@@ -17,7 +17,8 @@ import {
 } from './data3';
 import { JUNO } from '../brand/identity';
 import { V1Model, Explosion, Spy, shake } from './fx';
-import { TitleCard, EndCard, type VideoCfg } from '../brand/Brand';
+import { ColdOpen2D, ReticleTitle, Buzz2D } from './toon';
+import { EndCard, type VideoCfg } from '../brand/Brand';
 import { CornerMark } from '../brand/CornerMark';
 
 export { V3_END };
@@ -44,7 +45,7 @@ const CASE_T = [CASES, b(196), b(208), b(220), TEX]; // 3 + 3 + 3 + 2 bars
 type Key = [number, number[], number[]];
 const HOOK_P = [7, 30.5, 13.6], HOOK_L = [7, 4.6, -0.5];
 const SQUARE_P = [0, 16.5, 12.6], SQUARE_L = [0, 0, 0.7];
-const PILE_P = [0.6, 6.6, 9.8], PILE_L = [0.6, 0.9, -4.6];
+const PILE_P = [0.6, 7.1, 9.8], PILE_L = [0.6, 1.4, -4.6];
 const runP = [RUN_CENTER.x + 0.2, 3.7, RUN_CENTER.z + 4.9], runL = [RUN_CENTER.x, 0.3, RUN_CENTER.z - 0.7];
 const near = (x: number, z: number, d = 5.6, h = 5.6) => [[x + 1.4, h, z + d], [x, 0, z]];
 const panelCam = (i: number, push = 0) => [[PXS[i], PY - 0.15, PZ + 10.9 - push], [PXS[i], PY - 0.5, PZ]];
@@ -100,10 +101,10 @@ const KEYS: Key[] = [
   [BUILD + 2.2, PILE_P, PILE_L],
   [b(132), [0.6, 7.4, 11.4], [0.6, 0.6, -3.4]],
   [b(140), [0.6, 7.6, 11.6], [0.6, 0.6, -3.6]],
-  [b(148), [0.4, 3.7, 5.0], [0.4, 1.45, PILE_Z]],
-  [GAP, [0.4, 3.5, 4.3], [0.4, 1.45, PILE_Z]],
-  [DROP2, [0.4, 3.5, 4.3], [0.4, 1.45, PILE_Z]],
-  [BACK, [0.4, 3.7, 4.8], [0.4, 1.45, PILE_Z]],
+  [b(148), [0.4, 4.2, 5.0], [0.4, 1.95, PILE_Z]],
+  [GAP, [0.4, 4.0, 4.3], [0.4, 1.95, PILE_Z]],
+  [DROP2, [0.4, 4.0, 4.3], [0.4, 1.95, PILE_Z]],
+  [BACK, [0.4, 4.2, 4.8], [0.4, 1.95, PILE_Z]],
   [BACK + 1.6, HOOK_P, HOOK_L],
   [CASES - CUTK, [7, 29.6, 13.1], HOOK_L],
   [CASES, panelCam(0, -0.4)[0], panelCam(0, -0.4)[1]],
@@ -604,6 +605,24 @@ const GhostCols: React.FC<{ T: number }> = ({ T }) => {
     </>
   );
 };
+/* the display stand the piles grow on: lifts them clear of the grid and the rooftops */
+const Plinth: React.FC<{ T: number }> = ({ T }) => {
+  const o = easeOut(prog(T, BUILD - 0.3, BUILD + 0.5)) * (1 - prog(T, BACK - 0.1, BACK + 0.5));
+  if (o <= 0.001) return null;
+  const x0 = PX(0) - 0.9, x1 = PX(5) + SIM_DX + 0.9, h = PILE_Y - 0.03;
+  return (
+    <group position={[(x0 + x1) / 2, h / 2, PILE_Z]}>
+      <mesh>
+        <boxGeometry args={[x1 - x0, h, 1.2]} />
+        <meshStandardMaterial color="#141722" roughness={0.7} metalness={0.2} transparent opacity={o} />
+      </mesh>
+      <mesh position={[0, h / 2 + 0.005, 0.6]}>
+        <boxGeometry args={[x1 - x0, 0.012, 0.012]} />
+        <meshBasicMaterial color="#f1c56d" transparent opacity={0.6 * o} />
+      </mesh>
+    </group>
+  );
+};
 const PileLabels: React.FC<{ T: number }> = ({ T }) => {
   const out = 1 - prog(T, BACK - 0.1, BACK + 0.4);
   const base = easeOut(prog(T, BUILD + 0.8, BUILD + 1.4)) * out;
@@ -617,7 +636,7 @@ const PileLabels: React.FC<{ T: number }> = ({ T }) => {
         const top = PILE_Y + Math.max(v, SIM_HIST[k]) * TILE_H;
         return (
           <React.Fragment key={k}>
-            <Lbl text={k === 5 ? '5颗+' : `${k}颗`} pos={[PX(k) + SIM_DX / 2, 0.16, PILE_Z + 0.75]} w={1.6} h={0.36} o={base} color={C.dim} font={`600 50px ${ZH}`} />
+            <Lbl text={k === 5 ? '5颗+' : `${k}颗`} pos={[PX(k) + SIM_DX / 2, PILE_Y * 0.5, PILE_Z + 0.63]} w={1.6} h={0.36} o={base} color={C.dim} font={`600 50px ${ZH}`} />
             <Lbl text={`${v}`} pos={[PX(k), top + 0.32, PILE_Z]} w={1.0} h={0.36} o={real * (1 - merged)} font={`700 52px ${ZH}`} />
             <Lbl text={`*${SIM_HIST[k]}*`} pos={[PX(k) + SIM_DX, top + 0.32, PILE_Z]} w={1.0} h={0.36} o={sim * (1 - merged)} font={`700 52px ${ZH}`} />
             <Lbl text={`${v} / *${SIM_HIST[k]}*`} pos={[PX(k), top + 0.32, PILE_Z]} w={1.8} h={0.36} o={merged * out} font={`700 50px ${ZH}`} />
@@ -866,21 +885,74 @@ const DrawPanel: React.FC<{ T: number }> = ({ T }) => {
   );
 };
 
-/* ---------- the finale: Orion, drawn through the nearest real bomb sites ---------- */
-// sky picture (x right, y up), magnitude-ish size, tint
+/* ---------- the finale: Sagittarius (the Teapot), drawn through the nearest real bomb sites, with the archer faintly behind ---------- */
+// sky picture, spout to the right (x right, y up); size ~ brightness
 const ORION: [string, number, number, number, string][] = [
-  ['Meissa', 0.0, 3.3, 0.8, '#fff6dd'], ['Betelgeuse', -1.9, 2.4, 1.35, '#ffb27a'], ['Bellatrix', 1.5, 2.1, 1.0, '#e6eeff'],
-  ['Mintaka', 0.5, 0.25, 0.9, '#eef3ff'], ['Alnilam', 0.0, 0.0, 0.95, '#eef3ff'], ['Alnitak', -0.5, -0.25, 0.9, '#eef3ff'],
-  ['Saiph', -1.5, -2.6, 0.95, '#e6eeff'], ['Rigel', 1.8, -2.3, 1.35, '#cfe0ff'],
+  ['Alnasl', 3.06, -0.24, 0.95, '#fff2dc'], ['Kaus Media', 1.56, 0.03, 0.95, '#ffe6c8'], ['Kaus Australis', 1.24, -2.06, 1.35, '#e8efff'],
+  ['Kaus Borealis', 0.85, 2.03, 1.0, '#fff0d8'], ['Phi', -0.94, 1.3, 0.85, '#e8efff'], ['Nunki', -1.85, 1.62, 1.25, '#dfe9ff'],
+  ['Tau', -3.08, 0.99, 0.85, '#ffe6c8'], ['Ascella', -2.67, -0.01, 1.05, '#eef3ff'],
 ];
-const OR_S = 1.75, OR_Z = -3.9, OR_X = 0.9;
+const OR_S = 1.45, OR_Z = -3.9, OR_X = 0.4;
 const STARS = ORION.map(([, X, Y]) => {
   const x = OR_X + X * OR_S, z = OR_Z - Y * OR_S;
   let best = HITS3[0], d = 1e9;
   for (const h of HITS3) { const e = Math.hypot(h.x - x, h.z - z); if (e < d) { d = e; best = h; } }
   return [best.x, 0.24, best.z];
 });
-const STAR_EDGES = [[0, 1], [0, 2], [1, 5], [2, 3], [5, 4], [4, 3], [5, 6], [3, 7]];
+/* the archer: an original line drawing in sky units, laid flat under the stars */
+const ARCHER_BOX = { x0: -4.9, x1: 4.3, y0: -3.6, y1: 3.4 };
+const archerTex = (() => {
+  let tx: THREE.CanvasTexture | null = null;
+  return () => {
+    if (tx) return tx;
+    const PXU = 220, { x0, x1, y0, y1 } = ARCHER_BOX;
+    const c = document.createElement('canvas');
+    c.width = Math.round((x1 - x0) * PXU); c.height = Math.round((y1 - y0) * PXU);
+    const g = c.getContext('2d')!;
+    const P = (x: number, y: number): [number, number] => [(x - x0) * PXU, (y1 - y) * PXU];
+    const path = (pts: number[][], close = false) => { g.beginPath(); pts.forEach(([x, y], i) => (i ? g.lineTo(...P(x, y)) : g.moveTo(...P(x, y)))); if (close) g.closePath(); };
+    const curve = (a: number[], cp: number[], e: number[]) => { g.beginPath(); g.moveTo(...P(a[0], a[1])); g.quadraticCurveTo(...P(cp[0], cp[1]), ...P(e[0], e[1])); };
+    g.lineCap = 'round'; g.lineJoin = 'round';
+    g.strokeStyle = 'rgba(241,197,109,1)'; g.fillStyle = 'rgba(241,197,109,0.10)'; g.lineWidth = 0.055 * PXU;
+    // horse body
+    g.beginPath(); g.ellipse(...P(-2.35, -0.75), 1.65 * PXU, 0.78 * PXU, 0.08, 0, Math.PI * 2); g.fill(); g.stroke();
+    // legs (two forward, two back), with knees and hooves
+    for (const [hx, kx, fx] of [[-1.1, -0.85, -0.95], [-1.45, -1.3, -1.5], [-3.3, -3.55, -3.35], [-3.65, -3.9, -3.8]]) {
+      path([[hx, -1.25], [kx, -2.15], [fx, -3.05]]); g.stroke();
+    }
+    // tail
+    curve([-3.95, -0.45], [-4.75, -0.6], [-4.55, -1.85]); g.stroke();
+    // human torso rising from the front of the horse
+    path([[-1.05, -0.35], [-0.55, 0.65], [-0.35, 1.45], [0.25, 1.4], [0.15, 0.55], [-0.35, -0.3]], true); g.fill(); g.stroke();
+    // head
+    g.beginPath(); g.arc(...P(-0.05, 2.0), 0.36 * PXU, 0, Math.PI * 2); g.fill(); g.stroke();
+    // bow arm stretched toward the spout, draw arm bent back
+    path([[0.15, 1.25], [1.35, 0.25]]); g.stroke();
+    path([[-0.3, 1.3], [-0.05, 0.55], [0.35, 0.35]]); g.stroke();
+    // the bow, string and arrow (arrow tip at Alnasl)
+    curve([1.15, 1.75], [2.15, 0.2], [1.2, -1.75]); g.stroke();
+    g.lineWidth = 0.025 * PXU; path([[1.15, 1.75], [0.35, 0.35], [1.2, -1.75]]); g.stroke();
+    g.lineWidth = 0.04 * PXU; path([[0.35, 0.35], [3.06, -0.24]]); g.stroke();
+    path([[3.06, -0.24], [2.8, -0.02]]); g.stroke(); path([[3.06, -0.24], [2.82, -0.42]]); g.stroke();
+    tx = new THREE.CanvasTexture(c);
+    tx.colorSpace = THREE.SRGBColorSpace;
+    tx.anisotropy = 8;
+    return tx;
+  };
+})();
+const Archer: React.FC<{ T: number }> = ({ T }) => {
+  const o = 0.3 * easeInOut(prog(T, C0 + 4.2, C0 + 5.6)) * (1 - prog(T, END_IN - 0.4, END_IN + 0.4));
+  if (o <= 0.001) return null;
+  const { x0, x1, y0, y1 } = ARCHER_BOX;
+  const cx = OR_X + ((x0 + x1) / 2) * OR_S, cz = OR_Z - ((y0 + y1) / 2) * OR_S;
+  return (
+    <mesh position={[cx, 0.235, cz]} rotation={[-Math.PI / 2, 0, 0]}>
+      <planeGeometry args={[(x1 - x0) * OR_S, (y1 - y0) * OR_S]} />
+      <meshBasicMaterial map={archerTex()} transparent opacity={o} depthWrite={false} blending={THREE.AdditiveBlending} />
+    </mesh>
+  );
+};
+const STAR_EDGES = [[0, 1], [0, 2], [1, 2], [1, 3], [3, 4], [1, 4], [4, 7], [7, 2], [4, 5], [5, 6], [6, 7]];
 const C0 = TEX + 0.9;
 /* a gas street lamp: the spy waits in its pool of light */
 const StreetLamp: React.FC<{ x: number; z: number; o: number }> = ({ x, z, o }) => {
@@ -943,7 +1015,7 @@ const Constellation: React.FC<{ T: number }> = ({ T }) => {
           </React.Fragment>
         );
       })}
-      <Lbl text="猎户座 · ORION" pos={[STARS[2][0] + 2.9, 0.3, STARS[2][2] - 0.4]} w={5.4} h={0.8} flat
+      <Lbl text="射手座 · SAGITTARIUS" pos={[OR_X - 2.2 * OR_S, 0.3, OR_Z - 2.75 * OR_S]} w={9} h={0.8} flat
         o={o * easeOut(prog(T, C0 + 4.0, C0 + 4.6))} color="#e9e2cf" font={`600 110px ${ZH}`} />
     </>
   );
@@ -1037,15 +1109,13 @@ const Scene: React.FC<{ T: number }> = ({ T }) => {
       <Hits T={T} dim={hitDim} warm={warm} focus={focus} fade={fade} />
       <Measure T={T} />
       <Streaks T={T} />
-      <ColdOpen T={T} />
-      <HeroBomb T={T} />
-      <Searchlights T={T} />
       <Grid T={T} o={gridO} />
       <Numbers T={T} />
       <Tiles T={T} />
       <SimDots T={T} />
       <SimTiles T={T} />
       <GhostCols T={T} />
+      <Plinth T={T} />
       <PileLabels T={T} />
       <Ring x={HOT_SPOT.x} y={0.36} z={HOT_SPOT.z} r={HOT_R} o={hotO} hot />
       <Ring x={COLD_SPOT.x} y={0.36} z={COLD_SPOT.z} r={COLD_SPOT.r} o={coldO} hot={false} />
@@ -1070,6 +1140,7 @@ const Scene: React.FC<{ T: number }> = ({ T }) => {
       <BdayPanel T={T} />
       <LottoPanel T={T} />
       <DrawPanel T={T} />
+      <Archer T={T} />
       <Constellation T={T} />
     </>
   );
@@ -1081,9 +1152,52 @@ const Counter: React.FC<{ T: number }> = ({ T }) => {
   if (o <= 0) return null;
   const n = Math.round(lerp(537, 2419, easeInOut(prog(T, CUT + 0.2, CUT + 3.8))));
   return (
-    <div style={{ position: 'absolute', top: 260, right: 58, textAlign: 'right', opacity: o }}>
+    <div style={{ position: 'absolute', top: 110, right: 58, textAlign: 'right', opacity: o }}>
       <div style={{ fontFamily: EN, fontWeight: 600, fontSize: 76, lineHeight: 1, color: JUNO.colors.ink, fontVariantNumeric: 'tabular-nums' }}>{n.toLocaleString('en-US')}</div>
       <div style={{ fontFamily: ZH, fontSize: 24, color: 'rgba(243,237,226,0.6)', marginTop: 8, letterSpacing: '0.14em' }}>枚 V-1 落在伦敦</div>
+    </div>
+  );
+};
+
+const GOLD_TEXT: React.CSSProperties = {
+  backgroundImage: 'linear-gradient(180deg, #fff6d8 0%, #f6d07a 50%, #e2aa4c 100%)', WebkitBackgroundClip: 'text', backgroundClip: 'text', color: 'transparent',
+};
+const Rich3: React.FC<{ s: string }> = ({ s }) => (
+  <>
+    {s.split(/(\[[^\]]+\]|\{[^}]+\})/).filter(Boolean).map((seg, i) =>
+      seg.startsWith('[') ? <span key={i} style={GOLD_TEXT}>{seg.slice(1, -1)}</span>
+        : seg.startsWith('{') ? <span key={i} style={{ color: '#ff6a5c' }}>{seg.slice(1, -1)}</span>
+          : <span key={i}>{seg}</span>,
+    )}
+  </>
+);
+const Sub3: React.FC<{ T: number; at: number; out: number; zh: string; en: string; y?: number; size?: number; enSize?: number }> = ({
+  T, at, out, zh, en, y = 880, size = 56, enSize = 24,
+}) => {
+  const o = Math.min(easeOut(prog(T, at, at + 0.35)), 1 - prog(T, out - 0.3, out));
+  if (o <= 0) return null;
+  const rise = (1 - easeOut(prog(T, at, at + 0.45))) * 12;
+  return (
+    <div style={{ position: 'absolute', left: 0, right: 0, top: y - size * 0.62, textAlign: 'center', opacity: o, transform: `translateY(${rise}px)` }}>
+      <div style={{ fontFamily: ZH, fontSize: size, fontWeight: 700, color: '#f6efe1', letterSpacing: '0.03em', lineHeight: 1.25,
+        textShadow: '0 2px 14px rgba(0,0,0,0.95), 0 0 2px rgba(0,0,0,0.9)' }}><Rich3 s={zh} /></div>
+      <div style={{ fontFamily: EN, fontStyle: 'italic', fontSize: enSize, color: 'rgba(243,237,226,0.42)', marginTop: 6, textShadow: '0 2px 8px rgba(0,0,0,0.8)' }}>{en}</div>
+    </div>
+  );
+};
+const CHAPTERS: [number, number, string][] = [
+  [b(16) + 0.2, DROP1 - 0.15, '开 场 一 题'], [DROP1 + 0.2, CLARKE - 0.1, '1944 · 伦 敦'], [CLARKE + 0.1, BUILD - 0.1, '1946 · 克 拉 克 的 格 子'],
+  [BUILD + 0.1, GAP - 0.1, '随 机 长 什 么 样'], [DROP2 + 0.3, CASES - 0.1, '揭 晓'], [CASES + 0.1, TEX - 0.1, '同 一 个 道 理'], [TEX + 0.1, END_IN - 0.2, '星 座'],
+];
+const Chapter: React.FC<{ T: number }> = ({ T }) => {
+  const c = CHAPTERS.find(([a, z]) => T >= a - 0.05 && T <= z + 0.05);
+  if (!c) return null;
+  const o = Math.min(easeOut(prog(T, c[0], c[0] + 0.5)), 1 - prog(T, c[1] - 0.3, c[1]));
+  return (
+    <div style={{ position: 'absolute', top: 40, left: 0, right: 0, display: 'flex', justifyContent: 'center', alignItems: 'center', gap: 22, opacity: o }}>
+      <div style={{ width: 70 * easeOut(prog(T, c[0], c[0] + 0.7)), height: 1.5, background: 'rgba(241,197,109,0.7)' }} />
+      <div style={{ fontFamily: ZH, fontWeight: 600, fontSize: 24, letterSpacing: '0.18em', color: '#f1c56d', textShadow: '0 2px 8px rgba(0,0,0,0.8)' }}>{c[2]}</div>
+      <div style={{ width: 70 * easeOut(prog(T, c[0], c[0] + 0.7)), height: 1.5, background: 'rgba(241,197,109,0.7)' }} />
     </div>
   );
 };
@@ -1142,9 +1256,6 @@ export const V3Film: React.FC = () => {
   }, []);
   useEffect(() => { if (fontsReady) continueRender(fontHandle); }, [fontsReady, fontHandle]);
   // impact flashes: the cold-open explosion whites out into the title card; the rooftop one cuts to the overview
-  const coldFlash = T >= CO_HIT && T < CARD_IN + 0.3 ? Math.min(1, easeOut(prog(T, CO_HIT, CO_HIT + 0.1)) * 0.8 + 0.2 * prog(T, CO_HIT + 0.1, CARD_IN)) : 0;
-  const heroFlash = T >= HERO.t && T < HERO.t + 1 ? 0.75 * easeOut(prog(T, HERO.t, HERO.t + 0.05)) * Math.exp(-(T - HERO.t) * 4.5) : 0;
-  const flashO = Math.max(coldFlash, heroFlash);
   const markO = Math.min(easeOut(prog(T, 0.3, 1.0)), 1 - prog(T, CARD_IN, CARD_IN + 0.15) + prog(T, CARD_OUT - 0.1, CARD_OUT + 0.4), 1 - prog(T, END_IN - 0.2, END_IN + 0.5));
   return (
     <AbsoluteFill style={{ backgroundColor: JUNO.colors.night }}>
@@ -1154,13 +1265,13 @@ export const V3Film: React.FC = () => {
           <Scene T={T} />
         </ThreeCanvas>
       )}
-      {flashO > 0.001 && <AbsoluteFill style={{ opacity: flashO, background: 'radial-gradient(ellipse at 55% 60%, #fff6e2 0%, #ffd49a 45%, #ff9a50 100%)' }} />}
+      <Buzz2D T={T} />
+      <ColdOpen2D T={T} />
       <div style={{ position: 'absolute', left: 0, right: 0, bottom: 0, height: 360, pointerEvents: 'none',
         background: 'linear-gradient(180deg, rgba(8,9,13,0) 0%, rgba(8,9,13,0.55) 45%, rgba(8,9,13,0.78) 100%)' }} />
-      <YearMark T={T} at={DROP1 + 0.3} out={CUT - 0.1} year="1944" place="伦敦 · LONDON" />
+      <Chapter T={T} />
       <Counter T={T} />
-      <YearMark T={T} at={CLARKE + 0.2} out={BD - 0.2} year="1946" place="伦敦南部 · SOUTH LONDON" />
-      {LINES.map(([at, out, zh, en], i) => <Sub key={i} T={T} at={at} out={out} zh={zh} en={en} />)}
+      {LINES.map(([at, out, zh, en], i) => <Sub3 key={i} T={T} at={at} out={out} zh={zh} en={en} />)}
       {revO > 0 && (
         <div style={{ position: 'absolute', left: 0, right: 0, top: 62, textAlign: 'center', opacity: revO,
           transform: `scale(${lerp(1.12, 1, rp)})`, filter: `blur(${(1 - easeOut(prog(T, DROP2 + 0.5, DROP2 + 0.95))) * 12}px)` }}>
@@ -1174,11 +1285,12 @@ export const V3Film: React.FC = () => {
         <div style={{ position: 'absolute', left: 0, right: 0, top: 690, height: 360, opacity: easeOut(prog(T, b(236) - 0.4, b(236) + 0.4)) * 0.8 * (1 - prog(T, END_IN - 0.3, END_IN + 0.3)),
           background: 'radial-gradient(ellipse 45% 50% at 50% 50%, rgba(8,9,13,0.85) 0%, rgba(8,9,13,0) 100%)' }} />
       )}
-      <Sub T={T} at={b(236)} out={END_IN + 0.2} zh="随机，本来就会扎堆" en="Randomness clusters. That's what it does." y={790} size={72} enSize={32} />
-      <Sub T={T} at={FIN + 0.05} out={END_IN + 0.2} zh="[好运]，也会" en="So does good luck." y={935} size={52} enSize={28} />
+      <Sub3 T={T} at={b(236)} out={END_IN + 0.2} zh="随机，本来就会扎堆" en="Randomness clusters. That's what it does." y={800} size={74} enSize={28} />
+      <Sub3 T={T} at={FIN + 0.05} out={END_IN + 0.2} zh="[好运]，也会" en="So does good luck." y={940} size={56} enSize={24} />
       <CornerMark o={markO} />
       <Sequence from={cardF} durationInFrames={cardLen}>
-        <TitleCard v={EPISODE3} dur={cardLen} land={23} />
+        <ReticleTitle f={frame - cardF} dur={cardLen} kicker="THE CLUSTERING ILLUSION · LONDON 1944" title={EPISODE3.title}
+          tagline={EPISODE3.tagline} taglineEn={EPISODE3.taglineEn} credit={`— ${JUNO.credit} · ${JUNO.series} —`} />
       </Sequence>
       <Sequence from={endF} durationInFrames={endLen}>
         <EndCard v={EPISODE3} dur={endLen} />

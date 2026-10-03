@@ -58,7 +58,7 @@ export const countAt: number[] = CELLS.map((cl) => {
 
 /* sorting into piles: pile k sits behind the square */
 export const TILE_H = 0.013;
-export const PILE_Z = -7.8, PILE_Y = 0.42;
+export const PILE_Z = -7.8, PILE_Y = 0.95;
 export const PX = (k: number) => -5.25 + 2.1 * k;
 export const SIM_DX = 0.62;
 export const flyAt = (bucket: number, order: number) => BUILD + 0.1 + bucket * 0.55 + order * 0.9;
