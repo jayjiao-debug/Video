@@ -59,9 +59,9 @@ export const TanksCover: React.FC<{layout: 'wide' | 'tall'}> = ({layout}) => {
 				<div style={{fontFamily: font.serif, fontWeight: 900, fontSize: headSize, lineHeight: 1.18, color: '#fff7e6', marginTop: 24, textShadow: '0 6px 30px rgba(0,0,0,0.9)'}}>
 					只看几个<span style={{color: color.gold}}>编号</span>
 					<br />
-					算出德军造了
+					能算出德军
 					{tall ? <br /> : null}
-					多少坦克
+					造了<span style={{color: color.gold}}>多少坦克</span>？
 				</div>
 			</div>
 			<div style={{position: 'absolute', left: tall ? 0 : 80, right: tall ? 0 : undefined, top: tall ? 1080 : 470, display: 'flex', justifyContent: tall ? 'center' : 'flex-start', gap: tall ? 40 : 56}}>
