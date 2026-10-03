@@ -104,10 +104,10 @@ export const Shrub: React.FC<{f: number; ripe?: number; glow?: number}> = ({f, r
 									<ellipse cx={dir * 18} cy={-26} rx={38} ry={13} transform={`rotate(${-50 * dir})`} fill="#0a0503" />
 									<ellipse cx={dir * 18} cy={22} rx={36} ry={12} transform={`rotate(${40 * dir})`} fill="#0a0503" />
 									{k % 2 === 0
-										? [0, 1, 2].map((c) => (
+										? [0, 1].map((c) => (
 												<g key={c}>
-													<circle cx={(c - 1) * 13} cy={10 + (c % 2) * 8} r={18} fill="url(#ember-red)" opacity={0.9 * glow * ripe} />
-													<circle cx={(c - 1) * 13} cy={10 + (c % 2) * 8} r={7} fill={ripe > 0.5 ? '#ff6a40' : '#8ab04a'} />
+													<circle cx={(c - 0.5) * 16} cy={12 + c * 6} r={14} fill="url(#ember-red)" opacity={0.8 * glow * ripe} />
+													<circle cx={(c - 0.5) * 16} cy={12 + c * 6} r={6} fill={ripe > 0.5 ? '#ff6a40' : '#8ab04a'} />
 												</g>
 											))
 										: null}
@@ -151,7 +151,8 @@ export const BeanLine: React.FC<{r?: number; color?: string; fill?: string; w?: 
 );
 
 /** Phylogeny of a few eudicots: caffeine appears three separate times. */
-export const Tree: React.FC<{lit?: number; draw?: number}> = ({lit = 1, draw = 1}) => {
+export const Tree: React.FC<{lit?: number | number[]; draw?: number}> = ({lit = 1, draw = 1}) => {
+	const litOf = (name: string) => (Array.isArray(lit) ? (lit[['可可', '茶', '咖啡'].indexOf(name)] ?? 0) : lit);
 	// tips: x positions; three caffeine makers in gold
 	const tips = [
 		{x: -640, name: '可可', en: 'Theobroma', caf: true},
@@ -180,8 +181,10 @@ export const Tree: React.FC<{lit?: number; draw?: number}> = ({lit = 1, draw = 1
 					return <path key={t.x} d={`M${t.x},${y0} L${t.x},0`} />;
 				})}
 			</g>
-			{tips.map((t) => (
-				<g key={t.name} transform={`translate(${t.x},0)`}>
+			{tips.map((t) => {
+				const lit = litOf(t.name);
+				return (
+					<g key={t.name} transform={`translate(${t.x},0)`} opacity={Math.min(1, draw * 1.5)}>
 					{t.caf ? <Ember x={0} y={-6} r={60 * lit} o={lit} /> : null}
 					<circle r={9} fill={t.caf ? AMBER.gold : AMBER.dim} opacity={t.caf ? 0.4 + 0.6 * lit : 0.6} />
 					<text y={-46} textAnchor="middle" style={{fontFamily: font.serif, fontWeight: 900, fontSize: 34, fill: t.caf ? AMBER.gold : AMBER.dim}} opacity={t.caf ? 0.5 + 0.5 * lit : 0.7}>
@@ -190,8 +193,9 @@ export const Tree: React.FC<{lit?: number; draw?: number}> = ({lit = 1, draw = 1
 					<text y={-88} textAnchor="middle" style={{fontFamily: font.latinItalic, fontStyle: 'italic', fontSize: 22, fill: AMBER.dim}}>
 						{t.en}
 					</text>
-				</g>
-			))}
+					</g>
+				);
+			})}
 		</g>
 	);
 };
