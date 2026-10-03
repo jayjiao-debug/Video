@@ -12,7 +12,9 @@ export const Chrome: React.FC = () => {
 	const scene = tl.scenes[idx];
 	const local = f - scene.from;
 	const sceneOut = prog(local, scene.duration - 10, 10, ease.in);
-	const badge = prog(f, 20, 30) * (1 - prog(f, tl.durationInFrames - 50, 30));
+	// scenes can keep the frame clean until their first line (e.g. while a title card plays)
+	const quiet = scene.props.quietLead ? 1 - prog(local, (scene.lines[0]?.from ?? 0) - 12, 12) : 0;
+	const badge = prog(f, 20, 30) * (1 - prog(f, tl.durationInFrames - 150, 20)) * (1 - quiet);
 
 	return (
 		<>
@@ -61,7 +63,7 @@ export const Chrome: React.FC = () => {
 						fontWeight: 500,
 						letterSpacing: '0.32em',
 						color: color.gold,
-						opacity: 0.85 * prog(local, 6, 20) * (1 - sceneOut),
+						opacity: 0.85 * prog(local, 6, 20) * (1 - sceneOut) * (1 - quiet),
 						transform: `translateY(${(1 - prog(local, 6, 24)) * 10}px)`,
 					}}
 				>

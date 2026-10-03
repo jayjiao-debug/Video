@@ -35,7 +35,7 @@ videos:
     taglineEn: One tournament settled it.
     motif: duel
     card: [15.9, 21.2]
-    trim: 12.543
+    trim: 11.525  # its hook line starts ~0.5 s earlier than the others
     cuts: [[18.139, 20.174]]
     hit: 16.104
     extend: 6

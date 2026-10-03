@@ -14,7 +14,7 @@
 #   The jar example (19, 40, 42, 60) is illustrative.
 
 id: tanks
-series: 反直觉研究所
+series: Juno · VIBE知识大赏
 title: 德国坦克问题
 subtitle: 只看编号，能算出敌人造了多少坦克吗？
 format: horizontal
@@ -36,6 +36,8 @@ scenes:
   - id: london
     component: London
     at: a
+    lead: 3.6   # the branded title card plays first
+    props: {quietLead: true}
     kicker: 1943 · 伦敦 · 美国大使馆经济战处
     lines:
       - 1943年，伦敦。盟军最想知道：德国一个月造多少坦克？
@@ -102,6 +104,7 @@ scenes:
   - id: callback
     component: Callback
     at: coda
+    props: {quietLead: false}
     lines:
       - 德国人以为，编号只是为了方便管理。
       - 他们没想到，每一个数字，都在替对手数数。

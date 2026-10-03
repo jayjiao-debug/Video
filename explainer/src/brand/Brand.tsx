@@ -30,7 +30,7 @@ export type VideoCfg = {
 	kicker: string;
 	tagline: string;
 	taglineEn: string;
-	motif: 'cards' | 'duel' | 'stars';
+	motif: 'cards' | 'duel' | 'stars' | 'serials';
 	card: [number, number];
 	extend: number;
 	trim?: number;
@@ -121,6 +121,28 @@ const Motif: React.FC<{kind: VideoCfg['motif']; p: number; f: number}> = ({kind,
 							<rect x={-17} y={4} width={34} height={44} rx={2} fill={hero ? '#f6e3b0' : i < 4 ? '#8d8673' : '#d9cfb6'} />
 							<text y={34} textAnchor="middle" style={{fontFamily: font.latin, fontWeight: 600, fontSize: 22, fill: '#3a2f1e'}}>
 								{hero ? '5' : '?'}
+							</text>
+						</g>
+					);
+				})}
+			</g>
+		);
+	}
+	if (kind === 'serials') {
+		// five stamped plates; the largest number glows
+		const nums = ['19', '40', '42', '60', '?'];
+		return (
+			<g>
+				{nums.map((n, i) => {
+					const q = Math.min(1, Math.max(0, p * 6 - i));
+					const hero = i === 3;
+					const unknown = i === 4;
+					return (
+						<g key={i} transform={`translate(${(i - 2) * 96},${(1 - q) * 14})`} opacity={q}>
+							{hero ? <circle r={56} fill="url(#brand-glow)" /> : null}
+							<rect x={-40} y={-24} width={80} height={48} rx={5} fill={unknown ? 'none' : hero ? '#f3d58d' : '#b49a62'} stroke={unknown ? GOLD : '#5a4520'} strokeWidth={2} strokeDasharray={unknown ? '6 5' : undefined} />
+							<text y={11} textAnchor="middle" style={{fontFamily: 'monospace', fontWeight: 700, fontSize: 28, fill: unknown ? GOLD : '#3a2810'}}>
+								{n}
 							</text>
 						</g>
 					);
