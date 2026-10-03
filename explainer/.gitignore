@@ -1,0 +1,6 @@
+node_modules/
+# downloaded TTS/ASR models and source fonts (fetched by setup, too large for git)
+models/
+# per-episode build artifacts
+build/
+out/
