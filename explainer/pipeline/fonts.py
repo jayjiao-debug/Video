@@ -2,7 +2,7 @@
 
 Noto Serif SC is ~25 MB; an episode needs a few hundred glyphs, so each render
 loads a ~100 KB woff2 instead (fast, offline, deterministic). Characters are
-collected from the episode script plus every .tsx file the episode can render.
+collected from the episode script plus every .ts/.tsx file the episode can render.
 """
 
 import glob
@@ -29,7 +29,7 @@ def episode_chars(ep_dir, extra_text=""):
     chars = set(BASE) | set(extra_text)
     sources = glob.glob(os.path.join(ep_dir, "*.yaml"))
     sources += glob.glob(os.path.join(ep_dir, "**", "*.tsx"), recursive=True)
-    sources += glob.glob(os.path.join(ROOT, "src", "**", "*.tsx"), recursive=True)
+    sources += glob.glob(os.path.join(ROOT, "src", "**", "*.ts*"), recursive=True)
     for path in sources:
         with open(path, encoding="utf-8") as f:
             text = f.read()

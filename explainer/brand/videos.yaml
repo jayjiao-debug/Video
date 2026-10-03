@@ -5,11 +5,8 @@
 # nothing shifts. The end card extends the video by `extend` seconds and the
 # background track simply keeps playing from where the video stopped.
 
-brand:
-  name: Juno
-  credit: Juno 出品
-  series: VIBE知识大赏
-  follow: 关注 Juno · 每期一个反直觉的知识
+# The channel identity (name, credit, series, follow line, colours) is not set here:
+# it lives in src/brand/identity.ts so every video and episode matches.
 
 videos:
   - id: stopping

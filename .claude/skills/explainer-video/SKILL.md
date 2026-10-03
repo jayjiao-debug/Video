@@ -10,6 +10,9 @@ Episodes are `explainer/episodes/<id>/episode.yaml` (script) + `scenes.tsx`
 (visuals). There is no narration: the story is carried by burned-in subtitle
 lines over one background track the user supplies (`assets/music/bgm.mp3`, not in git).
 
+Branding (title card, corner mark, end card, copy voice) follows the `juno-brand`
+skill; run its brand QA together with the QA step below.
+
 The user approved this workflow. Follow it in order and do not skip the
 approval gates: **reference → research → art → approval → animate → QA → render.**
 

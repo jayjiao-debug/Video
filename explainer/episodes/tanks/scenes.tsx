@@ -19,11 +19,8 @@ const W = 1920;
 const H = 1080;
 const BROWSER_SAFE_GOLD = color.gold;
 
-// the channel package, shared with brand/videos.yaml
-const BRAND: BrandCfg = {
-	brand: {name: 'Juno', credit: 'Juno 出品', series: 'VIBE知识大赏', follow: '关注 Juno · 每期一个反直觉的知识'},
-	videos: [],
-};
+// the channel package: the identity itself lives in src/brand/identity.ts
+const BRAND: BrandCfg = {videos: []};
 const EPISODE: VideoCfg = {
 	id: 'tanks',
 	src: '',

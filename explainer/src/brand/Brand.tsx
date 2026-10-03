@@ -15,6 +15,7 @@ import {
 import {ease, prog} from '../lib/context';
 import {loadEpisodeFonts} from '../lib/fonts';
 import {font} from '../lib/theme';
+import {JUNO} from './identity';
 
 /**
  * Juno's channel package: a title card (片头) that replaces the plain card the
@@ -40,11 +41,12 @@ export type VideoCfg = {
 	sources: string;
 	duration: number;
 };
-export type BrandCfg = {brand: {name: string; credit: string; series: string; follow: string}; videos: VideoCfg[]};
+/** `brand` is optional and ignored: the identity comes from ./identity.ts so every video matches */
+export type BrandCfg = {brand?: unknown; videos: VideoCfg[]};
 export type BrandedProps = {video: string; cfg?: BrandCfg; part?: 'full' | 'title' | 'end'};
 
-const GOLD = '#f1c56d';
-const INK = '#f3ede2';
+const GOLD = JUNO.colors.gold;
+const INK = JUNO.colors.ink;
 const W = 1920;
 const H = 1080;
 
@@ -313,7 +315,7 @@ export const TitleCard: React.FC<{v: VideoCfg; cfg: BrandCfg; dur: number}> = ({
 						{v.taglineEn}
 					</text>
 					<text x={W / 2} y={884} textAnchor="middle" style={{fontFamily: font.sans, fontSize: 22, letterSpacing: '0.42em', fill: 'rgba(241,197,109,0.75)'}} opacity={prog(f, land + 36, 20)}>
-						{`— ${cfg.brand.credit} · ${cfg.brand.series} —`}
+						{`— ${JUNO.credit} · ${JUNO.series} —`}
 					</text>
 				</g>
 			</svg>
@@ -333,7 +335,7 @@ export const EndCard: React.FC<{v: VideoCfg; cfg: BrandCfg; dur: number}> = ({v,
 				<rect width={W} height={H} fill="url(#brand-key)" opacity={bgIn} />
 				<Dust f={f + 400} n={70} />
 				<g transform={`translate(${W / 2},250)`}>
-					<Monogram draw={prog(f, 8, 40, ease.inOut)} size={1} wordmark={cfg.brand.name} />
+					<Monogram draw={prog(f, 8, 40, ease.inOut)} size={1} wordmark={JUNO.name} />
 				</g>
 				<GoldTitle text={v.title} f={f} at={30} size={92} y={470} />
 				<g transform={`translate(${W / 2},556) scale(1.1)`}>
@@ -345,11 +347,11 @@ export const EndCard: React.FC<{v: VideoCfg; cfg: BrandCfg; dur: number}> = ({v,
 				<g opacity={prog(f, 78, 20)}>
 					<rect x={W / 2 - 330} y={738} width={660} height={56} rx={28} fill="none" stroke={GOLD} strokeOpacity={0.6} />
 					<text x={W / 2} y={774} textAnchor="middle" style={{fontFamily: font.sans, fontWeight: 500, fontSize: 26, letterSpacing: '0.2em', fill: GOLD}}>
-						{cfg.brand.follow}
+						{JUNO.follow}
 					</text>
 				</g>
 				<text x={W / 2} y={1010} textAnchor="middle" style={{fontFamily: font.sans, fontSize: 18, letterSpacing: '0.06em', fill: 'rgba(243,237,226,0.38)'}} opacity={prog(f, 90, 20)}>
-					{`《${v.title}》 · ${cfg.brand.credit} · ${cfg.brand.series}　|　${v.sources}`}
+					{`《${v.title}》 · ${JUNO.credit} · ${JUNO.series}　|　${v.sources}`}
 				</text>
 				<rect width={W} height={H} fill="#000" opacity={black} />
 			</svg>

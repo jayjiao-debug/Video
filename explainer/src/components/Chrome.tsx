@@ -1,6 +1,7 @@
 import React from 'react';
 import {useCurrentFrame} from 'remotion';
 import {ease, prog, useLayout, useTimeline} from '../lib/context';
+import {JUNO} from '../brand/identity';
 import {color, font} from '../lib/theme';
 
 /** Series badge (a corner mark in landscape; badge + chapter pips in vertical), the scene kicker, and the citation line. */
@@ -35,7 +36,7 @@ export const Chrome: React.FC = () => {
 					}}
 				>
 					<span style={{color: color.gold}}>◆ </span>
-					{tl.series}
+					{JUNO.mark}
 				</div>
 			) : (
 				<>
@@ -54,7 +55,7 @@ export const Chrome: React.FC = () => {
 						}}
 					>
 						<span style={{color: color.gold}}>◆ </span>
-						{tl.series}
+						{JUNO.mark}
 						<span style={{color: color.faint}}>　|　</span>
 						《{tl.title}》
 					</div>

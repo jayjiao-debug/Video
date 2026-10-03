@@ -8,6 +8,11 @@ animation, rendering), use the `explainer-video` skill
 (`.claude/skills/explainer-video/SKILL.md`) and follow its workflow in order:
 reference → research → art direction → **user approval** → animate → QA → render.
 
+Brand: every video is a Juno video. Use the `juno-brand` skill
+(`.claude/skills/juno-brand/SKILL.md`): fixed identity in `explainer/src/brand/identity.ts`,
+the four brand moments (cold open → gold title card by 4 s → corner mark → end card),
+and its brand QA before sending anything.
+
 What the owner wants:
 - Talks in Chinese; reply in Chinese.
 - Landscape 1920×1080, no narration, subtitles plus the owner's own background track.
