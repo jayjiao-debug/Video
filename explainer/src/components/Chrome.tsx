@@ -87,6 +87,7 @@ export const Chrome: React.FC = () => {
 						fontWeight: 500,
 						letterSpacing: '0.32em',
 						color: color.gold,
+						textShadow: '0 2px 14px rgba(0,0,0,0.75)',
 						opacity: 0.85 * prog(local, 6, 20) * (1 - sceneOut) * (1 - quiet),
 						transform: `translateY(${(1 - prog(local, 6, 24)) * 10}px)`,
 					}}

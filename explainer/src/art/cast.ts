@@ -23,5 +23,7 @@ export const CAST: Record<string, Look> = {
 	gentleman: {skin: P.skin1, hair: 'wig', hairColor: '#d8d0c0', outfit: 'frock', top: '#2f4a3c', bottom: '#2a2620', accent: '#8a6a3a', hat: 'tricorn'},
 	merchant: {skin: P.skin2, hair: 'short', hairColor: P.hairBrown, outfit: 'frock', top: '#5a4632', bottom: '#2a2620', accent: '#a07a46', mustache: true},
 	farmer: {skin: P.skin3, hair: 'long', hairColor: P.hairBlack, outfit: 'casual', top: '#2f4f7a', bottom: '#2a2d36', accent: '#c94c3c', hat: 'headwrap', hatColor: '#1f5f6a'},
+	bach: {skin: P.skin2, hair: 'wig', hairColor: '#ece6da', outfit: 'frock', top: '#2a2a30', bottom: '#1e1e22', accent: '#5a4a3a'},
+	pasqua: {skin: P.skin3, hair: 'short', hairColor: P.hairBlack, outfit: 'frock', top: '#4a3a2c', bottom: '#2a2620', accent: '#7a5a2e', apron: '#e6dcc6', mustache: true},
 	farmerOld: {skin: P.skin3, hair: 'short', hairColor: '#3a3632', outfit: 'casual', top: '#4a5a3a', bottom: '#2a2d36', accent: '#d9cfb8', hat: 'straw'},
 };

@@ -9,13 +9,14 @@ import {CAM0, Layer, type Cam} from './Airfield';
  * passes; hand straps sway with the motion. `travel` is how far the train has
  * gone (px), so a rewind can run it backwards.
  */
-export const Metro: React.FC<{frame: number; travel: number; cam?: Cam; children?: React.ReactNode; crowd?: React.ReactNode; sun?: number}> = ({
+export const Metro: React.FC<{frame: number; travel: number; cam?: Cam; children?: React.ReactNode; crowd?: React.ReactNode; sun?: number; outside?: React.ReactNode}> = ({
 	frame: f,
 	travel,
 	cam = CAM0,
 	children,
 	crowd,
 	sun = 1,
+	outside,
 }) => {
 	const towers = useMemo(
 		() => Array.from({length: 40}, (_, i) => ({x: i * 150 + random(`mt${i}`) * 60, w: 70 + random(`mw${i}`) * 90, h: 180 + random(`mh${i}`) * 300})),
@@ -50,6 +51,7 @@ export const Metro: React.FC<{frame: number; travel: number; cam?: Cam; children
 						)),
 					)}
 				</g>
+				{outside}
 			</Layer>
 			{/* the car: wall between windows, seats, ceiling */}
 			<Layer cam={cam} depth={0.55}>

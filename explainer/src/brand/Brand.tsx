@@ -31,7 +31,7 @@ export type VideoCfg = {
 	kicker: string;
 	tagline: string;
 	taglineEn: string;
-	motif: 'cards' | 'duel' | 'stars' | 'serials';
+	motif: 'cards' | 'duel' | 'stars' | 'serials' | 'coffee';
 	card: [number, number];
 	extend: number;
 	trim?: number;
@@ -145,6 +145,25 @@ const Motif: React.FC<{kind: VideoCfg['motif']; p: number; f: number}> = ({kind,
 				<text y={26} textAnchor="middle" style={{fontFamily: 'monospace', fontWeight: 700, fontSize: 46, fill: '#3a2810', letterSpacing: '0.12em'}}>
 					82731
 				</text>
+			</g>
+		);
+	}
+	if (kind === 'coffee') {
+		// a cup with a wisp of steam, and the coffee flower it came from
+		const q = Math.min(1, p * 2);
+		return (
+			<g opacity={q} transform={`scale(${0.8 + 0.2 * q})`}>
+				<circle r={110} fill="url(#brand-glow)" opacity={0.6} />
+				<path d="M-34,-30 L34,-30 L28,30 L-28,30 Z" fill="none" stroke={GOLD} strokeWidth={3} />
+				<path d="M34,-18 C54,-18 54,12 30,12" fill="none" stroke={GOLD} strokeWidth={3} />
+				<path d={`M-8,-40 C-18,-56 2,-66 -6,-${80 + 0 * f}`} fill="none" stroke={GOLD} strokeWidth={2.5} strokeLinecap="round" opacity={0.8} />
+				<path d="M10,-40 C2,-54 20,-62 12,-76" fill="none" stroke={GOLD} strokeWidth={2.5} strokeLinecap="round" opacity={0.6} />
+				<g transform="translate(78,-30)">
+					{Array.from({length: 5}, (_, i) => (
+						<path key={i} d="M0,0 C5,-6 5,-16 0,-20 C-5,-16 -5,-6 0,0 Z" fill="#f3ede2" transform={`rotate(${i * 72})`} />
+					))}
+					<circle r={3} fill={GOLD} />
+				</g>
 			</g>
 		);
 	}
