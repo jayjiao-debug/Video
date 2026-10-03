@@ -131,24 +131,20 @@ const Motif: React.FC<{kind: VideoCfg['motif']; p: number; f: number}> = ({kind,
 		);
 	}
 	if (kind === 'serials') {
-		// five stamped plates; the largest number glows
-		const nums = ['19', '40', '42', '60', '?'];
+		// the episode's object: brass plate 82731, stamped and lit
+		const q = spring({frame: Math.round(p * 40), fps: 30, config: {damping: 12}});
 		return (
-			<g>
-				{nums.map((n, i) => {
-					const q = Math.min(1, Math.max(0, p * 6 - i));
-					const hero = i === 3;
-					const unknown = i === 4;
-					return (
-						<g key={i} transform={`translate(${(i - 2) * 96},${(1 - q) * 14})`} opacity={q}>
-							{hero ? <circle r={56} fill="url(#brand-glow)" /> : null}
-							<rect x={-40} y={-24} width={80} height={48} rx={5} fill={unknown ? 'none' : hero ? '#f3d58d' : '#b49a62'} stroke={unknown ? GOLD : '#5a4520'} strokeWidth={2} strokeDasharray={unknown ? '6 5' : undefined} />
-							<text y={11} textAnchor="middle" style={{fontFamily: 'monospace', fontWeight: 700, fontSize: 28, fill: unknown ? GOLD : '#3a2810'}}>
-								{n}
-							</text>
-						</g>
-					);
-				})}
+			<g transform={`scale(${0.7 + 0.3 * q})`} opacity={Math.min(1, p * 3)}>
+				<circle r={120} fill="url(#brand-glow)" opacity={0.7} />
+				<rect x={-150} y={-46} width={300} height={92} rx={10} fill="#4a4234" />
+				<rect x={-140} y={-38} width={280} height={76} rx={6} fill="#c9a45a" />
+				{[-1, 1].map((sx) => [-1, 1].map((sy) => <circle key={`${sx}${sy}`} cx={sx * 124} cy={sy * 24} r={5} fill="#6b5328" />))}
+				<text x={-110} y={-14} style={{fontFamily: 'monospace', fontWeight: 700, fontSize: 13, fill: '#4a3517', letterSpacing: '0.1em'}}>
+					Fgst.Nr.
+				</text>
+				<text y={26} textAnchor="middle" style={{fontFamily: 'monospace', fontWeight: 700, fontSize: 46, fill: '#3a2810', letterSpacing: '0.12em'}}>
+					82731
+				</text>
 			</g>
 		);
 	}

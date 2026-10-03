@@ -44,8 +44,16 @@ then change `identity.ts` once so every video follows.
    of the episode, already moving. No logo, no title, no black lead-in. The first
    subtitle is on screen by ~1 s.
 2. **Gold title card (starts by `JUNO.timing.titleCardBy` = 4 s, lasts 3.2–5.3 s).**
-   Use `TitleCard` from `src/brand/Brand.tsx`. It must land on a strong beat of the
-   track (`hit`), with the anamorphic flare and dust burst. Layout never changes:
+   It must land on a strong beat of the track (`hit`). The owner prefers the
+   entrance **built from the episode's own object**, carried over from the cold
+   open by a match cut. In 《德国坦克问题》 the hook slams into plate 82731, the card
+   opens on that same plate, and the title is stamped into the brass one character
+   per half-beat before gold fills it (`TankTitle` in `episodes/tanks/scenes.tsx`).
+   Do not use a horizontal light-line sweep or a white flash to bring the title in;
+   the owner found those generic. A weak motif (a row of small numbers) is not
+   enough: the motif should be the episode's hero object. `TitleCard` in
+   `src/brand/Brand.tsx` remains the fallback for re-branding videos made
+   elsewhere. Whatever the entrance, the card carries these elements:
    - Latin kicker: `TOPIC IN ENGLISH · KEY NAME · YEAR`.
    - 《Title》 in gold, 3–6 characters.
    - The episode motif.

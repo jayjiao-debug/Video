@@ -1,5 +1,5 @@
 import React from 'react';
-import {Sequence, interpolate, random, spring, useCurrentFrame, useVideoConfig} from 'remotion';
+import {AbsoluteFill, Sequence, interpolate, random, spring, useCurrentFrame, useVideoConfig} from 'remotion';
 import {CAST} from '../../src/art/cast';
 import {Figure, POSES, blinkAt, lerpPose, walkPose} from '../../src/art/Figure';
 import {Embers, Impact, Smoke, Torch} from '../../src/art/fx';
@@ -7,8 +7,10 @@ import {P} from '../../src/art/palette';
 import {lookAt, type Cam} from '../../src/art/sets/Airfield';
 import {Battlefield} from '../../src/art/sets/Battlefield';
 import {LondonOffice} from '../../src/art/sets/LondonOffice';
-import {Jar, Panther, Panzer, SerialPlate} from '../../src/art/Tank';
-import {EndCard, TitleCard, type BrandCfg, type VideoCfg} from '../../src/brand/Brand';
+import {Jar, Panther, Panzer, SerialPlate, TANK_DEFS} from '../../src/art/Tank';
+import {Materials} from '../../src/art/materials';
+import {EndCard, type BrandCfg, type VideoCfg} from '../../src/brand/Brand';
+import {JUNO} from '../../src/brand/identity';
 import {FullFrame, camMix} from '../../src/components/FullFrame';
 import {T, countUp} from '../../src/components/Stage';
 import {ease, prog, useBeat, useCue, useHitFrames, useScene, useSnapBeat, useTimeline} from '../../src/lib/context';
@@ -176,7 +178,6 @@ const Hook: React.FC<SceneProps> = () => {
 				})}
 			</g>
 			<rect width={W} height={H} fill="#000" opacity={0.25 - 0.1 * beat} />
-			<rect width={W} height={H} fill="#fff4dc" opacity={0.6 * prog(f, end - 4, 4, ease.in)} />
 		</FullFrame>
 	);
 };
@@ -188,6 +189,141 @@ const WALL = Array.from({length: 45}, (_, i) => {
 	const n = c === 0 && r === 0 ? '82731' : String(82600 + Math.floor(random(`wall${i}`) * 560));
 	return {n, c, r, d: Math.max(Math.abs(c), Math.abs(r))};
 });
+
+// ---------------------------------------------------------------- the title, stamped into the plate
+
+/**
+ * This episode's title card, built from its own object: the hook slams into plate
+ * 82731; the card opens on that same plate (a match cut, no flash). The digits
+ * flip away, the plate widens into a nameplate, 《德国坦克问题》 is stamped into the
+ * brass one character per half-beat, then gold fills the letters. Brand elements
+ * (kicker, gold title in 《》, tagline, English line, credit) all stay.
+ */
+const TankTitle: React.FC<{dur: number}> = ({dur}) => {
+	const f = useCurrentFrame();
+	const {fps} = useVideoConfig();
+	const tempo = useTimeline().music.tempo;
+	const half = (60 / tempo / 2) * fps;
+	const heroTilt = (random('pr22') - 0.5) * 6; // the hook's plate 82731, exactly as it ends
+	const morph = prog(f, 4, 14, ease.inOut);
+	const w = 660 + (1640 / 1.764 - 660) * morph; // plate width in plate units (scaled 1.764 on screen)
+	const h = 260 + (236 - 260) * morph;
+	const tilt = heroTilt * (1 - morph);
+	const chars = [...'《德国坦克问题》'];
+	const stampAt = (i: number) => 14 + i * half * 0.5;
+	const lastStamp = stampAt(chars.length - 1);
+	const kick = chars.reduce((k, _, i) => k + (f >= stampAt(i) ? Math.exp(-(f - stampAt(i)) / 2.5) : 0), 0);
+	const gild = prog(f, lastStamp + 8, 22, ease.inOut);
+	const out = prog(f, dur - 14, 14, ease.inOut);
+	const size = 150 / 1.764;
+	const step = size * 1.02;
+	return (
+		<AbsoluteFill style={{opacity: 1 - out}}>
+			<svg width={W} height={H} viewBox={`0 0 ${W} ${H}`}>
+				<Materials />
+				<TANK_DEFS />
+				<defs>
+					<linearGradient id="tt-gold" x1="0" y1="0" x2="0" y2="1">
+						<stop offset="0" stopColor="#fff1c4" />
+						<stop offset="0.45" stopColor="#f1c56d" />
+						<stop offset="1" stopColor="#a8742a" />
+					</linearGradient>
+					<clipPath id="tt-gild">
+						<rect x={-900} y={-200} width={1800 * gild} height={400} />
+					</clipPath>
+				</defs>
+				<rect width={W} height={H} fill="#06070b" />
+				<ellipse cx={960} cy={470} rx={980} ry={520} fill="url(#glow-lamp)" opacity={0.22 + 0.1 * morph} />
+				<g transform={`translate(${960 + kick * 3 * (random(`tx${f}`) - 0.5)},${470 + kick * 3 * (random(`ty${f}`) - 0.5)}) scale(1.764) rotate(${tilt})`}>
+					{f < 6 ? (
+						<SerialPlate serial="82731" torch={1} />
+					) : (
+						<g>
+							<rect x={-w / 2 - 20} y={-h / 2 - 20} width={w + 40} height={h + 40} rx={18} fill="#4a4234" />
+							<rect x={-w / 2} y={-h / 2} width={w} height={h} rx={10} fill="url(#brass)" />
+							<rect x={-w / 2} y={-h / 2} width={w} height={h} rx={10} fill="url(#rivets)" opacity={0.8} />
+							{[
+								[-1, -1],
+								[1, -1],
+								[-1, 1],
+								[1, 1],
+							].map(([sx, sy], i) => (
+								<g key={i}>
+									<circle cx={sx * (w / 2 - 30)} cy={sy * (h / 2 - 30)} r={13} fill="#6b5328" />
+									<circle cx={sx * (w / 2 - 30) - 3} cy={sy * (h / 2 - 30) - 3} r={5} fill="#d9b874" opacity={0.6} />
+								</g>
+							))}
+							{/* the old digits flip away as the plate opens */}
+							{f < 14 ? (
+								<g transform={`translate(0,60) scale(1,${1 - prog(f, 6, 8, ease.in)}) translate(0,-60)`}>
+									<text x={0} y={60} textAnchor="middle" style={{fontFamily: 'monospace', fontSize: 110, fontWeight: 700, fill: '#3a2810', letterSpacing: '0.12em'}}>
+										82731
+									</text>
+								</g>
+							) : null}
+							{/* engraved kicker on the top band */}
+							<text x={0} y={-h / 2 + 38} textAnchor="middle" opacity={prog(f, 12, 12)} style={{fontFamily: font.latin, fontWeight: 700, fontSize: 22, letterSpacing: '0.45em', fill: '#4a3517'}}>
+								{EPISODE.kicker}
+							</text>
+							{/* the title, stamped character by character */}
+							{chars.map((c, i) => {
+								if (f < stampAt(i)) return null;
+								const s = spring({frame: f - stampAt(i), fps, config: {damping: 14, stiffness: 320}});
+								const x = (i - (chars.length - 1) / 2) * step;
+								return (
+									<g key={i} transform={`translate(${x},${h / 2 - 62}) scale(${1 + 0.5 * (1 - s)})`} opacity={Math.min(1, s * 2)}>
+										{/* the recess: dark lower-right edge, bright upper-left lip */}
+										<text x={2} y={3} textAnchor="middle" style={{fontFamily: font.serif, fontWeight: 900, fontSize: size, fill: '#2a1d0a'}}>
+											{c}
+										</text>
+										<text x={-1.5} y={-1.5} textAnchor="middle" style={{fontFamily: font.serif, fontWeight: 900, fontSize: size, fill: '#f6dfa0', opacity: 0.55}}>
+											{c}
+										</text>
+										<text textAnchor="middle" style={{fontFamily: font.serif, fontWeight: 900, fontSize: size, fill: '#6b4e1e'}}>
+											{c}
+										</text>
+									</g>
+								);
+							})}
+							{/* the brass darkens as the gold goes in, so the title reads */}
+							<rect x={-w / 2} y={-h / 2} width={w} height={h} rx={10} fill="#1a1206" opacity={0.55 * gild} />
+							<g clipPath="url(#tt-gild)" filter="url(#blur-sm)" opacity={0.8}>
+								{chars.map((c, i) => (
+									<text key={i} x={(i - (chars.length - 1) / 2) * step} y={h / 2 - 62} textAnchor="middle" style={{fontFamily: font.serif, fontWeight: 900, fontSize: size, fill: '#f1c56d'}}>
+										{c}
+									</text>
+								))}
+							</g>
+							{/* gold poured into the letters, left to right */}
+							<g clipPath="url(#tt-gild)">
+								{chars.map((c, i) => (
+									<text key={i} x={(i - (chars.length - 1) / 2) * step} y={h / 2 - 62} textAnchor="middle" style={{fontFamily: font.serif, fontWeight: 900, fontSize: size, fill: 'url(#tt-gold)'}}>
+										{c}
+									</text>
+								))}
+							</g>
+							{/* a dust puff where each character lands */}
+							{chars.map((_, i) => {
+								const k = f - stampAt(i);
+								if (k < 0 || k > 14) return null;
+								return <circle key={i} cx={(i - (chars.length - 1) / 2) * step} cy={h / 2 - 82} r={20 + k * 3} fill="#f6dfa0" opacity={0.25 * (1 - k / 14)} />;
+							})}
+						</g>
+					)}
+				</g>
+				<text x={W / 2} y={800} textAnchor="middle" opacity={prog(f, lastStamp + 14, 16)} style={{fontFamily: font.serif, fontWeight: 600, fontSize: 40, fill: color.text, letterSpacing: '0.12em'}}>
+					{EPISODE.tagline}
+				</text>
+				<text x={W / 2} y={846} textAnchor="middle" opacity={prog(f, lastStamp + 20, 16)} style={{fontFamily: font.latinItalic, fontStyle: 'italic', fontSize: 26, fill: 'rgba(243,237,226,0.55)'}}>
+					{EPISODE.taglineEn}
+				</text>
+				<text x={W / 2} y={918} textAnchor="middle" opacity={prog(f, lastStamp + 26, 18)} style={{fontFamily: font.sans, fontSize: 22, letterSpacing: '0.42em', fill: 'rgba(241,197,109,0.75)'}}>
+					{`— ${JUNO.credit} · ${JUNO.series} —`}
+				</text>
+			</svg>
+		</AbsoluteFill>
+	);
+};
 
 // ---------------------------------------------------------------- 2. London: the conventional estimate
 
@@ -214,7 +350,7 @@ const London: React.FC<SceneProps> = () => {
 			exit={14}
 			overlay={
 				<Sequence durationInFrames={titleLen + 14} layout="none">
-					<TitleCard v={EPISODE} cfg={BRAND} dur={titleLen + 14} />
+					<TankTitle dur={titleLen + 14} />
 				</Sequence>
 			}
 		>
