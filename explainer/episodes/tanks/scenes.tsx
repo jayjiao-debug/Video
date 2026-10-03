@@ -284,8 +284,9 @@ const Serials: React.FC<SceneProps> = () => {
 	const {fps} = useVideoConfig();
 	const cue = useCue();
 	const ledgerAt = cue(2) - 8;
+	const sceneLen = useScene().duration;
 	if (f < ledgerAt) {
-		const tx = 900;
+		const tx = interpolate(f, [0, cue(1) - 6], [640, 900], {extrapolateRight: 'clamp', easing: ease.out});
 		const ty = 690;
 		const s = 1.05;
 		return (
@@ -330,7 +331,7 @@ const Serials: React.FC<SceneProps> = () => {
 	// the ledger: every captured tank adds a line
 	const g = f - ledgerAt;
 	const rows = 14;
-	const shown = Math.min(rows * 2, Math.floor(g / 4));
+	const shown = Math.min(rows * 2, Math.floor((g / Math.max(1, sceneLen - ledgerAt - 20)) * rows * 2));
 	const glow = prog(f, cue(3), 40);
 	return (
 		<FullFrame fadeIn={8}>
@@ -455,6 +456,10 @@ const Gaps: React.FC<SceneProps> = () => {
 	const extra = prog(f, cue(3) + 6, 50, ease.out);
 	const tension = prog(f, cue(3), scene.duration - cue(3), ease.in);
 	const pulse = useBeat(6);
+	// where does the jar really end? a ghost marker searching beyond 60 until the extra gap settles it
+	const ghostX = 70 + 8 * Math.sin(f / 16) + 3 * Math.sin(f / 7);
+	const ghost = prog(f, cue(0) + 10, 20) * (1 - extra);
+	const scan = Math.floor(f / 14) % 4;
 	const real: [number, number][] = [
 		[0, 19],
 		[19, 40],
@@ -479,11 +484,17 @@ const Gaps: React.FC<SceneProps> = () => {
 			<T x={(px(60) + px(80)) / 2} y={y - 70} size={52} family="latin" weight={600} tone="gold" opacity={(0.4 + 0.4 * Math.sin(f / 8)) * (1 - extra)}>
 				?
 			</T>
+			{/* the unseen last ball, somewhere past 60 */}
+			<g opacity={ghost}>
+				<line x1={px(60)} y1={y} x2={px(ghostX)} y2={y} stroke={color.gold} strokeWidth={3} strokeDasharray="4 8" opacity={0.6} />
+				<circle cx={px(ghostX)} cy={y - 40} r={22} fill="none" stroke={color.gold} strokeWidth={2.5} strokeDasharray="5 5" opacity={0.7} />
+				<circle cx={px(ghostX)} cy={y - 40} r={30} fill="url(#glow-lamp)" opacity={0.35} />
+			</g>
 			{/* picks drop in */}
 			{PICKS.map((n, i) => {
 				const p = spring({frame: f - 6 - i * 6, fps, config: {damping: 10}});
 				return (
-					<g key={n} transform={`translate(${px(n)},${y - 40 - (1 - p) * 300})`}>
+					<g key={n} transform={`translate(${px(n)},${y - 40 - (1 - p) * 300 + 3 * Math.sin(f / 11 + i * 1.3)})`}>
 						<circle r={22} fill="#f6e3b0" />
 						<text y={8} textAnchor="middle" style={{fontFamily: 'monospace', fontWeight: 700, fontSize: 20, fill: '#3a2f1e'}}>
 							{n}
@@ -499,9 +510,10 @@ const Gaps: React.FC<SceneProps> = () => {
 				const A = a + (ea - a) * even;
 				const B = b + (eb - b) * even;
 				const yy = y + 110 + (i % 2) * 0;
+				const hot = f > cue(1) + 40 && scan === i ? 1 : 0;
 				return (
 					<g key={i} opacity={show}>
-						<path d={`M${px(A) + 4},${yy} Q${(px(A) + px(B)) / 2},${yy + 60} ${px(B) - 4},${yy}`} fill="none" stroke={even > 0.5 ? color.gold : color.steel} strokeWidth={3} />
+						<path d={`M${px(A) + 4},${yy} Q${(px(A) + px(B)) / 2},${yy + 60} ${px(B) - 4},${yy}`} fill="none" stroke={even > 0.5 ? color.gold : color.steel} strokeWidth={3 + 2 * hot} opacity={0.75 + 0.25 * hot} />
 						<T x={(px(A) + px(B)) / 2} y={yy + 86} size={34} family="latin" weight={600} tone={even > 0.5 ? 'gold' : 'text'}>
 							{even > 0.5 ? '15' : `${b - a}`}
 						</T>
@@ -534,6 +546,9 @@ const Formula: React.FC<SceneProps> = () => {
 		['德国档案', 342, P.paper, cue(4)],
 	];
 	const flash = Math.exp(-f / 7);
+	const focusX = interpolate(f, [cue(2), cue(3) - 10, cue(3) + 10, cue(4) - 10, cue(4) + 10], [600, 600, 960, 960, 1140], {extrapolateLeft: 'clamp', extrapolateRight: 'clamp', easing: ease.inOut});
+	const chartZoom = 1 + 0.06 * prog(f, cue(2), 60, ease.inOut);
+	const chartCam = `translate(960,540) scale(${chartZoom}) translate(${-960 - (focusX - 960) * 0.15},-540)`;
 	const shake = Math.exp(-Math.max(0, f - 2) / 4) * 10 * (f >= 2 ? 1 : 0);
 	return (
 		<FullFrame fadeIn={2}>
@@ -545,9 +560,10 @@ const Formula: React.FC<SceneProps> = () => {
 					{toks.map((t, i) => {
 						const p = spring({frame: f - 4 - i * 7, fps, config: {damping: 10, stiffness: 160}});
 						const x = 960 + (i - 3) * 190 + (i === 2 ? 0 : 0);
-						const hero = i === 6;
-						return (
-							<g key={i} transform={`translate(${x},430) scale(${hero ? 1.4 * p : p})`} opacity={Math.min(1, p)}>
+							const hero = i === 6;
+							const wave = f > 60 ? 0.05 * Math.exp(-(((f / 5) % 14 - i) ** 2)) : 0;
+							return (
+								<g key={i} transform={`translate(${x},430) scale(${(hero ? 1.4 * p : p) * (1 + wave)})`} opacity={Math.min(1, p)}>
 								{hero ? <circle r={110} fill="url(#glow-lamp)" opacity={0.8} /> : null}
 								<T size={i === 2 ? 80 : 104} family="latin" weight={600} tone={hero ? 'gold' : 'text'}>
 									{t}
@@ -578,8 +594,8 @@ const Formula: React.FC<SceneProps> = () => {
 											{n}
 										</text>
 									</g>
-									<g opacity={p} transform={`scale(${0.28 * p})`}>
-										<Panzer />
+										<g opacity={p} transform={`translate(${12 * Math.sin(f / 30 + i)},0) scale(${0.28 * p})`}>
+											<Panzer travel={f * 3} />
 									</g>
 									<text y={70} textAnchor="middle" opacity={p} style={{fontFamily: 'monospace', fontWeight: 700, fontSize: 24, fill: color.gold}}>
 										{`Nr. ${82000 + n * 11}`}
@@ -589,8 +605,8 @@ const Formula: React.FC<SceneProps> = () => {
 						})}
 					</g>
 				) : null}
-				{/* August 1942: three bars */}
-				<g opacity={toChart}>
+				{/* August 1942: three bars; the camera leans toward whichever bar the line is about */}
+				<g opacity={toChart} transform={chartCam}>
 					<T x={960} y={170} size={30} family="sans" tone="dim" track={0.3}>
 						1942 年 8 月 · 德国坦克月产量
 					</T>
@@ -635,6 +651,7 @@ const PantherScene: React.FC<SceneProps> = () => {
 	const wheelsOut = Math.min(64, Math.max(0, Math.floor((f - 20) / 2.4)));
 	const est = prog(f, cue(1) + 30, 40, ease.out);
 	const rec = prog(f, cue(2), 24, ease.out);
+	const reading = Math.floor(Math.max(0, f - cue(1) - 60) / 3) % 64;
 	return (
 		<FullFrame fadeIn={12}>
 			<Battlefield frame={f + 500} cam={cam} fires={0}>
@@ -642,7 +659,7 @@ const PantherScene: React.FC<SceneProps> = () => {
 					<Panther wheelGlow={0.6} />
 				</g>
 				<g transform="translate(330, 905) scale(0.4)">
-					<Figure look={CAST.mechanic} pose={POSES.hold} reach={{near: [140, -120]}} expression="neutral" rim="warm" blink={blinkAt(f, 'me')} />
+					<Figure look={CAST.mechanic} pose={lerpPose(POSES.hold, POSES.stand, 0.25 + 0.25 * Math.sin(f / 18))} reach={{near: [140 + 24 * Math.sin(f / 18), -120 + 30 * Math.cos(f / 18)]}} expression="neutral" rim="warm" blink={blinkAt(f, 'me')} />
 				</g>
 				<g transform="translate(1080, 760)">
 					<circle r={220} fill="url(#glow-lamp)" opacity={0.45} />
@@ -667,6 +684,10 @@ const PantherScene: React.FC<SceneProps> = () => {
 						</g>
 					);
 				})}
+				{f > cue(1) + 60 ? (
+					// reading the mould numbers, wheel by wheel
+					<circle cx={(reading % 8) * 74} cy={Math.floor(reading / 8) * 74} r={36} fill="none" stroke={color.gold} strokeWidth={3} opacity={0.9} />
+				) : null}
 				<T x={258} y={-60} size={34} weight={700} tone="gold" opacity={prog(f, 20, 20)}>
 					{`${wheelsOut} 个负重轮`}
 				</T>
@@ -698,10 +719,10 @@ const IPhone: React.FC<SceneProps> = () => {
 	const {fps} = useVideoConfig();
 	const cue = useCue();
 	const name = prog(f, cue(2) - 6, 30, ease.inOut);
-	const posts = Array.from({length: 9}, (_, i) => ({
+	const posts = Array.from({length: 60}, (_, i) => ({
 		x: 1080 + (i % 3) * 270,
 		y: 230 + Math.floor(i / 3) * 170,
-		at: cue(0) + 10 + i * 8,
+		at: cue(0) + 10 + i * 9,
 		sn: `SN ${8 + (i % 2)}${Math.floor(10000 + random(`sn${i}`) * 89999)}…`,
 	}));
 	return (
@@ -724,6 +745,16 @@ const IPhone: React.FC<SceneProps> = () => {
 						{`8${Math.floor(1000 + (f % 9000))}…`}
 					</text>
 				</g>
+				<defs>
+					<clipPath id="feed">
+						<rect x={940} y={150} width={820} height={560} />
+					</clipPath>
+				</defs>
+				<T x={1350} y={110} size={30} family="sans" tone="dim" track={0.15} opacity={prog(f, cue(0) + 10, 20)}>
+					{`已收集序列号 ${posts.filter((p) => f >= p.at).length}`}
+				</T>
+				<g clipPath="url(#feed)">
+				<g transform={`translate(0,${-170 * Math.max(0, (f - cue(0) - 10) / 27 - 2.4)})`}>
 				{posts.map((p, i) => {
 					const s = spring({frame: f - p.at, fps, config: {damping: 12}});
 					if (f < p.at) return null;
@@ -738,6 +769,8 @@ const IPhone: React.FC<SceneProps> = () => {
 						</g>
 					);
 				})}
+				</g>
+				</g>
 				<g opacity={prog(f, cue(1), 20)} transform="translate(1350,830)">
 					<T y={0} size={110} weight={900} tone="gold" filter="url(#glow-gold)">
 						{`≈${countUp(f, 910, cue(1), 40)}万部`}
@@ -746,9 +779,10 @@ const IPhone: React.FC<SceneProps> = () => {
 			</g>
 			{/* the name of the thing */}
 			<g opacity={name}>
-				<g transform="translate(960,330) scale(0.42)">
-					<Panzer />
+				<g transform={`translate(${interpolate(f, [cue(2) - 6, cue(2) + 240], [700, 1220], {extrapolateRight: 'clamp'})},330) scale(0.42)`}>
+					<Panzer travel={f * 3} />
 				</g>
+				<ellipse cx={interpolate(f, [cue(2) + 10, cue(2) + 70], [300, 1620], {extrapolateLeft: 'clamp', extrapolateRight: 'clamp', easing: ease.inOut})} cy={520} rx={200} ry={90} fill="url(#glow-lamp)" opacity={0.5 * prog(f, cue(2) + 10, 10) * (1 - prog(f, cue(2) + 60, 10))} />
 				<T x={960} y={520} size={140} weight={900} tone="gold" filter="url(#glow-gold)" track={0.08}>
 					德国坦克问题
 				</T>

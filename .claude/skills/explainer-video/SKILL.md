@@ -110,6 +110,17 @@ Anchor beats 4, 5, 6 and 9 with `at:`. Keep one visual motif from hook to callba
   moves, secondary motion (props spinning, smoke, cloth), impact frames (flash,
   sparks, 2–3 frame decaying camera shake) on hits and on the music's drop,
   match cuts between scenes instead of fades to empty.
+- **Never a still frame.** The owner noticed: after reading a subtitle, staring at
+  a frozen picture for 2–3 s feels dead. Plan action for the *whole* line and the
+  hold after it, not just its first second:
+  - Every new line triggers a visible event (something enters, moves, lights up or changes).
+  - Between events, something is still moving. Examples: a counter ticking, a feed
+    scrolling, a highlight scanning a grid, a character working, a vehicle rolling,
+    a ghost marker searching.
+  - `FullFrame` already adds a slow drift, a push on each line and dust motes.
+    These are a floor, not a substitute for scene action.
+- Don't put a "?" on objects. Show "unknown" with motion (a rolling number, a
+  searching marker, a dashed outline).
 - `npx tsc --noEmit` must pass.
 
 ## 6. QA, then render
@@ -118,6 +129,9 @@ Anchor beats 4, 5, 6 and 9 with `at:`. Keep one visual motif from hook to callba
 - On the final render, sample **every second** (`ffmpeg fps=1 … tile=4x6`) and
   review every sheet: empty transition frames, overlaps, labels on top of art,
   numbers showing 0.00 before they animate, anything off-frame.
+- Run `python3 -m pipeline.stillness out/<id>.mp4 0.2`. It lists every stretch where
+  the picture (outside the subtitles and the grain) barely moves. Any stretch
+  longer than ~1.5 s needs scene action before sending.
 - `python3 make.py <id>` → `out/<id>.mp4` (CRF 18 slow, −14 LUFS);
   `--share` for a small copy; chat uploads over ~30 MB fail, so send a 720p preview.
 - Keep the user posted with short progress notes during long work.
