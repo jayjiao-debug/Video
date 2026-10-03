@@ -11,6 +11,7 @@ episodes/<id>/scenes.tsx     the visuals: one React component per scene
 python make.py <id> --plan   analyse the track → timeline.json, subset fonts
 python make.py <id> --stills QA contact sheet (one frame per subtitle line)
 python make.py <id>          render 1920×1080 → master audio to −14 LUFS → out/<id>.mp4
+python make.py <id> --share  small copy for chat/previews → out/<id>-share.mp4
 npm run studio               live preview in the browser (after --plan)
 ```
 

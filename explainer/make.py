@@ -6,6 +6,7 @@
   python make.py survivorship --stills        # QA contact sheet (one frame per subtitle)
   python make.py survivorship --stills 12.5 40 # specific times (seconds)
   python make.py survivorship --preview 45 70 # render a time range, with music
+  python make.py survivorship --share         # small copy of out/<id>.mp4 for chat/preview (~2.5 Mbps)
   npm run studio                              # live preview (run --plan first)
 """
 
@@ -93,7 +94,7 @@ def remotion(args_):
 
 def render_video(ep_id, path, frames=None, concurrency=None):
     cmd = ["render", "src/index.ts", "Episode", path, f"--props={json.dumps({'episode': ep_id})}",
-           "--muted", "--codec=h264", "--crf=16", "--image-format=jpeg", "--jpeg-quality=94",
+           "--muted", "--codec=h264", "--crf=18", "--x264-preset=slow", "--image-format=jpeg", "--jpeg-quality=94",
            "--pixel-format=yuv420p", "--log=error"]
     if frames:
         cmd.append(f"--frames={frames[0]}-{frames[1]}")
@@ -120,6 +121,17 @@ def mux(video, audio, out):
          "-c:v", "copy", "-c:a", "aac", "-b:a", "256k", "-movflags", "+faststart", "-shortest", out])
 
 
+def share_copy(src, dst, kbps=2500):
+    """Two-pass x264 at a fixed bitrate: a light file for sending around (the master stays CRF 18)."""
+    log = os.path.join(os.path.dirname(dst), "x264pass")
+    base = ["ffmpeg", "-v", "error", "-y", "-i", src, "-c:v", "libx264", "-preset", "slow", "-b:v", f"{kbps}k",
+            "-pix_fmt", "yuv420p", "-passlogfile", log]
+    run(base + ["-pass", "1", "-an", "-f", "mp4", os.devnull])
+    run(base + ["-pass", "2", "-c:a", "aac", "-b:a", "160k", "-movflags", "+faststart", dst])
+    for f in glob.glob(log + "*"):
+        os.remove(f)
+
+
 def stills(ep_id, tl, times):
     fps = tl["fps"]
     if not times:
@@ -143,11 +155,16 @@ def main():
     ap.add_argument("--plan", action="store_true")
     ap.add_argument("--stills", nargs="*", type=float)
     ap.add_argument("--preview", nargs=2, type=float, metavar=("START", "END"))
+    ap.add_argument("--share", action="store_true", help="only re-encode out/<id>.mp4 into out/<id>-share.mp4")
     ap.add_argument("--concurrency", type=int)
     a = ap.parse_args()
     t0 = time.time()
     ep, tl = plan(a.episode)
     if a.plan:
+        return
+    if a.share:
+        src = os.path.join(ROOT, "out", f"{a.episode}.mp4")
+        share_copy(src, os.path.join(ROOT, "out", f"{a.episode}-share.mp4"))
         return
     if a.stills is not None:
         stills(a.episode, tl, a.stills)

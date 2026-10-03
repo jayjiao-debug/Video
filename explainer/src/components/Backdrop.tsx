@@ -79,14 +79,15 @@ export const Backdrop: React.FC = () => {
 
 /** Film grain + vignette, laid over everything. */
 export const Grade: React.FC = () => {
-	const f = useAbsoluteFrame();
+	// grain refreshes every other frame and stays subtle: it reads as film, and keeps the bitrate sane
+	const g = Math.floor(useAbsoluteFrame() / 2);
 	return (
 		<>
 			<AbsoluteFill
 				style={{
 					backgroundImage: `url(${staticFile('static/grain.png')})`,
-					backgroundPosition: `${Math.floor(random(`gx${f}`) * 256)}px ${Math.floor(random(`gy${f}`) * 256)}px`,
-					opacity: 0.11,
+					backgroundPosition: `${Math.floor(random(`gx${g}`) * 256)}px ${Math.floor(random(`gy${g}`) * 256)}px`,
+					opacity: 0.06,
 					mixBlendMode: 'overlay',
 				}}
 			/>

@@ -72,5 +72,5 @@ marker). Keep one visual motif from the hook to the callback.
   that each frame illustrates its line, and that the end card is there
   (`--stills <seconds>` for specific moments).
 - `python3 make.py <id> --preview 45 70` renders a section with music.
-- `python3 make.py <id>` produces `out/<id>.mp4` (h264 CRF 16, AAC 256k,
+- `python3 make.py <id>` produces `out/<id>.mp4` (h264 CRF 18 slow, AAC 256k,
   −14 LUFS). Spot-check the final file with ffprobe and a few extracted frames.
