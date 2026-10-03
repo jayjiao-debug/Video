@@ -6,6 +6,7 @@ import { Reveal3D } from './t3/Reveal3D';
 import { V1Film } from './v1/V1';
 import { V2Film } from './v2/V2';
 import { V3Film } from './v3/V3';
+import { Ep1 } from './ep1/Ep1';
 import '@fontsource/cormorant-garamond/400-italic.css';
 import '@fontsource/cormorant-garamond/500.css';
 import '@fontsource/cormorant-garamond/600.css';
@@ -66,6 +67,7 @@ export const Root: React.FC = () => (
     <Composition id="Open3D" component={Open3D} durationInFrames={630} fps={30} width={1920} height={1080} />
     <Composition id="Reveal3D" component={Reveal3D} durationInFrames={912} fps={30} width={1920} height={1080} />
     <Composition id="V1Film" component={V1Film} durationInFrames={3915} fps={30} width={1920} height={1080} />
+    <Composition id="Ep1" component={Ep1} durationInFrames={DURATION} fps={FPS} width={W} height={H} defaultProps={{ music: true }} />
     <Composition id="V3Film" component={V3Film} durationInFrames={3915} fps={30} width={1920} height={1080} />
     <Composition id="V2Film" component={V2Film} durationInFrames={3915} fps={30} width={1920} height={1080} />
   </>
