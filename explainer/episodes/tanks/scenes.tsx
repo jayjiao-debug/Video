@@ -210,6 +210,8 @@ const London: React.FC<SceneProps> = () => {
 	return (
 		<FullFrame
 			fadeIn={1}
+			fadeOut={8}
+			exit={14}
 			overlay={
 				<Sequence durationInFrames={titleLen + 14} layout="none">
 					<TitleCard v={EPISODE} cfg={BRAND} dur={titleLen + 14} />
@@ -290,7 +292,7 @@ const Serials: React.FC<SceneProps> = () => {
 		const ty = 690;
 		const s = 1.05;
 		return (
-			<FullFrame fadeIn={12} fadeOut={8}>
+			<FullFrame fadeIn={8} enter={16} fadeOut={6} exit={10} endAt={ledgerAt}>
 				<rect width={W} height={H} fill="#0d1830" />
 				{Array.from({length: 40}, (_, i) => (
 					<line key={`v${i}`} x1={i * 50} y1={0} x2={i * 50} y2={H} stroke="#5f7aa3" strokeOpacity={i % 5 ? 0.08 : 0.18} />
@@ -340,7 +342,7 @@ const Serials: React.FC<SceneProps> = () => {
 		return t > 0 ? 1.9 * t * t : 0;
 	};
 	return (
-		<FullFrame fadeIn={8} fadeOut={1}>
+		<FullFrame fadeIn={6} enter={14} startAt={ledgerAt} fadeOut={1}>
 			<rect width={W} height={H} fill="#120d09" />
 			<ellipse cx={960} cy={180} rx={900} ry={520} fill="url(#glow-lamp)" opacity={0.5} />
 			<g transform={`translate(960,470) rotate(-3) scale(${1 + 0.04 * prog(g, 0, 200)})`}>
@@ -400,8 +402,9 @@ const JarScene: React.FC<SceneProps> = () => {
 	const filled = timed.filter((b) => f >= b.t + FALL).map(({t, ...b}) => ({...b, lit: 0}));
 	const falling = timed.filter((b) => f >= b.t && f < b.t + FALL);
 	const lean = prog(f, settle, 70, ease.inOut);
+	const sceneEnd = useScene().duration;
 	return (
-		<FullFrame fadeIn={1}>
+		<FullFrame fadeIn={1} fadeOut={8}>
 			<g transform={`translate(1370,520) scale(${1 + 0.08 * lean}) translate(-1370,-520)`}>
 			<rect width={W} height={H} fill="#07080c" />
 			<polygon points={`${jx - 90},-40 ${jx + 90},-40 ${jx + 360},${H} ${jx - 360},${H}`} fill="url(#beam-warm)" opacity={0.55} />
@@ -445,8 +448,9 @@ const JarScene: React.FC<SceneProps> = () => {
 				const ey = 730;
 				const arc = Math.sin(Math.min(1, p) * Math.PI) * -180;
 				const hot = n === 60 ? land : 0;
+				const drop = Math.max(0, f - (sceneEnd - 12 + i * 2)) ** 2 * 3.2;
 				return (
-					<g key={n} transform={`translate(${sx + (ex - sx) * p},${sy + (ey - sy) * p + arc}) scale(${1 + 0.5 * Math.min(1, p) + 0.15 * hot})`}>
+					<g key={n} transform={`translate(${sx + (ex - sx) * p},${sy + (ey - sy) * p + arc + drop}) scale(${1 + 0.5 * Math.min(1, p) + 0.15 * hot})`}>
 						<circle r={48} fill="url(#glow-lamp)" opacity={0.8} />
 						<circle r={30} fill="#f6e3b0" />
 						<circle cx={-9} cy={-10} r={8} fill="#fff" opacity={0.6} />
@@ -508,7 +512,7 @@ const Gaps: React.FC<SceneProps> = () => {
 		[42, 60],
 	];
 	return (
-		<FullFrame fadeIn={12} fadeOut={1}>
+		<FullFrame fadeIn={5} fadeOut={1}>
 			<rect width={W} height={H} fill="#090b12" />
 			<g transform={`translate(${px(67.5) + shiver},${y + 40}) scale(${camZ}) translate(${-px(67.5) + (px(67.5) - 960) * (1 - dive) * 0},${-(y + 40)})`}>
 			<ellipse cx={960} cy={560} rx={900} ry={380} fill="url(#glow-lamp)" opacity={0.12 + 0.18 * tension + 0.08 * pulse * tension} />
@@ -532,7 +536,7 @@ const Gaps: React.FC<SceneProps> = () => {
 			</g>
 			{/* picks drop in */}
 			{PICKS.map((n, i) => {
-				const p = spring({frame: f - 6 - i * 6, fps, config: {damping: 10}});
+				const p = spring({frame: f - i * 2, fps, config: {damping: 10}});
 				return (
 					<g key={n} transform={`translate(${px(n)},${y - 40 - (1 - p) * 300})`}>
 						<circle r={22} fill="#f6e3b0" />
@@ -599,7 +603,7 @@ const Formula: React.FC<SceneProps> = () => {
 	const kick = (t: number) => (f >= t ? Math.exp(-(f - t) / 4) : 0);
 	const shake = 16 * kick(0) + 9 * kick(Math.round(heroAt));
 	return (
-		<FullFrame fadeIn={2}>
+		<FullFrame fadeIn={2} fadeOut={8} exit={12}>
 			<rect width={W} height={H} fill="#07080c" />
 			<ellipse cx={960} cy={500} rx={900} ry={420} fill="url(#glow-lamp)" opacity={0.25 + 0.4 * flash} />
 				<Impact f={f} x={960} y={430} size={1.2} seed="drop" />
@@ -758,7 +762,7 @@ const PantherScene: React.FC<SceneProps> = () => {
 		const grab = prog(f, pops[k] - 8, 6);
 		const cam = camMix(lookAt(860, 800, 2.1), lookAt(940, 810, 1.85), prog(f, 0, closeAt[0], ease.inOut));
 		return (
-			<FullFrame fadeIn={12} fadeOut={1}>
+			<FullFrame fadeIn={8} enter={16} fadeOut={1}>
 				<Battlefield frame={f + 500} cam={cam} fires={0}>
 					<g transform={`translate(${tank.x}, ${tank.y}) scale(${tank.s})`}>
 						<Panther missing={missing} />
@@ -927,7 +931,7 @@ const IPhone: React.FC<SceneProps> = () => {
 		sn: `SN ${8 + (i % 2)}${Math.floor(10000 + random(`sn${i}`) * 89999)}…`,
 	}));
 	return (
-		<FullFrame fadeIn={1}>
+		<FullFrame fadeIn={1} fadeOut={10} exit={14}>
 			<rect width={W} height={H} fill="#06080e" />
 			<g opacity={1 - name} transform={`translate(560,782) scale(${openZ}) translate(-560,-782)`}>
 				{/* an iPhone 3G-era phone */}
@@ -1010,7 +1014,8 @@ const Callback: React.FC<SceneProps> = () => {
 	const dots = Math.floor(prog(f, cue(1), 90) * 22);
 	return (
 		<FullFrame
-			fadeIn={12}
+			fadeIn={10}
+			enter={20}
 			fadeOut={1}
 			scrim={0.6}
 			drift={1}

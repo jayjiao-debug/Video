@@ -28,16 +28,25 @@ export const FullFrame: React.FC<{
 	motes?: number;
 	/** camera punch on the music's accents */
 	punch?: number;
-}> = ({children, fadeIn = 10, fadeOut = 10, scrim = 0.7, overlay, drift = 0, motes = 1, punch = 0}) => {
+	/** push-through transitions: the shot arrives out of a zoom (`enter` frames) and leaves into one (`exit` frames) */
+	enter?: number;
+	exit?: number;
+	/** the shot's own window inside the scene (for scenes made of several shots) */
+	startAt?: number;
+	endAt?: number;
+}> = ({children, fadeIn = 10, fadeOut = 10, scrim = 0.7, overlay, drift = 0, motes = 1, punch = 0, enter = 0, exit = 0, startAt = 0, endAt}) => {
 	const f = useCurrentFrame();
 	const {fps} = useVideoConfig();
 	const scene = useScene();
-	const o = prog(f, 0, fadeIn, ease.inOut) * (1 - prog(f, scene.duration - fadeOut, fadeOut, ease.inOut));
+	const stop = endAt ?? scene.duration;
+	const o = prog(f, startAt, fadeIn, ease.inOut) * (1 - prog(f, stop - fadeOut, fadeOut, ease.inOut));
+	// push-through: arrive decelerating out of a 1.22× zoom, leave accelerating into a 1.28× one
+	const through = (enter ? 0.22 * (1 - prog(f, startAt, enter, ease.out)) : 0) + (exit ? 0.28 * prog(f, stop - exit, exit, ease.in) : 0);
 	const seed = scene.from % 97;
 	const push = scene.lines.reduce((n, ln) => n + 0.014 * spring({frame: f - ln.from, fps, config: {damping: 20, stiffness: 60}}), 0);
 	// the track's accents punch the camera in (and settle): the picture breathes with the kick
 	const hit = useHit(5, 0.25);
-	const zoom = 1 + drift * (0.02 + 0.025 * (f / scene.duration) + push) + punch * 0.022 * hit;
+	const zoom = (1 + drift * (0.02 + 0.025 * (f / scene.duration) + push) + punch * 0.022 * hit) * (1 + through);
 	const dx = drift * 14 * Math.sin((f + seed * 9) / 80);
 	const dy = drift * 8 * Math.cos((f + seed * 7) / 105);
 	return (
