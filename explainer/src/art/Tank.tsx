@@ -125,19 +125,22 @@ export const Panzer: React.FC<{wreck?: boolean; travel?: number; turret?: number
 };
 
 /** Panther: sloped glacis, long gun, interleaved road wheels (the ones whose moulds gave it away). */
-export const Panther: React.FC<{travel?: number; wheelGlow?: number}> = ({travel = 0, wheelGlow = 0}) => {
+/** `missing`: outer road wheels already taken off, counted from the front. */
+export const Panther: React.FC<{travel?: number; wheelGlow?: number; missing?: number}> = ({travel = 0, wheelGlow = 0, missing = 0}) => {
 	const spin = (travel / 30) * (180 / Math.PI);
 	const xs = [-300, -220, -140, -60, 20, 100, 180, 260];
 	return (
 		<g>
 			<TANK_DEFS />
 			<Track x0={-380} x1={370} top={-84} travel={travel} />
-			{xs.map((x, i) => (
-				<g key={x}>
-					{wheelGlow > 0 ? <circle cx={x + (i % 2 ? 40 : 0)} cy={-40} r={60} fill="url(#glow-lamp)" opacity={wheelGlow * 0.5} /> : null}
-					<Wheel x={x} y={-40} r={33} spin={spin} dish />
-				</g>
-			))}
+			{xs.map((x, i) =>
+				i >= xs.length - missing ? null : (
+					<g key={x}>
+						{wheelGlow > 0 ? <circle cx={x + (i % 2 ? 40 : 0)} cy={-40} r={60} fill="url(#glow-lamp)" opacity={wheelGlow * 0.5} /> : null}
+						<Wheel x={x} y={-40} r={33} spin={spin} dish />
+					</g>
+				),
+			)}
 			{xs.slice(0, 7).map((x) => (
 				<Wheel key={`b${x}`} x={x + 40} y={-40} r={33} spin={spin} />
 			))}

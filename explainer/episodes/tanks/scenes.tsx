@@ -11,7 +11,7 @@ import {Jar, Panther, Panzer, SerialPlate} from '../../src/art/Tank';
 import {EndCard, TitleCard, type BrandCfg, type VideoCfg} from '../../src/brand/Brand';
 import {FullFrame, camMix} from '../../src/components/FullFrame';
 import {T, countUp} from '../../src/components/Stage';
-import {ease, prog, useBeat, useCue, useScene, useTimeline} from '../../src/lib/context';
+import {ease, prog, useBeat, useCue, useHitFrames, useScene, useSnapBeat, useTimeline} from '../../src/lib/context';
 import {color, font} from '../../src/lib/theme';
 import type {SceneMap, SceneProps} from '../../src/lib/types';
 
@@ -110,7 +110,7 @@ const Hook: React.FC<SceneProps> = () => {
 		const push = prog(f, cue(1) - 6, cutA - cue(1) + 6, ease.in);
 		const cam = camMix(lookAt(1000, 600, 1.02 + 0.03 * prog(f, 0, cue(1))), lookAt(1250, 780, 2.7), push);
 		return (
-			<FullFrame fadeIn={24} fadeOut={1}>
+			<FullFrame fadeIn={24} fadeOut={1} drift={1} punch={1}>
 				<Battlefield frame={f + 200} cam={cam}>
 					<g transform="translate(980, 880) scale(0.9)">
 						<Panzer wreck plateGlow={prog(f, cue(1) - 4, 16)} />
@@ -235,7 +235,7 @@ const London: React.FC<SceneProps> = () => {
 				>
 					{reports.map(([x, y, r, head, guess], i) => {
 						const p = spring({frame: f - cue(1) - i * 10, fps, config: {damping: 10, stiffness: 140}});
-						const jitter = f > cue(1) + 40 ? Math.sin(f / 3 + i) * 1.5 : 0;
+						const jitter = 0;
 						return (
 							<g key={head} transform={`translate(${x + (1 - p) * -300},${y + (1 - p) * 120}) scale(${0.6 + 0.4 * p})`} opacity={Math.min(1, p * 2)}>
 								<Paper x={0} y={0} w={190} h={130} r={r + jitter}>
@@ -389,8 +389,8 @@ const JarScene: React.FC<SceneProps> = () => {
 	const rolling = f >= askAt && f < settle ? 1 : 0;
 	const others = Array.from({length: 26}, (_, i) => ({
 		n: [3, 11, 27, 33, 51, 8, 66, 14, 72, 25, 47, 5, 58, 36, 22, 9, 31, 54, 17, 63, 2, 45, 29, 70, 12, 38][i],
-		x: -160 + (i % 6) * 62 + (Math.floor(i / 6) % 2) * 30 + Math.sin(f / 20 + i) * (1.5 + 2.5 * rolling),
-		y: 60 - Math.floor(i / 6) * 54 + Math.cos(f / 7 + i * 1.7) * 2.5 * rolling,
+		x: -160 + (i % 6) * 62 + (Math.floor(i / 6) % 2) * 30,
+		y: 60 - Math.floor(i / 6) * 54,
 	}));
 	const pop = spring({frame: f - askAt, fps, config: {damping: 12}});
 	const land = f >= settle ? Math.exp(-(f - settle) / 5) : 0;
@@ -496,7 +496,7 @@ const Gaps: React.FC<SceneProps> = () => {
 	const dive = prog(f, cue(3), end - 10 - cue(3), ease.in);
 	const suck = prog(f, end - 8, 8, ease.in);
 	const camZ = 1 + 0.5 * dive - 0.12 * suck;
-	const shiver = 3 * dive * Math.sin(f * 2.3);
+	const shiver = 0;
 	// where does the jar really end? a ghost marker searching beyond 60 until the extra gap settles it
 	const ghostX = 70 + 8 * Math.sin(f / 16) + 3 * Math.sin(f / 7);
 	const ghost = prog(f, cue(0) + 10, 20) * (1 - extra);
@@ -523,9 +523,7 @@ const Gaps: React.FC<SceneProps> = () => {
 				</g>
 			))}
 			<rect x={px(60)} y={y - 40} width={px(80) - px(60)} height={80} fill="none" stroke={color.gold} strokeDasharray="8 8" opacity={0.35 * (1 - extra)} />
-			<T x={(px(60) + px(80)) / 2} y={y - 70} size={52} family="latin" weight={600} tone="gold" opacity={(0.4 + 0.4 * Math.sin(f / 8)) * (1 - extra)}>
-				?
-			</T>
+			{/* the unknown end is shown by the searching marker, not a question mark */}
 			{/* the unseen last ball, somewhere past 60 */}
 			<g opacity={ghost}>
 				<line x1={px(60)} y1={y} x2={px(ghostX)} y2={y} stroke={color.gold} strokeWidth={3} strokeDasharray="4 8" opacity={0.6} />
@@ -536,7 +534,7 @@ const Gaps: React.FC<SceneProps> = () => {
 			{PICKS.map((n, i) => {
 				const p = spring({frame: f - 6 - i * 6, fps, config: {damping: 10}});
 				return (
-					<g key={n} transform={`translate(${px(n)},${y - 40 - (1 - p) * 300 + 3 * Math.sin(f / 11 + i * 1.3)})`}>
+					<g key={n} transform={`translate(${px(n)},${y - 40 - (1 - p) * 300})`}>
 						<circle r={22} fill="#f6e3b0" />
 						<text y={8} textAnchor="middle" style={{fontFamily: 'monospace', fontWeight: 700, fontSize: 20, fill: '#3a2f1e'}}>
 							{n}
@@ -613,7 +611,7 @@ const Formula: React.FC<SceneProps> = () => {
 							const p = spring({frame: f - i * half, fps, config: {damping: 9, stiffness: 220}});
 						const x = 960 + (i - 3) * 190 + (i === 2 ? 0 : 0);
 							const hero = i === 6;
-							const wave = f > 60 ? 0.05 * Math.exp(-(((f / 5) % 14 - i) ** 2)) : 0;
+							const wave = 0;
 							return (
 								<g key={i} transform={`translate(${x},430) scale(${(hero ? 1.4 * p : p) * (1 + wave)})`} opacity={Math.min(1, p * 3)}>
 								{hero ? <circle r={110} fill="url(#glow-lamp)" opacity={0.8} /> : null}
@@ -646,8 +644,8 @@ const Formula: React.FC<SceneProps> = () => {
 											{n}
 										</text>
 									</g>
-										<g opacity={p} transform={`translate(${12 * Math.sin(f / 30 + i)},0) scale(${0.28 * p})`}>
-											<Panzer travel={f * 3} />
+										<g opacity={p} transform={`scale(${0.28 * p})`}>
+											<Panzer />
 									</g>
 									<text y={70} textAnchor="middle" opacity={p} style={{fontFamily: 'monospace', fontWeight: 700, fontSize: 24, fill: color.gold}}>
 										{`Nr. ${82000 + n * 11}`}
@@ -706,80 +704,205 @@ const Formula: React.FC<SceneProps> = () => {
 
 // ---------------------------------------------------------------- 7. Panther road wheels
 
+/** A road wheel as a prop: rubber tyre, steel disc, bolt ring, hub. */
+const RoadWheel: React.FC<{r: number; spin?: number; chalk?: number}> = ({r, spin = 0, chalk = 0}) => (
+	<g transform={`rotate(${spin})`}>
+		<circle r={r} fill="#1b1b19" />
+		<circle r={r * 0.84} fill="#6d6040" />
+		<circle r={r * 0.84} fill="url(#rivets)" opacity={0.35} />
+		<circle r={r * 0.34} fill="#2a2924" />
+		{Array.from({length: 8}, (_, i) => (
+			<circle key={i} cx={Math.cos((i * Math.PI) / 4) * r * 0.48} cy={Math.sin((i * Math.PI) / 4) * r * 0.48} r={r * 0.06} fill="#22211d" />
+		))}
+		<circle r={r * 0.12} fill="#11110f" />
+		{chalk > 0 ? <path d={`M${-r * 0.5},${-r * 0.05} l${r * 0.25},${r * 0.28} l${r * 0.6},${-r * 0.62}`} fill="none" stroke="#f3eee2" strokeWidth={Math.max(2, r * 0.09)} strokeLinecap="round" strokeDasharray={r * 2} strokeDashoffset={r * 2 * (1 - chalk)} opacity={0.9} /> : null}
+	</g>
+);
+
+const MOULDS = ['M 23', 'M 41', 'M 17', 'M 36'];
+
 const PantherScene: React.FC<SceneProps> = () => {
 	const f = useCurrentFrame();
 	const {fps} = useVideoConfig();
 	const cue = useCue();
-	const pan = prog(f, cue(1) - 20, 50, ease.inOut);
-	const cam = camMix(lookAt(860, 700, 1.25), lookAt(1080, 560, 1.0), pan);
-	const wheelsOut = Math.min(64, Math.max(0, Math.floor((f - 20) / 2.4)));
-	const est = prog(f, cue(1) + 30, 40, ease.out);
-	const rec = prog(f, cue(2), 24, ease.out);
-	const sceneEnd = useScene().duration;
-	const diveAt = sceneEnd - 16;
-	const reading = Math.floor(Math.max(0, Math.min(f, diveAt) - cue(1) - 60) / 3) % 64;
-	// match cut: the camera dives into a wheel hub, which becomes the phone's home button
-	const hubX = 1180 + (reading % 8) * 74;
-	const hubY = 250 + Math.floor(reading / 8) * 74;
-	const dive = prog(f, diveAt, 16, ease.in);
-	const diveZ = Math.pow(26, dive);
+	const scene = useScene();
+	const snap = useSnapBeat();
+	const hits = useHitFrames(0.5);
+	const end = scene.duration;
+
+	// shot B (close-ups) cut on the heavy kicks after the second line starts; shot C follows the last one
+	// four quick close-ups, each cut on a heavy kick (or a beat when no kick is near): ~3.5 s in all
+	const closeAt: number[] = [];
+	for (let k = 0; k < 4; k++) {
+		const want = (closeAt[k - 1] ?? cue(1) - 26) + 26;
+		const kick = hits.find((h) => h >= want - 3 && h <= want + 8);
+		closeAt.push(kick ?? snap(want));
+	}
+	const wideAt = closeAt[3] + 26;
+
+	// ---- shot A: the crew strip the wheels off a knocked-out Panther, one per two beats
+	if (f < closeAt[0]) {
+		const tank = {x: 640, y: 905, s: 0.86};
+		const xs = [260, 180, 100, 20];
+		const pops = xs.map((_, k) => snap(14 + k * 31));
+		const missing = pops.filter((t) => f >= t).length;
+		const k = Math.min(3, pops.findIndex((t) => f < t) === -1 ? 3 : pops.findIndex((t) => f < t));
+		const wx = (i: number) => tank.x + xs[i] * tank.s;
+		const wy = tank.y - 40 * tank.s;
+		const target = wx(k);
+		// the mechanic walks from the last wheel to the next one between pops
+		const walkFrom = k === 0 ? -1 : pops[k - 1] + 6;
+		const walkTo = pops[k] - 8;
+		const mx = k === 0 || walkTo <= walkFrom ? target + 46 : interpolate(f, [walkFrom, walkTo], [wx(k - 1) + 46, target + 46], {extrapolateLeft: 'clamp', extrapolateRight: 'clamp'});
+		const walking = f > (pops[k - 1] ?? 0) + 6 && f < pops[k] - 8 && k > 0;
+		const grab = prog(f, pops[k] - 8, 6);
+		const cam = camMix(lookAt(860, 800, 2.1), lookAt(940, 810, 1.85), prog(f, 0, closeAt[0], ease.inOut));
+		return (
+			<FullFrame fadeIn={12} fadeOut={1}>
+				<Battlefield frame={f + 500} cam={cam} fires={0}>
+					<g transform={`translate(${tank.x}, ${tank.y}) scale(${tank.s})`}>
+						<Panther missing={missing} />
+					</g>
+					{/* a work lamp on a crate */}
+					<g transform="translate(1080, 905)">
+						<rect x={-26} y={-40} width={52} height={40} fill="#3b2c1c" />
+						<circle cy={-52} r={10} fill="#ffe2a0" />
+						<circle cy={-52} r={160} fill="url(#glow-lamp)" opacity={0.55} />
+					</g>
+					{/* wheels that came off roll out into the row */}
+					{xs.map((x, i) => {
+						const t = pops[i];
+						if (f < t) return null;
+						const out = spring({frame: f - t, fps, config: {damping: 9, stiffness: 170}});
+						const roll = prog(f, t + 6, 34, ease.out);
+						const ex = 1180 + i * 64;
+						const x0 = wx(i) + 26 * out;
+						const xNow = x0 + (ex - x0) * roll;
+						const r = 33 * tank.s;
+						return (
+							<g key={x} transform={`translate(${xNow},${wy + 6 * out})`}>
+								<RoadWheel r={r} spin={((xNow - wx(i)) / r) * (180 / Math.PI)} />
+							</g>
+						);
+					})}
+					<g transform={`translate(${mx}, 905) scale(0.42)`}>
+						<Figure
+							look={CAST.mechanic}
+							pose={walking ? walkPose(f * 0.32, 0.7) : lerpPose(POSES.stand, POSES.hold, grab)}
+							reach={!walking && grab > 0.2 ? {near: [100, -150 + 20 * Math.max(0, 1 - (f - pops[k]) / 6)]} : undefined}
+							flip
+							expression={grab > 0.5 ? 'stern' : 'neutral'}
+							rim="warm"
+							blink={blinkAt(f, 'me')}
+						/>
+					</g>
+					<g transform="translate(1520, 905) scale(0.42)">
+						<Figure look={CAST.soldier} pose={lerpPose(POSES.stand, POSES.point, prog(f, pops[1], 12))} flip rim="moon" blink={blinkAt(f, 'so2')} />
+					</g>
+				</Battlefield>
+			</FullFrame>
+		);
+	}
+
+	// ---- shot B: four close-ups, one per heavy kick; a torch finds the mould number, chalk rings it
+	if (f < wideAt) {
+		const i = closeAt.filter((t) => f >= t).length - 1;
+		const g = f - closeAt[i];
+		const len = (closeAt[i + 1] ?? wideAt) - closeAt[i];
+		const sweep = interpolate(g, [0, len * 0.7], [-0.6, 0.5], {extrapolateRight: 'clamp', easing: ease.out});
+		const lit = Math.max(0, 1 - Math.abs(sweep - 0) * 2.2);
+		const ring = prog(g, len * 0.45, 10, ease.out);
+		const tilt = [-8, 6, -3, 9][i];
+		return (
+			<FullFrame fadeIn={1} fadeOut={1}>
+				<rect width={W} height={H} fill="#0d0c0a" />
+				<g transform={`translate(1080,520) rotate(${tilt}) scale(${1.02 + 0.02 * prog(g, 0, len)})`}>
+					<RoadWheel r={430} />
+					{/* the cast number on the disc, raised metal: shadow + highlight */}
+					<g transform="translate(-150,-170)">
+						<text textAnchor="middle" x={4} y={6} style={{fontFamily: 'monospace', fontWeight: 700, fontSize: 120, fill: '#2a2418'}}>
+							{MOULDS[i]}
+						</text>
+						<text textAnchor="middle" style={{fontFamily: 'monospace', fontWeight: 700, fontSize: 120, fill: '#a8955f'}} opacity={0.25 + 0.75 * lit}>
+							{MOULDS[i]}
+						</text>
+						<ellipse cx={0} cy={-40} rx={210} ry={110} fill="none" stroke="#f3eee2" strokeWidth={9} strokeDasharray={1100} strokeDashoffset={1100 * (1 - ring)} strokeLinecap="round" opacity={0.85} transform="rotate(-6)" />
+					</g>
+				</g>
+				{/* torch pool sweeping across */}
+				<ellipse cx={1080 - 150 + sweep * 900} cy={360} rx={360} ry={260} fill="url(#glow-lamp)" opacity={0.85} style={{mixBlendMode: 'screen'}} />
+				<rect width={W} height={H} fill="url(#vignette-hard)" opacity={0.75} />
+				<T x={300} y={170} size={30} family="sans" tone="dim" track={0.2}>
+					{`负重轮 ${i + 1} / 64`}
+				</T>
+				<rect width={W} height={H} fill="#fff4dc" opacity={0.35 * Math.exp(-g / 2.5)} />
+			</FullFrame>
+		);
+	}
+
+	// ---- shot C: all 64 laid out in rows, ticked off; the estimate lands and holds
+	const g = f - wideAt;
+	const rows = [
+		{y: 880, r: 28, x0: 700, dx: 70},
+		{y: 834, r: 24, x0: 745, dx: 62},
+		{y: 796, r: 21, x0: 785, dx: 55},
+		{y: 764, r: 18, x0: 820, dx: 49},
+	];
+	const wheels = rows.flatMap((row, ri) => Array.from({length: 16}, (_, i) => ({x: row.x0 + i * row.dx, y: row.y, r: row.r, col: i, idx: ri * 16 + i}))).reverse();
+	// the analyst walks the front row with chalk; each column is ticked as he passes it
+	const walkEnd = Math.max(60, Math.min(100, cue(2) - wideAt - 60));
+	const ax = interpolate(g, [6, walkEnd], [640, 700 + 15 * 70 + 50], {extrapolateLeft: 'clamp', extrapolateRight: 'clamp'});
+	const strolling = g > 6 && g < walkEnd;
+	// "约270辆" lands on the beat nearest the end of the second line, after the count has run
+	const estAt = Math.min(cue(2) - 24, Math.max(snap(cue(1) + 195), wideAt + walkEnd + 8));
+	const estLand = spring({frame: f - estAt, fps, config: {damping: 11, stiffness: 160}});
+	const rec = spring({frame: f - cue(2), fps, config: {damping: 11, stiffness: 160}});
+	// the match cut out: dive into one front-row hub, which becomes the phone's home button
+	const hub = {x: 700 + 9 * 70, y: 880 - 28};
+	const dive = prog(f, end - 16, 16, ease.in);
+	const diveZ = Math.pow(30, dive);
 	return (
-		<FullFrame fadeIn={12} fadeOut={1}>
-			<g transform={`translate(${hubX},${hubY}) scale(${diveZ}) translate(${-hubX},${-hubY})`}>
-			<Battlefield frame={f + 500} cam={cam} fires={0}>
-				<g transform="translate(700, 900) scale(0.82)">
-					<Panther wheelGlow={0.6} />
-				</g>
-				<g transform="translate(330, 905) scale(0.4)">
-					<Figure look={CAST.mechanic} pose={lerpPose(POSES.hold, POSES.stand, 0.25 + 0.25 * Math.sin(f / 18))} reach={{near: [140 + 24 * Math.sin(f / 18), -120 + 30 * Math.cos(f / 18)]}} expression="neutral" rim="warm" blink={blinkAt(f, 'me')} />
-				</g>
-				<g transform="translate(1080, 760)">
-					<circle r={220} fill="url(#glow-lamp)" opacity={0.45} />
-				</g>
-			</Battlefield>
-			{/* 64 wheels, laid out as evidence */}
-			<g transform="translate(1180,250)">
-				{Array.from({length: wheelsOut}, (_, i) => {
-					const c = i % 8;
-					const r = Math.floor(i / 8);
-					const lit = prog(f, cue(1) + i * 0.8, 10);
-					return (
-						<g key={i} transform={`translate(${c * 74},${r * 74})`}>
-							<circle r={30} fill="#1d1d1b" />
-							<circle r={24} fill="#7a6a40" />
-							<circle r={9} fill="#22221f" />
-							{lit > 0 ? (
-								<text y={-34} textAnchor="middle" opacity={lit} style={{fontFamily: 'monospace', fontSize: 14, fontWeight: 700, fill: color.gold}}>
-									{`M${10 + Math.floor(random(`w${i}`) * 40)}`}
-								</text>
-							) : null}
-						</g>
-					);
-				})}
-				{f > cue(1) + 60 ? (
-					// reading the mould numbers, wheel by wheel
-					<circle cx={(reading % 8) * 74} cy={Math.floor(reading / 8) * 74} r={36} fill="none" stroke={color.gold} strokeWidth={3} opacity={0.9} />
-				) : null}
-				<T x={258} y={-60} size={34} weight={700} tone="gold" opacity={prog(f, 20, 20)}>
-					{`${wheelsOut} 个负重轮`}
-				</T>
-			</g>
-			<g opacity={est} transform="translate(520,300)">
-				<T x={-160} y={-40} size={28} family="sans" tone="dim" track={0.2}>
-					1944 年 2 月 · 估算
-				</T>
-				<T x={-160} y={40} size={96} family="latin" weight={600} tone="gold">
-					{`≈${countUp(f, 270, cue(1) + 30, 40)}`}
-				</T>
-					<g opacity={rec}>
-						<T x={160} y={-40} size={28} family="sans" tone="dim" track={0.2}>
-							德国档案
+		<FullFrame fadeIn={1} fadeOut={1}>
+			<g transform={`translate(${hub.x},${hub.y}) scale(${diveZ}) translate(${-hub.x},${-hub.y})`}>
+				<Battlefield frame={f + 700} cam={lookAt(960, 540, 1)} fires={0}>
+					<g transform="translate(250, 905) scale(0.62)">
+						<Panther missing={8} />
+					</g>
+					{wheels.map((w) => {
+						const passAt = 6 + ((w.x - 640) / (700 + 15 * 70 + 50 - 640)) * (walkEnd - 6);
+						const tick = prog(g, passAt, 6, ease.out);
+						return (
+							<g key={w.idx} transform={`translate(${w.x},${w.y - w.r})`}>
+								<RoadWheel r={w.r} chalk={tick} />
+							</g>
+						);
+					})}
+					<circle cx={1300} cy={860} r={420} fill="url(#glow-lamp)" opacity={0.3} />
+					<g transform={`translate(${ax}, 935) scale(0.46)`}>
+						<Figure look={CAST.analyst} pose={strolling ? walkPose(g * 0.34, 0.75) : lerpPose(POSES.stand, POSES.write, prog(g, walkEnd, 12))} expression={rec > 0.5 ? 'thinking' : 'neutral'} rim="warm" blink={blinkAt(f, 'an2')} />
+					</g>
+
+				</Battlefield>
+				{/* the numbers: they land once and stay still */}
+				<g transform="translate(1250,260)">
+					<T x={0} y={-58} size={28} family="sans" tone="dim" track={0.2} opacity={prog(f, estAt - 10, 10)}>
+						1944 年 2 月 · 编号估算
+					</T>
+					<g transform={`scale(${f >= estAt ? 1 + 0.35 * (1 - estLand) : 0})`}>
+						<T x={0} y={20} size={104} family="latin" weight={600} tone="gold">
+							≈270
 						</T>
-						<T x={160} y={40} size={96} family="latin" weight={600} tone="text">
+					</g>
+					<T x={320} y={-58} size={28} family="sans" tone="dim" track={0.2} opacity={prog(f, cue(2) - 4, 10)}>
+						德国档案
+					</T>
+					<g transform={`translate(320,0) scale(${f >= cue(2) ? 1 + 0.35 * (1 - rec) : 0})`}>
+						<T x={0} y={20} size={104} family="latin" weight={600} tone="text">
 							276
 						</T>
 					</g>
 				</g>
+				<Impact f={f} t={estAt} x={1250} y={280} size={0.35} seed="270" />
 			</g>
 		</FullFrame>
 	);
@@ -793,6 +916,9 @@ const IPhone: React.FC<SceneProps> = () => {
 	const cue = useCue();
 	const name = prog(f, cue(2) - 6, 30, ease.inOut);
 	const open = prog(f, 0, 20, ease.out);
+	// the feed steps up one row at a time (and holds), like a real feed, instead of crawling
+	const rowT = (f - cue(0) - 10) / 27;
+	const feedStep = Math.max(0, Math.floor(rowT) - 2 + prog((rowT % 1) * 27, 0, 9, ease.out));
 	const openZ = Math.pow(26, 1 - open);
 	const posts = Array.from({length: 60}, (_, i) => ({
 		x: 1080 + (i % 3) * 270,
@@ -817,7 +943,7 @@ const IPhone: React.FC<SceneProps> = () => {
 						Serial Number
 					</text>
 					<text y={0} textAnchor="middle" style={{fontFamily: 'monospace', fontWeight: 700, fontSize: 26, fill: color.gold}}>
-						{`8${Math.floor(1000 + (f % 9000))}…`}
+						{'88218…'}
 					</text>
 				</g>
 				<defs>
@@ -829,7 +955,7 @@ const IPhone: React.FC<SceneProps> = () => {
 					{`已收集序列号 ${posts.filter((p) => f >= p.at).length}`}
 				</T>
 				<g clipPath="url(#feed)">
-				<g transform={`translate(0,${-170 * Math.max(0, (f - cue(0) - 10) / 27 - 2.4)})`}>
+				<g transform={`translate(0,${-170 * feedStep})`}>
 				{posts.map((p, i) => {
 					const s = spring({frame: f - p.at, fps, config: {damping: 12}});
 					if (f < p.at) return null;
@@ -887,6 +1013,8 @@ const Callback: React.FC<SceneProps> = () => {
 			fadeIn={12}
 			fadeOut={1}
 			scrim={0.6}
+			drift={1}
+			punch={1}
 			overlay={
 				<Sequence from={endAt} layout="none">
 					<EndCard v={EPISODE} cfg={BRAND} dur={scene.duration - endAt} />

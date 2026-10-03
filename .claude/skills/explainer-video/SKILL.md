@@ -110,15 +110,29 @@ Anchor beats 4, 5, 6 and 9 with `at:`. Keep one visual motif from hook to callba
   moves, secondary motion (props spinning, smoke, cloth), impact frames (flash,
   sparks, 2–3 frame decaying camera shake) on hits and on the music's drop,
   match cuts between scenes instead of fades to empty.
-- **Never a still frame.** The owner noticed: after reading a subtitle, staring at
-  a frozen picture for 2–3 s feels dead. Plan action for the *whole* line and the
-  hold after it, not just its first second:
-  - Every new line triggers a visible event (something enters, moves, lights up or changes).
-  - Between events, something is still moving. Examples: a counter ticking, a feed
-    scrolling, a highlight scanning a grid, a character working, a vehicle rolling,
-    a ghost marker searching.
-  - `FullFrame` already adds a slow drift, a push on each line and dust motes.
-    These are a floor, not a substitute for scene action.
+- **Impact, not wobble.** Judge every motion as a viewer would:
+  - **Text, numbers and titles stay still once they have landed.** That covers
+    labels, counters, charts and the title card. They may enter with a spring or
+    a slam and leave with a move, but they never float, bob, sway, jitter or
+    pulse in scale while being read. Moving type is hard to read and looks like
+    shimmer (the owner called it out).
+  - Motion belongs to the world and the story: people doing things with objects
+    (pulling a wheel off, chalking a number, walking a row), vehicles, smoke,
+    light sweeping across a surface, a feed that steps up a row.
+  - Camera: eased moves that start and stop. Don't use a perpetual float. A slow
+    push or a dive is a move; a shot that settles and holds is fine.
+  - Cut and hit on the music. `useHitFrames()` / `useSnapBeat()` give the
+    track's accents. Land reveals, cuts and impacts (`Impact`, a short decaying
+    shake) on them, and contrast them with calm. A quiet stretch before a drop
+    builds tension.
+  - Transitions are ideas, not fades. Carry something across the cut: the
+    ledger's numbers fall into the jar, a wheel hub becomes a home button, the
+    camera dives into a shape and comes out of the same shape.
+  - Holds: after a line, the shot may hold if something in the world is alive
+    (a character working, light, smoke). Dead air is a frozen frame with nothing
+    happening, not "the text isn't moving".
+  - `FullFrame` drift and beat punch are opt-in (`drift`, `punch`), only for pure
+    picture shots with no on-screen text.
 - Don't put a "?" on objects. Show "unknown" with motion (a rolling number, a
   searching marker, a dashed outline).
 - `npx tsc --noEmit` must pass.

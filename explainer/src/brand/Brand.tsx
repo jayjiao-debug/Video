@@ -116,7 +116,7 @@ const Motif: React.FC<{kind: VideoCfg['motif']; p: number; f: number}> = ({kind,
 					const y = -12 + 10 * (1 - Math.pow((x / 330), 2)) + 4;
 					const q = Math.min(1, Math.max(0, p * 13 - i));
 					const hero = i === 4;
-					const sway = Math.sin(f / 18 + i) * 2;
+					const sway = 0;
 					return (
 						<g key={i} transform={`translate(${x},${y}) rotate(${sway})`} opacity={q}>
 							{hero ? <circle cy={26} r={46} fill="url(#brand-glow)" opacity={0.9} /> : null}
@@ -286,7 +286,7 @@ export const TitleCard: React.FC<{v: VideoCfg; cfg: BrandCfg; dur: number}> = ({
 	// the title lands on the track's downbeat (`hit`), else ~0.7 s in
 	const land = v.hit !== undefined ? Math.max(4, Math.round((toOut(v, v.hit) - toOut(v, v.card[0])) * 30)) : 22;
 	const flare = f >= land + 8 ? Math.exp(-(f - land - 8) / 9) : 0;
-	const push = 1 + 0.03 * prog(f, 0, dur, ease.inOut) + 0.03 * out;
+	const push = 1 + 0.03 * out; // still while it's read; a small push only on the way out
 	return (
 		<AbsoluteFill style={{opacity: inP * (1 - out)}}>
 			<svg width={W} height={H} viewBox={`0 0 ${W} ${H}`}>

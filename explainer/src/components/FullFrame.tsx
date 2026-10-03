@@ -10,9 +10,10 @@ import {GlowDefs} from './Stage';
  * in these coordinates). Cross-fades with the neighbouring scenes and lays a soft
  * scrim under the subtitle band so text stays readable over busy art.
  *
- * The frame is never still: the whole shot drifts slowly (a push plus a little
- * float), every new subtitle line gives it a small push, and dust motes hang in
- * the light. Scenes still own their real action; this keeps the holds alive.
+ * Dust motes always hang in the light. A slow drift with a push on each new line
+ * (`drift`) and a camera punch on the music's accents (`punch`) are opt-in, for
+ * shots that are pure picture: anything with text or numbers on it stays still
+ * once it has landed, because moving type is hard to read and looks like shimmer.
  */
 export const FullFrame: React.FC<{
 	children: React.ReactNode;
@@ -27,7 +28,7 @@ export const FullFrame: React.FC<{
 	motes?: number;
 	/** camera punch on the music's accents */
 	punch?: number;
-}> = ({children, fadeIn = 10, fadeOut = 10, scrim = 0.7, overlay, drift = 1, motes = 1, punch = 1}) => {
+}> = ({children, fadeIn = 10, fadeOut = 10, scrim = 0.7, overlay, drift = 0, motes = 1, punch = 0}) => {
 	const f = useCurrentFrame();
 	const {fps} = useVideoConfig();
 	const scene = useScene();
