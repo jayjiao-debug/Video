@@ -16,6 +16,14 @@ skill; run its brand QA together with the QA step below.
 The user approved this workflow. Follow it in order and do not skip the
 approval gates: **reference → research → art → approval → animate → QA → render.**
 
+## Where the code is
+
+The pipeline and art library live in the GitHub repo **jayjiao-debug/Video**
+(branch `claude/hopeful-curie-hm3mlq` until it is merged to `main`), under `explainer/`.
+If this session has no checkout, clone it first. If the session cannot run code at all
+(a plain chat), still follow the rules here and produce scripts, designs and
+prompts. Say so to the owner instead of pretending to render.
+
 ## 0. If the user shares a reference video, study it first
 
 - Download it, then sample it: a contact sheet every ~20 s, and upscaled crops of

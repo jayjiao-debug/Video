@@ -10,6 +10,14 @@ the first 3 seconds and again in the last 3 seconds, without reading the name.
 Recognition comes from **repetition of a few fixed things**, never from novelty.
 So: change the story every episode, never the brand.
 
+## Where the code is
+
+The pipeline and art library live in the GitHub repo **jayjiao-debug/Video**
+(branch `claude/hopeful-curie-hm3mlq` until it is merged to `main`), under `explainer/`.
+If this session has no checkout, clone it first. If the session cannot run code at all
+(a plain chat), still follow the rules here and produce scripts, designs and
+prompts. Say so to the owner instead of pretending to render.
+
 ## 1. The identity (fixed, single source)
 
 All of it lives in `explainer/src/brand/identity.ts` (`JUNO`). Import it; never
