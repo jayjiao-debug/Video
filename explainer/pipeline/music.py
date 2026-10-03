@@ -96,6 +96,31 @@ def markers(db, duration, beats):
     return out
 
 
+def band_flux(x, lo, hi):
+    win = np.hanning(1024)
+    frames = np.lib.stride_tricks.sliding_window_view(x, 1024)[::HOP]
+    spec = np.abs(np.fft.rfft(frames * win, axis=1))
+    freqs = np.fft.rfftfreq(1024, 1 / SR)
+    s = np.log1p(spec[:, (freqs >= lo) & (freqs < hi)])
+    f = np.maximum(0, np.diff(s, axis=0)).sum(1)
+    return (f - f.mean()) / (f.std() + 1e-9)
+
+
+def hits(x, beats, thresh=1.5):
+    """Beats that carry a real accent (kick + snare energy): where impacts should land.
+    Returns [(time, strength 0..1)]."""
+    fps = SR / HOP
+    low, mid = band_flux(x, 30, 160), band_flux(x, 1500, 6000)
+
+    def peak(env, t):
+        i = int(t * fps)
+        return env[max(0, i - 2):i + 3].max() if i < len(env) else 0
+
+    acc = np.array([peak(low, b) + 0.5 * peak(mid, b) for b in beats])
+    top = np.percentile(acc, 98)
+    return [(round(float(b), 3), round(float(min(1, (a - thresh) / (top - thresh + 1e-9))), 2)) for b, a in zip(beats, acc) if a > thresh]
+
+
 def analyse(path):
     x = load_mono(path)
     duration = len(x) / SR
@@ -103,6 +128,7 @@ def analyse(path):
     tempo, beats, _ = beat_grid(flux, duration)
     energy, db = energy_curve(x, duration)
     return {
+        "hits": hits(x, beats),
         "path": path,
         "duration": round(duration, 3),
         "tempo": round(float(tempo), 2),

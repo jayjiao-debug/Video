@@ -124,7 +124,8 @@ def build(ep, music, warn=print):
         "subtitle": ep.get("subtitle", ""), "format": ep.get("format", "vertical"),
         "width": width, "height": height, "fps": fps, "durationInFrames": f(total),
         "music": {"tempo": music["tempo"], "markers": {k: f(v) for k, v in markers.items()},
-                  "beats": [f(b) for b in beats], "energyHz": music["energy_hz"], "energy": music["energy"]},
+                  "beats": [f(b) for b in beats], "energyHz": music["energy_hz"], "energy": music["energy"],
+                  "hits": [[f(t), s] for t, s in music.get("hits", []) if t < total]},
         "scenes": out_scenes,
         "subtitles": subtitles,
     }

@@ -2,7 +2,7 @@ import React from 'react';
 import {Sequence, interpolate, random, spring, useCurrentFrame, useVideoConfig} from 'remotion';
 import {CAST} from '../../src/art/cast';
 import {Figure, POSES, blinkAt, lerpPose, walkPose} from '../../src/art/Figure';
-import {Embers, Smoke, Torch} from '../../src/art/fx';
+import {Embers, Impact, Smoke, Torch} from '../../src/art/fx';
 import {P} from '../../src/art/palette';
 import {lookAt, type Cam} from '../../src/art/sets/Airfield';
 import {Battlefield} from '../../src/art/sets/Battlefield';
@@ -11,7 +11,7 @@ import {Jar, Panther, Panzer, SerialPlate} from '../../src/art/Tank';
 import {EndCard, TitleCard, type BrandCfg, type VideoCfg} from '../../src/brand/Brand';
 import {FullFrame, camMix} from '../../src/components/FullFrame';
 import {T, countUp} from '../../src/components/Stage';
-import {ease, prog, useBeat, useCue, useScene} from '../../src/lib/context';
+import {ease, prog, useBeat, useCue, useScene, useTimeline} from '../../src/lib/context';
 import {color, font} from '../../src/lib/theme';
 import type {SceneMap, SceneProps} from '../../src/lib/types';
 
@@ -333,8 +333,14 @@ const Serials: React.FC<SceneProps> = () => {
 	const rows = 14;
 	const shown = Math.min(rows * 2, Math.floor((g / Math.max(1, sceneLen - ledgerAt - 20)) * rows * 2));
 	const glow = prog(f, cue(3), 40);
+	// on the last accent before the break the numbers come loose and fall (into the jar, next scene)
+	const fallStart = sceneLen - 16;
+	const fallOf = (i: number) => {
+		const t = f - fallStart - Math.floor(random(`fd${i}`) * 9);
+		return t > 0 ? 1.9 * t * t : 0;
+	};
 	return (
-		<FullFrame fadeIn={8}>
+		<FullFrame fadeIn={8} fadeOut={1}>
 			<rect width={W} height={H} fill="#120d09" />
 			<ellipse cx={960} cy={180} rx={900} ry={520} fill="url(#glow-lamp)" opacity={0.5} />
 			<g transform={`translate(960,470) rotate(-3) scale(${1 + 0.04 * prog(g, 0, 200)})`}>
@@ -353,7 +359,7 @@ const Serials: React.FC<SceneProps> = () => {
 						const col = Math.floor(i / rows);
 						const base = 82600 + Math.floor(random(`lg${i}`) * 560);
 						return (
-							<g key={i}>
+							<g key={i} transform={`translate(0,${fallOf(i)}) rotate(${fallOf(i) * 0.02 * (random(`fr${i}`) - 0.5)})`}>
 								<Hand x={-500 + col * 560} y={-190 + r * 34} size={24} anchor="start" tone={glow > 0 && random(`gl${i}`) < glow ? '#9a6a12' : P.ink}>
 									{`${base}   ·   ${40000 + Math.floor(random(`m${i}`) * 9000)}   ·   ${7000 + Math.floor(random(`t${i}`) * 900)}`}
 								</Hand>
@@ -362,9 +368,7 @@ const Serials: React.FC<SceneProps> = () => {
 					})}
 				</Paper>
 			</g>
-			<T x={960} y={520} size={420} family="latin" weight={600} tone="gold" opacity={0.18 * glow}>
-				?
-			</T>
+			<rect width={W} height={H} fill="#030305" opacity={0.92 * prog(f, fallStart + 2, 14, ease.in)} />
 		</FullFrame>
 	);
 };
@@ -390,21 +394,45 @@ const JarScene: React.FC<SceneProps> = () => {
 	}));
 	const pop = spring({frame: f - askAt, fps, config: {damping: 12}});
 	const land = f >= settle ? Math.exp(-(f - settle) / 5) : 0;
-	const fillGap = Math.max(2, (cue(1) - 30) / others.length);
-	const filled = others
-		.map((b, i) => ({...b, t: 8 + i * fillGap}))
-		.filter((b) => f >= b.t)
-		.map(({t, ...b}) => ({...b, out: 1 - spring({frame: f - t, fps, config: {damping: 14, stiffness: 140}}), lit: 0}));
+	const fillGap = Math.max(2, (cue(1) - 20) / others.length);
+	const FALL = 14;
+	const timed = others.map((b, i) => ({...b, t: i * fillGap}));
+	const filled = timed.filter((b) => f >= b.t + FALL).map(({t, ...b}) => ({...b, lit: 0}));
+	const falling = timed.filter((b) => f >= b.t && f < b.t + FALL);
 	const lean = prog(f, settle, 70, ease.inOut);
 	return (
-		<FullFrame fadeIn={14}>
+		<FullFrame fadeIn={1}>
 			<g transform={`translate(1370,520) scale(${1 + 0.08 * lean}) translate(-1370,-520)`}>
 			<rect width={W} height={H} fill="#07080c" />
 			<polygon points={`${jx - 90},-40 ${jx + 90},-40 ${jx + 360},${H} ${jx - 360},${H}`} fill="url(#beam-warm)" opacity={0.55} />
 			<ellipse cx={jx} cy={790} rx={330} ry={44} fill="#000" opacity={0.6} />
 			<g transform={`translate(${jx},${jy}) scale(1.05)`} opacity={prog(f, 0, 24)}>
 				<Jar balls={filled} />
+				{falling.map((b) => {
+					// a loose number from the ledger, rounding into a ball as it lands
+					const p = prog(f, b.t, FALL, ease.in);
+					return (
+						<g key={b.n} transform={`translate(${b.x},${b.y - 640 * (1 - p)})`}>
+							<circle r={26 * p * p} fill="#d9cfb6" />
+							<text y={9} textAnchor="middle" style={{fontFamily: p > 0.7 ? 'monospace' : font.latinItalic, fontStyle: p > 0.7 ? 'normal' : 'italic', fontWeight: 700, fontSize: 24 + 10 * (1 - p), fill: p > 0.7 ? '#3a2f1e' : '#e9dcc0'}}>
+								{b.n}
+							</text>
+						</g>
+					);
+				})}
 			</g>
+			{/* the rest of the ledger still falling through the dark */}
+			{f < 22
+				? Array.from({length: 26}, (_, i) => {
+						const x = 200 + random(`rx${i}`) * 1520;
+						const y = -60 + (f + random(`ry${i}`) * 10) ** 2 * 1.9;
+						return (
+							<text key={i} x={x} y={y} opacity={0.7 * (1 - f / 22)} style={{fontFamily: font.latinItalic, fontStyle: 'italic', fontWeight: 600, fontSize: 26, fill: '#e9dcc0'}}>
+								{82600 + Math.floor(random(`rn${i}`) * 560)}
+							</text>
+						);
+					})
+				: null}
 			{/* the four picks fly out to a velvet tray */}
 			<rect x={1060} y={690} width={620} height={90} rx={18} fill="#3a1418" opacity={prog(f, cue(1) - 10, 20)} />
 			{PICKS.map((n, i) => {
@@ -464,6 +492,11 @@ const Gaps: React.FC<SceneProps> = () => {
 	const extra = prog(f, cue(3) + 6, 50, ease.out);
 	const tension = prog(f, cue(3), scene.duration - cue(3), ease.in);
 	const pulse = useBeat(6);
+	const end = scene.duration;
+	const dive = prog(f, cue(3), end - 10 - cue(3), ease.in);
+	const suck = prog(f, end - 8, 8, ease.in);
+	const camZ = 1 + 0.5 * dive - 0.12 * suck;
+	const shiver = 3 * dive * Math.sin(f * 2.3);
 	// where does the jar really end? a ghost marker searching beyond 60 until the extra gap settles it
 	const ghostX = 70 + 8 * Math.sin(f / 16) + 3 * Math.sin(f / 7);
 	const ghost = prog(f, cue(0) + 10, 20) * (1 - extra);
@@ -475,8 +508,9 @@ const Gaps: React.FC<SceneProps> = () => {
 		[42, 60],
 	];
 	return (
-		<FullFrame fadeIn={12} fadeOut={6}>
+		<FullFrame fadeIn={12} fadeOut={1}>
 			<rect width={W} height={H} fill="#090b12" />
+			<g transform={`translate(${px(67.5) + shiver},${y + 40}) scale(${camZ}) translate(${-px(67.5) + (px(67.5) - 960) * (1 - dive) * 0},${-(y + 40)})`}>
 			<ellipse cx={960} cy={560} rx={900} ry={380} fill="url(#glow-lamp)" opacity={0.12 + 0.18 * tension + 0.08 * pulse * tension} />
 			{/* the ruler */}
 			<line x1={px(0)} y1={y} x2={px(0) + (px(80) - px(0)) * prog(f, 0, 30, ease.out)} y2={y} stroke={color.gold} strokeWidth={3} />
@@ -536,6 +570,10 @@ const Gaps: React.FC<SceneProps> = () => {
 				</T>
 				<circle cx={px(60 + 15 * extra)} cy={y} r={14 + 10 * pulse * tension} fill="url(#glow-lamp)" />
 			</g>
+			</g>
+			{/* the frame closes in before the drop */}
+			<rect width={W} height={H} fill="url(#vignette-hard)" opacity={dive} />
+			<rect width={W} height={H} fill="#000" opacity={0.85 * suck} />
 		</FullFrame>
 	);
 };
@@ -547,6 +585,7 @@ const Formula: React.FC<SceneProps> = () => {
 	const {fps} = useVideoConfig();
 	const cue = useCue();
 	const toks = ['60', '+', '60 ÷ 4', '−', '1', '≈', '74'];
+	const tempo = useTimeline().music.tempo;
 	const toChart = prog(f, cue(2) - 10, 24, ease.inOut);
 	const bars: [string, number, string, number][] = [
 		['情报部门估计', 1550, P.red, cue(2)],
@@ -554,24 +593,29 @@ const Formula: React.FC<SceneProps> = () => {
 		['德国档案', 342, P.paper, cue(4)],
 	];
 	const flash = Math.exp(-f / 7);
+	const half = 60 / tempo / 2 * fps; // the sum lands term by term on half-beats from the drop
+	const heroAt = 6 * half;
 	const focusX = interpolate(f, [cue(2), cue(3) - 10, cue(3) + 10, cue(4) - 10, cue(4) + 10], [600, 600, 960, 960, 1140], {extrapolateLeft: 'clamp', extrapolateRight: 'clamp', easing: ease.inOut});
 	const chartZoom = 1 + 0.05 * prog(f, cue(2), 60, ease.inOut) + 0.05 * prog(f, cue(3), 60, ease.inOut) + 0.04 * prog(f, cue(4), 60, ease.inOut);
 	const chartCam = `translate(960,540) scale(${chartZoom}) translate(${-960 - (focusX - 960) * 0.35},-540)`;
-	const shake = Math.exp(-Math.max(0, f - 2) / 4) * 10 * (f >= 2 ? 1 : 0);
+	const kick = (t: number) => (f >= t ? Math.exp(-(f - t) / 4) : 0);
+	const shake = 16 * kick(0) + 9 * kick(Math.round(heroAt));
 	return (
 		<FullFrame fadeIn={2}>
 			<rect width={W} height={H} fill="#07080c" />
 			<ellipse cx={960} cy={500} rx={900} ry={420} fill="url(#glow-lamp)" opacity={0.25 + 0.4 * flash} />
-			<g transform={`translate(${shake * (random(`fx${f}`) - 0.5)},${shake * (random(`fy${f}`) - 0.5)})`}>
-				{/* the jar sum, token by token on the beat */}
+				<Impact f={f} x={960} y={430} size={1.2} seed="drop" />
+				<Impact f={f} t={Math.round(heroAt)} x={960 + 3 * 190} y={430} size={0.6} seed="74" />
+				<g transform={`translate(${shake * (random(`fx${f}`) - 0.5)},${shake * (random(`fy${f}`) - 0.5)})`}>
+					{/* the jar sum, token by token on the beat */}
 				<g opacity={1 - toChart} transform={`translate(0,${-260 * prog(f, cue(1), 30, ease.inOut)}) translate(960,430) scale(${1 + 0.07 * prog(f, 40, cue(1) - 40, ease.inOut)}) translate(-960,-430)`}>
 					{toks.map((t, i) => {
-						const p = spring({frame: f - 4 - i * 7, fps, config: {damping: 10, stiffness: 160}});
+							const p = spring({frame: f - i * half, fps, config: {damping: 9, stiffness: 220}});
 						const x = 960 + (i - 3) * 190 + (i === 2 ? 0 : 0);
 							const hero = i === 6;
 							const wave = f > 60 ? 0.05 * Math.exp(-(((f / 5) % 14 - i) ** 2)) : 0;
 							return (
-								<g key={i} transform={`translate(${x},430) scale(${(hero ? 1.4 * p : p) * (1 + wave)})`} opacity={Math.min(1, p)}>
+								<g key={i} transform={`translate(${x},430) scale(${(hero ? 1.4 * p : p) * (1 + wave)})`} opacity={Math.min(1, p * 3)}>
 								{hero ? <circle r={110} fill="url(#glow-lamp)" opacity={0.8} /> : null}
 								<T size={i === 2 ? 80 : 104} family="latin" weight={600} tone={hero ? 'gold' : 'text'}>
 									{t}
@@ -671,9 +715,17 @@ const PantherScene: React.FC<SceneProps> = () => {
 	const wheelsOut = Math.min(64, Math.max(0, Math.floor((f - 20) / 2.4)));
 	const est = prog(f, cue(1) + 30, 40, ease.out);
 	const rec = prog(f, cue(2), 24, ease.out);
-	const reading = Math.floor(Math.max(0, f - cue(1) - 60) / 3) % 64;
+	const sceneEnd = useScene().duration;
+	const diveAt = sceneEnd - 16;
+	const reading = Math.floor(Math.max(0, Math.min(f, diveAt) - cue(1) - 60) / 3) % 64;
+	// match cut: the camera dives into a wheel hub, which becomes the phone's home button
+	const hubX = 1180 + (reading % 8) * 74;
+	const hubY = 250 + Math.floor(reading / 8) * 74;
+	const dive = prog(f, diveAt, 16, ease.in);
+	const diveZ = Math.pow(26, dive);
 	return (
-		<FullFrame fadeIn={12}>
+		<FullFrame fadeIn={12} fadeOut={1}>
+			<g transform={`translate(${hubX},${hubY}) scale(${diveZ}) translate(${-hubX},${-hubY})`}>
 			<Battlefield frame={f + 500} cam={cam} fires={0}>
 				<g transform="translate(700, 900) scale(0.82)">
 					<Panther wheelGlow={0.6} />
@@ -719,13 +771,14 @@ const PantherScene: React.FC<SceneProps> = () => {
 				<T x={-160} y={40} size={96} family="latin" weight={600} tone="gold">
 					{`≈${countUp(f, 270, cue(1) + 30, 40)}`}
 				</T>
-				<g opacity={rec}>
-					<T x={160} y={-40} size={28} family="sans" tone="dim" track={0.2}>
-						德国档案
-					</T>
-					<T x={160} y={40} size={96} family="latin" weight={600} tone="text">
-						276
-					</T>
+					<g opacity={rec}>
+						<T x={160} y={-40} size={28} family="sans" tone="dim" track={0.2}>
+							德国档案
+						</T>
+						<T x={160} y={40} size={96} family="latin" weight={600} tone="text">
+							276
+						</T>
+					</g>
 				</g>
 			</g>
 		</FullFrame>
@@ -739,6 +792,8 @@ const IPhone: React.FC<SceneProps> = () => {
 	const {fps} = useVideoConfig();
 	const cue = useCue();
 	const name = prog(f, cue(2) - 6, 30, ease.inOut);
+	const open = prog(f, 0, 20, ease.out);
+	const openZ = Math.pow(26, 1 - open);
 	const posts = Array.from({length: 60}, (_, i) => ({
 		x: 1080 + (i % 3) * 270,
 		y: 230 + Math.floor(i / 3) * 170,
@@ -746,9 +801,9 @@ const IPhone: React.FC<SceneProps> = () => {
 		sn: `SN ${8 + (i % 2)}${Math.floor(10000 + random(`sn${i}`) * 89999)}…`,
 	}));
 	return (
-		<FullFrame fadeIn={12}>
+		<FullFrame fadeIn={1}>
 			<rect width={W} height={H} fill="#06080e" />
-			<g opacity={1 - name}>
+			<g opacity={1 - name} transform={`translate(560,782) scale(${openZ}) translate(-560,-782)`}>
 				{/* a generic 2008 smartphone */}
 				<g transform="translate(560,520)">
 					<rect x={-150} y={-300} width={300} height={600} rx={46} fill="#14161b" stroke="#3a3e46" strokeWidth={4} />

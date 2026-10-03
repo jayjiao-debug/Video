@@ -23,6 +23,7 @@ music: assets/music/bgm.mp3
 markers:
   a: 16.104
   coda: 149.89
+  phone: 128.53   # an accent: the home button opens on it
 
 scenes:
   - id: hook
@@ -95,6 +96,7 @@ scenes:
 
   - id: iphone
     component: IPhone
+    at: phone
     kicker: 2008 · 伦敦
     lines:
       - 2008年，有人请网友晒出iPhone的序列号。
