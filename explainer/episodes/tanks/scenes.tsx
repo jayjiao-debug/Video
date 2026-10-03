@@ -198,7 +198,7 @@ const London: React.FC<SceneProps> = () => {
 	const titleLen = cue(0) - 6;
 	const pan = prog(f, titleLen - 30, 80, ease.inOut);
 	const cam = camMix(lookAt(1560, 340, 1.7), lookAt(960, 600, 1.04), pan);
-	const point = spring({frame: f - cue(1) + 4, fps, config: {damping: 12}});
+	const point = spring({frame: f - cue(0) - 24, fps, config: {damping: 12}}); // the analyst turns to the map as the question is asked
 	const doubt = spring({frame: f - cue(2) - 20, fps, config: {damping: 14}});
 	const stamp = spring({frame: f - cue(2) - 6, fps, config: {damping: 9, stiffness: 160}});
 	const shake = f >= cue(2) + 6 ? Math.exp(-(f - cue(2) - 6) / 4) * 8 : 0;
@@ -221,7 +221,7 @@ const London: React.FC<SceneProps> = () => {
 				<LondonOffice
 					frame={f + 300}
 					cam={cam}
-					pins={prog(f, cue(1), 40)}
+					pins={prog(f, cue(0) + 12, 50)}
 					staff={
 						<>
 							<g transform="translate(760, 1010) scale(1.45)">

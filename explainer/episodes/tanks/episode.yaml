@@ -36,7 +36,7 @@ scenes:
   - id: london
     component: London
     at: a
-    lead: 3.6   # the branded title card plays first
+    lead: 5.2   # the branded title card plays first (long enough to read the tagline)
     props: {quietLead: true}
     kicker: 1943 · 伦敦 · 美国大使馆经济战处
     lines:
