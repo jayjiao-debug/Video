@@ -932,6 +932,18 @@ const BeanGrid: React.FC<{f: number; at: number}> = ({f, at}) => (
 	</g>
 );
 
+const clusterXY: [number, number] = [1010, 640];
+const BRANCH_D = 'M-150,72 C-60,62 60,50 200,20';
+/** cherries in three clusters along the branch, nearest her hand first */
+const PICK: [number, number][] = [-90, -10, 75].flatMap((x, n) =>
+	[
+		[-12, 8],
+		[11, 10],
+		[-1, 24],
+		[14, -6],
+	].map(([dx, dy]) => [x + dx, 66 - n * 10 + dy] as [number, number]),
+);
+
 const Yunnan_: React.FC<SceneProps> = () => {
 	const f = useCurrentFrame();
 	const {fps} = useVideoConfig();
@@ -939,6 +951,7 @@ const Yunnan_: React.FC<SceneProps> = () => {
 	const scene = useScene();
 	const hits = useHitFrames(0.3);
 	const end = scene.duration;
+	const [clusterX, clusterY] = clusterXY;
 	const fromLight = 1 - prog(f, 0, 16, ease.out);
 	const flare = Math.exp(-f / 10);
 	// Y1 crane down from the sun; Y4 the picker; Y5 the macro of a branch
@@ -947,13 +960,23 @@ const Yunnan_: React.FC<SceneProps> = () => {
 	let cam: Cam = camMix(lookAt(1240, 330, 1.7), lookAt(960, 560, 1.0), prog(f, 8, 170, ease.inOut));
 	if (y4) cam = lookAt(900, 760, 1.55);
 	// picking: one cherry per heavy kick
-	const picks = hits.filter((h) => h >= cue(4) && h < cue(5) - 10);
+	const picks = hits.filter((h) => h >= cue(4) + 6 && h < cue(5) - 10).slice(0, PICK.length);
 	const picked = picks.filter((h) => f >= h).length;
+	// her hand: to the next cherry, a short dip toward the basket after each pick
+	const toReach = (i: number): [number, number] => {
+		const [x, y] = PICK[Math.min(i, PICK.length - 1)];
+		return [(clusterXY[0] + x - 700) / 1.5, (clusterXY[1] + y - 1000) / 1.5];
+	};
+	const nxt = Math.min(picked, PICK.length - 1);
+	const last = picks[picked - 1];
+	const goNext = last === undefined ? 1 : prog(f, last + 4, 8, ease.inOut);
+	const from = toReach(Math.max(0, picked - 1));
+	const to = toReach(nxt);
+	const dip = last === undefined ? 0 : Math.sin(prog(f, last, 12) * Math.PI);
+	const handReach: [number, number] = [from[0] + (to[0] - from[0]) * goNext - 40 * dip, from[1] + (to[1] - from[1]) * goNext + 20 * dip];
 	const photo = spring({frame: f - cue(3) + 4, fps, config: {damping: 14}}) * (1 - prog(f, cue(4) - 16, 14));
 	const grow = prog(f, cue(3) + 20, cue(4) - cue(3) - 40, ease.inOut);
 	const dive = prog(f, end - 18, 16, ease.in);
-	const clusterX = 1010;
-	const clusterY = 640;
 	return (
 		<FullFrame fadeIn={1} fadeOut={1}>
 			<SceneDefs />
@@ -970,26 +993,38 @@ const Yunnan_: React.FC<SceneProps> = () => {
 					sunUp={0.35 + 0.65 * prog(f, 0, 200, ease.out)}
 					front={
 						y4 ? (
-							// the branch she's picking from, close to camera
+							// the bush she's picking from: a stem out of the slope, one branch reaching to her hand,
+							// cherries in clusters at the leaf nodes (red ones get picked, the green stay)
 							<g transform={`translate(${clusterX},${clusterY})`}>
-								<path d="M-400,120 C-200,60 0,40 260,-30" stroke="#5a4632" strokeWidth={9} fill="none" />
-								<g transform="translate(-160,40)">
-									<Leaf len={120} rot={-60} />
-									<Leaf len={110} rot={50} />
-								</g>
-								<g transform="translate(140,-10)">
-									<Leaf len={110} rot={-70} />
-									<Leaf len={120} rot={40} />
-								</g>
-								{Array.from({length: 12}, (_, i) => {
+								<ellipse cx={230} cy={60} rx={190} ry={150} fill="#2a4a30" />
+								<ellipse cx={300} cy={-40} rx={150} ry={120} fill="#30553a" />
+								<path d="M300,520 C280,300 240,140 200,20" stroke="#4a3a28" strokeWidth={16} fill="none" strokeLinecap="round" />
+								<path d={BRANCH_D} stroke="#5a4632" strokeWidth={9} fill="none" strokeLinecap="round" />
+								<path d="M230,90 C300,40 360,-20 420,-90" stroke="#5a4632" strokeWidth={8} fill="none" strokeLinecap="round" />
+								{[
+									[-120, 66, -70, 60],
+									[-30, 58, -60, 50],
+									[60, 46, -65, 45],
+									[150, 30, -55, 60],
+									[330, -40, -50, 40],
+								].map(([x, y, a1, a2], i) => (
+									<g key={i} transform={`translate(${x},${y})`}>
+										<Leaf len={110} rot={a1 + 3 * Math.sin(f / 30 + i)} />
+										<Leaf len={100} rot={a2 + 3 * Math.sin(f / 26 + i)} />
+									</g>
+								))}
+								{/* green ones, left for next month */}
+								{[[318, -34], [338, -26], [326, -16], [345, -40]].map(([x, y], i) => (
+									<g key={i} transform={`translate(${x},${y})`}>
+										<Cherry r={13} ripe={0} />
+									</g>
+								))}
+								{PICK.map(([x0, y0], i) => {
 									const pt = picks[i];
-									const gone = pt !== undefined && f >= pt;
-									const u = gone ? prog(f, pt, 12, ease.inOut) : 0;
-									const x0 = -60 + (i % 6) * 26;
-									const y0 = 52 + Math.floor(i / 6) * 26 - (i % 6) * 4;
+									const u = pt !== undefined && f >= pt ? prog(f, pt, 12, ease.inOut) : 0;
 									if (u >= 1) return null;
 									return (
-										<g key={i} transform={`translate(${x0 + (-330 - x0) * u},${y0 + (200 - y0) * u - Math.sin(u * Math.PI) * 120})`}>
+										<g key={i} transform={`translate(${x0 + (-360 - x0) * u},${y0 + (190 - y0) * u - Math.sin(u * Math.PI) * 90})`}>
 											<Cherry r={14} />
 										</g>
 									);
@@ -1000,7 +1035,7 @@ const Yunnan_: React.FC<SceneProps> = () => {
 				>
 					{y4 ? (
 						<g transform="translate(700, 1000) scale(1.5)">
-							<Figure look={CAST.farmer} pose={POSES.hold} reach={{near: [150 + 20 * Math.sin(f / 6), -230 + 10 * Math.cos(f / 5)]}} expression="smile" blink={blinkAt(f, 'fm')} rim="warm" />
+							<Figure look={CAST.farmer} pose={POSES.hold} reach={{near: handReach}} expression="smile" blink={blinkAt(f, 'fm')} rim="warm" />
 							<g transform="translate(-50,-110) scale(0.75)">
 								<Basket fill={Math.min(1, 0.25 + picked / 14)} />
 							</g>
@@ -1009,7 +1044,7 @@ const Yunnan_: React.FC<SceneProps> = () => {
 				</Yunnan>
 			) : (
 				// macro: mixed ripeness on one branch; a hand takes only the red ones
-				<g transform={`translate(960,540) scale(${1 + 30 * dive ** 3}) translate(${-960 + (960 - 1100) * dive},${-540 + (540 - 560) * dive})`}>
+				<g transform={`translate(960,540) scale(${1 + 30 * dive ** 3}) translate(${-960 + (960 - 1155) * dive},${-540 + (540 - 527) * dive})`}>
 					<rect width={W} height={H} fill="#2c3a24" />
 					<Bokeh f={f} n={30} seed="ym" gold={0.6} />
 					<path d="M0,620 C400,560 900,520 1920,430" stroke="#5a4632" strokeWidth={22} fill="none" />
@@ -1022,25 +1057,29 @@ const Yunnan_: React.FC<SceneProps> = () => {
 							<Leaf len={280} rot={55} />
 						</g>
 					))}
-					{Array.from({length: 9}, (_, i) => {
-						const ripe = [1, 0, 1, 0.6, 1, 0, 0.6, 1, 1][i];
-						const x = 760 + (i % 5) * 92 + Math.floor(i / 5) * 46;
-						const y = 600 + Math.floor(i / 5) * 84 - (i % 5) * 14;
-						const reds = [0, 2, 4, 7].indexOf(i);
-						const t = cue(5) + 14 + reds * 18;
-						const taken = reds >= 0 && f > t + 8;
-						const ring = reds >= 0 && f > t - 8 && f <= t + 8;
-						if (taken) return null;
-						return (
-							<g key={i} transform={`translate(${x},${y})`}>
-								{ring ? <circle r={58} fill="none" stroke={color.gold} strokeWidth={4} /> : null}
-								<Cherry r={42} ripe={ripe} />
-							</g>
-						);
-					})}
-					{/* the last red one, which we dive into */}
-					<g transform="translate(1100,560)">
-						<Cherry r={42} />
+					<g transform="translate(1000,620) scale(1.55) translate(-1000,-620)">
+						{Array.from({length: 9}, (_, i) => {
+							const ripe = [1, 0, 1, 0.6, 1, 0, 0.6, 1, 1][i];
+							const x = 760 + (i % 5) * 92 + Math.floor(i / 5) * 46;
+							const y = 600 + Math.floor(i / 5) * 84 - (i % 5) * 14;
+							const reds = [0, 2, 4, 7].indexOf(i);
+							const t = cue(5) + 14 + reds * 18;
+							const ring = reds >= 0 && f > t - 10 && f <= t + 4 ? prog(f, t - 10, 6, ease.back) : 0;
+							// picked: a tug, then up and out of frame
+							const up = reds >= 0 ? prog(f, t + 2, 14, ease.in) : 0;
+							const tug = reds >= 0 ? Math.sin(prog(f, t - 4, 6) * Math.PI) * 8 : 0;
+							if (up >= 1) return null;
+							return (
+								<g key={i} transform={`translate(${x},${y + tug - 760 * up}) rotate(${-20 * up})`}>
+									{ring > 0 ? <circle r={58} fill="none" stroke={color.gold} strokeWidth={4} transform={`scale(${ring})`} /> : null}
+									<Cherry r={42} ripe={ripe} />
+								</g>
+							);
+						})}
+						{/* the last red one, which we dive into */}
+						<g transform="translate(1100,560)">
+							<Cherry r={42} />
+						</g>
 					</g>
 				</g>
 			)}
@@ -1086,6 +1125,15 @@ const Yunnan_: React.FC<SceneProps> = () => {
 
 // ---------------------------------------------------------------- 7. one cherry, two beans back to back
 
+/** One coffee seed: flat face at x=0, round back bulging toward `d`. */
+const Seed: React.FC<{d: number; rx?: number; ry?: number; glow?: number}> = ({d, rx = 78, ry = 150, glow = 0}) => (
+	<g>
+		<path d={`M0,${-ry} A${rx},${ry} 0 0,${d > 0 ? 1 : 0} 0,${ry} Z`} fill="url(#bean-green)" />
+		<path d={`M${d * rx * 0.25},${-ry * 0.8} C${d * rx * 0.6},${-ry * 0.3} ${d * rx * 0.6},${ry * 0.3} ${d * rx * 0.25},${ry * 0.8}`} stroke="#fff" strokeOpacity={0.25} strokeWidth={6} fill="none" />
+		<path d={`M0,${-ry} A${rx},${ry} 0 0,${d > 0 ? 1 : 0} 0,${ry}`} stroke="#ffe2a0" strokeOpacity={0.5 * glow} strokeWidth={4} fill="none" />
+	</g>
+);
+
 const CherryScene: React.FC<SceneProps> = () => {
 	const f = useCurrentFrame();
 	const {fps} = useVideoConfig();
@@ -1094,47 +1142,70 @@ const CherryScene: React.FC<SceneProps> = () => {
 	const snap = useSnapBeat();
 	const end = scene.duration;
 	const cutAt = snap(cue(0) + 40);
-	const cut = spring({frame: f - cutAt, fps, config: {damping: 12, stiffness: 150}});
-	const lift = prog(f, cue(1) - 10, 30, ease.inOut);
+	const meetAt = snap(cue(1));
 	const rwAt = end - 60;
-	const back = prog(f, rwAt, 50, ease.inOut);
+	// the rewind undoes everything in reverse order
+	const bp = prog(f, rwAt, 50, (x) => x);
+	const seg = (a: number, b: number) => ease.inOut(Math.min(1, Math.max(0, (bp - a) / (b - a))));
+	const unMeet = seg(0, 0.3);
+	const unRise = seg(0.2, 0.5);
+	const unCut = seg(0.45, 0.7);
+	const cut = spring({frame: f - cutAt, fps, config: {damping: 12, stiffness: 150}}) * 0.55 * (1 - unCut);
+	const rise = prog(f, cutAt + 34, 26, ease.inOut) * (1 - unRise);
+	const meet = spring({frame: f - meetAt, fps, config: {damping: 11, stiffness: 220}}) * (1 - unMeet);
+	const ripe = bp > 0.85 ? 0 : bp > 0.72 ? 0.6 : 1;
+	const flash = f >= meetAt ? Math.exp(-(f - meetAt) / 8) * (1 - unMeet) : 0;
 	const outP = prog(f, 0, 16, ease.out);
+	const push = 1 + 0.1 * prog(f, cutAt, end - cutAt - 60, ease.inOut);
+	const zoom = (0.6 + 0.4 * outP) * push * (1 - 0.55 * seg(0.55, 1));
+	// a gleam runs down the middle just before the cut
+	const gleam = f >= cutAt - 8 && f < cutAt + 2 ? (f - cutAt + 8) / 10 : -1;
+	const sep = (176 + 40 * rise) * (1 - meet) + 3 * meet; // seed centre distance from the middle
 	return (
 		<FullFrame fadeIn={1} fadeOut={1}>
 			<SceneDefs />
 			<rect width={W} height={H} fill="#1f2a1a" />
 			<Bokeh f={f} n={26} seed="cs" gold={0.5} />
-			<g transform={`translate(960,520) scale(${(0.6 + 0.4 * outP) * (1 - 0.6 * back)})`}>
-				{f < cutAt ? (
-					<g transform={`scale(${5}) rotate(${-4 + Math.sin(f / 30) * 2})`}>
-						<Cherry r={42} />
+			<g transform={`translate(960,520) scale(${zoom})`}>
+				{cut <= 0.001 ? (
+					<g transform={`scale(5) rotate(${(-4 + Math.sin(f / 30) * 2) * (1 - unCut)})`}>
+						<Cherry r={42} ripe={ripe} />
 					</g>
 				) : (
-					<g>
-						<g transform="scale(5)" opacity={1 - lift}>
-							<Cherry r={42} cut={cut * (1 - back)} ripe={1 - back} />
+					<g transform={`translate(0,${60 * rise})`} opacity={1 - 0.75 * rise}>
+						<g transform="scale(5)">
+							<Cherry r={42} cut={cut} ripe={ripe} />
 						</g>
-						{/* juice */}
-						{f < cutAt + 20
-							? Array.from({length: 10}, (_, i) => {
-									const a = random(`j${i}`) * Math.PI * 2;
-									const d = (f - cutAt) * (6 + random(`jd${i}`) * 8);
-									return <circle key={i} cx={Math.cos(a) * d} cy={Math.sin(a) * d + (f - cutAt) ** 2 * 0.3} r={6 + random(`jr${i}`) * 6} fill="#c0302a" opacity={1 - (f - cutAt) / 20} />;
-								})
-							: null}
-						{/* the two seeds come out and turn their flat sides to each other */}
-						{lift > 0
-							? [-1, 1].map((d) => (
-									<g key={d} transform={`translate(${d * (70 + 50 * lift) * (1 - back)},${-40 * lift}) rotate(${d * 90 * lift})`} opacity={lift * (1 - back)}>
-										<ellipse rx={64} ry={140} fill="url(#bean-green)" />
-										<path d={`M0,-120 L0,120`} stroke="#8a8a58" strokeWidth={6} />
-										<ellipse rx={64} ry={140} fill="none" stroke="#ffe2a0" strokeOpacity={0.5 * lift} strokeWidth={4} />
-									</g>
-								))
-							: null}
-						{lift > 0.6 ? <ellipse cx={0} cy={-40} rx={30} ry={150} fill="url(#glow-lamp)" opacity={0.6 * (lift - 0.6) * 2.5 * (1 - back)} /> : null}
 					</g>
 				)}
+				{gleam >= 0 ? <rect x={-3} y={-230} width={6} height={460 * gleam} fill="#fff8e0" opacity={0.9} filter="url(#blur-sm)" /> : null}
+				{/* juice */}
+				{f >= cutAt && f < cutAt + 20
+					? Array.from({length: 12}, (_, i) => {
+							const a = random(`j${i}`) * Math.PI * 2;
+							const d = (f - cutAt) * (6 + random(`jd${i}`) * 8);
+							return <circle key={i} cx={Math.cos(a) * d} cy={Math.sin(a) * d + (f - cutAt) ** 2 * 0.3} r={6 + random(`jr${i}`) * 6} fill="#c0302a" opacity={1 - (f - cutAt) / 20} />;
+						})
+					: null}
+				{/* the two seeds rise out of the fruit and come together, flat face to flat face */}
+				{rise > 0
+					? [-1, 1].map((d) => (
+							<g key={d} transform={`translate(${d * sep},${-50 * rise + 4 * Math.sin(f / 14 + d)})`} opacity={Math.min(1, rise * 2)}>
+								<Seed d={d} glow={rise} />
+							</g>
+						))
+					: null}
+				{flash > 0.01 ? (
+					<g>
+						<ellipse cx={0} cy={-50} rx={60 + 120 * (1 - flash)} ry={220} fill="url(#glow-lamp)" opacity={flash} />
+						{Array.from({length: 10}, (_, i) => {
+							const a = (i / 10) * Math.PI * 2;
+							const r0 = 170 + 260 * (1 - flash);
+							return <line key={i} x1={Math.cos(a) * r0} y1={-50 + Math.sin(a) * r0} x2={Math.cos(a) * (r0 + 40)} y2={-50 + Math.sin(a) * (r0 + 40)} stroke={color.gold} strokeWidth={5} strokeLinecap="round" opacity={flash} />;
+						})}
+					</g>
+				) : null}
+				{meet > 0.5 ? <ellipse cx={0} cy={-50} rx={26} ry={160} fill="url(#glow-lamp)" opacity={0.5 * (1 - unMeet)} /> : null}
 			</g>
 			<Tape amt={prog(f, rwAt, 10)} f={f} />
 			<Dark amt={1 - prog(f, 0, 6)} />
@@ -1145,12 +1216,12 @@ const CherryScene: React.FC<SceneProps> = () => {
 // ---------------------------------------------------------------- 8. a flower, and a bee that remembers it
 
 const CaffeineMolecule: React.FC<{o: number}> = ({o}) => (
-	<g opacity={o} stroke="#fff4dc" strokeWidth={4} fill="none" strokeLinejoin="round">
+	<g opacity={o} stroke="#f3cf7a" strokeWidth={5} fill="none" strokeLinejoin="round">
 		<path d="M-60,-35 L0,-70 L60,-35 L60,35 L0,70 L-60,35 Z" />
 		<path d="M60,-35 L120,-55 L150,0 L120,55 L60,35" />
 		<path d="M0,-70 L0,-110 M-60,35 L-100,60 M0,70 L0,110 M150,0 L190,0" />
-		<text x={-8} y={-118} style={{fontFamily: font.latin, fontSize: 22, fill: '#fff4dc', stroke: 'none'}}>O</text>
-		<text x={-8} y={136} style={{fontFamily: font.latin, fontSize: 22, fill: '#fff4dc', stroke: 'none'}}>O</text>
+		<text x={-8} y={-118} style={{fontFamily: font.latin, fontSize: 22, fill: '#f3cf7a', stroke: 'none'}}>O</text>
+		<text x={-8} y={136} style={{fontFamily: font.latin, fontSize: 22, fill: '#f3cf7a', stroke: 'none'}}>O</text>
 	</g>
 );
 
@@ -1169,13 +1240,13 @@ const Flower: React.FC<SceneProps> = () => {
 	const inT = prog(f, cue(3) - 10, 50, ease.out);
 	const offT = prog(f, cue(4) + 40, end - cue(4) - 40, ease.in);
 	const landed = inT >= 1 && offT <= 0;
-	const bx = offT > 0 ? 1080 + Math.cos(offT * 7) * 260 * (1 - offT) + (960 - 1080) * offT : -200 + (1080 + 200) * inT;
-	const by = offT > 0 ? 470 + Math.sin(offT * 7) * 150 * (1 - offT) - 60 * offT : 300 + (470 - 300) * inT - Math.sin(inT * Math.PI) * 140;
+	const bx = offT > 0 ? 1050 + Math.cos(offT * 7) * 260 * (1 - offT) + (960 - 1050) * offT : -200 + (1050 + 200) * inT;
+	const by = offT > 0 ? 480 + Math.sin(offT * 7) * 150 * (1 - offT) - 60 * offT : 300 + (480 - 300) * inT - Math.sin(inT * Math.PI) * 140;
 	const bs = offT > 0 ? 1.6 + 14 * offT ** 3 : 1.6;
 	const panel = prog(f, cue(3) + 70, 14) * (1 - prog(f, cue(4) - 10, 12));
 	const trail = Array.from({length: 24}, (_, i) => {
 		const o = Math.max(0, offT - i * 0.012);
-		return [1080 + Math.cos(o * 7) * 260 * (1 - o) + (960 - 1080) * o, 470 + Math.sin(o * 7) * 150 * (1 - o) - 60 * o];
+		return [1050 + Math.cos(o * 7) * 260 * (1 - o) + (960 - 1050) * o, 480 + Math.sin(o * 7) * 150 * (1 - o) - 60 * o];
 	});
 	const ff = prog(f, end - 26, 22);
 	return (
@@ -1185,9 +1256,13 @@ const Flower: React.FC<SceneProps> = () => {
 			<rect width={W} height={H} fill="url(#sky-morning)" opacity={0.25} />
 			<Bokeh f={f} n={34} seed="fl" gold={0.5} />
 			{/* the branch in bloom, wide */}
-			<g opacity={wide}>
-				<g transform="translate(-60,820) rotate(-14) scale(2.1)">
-					<Branch mode="flower" f={f} seed="wf" len={1000} />
+			<g opacity={wide} transform={`translate(${-80 * prog(f, cue(1) - 6, cue(2) - cue(1), ease.inOut)},0)`}>
+				{/* a far branch, soft, and a near one across the frame */}
+				<g transform="translate(2100,180) rotate(160) scale(1.6)" opacity={0.55} filter="url(#blur-sm)">
+					<Branch mode="flower" f={f} seed="wf2" len={900} />
+				</g>
+				<g transform="translate(-120,900) rotate(-18) scale(3)">
+					<Branch mode="flower" f={f} seed="wf" len={760} open={prog(f, cue(1) - 6, 40, ease.out)} />
 				</g>
 				{Array.from({length: 24}, (_, i) => {
 					const u = ((f / 120 + i / 24) % 1);
@@ -1196,13 +1271,30 @@ const Flower: React.FC<SceneProps> = () => {
 			</g>
 			{/* the one flower: opens out of the rewind, then the camera goes into its heart */}
 			<g opacity={1 - wide}>
-				<g transform={`translate(1000,500) scale(${(3.2 + 3 * macro) * (0.5 + 0.5 * open)})`}>
-					<CoffeeFlower r={60} open={open} rot={8} />
+				<g transform={`translate(1000,500) scale(${(3.2 + 3 * macro) * (0.5 + 0.5 * open) * (1 + 0.025 * Math.sin(f / 22))})`}>
+					<CoffeeFlower r={60} open={open} rot={8 + 10 * prog(f, 0, end, ease.inOut) + 2 * Math.sin(f / 37)} />
 				</g>
+				{/* pollen and scent drifting up out of the flower */}
+				{Array.from({length: 18}, (_, i) => {
+					const u = (f / 90 + i / 18) % 1;
+					const x = 1000 + (random(`pl${i}`) - 0.5) * 260 + Math.sin(u * 6 + i) * 60 * u;
+					return <circle key={i} cx={x} cy={500 - u * 520} r={2.5 + 3 * random(`plr${i}`)} fill="#ffe7a8" opacity={0.8 * Math.sin(u * Math.PI) * open} />;
+				})}
 				<circle cx={1000} cy={500} r={40 + 120 * nectar} fill="url(#glow-lamp)" opacity={nectar * (landed ? 0.6 : 1)} />
-				<g transform="translate(1000,500) scale(0.9)">
-					<CaffeineMolecule o={mol * (1 - prog(f, cue(3) - 10, 12))} />
-				</g>
+				{mol > 0 ? (
+					<g opacity={mol * (1 - prog(f, cue(3) - 10, 12))}>
+						<line x1={1040} y1={470} x2={1040 + 370 * mol} y2={470 - 110 * mol} stroke={color.gold} strokeWidth={3} strokeDasharray="6 8" />
+						<g transform={`translate(1560,340) scale(${0.6 + 0.4 * spring({frame: f - cue(2) - 40, fps, config: {damping: 12}})})`}>
+							<circle r={210} fill="#0b0806" opacity={0.6} />
+							<g transform="translate(-40,0) scale(1.1)">
+								<CaffeineMolecule o={1} />
+							</g>
+							<text x={0} y={190} textAnchor="middle" style={{fontFamily: font.sans, fontSize: 30, letterSpacing: '0.3em', fill: color.gold}}>
+								咖啡因
+							</text>
+						</g>
+					</g>
+				) : null}
 			</g>
 			{/* the memory trail as the bee circles */}
 			{offT > 0 ? <polyline points={trail.map((p) => p.join(',')).join(' ')} fill="none" stroke={color.gold} strokeWidth={4} strokeLinecap="round" opacity={0.7} /> : null}
@@ -1213,7 +1305,7 @@ const Flower: React.FC<SceneProps> = () => {
 			) : null}
 			{/* 24 h later, who still remembers the scent */}
 			{panel > 0 ? (
-				<g transform="translate(150,260)" opacity={panel}>
+				<g transform={`translate(60,${240 + 30 * (1 - panel)}) scale(1.08)`} opacity={panel}>
 					<rect x={0} y={0} width={560} height={360} rx={22} fill="#0b0806" opacity={0.6} />
 					<text x={280} y={60} textAnchor="middle" style={{fontFamily: font.sans, fontSize: 26, letterSpacing: '0.15em', fill: '#efe6d6'}}>
 						24 小时后 · 还记得花香
@@ -1221,14 +1313,14 @@ const Flower: React.FC<SceneProps> = () => {
 					<text x={40} y={160} style={{fontFamily: font.sans, fontSize: 26, fill: '#c9c1b4'}}>
 						普通蜜蜂
 					</text>
-					<g transform="translate(260,150) scale(0.6)">
+					<g transform="translate(270,150) scale(0.85)">
 						<Bee flap={0} fly={0} />
 					</g>
 					<text x={40} y={280} style={{fontFamily: font.sans, fontSize: 26, fill: color.gold}}>
 						喝过咖啡因
 					</text>
 					{[0, 1, 2].map((i) => (
-						<g key={i} transform={`translate(${260 + i * 90},270) scale(${0.6 * spring({frame: f - cue(3) - 90 - i * 8, fps, config: {damping: 12}})})`}>
+						<g key={i} transform={`translate(${270 + i * 86},270) scale(${0.85 * spring({frame: f - cue(3) - 90 - i * 8, fps, config: {damping: 12}})})`}>
 							<Bee flap={0} fly={0} />
 						</g>
 					))}
@@ -1259,8 +1351,8 @@ const Callback: React.FC<SceneProps> = () => {
 	const glow = prog(f, cue(1) + 20, 30);
 	const bloom = prog(f, cue(1) + 30, 50, ease.out);
 	// the fast-forward montage: every stop flicks past in a few frames
-	const MONT = 34;
-	const shot = Math.floor(f / 6);
+	const MONT = 44;
+	const shot = Math.floor(f / 8);
 	const montage = f < MONT;
 	const cam = camMix(lookAt(990, 640, 1.5), lookAt(lid.x, lid.y - 40, 1.9), prog(f, cue(0), end - cue(0), ease.inOut));
 	return (
@@ -1303,9 +1395,9 @@ const Callback: React.FC<SceneProps> = () => {
 					</g>
 					{/* the steam curls into the shape of the flower it came from */}
 					{bloom > 0 ? (
-						<g transform={`translate(${lid.x + 6},${lid.y - 70 - 60 * bloom}) scale(${0.6 + 0.6 * bloom})`} opacity={Math.sin(bloom * Math.PI) * 0.9} filter="url(#blur-sm)">
+						<g transform={`translate(${lid.x + 6},${lid.y - 80 - 70 * bloom}) scale(${0.8 + 0.9 * bloom}) rotate(${30 * bloom})`} opacity={Math.min(1, Math.sin(bloom * Math.PI) * 1.4)}>
 							{Array.from({length: 5}, (_, i) => (
-								<path key={i} d="M0,0 C14,-16 14,-44 0,-56 C-14,-44 -14,-16 0,0 Z" fill="none" stroke="#fff8ec" strokeWidth={5} transform={`rotate(${i * 72})`} />
+								<path key={i} d="M0,0 C14,-16 14,-44 0,-56 C-14,-44 -14,-16 0,0 Z" fill="#fff8ec" fillOpacity={0.25} stroke="#fff8ec" strokeWidth={4} transform={`rotate(${i * 72})`} />
 							))}
 						</g>
 					) : null}
