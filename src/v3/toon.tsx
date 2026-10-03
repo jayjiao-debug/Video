@@ -311,8 +311,9 @@ const Londoner: React.FC<{ x: number; y: number; s: number; kid?: boolean; T: nu
 };
 export const Buzz2D: React.FC<{ T: number }> = ({ T }) => {
   const A = b(48), CUTE = b(52), HIT = b(54), OUT = b(56);
-  if (T < A - 0.2 || T > OUT + 0.05) return null;
-  const o = Math.min(easeOut(prog(T, A - 0.2, A + 0.15)), 1 - prog(T, OUT - 0.2, OUT));
+  if (T < A - 0.2 || T > OUT + 0.4) return null;
+  // fades out only after the 3D camera has cut to the overview, so the dissolve lands on the map
+  const o = Math.min(easeOut(prog(T, A - 0.2, A + 0.15)), 1 - prog(T, OUT, OUT + 0.35));
   // flight: across the moon with the engine running; engine cuts; the glide steepens into a dive behind the roofs
   const ux = prog(T, A, CUTE);
   let bx = lerp(2150, 1080, ux), by = lerp(260, 300, ux), ang = 0;
