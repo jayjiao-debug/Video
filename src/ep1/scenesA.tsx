@@ -14,10 +14,10 @@ export const Intro: React.FC<{ t: number }> = ({ t }) => {
   const hits = [0, 2, 4, 6, 8, 10, 12, 14, 16, 18].map((i) => beats[i]);
   const sP = easeOut(prog(t, 0.0, 0.8));
   // camera: slow drift, then pull back
-  const push = 1;
+  const push = lerp(1, 1.035, prog(t, 0, 10.57));
   const pull = easeInOut(prog(t, 10.57, 12.9));
   const scale = lerp(push, 0.9, pull);
-  const tx = 0;
+  const tx = lerp(0, -30, prog(t, 0, 10.57)) * (1 - pull);
   const ty = lerp(0, -40, pull);
   const dimAll = easeInOut(prog(t, 12.61, 13.4)) * 0.7;
   const worldO = 1 - easeInOut(prog(t, 15.6, 16.35));
@@ -109,7 +109,7 @@ export const Rules: React.FC<{ t: number }> = ({ t }) => {
     { at: 22.71, zh: '当场决定，拒绝了不能回头', en: 'Decide on the spot. No going back.', icon: 'door', n: '②' },
     { at: 24.75, zh: '你只想要最好的那一个', en: 'You only want the very best one.', icon: 'crown', n: '③' },
   ] as const;
-  const cam = 1;
+  const cam = lerp(1, 1.025, prog(t, 20.6, 28.95));
   return (
     <AbsoluteFill style={{ opacity: o }}>
       <div style={{ position: 'absolute', left: 110, top: 96, opacity: easeOut(prog(t, S, S + 0.6)) }}>
@@ -166,7 +166,7 @@ export const TooEarlyLate: React.FC<{ t: number }> = ({ t }) => {
     if (i >= 2 && i <= 6) return beatAfter(S, i + 1);
     return 999;
   };
-  const cam = 1;
+  const cam = lerp(1.02, 1, prog(t, 28.7, 37.05));
   let youX = cardX(0), youO = 1;
   if (!part2) {
     youX = t < beatAfter(S, 1) ? cardX(0) : lerp(cardX(0), cardX(1), easeInOut(prog(t, beatAfter(S, 1), beatAfter(S, 1) + 0.3)));

@@ -113,15 +113,14 @@ export const splitLine = (s: string, max = 13): string[] => {
 /** Ep1 subtitle, as published: one line of ~56px serif Chinese with a small italic English line under it, no band. */
 export const Subtitle: React.FC<{
   t: number; at: number; out: number; zh: string; en?: string; y?: number; size?: number; enSize?: number; weight?: number; showEn?: boolean; band?: boolean;
-}> = ({ t, at, out, zh, en, y = 900, size = SUB_SIZE, enSize = SUB_EN, weight = SUB_W, showEn = true }) => {
+}> = ({ t, at, out, zh, en, y = SUB_Y, size = SUB_SIZE, enSize = SUB_EN, weight = SUB_W, showEn = true }) => {
   const o = inOut(t, at, out, 0.3, 0.25);
   if (o <= 0) return null;
   const rise = (1 - easeOut(prog(t, at, at + 0.35))) * 18;
-  const lh = size * 1.28;
-  const h = lh + (showEn && en ? enSize + SUB_GAP : 0);
+  const lh = size * SUB_LH;
   return (
-    <div style={{ position: 'absolute', left: 0, right: 0, top: y - h / 2 + SUB_DY, textAlign: 'center', opacity: o, transform: `translateY(${rise}px)` }}>
-      <div style={{ fontFamily: ZH, fontSize: size, lineHeight: `${lh}px`, fontWeight: weight, color: C.paper, letterSpacing: '0.04em',
+    <div style={{ position: 'absolute', left: 0, right: 0, top: y - size * SUB_K, textAlign: 'center', opacity: o, transform: `translateY(${rise}px)` }}>
+      <div style={{ fontFamily: ZH, fontSize: size, lineHeight: `${lh}px`, fontWeight: weight, color: C.paper, letterSpacing: SUB_LS,
         textShadow: '0 2px 12px rgba(0,0,0,0.8)' }}>
         <Rich s={zh.replace(/\|/g, '')} />
       </div>
@@ -133,20 +132,22 @@ export const Subtitle: React.FC<{
     </div>
   );
 };
-export const SUB_SIZE = 56, SUB_EN = 30, SUB_W = 500, SUB_GAP = 9, SUB_DY = 0;
+export const SUB_SIZE = 54, SUB_EN = 30, SUB_W = 500, SUB_GAP = 9, SUB_Y = 868, SUB_K = 0.51, SUB_LS = '0.08em', SUB_LH = 1.45;
 
+/** Ep1 year stamp, as published (the later episodes enlarged it). */
+export const YS = { left: 110, top: 78, size: 92, line: 250, gap: 10, place: 24, ls: '0.15em' };
 export const YearStamp: React.FC<{ t: number; at: number; out: number; year: string; place: string; approx?: string }> = ({ t, at, out, year, place, approx }) => {
   const o = inOut(t, at, out, 0.6, 0.4);
   if (o <= 0) return null;
   const ln = easeOut(prog(t, at + 0.15, at + 0.9));
   return (
-    <div style={{ position: 'absolute', left: 100, top: 60, opacity: o }}>
-      <div style={{ fontFamily: EN, fontWeight: 600, fontSize: 128, color: C.gold, letterSpacing: '0.04em', lineHeight: 1, fontVariantNumeric: 'lining-nums' }}>
+    <div style={{ position: 'absolute', left: YS.left, top: YS.top, opacity: o }}>
+      <div style={{ fontFamily: EN, fontWeight: 600, fontSize: YS.size, color: C.gold, letterSpacing: '0.04em', lineHeight: 1, fontVariantNumeric: 'lining-nums' }}>
         {approx && <span style={{ fontFamily: ZH, fontSize: 24, color: C.dim, marginRight: 8, verticalAlign: 'top' }}>{approx}</span>}
         {year}
       </div>
-      <div style={{ width: 330, height: 2, background: C.gold, opacity: 0.6, marginTop: 14, transform: `scaleX(${ln})`, transformOrigin: 'left' }} />
-      <div style={{ fontFamily: ZH, fontSize: 38, color: C.paper, opacity: 0.8, marginTop: 14, letterSpacing: '0.16em' }}>{place}</div>
+      <div style={{ width: YS.line, height: 2, background: C.gold, opacity: 0.6, marginTop: YS.gap + 2, transform: `scaleX(${ln})`, transformOrigin: 'left' }} />
+      <div style={{ fontFamily: ZH, fontSize: YS.place, color: C.paper, opacity: 0.8, marginTop: YS.gap + 1, letterSpacing: YS.ls }}>{place}</div>
     </div>
   );
 };

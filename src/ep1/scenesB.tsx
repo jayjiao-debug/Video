@@ -90,7 +90,7 @@ const keplerPos = (M: number, a: number, e: number) => {
 export const Kepler: React.FC<{ t: number }> = ({ t }) => {
   const S = 49.04, P = 57.14, E = 63.2;
   const o = Math.min(prog(t, S - 0.25, S + 0.1), 1 - prog(t, E - 0.25, E + 0.1));
-  const cam = 1;
+  const cam = lerp(1, 1.05, prog(t, S, E));
   // orbit
   const a = 640, ecc = 0.93, b = a * Math.sqrt(1 - ecc * ecc);
   const cx = 960, cy = 205;
