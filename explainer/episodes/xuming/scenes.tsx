@@ -619,8 +619,8 @@ const Defense: React.FC<SceneProps> = () => {
 	const [ex, ey] = leafEdge(cu);
 	// tilt down to the soil
 	const tilt = prog(f, cue(2) - 6, 32, ease.inOut);
-	const soilOut = prog(f, cue(3) - 12, 14);
-	const treeIn = prog(f, cue(3) - 4, 20);
+	const soilOut = prog(f, cue(3) - 6, 12);
+	const treeIn = prog(f, cue(3) - 8, 12);
 	const tipHits = events(cue(3) + 30, end - 30, 3, 16);
 	const lit = tipHits.map((h) => spring({frame: f - h, fps, config: {damping: 14}}));
 	const dive = prog(f, end - 18, 18, ease.in);
@@ -724,7 +724,7 @@ const Defense: React.FC<SceneProps> = () => {
 				<g opacity={treeIn}>
 					<g transform={`translate(1360,420) scale(${1 + 7 * dive ** 2}) translate(-1360,-420)`}>
 						<g transform="translate(1000,420)">
-							<Tree lit={lit} draw={prog(f, cue(3) - 4, 34)} />
+							<Tree lit={lit} draw={prog(f, cue(3) - 8, 18)} />
 						</g>
 					</g>
 					<Label en="Convergent evolution" zh="趋同演化 · Denoeud et al., Science 2014" o={landed(f, cue(3) + 10, end - 16)} />
@@ -830,7 +830,11 @@ const Bees: React.FC<SceneProps> = () => {
 		<Stage>
 			<Night x={960} y={500} r={900} />
 			<Motes f={af} n={50} seed="be" o={0.6} />
-			<g transform={`translate(${fx},${C.y})`} opacity={1 - 0.7 * fade}>
+			<g transform={`translate(${fx},${C.y}) scale(${1 + 0.18 * prog(f, cue(0), cue(2) - cue(0), ease.inOut) * (1 - side)})`} opacity={1 - 0.7 * fade}>
+				{Array.from({length: 16}, (_, i) => {
+					const u = (af / 70 + i / 16) % 1;
+					return <circle key={`p${i}`} cx={(random(`fp${i}`) - 0.5) * 160 + Math.sin(u * 6 + i) * 30} cy={-u * 420} r={2.5 + 2 * random(`fq${i}`)} fill={AMBER.gold} opacity={0.7 * Math.sin(u * Math.PI) * open} />;
+				})}
 				<path d={`M0,40 C-40,200 -30,400 -60,700`} stroke="#3a2a16" strokeWidth={10} fill="none" />
 				<path d={leafD(260, 0.3)} transform="translate(-40,240) rotate(160)" fill="#101a0c" stroke={AMBER.amber} strokeWidth={1.5} strokeOpacity={0.5} />
 				<path d={leafD(240, 0.3)} transform="translate(-45,300) rotate(20)" fill="#101a0c" stroke={AMBER.amber} strokeWidth={1.5} strokeOpacity={0.5} />
@@ -1106,11 +1110,13 @@ const Roast: React.FC<SceneProps> = () => {
 			<g transform={`translate(${sx},${sy})`}>
 				{/* the bean (and the gauge around it) */}
 				<g opacity={1 - inside} transform={`translate(960,${mix(560, 540, inside)}) scale(${(0.6 + 0.4 * inB) * (1 + 0.14 * crack + 3 * inside ** 2)})`}>
-					<BeanLine r={150} color={beanCol} fill="#160d06" w={6} />
+					<g transform={`scale(${0.82 + 0.18 * Math.cos(af / 26)},1) rotate(${4 * Math.sin(af / 40)})`}>
+						<BeanLine r={150} color={beanCol} fill="#160d06" w={6} />
+					</g>
 					{/* green and grassy at first */}
 					{Array.from({length: 18}, (_, i) => {
 						const u = ((af / 120 + i / 18) % 1);
-						return <path key={i} d={leafD(26, 0.3)} transform={`translate(${(random(`gx${i}`) - 0.5) * 420},${200 - u * 460}) rotate(${-90 + 40 * Math.sin(u * 5 + i)})`} fill={AMBER.green} opacity={0.5 * Math.sin(u * Math.PI) * (1 - heat)} />;
+						return <path key={i} d={leafD(34, 0.3)} transform={`translate(${(random(`gx${i}`) - 0.5) * 420},${200 - u * 460}) rotate(${-90 + 40 * Math.sin(u * 5 + i)})`} fill={AMBER.green} opacity={0.85 * Math.sin(u * Math.PI) * (1 - heat)} filter="url(#g-sm)" />;
 					})}
 					{crack > 0.02
 						? Array.from({length: 16}, (_, i) => {
@@ -1256,7 +1262,7 @@ const Body: React.FC<SceneProps> = () => {
 	const end = scene.duration;
 	const axes = prog(f, 0, 20);
 	// the curve draws through the day: fast to the peak, then the slow decline
-	const tNow = f < cue(1) ? mix(0, 2.2, prog(f, cue(0), cue(1) - cue(0) - 10, ease.inOut)) : mix(2.2, 9.6, prog(f, cue(1) - 10, 120, ease.inOut));
+	const tNow = f < cue(0) + 60 ? mix(0, 1.2, prog(f, cue(0), 60, ease.out)) : mix(1.2, 9.6, prog(f, cue(0) + 60, cue(1) + 110 - cue(0) - 60, (x) => x));
 	const pts: string[] = [];
 	for (let t = 0; t <= tNow; t += 0.05) pts.push(`${gx(t)},${gy(conc(t))}`);
 	const half = TMAX + 5;
@@ -1359,7 +1365,7 @@ const Coda: React.FC<SceneProps> = () => {
 			<g clipPath="url(#cup-clip)">
 				{/* reflections in the coffee: the plant, then the flower */}
 				<g transform="translate(960,860) scale(1.15)" opacity={0.3 * shrub}>
-					<Shrub f={af} glow={0.9} />
+					<Shrub f={af} glow={0.25} />
 				</g>
 				<g transform="translate(960,540) scale(0.95)" opacity={flower}>
 					<GlowFlower open={1} f={af} />
