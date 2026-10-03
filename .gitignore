@@ -3,3 +3,5 @@ __pycache__/
 output/stills/
 output/preview_*.mp4
 output/soundtrack.wav
+# Downloaded reference footage (not ours to redistribute; kept local only)
+input/
