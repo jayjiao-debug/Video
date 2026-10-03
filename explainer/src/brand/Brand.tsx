@@ -168,14 +168,14 @@ const Motif: React.FC<{kind: VideoCfg['motif']; p: number; f: number}> = ({kind,
 		);
 	}
 	// stars: a constellation that resolves into the Drake-style product
-	const pts = Array.from({length: 18}, (_, i) => [(random(`m${i}`) - 0.5) * 640, (random(`n${i}`) - 0.5) * 70] as [number, number]);
+	const pts = Array.from({length: 18}, (_, i) => [(random(`m${i}`) - 0.5) * 640, (random(`n${i}`) - 0.5) * 44 - 18] as [number, number]);
 	return (
 		<g>
 			{pts.map(([x, y], i) => (
 				<circle key={i} cx={x} cy={y} r={i === 7 ? 5 : 2.2} fill={i === 7 ? '#fff4d6' : GOLD} opacity={Math.min(1, Math.max(0, p * 18 - i)) * (0.5 + 0.5 * Math.sin(f / 9 + i))} />
 			))}
 			<circle cx={pts[7][0]} cy={pts[7][1]} r={34} fill="url(#brand-glow)" opacity={p} />
-			<text y={70} textAnchor="middle" style={{fontFamily: font.latinItalic, fontStyle: 'italic', fontSize: 30, fill: GOLD, letterSpacing: '0.12em'}} opacity={Math.max(0, p * 2 - 1)}>
+			<text y={36} textAnchor="middle" style={{fontFamily: font.latinItalic, fontStyle: 'italic', fontSize: 24, fill: GOLD, letterSpacing: '0.12em'}} opacity={Math.max(0, p * 2 - 1)}>
 				N = R* · fp · ne · fl · fi · fc · L
 			</text>
 		</g>
