@@ -1,8 +1,8 @@
-import React, { useMemo } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import * as THREE from 'three';
 import { useThree } from '@react-three/fiber';
 import { ThreeCanvas } from '@remotion/three';
-import { AbsoluteFill, Sequence, useCurrentFrame, useVideoConfig } from 'remotion';
+import { AbsoluteFill, Sequence, continueRender, delayRender, useCurrentFrame, useVideoConfig } from 'remotion';
 import { C, ZH, EN, prog, easeOut, easeIn, easeInOut, lerp } from '../lib';
 import { Vignette, Grain } from '../ui';
 import { v3 } from '../t3/Open3D';
@@ -16,6 +16,7 @@ import {
   COUNT_RUN, RUN_CENTER, countAt, TILE_H, PILE_Z, PILE_Y, PX, SIM_DX, flyAt, SIM_T, SIM_CELL_OF, SIM_CELLS, simFlyAt,
 } from './data3';
 import { JUNO } from '../brand/identity';
+import { V1Model, Explosion, Spy, shake } from './fx';
 import { TitleCard, EndCard, type VideoCfg } from '../brand/Brand';
 import { CornerMark } from '../brand/CornerMark';
 
@@ -49,9 +50,31 @@ const near = (x: number, z: number, d = 5.6, h = 5.6) => [[x + 1.4, h, z + d], [
 const panelCam = (i: number, push = 0) => [[PXS[i], PY - 0.15, PZ + 10.9 - push], [PXS[i], PY - 0.5, PZ]];
 const HC = [HERO.x, 0, HERO.z];
 const CUTK = 0.001;
+const CO_A = [9.0, 1.55, 7.4], CO_V = [1.75, 0, -0.22], CO_CUT = b(4), CO_HIT = b(7);
+const CO_P1 = CO_A.map((x, j) => x + CO_V[j] * CO_CUT);
+const CO_G = [CO_P1[0] + 2.3, 0.14, CO_P1[2] - 0.4];
+const coldPos = (T: number) => {
+  if (T <= CO_CUT) return CO_A.map((x, j) => x + CO_V[j] * T);
+  const u = Math.pow(prog(T, CO_CUT, CO_HIT), 1.25);
+  const c = CO_P1.map((x, j) => x + CO_V[j] * 0.8);
+  return CO_P1.map((x, j) => (1 - u) * (1 - u) * x + 2 * (1 - u) * u * c[j] + u * u * CO_G[j]);
+};
+const CO_OFF = [0.12, 0.05, 1.65];
+const coldCam = (T: number) => {
+  const bp = coldPos(Math.min(T, CO_HIT));
+  if (T <= CO_CUT) return { pos: bp.map((x, j) => x + CO_OFF[j]), look: bp.map((x, j) => x + [-0.06, 0.03, 0][j]) };
+  const p1 = CO_P1.map((x, j) => x + CO_OFF[j]);
+  const p2 = [CO_G[0] - 1.6, 1.05, CO_G[2] + 2.9];
+  const k = easeInOut(prog(T, CO_CUT, CO_HIT - 0.2));
+  const sh = shake(T - CO_HIT, 0.07);
+  return {
+    pos: p1.map((x, j) => lerp(x, p2[j], k) + sh[j]),
+    look: bp.map((x, j) => lerp(x, CO_G[j] + (j === 1 ? 0.25 : 0), prog(T, CO_HIT - 0.4, CO_HIT)) + sh[j] * 0.5),
+  };
+};
 const KEYS: Key[] = [
   [0.0, [1.5, 9.6, 10.5], [3.6, 5, 1.2]],
-  [4.48, [10.8, 9.6, 10.5], [9.8, 5, 1.2]],
+  [b(8) + 0.4, [10.8, 22, 14], [7, 4.6, 0]],
   [b(16), HOOK_P, HOOK_L],
   [DROP1, [7, 29.2, 13.0], HOOK_L],
   [b(36), [0, 17.5, 13.2], [0, 0, 0]],
@@ -64,9 +87,9 @@ const KEYS: Key[] = [
   [b(64) - 0.4, [0, 15.9, 12.0], SQUARE_L],
   [b(64) + 1.4, near(HOT_SPOT.x, HOT_SPOT.z)[0], near(HOT_SPOT.x, HOT_SPOT.z)[1]],
   [b(72) - 0.1, near(HOT_SPOT.x, HOT_SPOT.z, 5.2, 5.2)[0], near(HOT_SPOT.x, HOT_SPOT.z, 5.2, 5.2)[1]],
-  [b(72) + 1.4, near(COLD_SPOT.x, COLD_SPOT.z)[0], near(COLD_SPOT.x, COLD_SPOT.z)[1]],
-  [CLARKE - 0.1, near(COLD_SPOT.x, COLD_SPOT.z, 5.2, 5.2)[0], near(COLD_SPOT.x, COLD_SPOT.z, 5.2, 5.2)[1]],
-  [CLARKE + 1.6, SQUARE_P, SQUARE_L],
+  [b(72) + 1.4, [COLD_SPOT.x + 1.0, 1.45, COLD_SPOT.z + 3.0], [COLD_SPOT.x - 0.1, 0.6, COLD_SPOT.z]],
+  [CLARKE - 0.1, [COLD_SPOT.x + 0.8, 1.3, COLD_SPOT.z + 2.6], [COLD_SPOT.x - 0.1, 0.6, COLD_SPOT.z]],
+  [CLARKE + 1.6, [0, 18.2, 14.2], [0, 0, 0.1]],
   [BD - 0.3, [0, 16.0, 12.2], SQUARE_L],
   [BD + 0.9, runP, runL],
   [b(104), [runP[0] - 0.4, runP[1] - 0.15, runP[2] - 0.3], runL],
@@ -114,9 +137,17 @@ const camAt = (T: number) => {
   const k = i === 0 ? raw : easeInOut(raw);
   const pos = pa.map((x, j) => lerp(x, pb[j], k));
   let look = la.map((x, j) => lerp(x, lb[j], k));
+  if (T < b(8) + 0.2) return coldCam(T);
   if (T >= b(48) && T < b(56)) {
     const hp = heroPos(Math.min(T, b(54)));
-    look = look.map((x, j) => lerp(x, hp[j], 0.4));
+    const H = [HERO.x, 0.14, HERO.z];
+    const ride = (t: number) => { const q = heroPos(t); return [q[0] + 0.9, Math.max(0.5, q[1] - 0.75), q[2] + 1.9]; };
+    const hold = [H[0] + 1.7, 0.6, H[2] + 3.4];
+    const k = easeInOut(prog(T, b(52) - 0.2, b(54) - 0.3));
+    const p0 = ride(Math.min(T, b(52)));
+    const sh = shake(T - b(54), 0.06);
+    const lk = T < b(54) ? hp : [H[0], 0.45, H[2]];
+    return { pos: p0.map((x, j) => lerp(x, hold[j], k) + sh[j]), look: lk.map((x, j) => x + sh[j] * 0.5) };
   }
   return { pos, look };
 };
@@ -131,9 +162,9 @@ const CamRig: React.FC<{ T: number }> = ({ T }) => {
 
 /* ---------- the two boards ---------- */
 const BOARD_S = 12.8;
-const boardO = (T: number) => Math.min(1 - prog(T, DROP1, DROP1 + 0.45), 1) + win(T, BACK + 0.1, CASES + 0.2, 0.7, 0.6);
-const rightO = (T: number) => (1 - prog(T, DROP1, DROP1 + 0.5)) + win(T, BACK + 0.5, CASES + 0.2, 0.7, 0.6);
-const appearAt = (rank: number) => b(Math.floor(rank * 8)) + (rank * 8 % 1) * 0.16;
+const boardO = (T: number) => (T > b(12) ? 1 : 0) * (1 - prog(T, DROP1, DROP1 + 0.45)) + win(T, BACK + 0.1, CASES + 0.2, 0.7, 0.6);
+const rightO = (T: number) => (T > b(12) ? 1 : 0) * (1 - prog(T, DROP1, DROP1 + 0.5)) + win(T, BACK + 0.5, CASES + 0.2, 0.7, 0.6);
+const appearAt = (rank: number) => b(16 + Math.floor(rank * 7)) + (rank * 7 % 1) * 0.16;
 const Slab: React.FC<{ x: number; o: number }> = ({ x, o }) => {
   if (o <= 0.001) return null;
   const e = BOARD_S / 2;
@@ -215,7 +246,7 @@ const inSqLift = (T: number, d: number) => easeInOut(prog(T, BACK + 0.2 + d * 0.
 /** once an ember is back up on the board it turns into the same cream dot as at the start */
 const onBoard = (T: number, h: { inSquare: boolean; delay: number }) => (h.inSquare ? prog(inSqLift(T, h.delay), 0.85, 1) : 0);
 const inSqHide = (T: number) => easeInOut(prog(T, b(130), b(132))) * (1 - easeInOut(prog(T, BACK, BACK + 0.25)));
-const Hits: React.FC<{ T: number; dim: number; warm: number }> = ({ T, dim, warm }) => {
+const Hits: React.FC<{ T: number; dim: number; warm: number; focus: number; fade: number }> = ({ T, dim, warm, focus, fade }) => {
   const { core, halo } = useMemo(() => {
     const cg = new THREE.SphereGeometry(0.035, 10, 8);
     const cm = new THREE.MeshStandardMaterial({ color: '#ffd7a0', emissive: '#ff8a2a', emissiveIntensity: 2.2, roughness: 0.4 });
@@ -236,7 +267,7 @@ const Hits: React.FC<{ T: number; dim: number; warm: number }> = ({ T, dim, warm
     const flash = age >= 0 ? Math.exp(-age * 2.2) : 0;
     const pop = age >= 0 ? easeOut(Math.min(1, age / 0.18)) : 0;
     const lift = h.inSquare ? inSqLift(T, h.delay) : 0;
-    const vis = h.inSquare ? Math.max(1 - hide, lift) : 1;
+    const vis = (h.inSquare ? Math.max(1 - hide, lift) : 1 - 0.55 * focus) * (1 - 0.6 * fade);
     const y = lerp(0.16, BOARD_Y + 0.1, lift);
     o.position.set(h.x, y, h.z);
     o.rotation.set(0, 0, 0);
@@ -248,14 +279,14 @@ const Hits: React.FC<{ T: number; dim: number; warm: number }> = ({ T, dim, warm
     o.scale.set(Math.max(0.0001, s), 1, Math.max(0.0001, s));
     o.updateMatrix();
     halo.setMatrixAt(i, o.matrix);
-    const glow = (0.35 + 0.65 * flash) * (1 - dim * 0.7 * (1 - lift)) + warm * 0.18;
+    const glow = ((0.35 + 0.65 * flash) * (1 - dim * 0.7 * (1 - lift)) + warm * 0.18) * (h.inSquare ? 1 : 1 - 0.7 * focus) * (1 - 0.85 * fade);
     col.copy(COOLED).lerp(EMBER, Math.min(1, flash + warm + lift)).multiplyScalar(glow);
     halo.setColorAt(i, col);
   });
   core.instanceMatrix.needsUpdate = true;
   halo.instanceMatrix.needsUpdate = true;
   if (halo.instanceColor) halo.instanceColor.needsUpdate = true;
-  (core.material as THREE.MeshStandardMaterial).emissiveIntensity = 2.2 * (1 - dim * 0.6) + warm * 0.5;
+  (core.material as THREE.MeshStandardMaterial).emissiveIntensity = (2.2 * (1 - dim * 0.6) + warm * 0.5) * (1 - 0.8 * fade);
   return (
     <>
       <primitive object={core} />
@@ -312,62 +343,58 @@ const Streaks: React.FC<{ T: number }> = ({ T }) => {
   );
 };
 
-/* ---------- the hero V-1: you hear it, then you don't ---------- */
-const HeroBomb: React.FC<{ T: number }> = ({ T }) => {
-  if (T < b(48) || T >= HERO.t) return null;
-  const p = heroPos(T);
-  const q = heroPos(T + 0.02);
-  const dir = new THREE.Vector3(q[0] - p[0], q[1] - p[1], q[2] - p[2]).normalize();
+/* ---------- the V-1s: the cold-open chase and the low shot over the rooftops ---------- */
+const orient = (p: number[], q: number[]) => {
   const m = new THREE.Object3D();
   m.position.set(p[0], p[1], p[2]);
-  m.lookAt(p[0] + dir.x, p[1] + dir.y, p[2] + dir.z);
-  const engine = T < b(52) ? 1 : Math.max(0, 1 - (T - b(52)) / 0.12);
-  const flick = 0.75 + 0.25 * Math.sin(T * 97) * Math.sin(T * 41);
+  m.lookAt(q[0], q[1], q[2]);
+  return m;
+};
+const FlyingBomb: React.FC<{ T: number; p: number[]; q: number[]; engine: number; scale: number }> = ({ T, p, q, engine, scale }) => {
+  const m = orient(p, q);
   return (
-    <group position={m.position} quaternion={m.quaternion} scale={2.2}>
-      <mesh rotation={[Math.PI / 2, 0, 0]}>
-        <cylinderGeometry args={[0.034, 0.026, 0.34, 14]} />
-        <meshStandardMaterial color="#4b4e57" roughness={0.5} metalness={0.5} />
-      </mesh>
-      <mesh position={[0, 0, 0.17]} rotation={[Math.PI / 2, 0, 0]}>
-        <coneGeometry args={[0.034, 0.08, 14]} />
-        <meshStandardMaterial color="#5a5d66" roughness={0.5} metalness={0.5} />
-      </mesh>
-      <mesh position={[0, 0, 0.02]}>
-        <boxGeometry args={[0.36, 0.008, 0.07]} />
-        <meshStandardMaterial color="#454852" roughness={0.6} />
-      </mesh>
-      <mesh position={[0, 0.055, -0.13]} rotation={[Math.PI / 2, 0, 0]}>
-        <cylinderGeometry args={[0.018, 0.016, 0.24, 10]} />
-        <meshStandardMaterial color="#3c3f47" roughness={0.6} metalness={0.4} />
-      </mesh>
-      {engine > 0.01 && (
-        <mesh position={[0, 0.055, -0.33]} rotation={[-Math.PI / 2, 0, 0]}>
-          <coneGeometry args={[0.022 * flick, 0.2 * flick, 10]} />
-          <meshBasicMaterial color="#ffb45a" transparent opacity={engine * 0.95} blending={THREE.AdditiveBlending} depthWrite={false} />
-        </mesh>
-      )}
-      {engine > 0.01 && (
-        <mesh position={[0, 0.055, -0.3]}>
-          <planeGeometry args={[0.5, 0.5]} />
-          <meshBasicMaterial map={haloTex()} transparent opacity={engine * 0.8 * flick} blending={THREE.AdditiveBlending} depthWrite={false} />
-        </mesh>
-      )}
-    </group>
+    <>
+      <group position={m.position} quaternion={m.quaternion} scale={scale}>
+        <V1Model engine={engine} T={T} />
+      </group>
+      <pointLight position={[p[0] + 0.5, p[1] + 0.9, p[2] + 1.3]} color="#c9d6f5" intensity={3.2} distance={4} decay={1.6} />
+    </>
+  );
+};
+const ColdOpen: React.FC<{ T: number }> = ({ T }) => {
+  if (T > b(8) + 0.3) return null;
+  const engine = T < CO_CUT ? 1 : Math.max(0, 1 - (T - CO_CUT) / 0.15);
+  return (
+    <>
+      {T < CO_HIT && <FlyingBomb T={T} p={coldPos(T)} q={coldPos(T + 0.02)} engine={engine} scale={0.75} />}
+      <Explosion pos={CO_G} t0={CO_HIT} T={T} s={1.1} seed={3} />
+    </>
+  );
+};
+const HeroBomb: React.FC<{ T: number }> = ({ T }) => {
+  if (T < b(48) || T >= b(56)) return null;
+  const engine = T < b(52) ? 1 : Math.max(0, 1 - (T - b(52)) / 0.15);
+  return (
+    <>
+      {T < HERO.t && <FlyingBomb T={T} p={heroPos(T)} q={heroPos(T + 0.02)} engine={engine} scale={0.75} />}
+      <Explosion pos={[HERO.x, 0.14, HERO.z]} t0={HERO.t} T={T} s={0.9} seed={7} />
+    </>
   );
 };
 
 /* ---------- searchlights over the rooftops, only in the low shot ---------- */
 const BEAMS = [[-3.2, -5.5, 0.35, 0.9], [2.5, -7.5, -0.25, 0.6], [-7.5, -3.2, 0.15, 1.3]];
 const Searchlights: React.FC<{ T: number }> = ({ T }) => {
-  const o = win(T, b(48) - 0.05, b(56), 0.5, 0.01);
+  const cold = T < b(8) + 0.3;
+  const o = cold ? 1 : win(T, b(48) - 0.05, b(56), 0.5, 0.01);
   if (o <= 0.001) return null;
+  const cx = cold ? CO_G[0] - 1.5 : HERO.x, cz = cold ? CO_G[2] - 2.5 : HERO.z;
   return (
     <>
       {BEAMS.map(([dx, dz, tilt, ph], i) => {
         const sway = tilt + 0.18 * Math.sin(T * 0.45 + ph * 3);
         return (
-          <group key={i} position={[HERO.x + dx, 0.05, HERO.z + dz]} rotation={[0.12 * Math.cos(T * 0.3 + ph), 0, sway]}>
+          <group key={i} position={[cx + dx, 0.05, cz + dz]} rotation={[0.12 * Math.cos(T * 0.3 + ph), 0, sway]}>
             <mesh position={[0, 6, 0]}>
               <cylinderGeometry args={[0.55, 0.04, 12, 24, 1, true]} />
               <meshBasicMaterial color="#b9c8ef" transparent opacity={0.075 * o} blending={THREE.AdditiveBlending} depthWrite={false} side={THREE.DoubleSide} />
@@ -440,7 +467,7 @@ const Numbers: React.FC<{ T: number }> = ({ T }) => {
     if (p <= 0) return;
     const zero = cl.count === 0;
     const zf = zero ? easeInOut(prog(T, b(112), b(112) + 0.5)) : 0;
-    g.font = `700 ${Math.round(px * 0.62 * (0.6 + 0.4 * p))}px ${EN}`;
+    g.font = `700 ${Math.round(px * 0.58 * (0.6 + 0.4 * p))}px ${ZH}`;
     g.fillStyle = zero ? `rgba(${Math.round(lerp(160, 190, zf))},${Math.round(lerp(170, 220, zf))},255,${0.55 + 0.4 * zf})` : cl === HOT ? GOLD : '#fff6e4';
     g.shadowColor = 'rgba(0,0,0,0.9)';
     g.shadowBlur = 8;
@@ -591,9 +618,9 @@ const PileLabels: React.FC<{ T: number }> = ({ T }) => {
         return (
           <React.Fragment key={k}>
             <Lbl text={k === 5 ? '5颗+' : `${k}颗`} pos={[PX(k) + SIM_DX / 2, 0.16, PILE_Z + 0.75]} w={1.6} h={0.36} o={base} color={C.dim} font={`600 50px ${ZH}`} />
-            <Lbl text={`${v}`} pos={[PX(k), top + 0.32, PILE_Z]} w={1.0} h={0.36} o={real * (1 - merged)} font={`600 58px ${EN}`} />
-            <Lbl text={`*${SIM_HIST[k]}*`} pos={[PX(k) + SIM_DX, top + 0.32, PILE_Z]} w={1.0} h={0.36} o={sim * (1 - merged)} font={`600 58px ${EN}`} />
-            <Lbl text={`${v} / *${SIM_HIST[k]}*`} pos={[PX(k), top + 0.32, PILE_Z]} w={1.8} h={0.36} o={merged * out} font={`600 56px ${EN}`} />
+            <Lbl text={`${v}`} pos={[PX(k), top + 0.32, PILE_Z]} w={1.0} h={0.36} o={real * (1 - merged)} font={`700 52px ${ZH}`} />
+            <Lbl text={`*${SIM_HIST[k]}*`} pos={[PX(k) + SIM_DX, top + 0.32, PILE_Z]} w={1.0} h={0.36} o={sim * (1 - merged)} font={`700 52px ${ZH}`} />
+            <Lbl text={`${v} / *${SIM_HIST[k]}*`} pos={[PX(k), top + 0.32, PILE_Z]} w={1.8} h={0.36} o={merged * out} font={`700 50px ${ZH}`} />
           </React.Fragment>
         );
       })}
@@ -635,7 +662,7 @@ const Panel: React.FC<{ i: number; o: number; head: string; children?: React.Rea
 };
 const BigNum: React.FC<{ text: string; cap: string; o: number; capO: number }> = ({ text, cap, o, capO }) => (
   <>
-    <Lbl text={`*${text}*`} pos={[2.9, 0.25, 0.02]} w={3.0} h={1.25} o={o} font={`600 170px ${EN}`} />
+    <Lbl text={`*${text}*`} pos={[2.9, 0.25, 0.02]} w={3.0} h={1.25} o={o} font={`700 150px ${ZH}`} />
     <Lbl text={cap} pos={[2.9, -0.75, 0.02]} w={3.0} h={0.4} o={capO} font={`500 50px ${ZH}`} />
   </>
 );
@@ -739,7 +766,7 @@ const ballTex = (() => {
     g.beginPath(); g.arc(128, 128, 126, 0, Math.PI * 2); g.fill();
     g.fillStyle = '#fff'; g.beginPath(); g.arc(128, 132, 70, 0, Math.PI * 2); g.fill();
     g.fillStyle = blue ? '#1a3570' : '#8a1a22';
-    g.font = `700 92px ${EN}`; g.textAlign = 'center'; g.textBaseline = 'middle';
+    g.font = `700 96px "Noto Sans CJK SC", "Noto Sans SC", sans-serif`; g.textAlign = 'center'; g.textBaseline = 'middle';
     g.fillText(String(n).padStart(2, '0'), 128, 138);
     const tx = new THREE.CanvasTexture(c);
     tx.colorSpace = THREE.SRGBColorSpace;
@@ -839,44 +866,115 @@ const DrawPanel: React.FC<{ T: number }> = ({ T }) => {
   );
 };
 
-/* ---------- the finale: we draw constellations through random points ---------- */
-const DIPPER = [[-6.2, -3.4], [-3.6, -2.4], [-1.3, -2.0], [0.9, -0.7], [1.5, 2.2], [4.6, 2.5], [5.0, -0.4]];
-const STARS = DIPPER.map(([x, z]) => {
+/* ---------- the finale: Orion, drawn through the nearest real bomb sites ---------- */
+// sky picture (x right, y up), magnitude-ish size, tint
+const ORION: [string, number, number, number, string][] = [
+  ['Meissa', 0.0, 3.3, 0.8, '#fff6dd'], ['Betelgeuse', -1.9, 2.4, 1.35, '#ffb27a'], ['Bellatrix', 1.5, 2.1, 1.0, '#e6eeff'],
+  ['Mintaka', 0.5, 0.25, 0.9, '#eef3ff'], ['Alnilam', 0.0, 0.0, 0.95, '#eef3ff'], ['Alnitak', -0.5, -0.25, 0.9, '#eef3ff'],
+  ['Saiph', -1.5, -2.6, 0.95, '#e6eeff'], ['Rigel', 1.8, -2.3, 1.35, '#cfe0ff'],
+];
+const OR_S = 1.75, OR_Z = -3.9, OR_X = 0.9;
+const STARS = ORION.map(([, X, Y]) => {
+  const x = OR_X + X * OR_S, z = OR_Z - Y * OR_S;
   let best = HITS3[0], d = 1e9;
   for (const h of HITS3) { const e = Math.hypot(h.x - x, h.z - z); if (e < d) { d = e; best = h; } }
-  return [best.x, 0.22, best.z];
+  return [best.x, 0.24, best.z];
 });
-const STAR_EDGES = [[0, 1], [1, 2], [2, 3], [3, 4], [4, 5], [5, 6], [6, 3]];
+const STAR_EDGES = [[0, 1], [0, 2], [1, 5], [2, 3], [5, 4], [4, 3], [5, 6], [3, 7]];
 const C0 = TEX + 0.9;
+/* a gas street lamp: the spy waits in its pool of light */
+const StreetLamp: React.FC<{ x: number; z: number; o: number }> = ({ x, z, o }) => {
+  const target = useMemo(() => new THREE.Object3D(), []);
+  target.position.set(x + 0.38, 0, z + 0.12);
+  target.updateMatrixWorld();
+  if (o <= 0.001) return null;
+  return (
+    <group>
+      <primitive object={target} />
+      <mesh position={[x, 0.42, z]}>
+        <cylinderGeometry args={[0.012, 0.018, 0.84, 10]} />
+        <meshStandardMaterial color="#1f2125" metalness={0.6} roughness={0.5} transparent opacity={o} />
+      </mesh>
+      <mesh position={[x, 0.87, z]}>
+        <cylinderGeometry args={[0.03, 0.045, 0.07, 6]} />
+        <meshBasicMaterial color="#ffd89a" transparent opacity={o} />
+      </mesh>
+      <sprite position={[x, 0.87, z]} scale={[0.5, 0.5, 1]}>
+        <spriteMaterial map={haloTex()} color="#ffcf8a" transparent opacity={0.9 * o} blending={THREE.AdditiveBlending} depthWrite={false} />
+      </sprite>
+      <spotLight position={[x, 0.86, z]} target={target} angle={0.75} penumbra={0.6} decay={1.5} distance={3} intensity={9 * o} color="#ffd29a" castShadow
+        shadow-mapSize-width={512} shadow-mapSize-height={512} shadow-bias={-0.001} />
+    </group>
+  );
+};
+const RING_BOOMS = HITS3.filter((h) => h.inSquare && Math.hypot(h.x - HOT_SPOT.x, h.z - HOT_SPOT.z) < HOT_R * 0.8).slice(0, 3);
 const Constellation: React.FC<{ T: number }> = ({ T }) => {
   const o = easeOut(prog(T, C0, C0 + 0.6)) * (1 - prog(T, END_IN - 0.4, END_IN + 0.4));
   if (o <= 0.001) return null;
+  const starAt = (i: number) => C0 + i * 0.22;
   return (
     <>
       {STAR_EDGES.map(([i, j], k) => {
-        const p = easeInOut(prog(T, C0 + 0.3 + k * 0.3, C0 + 0.3 + k * 0.3 + 0.45));
+        const t0 = C0 + 1.9 + k * 0.26;
+        const p = easeInOut(prog(T, t0, t0 + 0.4));
         if (p <= 0) return null;
         const a = STARS[i], bb = STARS[j];
         return (
-          <mesh key={k} position={[(a[0] + bb[0]) / 2 + (bb[0] - a[0]) * (p - 1) / 2, 0.26, (a[2] + bb[2]) / 2 + (bb[2] - a[2]) * (p - 1) / 2]}
+          <mesh key={k} position={[(a[0] + bb[0]) / 2 + (bb[0] - a[0]) * (p - 1) / 2, 0.27, (a[2] + bb[2]) / 2 + (bb[2] - a[2]) * (p - 1) / 2]}
             rotation={[0, -Math.atan2(bb[2] - a[2], bb[0] - a[0]), 0]}>
-            <boxGeometry args={[Math.hypot(bb[0] - a[0], bb[2] - a[2]) * p, 0.02, 0.06]} />
-            <meshBasicMaterial color="#fff6dd" transparent opacity={0.95 * o} />
+            <boxGeometry args={[Math.hypot(bb[0] - a[0], bb[2] - a[2]) * p, 0.02, 0.05]} />
+            <meshBasicMaterial color="#e9e2cf" transparent opacity={0.85 * o} />
           </mesh>
         );
       })}
-      {STARS.map((s, i) => (
-        <React.Fragment key={i}>
-          <mesh position={s as any}>
-            <sphereGeometry args={[0.13, 16, 12]} />
-            <meshBasicMaterial color="#fff6dd" transparent opacity={o * easeOut(prog(T, C0 + i * 0.3, C0 + 0.4 + i * 0.3))} />
-          </mesh>
-          <mesh position={[s[0], 0.3, s[2]]} rotation={[-Math.PI / 2, 0, 0]}>
-            <planeGeometry args={[1.6, 1.6]} />
-            <meshBasicMaterial map={haloTex()} transparent blending={THREE.AdditiveBlending} depthWrite={false} opacity={o * 0.8 * easeOut(prog(T, C0 + i * 0.3, C0 + 0.4 + i * 0.3))} />
-          </mesh>
-        </React.Fragment>
-      ))}
+      {STARS.map((s, i) => {
+        const so = o * easeOut(prog(T, starAt(i), starAt(i) + 0.35));
+        const [, , , mag, tint] = ORION[i];
+        return (
+          <React.Fragment key={i}>
+            <mesh position={s as any}>
+              <sphereGeometry args={[0.1 * mag, 16, 12]} />
+              <meshBasicMaterial color={tint} transparent opacity={so} />
+            </mesh>
+            <mesh position={[s[0], 0.3, s[2]]} rotation={[-Math.PI / 2, 0, 0]}>
+              <planeGeometry args={[1.5 * mag, 1.5 * mag]} />
+              <meshBasicMaterial map={haloTex()} color={tint} transparent blending={THREE.AdditiveBlending} depthWrite={false} opacity={so * 0.9} />
+            </mesh>
+          </React.Fragment>
+        );
+      })}
+      <Lbl text="猎户座 · ORION" pos={[STARS[2][0] + 2.9, 0.3, STARS[2][2] - 0.4]} w={5.4} h={0.8} flat
+        o={o * easeOut(prog(T, C0 + 4.0, C0 + 4.6))} color="#e9e2cf" font={`600 110px ${ZH}`} />
+    </>
+  );
+};
+
+/* ---------- Clarke measures the square before cutting it ---------- */
+const Measure: React.FC<{ T: number }> = ({ T }) => {
+  const o = win(T, CLARKE + 0.3, b(88) + 0.2, 0.3, 0.5);
+  if (o <= 0.001) return null;
+  const top = easeInOut(prog(T, b(82), b(83) + 0.3));
+  const side = easeInOut(prog(T, b(84), b(85) + 0.3));
+  const area = easeOut(prog(T, b(86), b(86) + 0.4));
+  const z0 = SQ.z0 - 0.5, x1 = SQ.x0 + SQ.size + 0.5, y = GRID_Y + 0.02;
+  const mat = <meshBasicMaterial color={GOLD} transparent opacity={0.9 * o} />;
+  return (
+    <>
+      {top > 0 && (
+        <>
+          <mesh position={[SQ.x0 + SQ.size * top / 2, y, z0]}><boxGeometry args={[SQ.size * top, 0.01, 0.035]} />{mat}</mesh>
+          {[SQ.x0, SQ.x0 + SQ.size * top].map((x, i) => <mesh key={i} position={[x, y, z0]}><boxGeometry args={[0.035, 0.01, 0.35]} />{mat}</mesh>)}
+          <Lbl text="12 公里" pos={[0, y, z0 - 0.6]} w={4} h={0.8} flat o={o * prog(T, b(83), b(83) + 0.3)} color={GOLD} font={`700 110px ${ZH}`} />
+        </>
+      )}
+      {side > 0 && (
+        <>
+          <mesh position={[x1, y, SQ.z0 + SQ.size * side / 2]}><boxGeometry args={[0.035, 0.01, SQ.size * side]} />{mat}</mesh>
+          {[SQ.z0, SQ.z0 + SQ.size * side].map((z, i) => <mesh key={i} position={[x1, y, z]}><boxGeometry args={[0.35, 0.01, 0.035]} />{mat}</mesh>)}
+          <Lbl text="12 公里" pos={[x1 + 1.9, y, 0]} w={4} h={0.8} flat o={o * prog(T, b(85), b(85) + 0.3)} color={GOLD} font={`700 110px ${ZH}`} />
+        </>
+      )}
+      <Lbl text="*144* 平方公里" pos={[0, y + 0.05, 0]} w={6} h={1.1} flat o={o * area} font={`700 150px ${ZH}`} />
     </>
   );
 };
@@ -887,7 +985,7 @@ const Lights: React.FC<{ T: number }> = ({ T }) => {
   const target = useMemo(() => new THREE.Object3D(), []);
   target.position.set(look[0], look[1], look[2]);
   target.updateMatrixWorld();
-  const up = easeOut(prog(T, 0, 0.6));
+  const up = 1;
   const dark = 1 - 0.75 * easeInOut(prog(T, GAP - 1.8, GAP)) * (1 - easeOut(prog(T, DROP2, DROP2 + 0.6)));
   const preDrop = 1 - 0.5 * easeInOut(prog(T, b(30), DROP1 - 0.05)) * (T < DROP1 ? 1 : 0);
   const flare = (T >= DROP1 + 0.5 ? 1.6 * Math.exp(-(T - DROP1 - 0.5) * 2.2) : 0) + (T >= DROP2 ? 1.6 * Math.exp(-(T - DROP2) * 2.2) : 0);
@@ -907,12 +1005,15 @@ const Lights: React.FC<{ T: number }> = ({ T }) => {
 
 /* ---------- the whole world ---------- */
 const Scene: React.FC<{ T: number }> = ({ T }) => {
-  const gridO = easeOut(prog(T, CLARKE - 0.05, CLARKE + 0.3)) * (1 - prog(T, BACK - 0.1, BACK + 0.5));
+  // the grid steps aside while the camera looks at the piles, so nothing hides their feet
+  const gridO = easeOut(prog(T, CLARKE - 0.05, CLARKE + 0.3)) * (1 - prog(T, BACK - 0.1, BACK + 0.5)) * (1 - easeInOut(prog(T, b(148) - 0.6, b(148) + 0.3)));
   const hitDim = Math.max(
     easeInOut(prog(T, BD, BD + 1.5)) * 0.5 * (1 - easeInOut(prog(T, BACK, BACK + 0.6))),
     easeInOut(prog(T, CASES, CASES + 1)) * (1 - easeInOut(prog(T, b(236) - 1.2, b(236)))),
   );
-  const warm = easeInOut(prog(T, b(236) - 1.2, b(236) + 0.6));
+  const warm = 0;
+  const focus = easeInOut(prog(T, CLARKE + 0.2, CLARKE + 1.2)) * (1 - easeInOut(prog(T, BACK, BACK + 0.6)));
+  const fade = easeInOut(prog(T, TEX + 0.4, C0 + 0.6));
   const ringO = (at: number, out: number) => easeOut(prog(T, at, at + 0.5)) * (1 - prog(T, out - 0.4, out));
   const hotO = ringO(b(56) + 0.3, CLARKE), coldO = ringO(b(60), CLARKE);
   const sevenO = easeOut(prog(T, b(116) + 0.4, b(116) + 1.0)) * (1 - prog(T, BUILD - 0.2, BUILD + 0.3));
@@ -933,8 +1034,10 @@ const Scene: React.FC<{ T: number }> = ({ T }) => {
       <Slab x={0} o={bo} />
       <Slab x={RB_X} o={ro} />
       <BoardDots T={T} />
-      <Hits T={T} dim={hitDim} warm={warm} />
+      <Hits T={T} dim={hitDim} warm={warm} focus={focus} fade={fade} />
+      <Measure T={T} />
       <Streaks T={T} />
+      <ColdOpen T={T} />
       <HeroBomb T={T} />
       <Searchlights T={T} />
       <Grid T={T} o={gridO} />
@@ -946,8 +1049,17 @@ const Scene: React.FC<{ T: number }> = ({ T }) => {
       <PileLabels T={T} />
       <Ring x={HOT_SPOT.x} y={0.36} z={HOT_SPOT.z} r={HOT_R} o={hotO} hot />
       <Ring x={COLD_SPOT.x} y={0.36} z={COLD_SPOT.z} r={COLD_SPOT.r} o={coldO} hot={false} />
+      {T > b(64) && T < CLARKE && RING_BOOMS.map((h, i) => <Explosion key={i} pos={[h.x, 0.14, h.z]} t0={b(65 + 2 * i)} T={T} s={0.45} seed={11 + i} />)}
+      {T > b(72) && T < CLARKE + 0.1 && (
+        <>
+          <group position={[COLD_SPOT.x, 0.02, COLD_SPOT.z]} rotation={[0, 0.45, 0]} scale={[2.4, 2.4 * easeOut(prog(T, b(72) + 0.2, b(72) + 0.8)), 2.4]}>
+            <Spy T={T} o={win(T, b(72) + 0.2, CLARKE, 0.3, 0.4)} />
+          </group>
+          <StreetLamp x={COLD_SPOT.x - 0.38} z={COLD_SPOT.z - 0.12} o={win(T, b(72), CLARKE, 0.4, 0.4)} />
+        </>
+      )}
       <Lbl text="这里挨得最多" pos={[HOT_SPOT.x, 0.9, HOT_SPOT.z - 1.0]} w={2.6} h={0.42} o={hotO * (T > b(64) && T < b(72) ? 1 : 0.0)} font={`600 54px ${ZH}`} />
-      <Lbl text="这里一颗都没有" pos={[COLD_SPOT.x, 0.9, COLD_SPOT.z - COLD_SPOT.r - 0.35]} w={3.0} h={0.42} o={coldO * (T > b(72) ? 1 : 0)} font={`600 54px ${ZH}`} />
+      <Lbl text="这里一颗都没有" pos={[COLD_SPOT.x - 0.1, 1.12, COLD_SPOT.z - COLD_SPOT.r - 0.6]} w={1.5} h={0.21} o={0} font={`600 54px ${ZH}`} />
       <Lbl text="7颗" pos={[HOT.x, 2.15, HOT.z - 0.2]} w={1.4} h={0.5} o={sevenO} font={`600 72px ${ZH}`} />
       {/* the answer, back on the boards */}
       <Lbl text="伦敦 1944 · 真实落点" pos={[0, BOARD_Y + 0.08, -7.5]} w={10} h={1.1} o={ansO} flat font={`600 140px ${ZH}`} />
@@ -1020,13 +1132,29 @@ export const V3Film: React.FC = () => {
   const CARD_IN = b(8), CARD_OUT = b(16);
   const cardF = Math.round(CARD_IN * fps), cardLen = Math.round((CARD_OUT - CARD_IN) * fps);
   const endF = Math.round(END_IN * fps), endLen = Math.round((V3_END - END_IN) * fps);
+  // fonts first: canvas labels are drawn once, so every render chunk must see the same fonts
+  const [fontsReady, setFontsReady] = useState(false);
+  const [fontHandle] = useState(() => delayRender('fonts'));
+  useEffect(() => {
+    const faces = ['600 40px "Cormorant Garamond"', '500 40px "Cormorant Garamond"', 'italic 400 40px "Cormorant Garamond"',
+      '500 40px "Noto Serif CJK SC"', '600 40px "Noto Serif CJK SC"', '700 40px "Noto Serif CJK SC"', '700 40px "Noto Sans CJK SC"'];
+    Promise.all(faces.map((f) => document.fonts.load(f, '0123456789%公里').catch(() => null))).then(() => setFontsReady(true));
+  }, []);
+  useEffect(() => { if (fontsReady) continueRender(fontHandle); }, [fontsReady, fontHandle]);
+  // impact flashes: the cold-open explosion whites out into the title card; the rooftop one cuts to the overview
+  const coldFlash = T >= CO_HIT && T < CARD_IN + 0.3 ? Math.min(1, easeOut(prog(T, CO_HIT, CO_HIT + 0.1)) * 0.8 + 0.2 * prog(T, CO_HIT + 0.1, CARD_IN)) : 0;
+  const heroFlash = T >= HERO.t && T < HERO.t + 1 ? 0.75 * easeOut(prog(T, HERO.t, HERO.t + 0.05)) * Math.exp(-(T - HERO.t) * 4.5) : 0;
+  const flashO = Math.max(coldFlash, heroFlash);
   const markO = Math.min(easeOut(prog(T, 0.3, 1.0)), 1 - prog(T, CARD_IN, CARD_IN + 0.15) + prog(T, CARD_OUT - 0.1, CARD_OUT + 0.4), 1 - prog(T, END_IN - 0.2, END_IN + 0.5));
   return (
     <AbsoluteFill style={{ backgroundColor: JUNO.colors.night }}>
-      <ThreeCanvas width={width} height={height} shadows="variance" gl={{ antialias: true }}
-        camera={{ fov: 34, near: 0.1, far: 140, position: [0, 10, 10] }} style={{ background: '#0b0d14' }}>
-        <Scene T={T} />
-      </ThreeCanvas>
+      {fontsReady && (
+        <ThreeCanvas width={width} height={height} shadows="variance" gl={{ antialias: true }}
+          camera={{ fov: 34, near: 0.1, far: 140, position: [0, 10, 10] }} style={{ background: '#0b0d14' }}>
+          <Scene T={T} />
+        </ThreeCanvas>
+      )}
+      {flashO > 0.001 && <AbsoluteFill style={{ opacity: flashO, background: 'radial-gradient(ellipse at 55% 60%, #fff6e2 0%, #ffd49a 45%, #ff9a50 100%)' }} />}
       <div style={{ position: 'absolute', left: 0, right: 0, bottom: 0, height: 360, pointerEvents: 'none',
         background: 'linear-gradient(180deg, rgba(8,9,13,0) 0%, rgba(8,9,13,0.55) 45%, rgba(8,9,13,0.78) 100%)' }} />
       <YearMark T={T} at={DROP1 + 0.3} out={CUT - 0.1} year="1944" place="伦敦 · LONDON" />
@@ -1043,11 +1171,11 @@ export const V3Film: React.FC = () => {
         </div>
       )}
       {T > b(236) - 0.5 && (
-        <div style={{ position: 'absolute', left: 0, right: 0, top: 430, height: 420, opacity: easeOut(prog(T, b(236) - 0.4, b(236) + 0.4)) * 0.8 * (1 - prog(T, END_IN - 0.3, END_IN + 0.3)),
+        <div style={{ position: 'absolute', left: 0, right: 0, top: 690, height: 360, opacity: easeOut(prog(T, b(236) - 0.4, b(236) + 0.4)) * 0.8 * (1 - prog(T, END_IN - 0.3, END_IN + 0.3)),
           background: 'radial-gradient(ellipse 45% 50% at 50% 50%, rgba(8,9,13,0.85) 0%, rgba(8,9,13,0) 100%)' }} />
       )}
-      <Sub T={T} at={b(236)} out={END_IN + 0.2} zh="随机，本来就会扎堆" en="Randomness clusters. That's what it does." y={560} size={76} enSize={34} />
-      <Sub T={T} at={FIN + 0.05} out={END_IN + 0.2} zh="[好运]，也会" en="So does good luck." y={740} size={56} />
+      <Sub T={T} at={b(236)} out={END_IN + 0.2} zh="随机，本来就会扎堆" en="Randomness clusters. That's what it does." y={790} size={72} enSize={32} />
+      <Sub T={T} at={FIN + 0.05} out={END_IN + 0.2} zh="[好运]，也会" en="So does good luck." y={935} size={52} enSize={28} />
       <CornerMark o={markO} />
       <Sequence from={cardF} durationInFrames={cardLen}>
         <TitleCard v={EPISODE3} dur={cardLen} land={23} />
