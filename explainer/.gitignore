@@ -4,3 +4,9 @@ models/
 # per-episode build artifacts
 build/
 out/
+# generated per-episode timelines, fonts and renders
+public/build/
+src/registry.generated.ts
+# your background track (not redistributed: the repo is public)
+assets/music/*
+!assets/music/README.md
