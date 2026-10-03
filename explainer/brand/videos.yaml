@@ -20,6 +20,9 @@ videos:
     taglineEn: When should you stop looking?
     motif: cards
     card: [15.9, 21.2]
+    trim: 12.543
+    cuts: [[18.139, 20.174]]
+    hit: 16.104
     extend: 6
     question: 你会在第几个停下？评论区见
     sources: 参考 · Flood (1950) · Gardner, Mathematical Games (1960) · Ferguson, Who Solved the Secretary Problem? (1989)
@@ -32,6 +35,9 @@ videos:
     taglineEn: One tournament settled it.
     motif: duel
     card: [15.9, 21.2]
+    trim: 12.543
+    cuts: [[18.139, 20.174]]
+    hit: 16.104
     extend: 6
     question: 你是哪一种？评论区报个字母
     sources: 参考 · Robert Axelrod《合作的进化》(1984) · Axelrod & Hamilton, Science (1981)
@@ -44,6 +50,9 @@ videos:
     taglineEn: Can the odds of meeting them be calculated?
     motif: stars
     card: [15.9, 21.2]
+    trim: 12.543
+    cuts: [[18.139, 20.174]]
+    hit: 16.104
     extend: 6
     question: 算出你的数字，写在评论区
     sources: 参考 · Drake (1961) · Peter Backus, Why I Don't Have a Girlfriend (2010)

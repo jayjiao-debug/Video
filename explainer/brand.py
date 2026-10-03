@@ -63,14 +63,30 @@ def remotion(args):
     run(["npx", "remotion", *args, f"--browser-executable={BROWSER}", "--log=error"], cwd=ROOT)
 
 
+def kept(v):
+    """Source-time ranges that survive the trim and the cuts (the track continues past the video end)."""
+    start = v.get("trim", 0.0)
+    end = v["duration"] + v["extend"]
+    out = []
+    for a, b in sorted(v.get("cuts", [])):
+        out.append((start, a))
+        start = b
+    out.append((start, end))
+    return out
+
+
 def audio(v, path):
-    """The background track from 0 s, gain-matched to the source video, faded out at the new end."""
+    """The background track cut exactly like the picture, gain-matched to the source, faded at the new end."""
     src = os.path.join(ROOT, "public", v["src"])
     gain = rms_db(src, 20, 60) - rms_db(TRACK, 20, 60)
-    total = v["duration"] + v["extend"]
+    parts = kept(v)
+    chains = [f"[0:a]atrim={a}:{b},asetpts=PTS-STARTPTS[s{i}]" for i, (a, b) in enumerate(parts)]
+    joined = "".join(f"[s{i}]" for i in range(len(parts)))
+    total = sum(b - a for a, b in parts)
     fade = min(3.0, v["extend"] * 0.6)
-    run(["ffmpeg", "-v", "error", "-y", "-i", TRACK, "-af",
-         f"atrim=0:{total},volume={gain:.2f}dB,afade=t=out:st={total - fade}:d={fade}",
+    graph = ";".join(chains) + f";{joined}concat=n={len(parts)}:v=0:a=1,volume={gain:.2f}dB," \
+        f"afade=t=in:d=0.06,afade=t=out:st={total - fade}:d={fade}[out]"
+    run(["ffmpeg", "-v", "error", "-y", "-i", TRACK, "-filter_complex", graph, "-map", "[out]",
          "-ar", "48000", "-c:a", "aac", "-b:a", "256k", path])
 
 
@@ -96,9 +112,10 @@ def brand(v, parts=False):
 def stills(v):
     d = os.path.join(OUT, f"{v['id']}-stills")
     os.makedirs(d, exist_ok=True)
-    c0 = int(v["card"][0] * 30)
-    end0 = int(v["duration"] * 30) - 12
-    frames = [c0 + x for x in (8, 22, 34, 50, 80, 140)] + [end0 + x for x in (20, 50, 80, 120, 160)]
+    to_out = lambda t: t - v.get("trim", 0) - sum(b - a for a, b in v.get("cuts", []) if b <= t)
+    c0 = int(to_out(v["card"][0]) * 30)
+    end0 = int(to_out(v["duration"]) * 30) - 12
+    frames = [0, 6, 14, 40] + [c0 + x for x in (4, 10, 30, 60, 90)] + [end0 + x for x in (50, 120)]
     run(["node", "scripts/stills.mjs", "brand", d, *map(str, frames)], cwd=ROOT,
         env={**os.environ, "COMPOSITION": "Branded", "REMOTION_BROWSER": BROWSER, "PROPS": json.dumps({"video": v["id"]})})
     sheet = os.path.join(OUT, f"{v['id']}-contact.jpg")
