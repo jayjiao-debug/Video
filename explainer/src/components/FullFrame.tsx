@@ -39,7 +39,8 @@ export const FullFrame: React.FC<{
 	const {fps} = useVideoConfig();
 	const scene = useScene();
 	const stop = endAt ?? scene.duration;
-	const o = prog(f, startAt, fadeIn, ease.inOut) * (1 - prog(f, stop - fadeOut, fadeOut, ease.inOut));
+	// 0 means a hard cut (no dip to black on the first/last frame)
+	const o = (fadeIn > 0 ? prog(f, startAt, fadeIn, ease.inOut) : 1) * (fadeOut > 0 ? 1 - prog(f, stop - fadeOut, fadeOut, ease.inOut) : 1);
 	// push-through: arrive decelerating out of a 1.22× zoom, leave accelerating into a 1.28× one
 	const through = (enter ? 0.22 * (1 - prog(f, startAt, enter, ease.out)) : 0) + (exit ? 0.28 * prog(f, stop - exit, exit, ease.in) : 0);
 	const seed = scene.from % 97;

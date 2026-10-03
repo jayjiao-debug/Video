@@ -177,7 +177,7 @@ const Hook: React.FC<SceneProps> = () => {
 	const travel = f * 14;
 	const wake = prog(f, sipAt + 4, 10);
 	return (
-		<FullFrame fadeIn={1} fadeOut={1}>
+		<FullFrame fadeIn={0} fadeOut={0}>
 			<SceneDefs />
 			<Metro
 				frame={f}
@@ -335,8 +335,8 @@ const Street: React.FC<SceneProps> = () => {
 	const pose = (phase: number): Pose => (stand ? POSES.hold : walkPose(phase * 0.32, 0.8));
 	return (
 		<FullFrame
-			fadeIn={1}
-			fadeOut={1}
+			fadeIn={0}
+			fadeOut={0}
 			overlay={
 				<Sequence durationInFrames={titleLen + 16} layout="none">
 					<CoffeeTitle dur={titleLen + 16} />
@@ -517,7 +517,7 @@ const Kitchen: React.FC<SceneProps> = () => {
 	);
 
 	return (
-		<FullFrame fadeIn={1} fadeOut={1}>
+		<FullFrame fadeIn={0} fadeOut={0}>
 			<SceneDefs />
 			{k2 ? (
 				// top-down: the brass base, a nail and a hammer; each strike lands on a beat
@@ -677,7 +677,7 @@ const Leipzig: React.FC<SceneProps> = () => {
 	cam = camMix(cam, lookAt(surface.x, surface.y, 1.6 + 30 * dive ** 3), prog(f, stopAt, 20, ease.inOut));
 	const playing = f < cue(1) + 40 || f > cue(3);
 	return (
-		<FullFrame fadeIn={1} fadeOut={1}>
+		<FullFrame fadeIn={0} fadeOut={0}>
 			<SceneDefs />
 			<CoffeeHouse t={f} kind="leipzig" cam={cam}>
 				{/* the composer at the harpsichord, seen side-on, playing */}
@@ -806,7 +806,7 @@ const London: React.FC<SceneProps> = () => {
 	let cam = lookAt(surface.x + (960 - surface.x) * outP, surface.y + (620 - surface.y) * outP, 1.15 + 30 * (1 - outP) ** 3);
 	cam = camMix(cam, lookAt(1000, 560, 1.2), prog(f, cue(2) - 10, 20, ease.inOut));
 	return (
-		<FullFrame fadeIn={1} fadeOut={1}>
+		<FullFrame fadeIn={0} fadeOut={0}>
 			<SceneDefs />
 			{!k4 ? (
 				<CoffeeHouse
@@ -975,10 +975,13 @@ const Yunnan_: React.FC<SceneProps> = () => {
 	const dip = last === undefined ? 0 : Math.sin(prog(f, last, 12) * Math.PI);
 	const handReach: [number, number] = [from[0] + (to[0] - from[0]) * goNext - 40 * dip, from[1] + (to[1] - from[1]) * goNext + 20 * dip];
 	const photo = spring({frame: f - cue(3) + 4, fps, config: {damping: 14}}) * (1 - prog(f, cue(4) - 16, 14));
-	const grow = prog(f, cue(3) + 20, cue(4) - cue(3) - 40, ease.inOut);
+	// the seedling in the photograph grows a step on each kick while he waters it
+	const growHits = hits.filter((h) => h >= cue(3) + 16 && h < cue(4) - 24).slice(0, 6);
+	const grow = growHits.reduce((a, h) => a + prog(f, h, 10, ease.back) / Math.max(1, growHits.length), 0);
+	const pour = prog(f, cue(3) + 8, 12, ease.inOut) * (1 - prog(f, cue(4) - 24, 10));
 	const dive = prog(f, end - 18, 16, ease.in);
 	return (
-		<FullFrame fadeIn={1} fadeOut={1}>
+		<FullFrame fadeIn={0} fadeOut={0}>
 			<SceneDefs />
 			<defs>
 				<filter id="sepia">
@@ -1083,6 +1086,17 @@ const Yunnan_: React.FC<SceneProps> = () => {
 					</g>
 				</g>
 			)}
+			{/* a few birds cross the dawn */}
+			{!y4 && !y5
+				? Array.from({length: 7}, (_, i) => {
+						const u = (f - 6 - i * 4) / 260;
+						if (u <= 0 || u >= 1) return null;
+						const flap = Math.sin(f / 3 + i * 1.7);
+						const x = -80 + u * 2100 + (i % 3) * 40;
+						const y = 300 - u * 120 + (i * 37) % 90 + 10 * Math.sin(u * 9 + i);
+						return <path key={i} d={`M-14,${-4 * flap} Q-7,${-8 * flap} 0,2 Q7,${-8 * flap} 14,${-4 * flap}`} transform={`translate(${x},${y}) scale(${1.4 - (i % 3) * 0.2})`} stroke="#2a2438" strokeWidth={3} fill="none" strokeLinecap="round" />;
+					})
+				: null}
 			{/* "九成八" */}
 			{f >= cue(2) - 4 && f < cue(3) ? (
 				<g transform="translate(1260,260)" opacity={prog(f, cue(2) - 4, 10) * (1 - prog(f, cue(3) - 10, 10))}>
@@ -1091,7 +1105,7 @@ const Yunnan_: React.FC<SceneProps> = () => {
 			) : null}
 			{/* 1892: a sepia photograph of the first planting */}
 			{photo > 0.01 ? (
-				<g transform={`translate(960,${520 + (1 - photo) * 80}) rotate(${-2 + (1 - photo) * 4})`} opacity={Math.min(1, photo * 1.4)}>
+				<g transform={`translate(960,${520 + (1 - photo) * 80}) rotate(${-2 + (1 - photo) * 4}) scale(${1 + 0.05 * prog(f, cue(3), cue(4) - cue(3), ease.inOut)})`} opacity={Math.min(1, photo * 1.4)}>
 					<rect x={-470} y={-300} width={940} height={600} fill="#efe3c8" />
 					<g filter="url(#sepia)">
 						<rect x={-440} y={-270} width={880} height={500} fill="#c8b48a" />
@@ -1101,7 +1115,19 @@ const Yunnan_: React.FC<SceneProps> = () => {
 						<g transform="translate(-160,170) scale(1.05)">
 							<Figure look={MISSIONARY} pose={POSES.hold} reach={{near: [120, -110]}} rim="none" shadow={false} />
 						</g>
-						<g transform={`translate(20,170) scale(${0.3 + 0.9 * grow})`}>
+						{/* his watering can and the water */}
+						<g transform={`translate(-20,40) rotate(${30 * pour})`}>
+							<path d="M-30,-10 L20,-10 L24,36 L-34,36 Z" fill="#4a3a28" />
+							<path d="M20,0 L66,-26" stroke="#4a3a28" strokeWidth={7} strokeLinecap="round" />
+							<path d="M-30,-6 C-56,-6 -56,26 -32,26" stroke="#4a3a28" strokeWidth={5} fill="none" />
+						</g>
+						{pour > 0.5
+							? Array.from({length: 8}, (_, i) => {
+									const u = (f / 12 + i / 8) % 1;
+									return <rect key={i} x={36 + 6 * Math.sin(i * 3)} y={20 + u * 140} width={3} height={14} fill="#3a3020" opacity={0.7 * Math.sin(u * Math.PI)} />;
+								})
+							: null}
+						<g transform={`translate(40,170) scale(${0.3 + 0.9 * grow})`}>
 							<path d="M0,0 L0,-120" stroke="#4a3a22" strokeWidth={8} />
 							{[0, 1, 2, 3].map((i) => (
 								<g key={i} transform={`translate(0,${-40 - i * 26})`}>
@@ -1162,7 +1188,7 @@ const CherryScene: React.FC<SceneProps> = () => {
 	const gleam = f >= cutAt - 8 && f < cutAt + 2 ? (f - cutAt + 8) / 10 : -1;
 	const sep = (176 + 40 * rise) * (1 - meet) + 3 * meet; // seed centre distance from the middle
 	return (
-		<FullFrame fadeIn={1} fadeOut={1}>
+		<FullFrame fadeIn={0} fadeOut={0}>
 			<SceneDefs />
 			<rect width={W} height={H} fill="#1f2a1a" />
 			<Bokeh f={f} n={26} seed="cs" gold={0.5} />
@@ -1250,7 +1276,7 @@ const Flower: React.FC<SceneProps> = () => {
 	});
 	const ff = prog(f, end - 26, 22);
 	return (
-		<FullFrame fadeIn={1} fadeOut={1}>
+		<FullFrame fadeIn={0} fadeOut={0}>
 			<SceneDefs />
 			<rect width={W} height={H} fill="#3a4a2e" />
 			<rect width={W} height={H} fill="url(#sky-morning)" opacity={0.25} />
@@ -1357,7 +1383,7 @@ const Callback: React.FC<SceneProps> = () => {
 	const cam = camMix(lookAt(990, 640, 1.5), lookAt(lid.x, lid.y - 40, 1.9), prog(f, cue(0), end - cue(0), ease.inOut));
 	return (
 		<FullFrame
-			fadeIn={1}
+			fadeIn={0}
 			fadeOut={1}
 			overlay={
 				<Sequence from={endAt} layout="none">
