@@ -10,7 +10,9 @@
 #   June 1940–Sept 1942 average: intelligence ~1,400/month, statistics 246, records 245.
 #   Panther road wheels from two tanks (64 wheels) → ~270 tanks in Feb 1944; records: 276.
 #   Estimator: N ≈ m + m/k − 1 (largest serial m, sample size k).
-#   2008: an investor ("Tommo_UK") crowdsourced iPhone serial numbers → ~9.1 M sold by end of Sept 2008.
+#   Aug 2008: a London investor ("Tommo_UK", Mac Observer finance board) asked iPhone 3G buyers for
+#     serial number, purchase date and IMEI; the IMEI sequence put iPhone 3G production at
+#     9,190,680 units by the end of Sept 2008 (Fortune, 6 Oct 2008, "Apple iPhone 3Gs: 9,190,680 and counting").
 #   The jar example (19, 40, 42, 60) is illustrative.
 
 id: tanks
@@ -97,10 +99,10 @@ scenes:
   - id: iphone
     component: IPhone
     at: phone
-    kicker: 2008 · 伦敦
+    kicker: 2008 · 伦敦 · iPhone 3G
     lines:
-      - 2008年，有人请网友晒出iPhone的序列号。
-      - 同一个公式，估出苹果卖了约[910万部]。
+      - 2008年，有人请网友晒出iPhone 3G的序列号。
+      - 同一个思路，估出这款手机已经造了约[919万部]。
       - 这叫[德国坦克问题]：用很少的样本，估出看不见的总数。
 
   - id: callback

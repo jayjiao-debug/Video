@@ -33,7 +33,7 @@ const EPISODE: VideoCfg = {
 	hit: 0.25,
 	extend: 0,
 	question: '你还见过哪些"藏在编号里"的秘密？',
-	sources: '参考 · Ruggles & Brodie, JASA (1947) · 豹式负重轮与 iPhone 案例见同类文献转述',
+	sources: '参考 · Ruggles & Brodie, JASA (1947) · Fortune (2008) iPhone 3G 序列号估算',
 	duration: 0,
 };
 
@@ -804,7 +804,7 @@ const IPhone: React.FC<SceneProps> = () => {
 		<FullFrame fadeIn={1}>
 			<rect width={W} height={H} fill="#06080e" />
 			<g opacity={1 - name} transform={`translate(560,782) scale(${openZ}) translate(-560,-782)`}>
-				{/* a generic 2008 smartphone */}
+				{/* an iPhone 3G-era phone */}
 				<g transform="translate(560,520)">
 					<rect x={-150} y={-300} width={300} height={600} rx={46} fill="#14161b" stroke="#3a3e46" strokeWidth={4} />
 					<rect x={-128} y={-240} width={256} height={460} rx={8} fill="#0f1e33" />
@@ -848,7 +848,7 @@ const IPhone: React.FC<SceneProps> = () => {
 				</g>
 				<g opacity={prog(f, cue(1), 20)} transform="translate(1350,830)">
 					<T y={0} size={110} weight={900} tone="gold" filter="url(#glow-gold)">
-						{`≈${countUp(f, 910, cue(1), 40)}万部`}
+						{`≈${countUp(f, 919, cue(1), 40)}万部`}
 					</T>
 				</g>
 			</g>
