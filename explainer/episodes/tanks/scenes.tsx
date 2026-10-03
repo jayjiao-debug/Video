@@ -40,7 +40,6 @@ const EPISODE: VideoCfg = {
 	duration: 0,
 };
 
-const PLATES = ['82689', '82702', '82756', '82815', '82844', '82903', '82930', '82731', '82988', '83011', '83012', '83077', '83140', '82659', '82764'];
 
 /** A soldier's torch pool over everything outside it. */
 const TorchVignette: React.FC<{x: number; y: number; r?: number; dark?: number}> = ({x, y, r = 760, dark = 0.92}) => (
@@ -100,6 +99,7 @@ const Hook: React.FC<SceneProps> = () => {
 	const f = useCurrentFrame();
 	const {fps} = useVideoConfig();
 	const cue = useCue();
+	const scene = useScene();
 	const beat = useBeat(8);
 	const cutA = cue(1) + 54; // wide → plate close-up
 	const cutB = cue(2) - 6; // plate → wall of plates
@@ -151,31 +151,46 @@ const Hook: React.FC<SceneProps> = () => {
 			</FullFrame>
 		);
 	}
-	// the one plate becomes many: every captured tank leaves a number
+	// the one plate becomes many: every captured tank leaves a number. The wall keeps growing
+	// as the camera pulls back, a torch sweeps across it, then we slam back into 82731 for the title.
 	const g = f - cutB;
-	const zoom = interpolate(g, [0, 70], [3.1, 1], {extrapolateRight: 'clamp', easing: ease.inOut});
+	const end = scene.duration;
+	const slam = prog(f, end - 18, 18, ease.in);
+	const pull = interpolate(g, [0, 70, end - cutB - 18], [3.1, 1, 0.64], {extrapolateRight: 'clamp', easing: ease.inOut});
+	const zoom = pull + (4.2 - pull) * slam;
+	const sweep = interpolate(g, [80, end - cutB - 30], [-500, 2400], {extrapolateLeft: 'clamp', extrapolateRight: 'clamp'});
 	return (
-		<FullFrame fadeIn={1}>
+		<FullFrame fadeIn={1} fadeOut={1}>
 			<rect width={W} height={H} fill="#0b0c11" />
 			<g transform={`translate(960,470) scale(${zoom}) translate(-960,-470)`}>
-				{PLATES.map((n, i) => {
-					const c = i % 5;
-					const r = Math.floor(i / 5);
+				{WALL.map(({n, c, r, d}, i) => {
 					const hero = n === '82731';
-					const x = 960 + (c - 2) * 330;
-					const y = 300 + r * 190;
-					const q = hero ? 1 : prog(g, 10 + ((i * 7) % 15) * 3, 14, ease.back);
+					const x = 960 + c * 330;
+					const y = 470 + r * 190;
+					// the first ring lands during the zoom-out; the outer rings ripple in as we pull back
+					const t0 = d <= 1 ? 10 + ((i * 7) % 15) * 3 : 70 + (d - 1) * 26 + ((i * 5) % 9) * 3;
+					const q = hero ? 1 : prog(g, t0, 14, ease.back);
+					const lit = Math.exp(-(((x - sweep) / 240) ** 2));
 					return (
-						<g key={n} transform={`translate(${x},${y}) scale(${0.42 * (0.85 + 0.15 * q)}) rotate(${(random(`pr${i}`) - 0.5) * 6})`} opacity={q}>
-							<SerialPlate serial={n} torch={hero ? 1 : 0.55 + 0.2 * random(`pt${i}`)} />
+						<g key={n} transform={`translate(${x},${y}) scale(${0.42 * (0.85 + 0.15 * q)}) rotate(${(random(`pr${i}`) - 0.5) * 6})`} opacity={q * (hero ? 1 : 1 - 0.7 * slam)}>
+							<SerialPlate serial={n} torch={hero ? 1 : 0.45 + 0.15 * random(`pt${i}`) + 0.45 * lit} />
 						</g>
 					);
 				})}
 			</g>
 			<rect width={W} height={H} fill="#000" opacity={0.25 - 0.1 * beat} />
+			<rect width={W} height={H} fill="#fff4dc" opacity={0.6 * prog(f, end - 4, 4, ease.in)} />
 		</FullFrame>
 	);
 };
+
+// 9 × 5 plates around 82731; d = ring distance from the centre
+const WALL = Array.from({length: 45}, (_, i) => {
+	const c = (i % 9) - 4;
+	const r = Math.floor(i / 9) - 2;
+	const n = c === 0 && r === 0 ? '82731' : String(82600 + Math.floor(random(`wall${i}`) * 560));
+	return {n, c, r, d: Math.max(Math.abs(c), Math.abs(r))};
+});
 
 // ---------------------------------------------------------------- 2. London: the conventional estimate
 
@@ -204,7 +219,8 @@ const London: React.FC<SceneProps> = () => {
 				</Sequence>
 			}
 		>
-			<g transform={`translate(${shake * (random(`sx${f}`) - 0.5)},${shake * (random(`sy${f}`) - 0.5)})`}>
+			{/* hidden while the title card fades up, so the office never flashes before it */}
+			<g transform={`translate(${shake * (random(`sx${f}`) - 0.5)},${shake * (random(`sy${f}`) - 0.5)})`} opacity={f < 8 ? 0 : 1}>
 				<LondonOffice
 					frame={f + 300}
 					cam={cam}
@@ -365,12 +381,17 @@ const JarScene: React.FC<SceneProps> = () => {
 	const cue = useCue();
 	const jx = 760;
 	const jy = 660;
+	// "how many balls?": a counter spins through guesses, then settles, unsure, on the largest pick
+	const askAt = cue(2) - 4;
+	const settle = cue(3) - 2;
+	const rolling = f >= askAt && f < settle ? 1 : 0;
 	const others = Array.from({length: 26}, (_, i) => ({
 		n: [3, 11, 27, 33, 51, 8, 66, 14, 72, 25, 47, 5, 58, 36, 22, 9, 31, 54, 17, 63, 2, 45, 29, 70, 12, 38][i],
-		x: -160 + (i % 6) * 62 + (Math.floor(i / 6) % 2) * 30 + Math.sin(f / 20 + i) * 1.5,
-		y: 60 - Math.floor(i / 6) * 54,
+		x: -160 + (i % 6) * 62 + (Math.floor(i / 6) % 2) * 30 + Math.sin(f / 20 + i) * (1.5 + 2.5 * rolling),
+		y: 60 - Math.floor(i / 6) * 54 + Math.cos(f / 7 + i * 1.7) * 2.5 * rolling,
 	}));
-	const dim = prog(f, cue(2), 30);
+	const pop = spring({frame: f - askAt, fps, config: {damping: 12}});
+	const land = f >= settle ? Math.exp(-(f - settle) / 5) : 0;
 	return (
 		<FullFrame fadeIn={14}>
 			<rect width={W} height={H} fill="#07080c" />
@@ -378,13 +399,6 @@ const JarScene: React.FC<SceneProps> = () => {
 			<ellipse cx={jx} cy={790} rx={330} ry={44} fill="#000" opacity={0.6} />
 			<g transform={`translate(${jx},${jy}) scale(1.05)`} opacity={prog(f, 0, 24)}>
 				<Jar balls={others.map((b) => ({...b, lit: 0}))} />
-				<g opacity={0.9 * dim}>
-					{others.map((b, i) => (
-						<text key={i} x={b.x} y={b.y + 9} textAnchor="middle" style={{fontFamily: 'monospace', fontWeight: 700, fontSize: 24, fill: '#3a2f1e'}}>
-							?
-						</text>
-					))}
-				</g>
 			</g>
 			{/* the four picks fly out to a velvet tray */}
 			<rect x={1060} y={690} width={620} height={90} rx={18} fill="#3a1418" opacity={prog(f, cue(1) - 10, 20)} />
@@ -397,8 +411,9 @@ const JarScene: React.FC<SceneProps> = () => {
 				const ex = 1140 + i * 150;
 				const ey = 730;
 				const arc = Math.sin(Math.min(1, p) * Math.PI) * -180;
+				const hot = n === 60 ? land : 0;
 				return (
-					<g key={n} transform={`translate(${sx + (ex - sx) * p},${sy + (ey - sy) * p + arc}) scale(${1 + 0.5 * Math.min(1, p)})`}>
+					<g key={n} transform={`translate(${sx + (ex - sx) * p},${sy + (ey - sy) * p + arc}) scale(${1 + 0.5 * Math.min(1, p) + 0.15 * hot})`}>
 						<circle r={48} fill="url(#glow-lamp)" opacity={0.8} />
 						<circle r={30} fill="#f6e3b0" />
 						<circle cx={-9} cy={-10} r={8} fill="#fff" opacity={0.6} />
@@ -408,13 +423,22 @@ const JarScene: React.FC<SceneProps> = () => {
 					</g>
 				);
 			})}
-			{f >= cue(3) ? (
-				<g opacity={prog(f, cue(3), 14)}>
-					<line x1={1590} y1={640} x2={1590} y2={520} stroke={color.gold} strokeDasharray="6 6" />
-					<T x={1590} y={480} size={64} family="latin" weight={600} tone="gold">
-						{'60 ?'}
+			{f >= askAt ? (
+				<g transform={`translate(1370,470) scale(${0.85 + 0.15 * pop})`} opacity={prog(f, askAt, 10)}>
+					<T x={-50} y={4} size={60} family="latin" weight={600} tone="dim">
+						N =
 					</T>
+					<g transform={`translate(80,0) scale(${1 + 0.25 * land})`}>
+						<T x={0} y={0} size={120} family="latin" weight={700} tone={rolling ? 'text' : 'gold'} opacity={rolling ? 0.7 : 1}>
+							{rolling ? String(30 + Math.floor(random(`roll${Math.floor(f / 3)}`) * 90)) : '60'}
+						</T>
+					</g>
+					<line x1={10} y1={74} x2={150} y2={74} stroke={color.gold} strokeWidth={3} strokeDasharray="10 8" opacity={rolling ? 0.35 : 0.45 + 0.45 * Math.abs(Math.cos((f - settle) / 10))} />
 				</g>
+			) : null}
+			{f >= settle ? (
+				// the guess comes from the biggest ball on the tray
+				<path d="M1590,676 C1590,600 1560,560 1530,548" fill="none" stroke={color.gold} strokeWidth={2.5} strokeDasharray="6 7" opacity={0.8 * prog(f, settle, 12)} />
 			) : null}
 		</FullFrame>
 	);

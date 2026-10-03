@@ -50,7 +50,7 @@ export const layouts: Record<'vertical' | 'horizontal', Layout> = {
 	horizontal: {
 		w: 1920, h: 1080,
 		stage: {x: 0, y: 150, w: 1920, h: 740},
-		seriesY: 50, kickerY: 118,
+		seriesY: 44, kickerY: 56,
 		subY: 952, subSize: 54, subMaxW: 1500,
 		citeY: 1036,
 	},
