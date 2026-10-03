@@ -390,13 +390,20 @@ const JarScene: React.FC<SceneProps> = () => {
 	}));
 	const pop = spring({frame: f - askAt, fps, config: {damping: 12}});
 	const land = f >= settle ? Math.exp(-(f - settle) / 5) : 0;
+	const fillGap = Math.max(2, (cue(1) - 30) / others.length);
+	const filled = others
+		.map((b, i) => ({...b, t: 8 + i * fillGap}))
+		.filter((b) => f >= b.t)
+		.map(({t, ...b}) => ({...b, out: 1 - spring({frame: f - t, fps, config: {damping: 14, stiffness: 140}}), lit: 0}));
+	const lean = prog(f, settle, 70, ease.inOut);
 	return (
 		<FullFrame fadeIn={14}>
+			<g transform={`translate(1370,520) scale(${1 + 0.08 * lean}) translate(-1370,-520)`}>
 			<rect width={W} height={H} fill="#07080c" />
 			<polygon points={`${jx - 90},-40 ${jx + 90},-40 ${jx + 360},${H} ${jx - 360},${H}`} fill="url(#beam-warm)" opacity={0.55} />
 			<ellipse cx={jx} cy={790} rx={330} ry={44} fill="#000" opacity={0.6} />
 			<g transform={`translate(${jx},${jy}) scale(1.05)`} opacity={prog(f, 0, 24)}>
-				<Jar balls={others.map((b) => ({...b, lit: 0}))} />
+				<Jar balls={filled} />
 			</g>
 			{/* the four picks fly out to a velvet tray */}
 			<rect x={1060} y={690} width={620} height={90} rx={18} fill="#3a1418" opacity={prog(f, cue(1) - 10, 20)} />
@@ -438,6 +445,7 @@ const JarScene: React.FC<SceneProps> = () => {
 				// the guess comes from the biggest ball on the tray
 				<path d="M1590,676 C1590,600 1560,560 1530,548" fill="none" stroke={color.gold} strokeWidth={2.5} strokeDasharray="6 7" opacity={0.8 * prog(f, settle, 12)} />
 			) : null}
+			</g>
 		</FullFrame>
 	);
 };
@@ -547,8 +555,8 @@ const Formula: React.FC<SceneProps> = () => {
 	];
 	const flash = Math.exp(-f / 7);
 	const focusX = interpolate(f, [cue(2), cue(3) - 10, cue(3) + 10, cue(4) - 10, cue(4) + 10], [600, 600, 960, 960, 1140], {extrapolateLeft: 'clamp', extrapolateRight: 'clamp', easing: ease.inOut});
-	const chartZoom = 1 + 0.06 * prog(f, cue(2), 60, ease.inOut);
-	const chartCam = `translate(960,540) scale(${chartZoom}) translate(${-960 - (focusX - 960) * 0.15},-540)`;
+	const chartZoom = 1 + 0.05 * prog(f, cue(2), 60, ease.inOut) + 0.05 * prog(f, cue(3), 60, ease.inOut) + 0.04 * prog(f, cue(4), 60, ease.inOut);
+	const chartCam = `translate(960,540) scale(${chartZoom}) translate(${-960 - (focusX - 960) * 0.35},-540)`;
 	const shake = Math.exp(-Math.max(0, f - 2) / 4) * 10 * (f >= 2 ? 1 : 0);
 	return (
 		<FullFrame fadeIn={2}>
@@ -556,7 +564,7 @@ const Formula: React.FC<SceneProps> = () => {
 			<ellipse cx={960} cy={500} rx={900} ry={420} fill="url(#glow-lamp)" opacity={0.25 + 0.4 * flash} />
 			<g transform={`translate(${shake * (random(`fx${f}`) - 0.5)},${shake * (random(`fy${f}`) - 0.5)})`}>
 				{/* the jar sum, token by token on the beat */}
-				<g opacity={1 - toChart} transform={`translate(0,${-260 * prog(f, cue(1), 30, ease.inOut)}) scale(1)`}>
+				<g opacity={1 - toChart} transform={`translate(0,${-260 * prog(f, cue(1), 30, ease.inOut)}) translate(960,430) scale(${1 + 0.07 * prog(f, 40, cue(1) - 40, ease.inOut)}) translate(-960,-430)`}>
 					{toks.map((t, i) => {
 						const p = spring({frame: f - 4 - i * 7, fps, config: {damping: 10, stiffness: 160}});
 						const x = 960 + (i - 3) * 190 + (i === 2 ? 0 : 0);
@@ -610,6 +618,14 @@ const Formula: React.FC<SceneProps> = () => {
 					<T x={960} y={170} size={30} family="sans" tone="dim" track={0.3}>
 						1942 年 8 月 · 德国坦克月产量
 					</T>
+					{/* the factories never stop: a faint line of tanks rolling past behind the bars */}
+					<g opacity={0.16}>
+						{Array.from({length: 9}, (_, k) => (
+							<g key={k} transform={`translate(${((k * 260 + f * 2.2) % 2340) - 210},330) scale(0.16)`}>
+								<Panzer travel={f * 3} />
+							</g>
+						))}
+					</g>
 					{bars.map(([label, v, c, at], i) => {
 						const p = prog(f, at, 34, ease.out);
 						const h = (v / 1550) * 500 * p;
@@ -626,6 +642,10 @@ const Formula: React.FC<SceneProps> = () => {
 							</g>
 						);
 					})}
+					{f >= cue(3) + 20 ? (
+						// the intelligence guess, struck out once the serials answer
+						<line x1={520} y1={300} x2={520 + 160 * prog(f, cue(3) + 20, 14, ease.out)} y2={300 + 480 * prog(f, cue(3) + 20, 14, ease.out)} stroke="#fff4dc" strokeWidth={8} strokeLinecap="round" opacity={0.85} />
+					) : null}
 					{f >= cue(4) + 30 ? (
 						<g opacity={prog(f, cue(4) + 30, 20)}>
 							<path d={`M${960 + 90},${780 - (327 / 1550) * 500 - 70} C1120,${560} 1220,${560} ${1320 - 90},${780 - (342 / 1550) * 500 - 70}`} fill="none" stroke={color.gold} strokeWidth={2.5} strokeDasharray="6 6" />
