@@ -1,0 +1,49 @@
+# Branded title card (片头) + end card (片尾) for Juno's own videos.
+#
+# The source videos already carry a plain title card at ~16.5–20.5 s; the branded
+# card covers that window exactly (the music hits a new section at 16.1 s), so
+# nothing shifts. The end card extends the video by `extend` seconds and the
+# background track simply keeps playing from where the video stopped.
+
+brand:
+  name: Juno
+  credit: Juno 出品
+  series: VIBE知识大赏
+  follow: 关注 Juno · 每期一个反直觉的知识
+
+videos:
+  - id: stopping
+    src: build/brand/stopping.mp4
+    title: 第几个人
+    kicker: OPTIMAL STOPPING · KEPLER · MDCXI
+    tagline: 什么时候，该停止相亲？
+    taglineEn: When should you stop looking?
+    motif: cards
+    card: [15.9, 21.2]
+    extend: 6
+    question: 你会在第几个停下？评论区见
+    sources: 参考 · Flood (1950) · Gardner, Mathematical Games (1960) · Ferguson, Who Solved the Secretary Problem? (1989)
+
+  - id: cooperation
+    src: build/brand/cooperation.mp4
+    title: 好人会赢吗
+    kicker: THE EVOLUTION OF COOPERATION · AXELROD · 1980
+    tagline: 一场比赛，给出了答案
+    taglineEn: One tournament settled it.
+    motif: duel
+    card: [15.9, 21.2]
+    extend: 6
+    question: 你是哪一种？评论区报个字母
+    sources: 参考 · Robert Axelrod《合作的进化》(1984) · Axelrod & Hamilton, Science (1981)
+
+  - id: fate
+    src: build/brand/fate.mp4
+    title: 缘分方程
+    kicker: THE DRAKE EQUATION · 1961 · BACKUS · 2010
+    tagline: 遇见Ta的概率，能算吗？
+    taglineEn: Can the odds of meeting them be calculated?
+    motif: stars
+    card: [15.9, 21.2]
+    extend: 6
+    question: 算出你的数字，写在评论区
+    sources: 参考 · Drake (1961) · Peter Backus, Why I Don't Have a Girlfriend (2010)

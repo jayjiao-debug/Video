@@ -27,7 +27,7 @@ CJK_IN_CODE = re.compile(r"[ -⯿　-鿿＀-￯①-⓿]")
 
 def episode_chars(ep_dir, extra_text=""):
     chars = set(BASE) | set(extra_text)
-    sources = [os.path.join(ep_dir, "episode.yaml")]
+    sources = glob.glob(os.path.join(ep_dir, "*.yaml"))
     sources += glob.glob(os.path.join(ep_dir, "**", "*.tsx"), recursive=True)
     sources += glob.glob(os.path.join(ROOT, "src", "**", "*.tsx"), recursive=True)
     for path in sources:
