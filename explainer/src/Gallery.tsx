@@ -3,6 +3,10 @@ import {AbsoluteFill, useCurrentFrame} from 'remotion';
 import {B17Side, B17Top} from './art/B17';
 import {Cat, type CatPose} from './art/Cat';
 import {Airfield} from './art/sets/Airfield';
+import {Battlefield} from './art/sets/Battlefield';
+import {LondonOffice} from './art/sets/LondonOffice';
+import {Jar, Panther, Panzer, SerialPlate} from './art/Tank';
+import {Smoke, Torch} from './art/fx';
 import {CAST} from './art/cast';
 import {Figure, POSES, SPOTS, walkPose, type Expression} from './art/Figure';
 import {Materials} from './art/materials';
@@ -14,7 +18,7 @@ import {font} from './lib/theme';
  * Model sheets for art review: one sheet per frame.
  * Render with: node scripts/gallery.mjs  → out/gallery/*.jpg
  */
-export const SHEETS = ['palette', 'cast', 'poses', 'faces', 'cat', 'b17', 'airfield'] as const;
+export const SHEETS = ['palette', 'cast', 'poses', 'faces', 'cat', 'b17', 'airfield', 'tanks', 'battlefield', 'office', 'props2'] as const;
 
 const Label: React.FC<{x: number; y: number; children: React.ReactNode; size?: number; color?: string}> = ({x, y, children, size = 26, color = P.paperShade}) => (
 	<text x={x} y={y} textAnchor="middle" style={{fontFamily: font.sans, fontSize: size, fill: color, letterSpacing: '0.1em'}}>
@@ -254,6 +258,93 @@ const AirfieldSheet: React.FC<{f: number}> = ({f}) => (
 	</>
 );
 
+const TankSheet: React.FC<{f: number}> = ({f}) => (
+	<>
+		<Floor />
+		<Title sub="四号坦克 · 豹式坦克 · 1943 年暗黄涂装 · 残骸版本：烧焦、炮管下垂、履带断裂">主角道具 · 德国坦克</Title>
+		<g transform="translate(470, 560) scale(0.85)">
+			<Panzer travel={f * 4} plateGlow={0.8} />
+		</g>
+		<g transform="translate(1420, 560) scale(0.85)">
+			<Panzer wreck />
+			<g transform="translate(-60,-150)">
+				<Smoke frame={f * 3 + 60} seed="g1" height={360} wind={0.5} />
+			</g>
+		</g>
+		<g transform="translate(900, 960) scale(0.85)">
+			<Panther travel={f * 4} wheelGlow={0.7} />
+		</g>
+		<Label x={470} y={620}>四号坦克 · 变速箱检修盖（编号所在）</Label>
+		<Label x={1420} y={620}>残骸</Label>
+		<Label x={900} y={1040}>豹式 · 交错负重轮（模具编号）</Label>
+	</>
+);
+
+const BattlefieldSheet: React.FC<{f: number}> = ({f}) => (
+	<>
+		<Battlefield frame={f * 5}>
+			<g transform="translate(980, 880) scale(0.9)">
+				<Panzer wreck />
+				<g transform="translate(-80,-160)">
+					<circle r={90} fill="url(#glow-fire)" opacity={0.5} />
+					<Smoke frame={f * 5} seed="hero" height={560} wind={0.6} lit="#ff8a3d" />
+				</g>
+			</g>
+			<g transform="translate(1480, 900) scale(0.42)">
+				<Figure look={CAST.soldier} pose={POSES.hold} reach={{near: [90, -230]}} facing="side" flip rim="moon" />
+			</g>
+			<g transform="translate(1440, 790)">
+				<Torch angle={192} reach={240} spread={13} />
+			</g>
+		</Battlefield>
+		<rect x={60} y={50} width={820} height={100} rx={12} fill="rgba(7,10,20,0.6)" />
+		<Title sub="月光冷色环境光 + 燃烧残骸暖光 · 远景燃烧的坦克 · 前景铁丝网">布景 · 夜晚的战场</Title>
+	</>
+);
+
+const OfficeSheet: React.FC<{f: number}> = ({f}) => (
+	<>
+		<LondonOffice
+			frame={f * 5}
+			staff={
+				<>
+					<g transform="translate(820, 1010) scale(1.45)">
+						<Figure look={CAST.economist} pose={POSES.write} expression="thinking" rim="warm" shadow={false} />
+					</g>
+					<g transform="translate(1290, 1010) scale(1.45)">
+						<Figure look={CAST.analyst} pose={POSES.shrug} expression="worried" rim="warm" flip shadow={false} />
+					</g>
+				</>
+			}
+		/>
+		<rect x={60} y={50} width={860} height={100} rx={12} fill="rgba(7,10,20,0.6)" />
+		<Title sub="绿色台灯主光 · 窗外探照灯与阻塞气球 · 圣保罗大教堂穹顶 · 墙上地图与图钉">布景 · 1943 伦敦经济战处</Title>
+	</>
+);
+
+const Props2Sheet: React.FC<{f: number}> = ({f}) => (
+	<>
+		<Floor />
+		<Title sub="铭牌特写（手电光照亮）· 号码球罐（摸出的球会飞出并发光）">道具 · 编号与罐子</Title>
+		<g transform="translate(600, 560) scale(0.9)">
+			<SerialPlate serial="82731" torch={0.9} />
+		</g>
+		<g transform="translate(1440, 720) scale(1)">
+			<Jar
+				balls={[
+					...Array.from({length: 14}, (_, i) => ({n: [3, 11, 27, 33, 51, 8, 66, 14, 72, 25, 47, 5, 58, 36][i], x: -150 + (i % 6) * 60 + (Math.floor(i / 6) % 2) * 30, y: 60 - Math.floor(i / 6) * 52})),
+					{n: 19, x: -40, y: -60, lit: 1, out: 0.3},
+					{n: 40, x: 20, y: -60, lit: 1, out: 0.3},
+					{n: 42, x: 80, y: -60, lit: 1, out: 0.3},
+					{n: 60, x: 140, y: -60, lit: 1, out: 0.3},
+				]}
+			/>
+		</g>
+		<Label x={600} y={820}>变速箱铭牌 · Fgst.Nr.（底盘号）</Label>
+		<Label x={1440} y={860}>号码球罐</Label>
+	</>
+);
+
 export const Gallery: React.FC = () => {
 	loadEpisodeFonts('survivorship');
 	const f = useCurrentFrame();
@@ -269,6 +360,10 @@ export const Gallery: React.FC = () => {
 				{sheet === 'cat' ? <CatSheet f={f} /> : null}
 				{sheet === 'b17' ? <B17Sheet f={f} /> : null}
 				{sheet === 'airfield' ? <AirfieldSheet f={f} /> : null}
+				{sheet === 'tanks' ? <TankSheet f={f} /> : null}
+				{sheet === 'battlefield' ? <BattlefieldSheet f={f} /> : null}
+				{sheet === 'office' ? <OfficeSheet f={f} /> : null}
+				{sheet === 'props2' ? <Props2Sheet f={f} /> : null}
 			</svg>
 		</AbsoluteFill>
 	);

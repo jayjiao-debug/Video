@@ -16,7 +16,7 @@ import {P} from './palette';
 
 export type Outfit = 'suit' | 'uniform' | 'overalls' | 'flight' | 'labcoat' | 'dress';
 export type Hair = 'slick' | 'short' | 'bald' | 'bob' | 'bun' | 'none';
-export type Hat = 'officer' | 'garrison' | 'ballcap' | 'none';
+export type Hat = 'officer' | 'garrison' | 'ballcap' | 'helmet' | 'none';
 export type Expression = 'neutral' | 'smile' | 'surprise' | 'worried' | 'stern' | 'thinking';
 
 export type Look = {
@@ -389,6 +389,13 @@ export const Figure: React.FC<{
 				</g>
 			) : null}
 			{look.hat === 'garrison' ? <path d="M-22,-328 C-16,-346 22,-346 30,-332 L28,-324 L-22,-322 Z" fill={c(look.hatColor ?? shade(look.top, 0.9))} /> : null}
+			{look.hat === 'helmet' ? (
+				<g>
+					<path d="M-28,-318 C-30,-358 34,-362 36,-320 L40,-314 L-30,-312 Z" fill={c(look.hatColor ?? '#4a4f36')} />
+					<path d="M-30,-316 L42,-314" stroke={c(shade(look.hatColor ?? '#4a4f36', 0.6))} strokeWidth={4} strokeLinecap="round" />
+					{!sil && !back ? <path d="M30,-312 C32,-300 26,-292 20,-290" stroke="#3a2a1a" strokeWidth={2} fill="none" /> : null}
+				</g>
+			) : null}
 			{look.hat === 'ballcap' ? (
 				<g>
 					<path d="M-22,-322 C-22,-350 28,-352 30,-324 Z" fill={c(look.accent ?? '#3a4a5c')} />

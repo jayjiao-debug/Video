@@ -1,0 +1,108 @@
+# 《德国坦克问题》: estimating a total from serial numbers
+#
+# Sources (checked):
+#   Ruggles, R. & Brodie, H. (1947). An Empirical Approach to Economic Intelligence in
+#     World War II. JASA 42(237): 72–91. (Economic Warfare Division, US Embassy, London.)
+#   Serial numbers came from chassis, engines, gearboxes and road wheels of captured tanks;
+#     the analysis began in 1943.
+#   Monthly production (statistical / conventional intelligence / German records):
+#     June 1940: 169 / 1,000 / 122;  June 1941: 244 / 1,550 / 271;  August 1942: 327 / 1,550 / 342.
+#   June 1940–Sept 1942 average: intelligence ~1,400/month, statistics 246, records 245.
+#   Panther road wheels from two tanks (64 wheels) → ~270 tanks in Feb 1944; records: 276.
+#   Estimator: N ≈ m + m/k − 1 (largest serial m, sample size k).
+#   2008: an investor ("Tommo_UK") crowdsourced iPhone serial numbers → ~9.1 M sold by end of Sept 2008.
+#   The jar example (19, 40, 42, 60) is illustrative.
+
+id: tanks
+series: 反直觉研究所
+title: 德国坦克问题
+subtitle: 只看编号，能算出敌人造了多少坦克吗？
+format: horizontal
+fps: 30
+music: assets/music/bgm.mp3
+markers:
+  a: 16.104
+  coda: 149.89
+
+scenes:
+  - id: hook
+    component: Hook
+    kicker: 第二次世界大战 · 战场
+    lines:
+      - pause: 2.6
+      - 一辆被击毁的德国坦克，变速箱上刻着一串编号。
+      - 只看这些编号，你能算出德国[一个月造多少辆]坦克吗？
+
+  - id: london
+    component: London
+    at: a
+    kicker: 1943 · 伦敦 · 美国大使馆经济战处
+    lines:
+      - 1943年，伦敦。盟军最想知道：德国一个月造多少坦克？
+      - 间谍、战俘、航拍照片——答案互相矛盾。
+      - 情报部门的估计：每月约{1400}辆。
+
+  - id: serials
+    component: Serials
+    kicker: 一个德国式的习惯
+    lines:
+      - 可德国人有个习惯：每个零件，都按顺序编号。
+      - 底盘、发动机、变速箱、负重轮……
+      - 缴获的坦克越多，抄下的编号就越多。
+      - 能不能只靠这些编号，[反推出总数]？
+
+  - id: jar
+    component: Jar
+    at: break
+    kicker: 一个简化的问题
+    lines:
+      - 想象一个罐子，里面的球从1开始编号。
+      - 你随手摸出4个：19、40、42、60。
+      - 罐子里，一共有多少个球？
+      - text: 60个？
+        hold: 2.2
+
+  - id: gaps
+    component: Gaps
+    at: build
+    kicker: 最大的号，不是终点
+    lines:
+      - 你不太可能正好摸到最后一个。
+      - 4个号，把1到60切成了几段空档。
+      - 平均每段，大约15个号。
+      - 最大号之上，多半还藏着[同样宽的一段]。
+
+  - id: formula
+    component: Formula
+    at: drop
+    lines:
+      - 所以：60 + 60÷4 − 1 ≈ [74]。
+      - 把罐子换成坦克，把球换成编号——
+      - 1942年8月，情报部门估计：{1550}辆。
+      - 编号算出来：[327]辆。
+      - 战后翻出德国档案：真实数字是[342]。
+
+  - id: panther
+    component: Panther
+    kicker: 1944 · 豹式坦克
+    cite: Ruggles & Brodie, JASA 1947
+    lines:
+      - 后来，他们只拆了两辆豹式坦克的负重轮。
+      - 64个轮子上的模具编号，推出1944年2月产量：约[270]辆。
+      - 德国档案里的数字：276。
+
+  - id: iphone
+    component: IPhone
+    kicker: 2008 · 伦敦
+    lines:
+      - 2008年，有人请网友晒出iPhone的序列号。
+      - 同一个公式，估出苹果卖了约[910万部]。
+      - 这叫[德国坦克问题]：用很少的样本，估出看不见的总数。
+
+  - id: callback
+    component: Callback
+    at: coda
+    lines:
+      - 德国人以为，编号只是为了方便管理。
+      - 他们没想到，每一个数字，都在替对手数数。
+      - pause: 3.4

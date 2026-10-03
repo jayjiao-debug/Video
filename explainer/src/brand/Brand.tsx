@@ -33,6 +33,9 @@ export type VideoCfg = {
 	motif: 'cards' | 'duel' | 'stars';
 	card: [number, number];
 	extend: number;
+	trim?: number;
+	cuts?: [number, number][];
+	hit?: number;
 	question: string;
 	sources: string;
 	duration: number;
@@ -45,6 +48,21 @@ const INK = '#f3ede2';
 const W = 1920;
 const H = 1080;
 
+/** Source-time ranges kept after the trim and the cuts, up to the video's end. */
+const segments = (v: VideoCfg): [number, number][] => {
+	let start = v.trim ?? 0;
+	const out: [number, number][] = [];
+	for (const [a, b] of [...(v.cuts ?? [])].sort((x, y) => x[0] - y[0])) {
+		out.push([start, a]);
+		start = b;
+	}
+	out.push([start, v.duration]);
+	return out;
+};
+/** Source time → output time. */
+const toOut = (v: VideoCfg, t: number) => t - (v.trim ?? 0) - (v.cuts ?? []).filter(([, b]) => b <= t).reduce((n, [a, b]) => n + b - a, 0);
+const keptLength = (v: VideoCfg, a: number, b: number) => toOut(v, b) - toOut(v, a);
+
 export const calculateBrandMetadata: CalculateMetadataFunction<BrandedProps> = async ({props}) => {
 	const cfg = (await (await fetch(staticFile('build/brand/brand.json'))).json()) as BrandCfg;
 	const v = cfg.videos.find((x) => x.id === props.video);
@@ -52,7 +70,11 @@ export const calculateBrandMetadata: CalculateMetadataFunction<BrandedProps> = a
 	const fps = 30;
 	const part = props.part ?? 'full';
 	const frames =
-		part === 'title' ? Math.round((v.card[1] - v.card[0]) * fps) : part === 'end' ? Math.round(v.extend * fps) : Math.round((v.duration + v.extend) * fps);
+		part === 'title'
+			? Math.round(keptLength(v, v.card[0], v.card[1]) * fps)
+			: part === 'end'
+				? Math.round(v.extend * fps)
+				: Math.round((toOut(v, v.duration) + v.extend) * fps);
 	return {durationInFrames: frames, fps, width: W, height: H, props: {...props, cfg}};
 };
 
@@ -235,9 +257,10 @@ const Hairline: React.FC<{y: number; p: number; gap: number}> = ({y, p, gap}) =>
 
 export const TitleCard: React.FC<{v: VideoCfg; cfg: BrandCfg; dur: number}> = ({v, cfg, dur}) => {
 	const f = useCurrentFrame();
-	const inP = prog(f, 0, 14, ease.inOut);
-	const out = prog(f, dur - 16, 16, ease.inOut);
-	const land = 22; // title lands ~0.7 s in, on the music's new section
+	const inP = prog(f, 0, 5, ease.inOut);
+	const out = prog(f, dur - 14, 14, ease.inOut);
+	// the title lands on the track's downbeat (`hit`), else ~0.7 s in
+	const land = v.hit !== undefined ? Math.max(4, Math.round((toOut(v, v.hit) - toOut(v, v.card[0])) * 30)) : 22;
 	const flare = f >= land + 8 ? Math.exp(-(f - land - 8) / 9) : 0;
 	const push = 1 + 0.03 * prog(f, 0, dur, ease.inOut) + 0.03 * out;
 	return (
@@ -255,7 +278,7 @@ export const TitleCard: React.FC<{v: VideoCfg; cfg: BrandCfg; dur: number}> = ({
 					<g transform={`translate(${W / 2},360)`} opacity={prog(f, 6, 16)}>
 						<path d="M0,-6 L6,0 L0,6 L-6,0 Z" fill={GOLD} />
 					</g>
-					<GoldTitle text={v.title} f={f} at={land - 12} size={140} y={512} />
+					<GoldTitle text={v.title} f={f} at={Math.max(5, land - 8)} size={140} y={512} />
 					{/* anamorphic flare as the title lands */}
 					<ellipse cx={W / 2} cy={470} rx={760 * (0.4 + flare)} ry={2 + 2.5 * flare} fill="#fff1cf" opacity={0.6 * flare} />
 					<g transform={`translate(${W / 2},606) scale(1.35)`}>
@@ -320,27 +343,42 @@ export const Branded: React.FC<BrandedProps> = ({video, cfg, part = 'full'}) => 
 	const f = useCurrentFrame();
 	if (!cfg) return null;
 	const v = cfg.videos.find((x) => x.id === video)!;
-	const vidFrames = Math.round(v.duration * fps);
-	const [c0, c1] = v.card.map((s) => Math.round(s * fps));
+	const segs = segments(v);
+	const vidFrames = Math.round(toOut(v, v.duration) * fps);
+	const c0 = Math.round(toOut(v, v.card[0]) * fps);
+	const cardLen = Math.round(keptLength(v, v.card[0], v.card[1]) * fps);
 	const ext = Math.round(v.extend * fps);
-	if (part === 'title') return <TitleCard v={v} cfg={cfg} dur={c1 - c0} />;
+	if (part === 'title') return <TitleCard v={v} cfg={cfg} dur={cardLen} />;
 	if (part === 'end') return <EndCard v={v} cfg={cfg} dur={ext} />;
-	// the last frame, blurred, behind the end card
+	// cold open: the first frame is already moving, a quick punch-in with a light pop
+	const punch = 1 + 0.14 * (1 - prog(f, 0, 16, ease.out));
+	const pop = 0; // a white pop washed the dark first frame grey; the punch-in alone reads better
 	const endBlur = interpolate(f, [vidFrames - 6, vidFrames + 20], [0, 10], {extrapolateLeft: 'clamp', extrapolateRight: 'clamp'});
+	let at = 0;
 	return (
 		<AbsoluteFill style={{background: '#000'}}>
-			<Sequence durationInFrames={vidFrames}>
-				<OffthreadVideo src={staticFile(v.src)} muted />
-			</Sequence>
+			<AbsoluteFill style={{transform: `scale(${punch})`}}>
+				{segs.map(([a, b]) => {
+					const from = at;
+					const len = Math.round((b - a) * fps);
+					at += len;
+					return (
+						<Sequence key={a} from={from} durationInFrames={len}>
+							<OffthreadVideo src={staticFile(v.src)} startFrom={Math.round(a * fps)} muted />
+						</Sequence>
+					);
+				})}
+			</AbsoluteFill>
+			<AbsoluteFill style={{background: '#fff4dc', opacity: pop}} />
 			<Sequence from={vidFrames} durationInFrames={ext}>
 				<AbsoluteFill style={{filter: `blur(${endBlur}px) brightness(0.8)`}}>
-					<Freeze frame={vidFrames - 2}>
-						<OffthreadVideo src={staticFile(v.src)} muted />
+					<Freeze frame={0}>
+						<OffthreadVideo src={staticFile(v.src)} startFrom={Math.round(v.duration * fps) - 2} muted />
 					</Freeze>
 				</AbsoluteFill>
 			</Sequence>
-			<Sequence from={c0} durationInFrames={c1 - c0}>
-				<TitleCard v={v} cfg={cfg} dur={c1 - c0} />
+			<Sequence from={c0} durationInFrames={cardLen}>
+				<TitleCard v={v} cfg={cfg} dur={cardLen} />
 			</Sequence>
 			<Sequence from={vidFrames - 12} durationInFrames={ext + 12}>
 				<EndCard v={v} cfg={cfg} dur={ext + 12} />
