@@ -114,9 +114,9 @@ export const splitLine = (s: string, max = 13): string[] => {
 export const Subtitle: React.FC<{
   t: number; at: number; out: number; zh: string; en?: string; y?: number; size?: number; enSize?: number; weight?: number; showEn?: boolean; band?: boolean;
 }> = ({ t, at, out, zh, en, y = SUB_Y, size = SUB_SIZE, enSize = SUB_EN, weight = SUB_W, showEn = true }) => {
-  const o = inOut(t, at, out, 0.3, 0.25);
+  const o = inOut(t, at, out);
   if (o <= 0) return null;
-  const rise = (1 - easeOut(prog(t, at, at + 0.35))) * 18;
+  const rise = (1 - easeOut(prog(t, at, at + 0.5))) * 18;
   const lh = size * SUB_LH;
   return (
     <div style={{ position: 'absolute', left: 0, right: 0, top: y - size * SUB_K, textAlign: 'center', opacity: o, transform: `translateY(${rise}px)` }}>

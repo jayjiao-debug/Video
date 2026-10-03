@@ -222,7 +222,7 @@ export const Twist: React.FC<{ t: number }> = ({ t }) => {
   const g = easeOut(prog(t, S + 0.1, S + 1.2)) * 0.368;
   const d = easeInOut(prog(t, M, M + 1.0)) * 0.632;
   const sw = easeInOut(prog(t, M, M + 0.6));
-  const cam = 1;
+  const cam = lerp(1.05, 1, prog(t, S, E));
   return (
     <AbsoluteFill style={{ opacity: o }}>
       <AbsoluteFill style={{ transform: `scale(${cam})` }}>
