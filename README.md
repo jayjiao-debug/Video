@@ -81,3 +81,10 @@ This is a starting point, not a locked cut. Some ideas:
 - **New pose or gesture:** add an entry to `POSES` in `characters.py` and key it in a shot.
 - **Rewrite the music:** `compose()` in `audio.py` is a readable score (`phrase(music, 44.4, MOTIF, 0.45, ...)`).
 - **Higher resolution:** change `W, H` in `config.py`. Shot layouts assume 16:9.
+
+## Also in this repo: the explainer pipeline
+
+[`explainer/`](explainer/) is a separate pipeline for cinematic, subtitle-driven
+science explainers (Remotion + Python): an episode script anchored to the
+music's break and drop, beat-snapped subtitles, music-reactive lighting, QA
+contact sheets, and a −14 LUFS master. See [`explainer/README.md`](explainer/README.md).

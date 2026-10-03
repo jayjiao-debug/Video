@@ -123,18 +123,16 @@ def mux(video, audio, out):
 def stills(ep_id, tl, times):
     fps = tl["fps"]
     if not times:
-        times = [(s["from"] + s["to"]) / 2 / fps for s in tl["subtitles"]]
+        times = [(s["from"] + 0.8 * (s["to"] - s["from"])) / fps for s in tl["subtitles"]]
     d = os.path.join(ROOT, "out", f"{ep_id}-stills")
     shutil.rmtree(d, ignore_errors=True)
     os.makedirs(d)
-    for i, t in enumerate(times):
-        remotion(["still", "src/index.ts", "Episode", os.path.join(d, f"{i:03d}.jpg"),
-                  f"--props={json.dumps({'episode': ep_id})}", f"--frame={int(t * fps)}",
-                  "--image-format=jpeg", "--log=error"])
+    run(["node", "scripts/stills.mjs", ep_id, d, *[str(int(t * fps)) for t in times]], cwd=ROOT,
+        env={**os.environ, "REMOTION_BROWSER": BROWSER or ""})
     sheet = os.path.join(ROOT, "out", f"{ep_id}-contact.jpg")
     cols = 6 if tl["format"] == "vertical" else 4
     run(["ffmpeg", "-v", "error", "-y", "-pattern_type", "glob", "-i", os.path.join(d, "*.jpg"), "-vf",
-         f"scale=360:-1,tile={cols}x{(len(times) + cols - 1) // cols}:padding=6:color=0x222222",
+         f"scale=480:-1,tile={cols}x{(len(times) + cols - 1) // cols}:padding=6:color=0x222222",
          "-frames:v", "1", "-update", "1", sheet])
     print("wrote", sheet)
 

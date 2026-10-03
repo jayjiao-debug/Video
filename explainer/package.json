@@ -7,10 +7,12 @@
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
+    "@remotion/bundler": "^4.0.532",
     "@remotion/cli": "4.0.532",
     "@remotion/google-fonts": "4.0.532",
     "@remotion/noise": "4.0.532",
     "@remotion/paths": "4.0.532",
+    "@remotion/renderer": "^4.0.532",
     "@remotion/shapes": "4.0.532",
     "react": "19.1.0",
     "react-dom": "19.1.0",
