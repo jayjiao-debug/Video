@@ -192,10 +192,13 @@ export const SerialPlate: React.FC<{serial: string; label?: string; torch?: numb
 );
 
 /** A glass jar of numbered balls for the toy version of the problem. */
-export const Jar: React.FC<{balls: {n: number; x: number; y: number; lit?: number; out?: number}[]}> = ({balls}) => (
+/** `lid`: 0 on, 1 lifted off out of the shot. */
+export const Jar: React.FC<{balls: {n: number; x: number; y: number; lit?: number; out?: number}[]; lid?: number}> = ({balls, lid = 0}) => (
 	<g>
 		<path d="M-150,-330 L150,-330 L150,-300 C190,-280 200,-240 200,-200 L200,40 C200,80 170,100 130,100 L-130,100 C-170,100 -200,80 -200,40 L-200,-200 C-200,-240 -190,-280 -150,-300 Z" fill="rgba(160,200,235,0.08)" stroke="rgba(210,230,255,0.45)" strokeWidth={4} />
-		<rect x={-160} y={-350} width={320} height={26} rx={6} fill="url(#brass)" />
+		<g transform={`translate(${-220 * lid},${-520 * lid}) rotate(${-30 * lid})`} opacity={1 - 0.6 * lid}>
+			<rect x={-160} y={-350} width={320} height={26} rx={6} fill="url(#brass)" />
+		</g>
 		{balls.map((b, i) => {
 			const out = b.out ?? 0;
 			const lit = b.lit ?? 0;

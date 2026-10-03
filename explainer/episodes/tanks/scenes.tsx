@@ -110,7 +110,7 @@ const Hook: React.FC<SceneProps> = () => {
 		const push = prog(f, cue(1) - 6, cutA - cue(1) + 6, ease.in);
 		const cam = camMix(lookAt(1000, 600, 1.02 + 0.03 * prog(f, 0, cue(1))), lookAt(1250, 780, 2.7), push);
 		return (
-			<FullFrame fadeIn={24} fadeOut={1} drift={1} punch={1}>
+			<FullFrame fadeIn={24} fadeOut={1}>
 				<Battlefield frame={f + 200} cam={cam}>
 					<g transform="translate(980, 880) scale(0.9)">
 						<Panzer wreck plateGlow={prog(f, cue(1) - 4, 16)} />
@@ -330,11 +330,10 @@ const Serials: React.FC<SceneProps> = () => {
 			</FullFrame>
 		);
 	}
-	// the ledger: every captured tank adds a line
+	// the ledger: a handful of big serials written fast, then highlighted when the question lands
 	const g = f - ledgerAt;
-	const rows = 14;
-	const shown = Math.min(rows * 2, Math.floor((g / Math.max(1, sceneLen - ledgerAt - 20)) * rows * 2));
-	const glow = prog(f, cue(3), 40);
+	const LOG = ['82731', '82654', '82917', '83044', '82788', '82992', '83106', '82863'];
+	const written = Math.min(LOG.length, Math.floor(Math.max(0, g - 4) / 5) + (g >= 4 ? 1 : 0));
 	// on the last accent before the break the numbers come loose and fall (into the jar, next scene)
 	const fallStart = sceneLen - 16;
 	const fallOf = (i: number) => {
@@ -345,26 +344,29 @@ const Serials: React.FC<SceneProps> = () => {
 		<FullFrame fadeIn={6} enter={14} startAt={ledgerAt} fadeOut={1}>
 			<rect width={W} height={H} fill="#120d09" />
 			<ellipse cx={960} cy={180} rx={900} ry={520} fill="url(#glow-lamp)" opacity={0.5} />
-			<g transform={`translate(960,470) rotate(-3) scale(${1 + 0.04 * prog(g, 0, 200)})`}>
+			<g transform="translate(960,470) rotate(-3)">
 				<Paper x={0} y={0} w={1180} h={720}>
-					<text x={-540} y={-300} style={{fontFamily: 'monospace', fontWeight: 700, fontSize: 24, fill: P.ink, letterSpacing: '0.12em'}}>
+					<text x={-520} y={-290} style={{fontFamily: 'monospace', fontWeight: 700, fontSize: 26, fill: P.ink, letterSpacing: '0.12em'}}>
 						CAPTURED EQUIPMENT · SERIAL LOG · 1943
 					</text>
-					{['Fgst.Nr.', 'Motor', 'Getriebe'].map((h, i) => (
-						<text key={h} x={-500 + i * 360} y={-240} style={{fontFamily: 'monospace', fontSize: 22, fill: P.ink, opacity: 0.7}}>
-							{h}
-						</text>
-					))}
-					<line x1={-540} y1={-226} x2={540} y2={-226} stroke={P.ink} strokeOpacity={0.4} />
-					{Array.from({length: shown}, (_, i) => {
-						const r = i % rows;
-						const col = Math.floor(i / rows);
-						const base = 82600 + Math.floor(random(`lg${i}`) * 560);
+					<text x={-520} y={-238} style={{fontFamily: 'monospace', fontSize: 24, fill: P.ink, opacity: 0.7}}>
+						Fgst.Nr. · 底盘编号
+					</text>
+					<line x1={-520} y1={-222} x2={520} y2={-222} stroke={P.ink} strokeOpacity={0.4} />
+					{LOG.slice(0, written).map((n, i) => {
+						const x = -470 + Math.floor(i / 4) * 520;
+						const y = -140 + (i % 4) * 110;
+						const ink = prog(g, 4 + i * 5, 6, ease.out);
+						const mark = prog(f, cue(3) + i * 4, 10, ease.out);
 						return (
-							<g key={i} transform={`translate(0,${fallOf(i)}) rotate(${fallOf(i) * 0.02 * (random(`fr${i}`) - 0.5)})`}>
-								<Hand x={-500 + col * 560} y={-190 + r * 34} size={24} anchor="start" tone={glow > 0 && random(`gl${i}`) < glow ? '#9a6a12' : P.ink}>
-									{`${base}   ·   ${40000 + Math.floor(random(`m${i}`) * 9000)}   ·   ${7000 + Math.floor(random(`t${i}`) * 900)}`}
-								</Hand>
+							<g key={n} transform={`translate(0,${fallOf(i)}) rotate(${fallOf(i) * 0.02 * (random(`fr${i}`) - 0.5)})`}>
+								{/* highlighter swipe behind the number */}
+								<rect x={x - 14} y={y - 52} width={340 * mark} height={66} rx={8} fill={color.gold} opacity={0.45} />
+								<g opacity={ink}>
+									<Hand x={x} y={y} size={64} anchor="start" tone={mark > 0.5 ? '#5a3a06' : P.ink}>
+										{n}
+									</Hand>
+								</g>
 							</g>
 						);
 					})}
@@ -391,16 +393,27 @@ const JarScene: React.FC<SceneProps> = () => {
 	const rolling = f >= askAt && f < settle ? 1 : 0;
 	const others = Array.from({length: 26}, (_, i) => ({
 		n: [3, 11, 27, 33, 51, 8, 66, 14, 72, 25, 47, 5, 58, 36, 22, 9, 31, 54, 17, 63, 2, 45, 29, 70, 12, 38][i],
-		x: -160 + (i % 6) * 62 + (Math.floor(i / 6) % 2) * 30,
+		x: -150 + (i % 6) * 58 + (Math.floor(i / 6) % 2) * 26,
 		y: 60 - Math.floor(i / 6) * 54,
 	}));
 	const pop = spring({frame: f - askAt, fps, config: {damping: 12}});
 	const land = f >= settle ? Math.exp(-(f - settle) / 5) : 0;
-	const fillGap = Math.max(2, (cue(1) - 20) / others.length);
-	const FALL = 14;
-	const timed = others.map((b, i) => ({...b, t: i * fillGap}));
-	const filled = timed.filter((b) => f >= b.t + FALL).map(({t, ...b}) => ({...b, lit: 0}));
-	const falling = timed.filter((b) => f >= b.t && f < b.t + FALL);
+	const fillGap = Math.max(2, (cue(1) - 30) / others.length);
+	const FALL = 18;
+	const timed = others.map((b, i) => ({...b, t: 10 + i * fillGap}));
+	const lid = prog(f, 0, 12, ease.out);
+	/** where a ball is: dropped from above into the mouth, then rolled down to its place */
+	const ballAt = (b: (typeof timed)[number]) => {
+		const k = f - b.t;
+		const mx = Math.max(-95, Math.min(95, b.x));
+		if (k < 8) {
+			const p = prog(k, 0, 8, ease.in);
+			return {x: mx, y: -760 + (-300 + 760) * p, morph: p};
+		}
+		const p = prog(k, 8, FALL - 8, ease.out);
+		const bounce = Math.sin(Math.min(1, p) * Math.PI) * -18 * (1 - p);
+		return {x: mx + (b.x - mx) * p, y: -300 + (b.y + 300) * p + bounce, morph: 1};
+	};
 	const lean = prog(f, settle, 70, ease.inOut);
 	const sceneEnd = useScene().duration;
 	return (
@@ -410,19 +423,31 @@ const JarScene: React.FC<SceneProps> = () => {
 			<polygon points={`${jx - 90},-40 ${jx + 90},-40 ${jx + 360},${H} ${jx - 360},${H}`} fill="url(#beam-warm)" opacity={0.55} />
 			<ellipse cx={jx} cy={790} rx={330} ry={44} fill="#000" opacity={0.6} />
 			<g transform={`translate(${jx},${jy}) scale(1.05)`} opacity={prog(f, 0, 24)}>
-				<Jar balls={filled} />
-				{falling.map((b) => {
-					// a loose number from the ledger, rounding into a ball as it lands
-					const p = prog(f, b.t, FALL, ease.in);
-					return (
-						<g key={b.n} transform={`translate(${b.x},${b.y - 640 * (1 - p)})`}>
-							<circle r={26 * p * p} fill="#d9cfb6" />
-							<text y={9} textAnchor="middle" style={{fontFamily: p > 0.7 ? 'monospace' : font.latinItalic, fontStyle: p > 0.7 ? 'normal' : 'italic', fontWeight: 700, fontSize: 24 + 10 * (1 - p), fill: p > 0.7 ? '#3a2f1e' : '#e9dcc0'}}>
-								{b.n}
-							</text>
-						</g>
-					);
-				})}
+				<Jar balls={[]} lid={lid} />
+				<defs>
+					{/* the inside of the glass plus the column above the mouth: balls never cross the glass */}
+					<clipPath id="jar-inside">
+						<path d="M-146,-326 L146,-326 L146,-298 C186,-278 196,-240 196,-200 L196,40 C196,78 168,96 130,96 L-130,96 C-168,96 -196,78 -196,40 L-196,-200 C-196,-240 -186,-278 -146,-298 Z" />
+						<rect x={-146} y={-1200} width={292} height={880} />
+					</clipPath>
+				</defs>
+				<g clipPath="url(#jar-inside)">
+					{timed
+						.filter((b) => f >= b.t)
+						.map((b) => {
+							const {x, y, morph} = ballAt(b);
+							// a loose number from the ledger, rounding into a ball as it drops in
+							return (
+								<g key={b.n} transform={`translate(${x},${y})`}>
+									<circle r={26 * Math.min(1, 0.3 + morph)} fill="#d9cfb6" />
+									<circle cx={-8} cy={-9} r={7} fill="#fff" opacity={0.5 * morph} />
+									<text y={9} textAnchor="middle" style={{fontFamily: 'monospace', fontWeight: 700, fontSize: 24, fill: '#3a2f1e'}}>
+										{b.n}
+									</text>
+								</g>
+							);
+						})}
+				</g>
 			</g>
 			{/* the rest of the ledger still falling through the dark */}
 			{f < 22
@@ -502,7 +527,7 @@ const Gaps: React.FC<SceneProps> = () => {
 	const camZ = 1 + 0.5 * dive - 0.12 * suck;
 	const shiver = 0;
 	// where does the jar really end? a ghost marker searching beyond 60 until the extra gap settles it
-	const ghostX = 70 + 8 * Math.sin(f / 16) + 3 * Math.sin(f / 7);
+	const ghostX = interpolate(f, [cue(0) + 10, cue(0) + 46, cue(0) + 70], [60, 79, 72], {extrapolateLeft: 'clamp', extrapolateRight: 'clamp', easing: ease.inOut});
 	const ghost = prog(f, cue(0) + 10, 20) * (1 - extra);
 	const scan = Math.floor(f / 14) % 4;
 	const real: [number, number][] = [
@@ -597,11 +622,11 @@ const Formula: React.FC<SceneProps> = () => {
 	const flash = Math.exp(-f / 7);
 	const half = 60 / tempo / 2 * fps; // the sum lands term by term on half-beats from the drop
 	const heroAt = 6 * half;
-	const focusX = interpolate(f, [cue(2), cue(3) - 10, cue(3) + 10, cue(4) - 10, cue(4) + 10], [600, 600, 960, 960, 1140], {extrapolateLeft: 'clamp', extrapolateRight: 'clamp', easing: ease.inOut});
-	const chartZoom = 1 + 0.05 * prog(f, cue(2), 60, ease.inOut) + 0.05 * prog(f, cue(3), 60, ease.inOut) + 0.04 * prog(f, cue(4), 60, ease.inOut);
-	const chartCam = `translate(960,540) scale(${chartZoom}) translate(${-960 - (focusX - 960) * 0.35},-540)`;
+	const stampAt = cue(3) + 22;
+	const snap = useSnapBeat();
+	const stamp = spring({frame: f - stampAt, fps, config: {damping: 9, stiffness: 200}});
 	const kick = (t: number) => (f >= t ? Math.exp(-(f - t) / 4) : 0);
-	const shake = 16 * kick(0) + 9 * kick(Math.round(heroAt));
+	const shake = 16 * kick(0) + 9 * kick(Math.round(heroAt)) + 10 * kick(cue(3) + 22);
 	return (
 		<FullFrame fadeIn={2} fadeOut={8} exit={12}>
 			<rect width={W} height={H} fill="#07080c" />
@@ -659,39 +684,71 @@ const Formula: React.FC<SceneProps> = () => {
 						})}
 					</g>
 				) : null}
-				{/* August 1942: three bars; the camera leans toward whichever bar the line is about */}
-				<g opacity={toChart} transform={chartCam}>
+				{/* August 1942: each bar stacks up out of tanks, fast; the wrong one gets stamped */}
+				<g opacity={toChart}>
 					<T x={960} y={170} size={30} family="sans" tone="dim" track={0.3}>
 						1942 年 8 月 · 德国坦克月产量
 					</T>
-					{/* the factories never stop: a faint line of tanks rolling past behind the bars */}
-					<g opacity={0.16}>
-						{Array.from({length: 9}, (_, k) => (
-							<g key={k} transform={`translate(${((k * 260 + f * 2.2) % 2340) - 210},330) scale(0.16)`}>
-								<Panzer travel={f * 3} />
-							</g>
-						))}
-					</g>
 					{bars.map(([label, v, c, at], i) => {
-						const p = prog(f, at, 34, ease.out);
-						const h = (v / 1550) * 500 * p;
+						const rowsAll = Math.max(1, Math.round((v / 1550) * 20));
+						const shown = Math.min(rowsAll, Math.floor(Math.max(0, f - at) / 1.6));
+						const top = 780 - rowsAll * 25;
 						const x = 600 + i * 360;
+						const tone = i === 0 ? 'red' : i === 1 ? 'gold' : 'text';
 						return (
-							<g key={label} opacity={prog(f, at - 4, 10)}>
-								<rect x={x - 80} y={780 - h} width={160} height={h} rx={6} fill={c} opacity={0.88} />
-								<T x={x} y={760 - h - 30} size={72} family="latin" weight={600} tone={i === 0 ? 'red' : i === 1 ? 'gold' : 'text'}>
-									{countUp(f, v, at, 34)}
+							<g key={label} opacity={prog(f, at - 4, 8)}>
+								<rect x={x - 84} y={top - 4} width={168} height={rowsAll * 25 + 4} rx={6} fill="none" stroke={c} strokeOpacity={0.35} strokeWidth={2} />
+								{Array.from({length: shown}, (_, r) =>
+									[0, 1, 2, 3].map((k) => (
+										<g key={`${r}-${k}`} transform={`translate(${x - 60 + k * 40},${780 - r * 25 - 6})`}>
+											<rect x={-17} y={-8} width={34} height={11} rx={3} fill={c} />
+											<rect x={-9} y={-15} width={16} height={8} rx={2} fill={c} />
+											<rect x={6} y={-13} width={16} height={3} fill={c} />
+										</g>
+									)),
+								)}
+								<T x={x} y={top - 50} size={72} family="latin" weight={600} tone={tone}>
+									{Math.round((v * shown) / rowsAll)}
 								</T>
-								<T x={x} y={830} size={30} weight={700} tone={i === 0 ? 'red' : i === 1 ? 'gold' : 'text'}>
+								<T x={x} y={830} size={30} weight={700} tone={tone}>
 									{label}
 								</T>
 							</g>
 						);
 					})}
-					{f >= cue(3) + 20 ? (
-						// the intelligence guess, struck out once the serials answer
-						<line x1={520} y1={300} x2={520 + 160 * prog(f, cue(3) + 20, 14, ease.out)} y2={300 + 480 * prog(f, cue(3) + 20, 14, ease.out)} stroke="#fff4dc" strokeWidth={8} strokeLinecap="round" opacity={0.85} />
+					{/* where 1550 came from: the London reports pile in beside it, then clear for the answer */}
+					{([
+						['AGENT REPORT', '≈ 1000?', -5],
+						['P.O.W. INTERVIEW', '≈ 1800?', 4],
+						['AERIAL RECON', '≈ 1200?', -2],
+					] as [string, string, number][]).map(([head, guess, r], k) => {
+						const t = snap(cue(2) + 46 + k * 16);
+						if (f < t || f > cue(3) + 4) return null;
+						const inP = spring({frame: f - t, fps, config: {damping: 11, stiffness: 150}});
+						const outP = prog(f, cue(3) - 8, 12, ease.in);
+						return (
+							<g key={head} transform={`translate(${1000 + k * 250 + (1 - inP) * 500},${450 - 380 * outP})`} opacity={Math.min(1, inP * 2) * (1 - outP)}>
+								<Paper x={0} y={0} w={220} h={150} r={r}>
+									<text x={-92} y={-38} style={{fontFamily: 'monospace', fontSize: 17, fontWeight: 700, fill: P.ink, letterSpacing: '0.06em'}}>
+										{head}
+									</text>
+									<rect x={-92} y={-24} width={170} height={3} fill={P.ink} opacity={0.3} />
+									<Hand x={0} y={44} size={44} tone={P.redDeep}>
+										{guess}
+									</Hand>
+								</Paper>
+							</g>
+						);
+					})}
+					{f >= stampAt ? (
+						<g transform={`translate(600,560) rotate(-12) scale(${2.4 - 1.4 * stamp})`} opacity={Math.min(1, stamp * 1.6)}>
+							<rect x={-110} y={-110} width={220} height={220} rx={22} fill="rgba(20,4,4,0.35)" stroke={P.red} strokeWidth={10} />
+							<text y={58} textAnchor="middle" style={{fontFamily: font.serif, fontWeight: 900, fontSize: 168, fill: P.red}}>
+								错
+							</text>
+						</g>
 					) : null}
+					<Impact f={f} t={stampAt} x={600} y={560} size={0.4} color="#ffb4a8" seed="stamp" />
 					{f >= cue(4) + 30 ? (
 						<g opacity={prog(f, cue(4) + 30, 20)}>
 							<path d={`M${960 + 90},${780 - (327 / 1550) * 500 - 70} C1120,${560} 1220,${560} ${1320 - 90},${780 - (342 / 1550) * 500 - 70}`} fill="none" stroke={color.gold} strokeWidth={2.5} strokeDasharray="6 6" />
@@ -1018,8 +1075,6 @@ const Callback: React.FC<SceneProps> = () => {
 			enter={20}
 			fadeOut={1}
 			scrim={0.6}
-			drift={1}
-			punch={1}
 			overlay={
 				<Sequence from={endAt} layout="none">
 					<EndCard v={EPISODE} cfg={BRAND} dur={scene.duration - endAt} />
