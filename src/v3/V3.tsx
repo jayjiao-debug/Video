@@ -17,7 +17,7 @@ import {
 } from './data3';
 import { JUNO } from '../brand/identity';
 import { V1Model, Explosion, Spy, shake } from './fx';
-import { ColdOpen2D, ReticleTitle, Buzz2D } from './toon';
+import { ColdOpenRockets, ReticleTitle, Buzz2D } from './toon';
 import { EndCard, type VideoCfg } from '../brand/Brand';
 import { CornerMark } from '../brand/CornerMark';
 
@@ -1265,7 +1265,7 @@ export const V3Film: React.FC = () => {
         </ThreeCanvas>
       )}
       <Buzz2D T={T} />
-      <ColdOpen2D T={T} />
+      <ColdOpenRockets T={T} />
       <div style={{ position: 'absolute', left: 0, right: 0, bottom: 0, height: 360, pointerEvents: 'none',
         background: 'linear-gradient(180deg, rgba(8,9,13,0) 0%, rgba(8,9,13,0.55) 45%, rgba(8,9,13,0.78) 100%)' }} />
       <Chapter T={T} />

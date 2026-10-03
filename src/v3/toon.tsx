@@ -207,10 +207,11 @@ export const ReticleTitle: React.FC<{ f: number; dur: number; kicker: string; ti
   const out = prog(f, dur - 14, dur);
   const lockAt = 1.02; // lands on the next beat
   const k = easeInOut(prog(s, 0.05, lockAt));
-  const cx = lerp(1460, 960, k) + Math.sin(s * 3) * 10 * (1 - k), cy = lerp(300, 500, k) + Math.cos(s * 2.4) * 8 * (1 - k);
+  // starts where the cold open's gunsight was (match cut), then settles on the title
+  const cx = lerp(1020, 960, k), cy = lerp(610, 500, k);
   const locked = s >= lockAt;
   const snap = easeOut(prog(s, lockAt, lockAt + 0.25));
-  const R = lerp(380, 330, snap);
+  const R = lerp(lerp(250, 380, k), 330, snap);
   const flare = s >= lockAt ? Math.exp(-(s - lockAt) * 5) : 0;
   const thames = 'M -40 690 C 240 640 380 760 620 720 S 980 600 1220 660 S 1600 760 1960 680';
   return (
@@ -376,6 +377,151 @@ export const Buzz2D: React.FC<{ T: number }> = ({ T }) => {
       </svg>
       <Grain />
       <AbsoluteFill style={{ background: '#fff6e2', opacity: whiteout }} />
+    </AbsoluteFill>
+  );
+};
+
+/* ---------------- 1b. cold open, rocket version: V-1s keep landing on the same few houses ----------------
+   Impacts on beats 2, 4, 6, all inside one block; a neighbour shakes his fist; on beat 7 a gunsight settles over the
+   cluster ("as if something were aiming"), which match-cuts into the title's gunsight. */
+const HITS_CO = [
+  { x: 1010, y: 640, at: b(2), from: [2150, 120] },
+  { x: 1150, y: 660, at: b(4), from: [2150, 60] },
+  { x: 900, y: 650, at: b(6), from: [2150, 170] },
+];
+const RET_CO = { x: 1020, y: 610, r: 250 };
+const HOUSES = Array.from({ length: 9 }, (_, i) => ({ x: i * 220 - 30, w: 220, roof: 600 + (i % 3) * 18 }));
+const Bloke: React.FC<{ x: number; y: number; s: number; fist: number; shock: number }> = ({ x, y, s, fist, shock }) => {
+  const coat = '#4f4336';
+  const arm = fist > 0 ? `M 46 -240 Q 80 ${-300 - 20 * Math.sin(fist * 30)} 96 -360` : 'M 46 -240 Q 70 -180 60 -130';
+  return (
+    <g transform={`translate(${x}, ${y}) scale(${s})`}>
+      <ellipse cx={0} cy={0} rx={70} ry={10} fill="#05060a" opacity={0.5} />
+      <rect x={-26} y={-100} width={20} height={100} fill="#1c1d22" />
+      <rect x={6} y={-100} width={20} height={100} fill="#1c1d22" />
+      <path d="M -52 -250 Q 0 -268 52 -250 L 58 -90 L -58 -90 Z" fill={coat} />
+      <path d="M -46 -240 Q -70 -180 -60 -130" stroke={coat} strokeWidth={20} strokeLinecap="round" fill="none" />
+      <path d={arm} stroke={coat} strokeWidth={20} strokeLinecap="round" fill="none" />
+      {fist > 0 && <circle cx={96} cy={-366} r={14} fill={Skin} />}
+      <g transform="translate(0, -300) rotate(-10)">
+        <circle r={44} fill={Skin} />
+        <path d="M -50 -6 Q -50 -52 0 -54 Q 50 -52 52 -6 L 66 -2 L 44 -18 Q 0 -30 -50 -6 Z" fill="#3a3128" />
+        <path d={`M -26 ${-16 - shock * 4} L -6 ${-10 + shock * 2}`} stroke={Ink} strokeWidth={5} strokeLinecap="round" />
+        <path d={`M 26 ${-16 - shock * 4} L 6 ${-10 + shock * 2}`} stroke={Ink} strokeWidth={5} strokeLinecap="round" />
+        <ellipse cx={-14} cy={-2} rx={shock ? 7 : 5} ry={shock ? 9 : 5} fill={Ink} />
+        <ellipse cx={16} cy={-2} rx={shock ? 7 : 5} ry={shock ? 9 : 5} fill={Ink} />
+        {shock ? <ellipse cx={2} cy={22} rx={8} ry={10} fill="#5a2424" /> : <path d="M -10 22 L 12 20" stroke={Ink} strokeWidth={5} strokeLinecap="round" />}
+      </g>
+    </g>
+  );
+};
+export const ColdOpenRockets: React.FC<{ T: number }> = ({ T }) => {
+  if (T > b(8) + 0.4) return null;
+  const push = lerp(1.0, 1.08, easeInOut(prog(T, 0, b(8))));
+  const FLY = 1.3;
+  const ret = easeOut(prog(T, b(7), b(7) + 0.35));
+  const retR = lerp(RET_CO.r * 2.2, RET_CO.r, ret);
+  const shakeX = HITS_CO.reduce((acc, h) => acc + (T >= h.at ? 12 * Math.exp(-(T - h.at) * 5) * Math.sin((T - h.at) * 60) : 0), 0);
+  const hitHouse = (i: number) => HITS_CO.some((h) => T >= h.at && Math.abs(h.x - (HOUSES[i].x + HOUSES[i].w / 2)) < 120);
+  const fist = T > b(4) + 0.25 && T < b(6) ? T : 0;
+  const shock = T > b(6) ? 1 : 0;
+  return (
+    <AbsoluteFill>
+      <svg width={W} height={H}>
+        <defs>
+          <linearGradient id="co-sky" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stopColor="#070a14" /><stop offset="1" stopColor="#223052" /></linearGradient>
+          <radialGradient id="co-moon"><stop offset="0.55" stopColor="#f3ecd8" /><stop offset="0.62" stopColor="#f3ecd8" stopOpacity="0.25" /><stop offset="1" stopColor="#f3ecd8" stopOpacity="0" /></radialGradient>
+          <radialGradient id="co-blast"><stop offset="0" stopColor="#fff2c8" /><stop offset="0.35" stopColor="#ff9a40" stopOpacity="0.9" /><stop offset="1" stopColor="#ff5a20" stopOpacity="0" /></radialGradient>
+          <radialGradient id="co-fire"><stop offset="0" stopColor="#ffb24a" stopOpacity="0.8" /><stop offset="1" stopColor="#ff6a20" stopOpacity="0" /></radialGradient>
+          <mask id="co-m"><rect width={W} height={H} fill="white" /><circle cx={RET_CO.x} cy={RET_CO.y} r={retR} fill="black" /></mask>
+        </defs>
+        <g transform={`translate(${960 + shakeX}, 640) scale(${push}) translate(-960, -640)`}>
+          <rect width={W} height={H} fill="url(#co-sky)" />
+          {Array.from({ length: 90 }, (_, i) => <circle key={i} cx={rnd[i] * W} cy={rnd[i + 90] * 520} r={1 + rnd[i + 180] * 1.6} fill="#e8eeff" opacity={0.3 + 0.5 * rnd[i + 270]} />)}
+          <circle cx={420} cy={240} r={170} fill="url(#co-moon)" />
+          {/* distant skyline */}
+          <path d="M 0 640 L 0 560 L 90 560 L 90 520 L 160 520 L 160 575 L 300 575 L 320 480 L 340 575 L 520 575 L 520 540 L 640 540 L 640 590 L 860 590 L 880 500 L 900 590 L 1240 590 L 1240 530 L 1330 530 L 1330 580 L 1600 580 L 1640 470 L 1680 580 L 1920 580 L 1920 640 Z" fill="#141a2b" />
+          {/* smoke columns from earlier hits, behind the houses */}
+          {HITS_CO.map((h, k) => T >= h.at && Array.from({ length: 7 }, (_, j) => {
+            const t = T - h.at - j * 0.08;
+            if (t <= 0) return null;
+            return <circle key={`${k}-${j}`} cx={h.x + Math.sin(j * 1.7 + k) * 30 + t * 20} cy={h.y - 40 - t * 160 - j * 30} r={40 + t * 50 + j * 6} fill="#26252b" opacity={Math.min(0.75, t * 2) * (1 - j * 0.08)} />;
+          }))}
+          {/* the three V-1s */}
+          {HITS_CO.map((h, k) => {
+            const t0 = h.at - FLY;
+            if (T < t0 - 0.4 || T >= h.at) return null;
+            const u = prog(T, t0 - 0.4, h.at);
+            const x = lerp(h.from[0], h.x, u), y = lerp(h.from[1], h.y, easeIn(u));
+            const ang = lerp(-8, -38, easeIn(u));
+            const flame = u < 0.72 ? 1 : Math.max(0, 1 - (u - 0.72) / 0.08);
+            return (
+              <g key={k} transform={`translate(${x}, ${y}) scale(-0.85, 0.85) rotate(${-ang})`}>
+                <V1Side flame={flame} T={T + k} />
+              </g>
+            );
+          })}
+          {/* blasts */}
+          {HITS_CO.map((h, k) => {
+            const a = T - h.at;
+            if (a < 0 || a > 1.6) return null;
+            return (
+              <g key={k}>
+                <circle cx={h.x} cy={h.y} r={120 + 700 * easeOut(clamp(a / 0.7))} fill="url(#co-blast)" opacity={Math.exp(-a * 1.8)} />
+                {Array.from({ length: 14 }, (_, i) => {
+                  const ang = -Math.PI * (0.12 + 0.76 * rnd[i + 10 + k * 20]), sp = 450 + 450 * rnd[i + 30 + k * 20];
+                  return <rect key={i} x={h.x + Math.cos(ang) * sp * a} y={h.y + Math.sin(ang) * sp * a + 650 * a * a} width={10 + 12 * rnd[i]} height={8 + 9 * rnd[i + 5]} fill="#0b0c10" />;
+                })}
+              </g>
+            );
+          })}
+          {/* terraced houses: the ones that were hit lose their roofs and burn */}
+          {HOUSES.map((hs, i) => {
+            const hit = hitHouse(i);
+            const roofPath = hit
+              ? `M ${hs.x} 1080 L ${hs.x} ${hs.roof + 70} L ${hs.x + 40} ${hs.roof + 40} L ${hs.x + 70} ${hs.roof + 85} L ${hs.x + 120} ${hs.roof + 30} L ${hs.x + 150} ${hs.roof + 90} L ${hs.x + 190} ${hs.roof + 55} L ${hs.x + hs.w} ${hs.roof + 80} L ${hs.x + hs.w} 1080 Z`
+              : `M ${hs.x} 1080 L ${hs.x} ${hs.roof + 70} L ${hs.x + hs.w / 2} ${hs.roof} L ${hs.x + hs.w} ${hs.roof + 70} L ${hs.x + hs.w} 1080 Z`;
+            return (
+              <g key={i}>
+                <path d={roofPath} fill="#0d1018" />
+                {!hit && <rect x={hs.x + 30} y={hs.roof + 8} width={20} height={50} fill="#0d1018" />}
+                {[0, 1].map((r) => [0, 1].map((c) => {
+                  const wx = hs.x + 40 + c * 90, wy = hs.roof + 130 + r * 120;
+                  return (
+                    <g key={`${r}${c}`}>
+                      <rect x={wx} y={wy} width={56} height={70} fill={hit ? '#ff9a40' : '#e9c77a'} opacity={hit ? 0.9 : 0.25 + 0.35 * rnd[i * 4 + r * 2 + c]} />
+                      {!hit && <path d={`M ${wx} ${wy} L ${wx + 56} ${wy + 70} M ${wx + 56} ${wy} L ${wx} ${wy + 70}`} stroke="#0d1018" strokeWidth={4} />}
+                    </g>
+                  );
+                }))}
+                {hit && <circle cx={hs.x + hs.w / 2} cy={hs.roof + 90} r={150} fill="url(#co-fire)" opacity={0.7 + 0.2 * Math.sin(T * 13 + i)} />}
+              </g>
+            );
+          })}
+          <Bloke x={250} y={1075} s={0.95} fist={fist} shock={shock} />
+          {T > b(6) + 0.15 && T < b(7) + 0.2 && (
+            <g opacity={easeOut(prog(T, b(6) + 0.15, b(6) + 0.35))} transform={`translate(300, 520) scale(${1.45 * pop(T, b(6) + 0.15, 0.3)})`}>
+              <path d="M 0 0 Q 0 -60 120 -60 L 300 -60 Q 420 -60 420 0 Q 420 60 300 60 L 120 60 L 60 110 L 80 60 Q 0 60 0 0 Z" fill="#f3ecd8" />
+              <text x={210} y={14} textAnchor="middle" style={{ fontFamily: ZH, fontWeight: 900, fontSize: 46, fill: '#1d1c22' }}>又是我们这条街？！</text>
+            </g>
+          )}
+        </g>
+        {/* the gunsight settles over the cluster */}
+        {ret > 0 && (
+          <g opacity={ret}>
+            <rect width={W} height={H} fill="#05060a" opacity={0.6} mask="url(#co-m)" />
+            <g stroke="#f1c56d" fill="none">
+              <circle cx={RET_CO.x} cy={RET_CO.y} r={retR} strokeWidth={3} />
+              <circle cx={RET_CO.x} cy={RET_CO.y} r={retR - 14} strokeWidth={1} opacity={0.5} />
+              <line x1={RET_CO.x - retR - 50} y1={RET_CO.y} x2={RET_CO.x - 40} y2={RET_CO.y} strokeWidth={2} />
+              <line x1={RET_CO.x + 40} y1={RET_CO.y} x2={RET_CO.x + retR + 50} y2={RET_CO.y} strokeWidth={2} />
+              <line x1={RET_CO.x} y1={RET_CO.y - retR - 50} x2={RET_CO.x} y2={RET_CO.y - 40} strokeWidth={2} />
+              <line x1={RET_CO.x} y1={RET_CO.y + 40} x2={RET_CO.x} y2={RET_CO.y + retR + 50} strokeWidth={2} />
+            </g>
+          </g>
+        )}
+      </svg>
+      <Grain />
     </AbsoluteFill>
   );
 };
