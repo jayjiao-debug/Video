@@ -5,6 +5,7 @@ import {Gallery, SHEETS} from './Gallery';
 import {MotionTest} from './MotionTest';
 import {TankHookTest} from './TankHookTest';
 import {Branded, calculateBrandMetadata, type BrandedProps} from './brand/Brand';
+import {TanksCover} from '../episodes/tanks/cover';
 
 export const Root: React.FC = () => (
 	<>
@@ -23,6 +24,9 @@ export const Root: React.FC = () => (
 		<Composition id="Gallery" component={Gallery} durationInFrames={SHEETS.length} fps={30} width={1920} height={1080} />
 		<Composition id="MotionTest" component={MotionTest} durationInFrames={150} fps={30} width={1920} height={1080} />
 		<Composition id="TankHookTest" component={TankHookTest} durationInFrames={150} fps={30} width={1920} height={1080} />
+		{/* Douyin covers: COMPOSITION=CoverWide|CoverTall node scripts/stills.mjs tanks <dir> 0 */}
+		<Composition id="CoverWide" component={TanksCover} defaultProps={{layout: 'wide' as const}} durationInFrames={1} fps={30} width={1440} height={1080} />
+		<Composition id="CoverTall" component={TanksCover} defaultProps={{layout: 'tall' as const}} durationInFrames={1} fps={30} width={1080} height={1440} />
 		{/* channel package: python brand.py <video-id> */}
 		<Composition
 			id="Branded"
