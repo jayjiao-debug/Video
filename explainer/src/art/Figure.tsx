@@ -14,9 +14,9 @@ import {P} from './palette';
  * target (two-bone IK): `reach: {near: [x, y]}` puts the near hand at that point.
  */
 
-export type Outfit = 'suit' | 'uniform' | 'overalls' | 'flight' | 'labcoat' | 'dress';
-export type Hair = 'slick' | 'short' | 'bald' | 'bob' | 'bun' | 'none';
-export type Hat = 'officer' | 'garrison' | 'ballcap' | 'helmet' | 'none';
+export type Outfit = 'suit' | 'uniform' | 'overalls' | 'flight' | 'labcoat' | 'dress' | 'casual' | 'frock';
+export type Hair = 'slick' | 'short' | 'bald' | 'bob' | 'bun' | 'pony' | 'long' | 'wig' | 'none';
+export type Hat = 'officer' | 'garrison' | 'ballcap' | 'helmet' | 'tricorn' | 'straw' | 'headwrap' | 'none';
 export type Expression = 'neutral' | 'smile' | 'surprise' | 'worried' | 'stern' | 'thinking';
 
 export type Look = {
@@ -31,6 +31,8 @@ export type Look = {
 	hatColor?: string;
 	glasses?: boolean;
 	mustache?: boolean;
+	/** an apron over the outfit (colour) */
+	apron?: string;
 };
 
 /** Joint angles in degrees. Arms/legs: 0 = hanging down, + = swung forward. Elbows bend forward, knees back. */
@@ -183,7 +185,7 @@ export const Figure: React.FC<{
 	const topDark = sil ?? shade(look.top, 0.74);
 	const bottom = c(look.bottom);
 	const bottomDark = sil ?? shade(look.bottom, 0.74);
-	const long = look.outfit === 'labcoat' || look.outfit === 'dress';
+	const long = look.outfit === 'labcoat' || look.outfit === 'dress' || look.outfit === 'frock';
 	const hem = long ? -66 : -138;
 	const back = facing === 'back';
 	const hipY = HIP_Y + pose.lift;
@@ -231,7 +233,7 @@ export const Figure: React.FC<{
 					<circle cx={l.end[0] - dir(l.endAngle, 4)[0]} cy={l.end[1] - dir(l.endAngle, 4)[1]} r={6.5} fill={look.outfit === 'labcoat' ? P.labCoat : P.shirt} opacity={0.9} />
 				) : null}
 				<g transform={`translate(${l.end[0]},${l.end[1]}) rotate(${-l.endAngle})`}>
-					<Hand skin={near ? skin : skinFar} holding={near ? holdNear : holdFar} />
+					<Hand skin={near ? skin : skinFar} holding={(near ? holdNear : holdFar) ? <g transform={`rotate(${l.endAngle})`}>{near ? holdNear : holdFar}</g> : undefined} />
 				</g>
 			</g>
 		);
@@ -294,6 +296,27 @@ export const Figure: React.FC<{
 				);
 			case 'dress':
 				return <path d="M2,-276 C8,-268 14,-268 20,-274" stroke={P.paper} strokeWidth={3} fill="none" />;
+			case 'casual':
+				// open jacket over a tee
+				return (
+					<g>
+						<path d="M-2,-276 C4,-266 14,-266 22,-274 L20,-200 L0,-200 Z" fill={look.accent ?? P.shirt} />
+						<path d="M-2,-276 L-6,-180 L4,-180 L6,-250 Z" fill={topDark} />
+						<path d="M22,-274 L24,-180 L16,-180 L15,-248 Z" fill={topDark} />
+						<path d="M4,-266 C10,-262 14,-262 18,-266" stroke={shade(look.accent ?? P.shirt, 0.8)} strokeWidth={2} fill="none" />
+					</g>
+				);
+			case 'frock':
+				// 18th-century coat: waistcoat with buttons, a stock at the throat
+				return (
+					<g>
+						<path d="M2,-276 L18,-272 L16,-150 L4,-150 Z" fill={look.accent ?? '#8a6a3a'} />
+						{[-246, -228, -210, -192, -174].map((y) => (
+							<circle key={y} cx={11} cy={y} r={2} fill={P.brass} />
+						))}
+						<path d="M4,-278 C8,-268 14,-268 18,-276 L16,-262 C12,-258 8,-258 6,-262 Z" fill="#efe8da" />
+					</g>
+				);
 			default:
 				return null;
 		}
@@ -311,6 +334,13 @@ export const Figure: React.FC<{
 				return 'M-25,-306 C-28,-346 8,-354 28,-336 C33,-328 33,-318 31,-312 C18,-326 0,-328 -8,-316 C-10,-304 -6,-292 -8,-284 L-25,-284 Z';
 			case 'bun':
 				return 'M-22,-310 C-26,-342 4,-352 26,-336 C31,-330 32,-324 31,-318 C20,-330 4,-330 -8,-324 C-14,-316 -16,-306 -19,-294 L-22,-296 Z M-30,-330 a12,12 0 1,0 0.1,0 Z';
+			case 'pony':
+				return 'M-22,-310 C-26,-344 6,-354 28,-336 C32,-330 33,-322 31,-316 C20,-330 4,-330 -8,-322 C-14,-314 -16,-304 -19,-294 L-22,-296 Z M-24,-326 C-44,-322 -50,-300 -44,-278 C-40,-284 -36,-300 -26,-310 Z';
+			case 'long':
+				return 'M-26,-304 C-30,-348 8,-356 29,-336 C34,-328 34,-318 31,-312 C20,-328 2,-330 -8,-318 C-12,-304 -10,-286 -12,-262 L-30,-258 C-32,-276 -30,-292 -26,-304 Z';
+			case 'wig':
+				// powdered periwig: rolled curls over the ears, tied queue behind
+				return 'M-24,-312 C-26,-346 8,-354 28,-338 C32,-330 32,-322 30,-318 C20,-330 4,-332 -8,-326 C-12,-318 -14,-308 -16,-300 Z M-19,-302 a6,5 0 1,0 0.1,0 Z M-19,-291 a6,5 0 1,0 0.1,0 Z M-28,-308 C-40,-300 -42,-280 -36,-266 L-30,-270 C-34,-282 -32,-296 -24,-304 Z';
 			default:
 				return '';
 		}
@@ -396,6 +426,26 @@ export const Figure: React.FC<{
 					{!sil && !back ? <path d="M30,-312 C32,-300 26,-292 20,-290" stroke="#3a2a1a" strokeWidth={2} fill="none" /> : null}
 				</g>
 			) : null}
+			{look.hat === 'tricorn' ? (
+				<g>
+					<path d="M-34,-326 C-20,-356 32,-358 42,-326 C30,-334 18,-336 4,-334 C-10,-334 -22,-332 -34,-326 Z" fill={c(look.hatColor ?? '#1e1a17')} />
+					<path d="M-30,-330 C-10,-350 24,-352 36,-332" fill="none" stroke={c(shade(look.hatColor ?? '#1e1a17', 1.6))} strokeWidth={2} />
+				</g>
+			) : null}
+			{look.hat === 'straw' ? (
+				<g>
+					<path d="M-46,-322 C-20,-336 30,-338 58,-322 C40,-316 -30,-314 -46,-322 Z" fill={c(look.hatColor ?? '#c9a35e')} />
+					<path d="M-20,-326 C-18,-352 26,-354 30,-328 Z" fill={c(look.hatColor ?? '#c9a35e')} />
+					<path d="M-20,-328 L30,-330" stroke={c(shade(look.hatColor ?? '#c9a35e', 0.6))} strokeWidth={4} />
+				</g>
+			) : null}
+			{look.hat === 'headwrap' ? (
+				<g>
+					<path d="M-26,-306 C-30,-350 14,-360 32,-332 C30,-324 28,-322 26,-322 C10,-334 -8,-332 -16,-318 C-18,-310 -20,-300 -22,-294 Z" fill={c(look.hatColor ?? '#2f5f6a')} />
+					<path d="M-24,-330 C-6,-338 18,-338 30,-328" stroke={c(shade(look.hatColor ?? '#2f5f6a', 1.4))} strokeWidth={3} fill="none" strokeDasharray="5 6" />
+					<path d="M-26,-312 C-40,-306 -44,-292 -38,-282 C-34,-292 -30,-300 -22,-304 Z" fill={c(look.hatColor ?? '#2f5f6a')} />
+				</g>
+			) : null}
 			{look.hat === 'ballcap' ? (
 				<g>
 					<path d="M-22,-322 C-22,-350 28,-352 30,-324 Z" fill={c(look.accent ?? '#3a4a5c')} />
@@ -410,6 +460,9 @@ export const Figure: React.FC<{
 			<path d={torsoPath} fill={top} />
 			{!sil && !back ? <path d={`M-25,-262 C-20,-272 -10,-276 -2,-276 C-6,-240 -6,-200 -4,${hem} L${long ? -28 : -21},${hem} L-17,-178 C-24,-206 -28,-236 -25,-262 Z`} fill="#000" opacity={0.16} /> : null}
 			{details}
+			{look.apron && !back ? (
+				<path d={`M-14,-232 C-4,-236 16,-236 24,-232 L${long ? 30 : 22},${hem + 6} L${long ? -22 : -16},${hem + 6} Z`} fill={c(look.apron)} opacity={0.96} />
+			) : null}
 		</g>
 	);
 

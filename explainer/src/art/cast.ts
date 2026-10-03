@@ -13,4 +13,15 @@ export const CAST: Record<string, Look> = {
 	analyst: {skin: P.skin2, hair: 'slick', hairColor: P.hairBlack, outfit: 'suit', top: '#4a3f36', bottom: '#2f2a26', accent: '#7a2c2c'},
 	soldier: {skin: P.skin2, hair: 'short', hairColor: P.hairBrown, outfit: 'uniform', top: '#5a5c3e', bottom: '#5a5c3e', accent: '#6e6a50', hat: 'helmet', hatColor: '#4a4f36'},
 	clerk: {skin: P.skin1, hair: 'bun', hairColor: P.hairBrown, outfit: 'dress', top: '#5a3b4a', bottom: '#5a3b4a'},
+	// 《续命》 (coffee)
+	commuter: {skin: P.skin1, hair: 'pony', hairColor: P.hairBlack, outfit: 'casual', top: '#b9a58a', bottom: '#2f3442', accent: '#f1ece2'},
+	coworker: {skin: P.skin2, hair: 'short', hairColor: P.hairBlack, outfit: 'casual', top: '#3d4a63', bottom: '#2a2c33', accent: '#d9d4c8', glasses: true},
+	officegirl: {skin: P.skin1, hair: 'long', hairColor: '#3a2a22', outfit: 'casual', top: '#7a4a3a', bottom: '#d8cbb4', accent: '#efe6d6'},
+	melitta: {skin: P.skin1, hair: 'bun', hairColor: '#5a4130', outfit: 'dress', top: '#2f3a52', bottom: '#2f3a52', apron: '#ece4d2'},
+	liesgen: {skin: P.skin1, hair: 'long', hairColor: '#8a5a32', outfit: 'dress', top: '#9a4a52', bottom: '#9a4a52', apron: '#f2ead8'},
+	schlendrian: {skin: P.skin2, hair: 'wig', hairColor: '#e6e0d4', outfit: 'frock', top: '#4a3a2c', bottom: '#2e2620', accent: '#7a5a2e'},
+	gentleman: {skin: P.skin1, hair: 'wig', hairColor: '#d8d0c0', outfit: 'frock', top: '#2f4a3c', bottom: '#2a2620', accent: '#8a6a3a', hat: 'tricorn'},
+	merchant: {skin: P.skin2, hair: 'short', hairColor: P.hairBrown, outfit: 'frock', top: '#5a4632', bottom: '#2a2620', accent: '#a07a46', mustache: true},
+	farmer: {skin: P.skin3, hair: 'long', hairColor: P.hairBlack, outfit: 'casual', top: '#2f4f7a', bottom: '#2a2d36', accent: '#c94c3c', hat: 'headwrap', hatColor: '#1f5f6a'},
+	farmerOld: {skin: P.skin3, hair: 'short', hairColor: '#3a3632', outfit: 'casual', top: '#4a5a3a', bottom: '#2a2d36', accent: '#d9cfb8', hat: 'straw'},
 };
