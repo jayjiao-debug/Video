@@ -1,0 +1,129 @@
+# 《飞回来的飞机》: survivorship bias
+#
+# Sources (checked):
+#   Wald, A. (1943). A Method of Estimating Plane Vulnerability Based on Damage of
+#     Survivors. Statistical Research Group, Columbia. Reprinted CNA, 1980.
+#   SRG worked from an apartment at 401 W 118th St; members included Milton Friedman.
+#   Ellenberg, J. (2014). How Not to Be Wrong (《魔鬼数学》): holes per sq ft:
+#     engine 1.11, fuel system 1.55, fuselage 1.73. Illustrative figures as Ellenberg tells it.
+#   Whitney & Mehlhaff (1987). High-rise syndrome in cats. JAVMA 191(11): 132 cats.
+#   The red-dot plane diagram is a modern illustration, not Wald's data (shown as 示意).
+#
+# Line markup: [gold] highlights the answer, {red} the trap.
+# Scene anchors (at:) use the music markers from pipeline/music.py, or seconds.
+
+id: survivorship
+series: 反直觉研究所
+title: 飞回来的飞机
+subtitle: 弹孔最多的地方，该不该加固？
+format: horizontal
+fps: 30
+music: assets/music/bgm.mp3
+markers:
+  a: 16.104        # first full section of the track
+  coda: 149.89     # callback starts here so the last line lands before the outro
+
+scenes:
+  - id: hook
+    component: Hook
+    kicker: 第二次世界大战 · 盟军基地
+    lines:
+      - pause: 3.2
+      - 一架轰炸机飞回基地，机身上全是弹孔。
+      - 如果只能加固一个地方，你会选[弹孔最多]的那里吗？
+
+  - id: coldopen
+    component: ColdOpen
+    at: a
+    kicker: 1943 · 纽约 · 西118街401号
+    lines:
+      - 1943年，纽约。哥伦比亚大学旁的一间公寓里，
+      - 一群数学家，正在秘密地为战争做计算。
+      - 成员里，还有后来的诺贝尔奖得主[弗里德曼]。
+
+  - id: data
+    component: HoleData
+    kicker: 返航飞机 · 每平方英尺弹孔数
+    cite: 数据引自 Ellenberg《魔鬼数学》(2014) 对此案例的转述
+    lines:
+      - 军方送来一份数据：飞回来的飞机，弹孔都在哪。
+      - 机身[1.73]个，燃油系统[1.55]个，
+      - 而发动机，只有[1.11]个。
+      - 结论似乎很明显：哪里弹孔多，就{加固}哪里。
+
+  - id: twist
+    component: Twist
+    at: break
+    kicker: 统计研究小组 · SRG
+    lines:
+      - 统计学家[亚伯拉罕·瓦尔德]却说：
+      - text: 不。
+        hold: 2.2
+      - 该加固的，恰恰是[弹孔最少]的地方。
+      - text: 为什么？
+        hold: 2.4
+
+  - id: mechanism
+    component: Mechanism
+    at: build
+    kicker: 假设：子弹随机命中
+    lines:
+      - 子弹不会挑地方。
+      - 它本该均匀地，打遍整架飞机。
+      - 那么，发动机上的那些弹孔——
+      - text: 去哪儿了？
+        hold: 2.4
+
+  - id: reveal
+    component: Reveal
+    at: drop
+    lines:
+      - 它们，在那些{没能飞回来}的飞机上。
+      - 飞回来的飞机恰恰证明：机身中弹，还能活着回家。
+      - 发动机中弹的，大多回不来了。
+
+  - id: concept
+    component: Concept
+    kicker: Survivorship Bias
+    lines:
+      - 这，叫[幸存者偏差]。
+      - 你看到的，只是被筛选之后，剩下的那一部分。
+
+  - id: cats
+    component: Cats
+    kicker: 1987 · 纽约 · 动物医疗中心
+    cite: Whitney & Mehlhaff, JAVMA 1987 · 曲线为示意
+    lines:
+      - 1987年，纽约的兽医统计了132只坠楼的猫。
+      - 怪事出现了：从7层以上摔下来的猫，伤得反而[更轻]。
+      - 一种解释是：猫在空中，有时间调整姿势。
+      - 但也有人指出：摔得最重的猫，可能{根本没被送到医院}。
+
+  - id: world
+    component: World
+    lines:
+      - 辍学的亿万富翁，“老房子就是更结实”，
+      - 成功学讲台上的每一个人——
+      - 我们听到的，几乎都是[飞回来]的那一架。
+
+  - id: tips
+    component: Tips
+    kicker: 下次，先问三个问题
+    props:
+      items:
+        - 没飞回来的，在哪儿？
+        - 是什么，筛选了它们？
+        - 分母，有多大？
+    lines:
+      - 下次听到一个成功故事，先问三个问题：
+      - ① 没飞回来的，在哪儿？
+      - ② 是什么，筛选了它们？
+      - ③ 分母，有多大？
+
+  - id: callback
+    component: Callback
+    at: coda
+    lines:
+      - 那些没能飞回来的飞机，一句话也没说。
+      - 可最重要的答案，恰恰在它们身上。
+      - pause: 3.4

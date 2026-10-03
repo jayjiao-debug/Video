@@ -1,0 +1,12 @@
+node_modules/
+# downloaded TTS/ASR models and source fonts (fetched by setup, too large for git)
+models/
+# per-episode build artifacts
+build/
+out/
+# generated per-episode timelines, fonts and renders
+public/build/
+src/registry.generated.ts
+# your background track (not redistributed: the repo is public)
+assets/music/*
+!assets/music/README.md
