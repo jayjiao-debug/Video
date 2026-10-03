@@ -1159,9 +1159,8 @@ const Counter: React.FC<{ T: number }> = ({ T }) => {
   );
 };
 
-const GOLD_TEXT: React.CSSProperties = {
-  backgroundImage: 'linear-gradient(180deg, #fff6d8 0%, #f6d07a 50%, #e2aa4c 100%)', WebkitBackgroundClip: 'text', backgroundClip: 'text', color: 'transparent',
-};
+// gold key words: solid colour with a warm glow (gradient text via background-clip drops out in the headless renderer)
+const GOLD_TEXT: React.CSSProperties = { color: '#f6cf78', textShadow: '0 0 18px rgba(241,197,109,0.45), 0 2px 12px rgba(0,0,0,0.9)' };
 const Rich3: React.FC<{ s: string }> = ({ s }) => (
   <>
     {s.split(/(\[[^\]]+\]|\{[^}]+\})/).filter(Boolean).map((seg, i) =>
