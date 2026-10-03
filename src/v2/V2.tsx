@@ -104,7 +104,7 @@ const CamRig: React.FC<{ T: number }> = ({ T }) => {
 };
 
 /* ---------- labels that can lie flat or stand up ---------- */
-const Lbl: React.FC<{ text: string; pos: number[]; w: number; h: number; o: number; color?: string; font?: string; flat?: boolean }> = ({
+export const Lbl: React.FC<{ text: string; pos: number[]; w: number; h: number; o: number; color?: string; font?: string; flat?: boolean }> = ({
   text, pos, w, h, o, color = C.paper, font = `500 44px ${ZH}`, flat = false,
 }) => {
   const tp = useMemo(() => textPlane(w, h), [w, h]);
@@ -136,7 +136,7 @@ const Lbl: React.FC<{ text: string; pos: number[]; w: number; h: number; o: numb
 };
 
 /* ---------- the city ---------- */
-const City: React.FC = () => {
+export const City: React.FC = () => {
   const mesh = useMemo(() => {
     const r = mulberry(7);
     const pts: number[][] = [];
@@ -173,7 +173,7 @@ const City: React.FC = () => {
   return <primitive object={mesh} />;
 };
 
-const Thames: React.FC = () => {
+export const Thames: React.FC = () => {
   const geo = useMemo(() => {
     const shape: number[] = [];
     const idx: number[] = [];
@@ -473,7 +473,7 @@ const Coins: React.FC<{ T: number }> = ({ T }) => {
 };
 
 /* ---------- case 2: birthdays ---------- */
-const dateCard = (() => {
+export const dateCard = (() => {
   const cache: Record<string, THREE.CanvasTexture> = {};
   return (d: string) => {
     if (cache[d]) return cache[d];
@@ -716,7 +716,7 @@ const RichJ: React.FC<{ s: string }> = ({ s }) => (
     )}
   </>
 );
-const Sub: React.FC<{ T: number; at: number; out: number; zh: string; en: string; y?: number; size?: number; enSize?: number }> = ({
+export const Sub: React.FC<{ T: number; at: number; out: number; zh: string; en: string; y?: number; size?: number; enSize?: number }> = ({
   T, at, out, zh, en, y = 880, size = 56, enSize = 32,
 }) => {
   const o = Math.min(easeOut(prog(T, at, at + 0.4)), 1 - prog(T, out - 0.3, out));
@@ -731,7 +731,7 @@ const Sub: React.FC<{ T: number; at: number; out: number; zh: string; en: string
   );
 };
 /** year and place, top-right under the corner mark (the top-left belongs to Douyin's watermark) */
-const YearMark: React.FC<{ T: number; at: number; out: number; year: string; place: string }> = ({ T, at, out, year, place }) => {
+export const YearMark: React.FC<{ T: number; at: number; out: number; year: string; place: string }> = ({ T, at, out, year, place }) => {
   const o = Math.min(easeOut(prog(T, at, at + 0.6)), 1 - prog(T, out - 0.4, out));
   if (o <= 0) return null;
   return (
