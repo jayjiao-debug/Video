@@ -40,7 +40,7 @@ const hash = (i: number) => {
 };
 
 /* ---------- camera ---------- */
-const camAt = (T: number) => {
+export const camAt = (T: number) => {
   const K0p = [0, 0.25, 11.6], K0l = [0, -0.45, 0];
   const d1 = easeInOut(prog(T, 65.3, 71.3));
   const K1p = [-4.3, 7.0, lerp(20.5, 19.6, d1)], K1l = [-4.3, 6.9, 0];
@@ -77,7 +77,7 @@ const CamRig: React.FC<{ T: number }> = ({ T }) => {
 };
 
 /* ---------- helpers ---------- */
-const textPlane = (w: number, h: number, ppu = 160) => {
+export const textPlane = (w: number, h: number, ppu = 160) => {
   const c = document.createElement('canvas');
   c.width = Math.round(w * ppu);
   c.height = Math.round(h * ppu);
@@ -87,7 +87,7 @@ const textPlane = (w: number, h: number, ppu = 160) => {
   return { c, g: c.getContext('2d')!, tx, ppu };
 };
 
-const Label: React.FC<{ text: string; pos: number[]; w: number; h: number; o: number; color?: string; font?: string; align?: CanvasTextAlign }> = ({
+export const Label: React.FC<{ text: string; pos: number[]; w: number; h: number; o: number; color?: string; font?: string; align?: CanvasTextAlign }> = ({
   text, pos, w, h, o, color = C.dim, font = `500 34px ${ZH}`, align = 'center',
 }) => {
   const tp = useMemo(() => textPlane(w, h), [w, h]);
@@ -253,11 +253,11 @@ const GridOnly: React.FC<{ o: number }> = ({ o }) => {
 };
 
 /* ---------- gold geometry ---------- */
-const goldMat = (o: number, glow = 1.2) => (
+export const goldMat = (o: number, glow = 1.2) => (
   <meshStandardMaterial color="#f0d59a" emissive="#c9a45c" emissiveIntensity={glow} roughness={0.35} metalness={0.3} transparent opacity={o} depthWrite={o > 0.98} />
 );
 
-const Seg: React.FC<{ a: number[]; b: number[]; r: number; o: number; glow?: number }> = ({ a, b, r, o, glow }) => {
+export const Seg: React.FC<{ a: number[]; b: number[]; r: number; o: number; glow?: number }> = ({ a, b, r, o, glow }) => {
   const dx = b[0] - a[0], dy = b[1] - a[1];
   const len = Math.hypot(dx, dy);
   if (len < 1e-4 || o <= 0.001) return null;
@@ -298,7 +298,7 @@ const Dashes: React.FC<{ a: number[]; b: number[]; o: number }> = ({ a, b, o }) 
 };
 
 /* glowing halo sprite */
-const haloTex = (() => {
+export const haloTex = (() => {
   let tx: THREE.CanvasTexture | null = null;
   return () => {
     if (tx) return tx;
@@ -315,7 +315,7 @@ const haloTex = (() => {
     return tx;
   };
 })();
-const Halo: React.FC<{ pos: number[]; size: number; o: number }> = ({ pos, size, o }) => {
+export const Halo: React.FC<{ pos: number[]; size: number; o: number }> = ({ pos, size, o }) => {
   const tx = useMemo(() => haloTex(), []);
   if (o <= 0.001) return null;
   return (
@@ -439,7 +439,7 @@ const Scene: React.FC<{ T: number }> = ({ T }) => {
       <fog attach="fog" args={['#0f1016', 14, 48]} />
       <Lights T={T} />
       <mesh position={[0, 4, -1.7]} receiveShadow>
-        <planeGeometry args={[90, 50]} />
+        <planeGeometry args={[90, 50, 60, 34]} />
         <meshStandardMaterial color="#262836" roughness={1} />
       </mesh>
       {/* the string world */}
