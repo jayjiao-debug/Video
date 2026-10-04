@@ -120,6 +120,12 @@ Read the track first, not just its markers:
   ("slow writing at a desk over the loudest part, frantic numbers over the
   intro") awful. Print each scene's mean energy next to its content and check.
 
+- **Check the drop against the audio itself.** `music.py` snaps markers to its beat
+  grid and can land them late: in 《八百人猜牛》 the `drop` marker said 82.23 s, the
+  audible hit was 81.37 s (the reveal missed it; the owner heard it at once). Print
+  the RMS in 40 ms windows around every marker you anchor a reveal to, take the
+  onset, and override it in `markers:` (`drop: 81.37`).
+
 Then map the 9 beats:
 
 | Beat | Music | Job |
@@ -243,6 +249,12 @@ were looking at.
     is not mid-action, so the only motion on screen is not one jerky arm.
   - Put an action strip (one still per key pose) on a model sheet and look at it
     before rendering the motion test.
+- **Takeaways go on screen, not just in subtitles.** Three numbered tips that only
+  appear as subtitles over an unrelated shot read as "1, 2, 3 out of nowhere"
+  (the owner). Move the camera normally into the scene, then dim and soften the
+  background, put a header and the tips up one by one (short keyword lines; the
+  subtitle carries the full sentence), hold them still, then take them off and
+  return to the scene (`TipCards` in `episodes/ox/scenes.tsx`).
 - Don't put a "?" on objects. Show "unknown" with motion (a rolling number, a
   searching marker, a dashed outline).
 - `npx tsc --noEmit` must pass.

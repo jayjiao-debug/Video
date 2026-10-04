@@ -171,8 +171,15 @@ const OxTitle: React.FC<{dur: number; hitAt: number}> = ({dur, hitAt}) => {
 	const size = 132;
 	const width = CHARS.length * size * 0.98;
 	const gx = (i: number) => W / 2 - width / 2 + (i + 0.5) * (width / CHARS.length);
-	const gold = prog(f, goldAt, 10, ease.inOut);
-	const gloss = prog(f, goldAt + 14, 26, ease.inOut);
+	// gold pours up into the stamped letters (bottom to top), with a bloom behind them
+	const pour = prog(f, goldAt, 12, ease.inOut);
+	const gold = pour;
+	const bloom = f >= goldAt ? 0.3 + 0.7 * Math.exp(-(f - goldAt) / 10) : 0;
+	const gloss = prog(f, goldAt + 16, 26, ease.inOut);
+	// the card arrives as a slow push that settles by the time the title is stamped
+	const push = 1 + 0.1 * (1 - prog(f, 0, hitAt + 26, ease.out));
+	// the landing: light flares where the ticket hits the heap
+	const land = f >= hitAt ? Math.exp(-(f - hitAt) / 7) : 0;
 	return (
 		<AbsoluteFill style={{opacity: 1 - out}}>
 			<svg width={W} height={H} viewBox={`0 0 ${W} ${H}`}>
@@ -202,14 +209,24 @@ const OxTitle: React.FC<{dur: number; hitAt: number}> = ({dur, hitAt}) => {
 						<stop offset="0" stopColor="#05060b" stopOpacity="0" />
 						<stop offset="1" stopColor="#05060b" stopOpacity="0.85" />
 					</linearGradient>
+					<clipPath id="gold-pour">
+						<rect x={0} y={470 + 40 - (size + 60) * pour} width={W} height={size + 80} />
+					</clipPath>
+					<radialGradient id="title-bloom">
+						<stop offset="0" stopColor="#ffe7b0" stopOpacity="0.55" />
+						<stop offset="0.45" stopColor="#f1c56d" stopOpacity="0.18" />
+						<stop offset="1" stopColor="#f1c56d" stopOpacity="0" />
+					</radialGradient>
 					<filter id="ink-rough" x="-10%" y="-10%" width="120%" height="120%">
 						<feTurbulence type="fractalNoise" baseFrequency="0.9" numOctaves="2" seed="7" />
 						<feDisplacementMap in="SourceGraphic" scale="3" />
 					</filter>
 				</defs>
 				<rect width={W} height={H} fill={JUNO.colors.night} />
-				<rect width={W} height={H} fill="url(#box-light)" />
-				<g transform={`translate(${sx},${sy})`}>
+				<rect width={W} height={H} fill="url(#box-light)" opacity={1 + 1.2 * land} />
+				<g transform={`translate(${sx},${sy}) translate(960,540) scale(${push}) translate(-960,-540)`}>
+					<ellipse cx={960} cy={880} rx={520} ry={200} fill="url(#title-bloom)" opacity={1.6 * land} />
+					<ellipse cx={960} cy={440} rx={640} ry={170} fill="url(#title-bloom)" opacity={bloom} />
 					{/* the heap of guesses at the bottom of the box */}
 					{Array.from({length: 150}, (_, i) => {
 						const x = random(`hx${i}`) * 2200 - 140;
@@ -223,6 +240,21 @@ const OxTitle: React.FC<{dur: number; hitAt: number}> = ({dur, hitAt}) => {
 						);
 					})}
 					<rect x={0} y={940} width={W} height={140} fill="url(#heap-fade)" />
+					{f >= hitAt && f < hitAt + 44
+						? Array.from({length: 26}, (_, i) => {
+								const t = f - hitAt;
+								const vx = (random(`bx${i}`) - 0.5) * 22;
+								const vy = -(10 + random(`by${i}`) * 14);
+								const x = 960 + (random(`b0${i}`) - 0.5) * 160 + vx * t;
+								const y = 900 + vy * t + 0.75 * t * t;
+								if (y > 1000) return null;
+								return (
+									<g key={i} transform={`translate(${x},${y}) rotate(${random(`br${i}`) * 360 + t * (random(`bs${i}`) - 0.5) * 30}) scale(0.3)`} opacity={0.85}>
+										<rect x={-100} y={-62} width={200} height={124} rx={6} fill={random(`bc${i}`) > 0.5 ? '#c9b48a' : '#9a8762'} />
+									</g>
+								);
+							})
+						: null}
 					{/* the posted ticket: paper while it falls, then the gold motif */}
 					<g transform={`translate(${tx},${ty}) rotate(${rot}) scale(${0.62 * flip},0.62)`} opacity={1 - motif}>
 						<Ticket lod="mid" />
@@ -234,24 +266,24 @@ const OxTitle: React.FC<{dur: number; hitAt: number}> = ({dur, hitAt}) => {
 					{CHARS.map((ch, i) => {
 						const k = f - stampAt(i);
 						if (k < 0) return null;
-						const press = k < 3 ? 1.22 - 0.22 * (k / 3) : 1;
+						const press = k < 3 ? 1.9 - 0.9 * (k / 3) : k < 6 ? 1 - 0.04 * Math.sin(((k - 3) / 3) * Math.PI) : 1;
 						return (
 							<g key={i} transform={`translate(${gx(i)},470) scale(${press}) translate(${-gx(i)},-470)`}>
-								<text x={gx(i)} y={470} textAnchor="middle" filter="url(#ink-rough)" style={{fontFamily: font.serif, fontWeight: 900, fontSize: size, fill: '#8a6534'}} opacity={1 - gold}>
+								<text x={gx(i)} y={470} textAnchor="middle" filter="url(#ink-rough)" style={{fontFamily: font.serif, fontWeight: 900, fontSize: size, fill: '#8a6534'}} opacity={k < 1 ? 0.5 : 1 - 0.6 * gold}>
 									{ch}
 								</text>
-								<text x={gx(i)} y={470} textAnchor="middle" style={{fontFamily: font.serif, fontWeight: 900, fontSize: size, fill: 'url(#ox-gold)'}} opacity={gold}>
+								<text x={gx(i)} y={470} textAnchor="middle" clipPath="url(#gold-pour)" style={{fontFamily: font.serif, fontWeight: 900, fontSize: size, fill: 'url(#ox-gold)'}} opacity={gold > 0 ? 1 : 0}>
 									{ch}
 								</text>
 								<text x={gx(i)} y={470} textAnchor="middle" style={{fontFamily: font.serif, fontWeight: 900, fontSize: size, fill: 'url(#ox-gloss)'}} opacity={gold * (gloss > 0 && gloss < 1 ? 1 : 0)}>
 									{ch}
 								</text>
 								{/* ink dust off the stamp */}
-								{k < 14
-									? Array.from({length: 7}, (_, j) => {
-											const a = random(`sd${i}${j}`) * Math.PI;
-											const d = k * (3 + random(`sv${i}${j}`) * 5);
-											return <circle key={j} cx={gx(i) + Math.cos(a) * d * 1.6 - 0} cy={480 - Math.sin(a) * d * 0.5} r={2} fill="#f1c56d" opacity={0.7 * (1 - k / 14)} />;
+								{k < 16
+									? Array.from({length: 14}, (_, j) => {
+											const a = random(`sd${i}${j}`) * Math.PI * 2;
+											const d = k * (4 + random(`sv${i}${j}`) * 7) * Math.exp(-k / 12);
+											return <circle key={j} cx={gx(i) + Math.cos(a) * d * 1.7} cy={440 + Math.sin(a) * d * 0.8} r={1.5 + random(`sz${i}${j}`) * 2.5} fill={j % 3 ? '#8a6534' : '#f1c56d'} opacity={0.85 * (1 - k / 16)} />;
 										})
 									: null}
 							</g>
@@ -260,10 +292,10 @@ const OxTitle: React.FC<{dur: number; hitAt: number}> = ({dur, hitAt}) => {
 					<text x={W / 2} y={300} textAnchor="middle" style={{fontFamily: font.latin, fontWeight: 600, fontSize: 24, letterSpacing: '0.45em', fill: JUNO.colors.gold}} opacity={0.85 * prog(f, hitAt + 12, 18)}>
 						{EPISODE.kicker}
 					</text>
-					<text x={W / 2} y={600} textAnchor="middle" style={{fontFamily: font.serif, fontWeight: 600, fontSize: 40, fill: JUNO.colors.ink, letterSpacing: '0.12em'}} opacity={prog(f, goldAt + 10, 16)}>
+					<text x={W / 2} y={600 + 14 * (1 - prog(f, goldAt + 10, 16))} textAnchor="middle" style={{fontFamily: font.serif, fontWeight: 600, fontSize: 40, fill: JUNO.colors.ink, letterSpacing: '0.12em'}} opacity={prog(f, goldAt + 10, 16)}>
 						{EPISODE.tagline}
 					</text>
-					<text x={W / 2} y={646} textAnchor="middle" style={{fontFamily: font.latinItalic, fontStyle: 'italic', fontSize: 26, fill: 'rgba(243,237,226,0.55)'}} opacity={prog(f, goldAt + 18, 16)}>
+					<text x={W / 2} y={646 + 14 * (1 - prog(f, goldAt + 18, 16))} textAnchor="middle" style={{fontFamily: font.latinItalic, fontStyle: 'italic', fontSize: 26, fill: 'rgba(243,237,226,0.55)'}} opacity={prog(f, goldAt + 18, 16)}>
 						{EPISODE.taglineEn}
 					</text>
 					<text x={W / 2} y={712} textAnchor="middle" style={{fontFamily: font.sans, fontSize: 22, letterSpacing: '0.42em', fill: 'rgba(241,197,109,0.75)'}} opacity={prog(f, goldAt + 26, 18)}>
@@ -668,6 +700,11 @@ const Reveal: React.FC<SceneProps> = () => {
 	const sx = shake * (random(`rx${f}`) - 0.5);
 	const sy = shake * (random(`ry${f}`) - 0.5);
 	const flare = Math.exp(-f / 9);
+	// the drop's second hit (82.17 s): the handwritten 1207 lights up gold
+	const tlm = useTimeline().music.markers;
+	const d2 = Math.round((tlm.drop2 ?? scene.from + 24) - scene.from);
+	const gold2 = prog(f, d2 - 1, 4);
+	const pop2 = f >= d2 ? Math.exp(-(f - d2) / 6) : 0;
 	// layout: the card moves left as the show's card slides in; the notebook rises later
 	const apart = prog(f, cue(1) - 4, 24, ease.inOut);
 	const tk = {x: RV.ticket.x - 330 * apart, y: RV.ticket.y + 100 * apart, s: RV.ticket.s + 0.5 * apart};
@@ -740,7 +777,8 @@ const Reveal: React.FC<SceneProps> = () => {
 						<g transform={`translate(${tk.x},${tk.y}) scale(${tk.s})`}>
 							<ellipse cx={14} cy={56} rx={110} ry={70} fill="#000" opacity={0.4} filter="url(#blur-md)" />
 							<circle cx={30} cy={34} r={140} fill="url(#lantern-glow)" opacity={0.5 * flare} />
-							<Ticket no={MEDIAN_INDEX + 1} name="W. Pengelly" guess={GUESSES[MEDIAN_INDEX]} glow={1} />
+							<Ticket no={MEDIAN_INDEX + 1} name="W. Pengelly" guess={GUESSES[MEDIAN_INDEX]} glow={gold2} />
+							{gold2 > 0 ? <circle cx={20} cy={40} r={60 + 90 * pop2} fill="url(#lantern-glow)" opacity={0.9 * pop2} /> : null}
 						</g>
 						{/* 9 lbs apart: a gold bracket between the two numbers */}
 						{bracket > 0 ? (
@@ -838,7 +876,7 @@ const Why: React.FC<SceneProps> = () => {
 				<Study1906
 					frame={f + 600}
 					cam={cam}
-					boardNode={<BeanMachine f={f} start={hit} every={2} n={110} glow={glow} />}
+					boardNode={<BeanMachine f={f} start={hit} every={2} n={80} glow={glow} />}
 					behind={
 						<g transform={`translate(1000,${DESK_Y + 200}) scale(1.4)`}>
 							<Figure look={CAST.galton} pose={addPose(P_({lean: 1, head: -4, armNear: [10, 86], armFar: [12, 96]}), idle(f, 'gw'))} hands={{near: 'pinch', far: 'pinch'}} expression="smile" blink={blinkAt(f, 'gw')} rim="warm" shadow={false} />
@@ -958,7 +996,7 @@ const Zurich: React.FC<SceneProps> = () => {
 					<Study1906
 						frame={f + 900}
 						cam={camPath(study, f)}
-						boardNode={<BeanMachine f={f + 400} start={0} every={2} n={110} glow={1} heroAt={400 + cue(0)} />}
+						boardNode={<BeanMachine f={f + 400} start={0} every={2} n={80} glow={1} heroAt={400 + cue(0)} />}
 					/>
 					<rect width={1920} height={1080} fill="#0b0d12" opacity={glassIn} />
 				</g>
@@ -1000,10 +1038,9 @@ const Tips: React.FC<SceneProps> = () => {
 	const keys: CamKey[] = [
 		[0, LANTERN.x, LANTERN.y, 8],
 		[26, 700, 640, 1.35],
-		[cue(0) + 16, 260, 700, 1.55],
-		[cue(1) + 4, 120, 700, 1.6],
-		[cue(1) + 50, 520, 690, 1.5],
-		[cue(2) + 4, 520, 670, 1.45],
+		[cue(0) - 4, 300, 690, 1.5],
+		[cue(2) + 10, 420, 680, 1.45],
+		[D - 18, 640, 660, 1.3],
 		[D, 820, 640, 1.2],
 	];
 	const cam = camPath(keys, f);
@@ -1018,9 +1055,17 @@ const Tips: React.FC<SceneProps> = () => {
 	const rise = prog(f, cue(2) + 26, 30, ease.out);
 	const A = f + scene.from; // one clock for the whole show ground, so nothing jumps across a cut
 	const oxPose = {head: Math.sin(A / 70) * 4, tail: Math.sin(A / 11) * 0.7, breath: 0.5 + 0.5 * Math.sin(A / 22)};
+	// the takeaways go up on screen: the scene dims and softens behind them, then comes back
+	const dim = prog(f, cue(0) - 10, 12, ease.inOut) * (1 - prog(f, D - 18, 14, ease.inOut));
 	return (
 		<FullFrame fadeIn={0} fadeOut={0}>
 			<OX_DEFS />
+			<defs>
+				<filter id="tips-soft" x="-5%" y="-5%" width="110%" height="110%">
+					<feGaussianBlur stdDeviation={7 * dim} />
+				</filter>
+			</defs>
+			<g filter={dim > 0.02 ? 'url(#tips-soft)' : undefined}>
 			<Fair1906 frame={A + 92} cam={cam} postX={1660} front={<FrontCrowd f={A - 168} />}>
 				<g transform="translate(250,890)">
 					<Signboard />
@@ -1070,7 +1115,54 @@ const Tips: React.FC<SceneProps> = () => {
 					</g>
 				) : null}
 			</Fair1906>
+			</g>
+			<rect width={1920} height={1080} fill="#05060b" opacity={0.66 * dim} />
+			<TipCards f={f} cues={[cue(0), cue(1), cue(2)]} out={D - 18} />
 		</FullFrame>
+	);
+};
+
+const TIPS: [string, string][] = [
+	['先各自写下答案', '再开口讨论'],
+	['多找几个', '背景不同的人'],
+	['取中间的数', '别听嗓门最大的'],
+];
+
+/** The three takeaways on screen: a header, then one row per line, each landing on its line and then still. */
+const TipCards: React.FC<{f: number; cues: number[]; out: number}> = ({f, cues, out}) => {
+	const leave = prog(f, out, 12, ease.in);
+	const head = prog(f, cues[0] - 8, 14, ease.out);
+	if (head <= 0) return null;
+	return (
+		<g opacity={1 - leave} transform={`translate(0,${-30 * leave})`}>
+			<g opacity={head} transform={`translate(0,${16 * (1 - head)})`}>
+				<text x={960} y={250} textAnchor="middle" style={{fontFamily: font.serif, fontWeight: 900, fontSize: 52, fill: JUNO.colors.ink, letterSpacing: '0.18em'}}>
+					下次一群人做决定
+				</text>
+				<line x1={960 - 200 * head} y1={286} x2={960 + 200 * head} y2={286} stroke={JUNO.colors.gold} strokeWidth={2} opacity={0.8} />
+			</g>
+			{TIPS.map(([a, b], i) => {
+				const t = f - cues[i] + 2; // the row may lead its subtitle by 2 frames
+				if (t < 0) return null;
+				const sp = spring({frame: t, fps: 30, config: {damping: 13, stiffness: 140}});
+				const y = 410 + i * 150;
+				const ring = prog(t, 0, 12, ease.out);
+				return (
+					<g key={i} opacity={Math.min(1, t / 4)} transform={`translate(${-70 * (1 - sp)},0)`}>
+						<circle cx={600} cy={y - 16} r={44} fill="none" stroke={JUNO.colors.gold} strokeWidth={3} strokeDasharray={280} strokeDashoffset={280 * (1 - ring)} />
+						<text x={600} y={y + 2} textAnchor="middle" style={{fontFamily: font.latin, fontWeight: 700, fontSize: 52, fill: JUNO.colors.gold, fontVariantNumeric: 'lining-nums'}}>
+							{i + 1}
+						</text>
+						<text x={680} y={y} style={{fontFamily: font.serif, fontWeight: 700, fontSize: 56, fill: JUNO.colors.ink, letterSpacing: '0.06em'}}>
+							{a}
+							<tspan dx={18} style={{fill: 'rgba(243,237,226,0.62)', fontWeight: 600, fontSize: 44}}>
+								{b}
+							</tspan>
+						</text>
+					</g>
+				);
+			})}
+		</g>
 	);
 };
 

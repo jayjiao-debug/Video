@@ -47,6 +47,8 @@ music: assets/music/bgm.mp3
 markers:
   a: 15.6         # the title card starts (inside the ballot box); the ticket lands on the hit at 16.104
   hit: 16.104     # the track's first big hit: the title's first stamp
+  drop: 81.37     # the drop's audible onset (RMS); music.py snapped its marker two beats late (82.23)
+  drop2: 82.17    # the drop's second hit: 1207 turns gold
   why: 107.68     # "群体智慧" lands on the 108.18 s accent
   zurich: 117.55  # "前提：独立地猜" lands on the 117.85 s accent
   coda: 149.89    # the callback, so the last line lands before the end card
@@ -110,6 +112,7 @@ scenes:
   - id: reveal
     component: Reveal
     at: drop
+    lead: 0.8     # the first line lands with the drop's second hit (82.17 s), when 1207 turns gold
     cite: Galton, Vox Populi, Nature 1907
     lines:
       - 正中间那张：[1207磅]。
@@ -142,7 +145,6 @@ scenes:
   # 8 real world: three takeaways
   - id: tips
     component: Tips
-    kicker: 下次一起做决定
     lines:
       - ① 先各自写下答案，再开口讨论。
       - ② 多找几个背景不同的人。
