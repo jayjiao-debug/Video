@@ -10,6 +10,7 @@ import {COFFEE_SHEETS, CoffeeGallery} from '../episodes/coffee/gallery';
 import {CoffeeRewindTest} from '../episodes/coffee/motiontest';
 import {LOOKS, XumingLook} from '../episodes/xuming/look';
 import {XumingTitleTest} from '../episodes/xuming/titletest';
+import {BOARD_N, XumingBoard} from '../episodes/xuming/storyboard';
 
 export const Root: React.FC = () => (
 	<>
@@ -30,6 +31,7 @@ export const Root: React.FC = () => (
 		<Composition id="TankHookTest" component={TankHookTest} durationInFrames={150} fps={30} width={1920} height={1080} />
 		<Composition id="CoffeeRewindTest" component={CoffeeRewindTest} durationInFrames={150} fps={30} width={1920} height={1080} />
 		<Composition id="XumingTitleTest" component={XumingTitleTest} durationInFrames={200} fps={30} width={1920} height={1080} />
+		<Composition id="XumingBoard" component={XumingBoard} durationInFrames={BOARD_N} fps={30} width={1920} height={1080} />
 		<Composition id="XumingLook" component={XumingLook} durationInFrames={LOOKS} fps={30} width={1920} height={1080} />
 		<Composition id="CoffeeGallery" component={CoffeeGallery} durationInFrames={COFFEE_SHEETS.length} fps={30} width={1920} height={1080} />
 		{/* Douyin covers: COMPOSITION=CoverWide|CoverTall node scripts/stills.mjs tanks <dir> 0 */}

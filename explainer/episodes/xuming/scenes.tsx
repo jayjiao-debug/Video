@@ -897,7 +897,7 @@ const Bees: React.FC<SceneProps> = () => {
 const CRESCENT = 'M30,-104 A110,110 0 1,0 30,104 A86,86 0 1,1 30,-104 Z';
 
 export const scenesPart2 = {Origin, Defense, Bees};
-export {CRESCENT};
+export {CRESCENT, GlowFlower, GlowBee};
 
 // ---------------------------------------------------------------- 6. Yemen: carved in stone, then out along the routes
 
