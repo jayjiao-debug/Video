@@ -3,7 +3,7 @@ import * as THREE from 'three';
 import { useThree } from '@react-three/fiber';
 import { ThreeCanvas } from '@remotion/three';
 import { AbsoluteFill, useVideoConfig } from 'remotion';
-import { b, prog, easeOut, easeInOut, lerp, clamp, Subs, SubBand, Chapter, Stat, Note, Line, GOLD, CREAM, NIGHT, ZH, EN, GOLD_TEXT } from '../v6/ui6';
+import { b, prog, easeOut, easeInOut, lerp, clamp, zlerp, Subs, SubBand, Chapter, Stat, Note, Line, GOLD, CREAM, NIGHT, ZH, EN, GOLD_TEXT } from '../v6/ui6';
 import { GoldTitle } from '../brand/Brand';
 import { mulberry } from '../v1/data';
 import { Vignette, Grain } from '../ui';
@@ -13,7 +13,7 @@ import geo from './geo.json';
    S5, b124 -> b159.6: the world keeps shrinking (1967: 5.2, 2011: 3.74, 2016: 3.57). */
 export const S2_IN = b(32), S2_OUT = b(57.4), S5_IN = b(124), S5_OUT = b(159.6);
 const TITLE = b(50), FOV = 36, R = 10;
-const Y67 = b(131), Y11 = b(139), Y16 = b(147), GAP = b(155);
+const Y67 = b(131), Y11 = b(139), Y16 = b(147), GAP = b(155), PUSH0 = b(156.2);
 const LINES: Line[] = [
   [S2_IN + 0.15, b(40) - 0.08, '2016年，Facebook算了15.9亿人', '2016: Facebook measured 1.59 billion people.'],
   [b(40) + 0.06, TITLE - 0.1, '任意两个人，平均只隔[3.57]个人', 'Any two of them: on average, just 3.57 people apart.'],
@@ -91,11 +91,15 @@ const Globe: React.FC<{ T: number }> = ({ T }) => {
   if (s2) { const k = easeOut(prog(T, S2_IN, b(37))); dist = lerp(95, 40, k); el = lerp(0.6, 0.26, k); }
   else { dist = 38 + 2 * easeInOut(prog(T, S5_IN, Y67)); }
   const ang = 0.35;
-  camera.position.set(dist * Math.sin(ang) * Math.cos(el), dist * Math.sin(el), dist * Math.cos(ang) * Math.cos(el));
-  camera.lookAt(0, 0, 0); (camera as THREE.PerspectiveCamera).near = 0.1; camera.updateProjectionMatrix();
-
   // shrink the world by year (S5)
   const shrink = s2 ? 1 : 1 - 0.12 * easeInOut(prog(T, Y11, Y11 + 0.9)) - 0.08 * easeInOut(prog(T, Y16, Y16 + 0.9));
+  // in the musical gap: dive into the gold dot that is "you", towards the glow of a phone screen
+  const push = Math.pow(prog(T, PUSH0, S5_OUT), 2.2);
+  if (push > 0) dist = zlerp(dist, R * shrink + 0.12, push);
+  const cd = new THREE.Vector3(Math.sin(ang) * Math.cos(el), Math.sin(el), Math.cos(ang) * Math.cos(el));
+  camera.position.copy(cd.clone().multiplyScalar(dist));
+  camera.lookAt(0, 0, 0); (camera as THREE.PerspectiveCamera).near = 0.02; camera.updateProjectionMatrix();
+  const youK = s2 ? 0 : easeOut(prog(T, GAP + 0.3, GAP + 0.9));
   const dim = s2 ? 1 - 0.55 * easeInOut(prog(T, TITLE - 0.1, TITLE + 0.6)) : 1 - 0.55 * easeInOut(prog(T, GAP + 0.2, GAP + 1.4));
   mat.uniforms.uOpacity.value = 0.9 * dim;
   // arcs: S2 all eras flicker in; S5 era by year
@@ -114,6 +118,10 @@ const Globe: React.FC<{ T: number }> = ({ T }) => {
   return (
     <>
       <points geometry={stars} material={smat} />
+      {youK > 0 && <group position={cd.clone().multiplyScalar(R * shrink + 0.05)}>
+        <mesh scale={youK}><sphereGeometry args={[0.16, 16, 12]} /><meshBasicMaterial color="#ffe7a8" /></mesh>
+        <mesh scale={youK}><sphereGeometry args={[0.42, 16, 12]} /><meshBasicMaterial color="#f1c56d" transparent opacity={0.3} blending={THREE.AdditiveBlending} depthWrite={false} /></mesh>
+      </group>}
       <group rotation={[0, -spin(T) + 0.28, 0]} scale={shrink}>
         <mesh><sphereGeometry args={[R, 64, 48]} /><meshBasicMaterial color="#0a1326" /></mesh>
         <mesh scale={1.06}><sphereGeometry args={[R, 48, 32]} /><meshBasicMaterial color="#5f86d8" transparent opacity={0.07 * dim} side={THREE.BackSide} /></mesh>
@@ -138,13 +146,13 @@ export const GlobeScene: React.FC<{ T: number }> = ({ T }) => {
   const { width, height } = useVideoConfig();
   const inS2 = T >= S2_IN - 0.02 && T <= S2_OUT + 0.05, inS5 = T >= S5_IN - 0.4 && T <= S5_OUT + 0.05;
   if (!inS2 && !inS5) return null;
-  const o = inS2 ? Math.min(easeOut(prog(T, S2_IN - 0.02, S2_IN + 0.5)), 1 - prog(T, b(56.4), S2_OUT)) : Math.min(easeOut(prog(T, S5_IN - 0.4, S5_IN + 0.3)), 1 - prog(T, S5_OUT - 0.2, S5_OUT));
+  const o = inS2 ? Math.min(easeOut(prog(T, S2_IN - 0.02, S2_IN + 0.5)), 1 - prog(T, b(56.4), S2_OUT)) : easeOut(prog(T, S5_IN - 0.4, S5_IN + 0.3));
   const tf = (T - TITLE) * 30;
   const ladder = (at: number, y: number, year: string, v: string, gold: boolean) => {
     const k = easeOut(prog(T, at + 0.1, at + 0.5));
     if (k <= 0) return null;
     return (
-      <div style={{ position: 'absolute', right: 80, top: y, opacity: k * (1 - 0.5 * prog(T, GAP + 0.2, GAP + 1)), textAlign: 'right', transform: `translateX(${(1 - k) * 30}px)` }}>
+      <div style={{ position: 'absolute', right: 80, top: y, opacity: k * (1 - 0.5 * prog(T, GAP + 0.2, GAP + 1)) * (1 - prog(T, PUSH0, PUSH0 + 0.5)), textAlign: 'right', transform: `translateX(${(1 - k) * 30}px)` }}>
         <span style={{ fontFamily: EN, fontWeight: 600, fontSize: 34, color: 'rgba(243,237,226,0.6)', marginRight: 18 }}>{year}</span>
         <span style={{ fontFamily: EN, fontWeight: 700, fontSize: 92, color: gold ? GOLD : CREAM, ...(gold ? GOLD_TEXT : {}) }}>{v}</span>
         <span style={{ fontFamily: ZH, fontSize: 30, color: 'rgba(243,237,226,0.7)', marginLeft: 8 }}>人</span>
@@ -170,6 +178,10 @@ export const GlobeScene: React.FC<{ T: number }> = ({ T }) => {
       </>}
       {inS5 && <>
         <Chapter T={T} at={S5_IN + 0.3} out={GAP} text="世 界 在 变 小" />
+        <div style={{ position: 'absolute', left: 0, right: 0, top: 470, textAlign: 'center', fontFamily: ZH, fontWeight: 700, fontSize: 30, color: GOLD,
+          opacity: easeOut(prog(T, GAP + 0.5, GAP + 1.0)) * (1 - prog(T, PUSH0 + 0.5, PUSH0 + 1.0)) }}>你</div>
+        <div style={{ position: 'absolute', inset: 0, background: 'radial-gradient(circle at 50% 50%, #eef3ff 0%, #b9ccf5 35%, rgba(120,150,220,0) 70%)',
+          opacity: Math.pow(prog(T, S5_OUT - 0.55, S5_OUT), 1.5), transform: `scale(${0.4 + 2.2 * prog(T, S5_OUT - 0.55, S5_OUT)})` }} />
         {ladder(Y67, 200, '1967', '5.2', false)}
         {ladder(Y11, 330, '2011', '3.74', false)}
         {ladder(Y16, 460, '2016', '3.57', true)}

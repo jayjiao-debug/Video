@@ -3,7 +3,7 @@ import { AbsoluteFill } from 'remotion';
 import { b, prog, easeOut, easeInOut, lerp, clamp, zlerp, pop, win, Subs, SubBand, Chapter, Line, CAST, Who, Avatar, Bust, GOLD, BLUE, CREAM, NIGHT, ZH, EN, easeIn3 } from '../v6/ui6';
 import { Phone, Feed, Post } from '../v6/Phone';
 import { Room, Shoulder, PK, PX, PY } from '../v6/S1Cold';
-import { SX, SY } from '../v6/Phone';
+import { SX, SY, PW, PH } from '../v6/Phone';
 import { GoldTitle } from '../brand/Brand';
 import { JUNO } from '../brand/identity';
 import { HER } from './people7';
@@ -45,7 +45,11 @@ export const RevealScene: React.FC<{ T: number }> = ({ T }) => {
   // camera: start on the phone, then push into the photo
   const k = easeInOut(prog(T, b(165.6), b(167.8)));
   const photoX = PX + (SX + 76) * PK + 116 * PK, photoY = PY + (SY + 78 + 300 - SCROLL + 0) * PK + 110 * PK;
-  const s = zlerp(1.06, 3.0, k), fx = lerp(990, photoX, k), fy = lerp(520, photoY - 55, k);
+  // arriving from the globe: start inside the glowing phone screen and pull back to the room
+  const arrive = easeOut(prog(T, R_IN, R_IN + 1.5));
+  const cx = PX + (PW * PK) / 2, cy = PY + (PH * PK) / 2;
+  const s = zlerp(6.5, 1.06, arrive) * zlerp(1, 3.0 / 1.06, k), fx = lerp(lerp(cx, 990, arrive), photoX, k), fy = lerp(lerp(cy, 520, arrive), photoY - 55, k);
+  const glow = 1 - easeOut(prog(T, R_IN, R_IN + 0.8));
   const ring = easeOut(prog(T, b(166.6), b(167.3)));
   const chain = easeOut(prog(T, b(168.4), b(169.2)));
   return (
@@ -76,7 +80,8 @@ export const RevealScene: React.FC<{ T: number }> = ({ T }) => {
           </g>
         )}
       </svg>
-      <Chapter T={T} at={R_IN + 0.4} out={b(168.2)} text="当 天 晚 上 · 宿 舍" />
+      {glow > 0 && <div style={{ position: 'absolute', inset: 0, background: 'radial-gradient(circle at 50% 50%, #eef3ff 0%, #b9ccf5 45%, rgba(120,150,220,0.6) 100%)', opacity: glow }} />}
+      <Chapter T={T} at={R_IN + 0.8} out={b(168.2)} text="当 天 晚 上 · 宿 舍" />
       <SubBand o={0.85} />
       <Subs T={T} lines={LINES} />
       <Vignette strength={0.5} />
