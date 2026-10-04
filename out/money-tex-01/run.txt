@@ -1,0 +1,9 @@
+url https://commons.wikimedia.org/wiki/Special:FilePath/USA_100_Dollar_Bill_Series2009_Obverse.png
+  saved out/files/usd100_front.png 0.8 MB
+url https://commons.wikimedia.org/wiki/Special:FilePath/USA_100_Dollar_Bill_Series2009_Reverse.png
+  saved out/files/usd100_back.png 0.7 MB
+url https://commons.wikimedia.org/wiki/Special:FilePath/Obverse_of_the_series_2009_$100_Federal_Reserve_Note.jpg
+  saved out/files/usd100_front_bep.jpg 0.1 MB
+url https://commons.wikimedia.org/wiki/Special:FilePath/New100back.jpg
+  saved out/files/usd100_back_bep.jpg 0.1 MB
+done
