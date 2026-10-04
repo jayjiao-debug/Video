@@ -171,8 +171,9 @@ Story flow (what the owner rejected and why):
   - Motion belongs to the world and the story: people doing things with objects
     (pulling a wheel off, chalking a number, walking a row), vehicles, smoke,
     light sweeping across a surface, a feed that steps up a row.
-  - Camera: eased moves that start and stop. Don't use a perpetual float. A slow
-    push or a dive is a move; a shot that settles and holds is fine.
+  - Camera: purposeful moves that flow into one another (the spline camera above),
+    never a perpetual aimless float. A slow push or a dive is a move; a shot that
+    settles and holds is fine, but don't stop-start between every line.
   - Cut and hit on the music. `useHitFrames()` / `useSnapBeat()` give the
     track's accents. Land reveals, cuts and impacts (`Impact`, a short decaying
     shake) on them, and contrast them with calm. A quiet stretch before a drop
