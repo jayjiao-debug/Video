@@ -6,6 +6,14 @@ import {MotionTest} from './MotionTest';
 import {TankHookTest} from './TankHookTest';
 import {Branded, calculateBrandMetadata, type BrandedProps} from './brand/Brand';
 import {TanksCover} from '../episodes/tanks/cover';
+import {OxCover} from '../episodes/ox/cover';
+
+/** Douyin covers, one component per episode (douyin-publish skill). */
+const COVERS: Record<string, React.FC<{layout: 'wide' | 'tall'}>> = {tanks: TanksCover, ox: OxCover};
+const EpisodeCover: React.FC<{episode: string; layout: 'wide' | 'tall'}> = ({episode, layout}) => {
+	const C = COVERS[episode] ?? TanksCover;
+	return <C layout={layout} />;
+};
 import {COFFEE_SHEETS, CoffeeGallery} from '../episodes/coffee/gallery';
 import {CoffeeRewindTest} from '../episodes/coffee/motiontest';
 import {LOOKS, XumingLook} from '../episodes/xuming/look';
@@ -52,9 +60,9 @@ export const Root: React.FC = () => (
 		<Composition id="OxMotionTest" component={OxMotionTest} durationInFrames={OX_TEST_N} fps={30} width={1920} height={1080} />
 		<Composition id="OxGallery" component={OxGallery} durationInFrames={OX_SHEETS.length} fps={30} width={1920} height={1080} />
 		<Composition id="CoffeeGallery" component={CoffeeGallery} durationInFrames={COFFEE_SHEETS.length} fps={30} width={1920} height={1080} />
-		{/* Douyin covers: COMPOSITION=CoverWide|CoverTall node scripts/stills.mjs tanks <dir> 0 */}
-		<Composition id="CoverWide" component={TanksCover} defaultProps={{layout: 'wide' as const}} durationInFrames={1} fps={30} width={1440} height={1080} />
-		<Composition id="CoverTall" component={TanksCover} defaultProps={{layout: 'tall' as const}} durationInFrames={1} fps={30} width={1080} height={1440} />
+		{/* Douyin covers: COMPOSITION=CoverWide|CoverTall node scripts/stills.mjs <episode> <dir> 0 */}
+		<Composition id="CoverWide" component={EpisodeCover} defaultProps={{episode: 'tanks', layout: 'wide' as const}} durationInFrames={1} fps={30} width={1440} height={1080} />
+		<Composition id="CoverTall" component={EpisodeCover} defaultProps={{episode: 'tanks', layout: 'tall' as const}} durationInFrames={1} fps={30} width={1080} height={1440} />
 		{/* channel package: python brand.py <video-id> */}
 		<Composition
 			id="Branded"

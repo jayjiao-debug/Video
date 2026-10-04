@@ -11,8 +11,9 @@ const browserExecutable = process.env.REMOTION_BROWSER || null;
 const inputProps = process.env.PROPS ? JSON.parse(process.env.PROPS) : {episode};
 const composition = await selectComposition({serveUrl, id, inputProps, browserExecutable});
 for (const [i, fr] of frames.entries()) {
-	const output = path.join(outDir, `${String(i).padStart(3, '0')}.jpg`);
-	await renderStill({serveUrl, composition, inputProps, frame: Number(fr), output, imageFormat: 'jpeg', jpegQuality: 88, browserExecutable});
+	const fmt = process.env.FORMAT === 'png' ? 'png' : 'jpeg';
+	const output = path.join(outDir, `${String(i).padStart(3, '0')}.${fmt === 'png' ? 'png' : 'jpg'}`);
+	await renderStill({serveUrl, composition, inputProps, frame: Number(fr), output, imageFormat: fmt, ...(fmt === 'jpeg' ? {jpegQuality: 88} : {}), browserExecutable});
 	process.stdout.write('.');
 }
 console.log(`\n${frames.length} stills -> ${outDir}`);
