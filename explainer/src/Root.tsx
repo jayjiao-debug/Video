@@ -16,6 +16,7 @@ import {XumingOpen} from '../episodes/xuming/opentest';
 import {PROPS3D_N, XumingProps3D} from '../episodes/xuming/three/propsheet';
 import {MOTION4_N, XumingMotion4} from '../episodes/xuming/three/motion4';
 import {BENFORD_BOARD_N, BenfordBoard} from '../episodes/benford/storyboard';
+import {MOCAP_BOARD_N, MocapBoard} from './MocapBoard';
 import {OX_SHEETS, OxGallery} from '../episodes/ox/gallery';
 import {OX_TEST_N, OxMotionTest} from '../episodes/ox/motiontest';
 
@@ -43,6 +44,7 @@ export const Root: React.FC = () => (
 		<Composition id="XumingOpen" component={XumingOpen} durationInFrames={540} fps={30} width={1920} height={1080} />
 		<Composition id="XumingBoard2" component={XumingBoard2} durationInFrames={BOARD2_N} fps={30} width={1920} height={1080} />
 		<Composition id="XumingLook3" component={XumingLook3} durationInFrames={LOOK3_N} fps={30} width={1920} height={1080} />
+		<Composition id="MocapBoard" component={MocapBoard} durationInFrames={MOCAP_BOARD_N} fps={30} width={1920} height={1080} />
 		<Composition id="BenfordBoard" component={BenfordBoard} durationInFrames={BENFORD_BOARD_N} fps={30} width={1920} height={1080} />
 		<Composition id="XumingLook" component={XumingLook} durationInFrames={LOOKS} fps={30} width={1920} height={1080} />
 		<Composition id="OxMotionTest" component={OxMotionTest} durationInFrames={OX_TEST_N} fps={30} width={1920} height={1080} />

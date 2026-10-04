@@ -48,7 +48,42 @@ export type Pose = {
 	legNear: [number, number];
 	legFar: [number, number];
 	lift: number;
+	/** hand direction relative to the forearm, degrees (+ = toward the front); default 0 */
+	wristNear?: number;
+	wristFar?: number;
+	/** 1 = palm toward the camera side (thumb in front), -1 = back of the hand toward camera */
+	palmNear?: 1 | -1;
+	palmFar?: 1 | -1;
+	/** the whole body above the knees sinks by this much (figure units, + = down), for crouching and squatting */
+	drop?: number;
 };
+
+/**
+ * Human joint ranges (degrees, rig conventions). Every pose is clamped to these
+ * before drawing, so an elbow or knee can never fold backwards and a wrist can
+ * never twist past what a real wrist does. Reference: CMU mocap (pipeline/mocap.py).
+ */
+export const JOINT_LIMITS = {
+	lean: [-30, 90],
+	head: [-40, 45],
+	upperArm: [-70, 185],
+	elbow: [0, 150],
+	thigh: [-45, 130],
+	knee: [0, 150],
+	wrist: [-70, 80],
+} as const;
+const clampTo = (v: number, [lo, hi]: readonly [number, number]) => Math.min(hi, Math.max(lo, v));
+export const limitPose = (p: Pose): Pose => ({
+	...p,
+	lean: clampTo(p.lean, JOINT_LIMITS.lean),
+	head: clampTo(p.head, JOINT_LIMITS.head),
+	armNear: [clampTo(p.armNear[0], JOINT_LIMITS.upperArm), clampTo(p.armNear[1], JOINT_LIMITS.elbow)],
+	armFar: [clampTo(p.armFar[0], JOINT_LIMITS.upperArm), clampTo(p.armFar[1], JOINT_LIMITS.elbow)],
+	legNear: [clampTo(p.legNear[0], JOINT_LIMITS.thigh), clampTo(p.legNear[1], JOINT_LIMITS.knee)],
+	legFar: [clampTo(p.legFar[0], JOINT_LIMITS.thigh), clampTo(p.legFar[1], JOINT_LIMITS.knee)],
+	wristNear: p.wristNear === undefined ? undefined : clampTo(p.wristNear, JOINT_LIMITS.wrist),
+	wristFar: p.wristFar === undefined ? undefined : clampTo(p.wristFar, JOINT_LIMITS.wrist),
+});
 
 const L = {upper: 58, fore: 54, thigh: 76, shin: 74};
 const SHOULDER_NEAR: [number, number] = [14, -258];
@@ -129,7 +164,8 @@ export const reachAngles = (shoulder: [number, number], target: [number, number]
  * and other props to it. Mirrors the arm drawing: shoulder → upper arm → forearm,
  * then the body lean about the hip. `grip` = true returns the centre of the grip.
  */
-export const handAt = (pose: Pose, near = true, grip = true): [number, number] => {
+export const handAt = (rawPose: Pose, near = true, grip = true): [number, number] => {
+	const pose = limitPose(rawPose);
 	const shoulder = near ? SHOULDER_NEAR : SHOULDER_FAR;
 	const [a, e] = near ? pose.armNear : pose.armFar;
 	const [ux, uy] = dir(a, L.upper);
@@ -143,7 +179,7 @@ export const handAt = (pose: Pose, near = true, grip = true): [number, number] =
 	const dx = x;
 	const dy = y - hipY;
 	x = dx * Math.cos(r) - dy * Math.sin(r);
-	y = hipY + dx * Math.sin(r) + dy * Math.cos(r);
+	y = hipY + dx * Math.sin(r) + dy * Math.cos(r) + (pose.drop ?? 0);
 	return [x, y];
 };
 
@@ -357,7 +393,9 @@ export const Figure: React.FC<{
 	hands?: {near?: HandShape; far?: HandShape};
 	talk?: number;
 	shadow?: boolean;
-}> = ({look, pose = POSES.stand, reach, expression = 'neutral', blink = 1, facing = 'side', flip, rim = 'cool', silhouette, holdNear, holdFar, hands, talk = 0, shadow = true}) => {
+}> = ({look, pose: rawPose = POSES.stand, reach, expression = 'neutral', blink = 1, facing = 'side', flip, rim = 'cool', silhouette, holdNear, holdFar, hands, talk = 0, shadow = true}) => {
+	const pose = limitPose(rawPose);
+	const drop = pose.drop ?? 0;
 	const sil = silhouette;
 	const c = (x: string) => sil ?? x;
 	const skin = c(look.skin);
@@ -369,7 +407,7 @@ export const Figure: React.FC<{
 	const long = look.outfit === 'labcoat' || look.outfit === 'dress' || look.outfit === 'frock';
 	const hem = long ? -66 : -138;
 	const back = facing === 'back';
-	const hipY = HIP_Y + pose.lift;
+	const hipY = HIP_Y + pose.lift + drop;
 	const filter = rim === 'none' ? undefined : `url(#rim-${rim})`;
 
 	// legs
@@ -394,8 +432,11 @@ export const Figure: React.FC<{
 	// arms
 	const armShape = (near: boolean) => {
 		const shoulder = back ? ([near ? 24 : -24, -258] as [number, number]) : near ? SHOULDER_NEAR : SHOULDER_FAR;
-		const target = near ? reach?.near : reach?.far;
+		const rawTarget = near ? reach?.near : reach?.far;
+		// targets are in figure space; the arm is drawn inside the sunk upper body
+		const target: [number, number] | undefined = rawTarget ? [rawTarget[0], rawTarget[1] - drop] : undefined;
 		let [a, e] = target ? reachAngles(shoulder, target) : near ? pose.armNear : pose.armFar;
+		e = clampTo(e, JOINT_LIMITS.elbow);
 		if (back && !target) {
 			a = -a;
 			e = -e;
@@ -413,7 +454,7 @@ export const Figure: React.FC<{
 					// cuff
 					<circle cx={l.end[0] - dir(l.endAngle, 4)[0]} cy={l.end[1] - dir(l.endAngle, 4)[1]} r={6.5} fill={look.outfit === 'labcoat' ? P.labCoat : P.shirt} opacity={0.9} />
 				) : null}
-				<g transform={`translate(${l.end[0]},${l.end[1]}) rotate(${-l.endAngle})`}>
+				<g transform={`translate(${l.end[0]},${l.end[1]}) rotate(${-(l.endAngle + ((near ? pose.wristNear : pose.wristFar) ?? 0))}) scale(${(near ? pose.palmNear : pose.palmFar) === -1 ? -1 : 1},1)`}>
 					{(() => {
 							const item = near ? holdNear : holdFar;
 							const shape = (near ? hands?.near : hands?.far) ?? (item ? 'grip' : 'relaxed');
@@ -692,7 +733,7 @@ export const Figure: React.FC<{
 		</g>
 	);
 
-	const lean = `rotate(${pose.lean}, 0, ${hipY})`;
+	const lean = `translate(0,${drop}) rotate(${pose.lean}, 0, ${hipY - drop})`;
 	const body = back ? (
 		<g>
 			{legShape(false)}
