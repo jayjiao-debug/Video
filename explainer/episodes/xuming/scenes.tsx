@@ -565,7 +565,7 @@ const Defense: React.FC<SceneProps> = () => {
 	const sprout = prog(f, cue(2) + 20, 40, ease.out);
 	const wilt = prog(f, cue(2) + 80, 50, ease.inOut);
 	// D4: three plants, three spotlights, one molecule
-	const spots = events(cue(3) + 6, end - 40, 3, 14);
+	const spots = [cue(3) + 6, cue(3) + 27, cue(3) + 44]; // three lamps switched on by hand, not on the grid
 	const rise = prog(f, spots[2] + 10, 40, ease.inOut);
 	const meet = prog(f, end - 44, 30, ease.inOut);
 	const white = prog(f, end - 14, 14, ease.in);
