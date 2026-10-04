@@ -50,12 +50,17 @@ def write_registry():
             f.write(text)
 
 
-def snap_cuts(cuts, beats):
-    """Snap each [from, to] (seconds, original track) to beats, a whole number of bars (4 beats) long."""
+def snap_cuts(cuts, beats, phrase=16, anchor=None):
+    """Snap each [from, to] (seconds, original track) to the beat grid: both ends on a phrase line
+    (every `phrase` beats, counted from `anchor`, a beat index on a phrase start) and a whole number of
+    phrases long. Cutting part of a phrase leaves an odd-length phrase and the ear hears the jump."""
+    period = (beats[-1] - beats[0]) / (len(beats) - 1)
+    anchor = anchor or 0
     out = []
     for a, b in cuts:
         ia = min(range(len(beats)), key=lambda i: abs(beats[i] - a))
-        n = max(4, round((b - a) / ((beats[-1] - beats[0]) / (len(beats) - 1)) / 4) * 4)
+        ia = anchor + round((ia - anchor) / phrase) * phrase
+        n = max(phrase, round((b - a) / period / phrase) * phrase)
         ib = min(ia + n, len(beats) - 1)
         out.append((beats[ia] - 0.02, beats[ib] - 0.02))
     return sorted(out)
@@ -94,10 +99,13 @@ def cut_track(src, cuts, dst):
         keep.append((t, a))
         t = b
     keep.append((t, total))
-    parts = [f"[0:a]atrim={a}:{b},asetpts=PTS-STARTPTS[s{i}]" for i, (a, b) in enumerate(keep)]
+    # each later piece starts one crossfade early: acrossfade overlaps the pieces by `X`, and without
+    # this every cut would pull the rest of the track 30 ms early (v2 drifted ~90 ms by the drop)
+    X = 0.03
+    parts = [f"[0:a]atrim={max(0.0, a - (X if i else 0))}:{b},asetpts=PTS-STARTPTS[s{i}]" for i, (a, b) in enumerate(keep)]
     chain, last = [], "s0"
     for i in range(1, len(keep)):
-        chain.append(f"[{last}][s{i}]acrossfade=d=0.03:c1=tri:c2=tri[x{i}]")
+        chain.append(f"[{last}][s{i}]acrossfade=d={X}:c1=tri:c2=tri[x{i}]")
         last = f"x{i}"
     run(["ffmpeg", "-v", "error", "-y", "-i", src, "-filter_complex", ";".join(parts + chain), "-map", f"[{last}]",
          "-ar", "48000", "-c:a", "pcm_s16le", dst])
@@ -121,7 +129,10 @@ def plan(ep_id):
         json.dump(info, open(cache, "w"))
     if ep.get("music_cut"):
         # pacing: whole bars cut out of the track (markers in episode.yaml stay in original-track time)
-        cuts = snap_cuts(ep["music_cut"], info["beats"])
+        # the phrase grid: the break starts a phrase (music.py's section markers sit on phrase lines)
+        brk = info["markers"].get("break", 0)
+        anchor = min(range(len(info["beats"])), key=lambda i: abs(info["beats"][i] - brk))
+        cuts = snap_cuts(ep["music_cut"], info["beats"], 16, anchor)
         edited = os.path.join(out, "bgm.edit.wav")
         key = json.dumps([os.path.getmtime(track), cuts])
         if not (os.path.exists(edited) and os.path.exists(edited + ".key") and open(edited + ".key").read() == key):

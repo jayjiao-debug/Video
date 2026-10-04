@@ -512,7 +512,10 @@ const Twist: React.FC<SceneProps> = () => {
 	const scene = useScene();
 	const D = scene.duration;
 	const A = f + scene.from;
+	// three shots: the room (he thinks) → the logbook (the 讲评 column struck out) → the room again,
+	// the instructors' doubt, and the camera goes to the window: the hangar's lights (the next scene)
 	const CUT = cue(2);
+	const BACK = cue(3);
 	const room = camPath(
 		[
 			[0, 940, 520, 1.08],
@@ -523,17 +526,28 @@ const Twist: React.FC<SceneProps> = () => {
 	const book = camPath(
 		[
 			[CUT, 1080, 630, 1.5],
-			[D, 1110, 650, 1.66],
+			[BACK, 1110, 650, 1.62],
+		],
+		f,
+	);
+	// the window sits on the wall layer (depth 0.62): aim the hero-plane camera through it
+	const WIN = {x: 960 + (1650 - 960) / 0.62, y: 540 + (370 - 540) / 0.62};
+	const back = camPath(
+		[
+			[BACK, 620, 600, 1.45],
+			[cue(4) - 6, 900, 520, 1.15],
+			[D - 26, WIN.x - 120, WIN.y + 40, 1.5],
+			[D, WIN.x, WIN.y, 2.6],
 		],
 		f,
 	);
 	return (
 		<FullFrame fadeIn={0} fadeOut={0}>
 			<Defs />
-			{f < CUT ? (
-				<Briefing1965 frame={A} cam={room} night={0.85} lamp={0.85} board={<BoardText f={1e5} at={0} />}>
-					<Kahneman f={A} talk={f > cue(0) + 10 && f < cue(0) + 60 ? 1 : 0} />
-					<Instructor f={A} />
+			{f < CUT || f >= BACK ? (
+				<Briefing1965 frame={A} cam={f < CUT ? room : back} night={0.85} lamp={0.85} board={<BoardText f={1e5} at={0} />}>
+					<Kahneman f={A} talk={(f > cue(0) + 10 && f < cue(0) + 60) || (f > cue(4) && f < cue(4) + 50) ? 1 : 0} />
+					<Instructor f={A} talk={f > BACK && f < BACK + 40 ? 1 : 0} />
 				</Briefing1965>
 			) : (
 				<Flat cam={book}>
@@ -551,8 +565,8 @@ const Twist: React.FC<SceneProps> = () => {
 // ---------------------------------------------------------------- 5. the coin experiment (the build)
 
 /** When each instructor's coin leaves the hand (frames after the round starts): uneven, like people. */
-const THROW1 = [0, 7, 11, 20, 23, 33, 39, 45, 51, 60];
-const THROW2 = [3, 0, 14, 8, 22, 19, 35, 30, 47, 42];
+const THROW1 = [0, 9, 15, 27, 31, 44, 52, 61, 69, 80];
+const THROW2 = [4, 0, 19, 11, 30, 26, 47, 40, 63, 57];
 const FLY = 22;
 
 /** One coin from the hand to the floor: an arc, spinning, a small bounce, then it settles face up. */
@@ -824,6 +838,9 @@ const Why: React.FC<SceneProps> = () => {
 	const slam = k >= 0 ? spring({frame: k, fps: 30, config: {damping: 12, stiffness: 200}}) : 0;
 	const shake = k >= 0 && k < 8 ? 8 * Math.exp(-k / 2.2) : 0;
 	const titleOut = 1 - prog(f, D - 24, 14);
+	// line 3 (极端之后，大概率回到平常): the middle of the pack steps back, the extremes and the ring stay
+	const mid = prog(f, cue(2) - 4, 14);
+	const midDim = (i: number) => ([...BEST, ...WORST].includes(i) ? 1 : 1 - 0.65 * mid);
 	return (
 		<FullFrame
 			fadeIn={0}
@@ -850,8 +867,8 @@ const Why: React.FC<SceneProps> = () => {
 			<g transform={`translate(${shake * (random(`wx${f}`) - 0.5)},${shake * (random(`wy${f}`) - 0.5)})`}>
 				<Flat cam={cam}>
 					<HangarFloor f={A} rings={1}>
-						<Marks best={2} bestArrow={2} worstArrow={2} rest={2} aims={2 * (1 - prog(f, 0, 20))} />
-						<Experiment f={1e5} A={A} t1={0} t2={0} />
+						<Marks best={2} bestArrow={2} worstArrow={2} rest={2} aims={2 * (1 - prog(f, 0, 20))} dim={midDim} />
+						<Experiment f={1e5} A={A} t1={0} t2={0} dim={midDim} />
 						<ChalkRing x={TGT.x} y={TGT.y} r={MEAN_D} p={ring} color={P.gold} w={6} o={0.95} />
 						<WriteOn x={TGT.x + MEAN_D * 0.72 + 14} y={TGT.y - MEAN_D * 0.72 - 6} text="平均距离" size={28} p={prog(f, cue(0) + 18, 16)} id="mean" fill={P.gold} />
 						{/* the extremes: arrows toward the gold ring */}
