@@ -682,7 +682,12 @@ export const RoomWindow: React.FC<{sky: string; skyI?: number; wall?: string} & 
 		{/* the sky outside */}
 		<mesh position={[0, 2.5, -3.6]}>
 			<planeGeometry args={[4.4, 4.4]} />
-			<meshBasicMaterial color={sky} toneMapped={false} />
+			<meshBasicMaterial color={new THREE.Color(sky).multiplyScalar(0.55)} />
+		</mesh>
+		{/* a distant skyline through the glass */}
+		<mesh position={[0, 1.2, -3.55]}>
+			<planeGeometry args={[4.4, 1.0]} />
+			<meshBasicMaterial color={new THREE.Color(sky).multiplyScalar(0.18)} />
 		</mesh>
 		{/* window frame + mullions */}
 		{[

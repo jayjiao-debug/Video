@@ -25,6 +25,8 @@ export {EPISODE};
 const W = 1920;
 const H = 1080;
 type V3 = [number, number, number];
+/** 0..1 as x goes from a to b (prog() is for frames: it clamps durations to >= 1) */
+const ramp = (x: number, a: number, b: number) => Math.min(1, Math.max(0, (x - a) / (b - a)));
 const lerp3 = (a: V3, b: V3, t: number) => a.map((v, i) => mix(v, b[i], t)) as V3;
 
 /** the frame: a 3D canvas under, an SVG layer for type and the subtitle scrim, overlays on top */
@@ -385,14 +387,14 @@ const Sleep: React.FC<SceneProps> = () => {
 // ---------------------------------------------------------------- 3. origin: under the canopy, the forest 600,000 years ago, two wild coffees
 
 /** the forest set: layered tree cards in green fog, a warm sky, god rays, a coffee shrub in front */
-const Forest: React.FC<{t: number; f: number; rays?: number}> = ({t, f, rays = 1}) => (
+const Forest: React.FC<{t: number; f: number; rays?: number; canopy?: number}> = ({t, f, rays = 1, canopy = 1}) => (
 	<group>
 		<mesh>
 			<sphereGeometry args={[60, 32, 16]} />
 			<meshBasicMaterial color="#d9b678" side={THREE.BackSide} fog={false} toneMapped={false} />
 		</mesh>
 		{/* overhead canopy, seen from below at the start */}
-		<TreeCard seed="canopy" n={3} color="#050a06" w={40} h={22} position={[0, 12, -2]} rotation={[Math.PI / 2.2, 0, 0]} />
+		<TreeCard seed="canopy" n={3} color="#050a06" o={canopy} w={90} h={50} position={[0, 12, -2]} rotation={[Math.PI / 2.2, 0, 0]} />
 		{[
 			[-40, 30, 0.35, '#2a4a2c'],
 			[-26, 26, 0.5, '#1d3a22'],
@@ -443,17 +445,17 @@ const Origin: React.FC<SceneProps> = () => {
 		three = (
 			<Shot cam={{pos, target, fov: 40, roll: 0.05 * (1 - tilt)}} fx={{bloom: 0.8, threshold: 0.7, focus: Math.max(2, 12 - 6 * push), aperture: 0.003, fade: prog(f, cue(2) - 26, 12)}} bg="#0d2014" fog={[4, 46]}>
 				<Lights keyPos={[6, 12, -6]} keyI={300} keyColor="#ffe0a8" rim={[-4, 4, 6]} rimI={30} rimColor="#9fd0a0" />
-				<Forest t={t} f={f} />
+				<Forest t={t} f={f} canopy={1 - Math.min(1, Math.max(0, (tilt - 0.35) / 0.3))} />
 			</Shot>
 		);
 	} else if (flowers) {
-		const bez = (u: number): V3 => [mix(mix(-1.7, 0, u), mix(0, 1.7, u), u), 0.3 + 1.1 * 2 * u * (1 - u), 0.2 * Math.sin(u * 6)];
+		const bez = (u: number): V3 => [mix(mix(-1.45, 0, u), mix(0, 1.45, u), u), 0.3 + 1.1 * 2 * u * (1 - u), 0.2 * Math.sin(u * 6)];
 		const trail: Particle[] = pol > 0 ? Array.from({length: 26}, (_, k) => ({p: bez(Math.max(0, pol - k * 0.012)), s: 0.05 * (1 - k / 26), c: '#ffe7b8', a: 1 - k / 26})) : [];
 		three = (
 			<Shot cam={{pos: [0.2 * Math.sin(f / 60), 0.4, 4.6], target: [0, 0.3, 0], fov: 35}} fx={{bloom: 0.7, threshold: 0.7, focus: 4.6, aperture: 0.004, fade: 1 - prog(f, cue(2) - 14, 14)}} bg="#04120a" fog={[6, 20]}>
 				<Lights keyPos={[2, 4, 4]} keyI={60} keyColor="#ffe6c0" rim={[-3, 2, -3]} rimI={40} rimColor="#9fe8b0" />
-				{[-1.7, 1.7].map((x, i) => (
-					<Flower key={i} position={[x, 0.2, 0]} rotation={[0.15, (i ? -1 : 1) * 0.35 + f / 300, 0.2 + f / 200]} scale={2.1} open={prog(f, cue(2) - 10 + i * 6, 40, ease.out)} glow={0.1} />
+				{[-1.45, 1.45].map((x, i) => (
+					<Flower key={i} position={[x, 0.1, 0]} rotation={[0.15, (i ? -1 : 1) * 0.35 + f / 300, 0.2 + f / 200]} scale={1.35} open={prog(f, cue(2) - 10 + i * 6, 40, ease.out)} glow={0.1} />
 				))}
 				<Soft items={trail} />
 				<Soft items={dust('pl', 90, [10, 6, 6], t, '#d8ffd0', 0.03, 0.5)} />
@@ -592,8 +594,8 @@ const Defense: React.FC<SceneProps> = () => {
 	} else if (soil) {
 		const k = f - cue(2);
 		three = (
-			<Shot cam={{pos: [0, mix(3, 1.1, prog(f, cue(2), 50, ease.out)), 3.6], target: [0, 0.2, 0], fov: 35}} fx={{bloom: 0.7, threshold: 0.6, focus: 3.6, aperture: 0.003}} bg="#0a0806" fog={[4, 16]}>
-				<Lights keyPos={[2, 4, 2]} keyI={50} keyColor="#ffd8a0" rim={[-3, 2, -3]} rimI={20} />
+			<Shot cam={{pos: [0, mix(2.4, 0.75, prog(f, cue(2), 50, ease.out)), 2.4], target: [0, 0.15, 0], fov: 35}} fx={{bloom: 0.7, threshold: 0.6, focus: 2.4, aperture: 0.003}} bg="#0a0806" fog={[4, 16]}>
+				<Lights keyPos={[1.5, 3, 2]} keyI={110} keyColor="#ffd8a0" rim={[-3, 2, -3]} rimI={40} rimColor="#ffb070" fill={0.12} />
 				<Terrain amp={0.15} color="#1a120c" />
 				{Array.from({length: 7}, (_, i) => {
 					const u = prog(f, cue(2) - 10 + i * 9, 60, (x) => x);
@@ -864,8 +866,8 @@ const Journey: React.FC<SceneProps> = () => {
 	let labels: React.ReactNode = null;
 	if (f < cue(1) - 4) {
 		const dd = ease.out(down);
-		const pos: V3 = [mix(-2, 1.5, dd), mix(18, 2.0, dd), mix(6, 13, dd)];
-		const target: V3 = [0, mix(14, 2.0, dd), mix(-10, -5, dd)];
+		const pos: V3 = [mix(-2, 1.5, dd), mix(9, 2.0, dd), mix(8, 13, dd)];
+		const target: V3 = [0, mix(7, 2.0, dd), mix(-10, -5, dd)];
 		const stars: Particle[] = Array.from({length: 500}, (_, i) => {
 			const a = random(`sa${i}`) * Math.PI * 2;
 			const e = 0.1 + random(`se${i}`) * 1.4;
@@ -910,9 +912,9 @@ const Journey: React.FC<SceneProps> = () => {
 	} else {
 		const whipIn = 1 - prog(f, whip, 12, ease.out);
 		const out = prog(f, cue(3) - 20, 60, ease.inOut);
-		const rotY = mix(-1.25, mix(-0.25, 0.75, prog(f, legs[1], end - legs[1], ease.inOut)), out) - 0.6 * whipIn;
+		const rotY = mix(-2.5, mix(-1.45, -0.45, prog(f, legs[1], end - legs[1], ease.inOut)), out) - 0.6 * whipIn;
 		const rotX = mix(0.12, 0.35, out);
-		const cam: Cam = {pos: [0, 0.3, mix(2.4, 3.3, out)], target: [0, mix(0.15, 0.2, out), 0], fov: 35};
+		const cam: Cam = {pos: [0, 0.3, mix(2.9, 3.4, out)], target: [0, mix(0.15, 0.2, out), 0], fov: 35};
 		const pj = projector(cam);
 		const rot = new THREE.Euler(rotX, rotY, 0);
 		const at = (ll2: [number, number]) => pj(ll(ll2[0], ll2[1], 1.01).applyEuler(rot));
@@ -1087,7 +1089,6 @@ const Roast: React.FC<SceneProps> = () => {
 				<BeanSwarm items={PILE.slice(0, 40).map((b) => ({p: [b.p[0] * 0.8, b.p[1] - 1.6, b.p[2] * 0.8] as V3, r: b.r, s: 0.2, roast: 0.85}))} />
 				<Soft items={neb3} />
 				{gather > 0 ? <Soft items={[{p: [0, 0.3, 0], s: 1 + 5 * gather, c: '#fff1d0', a: gather}]} /> : null}
-				{k < 10 ? <Soft items={[{p: [0, 0, 0], s: 8 * (1 - k / 10), c: '#fff0c0', a: 1 - k / 10}]} /> : null}
 			</Shot>
 		);
 	}
@@ -1145,14 +1146,14 @@ const Body: React.FC<SceneProps> = () => {
 		const sky = new THREE.Color('#b8c8e0').lerp(new THREE.Color('#e08a50'), Math.min(1, time * 2)).lerp(new THREE.Color('#0a0e22'), Math.max(0, time * 2 - 1));
 		three = (
 			<Shot cam={{pos: [-0.8 + 0.3 * time, 1.7, 4.6 - 0.4 * time], target: [0.9, 1.4, -1.5], fov: 40}} fx={{bloom: 0.7, threshold: 0.7, focus: 4.4, aperture: 0.002, fade: fromGlow * 0.7}} bg="#06070c">
-				<Lights keyPos={[1, 3, -2]} keyI={mix(40, 6, time)} keyColor={`#${sky.getHexString()}`} rim={[-3, 3, 3]} rimI={mix(10, 25, time)} rimColor="#ffcf90" fill={0.05} />
+				<Lights keyPos={[1, 3, -2]} keyI={mix(20, 5, time)} keyColor={`#${sky.getHexString()}`} rim={[-3, 3, 3]} rimI={mix(10, 25, time)} rimColor="#ffcf90" fill={0.05} />
 				<RoomWindow sky={`#${sky.getHexString()}`} skyI={mix(1, 0.25, time)} position={[1.2, 0, 0]} />
 				<Table color="#1b120c" />
 				<group position={[1.1, 0, -0.6]}>
 					<Saucer />
 					<Cup position={[0, 0.05, 0]} t={t} level={mix(0.86, 0.29, time)} />
 				</group>
-				{time > 0.6 ? <Soft items={Array.from({length: 40}, (_, i) => ({p: [1.2 + (random(`ws${i}`) - 0.5) * 4, 2.5 + (random(`wy${i}`) - 0.5) * 4, -3.5] as V3, s: 0.03, c: '#ffffff', a: prog(time, 0.6, 0.4)}))} /> : null}
+				{time > 0.6 ? <Soft items={Array.from({length: 40}, (_, i) => ({p: [1.2 + (random(`ws${i}`) - 0.5) * 4, 2.5 + (random(`wy${i}`) - 0.5) * 4, -3.5] as V3, s: 0.03, c: '#ffffff', a: ramp(time, 0.6, 1)}))} /> : null}
 			</Shot>
 		);
 	} else if (f < cue(2) - 6) {
@@ -1199,7 +1200,7 @@ const Body: React.FC<SceneProps> = () => {
 					<text x={420} y={790} textAnchor="middle" style={{fontFamily: font.latin, fontWeight: 500, fontSize: 52, fill: '#f6e7c8', letterSpacing: '0.08em'}}>
 						{`${String(Math.floor(hours) % 24).padStart(2, '0')}:${String(Math.floor((hours % 1) * 60)).padStart(2, '0')}`}
 					</text>
-					<text x={1380} y={830} textAnchor="middle" style={{fontFamily: font.sans, fontSize: 24, letterSpacing: '0.2em', fill: '#ffd896'}} opacity={prog(time, 0.85, 0.15)}>
+					<text x={1380} y={830} textAnchor="middle" style={{fontFamily: font.sans, fontSize: 24, letterSpacing: '0.2em', fill: '#ffd896'}} opacity={ramp(time, 0.8, 0.95)}>
 						还剩 ≈ 1/3
 					</text>
 					<g opacity={landed(f, cue(0) + 6)}>
