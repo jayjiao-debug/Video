@@ -51,6 +51,7 @@ export const pointAt = (pts: P2[], cum: number[], s: number): P2 => {
 };
 /** the thread: halo, glow, core, plus light pulses running along it */
 export const thread = (ctx: CanvasRenderingContext2D, pts: P2[], o: { a?: number; w?: number; T?: number; pulses?: number; pulseSpeed?: number; draw?: number; hot?: number } = {}) => {
+  pts = pts.filter((p) => Number.isFinite(p[0]) && Number.isFinite(p[1]));
   if (pts.length < 2) return;
   const a = o.a ?? 1, w = o.w ?? 1, hot = o.hot ?? 0;
   let P = pts;
@@ -72,7 +73,7 @@ export const thread = (ctx: CanvasRenderingContext2D, pts: P2[], o: { a?: number
   const n = o.pulses ?? 0;
   if (n > 0 && o.T !== undefined) {
     const c = cumLen(P), L = c[c.length - 1];
-    for (let i = 0; i < n; i++) {
+    for (let i = 0; i < n && L > 2; i++) {
       const s = ((o.T * (o.pulseSpeed ?? 220) + (i / n) * L) % L + L) % L;
       const q = pointAt(P, c, s);
       const g = ctx.createRadialGradient(q[0], q[1], 0, q[0], q[1], 16 * w);
@@ -84,14 +85,14 @@ export const thread = (ctx: CanvasRenderingContext2D, pts: P2[], o: { a?: number
 };
 /** a soft round light (bokeh / star / person) */
 export const glow = (ctx: CanvasRenderingContext2D, x: number, y: number, r: number, c: number[], a: number, core = 0.35) => {
-  if (a <= 0.003 || r <= 0.2) return;
+  if (!(a > 0.003) || !(r > 0.2) || !Number.isFinite(x + y + r)) return;
   const g = ctx.createRadialGradient(x, y, 0, x, y, r);
   g.addColorStop(0, rgba(c, a)); g.addColorStop(core, rgba(c, a * 0.45)); g.addColorStop(1, rgba(c, 0));
   ctx.fillStyle = g; ctx.fillRect(x - r, y - r, 2 * r, 2 * r);
 };
 /** a defocused disc with a brighter rim, like lens bokeh */
 export const bokeh = (ctx: CanvasRenderingContext2D, x: number, y: number, r: number, c: number[], a: number) => {
-  if (a <= 0.003 || r < 1) return;
+  if (!(a > 0.003) || !(r >= 1) || !Number.isFinite(x + y + r)) return;
   const g = ctx.createRadialGradient(x, y, 0, x, y, r);
   g.addColorStop(0, rgba(c, a * 0.55)); g.addColorStop(0.82, rgba(c, a * 0.7)); g.addColorStop(0.93, rgba(c, a)); g.addColorStop(1, rgba(c, 0));
   ctx.fillStyle = g; ctx.beginPath(); ctx.arc(x, y, r, 0, Math.PI * 2); ctx.fill();
