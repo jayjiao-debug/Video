@@ -107,7 +107,7 @@ scenes:
     component: Coda
     at: coda
     lines:
-      - 你每天续的命，是一棵树六十万年的防身术，
+      - 你续的命，是一棵树六十万年的防身术，
       - 一朵花的[「记住我」]，和七颗偷渡的种子。
       - 早安。
-      - pause: 3.0
+      - pause: 5.8   # the Juno end card (JUNO.timing.endCard ≈ 6 s)
