@@ -105,20 +105,48 @@ export const dot = (ctx: CanvasRenderingContext2D, x: number, y: number, r: numb
   ctx.arc(x, y, r, 0, Math.PI * 2);
   ctx.fill();
 };
-/** a tiny bird (the reference's starling glyph), heading `ang` */
+/** a bird seen from above, heading `ang`: gull-like wings that bend forward at the wrist and sweep
+    back to the tips (the shape people read as "bird", where straight wings read as a plane), beating
+    (shorter and more swept on the upstroke). From size 3.2 up it also gets a body, head and forked
+    tail; below that those would blur the wings into a cross. Size `s` ≈ 1 → 8 px wingspan. */
 export const bird = (ctx: CanvasRenderingContext2D, x: number, y: number, s: number, ang: number, a: number, flap: number) => {
   if (a <= 0.003) return;
   ctx.save();
   ctx.translate(x, y);
   ctx.rotate(ang);
   ctx.fillStyle = `rgba(246,214,150,${a})`;
-  const w = 0.6 + 0.4 * Math.sin(flap);
+  const w = 0.5 + 0.5 * Math.sin(flap); // 0 = upstroke (short, swept), 1 = spread
+  const k = s < 3.2 ? s * 1.15 : s;
+  const sp = 2.4 + 1.5 * w; // half span
+  const back = 0.9 + 0.8 * (1 - w); // how far the tips sweep back
   ctx.beginPath();
-  ctx.moveTo(3 * s, 0);
-  ctx.lineTo(-2 * s, -3.4 * s * w);
-  ctx.lineTo(-0.8 * s, 0);
-  ctx.lineTo(-2 * s, 3.4 * s * w);
-  ctx.closePath();
+  for (const side of [-1, 1]) {
+    // leading edge: shoulder → wrist (out and forward) → tip (out and back)
+    ctx.moveTo(0.35 * k, side * 0.15 * k);
+    ctx.quadraticCurveTo(0.75 * k, side * sp * 0.38 * k, 0.45 * k, side * sp * 0.5 * k);
+    ctx.quadraticCurveTo(0.1 * k, side * sp * 0.8 * k, -back * k, side * sp * k);
+    // trailing edge: tip → behind the wrist → back of the shoulder
+    ctx.quadraticCurveTo(-0.1 * k, side * sp * 0.62 * k, -0.05 * k, side * sp * 0.42 * k);
+    ctx.quadraticCurveTo(-0.15 * k, side * sp * 0.2 * k, -0.45 * k, side * 0.15 * k);
+    ctx.closePath();
+  }
+  if (s < 3.2) {
+    ctx.moveTo(0.75 * k, 0);
+    ctx.ellipse(0.1 * k, 0, 0.65 * k, 0.3 * k, 0, 0, Math.PI * 2);
+  } else {
+    // body + head
+    ctx.moveTo(1.25 * k, 0);
+    ctx.ellipse(0.15 * k, 0, 1.1 * k, 0.36 * k, 0, 0, Math.PI * 2);
+    ctx.moveTo(1.5 * k, 0);
+    ctx.arc(1.18 * k, 0, 0.32 * k, 0, Math.PI * 2);
+    // forked tail
+    ctx.moveTo(-0.8 * k, -0.2 * k);
+    ctx.lineTo(-2.4 * k, -0.85 * k);
+    ctx.lineTo(-1.6 * k, 0);
+    ctx.lineTo(-2.4 * k, 0.85 * k);
+    ctx.lineTo(-0.8 * k, 0.2 * k);
+    ctx.closePath();
+  }
   ctx.fill();
   ctx.restore();
 };
