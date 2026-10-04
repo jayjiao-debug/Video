@@ -1,99 +1,75 @@
 {
-  "id": "money-search-01",
+  "id": "money-search-02",
   "items": [
     {
       "type": "sketchfab-search",
-      "q": "100 dollar bill",
+      "q": "yap stone",
       "count": 12,
       "maxFaces": 300000
     },
     {
       "type": "sketchfab-search",
-      "q": "banknote",
+      "q": "stone wheel",
       "count": 12,
       "maxFaces": 300000
     },
     {
       "type": "sketchfab-search",
-      "q": "ramen bowl",
+      "q": "millstone",
       "count": 12,
       "maxFaces": 300000
     },
     {
       "type": "sketchfab-search",
-      "q": "noodle bowl chinese",
+      "q": "money cowry",
       "count": 12,
       "maxFaces": 300000
     },
     {
       "type": "sketchfab-search",
-      "q": "restaurant table",
+      "q": "electrum coin",
       "count": 12,
       "maxFaces": 300000
     },
     {
       "type": "sketchfab-search",
-      "q": "cowrie shell",
+      "q": "lion coin",
       "count": 12,
       "maxFaces": 300000
     },
     {
       "type": "sketchfab-search",
-      "q": "seashell cowry",
+      "q": "wooden table",
       "count": 12,
       "maxFaces": 300000
     },
     {
       "type": "sketchfab-search",
-      "q": "lydian coin",
+      "q": "chinese restaurant",
       "count": 12,
       "maxFaces": 300000
     },
     {
       "type": "sketchfab-search",
-      "q": "ancient greek coin",
+      "q": "noodle shop",
       "count": 12,
       "maxFaces": 300000
     },
     {
       "type": "sketchfab-search",
-      "q": "chinese ancient coin",
+      "q": "old wooden table",
       "count": 12,
       "maxFaces": 300000
     },
     {
       "type": "sketchfab-search",
-      "q": "gold bar",
+      "q": "cash register",
       "count": 12,
       "maxFaces": 300000
     },
     {
       "type": "sketchfab-search",
-      "q": "gold ingot",
-      "count": 12,
-      "maxFaces": 300000
-    },
-    {
-      "type": "sketchfab-search",
-      "q": "apartment building",
-      "count": 12,
-      "maxFaces": 300000
-    },
-    {
-      "type": "sketchfab-search",
-      "q": "rai stone yap",
-      "count": 12,
-      "maxFaces": 300000
-    },
-    {
-      "type": "sketchfab-search",
-      "q": "stone money",
-      "count": 12,
-      "maxFaces": 300000
-    },
-    {
-      "type": "sketchfab-search",
-      "q": "outrigger canoe",
+      "q": "bank vault",
       "count": 12,
       "maxFaces": 300000
     }
