@@ -559,3 +559,35 @@ export const Finale3D: React.FC<{ T: number }> = ({ T }) => {
     </ThreeCanvas>
   );
 };
+
+/* ---------------- cover: boat No. 1 from above, 12 gold seats, 28 empty ---------------- */
+const COVER_PLACED: Placed[] = [{ x: 0, y: 0, z: 0, rot: 0, scale: 1, cap: 40, occ: 12, appear: -1, fill: -5, float: false }];
+const CoverCam: React.FC<{ pos: number[]; look: number[]; up: number[] }> = ({ pos, look, up }) => {
+  const { camera } = useThree();
+  camera.up.set(up[0], up[1], up[2]);
+  camera.position.set(pos[0], pos[1], pos[2]); camera.lookAt(look[0], look[1], look[2]); camera.updateProjectionMatrix();
+  return null;
+};
+export const CoverBoat3D: React.FC<{ w: number; h: number; pos: number[]; look: number[]; up: number[] }> = ({ w, h, pos, look, up }) => {
+  const [assets, setAssets] = useState<Assets | null>(ASSETS);
+  const [handle] = useState(() => (ASSETS ? null : delayRender('cover models', { timeoutInMilliseconds: 120000 })));
+  useEffect(() => { loadAssets().then((a) => { setAssets(a); if (handle !== null) continueRender(handle); }); }, [handle]);
+  if (!assets) return null;
+  const T = 3;
+  return (
+    <ThreeCanvas width={w} height={h} gl={{ antialias: true, toneMapping: THREE.ACESFilmicToneMapping, toneMappingExposure: 0.95 }} camera={{ fov: 34, near: 0.03, far: 400 }}>
+      <CoverCam pos={pos} look={look} up={up} />
+      <SkyEnv a={assets} />
+      <fog attach="fog" args={['#070b16', 30, 120]} />
+      <ambientLight intensity={0.12} color="#5a6a98" />
+      <directionalLight position={[MOON_DIR.x * 50, MOON_DIR.y * 50, MOON_DIR.z * 50]} intensity={0.6} color="#c9d6f5" />
+      <Sea T={T} a={assets} />
+      <Ship T={0} a={assets} />
+      <group position={[B1.x, B1.y, B1.z]}>
+        <Boats T={T} placed={COVER_PLACED} a={assets} emptyPulse={1} />
+        <pointLight position={[0.2, 0.5, 0.25]} color="#ffcf8a" intensity={1.6} distance={2.4} decay={1.6} />
+      </group>
+    </ThreeCanvas>
+  );
+};
+export const COVER_B1 = B1;

@@ -7,11 +7,13 @@ import { V1Film } from './v1/V1';
 import { V2Film } from './v2/V2';
 import { V3Film } from './v3/V3';
 import { CoverV3 } from './v3/CoverV3';
+import { CoverEp5 } from './v4/CoverEp5';
 import { TitanicOpen, OPEN_FRAMES } from './v4/Titanic';
 import { ModelPreview } from './v4/ModelPreview';
 import { TitanicOpen2, OPEN_FRAMES2 } from './v4/Titanic2';
 import { Ep5Draft, Ep5Film, EP5_FRAMES } from './v4/Ep5';
 import { Ep1 } from './ep1/Ep1';
+import { Ep6Film, EP6_FRAMES } from './v6/Film6';
 import '@fontsource/cormorant-garamond/400-italic.css';
 import '@fontsource/cormorant-garamond/500.css';
 import '@fontsource/cormorant-garamond/600.css';
@@ -51,6 +53,7 @@ export const Root: React.FC = () => (
     <Composition id="VCompareL" component={CompareL} durationInFrames={1} fps={FPS} width={2380} height={2150} />
     <Composition id="VCompare" component={Compare} durationInFrames={1} fps={FPS} width={2380} height={2150} />
     <Composition id="BoardChars" component={CharSheet} durationInFrames={1} fps={FPS} width={2400} height={1400} />
+    <Composition id="Ep6" component={Ep6Film} durationInFrames={EP6_FRAMES} fps={30} width={1920} height={1080} />
     <Composition id="Ep3Cast" component={CastSheet3} durationInFrames={1} fps={FPS} width={1920} height={1080} />
     <Composition id="Ep3Props" component={PropSheet3} durationInFrames={1} fps={FPS} width={1920} height={1080} />
     <Composition id="Ep4Cover43" component={Cover4} durationInFrames={1} fps={FPS} width={1440} height={1080} defaultProps={{ w: 1440, h: 1080 }} />
@@ -81,6 +84,8 @@ export const Root: React.FC = () => (
     <Composition id="Ep5Draft" component={Ep5Draft} durationInFrames={EP5_FRAMES} fps={30} width={1920} height={1080} />
     <Composition id="TitanicOpen2" component={TitanicOpen2} durationInFrames={OPEN_FRAMES2} fps={30} width={1920} height={1080} />
     <Composition id="TitanicOpen" component={TitanicOpen} durationInFrames={OPEN_FRAMES} fps={30} width={1920} height={1080} />
+    <Composition id="CoverEp5Tall" component={CoverEp5} durationInFrames={1} fps={30} width={1080} height={1440} defaultProps={{ w: 1080, h: 1440 }} />
+    <Composition id="CoverEp5Wide" component={CoverEp5} durationInFrames={1} fps={30} width={1440} height={1080} defaultProps={{ w: 1440, h: 1080 }} />
     <Composition id="CoverV3Tall" component={CoverV3} durationInFrames={1} fps={30} width={1080} height={1440} defaultProps={{ w: 1080, h: 1440 }} />
     <Composition id="CoverV3Wide" component={CoverV3} durationInFrames={1} fps={30} width={1440} height={1080} defaultProps={{ w: 1440, h: 1080 }} />
     <Composition id="V3Film" component={V3Film} durationInFrames={3915} fps={30} width={1920} height={1080} />
