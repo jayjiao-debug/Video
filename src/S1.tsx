@@ -24,14 +24,14 @@ export const LINES_S1: Line[] = [
 ];
 
 const KEYS_TONGUE: Key[] = [
-  [b(43), [0.4, 3.4, 6.8], [0, 0, 0]],
-  [b(49), [0.25, 1.0, 1.7], [0, 0.15, 0]],
-  [b(53), [0, 0.42, 0.28], [0, 0.26, 0]],
+  [b(43), [0.5, 2.6, 5.6], [0, 0, 0]],
+  [b(49), [0.22, 0.75, 1.35], [0, 0.08, 0]],
+  [b(53), [0, 0.2, 0.1], [0, 0.085, 0]],
 ];
 const KEYS_BUD: Key[] = [
   [b(52), [0.3, 0.1, 6], [0, 0, 0]],
-  [b(57), [0.2, 0.9, 3.0], [0, 0.85, 0]],
-  [b(61), [0, 1.5, 0.7], [0, 1.38, 0]],
+  [b(57), [0.25, 0.8, 3.2], [0, 0.7, 0]],
+  [b(61), [0, 1.62, 0.75], [0, 1.2, 0]],
 ];
 const C = RECEPTOR.cleft;
 const KEYS_REC: Key[] = [
@@ -51,7 +51,7 @@ const path = (T: number, a: number, z: number, from: number[], to: number[]) => 
   const k = easeInOut(prog(T, a, z));
   return [lerp(from[0], to[0], k), lerp(from[1], to[1], k) + 0.25 * Math.sin(Math.PI * k), lerp(from[2], to[2], k)];
 };
-const DOCK = [C[0] - 0.08, C[1] + 0.02, C[2] + 0.36];
+const DOCK = [C[0] - 0.42, C[1] + 0.0, C[2] + 0.3];
 
 const molsAt = (T: number) => {
   const out: { name: MolName; p: number[]; r: number[]; s: number; glow?: number }[] = [];
@@ -59,12 +59,12 @@ const molsAt = (T: number) => {
     const leaving = prog(T, SU.out0, SU.out1);
     const p = leaving > 0 ? path(T, SU.out0, SU.out1, DOCK, [-3.4, 3.4, 1.0]) : path(T, SU.in0, SU.in1, [-3.6, 2.9, 1.4], DOCK);
     const spin = (1 - prog(T, SU.in0, SU.in1)) * 3 + leaving * 2;
-    out.push({ name: 'sucrose', p, r: [0.3 + spin, 1.1 + spin * 0.7, 0.2], s: 0.1, glow: 0.35 * prog(T, SU.sig, SU.sig + 0.3) * (1 - leaving) });
+    out.push({ name: 'sucrose', p, r: [0.3 + spin, 1.1 + spin * 0.7, 0.2], s: 0.075, glow: 0.35 * prog(T, SU.sig, SU.sig + 0.3) * (1 - leaving) });
   }
   if (T > AS.in0 - 0.1) {
     const p = path(T, AS.in0, AS.in1, [-3.6, 2.4, 1.6], DOCK);
     const spin = (1 - prog(T, AS.in0, AS.in1)) * 3;
-    out.push({ name: 'aspartame', p, r: [0.8 + spin, 0.4 + spin * 0.6, 0.5], s: 0.095, glow: 0.9 * prog(T, AS.sig, AS.sig + 0.3) });
+    out.push({ name: 'aspartame', p, r: [0.8 + spin, 0.4 + spin * 0.6, 0.5], s: 0.072, glow: 0.9 * prog(T, AS.sig, AS.sig + 0.3) });
   }
   return out;
 };
