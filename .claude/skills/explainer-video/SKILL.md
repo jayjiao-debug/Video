@@ -132,6 +132,11 @@ Read the track first, not just its markers:
   the RMS in 40 ms windows around every marker you anchor a reveal to, take the
   onset, and override it in `markers:` (`drop: 81.37`).
 
+**Pace to reading speed, not to the track** (`pacing` skill): a line stays ~0.5 s + 字数/7 + 0.6 s,
+the plan must not stretch a window past ×1.15 (`reading: {…, maxStretch: 1.15}`), and when the
+music is longer than the story, whole bars come out of the track (`music_cut`). The episode
+does not have to fill the whole track.
+
 Then map the 9 beats:
 
 | Beat | Music | Job |
@@ -288,6 +293,8 @@ were looking at.
 - Run `python3 -m pipeline.stillness out/<id>.mp4 0.2`. It lists every stretch where
   the picture (outside the subtitles and the grain) barely moves. Any stretch
   longer than ~1.5 s needs scene action before sending.
+- Run `python3 -m pipeline.pace <id>` after every plan and `… out/<id>.mp4` after the render:
+  waiting ≤ 12 % of the runtime, no line waiting > 1.2 s over a quiet picture (`pacing` skill).
 - Run `python -m pipeline.beatlock out/<id>.mp4 <id>`: no metronome runs (≥ 4
   hit beats in a row) outside the title stamps (`edit-rhythm` skill).
 - **Cut check:** sample 10 fps across every scene boundary

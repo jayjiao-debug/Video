@@ -45,7 +45,7 @@ def build(ep, music, warn=print):
     fps = ep.get("fps", 30)
     width, height = LAYOUTS[ep.get("format", "vertical")]
     reading = {"cps": 4.6, "base": 0.9, "min": 1.9, "max": 6.0, "gap": 0.25,
-               "lead": 0.5, "tail": 0.6, "snap": 0.22, **ep.get("reading", {})}
+               "lead": 0.5, "tail": 0.6, "snap": 0.22, "maxStretch": 1.6, **ep.get("reading", {})}
     markers = {**music["markers"], **ep.get("markers", {})}
     end = ep.get("end", "music")
     total = music["duration"] if end == "music" else float(end)
@@ -78,7 +78,7 @@ def build(ep, music, warn=print):
             slots.append(row)
         natural = sum(map(sum, slots))
         scale = (stop - start) / natural
-        if not 0.8 <= scale <= 1.6:
+        if not 0.8 <= scale <= reading["maxStretch"]:
             ids = ", ".join(s["id"] for s in group)
             warn(f"warning: scenes [{ids}] have {natural:.1f}s of text for a {stop - start:.1f}s window "
                  f"(x{scale:.2f}); add or cut lines, or move the anchor")

@@ -551,8 +551,8 @@ const Twist: React.FC<SceneProps> = () => {
 // ---------------------------------------------------------------- 5. the coin experiment (the build)
 
 /** When each instructor's coin leaves the hand (frames after the round starts): uneven, like people. */
-const THROW1 = [0, 9, 15, 27, 31, 44, 52, 61, 69, 80];
-const THROW2 = [4, 0, 19, 11, 30, 26, 47, 40, 63, 57];
+const THROW1 = [0, 7, 11, 20, 23, 33, 39, 45, 51, 60];
+const THROW2 = [3, 0, 14, 8, 22, 19, 35, 30, 47, 42];
 const FLY = 22;
 
 /** One coin from the hand to the floor: an arc, spinning, a small bounce, then it settles face up. */

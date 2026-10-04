@@ -50,6 +50,59 @@ def write_registry():
             f.write(text)
 
 
+def snap_cuts(cuts, beats):
+    """Snap each [from, to] (seconds, original track) to beats, a whole number of bars (4 beats) long."""
+    out = []
+    for a, b in cuts:
+        ia = min(range(len(beats)), key=lambda i: abs(beats[i] - a))
+        n = max(4, round((b - a) / ((beats[-1] - beats[0]) / (len(beats) - 1)) / 4) * 4)
+        ib = min(ia + n, len(beats) - 1)
+        out.append((beats[ia] - 0.02, beats[ib] - 0.02))
+    return sorted(out)
+
+
+def through_cuts(t, cuts):
+    """Original track time -> edited track time (a time inside a cut maps to the cut point)."""
+    d = 0.0
+    for a, b in cuts:
+        if t >= b:
+            d += b - a
+        elif t > a:
+            return a - d
+    return t - d
+
+
+def edit_music(info, cuts):
+    """The analysis of the edited track, derived from the original's (no re-analysis, so beats stay put)."""
+    inside = lambda t: any(a < t < b for a, b in cuts)
+    e = dict(info)
+    e["beats"] = [through_cuts(t, cuts) for t in info["beats"] if not inside(t)]
+    e["hits"] = [[through_cuts(t, cuts), s] for t, s in info["hits"] if not inside(t)]
+    e["markers"] = {k: through_cuts(v, cuts) for k, v in info["markers"].items()}
+    hz = info["energy_hz"]
+    e["energy"] = [v for i, v in enumerate(info["energy"]) if not inside(i / hz)]
+    e["duration"] = info["duration"] - sum(b - a for a, b in cuts)
+    return e
+
+
+def cut_track(src, cuts, dst):
+    """Remove whole bars from the track, joined with short crossfades on the beat."""
+    total = float(subprocess.run(["ffprobe", "-v", "error", "-show_entries", "format=duration", "-of", "csv=p=0", src],
+                                 capture_output=True, text=True).stdout.strip())
+    keep, t = [], 0.0
+    for a, b in cuts:
+        keep.append((t, a))
+        t = b
+    keep.append((t, total))
+    parts = [f"[0:a]atrim={a}:{b},asetpts=PTS-STARTPTS[s{i}]" for i, (a, b) in enumerate(keep)]
+    chain, last = [], "s0"
+    for i in range(1, len(keep)):
+        chain.append(f"[{last}][s{i}]acrossfade=d=0.03:c1=tri:c2=tri[x{i}]")
+        last = f"x{i}"
+    run(["ffmpeg", "-v", "error", "-y", "-i", src, "-filter_complex", ";".join(parts + chain), "-map", f"[{last}]",
+         "-ar", "48000", "-c:a", "pcm_s16le", dst])
+
+
 def plan(ep_id):
     ep_dir = os.path.join(ROOT, "episodes", ep_id)
     with open(os.path.join(ep_dir, "episode.yaml"), encoding="utf-8") as f:
@@ -66,6 +119,19 @@ def plan(ep_id):
         info = music.analyse(track)
         info["mtime"] = os.path.getmtime(track)
         json.dump(info, open(cache, "w"))
+    if ep.get("music_cut"):
+        # pacing: whole bars cut out of the track (markers in episode.yaml stay in original-track time)
+        cuts = snap_cuts(ep["music_cut"], info["beats"])
+        edited = os.path.join(out, "bgm.edit.wav")
+        key = json.dumps([os.path.getmtime(track), cuts])
+        if not (os.path.exists(edited) and os.path.exists(edited + ".key") and open(edited + ".key").read() == key):
+            cut_track(track, cuts, edited)
+            open(edited + ".key", "w").write(key)
+        info = edit_music(info, cuts)
+        ep = {**ep, "markers": {k: through_cuts(v, cuts) for k, v in ep.get("markers", {}).items()}, "_track": edited}
+        print("music cut (original s → removed):", [(round(a, 2), round(b - a, 2)) for a, b in cuts],
+              f"→ {info['duration']:.1f}s")
+        track = edited
     shutil.copyfile(track, os.path.join(out, "bgm" + os.path.splitext(track)[1]))
 
     tl = timeline.build(ep, info)
@@ -172,7 +238,7 @@ def main():
     out = os.path.join(ROOT, "out")
     os.makedirs(out, exist_ok=True)
     tmp = os.path.join(ROOT, "public", "build", a.episode)
-    track = os.path.join(ROOT, ep["music"])
+    track = ep.get("_track") or os.path.join(ROOT, ep["music"])
     fps = tl["fps"]
     if a.preview:
         f0, f1 = int(a.preview[0] * fps), min(int(a.preview[1] * fps), tl["durationInFrames"]) - 1

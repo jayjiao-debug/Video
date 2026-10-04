@@ -36,6 +36,17 @@ subtitle: 夸一句就变差，骂一顿就变好？
 format: horizontal
 fps: 30
 music: assets/music/bgm.mp3
+# pacing (pacing skill): read at phone speed, and don't let a window stretch lines past 1.15x;
+# where the music leaves more time than the story needs, whole bars come out of the track
+# (original-track seconds; snapped to the beat grid, whole bars; markers below stay in original time)
+reading: {cps: 6.5, base: 0.5, min: 1.6, gap: 0.2, maxStretch: 1.15}
+music_cut:
+  - [32.89, 36.96]    # 2 bars in the cold open
+  - [53.24, 61.38]    # 4 bars of the break
+  - [67.48, 71.55]    # 2 bars of the build
+  - [93.94, 102.08]   # 4 bars of the drop, after the answer lands
+  - [110.22, 114.29]  # 2 bars between the name and Galton
+  - [134.63, 138.70]  # 2 bars before the takeaways
 markers:
   a: 15.6         # the title card starts: the coin falls through the dark and lands on the hit at 16.104
   hit: 16.104     # the track's first big hit: the title's first stamp

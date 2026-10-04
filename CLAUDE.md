@@ -13,6 +13,10 @@ Brand: every video is a Juno video. Use the `juno-brand` skill
 the four brand moments (cold open sized by the script → gold title card exactly on a music hit → corner mark → end card),
 and its brand QA before sending anything.
 
+Pacing: the owner should never finish a subtitle and wait. Follow the `pacing` skill
+(`.claude/skills/pacing/SKILL.md`): reading budget per line, no stretched windows, whole-bar
+music cuts when the track is longer than the story, and `python3 -m pipeline.pace <id>` before sending.
+
 Publishing: once the owner explicitly confirms an episode is final (满意 / 可以发了),
 and not before, generate the Douyin publish package with the `douyin-publish` skill
 (`.claude/skills/douyin-publish/SKILL.md`): title, description with hashtags, 4:3 and 3:4 covers,
