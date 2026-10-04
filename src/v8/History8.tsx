@@ -6,13 +6,13 @@ import { SIM100K } from './common8';
 import { Vignette, Grain } from '../ui';
 
 /* S3, b57 -> b96: 1990, the column, the letters, Erdős and the computer. 2D. */
-export const S3_IN = b(57.25), S3_OUT = b(96.2);
+export const S3_IN = b(53.25), S3_OUT = b(80.2);
 const LINES: Line[] = [
-  [b(57.4), b(64) - 0.08, '1990年，专栏作家玛丽莲说：[换]', '1990: columnist Marilyn vos Savant says: switch.'],
-  [b(64) + 0.06, b(72) - 0.08, '她收到了一万多封读者来信', 'More than ten thousand letters arrived.'],
-  [b(72) + 0.06, b(80) - 0.08, '大多数说她错了，其中有不少博士', 'Most said she was wrong. Many had PhDs.'],
-  [b(80) + 0.06, b(89) - 0.08, '连大数学家埃尔德什也不信', 'Even the great mathematician Paul Erdős refused to believe it.'],
-  [b(89) + 0.06, S3_OUT - 0.2, '直到电脑模拟了[10万局]', 'Until a computer played 100,000 games.'],
+  [b(53.4), b(58) - 0.08, '1990年，玛丽莲：[换]', '1990: Marilyn vos Savant says: switch.'],
+  [b(58) + 0.06, b(63) - 0.08, '一万多封信：[你错了]', 'Over ten thousand letters said she was wrong.'],
+  [b(63) + 0.06, b(68) - 0.08, '不少还是[博士]写的', 'Many were from PhDs.'],
+  [b(68) + 0.06, b(73) - 0.08, '数学家埃尔德什也不信', 'Even Paul Erdős refused to believe it.'],
+  [b(73) + 0.06, S3_OUT - 0.2, '直到电脑跑了[10万局]', 'Until a computer played 100,000 games.'],
 ];
 const ENV = (() => { const r = mulberry(1990); return Array.from({ length: 420 }, () => ({ x: r(), d: r(), rot: r() - 0.5, phd: r() < 0.12, s: 0.7 + 0.5 * r() })); })();
 const MARILYN: Who = { name: '玛丽莲', hair: 'updo', hairColor: '#7a4a2a', shirt: '#7a3b4a' };
@@ -31,27 +31,27 @@ export const HistoryScene: React.FC<{ T: number }> = ({ T }) => {
   if (T < S3_IN - 0.05 || T > S3_OUT + 0.05) return null;
   const o = easeOut(prog(T, S3_IN, S3_IN + 0.6));
   // phases
-  const page = win(T, b(57), b(80.2), 0.5, 0.5);
-  const rain = prog(T, b(64.2), b(71.5));
-  const pile = 1 - prog(T, b(80), b(80.8));
-  const stamp = easeOut(prog(T, b(72.4), b(73)));
-  const erd = win(T, b(80.2), b(96.3), 0.5, 0.01);
-  const pc = easeOut(prog(T, b(89.2), b(90)));
-  const games = Math.round(100000 * easeInOut(prog(T, b(89.6), b(93.6))));
+  const page = win(T, b(53), b(68.2), 0.4, 0.4);
+  const rain = prog(T, b(58.2), b(62));
+  const pile = 1 - prog(T, b(67.6), b(68.2));
+  const stamp = easeOut(prog(T, b(63.1), b(63.4)));
+  const erd = win(T, b(68.2), b(80.3), 0.5, 0.01);
+  const pc = easeOut(prog(T, b(73.1), b(73.7)));
+  const games = Math.round(100000 * easeInOut(prog(T, b(73.3), b(76.4))));
   const swWins = Math.round(SIM100K.sw * (games / 100000));
   const stWins = games - swWins;
   // dive into the computer screen at the end
-  const dive = Math.pow(prog(T, b(94.6), S3_OUT), 2.2);
+  const dive = Math.pow(prog(T, b(78.6), S3_OUT), 2.2);
   const s = zlerp(1, 9, dive);
-  const count = Math.round(10000 * easeOut(prog(T, b(64.3), b(71))));
+  const count = Math.round(10000 * easeOut(prog(T, b(58.3), b(61.5))));
   return (
-    <AbsoluteFill style={{ backgroundColor: NIGHT, opacity: o }}>
+    <AbsoluteFill style={{ backgroundColor: NIGHT, opacity: o, transform: `translate(${16 * Math.exp(-(T - b(63.1)) * 6) * (T > b(63.1) ? 1 : 0) * Math.sin(T * 80)}px, 0px)` }}>
       <AbsoluteFill style={{ background: 'radial-gradient(ellipse 80% 70% at 50% 42%, #1b2136 0%, #070a14 72%)' }} />
       <svg width={1920} height={1080} style={{ position: 'absolute', inset: 0 }}>
         <g transform={`translate(960 470) scale(${s}) translate(-960 -470)`}>
           {/* the column */}
           {page > 0 && (
-            <g opacity={page} transform={`translate(${lerp(960, 640, easeInOut(prog(T, b(63.6), b(64.6))))} 470) rotate(-3) scale(${lerp(1, 0.78, easeInOut(prog(T, b(63.6), b(64.6))))})`}>
+            <g opacity={page} transform={`translate(${lerp(960, 640, easeInOut(prog(T, b(57.6), b(58.4))))} 470) rotate(-3) scale(${lerp(1, 0.78, easeInOut(prog(T, b(57.6), b(58.4))))})`}>
               <rect x={-360} y={-330} width={720} height={640} rx={6} fill="#f2ead8" />
               <text x={-320} y={-262} style={{ fontFamily: EN, fontWeight: 700, fontSize: 52, fill: '#2b2118' }}>Ask Marilyn</text>
               <text x={-320} y={-218} style={{ fontFamily: ZH, fontSize: 24, fill: '#6b5b3a' }}>《Parade》杂志专栏 · 1990年9月9日</text>
@@ -60,7 +60,7 @@ export const HistoryScene: React.FC<{ T: number }> = ({ T }) => {
               <text x={-320} y={-140} style={{ fontFamily: ZH, fontWeight: 700, fontSize: 28, fill: '#2b2118' }}>读者问：三扇门，选了一扇，</text>
               <text x={-320} y={-98} style={{ fontFamily: ZH, fontWeight: 700, fontSize: 28, fill: '#2b2118' }}>主持人开了一扇空门，要换吗？</text>
               {[0, 1, 2, 3].map((k) => <rect key={k} x={-320} y={-62 + k * 34} width={560 - k * 60} height={10} rx={5} fill="#d6ccb4" />)}
-              <rect x={-330} y={90} width={660} height={120} rx={10} fill="#f6cf78" opacity={0.35 * easeOut(prog(T, b(59), b(59.6)))} />
+              <rect x={-330} y={90} width={660} height={120} rx={10} fill="#f6cf78" opacity={0.35 * easeOut(prog(T, b(54.6), b(55.1)))} />
               <text x={-310} y={146} style={{ fontFamily: ZH, fontWeight: 900, fontSize: 44, fill: '#8a3b3b' }}>玛丽莲：应该换。</text>
               <text x={-310} y={192} style={{ fontFamily: ZH, fontSize: 26, fill: '#4a3d2a' }}>换，赢的机会是 2/3。</text>
             </g>
@@ -82,12 +82,12 @@ export const HistoryScene: React.FC<{ T: number }> = ({ T }) => {
             <g opacity={erd}>
               <g transform="translate(600 520)">
                 <circle r={170} fill="#1e2740" />
-                <Bust who={ERDOS} mood={T > b(91.5) ? 'worry' : 'shout'} r={92} />
+                <Bust who={ERDOS} mood={T > b(75.2) ? 'worry' : 'shout'} r={92} />
                 <text y={250} textAnchor="middle" style={{ fontFamily: ZH, fontWeight: 700, fontSize: 30, fill: CREAM }}>保罗·埃尔德什</text>
                 <text y={290} textAnchor="middle" style={{ fontFamily: ZH, fontSize: 22, fill: 'rgba(243,237,226,0.6)' }}>匈牙利数学家（示意画像）</text>
               </g>
-              {pop(T, b(81.5), 0.35) > 0 && T < b(89.2) && (
-                <g transform={`translate(760 300) scale(${Math.min(1, pop(T, b(81.5), 0.35))})`}>
+              {pop(T, b(68.8), 0.35) > 0 && T < b(73.1) && (
+                <g transform={`translate(760 300) scale(${Math.min(1, pop(T, b(68.8), 0.35))})`}>
                   <path d="M 0 60 L 30 10 L 70 10 Z" fill="#f6efe1" />
                   <rect x={-10} y={-90} width={300} height={104} rx={46} fill="#f6efe1" />
                   <text x={140} y={-22} textAnchor="middle" style={{ fontFamily: ZH, fontWeight: 900, fontSize: 52, fill: '#1d1c22' }}>不可能！</text>
@@ -111,10 +111,16 @@ export const HistoryScene: React.FC<{ T: number }> = ({ T }) => {
           )}
         </g>
       </svg>
+      {T > b(63.1) && T < b(68) && (() => {
+        const k = clamp((T - b(63.1)) / 0.18), sc = lerp(2.6, 1, easeOut(k)), out = 1 - prog(T, b(67.4), b(68));
+        return <div style={{ position: 'absolute', left: 0, right: 0, top: 330, textAlign: 'center', opacity: k * out, transform: `scale(${sc}) rotate(-12deg)` }}>
+          <span style={{ display: 'inline-block', padding: '10px 40px', border: '10px solid #d23a2f', borderRadius: 18, fontFamily: ZH, fontWeight: 900, fontSize: 150, color: '#d23a2f', background: 'rgba(239,230,208,0.08)' }}>你错了！</span>
+        </div>;
+      })()}
       <div style={{ position: 'absolute', inset: 0, background: '#0a1a10', opacity: prog(T, S3_OUT - 0.35, S3_OUT) }} />
-      <Chapter T={T} at={S3_IN + 0.5} out={b(80)} text="1990 · 一 万 多 封 信" />
-      <Chapter T={T} at={b(80.4)} out={S3_OUT - 0.5} text="1995 · 埃 尔 德 什" />
-      <Note T={T} at={b(89.6)} out={S3_OUT - 0.4} text="屏幕上为代码实时模拟的 10 万局　资料：CHANCE（美国统计学会）, Hoffman《The Man Who Loved Only Numbers》" />
+      <Chapter T={T} at={S3_IN + 0.5} out={b(68)} text="1990 · 一 万 多 封 信" />
+      <Chapter T={T} at={b(68.4)} out={S3_OUT - 0.5} text="1995 · 埃 尔 德 什" />
+      <Note T={T} at={b(73.3)} out={S3_OUT - 0.4} text="屏幕上为代码实时模拟的 10 万局　资料：CHANCE（美国统计学会）, Hoffman《The Man Who Loved Only Numbers》" />
       <SubBand o={0.85} />
       <Subs T={T} lines={LINES} />
       <Vignette strength={0.45} />

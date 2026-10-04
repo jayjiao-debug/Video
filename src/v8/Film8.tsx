@@ -22,7 +22,7 @@ export const Ep8Film: React.FC = () => {
       .map((f) => document.fonts.load(f, '0123换不换三门')).map((p) => p.catch(() => null))).then(() => { setReady(true); continueRender(handle); });
   }, [handle]);
   if (!ready) return null;
-  const markO = T < b(50) ? easeOut(prog(T, S2_IN + 1, S2_IN + 1.6)) * (1 - prog(T, b(50) - 0.3, b(50))) : easeOut(prog(T, S3_IN + 0.8, S3_IN + 1.4)) * (1 - prog(T, CARD8 - 0.3, CARD8 + 0.2));
+  const markO = T < b(48) ? easeOut(prog(T, S2_IN + 1, S2_IN + 1.6)) * (1 - prog(T, b(48) - 0.3, b(48))) : easeOut(prog(T, S3_IN + 0.8, S3_IN + 1.4)) * (1 - prog(T, CARD8 - 0.3, CARD8 + 0.2));
   return (
     <AbsoluteFill style={{ backgroundColor: '#070a14' }}>
       {T <= S1_OUT + 0.05 && <DormScene T={T} />}

@@ -10,15 +10,15 @@ import { Vignette, Grain } from '../ui';
 
 /* 3D stage. S2, b32 -> b57.4: three doors, the intuition, 2/3, a 1000-game simulation, the title.
    S4, b96 -> b124: a hundred doors. */
-export const S2_IN = b(32), S2_OUT = b(57.4), S4_IN = b(96), S4_OUT = b(124);
-const TITLE = b(50), FOV = 40;
+export const S2_IN = b(32), S2_OUT = b(53.4), S4_IN = b(80), S4_OUT = b(96.2);
+const TITLE = b(48), HIT = b(37), FOV = 40;
 const LINES: Line[] = [
-  [S2_IN + 0.12, b(40) - 0.08, '直觉说：剩两扇门，[五五开]', 'Intuition says: two doors left, fifty-fifty.'],
-  [b(40) + 0.06, TITLE - 0.1, '错。换，赢面是[2/3]', 'Wrong. Switch, and you win two times in three.'],
-  [S4_IN + 0.3, b(104) - 0.08, '换个想法：如果有100扇门', 'Think of it with 100 doors.'],
-  [b(104) + 0.06, b(111) - 0.08, '你选1扇，主持人打开98扇空门', 'You pick one. The host opens 98 empty ones.'],
-  [b(111) + 0.06, b(118) - 0.08, '剩下那扇，你还守着原来的吗？', 'Would you still keep your first door?'],
-  [b(118) + 0.06, S4_OUT - 0.15, '三扇门也一样：你那扇只有[1/3]', 'Same with three: your door is only 1 in 3.'],
+  [S2_IN + 0.12, HIT - 0.08, '直觉：[五五开]？', 'Intuition: fifty-fifty?'],
+  [HIT + 0.02, b(42) - 0.08, '错！换，赢面是[2/3]', 'Wrong! Switch, and you win two times in three.'],
+  [b(42) + 0.06, TITLE - 0.1, `模拟1000局：换的赢[${SIM1K.sw}]局`, `1,000 games: switching won ${SIM1K.sw}.`],
+  [S4_IN + 0.2, b(85) - 0.08, '换成100扇门试试', 'Try it with 100 doors.'],
+  [b(85) + 0.06, b(90) - 0.08, '主持人开掉98扇空门', 'The host opens 98 empty ones.'],
+  [b(90) + 0.06, S4_OUT - 0.15, '你还守着[1%]那扇？', 'Still keeping your 1% door?'],
 ];
 type V3 = [number, number, number];
 const DOORS3: V3[] = [[-3.2, 0, 0], [0, 0, 0], [3.2, 0, 0]];
@@ -28,15 +28,15 @@ const door100 = (i: number): V3 => [i * 1.5, 0, 0];
 /* camera for each moment (shared by the 3D view and the HTML labels) */
 const camAt = (T: number): { pos: V3; look: V3 } => {
   if (T < S4_IN - 0.5) {
-    const k = easeInOut(prog(T, S2_IN, b(35.6)));
+    const k = easeInOut(prog(T, S2_IN, b(34.5)));
     const pos: V3 = [lerp(-3.2, 0.6, k), lerp(2.0, 2.9, k), zlerp(1.25, 12.5, k)];
     const look: V3 = [lerp(-3.2, 0, k), lerp(2.0, 1.9, k), 0];
     const d = 0.25 * Math.sin((T - S2_IN) * 0.25);
     pos[0] += d;
     return { pos, look };
   }
-  const glide = easeInOut(prog(T, b(111.2), b(114.6)));
-  const intro = easeOut(prog(T, S4_IN, b(99)));
+  const glide = easeInOut(prog(T, b(89.4), b(91.6)));
+  const intro = easeOut(prog(T, S4_IN, b(82)));
   const k73 = door100(KEEP)[0];
   const pos: V3 = [lerp(lerp(-6, 1, intro), k73 - 6, glide), lerp(lerp(3.4, 2.5, intro), 2.1, glide), lerp(lerp(8.5, 11, intro), 5.4, glide)];
   const look: V3 = [lerp(lerp(26, 21, intro), k73 + 4, glide), lerp(0.9, 0.75, glide), lerp(lerp(-2.5, 0, intro), -1.5, glide)];
@@ -75,8 +75,8 @@ const Scene: React.FC<{ T: number }> = ({ T }) => {
   camera.position.set(...pos); camera.lookAt(...look); (camera as THREE.PerspectiveCamera).near = 0.05; camera.updateProjectionMatrix();
   const s2 = T < S4_IN - 0.5;
   if (s2) {
-    const open3 = easeInOut(prog(T, b(34.2), b(35.4)));
-    const gold = (i: number) => (i === 0 ? 0.6 : i === 1 ? 0.9 * easeOut(prog(T, b(40.3), b(41))) : 0);
+    const open3 = easeInOut(prog(T, b(32.6), b(33.4)));
+    const gold = (i: number) => (i === 0 ? 0.6 : i === 1 ? 0.9 * easeOut(prog(T, HIT, HIT + 0.5)) : 0);
     return (
       <>
         <ambientLight intensity={0.28} color="#9aa6c4" />
@@ -85,21 +85,22 @@ const Scene: React.FC<{ T: number }> = ({ T }) => {
         <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, 0, 0]}><planeGeometry args={[60, 40, 30, 20]} /><meshStandardMaterial color="#0e1018" roughness={0.35} metalness={0.2} /></mesh>
         <mesh position={[0, 6, -0.4]}><planeGeometry args={[60, 14, 20, 6]} /><meshStandardMaterial color="#161a26" roughness={0.9} /></mesh>
         {DOORS3.map((p, i) => <Door key={i} at={p} open={i === 2 ? open3 : 0} gold={gold(i)} reveal={i === 2} />)}
+        {DOORS3.map((p, i) => <mesh key={`c${i}`} position={[p[0], 3.3, 1.0]}><coneGeometry args={[1.9, 6.6, 40, 1, true]} /><meshBasicMaterial color={i === 1 && T > HIT ? '#ffd27a' : '#ffe9c4'} transparent opacity={i === 1 && T > HIT ? 0.12 : 0.05} blending={THREE.AdditiveBlending} depthWrite={false} side={THREE.DoubleSide} /></mesh>)}
         {/* your pick: a gold ring on the floor */}
         <mesh rotation={[-Math.PI / 2, 0, 0]} position={[DOORS3[0][0], 0.012, 1.0]}><ringGeometry args={[0.9, 1.05, 48]} /><meshBasicMaterial color="#f1c56d" transparent opacity={0.85} /></mesh>
       </>
     );
   }
   // a hundred doors
-  const appear = (i: number) => easeOut(prog(T, S4_IN + 0.2 + i * 0.018, S4_IN + 0.6 + i * 0.018));
-  const openT = (i: number) => { const j = i - 1 - (i > KEEP ? 1 : 0); return b(104.6) + j * 0.03; };
+  const appear = (i: number) => easeOut(prog(T, S4_IN + 0.1 + i * 0.012, S4_IN + 0.4 + i * 0.012));
+  const openT = (i: number) => { const j = i - 1 - (i > KEEP ? 1 : 0); return b(85.2) + j * 0.014; };
   return (
     <>
       <ambientLight intensity={0.6} color="#a8b2cc" />
       <hemisphereLight args={['#c9d6f5', '#1a1f2c', 0.5]} />
       <directionalLight position={[-4, 9, 8]} intensity={0.9} color="#fff1d8" />
       {[0, 20, 40, 60, 80, 100, 120, 140].map((x) => <pointLight key={x} position={[x, 3.5, 3]} intensity={0.9} distance={14} color="#ffe2b0" />)}
-      <pointLight position={[door100(KEEP)[0], 4, 3]} intensity={1.6 * easeOut(prog(T, b(108), b(109)))} distance={10} color="#ffe2b0" />
+      <pointLight position={[door100(KEEP)[0], 4, 3]} intensity={1.6 * easeOut(prog(T, b(86.6), b(87.2)))} distance={10} color="#ffe2b0" />
       <mesh rotation={[-Math.PI / 2, 0, 0]} position={[70, 0, 0]}><planeGeometry args={[220, 60, 60, 20]} /><meshStandardMaterial color="#1a1f2c" roughness={0.4} metalness={0.15} /></mesh>
       <mesh position={[70, 4, -0.45]}><planeGeometry args={[220, 10, 40, 4]} /><meshStandardMaterial color="#2a3248" roughness={0.9} /></mesh>
       {Array.from({ length: N100 }, (_, i) => {
@@ -107,7 +108,7 @@ const Scene: React.FC<{ T: number }> = ({ T }) => {
         if (a <= 0) return null;
         const open = i === 0 || i === KEEP ? 0 : easeInOut(prog(T, openT(i), openT(i) + 0.35));
         const p = door100(i);
-        return <group key={i} scale={[1, Math.max(0.001, a), 1]}><Door at={p} w={1.0} h={2.1} open={open} inward gold={i === 0 ? 0.7 : i === KEEP ? 0.9 * easeOut(prog(T, b(108), b(109))) : 0} /></group>;
+        return <group key={i} scale={[1, Math.max(0.001, a), 1]}><Door at={p} w={1.0} h={2.1} open={open} inward gold={i === 0 ? 0.7 : i === KEEP ? 0.9 * easeOut(prog(T, b(86.6), b(87.2))) : 0} /></group>;
       })}
     </>
   );
@@ -117,8 +118,8 @@ export const StageScene: React.FC<{ T: number }> = ({ T }) => {
   const { width, height } = useVideoConfig();
   const inS2 = T >= S2_IN - 0.02 && T <= S2_OUT + 0.05, inS4 = T >= S4_IN - 0.05 && T <= S4_OUT + 0.05;
   if (!inS2 && !inS4) return null;
-  const o = inS2 ? Math.min(easeOut(prog(T, S2_IN - 0.02, S2_IN + 0.35)), 1 - prog(T, b(56.4), S2_OUT)) : Math.min(easeOut(prog(T, S4_IN - 0.05, S4_IN + 0.6)), 1 - prog(T, S4_OUT - 0.4, S4_OUT));
-  const dim = inS2 ? 1 - 0.6 * easeInOut(prog(T, TITLE - 0.1, TITLE + 0.6)) - 0.85 * easeInOut(prog(T, b(42.2), b(43))) * (1 - easeInOut(prog(T, TITLE - 0.2, TITLE))) : 1;
+  const o = inS2 ? Math.min(easeOut(prog(T, S2_IN - 0.02, S2_IN + 0.35)), 1 - prog(T, b(52.6), S2_OUT)) : Math.min(easeOut(prog(T, S4_IN - 0.05, S4_IN + 0.6)), 1 - prog(T, S4_OUT - 0.4, S4_OUT));
+  const dim = inS2 ? 1 - 0.6 * easeInOut(prog(T, TITLE - 0.1, TITLE + 0.6)) - 0.85 * easeInOut(prog(T, b(42), b(42.5))) * (1 - easeInOut(prog(T, TITLE - 0.2, TITLE))) : 1;
   const label = (p: V3, text: string, o2: number, gold = false, big = 64) => {
     if (o2 <= 0) return null;
     const q = project(T, p, width, height);
@@ -126,8 +127,8 @@ export const StageScene: React.FC<{ T: number }> = ({ T }) => {
     return <div style={{ position: 'absolute', left: q.x - 200, top: q.y - big, width: 400, textAlign: 'center', opacity: o2, fontFamily: EN, fontWeight: 700, fontSize: big, color: gold ? GOLD : CREAM, ...(gold ? GOLD_TEXT : { textShadow: '0 2px 12px rgba(0,0,0,0.9)' }) }}>{text}</div>;
   };
   // the 1000-game simulation panel
-  const simO = inS2 ? easeOut(prog(T, b(42.4), b(43.1))) * (1 - prog(T, TITLE - 0.3, TITLE)) : 0;
-  const fill = easeInOut(prog(T, b(43), b(48.4)));
+  const simO = inS2 ? easeOut(prog(T, b(42.1), b(42.6))) * (1 - prog(T, TITLE - 0.3, TITLE)) : 0;
+  const fill = easeInOut(prog(T, b(42.4), b(45.6)));
   const shown = Math.floor(1000 * fill);
   let stayW = 0, swW = 0;
   for (let i = 0; i < shown; i++) { stayW += SIM1K.games[i]; swW += 1 - SIM1K.games[i]; }
@@ -143,18 +144,21 @@ export const StageScene: React.FC<{ T: number }> = ({ T }) => {
     </g>
   );
   const tf = (T - TITLE) * 30;
+  const hitK = T > HIT && inS2 ? Math.exp(-(T - HIT) * 7) : 0;
+  const slamK = T > b(85.2) && inS4 ? Math.exp(-(T - b(85.2)) * 3) * (T < b(87) ? 1 : 0) : 0;
+  const shake = 16 * (hitK + 0.4 * slamK) * Math.sin(T * 75);
   return (
-    <AbsoluteFill style={{ backgroundColor: NIGHT, opacity: o }}>
+    <AbsoluteFill style={{ backgroundColor: NIGHT, opacity: o, transform: `translate(${shake}px, ${shake * 0.5}px)` }}>
       <AbsoluteFill style={{ opacity: dim }}>
         <ThreeCanvas width={width} height={height} gl={{ antialias: true, toneMapping: THREE.ACESFilmicToneMapping, toneMappingExposure: 1.0 }} camera={{ fov: FOV, near: 0.05, far: 500, position: [0, 2, 12] }}>
           <Scene T={T} />
         </ThreeCanvas>
       </AbsoluteFill>
-      {inS2 && T < b(43) && <>
-        {label([DOORS3[0][0], 4.9, 0], T < b(40.3) ? '50%？' : '1/3', easeOut(prog(T, b(36), b(36.6))) * (1 - 0.6 * prog(T, b(42.2), b(43))), false)}
-        {label([DOORS3[1][0], 4.9, 0], T < b(40.3) ? '50%？' : '2/3', easeOut(prog(T, b(36), b(36.6))) * (1 - 0.6 * prog(T, b(42.2), b(43))), T >= b(40.3))}
-        {label([DOORS3[0][0], -0.2, 1.3], '你选的', easeOut(prog(T, b(33), b(33.6))) * (1 - prog(T, b(42.2), b(43))), true, 30)}
-        {label([DOORS3[2][0], 2.4, 0.2], '空', easeOut(prog(T, b(35), b(35.6))) * (1 - prog(T, b(42.2), b(43))), false, 44)}
+      {inS2 && T < b(42.6) && <>
+        {label([DOORS3[0][0], 4.9, 0], T < HIT ? '50%？' : '1/3', easeOut(prog(T, b(33.5), b(34))) * (1 - prog(T, b(42), b(42.5))), false)}
+        {label([DOORS3[1][0], 4.9, 0], T < HIT ? '50%？' : '2/3', easeOut(prog(T, b(33.5), b(34))) * (1 - prog(T, b(42), b(42.5))), T >= HIT)}
+        {label([DOORS3[0][0], -0.2, 1.3], '你选的', easeOut(prog(T, b(32.8), b(33.3))) * (1 - prog(T, b(42), b(42.5))), true, 30)}
+        {label([DOORS3[2][0], 2.4, 0.2], '空', easeOut(prog(T, b(33.3), b(33.8))) * (1 - prog(T, b(42), b(42.5))), false, 44)}
       </>}
       {simO > 0 && (
         <svg width={1920} height={1080} style={{ position: 'absolute', inset: 0, opacity: simO }}>
@@ -163,20 +167,21 @@ export const StageScene: React.FC<{ T: number }> = ({ T }) => {
           {grid(1070, (i) => SIM1K.games[i] === 0, '每次都换', swW, true)}
         </svg>
       )}
-      {inS2 && <Chapter T={T} at={S2_IN + 0.6} out={b(42.2)} text="三 门 问 题" />}
+      {inS2 && <Chapter T={T} at={S2_IN + 0.6} out={b(42)} text="三 门 问 题" />}
       {inS2 && T >= TITLE - 0.05 && (
-        <svg width={1920} height={1080} style={{ position: 'absolute', inset: 0, opacity: 1 - prog(T, b(56.4), S2_OUT) }}>
+        <svg width={1920} height={1080} style={{ position: 'absolute', inset: 0, opacity: 1 - prog(T, b(52.6), S2_OUT) }}>
           <text x={960} y={400} textAnchor="middle" style={{ fontFamily: EN, fontWeight: 600, fontSize: 26, letterSpacing: '0.42em', fill: '#f1c56d' }} opacity={easeOut(prog(T, TITLE, TITLE + 0.5))}>THE MONTY HALL PROBLEM · 三 门 问 题</text>
           <GoldTitle text="换不换" f={tf} at={4} size={120} y={545} />
         </svg>
       )}
       {inS4 && <>
-        {label(door100(0).map((v, k) => (k === 1 ? 2.75 : v)) as V3, '1%', easeOut(prog(T, b(111.4), b(112))), false, 54)}
-        {label(door100(KEEP).map((v, k) => (k === 1 ? 2.75 : v)) as V3, '99%', easeOut(prog(T, b(112.6), b(113.2))), true, 64)}
-        {label(door100(0).map((v, k) => (k === 1 ? -0.25 : k === 2 ? 0.8 : v)) as V3, '你选的', easeOut(prog(T, b(98.5), b(99))) * (1 - prog(T, b(111), b(111.5))), true, 26)}
+        {label(door100(0).map((v, k) => (k === 1 ? 2.75 : v)) as V3, '1%', easeOut(prog(T, b(90.2), b(90.6))), false, 54)}
+        {label(door100(KEEP).map((v, k) => (k === 1 ? 2.75 : v)) as V3, '99%', easeOut(prog(T, b(90.8), b(91.2))), true, 64)}
+        {label(door100(0).map((v, k) => (k === 1 ? -0.25 : k === 2 ? 0.8 : v)) as V3, '你选的', easeOut(prog(T, b(81.5), b(82))) * (1 - prog(T, b(89.4), b(89.8))), true, 26)}
         <Chapter T={T} at={S4_IN + 0.4} out={S4_OUT - 0.3} text="换 个 想 法" />
-        <Note T={T} at={b(104.8)} out={S4_OUT - 0.2} text="主持人知道奖品在哪，只开空门" />
+        <Note T={T} at={b(85.2)} out={S4_OUT - 0.2} text="主持人知道奖品在哪，只开空门" />
       </>}
+      {hitK > 0.01 && <div style={{ position: 'absolute', inset: 0, background: '#fff6e0', opacity: 0.55 * hitK }} />}
       <SubBand o={0.85} />
       <Subs T={T} lines={LINES} />
       <Vignette strength={0.45} />

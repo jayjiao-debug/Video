@@ -5,13 +5,14 @@ import { Vignette, Grain } from '../ui';
 
 /* S5, b124 -> b159.6 (the build): pigeons learn to switch; people don't (Herbranson & Schroeder 2010). 2D.
    In the musical gap (b155 -> b159.6) the pigeon stops and looks at us. */
-export const S5_IN = b(124), S5_OUT = b(159.6);
-const GAP = b(155);
+export const S5_IN = b(96), S5_OUT = b(124);
+const GAP = b(119.2); // the bird turns to camera on the question
 const LINES: Line[] = [
-  [S5_IN + 0.15, b(131) - 0.08, '最离谱的是：[鸽子]都比人强', 'The strangest part: pigeons beat people.'],
-  [b(131) + 0.06, b(139) - 0.08, '2010年，科学家让鸽子玩这个游戏', '2010: scientists taught pigeons this game.'],
-  [b(139) + 0.06, b(147) - 0.08, '练了一个月，鸽子几乎[每次都换]', 'After a month, the pigeons switched almost every time.'],
-  [b(147) + 0.06, GAP + 0.3, '人玩了200局，还是常常[不换]', 'People, after 200 rounds, still often stayed.'],
+  [S5_IN + 0.15, b(101) - 0.08, '更离谱的是：[鸽子]', 'Stranger still: pigeons.'],
+  [b(101) + 0.06, b(107) - 0.08, '2010年，鸽子也来玩', '2010: scientists trained pigeons on this game.'],
+  [b(107) + 0.06, b(113) - 0.08, '一个月后，鸽子几乎[每次都换]', 'After a month, the pigeons switched almost every time.'],
+  [b(113) + 0.06, b(119) - 0.08, '人玩了200局，还是常常[不换]', 'People, after 200 rounds, still often stayed.'],
+  [b(119) + 0.06, S5_OUT - 0.2, '[为什么？]', 'Why?'],
 ];
 /* the pigeon faces left; peck in [0..1] pushes the head down to the key; look turns the head to camera */
 const Pigeon: React.FC<{ peck: number; look: number; blink: boolean }> = ({ peck, look, blink }) => {
@@ -50,22 +51,22 @@ const Pigeon: React.FC<{ peck: number; look: number; blink: boolean }> = ({ peck
 
 export const PigeonScene: React.FC<{ T: number }> = ({ T }) => {
   if (T < S5_IN - 0.05 || T > S5_OUT + 0.05) return null;
-  const o = Math.min(easeOut(prog(T, S5_IN - 0.05, S5_IN + 0.6)), 1);
+  const o = Math.min(easeOut(prog(T, S5_IN - 0.05, S5_IN + 0.5)), 1 - prog(T, S5_OUT - 0.3, S5_OUT));
   // time warp: the bird's own clock stops in the musical gap
-  const Tw = Math.min(T, GAP) + Math.max(0, Math.min(T, GAP + 0.6) - GAP) * 0.3;
+  const Tw = T;
   // trial loop (bird's own clock, ~2.3 s): keys light, one goes dark, peck the other
-  const cyc = 2.3, ph = ((Tw - S5_IN) % cyc + cyc) % cyc, round = Math.floor((Tw - S5_IN) / cyc);
+  const cyc = 1.7, ph = ((Tw - S5_IN) % cyc + cyc) % cyc, round = Math.floor((Tw - S5_IN) / cyc);
   const firstKey = round % 3, deadKey = (firstKey + 1 + (round % 2)) % 3, otherKey = 3 - firstKey - deadKey;
   const peckAt = (t: number) => Math.max(0, Math.sin(clamp((ph - t) / 0.28) * Math.PI));
-  const peck = Math.max(peckAt(0.35), peckAt(1.5));
-  const target = ph < 1.2 ? firstKey : otherKey;
-  const look = easeInOut(prog(T, GAP + 0.3, GAP + 0.9));
+  const peck = Math.max(peckAt(0.25), peckAt(1.1));
+  const target = ph < 0.9 ? firstKey : otherKey;
+  const look = easeInOut(prog(T, GAP, GAP + 0.4));
   const blink = Math.floor(Tw * 3.1) % 7 === 0;
   const keysX = [1180, 1320, 1460];
   // chart
-  const chartO = easeOut(prog(T, b(139.2), b(140))) * (1 - 0.4 * prog(T, GAP, GAP + 1));
-  const pig = easeInOut(prog(T, b(139.6), b(144)));
-  const hum = easeInOut(prog(T, b(147.3), b(151)));
+  const chartO = easeOut(prog(T, b(107), b(107.6))) * (1 - 0.5 * prog(T, GAP, GAP + 0.6));
+  const pig = easeInOut(prog(T, b(107.2), b(110.6)));
+  const hum = easeInOut(prog(T, b(113.2), b(116.4)));
   const X0 = 120, X1 = 860, Y0 = 640, Y1 = 230;
   const pigeonCurve = (d: number) => 0.36 + 0.6 * (1 - Math.exp(-d / 7)); // illustrative shape ending near "almost always"
   const humanCurve = (d: number) => 0.5 + 0.16 * (1 - Math.exp(-d / 6)); // illustrative, ends near two thirds
@@ -79,8 +80,8 @@ export const PigeonScene: React.FC<{ T: number }> = ({ T }) => {
           <rect x={1040} y={180} width={760} height={600} rx={20} fill="#222a3c" stroke="#3a445e" strokeWidth={6} />
           <rect x={1040} y={700} width={760} height={80} fill="#1a2030" />
           {keysX.map((x, i) => {
-            const on = ph < 0.9 ? 1 : i === deadKey ? 0.15 : 1;
-            const win2 = ph > 1.7 && i === otherKey;
+            const on = ph < 0.6 ? 1 : i === deadKey ? 0.15 : 1;
+            const win2 = ph > 1.3 && i === otherKey;
             return (
               <g key={i}>
                 <circle cx={x} cy={460} r={44} fill="#0f1420" />
@@ -91,7 +92,7 @@ export const PigeonScene: React.FC<{ T: number }> = ({ T }) => {
             );
           })}
           {/* food hopper flashes when the bird wins */}
-          <rect x={1370} y={620} width={140} height={50} rx={8} fill={ph > 1.75 ? '#f6cf78' : '#2c3448'} />
+          <rect x={1370} y={620} width={140} height={50} rx={8} fill={ph > 1.32 ? '#f6cf78' : '#2c3448'} />
           <g transform={`translate(${1650 - 18 * (target - 1)} 700) scale(1.15)`}><Pigeon peck={peck} look={look} blink={blink} /></g>
         </g>
         {/* the learning chart */}
@@ -112,8 +113,8 @@ export const PigeonScene: React.FC<{ T: number }> = ({ T }) => {
           </g>
         )}
       </svg>
-      <Chapter T={T} at={S5_IN + 0.4} out={GAP} text="2010 · 鸽 子 实 验" />
-      <Note T={T} at={b(131.5)} out={GAP + 0.5} text="Herbranson & Schroeder, Journal of Comparative Psychology, 2010　画面为示意" />
+      <Chapter T={T} at={S5_IN + 0.4} out={S5_OUT - 0.4} text="2010 · 鸽 子 实 验" />
+      <Note T={T} at={b(101.2)} out={S5_OUT - 0.3} text="Herbranson & Schroeder, Journal of Comparative Psychology, 2010　画面为示意" />
       <SubBand o={0.85} />
       <Subs T={T} lines={LINES} />
       <Vignette strength={0.45} />

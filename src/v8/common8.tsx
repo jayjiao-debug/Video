@@ -3,7 +3,7 @@ import { mulberry } from '../v1/data';
 import { b } from '../v6/ui6';
 
 /* 《换不换》 shared bits: the simulations (computed, not invented) and small props. */
-export const FILM_END8 = b(194) + 7.6;
+export const FILM_END8 = b(178) + 7.6;
 const sim = (n: number, seed: number) => {
   const r = mulberry(seed);
   let stay = 0;

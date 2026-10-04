@@ -8,17 +8,22 @@ import { Vignette, Grain } from '../ui';
 
 /* The dorm desk (2D). S1 cold open b16 -> b32; the ending b159.6 -> b194.
    阿杰 hides a red envelope under one of three cups. He knows where it is, always lifts an empty cup, and always asks. */
-export const S1_OUT = b(32), END_IN8 = b(159.6), CARD8 = b(194);
+export const S1_OUT = b(32), END_IN8 = b(123.8), CARD8 = b(178);
 const DESK_Y = 640, FLOOR = 860, CUPS = [760, 960, 1160], WIN = 1; // cup 2 (index 1) has the envelope
 const LINES: Line[] = [
-  [-0.4, b(22) - 0.08, '三个杯子，一个下面有红包', 'Three cups. One hides a red envelope.'],
-  [b(22) + 0.06, b(29.6), '阿杰翻开一个空杯：[换不换？]', 'A-Jie lifts an empty cup: switch or stay?'],
+  [-0.4, b(21.5) - 0.08, '三个杯子，一个下面有红包', 'Three cups. One hides a red envelope.'],
+  [b(21.5) + 0.06, b(27) - 0.08, '阿杰翻开一个空杯', 'A-Jie lifts an empty cup.'],
+  [b(27) + 0.06, b(31.5), '[你会换吗？]', 'Would you switch?'],
 ];
 const LINES_END: Line[] = [
-  [b(160) + 0.12, b(168) - 0.08, '鸽子不讲道理，它只看结果', "The pigeon doesn't argue. It just watches what wins."],
-  [b(168) + 0.06, b(176) - 0.08, '人却总舍不得[自己最初的选择]', "People can't let go of their first choice."],
-  [b(176) + 0.06, b(185) - 0.08, '下次有人问你：换不换？', 'Next time someone asks: switch or stay?'],
-  [b(185) + 0.06, CARD8 - 0.25, '先别急着守住[第一个选择]', "Don't rush to guard your first pick."],
+  [b(124) + 0.1, b(130) - 0.08, '鸽子只看结果', 'The pigeon only watches what wins.'],
+  [b(130) + 0.06, b(136) - 0.08, '人却舍不得[第一个选择]', "People can't let go of their first pick."],
+  [b(136) + 0.06, b(142) - 0.08, '怕换了，反而输', 'Afraid that switching will lose.'],
+  [b(142) + 0.06, b(149) - 0.08, '可是数学，[不管你怕不怕]', "But the math doesn't care."],
+  [b(149) + 0.06, b(155) - 0.08, '小张咬咬牙……', 'Xiao Zhang grits his teeth...'],
+  [b(161.4), b(166) - 0.08, '[换！]红包到手', 'Switch! The envelope is his.'],
+  [b(166) + 0.06, b(172) - 0.08, '下次有人问你：换不换？', 'Next time someone asks: switch or stay?'],
+  [b(172) + 0.06, CARD8 - 0.25, '记住[三分之二]', 'Remember: two in three.'],
 ];
 const Say: React.FC<{ x: number; y: number; text: string; o: number; flip?: boolean }> = ({ x, y, text, o, flip }) => {
   if (o <= 0) return null;
@@ -68,31 +73,41 @@ const Desk: React.FC = () => (
 );
 export const DormScene: React.FC<{ T: number; end?: boolean }> = ({ T, end }) => {
   // pick marker: cup 1, then (ending) moves to cup 2
-  const moveK = end ? easeInOut(prog(T, b(170.2), b(171))) : 0;
+  const moveK = end ? easeInOut(prog(T, b(160.1), b(160.6))) : 0;
   const markX = lerp(CUPS[0], CUPS[1], moveK);
-  const lift3 = easeOut(prog(T, end ? -1 : b(22.2), end ? 0 : b(22.9)));      // cup 3 lifted (and stays lifted in the ending)
-  const lift2 = end ? easeOut(prog(T, b(172), b(172.7))) : 0;
-  const found = end ? easeOut(prog(T, b(172.4), b(173))) : 0;
-  const ask = end ? 0 : pop(T, b(23), 0.35) * (1 - prog(T, b(29), b(29.4)));
-  const hey = end ? pop(T, b(170.4), 0.35) * (1 - prog(T, b(174), b(174.5))) : 0;
-  const rule = end ? 0 : Math.min(easeOut(prog(T, b(18.8), b(19.4))), 1 - prog(T, b(29), b(29.4)));
-  const ajMood: Mood = end ? (T > b(172.6) ? 'shout' : 'smug') : 'smug';
-  const zhMood: Mood = end ? (T > b(172.6) ? 'laugh' : 'worry') : 'worry';
+  const lift3 = easeOut(prog(T, end ? -1 : b(21.6), end ? 0 : b(22.2)));      // cup 3 lifted (and stays lifted in the ending)
+  const lift2 = end ? easeOut(prog(T, b(160.8), b(161.3))) : 0;
+  const found = end ? easeOut(prog(T, b(161), b(161.5))) : 0;
+  const ask = end ? 0 : pop(T, b(22.4), 0.3) * (1 - prog(T, b(26.8), b(27.1)));
+  const hey = end ? pop(T, b(159.7), 0.25) * (1 - prog(T, b(163), b(163.5))) : 0;
+  const rule = end ? 0 : Math.min(easeOut(prog(T, b(17.2), b(17.7))), 1 - prog(T, b(26.8), b(27.1)));
+  const ajMood: Mood = end ? (T > b(161.2) ? 'shout' : 'smug') : 'smug';
+  const zhMood: Mood = end ? (T > b(161.2) ? 'laugh' : T > b(159.6) ? 'shout' : 'worry') : 'worry';
   // camera
   let s = 1.14, fx = 930, fy = 540;
   if (!end) {
+    // reaction beat: snap onto 小张's face, then dive into cup 1
+    const r = easeOut(prog(T, b(27), b(27.35))) * (1 - easeInOut(prog(T, b(29.2), b(29.9))));
+    s = zlerp(1.14, 2.4, r); fx = lerp(930, 340, r); fy = lerp(540, 560, r);
     const p = prog(T, b(29.4), S1_OUT);
     if (p > 0) { const e = Math.pow(p, 2.2); s = zlerp(1.14, 22, e); fx = lerp(930, CUPS[0], easeInOut(Math.min(1, p * 1.4))); fy = lerp(540, DESK_Y - 80, easeInOut(Math.min(1, p * 1.4))); }
   } else {
-    const k = easeInOut(prog(T, b(165.8), b(168.6)));
-    s = zlerp(2.6, 1.14, k); fx = lerp(360, 930, k); fy = lerp(560, 540, k);
-    s *= 1 + 0.06 * easeInOut(prog(T, b(176), CARD8));
+    // close on 小张 -> pull back to the table -> slow push on him (tension) -> freeze in the gap -> wide on the drop
+    const k1 = easeInOut(prog(T, b(136), b(138)));
+    const k2 = easeInOut(prog(T, b(149), b(155)));
+    const k3 = easeOut(prog(T, b(159.6), b(160.2)));
+    s = zlerp(zlerp(zlerp(2.6, 1.14, k1), 2.9, k2), 1.14, k3); fx = lerp(lerp(lerp(360, 930, k1), 340, k2), 930, k3); fy = lerp(lerp(lerp(560, 540, k1), 560, k2), 540, k3);
+    s *= 1 + 0.05 * easeInOut(prog(T, b(162), CARD8));
   }
   const white = end ? 0 : prog(T, S1_OUT - 0.2, S1_OUT);
+  const shakeA = end ? Math.exp(-(T - b(161.2)) * 6) * (T > b(161.2) ? 1 : 0) : Math.exp(-(T - b(27)) * 7) * (T > b(27) ? 1 : 0);
+  const shake = 14 * shakeA * Math.sin(T * 70);
+  const sweat = end ? (T > b(149) && T < b(159.6) ? 1 : 0) : (T > b(27.1) && T < b(29.3) ? 1 : 0);
+  const confetti = end ? prog(T, b(161.2), b(161.2) + 2.2) : 0;
   return (
     <AbsoluteFill style={{ backgroundColor: NIGHT }}>
       <svg width={1920} height={1080} style={{ position: 'absolute', inset: 0 }}>
-        <g transform={`translate(960 540) scale(${s}) translate(${-fx} ${-fy})`}>
+        <g transform={`translate(${960 + shake} ${540 + shake * 0.6}) scale(${s}) translate(${-fx} ${-fy})`}>
           <Room T={T} />
           {/* 阿杰 behind the desk */}
           <g transform={`translate(1290 ${FLOOR})`}><Standing who={CAST[2]} mood={ajMood} /></g>
@@ -116,8 +131,14 @@ export const DormScene: React.FC<{ T: number; end?: boolean }> = ({ T, end }) =>
             <rect x={-60} y={-128} width={120} height={18} rx={6} fill="#4a3a2c" /><rect x={-50} y={-110} width={12} height={110} fill="#3a2c20" /><rect x={38} y={-110} width={12} height={110} fill="#3a2c20" />
             <Seated who={CAST[0]} mood={zhMood} lx={8} ly={2} />
           </g>
+          {sweat > 0 && <path d={`M ${392} ${515 + ((T * 70) % 34)} q 9 15 0 24 q -9 -9 0 -24 Z`} fill="#9fd0ff" opacity={0.9} />}
+          {confetti > 0 && confetti < 1 && Array.from({ length: 46 }, (_, i) => {
+            const a = (i * 137.5) % 360, sp = 260 + (i * 53) % 240, g = confetti;
+            const x = CUPS[WIN] + Math.cos((a * Math.PI) / 180) * sp * g, y = DESK_Y - 120 + Math.sin((a * Math.PI) / 180) * sp * g * 0.8 + 600 * g * g;
+            return <rect key={i} x={x} y={y} width={14} height={8} rx={2} fill={['#f6cf78', '#c8302c', '#f3ede2', '#7d9fd8'][i % 4]} transform={`rotate(${a + g * 700} ${x} ${y})`} opacity={1 - g * 0.6} />;
+          })}
           <Say x={1220} y={420} text="换不换？" o={ask} flip />
-          <Say x={420} y={330} text="换！" o={hey} />
+          <g transform={`translate(${420} ${330}) scale(1.5) translate(${-420} ${-330})`}><Say x={420} y={330} text="换！" o={hey} /></g>
         </g>
       </svg>
       {rule > 0 && (
