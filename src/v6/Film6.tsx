@@ -12,8 +12,8 @@ import { S7End, S7_IN, END_IN } from './S7End';
 export const EP6_FRAMES = FILM_FRAMES;
 export const EP6_SCENES: [string, number][] = [
   ['S1_凌晨一点', 0], ['S2_7亿人的关系网', Math.round(S2_IN * 30)], ['S3_宿舍6个人', Math.round(S3_IN * 30)],
-  ['S4_被数的次数', Math.round(S4_IN * 30)], ['S5_哈佛甲流', Math.round(S5_IN * 30)], ['S6_朋友圈', Math.round(S6_IN * 30)],
-  ['S7_结尾与片尾', Math.round(S7_IN * 30)],
+  ['S4_被数的次数', Math.round(S4_IN * 30)], ['S5_朋友圈', Math.round(S6_IN * 30)],
+  ['S6_结尾与片尾', Math.round(S7_IN * 30)],
 ];
 export const Ep6Film: React.FC = () => {
   const frame = useCurrentFrame();

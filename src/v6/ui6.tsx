@@ -9,7 +9,7 @@ export const b = (i: number) => {
   const k = Math.floor(i), f = i - k;
   return beats[k] - MUSIC_START + f * (beats[k + 1] - beats[k]);
 };
-export const FILM_END = 130.5 - MUSIC_START; // 121.955 s
+export const FILM_END = b(194) + 7.6; // short cut: end card from b194, film ends ~97.7 s
 export const FILM_FRAMES = Math.round(FILM_END * 30);
 export const D = data as any;
 export { prog, easeOut, easeInOut, lerp, clamp, ZH, EN };

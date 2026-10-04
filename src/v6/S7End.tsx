@@ -9,13 +9,13 @@ import { JUNO } from '../brand/identity';
 import { Vignette, Grain } from '../ui';
 
 /* S7, b194 -> end: the whole dorm at 1 a.m.; 阿杰's phone shows 小张's photo; the punchline; the end card. */
-export const S7_IN = b(194), OTS_IN = b(210), OTS_OUT = b(220), END_IN = b(244);
+export const S7_IN = b(139), OTS_IN = b(160), OTS_OUT = b(170), END_IN = b(194);
 const LINES: Line[] = [
-  [S7_IN + 0.12, b(201) - 0.08, '你刷到的，不是平均的人生', "What you scroll past isn't the average life."],
-  [b(201) + 0.06, b(208) - 0.08, '是网里[最亮的那几个人]', "It's the brightest few in the network."],
-  [b(208) + 0.06, b(218) - 0.1, '你晒的合照，也有人在[羡慕]', 'Someone out there is envying your group photo, too.'],
-  [b(220) + 0.06, b(230) - 0.1, '不是你不行，是[数学在偏心]', "It's not you. The math is biased."],
-  [b(230) + 0.06, END_IN - 0.2, '你朋友圈里，谁出现得最多？', 'Who shows up most in your feed?'],
+  [S7_IN + 0.12, b(146) - 0.08, '你刷到的，不是平均的人生', "What you scroll past isn't the average life."],
+  [b(146) + 0.06, b(153) - 0.08, '是网里[最亮的那几个人]', "It's the brightest few in the network."],
+  [OTS_IN + 0.1, b(168) - 0.1, '你晒的合照，也有人在[羡慕]', 'Someone out there is envying your group photo, too.'],
+  [b(170) + 0.06, b(180) - 0.1, '不是你不行，是[数学在偏心]', "It's not you. The math is biased."],
+  [b(180) + 0.06, END_IN - 0.2, '你朋友圈里，谁出现得最多？', 'Who shows up most in your feed?'],
 ];
 /* beds: three bunks; seat i -> [bed, deck] */
 const BED_X = [70, 690, 1310], DECK = [380, 690];
@@ -95,14 +95,14 @@ const Bunks: React.FC = () => (
 const wideCam = (T: number) => {
   const [hx, hy] = headAt(0);
   if (T < OTS_IN) {
-    const k = easeInOut(prog(T, S7_IN, b(200)));
+    const k = easeInOut(prog(T, S7_IN, b(145)));
     let s = zlerp(2.5, 1.0, k), fx = lerp(hx + 70, 960, k), fy = lerp(hy - 20, 540, k);
     const [ax, ay] = headAt(2);
-    const p = Math.pow(prog(T, b(208.2), OTS_IN), 1.6);
+    const p = Math.pow(prog(T, b(153.2), OTS_IN), 1.6);
     if (p > 0) { s = zlerp(1, 2.6, p); fx = lerp(960, ax + 90, p); fy = lerp(540, ay - 30, p); }
     return { s, fx, fy };
   }
-  const k = easeInOut(prog(T, OTS_OUT, b(240)));
+  const k = easeInOut(prog(T, OTS_OUT, b(190)));
   return { s: zlerp(1.7, 2.3, k), fx: hx + 80, fy: hy + 10 };
 };
 
@@ -112,9 +112,9 @@ export const S7End: React.FC<{ T: number }> = ({ T }) => {
   if (T < S7_IN - 0.02) return null;
   const ots = T >= OTS_IN && T < OTS_OUT;
   const { s, fx, fy } = wideCam(T);
-  const netO = win(T, b(201.4), b(208.4), 0.6, 0.5);
-  const zhPhone = 1 - easeInOut(prog(T, b(224), b(225.4)));
-  const zhMood: Mood = T > b(223) ? 'calm' : 'worry';
+  const netO = win(T, b(146.4), b(153.4), 0.6, 0.5);
+  const zhPhone = 1 - easeInOut(prog(T, b(174), b(175.4)));
+  const zhMood: Mood = T > b(173) ? 'calm' : 'worry';
   const t = T - END_IN;
   const f = t * 30;
   const card = easeInOut(prog(t, 0, 0.8));
@@ -128,12 +128,12 @@ export const S7End: React.FC<{ T: number }> = ({ T }) => {
             <rect x={-400} y={-300} width={2720} height={1700} fill="#0b101d" />
             <rect x={-400} y={800} width={2720} height={600} fill="#090d18" />
             <Bunks />
-            {[0, 1, 2, 3, 4, 5].map((i) => <Lying key={i} i={i} T={T} mood={i === 0 ? zhMood : 'worry'} phone={i === 0 ? zhPhone : 1} asleep={i === 1} doze={i === 0 ? easeOut(prog(T, b(227), b(227.6))) : 0} />)}
+            {[0, 1, 2, 3, 4, 5].map((i) => <Lying key={i} i={i} T={T} mood={i === 0 ? zhMood : 'worry'} phone={i === 0 ? zhPhone : 1} asleep={i === 1} doze={i === 0 ? easeOut(prog(T, b(177), b(177.6))) : 0} />)}
             {netO > 0 && (
               <g opacity={netO}>
                 {(D.dorm.edges as number[][]).map(([u, v], k) => {
                   const [x1, y1] = headAt(u), [x2, y2] = headAt(v);
-                  const d = easeOut(prog(T, b(201.4) + k * 0.08, b(201.4) + k * 0.08 + 0.35));
+                  const d = easeOut(prog(T, b(146.4) + k * 0.08, b(146.4) + k * 0.08 + 0.35));
                   const hub = u === 1 || v === 1;
                   return <line key={k} x1={x1} y1={y1} x2={lerp(x1, x2, d)} y2={lerp(y1, y2, d)} stroke={hub ? GOLD : '#c9d6f5'} strokeWidth={hub ? 4 : 3} opacity={hub ? 0.8 : 0.45} />;
                 })}
@@ -148,7 +148,6 @@ export const S7End: React.FC<{ T: number }> = ({ T }) => {
           <g transform={`translate(960 540) scale(${1.04 + 0.04 * prog(T, OTS_IN, OTS_OUT)}) translate(-990 -540)`}>
             <Room T={T} />
             <ellipse cx={1060} cy={470} rx={520} ry={420} fill="#5f86d8" opacity={0.1} />
-            <HandBack hood="#3f5a44" />
             <g transform={`translate(${PX} ${PY}) scale(${PK})`}>
               <Phone id="s7" glow={1.1}>
                 <Feed posts={[POST_ZH, { who: 1, text: '烧烤局，下次还约', n: 14, bg: '#8a4a3a', likes: 95, seed: 15 }]} scroll={300 - 40 * easeOut(prog(T, OTS_IN, OTS_IN + 1.2))} me={2} meMood="worry" id="s7f" />
@@ -163,7 +162,7 @@ export const S7End: React.FC<{ T: number }> = ({ T }) => {
         <svg width={1920} height={1080} style={{ position: 'absolute', inset: 0 }}>
           <rect width={1920} height={1080} fill="#05060b" opacity={0.84 * card} />
           <text x={960} y={250} textAnchor="middle" style={{ fontFamily: EN, fontWeight: 600, fontSize: 24, letterSpacing: '0.42em', fill: '#f1c56d' }} opacity={o(0.2)}>THE FRIENDSHIP PARADOX · 朋友悖论</text>
-          <GoldTitle text="朋友圈里，好像只有我过得不好" f={f} at={8} size={76} y={390} />
+          <GoldTitle text="人缘这道题" f={f} at={8} size={104} y={390} />
           <g transform="translate(960 478)" opacity={o(0.9)}>
             {(D.dorm.edges as number[][]).map(([u, v], k) => {
               const P = [[-90, 10], [0, -22], [-150, -18], [110, -20], [150, 16], [40, 26]];
@@ -171,8 +170,8 @@ export const S7End: React.FC<{ T: number }> = ({ T }) => {
             })}
             {[[-90, 10], [0, -22], [-150, -18], [110, -20], [150, 16], [40, 26]].map(([x, y], i) => <circle key={i} cx={x} cy={y} r={i === 1 ? 12 : 7} fill={i === 1 ? GOLD : BLUE} />)}
           </g>
-          <text x={960} y={590} textAnchor="middle" style={{ fontFamily: ZH, fontWeight: 700, fontSize: 46, fill: CREAM, letterSpacing: '0.06em' }} opacity={o(1.4)}>也觉得只有自己过得不好的，扣 1</text>
-          <text x={960} y={640} textAnchor="middle" style={{ fontFamily: ZH, fontSize: 26, fill: 'rgba(243,237,226,0.6)', letterSpacing: '0.1em' }} opacity={o(1.8)}>评论区说说：你朋友圈里，谁出现得最多？</text>
+          <text x={960} y={590} textAnchor="middle" style={{ fontFamily: ZH, fontWeight: 700, fontSize: 46, fill: CREAM, letterSpacing: '0.06em' }} opacity={o(1.4)}>评论区 @ 一下你身边的“老王”</text>
+          <text x={960} y={640} textAnchor="middle" style={{ fontFamily: ZH, fontSize: 26, fill: 'rgba(243,237,226,0.6)', letterSpacing: '0.1em' }} opacity={o(1.8)}>觉得自己人缘差的，扣 1</text>
           <g opacity={o(2.3)}>
             <rect x={960 - 330} y={690} width={660} height={56} rx={28} fill="none" stroke="#f1c56d" strokeOpacity={0.6} />
             <text x={960} y={727} textAnchor="middle" style={{ fontFamily: ZH, fontWeight: 500, fontSize: 26, letterSpacing: '0.2em', fill: '#f1c56d' }}>{JUNO.follow}</text>
@@ -185,7 +184,7 @@ export const S7End: React.FC<{ T: number }> = ({ T }) => {
           <rect width={1920} height={1080} fill="#000" opacity={black} />
         </svg>
       )}
-      {!ots && t < 0.8 && <div style={{ position: 'absolute', inset: 0, background: '#03040a', opacity: 0.3 * easeInOut(prog(T, b(226), b(232))) }} />}
+      {!ots && t < 0.8 && <div style={{ position: 'absolute', inset: 0, background: '#03040a', opacity: 0.3 * easeInOut(prog(T, b(176), b(182))) }} />}
       <Chapter T={T} at={OTS_IN + 0.2} out={OTS_OUT} text="阿 杰 的 手 机 · 凌 晨 1:12" />
       {t < 0 && <SubBand o={0.85} />}
       <Subs T={T} lines={LINES} />

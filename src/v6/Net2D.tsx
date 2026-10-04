@@ -7,7 +7,7 @@ import { Vignette, Grain } from '../ui';
 
 /* S3 b57 -> b96: the dorm network. S4 b96 -> b129: who gets counted, Feld 1991, pull back to a big network.
    S5 b129 -> b160: Harvard 2009 flu on the same network. 2D, every frame a pure function of T. */
-export const S3_IN = b(56.6), S4_IN = b(96), S5_IN = b(129), S5_OUT = b(160);
+export const S3_IN = b(56.6), S4_IN = b(96), S5_IN = b(114), S5_OUT = b(122.6);
 const LINES: Line[] = [
   [b(57.4), b(64) - 0.08, '小张以为，是自己{人缘太差}', "Xiao Zhang thought he just wasn't likeable."],
   [b(64) + 0.06, b(72) - 0.08, '其实，他只是输给了一道[算术题]', 'Actually, he lost to a piece of arithmetic.'],
@@ -16,12 +16,7 @@ const LINES: Line[] = [
   [b(89) + 0.06, b(96) - 0.08, '6个人里，[5个]不如朋友热闹', 'Five of the six have fewer friends than their friends.'],
   [b(97) + 0.06, b(107) - 0.08, '因为老王朋友最多，他出现在[5个人]的列表里', "Lao Wang has the most friends, so he's on five lists."],
   [b(107) + 0.06, b(114) - 0.08, '人缘越好，[被数的次数越多]', "The more friends you have, the more often you're counted."],
-  [b(114) + 0.06, b(121) - 0.08, '社会学家费尔德证明了', 'The sociologist Scott Feld proved it.'],
-  [b(121) + 0.06, b(129) - 0.08, '只要朋友有多有少，就[一定成立]', 'As long as some have more friends than others, it always holds.'],
-  [b(129) + 0.06, b(136) - 0.08, '哈佛甲流期间，盯住两组学生', 'During the 2009 flu, Harvard watched two groups of students.'],
-  [b(136) + 0.06, b(144) - 0.08, '一组随机抽，一组是他们的朋友', 'One picked at random. One made of their friends.'],
-  [b(144) + 0.06, b(151) - 0.08, '朋友组，早了[两周]得流感', 'The friends caught the flu two weeks earlier.'],
-  [b(151) + 0.06, b(159.2), '人缘好的人，离病毒更近', 'Popular people sit closer to the virus.'],
+  [b(114) + 0.06, b(122) - 0.1, '只要朋友有多有少，就[一定成立]', 'As long as some have more friends than others, it always holds.'],
 ];
 const DM = D.dorm, BG = D.big;
 const NB: number = BG.d.length;
@@ -53,14 +48,14 @@ const MAXDIST = Math.max(...DIST);
 
 /* camera: scale s about focus (fx, fy), focus drawn at (960, ay) */
 const cam = (T: number) => {
-  const k = easeInOut(prog(T, b(121.3), b(126.5)));
+  const k = easeInOut(prog(T, b(114.6), b(119.6)));
   let s = zlerp(1, 0.33, k), fx = lerp(DC[0], BB.cx, k), fy = lerp(DC[1] + 30, BB.cy, k), ay = lerp(470, 440, k);
   s *= 1 + 0.03 * prog(T, S3_IN, b(96)); // a slow push while the dorm is explained
   const m = easeInOut(prog(T, b(129.2), b(131)));
   s *= 1 + 0.06 * m;
   // flu chart: the network slides left
   const ch = easeInOut(prog(T, b(144.1), b(145.3))) * (1 - easeInOut(prog(T, b(150.6), b(151.8))));
-  const paperShift = easeInOut(prog(T, b(114), b(115.5))) * (1 - easeInOut(prog(T, b(121.3), b(124))));
+  const paperShift = 0;
   return { s: s * (1 - 0.22 * ch), fx, fy, ay, ax: 960 - 470 * ch - 240 * paperShift };
 };
 
@@ -77,11 +72,11 @@ export const Net2D: React.FC<{ T: number }> = ({ T }) => {
   const fadeIn = easeOut(prog(T, S3_IN, S3_IN + 0.8));
   // phases
   const spot = easeInOut(prog(T, b(57.3), b(58))) * (1 - easeInOut(prog(T, b(64), b(64.8))));
-  const cards = easeInOut(prog(T, b(97.1), b(98.6))) * (1 - easeInOut(prog(T, b(114.1), b(115.6))));
+  const cards = easeInOut(prog(T, b(97.1), b(98.6))) * (1 - easeInOut(prog(T, b(113.9), b(115.1))));
   const anon = easeInOut(prog(T, b(129.2), b(130.4))); // dorm avatars become ordinary students
-  const big = (i: number) => (i < 6 ? 1 : easeOut(prog(T, b(121.6) + (DIST[i] / MAXDIST) * 3.2, b(121.6) + (DIST[i] / MAXDIST) * 3.2 + 0.5)));
+  const big = (i: number) => (i < 6 ? 1 : easeOut(prog(T, b(115) + (DIST[i] / MAXDIST) * 3.0, b(115) + (DIST[i] / MAXDIST) * 3.0 + 0.5)));
   const verdict = easeOut(prog(T, b(89.2), b(89.9)));
-  const bigColour = easeOut(prog(T, b(124.5), b(126)));
+  const bigColour = easeOut(prog(T, b(118.2), b(119.6)));
   // flu
   const sampleK = easeOut(prog(T, b(136.3), b(136.9)));
   const friendK = easeOut(prog(T, b(139.6), b(140.3)));
@@ -95,7 +90,7 @@ export const Net2D: React.FC<{ T: number }> = ({ T }) => {
   const nodeR = (i: number) => (i < 6 ? 0 : (4 + 2.1 * Math.sqrt(BG.d[i])));
 
   /* ---- big network (world -> screen manually so stroke widths stay in px) ---- */
-  const bigLayer = T > b(121.4) ? (
+  const bigLayer = T > b(114.8) ? (
     <g>
       {BG.e.map(([u, v]: number[], k: number) => {
         const o = Math.min(big(u), big(v));
@@ -172,7 +167,7 @@ export const Net2D: React.FC<{ T: number }> = ({ T }) => {
   const deg: number[] = DM.deg, favg: number[] = DM.favg;
   const cardsOff = 1 - cards;
   const countLayer = (
-    <g opacity={cardsOff * (1 - prog(T, b(121.3), b(122.3)))}>
+    <g opacity={cardsOff * (1 - prog(T, b(114.6), b(115.6)))}>
       {DP.map(([x, y], i) => {
         const [X, Y] = scr(x, y);
         const at = i === 0 ? b(80.3) : (i === 1 || i === 2) ? b(81.2) : b(89.2);
@@ -295,14 +290,13 @@ export const Net2D: React.FC<{ T: number }> = ({ T }) => {
   })() : null;
 
   return (
-    <AbsoluteFill style={{ backgroundColor: NIGHT, opacity: fadeIn }}>
+    <AbsoluteFill style={{ backgroundColor: NIGHT, opacity: fadeIn * (1 - prog(T, b(121.8), S5_OUT)) }}>
       <AbsoluteFill style={{ background: 'radial-gradient(ellipse 80% 70% at 50% 42%, #141c34 0%, #070a14 72%)' }} />
       <svg width={1920} height={1080} style={{ position: "absolute", inset: 0 }}>
         {bigLayer}
         {dormLayer}
         {countLayer}
         {cardLayer}
-        {paper}
         {sampleK > 0 && (
           <g opacity={win(T, b(136.3), b(144.2), 0.4, 0.4)} transform="translate(1500 130)">
             <rect x={-30} y={-40} width={390} height={friendK > 0 ? 136 : 76} rx={14} fill="rgba(7,10,20,0.8)" />
@@ -322,13 +316,9 @@ export const Net2D: React.FC<{ T: number }> = ({ T }) => {
         })()}
       </svg>
       <Chapter T={T} at={S3_IN + 0.5} out={b(96)} text="宿 舍 · 6 个 人" />
-      <Chapter T={T} at={b(114.3)} out={b(129)} text="1991 · 费 尔 德" />
-      <Chapter T={T} at={b(129.3)} out={b(155)} text="2009 · 哈 佛 · 甲 流" />
       <Stat T={T} at={b(90)} out={b(96.4)} top={110} value={5} unit="/ 6" label="不如朋友们热闹" gold count={0.6} />
-      <Note T={T} at={b(72.5)} out={b(121)} text="示意：一间虚构的宿舍" />
-      <Note T={T} at={b(123)} out={b(129)} text="示意网络：金色 = 朋友比朋友们多　蓝色 = 比朋友们少" />
-      <Note T={T} at={b(144.5)} out={b(151)} x={64} y={1030} text="曲线为示意；14.7 天为医生确诊数据　Christakis & Fowler, PLoS ONE, 2010" />
-      <Note T={T} at={b(151.6)} out={b(157.6)} text="示意：红色 = 已感染" />
+      <Note T={T} at={b(72.5)} out={b(114.5)} text="示意：一间虚构的宿舍" />
+      <Note T={T} at={b(117.5)} out={b(122.4)} text="示意网络：金色 = 朋友比朋友们多　蓝色 = 比朋友们少" />
       <SubBand o={0.85} />
       <Subs T={T} lines={LINES} />
       <Vignette strength={0.45} />

@@ -1,18 +1,18 @@
 import React from 'react';
 import { AbsoluteFill } from 'remotion';
-import { b, D, prog, easeOut, easeInOut, lerp, clamp, win, Subs, SubBand, Chapter, Note, Line, CAST, Avatar, GOLD, BLUE, RED, CREAM, NIGHT, ZH, EN } from './ui6';
+import { b as b0, D, prog, easeOut, easeInOut, lerp, clamp, win, Subs, SubBand, Chapter, Note, Line, CAST, Avatar, GOLD, BLUE, RED, CREAM, NIGHT, ZH, EN } from './ui6';
 import { Phone, Feed, Post, PW, PH, flickScroll } from './Phone';
 import { mulberry } from '../v1/data';
 import { Mood } from '../v4/Why';
 import { Vignette, Grain } from '../ui';
 
 /* S6 drop 2, b160 -> b194: the same arithmetic in your feed; Twitter 2017, the happiness paradox. */
-export const S6_IN = b(160), S6_OUT = b(194);
+/* moved 38 beats earlier in the short cut: this scene's beat i plays at film beat i - 38 */
+const b = (i: number) => b0(i - 38);
+export const S6_IN = b(160), S6_OUT = b(177.2);
 const LINES: Line[] = [
   [S6_IN + 0.15, b(168) - 0.08, '同一道算术题，也在[你的朋友圈]里', 'The same arithmetic is in your feed.'],
-  [b(168) + 0.06, b(175) - 0.08, '朋友多的人，被[更多人]看见', 'People with many friends are seen by many more.'],
-  [b(176) + 0.06, b(183) - 0.08, '2017年，3.9万个Twitter用户', '2017: 39,000 Twitter users.'],
-  [b(184) + 0.06, S6_OUT - 0.1, '按发帖情绪算，[58.5%]的人没有朋友们开心', 'By the mood of their posts, 58.5% were less happy than their friends.'],
+  [b(168) + 0.06, S6_OUT - 0.15, '朋友多的人，被[更多人]看见', 'People with many friends are seen by many more.'],
 ];
 const FEED_B: Post[] = [
   { who: 1, text: '周五五排，冲！', n: 5, bg: '#2f5a6e', likes: 88, seed: 12 },
@@ -45,8 +45,8 @@ export const S6Feed: React.FC<{ T: number }> = ({ T }) => {
   if (T < S6_IN - 0.02 || T > S6_OUT + 0.05) return null;
   const red = 1 - easeOut(prog(T, S6_IN, S6_IN + 0.5));
   const scroll = flickScroll(T, [[S6_IN + 0.2, 380, 1.4], [b(171), 330, 1.2], [b(180), 360, 1.3], [b(188), 300, 1.2]], 290) + 14 * (T - S6_IN);
-  const netO = win(T, S6_IN + 0.3, b(176.2), 0.6, 0.5);
-  const dotsO = easeOut(prog(T, b(176.1), b(176.9)));
+  const netO = easeOut(prog(T, S6_IN + 0.3, S6_IN + 0.9));
+  const dotsO = 0;
   // signals along the edges: 老王 posts (to 5 friends), then 老李 (to 1)
   const signal = (who: number, at: number) => {
     const k = prog(T, at, at + 0.7);
@@ -62,7 +62,7 @@ export const S6Feed: React.FC<{ T: number }> = ({ T }) => {
   const lit = [...seen(1, b(168.4)), ...seen(5, b(171.6))];
   const recol = (i: number) => easeOut(prog(T, b(184.3) + ((i % COLS) / COLS) * 0.6, b(184.3) + ((i % COLS) / COLS) * 0.6 + 0.25));
   return (
-    <AbsoluteFill style={{ backgroundColor: NIGHT }}>
+    <AbsoluteFill style={{ backgroundColor: NIGHT, opacity: Math.min(easeOut(prog(T, S6_IN - 0.02, S6_IN + 0.5)), 1 - prog(T, S6_OUT - 0.35, S6_OUT)) }}>
       <AbsoluteFill style={{ background: 'radial-gradient(ellipse 80% 70% at 50% 42%, #141c34 0%, #070a14 72%)' }} />
       <svg width={1920} height={1080} style={{ position: "absolute", inset: 0 }}>
         <g transform={`translate(${PX} ${PY}) scale(${PK})`}>
@@ -121,9 +121,6 @@ export const S6Feed: React.FC<{ T: number }> = ({ T }) => {
           </g>
         )}
       </svg>
-      <div style={{ position: 'absolute', inset: 0, background: RED, opacity: 0.35 * red }} />
-      <Chapter T={T} at={b(176.3)} out={S6_OUT} text="2017 · TWITTER" />
-      <Note T={T} at={b(177)} out={S6_OUT} text="Bollen 等，《The happiness paradox: your friends are happier than you》，EPJ Data Science，2017" />
       <SubBand o={0.85} />
       <Subs T={T} lines={LINES} />
       <Vignette strength={0.45} />

@@ -12,7 +12,7 @@ const MINE: Post = { who: 0, text: '一个人吃了顿火锅', n: 1, bg: '#3a3f5
 export const PK = 0.82, PX = 1060 - (PW * PK) / 2, PY = 470 - (PH * PK) / 2; // phone in world px
 const AV = [PX + (SX + SW - 62) * PK, PY + (SY + 236) * PK]; // his own avatar on the header
 const LINES: Line[] = [
-  [-0.4, b(22) - 0.08, '好像只有我，过得不好', "It feels like I'm the only one not doing well."],
+  [-0.4, b(22) - 0.08, '好像谁的人缘，都比我好', 'Everyone seems more popular than me.'],
   [b(22) + 0.06, b(29.6), '你的朋友，真的[比你朋友多]', 'Your friends really do have more friends than you.'],
 ];
 /* the camera: scale s about focus (fx, fy) */
@@ -71,11 +71,6 @@ export const Shoulder: React.FC<{ T: number; thumbY: number; cap?: boolean; hood
       <path d="M 452 720 Q 600 676 750 720 L 748 742 Q 600 700 452 742 Z" fill="#0b0f18" />
       <path d="M 420 728 Q 380 744 372 770 Q 430 750 470 742 Z" fill="#0b0f18" />
     </g>}
-    {/* gripping fingers on the right edge and the thumb on the left edge (the palm is behind the phone) */}
-    {[0, 1, 2, 3].map((k) => (
-      <ellipse key={k} cx={PX + PW * PK + 4} cy={PY + PH * PK - 190 + k * 44} rx={17} ry={22} fill={SK} stroke={SKD} strokeWidth={3} />
-    ))}
-    <ellipse cx={PX - 6} cy={PY + PH * PK - 150 - thumbY} rx={19} ry={36} fill={SK} stroke={SKD} strokeWidth={3} transform={`rotate(-12 ${PX - 6} ${PY + PH * PK - 150 - thumbY})`} />
   </g>
 );
 export const S1Cold: React.FC<{ T: number }> = ({ T }) => {
@@ -96,7 +91,6 @@ export const S1Cold: React.FC<{ T: number }> = ({ T }) => {
           <Room T={T} />
           {/* screen light on the wall and his hood */}
           <ellipse cx={1060} cy={470} rx={520} ry={420} fill="#5f86d8" opacity={0.08 * glow} />
-          <HandBack />
           <g transform={`translate(${PX} ${PY}) scale(${PK})`}>
             <Phone id="s1" glow={glow}>
               <Feed posts={[MINE, ...FEED_A]} scroll={scroll} id="s1f" />

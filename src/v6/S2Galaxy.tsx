@@ -138,7 +138,7 @@ export const S2Galaxy: React.FC<{ T: number }> = ({ T }) => {
       {T >= TITLE - 0.05 && (
         <svg width={1920} height={1080} style={{ position: 'absolute', inset: 0, opacity: 1 - prog(T, b(56.2), S2_OUT) }}>
           <text x={960} y={392} textAnchor="middle" style={{ fontFamily: EN, fontWeight: 600, fontSize: 26, letterSpacing: '0.42em', fill: '#f1c56d' }} opacity={easeOut(prog(T, TITLE, TITLE + 0.5))}>THE FRIENDSHIP PARADOX · 朋友悖论</text>
-          <GoldTitle text="朋友圈里，好像只有我过得不好" f={tf} at={4} size={78} y={530} />
+          <GoldTitle text="人缘这道题" f={tf} at={4} size={110} y={540} />
         </svg>
       )}
       <SubBand o={0.85} />
