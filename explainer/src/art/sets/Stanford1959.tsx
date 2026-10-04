@@ -300,6 +300,10 @@ export const Lab1959: React.FC<{
 	cam?: Cam;
 	/** chalk on the board (board space: 0..640 × 0..340) */
 	board?: React.ReactNode;
+	/** on the back-wall layer, in front of the board (a person standing at it, ~0.62 scale) */
+	wall?: React.ReactNode;
+	/** the chalked heading on the board */
+	boardTitle?: boolean;
 	/** on the desk top (hero plane, desk top at LAB_DESK_Y) */
 	desk?: React.ReactNode;
 	/** people behind the desk (hero plane) */
@@ -311,7 +315,7 @@ export const Lab1959: React.FC<{
 	intercom?: number;
 	/** hide the tape recorder (when it is its own close-up) */
 	recorder?: boolean;
-}> = ({frame: f, cam = CAM0, board, desk, behind, children, front, lamp = 1, reels = 0, intercom = 0, recorder = true}) => (
+}> = ({frame: f, cam = CAM0, board, wall, boardTitle = true, desk, behind, children, front, lamp = 1, reels = 0, intercom = 0, recorder = true}) => (
 	<g>
 		<Layer cam={cam} depth={0.6}>
 			<rect x={-800} y={-600} width={3520} height={2200} fill="#3a3228" />
@@ -327,9 +331,11 @@ export const Lab1959: React.FC<{
 				<rect x={-18} y={-18} width={676} height={376} fill="#5a3e28" />
 				<rect width={640} height={340} fill="#26332c" />
 				<rect width={640} height={340} fill="url(#glass)" opacity={0.06} />
-				<text x={30} y={46} style={{fontFamily: 'cursive', fontSize: 26, fill: '#d8d8cc', opacity: 0.55}}>
-					Discussion group · psychology of sex
-				</text>
+				{boardTitle ? (
+					<text x={30} y={46} style={{fontFamily: 'cursive', fontSize: 26, fill: '#d8d8cc', opacity: 0.55}}>
+						Discussion group · psychology of sex
+					</text>
+				) : null}
 				{board}
 				<rect x={-18} y={340} width={676} height={14} fill="#6a4a30" />
 				<rect x={60} y={334} width={40} height={8} fill="#efeae0" />
@@ -349,6 +355,7 @@ export const Lab1959: React.FC<{
 			<g transform="translate(1040,400)">
 				<Intercom talk={intercom} />
 			</g>
+			{wall}
 		</Layer>
 		<Layer cam={cam} depth={1}>
 			{behind}
