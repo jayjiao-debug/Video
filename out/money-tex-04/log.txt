@@ -1,0 +1,4 @@
+token present: yes
+url https://commons.wikimedia.org/wiki/Special:FilePath/Official_Portrait_of_President_Nixon,_1971.jpg?width=1200
+  saved out/files/nixon1971.jpg 0.5 MB
+done
