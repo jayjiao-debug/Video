@@ -23,13 +23,14 @@ export const LINES_S4: Line[] = [
   [b(64) + 0.1, b(72) - 0.1, '公元前7世纪，吕底亚人铸出了最早的硬币。', 'In the 7th century BC, Lydia struck the first coins.'],
   [b(72) + 0.06, b(80) - 0.1, '国王的狮子印记，替你担保它的分量。', "The king's lion stamp vouched for its weight."],
   [b(80) + 0.06, b(88) - 0.1, '秦统一天下，圆形方孔的「半两」钱通行全国。', 'When Qin unified China, the round 半两 coin with a square hole ran everywhere.'],
-  [b(88) + 0.06, b(96) - 0.1, '这个形状，一用就是[两千多年]。', 'That shape stayed in use for over two thousand years.'],
+  [b(88) + 0.06, b(96) - 0.1, '这个形状，从秦朝一直用到清朝，[两千多年]。', 'That shape lasted from the Qin to the Qing: over two thousand years.'],
 ];
 
 // ---------------- A: Lydia ----------------
 const KEYS_A: Key[] = [
   [b(64) - 0.35, [0.13, 0.07, 0.17], [0, 0.03, 0]],
   [STAMP, [0.1, 0.06, 0.14], [0, 0.03, 0]],
+  [STAMP + 1.4, [0.055, 0.05, 0.075], [0, 0.012, 0]],
   [b(76), [-0.06, 0.1, 0.09], [0, 0.016, 0]],
   [b(80), [-0.015, 0.12, 0.03], [0, 0.014, 0]],
 ];

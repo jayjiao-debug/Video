@@ -14,8 +14,8 @@ export const S10_IN = b(294) - 0.5, END_IN = b(311);
 const TOP = 0.76;
 
 export const LINES_S10: Line[] = [
-  [b(294) + 0.3, b(302) - 0.1, '所以，一张纸能换一顿饭，', 'So a slip of paper buys a meal'],
-  [b(302) + 0.06, END_IN - 0.25, '是因为[几十亿人]一起相信它。', 'because billions of people believe in it together.'],
+  [b(294) + 0.3, b(302) - 0.1, '所以，一张纸之所以能换一顿饭，', 'So the reason a slip of paper buys a meal'],
+  [b(302) + 0.06, END_IN - 0.25, '是因为[几十亿人]，一起相信它。', 'is that billions of people believe in it together.'],
 ];
 
 const KEYS: Key[] = [

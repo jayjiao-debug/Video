@@ -13,8 +13,8 @@ export const S7_IN = DROP, S7_OUT = b(199) + 0.3;
 
 export const LINES_S7: Line[] = [
   [DROP + 0.02, b(169) - 0.1, '美元，[不再兑换黄金]。', 'The dollar would no longer be exchanged for gold.'],
-  [b(169) + 0.06, b(180) - 0.1, '从那天起，钱的背后，什么都没有了。', 'From that day on, there was nothing behind money.'],
-  [b(180) + 0.06, b(190) - 0.1, '一张纸能换多少东西，全看大家信不信它。', 'What a slip of paper buys depends only on whether people trust it.'],
+  [b(169) + 0.06, b(180) - 0.1, '从那天起，钱的背后，什么都没有了：没有金子，也没有银子。', 'From that day on, there was nothing behind money: no gold, no silver.'],
+  [b(180) + 0.06, b(190) - 0.1, '一张纸能换多少东西，全看大家信不信它、收不收它。', 'What a slip of paper buys depends only on whether people trust it and take it.'],
   [b(190) + 0.06, b(199) - 0.1, '这就是今天的“法定货币”：靠信用，不靠金子。', "That's today's fiat money: backed by trust, not by gold."],
 ];
 

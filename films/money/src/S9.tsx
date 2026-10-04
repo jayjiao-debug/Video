@@ -22,7 +22,7 @@ export const S9_IN = b(238) - 0.4, S9_OUT = b(294) + 0.4;
 export const LINES_S9: Line[] = [
   [b(239), b(250) - 0.1, '一百多年前，太平洋雅浦岛上的人，用巨大的石轮当钱。', 'A century ago, on Yap in the Pacific, people used giant stone wheels as money.'],
   [b(250) + 0.06, b(260) - 0.1, '石头要从四百多公里外的帕劳凿好，再用独木舟拖回来。', 'The stones were carved on Palau, 400 km away, and towed home behind canoes.'],
-  [b(260) + 0.06, b(270) - 0.1, '有一块，在运回来的路上沉进了海底。', 'One of them sank to the bottom of the sea on the way back.'],
+  [b(260) + 0.06, b(270) - 0.1, '有一块，在运回来的路上遇上风暴，沉进了海底。', 'One of them was lost in a storm on the way back and sank to the sea floor.'],
   [b(270) + 0.06, b(280) - 0.1, '没人再见过它，可全岛都承认：它的主人依然富有。', 'No one ever saw it again, yet the whole island agreed its owner was still rich.'],
   [b(280) + 0.06, b(286) - 0.1, '钱的价值，从来不在纸、不在石头，', "Money's value was never in the paper, or the stone;"],
   [b(286) + 0.06, b(294) - 0.1, '而在于你相信：[明天，别人还会收下它]。', 'it is in your belief that tomorrow, someone else will still accept it.'],
@@ -99,7 +99,7 @@ const Island: React.FC<{ T: number; wheel: THREE.Group; sky: THREE.Texture; wn: 
       <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, 0, 6]} receiveShadow><circleGeometry args={[40, 64]} /><meshStandardMaterial color="#6a5a46" roughness={1} /></mesh>
       {STONES.map((s, i) => {
         const g = stones[i];
-        return <primitive key={i} object={g} position={[s.x, s.s / 2 - 0.05, 0]} rotation={[Math.PI / 2, 0, s.ry]} scale={s.s / 2} />;
+        return <group key={i} position={[s.x, s.s / 2 - 0.05, 0]} rotation={[Math.PI / 2, 0, s.ry]} scale={s.s / 2}><primitive object={g} /></group>;
       })}
       {[[-12, 0, -6, 9], [-7, 0, -10, 11], [10, 0, -5, 10], [14, 0, -11, 12], [0, 0, -14, 10]].map(([x, y, z, h], i) => (
         <sprite key={i} position={[x, y + h / 2, z]} scale={[h / 2, h, 1]} center={new THREE.Vector2(0.5, 0.5)}>
@@ -134,7 +134,7 @@ const AtSea: React.FC<{ T: number; canoe: THREE.Group; wheel: THREE.Group; sky: 
         {Array.from({ length: 9 }, (_, i) => (
           <mesh key={i} position={[0, 0.05, (i - 4) * 0.28]} rotation={[0, 0, Math.PI / 2]}><cylinderGeometry args={[0.13, 0.13, 3.4, 10]} /><meshStandardMaterial color="#8a7a50" roughness={0.9} /></mesh>
         ))}
-        <primitive object={st} position={[0, 0.18, 0]} scale={1.2} />
+        <group position={[0, 0.18, 0]} scale={1.2}><primitive object={st} /></group>
       </group>
       {/* tow rope */}
       <mesh position={[x - 3.5, 0.2, 0.15]} rotation={[0, 0, Math.PI / 2 - 0.02]}><cylinderGeometry args={[0.025, 0.025, 5.6, 6]} /><meshStandardMaterial color="#c8b27a" roughness={0.9} /></mesh>
@@ -186,7 +186,7 @@ const Under: React.FC<{ T: number; wheel: THREE.Group }> = ({ T, wheel }) => {
         shadow-camera-left={-6} shadow-camera-right={6} shadow-camera-top={6} shadow-camera-bottom={-6} shadow-camera-near={1} shadow-camera-far={40} />
       {/* sand, with moving caustics laid over it */}
       <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, SAND, 0]} receiveShadow><planeGeometry args={[80, 80, 60, 60]} /><meshStandardMaterial color="#8c8466" roughness={1} /></mesh>
-      <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, SAND + 0.01, 0]}><planeGeometry args={[80, 80]} /><meshBasicMaterial map={c} transparent opacity={0.35} blending={THREE.AdditiveBlending} depthWrite={false} /></mesh>
+      <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, SAND + 0.01, 0]}><planeGeometry args={[80, 80]} /><meshBasicMaterial map={c} transparent opacity={0.16} blending={THREE.AdditiveBlending} depthWrite={false} /></mesh>
       {/* the surface seen from below */}
       <mesh rotation={[Math.PI / 2, 0, 0]} position={[0, 0.2, 0]}><planeGeometry args={[200, 200]} /><meshBasicMaterial color={new THREE.Color('#3f9ab8').multiplyScalar(0.6 + 0.6 * rise)} transparent opacity={0.6} side={THREE.DoubleSide} fog={false} toneMapped={false} /></mesh>
       {/* light shafts */}
@@ -196,7 +196,7 @@ const Under: React.FC<{ T: number; wheel: THREE.Group }> = ({ T, wheel }) => {
           <meshBasicMaterial map={shaftTex()} transparent opacity={(0.08 + 0.08 * rnd(i, 3)) * (1 + rise)} blending={THREE.AdditiveBlending} depthWrite={false} side={THREE.DoubleSide} />
         </mesh>
       ))}
-      <primitive object={st} position={[0, y, 0]} rotation={[landed ? 0.05 : 0.6 * (1 - k) + 0.05, k * 1.2, landed ? 0.04 : 0.3 * (1 - k)]} scale={1.2} />
+      <group position={[0, y, 0]} rotation={[landed ? 0.05 : 0.6 * (1 - k) + 0.05, k * 1.2, landed ? 0.04 : 0.3 * (1 - k)]} scale={1.2}><primitive object={st} /></group>
       {/* bubbles from the stone as it falls; a puff of sand where it lands */}
       {Array.from({ length: 40 }, (_, i) => {
         const t0 = SINK0 + rnd(i, 1) * (LAND - SINK0), t = T - t0;

@@ -14,7 +14,7 @@ export const LINES_S8: Line[] = [
   [b(199) + 0.06, b(207) - 0.1, '1971年的1美元，今天只剩约八分之一的购买力。', 'A dollar from 1971 now buys about an eighth of what it did.'],
   [b(207) + 0.06, b(218) - 0.1, '而1盎司黄金，从35美元涨到了[4000多美元]。', 'An ounce of gold went from $35 to over $4,000.'],
   [b(219), b(228) - 0.1, '今天，[97%]的钱，只是银行账上的数字。', 'Today, 97% of money is just numbers in bank accounts.'],
-  [b(228) + 0.06, b(238) - 0.1, '你手机里的余额，也只是一行数字。', 'The balance on your phone is just a line of digits too.'],
+  [b(228) + 0.06, b(238) - 0.1, '你手机里的余额，也只是银行电脑里的一行数字。', "The balance on your phone is just a line of digits in a bank's computer."],
 ];
 
 const COOL = '#bcd4ff';
