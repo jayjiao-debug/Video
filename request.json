@@ -1,0 +1,11 @@
+{
+  "id": "titanic-01",
+  "items": [
+    { "type": "polyhaven", "id": "kloppenheim_02", "res": "2k" },
+    { "type": "polyhaven", "id": "satara_night", "res": "2k" },
+    { "type": "sketchfab-search", "q": "titanic", "count": 24 },
+    { "type": "sketchfab-search", "q": "rms titanic ship", "count": 24 },
+    { "type": "sketchfab-search", "q": "wooden lifeboat", "count": 24 },
+    { "type": "sketchfab-search", "q": "titanic lifeboat", "count": 24 }
+  ]
+}

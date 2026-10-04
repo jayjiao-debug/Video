@@ -1,0 +1,40 @@
+name: assets
+
+# Push a new request.json to the asset-farm branch. A runner (which can reach the whole internet)
+# searches / downloads the requested assets, records licences and authors, and pushes the results
+# to the `asset-output` branch under out/<request id>/. Files over 90 MB are split into .partNN.
+on:
+  push:
+    branches: [asset-farm]
+    paths: ['request.json']
+
+permissions:
+  contents: write
+
+concurrency:
+  group: assets
+  cancel-in-progress: false
+
+jobs:
+  fetch:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with: { node-version: 20 }
+      - name: fetch
+        env:
+          SKETCHFAB_TOKEN: ${{ secrets.SKETCHFAB_TOKEN }}
+        run: node fetch.mjs
+      - name: publish
+        run: |
+          ID=$(node -e "console.log(require('./request.json').id)")
+          cd out && find . -type f -size +90M -print0 | while IFS= read -r -d '' f; do split -b 90m -d -a 2 "$f" "$f.part" && rm "$f"; done; cd ..
+          git config user.name "asset-farm"; git config user.email "asset-farm@users.noreply.github.com"
+          git fetch origin asset-output || true
+          mkdir -p /tmp/pub && cp -r out /tmp/pub/$ID
+          if git rev-parse --verify origin/asset-output >/dev/null 2>&1; then git checkout -q -B asset-output origin/asset-output; else git checkout -q --orphan asset-output; git rm -rqf . ; fi
+          rm -rf "out/$ID"; mkdir -p out; cp -r /tmp/pub/$ID out/$ID
+          echo "{\"id\":\"$ID\",\"finished\":$(date -u +%s)}" > latest.json
+          git add -A out latest.json && git commit -q -m "assets: $ID" && git push -q origin asset-output
