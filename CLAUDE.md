@@ -4,7 +4,7 @@ This repo holds two video projects: `paperstars/` (an animated short rendered
 in Python) and `explainer/` (cinematic science explainers made with Remotion).
 
 For anything about explainer videos (a new episode, characters, sets, props,
-animation, rendering), use the `explainer-video` skill
+animation, rendering), use the `explainer-video` skill (and `character-motion` for every pose)
 (`.claude/skills/explainer-video/SKILL.md`) and follow its workflow in order:
 reference → research → art direction → **user approval** → animate → QA → render.
 
