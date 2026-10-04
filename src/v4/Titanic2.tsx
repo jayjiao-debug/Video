@@ -16,8 +16,9 @@ import { BOATS, TOTAL_SEATS, IN_WATER } from './boats';
 
 /* 《应该没事吧》 opening: 0 → 24.75 s. Every frame is a pure function of T. */
 const b = (i: number) => beats[i];
-export const OPEN_END = b(48);
-const CARD_IN = b(8), CARD_OUT = b(16), DROP1 = b(32);
+/* cold open b0-b16 (slow, inside boat No. 1), hook b16-b32, drop b32-b48, title card b48-b56 */
+export const OPEN_END = b(56);
+const COLD_END = b(16), CARD_OUT = b(16), DROP1 = b(32), CARD_IN = b(48), STORY_END = b(48);
 const rnd = (() => { const r = mulberry(1912); return Array.from({ length: 6000 }, () => r()); })();
 const win = (T: number, a: number, z: number, fi = 0.35, fo = 0.35) => Math.min(easeOut(prog(T, a, a + fi)), 1 - prog(T, z - fo, z));
 
@@ -66,13 +67,13 @@ const Sea: React.FC<{ T: number; a: Assets }> = ({ T, a }) => {
   const water = useMemo(() => {
     const w = new Water(new THREE.PlaneGeometry(500, 500), {
       textureWidth: 1024, textureHeight: 1024, waterNormals: a.normals, sunDirection: MOON_DIR.clone(),
-      sunColor: 0x4a5878, waterColor: 0x040912, distortionScale: 1.4, fog: true,
+      sunColor: 0x1e2638, waterColor: 0x02050b, distortionScale: 0.7, fog: true,
     });
     w.rotation.x = -Math.PI / 2;
-    (w.material as THREE.ShaderMaterial).uniforms.size.value = 6;
+    (w.material as THREE.ShaderMaterial).uniforms.size.value = 2.2;
     return w;
   }, [a]);
-  (water.material as THREE.ShaderMaterial).uniforms.time.value = T * 0.55;
+  (water.material as THREE.ShaderMaterial).uniforms.time.value = T * 0.3;
   return <primitive object={water} />;
 };
 
@@ -86,7 +87,7 @@ const SkyEnv: React.FC<{ a: Assets }> = ({ a }) => {
     const dm = new THREE.ShaderMaterial({
       side: THREE.BackSide, depthWrite: false, fog: false,
       vertexShader: 'varying vec3 vP; void main(){ vP = normalize(position); gl_Position = projectionMatrix * modelViewMatrix * vec4(position,1.0); }',
-      fragmentShader: 'varying vec3 vP; void main(){ float h = clamp(vP.y, 0.0, 1.0); vec3 hor = vec3(0.055,0.078,0.13); vec3 zen = vec3(0.008,0.012,0.03); vec3 c = mix(hor, zen, pow(h, 0.45)); if (vP.y < 0.0) c = hor; gl_FragColor = vec4(c, 1.0); }',
+      fragmentShader: 'varying vec3 vP; void main(){ float h = clamp(vP.y, 0.0, 1.0); vec3 hor = vec3(0.028,0.04,0.07); vec3 zen = vec3(0.008,0.012,0.03); vec3 c = mix(hor, zen, pow(h, 0.45)); if (vP.y < 0.0) c = hor; gl_FragColor = vec4(c, 1.0); }',
     });
     const n = 2600, pos = new Float32Array(n * 3), col = new Float32Array(n * 3);
     const r = mulberry(1415);
@@ -149,12 +150,12 @@ const seatLayout = (cap: number, len: number, beam: number) => {
   return pts;
 };
 type Placed = { x: number; y?: number; z: number; rot: number; scale: number; cap: number; occ: number; appear: number; fill: number; float: boolean };
-const SEAT_OFF = new THREE.Color('#2c3448'), SEAT_EMPTY = new THREE.Color('#86b8ff'), SEAT_ON = new THREE.Color('#ffcf6e');
+const SEAT_OFF = new THREE.Color('#4a5670'), SEAT_EMPTY = new THREE.Color('#86b8ff'), SEAT_ON = new THREE.Color('#ffcf6e');
 const Boats: React.FC<{ T: number; placed: Placed[]; a: Assets; emptyPulse: number }> = ({ T, placed, a, emptyPulse }) => {
   const total = placed.reduce((s, p) => s + p.cap, 0);
   const hulls = useMemo(() => placed.map(() => a.boat.clone(true)), [a, placed]);
   const { seats, glows } = useMemo(() => {
-    const sm = new THREE.InstancedMesh(new THREE.BoxGeometry(0.034, 0.006, 0.034), new THREE.MeshBasicMaterial({ toneMapped: false }), total);
+    const sm = new THREE.InstancedMesh(new THREE.BoxGeometry(0.04, 0.006, 0.04), new THREE.MeshBasicMaterial({ toneMapped: false }), total);
     sm.instanceColor = new THREE.InstancedBufferAttribute(new Float32Array(total * 3), 3);
     const hg = new THREE.PlaneGeometry(1, 1); hg.rotateX(-Math.PI / 2);
     const gm = new THREE.InstancedMesh(hg, new THREE.MeshBasicMaterial({ map: haloTex(), color: '#ffc46a', transparent: true, opacity: 0.55, blending: THREE.AdditiveBlending, depthWrite: false, toneMapped: false }), total);
@@ -199,10 +200,10 @@ const Boats: React.FC<{ T: number; placed: Placed[]; a: Assets; emptyPulse: numb
 
 /* cold open: lifeboat No. 1 hanging from its falls beside the hull: 40 seats, 12 taken */
 const B1 = { x: 6.0, y: 2.08, z: SHIP_Z + 1.8 };
-const boat1Y = (T: number) => lerp(B1.y, 0.95, easeInOut(prog(T, 2.6, CARD_IN + 0.3)));
+const boat1Y = (T: number) => lerp(B1.y, 0.95, easeInOut(prog(T, b(12), COLD_END + 0.3)));
 const Boat1: React.FC<{ T: number; a: Assets }> = ({ T, a }) => {
   const placed = useMemo<Placed[]>(() => [{ x: 0, y: 0, z: 0, rot: 0, scale: 1, cap: 40, occ: 12, appear: -1, fill: 0.15, float: false }], []);
-  if (T > CARD_IN + 0.4) return null;
+  if (T > b(20)) return null;
   const pulse = easeInOut(prog(T, b(4), b(4) + 0.4));
   return (
     <group position={[B1.x, boat1Y(T), B1.z]}>
@@ -260,15 +261,17 @@ const Swimmers: React.FC<{ T: number }> = ({ T }) => {
 /* ---------------- camera ---------------- */
 type Key = [number, number[], number[]];
 const KEYS: Key[] = [
-  [0.0, [B1.x + 0.45, B1.y + 0.42, B1.z + 2.0], [B1.x - 0.05, B1.y + 0.1, B1.z - 0.05]],
-  [b(6), [B1.x + 0.85, B1.y + 0.3, B1.z + 2.7], [B1.x - 0.1, B1.y + 0.05, B1.z - 0.05]],
-  [CARD_IN + 0.3, [B1.x + 6, 2.4, B1.z + 9], [1.5, 1.4, SHIP_Z]],
-  [CARD_OUT, [0, 7.6, 14.2], [0, 1.2, 2.2]],
+  [0.0, [B1.x + 0.12, B1.y + 1.25, B1.z + 0.62], [B1.x, B1.y + 0.12, B1.z]],
+  [b(8), [B1.x + 0.3, B1.y + 1.05, B1.z + 0.8], [B1.x - 0.02, B1.y + 0.12, B1.z]],
+  [b(12), [B1.x + 0.55, B1.y + 0.95, B1.z + 1.3], [B1.x - 0.05, B1.y + 0.1, B1.z]],
+  [COLD_END + 0.4, [B1.x + 5, 2.6, B1.z + 8.5], [2.0, 1.2, SHIP_Z]],
+  [b(20), [0, 7.6, 14.2], [0, 1.2, 2.2]],
   [b(28), [0, 7.3, 13.6], [0, 1.2, 2.2]],
   [DROP1, [0, 8.4, 12.6], [0, 0, 2.0]],
   [b(36), [0, 7.0, 10.9], [0, 0, 1.3]],
   [b(40), [0, 7.6, 11.8], [0, 0, 1.8]],
-  [OPEN_END, [0, 9.2, 13.4], [0, 0, 2.3]],
+  [STORY_END, [0, 9.2, 13.4], [0, 0, 2.3]],
+  [OPEN_END, [0, 9.6, 13.8], [0, 0, 2.4]],
 ];
 const camAt = (T: number) => {
   let i = 0;
@@ -276,7 +279,7 @@ const camAt = (T: number) => {
   const [ta, pa, la] = KEYS[i], [tb, pb, lb] = KEYS[i + 1];
   const k = easeInOut(prog(T, ta, tb));
   const dy = boat1Y(T) - B1.y; // the first two keys ride down with boat No. 1
-  const off = (ix: number, v: number[]) => (ix <= 1 ? [v[0], v[1] + dy, v[2]] : v);
+  const off = (ix: number, v: number[]) => (ix <= 2 ? [v[0], v[1] + dy, v[2]] : v);
   const A = off(i, pa), B = off(i + 1, pb), LA = off(i, la), LB = off(i + 1, lb);
   return { pos: A.map((x, j) => lerp(x, B[j], k)), look: LA.map((x, j) => lerp(x, LB[j], k)) };
 };
@@ -397,14 +400,34 @@ const Stat: React.FC<{ T: number; at: number; out: number; value: number; label:
   );
 };
 
+/* the cold-open tally: 12 of 40 seats taken */
+const Tally: React.FC<{ T: number }> = ({ T }) => {
+  const o = Math.min(easeOut(prog(T, b(4), b(4) + 0.4)), 1 - prog(T, b(12) - 0.3, b(12)));
+  if (o <= 0) return null;
+  const k = 1;
+  const n = Math.round(12 * easeOut(prog(T, b(4), b(4) + 0.8)));
+  return (
+    <div style={{ position: 'absolute', top: 120, right: 72, textAlign: 'right', opacity: o }}>
+      <div style={{ fontFamily: ZH, fontSize: 24, letterSpacing: '0.16em', color: 'rgba(243,237,226,0.7)' }}>1 号救生艇</div>
+      <div style={{ fontFamily: EN, fontWeight: 600, fontSize: 96, lineHeight: 1.05, fontVariantNumeric: 'tabular-nums', textShadow: '0 2px 14px rgba(0,0,0,0.9)' }}>
+        <span style={k > 0 ? GOLD_TEXT : { color: '#f3ede2' }}>{n}</span>
+        <span style={{ color: 'rgba(243,237,226,0.55)', fontSize: 60 }}> / 40</span>
+      </div>
+      <div style={{ fontFamily: ZH, fontSize: 24, letterSpacing: '0.12em', color: '#9cc2ff', opacity: easeOut(prog(T, b(5), b(5) + 0.4)), marginTop: 4 }}>空着 28 个座位</div>
+    </div>
+  );
+};
+
 type Line = [number, number, string, string];
 const LINES: Line[] = [
   [0.4, b(4) - 0.08, '泰坦尼克号的1号救生艇，40个座位', "Titanic's lifeboat No. 1 had 40 seats."],
-  [b(4) + 0.06, b(8) - 0.12, '只坐了[12]个人', 'Twelve people got in.'],
+  [b(4) + 0.06, b(8) - 0.1, '只坐了[12]个人', 'Twelve people got in.'],
+  [b(8) + 0.06, b(12) - 0.1, '船在沉，船上还有两千多人', 'The ship was sinking. Over two thousand people were still aboard.'],
+  [b(12) + 0.06, COLD_END - 0.08, '它为什么[没坐满]？', 'So why was it not full?'],
   [CARD_OUT + 0.06, b(24) - 0.08, '20艘救生艇，一共1178个座位', 'Twenty lifeboats. 1,178 seats.'],
   [b(24) + 0.06, DROP1 - 0.08, '放下去的时候，空着[400多个]', 'More than 400 of them left empty.'],
   [DROP1 + 0.12, b(40) - 0.08, '同一时刻，水里有1500多人', 'At the same time, more than 1,500 people were in the water.'],
-  [b(40) + 0.06, OPEN_END - 0.1, '不是座位不够，是很多人{不肯上船}', "It wasn't the seats. Many people wouldn't get in."],
+  [b(40) + 0.06, STORY_END - 0.1, '不是座位不够，是很多人{不肯上船}', "It wasn't the seats. Many people wouldn't get in."],
 ];
 
 export const TitanicOpen2: React.FC = () => {
@@ -422,8 +445,8 @@ export const TitanicOpen2: React.FC = () => {
       .map((f) => document.fonts.load(f, '0123应该没事吧').catch(() => null))).then(() => setReady(true));
   }, []);
   useEffect(() => { if (ready && assets) continueRender(handle); }, [ready, assets, handle]);
-  const cardF = Math.round(CARD_IN * fps), cardLen = Math.round((CARD_OUT - CARD_IN) * fps);
-  const markO = Math.min(easeOut(prog(T, 0.3, 1.0)), 1 - prog(T, CARD_IN, CARD_IN + 0.15) + prog(T, CARD_OUT - 0.1, CARD_OUT + 0.4));
+  const cardF = Math.round(CARD_IN * fps), cardLen = Math.round((OPEN_END - CARD_IN) * fps);
+  const markO = Math.min(easeOut(prog(T, 0.3, 1.0)), 1 - prog(T, CARD_IN, CARD_IN + 0.15));
   return (
     <AbsoluteFill style={{ backgroundColor: '#05070d' }}>
       {ready && assets && (
@@ -432,12 +455,16 @@ export const TitanicOpen2: React.FC = () => {
           <Scene T={T} a={assets} />
         </ThreeCanvas>
       )}
+      {/* cold open: a night spotlight on boat No. 1, everything else falls into the dark */}
+      <div style={{ position: 'absolute', inset: 0, opacity: 1 - easeInOut(prog(T, b(12), COLD_END + 0.3)), background: 'radial-gradient(ellipse 46% 50% at 50% 50%, rgba(3,5,10,0) 0%, rgba(3,5,10,0.25) 55%, rgba(3,5,10,0.82) 100%)' }} />
+      <div style={{ position: 'absolute', top: 0, right: 0, width: 620, height: 420, opacity: Math.min(easeOut(prog(T, b(4), b(4) + 0.4)), 1 - prog(T, b(12) - 0.3, b(12))), background: 'radial-gradient(ellipse 70% 70% at 85% 30%, rgba(3,5,10,0.85) 0%, rgba(3,5,10,0.5) 50%, rgba(3,5,10,0) 100%)' }} />
       <div style={{ position: 'absolute', left: 0, right: 0, bottom: 0, height: 340, background: 'linear-gradient(180deg, rgba(5,7,13,0) 0%, rgba(5,7,13,0.6) 50%, rgba(5,7,13,0.82) 100%)' }} />
-      <Chapter T={T} at={0.3} out={CARD_IN - 0.1} text="1912 · 北 大 西 洋" />
-      <Chapter T={T} at={CARD_OUT + 0.2} out={OPEN_END} text="凌 晨 0:40 — 2:20" />
+      <Chapter T={T} at={0.3} out={COLD_END - 0.1} text="1912 · 北 大 西 洋" />
+      <Tally T={T} />
+      <Chapter T={T} at={CARD_OUT + 0.2} out={STORY_END} text="凌 晨 0:40 — 2:20" />
       <Stat T={T} at={CARD_OUT + 0.3} out={DROP1 - 0.1} value={TOTAL_SEATS} label="救生艇座位" top={110} />
       <Stat T={T} at={b(24) + 0.2} out={DROP1 - 0.1} value={414} label="放下时空着" top={250} gold />
-      <Stat T={T} at={DROP1 + 0.2} out={OPEN_END - 0.1} value={1500} label="人在水里" top={110} />
+      <Stat T={T} at={DROP1 + 0.2} out={STORY_END - 0.1} value={1500} label="人在水里" top={110} />
       {LINES.map(([at, out, zh, en], i) => <Sub key={i} T={T} at={at} out={out} zh={zh} en={en} />)}
       <CornerMark o={markO} />
       <Sequence from={cardF} durationInFrames={cardLen}>
