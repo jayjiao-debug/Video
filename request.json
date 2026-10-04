@@ -1,10 +1,12 @@
 {
-  "id": "titanic-03",
+  "id": "benford-search-01",
   "items": [
-    { "type": "sketchfab", "uid": "f0a6aa63294f45a2bf330c28502b2b67", "name": "titanic_s20" },
-    { "type": "sketchfab", "uid": "fa41e6b093b84010a462ef190210d90b", "name": "titanic_s23" },
-    { "type": "sketchfab", "uid": "0c03e9aeaea14edea86345a0b2f202f1", "name": "lifeboat_s12" },
-    { "type": "sketchfab", "uid": "588f5c05268b4b9daf18a27694974439", "name": "lifeboat_b1" },
-    { "type": "url", "url": "https://raw.githubusercontent.com/mrdoob/three.js/r169/examples/textures/waternormals.jpg", "name": "waternormals.jpg", "license": "MIT (three.js)" }
+    { "type": "sketchfab-search", "q": "earth globe night lights", "count": 12, "license": "by", "maxFaces": 400000 },
+    { "type": "sketchfab-search", "q": "antique old book", "count": 12, "license": "by", "maxFaces": 300000 },
+    { "type": "sketchfab-search", "q": "victorian oil lamp", "count": 12, "license": "by", "maxFaces": 300000 },
+    { "type": "sketchfab-search", "q": "old wooden writing desk", "count": 12, "license": "by", "maxFaces": 300000 },
+    { "type": "sketchfab-search", "q": "card catalog cabinet drawers", "count": 12, "license": "by", "maxFaces": 300000 },
+    { "type": "sketchfab-search", "q": "retro crt computer 90s", "count": 12, "license": "by", "maxFaces": 300000 },
+    { "type": "sketchfab-search", "q": "dot matrix printer", "count": 12, "license": "by", "maxFaces": 300000 }
   ]
 }
