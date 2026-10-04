@@ -1,12 +1,12 @@
 {
-  "id": "benford-search-01",
+  "id": "benford-search-02",
   "items": [
-    { "type": "sketchfab-search", "q": "earth globe night lights", "count": 12, "license": "by", "maxFaces": 400000 },
-    { "type": "sketchfab-search", "q": "antique old book", "count": 12, "license": "by", "maxFaces": 300000 },
-    { "type": "sketchfab-search", "q": "victorian oil lamp", "count": 12, "license": "by", "maxFaces": 300000 },
-    { "type": "sketchfab-search", "q": "old wooden writing desk", "count": 12, "license": "by", "maxFaces": 300000 },
-    { "type": "sketchfab-search", "q": "card catalog cabinet drawers", "count": 12, "license": "by", "maxFaces": 300000 },
-    { "type": "sketchfab-search", "q": "retro crt computer 90s", "count": 12, "license": "by", "maxFaces": 300000 },
-    { "type": "sketchfab-search", "q": "dot matrix printer", "count": 12, "license": "by", "maxFaces": 300000 }
+    { "type": "sketchfab-search", "q": "planet earth", "count": 12, "license": "by", "maxFaces": 400000 },
+    { "type": "sketchfab-search", "q": "earth globe", "count": 12, "license": "by", "maxFaces": 400000 },
+    { "type": "sketchfab-search", "q": "filing cabinet", "count": 12, "license": "by", "maxFaces": 300000 },
+    { "type": "sketchfab-search", "q": "library card catalog", "count": 12, "license": "by", "maxFaces": 300000 },
+    { "type": "sketchfab-search", "q": "vintage computer", "count": 12, "license": "by", "maxFaces": 300000 },
+    { "type": "sketchfab-search", "q": "printer", "count": 12, "license": "by", "maxFaces": 200000 },
+    { "type": "sketchfab-search", "q": "victorian desk", "count": 12, "license": "by", "maxFaces": 300000 }
   ]
 }
