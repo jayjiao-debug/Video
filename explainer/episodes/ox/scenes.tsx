@@ -597,6 +597,19 @@ const LampBloom: React.FC<{f: number; at: number}> = ({f, at}) => {
 	);
 };
 
+/** The page Galton reads (in his near hand). */
+const VoxPage: React.FC = () => (
+	<g transform="rotate(-6)">
+		<rect x={-4} y={-92} width={84} height={108} fill="#efe6d2" stroke="#b9ab8a" />
+		<text x={38} y={-70} textAnchor="middle" style={{fontFamily: font.latinItalic, fontStyle: 'italic', fontWeight: 700, fontSize: 13, fill: P.ink}}>
+			Vox Populi
+		</text>
+		{Array.from({length: 6}, (_, k) => (
+			<line key={k} x1={6} y1={-54 + k * 10} x2={72 - (k % 3) * 9} y2={-54 + k * 10} stroke={P.ink} strokeOpacity={0.45} strokeWidth={1.6} />
+		))}
+	</g>
+);
+
 /** One flat layer under a camera (the top view has no parallax). */
 const FlatLayer: React.FC<{cam: Cam; children: React.ReactNode}> = ({cam, children}) => (
 	<g transform={`translate(${960 - cam.x},${540 - cam.y}) scale(${cam.zoom}) translate(-960,-540)`}>{children}</g>
@@ -735,7 +748,7 @@ const Reveal: React.FC<SceneProps> = () => {
 	// Galton reading what he has written: stern → surprised → a small smile
 	const g = f - SWAP;
 	const READ = P_({lean: 1, head: 12, armNear: [10, 86], armFar: [12, 96], wristNear: 28, wristFar: 24});
-	const readPose = addPose(READ, idle(f, 'g-read'), 0.6);
+	const readPose = addPose(READ, idle(f + scene.from, 'g-read'), 0.6);
 	const face = g < 34 ? 'stern' : g < 70 ? 'surprise' : 'smile';
 	const lift = g >= 34 && g < 70 ? -6 * Math.sin(((g - 34) / 36) * Math.PI) : 0;
 	const mean = f < cue(3) + 22 ? null : f < cue(3) + 40 ? 1150 + Math.floor(random(`mn${Math.floor(f / 3)}`) * 90) : 1197;
@@ -804,6 +817,7 @@ const Reveal: React.FC<SceneProps> = () => {
 					<Study1906
 						frame={f + 300}
 						cam={elev}
+						boardNode={<BeanMachine f={0} start={1e6} />}
 						behind={
 							<g transform={`translate(1000,${DESK_Y + 200 + lift}) scale(1.4)`}>
 								<Figure
@@ -814,17 +828,7 @@ const Reveal: React.FC<SceneProps> = () => {
 									blink={blinkAt(f, 'gr')}
 									rim="warm"
 									shadow={false}
-									holdNear={
-										<g transform="rotate(-6)">
-											<rect x={-4} y={-92} width={84} height={108} fill="#efe6d2" stroke="#b9ab8a" />
-											<text x={38} y={-70} textAnchor="middle" style={{fontFamily: font.latinItalic, fontStyle: 'italic', fontWeight: 700, fontSize: 13, fill: P.ink}}>
-												Vox Populi
-											</text>
-											{Array.from({length: 6}, (_, k) => (
-												<line key={k} x1={6} y1={-54 + k * 10} x2={72 - (k % 3) * 9} y2={-54 + k * 10} stroke={P.ink} strokeOpacity={0.45} strokeWidth={1.6} />
-											))}
-										</g>
-									}
+										holdNear={<VoxPage />}
 								/>
 							</g>
 						}
@@ -879,7 +883,7 @@ const Why: React.FC<SceneProps> = () => {
 					boardNode={<BeanMachine f={f} start={hit} every={3} n={80} glow={glow} />}
 					behind={
 						<g transform={`translate(1000,${DESK_Y + 200}) scale(1.4)`}>
-							<Figure look={CAST.galton} pose={addPose(P_({lean: 1, head: -4, armNear: [10, 86], armFar: [12, 96]}), idle(f, 'gw'))} hands={{near: 'pinch', far: 'pinch'}} expression="smile" blink={blinkAt(f, 'gw')} rim="warm" shadow={false} />
+							<Figure look={CAST.galton} pose={addPose(P_({lean: 1, head: 12, armNear: [10, 86], armFar: [12, 96], wristNear: 28, wristFar: 24}), idle(f + scene.from, 'g-read'), 0.6)} hands={{near: 'pinch', far: 'pinch'}} expression="smile" blink={blinkAt(f, 'gw')} rim="warm" shadow={false} holdNear={<VoxPage />} />
 						</g>
 					}
 				/>
