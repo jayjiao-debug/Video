@@ -1,6 +1,6 @@
 import React from 'react';
 import { AbsoluteFill } from 'remotion';
-import { b, prog, easeOut, easeInOut, lerp, pop, rnd, EN, ZH, SANS, GOLD, INK, type Key } from './lib';
+import { b, cut, prog, easeOut, easeInOut, lerp, pop, rnd, EN, ZH, SANS, GOLD, INK, type Key } from './lib';
 import { Subs, SubBand, Chapter, type Line } from './ui';
 
 /* S4 (b240–b280): the turn. China's sugar-free drinks grew from ¥2.26 bn (2015) to ¥57.05 bn (2024); in 2024 about
@@ -8,22 +8,22 @@ import { Subs, SubBand, Chapter, type Line } from './ui';
    (勤策消费研究《2025年中国无糖茶行业报告》, data from 国家统计局, 中国饮料工业协会, 欧睿 etc., via 36氪).
    The WHO's own words (2023-05-15): "reduce the sweetness of the diet altogether, starting early in life".
    (The lock callback was cut at the owner's request; the music loses b288–b304 in the final edit.) */
-export const S4_IN = b(240) - 0.2, S4_OUT = b(280) + 0.3;
+export const S4_IN = cut(240), S4_OUT = cut(280) - 1e-4;
 
 export const LINES_S4: Line[] = [
   [b(240) + 0.1, b(248) - 0.1, '有意思的是，中国的饮料货架，自己拐了个弯。', 'Meanwhile China\'s drinks shelf took its own turn.'],
   [b(248) + 0.06, b(256) - 0.1, '无糖饮料，9年涨到[570.5亿元]，约25倍；', 'Sugar-free drinks grew from ¥2.26 bn in 2015 to ¥57.05 bn in 2024;'],
   [b(256) + 0.06, b(264) - 0.1, '其中约四成，是根本不加甜味的[无糖茶]。', 'about 40% of it was tea with no sweetener at all.'],
   [b(264) + 0.06, b(272) - 0.1, '一家龙头品牌，就占了无糖茶的[75%]。', 'One brand alone held 75% of that tea.'],
-  [b(272) + 0.06, b(280) - 0.15, '世卫组织的原话是：从小开始，整体降低饮食的甜度。', 'The WHO\'s own words: reduce the sweetness of the diet altogether, starting early in life.'],
+  [b(272) + 0.06, b(280) - 0.15, '世卫组织原话：从小开始，整体降低饮食的甜度。', 'The WHO\'s own words: reduce the sweetness of the diet altogether, starting early in life.'],
 ];
 
 
 export const S4: React.FC<{ T: number }> = ({ T }) => {
   if (T < S4_IN || T > S4_OUT) return null;
-  const o = easeOut(prog(T, S4_IN, S4_IN + 0.5)) * (1 - easeInOut(prog(T, S4_OUT - 0.5, S4_OUT)));
-  const chartO = 1 - easeInOut(prog(T, b(272) - 0.3, b(272) + 0.3));
-  const quoteO = easeInOut(prog(T, b(272) - 0.3, b(272) + 0.3));
+  const o = 1;
+  const chartO = T < cut(272) ? 1 : 0;
+  const quoteO = T >= cut(272) ? 1 : 0;
   // bars: 2015 and 2024 on one linear axis (¥ bn)
   const BASE = 700, K = 0.72; // px per 亿元
   const g15 = easeOut(prog(T, b(248) + 0.2, b(249)));
@@ -39,7 +39,7 @@ export const S4: React.FC<{ T: number }> = ({ T }) => {
       {chartO > 0.01 && (
         <svg width={1920} height={1080} style={{ position: 'absolute', inset: 0, opacity: chartO }}>
           {/* the shelf turning: a row of plain tea bottles fading in (b240–b248) */}
-          <g opacity={easeOut(prog(T, b(240), b(242))) * (1 - easeInOut(prog(T, b(247), b(248) + 0.2)))}>
+          <g opacity={T < cut(248) ? 1 : 0}>
             {Array.from({ length: 9 }, (_, i) => {
               const d = easeOut(prog(T, b(240) + 0.25 * i, b(241) + 0.25 * i));
               const x = 380 + i * 145;

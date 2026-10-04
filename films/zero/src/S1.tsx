@@ -1,6 +1,6 @@
 import React from 'react';
 import { AbsoluteFill } from 'remotion';
-import { b, prog, easeOut, easeIn, easeInOut, lerp, pop, EN, ZH, GOLD, INK, type Key } from './lib';
+import { b, cut, prog, easeOut, easeIn, easeInOut, lerp, pop, EN, ZH, GOLD, INK, type Key } from './lib';
 import { Subs, SubBand, Chapter, type Line } from './ui';
 import { Tongue, Bud, Receptor, RECEPTOR, type MolName } from './Micro3D';
 import { project } from './three-kit';
@@ -11,7 +11,7 @@ import { CubeIcon } from './Title';
    is far stronger. The ladder: sweetness relative to sucrose (US FDA, "Aspartame and Other Sweeteners in Food"):
    aspartame 200×, sucralose 600×, advantame 20,000×. The balance: 35 g of sugar ≈ 175 mg of aspartame at 200×;
    WHO's own example assumes 200–300 mg of aspartame in a can of diet soda, so "about 0.2 g" (估算). */
-export const S1_IN = b(43), S1_OUT = b(96) + 0.3;
+export const S1_IN = cut(44), S1_OUT = cut(96) - 1e-4;
 
 export const LINES_S1: Line[] = [
   [b(44) + 0.1, b(52) - 0.1, '答案，在你的舌头上。', 'The answer is on your tongue.'],
@@ -25,13 +25,13 @@ export const LINES_S1: Line[] = [
 
 const KEYS_TONGUE: Key[] = [
   [b(43), [0.5, 2.6, 5.6], [0, 0, 0]],
-  [b(49), [0.22, 0.75, 1.35], [0, 0.08, 0]],
-  [b(53), [0, 0.2, 0.1], [0, 0.085, 0]],
+  [b(48), [0.22, 0.75, 1.35], [0, 0.08, 0]],
+  [b(52), [0, 0.2, 0.1], [0, 0.085, 0]],
 ];
 const KEYS_BUD: Key[] = [
   [b(52), [0.3, 0.1, 6], [0, 0, 0]],
   [b(57), [0.25, 0.8, 3.2], [0, 0.7, 0]],
-  [b(61), [0, 1.62, 0.75], [0, 1.2, 0]],
+  [b(60), [0, 1.62, 0.75], [0, 1.2, 0]],
 ];
 const C = RECEPTOR.cleft;
 const KEYS_REC: Key[] = [
@@ -73,10 +73,11 @@ const LADDER: [string, number, string][] = [['蔗糖', 1, '×1'], ['阿斯巴甜
 
 export const S1: React.FC<{ T: number }> = ({ T }) => {
   if (T < S1_IN || T > S1_OUT) return null;
-  const o = easeOut(prog(T, S1_IN, S1_IN + 0.5)) * (1 - easeInOut(prog(T, S1_OUT - 0.5, S1_OUT)));
-  const tongueO = 1 - easeInOut(prog(T, b(52) + 0.2, b(53)));
-  const budO = easeInOut(prog(T, b(52) + 0.2, b(53))) * (1 - easeInOut(prog(T, b(60) + 0.2, b(61))));
-  const recO = easeInOut(prog(T, b(60) + 0.2, b(61)));
+  const o = 1;
+  // the dive cuts on the bar: tongue → bud at b52, bud → receptor at b60
+  const tongueO = T < cut(52) ? 1 : 0;
+  const budO = T >= cut(52) && T < cut(60) ? 1 : 0;
+  const recO = T >= cut(60) ? 1 : 0;
   // receptor state
   const closeSu = easeInOut(prog(T, SU.close, SU.close + 0.5)) * (1 - easeInOut(prog(T, SU.out0, SU.out0 + 0.5)));
   const closeAs = easeInOut(prog(T, AS.close, AS.close + 0.45));
@@ -92,8 +93,8 @@ export const S1: React.FC<{ T: number }> = ({ T }) => {
     const p = project(KEYS_REC, T, [DOCK[0] - 0.3, DOCK[1] + 0.32, DOCK[2]]);
     return <div style={{ position: 'absolute', left: p.x - 200, top: p.y - 40, width: 200, textAlign: 'right', fontFamily: ZH, fontWeight: 700, fontSize: 36, color: GOLD, opacity: oo, textShadow: '0 2px 12px rgba(0,0,0,0.9)' }}>{name}</div>;
   };
-  const ladO = easeOut(prog(T, b(82) + 0.2, b(83))) * (1 - easeInOut(prog(T, b(89) + 0.6, b(90) + 0.2)));
-  const balO = easeOut(prog(T, b(90) + 0.2, b(91))) ;
+  const ladO = T >= cut(82) && T < cut(90) ? easeOut(prog(T, cut(82), cut(82) + 0.15)) : 0;
+  const balO = T >= cut(90) ? 1 : 0;
   const XL = 300, WL = 1100; // ladder x0 and width for log10(20000)
   return (
     <AbsoluteFill style={{ backgroundColor: '#0a0716', opacity: o }}>

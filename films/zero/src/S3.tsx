@@ -1,6 +1,6 @@
 import React from 'react';
 import { AbsoluteFill } from 'remotion';
-import { b, prog, easeOut, easeIn, easeInOut, lerp, pop, hit, EN, ZH, SANS, GOLD, INK, RED, type Key } from './lib';
+import { b, cut, prog, easeOut, easeIn, easeInOut, lerp, pop, hit, EN, ZH, SANS, GOLD, INK, RED, type Key } from './lib';
 import { Subs, SubBand, Chapter, type Line } from './ui';
 import { Counter3D, Bokeh, CAN_H, type CanState } from './Counter3D';
 
@@ -16,7 +16,7 @@ import { Counter3D, Bokeh, CAN_H, type CanState } from './Counter3D';
    - WHO guideline, 2023-05-15 (conditional): don't use non-sugar sweeteners to control body weight or reduce the
      risk of NCDs; no long-term benefit in reducing body fat; possible links to type 2 diabetes, cardiovascular
      disease and mortality. Not for people with existing diabetes. */
-export const S3_IN = b(161) - 0.1, S3_OUT = b(240) + 0.3;
+export const S3_IN = cut(161), S3_OUT = cut(240) - 1e-4;
 
 export const LINES_S3: Line[] = [
   [b(161) + 0.1, b(168) - 0.1, '那么——它健康吗？', 'So is it healthy?'],
@@ -46,14 +46,15 @@ const Card: React.FC<{ o: number; children: React.ReactNode; y?: number }> = ({ 
 
 export const S3: React.FC<{ T: number }> = ({ T }) => {
   if (T < S3_IN || T > S3_OUT) return null;
-  const o = easeOut(prog(T, S3_IN, S3_IN + 0.25)) * (1 - easeInOut(prog(T, S3_OUT - 0.5, S3_OUT)));
-  const win = (a: number, z: number) => easeOut(prog(T, a, a + 0.45)) * (1 - easeInOut(prog(T, z - 0.35, z)));
+  const o = 1;
+  // hard cuts on the bar: each card is on screen from its beat to the next card's beat
+  const win = (a: number, z: number) => (T >= a - 0.02 && T < z - 0.02 ? 1 : 0);
   const qO = win(b(161), b(168));
   const iarcO = win(b(168), b(184));
   const shelf = easeOut(prog(T, b(176), b(177)));
-  const stackO = win(b(184), b(200) + 0.2);
+  const stackO = win(b(184), b(200));
   const studyO = win(b(200), b(224));
-  const whoO = win(b(224), S3_OUT);
+  const whoO = win(b(224), b(240));
   const cans: CanState[] = STACK.map(([x, y], i) => {
     const k = easeOut(prog(T, dropAt(i), dropAt(i) + 0.35));
     return { kind: 'black', p: [x, y + 2.2 * (1 - k), 0], ry: 0.2 + i * 0.37, o: k } as CanState;

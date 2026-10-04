@@ -5,7 +5,7 @@ import music from './music.json'; // beat grid of public/bgm.mp3 (118 bpm, 323 b
 export const FPS = 30;
 export const W = 1920;
 export const H = 1080;
-export const FILM_END = 164.49;
+export const FILM_END = 157.2; // the end card holds ~6 s after b296; the music fades out over the last 3 s
 export const FILM_FRAMES = Math.round(FILM_END * FPS);
 export const ZH = '"Noto Serif CJK SC", "Noto Serif SC", serif';
 export const SANS = '"Noto Sans CJK SC", "Noto Sans SC", sans-serif';
@@ -18,6 +18,8 @@ export const NIGHT = '#05070d';
 export const beats: number[] = music.beats;
 /** time of beat i; write all scene timing as b(i) so cuts and pops land on the music */
 export const b = (i: number) => beats[Math.max(0, Math.min(beats.length - 1, i))];
+/** a hard cut on beat i: the new shot's first frame lands on (never after) the beat */
+export const cut = (i: number) => b(i) - 0.02;
 
 export const clamp = (x: number, a = 0, c = 1) => Math.max(a, Math.min(c, x));
 export const prog = (t: number, a: number, z: number) => clamp((t - a) / (z - a));

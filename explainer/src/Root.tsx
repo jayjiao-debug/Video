@@ -29,6 +29,7 @@ import {MOCAP_BOARD_N, MocapBoard} from './MocapBoard';
 import {OX_SHEETS, OxGallery} from '../episodes/ox/gallery';
 import {OX_TEST_N, OxMotionTest} from '../episodes/ox/motiontest';
 import {REGRESS_SHEETS, RegressGallery} from '../episodes/regress/gallery';
+import {LOVE_FRAMES, LoveFilm} from '../episodes/love/film';
 
 export const Root: React.FC = () => (
 	<>
@@ -59,6 +60,8 @@ export const Root: React.FC = () => (
 		<Composition id="BenfordBoard" component={BenfordBoard} durationInFrames={BENFORD_BOARD_N} fps={30} width={1920} height={1080} />
 		<Composition id="XumingLook" component={XumingLook} durationInFrames={LOOKS} fps={30} width={1920} height={1080} />
 		<Composition id="OxMotionTest" component={OxMotionTest} durationInFrames={OX_TEST_N} fps={30} width={1920} height={1080} />
+		{/* 《同一个中心》, a free-form short (no episode pipeline): audio is episodes/love/music.py, muxed after */}
+		<Composition id="Love" component={LoveFilm} durationInFrames={LOVE_FRAMES} fps={30} width={1920} height={1080} />
 		<Composition id="RegressGallery" component={RegressGallery} durationInFrames={REGRESS_SHEETS.length} fps={30} width={1920} height={1080} />
 		<Composition id="OxGallery" component={OxGallery} durationInFrames={OX_SHEETS.length} fps={30} width={1920} height={1080} />
 		<Composition id="CoffeeGallery" component={CoffeeGallery} durationInFrames={COFFEE_SHEETS.length} fps={30} width={1920} height={1080} />

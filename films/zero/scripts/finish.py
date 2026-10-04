@@ -30,6 +30,7 @@ FPS = 30
 TITLE = CFG['title']
 MUSIC = ROOT / CFG.get('music', 'public/bgm.mp3')
 SCENES = [tuple(s) for s in CFG['scenes']]
+FADE = float(CFG.get('fade_out', 1.0))  # seconds of music fade at the end
 OUT = ROOT / 'out'
 SCR = Path(os.environ.get('VE_TMP', '/tmp/video-engine'))
 SCR.mkdir(parents=True, exist_ok=True)
@@ -47,7 +48,7 @@ print(f'picture: {n} frames, {dur:.3f} s')
 # 1. music
 wav = SCR / f'{TAG}_music.wav'
 run(['ffmpeg', '-v', 'error', '-y', '-i', str(MUSIC), '-t', f'{dur:.3f}',
-     '-af', f'afade=t=out:st={dur - 1.0:.3f}:d=1.0', '-c:a', 'pcm_s16le', str(wav)])
+     '-af', f'afade=t=out:st={dur - FADE:.3f}:d={FADE}', '-c:a', 'pcm_s16le', str(wav)])
 meas = run(['ffmpeg', '-hide_banner', '-i', str(wav), '-af', 'loudnorm=I=-14:TP=-1.5:LRA=11:print_format=json',
             '-f', 'null', '-']).stderr
 d = json.loads(re.search(r'\{[^{}]*"input_i"[^{}]*\}', meas, re.S).group(0))
