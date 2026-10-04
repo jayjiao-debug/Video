@@ -544,7 +544,7 @@ export const BookFront: React.FC<{b?: typeof BOOK; id: string; wear?: number; ta
 
 // ---------------------------------------------------------------- the break: snowy sky → archive → Benford's lab, 1938
 
-export const LAB_BOOK = {x: 960, y: 694, w: 330, h: 66};
+export const LAB_BOOK = {x: 1000, y: 694, w: 330, h: 66};
 
 /**
  * One continuous world for the silent break. Above (y < -200): the night sky the

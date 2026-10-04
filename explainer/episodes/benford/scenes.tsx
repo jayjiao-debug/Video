@@ -5,7 +5,8 @@ import {Materials} from '../../src/art/materials';
 import {P} from '../../src/art/palette';
 import {Layer, lookAt} from '../../src/art/sets/Airfield';
 import {TANK_DEFS} from '../../src/art/Tank';
-import type {VideoCfg} from '../../src/brand/Brand';
+import {EPISODE} from './episode';
+import {Town, Reveal, Cheques, City, Coda} from './scenes2';
 import {JUNO} from '../../src/brand/identity';
 import {FullFrame, camMix} from '../../src/components/FullFrame';
 import {ease, prog, useCue, useScene, useTimeline} from '../../src/lib/context';
@@ -15,25 +16,11 @@ import {Motes} from '../../src/art/glow/kit';
 import {BENF, BOOK, BookFront, BreakWorld, EdgeMacro, GOLD, H, LAB_BOOK, NEWCOMB, OilLamp, Snow, Study1881, W, camPath, camSpeed, sectionX, type Key} from './art';
 
 /**
- * 《第一位数字》 (Benford's law). Act one is built: hook → title card → 1881 office →
- * thumb tabs → twist. Later scenes are listed in episode.yaml and still to come.
+ * 《第一位数字》 (Benford's law). Act one (hook → title card → 1881 office → thumb tabs →
+ * twist → Benford) lives here; Town → Coda live in scenes2.tsx.
  */
 
-export const EPISODE: VideoCfg = {
-	id: 'benford',
-	src: '',
-	title: '第一位数字',
-	kicker: "BENFORD'S LAW · NEWCOMB · MDCCCLXXXI",
-	tagline: '为什么1开头的数字最多？',
-	taglineEn: 'Why does the world start with 1?',
-	motif: 'cards', // this episode draws its own motif: nine gold bars (Benford's staircase)
-	card: [0, 4.1],
-	hit: 4.07,
-	extend: 0,
-	question: '你的手机余额，第一位是几？评论区验一验',
-	sources: '参考 · Newcomb, Am. J. Math. (1881) · Benford, Proc. APS (1938) · Nigrini, J. Accountancy (1999) · Rauch et al. (2011)',
-	duration: 0,
-};
+export {EPISODE};
 
 const LN: React.CSSProperties = {fontVariantNumeric: 'lining-nums'};
 
@@ -503,15 +490,6 @@ const FlyingNumber: React.FC<{from: [number, number]; to: [number, number]; t: n
 	);
 };
 
-/** a thumb resting on the book for close shots (the rig's hand is too simple this close) */
-const Thumb: React.FC<{x: number; y: number; rot?: number; o?: number}> = ({x, y, rot = -20, o = 1}) => (
-	<g transform={`translate(${x},${y}) rotate(${rot})`} opacity={o}>
-		<rect x={-7} y={-6} width={14} height={40} rx={7} fill={P.skin1} />
-		<rect x={-7} y={-6} width={14} height={40} rx={7} fill="#7a3a20" opacity={0.18} transform="translate(2,1)" />
-		<rect x={-4.5} y={-4} width={9} height={10} rx={4} fill="#f8e2cc" />
-	</g>
-);
-
 const logNumber = (seed: string, d: number) => {
 	const n = 1 + Math.floor(random(`${seed}n`) * 4);
 	let r = '';
@@ -528,11 +506,31 @@ const benfordDigit = (u: number) => {
 };
 
 // Newcomb sits behind the desk; hand targets are in world coords
-const NX = 760;
+const NX = 690;
 const NY = 1130;
 const NS = 2.0;
 const nfig = (wx: number, wy: number): [number, number] => [(wx - NX) / NS, (wy - NY) / NS];
-const LEDGER = {x: 600, y: 748};
+
+/**
+ * Keep a hand target within reach (character-motion: never pull the arm straight
+ * to a target it can't reach). Finds the near shoulder in world space after the
+ * lean (as the rig draws it) and pulls the target to 0.93 of the arm's length.
+ */
+const safeReach = (pose: Pose, X: number, Y: number, S: number, target: [number, number], near = true): [number, number] => {
+	const r = (pose.lean * Math.PI) / 180;
+	const pivot = -150 + pose.lift;
+	const sx = near ? 14 : -12;
+	const sy = (near ? -258 : -256) - pivot;
+	const fx = sx * Math.cos(r) - sy * Math.sin(r);
+	const fy = pivot + sx * Math.sin(r) + sy * Math.cos(r) + (pose.drop ?? 0);
+	const shoulder: [number, number] = [X + fx * S, Y + fy * S];
+	const max = 0.93 * (58 + 54) * S;
+	const dx = target[0] - shoulder[0];
+	const dy = target[1] - shoulder[1];
+	const d = Math.hypot(dx, dy);
+	return d <= max ? target : [shoulder[0] + (dx / d) * max, shoulder[1] + (dy / d) * max];
+};
+const LEDGER = {x: 750, y: 748};
 
 /** the working sheet on the desk (left of the book) */
 const Sheet: React.FC<{rows: number; x?: number; y?: number}> = ({rows, x = LEDGER.x, y = LEDGER.y}) => (
@@ -560,7 +558,7 @@ const Desk1881: React.FC<{f: number; children?: React.ReactNode}> = ({f, childre
 				<rect key={i} x={-120 + i * 4} y={-18 - i * 16} width={200} height={16} fill={['#3a2418', '#2a2c34', '#4a2a22', '#24302a'][i]} />
 			))}
 		</g>
-		<g transform="translate(900,760)">
+		<g transform="translate(580,760)">
 			<path d="M-18,0 L18,0 L15,-26 L-15,-26 Z" fill="#14181e" />
 			<rect x={-7} y={-32} width={14} height={7} fill="#2a2e36" />
 		</g>
@@ -603,7 +601,7 @@ const Edge: React.FC<SceneProps> = () => {
 	const touch: [number, number] = [BOOK.x + 26, BOOK.y + 6];
 	const hand: [number, number] = [penX + (touch[0] - penX) * reach, penY + (touch[1] - penY) * reach];
 	const study = reach;
-	const pose: Pose = {...POSES.write, head: 22 - 26 * glance + 10 * study, lean: 16 - 8 * antic + 8 * study - 4 * glance};
+	const pose: Pose = {...POSES.write, head: 22 - 26 * glance + 10 * study, lean: 16 - 8 * antic + 12 * study - 4 * glance};
 	const breathe = Math.sin(f / 22) * 1.2;
 	return (
 		<FullFrame
@@ -627,7 +625,7 @@ const Edge: React.FC<SceneProps> = () => {
 								<Figure
 									look={NEWCOMB}
 									pose={pose}
-									reach={{near: nfig(hand[0], hand[1]), far: nfig(700, 752)}}
+									reach={{near: nfig(...safeReach(pose, NX, NY, NS, hand)), far: nfig(...safeReach(pose, NX, NY, NS, [720, 752], false))}}
 									expression={study > 0.5 ? 'thinking' : 'neutral'}
 									blink={blinkAt(f, 'nwe')}
 									rim="warm"
@@ -638,7 +636,6 @@ const Edge: React.FC<SceneProps> = () => {
 							<Desk1881 f={f}>
 								<Sheet rows={Math.min(8, 1 + f * 0.03)} />
 								<BookFront id="ebook" wear={0.62} />
-								{cam.zoom > 2.4 && reach > 0.5 ? <Thumb x={touch[0]} y={touch[1] - 4} o={Math.min(1, (cam.zoom - 2.4) * 2)} /> : null}
 							</Desk1881>
 						</>
 					}
@@ -671,9 +668,9 @@ const Flip: React.FC<SceneProps> = () => {
 		[c[5] - 10, 2000, 230, 1.25],
 		[c[5] + 44, 960, 540, 1.0],
 		[c[6] - 10, 960, 560, 1.02],
-		[c[6] + 30, 735, 726, 3.4],
-		[c[7] - 6, 745, 730, 3.1],
-		[c[7] + 28, 880, 680, 1.9],
+		[c[6] + 30, 870, 662, 2.2], // a medium push-in: the rig reads at this size (no macro of the body)
+		[c[7] - 6, 885, 668, 2.05],
+		[c[7] + 28, 920, 680, 1.9],
 		[c[8] - 2, 920, 650, 1.6],
 		[c[8] + 26, 1900, 260, 1.5],
 		[end, 2338, 73, 3.2],
@@ -719,8 +716,9 @@ const Flip: React.FC<SceneProps> = () => {
 		const cur = mech.filter((m) => f >= m.t0 - 6).pop();
 		if (cur) {
 			const p = spring({frame: f - (cur.t1 - 8), fps: 30, config: {damping: 14, stiffness: 160}});
+			// write the number, then thumb through the front corner to its section
 			const from: [number, number] = [LEDGER.x + 120, 735];
-			const to: [number, number] = [sectionX(cur.d), BOOK.y + 4];
+			const to: [number, number] = [BOOK.x + 18 + 4 * cur.d, BOOK.y + 2];
 			hand = [from[0] + (to[0] - from[0]) * p, from[1] + (to[1] - from[1]) * p];
 		} else hand = [LEDGER.x + 120, 735];
 	} else if (f >= c[4] && f < c[6]) {
@@ -734,7 +732,7 @@ const Flip: React.FC<SceneProps> = () => {
 	}
 	const lookUp = prog(f, c[4], 14, ease.inOut) * (1 - prog(f, c[6] - 20, 16, ease.inOut));
 	const startle = spring({frame: f - c[8] - 4, fps: 30, config: {damping: 9, stiffness: 140}});
-	const pose: Pose = f >= c[8] ? lerpPose({...POSES.write, head: 18}, {...POSES.recoil, lean: -6}, startle * 0.8) : {...POSES.write, head: 22 - 34 * lookUp, lean: 16 - 8 * lookUp + 2 * Math.sin(f / 20)};
+	const pose: Pose = f >= c[8] ? lerpPose({...POSES.write, head: 18}, {...POSES.recoil, lean: -6}, startle * 0.8) : {...POSES.write, head: 22 - 34 * lookUp, lean: (f < c[3] || (f >= c[3] && f < c[4]) ? 26 : 16) - 8 * lookUp + 2 * Math.sin(f / 20)};
 	// formula & publication
 	const fWrite = prog(f, c[6] + 8, 44, (x) => x);
 	const fGold = prog(f, beatAfter(c[6] + 54), 12, ease.inOut);
@@ -773,7 +771,7 @@ const Flip: React.FC<SceneProps> = () => {
 									<Figure
 										look={NEWCOMB}
 										pose={pose}
-										reach={{near: nfig(hand[0], hand[1]), far: nfig(700, 752)}}
+										reach={{near: nfig(...safeReach(pose, NX, NY, NS, hand)), far: nfig(...safeReach(pose, NX, NY, NS, [720, 752], false))}}
 										expression={f >= c[8] ? 'surprise' : lookUp > 0.5 ? 'thinking' : 'neutral'}
 										blink={blinkAt(f, 'nwf')}
 										rim="warm"
@@ -817,7 +815,6 @@ const Flip: React.FC<SceneProps> = () => {
 									<BookFront id="fbook" wear={wear} ping={ping}>
 										<Flicks events={events} f={f} />
 									</BookFront>
-									{cam.zoom > 2.4 && !inMech && f < c[4] ? <Thumb x={BOOK.x + 26 + (f < c[1] ? 6 * Math.sin(f * 0.9) : 0)} y={BOOK.y - 2} o={Math.min(1, (cam.zoom - 2.4) * 2)} /> : null}
 									{/* the numbers: one per beat from the sheet, then the world's numbers pouring in */}
 									{mech.map((m, i) => (
 										<FlyingNumber key={`m${i}`} from={[LEDGER.x + 130, 720]} to={[sectionX(m.d), BOOK.y - 4]} t={(f - m.t0) / (m.t1 - m.t0)} text={m.text} size={20} />
@@ -847,7 +844,7 @@ const Flip: React.FC<SceneProps> = () => {
 // ---------------------------------------------------------------- 4. twist: the silent break — snow, archive, 1938
 
 const BENFORD_LOOK: Look = {skin: P.skin1, hair: 'slick', hairColor: P.hairGray, outfit: 'suit', top: '#4a4238', bottom: '#2f2a26', accent: '#6e4a2a', glasses: true};
-const BX = 1000;
+const BX = 800;
 const BY = 1130;
 const bfig = (wx: number, wy: number): [number, number] => [(wx - BX) / NS, (wy - BY) / NS];
 
@@ -883,7 +880,7 @@ const Twist: React.FC<SceneProps> = () => {
 	const study = prog(f, c1 + 50, 30, ease.inOut);
 	const sitBack = spring({frame: f - c2 - 4, fps: 30, config: {damping: 13, stiffness: 90}});
 	const run = prog(f, c1 + 60, c2 - c1 - 60, ease.inOut);
-	const hand: [number, number] = sitBack > 0.5 ? [1060, 745] : [LAB_BOOK.x + 20 + run * (LAB_BOOK.w - 40), LAB_BOOK.y + 2];
+	const hand: [number, number] = sitBack > 0.5 ? [940, 745] : [LAB_BOOK.x + 20 + run * 110, LAB_BOOK.y + 2];
 	const pose: Pose = lerpPose({...POSES.write, head: 20, lean: 14}, {...POSES.think, head: 2}, sitBack);
 	return (
 		<FullFrame fadeIn={0} fadeOut={0} motes={0.6 * snowToDust}>
@@ -896,7 +893,7 @@ const Twist: React.FC<SceneProps> = () => {
 					desk={
 						<>
 							<g transform={`translate(${BX},${BY + Math.sin(f / 24)}) scale(${NS})`} opacity={prog(f, c1, 20)}>
-								<Figure look={BENFORD_LOOK} pose={pose} reach={{near: bfig(hand[0], hand[1]), far: bfig(940, 752)}} expression={sitBack > 0.5 ? 'stern' : study > 0.5 ? 'thinking' : 'neutral'} blink={blinkAt(f, 'bf')} rim="warm" shadow={false} />
+								<Figure look={BENFORD_LOOK} pose={pose} reach={{near: bfig(...safeReach(pose, BX, BY, NS, hand)), far: bfig(...safeReach(pose, BX, BY, NS, [860, 752], false))}} expression={sitBack > 0.5 ? 'stern' : study > 0.5 ? 'thinking' : 'neutral'} blink={blinkAt(f, 'bf')} rim="warm" shadow={false} />
 							</g>
 							<rect x={700} y={760} width={2600} height={40} fill="#3a2a1e" />
 							<rect x={700} y={760} width={2600} height={6} fill="#6a4a32" />
@@ -948,9 +945,9 @@ const Benford: React.FC<SceneProps> = () => {
 	const landed = f >= c1 + 16;
 	const hand: [number, number] = (() => {
 		const cur = cards.filter((c) => f >= c.t0 - 4).pop();
-		if (!cur) return [1180, 742];
+		if (!cur) return [960, 742];
 		const p = prog(f, cur.t0 - 4, 10, ease.out);
-		return [1180 + (TRAY(cur.d) - 1180) * 0.35 * p, 742 - 10 * p];
+		return [960 + 40 * p, 742 - 14 * p];
 	})();
 	return (
 		<FullFrame fadeIn={0} fadeOut={0} motes={0.6}>
@@ -962,14 +959,14 @@ const Benford: React.FC<SceneProps> = () => {
 				desk={
 					<>
 						<g transform={`translate(${BX},${BY + Math.sin(f / 24)}) scale(${NS})`}>
-							<Figure look={BENFORD_LOOK} pose={{...POSES.write, head: 18, lean: 12}} reach={{near: bfig(hand[0], hand[1]), far: bfig(940, 752)}} expression="thinking" blink={blinkAt(f + 300, 'bf')} rim="warm" shadow={false} />
+							<Figure look={BENFORD_LOOK} pose={{...POSES.write, head: 18, lean: 12}} reach={{near: bfig(...safeReach({...POSES.write, lean: 12}, BX, BY, NS, hand)), far: bfig(...safeReach({...POSES.write, lean: 12}, BX, BY, NS, [860, 752], false))}} expression="thinking" blink={blinkAt(f + 300, 'bf')} rim="warm" shadow={false} />
 						</g>
 						<rect x={700} y={760} width={2600} height={40} fill="#3a2a1e" />
 						<rect x={700} y={760} width={2600} height={6} fill="#6a4a32" />
 						<rect x={700} y={800} width={2600} height={600} fill="#21170f" />
 						<BookFront b={LAB_BOOK} id="lbook2" wear={1} tabs={1} />
 						{/* card box */}
-						<g transform="translate(1180,760)">
+						<g transform="translate(960,760)">
 							<rect x={-40} y={-36} width={80} height={36} fill="url(#wood)" />
 							{Array.from({length: 6}, (_, i) => (
 								<rect key={i} x={-34} y={-44 - i * 2} width={68} height={10} fill="#efe6d2" />
@@ -996,7 +993,7 @@ const Benford: React.FC<SceneProps> = () => {
 							const t = (f - c.t0) / (c.t1 - c.t0);
 							if (t < 0 || t > 1) return null;
 							const e = t * t * (3 - 2 * t);
-							const [x, y] = quad([1180, 712], [(1180 + TRAY(c.d)) / 2, 600], [TRAY(c.d), 700], e);
+							const [x, y] = quad([980, 712], [(980 + TRAY(c.d)) / 2, 560], [TRAY(c.d), 700], e);
 							return (
 								<g key={i} transform={`translate(${x},${y}) rotate(${(1 - e) * -8})`}>
 									<rect x={-38} y={-22} width={76} height={44} rx={2} fill="#efe6d2" />
@@ -1021,4 +1018,4 @@ const Benford: React.FC<SceneProps> = () => {
 	);
 };
 
-export const scenes: SceneMap = {Hook, Office: Edge, Edge, Flip, Twist, Benford};
+export const scenes: SceneMap = {Hook, Office: Edge, Edge, Flip, Twist, Benford, Town, Reveal, Cheques, City, Coda};

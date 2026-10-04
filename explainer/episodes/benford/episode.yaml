@@ -113,6 +113,8 @@ scenes:
     component: Cheques
     kicker: 1993 · 亚利桑那州财政办公室
     cite: State of Arizona v. Nelson, 1993
+    props:
+      swap: {line: 4, kicker: 2011 · 欧盟统计数据, cite: 'Rauch, Göttsche, Brähler & Engel, 2011'}
     lines:
       - 1993年，一位经理开出23张支票。
       - 金额是他自己{随手编的}。
