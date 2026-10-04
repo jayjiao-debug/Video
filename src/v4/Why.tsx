@@ -20,9 +20,9 @@ const pop = (T: number, a: number, d = 0.28) => {
 };
 
 /* ---------------- people ---------------- */
-const SK = '#edc9a4', SKD = '#d9ad86', INK = '#1d1c22';
-type Mood = 'calm' | 'laugh' | 'shout' | 'smug' | 'worry';
-const Face: React.FC<{ mood: Mood; lx?: number; ly?: number }> = ({ mood, lx = 0, ly = 0 }) => {
+export const SK = '#edc9a4', SKD = '#d9ad86', INK = '#1d1c22';
+export type Mood = 'calm' | 'laugh' | 'shout' | 'smug' | 'worry';
+export const Face: React.FC<{ mood: Mood; lx?: number; ly?: number }> = ({ mood, lx = 0, ly = 0 }) => {
   const eyeR = mood === 'shout' || mood === 'worry' ? 6.5 : 5;
   return (
     <g>
@@ -52,8 +52,8 @@ const Face: React.FC<{ mood: Mood; lx?: number; ly?: number }> = ({ mood, lx = 0
     </g>
   );
 };
-type HairKind = 'slick' | 'updo' | 'cap' | 'hat' | 'bald';
-const Head: React.FC<{ hair: HairKind; hairColor?: string; mood: Mood; tash?: boolean; lx?: number; tilt?: number }> = ({ hair, hairColor = '#2a211c', mood, tash, lx = 0, tilt = 0 }) => (
+export type HairKind = 'slick' | 'updo' | 'cap' | 'hat' | 'bald';
+export const Head: React.FC<{ hair: HairKind; hairColor?: string; mood: Mood; tash?: boolean; lx?: number; ly?: number; tilt?: number }> = ({ hair, hairColor = '#2a211c', mood, tash, lx = 0, ly = 0, tilt = 0 }) => (
   <g transform={`rotate(${tilt})`}>
     <rect x={-14} y={30} width={28} height={22} fill={SKD} />
     <circle r={44} fill={SK} />
@@ -78,11 +78,11 @@ const Head: React.FC<{ hair: HairKind; hairColor?: string; mood: Mood; tash?: bo
       <path d="M -40 -42 Q -36 -86 0 -88 Q 36 -86 40 -42 Z" fill="#3a2c42" />
       <path d="M 20 -80 Q 70 -120 96 -90 Q 64 -98 34 -70 Z" fill="#e9e1d2" />
     </>}
-    <Face mood={mood} lx={lx} />
+    <Face mood={mood} lx={lx} ly={ly} />
     {tash && <path d={`M ${-17 + lx} 13 Q ${-6 + lx} 6 ${1 + lx} 11 Q ${8 + lx} 6 ${19 + lx} 13 Q ${8 + lx} 18 ${1 + lx} 15 Q ${-6 + lx} 18 ${-17 + lx} 13 Z`} fill={hairColor} />}
   </g>
 );
-const Arm: React.FC<{ d: string; c: string; hand?: number[]; w?: number; glove?: string }> = ({ d, c, hand, w = 20, glove }) => (
+export const Arm: React.FC<{ d: string; c: string; hand?: number[]; w?: number; glove?: string }> = ({ d, c, hand, w = 20, glove }) => (
   <>
     <path d={d} stroke={c} strokeWidth={w} strokeLinecap="round" fill="none" />
     {hand && <circle cx={hand[0]} cy={hand[1]} r={12} fill={glove ?? SK} />}
@@ -409,7 +409,7 @@ const LEAVERS = (() => {
 })();
 const LEAVER_OF = new Map(LEAVERS.map((l) => [l.idx, l]));
 const SEAT_TAKEN = new Map(LEAVERS.map((l) => [`${l.k}:${l.j}`, l.t]));
-const FLY = 0.55;
+const FLY = 0.8;
 
 const Section: React.FC<{ T: number }> = ({ T }) => {
   const tilt = lerp(1.4, 3.2, easeInOut(prog(T, SECT, WHY_OUT)));
@@ -419,7 +419,7 @@ const Section: React.FC<{ T: number }> = ({ T }) => {
   const k1 = 4, j1 = (() => { for (let j = boatGrid(40).cols * 2 + 4; j < 40; j++) if (!SEAT_TAKEN.has(`${k1}:${j}`)) return j; return 39; })();
   const [sx, sy] = seatPos(k1, j1);
   const dive = easeIn(prog(T, DIVE, WHY_OUT - 0.05));
-  const zoom = push * Math.pow(70, dive);
+  const zoom = push * Math.pow(220, dive);
   const cx = lerp(960, sx, easeInOut(prog(T, DIVE, DIVE + 0.9))), cy = lerp(560, sy, easeInOut(prog(T, DIVE, DIVE + 0.9)));
   const leftO = easeOut(prog(T, NB, NB + 0.5));
   const statO = easeOut(prog(T, fillAt(5) + 0.9, fillAt(5) + 1.4));
@@ -467,11 +467,12 @@ const Section: React.FC<{ T: number }> = ({ T }) => {
                 const mx = (x + tx) / 2, my = Math.min(y, ty) - 90;
                 x = (1 - e) * (1 - e) * x + 2 * (1 - e) * e * mx + e * e * tx;
                 y = (1 - e) * (1 - e) * y + 2 * (1 - e) * e * my + e * e * ty;
-                o = u >= 1 ? 0 : 1; r = 3.8;
+                o = u >= 1 ? 0 : 1; r = 4.6;
               }
             }
             const tw = 0.75 + 0.25 * Math.sin(T * 2.2 + d.tw);
-            return o > 0 ? <circle key={i} cx={x} cy={y} r={r} fill="#ffcf6e" opacity={o * tw} /> : null;
+            if (o <= 0) return null;
+            return r > 3 ? <g key={i}><circle cx={x} cy={y} r={14} fill="url(#sx-dot)" /><circle cx={x} cy={y} r={r} fill="#fff0c8" /></g> : <circle key={i} cx={x} cy={y} r={r} fill="#ffcf6e" opacity={o * tw} />;
           })}
           {/* the sea over the lower hull */}
           <rect x={-200} y={WATER} width={W + 400} height={H} fill="url(#sx-sea)" />
