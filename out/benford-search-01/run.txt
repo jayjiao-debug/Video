@@ -1,0 +1,43 @@
+sketchfab search "earth globe night lights"
+  FAILED: ENOENT: no such file or directory, open 'out/search/earth-globe-night-lights/results.json'
+sketchfab search "antique old book"
+  saved out/search/antique-old-book/01_a7e1164cca004a65ab53ce0e8553586c.jpg 0.0 MB
+  saved out/search/antique-old-book/02_57df56d0e5804dc78898e17c4ae95dce.jpg 0.0 MB
+  saved out/search/antique-old-book/03_e39f2e1a7af240da8403fee1e93bc81f.jpg 0.0 MB
+  saved out/search/antique-old-book/04_6a4913a8cb4d41ada53650bd48a842bc.jpg 0.0 MB
+  saved out/search/antique-old-book/05_2fc707e68e2d490cbb900fb212e04bc5.jpg 0.0 MB
+  saved out/search/antique-old-book/06_742fbdd5bf314a488494a4afdba92b25.jpg 0.0 MB
+  saved out/search/antique-old-book/07_7a86923f789a44ffa01d27ead609b261.jpg 0.0 MB
+  saved out/search/antique-old-book/08_1433fbe0af1b421a8e9312a34aa1fbe2.jpg 0.0 MB
+  saved out/search/antique-old-book/09_5bf5df4d16864143a7d1ff11bdc201ea.jpg 0.0 MB
+  saved out/search/antique-old-book/10_d0ea548218ee47ce97e195d2f199a9de.jpg 0.0 MB
+  saved out/search/antique-old-book/11_12d76407cbd047d2a23a86c73e556c9e.jpg 0.0 MB
+  saved out/search/antique-old-book/12_9a159a9b14964ebdb48c152bd76a6e62.jpg 0.0 MB
+sketchfab search "victorian oil lamp"
+  saved out/search/victorian-oil-lamp/01_c932f6165fef40029c3f18afe19b9934.jpg 0.0 MB
+  saved out/search/victorian-oil-lamp/02_3ac3c5199c5544f491123d50aab3684a.jpg 0.0 MB
+  saved out/search/victorian-oil-lamp/03_6341be23fc704d19967944359a410d68.jpg 0.0 MB
+  saved out/search/victorian-oil-lamp/04_d3bf8831255e4ed9851a29216406307a.jpg 0.0 MB
+  saved out/search/victorian-oil-lamp/05_64db60298c1841aba59e23237d61da33.jpg 0.0 MB
+  saved out/search/victorian-oil-lamp/06_d541f4b1419c47b2a7bd43cbbe23d68a.jpg 0.0 MB
+sketchfab search "old wooden writing desk"
+  saved out/search/old-wooden-writing-desk/01_a7ab3ce6627d4663b88c0717a4020ca2.jpg 0.0 MB
+  saved out/search/old-wooden-writing-desk/02_0448e3a5b33c419f97cc891442b99158.jpg 0.0 MB
+sketchfab search "card catalog cabinet drawers"
+  FAILED: ENOENT: no such file or directory, open 'out/search/card-catalog-cabinet-drawers/results.json'
+sketchfab search "retro crt computer 90s"
+  saved out/search/retro-crt-computer-90s/01_5f80311f1a4646ef9673f20ee6dc6245.jpg 0.0 MB
+  thumb failed 403 https://media.sketchfab.com/models/9439cb5e09cc44caa63dfbfb299df45f/thumbnails/7c5c12d88feb4d7cb267427ed802f5d1/8bdf9b12c8e8435a9eb885ab0ae984d8.jpeg
+  saved out/search/retro-crt-computer-90s/03_ea9faf1298d24497b916c27a4ea38636.jpg 0.0 MB
+  saved out/search/retro-crt-computer-90s/04_646ed84ecd9d40089c31d94f79334ca5.jpg 0.0 MB
+  saved out/search/retro-crt-computer-90s/05_36b9d8a6018c493282916df39e149365.jpg 0.0 MB
+  saved out/search/retro-crt-computer-90s/06_9de7c78e35824eff94bb77acf47b250d.jpg 0.0 MB
+  saved out/search/retro-crt-computer-90s/07_571e419738a44d2e9221843bd788dc2b.jpg 0.0 MB
+  saved out/search/retro-crt-computer-90s/08_2e03f344d4aa4b09a7616da4b52bf037.jpg 0.0 MB
+  saved out/search/retro-crt-computer-90s/09_85c706df08204e7888760fe98782065f.jpg 0.0 MB
+  saved out/search/retro-crt-computer-90s/10_43de3078e5b749c59f6b78673e98f5a2.jpg 0.0 MB
+  saved out/search/retro-crt-computer-90s/11_e5d3032ef83f49e69479406bfdc16320.jpg 0.0 MB
+  saved out/search/retro-crt-computer-90s/12_214e95a422c34dee8dcc87237e67a745.jpg 0.0 MB
+sketchfab search "dot matrix printer"
+  saved out/search/dot-matrix-printer/01_822001fad7fa4155aa3b2c0a2011bc93.jpg 0.0 MB
+done
