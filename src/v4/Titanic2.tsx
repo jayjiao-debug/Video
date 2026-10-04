@@ -383,13 +383,13 @@ const LifebuoyTitle: React.FC<{ f: number; dur: number }> = ({ f, dur }) => {
     </AbsoluteFill>
   );
 };
-const GOLD_TEXT: React.CSSProperties = { color: '#f6cf78', textShadow: '0 0 18px rgba(241,197,109,0.45), 0 2px 12px rgba(0,0,0,0.9)' };
+export const GOLD_TEXT: React.CSSProperties = { color: '#f6cf78', textShadow: '0 0 18px rgba(241,197,109,0.45), 0 2px 12px rgba(0,0,0,0.9)' };
 const Rich: React.FC<{ s: string }> = ({ s }) => (
   <>{s.split(/(\[[^\]]+\]|\{[^}]+\})/).filter(Boolean).map((seg, i) =>
     seg.startsWith('[') ? <span key={i} style={GOLD_TEXT}>{seg.slice(1, -1)}</span>
       : seg.startsWith('{') ? <span key={i} style={{ color: '#ff6a5c' }}>{seg.slice(1, -1)}</span> : <span key={i}>{seg}</span>)}</>
 );
-const Sub: React.FC<{ T: number; at: number; out: number; zh: string; en: string }> = ({ T, at, out, zh, en }) => {
+export const Sub: React.FC<{ T: number; at: number; out: number; zh: string; en: string }> = ({ T, at, out, zh, en }) => {
   const o = Math.min(easeOut(prog(T, at, at + 0.35)), 1 - prog(T, out - 0.3, out));
   if (o <= 0) return null;
   const rise = (1 - easeOut(prog(T, at, at + 0.45))) * 12;
@@ -400,7 +400,7 @@ const Sub: React.FC<{ T: number; at: number; out: number; zh: string; en: string
     </div>
   );
 };
-const Chapter: React.FC<{ T: number; at: number; out: number; text: string }> = ({ T, at, out, text }) => {
+export const Chapter: React.FC<{ T: number; at: number; out: number; text: string }> = ({ T, at, out, text }) => {
   const o = Math.min(easeOut(prog(T, at, at + 0.5)), 1 - prog(T, out - 0.3, out));
   if (o <= 0) return null;
   const w = 70 * easeOut(prog(T, at, at + 0.7));
