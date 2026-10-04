@@ -105,8 +105,9 @@ export const pin = (run: Run, T: number, T0: number, per = 1, from = 0.35, to = 
   return s * ((2 * Math.PI * beatAt(T)) / per - at(run, run.psi, t));
 };
 
-/** a firefly's flash: a short bright pulse each time its phase passes 0 */
+/** a firefly's flash each time its phase passes 0: a quick rise and a soft fall. At one cycle per beat
+    (≈0.5 s) that is ~0.03 s up and ~0.1 s down: several frames, never a one-frame strobe. */
 export const flash = (th: number) => {
   const u = ((th % (2 * Math.PI)) + 2 * Math.PI) % (2 * Math.PI);
-  return Math.exp(-u * 6) + Math.exp(-(2 * Math.PI - u) * 30);
+  return Math.exp(-u * 1.3) + Math.exp(-(2 * Math.PI - u) * 3);
 };

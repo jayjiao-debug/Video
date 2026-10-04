@@ -43,7 +43,7 @@ const clap = (i: number, T: number) => {
   const bt = beatAt(T);
   const th = 2 * Math.PI * (bt + eAt(bt)) + (1 - syncOf(bt)) * SEATS[i].ph;
   const u = ((th % (2 * Math.PI)) + 2 * Math.PI) % (2 * Math.PI);
-  return Math.exp(-u * 7);
+  return Math.exp(-u * 1.6) + Math.exp(-(2 * Math.PI - u) * 4); // a few frames each, never a one-frame strobe
 };
 
 export const S9: React.FC<{T: number}> = ({T}) => {
