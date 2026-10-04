@@ -8,6 +8,7 @@ import {BokehPass} from 'three/examples/jsm/postprocessing/BokehPass.js';
 import {UnrealBloomPass} from 'three/examples/jsm/postprocessing/UnrealBloomPass.js';
 import {OutputPass} from 'three/examples/jsm/postprocessing/OutputPass.js';
 import {ShaderPass} from 'three/examples/jsm/postprocessing/ShaderPass.js';
+import {FXAAPass} from 'three/examples/jsm/postprocessing/FXAAPass.js';
 import * as THREE from 'three';
 import {RoomEnvironment} from 'three/examples/jsm/environments/RoomEnvironment.js';
 
@@ -19,6 +20,13 @@ import {RoomEnvironment} from 'three/examples/jsm/environments/RoomEnvironment.j
 
 export const W = 1920;
 export const H = 1080;
+/** render-cost knobs, read at bundle time (REMOTION_* env vars are inlined by Remotion's bundler) */
+export const DPR = Number(process.env.REMOTION_GL_DPR ?? '0.75') || 0.75;
+const SAMPLES = Number(process.env.REMOTION_GL_SAMPLES ?? '0');
+const NODOF = process.env.REMOTION_GL_NODOF === '1';
+const NOBLOOM = process.env.REMOTION_GL_NOBLOOM === '1';
+const RW = Math.round(W * DPR);
+const RH = Math.round(H * DPR);
 
 export type Cam = {pos: [number, number, number]; target?: [number, number, number]; fov?: number; roll?: number};
 
@@ -38,20 +46,25 @@ const CamRig: React.FC<Cam> = ({pos, target = [0, 0, 0], fov = 35, roll = 0}) =>
 	return null;
 };
 
-/** soft studio reflections from a procedural room (no HDR download) */
-const Env: React.FC<{intensity: number}> = ({intensity}) => {
-	const {gl, scene} = useThree();
-	const env = useMemo(() => {
+/**
+ * Soft studio reflections from a procedural room (no HDR download). Sampling an env map is
+ * the single most expensive thing in a software renderer, so it is NOT the scene environment:
+ * only hero materials opt in with useEnv() (cup, beans, atoms, leaves), large surfaces don't.
+ */
+const EnvCtx = React.createContext<{map: THREE.Texture | null; intensity: number}>({map: null, intensity: 0});
+export const useEnv = () => React.useContext(EnvCtx);
+/** spread onto a standard/physical material: <meshPhysicalMaterial {...envProps(useEnv())} /> */
+export const envProps = (e: {map: THREE.Texture | null; intensity: number}, k = 1) => ({envMap: e.map, envMapIntensity: e.intensity * k});
+
+const EnvProvider: React.FC<{intensity: number; children: React.ReactNode}> = ({intensity, children}) => {
+	const {gl} = useThree();
+	const map = useMemo(() => {
 		const pm = new THREE.PMREMGenerator(gl);
 		const t = pm.fromScene(new RoomEnvironment(), 0.04).texture;
 		pm.dispose();
 		return t;
 	}, [gl]);
-	useLayoutEffect(() => {
-		scene.environment = env;
-		scene.environmentIntensity = intensity;
-	}, [env, intensity, scene]);
-	return null;
+	return <EnvCtx.Provider value={{map: process.env.REMOTION_GL_NOENV === '1' ? null : map, intensity}}>{children}</EnvCtx.Provider>;
 };
 
 export type StageProps = {
@@ -93,21 +106,23 @@ const Post: React.FC<{bloom: number; threshold: number; focus?: number; aperture
 	const {gl, scene, camera} = useThree();
 	const frame = useCurrentFrame();
 	const chain = useMemo(() => {
-		const rt = new THREE.WebGLRenderTarget(W, H, {type: THREE.HalfFloatType, samples: 4});
+		const rt = new THREE.WebGLRenderTarget(RW, RH, {type: THREE.HalfFloatType, samples: SAMPLES});
 		const composer = new EffectComposer(gl, rt);
 		composer.setPixelRatio(1);
-		composer.setSize(W, H);
+		composer.setSize(RW, RH);
 		composer.addPass(new RenderPass(scene, camera));
 		const bokeh = new BokehPass(scene, camera, {focus: 5, aperture: 0.002, maxblur: 0.012});
 		composer.addPass(bokeh);
-		const bl = new UnrealBloomPass(new THREE.Vector2(W, H), 1, 0.6, 0.6);
+		const bl = new UnrealBloomPass(new THREE.Vector2(RW, RH), 1, 0.6, 0.6);
 		composer.addPass(bl);
 		composer.addPass(new OutputPass());
+		if (SAMPLES === 0) composer.addPass(new FXAAPass());
 		const grade = new ShaderPass(GradeShader);
 		composer.addPass(grade);
 		return {composer, bokeh, bl, grade};
 	}, [gl, scene, camera]);
-	chain.bokeh.enabled = focus !== undefined;
+	chain.bokeh.enabled = focus !== undefined && !NODOF;
+	chain.bl.enabled = !NOBLOOM;
 	if (focus !== undefined) {
 		(chain.bokeh.uniforms as any).focus.value = focus;
 		(chain.bokeh.uniforms as any).aperture.value = aperture;
@@ -133,13 +148,12 @@ export const Stage3D: React.FC<StageProps & StageFx> = ({cam, bg = '#05060b', en
 		height={H}
 		style={{position: 'absolute', inset: 0}}
 		gl={{antialias: true, toneMapping: THREE.ACESFilmicToneMapping, toneMappingExposure: 1.0, preserveDrawingBuffer: true}}
-		dpr={1}
+		dpr={DPR}
 	>
 		<color attach="background" args={[bg]} />
 		{fog ? <fog attach="fog" args={[bg, fog[0], fog[1]]} /> : null}
 		<CamRig {...cam} />
-		<Env intensity={env} />
-		{children}
+		<EnvProvider intensity={env}>{children}</EnvProvider>
 		{fx ? <Post bloom={bloom} threshold={threshold} focus={focus} aperture={aperture} vig={vig} grain={grain} blur={blur} fade={fade} /> : null}
 	</ThreeCanvas>
 );

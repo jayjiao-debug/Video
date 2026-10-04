@@ -95,7 +95,7 @@ def remotion(args_):
 def render_video(ep_id, path, frames=None, concurrency=None):
     cmd = ["render", "src/index.ts", "Episode", path, f"--props={json.dumps({'episode': ep_id})}",
            "--muted", "--codec=h264", "--crf=18", "--x264-preset=slow", "--image-format=jpeg", "--jpeg-quality=94",
-           "--pixel-format=yuv420p", "--log=error"]
+           "--pixel-format=yuv420p", "--log=error", "--timeout=300000"]
     if frames:
         cmd.append(f"--frames={frames[0]}-{frames[1]}")
     if concurrency:

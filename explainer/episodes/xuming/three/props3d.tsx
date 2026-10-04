@@ -1,5 +1,6 @@
 import React, {useMemo} from 'react';
 import type {ThreeElements} from '@react-three/fiber';
+import {envProps, useEnv} from './stage3d';
 import * as THREE from 'three';
 import {geoEquirectangular, geoGraticule10, geoPath} from 'd3-geo';
 import {feature} from 'topojson-client';
@@ -49,7 +50,7 @@ export const cupInnerR = (y: number) => {
 	return 0.4;
 };
 
-export const Cup: React.FC<{glaze?: string; level?: number; t?: number; swirl?: number; children?: React.ReactNode} & G> = ({glaze = '#efe5d6', level = 0.86, t = 0, swirl = 1, children, ...g}) => {
+export const Cup: React.FC<{glaze?: string; level?: number; t?: number; swirl?: number; ripple?: number; glow?: number; keyPos?: [number, number, number]; children?: React.ReactNode} & G> = ({glaze = '#efe5d6', level = 0.86, t = 0, swirl = 1, ripple = 0, glow = 0, keyPos, children, ...g}) => {
 	const body = useMemo(() => new THREE.LatheGeometry(CUP_PROFILE, 160), []);
 	const handle = useMemo(() => {
 		const path = new THREE.CatmullRomCurve3([
@@ -62,15 +63,16 @@ export const Cup: React.FC<{glaze?: string; level?: number; t?: number; swirl?: 
 		return new THREE.TubeGeometry(path, 64, 0.045, 24, false);
 	}, []);
 	const y = 0.08 + level * 0.9;
+	const env = useEnv();
 	return (
 		<group {...g}>
 			<mesh geometry={body}>
-				<meshPhysicalMaterial color={glaze} roughness={0.22} clearcoat={1} clearcoatRoughness={0.08} side={THREE.DoubleSide} />
+				<meshPhysicalMaterial color={glaze} roughness={0.22} clearcoat={1} clearcoatRoughness={0.08} side={THREE.DoubleSide} {...envProps(env)} />
 			</mesh>
 			<mesh geometry={handle}>
-				<meshPhysicalMaterial color={glaze} roughness={0.22} clearcoat={1} clearcoatRoughness={0.08} />
+				<meshPhysicalMaterial color={glaze} roughness={0.22} clearcoat={1} clearcoatRoughness={0.08} {...envProps(env)} />
 			</mesh>
-			<CoffeeSurface y={y} r={cupInnerR(y) - 0.002} t={t} swirl={swirl} />
+			<CoffeeSurface y={y} r={cupInnerR(y) - 0.002} t={t} swirl={swirl} ripple={ripple} glow={glow} keyPos={keyPos} />
 			{children}
 		</group>
 	);
@@ -79,7 +81,7 @@ export const Cup: React.FC<{glaze?: string; level?: number; t?: number; swirl?: 
 // ---------------------------------------------------------------- the coffee surface: crema swirl, real specular
 
 const surfaceFrag = /* glsl */ `
-uniform float uT; uniform float uSwirl; uniform vec3 uKey;
+uniform float uT; uniform float uSwirl; uniform vec3 uKey; uniform float uRip; uniform float uGlow;
 varying vec2 vUv; varying vec3 vW;
 float h(vec2 p){return fract(sin(dot(p,vec2(127.1,311.7)))*43758.5453);}
 float n(vec2 p){vec2 i=floor(p),f=fract(p);f=f*f*(3.-2.*f);
@@ -102,6 +104,11 @@ void main(){
   vec3 V=normalize(cameraPosition-vW); vec3 L=normalize(uKey-vW); vec3 H=normalize(V+L);
   float sp=pow(max(H.y,0.),400.)*3.+pow(max(H.y,0.),30.)*.12;
   float fr=pow(1.-max(V.y,0.),4.)*.25;
+  // a drop's ripple: two expanding rings of light
+  float ring=0.;
+  if(uRip>0.&&uRip<1.){ ring=(exp(-pow((r-uRip*1.1)/.025,2.))+.5*exp(-pow((r-uRip*.7)/.02,2.)))*(1.-uRip); }
+  c+=ring*vec3(1.,.8,.5)*1.6;
+  c+=uGlow*vec3(.9,.55,.2)*(1.-r*.6);
   gl_FragColor=vec4(c+sp*vec3(1.,.9,.75)+fr*vec3(.5,.55,.7),1.);
   #include <colorspace_fragment>
 }`;
@@ -109,19 +116,21 @@ const surfaceVert = /* glsl */ `
 varying vec2 vUv; varying vec3 vW;
 void main(){vUv=uv; vec4 w=modelMatrix*vec4(position,1.); vW=w.xyz; gl_Position=projectionMatrix*viewMatrix*w;}`;
 
-export const CoffeeSurface: React.FC<{y: number; r: number; t: number; swirl?: number; keyPos?: [number, number, number]}> = ({y, r, t, swirl = 1, keyPos = [3, 4, 3]}) => {
+export const CoffeeSurface: React.FC<{y: number; r: number; t: number; swirl?: number; keyPos?: [number, number, number]; ripple?: number; glow?: number}> = ({y, r, t, swirl = 1, keyPos = [3, 4, 3], ripple = 0, glow = 0}) => {
 	const mat = useMemo(
 		() =>
 			new THREE.ShaderMaterial({
 				vertexShader: surfaceVert,
 				fragmentShader: surfaceFrag,
-				uniforms: {uT: {value: 0}, uSwirl: {value: 1}, uKey: {value: new THREE.Vector3()}},
+				uniforms: {uT: {value: 0}, uSwirl: {value: 1}, uKey: {value: new THREE.Vector3()}, uRip: {value: 0}, uGlow: {value: 0}},
 			}),
 		[],
 	);
 	mat.uniforms.uT.value = t;
 	mat.uniforms.uSwirl.value = swirl;
 	mat.uniforms.uKey.value.set(...keyPos);
+	mat.uniforms.uRip.value = ripple;
+	mat.uniforms.uGlow.value = glow;
 	return (
 		<mesh position={[0, y, 0]} rotation={[-Math.PI / 2, 0, 0]} material={mat}>
 			<circleGeometry args={[r, 128]} />
@@ -162,6 +171,7 @@ export const beanColor = (roast: number) => {
 export const Bean: React.FC<{roast?: number; glow?: number} & G> = ({roast = 0.8, glow = 0, ...g}) => {
 	const geo = useBeanGeometry();
 	const c = beanColor(roast);
+	const env = useEnv();
 	return (
 		<group {...g}>
 			<mesh geometry={geo}>
@@ -174,6 +184,7 @@ export const Bean: React.FC<{roast?: number; glow?: number} & G> = ({roast = 0.8
 					sheenColor={roast < 0.3 ? '#e8f0c0' : '#ffb070'}
 					emissive="#ff6a1a"
 					emissiveIntensity={glow}
+					{...envProps(env)}
 				/>
 			</mesh>
 		</group>
@@ -259,6 +270,7 @@ const EL: Record<Atom['el'], {r: number; c: string}> = {
 /** ball-and-stick; `core` (0..1) lights the shared purine skeleton in gold */
 export const Molecule: React.FC<{mol: {atoms: Atom[]; bonds: Bond[]}; core?: number; ghost?: number} & G> = ({mol, core = 0, ghost = 1, ...g}) => {
 	const up = new THREE.Vector3(0, 1, 0);
+	const env = useEnv();
 	return (
 		<group {...g}>
 			{mol.atoms.map((a, i) => {
@@ -266,8 +278,8 @@ export const Molecule: React.FC<{mol: {atoms: Atom[]; bonds: Bond[]}; core?: num
 				const lit = a.core ? core : 0;
 				return (
 					<mesh key={i} position={a.p}>
-						<sphereGeometry args={[e.r, 48, 32]} />
-						<meshPhysicalMaterial color={e.c} roughness={0.18} clearcoat={1} clearcoatRoughness={0.05} emissive="#f1c56d" emissiveIntensity={lit * 0.55} transparent={ghost < 1} opacity={ghost} />
+						<sphereGeometry args={[e.r, 22, 14]} />
+						<meshPhysicalMaterial color={e.c} roughness={0.18} clearcoat={1} clearcoatRoughness={0.05} emissive="#f1c56d" emissiveIntensity={lit * 0.55} transparent={ghost < 1} opacity={ghost} {...envProps(env)} />
 					</mesh>
 				);
 			})}
@@ -283,7 +295,7 @@ export const Molecule: React.FC<{mol: {atoms: Atom[]; bonds: Bond[]}; core?: num
 				const lit = mol.atoms[a].core && mol.atoms[b].core ? core : 0;
 				return offs.map((o, k) => (
 					<mesh key={`${i}-${k}`} position={mid.clone().add(o)} quaternion={q}>
-						<cylinderGeometry args={[0.075, 0.075, len, 16]} />
+						<cylinderGeometry args={[0.075, 0.075, len, 8]} />
 						<meshPhysicalMaterial color="#c9ccd4" roughness={0.3} metalness={0.2} emissive="#f1c56d" emissiveIntensity={lit * 0.5} transparent={ghost < 1} opacity={ghost} />
 					</mesh>
 				));
@@ -460,11 +472,12 @@ export const DNA: React.FC<{turns?: number; len?: number; split?: number; t?: nu
 
 export const Cherry: React.FC<{ripe?: number} & G> = ({ripe = 1, ...g}) => {
 	const c = new THREE.Color('#6f9a3a').lerp(new THREE.Color('#b0141e'), ripe);
+	const env = useEnv();
 	return (
 		<group {...g}>
 			<mesh scale={[1, 1.12, 1]}>
 				<sphereGeometry args={[0.16, 48, 32]} />
-				<meshPhysicalMaterial color={c} roughness={0.25} clearcoat={1} clearcoatRoughness={0.1} />
+				<meshPhysicalMaterial color={c} roughness={0.25} clearcoat={1} clearcoatRoughness={0.1} {...envProps(env)} />
 			</mesh>
 			<mesh position={[0, -0.18, 0]}>
 				<torusGeometry args={[0.022, 0.012, 8, 24]} />
@@ -497,10 +510,11 @@ export const useLeafGeometry = () =>
 
 export const Leaf: React.FC<{color?: string; glow?: number} & G> = ({color = '#1f4a22', glow = 0, ...g}) => {
 	const geo = useLeafGeometry();
+	const env = useEnv();
 	return (
 		<group {...g}>
 			<mesh geometry={geo}>
-				<meshPhysicalMaterial color={color} roughness={0.28} clearcoat={0.8} clearcoatRoughness={0.15} side={THREE.DoubleSide} sheen={0.3} sheenColor="#b8e08a" emissive="#ffb347" emissiveIntensity={glow} />
+				<meshPhysicalMaterial {...envProps(env)} color={color} roughness={0.28} clearcoat={0.8} clearcoatRoughness={0.15} side={THREE.DoubleSide} sheen={0.3} sheenColor="#b8e08a" emissive="#ffb347" emissiveIntensity={glow} />
 			</mesh>
 		</group>
 	);
@@ -511,11 +525,12 @@ export const Flower: React.FC<{open?: number; glow?: number} & G> = ({open = 1, 
 	const petal = useMemo(() => {
 		const s = new THREE.Shape();
 		s.moveTo(0, 0);
-		s.bezierCurveTo(0.08, 0.15, 0.09, 0.45, 0, 0.62);
-		s.bezierCurveTo(-0.09, 0.45, -0.08, 0.15, 0, 0);
+		s.bezierCurveTo(0.16, 0.1, 0.19, 0.38, 0.05, 0.52);
+		s.quadraticCurveTo(0, 0.56, -0.05, 0.52);
+		s.bezierCurveTo(-0.19, 0.38, -0.16, 0.1, 0, 0);
 		const geo = new THREE.ShapeGeometry(s, 24);
 		const p = geo.attributes.position;
-		for (let i = 0; i < p.count; i++) p.setZ(i, 0.06 * Math.sin((p.getY(i) / 0.62) * Math.PI));
+		for (let i = 0; i < p.count; i++) p.setZ(i, 0.05 * Math.sin((p.getY(i) / 0.56) * Math.PI) - 0.25 * p.getX(i) ** 2);
 		geo.computeVertexNormals();
 		return geo;
 	}, []);
@@ -524,7 +539,7 @@ export const Flower: React.FC<{open?: number; glow?: number} & G> = ({open = 1, 
 			{Array.from({length: 5}, (_, i) => (
 				<group key={i} rotation={[0, 0, (i / 5) * Math.PI * 2]}>
 					<mesh geometry={petal} rotation={[-(1 - open) * 1.3 - 0.15, 0, 0]}>
-						<meshPhysicalMaterial color="#fbf6ec" roughness={0.45} transmission={0.25} thickness={0.05} side={THREE.DoubleSide} emissive="#ffe0a0" emissiveIntensity={glow} />
+						<meshPhysicalMaterial color="#fbf6ec" roughness={0.45} side={THREE.DoubleSide} emissive="#ffe0a0" emissiveIntensity={glow} />
 					</mesh>
 				</group>
 			))}
@@ -554,9 +569,10 @@ export const Saucer: React.FC<{glaze?: string} & G> = ({glaze = '#efe5d6', ...g}
 		() => new THREE.LatheGeometry([V(0, 0.0), V(0.4, 0.0), V(0.45, 0.02), V(0.8, 0.06), V(0.95, 0.11), V(0.96, 0.125), V(0.93, 0.125), V(0.78, 0.08), V(0.45, 0.05), V(0, 0.045)], 160),
 		[],
 	);
+	const env = useEnv();
 	return (
 		<mesh geometry={geo} {...(g as any)}>
-			<meshPhysicalMaterial color={glaze} roughness={0.22} clearcoat={1} clearcoatRoughness={0.08} side={THREE.DoubleSide} />
+			<meshPhysicalMaterial {...envProps(env)} color={glaze} roughness={0.22} clearcoat={1} clearcoatRoughness={0.08} side={THREE.DoubleSide} />
 		</mesh>
 	);
 };
@@ -617,4 +633,13 @@ export const Steam: React.FC<{t: number; o?: number; n?: number} & G> = ({t, o =
 			))}
 		</group>
 	);
+};
+
+/** a point on the leaf surface: across a in [-1, 1] (edge to edge), v in [0, 1] (base to tip) */
+export const leafPoint = (a: number, v: number): [number, number, number] => {
+	const half = 0.5 * Math.sin(Math.PI * Math.pow(Math.max(0.0001, v), 0.8)) * (1 - 0.15 * v);
+	const x = a * half;
+	const ax = Math.abs(a);
+	const wave = 0.03 * Math.sin(v * 38) * ax ** 2;
+	return [x, v * 2.6 - 1.3, -0.18 * x * x * 4 + 0.25 * Math.sin(v * Math.PI) + wave + 0.012];
 };
