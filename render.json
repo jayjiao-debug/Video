@@ -1,8 +1,8 @@
 {
-  "id": "titanic_open-1791095745",
-  "composition": "TitanicOpen",
+  "id": "titanic_open2-1791099381",
+  "composition": "TitanicOpen2",
   "start": 0,
   "end": 742,
   "chunks": 14,
-  "output": "titanic_open"
+  "output": "titanic_open2"
 }

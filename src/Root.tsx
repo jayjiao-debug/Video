@@ -8,6 +8,8 @@ import { V2Film } from './v2/V2';
 import { V3Film } from './v3/V3';
 import { CoverV3 } from './v3/CoverV3';
 import { TitanicOpen, OPEN_FRAMES } from './v4/Titanic';
+import { ModelPreview } from './v4/ModelPreview';
+import { TitanicOpen2 } from './v4/Titanic2';
 import { Ep1 } from './ep1/Ep1';
 import '@fontsource/cormorant-garamond/400-italic.css';
 import '@fontsource/cormorant-garamond/500.css';
@@ -70,6 +72,11 @@ export const Root: React.FC = () => (
     <Composition id="Reveal3D" component={Reveal3D} durationInFrames={912} fps={30} width={1920} height={1080} />
     <Composition id="V1Film" component={V1Film} durationInFrames={3915} fps={30} width={1920} height={1080} />
     <Composition id="Ep1" component={Ep1} durationInFrames={DURATION} fps={FPS} width={W} height={H} defaultProps={{ music: true }} />
+    <Composition id="MP-titanic-s20" component={ModelPreview} durationInFrames={1} fps={30} width={960} height={540} defaultProps={{ file: "titanic_s20.glb" }} />
+    <Composition id="MP-titanic-s23" component={ModelPreview} durationInFrames={1} fps={30} width={960} height={540} defaultProps={{ file: "titanic_s23.glb" }} />
+    <Composition id="MP-lifeboat-s12" component={ModelPreview} durationInFrames={1} fps={30} width={960} height={540} defaultProps={{ file: "lifeboat_s12.glb" }} />
+    <Composition id="MP-lifeboat-b1" component={ModelPreview} durationInFrames={1} fps={30} width={960} height={540} defaultProps={{ file: "lifeboat_b1.glb" }} />
+    <Composition id="TitanicOpen2" component={TitanicOpen2} durationInFrames={OPEN_FRAMES} fps={30} width={1920} height={1080} />
     <Composition id="TitanicOpen" component={TitanicOpen} durationInFrames={OPEN_FRAMES} fps={30} width={1920} height={1080} />
     <Composition id="CoverV3Tall" component={CoverV3} durationInFrames={1} fps={30} width={1080} height={1440} defaultProps={{ w: 1080, h: 1440 }} />
     <Composition id="CoverV3Wide" component={CoverV3} durationInFrames={1} fps={30} width={1440} height={1080} defaultProps={{ w: 1440, h: 1080 }} />
