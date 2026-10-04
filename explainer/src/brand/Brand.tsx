@@ -105,7 +105,7 @@ export const Monogram: React.FC<{draw?: number; size?: number; wordmark?: string
 };
 
 /** One small line drawing per episode, drawn on with `p` 0..1. */
-const Motif: React.FC<{kind: VideoCfg['motif']; p: number; f: number}> = ({kind, p, f}) => {
+export const Motif: React.FC<{kind: VideoCfg['motif']; p: number; f: number}> = ({kind, p, f}) => {
 	if (kind === 'cards') {
 		// eleven cards on a red thread; the fifth one is the answer
 		return (
@@ -200,7 +200,7 @@ const Motif: React.FC<{kind: VideoCfg['motif']; p: number; f: number}> = ({kind,
 };
 
 /** Metallic gold title with a staggered reveal and one light sweep. */
-const GoldTitle: React.FC<{text: string; f: number; at: number; size: number; y: number}> = ({text, f, at, size, y}) => {
+export const GoldTitle: React.FC<{text: string; f: number; at: number; size: number; y: number}> = ({text, f, at, size, y}) => {
 	const chars = [...`《${text}》`];
 	const sweep = interpolate(f, [at + 26, at + 56], [-700, 700], {extrapolateLeft: 'clamp', extrapolateRight: 'clamp', easing: ease.inOut});
 	const width = chars.length * size * 0.98;
