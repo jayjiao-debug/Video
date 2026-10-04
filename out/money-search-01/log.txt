@@ -1,0 +1,149 @@
+token present: yes
+sketchfab search "100 dollar bill"
+  saved out/search/100-dollar-bill/01_634e34ce3c0b4d75addce41c96e7b5ba.jpg 0.0 MB
+  saved out/search/100-dollar-bill/02_833e0a53433d4dc785644416b5edd32d.jpg 0.0 MB
+  saved out/search/100-dollar-bill/03_49f31b8a421c4da1b9043fc53c9a5eb0.jpg 0.0 MB
+  saved out/search/100-dollar-bill/04_7e54bc39435f459a921370caa7e21090.jpg 0.0 MB
+  saved out/search/100-dollar-bill/05_b780b7c260da443ea0775541bc3b6d4e.jpg 0.0 MB
+  saved out/search/100-dollar-bill/06_b219a7b305754dd3af453c03f2de5854.jpg 0.0 MB
+  saved out/search/100-dollar-bill/07_8003fed88ba04b049ae10c153d8fc37a.jpg 0.0 MB
+  saved out/search/100-dollar-bill/08_e7d9b3412d5e4374bb42e627e9809b5e.jpg 0.0 MB
+  saved out/search/100-dollar-bill/09_0c7ca43ecdc9421680f5ccee6f70585c.jpg 0.0 MB
+  saved out/search/100-dollar-bill/10_bdf5f469a24f46419594fade54311c88.jpg 0.0 MB
+  saved out/search/100-dollar-bill/11_2a0977edc6f74e899cd9615666829b4c.jpg 0.0 MB
+sketchfab search "banknote"
+  saved out/search/banknote/01_87fa8f53ad404b1487ecf85fb1404eeb.jpg 0.0 MB
+  saved out/search/banknote/02_1998b42922be4cbbb752de8b307bdaf4.jpg 0.0 MB
+  saved out/search/banknote/03_afcb0e5720ad40a98797507861aa371f.jpg 0.0 MB
+  saved out/search/banknote/04_6dff4a83c3f44d138f29cae51bb9266d.jpg 0.0 MB
+  saved out/search/banknote/05_be499af5e7294a1d97f34e808bf0474b.jpg 0.0 MB
+  saved out/search/banknote/06_6d59dd1c79b3472e90d095334744a345.jpg 0.0 MB
+  saved out/search/banknote/07_6470ac1ca16f4769b65055a461bfe57a.jpg 0.0 MB
+  saved out/search/banknote/08_4abdbd60b1cb41a88233d38f878798e3.jpg 0.0 MB
+  saved out/search/banknote/09_005d9149a9a643949523cec943fadd61.jpg 0.0 MB
+  saved out/search/banknote/10_19c1558f1bbb403b943f338a9a70da89.jpg 0.0 MB
+  saved out/search/banknote/11_c147f885c34443f5b897fc03e03ca1d6.jpg 0.0 MB
+  saved out/search/banknote/12_b4c255d55dfa45118b965a41cfa29fcb.jpg 0.0 MB
+sketchfab search "ramen bowl"
+  saved out/search/ramen-bowl/01_101c08b5c8534944b43959b142a140b1.jpg 0.0 MB
+  saved out/search/ramen-bowl/02_7a65263793b840a1b8c23155d7e66b61.jpg 0.0 MB
+  saved out/search/ramen-bowl/03_734a5d864fc845918b5ab0a0a5b9d46c.jpg 0.0 MB
+  saved out/search/ramen-bowl/04_f65a8eab51794fbc8c7941101a354a54.jpg 0.0 MB
+  saved out/search/ramen-bowl/05_e9e296e62d184d4e9eca8f7fafe020b1.jpg 0.0 MB
+  saved out/search/ramen-bowl/06_6b4ce426beed4e18bea2283973fc9949.jpg 0.0 MB
+  saved out/search/ramen-bowl/07_07d753c9e2be4b8fb1fb71175c0278b5.jpg 0.0 MB
+  saved out/search/ramen-bowl/08_6d4d6a4951cf4f078e16468594940c3f.jpg 0.0 MB
+  saved out/search/ramen-bowl/09_3d04380080ff4c269fe0ddd9b6924a3f.jpg 0.0 MB
+  saved out/search/ramen-bowl/10_18979b3689f74806925258b42b66c319.jpg 0.0 MB
+  saved out/search/ramen-bowl/11_374aba41259447e792b13ca99747a281.jpg 0.0 MB
+  saved out/search/ramen-bowl/12_2f21a6148b184e128934090ed14fd684.jpg 0.0 MB
+sketchfab search "noodle bowl chinese"
+  saved out/search/noodle-bowl-chinese/01_a1fd5cd41faf467fa9ffd42ee297e6f5.jpg 0.0 MB
+  saved out/search/noodle-bowl-chinese/02_6d4d6a4951cf4f078e16468594940c3f.jpg 0.0 MB
+  saved out/search/noodle-bowl-chinese/03_1806db48c28246629962c304e95688ea.jpg 0.0 MB
+  saved out/search/noodle-bowl-chinese/04_4303caa598e444a1b5f8c1eddf92273f.jpg 0.0 MB
+  saved out/search/noodle-bowl-chinese/05_5cb9632f84014fc6a932ac76d7b89932.jpg 0.0 MB
+  saved out/search/noodle-bowl-chinese/06_32826576d2114feb912cde86b577e42d.jpg 0.0 MB
+sketchfab search "restaurant table"
+  saved out/search/restaurant-table/01_1bf20d2de7f749d889d69c42207ca669.jpg 0.0 MB
+  saved out/search/restaurant-table/02_400c9069181a4342a7142433dfa3466e.jpg 0.0 MB
+  saved out/search/restaurant-table/03_c2509f5213f84197ae00ab058877e5fc.jpg 0.0 MB
+  saved out/search/restaurant-table/04_ca9ed87062694ff2a2521c44484f1a9a.jpg 0.0 MB
+  saved out/search/restaurant-table/05_441daec1a1f149698a88694780151b94.jpg 0.0 MB
+  saved out/search/restaurant-table/06_e559392994e04527b3f5ee35a8c3c418.jpg 0.0 MB
+  saved out/search/restaurant-table/07_8b0a984f0d9f47b48aff07c232960653.jpg 0.0 MB
+  saved out/search/restaurant-table/08_0c4d6d98c48c46e6b71f2914fd049c8e.jpg 0.0 MB
+  saved out/search/restaurant-table/09_23283a2bceb74739b55d694d2dd496d9.jpg 0.0 MB
+  saved out/search/restaurant-table/10_f6fa6d24e2424b9695f13866dfb6b4ce.jpg 0.0 MB
+  saved out/search/restaurant-table/11_5847113c458f4a2483aedd663376c7de.jpg 0.0 MB
+  saved out/search/restaurant-table/12_9fecb56cde1d4fc1a70dfcc331e730af.jpg 0.0 MB
+sketchfab search "cowrie shell"
+  saved out/search/cowrie-shell/01_2542bed101b642fe991dabae53588eea.jpg 0.0 MB
+  saved out/search/cowrie-shell/02_bc930d60c238410289ae694eaf07b846.jpg 0.0 MB
+  saved out/search/cowrie-shell/03_3895de5a9c584498a3f92f0b78598faa.jpg 0.0 MB
+  saved out/search/cowrie-shell/04_1df852e7297e48a29e6ef4292aac61d8.jpg 0.0 MB
+  saved out/search/cowrie-shell/05_a094c196190e457d885fee1fa0a997b0.jpg 0.0 MB
+  saved out/search/cowrie-shell/06_91d6c4d04e614bafa87f47b082a1a0bd.jpg 0.0 MB
+  saved out/search/cowrie-shell/07_c8acdbc61406494680ac47700670ea22.jpg 0.0 MB
+  saved out/search/cowrie-shell/08_4f915486f5684bb8a7064b4d09a884eb.jpg 0.0 MB
+  saved out/search/cowrie-shell/09_e3bcdc30721a459187ffd4d92e03213f.jpg 0.0 MB
+  saved out/search/cowrie-shell/10_606fe5c0904c4100b473ff9f2b7c5170.jpg 0.0 MB
+sketchfab search "seashell cowry"
+  FAILED: ENOENT: no such file or directory, open 'out/search/seashell-cowry/results.json'
+sketchfab search "lydian coin"
+  FAILED: ENOENT: no such file or directory, open 'out/search/lydian-coin/results.json'
+sketchfab search "ancient greek coin"
+  saved out/search/ancient-greek-coin/01_cc028593c47a428aa309c4d9b7840ef7.jpg 0.0 MB
+  saved out/search/ancient-greek-coin/02_d6a8ad4bbff04bd5801cffbf0d5236d2.jpg 0.0 MB
+  saved out/search/ancient-greek-coin/03_9e06bdb252de48e485d77664ca720631.jpg 0.0 MB
+  saved out/search/ancient-greek-coin/04_879008a2bfcd4a23bbdcce652a643577.jpg 0.0 MB
+  saved out/search/ancient-greek-coin/05_df8667dfd119435fa32921ac9f876f9c.jpg 0.0 MB
+  saved out/search/ancient-greek-coin/06_ed4e3a201aad4cb09c38d00bcca23bdf.jpg 0.0 MB
+  saved out/search/ancient-greek-coin/07_c35f4ab1b0ec44deb2f9ad9df8d7ab16.jpg 0.0 MB
+  saved out/search/ancient-greek-coin/08_5c8cb370fdc544dba2798d9672a347ac.jpg 0.0 MB
+  saved out/search/ancient-greek-coin/09_9890abe9ae56410eaa19a08e39313723.jpg 0.0 MB
+  saved out/search/ancient-greek-coin/10_0a6ce6e8d2424c4e82f729a1b2af234e.jpg 0.0 MB
+  saved out/search/ancient-greek-coin/11_f4cc9716572c4c4b80379451f3e7492f.jpg 0.0 MB
+  saved out/search/ancient-greek-coin/12_5514ac90f69d4bff96e4afcac211c04c.jpg 0.0 MB
+sketchfab search "chinese ancient coin"
+  saved out/search/chinese-ancient-coin/01_384f557db51a407e807c59af188cc9cc.jpg 0.0 MB
+  saved out/search/chinese-ancient-coin/02_09765d9d5a324a9f9584cc3a385d1ff9.jpg 0.0 MB
+  saved out/search/chinese-ancient-coin/03_08ad1336691345508071cc34aa0ee85c.jpg 0.0 MB
+  saved out/search/chinese-ancient-coin/04_04fc8e3ed9e1408a888941cb42bab41f.jpg 0.0 MB
+sketchfab search "gold bar"
+  saved out/search/gold-bar/01_0d1ff6b3e6d045cba78889caf7f5bc6e.jpg 0.0 MB
+  saved out/search/gold-bar/02_385733562f074903ba593ff29359fd4d.jpg 0.0 MB
+  saved out/search/gold-bar/03_194d2227c82549fcba14a37342ea3d08.jpg 0.0 MB
+  saved out/search/gold-bar/04_03a614bbd25a41cba8306c36089901e4.jpg 0.0 MB
+  saved out/search/gold-bar/05_49e5ede6a16d4dd39386d6aa705fdbeb.jpg 0.0 MB
+  saved out/search/gold-bar/06_07cee58f90b64f8195f0279e97dea53e.jpg 0.0 MB
+  saved out/search/gold-bar/07_cbc1d31bca344579908a4b2505498ccc.jpg 0.0 MB
+  saved out/search/gold-bar/08_f37ff575263d4e788862fd00af5ef632.jpg 0.0 MB
+  saved out/search/gold-bar/09_ba2cb0bb5cac4a41be57d0d806485ddd.jpg 0.0 MB
+  saved out/search/gold-bar/10_67d88c3a9b1c4075aaf3feaeabde4fa1.jpg 0.0 MB
+  saved out/search/gold-bar/11_87e4e0a9da7f4c8a9561a932d09279bd.jpg 0.0 MB
+  saved out/search/gold-bar/12_bfa4155870a84dca8b3ac56377969837.jpg 0.0 MB
+sketchfab search "gold ingot"
+  saved out/search/gold-ingot/01_4b7084ba94a34d1ab82a5056f9e2d467.jpg 0.0 MB
+  saved out/search/gold-ingot/02_03a614bbd25a41cba8306c36089901e4.jpg 0.0 MB
+  saved out/search/gold-ingot/03_f64a638eecc24c128d665a6a015e203d.jpg 0.0 MB
+  saved out/search/gold-ingot/04_792915d43c1947eb80fe2ab99b6d30e3.jpg 0.0 MB
+  saved out/search/gold-ingot/05_2bbe4af02e6347669dd3e745629f4296.jpg 0.0 MB
+  saved out/search/gold-ingot/06_61cb6c88db7b4c85a611c6c2b8f34d4e.jpg 0.0 MB
+  saved out/search/gold-ingot/07_4e7372d884574c82a7d609a2b7a92fb2.jpg 0.0 MB
+  saved out/search/gold-ingot/08_f848b8b1d3444364bf5965e88b089fdf.jpg 0.0 MB
+  saved out/search/gold-ingot/09_56f0e0ae9deb4426b0965c1fc5919d33.jpg 0.0 MB
+  saved out/search/gold-ingot/10_bec27a6dc7d34867a24597ee575c8d7a.jpg 0.0 MB
+  saved out/search/gold-ingot/11_cf971cc9c434439691326f2c59340f9f.jpg 0.0 MB
+  saved out/search/gold-ingot/12_9ef3084fd5a84d7c823349e1a4585a50.jpg 0.0 MB
+sketchfab search "apartment building"
+  saved out/search/apartment-building/01_1f50f0d6ec5a493d8e91d7db1106b324.jpg 0.0 MB
+  saved out/search/apartment-building/02_9f0343aff4814b758dc6e905aba5b5e0.jpg 0.0 MB
+  saved out/search/apartment-building/03_c80dba249d9547cbb48d00828d23cfa7.jpg 0.0 MB
+  saved out/search/apartment-building/04_528a732e84c44fd49c4726f341014a23.jpg 0.0 MB
+  saved out/search/apartment-building/05_dd400ed693cf416e940c5b8e3107205e.jpg 0.0 MB
+  saved out/search/apartment-building/06_e73f9bb9981d469c8a8ccdc1f168faad.jpg 0.0 MB
+  saved out/search/apartment-building/07_b407c0f316b94b1cbcf0bf254c3c2442.jpg 0.0 MB
+  saved out/search/apartment-building/08_54bc929a26094b6cb36f977903fbcd97.jpg 0.0 MB
+  saved out/search/apartment-building/09_493a69b451284ff88346c7b3e4e1b5a7.jpg 0.0 MB
+  saved out/search/apartment-building/10_05229ac1d1f94e6c8cacaad91110c602.jpg 0.0 MB
+  saved out/search/apartment-building/11_f4c5a825a88b487c99877e803ba5c786.jpg 0.0 MB
+  saved out/search/apartment-building/12_694adf5094fa41f99a245ed822293f47.jpg 0.0 MB
+sketchfab search "rai stone yap"
+  FAILED: ENOENT: no such file or directory, open 'out/search/rai-stone-yap/results.json'
+sketchfab search "stone money"
+  saved out/search/stone-money/01_1410a788c6544090b7c8ec21e41944f2.jpg 0.0 MB
+  saved out/search/stone-money/02_b99f1fabb16e401aaf78f9131ae34d5a.jpg 0.0 MB
+  saved out/search/stone-money/03_8e653c658d16465fb0c24af60e8fe17e.jpg 0.0 MB
+  saved out/search/stone-money/04_405cc8175019452daa01999fd1466731.jpg 0.0 MB
+  saved out/search/stone-money/05_8b1cec0fecb945e4bd27322c4fa35ab3.jpg 0.0 MB
+  saved out/search/stone-money/06_0dd2531866a24c829a8f739d1c7bc4dd.jpg 0.0 MB
+  saved out/search/stone-money/07_481aa9be897649aeb3fb2f0c45d1792a.jpg 0.0 MB
+sketchfab search "outrigger canoe"
+  saved out/search/outrigger-canoe/01_d4a7db541e4b414c9e136ed97d5593ed.jpg 0.0 MB
+  saved out/search/outrigger-canoe/02_8a364a99abfa47f0aa133b367a08a826.jpg 0.0 MB
+  saved out/search/outrigger-canoe/03_559fee0f2e034f4fad3d5f83fde16633.jpg 0.0 MB
+  saved out/search/outrigger-canoe/04_1f9c4d08a8a34107a0593976429b2c77.jpg 0.0 MB
+  saved out/search/outrigger-canoe/05_8908e6addf554435965b1cebdaeae1a7.jpg 0.0 MB
+  saved out/search/outrigger-canoe/06_fb4379ba486c43bd846f9b9ef608743a.jpg 0.0 MB
+done

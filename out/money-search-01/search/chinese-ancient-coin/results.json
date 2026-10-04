@@ -1,0 +1,58 @@
+[
+  {
+    "n": 1,
+    "uid": "384f557db51a407e807c59af188cc9cc",
+    "name": "Chinese coin",
+    "author": "BenP5",
+    "license": "CC Attribution",
+    "faces": 30944,
+    "vertices": 16209,
+    "likes": 148,
+    "views": 4124,
+    "animated": false,
+    "url": "https://sketchfab.com/3d-models/none-384f557db51a407e807c59af188cc9cc",
+    "thumb": "01_384f557db51a407e807c59af188cc9cc.jpg"
+  },
+  {
+    "n": 2,
+    "uid": "09765d9d5a324a9f9584cc3a385d1ff9",
+    "name": "Chinese Coin: North Song Dynasty (1101-1125 AD)",
+    "author": "Pichael3000",
+    "license": "CC Attribution",
+    "faces": 404,
+    "vertices": 202,
+    "likes": 44,
+    "views": 934,
+    "animated": false,
+    "url": "https://sketchfab.com/3d-models/none-09765d9d5a324a9f9584cc3a385d1ff9",
+    "thumb": "02_09765d9d5a324a9f9584cc3a385d1ff9.jpg"
+  },
+  {
+    "n": 3,
+    "uid": "08ad1336691345508071cc34aa0ee85c",
+    "name": "Old Coins Variety Set",
+    "author": "heartsinge",
+    "license": "CC Attribution-NonCommercial",
+    "faces": 14674,
+    "vertices": 7347,
+    "likes": 8,
+    "views": 421,
+    "animated": false,
+    "url": "https://sketchfab.com/3d-models/none-08ad1336691345508071cc34aa0ee85c",
+    "thumb": "03_08ad1336691345508071cc34aa0ee85c.jpg"
+  },
+  {
+    "n": 4,
+    "uid": "04fc8e3ed9e1408a888941cb42bab41f",
+    "name": "Chinese coin",
+    "author": "BenP5",
+    "license": "CC Attribution",
+    "faces": 207520,
+    "vertices": 103760,
+    "likes": 6,
+    "views": 221,
+    "animated": false,
+    "url": "https://sketchfab.com/3d-models/none-04fc8e3ed9e1408a888941cb42bab41f",
+    "thumb": "04_04fc8e3ed9e1408a888941cb42bab41f.jpg"
+  }
+]
