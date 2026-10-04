@@ -1,6 +1,6 @@
 import React from 'react';
 import {AbsoluteFill, Sequence, interpolate, random, spring, useCurrentFrame, useVideoConfig} from 'remotion';
-import {Figure, POSES, blinkAt, lerpPose, type Look, type Pose} from '../../src/art/Figure';
+import {Figure, POSES, addPose, blinkAt, idle, lerpPose, type Look, type Pose} from '../../src/art/Figure';
 import {Materials} from '../../src/art/materials';
 import {P} from '../../src/art/palette';
 import {Layer, lookAt} from '../../src/art/sets/Airfield';
@@ -601,8 +601,9 @@ const Edge: React.FC<SceneProps> = () => {
 	const touch: [number, number] = [BOOK.x + 26, BOOK.y + 6];
 	const hand: [number, number] = [penX + (touch[0] - penX) * reach, penY + (touch[1] - penY) * reach];
 	const study = reach;
-	const pose: Pose = {...POSES.write, head: 22 - 26 * glance + 10 * study, lean: 16 - 8 * antic + 12 * study - 4 * glance};
-	const breathe = Math.sin(f / 22) * 1.2;
+	const base: Pose = {...POSES.write, head: 22 - 26 * glance + 10 * study, lean: 16 - 8 * antic + 12 * study - 4 * glance};
+	const pose: Pose = {...base, ...addPose(base, idle(f, 'newcomb'), 0.6 * (1 - reach))};
+	const breathe = 0;
 	return (
 		<FullFrame
 			fadeIn={0}
@@ -682,7 +683,18 @@ const Flip: React.FC<SceneProps> = () => {
 	const events: [number, number][] = [];
 	for (let t = 0; t < c[1] - 4; t += 3) events.push([t, 1 + (Math.floor(t / 3) % 3)]);
 	const MECH = [1, 1, 2, 1, 3, 1, 2, 1, 4, 1];
-	const mechBeats = beats.filter((b) => b >= c[3] + 6 && b < c[4] - 8).slice(0, MECH.length);
+	// he writes at his own pace: slow at first, then quicker as he gets into it (not one per beat)
+	const mechBeats: number[] = [];
+	{
+		const span = c[4] - 8 - (c[3] + 6);
+		const w = MECH.map((_, i) => 1.35 - 0.07 * i + 0.25 * (random(`mw${i}`) - 0.5));
+		const sum = w.reduce((a, b) => a + b, 0);
+		let t = c[3] + 6;
+		w.forEach((x) => {
+			t += (x / sum) * span;
+			mechBeats.push(Math.round(t));
+		});
+	}
 	const mech = mechBeats.map((b, i) => ({t0: b - 14, t1: b, d: MECH[i], text: logNumber(`mech${i}`, MECH[i])}));
 	mech.forEach((m) => events.push([m.t1, m.d]));
 	const STREAM_FROM = [
@@ -703,8 +715,8 @@ const Flip: React.FC<SceneProps> = () => {
 	stream.forEach((s) => events.push([s.t1, s.d]));
 	// the book wears as we watch
 	const wear = 0.62 + 0.38 * prog(f, c[3], c[6] - c[3], ease.inOut);
-	// tabs ping 1 → 9 across "1在最前，9在最后"
-	const tabBeats = beats.filter((b) => b >= c[2] + 14).slice(0, 9);
+	// tabs ping 1 → 9 across "1在最前，9在最后": one quick sweep, like a finger running along them
+	const tabBeats = Array.from({length: 9}, (_, k) => c[2] + 14 + k * 6);
 	const ping = (d: number) => {
 		const b = tabBeats[d - 1];
 		return b === undefined || f < b ? 0 : Math.exp(-(f - b) / 10) * 0.9 + (d === 1 || d === 9 ? 0.1 : 0);
@@ -732,7 +744,8 @@ const Flip: React.FC<SceneProps> = () => {
 	}
 	const lookUp = prog(f, c[4], 14, ease.inOut) * (1 - prog(f, c[6] - 20, 16, ease.inOut));
 	const startle = spring({frame: f - c[8] - 4, fps: 30, config: {damping: 9, stiffness: 140}});
-	const pose: Pose = f >= c[8] ? lerpPose({...POSES.write, head: 18}, {...POSES.recoil, lean: -6}, startle * 0.8) : {...POSES.write, head: 22 - 34 * lookUp, lean: (f < c[3] || (f >= c[3] && f < c[4]) ? 26 : 16) - 8 * lookUp + 2 * Math.sin(f / 20)};
+	const pose0: Pose = f >= c[8] ? lerpPose({...POSES.write, head: 18}, {...POSES.recoil, lean: -6}, startle * 0.8) : {...POSES.write, head: 22 - 34 * lookUp, lean: (f < c[3] || (f >= c[3] && f < c[4]) ? 26 : 16) - 8 * lookUp};
+	const pose: Pose = {...pose0, ...addPose(pose0, idle(f + 400, 'newcomb'), 0.5 * (1 - startle))};
 	// formula & publication
 	const fWrite = prog(f, c[6] + 8, 44, (x) => x);
 	const fGold = prog(f, beatAfter(c[6] + 54), 12, ease.inOut);
@@ -767,7 +780,7 @@ const Flip: React.FC<SceneProps> = () => {
 						}
 						desk={
 							<>
-								<g transform={`translate(${NX},${NY + Math.sin(f / 22) * 1.2}) scale(${NS})`}>
+								<g transform={`translate(${NX},${NY}) scale(${NS})`}>
 									<Figure
 										look={NEWCOMB}
 										pose={pose}
@@ -881,7 +894,8 @@ const Twist: React.FC<SceneProps> = () => {
 	const sitBack = spring({frame: f - c2 - 4, fps: 30, config: {damping: 13, stiffness: 90}});
 	const run = prog(f, c1 + 60, c2 - c1 - 60, ease.inOut);
 	const hand: [number, number] = sitBack > 0.5 ? [940, 745] : [LAB_BOOK.x + 20 + run * 110, LAB_BOOK.y + 2];
-	const pose: Pose = lerpPose({...POSES.write, head: 20, lean: 14}, {...POSES.think, head: 2}, sitBack);
+	const pose0: Pose = lerpPose({...POSES.write, head: 20, lean: 14}, {...POSES.think, head: 2}, sitBack);
+	const pose: Pose = {...pose0, ...addPose(pose0, idle(f, 'benford'), 0.7)};
 	return (
 		<FullFrame fadeIn={0} fadeOut={0} motes={0.6 * snowToDust}>
 			<EdgeLight />
@@ -892,7 +906,7 @@ const Twist: React.FC<SceneProps> = () => {
 					lamp={lamp}
 					desk={
 						<>
-							<g transform={`translate(${BX},${BY + Math.sin(f / 24)}) scale(${NS})`} opacity={prog(f, c1, 20)}>
+							<g transform={`translate(${BX},${BY}) scale(${NS})`} opacity={prog(f, c1, 20)}>
 								<Figure look={BENFORD_LOOK} pose={pose} reach={{near: bfig(...safeReach(pose, BX, BY, NS, hand)), far: bfig(...safeReach(pose, BX, BY, NS, [860, 752], false))}} expression={sitBack > 0.5 ? 'stern' : study > 0.5 ? 'thinking' : 'neutral'} blink={blinkAt(f, 'bf')} rim="warm" shadow={false} />
 							</g>
 							<rect x={700} y={760} width={2600} height={40} fill="#3a2a1e" />
@@ -934,7 +948,12 @@ const Benford: React.FC<SceneProps> = () => {
 	];
 	const cam = camPath(keys, f);
 	const TRAY = (d: number) => 1640 + (d - 5) * 58;
-	const cardBeats = beats.slice(0, 14);
+	// he deals at a human pace, speeding up as he gets the rhythm of it (not one per beat)
+	const cardBeats: number[] = [];
+	for (let t = 8, i = 0; i < 14 && t < c1 + 4; i++) {
+		cardBeats.push(Math.round(t));
+		t += 6 + 14 * Math.pow(0.84, i) + 4 * (random(`cg${i}`) - 0.5);
+	}
 	const cards = cardBeats.map((b, i) => {
 		const d = benfordDigit(random(`cd${i}`) * 0.98);
 		return {t0: b - 12, t1: b, d, cat: CATS[i % CATS.length], text: logNumber(`bc${i}`, d)};
@@ -943,6 +962,8 @@ const Benford: React.FC<SceneProps> = () => {
 	const grow = prog(f, 0, end, (x) => x);
 	const total = Math.round(20229 * Math.min(1, prog(f, cue(0), c1 + 16 - cue(0), (x) => x * x)));
 	const landed = f >= c1 + 16;
+	const bBase: Pose = {...POSES.write, head: 18, lean: 12};
+	const bPose: Pose = {...bBase, ...addPose(bBase, idle(f + 300, 'benford'), 0.6)};
 	const hand: [number, number] = (() => {
 		const cur = cards.filter((c) => f >= c.t0 - 4).pop();
 		if (!cur) return [960, 742];
@@ -958,8 +979,8 @@ const Benford: React.FC<SceneProps> = () => {
 				lamp={1}
 				desk={
 					<>
-						<g transform={`translate(${BX},${BY + Math.sin(f / 24)}) scale(${NS})`}>
-							<Figure look={BENFORD_LOOK} pose={{...POSES.write, head: 18, lean: 12}} reach={{near: bfig(...safeReach({...POSES.write, lean: 12}, BX, BY, NS, hand)), far: bfig(...safeReach({...POSES.write, lean: 12}, BX, BY, NS, [860, 752], false))}} expression="thinking" blink={blinkAt(f + 300, 'bf')} rim="warm" shadow={false} />
+						<g transform={`translate(${BX},${BY}) scale(${NS})`}>
+							<Figure look={BENFORD_LOOK} pose={bPose} reach={{near: bfig(...safeReach(bPose, BX, BY, NS, hand)), far: bfig(...safeReach(bPose, BX, BY, NS, [860, 752], false))}} expression="thinking" blink={blinkAt(f + 300, 'bf')} rim="warm" shadow={false} />
 						</g>
 						<rect x={700} y={760} width={2600} height={40} fill="#3a2a1e" />
 						<rect x={700} y={760} width={2600} height={6} fill="#6a4a32" />

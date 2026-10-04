@@ -12,6 +12,8 @@ import {CAM0, Layer, type Cam} from './Airfield';
  */
 
 export const DESK_Y = 760;
+/** where the bean machine stands, on the back-wall layer (depth 0.55): base centre */
+export const BOARD_AT = {x: 720, y: 600, depth: 0.55};
 
 /** Galton's bean machine: pins in a triangle, beads piling into a bell. Origin at its base centre. */
 export const Quincunx: React.FC<{fill?: number; glow?: number}> = ({fill = 1, glow = 0}) => {
@@ -96,7 +98,11 @@ export const Study1906: React.FC<{
 	/** bean machine on the shelf: how full, and whether its middle bin glows */
 	board?: number;
 	boardGlow?: number;
-}> = ({frame: f, cam = CAM0, desk, children, front, lamp = 1, board = 1, boardGlow = 0}) => (
+	/** replace the static bean machine (e.g. an animated one); drawn at its base centre */
+	boardNode?: React.ReactNode;
+	/** on the hero plane but behind the desk (a person standing at it, seen from the waist up) */
+	behind?: React.ReactNode;
+}> = ({frame: f, cam = CAM0, desk, children, front, lamp = 1, board = 1, boardGlow = 0, boardNode, behind}) => (
 	<g>
 		<Layer cam={cam} depth={0.55}>
 			{/* wall: dark green paper with a faint damask, wainscot below */}
@@ -122,7 +128,7 @@ export const Study1906: React.FC<{
 			{/* the bean machine on a side cabinet */}
 			<g transform="translate(720,600)">
 				<rect x={-130} y={0} width={260} height={30} fill="#3e2a1a" />
-				<Quincunx fill={board} glow={boardGlow} />
+				{boardNode ?? <Quincunx fill={board} glow={boardGlow} />}
 			</g>
 			{/* window: London fog, roofs, a gas lamp */}
 			<g transform="translate(1400,130)">
@@ -144,6 +150,7 @@ export const Study1906: React.FC<{
 			<path d="M1400,130 L1800,130 L1360,1000 L960,1000 Z" fill="url(#beam-cool)" opacity={0.14} filter="url(#blur-md)" />
 		</Layer>
 		<Layer cam={cam} depth={1}>
+			{behind}
 			{/* the desk */}
 			<rect x={-400} y={DESK_Y + 300} width={2720} height={400} fill="#120c08" />
 			<rect x={-300} y={DESK_Y} width={2520} height={26} fill="#5a3d27" />

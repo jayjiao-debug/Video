@@ -263,12 +263,15 @@ export const Reveal: React.FC<SceneProps> = () => {
 	const crane = prog(f, 0, 50, ease.out);
 	const edgeIn = prog(f, c2 - 6, 30, ease.inOut);
 	const lift = -120 * edgeIn;
+	// after the slam the bars hold still (readable); the camera keeps pushing in
+	const push = 1 + 0.07 * prog(f, 40, scene.duration - 40, ease.inOut);
+	const drift = 26 * Math.sin(f / 70);
 	return (
 		<FullFrame fadeIn={0} fadeOut={0} motes={1.2}>
 			<GoldDefs />
 			<rect width={W} height={H} fill="#07060a" />
 			<ellipse cx={960} cy={600} rx={1100} ry={520} fill="url(#glow-lamp)" opacity={0.35 + 0.25 * hitAt(f, 0, 10)} />
-			<g transform={`translate(${shake * (random(`rx${f}`) - 0.5)},${shake * (random(`ry${f}`) - 0.5)}) translate(960,560) scale(${1.18 - 0.18 * crane}) translate(-960,-560) translate(0,${lift})`}>
+			<g transform={`translate(${shake * (random(`rx${f}`) - 0.5)},${shake * (random(`ry${f}`) - 0.5)}) translate(960,560) scale(${(1.18 - 0.18 * crane) * push}) translate(-960,-560) translate(${drift},${lift})`}>
 				{/* the worn fore-edge slides in under the bars: the same curve */}
 				{edgeIn > 0 ? (
 					<g opacity={edgeIn} transform={`translate(${STAIR(1).x},${820 + 40 * (1 - edgeIn)}) scale(${(STAIR(9).x + STAIR(9).w - STAIR(1).x) / BOOK.w})`}>
@@ -396,8 +399,12 @@ export const Cheques: React.FC<SceneProps> = () => {
 		[end, 1120, 610, 2.85],
 	];
 	const cam = camPath(keys, f);
-	// cheques printed one per beat from the dot-matrix printer
-	const printBeats = beats.filter((b) => b >= c0 + 6 && b < c2 - 4);
+	// cheques come out on the printer's own clock (a machine, not the music): steady feed, a slightly longer pause now and then
+	const printBeats: number[] = [];
+	for (let t = c0 + 8, i = 0; t < c2 - 4; i++) {
+		printBeats.push(Math.round(t));
+		t += 17 + (i % 4 === 3 ? 9 : 0) + 3 * (random(`pf${i}`) - 0.5);
+	}
 	const printed = printBeats.filter((b) => f >= b).length;
 	const tear = (i: number) => prog(f, printBeats[i] ?? 1e9, 10, ease.out);
 	// at c2 the printed cheques' first digits fly onto the CRT chart
@@ -494,7 +501,7 @@ export const Cheques: React.FC<SceneProps> = () => {
 											$<tspan fill="#c42a2a">{amt[0]}</tspan>
 											{amt.slice(1)}
 										</text>
-										{onPile ? <circle cx={-71} cy={16} r={14} fill="none" stroke="#e5484d" strokeWidth={3} opacity={prog(f, printBeats[i] + 4, 6)} /> : null}
+										{onPile ? <circle cx={-71} cy={16} r={14} fill="none" stroke="#e5484d" strokeWidth={3} opacity={prog(f, c2 - 30 + i * 2, 6)} /> : null}
 									</g>
 								);
 							})}
