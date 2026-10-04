@@ -1,77 +1,50 @@
 {
-  "id": "money-search-02",
+  "id": "money-models-01",
   "items": [
     {
-      "type": "sketchfab-search",
-      "q": "yap stone",
-      "count": 12,
-      "maxFaces": 300000
+      "type": "sketchfab",
+      "uid": "634e34ce3c0b4d75addce41c96e7b5ba",
+      "name": "bill100"
     },
     {
-      "type": "sketchfab-search",
-      "q": "stone wheel",
-      "count": 12,
-      "maxFaces": 300000
+      "type": "sketchfab",
+      "uid": "a1fd5cd41faf467fa9ffd42ee297e6f5",
+      "name": "noodles"
     },
     {
-      "type": "sketchfab-search",
-      "q": "millstone",
-      "count": 12,
-      "maxFaces": 300000
+      "type": "sketchfab",
+      "uid": "e53a5ef2faf84edcaddf49d4d27f366c",
+      "name": "table"
     },
     {
-      "type": "sketchfab-search",
-      "q": "money cowry",
-      "count": 12,
-      "maxFaces": 300000
+      "type": "sketchfab",
+      "uid": "bc930d60c238410289ae694eaf07b846",
+      "name": "cowrie"
     },
     {
-      "type": "sketchfab-search",
-      "q": "electrum coin",
-      "count": 12,
-      "maxFaces": 300000
+      "type": "sketchfab",
+      "uid": "e935c74614334ae7b808cd557df50cf2",
+      "name": "lioncoins"
     },
     {
-      "type": "sketchfab-search",
-      "q": "lion coin",
-      "count": 12,
-      "maxFaces": 300000
+      "type": "sketchfab",
+      "uid": "384f557db51a407e807c59af188cc9cc",
+      "name": "cashcoin"
     },
     {
-      "type": "sketchfab-search",
-      "q": "wooden table",
-      "count": 12,
-      "maxFaces": 300000
+      "type": "sketchfab",
+      "uid": "0d1ff6b3e6d045cba78889caf7f5bc6e",
+      "name": "goldbar"
     },
     {
-      "type": "sketchfab-search",
-      "q": "chinese restaurant",
-      "count": 12,
-      "maxFaces": 300000
+      "type": "sketchfab",
+      "uid": "c4731bab20764f5eb874daf3ff07fcb5",
+      "name": "stonewheel"
     },
     {
-      "type": "sketchfab-search",
-      "q": "noodle shop",
-      "count": 12,
-      "maxFaces": 300000
-    },
-    {
-      "type": "sketchfab-search",
-      "q": "old wooden table",
-      "count": 12,
-      "maxFaces": 300000
-    },
-    {
-      "type": "sketchfab-search",
-      "q": "cash register",
-      "count": 12,
-      "maxFaces": 300000
-    },
-    {
-      "type": "sketchfab-search",
-      "q": "bank vault",
-      "count": 12,
-      "maxFaces": 300000
+      "type": "sketchfab",
+      "uid": "fb4379ba486c43bd846f9b9ef608743a",
+      "name": "canoe"
     }
   ]
 }
