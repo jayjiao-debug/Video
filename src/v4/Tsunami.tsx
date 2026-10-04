@@ -203,7 +203,7 @@ const Umbrellas: React.FC = () => {
     const pts: number[][] = [];
     for (let i = 0; pts.length < 46 && i < 500; i++) {
       const x = -80 + rnd[7000 + i] * 160, zz = 4 + rnd[7500 + i] * 6;
-      if (Math.abs(x) < 8) continue;
+      if (Math.abs(x) < 8 || Math.abs(x - 44) < 10) continue; // keep the camera path around Tilly clear
       pts.push([x, zz - shoreOff(x), rnd[8000 + i]]);
     }
     const cg = new THREE.ConeGeometry(0.55, 0.28, 10); cg.translate(0, 0.95, 0);
