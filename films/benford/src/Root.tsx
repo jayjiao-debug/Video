@@ -12,7 +12,7 @@ import { FPS, W, H, FILM_FRAMES, b } from './lib';
 export const Root: React.FC = () => (
   <>
     <Composition id="Benford" component={Film} durationInFrames={FILM_FRAMES} fps={FPS} width={W} height={H} defaultProps={{ music: false }} />
-    <Composition id="Sample01" component={Film} durationInFrames={Math.round((b(52) + 0.6) * FPS)} fps={FPS} width={W} height={H} defaultProps={{ music: true }} />
+    <Composition id="Sample01" component={Film} durationInFrames={Math.round((b(44) + 0.6) * FPS)} fps={FPS} width={W} height={H} defaultProps={{ music: true }} />
     <Composition id="GlobeTest" component={GlobeTest} durationInFrames={6} fps={FPS} width={W} height={H} />
   </>
 );

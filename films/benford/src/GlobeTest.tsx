@@ -12,7 +12,7 @@ export const GlobeTest: React.FC = () => {
   const spin = f * 60;
   return (
     <AbsoluteFill style={{ background: '#05070d' }}>
-      <Globe T={0} keys={KEYS} spin={spin} pin={0.035} ambient={2.5} />
+      <Globe T={0} keys={KEYS} spin={spin} />
       {C.filter((c) => PICK.includes(c.code)).map((c) => {
         const p = project(KEYS, 0, worldOf(c.lat, c.lon, spin));
         if (p.facing < 0.05) return null;
