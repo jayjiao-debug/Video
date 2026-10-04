@@ -149,6 +149,7 @@ scenes:
   # 8 real world: three takeaways
   - id: tips
     component: Tips
+    subtitles: false   # the takeaways are already on screen as cards
     lines:
       - ① 先各自写下答案，再开口讨论。
       - ② 多找几个背景不同的人。

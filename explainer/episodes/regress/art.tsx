@@ -35,10 +35,10 @@ export const REGRESS_DEFS: React.FC = () => (
 			<stop offset="0.5" stopColor="#c3c8cf" />
 			<stop offset="1" stopColor="#6c727b" />
 		</radialGradient>
-		<radialGradient id="floor-pool" cx={960} cy={420} r={980} gradientUnits="userSpaceOnUse">
-			<stop offset="0" stopColor="#ffdca6" stopOpacity="0.28" />
-			<stop offset="0.5" stopColor="#c98a4a" stopOpacity="0.06" />
-			<stop offset="1" stopColor="#000" stopOpacity="0.8" />
+		<radialGradient id="floor-pool" cx={960} cy={440} r={1250} gradientUnits="userSpaceOnUse">
+			<stop offset="0" stopColor="#ffdca6" stopOpacity="0.3" />
+			<stop offset="0.5" stopColor="#c98a4a" stopOpacity="0.08" />
+			<stop offset="1" stopColor="#000" stopOpacity="0.62" />
 		</radialGradient>
 		<linearGradient id="paper-page" x1="0" y1="0" x2="1" y2="0">
 			<stop offset="0" stopColor="#efe6d2" />

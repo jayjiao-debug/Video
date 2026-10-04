@@ -88,7 +88,10 @@ def build(ep, music, warn=print):
             t += row[0] * scale
             lines = []
             for ln, dur in zip(s["_lines"], row[1:-1]):
-                lines.append({"text": ln.get("text", ""), "start": t, "silent": "pause" in ln})
+                # `sub: false` on a line (or `subtitles: false` on its scene) keeps it as a timed cue but
+                # burns no subtitle: for lines already on screen as cards (the takeaways)
+                lines.append({"text": ln.get("text", ""), "start": t, "silent": "pause" in ln,
+                              "nosub": ln.get("sub", True) is False or s.get("subtitles", True) is False})
                 t += dur * scale
             t += row[-1] * scale
             timed.append((s, s_start, t, lines))
@@ -111,7 +114,7 @@ def build(ep, music, warn=print):
             nxt = lines[i + 1]["start"] if i + 1 < len(lines) else s_end
             la, lb = f(ln["start"]), f(nxt) - (3 if i + 1 < len(lines) else 6)
             rel.append({"text": ln["text"], "from": la - a, "duration": max(1, lb - la), "silent": ln["silent"]})
-            if not ln["silent"] and ln["text"]:
+            if not ln["silent"] and ln["text"] and not ln["nosub"]:
                 subtitles.append({"text": ln["text"], "from": la, "to": lb, "scene": s["id"]})
         out_scenes.append({
             "id": s["id"], "component": s.get("component", "Blank"), "props": s.get("props", {}),

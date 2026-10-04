@@ -260,7 +260,10 @@ were looking at.
   (the owner). Move the camera normally into the scene, then dim and soften the
   background, put a header and the tips up one by one (short keyword lines; the
   subtitle carries the full sentence), hold them still, then take them off and
-  return to the scene (`TipCards` in `episodes/ox/scenes.tsx`).
+  return to the scene (`TipCards` in `episodes/ox/scenes.tsx`). **No subtitles under
+  the cards**: the owner saw the same words twice (这里上面都有字了，下面不需要字幕了). Put
+  `subtitles: false` on the tips scene (or `sub: false` on a line): the lines still time
+  the cards as cues but burn no subtitle, so each card must carry the whole idea.
 - Don't put a "?" on objects. Show "unknown" with motion (a rolling number, a
   searching marker, a dashed outline).
 - `npx tsc --noEmit` must pass.

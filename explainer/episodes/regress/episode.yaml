@@ -139,6 +139,7 @@ scenes:
   # 8 real world: three takeaways on screen
   - id: tips
     component: Tips
+    subtitles: false   # the takeaways are already on screen as cards
     lines:
       - 下次看到“立竿见影”，先问三件事：
       - ① 上一次，是不是太极端了？

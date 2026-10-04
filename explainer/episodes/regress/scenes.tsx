@@ -522,8 +522,8 @@ const Twist: React.FC<SceneProps> = () => {
 	);
 	const book = camPath(
 		[
-			[CUT, 1080, 540, 1.5],
-			[D, 1110, 560, 1.68],
+			[CUT, 1080, 630, 1.5],
+			[D, 1110, 650, 1.66],
 		],
 		f,
 	);
@@ -573,7 +573,7 @@ const coinState = (k: number, from: [number, number], to: [number, number]) => {
 const tgt = (p: [number, number]): [number, number] => [TGT.x + p[0], TGT.y + p[1]];
 
 /** The ten instructors, their two coins, and the chalk numbers; `t1`/`t2` are the rounds' start frames. */
-const Experiment: React.FC<{f: number; A: number; t1: number; t2: number; people?: number}> = ({f, A, t1, t2, people = 1}) => (
+const Experiment: React.FC<{f: number; A: number; t1: number; t2: number; people?: number; turn?: (i: number) => number; dim?: (i: number) => number}> = ({f, A, t1, t2, people = 1, turn = () => 1, dim = () => 1}) => (
 	<g>
 		{COINS.map((c, i) => {
 			const [px, py] = throwerAt(i);
@@ -587,7 +587,7 @@ const Experiment: React.FC<{f: number; A: number; t1: number; t2: number; people
 					</text>
 				) : null;
 			return (
-				<g key={i}>
+				<g key={i} opacity={dim(i)}>
 					{s1 ? <Coin x={s1.x} y={s1.y} h={s1.h} spin={s1.spin} r={26} /> : null}
 					{tag(s1, f - t1 - THROW1[i], 'a')}
 					{s2 ? <Coin x={s2.x} y={s2.y} h={s2.h} spin={s2.spin} r={26} copper /> : null}
@@ -600,7 +600,7 @@ const Experiment: React.FC<{f: number; A: number; t1: number; t2: number; people
 				const [x, y] = throwerAt(i);
 				return (
 					<g key={i}>
-						<TopPerson x={x} y={y} f={A} seed={`th${i}`} />
+						<TopPerson x={x} y={y} f={A} seed={`th${i}`} angle={180 * (1 - turn(i))} />
 						<text x={x} y={y + 84} textAnchor="middle" style={{fontFamily: font.latin, fontWeight: 700, fontSize: 28, fill: '#e9efe6', ...NUM}} opacity={0.7} filter="url(#chalk)">
 							{i + 1}
 						</text>
@@ -632,8 +632,9 @@ const Coins: React.FC<SceneProps> = () => {
 		<FullFrame fadeIn={0} fadeOut={0}>
 			<Defs />
 			<Flat cam={cam}>
-				<HangarFloor f={A} rings={prog(f, 4, 44, ease.inOut)}>
-					<Experiment f={f} A={A} t1={cue(2) + 6} t2={cue(3) + 8} />
+				<HangarFloor f={A} rings={prog(f, 0, 34, ease.inOut)}>
+					{/* they turn their backs on the target, one by one, on the line that says so */}
+					<Experiment f={f} A={A} t1={cue(2) + 6} t2={cue(3) + 8} turn={(i) => prog(f, cue(1) + 4 + [0, 7, 3, 12, 9, 16, 5, 20, 14, 24][i], 16, ease.inOut)} />
 				</HangarFloor>
 			</Flat>
 		</FullFrame>
@@ -670,7 +671,7 @@ const ChalkRing: React.FC<{x: number; y: number; r: number; p: number; color?: s
 };
 
 /** All of the answer's floor marks at a given set of progress values. */
-const Marks: React.FC<{best: number; bestArrow: number; worstArrow: number; rest: number; aims: number; focus?: number}> = ({best, bestArrow, worstArrow, rest, aims, focus = -1}) => (
+const Marks: React.FC<{best: number; bestArrow: number; worstArrow: number; rest: number; aims: number; dim?: (i: number) => number}> = ({best, bestArrow, worstArrow, rest, aims, dim: dimOf = () => 1}) => (
 	<g>
 		{COINS.map((c, i) => {
 			const a = tgt(c.a);
@@ -678,7 +679,7 @@ const Marks: React.FC<{best: number; bestArrow: number; worstArrow: number; rest
 			const isBest = BEST.includes(i);
 			const isWorst = WORST.includes(i);
 			const p = isBest ? bestArrow - BEST.indexOf(i) * 0.25 : isWorst ? worstArrow - WORST.indexOf(i) * 0.25 : rest - i * 0.05;
-			const dim = focus >= 0 && focus !== i ? 0.3 : 1;
+			const dim = dimOf(i);
 			return (
 				<g key={i} opacity={dim}>
 					{aims > 0 ? (
@@ -714,16 +715,33 @@ const Reveal: React.FC<SceneProps> = () => {
 	const cam = camPath(
 		[
 			[0, 960, 440, 1.2],
-			[cue(0), 960, 440, 1.24],
+			[cue(0) + 10, 935, 430, 1.62],
+			[cue(1) - 10, 935, 440, 1.6],
+			[cue(1) + 30, 960, 460, 1.16],
 			[cue(2) - 20, 960, 440, 1.16],
 			[cue(2) + 60, 960, 420, 1.1],
-			[cue(3), aimX - 90, aimY + 30, 1.8],
-			[cue(4) + 30, aimX - 100, aimY + 10, 1.85],
+			[cue(3), aimX - 110, aimY + 20, 1.8],
+			[cue(4) + 30, aimX - 120, aimY, 1.85],
 			[D - 30, aimX + 60, aimY + 60, 1.6],
 			[D, 960, 430, 1.15],
 		],
 		f,
 	);
+	// who is in focus: the best three (line 1), the worst three (line 2), all (3), the best one (4, 5)
+	const sets: [number, number, number[] | null][] = [
+		[cue(0) - 6, cue(1) - 6, BEST],
+		[cue(1) - 6, cue(2) - 6, WORST],
+		[cue(3) - 10, D - 30, [hero]],
+	];
+	const dimOf = (i: number) => {
+		let d = 1;
+		for (const [a, b, set] of sets) {
+			if (!set || set.includes(i)) continue;
+			const w = prog(f, a, 10) * (1 - prog(f, b, 10));
+			d = Math.min(d, 1 - 0.8 * w);
+		}
+		return d;
+	};
 	// on the drop: the floor's lamp flares, a short kick
 	const flash = f < 30 ? Math.exp(-f / 7) : 0;
 	const kick = f < 10 ? 10 * Math.exp(-f / 2.5) : 0;
@@ -764,18 +782,18 @@ const Reveal: React.FC<SceneProps> = () => {
 							worstArrow={prog(f, cue(1) + 8, 26) * 1.6}
 							rest={prog(f, cue(1) + 70, 40) * 1.5}
 							aims={prog(f, cue(2) + 2, 40) * 1.4}
-							focus={f > cue(3) - 10 && f < D - 30 ? hero : -1}
+							dim={dimOf}
 						/>
-						<Experiment f={1e5} A={A} t1={0} t2={0} />
+						<Experiment f={1e5} A={A} t1={0} t2={0} dim={dimOf} />
 						<rect x={-1400} y={-1100} width={4720} height={3300} fill="#fff1cf" opacity={0.12 * flash} />
-						<g opacity={prog(f, cue(3) + 16, 10)} stroke={P.gold} strokeWidth={2.5} filter="url(#chalk)">
-							<line x1={690} y1={ha[1] + 40} x2={ha[0] - 28} y2={ha[1] + 6} />
+						<g opacity={prog(f, cue(3) + 16, 10) * (1 - prog(f, D - 30, 12))} stroke={P.gold} strokeWidth={2.5} filter="url(#chalk)">
+							<line x1={712} y1={352} x2={ha[0] - 26} y2={ha[1] - 4} />
 						</g>
-						<WriteOn x={680} y={ha[1] + 50} text="第一枚：运气好" size={30} p={prog(f, cue(3) + 20, 22)} anchor="end" id="lk1" fill={P.gold} />
-						<g opacity={prog(f, cue(4) + 12, 10)} stroke="#e9efe6" strokeWidth={2.5} filter="url(#chalk)">
-							<line x1={690} y1={hb[1] - 50} x2={hb[0] - 28} y2={hb[1] - 8} />
+						<WriteOn x={700} y={362} text="第一枚：运气好" size={32} p={prog(f, cue(3) + 20, 22) * (1 - prog(f, D - 30, 12))} anchor="end" id="lk1" fill={P.gold} />
+						<g opacity={prog(f, cue(4) + 12, 10) * (1 - prog(f, D - 30, 12))} stroke="#e9efe6" strokeWidth={2.5} filter="url(#chalk)">
+							<line x1={712} y1={262} x2={hb[0] - 26} y2={hb[1] - 6} />
 						</g>
-						<WriteOn x={680} y={hb[1] - 40} text="第二枚：运气平常" size={30} p={prog(f, cue(4) + 16, 22)} anchor="end" id="lk2" />
+						<WriteOn x={700} y={272} text="第二枚：运气平常" size={32} p={prog(f, cue(4) + 16, 22) * (1 - prog(f, D - 30, 12))} anchor="end" id="lk2" />
 					</HangarFloor>
 				</Flat>
 			</g>
@@ -868,9 +886,9 @@ const Galton: React.FC<SceneProps> = () => {
 		[
 			[0, GALTON_LAMP.x, GALTON_LAMP.y, 3.4],
 			[34, 1260, 380, 1.3],
-			[cue(1), 930, 520, 1.12],
-			[cue(3), 1010, 470, 1.28],
-			[D, 1020, 470, 1.32],
+			[cue(1), 930, 560, 1.1],
+			[cue(3), 1000, 545, 1.14],
+			[D, 1010, 545, 1.17],
 		],
 		f,
 	);
@@ -914,7 +932,7 @@ const Galton: React.FC<SceneProps> = () => {
 const TIPS: [string, string][] = [
 	['上一次', '是不是太极端了？'],
 	['不做的人', '是不是也变了？'],
-	['表扬', '照样给'],
+	['表扬照样给', '它本来就管用'],
 ];
 
 const TipCards: React.FC<{f: number; cues: number[]; out: number}> = ({f, cues, out}) => {
@@ -925,7 +943,7 @@ const TipCards: React.FC<{f: number; cues: number[]; out: number}> = ({f, cues, 
 		<g opacity={1 - leave} transform={`translate(0,${-30 * leave})`}>
 			<g opacity={head} transform={`translate(0,${16 * (1 - head)})`}>
 				<text x={960} y={250} textAnchor="middle" style={{fontFamily: font.serif, fontWeight: 900, fontSize: 52, fill: JUNO.colors.ink, letterSpacing: '0.18em'}}>
-					下次看到“立竿见影”
+					下次看到“立竿见影”，先问：
 				</text>
 				<line x1={960 - 220 * head} y1={286} x2={960 + 220 * head} y2={286} stroke={JUNO.colors.gold} strokeWidth={2} opacity={0.8} />
 			</g>
