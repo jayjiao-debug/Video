@@ -8,7 +8,7 @@ import {Grade, Sub, Tag} from '../xuming/look3';
 import {Glow, Thin} from '../xuming/kit3';
 import {GoldTitle, Monogram} from '../../src/brand/Brand';
 import {POSES} from '../../src/art/Figure';
-import {Bedroom, Bubble, Bulb, Card, ChatHead, Corridor, DeskLamp, Dust, FlatPack, H, Headphones, HUE, Person, Phone, Pool, SHE, SIT_PHONE, STUDENT59, Typing, W, Wave} from './kit';
+import {Bedroom, Bubble, ChatStack, Clock, TimeChip, Bulb, Card, ChatHead, Corridor, DeskLamp, Dust, FlatPack, H, Headphones, HUE, Person, Phone, Pool, SHE, SIT_PHONE, STUDENT59, Typing, W, Wave} from './kit';
 
 /**
  * 《越难越爱》 storyboard: one key frame per shot, drawn with the episode kit.
@@ -125,16 +125,22 @@ const PANELS: Panel[] = [
 			<>
 				<rect width={W} height={H} fill="#05050b" />
 				<Pool x={960} y={520} r={800} c={HUE.phone} id="a2" />
-				<Phone x={960} y={480} s={1.15}>
+				<Phone x={960} y={480} s={1.28}>
 					<ChatHead />
-					<Bubble y={130} mine text="今天那家店我路过了，想起你说想去" />
-					<Bubble y={230} mine text="下周末有空吗？" />
-					<Bubble y={290} mine text="没空也没关系哈哈" />
-					<Bubble y={370} text="嗯" w={60} />
+					<Clock t="01:07" />
+					<TimeChip y={122} t="21:02" />
+					<Bubble y={136} mine text={'今天路过那家店了，\n想起你说想去'} />
+					<Bubble y={226} mine text="下周末有空吗？" />
+					<TimeChip y={306} t="22:40" />
+					<Bubble y={320} mine text="在忙吗？" />
+					<TimeChip y={400} t="23:58" />
+					<Bubble y={414} mine text="没空也没关系哈哈" />
+					<TimeChip y={494} t="01:07" />
+					<Bubble y={508} text="嗯" w={52} />
 				</Phone>
 				<Dust seed="a2" n={40} c="#d8deff" />
-				<Arrow d="M1240,250 L1240,520" label="三条气泡逐条弹出，“嗯”最后落下" lx={1270} ly={390} />
-				<Sub text="你发了三条长消息，TA只回了一个“嗯”。" />
+				<Arrow d="M1240,250 L1240,520" label="时间戳和时钟从21:02跳到01:07" lx={1270} ly={390} />
+				<Sub text="你等了四个小时，TA只回了一个“嗯”。" />
 			</>
 		),
 	},
@@ -145,16 +151,21 @@ const PANELS: Panel[] = [
 			<>
 				<rect width={W} height={H} fill="#05050b" />
 				<Pool x={960} y={520} r={800} c={HUE.phone} id="a3" />
-				<Phone x={960} y={480} s={1.15}>
-					<ChatHead status="对方正在输入…" />
-					<Bubble y={130} mine text="今天那家店我路过了，想起你说想去" o={0.4} />
-					<Bubble y={230} mine text="下周末有空吗？" o={0.4} />
-					<Bubble y={290} mine text="没空也没关系哈哈" o={0.4} />
-					<Bubble y={370} text="嗯" w={60} o={0.6} />
-					<Typing x={86} y={480} s={0.62} t={10} />
+				<Phone x={960} y={480} s={1.28}>
+					<ChatHead />
+					<Clock t="01:07" />
+					<TimeChip y={122} t="21:02" />
+					<Bubble y={136} mine text={'今天路过那家店了，\n想起你说想去'} gold={1} />
+					<Bubble y={226} mine text="下周末有空吗？" gold={1} />
+					<TimeChip y={306} t="22:40" />
+					<Bubble y={320} mine text="在忙吗？" gold={1} />
+					<TimeChip y={400} t="23:58" />
+					<Bubble y={414} mine text="没空也没关系哈哈" gold={1} />
+					<TimeChip y={494} t="01:07" />
+					<Bubble y={508} text="嗯" w={52} />
 				</Phone>
-				<Arrow d="M700,700 C800,640 860,600 920,580" label="推到三个点：跳、停、消失" lx={330} ly={760} />
-				<Beat x={1240} y={640} label="点消失=音乐的停顿" />
+				<Arrow d="M700,700 C800,640 860,600 920,580" label="她的四条消息依次变金（她的付出），TA的“嗯”留灰" lx={330} ly={760} />
+				<Beat x={1240} y={640} label="音乐停顿：屏幕自动变暗" />
 				<Sub text="为什么越难追到的人，你越放不下？" hl="越放不下" />
 			</>
 		),
@@ -170,17 +181,17 @@ const PANELS: Panel[] = [
 					EFFORT JUSTIFICATION · ARONSON & MILLS · MCMLIX
 				</text>
 				<GoldTitle text="越难越爱" f={200} at={0} size={150} y={530} />
-				<Typing x={960} y={650} s={0.9} t={4} gold />
-				<text x={960} y={770} textAnchor="middle" style={{fontFamily: font.serif, fontWeight: 600, fontSize: 38, fill: '#f6e7c8'}}>
+				<ChatStack x={960} y={690} s={0.8} />
+				<text x={960} y={840} textAnchor="middle" style={{fontFamily: font.serif, fontWeight: 600, fontSize: 38, fill: '#f6e7c8'}}>
 					为什么越难追到的人，越放不下？
 				</text>
-				<text x={960} y={820} textAnchor="middle" style={{fontFamily: font.latinItalic, fontSize: 30, fill: '#cdbb98'}}>
+				<text x={960} y={886} textAnchor="middle" style={{fontFamily: font.latinItalic, fontSize: 30, fill: '#cdbb98'}}>
 					Why do we love what costs us the most?
 				</text>
-				<text x={960} y={900} textAnchor="middle" style={{fontFamily: font.sans, fontSize: 20, letterSpacing: '0.3em', fill: '#bfa77a'}}>
+				<text x={960} y={950} textAnchor="middle" style={{fontFamily: font.sans, fontSize: 20, letterSpacing: '0.3em', fill: '#bfa77a'}}>
 					— Juno 出品 · VIBE知识大赏 —
 				</text>
-				<Beat x={1380} y={980} label="16.1秒重拍：三个点变金，片名压出" />
+				<Beat x={1200} y={1040} label="16.1秒重拍：金色气泡飞入，成为片名下的母题" />
 			</>
 		),
 	},
@@ -192,7 +203,7 @@ const PANELS: Panel[] = [
 			<>
 				<Corridor f={20} open={0.35} />
 				<Tag en="1959 · Stanford University" zh="1959 · 斯坦福大学" />
-				<Arrow d="M600,760 C850,680 1100,620 1300,570" label="三个点缩成走廊尽头的门缝光（匹配剪辑）" lx={240} ly={860} />
+				<Arrow d="M600,760 C850,680 1100,620 1300,570" label="片名淡出，走廊缓推向亮着的门" lx={240} ly={860} />
 				<Sub text="1959年，斯坦福的心理学家阿伦森招募女大学生，" />
 			</>
 		),
@@ -605,9 +616,8 @@ const PANELS: Panel[] = [
 					<rect x={-40} y={-10} width={80} height={20} rx={5} fill="#0b0b12" stroke="#4a4a5c" />
 					<circle r={50} fill={HUE.phone} opacity={0.25} filter="url(#b8)" />
 				</g>
-				<Typing x={880} y={740} s={0.5} t={8} />
-				<Arrow d="M1500,250 C1300,300 1100,450 900,700" label="窗外天亮接过灯光，床上的手机又亮了一下" lx={900} ly={140} />
-				<Sub text="天快亮了，对话框里的三个点又跳了起来。" />
+				<Arrow d="M1500,250 C1300,300 1100,450 900,700" label="天亮接过灯光；扣着的手机亮了一下，她没去看" lx={900} ly={140} />
+				<Sub text="天亮了，手机又亮了一下。这一次，你没去看。" />
 			</>
 		),
 	},
@@ -633,7 +643,7 @@ const PANELS: Panel[] = [
 					<Monogram draw={1} size={1} />
 				</g>
 				<GoldTitle text="越难越爱" f={200} at={0} size={96} y={520} />
-				<Typing x={960} y={600} s={0.6} t={4} gold />
+				<ChatStack x={960} y={610} s={0.6} />
 				<text x={960} y={720} textAnchor="middle" style={{fontFamily: font.serif, fontWeight: 600, fontSize: 38, fill: '#f6e7c8'}}>
 					你有没有明知不值得、却放不下的人？A 有 / B 没有
 				</text>

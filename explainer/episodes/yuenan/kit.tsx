@@ -1,5 +1,5 @@
 import React from 'react';
-import {random} from 'remotion';
+import {interpolateColors, random} from 'remotion';
 import {noise2D} from '@remotion/noise';
 import {Figure, POSES, type Look, type Pose} from '../../src/art/Figure';
 import {P} from '../../src/art/palette';
@@ -142,24 +142,64 @@ export const Phone: React.FC<{x: number; y: number; s?: number; glow?: number; c
 	);
 };
 
-/** one chat bubble in screen space */
-export const Bubble: React.FC<{y: number; text: string; mine?: boolean; w?: number; o?: number; size?: number}> = ({y, text, mine, w, o = 1, size = 19}) => {
-	const bw = w ?? Math.min(250, text.length * size + 34);
+/** one chat bubble in screen space; `gold` 0..1 warms her bubbles into the episode's gold (her effort) */
+export const Bubble: React.FC<{y: number; text: string; mine?: boolean; w?: number; o?: number; size?: number; gold?: number}> = ({y, text, mine, w, o = 1, size = 19, gold = 0}) => {
+	const longest = text.includes('\n') ? Math.max(...text.split('\n').map((r) => r.length)) : text.length;
+	const bw = w ?? Math.min(250, longest * size + 34);
 	const x = mine ? 330 - 18 - bw : 18;
-	const lines = Math.ceil((text.length * size) / (bw - 30));
+	const rows = text.includes('\n') ? text.split('\n') : null;
+	const lines = rows ? rows.length : Math.ceil((text.length * size) / (bw - 30));
 	const per = Math.ceil(text.length / lines);
 	const bh = 22 + lines * (size + 9);
+	const fill = mine ? interpolateColors(gold, [0, 1], ['#8f9cff', '#f1c56d']) : '#3a3c5c';
 	return (
 		<g opacity={o}>
-			<rect x={x} y={y} width={bw} height={bh} rx={18} fill={mine ? '#8f9cff' : '#2c2e48'} opacity={mine ? 0.85 : 1} />
+			{gold > 0 && mine ? <rect x={x - 6} y={y - 6} width={bw + 12} height={bh + 12} rx={22} fill={HUE.gold} opacity={0.35 * gold} filter="url(#b8)" /> : null}
+			<rect x={x} y={y} width={bw} height={bh} rx={18} fill={fill} opacity={mine ? 0.88 : 1} />
 			{Array.from({length: lines}, (_, i) => (
-				<text key={i} x={x + 16} y={y + 14 + (i + 1) * (size + 6)} style={{fontFamily: font.sans, fontSize: size, fill: mine ? '#0c0d1c' : '#e6e4f2'}}>
-					{text.slice(i * per, (i + 1) * per)}
+				<text key={i} x={x + 16} y={y + 14 + (i + 1) * (size + 6)} style={{fontFamily: font.sans, fontSize: size, fill: mine ? '#141020' : '#d6d4e6'}}>
+					{rows ? rows[i] : text.slice(i * per, (i + 1) * per)}
 				</text>
 			))}
 		</g>
 	);
 };
+
+/** a centred time stamp between messages (screen space) */
+export const TimeChip: React.FC<{y: number; t: string; o?: number}> = ({y, t, o = 1}) => (
+	<text x={165} y={y} textAnchor="middle" style={{fontFamily: font.sans, fontSize: 15, fill: '#8a8eb8', letterSpacing: '0.06em'}} opacity={o}>
+		{t}
+	</text>
+);
+
+/** the status-bar clock (screen space) */
+export const Clock: React.FC<{t: string}> = ({t}) => (
+	<text x={40} y={34} style={{fontFamily: font.sans, fontWeight: 600, fontSize: 15, fill: '#c9cbe6'}}>
+		{t}
+	</text>
+);
+
+/**
+ * The motif: her stack of messages in gold beside TA's one small grey reply.
+ * Readable at phone size; the asymmetry is the story (her effort vs. a "嗯").
+ */
+export const ChatStack: React.FC<{x: number; y: number; s?: number; o?: number}> = ({x, y, s = 1, o = 1}) => (
+	<g transform={`translate(${x},${y}) scale(${s})`} opacity={o}>
+		{[
+			{w: 176, y: -96},
+			{w: 112, y: -46},
+			{w: 148, y: 4},
+		].map((b, i) => (
+			<g key={i}>
+				<rect x={90 - b.w} y={b.y} width={b.w} height={36} rx={18} fill={HUE.gold} opacity={0.2} />
+				<rect x={90 - b.w} y={b.y} width={b.w} height={36} rx={18} fill="none" stroke={HUE.gold} strokeWidth={2.2} filter="url(#g-sm)" />
+				<path d={`M84,${b.y + 26} C92,${b.y + 34} 98,${b.y + 36} 104,${b.y + 36} C96,${b.y + 32} 94,${b.y + 26} 94,${b.y + 18}`} fill="none" stroke={HUE.gold} strokeWidth={2} />
+			</g>
+		))}
+		<rect x={-110} y={62} width={46} height={36} rx={18} fill="none" stroke="#9a96b4" strokeWidth={2.2} opacity={0.85} />
+		<path d={`M-104,${88} C-112,${96} -118,${98} -124,${98} C-116,${94} -114,${88} -114,${80}`} fill="none" stroke="#9a96b4" strokeWidth={2} opacity={0.85} />
+	</g>
+);
 
 /** the chat header in screen space */
 export const ChatHead: React.FC<{name?: string; status?: string}> = ({name = 'TA', status}) => (
