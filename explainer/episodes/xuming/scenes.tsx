@@ -1188,8 +1188,9 @@ const Journey: React.FC<SceneProps> = () => {
 	const out = prog(f, cue(3) - 20, 60, ease.inOut);
 	const legs = events(cue(3) + 20, end - 40, 3, 20);
 	const fan = prog(f, legs[2] + 16, 50, ease.out);
-	const scale = mix(1500, 430, out);
-	const rot = mix(-58, -8, out);
+	const drift = prog(f, cue(3) + 40, end - cue(3) - 40, (x) => x);
+	const scale = mix(1500, 430, out) * (1 + 0.1 * drift);
+	const rot = mix(-58, -8, out) + 6 * drift;
 	const cy = mix(900, 600, out);
 	const proj = geoNaturalEarth1()
 		.scale(scale)
@@ -1617,7 +1618,7 @@ const Coda: React.FC<SceneProps> = () => {
 	const cue = useCue();
 	const scene = useScene();
 	const end = scene.duration;
-	const endAt = cue(3) - 4;
+	const endAt = end - 6 * 30;
 	const rimIn = prog(f, 0, 22, ease.out);
 	const orbit = prog(f, 0, endAt, ease.inOut);
 	const ghostTree = landed(f, cue(0) + 10, cue(1) - 6, 20);
@@ -1669,6 +1670,7 @@ const Coda: React.FC<SceneProps> = () => {
 				<Rays x={1500} y={260} n={9} o={0.22} c="#fff6e0" />
 			</g>
 			<Motes f={af} seed="co" n={50} o={0.8} />
+			<rect width={W} height={H} fill="#05060b" opacity={0.88 * prog(f, endAt, 30, ease.inOut)} />
 		</Stage>
 	);
 };
