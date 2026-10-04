@@ -267,7 +267,7 @@ export const BookMotif: React.FC<{p?: number; id: string}> = ({p = 1, id}) => {
  * everything on it (1, hero plane), a chair-back and book spines in the
  * foreground (1.35). `person` is drawn between the wall and the desk.
  */
-export const Study1881: React.FC<{f: number; cam?: Cam; person?: React.ReactNode; desk?: React.ReactNode; lamp?: number; front?: boolean; deskY?: number}> = ({
+export const Study1881: React.FC<{f: number; cam?: Cam; person?: React.ReactNode; desk?: React.ReactNode; lamp?: number; front?: boolean; deskY?: number; extra?: React.ReactNode}> = ({
 	f,
 	cam = CAM0,
 	person,
@@ -275,6 +275,7 @@ export const Study1881: React.FC<{f: number; cam?: Cam; person?: React.ReactNode
 	lamp = 1,
 	front = true,
 	deskY = 760,
+	extra,
 }) => (
 	<g>
 		<Layer cam={cam} depth={0.45}>
@@ -332,6 +333,7 @@ export const Study1881: React.FC<{f: number; cam?: Cam; person?: React.ReactNode
 				<line x1={0} y1={270} x2={440} y2={270} stroke="#2c2018" strokeWidth={14} />
 				<rect x={-60} y={0} width={560} height={720} fill="url(#glow-moon)" opacity={0.18} />
 			</g>
+			{extra}
 			{/* moonlight falling across the wall */}
 			<path d="M1360,600 L1800,600 L1500,1000 L1000,1000 Z" fill="#9cc0ee" opacity={0.05} />
 		</Layer>
