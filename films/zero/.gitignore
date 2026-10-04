@@ -1,0 +1,6 @@
+node_modules
+out
+*.log
+public/bgm*.mp3
+public/models/*.glb
+models_unused
