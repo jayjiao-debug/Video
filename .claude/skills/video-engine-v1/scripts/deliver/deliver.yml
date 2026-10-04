@@ -1,0 +1,23 @@
+name: deliver
+on:
+  push:
+    branches: [deliver]
+jobs:
+  package:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          lfs: false
+      - name: Join parts and check
+        run: |
+          mkdir -p out
+          cat parts/master.mp4.part* > "out/master_1080p.mp4"
+          echo "$(cat parts/md5.txt)  out/master_1080p.mp4" | md5sum -c -
+          ls -la out
+      - uses: actions/upload-artifact@v4
+        with:
+          name: master_1080p
+          path: out/master_1080p.mp4
+          compression-level: 0
+          retention-days: 30

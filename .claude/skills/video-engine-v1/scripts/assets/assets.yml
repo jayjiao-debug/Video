@@ -1,0 +1,46 @@
+name: assets
+
+# Push a new request.json to the asset-farm branch. A runner (which can reach the whole internet)
+# searches / downloads the requested assets, records licences and authors, and pushes the results
+# to the `asset-output` branch under out/<request id>/. Files over 90 MB are split into .partNN.
+on:
+  push:
+    branches: [asset-farm]
+    paths: ['request.json']
+
+permissions:
+  contents: write
+
+concurrency:
+  group: assets
+  cancel-in-progress: false
+
+jobs:
+  fetch:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with: { node-version: 20 }
+      - name: fetch
+        env:
+          SKETCHFAB_TOKEN: ${{ secrets.SKETCHFAB_TOKEN }}
+        run: |
+          mkdir -p out
+          echo "token present: $([ -n "$SKETCHFAB_TOKEN" ] && echo yes || echo no)" >> out/log.txt
+          node fetch.mjs 2>&1 | tee -a out/run.txt || echo "fetch exited non-zero" >> out/log.txt
+      - name: publish
+        if: always()
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -x
+          ID=$(node -e "console.log(require('./request.json').id)")
+          find out -type f -size +90M -print0 | while IFS= read -r -d '' f; do split -b 90m -d -a 2 "$f" "$f.part" && rm "$f"; done
+          git clone -q --depth 1 --branch asset-output "https://x-access-token:${GH_TOKEN}@github.com/${{ github.repository }}.git" /tmp/ao || (mkdir -p /tmp/ao && cd /tmp/ao && git init -q && git checkout -q -b asset-output && git remote add origin "https://x-access-token:${GH_TOKEN}@github.com/${{ github.repository }}.git")
+          rm -rf "/tmp/ao/out/$ID"; mkdir -p "/tmp/ao/out/$ID"; cp -r out/. "/tmp/ao/out/$ID/"
+          cd /tmp/ao
+          echo "{\"id\":\"$ID\",\"finished\":$(date -u +%s)}" > latest.json
+          git config user.name "asset-farm"; git config user.email "asset-farm@users.noreply.github.com"
+          git add -A && git commit -q -m "assets: $ID" && git push -q origin asset-output

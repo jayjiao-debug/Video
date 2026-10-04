@@ -1,0 +1,94 @@
+name: render
+
+# Push a new render.json to the render-farm branch to start a render.
+# Each chunk of frames renders on its own runner; the combine job joins them
+# and pushes the finished picture (no audio) to the `render-output` branch.
+on:
+  push:
+    branches: [render-farm]
+    paths: ['render.json']
+
+permissions:
+  contents: write
+
+concurrency:
+  group: render
+  cancel-in-progress: true
+
+jobs:
+  plan:
+    runs-on: ubuntu-latest
+    outputs:
+      matrix: ${{ steps.p.outputs.matrix }}
+      name: ${{ steps.p.outputs.name }}
+      id: ${{ steps.p.outputs.id }}
+    steps:
+      - uses: actions/checkout@v4
+      - id: p
+        run: node scripts/plan.mjs >> "$GITHUB_OUTPUT"
+      - run: echo "started=$(date -u +%s)" > started.txt
+      - uses: actions/upload-artifact@v4
+        with: { name: started, path: started.txt, retention-days: 1 }
+
+  render:
+    needs: plan
+    runs-on: ubuntu-latest
+    timeout-minutes: 40
+    strategy:
+      fail-fast: true
+      max-parallel: 20
+      matrix:
+        chunk: ${{ fromJSON(needs.plan.outputs.matrix) }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+      - name: Chinese serif font
+        run: sudo apt-get update -qq && sudo apt-get install -y -qq fonts-noto-cjk fonts-noto-cjk-extra >/dev/null && fc-list | grep -c "Noto Serif CJK"
+      - run: npm ci --no-audit --no-fund
+      - run: npx remotion browser ensure
+      - name: Render frames ${{ matrix.chunk.a }}-${{ matrix.chunk.b }}
+        run: |
+          npx remotion render src/index.ts ${{ matrix.chunk.comp }} out/chunk_${{ matrix.chunk.i }}.mp4 \
+            --frames=${{ matrix.chunk.a }}-${{ matrix.chunk.b }} --gl=swangle --muted \
+            --concurrency=$(nproc) --crf=16 --timeout=180000 --log=warn
+      - uses: actions/upload-artifact@v4
+        with:
+          name: chunk-${{ matrix.chunk.i }}
+          path: out/chunk_${{ matrix.chunk.i }}.mp4
+          retention-days: 1
+
+  combine:
+    needs: [plan, render]
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          pattern: chunk-*
+          path: chunks
+          merge-multiple: true
+      - uses: actions/download-artifact@v4
+        with: { name: started, path: meta }
+      - name: Join chunks
+        run: |
+          sudo apt-get update -qq && sudo apt-get install -y -qq ffmpeg >/dev/null
+          ls chunks/*.mp4 | sort | sed "s#^#file '$PWD/#; s#\$#'#" > list.txt
+          ffmpeg -v error -f concat -safe 0 -i list.txt -c copy joined.mp4
+          ls -la joined.mp4
+      - name: Publish to the renders branch
+        env:
+          NAME: ${{ needs.plan.outputs.name }}
+          ID: ${{ needs.plan.outputs.id }}
+        run: |
+          mkdir pub && cd pub
+          git init -q -b render-output
+          git config user.name "render-bot"
+          git config user.email "render-bot@users.noreply.github.com"
+          # files over 95 MB are split so they fit GitHub's 100 MB limit
+          split -b 95m -d -a 2 ../joined.mp4 "$NAME.mp4.part"
+          . ../meta/started.txt
+          echo "{\"id\":\"$ID\",\"name\":\"$NAME\",\"started\":$started,\"finished\":$(date -u +%s),\"sha\":\"$GITHUB_SHA\"}" > result.json
+          git add -A && git commit -qm "render $NAME ($ID)"
+          git push -q --force "https://x-access-token:${{ github.token }}@github.com/${{ github.repository }}" render-output
