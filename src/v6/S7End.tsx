@@ -177,9 +177,8 @@ export const S7End: React.FC<{ T: number }> = ({ T }) => {
             <text x={960} y={727} textAnchor="middle" style={{ fontFamily: ZH, fontWeight: 500, fontSize: 26, letterSpacing: '0.2em', fill: '#f1c56d' }}>{JUNO.follow}</text>
           </g>
           <g opacity={o(2.7)} style={{ fontFamily: ZH, fontSize: 17, letterSpacing: '0.03em', fill: 'rgba(243,237,226,0.42)' }}>
-            <text x={960} y={940} textAnchor="middle">资料：Feld, American Journal of Sociology (1991) · Ugander 等, The Anatomy of the Facebook Social Graph (2011)</text>
-            <text x={960} y={968} textAnchor="middle">Christakis & Fowler, PLoS ONE (2010) · Bollen 等, EPJ Data Science (2017)</text>
-            <text x={960} y={996} textAnchor="middle">宿舍关系网、星系网络、流感曲线与朋友圈画面均为示意</text>
+            <text x={960} y={968} textAnchor="middle">资料：Feld, American Journal of Sociology (1991) · Ugander 等, The Anatomy of the Facebook Social Graph (2011)</text>
+            <text x={960} y={996} textAnchor="middle">宿舍关系网、星系网络与朋友圈画面均为示意</text>
           </g>
           <rect width={1920} height={1080} fill="#000" opacity={black} />
         </svg>

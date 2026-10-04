@@ -1,8 +1,8 @@
 {
-  "id": "ep6_v3-1791127780",
+  "id": "ep6_endfix-1791128727",
   "composition": "Ep6",
-  "start": 0,
+  "start": 2700,
   "end": 2931,
-  "chunks": 32,
-  "output": "ep6_v3"
+  "chunks": 6,
+  "output": "ep6_endfix"
 }
