@@ -46,51 +46,47 @@ scenes:
       - {text: "[1]。是9的六倍还多。", hold: 1.5}
 
   - id: office
-    component: Office
+    component: Edge
     at: a
-    lead: 4.67  # the title card plays first (3.90 → 8.47, cut on the 8.47 accent)
+    lead: 4.62  # the title card plays first (3.90 → 8.47); its nine bars become the book's worn edge
+    tail: 0
     props: {quietLead: true}
     kicker: 1881 · 华盛顿
     lines:
-      - 1881年，华盛顿。
-      - 美国航海历书局，灯还亮着。
+      - {text: 1881年，华盛顿。, hold: 2.2}
+      - {text: 天文学家纽康，天天翻一本对数表。, hold: 2.9}
+      - {text: 这本书，旧得很奇怪。, hold: 2.5}
 
-  - id: study
-    component: Study
+  - id: flip
+    component: Flip
     at: b
-    kicker: 美国航海历书局
+    lead: 0.3
     lines:
-      - pause: 1.2
-      - 那时没有计算器。
-      - 天文学家纽康，要算行星的位置。
-      - 一颗行星，就是成千上万次乘法。
-      - 诀窍是查[对数表]：乘法，变成加法。
-
-  - id: tabs
-    component: Tabs
-    kicker: 表是按第一位数字排的
-    lines:
-      - 表按第一位数字排：1开头的在前，9开头的在后。
-      - 如果数字是随机的，1到9机会均等。
-      - 每一段，{都该被翻得一样多}。
-      - pause: 1.5
+      - 前几页，被翻得发黑。
+      - 后几页，几乎全新。
+      - 表是按第一位数字排的：1在最前，9在最后。
+      - 每遇到一个1开头的数，就要翻一次前几页。
+      - 天上的星、账上的钱、地上的河……
+      - 全世界的数字，都在挤前几页。
+      - 纽康写下一条规律：
+      - 1881年，两页纸，发表了。
+      - {text: 然后——, hold: 1.6}
 
   - id: twist
     component: Twist
     at: break
-    kicker: 灯下的书口
+    lead: 0.4
     lines:
-      - {text: 不。, hold: 2.2}
-      - 越往前，越黑。
-      - 他写了两页纸。然后，没人在意。
+      - {text: 没人在意。, hold: 2.6}
+      - 57年后，物理学家本福特，也发现了这种磨损。
+      - 他不信这是巧合。
 
   - id: benford
     component: Benford
     kicker: 1938 · 斯克内克塔迪 · 通用电气
     lines:
-      - 57年后，本福特发现了同一件事。
-      - 河流、人口、物理常数、门牌号……
-      - 他收集了[20,229]个数字。
+      - 他去数：河流、人口、门牌号……
+      - 一共[20,229]个数字。
 
   - id: town
     component: Town
