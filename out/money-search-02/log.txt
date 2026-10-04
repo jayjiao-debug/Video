@@ -1,0 +1,124 @@
+token present: yes
+sketchfab search "yap stone"
+  FAILED: ENOENT: no such file or directory, open 'out/search/yap-stone/results.json'
+sketchfab search "stone wheel"
+  saved out/search/stone-wheel/01_23de5f8d88ee42308d53eaae4accaf43.jpg 0.0 MB
+  saved out/search/stone-wheel/02_678f78b844f447dcb568eccf6f1727aa.jpg 0.0 MB
+  saved out/search/stone-wheel/03_a885da93edd24fdd8c30bce9b6cf7ca3.jpg 0.0 MB
+  saved out/search/stone-wheel/04_bbbd160bae044a6485f4989fd387bd12.jpg 0.0 MB
+  saved out/search/stone-wheel/05_512b4f49b9344f1595c853db55fc3b36.jpg 0.0 MB
+  saved out/search/stone-wheel/06_7e180fe0ec1e4b6394d689c36ee6125f.jpg 0.0 MB
+  saved out/search/stone-wheel/07_6f81e5483caa47c0b7e336b26b6ef5ce.jpg 0.0 MB
+  saved out/search/stone-wheel/08_cc66f928ccad49e2a5412e85ae8114fc.jpg 0.0 MB
+  saved out/search/stone-wheel/09_2ac2995a3c9e4f13aed9346b02274830.jpg 0.0 MB
+  saved out/search/stone-wheel/10_7e070a9406364d1daf5ff730fee17167.jpg 0.0 MB
+  saved out/search/stone-wheel/11_1d0ef81ba59d461f96050e4b4a06c044.jpg 0.0 MB
+  saved out/search/stone-wheel/12_c4731bab20764f5eb874daf3ff07fcb5.jpg 0.0 MB
+sketchfab search "millstone"
+  saved out/search/millstone/01_815389a67c1e49808400b0b86a7ea17f.jpg 0.0 MB
+  saved out/search/millstone/02_e024443136a14f2fbc00e517295ceac6.jpg 0.0 MB
+  saved out/search/millstone/03_f2615549f73946baa65d35fbcf9ee884.jpg 0.0 MB
+  saved out/search/millstone/04_732d2eec5a0c456bafedd08af35134c3.jpg 0.0 MB
+  saved out/search/millstone/05_58a9edfc71ab4adc869061d4e5e862d1.jpg 0.0 MB
+  saved out/search/millstone/06_ab77c540507446cd820432f3b1cd4684.jpg 0.0 MB
+  saved out/search/millstone/07_1fd1cdc4c2d94ecfa8d80a25f1818e8c.jpg 0.0 MB
+  saved out/search/millstone/08_ce65f2fd429d40de9dac4eb60760dd90.jpg 0.0 MB
+  saved out/search/millstone/09_784ffea507354f70adf94d7fe0fd4b2a.jpg 0.0 MB
+  saved out/search/millstone/10_f59bab2a81244b869e1ca5aefd4ad94a.jpg 0.0 MB
+  saved out/search/millstone/11_ee89047544fe4141b9ae33e4e1898b45.jpg 0.0 MB
+  saved out/search/millstone/12_444c857aa1fa49dc8e496e06f20f5ff0.jpg 0.0 MB
+sketchfab search "money cowry"
+  FAILED: ENOENT: no such file or directory, open 'out/search/money-cowry/results.json'
+sketchfab search "electrum coin"
+  FAILED: ENOENT: no such file or directory, open 'out/search/electrum-coin/results.json'
+sketchfab search "lion coin"
+  saved out/search/lion-coin/01_068eb89461ce42bb98c30f07cebe3df5.jpg 0.0 MB
+  saved out/search/lion-coin/02_797b1a3c71ee4e12a49d493a82af2518.jpg 0.0 MB
+  saved out/search/lion-coin/03_57793a5914634f8b892ec2cd56e4ac3b.jpg 0.0 MB
+  saved out/search/lion-coin/04_b9f092ce5b104365b911d076620cab6a.jpg 0.0 MB
+  saved out/search/lion-coin/05_37eb640e258b4f4c97bc032664660163.jpg 0.0 MB
+  saved out/search/lion-coin/06_89fdf82488394c819aa8e247f5a1242d.jpg 0.0 MB
+  saved out/search/lion-coin/07_553e32062de640d8a8e82fd403ae0828.jpg 0.0 MB
+  saved out/search/lion-coin/08_e935c74614334ae7b808cd557df50cf2.jpg 0.0 MB
+  saved out/search/lion-coin/09_d6a8ad4bbff04bd5801cffbf0d5236d2.jpg 0.0 MB
+  saved out/search/lion-coin/10_2d7cdd81de6a4a45a29c466f378bd1bd.jpg 0.0 MB
+  saved out/search/lion-coin/11_db6fc83c65b24c87bcc9f7c49431b449.jpg 0.0 MB
+  saved out/search/lion-coin/12_ae1b496404c54c2ebb21b0f797943fd9.jpg 0.0 MB
+sketchfab search "wooden table"
+  saved out/search/wooden-table/01_2f109ba713fe455b959e4d79676b5c2d.jpg 0.0 MB
+  saved out/search/wooden-table/02_0dc1c7d6cbab4d74bef7c4f82abf2caf.jpg 0.0 MB
+  saved out/search/wooden-table/03_1132fa2850a24917892733566bd68e74.jpg 0.0 MB
+  saved out/search/wooden-table/04_e53a5ef2faf84edcaddf49d4d27f366c.jpg 0.0 MB
+  saved out/search/wooden-table/05_2aee19db562b4b26a199a81e62760109.jpg 0.0 MB
+  saved out/search/wooden-table/06_303cfebd25eb4ea3bd06d052106aea41.jpg 0.0 MB
+  saved out/search/wooden-table/07_c364d9c007c44ad6ada3f90706bcdc77.jpg 0.0 MB
+  saved out/search/wooden-table/08_fe35acda3a5245da8459d1a062e28190.jpg 0.0 MB
+  saved out/search/wooden-table/09_ab42c11876ea4a07b884a01e917a97c4.jpg 0.0 MB
+  saved out/search/wooden-table/10_31ab9f9ad2fa425aa75e8bb76cad8fc1.jpg 0.0 MB
+  saved out/search/wooden-table/11_dd87fbbae3c4481fb10c26a2546a99e1.jpg 0.0 MB
+  saved out/search/wooden-table/12_d2b7e1dcfcc94f9bb015d01aad7e6ee8.jpg 0.0 MB
+sketchfab search "chinese restaurant"
+  saved out/search/chinese-restaurant/01_e1931516aeae48e0b4a659489548e1e6.jpg 0.0 MB
+  saved out/search/chinese-restaurant/02_400c9069181a4342a7142433dfa3466e.jpg 0.0 MB
+  saved out/search/chinese-restaurant/03_032d086b265c492eac3f92eb427cb60e.jpg 0.0 MB
+  saved out/search/chinese-restaurant/04_254dac595ad3482a97455176366dde19.jpg 0.0 MB
+  saved out/search/chinese-restaurant/05_374c3169aabf440ca51dc87abe5d5df9.jpg 0.0 MB
+  saved out/search/chinese-restaurant/06_ee89047544fe4141b9ae33e4e1898b45.jpg 0.0 MB
+  saved out/search/chinese-restaurant/07_465323be767d4c8d91123ff2d6f6ac6f.jpg 0.0 MB
+  saved out/search/chinese-restaurant/08_1c67779cde264f0e986fbae9b76cc421.jpg 0.0 MB
+  saved out/search/chinese-restaurant/09_5a9e087fbd3a4ae79b4c51d6279f0466.jpg 0.0 MB
+  saved out/search/chinese-restaurant/10_661535a75f274a2cb762fe347f76afd8.jpg 0.0 MB
+  saved out/search/chinese-restaurant/11_92d728957d544fd68ed53f55d2119842.jpg 0.0 MB
+  saved out/search/chinese-restaurant/12_9fecb56cde1d4fc1a70dfcc331e730af.jpg 0.0 MB
+sketchfab search "noodle shop"
+  saved out/search/noodle-shop/01_3922eec82c5944beb17ab4cd14f9736c.jpg 0.0 MB
+  saved out/search/noodle-shop/02_1806db48c28246629962c304e95688ea.jpg 0.0 MB
+  saved out/search/noodle-shop/03_f0b4573474264d31a002d89435e93d05.jpg 0.0 MB
+  saved out/search/noodle-shop/04_2f6aa5df0ef54836aa5522d523e0f2d5.jpg 0.0 MB
+  saved out/search/noodle-shop/05_44d28041f4994e039290e969de0a187f.jpg 0.0 MB
+  saved out/search/noodle-shop/06_bf68cf42760c43dd934d460f0ba7efc4.jpg 0.0 MB
+  saved out/search/noodle-shop/07_f40ae1013b3340c3ae0414fe682fb6bc.jpg 0.0 MB
+  saved out/search/noodle-shop/08_cb75bf55d4e146f8a965b0f3c1190526.jpg 0.0 MB
+  saved out/search/noodle-shop/09_5576aebcee724fc491e9d8901da99f2f.jpg 0.0 MB
+  saved out/search/noodle-shop/10_fc9195070ed54ae3a81b2ca335260216.jpg 0.0 MB
+  saved out/search/noodle-shop/11_f470d925e9e54b3da393a17746415355.jpg 0.0 MB
+sketchfab search "old wooden table"
+  saved out/search/old-wooden-table/01_e53a5ef2faf84edcaddf49d4d27f366c.jpg 0.0 MB
+  saved out/search/old-wooden-table/02_2aee19db562b4b26a199a81e62760109.jpg 0.0 MB
+  saved out/search/old-wooden-table/03_303cfebd25eb4ea3bd06d052106aea41.jpg 0.0 MB
+  saved out/search/old-wooden-table/04_ab42c11876ea4a07b884a01e917a97c4.jpg 0.0 MB
+  saved out/search/old-wooden-table/05_915fffa0a7d943d0980c835784340c77.jpg 0.0 MB
+  saved out/search/old-wooden-table/06_0bef89aafd31423ab9c5b4dcf9c5aba9.jpg 0.0 MB
+  saved out/search/old-wooden-table/07_d837a7e46ca446b88119451a7b4473bc.jpg 0.0 MB
+  saved out/search/old-wooden-table/08_8a5b41d6445c4f1fbefb2e4abfeebb0d.jpg 0.0 MB
+  saved out/search/old-wooden-table/09_5832690490c24df18ea9783dacc36c3d.jpg 0.0 MB
+  saved out/search/old-wooden-table/10_abb5aa1de9d74fd7bce559f49226bd37.jpg 0.0 MB
+  saved out/search/old-wooden-table/11_fb7475ef551c46f9b4b2b28d96d31dfc.jpg 0.0 MB
+  saved out/search/old-wooden-table/12_7fc3374cf42a46639c858466c73e0fcf.jpg 0.0 MB
+sketchfab search "cash register"
+  saved out/search/cash-register/01_e1931516aeae48e0b4a659489548e1e6.jpg 0.0 MB
+  saved out/search/cash-register/02_6b6ecc33993d49939bd4c7633c795577.jpg 0.0 MB
+  saved out/search/cash-register/03_81983aad41fe4981b06dd2f26d98213c.jpg 0.0 MB
+  saved out/search/cash-register/04_1efcbed7fd124a89a9265c693d91b655.jpg 0.0 MB
+  saved out/search/cash-register/05_12073fdefe544cf7ba86d946f9e9f3b8.jpg 0.0 MB
+  saved out/search/cash-register/06_8aa8c0e6a0eb4da89cc13650d34aa5a3.jpg 0.0 MB
+  saved out/search/cash-register/07_119e19154a6e40429c47449b7b1e2717.jpg 0.0 MB
+  saved out/search/cash-register/08_a785cf24aa624c30a69b59c60c473d8d.jpg 0.0 MB
+  saved out/search/cash-register/09_87562962d47e48b28cc1b874fa46a47f.jpg 0.0 MB
+  saved out/search/cash-register/10_e0bfaac986474b31ad9ea84290a3eb12.jpg 0.0 MB
+  saved out/search/cash-register/11_9d4b93bb0471475a92802d9da053969c.jpg 0.0 MB
+  saved out/search/cash-register/12_52ff058a70ee4796a744a060c7898392.jpg 0.0 MB
+sketchfab search "bank vault"
+  saved out/search/bank-vault/01_627c684249a848f99f84b6941caddc49.jpg 0.0 MB
+  saved out/search/bank-vault/02_10a21127e14d43adaf37f150fb3cafca.jpg 0.0 MB
+  saved out/search/bank-vault/03_a14eb7bb1b8842329120939eb34ceb82.jpg 0.0 MB
+  saved out/search/bank-vault/04_defefb4c43fb448bb2f09815fefaee7d.jpg 0.0 MB
+  saved out/search/bank-vault/05_a3be7371c5694c3b9f5d85184472c005.jpg 0.0 MB
+  saved out/search/bank-vault/06_b18b48206ca84dafaf4df735c1bcc84d.jpg 0.0 MB
+  saved out/search/bank-vault/07_2de2322bf07d496bbcc19d94400a469f.jpg 0.0 MB
+  saved out/search/bank-vault/08_66ed0c4af0284ed09363a4c35ee7ba3d.jpg 0.0 MB
+  saved out/search/bank-vault/09_7d53bf4f961245c8bfa5f24c865f413f.jpg 0.0 MB
+  saved out/search/bank-vault/10_b7f9cf66195546668d74c2d9d5cfb2b4.jpg 0.0 MB
+  saved out/search/bank-vault/11_0c8b3a9310124b7b8efe98c6c308cc8c.jpg 0.0 MB
+  saved out/search/bank-vault/12_af389a721faa4ec49eaec7ec2a215371.jpg 0.0 MB
+done
