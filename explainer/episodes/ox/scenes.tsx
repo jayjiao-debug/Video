@@ -876,7 +876,7 @@ const Why: React.FC<SceneProps> = () => {
 				<Study1906
 					frame={f + 600}
 					cam={cam}
-					boardNode={<BeanMachine f={f} start={hit} every={2} n={80} glow={glow} />}
+					boardNode={<BeanMachine f={f} start={hit} every={3} n={80} glow={glow} />}
 					behind={
 						<g transform={`translate(1000,${DESK_Y + 200}) scale(1.4)`}>
 							<Figure look={CAST.galton} pose={addPose(P_({lean: 1, head: -4, armNear: [10, 86], armFar: [12, 96]}), idle(f, 'gw'))} hands={{near: 'pinch', far: 'pinch'}} expression="smile" blink={blinkAt(f, 'gw')} rim="warm" shadow={false} />
