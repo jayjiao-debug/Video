@@ -278,7 +278,7 @@ export const LAB = {screens: [330, 750, 1170, 1590].map((x) => ({x, y: 520})), w
  * at the end of the row. `screen(i)` draws the content of monitor i (screen-centred
  * coordinates, LAB.w × LAB.h). `students` is drawn between the monitors and the chairs.
  */
-export const LabZurich: React.FC<{f: number; cam: Cam; screen: (i: number) => React.ReactNode; students?: React.ReactNode; chairs?: boolean}> = ({f, cam, screen, students, chairs = true}) => {
+export const LabZurich: React.FC<{f: number; cam: Cam; screen: (i: number) => React.ReactNode; students?: React.ReactNode; chairs?: boolean; power?: number}> = ({f, cam, screen, students, chairs = true, power = 1}) => {
 	return (
 		<g>
 			<Layer cam={cam} depth={0.6}>
@@ -315,12 +315,13 @@ export const LabZurich: React.FC<{f: number; cam: Cam; screen: (i: number) => Re
 				{LAB.screens.map((sc, i) => (
 					<g key={i}>
 						{/* the monitor's glow on the desk and wall */}
-						<ellipse cx={sc.x} cy={LAB.deskY} rx={260} ry={34} fill="#9fc3e6" opacity={0.18} />
-						<circle cx={sc.x} cy={sc.y} r={300} fill="url(#glow-moon)" opacity={0.35} />
+						<ellipse cx={sc.x} cy={LAB.deskY} rx={260} ry={34} fill="#9fc3e6" opacity={0.18 * power} />
+						<circle cx={sc.x} cy={sc.y} r={300} fill="url(#glow-moon)" opacity={0.35 * power} />
 						<rect x={sc.x - 20} y={sc.y + LAB.h / 2} width={40} height={LAB.deskY - sc.y - LAB.h / 2} fill="#23262d" />
 						<rect x={sc.x - 70} y={LAB.deskY - 8} width={140} height={10} rx={4} fill="#23262d" />
 						<rect x={sc.x - LAB.w / 2 - 12} y={sc.y - LAB.h / 2 - 12} width={LAB.w + 24} height={LAB.h + 24} rx={8} fill="#16181d" />
-						<rect x={sc.x - LAB.w / 2} y={sc.y - LAB.h / 2} width={LAB.w} height={LAB.h} fill="#e9eef5" />
+						<rect x={sc.x - LAB.w / 2} y={sc.y - LAB.h / 2} width={LAB.w} height={LAB.h} fill="#0b0d12" />
+						<rect x={sc.x - LAB.w / 2} y={sc.y - LAB.h / 2} width={LAB.w} height={LAB.h} fill="#e9eef5" opacity={power} />
 						<g transform={`translate(${sc.x},${sc.y})`}>{screen(i)}</g>
 						{/* keyboard */}
 						<rect x={sc.x - 90} y={LAB.deskY - 4} width={180} height={8} rx={3} fill="#2c2f36" />

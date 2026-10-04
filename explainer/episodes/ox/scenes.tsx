@@ -1,7 +1,7 @@
 import React from 'react';
 import {AbsoluteFill, Sequence, random, spring, useCurrentFrame, useVideoConfig} from 'remotion';
 import {CAST} from '../../src/art/cast';
-import {Figure, POSES, addPose, blinkAt, idle, keyPoses, walkPose, type Pose} from '../../src/art/Figure';
+import {Figure, POSES, addPose, blinkAt, idle, keyPoses, lerpPose, walkPose, type Pose} from '../../src/art/Figure';
 import {BOX_PLATE, BallotBox, OX_DEFS, OX_PATHS, Ox, Signboard, Ticket, TicketMotif} from '../../src/art/Ox';
 import {getLength, getPointAtLength} from '@remotion/paths';
 import {EndCard} from '../../src/brand/Brand';
@@ -61,7 +61,7 @@ const Queue: React.FC<{f: number; who: (keyof typeof CAST)[]; x0: number; step?:
 			<g key={k} transform={`translate(${x0 + i * step},${POSTER.y - 6 - i * 4}) scale(0.9)`}>
 				<Figure
 					look={CAST[k]}
-					pose={addPose(i === 0 ? BUTCHER.read : POSES.stand, idle(f, `q${k}`))}
+					pose={addPose(i === 0 ? BUTCHER.read : k === 'galton' ? GALTON.stand : POSES.stand, idle(f, `q${k}`))}
 					hands={i === 0 ? {near: 'pinch'} : undefined}
 					holdNear={
 						i === 0 ? (
@@ -294,11 +294,12 @@ const Fair: React.FC<SceneProps> = () => {
 	cam = camMix(cam, sign, prog(f, cue(0) + 6, 34, ease.inOut));
 	cam = camMix(cam, wide, prog(f, cue(1), 34, ease.inOut));
 	cam = camMix(cam, crowd, prog(f, cue(2), 50, ease.inOut));
-	const oxPose = {head: Math.sin(f / 70) * 4, tail: Math.sin(f / 11) * 0.7, breath: 0.5 + 0.5 * Math.sin(f / 22)};
+	const A = f + scene.from; // one clock for the whole show ground, so nothing jumps across a cut
+	const oxPose = {head: Math.sin(A / 70) * 4, tail: Math.sin(A / 11) * 0.7, breath: 0.5 + 0.5 * Math.sin(A / 22)};
 	return (
 		<FullFrame
 			fadeIn={0}
-			fadeOut={10}
+			fadeOut={0}
 			overlay={
 				<Sequence durationInFrames={titleLen + 14} layout="none">
 					<OxTitle dur={titleLen + 14} hitAt={hitAt} />
@@ -308,19 +309,19 @@ const Fair: React.FC<SceneProps> = () => {
 			<OX_DEFS />
 			{/* hidden until the card lifts, so nothing flashes under it */}
 			<g opacity={f < titleLen - 14 ? 0 : 1}>
-				<Fair1906 frame={f + 560} cam={cam} postX={1660} front={<FrontCrowd f={f + 300} />}>
-					<TicketSwarm f={f + 470} cx={1050} cy={720} side={-1} />
+				<Fair1906 frame={A + 92} cam={cam} postX={1660} front={<FrontCrowd f={A - 168} />}>
+					<TicketSwarm f={A + 2} cx={1050} cy={720} side={-1} />
 					<g transform="translate(250,890)">
 						<Signboard />
 					</g>
-					<Queue f={f} who={['shopgirl', 'farmwife', 'galton']} x0={430} />
+					<Queue f={A - 468} who={['shopgirl', 'farmwife', 'galton']} x0={430} />
 					<g transform={`translate(${OX.x},${OX.y}) scale(${OX.s})`}>
-						<Ox pose={oxPose} blink={blinkAt(f, 'ox2')} lit={0.9} />
+						<Ox pose={oxPose} blink={blinkAt(A, 'oxg')} lit={0.9} />
 					</g>
-					<DroverWithRope f={f + 300} x={DROVER_AT.x} y={DROVER_AT.y} s={0.95} ox={{...OX, pose: oxPose}} expression="smile" />
+					<DroverWithRope f={A - 168} x={DROVER_AT.x} y={DROVER_AT.y} s={0.95} ox={{...OX, pose: oxPose}} expression="smile" />
 					{/* the clerk is next: he posts his on the second line */}
 					<ButcherPosting f={f} t0={cue(1) + 12} x={POSTER.x} y={POSTER.y} s={POSTER.s} who="clerk06" />
-					<TicketSwarm f={f + 470} cx={1050} cy={720} side={1} />
+					<TicketSwarm f={A + 2} cx={1050} cy={720} side={1} />
 				</Fair1906>
 			</g>
 		</FullFrame>
@@ -347,19 +348,20 @@ const Galton: React.FC<SceneProps> = () => {
 	const scene = useScene();
 	const snap = useSnapBeat();
 	const D = scene.duration;
+	const A = f + scene.from;
 	// the show is over: a time cut on the beat nearest the third line
 	const CUT = snap(cue(2) - 2);
 	const k = f - CUT;
 	const night = f >= CUT;
 	// --- before the cut: find him at the back of the queue; he strokes his whiskers, unconvinced
-	const gIdle = idle(f + 900, 'galton');
+	const gIdle = idle(A - 468, 'qgalton');
 	const chin = keyPoses(f - cue(1), [
 		[0, GALTON.stand],
 		[6, P_({...GALTON.stand, lean: -2, armFar: [-10, 20]})],
 		[16, GALTON.chin],
 	]);
 	const shake = f > cue(1) + 22 ? 5 * Math.sin((f - cue(1) - 22) / 4) * Math.exp(-(f - cue(1) - 22) / 30) : 0;
-	const galtonA = addPose({...chin, head: chin.head + shake}, gIdle, f < cue(1) ? 1 : 0.5);
+	const galtonA = addPose({...chin, head: chin.head + shake}, gIdle, 1 - 0.5 * prog(f, cue(1), 10));
 	// --- after the cut: he lifts the box off its trestle and carries it off toward us
 	const lifted = k >= 22;
 	const carry = Math.max(0, k - 40);
@@ -414,22 +416,25 @@ const Galton: React.FC<SceneProps> = () => {
 			];
 	// the plate key must follow the box as it moves: re-aim the last two keys each frame
 	const cam = camPath(keys, f);
-	const oxPose = {head: Math.sin(f / 70) * 4, tail: Math.sin(f / 11) * 0.7, breath: 0.5 + 0.5 * Math.sin(f / 22)};
+	const oxPose = {head: Math.sin(A / 70) * 4, tail: Math.sin(A / 11) * 0.7, breath: 0.5 + 0.5 * Math.sin(A / 22)};
 	return (
 		<FullFrame fadeIn={0} fadeOut={0}>
 			<OX_DEFS />
-			<Fair1906 frame={f + 1160} cam={cam} postX={1660} lamp={night ? 0.42 : 1} crowd={!night} front={night ? null : <FrontCrowd f={f + 600} />}>
-				{!night ? <TicketSwarm f={f + 1070} cx={1050} cy={720} side={-1} /> : null}
+			<Fair1906 frame={A + 92} cam={cam} postX={1660} lamp={night ? 0.42 : 1} crowd={!night} front={night ? null : <FrontCrowd f={A - 168} />}>
+				{!night ? <TicketSwarm f={A + 2} cx={1050} cy={720} side={-1} /> : null}
 				<g transform="translate(250,890)">
 					<Signboard />
 				</g>
 				{!night ? (
-					<Queue f={f + 600} who={['shopgirl', 'farmwife']} x0={430} />
+					<>
+						<Queue f={A - 468} who={['shopgirl', 'farmwife']} x0={430} />
+						<ButcherPosting f={A - 468} t0={-10000} x={POSTER.x} y={POSTER.y} s={POSTER.s} who="clerk06" box={false} />
+					</>
 				) : null}
 				<g transform={`translate(${OX.x},${OX.y}) scale(${OX.s})`}>
-					<Ox pose={oxPose} blink={blinkAt(f, 'ox3')} lit={night ? 0.4 : 0.9} />
+					<Ox pose={oxPose} blink={blinkAt(A, 'oxg')} lit={night ? 0.4 : 0.9} />
 				</g>
-				<DroverWithRope f={f + 900} x={DROVER_AT.x} y={DROVER_AT.y} s={0.95} ox={{...OX, pose: oxPose}} />
+				<DroverWithRope f={A - 168} x={DROVER_AT.x} y={DROVER_AT.y} s={0.95} ox={{...OX, pose: oxPose}} />
 				{/* the trestle stays; the box leaves it */}
 				<g transform={`translate(${BOX_BASE.x},${BOX_BASE.y}) scale(0.9)`}>
 					<path d="M-60,0 L-48,-90 M60,0 L48,-90 M-56,-40 L56,-40" stroke="#3a2618" strokeWidth={8} strokeLinecap="round" />
@@ -448,7 +453,7 @@ const Galton: React.FC<SceneProps> = () => {
 				<g transform={`translate(${box.x},${box.y}) scale(${boxS})`}>
 					<BallotBox stand={false} lit={night ? 0.9 : 0.6} />
 				</g>
-				{!night ? <TicketSwarm f={f + 1070} cx={1050} cy={720} side={1} /> : null}
+				{!night ? <TicketSwarm f={A + 2} cx={1050} cy={720} side={1} /> : null}
 			</Fair1906>
 		</FullFrame>
 	);
@@ -535,7 +540,26 @@ const Spread: React.FC<SceneProps> = () => {
 					</DeskTop>
 				</FlatLayer>
 			</g>
+			<LampBloom f={f} at={SWAP - 1} />
 		</FullFrame>
+	);
+};
+
+/** Warm light filling the frame as the camera passes through the lamp's globe (a light-to-light match). */
+const LampBloom: React.FC<{f: number; at: number}> = ({f, at}) => {
+	const o = Math.exp(-(((f - at) / 9) ** 2));
+	if (o < 0.01) return null;
+	return (
+		<g>
+			<defs>
+				<radialGradient id={`bloom${at}`} cx="50%" cy="50%" r="75%">
+					<stop offset="0" stopColor="#fff6e0" stopOpacity="1" />
+					<stop offset="0.5" stopColor="#ffd9a0" stopOpacity="0.9" />
+					<stop offset="1" stopColor="#c98a4a" stopOpacity="0.75" />
+				</radialGradient>
+			</defs>
+			<rect width={1920} height={1080} fill={`url(#bloom${at})`} opacity={0.92 * o} />
+		</g>
 	);
 };
 
@@ -570,6 +594,7 @@ const Line: React.FC<SceneProps> = () => {
 	const blur = Math.min(14, camSpeed(keys, f) / 9);
 	const spreadIdx = new Map(SPREAD.map((c) => [c.i, c]));
 	const rise = prog(f, cue(2), 26, ease.out);
+	const hl = prog(f, cue(1) + 20, 12) * (1 - rise);
 	const hover = f > cue(2) + 26 ? Math.sin((f - cue(2)) / 18) * 3 * (1 - prog(f, D - 10, 8)) : 0;
 	// it turns over in the scene's last 6 frames: the face lands on the drop (the next scene's frame 0)
 	const flipX = Math.cos(Math.PI * prog(f, D - 7, 7, ease.in));
@@ -595,8 +620,11 @@ const Line: React.FC<SceneProps> = () => {
 							const r = (from ? from.r : random(`fr${i}`) * 80 - 40) * (1 - t) + 90 * t;
 							const s = (from ? 0.62 : 0.5) * (1 - t) + 0.36 * t;
 							if (i === MEDIAN_INDEX && rise > 0) return null;
+							if (from && t < 0.5) return <DeskCard key={i} i={i} x={x} y={y} r={r} s={s} ring={i === 8 || i === 782 ? 1 - 2 * t : 0} />;
+							const mid = i === MEDIAN_INDEX ? hl : 0;
 							return (
-								<g key={i} transform={`translate(${x},${y}) rotate(${r}) scale(${s})`} opacity={rise > 0 ? 1 - 0.55 * rise : 1}>
+								<g key={i} transform={`translate(${x},${y - 14 * mid}) rotate(${r}) scale(${s})`} opacity={rise > 0 ? 1 - 0.55 * rise : 1}>
+									{mid > 0 ? <circle r={160} fill="url(#lantern-glow)" opacity={0.8 * mid} /> : null}
 									<Ticket lod="mid" />
 								</g>
 							);
@@ -768,6 +796,7 @@ const Reveal: React.FC<SceneProps> = () => {
 					/>
 				</g>
 			) : null}
+			<LampBloom f={f} at={SWAP + 1} />
 		</FullFrame>
 	);
 };
@@ -889,7 +918,7 @@ const Zurich: React.FC<SceneProps> = () => {
 	const scene = useScene();
 	const D = scene.duration;
 	// part A: the full bell; one gold bead falls on its own, on the accent
-	const glassIn = prog(f, cue(1) - 30, 22, ease.in);
+	const glassIn = prog(f, cue(1) - 34, 12, ease.in);
 	const study: CamKey[] = [
 		[0, BOARD_C[0], BOARD_C[1] + 6, 4.5],
 		[cue(0) + 30, BOARD_C[0], BOARD_C[1] - 10, 5.0],
@@ -936,6 +965,7 @@ const Zurich: React.FC<SceneProps> = () => {
 				<g opacity={toLab}>
 					<LabZurich
 						f={f}
+						power={on}
 						cam={camPath(lab, f)}
 						screen={(i) => <LabScreen i={i} f={Math.max(0, f - cue(1) - 20 - i * 6) / 4} on={on} social={social} converge={converge} sure={sure} round={round} truth={truth} ring={ring} />}
 						students={
@@ -984,20 +1014,24 @@ const Tips: React.FC<SceneProps> = () => {
 		[16, P_({lean: 0, head: -12, armNear: [112, 22], armFar: [-6, 18]})],
 	]);
 	const rise = prog(f, cue(2) + 26, 30, ease.out);
-	const oxPose = {head: Math.sin(f / 70) * 4, tail: Math.sin(f / 11) * 0.7, breath: 0.5 + 0.5 * Math.sin(f / 22)};
+	const A = f + scene.from; // one clock for the whole show ground, so nothing jumps across a cut
+	const oxPose = {head: Math.sin(A / 70) * 4, tail: Math.sin(A / 11) * 0.7, breath: 0.5 + 0.5 * Math.sin(A / 22)};
 	return (
 		<FullFrame fadeIn={0} fadeOut={0}>
 			<OX_DEFS />
-			<Fair1906 frame={f + 2000} cam={cam} postX={1660} front={<FrontCrowd f={f + 900} />}>
-				<TicketSwarm f={f + 1600} cx={1050} cy={720} side={-1} />
-				<g transform={`translate(${OX.x},${OX.y}) scale(${OX.s})`}>
-					<Ox pose={oxPose} blink={blinkAt(f, 'ox4')} lit={0.9} />
+			<Fair1906 frame={A + 92} cam={cam} postX={1660} front={<FrontCrowd f={A - 168} />}>
+				<TicketSwarm f={A + 2} cx={1050} cy={720} side={-1} />
+				<g transform="translate(250,890)">
+					<Signboard />
 				</g>
-				<DroverWithRope f={f + 1300} x={DROVER_AT.x} y={DROVER_AT.y} s={0.95} ox={{...OX, pose: oxPose}} expression="smile" />
+				<g transform={`translate(${OX.x},${OX.y}) scale(${OX.s})`}>
+					<Ox pose={oxPose} blink={blinkAt(A, 'oxg')} lit={0.9} />
+				</g>
+				<DroverWithRope f={A - 168} x={DROVER_AT.x} y={DROVER_AT.y} s={0.95} ox={{...OX, pose: oxPose}} expression="smile" />
 				{/* ① each one writes their own, heads down; ② all sorts of people; the front one posts */}
 				{LINE_UP.map((who, k) => {
 					const loud = who === 'gent' && shout;
-					const pose = loud ? addPose(shoutPose, idle(f, 'gent'), 0.3) : addPose(BUTCHER.read, idle(f, `w${who}`));
+					const pose = loud ? addPose(shoutPose, idle(A, 'gent'), 0.3) : addPose(BUTCHER.read, idle(A, `w${who}`));
 					return (
 						<g key={who} transform={`translate(${lineX(k)},${POSTER.y - 4 - k * 3}) scale(0.92)`}>
 							<Figure
@@ -1026,7 +1060,7 @@ const Tips: React.FC<SceneProps> = () => {
 						</g>
 					);
 				})}
-				<ButcherPosting f={f} t0={cue(1) + 30} x={POSTER.x} y={POSTER.y} s={POSTER.s} who="farmwife" />
+				<ButcherPosting f={A} t0={scene.from + cue(1) + 30} x={POSTER.x} y={POSTER.y} s={POSTER.s} who="farmwife" />
 				{rise > 0 ? (
 					<g transform={`translate(${SLOT[0]},${SLOT[1] - 10 - 190 * rise}) scale(${0.3 + 0.7 * rise})`} opacity={Math.min(1, rise * 2)}>
 						<circle r={200} fill="url(#lantern-glow)" opacity={0.8 * rise} />
@@ -1034,7 +1068,7 @@ const Tips: React.FC<SceneProps> = () => {
 						<TicketMotif p={rise} gold={JUNO.colors.gold} />
 					</g>
 				) : null}
-				<TicketSwarm f={f + 1600} cx={1050} cy={720} side={1} />
+				<TicketSwarm f={A + 2} cx={1050} cy={720} side={1} />
 			</Fair1906>
 		</FullFrame>
 	);
@@ -1083,7 +1117,8 @@ const Callback: React.FC<SceneProps> = () => {
 	const cam = camPath(keys, f);
 	const settle = (i: number) => prog(f, cue(1) + 8 + (i % 50) * 1.4, 26, ease.inOut);
 	const glow = prog(f, cue(1) + 70, 20);
-	const oxPose = {head: -6, tail: Math.sin(f / 11) * 0.7, breath: 0.5 + 0.5 * Math.sin(f / 22)};
+	const A = f + scene.from;
+	const oxPose = {head: Math.sin(A / 70) * 4, tail: Math.sin(A / 11) * 0.7, breath: 0.5 + 0.5 * Math.sin(A / 22)};
 	return (
 		<FullFrame
 			fadeIn={0}
@@ -1096,19 +1131,48 @@ const Callback: React.FC<SceneProps> = () => {
 			}
 		>
 			<OX_DEFS />
-			<Fair1906 frame={f + 2400} cam={cam} postX={1660} lamp={1 - 0.35 * glow} front={<FrontCrowd f={f + 1300} />}>
-				<TicketSwarm f={f + 2000} cx={1050} cy={720} side={-1} />
+			<Fair1906 frame={A + 92} cam={cam} postX={1660} lamp={1 - 0.35 * glow} front={<FrontCrowd f={A - 168} />}>
+				<TicketSwarm f={A + 2} cx={1050} cy={720} side={-1} />
 				<g transform={`translate(${OX.x},${OX.y}) scale(${OX.s})`}>
-					<Ox pose={oxPose} blink={blinkAt(f, 'ox5')} lit={0.9 - 0.4 * glow} />
+					<Ox pose={oxPose} blink={blinkAt(A, 'oxg')} lit={0.9 - 0.4 * glow} />
 				</g>
-				<DroverWithRope f={f + 1700} x={DROVER_AT.x} y={DROVER_AT.y} s={0.95} ox={{...OX, pose: oxPose}} expression="smile" />
+				<DroverWithRope f={A - 168} x={DROVER_AT.x} y={DROVER_AT.y} s={0.95} ox={{...OX, pose: oxPose}} expression="smile" />
 				<g transform="translate(250,890)">
 					<Signboard />
 				</g>
-				<g transform={`translate(${BOX_BASE.x},${BOX_BASE.y}) scale(0.9)`}>
-					<BallotBox />
-				</g>
-				<TicketSwarm f={f + 2000} cx={1050} cy={720} side={1} />
+				{LINE_UP.map((who, k) => {
+					const calm = prog(f, 0, 16, ease.inOut);
+					const shouted = P_({lean: 0, head: -12, armNear: [112, 22], armFar: [-6, 18]});
+					const pose = who === 'gent' ? addPose(lerpPose(shouted, BUTCHER.read, calm), idle(A, 'gent'), 0.3 + 0.7 * calm) : addPose(BUTCHER.read, idle(A, `w${who}`));
+					return (
+						<g key={who} transform={`translate(${lineX(k)},${POSTER.y - 4 - k * 3}) scale(0.92)`}>
+							<Figure
+								look={CAST[who]}
+								pose={pose}
+								hands={who === 'gent' && calm < 0.5 ? {near: 'open'} : {near: 'pinch'}}
+								holdNear={
+									who === 'gent' && calm < 0.5 ? undefined : (
+										<g transform="rotate(-70) scale(0.13)">
+											<Ticket lod="mid" />
+										</g>
+									)
+								}
+								expression={who === 'gent' && calm < 0.5 ? 'surprise' : 'thinking'}
+								rim="warm"
+								blink={blinkAt(f, who)}
+							/>
+						</g>
+					);
+				})}
+				<ButcherPosting f={A} t0={-10000} x={POSTER.x} y={POSTER.y} s={POSTER.s} who="farmwife" />
+				{f < 14 ? (
+					<g transform={`translate(${SLOT[0]},${SLOT[1] - 200}) scale(1)`} opacity={1 - f / 14}>
+						<circle r={200} fill="url(#lantern-glow)" opacity={0.8} />
+						<rect x={-92} y={-52} width={184} height={104} rx={8} fill="#05060b" opacity={0.75} />
+						<TicketMotif p={1} gold={JUNO.colors.gold} />
+					</g>
+				) : null}
+				<TicketSwarm f={A + 2} cx={1050} cy={720} side={1} />
 				{/* the guesses come down onto the ox's outline and turn gold */}
 				{OUTLINE.map(([x, y], i) => {
 					const t = settle(i);
