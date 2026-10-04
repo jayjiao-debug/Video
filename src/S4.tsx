@@ -45,7 +45,7 @@ export const S4: React.FC<{ T: number }> = ({ T }) => {
       {/* a tea-coloured light */}
       <AbsoluteFill style={{ background: 'radial-gradient(ellipse 70% 60% at 60% 40%, rgba(185,128,42,0.18), rgba(0,0,0,0) 70%)' }} />
       {chartO > 0.01 && (
-        <svg width={1920} height={1080} style={{ position: 'absolute', inset: 0, opacity: chartO }}>
+        <svg width={1920} height={1080} style={{ position: 'absolute', inset: 0, opacity: chartO, transform: `scale(${1 + 0.05 * prog(T, S4_IN, b(272))})` }}>
           {/* the shelf turning: a row of plain tea bottles fading in (b240–b248) */}
           <g opacity={easeOut(prog(T, b(240), b(242))) * (1 - easeInOut(prog(T, b(247), b(248) + 0.2)))}>
             {Array.from({ length: 9 }, (_, i) => {
@@ -88,7 +88,7 @@ export const S4: React.FC<{ T: number }> = ({ T }) => {
         </svg>
       )}
       {quoteO > 0.01 && (
-        <div style={{ position: 'absolute', inset: 0, opacity: quoteO, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', paddingBottom: 140 }}>
+        <div style={{ position: 'absolute', inset: 0, opacity: quoteO, transform: `scale(${1 + 0.06 * prog(T, b(271), b(282))})`, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', paddingBottom: 140 }}>
           <div style={{ fontFamily: EN, fontStyle: 'italic', fontSize: 40, color: 'rgba(243,237,226,0.6)', maxWidth: 1300, textAlign: 'center', lineHeight: 1.4 }}>"Reduce the sweetness of the diet altogether, starting early in life."</div>
           <div style={{ fontFamily: ZH, fontWeight: 900, fontSize: 64, color: GOLD, marginTop: 30, textShadow: '0 0 30px rgba(246,207,120,0.35)' }}>整体降低饮食的甜度</div>
           <div style={{ fontFamily: ZH, fontSize: 24, color: 'rgba(243,237,226,0.55)', marginTop: 18 }}>世界卫生组织 · 2023</div>
