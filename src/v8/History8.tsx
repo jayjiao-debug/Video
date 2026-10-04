@@ -6,7 +6,7 @@ import { SIM100K } from './common8';
 import { Vignette, Grain } from '../ui';
 
 /* S3, b57 -> b96: 1990, the column, the letters, Erdős and the computer. 2D. */
-export const S3_IN = b(56.8), S3_OUT = b(96.2);
+export const S3_IN = b(57.25), S3_OUT = b(96.2);
 const LINES: Line[] = [
   [b(57.4), b(64) - 0.08, '1990年，专栏作家玛丽莲说：[换]', '1990: columnist Marilyn vos Savant says: switch.'],
   [b(64) + 0.06, b(72) - 0.08, '她收到了一万多封读者来信', 'More than ten thousand letters arrived.'],
