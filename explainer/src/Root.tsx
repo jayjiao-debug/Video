@@ -12,6 +12,7 @@ import {LOOKS, XumingLook} from '../episodes/xuming/look';
 import {XumingTitleTest} from '../episodes/xuming/titletest';
 import {BOARD_N, XumingBoard} from '../episodes/xuming/storyboard';
 import {LOOK3_N, XumingLook3} from '../episodes/xuming/look3';
+import {BOARD2_N, XumingBoard2} from '../episodes/xuming/storyboard2';
 
 export const Root: React.FC = () => (
 	<>
@@ -32,6 +33,7 @@ export const Root: React.FC = () => (
 		<Composition id="TankHookTest" component={TankHookTest} durationInFrames={150} fps={30} width={1920} height={1080} />
 		<Composition id="CoffeeRewindTest" component={CoffeeRewindTest} durationInFrames={150} fps={30} width={1920} height={1080} />
 		<Composition id="XumingTitleTest" component={XumingTitleTest} durationInFrames={200} fps={30} width={1920} height={1080} />
+		<Composition id="XumingBoard2" component={XumingBoard2} durationInFrames={BOARD2_N} fps={30} width={1920} height={1080} />
 		<Composition id="XumingLook3" component={XumingLook3} durationInFrames={LOOK3_N} fps={30} width={1920} height={1080} />
 		<Composition id="XumingBoard" component={XumingBoard} durationInFrames={BOARD_N} fps={30} width={1920} height={1080} />
 		<Composition id="XumingLook" component={XumingLook} durationInFrames={LOOKS} fps={30} width={1920} height={1080} />

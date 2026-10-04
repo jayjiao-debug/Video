@@ -23,7 +23,7 @@ const W = 1920;
 const H = 1080;
 
 /** depth-of-field motes: a few big soft ones in front, many fine ones behind */
-const Haze: React.FC<{seed: string; n?: number; color?: string; y0?: number; y1?: number; f?: number}> = ({seed, n = 70, color = '#ffd9a0', y0 = 0, y1 = H, f = 0}) => (
+export const Haze: React.FC<{seed: string; n?: number; color?: string; y0?: number; y1?: number; f?: number}> = ({seed, n = 70, color = '#ffd9a0', y0 = 0, y1 = H, f = 0}) => (
 	<g>
 		{Array.from({length: n}, (_, i) => {
 			const near = random(`${seed}n${i}`) > 0.85;
@@ -35,14 +35,14 @@ const Haze: React.FC<{seed: string; n?: number; color?: string; y0?: number; y1?
 	</g>
 );
 
-const Grade: React.FC<{vig?: number; grain?: number}> = ({vig = 0.9, grain = 0.05}) => (
+export const Grade: React.FC<{vig?: number; grain?: number}> = ({vig = 0.9, grain = 0.05}) => (
 	<g pointerEvents="none">
 		<rect width={W} height={H} fill="url(#vig3)" opacity={vig} />
 		<rect width={W} height={H} filter="url(#grain)" opacity={grain} style={{mixBlendMode: 'overlay'}} />
 	</g>
 );
 
-const Sub: React.FC<{text: string; hl?: string}> = ({text, hl}) => {
+export const Sub: React.FC<{text: string; hl?: string}> = ({text, hl}) => {
 	const [a, b] = hl ? text.split(hl) : [text, ''];
 	return (
 		<text x={960} y={1006} textAnchor="middle" style={{fontFamily: font.serif, fontWeight: 700, fontSize: 40, fill: '#f3ead8', letterSpacing: '0.04em'}}>
@@ -53,7 +53,7 @@ const Sub: React.FC<{text: string; hl?: string}> = ({text, hl}) => {
 	);
 };
 
-const Tag: React.FC<{en: string; zh: string; x?: number; y?: number}> = ({en, zh, x = 150, y = 120}) => (
+export const Tag: React.FC<{en: string; zh: string; x?: number; y?: number}> = ({en, zh, x = 150, y = 120}) => (
 	<g>
 		<text x={x} y={y} style={{fontFamily: font.sans, fontSize: 15, letterSpacing: '0.32em', fill: '#c99a5a'}} opacity={0.7}>
 			{en.toUpperCase()}
@@ -66,7 +66,7 @@ const Tag: React.FC<{en: string; zh: string; x?: number; y?: number}> = ({en, zh
 
 // ---------------------------------------------------------------- 1. the heartbeat on the liquid
 
-const Heartbeat: React.FC<{f: number}> = ({f}) => {
+export const Heartbeat: React.FC<{f: number}> = ({f}) => {
 	// a real PQRST trace; the newest beat is the tall one (the "revival")
 	const beat = (u: number, k: number) => {
 		const p = 0.08 * Math.exp(-(((u - 0.18) / 0.035) ** 2));
@@ -190,7 +190,7 @@ const Synapse: React.FC<{f: number}> = ({f}) => {
 
 // ---------------------------------------------------------------- 3. the hillside in bloom, backlit at dawn
 
-const Bloom: React.FC<{f: number}> = ({f}) => {
+export const Bloom: React.FC<{f: number}> = ({f}) => {
 	const ridgeD = (base: number, amp: number, seed: string) => {
 		let d = `M-40,${H + 40} `;
 		for (let x = -40; x <= W + 40; x += 12) d += `L${x},${base - amp * (0.5 + 0.5 * noise2D(seed, x / 700, 0))} `;
@@ -265,15 +265,15 @@ const Bloom: React.FC<{f: number}> = ({f}) => {
 
 // ---------------------------------------------------------------- 4. the routes, on a dark map
 
-const LAND = feature(land50 as never, (land50 as never as {objects: {land: never}}).objects.land) as never;
-const CITIES: {n: string; y: string; p: [number, number]; dx?: number; dy?: number; a?: 'end'}[] = [
+export const LAND = feature(land50 as never, (land50 as never as {objects: {land: never}}).objects.land) as never;
+export const CITIES: {n: string; y: string; p: [number, number]; dx?: number; dy?: number; a?: 'end'}[] = [
 	{n: '摩卡', y: '也门', p: [43.25, 13.3], dx: 18, dy: 34},
 	{n: '奇克马加卢尔', y: '1670 · 七颗种子', p: [75.77, 13.32], dx: 18, dy: 34},
 	{n: '阿姆斯特丹', y: '1706', p: [4.9, 52.37], dx: -18, dy: -14, a: 'end'},
 	{n: '巴黎', y: '1714', p: [2.35, 48.86], dx: -18, dy: 30, a: 'end'},
 	{n: '马提尼克', y: '1723', p: [-61.02, 14.64], dx: -18, dy: -14, a: 'end'},
 ];
-const MapRoutes: React.FC = () => {
+export const MapRoutes: React.FC = () => {
 	const proj = geoNaturalEarth1().scale(420).translate([1060, 620]).rotate([-10, 0]);
 	const path = geoPath(proj);
 	const xy = (p: [number, number]) => proj(p) as [number, number];
