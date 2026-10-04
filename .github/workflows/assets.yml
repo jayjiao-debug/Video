@@ -26,15 +26,21 @@ jobs:
       - name: fetch
         env:
           SKETCHFAB_TOKEN: ${{ secrets.SKETCHFAB_TOKEN }}
-        run: node fetch.mjs
-      - name: publish
         run: |
+          mkdir -p out
+          echo "token present: $([ -n "$SKETCHFAB_TOKEN" ] && echo yes || echo no)" >> out/log.txt
+          node fetch.mjs 2>&1 | tee -a out/run.txt || echo "fetch exited non-zero" >> out/log.txt
+      - name: publish
+        if: always()
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -x
           ID=$(node -e "console.log(require('./request.json').id)")
-          cd out && find . -type f -size +90M -print0 | while IFS= read -r -d '' f; do split -b 90m -d -a 2 "$f" "$f.part" && rm "$f"; done; cd ..
-          git config user.name "asset-farm"; git config user.email "asset-farm@users.noreply.github.com"
-          git fetch origin asset-output || true
-          mkdir -p /tmp/pub && cp -r out /tmp/pub/$ID
-          if git rev-parse --verify origin/asset-output >/dev/null 2>&1; then git checkout -q -B asset-output origin/asset-output; else git checkout -q --orphan asset-output; git rm -rqf . ; fi
-          rm -rf "out/$ID"; mkdir -p out; cp -r /tmp/pub/$ID out/$ID
+          find out -type f -size +90M -print0 | while IFS= read -r -d '' f; do split -b 90m -d -a 2 "$f" "$f.part" && rm "$f"; done
+          git clone -q --depth 1 --branch asset-output "https://x-access-token:${GH_TOKEN}@github.com/${{ github.repository }}.git" /tmp/ao || (mkdir -p /tmp/ao && cd /tmp/ao && git init -q && git checkout -q -b asset-output && git remote add origin "https://x-access-token:${GH_TOKEN}@github.com/${{ github.repository }}.git")
+          rm -rf "/tmp/ao/out/$ID"; mkdir -p "/tmp/ao/out/$ID"; cp -r out/. "/tmp/ao/out/$ID/"
+          cd /tmp/ao
           echo "{\"id\":\"$ID\",\"finished\":$(date -u +%s)}" > latest.json
-          git add -A out latest.json && git commit -q -m "assets: $ID" && git push -q origin asset-output
+          git config user.name "asset-farm"; git config user.email "asset-farm@users.noreply.github.com"
+          git add -A && git commit -q -m "assets: $ID" && git push -q origin asset-output
