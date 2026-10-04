@@ -19,6 +19,8 @@ import {GLBench} from '../episodes/xuming/three/glbench';
 import {BENFORD_BOARD_N, BenfordBoard} from '../episodes/benford/storyboard';
 import {YUENAN_BOARD_N, YuenanBoard} from '../episodes/yuenan/storyboard';
 import {YUENAN_OPEN_N, YuenanOpen} from '../episodes/yuenan/opentest';
+import {YUENAN_SHEETS, YuenanGallery} from '../episodes/yuenan/gallery';
+import {YUENAN_MOTION_N, YuenanMotion} from '../episodes/yuenan/motion';
 import {MOCAP_BOARD_N, MocapBoard} from './MocapBoard';
 import {OX_SHEETS, OxGallery} from '../episodes/ox/gallery';
 import {OX_TEST_N, OxMotionTest} from '../episodes/ox/motiontest';
@@ -48,6 +50,8 @@ export const Root: React.FC = () => (
 		<Composition id="XumingOpen" component={XumingOpen} durationInFrames={540} fps={30} width={1920} height={1080} />
 		<Composition id="XumingBoard2" component={XumingBoard2} durationInFrames={BOARD2_N} fps={30} width={1920} height={1080} />
 		<Composition id="XumingLook3" component={XumingLook3} durationInFrames={LOOK3_N} fps={30} width={1920} height={1080} />
+		<Composition id="YuenanMotion" component={YuenanMotion} durationInFrames={YUENAN_MOTION_N} fps={30} width={1920} height={1080} />
+		<Composition id="YuenanGallery" component={YuenanGallery} durationInFrames={YUENAN_SHEETS.length} fps={30} width={1920} height={1080} />
 		<Composition id="YuenanOpen" component={YuenanOpen} durationInFrames={YUENAN_OPEN_N} fps={30} width={1920} height={1080} />
 		<Composition id="YuenanBoard" component={YuenanBoard} durationInFrames={YUENAN_BOARD_N} fps={30} width={1920} height={1080} />
 		<Composition id="MocapBoard" component={MocapBoard} durationInFrames={MOCAP_BOARD_N} fps={30} width={1920} height={1080} />

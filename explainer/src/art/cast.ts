@@ -35,4 +35,10 @@ export const CAST: Record<string, Look> = {
 	clerk06: {skin: P.skin2, hair: 'slick', hairColor: P.hairBrown, outfit: 'suit', top: '#4a4038', bottom: '#2f2a26', accent: '#2f3d5c', hat: 'boater', hatColor: '#cdb27a', glasses: true},
 	farmwife: {skin: P.skin2, hair: 'bun', hairColor: P.hairBlack, outfit: 'dress', top: '#5a3b3a', bottom: '#5a3b3a', apron: '#e6dcc6'},
 	lad: {skin: P.skin1, hair: 'short', hairColor: '#8a5a32', outfit: 'casual', top: '#3d4a63', bottom: '#4a4236', accent: '#d9d4c8', hat: 'flatcap', hatColor: '#6a5a42'},
+	// 《越难越爱》 (2026 / Stanford 1959 / 2011)
+	she: {skin: P.skin1, hair: 'long', hairColor: '#2a201c', outfit: 'casual', top: '#c8b4d0', bottom: '#4a5070', accent: '#f1ece2'},
+	coed59: {skin: P.skin1, hair: 'bob', hairColor: '#6a4428', outfit: 'casual', top: '#3e6a7e', bottom: '#5a4a40', accent: '#efe6d6'},
+	experimenter59: {skin: P.skin2, hair: 'slick', hairColor: P.hairBlack, outfit: 'suit', top: '#4a4a52', bottom: '#2e2e34', accent: '#7a2c2c', glasses: true},
+	aronson59: {skin: P.skin1, hair: 'short', hairColor: '#2a221e', outfit: 'suit', top: '#5a4a3a', bottom: '#3a302a', accent: '#2f3d5c'},
+	student11: {skin: P.skin2, hair: 'pony', hairColor: '#5a3a24', outfit: 'casual', top: '#2f5a6a', bottom: '#2a2d36', accent: '#e9e4da'},
 };
