@@ -5,10 +5,11 @@ description: Make characters move like people, not puppets - motion reference fr
 
 # Character motion
 
-**First choice: don't animate a character at all.** The owner's direction is to
-keep figures to a minimum because they are not our strength; tell the shot with
-the object, a person card, traces of presence or a distant silhouette
-(explainer-video §2). Use this skill only for the rare figure that remains.
+**First choice: let people be present, not perform.** Portraits, person cards
+and figures sitting or standing with `idle()` life are fine; the owner objects
+to actions done in a way no person would. Tell actions with the object
+(explainer-video §2). Use the reference workflow below for any figure that does
+have to act.
 
 The owner's complaint that started this: "every time it's weird - why is it
 bending like that". Poses invented by eye fail in the same few ways: elbows or

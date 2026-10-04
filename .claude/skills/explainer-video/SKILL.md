@@ -11,9 +11,9 @@ Episodes are `explainer/episodes/<id>/episode.yaml` (script) + `scenes.tsx`
 lines over one background track the user supplies (`assets/music/bgm.mp3`, not in git).
 
 Branding (title card, corner mark, end card, copy voice) follows the `juno-brand`
-skill; run its brand QA together with the QA step below. **Tell the story with
-objects, places, light, numbers and the camera, not with acting characters**
-(§2). In the rare shot that does need a figure, its pose follows the
+skill; run its brand QA together with the QA step below. **People may appear;
+people performing actions mostly should not** (§2): tell actions with objects,
+places, light, numbers and the camera. Any figure that does move follows the
 `character-motion` skill.
 
 The user approved this workflow. Follow it in order and do not skip the
@@ -56,29 +56,34 @@ people. What the user wants, and approved:
 - **Motivated light.** One warm practical key (lamp, window, fire, searchlight)
   plus cool moon/sky rim. Grade lit subjects into the scene (`grade-night`) so
   nothing looks pasted on.
-- **Play to our strengths: objects, not actors.** The owner's direction: 人物不是
-  你的强项，尽可能不做人物多的展示. Acting figures (arms reaching, hands holding,
-  faces reacting) are where our videos look wrong. What we do well, and what
-  should carry every episode:
+- **Play to our strengths: people present, objects act.** The owner's direction:
+  人物不是你的强项，尽可能不做人物多的展示, clarified as: 人的头像可以生成，只是他们在做动作的时候
+  在人类眼里不应该那么做就很奇怪. Portraits and people who are simply *there* are
+  fine. What looks wrong is a figure performing an action in a way no person
+  would (arms reaching, hands holding or flicking, gesturing). What we do well,
+  and what should carry every episode:
   - the hero object and its changes (a book's fore-edge darkening, a sign's
     number rolling, a printer feeding cheques, a chart landing);
   - places and motivated light, travelled by the spline camera;
   - numbers, typography and data that move with purpose;
   - match cuts through shapes, particles, weather, time-lapse.
-  How to show a person without animating one:
-  - **A person card** when a real person is introduced: a cut-paper profile
-    cameo in a gold oval, name, years and role (`PersonCard`); still, like an
-    archive caption. One card per person, on the line that names them.
+  How to show people:
+  - **Portraits are welcome.** A person card when a real person is introduced
+    (`PersonCard`: a cameo in a gold oval, name, years, role; still, like an
+    archive caption), or a larger illustrated portrait / head. A generated or
+    drawn portrait is fine as long as it stays still or nearly still.
+  - **Figures in the set:** sitting or standing, with only `idle()` life
+    (breathing, blinking, a small head turn). They don't do the action.
   - **Traces of presence:** the empty chair, a coat on the hook, a cup still
     steaming, ink appearing on the page line by line, pages turning as if
     riffled, a shadow on the wall that barely moves.
   - **Silhouettes** at a distance (a window, a doorway, a crowd as one shape),
     with little or no limb motion.
-  - No hands or arms acting on objects in shot. If an action needs a hand, show
-    the result (the page turns, the stamp lands) or cut to the object.
-  A figure from the shared rig (`src/art/Figure.tsx`) is the last resort: a
-  medium or wide shot, mostly still (breathing via `idle()`), and posed by the
-  `character-motion` rules.
+  - Actions are shown by their result, not performed by a figure: the page
+    turns, the stamp lands, ink appears, the card flies into its tray. No hands
+    or arms acting on objects in shot unless the motion comes from a real
+    reference (mocap or the owner's clip) and reads as natural at phone size
+    (`character-motion`). When unsure, leave the action to the object.
 - **Palette discipline** (`src/art/palette.ts`): night blues + warm amber; gold
   only for answers, red only for damage and traps.
 - **Period-accurate props** with material gradients (`src/art/materials.tsx`).
