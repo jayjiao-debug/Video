@@ -1,9 +1,8 @@
 {
-  "id": "money-tex-01",
+  "id": "money-tex-02",
   "items": [
-    {"type": "url", "url": "https://commons.wikimedia.org/wiki/Special:FilePath/USA_100_Dollar_Bill_Series2009_Obverse.png", "name": "usd100_front.png", "license": "Public domain (US Government work, BEP)"},
-    {"type": "url", "url": "https://commons.wikimedia.org/wiki/Special:FilePath/USA_100_Dollar_Bill_Series2009_Reverse.png", "name": "usd100_back.png", "license": "Public domain (US Government work, BEP)"},
-    {"type": "url", "url": "https://commons.wikimedia.org/wiki/Special:FilePath/Obverse_of_the_series_2009_$100_Federal_Reserve_Note.jpg", "name": "usd100_front_bep.jpg", "license": "Public domain (US Government work, BEP)"},
-    {"type": "url", "url": "https://commons.wikimedia.org/wiki/Special:FilePath/New100back.jpg", "name": "usd100_back_bep.jpg", "license": "Public domain (US Government work, BEP)"}
+    {"type": "url", "url": "https://www.uscurrency.gov/media/65", "name": "media65.html", "license": "page"},
+    {"type": "url", "url": "https://www.uscurrency.gov/media/multimedia-library", "name": "library.html", "license": "page"},
+    {"type": "url", "url": "https://www.uscurrency.gov/media/multimedia-library?page=1", "name": "library1.html", "license": "page"}
   ]
 }
