@@ -84,8 +84,13 @@ const Leg: React.FC<{d: string; top: [number, number]; angle: number; fill: stri
 	</g>
 );
 
+/** outline paths in ox space (head in head space: translate(240,-252) rotate(head-12) scale(1.3)) */
+export const OX_PATHS = {body: 'M-206,-266 C-180,-276 -150,-282 -120,-276 C-60,-268 20,-270 80,-280 C120,-288 150,-298 180,-292 C210,-286 236,-268 248,-246 L262,-200 C268,-168 254,-140 236,-124 C228,-108 216,-96 200,-96 C170,-98 150,-104 130,-102 C80,-92 0,-84 -80,-90 C-130,-94 -165,-108 -190,-126 C-236,-150 -252,-200 -242,-236 C-236,-254 -224,-264 -206,-266 Z', head: 'M-20,-8 C4,-24 40,-16 58,2 C72,20 86,50 98,76 C106,94 104,112 88,118 C70,124 50,120 38,110 C22,92 2,66 -12,42 C-24,22 -28,6 -20,-8 Z', front: '', hind: ''};
+
 const FRONT = 'M128,-136 C124,-96 134,-66 140,-52 L142,-18 L138,0 L176,0 L172,-18 L172,-54 C178,-76 182,-106 180,-136 Z';
 const HIND = 'M-226,-156 C-230,-112 -216,-82 -206,-62 L-206,-18 L-210,0 L-172,0 L-176,-18 L-178,-58 C-168,-84 -156,-116 -154,-150 Z';
+OX_PATHS.front = FRONT;
+OX_PATHS.hind = HIND;
 
 export const Ox: React.FC<{
 	pose?: OxPose;
@@ -261,10 +266,10 @@ export const Ticket: React.FC<{
 				</g>
 			) : (
 				<g>
-					<text x={-80} y={4} transform="rotate(-90,-80,4)" textAnchor="middle" style={{fontFamily: font.latin, fontWeight: 700, fontSize: 15, fill: ink, letterSpacing: '0.1em'}}>
+					<text x={-80} y={4} transform="rotate(-90,-80,4)" textAnchor="middle" style={{fontFamily: font.latin, fontWeight: 700, fontSize: 15, fill: ink, letterSpacing: '0.1em', fontVariantNumeric: 'lining-nums'}}>
 						{`No ${String(no).padStart(4, '0')}`}
 					</text>
-					<text x={-44} y={-40} style={{fontFamily: font.latin, fontWeight: 700, fontSize: 12, fill: ink, letterSpacing: '0.06em'}}>
+					<text x={-44} y={-40} style={{fontFamily: font.latin, fontWeight: 700, fontSize: 12, fill: ink, letterSpacing: '0.06em', fontVariantNumeric: 'lining-nums'}}>
 						FAT STOCK SHOW · 1906
 					</text>
 					<text x={-44} y={-25} style={{fontFamily: font.latin, fontWeight: 600, fontSize: 9.5, fill: ink, opacity: 0.75, letterSpacing: '0.04em'}}>
@@ -281,7 +286,7 @@ export const Ticket: React.FC<{
 						lbs.
 					</text>
 					{glow > 0 ? <ellipse cx={30} cy={34} rx={70} ry={26} fill="url(#lantern-glow)" opacity={glow} /> : null}
-					<text x={-14} y={44} style={{fontFamily: font.latinItalic, fontStyle: 'italic', fontWeight: 700, fontSize: 38, fill: glow > 0.5 ? '#6a4310' : ink}}>
+					<text x={-14} y={44} style={{fontFamily: font.latinItalic, fontStyle: 'italic', fontWeight: 700, fontSize: 38, fill: glow > 0.5 ? '#6a4310' : ink, fontVariantNumeric: 'lining-nums'}}>
 						{g.slice(0, Math.ceil(g.length * Math.max(0, Math.min(1, write * 2 - 1))))}
 					</text>
 					{/* the sixpenny stamp */}
@@ -320,21 +325,33 @@ export const TicketMotif: React.FC<{p: number; gold?: string}> = ({p, gold = '#f
 
 // ------------------------------------------------------------------ fair props
 
-/** The competition box: oak, a slot in the lid, a brass plate. Origin at its base centre. */
-export const BallotBox: React.FC<{lit?: number}> = ({lit = 0.6}) => (
+/** The plate on the competition box, in box space (stand on): for camera moves into it. */
+export const BOX_PLATE = {x: 0, y: -145};
+
+/**
+ * The competition box: oak, a slot in the lid, a brass plate. Origin at its base centre.
+ * `stand` draws the trestle it sits on (origin at the trestle's feet); without it the
+ * origin is the bottom of the box itself (carried, or on a desk).
+ */
+export const BallotBox: React.FC<{lit?: number; stand?: boolean}> = ({lit = 0.6, stand = true}) => (
 	<g>
-		<ellipse cx={0} cy={4} rx={80} ry={8} fill="#000" opacity={0.35} />
-		{/* trestle */}
-		<path d="M-60,0 L-48,-90 M60,0 L48,-90 M-56,-40 L56,-40" stroke={P.woodDark} strokeWidth={8} strokeLinecap="round" />
-		<rect x={-70} y={-100} width={140} height={14} fill="url(#wood)" />
-		<rect x={-56} y={-190} width={112} height={92} rx={4} fill="url(#wood)" />
-		<rect x={-56} y={-190} width={112} height={92} rx={4} fill="#ffcf8a" opacity={0.12 * lit} />
-		<path d="M-62,-196 L62,-196 L56,-186 L-56,-186 Z" fill="#6b4a30" />
-		<rect x={-30} y={-195} width={60} height={5} rx={2} fill="#140d08" />
-		<rect x={-42} y={-160} width={84} height={30} rx={3} fill="url(#brass)" />
-		<text x={0} y={-140} textAnchor="middle" style={{fontFamily: font.latin, fontWeight: 700, fontSize: 12, fill: '#3a2810', letterSpacing: '0.02em'}}>
-			6d · TICKETS
-		</text>
+		<ellipse cx={0} cy={4} rx={80} ry={8} fill="#000" opacity={stand ? 0.35 : 0} />
+		{stand ? (
+			<>
+				<path d="M-60,0 L-48,-90 M60,0 L48,-90 M-56,-40 L56,-40" stroke={P.woodDark} strokeWidth={8} strokeLinecap="round" />
+				<rect x={-70} y={-100} width={140} height={14} fill="url(#wood)" />
+			</>
+		) : null}
+		<g transform={stand ? undefined : 'translate(0,98)'}>
+			<rect x={-56} y={-190} width={112} height={92} rx={4} fill="url(#wood)" />
+			<rect x={-56} y={-190} width={112} height={92} rx={4} fill="#ffcf8a" opacity={0.12 * lit} />
+			<path d="M-62,-196 L62,-196 L56,-186 L-56,-186 Z" fill="#6b4a30" />
+			<rect x={-30} y={-195} width={60} height={5} rx={2} fill="#140d08" />
+			<rect x={-42} y={-160} width={84} height={30} rx={3} fill="url(#brass)" />
+			<text x={0} y={-140} textAnchor="middle" style={{fontFamily: font.latin, fontWeight: 700, fontSize: 12, fill: '#3a2810', letterSpacing: '0.02em', fontVariantNumeric: 'lining-nums'}}>
+				6d · TICKETS
+			</text>
+		</g>
 	</g>
 );
 

@@ -47,6 +47,8 @@ music: assets/music/bgm.mp3
 markers:
   a: 15.6         # the title card starts (inside the ballot box); the ticket lands on the hit at 16.104
   hit: 16.104     # the track's first big hit: the title's first stamp
+  why: 107.68     # "群体智慧" lands on the 108.18 s accent
+  zurich: 117.55  # "前提：独立地猜" lands on the 117.85 s accent
   coda: 149.89    # the callback, so the last line lands before the end card
 
 scenes:
@@ -116,19 +118,22 @@ scenes:
       - 他又算了平均数：1197磅，[只差1磅]。
       - 高尔顿写道：大众的判断，[比预想的可靠]。
 
-  # 7 name it + the second layer
+  # 7 name it (pinned to the 108.18 s accent) + the second layer (pinned to 117.85 s)
   - id: why
     component: Why
+    at: why
+    lead: 0.5
     lines:
       - 这就是[群体智慧]。
       - 猜高的和猜低的，误差在中间相互抵消。
-      - 但它有个前提：[每个人独立地猜]。
 
   - id: zurich
     component: Zurich
-    kicker: 2011 · 苏黎世联邦理工学院
+    at: zurich
+    lead: 0.3
     cite: Lorenz et al., PNAS 2011
     lines:
+      - 但它有个前提：[每个人独立地猜]。
       - 2011年，苏黎世，144个人做估算题。
       - 一旦让他们看到别人的答案——
       - 大家越猜越接近，却{并没有更准}。
