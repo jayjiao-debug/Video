@@ -53,7 +53,7 @@ const EndCard: React.FC<{ T: number }> = ({ T }) => {
         <g opacity={o(2.7)} style={{ fontFamily: ZH, fontSize: 17, letterSpacing: '0.03em', fill: 'rgba(243,237,226,0.42)' }}>
           <text x={960} y={958} textAnchor="middle">资料：Newcomb, Am. J. Math. (1881) · Benford, Proc. Am. Phil. Soc. (1938) · Nigrini, J. Accountancy (1999) · Rauch 等, German Economic Review (2011) · 世界银行人口数据 (2025)</text>
           <text x={960} y={986} textAnchor="middle">3D 模型（CC BY）：“Antique Desk” “Ink Bottle with Quill” by Matthew Collings · “Victorian Brass Oil Lamp” by tijerin_art · Sketchfab　|　地球贴图：three.js（MIT）</text>
-          <text x={960} y={1014} textAnchor="middle">小镇、支票分布与欧盟地图为示意</text>
+          <text x={960} y={1014} textAnchor="middle">小镇、支票分布与欧盟地图为示意　|　希腊赤字与救助数据：欧洲稳定机制（ESM）</text>
         </g>
         <rect width={1920} height={1080} fill="#000" opacity={black} />
       </svg>

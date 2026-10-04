@@ -69,15 +69,16 @@ export const Title: React.FC<{ T: number }> = ({ T }) => {
           BENFORD'S LAW · 本福特定律
         </text>
         <GoldTitle text="第一位数字" T={T} at={b(32)} size={128} y={500} />
-        <text x={960} y={850} textAnchor="middle" style={{ fontFamily: ZH, fontWeight: 700, fontSize: 46, fill: '#f3ede2', letterSpacing: '0.08em' }} opacity={o(b(36))}>
+        <text x={960} y={872} textAnchor="middle" style={{ fontFamily: ZH, fontWeight: 700, fontSize: 46, fill: '#f3ede2', letterSpacing: '0.08em' }} opacity={o(b(36))}>
           为什么1开头的数最多？
         </text>
-        <text x={960} y={898} textAnchor="middle" style={{ fontFamily: EN, fontStyle: 'italic', fontSize: 28, fill: 'rgba(243,237,226,0.5)' }} opacity={o(b(37))}>
+        <text x={960} y={918} textAnchor="middle" style={{ fontFamily: EN, fontStyle: 'italic', fontSize: 28, fill: 'rgba(243,237,226,0.5)' }} opacity={o(b(37))}>
           Why do so many numbers start with 1?
         </text>
-        <text x={960} y={780 + 34} textAnchor="middle" style={{ fontFamily: EN, fontWeight: 600, fontSize: 22, letterSpacing: '0.5em', fill: 'rgba(241,197,109,0.7)' }} opacity={o(b(34))}>
-          1 2 3 4 5 6 7 8 9
-        </text>
+        {/* digits under their own bars (not a letter-spaced row, which drifted off the bars) */}
+        {Array.from({ length: 9 }, (_, k) => (
+          <text key={k} x={960 + (k - 4) * 46} y={796} textAnchor="middle" style={{ fontFamily: EN, fontWeight: 700, fontSize: 24, fill: k === 0 ? '#f6cf78' : 'rgba(241,197,109,0.7)', fontVariantNumeric: 'lining-nums' }} opacity={o(b(34))}>{k + 1}</text>
+        ))}
       </svg>
     </AbsoluteFill>
   );

@@ -2,6 +2,7 @@ import React from 'react';
 import { AbsoluteFill } from 'remotion';
 import { b, prog, easeOut, easeInOut, lerp, hit, pop, rnd, EN, ZH, GOLD, INK, RED, benford } from './lib';
 import { Subs, SubBand, Chapter, type Line } from './ui';
+import { PersonCard } from './PersonCard';
 
 /* S6, 1993 (b192–b232): State of Arizona v. Wayne James Nelson. A manager in the Arizona State Treasurer's office
    wrote 23 cheques (nearly $2 million) to a bogus vendor; most amounts were just under $100,000 and over 90 %
@@ -150,6 +151,7 @@ export const S6: React.FC<{ T: number }> = ({ T }) => {
           <div style={{ fontFamily: ZH, fontSize: 24, color: 'rgba(243,237,226,0.7)', letterSpacing: '0.12em' }}>张 支 票</div>
         </div>
       )}
+      <PersonCard T={T} at={b(200) + 0.2} out={b(208) - 0.1} name="WAYNE JAMES NELSON" zh="韦恩·詹姆斯·纳尔逊" years="State of Arizona v. Nelson · 1993" role="亚利桑那州财政部门经理" beard={false} x={110} y={400} />
       <Subs T={T} lines={LINES_S6} />
     </AbsoluteFill>
   );

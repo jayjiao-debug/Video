@@ -8,14 +8,12 @@ import { Subs, SubBand, Chapter, type Line } from './ui';
    follow it. Narrow or assigned numbers don't: heights all sit between 1 and 2 metres, Chinese mobile numbers all
    start with 1 because they are assigned that way, lottery numbers are drawn evenly. Then: made-up numbers are too
    even. Ranges are indicative (示意). */
-export const S8_IN = b(264) - 0.3, S8_OUT = b(294) + 0.3;
+export const S8_IN = b(282) - 0.3, S8_OUT = b(294) + 0.3;
 
 export const LINES_S8: Line[] = [
-  [b(264) + 0.1, b(272) - 0.1, '跨越好几个数量级、自然增长的数，', 'Numbers that grow naturally and span many orders of magnitude'],
-  [b(272) + 0.06, b(280) - 0.1, '都偏爱1：人口、股价、河长、账单。', 'favour 1: populations, prices, river lengths, bills.'],
-  [b(280) + 0.06, b(288) - 0.1, '身高、手机号、彩票号——不算。', "Heights, phone numbers, lottery numbers don't count."],
-  [b(288) + 0.06, b(294) - 0.15, '人编的数，往往{太平均}。', 'Made-up numbers tend to be too even.'],
-];
+  [b(282) + 0.06, b(288) - 0.1, '自然增长、跨越数量级的数，才偏爱1；', 'Only numbers that grow naturally across orders of magnitude favour 1;'],
+  [b(288) + 0.06, b(294) - 0.15, '人编的数，往往{太平均}。', 'made-up numbers tend to be too even.'],
+]
 
 const AX = { x0: 330, x1: 1560 }, DEC = 11; // 1 … 10^11
 const ax = (e: number) => AX.x0 + ((AX.x1 - AX.x0) * e) / DEC; // e = log10(value)
@@ -43,29 +41,17 @@ export const S8: React.FC<{ T: number }> = ({ T }) => {
           ))}
           {/* kinds that follow the law: wide ranges */}
           {YES.map(([name, e0, e1], k) => {
-            const a = easeOut(prog(T, b(265) + k * 0.45, b(265) + k * 0.45 + 0.6));
+            const a = easeOut(prog(T, b(282) + k * 0.28, b(282) + k * 0.28 + 0.5));
             const y = 230 + k * 62;
             return (
               <g key={name} opacity={a}>
                 <text x={AX.x0 - 24} y={y + 9} textAnchor="end" style={{ fontFamily: ZH, fontWeight: 700, fontSize: 28, fill: INK }}>{name}</text>
                 <rect x={ax(e0)} y={y - 12} width={(ax(e1) - ax(e0)) * a} height={24} rx={12} fill="url(#g8)" />
-                <text x={ax(e1) + 18} y={y + 10} style={{ fontFamily: EN, fontWeight: 700, fontSize: 30, fill: GOLD }} opacity={easeOut(prog(T, b(272), b(273)))}>✓</text>
+                <text x={ax(e1) + 18} y={y + 10} style={{ fontFamily: EN, fontWeight: 700, fontSize: 30, fill: GOLD }} opacity={easeOut(prog(T, b(284), b(285)))}>✓</text>
               </g>
             );
           })}
-          {/* kinds that don't: narrow, assigned or uniform */}
-          {NO.map(([name, e0, e1, why], k) => {
-            const a = easeOut(prog(T, b(280) + k * 0.5, b(280) + k * 0.5 + 0.5));
-            const y = 560 + k * 62;
-            return (
-              <g key={name} opacity={a}>
-                <text x={AX.x0 - 24} y={y + 9} textAnchor="end" style={{ fontFamily: ZH, fontWeight: 700, fontSize: 28, fill: 'rgba(243,237,226,0.75)' }}>{name}</text>
-                <rect x={ax(e0) - (e1 === e0 ? 6 : 0)} y={y - 12} width={Math.max(12, ax(e1) - ax(e0))} height={24} rx={12} fill="rgba(243,237,226,0.55)" />
-                <text x={Math.max(ax(e1), ax(e0) + 12) + 22} y={y + 10} style={{ fontFamily: EN, fontWeight: 700, fontSize: 30, fill: RED }}>✗</text>
-                <text x={Math.max(ax(e1), ax(e0) + 12) + 60} y={y + 9} style={{ fontFamily: ZH, fontSize: 24, fill: 'rgba(243,237,226,0.6)' }}>{why}</text>
-              </g>
-            );
-          })}
+
         </g>
         {/* made-up numbers are too even */}
         {evenO > 0.01 && (
@@ -89,7 +75,7 @@ export const S8: React.FC<{ T: number }> = ({ T }) => {
       </svg>
       <div style={{ position: 'absolute', left: 0, right: 0, top: 790, textAlign: 'center', fontFamily: ZH, fontSize: 18, color: 'rgba(243,237,226,0.42)', opacity: axO }}>范围为示意</div>
       <SubBand />
-      <Chapter T={T} at={b(264)} out={b(294)} text="哪 些 数 偏 爱 1" />
+      <Chapter T={T} at={b(282)} out={b(294)} text="哪 些 数 偏 爱 1" />
       <Subs T={T} lines={LINES_S8} />
     </AbsoluteFill>
   );

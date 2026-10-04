@@ -32,6 +32,8 @@ export const S2B: React.FC<{ T: number }> = ({ T }) => {
   const toPaper = easeInOut(prog(T, b(89) + 0.3, b(90) + 0.4));
   const cold = easeInOut(prog(T, b(96), b(100))); // lamp light drains away in the silence
   const push = 1 + 0.06 * prog(T, S2B_IN, S2B_OUT);
+  const age = easeInOut(prog(T, b(96) + 0.3, b(103) + 0.3)); // 1881 → 1938
+  const year = Math.round(1881 + 57 * age);
   return (
     <AbsoluteFill style={{ backgroundColor: '#120c07', opacity: o }}>
       <AbsoluteFill style={{ transform: `scale(${push}) rotate(${-1.5 + 1.5 * prog(T, S2B_IN, S2B_OUT)}deg)` }}>
@@ -91,14 +93,47 @@ export const S2B: React.FC<{ T: number }> = ({ T }) => {
             ))}
           </g>
           <rect width={1920} height={1080} fill="url(#lamp-pool)" />
+          {/* time passes on the paper: it yellows, dust settles on it */}
+          {age > 0 && (
+            <g opacity={toPaper}>
+              <rect x={500} y={100} width={1040} height={720} fill="#6a4a1e" opacity={0.42 * age} />
+              {Array.from({ length: 420 }, (_, k) => k / 420 < age ? (
+                <circle key={k} cx={520 + rnd(k, 71) * 990} cy={130 + rnd(k, 72) * 640} r={0.8 + rnd(k, 73) * 2.4} fill="#3a2c1c" opacity={0.25 + 0.4 * rnd(k, 74)} />
+              ) : null)}
+            </g>
+          )}
           {/* the silence: cold light and slow dust */}
           <rect width={1920} height={1080} fill="#0b1630" opacity={0.55 * cold} />
+          {/* cobwebs spin out from the corners as the years go by */}
+          {age > 0 && [[0, 0, 1, 1], [1920, 1080, -1, -1], [1920, 0, -1, 1]].map(([cx, cy, sx, sy], w) => {
+            const R = 300 + 80 * w, n = 9;
+            return (
+              <g key={w} stroke="#cfd8ea" fill="none" opacity={0.5 * age} strokeWidth={1.4}>
+                {Array.from({ length: n }, (_, k) => {
+                  const a0 = (k / (n - 1)) * (Math.PI / 2);
+                  return <line key={k} x1={cx} y1={cy} x2={cx + sx * Math.cos(a0) * R * Math.min(1, age * 1.6)} y2={cy + sy * Math.sin(a0) * R * Math.min(1, age * 1.6)} />;
+                })}
+                {Array.from({ length: 7 }, (_, ring) => {
+                  const rr = (ring + 1) * (R / 8), grow = prog(age, 0.15 + ring * 0.1, 0.3 + ring * 0.1);
+                  if (grow <= 0) return null;
+                  const pts = Array.from({ length: n }, (_, k) => {
+                    const a0 = (k / (n - 1)) * (Math.PI / 2), sag = rr * (0.94 + 0.05 * Math.sin(k * 2.3 + ring));
+                    return `${cx + sx * Math.cos(a0) * sag},${cy + sy * Math.sin(a0) * sag}`;
+                  }).slice(0, Math.max(2, Math.round(n * grow)));
+                  return <polyline key={ring} points={pts.join(' ')} />;
+                })}
+              </g>
+            );
+          })}
           {cold > 0.01 && Array.from({ length: 70 }, (_, i) => {
             const x = rnd(i, 31) * 1920, y = (rnd(i, 32) * 1080 + (T - b(96)) * (8 + rnd(i, 33) * 14)) % 1080;
             return <circle key={i} cx={x + 20 * Math.sin(T * 0.4 + i)} cy={y} r={1 + rnd(i, 34) * 2.2} fill="#dfe8ff" opacity={0.35 * cold * rnd(i, 35)} />;
           })}
         </svg>
       </AbsoluteFill>
+      {age > 0 && (
+        <div style={{ position: 'absolute', left: 0, right: 0, top: 360, textAlign: 'center', opacity: easeOut(prog(T, b(96) + 0.2, b(97))), fontFamily: EN, fontWeight: 700, fontSize: 150, letterSpacing: '0.04em', color: year >= 1938 ? GOLD : 'rgba(243,237,226,0.85)', fontVariantNumeric: 'lining-nums tabular-nums', textShadow: '0 4px 30px rgba(0,0,0,0.9)' }}>{year}</div>
+      )}
       <SubBand />
       <Subs T={T} lines={LINES_S2B} />
     </AbsoluteFill>

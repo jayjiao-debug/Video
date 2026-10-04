@@ -30,13 +30,41 @@ const RL = { x0: 260, x1: 1660, y: 640 }; // the log ruler
 const BASE = 720; // the staircase's baseline (digits sit above the subtitles)
 const rx = (v: number) => RL.x0 + (RL.x1 - RL.x0) * Math.log10(v); // v in [1, 10]
 
-const House: React.FC<{ x: number; s: number; lit: boolean; k: number }> = ({ x, s, lit, k }) => (
-  <g transform={`translate(${x},440) scale(${s})`}>
-    <rect x={-22} y={-34} width={44} height={34} fill={['#2b3550', '#33304a', '#2a3a4a'][k % 3]} />
-    <path d="M-28,-34 L0,-58 L28,-34 Z" fill="#1c2236" />
-    <rect x={-8} y={-24} width={10} height={10} fill={lit ? '#ffcf80' : '#151a28'} />
-  </g>
-);
+/** one lot in the town; it upgrades as the town grows: cottage → two-storey house → apartment block → glass tower */
+const Building: React.FC<{ x: number; k: number; level: number }> = ({ x, k, level }) => {
+  const j = rnd(k, 54) * 0.3;
+  // upgrades spread over the whole run (1,000 → ~21,000): a few towers only at the very end
+  const tier = level < 0.2 + j ? 0 : level < 0.55 + j ? 1 : level < 0.95 + j ? 2 : 3;
+  const tone = ['#2b3550', '#33304a', '#2a3a4a', '#30384e'][k % 4];
+  const lit = (i: number) => rnd(k * 31 + i, 55) > 0.35;
+  if (tier === 0) return (
+    <g transform={`translate(${x},440)`}>
+      <rect x={-30} y={-46} width={60} height={46} fill={tone} /><path d="M-38,-46 L0,-78 L38,-46 Z" fill="#1c2236" />
+      <rect x={-10} y={-34} width={14} height={14} fill={lit(0) ? '#ffcf80' : '#151a28'} />
+    </g>
+  );
+  if (tier === 1) return (
+    <g transform={`translate(${x},440)`}>
+      <rect x={-40} y={-104} width={80} height={104} fill={tone} /><path d="M-48,-104 L0,-140 L48,-104 Z" fill="#1a2034" />
+      {[0, 1].map((r) => [0, 1].map((c) => <rect key={`${r}${c}`} x={-26 + c * 34} y={-92 + r * 46} width={18} height={20} fill={lit(r * 2 + c) ? '#ffcf80' : '#151a28'} />))}
+      <rect x={-6} y={-30} width={14} height={30} fill="#141826" />
+    </g>
+  );
+  if (tier === 2) return (
+    <g transform={`translate(${x},440)`}>
+      <rect x={-52} y={-170} width={104} height={170} fill={tone} /><rect x={-56} y={-176} width={112} height={8} fill="#1a2034" />
+      {Array.from({ length: 6 }, (_, r) => [0, 1, 2].map((c) => <rect key={`${r}${c}`} x={-40 + c * 30} y={-158 + r * 26} width={18} height={16} fill={lit(r * 3 + c) ? '#ffd48a' : '#151a28'} />))}
+    </g>
+  );
+  return (
+    <g transform={`translate(${x},440)`}>
+      <defs><linearGradient id={`glass${k}`} x1="0" y1="0" x2="1" y2="0"><stop offset="0" stopColor="#25324e" /><stop offset="1" stopColor="#3a4c72" /></linearGradient></defs>
+      <rect x={-58} y={-260} width={116} height={260} fill={`url(#glass${k})`} />
+      <rect x={-2} y={-300} width={4} height={40} fill="#8a96b0" /><circle cx={0} cy={-302} r={4} fill="#ff6a5c" />
+      {Array.from({ length: 10 }, (_, r) => [0, 1, 2, 3].map((c) => <rect key={`${r}${c}`} x={-48 + c * 25} y={-246 + r * 25} width={16} height={12} fill={lit(r * 4 + c) ? '#ffe2a8' : '#1a2238'} opacity={0.95} />))}
+    </g>
+  );
+};
 
 export const S45: React.FC<{ T: number }> = ({ T }) => {
   if (T < S4_IN || T > S5_OUT) return null;
@@ -50,7 +78,7 @@ export const S45: React.FC<{ T: number }> = ({ T }) => {
   const townO = 1 - easeInOut(prog(T, b(158), b(161)));
   const fit = easeOut(prog(T, b(184), b(185) + 0.3));
   const push = 1 + 0.04 * easeInOut(prog(T, b(161), S5_OUT));
-  const houses = Math.min(44, Math.floor(5 + 39 * Math.log10(p / 1000) / 1.3));
+  const houses = Math.min(26, Math.floor(8 + 18 * Math.log10(p / 1000) / 1.3));
   // years spent in each first-digit segment (first lap)
   const spent = (d: number) => {
     const a = Math.log(d) / Math.log(1.1), z = Math.log(d + 1) / Math.log(1.1);
@@ -68,7 +96,7 @@ export const S45: React.FC<{ T: number }> = ({ T }) => {
           <g opacity={townO}>
             <rect width={1920} height={440} fill="url(#dusk)" />
             <rect y={430} width={1920} height={30} fill="#141826" />
-            {Array.from({ length: houses }, (_, k) => <House key={k} k={k} x={90 + ((k * 397) % 1760) + rnd(k, 51) * 30} s={1.3 + rnd(k, 52) * 1.0} lit={rnd(k, 53) > 0.3} />)}
+            {Array.from({ length: houses }, (_, k) => k).sort((p1, p2) => rnd(p2, 56) - rnd(p1, 56)).map((k) => <Building key={k} k={k} x={70 + ((k * 397) % 1780) + rnd(k, 51) * 30} level={Math.log10(p / 1000)} />)}
             {/* the sign */}
             <g transform="translate(960,150)">
               <rect x={-170} y={-70} width={340} height={150} rx={8} fill="#efe6d0" />
