@@ -1,0 +1,7 @@
+url https://www.uscurrency.gov/media/65
+  saved out/files/media65.html 0.0 MB
+url https://www.uscurrency.gov/media/multimedia-library
+  saved out/files/library.html 0.1 MB
+url https://www.uscurrency.gov/media/multimedia-library?page=1
+  saved out/files/library1.html 0.1 MB
+done
