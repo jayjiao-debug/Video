@@ -14,11 +14,11 @@ import { Subs, SubBand, Chapter, type Line } from './ui';
 export const S2_IN = b(128) - 0.2, S2_OUT = b(161) + 0.2;
 
 export const LINES_S2: Line[] = [
-  [b(128) + 0.1, b(135) - 0.1, '2018年，元气森林主打"0糖0脂0卡"，', 'In 2018 a Chinese sparkling water sold itself on "0 sugar, 0 fat, 0 calories".'],
-  [b(135) + 0.06, b(141) - 0.1, '甜味来自赤藓糖醇和三氯蔗糖。', 'Its sweetness came from erythritol and sucralose.'],
-  [b(141) + 0.06, b(149) - 0.1, '2021年，它的乳茶标"0蔗糖"，却含乳糖和果糖。', 'In 2021 its milk tea said "0 sucrose" but held lactose and fructose; the company apologised.'],
-  [b(149) + 0.06, b(155) - 0.1, '国标"无糖"：每100毫升≤[0.5克]糖；', 'Under China\'s label standard, "sugar-free" means up to 0.5 g per 100 ml;'],
-  [b(155) + 0.06, b(161) - 0.15, '"0卡"：≤17千焦，并不是真的{零}。', '"zero calories" means up to 17 kJ. Not actually zero.'],
+  [b(128) + 0.1, b(135) - 0.1, '"0糖0脂0卡"的气泡水，火遍全国；', 'In 2018 a Chinese sparkling water sold itself on "0 sugar, 0 fat, 0 calories".'],
+  [b(135) + 0.06, b(141) - 0.1, '甜味多来自赤藓糖醇、三氯蔗糖。', 'Its sweetness came from erythritol and sucralose.'],
+  [b(141) + 0.06, b(149) - 0.1, '曾有乳茶印着"0蔗糖"，其实含乳糖和果糖。', 'In 2021 its milk tea said "0 sucrose" but held lactose and fructose; the company apologised.'],
+  [b(149) + 0.06, b(155) - 0.1, '国标里，"无糖"是糖≤[0.5克]；', 'Under China\'s label standard, "sugar-free" means up to 0.5 g per 100 ml;'],
+  [b(155) + 0.06, b(161) - 0.15, '"0卡"是≤17千焦，不是{零}。', '"zero calories" means up to 17 kJ. Not actually zero.'],
 ];
 
 const Bottle: React.FC<{ T: number; tint: string }> = ({ T, tint }) => (
@@ -88,7 +88,7 @@ export const S2: React.FC<{ T: number }> = ({ T }) => {
             <text x={700} y={470} textAnchor="middle" style={{ fontFamily: SANS, fontWeight: 700, fontSize: 30, fill: '#5a4a2a' }}>气泡水</text>
             <text x={700} y={520} textAnchor="middle" style={{ fontFamily: SANS, fontSize: 20, fill: '#8a7a5a', letterSpacing: '0.2em' }}>SPARKLING</text>
             {['0糖', '0脂', '0卡'].map((t, k) => <Seal key={t} x={1060 + k * 190} y={330} text={t} s={seal(k)} />)}
-            <text x={1250} y={470} textAnchor="middle" style={{ fontFamily: ZH, fontSize: 26, fill: 'rgba(243,237,226,0.7)' }} opacity={seal(2)}>2018 · 元气森林气泡水（示意）</text>
+            <text x={1250} y={470} textAnchor="middle" style={{ fontFamily: ZH, fontSize: 26, fill: 'rgba(243,237,226,0.7)' }} opacity={seal(2)}>2018 起 · 无糖气泡水（示意）</text>
             <g opacity={ingr} transform={`translate(${lerp(1080, 1040, ingr)},560)`}>
               <rect x={0} y={0} width={440} height={170} fill="#f3eee4" />
               <text x={24} y={44} style={{ fontFamily: SANS, fontWeight: 700, fontSize: 26, fill: '#2a2a2a' }}>配料表（节选）</text>
@@ -109,7 +109,7 @@ export const S2: React.FC<{ T: number }> = ({ T }) => {
             </g>
             <g opacity={strike}>
               <text x={1500} y={300} textAnchor="middle" style={{ fontFamily: ZH, fontWeight: 900, fontSize: 64, fill: INK }}>0蔗糖 <tspan fill={RED}>≠</tspan> 0糖</text>
-              <text x={1500} y={760} textAnchor="middle" style={{ fontFamily: ZH, fontSize: 28, fill: 'rgba(243,237,226,0.75)' }}>2021.4.10 公开道歉 · 改标“低糖”</text>
+              <text x={1500} y={760} textAnchor="middle" style={{ fontFamily: ZH, fontSize: 28, fill: 'rgba(243,237,226,0.75)' }}>后已公开道歉，改标“低糖”</text>
             </g>
           </g>
 

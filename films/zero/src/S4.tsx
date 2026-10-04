@@ -15,7 +15,7 @@ export const LINES_S4: Line[] = [
   [b(240) + 0.1, b(248) - 0.1, '有意思的是，中国的饮料货架，自己拐了个弯。', 'Meanwhile China\'s drinks shelf took its own turn.'],
   [b(248) + 0.06, b(256) - 0.1, '无糖饮料，9年涨到[570.5亿元]，约25倍；', 'Sugar-free drinks grew from ¥2.26 bn in 2015 to ¥57.05 bn in 2024;'],
   [b(256) + 0.06, b(264) - 0.1, '其中约四成，是根本不加甜味的[无糖茶]。', 'about 40% of it was tea with no sweetener at all.'],
-  [b(264) + 0.06, b(272) - 0.1, '东方树叶一家，就占了无糖茶的[75%]。', 'One brand alone held 75% of that tea.'],
+  [b(264) + 0.06, b(272) - 0.1, '一家龙头品牌，就占了无糖茶的[75%]。', 'One brand alone held 75% of that tea.'],
   [b(272) + 0.06, b(282) - 0.1, '世卫组织的原话是：从小开始，整体降低饮食的甜度。', 'The WHO\'s own words: reduce the sweetness of the diet altogether, starting early in life.'],
   [b(282) + 0.06, b(288) - 0.1, '不是换一把更甜的钥匙，', 'Not a sweeter key,'],
   [b(288) + 0.06, b(294) - 0.15, '而是让这把锁，少开几次。', 'but fewer turns of the lock.'],
@@ -80,7 +80,7 @@ export const S4: React.FC<{ T: number }> = ({ T }) => {
             <text x={1000} y={300} style={{ fontFamily: ZH, fontWeight: 700, fontSize: 32, fill: INK }}>无糖茶市场份额（2024）</text>
             <rect x={1000} y={360} width={700} height={90} fill="rgba(243,237,226,0.12)" />
             <rect x={1000} y={360} width={700 * 0.75 * share} height={90} fill={GOLD} />
-            <text x={1020} y={420} style={{ fontFamily: ZH, fontWeight: 900, fontSize: 36, fill: '#2a1d10' }}>东方树叶</text>
+            <text x={1020} y={420} style={{ fontFamily: ZH, fontWeight: 900, fontSize: 36, fill: '#2a1d10' }}>龙头品牌</text>
             <text x={1000 + 700 * 0.75 * share - 20} y={424} textAnchor="end" style={{ fontFamily: EN, fontWeight: 700, fontSize: 52, fill: '#2a1d10', fontVariantNumeric: 'lining-nums' }}>75%</text>
             <text x={1690} y={420} textAnchor="end" style={{ fontFamily: ZH, fontSize: 24, fill: 'rgba(243,237,226,0.6)' }}>其他</text>
           </g>
