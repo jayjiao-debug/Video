@@ -19,6 +19,7 @@ import {BeanMachine, DeskTop, LAB, LabZurich, OfficialCard, TOP, TicketBack, Tic
 import {GUESSES, MEDIAN_INDEX, SPREAD} from './guesses';
 import {DESK_Y, BOARD_AT, Study1906} from '../../src/art/sets/Study1906';
 import {BRAND, EPISODE} from './brand';
+import {PersonCard} from '../../src/art/PersonCard';
 
 /**
  * 《八百人猜牛》. The cold open is sized by its lines (what we're looking at → the
@@ -372,6 +373,15 @@ const GB = {
 	hold: P_({lean: -4, head: 0, armNear: [-15, 78], armFar: [1, 66]}),
 };
 
+/** Galton by 1906 (sources in episode.yaml); uneven gaps so the rows don't tick on the beat */
+const GALTON_FACTS = [
+	{text: '达尔文的表弟', at: 22},
+	{year: '1875', text: '画出第一张登上报纸的天气图', at: 44},
+	{year: '1886', text: '提出“回归均值”', at: 63},
+	{year: '1892', text: '出版《指纹》，开创指纹分类', at: 87},
+	{text: '也创造了“优生学”一词（今天饱受争议）', at: 112, muted: true},
+];
+
 const Galton: React.FC<SceneProps> = () => {
 	const f = useCurrentFrame();
 	const cue = useCue();
@@ -448,7 +458,27 @@ const Galton: React.FC<SceneProps> = () => {
 	const cam = camPath(keys, f);
 	const oxPose = {head: Math.sin(A / 70) * 4, tail: Math.sin(A / 11) * 0.7, breath: 0.5 + 0.5 * Math.sin(A / 22)};
 	return (
-		<FullFrame fadeIn={0} fadeOut={0}>
+		<FullFrame
+			fadeIn={0}
+			fadeOut={0}
+			// who he is: a person card with what he had done by 1906, in the free space left of him
+			overlay={
+			<svg width={W} height={H} viewBox={`0 0 ${W} ${H}`} style={{position: 'absolute', inset: 0}}>
+				<PersonCard
+					t={f - (cue(0) + 26)}
+					dur={CUT - 4 - (cue(0) + 26)}
+					name="FRANCIS GALTON"
+					zh="弗朗西斯·高尔顿"
+					years="1822 – 1911"
+					role="统计学家 · 探险家 · 英国皇家学会会员"
+					profile={{beard: true, hair: 'bald'}}
+					x={96}
+					y={150}
+					facts={GALTON_FACTS}
+				/>
+			</svg>
+			}
+		>
 			<OX_DEFS />
 			<Fair1906 frame={A + 92} cam={cam} postX={1660} lamp={night ? 0.42 : 1} crowd={!night} front={night ? null : <FrontCrowd f={A - 168} />}>
 				<g transform="translate(250,890)">

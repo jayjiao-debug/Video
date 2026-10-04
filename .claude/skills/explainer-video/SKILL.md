@@ -72,6 +72,12 @@ people. What the user wants, and approved:
     (`PersonCard`: a cameo in a gold oval, name, years, role; still, like an
     archive caption), or a larger illustrated portrait / head. A generated or
     drawn portrait is fine as long as it stays still or nearly still.
+    When the person matters to the story (the protagonist, the doubter, the
+    discoverer), give the card **what they had done by then**: `facts` rows
+    (year + one short line, 3–5 rows, sourced in `episode.yaml`, a controversy
+    as a muted row rather than left out). Put it in the open part of the frame
+    beside them while the line introduces them; rows rise in at uneven gaps
+    (not on the beat), the backing grows with them, and it fades before the cut.
   - **Figures in the set:** sitting or standing, with only `idle()` life
     (breathing, blinking, a small head turn). They don't do the action.
   - **Traces of presence:** the empty chair, a coat on the hook, a cup still

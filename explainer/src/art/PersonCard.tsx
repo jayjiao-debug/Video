@@ -41,13 +41,25 @@ export const PersonCard: React.FC<{
 	profile: Profile;
 	x?: number;
 	y?: number;
-}> = ({t, dur, name, zh, years, role, profile, x = 120, y = 150}) => {
+	/**
+	 * Optional achievements listed under the caption, each rising in at its own local frame
+	 * (`at`, frames after the card appears; keep the gaps uneven so they don't tick on the beat).
+	 * `muted` rows are greyed (e.g. a controversial footnote).
+	 */
+	facts?: {year?: string; text: string; at: number; muted?: boolean}[];
+}> = ({t, dur, name, zh, years, role, profile, x = 120, y = 150, facts = []}) => {
 	if (t < 0 || t > dur) return null;
 	const inP = Math.min(1, t / 14);
 	const e = 1 - Math.pow(1 - inP, 3);
 	const out = Math.max(0, Math.min(1, (t - (dur - 12)) / 12));
 	const o = e * (1 - out);
 	const id = `pc-${name.replace(/\W/g, '')}`;
+	const ROW = 60;
+	const shown = (i: number) => {
+		const k = Math.min(1, Math.max(0, (t - facts[i].at + 2) / 10));
+		return 1 - Math.pow(1 - k, 3);
+	};
+	const factsIn = facts.reduce((n, _, i) => n + shown(i), 0);
 	return (
 		<g transform={`translate(${x},${y + 16 * (1 - e)})`} opacity={o}>
 			<defs>
@@ -60,7 +72,30 @@ export const PersonCard: React.FC<{
 				</radialGradient>
 			</defs>
 			{/* soft backing so the card reads on any set */}
-			<rect x={-30} y={-20} width={560} height={260} rx={14} fill="#07060a" opacity={0.55} />
+			{/* the backing grows with the rows as they arrive, so it is never an empty box */}
+			<rect x={-30} y={-20} width={facts.length ? 690 : 560} height={260 + (facts.length ? 34 * shown(0) + factsIn * ROW : 0)} rx={14} fill="#07060a" opacity={facts.length ? 0.66 : 0.55} />
+			{facts.length ? <line x1={0} y1={252} x2={630 * Math.min(1, Math.max(0, (t - 8) / 16))} y2={252} stroke={color.goldDeep} strokeWidth={1.5} opacity={0.7} /> : null}
+			{facts.map((fact, i) => {
+				const k = t - fact.at;
+				if (k < 0) return null;
+				const a = Math.min(1, k / 10);
+				const ea = 1 - Math.pow(1 - a, 3);
+				const fy = 306 + i * ROW;
+				return (
+					<g key={i} opacity={ea} transform={`translate(${-18 * (1 - ea)},0)`}>
+						{fact.year ? (
+							<text x={0} y={fy} style={{fontFamily: font.latin, fontWeight: 700, fontSize: 34, fill: fact.muted ? '#8a857a' : color.gold, fontVariantNumeric: 'lining-nums'}}>
+								{fact.year}
+							</text>
+						) : (
+							<circle cx={10} cy={fy - 10} r={5} fill={fact.muted ? '#8a857a' : color.gold} />
+						)}
+						<text x={92} y={fy} style={{fontFamily: font.serif, fontWeight: fact.muted ? 500 : 700, fontSize: fact.muted ? 27 : 33, fill: fact.muted ? '#9a9488' : color.text}}>
+							{fact.text}
+						</text>
+					</g>
+				);
+			})}
 			<ellipse cx={90} cy={110} rx={74} ry={94} fill={`url(#${id}-bg)`} />
 			<g clipPath={`url(#${id})`}>
 				<g transform="translate(16,20) scale(0.72)">
