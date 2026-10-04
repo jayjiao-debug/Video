@@ -62,6 +62,34 @@ export const useBeat = (decay = 7, every = 1) => {
 	return Math.exp(-(f - last) / decay);
 };
 
+/** 1 on each accented beat of the track (scaled by its strength), decaying to 0. */
+export const useHit = (decay = 6, min = 0) => {
+	const {music} = useTimeline();
+	const f = useAbsoluteFrame();
+	let v = 0;
+	for (const [t, s] of music.hits ?? []) {
+		if (t > f) break;
+		if (s >= min) v = s * Math.exp(-(f - t) / decay);
+	}
+	return v;
+};
+
+/** Scene-local frames of the track's accents, so a scene can land its own events on them. */
+export const useHitFrames = (min = 0) => {
+	const {music} = useTimeline();
+	const scene = useContext(SceneCtx);
+	const from = scene ? scene.from : 0;
+	return (music.hits ?? []).filter(([, s]) => s >= min).map(([t]) => t - from);
+};
+
+/** The beat (scene-local frame) nearest to `frame`. */
+export const useSnapBeat = () => {
+	const {music} = useTimeline();
+	const scene = useContext(SceneCtx);
+	const from = scene ? scene.from : 0;
+	return (frame: number) => music.beats.reduce((best, b) => (Math.abs(b - from - frame) < Math.abs(best - frame) ? b - from : best), 1e9);
+};
+
 export const ease = {
 	out: Easing.bezier(0.16, 1, 0.3, 1),
 	inOut: Easing.bezier(0.65, 0, 0.35, 1),

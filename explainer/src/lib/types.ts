@@ -39,6 +39,8 @@ export type Timeline = {
 		beats: number[];
 		energyHz: number;
 		energy: number[];
+		/** accented beats (kick/snare): [absolute frame, strength 0..1] */
+		hits?: [number, number][];
 	};
 	scenes: Scene[];
 	subtitles: Subtitle[];

@@ -1,0 +1,113 @@
+# 《续命》 v2: what the morning coffee actually "renews", told in the Amber Night look
+# (no characters: liquid light, molecules, silhouettes, carved stone).
+#
+# Sources (checked):
+#   ~2 billion cups of coffee a day worldwide: widely cited estimate (CIAT coffee-facts
+#     infographic 2014; other estimates up to 2.25 bn). Phrased as 约二十亿.
+#   Caffeine is an adenosine-receptor antagonist: adenosine builds up while awake and
+#     promotes sleepiness; caffeine, a methylxanthine sharing the purine core, occupies the
+#     receptors without activating them. Peak plasma ~30–60 min; mean half-life ~5 h (range wide).
+#   Coffea arabica: allotetraploid hybrid of C. canephora × C. eugenioides, formed in the
+#     forests of Ethiopia ≥ ~610,000 years ago (Nature Genetics 2024 reference genome).
+#   Caffeine as a natural pesticide: Nathanson, Science 226:184 (1984): levels in fresh
+#     coffee beans/tea leaves kill or disrupt insect larvae via the nervous system.
+#   Allelopathy: caffeine from coffee leaves/pulp/under-canopy soil inhibits germination of
+#     other seeds (e.g. Agronomy 9:396, 2019; Friedman & Waller 1983).
+#   Convergent evolution: coffee's caffeine N-methyltransferases evolved independently of
+#     tea's and cacao's (Denoeud et al., Science 345:1181, 2014).
+#   Wright et al., Science 2013: caffeine in coffee/citrus nectar; bees given caffeine were
+#     3× as likely to remember the floral scent 24 h later.
+#   Earliest credible evidence of coffee drinking: Sufi lodges of Yemen, mid-15th century,
+#     to stay awake for night devotions (Hattox 1985); exported via the port of Mocha.
+#   Roasting: first crack ≈ 196–205 °C; Maillard reactions between sugars and amino acids;
+#     > 1,000 volatile compounds identified in roasted coffee (Flament, Coffee Flavor Chemistry).
+#   Green coffee smells grassy/beany, not of coffee (aroma forms in roasting).
+
+id: xuming
+series: Juno · VIBE知识大赏
+title: 续命
+subtitle: 它续的，到底是什么？
+format: horizontal
+fps: 30
+music: assets/music/bgm.mp3
+markers:
+  a: 16.104
+  coda: 149.89
+
+scenes:
+  - id: hook
+    component: Hook
+    lines:
+      - pause: 0.8
+      - 每天，全世界约有[二十亿]杯咖啡被端起。
+      - 你管它叫——[续命]。
+      - 可它续的，到底是什么？
+
+  - id: sleep
+    component: Sleep
+    at: a
+    lead: 5.2   # the title card plays first
+    lines:
+      - 你醒着的每一分钟，大脑都在积攒一种分子：[腺苷]。
+      - 它一点点落进受体，你就一点点困下去。
+      - 而咖啡因的骨架，和它[几乎一模一样]。
+      - 它抢先坐进受体，却什么也不做——
+      - 困意，就这样被挡在了门外。
+      - 咖啡不给你力气，它替你[挡住疲惫]。
+
+  - id: origin
+    component: Origin
+    at: break
+    lines:
+      - 可这把钥匙，最早不是为人类准备的。
+      - 约六十万年前，埃塞俄比亚的森林里，
+      - 两种野生咖啡偶然杂交，诞生了[阿拉比卡]。
+
+  - id: defense
+    component: Defense
+    at: build
+    lines:
+      - 咖啡因，本是它的[防身术]：
+      - 啃食叶子的虫子，会被它扰乱神经；
+      - 落叶里的咖啡因渗进土里，别的种子很难发芽。
+      - 茶、可可、咖啡，相隔万里，却[各自]发明了它。
+
+  - id: bloom
+    component: Bloom
+    at: drop
+    lines:
+      - 旱季后的第一场雨，整座山的咖啡树几乎同时开花。
+      - 花只开三四天。花蜜里，藏着一点点咖啡因。
+      - 喝过的蜜蜂，一天后还记得这朵花的，是别的蜜蜂的[三倍]。
+      - 它在对蜜蜂说：[记住我]。
+
+  - id: journey
+    component: Journey
+    lines:
+      - 后来，人类也记住了它——而且想独占它。
+      - 也门出口的咖啡豆，都要先烘过，种不活。
+      - 传说1670年，一位朝圣者把七颗生豆藏进胡子，带去了印度。
+      - 一棵送给法国国王的咖啡树，后代漂洋过海，长满了半个美洲。
+
+  - id: roast
+    component: Roast
+    lines:
+      - 刚摘下的生豆是青绿的，闻起来像青草。
+      - 两百度，水汽撑破细胞——[啪]。
+      - 糖和氨基酸相撞，生出[一千多种]香气。
+
+  - id: body
+    component: Body
+    lines:
+      - 下午三点那杯，到半夜还剩[近三分之一]。
+      - 有人一杯倒头就睡，有人失眠到天亮——快慢，部分写在基因里。
+      - 喝得越久，大脑会多造几把锁——所以越喝，越不管用。
+
+  - id: coda
+    component: Coda
+    at: coda
+    lines:
+      - 你续的命，是一棵树六十万年的防身术，
+      - 一朵花的[「记住我」]，和七颗偷渡的种子。
+      - 早安。
+      - pause: 5.8   # the Juno end card (JUNO.timing.endCard ≈ 6 s)

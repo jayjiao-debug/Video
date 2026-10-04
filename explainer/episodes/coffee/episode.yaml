@@ -1,0 +1,124 @@
+# 《续命》: where your morning coffee came from, rewound from the metro to a flower
+#
+# Sources (checked):
+#   China's branded coffee shops passed the US as the world's largest by outlets
+#     (49,691 outlets, late 2023; World Coffee Portal survey via China Daily, 2023-12-14).
+#   Melitta Bentz, Dresden, 1908: perforated brass pot lined with blotting paper from
+#     her son's exercise book; filter registered 20 June 1908 (DPMA; Melitta Group history).
+#   Bach, "Schweigt stille, plaudert nicht" (Coffee Cantata) BWV 211, c. 1732–35, for the
+#     Collegium Musicum at Zimmermann's coffee house, Leipzig; libretto Picander:
+#     "Wenn ich des Tages nicht dreimal / mein Schälchen Coffee trinken darf, / so werd ich
+#     ... zu einem ausgedorrten Ziegenbraten" (if I can't drink my coffee three times a day,
+#     I'll shrivel up like a roast goat).
+#   London's first coffeehouse: Pasqua Rosée, St Michael's Alley, 1652; "penny universities";
+#     Lloyd's of London began in Edward Lloyd's coffeehouse (Historic UK; Londonist).
+#   Yunnan: >98% of China's coffee area and output (2024: 1.267 M mu, 146,000 t);
+#     coffee brought in by French missionaries in 1892; picking season Nov–Mar, red cherries
+#     only (China Daily 2023-01-10; Xinhua; China News 2025-12-15).
+#   A coffee cherry holds two seeds, flat sides facing (botany).
+#   Wright et al., Science 2013: caffeine in coffee and citrus nectar; bees fed caffeine were
+#     3× as likely to remember the floral scent 24 h later (Newcastle University press release).
+#   Coffee blossom scent "often compared to jasmine": common description, phrased as such.
+
+id: coffee
+series: Juno · VIBE知识大赏
+title: 续命
+subtitle: 这杯咖啡，比你醒得早
+format: horizontal
+fps: 30
+music: assets/music/bgm.mp3
+markers:
+  a: 16.104
+  coda: 149.89
+
+scenes:
+  - id: hook
+    component: Hook
+    kicker: 早上八点 · 地铁
+    lines:
+      - pause: 1.2
+      - 早上八点，地铁里，很多人手里握着同一样东西。
+      - 你管它叫——[续命]。
+      - 中国的品牌咖啡店数量，已经是世界第一。
+
+  - id: street
+    component: Street
+    at: a
+    lead: 5.2   # the title card plays first
+    props: {quietLead: true}
+    kicker: 下午三点 · 写字楼楼下
+    lines:
+      - 「一起去买杯咖啡吗？」
+      - 有时是为了提神，有时只是想和某个人多走一段路。
+      - 可这杯咖啡，比你[醒得早]得多。
+
+  - id: kitchen
+    component: Kitchen
+    kicker: 1908 · 德累斯顿
+    lines:
+      - 1908年，德国一位主妇，嫌咖啡又苦又多渣。
+      - 她在铜罐底打了几个洞，铺上儿子作业本的吸墨纸。
+      - 世界上第一张[咖啡滤纸]，就这样诞生了。
+      - 你说的「手冲」，就从这里开始。
+
+  - id: leipzig
+    component: Leipzig
+    at: break
+    kicker: 1730年代 · 莱比锡 · 齐默尔曼咖啡馆
+    cite: Bach, BWV 211《咖啡康塔塔》
+    lines:
+      - 再往回。莱比锡，巴赫为咖啡写了一首歌。
+      - 女儿对父亲唱：「一天不让我喝三杯，」
+      - 「我就会干成一块[烤羊肉]。」
+      - 原来「续命」，三百年前就有人唱过。
+
+  - id: london
+    component: London
+    at: build
+    kicker: 1652 · 伦敦
+    lines:
+      - 再往回。1652年，伦敦第一家咖啡馆开张。
+      - 一便士一杯，看报、谈生意、争论天下，
+      - 人们叫它：[一便士大学]。
+      - 连保险公司，都是在咖啡馆里谈出来的。
+
+  - id: yunnan
+    component: Yunnan
+    at: drop
+    kicker: 云南 · 普洱
+    lines:
+      - 可你手里这一杯，多半来自更近的地方：
+      - 云南的山上。
+      - 中国的咖啡，[九成八]以上长在这里。
+      - 1892年，法国传教士把咖啡带进了云南。
+      - 每年冬天果子红透，咖啡农一颗一颗地摘，
+      - 只摘全红的那一颗。
+
+  - id: cherry
+    component: CherryScene
+    kicker: 一颗咖啡果
+    lines:
+      - 一颗红果子剖开，里面藏着两颗豆子，
+      - text: 背靠着背。
+        hold: 2.0
+
+  - id: flower
+    component: Flower
+    kicker: 春天 · 咖啡花开
+    cite: Wright et al., Science (2013)
+    lines:
+      - 最后，倒回一朵花。
+      - 咖啡开白花，香气常被比作茉莉。
+      - 它的花蜜里，有一点点咖啡因。
+      - 喝过的蜜蜂，记住花香的比例，是别的蜜蜂的[三倍]。
+      - 原来这份清醒，最早是一朵花对蜜蜂说：[记住我]。
+
+  - id: callback
+    component: Callback
+    at: coda
+    lines:
+      - 它从山上出发，走了很远很远，
+      - 来到你手里，叫醒你。
+      - text: 早安。
+        hold: 1.6
+      - pause: 3.0

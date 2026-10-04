@@ -59,7 +59,7 @@ def plan(ep_id):
 
     track = os.path.join(ROOT, ep["music"])
     cache = os.path.join(out, "music.json")
-    if os.path.exists(cache) and json.load(open(cache)).get("mtime") == os.path.getmtime(track):
+    if os.path.exists(cache) and json.load(open(cache)).get("mtime") == os.path.getmtime(track) and "hits" in json.load(open(cache)):
         info = json.load(open(cache))
     else:
         print("analysing music...")
