@@ -1,40 +1,101 @@
 {
-  "id": "benford-models-01",
+  "id": "money-search-01",
   "items": [
     {
-      "type": "sketchfab",
-      "uid": "4de1bcbd22a444abb4f089b9b78ec96a",
-      "name": "earth"
+      "type": "sketchfab-search",
+      "q": "100 dollar bill",
+      "count": 12,
+      "maxFaces": 300000
     },
     {
-      "type": "sketchfab",
-      "uid": "12d76407cbd047d2a23a86c73e556c9e",
-      "name": "book"
+      "type": "sketchfab-search",
+      "q": "banknote",
+      "count": 12,
+      "maxFaces": 300000
     },
     {
-      "type": "sketchfab",
-      "uid": "c491f647da5947978ba8113951ee2efc",
-      "name": "desk1881"
+      "type": "sketchfab-search",
+      "q": "ramen bowl",
+      "count": 12,
+      "maxFaces": 300000
     },
     {
-      "type": "sketchfab",
-      "uid": "ef967c9bc13b4635add8ab7517dfedfe",
-      "name": "inkwell"
+      "type": "sketchfab-search",
+      "q": "noodle bowl chinese",
+      "count": 12,
+      "maxFaces": 300000
     },
     {
-      "type": "sketchfab",
-      "uid": "c932f6165fef40029c3f18afe19b9934",
-      "name": "oil_lamp"
+      "type": "sketchfab-search",
+      "q": "restaurant table",
+      "count": 12,
+      "maxFaces": 300000
     },
     {
-      "type": "sketchfab",
-      "uid": "7ef1ca295ff14af2abcbe0ae0168a241",
-      "name": "cabinets"
+      "type": "sketchfab-search",
+      "q": "cowrie shell",
+      "count": 12,
+      "maxFaces": 300000
     },
     {
-      "type": "sketchfab",
-      "uid": "dadca97505214b9481d35e22c48e18df",
-      "name": "office90s"
+      "type": "sketchfab-search",
+      "q": "seashell cowry",
+      "count": 12,
+      "maxFaces": 300000
+    },
+    {
+      "type": "sketchfab-search",
+      "q": "lydian coin",
+      "count": 12,
+      "maxFaces": 300000
+    },
+    {
+      "type": "sketchfab-search",
+      "q": "ancient greek coin",
+      "count": 12,
+      "maxFaces": 300000
+    },
+    {
+      "type": "sketchfab-search",
+      "q": "chinese ancient coin",
+      "count": 12,
+      "maxFaces": 300000
+    },
+    {
+      "type": "sketchfab-search",
+      "q": "gold bar",
+      "count": 12,
+      "maxFaces": 300000
+    },
+    {
+      "type": "sketchfab-search",
+      "q": "gold ingot",
+      "count": 12,
+      "maxFaces": 300000
+    },
+    {
+      "type": "sketchfab-search",
+      "q": "apartment building",
+      "count": 12,
+      "maxFaces": 300000
+    },
+    {
+      "type": "sketchfab-search",
+      "q": "rai stone yap",
+      "count": 12,
+      "maxFaces": 300000
+    },
+    {
+      "type": "sketchfab-search",
+      "q": "stone money",
+      "count": 12,
+      "maxFaces": 300000
+    },
+    {
+      "type": "sketchfab-search",
+      "q": "outrigger canoe",
+      "count": 12,
+      "maxFaces": 300000
     }
   ]
 }
