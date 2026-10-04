@@ -9,7 +9,7 @@ import { tubeX, TUBE, COUNT } from './S01';
 export const T_IN = b(30), T_OUT = b(44);
 const half = (beats[33] - beats[32]) / 2;
 
-const GoldTitle: React.FC<{ text: string; T: number; at: number; size: number; y: number }> = ({ text, T, at, size, y }) => {
+export const GoldTitle: React.FC<{ text: string; T: number; at: number; size: number; y: number }> = ({ text, T, at, size, y }) => {
   const chars = [...`《${text}》`];
   const width = chars.length * size * 0.98;
   const sweep = lerp(-760, 760, easeInOut(prog(T, at + chars.length * half + 0.4, at + chars.length * half + 1.4)));
@@ -44,7 +44,7 @@ export const Title: React.FC<{ T: number }> = ({ T }) => {
   const step = TUBE.sq + TUBE.pad;
   const o = (a: number, d = 0.5) => easeOut(prog(T, a, a + d));
   return (
-    <AbsoluteFill style={{ opacity: 1 - out }}>
+    <AbsoluteFill style={{ opacity: 1 - out, transform: `scale(${1 + 0.05 * easeInOut(prog(T, b(32), T_OUT))})` }}>
       <svg width={1920} height={1080}>
         <defs>
           <linearGradient id="bar-gold" x1="0" y1="0" x2="0" y2="1">

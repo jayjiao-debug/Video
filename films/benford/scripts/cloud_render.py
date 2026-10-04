@@ -28,6 +28,9 @@ import os
 PROJECT = Path(os.environ.get('VE_PROJECT', '/home/claude/diji'))
 FARM = Path(os.environ.get('VE_FARM', '/home/claude/vibe-render'))
 REPO = os.environ.get('VE_REPO', 'jayjiao-debug/video')
+# each episode can run on its own farm branch so renders of different episodes never cancel or overwrite each other
+BRANCH = os.environ.get('VE_FARM_BRANCH', 'render-farm')
+OUT_BRANCH = os.environ.get('VE_OUT_BRANCH', 'render-output')
 FPS = 30
 
 
@@ -75,8 +78,8 @@ def main():
     }, indent=2) + '\n')
     sh('git add -A', cwd=FARM)
     sh(['git', 'commit', '-qm', f'render {a.output} ({a.composition} {a.start}-{a.end})'], cwd=FARM)
-    sh('git fetch -q origin render-farm && git rebase -q origin/render-farm', cwd=FARM)
-    sh('git push -q origin render-farm', cwd=FARM)
+    sh(f'git fetch -q origin {BRANCH} && git rebase -q origin/{BRANCH}', cwd=FARM)
+    sh(f'git push -q origin HEAD:{BRANCH}', cwd=FARM)
     sha = sh('git rev-parse HEAD', cwd=FARM)
     print(f'pushed {sha[:7]}; job {job_id}', flush=True)
 
@@ -101,7 +104,7 @@ def main():
 
     tmp = Path('/tmp/claude-0/render-output')
     shutil.rmtree(tmp, ignore_errors=True)
-    sh(f'git clone -q --depth 1 --branch render-output https://github.com/{REPO} {tmp}')
+    sh(f'git clone -q --depth 1 --branch {OUT_BRANCH} https://github.com/{REPO} {tmp}')
     result = json.loads((tmp / 'result.json').read_text())
     if result['id'] != job_id:
         sys.exit(f'render-output holds {result["id"]}, expected {job_id}')
