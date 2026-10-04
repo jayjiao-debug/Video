@@ -1,0 +1,82 @@
+token present: yes
+sketchfab search "planet earth"
+  saved out/search/planet-earth/01_d6521362b37b48e3a82bce4911409303.jpg 0.0 MB
+  saved out/search/planet-earth/02_fb78f4cc938144e6902dd5cff354d525.jpg 0.0 MB
+  saved out/search/planet-earth/03_894ad84ceb8b444a91fbc05f20530bcd.jpg 0.0 MB
+  saved out/search/planet-earth/04_db8f1c8cba3b464993e216acbf4a69b9.jpg 0.0 MB
+  saved out/search/planet-earth/05_4de1bcbd22a444abb4f089b9b78ec96a.jpg 0.0 MB
+  saved out/search/planet-earth/06_4db2273f6dd943b8ad7fa5e3b1b2431a.jpg 0.0 MB
+  saved out/search/planet-earth/07_397b266af9604b9fbf0a4e5446cf864b.jpg 0.0 MB
+  saved out/search/planet-earth/08_30fd7e9c4e6946ddb6fcae7a97b2b0d4.jpg 0.0 MB
+  saved out/search/planet-earth/09_41fc80d85dfd480281f21b74b2de2faa.jpg 0.0 MB
+  saved out/search/planet-earth/10_3ca2d8ea5320441b83b25520756a89f6.jpg 0.0 MB
+  saved out/search/planet-earth/11_3b377d37ddfe4e818570d013a0710c15.jpg 0.0 MB
+  saved out/search/planet-earth/12_ca0a6f6971a94fcc8d47421342dc6f40.jpg 0.0 MB
+sketchfab search "earth globe"
+  saved out/search/earth-globe/01_fb78f4cc938144e6902dd5cff354d525.jpg 0.0 MB
+  saved out/search/earth-globe/02_78b47132c6be42bcb664545a69b380d9.jpg 0.0 MB
+  saved out/search/earth-globe/03_8a3f6e66955e41d48762d75725d3ab52.jpg 0.0 MB
+  saved out/search/earth-globe/04_ef072f0ded9f4b1a8bb44a6ba536a1bb.jpg 0.0 MB
+  saved out/search/earth-globe/05_4ac8d8da60324fcfb7229f7604f02022.jpg 0.0 MB
+  saved out/search/earth-globe/06_10074333d322466493fa6afc95b68829.jpg 0.0 MB
+  saved out/search/earth-globe/07_3aaefdd3ea0f4b31954ce74a2142b92b.jpg 0.0 MB
+  saved out/search/earth-globe/08_f219f29dbd7f4b28be84c92e5c9507e6.jpg 0.0 MB
+  saved out/search/earth-globe/09_3b62a44bfb274d20ac92d08f0e686f49.jpg 0.0 MB
+  saved out/search/earth-globe/10_5a917c638c1344d7af7e34e5d4122f72.jpg 0.0 MB
+  saved out/search/earth-globe/11_37cac2803bbd4e9cad150a772215c343.jpg 0.0 MB
+  saved out/search/earth-globe/12_d55c139774e54037a31048f99b9ce4bb.jpg 0.0 MB
+sketchfab search "filing cabinet"
+  saved out/search/filing-cabinet/01_7ef1ca295ff14af2abcbe0ae0168a241.jpg 0.0 MB
+  saved out/search/filing-cabinet/02_619484b78fbe449ea5c0cdb68e8f2bd6.jpg 0.0 MB
+  saved out/search/filing-cabinet/03_e783d6d64f8c453ab534bdde715b210d.jpg 0.0 MB
+  saved out/search/filing-cabinet/04_89729ff6718840d6a10e5ea20d6904ce.jpg 0.0 MB
+  saved out/search/filing-cabinet/05_f0742791a0ea432db1f432c24de83867.jpg 0.0 MB
+  saved out/search/filing-cabinet/06_5baf2ce73afb40dc9d04035f2fbcfa6e.jpg 0.0 MB
+  saved out/search/filing-cabinet/07_e7fec8b453ef4105ace383dde017485c.jpg 0.0 MB
+  saved out/search/filing-cabinet/08_6ad39b0f52ad439ea12cbfdc1a1dd37f.jpg 0.0 MB
+  saved out/search/filing-cabinet/09_d217a4bbdfa2426eb32ebf3b1007a8c3.jpg 0.0 MB
+  saved out/search/filing-cabinet/10_81291e282b854934a6f1b9f53a900f5f.jpg 0.0 MB
+  saved out/search/filing-cabinet/11_2afb913100ac4ca4bb4708fe8183c5b8.jpg 0.0 MB
+  saved out/search/filing-cabinet/12_d16736e243904210b938590a42c8ea88.jpg 0.0 MB
+sketchfab search "library card catalog"
+  saved out/search/library-card-catalog/01_afde19f9f2424e90bcc063023264e827.jpg 0.0 MB
+sketchfab search "vintage computer"
+  saved out/search/vintage-computer/01_16c1a779bb0a4055a26367741d39e059.jpg 0.0 MB
+  saved out/search/vintage-computer/02_1f43612fa2d54041bbe2bdff8164c2cd.jpg 0.0 MB
+  saved out/search/vintage-computer/03_f1c6f36076154777809b30a2e1c50ba3.jpg 0.0 MB
+  saved out/search/vintage-computer/04_5f80311f1a4646ef9673f20ee6dc6245.jpg 0.0 MB
+  saved out/search/vintage-computer/05_b5d316548d634f16a72dd503db0aa01b.jpg 0.0 MB
+  saved out/search/vintage-computer/06_31e657b251b546e69e6ae312fc0bf66a.jpg 0.0 MB
+  saved out/search/vintage-computer/07_b4c0d44924d3408593878bdc2ae353a2.jpg 0.0 MB
+  saved out/search/vintage-computer/08_9c21f636edd44371ac81ce1c3ff6c987.jpg 0.0 MB
+  saved out/search/vintage-computer/09_7e7f8a9dfa1f4b34abde94bb02b9f46c.jpg 0.0 MB
+  saved out/search/vintage-computer/10_c5f7144f84ee4ed7bc91124ea3ef563a.jpg 0.0 MB
+  saved out/search/vintage-computer/11_3da4b1bade284fdb94d34573e9ff7002.jpg 0.0 MB
+  saved out/search/vintage-computer/12_b943e06de72c4b2b9ac6b9d7ca813f8f.jpg 0.0 MB
+sketchfab search "printer"
+  saved out/search/printer/01_dadca97505214b9481d35e22c48e18df.jpg 0.0 MB
+  saved out/search/printer/02_0279c00c98d1475da474c53f17f3747b.jpg 0.0 MB
+  saved out/search/printer/03_6c8bc8c16f2c4e739b2f182e9d060873.jpg 0.0 MB
+  saved out/search/printer/04_1b47d75b4e5a4548b5cb41aae45f8dcd.jpg 0.0 MB
+  saved out/search/printer/05_73ef58af341e46afba1da53366ed79cf.jpg 0.0 MB
+  saved out/search/printer/06_4a23132e4cf0482bbe55131745bee27c.jpg 0.0 MB
+  saved out/search/printer/07_d55f6fca7c3d45c883bbff770672970d.jpg 0.0 MB
+  saved out/search/printer/08_da21beea26034da9b889ec075bec6207.jpg 0.0 MB
+  saved out/search/printer/09_e2b7c01407114a2797beed055821ea8d.jpg 0.0 MB
+  saved out/search/printer/10_a036aa74dd234c07a3a2af19cff18dc6.jpg 0.0 MB
+  saved out/search/printer/11_4ffedc9bffad4a549f6e0a46b0f92b05.jpg 0.0 MB
+  saved out/search/printer/12_6717198fe1a54d9181ef2a25b35b3136.jpg 0.0 MB
+sketchfab search "victorian desk"
+  saved out/search/victorian-desk/01_c491f647da5947978ba8113951ee2efc.jpg 0.0 MB
+  saved out/search/victorian-desk/02_ad38ff95b713412080992a48eab50899.jpg 0.0 MB
+  saved out/search/victorian-desk/03_ef967c9bc13b4635add8ab7517dfedfe.jpg 0.0 MB
+  saved out/search/victorian-desk/04_11bcb1c2e9264457814bcfdca6860ad8.jpg 0.0 MB
+  saved out/search/victorian-desk/05_ac061b3de2b9480d8ca175e9fdc0c785.jpg 0.0 MB
+  saved out/search/victorian-desk/06_202d553c0ca64935abe4ef9f1a875ebe.jpg 0.0 MB
+  saved out/search/victorian-desk/07_01fcc03f2f434273ae620ef0e15f8070.jpg 0.0 MB
+  saved out/search/victorian-desk/08_707828edc0f744e491bd7076577c4896.jpg 0.0 MB
+  saved out/search/victorian-desk/09_f411b33be5a04d589913a140f7b08129.jpg 0.0 MB
+  saved out/search/victorian-desk/10_142bc494bbea40ef8e2d3894c0a96431.jpg 0.0 MB
+  saved out/search/victorian-desk/11_10a83aeb04134037bcc96189e2facf89.jpg 0.0 MB
+  saved out/search/victorian-desk/12_280db303f4d64354aa3e7b71f4652813.jpg 0.0 MB
+done
