@@ -1,0 +1,158 @@
+# 《八百人猜牛》: the wisdom of crowds, from Galton's ox to "don't look at each other's answers"
+#
+# Status: script + art direction, waiting for the owner's approval before the scenes are built.
+#
+# Sources (checked):
+#   Galton, F. (1907). Vox Populi. Nature 75: 450–451 (7 March 1907).
+#     West of England Fat Stock and Poultry Exhibition, Plymouth, 1906. Stamped, numbered cards at
+#     6d each (the fee deterred practical joking); each card had the guesser's name, address and estimate
+#     of the ox's DRESSED weight (after slaughter). About 800 cards; 13 defective or illegible → 787.
+#     Competitors: "butchers and farmers, some of whom were highly expert in judging the weight of cattle",
+#     and others guided by them. Galton: "The average competitor was probably as well fitted for making a
+#     just estimate of the dressed weight of the ox, as an average voter is of judging the merits of most
+#     political issues on which he votes."
+#     Middlemost estimate (median) 1207 lb; actual dressed weight 1198 lb; error 9 lb, "0.8 per cent".
+#     Quartiles 1162 / 1236 lb (probable error ±37 lb), so individual guesses were often far out.
+#     "This result is, I think, more creditable to the trustworthiness of a democratic judgment than
+#     might have been expected."
+#   Galton, F. (1907). The Ballot-Box. Nature 75: 509–510 (28 March 1907): replying to Hooker, gives the
+#     mean of the estimates: 1197 lb.
+#   Wallis, K. F. (2014). Revisiting Francis Galton's Forecasting Competition. Statistical Science 29(3):
+#     420–424. Rechecks Galton's notebooks: the median is 1208, the true weight 1197 (small transcription
+#     slips). We keep Galton's published figures (1207 / 1198 / 1197), as every retelling does.
+#   Surowiecki, J. (2004). The Wisdom of Crowds: popular retelling ("Galton undoubtedly thought that the
+#     average guess of the group would be way off the mark").
+#   Galton was born 16 Feb 1822, so 84 at the autumn 1906 show. Statistician and eugenicist who doubted
+#     the judgement of ordinary people (hence "他一向不太相信普通人的判断").
+#   1198 lb = 543.4 kg; 1207 lb = 547.5 kg; 9 lb ≈ 4 kg.
+#   Lorenz, J., Rauhut, H., Schweitzer, F. & Helbing, D. (2011). How social influence can undermine the
+#     wisdom of crowd effect. PNAS 108(22): 9020–9025. ETH Zurich; 144 participants in groups of 12, six
+#     factual estimation questions, five rounds; seeing others' estimates narrowed the spread of answers
+#     without making the crowd more accurate, and raised the participants' confidence.
+#
+# Line markup: [gold] highlights the answer, {red} the trap.
+# Music: the channel track as is (bgm.mp3). The hook is sized by its lines (what we're looking at,
+# the guessing, the question ≈ 14 s); the title lands on the track's first big hit at 16.10 s
+# (juno-brand §2, "Timing the title"). The card starts at 15.6 s with the posted ticket falling
+# inside the ballot box; it lands and the first character is stamped on 16.10, one character per
+# half-beat after that.
+
+id: ox
+series: Juno · VIBE知识大赏
+title: 八百人猜牛
+subtitle: 一群人瞎猜，能猜准吗？
+format: horizontal
+fps: 30
+music: assets/music/bgm.mp3
+markers:
+  a: 15.6         # the title card starts (inside the ballot box); the ticket lands on the hit at 16.104
+  hit: 16.104     # the track's first big hit: the title's first stamp
+  why: 107.68     # "群体智慧" lands on the 108.18 s accent
+  zurich: 117.55  # "前提：独立地猜" lands on the 117.85 s accent
+  coda: 149.89    # the callback, so the last line lands before the end card
+
+scenes:
+  # 1 hook: what we're looking at, then the question; the subtitle is on by ~1 s
+  - id: hook
+    component: Hook
+    lines:
+      - pause: 0.35
+      - 1906年，英格兰，一场乡下的家畜展。
+      - 800个人排队写下数字：猜这头牛有多重。
+      - text: 你觉得，他们能猜准吗？
+        hold: 3.2
+
+  # 2 cold open: a year, a place, a person
+  - id: fair
+    component: Fair
+    at: a
+    lead: 5.6     # the title card plays first (lands on the hit 0.5 s in)
+    props: {quietLead: true}
+    kicker: 1906 · 英格兰 普利茅斯 · 家畜展
+    lines:
+      - 六便士一张票，写上名字，和你猜的重量。
+      - 猜的是宰好、处理后的净重，最准的有奖。
+      - 屠夫、农夫、店员、看热闹的……一共约800张。
+
+  # 3 setup: the obvious expectation
+  - id: galton
+    component: Galton
+    kicker: 弗朗西斯·高尔顿 · 84岁
+    lines:
+      - 人群里，有位84岁的老科学家：高尔顿。
+      - 他一向{不太相信}普通人的判断。
+      - 展会结束，他把这堆票全借回了家。
+
+  # 4 twist (the break): the guesses are all over the place
+  - id: spread
+    component: Spread
+    at: break
+    lines:
+      - 你也猜一个：这头牛，宰好后有多少公斤？
+      - pause: 1.6
+      - 票一张张摊开：有人猜低，有人猜高。
+      - text: 差了四五十公斤的，大有人在。
+        hold: 2.6
+
+  # 5 mechanism (the build): sort them, take the middle one
+  - id: line
+    component: Line
+    at: build
+    kicker: 高尔顿的书房
+    lines:
+      - 他把787张有效票，从小到大排成一列。
+      - 然后，只看正中间的那一张。
+      - 第394张，上面写着——
+      - text: 它离真相，差多少？
+        hold: 2.2
+
+  # 6 reveal (the drop)
+  - id: reveal
+    component: Reveal
+    at: drop
+    cite: Galton, Vox Populi, Nature 1907
+    lines:
+      - 正中间那张：[1207磅]。
+      - 牛的真实重量：1198磅，约543公斤。
+      - 只差9磅——[不到1%]。
+      - 他又算了平均数：1197磅，[只差1磅]。
+      - 高尔顿写道：大众的判断，[比预想的可靠]。
+
+  # 7 name it (pinned to the 108.18 s accent) + the second layer (pinned to 117.85 s)
+  - id: why
+    component: Why
+    at: why
+    lead: 0.5
+    lines:
+      - 这就是[群体智慧]。
+      - 猜高的和猜低的，误差在中间相互抵消。
+
+  - id: zurich
+    component: Zurich
+    at: zurich
+    lead: 0.3
+    cite: Lorenz et al., PNAS 2011
+    lines:
+      - 但它有个前提：[每个人独立地猜]。
+      - 2011年，苏黎世，144个人做估算题。
+      - 一旦让他们看到别人的答案——
+      - 大家越猜越接近，却{并没有更准}。
+      - 只是每个人，都{更自信}了。
+
+  # 8 real world: three takeaways
+  - id: tips
+    component: Tips
+    kicker: 下次一起做决定
+    lines:
+      - ① 先各自写下答案，再开口讨论。
+      - ② 多找几个背景不同的人。
+      - ③ 取中间的数，别只听嗓门最大的。
+
+  # 9 callback + end card (last 6 s, the music keeps playing)
+  - id: callback
+    component: Callback
+    at: coda
+    lines:
+      - 那头牛，没有一个人能一眼看准。
+      - 可800个普通人的猜测放在一起，[刚好称出了它]。
+      - pause: 6.4

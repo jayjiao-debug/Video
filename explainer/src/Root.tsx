@@ -13,9 +13,15 @@ import {XumingTitleTest} from '../episodes/xuming/titletest';
 import {LOOK3_N, XumingLook3} from '../episodes/xuming/look3';
 import {BOARD2_N, XumingBoard2} from '../episodes/xuming/storyboard2';
 import {XumingOpen} from '../episodes/xuming/opentest';
+import {PROPS3D_N, XumingProps3D} from '../episodes/xuming/three/propsheet';
+import {MOTION4_N, XumingMotion4} from '../episodes/xuming/three/motion4';
+import {GLBench} from '../episodes/xuming/three/glbench';
 import {BENFORD_BOARD_N, BenfordBoard} from '../episodes/benford/storyboard';
 import {YUENAN_BOARD_N, YuenanBoard} from '../episodes/yuenan/storyboard';
 import {YUENAN_OPEN_N, YuenanOpen} from '../episodes/yuenan/opentest';
+import {MOCAP_BOARD_N, MocapBoard} from './MocapBoard';
+import {OX_SHEETS, OxGallery} from '../episodes/ox/gallery';
+import {OX_TEST_N, OxMotionTest} from '../episodes/ox/motiontest';
 
 export const Root: React.FC = () => (
 	<>
@@ -36,13 +42,19 @@ export const Root: React.FC = () => (
 		<Composition id="TankHookTest" component={TankHookTest} durationInFrames={150} fps={30} width={1920} height={1080} />
 		<Composition id="CoffeeRewindTest" component={CoffeeRewindTest} durationInFrames={150} fps={30} width={1920} height={1080} />
 		<Composition id="XumingTitleTest" component={XumingTitleTest} durationInFrames={200} fps={30} width={1920} height={1080} />
+		<Composition id="GLBench" component={GLBench} defaultProps={{fx: true}} durationInFrames={60} fps={30} width={1920} height={1080} />
+		<Composition id="XumingMotion4" component={XumingMotion4} durationInFrames={MOTION4_N} fps={30} width={1920} height={1080} />
+		<Composition id="XumingProps3D" component={XumingProps3D} durationInFrames={PROPS3D_N} fps={30} width={1920} height={1080} />
 		<Composition id="XumingOpen" component={XumingOpen} durationInFrames={540} fps={30} width={1920} height={1080} />
 		<Composition id="XumingBoard2" component={XumingBoard2} durationInFrames={BOARD2_N} fps={30} width={1920} height={1080} />
 		<Composition id="XumingLook3" component={XumingLook3} durationInFrames={LOOK3_N} fps={30} width={1920} height={1080} />
 		<Composition id="YuenanOpen" component={YuenanOpen} durationInFrames={YUENAN_OPEN_N} fps={30} width={1920} height={1080} />
 		<Composition id="YuenanBoard" component={YuenanBoard} durationInFrames={YUENAN_BOARD_N} fps={30} width={1920} height={1080} />
+		<Composition id="MocapBoard" component={MocapBoard} durationInFrames={MOCAP_BOARD_N} fps={30} width={1920} height={1080} />
 		<Composition id="BenfordBoard" component={BenfordBoard} durationInFrames={BENFORD_BOARD_N} fps={30} width={1920} height={1080} />
 		<Composition id="XumingLook" component={XumingLook} durationInFrames={LOOKS} fps={30} width={1920} height={1080} />
+		<Composition id="OxMotionTest" component={OxMotionTest} durationInFrames={OX_TEST_N} fps={30} width={1920} height={1080} />
+		<Composition id="OxGallery" component={OxGallery} durationInFrames={OX_SHEETS.length} fps={30} width={1920} height={1080} />
 		<Composition id="CoffeeGallery" component={CoffeeGallery} durationInFrames={COFFEE_SHEETS.length} fps={30} width={1920} height={1080} />
 		{/* Douyin covers: COMPOSITION=CoverWide|CoverTall node scripts/stills.mjs tanks <dir> 0 */}
 		<Composition id="CoverWide" component={TanksCover} defaultProps={{layout: 'wide' as const}} durationInFrames={1} fps={30} width={1440} height={1080} />

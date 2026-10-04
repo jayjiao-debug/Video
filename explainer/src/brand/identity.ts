@@ -19,7 +19,9 @@ export const JUNO = {
 	},
 	/** seconds */
 	timing: {
-		titleCardBy: 4, // the title card starts no later than this in the edit (cold open first)
+		// the cold open's length comes from the script (it must show what we're looking at, then ask the
+		// question); the title lands on the first strong hit after it. Keep the cold open under this.
+		coldOpenMax: 18,
 		titleCard: [3.2, 5.3], // on-screen length range
 		endCard: 6, // end card length; the music keeps playing under it
 	},

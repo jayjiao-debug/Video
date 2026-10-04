@@ -7,6 +7,9 @@
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
+    "@react-three/drei": "^10.7.9",
+    "@react-three/fiber": "^9.8.1",
+    "@react-three/postprocessing": "^3.1.3",
     "@remotion/bundler": "^4.0.532",
     "@remotion/cli": "4.0.532",
     "@remotion/google-fonts": "4.0.532",
@@ -14,12 +17,16 @@
     "@remotion/paths": "4.0.532",
     "@remotion/renderer": "^4.0.532",
     "@remotion/shapes": "4.0.532",
+    "@remotion/three": "^4.0.532",
     "@types/d3-geo": "^3.1.1",
+    "@types/three": "^0.178.1",
     "@types/topojson-client": "^3.1.5",
     "d3-geo": "^3.1.1",
+    "postprocessing": "^6.39.5",
     "react": "19.1.0",
     "react-dom": "19.1.0",
     "remotion": "4.0.532",
+    "three": "^0.178.0",
     "topojson-client": "^3.1.0",
     "world-atlas": "^2.0.2"
   },

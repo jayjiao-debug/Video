@@ -26,4 +26,13 @@ export const CAST: Record<string, Look> = {
 	bach: {skin: P.skin2, hair: 'wig', hairColor: '#ece6da', outfit: 'frock', top: '#2a2a30', bottom: '#1e1e22', accent: '#5a4a3a'},
 	pasqua: {skin: P.skin3, hair: 'short', hairColor: P.hairBlack, outfit: 'frock', top: '#4a3a2c', bottom: '#2a2620', accent: '#7a5a2e', apron: '#e6dcc6', mustache: true},
 	farmerOld: {skin: P.skin3, hair: 'short', hairColor: '#3a3632', outfit: 'casual', top: '#4a5a3a', bottom: '#2a2d36', accent: '#d9cfb8', hat: 'straw'},
+	// 《八百人猜牛》 (Plymouth, 1906)
+	galton: {skin: P.skin1, hair: 'bald', hairColor: '#e9e4da', outfit: 'suit', top: '#2a2a30', bottom: '#2a2a30', accent: '#3a3a44', whiskers: true},
+	butcher: {skin: P.skin2, hair: 'short', hairColor: P.hairBrown, outfit: 'suit', top: '#3a4458', bottom: '#2c3038', accent: '#6e2a2a', apron: '#ece6da', hat: 'boater', hatColor: '#d9bf7f', mustache: true},
+	drover: {skin: P.skin3, hair: 'short', hairColor: '#3a3632', outfit: 'casual', top: '#5a5040', bottom: '#3a362e', accent: '#d9cfb8', hat: 'flatcap', hatColor: '#4f4a3e'},
+	gent: {skin: P.skin1, hair: 'short', hairColor: P.hairBlack, outfit: 'suit', top: '#2e3138', bottom: '#3a3530', accent: '#7a2c2c', hat: 'bowler', mustache: true},
+	shopgirl: {skin: P.skin1, hair: 'bun', hairColor: '#6a4a32', outfit: 'dress', top: '#4a5a6a', bottom: '#4a5a6a', hat: 'bonnet', hatColor: '#3a3448', accent: '#c9a35e'},
+	clerk06: {skin: P.skin2, hair: 'slick', hairColor: P.hairBrown, outfit: 'suit', top: '#4a4038', bottom: '#2f2a26', accent: '#2f3d5c', hat: 'boater', hatColor: '#cdb27a', glasses: true},
+	farmwife: {skin: P.skin2, hair: 'bun', hairColor: P.hairBlack, outfit: 'dress', top: '#5a3b3a', bottom: '#5a3b3a', apron: '#e6dcc6'},
+	lad: {skin: P.skin1, hair: 'short', hairColor: '#8a5a32', outfit: 'casual', top: '#3d4a63', bottom: '#4a4236', accent: '#d9d4c8', hat: 'flatcap', hatColor: '#6a5a42'},
 };

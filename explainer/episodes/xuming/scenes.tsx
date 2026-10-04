@@ -1,84 +1,36 @@
 import React from 'react';
-import {AbsoluteFill, Sequence, interpolate, interpolateColors, random, spring, useCurrentFrame, useVideoConfig} from 'remotion';
+import {AbsoluteFill, Sequence, interpolate, random, useCurrentFrame} from 'remotion';
 import {noise2D} from '@remotion/noise';
-import {geoGraticule10, geoInterpolate, geoNaturalEarth1, geoPath} from 'd3-geo';
-import {Liquid} from '../../src/art/glow/Liquid';
 import {GlowDefs} from '../../src/art/glow/kit';
-import {ADENOSINE, CAFFEINE} from '../../src/art/glow/molecules';
-import {EndCard, GoldTitle, Motif, type BrandCfg, type VideoCfg} from '../../src/brand/Brand';
-import {JUNO} from '../../src/brand/identity';
-import {ease, prog, useAbsoluteFrame, useCue, useHitFrames, useScene, useSnapBeat} from '../../src/lib/context';
+import {ease, mix, prog, useAbsoluteFrame, useCue, useScene, useSnapBeat} from '../../src/lib/context';
 import {font} from '../../src/lib/theme';
 import type {SceneMap, SceneProps} from '../../src/lib/types';
-import {Bean, Branches, Caf, Clock, CORE, Cup, Defs3, Glow, LineBee, LineFlower, Num, Rays, Receptor, Room, Thin, Trees, leafD, ridgeD} from './kit3';
-import {Grade, LAND, Tag} from './look3';
+import {Clock, Defs3, Num, Thin} from './kit3';
+import {Tag} from './look3';
+import {BRAND, EPISODE, Rolling, XTitle, landed, pqrst, scenesV3, useEvents} from './scenes_v3';
+import {EndCard} from '../../src/brand/Brand';
+import {ADENOSINE, Bean, CAFFEINE, Cherry, Cup, DNA, Flower, Globe, Leaf, Molecule, Saucer, Steam, Table, leafPoint, ll} from './three/props3d';
+import {Lights, Stage3D, type Cam, type StageFx} from './three/stage3d';
+import {BeanSwarm, Bee3D, CacaoPod, Drum, RoomWindow, Caterpillar, Chromosome, Membrane, Rays3D, Receptor3D, Sea, Ship, Shrubs, Soft, TeaLeaf, Terrain, Tower, TreeCard, brainPoints, dust, terrainH, type Particle} from './three/kit4';
+import * as THREE from 'three';
 
 /**
- * 《续命》 v3. The craft rules of the reference: one soft light per shot, everything
- * else near-silhouette; thin lines; depth from many small elements; light as the
- * hero material. Every cut hands an object to the next shot. Brand: the gold title
- * card gathers out of the cup on the 16.1 s hit; corner mark throughout; the Juno
- * end card for the last ~6 s.
+ * 《续命》 v4: the same script and music, re-shot in real 3D (three.js) after the approved
+ * motion test: rack focus, crane moves, a dive through the crema, molecules in depth of
+ * field, whip pans. 2D only for type (subtitles, numbers, the Juno cards).
  */
+
+export {EPISODE};
 
 const W = 1920;
 const H = 1080;
-const GOLD = JUNO.colors.gold;
+type V3 = [number, number, number];
+const lerp3 = (a: V3, b: V3, t: number) => a.map((v, i) => mix(v, b[i], t)) as V3;
 
-const BRAND: BrandCfg = {videos: []};
-export const EPISODE: VideoCfg = {
-	id: 'xuming',
-	src: '',
-	title: '续命',
-	kicker: 'CAFFEINE · COFFEA ARABICA · DENOEUD 2014',
-	tagline: '它续的，到底是什么？',
-	taglineEn: 'What does your morning cup actually renew?',
-	motif: 'coffee',
-	card: [0, 3.2],
-	hit: 0.5,
-	extend: 0,
-	question: '你今天第几杯了？评论区报个数',
-	sources: '参考 · Denoeud et al., Science (2014) · Nathanson, Science (1984) · Wright et al., Science (2013) · Nature Genetics (2024) · coffee history (Ukers)',
-	duration: 0,
-};
-
-// ---------------------------------------------------------------- shared
-
-const clamp = (x: number, a = 0, b = 1) => Math.max(a, Math.min(b, x));
-const mix = (a: number, b: number, k: number) => a + (b - a) * k;
-/** fade a text/label in and hold it still; optional fade out */
-const landed = (f: number, at: number, out?: number, len = 12) => prog(f, at, len) * (out === undefined ? 1 : 1 - prog(f, out, len));
-
-/** n event frames inside [a, b): the track's accents first, topped up with beats */
-const useEvents = () => {
-	const hits = useHitFrames(0.3);
-	const snap = useSnapBeat();
-	return (a: number, b: number, n: number, step = 16) => {
-		const found = hits.filter((h) => h >= a && h < b);
-		if (found.length >= n) return found.slice(0, n);
-		// not enough accents in the window: walk the beat grid from its start instead
-		const out: number[] = [];
-		let t = snap(a);
-		if (t < a) t = snap(a + step / 2);
-		while (out.length < n) {
-			out.push(t);
-			t = Math.max(snap(t + step), t + 6);
-		}
-		return out;
-	};
-};
-
-/** the stage: an HTML layer under (liquid), the art, the subtitle band, grade; overlays on top */
-const Stage: React.FC<{children: React.ReactNode; under?: React.ReactNode; over?: React.ReactNode; scrim?: number; defs?: React.ReactNode; cam?: {x?: number; y?: number; s?: number}}> = ({
-	children,
-	under,
-	over,
-	scrim = 0.6,
-	defs,
-	cam,
-}) => (
+/** the frame: a 3D canvas under, an SVG layer for type and the subtitle scrim, overlays on top */
+const Stage4: React.FC<{three: React.ReactNode; children?: React.ReactNode; over?: React.ReactNode; scrim?: number}> = ({three, children, over, scrim = 0.55}) => (
 	<AbsoluteFill style={{background: '#05060b'}}>
-		{under}
+		{three}
 		<svg width={W} height={H} viewBox={`0 0 ${W} ${H}`} style={{position: 'absolute'}}>
 			<GlowDefs />
 			<Defs3 />
@@ -89,118 +41,31 @@ const Stage: React.FC<{children: React.ReactNode; under?: React.ReactNode; over?
 				</linearGradient>
 				<radialGradient id="brand-glow">
 					<stop offset="0" stopColor="#ffe7b0" stopOpacity="0.9" />
-					<stop offset="0.35" stopColor={GOLD} stopOpacity="0.35" />
-					<stop offset="1" stopColor={GOLD} stopOpacity="0" />
+					<stop offset="0.35" stopColor="#f1c56d" stopOpacity="0.35" />
+					<stop offset="1" stopColor="#f1c56d" stopOpacity="0" />
 				</radialGradient>
 				<filter id="mblur" x="-10%" y="-40%" width="120%" height="180%">
 					<feGaussianBlur stdDeviation="0 6" />
 				</filter>
-				{defs}
 			</defs>
-			<g transform={cam ? `translate(${960 + (cam.x ?? 0)},${540 + (cam.y ?? 0)}) scale(${cam.s ?? 1}) translate(-960,-540)` : undefined}>{children}</g>
+			{children}
 			<rect x={0} y={840} width={W} height={240} fill="url(#sub-band)" opacity={scrim} />
-			<Grade />
 		</svg>
 		{over}
 	</AbsoluteFill>
 );
 
-/** depth-of-field motes drifting upward; near ones big and soft */
-const Motes: React.FC<{f: number; seed: string; n?: number; color?: string; o?: number; speed?: number}> = ({f, seed, n = 46, color = '#ffe2b0', o = 1, speed = 1}) => (
-	<g>
-		{Array.from({length: n}, (_, i) => {
-			const near = random(`${seed}z${i}`) > 0.86;
-			const u = (random(`${seed}u${i}`) + (f * speed) / (near ? 260 : 520)) % 1;
-			const x = random(`${seed}x${i}`) * W + 26 * Math.sin(u * 6 + i);
-			const y = H + 40 - u * (H + 80);
-			return <circle key={i} cx={x} cy={y} r={near ? 16 + random(`${seed}r${i}`) * 18 : 1.2 + random(`${seed}r${i}`) * 2} fill={color} opacity={(near ? 0.07 : 0.4) * Math.sin(u * Math.PI) * o} filter={near ? 'url(#b8)' : undefined} />;
-		})}
-	</g>
+/** one 3D shot: camera + post + the house lights */
+const Shot: React.FC<{cam: Cam; fx?: StageFx; bg?: string; fog?: [number, number]; env?: number; children: React.ReactNode}> = ({cam, fx = {}, bg, fog, env, children}) => (
+	<Stage3D cam={cam} bg={bg} fog={fog} env={env} {...fx}>
+		{children}
+	</Stage3D>
 );
 
-/** liquid, full frame or clipped to a cup of radius `rim` */
-const CupLiquid: React.FC<{rim: number; t: number; swirl?: number; dim?: number; cool?: number; light?: [number, number, number]; scale?: number; gain?: number; veins?: number; kick?: number}> = ({
-	rim,
-	t,
-	swirl = 0,
-	dim = 1,
-	cool = 0,
-	light = [0.5, 0.42, 0.5],
-	scale = 2.2,
-	gain = 1.05,
-	veins = 0.9,
-	kick = 1,
-}) => (
-	<div style={{position: 'absolute', left: 960 - rim, top: 540 - rim, width: rim * 2, height: rim * 2, borderRadius: '50%', overflow: 'hidden', opacity: dim, transform: `scale(${kick})`}}>
-		<div style={{position: 'absolute', left: rim - 960, top: rim - 540, width: W, height: H}}>
-			<Liquid t={t} swirl={swirl} scale={scale} light={light} gain={gain} cool={cool} veins={veins} />
-		</div>
-	</div>
-);
+// cup geometry: saucer lift 0.05, cup floor 0.08, level 0.86 of 0.9
+const LEVEL_Y = 0.05 + 0.08 + 0.86 * 0.9;
 
-const CupRim: React.FC<{r: number; o?: number}> = ({r, o = 1}) => (
-	<g opacity={o}>
-		<circle cx={960} cy={556} r={r + 100} fill="#000" opacity={0.6} filter="url(#b8)" />
-		<circle cx={960} cy={540} r={r + 36} fill="none" stroke="#efe2c8" strokeWidth={50} opacity={0.07} />
-		<circle cx={960} cy={540} r={r + 62} fill="none" stroke="#f6e7c8" strokeWidth={1.4} opacity={0.55} />
-		<circle cx={960} cy={540} r={r + 4} fill="none" stroke="#f6e7c8" strokeWidth={1} opacity={0.35} />
-	</g>
-);
-
-/** slot-machine digits: every column rolls and all land together on `land` */
-const Rolling: React.FC<{value: string; f: number; start: number; land: number; y: number; size: number; id: string}> = ({value, f, start, land, y, size, id}) => {
-	const chars = [...value];
-	const cw = size * 0.56;
-	const total = chars.reduce((s, c) => s + (c === ',' || c === '+' ? cw * 0.5 : cw), 0);
-	let x = 960 - total / 2;
-	return (
-		<g>
-			<defs>
-				<clipPath id={`slot${id}`}>
-					<rect x={0} y={y - size * 0.76} width={W} height={size * 0.92} />
-				</clipPath>
-			</defs>
-			<g clipPath={`url(#slot${id})`}>
-				{chars.map((c, i) => {
-					const narrow = c === ',' || c === '+';
-					const cx = x + (narrow ? cw * 0.25 : cw / 2);
-					x += narrow ? cw * 0.5 : cw;
-					if (!/[0-9]/.test(c)) {
-						return (
-							<text key={i} x={cx} y={y} textAnchor="middle" opacity={prog(f, start, 10)} style={{fontFamily: font.latin, fontWeight: 500, fontSize: size, fill: 'url(#gold-text)'}}>
-								{c}
-							</text>
-						);
-					}
-					const d = Number(c);
-					const spins = 2 + Math.floor((chars.length - i) / 2);
-					const k = interpolate(f, [start + i * 1.5, land], [0, 1], {extrapolateLeft: 'clamp', extrapolateRight: 'clamp', easing: ease.out});
-					const pos = k * (spins * 10 + d);
-					const base = Math.floor(pos);
-					const frac = pos - base;
-					return (
-						<g key={i}>
-							{[0, 1].map((o) => (
-								<text key={o} x={cx} y={y + (o - frac) * size} textAnchor="middle" style={{fontFamily: font.latin, fontWeight: 500, fontSize: size, fill: 'url(#gold-text)'}} filter={k < 1 ? 'url(#mblur)' : 'url(#g-sm)'}>
-									{(((base + o) % 10) + 10) % 10}
-								</text>
-							))}
-						</g>
-					);
-				})}
-			</g>
-		</g>
-	);
-};
-
-/** one heartbeat (P-QRS-T) as a function of frames since the beat */
-const pqrst = (d: number) => {
-	if (d < 0 || d > 16) return 0;
-	const g = (c: number, w: number) => Math.exp(-(((d - c) / w) ** 2));
-	return 0.09 * g(2, 1.1) - 0.12 * g(5.2, 0.35) + 1 * g(6, 0.42) - 0.28 * g(6.9, 0.4) + 0.2 * g(11, 1.8);
-};
-
-// ---------------------------------------------------------------- 1. hook (the v2 opening): liquid gold, two billion, a heartbeat, the cup
+// ---------------------------------------------------------------- 1. hook: crema macro, two billion, a heartbeat, the cup
 
 const Hook: React.FC<SceneProps> = () => {
 	const f = useCurrentFrame();
@@ -211,18 +76,16 @@ const Hook: React.FC<SceneProps> = () => {
 	const snap = useSnapBeat();
 	const events = useEvents();
 	const end = scene.duration;
-	const t = af / 30 + 10;
-	// two billion, landing on an accent
+	const t = af / 30 + 4;
+	// two billion lands on an accent
 	const landC = events(cue(0) + 50, cue(1) - 24, 1)[0];
 	const cO = landed(f, cue(0) + 2, cue(1) - 12);
-	// the line goes flat; a drop of coffee lands on it; it beats back to life
+	// the line goes flat; a drop of coffee falls into the cup; it beats back to life
 	const dropAt = events(cue(1) + 6, cue(1) + 40, 1)[0];
 	const beats: {at: number; a: number}[] = [{at: dropAt, a: 1.5}];
 	for (let b = snap(dropAt + 15); b < cue(2) + 40; b = Math.max(snap(b + 15), b + 12)) beats.push({at: b, a: 0.95 + 0.1 * random(`bt${b}`)});
 	const lineO = prog(f, cue(1) - 16, 14) * (1 - prog(f, cue(2) + 34, 16));
 	const impact = f >= dropAt ? Math.exp(-(f - dropAt) / 7) : 0;
-	const fall = prog(f, dropAt - 24, 24, ease.in);
-	const dropY = mix(-60, 540, fall);
 	const head = 1480;
 	let ecg = '';
 	for (let x = 100; x <= head; x += 3) {
@@ -233,32 +96,65 @@ const Hook: React.FC<SceneProps> = () => {
 	}
 	const headV = beats.reduce((s, b) => s + b.a * pqrst(f - b.at), 0);
 	const bpm = Math.round(interpolate(f, [dropAt, dropAt + 15, dropAt + 40], [0, 44, 72], {extrapolateLeft: 'clamp', extrapolateRight: 'clamp'}));
-	// pull back: the liquid is one cup
+	// camera: macro drift -> crane back to reveal the cup -> rise to top-down for the title
 	const backStart = cue(2) + 40;
-	const back = prog(f, backStart, end - backStart - 2, ease.inOut);
-	const rim = mix(1300, 380, back);
-	const swirl = 0.3 + 4.6 * prog(f, backStart, end - backStart, ease.in);
+	const reveal = prog(f, backStart, 80, ease.inOut);
+	const rise = prog(f, backStart + 70, end - backStart - 70, ease.inOut);
+	const drift = af / 260;
+	const macro: V3 = [0.16 * Math.sin(drift), LEVEL_Y + 0.17 + 0.02 * Math.sin(drift * 1.3), 0.3 + 0.04 * Math.cos(drift)];
+	const orbit = -0.55 + 0.25 * reveal;
+	const wide: V3 = [Math.sin(orbit) * 3.0, 1.45, Math.cos(orbit) * 3.0];
+	const top: V3 = [0.0, 3.4, 0.02];
+	let pos = lerp3(macro, wide, reveal);
+	pos = lerp3(pos, top, rise);
+	const target = lerp3([0, LEVEL_Y, -0.04], [0, mix(0.5, LEVEL_Y, rise), 0], reveal);
+	const focus = Math.hypot(pos[0] - target[0], pos[1] - target[1], pos[2] - target[2]);
+	const swirl = 0.6 + 4.3 * prog(f, backStart + 60, end - backStart - 60, ease.in);
+	// the drop: falls through the macro frame into the centre of the cup
+	const fall = prog(f, dropAt - 16, 16, ease.in);
+	const ripple = f >= dropAt ? Math.min(1, (f - dropAt) / 40) : 0;
+	const splash: Particle[] =
+		f >= dropAt && f < dropAt + 24
+			? Array.from({length: 18}, (_, i) => {
+					const u = (f - dropAt) / 24;
+					const a = (i / 18) * Math.PI * 2;
+					const sp = 0.05 + 0.03 * random(`sp${i}`);
+					return {p: [Math.cos(a) * sp * u * 2, LEVEL_Y + 0.12 * u - 0.22 * u * u, Math.sin(a) * sp * u * 2] as V3, s: 0.012, c: '#ffd8a0', a: 1 - u};
+				})
+			: [];
+	const dim = 1 - 0.45 * Math.max(cO, lineO);
 	return (
-		<Stage
-			under={<CupLiquid rim={rim} t={t} swirl={swirl} gain={0.95 + 0.55 * impact} veins={0.88} scale={2.2 + 1.2 * back} kick={1 + 0.045 * impact} light={[mix(0.66, 0.5, back), mix(0.36, 0.45, back), mix(0.55, 0.38, back)]} />}
+		<Stage4
+			three={
+				<Shot cam={{pos, target, fov: mix(34, 30, reveal)}} fx={{focus, aperture: mix(0.006, 0.0015, reveal), bloom: 0.6, threshold: 0.75, fade: 1 - dim}} fog={[8, 30]}>
+					<Lights rim={[-2.5, 3.5, -4]} rimI={22} keyI={55} />
+					<Table color="#0d0907" />
+					<Saucer />
+					<Cup position={[0, 0.05, 0]} t={t} swirl={swirl} ripple={ripple} glow={0.25 * impact} />
+					<Steam t={t} position={[0, 1.05, 0]} o={0.22 * reveal * (1 - rise)} />
+					{f >= dropAt - 16 && f < dropAt ? (
+						<mesh position={[0, mix(LEVEL_Y + 0.5, LEVEL_Y, fall), -0.02]} scale={[1, 1.5, 1]}>
+							<sphereGeometry args={[0.012, 16, 12]} />
+							<meshPhysicalMaterial color="#3a1a08" roughness={0.05} clearcoat={1} emissive="#ff9a30" emissiveIntensity={0.6} />
+						</mesh>
+					) : null}
+					<Soft items={splash} />
+				</Shot>
+			}
 		>
-			<CupRim r={rim} o={prog(f, backStart + 20, 30)} />
-			<Motes f={af} seed="hk" n={50} o={1 - back} />
 			{/* two billion */}
 			{cO > 0 ? (
 				<g opacity={cO}>
-					<rect y={300} width={W} height={440} fill="url(#band2)" />
 					<Rolling value="2,000,000,000" f={f} start={cue(0) + 4} land={landC} y={570} size={150} id="hk" />
 					<text x={960} y={640} textAnchor="middle" opacity={prog(f, landC - 4, 14)} style={{fontFamily: font.sans, fontSize: 22, letterSpacing: '0.6em', fill: '#efe4d0'}}>
 						杯 · 每一天 · 全世界
 					</text>
-					{f >= landC ? <circle cx={960} cy={520} r={100 + 900 * prog(f, landC, 30, ease.out)} fill="none" stroke={GOLD} strokeWidth={1.4} opacity={0.5 * (1 - prog(f, landC, 30))} /> : null}
+					{f >= landC ? <circle cx={960} cy={520} r={100 + 900 * prog(f, landC, 30, ease.out)} fill="none" stroke="#f1c56d" strokeWidth={1.4} opacity={0.5 * (1 - prog(f, landC, 30))} /> : null}
 				</g>
 			) : null}
 			{/* the heartbeat */}
 			{lineO > 0 ? (
 				<g opacity={lineO}>
-					<rect y={260} width={W} height={560} fill="url(#band2)" />
 					<g opacity={0.07} stroke="#ffe0b0" strokeWidth={1}>
 						{Array.from({length: 40}, (_, i) => <line key={`v${i}`} x1={i * 48} y1={330} x2={i * 48} y2={750} />)}
 						{Array.from({length: 9}, (_, i) => <line key={`h${i}`} x1={0} y1={348 + i * 48} x2={W} y2={348 + i * 48} />)}
@@ -281,151 +177,19 @@ const Hook: React.FC<SceneProps> = () => {
 					</text>
 				</g>
 			) : null}
-			{/* the drop */}
-			{f >= dropAt - 24 && f < dropAt ? (
-				<g>
-					{[1, 2, 3, 4].map((k) => {
-						const yy = mix(-60, 540, prog(f - k * 1.2, dropAt - 24, 24, ease.in));
-						return <ellipse key={k} cx={960} cy={yy - 10} rx={7 - k} ry={14} fill="#ffcf80" opacity={0.18 / k} />;
-					})}
-					<path d={`M960,${dropY - 26 - 20 * fall} C972,${dropY - 4} 974,${dropY + 10} 960,${dropY + 14} C946,${dropY + 10} 948,${dropY - 4} 960,${dropY - 26 - 20 * fall} Z`} fill="#e69a3a" />
-					<circle cx={956} cy={dropY + 2} r={3} fill="#fff4dc" />
-					<circle cx={960} cy={dropY} r={40} fill="url(#ember)" opacity={0.5} />
-				</g>
-			) : null}
-			{impact > 0.02 ? (
-				<g>
-					<circle cx={960} cy={540} r={30 + 700 * (1 - impact)} fill="none" stroke="#ffe7b8" strokeWidth={2.4 * impact + 0.5} opacity={impact} />
-					<circle cx={960} cy={540} r={20 + 420 * (1 - impact)} fill="none" stroke="#ffcf80" strokeWidth={1.2} opacity={0.6 * impact} />
-					{Array.from({length: 10}, (_, i) => {
-						const a = -Math.PI * (0.1 + 0.8 * (i / 9));
-						const d = (1 - impact) * (90 + 40 * random(`cr${i}`));
-						return <circle key={i} cx={960 + Math.cos(a) * d * 1.6} cy={540 + Math.sin(a) * d + (1 - impact) ** 2 * 140} r={4 * impact + 1} fill="#ffcf80" opacity={impact} />;
-					})}
-				</g>
-			) : null}
-		</Stage>
+		</Stage4>
 	);
 };
 
-// ---------------------------------------------------------------- 2. sleep: the Juno title in the cup, then the brain
+// ---------------------------------------------------------------- 2. sleep: the title in the cup, the dive, the synapse, the brain
 
-/** The Juno gold title card, gathering out of the crema on the scene's first frame (the 16.1 s hit). */
-const XTitle: React.FC<{f: number}> = ({f}) => {
-	const gather = prog(f, -2, 26, ease.out);
-	const ripple = prog(f, 0, 44, ease.out);
-	const meta = (d: number) => prog(f, d, 16, ease.out);
-	const out = 1 - prog(f, 138, 14);
-	const kick = mix(0.9, 0.42, prog(f, 8, 30, ease.out));
-	return (
-		<g opacity={out}>
-			<defs>
-				<filter id="pour" x="-30%" y="-60%" width="160%" height="220%">
-					<feTurbulence type="fractalNoise" baseFrequency="0.012 0.02" numOctaves={2} seed={5} />
-					<feDisplacementMap in="SourceGraphic" scale={150 * (1 - gather)} xChannelSelector="R" yChannelSelector="G" />
-				</filter>
-			</defs>
-			{ripple < 1 ? (
-				<g fill="none" stroke={GOLD}>
-					<circle cx={960} cy={540} r={60 + 860 * ripple} strokeWidth={2} opacity={0.6 * (1 - ripple)} filter="url(#g-sm)" />
-					<circle cx={960} cy={540} r={40 + 540 * ripple} strokeWidth={1} opacity={0.45 * (1 - ripple)} />
-				</g>
-			) : null}
-			<text x={960} y={300} textAnchor="middle" opacity={meta(6)} style={{fontFamily: font.latin, fontWeight: 600, fontSize: 20, letterSpacing: `${kick}em`, fill: GOLD}}>
-				{EPISODE.kicker}
-			</text>
-			<g filter="url(#pour)" opacity={prog(f, -2, 10)}>
-				<GoldTitle text={EPISODE.title} f={f} at={-2} size={150} y={560} />
-			</g>
-			<g transform="translate(960,670) scale(0.62)" opacity={meta(16)}>
-				<Motif kind="coffee" p={prog(f, 14, 30)} f={f} />
-			</g>
-			<text x={960} y={772} textAnchor="middle" opacity={meta(22)} style={{fontFamily: font.serif, fontWeight: 700, fontSize: 38, fill: JUNO.colors.ink, letterSpacing: '0.08em'}}>
-				{EPISODE.tagline}
-			</text>
-			<text x={960} y={814} textAnchor="middle" opacity={0.75 * meta(28)} style={{fontFamily: font.latinItalic, fontStyle: 'italic', fontSize: 26, fill: JUNO.colors.ink}}>
-				{EPISODE.taglineEn}
-			</text>
-			<text x={960} y={880} textAnchor="middle" opacity={0.85 * meta(34)} style={{fontFamily: font.sans, fontSize: 20, letterSpacing: '0.3em', fill: GOLD}}>
-				— {JUNO.credit} · {JUNO.series} —
-			</text>
-		</g>
-	);
-};
+const RX = [-3, 0, 3];
+const POCKET = 0.72; // receptor pocket height above the membrane
 
-const RX = [560, 960, 1360];
-const RY = 770;
-
-/** the synapse: two membranes, vesicles, three receptors; adenosine drifting in depth of field */
-const SynapseScene: React.FC<{f: number; af: number; dots: number; docked: number[]; gold: number[]; lift?: number; dense?: number; mood?: number}> = ({f, af, dots, docked, gold, lift = 0, dense = 1, mood = 0}) => (
-	<g>
-		<Room x={960} y={420} r={1000} c={interpolateColors(mood, [0, 1], ['#2a2366', '#4a3a2a'])} base="#05040e" />
-		<path d="M-40,250 C420,150 1500,150 1960,250 L1960,-40 L-40,-40 Z" fill="#9fe8f0" opacity={0.05} />
-		<path d="M-40,250 C420,150 1500,150 1960,250" fill="none" stroke="#9fe8f0" strokeWidth={1.6} opacity={0.6} />
-		{Array.from({length: 9}, (_, i) => (
-			<circle key={i} cx={260 + i * 175 + 30 * Math.sin(i) + 6 * Math.sin(af / 40 + i)} cy={150 - 40 * Math.sin((i / 8) * Math.PI)} r={26 + 8 * random(`ves${i}`)} fill="none" stroke="#9fe8f0" strokeWidth={1.2} opacity={0.35} />
-		))}
-		<path d="M-40,790 C420,860 1500,860 1960,790" fill="none" stroke={gold.length >= 3 ? '#ffd896' : '#9fe8f0'} strokeWidth={1.6} opacity={0.6} />
-		{RX.map((x, i) => {
-			const g = gold[i] ?? 0;
-			const d = docked[i] ?? 0;
-			return (
-				<g key={x}>
-					<Receptor x={x} y={RY} gold={g > 0.5} docked={d > 0.5 && g <= 0.5} />
-					{g > 0 && g < 1 ? <circle cx={x} cy={RY - 30} r={40 + 260 * g} fill="none" stroke="#ffd896" strokeWidth={2} opacity={1 - g} /> : null}
-					{d > 0 && d < 1 ? <circle cx={x} cy={RY - 30} r={30 + 160 * d} fill="none" stroke="#ffcf80" strokeWidth={1.4} opacity={1 - d} /> : null}
-				</g>
-			);
-		})}
-		{Array.from({length: Math.round(110 * dense)}, (_, i) => {
-			if (i / (110 * dense) > dots) return null;
-			const z = random(`az${i}`);
-			const x = random(`ax${i}`) * W + 34 * noise2D('ad', i, af / 150);
-			const y = 280 + random(`ay${i}`) * 400 + 18 * noise2D('ady', i, af / 170) - lift * (600 + 400 * random(`al${i}`));
-			const far = z < 0.8;
-			const r = far ? 2 + 3 * z : 14 + 60 * (z - 0.8);
-			const born = clamp((dots * 110 * dense - i) / 3);
-			return (
-				<g key={i} opacity={(far ? 0.55 + 0.45 * z : 0.22) * born}>
-					<circle cx={x} cy={y} r={r * 2.2} fill="url(#ember)" opacity={far ? 0.5 : 0.3} filter={far ? undefined : 'url(#b8)'} />
-					<circle cx={x} cy={y} r={r * 0.5} fill="#ffe2a8" filter={far ? undefined : 'url(#b8)'} />
-				</g>
-			);
-		})}
-	</g>
-);
-
-/** a molecule rotating about the vertical axis: atoms get depth, size and brightness from it */
-const Model3D: React.FC<{mol: typeof CAFFEINE; th: number; hl?: (id: string) => number; tint?: string; o?: number}> = ({mol, th, hl, tint, o = 1}) => {
-	const ELEM: Record<string, string> = {N: '#7fb8ff', O: '#ff8a7a', C: '#e8e2d4'};
-	const el = (l?: string) => (!l ? 'C' : l.startsWith('N') ? 'N' : l.startsWith('O') || l === 'HO' ? 'O' : 'C');
-	const pts: Record<string, {x: number; y: number; z: number; e: string}> = {};
-	for (const [id, a] of Object.entries(mol.atoms)) {
-		const z0 = 12 * Math.sin(a.p[0] * 0.03 + a.p[1] * 0.02);
-		pts[id] = {x: a.p[0] * Math.cos(th) + z0 * Math.sin(th), y: a.p[1], z: -a.p[0] * Math.sin(th) + z0 * Math.cos(th), e: el(a.label)};
-	}
-	const order = Object.keys(pts).sort((a, b) => pts[a].z - pts[b].z);
-	return (
-		<g opacity={o}>
-			{mol.bonds.map(([a, b], i) => (
-				<line key={i} x1={pts[a].x} y1={pts[a].y} x2={pts[b].x} y2={pts[b].y} stroke={tint ?? '#d8dce8'} strokeWidth={2.2} opacity={0.55} />
-			))}
-			{order.map((id) => {
-				const p = pts[id];
-				const h = hl ? hl(id) : 0;
-				const c = tint ?? ELEM[p.e];
-				const s = 1 + p.z / 160;
-				return (
-					<g key={id}>
-						{h > 0 ? <circle cx={p.x} cy={p.y} r={26 * h} fill="#5fd8e6" opacity={0.45 * h} filter="url(#g-md)" /> : null}
-						<circle cx={p.x} cy={p.y} r={15 * s} fill={c} opacity={0.22} filter="url(#g-md)" />
-						<circle cx={p.x} cy={p.y} r={(p.e === 'C' ? 7 : 9) * s} fill={h > 0.5 ? '#bff4ff' : c} />
-						<circle cx={p.x - 2.5 * s} cy={p.y - 2.5 * s} r={2.4 * s} fill="#fff" opacity={0.9} />
-					</g>
-				);
-			})}
-		</g>
-	);
+/** adenosine drifting down toward the receptors; deterministic per index */
+const drifter = (i: number, f: number, start: number): V3 => {
+	const u = Math.max(0, f - start - i * 9) / 240;
+	return [(random(`dx${i}`) - 0.5) * 14 + 0.6 * Math.sin(u * 5 + i), 6.2 - 4.4 * Math.min(1, u) + 0.3 * Math.sin(f / 30 + i), -1.5 - random(`dz${i}`) * 5];
 };
 
 const Sleep: React.FC<SceneProps> = () => {
@@ -435,43 +199,131 @@ const Sleep: React.FC<SceneProps> = () => {
 	const scene = useScene();
 	const events = useEvents();
 	const end = scene.duration;
-	const t = af / 30 + 10;
-	// title in the cup (0–150), then down through the crema into the dark of a neuron
+	const t = af / 30 + 4;
+	// A: title over the cup, top-down; then the dive
+	const settle = prog(f, 0, 60, ease.out);
 	const dive = prog(f, 138, 30, ease.in);
-	const rim = mix(380, 1500, dive);
-	const neuron = prog(f, 150, 24, ease.out) * (1 - prog(f, 228, 22));
-	// the synapse: adenosine builds up through line 0, docks during line 1
-	const syn = prog(f, 220, 26);
-	const dots = prog(f, cue(0) + 40, cue(1) - cue(0) + 20, (x) => x);
+	// B: the synapse fills with adenosine; three dock on events; the light goes down
+	const dots = prog(f, cue(0) + 20, cue(1) - cue(0) + 30, (x) => x);
 	const dock = events(cue(1) + 6, cue(2) - 20, 3, 18);
-	const docked = dock.map((d) => (f >= d ? Math.min(1, (f - d) / 16) : 0));
+	const docked = dock.map((d) => (f >= d ? Math.min(1, (f - d) / 14) : 0));
+	const tired = docked.reduce((s, d) => s + d, 0) / 3;
 	const lids = prog(f, cue(1) + 10, cue(2) - cue(1) - 20, ease.inOut) * (1 - prog(f, cue(2) - 14, 10));
-	const darker = docked.reduce((s, d) => s + (d > 0 ? 0.13 : 0), 0) * (1 - prog(f, cue(2) - 14, 10));
-	// zoom into the docked molecule → the 3D models
-	const zin = prog(f, cue(2) - 16, 20, ease.in);
-	const mol = prog(f, cue(2) - 2, 14) * (1 - prog(f, cue(3) - 14, 14));
-	const th = -0.9 + 1.1 * prog(f, cue(2) - 2, cue(3) - cue(2), ease.inOut);
-	const cafIn = prog(f, cue(2) + 40, 40, ease.inOut);
+	// C/D: push into the middle pocket -> the two molecules, the shared skeleton in gold
+	const zin = prog(f, cue(2) - 18, 18, ease.in);
+	const molShot = f >= cue(2) && f < cue(3) - 2;
+	const cafIn = prog(f, cue(2) + 30, 40, ease.inOut);
 	const coreHits = events(cue(2) + 70, cue(3) - 16, 3, 10);
-	const coreLit = (id: string) => {
-		if (!CORE.has(id)) return 0;
-		const idx = ['C5', 'C4', 'N3', 'C2', 'N1', 'C6', 'N9', 'C8', 'N7'].indexOf(id);
-		const at = coreHits[Math.min(2, Math.floor(idx / 3))];
-		return prog(f, at, 10);
-	};
-	// back out: caffeine takes the receptors on the beats; adenosine is turned away
-	const back = prog(f, cue(3) - 14, 22, ease.out);
+	const core = coreHits.reduce((s, h) => s + prog(f, h, 10) / 3, 0);
+	// E: back out; caffeine takes the pockets on the beats; adenosine bounces off; light returns
+	const back = prog(f, cue(3) - 2, 26, ease.out);
 	const cafAt = events(cue(3) + 8, cue(4) - 10, 3, 16);
-	const gold = cafAt.map((a) => (f >= a ? Math.min(1, (f - a) / 18) : 0));
-	const truck = prog(f, cue(4) - 10, cue(5) - cue(4), ease.inOut);
-	// pull back to the whole brain; the fatigue fog is held at the edge
-	const brain = prog(f, cue(5) - 6, 30, ease.inOut);
-	const fog = prog(f, cue(5) + 30, 70, ease.out);
-	const flare = prog(f, end - 18, 18, ease.in);
-	const camS = syn > 0 && brain < 1 ? 1 + 0.05 * prog(f, 220, cue(2) - 220) * (1 - back) + 6 * (zin * (1 - back)) ** 2 : 1;
+	const cafDocked = cafAt.map((a) => (f >= a ? 1 : 0));
+	const relief = prog(f, cue(4), 50, ease.inOut);
+	const truck = prog(f, cue(4) - 10, cue(5) - cue(4) + 10, ease.inOut);
+	// F: pull back to the whole brain; the fog of tiredness held at its edge
+	const brain = prog(f, cue(5) - 6, 40, ease.inOut);
+	const fogR = prog(f, cue(5) + 30, 70, ease.out);
+	const flare = prog(f, end - 16, 16, ease.in);
+
+	let three: React.ReactNode;
+	if (f < 170) {
+		const pos: V3 = lerp3([0, mix(3.6, 3.25, settle), 0.02], [0.01, LEVEL_Y + 0.02, 0.012], dive);
+		three = (
+			<Shot cam={{pos, target: [0, LEVEL_Y, 0], fov: 35, roll: f / 300}} fx={{bloom: 0.6, threshold: 0.75, fade: prog(f, 158, 12, ease.in)}} fog={[8, 30]}>
+				<Lights rim={[-2.5, 3.5, -4]} rimI={22} keyI={55} />
+				<Table color="#0d0907" />
+				<Saucer />
+				<Cup position={[0, 0.05, 0]} t={t} swirl={mix(4.9, 1.4, settle) + 4 * dive} />
+			</Shot>
+		);
+	} else if (molShot) {
+		// D: the key and the lock, close
+		const k = f - cue(2);
+		three = (
+			<Shot cam={{pos: [0.3 * Math.sin(k / 50), 0.1, mix(13, 11.5, prog(f, cue(2), cue(3) - cue(2)))], target: [0, 0, 0], fov: 38}} fx={{bloom: 0.7, threshold: 0.7, focus: 12, aperture: 0.003}} bg="#06050c">
+				<Lights rim={[-6, 4, -6]} rimI={60} keyI={90} rimColor="#7fa6ff" />
+				<Molecule mol={ADENOSINE} core={core} position={[mix(0, -3.6, cafIn), 0.6, 0]} rotation={[0.15, -0.4 + k / 160, 0.05]} scale={0.95} />
+				<Molecule mol={CAFFEINE} core={core} position={[mix(14, 3.8, cafIn), 0, 0]} rotation={[0.15, 0.3 - k / 170, 0]} scale={0.95} />
+				<Soft items={dust('md', 60, [26, 14, 10], t, '#9fc8ff', 0.05, 0.5)} />
+			</Shot>
+		);
+	} else if (brain < 1) {
+		// B / E: the synapse
+		const camZ = mix(8.5, 7.2, prog(f, 170, cue(2) - 170));
+		let pos: V3 = [mix(0, 3.5, truck), mix(2.6, 2.2, prog(f, 170, 200)), camZ];
+		let target: V3 = [mix(0, 3.5, truck), 0.9, 0];
+		pos = lerp3(pos, [0, POCKET + 0.5, 1.2], zin * (1 - back));
+		target = lerp3(target, [0, POCKET, 0], zin * (1 - back));
+		pos = lerp3(pos, [truck * 3.5, 9, 18], brain);
+		const focus = Math.hypot(pos[0] - target[0], pos[1] - target[1], pos[2] - target[2]);
+		const keyI = 80 * (1 - 0.55 * tired * (1 - back)) * (back > 0 ? mix(0.6, 1.15, relief) : 1);
+		const nA = Math.round(3 + 7 * dots);
+		const rx = [...RX, 6, 9, -6];
+		three = (
+			<Shot cam={{pos, target, fov: 36}} fx={{focus, aperture: 0.004, bloom: 0.75, threshold: 0.65, fade: Math.max(1 - prog(f, 170, 16), 0.0)}} bg="#05040e" fog={[10, 34]}>
+				<Lights keyPos={[2, 5.5, 6]} keyI={keyI} keyColor={back > 0 ? '#ffd8a0' : '#cfe0ff'} rim={[-5, 3, -6]} rimI={50} rimColor="#8a7dff" />
+				<Membrane t={t} w={26} d={9} color="#6c8cff" position={[0, -0.05, -1]} />
+				{brain === 0 ? <Membrane t={t + 2} w={20} d={6} color="#4a5cb0" position={[0, 7.5, -2]} o={0.35} /> : null}
+				{rx.map((x, i) => {
+					const a = i < 3 ? (back > 0 ? 0 : docked[i]) : 0;
+					const c = i < 3 ? cafDocked[i] : back > 0 ? prog(f, cafAt[2] + 10 + i * 6, 14) : 0;
+					return <Receptor3D key={i} position={[x, 0, 0]} scale={0.9} glow={0.22 * a + 0.2 * c} glowColor={c > 0 ? '#ffc070' : '#7ff7ff'} />;
+				})}
+				{/* adenosine drifting down */}
+				{Array.from({length: nA}, (_, i) => {
+					const p = drifter(i, f, 170);
+					return <Molecule key={i} mol={ADENOSINE} position={p} rotation={[f / 90 + i, f / 70 + i * 2, 0]} scale={0.11} />;
+				})}
+				{/* adenosine docked (B) */}
+				{back === 0
+					? RX.map((x, i) =>
+							docked[i] > 0 ? <Molecule key={`d${i}`} mol={ADENOSINE} position={[x, mix(POCKET + 1.6, POCKET, docked[i]), 0]} rotation={[0.2, i, 0]} scale={0.18} /> : null,
+						)
+					: null}
+				{/* caffeine falling into the pockets (E); adenosine knocked away */}
+				{back > 0
+					? rx.map((x, i) => {
+							const at = i < 3 ? cafAt[i] : cafAt[2] + 10 + i * 6;
+							const u = prog(f, at - 22, 22, ease.in);
+							if (u <= 0) return null;
+							const kx = f > at ? (f - at) / 30 : 0;
+							return (
+								<group key={`c${i}`}>
+									<Molecule mol={CAFFEINE} core={0.35} position={[x + (1 - u) * (i % 2 ? -1.5 : 1.5), mix(POCKET + 5, POCKET, u), 0]} rotation={[0.2, i * 1.3 + (1 - u) * 3, 0]} scale={0.2} />
+									{kx > 0 && kx < 1 ? <Molecule mol={ADENOSINE} position={[x + (i % 2 ? -1 : 1) * 3 * kx, POCKET + 1.2 + 2.5 * Math.sin(kx * Math.PI * 0.6), 0.5]} rotation={[kx * 6, i, 0]} scale={0.16} ghost={1 - kx} /> : null}
+								</group>
+							);
+						})
+					: null}
+				<Soft items={dust('sy', 120, [30, 9, 12], t, back > 0 ? '#ffe0b0' : '#bcd4ff', 0.04, 0.6).map((p) => ({...p, p: [p.p[0], p.p[1] + 3.5, p.p[2]] as V3}))} />
+			</Shot>
+		);
+	} else {
+		// F: the brain as a cloud of light; the fog of tiredness kept at the edge
+		const pts = brainPoints(5200);
+		const pull = prog(f, cue(5) - 6, end - cue(5), ease.out);
+		const items: Particle[] = pts.map((p, i) => {
+			const lit = prog(f, cue(5) + 10 + (p[2] + 1) * 30, 24);
+			return {p: [p[0] * 3, p[1] * 3, p[2] * 3] as V3, s: 0.03 + 0.03 * p[3], c: lit > 0.5 ? '#ffe2b0' : '#8fe8f0', a: (0.12 + 0.88 * p[3] ** 2) * (0.55 + 0.45 * lit)};
+		});
+		const fog: Particle[] = Array.from({length: 260}, (_, i) => {
+			const a = random(`fa${i}`) * Math.PI * 2 + af / 400;
+			const e = (random(`fe${i}`) - 0.5) * Math.PI;
+			const rr = mix(3.6, 5.6, fogR) + random(`fr${i}`) * 1.2;
+			return {p: [Math.cos(a) * Math.cos(e) * rr, Math.sin(e) * rr * 0.8, Math.sin(a) * Math.cos(e) * rr] as V3, s: 0.5, c: '#3a2a6a', a: 0.35};
+		});
+		three = (
+			<Shot cam={{pos: [mix(4.2, 7.5, pull) * Math.cos(0.9 + af / 300), mix(2.6, 4.2, pull), mix(4.2, 7.5, pull) * Math.sin(0.9 + af / 300)], target: [0, -0.2, 0], fov: 36}} fx={{bloom: 0.9, threshold: 0.5}} bg="#06040c">
+				<Soft items={items} />
+				<Soft items={fog} additive={false} />
+			</Shot>
+		);
+	}
+
 	return (
-		<Stage
-			under={f < 175 ? <CupLiquid rim={rim} t={t} swirl={mix(4.9, 1.2, prog(f, 0, 60, ease.out)) + 4 * dive} cool={prog(f, 150, 25)} dim={1 - prog(f, 150, 25)} gain={1.05} scale={mix(3.4, 2.0, dive)} /> : null}
+		<Stage4
+			three={three}
 			over={
 				<Sequence durationInFrames={160} layout="none">
 					<AbsoluteFill>
@@ -480,142 +332,92 @@ const Sleep: React.FC<SceneProps> = () => {
 							<defs>
 								<radialGradient id="brand-glow">
 									<stop offset="0" stopColor="#ffe7b0" stopOpacity="0.9" />
-									<stop offset="0.35" stopColor={GOLD} stopOpacity="0.35" />
-									<stop offset="1" stopColor={GOLD} stopOpacity="0" />
+									<stop offset="0.35" stopColor="#f1c56d" stopOpacity="0.35" />
+									<stop offset="1" stopColor="#f1c56d" stopOpacity="0" />
+								</radialGradient>
+								<radialGradient id="cupdark">
+									<stop offset="0" stopColor="#05060b" stopOpacity="0.75" />
+									<stop offset="0.7" stopColor="#05060b" stopOpacity="0.55" />
+									<stop offset="1" stopColor="#05060b" stopOpacity="0" />
 								</radialGradient>
 							</defs>
-							<circle cx={960} cy={540} r={380} fill="#05060b" opacity={0.5 * prog(f, 0, 16) * (1 - prog(f, 134, 14))} />
+							<circle cx={960} cy={540} r={520} fill="url(#cupdark)" opacity={prog(f, 0, 16) * (1 - prog(f, 134, 14))} />
 							<XTitle f={f} />
 						</svg>
 					</AbsoluteFill>
 				</Sequence>
 			}
 		>
-			{f < 175 ? <CupRim r={rim} o={1 - prog(f, 138, 20)} /> : null}
-			{/* the neuron grows out of the dark */}
-			{neuron > 0 ? (
-				<g opacity={neuron}>
-					<Room x={960} y={540} r={900} c="#2a2366" base="#05040e" />
-					{(() => {
-						const out: React.ReactNode[] = [];
-						const grow = (x0: number, y0: number, a: number, l: number, w: number, depth: number, key: string, born: number) => {
-							if (depth > 6 || l < 10) return;
-							const k = clamp((f - 150 - born) / 16);
-							if (k <= 0) return;
-							const bend = (random(`${key}b`) - 0.5) * 0.6;
-							const x1 = x0 + Math.cos(a) * l;
-							const y1 = y0 + Math.sin(a) * l;
-							const len = l * 1.05;
-							out.push(<path key={key} d={`M${x0},${y0} Q${x0 + Math.cos(a + bend) * l * 0.55},${y0 + Math.sin(a + bend) * l * 0.55} ${x1},${y1}`} fill="none" stroke="#9fe8f0" strokeWidth={w} strokeLinecap="round" strokeDasharray={len} strokeDashoffset={len * (1 - k)} opacity={0.45 + 0.55 / (depth + 1)} />);
-							if (k < 1) return;
-							const n = depth < 2 ? 2 : random(key) > 0.35 ? 2 : 1;
-							for (let i = 0; i < n; i++) grow(x1, y1, a + (random(`${key}a${i}`) - 0.5) * 1.0, l * (0.66 + 0.18 * random(`${key}l${i}`)), w * 0.66, depth + 1, `${key}${i}`, born + 7);
-						};
-						for (let k = 0; k < 9; k++) grow(960, 540, (k / 9) * Math.PI * 2 + random(`nn${k}`) * 0.4, 300, 5, 0, `nn${k}`, 0);
-						return <g transform={`translate(960,540) scale(${1 + 0.6 * prog(f, 190, 60, ease.in)}) translate(-960,-540)`} filter="url(#g-sm)">{out}</g>;
-					})()}
-					<circle cx={960} cy={540} r={260} fill="url(#ember)" opacity={0.55} />
-					<circle cx={960} cy={540} r={56} fill="#e8ffff" opacity={0.85} filter="url(#g-md)" />
+			{/* tiredness: the eyelids come down */}
+			{lids > 0 ? (
+				<g>
+					<rect width={W} height={300 * lids + 20} fill="url(#lidT)" />
+					<rect y={H - 300 * lids - 20} width={W} height={300 * lids + 20} fill="url(#lidB)" />
 				</g>
 			) : null}
-			{/* the synapse */}
-			{syn > 0 && mol < 1 && brain < 1 ? (
-				<g opacity={syn * (1 - mol) * (1 - brain)}>
-					<g transform={`translate(${RX[0]},${RY - 30}) scale(${camS}) translate(${-RX[0] - 900 * truck * 0},${-(RY - 30)}) translate(${-60 * truck},0)`}>
-						<SynapseScene f={f} af={af} dots={dots} docked={docked} gold={gold} lift={0} dense={1 + 0.8 * truck} mood={0.6 * back * gold.reduce((s, g) => s + g, 0) / 3} />
-						{/* caffeine falling into place */}
-						{RX.map((x, i) => {
-							const at = cafAt[i];
-							if (f < at - 22 || f >= at) return null;
-							const u = prog(f, at - 22, 22, ease.in);
-							return <Caf key={x} x={x + (1 - u) * 80 * (i % 2 ? -1 : 1)} y={mix(-60, RY - 30, u)} s={0.55} />;
-						})}
-						{/* turned away: adenosine bouncing off the occupied receptors */}
-						{RX.map((x, i) => {
-							const at = cafAt[i];
-							if (f < at || f > at + 30) return null;
-							const u = (f - at) / 30;
-							return <Glow key={i} x={x + (i % 2 ? -1 : 1) * 140 * u} y={RY - 40 - 260 * Math.sin(u * Math.PI * 0.6)} r={22} o={1 - u} />;
-						})}
-					</g>
-					<rect width={W} height={H} fill="#000" opacity={darker} />
-					<rect width={W} height={300 * lids + 20} fill="url(#lidT)" opacity={lids > 0 ? 1 : 0} />
-					<rect y={H - 300 * lids - 20} width={W} height={300 * lids + 20} fill="url(#lidB)" opacity={lids > 0 ? 1 : 0} />
-					<g transform="translate(1690,200)" opacity={landed(f, cue(0) + 20, cue(2) - 20)}>
-						<Clock x={0} y={0} r={70} h={8 + 15 * dots} m={(60 * 15 * dots) % 60} c="#cfe8ff" />
-						<text y={110} textAnchor="middle" style={{fontFamily: font.latin, fontSize: 22, letterSpacing: '0.2em', fill: '#cfe8ff'}} opacity={0.8}>
-							{`${String(Math.floor(8 + 15 * dots)).padStart(2, '0')}:${String(Math.floor((60 * 15 * dots) % 60)).padStart(2, '0')}`}
-						</text>
-					</g>
-					<g opacity={landed(f, cue(0) + 10, cue(2) - 20)}>
-						<Tag en="Adenosine" zh="腺苷 · 醒着时一点点积累" />
-					</g>
-					<g opacity={landed(f, cue(3) + 10, cue(5) - 6)}>
-						<Tag en="Adenosine receptor" zh="腺苷受体 · 咖啡因占位，却不开锁" />
-					</g>
-				</g>
-			) : null}
-			{/* the key and the lock, in three dimensions */}
-			{mol > 0 ? (
-				<g opacity={mol}>
-					<Room x={1000} y={520} r={900} c="#1f3a6a" base="#05040e" />
-					<g transform={`translate(${mix(1000, 980, cafIn)},540) scale(${2.9 + 0.15 * prog(f, cue(2), cue(3) - cue(2))})`}>
-						<Model3D mol={ADENOSINE} th={th} hl={coreLit} o={1 - 0.15 * cafIn} />
-					</g>
-					<g transform={`translate(${mix(2300, 1000, cafIn)},540) scale(${2.9 + 0.15 * prog(f, cue(2), cue(3) - cue(2))})`} opacity={0.55 * cafIn}>
-						<Model3D mol={CAFFEINE} th={th + 0.6 * (1 - cafIn)} tint="#ffd896" />
-					</g>
-					<g opacity={landed(f, coreHits[2] + 6, cue(3) - 16)}>
-						<Thin text="同一个骨架" x={960} y={170} size={64} fill="#9fe8f0" w={700} />
-					</g>
-					<g opacity={landed(f, cue(2) + 4)}>
-						<Tag en="Adenosine · Caffeine" zh="腺苷与咖啡因 · 共享嘌呤骨架（青色）" />
-					</g>
-				</g>
-			) : null}
-			{/* the whole brain: a constellation; the fog of tiredness held at its edge */}
-			{brain > 0 ? (
-				<g opacity={brain}>
-					<Room x={960} y={520} r={800} c="#3a2a50" base="#05040e" />
-					<g transform={`translate(960,520) scale(${mix(1.6, 1, brain)}) translate(-960,-520)`}>
-						{Array.from({length: 170}, (_, i) => {
-							const a = random(`ba${i}`) * Math.PI * 2;
-							const r = Math.sqrt(random(`br${i}`));
-							const x = 960 + Math.cos(a) * r * 430;
-							const y = 520 + Math.sin(a) * r * 300;
-							const j = (i * 7 + 3) % 170;
-							const a2 = random(`ba${j}`) * Math.PI * 2;
-							const r2 = Math.sqrt(random(`br${j}`));
-							const lit = prog(f, cue(5) + 10 + r * 50, 20);
-							return (
-								<g key={i}>
-									{i % 2 ? <line x1={x} y1={y} x2={960 + Math.cos(a2) * r2 * 430} y2={520 + Math.sin(a2) * r2 * 300} stroke="#ffd896" strokeWidth={0.8} opacity={0.35 * lit} /> : null}
-									<circle cx={x} cy={y} r={2.5} fill={lit > 0.5 ? '#ffe7b8' : '#9fe8f0'} />
-								</g>
-							);
-						})}
-						<Glow x={960} y={520} r={300} o={0.5 * prog(f, cue(5) + 10, 40)} />
-						<ellipse cx={960} cy={520} rx={mix(420, 640, fog)} ry={mix(290, 460, fog)} fill="none" stroke="#7fd4d8" strokeWidth={140} opacity={0.12} filter="url(#b8)" />
-						{Array.from({length: 70}, (_, i) => {
-							const a = random(`fg${i}`) * Math.PI * 2 + af / 300;
-							const rr = mix(300 + random(`fgr${i}`) * 100, 560 + random(`fgr${i}`) * 160, fog);
-							return <circle key={i} cx={960 + Math.cos(a) * rr} cy={520 + Math.sin(a) * rr * 0.72} r={3 + random(`fgs${i}`) * 4} fill="#9fe8f0" opacity={0.6} />;
-						})}
-					</g>
-					<g opacity={landed(f, cue(5) + 20, end - 20)}>
-						<Tag en="Blocked, not removed" zh="疲惫没有消失 · 只是被挡在外面" />
-					</g>
-				</g>
-			) : null}
-			<Motes f={af} seed="sl" n={40} color="#cfe8ff" o={0.6 * syn} />
+			<g transform="translate(1690,200)" opacity={landed(f, cue(0) + 20, cue(2) - 20)}>
+				<Clock x={0} y={0} r={70} h={8 + 15 * dots} m={(60 * 15 * dots) % 60} c="#cfe8ff" />
+				<text y={110} textAnchor="middle" style={{fontFamily: font.latin, fontSize: 22, letterSpacing: '0.2em', fill: '#cfe8ff'}} opacity={0.8}>
+					{`${String(Math.floor(8 + 15 * dots)).padStart(2, '0')}:${String(Math.floor((60 * 15 * dots) % 60)).padStart(2, '0')}`}
+				</text>
+			</g>
+			<g opacity={landed(f, cue(0) + 10, cue(2) - 20)}>
+				<Tag en="Adenosine" zh="腺苷 · 醒着时一点点积累" />
+			</g>
+			<g opacity={landed(f, cue(2) + 4, cue(3) - 6)}>
+				<Tag en="Adenosine · Caffeine" zh="腺苷与咖啡因 · 共享嘌呤骨架（金色）" />
+			</g>
+			<g opacity={landed(f, coreHits[2] + 6, cue(3) - 10)}>
+				<Thin text="同一个骨架" x={960} y={170} size={64} fill="#ffe2b0" w={700} />
+			</g>
+			<g opacity={landed(f, cue(3) + 10, cue(5) - 6)}>
+				<Tag en="Adenosine receptor" zh="腺苷受体 · 咖啡因占位，却不开锁" />
+			</g>
+			<g opacity={landed(f, cue(5) + 20, end - 20)}>
+				<Tag en="Blocked, not removed" zh="疲惫没有消失 · 只是被挡在外面" />
+			</g>
 			<rect width={W} height={H} fill="#fff1d0" opacity={flare} />
-		</Stage>
+		</Stage4>
 	);
 };
 
-export const scenesA = {Hook, Sleep};
 
-// ---------------------------------------------------------------- 3. origin: a tree out of the light, the forest, two wild coffees
+// ---------------------------------------------------------------- 3. origin: under the canopy, the forest 600,000 years ago, two wild coffees
+
+/** the forest set: layered tree cards in green fog, a warm sky, god rays, a coffee shrub in front */
+const Forest: React.FC<{t: number; f: number; rays?: number}> = ({t, f, rays = 1}) => (
+	<group>
+		<mesh>
+			<sphereGeometry args={[60, 32, 16]} />
+			<meshBasicMaterial color="#d9b678" side={THREE.BackSide} fog={false} toneMapped={false} />
+		</mesh>
+		{/* overhead canopy, seen from below at the start */}
+		<TreeCard seed="canopy" n={3} color="#050a06" w={40} h={22} position={[0, 12, -2]} rotation={[Math.PI / 2.2, 0, 0]} />
+		{[
+			[-40, 30, 0.35, '#2a4a2c'],
+			[-26, 26, 0.5, '#1d3a22'],
+			[-16, 22, 0.75, '#122a18'],
+			[-8, 18, 0.9, '#0a1a0e'],
+			[-2, 14, 1, '#050c07'],
+		].map(([z, w, o, c], i) => (
+			<TreeCard key={i} seed={`fr${i}`} n={5 + i} color={c as string} o={o as number} w={w as number} h={(w as number) * 0.5625} position={[(i % 2 ? 2 : -2) + 0.3 * Math.sin(t / 3 + i), ((w as number) * 0.5625) / 2 - 2.2, z as number]} />
+		))}
+		<mesh position={[0, -2.2, -20]} rotation={[-Math.PI / 2, 0, 0]}>
+			<planeGeometry args={[200, 60]} />
+			<meshStandardMaterial color="#060c07" roughness={1} />
+		</mesh>
+		<Rays3D n={8} o={0.2 * rays} len={30} spread={0.9} color="#ffe6b0" position={[8, 16, -14]} rotation={[0, 0, 0.45]} seed="or" />
+		<Soft items={dust('fo', 160, [24, 10, 20], t, '#ffe6b0', 0.04, 0.6).map((p) => ({...p, p: [p.p[0], p.p[1] + 3, p.p[2] - 6] as V3}))} />
+		{/* a wild coffee branch, close and soft */}
+		<group position={[2.6, 1.2, 3.2]} rotation={[0.2, -0.5, -0.6 + 0.04 * Math.sin(f / 40)]}>
+			<Leaf position={[-0.4, 0.3, 0]} rotation={[0.4, 0.3, 0.9]} scale={0.5} color="#173d1c" />
+			<Leaf position={[0.5, 0.2, -0.1]} rotation={[0.3, -0.4, -0.95]} scale={0.45} color="#1b4520" />
+			{[0, 1, 2, 3, 4].map((i) => (
+				<Cherry key={i} ripe={i % 2 ? 0.2 : 0.9} position={[-0.1 + 0.12 * i, -0.25 - 0.05 * (i % 2), 0.05 * (i % 3)]} scale={0.5} />
+			))}
+		</group>
+	</group>
+);
 
 const Origin: React.FC<SceneProps> = () => {
 	const f = useCurrentFrame();
@@ -624,156 +426,118 @@ const Origin: React.FC<SceneProps> = () => {
 	const scene = useScene();
 	const events = useEvents();
 	const end = scene.duration;
+	const t = af / 30;
 	const fromFlare = 1 - prog(f, 0, 20, ease.out);
-	// C1: branches against the light, tilting down into the forest
-	const c1 = 1 - prog(f, cue(1) - 20, 24);
 	const tilt = prog(f, 0, cue(1) - 10, ease.inOut);
-	// C2: the forest, a slow push through the layers
-	const c2 = prog(f, cue(1) - 24, 24) * (1 - prog(f, cue(2) - 16, 18));
-	const push = prog(f, cue(1) - 24, cue(2) - cue(1) + 30, (x) => x);
+	const push = prog(f, cue(1) - 30, cue(2) - cue(1) + 20, (x) => x);
 	const stamp = events(cue(1) + 20, cue(2) - 30, 1)[0];
-	// C3a: two flowers, a grain of pollen crossing
-	const c3 = prog(f, cue(2) - 16, 18) * (1 - prog(f, cue(2) + 90, 16));
-	const draw = prog(f, cue(2) - 10, 40, ease.inOut);
+	const flowers = f >= cue(2) - 14 && f < cue(2) + 96;
 	const pol = prog(f, cue(2) + 30, 50, ease.inOut);
-	// C3b: chromosomes, 22 + 22 → 44
-	const c4 = prog(f, cue(2) + 86, 16);
-	const fly = prog(f, cue(2) + 90, 40, ease.out);
+	const fly = prog(f, cue(2) + 96, 40, ease.out);
 	const eqAt = events(cue(2) + 120, end - 20, 1)[0];
 	const collapse = prog(f, end - 22, 22, ease.in);
-	const pa: [number, number] = [560, 440];
-	const pb: [number, number] = [1360, 440];
-	const bez = (u: number): [number, number] => {
-		const cx = 960;
-		const cy = 300;
-		return [(1 - u) ** 2 * pa[0] + 2 * (1 - u) * u * cx + u * u * pb[0], (1 - u) ** 2 * pa[1] + 2 * (1 - u) * u * cy + u * u * pb[1]];
-	};
+	let three: React.ReactNode;
+	if (f < cue(2) - 14) {
+		const pos: V3 = [mix(-0.5, 0.4, push), mix(1.1, 1.7, tilt), mix(9, 2.5, push)];
+		const target: V3 = [mix(0.2, 0.6, tilt), mix(14, 2.2, tilt), mix(2, -12, tilt) + mix(0, -6, push)];
+		three = (
+			<Shot cam={{pos, target, fov: 40, roll: 0.05 * (1 - tilt)}} fx={{bloom: 0.8, threshold: 0.7, focus: Math.max(2, 12 - 6 * push), aperture: 0.003, fade: prog(f, cue(2) - 26, 12)}} bg="#0d2014" fog={[4, 46]}>
+				<Lights keyPos={[6, 12, -6]} keyI={300} keyColor="#ffe0a8" rim={[-4, 4, 6]} rimI={30} rimColor="#9fd0a0" />
+				<Forest t={t} f={f} />
+			</Shot>
+		);
+	} else if (flowers) {
+		const bez = (u: number): V3 => [mix(mix(-1.7, 0, u), mix(0, 1.7, u), u), 0.3 + 1.1 * 2 * u * (1 - u), 0.2 * Math.sin(u * 6)];
+		const trail: Particle[] = pol > 0 ? Array.from({length: 26}, (_, k) => ({p: bez(Math.max(0, pol - k * 0.012)), s: 0.05 * (1 - k / 26), c: '#ffe7b8', a: 1 - k / 26})) : [];
+		three = (
+			<Shot cam={{pos: [0.2 * Math.sin(f / 60), 0.4, 4.6], target: [0, 0.3, 0], fov: 35}} fx={{bloom: 0.7, threshold: 0.7, focus: 4.6, aperture: 0.004, fade: 1 - prog(f, cue(2) - 14, 14)}} bg="#04120a" fog={[6, 20]}>
+				<Lights keyPos={[2, 4, 4]} keyI={60} keyColor="#ffe6c0" rim={[-3, 2, -3]} rimI={40} rimColor="#9fe8b0" />
+				{[-1.7, 1.7].map((x, i) => (
+					<Flower key={i} position={[x, 0.2, 0]} rotation={[0.15, (i ? -1 : 1) * 0.35 + f / 300, 0.2 + f / 200]} scale={2.1} open={prog(f, cue(2) - 10 + i * 6, 40, ease.out)} glow={0.1} />
+				))}
+				<Soft items={trail} />
+				<Soft items={dust('pl', 90, [10, 6, 6], t, '#d8ffd0', 0.03, 0.5)} />
+			</Shot>
+		);
+	} else {
+		const items = Array.from({length: 44}, (_, i) => {
+			const left = i < 22;
+			const tx = ((i % 11) - 5) * 0.62;
+			const ty = 0.9 - Math.floor(i / 11) * 0.62;
+			const u = Math.max(0, Math.min(1, fly * 1.4 - random(`cd${i}`) * 0.4));
+			const sx = (left ? -1 : 1) * (6 + random(`cx${i}`) * 3);
+			const sy = (random(`cy${i}`) - 0.5) * 5;
+			const sz = -2 - random(`cz${i}`) * 4;
+			const p: V3 = lerp3(lerp3([sx, sy, sz], [tx, ty, 0], u), [0, 0, 0], collapse);
+			return {p, r: (1 - u) * 3 * (left ? 1 : -1), c: left ? '#7fc8ff' : '#ffc070', s: 0.8 - 0.25 * (i % 11) / 10};
+		});
+		three = (
+			<Shot cam={{pos: [0, 0.2, mix(7.5, 7, fly)], target: [0, 0.1, 0], fov: 35}} fx={{bloom: 0.6, threshold: 0.8}} bg="#04120a">
+				<Lights keyPos={[3, 4, 5]} keyI={70} rim={[-3, 2, -4]} rimI={40} rimColor="#9fe8b0" />
+				{items.map((c, i) => (
+					<Chromosome key={i} color={c.c} position={c.p} rotation={[0, c.r, c.r * 0.5]} scale={c.s} glow={0.12 + collapse} />
+				))}
+				{collapse > 0 ? <Soft items={[{p: [0, 0, 0], s: 2 + 6 * collapse, c: '#fff1d0', a: collapse}]} /> : null}
+				<Soft items={dust('ch', 70, [14, 8, 6], t, '#d8ffd0', 0.03, 0.4)} />
+			</Shot>
+		);
+	}
 	return (
-		<Stage>
-			{c1 > 0 ? (
-				<g opacity={c1}>
-					<Room x={960} y={mix(300, 760, tilt)} r={1000} c="#9a7a3a" base="#04100a" />
-					<rect width={W} height={H} fill="#0f3d2a" opacity={0.35} />
-					<g transform={`translate(0,${mix(420, 0, tilt)})`}>
-						<path d={ridgeD(860, 60, 'c1')} fill="#030a06" />
-						<rect x={955} y={420} width={10} height={460} fill="#030a06" />
-						<Branches x={960} y={430} s={1.9} color="#060c08" seed="tree" n={7} up w={10} len={170} />
-					</g>
-					<Motes f={af} seed="c1" n={50} />
-				</g>
-			) : null}
-			{c2 > 0 ? (
-				<g opacity={c2}>
-					<Room x={1180} y={720} r={1100} c="#e8c27a" base="#03100a" />
-					<rect width={W} height={H} fill="#0f3d2a" opacity={0.45} />
-					<g opacity={0.7 + 0.3 * Math.sin(af / 30)}>
-						<Rays x={1250} y={-60} n={9} o={0.16} />
-					</g>
-					<g transform={`translate(960,820) scale(${1 + 0.08 * push}) translate(-960,-820)`}>
-						<Trees y={820} n={18} s={0.7} c="#1a3a24" seed="t1" o={0.55} />
-					</g>
-					<g transform={`translate(960,900) scale(${1 + 0.18 * push}) translate(-960,-900)`}>
-						<Trees y={900} n={12} s={1} c="#0b1e12" seed="t2" o={0.85} />
-					</g>
-					<g transform={`translate(960,960) scale(${1 + 0.3 * push}) translate(-960,-960)`}>
-						<path d={ridgeD(960, 50, 'c2')} fill="#030805" />
-					</g>
-					<Motes f={af} seed="c2" n={70} />
-					<g opacity={landed(f, stamp)} style={{filter: `blur(${6 * (1 - prog(f, stamp, 14))}px)`}}>
-						<Thin text="60 万年前" y={380} size={110} w={500} />
-					</g>
-					<g opacity={landed(f, cue(1) + 6)}>
-						<Tag en="Coffea arabica · SW Ethiopia" zh="埃塞俄比亚西南高地森林" />
-					</g>
-				</g>
-			) : null}
-			{c3 > 0 ? (
-				<g opacity={c3}>
-					<Room x={960} y={540} r={1000} c="#3a6a4a" base="#03100a" />
-					{[pa, pb].map(([x], i) => (
-						<g key={i}>
-							<defs>
-								<clipPath id={`fl${i}`}>
-									<circle cx={x} cy={480} r={40 + 400 * draw} />
-								</clipPath>
-							</defs>
-							<g clipPath={`url(#fl${i})`} transform={`rotate(${3 * Math.sin(af / 50 + i)},${x},${480})`}>
-								<LineFlower x={x} y={480} s={1.2} />
-							</g>
-							<text x={x} y={850} textAnchor="middle" opacity={landed(f, cue(2) + 10 + i * 6)} style={{fontFamily: font.latinItalic, fontStyle: 'italic', fontSize: 34, fill: '#efe4d0'}}>
-								{i ? 'Coffea canephora' : 'Coffea eugenioides'}
-							</text>
-						</g>
-					))}
-					{pol > 0 ? (
-						<g>
-							<path
-								d={Array.from({length: 30}, (_, k) => {
-									const [x, y] = bez(Math.max(0, pol - 0.25 + (k / 29) * 0.25));
-									return `${k ? 'L' : 'M'}${x},${y}`;
-								}).join(' ')}
-								fill="none"
-								stroke="#ffe7b8"
-								strokeWidth={2}
-								opacity={0.8}
-							/>
-							<Glow x={bez(pol)[0]} y={bez(pol)[1]} r={44} />
-						</g>
-					) : null}
-					<Motes f={af} seed="c3" n={50} />
-				</g>
-			) : null}
-			{c4 > 0 ? (
-				<g opacity={c4 * (1 - collapse)}>
-					<Room x={960} y={560} r={900} c="#2a4a3a" base="#03100a" />
-					{Array.from({length: 44}, (_, i) => {
-						const tx = 330 + (i % 11) * 126;
-						const ty = 360 + Math.floor(i / 11) * 120;
-						const fromLeft = i < 22;
-						const sx = fromLeft ? -100 - random(`cx${i}`) * 300 : 2020 + random(`cx${i}`) * 300;
-						const sy = 200 + random(`cy${i}`) * 600;
-						const u = clamp(fly * 1.4 - random(`cd${i}`) * 0.4);
-						const x = mix(mix(sx, tx, u), 960, collapse);
-						const y = mix(mix(sy, ty, u), 540, collapse);
-						const c = fromLeft ? '#9fe8f0' : '#ffd896';
-						const h = 70 - (i % 11) * 3.5;
-						return (
-							<g key={i} transform={`translate(${x},${y}) rotate(${(1 - u) * 90 * (fromLeft ? 1 : -1)})`} stroke={c} strokeLinecap="round" filter="url(#g-sm)">
-								<path d={`M-9,${-h / 2} Q0,0 -9,${h / 2} M9,${-h / 2} Q0,0 9,${h / 2}`} strokeWidth={5} fill="none" />
-							</g>
-						);
-					})}
-					<g opacity={landed(f, eqAt)}>
-						<Num text="22 + 22 → 44" y={230} size={88} />
-					</g>
-					<g opacity={landed(f, cue(2) + 100)}>
-						<Tag en="Allotetraploid" zh="阿拉比卡 · 四倍体 · 44 条染色体" />
-					</g>
-				</g>
-			) : null}
-			{collapse > 0 ? <Glow x={960} y={540} r={60 + 200 * collapse} o={collapse} /> : null}
+		<Stage4 three={three}>
+			<g opacity={landed(f, stamp, cue(2) - 20)} style={{filter: `blur(${6 * (1 - prog(f, stamp, 14))}px)`}}>
+				<Thin text="60 万年前" y={380} size={110} w={500} />
+			</g>
+			<g opacity={landed(f, cue(1) + 6, cue(2) - 20)}>
+				<Tag en="Coffea arabica · SW Ethiopia" zh="埃塞俄比亚西南高地森林" />
+			</g>
+			{flowers
+				? [412, 1508].map((x, i) => (
+						<text key={i} x={x} y={820} textAnchor="middle" opacity={landed(f, cue(2) + 10 + i * 6, cue(2) + 84)} style={{fontFamily: font.latinItalic, fontStyle: 'italic', fontSize: 34, fill: '#efe4d0'}}>
+							{i ? 'Coffea canephora' : 'Coffea eugenioides'}
+						</text>
+					))
+				: null}
+			<g opacity={landed(f, eqAt, end - 18)}>
+				<Num text="22 + 22 → 44" y={200} size={88} />
+			</g>
+			<g opacity={landed(f, cue(2) + 100, end - 18)}>
+				<Tag en="Allotetraploid" zh="阿拉比卡 · 四倍体 · 44 条染色体" />
+			</g>
 			<rect width={W} height={H} fill="#fff1d0" opacity={fromFlare} />
-		</Stage>
+		</Stage4>
 	);
 };
 
-// ---------------------------------------------------------------- 4. defense: a leaf full of caffeine, a caterpillar, the soil, three inventions
+// ---------------------------------------------------------------- 4. defense: caffeine in the veins, the caterpillar, the soil, three inventions
 
-const LEAF_L = 1640;
-const LEAF_W = 0.27;
-/** a point on the leaf's upper edge, u from base (0) to tip (1) */
-const leafEdge = (u: number): [number, number] => {
-	const l = LEAF_L;
-	const w = LEAF_W;
-	const p = [
-		[0, 0],
-		[l * 0.25, -l * w],
-		[l * 0.75, -l * w * 0.8],
-		[l, 0],
-	];
-	const v = 1 - u;
-	const b = [v ** 3, 3 * v * v * u, 3 * v * u * u, u ** 3];
-	return [b.reduce((s, k, i) => s + k * p[i][0], 0), b.reduce((s, k, i) => s + k * p[i][1], 0)];
+/** veins of a Leaf as tubes that light from the base outward (k 0..1) */
+const Veins: React.FC<{k: number; color?: string}> = ({k, color = '#ffb347'}) => {
+	const tubes = React.useMemo(() => {
+		const mk = (pts: V3[]) => new THREE.TubeGeometry(new THREE.CatmullRomCurve3(pts.map((p) => new THREE.Vector3(...p))), 48, 0.008, 6, false);
+		const mid = mk(Array.from({length: 24}, (_, i) => leafPoint(0, 0.02 + (i / 23) * 0.95)));
+		const lat: {geo: THREE.TubeGeometry; at: number}[] = [];
+		for (let j = 0; j < 9; j++) {
+			const v0 = 0.12 + j * 0.088;
+			for (const s of [-1, 1]) lat.push({geo: mk(Array.from({length: 10}, (_, i) => leafPoint(s * (i / 9) * 0.85, v0 + (i / 9) * 0.12))), at: v0});
+		}
+		return {mid, lat};
+	}, []);
+	const draw = (g: THREE.TubeGeometry, p: number) => {
+		const n = g.index!.count;
+		const c = Math.floor(n * Math.max(0, Math.min(1, p)));
+		g.setDrawRange(0, c - (c % 3));
+	};
+	draw(tubes.mid, k * 1.3);
+	tubes.lat.forEach((l) => draw(l.geo, (k * 1.3 - l.at) * 3));
+	return (
+		<group>
+			{[tubes.mid, ...tubes.lat.map((l) => l.geo)].map((g, i) => (
+				<mesh key={i} geometry={g}>
+					<meshBasicMaterial color={color} toneMapped={false} />
+				</mesh>
+			))}
+		</group>
+	);
 };
 
 const Defense: React.FC<SceneProps> = () => {
@@ -783,219 +547,156 @@ const Defense: React.FC<SceneProps> = () => {
 	const scene = useScene();
 	const events = useEvents();
 	const end = scene.duration;
-	// D1: the leaf grows out of the glow; veins light; caffeine flows in them
-	const grow = prog(f, 0, 26, ease.out);
-	const veins = prog(f, 10, 40, ease.inOut);
-	const pan = prog(f, 0, cue(2), (x) => x);
-	const word = events(cue(0) + 6, cue(1) - 10, 1)[0];
-	// D2: the caterpillar
-	const crawl = prog(f, cue(1) - 6, 56, ease.inOut);
-	const biteAt = cue(1) + 54;
-	const bite = prog(f, biteAt, 6);
-	const twitch = f > biteAt + 8 && f < biteAt + 36 ? 1 : 0;
-	const curl = prog(f, biteAt + 34, 12, ease.inOut);
-	const fall = prog(f, biteAt + 44, 30, ease.in);
-	const cu = mix(0.96, 0.62, crawl);
-	const [ex, ey] = leafEdge(cu);
-	// D3: tilt down into the soil
-	const tilt = prog(f, cue(2) - 8, 30, ease.inOut);
-	const soilOut = prog(f, cue(3) - 10, 12);
-	// D4: three spotlights
-	const spots = events(cue(3) + 8, end - 30, 3, 16);
-	const lit = spots.map((s) => prog(f, s, 12, ease.out));
-	const whiteOut = prog(f, end - 14, 14, ease.in);
-	return (
-		<Stage
-			defs={
-				<mask id="bite3">
-					<rect x={-300} y={-800} width={2400} height={1600} fill="#fff" />
-					<circle cx={leafEdge(0.62)[0]} cy={leafEdge(0.62)[1] - 10} r={60 * bite} fill="#000" />
-					<circle cx={leafEdge(0.59)[0]} cy={leafEdge(0.59)[1] - 4} r={40 * bite} fill="#000" />
-				</mask>
-			}
-		>
-			{soilOut < 1 ? (
-				<g opacity={1 - soilOut}>
-					<Room x={960} y={mix(540, -200, tilt)} r={900} c="#a8c86a" base="#040a05" o={0.7} />
-					<g transform={`translate(0,${-1080 * tilt})`}>
-						{/* the leaf */}
-						<g transform={`translate(${140 - 120 * pan},560) rotate(${-5 + 0.6 * Math.sin(af / 40)}) scale(${grow})`}>
-							<g mask="url(#bite3)">
-								<path d={leafD(LEAF_L, LEAF_W)} fill="url(#leafLit)" />
-								<path d={leafD(LEAF_L, LEAF_W)} fill="none" stroke="#f4ffc8" strokeWidth={1.2} opacity={0.6} />
-								<path d={`M0,0 C500,-8 1100,-4 ${LEAF_L},0`} stroke="#f8ffd8" strokeWidth={2.4} fill="none" strokeDasharray={1700} strokeDashoffset={1700 * (1 - veins)} filter="url(#g-sm)" />
-								{Array.from({length: 13}, (_, i) => {
-									const x = 90 + i * 115;
-									const L = 300 * Math.sin(((i + 1) / 14) * Math.PI) + 40;
-									const k = clamp(veins * 1.6 - i * 0.05);
-									return (
-										<g key={i} stroke="#f4ffc8" strokeWidth={1} fill="none" opacity={0.7}>
-											<path d={`M${x},-3 Q${x + L * 0.5},${-L * 0.25} ${x + L * 0.75},${-L * 0.6}`} strokeDasharray={500} strokeDashoffset={500 * (1 - k)} />
-											<path d={`M${x},3 Q${x + L * 0.5},${L * 0.25} ${x + L * 0.75},${L * 0.6}`} strokeDasharray={500} strokeDashoffset={500 * (1 - k)} />
-										</g>
-									);
-								})}
-								{Array.from({length: 16}, (_, i) => {
-									const u = ((af / 150 + i / 16) % 1) * 0.96;
-									return <Glow key={i} x={u * LEAF_L} y={Math.sin(u * 30 + i) * 2} r={16} o={veins * Math.sin(u * Math.PI)} />;
-								})}
-							</g>
-							{/* the caterpillar */}
-							{f >= cue(1) - 6 && fall < 1 ? (
-								<g transform={`translate(${ex},${ey - 26 + 900 * fall}) rotate(${-14 + 200 * fall})`}>
-									{Array.from({length: 11}, (_, i) => {
-										const wave = Math.sin(af / 3.5 - i * 0.8) * 7 * (1 - curl);
-										const a = (i / 11) * Math.PI * 1.7 * curl;
-										const x = mix(i * 40, 60 * Math.sin(a), curl) + twitch * (random(`tw${i}${Math.floor(f / 2)}`) - 0.5) * 14;
-										const y = mix(-wave, -60 + 60 * Math.cos(a), curl);
-										return <circle key={i} cx={x} cy={y} r={i === 0 ? 26 : 22} fill="#0c0805" stroke="#ffcf9a" strokeWidth={1} />;
-									})}
-									<path d={`M0,0 ${Array.from({length: 11}, (_, i) => `L${mix(i * 40, 0, curl)},${-Math.sin(af / 3.5 - i * 0.8) * 7 * (1 - curl)}`).join(' ')}`} stroke="#ff5a46" strokeWidth={2.4} fill="none" opacity={twitch ? 0.5 + 0.5 * random(`nf${f}`) : 0.25} filter="url(#g-md)" />
-									{twitch
-										? Array.from({length: 10}, (_, i) => {
-												const a = random(`sp${i}${Math.floor(f / 3)}`) * Math.PI * 2;
-												return <line key={i} x1={Math.cos(a) * 34} y1={Math.sin(a) * 34} x2={Math.cos(a) * 74} y2={Math.sin(a) * 74} stroke="#ff7a62" strokeWidth={1.4} />;
-											})
-										: null}
-								</g>
-							) : null}
-							{/* crumbs from the bite */}
-							{f >= biteAt && f < biteAt + 30
-								? Array.from({length: 8}, (_, i) => {
-										const k = (f - biteAt) / 30;
-										const [bx, by] = leafEdge(0.61);
-										return <ellipse key={i} cx={bx + (random(`cb${i}`) - 0.5) * 120 * k} cy={by - 20 + 300 * k * k} rx={6} ry={3} fill="#9ac860" opacity={1 - k} />;
-									})
+	const t = af / 30;
+	const fromGlow = 1 - prog(f, 0, 16);
+	// D1: caffeine lights the veins
+	const veins = prog(f, 4, cue(1) - 10, ease.inOut);
+	const word = events(cue(0) + 20, cue(1) - 10, 1)[0];
+	// D2: the caterpillar arrives, bites, is poisoned, curls and drops
+	const crawl = prog(f, cue(1) - 10, 50, ease.out);
+	const bite = events(cue(1) + 36, cue(2) - 30, 1)[0];
+	const hurt = prog(f, bite + 4, 14);
+	const curl = prog(f, bite + 20, 18, ease.inOut);
+	const drop = prog(f, bite + 40, 30, ease.in);
+	// D3: down into the soil
+	const soil = f >= cue(2) && f < cue(3);
+	const sprout = prog(f, cue(2) + 20, 40, ease.out);
+	const wilt = prog(f, cue(2) + 80, 50, ease.inOut);
+	// D4: three plants, three spotlights, one molecule
+	const spots = events(cue(3) + 6, end - 40, 3, 14);
+	const rise = prog(f, spots[2] + 10, 40, ease.inOut);
+	const meet = prog(f, end - 44, 30, ease.inOut);
+	const white = prog(f, end - 14, 14, ease.in);
+	let three: React.ReactNode;
+	if (f < cue(2)) {
+		const follow = prog(f, cue(1) - 10, cue(2) - cue(1), ease.inOut);
+		const cx = mix(-0.6, -0.25, follow);
+		three = (
+			<Shot cam={{pos: [cx + 0.3, 0.9 - 0.5 * follow, 2.6 - 0.6 * follow], target: [cx + 0.05, 0.1, 0.2], fov: 35}} fx={{bloom: 0.8, threshold: 0.6, focus: 2.5, aperture: 0.004, fade: fromGlow * 0.8}} bg="#06100a" fog={[3, 14]}>
+				<Lights keyPos={[2, 3, 3]} keyI={45} keyColor="#ffe6c0" rim={[-3, 1, -3]} rimI={30} rimColor="#9fe8b0" />
+				<group rotation={[-1.1, 0, -1.15]} scale={1.1}>
+					<Leaf color="#1c4a20" glow={0.04 * veins} />
+					<Veins k={veins} />
+					{/* the caterpillar walks in along the leaf's right edge */}
+					<group position={(() => {
+						const p = leafPoint(0.35, mix(1.12, 0.6, crawl));
+						return [p[0] + 0.4 * drop, p[1] - 0.2 * drop, p[2] - 2.2 * drop * drop - 0.3 * drop] as V3;
+					})()} rotation={new THREE.Euler(Math.PI / 2 + drop * 2, 0, -Math.PI / 2 - 0.15 + drop, 'ZYX')}>
+						<Caterpillar t={t} curl={curl} hurt={hurt * (1 - drop * 0.5)} scale={0.7} />
+					</group>
+				</group>
+				{f >= bite && f < bite + 20 ? <Soft items={Array.from({length: 10}, (_, i) => ({p: [-0.3 + random(`cr${i}`) * 0.1, 0.2 - ((f - bite) / 20) * 0.6 * random(`cv${i}`), 0.4] as V3, s: 0.012, c: '#4a8a30', a: 1 - (f - bite) / 20}))} additive={false} /> : null}
+				<Soft items={dust('df', 80, [6, 4, 4], t, '#d0ffb0', 0.02, 0.5)} />
+			</Shot>
+		);
+	} else if (soil) {
+		const k = f - cue(2);
+		three = (
+			<Shot cam={{pos: [0, mix(3, 1.1, prog(f, cue(2), 50, ease.out)), 3.6], target: [0, 0.2, 0], fov: 35}} fx={{bloom: 0.7, threshold: 0.6, focus: 3.6, aperture: 0.003}} bg="#0a0806" fog={[4, 16]}>
+				<Lights keyPos={[2, 4, 2]} keyI={50} keyColor="#ffd8a0" rim={[-3, 2, -3]} rimI={20} />
+				<Terrain amp={0.15} color="#1a120c" />
+				{Array.from({length: 7}, (_, i) => {
+					const u = prog(f, cue(2) - 10 + i * 9, 60, (x) => x);
+					return <Leaf key={i} position={[(random(`fl${i}`) - 0.5) * 4 + 0.3 * Math.sin(u * 6 + i), mix(3.5, 0.05, u), (random(`fz${i}`) - 0.5) * 2]} rotation={[mix(0, -Math.PI / 2, u) + 0.3 * Math.sin(k / 9 + i), i, 0.4 * Math.sin(k / 13 + i)]} scale={0.22} color={i % 2 ? '#4a3a18' : '#2c3a16'} />;
+				})}
+				{/* caffeine seeping into the ground */}
+				<Soft items={Array.from({length: 60}, (_, i) => {
+					const u = ((k / 60 + random(`sp${i}`)) % 1);
+					return {p: [(random(`sx${i}`) - 0.5) * 3.5, 0.05 - u * 0.3, (random(`sz${i}`) - 0.5) * 1.5] as V3, s: 0.03, c: '#ffb347', a: 0.8 * Math.sin(u * Math.PI)};
+				})} />
+				{/* seedlings come up, then give up */}
+				{[-0.9, 0, 0.9].map((x, i) => {
+					const h = 0.35 * sprout;
+					const bend = wilt * (1.1 + 0.2 * i);
+					const col = new THREE.Color('#6fae3a').lerp(new THREE.Color('#5a4020'), wilt);
+					return (
+						<group key={i} position={[x, 0.02, 0.4]} rotation={[0, 0, bend * (i % 2 ? -1 : 1)]}>
+							<mesh position={[0, h / 2, 0]}>
+								<cylinderGeometry args={[0.012, 0.016, Math.max(0.001, h), 8]} />
+								<meshStandardMaterial color={col} />
+							</mesh>
+							{[1, -1].map((s) => (
+								<mesh key={s} position={[0.05 * s, h, 0]} rotation={[0, 0, -s * (0.9 - 0.7 * wilt)]} scale={[0.06 * sprout, 0.03 * sprout, 0.01]}>
+									<sphereGeometry args={[1, 12, 8]} />
+									<meshStandardMaterial color={col} />
+								</mesh>
+							))}
+						</group>
+					);
+				})}
+			</Shot>
+		);
+	} else {
+		const xs = [-2.4, 0, 2.4];
+		three = (
+			<Shot cam={{pos: [0, 1.2, mix(7.5, 6.8, prog(f, cue(3), end - cue(3)))], target: [0, 0.8, 0], fov: 35}} fx={{bloom: 0.9, threshold: 0.55, fade: 0}} bg="#040404" env={0.05}>
+				<ambientLight intensity={0.02} />
+				{xs.map((x, i) => {
+					const on = prog(f, spots[i], 8);
+					const p0: V3 = [x, 1.5, 0];
+					const p = lerp3(lerp3(p0, [x, 2.4, 0], rise), [0, 2.6, 0.5], meet);
+					return (
+						<group key={i}>
+							<pointLight position={[x, 3.2, 1.2]} intensity={28 * on} distance={6} decay={1.5} color="#fff0d0" />
+							<Rays3D n={3} o={0.22 * on} len={6} spread={0.25} color="#fff0d0" position={[x, 6, -0.4]} seed={`sp${i}`} />
+							<mesh position={[x, 0.4, 0]}>
+								<cylinderGeometry args={[0.6, 0.65, 0.8, 48]} />
+								<meshStandardMaterial color="#1a1714" roughness={0.6} />
+							</mesh>
+							{i === 0 ? <TeaLeaf position={[x, 1.25, 0]} rotation={[0.3, 0.4 + f / 120, 0]} scale={0.35} /> : null}
+							{i === 1 ? <CacaoPod position={[x, 1.3, 0]} rotation={[0.2, f / 120, 0.4]} scale={0.6} /> : null}
+							{i === 2
+								? [0, 1, 2, 3].map((k) => <Cherry key={k} ripe={0.95} position={[x - 0.15 + 0.1 * k, 1.05 + 0.06 * (k % 2), 0.05 * (k % 3)]} scale={0.9} />)
 								: null}
-						</g>
-						{/* the soil */}
-						<g transform="translate(0,1080)">
-							<rect y={360} width={W} height={900} fill="#1a0f08" />
-							<rect y={360} width={W} height={900} filter="url(#stone)" opacity={0.12} />
-							<path d="M0,360 L1920,360" stroke="#ffd896" strokeWidth={1.4} opacity={0.7} />
-							{[300, 900, 1500].map((x, i) => {
-								const u = prog(f, cue(2) + i * 12, 60, ease.out);
-								if (f < cue(2) - 6) return null;
-								return <path key={i} d={leafD(170, 0.3)} transform={`translate(${x + 40 * Math.sin(u * 5 + i)},${mix(-500, 352, u)}) rotate(${mix(40 + i * 40, 174 + i * 4, u)})`} fill="#1a2a10" stroke="#c9d88a" strokeWidth={1} />;
-							})}
-							{Array.from({length: 120}, (_, i) => {
-								const s0 = cue(2) + 50 + (i % 12) * 3;
-								const u = prog(f, s0, 120, (x) => x);
-								if (u <= 0) return null;
-								const x = 300 + (i % 3) * 600 + (random(`gx${i}`) - 0.5) * 400;
-								return <circle key={i} cx={x} cy={370 + u * 420 * (0.4 + 0.6 * random(`gy${i}`))} r={1.5 + random(`gr${i}`) * 2.5} fill="#ffd896" opacity={0.5 + 0.5 * random(`go${i}`)} />;
-							})}
-							{[560, 960, 1360].map((x, i) => {
-								const g = prog(f, cue(2) + 24 + i * 8, 40, ease.out);
-								const stop = prog(f, cue(2) + 96 + i * 6, 30, ease.inOut);
-								return (
-									<g key={x} opacity={1 - 0.55 * stop}>
-										<ellipse cx={x} cy={760} rx={46} ry={30} fill="#2a1a0e" stroke="#ffd896" strokeWidth={1.4} />
-										<path d={`M${x},730 Q${x + 10 + 30 * stop},${730 - 70 * g} ${x + 40 * stop},${730 - 90 * g + 50 * stop}`} stroke={stop > 0.5 ? '#7a6a3a' : '#b8e07a'} strokeWidth={2.4} fill="none" />
-										<path d={`M${x},790 Q${x - 8},${790 + 50 * g} ${x + 6},${790 + 90 * g}`} stroke="#c9a070" strokeWidth={1} fill="none" opacity={0.7} />
-									</g>
-								);
-							})}
-						</g>
-					</g>
-					<g opacity={landed(f, word, cue(1) - 4)} style={{filter: `blur(${6 * (1 - prog(f, word, 14))}px)`}}>
-						<Thin text="防身术" x={1560} y={230} size={84} w={600} fill="#f8ffd8" />
-					</g>
-					<g opacity={landed(f, cue(1) + 4, cue(2) - 8)}>
-						<Tag en="Caffeine · natural pesticide" zh="扰乱昆虫神经 · Nathanson, Science 1984" />
-					</g>
-					<g opacity={landed(f, cue(2) + 24, cue(3) - 10)}>
-						<Tag en="Allelopathy" zh="化感作用 · 树下的土壤抑制发芽" />
-					</g>
+							{on > 0 ? <Molecule mol={CAFFEINE} core={0.6 + 0.4 * meet} position={p} rotation={[0.2, f / 50 + i, 0]} scale={0.14 * prog(f, spots[i] + 4, 16, ease.back)} /> : null}
+						</group>
+					);
+				})}
+				{meet > 0 ? <Soft items={[{p: [0, 2.6, 0.5], s: 1 + 6 * meet, c: '#fff1d0', a: meet}]} /> : null}
+			</Shot>
+		);
+	}
+	return (
+		<Stage4 three={three}>
+			<g opacity={landed(f, word, cue(1) - 8)}>
+				<Thin text="防身术" x={1480} y={300} size={96} fill="#ffc977" w={420} />
+			</g>
+			<g opacity={landed(f, 10, cue(2) - 10)}>
+				<Tag en="Caffeine · a natural pesticide" zh="咖啡因 · 天然杀虫剂 · Nathanson 1984" />
+			</g>
+			<g opacity={landed(f, cue(2) + 10, cue(3) - 10)}>
+				<Tag en="Allelopathy" zh="化感作用 · 落叶抑制别的种子发芽" />
+			</g>
+			{['茶', '可可', '咖啡'].map((n, i) => (
+				<g key={n} opacity={landed(f, spots[i] + 4, end - 16)}>
+					<text x={[548, 960, 1372][i]} y={800} textAnchor="middle" style={{fontFamily: font.serif, fontWeight: 700, fontSize: 44, fill: '#efe4d0'}}>
+						{n}
+					</text>
 				</g>
-			) : null}
-			{/* three inventions, three spotlights */}
-			{f >= cue(3) - 10 ? (
-				<g opacity={prog(f, cue(3) - 10, 12)}>
-					<rect width={W} height={H} fill="#07060a" />
-					{[
-						{x: 400, n: '茶', r: '中国 · Camellia', c: '#b8e07a'},
-						{x: 960, n: '可可', r: '美洲 · Theobroma', c: '#e0a060'},
-						{x: 1520, n: '咖啡', r: '非洲 · Coffea', c: '#ff8a6a'},
-					].map((tt, i) => {
-						const k = lit[i];
-						return (
-							<g key={tt.n} opacity={0.15 + 0.85 * k}>
-								<polygon points={`${tt.x - 40},100 ${tt.x + 40},100 ${tt.x + 220},760 ${tt.x - 220},760`} fill={tt.c} opacity={0.07 * k} />
-								<ellipse cx={tt.x} cy={760} rx={240} ry={26} fill={tt.c} opacity={0.14 * k} filter="url(#b8)" />
-								<g strokeDasharray={1400} strokeDashoffset={1400 * (1 - k)}>
-									{i === 0 ? <path d={leafD(320, 0.3)} transform={`translate(${tt.x - 160},520) rotate(-30)`} fill="none" stroke={tt.c} strokeWidth={2} /> : null}
-									{i === 1 ? <ellipse cx={tt.x} cy={500} rx={90} ry={170} fill="none" stroke={tt.c} strokeWidth={2} /> : null}
-									{i === 1 ? <path d={`M${tt.x - 40},340 Q${tt.x - 50},500 ${tt.x - 40},660 M${tt.x + 40},340 Q${tt.x + 50},500 ${tt.x + 40},660 M${tt.x},330 L${tt.x},670`} fill="none" stroke={tt.c} strokeWidth={1} opacity={0.6} /> : null}
-									{i === 2 ? (
-										<g fill="none" stroke={tt.c} strokeWidth={2}>
-											<path d={`M${tt.x - 200},420 Q${tt.x},380 ${tt.x + 200},430`} />
-											{[-120, -40, 40, 120].map((dx) => (
-												<circle key={dx} cx={tt.x + dx} cy={470 + (dx % 80 ? 10 : 0)} r={30} />
-											))}
-										</g>
-									) : null}
-								</g>
-								<Thin text={tt.n} x={tt.x} y={850} size={56} fill={tt.c} w={700} />
-								<text x={tt.x} y={890} textAnchor="middle" style={{fontFamily: font.sans, fontSize: 20, letterSpacing: '0.2em', fill: '#efe4d0'}} opacity={0.6}>
-									{tt.r}
-								</text>
-								{k > 0 ? <path d={`M${tt.x},${300} Q${(tt.x + 960) / 2},${160} 960,${190}`} stroke={tt.c} strokeWidth={1.2} fill="none" strokeDasharray={900} strokeDashoffset={900 * (1 - prog(f, spots[i] + 6, 18))} opacity={0.6} /> : null}
-							</g>
-						);
-					})}
-					<g opacity={prog(f, spots[2] + 14, 14)}>
-						<Caf x={960} y={190} s={0.9} />
-					</g>
-					<g opacity={landed(f, cue(3) + 10)}>
-						<Tag en="Convergent evolution" zh="趋同演化 · Denoeud et al., Science 2014" />
-					</g>
-				</g>
-			) : null}
-			<rect width={W} height={H} fill="#fff8ec" opacity={whiteOut} />
-		</Stage>
+			))}
+			<g opacity={landed(f, cue(3) + 10, end - 16)}>
+				<Tag en="Convergent evolution" zh="趋同演化 · Denoeud et al. 2014" />
+			</g>
+			<rect width={W} height={H} fill="#fff1d0" opacity={white} />
+		</Stage4>
 	);
 };
 
-export const scenesB = {Origin, Defense};
+// ---------------------------------------------------------------- projection: pin 2D type to 3D points
 
-// ---------------------------------------------------------------- 5. bloom: the hillside opens on the drop; a bee; three times the memory
+const projector = (cam: Cam) => {
+	const c = new THREE.PerspectiveCamera(cam.fov ?? 35, W / H, 0.01, 400);
+	c.position.set(...cam.pos);
+	c.up.set(Math.sin(cam.roll ?? 0), Math.cos(cam.roll ?? 0), 0);
+	c.lookAt(...(cam.target ?? [0, 0, 0]));
+	c.updateMatrixWorld();
+	return (p: THREE.Vector3): [number, number, boolean] => {
+		const v = p.clone().project(c);
+		return [(v.x * 0.5 + 0.5) * W, (-v.y * 0.5 + 0.5) * H, v.z < 1];
+	};
+};
 
-/** a coffee shrub in silhouette with white blossoms that open when `open` passes them */
-const Shrub: React.FC<{x: number; y: number; s: number; seed: string; o: number; af: number; open: number}> = ({x, y, s, seed, o, af, open}) => (
-	<g transform={`translate(${x},${y}) scale(${s})`} opacity={o}>
-		{Array.from({length: 6}, (_, k) => {
-			const a = -Math.PI / 2 + (k - 2.5) * 0.28 + (random(`${seed}a${k}`) - 0.5) * 0.2;
-			const len = 120 + random(`${seed}l${k}`) * 90;
-			const sway = 0.03 * Math.sin(af / 40 + k + x);
-			const ex = Math.cos(a + sway) * len;
-			const ey = Math.sin(a + sway) * len;
-			return (
-				<g key={k}>
-					<path d={`M0,0 Q${ex * 0.4},${ey * 0.6} ${ex},${ey}`} stroke="#120a05" strokeWidth={2.4} fill="none" />
-					{Array.from({length: 7}, (_, j) => {
-						const u = (j + 1) / 8;
-						const px = ex * u + (j % 2 ? 9 : -9);
-						const py = ey * u;
-						const b = random(`${seed}b${k}${j}`);
-						const op = clamp((open - b * 0.4) * 4);
-						return (
-							<g key={j}>
-								<ellipse cx={px} cy={py} rx={13} ry={4.5} transform={`rotate(${(j % 2 ? 30 : -30) + (a * 180) / Math.PI + 90},${px},${py})`} fill="#140b05" />
-								{b > 0.45 && op > 0 ? (
-									<g>
-										<circle cx={px + (j % 2 ? -4 : 4)} cy={py + 2} r={8 * op} fill="#fff1d0" opacity={0.22} />
-										<circle cx={px + (j % 2 ? -4 : 4)} cy={py + 2} r={3.6 * op} fill="#fffaf0" />
-									</g>
-								) : null}
-							</g>
-						);
-					})}
-				</g>
-			);
-		})}
-	</g>
-);
+// ---------------------------------------------------------------- 5. bloom: the first rain, a hillside in flower, nectar, the bee that remembers
 
 const Bloom: React.FC<SceneProps> = () => {
 	const f = useCurrentFrame();
@@ -1004,149 +705,114 @@ const Bloom: React.FC<SceneProps> = () => {
 	const scene = useScene();
 	const events = useEvents();
 	const end = scene.duration;
-	// E1: hard cut on the drop; the bloom runs over the hillside like a wave; crane up
-	const wave = prog(f, 0, 70, ease.out);
+	const t = af / 30;
+	const fromWhite = 1 - prog(f, 0, 14, ease.out);
+	// B1: rain, then the wave of white across the hill
+	const rain = 1 - prog(f, 50, 30);
+	const wave = prog(f, 40, cue(1) - 50, ease.inOut);
 	const crane = prog(f, 0, cue(1), ease.inOut);
-	const e1 = 1 - prog(f, cue(1) - 14, 18);
-	// E2: one flower, the nectar
-	const e2 = prog(f, cue(1) - 14, 18) * (1 - prog(f, cue(2) - 10, 14));
-	const zoomF = prog(f, cue(1) - 14, 70, ease.out);
-	// E3: the bee, the 24 hours, the three
-	const e3 = prog(f, cue(2) - 10, 14) * (1 - prog(f, cue(3) - 8, 14));
-	const beeIn = prog(f, cue(2) - 6, 40, ease.inOut);
-	const clockT = prog(f, cue(2) + 20, 50, ease.inOut);
-	const land = events(cue(2) + 80, cue(3) - 14, 3, 12);
-	const x3 = landed(f, land[2]);
-	// E4: petals rise and become stars
-	const e4 = prog(f, cue(3) - 8, 14);
+	// B2: one flower, its nectar
+	const nectar = prog(f, cue(1) + 20, 30);
+	// B3: the bee arrives, drinks; 24 h; three come back
+	const beeIn = prog(f, cue(2) - 6, 46, ease.inOut);
+	const clockT = prog(f, cue(2) + 40, 50, ease.inOut);
+	const land = events(cue(2) + 90, cue(3) - 14, 3, 12);
+	const x3 = landed(f, land[2] + 2, cue(3) - 10);
+	// B4: petals rise into stars
 	const rise = prog(f, cue(3) - 8, end - cue(3) + 8, ease.inOut);
+	let three: React.ReactNode;
+	if (f < cue(1) - 4) {
+		const pos: V3 = [mix(-6, -2, crane), mix(1.2, 7, crane), mix(14, 20, crane)];
+		const drops: Particle[] =
+			rain > 0
+				? Array.from({length: 260}, (_, i) => {
+						const y = 12 - ((f * 0.9 + random(`ry${i}`) * 14) % 14);
+						return {p: [(random(`rx${i}`) - 0.5) * 30 + pos[0], y, pos[2] - 3 - random(`rz${i}`) * 16] as V3, s: 0.05, c: '#cfe0ff', a: 0.5 * rain};
+					})
+				: [];
+		three = (
+			<Shot cam={{pos, target: [2, mix(1.5, 0, crane), -6], fov: 40}} fx={{bloom: 0.9, threshold: 0.6, fade: fromWhite * 0.6}} bg="#2a1a14" fog={[8, 60]}>
+				<mesh>
+					<sphereGeometry args={[90, 32, 16]} />
+					<meshBasicMaterial color="#e09a5a" side={THREE.BackSide} fog={false} toneMapped={false} />
+				</mesh>
+				<Soft items={[{p: [10, 1.5, -60], s: 14, c: '#ffe0a8', a: 0.9}]} />
+				<directionalLight position={[10, 4, -30]} intensity={2.5} color="#ffc890" />
+				<Lights keyPos={[0, 10, 10]} keyI={60} keyColor="#ffd8b0" rim={[10, 3, -20]} rimI={200} rimColor="#ffb070" />
+				<Terrain amp={3} color="#140d0a" />
+				<Shrubs seed="hill" n={420} area={[-30, 30, -30, 8]} wave={wave * 1.25 - 0.1} t={t} />
+				<Soft items={drops} />
+			</Shot>
+		);
+	} else if (f < cue(3) - 8) {
+		const k = f - cue(1);
+		const zoom = prog(f, cue(1) - 4, 60, ease.out);
+		const caf: V3 = [0.05 * Math.sin(k / 20), 0.15 + 0.5 * prog(f, cue(1) + 50, 60, ease.inOut), 0.25];
+		// the bee's flight: from off-left to hovering over the nectar
+		const bp: V3 = lerp3([-4, 1.4, 1], [0.35, 0.45 + 0.03 * Math.sin(f / 3), 0.35], beeIn);
+		const second = (i: number): V3 => {
+			const u = prog(f, land[i] - 30, 30, ease.out);
+			return lerp3([-5 + i, 2 - i, 1.5], [1.6 + i * 0.5, 0.9 - i * 0.6, -0.4 - i * 0.3], u);
+		};
+		three = (
+			<Shot cam={{pos: [mix(0.4, 0.15, zoom) + 0.1 * Math.sin(k / 50), mix(1.0, 0.75, zoom), mix(3.4, 2.6, zoom) + (f >= cue(2) ? 0.8 * prog(f, cue(2), 40, ease.inOut) : 0)], target: [0.15, 0.2, 0], fov: 35}} fx={{bloom: 0.6, threshold: 0.8, focus: mix(3.3, 2.6, zoom), aperture: 0.004}} bg="#160c08" fog={[3, 14]}>
+				<Lights keyPos={[2, 3, 3]} keyI={22} keyColor="#ffe0b0" rim={[-2, 2, -3]} rimI={30} rimColor="#ffb070" />
+				<Flower rotation={[0.25, 0.2 + k / 300, 0]} scale={1.8} glow={0} />
+				{/* nectar droplet */}
+				<mesh position={[0, 0, 0.06]} scale={0.06 + 0.02 * nectar}>
+					<sphereGeometry args={[1, 32, 24]} />
+					<meshPhysicalMaterial color="#ffcf70" roughness={0.02} transparent opacity={0.85} emissive="#ffb030" emissiveIntensity={0.6 * nectar} />
+				</mesh>
+				{nectar > 0 && f < cue(2) + 10 ? <Molecule mol={CAFFEINE} core={0.5} position={caf} rotation={[0.3, k / 40, 0]} scale={0.05 * nectar} /> : null}
+				{f >= cue(2) - 6 ? <Bee3D flap={f * 2.4} position={bp} rotation={[0, -0.6, 0.15 * Math.sin(f / 9)]} scale={0.9} /> : null}
+				{[0, 1, 2].map((i) => (f >= land[i] - 30 ? <Bee3D key={i} flap={f * 2.4 + i} position={second(i)} rotation={[0, -0.9 + i * 0.3, 0.1]} scale={0.6} /> : null))}
+				<Soft items={dust('bl', 90, [8, 5, 6], t, '#fff4dc', 0.05, 0.4).map((p) => ({...p, p: [p.p[0], p.p[1], p.p[2] - 4] as V3}))} />
+			</Shot>
+		);
+	} else {
+		const petals: Particle[] = Array.from({length: 320}, (_, i) => {
+			const x0 = (random(`px${i}`) - 0.5) * 30;
+			const z0 = -random(`pz${i}`) * 30;
+			const sp = 0.5 + random(`ps${i}`);
+			const y = -2 + rise * 22 * sp + 0.3 * Math.sin(t + i);
+			const star = y > 8;
+			return {p: [x0 + 0.5 * Math.sin(t / 2 + i), y, z0] as V3, s: star ? 0.06 : 0.14, c: star ? '#ffffff' : '#fff4e0', a: star ? 0.9 : 0.8};
+		});
+		three = (
+			<Shot cam={{pos: [0, mix(1, 6, rise), 12], target: [0, mix(2, 14, rise), -10], fov: 40}} fx={{bloom: 0.8, threshold: 0.5}} bg={rise > 0.5 ? '#0a0c1e' : '#1a1020'} fog={[10, 50]}>
+				<mesh>
+					<sphereGeometry args={[90, 32, 16]} />
+					<meshBasicMaterial color={new THREE.Color('#5a3040').lerp(new THREE.Color('#080a1a'), rise)} side={THREE.BackSide} fog={false} />
+				</mesh>
+				<Terrain amp={3} color="#0a0708" />
+				<Shrubs seed="hill" n={300} area={[-30, 30, -30, 8]} wave={2} blossom={1 - rise} t={t} />
+				<Soft items={petals} />
+			</Shot>
+		);
+	}
 	return (
-		<Stage>
-			{e1 > 0 ? (
-				<g opacity={e1} transform={`translate(0,${-60 * crane}) translate(960,600) scale(${1 + 0.06 * crane}) translate(-960,-600)`}>
-					<defs>
-						<linearGradient id="dawn3" x1="0" y1="0" x2="0" y2="1">
-							<stop offset="0" stopColor="#140c08" />
-							<stop offset="0.3" stopColor="#5a3418" />
-							<stop offset="0.5" stopColor="#e8b06a" />
-							<stop offset="0.58" stopColor="#fff2d6" />
-							<stop offset="1" stopColor="#2a160a" />
-						</linearGradient>
-					</defs>
-					<rect y={-100} width={W} height={H + 200} fill="url(#dawn3)" />
-					<circle cx={1060} cy={600} r={700} fill="url(#ember)" opacity={0.8} />
-					<circle cx={1060} cy={600} r={120} fill="#fffaf0" opacity={0.95} filter="url(#b8)" />
-					<path d={ridgeD(610, 80, 'r1')} fill="#7a4a24" opacity={0.5} />
-					<path d={ridgeD(660, 100, 'r2')} fill="#3a2010" opacity={0.85} />
-					{Array.from({length: 3}, (_, row) =>
-						Array.from({length: 13 - row * 3}, (_, i) => {
-							const s = 0.55 + row * 0.33;
-							const x = -60 + i * (W / (12 - row * 3)) + random(`sx${row}${i}`) * 60;
-							const y = 720 + row * 95;
-							// the bloom runs from bottom-left to top-right
-							const open = clamp(wave * 1.8 - (x / W) * 0.6 - (2 - row) * 0.12);
-							return <Shrub key={`${row}${i}`} x={x} y={y} s={s} seed={`s${row}${i}`} o={0.65 + row * 0.18} af={af} open={open} />;
-						}),
-					)}
-					<rect y={880} width={W} height={300} fill="#000" opacity={0.55} filter="url(#b8)" />
-					<Motes f={af} seed="pet" n={90} color="#fff4e0" o={wave} speed={0.6} />
-					<g opacity={landed(f, 10)}>
-						<Tag en="Coffea arabica · in bloom" zh="咖啡花 · 旱季后第一场雨 · 只开三四天" />
-					</g>
+		<Stage4 three={three}>
+			<g opacity={landed(f, 30, cue(1) - 10)}>
+				<Tag en="Coffea arabica · in bloom" zh="咖啡花 · 旱季后第一场雨 · 只开三四天" />
+			</g>
+			<g opacity={landed(f, cue(1) + 30, cue(2) - 10)}>
+				<Tag en="Nectar" zh="花蜜里的咖啡因 · 低于蜜蜂能尝出的苦味" />
+			</g>
+			<g opacity={landed(f, cue(2) + 30, cue(3) - 10)}>
+				<g transform="translate(1660,230)">
+					<Clock x={0} y={0} r={80} h={9 + 24 * clockT} m={(60 * 24 * clockT) % 60} c="#ffe2b0" />
 				</g>
-			) : null}
-			{e2 > 0 ? (
-				<g opacity={e2}>
-					<Room x={960} y={520} r={900} c="#c88a4a" base="#0c0705" />
-					{Array.from({length: 40}, (_, i) => (
-						<circle key={i} cx={random(`bk${i}`) * W + 20 * Math.sin(af / 60 + i)} cy={random(`bky${i}`) * H} r={20 + random(`bkr${i}`) * 60} fill="#ffe0b0" opacity={0.05 + 0.06 * random(`bko${i}`)} filter="url(#b8)" />
-					))}
-					<g transform={`translate(960,520) rotate(${4 * Math.sin(af / 60)}) scale(${mix(0.5, 1.9, zoomF)}) translate(-960,-520)`}>
-						<LineFlower x={960} y={520} s={1} />
-						<Glow x={960} y={520} r={60 + 10 * Math.sin(af / 6)} o={prog(f, cue(1) + 20, 20)} />
-					</g>
-					<g opacity={prog(f, cue(1) + 40, 20)}>
-						<Caf x={1250} y={330} s={0.7} />
-						<path d="M1220,350 C1120,400 1040,460 980,510" stroke="#ffd896" strokeWidth={1} strokeDasharray="5 6" strokeDashoffset={-af} fill="none" opacity={0.7} />
-					</g>
-					<g opacity={landed(f, cue(1) + 30)}>
-						<Tag en="Nectar" zh="花蜜里的咖啡因 · 低于蜜蜂能尝出的苦味" />
-					</g>
-				</g>
-			) : null}
-			{e3 > 0 ? (
-				<g opacity={e3}>
-					<Room x={1300} y={540} r={900} c="#c88a4a" base="#0c0705" />
-					<g opacity={1 - prog(f, land[0] - 20, 16)}>
-						<Clock x={560} y={500} r={250} h={9 + 24 * clockT} m={(60 * 24 * clockT) % 60} c="#f6e7c8" />
-						<Thin text="24 h" x={560} y={830} size={48} w={500} />
-					</g>
-					<LineFlower x={1460} y={560} s={1.25} />
-					{/* the first bee hovers by the clock; at the landings it and two more arrive in formation */}
-					{[0, 1, 2].map((i) => {
-						const at = land[i];
-						const p1: [number, number] = [1330 + i * 22, 520 + i * 34];
-						const k = prog(f, at - 30, 30, ease.inOut);
-						let x = 0;
-						let y = 0;
-						let sc = 1.1;
-						if (i === 0) {
-							if (beeIn <= 0) return null;
-							const hx = mix(-160, 1180, beeIn);
-							const hy = mix(260, 460, beeIn) - Math.sin(beeIn * Math.PI) * 100 + 8 * Math.sin(af / 7);
-							x = mix(hx, p1[0], k);
-							y = mix(hy, p1[1], k);
-							sc = mix(2.2, 1.1, k);
-						} else {
-							if (k <= 0) return null;
-							const p0 = [-160, 260 + i * 140];
-							x = mix(p0[0], p1[0], k);
-							y = mix(p0[1], p1[1], k) - Math.sin(k * Math.PI) * 120;
-						}
-						return (
-							<g key={i}>
-								<LineBee x={x} y={y} s={sc} />
-								{f >= at ? <circle cx={p1[0]} cy={p1[1]} r={20 + 120 * prog(f, at, 20)} fill="none" stroke="#ffd896" strokeWidth={1.4} opacity={1 - prog(f, at, 20)} /> : null}
-							</g>
-						);
-					})}
-					<path d="M300,880 C400,780 520,980 620,860 C700,760 560,700 480,800" stroke="#8a7a6a" strokeWidth={1.2} fill="none" strokeDasharray="6 8" strokeDashoffset={-af * 2} opacity={prog(f, land[0], 20)} />
-					<text x={330} y={960} style={{fontFamily: font.sans, fontSize: 22, letterSpacing: '0.2em', fill: '#9a8a7a'}} opacity={prog(f, land[0], 20)}>
-						没喝过的蜜蜂 · 迷路
-					</text>
-					<g opacity={x3} transform={`translate(960,330) scale(${1 + 0.15 * (1 - prog(f, land[2], 10))}) translate(-960,-330)`}>
-						<Num text="×3" x={960} y={330} size={200} />
-					</g>
-					<g opacity={landed(f, cue(2) + 20)}>
-						<Tag en="Wright et al., Science 2013" zh="24 小时后还记得花香的比例" />
-					</g>
-				</g>
-			) : null}
-			{e4 > 0 ? (
-				<g opacity={e4}>
-					<rect width={W} height={H} fill="url(#dusk2)" />
-					{Array.from({length: 140}, (_, i) => {
-						const x0 = random(`px${i}`) * W;
-						const y0 = 600 + random(`py${i}`) * 500;
-						const sp = 0.5 + random(`ps${i}`) * 0.8;
-						const y = y0 - rise * 900 * sp;
-						const star = y < 440;
-						return star ? (
-							<circle key={i} cx={x0} cy={y} r={1 + random(`pr${i}`) * 1.8} fill="#fff" opacity={0.6 + 0.4 * Math.sin(af / 9 + i)} />
-						) : (
-							<ellipse key={i} cx={x0 + 30 * Math.sin(af / 40 + i)} cy={y} rx={6} ry={3} fill="#fff4e0" opacity={0.75} transform={`rotate(${i * 37 + af},${x0},${y})`} />
-						);
-					})}
-					<g transform={`translate(0,${200 * rise})`}>
-						<path d={ridgeD(980, 60, 'e4')} fill="#05040a" />
-					</g>
-				</g>
-			) : null}
-		</Stage>
+				<Thin text="24 h" x={1660} y={370} size={44} w={300} />
+				<Tag en="Wright et al., Science 2013" zh="24 小时后还记得花香的比例" />
+			</g>
+			<g opacity={x3} transform={`translate(560,330) scale(${1 + 0.15 * (1 - prog(f, land[2], 10))}) translate(-560,-330)`}>
+				<Num text="×3" x={560} y={330} size={200} />
+			</g>
+		</Stage4>
 	);
 };
 
-// ---------------------------------------------------------------- 6. journey: Mocha, the roasted beans, seven seeds, one tree for half the Americas
+// ---------------------------------------------------------------- 6. journey: the port of Mocha, roasted beans, seven seeds, the globe
 
 const ROUTE = {
 	mocha: [43.25, 13.3] as [number, number],
@@ -1164,6 +830,12 @@ const AMERICAS: [number, number][] = [
 	[-77, 18],
 	[-56, -25],
 ];
+const TOWERS = Array.from({length: 24}, (_, i) => ({
+	x: -10 + (i % 8) * 2.7 + (random(`tx${i}`) - 0.5) * 1.4,
+	z: -3 - Math.floor(i / 8) * 3.2 - random(`tz${i}`) * 1.5,
+	h: 1.8 + random(`th${i}`) * 2.6 + Math.floor(i / 8) * 0.6,
+	w: 1.1 + random(`tw${i}`) * 0.6,
+}));
 
 const Journey: React.FC<SceneProps> = () => {
 	const f = useCurrentFrame();
@@ -1172,115 +844,135 @@ const Journey: React.FC<SceneProps> = () => {
 	const scene = useScene();
 	const events = useEvents();
 	const end = scene.duration;
-	// F1: down from the stars to the port; windows light on the beats
-	const down = prog(f, 0, cue(1) - 20, ease.inOut);
-	const f1 = 1 - prog(f, cue(1) - 14, 16);
+	const t = af / 30;
+	// J1: descend from the stars to Mocha at night; windows light on the beats
+	const down = prog(f, 0, cue(1) - 10, ease.inOut);
 	const win = events(4, cue(1) - 20, 6, 8);
-	// F2: roasted so it can't grow; the seal
-	const f2 = prog(f, cue(1) - 14, 16) * (1 - prog(f, cue(2) - 10, 14));
+	// J2: a green bean roasted over embers; the ban
+	const roastK = prog(f, cue(1) + 10, 70, ease.inOut);
 	const seal = events(cue(1) + 40, cue(2) - 20, 1)[0];
-	const sealK = f >= seal ? spring({frame: f - seal, fps: 30, config: {damping: 11, stiffness: 220}}) : 0;
-	// F3: seven seeds, one per beat; then the map
+	const sealK = f >= seal ? prog(f, seal, 8, ease.back) : 0;
+	// J3: seven seeds; whip to the globe
 	const seeds = events(cue(2) + 4, cue(2) + 90, 7, 7);
-	const mapIn = prog(f, cue(2) + 70, 30, ease.inOut);
-	const routeIN = prog(f, cue(2) + 96, 40, ease.inOut);
-	// F4: pull out to the world; west along the routes
-	const out = prog(f, cue(3) - 20, 60, ease.inOut);
+	const whip = cue(2) + 100;
+	// J4: the routes west
+	const routeIN = prog(f, whip + 6, 40, ease.inOut);
 	const legs = events(cue(3) + 20, end - 40, 3, 20);
+	const legP = legs.map((l) => prog(f, l - 20, 26, ease.inOut));
 	const fan = prog(f, legs[2] + 16, 50, ease.out);
-	const drift = prog(f, cue(3) + 40, end - cue(3) - 40, (x) => x);
-	const scale = mix(1500, 430, out) * (1 + 0.1 * drift);
-	const rot = mix(-58, -8, out) + 6 * drift;
-	const cy = mix(900, 600, out);
-	const proj = geoNaturalEarth1()
-		.scale(scale)
-		.translate([960, cy])
-		.rotate([rot, 0]);
-	const path = geoPath(proj);
-	const xy = (p: [number, number]) => proj(p) as [number, number];
-	const arc = (a: [number, number], b: [number, number], k: number) => {
-		const ip = geoInterpolate(a, b);
-		const n = Math.max(2, Math.round(60 * k));
-		return path({type: 'LineString', coordinates: Array.from({length: n}, (_, i) => ip((i / (n - 1)) * k))}) ?? '';
-	};
-	const leg = (a: [number, number], b: [number, number], at: number, key: string) => {
-		const k = prog(f, at - 18, 18, ease.inOut);
-		if (k <= 0) return null;
-		return (
-			<g key={key}>
-				<path d={arc(a, b, k)} stroke="#f2b45a" strokeWidth={8} opacity={0.25} fill="none" filter="url(#b8)" />
-				<path d={arc(a, b, k)} stroke="#ffd896" strokeWidth={2} fill="none" />
-			</g>
+	let three: React.ReactNode;
+	let labels: React.ReactNode = null;
+	if (f < cue(1) - 4) {
+		const dd = ease.out(down);
+		const pos: V3 = [mix(-2, 1.5, dd), mix(18, 2.0, dd), mix(6, 13, dd)];
+		const target: V3 = [0, mix(14, 2.0, dd), mix(-10, -5, dd)];
+		const stars: Particle[] = Array.from({length: 500}, (_, i) => {
+			const a = random(`sa${i}`) * Math.PI * 2;
+			const e = 0.1 + random(`se${i}`) * 1.4;
+			return {p: [Math.cos(a) * Math.cos(e) * 80, Math.sin(e) * 80, Math.sin(a) * Math.cos(e) * 80] as V3, s: 0.25 + random(`ss${i}`) * 0.4, c: '#ffffff', a: 0.5 + 0.5 * Math.sin(t * 2 + i)};
+		});
+		three = (
+			<Shot cam={{pos, target, fov: 40}} fx={{bloom: 0.9, threshold: 0.55}} bg="#05070f" fog={[10, 60]}>
+				<Lights keyPos={[-10, 20, 10]} keyI={420} keyColor="#9fb4ff" rim={[10, 5, -20]} rimI={150} rimColor="#5a6aaa" fill={0.06} />
+				<Soft items={[{p: [-24, 30, -60], s: 6, c: '#e8eeff', a: 0.9}]} />
+				<Soft items={stars} />
+				<Terrain amp={1.2} color="#0d0b0a" position={[0, -0.6, -10]} />
+				<Sea t={t} position={[0, -0.2, 20]} />
+				{TOWERS.map((b, i) => (
+					<Tower key={i} seed={`t${i}`} h={b.h} w={b.w} lit={prog(f, win[i % 6] + Math.floor(i / 6) * 3, 6)} position={[b.x, terrainH(b.x, b.z + 10, 1.2) - 0.6, b.z]} />
+				))}
+				<Ship t={t} position={[4, -0.15, 5]} rotation={[0, -0.4, 0]} scale={0.9} lantern={1} />
+			</Shot>
 		);
-	};
-	const city = (p: [number, number], n: string, y: string, at: number, dx = 18, dy = 34, anchor: 'start' | 'end' = 'start') => {
-		const [x, yy] = xy(p);
-		const o = prog(f, at, 12);
-		if (o <= 0) return null;
-		const ring = f >= at ? prog(f, at, 24) : 0;
-		return (
-			<g key={n} opacity={o}>
-				<Glow x={x} y={yy} r={34} />
-				{ring < 1 ? <circle cx={x} cy={yy} r={10 + 60 * ring} fill="none" stroke="#ffd896" strokeWidth={1.2} opacity={1 - ring} /> : null}
-				<text x={x + dx} y={yy + dy} textAnchor={anchor} style={{fontFamily: font.serif, fontWeight: 700, fontSize: 28, fill: '#f3ead8'}}>
-					{n}
-				</text>
-				<text x={x + dx} y={yy + dy + 24} textAnchor={anchor} style={{fontFamily: font.sans, fontSize: 15, letterSpacing: '0.2em', fill: '#c99a5a'}}>
-					{y}
-				</text>
-			</g>
+	} else if (f < cue(2) - 4) {
+		const embers: Particle[] = Array.from({length: 120}, (_, i) => {
+			const u = (t * (0.3 + random(`ev${i}`) * 0.5) + random(`eu${i}`)) % 1;
+			return {p: [(random(`ex${i}`) - 0.5) * 3, -1.2 + u * 3, (random(`ez${i}`) - 0.5) * 2] as V3, s: 0.04 + 0.04 * random(`es${i}`), c: '#ffa050', a: (1 - u) * 0.9};
+		});
+		three = (
+			<Shot cam={{pos: [0.2 * Math.sin(f / 40), 0.3, 3.2 - 0.3 * roastK], target: [0, 0, 0], fov: 35}} fx={{bloom: 0.6, threshold: 0.8, focus: 3.1, aperture: 0.003}} bg="#0a0402">
+				<pointLight position={[0, -1.6, 0.4]} color="#ff6a20" intensity={9 * (0.75 + 0.25 * Math.sin(t * 6))} distance={6} decay={1.5} />
+				<Lights keyPos={[2, 3, 3]} keyI={25} rimI={15} rimColor="#ff9a50" />
+				<Bean roast={0.05 + 0.75 * roastK} position={[0, 0, 0]} rotation={[-0.9, 0.4 + f / 80, 0.3]} scale={0.9} />
+				<Soft items={embers} />
+			</Shot>
 		);
-	};
-	return (
-		<Stage>
-			{f1 > 0 ? (
-				<g opacity={f1}>
-					<rect width={W} height={H} fill="url(#night)" />
-					<g transform={`translate(0,${mix(-500, 0, down) * 0.4})`}>
-						{Array.from({length: 160}, (_, i) => <circle key={i} cx={random(`st${i}`) * W} cy={random(`sty${i}`) * 560 - 200} r={0.8 + random(`sr${i}`) * 1.8} fill="#fff" opacity={(0.4 + 0.6 * random(`so${i}`)) * (0.7 + 0.3 * Math.sin(af / 11 + i))} />)}
-					</g>
-					<g transform={`translate(0,${mix(600, 0, down)})`}>
-						<path d={ridgeD(700, 160, 'ym', 500)} fill="#0a0c1a" />
-						{Array.from({length: 16}, (_, i) => {
-							const x = 160 + i * 98 + random(`hx${i}`) * 24;
-							const h = 150 + random(`hh${i}`) * 170 + (i > 5 && i < 11 ? 80 : 0);
-							const w = 52 + random(`hw${i}`) * 20;
-							const top = 860 - h;
-							return (
-								<g key={i}>
-									<path d={`M${x},860 L${x},${top} ${Array.from({length: 4}, (_, k) => `L${x + (k * w) / 4},${top} L${x + (k * w) / 4},${top - 8} L${x + ((k + 0.5) * w) / 4},${top - 8} L${x + ((k + 0.5) * w) / 4},${top}`).join(' ')} L${x + w},${top} L${x + w},860 Z`} fill="#05060e" />
-									{Array.from({length: 3}, (_, k) => {
-										const on = random(`w${i}${k}`) > 0.4 ? prog(f, win[(i + k) % 6], 6) : 0;
-										return on > 0 ? <path key={k} d={`M${x + w / 2 - 7},${top + 40 + k * 52} L${x + w / 2 - 7},${top + 26 + k * 52} A7,7 0 0,1 ${x + w / 2 + 7},${top + 26 + k * 52} L${x + w / 2 + 7},${top + 40 + k * 52} Z`} fill="#ffb060" opacity={on * (0.85 + 0.15 * Math.sin(af / 5 + i + k))} filter="url(#g-sm)" /> : null;
-									})}
-								</g>
-							);
-						})}
-						<path d="M1130,640 A70,70 0 0,1 1270,640 L1270,700 L1130,700 Z" fill="#05060e" />
-						<rect x={1320} y={470} width={22} height={390} fill="#05060e" />
-						<path d="M1314,470 L1348,470 L1331,430 Z" fill="#05060e" />
-						<rect y={860} width={W} height={260} fill="#060a1c" />
-						{Array.from({length: 34}, (_, i) => <rect key={i} x={200 + random(`rf${i}`) * 1500 + 10 * Math.sin(af / 13 + i)} y={880 + random(`rfy${i}`) * 140} width={30 + random(`rfw${i}`) * 60} height={2} fill="#ffb060" opacity={0.25 + 0.1 * Math.sin(af / 7 + i)} />)}
-						<g transform={`translate(${-40 * prog(f, 0, cue(1))},${3 * Math.sin(af / 20)})`}>
-							<path d="M1500,860 L1700,860 L1670,900 L1530,900 Z M1600,860 L1600,700 L1690,840 Z M1600,700 L1520,840 L1600,840 Z" fill="#03040a" />
-							<Glow x={1660} y={850} r={22} />
-						</g>
-					</g>
-					<g opacity={landed(f, 20)}>
-						<Tag en="Mocha, Yemen" zh="也门 · 摩卡港" />
-					</g>
+	} else if (f < whip) {
+		three = (
+			<Shot cam={{pos: [mix(0, -3, prog(f, whip - 12, 12, ease.in)), 0.2, 6], target: [mix(0, -6, prog(f, whip - 12, 12, ease.in)), 0, 0], fov: 35}} fx={{bloom: 0.7, threshold: 0.6, blur: [0.3 * prog(f, whip - 12, 12, ease.in), 0]}} bg="#07080c">
+				<Lights keyPos={[2, 4, 5]} keyI={60} rim={[-3, 2, -4]} rimI={40} />
+				{seeds.map((s, i) => {
+					const k = prog(f, s, 12, ease.back);
+					return k > 0 ? <Bean key={i} roast={0.02} position={[(i - 3) * 1.15, 0.15 * Math.sin(f / 15 + i), 0]} rotation={[-1.0 + 0.2 * Math.sin(f / 20 + i), i * 0.6 + f / 90, 0.2]} scale={0.45 * k} /> : null;
+				})}
+			</Shot>
+		);
+	} else {
+		const whipIn = 1 - prog(f, whip, 12, ease.out);
+		const out = prog(f, cue(3) - 20, 60, ease.inOut);
+		const rotY = mix(-1.25, mix(-0.25, 0.75, prog(f, legs[1], end - legs[1], ease.inOut)), out) - 0.6 * whipIn;
+		const rotX = mix(0.12, 0.35, out);
+		const cam: Cam = {pos: [0, 0.3, mix(2.4, 3.3, out)], target: [0, mix(0.15, 0.2, out), 0], fov: 35};
+		const pj = projector(cam);
+		const rot = new THREE.Euler(rotX, rotY, 0);
+		const at = (ll2: [number, number]) => pj(ll(ll2[0], ll2[1], 1.01).applyEuler(rot));
+		const city = (p: [number, number], name: string, sub: string, o: number, dx = 18, dy = -14) => {
+			const [x, y] = at(p);
+			const facing = ll(p[0], p[1]).applyEuler(rot).z > 0.15;
+			if (o <= 0 || !facing) return null;
+			return (
+				<g key={name} opacity={o}>
+					<text x={x + dx} y={y + dy} style={{fontFamily: font.serif, fontWeight: 700, fontSize: 28, fill: '#f3ead8'}}>
+						{name}
+					</text>
+					<text x={x + dx} y={y + dy + 24} style={{fontFamily: font.sans, fontSize: 15, letterSpacing: '0.2em', fill: '#c99a5a'}}>
+						{sub}
+					</text>
 				</g>
-			) : null}
-			{f2 > 0 ? (
-				<g opacity={f2}>
-					<Room x={700} y={760} r={700} c="#c8501a" base="#070302" />
-					{Array.from({length: 70}, (_, i) => (
-						<circle key={i} cx={420 + random(`em${i}`) * 560} cy={820 + random(`emy${i}`) * 140 - ((af * (0.5 + random(`emv${i}`))) % 200) * 0.3} r={2 + random(`emr${i}`) * 5} fill="#ffb060" opacity={0.4 + 0.4 * Math.sin(af / 4 + i)} filter="url(#g-sm)" />
-					))}
-					<Bean x={700} y={600} r={170} c0={interpolateColors(prog(f, cue(1), 60), [0, 1], ['#8aa060', '#4a3020'])} c1="#0a0503" rot={18} />
-					{[0, 1].map((i) => (
-						<path key={i} d={`M${620 + i * 150},430 C${650 + i * 150},${380 - 10 * Math.sin(af / 12 + i)} ${620 + i * 150},330 ${650 + i * 150},${270 - 20 * Math.sin(af / 15)}`} stroke="#fff" strokeWidth={2} fill="none" opacity={0.18} filter="url(#g-sm)" />
-					))}
+			);
+		};
+		labels = (
+			<g>
+				{city(ROUTE.mocha, '摩卡', '也门', prog(f, whip + 10, 14))}
+				{city(ROUTE.india, '奇克马加卢尔', '1670 · 七颗种子', prog(f, whip + 40, 14))}
+				{city(ROUTE.ams, '阿姆斯特丹', '1706', prog(f, legs[0], 14))}
+				{city(ROUTE.paris, '巴黎', '1714 · 送给法国国王', prog(f, legs[1], 14), 18, 30)}
+				{city(ROUTE.mart, '马提尼克', '1723', prog(f, legs[2], 14))}
+			</g>
+		);
+		three = (
+			<Shot cam={cam} fx={{bloom: 0.75, threshold: 0.6, blur: [0.3 * whipIn, 0]}} bg="#05060b">
+				<Lights keyPos={[3, 3, 4]} keyI={60} rim={[-4, 3, -4]} rimI={40} />
+				<Globe
+					rotation={[rotX, rotY, 0]}
+					routes={[
+						{from: ROUTE.mocha, to: ROUTE.india, p: routeIN},
+						{from: ROUTE.mocha, to: ROUTE.ams, p: legP[0]},
+						{from: ROUTE.ams, to: ROUTE.paris, p: legP[1]},
+						{from: ROUTE.paris, to: ROUTE.mart, p: legP[2]},
+						...AMERICAS.map((a, i) => ({from: ROUTE.mart, to: a, p: Math.max(0, Math.min(1, fan * 1.4 - i * 0.06))})),
+					]}
+					cities={[
+						{at: ROUTE.mocha, o: 1},
+						{at: ROUTE.india, o: routeIN >= 1 ? 1 : 0},
+						{at: ROUTE.ams, o: legP[0] >= 1 ? 1 : 0},
+						{at: ROUTE.paris, o: legP[1] >= 1 ? 1 : 0},
+						{at: ROUTE.mart, o: legP[2] >= 1 ? 1 : 0},
+						...AMERICAS.map((a, i) => ({at: a, o: fan * 1.4 - i * 0.06 >= 1 ? 0.7 : 0})),
+					]}
+				/>
+				<Soft items={dust('gl', 200, [20, 12, 8], t, '#ffffff', 0.03, 0.5).map((p) => ({...p, p: [p.p[0], p.p[1], p.p[2] - 8] as V3}))} />
+			</Shot>
+		);
+	}
+	return (
+		<Stage4 three={three}>
+			{labels}
+			<g opacity={landed(f, 20, cue(1) - 10)}>
+				<Tag en="Mocha, Yemen" zh="也门 · 摩卡港" />
+			</g>
+			{f >= cue(1) - 4 && f < cue(2) - 4 ? (
+				<g>
 					{sealK > 0 ? (
 						<g transform={`translate(1380,560) scale(${mix(1.8, 1, sealK)})`} opacity={Math.min(1, sealK * 1.5)}>
 							<circle r={150} fill="none" stroke="#c8342a" strokeWidth={3} opacity={0.9} />
@@ -1293,56 +985,17 @@ const Journey: React.FC<SceneProps> = () => {
 					</g>
 				</g>
 			) : null}
-			{f >= cue(2) - 10 ? (
-				<g opacity={prog(f, cue(2) - 10, 14)}>
-					<rect width={W} height={H} fill="#07080c" />
-					<g opacity={mapIn}>
-						<circle cx={960} cy={560} r={900} fill="url(#warm-pool)" opacity={0.5} />
-						<path d={path(geoGraticule10()) ?? ''} fill="none" stroke="#c99a5a" strokeWidth={0.6} opacity={0.12} />
-						<path d={path(LAND) ?? ''} fill="#1a140f" stroke="#7a5a3a" strokeWidth={1} />
-						{routeIN > 0 ? (
-							<g>
-								<path d={arc(ROUTE.mocha, ROUTE.india, routeIN)} stroke="#f2b45a" strokeWidth={8} opacity={0.25} fill="none" filter="url(#b8)" />
-								<path d={arc(ROUTE.mocha, ROUTE.india, routeIN)} stroke="#ffd896" strokeWidth={2} fill="none" />
-							</g>
-						) : null}
-						{city(ROUTE.mocha, '摩卡', '也门', cue(2) + 80, -18, 40, 'end')}
-						{city(ROUTE.india, '奇克马加卢尔', '1670 · 七颗种子', cue(2) + 136)}
-						{leg(ROUTE.mocha, ROUTE.ams, legs[0], 'l0')}
-						{city(ROUTE.ams, '阿姆斯特丹', '1706', legs[0], -18, -14, 'end')}
-						{leg(ROUTE.ams, ROUTE.paris, legs[1], 'l1')}
-						{city(ROUTE.paris, '巴黎', '1714 · 送给法国国王', legs[1], -18, 30, 'end')}
-						{leg(ROUTE.paris, ROUTE.mart, legs[2], 'l2')}
-						{city(ROUTE.mart, '马提尼克', '1723', legs[2], -18, -14, 'end')}
-						{fan > 0 ? AMERICAS.map((p, i) => <path key={i} d={arc(ROUTE.mart, p, clamp(fan * 1.4 - i * 0.06))} fill="none" stroke="#ffd896" strokeWidth={1.4} opacity={0.75} />) : null}
-					</g>
-					{/* seven seeds, one per beat */}
-					<g opacity={1 - prog(f, cue(3) + 10, 20)}>
-						{seeds.map((s, i) => {
-							const k = f >= s ? spring({frame: f - s, fps: 30, config: {damping: 12}}) : 0;
-							return (
-								<g key={i} transform={`translate(${mix(960 + (i - 3) * 130, 160 + i * 64, mapIn)},${mix(500, 760, mapIn)}) scale(${k * mix(2, 1, mapIn)})`}>
-									<Bean x={0} y={0} r={24} c0="#d8eab0" c1="#5a7a3a" rot={i * 24} />
-									<circle r={36} fill="url(#ember)" opacity={0.35} />
-								</g>
-							);
-						})}
-						<text x={130} y={830} style={{fontFamily: font.sans, fontSize: 20, letterSpacing: '0.2em', fill: '#c99a5a'}} opacity={prog(f, seeds[6], 12)}>
-							七颗生豆 · 1670 · 传说
-						</text>
-					</g>
-					<g opacity={landed(f, cue(3) + 10)}>
-						<Tag en="The smuggled seeds" zh="被偷偷带走的种子" />
-					</g>
-				</g>
-			) : null}
-		</Stage>
+			<g opacity={landed(f, seeds[6], whip - 4)}>
+				<Thin text="7" x={960} y={300} size={120} fill="#e9f0c0" w={200} />
+			</g>
+			<g opacity={landed(f, cue(3) + 10)}>
+				<Tag en="The smuggled seeds" zh="被偷偷带走的种子" />
+			</g>
+		</Stage4>
 	);
 };
 
-export const scenesC = {Bloom, Journey};
-
-// ---------------------------------------------------------------- 7. roast: green beans, the drum, the crack, a thousand aromas
+// ---------------------------------------------------------------- 7. roast: green beans, the drum, the crack, a nebula of aroma
 
 const AROMAS: [string, string, number, number][] = [
 	['焦糖', '#ffc070', 400, 300],
@@ -1352,6 +1005,12 @@ const AROMAS: [string, string, number, number][] = [
 	['巧克力', '#d0a080', 960, 220],
 ];
 
+const PILE = Array.from({length: 110}, (_, i) => {
+	const a = random(`pa${i}`) * Math.PI * 2;
+	const r = Math.sqrt(random(`pr${i}`)) * 2.4;
+	return {p: [Math.cos(a) * r * 1.4, (1 - r / 2.4) * 0.7 + random(`ph${i}`) * 0.12, Math.sin(a) * r * 0.8] as V3, r: [random(`r1${i}`) * 6, random(`r2${i}`) * 6, random(`r3${i}`) * 6] as V3};
+});
+
 const Roast: React.FC<SceneProps> = () => {
 	const f = useCurrentFrame();
 	const af = useAbsoluteFrame();
@@ -1359,143 +1018,112 @@ const Roast: React.FC<SceneProps> = () => {
 	const scene = useScene();
 	const events = useEvents();
 	const end = scene.duration;
+	const t = af / 30;
 	const fromDark = 1 - prog(f, 0, 14);
-	// G1: green beans, a slow macro pan
-	const g1 = 1 - prog(f, cue(1) - 10, 12);
-	const pan = prog(f, 0, cue(1), (x) => x);
-	// G2: the drum, temperature climbing
-	const g2 = prog(f, cue(1) - 10, 12) * (1 - prog(f, cue(1) + 36, 6));
 	const heat = prog(f, cue(1) - 10, 44, ease.in);
 	const crack = events(cue(1) + 30, cue(1) + 60, 1)[0];
-	// G3: the crack
-	const g3 = prog(f, crack - 2, 4) * (1 - prog(f, cue(2) - 10, 12));
 	const burst = f >= crack ? Math.exp(-(f - crack) / 8) : 0;
-	const shake = 14 * burst;
-	// G4: inside, sugars meet amino acids; the aroma nebula opens
-	const g4 = prog(f, cue(2) - 10, 12);
 	const meetAt = events(cue(2) + 4, cue(2) + 40, 1)[0];
-	const neb = prog(f, meetAt, 50, ease.out);
+	const neb = prog(f, meetAt - 10, 50, ease.out);
 	const words = events(meetAt + 14, end - 30, AROMAS.length, 9);
 	const landN = events(meetAt + 30, end - 24, 1)[0];
 	const gather = prog(f, end - 22, 22, ease.in);
+	let three: React.ReactNode;
+	if (f < cue(1) - 6) {
+		const slide = prog(f, 0, cue(1), (x) => x);
+		three = (
+			<Shot cam={{pos: [mix(-1.6, 1.2, slide), 1.5, 3.4], target: [mix(-0.8, 0.6, slide), 0.3, 0], fov: 35}} fx={{bloom: 0.6, threshold: 0.8, focus: 3.3, aperture: 0.005, fade: fromDark}} bg="#07100a" fog={[3, 12]}>
+				<Lights keyPos={[2, 4, 2]} keyI={60} keyColor="#f0ffe0" rim={[-3, 2, -3]} rimI={40} rimColor="#a0e8a0" />
+				<BeanSwarm items={PILE.map((b) => ({...b, s: 0.26, roast: 0.02}))} />
+				<Soft items={dust('gr', 120, [6, 3, 4], t, '#b8f0a0', 0.05, 0.45).map((p) => ({...p, p: [p.p[0], p.p[1] + 1.4, p.p[2]] as V3}))} />
+			</Shot>
+		);
+	} else if (f < cue(2) - 6) {
+		const spin = f / 14;
+		const roastK = 0.05 + 0.7 * heat + 0.15 * (f >= crack ? 1 : 0);
+		const beans = Array.from({length: 70}, (_, i) => {
+			const lane = random(`dl${i}`);
+			const ph = (spin * (0.6 + 0.3 * lane) + random(`dp${i}`) * Math.PI * 2) % (Math.PI * 2);
+			// carried up the wall, then tumbling down through the middle
+			const up = ph < Math.PI * 1.2;
+			const a = up ? -Math.PI / 2 - 0.4 + ph * 0.75 : 0;
+			const y = up ? Math.sin(a) * 1.35 : mix(1.0, -1.3, (ph - Math.PI * 1.2) / (Math.PI * 0.8));
+			const z = up ? Math.cos(a) * 1.35 : mix(-0.6, 0.4, (ph - Math.PI * 1.2) / (Math.PI * 0.8));
+			const pop = f >= crack && i % 7 === 0 ? 1 + 0.4 * burst : 1;
+			return {p: [(lane - 0.5) * 2.6, y, z] as V3, r: [ph * 3 + i, i, ph * 2] as V3, s: 0.16 * pop, roast: roastK};
+		});
+		const shake: V3 = [6 * burst * (random(`sx${f}`) - 0.5) * 0.05, 6 * burst * (random(`sy${f}`) - 0.5) * 0.05, 0];
+		const chaff: Particle[] =
+			f >= crack
+				? Array.from({length: 80}, (_, i) => {
+						const k = Math.min(1, (f - crack) / 40);
+						const a = random(`ca${i}`) * Math.PI * 2;
+						const d = (0.3 + random(`cd${i}`) * 2.2) * k;
+						return {p: [Math.cos(a) * d, Math.sin(a) * d * 0.7 + 0.3 * k, 0.5 + random(`cz${i}`)] as V3, s: 0.05, c: '#e0b070', a: 1 - k};
+					})
+				: [];
+		three = (
+			<Shot cam={{pos: [2.6 + shake[0], 0.2 + shake[1], 2.2], target: [0, -0.2, 0], fov: 50}} fx={{bloom: 0.9, threshold: 0.6, focus: 2.8, aperture: 0.004}} bg="#060302">
+				<pointLight position={[0, -2.5, 0]} color="#ff5a10" intensity={20 + 60 * heat} distance={8} decay={1.5} />
+				<Lights keyPos={[3, 2, 3]} keyI={30} rimI={20} rimColor="#ff8a40" />
+				<Drum heat={heat} spin={spin} />
+				<BeanSwarm items={beans} />
+				<Soft items={chaff} />
+				{burst > 0.05 ? <Soft items={[{p: [0, 0, 0.5], s: 6 * burst, c: '#fff0c0', a: burst}]} /> : null}
+			</Shot>
+		);
+	} else {
+		const k = f - (cue(2) - 6);
+		const cols = ['#ffc070', '#c8906a', '#ff8aa0', '#c8a0ff', '#a07050', '#ffe0a0'];
+		const neb3: Particle[] = Array.from({length: 900}, (_, i) => {
+			const a = random(`na${i}`) * Math.PI * 2 + t * (0.1 + 0.2 * random(`nv${i}`));
+			const r = Math.pow(random(`nr${i}`), 0.6) * 4.5 * neb * (1 - gather);
+			const y = (random(`ny${i}`) - 0.3) * 2.4 * neb * (1 - gather) + 0.5 * Math.sin(a * 2);
+			return {p: [Math.cos(a) * r, y, Math.sin(a) * r * 0.6] as V3, s: random(`nb${i}`) > 0.95 ? 0.3 : 0.05, c: cols[i % 6], a: 0.7};
+		});
+		three = (
+			<Shot cam={{pos: [0, mix(0.8, 1.6, prog(f, cue(2), 120)), mix(5, 7.5, neb)], target: [0, 0.2, 0], fov: 38}} fx={{bloom: 1.0, threshold: 0.45}} bg="#07040a">
+				<Lights keyPos={[2, 3, 3]} keyI={40} rimI={30} rimColor="#c8a0ff" />
+				<BeanSwarm items={PILE.slice(0, 40).map((b) => ({p: [b.p[0] * 0.8, b.p[1] - 1.6, b.p[2] * 0.8] as V3, r: b.r, s: 0.2, roast: 0.85}))} />
+				<Soft items={neb3} />
+				{gather > 0 ? <Soft items={[{p: [0, 0.3, 0], s: 1 + 5 * gather, c: '#fff1d0', a: gather}]} /> : null}
+				{k < 10 ? <Soft items={[{p: [0, 0, 0], s: 8 * (1 - k / 10), c: '#fff0c0', a: 1 - k / 10}]} /> : null}
+			</Shot>
+		);
+	}
 	return (
-		<Stage cam={{x: shake * (random(`sx${f}`) - 0.5), y: shake * (random(`sy${f}`) - 0.5)}}>
-			{g1 > 0 ? (
-				<g opacity={g1}>
-					<Room x={1100} y={360} r={900} c="#7a9a5a" base="#050805" o={0.7} />
-					<g transform={`translate(${-160 * pan},0)`}>
-						{Array.from({length: 26}, (_, i) => {
-							const row = Math.floor(i / 9);
-							const x = 120 + (i % 9) * 250 + (row % 2) * 120;
-							const y = 520 + row * 220 + 4 * Math.sin(af / 30 + i);
-							return <Bean key={i} x={x} y={y} r={110 + row * 30} c0="#cfe0a8" c1="#3a4a24" rot={i * 37} blur={row === 2} />;
-						})}
-					</g>
-					{Array.from({length: 16}, (_, i) => {
-						const u = (af / 120 + i / 16) % 1;
-						return <path key={i} d={`M${160 + i * 110},${420 - u * 260} q10,-40 0,-80`} stroke="#d8f0a8" strokeWidth={1.4} fill="none" opacity={0.5 * Math.sin(u * Math.PI)} filter="url(#g-sm)" />;
-					})}
-					<g opacity={landed(f, cue(0) + 6)}>
-						<Tag en="Green coffee" zh="生豆 · 闻起来像青草" />
-					</g>
-				</g>
-			) : null}
-			{g2 > 0 ? (
-				<g opacity={g2}>
-					<Room x={760} y={1000} r={900} c="#d8601a" base="#060202" o={0.5 + 0.5 * heat} />
-					<circle cx={760} cy={560} r={360} fill="none" stroke="#c9a070" strokeWidth={2} opacity={0.7} />
-					<circle cx={760} cy={560} r={372} fill="none" stroke="#c9a070" strokeWidth={0.8} opacity={0.4} />
-					{Array.from({length: 26}, (_, i) => {
-						const a = 0.3 + random(`dr${i}`) * 2.4 + af / 18;
-						const r = 120 + random(`drr${i}`) * 200;
-						const yy = 560 + Math.abs(Math.sin(a)) * r * 0.85;
-						return <Bean key={i} x={760 + Math.cos(a) * r} y={yy} r={40} c0={interpolateColors(heat, [0, 0.5, 1], ['#b8d088', '#d8a04a', '#8a4a1e'])} c1="#2a1a08" rot={i * 47 + af * 8} />;
-					})}
-					{Array.from({length: 9}, (_, i) => (
-						<path key={i} d={`M${560 + i * 50},1080 Q${580 + i * 50},${1000 - 30 * Math.sin(af / 3 + i)} ${560 + i * 50},${940 - 40 * heat}`} stroke="#ff8a1e" strokeWidth={16} fill="none" opacity={0.5 * heat} filter="url(#b8)" />
-					))}
+		<Stage4 three={three}>
+			<g opacity={landed(f, cue(0) + 6, cue(1) - 10)}>
+				<Tag en="Green coffee" zh="生豆 · 闻起来像青草" />
+			</g>
+			{f >= cue(1) - 6 && f < cue(2) - 6 ? (
+				<g>
 					<Num text={`${Math.round(mix(150, 196, heat))}°C`} x={1560} y={600} size={170} fill="#ffb060" />
 					<g opacity={landed(f, cue(1))}>
-						<Tag en="Roasting drum" zh="滚筒 · 两百度左右" />
+						<Tag en={f >= crack ? 'First crack' : 'Roasting drum'} zh={f >= crack ? '一爆 · 水汽撑破细胞壁 · 约 196 °C' : '滚筒 · 两百度左右'} />
 					</g>
 				</g>
 			) : null}
-			{g3 > 0 ? (
-				<g opacity={g3}>
-					<Room x={960} y={560} r={900} c="#e07a2a" base="#060202" o={0.6 + 0.4 * burst} />
-					<g transform={`translate(960,560) scale(${1 + 0.06 * burst + 0.04 * prog(f, crack, 60)}) translate(-960,-560)`}>
-						<Bean x={960} y={560} r={330} c0="#8a4a1e" c1="#1a0804" rot={-8} crack />
-					</g>
-					{Array.from({length: 26}, (_, i) => {
-						const a = (i / 26) * Math.PI * 2 + 0.1;
-						const r0 = 380 + 300 * (1 - burst);
-						return <line key={i} x1={960 + Math.cos(a) * r0} y1={560 + Math.sin(a) * r0 * 1.1} x2={960 + Math.cos(a) * (r0 + 60 + 60 * random(`cr${i}`))} y2={560 + Math.sin(a) * (r0 + 60 + 60 * random(`cr${i}`)) * 1.1} stroke="#ffe0a0" strokeWidth={1.6} strokeLinecap="round" opacity={burst} />;
-					})}
-					{f >= crack
-						? Array.from({length: 22}, (_, i) => {
-								const k = Math.min(1, (f - crack) / 50);
-								const a = random(`ch${i}`) * Math.PI * 2;
-								const d = 300 + 700 * k * (0.5 + random(`cd${i}`));
-								const x = 960 + Math.cos(a) * d;
-								const y = 560 + Math.sin(a) * d * 0.8 + 200 * k * k;
-								return <ellipse key={i} cx={x} cy={y} rx={10} ry={4} fill="#d8b890" opacity={0.7 * (1 - k)} transform={`rotate(${k * 500 + i * 40},${x},${y})`} />;
-							})
-						: null}
-					{Array.from({length: 4}, (_, i) => (
-						<path key={i} d={`M${880 + i * 50},300 C${900 + i * 50},${240 - 20 * Math.sin(af / 10 + i)} ${860 + i * 50},180 ${890 + i * 50},${120 - 30 * prog(f, crack, 40)}`} stroke="#fff" strokeWidth={3} fill="none" opacity={0.15 * prog(f, crack, 10)} filter="url(#b8)" />
-					))}
-					<g opacity={landed(f, crack)}>
-						<Tag en="First crack" zh="一爆 · 水汽撑破细胞壁 · 约 196 °C" />
-					</g>
-				</g>
-			) : null}
-			{g4 > 0 ? (
-				<g opacity={g4 * (1 - gather)}>
-					<rect width={W} height={H} fill="#06040a" />
-					{/* the bean's honeycomb of cells, a browning wave sweeping across */}
-					<g opacity={1 - neb}>
-						{Array.from({length: 120}, (_, i) => {
-							const col = i % 15;
-							const row = Math.floor(i / 15);
-							const x = 120 + col * 120 + (row % 2) * 60;
-							const y = 160 + row * 104;
-							const brown = prog(f, cue(2) - 10 + col * 2, 20);
-							return <polygon key={i} points={Array.from({length: 6}, (_, k) => `${x + Math.cos((k * Math.PI) / 3 + Math.PI / 6) * 58},${y + Math.sin((k * Math.PI) / 3 + Math.PI / 6) * 58}`).join(' ')} fill={interpolateColors(brown, [0, 1], ['#3a4a24', '#5a2a10'])} fillOpacity={0.35} stroke="#ffd896" strokeWidth={1} opacity={0.6} />;
-						})}
-						{[0, 1].map((i) => {
-							const u = prog(f, cue(2) - 6, meetAt - cue(2) + 6, ease.in);
-							return <Glow key={i} x={mix(i ? 1500 : 420, 960, u)} y={540 + (i ? -80 : 80) * (1 - u)} r={34} />;
-						})}
-					</g>
-					{/* the nebula */}
-					{neb > 0
-						? Array.from({length: 420}, (_, i) => {
-								const a = random(`ne${i}`) * Math.PI * 2;
-								const r = Math.pow(random(`ner${i}`), 0.7) * 900 * neb;
-								const c = ['#ffc070', '#c8906a', '#ff8aa0', '#c8a0ff', '#a07050', '#ffe0a0'][i % 6];
-								const big = random(`neb${i}`) > 0.93;
-								return <circle key={i} cx={960 + Math.cos(a + af / 900) * r * 1.2} cy={540 + Math.sin(a + af / 900) * r * 0.7} r={big ? 10 + random(`nes${i}`) * 14 : 1 + random(`nes${i}`) * 2.6} fill={c} opacity={big ? 0.18 : 0.75} filter={big ? 'url(#b8)' : undefined} />;
-							})
-						: null}
-					{neb > 0 ? <Glow x={960} y={540} r={260} o={0.35} /> : null}
-					{neb > 0 ? <Rolling value="1,000+" f={f} start={meetAt + 4} land={landN} y={570} size={150} id="ro" /> : null}
+			{f >= cue(2) - 6 ? (
+				<g opacity={1 - gather}>
+					{f >= meetAt + 20 ? <Rolling value="1,000+" f={f} start={meetAt + 20} land={landN} y={600} size={170} id="ar" /> : null}
 					{AROMAS.map(([w, c, x, y], i) => (
-						<text key={w} x={x} y={y} textAnchor="middle" opacity={landed(f, words[i])} style={{fontFamily: font.serif, fontWeight: 600, fontSize: 40, fill: c, letterSpacing: '0.1em'}}>
-							{w}
-						</text>
+						<g key={w} opacity={landed(f, words[i])} style={{filter: `blur(${4 * (1 - prog(f, words[i], 10))}px)`}}>
+							<text x={x} y={y} textAnchor="middle" style={{fontFamily: font.serif, fontWeight: 700, fontSize: 46, fill: c}}>
+								{w}
+							</text>
+						</g>
 					))}
 					<g opacity={landed(f, cue(2))}>
 						<Tag en={neb > 0.5 ? 'Volatile compounds' : 'Maillard reaction'} zh={neb > 0.5 ? '已鉴定的咖啡香气物质 · 一千多种' : '美拉德反应 · 糖 + 氨基酸'} />
 					</g>
 				</g>
 			) : null}
-			{gather > 0 ? <Glow x={960} y={540} r={40 + 160 * gather} o={gather} /> : null}
-			<rect width={W} height={H} fill="#000" opacity={fromDark} />
-		</Stage>
+		</Stage4>
 	);
 };
 
-// ---------------------------------------------------------------- 8. body: the 3 pm cup at midnight, two livers, more locks
+// ---------------------------------------------------------------- 8. body: afternoon to midnight, two genes, more locks
 
 const Body: React.FC<SceneProps> = () => {
 	const f = useCurrentFrame();
@@ -1504,39 +1132,74 @@ const Body: React.FC<SceneProps> = () => {
 	const scene = useScene();
 	const events = useEvents();
 	const end = scene.duration;
+	const t = af / 30;
 	const fromGlow = 1 - prog(f, 0, 16);
-	// H1: 15:00 → 24:00, the cup empties to a third
-	const h1 = 1 - prog(f, cue(1) - 10, 14);
 	const time = prog(f, 6, cue(1) - 20, ease.inOut);
 	const hours = 15 + 9 * time;
-	const level = mix(1, 0.29, time);
-	const sky = interpolateColors(time, [0, 0.5, 1], ['#4a5a7a', '#3a2a4a', '#05060f']);
-	// H2: two livers, fast and slow
-	const h2 = prog(f, cue(1) - 10, 14) * (1 - prog(f, cue(2) - 10, 14));
 	const dec = prog(f, cue(1), cue(2) - cue(1), (x) => x);
-	// H3: more locks
-	const h3 = prog(f, cue(2) - 10, 14);
 	const batches = events(cue(2) + 10, end - 30, 3, 20);
 	const nLocks = f < batches[0] ? 3 : f < batches[1] ? 6 : 12;
-	const pull = prog(f, cue(2) - 10, end - cue(2), ease.inOut);
 	const toCup = prog(f, end - 18, 18, ease.in);
+	let three: React.ReactNode;
+	if (f < cue(1) - 6) {
+		const sky = new THREE.Color('#b8c8e0').lerp(new THREE.Color('#e08a50'), Math.min(1, time * 2)).lerp(new THREE.Color('#0a0e22'), Math.max(0, time * 2 - 1));
+		three = (
+			<Shot cam={{pos: [-0.8 + 0.3 * time, 1.7, 4.6 - 0.4 * time], target: [0.9, 1.4, -1.5], fov: 40}} fx={{bloom: 0.7, threshold: 0.7, focus: 4.4, aperture: 0.002, fade: fromGlow * 0.7}} bg="#06070c">
+				<Lights keyPos={[1, 3, -2]} keyI={mix(40, 6, time)} keyColor={`#${sky.getHexString()}`} rim={[-3, 3, 3]} rimI={mix(10, 25, time)} rimColor="#ffcf90" fill={0.05} />
+				<RoomWindow sky={`#${sky.getHexString()}`} skyI={mix(1, 0.25, time)} position={[1.2, 0, 0]} />
+				<Table color="#1b120c" />
+				<group position={[1.1, 0, -0.6]}>
+					<Saucer />
+					<Cup position={[0, 0.05, 0]} t={t} level={mix(0.86, 0.29, time)} />
+				</group>
+				{time > 0.6 ? <Soft items={Array.from({length: 40}, (_, i) => ({p: [1.2 + (random(`ws${i}`) - 0.5) * 4, 2.5 + (random(`wy${i}`) - 0.5) * 4, -3.5] as V3, s: 0.03, c: '#ffffff', a: prog(time, 0.6, 0.4)}))} /> : null}
+			</Shot>
+		);
+	} else if (f < cue(2) - 6) {
+		const cloud = (x: number, keep: number, seed: string): Particle[] =>
+			Array.from({length: 90}, (_, i) => {
+				const a = random(`${seed}a${i}`) * Math.PI * 2 + t * 0.5;
+				const r = 0.8 + random(`${seed}r${i}`) * 1.2 + (1 - keep) * 2.5;
+				return {p: [x + Math.cos(a) * r, (random(`${seed}y${i}`) - 0.5) * 5, Math.sin(a) * r * 0.6] as V3, s: 0.07, c: '#ffc070', a: (random(`${seed}k${i}`) < keep ? 0.9 : 0) * keep};
+			});
+		three = (
+			<Shot cam={{pos: [0, 0, 9.5], target: [0, 0, 0], fov: 38}} fx={{bloom: 0.8, threshold: 0.55}} bg="#07060e">
+				<Lights keyPos={[3, 3, 5]} keyI={60} rim={[-3, 2, -4]} rimI={40} />
+				<DNA position={[-3, 0, 0]} rotation={[0, 0, 0.2]} t={t * 1.5} color="#e8e8ff" len={6} />
+				<DNA position={[3, 0, 0]} rotation={[0, 0, 0.2]} t={t * 1.5} color="#ffcf8a" len={6} />
+				<Soft items={cloud(-3, Math.exp(-dec * 4), 'fa')} />
+				<Soft items={cloud(3, Math.exp(-dec * 0.6), 'sl')} />
+			</Shot>
+		);
+	} else {
+		const pull = prog(f, cue(2) - 6, end - cue(2), ease.inOut);
+		const spots: V3[] = Array.from({length: 12}, (_, i) => [((i % 6) - 2.5) * 2.2, 0, i < 6 ? 0 : -2.4] as V3);
+		three = (
+			<Shot cam={{pos: [0, mix(2.4, 5.5, pull), mix(6.5, 10.5, pull)], target: [0, 0.4, -1], fov: 38}} fx={{bloom: 0.8, threshold: 0.6, fade: toCup * 0.3}} bg="#05040e" fog={[8, 30]}>
+				<Lights keyPos={[2, 6, 6]} keyI={90} keyColor="#cfe0ff" rim={[-5, 3, -6]} rimI={50} rimColor="#8a7dff" />
+				<Membrane t={t} w={26} d={9} color="#6c8cff" position={[0, -0.05, -1]} />
+				{spots.map((p, i) => {
+					const at = i < 3 ? cue(2) - 6 : i < 6 ? batches[0] : batches[1];
+					const order = [2, 3, 1, 4, 0, 5, 8, 9, 7, 10, 6, 11][i];
+					const k = order < 3 ? 1 : interpolate(f - at - (order % 6) * 2, [0, 10], [0, 1], {extrapolateLeft: 'clamp', extrapolateRight: 'clamp', easing: ease.back});
+					const pp = spots[order];
+					return k > 0 ? <Receptor3D key={i} position={pp} scale={0.85 * k} glow={0.2} /> : null;
+				})}
+				{toCup > 0 ? <Soft items={[{p: [0, 1, 0], s: 2 + 10 * toCup, c: '#ffe2b0', a: toCup}]} /> : null}
+			</Shot>
+		);
+	}
 	return (
-		<Stage>
-			{h1 > 0 ? (
-				<g opacity={h1}>
-					<Room x={1450} y={330} r={700} c="#3a4a7a" base="#05060c" />
-					<rect x={1160} y={150} width={560} height={480} fill={sky} stroke="#c9ced8" strokeWidth={1.4} opacity={0.9} />
-					<line x1={1440} y1={150} x2={1440} y2={630} stroke="#c9ced8" strokeWidth={1.4} />
-					<circle cx={mix(1250, 1600, time)} cy={mix(420, 260, time)} r={36} fill={time > 0.6 ? '#f4f0e0' : '#ffd896'} filter="url(#g-sm)" opacity={0.9} />
-					{Array.from({length: 40}, (_, i) => <circle key={i} cx={1170 + random(`ws${i}`) * 540} cy={160 + random(`wsy${i}`) * 460} r={1} fill="#fff" opacity={0.7 * prog(time, 0.6, 0.4)} />)}
-					<g transform={`translate(560,480) scale(${1 + 0.05 * time})`}>
-						<Clock x={0} y={0} r={300} h={hours} m={(hours % 1) * 60} />
+		<Stage4 three={three}>
+			{f < cue(1) - 6 ? (
+				<g>
+					<g transform="translate(420,470)">
+						<Clock x={0} y={0} r={230} h={hours} m={(hours % 1) * 60} />
 					</g>
-					<text x={560} y={880} textAnchor="middle" style={{fontFamily: font.latin, fontWeight: 500, fontSize: 52, fill: '#f6e7c8', letterSpacing: '0.08em'}}>
+					<text x={420} y={790} textAnchor="middle" style={{fontFamily: font.latin, fontWeight: 500, fontSize: 52, fill: '#f6e7c8', letterSpacing: '0.08em'}}>
 						{`${String(Math.floor(hours) % 24).padStart(2, '0')}:${String(Math.floor((hours % 1) * 60)).padStart(2, '0')}`}
 					</text>
-					<Cup x={1440} y={830} s={0.7} level={level} />
-					<text x={1440} y={970} textAnchor="middle" style={{fontFamily: font.sans, fontSize: 22, letterSpacing: '0.2em', fill: '#ffd896'}} opacity={prog(time, 0.85, 0.15)}>
+					<text x={1380} y={830} textAnchor="middle" style={{fontFamily: font.sans, fontSize: 24, letterSpacing: '0.2em', fill: '#ffd896'}} opacity={prog(time, 0.85, 0.15)}>
 						还剩 ≈ 1/3
 					</text>
 					<g opacity={landed(f, cue(0) + 6)}>
@@ -1544,69 +1207,28 @@ const Body: React.FC<SceneProps> = () => {
 					</g>
 				</g>
 			) : null}
-			{h2 > 0 ? (
-				<g opacity={h2}>
-					<Room x={480} y={540} r={700} c="#4a2a3a" base="#07040a" />
-					<Room x={1440} y={540} r={700} c={interpolateColors(dec, [0, 1], ['#3a2a4a', '#6a4a3a'])} base="transparent" />
-					<line x1={960} y1={80} x2={960} y2={900} stroke="#fff" strokeWidth={1} opacity={0.25} />
-					{[480, 1440].map((cx, s) => (
-						<g key={cx}>
-							{Array.from({length: 70}, (_, i) => {
-								const y = 140 + i * 10;
-								const ph = i * 0.22 + af / 25;
-								const x1 = cx + Math.sin(ph) * 140;
-								const x2 = cx - Math.sin(ph) * 140;
-								const front = Math.cos(ph) > 0;
-								return (
-									<g key={i}>
-										<circle cx={x1} cy={y} r={front ? 2.8 : 1.8} fill="#ff9aaa" opacity={front ? 1 : 0.5} />
-										<circle cx={x2} cy={y} r={front ? 1.8 : 2.8} fill="#9fe8f0" opacity={front ? 0.5 : 1} />
-										{i % 4 === 0 ? <line x1={x1} y1={y} x2={x2} y2={y} stroke="#fff" strokeWidth={0.8} opacity={0.35} /> : null}
-									</g>
-								);
-							})}
-							{Array.from({length: 40}, (_, i) => {
-								const keep = s ? Math.exp(-dec * 0.6) : Math.exp(-dec * 4);
-								if (i / 40 > keep) return null;
-								return <Glow key={i} x={cx - 320 + random(`dn${s}${i}`) * 640 + 20 * Math.sin(af / 30 + i)} y={160 + random(`dny${s}${i}`) * 680} r={14} />;
-							})}
-							<text x={cx} y={830} textAnchor="middle" style={{fontFamily: font.serif, fontWeight: 600, fontSize: 40, fill: s ? '#ffd896' : '#e8e8e8'}}>
-								{s ? '慢 · 失眠到天亮' : '快 · 倒头就睡'}
-							</text>
-						</g>
+			{f >= cue(1) - 6 && f < cue(2) - 6 ? (
+				<g>
+					{['快 · 倒头就睡', '慢 · 失眠到天亮'].map((n, i) => (
+						<text key={n} x={[560, 1360][i]} y={160} textAnchor="middle" style={{fontFamily: font.serif, fontWeight: 600, fontSize: 40, fill: i ? '#ffd896' : '#e8e8e8'}}>
+							{n}
+						</text>
 					))}
 					<g opacity={landed(f, cue(1) + 6)}>
 						<Tag en="CYP1A2" zh="肝脏里分解咖啡因的基因" />
 					</g>
 				</g>
 			) : null}
-			{h3 > 0 ? (
-				<g opacity={h3 * (1 - toCup)}>
-					<Room x={960} y={420} r={1000} c="#2a2366" base="#05040e" />
-					<g transform={`translate(960,560) scale(${mix(1.25, 0.95, pull)}) translate(-960,-560)`}>
-						{Array.from({length: 12}, (_, i) => {
-							if (i >= nLocks) return null;
-							const at = i < 3 ? cue(2) : i < 6 ? batches[0] : batches[1];
-							const k = i < 3 ? 1 : spring({frame: f - at - (i % 6) * 2, fps: 30, config: {damping: 13}});
-							return (
-								<g key={i} transform={`translate(${240 + (i % 6) * 288},${430 + Math.floor(i / 6) * 330}) scale(${0.75 * k}) translate(${-(240 + (i % 6) * 288)},${-(430 + Math.floor(i / 6) * 330)})`}>
-									<Receptor x={240 + (i % 6) * 288} y={430 + Math.floor(i / 6) * 330} gold={i < 4} />
-								</g>
-							);
-						})}
-					</g>
-					<g opacity={landed(f, cue(2) + 6)}>
-						<Num text={`${nLocks}`} x={960} y={160} size={90} fill="#9fe8f0" />
-						<text x={960} y={210} textAnchor="middle" style={{fontFamily: font.sans, fontSize: 20, letterSpacing: '0.4em', fill: '#9fe8f0'}} opacity={0.7}>
-							把锁
-						</text>
-						<Tag en="Tolerance" zh="耐受 · 受体变多，同样的咖啡不够分" />
-					</g>
+			{f >= cue(2) - 6 ? (
+				<g opacity={landed(f, cue(2) + 6, end - 16)}>
+					<Num text={`${nLocks}`} x={960} y={160} size={90} fill="#9fe8f0" />
+					<text x={960} y={210} textAnchor="middle" style={{fontFamily: font.sans, fontSize: 20, letterSpacing: '0.4em', fill: '#9fe8f0'}} opacity={0.7}>
+						把锁
+					</text>
+					<Tag en="Tolerance" zh="耐受 · 受体变多，同样的咖啡不够分" />
 				</g>
 			) : null}
-			{toCup > 0 ? <circle cx={960} cy={540} r={mix(800, 120, toCup)} fill="none" stroke="#f6e7c8" strokeWidth={2} opacity={toCup} /> : null}
-			<Glow x={960} y={540} r={300} o={fromGlow} />
-		</Stage>
+		</Stage4>
 	);
 };
 
@@ -1618,62 +1240,50 @@ const Coda: React.FC<SceneProps> = () => {
 	const cue = useCue();
 	const scene = useScene();
 	const end = scene.duration;
+	const t = af / 30;
 	const endAt = end - 6 * 30;
-	const rimIn = prog(f, 0, 22, ease.out);
+	const fromGlow = 1 - prog(f, 0, 16);
 	const orbit = prog(f, 0, endAt, ease.inOut);
 	const ghostTree = landed(f, cue(0) + 10, cue(1) - 6, 20);
 	const ghostFlower = landed(f, cue(1) + 4, cue(2) - 2, 20);
 	const sun = prog(f, cue(2) - 16, 40, ease.inOut);
-	const steam = (dx: number, i: number) => {
-		let d = `M${960 + dx},${560}`;
-		for (let k = 1; k <= 16; k++) d += ` L${960 + dx + 40 * noise2D(`st${i}`, k / 5, af / 50) * (k / 16)},${560 - k * 22}`;
-		return d;
-	};
+	const card = prog(f, endAt, 30, ease.inOut);
+	const sky = new THREE.Color('#c87a40').lerp(new THREE.Color('#e8b878'), sun);
 	return (
-		<Stage
+		<Stage4
+			three={
+				<Shot cam={{pos: [mix(-1.4, -0.6, orbit), mix(1.5, 1.35, orbit), mix(4.4, 3.4, orbit)], target: [0.4, 1.35, -1.2], fov: 38}} fx={{bloom: 0.6, threshold: 0.75, focus: 3.4, aperture: 0.002, fade: 0.88 * card + fromGlow * 0.6}} bg="#0a0604">
+					<Lights keyPos={[0.8, 3, -2.2]} keyI={mix(35, 60, sun)} keyColor={`#${sky.getHexString()}`} rim={[-3, 3, 3]} rimI={10} fill={0.05} />
+					<RoomWindow sky={`#${sky.getHexString()}`} skyI={mix(0.6, 0.8, sun)} position={[0.8, 0, 0]} />
+					<Table color="#22160e" />
+					<group position={[0.4, 0, -0.9]}>
+						<Saucer />
+						<Cup position={[0, 0.05, 0]} t={t} level={0.86} />
+						<Steam t={t} position={[0, 1.05, 0]} o={0.3} />
+						{/* memories rising out of the steam */}
+						<group position={[0, 1.75, 0]} scale={0.9}>
+							<TreeCard seed="ghost" n={1} ground={false} color="#ffe2b0" o={0.85 * ghostTree} w={3} h={1.7} />
+						</group>
+						<group position={[0, 1.55, 0]}>
+							{ghostFlower > 0 ? <Flower scale={0.5 * ghostFlower} glow={0.5} rotation={[0.3, t / 3, 0]} /> : null}
+							{Array.from({length: 7}, (_, i) => {
+								const k = prog(f, cue(1) + 20 + i * 4, 16, ease.back) * ghostFlower;
+								const a = (i / 7) * Math.PI * 2 + t / 2;
+								return k > 0 ? <Bean key={i} roast={0.05} glow={0.6} position={[Math.cos(a) * 0.55, 0.05 * Math.sin(t + i), Math.sin(a) * 0.55]} rotation={[-1, a, 0]} scale={0.08 * k} /> : null;
+							})}
+						</group>
+					</group>
+					<Rays3D n={6} o={0.18 * (0.4 + sun)} len={7} spread={0.5} color="#fff0d0" position={[1.2, 4.6, -2.8]} rotation={[0.5, 0, 0.35]} seed="cr" />
+					<Soft items={dust('cd', 120, [6, 4, 4], t, '#fff0d0', 0.03, 0.6).map((p) => ({...p, p: [p.p[0] + 0.6, p.p[1] + 2, p.p[2] - 1] as V3}))} />
+				</Shot>
+			}
 			over={
 				<Sequence from={endAt} layout="none">
 					<EndCard v={EPISODE} cfg={BRAND} dur={end - endAt} />
 				</Sequence>
 			}
-		>
-			<Room x={1300} y={300} r={1000 + 300 * sun} c={interpolateColors(sun, [0, 1], ['#e8a060', '#ffe0b0'])} base={interpolateColors(sun, [0, 1], ['#0a0604', '#2a1408'])} />
-			<g transform={`translate(${-60 * orbit},0)`}>
-				<rect x={760} y={60} width={1080} height={680} fill="#ffd8a8" opacity={0.08 + 0.1 * sun} stroke="#3a2010" strokeWidth={14} />
-				<line x1={1300} y1={60} x2={1300} y2={740} stroke="#3a2010" strokeWidth={12} />
-				<polygon points="760,740 1840,740 1500,1080 260,1080" fill="#ffd8a8" opacity={0.08 + 0.12 * sun} />
-			</g>
-			<rect y={800} width={W} height={280} fill={interpolateColors(sun, [0, 1], ['#140b06', '#3a200e'])} />
-			<g transform={`translate(${30 * orbit},0)`} opacity={rimIn}>
-				<Cup x={960} y={700} s={0.9} level={0.85} rim={sun > 0.5 ? '#fff6e0' : '#f6e7c8'} />
-				{[-30, 0, 30].map((dx, i) => (
-					<path key={i} d={steam(dx, i)} stroke="#fff" strokeWidth={8} fill="none" opacity={0.16} filter="url(#b8)" />
-				))}
-				<g opacity={0.55 * ghostTree}>
-					<Branches x={960} y={520} s={0.9} color="#fff1dc" seed="steam" n={5} up w={3} len={110} />
-				</g>
-				<g opacity={ghostFlower}>
-					<LineFlower x={960} y={350} s={0.8} o={0.7} />
-					{Array.from({length: 7}, (_, i) => {
-						const k = prog(f, cue(1) + 20 + i * 4, 16, ease.out);
-						return (
-							<g key={i} opacity={k}>
-								<Bean x={720 + i * 80} y={560 - 10 * k} r={20} c0="#ffe0a0" c1="#a06020" rot={i * 22} />
-								<circle cx={720 + i * 80} cy={560 - 10 * k} r={30} fill="url(#ember)" opacity={0.4} />
-							</g>
-						);
-					})}
-				</g>
-				{sun > 0 ? <circle cx={1090} cy={570} r={40} fill="#fff" opacity={0.7 * sun} filter="url(#b8)" /> : null}
-			</g>
-			<g opacity={sun}>
-				<Rays x={1500} y={260} n={9} o={0.22} c="#fff6e0" />
-			</g>
-			<Motes f={af} seed="co" n={50} o={0.8} />
-			<rect width={W} height={H} fill="#05060b" opacity={0.88 * prog(f, endAt, 30, ease.inOut)} />
-		</Stage>
+		/>
 	);
 };
 
-export const scenesD = {Roast, Body, Coda};
-export const scenes: SceneMap = {...scenesA, ...scenesB, ...scenesC, ...scenesD};
+export const scenes: SceneMap = {...scenesV3, Hook, Sleep, Origin, Defense, Bloom, Journey, Roast, Body, Coda};
