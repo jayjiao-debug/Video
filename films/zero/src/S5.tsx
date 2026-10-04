@@ -6,7 +6,7 @@ import { Counter3D, Bokeh, type CanState } from './Counter3D';
 import { GoldTitle, CubeIcon } from './Title';
 import { JUNO } from './brand/identity';
 
-/* S5 (b294–end): back to the counter of the cold open, now with a glass of tea beside the two cans. Then the end card
+/* S5 (b294–end): back to the counter of the cold open, now with a glass of still water beside the two cans. Then the end card
    (last ~6 s, from b310): title, the question for the comments, the follow line, sources. */
 export const S5_IN = b(294) - 0.4, END_IN = b(310);
 
