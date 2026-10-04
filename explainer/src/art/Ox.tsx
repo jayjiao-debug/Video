@@ -68,6 +68,14 @@ export type OxPose = {
 
 export const OX_STAND: OxPose = {head: 0, tail: 0, breath: 0};
 
+/** The halter's lead ring in ox space (for tying a rope to a handler's hand). */
+export const oxHalterRing = (pose: OxPose = OX_STAND): [number, number] => {
+	const th = ((pose.head - 12) * Math.PI) / 180;
+	const [x, y] = [66 * 1.3, 94 * 1.3];
+	const bob = pose.walk === undefined ? 0 : -2.5 * Math.abs(Math.cos(pose.walk));
+	return [240 + x * Math.cos(th) - y * Math.sin(th), -252 + bob + x * Math.sin(th) + y * Math.cos(th)];
+};
+
 /** One leg, pivoting at its top (`top`), drawn as a tapered column with a hoof. */
 const Leg: React.FC<{d: string; top: [number, number]; angle: number; fill: string; hoof: [number, number]}> = ({d, top, angle, fill, hoof}) => (
 	<g transform={`rotate(${angle}, ${top[0]}, ${top[1]})`}>

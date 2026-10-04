@@ -1,9 +1,11 @@
 import React from 'react';
 import {AbsoluteFill, Sequence, random, spring, useCurrentFrame} from 'remotion';
 import {CAST} from '../../src/art/cast';
-import {Figure, POSES, blinkAt, lerpPose} from '../../src/art/Figure';
+import {Figure, addPose, idle} from '../../src/art/Figure';
 import {Materials} from '../../src/art/materials';
-import {BallotBox, OX_DEFS, Ox, Signboard, Ticket} from '../../src/art/Ox';
+import {OX_DEFS, Ox, Signboard} from '../../src/art/Ox';
+import {blinkAt, POSES} from '../../src/art/Figure';
+import {ButcherPosting, DroverWithRope} from './acting';
 import {lookAt} from '../../src/art/sets/Airfield';
 import {Fair1906} from '../../src/art/sets/Fair1906';
 import {TitleCard} from '../../src/brand/Brand';
@@ -38,15 +40,13 @@ export const OxMotionTest: React.FC = () => {
 	const shake = 0;
 	const sx = shake * (random(`kx${f}`) - 0.5);
 	const sy = shake * (random(`ky${f}`) - 0.5);
-	// the butcher writes, then posts the ticket with a spring
-	const post = spring({frame: f - 34, fps, config: {damping: 11, stiffness: 120}});
-	const butcherPose = lerpPose(POSES.write, POSES.hold, post);
-	const slot: [number, number] = [118, -200];
 	// the ox turns its head toward us as the tickets gather
 	const look = spring({frame: f - 62, fps, config: {damping: 14}});
 	const flash = 0;
 	const sub = prog(f, 10, 8) * (1 - prog(f, CARD - 6, 6));
 	const swarmC = {cx: 1050, cy: 720};
+	const oxPose = {head: -8 * look, tail: Math.sin(f / 9) * 0.8, breath: 0.5 + 0.5 * Math.sin(f / 22)};
+	const OX = {x: 1050, y: 880, s: 0.95, pose: oxPose};
 	return (
 		<AbsoluteFill style={{background: '#000'}}>
 			<svg width={1920} height={1080} viewBox="0 0 1920 1080">
@@ -58,6 +58,7 @@ export const OxMotionTest: React.FC = () => {
 						frame={f + 80}
 						cam={cam}
 						lamp={1 - 0.15 * tighten + 0.6 * flash}
+						postX={1660}
 						front={
 							<g>
 								{[
@@ -67,41 +68,21 @@ export const OxMotionTest: React.FC = () => {
 									[1830, 'drover'],
 								].map(([x, who], i) => (
 									<g key={i} transform={`translate(${x},1260) scale(1.3)`}>
-										<Figure look={CAST[who as string]} facing="back" silhouette="#07080d" rim="none" shadow={false} />
+										<Figure look={CAST[who as string]} pose={addPose(POSES.stand, idle(f, `fg${i}`), 1.4)} facing="back" silhouette="#07080d" rim="none" shadow={false} />
 									</g>
 								))}
 							</g>
 						}
 					>
 						<TicketSwarm f={f} {...swarmC} side={-1} tighten={tighten} rush={rush} />
-						<g transform="translate(440,890)">
+						<g transform="translate(380,890)">
 							<Signboard />
 						</g>
-						<g transform="translate(1050,880) scale(0.95)">
-							<Ox pose={{head: -8 * look, tail: Math.sin(f / 9) * 0.8, breath: 0.5 + 0.5 * Math.sin(f / 22)}} blink={blinkAt(f, 'ox')} lit={0.9 + 0.3 * flash} />
+						<g transform={`translate(${OX.x},${OX.y}) scale(${OX.s})`}>
+							<Ox pose={oxPose} blink={blinkAt(f, 'ox')} lit={0.9 + 0.3 * flash} />
 						</g>
-						<g transform="translate(1390,885) scale(0.95)">
-							<Figure look={CAST.drover} pose={POSES.hold} reach={{near: [-70, -210]}} flip rim="warm" blink={blinkAt(f, 'dr')} expression={f > 70 ? 'smile' : 'neutral'} />
-						</g>
-						<g transform="translate(640,892) scale(0.95)">
-							<Figure
-								look={CAST.butcher}
-								pose={butcherPose}
-								reach={post > 0.2 ? {near: slot} : undefined}
-								rim="warm"
-								blink={blinkAt(f, 'bu')}
-								holdNear={
-									post < 0.85 ? (
-										<g transform="scale(0.12) rotate(-20)">
-											<Ticket lod="mid" />
-										</g>
-									) : undefined
-								}
-							/>
-						</g>
-						<g transform="translate(745,896) scale(0.9)">
-							<BallotBox />
-						</g>
+						<DroverWithRope f={f} x={1530} y={885} s={0.95} ox={OX} expression={f > 70 ? 'smile' : 'neutral'} />
+						<ButcherPosting f={f} t0={30} x={560} y={892} s={0.95} />
 						<TicketSwarm f={f} {...swarmC} side={1} tighten={tighten} rush={rush} />
 					</Fair1906>
 				</g>

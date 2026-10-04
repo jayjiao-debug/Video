@@ -1,18 +1,19 @@
 import React from 'react';
 import {AbsoluteFill, useCurrentFrame} from 'remotion';
 import {CAST} from '../../src/art/cast';
-import {Figure, POSES, SPOTS, blinkAt, walkPose, type Expression} from '../../src/art/Figure';
+import {Figure, POSES, SPOTS, blinkAt, walkPose, type Expression, type HandShape, type Pose} from '../../src/art/Figure';
 import {Materials} from '../../src/art/materials';
 import {BallotBox, Bale, Lantern, OX_DEFS, Ox, Signboard, Ticket, TicketMotif} from '../../src/art/Ox';
 import {P} from '../../src/art/palette';
 import {Fair1906} from '../../src/art/sets/Fair1906';
 import {DESK_Y, OilLamp, Quincunx, Study1906} from '../../src/art/sets/Study1906';
 import {lookAt} from '../../src/art/sets/Airfield';
+import {BUTCHER, ButcherPosting, DROVER, DroverWithRope, GALTON} from './acting';
 import {loadEpisodeFonts} from '../../src/lib/fonts';
 import {font} from '../../src/lib/theme';
 
 /** 《八百人猜牛》 model sheets, one per frame: COMPOSITION=OxGallery node scripts/stills.mjs ox out/gallery-ox 0 1 … */
-export const OX_SHEETS = ['ox', 'cast', 'props', 'fair', 'study'] as const;
+export const OX_SHEETS = ['ox', 'cast', 'props', 'fair', 'study', 'hands', 'acting'] as const;
 
 const Title: React.FC<{children: React.ReactNode; sub?: string}> = ({children, sub}) => (
 	<g>
@@ -243,6 +244,74 @@ const StudySheet: React.FC<{f: number}> = ({f}) => (
 	</>
 );
 
+
+const HandsSheet: React.FC = () => {
+	const list: [string, Pose, HandShape, keyof typeof CAST, React.ReactNode?][] = [
+		['自然垂手', POSES.stand, 'relaxed', 'gent'],
+		['握绳', {...DROVER, armNear: [20, 50]}, 'grip', 'drover', <path key="r" d="M0,-40 C4,-10 -4,20 2,60" stroke="#b08a52" strokeWidth={4} fill="none" />],
+		['摊手', {...POSES.present, armNear: [30, 88]}, 'open', 'clerk06'],
+		['指', {...POSES.point, armNear: [80, 14]}, 'point', 'shopgirl'],
+		['捏票', BUTCHER.read, 'pinch', 'butcher', <g key="t" transform="rotate(-70) scale(0.13)"><Ticket lod="mid" /></g>],
+	];
+	return (
+		<>
+			<Backdrop />
+			{list.map(([label, pose, shape, who, item], i) => (
+				<g key={label}>
+					<g transform={`translate(${150 + i * 390},1000) scale(2.3)`}>
+						<Figure look={CAST[who]} pose={pose} hands={{near: shape}} holdNear={item} rim="warm" shadow={false} />
+					</g>
+					<rect x={20 + i * 390} y={1000} width={300} height={80} fill="#0f121a" />
+					<Label x={170 + i * 390} y={1040}>
+						{label}
+					</Label>
+				</g>
+			))}
+			<Title sub="共享骨骼重画：拇指 + 手指，五种手型；手约为身高的 9%（原来像连指手套）">手 · 返工</Title>
+		</>
+	);
+};
+
+const ActingSheet: React.FC<{f: number}> = ({f}) => {
+	const beats: [number, string][] = [
+		[0, '看票'],
+		[8, '预备：抬手后仰'],
+		[15, '投进去'],
+		[19, '多推一下'],
+		[25, '松手'],
+		[44, '直起身看牛'],
+	];
+	const oxPose = {head: 0, tail: 0.2, breath: 0.4};
+	return (
+		<>
+			<Backdrop />
+			{beats.map(([k, label], i) => (
+				<g key={k}>
+					<g transform={`translate(${30 + i * 310},0)`}>
+						<ButcherPosting f={100 + k} t0={100} x={100} y={560} s={1.05} />
+					</g>
+					<Label x={180 + i * 310} y={610}>
+						{`${i + 1} · ${label}`}
+					</Label>
+				</g>
+			))}
+			{/* the drover holding the ox by its halter rope */}
+			<g transform="translate(-180,0)">
+				<g transform="translate(700,1010) scale(0.95)">
+					<Ox pose={oxPose} blink={1} lit={0.8} />
+				</g>
+				<DroverWithRope f={f} x={1180} y={1012} s={0.95} ox={{x: 700, y: 1010, s: 0.95, pose: oxPose}} />
+			</g>
+			<Label x={760} y={1060}>赶牛人：手握缰绳，绳子接在笼头环上</Label>
+			<g transform="translate(1500,1010) scale(0.95)">
+				<Figure look={CAST.galton} pose={GALTON.chin} hands={{far: 'relaxed'}} expression="stern" rim="warm" />
+			</g>
+			<Label x={1500} y={1060}>高尔顿：捻胡须，不以为然</Label>
+			<Title sub="手按解算的角度落在票箱口、缰绳、下巴上 · 每个动作：预备 → 动作 → 过冲 → 回稳">表演 · 返工</Title>
+		</>
+	);
+};
+
 export const OxGallery: React.FC = () => {
 	loadEpisodeFonts('ox');
 	const f = useCurrentFrame();
@@ -264,6 +333,8 @@ export const OxGallery: React.FC = () => {
 				{sheet === 'props' ? <PropsSheet f={f + 40} /> : null}
 				{sheet === 'fair' ? <FairSheet f={f + 40} /> : null}
 				{sheet === 'study' ? <StudySheet f={f + 40} /> : null}
+				{sheet === 'hands' ? <HandsSheet /> : null}
+				{sheet === 'acting' ? <ActingSheet f={f + 40} /> : null}
 			</svg>
 		</AbsoluteFill>
 	);

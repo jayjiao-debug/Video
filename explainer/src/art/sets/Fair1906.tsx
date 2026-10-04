@@ -93,7 +93,9 @@ export const Fair1906: React.FC<{
 	lamp?: number;
 	/** far crowd milling */
 	crowd?: boolean;
-}> = ({frame: f, cam = CAM0, children, front, lamp = 1, crowd = true}) => {
+	/** x of the key lantern's gallows post (the lantern hangs 165 units to its left) */
+	postX?: number;
+}> = ({frame: f, cam = CAM0, children, front, lamp = 1, crowd = true, postX = 1420}) => {
 	const stars = useMemo(() => Array.from({length: 90}, (_, i) => ({x: random(`fs${i}`) * 2700 - 390, y: random(`fy${i}`) * 380 - 120, r: 0.6 + random(`fr${i}`) * 1.3})), []);
 	return (
 		<g>
@@ -198,10 +200,10 @@ export const Fair1906: React.FC<{
 				})}
 				{/* the key: a big lantern on a gallows post over the ring */}
 				<g>
-					<line x1={1420} y1={180} x2={1420} y2={880} stroke="#211b17" strokeWidth={12} />
-					<line x1={1420} y1={190} x2={1250} y2={190} stroke="#211b17" strokeWidth={9} />
-					<line x1={1380} y1={190} x2={1420} y2={240} stroke="#211b17" strokeWidth={6} />
-					<g transform="translate(1256,190) scale(1.5)">
+					<line x1={postX} y1={180} x2={postX} y2={880} stroke="#211b17" strokeWidth={12} />
+					<line x1={postX} y1={190} x2={postX - 170} y2={190} stroke="#211b17" strokeWidth={9} />
+					<line x1={postX - 40} y1={190} x2={postX} y2={240} stroke="#211b17" strokeWidth={6} />
+					<g transform={`translate(${postX - 164},190) scale(1.5)`}>
 						<Lantern f={f} seed={7} on={lamp} glow={1.6} />
 					</g>
 				</g>
