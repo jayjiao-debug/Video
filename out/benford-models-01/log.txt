@@ -1,0 +1,23 @@
+token present: yes
+sketchfab model 4de1bcbd22a444abb4f089b9b78ec96a
+  saved out/models/earth.glb 2.7 MB
+  optimized 2.7 -> 1.2 MB
+sketchfab model 12d76407cbd047d2a23a86c73e556c9e
+  saved out/models/book.glb 3.4 MB
+  optimized 3.4 -> 0.4 MB
+sketchfab model c491f647da5947978ba8113951ee2efc
+  saved out/models/desk1881.glb 4.4 MB
+  optimized 4.4 -> 0.9 MB
+sketchfab model ef967c9bc13b4635add8ab7517dfedfe
+  saved out/models/inkwell.glb 2.6 MB
+  optimized 2.6 -> 0.4 MB
+sketchfab model c932f6165fef40029c3f18afe19b9934
+  saved out/models/oil_lamp.glb 2.5 MB
+  optimized 2.5 -> 0.5 MB
+sketchfab model 7ef1ca295ff14af2abcbe0ae0168a241
+  saved out/models/cabinets.glb 6.0 MB
+  optimized 6.0 -> 0.9 MB
+sketchfab model dadca97505214b9481d35e22c48e18df
+  saved out/models/office90s.glb 26.7 MB
+  optimized 26.7 -> 5.7 MB
+done

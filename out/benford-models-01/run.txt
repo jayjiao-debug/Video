@@ -1,0 +1,192 @@
+sketchfab model 4de1bcbd22a444abb4f089b9b78ec96a
+  saved out/models/earth.glb 2.7 MB
+npm warn deprecated glob@10.5.0: Old versions of glob are not supported, and contain widely publicized security vulnerabilities, which have been fixed in the current version. Please update. Support for old versions may be purchased (at exorbitant rates) by contacting i@izs.me
+[33m❯[39m dedup
+[32m✔[39m dedup                6ms
+[33m❯[39m instance
+warn: instance: Instancing is not currently supported for animated models.
+[32m✔[39m instance             1ms
+[33m❯[39m palette
+[32m✔[39m palette              0ms
+[33m❯[39m flatten
+[32m✔[39m flatten              2ms
+[33m❯[39m join
+[32m✔[39m join                 14ms
+[33m❯[39m weld
+[32m✔[39m weld                 29ms
+[33m❯[39m simplify
+[32m✔[39m simplify             53ms
+[33m❯[39m resample
+[32m✔[39m resample             5ms
+[33m❯[39m prune
+[32m✔[39m prune                35ms
+[33m❯[39m sparse
+[32m✔[39m sparse               11ms
+[33m❯[39m textureCompress
+[32m✔[39m textureCompress      391ms
+
+info: earth.glb (2.69 MB) → earth.opt.glb (1.17 MB)
+  optimized 2.7 -> 1.2 MB
+sketchfab model 12d76407cbd047d2a23a86c73e556c9e
+  saved out/models/book.glb 3.4 MB
+[33m❯[39m dedup
+[32m✔[39m dedup                3ms
+[33m❯[39m instance
+[32m✔[39m instance             1ms
+[33m❯[39m palette
+[32m✔[39m palette              1ms
+[33m❯[39m flatten
+[32m✔[39m flatten              2ms
+[33m❯[39m join
+[32m✔[39m join                 3ms
+[33m❯[39m weld
+[32m✔[39m weld                 2ms
+[33m❯[39m simplify
+[32m✔[39m simplify             3ms
+[33m❯[39m resample
+[32m✔[39m resample             0ms
+[33m❯[39m prune
+[32m✔[39m prune                43ms
+[33m❯[39m sparse
+[32m✔[39m sparse               1ms
+[33m❯[39m textureCompress
+[32m✔[39m textureCompress      178ms
+
+info: book.glb (3.43 MB) → book.opt.glb (426.45 KB)
+  optimized 3.4 -> 0.4 MB
+sketchfab model c491f647da5947978ba8113951ee2efc
+  saved out/models/desk1881.glb 4.4 MB
+[33m❯[39m dedup
+[32m✔[39m dedup                6ms
+[33m❯[39m instance
+[32m✔[39m instance             1ms
+[33m❯[39m palette
+[32m✔[39m palette              1ms
+[33m❯[39m flatten
+[32m✔[39m flatten              3ms
+[33m❯[39m join
+[32m✔[39m join                 49ms
+[33m❯[39m weld
+[32m✔[39m weld                 27ms
+[33m❯[39m simplify
+[32m✔[39m simplify             31ms
+[33m❯[39m resample
+[32m✔[39m resample             0ms
+[33m❯[39m prune
+[32m✔[39m prune                44ms
+[33m❯[39m sparse
+[32m✔[39m sparse               11ms
+[33m❯[39m textureCompress
+[32m✔[39m textureCompress      163ms
+
+info: desk1881.glb (4.37 MB) → desk1881.opt.glb (916.94 KB)
+  optimized 4.4 -> 0.9 MB
+sketchfab model ef967c9bc13b4635add8ab7517dfedfe
+  saved out/models/inkwell.glb 2.6 MB
+[33m❯[39m dedup
+[32m✔[39m dedup                4ms
+[33m❯[39m instance
+[32m✔[39m instance             1ms
+[33m❯[39m palette
+[32m✔[39m palette              0ms
+[33m❯[39m flatten
+[32m✔[39m flatten              2ms
+[33m❯[39m join
+[32m✔[39m join                 14ms
+[33m❯[39m weld
+[32m✔[39m weld                 7ms
+[33m❯[39m simplify
+[32m✔[39m simplify             5ms
+[33m❯[39m resample
+[32m✔[39m resample             0ms
+[33m❯[39m prune
+[32m✔[39m prune                46ms
+[33m❯[39m sparse
+[32m✔[39m sparse               1ms
+[33m❯[39m textureCompress
+[32m✔[39m textureCompress      539ms
+
+info: inkwell.glb (2.64 MB) → inkwell.opt.glb (438.43 KB)
+  optimized 2.6 -> 0.4 MB
+sketchfab model c932f6165fef40029c3f18afe19b9934
+  saved out/models/oil_lamp.glb 2.5 MB
+[33m❯[39m dedup
+[32m✔[39m dedup                3ms
+[33m❯[39m instance
+[32m✔[39m instance             1ms
+[33m❯[39m palette
+[32m✔[39m palette              0ms
+[33m❯[39m flatten
+[32m✔[39m flatten              2ms
+[33m❯[39m join
+[32m✔[39m join                 8ms
+[33m❯[39m weld
+[32m✔[39m weld                 20ms
+[33m❯[39m simplify
+[32m✔[39m simplify             27ms
+[33m❯[39m resample
+[32m✔[39m resample             0ms
+[33m❯[39m prune
+[32m✔[39m prune                29ms
+[33m❯[39m sparse
+[32m✔[39m sparse               11ms
+[33m❯[39m textureCompress
+[32m✔[39m textureCompress      403ms
+
+info: oil_lamp.glb (2.54 MB) → oil_lamp.opt.glb (475.21 KB)
+  optimized 2.5 -> 0.5 MB
+sketchfab model 7ef1ca295ff14af2abcbe0ae0168a241
+  saved out/models/cabinets.glb 6.0 MB
+[33m❯[39m dedup
+[32m✔[39m dedup                9ms
+[33m❯[39m instance
+[32m✔[39m instance             1ms
+[33m❯[39m palette
+[32m✔[39m palette              0ms
+[33m❯[39m flatten
+[32m✔[39m flatten              4ms
+[33m❯[39m join
+[32m✔[39m join                 69ms
+[33m❯[39m weld
+[32m✔[39m weld                 11ms
+[33m❯[39m simplify
+[32m✔[39m simplify             24ms
+[33m❯[39m resample
+[32m✔[39m resample             0ms
+[33m❯[39m prune
+[32m✔[39m prune                123ms
+[33m❯[39m sparse
+[32m✔[39m sparse               7ms
+[33m❯[39m textureCompress
+[32m✔[39m textureCompress      662ms
+
+info: cabinets.glb (6.04 MB) → cabinets.opt.glb (894.08 KB)
+  optimized 6.0 -> 0.9 MB
+sketchfab model dadca97505214b9481d35e22c48e18df
+  saved out/models/office90s.glb 26.7 MB
+[33m❯[39m dedup
+[32m✔[39m dedup                71ms
+[33m❯[39m instance
+[32m✔[39m instance             1ms
+[33m❯[39m palette
+[32m✔[39m palette              10ms
+[33m❯[39m flatten
+[32m✔[39m flatten              28ms
+[33m❯[39m join
+[32m✔[39m join                 268ms
+[33m❯[39m weld
+[32m✔[39m weld                 63ms
+[33m❯[39m simplify
+[32m✔[39m simplify             81ms
+[33m❯[39m resample
+[32m✔[39m resample             0ms
+[33m❯[39m prune
+[32m✔[39m prune                749ms
+[33m❯[39m sparse
+[32m✔[39m sparse               15ms
+[33m❯[39m textureCompress
+[32m✔[39m textureCompress      3,840ms
+
+info: office90s.glb (26.69 MB) → office90s.opt.glb (5.66 MB)
+  optimized 26.7 -> 5.7 MB
+done
