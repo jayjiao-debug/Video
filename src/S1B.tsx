@@ -1,6 +1,6 @@
 import React from 'react';
 import { AbsoluteFill } from 'remotion';
-import { b, prog, easeOut, easeInOut, lerp, rnd, EN, ZH, GOLD, INK } from './lib';
+import { b, cut, prog, easeOut, easeInOut, lerp, rnd, EN, ZH, GOLD, INK } from './lib';
 import { Subs, SubBand, Chapter, type Line } from './ui';
 
 /* S1b, the break (b96–b128; the music drops out): three sweeteners found by accident, told by objects, no actors.
@@ -9,7 +9,7 @@ import { Subs, SubBand, Chapter, type Line } from './ui';
    Searle, an ulcer-drug project) licked a finger to pick up a sheet of paper (Univ. of Bristol, Molecule of the Month).
    1975 sucralose: Shashikant Phadnis (Queen Elizabeth College, London, with Tate & Lyle) heard "testing" as
    "tasting" (Chemistry World). Sweetness multiples from the US FDA: saccharin 200–700×. */
-export const S1B_IN = b(96) - 0.2, S1B_OUT = b(128) + 0.3;
+export const S1B_IN = cut(96), S1B_OUT = cut(128) - 1e-4;
 
 export const LINES_S1B: Line[] = [
   [b(96) + 0.3, b(104) - 0.1, '这些甜味剂，大多是"不小心"尝出来的。', 'Most of these sweeteners were found by accident.'],
@@ -75,9 +75,9 @@ const ITEMS = [
 
 export const S1B: React.FC<{ T: number }> = ({ T }) => {
   if (T < S1B_IN || T > S1B_OUT) return null;
-  const o = easeOut(prog(T, S1B_IN, S1B_IN + 0.6)) * (1 - easeInOut(prog(T, S1B_OUT - 0.5, S1B_OUT)));
+  const o = 1;
   const row = easeInOut(prog(T, b(122), b(123) + 0.3)); // all three gather in a row
-  const intro = easeOut(prog(T, b(96) + 0.4, b(97) + 0.4)) * (1 - easeInOut(prog(T, b(103), b(104))));
+  const intro = T < cut(104) ? easeOut(prog(T, b(96) + 0.3, b(97) + 0.3)) : 0;
   return (
     <AbsoluteFill style={{ backgroundColor: '#120c07', opacity: o }}>
       <svg width={1920} height={1080}>
@@ -93,9 +93,9 @@ export const S1B: React.FC<{ T: number }> = ({ T }) => {
           <text x={960} y={720} textAnchor="middle" style={{ fontFamily: EN, fontStyle: 'italic', fontSize: 36, fill: 'rgba(243,237,226,0.6)' }}>serendipity</text>
         </g>
         {ITEMS.map((it, k) => {
-          const inK = easeOut(prog(T, it.at, it.at + 0.6));
+          const inK = easeOut(prog(T, it.at - 0.02, it.at + 0.3));
           if (inK <= 0) return null;
-          const next = k < 2 ? easeInOut(prog(T, ITEMS[k + 1].at - 0.2, ITEMS[k + 1].at + 0.4)) : 0;
+          const next = k < 2 ? easeInOut(prog(T, ITEMS[k + 1].at - 0.02, ITEMS[k + 1].at + 0.3)) : 0;
           const away = Math.max(next * (1 - row), 0);
           // centre stage, then off to the side, then into the final row
           const cx = lerp(lerp(960, -400, away), 380 + k * 580, row);

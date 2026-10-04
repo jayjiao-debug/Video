@@ -1,6 +1,6 @@
 import React from 'react';
 import { AbsoluteFill } from 'remotion';
-import { b, prog, easeOut, easeInOut, lerp, pop, rnd, EN, ZH, SANS, GOLD, INK, RED } from './lib';
+import { b, cut, prog, easeOut, easeInOut, lerp, pop, rnd, EN, ZH, SANS, GOLD, INK, RED } from './lib';
 import { Subs, SubBand, Chapter, type Line } from './ui';
 
 /* S2 (b128–b161, the build): the Chinese version. Generic bottles only (no brand's design): the name is said in the
@@ -11,7 +11,7 @@ import { Subs, SubBand, Chapter, type Line } from './ui';
      apologised and relabelled it "低糖" (每日经济新闻, 2021-04-12).
    - GB 28050 (预包装食品营养标签通则): "无糖" ≤ 0.5 g sugar per 100 ml; "无能量/0卡" ≤ 17 kJ per 100 ml, "并不是真正
      意义的无能量" (国家卫健委 interpretation of GB 28050—2025, 中新网 2025-04-22). */
-export const S2_IN = b(128) - 0.2, S2_OUT = b(161) + 0.2;
+export const S2_IN = cut(128), S2_OUT = cut(161) - 1e-4;
 
 export const LINES_S2: Line[] = [
   [b(128) + 0.1, b(134) - 0.1, '"0糖0脂0卡"的气泡水，火遍全国；', 'In 2018 a Chinese sparkling water sold itself on "0 sugar, 0 fat, 0 calories".'],
@@ -57,10 +57,10 @@ const Carton: React.FC = () => (
 
 export const S2: React.FC<{ T: number }> = ({ T }) => {
   if (T < S2_IN || T > S2_OUT) return null;
-  const o = easeOut(prog(T, S2_IN, S2_IN + 0.5)) * (1 - easeInOut(prog(T, S2_OUT - 0.4, S2_OUT)));
-  const A = 1 - easeInOut(prog(T, b(140) - 0.3, b(140) + 0.3));           // bottle part
-  const B = easeInOut(prog(T, b(140) - 0.3, b(140) + 0.3)) * (1 - easeInOut(prog(T, b(148) - 0.3, b(148) + 0.3))); // carton
-  const C = easeInOut(prog(T, b(148) - 0.3, b(148) + 0.3));               // the standard
+  const o = 1;
+  const A = T < cut(140) ? 1 : 0;           // bottle part
+  const B = T >= cut(140) && T < cut(148) ? 1 : 0; // carton
+  const C = T >= cut(148) ? 1 : 0;               // the standard
   const seal = (k: number) => pop(T, b(129) + 0.5 * k, 0.35);
   const ingr = easeOut(prog(T, b(134), b(135)));
   const mag = easeInOut(prog(T, b(142), b(143)));

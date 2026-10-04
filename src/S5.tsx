@@ -1,6 +1,6 @@
 import React from 'react';
 import { AbsoluteFill } from 'remotion';
-import { b, prog, easeOut, easeIn, easeInOut, EN, ZH, INK, FILM_END, type Key } from './lib';
+import { b, cut, prog, easeOut, easeIn, easeInOut, EN, ZH, INK, FILM_END, type Key } from './lib';
 import { Subs, SubBand, type Line } from './ui';
 import { Counter3D, Bokeh, type CanState } from './Counter3D';
 import { GoldTitle, CubeIcon } from './Title';
@@ -8,21 +8,21 @@ import { JUNO } from './brand/identity';
 
 /* S5 (b294–end): back to the counter of the cold open, now with a glass of still water beside the two cans. Then the end card
    (last ~6 s, from b310): title, the question for the comments, the follow line, sources. */
-/* Final edit: the beats b288–b304 (one half-phrase) are cut from picture and music (whole bars, on the beat grid),
-   so the cut lands as a hard cut from the cans to the water glass. Nothing between them is ever seen. */
-export const S5_IN = b(280) - 0.3, END_IN = b(310), CUT_A = b(288), CUT_B = b(304);
+/* The ending runs on the uncut music: the cans from b280, a hard cut to the water glass on the phrase at b288, the end
+   card from b296; the film ends ~6 s later while the music fades out over the last 3 s (no cut in the music). */
+export const S5_IN = cut(280), END_IN = b(296), CUT_W = cut(288);
 
 export const LINES_S5: Line[] = [
-  [b(280) + 0.1, b(288) - 0.1, '把含糖可乐换成无糖的，确实少了[35克]糖；', 'Swapping to the sugar-free can does spare you 35 g of sugar;'],
-  [b(304) + 0.06, END_IN - 0.25, '但它，不该当水喝。', 'but it isn\'t water.'],
+  [b(280) + 0.06, b(288) - 0.1, '把含糖可乐换成无糖的，确实少了[35克]糖；', 'Swapping to the sugar-free can does spare you 35 g of sugar;'],
+  [b(288) + 0.06, END_IN - 0.25, '但它，不该当水喝。', 'but it isn\'t water.'],
 ];
 
 const KEYS: Key[] = [
   [S5_IN, [-0.75, 1.2, 3.7], [-0.45, 0.66, 0]],
-  [CUT_A, [-0.5, 1.12, 3.15], [-0.42, 0.66, 0]],
-  [CUT_B, [1.1, 1.0, 3.0], [0.6, 0.62, 0]],
-  [END_IN, [0.3, 1.45, 4.9], [0.1, 0.6, 0]],
-  [FILM_END, [0.35, 1.5, 5.2], [0.1, 0.6, 0]],
+  [CUT_W - 0.001, [-0.5, 1.12, 3.15], [-0.42, 0.66, 0]],
+  [CUT_W, [1.1, 1.0, 3.0], [0.6, 0.62, 0]],
+  [END_IN, [0.6, 1.2, 3.9], [0.35, 0.62, 0]],
+  [FILM_END, [0.4, 1.4, 4.9], [0.15, 0.6, 0]],
 ];
 
 const EndCard: React.FC<{ T: number }> = ({ T }) => {
@@ -57,7 +57,7 @@ const EndCard: React.FC<{ T: number }> = ({ T }) => {
 
 export const S5: React.FC<{ T: number }> = ({ T }) => {
   if (T < S5_IN) return null;
-  const o = easeOut(prog(T, S5_IN, S5_IN + 0.8));
+  const o = 1;
   const cans: CanState[] = [{ kind: 'red', p: [-0.95, 0, 0], ry: -0.15 }, { kind: 'black', p: [0.0, 0, 0.05], ry: 0.12 }];
   return (
     <AbsoluteFill style={{ backgroundColor: '#05070d' }}>
