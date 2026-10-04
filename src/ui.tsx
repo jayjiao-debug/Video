@@ -20,7 +20,7 @@ export const Sub: React.FC<{ T: number; at: number; out: number; zh: string; en:
   const rise = (1 - easeOut(prog(T, at, at + 0.45))) * 12;
   return (
     <div style={{ position: 'absolute', left: 0, right: 0, top: 880 - 56 * 0.62, textAlign: 'center', opacity: o, transform: `translateY(${rise}px)` }}>
-      <div style={{ fontFamily: ZH, fontSize: 56, fontWeight: 700, color: '#f6efe1', letterSpacing: '0.03em', lineHeight: 1.25, textShadow: '0 2px 14px rgba(0,0,0,0.95), 0 0 2px rgba(0,0,0,0.9)', fontVariantNumeric: 'lining-nums' }}><Rich s={zh} /></div>
+      <div style={{ fontFamily: ZH, fontSize: 56, fontWeight: 700, color: '#f6efe1', letterSpacing: '0.03em', lineHeight: 1.25, textShadow: '0 2px 14px rgba(0,0,0,0.95), 0 0 2px rgba(0,0,0,0.9)', fontVariantNumeric: 'lining-nums' }}><Rich s={zh.replace(/"([^"]*)"/g, '“$1”')} /></div>
       <div style={{ fontFamily: EN, fontStyle: 'italic', fontSize: 24, color: 'rgba(243,237,226,0.42)', marginTop: 6, textShadow: '0 2px 8px rgba(0,0,0,0.8)' }}>{en}</div>
     </div>
   );

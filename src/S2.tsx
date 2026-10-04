@@ -1,287 +1,144 @@
-import React, { useEffect, useMemo, useState } from 'react';
-import * as THREE from 'three';
-import { useThree } from '@react-three/fiber';
-import { ThreeCanvas } from '@remotion/three';
-import { AbsoluteFill, continueRender, delayRender, staticFile, useVideoConfig } from 'remotion';
-import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
-import { RoundedBoxGeometry } from 'three/examples/jsm/geometries/RoundedBoxGeometry.js';
-import { b, prog, easeOut, easeInOut, camAt, benford, mulberry, EN, ZH as ZH_, GOLD, INK, type Key } from './lib';
+import React from 'react';
+import { AbsoluteFill } from 'remotion';
+import { b, prog, easeOut, easeInOut, lerp, pop, rnd, EN, ZH, SANS, GOLD, INK, RED } from './lib';
 import { Subs, SubBand, Chapter, type Line } from './ui';
-import { PersonCard } from './PersonCard';
 
-/* S2a, 1881 (b44–b84): Newcomb's desk at night, nobody in shot. The log table lies closed; its fore-edge is worn in
-   nine bands, front pages (first digit 1) darkest, back pages (9) almost clean. The camera opens on the fore-edge
-   (the title card's bars became these bands), pulls back to the desk, then reads the bands top to bottom.
-   Models (Sketchfab, CC-BY): "Antique Desk" and "Ink Bottle with Quill" by Matthew Collings, "Victorian Brass Oil
-   Lamp" by tijerin_art. The book is built here so its fore-edge can carry the wear exactly. */
-export const S2_IN = b(43), S2_OUT = b(84) + 0.4;
+/* S2 (b128–b161, the build): the Chinese version. Generic bottles only (no brand's design): the name is said in the
+   subtitles, the pictures stay unbranded.
+   - 元气森林 (founded 2016) launched its sparkling water in 2018 on "0糖0脂0卡"; sweetened with erythritol and
+     sucralose (凤凰网科技, 2020-07-27).
+   - 2021: its milk tea said "0蔗糖" but contained lactose and crystalline fructose; on 2021-04-10 the company
+     apologised and relabelled it "低糖" (每日经济新闻, 2021-04-12).
+   - GB 28050 (预包装食品营养标签通则): "无糖" ≤ 0.5 g sugar per 100 ml; "无能量/0卡" ≤ 17 kJ per 100 ml, "并不是真正
+     意义的无能量" (国家卫健委 interpretation of GB 28050—2025, 中新网 2025-04-22). */
+export const S2_IN = b(128) - 0.2, S2_OUT = b(161) + 0.2;
 
-const DESK_TOP = 0.9;
-const BOOK = { x: 0.06, z: 0.06, L: 0.26, Wd: 0.18, Th: 0.078 }; // length along x, width along z, thickness
-const EDGE_Z = BOOK.z + BOOK.Wd / 2; // fore-edge faces +z
-const bandY = (d: number) => DESK_TOP + 0.004 + BOOK.Th * (1 - (d - 0.5) / 9); // band d centre (1 = top = front pages)
-
-export const LINES_S2A: Line[] = [
-  [b(44) + 0.1, b(52) - 0.1, '1881年，美国华盛顿。', 'Washington, 1881.'],
-  [b(52) + 0.06, b(60) - 0.1, '天文学家纽康，天天翻一本对数表。', 'The astronomer Simon Newcomb used a book of logarithms every day.'],
-  [b(60) + 0.06, b(68) - 0.1, '他发现：书的前几页，脏得发黑；', 'He noticed the first pages were worn almost black,'],
-  [b(68) + 0.06, b(76) - 0.1, '越往后翻，越干净。', 'and the further in, the cleaner they got.'],
-  [b(76) + 0.06, b(84) - 0.1, '对数表按第一位排：1在最前，9在最后。', 'The table runs by first digit: 1 at the front, 9 at the back.'],
+export const LINES_S2: Line[] = [
+  [b(128) + 0.1, b(134) - 0.1, '2018年，元气森林气泡水主打"0糖0脂0卡"。', 'In 2018 a Chinese sparkling water sold itself on "0 sugar, 0 fat, 0 calories".'],
+  [b(134) + 0.06, b(140) - 0.1, '它的甜，来自赤藓糖醇和三氯蔗糖。', 'Its sweetness came from erythritol and sucralose.'],
+  [b(140) + 0.06, b(148) - 0.1, '2021年，它的乳茶写着"0蔗糖"，却含乳糖和果糖，公司公开道歉。', 'In 2021 its milk tea said "0 sucrose" but held lactose and fructose; the company apologised.'],
+  [b(148) + 0.06, b(154) - 0.1, '国标里的"无糖"：每100毫升，糖不超过[0.5克]；', 'Under China\'s label standard, "sugar-free" means up to 0.5 g per 100 ml;'],
+  [b(154) + 0.06, b(160) - 0.15, '"0卡"：不超过17千焦——并不是真的{零}。', '"zero calories" means up to 17 kJ. Not actually zero.'],
 ];
 
-const KEYS: Key[] = [
-  [b(43), [BOOK.x, bandY(5), EDGE_Z + 0.2], [BOOK.x, bandY(5), EDGE_Z]],
-  [b(45), [BOOK.x, bandY(5), EDGE_Z + 0.23], [BOOK.x, bandY(5), EDGE_Z]],
-  [b(52), [-0.42, 1.36, 1.72], [0.12, 1.06, 0.02]],
-  [b(59), [-0.3, 1.24, 1.32], [0.1, 1.0, 0.04]],
-  [b(61), [BOOK.x - 0.12, bandY(2) + 0.015, EDGE_Z + 0.2], [BOOK.x - 0.02, bandY(2), EDGE_Z]],
-  [b(68), [BOOK.x - 0.02, bandY(4) + 0.01, EDGE_Z + 0.19], [BOOK.x + 0.02, bandY(4), EDGE_Z]],
-  [b(75), [BOOK.x + 0.1, bandY(8), EDGE_Z + 0.17], [BOOK.x + 0.06, bandY(8.5), EDGE_Z]],
-  [b(77), [BOOK.x, bandY(5) + 0.01, EDGE_Z + 0.27], [BOOK.x, bandY(5), EDGE_Z]],
-  [b(84), [BOOK.x - 0.05, bandY(5) + 0.03, EDGE_Z + 0.24], [BOOK.x - 0.05, bandY(5), EDGE_Z]],
-];
+const Bottle: React.FC<{ T: number; tint: string }> = ({ T, tint }) => (
+  <g>
+    <path d="M-34,-300 L34,-300 L34,-268 Q34,-250 52,-230 Q92,-190 92,-130 L92,240 Q92,270 62,270 L-62,270 Q-92,270 -92,240 L-92,-130 Q-92,-190 -52,-230 Q-34,-250 -34,-268 Z" fill={tint} stroke="rgba(220,235,255,0.55)" strokeWidth={3} />
+    <rect x={-40} y={-330} width={80} height={34} rx={6} fill="#e8e4dc" />
+    {Array.from({ length: 26 }, (_, i) => {
+      const y = 250 - ((T * (40 + rnd(i, 2) * 50) + rnd(i, 3) * 480) % 480);
+      return <circle key={i} cx={-70 + rnd(i, 1) * 140} cy={y} r={2 + rnd(i, 4) * 4} fill="none" stroke="rgba(230,245,255,0.55)" strokeWidth={1.5} />;
+    })}
+    <path d="M-80,-120 Q-84,40 -78,220" stroke="rgba(255,255,255,0.35)" strokeWidth={8} fill="none" strokeLinecap="round" />
+    {/* the label band */}
+    <rect x={-92} y={-40} width={184} height={150} fill="#f6f1e8" />
+    <rect x={-92} y={-40} width={184} height={10} fill="#c8a25a" /><rect x={-92} y={100} width={184} height={10} fill="#c8a25a" />
+  </g>
+);
 
-// ---------------------------------------------------------------- textures drawn in code (no text: fonts stay in HTML)
-const foreEdgeTexture = () => {
-  const W = 2048, H = 640;
-  const c = document.createElement('canvas'); c.width = W; c.height = H;
-  const g = c.getContext('2d')!;
-  g.fillStyle = '#efe5cc'; g.fillRect(0, 0, W, H);
-  const r = mulberry(7);
-  for (let y = 0; y < H; y += 2) { g.fillStyle = `rgba(120,100,70,${0.05 + r() * 0.12})`; g.fillRect(0, y, W, 1); }
-  // wear per band: darker toward the front; smudges where thumbs land (toward the left, where the book is opened)
-  for (let d = 1; d <= 9; d++) {
-    const y0 = ((d - 1) / 9) * H, y1 = (d / 9) * H;
-    const w = benford(d) / benford(1); // 1 → 1.0, 9 → 0.15
-    for (let k = 0; k < 900 * w; k++) {
-      const x = Math.pow(r(), 1.6) * W * (0.55 + 0.45 * w), y = y0 + r() * (y1 - y0);
-      const rad = 6 + r() * 40 * w;
-      const grd = g.createRadialGradient(x, y, 0, x, y, rad);
-      grd.addColorStop(0, `rgba(58,40,22,${0.10 * w + 0.02})`); grd.addColorStop(1, 'rgba(58,40,22,0)');
-      g.fillStyle = grd; g.fillRect(x - rad, y - rad, rad * 2, rad * 2);
-    }
-    // overall grime, fading toward the right (the side away from the thumb) and darkest at the front
-    const gr = g.createLinearGradient(0, 0, W, 0);
-    gr.addColorStop(0, `rgba(40,26,12,${0.95 * Math.pow(w, 0.9)})`); gr.addColorStop(0.7, `rgba(48,32,16,${0.82 * Math.pow(w, 1.1)})`); gr.addColorStop(1, `rgba(60,40,20,${0.55 * Math.pow(w, 1.3)})`);
-    g.fillStyle = gr; g.fillRect(0, y0, W, y1 - y0);
-    // the thumb-index notch for this section
-    g.fillStyle = 'rgba(40,26,14,0.85)';
-    g.beginPath(); g.ellipse(70, (y0 + y1) / 2, 34, (y1 - y0) * 0.42, 0, 0, Math.PI * 2); g.fill();
-  }
-  const t = new THREE.CanvasTexture(c); t.colorSpace = THREE.SRGBColorSpace; t.anisotropy = 8;
-  return t;
-};
-const pagesSideTexture = () => {
-  const c = document.createElement('canvas'); c.width = 512; c.height = 256;
-  const g = c.getContext('2d')!; g.fillStyle = '#e9dfc4'; g.fillRect(0, 0, 512, 256);
-  const r = mulberry(11);
-  for (let y = 0; y < 256; y += 2) { g.fillStyle = `rgba(120,100,70,${0.06 + r() * 0.1})`; g.fillRect(0, y, 512, 1); }
-  const t = new THREE.CanvasTexture(c); t.colorSpace = THREE.SRGBColorSpace; return t;
-};
-const wallTexture = () => {
-  const c = document.createElement('canvas'); c.width = 1024; c.height = 512;
-  const g = c.getContext('2d')!; g.fillStyle = '#2a2219'; g.fillRect(0, 0, 1024, 512);
-  for (let x = 0; x < 1024; x += 32) { g.fillStyle = 'rgba(70,52,30,0.35)'; g.fillRect(x, 0, 10, 512); }
-  const t = new THREE.CanvasTexture(c); t.colorSpace = THREE.SRGBColorSpace; t.wrapS = t.wrapT = THREE.RepeatWrapping; t.repeat.set(4, 2); return t;
-};
+const Seal: React.FC<{ x: number; y: number; text: string; s: number }> = ({ x, y, text, s }) => (
+  <g transform={`translate(${x},${y}) scale(${s})`} opacity={Math.min(1, s * 1.4)}>
+    <circle r={78} fill="none" stroke={GOLD} strokeWidth={4} />
+    <circle r={68} fill="rgba(246,207,120,0.12)" stroke={GOLD} strokeWidth={1.5} />
+    <text y={20} textAnchor="middle" style={{ fontFamily: ZH, fontWeight: 900, fontSize: 52, fill: GOLD }}>{text}</text>
+  </g>
+);
 
-// ---------------------------------------------------------------- models
-type Assets = { desk: THREE.Group; ink: THREE.Group; lamp: THREE.Group };
-let ASSETS: Assets | null = null;
-/** centre on x/z, base at y = 0, scale so the height is `h` metres */
-const normalize = (obj: THREE.Object3D, h: number) => {
-  const box = new THREE.Box3().setFromObject(obj);
-  const size = box.getSize(new THREE.Vector3()), c = box.getCenter(new THREE.Vector3());
-  obj.position.set(-c.x, -box.min.y, -c.z);
-  const g = new THREE.Group(); g.add(obj); g.scale.setScalar(h / size.y);
-  return g;
-};
-const loadAssets = async () => {
-  if (ASSETS) return ASSETS;
-  const L = new GLTFLoader();
-  const [d, i, l] = await Promise.all(['desk1881', 'inkwell', 'oil_lamp'].map((n) => L.loadAsync(staticFile(`models/${n}.glb`))));
-  for (const s of [d.scene, i.scene]) s.traverse((o: any) => { if (o.isMesh) { o.castShadow = true; o.receiveShadow = true; } });
-  // the lamp holds the light: if it cast shadows its own shade would throw a hard slab of dark across the wall
-  l.scene.traverse((o: any) => { if (o.isMesh) { o.castShadow = false; o.receiveShadow = true; } });
-  ASSETS = { desk: normalize(d.scene, 0.9), ink: normalize(i.scene, 0.156), lamp: normalize(l.scene, 0.48) };
-  return ASSETS;
-};
+const Carton: React.FC = () => (
+  <g>
+    <path d="M-110,-200 L110,-200 L110,250 L-110,250 Z" fill="#efe2cf" />
+    <path d="M-110,-200 L0,-280 L110,-200 Z" fill="#e2d2bb" />
+    <rect x={-110} y={-120} width={220} height={130} fill="#8a5a3a" />
+    <text x={0} y={-36} textAnchor="middle" style={{ fontFamily: ZH, fontWeight: 900, fontSize: 56, fill: '#f6efe1' }}>乳茶</text>
+    <text x={0} y={80} textAnchor="middle" style={{ fontFamily: ZH, fontWeight: 900, fontSize: 50, fill: '#5a3a24' }}>0蔗糖</text>
+    {Array.from({ length: 5 }, (_, i) => <rect key={i} x={-80} y={130 + i * 18} width={160 - (i % 2) * 40} height={6} fill="#5a3a24" opacity={0.3} />)}
+  </g>
+);
 
-const CamRig: React.FC<{ T: number }> = ({ T }) => {
-  const { camera } = useThree();
-  const { pos, look } = camAt(KEYS, T);
-  camera.position.set(pos[0], pos[1], pos[2]);
-  camera.lookAt(look[0], look[1], look[2]);
-  camera.updateProjectionMatrix();
-  return null;
-};
-
-const PROJ = new THREE.PerspectiveCamera(30, 1920 / 1080, 0.01, 50);
-const toScreen = (T: number, v: number[]) => {
-  const { pos, look } = camAt(KEYS, T);
-  PROJ.position.set(pos[0], pos[1], pos[2]); PROJ.lookAt(look[0], look[1], look[2]); PROJ.updateMatrixWorld(); PROJ.updateProjectionMatrix();
-  const p = new THREE.Vector3(v[0], v[1], v[2]).project(PROJ);
-  return { x: ((p.x + 1) / 2) * 1920, y: ((1 - p.y) / 2) * 1080 };
-};
-
-const leather = (w: number, h: number, title: boolean) => {
-  const c = document.createElement('canvas'); c.width = w; c.height = h;
-  const g = c.getContext('2d')!;
-  g.fillStyle = '#4a2214'; g.fillRect(0, 0, w, h);
-  const r = mulberry(5);
-  for (let k = 0; k < (w * h) / 60; k++) { g.fillStyle = `rgba(${r() > 0.5 ? '20,8,4' : '120,60,36'},${0.05 + r() * 0.08})`; g.fillRect(r() * w, r() * h, 1 + r() * 3, 1 + r() * 3); }
-  const wear = g.createRadialGradient(w / 2, h / 2, Math.min(w, h) * 0.2, w / 2, h / 2, Math.max(w, h) * 0.7);
-  wear.addColorStop(0, 'rgba(0,0,0,0)'); wear.addColorStop(1, 'rgba(10,4,2,0.45)'); g.fillStyle = wear; g.fillRect(0, 0, w, h);
-  if (title) {
-    g.strokeStyle = '#c9a050'; g.lineWidth = 6; g.strokeRect(34, 34, w - 68, h - 68); g.lineWidth = 2; g.strokeRect(52, 52, w - 104, h - 104);
-    g.fillStyle = '#d8b25a'; g.textAlign = 'center';
-    const font = (px: number, it = false) => `${it ? 'italic ' : ''}700 ${px}px "Noto Serif CJK SC", serif`;
-    g.font = font(54); g.fillText('A NEW MANUAL', w / 2, h * 0.3);
-    g.font = font(40); g.fillText('OF', w / 2, h * 0.41);
-    g.font = font(74); g.fillText('LOGARITHMS', w / 2, h * 0.55);
-    g.font = font(38); g.fillText('TO SEVEN PLACES OF DECIMALS', w / 2, h * 0.66);
-    g.font = font(44); g.fillText('— BRUHNS —', w / 2, h * 0.8);
-  }
-  const t = new THREE.CanvasTexture(c); t.colorSpace = THREE.SRGBColorSpace; t.anisotropy = 8; return t;
-};
-
-const Book: React.FC = () => {
-  const mats = useMemo(() => {
-    const edge = new THREE.MeshStandardMaterial({ map: foreEdgeTexture(), roughness: 0.92 });
-    const side = new THREE.MeshStandardMaterial({ map: pagesSideTexture(), roughness: 0.95 });
-    const plain = new THREE.MeshStandardMaterial({ color: '#e6dcc2', roughness: 0.95 });
-    // box faces: +x, -x, +y, -y, +z (fore-edge), -z (spine side)
-    return [side, side, plain, plain, edge, plain];
-  }, []);
-  const cover = useMemo(() => new THREE.MeshStandardMaterial({ map: leather(512, 512, false), roughness: 0.58, metalness: 0.04 }), []);
-  const face = useMemo(() => new THREE.MeshStandardMaterial({ map: leather(1300, 900, true), roughness: 0.55, metalness: 0.08 }), []);
-  const board = useMemo(() => new RoundedBoxGeometry(BOOK.L + 0.012, 0.006, BOOK.Wd + 0.012, 3, 0.0028), []);
-  const { x, z, L, Wd, Th } = BOOK;
-  const y0 = DESK_TOP;
-  return (
-    <group>
-      <mesh position={[x, y0 + 0.003, z + 0.003]} geometry={board} material={cover} castShadow receiveShadow />
-      <mesh position={[x, y0 + 0.005 + Th / 2, z]} material={mats} castShadow receiveShadow><boxGeometry args={[L, Th, Wd]} /></mesh>
-      <mesh position={[x, y0 + 0.005 + Th + 0.003, z + 0.003]} geometry={board} material={cover} castShadow receiveShadow />
-      {/* the gilt title on the front board */}
-      <mesh position={[x, y0 + 0.005 + Th + 0.0062, z + 0.003]} rotation={[-Math.PI / 2, 0, 0]} material={face} receiveShadow><planeGeometry args={[L + 0.006, Wd + 0.006]} /></mesh>
-      {/* headbands at both ends of the spine */}
-      {[-1, 1].map((k) => <mesh key={k} position={[x + k * (L / 2 - 0.002), y0 + 0.005 + Th / 2, z - Wd / 2 + 0.004]}><boxGeometry args={[0.004, Th * 0.9, 0.008]} /><meshStandardMaterial color="#7a2a22" roughness={0.8} /></mesh>)}
-      {/* the spine, rounded */}
-      <mesh position={[x, y0 + 0.005 + Th / 2, z - Wd / 2 - 0.002]} rotation={[0, 0, Math.PI / 2]} castShadow><cylinderGeometry args={[Th / 2 + 0.006, Th / 2 + 0.006, L + 0.012, 24, 1, false, 0, Math.PI]} /><primitive object={cover} attach="material" /></mesh>
-    </group>
-  );
-};
-
-const starChart = () => {
-  const c = document.createElement('canvas'); c.width = 900; c.height = 700;
-  const g = c.getContext('2d')!; g.fillStyle = '#e6d9b8'; g.fillRect(0, 0, 900, 700);
-  const r = mulberry(19);
-  g.strokeStyle = 'rgba(70,50,30,0.6)'; g.lineWidth = 2;
-  g.beginPath(); g.arc(450, 350, 300, 0, Math.PI * 2); g.stroke(); g.beginPath(); g.arc(450, 350, 200, 0, Math.PI * 2); g.stroke();
-  for (let k = 0; k < 12; k++) { g.beginPath(); g.moveTo(450, 350); g.lineTo(450 + 300 * Math.cos(k * Math.PI / 6), 350 + 300 * Math.sin(k * Math.PI / 6)); g.stroke(); }
-  for (let k = 0; k < 140; k++) { const a = r() * Math.PI * 2, d = Math.sqrt(r()) * 290; g.fillStyle = '#2a1d10'; g.beginPath(); g.arc(450 + d * Math.cos(a), 350 + d * Math.sin(a), 1 + r() * 4, 0, Math.PI * 2); g.fill(); }
-  const t = new THREE.CanvasTexture(c); t.colorSpace = THREE.SRGBColorSpace; return t;
-};
-/** soft round glow for the flame (a sprite without a map renders as a hard square) */
-const GLOW = (() => {
-  if (typeof document === 'undefined') return null as unknown as THREE.Texture;
-  const c = document.createElement('canvas'); c.width = c.height = 256;
-  const g = c.getContext('2d')!; const r = g.createRadialGradient(128, 128, 0, 128, 128, 128);
-  r.addColorStop(0, 'rgba(255,255,255,1)'); r.addColorStop(0.25, 'rgba(255,255,255,0.35)'); r.addColorStop(1, 'rgba(255,255,255,0)');
-  g.fillStyle = r; g.fillRect(0, 0, 256, 256);
-  return new THREE.CanvasTexture(c);
-})();
-const StarChart: React.FC = () => {
-  const m = useMemo(() => new THREE.MeshStandardMaterial({ map: starChart(), roughness: 1 }), []);
-  return (
-    <group position={[-0.25, 1.55, -0.74]}>
-      <mesh position={[0, 0, -0.005]}><boxGeometry args={[0.66, 0.54, 0.02]} /><meshStandardMaterial color="#2a180c" roughness={0.6} /></mesh>
-      <mesh position={[0, 0, 0.006]} material={m}><planeGeometry args={[0.58, 0.46]} /></mesh>
-    </group>
-  );
-};
-const Bookcase: React.FC = () => {
-  const r = mulberry(23);
-  const spines = Array.from({ length: 5 * 22 }, (_, k) => ({ row: Math.floor(k / 22), w: 0.025 + r() * 0.03, h: 0.2 + r() * 0.08, c: ['#3a1e14', '#24302a', '#4a3420', '#2a2236', '#5a2a1a'][Math.floor(r() * 5)] }));
-  let cx = 0, row = -1;
-  return (
-    <group position={[-1.55, 0, -0.62]}>
-      <mesh position={[0.4, 1.1, -0.1]}><boxGeometry args={[0.9, 2.2, 0.06]} /><meshStandardMaterial color="#1e140c" /></mesh>
-      {[0, 1, 2, 3, 4].map((k) => <mesh key={k} position={[0.4, 0.3 + k * 0.38, 0.0]}><boxGeometry args={[0.9, 0.025, 0.24]} /><meshStandardMaterial color="#2c1c10" /></mesh>)}
-      {spines.map((sp, k) => {
-        if (sp.row !== row) { row = sp.row; cx = 0.0; }
-        const x = cx + sp.w / 2; cx += sp.w + 0.003;
-        if (cx > 0.86) return null;
-        return <mesh key={k} position={[x, 0.3 + sp.row * 0.38 + 0.0125 + sp.h / 2, 0.02]}><boxGeometry args={[sp.w, sp.h, 0.18]} /><meshStandardMaterial color={sp.c} roughness={0.8} /></mesh>;
-      })}
-    </group>
-  );
-};
-
-const Room: React.FC<{ T: number; a: Assets }> = ({ T, a }) => {
-  const wall = useMemo(() => new THREE.MeshStandardMaterial({ map: wallTexture(), roughness: 1 }), []);
-  // the flame breathes on its own slow clock (not the beat)
-  const flick = 1 + 0.06 * Math.sin(T * 7.3) + 0.04 * Math.sin(T * 12.1 + 1.3);
-  return (
-    <>
-      <ambientLight intensity={0.05} color="#8aa0c8" />
-      <directionalLight position={[-2.5, 2.6, -1.2]} intensity={0.35} color="#9db6e6" />
-      <pointLight position={[0.5, DESK_TOP + 0.32, 0.24]} intensity={3.2 * flick} distance={6} decay={2} color="#ffb766" castShadow shadow-mapSize-width={1024} shadow-mapSize-height={1024} shadow-bias={-0.0005} />
-      <pointLight position={[0.2, DESK_TOP + 0.6, 0.9]} intensity={0.18} distance={4} decay={2} color="#ffcf9a" />
-      <primitive object={a.desk} position={[0, 0, 0]} />
-      <primitive object={a.lamp} position={[0.5, DESK_TOP, 0.22]} />
-      <primitive object={a.ink} position={[-0.32, DESK_TOP, -0.02]} rotation={[0, 0.5, 0]} />
-      <Book />
-      {/* a sheet of working on the desk, left of the book */}
-      <mesh position={[-0.2, DESK_TOP + 0.001, 0.14]} rotation={[-Math.PI / 2, 0, 0.12]} receiveShadow><planeGeometry args={[0.21, 0.28]} /><meshStandardMaterial color="#efe4c8" roughness={1} /></mesh>
-      {/* wall, floor, a window of night sky */}
-      <mesh position={[0, 1.4, -0.75]} receiveShadow><planeGeometry args={[8, 4]} /><primitive object={wall} attach="material" /></mesh>
-      <StarChart />
-      <Bookcase />
-      <mesh position={[0, 0, 0]} rotation={[-Math.PI / 2, 0, 0]} receiveShadow><planeGeometry args={[8, 8]} /><meshStandardMaterial color="#17110c" roughness={1} /></mesh>
-      <mesh position={[-1.25, 1.75, -0.74]}><planeGeometry args={[0.9, 1.2]} /><meshBasicMaterial color="#101c36" toneMapped={false} /></mesh>
-      {[-0.45, 0, 0.45].map((dx, i) => <mesh key={i} position={[-1.25 + dx, 1.75, -0.735]}><planeGeometry args={[0.04, 1.2]} /><meshStandardMaterial color="#1b130c" /></mesh>)}
-      <mesh position={[-1.25, 1.75, -0.735]}><planeGeometry args={[0.9, 0.04]} /><meshStandardMaterial color="#1b130c" /></mesh>
-      {/* the flame's glow */}
-      <sprite position={[0.5, DESK_TOP + 0.32, 0.24]} scale={[0.5 * flick, 0.5 * flick, 1]}><spriteMaterial map={GLOW} color="#ffb766" transparent opacity={0.5} blending={THREE.AdditiveBlending} depthWrite={false} toneMapped={false} /></sprite>
-    </>
-  );
-};
-
-export const S2A: React.FC<{ T: number }> = ({ T }) => {
-  const { width, height } = useVideoConfig();
-  const [assets, setAssets] = useState<Assets | null>(ASSETS);
-  const [handle] = useState(() => (ASSETS ? null : delayRender('1881 desk models', { timeoutInMilliseconds: 120000 })));
-  useEffect(() => { loadAssets().then((x) => { setAssets(x); if (handle !== null) continueRender(handle); }); }, [handle]);
+export const S2: React.FC<{ T: number }> = ({ T }) => {
   if (T < S2_IN || T > S2_OUT) return null;
-  const o = easeOut(prog(T, S2_IN, S2_IN + 0.6)) * (1 - easeInOut(prog(T, S2_OUT - 0.5, S2_OUT)));
-  // tabs 1→9 light up in one quick sweep on "1在最前，9在最后"
-  const sweep = (d: number) => easeOut(prog(T, b(78) + (d - 1) * 0.12, b(78) + (d - 1) * 0.12 + 0.25));
-  const tabsO = easeOut(prog(T, b(77), b(78))) * (1 - easeInOut(prog(T, S2_OUT - 0.6, S2_OUT)));
+  const o = easeOut(prog(T, S2_IN, S2_IN + 0.5)) * (1 - easeInOut(prog(T, S2_OUT - 0.4, S2_OUT)));
+  const A = 1 - easeInOut(prog(T, b(140) - 0.3, b(140) + 0.3));           // bottle part
+  const B = easeInOut(prog(T, b(140) - 0.3, b(140) + 0.3)) * (1 - easeInOut(prog(T, b(148) - 0.3, b(148) + 0.3))); // carton
+  const C = easeInOut(prog(T, b(148) - 0.3, b(148) + 0.3));               // the standard
+  const seal = (k: number) => pop(T, b(129) + 0.5 * k, 0.35);
+  const ingr = easeOut(prog(T, b(134), b(135)));
+  const mag = easeInOut(prog(T, b(142), b(143)));
+  const strike = easeOut(prog(T, b(144), b(144) + 0.4));
+  const sugarO = easeOut(prog(T, b(148) + 0.2, b(149)));
+  const kjO = easeOut(prog(T, b(154), b(155)));
+  const push = 1 + 0.04 * prog(T, S2_IN, S2_OUT);
   return (
-    <AbsoluteFill style={{ backgroundColor: '#070504', opacity: o }}>
-      {assets && (
-        <ThreeCanvas width={width} height={height} shadows gl={{ antialias: true, toneMapping: THREE.ACESFilmicToneMapping, toneMappingExposure: 1.3 }} camera={{ fov: 30, near: 0.01, far: 50 }}>
-          <CamRig T={T} />
-          <Room T={T} a={assets} />
-        </ThreeCanvas>
-      )}
-      {/* section digits beside the thumb-index notches (HTML so the type stays crisp) */}
-      {tabsO > 0.01 && Array.from({ length: 9 }, (_, k) => {
-        const d = k + 1;
-        const p = toScreen(T, [BOOK.x - BOOK.L / 2 + 0.0087, bandY(d), EDGE_Z + 0.001]);
-        return (
-          <div key={d} style={{ position: 'absolute', left: p.x - 110, top: p.y - 24, width: 70, textAlign: 'right', opacity: tabsO * (0.35 + 0.65 * sweep(d)), fontFamily: EN, fontWeight: 700, fontSize: 42, color: d === 1 ? GOLD : INK, fontVariantNumeric: 'lining-nums', textShadow: '0 2px 10px rgba(0,0,0,0.95)' }}>{d}</div>
-        );
-      })}
+    <AbsoluteFill style={{ backgroundColor: '#070b12', opacity: o }}>
+      <AbsoluteFill style={{ transform: `scale(${push})` }}>
+        <svg width={1920} height={1080}>
+          <defs>
+            <linearGradient id="s2-cool" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stopColor="#0d1a26" /><stop offset="1" stopColor="#060a10" /></linearGradient>
+            <radialGradient id="s2-glow" cx="0.5" cy="0.4" r="0.55"><stop offset="0" stopColor="#bfe3ff" stopOpacity="0.18" /><stop offset="1" stopColor="#000" stopOpacity="0" /></radialGradient>
+          </defs>
+          <rect width={1920} height={1080} fill="url(#s2-cool)" />
+          {/* a cooler's shelves behind, out of focus */}
+          {[250, 520, 790].map((y) => <rect key={y} x={0} y={y} width={1920} height={8} fill="rgba(190,225,255,0.12)" />)}
+          {Array.from({ length: 18 }, (_, i) => <rect key={i} x={40 + i * 108} y={i % 2 ? 300 : 570} width={60} height={200} rx={20} fill="rgba(150,190,230,0.06)" />)}
+          <rect width={1920} height={1080} fill="url(#s2-glow)" />
+
+          {/* A: the bottle, three seals, the sweeteners */}
+          <g opacity={A}>
+            <g transform="translate(700,470)"><Bottle T={T} tint="rgba(200,230,255,0.18)" /></g>
+            <text x={700} y={470} textAnchor="middle" style={{ fontFamily: SANS, fontWeight: 700, fontSize: 30, fill: '#5a4a2a' }}>气泡水</text>
+            <text x={700} y={520} textAnchor="middle" style={{ fontFamily: SANS, fontSize: 20, fill: '#8a7a5a', letterSpacing: '0.2em' }}>SPARKLING</text>
+            {['0糖', '0脂', '0卡'].map((t, k) => <Seal key={t} x={1060 + k * 190} y={330} text={t} s={seal(k)} />)}
+            <text x={1250} y={470} textAnchor="middle" style={{ fontFamily: ZH, fontSize: 26, fill: 'rgba(243,237,226,0.7)' }} opacity={seal(2)}>2018 · 元气森林气泡水（示意）</text>
+            <g opacity={ingr} transform={`translate(${lerp(1080, 1040, ingr)},560)`}>
+              <rect x={0} y={0} width={440} height={170} fill="#f3eee4" />
+              <text x={24} y={44} style={{ fontFamily: SANS, fontWeight: 700, fontSize: 26, fill: '#2a2a2a' }}>配料表（节选）</text>
+              <text x={24} y={96} style={{ fontFamily: SANS, fontSize: 30, fill: '#2a2a2a' }}>…<tspan fill="#b07a1e" fontWeight={700}>赤藓糖醇</tspan>…</text>
+              <text x={24} y={144} style={{ fontFamily: SANS, fontSize: 30, fill: '#2a2a2a' }}>…<tspan fill="#b07a1e" fontWeight={700}>三氯蔗糖</tspan>…</text>
+            </g>
+          </g>
+
+          {/* B: "0蔗糖" is not "0糖" */}
+          <g opacity={B}>
+            <g transform="translate(680,470)"><Carton /></g>
+            <g transform={`translate(${lerp(680, 1120, mag)},${lerp(550, 470, mag)}) scale(${lerp(0.4, 1, mag)})`} opacity={mag}>
+              <circle r={200} fill="#f3eee4" stroke="#c8a25a" strokeWidth={10} />
+              <text y={-60} textAnchor="middle" style={{ fontFamily: SANS, fontSize: 30, fill: '#555' }}>配料中的糖：</text>
+              <text y={10} textAnchor="middle" style={{ fontFamily: SANS, fontWeight: 700, fontSize: 52, fill: '#b23a2e' }}>乳糖</text>
+              <text y={80} textAnchor="middle" style={{ fontFamily: SANS, fontWeight: 700, fontSize: 52, fill: '#b23a2e' }}>结晶果糖</text>
+              <rect x={150} y={150} width={90} height={26} rx={13} fill="#c8a25a" transform="rotate(40 150 150)" />
+            </g>
+            <g opacity={strike}>
+              <text x={1500} y={300} textAnchor="middle" style={{ fontFamily: ZH, fontWeight: 900, fontSize: 64, fill: INK }}>0蔗糖 <tspan fill={RED}>≠</tspan> 0糖</text>
+              <text x={1500} y={760} textAnchor="middle" style={{ fontFamily: ZH, fontSize: 28, fill: 'rgba(243,237,226,0.75)' }}>2021.4.10 公开道歉 · 改标“低糖”</text>
+            </g>
+          </g>
+
+          {/* C: what the standard allows, per 100 ml */}
+          <g opacity={C}>
+            <text x={960} y={190} textAnchor="middle" style={{ fontFamily: ZH, fontWeight: 700, fontSize: 36, fill: INK, letterSpacing: '0.08em' }}>国标怎么算“无糖”“0卡”（每 100 毫升）</text>
+            {/* beaker */}
+            <g transform="translate(600,560)">
+              <path d="M-120,-220 L120,-220 L110,180 Q108,200 88,200 L-88,200 Q-108,200 -110,180 Z" fill="rgba(200,230,255,0.12)" stroke="rgba(220,235,255,0.6)" strokeWidth={3} />
+              <path d="M-114,-120 L114,-120 L110,180 Q108,200 88,200 L-88,200 Q-108,200 -110,180 Z" fill="rgba(170,210,255,0.16)" />
+              {[0, 1, 2, 3].map((k) => <line key={k} x1={-120} x2={-90} y1={-120 + k * 80} y2={-120 + k * 80} stroke="rgba(220,235,255,0.6)" strokeWidth={2} />)}
+              <text x={0} y={-150} textAnchor="middle" style={{ fontFamily: SANS, fontSize: 24, fill: 'rgba(220,235,255,0.75)' }}>100 毫升</text>
+              {/* the allowance: a pinch of sugar at the bottom */}
+              <g opacity={sugarO}>{Array.from({ length: 16 }, (_, i) => <circle key={i} cx={-14 + rnd(i, 7) * 28} cy={194 - rnd(i, 8) * 8} r={2.4} fill="#fbf7ef" />)}</g>
+            </g>
+            <g opacity={sugarO}>
+              <text x={900} y={500} style={{ fontFamily: ZH, fontWeight: 700, fontSize: 40, fill: INK }}>“无糖” ＝ 糖 ≤ <tspan fontFamily={EN} fontSize={84} fill={GOLD} fontWeight={700} style={{ fontVariantNumeric: 'lining-nums' }}>0.5</tspan> 克</text>
+            </g>
+            <g opacity={kjO}>
+              <text x={900} y={660} style={{ fontFamily: ZH, fontWeight: 700, fontSize: 40, fill: INK }}>“0卡” ＝ 能量 ≤ <tspan fontFamily={EN} fontSize={84} fill={GOLD} fontWeight={700} style={{ fontVariantNumeric: 'lining-nums' }}>17</tspan> 千焦</text>
+              <text x={900} y={712} style={{ fontFamily: ZH, fontSize: 28, fill: 'rgba(243,237,226,0.7)' }}>官方解读：“并不是真正意义的无能量”</text>
+            </g>
+            <text x={960} y={800} textAnchor="middle" style={{ fontFamily: ZH, fontSize: 20, fill: 'rgba(243,237,226,0.42)' }}>GB 28050《预包装食品营养标签通则》· 国家卫生健康委员会解读（2025）</text>
+          </g>
+        </svg>
+      </AbsoluteFill>
       <SubBand />
-      <Chapter T={T} at={b(44)} out={b(60)} text="1881 · 美 国 华 盛 顿" />
-      <div style={{ position: 'absolute', left: 0, right: 0, top: 800, textAlign: 'center', fontFamily: ZH_, fontSize: 19, color: 'rgba(243,237,226,0.5)', opacity: easeOut(prog(T, b(61), b(62))) * (1 - easeInOut(prog(T, b(75), b(76)))) }}>
-        书：布鲁恩斯《七位对数新手册》（A New Manual of Logarithms，1870 年英文版），当时常用的对数表 · 示意
-      </div>
-      <PersonCard T={T} at={b(52) + 0.3} out={b(60) - 0.1} name="SIMON NEWCOMB" zh="西蒙·纽康" years="1835 – 1909" role="天文学家 · 美国航海天文历局局长" />
-      <Subs T={T} lines={LINES_S2A} />
+      <Chapter T={T} at={b(128)} out={b(161)} text="中 国 版 的 零 糖" />
+      <Subs T={T} lines={LINES_S2} />
     </AbsoluteFill>
   );
 };
