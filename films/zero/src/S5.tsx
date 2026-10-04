@@ -8,15 +8,19 @@ import { JUNO } from './brand/identity';
 
 /* S5 (b294–end): back to the counter of the cold open, now with a glass of still water beside the two cans. Then the end card
    (last ~6 s, from b310): title, the question for the comments, the follow line, sources. */
-export const S5_IN = b(294) - 0.4, END_IN = b(310);
+/* Final edit: the beats b288–b304 (one half-phrase) are cut from picture and music (whole bars, on the beat grid),
+   so the cut lands as a hard cut from the cans to the water glass. Nothing between them is ever seen. */
+export const S5_IN = b(280) - 0.3, END_IN = b(310), CUT_A = b(288), CUT_B = b(304);
 
 export const LINES_S5: Line[] = [
-  [b(294) + 0.1, b(302) - 0.1, '把含糖可乐换成无糖的，确实少了[35克]糖；', 'Swapping to the sugar-free can does spare you 35 g of sugar;'],
-  [b(302) + 0.06, END_IN - 0.25, '但它，不该当水喝。', 'but it isn\'t water.'],
+  [b(280) + 0.1, b(288) - 0.1, '把含糖可乐换成无糖的，确实少了[35克]糖；', 'Swapping to the sugar-free can does spare you 35 g of sugar;'],
+  [b(304) + 0.06, END_IN - 0.25, '但它，不该当水喝。', 'but it isn\'t water.'],
 ];
 
 const KEYS: Key[] = [
-  [S5_IN, [-0.6, 1.2, 3.6], [-0.4, 0.65, 0]],
+  [S5_IN, [-0.75, 1.2, 3.7], [-0.45, 0.66, 0]],
+  [CUT_A, [-0.5, 1.12, 3.15], [-0.42, 0.66, 0]],
+  [CUT_B, [1.1, 1.0, 3.0], [0.6, 0.62, 0]],
   [END_IN, [0.3, 1.45, 4.9], [0.1, 0.6, 0]],
   [FILM_END, [0.35, 1.5, 5.2], [0.1, 0.6, 0]],
 ];

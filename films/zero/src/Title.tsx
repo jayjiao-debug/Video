@@ -51,7 +51,7 @@ export const Title: React.FC<{ T: number }> = ({ T }) => {
   const burst = prog(T, b(32), b(32) + 1.6);
   const o = (a: number, d = 0.5) => easeOut(prog(T, a, a + d));
   return (
-    <AbsoluteFill style={{ backgroundColor: '#05060b', opacity: inO * (1 - out), transform: `scale(${1 + 0.05 * easeInOut(prog(T, b(32), T_OUT))})` }}>
+    <AbsoluteFill style={{ backgroundColor: '#05060b', opacity: inO * (1 - out) }}>
       <svg width={1920} height={1080}>
         <radialGradient id="title-glow" cx="0.5" cy="0.5" r="0.5">
           <stop offset="0" stopColor="#f6cf78" stopOpacity="0.16" /><stop offset="0.6" stopColor="#f6cf78" stopOpacity="0.04" /><stop offset="1" stopColor="#f6cf78" stopOpacity="0" />
