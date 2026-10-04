@@ -40,9 +40,8 @@ const KEYS_STACK: Key[] = [
   [b(200), [-0.2, 2.5, 16.5], [0, 2.05, 0]],
 ];
 
-// k: 0→1 across the card's own window, a slow push so a card never sits still
-const Card: React.FC<{ o: number; children: React.ReactNode; y?: number; k?: number }> = ({ o, children, y = 0, k = 0 }) => (
-  <div style={{ position: 'absolute', inset: 0, opacity: o, transform: `translateY(${(1 - o) * 16 + y - 10 * k}px) scale(${1 + 0.06 * k})` }}>{children}</div>
+const Card: React.FC<{ o: number; children: React.ReactNode; y?: number }> = ({ o, children, y = 0 }) => (
+  <div style={{ position: 'absolute', inset: 0, opacity: o, transform: `translateY(${(1 - o) * 16 + y}px)` }}>{children}</div>
 );
 
 export const S3: React.FC<{ T: number }> = ({ T }) => {
@@ -63,12 +62,12 @@ export const S3: React.FC<{ T: number }> = ({ T }) => {
   return (
     <AbsoluteFill style={{ backgroundColor: '#06070c', opacity: o }}>
       {/* the question, on the drop */}
-      <Card o={qO} k={prog(T, b(161), b(168))}>
+      <Card o={qO}>
         <AbsoluteFill style={{ background: 'radial-gradient(ellipse 60% 50% at 50% 45%, rgba(246,207,120,0.12), rgba(0,0,0,0) 70%)' }} />
         <div style={{ position: 'absolute', top: 380, left: 0, right: 0, textAlign: 'center', fontFamily: ZH, fontWeight: 900, fontSize: 150, color: GOLD, transform: `scale(${0.85 + 0.15 * pop(T, b(161), 0.4)})`, textShadow: '0 0 40px rgba(246,207,120,0.4)' }}>健康吗？</div>
       </Card>
       {/* IARC: the headline, then the shelf it sits on */}
-      <Card o={iarcO} k={prog(T, b(168), b(184))}>
+      <Card o={iarcO}>
         <svg width={1920} height={1080}>
           <g transform={`translate(0,${-120 * shelf})`}>
             <rect x={460} y={250} width={1000} height={200} fill="#efe8d8" />
@@ -111,7 +110,7 @@ export const S3: React.FC<{ T: number }> = ({ T }) => {
         </AbsoluteFill>
       )}
       {/* erythritol: the study and its limits */}
-      <Card o={studyO} k={prog(T, b(200), b(224))}>
+      <Card o={studyO}>
         <svg width={1920} height={1080}>
           <text x={960} y={190} textAnchor="middle" style={{ fontFamily: ZH, fontWeight: 700, fontSize: 40, fill: INK }}>赤藓糖醇 · 《自然·医学》2023</text>
           <text x={960} y={236} textAnchor="middle" style={{ fontFamily: ZH, fontSize: 24, fill: 'rgba(243,237,226,0.6)' }}>血液中赤藓糖醇水平 vs 三年内心血管事件风险</text>
@@ -135,7 +134,7 @@ export const S3: React.FC<{ T: number }> = ({ T }) => {
         </svg>
       </Card>
       {/* WHO */}
-      <Card o={whoO} k={prog(T, b(224), S3_OUT)}>
+      <Card o={whoO}>
         <svg width={1920} height={1080}>
           <rect x={460} y={230} width={1000} height={460} fill="rgba(239,232,216,0.06)" stroke="rgba(243,237,226,0.25)" />
           <text x={510} y={300} style={{ fontFamily: SANS, fontSize: 24, fill: 'rgba(243,237,226,0.6)', letterSpacing: '0.1em' }}>2023 年 5 月 15 日 · 世界卫生组织 指南</text>

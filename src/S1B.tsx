@@ -80,7 +80,7 @@ export const S1B: React.FC<{ T: number }> = ({ T }) => {
   const intro = easeOut(prog(T, b(96) + 0.4, b(97) + 0.4)) * (1 - easeInOut(prog(T, b(103), b(104))));
   return (
     <AbsoluteFill style={{ backgroundColor: '#120c07', opacity: o }}>
-      <svg width={1920} height={1080} style={{ transform: `scale(${1 + 0.05 * prog(T, S1B_IN, S1B_OUT)}) translateY(${-8 * prog(T, S1B_IN, S1B_OUT)}px)` }}>
+      <svg width={1920} height={1080}>
         <defs>
           <radialGradient id="s1b-pool" cx="0.5" cy="0.45" r="0.6"><stop offset="0" stopColor="#ffcf8a" stopOpacity="0.28" /><stop offset="1" stopColor="#000" stopOpacity="0" /></radialGradient>
         </defs>
