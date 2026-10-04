@@ -11,8 +11,10 @@ Episodes are `explainer/episodes/<id>/episode.yaml` (script) + `scenes.tsx`
 lines over one background track the user supplies (`assets/music/bgm.mp3`, not in git).
 
 Branding (title card, corner mark, end card, copy voice) follows the `juno-brand`
-skill; run its brand QA together with the QA step below. Every character pose,
-hand and arm follows the `character-motion` skill (motion reference, joint limits).
+skill; run its brand QA together with the QA step below. **Tell the story with
+objects, places, light, numbers and the camera, not with acting characters**
+(§2). In the rare shot that does need a figure, its pose follows the
+`character-motion` skill.
 
 The user approved this workflow. Follow it in order and do not skip the
 approval gates: **reference → research → art → approval → animate → QA → render.**
@@ -54,10 +56,29 @@ people. What the user wants, and approved:
 - **Motivated light.** One warm practical key (lamp, window, fire, searchlight)
   plus cool moon/sky rim. Grade lit subjects into the scene (`grade-night`) so
   nothing looks pasted on.
-- **Characters from the shared rig** (`src/art/Figure.tsx`): one skeleton and
-  proportions for the whole cast, tapered limbs, IK hand targets (`reach`),
-  blink, six expressions, back view and silhouette + rim light for storytelling
-  shots. Keep real-world scale next to props (a person is ~⅓ of a B-17's fin).
+- **Play to our strengths: objects, not actors.** The owner's direction: 人物不是
+  你的强项，尽可能不做人物多的展示. Acting figures (arms reaching, hands holding,
+  faces reacting) are where our videos look wrong. What we do well, and what
+  should carry every episode:
+  - the hero object and its changes (a book's fore-edge darkening, a sign's
+    number rolling, a printer feeding cheques, a chart landing);
+  - places and motivated light, travelled by the spline camera;
+  - numbers, typography and data that move with purpose;
+  - match cuts through shapes, particles, weather, time-lapse.
+  How to show a person without animating one:
+  - **A person card** when a real person is introduced: a cut-paper profile
+    cameo in a gold oval, name, years and role (`PersonCard`); still, like an
+    archive caption. One card per person, on the line that names them.
+  - **Traces of presence:** the empty chair, a coat on the hook, a cup still
+    steaming, ink appearing on the page line by line, pages turning as if
+    riffled, a shadow on the wall that barely moves.
+  - **Silhouettes** at a distance (a window, a doorway, a crowd as one shape),
+    with little or no limb motion.
+  - No hands or arms acting on objects in shot. If an action needs a hand, show
+    the result (the page turns, the stamp lands) or cut to the object.
+  A figure from the shared rig (`src/art/Figure.tsx`) is the last resort: a
+  medium or wide shot, mostly still (breathing via `idle()`), and posed by the
+  `character-motion` rules.
 - **Palette discipline** (`src/art/palette.ts`): night blues + warm amber; gold
   only for answers, red only for damage and traps.
 - **Period-accurate props** with material gradients (`src/art/materials.tsx`).
@@ -72,7 +93,7 @@ Process:
    stick limbs, detached parts, oversized eyes, heavy outlines, wrong scale,
    floating vehicles, things too bright for the scene.
 3. Build a 5-second motion test (`src/MotionTest.tsx` pattern): camera move with
-   parallax, a walk into a sprung pose change, an impact beat. Check frames.
+   parallax, the hero object doing its thing, an impact beat. Check frames.
 4. Send the sheets and the motion test to the user and **wait for approval**
    of the direction before building scenes. Then build the remaining sets and FX
    to the same standard.

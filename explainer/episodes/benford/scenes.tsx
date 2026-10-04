@@ -2,6 +2,7 @@ import React from 'react';
 import {AbsoluteFill, Sequence, interpolate, random, spring, useCurrentFrame, useVideoConfig} from 'remotion';
 import {Figure, POSES, addPose, blinkAt, idle, lerpPose, type Look, type Pose} from '../../src/art/Figure';
 import {Materials} from '../../src/art/materials';
+import {PersonCard} from '../../src/art/PersonCard';
 import {P} from '../../src/art/palette';
 import {Layer, lookAt} from '../../src/art/sets/Airfield';
 import {TANK_DEFS} from '../../src/art/Tank';
@@ -544,7 +545,32 @@ const Sheet: React.FC<{rows: number; x?: number; y?: number}> = ({rows, x = LEDG
 	</g>
 );
 
-/** the desk furniture of 1881 drawn in front of Newcomb (the desk front hides his legs) */
+/**
+ * The scholar's empty chair (behind the desk; the desk front hides the seat), with a
+ * coat over its back: someone works here, without drawing them (explainer-video §2).
+ */
+const Chair1881: React.FC<{x: number; coat?: boolean}> = ({x, coat}) => (
+	<g transform={`translate(${x},800)`}>
+		<rect x={-6} y={-250} width={12} height={250} rx={4} fill="#2a1a10" />
+		<rect x={44} y={-210} width={10} height={210} rx={4} fill="#24160c" />
+		<path d="M-12,-254 C10,-268 40,-268 58,-254 L58,-240 C40,-252 10,-252 -12,-240 Z" fill="#3a2414" />
+		{[0, 1, 2].map((i) => (
+			<rect key={i} x={-2} y={-226 + i * 46} width={52} height={8} rx={3} fill="#2e1c10" />
+		))}
+		<rect x={-1} y={-262} width={4} height={250} fill="#6a4a30" opacity={0.35} />
+		{coat ? (
+			<g>
+				{/* a dark wool coat thrown over the back: collar folded over the rail, hem uneven */}
+				<path d="M-22,-246 C-20,-268 30,-272 34,-250 C36,-200 40,-150 44,-96 L30,-88 L22,-100 L8,-84 L-6,-98 L-20,-86 C-26,-140 -26,-200 -22,-246 Z" fill="#26211e" />
+				<path d="M-22,-246 C-6,-256 18,-258 34,-250 L30,-236 C14,-242 -6,-240 -20,-232 Z" fill="#332c27" />
+				<path d="M6,-236 C8,-190 10,-150 12,-104" stroke="#1a1614" strokeWidth={3} fill="none" />
+				<path d="M-14,-228 C-16,-190 -16,-150 -14,-110" stroke="#3a322c" strokeWidth={2} fill="none" opacity={0.7} />
+			</g>
+		) : null}
+	</g>
+);
+
+/** the desk furniture of 1881 (the desk front hides the chair's seat) */
 const Desk1881: React.FC<{f: number; children?: React.ReactNode}> = ({f, children}) => (
 	<>
 		<rect x={-300} y={760} width={2520} height={40} fill="#4a2e1a" />
@@ -561,6 +587,8 @@ const Desk1881: React.FC<{f: number; children?: React.ReactNode}> = ({f, childre
 		<g transform="translate(580,760)">
 			<path d="M-18,0 L18,0 L15,-26 L-15,-26 Z" fill="#14181e" />
 			<rect x={-7} y={-32} width={14} height={7} fill="#2a2e36" />
+			<line x1={2} y1={-24} x2={34} y2={-92} stroke="#3a2418" strokeWidth={4} strokeLinecap="round" />
+			<line x1={30} y1={-84} x2={38} y2={-102} stroke="#d8c8a0" strokeWidth={2} strokeLinecap="round" opacity={0.7} />
 		</g>
 		{children}
 		<g transform="translate(1460,760)">
@@ -622,18 +650,7 @@ const Edge: React.FC<SceneProps> = () => {
 					cam={cam}
 					desk={
 						<>
-							<g transform={`translate(${NX},${NY + breathe}) scale(${NS})`}>
-								<Figure
-									look={NEWCOMB}
-									pose={pose}
-									reach={{near: nfig(...safeReach(pose, NX, NY, NS, hand)), far: nfig(...safeReach(pose, NX, NY, NS, [720, 752], false))}}
-									expression={study > 0.5 ? 'thinking' : 'neutral'}
-									blink={blinkAt(f, 'nwe')}
-									rim="warm"
-									shadow={false}
-									holdNear={reach < 0.3 ? <rect x={-2} y={-34} width={4} height={40} rx={2} fill="#1a1410" transform="rotate(-30)" /> : undefined}
-								/>
-							</g>
+								<Chair1881 x={640} coat />
 							<Desk1881 f={f}>
 								<Sheet rows={Math.min(8, 1 + f * 0.03)} />
 								<BookFront id="ebook" wear={0.62} />
@@ -642,6 +659,7 @@ const Edge: React.FC<SceneProps> = () => {
 					}
 				/>
 			</MotionBlur>
+			<PersonCard t={f - c1} dur={c2 - c1 - 2} name="SIMON NEWCOMB" zh="西蒙·纽康" years="1835 – 1909" role="天文学家 · 美国航海天文历局局长" profile={{beard: true, hair: 'full'}} x={110} y={500} />
 		</FullFrame>
 	);
 };
@@ -780,18 +798,7 @@ const Flip: React.FC<SceneProps> = () => {
 						}
 						desk={
 							<>
-								<g transform={`translate(${NX},${NY}) scale(${NS})`}>
-									<Figure
-										look={NEWCOMB}
-										pose={pose}
-										reach={{near: nfig(...safeReach(pose, NX, NY, NS, hand)), far: nfig(...safeReach(pose, NX, NY, NS, [720, 752], false))}}
-										expression={f >= c[8] ? 'surprise' : lookUp > 0.5 ? 'thinking' : 'neutral'}
-										blink={blinkAt(f, 'nwf')}
-										rim="warm"
-										shadow={false}
-										holdNear={f >= c[6] && f < c[8] ? <rect x={-2} y={-34} width={4} height={40} rx={2} fill="#1a1410" transform="rotate(-30)" /> : undefined}
-									/>
-								</g>
+								<Chair1881 x={640} coat />
 								<Desk1881 f={f}>
 									{/* the formula sheet (then the printed note) */}
 									{fly(0) < 0.02 ? (
@@ -906,9 +913,7 @@ const Twist: React.FC<SceneProps> = () => {
 					lamp={lamp}
 					desk={
 						<>
-							<g transform={`translate(${BX},${BY}) scale(${NS})`} opacity={prog(f, c1, 20)}>
-								<Figure look={BENFORD_LOOK} pose={pose} reach={{near: bfig(...safeReach(pose, BX, BY, NS, hand)), far: bfig(...safeReach(pose, BX, BY, NS, [860, 752], false))}} expression={sitBack > 0.5 ? 'stern' : study > 0.5 ? 'thinking' : 'neutral'} blink={blinkAt(f, 'bf')} rim="warm" shadow={false} />
-							</g>
+							<Chair1881 x={760} />
 							<rect x={700} y={760} width={2600} height={40} fill="#3a2a1e" />
 							<rect x={700} y={760} width={2600} height={6} fill="#6a4a32" />
 							<rect x={700} y={800} width={2600} height={600} fill="#21170f" />
@@ -926,6 +931,7 @@ const Twist: React.FC<SceneProps> = () => {
 					}
 				/>
 			</MotionBlur>
+			<PersonCard t={f - c1} dur={c2 - c1 + 40} name="FRANK BENFORD" zh="弗兰克·本福特" years="1883 – 1948" role="物理学家 · 通用电气研究实验室" profile={{glasses: true, hair: 'short'}} x={110} y={230} />
 			{/* snow that becomes archive dust */}
 			<Snow f={f * (1 - 0.7 * snowToDust)} n={110} seed="brk" size={1.2 - 0.5 * snowToDust} speed={1 - 0.6 * snowToDust} o={0.8 - 0.4 * snowToDust} />
 		</FullFrame>
@@ -979,9 +985,7 @@ const Benford: React.FC<SceneProps> = () => {
 				lamp={1}
 				desk={
 					<>
-						<g transform={`translate(${BX},${BY}) scale(${NS})`}>
-							<Figure look={BENFORD_LOOK} pose={bPose} reach={{near: bfig(...safeReach(bPose, BX, BY, NS, hand)), far: bfig(...safeReach(bPose, BX, BY, NS, [860, 752], false))}} expression="thinking" blink={blinkAt(f + 300, 'bf')} rim="warm" shadow={false} />
-						</g>
+						<Chair1881 x={760} />
 						<rect x={700} y={760} width={2600} height={40} fill="#3a2a1e" />
 						<rect x={700} y={760} width={2600} height={6} fill="#6a4a32" />
 						<rect x={700} y={800} width={2600} height={600} fill="#21170f" />
