@@ -57,3 +57,59 @@ export const DRUNK = (() => {
   }
   throw new Error('no drunk path');
 })();
+
+const visits = (w: Walk, i: number, upto: number, tx = 0, ty = 0, tz = 0) => {
+  const out: number[] = [];
+  for (let k = 1; k <= upto; k++) {
+    const o = (i * (w.steps + 1) + k) * w.d;
+    if (w.pos[o] === tx && (w.d < 2 || w.pos[o + 1] === ty) && (w.d < 3 || w.pos[o + 2] === tz)) out.push(k);
+  }
+  return out;
+};
+const reach = (w: Walk, upto: number) => {
+  let far = 0;
+  for (let k = 0; k <= upto; k++) {
+    let d = 0;
+    for (let j = 0; j < w.d; j++) d += w.pos[k * w.d + j] ** 2;
+    far = Math.max(far, Math.sqrt(d));
+  }
+  return far;
+};
+
+const search = <R,>(name: string, f: (seed: number) => R | null): R => {
+  for (let seed = 1; seed < 400000; seed++) {
+    const r = f(seed);
+    if (r) return r;
+  }
+  throw new Error('no walk for ' + name);
+};
+
+/** S2 left: a walker on the plane that comes home 4–5 times in 48 steps, well spread out, and wanders ≥ 3.5 blocks */
+export const HOMER = search('HOMER', (seed) => {
+  const w = simulate(2, 1, 48, seed * 104729);
+  const v = visits(w, 0, 48);
+  return v.length >= 4 && v.length <= 5 && reach(w, 48) >= 3.5 && v[0] >= 6 && v.every((x, k) => k === 0 || x - v[k - 1] >= 6) ? {w, visits: v} : null;
+});
+/** S2 right: a bird that never comes back in 60 steps and ends ≥ 8 away */
+export const LOST = search('LOST', (seed) => {
+  const w = simulate(3, 1, 60, seed * 15485863);
+  return w.back[0] < 0 && Math.hypot(w.pos[180], w.pos[181], w.pos[182]) >= 8 ? {w} : null;
+});
+/** S4: the couple (a) and Pólya (b, starting 3 right and 1 down: same parity, or they could never meet),
+    meeting 4–5 times in 64 steps */
+export const WOODS = search('WOODS', (seed) => {
+  const a = simulate(2, 1, 64, seed * 7907);
+  const b = simulate(2, 1, 64, seed * 7907 + 3);
+  const meet: number[] = [];
+  let far = 0;
+  for (let k = 1; k <= 64; k++) {
+    const dx = a.pos[k * 2] - (b.pos[k * 2] + 3);
+    const dy = a.pos[k * 2 + 1] - (b.pos[k * 2 + 1] + 1);
+    if (dx === 0 && dy === 0 && (meet.length === 0 || k - meet[meet.length - 1] >= 5)) meet.push(k);
+    far = Math.max(far, Math.abs(dx) + Math.abs(dy));
+  }
+  return meet.length >= 4 && meet.length <= 5 && meet[0] >= 6 && meet[0] <= 16 && far >= 5 ? {a, b, meet, off: [3, 1] as [number, number]} : null;
+});
+/** S7: one long walk on the plane and one in space, for the footprint picture */
+export const LONG2 = simulate(2, 1, 2000, 2024);
+export const LONG3 = simulate(3, 1, 2000, 3036);

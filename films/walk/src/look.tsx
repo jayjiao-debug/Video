@@ -46,7 +46,7 @@ export type Draw = (ctx: CanvasRenderingContext2D) => void;
  * A full-frame canvas of light: `draw` paints with additive blending; a blurred copy is then added
  * for bloom. Re-drawn synchronously every frame (deterministic, no animation loop).
  */
-export const Light: React.FC<{draw: Draw; bloom?: number; opacity?: number; deps: unknown[]}> = ({draw, bloom = 0.9, opacity = 1, deps}) => {
+export const Light: React.FC<{draw: Draw; bloom?: number; opacity?: number; deps: unknown[]; w?: number; h?: number}> = ({draw, bloom = 0.9, opacity = 1, deps, w = W, h = H}) => {
   const ref = useRef<HTMLCanvasElement>(null);
   const tmp = useRef<HTMLCanvasElement | null>(null);
   useLayoutEffect(() => {
@@ -54,29 +54,29 @@ export const Light: React.FC<{draw: Draw; bloom?: number; opacity?: number; deps
     if (!cv) return;
     const ctx = cv.getContext('2d')!;
     ctx.setTransform(1, 0, 0, 1, 0, 0);
-    ctx.clearRect(0, 0, W, H);
+    ctx.clearRect(0, 0, w, h);
     ctx.globalCompositeOperation = 'lighter';
     draw(ctx);
     if (bloom > 0) {
       if (!tmp.current) {
         tmp.current = document.createElement('canvas');
-        tmp.current.width = W / 2;
-        tmp.current.height = H / 2;
+        tmp.current.width = w / 2;
+        tmp.current.height = h / 2;
       }
       const t = tmp.current.getContext('2d')!;
-      t.clearRect(0, 0, W / 2, H / 2);
+      t.clearRect(0, 0, w / 2, h / 2);
       t.filter = 'blur(7px)';
-      t.drawImage(cv, 0, 0, W / 2, H / 2);
+      t.drawImage(cv, 0, 0, w / 2, h / 2);
       t.filter = 'none';
       ctx.setTransform(1, 0, 0, 1, 0, 0);
       ctx.globalCompositeOperation = 'lighter';
       ctx.globalAlpha = bloom;
-      ctx.drawImage(tmp.current, 0, 0, W, H);
+      ctx.drawImage(tmp.current, 0, 0, w, h);
       ctx.globalAlpha = 1;
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, deps);
-  return <canvas ref={ref} width={W} height={H} style={{position: 'absolute', inset: 0, opacity}} />;
+  return <canvas ref={ref} width={w} height={h} style={{position: 'absolute', inset: 0, opacity}} />;
 };
 
 /** a glowing point: hot core + soft halo (call with globalCompositeOperation = 'lighter') */
@@ -151,3 +151,47 @@ export const textPoints = (text: string, font: string, cx: number, cy: number, n
   TEXT_PTS.set(key, pts);
   return pts;
 };
+
+/** the episode motif: a home ring, a wandering loop that comes back to it, and a bird leaving.
+    Drawn in gold at (cx, cy), `s` = scale (1 ≈ 220 px wide); `p` = how much is drawn (0–1). */
+export const motif = (ctx: CanvasRenderingContext2D, cx: number, cy: number, s: number, a: number, p = 1, split = 0) => {
+  if (a <= 0.003) return;
+  ctx.save();
+  ctx.lineCap = 'round';
+  ctx.lineJoin = 'round';
+  // the loop: a drunk's walk on a tiny grid, leaving the ring and coming back
+  const path = [[0, 0], [1, 0], [1, -1], [2, -1], [2, 0], [3, 0], [3, 1], [2, 1], [1, 1], [0, 1], [-1, 1], [-1, 0], [0, 0]];
+  const G = 26 * s;
+  const ox = cx - 40 * s - split * 160 * s;
+  const n = (path.length - 1) * clampN(p * 1.4);
+  ctx.strokeStyle = `rgba(246,214,150,${0.85 * a})`;
+  ctx.lineWidth = 2.4 * s;
+  ctx.beginPath();
+  for (let i = 0; i <= Math.floor(n) && i < path.length; i++) {
+    const [x, y] = path[i];
+    if (i === 0) ctx.moveTo(ox + x * G, cy + y * G);
+    else ctx.lineTo(ox + x * G, cy + y * G);
+  }
+  const f = n % 1;
+  const i0 = Math.min(path.length - 2, Math.floor(n));
+  if (n < path.length - 1) ctx.lineTo(ox + (path[i0][0] + (path[i0 + 1][0] - path[i0][0]) * f) * G, cy + (path[i0][1] + (path[i0 + 1][1] - path[i0][1]) * f) * G);
+  ctx.stroke();
+  // home ring
+  ctx.strokeStyle = `rgba(255,232,180,${a})`;
+  ctx.lineWidth = 2 * s;
+  ctx.beginPath();
+  ctx.arc(ox, cy, 9 * s, 0, Math.PI * 2);
+  ctx.stroke();
+  glow(ctx, ox, cy, 4 * s, 0.7 * a, true);
+  // the bird: a dotted climb away to the upper right
+  const q = clampN(p * 1.4 - 0.4);
+  const bx = cx + 60 * s + split * 160 * s;
+  const by = cy + 10 * s;
+  for (let k = 0; k < 14 * q; k++) {
+    const t = k / 14;
+    dot(ctx, bx + t * 90 * s, by - t * t * 80 * s - Math.sin(t * 9) * 6 * s, 1.5 * s, 0.7 * a * (1 - t * 0.6));
+  }
+  if (q > 0) bird(ctx, bx + q * 90 * s, by - q * q * 80 * s - Math.sin(q * 9) * 6 * s, 3.2 * s, -0.7, a, q * 20);
+  ctx.restore();
+};
+const clampN = (x: number) => Math.max(0, Math.min(1, x));
