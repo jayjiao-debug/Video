@@ -1,12 +1,12 @@
 import React from 'react';
 import {makeCam} from '../cam';
 import {b, clamp, easeInOut, easeOut, inOut, keys, mulberry, prog} from '../lib';
-import {bird, C, dot, glow, Light, SERIF, textPoints} from '../look';
+import {bird, C, dot, glow, Light, SERIF, textPoints, waffle} from '../look';
 import {BigNum, Caption, Credit, Tag} from '../ui';
-import {at, homeBy, W3} from '../walks';
+import {at, H3 as W3, homeBy} from '../walks';
 
-/* S5, the build (b128–b157): the plane grows a third axis into a lattice of points; 1,600 birds leave
-   one nest; the share that has come back climbs fast, then slower, then freezes (b152–b157).
+/* S5, the build (b128–b157): the plane grows a third axis into a lattice of points; 100 birds (few
+   enough to follow, each with a short trail) leave one nest; the share that has come back climbs fast, then slower, then freezes (b152–b157).
    S6, the drop (b157–b185): the frozen birds (plus thousands more from off frame) fly into "34%",
    landing exactly on b161; Kakutani's line; the number re-forms as 19% (4D) and 14% (5D). */
 const P = [0, 0, 0, 0];
@@ -16,7 +16,7 @@ const V = [0, 0, 0];
 const stepS5 = (T: number) => keys(T, [[b(136), 0], [b(140), 15], [b(144), 60], [b(152), 300], [b(156), 600]], (x) => x);
 const camS5 = (T: number) => {
   const phi = 0.4 + (T - b(128)) * 0.07;
-  const R = keys(T, [[b(128), 36], [b(136), 30], [b(152), 78], [b(157), 82]], easeInOut);
+  const R = keys(T, [[b(128), 36], [b(136), 24], [b(152), 60], [b(157), 64]], easeInOut);
   return makeCam([R * Math.sin(phi), R * 0.32, R * Math.cos(phi)], [0, -1, 0], 42, 1080, 460);
 };
 
@@ -53,6 +53,25 @@ export const S5: React.FC<{T: number}> = ({T}) => {
     cam.project(0, 0, 0, P);
     glow(ctx, P[0], P[1], 10, 0.8 * fin, true);
     if (T < b(136)) return;
+    const out = clamp((T - b(136)) / 0.6);
+    // trails (normal blending: no white pile-up)
+    ctx.save();
+    ctx.globalCompositeOperation = 'source-over';
+    ctx.lineWidth = 1.3;
+    ctx.lineCap = 'round';
+    for (let i = 0; i < W3.n; i++) {
+      const home = W3.back[i] >= 0 && W3.back[i] <= s;
+      ctx.strokeStyle = home ? `rgba(241,197,109,${0.4 * out * fin})` : `rgba(180,192,222,${0.28 * out * fin})`;
+      ctx.beginPath();
+      for (let k = 0; k <= 16; k++) {
+        at(W3, i, Math.max(0, s - 16 + k), V);
+        cam.project(V[0], V[1], V[2], P);
+        if (k === 0) ctx.moveTo(P[0], P[1]);
+        else ctx.lineTo(P[0], P[1]);
+      }
+      ctx.stroke();
+    }
+    ctx.restore();
     for (let i = 0; i < W3.n; i++) {
       const home = W3.back[i] >= 0 && W3.back[i] <= s;
       at(W3, i, Math.max(0, s - 0.6), V);
@@ -60,11 +79,24 @@ export const S5: React.FC<{T: number}> = ({T}) => {
       at(W3, i, s, V);
       cam.project(V[0], V[1], V[2], P);
       if (P[3] === 0) continue;
-      const sz = clamp(P[3] * 0.0055, 0.7, 2.8);
-      const fog = clamp(1.3 - P[2] / 140, 0.3, 1);
-      const out = clamp((T - b(136)) / 0.6);
-      bird(ctx, P[0], P[1], sz, Math.atan2(P[1] - Q[1], P[0] - Q[0]), (home ? 0.95 : 0.45) * fog * out * fin, s * 3 + i);
+      const sz = clamp(P[3] * 0.012, 2.6, 6);
+      bird(ctx, P[0], P[1], sz, Math.atan2(P[1] - Q[1], P[0] - Q[0]), (home ? 1 : 0.6) * out * fin, s * 3 + i);
+      if (home) glow(ctx, P[0], P[1], 3, 0.5 * out * fin);
     }
+    // a ring pulses at the nest for every new return
+    cam.project(0, 0, 0, P);
+    for (let i = 0; i < W3.n; i++) {
+      const k = W3.back[i];
+      if (k < 0) continue;
+      const u = (s - k) / Math.max(3, s * 0.08);
+      if (u < 0 || u > 1) continue;
+      ctx.strokeStyle = `rgba(255,226,160,${(1 - u) * 0.4 * fin})`;
+      ctx.lineWidth = 1.5;
+      ctx.beginPath();
+      ctx.arc(P[0], P[1], 10 + u * 46, 0, Math.PI * 2);
+      ctx.stroke();
+    }
+    waffle(ctx, 140, 620, (i) => (W3.back[i] >= 0 && W3.back[i] <= s ? 1 : 0), fin * prog(T, b(137), b(138.5)));
   };
   const pct = Math.round((100 * homeBy(W3, s)) / W3.n);
   cam.project(0, 12 * grow, 0, P);
@@ -73,9 +105,9 @@ export const S5: React.FC<{T: number}> = ({T}) => {
     <>
       <Light draw={draw} deps={[T]} bloom={0.95} />
       <Tag x={P[0]} y={P[1] - 40} text="↑ 上" anchor="center" size={26} color={C.gold} o={up} />
-      <BigNum T={T} at={b(137)} out={b(157)} x={130} y={330} value={`${pct}%`} zh="飞回过鸟巢" en="BIRDS THAT RETURNED" />
-      <Tag x={130} y={610} text={`第 ${Math.round(s)} 步`} size={24} color={C.grey} o={inOut(T, b(137), b(157), 0.4, 0.3)} />
-      <Credit T={T} at={b(137)} out={b(157)} text="模拟 · 1,600 个三维随机游走" />
+      <BigNum T={T} at={b(137)} out={b(157)} x={130} y={300} value={`${pct}%`} zh="飞回过鸟巢" en="BIRDS THAT RETURNED" />
+      <Tag x={130} y={556} text={`第 ${Math.round(s)} 步`} size={24} color={C.grey} o={inOut(T, b(137), b(157), 0.4, 0.3)} />
+      <Credit T={T} at={b(137)} out={b(157)} text="模拟 · 100 个三维随机游走 · 600 步" />
     </>
   );
 };

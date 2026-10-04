@@ -195,3 +195,23 @@ export const motif = (ctx: CanvasRenderingContext2D, cx: number, cy: number, s: 
   ctx.restore();
 };
 const clampN = (x: number) => Math.max(0, Math.min(1, x));
+
+/** 100 people as a 10×10 grid of dots: lit(i) 0..1 = how much person i glows (home), `pulse(i)` 0..1 a fresh pop */
+export const waffle = (ctx: CanvasRenderingContext2D, x: number, y: number, lit: (i: number) => number, a: number, cell = 21) => {
+  if (a <= 0.003) return;
+  for (let i = 0; i < 100; i++) {
+    const cx = x + (i % 10) * cell;
+    const cy = y + Math.floor(i / 10) * cell;
+    const l = lit(i);
+    ctx.fillStyle = `rgba(150,160,190,${0.22 * a * (1 - l)})`;
+    ctx.beginPath();
+    ctx.arc(cx, cy, cell * 0.2, 0, Math.PI * 2);
+    ctx.fill();
+    if (l > 0) {
+      ctx.fillStyle = `rgba(255,222,150,${0.95 * l * a})`;
+      ctx.beginPath();
+      ctx.arc(cx, cy, cell * 0.24, 0, Math.PI * 2);
+      ctx.fill();
+    }
+  }
+};

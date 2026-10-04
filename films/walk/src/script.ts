@@ -22,7 +22,7 @@ export const LINES: [number, number, string, string][] = [
   [120, 128, '两个乱走的人，为什么总会[再遇见]？', 'So he asked: why do two random walkers keep meeting?'],
   // S5 one more direction
   [128, 136, '可如果，再多一个方向：[上下]', 'Now add one more direction: up and down.'],
-  [136, 144, '1,600 只鸟，从同一个鸟巢出发', '1,600 birds leave the same nest.'],
+  [136, 144, '100 只鸟，从同一个鸟巢出发', '100 birds leave the same nest.'],
   [144, 152, '飞回来的比例，越涨越慢……', 'The share that makes it back climbs slower and slower…'],
   [152, 159, '然后，停住了', '…and then it stops.'],
   // S6 the drop

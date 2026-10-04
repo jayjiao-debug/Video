@@ -113,3 +113,17 @@ export const WOODS = search('WOODS', (seed) => {
 /** S7: one long walk on the plane and one in space, for the footprint picture */
 export const LONG2 = simulate(2, 1, 2000, 2024);
 export const LONG3 = simulate(3, 1, 2000, 3036);
+
+/* Readable versions for the film: 100 walkers each, few enough to follow one by one. Seeds are
+   searched so that each small group matches its big simulation (and the theory) to the percent:
+   1D 97% home by step 900, 2D 68% by step 900, 3D 34% by step 600. */
+const matching = (d: 1 | 2 | 3, steps: number, want: number, base: number) => {
+  for (let seed = 1; seed < 20000; seed++) {
+    const w = simulate(d, 100, steps, base + seed * 7);
+    if (homeBy(w, steps) === want) return w;
+  }
+  throw new Error(`no ${d}D group with ${want} home`);
+};
+export const H1 = matching(1, 900, 97, 1000);
+export const H2 = matching(2, 900, 68, 2000);
+export const H3 = matching(3, 600, 34, 3000);
