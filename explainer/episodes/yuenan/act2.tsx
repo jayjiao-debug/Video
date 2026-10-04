@@ -8,7 +8,7 @@ import {font} from '../../src/lib/theme';
 import type {SceneProps} from '../../src/lib/types';
 import {Tag} from '../xuming/look3';
 import {Glow, Thin} from '../xuming/kit3';
-import {BASE, Bar} from './act1';
+import {BASE, Bar, MSGS, OFF, PHONE, REPLY_Y} from './act1';
 import {Bedroom, Bubble, Bulb, ChatHead, Clock, Dust, FlatPack, H, HUE, Person, Phone, Pool, SHE, SIT_PHONE, TimeChip, W} from './kit';
 import {Canvas, EPISODE, View, arrive, cam, camPath, landed, shake, through} from './stage';
 
@@ -168,7 +168,7 @@ const Reveal: React.FC<SceneProps> = () => {
 	]);
 	const bars = prog(f, cue(3) + 50, 30, ease.out);
 	return (
-		<Canvas flash={f < 8 ? 0.9 * (1 - f / 8) : f >= R4 ? a4.flash * 0.5 + 0.35 * zap : f >= R3 ? a3.flash * 0.5 : f >= R2 ? a2.flash * 0.6 : 0} flashColor={f >= R4 ? '#cfe6ff' : HUE.gold}>
+		<Canvas flash={f < 8 ? 0.9 * (1 - f / 8) : f < R2 ? 0.85 * prog(f, R2 - 10, 10, ease.in) : f >= R4 ? a4.flash * 0.5 + 0.35 * zap : f >= R3 ? a3.flash * 0.5 : f >= R2 ? a2.flash * 0.6 : 0} flashColor={f >= R4 ? '#cfe6ff' : HUE.gold}>
 			{f < R2 ? (
 				<g opacity={into.o}>
 					<View c={{...c1, z: c1.z * into.z, x: mix(c1.x, R.x, prog(f, R2 - 16, 16, ease.in)), y: mix(c1.y, R.y, prog(f, R2 - 16, 16, ease.in))}} sh={shake(f, 0, 18)}>
@@ -330,53 +330,146 @@ const Takeaways: React.FC<SceneProps> = () => {
 	const f = useCurrentFrame();
 	const cue = useCue();
 	const end = useScene().duration;
-	const a = arrive(f, 0, 16);
+	const T2 = cue(1) - 8;
+	const T3 = cue(2) - 8;
+	const T4 = cue(3) - 8;
 	const handX = 700 + 104 * 1.3;
 	const handY = SEAT - 262 * 1.3 - 6;
-	const c = camPath(f, [
+
+	// T1: out of the card into the phone in her hand, pull back; she puts it face down
+	const a = arrive(f, 0, 16);
+	const c1 = camPath(f, [
 		[0, cam(handX, handY, 4.2)],
 		[cue(0) + 60, cam(820, 600, 1.05)],
-		[cue(1) - 10, cam(700, 600, 1.12)],
-		[end, cam(620, 600, 1.3)],
+		[T2, cam(780, 600, 1.12)],
 	]);
-	// she lowers the phone and puts it face down on the bed
 	const down = prog(f, cue(0) + 70, 30, ease.inOut);
 	const phoneX = mix(handX, 860, down);
 	const phoneY = mix(handY, 818, down);
 	const glow = 1 - prog(f, cue(0) + 96, 10);
-	const q = (i: number) => landed(f, cue(i + 1) - 2);
-	const dim = (i: number) => (i < 2 && f > cue(i + 2) - 2 ? 0.45 : 1);
+
+	// T2 ①: the chat rewinds to the first day: every message slides back out, newest first
+	const c2 = camPath(f, [
+		[T2, cam(PHONE.x, PHONE.y + 30, 1.12)],
+		[T3, cam(PHONE.x, PHONE.y + 10, 1.3)],
+	]);
+	const gone = (k: number) => prog(f, cue(1) + 8 + k * 6, 9, ease.in);
+	const fresh = landed(f, cue(1) + 8 + 7 * 6 + 6);
+
+	// T3 ②: what you paid (her gold pile) and what TA gave (one grey 嗯) slide apart
+	const c3 = camPath(f, [
+		[T3, cam(960, 520, 1.25)],
+		[T4, cam(960, 520, 1.0)],
+	]);
+	const sep = prog(f, cue(2) + 20, 90, ease.inOut);
+
+	// T4 ③: the gold comes back to her: it gathers into a warm light in her hands
+	const c4 = camPath(f, [
+		[T4, cam(handX, handY, 2.3)],
+		[end, cam(860, 600, 1.15)],
+	]);
+	const gather = prog(f, T4 + 10, 80, ease.inOut);
+	const warm = prog(f, T4 + 40, 90, ease.inOut);
+
+	const chatAt = (k: number) => {
+		// k: 0 = TA's reply, 1.. = her messages from the newest down
+		const o = 1 - gone(k);
+		return {o, dy: 30 * gone(k)};
+	};
+
 	return (
-		<Canvas flash={a.flash * 0.4} flashColor={HUE.phone}>
-			<View c={{...c, z: c.z * a.z}}>
-				<Bedroom f={f} phone={mix(1, 0.15, 1 - glow)} />
-				<Person look={SHE} x={700} y={SEAT} s={1.3} pose={lerpPose(SIT_PHONE, {...SIT_PHONE, head: 6, armNear: [14, 30], armFar: [10, 34]}, down)} rim="cool" sil="#0a0a14" reach={down < 0.5 ? {near: [104, -262], far: [98, -258]} : undefined} />
-				<g transform={`translate(${phoneX},${phoneY}) rotate(${mix(-20, 4, down)})`}>
-					{down < 0.6 ? (
-						<rect x={-13} y={-22} width={26} height={44} rx={5} fill={HUE.phoneWarm} opacity={glow} />
-					) : (
+		<Canvas flash={f < T2 ? a.flash * 0.4 : 0} flashColor={HUE.phone}>
+			{f < T2 ? (
+				<View c={{...c1, z: c1.z * a.z}}>
+					<Bedroom f={f} phone={mix(1, 0.15, 1 - glow)} />
+					<Pool x={1440} y={420} r={800} c={HUE.phone} o={0.35} id="tkm" />
+					<Person look={SHE} x={700} y={SEAT} s={1.3} pose={lerpPose(SIT_PHONE, {...SIT_PHONE, head: 6, armNear: [14, 30], armFar: [10, 34]}, down)} rim="cool" sil="#0a0a14" reach={down < 0.5 ? {near: [104, -262], far: [98, -258]} : undefined} />
+					<g transform={`translate(${phoneX},${phoneY}) rotate(${mix(-20, 4, down)})`}>
+						{down < 0.6 ? <rect x={-13} y={-22} width={26} height={44} rx={5} fill={HUE.phoneWarm} opacity={glow} /> : <rect x={-40} y={-10} width={80} height={20} rx={5} fill="#0b0b12" stroke="#4a4a5c" />}
+						<circle r={70} fill={HUE.phone} opacity={0.22 * glow} filter="url(#b8)" />
+					</g>
+				</View>
+			) : null}
+			{f >= T2 && f < T3 ? (
+				<View c={c2}>
+					<rect x={-2000} y={-2000} width={W + 4000} height={H + 4000} fill="#05050b" />
+					<Pool x={960} y={520} r={800} c={HUE.phone} id="tk2" />
+					<Phone x={PHONE.x} y={PHONE.y} s={1}>
+						<g transform={`translate(0,${OFF})`}>
+							{MSGS.map((m, i) => {
+								const {o, dy} = chatAt(MSGS.length - i);
+								return o > 0 ? (
+									<g key={i} opacity={o} transform={`translate(0,${dy})`}>
+										{m.chip ? <TimeChip y={m.chipY!} t={m.chip} /> : null}
+										<Bubble y={m.y} mine text={m.text} />
+									</g>
+								) : null;
+							})}
+							{chatAt(0).o > 0 ? (
+								<g opacity={chatAt(0).o} transform={`translate(0,${chatAt(0).dy})`}>
+									<TimeChip y={REPLY_Y - 10} t="01:07" />
+									<Bubble y={REPLY_Y} text="嗯" w={52} />
+								</g>
+							) : null}
+						</g>
+						<ChatHead />
+						<Clock t={fresh > 0.5 ? '21:02' : '01:07'} />
+						<g opacity={fresh}>
+							<TimeChip y={150} t="今天 · 你们刚认识" />
+						</g>
+						<rect x={14} y={606} width={302} height={50} rx={25} fill="#1b1c33" stroke="#3a3d66" strokeWidth={1} />
+						<text x={34} y={639} style={{fontFamily: font.sans, fontSize: 20, fill: '#5a5e8a'}}>
+							发消息{Math.floor(f / 15) % 2 === 0 && fresh > 0.5 ? '|' : ''}
+						</text>
+					</Phone>
+					<Dust seed="tk2" f={f} n={36} c="#d8deff" />
+				</View>
+			) : null}
+			{f >= T3 && f < T4 ? (
+				<View c={c3}>
+					<rect x={-2000} y={-2000} width={W + 4000} height={H + 4000} fill="#05050b" />
+					<Pool x={mix(640, 560, sep)} y={460} r={620} c={HUE.gold} o={0.55} id="tk3a" />
+					<g transform={`translate(${mix(470, 390, sep)},${150}) scale(1.25)`}>
+						{MSGS.map((m, i) => (
+							<Bubble key={i} y={m.y - 100} mine text={m.text} gold={1} />
+						))}
+					</g>
+					<g transform={`translate(${mix(1280, 1380, sep)},${560}) scale(2)`}>
+						<circle cx={-40} cy={-60} r={22} fill="#22243e" stroke="#4a4f80" strokeWidth={1} />
+						<g transform="translate(-18,-25)">
+							<Bubble y={0} text="嗯" w={52} />
+						</g>
+					</g>
+					<text x={mix(660, 580, sep)} y={790} textAnchor="middle" opacity={landed(f, cue(2) + 6)} style={{fontFamily: font.serif, fontWeight: 600, fontSize: 46, fill: HUE.gold}}>
+						你付出的
+					</text>
+					<text x={mix(1300, 1400, sep)} y={790} textAnchor="middle" opacity={landed(f, cue(2) + 16)} style={{fontFamily: font.serif, fontWeight: 600, fontSize: 46, fill: "#9a96b4"}}>
+						TA 给的
+					</text>
+					<line x1={960} y1={250} x2={960} y2={800} stroke="#3a3650" strokeWidth={1.5} strokeDasharray="6 10" opacity={sep} />
+					<Dust seed="tk3" f={f} n={40} c="#ffd98f" x0={200} x1={1000} />
+				</View>
+			) : null}
+			{f >= T4 ? (
+				<View c={c4}>
+					<Bedroom f={f} phone={0.12} />
+					<Pool x={handX} y={handY} r={900} c={HUE.lamp} o={0.7 * warm} id="tk4" />
+					<Person look={SHE} x={700} y={SEAT} s={1.3} pose={{...SIT_PHONE, head: 14}} rim="warm" sil="#100a10" reach={{near: [104, -250], far: [96, -246]}} />
+					<g transform="translate(860,818) rotate(4)">
 						<rect x={-40} y={-10} width={80} height={20} rx={5} fill="#0b0b12" stroke="#4a4a5c" />
-					)}
-					<circle r={70} fill={HUE.phone} opacity={0.22 * glow} filter="url(#b8)" />
-				</g>
-			</View>
-			<rect width={W} height={H} fill="url(#leftScrim)" opacity={prog(f, cue(1) - 20, 20)} />
-			<defs>
-				<linearGradient id="leftScrim" x1="0" y1="0" x2="1" y2="0">
-					<stop offset="0" stopColor="#000" stopOpacity="0.85" />
-					<stop offset="0.55" stopColor="#000" stopOpacity="0.2" />
-					<stop offset="1" stopColor="#000" stopOpacity="0" />
-				</linearGradient>
-			</defs>
-			{[
-				{t: '① 如果今天第一次遇见TA，还会选吗？'},
-				{t: '② 放不下的是TA，还是你付出的那些？'},
-				{t: '③ 付出不是错，把它留给值得的人。', gold: true},
-			].map((l, i) => (
-				<text key={i} x={140} y={300 + i * 90} opacity={q(i) * dim(i)} style={{fontFamily: font.serif, fontWeight: 600, fontSize: 44, fill: l.gold ? HUE.gold : HUE.cream}} filter={l.gold ? 'url(#g-sm)' : undefined}>
-					{l.t}
-				</text>
-			))}
+					</g>
+					{/* gold motes gathering into her hands */}
+					{Array.from({length: 18}, (_, i) => {
+						const a0 = (i / 18) * Math.PI * 2;
+						const r0 = 700 + 200 * Math.sin(i * 1.7);
+						const k = Math.min(1, gather * 1.25 - (i % 6) * 0.04);
+						const x = mix(handX + r0 * Math.cos(a0), handX, Math.max(0, k));
+						const y = mix(handY + r0 * Math.sin(a0) * 0.6, handY, Math.max(0, k));
+						return <rect key={i} x={x - 14} y={y - 6} width={28} height={12} rx={6} fill={HUE.gold} opacity={0.8 * (1 - Math.max(0, k) ** 6)} filter="url(#g-sm)" />;
+					})}
+					<Glow x={handX} y={handY} r={40 + 90 * warm} o={warm} />
+				</View>
+			) : null}
 		</Canvas>
 	);
 };

@@ -96,7 +96,7 @@ export const Bar: React.FC<{x: number; base?: number; h: number; label: string; 
 
 const Lamp1959: React.FC<{id: string; x?: number; y?: number}> = ({id, x = 1180, y = 420}) => (
 	<>
-		<rect x={-400} y={-300} width={W + 800} height={H + 600} fill="#07060a" />
+		<rect x={-2000} y={-2000} width={W + 4000} height={H + 4000} fill="#07060a" />
 		<Pool x={x} y={y} r={820} c={HUE.lamp} id={id} />
 	</>
 );
@@ -104,8 +104,8 @@ const Lamp1959: React.FC<{id: string; x?: number; y?: number}> = ({id, x = 1180,
 // ---------------------------------------------------------------- 1. hook: 嗯
 
 // the conversation in screen space; OFF scrolls it so TA's reply sits above the input bar
-const OFF = -64;
-const MSGS: {chip?: string; chipY?: number; y: number; text: string}[] = [
+export const OFF = -64;
+export const MSGS: {chip?: string; chipY?: number; y: number; text: string}[] = [
 	{chip: '21:02', chipY: 118, y: 128, text: '今天路过那家店了，\n想起你说想去'},
 	{y: 214, text: '下周末有空吗？'},
 	{chip: '22:40', chipY: 290, y: 300, text: '在忙吗？'},
@@ -113,9 +113,9 @@ const MSGS: {chip?: string; chipY?: number; y: number; text: string}[] = [
 	{chip: '23:58', chipY: 434, y: 444, text: '没空也没关系哈哈'},
 	{y: 502, text: '早点睡'},
 ];
-const REPLY_Y = 588;
-const PHONE = {x: 960, y: 480};
-const SCR = {x: PHONE.x - 165, y: PHONE.y - 340}; // screen origin in world space
+export const REPLY_Y = 588;
+export const PHONE = {x: 960, y: 480};
+export const SCR = {x: PHONE.x - 165, y: PHONE.y - 340}; // screen origin in world space
 const UM = {x: SCR.x + 44, y: SCR.y + REPLY_Y + OFF + 25}; // the 嗯 bubble's centre in world space
 const SEAT = 700 + 216 * 1.3;
 const HANDX = 700 + 104 * 1.3;
@@ -354,7 +354,16 @@ const ColdOpen: React.FC<SceneProps> = () => {
 	const crack = through(f, end - 14, 14);
 
 	return (
-		<Canvas flash={f >= SHEET ? sa.flash * 0.7 : f >= OUT + 10 && f < SHEET ? corrIn.flash * 0.5 : 0} flashColor={HUE.lamp}>
+		<Canvas
+			flash={
+				f >= SHEET
+					? Math.max(sa.flash * 0.9, f >= DOOR ? 0.85 * prog(f, end - 10, 10, ease.in) : 0)
+					: f >= OUT + 10
+						? Math.max(corrIn.flash * 0.5, 0.9 * prog(f, SHEET - 10, 10, ease.in))
+						: 0
+			}
+			flashColor={HUE.lamp}
+		>
 			{f >= OUT && f < SHEET ? (
 				<g opacity={thruDoor.o}>
 					<View c={{...cc, z: cc.z * corrIn.z * thruDoor.z}}>
@@ -523,6 +532,7 @@ const Setup: React.FC<SceneProps> = () => {
 							<circle cx={0} cy={36} r={6} fill={HUE.lamp} opacity={hp} filter="url(#g-sm)" />
 						</g>
 						<path d={`M770,${560} C840,620 900,640 980,660`} fill="none" stroke="#c9a070" strokeWidth={2} opacity={0.5 * hp} />
+						<path d="M980,700 C1000,900 980,1100 960,1500" fill="none" stroke="#c9a070" strokeWidth={2} opacity={0.5 * hp} />
 						<g opacity={prog(f, S3 + 34, 14)}>
 							<Wave x0={1040} x1={1500} y={560} t={f} amp={0.7} />
 						</g>
@@ -533,8 +543,9 @@ const Setup: React.FC<SceneProps> = () => {
 			{f >= S4 - 6 ? (
 				<g transform={`translate(0,${700 * (1 - tilt)})`}>
 					<View c={c4}>
-						<rect x={-200} y={-200} width={W + 400} height={H + 400} fill="#07060a" />
+						<rect x={-2000} y={-2000} width={W + 4000} height={H + 4000} fill="#07060a" />
 						<Pool x={960} y={460} r={700} c={HUE.lamp} o={0.6 * (1 - 0.5 * toBase)} id="s4" />
+						<path d="M960,-600 C980,-200 960,100 960,270" fill="none" stroke="#c9a070" strokeWidth={2} opacity={0.5 * (1 - toBase)} />
 						<g opacity={1 - toBase}>
 							<Reels f={f} />
 							<text x={960} y={800} textAnchor="middle" opacity={landed(f, S4 + 16)} style={{fontFamily: font.latinItalic, fontSize: 30, fill: '#bfa77a'}}>
@@ -605,6 +616,8 @@ const Twist: React.FC<SceneProps> = () => {
 						<Bar x={b.x} h={b.h} label={b.l} dashed red={b.red} />
 					</g>
 				))}
+				{/* a hint: a thin gold line starts to grow where the 难堪 bar will rise */}
+				<rect x={1318} y={BASE - 60 * prog(f, cue(0) + 24, cue(2) - cue(0) - 24, ease.inOut)} width={4} height={60 * prog(f, cue(0) + 24, cue(2) - cue(0) - 24, ease.inOut)} fill={HUE.gold} opacity={0.9 * (1 - gold)} filter="url(#g-sm)" />
 				{axis > 0 ? (
 					<g opacity={axis}>
 						<line x1={460} y1={BASE} x2={1480} y2={BASE} stroke="#5a4a38" strokeWidth={1.5} />
