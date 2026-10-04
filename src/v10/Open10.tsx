@@ -44,7 +44,7 @@ const drawVoid = (ctx: CanvasRenderingContext2D, T: number, a: number) => {
   glow(ctx, MOON_X, MOON_Y, 700, [255, 220, 180], 0.12 * mg, 0.1);
   glow(ctx, MOON_X, MOON_Y, 260, [255, 236, 210], 0.35 * mg, 0.2);
   ctx.restore();
-  thread(ctx, voidThread(T), { a, w: 1.25, T, pulses: 3, pulseSpeed: -260, draw: easeOut(prog(T, 0.15, 2.6)) });
+  thread(ctx, voidThread(T), { a, w: 1.25, T, pulses: 3, pulseSpeed: -260, draw: 0.75 + 0.25 * easeOut(prog(T, 0, 2.0)) });
 };
 
 /* ---------- ink mountains ---------- */
@@ -77,7 +77,7 @@ const ridge = (x: number, L: typeof LAYERS[0]) => {
 let inkMoon = { y: MOON_Y, a: 0 };
 const drawInk = (ctx: CanvasRenderingContext2D, T: number, a: number) => {
   const t = T - S1_IN;
-  const tilt = 1080 * easeInOut(prog(T, bt(9) + 0.4, bt(10) + 0.6)); // camera tilts down to the water
+  const tilt = 1080 * easeInOut(prog(T, bt(9) + 1.4, bt(10) + 0.4)); // camera tilts down to the water
   const drift = t * 26;
   // sky
   const sky = ctx.createLinearGradient(0, -tilt, 0, H - tilt + 400);
@@ -123,6 +123,14 @@ const drawInk = (ctx: CanvasRenderingContext2D, T: number, a: number) => {
       thread(ctx, tp, { a: a * 0.95, w: 1.1, T, pulses: 2, pulseSpeed: 160, draw: easeInOut(prog(T, S1_IN + 0.3, S1_IN + 3.2)) });
     }
   });
+  // fireflies drifting over the valley
+  ctx.save(); ctx.globalCompositeOperation = 'lighter';
+  for (let i = 0; i < 26; i++) {
+    const fx = INN_X - 260 + 520 * ((i * 0.618 + 0.13) % 1) + 40 * Math.sin(t * 0.5 + i), fy = 800 - tilt * 0.9 - 160 * ((i * 0.382) % 1) + 25 * Math.sin(t * 0.7 + i * 2);
+    const fl = Math.max(0, Math.sin(t * (1.1 + (i % 5) * 0.3) + i * 1.7));
+    glow(ctx, fx, fy, 14, [255, 214, 120], 0.55 * fl * a, 0.3);
+  }
+  ctx.restore();
   // the river below, with the moon's reflection (revealed by the tilt)
   const wy = H + 180 - tilt;
   if (wy < H) {
@@ -156,12 +164,6 @@ export const OpenScene: React.FC<{ T: number }> = ({ T }) => {
     bloom(ctx, b2, 0.4 - 0.2 * inkA, 12);
     if (inkA > 0) {
       drawMoon(ctx, MOON_X, inkMoon.y, MOON_R, inkA, 1, 'disc');
-      for (let i = 0; i < 4; i++) {
-        const y = inkMoon.y - 50 + i * 38, x0 = (((T - S1_IN) * (14 + i * 5) + i * 330) % 1500) - 350 + MOON_X - 500;
-        const gr = ctx.createLinearGradient(x0 - 380, 0, x0 + 380, 0);
-        gr.addColorStop(0, 'rgba(14,18,36,0)'); gr.addColorStop(0.5, `rgba(14,18,36,${0.5 * inkA})`); gr.addColorStop(1, 'rgba(14,18,36,0)');
-        ctx.save(); ctx.filter = 'blur(7px)'; ctx.fillStyle = gr; ctx.fillRect(x0 - 380, y, 760, 16 + 8 * Math.sin(i * 2)); ctx.restore();
-      }
     }
   };
   return <AbsoluteFill style={{ opacity: out }}><Canvas9 T={T} draw={draw} /></AbsoluteFill>;

@@ -98,7 +98,7 @@ export const KnotScene: React.FC<{ T: number }> = ({ T }) => {
     if (kd > 0) {
       // strands from each light up to the ears
       const er = place(EAR_R[9]), el = place(EAR_L[9]);
-      const ka = smooth(KNOT0, KNOT0 + 0.8, T);
+      const ka = smooth(0.55, 0.75, kd);
       thread(ctx, spline([A, [lerp(A[0], el[0], 0.5), lerp(A[1], el[1], 0.5) + 40], el], 30), { a: ka * 0.9, w: 1.1, T, pulses: 2, pulseSpeed: 200 });
       thread(ctx, spline([B, [lerp(B[0], er[0], 0.5), lerp(B[1], er[1], 0.5) + 40], er], 30), { a: ka * 0.9, w: 1.1, T, pulses: 2, pulseSpeed: -200 });
       for (const [pts, a0, a1] of PARTS) {
@@ -148,6 +148,17 @@ export const KnotScene: React.FC<{ T: number }> = ({ T }) => {
       glow(ctx, p1[0], p1[1], 60, [255, 205, 140], 0.5 * sky, 0.2); glow(ctx, p1[0], p1[1], 7, [255, 250, 240], sky, 0.5);
       glow(ctx, p2[0], p2[1], 60, [255, 140, 165], 0.5 * sky, 0.2); glow(ctx, p2[0], p2[1], 7, [255, 245, 245], sky, 0.5);
       ctx.restore();
+    }
+    const tf = prog(T, bt(33) + 0.2, bt(33) + 2.4);
+    if (tf > 0) {
+      const fl: P2[] = [];
+      for (let i = 0; i <= 120; i++) {
+        const k = i / 120, x = lerp(640, 1280, k);
+        const loop = Math.exp(-Math.pow((k - 0.5) / 0.06, 2));
+        const ang = (k - 0.5) / 0.06 * Math.PI;
+        fl.push([x - loop * 26 * Math.sin(ang), 760 + 3 * Math.sin(k * 9 + T) - loop * 30 * (1 - Math.cos(ang)) * 0.5]);
+      }
+      thread(ctx, fl, { a: 1 - smooth(FILM_END10 - 1.6, FILM_END10, T), w: 1, T, pulses: 2, pulseSpeed: 140, draw: easeInOut(tf) });
     }
     bloom(ctx, b1, 0.6, 5);
     bloom(ctx, b2, 0.5, 13);

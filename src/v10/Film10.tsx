@@ -12,7 +12,7 @@ export const LOVE_FRAMES = Math.round(FILM_END10 * 30);
 const SERIF = '"Noto Serif CJK SC", "Noto Serif SC", serif';
 type L = [number, number, string];
 const LINES: L[] = [
-  [0.4, 3.3, '你的脚踝上，系着一根线'],
+  [0.0, 3.3, '你的脚踝上，系着一根线'],
   [3.4, 6.6, '看不见，也剪不断'],
   [6.7, 9.9, '一千多年前，就有人这么说'],
   [10.2, 13.4, '唐代《续玄怪录》里'],
@@ -47,9 +47,9 @@ const LINES: L[] = [
 ];
 
 const Sub: React.FC<{ T: number; l: L }> = ({ T, l: [a, z, s] }) => {
-  const o = Math.min(easeOut(prog(T, a, a + 0.45)), 1 - prog(T, z - 0.35, z));
+  const o = a <= 0 ? 1 - prog(T, z - 0.35, z) : Math.min(easeOut(prog(T, a, a + 0.45)), 1 - prog(T, z - 0.35, z));
   if (o <= 0) return null;
-  const blur = (1 - easeOut(prog(T, a, a + 0.6))) * 8;
+  const blur = a <= 0 ? 0 : (1 - easeOut(prog(T, a, a + 0.6))) * 8;
   return (
     <div style={{ position: 'absolute', left: 0, right: 0, top: 872, textAlign: 'center', opacity: o, filter: blur > 0.1 ? `blur(${blur}px)` : undefined }}>
       <span style={{ fontFamily: SERIF, fontWeight: 500, fontSize: 50, letterSpacing: '0.14em', color: '#f7efe6', textShadow: '0 2px 18px rgba(0,0,0,0.95), 0 0 30px rgba(255,90,100,0.18)' }}>{s}</span>
@@ -109,7 +109,7 @@ export const LoveFilm: React.FC = () => {
       .map((f) => document.fonts.load(f, '红线你的脚踝上系着一根月老人')).map((p) => p.catch(() => null))).then(() => { setReady(true); continueRender(handle); });
   }, [handle]);
   if (!ready) return null;
-  const colOut = S1_OUT - 0.4;
+  const colOut = bt(10) - 0.2;
   return (
     <AbsoluteFill style={{ backgroundColor: '#030205' }}>
       <OpenScene T={T} />
