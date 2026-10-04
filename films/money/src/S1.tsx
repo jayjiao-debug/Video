@@ -206,7 +206,7 @@ export const S1: React.FC<{ T: number }> = ({ T }) => {
   const tex = useAsset('billtex', loadBillTex);
   const barMesh = useAsset('goldbar1', loadBar);
   if (T > S1_OUT || !m || !tex || !barMesh) return null;
-  const o = easeOut(prog(T, 0, 0.6)) * (1 - easeIn(prog(T, b(30), S1_OUT)));
+  const o = (0.45 + 0.55 * easeOut(prog(T, 0, 0.5))) * (1 - easeIn(prog(T, b(30), S1_OUT))); // no black lead-in: the first frame already shows the note
   const shot = T < b(8) ? 'A' : T < b(16) ? 'B' : T < b(24) ? 'C' : 'D';
   const keys = shot === 'A' ? KEYS_A : shot === 'B' ? KEYS_B : KEYS_D;
   // focus: on the note in A/B, then the note and bar in D
