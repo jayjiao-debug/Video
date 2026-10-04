@@ -83,26 +83,22 @@ def main():
     sha = sh('git rev-parse HEAD', cwd=FARM)
     print(f'pushed {sha[:7]}; job {job_id}', flush=True)
 
+    # wait for the combine job's push to the output branch (no GitHub API needed: just watch result.json)
     t0 = time.time()
     while True:
         time.sleep(30)
-        raw = sh(['gh', 'api', f'repos/{REPO}/commits/{sha}/check-runs?per_page=100', '--jq',
-                  '[.check_runs[] | {n: .name, s: .status, c: .conclusion}]'], check=False)
+        r = subprocess.run(f'git fetch -q origin {OUT_BRANCH} && git show FETCH_HEAD:result.json', cwd=PROJECT, shell=True, capture_output=True, text=True)
         try:
-            runs = json.loads(raw)
-        except json.JSONDecodeError:
-            continue
-        done = sum(r['s'] == 'completed' for r in runs)
-        bad = [r['n'] for r in runs if r['c'] not in (None, 'success', 'skipped')]
-        print(f'{int(time.time() - t0):4d}s  {done}/{len(runs)} done', flush=True)
-        if bad:
-            sys.exit(f'render failed: {bad}')
-        if any(r['n'] == 'combine' and r['s'] == 'completed' for r in runs):
+            rid = json.loads(r.stdout)['id']
+        except (json.JSONDecodeError, KeyError):
+            rid = None
+        print(f'{int(time.time() - t0):4d}s  waiting ({rid or "no output yet"})', flush=True)
+        if rid == job_id:
             break
         if time.time() - t0 > 60 * 60:
             sys.exit('timed out after 60 minutes')
 
-    tmp = Path('/tmp/claude-0/render-output')
+    tmp = Path(os.environ.get('VE_TMP', '/tmp/claude-0/render-output'))
     shutil.rmtree(tmp, ignore_errors=True)
     sh(f'git clone -q --depth 1 --branch {OUT_BRANCH} https://github.com/{REPO} {tmp}')
     result = json.loads((tmp / 'result.json').read_text())
