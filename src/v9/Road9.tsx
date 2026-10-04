@@ -2,7 +2,7 @@ import React from 'react';
 import { AbsoluteFill } from 'remotion';
 import { mulberry } from '../v1/data';
 import { b, prog, easeOut, easeInOut, lerp, clamp, win, smooth, heat, rgb, Hud, SANS, MONO, AMBER, RED, ICE, WHITE, DIMW } from './kit9';
-import { Cam, V3, Poly, Proj, camAt, projector, poly, quad, at, sub, strokeWorld, bloom, integrator, hash, CITY_DOTS, STREETS, W, H } from './light9';
+import { Cam, V3, Poly, Proj, camAt, camLerp, projector, ribbon, poly, quad, at, sub, strokeWorld, bloom, integrator, hash, CITY_DOTS, STREETS, W, H } from './light9';
 import { Canvas9 } from './Canvas9';
 
 /* 《越修越堵》 the road network at night. Two parts share it:
@@ -31,7 +31,7 @@ export const netState = (T: number, part: 'main' | 'end') => {
     const off = easeInOut(prog(T, b(182), b(183.8)));
     return { u: 1 - easeInOut(prog(T, b(182.6), b(186.4))), draw: 1, cut: off, closed: 0 };
   }
-  if (T < b(32.2)) return { u: easeInOut(prog(T, 2.2, 5.0)), draw: easeInOut(prog(T, 0.15, 1.5)), cut: 0, closed: 0 };
+  if (T < b(32.2)) return { u: easeInOut(prog(T, 2.9, 5.3)), draw: easeInOut(prog(T, 0.35, 1.9)), cut: 0, closed: 0 };
   if (T < b(36.5)) return { u: 1 - easeInOut(prog(T, b(32.3), b(35.6))), draw: 1 - easeInOut(prog(T, b(33.4), b(35.8))), cut: 0, closed: 0 };
   if (T < b(64)) return { u: 0, draw: 0, cut: 0, closed: 0 };
   if (T < b(96.4)) return { u: easeInOut(prog(T, b(69.4), b(79.4))), draw: easeInOut(prog(T, b(64.3), b(66.2))), cut: 0, closed: 0 };
@@ -48,8 +48,8 @@ const phaseEnd = integrator((T) => 1 / (narrowMin(netState(T, "end").u) * K), 70
 /* ---------- cameras ---------- */
 const cam = (pos: V3, tgt: V3, fov = 40, roll = 0): Cam => ({ pos, tgt, fov, roll });
 const MAIN_KEYS: [number, Cam][] = [
-  [-0.4, cam([-760, 230, 470], [-150, 0, -30], 48, 0.05)],
-  [4.6, cam([-430, 520, 980], [-20, 0, 60], 44, 0.02)],
+  [2.4, cam([-420, 560, 1020], [-30, 0, 70], 46, 0.03)],
+  [5.0, cam([-300, 760, 1130], [-10, 0, 50], 44, 0.015)],
   [b(31.4), cam([-140, 1000, 1180], [0, 0, 40], 42)],
   [b(36), cam([0, 1320, 790], [0, 0, 140], 40)],
   [b(58.4), cam([40, 1300, 770], [0, 0, 140], 40)],
@@ -66,7 +66,20 @@ const END_KEYS: [number, Cam][] = [
   [b(187.6), cam([0, 1300, 900], [0, 0, 140], 40)],
   [b(200), cam([120, 1420, 960], [0, 0, 140], 40)],
 ];
-export const roadCam = (T: number, part: 'main' | 'end') => camAt(part === 'main' ? MAIN_KEYS : END_KEYS, T);
+/* the cold open: skim the lower highway at lane height, then crane up as the new road lights */
+const qAD = (t: number): V3 => { const u = 1 - t; return [u * u * A[0] + 2 * u * t * -230 + t * t * D[0], 0, u * u * A[2] + 2 * u * t * 560 + t * t * D[2]]; };
+const flight = (T: number): Cam => {
+  const k = (T + 0.4) / 2.3, t = lerp(-0.16, 0.6, k);
+  const p = qAD(t), q = qAD(t + 0.2);
+  return cam([p[0] - 30, lerp(38, 70, clamp(k)), p[2] + 40], [q[0], 6, q[2]], 58, 0.09 * Math.sin(k * 2.2));
+};
+export const roadCam = (T: number, part: 'main' | 'end') => {
+  if (part === 'main' && T < 3.2) {
+    const crane = camAt(MAIN_KEYS, T);
+    return camLerp(flight(T), crane, smooth(1.35, 3.1, T));
+  }
+  return camAt(part === 'main' ? MAIN_KEYS : END_KEYS, T);
+};
 const shakeAt = (T: number): [number, number] => {
   if (T < HIT) return [0, 0];
   const e = Math.exp(-(T - HIT) * 7) * 16;
@@ -131,8 +144,8 @@ const drawCity = (ctx: CanvasRenderingContext2D, pr: Proj, T: number, o: number)
 
 const drawRoadBase = (ctx: CanvasRenderingContext2D, pr: Proj, P: Poly, ww: number, a: number, glow?: string) => {
   ctx.globalCompositeOperation = 'lighter';
-  if (glow) strokeWorld(ctx, pr, P.pts, glow, ww * 2.6, true);
-  strokeWorld(ctx, pr, P.pts, `rgba(110,130,190,${0.07 * a})`, ww, true);
+  if (glow) ribbon(ctx, pr, P.pts, ww * 1.3, glow);
+  ribbon(ctx, pr, P.pts, ww / 2, `rgba(110,130,190,${0.07 * a})`);
   strokeWorld(ctx, pr, P.pts, `rgba(170,190,240,${0.12 * a})`, 1);
 };
 
@@ -157,8 +170,8 @@ const drawFlow = (ctx: CanvasRenderingContext2D, pr: Proj, P: Poly, opt: { slots
       pts.push([p[0] - dz * off, 0, p[2] + dx * off]);
     }
     const al = a * vis * edge;
-    strokeWorld(ctx, pr, pts, rgb(color, 0.3 * al), 2.6 * lw);
-    strokeWorld(ctx, pr, pts.slice(0, 2), rgb(color, 0.95 * al), 1.4 * lw);
+    strokeWorld(ctx, pr, pts, rgb(color, 0.3 * al), 3.0 * lw, true, 14);
+    strokeWorld(ctx, pr, pts.slice(0, 2), rgb(color, 0.95 * al), 1.6 * lw, true, 7);
     if (opt.head) { const q = pr(pts[0]); if (q) { ctx.fillStyle = rgb([255, 255, 255], 0.8 * al); ctx.fillRect(q[0] - 1, q[1] - 1, 2.2, 2.2); } }
   }
 };
@@ -177,11 +190,11 @@ const drawNet = (ctx: CanvasRenderingContext2D, pr: Proj, T: number, part: 'main
   drawRoadBase(ctx, pr, L.DB, 13, o, `rgba(255,60,40,${0.2 * s.u * o})`);
   // shortcut: drawn in like a scan line
   if (s.draw > 0 && scA > 0) {
-    const pts = sub(L.CD, 0, s.draw, 30);
-    strokeWorld(ctx, pr, pts, `rgba(159,227,255,${0.08 * scA})`, 34, true);
-    strokeWorld(ctx, pr, pts, `rgba(159,227,255,${0.3 * scA})`, 8, true);
+    const pts = sub(L.CD, 1 - s.draw, 1, 30);
+    ribbon(ctx, pr, pts, 17, `rgba(159,227,255,${0.08 * scA})`);
+    ribbon(ctx, pr, pts, 4, `rgba(159,227,255,${0.3 * scA})`);
     strokeWorld(ctx, pr, pts, `rgba(235,250,255,${0.9 * scA})`, 1.6);
-    if (s.draw < 1) { const q = pr(at(L.CD, s.draw)[0]); if (q) { const g = ctx.createRadialGradient(q[0], q[1], 0, q[0], q[1], 26); g.addColorStop(0, `rgba(235,250,255,${scA})`); g.addColorStop(1, 'rgba(159,227,255,0)'); ctx.fillStyle = g; ctx.fillRect(q[0] - 26, q[1] - 26, 52, 52); } }
+    if (s.draw < 1) { const q = pr(at(L.CD, 1 - s.draw)[0]); if (q) { const g = ctx.createRadialGradient(q[0], q[1], 0, q[0], q[1], 26); g.addColorStop(0, `rgba(235,250,255,${scA})`); g.addColorStop(1, 'rgba(159,227,255,0)'); ctx.fillStyle = g; ctx.fillRect(q[0] - 26, q[1] - 26, 52, 52); } }
   }
   // traffic: narrow roads fill and slow down; wide roads empty; the shortcut carries the switchers
   const nSpeed = 1 / (nMin * K), wSpeed = 1 / (45 * K), cSpeed = 1 / 0.7;
@@ -218,7 +231,7 @@ const drawCityGraph = (ctx: CanvasRenderingContext2D, pr: Proj, T: number, o: nu
     const load = hash(e, 11), dir = hash(e, 12) < 0.5;
     const jam = clamp(load * 0.55 + 0.05 - cool);
     const sp = 0.16 + 0.3 * (1 - jam);
-    drawFlow(ctx, pr, dir ? P : poly([z, a]), { slots: 34, fill: 0.25 + 0.6 * load, phase: T * sp + hash(e, 13), speed: sp, lanes: 2, laneW: 10, color: heat(jam), a: ea, seed: 20 + e });
+    drawFlow(ctx, pr, dir ? P : poly([z, a]), { slots: 34, fill: 0.25 + 0.6 * load, phase: T * sp + hash(e, 13), speed: sp, lanes: 2, laneW: 10, color: heat(jam), a: ea, seed: 20 + e, lw: 3 });
     if (CITY.hot.has(e) && hotO > 0) {
       ctx.save();
       ctx.setLineDash([10, 9]);
@@ -263,6 +276,7 @@ export const RoadScene: React.FC<{ T: number; part: 'main' | 'end'; o?: number }
     drawCityGraph(ctx, pr, T, graphO);
     bloom(ctx, b1, 0.6, 4);
     bloom(ctx, b2, 0.35, 10);
+    if (part === 'main' && T > 2.5 && T < 3.2) { ctx.globalCompositeOperation = 'lighter'; ctx.fillStyle = `rgba(159,227,255,${0.16 * Math.exp(-(T - 2.5) * 7)})`; ctx.fillRect(0, 0, W, H); }
     // flash on the hit
     if (part === 'main' && T > HIT && T < HIT + 0.6) { ctx.globalCompositeOperation = 'source-over'; ctx.fillStyle = `rgba(255,236,210,${0.32 * Math.exp(-(T - HIT) * 9)})`; ctx.fillRect(0, 0, W, H); }
   };
@@ -272,25 +286,27 @@ export const RoadScene: React.FC<{ T: number; part: 'main' | 'end'; o?: number }
   if (part === 'main') {
     const lab = (T2: number, z: number) => win(T, T2, Math.min(z, b(101.6)), 0.4, 0.4) * netO;
     const [ax, ay] = anchor(pr, A, -64, 0), [bx, by] = anchor(pr, B, 64, 0);
-    ov.push(<Label key="A" x={ax} y={ay} o={lab(b(36.2), b(104))} big="A" small="出发" />);
-    ov.push(<Label key="B" x={bx} y={by} o={lab(b(36.2), b(104))} big="B" small="家" />);
+    ov.push(<Label key="A" x={ax} y={ay} o={lab(b(37.6), b(104))} big="A" small="出发" />);
+    ov.push(<Label key="B" x={bx} y={by} o={lab(b(37.6), b(104))} big="B" small="家" />);
     const nCol = nMin > 30 ? RED : nMin > 21 ? AMBER : WHITE;
     const [m1x, m1y] = anchor(pr, at(L.AC, 0.5)[0], -58, -30), [m2x, m2y] = anchor(pr, at(L.DB, 0.5)[0], 58, 30);
-    const nO = lab(b(40.3), b(104));
+    const nO = lab(b(43.3), b(104));
     ov.push(<Label key="ac" x={m1x} y={m1y} o={nO} big={`${Math.round(nMin)} 分钟`} small={T < b(64) ? '车数÷100' : undefined} color={nCol} />);
     ov.push(<Label key="db" x={m2x} y={m2y} o={nO} big={`${Math.round(nMin)} 分钟`} small={T < b(64) ? '车数÷100' : undefined} color={nCol} />);
     const [w1x, w1y] = anchor(pr, at(L.CB, 0.5)[0], 0, -44), [w2x, w2y] = anchor(pr, at(L.AD, 0.5)[0], 0, -50);
-    const wO = lab(b(44.7), b(104));
+    const wO = lab(b(47.9), b(104));
     ov.push(<Label key="cb" x={w1x} y={w1y} o={wO} big="45 分钟" small="宽路" />);
     ov.push(<Label key="ad" x={w2x} y={w2y} o={wO} big="45 分钟" small="宽路" />);
     const [cx, cy] = anchor(pr, at(L.CD, 0.5)[0], 74, 0);
     ov.push(<Label key="cd" x={cx} y={cy} o={lab(b(65.6), b(98)) * s.draw} big="0 分钟" small="近路" color={ICE} />);
+    { const k = clamp((T - 2.45) / 0.25), o1 = T > 2.45 ? Math.min(1, k * 1.5) * (1 - prog(T, 5.0, 5.4)) : 0;
+      if (o1 > 0) { const [px1, py1] = anchor(pr, at(L.CD, 0.5)[0], 0, -70); ov.push(<div key="plus1" style={{ position: 'absolute', left: px1, top: py1, transform: `translate(-50%,-50%) scale(${lerp(1.6, 1, easeOut(k))})`, opacity: o1, whiteSpace: 'nowrap', fontFamily: SANS, fontWeight: 300, fontSize: 64, color: '#e8f8ff', textShadow: '0 0 24px rgba(159,227,255,0.9), 0 0 4px rgba(0,0,0,0.9)' }}>+1 <span style={{ fontSize: 34 }}>条路</span></div>); } }
     // closing the shortcut
     const cl = s.closed;
     if (cl > 0) { const [xx, xy] = anchor(pr, at(L.CD, 0.5)[0]); ov.push(<div key="x" style={{ position: 'absolute', left: xx, top: xy, transform: `translate(-50%,-50%) scale(${lerp(1.6, 1, cl)})`, opacity: cl, fontFamily: SANS, fontWeight: 300, fontSize: 90, color: RED, textShadow: '0 0 20px rgba(255,75,58,0.8)' }}>×</div>); }
     // the 4000 cars
-    const cars = Math.round(4000 * easeOut(prog(T, b(48.9), b(50.6))));
-    ov.push(<Hud key="cars" x={ax + 30} y={ay + 50} o={lab(b(48.9), b(64))} align="right" color={AMBER} size={22}>{cars} 辆</Hud>);
+    const cars = Math.round(4000 * easeOut(prog(T, b(38.4), b(40.6))));
+    ov.push(<Hud key="cars" x={ax + 30} y={ay + 50} o={lab(b(38.4), b(64))} align="right" color={AMBER} size={22}>{cars} 辆</Hud>);
     // route panel
     const AC = nMin, DB = nMin;
     const rows: [string, string, number, number][] = [

@@ -71,7 +71,7 @@ export const at = (P: Poly, f: number): [V3, number, number] => {
 export const sub = (P: Poly, f0: number, f1: number, n = 24): V3[] => Array.from({ length: n + 1 }, (_, i) => at(P, lerp(f0, f1, i / n))[0]);
 
 /* ---------- drawing ---------- */
-export const strokeWorld = (ctx: CanvasRenderingContext2D, pr: Proj, pts: V3[], color: string, width: number, worldWidth = false) => {
+export const strokeWorld = (ctx: CanvasRenderingContext2D, pr: Proj, pts: V3[], color: string, width: number, worldWidth = false, maxW = 1e9) => {
   ctx.beginPath();
   let started = false, wsum = 0, n = 0;
   for (const p of pts) {
@@ -82,8 +82,30 @@ export const strokeWorld = (ctx: CanvasRenderingContext2D, pr: Proj, pts: V3[], 
   }
   if (!n) return;
   ctx.strokeStyle = color;
-  ctx.lineWidth = worldWidth ? Math.max(0.6, width * (wsum / n)) : width;
+  ctx.lineWidth = worldWidth ? Math.min(maxW, Math.max(0.6, width * (wsum / n))) : width;
   ctx.stroke();
+};
+
+/** a flat ribbon on the ground (true perspective width): for asphalt and glow bands */
+export const ribbon = (ctx: CanvasRenderingContext2D, pr: Proj, pts: V3[], half: number, color: string) => {
+  const L: [number, number][] = [], R: [number, number][] = [];
+  for (let i = 0; i < pts.length; i++) {
+    const a = pts[Math.max(0, i - 1)], z = pts[Math.min(pts.length - 1, i + 1)];
+    let dx = z[0] - a[0], dz = z[2] - a[2];
+    const l = Math.hypot(dx, dz) || 1; dx /= l; dz /= l;
+    const p = pts[i];
+    const ql = pr([p[0] - dz * half, 0, p[2] + dx * half]), qr = pr([p[0] + dz * half, 0, p[2] - dx * half]);
+    if (!ql || !qr) continue;
+    L.push([ql[0], ql[1]]); R.push([qr[0], qr[1]]);
+  }
+  if (L.length < 2) return;
+  ctx.beginPath();
+  ctx.moveTo(L[0][0], L[0][1]);
+  for (const q of L.slice(1)) ctx.lineTo(q[0], q[1]);
+  for (const q of R.reverse()) ctx.lineTo(q[0], q[1]);
+  ctx.closePath();
+  ctx.fillStyle = color;
+  ctx.fill();
 };
 
 /** bloom: blur a downscaled copy and add it back */

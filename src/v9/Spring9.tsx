@@ -6,6 +6,7 @@ import { b, prog, easeOut, easeInOut, lerp, clamp, win, SANS, MONO, AMBER, WHITE
    Neon line drawing. Units: metres-ish, drawn with a small visual rest length s0 so springs have a body. */
 export const SP_IN = b(123.8), SP_OUT = b(173.8);
 const CUT = b(156), DROP = b(160);
+const easeIn2 = (x: number) => x * x;
 const S = 340, X0 = 960, Y0 = 110, s0 = 0.1;
 
 const coil = (x1: number, y1: number, x2: number, y2: number, n = 9, amp = 19) => {
@@ -97,11 +98,11 @@ export const SpringScene: React.FC<{ T: number }> = ({ T }) => {
   const push = lerp(1, 1.08, easeInOut(prog(T, b(150), CUT))) * (cut ? lerp(1, 1 / 1.08, easeInOut(prog(T, DROP - 0.4, DROP + 0.6))) : 1);
   const compare = easeInOut(prog(T, b(164.8), b(166.4)));
   const ghostString = win(T, b(170.4), b(173.4), 0.4, 0.3);
-  // scissors
-  const scX = lerp(0.95, 0.05, easeInOut(prog(T, b(145.2), b(149.6))));
-  const scOpen = cut ? 0 : 0.42 * (0.6 + 0.4 * Math.sin(Math.max(0, T - b(149.6)) * 5.5)) * (1 - easeOut(prog(T, CUT - 0.18, CUT)));
-  const scO = win(T, b(145.2), CUT + 0.6, 0.4, 0.5);
-  const spark = cut ? Math.exp(-tau * 7) : 0;
+  // scissors: slide in open, hold, snap shut on the cut, back off
+  const scX = lerp(560, 95, easeInOut(prog(T, b(145.2), b(149.6)))) + 480 * easeInOut(prog(T, CUT + 0.25, CUT + 1.0));
+  const scOpen = 22 + 4 * easeInOut(prog(T, b(149.6), CUT - 0.15)) - 26 * easeIn2(prog(T, CUT - 0.12, CUT));
+  const scO = win(T, b(145.2), CUT + 1.0, 0.4, 0.5);
+  const spark = cut ? clamp(tau / 0.35) : 0;
   const ref = win(T, b(145.6), b(170.6), 0.5, 0.5);
   const rise = easeOut(prog(T, DROP, DROP + 0.5));
   return (
@@ -134,16 +135,25 @@ export const SpringScene: React.FC<{ T: number }> = ({ T }) => {
           )}
           {/* scissors */}
           {scO > 0 && (
-            <g opacity={scO} transform={`translate(${px(scX) + 26} ${py(0.85)})`} filter="url(#glow9)">
+            <g filter="url(#glow9)"><g opacity={scO} transform={`translate(${px(0) + scX} ${py(0.85)})`}>
               {[1, -1].map((sg) => (
-                <g key={sg} transform={`rotate(${sg * scOpen * 40})`}>
-                  <line x1={-30} y1={0} x2={60} y2={0} stroke={WHITE} strokeWidth={3} />
-                  <circle cx={78} cy={sg * 14} r={16} fill="none" stroke={WHITE} strokeWidth={3} />
+                <g key={sg} transform={`rotate(${sg * scOpen})`}>
+                  <path d={`M 8 ${-10 * sg} C -40 ${-15 * sg}, -112 ${-10 * sg}, -154 ${1 * sg} L 8 ${4 * sg} Z`} fill="rgba(210,236,255,0.16)" stroke="#e8f6ff" strokeWidth={2.4} strokeLinejoin="round" />
+                  <path d={`M 4 ${4 * sg} L 50 ${24 * -sg}`} stroke="#9fe3ff" strokeWidth={5} strokeLinecap="round" />
+                  <ellipse cx={78} cy={36 * -sg} rx={27} ry={18} transform={`rotate(${22 * -sg} 78 ${36 * -sg})`} fill="none" stroke="#9fe3ff" strokeWidth={5} />
                 </g>
               ))}
+              <circle r={6} fill="#030409" stroke="#e8f6ff" strokeWidth={2.4} />
+            </g></g>
+          )}
+          {cut && spark < 1 && (
+            <g transform={`translate(${px(0)} ${py(0.85)})`} opacity={1 - spark}>
+              {Array.from({ length: 10 }, (_, i) => {
+                const a = (i / 10) * Math.PI * 2 + 0.3, r0 = 10 + 50 * spark, r1 = r0 + 26 * (1 - spark);
+                return <line key={i} x1={Math.cos(a) * r0} y1={Math.sin(a) * r0} x2={Math.cos(a) * r1} y2={Math.sin(a) * r1} stroke="#fff1d6" strokeWidth={2.5} strokeLinecap="round" />;
+              })}
             </g>
           )}
-          {spark > 0.01 && <circle cx={px(0)} cy={py(0.85)} r={20 + 120 * (1 - spark)} fill="none" stroke={`rgba(255,236,210,${spark})`} strokeWidth={3} />}
         </g>
       </svg>
       {compare > 0.3 && (
@@ -154,7 +164,7 @@ export const SpringScene: React.FC<{ T: number }> = ({ T }) => {
       )}
       <Hud x={1860} y={120} o={win(T, b(128.2), b(164.6), 0.5, 0.4)} align="right" color={WHITE} size={22}>NATURE · 1991</Hud>
       <Hud x={1860} y={156} o={win(T, b(128.4), b(164.6), 0.5, 0.4)} align="right" size={17}>Joel Cohen &amp; Paul Horowitz</Hud>
-      {T > CUT && T < CUT + 0.12 && <AbsoluteFill style={{ background: 'rgba(255,240,220,0.18)' }} />}
+      {T > CUT && T < CUT + 0.07 && <AbsoluteFill style={{ background: 'rgba(255,244,228,0.1)' }} />}
       {T > DROP && T < DROP + 0.5 && <AbsoluteFill style={{ background: `rgba(255,190,110,${0.22 * Math.exp(-(T - DROP) * 8)})` }} />}
     </AbsoluteFill>
   );
