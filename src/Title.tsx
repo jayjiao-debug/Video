@@ -1,10 +1,16 @@
 import React from 'react';
+import * as THREE from 'three';
 import { AbsoluteFill } from 'remotion';
-import { b, prog, easeOut, easeInOut, lerp, pop, EN, ZH, beats } from './lib';
+import { useThree } from '@react-three/fiber';
+import { b, bf, prog, easeOut, easeInOut, lerp, EN, ZH, beats } from './lib';
+import { Stage } from './stage';
+import { Bill, EnvFor, Spot, loadBillTex } from './kit';
+import { Coin, coinMaterial } from './coins';
+import { useAsset } from './useModels';
 
 /* Title card (b30–b40; stamped on the full-strength hit b32 = 16.61 s, out on the hit b40 = 20.68 s).
-   The cold open ends looking straight down on the note; the card draws that note in gold line, a square-holed
-   coin drops onto it on b32, and the title is stamped one character per half beat. */
+   The cold open ends looking straight down on the note. The card keeps that note, alone under one lamp,
+   and a gold 半两 coin drops onto it on b32 while the title is stamped above, one character per half beat. */
 export const T_IN = b(30), T_OUT = b(40);
 const half = (beats[33] - beats[32]) / 2;
 
@@ -35,23 +41,48 @@ export const GoldTitle: React.FC<{ text: string; T: number; at: number; size: nu
   );
 };
 
-/** the episode motif: a banknote in gold line with a square-holed coin on it */
-export const Motif: React.FC<{ x: number; y: number; w: number; draw?: number; coin?: number; o?: number }> = ({ x, y, w, draw = 1, coin = 1, o = 1 }) => {
-  const h = w * 0.425, per = 2 * (w + h);
-  const r = h * 0.42, cx = x + w * 0.32, cy = y + h * 0.08 - (1 - coin) * 60;
+const TopCam: React.FC<{ h: number; look: number; x?: number }> = ({ h, look, x = 0 }) => {
+  const { camera } = useThree();
+  camera.position.set(x, h, look + 0.0005);
+  camera.up.set(0, 0, -1);
+  camera.lookAt(x, 0, look);
+  (camera as THREE.PerspectiveCamera).near = 0.01;
+  camera.updateProjectionMatrix();
+  return null;
+};
+
+const G = 9.8;
+/** the coin: dropped from `h0` so that it lands exactly at `land`, one small bounce, then still */
+const coinY = (T: number, land: number, h0 = 0.12) => {
+  const tf = Math.sqrt((2 * h0) / G);
+  const t = T - (land - tf);
+  if (t < 0) return h0;
+  if (t < tf) return h0 - 0.5 * G * t * t;
+  const tb = t - tf, up = 0.9; // bounce: 9 mm, 2 × 43 ms
+  const tu = 2 * Math.sqrt((2 * up * 0.01) / G);
+  return tb < tu ? Math.max(0, Math.sqrt(2 * G * up * 0.01) * tb - 0.5 * G * tb * tb) : 0;
+};
+
+/** the episode motif in 3D: a $100 note under a lamp with a gold 半两 lying on it */
+export const CoinOnBill: React.FC<{ T: number; land: number; h: number; look: number; light?: number; seed?: number }> = ({ T, land, h, look, light = 1 }) => {
+  const tex = useAsset('billtex', loadBillTex);
+  if (!tex) return null;
+  const y = coinY(T, land);
+  const tilt = T < land ? 0.35 * (1 - prog(T, land - 0.3, land)) : 0;
   return (
-    <g opacity={o} fill="none" stroke="#f1c56d" strokeLinecap="round">
-      <rect x={x - w / 2} y={y - h / 2} width={w} height={h} rx={h * 0.06} strokeWidth={3} strokeDasharray={per} strokeDashoffset={per * (1 - draw)} />
-      <rect x={x - w / 2 + h * 0.1} y={y - h / 2 + h * 0.1} width={w - h * 0.2} height={h * 0.8} rx={h * 0.04} strokeWidth={1.2} opacity={0.55 * draw} />
-      <ellipse cx={x - w * 0.12} cy={y} rx={h * 0.27} ry={h * 0.33} strokeWidth={1.6} opacity={0.75 * draw} />
-      {coin > 0 && (
-        <g opacity={Math.min(1, coin * 1.5)}>
-          <circle cx={cx} cy={cy} r={r} fill="#05060b" strokeWidth={3.5} />
-          <circle cx={cx} cy={cy} r={r * 0.86} strokeWidth={1.2} opacity={0.6} />
-          <rect x={cx - r * 0.28} y={cy - r * 0.28} width={r * 0.56} height={r * 0.56} strokeWidth={3} />
-        </g>
-      )}
-    </g>
+    <Stage bloom={0.3} threshold={0.95} exposure={1} seed={Math.floor(T * 30) % 97} fov={30} bg="#05060b">
+      <TopCam h={h} look={look} />
+      <ambientLight intensity={0.02} />
+      <Spot position={[-0.05, 0.6, 0.08]} target={[0.01, 0, 0]} angle={0.32} penumbra={0.85} intensity={0.8 * light} color="#ffc98c" near={0.1} far={2} />
+      <pointLight position={[0.3, 0.12, -0.3]} intensity={0.08 * light} decay={2} color="#7f9cff" />
+      <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, -0.0006, 0]} receiveShadow>
+        <planeGeometry args={[2, 2]} />
+        <meshStandardMaterial color="#120d0a" roughness={0.95} />
+      </mesh>
+      <Bill tex={tex} position={[0, 0.0004, 0]} rotation={[0, 0.06, 0]} curl={0.003} />
+      <Coin kind="banliang" metal="gold" position={[0.042, 0.0026 + y, 0.008]} rotation={[tilt, 0.3, tilt * 0.6]} />
+      <EnvFor mats={[coinMaterial('banliang', 'gold')]} intensity={0.45} />
+    </Stage>
   );
 };
 
@@ -60,21 +91,19 @@ export const Title: React.FC<{ T: number }> = ({ T }) => {
   const inO = easeOut(prog(T, T_IN, T_IN + 0.5));
   const out = easeInOut(prog(T, b(39), T_OUT));
   const o = (a: number, d = 0.5) => easeOut(prog(T, a, a + d));
-  // the note is drawn at the size the cold open last showed it, then settles below the title
-  const settle = easeInOut(prog(T, b(32), b(33)));
-  const mw = lerp(860, 300, settle), my = lerp(540, 712, settle);
+  // the lamp comes up under the fade-in; a slow push after the hit
+  const light = easeOut(prog(T, T_IN + 0.2, bf(31.5)));
+  const h = lerp(0.4, 0.365, easeInOut(prog(T, b(32), T_OUT)));
   return (
-    <AbsoluteFill style={{ backgroundColor: '#05060b', opacity: inO * (1 - out), transform: `scale(${1 + 0.04 * easeInOut(prog(T, b(32), T_OUT))})` }}>
-      <svg width={1920} height={1080}>
-        <radialGradient id="title-glow" cx="0.5" cy="0.5" r="0.5">
-          <stop offset="0" stopColor="#f6cf78" stopOpacity="0.16" /><stop offset="0.6" stopColor="#f6cf78" stopOpacity="0.04" /><stop offset="1" stopColor="#f6cf78" stopOpacity="0" />
-        </radialGradient>
-        <ellipse cx={960} cy={560} rx={900} ry={520} fill="url(#title-glow)" opacity={o(b(32), 0.6)} />
-        <Motif x={960} y={my} w={mw} draw={easeInOut(prog(T, T_IN + 0.1, b(32) - 0.05))} coin={pop(T, b(32), 0.3)} />
-        <text x={960} y={300} textAnchor="middle" style={{ fontFamily: EN, fontWeight: 600, fontSize: 24, letterSpacing: '0.42em', fill: '#f1c56d' }} opacity={o(b(32) + 0.2)}>MONEY · FROM SHELLS TO CODE</text>
-        <GoldTitle text="钱凭什么" T={T} at={b(32)} size={150} y={500} />
-        <text x={960} y={850} textAnchor="middle" style={{ fontFamily: ZH, fontWeight: 700, fontSize: 46, fill: '#f3ede2', letterSpacing: '0.06em' }} opacity={o(b(35))}>一张纸，凭什么能换一顿饭？</text>
-        <text x={960} y={896} textAnchor="middle" style={{ fontFamily: EN, fontStyle: 'italic', fontSize: 26, fill: 'rgba(243,237,226,0.5)' }} opacity={o(b(35) + 0.3)}>A slip of paper buys a meal. Why?</text>
+    <AbsoluteFill style={{ backgroundColor: '#05060b', opacity: inO * (1 - out) }}>
+      <CoinOnBill T={T} land={b(32)} h={h} look={-0.024} light={light} />
+      {/* keep the type clear of the set: dark at the top, dark under the tagline */}
+      <AbsoluteFill style={{ background: 'linear-gradient(180deg, rgba(5,6,11,0.92) 0%, rgba(5,6,11,0.55) 30%, rgba(5,6,11,0) 44%, rgba(5,6,11,0) 74%, rgba(5,6,11,0.8) 88%)' }} />
+      <svg width={1920} height={1080} style={{ position: 'absolute', inset: 0 }}>
+        <text x={960} y={150} textAnchor="middle" style={{ fontFamily: EN, fontWeight: 600, fontSize: 26, letterSpacing: '0.42em', fill: '#f1c56d' }} opacity={o(b(32) + 0.2)}>MONEY · FROM SHELLS TO CODE</text>
+        <GoldTitle text="钱凭什么" T={T} at={b(32)} size={150} y={330} />
+        <text x={960} y={940} textAnchor="middle" style={{ fontFamily: ZH, fontWeight: 700, fontSize: 48, fill: '#f3ede2', letterSpacing: '0.06em' }} opacity={o(b(35))}>一张纸，凭什么能换一顿饭？</text>
+        <text x={960} y={990} textAnchor="middle" style={{ fontFamily: EN, fontStyle: 'italic', fontSize: 28, fill: 'rgba(243,237,226,0.55)' }} opacity={o(b(35) + 0.3)}>A slip of paper buys a meal. Why?</text>
       </svg>
     </AbsoluteFill>
   );

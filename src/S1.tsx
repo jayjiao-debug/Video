@@ -54,7 +54,7 @@ const dist = (keys: Key[], T: number, p: number[]) => {
 };
 
 /** one gold bar out of the three-bar model; gold that reads as gold (metal, warm, some env) */
-const loadBar = async () => {
+export const loadBar = async () => {
   const g = await loadModel('goldbar');
   const bar = fit(islands(g)[0], 0.116);
   const m = (bar.material as THREE.MeshStandardMaterial).clone();
@@ -63,7 +63,7 @@ const loadBar = async () => {
   return bar;
 };
 
-const TableSet: React.FC<{ T: number; keys: Key[]; bar: boolean; focus: number; aperture: number; noodle: THREE.Group; table: THREE.Group; barMesh: THREE.Mesh; tex: Awaited<ReturnType<typeof loadBillTex>> }> = ({ T, keys, bar, focus, aperture, noodle, table, barMesh, tex }) => {
+export const TableSet: React.FC<{ T: number; keys: Key[]; bar: boolean; focus: number; aperture: number; noodle: THREE.Group; table: THREE.Group; barMesh: THREE.Mesh; tex: Awaited<ReturnType<typeof loadBillTex>>; crowd?: number }> = ({ T, keys, bar, focus, aperture, noodle, table, barMesh, tex, crowd = 0 }) => {
   const tablePlaced = useMemo(() => {
     const bb = new THREE.Box3().setFromObject(table);
     table.position.y += TOP - bb.max.y;
@@ -100,6 +100,7 @@ const TableSet: React.FC<{ T: number; keys: Key[]; bar: boolean; focus: number; 
       <mesh position={[0, 1.2, -4.5]}><planeGeometry args={[14, 6]} /><meshStandardMaterial color="#1a120c" roughness={1} /></mesh>
       <Neon text="面" position={[-1.25, 1.55, -2.6]} h={0.55} />
       <Bokeh T={T} z={-3.0} spread={6} y={1.2} />
+      {crowd > 0 && <Bokeh T={T} n={Math.floor(crowd)} z={-3.6} spread={10} y={1.25} seed={7} o={0.9} />}
     </Stage>
   );
 };
