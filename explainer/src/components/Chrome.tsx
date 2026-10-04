@@ -15,6 +15,13 @@ export const Chrome: React.FC = () => {
 	const sceneOut = prog(local, scene.duration - 10, 10, ease.in);
 	// scenes can keep the frame clean until their first line (e.g. while a title card plays)
 	const quiet = scene.props.quietLead ? 1 - prog(local, (scene.lines[0]?.from ?? 0) - 12, 12) : 0;
+	// a scene can hand over to a second kicker/cite at one of its lines (props.swap = {line, kicker, cite})
+	const swap = scene.props.swap as {line: number; kicker?: string; cite?: string} | undefined;
+	const swapAt = swap ? (scene.lines[swap.line]?.from ?? 1e9) - 14 : 1e9;
+	const swapped = local >= swapAt;
+	const swapFade = swap ? Math.abs(prog(local, swapAt - 10, 20) * 2 - 1) : 1; // dips to 0 at the hand-over
+	const kicker = swapped && swap?.kicker ? swap.kicker : scene.kicker;
+	const cite = swapped && swap?.cite ? swap.cite : scene.cite;
 	const landscape = L.w > L.h;
 	const badge = prog(f, 20, 30) * (1 - prog(f, tl.durationInFrames - 150, 20)) * (1 - quiet);
 
@@ -75,7 +82,7 @@ export const Chrome: React.FC = () => {
 					</div>
 				</>
 			)}
-			{scene.kicker ? (
+			{kicker ? (
 				<div
 					style={{
 						position: 'absolute',
@@ -88,16 +95,16 @@ export const Chrome: React.FC = () => {
 						letterSpacing: '0.32em',
 						color: color.gold,
 						textShadow: '0 2px 14px rgba(0,0,0,0.75)',
-						opacity: 0.85 * prog(local, 6, 20) * (1 - sceneOut) * (1 - quiet),
+						opacity: 0.85 * prog(local, 6, 20) * (1 - sceneOut) * (1 - quiet) * swapFade,
 						transform: `translateY(${(1 - prog(local, 6, 24)) * 10}px)`,
 					}}
 				>
 					<span style={{display: 'inline-block', width: 70 * prog(local, 10, 30), height: 1, background: color.goldDeep, verticalAlign: 'middle', marginRight: 22}} />
-					{scene.kicker}
+					{kicker}
 					<span style={{display: 'inline-block', width: 70 * prog(local, 10, 30), height: 1, background: color.goldDeep, verticalAlign: 'middle', marginLeft: 14}} />
 				</div>
 			) : null}
-			{scene.cite ? (
+			{cite ? (
 				<div
 					style={{
 						position: 'absolute',
@@ -108,10 +115,10 @@ export const Chrome: React.FC = () => {
 						fontSize: 22,
 						letterSpacing: '0.08em',
 						color: color.faint,
-						opacity: prog(local, (scene.lines[0]?.from ?? 0) + 20, 25) * (1 - sceneOut),
+						opacity: prog(local, (scene.lines[0]?.from ?? 0) + 20, 25) * (1 - sceneOut) * swapFade,
 					}}
 				>
-					{scene.cite}
+					{cite}
 				</div>
 			) : null}
 		</>

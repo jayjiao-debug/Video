@@ -168,8 +168,11 @@ export const DeskBook: React.FC<{w?: number; h?: number; d?: number; open?: numb
  * The fore-edge seen straight on, as a macro: thousands of page lines, the wear
  * darkest at the front (left). World units: the block spans [x, x + w].
  */
-export const EdgeMacro: React.FC<{x: number; y: number; w: number; h: number; id: string; wear?: number; tabs?: number; lit?: number; dim?: number}> = ({x, y, w, h, id, wear = 1, tabs = 0, lit = 1, dim = 0}) => {
+export const EdgeMacro: React.FC<{x: number; y: number; w: number; h: number; id: string; wear?: number; tabs?: number; lit?: number; dim?: number; ping?: (d: number) => number}> = ({x, y, w, h, id, wear = 1, tabs = 0, lit = 1, dim = 0, ping}) => {
 	const lines = 900;
+	const cv = Math.min(46, h * 0.1);
+	const ex = Math.min(60, w * 0.012);
+	const tr = Math.min(54, h * 0.15);
 	return (
 		<g transform={`translate(${x},${y})`}>
 			<defs>
@@ -182,9 +185,9 @@ export const EdgeMacro: React.FC<{x: number; y: number; w: number; h: number; id
 				</linearGradient>
 			</defs>
 			{/* covers */}
-			<rect x={-60} y={-46} width={w + 120} height={50} rx={10} fill="#3c2416" />
-			<rect x={-60} y={-46} width={w + 120} height={8} fill="#6a4630" opacity={0.6} />
-			<rect x={-60} y={h - 4} width={w + 120} height={50} rx={10} fill="#3c2416" />
+			<rect x={-ex} y={-cv} width={w + 2 * ex} height={cv + 4} rx={cv * 0.2} fill="#3c2416" />
+			<rect x={-ex} y={-cv} width={w + 2 * ex} height={cv * 0.18} fill="#6a4630" opacity={0.6} />
+			<rect x={-ex} y={h - 4} width={w + 2 * ex} height={cv + 4} rx={cv * 0.2} fill="#3c2416" />
 			<rect x={0} y={0} width={w} height={h} fill="#eadfc4" />
 			{Array.from({length: lines}, (_, i) => {
 				const lx = (i / lines) * w + random(`${id}j${i}`) * 2;
@@ -206,9 +209,10 @@ export const EdgeMacro: React.FC<{x: number; y: number; w: number; h: number; id
 						const cx = ((i + 0.5) / 9) * w;
 						return (
 							<g key={`t${i}`} opacity={tabs}>
-								<line x1={((i + 1) / 9) * w} y1={0} x2={((i + 1) / 9) * w} y2={h} stroke="#6a4a2a" strokeWidth={3} opacity={i < 8 ? 0.5 : 0} />
-								<path d={`M${cx - 54},${-2} A54,54 0 0 0 ${cx + 54},${-2} Z`} fill="#2e1c10" />
-								<text x={cx} y={34} textAnchor="middle" style={{fontFamily: font.latin, fontWeight: 700, fontSize: 52, fill: '#efe4c8', fontVariantNumeric: 'lining-nums'}}>
+								<line x1={((i + 1) / 9) * w} y1={0} x2={((i + 1) / 9) * w} y2={h} stroke="#6a4a2a" strokeWidth={Math.max(0.6, tr * 0.05)} opacity={i < 8 ? 0.5 : 0} />
+								{ping && ping(i + 1) > 0 ? <circle cx={cx} cy={tr * 0.3} r={tr * (1.2 + 1.4 * (1 - ping(i + 1)))} fill="none" stroke={GOLD} strokeWidth={tr * 0.12} opacity={ping(i + 1)} /> : null}
+								<path d={`M${cx - tr},${-1} A${tr},${tr} 0 0 0 ${cx + tr},${-1} Z`} fill={ping && ping(i + 1) > 0.05 ? '#5a3a14' : '#2e1c10'} />
+								<text x={cx} y={tr * 0.62} textAnchor="middle" style={{fontFamily: font.latin, fontWeight: 700, fontSize: tr * 0.96, fill: ping && ping(i + 1) > 0.05 ? GOLD : '#efe4c8', fontVariantNumeric: 'lining-nums'}}>
 									{i + 1}
 								</text>
 							</g>
@@ -216,8 +220,8 @@ export const EdgeMacro: React.FC<{x: number; y: number; w: number; h: number; id
 					})
 				: null}
 			{/* light: the lamp from the front-left, falling off to the back */}
-			<rect x={-60} y={-46} width={w + 120} height={h + 92} fill="url(#em-light)" opacity={0.22 * lit} />
-			{dim > 0 ? <rect x={-60} y={-46} width={w + 120} height={h + 92} fill="#05060b" opacity={dim} /> : null}
+			<rect x={-ex} y={-cv} width={w + 2 * ex} height={h + 2 * cv} fill="url(#em-light)" opacity={0.22 * lit} />
+			{dim > 0 ? <rect x={-ex} y={-cv} width={w + 2 * ex} height={h + 2 * cv} fill="#05060b" opacity={dim} /> : null}
 		</g>
 	);
 };
@@ -267,7 +271,7 @@ export const BookMotif: React.FC<{p?: number; id: string}> = ({p = 1, id}) => {
  * everything on it (1, hero plane), a chair-back and book spines in the
  * foreground (1.35). `person` is drawn between the wall and the desk.
  */
-export const Study1881: React.FC<{f: number; cam?: Cam; person?: React.ReactNode; desk?: React.ReactNode; lamp?: number; front?: boolean; deskY?: number; extra?: React.ReactNode}> = ({
+export const Study1881: React.FC<{f: number; cam?: Cam; person?: React.ReactNode; desk?: React.ReactNode; lamp?: number; front?: boolean; deskY?: number; extra?: React.ReactNode; gust?: number}> = ({
 	f,
 	cam = CAM0,
 	person,
@@ -276,6 +280,7 @@ export const Study1881: React.FC<{f: number; cam?: Cam; person?: React.ReactNode
 	front = true,
 	deskY = 760,
 	extra,
+	gust = 0,
 }) => (
 	<g>
 		<Layer cam={cam} depth={0.45}>
@@ -329,6 +334,14 @@ export const Study1881: React.FC<{f: number; cam?: Cam; person?: React.ReactNode
 					<Snow f={f} n={70} seed="win" w={440} h={540} size={0.8} />
 				</svg>
 				<rect x={-18} y={-18} width={476} height={576} fill="none" stroke="#2c2018" strokeWidth={36} />
+				{gust > 0 ? (
+					<g>
+						{/* the right casement swings in on the gust: cold light and snow pour through */}
+						<rect x={220} y={0} width={220} height={540} fill="#c8d6ec" opacity={0.18 * gust} />
+						<path d={`M440,0 L${440 - 200 * gust},${-30 * gust} L${440 - 200 * gust},${570 + 30 * gust} L440,540 Z`} fill="#2c2018" opacity={0.95} />
+						<path d={`M${440 - 12},0 L${440 - 188 * gust},${-26 * gust} L${440 - 188 * gust},${566 + 26 * gust} L${440 - 12},540 Z`} fill="#9cc0ee" opacity={0.18} />
+					</g>
+				) : null}
 				<line x1={220} y1={0} x2={220} y2={540} stroke="#2c2018" strokeWidth={14} />
 				<line x1={0} y1={270} x2={440} y2={270} stroke="#2c2018" strokeWidth={14} />
 				<rect x={-60} y={0} width={560} height={720} fill="url(#glow-moon)" opacity={0.18} />
@@ -457,5 +470,161 @@ export const Exterior1881: React.FC<{f: number; cam?: Cam}> = ({f, cam = CAM0}) 
 			))}
 			<rect x={-400} y={874} width={3000} height={6} fill="#c8d4e6" opacity={0.45} />
 		</Layer>
+	</g>
+);
+
+// ---------------------------------------------------------------- camera
+
+/** a camera key: [frame, x, y, zoom] in hero-plane coordinates */
+export type Key = [number, number, number, number];
+
+/**
+ * Velocity-continuous camera through keys (Catmull–Rom on x, y and log-zoom):
+ * no stop-and-go between moves, so a shot flows from one framing into the next.
+ */
+export const camPath = (keys: Key[], f: number): Cam => {
+	const n = keys.length;
+	const val = (k: Key, c: number) => (c === 3 ? Math.log(k[3]) : k[c]);
+	if (f <= keys[0][0]) return lookAtZ(keys[0][1], keys[0][2], keys[0][3]);
+	if (f >= keys[n - 1][0]) return lookAtZ(keys[n - 1][1], keys[n - 1][2], keys[n - 1][3]);
+	let i = 0;
+	while (i < n - 2 && f >= keys[i + 1][0]) i++;
+	const p0 = keys[Math.max(0, i - 1)];
+	const p1 = keys[i];
+	const p2 = keys[i + 1];
+	const p3 = keys[Math.min(n - 1, i + 2)];
+	const dt = p2[0] - p1[0];
+	const t = (f - p1[0]) / dt;
+	const out = [0, 0, 0, 0];
+	for (let c = 1; c <= 3; c++) {
+		const m1 = p0 === p1 ? 0 : ((val(p2, c) - val(p0, c)) / (p2[0] - p0[0])) * dt;
+		const m2 = p3 === p2 ? 0 : ((val(p3, c) - val(p1, c)) / (p3[0] - p1[0])) * dt;
+		const t2 = t * t;
+		const t3 = t2 * t;
+		out[c] = (2 * t3 - 3 * t2 + 1) * val(p1, c) + (t3 - 2 * t2 + t) * m1 + (-2 * t3 + 3 * t2) * val(p2, c) + (t3 - t2) * m2;
+	}
+	return lookAtZ(out[1], out[2], Math.exp(out[3]));
+};
+const lookAtZ = (tx: number, ty: number, zoom: number): Cam => ({x: (tx - 960) * zoom, y: (ty - 540) * zoom, zoom});
+
+/** screen-space speed of the camera (px/frame), for motion blur */
+export const camSpeed = (keys: Key[], f: number): [number, number] => {
+	const a = camPath(keys, f - 1);
+	const b = camPath(keys, f + 1);
+	const ta = [a.x / a.zoom, a.y / a.zoom];
+	const tb = [b.x / b.zoom, b.y / b.zoom];
+	const z = (a.zoom + b.zoom) / 2;
+	const zr = Math.abs(Math.log(b.zoom / a.zoom)) * 120;
+	return [Math.abs(tb[0] - ta[0]) * z * 0.5 + zr, Math.abs(tb[1] - ta[1]) * z * 0.5 + zr];
+};
+
+// ---------------------------------------------------------------- the log table on the desk, fore-edge to camera
+
+/** world placement of the 1881 book's fore-edge on Newcomb's desk */
+export const BOOK = {x: 990, y: 694, w: 330, h: 66};
+export const sectionX = (d: number, b = BOOK) => b.x + ((d - 0.5) / 9) * b.w;
+
+/** a closed book lying on the desk, its worn fore-edge toward us (world coords from `b`) */
+export const BookFront: React.FC<{b?: typeof BOOK; id: string; wear?: number; tabs?: number; ping?: (d: number) => number; children?: React.ReactNode}> = ({b = BOOK, id, wear = 1, tabs = 1, ping, children}) => {
+	const dx = 46;
+	const dy = -30;
+	return (
+		<g>
+			<ellipse cx={b.x + b.w / 2 + 20} cy={b.y + b.h + 4} rx={b.w * 0.62} ry={14} fill="#000" opacity={0.45} filter="url(#blur-md)" />
+			<path d={`M${b.x + b.w},${b.y} L${b.x + b.w + dx},${b.y + dy} L${b.x + b.w + dx},${b.y + b.h + dy} L${b.x + b.w},${b.y + b.h} Z`} fill="#b8a582" />
+			<path d={`M${b.x - 4},${b.y - 6} L${b.x + b.w + 4},${b.y - 6} L${b.x + b.w + 4 + dx},${b.y - 6 + dy} L${b.x - 4 + dx},${b.y - 6 + dy} Z`} fill="#4e2c18" stroke="#2a160a" strokeWidth={1.5} />
+			<text x={b.x + b.w / 2 + dx / 2} y={b.y - 6 + dy / 2 + 4} textAnchor="middle" style={{fontFamily: font.latin, fontWeight: 700, fontSize: 11, letterSpacing: '0.3em', fill: P.brass}} opacity={0.8}>
+				LOGARITHMS
+			</text>
+			<EdgeMacro x={b.x} y={b.y} w={b.w} h={b.h} id={id} wear={wear} tabs={tabs} ping={ping} />
+			{children}
+		</g>
+	);
+};
+
+// ---------------------------------------------------------------- the break: snowy sky → archive → Benford's lab, 1938
+
+export const LAB_BOOK = {x: 1000, y: 694, w: 330, h: 66};
+
+/**
+ * One continuous world for the silent break. Above (y < -200): the night sky the
+ * pages flew into, snowing. Left (x < 640): the journal archive, shelves of bound
+ * volumes and the stack where Newcomb's note comes to rest. Right: Benford's desk
+ * at General Electric, 1938, an electric lamp that switches on (`lamp`).
+ */
+export const BreakWorld: React.FC<{f: number; cam: Cam; lamp: number; person?: React.ReactNode; desk?: React.ReactNode}> = ({f, cam, lamp, person, desk}) => (
+	<g>
+		<Layer cam={cam} depth={0.35}>
+			<rect x={-3000} y={-3000} width={7000} height={7000} fill="#07090f" />
+			<rect x={-3000} y={-2200} width={7000} height={1900} fill="url(#sky-night)" />
+		</Layer>
+		<Layer cam={cam} depth={0.55}>
+			{/* archive shelves */}
+			{Array.from({length: 5}, (_, r) => (
+				<g key={r}>
+					<rect x={-1500} y={90 + r * 190} width={2140} height={12} fill="#20170f" />
+					{Array.from({length: 54}, (_, i) => {
+						const hh = 120 + random(`ah${r}${i}`) * 50;
+						return <rect key={i} x={-1490 + i * 39} y={90 + r * 190 - hh} width={34} height={hh} fill={['#2a2018', '#33281c', '#241c16', '#3a2c20', '#2c2a24'][Math.floor(random(`ac${r}${i}`) * 5)]} />;
+					})}
+				</g>
+			))}
+			<rect x={-1500} y={-100} width={2140} height={1300} fill="#0b0d14" opacity={0.35} />
+			{/* the lab wall, window onto the plant at night */}
+			<rect x={640} y={-200} width={2600} height={1400} fill="#151a1f" />
+			{Array.from({length: 12}, (_, i) => (
+				<rect key={i} x={640 + i * 220} y={-200} width={4} height={1400} fill="#0e1216" />
+			))}
+			<g transform="translate(1720,80)">
+				<rect width={600} height={460} fill="#0d1424" />
+				{[[60, 140], [200, 200], [380, 120], [480, 170]].map(([sx, sh], i) => (
+					<g key={i}>
+						<rect x={sx} y={460 - sh} width={36} height={sh} fill="#05070c" />
+						{Array.from({length: 5}, (_, k) => (
+							<circle key={k} cx={sx + 18 + Math.sin((f + k * 20 + i * 7) / 18) * 10 + k * 8} cy={460 - sh - 20 - k * 26 - ((f * 0.4 + k * 26) % 26)} r={14 + k * 5} fill="#2a3040" opacity={0.35 - k * 0.05} />
+						))}
+					</g>
+				))}
+				<rect y={380} width={600} height={80} fill="#05070c" />
+				{Array.from({length: 7}, (_, i) => (
+					<rect key={i} x={i * 100} y={0} width={8} height={460} fill="#2a2f36" />
+				))}
+				{Array.from({length: 5}, (_, i) => (
+					<rect key={`h${i}`} x={0} y={i * 115} width={600} height={8} fill="#2a2f36" />
+				))}
+			</g>
+			{/* shelf of apparatus */}
+			<g transform="translate(820,300)">
+				<rect width={520} height={12} fill="#2a2f36" />
+				{[30, 110, 190, 290, 380, 450].map((bx, i) => (
+					<path key={i} d={`M${bx},0 L${bx},-${50 + (i % 3) * 20} L${bx + 30},-${50 + (i % 3) * 20} L${bx + 30},0 Z`} fill="#3a5560" opacity={0.6} />
+				))}
+			</g>
+			<rect x={640} y={-200} width={2600} height={1400} fill="#ffcf8a" opacity={0.05 * lamp} />
+		</Layer>
+		{person}
+		<Layer cam={cam} depth={1}>
+			{/* journal stack in the archive: the note lands on top (top at y=690) */}
+			<g transform="translate(300,760)">
+				{Array.from({length: 7}, (_, i) => (
+					<rect key={i} x={-130 + (i % 2) * 6} y={-10 - i * 10} width={260} height={10} fill={['#3a2a1c', '#4a3422', '#2e2216'][i % 3]} />
+				))}
+				<rect x={-160} y={0} width={320} height={300} fill="#1a120c" />
+			</g>
+			{/* Benford's desk */}
+			<rect x={700} y={760} width={2600} height={40} fill="#3a2a1e" />
+			<rect x={700} y={760} width={2600} height={6} fill="#6a4a32" />
+			<rect x={700} y={800} width={2600} height={600} fill="#21170f" />
+			{desk}
+			{/* the gooseneck lamp */}
+			<g transform="translate(2020,760)">
+				<ellipse cx={0} cy={0} rx={60} ry={12} fill="#1e2a22" />
+				<path d="M0,0 C0,-120 -40,-200 -120,-230" stroke="#2a3a2e" strokeWidth={10} fill="none" />
+				<path d="M-170,-250 L-80,-250 L-60,-200 L-190,-200 Z" fill="#2f5a3a" />
+				<ellipse cx={-125} cy={-200} rx={62} ry={10} fill={lamp > 0.5 ? '#fff4d6' : '#3a3a30'} />
+				<circle cx={-125} cy={-120} r={560} fill="url(#glow-lamp)" opacity={0.75 * lamp} />
+			</g>
+		</Layer>
+		<rect x={0} y={0} width={W} height={H} fill="#05060b" opacity={0.35 * (1 - lamp)} />
 	</g>
 );

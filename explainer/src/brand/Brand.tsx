@@ -16,6 +16,7 @@ import {ease, prog} from '../lib/context';
 import {loadEpisodeFonts} from '../lib/fonts';
 import {font} from '../lib/theme';
 import {JUNO} from './identity';
+import {TicketMotif} from '../art/Ox';
 
 /**
  * Juno's channel package: a title card (片头) that replaces the plain card the
@@ -31,7 +32,7 @@ export type VideoCfg = {
 	kicker: string;
 	tagline: string;
 	taglineEn: string;
-	motif: 'cards' | 'duel' | 'stars' | 'serials' | 'coffee';
+	motif: 'cards' | 'duel' | 'stars' | 'serials' | 'coffee' | 'ticket' | 'bars';
 	card: [number, number];
 	extend: number;
 	trim?: number;
@@ -130,6 +131,21 @@ export const Motif: React.FC<{kind: VideoCfg['motif']; p: number; f: number}> = 
 			</g>
 		);
 	}
+	if (kind === 'bars') {
+		// nine gold bars in Benford's proportions (《第一位数字》): the hook's tubes, the reveal, the worn book edge
+		const B = [30.1, 17.6, 12.5, 9.7, 7.9, 6.7, 5.8, 5.1, 4.6];
+		return (
+			<g>
+				<ellipse cx={-150} cy={-10} rx={140} ry={70} fill="url(#brand-glow)" opacity={0.6 * p} />
+				{B.map((v, i) => {
+					const q = Math.min(1, Math.max(0, p * 12 - i));
+					const h = (v / 30.1) * 110 * q;
+					return <rect key={i} x={-240 + i * 54} y={40 - h} width={40} height={h} rx={3} fill={GOLD} opacity={0.35 + 0.65 * (v / 30.1)} />;
+				})}
+				<line x1={-250} y1={46} x2={240} y2={46} stroke={GOLD} strokeWidth={2} opacity={0.5 * p} />
+			</g>
+		);
+	}
 	if (kind === 'serials') {
 		// the episode's object: brass plate 82731, stamped and lit
 		const q = spring({frame: Math.round(p * 40), fps: 30, config: {damping: 12}});
@@ -147,6 +163,10 @@ export const Motif: React.FC<{kind: VideoCfg['motif']; p: number; f: number}> = 
 				</text>
 			</g>
 		);
+	}
+	if (kind === 'ticket') {
+		// 《八百人猜牛》: the middle ticket, No 394, drawn in gold
+		return <TicketMotif p={p} gold={GOLD} />;
 	}
 	if (kind === 'coffee') {
 		// a cup with a wisp of steam, and the coffee flower it came from

@@ -16,7 +16,7 @@ import {P} from './palette';
 
 export type Outfit = 'suit' | 'uniform' | 'overalls' | 'flight' | 'labcoat' | 'dress' | 'casual' | 'frock';
 export type Hair = 'slick' | 'short' | 'bald' | 'bob' | 'bun' | 'pony' | 'long' | 'wig' | 'none';
-export type Hat = 'officer' | 'garrison' | 'ballcap' | 'helmet' | 'tricorn' | 'straw' | 'headwrap' | 'none';
+export type Hat = 'officer' | 'garrison' | 'ballcap' | 'helmet' | 'tricorn' | 'straw' | 'headwrap' | 'bowler' | 'flatcap' | 'boater' | 'bonnet' | 'none';
 export type Expression = 'neutral' | 'smile' | 'surprise' | 'worried' | 'stern' | 'thinking';
 
 export type Look = {
@@ -33,6 +33,8 @@ export type Look = {
 	mustache?: boolean;
 	/** a full beard over the jaw (19th-century scholars) */
 	beard?: boolean;
+	/** side-whiskers (mutton chops) down the cheek, chin shaved (Victorian gentlemen) */
+	whiskers?: boolean;
 	/** an apron over the outfit (colour) */
 	apron?: string;
 };
@@ -46,7 +48,42 @@ export type Pose = {
 	legNear: [number, number];
 	legFar: [number, number];
 	lift: number;
+	/** hand direction relative to the forearm, degrees (+ = toward the front); default 0 */
+	wristNear?: number;
+	wristFar?: number;
+	/** 1 = palm toward the camera side (thumb in front), -1 = back of the hand toward camera */
+	palmNear?: 1 | -1;
+	palmFar?: 1 | -1;
+	/** the whole body above the knees sinks by this much (figure units, + = down), for crouching and squatting */
+	drop?: number;
 };
+
+/**
+ * Human joint ranges (degrees, rig conventions). Every pose is clamped to these
+ * before drawing, so an elbow or knee can never fold backwards and a wrist can
+ * never twist past what a real wrist does. Reference: CMU mocap (pipeline/mocap.py).
+ */
+export const JOINT_LIMITS = {
+	lean: [-30, 90],
+	head: [-40, 45],
+	upperArm: [-70, 185],
+	elbow: [0, 150],
+	thigh: [-45, 130],
+	knee: [0, 150],
+	wrist: [-70, 80],
+} as const;
+const clampTo = (v: number, [lo, hi]: readonly [number, number]) => Math.min(hi, Math.max(lo, v));
+export const limitPose = (p: Pose): Pose => ({
+	...p,
+	lean: clampTo(p.lean, JOINT_LIMITS.lean),
+	head: clampTo(p.head, JOINT_LIMITS.head),
+	armNear: [clampTo(p.armNear[0], JOINT_LIMITS.upperArm), clampTo(p.armNear[1], JOINT_LIMITS.elbow)],
+	armFar: [clampTo(p.armFar[0], JOINT_LIMITS.upperArm), clampTo(p.armFar[1], JOINT_LIMITS.elbow)],
+	legNear: [clampTo(p.legNear[0], JOINT_LIMITS.thigh), clampTo(p.legNear[1], JOINT_LIMITS.knee)],
+	legFar: [clampTo(p.legFar[0], JOINT_LIMITS.thigh), clampTo(p.legFar[1], JOINT_LIMITS.knee)],
+	wristNear: p.wristNear === undefined ? undefined : clampTo(p.wristNear, JOINT_LIMITS.wrist),
+	wristFar: p.wristFar === undefined ? undefined : clampTo(p.wristFar, JOINT_LIMITS.wrist),
+});
 
 const L = {upper: 58, fore: 54, thigh: 76, shin: 74};
 const SHOULDER_NEAR: [number, number] = [14, -258];
@@ -122,6 +159,80 @@ export const reachAngles = (shoulder: [number, number], target: [number, number]
 	return [a1, a2abs - a1];
 };
 
+/**
+ * Where a hand ends up (figure space, before `flip`), for attaching ropes, tickets
+ * and other props to it. Mirrors the arm drawing: shoulder → upper arm → forearm,
+ * then the body lean about the hip. `grip` = true returns the centre of the grip.
+ */
+export const handAt = (rawPose: Pose, near = true, grip = true): [number, number] => {
+	const pose = limitPose(rawPose);
+	const shoulder = near ? SHOULDER_NEAR : SHOULDER_FAR;
+	const [a, e] = near ? pose.armNear : pose.armFar;
+	const [ux, uy] = dir(a, L.upper);
+	const [fx, fy] = dir(a + e, L.fore);
+	const [gx, gy] = grip ? dir(a + e, 14) : [0, 0];
+	let x = shoulder[0] + ux + fx + gx;
+	let y = shoulder[1] + uy + fy + gy;
+	// the lean rotates the upper body about the hip
+	const hipY = HIP_Y + pose.lift;
+	const r = rad(pose.lean);
+	const dx = x;
+	const dy = y - hipY;
+	x = dx * Math.cos(r) - dy * Math.sin(r);
+	y = hipY + dx * Math.sin(r) + dy * Math.cos(r) + (pose.drop ?? 0);
+	return [x, y];
+};
+
+/** Pose arithmetic: a + b·k (for layering idle motion or offsets on a key pose). */
+export const addPose = (a: Pose, b: Partial<Pose>, k = 1): Pose => ({
+	lean: a.lean + (b.lean ?? 0) * k,
+	head: a.head + (b.head ?? 0) * k,
+	armNear: [a.armNear[0] + (b.armNear?.[0] ?? 0) * k, a.armNear[1] + (b.armNear?.[1] ?? 0) * k],
+	armFar: [a.armFar[0] + (b.armFar?.[0] ?? 0) * k, a.armFar[1] + (b.armFar?.[1] ?? 0) * k],
+	legNear: [a.legNear[0] + (b.legNear?.[0] ?? 0) * k, a.legNear[1] + (b.legNear?.[1] ?? 0) * k],
+	legFar: [a.legFar[0] + (b.legFar?.[0] ?? 0) * k, a.legFar[1] + (b.legFar?.[1] ?? 0) * k],
+	lift: a.lift + (b.lift ?? 0) * k,
+});
+
+/**
+ * Idle life for a standing figure: breathing (a slow lean and shoulder rise), a weight
+ * shift every few seconds, and small head turns. Deterministic per `seed`; layer it
+ * with addPose(pose, idle(f, 'name')). `k` scales it (0 = frozen).
+ */
+export const idle = (f: number, seed: string, k = 1): Partial<Pose> => {
+	const o = random(seed + 'idle') * 100;
+	const breath = Math.sin((f + o) / 26);
+	const shift = Math.sin((f + o * 3) / 97);
+	const look = Math.sin((f + o * 7) / 71) + 0.4 * Math.sin((f + o) / 31);
+	return {
+		lean: k * (0.7 * breath + 1.2 * shift),
+		head: k * (2.2 * look - 0.8 * breath),
+		armNear: [k * (1.6 * breath), k * (1.2 * breath)],
+		armFar: [k * (-1.2 * breath), k * (1.4 * breath)],
+		legNear: [k * 1.5 * shift, 0],
+		legFar: [k * -1.5 * shift, 0],
+		lift: k * 0.6 * Math.abs(shift),
+	};
+};
+
+/**
+ * Pose at frame `f` along key poses [[frame, pose], …]: each segment eases in and out
+ * (smoothstep), so a move has a start, a travel and a settle. Use an overshoot key
+ * (a pose slightly past the target, 3–5 frames before it) for follow-through.
+ */
+export const keyPoses = (f: number, keys: [number, Pose][]): Pose => {
+	if (f <= keys[0][0]) return keys[0][1];
+	for (let i = 0; i < keys.length - 1; i++) {
+		const [f0, p0] = keys[i];
+		const [f1, p1] = keys[i + 1];
+		if (f <= f1) {
+			const t = (f - f0) / Math.max(1, f1 - f0);
+			return lerpPose(p0, p1, t * t * (3 - 2 * t));
+		}
+	}
+	return keys[keys.length - 1][1];
+};
+
 export const shade = (hex: string, k: number) => {
 	if (!hex.startsWith('#')) return hex;
 	const n = parseInt(hex.slice(1), 16);
@@ -155,13 +266,115 @@ const limb = (from: [number, number], a1: number, a2abs: number, l1: number, l2:
 };
 
 const Shoe: React.FC<{color?: string}> = ({color = '#1b1a1d'}) => <path d="M-8,-6 C-9,4 -5,8 3,8 L23,8 C25,2 20,-4 10,-6 Z" fill={color} />;
-const Hand: React.FC<{skin: string; holding?: React.ReactNode}> = ({skin, holding}) => (
-	<g>
-		{holding}
-		<path d="M-6,-2 C-8,6 -5,13 1,13 C6,13 8,8 7,2 C7,-2 4,-4 0,-4 C-3,-4 -5,-3 -6,-2 Z" fill={skin} />
-		<path d="M5,0 C9,1 10,5 8,7" stroke={skin} strokeWidth={4} strokeLinecap="round" fill="none" />
+export type HandShape = 'relaxed' | 'grip' | 'open' | 'point' | 'pinch';
+
+/**
+ * A hand in forearm space: the wrist at the origin, the fingers toward +y, the thumb
+ * toward +x (the front of a figure facing right). Big enough to read at phone size
+ * (~0.09 of the figure's height). `holding` sits in the grip (or between the
+ * pinched fingertips) and is counter-rotated by the caller so props stay upright.
+ */
+const HAND_SCALE = 1.2;
+const GRIP: Record<HandShape, [number, number]> = {relaxed: [2, 15], grip: [2, 14], open: [1, 20], point: [2, 13], pinch: [9, 27]};
+
+/** An outlined finger (or thumb): a capsule from (x1,y1) to (x2,y2), optionally bent at a knuckle. */
+const Digit: React.FC<{d: string; w: number; skin: string; edge: string}> = ({d, w, skin, edge}) => (
+	<g fill="none" strokeLinecap="round" strokeLinejoin="round">
+		<path d={d} stroke={edge} strokeWidth={w + 2} />
+		<path d={d} stroke={skin} strokeWidth={w} />
 	</g>
 );
+
+const Hand: React.FC<{skin: string; shape: HandShape; holding?: React.ReactNode; holdAngle?: number}> = ({skin, shape, holding, holdAngle = 0}) => {
+	const edge = shade(skin, 0.72);
+	const thumb = shade(skin, 0.95);
+	const [gx, gy] = GRIP[shape];
+	const held = holding ? <g transform={`translate(${gx * HAND_SCALE},${gy * HAND_SCALE}) rotate(${holdAngle})`}>{holding}</g> : null;
+	const palm = <path d="M-7,-1 C-9,6 -9,13 -7,18 C-4,21 5,21 8,18 C10,13 10,6 7,-1 Z" fill={skin} stroke={edge} strokeWidth={1.1} />;
+	const fist = <path d="M-8,-1 C-10,7 -9,16 -5,20 C0,23 8,21 10,15 C11,9 10,3 7,-1 Z" fill={skin} stroke={edge} strokeWidth={1.1} />;
+	// four curled fingertips rolled toward the front
+	const rolls = (y0: number) => (
+		<g>
+			{[0, 1, 2, 3].map((i) => (
+				<ellipse key={i} cx={6.5 - i * 0.6} cy={y0 + i * 3.6} rx={3.6} ry={2.1} fill={skin} stroke={edge} strokeWidth={1} />
+			))}
+		</g>
+	);
+	const body = (() => {
+		switch (shape) {
+			case 'grip':
+				return (
+					<g>
+						{fist}
+						{rolls(5)}
+						<Digit d="M4,3 C9,4 12,8 10,13" w={4.6} skin={thumb} edge={edge} />
+					</g>
+				);
+			case 'open':
+				return (
+					<g>
+						{[
+							[-5, 17, -6, 29],
+							[-1.6, 18, -1.8, 31],
+							[1.8, 18, 2.4, 30.5],
+							[5, 17, 6.6, 27.5],
+						].map(([x1, y1, x2, y2], i) => (
+							<Digit key={i} d={`M${x1},${y1} L${x2},${y2}`} w={3.4} skin={skin} edge={edge} />
+						))}
+						{palm}
+						<Digit d="M6,4 C12,7 15,11 16,16" w={4.2} skin={thumb} edge={edge} />
+					</g>
+				);
+			case 'point':
+				return (
+					<g>
+						<Digit d="M6,14 L8.5,31" w={3.6} skin={skin} edge={edge} />
+						{fist}
+						{rolls(9)}
+						<Digit d="M4,3 C9,4 12,8 10,12" w={4.6} skin={thumb} edge={edge} />
+					</g>
+				);
+			case 'pinch':
+				// fingers behind the held item, the thumb in front of it (drawn in the return)
+				return (
+					<g>
+						{palm}
+						<Digit d="M-5,16 C-6,22 -3,25 1,24" w={3.4} skin={skin} edge={edge} />
+						<Digit d="M-1,17 C-1,22 1,25 4,25" w={3.4} skin={skin} edge={edge} />
+						<Digit d="M4,16 C6,21 8,25 10,27" w={3.4} skin={skin} edge={edge} />
+					</g>
+				);
+			default:
+				// relaxed: fingers loosely curled, the thumb resting along the index
+				return (
+					<g>
+						{palm}
+						<Digit d="M-5,16 C-6,22 -3,26 1,26" w={3.6} skin={skin} edge={edge} />
+						<Digit d="M-1,17 C-1,23 2,27 5,26" w={3.6} skin={skin} edge={edge} />
+						<Digit d="M3,17 C4,22 6,25 8.5,24" w={3.6} skin={skin} edge={edge} />
+						<Digit d="M6,4 C11,7 12,12 10,17" w={4.4} skin={thumb} edge={edge} />
+					</g>
+				);
+		}
+	})();
+	if (shape === 'pinch') {
+		return (
+			<g>
+				<g transform={`scale(${HAND_SCALE})`}>{body}</g>
+				{held}
+				<g transform={`scale(${HAND_SCALE})`}>
+					<Digit d="M6,4 C12,8 13,18 10.5,26" w={4.4} skin={thumb} edge={edge} />
+				</g>
+			</g>
+		);
+	}
+	return (
+		<g>
+			{held}
+			<g transform={`scale(${HAND_SCALE})`}>{body}</g>
+		</g>
+	);
+};
 
 export const Figure: React.FC<{
 	look: Look;
@@ -176,9 +389,13 @@ export const Figure: React.FC<{
 	silhouette?: string;
 	holdNear?: React.ReactNode;
 	holdFar?: React.ReactNode;
+	/** hand shapes; default: grip when holding something, else relaxed */
+	hands?: {near?: HandShape; far?: HandShape};
 	talk?: number;
 	shadow?: boolean;
-}> = ({look, pose = POSES.stand, reach, expression = 'neutral', blink = 1, facing = 'side', flip, rim = 'cool', silhouette, holdNear, holdFar, talk = 0, shadow = true}) => {
+}> = ({look, pose: rawPose = POSES.stand, reach, expression = 'neutral', blink = 1, facing = 'side', flip, rim = 'cool', silhouette, holdNear, holdFar, hands, talk = 0, shadow = true}) => {
+	const pose = limitPose(rawPose);
+	const drop = pose.drop ?? 0;
 	const sil = silhouette;
 	const c = (x: string) => sil ?? x;
 	const skin = c(look.skin);
@@ -190,7 +407,7 @@ export const Figure: React.FC<{
 	const long = look.outfit === 'labcoat' || look.outfit === 'dress' || look.outfit === 'frock';
 	const hem = long ? -66 : -138;
 	const back = facing === 'back';
-	const hipY = HIP_Y + pose.lift;
+	const hipY = HIP_Y + pose.lift + drop;
 	const filter = rim === 'none' ? undefined : `url(#rim-${rim})`;
 
 	// legs
@@ -215,8 +432,11 @@ export const Figure: React.FC<{
 	// arms
 	const armShape = (near: boolean) => {
 		const shoulder = back ? ([near ? 24 : -24, -258] as [number, number]) : near ? SHOULDER_NEAR : SHOULDER_FAR;
-		const target = near ? reach?.near : reach?.far;
+		const rawTarget = near ? reach?.near : reach?.far;
+		// targets are in figure space; the arm is drawn inside the sunk upper body
+		const target: [number, number] | undefined = rawTarget ? [rawTarget[0], rawTarget[1] - drop] : undefined;
 		let [a, e] = target ? reachAngles(shoulder, target) : near ? pose.armNear : pose.armFar;
+		e = clampTo(e, JOINT_LIMITS.elbow);
 		if (back && !target) {
 			a = -a;
 			e = -e;
@@ -234,8 +454,12 @@ export const Figure: React.FC<{
 					// cuff
 					<circle cx={l.end[0] - dir(l.endAngle, 4)[0]} cy={l.end[1] - dir(l.endAngle, 4)[1]} r={6.5} fill={look.outfit === 'labcoat' ? P.labCoat : P.shirt} opacity={0.9} />
 				) : null}
-				<g transform={`translate(${l.end[0]},${l.end[1]}) rotate(${-l.endAngle})`}>
-					<Hand skin={near ? skin : skinFar} holding={(near ? holdNear : holdFar) ? <g transform={`rotate(${l.endAngle})`}>{near ? holdNear : holdFar}</g> : undefined} />
+				<g transform={`translate(${l.end[0]},${l.end[1]}) rotate(${-(l.endAngle + ((near ? pose.wristNear : pose.wristFar) ?? 0))}) scale(${(near ? pose.palmNear : pose.palmFar) === -1 ? -1 : 1},1)`}>
+					{(() => {
+							const item = near ? holdNear : holdFar;
+							const shape = (near ? hands?.near : hands?.far) ?? (item ? 'grip' : 'relaxed');
+							return <Hand skin={near ? skin : skinFar} shape={shape} holding={item ?? undefined} holdAngle={l.endAngle} />;
+						})()}
 				</g>
 			</g>
 		);
@@ -398,6 +622,7 @@ export const Figure: React.FC<{
 							<path d={`M18,${-314 + brow * 0.35} L26,${-313 - brow * 0.25}`} stroke={c(look.hairColor)} strokeWidth={2.2} strokeLinecap="round" />
 							<path d="M29,-303 C31,-298 30,-296 27,-295" stroke={shade(look.skin, 0.75)} strokeWidth={1.6} fill="none" strokeLinecap="round" />
 							{look.beard ? <path d="M-13,-300 C-16,-284 -8,-264 8,-259 C22,-256 32,-268 33,-283 C33,-289 32,-293 30,-295 C27,-291 23,-290 19,-291 C14,-292 9,-293 5,-291 C1,-295 -6,-300 -13,-300 Z" fill={c(look.hairColor)} /> : null}
+							{look.whiskers ? <path d="M-14,-306 C-18,-292 -14,-276 -2,-270 C6,-268 10,-274 8,-282 C2,-286 -4,-292 -6,-304 Z" fill={c(look.hairColor)} /> : null}
 							{look.mustache || look.beard ? <path d="M15,-294 C18,-297 26,-297 29,-294 C26,-292 18,-292 15,-294 Z" fill={shade(look.hairColor, 0.8)} /> : null}
 							{mouth}
 							<ellipse cx={24} cy={-295} rx={4} ry={2.4} fill="#e28b7a" opacity={expression === 'smile' ? 0.35 : 0.15} />
@@ -449,6 +674,45 @@ export const Figure: React.FC<{
 					<path d="M-26,-312 C-40,-306 -44,-292 -38,-282 C-34,-292 -30,-300 -22,-304 Z" fill={c(look.hatColor ?? '#2f5f6a')} />
 				</g>
 			) : null}
+			{look.hat === 'bowler' ? (
+				<g>
+					<path d="M-26,-324 C-30,-322 -30,-318 -24,-317 C-4,-314 22,-314 40,-318 C44,-319 44,-323 40,-325 Z" fill={c(look.hatColor ?? '#1c1b1e')} />
+					<path d="M-20,-324 C-22,-360 30,-364 32,-324 Z" fill={c(look.hatColor ?? '#1c1b1e')} />
+					{!sil ? <path d="M-19,-330 C-6,-332 18,-332 31,-330 L31,-325 L-19,-325 Z" fill={shade(look.hatColor ?? '#1c1b1e', 0.55)} /> : null}
+					{!sil ? <path d="M-10,-352 C-2,-358 12,-358 20,-352" stroke="#fff" strokeOpacity={0.12} strokeWidth={3} fill="none" /> : null}
+				</g>
+			) : null}
+			{look.hat === 'flatcap' ? (
+				<g>
+					<path d="M-24,-318 C-28,-344 2,-354 30,-340 C40,-334 46,-326 48,-320 C30,-318 4,-318 -24,-318 Z" fill={c(look.hatColor ?? '#5a5446')} />
+					{!back ? <path d="M22,-322 L50,-318 C46,-312 30,-312 18,-316 Z" fill={c(shade(look.hatColor ?? '#5a5446', 0.7))} /> : null}
+					{!sil ? <path d="M-14,-340 C4,-344 22,-340 34,-334" stroke={shade(look.hatColor ?? '#5a5446', 0.75)} strokeWidth={1.5} fill="none" /> : null}
+				</g>
+			) : null}
+			{look.hat === 'boater' ? (
+				<g>
+					<ellipse cx={8} cy={-322} rx={40} ry={6} fill={c(look.hatColor ?? '#d9bf7f')} />
+					<path d="M-20,-322 L-18,-346 C-4,-350 20,-350 34,-346 L36,-322 Z" fill={c(look.hatColor ?? '#d9bf7f')} />
+					<rect x={-19} y={-333} width={54} height={8} fill={c(look.accent ?? '#2a2f45')} />
+					{!sil ? <ellipse cx={8} cy={-347} rx={27} ry={3} fill={shade(look.hatColor ?? '#d9bf7f', 1.08)} /> : null}
+				</g>
+			) : null}
+			{look.hat === 'bonnet' ? (
+				// an Edwardian wide-brimmed hat, a ribbon and a flower
+				<g>
+					<path d="M-20,-326 C-22,-352 30,-356 34,-326 Z" fill={c(look.hatColor ?? '#4a3a4a')} />
+					<path d="M-46,-322 C-30,-334 50,-336 64,-322 C50,-314 -30,-312 -46,-322 Z" fill={c(look.hatColor ?? '#4a3a4a')} />
+					{!sil ? <path d="M-19,-334 C0,-338 18,-338 33,-334 L33,-327 L-19,-327 Z" fill={look.accent ?? '#c9a35e'} /> : null}
+					{!sil ? (
+						<g transform="translate(-12,-334)">
+							{[0, 72, 144, 216, 288].map((r) => (
+								<ellipse key={r} cx={0} cy={-5} rx={3.5} ry={5} transform={`rotate(${r})`} fill="#e9d6d0" />
+							))}
+							<circle r={2.5} fill={look.accent ?? '#c9a35e'} />
+						</g>
+					) : null}
+				</g>
+			) : null}
 			{look.hat === 'ballcap' ? (
 				<g>
 					<path d="M-22,-322 C-22,-350 28,-352 30,-324 Z" fill={c(look.accent ?? '#3a4a5c')} />
@@ -469,7 +733,7 @@ export const Figure: React.FC<{
 		</g>
 	);
 
-	const lean = `rotate(${pose.lean}, 0, ${hipY})`;
+	const lean = `translate(0,${drop}) rotate(${pose.lean}, 0, ${hipY - drop})`;
 	const body = back ? (
 		<g>
 			{legShape(false)}
