@@ -1,0 +1,16 @@
+token present: yes
+sketchfab model f0a6aa63294f45a2bf330c28502b2b67
+  saved out/models/titanic_s20.glb 27.5 MB
+  optimized 27.5 -> 32.3 MB
+sketchfab model fa41e6b093b84010a462ef190210d90b
+  saved out/models/titanic_s23.glb 9.7 MB
+  optimized 9.7 -> 2.9 MB
+sketchfab model 0c03e9aeaea14edea86345a0b2f202f1
+  saved out/models/lifeboat_s12.glb 6.9 MB
+  optimized 6.9 -> 5.1 MB
+sketchfab model 588f5c05268b4b9daf18a27694974439
+  saved out/models/lifeboat_b1.glb 2.3 MB
+  optimized 2.3 -> 1.9 MB
+url https://raw.githubusercontent.com/mrdoob/three.js/r169/examples/textures/waternormals.jpg
+  saved out/files/waternormals.jpg 0.2 MB
+done

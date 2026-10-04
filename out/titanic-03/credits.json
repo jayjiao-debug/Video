@@ -1,0 +1,42 @@
+[
+  {
+    "source": "Sketchfab",
+    "uid": "f0a6aa63294f45a2bf330c28502b2b67",
+    "name": "RMS Titanic",
+    "author": "Union",
+    "authorUrl": "https://sketchfab.com/krprom",
+    "license": "CC Attribution",
+    "url": "https://sketchfab.com/3d-models/rms-titanic-f0a6aa63294f45a2bf330c28502b2b67"
+  },
+  {
+    "source": "Sketchfab",
+    "uid": "fa41e6b093b84010a462ef190210d90b",
+    "name": "Titanic",
+    "author": "farhad.Guli",
+    "authorUrl": "https://sketchfab.com/farhad.Guli",
+    "license": "CC Attribution",
+    "url": "https://sketchfab.com/3d-models/titanic-fa41e6b093b84010a462ef190210d90b"
+  },
+  {
+    "source": "Sketchfab",
+    "uid": "0c03e9aeaea14edea86345a0b2f202f1",
+    "name": "Titanic Lifeboat",
+    "author": "axstream",
+    "authorUrl": "https://sketchfab.com/axstream",
+    "license": "CC Attribution",
+    "url": "https://sketchfab.com/3d-models/titanic-lifeboat-0c03e9aeaea14edea86345a0b2f202f1"
+  },
+  {
+    "source": "Sketchfab",
+    "uid": "588f5c05268b4b9daf18a27694974439",
+    "name": "Titanic Lifeboat",
+    "author": "millernathan472",
+    "authorUrl": "https://sketchfab.com/millernathan472",
+    "license": "CC Attribution",
+    "url": "https://sketchfab.com/3d-models/titanic-lifeboat-588f5c05268b4b9daf18a27694974439"
+  },
+  {
+    "source": "https://raw.githubusercontent.com/mrdoob/three.js/r169/examples/textures/waternormals.jpg",
+    "license": "MIT (three.js)"
+  }
+]
