@@ -27,13 +27,15 @@ export const BUTCHER = {
 };
 
 /** Slot position in the butcher's own space (his hand at `post` lands here). */
-const SLOT_LOCAL: [number, number] = [103, -170];
+export const SLOT_LOCAL: [number, number] = [103, -170];
+/** Where the ticket box's slot is, in the scene, for a poster standing at (x, y) scale s. */
+export const slotFor = (x: number, y: number, s = 0.95): [number, number] => [x + SLOT_LOCAL[0] * s, y + SLOT_LOCAL[1] * s];
 
 /**
  * The butcher at (x, y) scale s, his ticket box placed so its slot meets his hand.
  * `t0` is the frame the action starts (he reads until then).
  */
-export const ButcherPosting: React.FC<{f: number; t0: number; x: number; y: number; s?: number; name?: string}> = ({f, t0, x, y, s = 0.95}) => {
+export const ButcherPosting: React.FC<{f: number; t0: number; x: number; y: number; s?: number; who?: keyof typeof CAST; box?: boolean}> = ({f, t0, x, y, s = 0.95, who = 'butcher', box: showBox = true}) => {
 	const k = f - t0;
 	const pose = keyPoses(k, [
 		[0, BUTCHER.read],
@@ -45,7 +47,7 @@ export const ButcherPosting: React.FC<{f: number; t0: number; x: number; y: numb
 	]);
 	// idle stays on before and after the move, eases off during it
 	const still = k < 0 || k > 44 ? 1 : k < 4 ? 1 - k / 4 : k > 36 ? (k - 36) / 8 : 0;
-	const p = addPose(pose, idle(f, 'butcher'), still);
+	const p = addPose(pose, idle(f, who), still);
 	const released = k >= 19;
 	const hand: HandShape = k < 19 ? 'pinch' : k < 34 ? 'open' : 'relaxed';
 	// box: the slot (box-local [0, -195] at scale 0.9) sits at the hand's post position
@@ -58,11 +60,11 @@ export const ButcherPosting: React.FC<{f: number; t0: number; x: number; y: numb
 		<g>
 			<g transform={`translate(${x},${y}) scale(${s})`}>
 				<Figure
-					look={CAST.butcher}
+					look={CAST[who]}
 					pose={p}
 					hands={{near: hand}}
 					rim="warm"
-					blink={blinkAt(f, 'bu')}
+					blink={blinkAt(f, who)}
 					expression={k > 30 ? 'smile' : k < 2 ? 'thinking' : 'neutral'}
 					holdNear={
 						!released ? (
@@ -74,7 +76,7 @@ export const ButcherPosting: React.FC<{f: number; t0: number; x: number; y: numb
 				/>
 			</g>
 			<g transform={`translate(${box.x},${box.y}) scale(0.9)`}>
-				<BallotBox />
+				{showBox ? <BallotBox /> : null}
 				{released && drop < 1 ? (
 					<g>
 						<clipPath id="slot-clip">

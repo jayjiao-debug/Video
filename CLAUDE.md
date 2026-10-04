@@ -10,7 +10,7 @@ reference → research → art direction → **user approval** → animate → Q
 
 Brand: every video is a Juno video. Use the `juno-brand` skill
 (`.claude/skills/juno-brand/SKILL.md`): fixed identity in `explainer/src/brand/identity.ts`,
-the four brand moments (cold open → gold title card by 4 s → corner mark → end card),
+the four brand moments (cold open sized by the script → gold title card exactly on a music hit → corner mark → end card),
 and its brand QA before sending anything.
 
 What the owner wants:

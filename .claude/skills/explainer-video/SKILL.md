@@ -98,7 +98,7 @@ Then map the 9 beats:
 
 | Beat | Music | Job |
 |---|---|---|
-| 1 Hook question | intro | an everyday "would you…?" question, plus the central image |
+| 1 Hook | intro | the central image, established (what are we looking at?), then an everyday "would you…?" question; the title lands on the first strong hit after it |
 | 2 Cold open | first full section | a person, a year, a place ("1943年，纽约…") |
 | 3 Data / setup | same section | the obvious reading of the evidence |
 | 4 Twist | **break** (quiet) | the expert says "不。" |
@@ -111,7 +111,7 @@ Then map the 9 beats:
 Anchor beats 4, 5, 6 and 9 with `at:`. Keep one visual motif from hook to callback.
 
 Story flow (what the owner rejected and why):
-- **The hook must hit in 3 s.** A slow, abstract image (a pan along a book's
+- **The hook must grab within 3 s** (the title still waits until the hook has done its job; see below). A slow, abstract image (a pan along a book's
   page edge) was "太弱". Open already moving, on the track's first accent, with
   the counterintuitive claim made visible (numbers freeze, their first digits pour
   into nine tubes, "30%" slams on the next accent). Stating the surprising *what*
@@ -121,6 +121,14 @@ Story flow (what the owner rejected and why):
   scene should show the mechanism happening (the book's front pages visibly
   darkening as numbers flow into them), not explain context.
 - Keep the twist a real reversal of what the viewer now believes.
+
+**The opening is sized by the script, then locked to the music.** Don't force the
+title to a fixed time. Estimate the hook's length from its lines (juno-brand §2,
+"Timing the title"), pick the first strong hit at or after it, and anchor the
+second scene there (`markers: {a: <hit>}`). If no strong hit sits close to where
+the hook ends, trim the start of the track rather than squeezing the hook. A
+4-second cold open was too fast for the owner: viewers didn't yet know what they
+were looking at.
 
 ## 4. Write the lines
 
@@ -186,6 +194,20 @@ Story flow (what the owner rejected and why):
     happening, not "the text isn't moving".
   - `FullFrame` drift and beat punch are opt-in (`drift`, `punch`), only for pure
     picture shots with no on-screen text.
+- **Acting: pose hands on purpose.** The owner called auto-reached arms "wrong and
+  wacky" (hands floating next to a face, arms snapping straight).
+  - Set arm angles by hand for every action and check the hand lands where it
+    should: `handAt(pose)` gives the hand's position, so ropes, tickets and props
+    attach to the real hand. Solve the angles for a target first; if a target
+    needs a fully straight arm, move the prop or the person instead.
+  - Pick the hand shape for the action (`hands={{near: 'grip' | 'pinch' | 'open'
+    | 'point' | 'relaxed'}}`).
+  - Animate actions with `keyPoses()`: anticipation → action → a small overshoot
+    → settle, never a single lerp between two poses.
+  - Layer `idle()` (breathing, weight shift, small head turns) on everyone who
+    is not mid-action, so the only motion on screen is not one jerky arm.
+  - Put an action strip (one still per key pose) on a model sheet and look at it
+    before rendering the motion test.
 - Don't put a "?" on objects. Show "unknown" with motion (a rolling number, a
   searching marker, a dashed outline).
 - `npx tsc --noEmit` must pass.

@@ -31,9 +31,11 @@
 #     without making the crowd more accurate, and raised the participants' confidence.
 #
 # Line markup: [gold] highlights the answer, {red} the trap.
-# Music: assets/music/cainiu.wav is the channel track (bgm.mp3) with its first 12.543 s cut, as the
-# re-branded videos do (`trim` in brand/videos.yaml), so the track's first hit lands at ~3.56 s and the
-# gold title card is up by 4 s (juno-brand §2).
+# Music: the channel track as is (bgm.mp3). The hook is sized by its lines (what we're looking at,
+# the guessing, the question ≈ 14 s); the title lands on the track's first big hit at 16.10 s
+# (juno-brand §2, "Timing the title"). The card starts at 15.6 s with the posted ticket falling
+# inside the ballot box; it lands and the first character is stamped on 16.10, one character per
+# half-beat after that.
 
 id: ox
 series: Juno · VIBE知识大赏
@@ -41,30 +43,33 @@ title: 八百人猜牛
 subtitle: 一群人瞎猜，能猜准吗？
 format: horizontal
 fps: 30
-music: assets/music/cainiu.wav
+music: assets/music/bgm.mp3
 markers:
-  a: 3.561        # the track's first hit (16.104 s in bgm.mp3, minus the 12.543 s trim)
-  coda: 137.347   # 149.89 s in bgm.mp3: the callback, so the last line lands before the end card
+  a: 15.6         # the title card starts (inside the ballot box); the ticket lands on the hit at 16.104
+  hit: 16.104     # the track's first big hit: the title's first stamp
+  coda: 149.89    # the callback, so the last line lands before the end card
 
 scenes:
-  # 1 hook: the striking image, already moving; the subtitle is on by ~1 s
+  # 1 hook: what we're looking at, then the question; the subtitle is on by ~1 s
   - id: hook
     component: Hook
     lines:
       - pause: 0.35
-      - 800个人，猜一头牛有多重。
+      - 1906年，英格兰，一场乡下的家畜展。
+      - 800个人排队写下数字：猜这头牛有多重。
+      - text: 你觉得，他们能猜准吗？
+        hold: 3.2
 
   # 2 cold open: a year, a place, a person
   - id: fair
     component: Fair
     at: a
-    lead: 5.0     # the gold title card plays first
+    lead: 5.6     # the title card plays first (lands on the hit 0.5 s in)
     props: {quietLead: true}
     kicker: 1906 · 英格兰 普利茅斯 · 家畜展
     lines:
-      - 1906年秋，英格兰普利茅斯，一场家畜展。
-      - 一头肥牛被牵上台：猜猜它宰好后有多重。
-      - 六便士一张票，写上名字和你的数字。
+      - 六便士一张票，写上名字，和你猜的重量。
+      - 猜的是宰好、处理后的净重，最准的有奖。
       - 屠夫、农夫、店员、看热闹的……一共约800张。
 
   # 3 setup: the obvious expectation

@@ -23,9 +23,11 @@ export type SwarmCfg = {
 	tighten?: number;
 	/** 0..1 the tickets rush the lens (the wipe into the title card) */
 	rush?: number;
+	/** the tickets rise out of a point (the box slot) one by one, from frame `at` over `spread` frames */
+	emerge?: {x: number; y: number; at: number; spread: number};
 };
 
-export const TicketSwarm: React.FC<SwarmCfg> = ({f, cx, cy, n = 56, burst, start = -60, side, tighten = 0, rush = 0}) => (
+export const TicketSwarm: React.FC<SwarmCfg> = ({f, cx, cy, n = 56, burst, start = -60, side, tighten = 0, rush = 0, emerge}) => (
 	<g>
 		{Array.from({length: n}, (_, i) => {
 			const r = (k: string) => random(`sw${k}${i}`);
@@ -40,6 +42,18 @@ export const TicketSwarm: React.FC<SwarmCfg> = ({f, cx, cy, n = 56, burst, start
 			let x = cx + Math.cos(th) * rx;
 			let y = cy + y0 + depth * ry;
 			let o = Math.min(1, Math.max(0, (f - start - r('in') * 30) / 14));
+			let grow = 1;
+			if (emerge) {
+				const born = emerge.at + r('in') * emerge.spread;
+				if (f < born) return null;
+				const t = Math.min(1, (f - born) / 26);
+				const e = 1 - Math.pow(1 - t, 3);
+				// out of the slot, up in an arc, into the orbit
+				x = emerge.x + (x - emerge.x) * e;
+				y = emerge.y + (y - emerge.y) * e - 60 * Math.sin(Math.PI * t);
+				grow = 0.5 + 0.5 * e;
+				o = Math.min(1, t * 4);
+			}
 			if (burst !== undefined && f >= burst) {
 				const t = f - burst;
 				const k = 1 + 0.09 * t + 0.004 * t * t;
@@ -53,7 +67,7 @@ export const TicketSwarm: React.FC<SwarmCfg> = ({f, cx, cy, n = 56, burst, start
 				x = 960 + (x - 960) * (1 + 2.2 * k);
 				y = 540 + (y - 540) * (1 + 2.2 * k) - 120 * k;
 			}
-			const s = (0.22 + 0.08 * depth) * (0.8 + 0.4 * r('s')) * (1 + (side > 0 ? 9 : 2) * rush * rush * (0.5 + r('rs')));
+			const s = grow * (0.22 + 0.08 * depth) * (0.8 + 0.4 * r('s')) * (1 + (side > 0 ? 9 : 2) * rush * rush * (0.5 + r('rs')));
 			const spin = r('rot') * 360 + f * (2 + r('sp') * 5) * dir;
 			const flipX = Math.cos(f * (0.08 + r('fl') * 0.1) + i);
 			const lit = 0.55 + 0.45 * Math.max(0, Math.cos(th - 0.6));
