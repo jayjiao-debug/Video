@@ -182,10 +182,14 @@ were looking at.
   - Camera: purposeful moves that flow into one another (the spline camera above),
     never a perpetual aimless float. A slow push or a dive is a move; a shot that
     settles and holds is fine, but don't stop-start between every line.
-  - Cut and hit on the music. `useHitFrames()` / `useSnapBeat()` give the
-    track's accents. Land reveals, cuts and impacts (`Impact`, a short decaying
-    shake) on them, and contrast them with calm. A quiet stretch before a drop
-    builds tension.
+  - Cut and hit on the music, but only the moments that mean something.
+    `useHitFrames()` / `useSnapBeat()` give the track's accents. Land reveals,
+    cuts and impacts (`Impact`, a short decaying shake) on them, and contrast them
+    with calm. A quiet stretch before a drop builds tension. **Don't put
+    repeated actions or effects on every beat** (bars or light pulsing, a printer
+    printing on the beat, cards dealt one per beat): the owner found it 突兀.
+    Follow the `edit-rhythm` skill: tiers of what may hit, continuous actions on
+    their own clock, the beat-lock check.
   - Transitions are ideas, not fades. Carry something across the cut: the
     ledger's numbers fall into the jar, a wheel hub becomes a home button, the
     camera dives into a shape and comes out of the same shape.
@@ -232,6 +236,8 @@ were looking at.
 - Run `python3 -m pipeline.stillness out/<id>.mp4 0.2`. It lists every stretch where
   the picture (outside the subtitles and the grain) barely moves. Any stretch
   longer than ~1.5 s needs scene action before sending.
+- Run `python -m pipeline.beatlock out/<id>.mp4 <id>`: no metronome runs (≥ 4
+  hit beats in a row) outside the title stamps (`edit-rhythm` skill).
 - **Cut check:** sample 10 fps across every scene boundary
   (`ffmpeg -ss <t-0.4> -t 0.9 -vf fps=10,tile=9x1`) and stack them; nothing should
   jump to an unrelated world, flash empty, or blur into mush.

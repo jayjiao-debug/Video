@@ -94,6 +94,18 @@ if a clip comes out mirrored, that sign is the first thing to check.
 - **Anticipation and follow-through.** A small move against the direction before a
   reach (4–6 frames), a spring settle after it, and breathing (±1–2 units, ~22-frame
   period) while still. Blend key poses with `lerpPose` + `spring`, never linear snaps.
+- **Idle life on everyone not mid-action:** layer `idle(f, seed, k)` with
+  `{...pose, ...addPose(pose, idle(f, 'name'), k)}` (spread first: `addPose` drops
+  wrist, palm and drop). Fade `k` toward 0 during a big action. Don't also bob the
+  whole figure with a `translate` sine.
+- **Actions with `keyPoses(f, [[frame, pose], …])`:** anticipation → action →
+  overshoot → settle. A person's repeated action (writing, dealing) keeps a human
+  rhythm, never the beat grid (`edit-rhythm`).
+- **Back views can't reach forward.** With `facing="back"` the rig mirrors the side
+  view, so a forward reach swings the arms out sideways into the air (the 1993
+  manager in 《第一位数字》). From behind, keep the arms hanging (upper arm ≤ ~10°)
+  so the desk or the body hides the forearms, and seat the person beside the prop
+  rather than behind it.
 - **Close-ups of hands** need a real hand at that scale (fingers, knuckles,
   nails). The rig hand is built for medium shots; zoomed past ~2.5× it looks like
   a blob. Either keep hands out of macro shots or draw a dedicated hand asset
