@@ -31,7 +31,7 @@ export type VideoCfg = {
 	kicker: string;
 	tagline: string;
 	taglineEn: string;
-	motif: 'cards' | 'duel' | 'stars' | 'serials' | 'coffee';
+	motif: 'cards' | 'duel' | 'stars' | 'serials' | 'coffee' | 'chat';
 	card: [number, number];
 	extend: number;
 	trim?: number;
@@ -106,6 +106,28 @@ export const Monogram: React.FC<{draw?: number; size?: number; wordmark?: string
 
 /** One small line drawing per episode, drawn on with `p` 0..1. */
 export const Motif: React.FC<{kind: VideoCfg['motif']; p: number; f: number}> = ({kind, p, f}) => {
+	if (kind === 'chat') {
+		// 《越难越爱》: her three messages in gold, stacked on the right; TA's one small grey reply
+		const rows = [
+			{w: 132, y: -50},
+			{w: 86, y: -20},
+			{w: 112, y: 10},
+		];
+		return (
+			<g>
+				{rows.map((b, i) => {
+					const q = Math.min(1, Math.max(0, p * 4 - i));
+					return (
+						<g key={i} opacity={q} transform={`translate(${10 * (1 - q)},0)`}>
+							<rect x={70 - b.w} y={b.y} width={b.w} height={22} rx={11} fill={GOLD} opacity={0.2} />
+							<rect x={70 - b.w} y={b.y} width={b.w} height={22} rx={11} fill="none" stroke={GOLD} strokeWidth={2} />
+						</g>
+					);
+				})}
+				<rect x={-70} y={40} width={34} height={22} rx={11} fill="none" stroke="#9a96b4" strokeWidth={2} opacity={Math.min(1, Math.max(0, p * 4 - 3)) * 0.9} />
+			</g>
+		);
+	}
 	if (kind === 'cards') {
 		// eleven cards on a red thread; the fifth one is the answer
 		return (

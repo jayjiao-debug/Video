@@ -5,6 +5,7 @@ import {Figure, POSES, type Look, type Pose} from '../../src/art/Figure';
 import {P} from '../../src/art/palette';
 import {font} from '../../src/lib/theme';
 import {Glow} from '../xuming/kit3';
+import {Motif} from '../../src/brand/Brand';
 
 /**
  * Drawing kit for 《越难越爱》, on the 《续命》 v3 craft rules: one soft light per shot,
@@ -179,25 +180,10 @@ export const Clock: React.FC<{t: string}> = ({t}) => (
 	</text>
 );
 
-/**
- * The motif: her stack of messages in gold beside TA's one small grey reply.
- * Readable at phone size; the asymmetry is the story (her effort vs. a "嗯").
- */
-export const ChatStack: React.FC<{x: number; y: number; s?: number; o?: number}> = ({x, y, s = 1, o = 1}) => (
+/** The motif (drawn by the brand's Motif so title card, end card and transitions match). */
+export const ChatStack: React.FC<{x: number; y: number; s?: number; o?: number; p?: number}> = ({x, y, s = 1, o = 1, p = 1}) => (
 	<g transform={`translate(${x},${y}) scale(${s})`} opacity={o}>
-		{[
-			{w: 176, y: -96},
-			{w: 112, y: -46},
-			{w: 148, y: 4},
-		].map((b, i) => (
-			<g key={i}>
-				<rect x={90 - b.w} y={b.y} width={b.w} height={36} rx={18} fill={HUE.gold} opacity={0.2} />
-				<rect x={90 - b.w} y={b.y} width={b.w} height={36} rx={18} fill="none" stroke={HUE.gold} strokeWidth={2.2} filter="url(#g-sm)" />
-				<path d={`M84,${b.y + 26} C92,${b.y + 34} 98,${b.y + 36} 104,${b.y + 36} C96,${b.y + 32} 94,${b.y + 26} 94,${b.y + 18}`} fill="none" stroke={HUE.gold} strokeWidth={2} />
-			</g>
-		))}
-		<rect x={-110} y={62} width={46} height={36} rx={18} fill="none" stroke="#9a96b4" strokeWidth={2.2} opacity={0.85} />
-		<path d={`M-104,${88} C-112,${96} -118,${98} -124,${98} C-116,${94} -114,${88} -114,${80}`} fill="none" stroke="#9a96b4" strokeWidth={2} opacity={0.85} />
+		<Motif kind="chat" p={p} f={0} />
 	</g>
 );
 
