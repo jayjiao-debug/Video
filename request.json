@@ -1,8 +1,8 @@
 {
-  "id": "money-tex-02",
+  "id": "money-tex-03",
   "items": [
-    {"type": "url", "url": "https://www.uscurrency.gov/media/65", "name": "media65.html", "license": "page"},
-    {"type": "url", "url": "https://www.uscurrency.gov/media/multimedia-library", "name": "library.html", "license": "page"},
-    {"type": "url", "url": "https://www.uscurrency.gov/media/multimedia-library?page=1", "name": "library1.html", "license": "page"}
+    {"type": "url", "url": "https://www.uscurrency.gov/sites/default/files/media/images/100-front-2013-present.jpg", "name": "usd100_front_hi.jpg", "license": "Public domain (U.S. Currency Education Program)"},
+    {"type": "url", "url": "https://www.uscurrency.gov/sites/default/files/media/images/100-back-2013-present.jpg", "name": "usd100_back_hi.jpg", "license": "Public domain (U.S. Currency Education Program)"},
+    {"type": "url", "url": "https://www.uscurrency.gov/sites/default/files/media/images/1-front-1963-present.jpg", "name": "usd1_front_hi.jpg", "license": "Public domain (U.S. Currency Education Program)"}
   ]
 }
