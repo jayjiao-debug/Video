@@ -1,11 +1,11 @@
 import React from 'react';
 import { AbsoluteFill } from 'remotion';
-import { b, prog, easeOut, easeInOut, lerp, rnd, EN, ZH, beats } from './lib';
+import { b, cut, prog, easeOut, easeInOut, lerp, rnd, EN, ZH, beats } from './lib';
 
 /* Title card (b30–b44; stamped on the drop b32 = 16.6 s). The nine sugar cubes of the cold open line up as small
    isometric icons, then burst into gold dust as the title is stamped, one character per half beat: the sugar goes,
    the sweetness stays. */
-export const T_IN = b(30), T_OUT = b(44);
+export const T_IN = cut(30), T_OUT = cut(44) - 1e-4;
 const half = (beats[33] - beats[32]) / 2;
 
 export const GoldTitle: React.FC<{ text: string; T: number; at: number; size: number; y: number; x?: number; id?: string }> = ({ text, T, at, size, y, x = 960, id = 'gt' }) => {
@@ -46,12 +46,10 @@ export const CubeIcon: React.FC<{ x: number; y: number; s: number; o?: number }>
 
 export const Title: React.FC<{ T: number }> = ({ T }) => {
   if (T < T_IN || T > T_OUT) return null;
-  const inO = easeOut(prog(T, T_IN, T_IN + 0.5));
-  const out = easeInOut(prog(T, b(42), T_OUT));
   const burst = prog(T, b(32), b(32) + 1.6);
   const o = (a: number, d = 0.5) => easeOut(prog(T, a, a + d));
   return (
-    <AbsoluteFill style={{ backgroundColor: '#05060b', opacity: inO * (1 - out) }}>
+    <AbsoluteFill style={{ backgroundColor: '#05060b', opacity: 1 }}>
       <svg width={1920} height={1080}>
         <radialGradient id="title-glow" cx="0.5" cy="0.5" r="0.5">
           <stop offset="0" stopColor="#f6cf78" stopOpacity="0.16" /><stop offset="0.6" stopColor="#f6cf78" stopOpacity="0.04" /><stop offset="1" stopColor="#f6cf78" stopOpacity="0" />

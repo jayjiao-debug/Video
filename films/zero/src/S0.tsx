@@ -1,6 +1,6 @@
 import React from 'react';
 import { AbsoluteFill } from 'remotion';
-import { b, prog, easeOut, easeIn, easeInOut, lerp, rnd, pop, EN, ZH, GOLD, INK, type Key } from './lib';
+import { b, cut, prog, easeOut, easeIn, easeInOut, lerp, rnd, pop, EN, ZH, GOLD, INK, type Key } from './lib';
 import { Subs, SubBand, type Line } from './ui';
 import { Counter3D, CUBE, type CanState, type CubeState, type Grain } from './Counter3D';
 import { project } from './three-kit';
@@ -9,7 +9,7 @@ import { project } from './three-kit';
    down the red can; then its sugar arrives as cubes dropping in from above, one by one, faster and faster, and
    stacks into a 3 × 3 block beside it: 35 g, 4 g a cube (估算). The black can gets nothing. "So why is it sweet?"
    Sugar per can: 10.6 g / 100 ml on the Chinese label (解放日报·上观新闻 via 中国互联网联合辟谣平台, 2018) → 35 g in 330 ml. */
-export const S0_IN = 0, S0_OUT = b(31);
+export const S0_IN = 0, S0_OUT = cut(30) - 1e-4;
 
 export const LINES_S0: Line[] = [
   [b(2), b(10) - 0.1, '一罐330毫升的可乐，含糖约[35克]——', 'A 330 ml can of cola holds about 35 g of sugar,'],
@@ -71,9 +71,8 @@ export const KEYS_S0: Key[] = [
 export const S0: React.FC<{ T: number }> = ({ T }) => {
   if (T > S0_OUT) return null;
   const cans: CanState[] = [{ kind: 'red', p: [RED_X, 0, 0], ry: -0.12 }, { kind: 'black', p: [BLACK_X, 0, 0], ry: 0.1 }];
-  const o = easeOut(prog(T, 0, 0.9)) * (1 - easeIn(prog(T, b(30), S0_OUT)));
+  const o = easeOut(prog(T, 0, 0.9));
   // two light sweeps: down the red can at the start, across the black can on the question
-  const sweep = T < b(5) ? lerp(-1.1, 0.3, easeInOut(prog(T, 0.1, b(5)))) : T > b(24) && T < b(28) ? lerp(-0.05, 0.9, easeInOut(prog(T, b(24), b(28)))) : -1;
   const n = Array.from({ length: 9 }, (_, i) => i).filter((i) => T >= landAt(i)).length;
   const st = project(KEYS_S0, T, [STACK_X, 3 * CUBE + 0.32, STACK_Z]);
   const bl = project(KEYS_S0, T, [BLACK_X + 0.62, 0.74, 0]);
@@ -81,7 +80,7 @@ export const S0: React.FC<{ T: number }> = ({ T }) => {
   const zeroO = easeOut(prog(T, b(17) + 0.1, b(18))) * (1 - prog(T, b(29), b(30)));
   return (
     <AbsoluteFill style={{ opacity: o, backgroundColor: '#05070d' }}>
-      <Counter3D T={T} keys={KEYS_S0} cans={cans} cubes={cubesAt(T)} grains={grainsAt(T)} sweep={sweep} />
+      <Counter3D T={T} keys={KEYS_S0} cans={cans} cubes={cubesAt(T)} grains={grainsAt(T)} />
       {countO > 0.01 && (
         <div style={{ position: 'absolute', left: st.x - 220, top: st.y - 130, width: 440, textAlign: 'center', opacity: countO }}>
           <div style={{ fontFamily: EN, fontWeight: 700, fontSize: 96, color: n >= 9 ? GOLD : INK, lineHeight: 1, fontVariantNumeric: 'lining-nums tabular-nums', textShadow: '0 4px 24px rgba(0,0,0,0.8)' }}>
