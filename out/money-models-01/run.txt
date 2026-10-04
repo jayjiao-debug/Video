@@ -1,0 +1,245 @@
+sketchfab model 634e34ce3c0b4d75addce41c96e7b5ba
+  saved out/models/bill100.glb 1.9 MB
+npm warn deprecated glob@10.5.0: Old versions of glob are not supported, and contain widely publicized security vulnerabilities, which have been fixed in the current version. Please update. Support for old versions may be purchased (at exorbitant rates) by contacting i@izs.me
+[33m❯[39m dedup
+[32m✔[39m dedup                2ms
+[33m❯[39m instance
+[32m✔[39m instance             0ms
+[33m❯[39m palette
+[32m✔[39m palette              0ms
+[33m❯[39m flatten
+[32m✔[39m flatten              1ms
+[33m❯[39m join
+[32m✔[39m join                 36ms
+[33m❯[39m weld
+[32m✔[39m weld                 24ms
+[33m❯[39m simplify
+[32m✔[39m simplify             49ms
+[33m❯[39m resample
+[32m✔[39m resample             1ms
+[33m❯[39m prune
+[32m✔[39m prune                18ms
+[33m❯[39m sparse
+[32m✔[39m sparse               12ms
+[33m❯[39m textureCompress
+[32m✔[39m textureCompress      50ms
+
+info: bill100.glb (1.86 MB) → bill100.opt.glb (1.11 MB)
+  optimized 1.9 -> 1.1 MB
+sketchfab model a1fd5cd41faf467fa9ffd42ee297e6f5
+  saved out/models/noodles.glb 15.8 MB
+[33m❯[39m dedup
+[32m✔[39m dedup                11ms
+[33m❯[39m instance
+[32m✔[39m instance             1ms
+[33m❯[39m palette
+[32m✔[39m palette              0ms
+[33m❯[39m flatten
+[32m✔[39m flatten              1ms
+[33m❯[39m join
+[32m✔[39m join                 124ms
+[33m❯[39m weld
+[32m✔[39m weld                 93ms
+[33m❯[39m simplify
+[32m✔[39m simplify             188ms
+[33m❯[39m resample
+[32m✔[39m resample             0ms
+[33m❯[39m prune
+[32m✔[39m prune                7ms
+[33m❯[39m sparse
+[32m✔[39m sparse               18ms
+[33m❯[39m textureCompress
+[32m✔[39m textureCompress      26ms
+
+info: noodles.glb (15.76 MB) → noodles.opt.glb (4.35 MB)
+  optimized 15.8 -> 4.3 MB
+sketchfab model e53a5ef2faf84edcaddf49d4d27f366c
+  saved out/models/table.glb 2.5 MB
+[33m❯[39m dedup
+[32m✔[39m dedup                2ms
+[33m❯[39m instance
+[32m✔[39m instance             1ms
+[33m❯[39m palette
+[32m✔[39m palette              0ms
+[33m❯[39m flatten
+[32m✔[39m flatten              1ms
+[33m❯[39m join
+[32m✔[39m join                 2ms
+[33m❯[39m weld
+[32m✔[39m weld                 3ms
+[33m❯[39m simplify
+[32m✔[39m simplify             2ms
+[33m❯[39m resample
+[32m✔[39m resample             0ms
+[33m❯[39m prune
+[32m✔[39m prune                21ms
+[33m❯[39m sparse
+[32m✔[39m sparse               1ms
+[33m❯[39m textureCompress
+[32m✔[39m textureCompress      130ms
+
+info: table.glb (2.5 MB) → table.opt.glb (462.65 KB)
+  optimized 2.5 -> 0.5 MB
+sketchfab model bc930d60c238410289ae694eaf07b846
+  saved out/models/cowrie.glb 6.7 MB
+[33m❯[39m dedup
+[32m✔[39m dedup                2ms
+[33m❯[39m instance
+[32m✔[39m instance             1ms
+[33m❯[39m palette
+[32m✔[39m palette              0ms
+[33m❯[39m flatten
+[32m✔[39m flatten              1ms
+[33m❯[39m join
+[32m✔[39m join                 65ms
+[33m❯[39m weld
+[32m✔[39m weld                 47ms
+[33m❯[39m simplify
+[32m✔[39m simplify             189ms
+[33m❯[39m resample
+[32m✔[39m resample             0ms
+[33m❯[39m prune
+[32m✔[39m prune                11ms
+[33m❯[39m sparse
+[32m✔[39m sparse               13ms
+[33m❯[39m textureCompress
+[32m✔[39m textureCompress      68ms
+
+info: cowrie.glb (6.73 MB) → cowrie.opt.glb (1.79 MB)
+  optimized 6.7 -> 1.8 MB
+sketchfab model e935c74614334ae7b808cd557df50cf2
+  saved out/models/lioncoins.glb 8.2 MB
+[33m❯[39m dedup
+[32m✔[39m dedup                3ms
+[33m❯[39m instance
+[32m✔[39m instance             0ms
+[33m❯[39m palette
+[32m✔[39m palette              0ms
+[33m❯[39m flatten
+[32m✔[39m flatten              1ms
+[33m❯[39m join
+[32m✔[39m join                 66ms
+[33m❯[39m weld
+[32m✔[39m weld                 45ms
+[33m❯[39m simplify
+[32m✔[39m simplify             113ms
+[33m❯[39m resample
+[32m✔[39m resample             0ms
+[33m❯[39m prune
+[32m✔[39m prune                21ms
+[33m❯[39m sparse
+[32m✔[39m sparse               23ms
+[33m❯[39m textureCompress
+[32m✔[39m textureCompress      100ms
+
+info: lioncoins.glb (8.15 MB) → lioncoins.opt.glb (6.33 MB)
+  optimized 8.2 -> 6.3 MB
+sketchfab model 384f557db51a407e807c59af188cc9cc
+  saved out/models/cashcoin.glb 4.0 MB
+[33m❯[39m dedup
+[32m✔[39m dedup                2ms
+[33m❯[39m instance
+[32m✔[39m instance             0ms
+[33m❯[39m palette
+[32m✔[39m palette              0ms
+[33m❯[39m flatten
+[32m✔[39m flatten              1ms
+[33m❯[39m join
+[32m✔[39m join                 34ms
+[33m❯[39m weld
+[32m✔[39m weld                 19ms
+[33m❯[39m simplify
+[32m✔[39m simplify             31ms
+[33m❯[39m resample
+[32m✔[39m resample             0ms
+[33m❯[39m prune
+[32m✔[39m prune                31ms
+[33m❯[39m sparse
+[32m✔[39m sparse               9ms
+[33m❯[39m textureCompress
+[32m✔[39m textureCompress      130ms
+
+info: cashcoin.glb (3.97 MB) → cashcoin.opt.glb (794.38 KB)
+  optimized 4.0 -> 0.8 MB
+sketchfab model 0d1ff6b3e6d045cba78889caf7f5bc6e
+  saved out/models/goldbar.glb 1.3 MB
+[33m❯[39m dedup
+[32m✔[39m dedup                3ms
+[33m❯[39m instance
+[32m✔[39m instance             0ms
+[33m❯[39m palette
+[32m✔[39m palette              0ms
+[33m❯[39m flatten
+[32m✔[39m flatten              1ms
+[33m❯[39m join
+[32m✔[39m join                 7ms
+[33m❯[39m weld
+[32m✔[39m weld                 4ms
+[33m❯[39m simplify
+[32m✔[39m simplify             2ms
+[33m❯[39m resample
+[32m✔[39m resample             0ms
+[33m❯[39m prune
+[32m✔[39m prune                25ms
+[33m❯[39m sparse
+[32m✔[39m sparse               1ms
+[33m❯[39m textureCompress
+[32m✔[39m textureCompress      87ms
+
+info: goldbar.glb (1.26 MB) → goldbar.opt.glb (68.4 KB)
+  optimized 1.3 -> 0.1 MB
+sketchfab model c4731bab20764f5eb874daf3ff07fcb5
+  saved out/models/stonewheel.glb 5.6 MB
+[33m❯[39m dedup
+[32m✔[39m dedup                2ms
+[33m❯[39m instance
+[32m✔[39m instance             0ms
+[33m❯[39m palette
+[32m✔[39m palette              0ms
+[33m❯[39m flatten
+[32m✔[39m flatten              1ms
+[33m❯[39m join
+[32m✔[39m join                 2ms
+[33m❯[39m weld
+[32m✔[39m weld                 4ms
+[33m❯[39m simplify
+[32m✔[39m simplify             3ms
+[33m❯[39m resample
+[32m✔[39m resample             0ms
+[33m❯[39m prune
+[32m✔[39m prune                31ms
+[33m❯[39m sparse
+[32m✔[39m sparse               1ms
+[33m❯[39m textureCompress
+[32m✔[39m textureCompress      137ms
+
+info: stonewheel.glb (5.6 MB) → stonewheel.opt.glb (576.57 KB)
+  optimized 5.6 -> 0.6 MB
+sketchfab model fb4379ba486c43bd846f9b9ef608743a
+  saved out/models/canoe.glb 1.2 MB
+[33m❯[39m dedup
+[32m✔[39m dedup                1ms
+[33m❯[39m instance
+[32m✔[39m instance             0ms
+[33m❯[39m palette
+[32m✔[39m palette              0ms
+[33m❯[39m flatten
+[32m✔[39m flatten              1ms
+[33m❯[39m join
+[32m✔[39m join                 8ms
+[33m❯[39m weld
+[32m✔[39m weld                 16ms
+[33m❯[39m simplify
+[32m✔[39m simplify             28ms
+[33m❯[39m resample
+[32m✔[39m resample             0ms
+[33m❯[39m prune
+[32m✔[39m prune                16ms
+[33m❯[39m sparse
+[32m✔[39m sparse               7ms
+[33m❯[39m textureCompress
+[32m✔[39m textureCompress      86ms
+
+info: canoe.glb (1.22 MB) → canoe.opt.glb (674.63 KB)
+  optimized 1.2 -> 0.7 MB
+done
