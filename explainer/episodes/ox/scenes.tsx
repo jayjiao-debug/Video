@@ -509,7 +509,13 @@ const Spread: React.FC<SceneProps> = () => {
 	const mix = prog(f, SWAP - 8, 14, ease.inOut);
 	// the blank card under the lamp; its weight field cycles (you guess too)
 	const roll = f > cue(0) && f < cue(1) ? 980 + Math.floor(random(`roll${Math.floor(f / 5)}`) * 420) : null;
-	const dealt = (k: number) => prog(f, cue(1) + 4 + k * 5, 10, ease.out);
+	// dealt by hand: slow at first, quicker as he gets into it, never even (edit-rhythm §2)
+	const dealAt = (k: number) => {
+		let t = cue(1) + 4;
+		for (let j = 0; j < k; j++) t += (3 + 9 * Math.pow(0.84, j)) * (0.85 + 0.3 * random(`deal${j}`));
+		return t;
+	};
+	const dealt = (k: number) => prog(f, dealAt(k), 10, ease.out);
 	return (
 		<FullFrame fadeIn={0} fadeOut={0}>
 			<OX_DEFS />
