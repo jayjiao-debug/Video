@@ -13,6 +13,11 @@ Brand: every video is a Juno video. Use the `juno-brand` skill
 the four brand moments (cold open sized by the script → gold title card exactly on a music hit → corner mark → end card),
 and its brand QA before sending anything.
 
+Publishing: once the owner explicitly confirms an episode is final (满意 / 可以发了),
+and not before, generate the Douyin publish package with the `douyin-publish` skill
+(`.claude/skills/douyin-publish/SKILL.md`): title, description with hashtags, 4:3 and 3:4 covers,
+合集, 自主声明, in the owner's habitual format.
+
 What the owner wants:
 - Talks in Chinese; reply in Chinese.
 - Landscape 1920×1080, no narration, subtitles plus the owner's own background track.

@@ -290,3 +290,6 @@ were looking at.
   `--share` for a small copy; chat uploads over ~30 MB fail, so send a 720p preview.
 - Keep the user posted with short progress notes during long work.
 - The repo is public: don't commit the BGM or videos containing it unless the user asks.
+- **Publish package (标题, 简介, covers, 合集, 自主声明) only after the owner explicitly
+  confirms the video is final** (满意 / 可以发了). Then follow the `douyin-publish` skill.
+  Never draft any of it while fixes are still in flight.
