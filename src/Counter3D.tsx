@@ -4,6 +4,7 @@ import { ThreeCanvas } from '@remotion/three';
 import { AbsoluteFill, useVideoConfig } from 'remotion';
 import { RoundedBoxGeometry } from 'three/examples/jsm/geometries/RoundedBoxGeometry.js';
 import { RectAreaLightUniformsLib } from 'three/examples/jsm/lights/RectAreaLightUniformsLib.js';
+import { mergeGeometries } from 'three/examples/jsm/utils/BufferGeometryUtils.js';
 import { mulberry, type Key } from './lib';
 import { CamRig, Env, canvasTex, useFontsReady } from './three-kit';
 
@@ -174,7 +175,8 @@ const Can: React.FC<{ s: CanState; tex: Tex }> = ({ s, tex }) => {
   );
 };
 
-// a heavy tumbler with real wall thickness; the tea is a separate solid that never touches the glass surfaces
+// a heavy tumbler of still water. The glass is drawn back faces first, then front faces (fixed order: no sorting
+// flicker); the water is a separate solid that never touches a glass surface; the foot stands 1 mm off the counter.
 const Glass: React.FC<{ p: number[]; level: number }> = ({ p, level }) => {
   const RB = 0.29, RT = 0.33, H = 1.0, BASE = 0.11, WALL = 0.022;
   const rIn = (y: number) => RB - WALL + (RT - RB) * (y / H);
@@ -184,22 +186,39 @@ const Glass: React.FC<{ p: number[]; level: number }> = ({ p, level }) => {
     new THREE.Vector2(RB + 0.004, 0.03), new THREE.Vector2(RB - 0.012, 0.004), new THREE.Vector2(RB - 0.03, 0.0), new THREE.Vector2(0.0, 0.0),
   ], 128), []);
   const top = BASE + 0.02 + (H - BASE - 0.12) * level;
-  const tea = useMemo(() => {
-    const pts: THREE.Vector2[] = [new THREE.Vector2(0, BASE + 0.006), new THREE.Vector2(rIn(BASE) - 0.024, BASE + 0.006), new THREE.Vector2(rIn(BASE + 0.03) - 0.006, BASE + 0.03)];
-    pts.push(new THREE.Vector2(rIn(top) - 0.005, top - 0.008), new THREE.Vector2(rIn(top) - 0.012, top), new THREE.Vector2(0, top - 0.004));
+  const water = useMemo(() => {
+    const pts: THREE.Vector2[] = [new THREE.Vector2(0, BASE + 0.008), new THREE.Vector2(rIn(BASE) - 0.026, BASE + 0.008), new THREE.Vector2(rIn(BASE + 0.03) - 0.008, BASE + 0.03)];
+    // the meniscus: the surface climbs a little where it meets the glass
+    pts.push(new THREE.Vector2(rIn(top) - 0.006, top + 0.006), new THREE.Vector2(rIn(top) - 0.016, top), new THREE.Vector2(rIn(top) - 0.05, top - 0.003), new THREE.Vector2(0, top - 0.003));
     return new THREE.LatheGeometry(pts, 128);
   }, [top]);
+  // tiny bubbles resting on the inside of the wall and the bottom (still water)
+  const bubbles = useMemo(() => {
+    const r = mulberry(77), out: THREE.Matrix4[] = [];
+    for (let i = 0; i < 70; i++) {
+      const y = BASE + 0.05 + Math.pow(r(), 1.6) * (top - BASE - 0.1), a = r() * Math.PI * 2, s = 0.004 + Math.pow(r(), 3) * 0.01;
+      const rad = rIn(y) - 0.008 - s;
+      out.push(new THREE.Matrix4().compose(new THREE.Vector3(Math.cos(a) * rad, y, Math.sin(a) * rad), new THREE.Quaternion(), new THREE.Vector3(s, s, s)));
+    }
+    for (let i = 0; i < 18; i++) {
+      const a = r() * Math.PI * 2, rr = Math.sqrt(r()) * (rIn(BASE) - 0.05), s = 0.004 + r() * 0.006;
+      out.push(new THREE.Matrix4().compose(new THREE.Vector3(Math.cos(a) * rr, BASE + 0.012 + s, Math.sin(a) * rr), new THREE.Quaternion(), new THREE.Vector3(s, s, s)));
+    }
+    return mergeGeometries(out.map((m) => new THREE.SphereGeometry(1, 10, 8).applyMatrix4(m)));
+  }, [top]);
+  const glassMat = (side: THREE.Side) => <meshPhysicalMaterial depthWrite={false} color="#eef4ff" roughness={0.02} metalness={0} transparent opacity={0.06} clearcoat={1} clearcoatRoughness={0.02} specularIntensity={1} envMapIntensity={2.4} side={side} />;
   return (
-    <group position={[p[0], p[1] + 0.002, p[2]]}>
+    <group position={[p[0], p[1] + 0.01, p[2]]}>
       {level > 0.01 && (
-        <mesh geometry={tea} renderOrder={1}>
-          <meshPhysicalMaterial color="#ffe2b0" roughness={0.03} metalness={0} transmission={1} thickness={0.6} ior={1.33} attenuationColor="#b05a08" attenuationDistance={0.45} clearcoat={1} clearcoatRoughness={0.03} emissive="#9a4a06" emissiveIntensity={0.5} />
+        <mesh geometry={water} renderOrder={1}>
+          <meshPhysicalMaterial color="#f4f9ff" roughness={0.0} metalness={0} transmission={1} thickness={0.6} ior={1.33} attenuationColor="#d6ebff" attenuationDistance={2.5} clearcoat={1} clearcoatRoughness={0.0} specularIntensity={1} envMapIntensity={1.4} />
         </mesh>
       )}
-      <pointLight position={[0, 0.35, -0.75]} intensity={1.6} distance={1.6} decay={2} color="#ffb860" />
-      <mesh geometry={geo} renderOrder={3}>
-        <meshPhysicalMaterial depthWrite={false} color="#eef4ff" roughness={0.02} metalness={0} transparent opacity={0.16} clearcoat={1} clearcoatRoughness={0.02} specularIntensity={1} envMapIntensity={1.6} side={THREE.DoubleSide} />
-      </mesh>
+      {level > 0.01 && <mesh geometry={bubbles} renderOrder={5}><meshPhysicalMaterial color="#ffffff" roughness={0.05} transparent opacity={0.85} clearcoat={1} envMapIntensity={2.5} emissive="#9fb6d8" emissiveIntensity={0.35} depthWrite={false} /></mesh>}
+      {/* a cool card light behind, so the water catches a bright edge */}
+      <pointLight position={[0, 0.5, -0.8]} intensity={1.2} distance={1.8} decay={2} color="#cfe2ff" />
+      <mesh geometry={geo} renderOrder={2}>{glassMat(THREE.BackSide)}</mesh>
+      <mesh geometry={geo} renderOrder={4}>{glassMat(THREE.FrontSide)}</mesh>
     </group>
   );
 };
