@@ -14,11 +14,11 @@ import { Subs, SubBand, Chapter, type Line } from './ui';
 export const S2_IN = b(128) - 0.2, S2_OUT = b(161) + 0.2;
 
 export const LINES_S2: Line[] = [
-  [b(128) + 0.1, b(134) - 0.1, '2018年，元气森林气泡水主打"0糖0脂0卡"。', 'In 2018 a Chinese sparkling water sold itself on "0 sugar, 0 fat, 0 calories".'],
-  [b(134) + 0.06, b(140) - 0.1, '它的甜，来自赤藓糖醇和三氯蔗糖。', 'Its sweetness came from erythritol and sucralose.'],
-  [b(140) + 0.06, b(148) - 0.1, '2021年，它的乳茶写着"0蔗糖"，却含乳糖和果糖，公司公开道歉。', 'In 2021 its milk tea said "0 sucrose" but held lactose and fructose; the company apologised.'],
-  [b(148) + 0.06, b(154) - 0.1, '国标里的"无糖"：每100毫升，糖不超过[0.5克]；', 'Under China\'s label standard, "sugar-free" means up to 0.5 g per 100 ml;'],
-  [b(154) + 0.06, b(160) - 0.15, '"0卡"：不超过17千焦——并不是真的{零}。', '"zero calories" means up to 17 kJ. Not actually zero.'],
+  [b(128) + 0.1, b(135) - 0.1, '2018年，元气森林主打"0糖0脂0卡"，', 'In 2018 a Chinese sparkling water sold itself on "0 sugar, 0 fat, 0 calories".'],
+  [b(135) + 0.06, b(141) - 0.1, '甜味来自赤藓糖醇和三氯蔗糖。', 'Its sweetness came from erythritol and sucralose.'],
+  [b(141) + 0.06, b(149) - 0.1, '2021年，它的乳茶标"0蔗糖"，却含乳糖和果糖。', 'In 2021 its milk tea said "0 sucrose" but held lactose and fructose; the company apologised.'],
+  [b(149) + 0.06, b(155) - 0.1, '国标"无糖"：每100毫升≤[0.5克]糖；', 'Under China\'s label standard, "sugar-free" means up to 0.5 g per 100 ml;'],
+  [b(155) + 0.06, b(161) - 0.15, '"0卡"：≤17千焦，并不是真的{零}。', '"zero calories" means up to 17 kJ. Not actually zero.'],
 ];
 
 const Bottle: React.FC<{ T: number; tint: string }> = ({ T, tint }) => (
@@ -58,15 +58,15 @@ const Carton: React.FC = () => (
 export const S2: React.FC<{ T: number }> = ({ T }) => {
   if (T < S2_IN || T > S2_OUT) return null;
   const o = easeOut(prog(T, S2_IN, S2_IN + 0.5)) * (1 - easeInOut(prog(T, S2_OUT - 0.4, S2_OUT)));
-  const A = 1 - easeInOut(prog(T, b(140) - 0.3, b(140) + 0.3));           // bottle part
-  const B = easeInOut(prog(T, b(140) - 0.3, b(140) + 0.3)) * (1 - easeInOut(prog(T, b(148) - 0.3, b(148) + 0.3))); // carton
-  const C = easeInOut(prog(T, b(148) - 0.3, b(148) + 0.3));               // the standard
+  const A = 1 - easeInOut(prog(T, b(141) - 0.3, b(141) + 0.3));           // bottle part
+  const B = easeInOut(prog(T, b(141) - 0.3, b(141) + 0.3)) * (1 - easeInOut(prog(T, b(149) - 0.3, b(149) + 0.3))); // carton
+  const C = easeInOut(prog(T, b(149) - 0.3, b(149) + 0.3));               // the standard
   const seal = (k: number) => pop(T, b(129) + 0.5 * k, 0.35);
-  const ingr = easeOut(prog(T, b(134), b(135)));
-  const mag = easeInOut(prog(T, b(142), b(143)));
-  const strike = easeOut(prog(T, b(144), b(144) + 0.4));
-  const sugarO = easeOut(prog(T, b(148) + 0.2, b(149)));
-  const kjO = easeOut(prog(T, b(154), b(155)));
+  const ingr = easeOut(prog(T, b(135), b(136)));
+  const mag = easeInOut(prog(T, b(143), b(144)));
+  const strike = easeOut(prog(T, b(145), b(145) + 0.4));
+  const sugarO = easeOut(prog(T, b(149) + 0.2, b(150)));
+  const kjO = easeOut(prog(T, b(155), b(156)));
   const push = 1 + 0.04 * prog(T, S2_IN, S2_OUT);
   return (
     <AbsoluteFill style={{ backgroundColor: '#070b12', opacity: o }}>

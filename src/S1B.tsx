@@ -13,10 +13,10 @@ export const S1B_IN = b(96) - 0.2, S1B_OUT = b(128) + 0.3;
 
 export const LINES_S1B: Line[] = [
   [b(96) + 0.3, b(104) - 0.1, '这些甜味剂，大多是"不小心"尝出来的。', 'Most of these sweeteners were found by accident.'],
-  [b(104) + 0.06, b(110) - 0.1, '1878年，手上沾了实验品，吃面包时发现是甜的：[糖精]。', '1878: a chemist found his dinner roll sweet. Saccharin.'],
-  [b(110) + 0.06, b(116) - 0.1, '1965年，舔了下手指去翻纸：[阿斯巴甜]。', '1965: a licked finger to turn a page. Aspartame.'],
-  [b(116) + 0.06, b(122) - 0.1, '1975年，把电话里的"测试"听成了"尝尝"：[三氯蔗糖]。', '1975: "testing" heard as "tasting". Sucralose.'],
-  [b(122) + 0.06, b(128) - 0.1, '它们太甜了：只用一点点，热量几乎可以忽略。', 'So sweet that a trace will do, and the calories all but vanish.'],
+  [b(104) + 0.06, b(110) - 0.1, '1878年，手上沾的实验品：[糖精]。', '1878: a chemist found his dinner roll sweet. Saccharin.'],
+  [b(110) + 0.06, b(116) - 0.1, '1965年，舔手指翻纸：[阿斯巴甜]。', '1965: a licked finger to turn a page. Aspartame.'],
+  [b(116) + 0.06, b(122) - 0.1, '1975年，听错了一个词：[三氯蔗糖]。', '1975: "testing" heard as "tasting". Sucralose.'],
+  [b(122) + 0.06, b(128) - 0.1, '太甜了：一点点就够，热量几乎可忽略。', 'So sweet that a trace will do, and the calories all but vanish.'],
 ];
 
 const INKC = '#2a1d10', PAPER = '#efe4c8';

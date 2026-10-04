@@ -19,7 +19,7 @@ export const LINES_S1: Line[] = [
   [b(60) + 0.06, b(67) - 0.1, '它像一把锁，只等形状对的分子。', 'a lock that waits for a molecule of the right shape.'],
   [b(67) + 0.06, b(75) - 0.1, '糖分子卡进去，锁合上，信号传给大脑：[甜]。', 'Sugar slips in, the lock closes, and the brain hears: sweet.'],
   [b(75) + 0.06, b(82) - 0.1, '可是能开这把锁的，不只有糖。', 'But sugar is not the only key.'],
-  [b(82) + 0.06, b(90) - 0.1, '阿斯巴甜，甜度约是糖的[200倍]；三氯蔗糖，[600倍]。', 'Aspartame is about 200 times as sweet as sugar; sucralose, 600 times.'],
+  [b(82) + 0.06, b(90) - 0.1, '阿斯巴甜，约[200倍]甜；三氯蔗糖，[600倍]。', 'Aspartame is about 200 times as sweet as sugar; sucralose, 600 times.'],
   [b(90) + 0.06, b(96) - 0.1, '同样的甜，只要[零点几克]。', 'The same sweetness takes a fraction of a gram.'],
 ];
 

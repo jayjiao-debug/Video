@@ -13,7 +13,7 @@ export const S4_IN = b(240) - 0.2, S4_OUT = b(294) + 0.3;
 
 export const LINES_S4: Line[] = [
   [b(240) + 0.1, b(248) - 0.1, '有意思的是，中国的饮料货架，自己拐了个弯。', 'Meanwhile China\'s drinks shelf took its own turn.'],
-  [b(248) + 0.06, b(256) - 0.1, '无糖饮料，从2015年的22.6亿元，涨到2024年的[570.5亿元]；', 'Sugar-free drinks grew from ¥2.26 bn in 2015 to ¥57.05 bn in 2024;'],
+  [b(248) + 0.06, b(256) - 0.1, '无糖饮料，9年涨到[570.5亿元]，约25倍；', 'Sugar-free drinks grew from ¥2.26 bn in 2015 to ¥57.05 bn in 2024;'],
   [b(256) + 0.06, b(264) - 0.1, '其中约四成，是根本不加甜味的[无糖茶]。', 'about 40% of it was tea with no sweetener at all.'],
   [b(264) + 0.06, b(272) - 0.1, '东方树叶一家，就占了无糖茶的[75%]。', 'One brand alone held 75% of that tea.'],
   [b(272) + 0.06, b(282) - 0.1, '世卫组织的原话是：从小开始，整体降低饮食的甜度。', 'The WHO\'s own words: reduce the sweetness of the diet altogether, starting early in life.'],

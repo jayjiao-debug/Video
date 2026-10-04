@@ -20,15 +20,15 @@ export const S3_IN = b(161) - 0.1, S3_OUT = b(240) + 0.3;
 
 export const LINES_S3: Line[] = [
   [b(161) + 0.1, b(168) - 0.1, '那么——它健康吗？', 'So is it healthy?'],
-  [b(168) + 0.06, b(176) - 0.1, '2023年7月，阿斯巴甜被列为"可能致癌"（2B类）。', 'In July 2023 aspartame was classed as "possibly carcinogenic" (Group 2B).'],
+  [b(168) + 0.06, b(176) - 0.1, '2023年7月，阿斯巴甜被列为"可能致癌"。', 'In July 2023 aspartame was classed as "possibly carcinogenic" (Group 2B).'],
   [b(176) + 0.06, b(184) - 0.1, '同一类里，还有芦荟全叶提取物、传统腌菜。', 'The same group holds aloe vera leaf extract and traditional pickled vegetables.'],
   [b(184) + 0.06, b(192) - 0.1, '而安全线是：每公斤体重，每天40毫克。', 'The safe limit: 40 mg per kilogram of body weight a day.'],
-  [b(192) + 0.06, b(200) - 0.1, '一个70公斤的成年人，一天要喝[9到14罐]以上，才会超过。', 'A 70 kg adult would need more than 9 to 14 cans a day to pass it.'],
-  [b(200) + 0.06, b(208) - 0.1, '另一种常见代糖，赤藓糖醇：2023年一项研究发现，', 'Another common sweetener, erythritol: a 2023 study found'],
-  [b(208) + 0.06, b(216) - 0.1, '血液里含量最高的人，心血管事件风险约为最低者的[2倍]。', 'people with the most in their blood had about twice the risk of heart attack or stroke.'],
-  [b(216) + 0.06, b(224) - 0.1, '但它是观察性研究，对象本就是高风险人群，不能证明因果。', 'But it was observational, in people already at high risk: it cannot show cause.'],
-  [b(224) + 0.06, b(232) - 0.1, '同年5月，世卫组织建议：{不要}靠代糖来控制体重。', 'That May, the WHO advised against using sweeteners to control weight.'],
-  [b(232) + 0.06, b(240) - 0.15, '长期看，它对减脂没有好处，还可能和一些慢性病风险有关。', 'Long term they don\'t reduce body fat, and may be linked to some chronic disease risks.'],
+  [b(192) + 0.06, b(200) - 0.1, '70公斤的人，一天得喝[9到14罐]以上才超标。', 'A 70 kg adult would need more than 9 to 14 cans a day to pass it.'],
+  [b(200) + 0.06, b(208) - 0.1, '另一种代糖赤藓糖醇，2023年有研究发现：', 'Another common sweetener, erythritol: a 2023 study found'],
+  [b(208) + 0.06, b(216) - 0.1, '血液里含量最高的人，心血管风险约是[2倍]。', 'people with the most in their blood had about twice the risk of heart attack or stroke.'],
+  [b(216) + 0.06, b(224) - 0.1, '但这是观察性研究，不能证明因果。', 'But it was observational, in people already at high risk: it cannot show cause.'],
+  [b(224) + 0.06, b(232) - 0.1, '同年5月，世卫建议：{别}靠代糖控制体重。', 'That May, the WHO advised against using sweeteners to control weight.'],
+  [b(232) + 0.06, b(240) - 0.15, '长期看它不减脂，还可能和慢性病风险有关。', 'Long term they don\'t reduce body fat, and may be linked to some chronic disease risks.'],
 ];
 
 // the can stack: 5-4-3-2 = 14 black cans, each dropped in on its own accelerating clock
