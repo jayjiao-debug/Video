@@ -11,7 +11,8 @@ Episodes are `explainer/episodes/<id>/episode.yaml` (script) + `scenes.tsx`
 lines over one background track the user supplies (`assets/music/bgm.mp3`, not in git).
 
 Branding (title card, corner mark, end card, copy voice) follows the `juno-brand`
-skill; run its brand QA together with the QA step below.
+skill; run its brand QA together with the QA step below. Every character pose,
+hand and arm follows the `character-motion` skill (motion reference, joint limits).
 
 The user approved this workflow. Follow it in order and do not skip the
 approval gates: **reference → research → art → approval → animate → QA → render.**
@@ -78,7 +79,22 @@ Process:
 
 ## 3. Structure the story on the music
 
-Run `python3 make.py <id> --plan` to see the track's markers, then map the 9 beats:
+**Get the owner's track before timing anything.** Building on a placeholder
+track wastes a pass: every cut moves when the real one arrives. If you must
+start early, say so, and keep a synthetic placeholder local (never commit it).
+
+Read the track first, not just its markers:
+- `python3 make.py <id> --plan` prints break/build/drop/outro; also print the
+  energy curve per 2 s and the accents (`music.hits`, strength 0–1) for the
+  first 20 s. Note the strongest accents by time: the cold-open hit, the title
+  card's first stamp, the first downbeat of the full section, the drop.
+- **Match picture energy to the music's energy.** The loudest section gets the
+  most motion (fast camera, things pouring, cuts on the beat); the quiet break
+  gets stillness (one slow move, one object). The owner called the reverse
+  ("slow writing at a desk over the loudest part, frantic numbers over the
+  intro") awful. Print each scene's mean energy next to its content and check.
+
+Then map the 9 beats:
 
 | Beat | Music | Job |
 |---|---|---|
@@ -94,11 +110,28 @@ Run `python3 make.py <id> --plan` to see the track's markers, then map the 9 bea
 
 Anchor beats 4, 5, 6 and 9 with `at:`. Keep one visual motif from hook to callback.
 
+Story flow (what the owner rejected and why):
+- **The hook must hit in 3 s.** A slow, abstract image (a pan along a book's
+  page edge) was "太弱". Open already moving, on the track's first accent, with
+  the counterintuitive claim made visible (numbers freeze, their first digits pour
+  into nine tubes, "30%" slams on the next accent). Stating the surprising *what*
+  up front is fine; then the middle must drive toward *why*.
+- **No exposition dumps in the middle.** If the hook already gave the answer,
+  don't spend 30 s on background and then a "不。" that surprises no one. Each
+  scene should show the mechanism happening (the book's front pages visibly
+  darkening as numbers flow into them), not explain context.
+- Keep the twist a real reversal of what the viewer now believes.
+
 ## 4. Write the lines
 
 - One idea per line, ≤ 22 Chinese characters. `[gold]` = answer, `{red}` = trap, at most one per line.
 - `hold:` for punch lines ("不。", "为什么？"), `pause:` for visual beats.
 - Fix every `--plan` timing warning.
+- **Pin a line to an accent:** a scene's natural length is lead + Σ(hold + gap)
+  + tail, scaled to its window; set `lead`, `tail` and every `hold` so the sum
+  equals the window (scale ≈ 1). Then the plan's beat-snap lands each line on
+  the accent you chose. A YAML line that starts with `[` must be quoted
+  (`- "[1]。是9的六倍还多。"`), or YAML reads it as a list.
 
 ## 5. Animate the scenes
 
@@ -106,6 +139,25 @@ Anchor beats 4, 5, 6 and 9 with `at:`. Keep one visual motif from hook to callba
   Visual changes land on the line that talks about them.
 - Compose with the art library inside a set; frame with `lookAt(tx, ty, zoom)`
   cameras (never raw offsets) and move the camera in most shots.
+- **Flow: one continuous world, not a slideshow.** The owner's word for cutting
+  between unrelated worlds (number void → title → blue exterior → warm study →
+  paper insert → book edge → paper → hands) was "awful". Rules:
+  - Every cut carries something across: the same object, shape, colour or
+    camera direction. The title card's bars become the book's worn fore-edge;
+    the pages fly out of the window and fall through snow that becomes archive dust.
+  - Prefer one camera travelling through one set over many inserts. Use the
+    velocity-continuous spline camera (`camPath(keys, f)` in
+    `episodes/benford/art.tsx`: Catmull-Rom on x, y, log-zoom) so moves flow
+    into each other instead of stopping and starting; add `MotionBlur` (blur from
+    `camSpeed`) on whips so a fast move reads as a whip, not a jump. Keep the blur's
+    zoom term small, or pushes smear the whole frame.
+  - Parallax: a wall layer at `depth` d shows the point wx centred when the
+    camera's hero-plane target is `tx = 960 + (wx - 960) / d`. Use that to aim at a
+    window or poster on a back layer.
+  - Don't change the colour world mid-scene (a blue night exterior between two
+    warm interiors) unless the story jumps in time, and then bridge it.
+- Characters: pose from reference and the rig's joint limits (`character-motion`).
+  Never overlay a hand-drawn hand or thumb on top of a rig arm (it reads as a second arm).
 - Tension: `spring()` with overshoot for poses and pops, anticipation before big
   moves, secondary motion (props spinning, smoke, cloth), impact frames (flash,
   sparks, 2–3 frame decaying camera shake) on hits and on the music's drop,
@@ -136,6 +188,17 @@ Anchor beats 4, 5, 6 and 9 with `at:`. Keep one visual motif from hook to callba
 - Don't put a "?" on objects. Show "unknown" with motion (a rolling number, a
   searching marker, a dashed outline).
 - `npx tsc --noEmit` must pass.
+- Rendering gotchas:
+  - Headless Chrome ignores `mix-blend-mode` inside SVG: a "soft-light" or
+    "screen" overlay renders as a plain opaque wash and hides what's under it.
+    Use plain opacity.
+  - Cormorant uses old-style figures by default ("1" looks like "I"). Any number
+    on screen needs `fontVariantNumeric: 'lining-nums'` (put it on the root `<svg>`).
+  - A gradient meant to read at a glance (wear, heat) needs a perceptual ramp, not
+    raw percentages mapped to opacity; check it standalone in headless Chrome.
+  - If stills don't change after an edit, `rm -rf node_modules/.cache`.
+  - Shell calls time out at 10 min: start long renders detached
+    (`setsid nohup python3 make.py … &`) and poll the log.
 
 ## 6. QA, then render
 
@@ -146,6 +209,11 @@ Anchor beats 4, 5, 6 and 9 with `at:`. Keep one visual motif from hook to callba
 - Run `python3 -m pipeline.stillness out/<id>.mp4 0.2`. It lists every stretch where
   the picture (outside the subtitles and the grain) barely moves. Any stretch
   longer than ~1.5 s needs scene action before sending.
+- **Cut check:** sample 10 fps across every scene boundary
+  (`ffmpeg -ss <t-0.4> -t 0.9 -vf fps=10,tile=9x1`) and stack them; nothing should
+  jump to an unrelated world, flash empty, or blur into mush.
+- **Sync check:** grab frames 0.05 s before and after each accent you used
+  (freeze, stamps, cuts, drop); the change must land within one frame.
 - `python3 make.py <id>` → `out/<id>.mp4` (CRF 18 slow, −14 LUFS);
   `--share` for a small copy; chat uploads over ~30 MB fail, so send a 720p preview.
 - Keep the user posted with short progress notes during long work.
