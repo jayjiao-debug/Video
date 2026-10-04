@@ -30,20 +30,25 @@ title: 第一位数字
 subtitle: 为什么1开头的数字最多？
 format: horizontal
 fps: 30
-music: assets/music/bgm.mp3
+music: assets/music/benford-temp.mp3   # PLACEHOLDER (synthesised, local only): switch to bgm.mp3 and drop the markers below
+markers:          # pinned to the placeholder's sections; recompute with the real track
+  a: 4.07         # the title-card hit
+  break: 30.51
+  build: 50.85
+  drop: 75.25
+  outro: 146.44
 
 scenes:
   - id: hook
     component: Hook
-    kicker: 一本被翻旧的书
     lines:
-      - 这本书，前几页被翻黑了。
-      - 后面几页，几乎是新的。
-      - 它不是小说。是一本[数字表]。
+      - 前几页，被翻黑了。
+      - 后面的，几乎全新。
 
   - id: office
     component: Office
-    lead: 4.2   # the title card plays first, opened from the book's page
+    at: a
+    lead: 4.4   # the title card plays first, opened from the book's page
     props: {quietLead: true}
     kicker: 1881 · 华盛顿 · 航海历书局
     lines:
@@ -62,7 +67,7 @@ scenes:
   - id: twist
     component: Twist
     at: break
-    kicker: 灯下的书脊
+    kicker: 灯下的书口
     lines:
       - {text: 不。, hold: 2.2}
       - 越往前，越黑。

@@ -31,6 +31,8 @@ export type Look = {
 	hatColor?: string;
 	glasses?: boolean;
 	mustache?: boolean;
+	/** a full beard over the jaw (19th-century scholars) */
+	beard?: boolean;
 	/** an apron over the outfit (colour) */
 	apron?: string;
 };
@@ -395,7 +397,8 @@ export const Figure: React.FC<{
 							<path d={`M6,${-313 - brow * 0.25} L13,${-314 + brow * 0.35}`} stroke={c(look.hairColor)} strokeWidth={2.2} strokeLinecap="round" />
 							<path d={`M18,${-314 + brow * 0.35} L26,${-313 - brow * 0.25}`} stroke={c(look.hairColor)} strokeWidth={2.2} strokeLinecap="round" />
 							<path d="M29,-303 C31,-298 30,-296 27,-295" stroke={shade(look.skin, 0.75)} strokeWidth={1.6} fill="none" strokeLinecap="round" />
-							{look.mustache ? <path d="M15,-294 C18,-297 26,-297 29,-294 C26,-292 18,-292 15,-294 Z" fill={look.hairColor} /> : null}
+							{look.beard ? <path d="M-13,-300 C-16,-284 -8,-264 8,-259 C22,-256 32,-268 33,-283 C33,-289 32,-293 30,-295 C27,-291 23,-290 19,-291 C14,-292 9,-293 5,-291 C1,-295 -6,-300 -13,-300 Z" fill={c(look.hairColor)} /> : null}
+							{look.mustache || look.beard ? <path d="M15,-294 C18,-297 26,-297 29,-294 C26,-292 18,-292 15,-294 Z" fill={shade(look.hairColor, 0.8)} /> : null}
 							{mouth}
 							<ellipse cx={24} cy={-295} rx={4} ry={2.4} fill="#e28b7a" opacity={expression === 'smile' ? 0.35 : 0.15} />
 							{look.glasses ? (
