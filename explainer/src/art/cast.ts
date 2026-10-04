@@ -34,5 +34,8 @@ export const CAST: Record<string, Look> = {
 	shopgirl: {skin: P.skin1, hair: 'bun', hairColor: '#6a4a32', outfit: 'dress', top: '#4a5a6a', bottom: '#4a5a6a', hat: 'bonnet', hatColor: '#3a3448', accent: '#c9a35e'},
 	clerk06: {skin: P.skin2, hair: 'slick', hairColor: P.hairBrown, outfit: 'suit', top: '#4a4038', bottom: '#2f2a26', accent: '#2f3d5c', hat: 'boater', hatColor: '#cdb27a', glasses: true},
 	farmwife: {skin: P.skin2, hair: 'bun', hairColor: P.hairBlack, outfit: 'dress', top: '#5a3b3a', bottom: '#5a3b3a', apron: '#e6dcc6'},
+	// 《夸完就翻车》 (Israeli Air Force flight school, mid-1960s)
+	kahneman: {skin: P.skin1, hair: 'short', hairColor: P.hairBlack, outfit: 'casual', top: '#e6e1d6', bottom: '#3a3e48', accent: '#2f3d5c'},
+	instructor: {skin: P.skin2, hair: 'short', hairColor: P.hairBrown, outfit: 'uniform', top: '#a49371', bottom: '#8f805f', accent: '#6e6248', hat: 'officer', hatColor: '#5a5440', mustache: true},
 	lad: {skin: P.skin1, hair: 'short', hairColor: '#8a5a32', outfit: 'casual', top: '#3d4a63', bottom: '#4a4236', accent: '#d9d4c8', hat: 'flatcap', hatColor: '#6a5a42'},
 };

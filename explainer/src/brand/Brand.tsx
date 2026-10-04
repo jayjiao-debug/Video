@@ -32,7 +32,7 @@ export type VideoCfg = {
 	kicker: string;
 	tagline: string;
 	taglineEn: string;
-	motif: 'cards' | 'duel' | 'stars' | 'serials' | 'coffee' | 'ticket' | 'bars';
+	motif: 'cards' | 'duel' | 'stars' | 'serials' | 'coffee' | 'ticket' | 'bars' | 'coin';
 	card: [number, number];
 	extend: number;
 	trim?: number;
@@ -163,6 +163,10 @@ export const Motif: React.FC<{kind: VideoCfg['motif']; p: number; f: number}> = 
 				</text>
 			</g>
 		);
+	}
+	if (kind === 'coin') {
+		// 《夸完就翻车》: the tossed coin, 夸 on its face, landed on the chalk target
+		return <CoinMotif p={p} gold={GOLD} />;
 	}
 	if (kind === 'ticket') {
 		// 《八百人猜牛》: the middle ticket, No 394, drawn in gold
@@ -443,5 +447,27 @@ export const Branded: React.FC<BrandedProps> = ({video, cfg, part = 'full'}) => 
 				<EndCard v={v} cfg={cfg} dur={ext + 12} />
 			</Sequence>
 		</AbsoluteFill>
+	);
+};
+
+/** 《夸完就翻车》's motif: a gold coin with 夸 on its face, on two chalk rings. */
+export const CoinMotif: React.FC<{p: number; gold: string}> = ({p, gold}) => {
+	const q = spring({frame: Math.round(p * 40), fps: 30, config: {damping: 12}});
+	return (
+		<g opacity={Math.min(1, p * 3)}>
+			<circle r={110} fill="url(#brand-glow)" opacity={0.6} />
+			{[64, 92].map((r, i) => (
+				<ellipse key={r} rx={r * 1.5} ry={r * 0.42} cy={18} fill="none" stroke={gold} strokeWidth={1.6} opacity={0.5 - i * 0.18} strokeDasharray={2 * Math.PI * r * 1.1} strokeDashoffset={2 * Math.PI * r * 1.1 * (1 - Math.min(1, p * 1.4))} />
+			))}
+			<g transform={`translate(0,${-6 - 10 * (1 - q)}) scale(${0.8 + 0.2 * q})`}>
+				<circle r={40} fill={gold} />
+				<circle r={40} fill="none" stroke="#8a5e1e" strokeWidth={3} />
+				<circle r={31} fill="none" stroke="#8a5e1e" strokeWidth={2} opacity={0.6} />
+				<text y={13} textAnchor="middle" style={{fontFamily: font.serif, fontWeight: 900, fontSize: 38, fill: '#6a4310'}}>
+					夸
+				</text>
+				<ellipse cx={-12} cy={-16} rx={14} ry={6} fill="#fff" opacity={0.4} />
+			</g>
+		</g>
 	);
 };

@@ -1,0 +1,155 @@
+# 《夸完就翻车》: regression to the mean, from the Israeli Air Force flight school to Galton's heights
+#
+# Status: made end to end on the owner's go-ahead ("你自己再选一个话题完全自己发挥吧，成品给我").
+#
+# Sources (checked):
+#   Kahneman, D. (2002). Autobiography, Nobel Prize in Economic Sciences; and Kahneman, D. (2011).
+#     Thinking, Fast and Slow, ch. 17 "Regression to the Mean". While teaching Israeli Air Force flight
+#     instructors that praise is more effective than punishment for skill learning, a senior instructor
+#     objected: "On many occasions I have praised flight cadets for clean execution of some aerobatic
+#     maneuver, and in general when they try it again, they do worse. On the other hand, I have often
+#     screamed at cadets for bad execution, and in general they do better the next time." Kahneman:
+#     the instructor was right about what he saw and wrong about the cause (regression to the mean).
+#     He then had each participant toss two coins at a target behind his back, without feedback; the
+#     distances showed that those who did best the first time mostly did worse the second, and vice versa.
+#     Period: mid-1960s (as retold, e.g. Lewis, The Undoing Project, 2016). We say 1960年代中期.
+#   Kahneman: born 5 March 1934, Tel Aviv; IDF from 1954, psychology unit, built the structured interview
+#     for combat recruits used for decades; PhD Berkeley 1961; Hebrew University 1961–1978; Nobel 2002;
+#     died 27 March 2024 (Wikipedia, checked).
+#   IAF flight school jet trainer of the period: Fouga CM.170 Magister ("Tzukit"), first locally assembled
+#     7 July 1960, used for basic and advanced jet training (Jewish Virtual Library, IAF inventory).
+#     Drawn as a generic V-tail trainer.
+#   Galton, F. (1886). Regression towards Mediocrity in Hereditary Stature. Journal of the Anthropological
+#     Institute 15: 246–263. 930 adult children of 205 parentages; the child's deviation from the mean
+#     ("mediocrity", 68¼ in) averaged about two-thirds of the mid-parent's deviation. Hence "regression".
+#   Illustrative: the coin distances and the cadets' scores on screen are a simulation (示意), not data.
+#
+# Line markup: [gold] highlights the answer, {red} the trap.
+# Music: the channel track (bgm.mp3), same map as 《八百人猜牛》: the title lands on the first big hit at
+# 16.10 s, the twist sits in the break (49.2 s), the coin experiment on the build (65.5 s), the answer on
+# the drop's audible onset (81.37 s), the name on the 108.18 s accent, Galton on 117.85 s.
+
+id: regress
+series: Juno · VIBE知识大赏
+title: 夸完就翻车
+subtitle: 夸一句就变差，骂一顿就变好？
+format: horizontal
+fps: 30
+music: assets/music/bgm.mp3
+markers:
+  a: 15.6         # the title card starts: the coin falls through the dark and lands on the hit at 16.104
+  hit: 16.104     # the track's first big hit: the title's first stamp
+  drop: 81.37     # the drop's audible onset (RMS); music.py's marker is two beats late (82.23)
+  drop2: 82.17    # the drop's second hit: the aim rings light up
+  why: 107.68     # "回归均值" lands on the 108.18 s accent
+  galton: 117.55  # Galton lands on the 117.85 s accent
+  coda: 149.89    # the callback, so the last line lands before the end card
+
+scenes:
+  # 1 hook: what we're looking at (a flight school at dusk, a jet, a grade board), then the question
+  - id: hook
+    component: Hook
+    lines:
+      - pause: 0.3
+      - 这个学员飞得漂亮，教官夸了一句。
+      - 下一次，他飞砸了。
+      - 那个飞得一塌糊涂，被教官骂了一顿。
+      - 下一次，他飞好了。
+      - text: 所以，该骂，不该夸？
+        hold: 2.6
+
+  # 2 cold open: a year, a place, a person
+  - id: base
+    component: Base
+    at: a
+    lead: 5.6     # the title card plays first (lands on the hit 0.5 s in)
+    kicker: 1960年代中期 · 以色列 · 空军飞行学校
+    lines:
+      - 1960年代中期，以色列空军飞行学校。
+      - 一位年轻的心理学家，来给教官们上课。
+      - 他讲：想教会技术，[表扬]比惩罚管用。
+
+  # 3 setup: the obvious reading, from the man who sees it every day
+  - id: objection
+    component: Objection
+    lines:
+      - 一位资深教官当场反驳：
+      - “我夸过的，下次多半飞得更差。”
+      - “我骂过的，下次多半飞得更好。”
+      - 他的飞行记录上，一条条都对得上。
+
+  # 4 twist (the break): quiet
+  - id: twist
+    component: Twist
+    at: break
+    lines:
+      - 心理学家想了想，说：你看到的都是真的。
+      - pause: 1.2
+      - text: 但原因，{不是你的夸和骂}。
+        hold: 3.2
+
+  # 5 mechanism (the build): the coin experiment
+  - id: coins
+    component: Coins
+    at: build
+    kicker: 机库 · 硬币实验
+    lines:
+      - 他当场做了个实验：
+      - 每人背对靶子，往后扔两枚硬币。
+      - 第一枚：有人扔得很近，有人很远。
+      - 再扔第二枚。没人夸，也没人骂——
+      - text: 结果呢？
+        hold: 1.6
+
+  # 6 reveal (the drop)
+  - id: reveal
+    component: Reveal
+    at: drop
+    lead: 0.8     # the first line lands with the drop's second hit (82.17 s)
+    cite: Kahneman, Thinking, Fast and Slow (2011) · 示意
+    lines:
+      - 第一枚最近的几位，第二枚[大多变远了]。
+      - 第一枚最远的几位，第二枚[大多变近了]。
+      - 因为每一次成绩，都是[实力 + 运气]。
+      - 最好的那一次，往往运气也最好。
+      - 下一次运气回到平常，成绩就“回落”了。
+
+  # 7 name it (pinned to the 108.18 s accent)
+  - id: why
+    component: Why
+    at: why
+    lead: 0.5
+    lines:
+      - 这就是[回归均值]。
+      - 不夸不骂，极端的成绩也会往中间回。
+
+  # 7b second layer (pinned to 117.85 s): where the word comes from
+  - id: galton
+    component: Galton
+    at: galton
+    lead: 0.3
+    kicker: 1886 · 伦敦 · 高尔顿的书房
+    cite: Galton, J. Anthropol. Inst. 15 (1886)
+    lines:
+      - 最早发现它的，正是上期猜牛的高尔顿。
+      - 他比较了205对父母和930个孩子的身高。
+      - 父母特别高，孩子也偏高，但没那么高。
+      - 高出的部分，平均只剩约[三分之二]。
+
+  # 8 real world: three takeaways on screen
+  - id: tips
+    component: Tips
+    lines:
+      - 下次看到“立竿见影”，先问三件事：
+      - ① 上一次，是不是太极端了？
+      - ② 什么都没做的人，是不是也变了？
+      - ③ 表扬照样给：它本来就管用。
+
+  # 9 callback + end card (last 6 s, the music keeps playing)
+  - id: callback
+    component: Callback
+    at: coda
+    lines:
+      - 那位教官没看错，只是想错了原因。
+      - 夸人常被运气“惩罚”，骂人反被“奖励”。
+      - pause: 6.4

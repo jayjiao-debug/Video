@@ -28,6 +28,7 @@ import {BENFORD_BOARD_N, BenfordBoard} from '../episodes/benford/storyboard';
 import {MOCAP_BOARD_N, MocapBoard} from './MocapBoard';
 import {OX_SHEETS, OxGallery} from '../episodes/ox/gallery';
 import {OX_TEST_N, OxMotionTest} from '../episodes/ox/motiontest';
+import {REGRESS_SHEETS, RegressGallery} from '../episodes/regress/gallery';
 
 export const Root: React.FC = () => (
 	<>
@@ -58,6 +59,7 @@ export const Root: React.FC = () => (
 		<Composition id="BenfordBoard" component={BenfordBoard} durationInFrames={BENFORD_BOARD_N} fps={30} width={1920} height={1080} />
 		<Composition id="XumingLook" component={XumingLook} durationInFrames={LOOKS} fps={30} width={1920} height={1080} />
 		<Composition id="OxMotionTest" component={OxMotionTest} durationInFrames={OX_TEST_N} fps={30} width={1920} height={1080} />
+		<Composition id="RegressGallery" component={RegressGallery} durationInFrames={REGRESS_SHEETS.length} fps={30} width={1920} height={1080} />
 		<Composition id="OxGallery" component={OxGallery} durationInFrames={OX_SHEETS.length} fps={30} width={1920} height={1080} />
 		<Composition id="CoffeeGallery" component={CoffeeGallery} durationInFrames={COFFEE_SHEETS.length} fps={30} width={1920} height={1080} />
 		{/* Douyin covers: COMPOSITION=CoverWide|CoverTall node scripts/stills.mjs <episode> <dir> 0 */}
