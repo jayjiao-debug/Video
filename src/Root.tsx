@@ -10,7 +10,7 @@ import { CoverV3 } from './v3/CoverV3';
 import { TitanicOpen, OPEN_FRAMES } from './v4/Titanic';
 import { ModelPreview } from './v4/ModelPreview';
 import { TitanicOpen2, OPEN_FRAMES2 } from './v4/Titanic2';
-import { Ep5Draft, EP5_FRAMES } from './v4/Ep5';
+import { Ep5Draft, Ep5Film, EP5_FRAMES } from './v4/Ep5';
 import { Ep1 } from './ep1/Ep1';
 import '@fontsource/cormorant-garamond/400-italic.css';
 import '@fontsource/cormorant-garamond/500.css';
@@ -77,6 +77,7 @@ export const Root: React.FC = () => (
     <Composition id="MP-titanic-s23" component={ModelPreview} durationInFrames={1} fps={30} width={960} height={540} defaultProps={{ file: "titanic_s23.glb" }} />
     <Composition id="MP-lifeboat-s12" component={ModelPreview} durationInFrames={1} fps={30} width={960} height={540} defaultProps={{ file: "lifeboat_s12.glb" }} />
     <Composition id="MP-lifeboat-b1" component={ModelPreview} durationInFrames={1} fps={30} width={960} height={540} defaultProps={{ file: "lifeboat_b1.glb" }} />
+    <Composition id="Ep5" component={Ep5Film} durationInFrames={EP5_FRAMES} fps={30} width={1920} height={1080} />
     <Composition id="Ep5Draft" component={Ep5Draft} durationInFrames={EP5_FRAMES} fps={30} width={1920} height={1080} />
     <Composition id="TitanicOpen2" component={TitanicOpen2} durationInFrames={OPEN_FRAMES2} fps={30} width={1920} height={1080} />
     <Composition id="TitanicOpen" component={TitanicOpen} durationInFrames={OPEN_FRAMES} fps={30} width={1920} height={1080} />

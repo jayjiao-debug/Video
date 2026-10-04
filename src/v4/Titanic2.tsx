@@ -172,7 +172,7 @@ const seatLayout = (cap: number) => {
   LAYOUTS.set(cap, out);
   return out;
 };
-type Placed = { x: number; y?: number; z: number; rot: number; scale: number; cap: number; occ: number; appear: number; fill: number; float: boolean };
+type Placed = { x: number; y?: number; z: number; rot: number; scale: number; cap: number; occ: number; appear: number; fill: number; float: boolean; fillAt?: (r: number) => number };
 const SEAT_OFF = new THREE.Color('#4a5670'), SEAT_EMPTY = new THREE.Color('#86b8ff'), SEAT_ON = new THREE.Color('#ffcf6e');
 const Boats: React.FC<{ T: number; placed: Placed[]; a: Assets; emptyPulse: number }> = ({ T, placed, a, emptyPulse }) => {
   const total = placed.reduce((s, p) => s + p.cap, 0);
@@ -205,7 +205,8 @@ const Boats: React.FC<{ T: number; placed: Placed[]; a: Assets; emptyPulse: numb
     pts.forEach(([lx, lz], si) => {
       const wx = p.x + (lx * cos + lz * sin) * p.scale, wz = p.z + (-lx * sin + lz * cos) * p.scale;
       const r = order[si];
-      const filled = r < p.occ ? easeOut(prog(T, p.fill + r * 0.012, p.fill + r * 0.012 + 0.2)) : 0;
+      const f0 = p.fillAt ? p.fillAt(r) : p.fill + r * 0.012;
+      const filled = r < p.occ ? easeOut(prog(T, f0, f0 + (p.fillAt ? 0.35 : 0.2))) : 0;
       const empty = r >= p.occ;
       o.position.set(wx, base + SEAT_Y * p.scale, wz); o.rotation.set(0, p.rot, 0); o.scale.set(Math.max(0.0001, p.scale * ap * ts), Math.max(0.0001, p.scale * ap), Math.max(0.0001, p.scale * ap * ts)); o.updateMatrix();
       seats.setMatrixAt(k, o.matrix);
@@ -501,3 +502,60 @@ export const TitanicOpen2: React.FC = () => {
 };
 export const OPEN_FRAMES2 = Math.round(OPEN_END * 30);
 export { clamp };
+
+
+/* ---------------- the finale, b228 -> end: back on boat No. 1; the empty seats fill one by one ---------------- */
+const FIN_IN = b(228), SEATS_FROM = b(236) + 0.2;
+const FIN_Y = 1.6;
+const FIN_KEYS: Key[] = [
+  [FIN_IN, [B1.x + 0.1, FIN_Y + 1.15, B1.z + 0.58], [B1.x, FIN_Y + 0.12, B1.z]],
+  [b(236), [B1.x + 0.35, FIN_Y + 1.4, B1.z + 0.9], [B1.x - 0.02, FIN_Y + 0.12, B1.z]],
+  [b(244), [B1.x + 2.2, FIN_Y + 2.6, B1.z + 4.2], [B1.x - 0.4, FIN_Y + 0.2, B1.z - 0.4]],
+  [b(256), [B1.x + 7, 6.5, B1.z + 14], [1, 1.2, SHIP_Z]],
+];
+const finCam = (T: number) => {
+  let i = 0;
+  while (i < FIN_KEYS.length - 2 && T > FIN_KEYS[i + 1][0]) i++;
+  const [ta, pa, la] = FIN_KEYS[i], [tb, pb, lb] = FIN_KEYS[i + 1];
+  const k = easeInOut(prog(T, ta, tb));
+  return { pos: pa.map((x, j) => lerp(x, pb[j], k)), look: la.map((x, j) => lerp(x, lb[j], k)) };
+};
+const FinCam: React.FC<{ T: number }> = ({ T }) => {
+  const { camera } = useThree();
+  const { pos, look } = finCam(T);
+  camera.position.set(pos[0], pos[1], pos[2]); camera.lookAt(look[0], look[1], look[2]); camera.updateProjectionMatrix();
+  return null;
+};
+const FIN_PLACED: Placed[] = [{ x: 0, y: 0, z: 0, rot: 0, scale: 1, cap: 40, occ: 40, appear: -1, fill: 0, float: false, fillAt: (r) => (r < 12 ? -10 : SEATS_FROM + (r - 12) * 0.19) }];
+const FinScene: React.FC<{ T: number; a: Assets }> = ({ T, a }) => (
+  <>
+    <FinCam T={T} />
+    <SkyEnv a={a} />
+    <fog attach="fog" args={['#070b16', 30, 120]} />
+    <ambientLight intensity={0.12} color="#5a6a98" />
+    <directionalLight position={[MOON_DIR.x * 50, MOON_DIR.y * 50, MOON_DIR.z * 50]} intensity={0.6} color="#c9d6f5" />
+    <directionalLight position={[10, 12, 20]} intensity={0.16} color="#8fa6d8" />
+    <Sea T={T} a={a} />
+    <Ship T={0} a={a} />
+    <group position={[B1.x, FIN_Y, B1.z]}>
+      <Boats T={T} placed={FIN_PLACED} a={a} emptyPulse={0.8} />
+      {[-0.34, 0.34].map((dx) => (
+        <mesh key={dx} position={[dx, 0.1 + (B1.y + 1.0 - FIN_Y) / 2, 0]}><cylinderGeometry args={[0.003, 0.003, B1.y + 0.8 - FIN_Y, 6]} /><meshStandardMaterial color="#c8bca2" /></mesh>
+      ))}
+      <pointLight position={[0.2, 0.5, 0.25]} color="#ffcf8a" intensity={1.4 + 1.6 * prog(T, SEATS_FROM, SEATS_FROM + 5.5)} distance={2.6} decay={1.6} />
+    </group>
+  </>
+);
+export const Finale3D: React.FC<{ T: number }> = ({ T }) => {
+  const { width, height } = useVideoConfig();
+  const [assets, setAssets] = useState<Assets | null>(ASSETS);
+  const [handle] = useState(() => (ASSETS ? null : delayRender('finale models', { timeoutInMilliseconds: 120000 })));
+  useEffect(() => { loadAssets().then((a) => { setAssets(a); if (handle !== null) continueRender(handle); }); }, [handle]);
+  if (!assets) return null;
+  return (
+    <ThreeCanvas width={width} height={height} gl={{ antialias: true, toneMapping: THREE.ACESFilmicToneMapping, toneMappingExposure: 0.95 }}
+      camera={{ fov: 34, near: 0.03, far: 400, position: [0, 10, 10] }}>
+      <FinScene T={T} a={assets} />
+    </ThreeCanvas>
+  );
+};

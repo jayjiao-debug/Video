@@ -23,8 +23,15 @@ const SWEATER = '#3f6f6c', SWEATER2 = '#2f5552';
 const Seated: React.FC<{ T: number; top: string; hair: string; mood: Mood; lx?: number; ly?: number; write?: boolean; shrug?: number; tilt?: number; ph?: number }> = ({ T, top, hair, mood, lx = 0, ly = 0, write = true, shrug = 0, tilt = 0, ph = 0 }) => {
   const pen = write ? Math.sin(T * 9 + ph) * 7 : 0;
   const lift = shrug * 14;
+  const legs = FLOOR - 470;
   return (
     <g>
+      {/* chair back behind, legs and shoes under the table */}
+      <rect x={-60} y={-176} width={120} height={150} rx={10} fill="#6a5440" />
+      <rect x={-52} y={10} width={8} height={legs - 10} fill="#4a3a2c" /><rect x={44} y={10} width={8} height={legs - 10} fill="#4a3a2c" />
+      <rect x={-34} y={8} width={26} height={legs - 14} rx={9} fill="#33405e" />
+      <rect x={8} y={8} width={26} height={legs - 14} rx={9} fill="#33405e" />
+      <ellipse cx={-24} cy={legs - 4} rx={22} ry={8} fill="#1d1c22" /><ellipse cx={24} cy={legs - 4} rx={22} ry={8} fill="#1d1c22" />
       <path d={`M -56 ${-150 - lift} Q 0 ${-168 - lift} 56 ${-150 - lift} L 66 0 L -66 0 Z`} fill={top} />
       <g transform={`translate(0, ${-196 - lift * 0.6})`}><Head hair="slick" hairColor={hair} mood={mood} lx={lx} ly={ly} tilt={tilt} /></g>
       {shrug > 0.5 ? (
