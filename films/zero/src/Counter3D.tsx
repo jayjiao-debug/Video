@@ -11,8 +11,8 @@ import { CamRig, Env, canvasTex, useFontsReady } from './three-kit';
 /* The night counter: the set for the cold open, the can stack and the ending. 1 unit = 10 cm.
    Cans are a standard 330 ml can (Ø 6.6 cm, 11.5 cm tall) built here with our own unbranded labels:
    red = the sugared cola, black = the sugar-free one. No real brand's design, logo or lettering.
-   Product-shot lighting: two soft boxes (rect area lights) draw long highlights down the cans, a warm pendant spot
-   gives the pool and the shadows; the city bokeh is a plane in the scene so the glass can refract it. */
+   Lighting: a warm pendant spot (pool and shadows) and a cool rim from the window; a narrow light strip sweeps the
+   cans in the opening. The city bokeh is a plane in the scene so the glass and water can refract it. */
 export const CAN_H = 1.15, CAN_R = 0.33, CUBE = 0.16;
 export type CanKind = 'red' | 'black';
 export type CanState = { kind: CanKind; p: number[]; ry?: number; o?: number; tilt?: number };
@@ -24,77 +24,40 @@ const SERIF_EN = '"Cormorant Garamond", Georgia, serif';
 const SERIF_ZH = '"Noto Serif CJK SC", serif';
 const SANS_ZH = '"Noto Sans CJK SC", sans-serif';
 
-// one layout, drawn twice: the colour map, and a roughness/metalness map (G = roughness, B = metalness) so the
-// printed ink reads as ink on metal and the white lettering as matte ink
-const drawLabel = (g: CanvasRenderingContext2D, kind: CanKind, pbr: boolean) => {
+const labelTex = (kind: CanKind) => canvasTex(2048, 1024, (g) => {
   const red = kind === 'red';
-  const W = 2048, H = 1024;
-  if (pbr) { g.fillStyle = 'rgb(0,80,150)'; g.fillRect(0, 0, W, H); }
-  else {
-    const base = g.createLinearGradient(0, 0, 0, H);
-    if (red) { base.addColorStop(0, '#9c0f17'); base.addColorStop(0.45, '#cf2027'); base.addColorStop(1, '#8e0d14'); }
-    else { base.addColorStop(0, '#09090b'); base.addColorStop(0.5, '#17171b'); base.addColorStop(1, '#08080a'); }
-    g.fillStyle = base; g.fillRect(0, 0, W, H);
-    // fine print-on-metal streaks
-    const r = mulberry(red ? 2 : 3);
-    for (let i = 0; i < 900; i++) { g.fillStyle = `rgba(255,255,255,${0.012 + r() * 0.02})`; g.fillRect(r() * W, 0, 1 + r() * 2, H); }
-  }
-  const ink = (c: string) => (pbr ? 'rgb(0,150,25)' : c);
-  const gold = pbr ? 'rgb(0,60,230)' : '#cfa760';
-  // gold hairlines and a band near the bottom
-  g.fillStyle = gold; g.fillRect(0, 96, W, 5); g.fillRect(0, 930, W, 5);
-  g.fillStyle = ink(red ? '#f4e6c8' : '#cf2027'); g.fillRect(0, 760, W, 28);
-  for (const cx of [W / 2, 0, W]) {
-    g.save(); g.translate(cx, 0); g.textAlign = 'center';
-    g.fillStyle = gold; g.font = `600 64px ${SERIF_EN}`;
-    (g as unknown as { letterSpacing: string }).letterSpacing = '18px';
-    g.fillText(red ? 'CLASSIC' : 'ZERO SUGAR', 0, 250);
-    (g as unknown as { letterSpacing: string }).letterSpacing = '10px';
-    g.fillStyle = ink(red ? '#fff7ec' : '#f3ede2'); g.font = `700 200px ${SERIF_EN}`;
-    g.fillText('COLA', 0, 500);
+  const base = g.createLinearGradient(0, 0, 0, 1024);
+  if (red) { base.addColorStop(0, '#a8121a'); base.addColorStop(0.5, '#d42a2a'); base.addColorStop(1, '#9a1016'); }
+  else { base.addColorStop(0, '#0c0c0e'); base.addColorStop(0.5, '#1b1b1f'); base.addColorStop(1, '#0a0a0c'); }
+  g.fillStyle = base; g.fillRect(0, 0, 2048, 1024);
+  // bands: gold hairlines top and bottom, a wide accent band
+  const accent = red ? '#f3e2c0' : '#d42a2a';
+  g.fillStyle = '#c8a25a'; g.fillRect(0, 70, 2048, 6); g.fillRect(0, 948, 2048, 6);
+  g.fillStyle = accent; g.globalAlpha = 0.9; g.fillRect(0, 720, 2048, 46); g.globalAlpha = 1;
+  // the word, centred at u = 0.5 (faces the camera) and once more on the back
+  for (const cx of [1024, 0, 2048]) {
+    g.save(); g.translate(cx, 0);
+    g.textAlign = 'center'; g.fillStyle = red ? '#fff6ea' : '#f3ede2';
+    (g as unknown as { letterSpacing: string }).letterSpacing = '6px';
+    g.font = `700 210px ${SERIF_EN}`; g.fillText('COLA', 0, 520);
     (g as unknown as { letterSpacing: string }).letterSpacing = '0px';
-    g.fillStyle = ink(red ? '#fff7ec' : '#e8453c'); g.font = `900 104px ${SERIF_ZH}`;
-    g.fillText(red ? '经典' : '无糖', 0, 690);
-    g.fillStyle = ink(red ? 'rgba(255,240,225,0.9)' : 'rgba(243,237,226,0.8)'); g.font = `500 40px ${SANS_ZH}`;
-    g.fillText(red ? '可乐 · 330 毫升' : '可乐 · 330 毫升 · 糖 0 克', 0, 880);
+    g.font = `900 120px ${SERIF_ZH}`; g.fillStyle = red ? '#fff6ea' : '#e8453c';
+    g.fillText(red ? '经典' : '无糖', 0, 900);
     g.restore();
   }
-  // nutrition panel on the side
-  g.textAlign = 'left'; g.fillStyle = ink(red ? 'rgba(255,240,225,0.85)' : 'rgba(243,237,226,0.75)'); g.font = `500 34px ${SANS_ZH}`;
-  ['营养成分表', '每 100 毫升', red ? '糖  10.6 克' : '糖  0 克'].forEach((t, i) => g.fillText(t, 1530, 360 + i * 52));
-};
-const labelTex = (kind: CanKind) => canvasTex(2048, 1024, (g) => drawLabel(g, kind, false));
-const labelPbr = (kind: CanKind) => canvasTex(2048, 1024, (g) => drawLabel(g, kind, true), false);
-
-// cold-can condensation: droplets and mist as a bump map
-const dropsTex = () => canvasTex(1024, 1024, (g) => {
-  g.fillStyle = '#808080'; g.fillRect(0, 0, 1024, 1024);
-  const r = mulberry(19);
-  for (let i = 0; i < 9000; i++) { const v = 128 + r() * 30; g.fillStyle = `rgb(${v},${v},${v})`; g.fillRect(r() * 1024, r() * 1024, 1.5, 1.5); }
-  for (let i = 0; i < 420; i++) {
-    const x = r() * 1024, y = r() * 1024, s = 3 + Math.pow(r(), 3) * 16;
-    const gr = g.createRadialGradient(x - s * 0.25, y - s * 0.3, 0, x, y, s);
-    gr.addColorStop(0, '#ffffff'); gr.addColorStop(0.7, '#b0b0b0'); gr.addColorStop(1, '#808080');
-    g.fillStyle = gr; g.beginPath(); g.ellipse(x, y, s * 0.85, s, 0, 0, 7); g.fill();
-  }
-}, false);
-
-const metalTex = () => canvasTex(512, 512, (g) => {
-  g.fillStyle = '#a4a6ac'; g.fillRect(0, 0, 512, 512);
-  const r = mulberry(3);
-  for (let i = 0; i < 4000; i++) { g.fillStyle = `rgba(255,255,255,${r() * 0.07})`; g.fillRect(r() * 512, r() * 512, 1 + r() * 40, 1); }
+  // a quiet nutrition panel on the side
+  g.textAlign = 'left'; g.fillStyle = red ? 'rgba(255,240,225,0.85)' : 'rgba(243,237,226,0.75)';
+  g.font = `500 44px "Noto Sans CJK SC", sans-serif`;
+  const sx = 1500;
+  g.fillText('330 毫升', sx, 300);
+  g.fillText(red ? '糖  35 克' : '糖  0 克', sx, 370);
 });
 
-// the lid seen from above: the score line, the opening, the recessed panel (bump)
-const lidBump = () => canvasTex(512, 512, (g) => {
-  g.fillStyle = '#808080'; g.fillRect(0, 0, 512, 512);
-  g.strokeStyle = '#5a5a5a'; g.lineWidth = 6;
-  g.beginPath(); g.arc(256, 256, 236, 0, 7); g.stroke();
-  g.strokeStyle = '#a8a8a8'; g.lineWidth = 3; g.beginPath(); g.arc(256, 256, 222, 0, 7); g.stroke();
-  g.strokeStyle = '#4a4a4a'; g.lineWidth = 4;
-  g.beginPath(); g.ellipse(160, 256, 70, 95, 0, 0, 7); g.stroke(); // the opening to be
-  g.beginPath(); g.arc(300, 256, 16, 0, 7); g.stroke(); // rivet seat
-}, false);
+const metalTex = () => canvasTex(512, 512, (g) => {
+  g.fillStyle = '#9a9ca2'; g.fillRect(0, 0, 512, 512);
+  const r = mulberry(3);
+  for (let i = 0; i < 4000; i++) { g.fillStyle = `rgba(255,255,255,${r() * 0.08})`; g.fillRect(r() * 512, r() * 512, 1 + r() * 40, 1); }
+});
 
 const stoneTex = () => {
   const t = canvasTex(1024, 1024, (g) => {
@@ -133,44 +96,33 @@ const bokehTex = (seed: number) => canvasTex(2048, 1024, (g) => {
   }
 });
 
-type Tex = { red: THREE.Texture; black: THREE.Texture; redP: THREE.Texture; blackP: THREE.Texture; drops: THREE.Texture; metal: THREE.Texture; lid: THREE.Texture };
-
-const Can: React.FC<{ s: CanState; tex: Tex }> = ({ s, tex }) => {
+const Can: React.FC<{ s: CanState; label: THREE.Texture; metal: THREE.Texture }> = ({ s, label, metal }) => {
   const parts = useMemo(() => {
-    const body = new THREE.CylinderGeometry(CAN_R, CAN_R, 0.86, 128, 1, true, -Math.PI, Math.PI * 2);
+    const body = new THREE.CylinderGeometry(CAN_R, CAN_R, 0.86, 96, 1, true, -Math.PI, Math.PI * 2);
     body.translate(0, 0.14 + 0.43, 0);
+    // bottom: a short taper and a domed base
     const bottom = new THREE.LatheGeometry([
-      new THREE.Vector2(0.0, 0.07), new THREE.Vector2(0.17, 0.045), new THREE.Vector2(0.235, 0.012), new THREE.Vector2(0.25, 0.002),
-      new THREE.Vector2(0.268, 0.004), new THREE.Vector2(0.29, 0.03), new THREE.Vector2(0.312, 0.075), new THREE.Vector2(0.326, 0.115), new THREE.Vector2(CAN_R, 0.14),
-    ], 128);
+      new THREE.Vector2(0.0, 0.06), new THREE.Vector2(0.18, 0.035), new THREE.Vector2(0.24, 0.0), new THREE.Vector2(0.27, 0.004),
+      new THREE.Vector2(0.305, 0.05), new THREE.Vector2(0.325, 0.11), new THREE.Vector2(CAN_R, 0.14),
+    ], 96);
+    // shoulder and neck up to the rim
     const top = new THREE.LatheGeometry([
-      new THREE.Vector2(CAN_R, 1.0), new THREE.Vector2(0.324, 1.045), new THREE.Vector2(0.305, 1.08), new THREE.Vector2(0.282, 1.108),
-      new THREE.Vector2(0.27, 1.125), new THREE.Vector2(0.272, 1.14), new THREE.Vector2(0.279, 1.149), new THREE.Vector2(0.274, 1.156),
-      new THREE.Vector2(0.262, 1.152), new THREE.Vector2(0.252, 1.138), new THREE.Vector2(0.246, 1.124), new THREE.Vector2(0.238, 1.12),
-    ], 128);
-    const lid = new THREE.CircleGeometry(0.239, 96); lid.rotateX(-Math.PI / 2); lid.translate(0, 1.121, 0);
-    // the ring-pull: a rounded plate with a finger hole, slightly lifted at its tail
-    const sh = new THREE.Shape();
-    sh.moveTo(-0.03, -0.04); sh.lineTo(0.09, -0.045); sh.quadraticCurveTo(0.13, -0.045, 0.13, 0); sh.quadraticCurveTo(0.13, 0.045, 0.09, 0.045);
-    sh.lineTo(-0.03, 0.04); sh.quadraticCurveTo(-0.06, 0.035, -0.06, 0); sh.quadraticCurveTo(-0.06, -0.035, -0.03, -0.04);
-    const hole = new THREE.Path(); hole.absellipse(0.07, 0, 0.034, 0.026, 0, Math.PI * 2, true); sh.holes.push(hole);
-    const tab = new THREE.ExtrudeGeometry(sh, { depth: 0.006, bevelEnabled: true, bevelThickness: 0.002, bevelSize: 0.003, bevelSegments: 2, curveSegments: 24 });
-    tab.rotateX(-Math.PI / 2); tab.translate(0.03, 1.126, 0);
-    return { body, bottom, top, lid, tab };
+      new THREE.Vector2(CAN_R, 1.0), new THREE.Vector2(0.322, 1.05), new THREE.Vector2(0.295, 1.095), new THREE.Vector2(0.272, 1.12),
+      new THREE.Vector2(0.268, 1.135), new THREE.Vector2(0.276, 1.148), new THREE.Vector2(0.27, 1.152), new THREE.Vector2(0.25, 1.14),
+      new THREE.Vector2(0.245, 1.128), new THREE.Vector2(0.0, 1.128),
+    ], 96);
+    const tab = new RoundedBoxGeometry(0.16, 0.012, 0.1, 2, 0.02);
+    return { body, bottom, top, tab };
   }, []);
   const red = s.kind === 'red';
-  const o = s.o ?? 1, tr = o < 1;
   return (
     <group position={[s.p[0], s.p[1], s.p[2]]} rotation={[s.tilt ?? 0, s.ry ?? 0, 0]}>
-      <mesh geometry={parts.body} castShadow={!tr} receiveShadow>
-        <meshPhysicalMaterial map={red ? tex.red : tex.black} roughnessMap={red ? tex.redP : tex.blackP} metalnessMap={red ? tex.redP : tex.blackP}
-          metalness={1} roughness={1} clearcoat={0.6} clearcoatRoughness={0.18} bumpMap={tex.drops} bumpScale={0.9} transparent={tr} opacity={o} />
+      <mesh geometry={parts.body} castShadow receiveShadow>
+        <meshPhysicalMaterial map={label} metalness={red ? 0.45 : 0.55} roughness={red ? 0.3 : 0.24} clearcoat={1} clearcoatRoughness={0.12} transparent={(s.o ?? 1) < 1} opacity={s.o ?? 1} />
       </mesh>
-      <mesh geometry={parts.bottom} castShadow={!tr}><meshStandardMaterial map={tex.metal} metalness={1} roughness={0.3} side={THREE.DoubleSide} transparent={tr} opacity={o} /></mesh>
-      <mesh geometry={parts.top} castShadow={!tr}><meshStandardMaterial map={tex.metal} metalness={1} roughness={0.22} side={THREE.DoubleSide} transparent={tr} opacity={o} /></mesh>
-      <mesh geometry={parts.lid}><meshStandardMaterial map={tex.metal} bumpMap={tex.lid} bumpScale={2} metalness={1} roughness={0.28} transparent={tr} opacity={o} /></mesh>
-      <mesh geometry={parts.tab}><meshStandardMaterial color="#c4c6cc" metalness={1} roughness={0.2} transparent={tr} opacity={o} /></mesh>
-      <mesh position={[0.03 + 0.0, 1.127, 0]}><cylinderGeometry args={[0.014, 0.016, 0.01, 20]} /><meshStandardMaterial color="#b6b8be" metalness={1} roughness={0.25} transparent={tr} opacity={o} /></mesh>
+      <mesh geometry={parts.bottom} castShadow><meshStandardMaterial map={metal} metalness={1} roughness={0.32} side={THREE.DoubleSide} transparent={(s.o ?? 1) < 1} opacity={s.o ?? 1} /></mesh>
+      <mesh geometry={parts.top} castShadow><meshStandardMaterial map={metal} metalness={1} roughness={0.26} side={THREE.DoubleSide} transparent={(s.o ?? 1) < 1} opacity={s.o ?? 1} /></mesh>
+      <mesh geometry={parts.tab} position={[0.06, 1.138, 0]}><meshStandardMaterial color="#b9bbc0" metalness={1} roughness={0.25} /></mesh>
     </group>
   );
 };
@@ -233,8 +185,7 @@ export const Counter3D: React.FC<{ T: number; keys: Key[]; cans: CanState[]; cub
   const ready = useFontsReady();
   if (!RECT_INIT) { RectAreaLightUniformsLib.init(); RECT_INIT = true; }
   const tex = useMemo(() => (ready ? {
-    red: labelTex('red'), black: labelTex('black'), redP: labelPbr('red'), blackP: labelPbr('black'), drops: dropsTex(), metal: metalTex(), lid: lidBump(),
-    stone: stoneTex(), sugar: sugarBump(), bokeh: bokehTex(seed),
+    red: labelTex('red'), black: labelTex('black'), metal: metalTex(), stone: stoneTex(), sugar: sugarBump(), bokeh: bokehTex(seed),
   } : null), [ready, seed]);
   const cubeGeo = useMemo(() => new RoundedBoxGeometry(CUBE, CUBE, CUBE, 4, 0.02), []);
   const rectRef = (l: THREE.RectAreaLight | null, at: number[]) => { if (l) l.lookAt(at[0], at[1], at[2]); };
@@ -243,23 +194,22 @@ export const Counter3D: React.FC<{ T: number; keys: Key[]; cans: CanState[]; cub
     <AbsoluteFill>
       <ThreeCanvas width={width} height={height} shadows gl={{ antialias: true, toneMapping: THREE.ACESFilmicToneMapping, toneMappingExposure: 1.1 }} camera={{ fov, near: 0.05, far: 80 }}>
         <CamRig T={T} keys={keys} fov={fov} />
-        <Env intensity={0.28} />
-        <ambientLight intensity={0.05} color="#9fb2ff" />
-        {/* soft boxes: a warm key on the left, a cool strip behind on the right */}
-        <rectAreaLight ref={(l) => rectRef(l, [0, 0.6, 0])} position={[-3.2, 2.6, 3.2]} width={2.2} height={3.2} intensity={5 * lamp} color="#ffe3c0" />
-        <directionalLight position={[3, 2.5, -4]} intensity={1.2} color="#8fb0ff" />
+        <Env intensity={0.32} />
+        <ambientLight intensity={0.06} color="#9fb2ff" />
+        {/* cool rim from the window behind */}
+        <directionalLight position={[3, 2.5, -4]} intensity={1.4} color="#7fa2ff" />
         {/* the opening's light sweep: a narrow strip that travels across the cans */}
         {sweep > -1 && <rectAreaLight ref={(l) => rectRef(l, [sweep * 2, 0.6, 0])} position={[sweep * 2 + 0.6, 1.4, 2.4]} width={0.25} height={2.6} intensity={30} color="#fff4e6" />}
-        <spotLight position={[lampPos[0], lampPos[1], lampPos[2]]} angle={lampPos[1] > 6 ? 0.42 : 0.55} penumbra={0.95} intensity={90 * lamp} decay={2} color="#ffd9a6" castShadow shadow-mapSize-width={2048} shadow-mapSize-height={2048} shadow-bias={-0.0003} shadow-normalBias={0.02} />
+        <spotLight position={[lampPos[0], lampPos[1], lampPos[2]]} angle={lampPos[1] > 6 ? 0.42 : 0.55} penumbra={0.9} intensity={140 * lamp} decay={2} color="#ffd9a6" castShadow shadow-mapSize-width={2048} shadow-mapSize-height={2048} shadow-bias={-0.0004} />
         <mesh position={[0, 4.2, -9]}><planeGeometry args={[36, 16]} /><meshBasicMaterial map={tex.bokeh} toneMapped={false} /></mesh>
         <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, 0, -0.5]} receiveShadow>
           <planeGeometry args={[18, 9]} />
           <meshStandardMaterial map={tex.stone} roughness={0.42} metalness={0.05} />
         </mesh>
-        {cans.map((c, i) => <Can key={i} s={c} tex={tex} />)}
+        {cans.map((c, i) => <Can key={i} s={c} label={c.kind === 'red' ? tex.red : tex.black} metal={tex.metal} />)}
         {cubes.map((c, i) => (
           <mesh key={i} geometry={cubeGeo} position={[c.p[0], c.p[1], c.p[2]]} rotation={[c.r[0], c.r[1], c.r[2]]} scale={c.s ?? 1} castShadow receiveShadow>
-            <meshPhysicalMaterial color="#fbf8f2" roughness={0.7} bumpMap={tex.sugar} bumpScale={0.7} sheen={0.6} sheenColor="#ffffff" />
+            <meshStandardMaterial color="#fbf8f2" roughness={0.75} bumpMap={tex.sugar} bumpScale={0.6} emissive="#3a3020" emissiveIntensity={0.08} />
           </mesh>
         ))}
         <Grains g={grains} />

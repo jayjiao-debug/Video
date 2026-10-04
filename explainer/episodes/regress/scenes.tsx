@@ -532,13 +532,18 @@ const Twist: React.FC<SceneProps> = () => {
 	);
 	// the window sits on the wall layer (depth 0.62): aim the hero-plane camera through it
 	const WIN = {x: 960 + (1650 - 960) / 0.62, y: 540 + (370 - 540) / 0.62};
+	// the doubter, held (the break is quiet); then a cut on line 5 to the window and one slow push
+	// toward the hangar's lights, which the next scene opens on
 	const back = camPath(
-		[
-			[BACK, 620, 600, 1.45],
-			[cue(4) - 6, 900, 520, 1.15],
-			[D - 26, WIN.x - 120, WIN.y + 40, 1.5],
-			[D, WIN.x, WIN.y, 2.6],
-		],
+		f < cue(4)
+			? [
+					[BACK, 640, 600, 1.4],
+					[cue(4), 700, 590, 1.48],
+				]
+			: [
+					[cue(4), WIN.x - 260, WIN.y + 70, 1.45],
+					[D, WIN.x - 40, WIN.y + 10, 1.9],
+				],
 		f,
 	);
 	return (
@@ -731,7 +736,7 @@ const Reveal: React.FC<SceneProps> = () => {
 			[0, 960, 440, 1.2],
 			[cue(0) + 10, 935, 430, 1.62],
 			[cue(1) - 10, 935, 440, 1.6],
-			[cue(1) + 30, 960, 460, 1.16],
+			[cue(1) + 54, 960, 460, 1.16],
 			[cue(2) - 20, 960, 440, 1.16],
 			[cue(2) + 60, 960, 420, 1.1],
 			[cue(3), aimX - 110, aimY + 20, 1.8],
@@ -833,8 +838,13 @@ const Why: React.FC<SceneProps> = () => {
 		],
 		f,
 	);
-	const ring = prog(f, cue(0) - 2, 26, ease.inOut);
-	const k = f - cue(0);
+	// the name slams on the track's accent itself (the beat grid sits ~3 frames after the onset)
+	const tl = useTimeline();
+	const hits = (tl.music.hits ?? []).filter(([, st]) => st >= 0.8).map(([t]) => t - scene.from);
+	const near = hits.filter((h) => Math.abs(h - cue(0)) <= 8).sort((x, y) => Math.abs(x - cue(0)) - Math.abs(y - cue(0)));
+	const SLAM = near.length ? near[0] : cue(0);
+	const ring = prog(f, SLAM - 2, 26, ease.inOut);
+	const k = f - SLAM;
 	const slam = k >= 0 ? spring({frame: k, fps: 30, config: {damping: 12, stiffness: 200}}) : 0;
 	const shake = k >= 0 && k < 8 ? 8 * Math.exp(-k / 2.2) : 0;
 	const titleOut = 1 - prog(f, D - 24, 14);
