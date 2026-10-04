@@ -30,39 +30,50 @@ title: 第一位数字
 subtitle: 为什么1开头的数字最多？
 format: horizontal
 fps: 30
-music: assets/music/benford-temp.mp3   # PLACEHOLDER (synthesised, local only): switch to bgm.mp3 and drop the markers below
-markers:          # pinned to the placeholder's sections; recompute with the real track
-  a: 4.07         # the title-card hit
-  break: 30.51
-  build: 50.85
-  drop: 75.25
-  outro: 146.44
+music: assets/music/benford-bgm.mp3   # the owner's track (not in git). 118 bpm, 164.5 s
+markers:
+  a: 3.90      # title card: first stamp on this accent; 4.40 (the strongest) lands the third character
+  b: 16.61     # the first full section: through the window into the study
+  # break 49.17 · build 65.45 · drop 82.24 come from the analysis
 
 scenes:
   - id: hook
     component: Hook
+    lead: 0.33
+    tail: 0
     lines:
-      - 前几页，被翻黑了。
-      - 后面的，几乎全新。
+      - {text: 世上的数字，第一位最常是几？, hold: 2.04}
+      - {text: "[1]。是9的六倍还多。", hold: 1.5}
 
   - id: office
     component: Office
     at: a
-    lead: 4.4   # the title card plays first, opened from the book's page
+    lead: 4.67  # the title card plays first (3.90 → 8.47, cut on the 8.47 accent)
     props: {quietLead: true}
-    kicker: 1881 · 华盛顿 · 航海历书局
+    kicker: 1881 · 华盛顿
     lines:
       - 1881年，华盛顿。
-      - 天文学家纽康，每天算星星的位置。
-      - 每算一次乘法，就要翻一次对数表。
+      - 美国航海历书局，灯还亮着。
+
+  - id: study
+    component: Study
+    at: b
+    kicker: 美国航海历书局
+    lines:
+      - pause: 1.2
+      - 那时没有计算器。
+      - 天文学家纽康，要算行星的位置。
+      - 一颗行星，就是成千上万次乘法。
+      - 诀窍是查[对数表]：乘法，变成加法。
 
   - id: tabs
     component: Tabs
     kicker: 表是按第一位数字排的
     lines:
-      - 1开头的数在最前面，9开头的在最后。
-      - 数字1到9，地位平等。
-      - 按理说，每一段{该被翻得一样多}。
+      - 表按第一位数字排：1开头的在前，9开头的在后。
+      - 如果数字是随机的，1到9机会均等。
+      - 每一段，{都该被翻得一样多}。
+      - pause: 1.5
 
   - id: twist
     component: Twist
@@ -77,8 +88,8 @@ scenes:
     component: Benford
     kicker: 1938 · 斯克内克塔迪 · 通用电气
     lines:
-      - 57年后，物理学家本福特，发现了同一件事。
-      - 河流面积、城市人口、物理常数、门牌号……
+      - 57年后，本福特发现了同一件事。
+      - 河流、人口、物理常数、门牌号……
       - 他收集了[20,229]个数字。
 
   - id: town
@@ -86,10 +97,10 @@ scenes:
     at: build
     kicker: 一个小镇 · 示意
     lines:
-      - 一个小镇，人口每年涨一成。
-      - 从1千涨到2千：要7年。
-      - 从9千涨到1万：只要1年。
-      - 然后，又回到1开头。
+      - 小镇人口，每年涨一成。
+      - 从1千到2千：7年。
+      - 从9千到1万：1年。
+      - 到了1万，又回到1开头。
       - {text: 1开头的数，到底占多少？, hold: 2.4}
 
   - id: reveal
@@ -126,7 +137,7 @@ scenes:
 
   - id: coda
     component: Coda
-    at: outro
+    at: 146.5
     lines:
       - 回到那本书。
       - 翻黑它的，不是某一个人。

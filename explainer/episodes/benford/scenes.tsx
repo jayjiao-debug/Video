@@ -3,7 +3,7 @@ import {AbsoluteFill, Sequence, interpolate, random, spring, useCurrentFrame, us
 import {Figure, POSES, blinkAt, lerpPose, type Pose} from '../../src/art/Figure';
 import {Materials} from '../../src/art/materials';
 import {P} from '../../src/art/palette';
-import {lookAt} from '../../src/art/sets/Airfield';
+import {Layer, lookAt} from '../../src/art/sets/Airfield';
 import {TANK_DEFS} from '../../src/art/Tank';
 import type {VideoCfg} from '../../src/brand/Brand';
 import {JUNO} from '../../src/brand/identity';
@@ -11,6 +11,7 @@ import {FullFrame, camMix} from '../../src/components/FullFrame';
 import {ease, prog, useCue, useScene, useTimeline} from '../../src/lib/context';
 import {color, font} from '../../src/lib/theme';
 import type {SceneMap, SceneProps} from '../../src/lib/types';
+import {Motes} from '../../src/art/glow/kit';
 import {BookMotif, DeskBook, EdgeMacro, Exterior1881, GOLD, H, LogRows, NEWCOMB, OilLamp, Snow, Study1881, W, WINDOW_LIT} from './art';
 
 /**
@@ -25,7 +26,7 @@ export const EPISODE: VideoCfg = {
 	kicker: "BENFORD'S LAW · NEWCOMB · MDCCCLXXXI",
 	tagline: '为什么1开头的数字最多？',
 	taglineEn: 'Why does the world start with 1?',
-	motif: 'cards', // drawn by BookMotif in this episode (the brand Motif union is for re-branded videos)
+	motif: 'cards', // this episode draws its own motif: nine gold bars (Benford's staircase)
 	card: [0, 4.1],
 	hit: 4.07,
 	extend: 0,
@@ -53,75 +54,248 @@ const camT = (cam: {x: number; y: number; zoom: number}) => `translate(960,540) 
 /** a decaying 2–3 frame camera shake */
 const shakeAt = (f: number, at: number, amp = 10) => (f >= at ? Math.exp(-(f - at) / 3.5) * amp : 0);
 
-// ---------------------------------------------------------------- 1. hook: the thumbed fore-edge
+// ---------------------------------------------------------------- 1. hook: the world's numbers pour into nine tubes
+
+/*
+ * Track accents used here (seconds, from the analysis of benford-bgm.mp3):
+ * 0.33 (1.0) the freeze · 2.37 (0.84) tube 1 brims · 2.88 (0.91) the 5% lands ·
+ * 3.90 (0.86) the title card's first stamp · 4.40 (1.0) its third · 8.47 (0.98) cut to 1881.
+ */
+const FREEZE = 10;
+const BRIM = 71;
+const LAND9 = 86;
+const QUOTA = [0, 63, 37, 26, 20, 17, 14, 12, 11, 10]; // 210 first digits in Benford's proportions
+const TUBE_H = 360;
+const TUBE_TOP = 480;
+const TUBE_BOT = TUBE_TOP + TUBE_H;
+const tubeX = (d: number) => 960 + (d - 5) * 150;
+const level = (d: number) => (QUOTA[d] / QUOTA[1]) * TUBE_H;
+
+/** every drop: its digit, launch frame, start point (field numbers start where they float) */
+const DROPS: {d: number; field: boolean}[] = (() => {
+	const all: number[] = [];
+	for (let d = 1; d <= 9; d++) for (let k = 0; k < QUOTA[d]; k++) all.push(d);
+	return all
+		.map((d, i) => ({d, r: random(`drop${i}`)}))
+		.sort((a, b) => a.r - b.r)
+		.map(({d}, i) => ({d, field: i < 70}));
+})();
+
+const UNITS = ['', ' km', ' 元', ' MB', ' 人', ' m', ' kg', '', ' 次', ' 吨'];
+/** the numbers floating in the dark: 70 far ones (their first digits will drop), 22 near ones that rush past */
+const FIELD = Array.from({length: 92}, (_, i) => {
+	const far = i < 70;
+	const d = far ? DROPS[i].d : 1 + Math.floor(random(`fd${i}`) * 9);
+	const n = 1 + Math.floor(random(`fn${i}`) * 6);
+	let rest = '';
+	for (let k = 0; k < n; k++) rest += Math.floor(random(`fr${i}${k}`) * 10);
+	const digits = `${d}${rest}`;
+	const dec = random(`fdec${i}`) > 0.75 && digits.length > 1;
+	const int = dec ? digits.slice(0, Math.max(1, digits.length - 2)) : digits;
+	const withCommas = int.replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+	const text = dec ? `${withCommas}.${digits.slice(int.length)}` : withCommas;
+	return {
+		x: (random(`fx${i}`) - 0.5) * (far ? 2600 : 1800),
+		y: (random(`fy${i}`) - 0.5) * (far ? 1300 : 1000) - (far ? 120 : 0),
+		z: far ? 1250 + random(`fz${i}`) * 2600 : 250 + random(`fz${i}`) * 850,
+		d,
+		tail: text.slice(1) + UNITS[Math.floor(random(`fu${i}`) * UNITS.length)],
+		far,
+	};
+});
+const V = 95; // camera speed (units/frame) until the freeze
+const camZ = (f: number) => (f < FREEZE ? V * f : V * FREEZE + 70 * (1 - Math.exp(-(f - FREEZE) / 3)));
+const FOCAL = 900;
+const project = (p: {x: number; y: number; z: number}, cz: number) => {
+	const zr = p.z - cz;
+	return {zr, sx: 960 + (p.x * FOCAL) / zr, sy: 500 + (p.y * FOCAL) / zr, k: FOCAL / zr};
+};
+/** launch frame and flight time of drop i */
+const launchAt = (i: number) => (DROPS[i].field ? 12 + i * 0.6 : 16 + (i - 70) * 0.26);
+const FLIGHT = 18;
+const arrivals = (() => {
+	const a: number[][] = Array.from({length: 10}, () => []);
+	DROPS.forEach((dr, i) => a[dr.d].push(launchAt(i) + FLIGHT));
+	return a.map((l) => l.sort((x, y) => x - y));
+})();
+const filled = (d: number, f: number) => {
+	const l = arrivals[d];
+	let n = 0;
+	while (n < l.length && l[n] <= f) n++;
+	return n;
+};
+
+const quad = (a: [number, number], c: [number, number], b: [number, number], t: number): [number, number] => [
+	(1 - t) * (1 - t) * a[0] + 2 * (1 - t) * t * c[0] + t * t * b[0],
+	(1 - t) * (1 - t) * a[1] + 2 * (1 - t) * t * c[1] + t * t * b[1],
+];
 
 const Hook: React.FC<SceneProps> = () => {
 	const f = useCurrentFrame();
 	const scene = useScene();
 	const end = scene.duration;
-	const diveAt = end - 22;
-	// already moving on frame 0: a slide along the fore-edge, front (black) to back (clean)
-	const slide = interpolate(f, [0, diveAt], [560, 3150], {extrapolateRight: 'clamp', easing: ease.out});
-	const dive = prog(f, diveAt, 22, ease.in);
-	const cam = lookAt(slide, 540, 1.22 + 6 * dive * dive);
-	// the thumb riffles the front pages; the camera outruns it
-	const tx = interpolate(f, [0, 64], [330, 1080], {extrapolateRight: 'clamp', easing: ease.inOut});
-	const lift = prog(f, 56, 14, ease.in);
+	const cz = camZ(f);
+	const hit = (at: number, decay = 4) => (f >= at ? Math.exp(-(f - at) / decay) : 0);
+	const punch = 0.035 * hit(FREEZE) + 0.025 * hit(BRIM) + 0.02 * hit(LAND9);
+	const shake = 9 * hit(FREEZE, 2.5) + 6 * hit(BRIM, 2.5);
+	const frozen = f >= FREEZE;
+	const dimRest = prog(f, FREEZE, 6) * 0.75 + prog(f, 40, 30) * 0.2;
+	const toCard = prog(f, end - 22, 22, ease.inOut); // glass dissolves, the field goes dark: nine gold bars remain
+	const tubesIn = (d: number) => spring({frame: f - FREEZE - 2 - d * 1.2, fps: 30, config: {damping: 14, stiffness: 140}});
 	return (
-		<FullFrame fadeIn={0} fadeOut={0} motes={0.6}>
-			<EdgeLight />
-			<rect width={W} height={H} fill="#140d08" />
-			<g transform={`translate(960,540) scale(${cam.zoom}) translate(${-slide},-540)`}>
-				<rect x={-800} y={-400} width={5200} height={1900} fill="#1e140c" />
-				<EdgeMacro x={0} y={190} w={4200} h={700} id="hook" />
-				{/* riffled leaves springing back behind the thumb */}
-				{Array.from({length: 7}, (_, k) => {
-					const ph = ((f * 0.9 + k * 0.6) % 4) / 4;
-					const x = tx + 26 + k * 9;
-					const bend = Math.sin(ph * Math.PI) * 26 * (1 - lift);
-					return <path key={k} d={`M${x},200 C${x + bend},420 ${x + bend},660 ${x},880`} stroke="#fff6e0" strokeWidth={2.2} fill="none" opacity={0.55 * Math.sin(ph * Math.PI) * (1 - lift)} />;
-				})}
-				{/* the thumb */}
-				<g transform={`translate(${tx},${620 + 260 * lift}) rotate(-12)`}>
-					<rect x={-70} y={-120} width={140} height={560} rx={70} fill={P.skin1} />
-					<rect x={-70} y={-120} width={140} height={560} rx={70} fill="#7a3a20" opacity={0.2} transform="translate(16,8)" />
-					<rect x={-46} y={-98} width={92} height={120} rx={44} fill="#f8e2cc" />
-					<path d="M-54,140 C-18,128 18,128 54,140" stroke="#b07a58" strokeWidth={5} fill="none" opacity={0.5} />
-					<rect x={-70} y={-120} width={140} height={560} rx={70} fill="url(#glow-lamp)" opacity={0.25} />
+		<FullFrame fadeIn={0} fadeOut={0} motes={0} scrim={0.55}>
+			<defs>
+				<linearGradient id="tube-gold" x1="0" y1="0" x2="0" y2="1">
+					<stop offset="0" stopColor="#fff1c4" />
+					<stop offset="0.25" stopColor="#f1c56d" />
+					<stop offset="1" stopColor="#a8742a" />
+				</linearGradient>
+				<radialGradient id="hook-void" cx="50%" cy="46%" r="70%">
+					<stop offset="0" stopColor="#1a1410" />
+					<stop offset="1" stopColor="#05060b" />
+				</radialGradient>
+			</defs>
+			<rect width={W} height={H} fill="url(#hook-void)" />
+			<g transform={`translate(${960 + shake * (random(`hx${f}`) - 0.5)},${540 + shake * (random(`hy${f}`) - 0.5)}) scale(${1 + punch}) translate(-960,-540)`}>
+				{/* the field of numbers, far to near */}
+				<g opacity={1 - toCard}>
+					{FIELD.map((p, i) => ({p, i, pr: project(p, cz)}))
+						.filter(({pr}) => pr.zr > 40 && pr.zr < 4200)
+						.sort((a, b) => b.pr.zr - a.pr.zr)
+						.map(({p, i, pr}) => {
+							const size = Math.min(260, 70 * pr.k);
+							const fog = Math.min(1, (4200 - pr.zr) / 1800) * Math.min(1, (pr.zr - 40) / 160);
+							const launched = p.far && f >= launchAt(i);
+							const prev = project(p, cz - (frozen ? 0 : V));
+							const streak = !frozen && pr.k > 0.5;
+							return (
+								<g key={i} opacity={fog}>
+									{streak ? <line x1={prev.sx} y1={prev.sy} x2={pr.sx} y2={pr.sy} stroke="#f3ede2" strokeWidth={size * 0.12} opacity={0.18} strokeLinecap="round" /> : null}
+									{/* the first digit (it leaves for its tube) */}
+									{!launched ? (
+										<text x={pr.sx} y={pr.sy} style={{fontFamily: font.latin, fontWeight: 700, fontSize: size, fill: frozen ? GOLD : '#f3ede2', ...LN}} filter={frozen ? 'url(#g-sm)' : undefined}>
+											{p.d}
+										</text>
+									) : null}
+									<text x={pr.sx + size * 0.5} y={pr.sy} style={{fontFamily: font.latin, fontWeight: 600, fontSize: size, fill: '#f3ede2', ...LN}} opacity={(1 - dimRest) * (launched ? 0.6 : 1)}>
+										{p.tail}
+									</text>
+								</g>
+							);
+						})}
 				</g>
+				{/* the nine tubes */}
+				{Array.from({length: 9}, (_, k) => {
+					const d = k + 1;
+					const s = tubesIn(k);
+					const x = tubeX(d);
+					const n = filled(d, f);
+					const lv = (n / QUOTA[1]) * TUBE_H;
+					const brim = d === 1 ? hit(BRIM, 6) : 0;
+					return (
+						<g key={d} transform={`translate(0,${(1 - s) * 520})`} opacity={Math.min(1, s * 1.5)}>
+							{lv > 0 ? (
+								<>
+									<rect x={x - 48} y={TUBE_BOT - lv - 10} width={96} height={lv + 20} fill={GOLD} opacity={0.18 + 0.4 * brim} filter="url(#g-lg)" />
+									<rect x={x - 42} y={TUBE_BOT - lv} width={84} height={lv} rx={6} fill="url(#tube-gold)" />
+									<rect x={x - 42} y={TUBE_BOT - lv} width={84} height={5} fill="#fff6dc" opacity={0.8} />
+								</>
+							) : null}
+							<g opacity={1 - toCard}>
+								<rect x={x - 48} y={TUBE_TOP - 20} width={96} height={TUBE_H + 26} rx={14} fill="#f3ede2" opacity={0.05} stroke="#f3ede2" strokeOpacity={0.4} strokeWidth={2.5} />
+								<rect x={x - 36} y={TUBE_TOP} width={8} height={TUBE_H - 20} rx={4} fill="#fff" opacity={0.18} />
+								<text x={x} y={TUBE_BOT + 56} textAnchor="middle" style={{fontFamily: font.latin, fontWeight: 700, fontSize: 46, fill: d === 1 ? GOLD : '#f3ede2', ...LN}} opacity={0.9}>
+									{d}
+								</text>
+							</g>
+							{brim > 0.02 ? <circle cx={x} cy={TUBE_TOP} r={60 + 160 * (1 - brim)} fill="none" stroke={GOLD} strokeWidth={4} opacity={brim} /> : null}
+						</g>
+					);
+				})}
+				{/* drops in flight */}
+				{DROPS.map((dr, i) => {
+					const t0 = launchAt(i);
+					const t = (f - t0) / FLIGHT;
+					if (t < 0 || t >= 1) return null;
+					let a: [number, number];
+					if (dr.field) {
+						const pr = project(FIELD[i], camZ(t0));
+						a = [pr.sx, pr.sy];
+					} else {
+						a = [120 + random(`rx${i}`) * 1680, -80];
+					}
+					const b: [number, number] = [tubeX(dr.d), TUBE_TOP - 10];
+					const c: [number, number] = [(a[0] + b[0]) / 2, Math.min(a[1], b[1]) - 220];
+					const e = t * t * (3 - 2 * t);
+					const [x, y] = quad(a, c, b, e);
+					const size = 56 - 18 * e;
+					return (
+						<text key={i} x={x} y={y} textAnchor="middle" style={{fontFamily: font.latin, fontWeight: 700, fontSize: size, fill: GOLD, ...LN}} opacity={dr.field ? 1 : 0.85} filter="url(#g-sm)">
+							{dr.d}
+						</text>
+					);
+				})}
+				{/* the two shares, landing on the 2.37 and 2.88 accents; they stay put */}
+				{f >= BRIM ? (
+					<text
+						x={tubeX(1)}
+						y={TUBE_TOP - 58}
+						textAnchor="middle"
+						transform={`translate(${tubeX(1)},${TUBE_TOP - 70}) scale(${1 + 0.6 * hit(BRIM, 3)}) translate(${-tubeX(1)},${-(TUBE_TOP - 70)})`}
+						style={{fontFamily: font.latin, fontWeight: 700, fontSize: 92, fill: GOLD, ...LN}}
+						filter="url(#g-sm)"
+						opacity={1 - toCard}
+					>
+						30%
+					</text>
+				) : null}
+				{f >= LAND9 ? (
+					<text
+						x={tubeX(9)}
+						y={TUBE_BOT - level(9) - 40}
+						textAnchor="middle"
+						transform={`translate(${tubeX(9)},${TUBE_BOT - level(9) - 50}) scale(${1 + 0.6 * hit(LAND9, 3)}) translate(${-tubeX(9)},${-(TUBE_BOT - level(9) - 50)})`}
+						style={{fontFamily: font.latin, fontWeight: 700, fontSize: 64, fill: '#f3ede2', ...LN}}
+						opacity={1 - toCard}
+					>
+						5%
+					</text>
+				) : null}
 			</g>
-			{/* the dive goes into the pages: they fill the frame, paper-bright */}
-			<rect width={W} height={H} fill="#e9dcc0" opacity={Math.max(0, (dive - 0.55) / 0.45)} />
+			{/* the freeze: a flash and a ring of light */}
+			<rect width={W} height={H} fill="url(#glow-lamp)" opacity={0.6 * hit(FREEZE, 3)} />
 		</FullFrame>
 	);
 };
 
-// ---------------------------------------------------------------- the title card, printed into the log table
+// ---------------------------------------------------------------- the title card, grown out of the nine bars
 
 /**
- * The hook dives into the pages; the card opens on a page of the same book (the
- * paper fills the frame) and pulls back to the open log table under the lamp. The
- * lamp turns down, the logarithms fade, and 《第一位数字》 is pressed into the page
- * like 1881 metal type, one character per half-beat, then gold is poured in.
+ * The hook ends on nine gold bars (the tubes' contents, Benford's staircase). The
+ * card keeps them: they gather into the episode motif under the title while
+ * 《第一位数字》 is struck in, one character per half-beat from the 3.90 accent
+ * (the third lands on 4.40, the track's strongest), and gold pours in on 5.93.
  */
+const motifBar = (d: number) => ({x: 960 + (d - 5) * 54 - 20, w: 40, bot: 712, h: level(d) * 0.42});
+const tubeBar = (d: number) => ({x: tubeX(d) - 42, w: 84, bot: TUBE_BOT, h: level(d)});
+
 const BenfordTitle: React.FC<{dur: number}> = ({dur}) => {
 	const f = useCurrentFrame();
 	const {fps} = useVideoConfig();
 	const tempo = useTimeline().music.tempo;
 	const half = (60 / tempo / 2) * fps;
-	const pull = prog(f, 0, 16, ease.out);
-	const zoom = 3.2 + (1 - 3.2) * pull;
-	const dusk = prog(f, 12, 40, ease.inOut); // the lamp turns down; the page goes deep brown
+	const gather = prog(f, 0, 12, ease.out);
 	const chars = [...'《第一位数字》'];
-	const stampAt = (i: number) => 18 + i * half;
+	const stampAt = (i: number) => i * half;
 	const last = stampAt(chars.length - 1);
-	const kick = chars.reduce((k, _, i) => k + (f >= stampAt(i) ? Math.exp(-(f - stampAt(i)) / 2.5) : 0), 0);
-	const gild = prog(f, last + 6, 20, ease.inOut);
-	const out = prog(f, dur - 14, 14, ease.inOut);
+	const kick = chars.reduce((k, _, i) => k + (f >= stampAt(i) ? (i === 2 ? 1.8 : 1) * Math.exp(-(f - stampAt(i)) / 2.5) : 0), 0);
+	const gildAt = Math.round(2 * (60 / tempo) * fps * 2 - 0); // 5.93 s = 4 beats after 3.90
+	const gild = prog(f, gildAt, 14, ease.inOut);
+	const glint = prog(f, gildAt + 8, 16, ease.inOut);
+	const out = prog(f, dur - 5, 5, ease.in);
 	const size = 150;
-	const step = size * 1.0;
-	const ty = 470;
-	const page = (o: number) => `rgba(${Math.round(233 - 190 * o)},${Math.round(220 - 186 * o)},${Math.round(192 - 172 * o)},1)`;
+	const step = size;
+	const ty = 480;
 	return (
 		<AbsoluteFill style={{opacity: 1 - out}}>
 			<svg width={W} height={H} viewBox={`0 0 ${W} ${H}`} style={LN}>
@@ -133,43 +307,66 @@ const BenfordTitle: React.FC<{dur: number}> = ({dur}) => {
 						<stop offset="0.45" stopColor="#f1c56d" />
 						<stop offset="1" stopColor="#a8742a" />
 					</linearGradient>
+					<linearGradient id="bt-bar" x1="0" y1="0" x2="0" y2="1">
+						<stop offset="0" stopColor="#fff1c4" />
+						<stop offset="0.25" stopColor="#f1c56d" />
+						<stop offset="1" stopColor="#a8742a" />
+					</linearGradient>
 					<clipPath id="bt-gild">
 						<rect x={0} y={0} width={W * gild} height={H} />
 					</clipPath>
-					<radialGradient id="bt-pool" cx="50%" cy="42%" r="60%">
-						<stop offset="0" stopColor="#ffcf8a" stopOpacity="0.22" />
-						<stop offset="1" stopColor="#000" stopOpacity="0" />
-					</radialGradient>
+					<linearGradient id="bt-glint" x1="0" y1="0" x2="1" y2="0">
+						<stop offset="0" stopColor="#fff" stopOpacity="0" />
+						<stop offset="0.5" stopColor="#fff" stopOpacity="0.85" />
+						<stop offset="1" stopColor="#fff" stopOpacity="0" />
+					</linearGradient>
+					<clipPath id="bt-chars">
+						{chars.map((c, i) => (
+							<text key={i} x={960 + (i - (chars.length - 1) / 2) * step} y={ty} textAnchor="middle" style={{fontFamily: font.serif, fontWeight: 900, fontSize: size}}>
+								{c}
+							</text>
+						))}
+					</clipPath>
 				</defs>
 				<rect width={W} height={H} fill={JUNO.colors.night} />
-				<g transform={`translate(${960 + kick * 3 * (random(`kx${f}`) - 0.5)},${540 + kick * 3 * (random(`ky${f}`) - 0.5)}) scale(${zoom}) translate(-960,-540)`}>
-					{/* the open book: two pages and the gutter */}
-					<path d="M150,110 L950,96 L950,990 L140,1004 Z" fill={page(dusk)} />
-					<path d="M970,96 L1770,110 L1780,1004 L970,990 Z" fill={page(dusk * 0.96)} />
-					<rect x={944} y={92} width={32} height={902} fill="#000" opacity={0.25} />
-					<LogRows x={200} y={190} n0={100} rows={21} size={30} gap={39} fill={dusk > 0.5 ? '#6a5236' : '#3a2a1a'} o={0.75 - 0.55 * dusk} />
-					<LogRows x={1020} y={190} n0={121} rows={21} size={30} gap={39} fill={dusk > 0.5 ? '#6a5236' : '#3a2a1a'} o={0.75 - 0.55 * dusk} />
-				</g>
-				<rect width={W} height={H} fill="url(#bt-pool)" />
-				{/* kicker, printed small caps above the title */}
-				<text x={960} y={300} textAnchor="middle" opacity={prog(f, 14, 14) * 0.9} style={{fontFamily: font.latin, fontWeight: 700, fontSize: 28, letterSpacing: '0.42em', fill: '#c8913a'}}>
-					{EPISODE.kicker}
-				</text>
-				{/* the title, pressed character by character */}
-				<g transform={`translate(${kick * 2 * (random(`tx${f}`) - 0.5)},0)`}>
+				<ellipse cx={960} cy={540} rx={900} ry={520} fill="url(#glow-lamp)" opacity={0.16 + 0.04 * Math.sin(f / 13)} />
+				<Motes f={f * 1.6} n={60} seed="tc" o={0.9} />
+				<g transform={`translate(${kick * 2.5 * (random(`kx${f}`) - 0.5)},${kick * 2.5 * (random(`ky${f}`) - 0.5)})`}>
+					{/* the nine bars gather into the motif */}
+					{Array.from({length: 9}, (_, k) => {
+						const d = k + 1;
+						const a = tubeBar(d);
+						const b = motifBar(d);
+						const x = a.x + (b.x - a.x) * gather;
+						const w = a.w + (b.w - a.w) * gather;
+						const bot = a.bot + (b.bot - a.bot) * gather;
+						const h = a.h + (b.h - a.h) * gather;
+						return (
+							<g key={d}>
+								<rect x={x - 4} y={bot - h - 6} width={w + 8} height={h + 12} fill={GOLD} opacity={0.16} filter="url(#g-lg)" />
+								<rect x={x} y={bot - h} width={w} height={h} rx={4 + 2 * (1 - gather)} fill="url(#bt-bar)" />
+							</g>
+						);
+					})}
+					<line x1={960 - 4.5 * 54} y1={720} x2={960 + 4.5 * 54} y2={720} stroke={GOLD} strokeWidth={2} opacity={0.5 * gather} />
+					{(() => {
+						const g2 = prog(f, Math.round((6.95 - 3.9) * fps), 18, ease.inOut);
+						return g2 > 0 && g2 < 1 ? <rect x={960 - 300 + 600 * g2} y={540} width={60} height={190} fill="url(#bt-glint)" opacity={0.9} transform={`skewX(-18)`} /> : null;
+					})()}
+					<text x={960} y={300} textAnchor="middle" opacity={prog(f, 4, 14) * 0.9} style={{fontFamily: font.latin, fontWeight: 700, fontSize: 28, letterSpacing: '0.42em', fill: '#c8913a'}}>
+						{EPISODE.kicker}
+					</text>
+					{/* struck characters: dark bronze relief, then gold */}
 					{chars.map((c, i) => {
 						if (f < stampAt(i)) return null;
-						const s = spring({frame: f - stampAt(i), fps, config: {damping: 14, stiffness: 320}});
+						const s = spring({frame: f - stampAt(i), fps, config: {damping: 13, stiffness: 340}});
 						const x = 960 + (i - (chars.length - 1) / 2) * step;
 						return (
-							<g key={i} transform={`translate(${x},${ty}) scale(${1 + 0.45 * (1 - s)})`} opacity={Math.min(1, s * 2)}>
-								<text x={2.5} y={3.5} textAnchor="middle" style={{fontFamily: font.serif, fontWeight: 900, fontSize: size, fill: '#0e0904'}}>
+							<g key={i} transform={`translate(${x},${ty}) scale(${1 + 0.55 * (1 - s)})`} opacity={Math.min(1, s * 2.2)}>
+								<text x={0} y={4} textAnchor="middle" style={{fontFamily: font.serif, fontWeight: 900, fontSize: size, fill: '#000'}} opacity={0.6}>
 									{c}
 								</text>
-								<text x={-2} y={-2} textAnchor="middle" style={{fontFamily: font.serif, fontWeight: 900, fontSize: size, fill: '#f6dfa0', opacity: 0.28}}>
-									{c}
-								</text>
-								<text textAnchor="middle" style={{fontFamily: font.serif, fontWeight: 900, fontSize: size, fill: '#3a2814'}}>
+								<text textAnchor="middle" style={{fontFamily: font.serif, fontWeight: 900, fontSize: size, fill: '#4a3418', stroke: '#c8913a', strokeWidth: 1.5, paintOrder: 'stroke'}}>
 									{c}
 								</text>
 							</g>
@@ -177,44 +374,120 @@ const BenfordTitle: React.FC<{dur: number}> = ({dur}) => {
 					})}
 					{chars.map((_, i) => {
 						const k = f - stampAt(i);
-						if (k < 0 || k > 14) return null;
-						return <circle key={`d${i}`} cx={960 + (i - (chars.length - 1) / 2) * step} cy={ty - 50} r={30 + k * 4} fill="#f6dfa0" opacity={0.22 * (1 - k / 14)} />;
+						if (k < 0 || k > 12) return null;
+						const x = 960 + (i - (chars.length - 1) / 2) * step;
+						return <circle key={`d${i}`} cx={x} cy={ty - 52} r={40 + k * (i === 2 ? 9 : 5)} fill="none" stroke={GOLD} strokeWidth={3} opacity={(i === 2 ? 0.7 : 0.35) * (1 - k / 12)} />;
 					})}
-					<g clipPath="url(#bt-gild)" filter="url(#blur-sm)" opacity={0.7}>
-						{chars.map((c, i) => (
-							<text key={i} x={960 + (i - (chars.length - 1) / 2) * step} y={ty} textAnchor="middle" style={{fontFamily: font.serif, fontWeight: 900, fontSize: size, fill: GOLD}}>
-								{c}
-							</text>
-						))}
-					</g>
 					<g clipPath="url(#bt-gild)">
+						<g filter="url(#blur-sm)" opacity={0.75}>
+							{chars.map((c, i) => (
+								<text key={i} x={960 + (i - (chars.length - 1) / 2) * step} y={ty} textAnchor="middle" style={{fontFamily: font.serif, fontWeight: 900, fontSize: size, fill: GOLD}}>
+									{c}
+								</text>
+							))}
+						</g>
 						{chars.map((c, i) => (
 							<text key={i} x={960 + (i - (chars.length - 1) / 2) * step} y={ty} textAnchor="middle" style={{fontFamily: font.serif, fontWeight: 900, fontSize: size, fill: 'url(#bt-gold)'}}>
 								{c}
 							</text>
 						))}
 					</g>
+					{/* one glint across the gold, once */}
+					{glint > 0 && glint < 1 ? (
+						<g clipPath="url(#bt-chars)">
+							<rect x={-300 + 2500 * glint} y={300} width={220} height={240} fill="url(#bt-glint)" transform={`skewX(-20)`} />
+						</g>
+					) : null}
 				</g>
-				<g transform="translate(960,600)">
-					<BookMotif id="title" p={prog(f, last + 2, 22, ease.out)} />
-				</g>
-				<text x={960} y={746} textAnchor="middle" opacity={prog(f, last + 10, 14)} style={{fontFamily: font.serif, fontWeight: 600, fontSize: 46, fill: color.text, letterSpacing: '0.1em'}}>
+				<text x={960} y={800} textAnchor="middle" opacity={prog(f, gildAt + 4, 12)} style={{fontFamily: font.serif, fontWeight: 600, fontSize: 46, fill: color.text, letterSpacing: '0.1em'}}>
 					{EPISODE.tagline}
 				</text>
-				<text x={960} y={796} textAnchor="middle" opacity={prog(f, last + 16, 14)} style={{fontFamily: font.latinItalic, fontStyle: 'italic', fontSize: 32, fill: 'rgba(243,237,226,0.6)'}}>
+				<text x={960} y={850} textAnchor="middle" opacity={prog(f, gildAt + 10, 12)} style={{fontFamily: font.latinItalic, fontStyle: 'italic', fontSize: 32, fill: 'rgba(243,237,226,0.6)'}}>
 					{EPISODE.taglineEn}
 				</text>
-				<text x={960} y={872} textAnchor="middle" opacity={prog(f, last + 22, 16)} style={{fontFamily: font.sans, fontSize: 22, letterSpacing: '0.42em', fill: 'rgba(241,197,109,0.78)'}}>
+				<text x={960} y={922} textAnchor="middle" opacity={prog(f, gildAt + 16, 14)} style={{fontFamily: font.sans, fontSize: 22, letterSpacing: '0.42em', fill: 'rgba(241,197,109,0.78)'}}>
 					{`— ${JUNO.credit} · ${JUNO.series} —`}
 				</text>
-				{/* the opening frames are paper-bright, matching the dive */}
-				<rect width={W} height={H} fill="#e9dcc0" opacity={1 - prog(f, 0, 8)} />
 			</svg>
 		</AbsoluteFill>
 	);
 };
 
-// ---------------------------------------------------------------- 2. office: Washington, 1881
+// ---------------------------------------------------------------- 2. office: Washington, 1881 (exterior)
+
+/** a hansom cab crossing the snowy street: horse at a trot, wheels turning, a lamp on the cab */
+const Cab: React.FC<{f: number}> = ({f}) => {
+	const trot = Math.sin(f * 0.55);
+	return (
+		<g>
+			<ellipse cx={20} cy={8} rx={260} ry={14} fill="#000" opacity={0.3} />
+			{/* horse */}
+			<g transform={`translate(170,${-6 * Math.abs(trot)})`}>
+				<ellipse cx={0} cy={-120} rx={78} ry={36} fill="#0d0f14" />
+				<path d="M60,-140 L110,-200 L132,-196 L120,-176 L84,-120 Z" fill="#0d0f14" />
+				{[-50, -30, 40, 60].map((lx, i) => (
+					<line key={i} x1={lx} y1={-96} x2={lx + 18 * Math.sin(f * 0.55 + (i % 2 ? Math.PI : 0))} y2={-10} stroke="#0d0f14" strokeWidth={11} strokeLinecap="round" />
+				))}
+				<path d="M-74,-128 C-100,-110 -104,-80 -96,-60" stroke="#0d0f14" strokeWidth={8} fill="none" />
+			</g>
+			{/* cab */}
+			<path d="M-200,-190 L-60,-190 L-40,-60 L-210,-60 Z" fill="#11141b" />
+			<rect x={-196} y={-170} width={60} height={60} fill="#ffcf8a" opacity={0.18} />
+			<line x1={-40} y1={-100} x2={110} y2={-110} stroke="#11141b" strokeWidth={6} />
+			{[-150, -40].map((wx, i) => (
+				<g key={i} transform={`translate(${wx},-48) rotate(${f * 9})`}>
+					<circle r={i ? 30 : 58} fill="none" stroke="#11141b" strokeWidth={7} />
+					{Array.from({length: 8}, (_, k) => (
+						<line key={k} x1={0} y1={0} x2={(i ? 30 : 58) * Math.cos((k * Math.PI) / 4)} y2={(i ? 30 : 58) * Math.sin((k * Math.PI) / 4)} stroke="#11141b" strokeWidth={3} />
+					))}
+				</g>
+			))}
+			<circle cx={-56} cy={-176} r={9} fill="#ffd88a" />
+			<circle cx={-56} cy={-176} r={70} fill="url(#glow-lamp)" opacity={0.9} />
+		</g>
+	);
+};
+
+const Office: React.FC<SceneProps> = () => {
+	const f = useCurrentFrame();
+	const scene = useScene();
+	const titleLen = Math.round((8.47 - 3.9) * 30); // the card runs to the 8.47 accent; hard cut to 1881
+	const end = scene.duration;
+	const g = f - titleLen;
+	// crane down out of the snowing sky onto the building, then a slow push to the one lit window and a dive through it on the 16.6 downbeat
+	const crane = prog(g, 0, 70, ease.out);
+	const push = prog(g, 60, end - titleLen - 90, ease.inOut);
+	const dive = prog(f, end - 26, 26, ease.in);
+	const cam = camMix(camMix(lookAt(960, 120, 1.25), lookAt(960, 560, 1.0), crane), lookAt(WINDOW_LIT[0], WINDOW_LIT[1] + 30, 1.6), push);
+	const camD = camMix(cam, lookAt(WINDOW_LIT[0] + 32, WINDOW_LIT[1] + 65, 9), dive * dive);
+	const cabX = interpolate(g, [10, 260], [-600, 2500], {extrapolateLeft: 'clamp', extrapolateRight: 'clamp'});
+	return (
+		<FullFrame
+			fadeIn={0}
+			fadeOut={0}
+			motes={0}
+			overlay={
+				<Sequence durationInFrames={titleLen} layout="none">
+					<BenfordTitle dur={titleLen} />
+				</Sequence>
+			}
+		>
+			<g opacity={f < titleLen - 5 ? 0 : 1}>
+				<Exterior1881 f={f + 400} cam={camD} />
+				<Layer cam={camD} depth={1.15}>
+					<g transform={`translate(${cabX},860)`}>
+						<Cab f={g} />
+					</g>
+				</Layer>
+				<Snow f={f + 400} n={70} seed="fg" size={2.2} speed={1.6} o={0.8 * (1 - dive)} />
+				<Snow f={f + 400} n={120} seed="mg" size={1} speed={1} o={0.7} />
+				<rect width={W} height={H} fill="#ffcf7a" opacity={Math.max(0, (dive - 0.6) / 0.4) * 0.9} />
+			</g>
+		</FullFrame>
+	);
+};
+
+// ---------------------------------------------------------------- 3. study: no calculators; logarithms
 
 /** the sheet Newcomb is filling with figures, on the desk (world coords) */
 const Ledger: React.FC<{rows: number}> = ({rows}) => (
@@ -228,65 +501,87 @@ const Ledger: React.FC<{rows: number}> = ({rows}) => (
 	</g>
 );
 
-const Office: React.FC<SceneProps> = () => {
+/** close-up of the working sheet: multiplications racing down the page */
+const Workings: React.FC<{g: number; len: number}> = ({g, len}) => {
+	const rows = Math.min(40, Math.floor(g / 2.2));
+	const scroll = Math.max(0, rows - 11) * 60;
+	const frac = (g % 2.2) / 2.2;
+	return (
+		<g>
+			<rect width={W} height={H} fill="#3a2414" />
+			<g transform={`rotate(-3,960,540) translate(0,${-scroll})`}>
+				<rect x={360} y={60} width={1200} height={2600} fill="#efe6d0" />
+				{Array.from({length: 48}, (_, i) => (
+					<line key={i} x1={360} y1={100 + i * 52} x2={1560} y2={100 + i * 52} stroke="#9cb0c8" strokeWidth={1} opacity={0.35} />
+				))}
+				{Array.from({length: rows}, (_, r) => {
+					const a = (1 + random(`wa${r}`) * 8.99).toFixed(4);
+					const b = (1 + random(`wb${r}`) * 8.99).toFixed(4);
+					const c = (Number(a) * Number(b)).toFixed(4);
+					return (
+						<text key={r} x={560} y={160 + r * 60} style={{fontFamily: font.latinItalic, fontStyle: 'italic', fontWeight: 600, fontSize: 46, fill: '#2a2a30', ...LN}} opacity={0.88}>
+							{`${a}  ×  ${b}  =  ${c}`}
+						</text>
+					);
+				})}
+			</g>
+			<g transform={`rotate(-3,960,540) translate(${560 + 720 * frac},${160 + rows * 60 - scroll - 6}) rotate(152)`}>
+				<rect x={-5} y={-170} width={10} height={170} fill="#1a1410" />
+				<path d="M-5,0 L5,0 L0,20 Z" fill="#8a8a90" />
+				<path d="M-40,-170 C-50,-120 -10,-80 30,-90 C70,-100 80,-160 60,-190 L-20,-210 Z" fill={P.skin1} />
+				<path d="M-30,-200 L70,-190 L90,-460 L-50,-460 Z" fill="#262a33" />
+				<rect x={-30} y={-216} width={100} height={20} fill="#e9e4da" transform="rotate(4)" />
+			</g>
+			<rect width={W} height={H} fill="url(#vignette-hard)" opacity={0.5} />
+			<rect width={W} height={H} fill="#000" opacity={0.0 * len} />
+		</g>
+	);
+};
+
+const Study: React.FC<SceneProps> = () => {
 	const f = useCurrentFrame();
-	const {fps} = useVideoConfig();
 	const cue = useCue();
 	const scene = useScene();
-	const titleLen = cue(0) - 6;
-	const cutIn = cue(1) - 4; // through the window into the room
-	if (f < cutIn) {
-		// exterior: a slow push on the one lit window, then a dive through it
-		const push = prog(f, titleLen - 20, cutIn - titleLen - 6, ease.inOut);
-		const dive = prog(f, cutIn - 22, 22, ease.in);
-		const cam = camMix(camMix(lookAt(960, 560, 1.0), lookAt(WINDOW_LIT[0], WINDOW_LIT[1] + 30, 1.55), push), lookAt(WINDOW_LIT[0] + 32, WINDOW_LIT[1] + 65, 9), dive * dive);
+	const len = scene.duration;
+	const c1 = cue(1);
+	const c2 = cue(2);
+	const c3 = cue(3);
+	const c4 = cue(4);
+	// insert: "a planet is thousands of multiplications"
+	if (f >= c3 - 2 && f < c4 - 2) {
 		return (
-			<FullFrame
-				fadeIn={0}
-				fadeOut={0}
-				motes={0}
-				overlay={
-					<Sequence durationInFrames={titleLen + 14} layout="none">
-						<BenfordTitle dur={titleLen + 14} />
-					</Sequence>
-				}
-			>
-				<g opacity={f < 8 ? 0 : 1}>
-					<Exterior1881 f={f + 400} cam={cam} />
-					<Snow f={f + 400} n={70} seed="fg" size={2.2} speed={1.6} o={0.8 * (1 - dive)} />
-					<Snow f={f + 400} n={120} seed="mg" size={1} speed={1} o={0.7} />
-					<rect width={W} height={H} fill="#ffcf7a" opacity={Math.max(0, (dive - 0.6) / 0.4) * 0.9} />
+			<FullFrame fadeIn={0} fadeOut={0} motes={0.6}>
+				<g transform={`translate(960,540) scale(${1.0 + 0.05 * prog(f, c3, c4 - c3, ease.inOut)}) translate(-960,-540)`}>
+					<Workings g={f - c3 + 2} len={c4 - c3} />
 				</g>
 			</FullFrame>
 		);
 	}
-	// interior: out of the lamp's glow into Newcomb's study
-	const g = f - cutIn;
-	const c1 = cue(1) - cutIn;
-	const c2 = cue(2) - cutIn;
-	const len = scene.duration - cutIn;
+	const g = f;
 	const LAMP: [number, number] = [1400, 760];
 	const reveal = prog(g, 0, 46, ease.out);
-	const toBook = prog(g, c2 + 6, len - c2 - 10, ease.inOut);
-	const cam = camMix(camMix(lookAt(LAMP[0], LAMP[1] - 130, 2.6), lookAt(900, 560, 1.04), reveal), lookAt(1040, 680, 1.9), toBook);
-	// Newcomb: writing; glances up at the dome; then reaches for the book, pulls it over and opens it
+	const toBook = prog(g, c4 + 4, len - c4 - 8, ease.inOut);
+	const cam = camMix(camMix(lookAt(LAMP[0], LAMP[1] - 130, 2.6), lookAt(900, 560, 1.04), reveal), lookAt(1020, 690, 1.65), toBook);
 	const NX = 760;
 	const NY = 1130;
 	const S = 2.0;
 	const fig = (wx: number, wy: number): [number, number] => [(wx - NX) / S, (wy - NY) / S];
-	const lookUp = prog(g, c1 + 40, 14, ease.inOut) * (1 - prog(g, c1 + 84, 16, ease.inOut));
-	const pose: Pose = {...POSES.write, head: 22 - 30 * lookUp, lean: 16 - 6 * lookUp};
-	const writing = g < c2 + 4 && lookUp < 0.5;
-	const penX = 900 + 70 * ((g * 0.035) % 1) + 4 * Math.sin(g * 1.3);
-	const penY = 730 + 4 * Math.cos(g * 0.9) + 10 * Math.floor((g * 0.035) % 3);
-	const reachT = prog(g, c2 + 4, 16, ease.inOut);
-	const pullT = prog(g, c2 + 24, 22, ease.inOut);
-	const openT = prog(g, c2 + 50, 22, ease.inOut);
-	const flickT = prog(g, c2 + 74, 40, (x) => x);
+	// writes; at "要算行星的位置" glances up to the window (a planet shines over the dome); back to work
+	const lookUp = prog(g, c2 + 10, 14, ease.inOut) * (1 - prog(g, c3 - 22, 14, ease.inOut));
+	const pose: Pose = {...POSES.write, head: 22 - 32 * lookUp, lean: 16 - 6 * lookUp};
+	const writing = g < c4 && lookUp < 0.5;
+	const speed = g > c1 ? 0.06 : 0.035;
+	const penX = 900 + 70 * ((g * speed) % 1) + 4 * Math.sin(g * 1.3);
+	const penY = 730 + 4 * Math.cos(g * 0.9) + 10 * Math.floor((g * speed) % 3);
+	const reachT = prog(g, c4, 14, ease.inOut);
+	const pullT = prog(g, c4 + 16, 18, ease.inOut);
+	const openT = prog(g, c4 + 38, 20, ease.inOut);
+	const flickT = prog(g, c4 + 60, 36, (x) => x);
 	const bookX = 1080 - 110 * pullT;
-	const grip: [number, number] = [bookX + 230 - 260 * openT + 120 * prog(g, c2 + 74, 10), 725 - 70 * Math.sin(openT * Math.PI)];
+	const grip: [number, number] = [bookX + 230 - 260 * openT + 120 * prog(g, c4 + 60, 10), 725 - 70 * Math.sin(openT * Math.PI)];
 	const nearHand = writing ? fig(penX, penY) : reachT < 1 ? fig(penX + (grip[0] - penX) * reachT, penY + (grip[1] - penY) * reachT) : fig(grip[0], grip[1]);
 	const pen = writing || reachT === 0;
+	const planet = prog(g, c2 + 6, 20);
 	return (
 		<FullFrame fadeIn={0} fadeOut={0} motes={1}>
 			<Study1881
@@ -306,15 +601,13 @@ const Office: React.FC<SceneProps> = () => {
 								holdNear={pen ? <rect x={-2} y={-34} width={4} height={40} rx={2} fill="#1a1410" transform="rotate(-30)" /> : undefined}
 							/>
 						</g>
-						{/* the desk top is drawn in front of him: re-lay the edge so his legs stay hidden */}
 						<rect x={-300} y={760} width={2520} height={40} fill="#4a2e1a" />
 						<rect x={-300} y={760} width={2520} height={6} fill="#7a5232" />
 						<rect x={-300} y={800} width={2520} height={600} fill="#2c1a0e" />
 						{Array.from({length: 6}, (_, i) => (
 							<rect key={i} x={-200 + i * 420} y={830} width={360} height={200} fill="none" stroke="#1a0e06" strokeWidth={4} />
 						))}
-						<Ledger rows={Math.min(8, 1 + g * 0.035)} />
-						{/* inkwell, stacked ledgers */}
+						<Ledger rows={Math.min(8, 1 + g * 0.04)} />
 						<g transform="translate(620,760)">
 							{Array.from({length: 4}, (_, i) => (
 								<rect key={i} x={-120 + i * 4} y={-18 - i * 16} width={200} height={16} fill={['#3a2418', '#2a2c34', '#4a2a22', '#24302a'][i]} />
@@ -333,8 +626,14 @@ const Office: React.FC<SceneProps> = () => {
 					</>
 				}
 				deskY={760}
+				extra={
+					// a bright planet over the dome, seen through the window (wall layer)
+					<g opacity={planet}>
+						<circle cx={1480} cy={240} r={7} fill="#fff4d6" />
+						<circle cx={1480} cy={240} r={40} fill="url(#glow-lamp)" opacity={0.7} />
+					</g>
+				}
 			/>
-			{/* the lamp glow we came in through */}
 			<rect width={W} height={H} fill="#ffcf7a" opacity={0.9 * (1 - prog(g, 0, 12, ease.out))} />
 		</FullFrame>
 	);
@@ -373,15 +672,16 @@ const Tabs: React.FC<SceneProps> = () => {
 	const c2 = cue(2) - cut;
 	const len = scene.duration - cut;
 	const push = prog(g, 0, len, ease.inOut);
-	const digitAt = (i: number) => 6 + i * 5;
+	const step9 = Math.max(5, Math.min(12, (c2 - 30) / 9));
+	const digitAt = (i: number) => 6 + i * step9;
 	const barAt = (i: number) => c2 + 8 + i * 4;
 	const bracketAt = c2 + 52;
 	// the pencil follows whatever is being drawn
 	let hx = 520;
 	let hy = 650;
 	if (g < c2) {
-		const i = Math.min(8, Math.max(0, Math.floor((g - 6) / 5)));
-		hx = 560 + i * 100 + 30 * prog(g, digitAt(i), 5);
+		const i = Math.min(8, Math.max(0, Math.floor((g - 6) / step9)));
+		hx = 560 + i * 100 + 30 * prog(g, digitAt(i), 5) + (g > digitAt(8) + 5 ? 6 * Math.sin(g / 4) : 0);
 		hy = 650;
 	} else if (g < bracketAt) {
 		const i = Math.min(8, Math.max(0, Math.floor((g - c2 - 8) / 4)));
@@ -395,7 +695,7 @@ const Tabs: React.FC<SceneProps> = () => {
 		const back = prog(g, bracketAt + 26, 14, ease.inOut);
 		const beatF = (60 / tempo) * fps;
 		const k = g - (bracketAt + 42);
-		const tap = k > 0 && k < beatF * 2 ? Math.max(0, Math.sin((k / beatF) * Math.PI * 2 - Math.PI / 2) * 0.5 + 0.5) : 0;
+		const tap = k > 0 ? Math.max(0, Math.sin((k / beatF) * Math.PI * 2 - Math.PI / 2) * 0.5 + 0.5) : 0;
 		hx = 1420 + (590 - 1420) * back;
 		hy = 360 + (470 - 360) * back - 26 * tap;
 	}
@@ -590,4 +890,4 @@ const Twist: React.FC<SceneProps> = () => {
 	);
 };
 
-export const scenes: SceneMap = {Hook, Office, Tabs, Twist};
+export const scenes: SceneMap = {Hook, Office, Study, Tabs, Twist};
