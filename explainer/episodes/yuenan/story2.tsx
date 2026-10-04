@@ -212,7 +212,7 @@ const Setup: React.FC<SceneProps> = () => {
 	const talk = prog(f, S3 + 20, 10);
 	const reels = f >= S3 + 20 ? 1 : 0;
 	// the experimenter writes the three groups at the board, later our dashed guess
-	const atBoard = f >= S2 - 20 && f < S3 + 4 ? 1 : f >= S5 - 10 ? 1 : 0;
+	const atBoard = f >= S2 - 2 && f < S3 + 4 ? 1 : f >= S5 ? 1 : 0;
 	const write = (at: number, k = 1) => Math.min(1, Math.max(0, (f - at) / (10 * k)));
 	const guess = (i: number) => prog(f, cue(4) + 6 + i * 12, 16, ease.out);
 	const chalkArm: Pose = {...EXP_POSE.write, armNear: [118 + 14 * Math.sin(f / 3), 36 + 8 * Math.cos(f / 4)]};
@@ -253,7 +253,7 @@ const Setup: React.FC<SceneProps> = () => {
 				}
 				wall={
 					atBoard ? (
-						<Person who="experimenter59" f={f} x={f >= S5 ? 760 : 740} y={760} s={0.95} pose={f - (f >= S5 ? S5 : S2) < 40 ? chalkArm : EXP_POSE.look} hand="pinch" hold={<Chalk />} flip rim="warm" still={0.4} />
+						<Person who="experimenter59" f={f} x={f >= S5 ? 120 : 110} y={760} s={0.95} pose={f - (f >= S5 ? S5 : S2) < 40 ? chalkArm : EXP_POSE.look} hand="pinch" hold={<Chalk />} rim="warm" still={0.4} />
 					) : null
 				}
 				behind={
