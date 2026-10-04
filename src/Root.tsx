@@ -15,6 +15,8 @@ import { Ep5Draft, Ep5Film, EP5_FRAMES } from './v4/Ep5';
 import { Ep1 } from './ep1/Ep1';
 import { Ep6Film, EP6_FRAMES } from './v6/Film6';
 import { Ep7Film, EP7_FRAMES } from './v7/Film7';
+import { Ep8Film, EP8_FRAMES } from './v8/Film8';
+import { CoverEp7 } from './v7/CoverEp7';
 import '@fontsource/cormorant-garamond/400-italic.css';
 import '@fontsource/cormorant-garamond/500.css';
 import '@fontsource/cormorant-garamond/600.css';
@@ -54,6 +56,9 @@ export const Root: React.FC = () => (
     <Composition id="VCompareL" component={CompareL} durationInFrames={1} fps={FPS} width={2380} height={2150} />
     <Composition id="VCompare" component={Compare} durationInFrames={1} fps={FPS} width={2380} height={2150} />
     <Composition id="BoardChars" component={CharSheet} durationInFrames={1} fps={FPS} width={2400} height={1400} />
+    <Composition id="Ep8" component={Ep8Film} durationInFrames={EP8_FRAMES} fps={30} width={1920} height={1080} />
+    <Composition id="CoverEp7Wide" component={CoverEp7} durationInFrames={1} fps={30} width={1440} height={1080} defaultProps={{ w: 1440, h: 1080 }} />
+    <Composition id="CoverEp7Tall" component={CoverEp7} durationInFrames={1} fps={30} width={1080} height={1440} defaultProps={{ w: 1080, h: 1440 }} />
     <Composition id="Ep7" component={Ep7Film} durationInFrames={EP7_FRAMES} fps={30} width={1920} height={1080} />
     <Composition id="Ep6" component={Ep6Film} durationInFrames={EP6_FRAMES} fps={30} width={1920} height={1080} />
     <Composition id="Ep3Cast" component={CastSheet3} durationInFrames={1} fps={FPS} width={1920} height={1080} />

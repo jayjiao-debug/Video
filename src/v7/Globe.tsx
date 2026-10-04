@@ -60,7 +60,7 @@ const spin = (T: number) => {
   const free = Math.min(T, GAP) + Math.max(0, Math.min(T, GAP + 0.8) - GAP) * 0.35;
   return free * 0.07;
 };
-const Globe: React.FC<{ T: number }> = ({ T }) => {
+export const Globe: React.FC<{ T: number; distOverride?: number }> = ({ T, distOverride }) => {
   const { camera, size } = useThree();
   const land = useMemo(() => {
     const g = new THREE.BufferGeometry();
@@ -90,6 +90,7 @@ const Globe: React.FC<{ T: number }> = ({ T }) => {
   let dist = 34, el = 0.25;
   if (s2) { const k = easeOut(prog(T, S2_IN, b(37))); dist = lerp(95, 40, k); el = lerp(0.6, 0.26, k); }
   else { dist = 38 + 2 * easeInOut(prog(T, S5_IN, Y67)); }
+  if (distOverride) dist = distOverride;
   const ang = 0.35;
   // shrink the world by year (S5)
   const shrink = s2 ? 1 : 1 - 0.12 * easeInOut(prog(T, Y11, Y11 + 0.9)) - 0.08 * easeInOut(prog(T, Y16, Y16 + 0.9));
