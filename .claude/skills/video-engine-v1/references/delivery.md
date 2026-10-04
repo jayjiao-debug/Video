@@ -24,6 +24,14 @@
 - **自主声明**: "内容由AI生成" (AI-assisted, code-built animation; declaring avoids being down-ranked as unlabelled).
 - **置顶评论**: the end-card question with 👇.
 
+## Sources and platform fact-checks
+- The end card and the 简介 (or a pinned comment) list the credible sources from the facts table — never
+  Wikipedia (see qa-lessons → Sources).
+- Douyin may ask for proof of authenticity (抖音小安 私信). Reply in two messages: (1) the content is real events and
+  published research, visuals are code-built animation (示意, declared 内容由AI生成), then each claim with its
+  number; (2) the source list with official / journal / government links. No original footage exists, so none is
+  attached. Do not edit the title or delete and re-post the video.
+
 ## Credits and licences
 - Sketchfab models are CC-BY: credit `"<model>" by <author> (Sketchfab)` in the end card and the description.
 - Poly Haven assets are CC0; three.js textures MIT. The asset farm writes credits.json for every download.

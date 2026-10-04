@@ -27,6 +27,24 @@ film (finish.py's glitch scan) after.
 - Don't run two animations the viewer must follow at once.
 - Small text (map labels) ≥ 18 px at 1080p; key numbers ≥ 60 px.
 
+## Sources (the creator's rule: credible sources only, never Wikipedia)
+Douyin's fact-check team (抖音小安) asked for evidence on a published episode; Wikipedia links do not convince a
+platform reviewer because anyone can edit them. Rules:
+- **Allowed as the cited source:** official inquiries and reports (e.g. the 1912 British Wreck Commissioner's
+  Inquiry), government publications (e.g. 政府広報 gov-online.go.jp, city verification reports), national archives
+  and museums (e.g. US National Archives *Prologue*), peer-reviewed papers with a DOI (e.g. Latané & Darley 1968,
+  doi:10.1037/h0026570), UN / intergovernmental agencies (WMO, UNDRR), the researchers' own publication for their
+  own data (e.g. Facebook Research, arXiv paper by the authors), established news organisations (Reuters, AP, BBC,
+  NHK, 新华社) for what happened at an event.
+- **Never cited:** Wikipedia, 百度百科, Zhihu answers, personal blogs, content farms, AI-generated summaries,
+  "quote" sites. They may be used to find a lead; follow the lead to the primary source and cite that.
+- When the authoritative sources disagree (Titanic survivors: 706 US vs 712 British), pick one, say which, and
+  phrase the on-screen claim so it holds for all of them ("400多个空座位", "1500多人").
+- If a number only exists in news reports (e.g. "about 100 people evacuated"), say so in the facts table so the
+  answer is ready if a platform asks.
+- Keep the facts table with URLs in the episode folder; it feeds the end-card sources, the posting copy and any
+  platform truthfulness reply.
+
 ## Facts
 - Verify every number, name, date and place with a source before it goes on screen; note estimates as 估算.
 - When sources disagree (boat 7: 26/28/34 people), phrase the claim so it holds for all of them

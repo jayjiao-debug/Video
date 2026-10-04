@@ -16,6 +16,9 @@ Read before starting: `references/craft.md` (story, tools, camera), `references/
 - **Discuss first.** Propose topics or a structure in plain words and wait for a choice. Show something to react to
   (a storyboard page, keyframes) before the long render.
 - **Verify every fact** (numbers, names, dates, places) with sources before it goes on screen. Estimates say 估算.
+- **Credible sources only. Never cite Wikipedia** (or 百度百科, Zhihu, blogs, content farms, AI summaries): anyone
+  can edit them. Use them only to find leads, then cite the primary or authoritative source behind the claim.
+  See `references/qa-lessons.md` → Sources.
 - Give an honest producer-style verdict with each delivery: what's strong, what's weak, what you'd change next.
 - Music only. No sound effects. No AI-generated video. No "Juno 出品".
 - When they flag a problem in one scene, re-render **only that scene** and splice it in (step 6).
@@ -24,6 +27,9 @@ Read before starting: `references/craft.md` (story, tools, camera), `references/
 - Pick one counter-intuitive principle and 4–6 scenes from different places, eras and scales that all show it, each
   with a number that can be made visual. Open on a concrete paradox, end on a question to the viewer.
 - Research with web search; record sources. Read primary accounts — retellings get details wrong.
+- Every on-screen number gets a row in the script's facts table: claim, source, URL. Each row needs a credible
+  source (official report, peer-reviewed paper, government / UN body, national archive, the researchers' own
+  publication, or an established news organisation for event facts). Wikipedia is never the cited source.
 
 ## 2. Script on the beat grid
 - `python3 scripts/beats.py public/bgm.mp3 src/music.json` → beats + markers (break / build / drop / outro). Listen and
