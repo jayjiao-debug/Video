@@ -2,7 +2,7 @@ import React from 'react';
 import {AbsoluteFill, Sequence, interpolate, random, useCurrentFrame} from 'remotion';
 import {noise2D} from '@remotion/noise';
 import {GlowDefs} from '../../src/art/glow/kit';
-import {ease, mix, prog, useAbsoluteFrame, useCue, useScene, useSnapBeat} from '../../src/lib/context';
+import {ease, mix, prog, useAbsoluteFrame, useCue, useScene} from '../../src/lib/context';
 import {font} from '../../src/lib/theme';
 import type {SceneMap, SceneProps} from '../../src/lib/types';
 import {Clock, Defs3, Num, Thin} from './kit3';
@@ -75,7 +75,6 @@ const Hook: React.FC<SceneProps> = () => {
 	const cue0 = useCue();
 	const cue = (i: number, o = 0) => cue0(i + 1, o); // line 0 is the opening pause
 	const scene = useScene();
-	const snap = useSnapBeat();
 	const events = useEvents();
 	const end = scene.duration;
 	const t = af / 30 + 4;
@@ -85,7 +84,8 @@ const Hook: React.FC<SceneProps> = () => {
 	// the line goes flat; a drop of coffee falls into the cup; it beats back to life
 	const dropAt = events(cue(1) + 6, cue(1) + 40, 1)[0];
 	const beats: {at: number; a: number}[] = [{at: dropAt, a: 1.5}];
-	for (let b = snap(dropAt + 15); b < cue(2) + 40; b = Math.max(snap(b + 15), b + 12)) beats.push({at: b, a: 0.95 + 0.1 * random(`bt${b}`)});
+	// the heart keeps its own clock (72 bpm = 25 frames), not the music's: slow at first, then steady
+	for (let b = dropAt + 34, k = 0; b < cue(2) + 40; k++, b += 25 + 9 * 0.6 ** k + Math.round((random(`bj${k}`) - 0.5) * 3)) beats.push({at: b, a: 0.95 + 0.1 * random(`bt${k}`)});
 	const lineO = prog(f, cue(1) - 16, 14) * (1 - prog(f, cue(2) + 34, 16));
 	const impact = f >= dropAt ? Math.exp(-(f - dropAt) / 7) : 0;
 	const head = 1480;
@@ -849,13 +849,17 @@ const Journey: React.FC<SceneProps> = () => {
 	const t = af / 30;
 	// J1: descend from the stars to Mocha at night; windows light on the beats
 	const down = prog(f, 0, cue(1) - 10, ease.inOut);
-	const win = events(4, cue(1) - 20, 6, 8);
+	const win = [6, 15, 21, 33, 40, 52].map((x, i) => x + Math.round(random(`wn${i}`) * 4));
 	// J2: a green bean roasted over embers; the ban
 	const roastK = prog(f, cue(1) + 10, 70, ease.inOut);
 	const seal = events(cue(1) + 40, cue(2) - 20, 1)[0];
 	const sealK = f >= seal ? prog(f, seal, 8, ease.back) : 0;
 	// J3: seven seeds; whip to the globe
-	const seeds = events(cue(2) + 4, cue(2) + 90, 7, 7);
+	const seeds = (() => {
+		const out: number[] = [];
+		for (let i = 0, t0 = cue(2) + 4; i < 7; i++, t0 += 6 + 12 * 0.84 ** i + Math.round((random(`sd${i}`) - 0.5) * 3)) out.push(Math.round(t0));
+		return out;
+	})();
 	const whip = cue(2) + 100;
 	// J4: the routes west
 	const routeIN = prog(f, whip + 6, 40, ease.inOut);
@@ -1027,7 +1031,7 @@ const Roast: React.FC<SceneProps> = () => {
 	const burst = f >= crack ? Math.exp(-(f - crack) / 8) : 0;
 	const meetAt = events(cue(2) + 4, cue(2) + 40, 1)[0];
 	const neb = prog(f, meetAt - 10, 50, ease.out);
-	const words = events(meetAt + 14, end - 30, AROMAS.length, 9);
+	const words = [0, 11, 19, 30, 37].map((d) => meetAt + 14 + d);
 	const landN = events(meetAt + 30, end - 24, 1)[0];
 	const gather = prog(f, end - 22, 22, ease.in);
 	let three: React.ReactNode;
