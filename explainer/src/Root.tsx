@@ -14,6 +14,8 @@ import {LOOK3_N, XumingLook3} from '../episodes/xuming/look3';
 import {BOARD2_N, XumingBoard2} from '../episodes/xuming/storyboard2';
 import {XumingOpen} from '../episodes/xuming/opentest';
 import {BENFORD_BOARD_N, BenfordBoard} from '../episodes/benford/storyboard';
+import {YUENAN_BOARD_N, YuenanBoard} from '../episodes/yuenan/storyboard';
+import {YUENAN_OPEN_N, YuenanOpen} from '../episodes/yuenan/opentest';
 
 export const Root: React.FC = () => (
 	<>
@@ -37,6 +39,8 @@ export const Root: React.FC = () => (
 		<Composition id="XumingOpen" component={XumingOpen} durationInFrames={540} fps={30} width={1920} height={1080} />
 		<Composition id="XumingBoard2" component={XumingBoard2} durationInFrames={BOARD2_N} fps={30} width={1920} height={1080} />
 		<Composition id="XumingLook3" component={XumingLook3} durationInFrames={LOOK3_N} fps={30} width={1920} height={1080} />
+		<Composition id="YuenanOpen" component={YuenanOpen} durationInFrames={YUENAN_OPEN_N} fps={30} width={1920} height={1080} />
+		<Composition id="YuenanBoard" component={YuenanBoard} durationInFrames={YUENAN_BOARD_N} fps={30} width={1920} height={1080} />
 		<Composition id="BenfordBoard" component={BenfordBoard} durationInFrames={BENFORD_BOARD_N} fps={30} width={1920} height={1080} />
 		<Composition id="XumingLook" component={XumingLook} durationInFrames={LOOKS} fps={30} width={1920} height={1080} />
 		<Composition id="CoffeeGallery" component={CoffeeGallery} durationInFrames={COFFEE_SHEETS.length} fps={30} width={1920} height={1080} />

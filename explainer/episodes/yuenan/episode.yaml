@@ -1,0 +1,126 @@
+# 《越难越爱》: effort justification. Why the person who was hardest to win is the one you can't let go of.
+#
+# Sources (checked against publisher abstracts and quotations; PDFs not opened):
+#   Aronson, E. & Mills, J. (1959). The effect of severity of initiation on liking for a group.
+#     J. Abnormal and Social Psychology 59(2): 177–181. Aronson at Stanford.
+#     63 female college students, 21 per condition, volunteering for a discussion group on the
+#     "psychology of sex". Severe: read 12 obscene words + 2 vivid passages aloud to a male
+#     experimenter; mild: sex-related, non-obscene words; control: no test. All then "listened in"
+#     over an intercom/headphones to a pre-recorded, deliberately dull discussion on secondary sex
+#     behaviour in lower animals. Summed ratings of the discussion (Table 1):
+#     control 80.2, mild 81.8, severe 97.6.
+#   Gerard, H. B. & Mathewson, G. C. (1966). J. Experimental Social Psychology 2: 278–287.
+#     Replication with electric shocks: stronger shocks framed as an initiation → higher ratings
+#     of a dull recorded discussion.
+#   Festinger, L. (1957). A Theory of Cognitive Dissonance. (认知失调)
+#   Norton, M. I., Mochon, D. & Ariely, D. (2012). The IKEA effect: When labor leads to love.
+#     J. Consumer Psychology 22(3): 453–460. Builders bid $0.78 vs $0.48 for a plain IKEA box (~63% more).
+#   Whitchurch, E. R., Wilson, T. D. & Gilbert, D. T. (2011). "He loves me, he loves me not…"
+#     Psychological Science 22(2): 172–175. 47 female UVA students; men whose liking was uncertain
+#     were rated most attractive and thought about most. One small study: hedged on screen.
+#   Hedge: real-world initiations show mixed evidence (Lodewijkx & Syroit 1997, EJSP 27(3);
+#     Cimino & Thomas 2022); the induced-compliance dissonance paradigm failed a 2024 multilab
+#     replication (Vaidis et al., AMPPS). Said on screen as "真实生活里，证据并不总一致".
+#   The chat on the phone and the bulbs are illustrations (示意).
+
+id: yuenan
+series: Juno · VIBE知识大赏
+title: 越难越爱
+subtitle: 为什么越难追到的人，越放不下？
+format: horizontal
+fps: 30
+music: assets/music/bgm.mp3
+markers:
+  a: 16.104
+  coda: 149.89
+
+scenes:
+  - id: hook
+    component: Hook
+    kicker: 凌晨一点
+    lines:
+      - pause: 2.4
+      - 你发了三条长消息，TA只回了一个“嗯”。
+      - 为什么越难追到的人，你[越放不下]？
+
+  - id: coldopen
+    component: ColdOpen
+    at: a
+    lead: 4.8
+    props: {quietLead: true}
+    kicker: 1959 · 斯坦福大学
+    lines:
+      - 1959年，斯坦福的心理学家阿伦森招募女大学生，
+      - 加入一个讨论“性心理”的小组。
+      - 但入组之前，要先过一场“难堪测试”。
+
+  - id: setup
+    component: Setup
+    kicker: 三组人 · 三种考验
+    lines:
+      - 一组：当着男实验员，大声念出露骨的词句。
+      - 一组念温和的词，一组免考。
+      - 然后戴上耳机，“旁听”小组讨论。
+      - 那其实是一段录音，故意录得无聊透顶。
+      - 按常理，吃过苦的人会更{讨厌}它。
+
+  - id: twist
+    component: Twist
+    at: break
+    kicker: 对讨论的评分
+    cite: Aronson & Mills, 1959 · 评分总和
+    lines:
+      - text: 不。
+        hold: 2.2
+      - 同一段无聊的录音，
+      - 难堪组打出了[97.6]分。
+      - 另外两组：80.2，和81.8。
+
+  - id: mechanism
+    component: Mechanism
+    at: build
+    kicker: 认知失调 · Festinger 1957
+    lines:
+      - 心理学家费斯廷格说：人受不了两个矛盾的念头。
+      - “我为它付出了这么多”，和“它根本不值得”。
+      - 付出已经收不回了。
+      - 那就只能，改掉另一个——
+
+  - id: reveal
+    component: Reveal
+    at: drop
+    lines:
+      - text: “它一定很有意思。”
+        hold: 2.6
+      - 你爱的，有一部分是[你自己的付出]。
+      - 这叫[努力合理化]。
+      - 1966年换成电击重做：电得越重，越喜欢。
+
+  - id: layer
+    component: Layer
+    kicker: 宜家效应 · 2012
+    cite: Norton, Mochon & Ariely, 2012 · Whitchurch et al., 2011
+    lines:
+      - 不只是爱情。自己拼好的宜家收纳盒，
+      - 人们愿意多付约[63%]的钱。
+      - 还有一项小研究：不确定对方喜不喜欢你，
+      - 反而想得最多，也被吸引得最多。
+
+  - id: takeaways
+    component: Takeaways
+    kicker: 下次放不下的时候
+    lines:
+      - 真实生活里，证据并不总一致。但可以先问自己：
+      - ① 如果今天第一次遇见TA，还会选吗？
+      - ② 放不下的是TA，还是你付出的那些？
+      - ③ 付出不是错，把它留给[值得的人]。
+
+  - id: callback
+    component: Callback
+    at: coda
+    props: {quietLead: false}
+    lines:
+      - 天快亮了，对话框里的三个点又跳了起来。
+      - 你放不下的，也许不是TA，
+      - 是那个一直在等的[自己]。
+      - pause: 3.4
