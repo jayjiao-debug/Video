@@ -95,7 +95,7 @@ Suggest which collection the episode goes in. Ask the owner which existing 合�
 they use if it isn't known yet, and remember their answer for later episodes by
 adding it below.
 
-Known collections: _(none recorded yet)_
+Known collections: **VIBE知识大赏**（所有 Juno 知识片都放这个合集；《第一位数字》起使用）
 
 ### 5. 自主声明
 

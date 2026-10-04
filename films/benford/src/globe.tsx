@@ -39,12 +39,13 @@ export const worldOf = (lat: number, lon: number, spin: number, r = R) => llToVe
 
 const PROJ = new THREE.PerspectiveCamera(30, 1920 / 1080, 0.1, 500);
 /** project a world point to screen pixels for HTML labels; `facing` > 0 when the point faces the camera */
-export const project = (keys: Key[], T: number, v: THREE.Vector3) => {
+export const project = (keys: Key[], T: number, v: THREE.Vector3, w = 1920, h = 1080) => {
   const { pos, look } = camAt(keys, T);
+  PROJ.aspect = w / h;
   PROJ.position.set(pos[0], pos[1], pos[2]); PROJ.lookAt(look[0], look[1], look[2]); PROJ.updateMatrixWorld(); PROJ.updateProjectionMatrix();
   const p = v.clone().project(PROJ);
   const toCam = new THREE.Vector3(pos[0], pos[1], pos[2]).sub(v).normalize();
-  return { x: ((p.x + 1) / 2) * 1920, y: ((1 - p.y) / 2) * 1080, facing: v.clone().normalize().dot(toCam) };
+  return { x: ((p.x + 1) / 2) * w, y: ((1 - p.y) / 2) * h, facing: v.clone().normalize().dot(toCam) };
 };
 
 const SUN = new THREE.Vector3(1.0, 0.35, 0.55).normalize();
