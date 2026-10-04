@@ -214,6 +214,11 @@ were looking at.
   - Transitions are ideas, not fades. Carry something across the cut: the
     ledger's numbers fall into the jar, a wheel hub becomes a home button, the
     camera dives into a shape and comes out of the same shape.
+  - The cold open's metaphor effects end with the cold open. The ~70 tickets
+    circling the ox sold the hook ("800 people guessing"); left in the sky for the
+    rest of the fair they were clutter (the owner: 空中悬浮的信件，开场白结束之后就可以消失了).
+    Bring such an effect back only when the story calls for it again (the callback),
+    and then from a real source (out of the box's slot), not already floating.
   - Holds: after a line, the shot may hold if something in the world is alive
     (a character working, light, smoke). Dead air is a frozen frame with nothing
     happening, not "the text isn't moving".

@@ -310,7 +310,6 @@ const Fair: React.FC<SceneProps> = () => {
 			{/* hidden until the card lifts, so nothing flashes under it */}
 			<g opacity={f < titleLen - 14 ? 0 : 1}>
 				<Fair1906 frame={A + 92} cam={cam} postX={1660} front={<FrontCrowd f={A - 168} />}>
-					<TicketSwarm f={A + 2} cx={1050} cy={720} side={-1} />
 					<g transform="translate(250,890)">
 						<Signboard />
 					</g>
@@ -321,7 +320,6 @@ const Fair: React.FC<SceneProps> = () => {
 					<DroverWithRope f={A - 168} x={DROVER_AT.x} y={DROVER_AT.y} s={0.95} ox={{...OX, pose: oxPose}} expression="smile" />
 					{/* the clerk is next: he posts his on the second line */}
 					<ButcherPosting f={f} t0={cue(1) + 12} x={POSTER.x} y={POSTER.y} s={POSTER.s} who="clerk06" />
-					<TicketSwarm f={A + 2} cx={1050} cy={720} side={1} />
 				</Fair1906>
 			</g>
 		</FullFrame>
@@ -421,7 +419,6 @@ const Galton: React.FC<SceneProps> = () => {
 		<FullFrame fadeIn={0} fadeOut={0}>
 			<OX_DEFS />
 			<Fair1906 frame={A + 92} cam={cam} postX={1660} lamp={night ? 0.42 : 1} crowd={!night} front={night ? null : <FrontCrowd f={A - 168} />}>
-				{!night ? <TicketSwarm f={A + 2} cx={1050} cy={720} side={-1} /> : null}
 				<g transform="translate(250,890)">
 					<Signboard />
 				</g>
@@ -453,7 +450,6 @@ const Galton: React.FC<SceneProps> = () => {
 				<g transform={`translate(${box.x},${box.y}) scale(${boxS})`}>
 					<BallotBox stand={false} lit={night ? 0.9 : 0.6} />
 				</g>
-				{!night ? <TicketSwarm f={A + 2} cx={1050} cy={720} side={1} /> : null}
 			</Fair1906>
 		</FullFrame>
 	);
@@ -1026,7 +1022,6 @@ const Tips: React.FC<SceneProps> = () => {
 		<FullFrame fadeIn={0} fadeOut={0}>
 			<OX_DEFS />
 			<Fair1906 frame={A + 92} cam={cam} postX={1660} front={<FrontCrowd f={A - 168} />}>
-				<TicketSwarm f={A + 2} cx={1050} cy={720} side={-1} />
 				<g transform="translate(250,890)">
 					<Signboard />
 				</g>
@@ -1074,7 +1069,6 @@ const Tips: React.FC<SceneProps> = () => {
 						<TicketMotif p={rise} gold={JUNO.colors.gold} />
 					</g>
 				) : null}
-				<TicketSwarm f={A + 2} cx={1050} cy={720} side={1} />
 			</Fair1906>
 		</FullFrame>
 	);
@@ -1121,7 +1115,7 @@ const Callback: React.FC<SceneProps> = () => {
 		[D, 1060, 640, 1.22],
 	];
 	const cam = camPath(keys, f);
-	const settle = (i: number) => prog(f, cue(1) + 8 + (i % 50) * 1.4, 26, ease.inOut);
+	const settle = (i: number) => prog(f, cue(1) + 6 + i * 0.5 + 6 * random(`cj${i}`), 30, ease.inOut);
 	const glow = prog(f, cue(1) + 70, 20);
 	const A = f + scene.from;
 	const oxPose = {head: Math.sin(A / 70) * 4, tail: Math.sin(A / 11) * 0.7, breath: 0.5 + 0.5 * Math.sin(A / 22)};
@@ -1138,7 +1132,6 @@ const Callback: React.FC<SceneProps> = () => {
 		>
 			<OX_DEFS />
 			<Fair1906 frame={A + 92} cam={cam} postX={1660} lamp={1 - 0.35 * glow} front={<FrontCrowd f={A - 168} />}>
-				<TicketSwarm f={A + 2} cx={1050} cy={720} side={-1} />
 				<g transform={`translate(${OX.x},${OX.y}) scale(${OX.s})`}>
 					<Ox pose={oxPose} blink={blinkAt(A, 'oxg')} lit={0.9 - 0.4 * glow} />
 				</g>
@@ -1178,16 +1171,15 @@ const Callback: React.FC<SceneProps> = () => {
 						<TicketMotif p={1} gold={JUNO.colors.gold} />
 					</g>
 				) : null}
-				<TicketSwarm f={A + 2} cx={1050} cy={720} side={1} />
 				{/* the guesses come down onto the ox's outline and turn gold */}
 				{OUTLINE.map(([x, y], i) => {
 					const t = settle(i);
 					if (t <= 0) return null;
-					const a = random(`ca${i}`) * Math.PI * 2;
-					const sx = 1050 + Math.cos(a) * (500 + random(`cr${i}`) * 300);
-					const sy = 360 + Math.sin(a) * 200 - 120;
+					// out of the box's slot, up in an arc, down onto the outline
+					const sx = SLOT[0];
+					const sy = SLOT[1];
 					const px = sx + (x - sx) * t;
-					const py = sy + (y - sy) * t - 80 * Math.sin(Math.PI * t);
+					const py = sy + (y - sy) * t - (220 + 160 * random(`ch${i}`)) * Math.sin(Math.PI * t);
 					return (
 						<g key={i} transform={`translate(${px},${py}) rotate(${(1 - t) * 300 * (random(`cs${i}`) - 0.5)}) scale(${0.16 - 0.06 * t})`}>
 							<Ticket lod="tiny" tone={t > 0.98 && glow > 0 ? 'gold' : 'paper'} />
