@@ -137,17 +137,40 @@ const Ship: React.FC<{ T: number; a: Assets }> = ({ T, a }) => {
 
 /* ---------------- lifeboats (Sketchfab "Titanic Lifeboat", CC-BY) with a seat overlay ---------------- */
 const BOAT_L = 0.9;
-const seatLayout = (cap: number, len: number, beam: number) => {
-  const across = cap >= 60 ? 5 : 4;
-  const rows = Math.ceil(cap / across);
-  const pts: number[][] = [];
-  for (let r = 0; r < rows; r++) {
-    const t = -0.74 + (1.48 * (r + 0.5)) / rows;
-    const half = (beam / 2) * Math.pow(Math.max(0, 1 - t * t), 0.62) * 0.72;
-    const n = Math.min(across, cap - pts.length);
-    for (let c = 0; c < n; c++) pts.push([t * len / 2, n === 1 ? 0 : -half + (2 * half * c) / (n - 1)]);
+/* seat grid fitted inside the real hull: outer half-width at the gunwale, measured from lifeboat_b1.glb (BOAT_L = 0.9) */
+const HULL_W: [number, number][] = [[0, 0.136], [0.05, 0.132], [0.1, 0.132], [0.15, 0.122], [0.2, 0.104], [0.25, 0.102], [0.3, 0.078]];
+const hullHalf = (x: number) => {
+  const ax = Math.abs(x);
+  for (let i = 0; i < HULL_W.length - 1; i++) {
+    const [x0, w0] = HULL_W[i], [x1, w1] = HULL_W[i + 1];
+    if (ax <= x1) return lerp(w0, w1, (ax - x0) / (x1 - x0));
   }
-  return pts;
+  return HULL_W[HULL_W.length - 1][1];
+};
+const SEAT_Y = 0.152, SEAT_X = 0.262; // just above the gunwale amidships, clear of the raised bow and stern
+const LAYOUTS = new Map<number, { pts: number[][]; tile: number }>();
+const seatLayout = (cap: number) => {
+  const hit = LAYOUTS.get(cap);
+  if (hit) return hit;
+  const R = cap <= 40 ? 9 : cap <= 47 ? 10 : 11;
+  const xs = Array.from({ length: R }, (_, r) => -SEAT_X + (2 * SEAT_X * (r + 0.5)) / R);
+  const ws = xs.map((x) => hullHalf(x) - 0.018);
+  const sw = ws.reduce((a, c) => a + c, 0);
+  const n = ws.map((w) => Math.max(2, Math.round((cap * w) / sw)));
+  let diff = cap - n.reduce((a, c) => a + c, 0);
+  const byW = xs.map((_, r) => r).sort((a, c) => ws[c] - ws[a]);
+  for (let k = 0; diff !== 0; k = (k + 1) % R) { const r = diff > 0 ? byW[k] : byW[R - 1 - k]; n[r] += Math.sign(diff); diff -= Math.sign(diff); }
+  const rowPitch = (2 * SEAT_X) / R;
+  const colPitch = Math.min(...ws.map((w, r) => (2 * w) / n[r]));
+  const tile = Math.min(rowPitch, colPitch) * 0.74;
+  const pts: number[][] = [];
+  xs.forEach((x, r) => {
+    const half = ws[r] - tile / 2, c = n[r];
+    for (let k = 0; k < c; k++) pts.push([x, c === 1 ? 0 : -half + (2 * half * k) / (c - 1)]);
+  });
+  const out = { pts, tile };
+  LAYOUTS.set(cap, out);
+  return out;
 };
 type Placed = { x: number; y?: number; z: number; rot: number; scale: number; cap: number; occ: number; appear: number; fill: number; float: boolean };
 const SEAT_OFF = new THREE.Color('#4a5670'), SEAT_EMPTY = new THREE.Color('#86b8ff'), SEAT_ON = new THREE.Color('#ffcf6e');
@@ -171,10 +194,11 @@ const Boats: React.FC<{ T: number; placed: Placed[]; a: Assets; emptyPulse: numb
     const base = (p.y ?? -h * 0.42 * p.scale) + bob;
     const hull = hulls[bi];
     hull.position.set(p.x, base - (1 - ap) * 0.6, p.z);
-    hull.rotation.set(p.float ? 0.04 * Math.sin(T * 1.3 + bi) : 0, p.rot, p.float ? 0.05 * Math.sin(T * 1.1 + bi * 2) : 0);
+    hull.rotation.set(p.float ? 0.015 * Math.sin(T * 1.0 + bi) : 0, p.rot, p.float ? 0.02 * Math.sin(T * 0.9 + bi * 2) : 0);
     hull.scale.setScalar(Math.max(0.0001, p.scale));
     hull.visible = ap > 0.01;
-    const pts = seatLayout(p.cap, BOAT_L, beam);
+    const { pts, tile } = seatLayout(p.cap);
+    const ts = tile / 0.04;
     const rank = pts.map((_, j) => j).sort((u, v) => rnd[(bi * 97 + u) % 5000] - rnd[(bi * 97 + v) % 5000]);
     const order: number[] = []; rank.forEach((si, r) => (order[si] = r));
     const cos = Math.cos(p.rot), sin = Math.sin(p.rot);
@@ -183,12 +207,12 @@ const Boats: React.FC<{ T: number; placed: Placed[]; a: Assets; emptyPulse: numb
       const r = order[si];
       const filled = r < p.occ ? easeOut(prog(T, p.fill + r * 0.012, p.fill + r * 0.012 + 0.2)) : 0;
       const empty = r >= p.occ;
-      o.position.set(wx, base + h * 0.98 * p.scale + 0.004, wz); o.rotation.set(0, p.rot, 0); o.scale.setScalar(Math.max(0.0001, p.scale * ap)); o.updateMatrix();
+      o.position.set(wx, base + SEAT_Y * p.scale, wz); o.rotation.set(0, p.rot, 0); o.scale.set(Math.max(0.0001, p.scale * ap * ts), Math.max(0.0001, p.scale * ap), Math.max(0.0001, p.scale * ap * ts)); o.updateMatrix();
       seats.setMatrixAt(k, o.matrix);
       c.copy(SEAT_OFF).lerp(SEAT_ON, filled);
-      if (empty) c.copy(SEAT_OFF).lerp(SEAT_EMPTY, emptyPulse * (0.55 + 0.45 * Math.sin(T * 5 + si)));
+      if (empty) c.copy(SEAT_OFF).lerp(SEAT_EMPTY, emptyPulse * (0.88 + 0.12 * Math.sin(T * 2.2)));
       seats.setColorAt(k, c);
-      o.position.y += 0.003; o.scale.set(Math.max(0.0001, 0.09 * p.scale * filled), 1, Math.max(0.0001, 0.09 * p.scale * filled)); o.updateMatrix();
+      o.position.y += 0.012 * p.scale; o.scale.set(Math.max(0.0001, 2.2 * tile * p.scale * filled), 1, Math.max(0.0001, 2.2 * tile * p.scale * filled)); o.updateMatrix();
       glows.setMatrixAt(k, o.matrix);
       k++;
     });
