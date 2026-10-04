@@ -5,6 +5,12 @@ description: Make characters move like people, not puppets - motion reference fr
 
 # Character motion
 
+**First choice: let people be present, not perform.** Portraits, person cards
+and figures sitting or standing with `idle()` life are fine; the owner objects
+to actions done in a way no person would. Tell actions with the object
+(explainer-video §2). Use the reference workflow below for any figure that does
+have to act.
+
 The owner's complaint that started this: "every time it's weird - why is it
 bending like that". Poses invented by eye fail in the same few ways: elbows or
 wrists folding the wrong way, arms pulled straight like sticks to reach

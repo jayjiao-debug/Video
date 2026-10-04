@@ -186,10 +186,14 @@ export const OfficialCard: React.FC<{write?: number}> = ({write = 1}) => (
 
 // ---------------------------------------------------------------- Galton's bean machine, animated
 
-const ROWS = 8;
-const PIN = 18; // pin spacing
-const BIN_BOTTOM = -17;
-const BEAD = 7.4;
+const ROWS = 10;
+const PIN = 14; // pin spacing
+const PIN_TOP = -254;
+const ROW_H = 12.5;
+const BIN_TOP = -124;
+const BIN_BOTTOM = -15;
+const BEAD = 5.6;
+const BIN_MAX = Math.floor((BIN_BOTTOM - BIN_TOP) / BEAD) - 1; // a full bin never spills into the pins
 
 /**
  * The bean machine with beads actually falling: each bead bounces left or right at
@@ -203,7 +207,7 @@ export const BeanMachine: React.FC<{f: number; start: number; every?: number; n?
 	f,
 	start,
 	every = 2,
-	n = 110,
+	n = 80,
 	follow = 0,
 	hero,
 	glow = 0,
@@ -236,17 +240,17 @@ export const BeanMachine: React.FC<{f: number; start: number; every?: number; n?
 			const before = p.slice(0, r).reduce((a, b) => a + (b ? 1 : -1), 0);
 			const step = p[r] ? 1 : -1;
 			x = ((before + step * u) * PIN) / 2;
-			y = -252 + r * 16 + u * 16 - 6 * Math.sin(Math.PI * u);
+			y = PIN_TOP - 4 + r * ROW_H + u * ROW_H - 5 * Math.sin(Math.PI * u);
 		} else {
 			x = (bin - ROWS / 2) * PIN;
-			const yTop = -252 + ROWS * 16;
-			const yEnd = BIN_BOTTOM - k * BEAD;
+			const yTop = PIN_TOP + ROWS * ROW_H;
+			const yEnd = BIN_BOTTOM - Math.min(k, BIN_MAX) * BEAD;
 			const tf = t - ROWS * rowF;
 			y = Math.min(yEnd, yTop + 0.9 * tf * tf + 4 * tf);
 		}
 		const isHero = hero === i || isLone;
 		if (isLone) beads.push(<circle key={`${i}h`} cx={x} cy={y} r={14} fill="url(#lantern-glow)" opacity={0.9} />);
-		beads.push(<circle key={i} cx={x} cy={y} r={isHero ? 4.6 : 3.6} fill={isHero ? '#f1c56d' : '#d8cdb4'} stroke={isHero ? '#fff1cf' : 'none'} strokeWidth={1} />);
+		beads.push(<circle key={i} cx={x} cy={y} r={isHero ? 3.6 : 2.7} fill={isHero ? '#f1c56d' : '#d8cdb4'} stroke={isHero ? '#fff1cf' : 'none'} strokeWidth={1} />);
 	}
 	return (
 		<g>
@@ -254,12 +258,12 @@ export const BeanMachine: React.FC<{f: number; start: number; every?: number; n?
 			<rect x={-84} y={-288} width={168} height={276} fill="#1a1612" />
 			<path d="M-24,-288 L-6,-266 L6,-266 L24,-288 Z" fill="#3a2a1e" />
 			{Array.from({length: ROWS}, (_, r) =>
-				Array.from({length: r + 1}, (_, c) => <circle key={`${r}-${c}`} cx={(c - r / 2) * PIN} cy={-248 + r * 16} r={2.2} fill="#c9a95e" />),
+				Array.from({length: r + 1}, (_, c) => <circle key={`${r}-${c}`} cx={(c - r / 2) * PIN} cy={PIN_TOP + r * ROW_H} r={1.8} fill="#c9a95e" />),
 			)}
 			{Array.from({length: ROWS + 2}, (_, i) => (
-				<line key={i} x1={(i - ROWS / 2 - 0.5) * PIN} y1={-112} x2={(i - ROWS / 2 - 0.5) * PIN} y2={-12} stroke="#5a4632" strokeWidth={2} />
+				<line key={i} x1={(i - ROWS / 2 - 0.5) * PIN} y1={BIN_TOP} x2={(i - ROWS / 2 - 0.5) * PIN} y2={-12} stroke="#5a4632" strokeWidth={1.6} />
 			))}
-			{glow > 0 ? <rect x={-PIN / 2} y={-112} width={PIN} height={100} fill="#f1c56d" opacity={0.25 * glow} /> : null}
+			{glow > 0 ? <rect x={-PIN / 2} y={BIN_TOP} width={PIN} height={-12 - BIN_TOP} fill="#f1c56d" opacity={0.25 * glow} /> : null}
 			{beads}
 			<rect x={-84} y={-288} width={168} height={276} fill="url(#glass)" opacity={0.1} />
 			<rect x={-96} y={-12} width={192} height={12} fill="#3e2a1a" />

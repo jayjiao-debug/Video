@@ -468,9 +468,11 @@ export const Cheques: React.FC<SceneProps> = () => {
 					screen={screen}
 					person={
 						<Layer cam={cam} depth={1}>
-							{/* the manager, from behind only (a real case: no face) */}
-							<g transform={`translate(330,${1210 + Math.sin(f / 22) * 1.5}) scale(2.1)`}>
-								<Figure look={NELSON} pose={{...POSES.write, lean: 6, head: 0, armNear: [8, 18], armFar: [8, 18]}} facing="back" blink={blinkAt(f, 'nl')} rim="warm" shadow={false} />
+							{/* nobody in shot: his empty swivel chair, still turning a little, says someone just left (explainer-video §2) */}
+							<g transform={`translate(330,760) rotate(${2.5 * Math.sin(f / 40) * Math.exp(-f / 240)},0,0)`}>
+								<rect x={-70} y={-170} width={140} height={150} rx={30} fill="#2a3346" />
+								<rect x={-56} y={-156} width={112} height={122} rx={22} fill="#343f56" />
+								<rect x={-8} y={-22} width={16} height={30} fill="#1a1f2a" />
 							</g>
 						</Layer>
 					}

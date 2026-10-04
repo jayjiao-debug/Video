@@ -11,8 +11,10 @@ Episodes are `explainer/episodes/<id>/episode.yaml` (script) + `scenes.tsx`
 lines over one background track the user supplies (`assets/music/bgm.mp3`, not in git).
 
 Branding (title card, corner mark, end card, copy voice) follows the `juno-brand`
-skill; run its brand QA together with the QA step below. Every character pose,
-hand and arm follows the `character-motion` skill (motion reference, joint limits).
+skill; run its brand QA together with the QA step below. **People may appear;
+people performing actions mostly should not** (§2): tell actions with objects,
+places, light, numbers and the camera. Any figure that does move follows the
+`character-motion` skill.
 
 The user approved this workflow. Follow it in order and do not skip the
 approval gates: **reference → research → art → approval → animate → QA → render.**
@@ -54,10 +56,34 @@ people. What the user wants, and approved:
 - **Motivated light.** One warm practical key (lamp, window, fire, searchlight)
   plus cool moon/sky rim. Grade lit subjects into the scene (`grade-night`) so
   nothing looks pasted on.
-- **Characters from the shared rig** (`src/art/Figure.tsx`): one skeleton and
-  proportions for the whole cast, tapered limbs, IK hand targets (`reach`),
-  blink, six expressions, back view and silhouette + rim light for storytelling
-  shots. Keep real-world scale next to props (a person is ~⅓ of a B-17's fin).
+- **Play to our strengths: people present, objects act.** The owner's direction:
+  人物不是你的强项，尽可能不做人物多的展示, clarified as: 人的头像可以生成，只是他们在做动作的时候
+  在人类眼里不应该那么做就很奇怪. Portraits and people who are simply *there* are
+  fine. What looks wrong is a figure performing an action in a way no person
+  would (arms reaching, hands holding or flicking, gesturing). What we do well,
+  and what should carry every episode:
+  - the hero object and its changes (a book's fore-edge darkening, a sign's
+    number rolling, a printer feeding cheques, a chart landing);
+  - places and motivated light, travelled by the spline camera;
+  - numbers, typography and data that move with purpose;
+  - match cuts through shapes, particles, weather, time-lapse.
+  How to show people:
+  - **Portraits are welcome.** A person card when a real person is introduced
+    (`PersonCard`: a cameo in a gold oval, name, years, role; still, like an
+    archive caption), or a larger illustrated portrait / head. A generated or
+    drawn portrait is fine as long as it stays still or nearly still.
+  - **Figures in the set:** sitting or standing, with only `idle()` life
+    (breathing, blinking, a small head turn). They don't do the action.
+  - **Traces of presence:** the empty chair, a coat on the hook, a cup still
+    steaming, ink appearing on the page line by line, pages turning as if
+    riffled, a shadow on the wall that barely moves.
+  - **Silhouettes** at a distance (a window, a doorway, a crowd as one shape),
+    with little or no limb motion.
+  - Actions are shown by their result, not performed by a figure: the page
+    turns, the stamp lands, ink appears, the card flies into its tray. No hands
+    or arms acting on objects in shot unless the motion comes from a real
+    reference (mocap or the owner's clip) and reads as natural at phone size
+    (`character-motion`). When unsure, leave the action to the object.
 - **Palette discipline** (`src/art/palette.ts`): night blues + warm amber; gold
   only for answers, red only for damage and traps.
 - **Period-accurate props** with material gradients (`src/art/materials.tsx`).
@@ -72,7 +98,7 @@ Process:
    stick limbs, detached parts, oversized eyes, heavy outlines, wrong scale,
    floating vehicles, things too bright for the scene.
 3. Build a 5-second motion test (`src/MotionTest.tsx` pattern): camera move with
-   parallax, a walk into a sprung pose change, an impact beat. Check frames.
+   parallax, the hero object doing its thing, an impact beat. Check frames.
 4. Send the sheets and the motion test to the user and **wait for approval**
    of the direction before building scenes. Then build the remaining sets and FX
    to the same standard.
@@ -93,6 +119,12 @@ Read the track first, not just its markers:
   gets stillness (one slow move, one object). The owner called the reverse
   ("slow writing at a desk over the loudest part, frantic numbers over the
   intro") awful. Print each scene's mean energy next to its content and check.
+
+- **Check the drop against the audio itself.** `music.py` snaps markers to its beat
+  grid and can land them late: in 《八百人猜牛》 the `drop` marker said 82.23 s, the
+  audible hit was 81.37 s (the reveal missed it; the owner heard it at once). Print
+  the RMS in 40 ms windows around every marker you anchor a reveal to, take the
+  onset, and override it in `markers:` (`drop: 81.37`).
 
 Then map the 9 beats:
 
@@ -193,6 +225,11 @@ were looking at.
   - Transitions are ideas, not fades. Carry something across the cut: the
     ledger's numbers fall into the jar, a wheel hub becomes a home button, the
     camera dives into a shape and comes out of the same shape.
+  - The cold open's metaphor effects end with the cold open. The ~70 tickets
+    circling the ox sold the hook ("800 people guessing"); left in the sky for the
+    rest of the fair they were clutter (the owner: 空中悬浮的信件，开场白结束之后就可以消失了).
+    Bring such an effect back only when the story calls for it again (the callback),
+    and then from a real source (out of the box's slot), not already floating.
   - Holds: after a line, the shot may hold if something in the world is alive
     (a character working, light, smoke). Dead air is a frozen frame with nothing
     happening, not "the text isn't moving".
@@ -212,6 +249,12 @@ were looking at.
     is not mid-action, so the only motion on screen is not one jerky arm.
   - Put an action strip (one still per key pose) on a model sheet and look at it
     before rendering the motion test.
+- **Takeaways go on screen, not just in subtitles.** Three numbered tips that only
+  appear as subtitles over an unrelated shot read as "1, 2, 3 out of nowhere"
+  (the owner). Move the camera normally into the scene, then dim and soften the
+  background, put a header and the tips up one by one (short keyword lines; the
+  subtitle carries the full sentence), hold them still, then take them off and
+  return to the scene (`TipCards` in `episodes/ox/scenes.tsx`).
 - Don't put a "?" on objects. Show "unknown" with motion (a rolling number, a
   searching marker, a dashed outline).
 - `npx tsc --noEmit` must pass.
