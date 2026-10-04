@@ -1,50 +1,9 @@
 {
-  "id": "money-models-01",
+  "id": "money-tex-01",
   "items": [
-    {
-      "type": "sketchfab",
-      "uid": "634e34ce3c0b4d75addce41c96e7b5ba",
-      "name": "bill100"
-    },
-    {
-      "type": "sketchfab",
-      "uid": "a1fd5cd41faf467fa9ffd42ee297e6f5",
-      "name": "noodles"
-    },
-    {
-      "type": "sketchfab",
-      "uid": "e53a5ef2faf84edcaddf49d4d27f366c",
-      "name": "table"
-    },
-    {
-      "type": "sketchfab",
-      "uid": "bc930d60c238410289ae694eaf07b846",
-      "name": "cowrie"
-    },
-    {
-      "type": "sketchfab",
-      "uid": "e935c74614334ae7b808cd557df50cf2",
-      "name": "lioncoins"
-    },
-    {
-      "type": "sketchfab",
-      "uid": "384f557db51a407e807c59af188cc9cc",
-      "name": "cashcoin"
-    },
-    {
-      "type": "sketchfab",
-      "uid": "0d1ff6b3e6d045cba78889caf7f5bc6e",
-      "name": "goldbar"
-    },
-    {
-      "type": "sketchfab",
-      "uid": "c4731bab20764f5eb874daf3ff07fcb5",
-      "name": "stonewheel"
-    },
-    {
-      "type": "sketchfab",
-      "uid": "fb4379ba486c43bd846f9b9ef608743a",
-      "name": "canoe"
-    }
+    {"type": "url", "url": "https://commons.wikimedia.org/wiki/Special:FilePath/USA_100_Dollar_Bill_Series2009_Obverse.png", "name": "usd100_front.png", "license": "Public domain (US Government work, BEP)"},
+    {"type": "url", "url": "https://commons.wikimedia.org/wiki/Special:FilePath/USA_100_Dollar_Bill_Series2009_Reverse.png", "name": "usd100_back.png", "license": "Public domain (US Government work, BEP)"},
+    {"type": "url", "url": "https://commons.wikimedia.org/wiki/Special:FilePath/Obverse_of_the_series_2009_$100_Federal_Reserve_Note.jpg", "name": "usd100_front_bep.jpg", "license": "Public domain (US Government work, BEP)"},
+    {"type": "url", "url": "https://commons.wikimedia.org/wiki/Special:FilePath/New100back.jpg", "name": "usd100_back_bep.jpg", "license": "Public domain (US Government work, BEP)"}
   ]
 }
