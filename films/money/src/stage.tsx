@@ -72,12 +72,12 @@ const Post: React.FC<Required<Omit<Fx, 'focus'>> & { focus?: number }> = (p) => 
   return null;
 };
 
-export const Stage: React.FC<Fx & { bg?: string; exposure?: number; fov?: number; children: React.ReactNode }> = ({
-  bg = '#06070c', exposure = 1, fov = 30, bloom = 0.7, threshold = 0.82, radius = 0.5, focus, aperture = 0.0015, maxblur = 0.008, grain = 0.045, shake = [0, 0], seed = 0, children,
+export const Stage: React.FC<Fx & { bg?: string; exposure?: number; fov?: number; near?: number; far?: number; children: React.ReactNode }> = ({
+  bg = '#06070c', exposure = 1, fov = 30, near = 0.005, far = 200, bloom = 0.7, threshold = 0.82, radius = 0.5, focus, aperture = 0.0015, maxblur = 0.008, grain = 0.045, shake = [0, 0], seed = 0, children,
 }) => (
   <ThreeCanvas width={W} height={H} style={{ position: 'absolute', inset: 0 }} shadows
     gl={{ antialias: false, toneMapping: THREE.ACESFilmicToneMapping, toneMappingExposure: exposure, preserveDrawingBuffer: true }}
-    camera={{ fov, near: 0.005, far: 200 }}>
+    camera={{ fov, near, far }}>
     <color attach="background" args={[bg]} />
     {children}
     <Post bloom={bloom} threshold={threshold} radius={radius} focus={focus} aperture={aperture} maxblur={maxblur} grain={grain} shake={shake} seed={seed} />

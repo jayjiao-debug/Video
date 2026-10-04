@@ -14,6 +14,7 @@ const composition = await selectComposition({ serveUrl, id: process.env.COMP, br
 for (const t of times) {
   const frame = Math.round(t * composition.fps);
   await renderStill({ composition, serveUrl, frame, output: `${dir}/t${t.toFixed(2).padStart(6, '0')}.png`, browserExecutable,
-    scale: Number(process.env.SCALE || 0.5), chromiumOptions: { gl: 'swangle' }, timeoutInMilliseconds: 180000 });
+    scale: Number(process.env.SCALE || 0.5), chromiumOptions: { gl: 'swangle' }, timeoutInMilliseconds: 180000,
+    onBrowserLog: (l) => { if (process.env.LOGS && (l.type === 'error' || l.type === 'warning')) console.log('[browser]', l.type, l.text.slice(0, 300)); } });
   console.log('ok', t);
 }

@@ -17,7 +17,11 @@ export const NIGHT = '#05070d';
 
 export const beats: number[] = music.beats;
 /** time of beat i; write all scene timing as b(i) so cuts and pops land on the music */
-export const b = (i: number) => beats[Math.max(0, Math.min(beats.length - 1, i))];
+export const b = (i: number) => beats[Math.max(0, Math.min(beats.length - 1, Math.round(i)))];
+/** fractional beat (b(31.5) is halfway between b31 and b32) */
+export const bf = (x: number) => { const i = Math.floor(x); return b(i) + (b(i + 1) - b(i)) * (x - i); };
+/** the drop: the real onset of the full-strength section (the auto marker says 82.24; measured 81.38) */
+export const DROP = 81.38;
 
 export const clamp = (x: number, a = 0, c = 1) => Math.max(a, Math.min(c, x));
 export const prog = (t: number, a: number, z: number) => clamp((t - a) / (z - a));

@@ -151,7 +151,7 @@ export const Steam: React.FC<{ T: number; at: number[]; n?: number; o?: number; 
 export const Bokeh: React.FC<{ T: number; n?: number; z?: number; spread?: number; y?: number; o?: number; seed?: number; colors?: string[] }> = ({ T, n = 26, z = -3.2, spread = 5, y = 1.1, o = 1, seed = 1, colors = ['#ffb35c', '#ffcf8a', '#ff7a4a', '#ffd9a0', '#7fb2ff'] }) => (
   <group>
     {Array.from({ length: n }, (_, i) => {
-      const s = 0.12 + rnd(i, seed + 1) * 0.3;
+      const s = (0.12 + rnd(i, seed + 1) * 0.3) * (seed === 1 ? 1 : 0.45);
       const tw = 0.75 + 0.25 * Math.sin(T * (0.6 + rnd(i, seed + 2)) + i);
       return (
         <sprite key={i} position={[(rnd(i, seed + 3) - 0.5) * spread, y + (rnd(i, seed + 4) - 0.4) * 1.4, z - rnd(i, seed + 5) * 1.5]} scale={[s, s, s]}>
@@ -221,3 +221,34 @@ export const EnvFor: React.FC<{ mats: THREE.Material[]; intensity: number }> = (
   mats.forEach((m) => { const s = m as THREE.MeshStandardMaterial; s.envMap = t!; s.envMapIntensity = intensity; s.needsUpdate = s.needsUpdate || false; });
   return null;
 };
+
+/** reflections from our own sky (a gradient dome), for outdoor metal; cached per renderer + key */
+const SKYENV = new Map<string, THREE.Texture>();
+export const SkyEnvFor: React.FC<{ id: string; sky: THREE.Texture; mats: THREE.Material[]; intensity: number }> = ({ id, sky, mats, intensity }) => {
+  const { gl } = useThree();
+  const key = `${id}`;
+  let t = SKYENV.get(key);
+  if (!t) {
+    const s = new THREE.Scene();
+    const dome = new THREE.Mesh(new THREE.SphereGeometry(10, 64, 32), new THREE.MeshBasicMaterial({ map: sky, side: THREE.BackSide }));
+    s.add(dome);
+    const pm = new THREE.PMREMGenerator(gl);
+    t = pm.fromScene(s, 0.02).texture;
+    pm.dispose();
+    SKYENV.set(key, t);
+  }
+  mats.forEach((m) => { const s = m as THREE.MeshStandardMaterial; s.envMap = t!; s.envMapIntensity = intensity; });
+  return null;
+};
+
+/** a vertical gradient sky (stops from zenith to below the horizon), mapped on an inside-out sphere */
+export const gradientSky = (stops: [number, string][], glow?: { x: number; y: number; r: number; color: string }) => canvasTex(1024, 512, (g) => {
+  const gr = g.createLinearGradient(0, 0, 0, 512);
+  stops.forEach(([o, c]) => gr.addColorStop(o, c));
+  g.fillStyle = gr; g.fillRect(0, 0, 1024, 512);
+  if (glow) {
+    const r = g.createRadialGradient(glow.x * 1024, glow.y * 512, 0, glow.x * 1024, glow.y * 512, glow.r * 512);
+    r.addColorStop(0, glow.color); r.addColorStop(1, 'rgba(0,0,0,0)');
+    g.fillStyle = r; g.fillRect(0, 0, 1024, 512);
+  }
+});
