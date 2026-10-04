@@ -63,6 +63,30 @@ export const loadBar = async () => {
   return bar;
 };
 
+/** the city behind the shop: thousands of small lit windows that come on, one by one ("billions of people") */
+const CITY_N = 6000;
+const CITY = Array.from({ length: CITY_N }, (_, i) => [(rnd(i, 1) - 0.5) * 44, -1 + Math.pow(rnd(i, 2), 1.4) * 7, -6 - rnd(i, 3) * 30]);
+const City: React.FC<{ T: number; k: number }> = ({ T, k }) => {
+  const geo = useMemo(() => {
+    const g = new THREE.BufferGeometry();
+    g.setAttribute('position', new THREE.Float32BufferAttribute(CITY.flat(), 3));
+    g.setAttribute('color', new THREE.Float32BufferAttribute(new Array(CITY_N * 3).fill(0), 3));
+    return g;
+  }, []);
+  const c = geo.attributes.color as THREE.BufferAttribute;
+  for (let i = 0; i < CITY_N; i++) {
+    const on = easeOut(prog(k, rnd(i, 4) * 0.9, rnd(i, 4) * 0.9 + 0.1)) * (0.6 + 0.4 * Math.sin(T * (0.5 + rnd(i, 5)) + i));
+    const w = rnd(i, 6) > 0.15 ? [1, 0.75, 0.45] : [0.7, 0.8, 1];
+    c.setXYZ(i, w[0] * on, w[1] * on, w[2] * on);
+  }
+  c.needsUpdate = true;
+  return (
+    <points geometry={geo}>
+      <pointsMaterial size={0.22} map={softTex()} vertexColors transparent depthWrite={false} blending={THREE.AdditiveBlending} toneMapped={false} sizeAttenuation />
+    </points>
+  );
+};
+
 export const TableSet: React.FC<{ T: number; keys: Key[]; bar: boolean; focus: number; aperture: number; noodle: THREE.Group; table: THREE.Group; barMesh: THREE.Mesh; tex: Awaited<ReturnType<typeof loadBillTex>>; crowd?: number }> = ({ T, keys, bar, focus, aperture, noodle, table, barMesh, tex, crowd = 0 }) => {
   const tablePlaced = useMemo(() => {
     const bb = new THREE.Box3().setFromObject(table);
@@ -97,10 +121,11 @@ export const TableSet: React.FC<{ T: number; keys: Key[]; bar: boolean; focus: n
       {bar && <primitive object={barObj} position={BAR} rotation={[0, -0.35, 0]} />}
       <EnvFor mats={[barMesh.material as THREE.Material]} intensity={0.55} />
       {/* the shop behind: a warm back wall far off, a neon sign and street lights through the window, all soft */}
-      <mesh position={[0, 1.2, -4.5]}><planeGeometry args={[14, 6]} /><meshStandardMaterial color="#1a120c" roughness={1} /></mesh>
+      {crowd <= 0 && <mesh position={[0, 1.2, -4.5]}><planeGeometry args={[14, 6]} /><meshStandardMaterial color="#1a120c" roughness={1} /></mesh>}
       <Neon text="面" position={[-1.25, 1.55, -2.6]} h={0.55} />
       <Bokeh T={T} z={-3.0} spread={6} y={1.2} />
       {crowd > 0 && <Bokeh T={T} n={Math.floor(crowd)} z={-3.6} spread={10} y={1.25} seed={7} o={0.9} />}
+      {crowd > 0 && <City T={T} k={crowd / 220} />}
     </Stage>
   );
 };
