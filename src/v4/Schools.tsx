@@ -5,23 +5,30 @@ import { mulberry } from '../v1/data';
 import { Vignette, Grain } from '../ui';
 import { Sub } from './Titanic2';
 
-/* 《应该没事吧》 part 5, b168-b212: 11 March 2011. One clock, two places.
+/* 《应该没事吧》 part 5, b168-b228: 11 March 2011. Told in three acts so the eye has one place to look:
+   both maps (the quake) -> Okawa alone, its clock 14:46 -> 15:37 -> Kamaishi alone, the clock back to 14:46 ->
+   both side by side with their tallies.
    Okawa Elementary (Ishinomaki): the manual said gather in the schoolyard; they waited there for close to 50 minutes,
    then moved towards the river bridge instead of the hill behind the school. 74 of 108 students died.
    Kamaishi: children who had watched footage of the 2004 tsunami in class ran for high ground as soon as the shaking
    stopped; 99.8% of the city's elementary and junior-high students survived.
    Top-down contour maps, one dot per student (Okawa) / per ~25 students (Kamaishi). */
 const b = (i: number) => beats[i];
-export const SC_IN = b(168), SC_OUT = b(212);
+export const SC_IN = b(168), SC_OUT = b(228);
 const W = 1920, H = 1080;
 const rnd = (() => { const r = mulberry(311); return Array.from({ length: 8000 }, () => r()); })();
 const PW = 860, PH = 590, PY = 170;
 const PX = [60, 1000];
-const CLOCK_A = b(177), CLOCK_B = b(193); // 14:46 -> 15:37
-const minutes = (T: number) => 51 * clamp((T - CLOCK_A) / (CLOCK_B - CLOCK_A));
+/* acts */
+const SOLO_OK = b(176), SOLO_KA = b(200), BOTH = b(218);
+/* Okawa's clock: 14:46 at b177 -> 15:37 at b192.  Kamaishi's clock: 14:46 again at b201 -> 15:21 at b211. */
+const CLOCK_A = b(177), CLOCK_B = b(192);
 const atMinute = (m: number) => CLOCK_A + (CLOCK_B - CLOCK_A) * (m / 51);
+const KCLOCK_A = b(201), KCLOCK_B = b(211);
+const kaMinute = (m: number) => KCLOCK_A + (KCLOCK_B - KCLOCK_A) * (m / 35);
+const minutes = (T: number) => (T < SOLO_KA ? 51 * clamp((T - CLOCK_A) / (CLOCK_B - CLOCK_A)) : 35 * clamp((T - KCLOCK_A) / (KCLOCK_B - KCLOCK_A)));
 const QUAKE = b(168) + 0.3;
-const OKAWA_FLOOD = atMinute(49), KAMA_FLOOD = atMinute(35);
+const OKAWA_FLOOD = atMinute(49), KAMA_FLOOD = kaMinute(35);
 
 /* ---------------- map helpers ---------------- */
 type Hill = { x: number; y: number; r: number; h: number; ph: number };
@@ -94,7 +101,7 @@ const Okawa: React.FC<{ T: number }> = ({ T }) => {
   const gather = easeInOut(prog(T, b(176), b(178)));
   const move = easeInOut(prog(T, atMinute(46.5), atMinute(50)));
   const flood = prog(T, OKAWA_FLOOD, OKAWA_FLOOD + 1.6);
-  const hillO = easeOut(prog(T, b(186), b(187))) * (1 - prog(T, b(193), b(194)));
+  const hillO = easeOut(prog(T, b(185), b(186))) * (1 - prog(T, b(190), b(191)));
   return (
     <g>
       <rect width={PW} height={PH} fill="#16202c" />
@@ -127,7 +134,7 @@ const Okawa: React.FC<{ T: number }> = ({ T }) => {
         const lost = flood > 0.4 ? clamp((flood - 0.4) * 3) : 0;
         return <circle key={i} cx={x} cy={y} r={4.2} fill="#f6cf78" opacity={draw * (1 - 0.85 * lost)} />;
       })}
-      <Tally n={108} bad={74} cols={18} size={14} x={150} y={150} o={easeOut(prog(T, b(194), b(194) + 0.4))} t={prog(T, b(194), b(196))}
+      <Tally n={108} bad={74} cols={18} size={14} x={150} y={150} o={easeOut(prog(T, b(194), b(194) + 0.4))} t={prog(T, b(194), b(196.5))}
         label="108个学生 · 灰色：遇难" big="74" bigColor="#ff6a5c" />
     </g>
   );
@@ -165,16 +172,16 @@ const Kamaishi: React.FC<{ T: number }> = ({ T }) => {
           <text x={s.x} y={s.y + 46} textAnchor="middle" style={{ fontFamily: ZH, fontSize: 18, fill: '#c9c2b0' }}>{s.name}</text>
         </g>
       ))}
-      <text x={KA_GOAL.x} y={KA_GOAL.y - 62} textAnchor="middle" style={{ fontFamily: ZH, fontWeight: 700, fontSize: 22, fill: '#f6cf78' }} opacity={easeOut(prog(T, b(182), b(183)))}>高处</text>
+      <text x={KA_GOAL.x} y={KA_GOAL.y - 62} textAnchor="middle" style={{ fontFamily: ZH, fontWeight: 700, fontSize: 22, fill: '#f6cf78' }} opacity={easeOut(prog(T, b(205), b(206)))}>高处</text>
       <Flood hills={KA_HILLS} t={flood} from="bottom" level={0.3} seaEdge={SEA_Y} />
       {KA_DOTS.map((d, i) => {
-        const u = easeInOut(clamp((T - (b(177) + d.delay)) / 4.2));
+        const u = easeInOut(clamp((T - (KCLOCK_A + 0.3 + d.delay)) / 4.2));
         const mx = lerp(d.sx, d.gx, 0.5) + 60 * Math.sin(i), my = lerp(d.sy, d.gy, 0.55) + 20;
         const x = (1 - u) * (1 - u) * d.sx + 2 * (1 - u) * u * mx + u * u * d.gx + (u >= 1 ? Math.sin(T * 1.4 + d.ph) * 2 : 0);
         const y = (1 - u) * (1 - u) * d.sy + 2 * (1 - u) * u * my + u * u * d.gy;
         return <circle key={i} cx={x} cy={y} r={4.6} fill="#f6cf78" opacity={draw} />;
       })}
-      <Tally n={500} bad={1} cols={25} size={9} x={190} y={300} o={easeOut(prog(T, b(205), b(205) + 0.4))} t={prog(T, b(205), b(207))}
+      <Tally n={500} bad={1} cols={25} size={9} x={190} y={300} o={easeOut(prog(T, BOTH, BOTH + 0.4))} t={prog(T, BOTH, BOTH + 1.2)}
         label="近3000名中小学生 · 每格≈6人" big="99.8%" bigColor="#f6cf78" />
     </g>
   );
@@ -185,41 +192,61 @@ type Line = [number, number, string, string];
 const LINES: Line[] = [
   [SC_IN + 0.15, b(176) - 0.1, '2011年3月11日，日本大地震，海啸正在赶来', '11 March 2011. A great earthquake, and a tsunami on its way.'],
   [b(176) + 0.06, b(184) - 0.1, '大川小学：老师让学生在操场集合，讨论往哪撤', 'Okawa Elementary: the children waited in the schoolyard while teachers talked.'],
-  [b(184) + 0.06, b(194) - 0.1, '在操场上等了将近50分钟，学校后面就是山', 'They waited almost 50 minutes. There was a hill right behind the school.'],
-  [b(194) + 0.06, b(200) - 0.1, '108个学生，{74人遇难}', '74 of 108 children died.'],
-  [b(200) + 0.06, b(205) - 0.1, '釜石的孩子，课上看过2004年印度洋海啸的录像', 'In Kamaishi, children had watched footage of the 2004 tsunami in class.'],
-  [b(205) + 0.06, SC_OUT - 0.15, '地震一停就往高处跑，生存率[99.8%]', 'They ran for high ground the moment the shaking stopped. 99.8% survived.'],
+  [b(184) + 0.06, b(190) - 0.1, '在操场上等了将近50分钟，学校后面就是山', 'They waited almost 50 minutes. There was a hill right behind the school.'],
+  [b(190) + 0.06, b(194) - 0.1, '最后，他们往河边的大桥走', 'In the end they walked towards the bridge by the river.'],
+  [b(194) + 0.06, SOLO_KA - 0.1, '108个学生，{74人遇难}', '74 of 108 children died.'],
+  [SOLO_KA + 0.06, b(206) - 0.1, '同一天的釜石，孩子们课上看过2004年海啸的录像', 'The same day in Kamaishi: these children had watched footage of the 2004 tsunami in class.'],
+  [b(206) + 0.06, b(212) - 0.1, '地震一停就往高处跑，大的拉着小的', 'They ran for high ground the moment the shaking stopped, the older ones leading the younger.'],
+  [b(212) + 0.06, BOTH - 0.1, '海啸冲进了他们的学校，人已经在山上', 'The wave went through their schools. They were already up the hill.'],
+  [BOTH + 0.06, b(223) - 0.1, '近3000名中小学生，生存率[99.8%]', 'Nearly 3,000 schoolchildren. 99.8% survived.'],
+  [b(223) + 0.06, SC_OUT - 0.25, '同一场海啸，差别只在：[先跑]，还是先等', 'The same tsunami. The difference: run first, or wait.'],
 ];
+/* panel layout: split (both) or solo (one, centred and larger) */
+const SOLO_S = 1.12;
+const layout = (side: number, T: number) => {
+  const split = { x: PX[side], y: PY, s: 1, o: 1 };
+  const solo = { x: (W - PW * SOLO_S) / 2, y: 128, s: SOLO_S, o: 1 };
+  const k = side === 0
+    ? easeInOut(prog(T, SOLO_OK - 0.4, SOLO_OK + 0.5)) * (1 - easeInOut(prog(T, BOTH - 0.4, BOTH + 0.4)))
+    : easeInOut(prog(T, SOLO_KA - 0.1, SOLO_KA + 0.7)) * (1 - easeInOut(prog(T, BOTH - 0.4, BOTH + 0.4)));
+  const vis = side === 0
+    ? clamp(1 - easeInOut(prog(T, SOLO_KA - 0.5, SOLO_KA - 0.1)) + easeInOut(prog(T, BOTH - 0.4, BOTH + 0.3)))
+    : clamp(1 - easeInOut(prog(T, SOLO_OK - 0.4, SOLO_OK)) + easeInOut(prog(T, SOLO_KA - 0.1, SOLO_KA + 0.5)));
+  return { x: lerp(split.x, solo.x, k), y: lerp(split.y, solo.y, k), s: lerp(1, SOLO_S, k), o: vis };
+};
 export const SchoolsScene: React.FC<{ T: number }> = ({ T }) => {
   if (T < SC_IN - 0.05 || T > SC_OUT + 0.05) return null;
   const inO = easeOut(prog(T, SC_IN - 0.05, SC_IN + 0.5));
   const outO = 1 - easeIn(prog(T, SC_OUT - 0.4, SC_OUT));
   const quake = T > QUAKE && T < QUAKE + 1.6 ? 7 * (1 - (T - QUAKE) / 1.6) : 0;
-  const qx = quake * Math.sin(T * 63), qy = quake * Math.sin(T * 47);
-  const m = minutes(T);
+  const kq = T > KCLOCK_A - 0.6 && T < KCLOCK_A + 0.6 ? 5 * (1 - Math.abs(T - KCLOCK_A) / 0.6) : 0;
+  const qx = (quake + kq) * Math.sin(T * 63), qy = (quake + kq) * Math.sin(T * 47);
+  const m = T < CLOCK_A ? 0 : minutes(T);
   const hh = 14 + Math.floor((46 + m) / 60), mm = Math.floor((46 + m) % 60);
-  const clockO = easeOut(prog(T, SC_IN + 0.4, SC_IN + 0.9));
-  // focus: dim the side that is not being talked about
-  const focusL = T < b(176) ? 1 : T < b(200) ? 1 : 0.45;
-  const focusR = T < b(176) ? 1 : T < b(200) ? 0.6 : 1;
+  const clockO = easeOut(prog(T, SC_IN + 0.4, SC_IN + 0.9)) * (1 - easeIn(prog(T, BOTH - 0.4, BOTH)));
+  const tag = T < SOLO_OK ? '地震' : T < SOLO_KA ? '大川小学 · 地震后' : '釜石 · 地震后';
   return (
     <AbsoluteFill style={{ backgroundColor: '#05070d', opacity: inO * outO }}>
       <svg width={W} height={H}>
         <g transform={`translate(${qx}, ${qy})`}>
-          {[0, 1].map((side) => (
-            <g key={side} transform={`translate(${PX[side]}, ${PY})`} opacity={side ? focusR : focusL}>
-              <defs><clipPath id={`sc${side}`}><rect width={PW} height={PH} rx={10} /></clipPath></defs>
-              <g clipPath={`url(#sc${side})`}>{side ? <Kamaishi T={T} /> : <Okawa T={T} />}</g>
-              <rect width={PW} height={PH} rx={10} fill="none" stroke="#c9c2b0" strokeWidth={3} />
-              <text x={0} y={-22} style={{ fontFamily: ZH, fontWeight: 700, fontSize: 32, fill: '#f3ede2', letterSpacing: '0.12em' }}>{side ? '釜石市' : '大川小学'}</text>
-              <text x={side ? 118 : 150} y={-22} style={{ fontFamily: ZH, fontSize: 22, fill: 'rgba(243,237,226,0.55)', letterSpacing: '0.1em' }}>{side ? '岩手县' : '宫城县石卷市'}</text>
-            </g>
-          ))}
+          {[0, 1].map((side) => {
+            const L = layout(side, T);
+            if (L.o <= 0.001) return null;
+            return (
+              <g key={side} transform={`translate(${L.x}, ${L.y}) scale(${L.s})`} opacity={L.o}>
+                <defs><clipPath id={`sc${side}`}><rect width={PW} height={PH} rx={10} /></clipPath></defs>
+                <g clipPath={`url(#sc${side})`}>{side ? <Kamaishi T={T} /> : <Okawa T={T} />}</g>
+                <rect width={PW} height={PH} rx={10} fill="none" stroke="#c9c2b0" strokeWidth={3} />
+                <text x={0} y={-22} style={{ fontFamily: ZH, fontWeight: 700, fontSize: 32, fill: '#f3ede2', letterSpacing: '0.12em' }}>{side ? '釜石市' : '大川小学'}</text>
+                <text x={side ? 118 : 150} y={-22} style={{ fontFamily: ZH, fontSize: 22, fill: 'rgba(243,237,226,0.55)', letterSpacing: '0.1em' }}>{side ? '岩手县' : '宫城县石卷市'}</text>
+              </g>
+            );
+          })}
         </g>
         <g opacity={clockO}>
-          <rect x={W / 2 - 150} y={40} width={300} height={66} rx={33} fill="#0b111e" stroke="#c9c2b0" strokeOpacity={0.4} />
-          <text x={W / 2 - 18} y={85} textAnchor="end" style={{ fontFamily: EN, fontWeight: 600, fontSize: 44, fill: '#f3ede2', fontVariantNumeric: 'tabular-nums' }}>{hh}:{String(mm).padStart(2, '0')}</text>
-          <text x={W / 2 + 0} y={82} style={{ fontFamily: ZH, fontSize: 20, fill: 'rgba(243,237,226,0.6)' }}>地震后 {Math.floor(m)} 分钟</text>
+          <rect x={W / 2 - 190} y={40} width={380} height={66} rx={33} fill="#0b111e" stroke="#c9c2b0" strokeOpacity={0.4} />
+          <text x={W / 2 - 40} y={85} textAnchor="end" style={{ fontFamily: EN, fontWeight: 600, fontSize: 44, fill: '#f3ede2', fontVariantNumeric: 'tabular-nums' }}>{hh}:{String(mm).padStart(2, '0')}</text>
+          <text x={W / 2 - 22} y={82} style={{ fontFamily: ZH, fontSize: 20, fill: 'rgba(243,237,226,0.6)' }}>{tag}{T >= SOLO_OK ? ` ${Math.floor(m)} 分钟` : ''}</text>
         </g>
       </svg>
       {LINES.map(([at, out, zh, en], i) => <Sub key={i} T={T} at={at} out={out} zh={zh} en={en} />)}

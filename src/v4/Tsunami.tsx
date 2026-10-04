@@ -174,6 +174,7 @@ const Palms: React.FC = () => {
       const x = -85 + rnd[1000 + i] * 170, z = 11 + rnd[3000 + i] * 22;
       const zz = z + shoreOff(x);
       if (zz < 11 || (x > HOTEL.x0 - 3 && x < HOTEL.x1 + 3 && z > HOTEL.z0 - 3 && z < HOTEL.z1 + 3)) continue;
+      if (x > 50 && x < 84 && z < 42) continue; // the camera's side of the hotel
       spots.push([x, z, rnd[5000 + i], rnd[6000 + i]]);
     }
     const tg = new THREE.CylinderGeometry(0.07, 0.11, 2.4, 6); tg.translate(0, 1.2, 0);
@@ -334,24 +335,67 @@ const TillyRing: React.FC<{ Tw: number; T: number }> = ({ Tw, T }) => {
     </group>
   );
 };
-/* fish flapping on the exposed seabed (region A) */
+/* the exposed seabed (region A): fish flapping, shells, rocks, weed, tide pools.
+   All of it sits on the seabed under the opaque water and only shows once the sea drains away. */
+const BED = (i: number, k: number) => {
+  const x = -76 + rnd[(k * 1931 + i * 7) % 20000] * 62, zz = -3 - rnd[(k * 2731 + i * 11) % 20000] * 52;
+  return [x, zz - shoreOff(x)];
+};
+const NFISH = 320;
 const Fish: React.FC<{ Tw: number }> = ({ Tw }) => {
   const mesh = useMemo(() => {
-    const g = new THREE.PlaneGeometry(0.22, 0.08);
-    return new THREE.InstancedMesh(g, new THREE.MeshStandardMaterial({ color: '#dfe6ea', metalness: 0.8, roughness: 0.25, side: THREE.DoubleSide }), 140);
+    const g = new THREE.SphereGeometry(0.5, 10, 6); g.scale(0.42, 0.07, 0.14);
+    const m = new THREE.InstancedMesh(g, new THREE.MeshStandardMaterial({ metalness: 0.75, roughness: 0.25 }), NFISH);
+    const cols = ['#dfe6ea', '#c9d6de', '#e8d9b0', '#9fb8c8', '#f0c8a0'];
+    for (let i = 0; i < NFISH; i++) m.setColorAt(i, new THREE.Color(cols[i % 5]));
+    return m;
   }, []);
   const o = useMemo(() => new THREE.Object3D(), []);
-  const dr = drain(Tw);
-  for (let i = 0; i < 140; i++) {
-    const x = -72 + rnd[12000 + i] * 58, zz = -4 - rnd[12200 + i] * 50, z = zz - shoreOff(x);
-    const show = dr > 0.6 && waterH(x, z, Tw) < groundY(x, z) ? 1 : 0.0001;
-    o.position.set(x, groundY(x, z) + 0.05 + 0.04 * Math.abs(Math.sin(Tw * 7 + i)), z);
-    o.rotation.set(-Math.PI / 2 + 0.6 * Math.sin(Tw * 9 + i * 3), rnd[12400 + i] * 6, 0);
-    o.scale.setScalar(show); o.updateMatrix();
+  for (let i = 0; i < NFISH; i++) {
+    const [x, z] = BED(i, 1);
+    const flap = Math.sin(Tw * 8 + i * 1.7);
+    o.position.set(x, groundY(x, z) + 0.05 + 0.06 * Math.max(0, flap), z);
+    o.rotation.set(0.6 * flap, rnd[(12400 + i) % 20000] * 6, 0.35 * Math.sin(Tw * 6 + i));
+    o.scale.setScalar(0.7 + 0.6 * rnd[(12800 + i) % 20000]); o.updateMatrix();
     mesh.setMatrixAt(i, o.matrix);
   }
   mesh.instanceMatrix.needsUpdate = true;
   return <primitive object={mesh} />;
+};
+const Seabed: React.FC = () => {
+  const objs = useMemo(() => {
+    const o = new THREE.Object3D();
+    const make = (geo: THREE.BufferGeometry, mat: THREE.Material, n: number, k: number, place: (i: number, x: number, z: number) => void, cols?: string[]) => {
+      const m = new THREE.InstancedMesh(geo, mat, n);
+      for (let i = 0; i < n; i++) {
+        const [x, z] = BED(i, k);
+        place(i, x, z);
+        o.updateMatrix(); m.setMatrixAt(i, o.matrix);
+        if (cols) m.setColorAt(i, new THREE.Color(cols[Math.floor(rnd[(k * 977 + i) % 20000] * cols.length)]));
+      }
+      return m;
+    };
+    const shellG = new THREE.ConeGeometry(0.09, 0.05, 7); shellG.rotateX(Math.PI);
+    const shells = make(shellG, new THREE.MeshStandardMaterial({ roughness: 0.5 }), 700, 2, (i, x, z) => {
+      o.position.set(x, groundY(x, z) + 0.02, z); o.rotation.set(0.2, rnd[(i * 13) % 20000] * 6, 0); o.scale.setScalar(0.7 + rnd[(i * 17) % 20000]);
+    }, ['#f4ece0', '#f2c9b8', '#e8a87c', '#d9c7a8', '#ffffff']);
+    const rocks = make(new THREE.DodecahedronGeometry(0.35, 0), new THREE.MeshStandardMaterial({ color: '#6a6458', roughness: 0.95 }), 140, 3, (i, x, z) => {
+      const s = 0.5 + 1.6 * rnd[(i * 19) % 20000] ** 2;
+      o.position.set(x, groundY(x, z) + 0.05 * s, z); o.rotation.set(rnd[(i * 23) % 20000] * 3, rnd[(i * 29) % 20000] * 3, 0); o.scale.set(s, s * 0.55, s * 0.8);
+    });
+    const weedG = new THREE.CircleGeometry(0.6, 9); weedG.rotateX(-Math.PI / 2);
+    const weed = make(weedG, new THREE.MeshStandardMaterial({ roughness: 0.9 }), 160, 4, (i, x, z) => {
+      const s = 0.6 + 1.6 * rnd[(i * 31) % 20000];
+      o.position.set(x, groundY(x, z) + 0.012, z); o.rotation.set(0, rnd[(i * 37) % 20000] * 6, 0); o.scale.set(s, 1, s * (0.5 + rnd[(i * 41) % 20000]));
+    }, ['#3f5a2c', '#4a6a30', '#5a5a24', '#2f4a30']);
+    const poolG = new THREE.CircleGeometry(1, 20); poolG.rotateX(-Math.PI / 2);
+    const pools = make(poolG, new THREE.MeshStandardMaterial({ color: '#6fb8c8', roughness: 0.08, metalness: 0.2 }), 45, 5, (i, x, z) => {
+      const s = 0.8 + 2.4 * rnd[(i * 43) % 20000];
+      o.position.set(x, groundY(x, z) + 0.02, z); o.rotation.set(0, rnd[(i * 47) % 20000] * 6, 0); o.scale.set(s, 1, s * (0.45 + 0.4 * rnd[(i * 53) % 20000]));
+    });
+    return [shells, rocks, weed, pools];
+  }, []);
+  return <>{objs.map((m, i) => <primitive key={i} object={m} />)}</>;
 };
 /* spray when the wave breaks on the beach */
 const Spray: React.FC<{ Tw: number }> = ({ Tw }) => {
@@ -386,7 +430,8 @@ const KEYS: Key[] = [
   [b(123), [TXp + 3.2, 1.4, TZp + 5.6], [TXp, 0.4, TZp - 1.5]],
   [b(132), [TXp + 1.7, 0.85, TZp + 3.0], [TXp, 0.38, TZp - 0.4]],
   [b(136), [TXp + 2.2, 1.1, TZp + 4.0], [TXp, 0.4, TZp]],
-  [b(142), [TXp + 6, 3.2, 26], [TXp - 1, 0.8, 8]],
+  [b(142), [62, 4, 5], [42, 1, 8]],
+  [b(146), [70, 8, 20], [40, 1.2, 4]],
   [b(148), [76, 13, 36], [36, 0.5, -6]],
   [b(154), [64, 4.4, 20], [40, 2.4, -20]],
   [b(160), [63, 5.0, 22], [40, 1.4, -6]],
@@ -400,10 +445,12 @@ const camAt = (T: number) => {
   const k = easeInOut(prog(T, ta, tb));
   const pos = pa.map((x, j) => lerp(x, pb[j], k)), look = la.map((x, j) => lerp(x, lb[j], k));
   // follow Tilly while she runs
-  if (T > b(136) && T < b(144)) {
-    const { x, z } = personAt(TILLY, warp(T));
-    const f = easeInOut(prog(T, b(136), b(137))) * (1 - easeInOut(prog(T, b(142), b(144))));
-    pos[0] += (x - TXp) * f; pos[2] += (z - TZp) * f; look[0] += (x - TXp) * f; look[2] += (z - TZp) * f;
+  // track her from the side as she runs up the beach (the camera stays seaward of the hotel and east of it)
+  if (T > b(136) && T < b(142)) {
+    const { x, y, z } = personAt(TILLY, warp(T));
+    const f = easeInOut(prog(T, b(136), b(137) + 0.2)) * (1 - easeInOut(prog(T, b(140) + 0.3, b(142))));
+    const fp = [x + 11, y + 2.2, Math.min(z - 1, 12)], fl = [x, y + 0.5, z + 2];
+    for (let j = 0; j < 3; j++) { pos[j] = lerp(pos[j], fp[j], f); look[j] = lerp(look[j], fl[j], f); }
   }
   const sh = T > DROP2 ? 0.22 * Math.exp(-(T - DROP2) * 2.2) : 0;
   return { pos: [pos[0] + sh * Math.sin(T * 47), pos[1] + sh * Math.sin(T * 61), pos[2]], look };
@@ -441,6 +488,7 @@ const Scene: React.FC<{ T: number; normals: THREE.Texture }> = ({ T, normals }) 
       <People Tw={Tw} T={T} />
       <TillyRing Tw={Tw} T={T} />
       <Fish Tw={Tw} />
+      <Seabed />
       <Spray Tw={Tw} />
     </>
   );
