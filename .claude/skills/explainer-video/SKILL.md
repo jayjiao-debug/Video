@@ -302,6 +302,10 @@ were looking at.
   jump to an unrelated world, flash empty, or blur into mush.
 - **Sync check:** grab frames 0.05 s before and after each accent you used
   (freeze, stamps, cuts, drop); the change must land within one frame.
+  Lines snap to the beat grid, which can sit ~3 frames after the audible onset (the
+  "回归均值" slam in 《夸完就翻车》 landed 3 frames late on its line's cue). Land slams on the
+  accent itself: the nearest strong `music.hits` frame within ±8 frames of the cue, read from
+  `useTimeline().music.hits` minus `scene.from`.
 - `python3 make.py <id>` → `out/<id>.mp4` (CRF 18 slow, −14 LUFS);
   `--share` for a small copy; chat uploads over ~30 MB fail, so send a 720p preview.
 - Keep the user posted with short progress notes during long work.
