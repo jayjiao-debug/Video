@@ -11,7 +11,7 @@ export const PK = 0.82, PX = 1060 - (PW * PK) / 2, PY = 470 - (PH * PK) / 2; // 
 const AV = [PX + (SX + SW - 62) * PK, PY + (SY + 236) * PK]; // his own avatar on the header
 const LINES: Line[] = [
   [-0.4, b(22) - 0.08, '好像人人都比我热闹', 'Everyone seems to have more going on than me.'],
-  [b(22) + 0.06, b(31.6), '你的朋友，真的[比你朋友多]', 'Your friends really do have more friends than you.'],
+  [b(22) + 0.06, b(29.6), '你的朋友，真的[比你朋友多]', 'Your friends really do have more friends than you.'],
 ];
 /* the camera: scale s about focus (fx, fy) */
 const cam = (T: number) => {
