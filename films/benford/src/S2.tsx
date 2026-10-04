@@ -4,7 +4,8 @@ import { useThree } from '@react-three/fiber';
 import { ThreeCanvas } from '@remotion/three';
 import { AbsoluteFill, continueRender, delayRender, staticFile, useVideoConfig } from 'remotion';
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
-import { b, prog, easeOut, easeInOut, camAt, benford, mulberry, EN, GOLD, INK, type Key } from './lib';
+import { RoundedBoxGeometry } from 'three/examples/jsm/geometries/RoundedBoxGeometry.js';
+import { b, prog, easeOut, easeInOut, camAt, benford, mulberry, EN, ZH as ZH_, GOLD, INK, type Key } from './lib';
 import { Subs, SubBand, Chapter, type Line } from './ui';
 import { PersonCard } from './PersonCard';
 
@@ -31,8 +32,8 @@ export const LINES_S2A: Line[] = [
 const KEYS: Key[] = [
   [b(43), [BOOK.x, bandY(5), EDGE_Z + 0.2], [BOOK.x, bandY(5), EDGE_Z]],
   [b(45), [BOOK.x, bandY(5), EDGE_Z + 0.23], [BOOK.x, bandY(5), EDGE_Z]],
-  [b(52), [-0.3, 1.3, 1.4], [0.1, 0.98, 0.02]],
-  [b(59), [-0.22, 1.18, 1.1], [0.08, 0.96, 0.04]],
+  [b(52), [-0.42, 1.36, 1.72], [0.12, 1.06, 0.02]],
+  [b(59), [-0.3, 1.24, 1.32], [0.1, 1.0, 0.04]],
   [b(61), [BOOK.x - 0.12, bandY(2) + 0.015, EDGE_Z + 0.2], [BOOK.x - 0.02, bandY(2), EDGE_Z]],
   [b(68), [BOOK.x - 0.02, bandY(4) + 0.01, EDGE_Z + 0.19], [BOOK.x + 0.02, bandY(4), EDGE_Z]],
   [b(75), [BOOK.x + 0.1, bandY(8), EDGE_Z + 0.17], [BOOK.x + 0.06, bandY(8.5), EDGE_Z]],
@@ -99,8 +100,10 @@ const loadAssets = async () => {
   if (ASSETS) return ASSETS;
   const L = new GLTFLoader();
   const [d, i, l] = await Promise.all(['desk1881', 'inkwell', 'oil_lamp'].map((n) => L.loadAsync(staticFile(`models/${n}.glb`))));
-  for (const s of [d.scene, i.scene, l.scene]) s.traverse((o: any) => { if (o.isMesh) { o.castShadow = true; o.receiveShadow = true; } });
-  ASSETS = { desk: normalize(d.scene, 0.9), ink: normalize(i.scene, 0.156), lamp: normalize(l.scene, 0.54) };
+  for (const s of [d.scene, i.scene]) s.traverse((o: any) => { if (o.isMesh) { o.castShadow = true; o.receiveShadow = true; } });
+  // the lamp holds the light: if it cast shadows its own shade would throw a hard slab of dark across the wall
+  l.scene.traverse((o: any) => { if (o.isMesh) { o.castShadow = false; o.receiveShadow = true; } });
+  ASSETS = { desk: normalize(d.scene, 0.9), ink: normalize(i.scene, 0.156), lamp: normalize(l.scene, 0.48) };
   return ASSETS;
 };
 
@@ -121,6 +124,27 @@ const toScreen = (T: number, v: number[]) => {
   return { x: ((p.x + 1) / 2) * 1920, y: ((1 - p.y) / 2) * 1080 };
 };
 
+const leather = (w: number, h: number, title: boolean) => {
+  const c = document.createElement('canvas'); c.width = w; c.height = h;
+  const g = c.getContext('2d')!;
+  g.fillStyle = '#4a2214'; g.fillRect(0, 0, w, h);
+  const r = mulberry(5);
+  for (let k = 0; k < (w * h) / 60; k++) { g.fillStyle = `rgba(${r() > 0.5 ? '20,8,4' : '120,60,36'},${0.05 + r() * 0.08})`; g.fillRect(r() * w, r() * h, 1 + r() * 3, 1 + r() * 3); }
+  const wear = g.createRadialGradient(w / 2, h / 2, Math.min(w, h) * 0.2, w / 2, h / 2, Math.max(w, h) * 0.7);
+  wear.addColorStop(0, 'rgba(0,0,0,0)'); wear.addColorStop(1, 'rgba(10,4,2,0.45)'); g.fillStyle = wear; g.fillRect(0, 0, w, h);
+  if (title) {
+    g.strokeStyle = '#c9a050'; g.lineWidth = 6; g.strokeRect(34, 34, w - 68, h - 68); g.lineWidth = 2; g.strokeRect(52, 52, w - 104, h - 104);
+    g.fillStyle = '#d8b25a'; g.textAlign = 'center';
+    const font = (px: number, it = false) => `${it ? 'italic ' : ''}700 ${px}px "Noto Serif CJK SC", serif`;
+    g.font = font(54); g.fillText('A NEW MANUAL', w / 2, h * 0.3);
+    g.font = font(40); g.fillText('OF', w / 2, h * 0.41);
+    g.font = font(74); g.fillText('LOGARITHMS', w / 2, h * 0.55);
+    g.font = font(38); g.fillText('TO SEVEN PLACES OF DECIMALS', w / 2, h * 0.66);
+    g.font = font(44); g.fillText('— BRUHNS —', w / 2, h * 0.8);
+  }
+  const t = new THREE.CanvasTexture(c); t.colorSpace = THREE.SRGBColorSpace; t.anisotropy = 8; return t;
+};
+
 const Book: React.FC = () => {
   const mats = useMemo(() => {
     const edge = new THREE.MeshStandardMaterial({ map: foreEdgeTexture(), roughness: 0.92 });
@@ -129,16 +153,68 @@ const Book: React.FC = () => {
     // box faces: +x, -x, +y, -y, +z (fore-edge), -z (spine side)
     return [side, side, plain, plain, edge, plain];
   }, []);
-  const cover = useMemo(() => new THREE.MeshStandardMaterial({ color: '#4a2416', roughness: 0.55, metalness: 0.05 }), []);
+  const cover = useMemo(() => new THREE.MeshStandardMaterial({ map: leather(512, 512, false), roughness: 0.58, metalness: 0.04 }), []);
+  const face = useMemo(() => new THREE.MeshStandardMaterial({ map: leather(1300, 900, true), roughness: 0.55, metalness: 0.08 }), []);
+  const board = useMemo(() => new RoundedBoxGeometry(BOOK.L + 0.012, 0.006, BOOK.Wd + 0.012, 3, 0.0028), []);
   const { x, z, L, Wd, Th } = BOOK;
   const y0 = DESK_TOP;
   return (
     <group>
-      <mesh position={[x, y0 + 0.0025, z + 0.003]} castShadow receiveShadow><boxGeometry args={[L + 0.012, 0.005, Wd + 0.012]} /><primitive object={cover} attach="material" /></mesh>
+      <mesh position={[x, y0 + 0.003, z + 0.003]} geometry={board} material={cover} castShadow receiveShadow />
       <mesh position={[x, y0 + 0.005 + Th / 2, z]} material={mats} castShadow receiveShadow><boxGeometry args={[L, Th, Wd]} /></mesh>
-      <mesh position={[x, y0 + 0.005 + Th + 0.0025, z + 0.003]} castShadow receiveShadow><boxGeometry args={[L + 0.012, 0.005, Wd + 0.012]} /><primitive object={cover} attach="material" /></mesh>
+      <mesh position={[x, y0 + 0.005 + Th + 0.003, z + 0.003]} geometry={board} material={cover} castShadow receiveShadow />
+      {/* the gilt title on the front board */}
+      <mesh position={[x, y0 + 0.005 + Th + 0.0062, z + 0.003]} rotation={[-Math.PI / 2, 0, 0]} material={face} receiveShadow><planeGeometry args={[L + 0.006, Wd + 0.006]} /></mesh>
+      {/* headbands at both ends of the spine */}
+      {[-1, 1].map((k) => <mesh key={k} position={[x + k * (L / 2 - 0.002), y0 + 0.005 + Th / 2, z - Wd / 2 + 0.004]}><boxGeometry args={[0.004, Th * 0.9, 0.008]} /><meshStandardMaterial color="#7a2a22" roughness={0.8} /></mesh>)}
       {/* the spine, rounded */}
       <mesh position={[x, y0 + 0.005 + Th / 2, z - Wd / 2 - 0.002]} rotation={[0, 0, Math.PI / 2]} castShadow><cylinderGeometry args={[Th / 2 + 0.006, Th / 2 + 0.006, L + 0.012, 24, 1, false, 0, Math.PI]} /><primitive object={cover} attach="material" /></mesh>
+    </group>
+  );
+};
+
+const starChart = () => {
+  const c = document.createElement('canvas'); c.width = 900; c.height = 700;
+  const g = c.getContext('2d')!; g.fillStyle = '#e6d9b8'; g.fillRect(0, 0, 900, 700);
+  const r = mulberry(19);
+  g.strokeStyle = 'rgba(70,50,30,0.6)'; g.lineWidth = 2;
+  g.beginPath(); g.arc(450, 350, 300, 0, Math.PI * 2); g.stroke(); g.beginPath(); g.arc(450, 350, 200, 0, Math.PI * 2); g.stroke();
+  for (let k = 0; k < 12; k++) { g.beginPath(); g.moveTo(450, 350); g.lineTo(450 + 300 * Math.cos(k * Math.PI / 6), 350 + 300 * Math.sin(k * Math.PI / 6)); g.stroke(); }
+  for (let k = 0; k < 140; k++) { const a = r() * Math.PI * 2, d = Math.sqrt(r()) * 290; g.fillStyle = '#2a1d10'; g.beginPath(); g.arc(450 + d * Math.cos(a), 350 + d * Math.sin(a), 1 + r() * 4, 0, Math.PI * 2); g.fill(); }
+  const t = new THREE.CanvasTexture(c); t.colorSpace = THREE.SRGBColorSpace; return t;
+};
+/** soft round glow for the flame (a sprite without a map renders as a hard square) */
+const GLOW = (() => {
+  if (typeof document === 'undefined') return null as unknown as THREE.Texture;
+  const c = document.createElement('canvas'); c.width = c.height = 256;
+  const g = c.getContext('2d')!; const r = g.createRadialGradient(128, 128, 0, 128, 128, 128);
+  r.addColorStop(0, 'rgba(255,255,255,1)'); r.addColorStop(0.25, 'rgba(255,255,255,0.35)'); r.addColorStop(1, 'rgba(255,255,255,0)');
+  g.fillStyle = r; g.fillRect(0, 0, 256, 256);
+  return new THREE.CanvasTexture(c);
+})();
+const StarChart: React.FC = () => {
+  const m = useMemo(() => new THREE.MeshStandardMaterial({ map: starChart(), roughness: 1 }), []);
+  return (
+    <group position={[-0.25, 1.55, -0.74]}>
+      <mesh position={[0, 0, -0.005]}><boxGeometry args={[0.66, 0.54, 0.02]} /><meshStandardMaterial color="#2a180c" roughness={0.6} /></mesh>
+      <mesh position={[0, 0, 0.006]} material={m}><planeGeometry args={[0.58, 0.46]} /></mesh>
+    </group>
+  );
+};
+const Bookcase: React.FC = () => {
+  const r = mulberry(23);
+  const spines = Array.from({ length: 5 * 22 }, (_, k) => ({ row: Math.floor(k / 22), w: 0.025 + r() * 0.03, h: 0.2 + r() * 0.08, c: ['#3a1e14', '#24302a', '#4a3420', '#2a2236', '#5a2a1a'][Math.floor(r() * 5)] }));
+  let cx = 0, row = -1;
+  return (
+    <group position={[-1.55, 0, -0.62]}>
+      <mesh position={[0.4, 1.1, -0.1]}><boxGeometry args={[0.9, 2.2, 0.06]} /><meshStandardMaterial color="#1e140c" /></mesh>
+      {[0, 1, 2, 3, 4].map((k) => <mesh key={k} position={[0.4, 0.3 + k * 0.38, 0.0]}><boxGeometry args={[0.9, 0.025, 0.24]} /><meshStandardMaterial color="#2c1c10" /></mesh>)}
+      {spines.map((sp, k) => {
+        if (sp.row !== row) { row = sp.row; cx = 0.0; }
+        const x = cx + sp.w / 2; cx += sp.w + 0.003;
+        if (cx > 0.86) return null;
+        return <mesh key={k} position={[x, 0.3 + sp.row * 0.38 + 0.0125 + sp.h / 2, 0.02]}><boxGeometry args={[sp.w, sp.h, 0.18]} /><meshStandardMaterial color={sp.c} roughness={0.8} /></mesh>;
+      })}
     </group>
   );
 };
@@ -151,7 +227,7 @@ const Room: React.FC<{ T: number; a: Assets }> = ({ T, a }) => {
     <>
       <ambientLight intensity={0.05} color="#8aa0c8" />
       <directionalLight position={[-2.5, 2.6, -1.2]} intensity={0.35} color="#9db6e6" />
-      <pointLight position={[0.5, DESK_TOP + 0.36, 0.24]} intensity={3.2 * flick} distance={6} decay={2} color="#ffb766" castShadow shadow-mapSize-width={1024} shadow-mapSize-height={1024} shadow-bias={-0.0005} />
+      <pointLight position={[0.5, DESK_TOP + 0.32, 0.24]} intensity={3.2 * flick} distance={6} decay={2} color="#ffb766" castShadow shadow-mapSize-width={1024} shadow-mapSize-height={1024} shadow-bias={-0.0005} />
       <pointLight position={[0.2, DESK_TOP + 0.6, 0.9]} intensity={0.18} distance={4} decay={2} color="#ffcf9a" />
       <primitive object={a.desk} position={[0, 0, 0]} />
       <primitive object={a.lamp} position={[0.5, DESK_TOP, 0.22]} />
@@ -161,12 +237,14 @@ const Room: React.FC<{ T: number; a: Assets }> = ({ T, a }) => {
       <mesh position={[-0.2, DESK_TOP + 0.001, 0.14]} rotation={[-Math.PI / 2, 0, 0.12]} receiveShadow><planeGeometry args={[0.21, 0.28]} /><meshStandardMaterial color="#efe4c8" roughness={1} /></mesh>
       {/* wall, floor, a window of night sky */}
       <mesh position={[0, 1.4, -0.75]} receiveShadow><planeGeometry args={[8, 4]} /><primitive object={wall} attach="material" /></mesh>
+      <StarChart />
+      <Bookcase />
       <mesh position={[0, 0, 0]} rotation={[-Math.PI / 2, 0, 0]} receiveShadow><planeGeometry args={[8, 8]} /><meshStandardMaterial color="#17110c" roughness={1} /></mesh>
       <mesh position={[-1.25, 1.75, -0.74]}><planeGeometry args={[0.9, 1.2]} /><meshBasicMaterial color="#101c36" toneMapped={false} /></mesh>
       {[-0.45, 0, 0.45].map((dx, i) => <mesh key={i} position={[-1.25 + dx, 1.75, -0.735]}><planeGeometry args={[0.04, 1.2]} /><meshStandardMaterial color="#1b130c" /></mesh>)}
       <mesh position={[-1.25, 1.75, -0.735]}><planeGeometry args={[0.9, 0.04]} /><meshStandardMaterial color="#1b130c" /></mesh>
       {/* the flame's glow */}
-      <sprite position={[0.5, DESK_TOP + 0.36, 0.24]} scale={[0.5 * flick, 0.5 * flick, 1]}><spriteMaterial color="#ffb766" transparent opacity={0.35} blending={THREE.AdditiveBlending} depthWrite={false} toneMapped={false} /></sprite>
+      <sprite position={[0.5, DESK_TOP + 0.32, 0.24]} scale={[0.5 * flick, 0.5 * flick, 1]}><spriteMaterial map={GLOW} color="#ffb766" transparent opacity={0.5} blending={THREE.AdditiveBlending} depthWrite={false} toneMapped={false} /></sprite>
     </>
   );
 };
@@ -199,6 +277,9 @@ export const S2A: React.FC<{ T: number }> = ({ T }) => {
       })}
       <SubBand />
       <Chapter T={T} at={b(44)} out={b(60)} text="1881 · 美 国 华 盛 顿" />
+      <div style={{ position: 'absolute', left: 0, right: 0, top: 800, textAlign: 'center', fontFamily: ZH_, fontSize: 19, color: 'rgba(243,237,226,0.5)', opacity: easeOut(prog(T, b(61), b(62))) * (1 - easeInOut(prog(T, b(75), b(76)))) }}>
+        书：布鲁恩斯《七位对数新手册》（A New Manual of Logarithms，1870 年英文版），当时常用的对数表 · 示意
+      </div>
       <PersonCard T={T} at={b(52) + 0.3} out={b(60) - 0.1} name="SIMON NEWCOMB" zh="西蒙·纽康" years="1835 – 1909" role="天文学家 · 美国航海天文历局局长" />
       <Subs T={T} lines={LINES_S2A} />
     </AbsoluteFill>

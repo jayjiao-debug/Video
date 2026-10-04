@@ -18,10 +18,12 @@ export const PersonCard: React.FC<{ T: number; at: number; out: number; name: st
     <svg width={1920} height={1080} style={{ position: 'absolute', inset: 0, opacity: o }}>
       <defs>
         <clipPath id={id}><ellipse cx={90} cy={110} rx={74} ry={94} /></clipPath>
+        <radialGradient id={`${id}-shade`} cx="0.5" cy="0.5" r="0.5"><stop offset="0" stopColor="#05060b" stopOpacity="0.62" /><stop offset="0.7" stopColor="#05060b" stopOpacity="0.35" /><stop offset="1" stopColor="#05060b" stopOpacity="0" /></radialGradient>
         <radialGradient id={`${id}-bg`} cx="0.45" cy="0.4" r="0.7"><stop offset="0" stopColor="#f3e9d2" /><stop offset="1" stopColor="#d9c9a4" /></radialGradient>
       </defs>
       <g transform={`translate(${x},${y + rise})`}>
-        <rect x={-30} y={-20} width={600} height={260} rx={14} fill="#07060a" opacity={0.6} />
+        {/* a soft pool of shadow instead of a hard panel, so the card sits in the set */}
+        <ellipse cx={250} cy={110} rx={360} ry={170} fill={`url(#${id}-shade)`} />
         <ellipse cx={90} cy={110} rx={74} ry={94} fill={`url(#${id}-bg)`} />
         <g clipPath={`url(#${id})`}>
           <g transform="translate(16,20) scale(0.72)" fill="#231a12">
@@ -34,9 +36,9 @@ export const PersonCard: React.FC<{ T: number; at: number; out: number; name: st
         <ellipse cx={90} cy={110} rx={74} ry={94} fill="none" stroke="#c8913a" strokeWidth={3} />
         <ellipse cx={90} cy={110} rx={82} ry={102} fill="none" stroke="#c8913a" strokeWidth={1} opacity={0.6} />
         <text x={200} y={70} style={{ fontFamily: EN, fontWeight: 700, fontSize: 24, letterSpacing: '0.22em', fill: '#c8913a', fontVariantNumeric: 'lining-nums' }}>{name}</text>
-        <text x={200} y={124} style={{ fontFamily: ZH, fontWeight: 900, fontSize: 46, fill: '#f3ede2' }}>{zh}</text>
-        <text x={200} y={164} style={{ fontFamily: EN, fontWeight: 600, fontSize: 28, fill: '#cfc8b8', fontVariantNumeric: 'lining-nums' }}>{years}</text>
-        <text x={200} y={200} style={{ fontFamily: SANS, fontSize: 22, letterSpacing: '0.06em', fill: '#9a9488' }}>{role}</text>
+        <text x={200} y={124} paintOrder="stroke" stroke="#05060b" strokeWidth={6} strokeOpacity={0.6} style={{ fontFamily: ZH, fontWeight: 900, fontSize: 46, fill: '#f3ede2' }}>{zh}</text>
+        <text x={200} y={164} paintOrder="stroke" stroke="#05060b" strokeWidth={5} strokeOpacity={0.6} style={{ fontFamily: EN, fontWeight: 600, fontSize: 28, fill: '#e2dccf', fontVariantNumeric: 'lining-nums' }}>{years}</text>
+        <text x={200} y={200} paintOrder="stroke" stroke="#05060b" strokeWidth={5} strokeOpacity={0.6} style={{ fontFamily: SANS, fontSize: 22, letterSpacing: '0.06em', fill: '#c9c2b4' }}>{role}</text>
       </g>
     </svg>
   );
