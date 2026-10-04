@@ -1,0 +1,129 @@
+# 《第一位数字》: why so many numbers start with 1 (Benford's law)
+#
+# Status: storyboard draft, waiting for the owner's approval and the track (anchors are planned, not yet timed).
+#
+# Sources (checked):
+#   Newcomb, S. (1881). Note on the Frequency of Use of the Different Digits in Natural Numbers.
+#     American Journal of Mathematics 4(1): 39–40. Opening: the first pages of logarithm tables
+#     "wear out" faster than the last ones. Newcomb: astronomer, US Nautical Almanac Office, Washington.
+#   Benford, F. (1938). The Law of Anomalous Numbers. Proc. American Philosophical Society 78(4): 551–572.
+#     Physicist at General Electric (Schenectady). 20 tables, 20,229 observations: river areas (335),
+#     populations (3,259), physical constants (104), molecular weights, Reader's Digest numbers,
+#     street addresses (342), death rates (418) …
+#   P(d) = log10(1 + 1/d): 1 → 30.1 %, 9 → 4.6 % (a flat guess would be 11.1 % each).
+#   Growth illustration (our own toy model, 示意): +10 %/yr, 1,000 → 2,000 takes ln2/ln1.1 ≈ 7.3 yr,
+#     9,000 → 10,000 takes ln(10/9)/ln1.1 ≈ 1.1 yr; 1,000 → 10,000 ≈ 24.2 yr; 7.3/24.2 ≈ 30 %.
+#   State of Arizona v. Wayne James Nelson (CV92-18841, 1993): a manager in the Arizona State
+#     Treasurer's office wrote 23 cheques to a bogus vendor, nearly $2 million; over 90 % of the amounts
+#     began with 7, 8 or 9, most just under $100,000 (Nigrini, Journal of Accountancy, May 1999).
+#   Rauch, Göttsche, Brähler & Engel (2011). Fact and Fiction in EU-Governmental Economic Data.
+#     German Economic Review 12(3): 243–255: Greece's reported data deviated most from Benford of all
+#     EU members (as told by Tim Harford, 2011). Hedged in the script as "一项研究发现".
+#   Counter-examples: adult heights in metres (all 1.x), phone numbers, lottery balls: narrow range or
+#     assigned numbers, so no Benford pattern.
+#
+# Line markup: [gold] highlights the answer, {red} the trap.
+
+id: benford
+series: Juno · VIBE知识大赏
+title: 第一位数字
+subtitle: 为什么1开头的数字最多？
+format: horizontal
+fps: 30
+music: assets/music/bgm.mp3
+
+scenes:
+  - id: hook
+    component: Hook
+    kicker: 一本被翻旧的书
+    lines:
+      - 这本书，前几页被翻黑了。
+      - 后面几页，几乎是新的。
+      - 它不是小说。是一本[数字表]。
+
+  - id: office
+    component: Office
+    lead: 4.2   # the title card plays first, opened from the book's page
+    props: {quietLead: true}
+    kicker: 1881 · 华盛顿 · 航海历书局
+    lines:
+      - 1881年，华盛顿。
+      - 天文学家纽康，每天算星星的位置。
+      - 每算一次乘法，就要翻一次对数表。
+
+  - id: tabs
+    component: Tabs
+    kicker: 表是按第一位数字排的
+    lines:
+      - 1开头的数在最前面，9开头的在最后。
+      - 数字1到9，地位平等。
+      - 按理说，每一段{该被翻得一样多}。
+
+  - id: twist
+    component: Twist
+    at: break
+    kicker: 灯下的书脊
+    lines:
+      - {text: 不。, hold: 2.2}
+      - 越往前，越黑。
+      - 他写了两页纸。然后，没人在意。
+
+  - id: benford
+    component: Benford
+    kicker: 1938 · 斯克内克塔迪 · 通用电气
+    lines:
+      - 57年后，物理学家本福特，发现了同一件事。
+      - 河流面积、城市人口、物理常数、门牌号……
+      - 他收集了[20,229]个数字。
+
+  - id: town
+    component: Town
+    at: build
+    kicker: 一个小镇 · 示意
+    lines:
+      - 一个小镇，人口每年涨一成。
+      - 从1千涨到2千：要7年。
+      - 从9千涨到1万：只要1年。
+      - 然后，又回到1开头。
+      - {text: 1开头的数，到底占多少？, hold: 2.4}
+
+  - id: reveal
+    component: Reveal
+    at: drop
+    kicker: BENFORD'S LAW
+    cite: Benford, 1938
+    lines:
+      - 约[三成]，以1开头。
+      - 以9开头的，[不到5%]。
+      - 它叫[本福特定律]。
+
+  - id: cheques
+    component: Cheques
+    kicker: 1993 · 亚利桑那州财政办公室
+    cite: State of Arizona v. Nelson, 1993
+    lines:
+      - 1993年，一位经理开出23张支票。
+      - 金额是他自己{随手编的}。
+      - 九成以上，以7、8、9开头。
+      - 审计一比，[一眼就露馅]。
+      - 一项研究发现：希腊报给欧盟的数据，偏得最远。
+
+  - id: city
+    component: City
+    kicker: 哪些数字偏爱1
+    lines:
+      - 股价、账单、河长、文件大小……
+      - 自然增长、跨越很多量级的数，[都偏爱1]。
+      - 身高、电话号码、彩票号码——不算。
+      - ①数字要跨越好几个量级。
+      - ②人编的数，往往{太平均}。
+      - ③1开头最多，是[增长的形状]。
+
+  - id: coda
+    component: Coda
+    at: outro
+    lines:
+      - 回到那本书。
+      - 翻黑它的，不是某一个人。
+      - 是整个世界的[增长方式]。
+      - pause: 6   # end card
