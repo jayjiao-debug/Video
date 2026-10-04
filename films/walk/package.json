@@ -1,0 +1,21 @@
+{
+  "name": "walk",
+  "private": true,
+  "description": "《醉汉与小鸟》 — a Juno / VIBE知识大赏 film made with video-engine-v1",
+  "scripts": {
+    "studio": "remotion studio src/index.ts"
+  },
+  "dependencies": {
+    "@react-three/fiber": "8.17.10",
+    "@remotion/cli": "4.0.530",
+    "@remotion/three": "4.0.530",
+    "@remotion/noise": "4.0.530",
+    "@types/react": "18.3.12",
+    "@types/three": "0.169.0",
+    "react": "18.3.1",
+    "react-dom": "18.3.1",
+    "remotion": "4.0.530",
+    "three": "0.169.0",
+    "typescript": "5.6.3"
+  }
+}
