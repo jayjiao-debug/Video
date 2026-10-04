@@ -1,6 +1,6 @@
 ---
 name: pacing
-description: Pace a subtitle-only Juno / VIBE知识大赏 explainer so the viewer never finishes a line and then waits - reading-speed budget per line, no stretched windows, whole-bar music cuts when the track is longer than the story, and the pace check (pipeline/pace.py) before any render is sent. Use when writing or timing an episode's lines, when a plan warns a window is stretched, before rendering, or when the owner says it is slow, drags, 节奏太慢, 字幕读完了干等, 拖.
+description: Pace a subtitle-only Juno / VIBE知识大赏 explainer so the viewer never finishes a line and then waits, without breaking the music or the flow - reading-speed budget per line, story added where windows are long, music cut only in whole half-phrases, a 6–12 % waiting band, and the pace + flow check (pipeline/pace.py) before any render is sent. Use when writing or timing an episode's lines, when a plan warns a window is stretched, before rendering, or when the owner says it is slow, drags, 节奏太慢, 字幕读完了干等, 拖, or after a re-pace that 卡不上点 / 不流畅.
 ---
 
 # Pacing
@@ -12,9 +12,10 @@ pipeline, not the story: every episode was stretched to fill the whole 164 s tra
 the planner scales each window's lines up to fit its music anchors (×1.3–1.6), so the
 emptier the window, the longer each line sat on screen.
 
-**Rule: the story sets the length, not the track.** A line stays on screen as long as it
-takes to read, plus a moment to take in the picture. When the music leaves more time than
-the story needs, take music out (whole bars) or add story. Never let lines just sit.
+**Rule: a line stays on screen as long as it takes to read, plus a moment to take in the
+picture.** When the music leaves more time than the story needs, add story first; cut music
+only in whole half-phrases. Never let lines sit, and never squeeze the picture to get there:
+the music must still land and the camera must still breathe (§3).
 
 ## 1. The reading budget
 
@@ -56,31 +57,39 @@ Budget per beat type:
 
 ## 3. When a window is too long for its lines
 
-In order of preference:
+v2 of 《夸完就翻车》 cut six 2–4-bar pieces out of the track to kill every wait (2:44 → 2:12,
+waiting 5 %). The owner: "音乐卡不上点了，画面流畅性不够". Three things went wrong: the
+cuts broke the music's phrases (a 24-beat phrase where the ear expects 32), each crossfade
+pulled the rest of the track 30 ms early (~90 ms off by the drop, three frames), and the
+squeezed windows crammed every camera move and cut into less time. So, in this order:
 
-1. **Cut whole bars out of the track** where the music repeats (`music_cut` in
-   `episode.yaml`, original-track seconds). The planner snaps each cut to the beat grid
-   and a whole number of bars (4 beats), crossfades 30 ms, and maps your `markers` and
-   the music's own markers through the cuts, so keep writing markers in original-track
-   time. Good places: the middle of the break, the middle of a long drop section after
-   the answer has landed, the bars between two accents you anchor. Never cut across the
-   hook→title hit, the drop's onset, or an accent a line is pinned to.
+1. **Add story.** A concrete detail, a number, the doubters' question, a line that leads
+   into the next scene ("他说：去机库，我做给你们看。"). Each new line needs its own visual
+   change (a new shot, a cut back, a push toward the next place).
+2. **Move the anchor** to an earlier accent so the window shrinks.
+3. **Cut music only in whole half-phrases** (16 beats ≈ 8.1 s at 118 bpm, on the 16-beat
+   phrase grid counted from the break), at most one or two per episode, in a section
+   that repeats (the second half of the drop section after the answer has landed). Never
+   inside the hook, across the title hit, the drop's onset, or an accent a line is
+   pinned to. The planner snaps `music_cut` to that grid and compensates the crossfade,
+   and maps markers through the cuts (keep writing them in original-track time).
 
    ```yaml
    music_cut:
-     - [53.24, 61.38]    # 4 bars of the break
-     - [93.94, 102.08]   # 4 bars of the drop, after the answer lands
+     - [98.01, 106.15]   # beats 192–208: the drop section's second 8 bars
    ```
 
-2. **Add story**, not filler: a concrete detail, a number, a second example, a line that
-   names what the picture is already showing. Each new line needs its own visual change.
+   After cutting, check the alignment: cross-correlate a second of the original after
+   each cut with the edited track; the offset must be 0 ms.
 
-3. **Move the anchor** to an earlier accent so the window shrinks.
+Do not fix a long window by raising `hold:` or adding unnamed pauses, and do not squeeze
+it until nothing breathes.
 
-Do **not** fix it by raising `hold:` or adding unnamed pauses.
+## Too tight is a failure too
 
-Length that falls out of this for one idea at this density: ~2:00–2:20 (《夸完就翻车》:
-2:44 → 2:12 with six music cuts, waiting 22 % → 5 %).
+Waiting below ~6 % means every window is squeezed: camera moves get faster, shots
+shorter, transitions jump. Target **6–12 %**. When a scene's window shrinks, drop camera
+keys instead of compressing all of them, and give every shot change at least ~1.5 s.
 
 ## 4. The pace check (before every render you send)
 
@@ -89,14 +98,20 @@ python3 -m pipeline.pace <id>                  # from the timeline: run after --
 python3 -m pipeline.pace <id> out/<id>.mp4     # after the render: + picture motion in each wait
 ```
 
+```
+python3 -m pipeline.pace <id> out/<id>.mp4 --ref out/ox.mp4   # + flow next to an approved episode
+```
+
 It lists every line's on-screen time, its reading time and the wait after it, plus gaps
-with no line. Targets:
-- total waiting ≤ **12 %** of the runtime;
+with no line, and with a video the flow numbers (motion mean / p95, jerk mean / p99).
+Targets:
+- total waiting **6–12 %** of the runtime (`TOO TIGHT` below 6 %, `TOO SLOW` above 12 %);
+- flow within ~15 % of an approved episode (v2 of 《夸完就翻车》 was +20 % motion, +21 % jerk);
 - no line waits more than **1.2 s** unless the picture makes a big change in that time
   (the report marks waits with a cut or landing in them);
 - no gap without a line over ~2 s except the title card, a named visual beat and the end card.
 
-`TOO SLOW` means: go back to §3, re-plan, and re-check before rendering. Run it on the
+`TOO SLOW` or `TOO TIGHT` means: go back to §3, re-plan, and re-check before rendering. Run it on the
 plan first; a full render costs ~40 minutes.
 
 ## 5. Scenes that must follow the new timing

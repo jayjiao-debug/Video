@@ -9,6 +9,7 @@ held shot is.
 
   python -m pipeline.pace regress                 # timeline only
   python -m pipeline.pace regress out/regress.mp4 # + picture motion during each wait
+  python -m pipeline.pace regress out/regress.mp4 --ref out/ox.mp4   # + flow vs an approved episode
 
 Targets (pacing skill): no single wait over ~1.2 s unless something big happens on
 screen in it (a cut, a landing), total waiting under ~12 % of the runtime, no stretch without a subtitle longer than ~2 s outside the
@@ -30,9 +31,26 @@ def read_time(text):
     return max(1.3, NOTICE + n / CPS)
 
 
+def flow(path):
+    """How busy and how jerky the picture is: mean and p95 motion, and p99 of the change in motion
+    frame to frame (a camera that starts and stops, or moves crammed into too little time, shows here)."""
+    import numpy as np
+    from pipeline.stillness import motion as mo
+    m, _ = mo(path, fps=30)
+    sm = np.convolve(m, np.ones(3) / 3, mode="same")
+    jerk = np.abs(np.diff(sm))
+    return float(m.mean()), float(np.percentile(m, 95)), float(np.percentile(jerk, 99)), float(jerk.mean())
+
+
 def main():
-    ep = sys.argv[1]
-    video = sys.argv[2] if len(sys.argv) > 2 else None
+    args = sys.argv[1:]
+    ref = None
+    if "--ref" in args:
+        i = args.index("--ref")
+        ref = args[i + 1]
+        args = args[:i] + args[i + 2:]
+    ep = args[0]
+    video = args[1] if len(args) > 1 else None
     tl = json.load(open(os.path.join(ROOT, "public", "build", ep, "timeline.json"), encoding="utf-8"))
     fps = tl["fps"]
     total = tl["durationInFrames"] / fps
@@ -77,8 +95,14 @@ def main():
     print(f"  end card / tail: {tail:.1f}s")
     # a camera drift is not news: only a big change on screen (a cut, a landing) excuses a wait
     over = [w for w in waits if w[0] > 1.2 and (w[4] is None or w[4] < 1.0)]
-    verdict = "PASS" if tot <= 0.12 * total and not over else "TOO SLOW"
-    print(f"\n{verdict}: {len(over)} lines wait > 1.2 s with nothing new on screen; waiting {100 * tot / total:.0f}% (target ≤ 12%)")
+    # too tight is a failure too: squeezed windows cram camera moves and cuts (v2 of 《夸完就翻车》 at 5 %)
+    verdict = "TOO TIGHT" if tot < 0.06 * total else ("PASS" if tot <= 0.12 * total and not over else "TOO SLOW")
+    print(f"\n{verdict}: {len(over)} lines wait > 1.2 s with nothing new on screen; waiting {100 * tot / total:.0f}% (target 6–12%)")
+    if video:
+        rows = [("this", flow(video))] + ([("ref", flow(ref))] if ref else [])
+        print("\nflow (motion mean / p95, jerk mean / p99): keep within ~15 % of an approved episode")
+        for name, (mm, p95, j99, jm) in rows:
+            print(f"  {name:<5} {mm:.2f} / {p95:.2f}   {jm:.3f} / {j99:.2f}")
 
 
 if __name__ == "__main__":
