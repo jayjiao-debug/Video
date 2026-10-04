@@ -263,12 +263,17 @@ export const Reveal: React.FC<SceneProps> = () => {
 	const crane = prog(f, 0, 50, ease.out);
 	const edgeIn = prog(f, c2 - 6, 30, ease.inOut);
 	const lift = -120 * edgeIn;
+	// the drop keeps going: every beat kicks the bars and the light, the camera keeps pushing in
+	const lastBeat = beats.filter((b) => b <= f).pop();
+	const pulse = lastBeat === undefined ? 0 : Math.exp(-(f - lastBeat) / 5);
+	const push = 1 + 0.07 * prog(f, 40, scene.duration - 40, ease.inOut);
+	const drift = 26 * Math.sin(f / 70);
 	return (
 		<FullFrame fadeIn={0} fadeOut={0} motes={1.2}>
 			<GoldDefs />
 			<rect width={W} height={H} fill="#07060a" />
-			<ellipse cx={960} cy={600} rx={1100} ry={520} fill="url(#glow-lamp)" opacity={0.35 + 0.25 * hitAt(f, 0, 10)} />
-			<g transform={`translate(${shake * (random(`rx${f}`) - 0.5)},${shake * (random(`ry${f}`) - 0.5)}) translate(960,560) scale(${1.18 - 0.18 * crane}) translate(-960,-560) translate(0,${lift})`}>
+			<ellipse cx={960} cy={600} rx={1100} ry={520} fill="url(#glow-lamp)" opacity={0.35 + 0.25 * hitAt(f, 0, 10) + 0.18 * pulse} />
+			<g transform={`translate(${shake * (random(`rx${f}`) - 0.5)},${shake * (random(`ry${f}`) - 0.5)}) translate(960,560) scale(${(1.18 - 0.18 * crane) * push}) translate(-960,-560) translate(${drift},${lift})`}>
 				{/* the worn fore-edge slides in under the bars: the same curve */}
 				{edgeIn > 0 ? (
 					<g opacity={edgeIn} transform={`translate(${STAIR(1).x},${820 + 40 * (1 - edgeIn)}) scale(${(STAIR(9).x + STAIR(9).w - STAIR(1).x) / BOOK.w})`}>
@@ -282,7 +287,7 @@ export const Reveal: React.FC<SceneProps> = () => {
 					const hi = d === 1 || d === 9;
 					return (
 						<g key={d}>
-							<GoldBar x={s.x} w={s.w} bot={s.bot} h={s.h * q} glow={hi ? 0.35 : 0.15} o={hi ? 1 : 0.85} />
+							<GoldBar x={s.x} w={s.w} bot={s.bot} h={s.h * q * (1 + 0.035 * pulse * (1 - (d - 1) / 12))} glow={(hi ? 0.35 : 0.15) + 0.3 * pulse} o={hi ? 1 : 0.85} />
 							<text x={s.x + s.w / 2} y={s.bot + 54} textAnchor="middle" style={{fontFamily: font.latin, fontWeight: 700, fontSize: 48, fill: hi ? GOLD : color.text, ...LN}}>
 								{d}
 							</text>
