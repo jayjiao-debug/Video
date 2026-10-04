@@ -61,7 +61,9 @@ print('film:', film, f'{film.stat().st_size / 1e6:.1f} MB')
 # 2. send version
 send = OUT / f'{TITLE}_{TAG}_发送版.mp4'
 for p in (1, 2):
-    cmd = ['ffmpeg', '-v', 'error', '-y', '-i', str(film), '-c:v', 'libx264', '-preset', 'slow', '-b:v', '1600k',
+    # fit under the 30 MB chat limit whatever the length (1600k for a 130 s film; less for longer ones)
+    vk = min(1600, int(28.6e6 * 8 / dur / 1000) - 160)
+    cmd = ['ffmpeg', '-v', 'error', '-y', '-i', str(film), '-c:v', 'libx264', '-preset', 'slow', '-b:v', f'{vk}k',
            '-pass', str(p), '-passlogfile', str(SCR / f'{TAG}_x264')]
     cmd += ['-an', '-f', 'mp4', '/dev/null'] if p == 1 else ['-c:a', 'aac', '-b:a', '160k', '-movflags', '+faststart', str(send)]
     run(cmd)
