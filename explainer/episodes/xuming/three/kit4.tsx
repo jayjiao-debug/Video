@@ -251,7 +251,7 @@ export const TreeCard: React.FC<{seed: string; n?: number; color?: string; o?: n
 		ctx.lineCap = 'round';
 		for (let i = 0; i < n; i++) {
 			const x = (cw * (i + 0.2 + 0.6 * rnd(`${seed}tx${i}`))) / n;
-			const s = 0.7 + 0.6 * rnd(`${seed}ts${i}`);
+			const s = 0.5 + 0.4 * rnd(`${seed}ts${i}`);
 			tree(ctx, x, ch, -Math.PI / 2 + (rnd(`${seed}ta${i}`) - 0.5) * 0.2, 260 * s, 30 * s, 0, `${seed}t${i}`);
 		}
 		// undergrowth

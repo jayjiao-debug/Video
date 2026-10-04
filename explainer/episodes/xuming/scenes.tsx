@@ -452,10 +452,10 @@ const Origin: React.FC<SceneProps> = () => {
 		const bez = (u: number): V3 => [mix(mix(-1.45, 0, u), mix(0, 1.45, u), u), 0.3 + 1.1 * 2 * u * (1 - u), 0.2 * Math.sin(u * 6)];
 		const trail: Particle[] = pol > 0 ? Array.from({length: 26}, (_, k) => ({p: bez(Math.max(0, pol - k * 0.012)), s: 0.05 * (1 - k / 26), c: '#ffe7b8', a: 1 - k / 26})) : [];
 		three = (
-			<Shot cam={{pos: [0.2 * Math.sin(f / 60), 0.4, 4.6], target: [0, 0.3, 0], fov: 35}} fx={{bloom: 0.7, threshold: 0.7, focus: 4.6, aperture: 0.004, fade: 1 - prog(f, cue(2) - 14, 14)}} bg="#04120a" fog={[6, 20]}>
+			<Shot cam={{pos: [0.2 * Math.sin(f / 60), 0.4, 4.6], target: [0, 0.3, 0], fov: 35}} fx={{bloom: 0.7, threshold: 0.7, focus: 4.6, aperture: 0.003, fade: 1 - prog(f, cue(2) - 14, 14)}} bg="#04120a" fog={[6, 20]}>
 				<Lights keyPos={[2, 4, 4]} keyI={60} keyColor="#ffe6c0" rim={[-3, 2, -3]} rimI={40} rimColor="#9fe8b0" />
 				{[-1.45, 1.45].map((x, i) => (
-					<Flower key={i} position={[x, 0.1, 0]} rotation={[0.15, (i ? -1 : 1) * 0.35 + f / 300, 0.2 + f / 200]} scale={1.35} open={prog(f, cue(2) - 10 + i * 6, 40, ease.out)} glow={0.1} />
+					<Flower key={i} position={[x, 0.1, 0]} rotation={[0.25, (i ? -1 : 1) * 0.3 + (f - cue(2)) / 300, 0]} scale={1.35} open={prog(f, cue(2) - 10 + i * 6, 40, ease.out)} glow={0.1} />
 				))}
 				<Soft items={trail} />
 				<Soft items={dust('pl', 90, [10, 6, 6], t, '#d8ffd0', 0.03, 0.5)} />

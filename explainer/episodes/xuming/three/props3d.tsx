@@ -532,6 +532,12 @@ export const Flower: React.FC<{open?: number; glow?: number} & G> = ({open = 1, 
 		const p = geo.attributes.position;
 		for (let i = 0; i < p.count; i++) p.setZ(i, 0.05 * Math.sin((p.getY(i) / 0.56) * Math.PI) - 0.25 * p.getX(i) ** 2);
 		geo.computeVertexNormals();
+		// the shape's closing point duplicates its start: repair the zero-length normals it produces
+		const n = geo.attributes.normal;
+		for (let i = 0; i < n.count; i++) {
+			const l = Math.hypot(n.getX(i), n.getY(i), n.getZ(i));
+			if (!(l > 1e-6)) n.setXYZ(i, 0, 0, 1);
+		}
 		return geo;
 	}, []);
 	return (

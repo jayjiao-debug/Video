@@ -20,7 +20,7 @@ def main():
         segs.append((a, b, p))
     segs.sort()
     n = int(subprocess.run(["ffprobe", "-v", "error", "-count_packets", "-select_streams", "v:0", "-show_entries",
-                            "stream=nb_read_packets", "-of", "csv=p=0", src], capture_output=True, text=True).stdout.strip())
+                            "stream=nb_read_packets", "-of", "csv=p=0", src], capture_output=True, text=True).stdout.strip().strip(","))
     pieces = []  # (input index or None for the source, start, end)
     cur = 0
     for a, b, _ in segs:
@@ -49,7 +49,7 @@ def main():
            "-c:v", "libx264", "-crf", "18", "-preset", "slow", "-pix_fmt", "yuv420p", "-c:a", "copy", "-movflags", "+faststart", out]
     subprocess.run(cmd, check=True)
     m = int(subprocess.run(["ffprobe", "-v", "error", "-count_packets", "-select_streams", "v:0", "-show_entries",
-                            "stream=nb_read_packets", "-of", "csv=p=0", out], capture_output=True, text=True).stdout.strip())
+                            "stream=nb_read_packets", "-of", "csv=p=0", out], capture_output=True, text=True).stdout.strip().strip(","))
     print(f"wrote {out}: {m} frames (source {n}), {len(segs)} segments spliced")
 
 

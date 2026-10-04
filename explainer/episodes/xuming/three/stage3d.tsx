@@ -111,6 +111,17 @@ const Post: React.FC<{bloom: number; threshold: number; focus?: number; aperture
 		composer.setPixelRatio(1);
 		composer.setSize(RW, RH);
 		composer.addPass(new RenderPass(scene, camera));
+		// safety net: a NaN or overflowed pixel would be smeared over the frame by bloom/bokeh
+		composer.addPass(
+			new ShaderPass({
+				uniforms: {tDiffuse: {value: null}},
+				vertexShader: `varying vec2 vUv; void main(){vUv=uv; gl_Position=projectionMatrix*modelViewMatrix*vec4(position,1.);}`,
+				fragmentShader: `uniform sampler2D tDiffuse; varying vec2 vUv;
+void main(){ vec4 c=texture2D(tDiffuse,vUv);
+  if(!(c.r==c.r)||!(c.g==c.g)||!(c.b==c.b)||!(c.a==c.a)) c=vec4(0.,0.,0.,1.);
+  gl_FragColor=vec4(min(c.rgb,vec3(64.)),c.a); }`,
+			}),
+		);
 		const bokeh = new BokehPass(scene, camera, {focus: 5, aperture: 0.002, maxblur: 0.012});
 		composer.addPass(bokeh);
 		const bl = new UnrealBloomPass(new THREE.Vector2(RW, RH), 1, 0.6, 0.6);
