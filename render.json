@@ -1,8 +1,8 @@
 {
-  "id": "v6-1791060029",
-  "composition": "V3Film",
+  "id": "titanic_open-1791095745",
+  "composition": "TitanicOpen",
   "start": 0,
-  "end": 3914,
-  "chunks": 20,
-  "output": "v6"
+  "end": 742,
+  "chunks": 14,
+  "output": "titanic_open"
 }

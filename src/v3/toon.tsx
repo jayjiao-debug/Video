@@ -271,7 +271,7 @@ export const ReticleTitle: React.FC<{ f: number; dur: number; kicker: string; ti
 };
 
 /* ---------------- 3. London, 1944: the buzz, the silence, the blast ---------------- */
-const V1Side: React.FC<{ flame: number; T: number }> = ({ flame, T }) => {
+export const V1Side: React.FC<{ flame: number; T: number }> = ({ flame, T }) => {
   const fl = flame * (0.75 + 0.25 * Math.abs(Math.sin(T * 47)));
   return (
     <g>

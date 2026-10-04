@@ -6,6 +6,8 @@ import { Reveal3D } from './t3/Reveal3D';
 import { V1Film } from './v1/V1';
 import { V2Film } from './v2/V2';
 import { V3Film } from './v3/V3';
+import { CoverV3 } from './v3/CoverV3';
+import { TitanicOpen, OPEN_FRAMES } from './v4/Titanic';
 import { Ep1 } from './ep1/Ep1';
 import '@fontsource/cormorant-garamond/400-italic.css';
 import '@fontsource/cormorant-garamond/500.css';
@@ -68,6 +70,9 @@ export const Root: React.FC = () => (
     <Composition id="Reveal3D" component={Reveal3D} durationInFrames={912} fps={30} width={1920} height={1080} />
     <Composition id="V1Film" component={V1Film} durationInFrames={3915} fps={30} width={1920} height={1080} />
     <Composition id="Ep1" component={Ep1} durationInFrames={DURATION} fps={FPS} width={W} height={H} defaultProps={{ music: true }} />
+    <Composition id="TitanicOpen" component={TitanicOpen} durationInFrames={OPEN_FRAMES} fps={30} width={1920} height={1080} />
+    <Composition id="CoverV3Tall" component={CoverV3} durationInFrames={1} fps={30} width={1080} height={1440} defaultProps={{ w: 1080, h: 1440 }} />
+    <Composition id="CoverV3Wide" component={CoverV3} durationInFrames={1} fps={30} width={1440} height={1080} defaultProps={{ w: 1440, h: 1080 }} />
     <Composition id="V3Film" component={V3Film} durationInFrames={3915} fps={30} width={1920} height={1080} />
     <Composition id="V2Film" component={V2Film} durationInFrames={3915} fps={30} width={1920} height={1080} />
   </>
