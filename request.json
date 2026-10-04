@@ -1,12 +1,40 @@
 {
-  "id": "benford-search-02",
+  "id": "benford-models-01",
   "items": [
-    { "type": "sketchfab-search", "q": "planet earth", "count": 12, "license": "by", "maxFaces": 400000 },
-    { "type": "sketchfab-search", "q": "earth globe", "count": 12, "license": "by", "maxFaces": 400000 },
-    { "type": "sketchfab-search", "q": "filing cabinet", "count": 12, "license": "by", "maxFaces": 300000 },
-    { "type": "sketchfab-search", "q": "library card catalog", "count": 12, "license": "by", "maxFaces": 300000 },
-    { "type": "sketchfab-search", "q": "vintage computer", "count": 12, "license": "by", "maxFaces": 300000 },
-    { "type": "sketchfab-search", "q": "printer", "count": 12, "license": "by", "maxFaces": 200000 },
-    { "type": "sketchfab-search", "q": "victorian desk", "count": 12, "license": "by", "maxFaces": 300000 }
+    {
+      "type": "sketchfab",
+      "uid": "4de1bcbd22a444abb4f089b9b78ec96a",
+      "name": "earth"
+    },
+    {
+      "type": "sketchfab",
+      "uid": "12d76407cbd047d2a23a86c73e556c9e",
+      "name": "book"
+    },
+    {
+      "type": "sketchfab",
+      "uid": "c491f647da5947978ba8113951ee2efc",
+      "name": "desk1881"
+    },
+    {
+      "type": "sketchfab",
+      "uid": "ef967c9bc13b4635add8ab7517dfedfe",
+      "name": "inkwell"
+    },
+    {
+      "type": "sketchfab",
+      "uid": "c932f6165fef40029c3f18afe19b9934",
+      "name": "oil_lamp"
+    },
+    {
+      "type": "sketchfab",
+      "uid": "7ef1ca295ff14af2abcbe0ae0168a241",
+      "name": "cabinets"
+    },
+    {
+      "type": "sketchfab",
+      "uid": "dadca97505214b9481d35e22c48e18df",
+      "name": "office90s"
+    }
   ]
 }
