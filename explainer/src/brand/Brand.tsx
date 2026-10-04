@@ -16,6 +16,7 @@ import {ease, prog} from '../lib/context';
 import {loadEpisodeFonts} from '../lib/fonts';
 import {font} from '../lib/theme';
 import {JUNO} from './identity';
+import {TicketMotif} from '../art/Ox';
 
 /**
  * Juno's channel package: a title card (片头) that replaces the plain card the
@@ -31,7 +32,7 @@ export type VideoCfg = {
 	kicker: string;
 	tagline: string;
 	taglineEn: string;
-	motif: 'cards' | 'duel' | 'stars' | 'serials' | 'coffee';
+	motif: 'cards' | 'duel' | 'stars' | 'serials' | 'coffee' | 'ticket';
 	card: [number, number];
 	extend: number;
 	trim?: number;
@@ -147,6 +148,10 @@ export const Motif: React.FC<{kind: VideoCfg['motif']; p: number; f: number}> = 
 				</text>
 			</g>
 		);
+	}
+	if (kind === 'ticket') {
+		// 《八百人猜牛》: the middle ticket, No 394, drawn in gold
+		return <TicketMotif p={p} gold={GOLD} />;
 	}
 	if (kind === 'coffee') {
 		// a cup with a wisp of steam, and the coffee flower it came from

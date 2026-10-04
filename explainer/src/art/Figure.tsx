@@ -16,7 +16,7 @@ import {P} from './palette';
 
 export type Outfit = 'suit' | 'uniform' | 'overalls' | 'flight' | 'labcoat' | 'dress' | 'casual' | 'frock';
 export type Hair = 'slick' | 'short' | 'bald' | 'bob' | 'bun' | 'pony' | 'long' | 'wig' | 'none';
-export type Hat = 'officer' | 'garrison' | 'ballcap' | 'helmet' | 'tricorn' | 'straw' | 'headwrap' | 'none';
+export type Hat = 'officer' | 'garrison' | 'ballcap' | 'helmet' | 'tricorn' | 'straw' | 'headwrap' | 'bowler' | 'flatcap' | 'boater' | 'bonnet' | 'none';
 export type Expression = 'neutral' | 'smile' | 'surprise' | 'worried' | 'stern' | 'thinking';
 
 export type Look = {
@@ -33,6 +33,8 @@ export type Look = {
 	mustache?: boolean;
 	/** a full beard over the jaw (19th-century scholars) */
 	beard?: boolean;
+	/** side-whiskers (mutton chops) down the cheek, chin shaved (Victorian gentlemen) */
+	whiskers?: boolean;
 	/** an apron over the outfit (colour) */
 	apron?: string;
 };
@@ -398,6 +400,7 @@ export const Figure: React.FC<{
 							<path d={`M18,${-314 + brow * 0.35} L26,${-313 - brow * 0.25}`} stroke={c(look.hairColor)} strokeWidth={2.2} strokeLinecap="round" />
 							<path d="M29,-303 C31,-298 30,-296 27,-295" stroke={shade(look.skin, 0.75)} strokeWidth={1.6} fill="none" strokeLinecap="round" />
 							{look.beard ? <path d="M-13,-300 C-16,-284 -8,-264 8,-259 C22,-256 32,-268 33,-283 C33,-289 32,-293 30,-295 C27,-291 23,-290 19,-291 C14,-292 9,-293 5,-291 C1,-295 -6,-300 -13,-300 Z" fill={c(look.hairColor)} /> : null}
+							{look.whiskers ? <path d="M-14,-306 C-18,-292 -14,-276 -2,-270 C6,-268 10,-274 8,-282 C2,-286 -4,-292 -6,-304 Z" fill={c(look.hairColor)} /> : null}
 							{look.mustache || look.beard ? <path d="M15,-294 C18,-297 26,-297 29,-294 C26,-292 18,-292 15,-294 Z" fill={shade(look.hairColor, 0.8)} /> : null}
 							{mouth}
 							<ellipse cx={24} cy={-295} rx={4} ry={2.4} fill="#e28b7a" opacity={expression === 'smile' ? 0.35 : 0.15} />
@@ -447,6 +450,45 @@ export const Figure: React.FC<{
 					<path d="M-26,-306 C-30,-350 14,-360 32,-332 C30,-324 28,-322 26,-322 C10,-334 -8,-332 -16,-318 C-18,-310 -20,-300 -22,-294 Z" fill={c(look.hatColor ?? '#2f5f6a')} />
 					<path d="M-24,-330 C-6,-338 18,-338 30,-328" stroke={c(shade(look.hatColor ?? '#2f5f6a', 1.4))} strokeWidth={3} fill="none" strokeDasharray="5 6" />
 					<path d="M-26,-312 C-40,-306 -44,-292 -38,-282 C-34,-292 -30,-300 -22,-304 Z" fill={c(look.hatColor ?? '#2f5f6a')} />
+				</g>
+			) : null}
+			{look.hat === 'bowler' ? (
+				<g>
+					<path d="M-26,-324 C-30,-322 -30,-318 -24,-317 C-4,-314 22,-314 40,-318 C44,-319 44,-323 40,-325 Z" fill={c(look.hatColor ?? '#1c1b1e')} />
+					<path d="M-20,-324 C-22,-360 30,-364 32,-324 Z" fill={c(look.hatColor ?? '#1c1b1e')} />
+					{!sil ? <path d="M-19,-330 C-6,-332 18,-332 31,-330 L31,-325 L-19,-325 Z" fill={shade(look.hatColor ?? '#1c1b1e', 0.55)} /> : null}
+					{!sil ? <path d="M-10,-352 C-2,-358 12,-358 20,-352" stroke="#fff" strokeOpacity={0.12} strokeWidth={3} fill="none" /> : null}
+				</g>
+			) : null}
+			{look.hat === 'flatcap' ? (
+				<g>
+					<path d="M-24,-318 C-28,-344 2,-354 30,-340 C40,-334 46,-326 48,-320 C30,-318 4,-318 -24,-318 Z" fill={c(look.hatColor ?? '#5a5446')} />
+					{!back ? <path d="M22,-322 L50,-318 C46,-312 30,-312 18,-316 Z" fill={c(shade(look.hatColor ?? '#5a5446', 0.7))} /> : null}
+					{!sil ? <path d="M-14,-340 C4,-344 22,-340 34,-334" stroke={shade(look.hatColor ?? '#5a5446', 0.75)} strokeWidth={1.5} fill="none" /> : null}
+				</g>
+			) : null}
+			{look.hat === 'boater' ? (
+				<g>
+					<ellipse cx={8} cy={-322} rx={40} ry={6} fill={c(look.hatColor ?? '#d9bf7f')} />
+					<path d="M-20,-322 L-18,-346 C-4,-350 20,-350 34,-346 L36,-322 Z" fill={c(look.hatColor ?? '#d9bf7f')} />
+					<rect x={-19} y={-333} width={54} height={8} fill={c(look.accent ?? '#2a2f45')} />
+					{!sil ? <ellipse cx={8} cy={-347} rx={27} ry={3} fill={shade(look.hatColor ?? '#d9bf7f', 1.08)} /> : null}
+				</g>
+			) : null}
+			{look.hat === 'bonnet' ? (
+				// an Edwardian wide-brimmed hat, a ribbon and a flower
+				<g>
+					<path d="M-20,-326 C-22,-352 30,-356 34,-326 Z" fill={c(look.hatColor ?? '#4a3a4a')} />
+					<path d="M-46,-322 C-30,-334 50,-336 64,-322 C50,-314 -30,-312 -46,-322 Z" fill={c(look.hatColor ?? '#4a3a4a')} />
+					{!sil ? <path d="M-19,-334 C0,-338 18,-338 33,-334 L33,-327 L-19,-327 Z" fill={look.accent ?? '#c9a35e'} /> : null}
+					{!sil ? (
+						<g transform="translate(-12,-334)">
+							{[0, 72, 144, 216, 288].map((r) => (
+								<ellipse key={r} cx={0} cy={-5} rx={3.5} ry={5} transform={`rotate(${r})`} fill="#e9d6d0" />
+							))}
+							<circle r={2.5} fill={look.accent ?? '#c9a35e'} />
+						</g>
+					) : null}
 				</g>
 			) : null}
 			{look.hat === 'ballcap' ? (

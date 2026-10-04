@@ -16,6 +16,8 @@ import {XumingOpen} from '../episodes/xuming/opentest';
 import {PROPS3D_N, XumingProps3D} from '../episodes/xuming/three/propsheet';
 import {MOTION4_N, XumingMotion4} from '../episodes/xuming/three/motion4';
 import {BENFORD_BOARD_N, BenfordBoard} from '../episodes/benford/storyboard';
+import {OX_SHEETS, OxGallery} from '../episodes/ox/gallery';
+import {OX_TEST_N, OxMotionTest} from '../episodes/ox/motiontest';
 
 export const Root: React.FC = () => (
 	<>
@@ -43,6 +45,8 @@ export const Root: React.FC = () => (
 		<Composition id="XumingLook3" component={XumingLook3} durationInFrames={LOOK3_N} fps={30} width={1920} height={1080} />
 		<Composition id="BenfordBoard" component={BenfordBoard} durationInFrames={BENFORD_BOARD_N} fps={30} width={1920} height={1080} />
 		<Composition id="XumingLook" component={XumingLook} durationInFrames={LOOKS} fps={30} width={1920} height={1080} />
+		<Composition id="OxMotionTest" component={OxMotionTest} durationInFrames={OX_TEST_N} fps={30} width={1920} height={1080} />
+		<Composition id="OxGallery" component={OxGallery} durationInFrames={OX_SHEETS.length} fps={30} width={1920} height={1080} />
 		<Composition id="CoffeeGallery" component={CoffeeGallery} durationInFrames={COFFEE_SHEETS.length} fps={30} width={1920} height={1080} />
 		{/* Douyin covers: COMPOSITION=CoverWide|CoverTall node scripts/stills.mjs tanks <dir> 0 */}
 		<Composition id="CoverWide" component={TanksCover} defaultProps={{layout: 'wide' as const}} durationInFrames={1} fps={30} width={1440} height={1080} />
