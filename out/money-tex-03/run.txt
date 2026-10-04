@@ -1,0 +1,7 @@
+url https://www.uscurrency.gov/sites/default/files/media/images/100-front-2013-present.jpg
+  saved out/files/usd100_front_hi.jpg 0.2 MB
+url https://www.uscurrency.gov/sites/default/files/media/images/100-back-2013-present.jpg
+  FAILED: 404 https://www.uscurrency.gov/sites/default/files/media/images/100-back-2013-present.jpg
+url https://www.uscurrency.gov/sites/default/files/media/images/1-front-1963-present.jpg
+  FAILED: 404 https://www.uscurrency.gov/sites/default/files/media/images/1-front-1963-present.jpg
+done
