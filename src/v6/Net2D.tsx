@@ -303,6 +303,17 @@ export const Net2D: React.FC<{ T: number }> = ({ T }) => {
         {countLayer}
         {cardLayer}
         {paper}
+        {sampleK > 0 && (
+          <g opacity={win(T, b(136.3), b(144.2), 0.4, 0.4)} transform="translate(1500 130)">
+            <rect x={-30} y={-40} width={390} height={friendK > 0 ? 136 : 76} rx={14} fill="rgba(7,10,20,0.8)" />
+            <circle cx={0} cy={0} r={13} fill="none" stroke="#fff" strokeWidth={3} />
+            <text x={30} y={10} style={{ fontFamily: ZH, fontWeight: 600, fontSize: 28, fill: CREAM }}>随机抽的学生</text>
+            {friendK > 0 && <g opacity={friendK}>
+              <circle cx={0} cy={60} r={13} fill="none" stroke={GOLD} strokeWidth={3.5} />
+              <text x={30} y={70} style={{ fontFamily: ZH, fontWeight: 600, fontSize: 28, fill: GOLD }}>他们点名的朋友</text>
+            </g>}
+          </g>
+        )}
         {chart}
         {T > b(157.6) && (() => {
           const [X, Y] = scr(BG.p[SEED][0], BG.p[SEED][1]);
@@ -314,9 +325,6 @@ export const Net2D: React.FC<{ T: number }> = ({ T }) => {
       <Chapter T={T} at={b(114.3)} out={b(129)} text="1991 · 费 尔 德" />
       <Chapter T={T} at={b(129.3)} out={b(155)} text="2009 · 哈 佛 · 甲 流" />
       <Stat T={T} at={b(90)} out={b(96.4)} top={110} value={5} unit="/ 6" label="不如朋友们热闹" gold count={0.6} />
-      <Stat T={T} at={b(129.6)} out={b(144)} top={110} value={6650} label="哈佛本科生" count={1.2} />
-      <Stat T={T} at={b(136.4)} out={b(144)} top={250} value={319} label="随机组" count={0.8} />
-      <Stat T={T} at={b(139.7)} out={b(144)} top={390} value={425} label="朋友组（被随机组点名的朋友）" gold count={0.8} />
       <Note T={T} at={b(72.5)} out={b(121)} text="示意：一间虚构的宿舍" />
       <Note T={T} at={b(123)} out={b(129)} text="示意网络：金色 = 朋友比朋友们多　蓝色 = 比朋友们少" />
       <Note T={T} at={b(144.5)} out={b(151)} x={64} y={1030} text="曲线为示意；14.7 天为医生确诊数据　Christakis & Fowler, PLoS ONE, 2010" />

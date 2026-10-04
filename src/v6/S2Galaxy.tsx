@@ -132,14 +132,13 @@ export const S2Galaxy: React.FC<{ T: number }> = ({ T }) => {
       )}
       <Chapter T={T} at={S2_IN + 0.4} out={TITLE} text="FACEBOOK · 2011" />
       <Stat T={T} at={b(34)} out={TITLE} top={110} value={7.21} decimals={2} unit="亿" label="个用户" />
-      <Stat T={T} at={b(36)} out={TITLE} top={260} value={687} unit="亿" label="对好友关系" />
-      <Stat T={T} at={RECOLOR} out={TITLE} top={410} value={92.7} decimals={1} suffix="%" label="朋友数少于朋友们的平均" gold />
+      <Stat T={T} at={RECOLOR} out={TITLE} top={260} value={92.7} decimals={1} suffix="%" label="朋友数少于朋友们的平均" gold />
       <Note T={T} at={b(34)} out={TITLE} text="示意图：点越大，朋友越多　金色 = 比朋友们多　蓝色 = 比朋友们少" />
       <Note T={T} at={b(34)} out={TITLE} x={64} y={1060} text="数据：Ugander 等，《The Anatomy of the Facebook Social Graph》，2011" />
       {T >= TITLE - 0.05 && (
         <svg width={1920} height={1080} style={{ position: 'absolute', inset: 0, opacity: 1 - prog(T, b(56.2), S2_OUT) }}>
           <text x={960} y={392} textAnchor="middle" style={{ fontFamily: EN, fontWeight: 600, fontSize: 26, letterSpacing: '0.42em', fill: '#f1c56d' }} opacity={easeOut(prog(T, TITLE, TITLE + 0.5))}>THE FRIENDSHIP PARADOX · 朋友悖论</text>
-          <GoldTitle text="为什么别人都比我热闹" f={tf} at={4} size={96} y={530} />
+          <GoldTitle text="朋友圈里，好像只有我过得不好" f={tf} at={4} size={78} y={530} />
         </svg>
       )}
       <SubBand o={0.85} />

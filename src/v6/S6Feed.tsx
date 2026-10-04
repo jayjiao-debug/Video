@@ -112,10 +112,9 @@ export const S6Feed: React.FC<{ T: number }> = ({ T }) => {
               if (o <= 0) return null;
               return (
                 <g opacity={o}>
-                  <rect x={1190} y={300} width={500} height={250} rx={18} fill="rgba(7,10,20,0.86)" stroke="rgba(125,159,216,0.5)" />
+                  <rect x={1190} y={300} width={500} height={210} rx={18} fill="rgba(7,10,20,0.86)" stroke="rgba(125,159,216,0.5)" />
                   <text x={1440} y={410} textAnchor="middle" style={{ fontFamily: EN, fontWeight: 700, fontSize: 104, fill: '#a9c2ee' }}>58.5%</text>
                   <text x={1440} y={460} textAnchor="middle" style={{ fontFamily: ZH, fontWeight: 600, fontSize: 28, fill: CREAM }}>没有朋友们开心</text>
-                  <text x={1440} y={510} textAnchor="middle" style={{ fontFamily: ZH, fontSize: 22, fill: 'rgba(243,237,226,0.6)' }}>（另有 94.3% 不如朋友受欢迎）</text>
                 </g>
               );
             })()}
