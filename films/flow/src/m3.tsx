@@ -1,6 +1,5 @@
 // @ts-expect-error katex ships no types here
 import katex from 'katex';
-import 'katex/dist/katex.min.css';
 import React from 'react';
 import {clamp, easeInOut, prog} from './lib';
 import {SANS} from './look';
