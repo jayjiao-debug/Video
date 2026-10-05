@@ -1,6 +1,8 @@
 {
-  "id": "money-tex-04",
+  "id": "effort-papers-01",
   "items": [
-    {"type": "url", "url": "https://commons.wikimedia.org/wiki/Special:FilePath/Official_Portrait_of_President_Nixon,_1971.jpg?width=1200", "name": "nixon1971.jpg", "license": "Public domain (US Government work, National Archives)"}
+    {"type": "url", "url": "https://docs.iza.org/dp8129.pdf", "name": "pencavel_dp8129.pdf", "license": "paper (reading only)"},
+    {"type": "url", "url": "https://arxiv.org/pdf/1802.07068v3", "name": "pluchino_2018.pdf", "license": "paper (reading only)"},
+    {"type": "url", "url": "https://gwern.net/doc/psychology/2014-macnamara.pdf", "name": "macnamara_2014.pdf", "license": "paper (reading only)"}
   ]
 }
