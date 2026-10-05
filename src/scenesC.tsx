@@ -26,7 +26,7 @@ const TAGS: [number, string][] = [[190, '第一次游泳'], [214, '第一次看�
 export const Child: React.FC<{ T: number }> = ({ T }) => {
   const c = CH('child'); if (T < c.a || T >= c.z) return null;
   const c1 = L('c1'), c2 = L('c2'), c3 = L('c3');
-  const s10 = easeOut(prog(T, c.a + 0.1, c.a + 0.8));
+  const s10 = easeOut(prog(T, c.a, c.a + 0.5));
   const summer = easeOut(prog(T, at('c1', '暑假'), at('c1', '暑假') + 0.6));
   const lit = (k: number) => prog(T, c2.a + 0.2 + k * 0.045, c2.a + 0.4 + k * 0.045);
   const s25 = easeOut(prog(T, c3.a + 0.1, c3.a + 0.7));
@@ -83,7 +83,7 @@ export const Child: React.FC<{ T: number }> = ({ T }) => {
 export const Holiday: React.FC<{ T: number }> = ({ T }) => {
   const c = CH('holiday'); if (T < c.a || T >= c.z) return null;
   const v1 = L('v1'), v2 = L('v2'), v3 = L('v3');
-  const q = easeOut(prog(T, c.a + 0.2, c.a + 0.9));
+  const q = easeOut(prog(T, c.a, c.a + 0.5));
   const qUp = easeInOut(prog(T, v2.a - 0.1, v2.a + 0.6));
   const passTrip = easeOut(prog(T, v2.a + 0.3, v2.a + 1.0));
   const backTrip = easeOut(prog(T, at('v2', '回头看') - 0.1, at('v2', '回头看') + 0.7));
@@ -114,7 +114,7 @@ export const Holiday: React.FC<{ T: number }> = ({ T }) => {
         <g opacity={q} transform={`translate(0 ${-150 * qUp})`}>
           <text x={960} y={450} textAnchor="middle" style={{ fontFamily: EN, fontStyle: 'italic', fontSize: lerp(46, 30, qUp), fill: INK }}>“A time filled with varied and interesting experiences</text>
           <text x={960} y={450 + lerp(60, 40, qUp)} textAnchor="middle" style={{ fontFamily: EN, fontStyle: 'italic', fontSize: lerp(46, 30, qUp), fill: INK }}>seems short in passing, but long as we look back.”</text>
-          <text x={960} y={450 + lerp(130, 84, qUp)} textAnchor="middle" style={{ fontFamily: MONO, fontSize: 20, fill: DIM }}>— William James, 1890</text>
+          <text x={960} y={450 + lerp(130, 84, qUp)} textAnchor="middle" style={{ fontFamily: MONO, fontSize: 24, fill: DIM }}>— William James, 1890</text>
         </g>
         {qUp > 0 && (
           <g opacity={qUp}>
@@ -172,12 +172,12 @@ export const Slow: React.FC<{ T: number }> = ({ T }) => {
           })}
           {nope > 0 && (
             <g opacity={nope}>
-              <text x={960} y={360} textAnchor="middle" style={{ fontFamily: ZH, fontWeight: 900, fontSize: 60, fill: DIM }}>熬夜 <tspan fill={RED}>✕</tspan>　发呆 <tspan fill={RED}>✕</tspan></text>
+              <text x={960} y={360} textAnchor="middle" style={{ fontFamily: ZH, fontWeight: 900, fontSize: 60, fill: DIM }}>熬夜 <tspan fill={RED}>✕</tspan></text>
             </g>
           )}
           {count > 0 && (
             <g opacity={count}>
-              <text x={960} y={770} textAnchor="middle" style={{ fontFamily: SANS, fontSize: 26, fill: DIM }}>今年剩下的日子（从 10 月 6 日算）</text>
+              <text x={960} y={770} textAnchor="middle" style={{ fontFamily: SANS, fontSize: 28, fill: DIM }}>今年剩下的日子（从 10 月 6 日算）</text>
               <text x={960} y={866} textAnchor="middle" style={{ fontFamily: MONO, fontWeight: 700, fontSize: 92, fill: GOLD }}>{Math.round(LEFT * count)}<tspan fontSize={40} fontFamily={SANS}> 天</tspan></text>
             </g>
           )}

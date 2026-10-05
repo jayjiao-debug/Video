@@ -37,7 +37,7 @@ export const Calendar: React.FC<{ fill: number; grey: number; memo: number; futu
 export const Hook: React.FC<{ T: number }> = ({ T }) => {
   const c = CH('hook'); if (T >= c.z) return null;
   const h1 = L('h1'), h2 = L('h2'), h3 = L('h3');
-  const fill = TODAY * easeInOut(prog(T, 0.15, h1.z - 0.1));
+  const fill = lerp(190, TODAY, easeOut(prog(T, 0, h1.z - 0.1)));
   const grey = easeInOut(prog(T, at('h2', '好像') , at('h2', '好像') + 1.2));
   const memo = easeOut(prog(T, at('h2', '还没做'), at('h2', '还没做') + 0.5));
   const ending = at('h2', '这一年');
@@ -79,13 +79,13 @@ export const Hook: React.FC<{ T: number }> = ({ T }) => {
 const AGES = 65, PER = 29, SX0 = 330, SX1 = 1590, SY0 = 800, DY = 13.2;
 const sx = (age: number) => SX0 + ((age - 16) / 64) * (SX1 - SX0);
 // schematic: how fast "the last ten years" felt, rising with age and levelling off around 50 (shape only)
-const curve = (age: number) => 1 - Math.exp(-(age - 10) / 18);
-const cy = (age: number) => 760 - 330 * (curve(age) - curve(16)) / (curve(80) - curve(16));
+const curve = (age: number) => 1 - Math.exp(-(age - 10) / 13);
+const cy = (age: number) => 640 - 150 * (curve(age) - curve(16)) / (curve(80) - curve(16));
 
 export const Survey: React.FC<{ T: number }> = ({ T }) => {
   const c = CH('survey'); if (T < c.a || T >= c.z) return null;
   const s2 = L('s2'), s3 = L('s3');
-  const appear = (i: number) => easeOut(prog(T, c.a + 0.2 + rnd(i, 1) * 0.9, c.a + 0.5 + rnd(i, 1) * 0.9));
+  const appear = (i: number) => easeOut(prog(T, c.a + rnd(i, 1) * 0.8, c.a + 0.25 + rnd(i, 1) * 0.8));
   const sayFast = at('s2', '几乎');
   const morph = easeInOut(prog(T, s3.a + 0.3, s3.a + 1.8));
   const dots: React.ReactNode[] = [];
@@ -100,7 +100,7 @@ export const Survey: React.FC<{ T: number }> = ({ T }) => {
     const x = lerp(x0, x1, morph), y = lerp(y0, y1, morph);
     dots.push(<circle key={i} cx={x} cy={y} r={lerp(3.6, 2.6, morph)} fill={red > 0.5 ? RED : INK} opacity={appear(i) * (red > 0.5 ? 0.85 : 0.35)} />);
   }
-  const axisO = easeOut(prog(T, c.a + 0.3, c.a + 0.9));
+  const axisO = easeOut(prog(T, c.a, c.a + 0.4));
   const line = easeInOut(prog(T, s3.a + 1.2, s3.a + 2.6));
   const pts = Array.from({ length: 65 }, (_, k) => `${sx(16 + k)},${cy(16 + k)}`);
   return (
@@ -119,9 +119,9 @@ export const Survey: React.FC<{ T: number }> = ({ T }) => {
         {line > 0 && (
           <g>
             <polyline points={pts.join(' ')} fill="none" stroke={RED} strokeWidth={4} strokeDasharray={3000} strokeDashoffset={3000 * (1 - line)} style={{ filter: 'drop-shadow(0 0 8px rgba(255,90,69,0.6))' }} />
-            <text x={SX0 - 10} y={390} opacity={line} style={{ fontFamily: SANS, fontSize: 26, fill: INK }}>回头看“过去十年”，过得有多快</text>
-            <text x={SX0 - 10} y={424} opacity={line} style={{ fontFamily: SANS, fontSize: 19, fill: DIM }}>示意：只画趋势，年龄的影响在 50 岁左右趋平；一周、一个月几乎没有年龄差别</text>
-            <text x={sx(80) + 8} y={cy(80) - 18} textAnchor="end" opacity={line} style={{ fontFamily: MONO, fontWeight: 700, fontSize: 26, fill: RED }}>更快 ↑</text>
+            <text x={SX0 - 10} y={330} opacity={line} style={{ fontFamily: SANS, fontSize: 32, fill: INK }}>回头看“过去十年”，过得有多快</text>
+            <text x={SX0 - 10} y={372} opacity={line} style={{ fontFamily: SANS, fontSize: 26, fill: DIM }}>示意 · 差别不大，50 岁后趋平；问“上周”“上个月”，各年龄几乎一样</text>
+            <text x={sx(80) + 8} y={cy(80) - 22} textAnchor="end" opacity={line} style={{ fontFamily: SANS, fontWeight: 700, fontSize: 28, fill: RED }}>越觉得快 ↑</text>
           </g>
         )}
       </svg>
@@ -136,7 +136,7 @@ export const Ratio: React.FC<{ T: number }> = ({ T }) => {
   const BX = 260, BW = 1400, BY = 600, BH = 64;
   const r1 = L('r1');
   const years = Math.min(10, Math.floor(10 * prog(T, r1.a + 0.3, r1.z)));
-  const barIn = easeOut(prog(T, c.a + 0.2, c.a + 1.0));
+  const barIn = easeOut(prog(T, c.a, c.a + 0.6));
   const ten = easeOut(prog(T, r2.a, r2.a + 1.0));
   const toFifty = easeInOut(prog(T, r3.a + 0.1, r3.a + 1.4));
   const n = Math.round(lerp(10, 50, toFifty));
@@ -145,7 +145,7 @@ export const Ratio: React.FC<{ T: number }> = ({ T }) => {
   const age = Math.round(lerp(10, 50, toFifty));
   const frac = toFifty < 0.5 ? '1/10' : '1/50';
   const pct = (100 / lerp(10, 50, toFifty));
-  const you = easeOut(prog(T, r3.z - 0.4, r3.z + 0.3));
+  const you = easeOut(prog(T, L('r4').a, L('r4').a + 0.4));
   return (
     <AbsoluteFill>
       <svg width={1920} height={1080} style={{ position: 'absolute', inset: 0 }}>
@@ -170,9 +170,9 @@ export const Ratio: React.FC<{ T: number }> = ({ T }) => {
         {you > 0 && (
           <g opacity={you}>
             {[[18, '5.6%'], [20, '5%'], [25, '4%']].map(([a, p], i) => (
-              <text key={i} x={BX + i * 300} y={830} style={{ fontFamily: MONO, fontSize: 30, fill: i === 1 ? INK : DIM }}>{a}岁 → <tspan fill={RED} fontWeight={700}>{p}</tspan></text>
+              <text key={i} x={BX + i * 380} y={850} style={{ fontFamily: MONO, fontSize: 40, fill: i === 1 ? INK : DIM }}>{a}岁 → <tspan fill={RED} fontWeight={700}>{p}</tspan></text>
             ))}
-            <text x={BX} y={786} style={{ fontFamily: SANS, fontSize: 24, fill: DIM }}>换成你的年纪：</text>
+            <text x={BX} y={790} style={{ fontFamily: SANS, fontSize: 30, fill: DIM }}>换成你的年纪：</text>
           </g>
         )}
       </svg>
@@ -184,12 +184,12 @@ export const Ratio: React.FC<{ T: number }> = ({ T }) => {
 const RX0 = 240, RX1 = 1680, TOPY = 400, BOTY = 700;
 const linX = (a: number) => RX0 + (a / 80) * (RX1 - RX0);
 const logX = (a: number) => RX0 + (Math.log(a / 3) / Math.log(80 / 3)) * (RX1 - RX0);
-const TICKS = [3, 5, 8, 10, 12, 16, 20, 25, 30, 40, 50, 60, 70, 80];
+const TICKS = [3, 5, 10, 16, 20, 30, 40, 50, 60, 70, 80];
 
 export const LogLife: React.FC<{ T: number }> = ({ T }) => {
   const c = CH('log'); if (T < c.a || T >= c.z) return null;
   const g1 = L('g1'), g2 = L('g2'), g3 = L('g3');
-  const rul = easeOut(prog(T, c.a + 0.15, c.a + 1.0));
+  const rul = easeOut(prog(T, c.a, c.a + 0.6));
   const fan = (k: number) => easeInOut(prog(T, g1.a + 0.6 + k * 0.12, g1.a + 1.2 + k * 0.12));
   const half = easeOut(prog(T, g2.a + 0.2, g2.a + 0.9));
   const out = easeInOut(prog(T, at('g3', '真正'), c.z - 0.1));
@@ -220,8 +220,8 @@ export const LogLife: React.FC<{ T: number }> = ({ T }) => {
               <rect x={RX0} y={BOTY - 8} width={(RX1 - RX0) / 2} height={16} fill={RED} opacity={0.35} />
               <text x={(RX0 + RX1) / 2} y={BOTY - 26} textAnchor="middle" style={{ fontFamily: SANS, fontWeight: 700, fontSize: 30, fill: RED }}>一半</text>
               <rect x={linX(3)} y={TOPY - 8} width={linX(16) - linX(3)} height={16} fill={RED} opacity={0.35} />
-              <text x={linX(16) + 20} y={TOPY + 56} style={{ fontFamily: MONO, fontWeight: 700, fontSize: 64, fill: RED }}>16 岁</text>
-              <text x={RX1} y={BOTY + 120} textAnchor="end" style={{ fontFamily: MONO, fontSize: 19, fill: DIM }}>模型估算：√(3 × 80) ≈ 16　比例理论不是定律</text>
+              <text x={linX(16)} y={TOPY - 60} textAnchor="middle" style={{ fontFamily: MONO, fontWeight: 700, fontSize: 64, fill: RED }}>16 岁</text>
+              <text x={RX1} y={BOTY + 130} textAnchor="end" style={{ fontFamily: SANS, fontSize: 26, fill: DIM }}>模型估算：√(3 × 80) ≈ 16　· 比例理论只是一种解释，不是定律</text>
             </g>
           )}
         </g>

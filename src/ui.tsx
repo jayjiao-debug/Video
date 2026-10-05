@@ -26,7 +26,7 @@ export const Backdrop: React.FC = () => (
 export const META: Record<string, { no: string; zh: string; en: string; cite: string }> = {
   survey: { no: '01', zh: '不是错觉', en: "IT'S NOT JUST YOU", cite: 'Friedman & Janssen · Acta Psychologica · 2010　｜　Wittmann & Lehnhoff · 2005' },
   ratio: { no: '02', zh: '比例理论', en: 'PROPORTIONAL THEORY', cite: 'Paul Janet · Revue philosophique · 1877' },
-  log: { no: '03', zh: '感觉上的人生', en: 'A LOGARITHMIC LIFE', cite: '按比例理论推算 · 模型估算，不是测量' },
+  log: { no: '03', zh: '感觉上的人生', en: 'A LOGARITHMIC LIFE', cite: '按比例理论推算 · 是模型估算，不是测量结果' },
   fall: { no: '04', zh: '31 米自由落体', en: 'FREE FALL', cite: 'Stetson, Fiesta & Eagleman · PLoS ONE · 2007' },
   memory: { no: '05', zh: '大脑在数回忆', en: 'THE MEMORY CLOCK', cite: 'Faber & Gennari · Cognition · 2015' },
   routine: { no: '06', zh: '重复会压缩时间', en: 'ROUTINE', cite: 'Avni-Babad & Ritov · J. Exp. Psychol.: General · 2003' },
@@ -48,7 +48,7 @@ export const ChapterHead: React.FC<{ T: number; id: string }> = ({ T, id }) => {
         <span style={{ fontFamily: MONO, fontSize: 16, letterSpacing: '0.28em', color: DIM }}>{m.en}</span>
       </div>
       <div style={{ fontFamily: ZH, fontWeight: 900, fontSize: 54, color: INK, marginTop: 10, letterSpacing: '0.04em' }}>{m.zh}</div>
-      {m.cite && <div style={{ fontFamily: SANS, fontSize: 19, color: 'rgba(236,232,223,0.5)', marginTop: 8, letterSpacing: '0.02em' }}>{m.cite}</div>}
+      {m.cite && <div style={{ fontFamily: SANS, fontSize: 23, color: 'rgba(236,232,223,0.5)', marginTop: 8, letterSpacing: '0.02em' }}>{m.cite}</div>}
     </div>
   );
 };
@@ -90,7 +90,6 @@ export const Progress: React.FC<{ T: number; o?: number }> = ({ T, o = 1 }) => {
           <g key={c.id}>
             <rect x={xa} y={1052} width={xz - xa} height={3} fill={FAINT} />
             <rect x={xa} y={1052} width={(xz - xa) * fill} height={3} fill={on ? RED : 'rgba(255,90,69,0.45)'} />
-            <text x={(xa + xz) / 2} y={1042} textAnchor="middle" style={{ fontFamily: SANS, fontSize: 14, fill: on ? INK : 'rgba(236,232,223,0.32)', letterSpacing: '0.08em' }}>{META[c.id].zh}</text>
           </g>
         );
       })}

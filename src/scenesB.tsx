@@ -7,7 +7,7 @@ import { L, at, CH, SANS, MONO, ZH, INK, DIM, FAINT, RED, CYAN, GOLD, prog, ease
 // ------------------------------------------------------------------ 04 free fall
 const TX = 470, TY0 = 300, TY1 = 860; // the 31 m tower, top to net
 const mY = (m: number) => TY0 + (m / 31) * (TY1 - TY0);
-const BARS: [string, number, string][] = [['看别人跳', 2.17, DIM], ['真实时长', 2.49, INK], ['回忆自己那一跳', 2.96, RED]];
+const BARS: [string, number, string][] = [['回忆“看别人跳”', 2.17, DIM], ['回忆“自己那一跳”', 2.96, RED]];
 
 export const Fall: React.FC<{ T: number }> = ({ T }) => {
   const frame = useCurrentFrame();
@@ -16,16 +16,17 @@ export const Fall: React.FC<{ T: number }> = ({ T }) => {
   const t0 = at('f1', '背朝下') + 0.1; // the drop starts on "背朝下自由落体"
   const ft = clamp(T - t0, 0, 2.49);
   const depth = 0.5 * (62 / 6.2001) * ft * ft; // 31 m in 2.49 s (a ≈ 10 m/s²)
-  const towerO = easeOut(prog(T, c.a + 0.1, c.a + 0.8));
+  const towerO = easeOut(prog(T, c.a, c.a + 0.5));
   const timerO = easeOut(prog(T, t0 - 0.4, t0));
   const landed = T >= t0 + 2.49;
   const real = easeOut(prog(T, f2.a, f2.a + 0.3));
   const bars = (k: number) => easeOut(prog(T, f3.a + 0.4 + k * 0.5, f3.a + 1.2 + k * 0.5));
   const plus = pop(T, at('f3', '百分之'));
-  const chrono = easeOut(prog(T, f4.a, f4.a + 0.4));
-  const cross = easeOut(prog(T, at('f4', '数字'), at('f4', '数字') + 0.3));
-  const fin = easeInOut(prog(T, f5.a, f5.a + 0.6));
-  const PX = 860, PW = 860, SCALE = PW / 3.0;
+  const chrono = easeOut(prog(T, f4.a + 0.35, f4.a + 0.7));
+  const timerOut = prog(T, f4.a - 0.1, f4.a + 0.3);
+  const cross = easeOut(prog(T, L('f4b').a + 0.1, L('f4b').a + 0.4));
+  const fin = easeInOut(prog(T, f5.a - 0.1, f5.a + 0.5));
+  const PX = 820, PW = 700, SCALE = PW / 3.0;
   const trail = Array.from({ length: 10 }, (_, k) => {
     const tt = clamp(ft - k * 0.05, 0, 2.49); return 0.5 * 10 * tt * tt;
   });
@@ -48,16 +49,16 @@ export const Fall: React.FC<{ T: number }> = ({ T }) => {
         </g>
         {/* timer */}
         {timerO > 0 && (
-          <g opacity={timerO * (1 - fin) * (1 - chrono)}>
+          <g opacity={timerO * (1 - fin) * (1 - timerOut)}>
             <text x={PX} y={330} style={{ fontFamily: MONO, fontWeight: 700, fontSize: 150, fill: landed && real > 0 ? RED : INK }}>{ft.toFixed(2)}<tspan fontSize={60}> s</tspan></text>
             <text x={PX} y={385} opacity={real} style={{ fontFamily: SANS, fontSize: 28, fill: DIM }}>真实的下落时间</text>
           </g>
         )}
         {/* recalled durations */}
-        <g opacity={1 - 0.75 * Math.max(chrono, 0) * (1 - fin) - fin}>
+        <g opacity={(1 - timerOut) * (1 - fin)}>
           {BARS.map(([name, v, col], k) => {
             const b = bars(k); if (b <= 0) return null;
-            const y = 480 + k * 92;
+            const y = 500 + k * 110;
             return (
               <g key={name}>
                 <text x={PX} y={y - 12} style={{ fontFamily: SANS, fontSize: 24, fill: col === DIM ? DIM : INK }}>{name}</text>
@@ -66,19 +67,29 @@ export const Fall: React.FC<{ T: number }> = ({ T }) => {
               </g>
             );
           })}
-          {plus > 0 && <text x={PX + 2.96 * SCALE - 10} y={480 + 2 * 92 - 22} textAnchor="end" opacity={Math.min(1, plus)} style={{ fontFamily: MONO, fontWeight: 700, fontSize: 52, fill: RED }}>+36%</text>}
+          {bars(0) > 0.5 && (() => {
+            const xr = PX + 2.49 * SCALE;
+            return <g opacity={prog(bars(0), 0.5, 1)}>
+              <line x1={xr} x2={xr} y1={470} y2={700} stroke={INK} strokeWidth={2} strokeDasharray="6 6" />
+              <text x={xr} y={730} textAnchor="middle" style={{ fontFamily: MONO, fontSize: 24, fill: INK }}>真实 2.49 s</text>
+            </g>;
+          })()}
+          {plus > 0 && <g opacity={Math.min(1, plus)}>
+            <path d={`M ${PX + 2.17 * SCALE + 110} 515 L ${PX + 2.96 * SCALE + 150} 515 L ${PX + 2.96 * SCALE + 150} 625`} fill="none" stroke={RED} strokeWidth={2} />
+            <text x={PX + 2.96 * SCALE + 165} y={585} style={{ fontFamily: MONO, fontWeight: 700, fontSize: 46, fill: RED }}>+36%</text>
+          </g>}
         </g>
         {/* the perceptual chronometer: digits alternating with their negative, too fast to read */}
         {chrono > 0 && fin < 1 && (
           <g opacity={chrono * (1 - fin)} transform={`translate(${PX + 60} 190)`}>
             <rect x={0} y={0} width={300} height={190} rx={18} fill="#14161b" stroke="rgba(236,232,223,0.4)" strokeWidth={2} />
             <text x={150} y={150} textAnchor="middle" style={{ fontFamily: MONO, fontWeight: 700, fontSize: 150, fill: frame % 2 ? '#cfc9be' : '#5d6068' }}>{frame % 2 ? String(Math.floor(rnd(frame, 3) * 10)) : '8'}</text>
-            <text x={150} y={232} textAnchor="middle" style={{ fontFamily: SANS, fontSize: 22, fill: DIM }}>绑在手腕上的闪烁数字屏</text>
+            <text x={150} y={236} textAnchor="middle" style={{ fontFamily: SANS, fontSize: 26, fill: DIM }}>手腕上的闪烁数字屏</text>
             {cross > 0 && (
               <g opacity={cross}>
                 <line x1={-20} y1={-20} x2={320} y2={210} stroke={RED} strokeWidth={6} />
-                <text x={350} y={110} style={{ fontFamily: ZH, fontWeight: 900, fontSize: 56, fill: RED }}>没看清</text>
-                <text x={350} y={150} style={{ fontFamily: MONO, fontSize: 20, fill: DIM }}>和站在地上时一样（p = 0.86）</text>
+                <text x={350} y={110} style={{ fontFamily: ZH, fontWeight: 900, fontSize: 60, fill: RED }}>看不清</text>
+                <text x={350} y={156} style={{ fontFamily: SANS, fontSize: 26, fill: DIM }}>和站在地面上一样</text>
               </g>
             )}
           </g>
@@ -110,8 +121,8 @@ export const Fall: React.FC<{ T: number }> = ({ T }) => {
 export const Memory: React.FC<{ T: number }> = ({ T }) => {
   const c = CH('memory'); if (T < c.a || T >= c.z) return null;
   const m1 = L('m1'), m2 = L('m2');
-  const clockO = easeOut(prog(T, c.a + 0.1, c.a + 0.6));
-  const detach = easeInOut(prog(T, at('m1', '它是') - 0.1, at('m1', '它是') + 1.0));
+  const clockO = easeOut(prog(T, c.a, c.a + 0.4));
+  const detach = easeInOut(prog(T, at('m1', '而是') - 0.1, at('m1', '而是') + 1.0));
   const rows = easeOut(prog(T, m2.a + 0.1, m2.a + 0.8));
   const stretch = easeInOut(prog(T, at('m2', '回想') - 0.1, at('m2', '回想') + 1.0));
   const CXc = 960, CYc = 520, R = 240;
@@ -132,7 +143,7 @@ export const Memory: React.FC<{ T: number }> = ({ T }) => {
             const memoCol = COLS[k % COLS.length];
             return <circle key={k} cx={lerp(x0, x1, d)} cy={lerp(y0, y1, d)} r={lerp(4, 9, d)} fill={d > 0.5 ? memoCol : INK} opacity={0.85} />;
           })}
-          {detach > 0.6 && <text x={960} y={CYc - 70} textAnchor="middle" opacity={prog(detach, 0.6, 1)} style={{ fontFamily: SANS, fontSize: 36, fill: INK }}>大脑数的不是秒，是记住的事</text>}
+          
         </g>
         {rows > 0 && [0, 1].map((r) => {
           const y = 430 + r * 270;
@@ -140,7 +151,7 @@ export const Memory: React.FC<{ T: number }> = ({ T }) => {
           const real = 560, felt = varied ? lerp(560, 1150, stretch) : lerp(560, 300, stretch);
           return (
             <g key={r} opacity={rows}>
-              <text x={300} y={y - 80} style={{ fontFamily: SANS, fontSize: 32, fill: INK }}>{varied ? '同样一小时：发生了很多不一样的小事' : '同样一小时：都差不多'}</text>
+              <text x={300} y={y - 80} style={{ fontFamily: SANS, fontSize: 32, fill: INK }}>{varied ? '同样长的一段：发生了很多不一样的小事' : '同样长的一段：都差不多'}</text>
               {Array.from({ length: n }, (_, k) => {
                 const x = 300 + (k + 0.5) * (real / n);
                 return varied
@@ -171,9 +182,9 @@ export const Routine: React.FC<{ T: number }> = ({ T }) => {
   const frame = useCurrentFrame();
   const c = CH('routine'); if (T < c.a || T >= c.z) return null;
   const u2 = L('u2'), u3 = L('u3'), u4 = L('u4');
-  const panels = easeOut(prog(T, c.a + 0.3, c.a + 1.0)) * (1 - easeInOut(prog(T, u4.a - 0.1, u4.a + 0.4)));
+  const panels = easeOut(prog(T, c.a, c.a + 0.5)) * (1 - easeInOut(prog(T, u4.a - 0.1, u4.a + 0.4)));
   const run = T >= u2.a ? Math.min(Math.floor((T - u2.a) / 0.22), 22) : -1;
-  const bars = (k: number) => easeOut(prog(T, u3.a + 0.4 + k * 0.4, u3.a + 1.3 + k * 0.4));
+  const bars = (_k: number) => easeOut(prog(T, u3.a + 0.4, u3.a + 1.6));
   const minus = pop(T, at('u3', '短了'));
   const week = easeOut(prog(T, u4.a + 0.1, u4.a + 0.7));
   const merge = easeInOut(prog(T, at('u4', '一周像') - 0.1, at('u4', '一周像') + 0.9));
@@ -198,20 +209,20 @@ export const Routine: React.FC<{ T: number }> = ({ T }) => {
                 </g>
               );
             })}
-            <text x={960} y={280} textAnchor="middle" style={{ fontFamily: MONO, fontSize: 22, fill: DIM }}>同样时长 · 真实计时 {run >= 0 ? (Math.min(T - u2.a, 5)).toFixed(1) : '0.0'} s</text>
+            <text x={960} y={286} textAnchor="middle" style={{ fontFamily: SANS, fontSize: 28, fill: DIM }}>两组做的时间一样长</text>
             {[['A 组回想', 128.89, DIM], ['B 组回想', 168.1, CYAN]].map(([name, v, col], k) => {
               const b = bars(k); if (b <= 0) return null;
               const y = 600 + k * 90;
               return (
                 <g key={k}>
-                  <text x={260} y={y - 12} style={{ fontFamily: SANS, fontSize: 24, fill: INK }}>{name as string}</text>
+                  <text x={260} y={y - 12} style={{ fontFamily: SANS, fontSize: 28, fill: INK }}>{name as string}</text>
                   <rect x={260} y={y} width={(v as number) * 7.2 * b} height={30} rx={4} fill={col as string} opacity={0.85} />
                   <text x={260 + (v as number) * 7.2 * b + 14} y={y + 26} style={{ fontFamily: MONO, fontSize: 24, fill: col as string }}>{((v as number) * b).toFixed(0)} mm</text>
                 </g>
               );
             })}
             {minus > 0 && <text x={1640} y={640} textAnchor="end" opacity={Math.min(1, minus)} style={{ fontFamily: MONO, fontWeight: 700, fontSize: 96, fill: RED }}>−23%</text>}
-            {minus > 0 && <text x={1640} y={680} textAnchor="end" opacity={Math.min(1, minus)} style={{ fontFamily: SANS, fontSize: 19, fill: DIM }}>在一条线上标出“感觉有多长”（研究 2，N = 38）</text>}
+            {minus > 0 && <text x={1640} y={690} textAnchor="end" opacity={Math.min(1, minus)} style={{ fontFamily: SANS, fontSize: 26, fill: DIM }}>回想时在一条线上标出“有多长”</text>}
           </g>
         )}
         {week > 0 && (
@@ -232,7 +243,7 @@ export const Routine: React.FC<{ T: number }> = ({ T }) => {
                 );
               });
             })}
-            {merge > 0.6 && <text x={940} y={560} opacity={prog(merge, 0.6, 1)} style={{ fontFamily: ZH, fontWeight: 900, fontSize: 80, fill: INK }}>{month > 0.5 ? '一个月 ≈ 一周' : '一周 ≈ 一天'}</text>}
+            {merge > 0.6 && <text x={940} y={560} opacity={prog(merge, 0.6, 1)} style={{ fontFamily: ZH, fontWeight: 900, fontSize: 68, fill: INK }}>{month > 0.5 ? '一个月，像一周' : '一周，像一天'}</text>}
           </g>
         )}
       </svg>
