@@ -5,3 +5,6 @@ output/preview_*.mp4
 output/soundtrack.wav
 # Downloaded reference footage (not ours to redistribute; kept local only)
 input/
+
+# voice-over clips (generated; not committed)
+public/vo/
