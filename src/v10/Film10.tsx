@@ -11,7 +11,7 @@ import { Grain, Vignette } from '../ui';
 export const LOVE_FRAMES = Math.round(FILM_END10 * 30);
 const SERIF = '"Noto Serif CJK SC", "Noto Serif SC", serif';
 type L = [number, number, string];
-const LINES: L[] = [
+export const LINES: L[] = [
   [0.0, 3.3, '你的脚踝上，系着一根线'],
   [3.4, 6.6, '看不见，也剪不断'],
   [6.7, 9.9, '一千多年前，就有人这么说'],
