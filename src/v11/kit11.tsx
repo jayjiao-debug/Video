@@ -257,20 +257,19 @@ export const Svg: React.FC<{ children: React.ReactNode; style?: React.CSSPropert
 
 /** the shared hinge: a leaf rotating about a vertical axis (rotateY), with a moving shade.
     angle 0 = flat; −180 = turned over to the left. Front face only (backface hidden). */
-export const Hinge: React.FC<{ angle: number; axisX: number; children: React.ReactNode; shade?: boolean; back?: React.ReactNode; persp?: number }> = ({ angle, axisX, children, shade = true, back, persp = 3200 }) => {
+export const Hinge: React.FC<{ angle: number; axisX: number; children: React.ReactNode; shade?: boolean; back?: React.ReactNode; persp?: number }> = ({ angle, axisX, children, shade = true, back }) => {
+  /* 2D hinge (scaleX = cos θ about the spine, a slight lift and a moving shade). No 3D compositing at all:
+     headless Chrome dropped/mis-ordered tiles of rotateY layers for single frames (gate 4). */
   const a = Math.abs(angle) % 360;
   const k = Math.sin((Math.min(a, 180) * Math.PI) / 180);
-  // flat: no 3D context at all (a 3D layer held at 0° can drop tiles for a frame in headless Chrome)
+  const c = Math.cos((a * Math.PI) / 180);
   if (a < 0.01) return <div style={{ position: 'absolute', left: 0, top: 0, width: W, height: H }}>{children}</div>;
+  const front = c > 0;
+  if (!front && !back) return null;
   return (
-    <div style={{ position: 'absolute', left: 0, top: 0, width: W, height: H, perspective: persp, perspectiveOrigin: `${axisX}px 540px` }}>
-      <div style={{ position: 'absolute', left: 0, top: 0, width: W, height: H, transformStyle: 'preserve-3d', transformOrigin: `${axisX}px 540px`, transform: `rotateY(${angle}deg)` }}>
-        <div style={{ position: 'absolute', inset: 0, backfaceVisibility: 'hidden' }}>
-          {children}
-          {shade && k > 0.01 && <div style={{ position: 'absolute', inset: 0, background: `linear-gradient(90deg, rgba(0,0,0,${0.55 * k}) 0%, rgba(0,0,0,${0.15 * k}) 40%, rgba(255,250,235,${0.12 * k}) 75%, rgba(0,0,0,${0.3 * k}) 100%)`, mixBlendMode: 'multiply' }} />}
-        </div>
-        {back && <div style={{ position: 'absolute', inset: 0, backfaceVisibility: 'hidden', transform: 'rotateY(180deg)' }}>{back}</div>}
-      </div>
+    <div style={{ position: 'absolute', left: 0, top: 0, width: W, height: H, transformOrigin: `${axisX}px 540px`, transform: `scale(${front ? Math.max(0.002, c) : Math.min(-0.002, c)}, ${1 + 0.05 * k})` }}>
+      {front ? children : back}
+      {shade && k > 0.01 && <div style={{ position: 'absolute', inset: 0, background: `linear-gradient(90deg, rgba(0,0,0,${0.55 * k}) 0%, rgba(0,0,0,${0.15 * k}) 40%, rgba(255,250,235,${0.12 * k}) 75%, rgba(0,0,0,${0.3 * k}) 100%)`, mixBlendMode: 'multiply' }} />}
     </div>
   );
 };
