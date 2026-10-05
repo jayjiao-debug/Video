@@ -39,7 +39,7 @@ export const GoldTitle: React.FC<{ text: string; T: number; at: number; size: nu
 };
 
 /** the motif: effort along x (weekly hours 0–70), reward up y, the line bends after 49 */
-export const Curve: React.FC<{ x: number; y: number; w: number; h: number; draw: number; labels?: number; id?: string }> = ({ x, y, w, h, draw, labels = 0, id = 'cv' }) => {
+export const Curve: React.FC<{ x: number; y: number; w: number; h: number; draw: number; labels?: number; id?: string; axes?: boolean }> = ({ x, y, w, h, draw, labels = 0, id = 'cv', axes = true }) => {
   const X = (hr: number) => x + (hr / 70) * w, Y = (v: number) => y + h - (v / 56) * h;
   const pts = Array.from({ length: 71 }, (_, i) => `${X(i).toFixed(1)},${Y(output(i)).toFixed(1)}`);
   const d = `M${pts.join(' L')}`;
@@ -50,8 +50,8 @@ export const Curve: React.FC<{ x: number; y: number; w: number; h: number; draw:
       <line x1={x} y1={y + h} x2={X(56) + 40} y2={Y(56) - 40} stroke="rgba(243,237,226,0.18)" strokeWidth={2} strokeDasharray="6 9" opacity={draw} />
       <defs><linearGradient id={`${id}-fill`} x1="0" y1="0" x2="0" y2="1"><stop offset="0" stopColor="#f1c56d" stopOpacity="0.28" /><stop offset="1" stopColor="#f1c56d" stopOpacity="0" /></linearGradient></defs>
       <path d={`${d} L${X(70)},${y + h} L${x},${y + h} Z`} fill={`url(#${id}-fill)`} opacity={draw * draw} />
-      <text x={x + w * 1.03} y={y + h + 70} textAnchor="end" style={{ fontFamily: ZH, fontSize: 22, fill: 'rgba(243,237,226,0.5)' }} opacity={draw}>每周工时</text>
-      <text x={x - 14} y={y + 10} textAnchor="end" style={{ fontFamily: ZH, fontSize: 22, fill: 'rgba(243,237,226,0.5)' }} opacity={draw}>产出</text>
+      {axes && <text x={x + w * 1.03} y={y + h + 70} textAnchor="end" style={{ fontFamily: ZH, fontSize: 22, fill: 'rgba(243,237,226,0.5)' }} opacity={draw}>每周工时</text>}
+      {axes && <text x={x - 14} y={y + 10} textAnchor="end" style={{ fontFamily: ZH, fontSize: 22, fill: 'rgba(243,237,226,0.5)' }} opacity={draw}>产出</text>}
       <path d={d} fill="none" stroke="#f1c56d" strokeWidth={5} strokeLinecap="round" strokeDasharray={`${L * draw} ${L}`} style={{ filter: 'drop-shadow(0 0 12px rgba(246,207,120,0.55))' }} id={id} />
       {labels > 0 && [[49, '49'], [63, '63'], [70, '70']].map(([hr, t]) => (
         <g key={t as string} opacity={labels}>

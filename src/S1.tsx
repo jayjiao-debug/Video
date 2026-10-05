@@ -21,7 +21,7 @@ export const output = (h: number) => (h <= 49 ? h : 49 + (h - 49) - ((h - 49) * 
 
 export const LINES_S1: Line[] = [
   [b(0) + 0.5, b(8) - 0.1, '你以为：付出翻倍，回报也翻倍。', 'You think: double the effort, double the reward.'],
-  [b(8) + 0.06, b(16) - 0.1, '一百多年前，英国军工厂里，女工每周干到70小时。', 'A century ago, women in British munitions works put in up to 70 hours a week.'],
+  [b(8) + 0.06, b(16) - 0.1, '一百多年前，英国军工厂女工每周干到70小时。', 'A century ago, women in British munitions works put in up to 70 hours a week.'],
   [b(16) + 0.06, b(24) - 0.1, '可产出，和每周干56小时的时候几乎一样。', 'Yet they produced about as much as in a 56-hour week.'],
   [b(24) + 0.06, b(30) - 0.12, '多干的14个小时，[去哪了]？', 'So where did the extra 14 hours go?'],
 ];
