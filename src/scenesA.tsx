@@ -197,7 +197,7 @@ export const LogLife: React.FC<{ T: number }> = ({ T }) => {
   return (
     <AbsoluteFill>
       <svg width={1920} height={1080} style={{ position: 'absolute', inset: 0 }}>
-        <g opacity={1 - out} transform={`translate(0 ${out * 60})`}>
+        <g opacity={1 - 0.7 * out} transform={`translate(0 ${out * 40})`}>
           {/* rulers */}
           <text x={RX0} y={TOPY - 46} opacity={rul} style={{ fontFamily: SANS, fontSize: 26, fill: INK }}>真实的人生 <tspan fill={DIM} fontSize={20}>每年一样长</tspan></text>
           <line x1={RX0} x2={RX0 + (RX1 - RX0) * rul} y1={TOPY} y2={TOPY} stroke={INK} strokeWidth={2} />
