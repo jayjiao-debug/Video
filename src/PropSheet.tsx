@@ -11,15 +11,14 @@ import { ZH, EN, GOLD } from './lib';
 /* Props sheet for approval: one downloaded model per frame, lit the way the film will light it
    (one warm key with soft shadows, a cool rim from behind, a dark set). */
 export const PROPS: [ModelName, string, string][] = [
-  ['bill100', '100 美元纸币', 'S1 · S6 · S10'],
-  ['noodles', '一碗炸酱面', 'S1 · S10'],
-  ['table', '旧木桌', 'S1 · S10'],
-  ['cowrie', '海贝', 'S3'],
-  ['lioncoins', '狮子币（吕底亚替身）', 'S4'],
-  ['cashcoin', '方孔铜钱（改成半两）', 'S4'],
-  ['goldbar', '金条', 'S5 · S6 · S8'],
-  ['stonewheel', '石币（雅浦替身）', 'S9'],
-  ['canoe', '独木舟', 'S9'],
+  ['shell', '炮弹', 'S1 · S3 · 片名'],
+  ['table', '工作台（旧木桌）', 'S1 · S3'],
+  ['lamp', '车间吊灯', 'S1 · S3'],
+  ['wallclock', '车间挂钟', 'S1 · S3'],
+  ['piano', '三角钢琴', 'S4'],
+  ['metronome', '节拍器', 'S4'],
+  ['bambooset', '竹林', 'S8'],
+  ['bamboo', '单丛竹子', 'S8'],
 ];
 
 const Cam: React.FC<{ r: number; y: number }> = ({ r, y }) => {

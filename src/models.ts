@@ -2,22 +2,21 @@ import * as THREE from 'three';
 import { staticFile } from 'remotion';
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
 
-/* Downloaded Sketchfab models (asset farm request money-models-01; credits in public/models/credits.json).
+/* Downloaded Sketchfab models (asset farm request effort-models-01, table from money-models-01; credits in public/models/credits.json).
    One module cache per bundle; each model is centred on x/z, its base set on y = 0, and scaled so that its
    longest side (or its height) matches the real object in metres. Scenes clone what they need. */
-export type ModelName = 'bill100' | 'noodles' | 'table' | 'cowrie' | 'lioncoins' | 'cashcoin' | 'goldbar' | 'stonewheel' | 'canoe';
+export type ModelName = 'shell' | 'metronome' | 'piano' | 'bambooset' | 'bamboo' | 'lamp' | 'wallclock' | 'table';
 
 /** real size in metres and which measure it sets: 'max' = longest side, 'h' = height */
 export const SIZES: Record<ModelName, [number, 'max' | 'h']> = {
-  bill100: [0.156, 'max'], // US banknote 156 × 66 mm
-  noodles: [0.2, 'max'], // a noodle bowl ≈ 20 cm across
+  shell: [0.45, 'max'], // an 18-pounder round is about 0.5 m long
+  metronome: [0.23, 'h'],
+  piano: [1.9, 'max'], // a parlour grand
+  bambooset: [16, 'h'], // a stand of moso bamboo
+  bamboo: [9, 'h'],
+  lamp: [0.42, 'max'],
+  wallclock: [0.34, 'max'],
   table: [0.76, 'h'],
-  cowrie: [0.025, 'max'], // money cowry ≈ 2.5 cm
-  lioncoins: [0.045, 'max'], // three small coins side by side
-  cashcoin: [0.032, 'max'], // 半两 ≈ 3.2 cm
-  goldbar: [0.116, 'max'], // a 1 kg bar
-  stonewheel: [2.0, 'max'], // a mid-sized Yap stone
-  canoe: [6.0, 'max'],
 };
 
 const CACHE = new Map<ModelName, Promise<THREE.Group>>();

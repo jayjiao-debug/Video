@@ -11,7 +11,7 @@ import { FPS, W, H, FILM_FRAMES } from './lib';
 /* Composition ids: only a-z, A-Z, 0-9 and "-" (no underscores). */
 export const Root: React.FC = () => (
   <>
-    <Composition id="Money" component={Film} durationInFrames={FILM_FRAMES} fps={FPS} width={W} height={H} defaultProps={{ music: false }} />
+    <Composition id="Effort" component={Film} durationInFrames={FILM_FRAMES} fps={FPS} width={W} height={H} defaultProps={{ music: false }} />
     <Composition id="Props" component={PropSheet} durationInFrames={PROPS.length} fps={FPS} width={W} height={H} />
   </>
 );
