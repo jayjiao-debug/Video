@@ -220,7 +220,7 @@ export const LogLife: React.FC<{ T: number }> = ({ T }) => {
               <rect x={RX0} y={BOTY - 8} width={(RX1 - RX0) / 2} height={16} fill={RED} opacity={0.35} />
               <text x={(RX0 + RX1) / 2} y={BOTY - 26} textAnchor="middle" style={{ fontFamily: SANS, fontWeight: 700, fontSize: 30, fill: RED }}>一半</text>
               <rect x={linX(3)} y={TOPY - 8} width={linX(16) - linX(3)} height={16} fill={RED} opacity={0.35} />
-              <text x={linX(16)} y={TOPY - 60} textAnchor="middle" style={{ fontFamily: MONO, fontWeight: 700, fontSize: 64, fill: RED }}>16 岁</text>
+              <text x={linX(16) + 24} y={TOPY - 52} style={{ fontFamily: MONO, fontWeight: 700, fontSize: 64, fill: RED }}>16 岁</text>
               <text x={RX1} y={BOTY + 130} textAnchor="end" style={{ fontFamily: SANS, fontSize: 26, fill: DIM }}>模型估算：√(3 × 80) ≈ 16　· 比例理论只是一种解释，不是定律</text>
             </g>
           )}
