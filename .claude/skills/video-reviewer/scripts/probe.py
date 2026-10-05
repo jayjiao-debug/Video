@@ -78,7 +78,7 @@ def main():
     flags = []
     if (v['width'], v['height']) not in ((1920, 1080), (1080, 1920)):
         flags.append(['MAJOR', f"resolution {v['width']}x{v['height']} (want 1920x1080)"])
-    if res['video_mbps'] < 6:
+    if res['video_mbps'] < 8:
         flags.append(['MAJOR', f"video bitrate {res['video_mbps']} Mbps: too low to upload; dark/grainy scenes turn to mush and Douyin may flag 画质模糊. Upload the master (≥8 Mbps)"])
     if not au:
         flags.append(['BLOCKER', 'no audio stream'])
