@@ -1,0 +1,21 @@
+name: deliver-zero
+on:
+  push:
+    branches: [deliver-zero]
+jobs:
+  package:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Join parts and check
+        run: |
+          mkdir -p out
+          cat parts/master.mp4.part* > "out/零糖_v6_高清原片.mp4"
+          echo "$(cat parts/md5.txt)  out/零糖_v6_高清原片.mp4" | md5sum -c -
+          ls -la out
+      - uses: actions/upload-artifact@v4
+        with:
+          name: 零糖_v6_高清原片
+          path: out/零糖_v6_高清原片.mp4
+          compression-level: 0
+          retention-days: 30
