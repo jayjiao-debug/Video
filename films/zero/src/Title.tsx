@@ -2,10 +2,10 @@ import React from 'react';
 import { AbsoluteFill } from 'remotion';
 import { b, cut, prog, easeOut, easeInOut, lerp, rnd, EN, ZH, beats } from './lib';
 
-/* Title card (b30–b44; stamped on the drop b32 = 16.6 s). The nine sugar cubes of the cold open line up as small
+/* Title card (b30–b36, 3 s; stamped on the drop b32 = 16.6 s). The nine sugar cubes of the cold open line up as small
    isometric icons, then burst into gold dust as the title is stamped, one character per half beat: the sugar goes,
-   the sweetness stays. */
-export const T_IN = cut(30), T_OUT = cut(44) - 1e-4;
+   the sweetness stays. Kept short (the cold open already asked the question), it hands over to the mouth at b36. */
+export const T_IN = cut(30), T_OUT = cut(36) - 1e-4;
 const half = (beats[33] - beats[32]) / 2;
 
 export const GoldTitle: React.FC<{ text: string; T: number; at: number; size: number; y: number; x?: number; id?: string }> = ({ text, T, at, size, y, x = 960, id = 'gt' }) => {
@@ -69,8 +69,6 @@ export const Title: React.FC<{ T: number }> = ({ T }) => {
         })}
         <text x={960} y={330} textAnchor="middle" style={{ fontFamily: EN, fontWeight: 600, fontSize: 24, letterSpacing: '0.42em', fill: '#f1c56d' }} opacity={o(b(32) + 0.2)}>ZERO SUGAR · 甜 味 剂</text>
         <GoldTitle text="零糖" T={T} at={b(32)} size={150} y={530} />
-        <text x={960} y={800} textAnchor="middle" style={{ fontFamily: ZH, fontWeight: 700, fontSize: 46, fill: '#f3ede2', letterSpacing: '0.06em' }} opacity={o(b(35))}>不加糖，为什么也会甜？</text>
-        <text x={960} y={846} textAnchor="middle" style={{ fontFamily: EN, fontStyle: 'italic', fontSize: 26, fill: 'rgba(243,237,226,0.5)' }} opacity={o(b(35) + 0.3)}>No sugar. So why is it sweet?</text>
       </svg>
     </AbsoluteFill>
   );

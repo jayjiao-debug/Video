@@ -5,7 +5,7 @@ import music from './music.json'; // beat grid of public/bgm.mp3 (118 bpm, 323 b
 export const FPS = 30;
 export const W = 1920;
 export const H = 1080;
-export const FILM_END = 109.5; // v5: ~110 s; the end card from b206, the music fades out over the last 3 s
+export const FILM_END = 157.2; // the end card holds ~6 s after b296; the music fades out over the last 3 s
 export const FILM_FRAMES = Math.round(FILM_END * FPS);
 export const ZH = '"Noto Serif CJK SC", "Noto Serif SC", serif';
 export const SANS = '"Noto Sans CJK SC", "Noto Sans SC", sans-serif';
@@ -61,6 +61,39 @@ export const camAt = (keys: Key[], T: number) => {
   const [ta, pa, la] = keys[i], [tb, pb, lb] = keys[i + 1];
   const k = easeInOut(prog(T, ta, tb));
   return { pos: pa.map((x, j) => lerp(x, pb[j], k)), look: la.map((x, j) => lerp(x, lb[j], k)) };
+};
+/** monotone cubic (Fritsch–Carlson) through [time, values[]] keys: C1-smooth, never overshoots, keeps moving through
+    the keys (no stop at each key, unlike camAt), so a long camera move reads as one continuous motion */
+export const smoothKeys = (keys: [number, number[]][], T: number) => {
+  const n = keys.length, dim = keys[0][1].length;
+  if (T <= keys[0][0]) return keys[0][1].slice();
+  if (T >= keys[n - 1][0]) return keys[n - 1][1].slice();
+  let i = 0; while (i < n - 2 && T > keys[i + 1][0]) i++;
+  const out: number[] = [];
+  for (let j = 0; j < dim; j++) {
+    const t = keys.map((k) => k[0]), y = keys.map((k) => k[1][j]);
+    const d = t.slice(0, -1).map((_, k) => (y[k + 1] - y[k]) / (t[k + 1] - t[k]));
+    const m = t.map((_, k) => {
+      if (k === 0) return d[0];
+      if (k === n - 1) return d[n - 2];
+      if (d[k - 1] * d[k] <= 0) return 0;
+      const w1 = 2 * (t[k + 1] - t[k]) + (t[k] - t[k - 1]), w2 = (t[k + 1] - t[k]) + 2 * (t[k] - t[k - 1]);
+      return (w1 + w2) / (w1 / d[k - 1] + w2 / d[k]);
+    });
+    const h = t[i + 1] - t[i], s = (T - t[i]) / h;
+    const h00 = 2 * s ** 3 - 3 * s ** 2 + 1, h10 = s ** 3 - 2 * s ** 2 + s, h01 = -2 * s ** 3 + 3 * s ** 2, h11 = s ** 3 - s ** 2;
+    out.push(h00 * y[i] + h10 * h * m[i] + h01 * y[i + 1] + h11 * h * m[i + 1]);
+  }
+  return out;
+};
+/** a zoom key: [time, lookAt, direction from the target to the camera, distance]; distance is eased in log space, so a
+    move from 60 units to 0.02 units feels like one steady dive (powers of ten) */
+export type ZoomKey = [number, number[], number[], number];
+export const zoomAt = (keys: ZoomKey[], T: number) => {
+  const v = smoothKeys(keys.map(([t, l, d, r]) => [t, [...l, ...d, Math.log(r)]]), T);
+  const look = v.slice(0, 3), dir = v.slice(3, 6), dist = Math.exp(v[6]);
+  const len = Math.hypot(dir[0], dir[1], dir[2]) || 1;
+  return { pos: look.map((x, j) => x + (dir[j] / len) * dist), look, dist };
 };
 /** Benford's law */
 export const benford = (d: number) => Math.log10(1 + 1 / d);
