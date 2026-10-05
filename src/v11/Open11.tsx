@@ -1,7 +1,6 @@
 import React from 'react';
 import { random } from 'remotion';
 import { GoldTitle11 } from './kit11';
-import { ExitPict } from './kit11';
 import { C, F, LNUM, Cam, Svg, Desk, PaperDiv, PageInk, PenText, Coin, Heart, Stamp, Hinge, pr, eo, eio, pop, spring, swing, lerp, clamp, easeOut, easeInOut, rnd, W } from './kit11';
 import { CUT } from './time11';
 import { b } from '../v6/ui6';
@@ -77,7 +76,12 @@ export const S01: React.FC<{ T: number }> = ({ T }) => {
           <Ticket />
         </g>
         <g opacity={(1 - whip) * flick}>
-          <ExitPict x={250} y={690} s={1} glow={1} />
+          <g transform="translate(250 690)">
+            <rect x={-80} y={-48} width={160} height={96} rx={8} fill="#0d3b2c" stroke="#3fd39a" strokeWidth={3} />
+            <rect x={-80} y={-48} width={160} height={96} rx={8} fill="#3fd39a" opacity={0.25} filter="url(#k-soft)" />
+            <text x={-14} y={22} textAnchor="middle" style={{ fontFamily: F.sans, fontWeight: 900, fontSize: 60 }} fill="#7ff0c0">走</text>
+            <path d="M30,0 H58 M46,-14 L60,0 L46,14" fill="none" stroke="#7ff0c0" strokeWidth={6} strokeLinecap="round" strokeLinejoin="round" />
+          </g>
         </g>
         <g opacity={1 - whip} transform="translate(1660 690) scale(1.25)">
           <path d="M-44,-4 V-46 Q-44,-62 -28,-62 H28 Q44,-62 44,-46 V-4 Z" fill="#8a3238" />

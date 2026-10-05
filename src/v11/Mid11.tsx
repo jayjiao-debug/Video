@@ -1,7 +1,6 @@
 import React from 'react';
-import { ExitPict } from './kit11';
-import { Zoom, PZ } from './kit11';
 import { C, F, LNUM, Cam, Svg, PaperDiv, PageInk, Coin, Margin11, pr, eo, eio, pop, spring, swing, lerp, clamp, drawOn } from './kit11';
+import { Zoom, PZ } from './kit11';
 import { CUT } from './time11';
 import { b } from '../v6/ui6';
 
@@ -168,7 +167,13 @@ const RelCard: React.FC<{ c: number; T: number }> = ({ c, T }) => {
     </g>
   );
 };
-const ExitSign: React.FC<{ x: number; y: number; s?: number }> = ({ x, y, s = 0.5 }) => <ExitPict x={x} y={y} s={s * 0.78} glow={0.6} />;
+const ExitSign: React.FC<{ x: number; y: number; s?: number }> = ({ x, y, s = 0.5 }) => (
+  <g transform={`translate(${x} ${y}) scale(${s})`}>
+    <rect x={-80} y={-48} width={160} height={96} rx={8} fill="#0d3b2c" stroke="#2a9c6f" strokeWidth={4} />
+    <text x={-14} y={22} textAnchor="middle" style={{ fontFamily: F.sans, fontWeight: 900, fontSize: 60 }} fill="#7ff0c0">走</text>
+    <path d="M30,0 H58 M46,-14 L60,0 L46,14" fill="none" stroke="#7ff0c0" strokeWidth={6} strokeLinecap="round" strokeLinejoin="round" />
+  </g>
+);
 const Seat: React.FC<{ x: number; y: number; s?: number }> = ({ x, y, s = 0.62 }) => (
   <g transform={`translate(${x} ${y}) scale(${s})`}>
     <path d="M-44,-4 V-46 Q-44,-62 -28,-62 H28 Q44,-62 44,-46 V-4 Z" fill="#8a3238" />
