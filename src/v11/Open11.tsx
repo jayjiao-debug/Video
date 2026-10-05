@@ -386,7 +386,7 @@ const Cover: React.FC<{ T: number; f: number }> = ({ T, f }) => {
             <line x1={640} y1={438} x2={890} y2={438} /><line x1={1030} y1={438} x2={1280} y2={438} />
             <path d="M960,432 L966,438 L960,444 L954,438 Z" fill="#e6bd66" stroke="none" />
           </g>
-          <GoldTitle11 text="舍不得的，是TA吗？" f={f} at={8} size={120} y={590} />
+          <GoldTitle11 text="舍不得的，是TA吗？" f={f} at={6} step={1.5} fade={10} size={120} y={590} />
           <ellipse cx={960} cy={548} rx={760 * (0.4 + flare)} ry={2 + 2.5 * flare} fill="#fff1cf" opacity={0.55 * flare} />
           {Array.from({ length: 36 }, (_, i) => {
             const t = f - 26;

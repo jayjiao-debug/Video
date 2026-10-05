@@ -267,9 +267,9 @@ export const Hinge: React.FC<{ angle: number; axisX: number; children: React.Rea
 };
 
 /** the brand's metal gold title, set with natural advances (so "TA" isn't spaced like CJK), staggered reveal + one light sweep */
-export const GoldTitle11: React.FC<{ text: string; f: number; at: number; size: number; y: number; x?: number; id?: string }> = ({ text, f, at, size, y, x = W / 2, id = 'gt11' }) => {
+export const GoldTitle11: React.FC<{ text: string; f: number; at: number; size: number; y: number; x?: number; id?: string; step?: number; fade?: number }> = ({ text, f, at, size, y, x = W / 2, id = 'gt11', step = 3, fade = 16 }) => {
   const chars = [...`《${text}》`];
-  const sweep = lerp(-700, 700, easeInOut(clamp((f - at - 26) / 30)));
+  const sweep = lerp(-700, 700, easeInOut(clamp((f - at - chars.length * step - fade + 4) / 30)));
   return (
     <g>
       <defs>
@@ -282,7 +282,7 @@ export const GoldTitle11: React.FC<{ text: string; f: number; at: number; size: 
       </defs>
       {['m', 's'].map((k) => (
         <text key={k} x={x} y={y} textAnchor="middle" style={{ fontFamily: F.serif, fontWeight: 900, fontSize: size, letterSpacing: '0.02em' }}>
-          {chars.map((ch, i) => <tspan key={i} fill={`url(#${id}-${k})`} opacity={easeOut(clamp((f - at - i * 3) / 16))}>{ch}</tspan>)}
+          {chars.map((ch, i) => <tspan key={i} fill={`url(#${id}-${k})`} opacity={easeOut(clamp((f - at - i * step) / fade))}>{ch}</tspan>)}
         </text>
       ))}
     </g>

@@ -94,11 +94,13 @@ export const Lamp: React.FC<{ x: number; y: number; r: number; lit: number; ray?
     {q > 0.01 && <text y={r * 0.38} textAnchor="middle" opacity={q} style={{ fontFamily: F.lat, fontWeight: 700, fontSize: r * 1.1 }} fill="#6f685d">?</text>}
   </g>
 );
-export const Key: React.FC<{ x: number; y: number; r: number; pressed: number }> = ({ x, y, r, pressed }) => (
+export const Key: React.FC<{ x: number; y: number; r: number; pressed: number; gold?: number }> = ({ x, y, r, pressed, gold = 0 }) => (
   <g transform={`translate(${x} ${y})`}>
+    {gold > 0.01 && <circle r={(r + 8 * (r / 26)) * 1.6} fill="url(#k-lampHalo)" opacity={gold} />}
     <circle r={r + 8 * (r / 26)} fill="#e8dfcb" stroke={INK} strokeWidth={3} />
     <circle r={r} fill={pressed > 0.5 ? '#d9cfba' : '#efe7d6'} stroke={INK} strokeWidth={2.5} />
     <circle r={r - 7 * (r / 26)} fill="url(#k-hatchFine)" opacity={0.2 + 0.25 * pressed} />
+    {gold > 0.01 && <circle r={r + 4 * (r / 26)} fill="none" stroke={C.gold} strokeWidth={4} opacity={gold} />}
   </g>
 );
 
@@ -236,7 +238,7 @@ export const S12: React.FC<{ T: number }> = ({ T }) => {
   const catchK = eio(T, b(158), 0.7);
   const qx = lerp(qPark.x, P.x, catchK), qy = lerp(qPark.y, P.y, catchK);
   const seated = T >= b(158) + 0.7;
-  const pageIn = eo(T, b(158), 0.35);
+  const pageIn = eo(T, b(158) + 0.24, 0.3);
   // pecking
   const pk = peckAt(T);
   const machine = CUT.machine;
@@ -325,9 +327,9 @@ export const S12: React.FC<{ T: number }> = ({ T }) => {
           </g>
           {T < machine + 0.3 && (
             <g opacity={1 - eo(T, machine, 0.3)}>
-              <text x={560} y={300} opacity={eo(T, CUT.drop2 + 0.3, 0.4)} style={{ fontFamily: F.serif, fontWeight: 900, fontSize: 44 }} fill={C.goldD}>奖励</text>
-              <text x={560} y={346} opacity={eo(T, CUT.drop2 + 0.4, 0.4)} style={{ fontFamily: F.sans, fontWeight: 500, fontSize: 28 }} fill={C.ink2}>说不准什么时候亮</text>
-              <path d={`M672,288 C760,282 ${LX - 140},${LY - 30} ${LX - 76},${LY - 6}`} stroke={C.ink2} strokeWidth={1.8} fill="none" strokeDasharray="2 6" strokeLinecap="round" opacity={eo(T, CUT.drop2 + 0.4, 0.4)} />
+              <text x={520} y={300} opacity={eo(T, CUT.drop2, 0.25)} style={{ fontFamily: F.serif, fontWeight: 900, fontSize: 44 }} fill={C.goldD}>奖励</text>
+              <text x={520} y={350} opacity={eo(T, CUT.drop2, 0.25)} style={{ fontFamily: F.sans, fontWeight: 500, fontSize: 34 }} fill={C.ink2}>说不准什么时候亮</text>
+              <path d={`M624,288 C740,282 ${LX - 140},${LY - 30} ${LX - 76},${LY - 6}`} stroke={C.ink2} strokeWidth={1.8} fill="none" strokeDasharray="2 6" strokeLinecap="round" opacity={eo(T, CUT.drop2 + 0.1, 0.25)} />
               <Clock H0={H0} o={1 - eo(T, machine, 0.4)} />
             </g>
           )}
@@ -356,8 +358,8 @@ export const S12: React.FC<{ T: number }> = ({ T }) => {
           )}
           {/* key + lamp (the originals, travelling into the machine) */}
           <g transform={T >= machine + 0.25 ? machineT : undefined}>
-            <Lamp x={lx} y={ly} r={lr} lit={T < machine ? lampLit : machineLamp} ray={lerp(1, 0.4, travel)} q={seated && T < CUT.drop2 ? 1 : T < CUT.drop2 + 0.15 && seated ? 1 - pr(T, CUT.drop2, 0.15) : 0} />
-            <Key x={kx} y={ky} r={kr} pressed={T < machine && pk.hit ? 1 : 0} />
+            <Lamp x={lx} y={ly} r={lr} lit={T < machine ? lampLit : Math.max(machineLamp, 1 - pr(T, machine + 0.6, 0.25))} ray={lerp(1, 0.4, travel)} q={seated && T < CUT.drop2 ? 1 : T < CUT.drop2 + 0.15 && seated ? 1 - pr(T, CUT.drop2, 0.15) : 0} />
+            <Key x={kx} y={ky} r={kr} pressed={T < machine && pk.hit ? 1 : 0} gold={T >= machine ? 1 - pr(T, machine + 0.6, 0.25) : 0} />
           </g>
           {/* the 像 tag */}
           {tagIn > 0 && (

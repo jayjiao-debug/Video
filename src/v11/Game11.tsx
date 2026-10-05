@@ -48,8 +48,8 @@ export const S10S11: React.FC<{ T: number }> = ({ T }) => {
 /** the "?" coin carried out of the dive; it waits where the cards will be dealt from */
 const QFloat: React.FC<{ T: number }> = ({ T }) => {
   const k = eio(T, CUT.dive, 0.9);
-  const x = lerp(cx[1] + CW - 48, 1070, k), y = lerp(cy[0] + 44, 380, k);
-  const s = lerp(1.05, 1.7, k) * (1 + 0.04 * Math.sin(T * 5));
+  const x = lerp(cx[1] + CW - 48, 1535, k), y = lerp(cy[0] + 44, 330, k);
+  const s = lerp(1.05, 1.4, k) * (1 + 0.04 * Math.sin(T * 5));
   const o = 1 - eo(T, b(127), 0.35);
   return <Svg><Heart x={x} y={y} kind="q" s={s} o={o} /></Svg>;
 };
@@ -211,7 +211,7 @@ const S11: React.FC<{ T: number }> = ({ T }) => {
   const tl = eo(T, b(150) + 0.4, 0.8);
   const qTip = T >= b(155) ? 1 : 0;
   const dimEnd = eio(T, CUT.silent, 0.4) * 0.4;
-  const fadeOut = 1 - eo(T, CUT.drop2 - 0.9, 0.4);
+  const fadeOut = 1 - eo(T, b(158), 0.22);
   const chartT = `translate(${lerp(0, -40, slide)} ${lerp(0, -70, slide)}) translate(400 700) scale(${lerp(1, 0.5, slide)}) translate(-400 -700)`;
   return (
     <Cam s={camS} x={camX} o={fadeOut}>
