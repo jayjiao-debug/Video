@@ -67,7 +67,7 @@ export const Sub3: React.FC<{T: number; at: number; out: number; zh: React.React
   if (o <= 0) return null;
   return (
     <div style={{position: 'absolute', left: 0, right: 0, top: 900, textAlign: 'center', opacity: o}}>
-      <div style={{fontFamily: SANS, fontSize: 44, fontWeight: 600, color: M.white, letterSpacing: '0.03em'}}>{zh}</div>
+      <div style={{fontFamily: SANS, fontSize: 44, fontWeight: 600, color: M.white, letterSpacing: '0.03em', textShadow: '0 0 14px #000, 0 0 6px #000, 0 0 2px #000'}}>{zh}</div>
       <div style={{fontFamily: SANS, fontSize: 21, color: 'rgba(255,255,255,0.45)', marginTop: 8}}>{en}</div>
     </div>
   );
