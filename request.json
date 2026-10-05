@@ -1,77 +1,40 @@
 {
-  "id": "effort-search-01",
+  "id": "effort-models-01",
   "items": [
     {
-      "type": "sketchfab-search",
-      "q": "artillery shell",
-      "count": 12,
-      "maxFaces": 300000
+      "type": "sketchfab",
+      "uid": "bc376f5f58a3426f82ef1de506935213",
+      "name": "shell"
     },
     {
-      "type": "sketchfab-search",
-      "q": "brass shell casing",
-      "count": 12,
-      "maxFaces": 300000
+      "type": "sketchfab",
+      "uid": "5f76f9ecd6624681b148783fb76a4854",
+      "name": "metronome"
     },
     {
-      "type": "sketchfab-search",
-      "q": "punch clock",
-      "count": 12,
-      "maxFaces": 300000
+      "type": "sketchfab",
+      "uid": "c7c82e2445544191b541f2240ae8c4e7",
+      "name": "piano"
     },
     {
-      "type": "sketchfab-search",
-      "q": "time clock vintage",
-      "count": 12,
-      "maxFaces": 300000
+      "type": "sketchfab",
+      "uid": "e9f9fa5397814f81bf85ad06acf5bf30",
+      "name": "bambooset"
     },
     {
-      "type": "sketchfab-search",
-      "q": "grand piano",
-      "count": 12,
-      "maxFaces": 300000
+      "type": "sketchfab",
+      "uid": "a02bf0e3ffe44617ad49daf3cd94fe59",
+      "name": "bamboo"
     },
     {
-      "type": "sketchfab-search",
-      "q": "upright piano",
-      "count": 12,
-      "maxFaces": 300000
+      "type": "sketchfab",
+      "uid": "2ba27702aabe4d37822956a2b7bf43d8",
+      "name": "lamp"
     },
     {
-      "type": "sketchfab-search",
-      "q": "metronome",
-      "count": 12,
-      "maxFaces": 300000
-    },
-    {
-      "type": "sketchfab-search",
-      "q": "bamboo",
-      "count": 12,
-      "maxFaces": 300000
-    },
-    {
-      "type": "sketchfab-search",
-      "q": "bamboo shoot",
-      "count": 12,
-      "maxFaces": 300000
-    },
-    {
-      "type": "sketchfab-search",
-      "q": "workbench vintage",
-      "count": 12,
-      "maxFaces": 300000
-    },
-    {
-      "type": "sketchfab-search",
-      "q": "factory lamp",
-      "count": 12,
-      "maxFaces": 300000
-    },
-    {
-      "type": "sketchfab-search",
-      "q": "wall calendar",
-      "count": 12,
-      "maxFaces": 300000
+      "type": "sketchfab",
+      "uid": "174a3fc826414bfc9693d9b00f43fe57",
+      "name": "wallclock"
     }
   ]
 }
