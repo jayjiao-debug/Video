@@ -96,13 +96,37 @@ export const order = (run: Run, t: number) => at(run, run.r, t);
 
 /** a phase shift that pins the crowd's common beat to the music once it has formed: added to every
     oscillator alike, so it never changes how in-step they are, only when the shared flash lands.
-    `per` = music beats per cycle. */
+    `per` = music beats per cycle. The gap to the beat is fixed (taken the short way round) at the
+    moment the crowd is half formed and only followed slowly after that, so the shift eases in
+    without spinning the flashes through extra cycles; it is precomputed per frame (pure in T). */
+const PIN_CACHE = new Map<string, Float64Array>();
 export const pin = (run: Run, T: number, T0: number, per = 1, from = 0.35, to = 0.85) => {
-  const t = T - T0;
-  const r = order(run, t);
-  const w = Math.max(0, Math.min(1, (r - from) / (to - from)));
-  const s = w * w * (3 - 2 * w);
-  return s * ((2 * Math.PI * beatAt(T)) / per - at(run, run.psi, t));
+  const key = `${run.th.length}|${run.psi[run.frames - 1]}|${T0}|${per}|${from}|${to}`;
+  let off = PIN_CACHE.get(key);
+  if (!off) {
+    off = new Float64Array(run.frames);
+    const sOf = (f: number) => {
+      const w = Math.max(0, Math.min(1, (run.r[f] - from) / (to - from)));
+      return w * w * (3 - 2 * w);
+    };
+    const gap = (f: number) => (2 * Math.PI * beatAt(T0 + f / run.fps)) / per - run.psi[f];
+    const wrap = (x: number) => x - 2 * Math.PI * Math.round(x / (2 * Math.PI));
+    let f0 = run.frames - 1;
+    for (let f = 0; f < run.frames; f++)
+      if (sOf(f) >= 0.5) {
+        f0 = f;
+        break;
+      }
+    let D = wrap(gap(f0));
+    for (let f = 0; f < run.frames; f++) {
+      if (f > f0) D += wrap(gap(f) - gap(f - 1));
+      off[f] = sOf(f) * D;
+    }
+    PIN_CACHE.set(key, off);
+  }
+  const f = Math.max(0, Math.min(run.frames - 1.001, (T - T0) * run.fps));
+  const a = Math.floor(f);
+  return off[a] + (off[a + 1] - off[a]) * (f - a);
 };
 
 /** a firefly's flash each time its phase passes 0: a quick rise and a soft fall. At one cycle per beat
