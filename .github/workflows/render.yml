@@ -5,14 +5,14 @@ name: render
 # and pushes the finished picture (no audio) to the `render-output` branch.
 on:
   push:
-    branches: [render-farm-money]
+    branches: [render-farm-effort]
     paths: ['render.json']
 
 permissions:
   contents: write
 
 concurrency:
-  group: render-money
+  group: render-effort
   cancel-in-progress: true
 
 jobs:
@@ -83,7 +83,7 @@ jobs:
           ID: ${{ needs.plan.outputs.id }}
         run: |
           mkdir pub && cd pub
-          git init -q -b render-output-money
+          git init -q -b render-output-effort
           git config user.name "render-bot"
           git config user.email "render-bot@users.noreply.github.com"
           # files over 95 MB are split so they fit GitHub's 100 MB limit
@@ -91,4 +91,4 @@ jobs:
           . ../meta/started.txt
           echo "{\"id\":\"$ID\",\"name\":\"$NAME\",\"started\":$started,\"finished\":$(date -u +%s),\"sha\":\"$GITHUB_SHA\"}" > result.json
           git add -A && git commit -qm "render $NAME ($ID)"
-          git push -q --force "https://x-access-token:${{ github.token }}@github.com/${{ github.repository }}" render-output-money
+          git push -q --force "https://x-access-token:${{ github.token }}@github.com/${{ github.repository }}" render-output-effort
