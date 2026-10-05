@@ -21,4 +21,6 @@ working; the director and reviewer check every row. Newest at the bottom; quote 
 | Douyin restricted 《应该没事吧》 for 低质/批量 (2026-10-05) | Upload only the upload master (≥ 8 Mbps); no maps with borders; declare AI content; post at most one per day. | producer |
 | "开头的冲击力度有点弱感觉留不住人" (ep11 v3) + account data: 2s跳出 ≤29% films all got pushed, ≥34.7% none did | First line = the viewer's own situation and the topic itself (no detour like a movie/galaxy/office), subtitle on frame 0, and something happens on the music inside the first second. | screenwriter, art-director, animator |
 | "感情账本我们可以调整…观众能看到下面留/不留的变化" (ep11) | When a formula/model is shown, let the viewer play it: change one input at a time and show the outcome flip on screen. | art-director, animator |
+| "屏幕本来就不大…把账本变大？" → chose option B (ep11) | On a phone a landscape film is ~1/4 of the screen: fill the frame (page scenes ~80 %), keep a dark strip only for subtitles; bigger type beats a different background colour. | art-director, animator |
+| "我不喜欢那个Logo还是用走吧" (ep11, the running-man exit pictogram) | Keep the series' own drawn props (the 走→ sign) over generic stock pictograms. | art-director |
 
