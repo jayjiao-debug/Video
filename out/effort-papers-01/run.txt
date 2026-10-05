@@ -1,0 +1,7 @@
+url https://docs.iza.org/dp8129.pdf
+  saved out/files/pencavel_dp8129.pdf 0.4 MB
+url https://arxiv.org/pdf/1802.07068v3
+  saved out/files/pluchino_2018.pdf 2.2 MB
+url https://gwern.net/doc/psychology/2014-macnamara.pdf
+  saved out/files/macnamara_2014.pdf 1.5 MB
+done
