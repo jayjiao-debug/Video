@@ -1,0 +1,124 @@
+token present: yes
+sketchfab search "artillery shell"
+  saved out/search/artillery-shell/01_1cd42a0412ef47c092d5d68abd320352.jpg 0.0 MB
+  saved out/search/artillery-shell/02_4067fabb9f2944a784a6f1f1146639ad.jpg 0.0 MB
+  saved out/search/artillery-shell/03_dcd0ade8c80e46d982a54fe4619f1c87.jpg 0.0 MB
+  saved out/search/artillery-shell/04_ea28a6a5dc554a6a92653a80b9acca34.jpg 0.0 MB
+  saved out/search/artillery-shell/05_949b612d7eb041a68df5dc7ac85e7fd4.jpg 0.0 MB
+  saved out/search/artillery-shell/06_bc376f5f58a3426f82ef1de506935213.jpg 0.0 MB
+  saved out/search/artillery-shell/07_730ce8f8fb3541679a0eff239ca4c3b1.jpg 0.0 MB
+  saved out/search/artillery-shell/08_673779cf56a340d785cc8be685fba2f9.jpg 0.0 MB
+  saved out/search/artillery-shell/09_a2066eac84ea4ac3883591e932368b15.jpg 0.0 MB
+  saved out/search/artillery-shell/10_22e6c1948bb24b66908f33727a3e3407.jpg 0.0 MB
+  saved out/search/artillery-shell/11_8b685fb7eefb44da9362cd7a1022a16c.jpg 0.0 MB
+  saved out/search/artillery-shell/12_5d22e94bc6284597b0f3b3442070a2a3.jpg 0.0 MB
+sketchfab search "brass shell casing"
+  FAILED: ENOENT: no such file or directory, open 'out/search/brass-shell-casing/results.json'
+sketchfab search "punch clock"
+  saved out/search/punch-clock/01_c4bdee94a9744a23b6fd748e6517139b.jpg 0.0 MB
+  saved out/search/punch-clock/02_49c04ed7c97e4580860f3a48183ccf48.jpg 0.0 MB
+sketchfab search "time clock vintage"
+  saved out/search/time-clock-vintage/01_cb84e55159e545428282d23c3995039d.jpg 0.0 MB
+  saved out/search/time-clock-vintage/02_796be67fab614a729ea53d107de81cd0.jpg 0.0 MB
+  saved out/search/time-clock-vintage/03_174a3fc826414bfc9693d9b00f43fe57.jpg 0.0 MB
+  saved out/search/time-clock-vintage/04_7ea0929918f44c3f89c093b15b91a587.jpg 0.0 MB
+  saved out/search/time-clock-vintage/05_ca1cf1c435ec4012b9b6d5128333ad83.jpg 0.0 MB
+  saved out/search/time-clock-vintage/06_ab803e206f04410bb54a077a94057d8f.jpg 0.0 MB
+  saved out/search/time-clock-vintage/07_d98dd28d47424d7aaedfd33685af0427.jpg 0.0 MB
+  saved out/search/time-clock-vintage/08_7c1ef69d70824318aad99bcdce3a849a.jpg 0.0 MB
+  saved out/search/time-clock-vintage/09_9bd21849d1d04837b4a317d1d5ac6a9e.jpg 0.0 MB
+  saved out/search/time-clock-vintage/10_8728909b6ce24ef8baeffabbf5bae8f4.jpg 0.0 MB
+  saved out/search/time-clock-vintage/11_35a1935bbc62467b8a8295f03c0feea5.jpg 0.0 MB
+  saved out/search/time-clock-vintage/12_a0736779404a4a6b94e61dbaa500651d.jpg 0.0 MB
+sketchfab search "grand piano"
+  saved out/search/grand-piano/01_159b0bd1ef114b32888d9d39885cac68.jpg 0.0 MB
+  saved out/search/grand-piano/02_c7c82e2445544191b541f2240ae8c4e7.jpg 0.0 MB
+  saved out/search/grand-piano/03_5a0d2e4dea71474abb55b7c2bfb6e715.jpg 0.0 MB
+  saved out/search/grand-piano/04_77ef2018382f4165a65372e594ed538e.jpg 0.0 MB
+  saved out/search/grand-piano/05_371090c279ff4e77a59acdebc25b5892.jpg 0.0 MB
+  saved out/search/grand-piano/06_87eddb7ef5334f368be785a40fa8c6e8.jpg 0.0 MB
+  saved out/search/grand-piano/07_e8ab5d21696b4926a38439f7bcf72d8d.jpg 0.0 MB
+  saved out/search/grand-piano/08_991b78e6d39049028f98b8a8a6d1d9b4.jpg 0.0 MB
+  saved out/search/grand-piano/09_b7f6cd528c9c47429866cdb8ccd91b43.jpg 0.0 MB
+  saved out/search/grand-piano/10_aff67d046ecf43fabbdc795e79abdf2d.jpg 0.0 MB
+  saved out/search/grand-piano/11_a007e6ebd5a64ff7b1aa7ef645b1df31.jpg 0.0 MB
+  saved out/search/grand-piano/12_de9530d9b5cd4326b7d7829c2d3823a8.jpg 0.0 MB
+sketchfab search "upright piano"
+  saved out/search/upright-piano/01_f1aa479977a74a608d362679ed5ca721.jpg 0.0 MB
+  saved out/search/upright-piano/02_5a0d2e4dea71474abb55b7c2bfb6e715.jpg 0.0 MB
+  saved out/search/upright-piano/03_ae0529d9da834820b8a9c30ec0b6228f.jpg 0.0 MB
+  saved out/search/upright-piano/04_535d2c6465d243c4a17dd87650fa2c88.jpg 0.0 MB
+  saved out/search/upright-piano/05_eb76131fcae44993a532ad1b99050deb.jpg 0.0 MB
+  saved out/search/upright-piano/06_19b494e186d0402e818254958d2fed75.jpg 0.0 MB
+  saved out/search/upright-piano/07_b16b18ce804644cfa13f335487648ebc.jpg 0.0 MB
+  saved out/search/upright-piano/08_918ee5f333344b4da18e5e95c2acf34b.jpg 0.0 MB
+  saved out/search/upright-piano/09_8c8eb590cd934184ac4103562cdf886c.jpg 0.0 MB
+  saved out/search/upright-piano/10_9126c88c4c784d1d8120c44e8dfc7394.jpg 0.0 MB
+  saved out/search/upright-piano/11_2c2d91a035c644f9965f187e0f78f73f.jpg 0.0 MB
+  saved out/search/upright-piano/12_76aaf5a62d8a42d49092780bb7ca4c0a.jpg 0.0 MB
+sketchfab search "metronome"
+  saved out/search/metronome/01_5f76f9ecd6624681b148783fb76a4854.jpg 0.0 MB
+  saved out/search/metronome/02_297175b8d2c544cdbde2070275fc815a.jpg 0.0 MB
+  saved out/search/metronome/03_bed67e2a1c824f95927159679ec30e62.jpg 0.0 MB
+  saved out/search/metronome/04_e19dec66e2314f768de9c205c09e16c4.jpg 0.0 MB
+  saved out/search/metronome/05_8fe0e5c562534e2aa266d464a796dc42.jpg 0.0 MB
+  saved out/search/metronome/06_d92c58f6e0d74fa999d52f86442804e2.jpg 0.0 MB
+  saved out/search/metronome/07_c34a5052597a4ad8804db729c56f05dd.jpg 0.0 MB
+  saved out/search/metronome/08_1a16e96c17b14f59ae033e2ffb5eae6b.jpg 0.0 MB
+  saved out/search/metronome/09_48a8906221c04f9888d4be1326dd1f9f.jpg 0.0 MB
+  saved out/search/metronome/10_7663c1f50d0a4ac2bb35e585aff8b0fa.jpg 0.0 MB
+  saved out/search/metronome/11_eca0ccfec1e54f01b8743ca577da514c.jpg 0.0 MB
+  saved out/search/metronome/12_a254cc77d2124a63897af7836a425d40.jpg 0.0 MB
+sketchfab search "bamboo"
+  saved out/search/bamboo/01_6270bc1dff604281b6f66ea588e7da17.jpg 0.0 MB
+  saved out/search/bamboo/02_e9f9fa5397814f81bf85ad06acf5bf30.jpg 0.0 MB
+  saved out/search/bamboo/03_bb3928c27f73482cab8810f21e821a6c.jpg 0.0 MB
+  saved out/search/bamboo/04_d3dec406af444af7b5025134005a9696.jpg 0.0 MB
+  saved out/search/bamboo/05_a02bf0e3ffe44617ad49daf3cd94fe59.jpg 0.0 MB
+  saved out/search/bamboo/06_ed88609057db40bf94a5b79ff6485410.jpg 0.0 MB
+  saved out/search/bamboo/07_420d5be345904567a51466259c9476a2.jpg 0.0 MB
+  saved out/search/bamboo/08_d0161434cf6844a8bc6eaeb0c0692ed0.jpg 0.0 MB
+  saved out/search/bamboo/09_73400231f3204a4bb570019cd67fa29a.jpg 0.0 MB
+  saved out/search/bamboo/10_47f80d3c40d141948b45a5f128ac02d6.jpg 0.0 MB
+  saved out/search/bamboo/11_3400ef8db55a4e91ac0c9c53f4329e26.jpg 0.0 MB
+  saved out/search/bamboo/12_3005da6ad7be47cba014fc1e0e6e90ef.jpg 0.0 MB
+sketchfab search "bamboo shoot"
+  saved out/search/bamboo-shoot/01_8ae4b5abaa304ec4aee025360cd16893.jpg 0.0 MB
+  saved out/search/bamboo-shoot/02_0349fba9e1eb4624b8ca327090bd8705.jpg 0.0 MB
+  saved out/search/bamboo-shoot/03_bb5421c7a8e8426e850f8605ee8262ba.jpg 0.0 MB
+  saved out/search/bamboo-shoot/04_1de6a5d71aab47c5b71a86fae91b8826.jpg 0.0 MB
+  saved out/search/bamboo-shoot/05_36c15db8e193464e8eb4cd04f73f1abc.jpg 0.0 MB
+  saved out/search/bamboo-shoot/06_5d27d68ab71e4449b7f304581e3dea72.jpg 0.0 MB
+  saved out/search/bamboo-shoot/07_97e84e3b679349eda47bd1e18c873a9a.jpg 0.0 MB
+  saved out/search/bamboo-shoot/08_b192177a9e5f465b9f5845342402e881.jpg 0.0 MB
+  saved out/search/bamboo-shoot/09_f131edc0705f4d0ebc856c27c7fc11ab.jpg 0.0 MB
+  saved out/search/bamboo-shoot/10_b66d823b099f4faf895fd0015aad8fd6.jpg 0.0 MB
+  saved out/search/bamboo-shoot/11_8e67cbb38ab4462091f99a5d258aa566.jpg 0.0 MB
+  saved out/search/bamboo-shoot/12_76b5df4db66c499e853cb65fd8de4eba.jpg 0.0 MB
+sketchfab search "workbench vintage"
+  saved out/search/workbench-vintage/01_09c822f5af684248b251078d5ec4a5c8.jpg 0.0 MB
+  saved out/search/workbench-vintage/02_5cb671b8480c4fe0aad56ef079ba7551.jpg 0.0 MB
+sketchfab search "factory lamp"
+  saved out/search/factory-lamp/01_b70dcbb9568846feb4758edcbefbe2c5.jpg 0.0 MB
+  saved out/search/factory-lamp/02_0cbc62e33040405a989dc5079a1047a5.jpg 0.0 MB
+  saved out/search/factory-lamp/03_0a84b3898bcc4ec4be6aa0f5b638fcbe.jpg 0.0 MB
+  saved out/search/factory-lamp/04_b63c31b9c6a04284b665af8a0a93d456.jpg 0.0 MB
+  saved out/search/factory-lamp/05_9a43fb7f74ff4094875ee82f60f0defc.jpg 0.0 MB
+  saved out/search/factory-lamp/06_2ba27702aabe4d37822956a2b7bf43d8.jpg 0.0 MB
+  saved out/search/factory-lamp/07_0af487eebc2a433a9f7eb59aa26e7f58.jpg 0.0 MB
+  saved out/search/factory-lamp/08_9200262ca1cd47b4bb139c8c150b4231.jpg 0.0 MB
+  saved out/search/factory-lamp/09_30cbdec40e9743bab362ecde48f83507.jpg 0.0 MB
+  saved out/search/factory-lamp/10_84be6ace31174868a2787597f76ed663.jpg 0.0 MB
+  saved out/search/factory-lamp/11_f4de4462d25f4ba68e65ed717737ee4b.jpg 0.0 MB
+  saved out/search/factory-lamp/12_a8c0114b383a476bb27f8b11da8461a3.jpg 0.0 MB
+sketchfab search "wall calendar"
+  saved out/search/wall-calendar/01_592f4833145442d2871b8f7c23a113b0.jpg 0.0 MB
+  saved out/search/wall-calendar/02_03df12d6917a406da7a2b3ee333faba6.jpg 0.0 MB
+  saved out/search/wall-calendar/03_aa16e7b119044890bd7f44d544108ea5.jpg 0.0 MB
+  saved out/search/wall-calendar/04_8e44d3b74c974dfa9227c9ffc75c095f.jpg 0.0 MB
+  saved out/search/wall-calendar/05_5977af1f1adc41ee9ef391a59c3093d0.jpg 0.0 MB
+  saved out/search/wall-calendar/06_ea77e1dc0e1a451688c5d984c5e57b99.jpg 0.0 MB
+  saved out/search/wall-calendar/07_1cfb64b810d14c089e6a0480a8bbb58a.jpg 0.0 MB
+  saved out/search/wall-calendar/08_00c015c5c14d4ec2bdc51c90898715f2.jpg 0.0 MB
+  saved out/search/wall-calendar/09_139089bfd2594576a566c99658bb5df2.jpg 0.0 MB
+done
