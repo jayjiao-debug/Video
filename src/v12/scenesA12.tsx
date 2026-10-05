@@ -371,7 +371,7 @@ export const B5Scene: React.FC<{ T: number; x: number; dive: number }> = ({ T, x
   const lx = lerp(2150, lp.x, lk) - 6 * Math.sin(Math.PI * pr(T, tQ + 0.75, 0.15)), ly = lerp(560, lp.y, lk) + 2 * Math.sin(T * Math.PI);
   return (
     <Layer x={x} s={1 + 0.35 * dive} cx={lp.x} cy={lp.y}>
-      <Header T={T} a={a} vol="05" field="心理学 · 元分析" title="“快”分两种" eng="PROSPECTIVE VS RETROSPECTIVE" chip="研究" line={`Block, Hancock & Zakay · 2010 · ${cnt(T, t117, 117, 0.8)}个实验`} />
+      <Header T={T} a={a} vol="05" field="心理学 · 元分析" title="“快”分两种" eng="PROSPECTIVE VS RETROSPECTIVE" chip="研究" line={`Block, Hancock & Zakay · 2010 · ${cnt(T, a + 0.3, 117, 0.8)}个实验`} />
       <Svg>
         <Tx x={560} y={404} size={30} w={500} color={SEC} o={eo(T, a + 0.3, 0.3)}>感觉有多长</Tx>
         <g transform={`translate(1580,372) scale(${lerp(1.25, 1, eo(T, a + 0.5, 0.22))})`} opacity={eo(T, a + 0.5, 0.22)}>

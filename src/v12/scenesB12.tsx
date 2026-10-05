@@ -151,7 +151,7 @@ export const B7Scene: React.FC<{ T: number; x: number; push: number }> = ({ T, x
   });
   return (
     <Layer x={x} s={lerp(1, 1.42, push)} cx={140.9} cy={600.9} o={1 - eo(push, 0.45, 0.55)}>
-      <Header T={T} a={a} vol="07" field="认知心理学" title="回忆会快进" eng="TEMPORAL COMPRESSION IN MEMORY" chip="研究" line={`Jeunehomme 等 · 2018 · ${cnt(T, t128, 128, 0.8)}名大学生 · 随身相机`} />
+      <Header T={T} a={a} vol="07" field="认知心理学" title="回忆会快进" eng="TEMPORAL COMPRESSION IN MEMORY" chip="研究" line={`Jeunehomme 等 · 2018 · ${cnt(T, a + 0.3, 128, 0.8)}名大学生 · 随身相机`} />
       <Svg>
         <Tx x={148} y={360} size={40} w={900} o={eo(T, a + 0.3, 0.3)}>散步原片</Tx>
         <Tx x={334} y={360} size={34} w={500} color={SEC} o={eo(T, a + 0.4, 0.3)}>1 格 = 1 分钟</Tx>
@@ -220,7 +220,7 @@ export const B8Scene: React.FC<{ T: number; x: number; inK: number }> = ({ T, x,
         <Strip x0={stripX0} x1={stripX1} y={458} g={{ h: 164, band: 40, hw: 13, hh: 17, hr: 3, pitch: 25.6, inset: 11 }} perf="dim" frames={fr} tc={tcOf(T)} />
         {flash && <rect x={pos(29)} y={498} width={125} height={85} fill="#FCFDFB" opacity={0.9} />}
         <g opacity={dim * (1 - kGold)}>
-          <Tx x={1180} y={680} size={34} w={500} color={LAB} o={eo(T, t5, 0.3)}>被记住的机会</Tx>
+          <Tx x={1180} y={636} size={34} w={500} color={LAB} o={eo(T, t5, 0.3)}>被记住的机会</Tx>
           <rect x={1240} y={830 - barHero} width={80} height={barHero} rx={3} fill={A} />
           <rect x={1460} y={830 - barCmp} width={80} height={barCmp} rx={3} fill="#AEB6BC" />
           <Tx x={1280} y={872} size={30} w={700} color={LAB} anchor="middle" o={eo(T, t5, 0.3)}>切换那一刻</Tx>
