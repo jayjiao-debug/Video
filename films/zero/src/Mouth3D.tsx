@@ -31,7 +31,7 @@ export const surf = (x: number, z: number) => {
   return H(x, z) * (0.3 + 0.7 * Math.exp(-(x * x + z * z) / 30)) + crown + slope + groove + back + drop;
 };
 const tongueGeo = () => {
-  const NU = 260, NV = 540;
+  const NU = 220, NV = 440;
   const pos: number[] = [], uv: number[] = [], idx: number[] = [];
   for (let j = 0; j <= NV; j++) {
     const z = ZT - (j / NV) * (ZT - ZB);
@@ -182,7 +182,7 @@ export const MouthDive: React.FC<{ pos: number[]; look: number[]; dist: number; 
     }
     const cavity = new THREE.SphereGeometry(1, 64, 48); cavity.scale(12.5, 9, 21); cavity.translate(0, 2, -10);
     return {
-      tongue: tongueGeo(), tex: tongueTex(), domes: bake(domeG, domes), fili: bake(new THREE.SphereGeometry(0.026, 10, 8), fili),
+      tongue: tongueGeo(), tex: tongueTex(), domes: bake(domeG, domes), fili: bake(new THREE.SphereGeometry(0.026, 7, 5), fili),
       lips: lipsGeo(), skin: skinGeo(), teeth: teethGeo(), cavity,
     };
   }, []);
