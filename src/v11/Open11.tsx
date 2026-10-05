@@ -306,8 +306,11 @@ export const S03S04: React.FC<{ T: number }> = ({ T }) => {
   // reframe to rows 2–3
   const push = eio(T, b(41) - 0.1, 0.7);
   // book closes on bar 7, camera pulls back
-  const close = eio(T, CUT.s4, 0.52);
-  const pull = eio(T, CUT.s4, 0.52);
+  // the book slams shut ON the music's hardest drop (14.16, track bar 8): close starts one beat earlier
+  const C0 = CUT.s4 - 0.51;
+  const close = eio(T, C0, 0.51);
+  const pull = eio(T, C0, 0.51);
+  const punch = T >= CUT.s4 ? 1 + 0.04 * Math.exp(-(T - CUT.s4) * 9) : 1;
   // title push, then open on bar 8
   const open = eio(T, CUT.s5, 0.55);
   const pushIn = eio(T, CUT.s5, 0.42);
@@ -315,7 +318,7 @@ export const S03S04: React.FC<{ T: number }> = ({ T }) => {
   const brand = 1 + 0.03 * eio(T, CUT.s4 + 0.3, CUT.s5 - CUT.s4 - 0.3);
   let s = lerp(1, 1.12, push);
   let cx = lerp(960, 900, push), cy = lerp(540, 720, push);
-  s = lerp(s, 0.82 * brand, pull);
+  s = lerp(s, 0.82 * brand * punch, pull);
   cx = lerp(cx, 960, pull);
   cy = lerp(cy, 470, pull);
   s = lerp(s, 1, pushIn);
@@ -323,7 +326,7 @@ export const S03S04: React.FC<{ T: number }> = ({ T }) => {
   const penP = pr(T, b(41), 1.05);
   const blink = T > b(43) && T < b(43) + 0.6 ? (Math.floor((T - b(43)) / 0.15) % 2 === 0 ? 1 : 0.25) : T >= b(43) + 0.6 ? 1 : 1;
   const coins = pop(T, b(43) + 0.32, 0.3);
-  const pageO = T < CUT.s4 + 0.52 ? 1 : 0; // hidden while the cover is shut (no flash through it); S05 owns the page after it opens
+  const pageO = T < CUT.s4 ? 1 : 0; // hidden while the cover is shut (no flash through it); S05 owns the page after it opens
   return (
     <Cam s={s} cx={cx} cy={cy}>
       {pageO > 0 && (
@@ -381,7 +384,7 @@ export const S03S04: React.FC<{ T: number }> = ({ T }) => {
         </Svg>
       )}
       {/* the cover: closes on bar 7, opens on bar 8 (the same hinge, spine on the left) */}
-      {T >= CUT.s4 && (
+      {T >= C0 && (
         <Hinge angle={T < CUT.s5 ? lerp(-178, 0, close) : lerp(0, -178, open)} axisX={120} back={<CoverInside />}>
           <Cover T={T} f={titleF} />
         </Hinge>
@@ -396,7 +399,7 @@ const CoverInside: React.FC = () => (
   </div>
 );
 const Cover: React.FC<{ T: number; f: number }> = ({ T, f }) => {
-  const flare = f >= 26 ? Math.exp(-(f - 26) / 9) : 0;
+  const flare = f >= 0 ? Math.exp(-f / 10) : 0;
   return (
     <>
       {/* page block (cream) on the fore-edge and bottom edge, under the cloth */}
@@ -413,10 +416,10 @@ const Cover: React.FC<{ T: number; f: number }> = ({ T, f }) => {
             <line x1={640} y1={438} x2={890} y2={438} /><line x1={1030} y1={438} x2={1280} y2={438} />
             <path d="M960,432 L966,438 L960,444 L954,438 Z" fill="#e6bd66" stroke="none" />
           </g>
-          <GoldTitle11 text="舍不得的，是TA吗？" f={f} at={6} step={1.5} fade={10} size={120} y={590} />
+          <GoldTitle11 text="舍不得的，是TA吗？" f={f} at={0} step={1.2} fade={7} size={120} y={590} />
           <ellipse cx={960} cy={548} rx={760 * (0.4 + flare)} ry={2 + 2.5 * flare} fill="#fff1cf" opacity={0.55 * flare} />
           {Array.from({ length: 36 }, (_, i) => {
-            const t = f - 26;
+            const t = f;
             if (t < 0 || t > 40) return null;
             const a = random(`c11a${i}`) * Math.PI * 2, d = t * (3 + random(`c11d${i}`) * 9) * Math.exp(-t / 30);
             return <circle key={i} cx={960 + Math.cos(a) * d * 1.6} cy={548 + Math.sin(a) * d * 0.4} r={1 + random(`c11r${i}`) * 2} fill="#ffe3a8" opacity={Math.max(0, 1 - t / 40)} />;
