@@ -41,9 +41,12 @@ const integrate = (p: Plan) => {
 const theatre = (p: Plan) => {
   const E = integrate(p);
   const syncOf = (beat: number) => keys(beat, p.sync);
-  const clap = (i: number, T: number) => {
+  const phaseOf = (i: number, T: number) => {
     const bt = beatAt(T);
-    const th = 2 * Math.PI * (bt + E(bt)) + (1 - syncOf(bt)) * SEATS[i].ph;
+    return 2 * Math.PI * (bt + E(bt)) + (1 - syncOf(bt)) * SEATS[i].ph;
+  };
+  const clap = (i: number, T: number) => {
+    const th = phaseOf(i, T);
     const u = ((th % (2 * Math.PI)) + 2 * Math.PI) % (2 * Math.PI);
     return Math.exp(-u * 1.6) + Math.exp(-(2 * Math.PI - u) * 4); // a few frames each, never a one-frame strobe
   };
@@ -75,11 +78,11 @@ const theatre = (p: Plan) => {
     }
     ctx.stroke();
   };
-  return {draw, syncOf};
+  return {draw, syncOf, phaseOf, seats: SEATS};
 };
 
 // ------------------------------------------------------------------ the cold open (b0 → b31)
-const OPEN = theatre({from: -2, to: 33, rate: [[0, 2], [8, 2], [11, 1], [33, 1]], sync: [[7.5, 0], [14, 1]], align: 20});
+export const OPEN = theatre({from: -2, to: 33, rate: [[0, 2], [8, 2], [11, 1], [33, 1]], sync: [[7.5, 0], [14, 1]], align: 20});
 export const S1: React.FC<{T: number}> = ({T}) => {
   const out = 1 - prog(T, b(31) + 0.05, b(31) + 0.45);
   const pulse = T > b(31) - 0.05 ? Math.exp(-(T - b(31)) * 6) : 0;
@@ -98,7 +101,7 @@ export const S1: React.FC<{T: number}> = ({T}) => {
 };
 
 // ------------------------------------------------------------------ S9, the answer (b241 → b273)
-const ANSWER = theatre({from: 241, to: 274, rate: [[241, 2], [248.5, 2], [249.5, 1], [257, 1], [264, 1.8], [273, 2]], sync: [[248.5, 0], [250.5, 1], [257, 1], [262, 0.35], [266, 0]], align: 253});
+export const ANSWER = theatre({from: 241, to: 274, rate: [[241, 2], [248.5, 2], [249.5, 1], [257, 1], [264, 1.8], [273, 2]], sync: [[248.5, 0], [250.5, 1], [257, 1], [262, 0.35], [266, 0]], align: 253});
 export const S9: React.FC<{T: number}> = ({T}) => {
   const fin = inOut(T, b(241), b(273), 0.5, 0.5);
   const draw = (ctx: CanvasRenderingContext2D) => ANSWER.draw(ctx, T, fin, 1);

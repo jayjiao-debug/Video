@@ -17,6 +17,7 @@ const pos = (i: number) => {
   const row = Math.floor(i / 8);
   return {x: 420 + col * 154 + row * 18, y: 700 - row * 130, s: 0.85 - row * 0.1, a: 0.45 + 0.14 * (3 - row)};
 };
+export const METRO = {N, T0, theta: (i: number, T: number) => theta(i, T)};
 const theta = (i: number, T: number) => phase(RUN, i, T - T0) + pin(RUN, T, T0, 2, 0.5, 0.9);
 const armAng = (i: number, T: number) => 0.5 * Math.sin(theta(i, T)) * clamp((T - T0) / 0.6);
 const boardSway = (T: number) => {

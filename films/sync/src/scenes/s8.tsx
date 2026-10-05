@@ -14,8 +14,8 @@ const CROWD = (() => {
   const r = mulberry(8);
   return Array.from({length: MAXD}, () => ({u: r(), z: (r() - 0.5) * 0.7, sp: 0.5 + r(), ph: r() * Math.PI * 2}));
 })();
-const people = (T: number) => keys(T, [[b(209.5), 0], [b(217), 90], [b(225), 160], [b(229), 1200], [b(233), 2000], [b(235), 2000], [b(241), 900]]);
-const swayMM = (T: number) => {
+export const people = (T: number) => keys(T, [[b(209.5), 0], [b(217), 90], [b(225), 160], [b(229), 1200], [b(233), 2000], [b(235), 2000], [b(241), 900]]);
+export const swayMM = (T: number) => {
   const n = people(T);
   const grow = clamp((n - 150) / 600);
   const damp = 1 - clamp((T - b(234)) / (b(238) - b(234)));

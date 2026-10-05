@@ -1,6 +1,6 @@
 {
  "title": "没有指挥",
- "music": "public/bgm.mp3",
+ "music": "out/mix_sfx.wav",
  "scenes": [
   [
    "S1_掌声开场",
