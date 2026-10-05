@@ -226,8 +226,12 @@ const GaugeBig: React.FC<{ x: number; y: number; r: number; ang: number; label: 
 };
 
 /* ---------- the scene ---------- */
-export const S12: React.FC<{ T: number }> = ({ T }) => {
+export const S12: React.FC<{ T: number; layer?: 'main' | 'over' }> = ({ T, layer = 'main' }) => {
   if (T < CUT.silent - 0.6 || T > CUT.s13 + 0.8) return null;
+  // 'main' draws everything until the ≠ → − hand-off; 'over' (rendered above S13) draws S12's fading ink and the travelling bar after it
+  if (layer === 'main' && T >= CUT.s13) return null;
+  if (layer === 'over' && T < CUT.s13) return null;
+  const over = layer === 'over';
   const pb = eio(T, b(158), CUT.drop2 - b(158));       // pull-back 71.88 → 72.89
   // the "?" : tips (b155), drifts down through the silent bar, then is caught by the socket
   const tip = eio(T, b(155), 0.45);
@@ -268,7 +272,7 @@ export const S12: React.FC<{ T: number }> = ({ T }) => {
   const neq = T >= CUT.neq ? pop(T, CUT.neq, 0.2) : 0;
   const nS = T >= CUT.neq ? lerp(1.5, 1, eo(T, CUT.neq, 0.17)) : 0;
   const toMinus = eio(T, CUT.s13, 0.6);
-  const sceneO = 1 - eo(T, CUT.s13 + 0.05, 0.35);
+  const sceneO = 1 - eo(T, CUT.s13, 0.27);
   // the machine transform (full → parked small)
   const ms = lerp(1, MACHINE_SMALL.s, shrink);
   const mtx = lerp(MCX, MACHINE_SMALL.cx, shrink), mty = lerp(MCY, MACHINE_SMALL.cy, shrink);
@@ -289,7 +293,7 @@ export const S12: React.FC<{ T: number }> = ({ T }) => {
     <>
       <div style={{ position: 'absolute', inset: 0, clipPath: sCam > 1.001 ? 'inset(92px 120px 280px 120px)' : undefined }}>
       <Cam s={sCam} cx={LX} cy={LY} x={P.x - LX} y={P.y - LY} o={pageIn * sceneO}>
-        <PaperDiv />
+        {!over && <PaperDiv />}
         <Svg>
           <PageInk title="说不准的奖励" sub={sub} subP={subP} no="Ledger · No. 7" />
           {/* ---- the pigeon box (L21) ---- */}

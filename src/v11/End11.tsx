@@ -45,7 +45,7 @@ export const S13S14: React.FC<{ T: number }> = ({ T }) => {
     <>
       {T >= CUT.s14 && <EndCard T={T} />}
       {turn < 1 && (
-        <Hinge angle={-178 * turn} axisX={120}>
+        <Hinge angle={-178 * turn} axisX={120} back={<PageBack />}>
           <S13 T={T} />
         </Hinge>
       )}
@@ -53,12 +53,17 @@ export const S13S14: React.FC<{ T: number }> = ({ T }) => {
   );
 };
 
+const PageBack: React.FC = () => (
+  <div style={{ position: 'absolute', left: 120, top: 92, width: 1680, height: 708, borderRadius: 3, background: 'linear-gradient(180deg,#efe6d1,#e8dec6)', boxShadow: '0 30px 60px rgba(0,0,0,.45)' }}>
+    <div style={{ position: 'absolute', inset: 0, backgroundImage: 'repeating-linear-gradient(180deg, transparent 0 151px, rgba(157,182,201,.18) 151px 152px, transparent 152px 197px)', opacity: 0.6 }} />
+  </div>
+);
 const S13: React.FC<{ T: number }> = ({ T }) => {
-  const inK = eo(T, CUT.s13 + 0.1, 0.45);
+  const inK = eo(T, CUT.s13 + 0.09, 0.3);
   const pull = eio(T, CUT.s13, 0.6);
   const push = eio(T, b(193), 0.8);
-  const s = lerp(1.05, 1, pull) * lerp(1, 1.05, push);
-  const minusO = T >= CUT.s13 + 0.6 ? 1 : 0;
+  const s = lerp(1, 1.05, push);
+  const minusO = T >= CUT.s13 + 0.6 ? 1 : 0; void pull;
   // L25: the person (满意) dims
   const lens = pr(T, b(199) + 0.1, 1.7);
   const lensX = lerp(380, 1560, lens);
@@ -164,8 +169,8 @@ const Motif: React.FC<{ p: number }> = ({ p }) => {
   );
 };
 const EndCard: React.FC<{ T: number }> = ({ T }) => {
-  const f = (T - CUT.s14) * 30;
-  const dur = (CUT.end - CUT.s14) * 30;
+  const f = (T - CUT.s14) * 30 + 9;
+  const dur = (CUT.end - CUT.s14) * 30 + 9;
   const p = (a: number, d: number) => clamp((f - a) / d);
   const black = easeIn(clamp((f - (dur - 18)) / 18));
   return (

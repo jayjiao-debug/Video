@@ -22,7 +22,7 @@ const Clock: React.FC<{ x: number; y: number; a: number; o: number }> = ({ x, y,
 export const S10S11: React.FC<{ T: number }> = ({ T }) => {
   if (T < CUT.s10 - 0.02 || T > CUT.drop2 - 0.3) return null;
   const dive = eio(T, CUT.dive, 0.9);
-  const inS11 = T >= CUT.dive + 0.75;
+  const inS11 = T >= CUT.dive + 0.55;
   return (
     <>
       {T > CUT.s10 + 0.6 && T < CUT.dive + 0.95 && (
@@ -201,11 +201,11 @@ const S11: React.FC<{ T: number }> = ({ T }) => {
   const tagK = (i: number) => eo(T, b(133) + 0.35 + i * 0.12, 0.3);
   const barK = [eo(T, b(138.5) + 0.05, 0.5), eo(T, b(138.5) + 0.3, 0.5), eio(T, b(138.5) + 0.6, 1.1)];
   // camera: start on 很喜欢你, pan right to 说不准, then settle
-  const pan = eio(T, b(138.5), 0.8), settle = eio(T, b(144) - 0.1, 0.6);
-  const camX = lerp(lerp((960 - COL[0]) * 0.45, (960 - COL[2]) * 0.45, pan), 0, settle);
-  const camS = lerp(1 + 0.12 * eo(T, b(138.5) - 0.2, 0.4), 1, settle);
+  // hold the standard page through L21's start, then a gentle push toward 说不准 (≤ 1.04, header stays clear of the watermark zone)
+  const push = eio(T, b(138.5), 0.9) * (1 - eio(T, b(150) - 0.1, 0.6));
+  const camS = lerp(1, 1.04, push), camX = 50 * push;
   const glow = eo(T, b(144), 0.4);
-  const bubbles = (n: number, x: number, at: number) => Array.from({ length: n }, (_, k) => <Bubble key={k} x={x + (k % 2) * 108} y={ZERO - 34 - Math.floor(k / 2) * 50} s={pop(T, at + k * 0.11, 0.25)} />);
+  const bubbles = (n: number, x: number, at: number, dir = 1) => Array.from({ length: n }, (_, k) => <Bubble key={k} x={x + dir * (k % 2) * 108} y={ZERO - 34 - Math.floor(k / 2) * 50} s={pop(T, at + k * 0.11, 0.25)} />);
   // L23: the chart slides left onto the timeline
   const slide = eio(T, b(150), 0.8);
   const tl = eo(T, b(150) + 0.4, 0.8);
@@ -214,7 +214,7 @@ const S11: React.FC<{ T: number }> = ({ T }) => {
   const fadeOut = 1 - eo(T, b(158), 0.22);
   const chartT = `translate(${lerp(0, -40, slide)} ${lerp(0, -70, slide)}) translate(400 700) scale(${lerp(1, 0.5, slide)}) translate(-400 -700)`;
   return (
-    <Cam s={camS} x={camX} o={fadeOut}>
+    <Cam s={camS} cx={1700} cy={560} x={camX} o={fadeOut * eo(T, CUT.dive + 0.55, 0.3)}>
       <PaperDiv tint={`linear-gradient(180deg, #f6d48a, #efc777)`} tintO={wash * 0.95} />
       <Svg>
         <PageInk title="心动实验" sub="· 刚认识的人" no="Ledger · No. 6" titleP={eo(T, CUT.dive + 1.0, 0.5)} subP={eo(T, CUT.dive + 1.2, 0.4)} />
@@ -270,7 +270,7 @@ const S11: React.FC<{ T: number }> = ({ T }) => {
               </g>
             );
           })}
-          {T > b(144) && bubbles(7, COL[2] + 128, b(144) + 0.3)}
+          {T > b(144) && bubbles(7, COL[2] - 128, b(144) + 0.3, -1)}
           {T > b(144) && bubbles(4, COL[0] + 128, b(144) + 0.5)}
         </g>
         {/* timeline */}

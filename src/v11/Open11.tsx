@@ -5,6 +5,7 @@ import { C, F, LNUM, Cam, Svg, Desk, PaperDiv, PageInk, PenText, Coin, Heart, St
 import { CUT } from './time11';
 import { b } from '../v6/ui6';
 const b37 = () => b(37) + 0.05;
+const FLIP = 0.42;
 
 /* S01 cold open · S02 the experiment · S03 into the ledger · S04 title card */
 
@@ -162,8 +163,15 @@ const CardFace: React.FC<{ T: number; o: CardO; lit: number }> = ({ T, o, lit })
       {askO > 0 && <text x={x0 + 330} y={y0 + 352} textAnchor="middle" opacity={askO} style={{ fontFamily: F.serif, fontWeight: 900, fontSize: 96 }} fill={C.ink4}>投不投？</text>}
       {pctO > 0 && (
         <g opacity={pctO}>
-          <text x={x0 + 36} y={y0 + 392} style={{ fontFamily: F.lat, fontWeight: 600, fontSize: 226, letterSpacing: -2, ...LNUM }} fill="url(#k-foil)">{pct}%</text>
-          {glint > 0.01 && <text x={x0 + 36} y={y0 + 392} style={{ fontFamily: F.lat, fontWeight: 600, fontSize: 226, letterSpacing: -2, ...LNUM }} fill="#fff4cf" opacity={0.75 * glint}>{pct}%</text>}
+          <g transform={`translate(${x0 + 180} ${y0 + 320}) scale(${1 + 0.06 * Math.sin(Math.PI * clamp((T - o.flash) / 0.3))}) translate(${-x0 - 180} ${-y0 - 320})`}>
+            <text x={x0 + 36} y={y0 + 392} style={{ fontFamily: F.lat, fontWeight: 600, fontSize: 226, letterSpacing: -2, ...LNUM }} fill="url(#k-foil)">{pct}%</text>
+            {glint > 0.01 && (
+              <>
+                <clipPath id={`gl${x0}`}><rect x={x0 + 36 + lerp(-120, 520, 1 - glint)} y={y0 + 200} width={70} height={220} transform={`skewX(-18)`} /></clipPath>
+                <text x={x0 + 36} y={y0 + 392} clipPath={`url(#gl${x0})`} style={{ fontFamily: F.lat, fontWeight: 600, fontSize: 226, letterSpacing: -2, ...LNUM }} fill="#fff4cf" opacity={0.35}>{pct}%</text>
+              </>
+            )}
+          </g>
         </g>
       )}
       <line x1={x0 + 44} y1={base + 2} x2={x0 + 616} y2={base + 2} stroke={C.ink} strokeOpacity={0.45} strokeWidth={1.5} />
@@ -202,25 +210,40 @@ export const S02: React.FC<{ T: number }> = ({ T }) => {
   const pt = pr(T, CUT.s2 + 3.04, 0.7);
   const px = lerp(-200, 2150, easeInOut(pt));
   // flips (S03 start): rotateY 0 → 180; the backs are ledger rows (drawn by S03)
-  const flipL = eio(T, CUT.s3, 0.42) * 180, flipR = eio(T, CUT.s3 + 0.1, 0.42) * 180;
-  const card = (o: CardO, d: ReturnType<typeof deal>, lit: number, flip: number) => (
-    <div style={{ position: 'absolute', inset: 0, opacity: flip > 90 ? 0 : d.o, transform: `translateX(${d.dx}px) rotate(${d.rot}deg)`, transformOrigin: `${o.x0 + 330}px 470px` }}>
-      <div style={{ position: 'absolute', inset: 0, perspective: 2200, perspectiveOrigin: `${o.x0 + 330}px 470px` }}>
-        <div style={{ position: 'absolute', inset: 0, transformOrigin: `${o.x0 + 330}px 470px`, transform: `rotateY(${flip}deg)`, backfaceVisibility: 'hidden' }}>
-          <CardBody x={o.x0} />
-          <Svg><CardFace T={T} o={o} lit={lit} /></Svg>
+  const flipL = eio(T, CUT.s3, FLIP) * 180, flipR = eio(T, CUT.s3 + 0.1, FLIP) * 180;
+  const card = (o: CardO, d: ReturnType<typeof deal>, lit: number, flip: number, row: { no: string; name: string; note: string }, handoff: number) => {
+    // a 2D flip (scaleX = cos θ): never vanishes mid-turn; the back is the card's ledger row, handed to S03 on the frame the flip ends
+    if (T >= handoff) return null;
+    const c = Math.cos((flip * Math.PI) / 180);
+    const cxp = o.x0 + 330;
+    const shade = 1 - Math.abs(c);
+    return (
+      <div style={{ position: 'absolute', inset: 0, opacity: d.o, transform: `translateX(${d.dx}px) rotate(${d.rot}deg)`, transformOrigin: `${cxp}px 470px` }}>
+        <div style={{ position: 'absolute', inset: 0, transformOrigin: `${cxp}px 471px`, transform: `scaleX(${Math.max(0.002, Math.abs(c))})` }}>
+          {c > 0 ? (
+            <>
+              <CardBody x={o.x0} />
+              <Svg><CardFace T={T} o={o} lit={lit} /></Svg>
+            </>
+          ) : (
+            <>
+              <CardBody x={o.x0} />
+              <Svg><g transform={`translate(${o.x0 + 28} ${471 + 14}) scale(0.55)`}><RowStrip {...row} /></g></Svg>
+            </>
+          )}
+          {shade > 0.02 && <div style={{ position: 'absolute', left: o.x0, top: 184, width: 660, height: 574, background: '#000', opacity: 0.35 * shade }} />}
         </div>
       </div>
-    </div>
-  );
+    );
+  };
   const bracket = eo(T, b37(), 0.5);
   const fadeAll = 1 - eo(T, CUT.s3, 0.3);
   return (
     <>
       {/* lamp pool slides from the left card to both */}
       <div style={{ position: 'absolute', inset: 0, opacity: fadeAll, background: `radial-gradient(ellipse ${lerp(30, 52, lampK)}% 44% at ${lerp(28, 50, lampK)}% 50%, rgba(241,197,109,.12), rgba(241,197,109,0) 70%)` }} />
-      {card(CARD_L, dl, 1, flipL)}
-      {card(CARD_R, dr, rightLit, flipR)}
+      {card(CARD_L, dl, 1, flipL, ROWS[1], CUT.s3 + FLIP)}
+      {card(CARD_R, dr, rightLit, flipR, ROWS[2], CUT.s3 + 0.1 + FLIP)}
       <Svg>
         <g opacity={fadeAll}>
           <g opacity={Math.min(dl.o, dr.o)}>
@@ -280,12 +303,11 @@ export const S03S04: React.FC<{ T: number }> = ({ T }) => {
   // page unrolls beneath the flipping cards
   const unroll = eio(T, CUT.s3 + 0.2, 0.55);
   // cards (backs) fly into rows
-  const fly = eio(T, CUT.s3 + 0.42, 0.5);
   // reframe to rows 2–3
   const push = eio(T, b(41) - 0.1, 0.7);
   // book closes on bar 7, camera pulls back
-  const close = eio(T, CUT.s4, 0.45);
-  const pull = eio(T, CUT.s4, 0.4);
+  const close = eio(T, CUT.s4, 0.52);
+  const pull = eio(T, CUT.s4, 0.52);
   // title push, then open on bar 8
   const open = eio(T, CUT.s5, 0.55);
   const pushIn = eio(T, CUT.s5, 0.42);
@@ -301,7 +323,7 @@ export const S03S04: React.FC<{ T: number }> = ({ T }) => {
   const penP = pr(T, b(41), 1.05);
   const blink = T > b(43) && T < b(43) + 0.6 ? (Math.floor((T - b(43)) / 0.15) % 2 === 0 ? 1 : 0.25) : T >= b(43) + 0.6 ? 1 : 1;
   const coins = pop(T, b(43) + 0.32, 0.3);
-  const pageO = T < CUT.s5 ? 1 : 0; // after the cover opens, S05 owns the page
+  const pageO = T < CUT.s4 + 0.52 ? 1 : 0; // hidden while the cover is shut (no flash through it); S05 owns the page after it opens
   return (
     <Cam s={s} cx={cx} cy={cy}>
       {pageO > 0 && (
@@ -316,10 +338,6 @@ export const S03S04: React.FC<{ T: number }> = ({ T }) => {
           </g>
           {/* rows: flying card-backs settle into ledger rows */}
           {ROWS.map((r, i) => {
-            const k = clamp(fly * 1.15 - i * 0.07);
-            const f = r.from;
-            const sx = lerp(f.w / 1200, 1, k), sy = lerp(f.h / 70, 1, k);
-            const x = lerp(f.x - 600 * sx, 460, k), y = lerp(f.y, r.y - 14, k);
             if (i === 0) {
               // the ticket's row is written onto the page as it unrolls
               return (
@@ -328,11 +346,15 @@ export const S03S04: React.FC<{ T: number }> = ({ T }) => {
                 </g>
               );
             }
-            if (fly <= 0) return null;
+            const t0 = CUT.s3 + (i === 1 ? 0 : 0.1) + FLIP;
+            if (T < t0) return null;
+            const k = eio(T, t0, 0.5);
+            const f = r.from;
+            const rx = lerp(f.x - f.w / 2, 440, k), ry = lerp(f.y - f.h / 2, r.y - 44, k), rw = lerp(f.w, 1140, k), rh = lerp(f.h, 60, k);
             return (
               <g key={i}>
-                {k < 1 && <rect x={x - 20 * sx} y={y - 35 * sy} width={1200 * sx} height={70 * sy} rx={6} fill="#f3ebd8" stroke={C.ink} strokeOpacity={0.15} opacity={(1 - k) * (1 - k)} />}
-                <g transform={`translate(${lerp(x, 460, k)} ${lerp(y + 14, r.y, k)}) scale(${lerp(0.7, 1, k)})`} opacity={1}>
+                {k < 1 && <rect x={rx} y={ry} width={rw} height={rh} rx={4} fill="#f3ebd8" opacity={Math.pow(1 - k, 1.5)} />}
+                <g transform={`translate(${lerp(f.x - f.w / 2 + 28, 460, k)} ${lerp(f.y + 14, r.y, k)}) scale(${lerp(0.55, 1, k)})`}>
                   <RowStrip no={r.no} name={r.name} note={r.note} />
                 </g>
               </g>
@@ -360,7 +382,7 @@ export const S03S04: React.FC<{ T: number }> = ({ T }) => {
       )}
       {/* the cover: closes on bar 7, opens on bar 8 (the same hinge, spine on the left) */}
       {T >= CUT.s4 && (
-        <Hinge angle={T < CUT.s5 ? lerp(-178, 0, close) : lerp(0, -178, open)} axisX={120}>
+        <Hinge angle={T < CUT.s5 ? lerp(-178, 0, close) : lerp(0, -178, open)} axisX={120} back={<CoverInside />}>
           <Cover T={T} f={titleF} />
         </Hinge>
       )}
@@ -368,6 +390,11 @@ export const S03S04: React.FC<{ T: number }> = ({ T }) => {
   );
 };
 
+const CoverInside: React.FC = () => (
+  <div style={{ position: 'absolute', left: 120, top: 86, width: 1690, height: 708, borderRadius: 6, background: '#1b2640' }}>
+    <div style={{ position: 'absolute', left: 14, top: 12, right: 14, bottom: 12, borderRadius: 3, background: 'linear-gradient(90deg,#e4d8bd,#efe5cf 60%,#e7dcc3)', boxShadow: 'inset 0 0 80px rgba(120,90,50,.25)' }} />
+  </div>
+);
 const Cover: React.FC<{ T: number; f: number }> = ({ T, f }) => {
   const flare = f >= 26 ? Math.exp(-(f - 26) / 9) : 0;
   return (

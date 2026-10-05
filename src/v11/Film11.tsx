@@ -33,13 +33,14 @@ export const Ep11Film: React.FC = () => {
       <Defs11 />
       <Desk />
       <S01 T={T} />
-      <S02 T={T} />
       <S03S04 T={T} />
+      <S02 T={T} />
       <S05S06 T={T} />
       <S07S09 T={T} />
       <S10S11 T={T} />
       <S12 T={T} />
       <S13S14 T={T} />
+      <S12 T={T} layer="over" />
       <Subs11 T={T} lines={LINES11} />
       <CornerMark o={markO} />
       <Grain11 />

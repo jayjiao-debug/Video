@@ -67,7 +67,7 @@ const S: [number, string][] = [
   [199, '把账看清，怎么选由你'],
 ];
 /* where a line must end before the next one starts (title card, the breath before ≠ → −, the end card) */
-const HARD_END: Record<number, number> = { 4: b(44) - 0.1, 26: b(180) - 0.08, 30: b(204) - 0.1 };
+const HARD_END: Record<number, number> = { 4: b(44) + 0.35, 26: b(180) - 0.08, 30: b(204) - 0.1 };
 export const LINES11: Line11[] = S.map(([bi, s], i) => {
   const a = i === 0 ? 0 : b(bi);
   const z = HARD_END[i] ?? (i + 1 < S.length ? b(S[i + 1][0]) - 0.1 : b(204) - 0.1);
