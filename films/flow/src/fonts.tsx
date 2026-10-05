@@ -16,7 +16,10 @@ const load = () =>
       await f.load();
       (document.fonts as unknown as {add: (f: FontFace) => void}).add(f);
     }),
-  ).then(() => undefined));
+  ).then(async () => {
+    // KaTeX's Computer Modern faces come from its stylesheet; wait for the ones the equations use
+    for (const f of ['KaTeX_Main', 'KaTeX_Math', 'KaTeX_Size1', 'KaTeX_Size2']) await document.fonts.load(`40px ${f}`).catch(() => undefined);
+  }));
 
 export const FontGate: React.FC<{children: React.ReactNode}> = ({children}) => {
   const [handle] = useState(() => delayRender('fonts'));
