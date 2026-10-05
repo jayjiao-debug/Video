@@ -1,8 +1,77 @@
 {
-  "id": "effort-papers-01",
+  "id": "effort-search-01",
   "items": [
-    {"type": "url", "url": "https://docs.iza.org/dp8129.pdf", "name": "pencavel_dp8129.pdf", "license": "paper (reading only)"},
-    {"type": "url", "url": "https://arxiv.org/pdf/1802.07068v3", "name": "pluchino_2018.pdf", "license": "paper (reading only)"},
-    {"type": "url", "url": "https://gwern.net/doc/psychology/2014-macnamara.pdf", "name": "macnamara_2014.pdf", "license": "paper (reading only)"}
+    {
+      "type": "sketchfab-search",
+      "q": "artillery shell",
+      "count": 12,
+      "maxFaces": 300000
+    },
+    {
+      "type": "sketchfab-search",
+      "q": "brass shell casing",
+      "count": 12,
+      "maxFaces": 300000
+    },
+    {
+      "type": "sketchfab-search",
+      "q": "punch clock",
+      "count": 12,
+      "maxFaces": 300000
+    },
+    {
+      "type": "sketchfab-search",
+      "q": "time clock vintage",
+      "count": 12,
+      "maxFaces": 300000
+    },
+    {
+      "type": "sketchfab-search",
+      "q": "grand piano",
+      "count": 12,
+      "maxFaces": 300000
+    },
+    {
+      "type": "sketchfab-search",
+      "q": "upright piano",
+      "count": 12,
+      "maxFaces": 300000
+    },
+    {
+      "type": "sketchfab-search",
+      "q": "metronome",
+      "count": 12,
+      "maxFaces": 300000
+    },
+    {
+      "type": "sketchfab-search",
+      "q": "bamboo",
+      "count": 12,
+      "maxFaces": 300000
+    },
+    {
+      "type": "sketchfab-search",
+      "q": "bamboo shoot",
+      "count": 12,
+      "maxFaces": 300000
+    },
+    {
+      "type": "sketchfab-search",
+      "q": "workbench vintage",
+      "count": 12,
+      "maxFaces": 300000
+    },
+    {
+      "type": "sketchfab-search",
+      "q": "factory lamp",
+      "count": 12,
+      "maxFaces": 300000
+    },
+    {
+      "type": "sketchfab-search",
+      "q": "wall calendar",
+      "count": 12,
+      "maxFaces": 300000
+    }
   ]
 }
