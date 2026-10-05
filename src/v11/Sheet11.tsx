@@ -1,5 +1,6 @@
 import React from 'react';
 import { C, F, LNUM, Svg, PaperDiv, PageInk, PenText, Coin, Margin11, Stamp, pr, eo, eio, pop, spring, lerp, clamp, easeInOut, drawOn } from './kit11';
+import { Zoom } from './kit11';
 import { CUT } from './time11';
 import { b } from '../v6/ui6';
 
@@ -51,12 +52,12 @@ const Bar: React.FC<{ x: number; y: number; L: number; th: number; h: number; fi
 export const S07S09: React.FC<{ T: number }> = ({ T }) => {
   if (T < CUT.s7 - 0.02 || T > CUT.s10 + 0.7) return null;
   return (
-    <>
+    <Zoom>
       {T > CUT.s7 + 0.95 && <PaperDiv />}
       <Svg>
         <SheetInk T={T} />
       </Svg>
-    </>
+    </Zoom>
   );
 };
 

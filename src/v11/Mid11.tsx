@@ -1,4 +1,6 @@
 import React from 'react';
+import { ExitPict } from './kit11';
+import { Zoom, PZ } from './kit11';
 import { C, F, LNUM, Cam, Svg, PaperDiv, PageInk, Coin, Margin11, pr, eo, eio, pop, spring, swing, lerp, clamp, drawOn } from './kit11';
 import { CUT } from './time11';
 import { b } from '../v6/ui6';
@@ -60,13 +62,15 @@ export const S05S06: React.FC<{ T: number }> = ({ T }) => {
   const s = lerp(0.82 * 1.03, 1, back);
   const cy = lerp(470, 540, back);
   return (
-    <Cam s={s} cy={cy} y={lift * 46}>
+    <Zoom s={lerp(1, PZ.s, back)}>
+    <Cam s={s} cy={cy} y={0 * lift}>
       <PaperDiv />
       <Svg>
         {T < CUT.s6 + 0.5 && <S05Ink T={T} />}
         {inS6 && <S06Ink T={T} />}
       </Svg>
     </Cam>
+    </Zoom>
   );
 };
 
@@ -76,7 +80,7 @@ const S05Ink: React.FC<{ T: number }> = ({ T }) => {
   const rise = eio(T, CUT.s5 + 0.2, 1.3);
   const wl = lerp(800, WL, rise);
   const entries: { y: number; el: React.ReactNode }[] = [
-    { y: 560, el: <><text x={460} y={560} style={{ fontFamily: F.serif, fontWeight: 900, fontSize: 40 }} fill={C.ink}>这段感情</text><text x={630} y={560} style={{ fontFamily: F.serif, fontWeight: 700, fontSize: 40, ...LNUM }} fill={C.ink2}>· 已付出3年</text></> },
+    { y: 560, el: <><text x={460} y={560} style={{ fontFamily: F.serif, fontWeight: 900, fontSize: 40 }} fill={C.ink}>电影票</text><text x={590} y={560} style={{ fontFamily: F.serif, fontWeight: 700, fontSize: 40 }} fill={C.ink2}>· 已付款</text></> },
     { y: 630, el: <><text x={460} y={630} style={{ fontFamily: F.serif, fontWeight: 900, fontSize: 40 }} fill={C.ink}>项目</text><text x={548} y={630} style={{ fontFamily: F.serif, fontWeight: 700, fontSize: 40, ...LNUM }} fill={C.ink2}>· 1000万美元</text></> },
     { y: 712, el: <>
       <g transform="translate(500 700)"><Banknote /></g><text x={548} y={714} style={{ fontFamily: F.serif, fontWeight: 700, fontSize: 36 }} fill={C.ink}>钱</text>
@@ -164,13 +168,7 @@ const RelCard: React.FC<{ c: number; T: number }> = ({ c, T }) => {
     </g>
   );
 };
-const ExitSign: React.FC<{ x: number; y: number; s?: number }> = ({ x, y, s = 0.5 }) => (
-  <g transform={`translate(${x} ${y}) scale(${s})`}>
-    <rect x={-80} y={-48} width={160} height={96} rx={8} fill="#0d3b2c" stroke="#2a9c6f" strokeWidth={4} />
-    <text x={-14} y={22} textAnchor="middle" style={{ fontFamily: F.sans, fontWeight: 900, fontSize: 60 }} fill="#7ff0c0">走</text>
-    <path d="M30,0 H58 M46,-14 L60,0 L46,14" fill="none" stroke="#7ff0c0" strokeWidth={6} strokeLinecap="round" strokeLinejoin="round" />
-  </g>
-);
+const ExitSign: React.FC<{ x: number; y: number; s?: number }> = ({ x, y, s = 0.5 }) => <ExitPict x={x} y={y} s={s * 0.78} glow={0.6} />;
 const Seat: React.FC<{ x: number; y: number; s?: number }> = ({ x, y, s = 0.62 }) => (
   <g transform={`translate(${x} ${y}) scale(${s})`}>
     <path d="M-44,-4 V-46 Q-44,-62 -28,-62 H28 Q44,-62 44,-46 V-4 Z" fill="#8a3238" />

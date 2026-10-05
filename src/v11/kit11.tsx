@@ -20,6 +20,13 @@ export const F = {
   lat: '"Cormorant Garamond", serif',
   mono: '"DejaVu Sans Mono", monospace',
 };
+/** page header x (clear of the Douyin watermark after the page zoom) and the marginalia column start */
+export const HX = 560, MX0 = 180;
+/** the page-scene zoom (owner's option B): pages fill ~80 % of the frame */
+export const PZ = { s: 1.18, cx: 1100, cy: 520 };
+export const Zoom: React.FC<{ s?: number; children: React.ReactNode }> = ({ s = PZ.s, children }) => (
+  <div style={{ position: 'absolute', left: 0, top: 0, width: 1920, height: 1080, transformOrigin: `${PZ.cx}px ${PZ.cy}px`, transform: `scale(${s})` }}>{children}</div>
+);
 export const LNUM: React.CSSProperties = { fontFeatureSettings: "'lnum' 1, 'pnum' 1" };
 
 /* ---------- timing helpers ---------- */
@@ -108,7 +115,7 @@ export const PaperDiv: React.FC<{ x?: number; y?: number; w?: number; h?: number
 /** ledger furniture in SVG: blue rules, red double margin, double rule under the header, header texts */
 export const PageInk: React.FC<{ title?: string; sub?: string; no?: string; o?: number; titleP?: number; subP?: number; rulesFrom?: number }> = ({ title, sub, no, o = 1, titleP = 1, subP = 1, rulesFrom = 244 }) => {
   const n = title ? [...title].length : 0;
-  const subX = 460 + n * 56 + 12;
+  const subX = HX + n * 56 + 12;
   const rules: number[] = [];
   for (let y = rulesFrom; y < 800; y += 46) rules.push(y);
   return (
@@ -118,7 +125,7 @@ export const PageInk: React.FC<{ title?: string; sub?: string; no?: string; o?: 
       <line x1={337} y1={92} x2={337} y2={800} stroke={C.margin} strokeWidth={1.6} strokeOpacity={0.75} />
       <line x1={120} y1={190} x2={1800} y2={190} stroke={C.ink} strokeWidth={2} />
       <line x1={120} y1={196} x2={1800} y2={196} stroke={C.ink} strokeWidth={1} />
-      {title && <PenText x={460} y={164} p={titleP} size={52} weight={900} font={F.serif} fill={C.ink} ls={4} text={title} />}
+      {title && <PenText x={HX} y={164} p={titleP} size={52} weight={900} font={F.serif} fill={C.ink} ls={4} text={title} />}
       {sub && <text x={subX} y={160} opacity={subP} style={{ fontFamily: F.sans, fontWeight: 500, fontSize: 30 }} fill={C.ink2}>{sub}</text>}
       {no && <text x={1752} y={160} textAnchor="end" style={{ fontFamily: F.lat, fontStyle: 'italic', fontWeight: 600, fontSize: 40, ...LNUM }} fill={C.ink3}>{no}</text>}
     </g>
@@ -148,10 +155,10 @@ export const Margin11: React.FC<{ chip: string; lines: string[]; o?: number; y0?
   const zh = (t: string) => /[一-鿿]/.test(t);
   return (
     <g opacity={o}>
-      <rect x={160} y={top} width={w} height={34} rx={17} fill="none" stroke={C.ink2} strokeOpacity={0.7} />
-      <text x={160 + w / 2} y={top + 24} textAnchor="middle" style={{ fontFamily: F.sans, fontWeight: 500, fontSize: 21 }} fill={C.ink2}>{chip}</text>
+      <rect x={MX0} y={top} width={w} height={34} rx={17} fill="none" stroke={C.ink2} strokeOpacity={0.7} />
+      <text x={MX0 + w / 2} y={top + 24} textAnchor="middle" style={{ fontFamily: F.sans, fontWeight: 500, fontSize: 21 }} fill={C.ink2}>{chip}</text>
       {lines.map((t, i) => (
-        <text key={i} x={160} y={top + 68 + i * 32} style={{ fontFamily: zh(t) ? F.sans : F.mono, fontSize: zh(t) ? 21 : 19, ...LNUM }} fill={C.ink2}>{t}</text>
+        <text key={i} x={MX0} y={top + 68 + i * 32} style={{ fontFamily: zh(t) ? F.sans : F.mono, fontSize: zh(t) ? 21 : 19, ...LNUM }} fill={C.ink2}>{t}</text>
       ))}
     </g>
   );
@@ -230,7 +237,7 @@ export const Subs11: React.FC<{ T: number; lines: Line11[] }> = ({ T, lines }) =
       const bl = a <= 0.01 ? 0 : (1 - easeOut(pr(T, a, 0.26))) * 5;
       return (
         <div key={i} style={{ position: 'absolute', left: 0, right: 0, top: 852, textAlign: 'center', opacity: o, filter: bl > 0.1 ? `blur(${bl}px)` : undefined,
-          fontFamily: F.sans, fontWeight: 500, fontSize: 56, letterSpacing: '0.06em', lineHeight: 1.2, color: C.cream, textShadow: '0 2px 14px rgba(0,0,0,.9)', ...LNUM }}>
+          fontFamily: F.sans, fontWeight: 500, fontSize: 62, letterSpacing: '0.05em', lineHeight: 1.2, color: C.cream, textShadow: '0 2px 14px rgba(0,0,0,.9)', ...LNUM }}>
           <Rich s={s} />
         </div>
       );
@@ -287,6 +294,35 @@ export const GoldTitle11: React.FC<{ text: string; f: number; at: number; size: 
           {chars.map((ch, i) => <tspan key={i} fill={`url(#${id}-${k})`} opacity={easeOut(clamp((f - at - i * step) / fade))}>{ch}</tspan>)}
         </text>
       ))}
+    </g>
+  );
+};
+
+/** the classic green emergency-exit sign: arrow | running figure → door (white on green), softly lit */
+export const ExitPict: React.FC<{ x: number; y: number; s?: number; o?: number; glow?: number; flip?: boolean }> = ({ x, y, s = 1, o = 1, glow = 1, flip = false }) => {
+  const W2 = 120, H2 = 60;
+  const st = { stroke: '#fff', strokeWidth: 10, strokeLinecap: 'round' as const, strokeLinejoin: 'round' as const, fill: 'none' };
+  return (
+    <g transform={`translate(${x} ${y}) scale(${s})`} opacity={o}>
+      {glow > 0 && <rect x={-W2 - 14} y={-H2 - 14} width={2 * W2 + 28} height={2 * H2 + 28} rx={18} fill="#2fe08a" opacity={0.28 * glow} filter="url(#k-soft)" />}
+      <rect x={-W2} y={-H2} width={2 * W2} height={2 * H2} rx={8} fill="#0b9a52" stroke="#86f5bd" strokeWidth={3} />
+      <g transform={flip ? 'scale(-1 1)' : undefined}>
+        {/* arrow panel */}
+        <line x1={-W2 + 76} y1={-H2 + 10} x2={-W2 + 76} y2={H2 - 10} stroke="#fff" strokeWidth={3} opacity={0.9} />
+        <path d={`M${-W2 + 16},0 H${-W2 + 58} M${-W2 + 42},-17 L${-W2 + 60},0 L${-W2 + 42},17`} {...st} strokeWidth={9} />
+        {/* the running figure, heading for the door */}
+        <g transform={`translate(${-W2 + 82} ${-H2 + 6}) scale(1.05)`}>
+          <circle cx={58} cy={12} r={9.5} fill="#fff" />
+          <path d="M53,25 L41,55" {...st} strokeWidth={13} />
+          <path d="M51,30 L66,38 L77,31" {...st} />
+          <path d="M50,30 L36,38 L28,33" {...st} />
+          <path d="M41,55 L57,66 L60,90" {...st} />
+          <path d="M41,55 L31,72 L15,75" {...st} />
+        </g>
+        {/* the door */}
+        <rect x={W2 - 52} y={-H2 + 12} width={38} height={2 * H2 - 24} fill="none" stroke="#fff" strokeWidth={6} />
+        <rect x={W2 - 52} y={-H2 + 12} width={14} height={2 * H2 - 24} fill="#fff" />
+      </g>
     </g>
   );
 };

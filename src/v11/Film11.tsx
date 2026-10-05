@@ -42,7 +42,14 @@ export const Ep11Film: React.FC = () => {
       <S13S14 T={T} />
       <S12 T={T} layer="over" />
       <Subs11 T={T} lines={LINES11} />
-      <CornerMark o={markO} />
+      {(() => {
+        const onPaper = T > CUT.s5 + 0.3 && T < CUT.s14 + 0.4; // the zoomed page sits under the mark
+        return markO > 0.001 ? (
+          <div style={{ position: 'absolute', top: onPaper ? 24 : 44, right: 56, opacity: (onPaper ? 0.6 : 0.55) * markO, fontFamily: '"Noto Sans CJK SC", sans-serif', fontWeight: 500, fontSize: 20, letterSpacing: '0.3em', color: onPaper ? 'rgba(30,26,22,0.62)' : 'rgba(243,237,226,0.58)' }}>
+            <span style={{ color: onPaper ? '#9a6c1f' : '#f1c56d' }}>◆ </span>Juno · VIBE知识大赏
+          </div>
+        ) : null;
+      })()}
       <Grain11 />
     </AbsoluteFill>
   );

@@ -1,5 +1,6 @@
 import React from 'react';
 import { C, F, LNUM, Cam, Svg, PaperDiv, PageInk, Coin, Heart, Margin11, pr, eo, eio, pop, spring, swing, lerp, clamp, easeInOut, easeOut, rnd } from './kit11';
+import { Zoom } from './kit11';
 import { CUT } from './time11';
 import { S09_COINS, STAMP } from './Sheet11';
 import { b } from '../v6/ui6';
@@ -24,7 +25,7 @@ export const S10S11: React.FC<{ T: number }> = ({ T }) => {
   const dive = eio(T, CUT.dive, 0.9);
   const inS11 = T >= CUT.dive + 0.55;
   return (
-    <>
+    <Zoom>
       {T > CUT.s10 + 0.6 && T < CUT.dive + 0.95 && (
         <div style={{ position: 'absolute', inset: 0, clipPath: 'inset(92px 120px 280px 120px)' }}>
         <Cam s={lerp(1, 3.95, dive)} cx={LIT.x} cy={LIT.y} x={(960 - LIT.x) * dive} y={(446 - LIT.y) * dive}>
@@ -41,7 +42,7 @@ export const S10S11: React.FC<{ T: number }> = ({ T }) => {
       )}
       {inS11 && <S11 T={T} />}
       {T >= CUT.dive && T < b(129) && <QFloat T={T} />}
-    </>
+    </Zoom>
   );
 };
 

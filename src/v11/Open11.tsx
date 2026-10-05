@@ -1,6 +1,7 @@
 import React from 'react';
 import { random } from 'remotion';
 import { GoldTitle11 } from './kit11';
+import { ExitPict } from './kit11';
 import { C, F, LNUM, Cam, Svg, Desk, PaperDiv, PageInk, PenText, Coin, Heart, Stamp, Hinge, pr, eo, eio, pop, spring, swing, lerp, clamp, easeOut, easeInOut, rnd, W } from './kit11';
 import { CUT } from './time11';
 import { b } from '../v6/ui6';
@@ -10,21 +11,21 @@ const FLIP = 0.42;
 /* S01 cold open · S02 the experiment · S03 into the ledger · S04 title card */
 
 /* ---------------------------------------------------------------- S01 */
-const Ticket: React.FC<{ stampO?: number; stampS?: number }> = ({ stampO = 1, stampS = 1 }) => (
+const Ticket: React.FC<{ stampO?: number }> = ({ stampO = 1 }) => (
   <g>
     <rect x={-410} y={-150} width={820} height={300} rx={10} fill="#000" opacity={0.55} filter="url(#k-soft)" transform="translate(10 34)" />
     <path d="M-410,-150 H174 A26 26 0 0 0 226,-150 H410 V150 H226 A26 26 0 0 0 174,150 H-410 Z" fill="url(#k-tix)" />
     <line x1={200} y1={-140} x2={200} y2={140} stroke="#9c8f74" strokeWidth={2.4} strokeDasharray="3 9" />
     <rect x={-380} y={-122} width={560} height={244} fill="none" stroke={C.ink} strokeOpacity={0.25} />
-    <text x={-350} y={-62} style={{ fontFamily: F.mono, fontSize: 22, letterSpacing: 6 }} fill={C.ink3}>TWO OF US · YEAR 3</text>
-    <text x={-352} y={52} style={{ fontFamily: F.serif, fontWeight: 900, fontSize: 76, letterSpacing: 6 }} fill={C.ink}>这段感情</text>
-    <text x={-350} y={108} style={{ fontFamily: F.sans, fontWeight: 500, fontSize: 30, ...LNUM }} fill={C.ink2}>在一起 3年 · 钱 · 心力</text>
+    <text x={-350} y={-62} style={{ fontFamily: F.mono, fontSize: 22, letterSpacing: 6 }} fill={C.ink3}>CINEMA · ADMIT ONE</text>
+    <text x={-352} y={58} style={{ fontFamily: F.serif, fontWeight: 900, fontSize: 88, letterSpacing: 8 }} fill={C.ink}>电影票</text>
+    <text x={-350} y={108} style={{ fontFamily: F.sans, fontWeight: 500, fontSize: 30, ...LNUM }} fill={C.ink2}>7排 · 12座</text>
     <text x={305} y={-60} textAnchor="middle" style={{ fontFamily: F.lat, fontStyle: 'italic', fontWeight: 600, fontSize: 40, ...LNUM }} fill={C.ink3}>No. 1</text>
-    <text x={305} y={30} textAnchor="middle" style={{ fontFamily: F.serif, fontWeight: 900, fontSize: 54 }} fill={C.ink}>继续</text>
-    <g transform={`translate(104 70) rotate(-12) scale(${0.7 * stampS})`} opacity={stampO} filter="url(#k-stampInk)">
+    <text x={305} y={30} textAnchor="middle" style={{ fontFamily: F.serif, fontWeight: 900, fontSize: 54 }} fill={C.ink}>入场</text>
+    <g transform="translate(78 44) rotate(-12) scale(.8)" opacity={stampO} filter="url(#k-stampInk)">
       <rect x={-150} y={-62} width={300} height={124} rx={6} fill="none" stroke={C.red} strokeWidth={7} />
       <rect x={-138} y={-50} width={276} height={100} rx={3} fill="none" stroke={C.red} strokeWidth={2.5} />
-      <text y={26} textAnchor="middle" style={{ fontFamily: F.serif, fontWeight: 900, fontSize: 72, letterSpacing: 6 }} fill={C.red}>已付出</text>
+      <text y={26} textAnchor="middle" style={{ fontFamily: F.serif, fontWeight: 900, fontSize: 72, letterSpacing: 6 }} fill={C.red}>已付款</text>
     </g>
   </g>
 );
@@ -57,14 +58,6 @@ export const S01: React.FC<{ T: number }> = ({ T }) => {
   const tx = -1500 * Math.pow(whip, 1.6);
   const screenO = 1 - eio(T, CUT.s2, 0.4);
   const flick = 0.98 + 0.02 * Math.sin(t * 53) * Math.sin(t * 7.1);
-  // first second: the 满意 stars go out one by one (16ths into beat 2), then 已付出 slams on beat 3
-  const OUT = [99, 0.51, 0.38, 0.25, 0.13];
-  const STAMP_T = b(18);
-  const st = T - STAMP_T;
-  const stampS = st < 0 ? 1.9 : st < 0.15 ? lerp(1.9, 1, easeInOut(st / 0.15)) : 1;
-  const stampO = st < 0 ? 0 : Math.min(1, st / 0.06);
-  const shake = st > 0 && st < 0.35 ? 5 * Math.exp(-st * 12) * Math.sin(st * 95) : 0;
-  const cloudO = eo(T, 0.55, 0.3);
   return (
     <>
       <Svg>
@@ -76,38 +69,15 @@ export const S01: React.FC<{ T: number }> = ({ T }) => {
             <radialGradient id="s01-lit" cx="50%" cy="45%" r="60%"><stop offset="0" stopColor="#8fa6d6" stopOpacity=".22" /><stop offset="1" stopColor="#0e1322" stopOpacity=".6" /></radialGradient>
             <radialGradient id="s01-spot" cx="50%" cy="50%" r="50%"><stop offset="0" stopColor="#ffe9b8" stopOpacity=".22" /><stop offset="1" stopColor="#ffe9b8" stopOpacity="0" /></radialGradient>
           </defs>
-          <text x={960} y={138} textAnchor="middle" style={{ fontFamily: F.serif, fontWeight: 700, fontSize: 34, letterSpacing: 12 }} fill={C.cream} fillOpacity={0.6}>满意度</text>
-          {OUT.map((o, i) => {
-            const k = eo(T, o, 0.12);
-            const x = 960 + (i - 2) * 142;
-            const flash = T > o && T < o + 0.15 ? 1 - (T - o) / 0.15 : 0;
-            return (
-              <g key={i} transform={`translate(${x} ${262 + 10 * k})`}>
-                {flash > 0 && <circle cx={0} cy={-40} r={60} fill="#ffe3a8" opacity={0.35 * flash} filter="url(#k-soft)" />}
-                <text x={0} y={0} textAnchor="middle" style={{ fontFamily: F.mono, fontSize: 120 }} fill={k < 0.5 ? '#e0ad4f' : '#46516e'} opacity={k < 0.5 ? 1 - k : k}>★</text>
-              </g>
-            );
-          })}
-          <g opacity={cloudO} transform="translate(1380 196) scale(1.7)">
-            <path d="M-46,10 Q-52,-14 -28,-16 Q-22,-38 4,-32 Q22,-46 38,-24 Q60,-22 54,4 Q56,14 44,14 L-38,14 Q-48,14 -46,10 Z" fill="#c9cfdc" opacity={0.85} />
-            {[0, 1, 2, 3, 4].map((i) => {
-              const ph = (T * 1.6 + i * 0.37) % 1;
-              const dx = -32 + i * 16, y0 = 22 + ph * 50;
-              return <line key={i} x1={dx} y1={y0} x2={dx - 4} y2={y0 + 12} stroke="#c9cfdc" strokeWidth={2.6} strokeLinecap="round" opacity={0.9 * (1 - ph)} />;
-            })}
-          </g>
+          <text x={960} y={262} textAnchor="middle" style={{ fontFamily: F.mono, fontSize: 120, letterSpacing: 22 }}><tspan fill="#e0ad4f">★</tspan><tspan fill="#46516e">★★★★</tspan></text>
+          <Zzz T={T} />
         </g>
         <ellipse cx={960 + tx * 0.3} cy={560} rx={640} ry={260} fill="url(#s01-spot)" opacity={1 - whip} />
-        <g transform={`translate(${960 + tx + shake} ${560 + shake * 0.5}) rotate(${rot})`} filter={whip > 0.05 && whip < 0.95 ? 'url(#k-blur2)' : undefined}>
-          <Ticket stampO={stampO} stampS={stampS} />
+        <g transform={`translate(${960 + tx} 560) rotate(${rot})`} filter={whip > 0.05 && whip < 0.95 ? 'url(#k-blur2)' : undefined}>
+          <Ticket />
         </g>
         <g opacity={(1 - whip) * flick}>
-          <g transform="translate(250 690)">
-            <rect x={-80} y={-48} width={160} height={96} rx={8} fill="#0d3b2c" stroke="#3fd39a" strokeWidth={3} />
-            <rect x={-80} y={-48} width={160} height={96} rx={8} fill="#3fd39a" opacity={0.25} filter="url(#k-soft)" />
-            <text x={-14} y={22} textAnchor="middle" style={{ fontFamily: F.sans, fontWeight: 900, fontSize: 60 }} fill="#7ff0c0">走</text>
-            <path d="M30,0 H58 M46,-14 L60,0 L46,14" fill="none" stroke="#7ff0c0" strokeWidth={6} strokeLinecap="round" strokeLinejoin="round" />
-          </g>
+          <ExitPict x={250} y={690} s={1} glow={1} />
         </g>
         <g opacity={1 - whip} transform="translate(1660 690) scale(1.25)">
           <path d="M-44,-4 V-46 Q-44,-62 -28,-62 H28 Q44,-62 44,-46 V-4 Z" fill="#8a3238" />
@@ -309,7 +279,7 @@ export const S02: React.FC<{ T: number }> = ({ T }) => {
 
 /* ---------------------------------------------------------------- S03 + S04 (one camera: page → closed book → open book) */
 const ROWS = [
-  { y: 330, no: 'No.1', name: '这段感情', note: '已付出3年', from: { x: 960, y: 560, w: 820, h: 300 } },
+  { y: 330, no: 'No.1', name: '电影票', note: '已付款', from: { x: 960, y: 560, w: 820, h: 300 } },
   { y: 422, no: 'No.2', name: '项目', note: '已投1000万美元', from: { x: 558, y: 471, w: 660, h: 574 } },
   { y: 514, no: 'No.3', name: '项目', note: '之前没投过', from: { x: 1362, y: 471, w: 660, h: 574 } },
 ];
@@ -339,8 +309,8 @@ export const S03S04: React.FC<{ T: number }> = ({ T }) => {
   const pushIn = eio(T, CUT.s5, 0.42);
   const titleF = (T - CUT.s4) * 30;
   const brand = 1 + 0.03 * eio(T, CUT.s4 + 0.3, CUT.s5 - CUT.s4 - 0.3);
-  let s = lerp(1, 1.08, push);
-  let cx = lerp(960, 1100, push), cy = lerp(540, 400, push);
+  let s = lerp(1, 1.12, push);
+  let cx = lerp(960, 900, push), cy = lerp(540, 720, push);
   s = lerp(s, 0.82 * brand, pull);
   cx = lerp(cx, 960, pull);
   cy = lerp(cy, 470, pull);
@@ -386,20 +356,24 @@ export const S03S04: React.FC<{ T: number }> = ({ T }) => {
               </g>
             );
           })}
-          {/* L5 in red pen: is love the same account? — circle the first row, bracket it to the project's row */}
+          {/* No.3 in red pen */}
           {penP > 0 && (
             <g>
-              <ellipse cx={680} cy={318} rx={140} ry={34} fill="none" stroke={C.red} strokeWidth={2.6} transform="rotate(-2 680 318)" {...{ pathLength: 1, strokeDasharray: '1 1', strokeDashoffset: 1 - clamp(penP * 1.8) }} />
-              <path d="M1580,318 L1606,318 L1606,410 L1580,410" fill="none" stroke={C.red} strokeWidth={3} strokeLinecap="round" strokeLinejoin="round" {...{ pathLength: 1, strokeDasharray: '1 1', strokeDashoffset: 1 - clamp((penP - 0.45) / 0.35) }} />
-              {penP > 0.82 && (
-                <g opacity={blink} transform="translate(1644 378)">
-                  <text x={0} y={0} style={{ fontFamily: F.serif, fontWeight: 900, fontSize: 52 }} fill={C.red}>?</text>
+              <text x={460} y={606} style={{ fontFamily: F.lat, fontStyle: 'italic', fontWeight: 600, fontSize: 36, ...LNUM }} fill={C.red} opacity={eo(T, b(41), 0.2)}>No.4</text>
+              <PenText x={580} y={606} p={clamp(penP * 1.6)} size={40} weight={900} fill={C.red} text="感情" />
+              {penP > 0.55 && <line x1={680} y1={598} x2={lerp(680, 1380, clamp((penP - 0.55) / 0.35))} y2={598} stroke={C.red} strokeWidth={2.2} strokeDasharray="2 10" strokeLinecap="round" />}
+              {penP > 0.9 && (
+                <g opacity={blink} transform="translate(1440 590)">
+                  <Heart x={0} y={0} kind="empty" s={1.1} />
+                  <text x={34} y={14} style={{ fontFamily: F.lat, fontWeight: 700, fontSize: 52 }} fill={C.red}>?</text>
                 </g>
               )}
+              {/* pen nib */}
+              {penP < 1 && <circle cx={penP < 0.55 ? 580 + 90 * clamp(penP * 1.6) : lerp(680, 1380, clamp((penP - 0.55) / 0.35))} cy={600} r={4} fill={C.red} />}
             </g>
           )}
-          <Coin x={392} y={318} l="A" s={coins} o={Math.min(1, coins)} r={20} />
-          <Coin x={392} y={364} l="B" s={coins} o={Math.min(1, coins)} r={20} solid={false} />
+          <Coin x={420} y={592} l="A" s={coins} o={Math.min(1, coins)} r={22} />
+          <Coin x={1540} y={592} l="B" s={coins} o={Math.min(1, coins)} r={22} />
         </Svg>
       )}
       {/* the cover: closes on bar 7, opens on bar 8 (the same hinge, spine on the left) */}
