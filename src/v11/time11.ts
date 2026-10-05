@@ -34,7 +34,7 @@ export const EP11_FRAMES = Math.round(FILM_END11 * 30);
 
 /* line starts as beat indices (half-beats allowed where reading time needs it) */
 const S: [number, string][] = [
-  [16, '电影很烂，票都买了：你[走不走]？'],
+  [16, '在一起3年，不开心了：你[走不走]？'],
   [22, '有个实验：项目已投1000万美元'],
   [28, '对手更强，[85%]的人还接着投'],
   [34, '没投过钱的：只有[17%]肯投'],

@@ -60,86 +60,143 @@ const PageBack: React.FC = () => (
     <div style={{ position: 'absolute', inset: 0, backgroundImage: 'repeating-linear-gradient(180deg, transparent 0 151px, rgba(157,182,201,.18) 151px 152px, transparent 152px 197px)', opacity: 0.6 }} />
   </div>
 );
+/* S13 — the account again, now as a live sum: change an entry and watch the 留 / 走 verdict underneath move.
+   L28 the person (满意) shrinks — still 留. L29 take out what's 已付出 — it flips to 走. L30 add 说不准 — it flickers.
+   L31 the magnifier: the sum is a range across the line; both signs stay lit (怎么选由你). Values are 示意, no numbers. */
+const RY = { sat: 340, inv: 400, alt: 460, q: 520 };
+const BH = 28, TH = 300, TOT_Y = 606, TOT_BAR = 594;
+const ExitSign: React.FC<{ x: number; y: number; s: number; o: number; glow: number }> = ({ x, y, s, o, glow }) => (
+  <g transform={`translate(${x} ${y}) scale(${s})`} opacity={o}>
+    {glow > 0.01 && <rect x={-110} y={-76} width={220} height={152} rx={30} fill="#3fd39a" opacity={0.35 * glow} filter="url(#k-glow)" />}
+    <rect x={-80} y={-48} width={160} height={96} rx={8} fill="#0d3b2c" stroke="#2a9c6f" strokeWidth={4} />
+    <text x={-14} y={22} textAnchor="middle" style={{ fontFamily: F.sans, fontWeight: 900, fontSize: 60 }} fill="#7ff0c0">走</text>
+    <path d="M30,0 H58 M46,-14 L60,0 L46,14" fill="none" stroke="#7ff0c0" strokeWidth={6} strokeLinecap="round" strokeLinejoin="round" />
+  </g>
+);
+const SeatSign: React.FC<{ x: number; y: number; s: number; o: number; glow: number }> = ({ x, y, s, o, glow }) => (
+  <g transform={`translate(${x} ${y}) scale(${s})`} opacity={o}>
+    {glow > 0.01 && <rect x={-100} y={-96} width={200} height={150} rx={30} fill="#f1c56d" opacity={0.45 * glow} filter="url(#k-glow)" />}
+    <path d="M-44,-4 V-46 Q-44,-62 -28,-62 H28 Q44,-62 44,-46 V-4 Z" fill="#8a3238" />
+    <rect x={-56} y={-8} width={112} height={30} rx={7} fill="#a33d44" />
+    <rect x={-64} y={-26} width={16} height={58} rx={6} fill="#5e2428" /><rect x={48} y={-26} width={16} height={58} rx={6} fill="#5e2428" />
+    <text y={-22} textAnchor="middle" style={{ fontFamily: F.sans, fontWeight: 900, fontSize: 38 }} fill={C.cream}>留</text>
+  </g>
+);
+/** "说不准": an irregular on/off flicker (preset, deterministic) */
+const flickOn = (T: number, a: number) => {
+  if (T < a) return 0;
+  const sched = [0, 0.32, 0.5, 0.94, 1.12, 1.3, 1.71, 1.86, 2.08];
+  const t = T - a;
+  let k = 0;
+  for (let i = 0; i < sched.length; i++) if (t >= sched[i]) k = i;
+  return k % 2 === 0 ? 1 : 0;
+};
 const S13: React.FC<{ T: number }> = ({ T }) => {
   const inK = eo(T, CUT.s13 + 0.09, 0.3);
-  const pull = eio(T, CUT.s13, 0.6);
   const push = eio(T, b(193), 0.8);
-  const s = lerp(1, 1.05, push);
-  const minusO = T >= CUT.s13 + 0.6 ? 1 : 0; void pull;
-  // L25: the person (满意) dims
-  const lens = pr(T, b(199) + 0.1, 1.7);
+  const s = lerp(1, 1.04, push);
+  const minusO = T >= CUT.s13 + 0.6 ? 1 : 0;
+  // values (px of bar)
+  const sat = lerp(160, 40, eio(T, CUT.s13 + 0.7, 0.9));
+  const satDim = lerp(1, 0.55, eo(T, CUT.s13 + 0.7, 0.6));
+  const strike = eo(T, b(188) + 0.15, 0.3);
+  const rewrite = pr(T, b(188) + 0.4, 0.5);
+  const lift = eio(T, b(190), 0.6);                  // 已付出 taken out of the sum
+  const inv = 500 * (1 - lift);
+  const alt = -160;
+  const slip = eio(T, b(193) + 0.1, 0.6);
+  const qIn = T >= b(193) + 0.7;
+  const L31 = b(199);
+  const qOn = qIn && T < L31 ? flickOn(T, b(193) + 0.7) : 0;
+  const Q = 460;
+  const qVal = Q * qOn;
+  const total = sat + inv + alt + qVal;
+  const range = T >= L31; // the end: the sum is a range across the line
+  const rangeK = eo(T, L31, 0.5);
+  const totLo = sat + inv + alt, totHi = totLo + Q;
+  // the verdict underneath
+  const stay = total >= TH;
+  const vO = eo(T, CUT.s13 + 0.3, 0.4);
+  const both = range ? rangeK : 0;
+  const seatGlow = range ? 0.6 : stay ? 1 : 0, exitGlow = range ? 0.6 : stay ? 0 : 1;
+  const seatO = range ? lerp(stay ? 1 : 0.32, 0.9, both) : stay ? 1 : 0.32;
+  const exitO = range ? lerp(stay ? 0.32 : 1, 0.9, both) : stay ? 0.32 : 1;
+  // magnifier
+  const lens = pr(T, L31 + 0.6, 1.6);
   const lensX = lerp(380, 1560, lens);
-  const passed = (x: number) => (lens > 0 ? clamp((lensX - x) / 80) : 0);
-  const satDim = lerp(1, 0.4, eo(T, CUT.s13 + 0.6, 0.4));
-  const satO = lerp(satDim, 1, passed(ZX));
-  // L26: 投入 lights, struck through, rewritten 已付出
-  const lightK = eo(T, b(188), 0.4);
-  const strike = eo(T, b(188) + 0.25, 0.35);
-  const rewrite = pr(T, b(188) + 0.55, 0.6);
-  const under = eo(T, b(188) + 1.1, 0.4);
-  // L27: the slip slides out of the 回复机 and becomes a row
-  const shift = eio(T, b(193) + 0.05, 0.5);
-  const slip = eio(T, b(193) + 0.3, 0.7);
-  const rowY = 672;
-  const flickN = T > b(193) + 1.0 && T < b(193) + 1.9 ? (Math.floor((T - b(193) - 1.0) / 0.15) % 2 ? 0.35 : 1) : 1;
-  const qO = slip >= 1 ? (lens > 0 ? lerp(flickN, 1, passed(460)) : flickN) : 0;
-  const totY = TOT.y + 80 * shift, totRule = TOT.rule + 80 * shift, totBar = TOT.bar + 80 * shift;
-  const sharp = (x: number) => (lens > 0 ? passed(x) : 0);
+  const totBarX = Math.min(ZX, ZX + total), totBarW = Math.abs(total);
   return (
-    <Cam s={s} cx={900} cy={560} o={1}>
+    <Cam s={s} cx={1000} cy={430} o={1}>
       <PaperDiv />
       <Svg>
         <g opacity={inK}>
           <PageInk title="感情账本" no="Ledger · No. 4" />
           <Coin x={1380} y={148} l="A" r={18} />
           <Coin x={1428} y={148} l="B" r={18} solid={false} />
-          <line x1={440} y1={330} x2={1500} y2={330} stroke={C.ink} strokeWidth={3} />
-          <text x={460} y={296} style={{ fontFamily: F.serif, fontWeight: 900, fontSize: 56 }} fill={C.ink}>想留下 = 满意 + 投入 − 别的选择</text>
-          <line x1={ZX} y1={372} x2={ZX} y2={totBar + 26} stroke={C.ink} strokeWidth={1.6} strokeOpacity={0.6} />
-          {/* 满意 (the person) */}
-          <g opacity={satO}>
-            <text x={460} y={ROW.sat} style={{ fontFamily: F.serif, fontWeight: 900, fontSize: 40 }} fill={C.goldD}>+ 满意</text>
-            <Bar x={ZX} y={ROW.sat - 14} L={160} h={BAR_H} fill={C.gold} o={0.92} />
+          <text x={460} y={262} style={{ fontFamily: F.serif, fontWeight: 900, fontSize: 44 }} fill={C.ink}>想留下 = 满意 + 投入 − 别的选择</text>
+          <line x1={440} y1={284} x2={1500} y2={284} stroke={C.ink} strokeWidth={2.4} />
+          <line x1={ZX} y1={312} x2={ZX} y2={TOT_BAR + 24} stroke={C.ink} strokeWidth={1.6} strokeOpacity={0.6} />
+          {/* the line you have to clear to stay */}
+          <line x1={ZX + TH} y1={306} x2={ZX + TH} y2={TOT_BAR + 30} stroke={C.goldD} strokeWidth={2.4} strokeDasharray="8 7" />
+          <text x={ZX + TH} y={300} textAnchor="middle" style={{ fontFamily: F.serif, fontWeight: 900, fontSize: 28 }} fill={C.goldD}>留下线</text>
+          {/* 满意 */}
+          <g opacity={satDim}>
+            <text x={460} y={RY.sat} style={{ fontFamily: F.serif, fontWeight: 900, fontSize: 36 }} fill={C.goldD}>+ 满意</text>
+            <Bar x={ZX} y={RY.sat - 12} L={sat} h={BH} fill={C.gold} o={0.92} />
           </g>
-          {/* 投入 → 已付出 */}
-          <g>
-            {lightK > 0 && <rect x={ZX - 6} y={ROW.inv - 14 - BAR_H / 2 - 6} width={512} height={BAR_H + 12} fill={C.tealHi} opacity={0.45 * lightK} filter="url(#k-glow)" />}
-            <text x={460} y={ROW.inv} style={{ fontFamily: F.serif, fontWeight: 900, fontSize: 40 }} fill={C.teal}>+ 投入</text>
-            {strike > 0 && <line x1={500} y1={ROW.inv - 14} x2={lerp(500, 590, strike)} y2={ROW.inv - 16} stroke={C.teal} strokeWidth={3.5} strokeLinecap="round" />}
-            {rewrite > 0 && <PenText x={612} y={ROW.inv} p={rewrite} size={40} weight={900} fill={C.teal} text="已付出" id="s13rw" />}
-            {under > 0 && <path d={`M612,${ROW.inv + 12} Q${612 + 60},${ROW.inv + 18} ${lerp(612, 740, under)},${ROW.inv + 10}`} stroke={C.teal} strokeWidth={3} fill="none" strokeLinecap="round" />}
-            <Bar x={ZX} y={ROW.inv - 14} L={500} h={BAR_H} fill={C.teal} o={lerp(0.92, 1, lightK)} />
-          </g>
+          {/* 投入 → 已付出 → taken out */}
+          <text x={460} y={RY.inv} style={{ fontFamily: F.serif, fontWeight: 900, fontSize: 36 }} fill={C.teal}>+ 投入</text>
+          {strike > 0 && <line x1={496} y1={RY.inv - 12} x2={lerp(496, 572, strike)} y2={RY.inv - 14} stroke={C.teal} strokeWidth={3.5} strokeLinecap="round" />}
+          {rewrite > 0 && <PenText x={590} y={RY.inv} p={rewrite} size={36} weight={900} fill={C.teal} text="已付出" id="s13rw" />}
+          {lift > 0 && <Bar x={ZX} y={RY.inv - 12} L={500} h={BH} fill={C.teal} dashed o={lift} />}
+          <g transform={`translate(0 ${-26 * lift})`}><Bar x={ZX} y={RY.inv - 12} L={inv} h={BH} fill={C.teal} o={0.92 * (1 - lift * 0.6)} /></g>
+          {lift > 0.5 && <text x={ZX + 520} y={RY.inv} opacity={clamp(lift * 2 - 1)} style={{ fontFamily: F.serif, fontWeight: 900, fontSize: 30 }} fill={C.red}>不算它</text>}
           {/* − 别的选择 (the "−" arrives from the ≠) */}
-          <rect x={460} y={576 - 2.5} width={28} height={5} rx={2} fill={C.red} opacity={minusO} />
-          <text x={500} y={ROW.alt} style={{ fontFamily: F.serif, fontWeight: 900, fontSize: 40 }} fill={C.red}>别的选择</text>
-          <Bar x={ZX} y={ROW.alt - 14} L={-160} h={BAR_H} fill={C.red} o={0.9} />
+          <rect x={460} y={448 - 2.25} width={24} height={4.5} rx={2} fill={C.red} opacity={minusO} />
+          <text x={496} y={RY.alt} style={{ fontFamily: F.serif, fontWeight: 900, fontSize: 36 }} fill={C.red}>别的选择</text>
+          <Bar x={ZX} y={RY.alt - 12} L={alt} h={BH} fill={C.red} o={0.9} />
           {/* ? 说不准 */}
-          {slip >= 1 && (
-            <g opacity={qO}>
-              <text x={460} y={rowY} style={{ fontFamily: F.serif, fontWeight: 900, fontSize: 40 }} fill={C.ink2}>? 说不准</text>
-              <Bar x={ZX} y={rowY - 14} L={260} h={BAR_H} fill={C.ink3} dashed o={1} />
+          {qIn && (
+            <g>
+              <text x={460} y={RY.q} style={{ fontFamily: F.serif, fontWeight: 900, fontSize: 36 }} fill={C.ink2}>+ 说不准</text>
+              <Bar x={ZX} y={RY.q - 12} L={Q} h={BH} fill={C.ink3} dashed o={range ? 1 : 0.6} />
+              {!range && <Bar x={ZX} y={RY.q - 12} L={qVal} h={BH} fill={C.goldHi} o={0.9} />}
             </g>
           )}
           {/* the total */}
-          <line x1={440} y1={totRule} x2={1500} y2={totRule} stroke={C.ink} strokeWidth={2.4} />
-          <line x1={440} y1={totRule + 6} x2={1500} y2={totRule + 6} stroke={C.ink} strokeWidth={1.2} />
-          <text x={460} y={totY} style={{ fontFamily: F.serif, fontWeight: 900, fontSize: 40 }} fill={C.ink}>= 想留下</text>
-          <Bar x={ZX} y={totBar - 14} L={500} h={BAR_H} fill={C.ink} o={0.88} />
-          <line x1={ZX} y1={totBar + 12} x2={ZX + 500} y2={totBar + 12} stroke={C.ink} strokeWidth={2.4} />
+          <line x1={440} y1={552} x2={1500} y2={552} stroke={C.ink} strokeWidth={2.4} />
+          <line x1={440} y1={558} x2={1500} y2={558} stroke={C.ink} strokeWidth={1.2} />
+          <text x={460} y={TOT_Y} style={{ fontFamily: F.serif, fontWeight: 900, fontSize: 36 }} fill={C.ink}>= 想留下</text>
+          {!range ? (
+            <rect x={totBarX} y={TOT_BAR - 12 - BH / 2} width={totBarW} height={BH} fill={total >= TH ? C.ink : '#6d665c'} opacity={0.9} />
+          ) : (
+            <g>
+              <rect x={Math.min(ZX, ZX + totLo)} y={TOT_BAR - 12 - BH / 2} width={Math.abs(totLo)} height={BH} fill="#6d665c" opacity={0.9 * (1 - 0.4 * rangeK)} />
+              <rect x={ZX + totLo} y={TOT_BAR - 12 - BH / 2} width={(totHi - totLo) * rangeK} height={BH} fill="url(#k-hatchFine)" stroke={C.ink} strokeWidth={2} strokeDasharray="7 6" />
+            </g>
+          )}
+          {/* the verdict underneath: 走 / 留 (the hook's signs) */}
+          <g opacity={vO}>
+            <ExitSign x={800} y={712} s={0.8} o={exitO} glow={exitGlow} />
+            <SeatSign x={1200} y={722} s={0.95} o={seatO} glow={seatGlow} />
+            {range ? (
+              <text x={1000} y={730} textAnchor="middle" opacity={rangeK} style={{ fontFamily: F.lat, fontWeight: 700, fontSize: 64 }} fill={C.ink2}>?</text>
+            ) : (
+              <path d={stay ? 'M940,712 L1080,712 M1062,698 L1080,712 L1062,726' : 'M1060,712 L920,712 M938,698 L920,712 L938,726'} fill="none" stroke={C.ink2} strokeWidth={3} strokeLinecap="round" strokeLinejoin="round" />
+            )}
+          </g>
           <SmallMachine T={T} />
-          <Margin11 chip="模型" lines={['Caryl Rusbult', '1980 · 1983']} o={1} />
+          <Margin11 chip="示意" lines={['Rusbult 投资模型', '数值为示意']} o={1} />
         </g>
-        {/* the slip */}
+        {/* the slip out of the 回复机 */}
         {slip > 0 && slip < 1 && (
-          <g transform={`translate(${lerp(1600, 560, slip)} ${lerp(560, rowY - 14, slip)}) rotate(${lerp(-6, 0, slip)})`}>
-            <rect x={-120} y={-28} width={240} height={56} rx={3} fill="#fbf6ea" stroke={C.ink} strokeWidth={1.6} />
-            <text x={-100} y={14} style={{ fontFamily: F.serif, fontWeight: 900, fontSize: 36 }} fill={C.ink2}>? 说不准</text>
+          <g transform={`translate(${lerp(1600, 560, slip)} ${lerp(560, RY.q - 12, slip)}) rotate(${lerp(-6, 0, slip)})`}>
+            <rect x={-120} y={-26} width={240} height={52} rx={3} fill="#fbf6ea" stroke={C.ink} strokeWidth={1.6} />
+            <text x={-100} y={13} style={{ fontFamily: F.serif, fontWeight: 900, fontSize: 34 }} fill={C.ink2}>+ 说不准</text>
           </g>
         )}
-        {/* the magnifier */}
         {lens > 0 && lens < 1 && (
-          <g transform={`translate(${lensX} ${520 + 40 * Math.sin(lens * Math.PI)})`}>
+          <g transform={`translate(${lensX} ${440 + 40 * Math.sin(lens * Math.PI)})`}>
             <circle r={96} fill="#fff8e6" opacity={0.18} />
             <circle r={96} fill="none" stroke={C.ink} strokeWidth={7} />
             <circle r={88} fill="none" stroke={C.ink} strokeWidth={1.4} strokeOpacity={0.5} />

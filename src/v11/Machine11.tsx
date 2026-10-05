@@ -435,7 +435,7 @@ export const S12: React.FC<{ T: number; layer?: 'main' | 'over' }> = ({ T, layer
             <line x1={34} y1={-74} x2={-34} y2={74} stroke={C.red} strokeWidth={16} strokeLinecap="round" />
           </g>
           {(() => {
-            const x = lerp(975 - 62 * nS, 460, toMinus), y = lerp(520 + 25 * nS, 576, toMinus), w = lerp(124 * nS, 28, toMinus), h = lerp(18 * nS, 5, toMinus);
+            const x = lerp(975 - 62 * nS, 460, toMinus), y = lerp(520 + 25 * nS, 448, toMinus), w = lerp(124 * nS, 24, toMinus), h = lerp(18 * nS, 4.5, toMinus);
             return <rect x={x} y={y - h / 2} width={w} height={h} rx={2} fill={toMinus > 0.8 ? C.red : C.red} opacity={Math.min(1, neq) * (1 - eo(T, CUT.s13 + 0.62, 0.15))} />;
           })()}
         </Svg>

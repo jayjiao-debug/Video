@@ -76,7 +76,7 @@ const S05Ink: React.FC<{ T: number }> = ({ T }) => {
   const rise = eio(T, CUT.s5 + 0.2, 1.3);
   const wl = lerp(800, WL, rise);
   const entries: { y: number; el: React.ReactNode }[] = [
-    { y: 560, el: <><text x={460} y={560} style={{ fontFamily: F.serif, fontWeight: 900, fontSize: 40 }} fill={C.ink}>电影票</text><text x={590} y={560} style={{ fontFamily: F.serif, fontWeight: 700, fontSize: 40 }} fill={C.ink2}>· 已付款</text></> },
+    { y: 560, el: <><text x={460} y={560} style={{ fontFamily: F.serif, fontWeight: 900, fontSize: 40 }} fill={C.ink}>这段感情</text><text x={630} y={560} style={{ fontFamily: F.serif, fontWeight: 700, fontSize: 40, ...LNUM }} fill={C.ink2}>· 已付出3年</text></> },
     { y: 630, el: <><text x={460} y={630} style={{ fontFamily: F.serif, fontWeight: 900, fontSize: 40 }} fill={C.ink}>项目</text><text x={548} y={630} style={{ fontFamily: F.serif, fontWeight: 700, fontSize: 40, ...LNUM }} fill={C.ink2}>· 1000万美元</text></> },
     { y: 712, el: <>
       <g transform="translate(500 700)"><Banknote /></g><text x={548} y={714} style={{ fontFamily: F.serif, fontWeight: 700, fontSize: 36 }} fill={C.ink}>钱</text>
