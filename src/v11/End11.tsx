@@ -45,9 +45,11 @@ export const S13S14: React.FC<{ T: number }> = ({ T }) => {
     <>
       {T >= CUT.s14 && <EndCard T={T} />}
       {turn < 1 && (
-        <Hinge angle={-178 * turn} axisX={120} back={<PageBack />}>
-          <S13 T={T} />
-        </Hinge>
+        <div style={{ position: 'absolute', inset: 0, opacity: 1 - clamp((turn - 0.5) / 0.3) }}>
+          <Hinge angle={-178 * turn} axisX={120} back={<PageBack />}>
+            <S13 T={T} />
+          </Hinge>
+        </div>
       )}
     </>
   );

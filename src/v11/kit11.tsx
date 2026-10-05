@@ -253,6 +253,8 @@ export const Svg: React.FC<{ children: React.ReactNode; style?: React.CSSPropert
 export const Hinge: React.FC<{ angle: number; axisX: number; children: React.ReactNode; shade?: boolean; back?: React.ReactNode; persp?: number }> = ({ angle, axisX, children, shade = true, back, persp = 3200 }) => {
   const a = Math.abs(angle) % 360;
   const k = Math.sin((Math.min(a, 180) * Math.PI) / 180);
+  // flat: no 3D context at all (a 3D layer held at 0° can drop tiles for a frame in headless Chrome)
+  if (a < 0.01) return <div style={{ position: 'absolute', left: 0, top: 0, width: W, height: H }}>{children}</div>;
   return (
     <div style={{ position: 'absolute', left: 0, top: 0, width: W, height: H, perspective: persp, perspectiveOrigin: `${axisX}px 540px` }}>
       <div style={{ position: 'absolute', left: 0, top: 0, width: W, height: H, transformStyle: 'preserve-3d', transformOrigin: `${axisX}px 540px`, transform: `rotateY(${angle}deg)` }}>

@@ -353,7 +353,7 @@ export const S03S04: React.FC<{ T: number }> = ({ T }) => {
             const rx = lerp(f.x - f.w / 2, 440, k), ry = lerp(f.y - f.h / 2, r.y - 44, k), rw = lerp(f.w, 1140, k), rh = lerp(f.h, 60, k);
             return (
               <g key={i}>
-                {k < 1 && <rect x={rx} y={ry} width={rw} height={rh} rx={4} fill="#f3ebd8" opacity={Math.pow(1 - k, 1.5)} />}
+                {k < 1 && <rect x={rx} y={ry} width={rw} height={rh} rx={4} fill="#f1e8d3" stroke={C.ink} strokeOpacity={0.18} opacity={1 - clamp((k - 0.7) / 0.3)} />}
                 <g transform={`translate(${lerp(f.x - f.w / 2 + 28, 460, k)} ${lerp(f.y + 14, r.y, k)}) scale(${lerp(0.55, 1, k)})`}>
                   <RowStrip no={r.no} name={r.name} note={r.note} />
                 </g>
