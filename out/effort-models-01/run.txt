@@ -1,0 +1,191 @@
+sketchfab model bc376f5f58a3426f82ef1de506935213
+  saved out/models/shell.glb 3.4 MB
+npm warn deprecated glob@10.5.0: Old versions of glob are not supported, and contain widely publicized security vulnerabilities, which have been fixed in the current version. Please update. Support for old versions may be purchased (at exorbitant rates) by contacting i@izs.me
+[33m❯[39m dedup
+[32m✔[39m dedup                4ms
+[33m❯[39m instance
+[32m✔[39m instance             1ms
+[33m❯[39m palette
+[32m✔[39m palette              0ms
+[33m❯[39m flatten
+[32m✔[39m flatten              2ms
+[33m❯[39m join
+[32m✔[39m join                 5ms
+[33m❯[39m weld
+[32m✔[39m weld                 8ms
+[33m❯[39m simplify
+[32m✔[39m simplify             7ms
+[33m❯[39m resample
+[32m✔[39m resample             0ms
+[33m❯[39m prune
+[32m✔[39m prune                36ms
+[33m❯[39m sparse
+[32m✔[39m sparse               2ms
+[33m❯[39m textureCompress
+[32m✔[39m textureCompress      173ms
+
+info: shell.glb (3.45 MB) → shell.opt.glb (230.34 KB)
+  optimized 3.4 -> 0.2 MB
+sketchfab model 5f76f9ecd6624681b148783fb76a4854
+  saved out/models/metronome.glb 6.1 MB
+[33m❯[39m dedup
+[32m✔[39m dedup                5ms
+[33m❯[39m instance
+[32m✔[39m instance             1ms
+[33m❯[39m palette
+[32m✔[39m palette              1ms
+[33m❯[39m flatten
+[32m✔[39m flatten              2ms
+[33m❯[39m join
+[32m✔[39m join                 10ms
+[33m❯[39m weld
+[32m✔[39m weld                 17ms
+[33m❯[39m simplify
+[32m✔[39m simplify             18ms
+[33m❯[39m resample
+[32m✔[39m resample             0ms
+[33m❯[39m prune
+[32m✔[39m prune                76ms
+[33m❯[39m sparse
+[32m✔[39m sparse               6ms
+[33m❯[39m textureCompress
+[32m✔[39m textureCompress      317ms
+
+info: metronome.glb (6.11 MB) → metronome.opt.glb (700.66 KB)
+  optimized 6.1 -> 0.7 MB
+sketchfab model c7c82e2445544191b541f2240ae8c4e7
+  saved out/models/piano.glb 5.2 MB
+[33m❯[39m dedup
+[32m✔[39m dedup                3ms
+[33m❯[39m instance
+[32m✔[39m instance             1ms
+[33m❯[39m palette
+[32m✔[39m palette              1ms
+[33m❯[39m flatten
+[32m✔[39m flatten              4ms
+[33m❯[39m join
+[32m✔[39m join                 48ms
+[33m❯[39m weld
+[32m✔[39m weld                 24ms
+[33m❯[39m simplify
+[32m✔[39m simplify             33ms
+[33m❯[39m resample
+[32m✔[39m resample             0ms
+[33m❯[39m prune
+[32m✔[39m prune                73ms
+[33m❯[39m sparse
+[32m✔[39m sparse               12ms
+[33m❯[39m textureCompress
+[32m✔[39m textureCompress      298ms
+
+info: piano.glb (5.25 MB) → piano.opt.glb (895.68 KB)
+  optimized 5.2 -> 0.9 MB
+sketchfab model e9f9fa5397814f81bf85ad06acf5bf30
+  saved out/models/bambooset.glb 5.7 MB
+[33m❯[39m dedup
+[32m✔[39m dedup                8ms
+[33m❯[39m instance
+[32m✔[39m instance             1ms
+[33m❯[39m palette
+[32m✔[39m palette              1ms
+[33m❯[39m flatten
+[32m✔[39m flatten              6ms
+[33m❯[39m join
+[32m✔[39m join                 92ms
+[33m❯[39m weld
+[32m✔[39m weld                 36ms
+[33m❯[39m simplify
+[32m✔[39m simplify             49ms
+[33m❯[39m resample
+[32m✔[39m resample             0ms
+[33m❯[39m prune
+[32m✔[39m prune                65ms
+[33m❯[39m sparse
+[32m✔[39m sparse               22ms
+[33m❯[39m textureCompress
+[32m✔[39m textureCompress      204ms
+
+info: bambooset.glb (5.72 MB) → bambooset.opt.glb (1.79 MB)
+  optimized 5.7 -> 1.8 MB
+sketchfab model a02bf0e3ffe44617ad49daf3cd94fe59
+  saved out/models/bamboo.glb 4.5 MB
+[33m❯[39m dedup
+[32m✔[39m dedup                3ms
+[33m❯[39m instance
+[32m✔[39m instance             1ms
+[33m❯[39m palette
+[32m✔[39m palette              0ms
+[33m❯[39m flatten
+[32m✔[39m flatten              2ms
+[33m❯[39m join
+[32m✔[39m join                 6ms
+[33m❯[39m weld
+[32m✔[39m weld                 9ms
+[33m❯[39m simplify
+[32m✔[39m simplify             10ms
+[33m❯[39m resample
+[32m✔[39m resample             0ms
+[33m❯[39m prune
+[32m✔[39m prune                62ms
+[33m❯[39m sparse
+[32m✔[39m sparse               4ms
+[33m❯[39m textureCompress
+[32m✔[39m textureCompress      277ms
+
+info: bamboo.glb (4.49 MB) → bamboo.opt.glb (491.98 KB)
+  optimized 4.5 -> 0.5 MB
+sketchfab model 2ba27702aabe4d37822956a2b7bf43d8
+  saved out/models/lamp.glb 2.0 MB
+[33m❯[39m dedup
+[32m✔[39m dedup                3ms
+[33m❯[39m instance
+[32m✔[39m instance             1ms
+[33m❯[39m palette
+[32m✔[39m palette              1ms
+[33m❯[39m flatten
+[32m✔[39m flatten              2ms
+[33m❯[39m join
+[32m✔[39m join                 10ms
+[33m❯[39m weld
+[32m✔[39m weld                 18ms
+[33m❯[39m simplify
+[32m✔[39m simplify             29ms
+[33m❯[39m resample
+[32m✔[39m resample             0ms
+[33m❯[39m prune
+[32m✔[39m prune                47ms
+[33m❯[39m sparse
+[32m✔[39m sparse               7ms
+[33m❯[39m textureCompress
+[32m✔[39m textureCompress      228ms
+
+info: lamp.glb (2.02 MB) → lamp.opt.glb (335.78 KB)
+  optimized 2.0 -> 0.3 MB
+sketchfab model 174a3fc826414bfc9693d9b00f43fe57
+  saved out/models/wallclock.glb 2.4 MB
+[33m❯[39m dedup
+[32m✔[39m dedup                2ms
+[33m❯[39m instance
+[32m✔[39m instance             1ms
+[33m❯[39m palette
+[32m✔[39m palette              0ms
+[33m❯[39m flatten
+[32m✔[39m flatten              1ms
+[33m❯[39m join
+[32m✔[39m join                 5ms
+[33m❯[39m weld
+[32m✔[39m weld                 8ms
+[33m❯[39m simplify
+[32m✔[39m simplify             9ms
+[33m❯[39m resample
+[32m✔[39m resample             0ms
+[33m❯[39m prune
+[32m✔[39m prune                36ms
+[33m❯[39m sparse
+[32m✔[39m sparse               5ms
+[33m❯[39m textureCompress
+[32m✔[39m textureCompress      283ms
+
+info: wallclock.glb (2.4 MB) → wallclock.opt.glb (231.68 KB)
+  optimized 2.4 -> 0.2 MB
+done
