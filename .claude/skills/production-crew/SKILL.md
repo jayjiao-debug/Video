@@ -15,8 +15,11 @@ Producer + owner: brief.md
   → screenwriter: script.md + lines.json
   → GATE 1  director + cold-reader (parallel)  ── REVISE → screenwriter (≤ 3 rounds)
             owner: picks the title, OKs the script            ◀ owner touchpoint
-  → art-director: storyboard.md + 2 style frames
-  → GATE 2  director + cold-reader 5-second test on the style frames ── REVISE → art-director (≤ 3)
+  → art-director: 2–3 looks (2 style frames each: hook + key visual)
+  → GATE 2a director (buildable? readable on a phone? ranks them) + cold-reader 5-second test on every frame
+            owner: picks one look (1 minute)                    ◀ owner touchpoint
+  → art-director: storyboard.md for the chosen look
+  → GATE 2b director on the storyboard ── REVISE → art-director (≤ 3)
   → producer/animator: build scene by scene, stills per scene
   → GATE 3  director on each scene's contact sheet ── REVISE → animator
   → full render → finish (music, sound) → upload master
@@ -52,11 +55,19 @@ tagged with the role that owns it). Rubric: `references/rubric.md`.
   independent roles in the same turn (director + cold-reader at each gate).
 - At each gate: if the director says REVISE, send the routed notes (and the cold-read) back to that role; at most 3
   rounds, then ESCALATE to the owner with the options. If APPROVE, move on.
-- Owner touchpoints: gate 1 (show 3 titles with reasons + the lines, ask for the pick/OK) and gate 4 (the cut).
-  The owner may also ask to see gate 2 style frames. When the owner is away, take the director's top title, note
+- Owner touchpoints: gate 1 (show 3 titles with reasons + the lines, ask for the pick/OK), gate 2a (show the
+  2–3 looks side by side as one contact sheet, with the director's ranking and the cold-reader's 5-second reads,
+  ask which one) and gate 4 (the cut). When the owner is away, take the director's top title / top look, note
   that in `crew_log.md`, and continue.
-- Build (animator role, done by the producer for now): follow `storyboard.md` and `lines.json` exactly; reuse
-  existing engine parts before writing new ones; stills per scene → gate 3 before the full render.
+- While the owner is choosing at gate 1, the art director can already sketch looks from the brief; don't idle.
+- Build (animator role, done by the producer for now): follow `storyboard.md` and `lines.json` exactly; stills per
+  scene → gate 3 before the full render. Two layers:
+  - **Engine (always reuse):** subtitle bar and reading timing, music beat grid and cut timing, title on the
+    hardest drop, 2D transitions (no CSS 3D), phone zoom, grain, corner mark, Juno end card, QA scripts.
+    Copy the latest kit's mechanics instead of rewriting them.
+  - **Look (new every episode):** palette, the central metaphor and its props, layout, motifs. Never carry the
+    previous episode's look over just because its code exists.
+- After the owner picks a look, add a row to `references/looks.md`; after publishing, fill in its numbers.
 - After the render: `finish` as usual, then `python3 <this skill>/scripts/upload_master.py <film.mp4>` to make the
   upload master (≥ 8 Mbps, −14 LUFS, ≤ −1.5 dBTP). Gate 4 reviews the upload master.
 - Owner notes: route each to its role; add a row to owner-notes.md with the owner's words and the role tag.
@@ -71,16 +82,30 @@ Fill `facts.md`; credible primary sources only; mark 估算 and UNVERIFIED; end 
 facts only from verified rows; reading budget checked with pace.py; three titles with reasons; picture column.
 
 ## Art director
-`storyboard.md` + 2 style frames (HTML → PNG via `scripts/render_html.py`): one coherent look; every transition
-motivated; first frame striking; text in safe zones; buildable in our engine; Juno end card for Juno episodes.
+First 2–3 looks, then `storyboard.md` for the one the owner picks.
+- **Looks:** each has a name, a 3-line pitch (the world/metaphor, palette as hex, type, what it must NOT look
+  like) and 2 style frames (the hook frame and the key-visual frame, HTML → PNG via `scripts/render_html.py`),
+  plus one contact sheet with all looks side by side. The looks must differ in the world they come from (e.g.
+  a ledger vs a casino table vs a chat screen), not just in colour. At least one is a bold, riskier take. None
+  may reuse the previous episode's main look (check `references/looks.md`). All share the engine layer: the same
+  subtitle style, corner mark and Juno end card, so the series stays recognisable.
+- **Storyboard:** one coherent look; every transition motivated; first frame striking; text in safe zones;
+  buildable in our engine; Juno end card for Juno episodes.
 
 ## Director
 Gate reviews against the brief, rubric and owner notes; APPROVE / REVISE (routed, concrete notes) / ESCALATE.
-Keeps a "don't change" list. Never makes the work.
+Keeps a "don't change" list. Never makes the work. At gate 2a it does not pick for the owner: it checks each
+look is buildable and readable on a phone (send back any that fail), then ranks them with one line of reasoning
+each, using the cold-read and `references/looks.md` numbers when there are any.
 
 ## Cold reader
 A first-time viewer who sees only lines/titles/frames; reports hook, swipe points, confusion, takeaway, title
 pick, and 5-second reads of frames.
+
+## Which looks work
+`references/looks.md` has one row per published episode: the look's name and pitch, and after publishing its 2s跳出,
+5s完播, 完播, 分享率 and whether it got pushed. Read it before proposing looks; after ~5 rows, say which kinds of
+look this audience stays for. The sample is small, so treat it as a hint, not a rule.
 
 ## Measuring whether the crew helps
 Per episode, in `crew_log.md`: total time, time per stage, director rounds per gate, owner feedback rounds after
