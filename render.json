@@ -1,8 +1,8 @@
 {
-  "id": "zero_v6-1791217688",
+  "id": "zero_v6fix-1791220591",
   "composition": "Zero",
-  "start": 0,
-  "end": 4715,
-  "chunks": 31,
-  "output": "zero_v6"
+  "start": 467,
+  "end": 925,
+  "chunks": 24,
+  "output": "zero_v6fix"
 }
