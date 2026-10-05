@@ -1,15 +1,15 @@
 /* Every subtitle, on the beat grid: [from beat, to beat, Chinese, English]. [gold] marks the answer,
    {red} the trap. The film shows each line from b(from) to b(to). */
 export const LINES: [number, number, string, string][] = [
-  // S1 cold open
-  [1, 9, '泰国，湄南河边的红树林', 'Thailand. Mangroves along the Chao Phraya.'],
-  [9, 17, '几千只萤火虫，各闪各的', 'Thousands of fireflies, each flashing on its own.'],
-  [17, 25, '然后，整棵树开始[一起]闪', 'Then whole trees begin to flash together.'],
-  [25, 31, '没人指挥，怎么做到的？', 'No conductor. How do they do it?'],
-  // S2 nobody believed it
-  [39, 47, '1917 年，有人在《科学》上说：那是你在{眨眼}', '1917, in Science: it is just the observer blinking.'],
-  [47, 55, '1935 年，有人看到整棵树同时亮、[同时]灭', '1935: a whole tree flashing in perfect unison.'],
-  [55, 64, '1968 年，巴克夫妇测到：约每 [0.56] 秒一次', '1968: the Bucks measure one flash about every 0.56 s.'],
+  // S1 cold open: the question, from something the viewer has lived through
+  [1, 9, '演出结束，全场开始鼓掌', 'The show ends. The whole hall starts clapping.'],
+  [9, 17, '你有没有发现：拍着拍着，掌声就[整齐]了？', 'Ever noticed? After a while, the applause falls into step.'],
+  [17, 25, '没人喊口令，也没人带头', 'No one counts. No one leads.'],
+  [25, 31, '为什么会这样？', 'Why does that happen?'],
+  // S2 not just people
+  [39, 47, '不只是人：泰国的萤火虫也会[一起]闪', 'Not just people: fireflies in Thailand flash together too.'],
+  [47, 55, '1917 年，还有人说：那是你自己在{眨眼}', 'In 1917, someone said: you are just blinking.'],
+  [55, 64, '1968 年，仪器测到：它们真的[同时]闪', '1968: instruments show they really do flash together.'],
   // S3 how
   [64, 72, '跟着闪？来不及：看见再闪，慢将近一拍', 'Copying is too slow: seeing, then flashing, takes almost a cycle.'],
   [72, 80, '邻居一亮，就把自己的[表]拨快一点', 'When a neighbour flashes, each one nudges its own clock forward.'],
@@ -39,7 +39,7 @@ export const LINES: [number, number, string, string][] = [
   [225, 233, '超过约 [160] 人，突然大晃，两天后关闭', 'Above about 160 walkers the sway jumps. Closed two days later.'],
   [233, 241, '加装阻尼器花了约 500 万英镑，2002 年重开', 'Dampers, about £5 million, reopened in 2002.'],
   // S9 applause
-  [241, 249, '2000 年，物理学家录下剧院里的掌声', '2000: physicists record the applause in theatres.'],
+  [241, 249, '回到开头：2000 年，物理学家录下了掌声', 'Back to the applause: in 2000, physicists recorded it.'],
   [249, 257, '掌声会自己变[整齐]，节奏还慢了一半', 'It falls into step by itself, at half the speed.'],
   [257, 265, '可大家想更响，就越拍越快', 'But people want it louder, so they clap faster.'],
   [265, 273, '整齐，又[散]了', 'And the rhythm falls apart.'],

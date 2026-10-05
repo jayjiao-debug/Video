@@ -2,12 +2,14 @@ import React from 'react';
 import {b, beatAt, clamp, easeInOut, inOut, keys, mulberry, prog} from '../lib';
 import {C, glow, Light} from '../look';
 import {Chapter, Credit, Tag} from '../ui';
-import {drawRiver, FLIES_J} from './river';
+import {drawRiver, FLIES_J, S2RUN} from './river';
+import {phase, pin} from '../sync';
 
-/* S2 (b39–b64): nobody believed it. 1917: a letter in Science said observers were seeing their own
-   blinking (the frame blinks like an eyelid). 1935: a single tree close up, flashing as one.
-   1968: the Bucks' light-meter traces, pulses lined up, a bracket marking ~0.56 s. */
-const synced = (T: number) => (i: number) => 2 * Math.PI * beatAt(T) + FLIES_J[i] * 0.25;
+/* S2 (b39–b64): not just people. A Thai riverbank: thousands of fireflies go from flashing on their
+   own to flashing as one (a real Kuramoto run, pinned to the beat once it forms). 1917: a letter in
+   Science said observers were seeing their own blinking (the frame blinks like an eyelid). 1968: the
+   Bucks' light-meter traces, pulses lined up, a bracket marking ~0.56 s. */
+const synced = (T: number) => (i: number) => (T < b(47) ? phase(S2RUN, i, T - b(39)) + pin(S2RUN, T, b(39)) : 2 * Math.PI * beatAt(T) + FLIES_J[i] * 0.25);
 
 const Eyelids: React.FC<{c: number}> = ({c}) => {
   if (c <= 0.003) return null;
@@ -27,15 +29,15 @@ export const S2: React.FC<{T: number}> = ({T}) => {
   const fin = inOut(T, b(39) - 0.05, b(64), 0.5, 0.45);
   const part = T < b(47) ? 0 : T < b(55) ? 1 : 2;
   // camera: wide bank → one tree (1935) → away (1968)
-  const zoom = keys(T, [[b(46.5), 0.9], [b(48), 1.8], [b(54.5), 1.95]], easeInOut);
-  const fx = keys(T, [[b(46.5), 960], [b(48), 930]], easeInOut);
-  const fy = keys(T, [[b(46.5), 560], [b(48), 450]], easeInOut);
-  const sy = keys(T, [[b(46.5), 560], [b(48), 450]], easeInOut);
+  const zoom = keys(T, [[b(39), 1.1], [b(55), 0.92]], easeInOut);
+  const fx = 960;
+  const fy = 560;
+  const sy = 560;
   const river = 1 - prog(T, b(54.5), b(55.5));
   const traces = prog(T, b(55), b(56));
   // two blinks on the beat in 1917
   const blink = (k: number) => Math.max(0, 1 - Math.abs(T - b(k)) / 0.16);
-  const lid = part === 0 ? Math.max(blink(41), blink(43)) : 0;
+  const lid = part === 1 ? Math.max(blink(49), blink(51)) : 0;
   const draw = (ctx: CanvasRenderingContext2D) => {
     if (river > 0.003) drawRiver(ctx, synced(T), {a: river * fin, zoom, T, fx, fy, sy});
     if (traces > 0.003) {
@@ -83,11 +85,10 @@ export const S2: React.FC<{T: number}> = ({T}) => {
     <>
       <Light draw={draw} deps={[T]} bloom={1} />
       <Eyelids c={lid} />
-      <Chapter T={T} at={b(39)} out={b(47)} text="1917 · 《科 学》" />
-      <Tag x={960} y={150} text="“那是观察者自己在眨眼。”" anchor="center" size={34} color={C.red} o={inOut(T, b(40), b(46.5), 0.4, 0.4) * fin} />
-      <Chapter T={T} at={b(47)} out={b(55)} text="1935 · 泰 国" />
-      <Tag x={1500} y={300} text="约两秒闪三次" size={28} color={C.gold} o={inOut(T, b(49), b(54.5), 0.5, 0.4) * fin} />
-      <Credit T={T} at={b(48)} out={b(55)} text="Hugh M. Smith, Science, 1935" />
+      <Chapter T={T} at={b(39)} out={b(47)} text="泰 国 · 河 边" />
+      <Chapter T={T} at={b(47)} out={b(55)} text="1917 · 《科 学》" />
+      <Tag x={960} y={150} text="“那是观察者自己在眨眼。”" anchor="center" size={34} color={C.red} o={inOut(T, b(48), b(54.5), 0.4, 0.4) * fin} />
+      <Credit T={T} at={b(48)} out={b(55)} text="Laurent, Science, 1917" />
       <Chapter T={T} at={b(55)} out={b(64)} text="1968 · 巴 克 夫 妇" />
       <Tag x={xb + 30} y={140} text="约 0.56 秒" size={28} color={C.gold} o={inOut(T, b(58), b(64), 0.5, 0.4) * fin} />
       <Tag x={300} y={760} text="光度计记录 · 三个位置的萤火虫" size={22} color={C.grey} o={inOut(T, b(56), b(64), 0.5, 0.4) * fin} />

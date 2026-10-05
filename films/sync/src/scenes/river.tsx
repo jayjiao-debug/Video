@@ -4,8 +4,8 @@ import {C, dot, glow, LATIN, Light, motif, SANS, SERIF} from '../look';
 
 import {flash, kuramoto, phase, pin} from '../sync';
 
-/* The river (S1 cold open, the title card, S10 callback). A Thai mangrove bank at night: seven tree
-   crowns outlined by 3,000 fireflies, mirrored in the water. S1 runs a real Kuramoto simulation: each
+/* The river (S2, S10 callback) plus the title and end cards. A Thai mangrove bank at night: seven tree
+   crowns outlined by 3,000 fireflies, mirrored in the water. S2 runs a real Kuramoto simulation: each
    tree first falls into its own rhythm (strong pull inside a tree), then the trees lock to each other;
    once they agree, the shared flash is pinned to the music's beat (pin()). S10: all on the beat. */
 const TREES: [number, number, number, number][] = [
@@ -36,7 +36,8 @@ const FLIES = (() => {
 const GROUPS = Int32Array.from(FLIES.map((f) => f.g));
 /** S1's run: trees lock from ~6.5 s, the bank from ~9.5 s */
 export const FLIES_J = FLIES.map((f) => f.j);
-export const S1RUN = kuramoto({n: N, seconds: b(39) + 1, hz: 1.966, spread: 0.06, groups: GROUPS, Kin: (t) => (t < 6.5 ? 0 : Math.min(6, (t - 6.5) * 2)), K: (t) => (t < 9.5 ? 0 : Math.min(4, (t - 9.5) * 1.2)), seed: 7});
+/** S2's run (from b39): each tree locks within a second or two, the whole bank by about b46 */
+export const S2RUN = kuramoto({n: N, seconds: 9, hz: 1.966, spread: 0.06, groups: GROUPS, Kin: (t) => (t < 1 ? 0 : Math.min(8, (t - 1) * 5)), K: (t) => (t < 2.4 ? 0 : Math.min(5, (t - 2.4) * 2.5)), seed: 8});
 
 /** draw the bank: θ(i) gives each firefly's phase; zoom/pan for camera moves */
 export const drawRiver = (ctx: CanvasRenderingContext2D, th: (i: number) => number, o: {a: number; zoom?: number; T: number; fx?: number; fy?: number; sy?: number}) => {
@@ -89,19 +90,6 @@ export const drawRiver = (ctx: CanvasRenderingContext2D, th: (i: number) => numb
       dot(ctx, sx + Math.sin(ry * 0.08 + o.T * 2) * 3, ry, 1.6, 0.28 * f * a);
     }
   }
-};
-
-// ------------------------------------------------------------------ S1
-export const S1: React.FC<{T: number}> = ({T}) => {
-  const out = 1 - prog(T, b(31) + 0.05, b(31) + 0.45);
-  const zoom = keys(T, [[0, 1.12], [b(31), 1]], easeInOut);
-  const th = (i: number) => phase(S1RUN, i, T) + pin(S1RUN, T, 0);
-  const pulse = T > b(31) - 0.05 ? Math.exp(-(T - b(31)) * 6) : 0;
-  const draw = (ctx: CanvasRenderingContext2D) => {
-    drawRiver(ctx, th, {a: out * easeOut(prog(T, 0, 0.6)), zoom, T});
-    if (pulse > 0.01) glow(ctx, 960, 470, 260, 0.35 * pulse);
-  };
-  return <Light draw={draw} deps={[T]} bloom={1.1 + 0.8 * pulse} />;
 };
 
 // ------------------------------------------------------------------ title card (b31 → b39)

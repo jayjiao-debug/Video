@@ -4,14 +4,14 @@ import {b, FPS, inOut, prog} from './lib';
 import {C, Night} from './look';
 import {LINES} from './script';
 import {Corner, Sub} from './ui';
-import {EndCard, S1, S10, TitleCard} from './scenes/river';
+import {EndCard, S10, TitleCard} from './scenes/river';
 import {S2} from './scenes/s2';
 import {S3} from './scenes/s3';
 import {S4} from './scenes/s4';
 import {S5, S6} from './scenes/s56';
 import {S7} from './scenes/s7';
 import {S8} from './scenes/s8';
-import {S9} from './scenes/s9';
+import {S1, S9} from './scenes/s9';
 
 /* The whole film as one composition. Each scene takes the global T, returns null outside its window
    and owns its fades. SCENES is the table that per-scene renders, clips and fixes are cut by
@@ -19,9 +19,9 @@ import {S9} from './scenes/s9';
 export const FILM_END = 164.49;
 export const FILM_FRAMES = Math.round(FILM_END * FPS);
 export const SCENES: [string, number, number][] = [
-  ['S1_河边', 0, b(31)],
+  ['S1_掌声开场', 0, b(31)],
   ['T_标题', b(31), b(39)],
-  ['S2_没人相信', b(39), b(64)],
+  ['S2_萤火虫', b(39), b(64)],
   ['S3_怎么做到的', b(64), b(96)],
   ['S4_惠更斯的钟', b(96), b(128)],
   ['S5_节拍器', b(128), b(161)],
