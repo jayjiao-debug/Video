@@ -37,7 +37,7 @@ const GROUPS = Int32Array.from(FLIES.map((f) => f.g));
 /** S1's run: trees lock from ~6.5 s, the bank from ~9.5 s */
 export const FLIES_J = FLIES.map((f) => f.j);
 /** S2's run (from b39): each tree locks within a second or two, the whole bank by about b46 */
-export const S2RUN = kuramoto({n: N, seconds: 9, hz: 1.966, spread: 0.06, groups: GROUPS, Kin: (t) => (t < 1 ? 0 : Math.min(8, (t - 1) * 5)), K: (t) => (t < 2.4 ? 0 : Math.min(5, (t - 2.4) * 2.5)), seed: 8});
+export const S2RUN = kuramoto({n: N, seconds: 27, hz: 1.966, spread: 0.06, groups: GROUPS, Kin: (t) => (t < 1 ? 0 : Math.min(8, (t - 1) * 5)), K: (t) => (t < 2.4 ? 0 : Math.min(5, (t - 2.4) * 2.5)), seed: 8});
 
 /** draw the bank: θ(i) gives each firefly's phase; zoom/pan for camera moves */
 export const drawRiver = (ctx: CanvasRenderingContext2D, th: (i: number) => number, o: {a: number; zoom?: number; T: number; fx?: number; fy?: number; sy?: number}) => {

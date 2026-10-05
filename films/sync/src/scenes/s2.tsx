@@ -9,7 +9,8 @@ import {phase, pin} from '../sync';
    own to flashing as one (a real Kuramoto run, pinned to the beat once it forms). 1917: a letter in
    Science said observers were seeing their own blinking (the frame blinks like an eyelid). 1968: the
    Bucks' light-meter traces, pulses lined up, a bracket marking ~0.56 s. */
-const synced = (T: number) => (i: number) => (T < b(47) ? phase(S2RUN, i, T - b(39)) + pin(S2RUN, T, b(39)) : 2 * Math.PI * beatAt(T) + FLIES_J[i] * 0.25);
+// one continuous run for the whole scene (switching formulas mid-scene made the flashes jump)
+const synced = (T: number) => (i: number) => phase(S2RUN, i, T - b(39)) + pin(S2RUN, T, b(39));
 
 const Eyelids: React.FC<{c: number}> = ({c}) => {
   if (c <= 0.003) return null;
