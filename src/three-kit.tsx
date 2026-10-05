@@ -18,6 +18,25 @@ export const CamRig: React.FC<{ T: number; keys: Key[]; fov?: number }> = ({ T, 
   return null;
 };
 
+/** a camera placed directly (pos/look), with near/far scaled to the distance so a 60 → 0.02 dive keeps depth precision */
+export const PoseRig: React.FC<{ pos: number[]; look: number[]; dist: number; fov: number }> = ({ pos, look, dist, fov }) => {
+  const { camera } = useThree();
+  const cam = camera as THREE.PerspectiveCamera;
+  cam.position.set(pos[0], pos[1], pos[2]);
+  cam.lookAt(look[0], look[1], look[2]);
+  cam.fov = fov; cam.near = Math.max(0.0004, dist * 0.02); cam.far = Math.max(40, dist * 60);
+  cam.updateProjectionMatrix();
+  return null;
+};
+
+/** project a world point to 1920×1080 pixels for a camera pose */
+export const projectPose = (pos: number[], look: number[], p: number[], fov: number) => {
+  PROJ.fov = fov; PROJ.position.set(pos[0], pos[1], pos[2]); PROJ.lookAt(look[0], look[1], look[2]);
+  PROJ.updateMatrixWorld(); PROJ.updateProjectionMatrix();
+  const v = new THREE.Vector3(p[0], p[1], p[2]).project(PROJ);
+  return { x: ((v.x + 1) / 2) * 1920, y: ((1 - v.y) / 2) * 1080 };
+};
+
 export const Env: React.FC<{ intensity?: number }> = ({ intensity = 1 }) => {
   const { gl, scene } = useThree();
   useMemo(() => {

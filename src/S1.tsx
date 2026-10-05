@@ -1,21 +1,25 @@
 import React from 'react';
 import { AbsoluteFill } from 'remotion';
-import { b, cut, prog, easeOut, easeIn, easeInOut, lerp, pop, EN, ZH, GOLD, INK, type Key } from './lib';
+import { b, cut, prog, easeOut, easeIn, easeInOut, lerp, pop, zoomAt, smoothKeys, EN, ZH, GOLD, INK, type Key, type ZoomKey } from './lib';
 import { Subs, SubBand, Chapter, type Line } from './ui';
-import { Tongue, Bud, Receptor, RECEPTOR, type MolName } from './Micro3D';
-import { project } from './three-kit';
+import { Bud, Receptor, RECEPTOR, type MolName } from './Micro3D';
+import { MouthDive, PORE, PORE_R, DOME_Y, DOME_R } from './Mouth3D';
+import { project, projectPose } from './three-kit';
 import { CubeIcon } from './Title';
 
-/* S1 (b44–b96): sweetness is a lock. Dive into the tongue → a taste bud → the sweet receptor (T1R2 + T1R3) on a cell.
+/* S1 (b36–b96): sweetness is a lock. One continuous dive from outside an open mouth, in through the lips, down onto
+   the tongue, onto one fungiform papilla (the red dots) and into its taste pore, which opens onto a taste bud; then → the sweet receptor (T1R2 + T1R3) on a cell.
    Sucrose docks in T1R2's flytrap, the lobes close, a signal leaves the cell. Then aspartame docks too, and the signal
    is far stronger. The ladder: sweetness relative to sucrose (US FDA, "Aspartame and Other Sweeteners in Food"):
    aspartame 200×, sucralose 600×, advantame 20,000×. The balance: 35 g of sugar ≈ 175 mg of aspartame at 200×;
    WHO's own example assumes 200–300 mg of aspartame in a can of diet soda, so "about 0.2 g" (估算). */
-export const S1_IN = cut(44), S1_OUT = cut(96) - 1e-4;
+export const S1_IN = cut(36), S1_OUT = cut(96) - 1e-4;
 
 export const LINES_S1: Line[] = [
-  [b(44) + 0.1, b(52) - 0.1, '答案，在你的舌头上。', 'The answer is on your tongue.'],
-  [b(52) + 0.06, b(60) - 0.1, '舌头的味蕾里，藏着一种"甜味受体"——', 'Inside its taste buds sits a "sweet receptor",'],
+  [b(36) + 0.1, b(41) - 0.1, '答案在你舌头上。', 'The answer is on your tongue.'],
+  [b(41) + 0.06, b(46) + 0.45, '这些小红点，叫菌状乳头，', 'These red dots are fungiform papillae;'],
+  [b(46) + 0.55, b(52) - 0.1, '顶端小孔，通往味蕾。', 'the pore on top leads to a taste bud.'],
+  [b(52) + 0.06, b(60) - 0.1, '味蕾里，藏着一种"甜味受体"——', 'Inside the bud sits a "sweet receptor",'],
   [b(60) + 0.06, b(67) - 0.1, '它像一把锁，只等形状对的分子。', 'a lock that waits for a molecule of the right shape.'],
   [b(67) + 0.06, b(75) - 0.1, '糖分子卡进去，锁合上，信号传给大脑：[甜]。', 'Sugar slips in, the lock closes, and the brain hears: sweet.'],
   [b(75) + 0.06, b(82) - 0.1, '可是能开这把锁的，不只有糖。', 'But sugar is not the only key.'],
@@ -23,15 +27,23 @@ export const LINES_S1: Line[] = [
   [b(90) + 0.06, b(96) - 0.1, '同样的甜，只要[零点几克]。', 'The same sweetness takes a fraction of a gram.'],
 ];
 
-const KEYS_TONGUE: Key[] = [
-  [b(43), [0.5, 2.6, 5.6], [0, 0, 0]],
-  [b(48), [0.22, 0.75, 1.35], [0, 0.08, 0]],
-  [b(52), [0, 0.2, 0.1], [0, 0.085, 0]],
+// the dive: [time, look at, direction to the camera, distance]; distance eases in log space (60 units ≈ 18 cm → 0.016)
+const FOV_M = 34;
+const ZOOM: ZoomKey[] = [
+  [cut(36), [0, 2.6, 6], [0, 0.16, 1], 60],
+  [b(40), [0, 1.6, 3.5], [0, 0.24, 1], 36],
+  [b(43), [0, 0.0, 0.5], [0, 0.33, 1], 10.5],
+  [b(46), [0, DOME_Y + 0.05, 0], [0.1, 0.8, 1], 3.2],
+  [b(49), PORE, [0.05, 1.5, 1], 0.8],
+  [b(52), PORE, [0, 1, 0.12], 0.016],
 ];
-const KEYS_BUD: Key[] = [
-  [b(52), [0.3, 0.1, 6], [0, 0, 0]],
-  [b(57), [0.25, 0.8, 3.2], [0, 0.7, 0]],
-  [b(60), [0, 1.62, 0.75], [0, 1.2, 0]],
+// through the pore: the bud seen from above, then the camera swings down beside it (the bud is drawn cut open) and
+// closes on a gold (sweet-sensing) cell, where the receptor shot begins
+const BUD_KEYS: [number, number[]][] = [
+  [b(50), [0, 3.6, 0.45, 0, 1.0, 0]],
+  [b(52), [0, 2.5, 0.3, 0, 1.0, 0]],
+  [b(56), [0.3, 1.25, 4.2, 0, 0.3, 0]],
+  [b(60), [0.25, 1.9, 3.0, 0, 0.7, 0]],
 ];
 const C = RECEPTOR.cleft;
 const KEYS_REC: Key[] = [
@@ -74,9 +86,29 @@ const LADDER: [string, number, string][] = [['蔗糖', 1, '×1'], ['阿斯巴甜
 export const S1: React.FC<{ T: number }> = ({ T }) => {
   if (T < S1_IN || T > S1_OUT) return null;
   const o = 1;
-  // the dive cuts on the bar: tongue → bud at b52, bud → receptor at b60
+  // the dive: mouth → tongue → papilla → pore in one shot; the bud shows through the pore and has the frame by b52;
+  // bud → receptor cuts on the bar at b60
+  const zm = zoomAt(ZOOM, T);
   const tongueO = T < cut(52) ? 1 : 0;
-  const budO = T >= cut(52) && T < cut(60) ? 1 : 0;
+  const tanH = Math.tan((FOV_M / 2) * Math.PI / 180);
+  const pxPer = (w: number[]) => 540 / (Math.hypot(w[0] - zm.pos[0], w[1] - zm.pos[1], w[2] - zm.pos[2]) * tanH);
+  const poreP = projectPose(zm.pos, zm.look, PORE, FOV_M), poreR = PORE_R * 0.9 * pxPer(PORE);
+  const budO = T < cut(60) && (T >= cut(52) || poreR > 3) ? 1 : 0;
+  const iris = T < cut(52) ? `circle(${poreR.toFixed(1)}px at ${poreP.x.toFixed(1)}px ${poreP.y.toFixed(1)}px)` : undefined;
+  const bk = smoothKeys(BUD_KEYS, T);
+  const domeC = [0, DOME_Y + 0.04, 0], domeP = projectPose(zm.pos, zm.look, domeC, FOV_M), domeR = DOME_R * 1.25 * pxPer(domeC);
+  const callout = (p: { x: number; y: number }, r: number, text: string, a: number, z: number) => {
+    const oo = easeOut(prog(T, a, a + 0.35)) * (1 - prog(T, z - 0.3, z));
+    if (oo <= 0) return null;
+    const ex = p.x + r * 0.71, ey = p.y - r * 0.71, tx = ex + 120, ty = ey - 120;
+    return (
+      <svg width={1920} height={1080} style={{ position: 'absolute', inset: 0, opacity: oo }}>
+        <circle cx={p.x} cy={p.y} r={r} fill="none" stroke={GOLD} strokeWidth={2} strokeOpacity={0.85} />
+        <polyline points={`${ex},${ey} ${tx},${ty} ${tx + 40},${ty}`} fill="none" stroke={GOLD} strokeWidth={2} />
+        <text x={tx + 52} y={ty + 12} style={{ fontFamily: ZH, fontWeight: 700, fontSize: 36, fill: GOLD, paintOrder: 'stroke', stroke: 'rgba(0,0,0,0.55)', strokeWidth: 6 }}>{text}</text>
+      </svg>
+    );
+  };
   const recO = T >= cut(60) ? 1 : 0;
   // receptor state
   const closeSu = easeInOut(prog(T, SU.close, SU.close + 0.5)) * (1 - easeInOut(prog(T, SU.out0, SU.out0 + 0.5)));
@@ -98,8 +130,10 @@ export const S1: React.FC<{ T: number }> = ({ T }) => {
   const XL = 300, WL = 1100; // ladder x0 and width for log10(20000)
   return (
     <AbsoluteFill style={{ backgroundColor: '#0a0716', opacity: o }}>
-      {tongueO > 0.01 && <AbsoluteFill style={{ opacity: tongueO }}><Tongue T={T} keys={KEYS_TONGUE} /></AbsoluteFill>}
-      {budO > 0.01 && <AbsoluteFill style={{ opacity: budO }}><Bud T={T} keys={KEYS_BUD} lit={prog(T, b(57), b(60))} /></AbsoluteFill>}
+      {tongueO > 0.01 && <AbsoluteFill><MouthDive pos={zm.pos} look={zm.look} dist={zm.dist} fov={FOV_M} /></AbsoluteFill>}
+      {budO > 0.01 && <AbsoluteFill style={{ clipPath: iris }}><Bud T={T} pose={{ pos: bk.slice(0, 3), look: bk.slice(3) }} lit={prog(T, b(57), b(60))} /></AbsoluteFill>}
+      {tongueO > 0.01 && callout(domeP, domeR, '菌状乳头', b(41) + 0.3, b(46) + 0.45)}
+      {tongueO > 0.01 && callout(poreP, Math.max(poreR * 1.6, 10), '味孔', b(46) + 0.6, b(50) + 0.3)}
       {recO > 0.01 && (
         <AbsoluteFill style={{ opacity: recO, filter: dim > 0 ? `brightness(${1 - 0.6 * dim}) blur(${3 * dim}px)` : undefined }}>
           <Receptor T={T} keys={KEYS_REC} open={open} glow={glow} pulse={pulse} mols={molsAt(T)} />
@@ -162,7 +196,7 @@ export const S1: React.FC<{ T: number }> = ({ T }) => {
         </svg>
       )}
       <SubBand />
-      <Chapter T={T} at={b(44)} out={b(82)} text="舌 头 上 的 锁" />
+      <Chapter T={T} at={b(36) + 0.2} out={b(82)} text="舌 头 上 的 锁" />
       <Subs T={T} lines={LINES_S1} />
     </AbsoluteFill>
   );

@@ -3,7 +3,7 @@ import * as THREE from 'three';
 import { ThreeCanvas } from '@remotion/three';
 import { AbsoluteFill, useVideoConfig } from 'remotion';
 import { mulberry, type Key } from './lib';
-import { CamRig, Env, canvasTex } from './three-kit';
+import { CamRig, PoseRig, Env, canvasTex } from './three-kit';
 import MOL from './molecules.json';
 import { mergeGeometries, mergeVertices } from 'three/examples/jsm/utils/BufferGeometryUtils.js';
 
@@ -144,7 +144,7 @@ export const Tongue: React.FC<{ T: number; keys: Key[] }> = ({ T, keys }) => {
 // ------------------------------------------------------------------ a taste bud, cut open
 export const BUD_PORE = [0, 1.18, 0];
 
-export const Bud: React.FC<{ T: number; keys: Key[]; lit: number }> = ({ T, keys, lit }) => {
+export const Bud: React.FC<{ T: number; keys?: Key[]; pose?: { pos: number[]; look: number[] }; lit: number }> = ({ T, keys, pose, lit }) => {
   const { width, height } = useVideoConfig();
   const geo = useMemo(() => {
     const r = mulberry(9);
@@ -188,7 +188,7 @@ export const Bud: React.FC<{ T: number; keys: Key[]; lit: number }> = ({ T, keys
   return (
     <AbsoluteFill>
       <ThreeCanvas width={width} height={height} gl={{ antialias: true, toneMapping: THREE.ACESFilmicToneMapping, toneMappingExposure: 1.1 }} camera={{ fov: 32, near: 0.01, far: 60 }}>
-        <CamRig T={T} keys={keys} fov={32} />
+        {pose ? <PoseRig pos={pose.pos} look={pose.look} dist={2} fov={32} /> : <CamRig T={T} keys={keys!} fov={32} />}
         <Env intensity={0.55} />
         <color attach="background" args={['#170711']} />
         <fog attach="fog" args={['#170711', 4.5, 13]} />
