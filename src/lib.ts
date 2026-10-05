@@ -5,7 +5,7 @@ import music from './music.json'; // beat grid of public/bgm.mp3 (118 bpm, 323 b
 export const FPS = 30;
 export const W = 1920;
 export const H = 1080;
-export const FILM_END = 157.2; // the end card holds ~6 s after b296; the music fades out over the last 3 s
+export const FILM_END = 109.5; // v5: ~110 s; the end card from b206, the music fades out over the last 3 s
 export const FILM_FRAMES = Math.round(FILM_END * FPS);
 export const ZH = '"Noto Serif CJK SC", "Noto Serif SC", serif';
 export const SANS = '"Noto Sans CJK SC", "Noto Sans SC", sans-serif';
@@ -18,6 +18,15 @@ export const NIGHT = '#05070d';
 export const beats: number[] = music.beats;
 /** time of beat i; write all scene timing as b(i) so cuts and pops land on the music */
 export const b = (i: number) => beats[Math.max(0, Math.min(beats.length - 1, i))];
+/** time of a fractional beat index (between two beats, linearly) */
+export const bf = (x: number) => { const i = Math.max(0, Math.min(beats.length - 2, Math.floor(x))); return lerp(beats[i], beats[i + 1], x - i); };
+/** a scene written against one beat grid, re-timed onto another: piecewise-linear [oldBeat, newBeat] anchors */
+export const remapBeats = (anchors: [number, number][]) => (i: number) => {
+  let k = 0; while (k < anchors.length - 2 && i > anchors[k + 1][0]) k++;
+  const [a0, n0] = anchors[k], [a1, n1] = anchors[k + 1];
+  const x = a1 === a0 ? n1 : n0 + (n1 - n0) * Math.max(0, Math.min(1, (i - a0) / (a1 - a0)));
+  return bf(x);
+};
 /** a hard cut on beat i: the new shot's first frame lands on (never after) the beat */
 export const cut = (i: number) => b(i) - 0.02;
 
