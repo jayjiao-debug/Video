@@ -1,0 +1,155 @@
+# 《旋转的硬币》: what a quantum computer is, for everyone: bits vs qubits, superposition as a spinning
+# coin, why it is NOT "trying every answer at once", interference, what it is good for, how far off it is.
+#
+# Sources (checked):
+#   Google Quantum AI, "Meet Willow" (9 Dec 2024): 105 superconducting qubits; random circuit sampling in
+#     under 5 minutes vs an estimated 10^25 (10 septillion) years on today's fastest supercomputers; error
+#     correction "below threshold" from 3x3 to 7x7 grids. RCS has no known practical use (a benchmark).
+#   Dilution refrigerators cool superconducting qubits to ~10 mK (≈ -273.14 °C); deep space ≈ 2.7 K,
+#     i.e. ~270x colder (Quantum Zeitgeist, "Inside the freezer colder than deep space").
+#   Aaronson, S. (2011). "Quantum computing promises new insights, not just supermachines", NYT, and
+#     "Speaking truth to parallelism": a quantum computer does not try all answers in parallel; measuring
+#     gives one random outcome; algorithms choreograph interference so wrong answers cancel.
+#   Gidney, C. (2025). How to factor 2048 bit RSA integers with less than a million noisy qubits.
+#     arXiv:2505.15917 (under a week). Shor's algorithm: 1994.
+#   2^300 ≈ 2×10^90 > ~10^80 atoms in the observable universe (standard estimate).
+#   The spinning coin is an analogy (示意): a qubit's state is a superposition with amplitudes, not a coin
+#   that is "secretly" heads or tails.
+#
+# Music: the channel track, same map as the other episodes: title on the 16.10 s hit, the twist in the
+# break (49.2 s), the coins on the build (65.5 s), "不是。" on the drop's onset (81.37 s), the summing-up
+# on 108.18 s, the uses on 117.85 s. Paced per the pacing skill (reading budget, no stretched windows).
+
+id: quantum
+series: Juno · VIBE知识大赏
+title: 旋转的硬币
+subtitle: 量子计算机，到底快在哪？
+format: horizontal
+fps: 30
+music: assets/music/bgm.mp3
+reading: {cps: 6.5, base: 0.5, min: 1.6, gap: 0.2, maxStretch: 1.3}
+markers:
+  a: 15.6
+  hit: 16.104
+  drop: 81.37
+  drop2: 82.17
+  why: 107.68
+  uses: 117.55
+  coda: 149.89
+
+scenes:
+  # 1 hook: the race, then the question
+  - id: hook
+    component: Hook
+    lines:
+      - pause: 0.3
+      - 2024年底，谷歌发布了一块量子芯片。
+      - 一道题，它算了不到5分钟。
+      - 最快的超级计算机，要算十亿亿亿年。
+      - text: 量子计算机，到底快在哪？
+        hold: 2.4
+
+  # 2 cold open: the machine itself
+  - id: lab
+    component: Lab
+    at: a
+    lead: 5.6
+    kicker: 2024 · 美国加州 · 谷歌量子实验室
+    props: {quietLead: true}
+    lines:
+      - 这盏“金色吊灯”，就是量子计算机。
+      - 芯片挂在最底下，要冷到零下273.14℃。
+      - 比外太空还冷两百多倍。
+      - 最底下那块芯片，有105个量子比特。
+
+  # 3 setup: the bit
+  - id: bits
+    component: Bits
+    lines:
+      - 普通电脑里，信息是一个个“比特”。
+      - 像一枚放平的硬币：不是0，就是1。
+      - 你的手机里，就有几百亿枚这样的硬币。
+      - 再快的电脑，也只是翻硬币翻得更快。
+
+  # 4 twist (the break): the qubit
+  - id: qubit
+    component: Qubit
+    at: break
+    cite: 示意
+    lines:
+      - 量子比特不一样。
+      - 它像一枚正在旋转的硬币。
+      - text: 转着的时候，既不是0，也不是1。
+        hold: 2.6
+      - 这种状态，叫[叠加]。
+      - 一旦去看它，它才停成0或1。
+
+  # 5 mechanism (the build): many spinning coins
+  - id: many
+    component: Many
+    at: build
+    lines:
+      - 2枚转着的硬币，同时含着4种组合。
+      - 10枚，1024种。
+      - 300枚，比宇宙里的原子还多。
+      - 人们说它“快”，常说的就是这个。
+      - 那它是不是把所有答案，同时算了一遍？
+
+  # 6 reveal (the drop)
+  - id: reveal
+    component: Reveal
+    at: drop
+    lead: 0.0
+    cite: Aaronson, NYT (2011) · 示意
+    lines:
+      - text: "[不是。]"
+        hold: 1.6
+      - 直接去看，你只会随机得到一个答案。
+      - 真正的诀窍，叫[干涉]。
+      - 像水波：波峰碰上波峰，叠得更高；
+      - 波峰碰上波谷，互相抵消。
+      - 降噪耳机，用的就是这一招。
+      - 量子算法，让错的答案互相抵消，
+      - 让对的答案越叠越强，再去看它。
+
+  # 7 name it (pinned to the 108.18 s accent)
+  - id: why
+    component: Why
+    at: why
+    lead: 0.5
+    lines:
+      - 所以，它不是一台“更快的电脑”。
+      - 它只在某些题上，快得不可思议。
+      - 聊天、刷视频、打游戏，它都帮不上忙。
+
+  # 7b what for (pinned to 117.85 s)
+  - id: uses
+    component: Uses
+    at: uses
+    lead: 0.3
+    cite: Google Quantum AI (2024) · Gidney, arXiv:2505.15917 (2025)
+    lines:
+      - 比如模拟分子，设计新药、新电池。
+      - 比如分解大数，破解今天常用的密码。
+      - 但那需要约100万个量子比特；
+      - 今天最好的芯片，只有约100个。
+      - 谷歌那道题本身没用，它证明的是：路走得通。
+
+  # 8 three things, on screen
+  - id: tips
+    component: Tips
+    subtitles: false
+    lines:
+      - 关于量子计算机，记住三件事：
+      - ① 它不是什么题都快
+      - ② 靠的是干涉，不是同时试所有答案
+      - ③ 离真正有用，还有一段路
+
+  # 9 callback + end card
+  - id: callback
+    component: Callback
+    at: coda
+    lines:
+      - 硬币还在转。
+      - 它什么时候停下，我们还不知道。
+      - pause: 6.4
