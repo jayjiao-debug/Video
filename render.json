@@ -1,8 +1,8 @@
 {
-  "id": "regret_v3-1791296260",
-  "composition": "Regret",
+  "id": "icecube_v1-1791298323",
+  "composition": "IceCube",
   "start": 0,
   "end": 2908,
   "chunks": 26,
-  "output": "regret_v3"
+  "output": "icecube_v1"
 }

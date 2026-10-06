@@ -2,13 +2,13 @@ import React, { useEffect, useState } from 'react';
 import { AbsoluteFill, Img, continueRender, delayRender, staticFile, useCurrentFrame, useVideoConfig } from 'remotion';
 import { CUT, FPS, SANS, prog, easeOut } from './lib';
 import { transAt } from './camera';
-import { SHOTS, CUTS, Balance, TitleCard, PlateShot } from './shots';
+import { SHOTS, CUTS, TitleCard, PlateShot } from './shots';
 import { Leak, Letterbox } from './cine';
 import { LOOKS, LookCtx, LookId, useLook } from './look';
 import { JUNO } from './brand/identity';
 import { Subtitles } from './subs';
 
-/* 《没走的路》. During a camera transition the whole stage is rendered SAMPLES times across one frame's time and
+/* 《冰下捉鬼》. During a camera transition the whole stage is rendered SAMPLES times across one frame's time and
    averaged (layer k gets opacity 1/(k+1), so every sample weighs the same): real motion blur on the whips and pushes. */
 const SAMPLES = 8;
 
@@ -23,7 +23,6 @@ const useFonts = () => {
 const StageAt: React.FC<{ T: number }> = ({ T }) => (
   <AbsoluteFill>
     {SHOTS.map((s, i) => <PlateShot key={i} T={T} shot={s} />)}
-    <Balance T={T} />
     <TitleCard T={T} />
   </AbsoluteFill>
 );

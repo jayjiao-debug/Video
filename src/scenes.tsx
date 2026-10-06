@@ -1,460 +1,364 @@
 import React from 'react';
-import { rnd, lerp } from './lib';
+import { rnd, lerp, prog, easeOut, easeIn, easeInOut, expoInOut, clamp, hit } from './lib';
 
-/* Hand-built sets for 《没走的路》 (no generated images): every plate is drawn here in SVG, 1920×1080, in one grade
-   (teal shadows, amber light). Key points match the overlays in shots.tsx: walker figure (811, 700), hourglass neck
-   (628, 400), fork junction (922, 600), corridor door (662, 540), spotlight pool (941, 740), sun on the earth limb
-   (1354, 331). Each set takes T for small life (fog, rain, flicker, sand) — never acted actions. */
+/* Sets for 《冰下捉鬼》, all drawn in code (no generated images). Polar night palette: navy black, ice cyan,
+   Cherenkov blue, Juno gold for the prize and the numbers. Each set receives the global time T. */
 
 type S = React.FC<{ T: number; id: string }>;
 const W = 1920, H = 1080;
+export const ICE = '#8fdcff', CHER = '#4fb4ff', GOLD = '#f1c56d';
 
-/** a tree silhouette: trunk + a canopy of overlapping blobs */
-const Tree: React.FC<{ x: number; y: number; h: number; seed: number; fill: string; conifer?: boolean }> = ({ x, y, h, seed, fill, conifer }) => {
-  if (conifer) {
-    const tiers = 7;
-    return (
-      <g fill={fill}>
-        <rect x={x - h * 0.02} y={y - h * 0.15} width={h * 0.04} height={h * 0.15} />
-        {Array.from({ length: tiers }, (_, i) => {
-          const t = i / tiers, w = h * (0.34 - 0.27 * t) * (0.9 + 0.2 * rnd(seed, i));
-          const ty = y - h * 0.1 - t * h * 0.88;
-          return <path key={i} d={`M ${x - w} ${ty} L ${x} ${ty - h * 0.24} L ${x + w} ${ty} Z`} />;
-        })}
-      </g>
-    );
+// ------------------------------------------------------------------ the detector geometry (shared)
+/** 86 strings: 78 on a triangular grid (125 m spacing) + 8 DeepCore strings in the middle; 60 DOMs each */
+export const STRINGS: [number, number][] = (() => {
+  const out: [number, number][] = [];
+  const d = 125;
+  for (let r = -5; r <= 5; r++) for (let c = -6; c <= 6; c++) {
+    const x = c * d + (r % 2 ? d / 2 : 0), z = r * d * 0.866;
+    if (Math.hypot(x / 1.05, z) < 560) out.push([x, z]);
   }
-  return (
-    <g fill={fill}>
-      <path d={`M ${x - h * 0.025} ${y} L ${x - h * 0.012} ${y - h * 0.55} L ${x + h * 0.012} ${y - h * 0.55} L ${x + h * 0.025} ${y} Z`} />
-      {Array.from({ length: 14 }, (_, i) => {
-        const a = rnd(seed, i) * Math.PI * 2, r = h * (0.08 + 0.18 * rnd(seed, i + 30));
-        return <circle key={i} cx={x + Math.cos(a) * h * 0.2 * rnd(seed, i + 60)} cy={y - h * 0.68 + Math.sin(a) * h * 0.18 * rnd(seed, i + 90)} r={r} />;
-      })}
-    </g>
-  );
+  out.sort((a, b) => Math.hypot(a[0], a[1]) - Math.hypot(b[0], b[1]));
+  const main = out.slice(0, 78);
+  const core = Array.from({ length: 8 }, (_, i) => [Math.cos(i / 8 * Math.PI * 2) * 45, Math.sin(i / 8 * Math.PI * 2) * 45] as [number, number]);
+  return [...main, ...core];
+})();
+export const DOMS_PER = 20; // drawn per string (each drawn DOM stands for 3)
+export const Y_TOP = -500, Y_BOT = 500; // 1450 m … 2450 m, centred
+
+/** perspective projection of (x, y, z) metres → screen */
+export const project = (x: number, y: number, z: number, yaw: number, pitch: number, dist: number, cx = 960, cy = 540, f = 1100) => {
+  const cy1 = Math.cos(yaw), sy1 = Math.sin(yaw);
+  let X = x * cy1 - z * sy1, Z = x * sy1 + z * cy1;
+  const cp = Math.cos(pitch), sp = Math.sin(pitch);
+  const Y = y * cp - Z * sp; Z = y * sp + Z * cp;
+  const k = f / (Z + dist);
+  return { x: cx + X * k, y: cy + Y * k, k, z: Z };
 };
 
-const Rays: React.FC<{ x: number; y: number; n: number; len: number; spread: number; dir: number; color: string; o: number; seed: number }> = ({ x, y, n, len, spread, dir, color, o, seed }) => (
-  <g style={{ mixBlendMode: 'screen' }}>
-    {Array.from({ length: n }, (_, i) => {
-      const a = dir + (i / (n - 1) - 0.5) * spread + (rnd(seed, i) - 0.5) * 0.05, w = 0.012 + 0.03 * rnd(seed, i + 9);
-      const p1 = [x + Math.cos(a - w) * len, y + Math.sin(a - w) * len], p2 = [x + Math.cos(a + w) * len, y + Math.sin(a + w) * len];
-      return <path key={i} d={`M ${x} ${y} L ${p1[0]} ${p1[1]} L ${p2[0]} ${p2[1]} Z`} fill={color} opacity={o * (0.4 + 0.6 * rnd(seed, i + 20))} />;
-    })}
-  </g>
+/** the lattice: strings + DOMs, optional per-DOM light function */
+export const Lattice: React.FC<{ yaw: number; pitch: number; dist: number; cx?: number; cy?: number; f?: number; o?: number; light?: (x: number, y: number, z: number) => [number, string] | null; strings?: number }> = ({ yaw, pitch, dist, cx = 960, cy = 540, f = 1100, o = 1, light, strings = 86 }) => {
+  const items: { z: number; el: React.ReactNode }[] = [];
+  STRINGS.slice(0, strings).forEach(([sx, sz], i) => {
+    const a = project(sx, Y_TOP - 60, sz, yaw, pitch, dist, cx, cy, f), b = project(sx, Y_BOT, sz, yaw, pitch, dist, cx, cy, f);
+    items.push({ z: (a.z + b.z) / 2 + 1, el: <line key={`s${i}`} x1={a.x} y1={a.y} x2={b.x} y2={b.y} stroke="rgba(170,220,255,0.16)" strokeWidth={Math.max(0.6, a.k * 2)} /> });
+    for (let j = 0; j < DOMS_PER; j++) {
+      const y = lerp(Y_TOP, Y_BOT, j / (DOMS_PER - 1));
+      const p = project(sx, y, sz, yaw, pitch, dist, cx, cy, f);
+      const L = light ? light(sx, y, sz) : null;
+      const r = Math.max(0.8, p.k * 7);
+      items.push({ z: p.z, el: L
+        ? <circle key={`d${i}-${j}`} cx={p.x} cy={p.y} r={r * (1 + 3.2 * L[0])} fill={L[1]} opacity={0.35 + 0.65 * L[0]} />
+        : <circle key={`d${i}-${j}`} cx={p.x} cy={p.y} r={r} fill="#cfeaff" opacity={0.18 + 0.5 * clamp(p.k)} /> });
+    }
+  });
+  items.sort((a, b) => b.z - a.z);
+  return <g opacity={o}>{items.map((it) => it.el)}</g>;
+};
+
+const Stars: React.FC<{ n: number; seed: number; h?: number; T?: number }> = ({ n, seed, h = H, T = 0 }) => (
+  <g>{Array.from({ length: n }, (_, i) => <circle key={i} cx={rnd(i, seed) * W} cy={rnd(i, seed + 1) * h} r={0.5 + rnd(i, seed + 2) * 1.3} fill="#ffffff" opacity={(0.25 + 0.6 * rnd(i, seed + 3)) * (0.75 + 0.25 * Math.sin(T * 1.7 + i))} />)}</g>
 );
 
-// ------------------------------------------------------------------ 1. a figure on a foggy road
-export const Walker: S = ({ T, id }) => (
-  <svg width={W} height={H} viewBox={`0 0 ${W} ${H}`}>
-    <defs>
-      <linearGradient id={`${id}-sky`} x1="0" y1="0" x2="0" y2="1"><stop offset="0" stopColor="#8d9690" /><stop offset="0.45" stopColor="#cfc6a6" /><stop offset="0.62" stopColor="#7c8780" /><stop offset="1" stopColor="#151c1e" /></linearGradient>
-      <radialGradient id={`${id}-sun`} cx="0.12" cy="0.36" r="0.45"><stop offset="0" stopColor="#fff2c8" stopOpacity="0.95" /><stop offset="0.25" stopColor="#f4c879" stopOpacity="0.5" /><stop offset="1" stopColor="#f4c879" stopOpacity="0" /></radialGradient>
-      <linearGradient id={`${id}-road`} x1="0" y1="0" x2="0" y2="1"><stop offset="0" stopColor="#8a8f88" /><stop offset="1" stopColor="#262b2c" /></linearGradient>
-      <linearGradient id={`${id}-fog`} x1="0" y1="0" x2="0" y2="1"><stop offset="0" stopColor="#e6dcc0" stopOpacity="0" /><stop offset="0.5" stopColor="#e6dcc0" stopOpacity="0.55" /><stop offset="1" stopColor="#e6dcc0" stopOpacity="0" /></linearGradient>
-    </defs>
-    <rect width={W} height={H} fill={`url(#${id}-sky)`} />
-    <rect width={W} height={H} fill={`url(#${id}-sun)`} />
-    {/* far trees (pale) */}
-    {Array.from({ length: 12 }, (_, i) => <Tree key={`f${i}`} x={500 + i * 110 + rnd(i, 1) * 60} y={700} h={260 + rnd(i, 2) * 120} seed={i + 40} fill="rgba(110,120,112,0.55)" />)}
-    <rect x={0} y={520} width={W} height={260} fill={`url(#${id}-fog)`} />
-    {/* ground */}
-    <path d={`M 0 690 L ${W} 700 L ${W} ${H} L 0 ${H} Z`} fill="#1f2826" />
-    <path d={`M 0 690 L 780 700 L 0 760 Z`} fill="#3b3e2c" opacity={0.6} />
-    {/* road, curving into the fog */}
-    <path d={`M 360 ${H} C 520 900, 700 760, 800 705 L 905 700 C 980 760, 1200 900, 1580 ${H} Z`} fill={`url(#${id}-road)`} />
-    <path d={`M 360 ${H} C 520 900, 700 760, 800 705`} stroke="#c9b27a" strokeOpacity={0.35} strokeWidth={6} fill="none" />
-    {/* near trees */}
-    {[[-40, 1020, 980, 1], [180, 980, 760, 2], [330, 900, 520, 3], [1500, 990, 900, 4], [1720, 1030, 1050, 5], [1260, 900, 600, 6], [1880, 960, 800, 7]].map(([x, y, h, s]) => (
-      <Tree key={s} x={x} y={y} h={h} seed={s * 13} fill="#141b1c" />
-    ))}
-    <Rays x={230} y={390} n={9} len={1500} spread={0.7} dir={0.32} color="#f6dca0" o={0.12 + 0.03 * Math.sin(T * 0.7)} seed={5} />
-    <rect x={0} y={600 + Math.sin(T * 0.3) * 8} width={W} height={200} fill={`url(#${id}-fog)`} opacity={0.6} />
-    {/* the figure, standing */}
-    <g transform={`translate(811 700) scale(1, ${1 + 0.004 * Math.sin(T * 2.2)})`} fill="#121718">
-      <circle cx={0} cy={-170} r={17} />
-      <path d="M -26 -150 Q 0 -160 26 -150 L 30 -75 L 18 -70 L 15 0 L 4 0 L 0 -62 L -4 0 L -15 0 L -18 -70 L -30 -75 Z" />
-    </g>
-    <ellipse cx={811} cy={702} rx={40} ry={5} fill="#0c1112" opacity={0.5} />
-  </svg>
-);
-
-// ------------------------------------------------------------------ 2. an hourglass on a table
-export const Hourglass: S = ({ T, id }) => {
-  const cx = 628;
-  const bulb = (top: boolean) => {
-    const y0 = top ? 140 : 400, y1 = top ? 400 : 660, s = top ? 1 : -1;
-    const yA = top ? y0 : y1, yB = top ? y1 : y0;
-    return `M ${cx - 150} ${yA} C ${cx - 160} ${yA + s * 120}, ${cx - 30} ${yB - s * 60}, ${cx - 8} ${yB} L ${cx + 8} ${yB} C ${cx + 30} ${yB - s * 60}, ${cx + 160} ${yA + s * 120}, ${cx + 150} ${yA} Z`;
-  };
-  const sandTop = 0.55 - 0.02 * ((T * 0.05) % 1);
+// ------------------------------------------------------------------ 1. a body in the neutrino rain
+const STREAKS = Array.from({ length: 150 }, (_, i) => ({ y0: rnd(i, 1) * 1500 - 300, sp: 0.5 + rnd(i, 2) * 0.9, ph: rnd(i, 3), w: 0.6 + rnd(i, 4) * 1.6, len: 120 + rnd(i, 5) * 260 }));
+export const Body: S = ({ T, id }) => {
+  const body = 'M 960 260 m -46 0 a 46 52 0 1 0 92 0 a 46 52 0 1 0 -92 0 M 896 336 Q 960 318 1024 336 L 1060 520 L 1040 600 L 1028 540 L 1022 760 L 1010 900 L 978 900 L 966 660 L 954 660 L 942 900 L 910 900 L 898 760 L 892 540 L 880 600 L 860 520 Z';
+  const breathe = 1 + 0.005 * Math.sin(T * 1.8);
   return (
     <svg width={W} height={H} viewBox={`0 0 ${W} ${H}`}>
       <defs>
-        <linearGradient id={`${id}-bg`} x1="0" y1="0" x2="0" y2="1"><stop offset="0" stopColor="#1a2a2e" /><stop offset="0.6" stopColor="#0f1a1c" /><stop offset="1" stopColor="#0a0f10" /></linearGradient>
-        <linearGradient id={`${id}-wood`} x1="0" y1="0" x2="0" y2="1"><stop offset="0" stopColor="#3a2414" /><stop offset="1" stopColor="#1a0f08" /></linearGradient>
-        <radialGradient id={`${id}-win`} cx="0.5" cy="0.5" r="0.5"><stop offset="0" stopColor="#d8e6e2" stopOpacity="0.75" /><stop offset="0.6" stopColor="#9fb8b8" stopOpacity="0.25" /><stop offset="1" stopColor="#9fb8b8" stopOpacity="0" /></radialGradient>
-        <linearGradient id={`${id}-glass`} x1="0" y1="0" x2="1" y2="0"><stop offset="0" stopColor="#cfe6ea" stopOpacity="0.35" /><stop offset="0.2" stopColor="#cfe6ea" stopOpacity="0.06" /><stop offset="0.8" stopColor="#cfe6ea" stopOpacity="0.04" /><stop offset="1" stopColor="#cfe6ea" stopOpacity="0.25" /></linearGradient>
-        <linearGradient id={`${id}-sand`} x1="0" y1="0" x2="0" y2="1"><stop offset="0" stopColor="#f2d39a" /><stop offset="1" stopColor="#b98a4a" /></linearGradient>
-        <linearGradient id={`${id}-brass`} x1="0" y1="0" x2="1" y2="0"><stop offset="0" stopColor="#5a4320" /><stop offset="0.35" stopColor="#d9b26a" /><stop offset="0.6" stopColor="#8a6a32" /><stop offset="1" stopColor="#3a2a12" /></linearGradient>
-        <clipPath id={`${id}-top`}><path d={bulb(true)} /></clipPath>
-        <clipPath id={`${id}-bot`}><path d={bulb(false)} /></clipPath>
+        <radialGradient id={`${id}-bg`} cx="0.5" cy="0.45" r="0.75"><stop offset="0" stopColor="#0f2240" /><stop offset="0.55" stopColor="#071226" /><stop offset="1" stopColor="#020610" /></radialGradient>
+        <linearGradient id={`${id}-rim`} x1="0" y1="0" x2="1" y2="0"><stop offset="0" stopColor="#8fdcff" stopOpacity="0.55" /><stop offset="0.2" stopColor="#0a1426" stopOpacity="1" /><stop offset="0.8" stopColor="#0a1426" stopOpacity="1" /><stop offset="1" stopColor="#8fdcff" stopOpacity="0.4" /></linearGradient>
+        <clipPath id={`${id}-clip`}><path d={body} /></clipPath>
       </defs>
       <rect width={W} height={H} fill={`url(#${id}-bg)`} />
-      {/* window bokeh behind */}
-      <rect x={280} y={-60} width={760} height={420} rx={40} fill={`url(#${id}-win)`} />
-      <rect x={1150} y={-40} width={600} height={380} rx={40} fill={`url(#${id}-win)`} opacity={0.8} />
-      {/* table */}
-      <path d={`M 0 600 L ${W} 600 L ${W} ${H} L 0 ${H} Z`} fill={`url(#${id}-wood)`} />
-      {Array.from({ length: 18 }, (_, i) => <path key={i} d={`M 0 ${620 + i * 26 + i * i * 0.6} C 600 ${612 + i * 26 + i * i * 0.6}, 1300 ${628 + i * 26 + i * i * 0.6}, ${W} ${618 + i * 26 + i * i * 0.6}`} stroke="#5a3a20" strokeOpacity={0.25} strokeWidth={2} fill="none" />)}
-      <ellipse cx={cx + 40} cy={700} rx={420} ry={60} fill="#e9c27a" opacity={0.12} />
-      {/* frame + glass */}
-      <rect x={cx - 200} y={100} width={16} height={580} fill={`url(#${id}-brass)`} />
-      <rect x={cx + 184} y={100} width={16} height={580} fill={`url(#${id}-brass)`} />
-      <g clipPath={`url(#${id}-top)`}>
-        <path d={`M ${cx - 160} ${140 + 260 * (1 - sandTop)} L ${cx + 160} ${140 + 260 * (1 - sandTop)} L ${cx} 400 Z`} fill={`url(#${id}-sand)`} />
+      <Stars n={120} seed={7} T={T} />
+      <ellipse cx={960} cy={905} rx={260} ry={26} fill="#4fb4ff" opacity={0.12} />
+      <g transform={`translate(960 900) scale(1 ${breathe}) translate(-960 -900)`}>
+        <path d={body} fill={`url(#${id}-rim)`} />
+        <path d={body} fill="none" stroke="#8fdcff" strokeOpacity={0.35} strokeWidth={2} />
       </g>
-      <g clipPath={`url(#${id}-bot)`}>
-        <path d={`M ${cx - 170} 660 L ${cx - 120} 640 Q ${cx} 520 ${cx + 120} 640 L ${cx + 170} 660 Z`} fill={`url(#${id}-sand)`} />
-      </g>
-      <path d={bulb(true)} fill={`url(#${id}-glass)`} stroke="rgba(220,240,240,0.5)" strokeWidth={2.5} />
-      <path d={bulb(false)} fill={`url(#${id}-glass)`} stroke="rgba(220,240,240,0.5)" strokeWidth={2.5} />
-      <path d={`M ${cx - 120} 170 C ${cx - 130} 240, ${cx - 90} 300, ${cx - 50} 340`} stroke="#ffffff" strokeOpacity={0.55} strokeWidth={5} fill="none" strokeLinecap="round" />
-      <path d={`M ${cx - 118} 630 C ${cx - 128} 560, ${cx - 90} 500, ${cx - 50} 460`} stroke="#ffffff" strokeOpacity={0.35} strokeWidth={4} fill="none" strokeLinecap="round" />
-      {/* caps */}
-      <ellipse cx={cx} cy={104} rx={235} ry={22} fill={`url(#${id}-brass)`} />
-      <rect x={cx - 235} y={80} width={470} height={24} fill={`url(#${id}-brass)`} />
-      <ellipse cx={cx} cy={80} rx={235} ry={22} fill="#e2bd76" />
-      <rect x={cx - 250} y={668} width={500} height={40} fill={`url(#${id}-brass)`} />
-      <ellipse cx={cx} cy={668} rx={250} ry={24} fill="#e2bd76" />
-      <ellipse cx={cx} cy={708} rx={250} ry={24} fill="#4a3618" />
-    </svg>
-  );
-};
-
-// ------------------------------------------------------------------ 3. a fork in the road, from above
-export const Fork: S = ({ T, id }) => {
-  const J = [922, 600];
-  const branch = (ex: number, ey: number, wNear: number, wFar: number) => {
-    const c1 = [J[0] + (ex - J[0]) * 0.25, J[1] - 120], c2 = [ex + (J[0] - ex) * 0.15, ey + 60];
-    // a ribbon: offset the centre line by ±w
-    return `M ${J[0] - wNear} ${J[1]} C ${c1[0] - wNear} ${c1[1]}, ${c2[0] - wFar} ${c2[1]}, ${ex - wFar} ${ey} L ${ex + wFar} ${ey} C ${c2[0] + wFar} ${c2[1]}, ${c1[0] + wNear} ${c1[1]}, ${J[0] + wNear} ${J[1]} Z`;
-  };
-  return (
-    <svg width={W} height={H} viewBox={`0 0 ${W} ${H}`}>
-      <defs>
-        <linearGradient id={`${id}-land`} x1="0" y1="0" x2="0" y2="1"><stop offset="0" stopColor="#7d8478" /><stop offset="0.3" stopColor="#4a4a36" /><stop offset="1" stopColor="#1e1c14" /></linearGradient>
-        <radialGradient id={`${id}-sun`} cx="0.05" cy="0.2" r="0.7"><stop offset="0" stopColor="#ffe9b8" stopOpacity="0.9" /><stop offset="0.3" stopColor="#e9b46a" stopOpacity="0.45" /><stop offset="1" stopColor="#e9b46a" stopOpacity="0" /></radialGradient>
-        <linearGradient id={`${id}-haze`} x1="0" y1="0" x2="0" y2="1"><stop offset="0" stopColor="#b9c8c4" stopOpacity="0.95" /><stop offset="0.35" stopColor="#b9c8c4" stopOpacity="0.35" /><stop offset="0.6" stopColor="#b9c8c4" stopOpacity="0" /></linearGradient>
-        <linearGradient id={`${id}-asph`} x1="0" y1="0" x2="0" y2="1"><stop offset="0" stopColor="#6c706c" /><stop offset="1" stopColor="#2a2c2c" /></linearGradient>
-      </defs>
-      <rect width={W} height={H} fill={`url(#${id}-land)`} />
-      {/* fields texture */}
-      {Array.from({ length: 46 }, (_, i) => { const y = 300 + Math.pow(i / 46, 1.4) * 780; return <path key={i} d={`M 0 ${y} C 500 ${y - 20 - rnd(i, 2) * 30}, 1400 ${y + 20 + rnd(i, 3) * 30}, ${W} ${y - 10}`} stroke={i % 3 ? '#2e2a1a' : '#6a5e3a'} strokeOpacity={0.35} strokeWidth={6 + i * 0.5} fill="none" />; })}
-      {/* verges catching the light */}
-      <path d={`M 860 ${H} C 880 820, 900 700, 905 600`} stroke="#c9a253" strokeOpacity={0.55} strokeWidth={26} fill="none" />
-      {/* roads */}
-      <path d={`M 860 ${H} L 990 ${H} L ${J[0] + 32} ${J[1]} L ${J[0] - 32} ${J[1]} Z`} fill={`url(#${id}-asph)`} />
-      <path d={branch(430, 320, 32, 12)} fill={`url(#${id}-asph)`} />
-      <path d={branch(1480, 320, 32, 12)} fill={`url(#${id}-asph)`} />
-      <path d={branch(1480, 320, 40, 16)} fill="none" stroke="#e8b866" strokeOpacity={0.35} strokeWidth={4} />
-      <path d={branch(430, 320, 40, 16)} fill="none" stroke="#9fb8c0" strokeOpacity={0.25} strokeWidth={3} />
-      {Array.from({ length: 8 }, (_, i) => <rect key={i} x={922 + (1 - i / 8) * 3 - 3} y={1040 - i * 55} width={6} height={26 - i * 2} fill="#e8c35a" opacity={0.85} />)}
-      <rect width={W} height={H} fill={`url(#${id}-haze)`} />
-      <rect width={W} height={H} fill={`url(#${id}-sun)`} style={{ mixBlendMode: 'screen' }} />
-      <rect x={0} y={280 + Math.sin(T * 0.25) * 10} width={W} height={120} fill="#c9d4d0" opacity={0.18} />
-    </svg>
-  );
-};
-
-// ------------------------------------------------------------------ 4. an unsent letter on a desk
-export const Letter: S = ({ T, id }) => (
-  <svg width={W} height={H} viewBox={`0 0 ${W} ${H}`}>
-    <defs>
-      <linearGradient id={`${id}-desk`} x1="0" y1="0" x2="1" y2="1"><stop offset="0" stopColor="#2c1c12" /><stop offset="0.6" stopColor="#1c130c" /><stop offset="1" stopColor="#0e0a08" /></linearGradient>
-      <linearGradient id={`${id}-beam`} x1="0" y1="0" x2="1" y2="0"><stop offset="0" stopColor="#ffe2a8" stopOpacity="0" /><stop offset="0.3" stopColor="#ffe2a8" stopOpacity="0.32" /><stop offset="0.7" stopColor="#ffd28a" stopOpacity="0.28" /><stop offset="1" stopColor="#ffd28a" stopOpacity="0" /></linearGradient>
-      <linearGradient id={`${id}-env`} x1="0" y1="0" x2="1" y2="1"><stop offset="0" stopColor="#f3ecdc" /><stop offset="1" stopColor="#b9b2a2" /></linearGradient>
-    </defs>
-    <rect width={W} height={H} fill={`url(#${id}-desk)`} />
-    {Array.from({ length: 26 }, (_, i) => <path key={i} d={`M -100 ${i * 50 - 200} L ${W + 100} ${i * 50 + 500}`} stroke="#4a2e18" strokeOpacity={0.22} strokeWidth={2 + rnd(i, 1) * 3} />)}
-    <rect width={W} height={H} fill="#1c3a44" opacity={0.25} />
-    {/* the beam */}
-    <path d="M -100 120 L 380 -40 L 1900 900 L 1500 1180 Z" fill={`url(#${id}-beam)`} style={{ mixBlendMode: 'screen' }} />
-    {/* the pen */}
-    <g transform="rotate(-18 380 380)">
-      <rect x={20} y={360} width={620} height={46} rx={23} fill="#1d2a34" />
-      <rect x={20} y={364} width={620} height={10} rx={5} fill="#5b7182" opacity={0.6} />
-      <rect x={300} y={358} width={26} height={50} fill="#c9a253" />
-      <path d="M 640 362 L 720 383 L 640 404 Z" fill="#c9a253" />
-    </g>
-    {/* the envelope, closed */}
-    <g transform="translate(330 330) rotate(-6)">
-      <rect x={0} y={0} width={1360} height={600} rx={8} fill="#0a0806" opacity={0.45} transform="translate(26 30)" />
-      <rect x={0} y={0} width={1360} height={600} rx={8} fill={`url(#${id}-env)`} />
-      <path d="M 0 0 L 680 330 L 1360 0" fill="none" stroke="#8f887a" strokeWidth={4} />
-      <path d="M 0 600 L 560 260 M 1360 600 L 800 260" fill="none" stroke="#a49d8e" strokeWidth={2.5} strokeOpacity={0.6} />
-    </g>
-    <rect width={W} height={H} fill="#0c1a20" opacity={0.18} />
-    {Array.from({ length: 40 }, (_, i) => {
-      const f = (rnd(i, 3) + T * 0.02 * (0.5 + rnd(i, 4))) % 1;
-      return <circle key={i} cx={lerp(100, 1700, f)} cy={lerp(60, 1000, f) + Math.sin(T + i) * 20 - 200 + rnd(i, 5) * 300} r={1 + rnd(i, 6) * 2} fill="#ffe6b8" opacity={0.35} />;
-    })}
-  </svg>
-);
-
-// ------------------------------------------------------------------ 5. a single road to the horizon
-export const Road: S = ({ T, id }) => (
-  <svg width={W} height={H} viewBox={`0 0 ${W} ${H}`}>
-    <defs>
-      <linearGradient id={`${id}-sky`} x1="0" y1="0" x2="0" y2="1"><stop offset="0" stopColor="#3f6266" /><stop offset="0.7" stopColor="#8aa09a" /><stop offset="1" stopColor="#b8b08e" /></linearGradient>
-      <linearGradient id={`${id}-field`} x1="0" y1="0" x2="0" y2="1"><stop offset="0" stopColor="#6b5a32" /><stop offset="1" stopColor="#2a2010" /></linearGradient>
-      <linearGradient id={`${id}-road`} x1="0" y1="0" x2="0" y2="1"><stop offset="0" stopColor="#7b7d78" /><stop offset="1" stopColor="#1f2122" /></linearGradient>
-      <radialGradient id={`${id}-sun`} cx="0" cy="0.45" r="0.6"><stop offset="0" stopColor="#ffe3a6" stopOpacity="0.8" /><stop offset="1" stopColor="#ffe3a6" stopOpacity="0" /></radialGradient>
-    </defs>
-    <rect width={W} height={560} fill={`url(#${id}-sky)`} />
-    <rect width={W} height={H} fill={`url(#${id}-sun)`} />
-    {/* forest on the right horizon */}
-    {Array.from({ length: 26 }, (_, i) => <Tree key={i} x={1000 + i * 40} y={560} h={120 + rnd(i, 3) * 170 + i * 6} seed={i + 200} fill="#16211f" conifer />)}
-    {Array.from({ length: 16 }, (_, i) => <Tree key={`l${i}`} x={i * 60} y={560} h={60 + rnd(i, 4) * 50} seed={i + 300} fill="rgba(40,52,48,0.7)" />)}
-    <path d={`M 0 556 L ${W} 556 L ${W} ${H} L 0 ${H} Z`} fill={`url(#${id}-field)`} />
-    {Array.from({ length: 40 }, (_, i) => {
-      const y = 570 + Math.pow(i / 40, 1.8) * 510;
-      return <line key={i} x1={0} y1={y} x2={W} y2={y} stroke={i % 2 ? '#8a7440' : '#3a2e16'} strokeOpacity={0.35} strokeWidth={1 + i * 0.12} />;
-    })}
-    <path d={`M 930 556 L 990 556 L 1520 ${H} L 400 ${H} Z`} fill={`url(#${id}-road)`} />
-    <path d={`M 930 556 L 400 ${H}`} stroke="#d9b45c" strokeOpacity={0.6} strokeWidth={10} />
-    <path d={`M 990 556 L 1520 ${H}`} stroke="#9a8a5a" strokeOpacity={0.4} strokeWidth={8} />
-    <path d={`M 955 600 L 940 ${H}`} stroke="#f0d79a" strokeOpacity={0.18} strokeWidth={80} />
-    <rect x={0} y={480 + Math.sin(T * 0.3) * 6} width={W} height={120} fill="#c9d4c8" opacity={0.25} />
-  </svg>
-);
-
-// ------------------------------------------------------------------ 6. a corridor, one door open at the end
-export const Corridor: S = ({ T, id }) => {
-  const V = [900, 480]; // vanishing point
-  const far = { x0: 760, x1: 1040, y0: 330, y1: 650 };
-  const wallL = `M 0 0 L ${far.x0} ${far.y0} L ${far.x0} ${far.y1} L 0 ${H} Z`, wallR = `M ${W} 0 L ${far.x1} ${far.y0} L ${far.x1} ${far.y1} L ${W} ${H} Z`;
-  const door = (side: number, t: number, key: string) => {
-    // a door on a side wall between depth t (0 near … 1 far)
-    const xA = side < 0 ? lerp(0, far.x0, t) : lerp(W, far.x1, t), xB = side < 0 ? lerp(0, far.x0, t + 0.12) : lerp(W, far.x1, t + 0.12);
-    const top = (x: number) => lerp(0, far.y0, side < 0 ? x / far.x0 : (W - x) / (W - far.x1)) + 120 * (1 - (side < 0 ? x / far.x0 : (W - x) / (W - far.x1)));
-    const bot = (x: number) => lerp(H, far.y1, side < 0 ? x / far.x0 : (W - x) / (W - far.x1));
-    return <path key={key} d={`M ${xA} ${top(xA)} L ${xB} ${top(xB)} L ${xB} ${bot(xB)} L ${xA} ${bot(xA)} Z`} fill="#0d1416" stroke="#3a4a4c" strokeWidth={3} />;
-  };
-  const D = { x: 600, y: 380, w: 130, h: 285 }; // the open door (left wall, far end), centre ≈ (662, 540)
-  const flick = 0.92 + 0.08 * Math.sin(T * 7) * Math.sin(T * 2.3);
-  return (
-    <svg width={W} height={H} viewBox={`0 0 ${W} ${H}`}>
-      <defs>
-        <linearGradient id={`${id}-wl`} x1="0" y1="0" x2="1" y2="0"><stop offset="0" stopColor="#0f1d22" /><stop offset="1" stopColor="#3c5458" /></linearGradient>
-        <linearGradient id={`${id}-wr`} x1="1" y1="0" x2="0" y2="0"><stop offset="0" stopColor="#0c171a" /><stop offset="1" stopColor="#33494c" /></linearGradient>
-        <linearGradient id={`${id}-fl`} x1="0" y1="1" x2="0" y2="0"><stop offset="0" stopColor="#0a1012" /><stop offset="1" stopColor="#3a4644" /></linearGradient>
-        <linearGradient id={`${id}-light`} x1="0" y1="0" x2="1" y2="1"><stop offset="0" stopColor="#ffe2a2" stopOpacity="0.85" /><stop offset="1" stopColor="#ffb860" stopOpacity="0" /></linearGradient>
-        <radialGradient id={`${id}-glow`} cx="0.5" cy="0.5" r="0.5"><stop offset="0" stopColor="#ffd590" stopOpacity="0.6" /><stop offset="1" stopColor="#ffd590" stopOpacity="0" /></radialGradient>
-      </defs>
-      <rect width={W} height={H} fill="#0b1214" />
-      <path d={`M 0 0 L ${W} 0 L ${far.x1} ${far.y0} L ${far.x0} ${far.y0} Z`} fill="#121c1f" />
-      <path d={`M 0 ${H} L ${W} ${H} L ${far.x1} ${far.y1} L ${far.x0} ${far.y1} Z`} fill={`url(#${id}-fl)`} />
-      <path d={wallL} fill={`url(#${id}-wl)`} />
-      <path d={wallR} fill={`url(#${id}-wr)`} />
-      <rect x={far.x0} y={far.y0} width={far.x1 - far.x0} height={far.y1 - far.y0} fill="#4a5e60" />
-      {[0.1, 0.42].map((t, i) => door(-1, t, `l${i}`))}
-      {[0.08, 0.36, 0.62].map((t, i) => door(1, t, `r${i}`))}
-      {/* the open door: warm room behind, the leaf swung in */}
-      <rect x={D.x} y={D.y} width={D.w} height={D.h} fill="#ffe4b0" opacity={flick} />
-      <rect x={D.x} y={D.y} width={D.w} height={D.h} fill={`url(#${id}-glow)`} />
-      <path d={`M ${D.x + D.w} ${D.y} L ${D.x + D.w + 70} ${D.y - 18} L ${D.x + D.w + 70} ${D.y + D.h + 22} L ${D.x + D.w} ${D.y + D.h} Z`} fill="#b08a58" />
-      <path d={`M ${D.x - 6} ${D.y - 6} h ${D.w + 12} v ${D.h + 6} h -6 v ${-D.h} h ${-D.w} v ${D.h} h -6 Z`} fill="#2a2a24" />
-      {/* light spilling on the floor */}
-      <path d={`M ${D.x} ${D.y + D.h} L ${D.x + D.w} ${D.y + D.h} L 1180 ${H} L 380 ${H} Z`} fill={`url(#${id}-light)`} opacity={0.55 * flick} style={{ mixBlendMode: 'screen' }} />
-      <ellipse cx={D.x + D.w / 2} cy={D.y + D.h / 2} rx={260} ry={300} fill={`url(#${id}-glow)`} opacity={0.6 * flick} style={{ mixBlendMode: 'screen' }} />
-      <rect x={850} y={22} width={120} height={20} rx={4} fill="#cfd8d6" opacity={0.25} />
-      <circle cx={V[0]} cy={V[1]} r={2} fill="#000" opacity={0} />
-    </svg>
-  );
-};
-
-// ------------------------------------------------------------------ 7. someone sitting by a window at dusk
-export const Window: S = ({ T, id }) => {
-  const breathe = 1 + 0.006 * Math.sin(T * 1.6);
-  return (
-    <svg width={W} height={H} viewBox={`0 0 ${W} ${H}`}>
-      <defs>
-        <linearGradient id={`${id}-sky`} x1="0" y1="0" x2="0" y2="1"><stop offset="0" stopColor="#7fa6ac" /><stop offset="0.55" stopColor="#c9c8b2" /><stop offset="0.85" stopColor="#f2c49a" /><stop offset="1" stopColor="#e8a878" /></linearGradient>
-        <linearGradient id={`${id}-room`} x1="0" y1="0" x2="0" y2="1"><stop offset="0" stopColor="#1a2224" /><stop offset="1" stopColor="#0e1214" /></linearGradient>
-        <linearGradient id={`${id}-floor`} x1="0" y1="0" x2="0" y2="1"><stop offset="0" stopColor="#4a3420" /><stop offset="1" stopColor="#1e140c" /></linearGradient>
-        <linearGradient id={`${id}-patch`} x1="0" y1="0" x2="0" y2="1"><stop offset="0" stopColor="#ffd9a8" stopOpacity="0.55" /><stop offset="1" stopColor="#ffd9a8" stopOpacity="0" /></linearGradient>
-      </defs>
-      <rect width={W} height={H} fill={`url(#${id}-room)`} />
-      {/* window */}
-      <rect x={340} y={0} width={1320} height={650} fill={`url(#${id}-sky)`} />
-      {Array.from({ length: 30 }, (_, i) => {
-        const x = 340 + i * 44, h = 30 + rnd(i, 7) * 110;
-        return <rect key={i} x={x} y={650 - h} width={40 + rnd(i, 8) * 30} height={h} fill="#5c6a70" opacity={0.6} />;
+      {/* the rain: straight lines from upper left to lower right, passing through everything */}
+      {STREAKS.map((s, i) => {
+        const f = ((T * s.sp + s.ph) % 1);
+        const x = lerp(-400, W + 400, f), y = s.y0 + lerp(-200, 500, f);
+        return <line key={i} x1={x} y1={y} x2={x - s.len} y2={y - s.len * 0.32} stroke="#bfe8ff" strokeWidth={s.w} strokeOpacity={0.22} strokeLinecap="round" />;
       })}
-      {Array.from({ length: 14 }, (_, i) => <circle key={`l${i}`} cx={360 + rnd(i, 9) * 1280} cy={560 + rnd(i, 10) * 80} r={2} fill="#ffe2a0" opacity={0.6 + 0.4 * Math.sin(T * 2 + i)} />)}
-      <path d="M 340 0 h 1320 v 650 h -1320 Z M 360 20 v 610 h 1280 v -610 Z" fill="#ece0cc" fillRule="evenodd" opacity={0.85} />
-      {[670, 990, 1310].map((x) => <rect key={x} x={x - 9} y={0} width={18} height={650} fill="#ece0cc" opacity={0.85} />)}
-      <rect x={300} y={640} width={1400} height={22} fill="#d8ccb8" opacity={0.7} />
-      {/* floor with window light */}
-      <path d={`M 0 790 L ${W} 790 L ${W} ${H} L 0 ${H} Z`} fill={`url(#${id}-floor)`} />
-      <path d={`M 0 662 L ${W} 662 L ${W} 790 L 0 790 Z`} fill="#2a2420" />
-      <path d="M 420 790 L 1600 790 L 1820 1080 L 260 1080 Z" fill={`url(#${id}-patch)`} style={{ mixBlendMode: 'screen' }} />
-      {[700, 1020, 1340].map((x) => <path key={x} d={`M ${x - 8} 790 L ${x + 8} 790 L ${x + 60} 1080 L ${x + 20} 1080 Z`} fill="#1e140c" opacity={0.7} />)}
-      {/* the chair and the sitter (still) */}
-      <g fill="#14100e">
-        <path d="M 500 560 Q 500 500 550 498 L 880 498 Q 930 500 930 560 L 940 860 L 490 860 Z" />
-        <rect x={500} y={860} width={14} height={110} transform="rotate(8 507 860)" />
-        <rect x={910} y={860} width={14} height={110} transform="rotate(-8 917 860)" />
-        <g transform={`translate(700 470) scale(1 ${breathe}) translate(-700 -470)`}>
-          <ellipse cx={712} cy={372} rx={40} ry={48} />
-          <path d="M 690 416 L 735 416 L 740 438 Z" />
-          <path d="M 618 470 Q 640 430 712 428 Q 790 432 808 476 L 826 640 L 600 640 Z" />
-          <path d="M 686 330 Q 712 318 744 334 Q 752 350 748 362 Q 724 344 690 352 Z" fill="#2a2420" />
-        </g>
-        <path d="M 820 700 L 1100 760 L 1150 830 L 1090 840 L 1050 790 L 820 780 Z" />
-        <path d="M 1050 790 L 1080 960 L 1160 975 L 1150 940 L 1110 930 L 1090 800 Z" />
+      <g clipPath={`url(#${id}-clip)`}>
+        {STREAKS.map((s, i) => {
+          const f = ((T * s.sp + s.ph) % 1);
+          const x = lerp(-400, W + 400, f), y = s.y0 + lerp(-200, 500, f);
+          return <line key={i} x1={x} y1={y} x2={x - s.len} y2={y - s.len * 0.32} stroke="#e8f8ff" strokeWidth={s.w * 1.4} strokeOpacity={0.6} strokeLinecap="round" />;
+        })}
       </g>
-      <rect width={W} height={H} fill="#ffb070" opacity={0.05} />
     </svg>
   );
 };
 
-// ------------------------------------------------------------------ 8. an empty stage, one spotlight
-export const Stage: S = ({ T, id }) => (
+// ------------------------------------------------------------------ 2. the prize: a gold medallion in the dark
+export const Prize: S = ({ T, id }) => (
   <svg width={W} height={H} viewBox={`0 0 ${W} ${H}`}>
     <defs>
-      <linearGradient id={`${id}-cur`} x1="0" y1="0" x2="1" y2="0">
-        {Array.from({ length: 24 }, (_, i) => <stop key={i} offset={i / 23} stopColor={i % 2 ? '#1c1a18' : '#2c2622'} />)}
-      </linearGradient>
-      <linearGradient id={`${id}-floor`} x1="0" y1="0" x2="0" y2="1"><stop offset="0" stopColor="#3a2614" /><stop offset="1" stopColor="#5a3c20" /></linearGradient>
-      <linearGradient id={`${id}-cone`} x1="0" y1="0" x2="0" y2="1"><stop offset="0" stopColor="#dff0f4" stopOpacity="0.55" /><stop offset="1" stopColor="#dff0f4" stopOpacity="0.18" /></linearGradient>
-      <radialGradient id={`${id}-pool`} cx="0.5" cy="0.5" r="0.5"><stop offset="0" stopColor="#f2fbff" stopOpacity="0.95" /><stop offset="0.7" stopColor="#d8ecf2" stopOpacity="0.6" /><stop offset="1" stopColor="#d8ecf2" stopOpacity="0" /></radialGradient>
+      <radialGradient id={`${id}-bg`} cx="0.32" cy="0.5" r="0.7"><stop offset="0" stopColor="#1c1608" /><stop offset="0.5" stopColor="#0a0a0c" /><stop offset="1" stopColor="#030306" /></radialGradient>
+      <radialGradient id={`${id}-gold`} cx="0.38" cy="0.32" r="0.75"><stop offset="0" stopColor="#fff2c8" /><stop offset="0.35" stopColor="#f1c56d" /><stop offset="0.75" stopColor="#b8862e" /><stop offset="1" stopColor="#6e4a14" /></radialGradient>
+      <linearGradient id={`${id}-sheen`} x1="0" y1="0" x2="1" y2="0"><stop offset="0" stopColor="#fff" stopOpacity="0" /><stop offset="0.5" stopColor="#fff" stopOpacity="0.55" /><stop offset="1" stopColor="#fff" stopOpacity="0" /></linearGradient>
+      <clipPath id={`${id}-disc`}><circle cx={600} cy={540} r={300} /></clipPath>
     </defs>
-    <rect width={W} height={720} fill={`url(#${id}-cur)`} />
-    <rect width={W} height={720} fill="#000" opacity={0.35} />
-    <path d={`M 0 700 L ${W} 700 L ${W} 840 L 0 840 Z`} fill={`url(#${id}-floor)`} />
-    {Array.from({ length: 30 }, (_, i) => <line key={i} x1={i * 70 - 100} y1={700} x2={(i * 70 - 100 - 960) * 1.3 + 960} y2={840} stroke="#22160a" strokeOpacity={0.5} strokeWidth={2} />)}
-    <rect x={0} y={836} width={W} height={20} fill="#120c08" />
-    {/* cone + pool */}
-    <path d={`M 900 0 L 982 0 L 1230 740 L 652 740 Z`} fill={`url(#${id}-cone)`} style={{ mixBlendMode: 'screen' }} opacity={0.85 + 0.05 * Math.sin(T * 3)} />
-    <ellipse cx={941} cy={742} rx={300} ry={42} fill={`url(#${id}-pool)`} />
-    {Array.from({ length: 60 }, (_, i) => {
-      const y = ((rnd(i, 1) * 740 + T * 12 * (0.5 + rnd(i, 2))) % 740);
-      const span = lerp(40, 290, y / 740);
-      return <circle key={i} cx={941 + (rnd(i, 3) - 0.5) * 2 * span} cy={y} r={1 + rnd(i, 4) * 1.8} fill="#ffffff" opacity={0.35} />;
+    <rect width={W} height={H} fill={`url(#${id}-bg)`} />
+    <circle cx={600} cy={540} r={420} fill="#f1c56d" opacity={0.06} />
+    <circle cx={600} cy={540} r={300} fill={`url(#${id}-gold)`} />
+    <circle cx={600} cy={540} r={268} fill="none" stroke="#8a6020" strokeWidth={4} opacity={0.6} />
+    {/* laurel ring */}
+    {Array.from({ length: 28 }, (_, i) => {
+      const side = i < 14 ? -1 : 1, k = (i % 14) / 13, a = Math.PI / 2 + side * (0.35 + k * 2.3);
+      const x = 600 + Math.cos(a) * 205, y = 540 + Math.sin(a) * 205;
+      return <ellipse key={i} cx={x} cy={y} rx={24} ry={10} fill="#a77428" opacity={0.75} transform={`rotate(${(a * 180) / Math.PI + 90 + side * 25} ${x} ${y})`} />;
     })}
-    {/* seats */}
-    {[860, 920, 990].map((y, r) => Array.from({ length: 14 - r }, (_, i) => {
-      const w = 120 + r * 14, x = (i - (13 - r) / 2) * (w + 18) + 960;
-      return <rect key={`${r}-${i}`} x={x - w / 2} y={y} width={w} height={90} rx={26} fill={['#4a1214', '#56161a', '#621a1e'][r]} stroke="#2a080a" strokeWidth={3} />;
-    }))}
-    <rect x={0} y={850} width={W} height={230} fill="#000" opacity={0.25} />
+    <text x={600} y={530} textAnchor="middle" style={{ fontFamily: '"Cormorant Garamond", Georgia, serif', fontWeight: 700, fontSize: 96, fill: '#7a5418' }}>2026</text>
+    <text x={600} y={590} textAnchor="middle" style={{ fontFamily: '"JunoMono", monospace', fontWeight: 700, fontSize: 24, letterSpacing: '0.3em', fill: '#7a5418' }}>PHYSICS</text>
+    <g clipPath={`url(#${id}-disc)`}>
+      <rect x={lerp(0, 1000, ((T * 0.18) % 1))} y={200} width={160} height={700} fill={`url(#${id}-sheen)`} transform="rotate(20 600 540)" />
+    </g>
   </svg>
 );
 
-// ------------------------------------------------------------------ 9. a night platform, a train leaving
-export const Train: S = ({ T, id }) => (
+// ------------------------------------------------------------------ 3. the earth in cross-section, a neutrino straight through
+export const EarthCut: S = ({ T, id }) => {
+  const f = ((T - 15.4) * 0.22) % 1;
+  return (
+    <svg width={W} height={H} viewBox={`0 0 ${W} ${H}`}>
+      <defs>
+        <radialGradient id={`${id}-bg`} cx="0.5" cy="0.5" r="0.7"><stop offset="0" stopColor="#0a1830" /><stop offset="1" stopColor="#02050c" /></radialGradient>
+        <radialGradient id={`${id}-core`} cx="0.5" cy="0.5" r="0.5"><stop offset="0" stopColor="#fff0b0" /><stop offset="0.5" stopColor="#ffb040" /><stop offset="1" stopColor="#c05010" /></radialGradient>
+        <radialGradient id={`${id}-mantle`} cx="0.5" cy="0.5" r="0.5"><stop offset="0.45" stopColor="#c04818" /><stop offset="0.75" stopColor="#7a2a10" /><stop offset="1" stopColor="#3a1408" /></radialGradient>
+        <clipPath id={`${id}-cut`}><path d="M 960 540 L 960 160 A 380 380 0 0 1 1340 540 Z" /></clipPath>
+        <clipPath id={`${id}-globe`}><circle cx={960} cy={540} r={380} /></clipPath>
+      </defs>
+      <rect width={W} height={H} fill={`url(#${id}-bg)`} />
+      <Stars n={160} seed={11} T={T} />
+      {/* the globe */}
+      <circle cx={960} cy={540} r={380} fill="#14406a" />
+      <g clipPath={`url(#${id}-globe)`}>
+        {Array.from({ length: 9 }, (_, i) => <ellipse key={i} cx={640 + rnd(i, 1) * 560} cy={240 + rnd(i, 2) * 560} rx={50 + rnd(i, 3) * 110} ry={30 + rnd(i, 4) * 70} fill="#2e6a3c" opacity={0.8} />)}
+        <circle cx={1060} cy={420} r={420} fill="none" stroke="#000" strokeOpacity={0.35} strokeWidth={260} transform="translate(-180 120)" />
+      </g>
+      <circle cx={960} cy={540} r={380} fill="none" stroke="#8fdcff" strokeOpacity={0.5} strokeWidth={5} />
+      <circle cx={960} cy={540} r={398} fill="none" stroke="#4fb4ff" strokeOpacity={0.15} strokeWidth={26} />
+      {/* the cut-away quarter */}
+      <g clipPath={`url(#${id}-cut)`}>
+        <circle cx={960} cy={540} r={380} fill="#5a2a14" />
+        <circle cx={960} cy={540} r={356} fill={`url(#${id}-mantle)`} />
+        <circle cx={960} cy={540} r={206} fill="#d8701c" />
+        <circle cx={960} cy={540} r={116} fill={`url(#${id}-core)`} />
+      </g>
+      {/* the neutrino: a straight line through everything, never deflected */}
+      <line x1={lerp(200, 1720, f) - 300} y1={lerp(140, 940, f) - 158} x2={lerp(200, 1720, f)} y2={lerp(140, 940, f)} stroke="#e8f8ff" strokeWidth={5} strokeLinecap="round" style={{ filter: 'drop-shadow(0 0 10px #8fdcff)' }} />
+      <circle cx={lerp(200, 1720, f)} cy={lerp(140, 940, f)} r={8} fill="#ffffff" style={{ filter: 'drop-shadow(0 0 14px #8fdcff)' }} />
+      <line x1={200} y1={140} x2={1720} y2={940} stroke="#8fdcff" strokeOpacity={0.15} strokeWidth={2} strokeDasharray="6 10" />
+    </svg>
+  );
+};
+
+// ------------------------------------------------------------------ 4. four lives, one hit
+export const Lives: S = ({ T, id }) => (
+  <svg width={W} height={H} viewBox={`0 0 ${W} ${H}`}>
+    <defs><radialGradient id={`${id}-bg`} cx="0.5" cy="0.5" r="0.8"><stop offset="0" stopColor="#0c1a30" /><stop offset="1" stopColor="#02050c" /></radialGradient></defs>
+    <rect width={W} height={H} fill={`url(#${id}-bg)`} />
+    <Stars n={90} seed={21} T={T} />
+    {Array.from({ length: 160 }, (_, i) => {
+      const f = ((T * (0.7 + rnd(i, 2)) + rnd(i, 3)) % 1), x = rnd(i, 1) * W;
+      return <line key={i} x1={x} y1={lerp(-100, H + 100, f)} x2={x} y2={lerp(-100, H + 100, f) - 90} stroke="#bfe8ff" strokeOpacity={0.12} strokeWidth={1.2} />;
+    })}
+  </svg>
+);
+
+// ------------------------------------------------------------------ 5. the South Pole: surface at polar night, then down into the ice
+export const Pole: S = ({ T, id }) => {
+  const dive = expoInOut(prog(T, 39.4, 41.2));
+  const dy = -lerp(0, 1150, dive);
+  return (
+    <svg width={W} height={H} viewBox={`0 0 ${W} ${H}`}>
+      <defs>
+        <linearGradient id={`${id}-sky`} x1="0" y1="0" x2="0" y2="1"><stop offset="0" stopColor="#020814" /><stop offset="0.7" stopColor="#0c2240" /><stop offset="1" stopColor="#2a4c6e" /></linearGradient>
+        <linearGradient id={`${id}-snow`} x1="0" y1="0" x2="0" y2="1"><stop offset="0" stopColor="#9fc0d8" /><stop offset="1" stopColor="#3a5a78" /></linearGradient>
+        <linearGradient id={`${id}-ice`} x1="0" y1="0" x2="0" y2="1"><stop offset="0" stopColor="#3a6a90" /><stop offset="0.3" stopColor="#123456" /><stop offset="1" stopColor="#040e1e" /></linearGradient>
+        <linearGradient id={`${id}-aur`} x1="0" y1="0" x2="0" y2="1"><stop offset="0" stopColor="#40ffb0" stopOpacity="0" /><stop offset="0.6" stopColor="#40ffb0" stopOpacity="0.35" /><stop offset="1" stopColor="#40ffb0" stopOpacity="0" /></linearGradient>
+      </defs>
+      <g transform={`translate(0 ${dy})`}>
+        <rect width={W} height={700} fill={`url(#${id}-sky)`} />
+        <Stars n={200} seed={31} h={600} T={T} />
+        {/* aurora curtains */}
+        {Array.from({ length: 5 }, (_, k) => (
+          <path key={k} d={`M ${-100 + k * 60} ${200 + k * 20} C 500 ${120 + 60 * Math.sin(T * 0.4 + k)}, 1100 ${300 + 50 * Math.sin(T * 0.3 + k * 2)}, ${W + 100} ${160 + k * 30} L ${W + 100} ${420 + k * 30} C 1100 ${520 + 50 * Math.sin(T * 0.3 + k)}, 500 ${380 + 60 * Math.sin(T * 0.5 + k)}, ${-100 + k * 60} ${460 + k * 20} Z`} fill={`url(#${id}-aur)`} opacity={0.5 - k * 0.07} />
+        ))}
+        <rect y={640} width={W} height={60} fill={`url(#${id}-snow)`} />
+        {/* the lab on stilts, lit windows */}
+        <g transform="translate(1180 560)">
+          <rect x={0} y={0} width={360} height={90} fill="#1c2a3a" />
+          <rect x={60} y={-60} width={110} height={60} fill="#1c2a3a" />
+          <rect x={200} y={-40} width={90} height={40} fill="#1c2a3a" />
+          {Array.from({ length: 9 }, (_, i) => <rect key={i} x={20 + i * 37} y={30} width={22} height={14} fill="#ffd890" opacity={0.75 + 0.25 * Math.sin(T * 2 + i)} />)}
+          {[30, 160, 300].map((x) => <rect key={x} x={x} y={90} width={10} height={40} fill="#14202c" />)}
+          <circle cx={115} cy={-74} r={4} fill="#ff5040" opacity={0.5 + 0.5 * Math.sin(T * 4)} />
+        </g>
+        <ellipse cx={1360} cy={690} rx={300} ry={14} fill="#ffd890" opacity={0.12} />
+        {/* below: the ice, the strings */}
+        <rect y={700} width={W} height={1700} fill={`url(#${id}-ice)`} />
+        {Array.from({ length: 30 }, (_, i) => <line key={i} x1={0} y1={720 + i * 46} x2={W} y2={724 + i * 46} stroke="#8fdcff" strokeOpacity={0.04} strokeWidth={2} />)}
+        {Array.from({ length: 23 }, (_, i) => {
+          const x = 140 + i * 75, depth = easeOut(prog(T, 41.4 + i * 0.04, 43.0 + i * 0.04));
+          return (
+            <g key={i}>
+              <line x1={x} y1={700} x2={x} y2={700 + 1620 * depth} stroke="#8fdcff" strokeOpacity={0.25} strokeWidth={2} />
+              {Array.from({ length: 12 }, (_, j) => (1560 + j * 62 < 700 + 1620 * depth) ? <circle key={j} cx={x} cy={1560 + j * 62} r={7} fill="#cfeaff" opacity={0.85} style={{ filter: 'drop-shadow(0 0 6px #4fb4ff)' }} /> : null)}
+            </g>
+          );
+        })}
+      </g>
+    </svg>
+  );
+};
+
+// ------------------------------------------------------------------ 6. the cubic kilometre in 3D, a Cherenkov flash
+export const Cube: S = ({ T, id }) => {
+  const yaw = 0.5 + (T - 45.8) * 0.08, pitch = 0.32;
+  const flash = hit(T, 53.8, 0.9);
+  const P = { x: 120, y: 80, z: -60 };
+  return (
+    <svg width={W} height={H} viewBox={`0 0 ${W} ${H}`}>
+      <defs><radialGradient id={`${id}-bg`} cx="0.5" cy="0.5" r="0.75"><stop offset="0" stopColor="#0c2442" /><stop offset="1" stopColor="#020812" /></radialGradient></defs>
+      <rect width={W} height={H} fill={`url(#${id}-bg)`} />
+      {Array.from({ length: 60 }, (_, i) => <circle key={i} cx={rnd(i, 41) * W} cy={((rnd(i, 42) * H - T * 6) % H + H) % H} r={1 + rnd(i, 43) * 2} fill="#cfeaff" opacity={0.15} />)}
+      <Lattice yaw={yaw} pitch={pitch} dist={2100} cy={560} light={(x, y, z) => {
+        if (flash < 0.01) return null;
+        const d = Math.hypot(x - P.x, y - P.y, z - P.z);
+        const k = flash * Math.exp(-d / 240);
+        return k > 0.04 ? [k, '#8fdcff'] : null;
+      }} />
+      {flash > 0.01 && (() => {
+        const c = project(P.x, P.y, P.z, yaw, pitch, 2100, 960, 560);
+        return <circle cx={c.x} cy={c.y} r={40 + 360 * (1 - flash)} fill="#4fb4ff" opacity={0.35 * flash} style={{ filter: 'blur(14px)' }} />;
+      })()}
+    </svg>
+  );
+};
+
+// ------------------------------------------------------------------ 7. the event display: a track lights the DOMs in time order
+const EV = { a: [-480, -420, 300], b: [460, 380, -260] }; // track from a to b (metres)
+const timeColor = (u: number) => `hsl(${lerp(0, 230, u)} 95% 60%)`; // early red → late blue
+export const Event: S = ({ T, id }) => {
+  const yaw = 0.9 + (T - 57) * 0.05, pitch = 0.22;
+  const bursts = Array.from({ length: 28 }, (_, i) => ({ t: 57.3 + i * 0.13, p: [STRINGS[(i * 29) % 86][0], lerp(Y_TOP, Y_BOT, rnd(i, 51)), STRINGS[(i * 29) % 86][1]] }));
+  const tr = prog(T, 65.9, 67.4);
+  const dir = [EV.b[0] - EV.a[0], EV.b[1] - EV.a[1], EV.b[2] - EV.a[2]], len = Math.hypot(dir[0], dir[1], dir[2]);
+  return (
+    <svg width={W} height={H} viewBox={`0 0 ${W} ${H}`}>
+      <defs><radialGradient id={`${id}-bg`} cx="0.5" cy="0.5" r="0.75"><stop offset="0" stopColor="#0a1c34" /><stop offset="1" stopColor="#02060e" /></radialGradient></defs>
+      <rect width={W} height={H} fill={`url(#${id}-bg)`} />
+      <Lattice yaw={yaw} pitch={pitch} dist={2000} cx={1000} cy={560} light={(x, y, z) => {
+        // the 28 bursts (2013)
+        let best: [number, string] | null = null;
+        for (const b of bursts) {
+          const h = hit(T, b.t, 0.5);
+          if (h < 0.03) continue;
+          const d = Math.hypot(x - b.p[0], y - b.p[1], z - b.p[2]);
+          const k = h * Math.exp(-d / 150);
+          if (k > 0.05 && (!best || k > best[0])) best = [k, '#f1c56d'];
+        }
+        if (best) return best;
+        // the 2017 track
+        if (tr <= 0) return null;
+        const rel = [x - EV.a[0], y - EV.a[1], z - EV.a[2]];
+        const s = (rel[0] * dir[0] + rel[1] * dir[1] + rel[2] * dir[2]) / (len * len);
+        if (s < 0 || s > 1 || s > tr) return null;
+        const px = EV.a[0] + dir[0] * s - x, py = EV.a[1] + dir[1] * s - y, pz = EV.a[2] + dir[2] * s - z;
+        const d = Math.hypot(px, py, pz);
+        const k = Math.exp(-d / 110) * (1 - 0.3 * prog(T, 69, 73));
+        return k > 0.06 ? [k, timeColor(s)] : null;
+      }} />
+      {tr > 0 && (() => {
+        const a = project(EV.a[0], EV.a[1], EV.a[2], yaw, pitch, 2000, 1000, 560), b = project(EV.a[0] + dir[0] * tr, EV.a[1] + dir[1] * tr, EV.a[2] + dir[2] * tr, yaw, pitch, 2000, 1000, 560);
+        return <line x1={a.x} y1={a.y} x2={b.x} y2={b.y} stroke="#ffffff" strokeWidth={2} strokeOpacity={0.6} strokeDasharray="10 8" />;
+      })()}
+    </svg>
+  );
+};
+
+// ------------------------------------------------------------------ 8. the blazar: a black hole whose jet points at us
+export const Blazar: S = ({ T, id }) => {
+  const pulse = 0.85 + 0.15 * Math.sin(T * 9);
+  return (
+    <svg width={W} height={H} viewBox={`0 0 ${W} ${H}`}>
+      <defs>
+        <radialGradient id={`${id}-core`} cx="0.5" cy="0.5" r="0.5"><stop offset="0" stopColor="#ffffff" /><stop offset="0.12" stopColor="#d8f0ff" /><stop offset="0.4" stopColor="#6aa8ff" stopOpacity="0.5" /><stop offset="1" stopColor="#2040a0" stopOpacity="0" /></radialGradient>
+        <radialGradient id={`${id}-disk`} cx="0.5" cy="0.5" r="0.5"><stop offset="0.25" stopColor="#ffd080" stopOpacity="0" /><stop offset="0.4" stopColor="#ffb050" stopOpacity="0.9" /><stop offset="0.7" stopColor="#c05020" stopOpacity="0.5" /><stop offset="1" stopColor="#601808" stopOpacity="0" /></radialGradient>
+      </defs>
+      <rect width={W} height={H} fill="#010208" />
+      <Stars n={300} seed={61} T={T} />
+      {/* host galaxy */}
+      {Array.from({ length: 900 }, (_, i) => {
+        const r = Math.pow(rnd(i, 71), 0.6) * 520, a = rnd(i, 72) * Math.PI * 2 + r * 0.008 + T * 0.02;
+        return <circle key={i} cx={1260 + Math.cos(a) * r} cy={500 + Math.sin(a) * r * 0.42} r={0.6 + rnd(i, 73) * 1.4} fill={rnd(i, 74) < 0.3 ? '#ffd8a0' : '#cfe0ff'} opacity={0.15 + 0.5 * (1 - r / 520)} />;
+      })}
+      <ellipse cx={1260} cy={500} rx={170} ry={70} fill={`url(#${id}-disk)`} />
+      {/* the jet, end-on: a blinding core with rays toward the viewer */}
+      {Array.from({ length: 18 }, (_, i) => {
+        const a = (i / 18) * Math.PI * 2 + T * 0.1;
+        return <line key={i} x1={1260} y1={500} x2={1260 + Math.cos(a) * 520 * pulse} y2={500 + Math.sin(a) * 520 * pulse} stroke="#bfe0ff" strokeWidth={2} strokeOpacity={0.12} />;
+      })}
+      <circle cx={1260} cy={500} r={260 * pulse} fill={`url(#${id}-core)`} style={{ mixBlendMode: 'screen' }} />
+      <circle cx={1260} cy={500} r={16} fill="#ffffff" />
+      {/* the path home */}
+      <path d="M 1260 500 Q 700 820 180 920" stroke="#8fdcff" strokeWidth={2} strokeDasharray="4 12" strokeDashoffset={-T * 60} fill="none" opacity={0.5} />
+      <circle cx={180} cy={920} r={10} fill="#4fb4ff" />
+      <circle cx={180} cy={920} r={26} fill="none" stroke="#4fb4ff" strokeOpacity={0.5} strokeWidth={2} />
+    </svg>
+  );
+};
+
+// ------------------------------------------------------------------ 9. the Milky Way, in light and in neutrinos
+export const Galaxy: S = ({ T, id }) => {
+  const nu = easeInOut(prog(T, 83.4, 85.2));
+  return (
+    <svg width={W} height={H} viewBox={`0 0 ${W} ${H}`}>
+      <defs>
+        <linearGradient id={`${id}-band`} x1="0" y1="0" x2="0" y2="1"><stop offset="0" stopColor="#ffffff" stopOpacity="0" /><stop offset="0.5" stopColor="#e8e0ff" stopOpacity="0.22" /><stop offset="1" stopColor="#ffffff" stopOpacity="0" /></linearGradient>
+        <linearGradient id={`${id}-nu`} x1="0" y1="0" x2="0" y2="1"><stop offset="0" stopColor="#4fb4ff" stopOpacity="0" /><stop offset="0.5" stopColor="#4fb4ff" stopOpacity="0.75" /><stop offset="1" stopColor="#4fb4ff" stopOpacity="0" /></linearGradient>
+        <radialGradient id={`${id}-centre`} cx="0.5" cy="0.5" r="0.5"><stop offset="0" stopColor="#8fdcff" stopOpacity="0.9" /><stop offset="1" stopColor="#4fb4ff" stopOpacity="0" /></radialGradient>
+      </defs>
+      <rect width={W} height={H} fill="#02040a" />
+      <Stars n={500} seed={81} T={T} />
+      <g transform="rotate(-14 960 540)">
+        <rect x={-200} y={380} width={2320} height={320} fill={`url(#${id}-band)`} opacity={1 - 0.6 * nu} />
+        {Array.from({ length: 1400 }, (_, i) => {
+          const x = -200 + rnd(i, 91) * 2320, y = 540 + (rnd(i, 92) + rnd(i, 93) - 1) * 150;
+          return <circle key={i} cx={x} cy={y} r={0.5 + rnd(i, 94)} fill="#ffffff" opacity={(0.2 + 0.5 * rnd(i, 95)) * (1 - 0.7 * nu)} />;
+        })}
+        {Array.from({ length: 20 }, (_, i) => <ellipse key={i} cx={-100 + rnd(i, 96) * 2100} cy={540 + (rnd(i, 97) - 0.5) * 60} rx={60 + rnd(i, 98) * 160} ry={14 + rnd(i, 99) * 20} fill="#120a18" opacity={0.7 * (1 - nu)} />)}
+        {/* the neutrino image: a soft blue band, brightest at the centre */}
+        <rect x={-200} y={420} width={2320} height={240} fill={`url(#${id}-nu)`} opacity={nu} style={{ filter: 'blur(18px)' }} />
+        <ellipse cx={960} cy={540} rx={420} ry={150} fill={`url(#${id}-centre)`} opacity={nu} style={{ filter: 'blur(10px)' }} />
+      </g>
+    </svg>
+  );
+};
+
+// ------------------------------------------------------------------ 10. polar night again: ice plain, aurora (end card)
+export const Night: S = ({ T, id }) => (
   <svg width={W} height={H} viewBox={`0 0 ${W} ${H}`}>
     <defs>
-      <linearGradient id={`${id}-sky`} x1="0" y1="0" x2="0" y2="1"><stop offset="0" stopColor="#0a1a24" /><stop offset="1" stopColor="#1d3442" /></linearGradient>
-      <linearGradient id={`${id}-plat`} x1="0" y1="0" x2="0" y2="1"><stop offset="0" stopColor="#3a3a34" /><stop offset="1" stopColor="#0e1012" /></linearGradient>
-      <radialGradient id={`${id}-lamp`} cx="0.5" cy="0.5" r="0.5"><stop offset="0" stopColor="#ffe6b0" stopOpacity="0.9" /><stop offset="1" stopColor="#ffe6b0" stopOpacity="0" /></radialGradient>
-      <linearGradient id={`${id}-streak`} x1="1" y1="0" x2="0" y2="0"><stop offset="0" stopColor="#ffffff" stopOpacity="0.9" /><stop offset="1" stopColor="#ffe0a0" stopOpacity="0" /></linearGradient>
+      <linearGradient id={`${id}-sky`} x1="0" y1="0" x2="0" y2="1"><stop offset="0" stopColor="#01040c" /><stop offset="1" stopColor="#0c2240" /></linearGradient>
+      <linearGradient id={`${id}-aur`} x1="0" y1="0" x2="0" y2="1"><stop offset="0" stopColor="#40ffb0" stopOpacity="0" /><stop offset="0.6" stopColor="#40ffb0" stopOpacity="0.3" /><stop offset="1" stopColor="#40ffb0" stopOpacity="0" /></linearGradient>
     </defs>
     <rect width={W} height={H} fill={`url(#${id}-sky)`} />
-    {/* parked train (left), receding */}
-    <path d="M 0 140 L 600 420 L 600 600 L 0 900 Z" fill="#33424a" />
-    <path d="M 0 140 L 600 420 L 600 432 L 0 170 Z" fill="#5c6e78" />
-    <path d="M 0 250 L 600 470 L 600 520 L 0 400 Z" fill="#d8e8e4" opacity={0.42} />
-    {Array.from({ length: 10 }, (_, i) => { const x = i * 62; return <line key={i} x1={x} y1={250 + x * 0.367} x2={x} y2={400 + x * 0.2} stroke="#33424a" strokeWidth={8 - i * 0.5} />; })}
-    <path d="M 0 560 L 600 560 L 600 566 L 0 600 Z" fill="#c9a253" opacity={0.6} />
-    {/* platform */}
-    <path d={`M 0 900 L 600 600 L 1000 600 L 1500 ${H} L 0 ${H} Z`} fill={`url(#${id}-plat)`} />
-    <path d="M 600 600 L 0 900" stroke="#d8b24a" strokeWidth={8} opacity={0.6} />
-    <path d={`M 1000 600 L 1500 ${H}`} stroke="#d8b24a" strokeWidth={10} opacity={0.6} />
-    {/* lamps */}
-    {[0, 1, 2, 3, 4].map((k) => {
-      const s = Math.pow(0.68, k), x = 760 + (1 - s) * 60 - s * 120, top = 600 - 560 * s;
-      return (
-        <g key={k}>
-          <rect x={x} y={top} width={10 * s + 2} height={560 * s} fill="#1a1e20" />
-          <ellipse cx={x + 5} cy={top} rx={180 * s + 20} ry={180 * s + 20} fill={`url(#${id}-lamp)`} />
-          <ellipse cx={x + 5} cy={600 + (600 - top) * 0.6} rx={30 * s + 6} ry={140 * s + 10} fill="#ffdca0" opacity={0.18} />
-        </g>
-      );
-    })}
-    {/* the moving train: light streaks */}
-    <path d={`M 1000 600 L ${W} 360 L ${W} 820 L 1000 640 Z`} fill="#26323a" opacity={0.85} />
-    {Array.from({ length: 16 }, (_, i) => {
-      const f = ((T * 1.8 + rnd(i, 2)) % 1), y = 380 + rnd(i, 3) * 420;
-      const x1 = W - f * 1400;
-      return <path key={i} d={`M ${x1} ${y} L ${x1 + 700} ${y - 30} L ${x1 + 700} ${y - 24} L ${x1} ${y + 4} Z`} fill={`url(#${id}-streak)`} opacity={0.35 + 0.4 * rnd(i, 4)} />;
-    })}
-    {/* rain */}
-    {Array.from({ length: 120 }, (_, i) => {
-      const x = rnd(i, 5) * W, y = ((rnd(i, 6) * H + T * 900) % (H + 100)) - 50;
-      return <line key={i} x1={x} y1={y} x2={x - 6} y2={y + 26} stroke="#b8d0dc" strokeOpacity={0.25} strokeWidth={1.5} />;
-    })}
-    {/* reflections on the wet platform */}
-    {Array.from({ length: 6 }, (_, i) => <rect key={i} x={700 + i * 40} y={760 + i * 30} width={14} height={120 + i * 20} fill="#ffdca0" opacity={0.08} />)}
+    <Stars n={260} seed={101} h={800} T={T} />
+    {Array.from({ length: 4 }, (_, k) => (
+      <path key={k} d={`M -100 ${150 + k * 30} C 600 ${60 + 50 * Math.sin(T * 0.4 + k)}, 1300 ${260 + 40 * Math.sin(T * 0.3 + k)}, 2020 ${120 + k * 20} L 2020 ${380 + k * 20} C 1300 ${480 + 40 * Math.sin(T * 0.3 + k)}, 600 ${330 + 50 * Math.sin(T * 0.5 + k)}, -100 ${420 + k * 30} Z`} fill={`url(#${id}-aur)`} opacity={0.45 - k * 0.08} />
+    ))}
+    <rect y={820} width={W} height={260} fill="#2a4a6a" />
+    <rect y={820} width={W} height={8} fill="#8fb8d8" opacity={0.6} />
   </svg>
 );
 
-// ------------------------------------------------------------------ 10. the night side of the earth
-const CITIES = Array.from({ length: 520 }, (_, i) => {
-  const cluster = Math.floor(rnd(i, 1) * 14);
-  const cx = 160 + rnd(cluster, 2) * 1600, cy = 520 + rnd(cluster, 3) * 480;
-  const r = 30 + rnd(i, 4) * 140 * (rnd(i, 5) < 0.3 ? 2 : 1);
-  const a = rnd(i, 6) * Math.PI * 2;
-  return { x: cx + Math.cos(a) * r, y: cy + Math.sin(a) * r * 0.6, s: 0.6 + rnd(i, 7) * 2.4 };
-});
-export const Earth: S = ({ T, id }) => (
-  <svg width={W} height={H} viewBox={`0 0 ${W} ${H}`}>
-    <defs>
-      <radialGradient id={`${id}-planet`} cx="0.5" cy="0.06" r="0.9"><stop offset="0" stopColor="#1c3346" /><stop offset="0.3" stopColor="#0c1824" /><stop offset="1" stopColor="#04080c" /></radialGradient>
-      <radialGradient id={`${id}-flare`} cx="0.5" cy="0.5" r="0.5"><stop offset="0" stopColor="#ffffff" stopOpacity="1" /><stop offset="0.15" stopColor="#ffe6b0" stopOpacity="0.9" /><stop offset="0.5" stopColor="#ffb860" stopOpacity="0.25" /><stop offset="1" stopColor="#ffb860" stopOpacity="0" /></radialGradient>
-      <clipPath id={`${id}-clip`}><circle cx={960} cy={2700} r={2420} /></clipPath>
-    </defs>
-    <rect width={W} height={H} fill="#020305" />
-    {Array.from({ length: 140 }, (_, i) => <circle key={i} cx={rnd(i, 11) * W} cy={rnd(i, 12) * 330} r={0.6 + rnd(i, 13) * 1.2} fill="#ffffff" opacity={0.3 + 0.5 * rnd(i, 14)} />)}
-    <circle cx={960} cy={2700} r={2440} fill="none" stroke="#5aa8ff" strokeOpacity={0.35} strokeWidth={40} />
-    <circle cx={960} cy={2700} r={2425} fill="none" stroke="#8fd0ff" strokeOpacity={0.7} strokeWidth={8} />
-    <g clipPath={`url(#${id}-clip)`}>
-      <circle cx={960} cy={2700} r={2420} fill={`url(#${id}-planet)`} />
-      {Array.from({ length: 18 }, (_, i) => <ellipse key={i} cx={rnd(i, 21) * W} cy={330 + rnd(i, 22) * 300} rx={120 + rnd(i, 23) * 300} ry={20 + rnd(i, 24) * 40} fill="#9fb4c4" opacity={0.08} />)}
-      {CITIES.map((c, i) => <circle key={i} cx={c.x} cy={c.y} r={c.s} fill="#ffc870" opacity={0.55 + 0.35 * Math.sin(T * 0.8 + i)} />)}
-      {CITIES.filter((_, i) => i % 9 === 0).map((c, i) => <circle key={`g${i}`} cx={c.x} cy={c.y} r={c.s * 6} fill="#ffb050" opacity={0.08} />)}
-    </g>
-    <circle cx={1354} cy={331} r={260} fill={`url(#${id}-flare)`} style={{ mixBlendMode: 'screen' }} />
-    {[0, 1, 2, 3].map((k) => <rect key={k} x={1354 - 260} y={329} width={520} height={4} fill="#fff4d8" opacity={0.6} transform={`rotate(${k * 45 + T * 2} 1354 331)`} />)}
-  </svg>
-);
-
-// ------------------------------------------------------------------ 11. a pier at blue hour, one lamp
-export const Pier: S = ({ T, id }) => (
-  <svg width={W} height={H} viewBox={`0 0 ${W} ${H}`}>
-    <defs>
-      <linearGradient id={`${id}-sky`} x1="0" y1="0" x2="0" y2="1"><stop offset="0" stopColor="#2c4a52" /><stop offset="1" stopColor="#7c968e" /></linearGradient>
-      <linearGradient id={`${id}-sea`} x1="0" y1="0" x2="0" y2="1"><stop offset="0" stopColor="#4a6a6c" /><stop offset="1" stopColor="#0e2026" /></linearGradient>
-      <radialGradient id={`${id}-lamp`} cx="0.5" cy="0.5" r="0.5"><stop offset="0" stopColor="#fff0c8" stopOpacity="1" /><stop offset="0.2" stopColor="#ffd890" stopOpacity="0.5" /><stop offset="1" stopColor="#ffd890" stopOpacity="0" /></radialGradient>
-    </defs>
-    <rect width={W} height={650} fill={`url(#${id}-sky)`} />
-    <rect y={640} width={W} height={440} fill={`url(#${id}-sea)`} />
-    {Array.from({ length: 30 }, (_, i) => <line key={i} x1={0} y1={660 + i * i * 0.45 + i * 6} x2={W} y2={660 + i * i * 0.45 + i * 6} stroke="#a8c4c0" strokeOpacity={0.06 + 0.04 * Math.sin(T + i)} strokeWidth={1 + i * 0.1} />)}
-    {/* pier */}
-    <rect x={390} y={642} width={1530} height={12} fill="#1a2426" />
-    <rect x={390} y={630} width={1530} height={4} fill="#1a2426" />
-    {Array.from({ length: 34 }, (_, i) => <rect key={i} x={400 + i * 46} y={634} width={3} height={10} fill="#1a2426" />)}
-    {Array.from({ length: 22 }, (_, i) => { const x = 405 + i * 72 + rnd(i, 3) * 20; return <rect key={i} x={x} y={652} width={9 + i * 0.3} height={50 + i * 2.2} fill="#152022" />; })}
-    {/* lamp + reflection */}
-    <rect x={508} y={590} width={4} height={50} fill="#1a2426" />
-    <circle cx={510} cy={588} r={7} fill="#fff4d8" />
-    <circle cx={510} cy={588} r={90} fill={`url(#${id}-lamp)`} opacity={0.9 + 0.1 * Math.sin(T * 5)} />
-    {Array.from({ length: 14 }, (_, i) => <rect key={i} x={500 + Math.sin(T * 1.5 + i) * 6} y={700 + i * 22} width={20 - i * 0.6} height={8} rx={4} fill="#ffd890" opacity={0.5 - i * 0.03} />)}
-    <rect y={560 + Math.sin(T * 0.3) * 5} width={W} height={140} fill="#b8ccc6" opacity={0.12} />
-  </svg>
-);
-
-export const SETS: Record<string, S> = { walker: Walker, hourglass: Hourglass, fork: Fork, letter: Letter, road: Road, corridor: Corridor, window: Window, stage: Stage, train: Train, earth: Earth, pier: Pier };
+export const SETS: Record<string, S> = { body: Body, prize: Prize, earth: EarthCut, lives: Lives, pole: Pole, cube: Cube, event: Event, blazar: Blazar, galaxy: Galaxy, night: Night };
+export { easeIn };
