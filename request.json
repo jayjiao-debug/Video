@@ -1,21 +1,87 @@
 {
-  "id": "endurance-01",
-  "items": [
-    { "type": "sketchfab", "uid": "88a157144c6d44a4864a9a5358f598da", "name": "james_caird_watt" },
-    { "type": "sketchfab", "uid": "8490acd37fe24074a827d7c5897a3871", "name": "sailing_ship_cyc3w" },
-    { "type": "sketchfab", "uid": "f6542036575c4945b40ffe765b1f537c", "name": "ice_floes_dadema" },
-    { "type": "sketchfab", "uid": "8fad3f7ad75847d2b3b3576d180bb1ff", "name": "oceanic_floes_cat", "optimize": true },
-    { "type": "sketchfab-search", "q": "barquentine", "license": "by", "count": 24 },
-    { "type": "sketchfab-search", "q": "polar expedition ship", "license": "by", "count": 24 },
-    { "type": "sketchfab-search", "q": "wooden ship stern", "license": "by", "count": 24 },
-    { "type": "sketchfab-search", "q": "steam tug", "license": "by", "count": 16 },
-    { "type": "sketchfab-search", "q": "sea ice", "license": "by", "count": 24 },
-    { "type": "sketchfab-search", "q": "iceberg", "license": "by", "count": 16 },
-    { "type": "sketchfab-search", "q": "shipwreck", "license": "by", "count": 24 },
-    { "type": "polyhaven", "id": "kloppenheim_06_puresky", "res": "2k" },
-    { "type": "polyhaven", "id": "belfast_sunset_puresky", "res": "2k" },
-    { "type": "polyhaven", "id": "snow_02", "res": "2k" },
-    { "type": "polyhaven", "id": "brown_planks_03", "res": "2k" },
-    { "type": "url", "url": "https://raw.githubusercontent.com/mrdoob/three.js/r169/examples/textures/waternormals.jpg", "name": "waternormals.jpg", "license": "MIT (three.js)" }
-  ]
+ "id": "endurance-02",
+ "items": [
+  {
+   "type": "sketchfab-search",
+   "q": "RRS Discovery",
+   "license": "by",
+   "count": 16
+  },
+  {
+   "type": "sketchfab-search",
+   "q": "Fram ship",
+   "license": "by",
+   "count": 16
+  },
+  {
+   "type": "sketchfab-search",
+   "q": "schooner",
+   "license": "by",
+   "count": 16
+  },
+  {
+   "type": "sketchfab-search",
+   "q": "brigantine",
+   "license": "by",
+   "count": 16
+  },
+  {
+   "type": "sketchfab-search",
+   "q": "barque",
+   "license": "by",
+   "count": 16
+  },
+  {
+   "type": "sketchfab-search",
+   "q": "three masted ship",
+   "license": "by",
+   "count": 16
+  },
+  {
+   "type": "sketchfab-search",
+   "q": "whaling ship",
+   "license": "by",
+   "count": 16
+  },
+  {
+   "type": "sketchfab-search",
+   "q": "steamship 1900",
+   "license": "by",
+   "count": 16
+  },
+  {
+   "type": "sketchfab-search",
+   "q": "tall ship",
+   "license": "by",
+   "count": 16
+  },
+  {
+   "type": "sketchfab-search",
+   "q": "clipper ship",
+   "license": "by",
+   "count": 16
+  },
+  {
+   "type": "sketchfab-search",
+   "q": "polar ship",
+   "license": "by",
+   "count": 16
+  },
+  {
+   "type": "sketchfab-search",
+   "q": "Terra Nova ship",
+   "license": "by",
+   "count": 16
+  },
+  {
+   "type": "sketchfab-search",
+   "q": "Endurance Shackleton",
+   "count": 12
+  },
+  {
+   "type": "sketchfab-search",
+   "q": "Shackleton",
+   "count": 12
+  }
+ ]
 }
