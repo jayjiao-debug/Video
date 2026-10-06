@@ -22,6 +22,14 @@ and not before, generate the Douyin publish package with the `douyin-publish` sk
 (`.claude/skills/douyin-publish/SKILL.md`): title, description with hashtags, 4:3 and 3:4 covers,
 合集, 自主声明, in the owner's habitual format.
 
+Skills not to use (the owner's choice: too many skills lower the quality). In this repo, never invoke or
+follow these plugin skills, even when their descriptions seem to match:
+- `video-shotcraft:*`
+- `animation-studio:*`
+- `ai-video-editor:*` (ai-video-edit, ai-video-shot, video-editing, video-generation; ManyMotions)
+- `remotion:*` (the generic Remotion plugin skills; our own pipeline and skills above already cover Remotion)
+Use only the repo's own skills listed above plus github-hd-delivery and juno-crew-workflow.
+
 What the owner wants:
 - Talks in Chinese; reply in Chinese.
 - Landscape 1920×1080, no narration, subtitles plus the owner's own background track.
