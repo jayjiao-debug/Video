@@ -40,3 +40,8 @@ dropped). Owner hasn't approved any ep13 look. Park it unless the owner asks; if
   Maritime Heritage Trust / Endurance22), distances. Check 3D model licences (ship, lifeboat, ice) before building.
 - **Process:** brief → research → script (gate 1) → 2–3 looks with a ~15 s moving 3D test of the main set-piece (gate 2)
   → build → independent review → owner.
+
+## Modal GPU farm (set up 2026-10-06)
+- Repository secrets `MODAL_TOKEN_ID` / `MODAL_TOKEN_SECRET` (Modal profile `jayjiao249`) are set by the owner. Never put tokens in files: this repo is public.
+- The sandbox cannot reach modal.com; GitHub Actions can. Branch `modal-farm` holds `.github/workflows/modal.yml`: push a new `job.json` (`{"id": "...", "entry": "<script.py>"}`) plus the script → the runner does `modal run <entry>` → everything the script writes to `out/` lands on branch `modal-output` under `out/<id>/` (files > 90 MB split into .partNN).
+- Smoke test `check-01` passed: Tesla T4 GPU, `MODAL_OK`.
