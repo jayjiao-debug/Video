@@ -1,0 +1,46 @@
+{
+  "label": "gate1_r1",
+  "source_read": "/home/claude/video/episodes/14-design-blame/lines.json (subtitles only, music, no voiceover) + feed title + plaque text given in task",
+  "would_keep_watching_after_3s": true,
+  "why": "Barely, and not because of line 1. '推错门、按错键，你会骂自己[蠢]吗？' on its own is a mild 'relatable question' opener. I've seen a hundred of them, and without a visual of someone face-planting into a door I'd give it about 1.5 s. What actually keeps me is the feed title promising Chernobyl, and line 2 at 3.0 s delivering it ('1986年，切尔诺贝利，有人按下[紧急停堆]'). Line 3 is the real hook: 功率不降反[暴涨]. You press the stop button and it explodes? Now I want to know. So I stay past 3 s thanks to the title. The first line by itself doesn't do it.",
+  "first_moment_I_got_curious": "Line 3 (6.3 s): '几秒内，功率不降反[暴涨]，接着爆炸'. Pressing the emergency stop made it worse, which is a genuine 'wait, what?'.",
+  "where_I_would_swipe_away": [
+    "12.4-15.2 s: the plaque '谁按错了？' sits there for ~2.8 s right after line 4 already asked '真的吗？'. Same question twice with no new info, and it's a dead stretch right where my thumb is ready. Small risk, but real.",
+    "MAIN SWIPE POINT, ~24-31 s (lines 8-10): I came for Chernobyl and at 18.2 s it jumps to WWII pilots with no bridge. Then I get a name I've never heard (查帕尼斯), plane model codes (C-47, B-17), and the word 襟翼. This is where it starts feeling like 历史课/科普号 and I'd most likely swipe, around line 9 '线索：C-47的副驾驶，[从没]收错轮子'. Model numbers stacked on model numbers. Line 5 '看完你会知道，哪些错不全怪你' buys a little patience but not 15 s of airplane history.",
+    "If I survived to 43.5 s, Hawaii (lines 14-17) pulls me back hard. '导弹来袭，这[不是演习]' is a great beat and I'd stay through ~64 s.",
+    "87.6-96.4 s (lines 28-30): the moral section. '错，确实是人犯的 / 可让同一个错一再发生的，往往是[设计] / 让一个错酿成灾难的，也往往是[设计]' reads like the teacher summarizing. I wouldn't swipe this late because the Norman door ending is close, but my attention drops here."
+  ],
+  "lines_I_did_not_understand": [
+    "#7 '落地后本想收襟翼，却把[轮子]收了': I don't know what 襟翼 is (I guessed some wing part only later). Also, retract the wheels after landing? While on the ground? What happens then, does the plane drop on its belly? The consequence is never said, so I don't feel why this mistake is bad.",
+    "#9 '线索：C-47的副驾驶，[从没]收错轮子': why specifically the 副驾驶? Did the co-pilot work the switches? Felt like a detail I was supposed to already know.",
+    "#12 '起落架开关装[小轮子]，襟翼装[楔形块]': on first read I thought 小轮子 meant actual plane wheels. Only after line 13 ('改个[形状]，一摸就分清') did I get that it means a little wheel-shaped knob on the switch. Without a picture this line is hard to parse.",
+    "#16 '不是手滑：值班员以为导弹[真的]来了' followed by #18 '测试和真警报：同一菜单，[同一个]确认框': this confused me logically. If he wasn't slipping and actually believed it was real, why does it matter that test and real alarm share a menu? Those sound like two different explanations, and the video doesn't connect them.",
+    "#17 '而演习通知里，竟写着\"这不是演习\"': I had to read it twice. A drill notice that says 'this is not a drill'? Good twist once I got it, but it went by in 3 s.",
+    "#19 '没预案，[38分钟]后手机才收到更正': no plan for what, sending a correction? Vague.",
+    "#20 '调查结论：人为失误，加上[防护不足]': 防护不足 is officialese. Protection against what? I don't picture anything.",
+    "#21 '切尔诺贝利：1992年，同一机构[修正]结论': same as which agency? Line 4 just said '当年调查' and never named anyone, so '同一机构' points at nothing.",
+    "#23 '停堆棒全部插到底，要整整[18秒]': is 18 s long? I only get it if I remember line 3 said '几秒内' it exploded. The video leaves that math to me; one more half-line would make it land.",
+    "#25 '当然，操作员也确实违规，临时改了试验': what 试验? Nobody said there was an experiment going on. That came out of nowhere.",
+    "#31-32 '设计专家诺曼，自己也常推错门 / 这种门，常被叫作\"[诺曼门]\"': which kind of door is 'this kind'? It's never described (a handle that says pull but you have to push). Cute callback, but without a visual it's a little hollow."
+  ],
+  "lecture_like_moments": [
+    "Lines 8-10 (查帕尼斯 / C-47 / B-17): name + year + model codes in a row = textbook.",
+    "Line 20 and line 24 ('报告：这脚\"油门\"，[很可能]是决定性因素'): quoting reports with hedging words. Accurate, I guess, but it sounds like reading a paper aloud.",
+    "Lines 28-30: the three-line moral with [设计] twice. It's telling me the conclusion I already got from the stories."
+  ],
+  "takeaway_in_my_words": "When lots of different people keep making the same mistake, the problem is probably the design, not the people. Chernobyl's operators did break rules, but the stop button itself briefly sped the reactor up, took 18 s to fully work, and that flaw had been known since 1983 and nobody fixed it. Planes and the Hawaii missile alert are the same story: identical switches, an identical confirm box. So next time I push a pull-door, it's not (only) that I'm dumb.",
+  "surprise_that_stuck": "Line 22: '停堆棒本是刹车，刚落下时却像[油门]'. The brake acting like a gas pedal is the line I'd repeat to a friend. Close second: the Hawaii drill message literally saying 'this is not a drill' (#17).",
+  "title_I_would_click": "切尔诺贝利，谁按错了: yes, I'd click. Chernobyl is a name everyone knows, and '谁按错了' makes it a whodunit with a person to blame. Strong.",
+  "title_that_misleads": "Somewhat. The title promises a Chernobyl video, but only about 30 of 105 s are Chernobyl, and between 15 s and 64 s it's planes and Hawaii. Chernobyl fans like me feel bait-and-switched right at the WWII cut, which is exactly where I'd swipe. The twist (nobody 'pressed wrong', the button itself was bad) is a fair payoff, but the video should tell me early that Chernobyl comes back, e.g. a line around 15-18 s saying 先看两个更小的错.",
+  "what_I_would_comment": "\"刹车变油门这个也太离谱了，1983年就知道还不改？？\" or, more likely given the ending: \"我每天推错公司那扇门，原来不是我蠢😂诺曼门实锤\". Someone in the comments would also definitely ask '襟翼是啥'.",
+  "for_frames_only": [
+    {
+      "frame": "~12.4 s plaque: 谁按错了？",
+      "what_this_says_in_5s": "The same question line 4 just asked ('真的吗？'). As a title card it works as a chapter break, but held for ~2.8 s with no new info it feels like a pause where I'd swipe. If it stays, it needs something moving or a new fact on screen."
+    },
+    {
+      "frame": "No other frames were provided",
+      "what_this_says_in_5s": "Can't judge visuals. Lines #7, #12 and #31-32 especially depend on pictures (襟翼 vs 轮子, the knob shapes, what a 'Norman door' looks like)."
+    }
+  ]
+}
