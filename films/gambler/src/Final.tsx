@@ -68,7 +68,9 @@ const gauge = (T: number) => {
   if (T < EV.riser) return lerp(0.34, 0.24, prog(T, EV.break, EV.riser));
   if (T < EV.breath2) return lerp(0.24, 0.94, easeInOut(prog(T, EV.riser, EV.breath2)));
   if (T < EV.pickup) return 0.94 + 0.06 * prog(T, EV.breath2, EV.hush) + 0.015 * Math.sin(T * 47);
-  return lerp(1.18, 0.5, easeOut(prog(T, EV.pickup, EV.pickup + 7))) + 0.06 * hit(T, EV.drop, 0.3);
+  // after the black: the bar charges from empty to overflowing in a quarter second, then settles
+  const charge = easeOut(prog(T, EV.pickup, EV.pickup + 0.25));
+  return charge < 1 ? lerp(0, 1.18, charge) : lerp(1.18, 0.5, easeOut(prog(T, EV.pickup + 0.25, EV.pickup + 7))) + 0.06 * hit(T, EV.drop, 0.3);
 };
 
 /* ---------------------------------------------------------------- framings (locked) */
@@ -436,7 +438,7 @@ const Graph2: React.FC<{ T: number }> = ({ T }) => {
 
 /* ---------------------------------------------------------------- HUD and type */
 const Bar: React.FC<{ T: number }> = ({ T }) => {
-  if (T > L_.end - 0.2 || (T > EV.title && T < EV.title + 3.3)) return null;
+  if (T > L_.end - 0.2 || (T > EV.title && T < EV.title + 3.3) || (T >= EV.hush && T < EV.pickup)) return null; // the silent beats are pure black
   const v = gauge(T), fill = clamp(v), over = clamp((v - 1) / 0.18);
   const H = 470, top = 300, x = 1768, w = 40;
   return (
@@ -543,7 +545,7 @@ export const Final: React.FC<{ at?: number }> = ({ at: atT }) => {
   const frame = useCurrentFrame();
   const { fps } = useVideoConfig();
   const T = atT ?? frame / fps;
-  const mark = easeOut(prog(T, EV.title + 3.4, EV.title + 4.2)) * (1 - prog(T, L_.end - 0.3, L_.end));
+  const mark = easeOut(prog(T, EV.title + 3.4, EV.title + 4.2)) * (1 - prog(T, L_.end - 0.3, L_.end)) * (T >= EV.hush && T < EV.pickup ? 0 : 1);
   return (
     <LookCtx.Provider value={LOOKS.night}>
       <AbsoluteFill style={{ backgroundColor: '#040303' }}>

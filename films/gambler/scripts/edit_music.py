@@ -38,7 +38,7 @@ EDL = [
     ('play', DIP, DROP1, 'trick 2: the dip again'),
     ('play', DROP1, PRE2, 'drop 1 (title) -> section A -> break -> riser -> build -> breath'),
     ('play', BREATH, PRE2, 'trick 3: the breath again'),
-    ('silence', BEAT, None, 'trick 3: one beat of nothing'),
+    ('silence', 2 * BEAT, None, 'trick 3: two beats of nothing (owner: one beat felt like a glitch)'),
     ('play', PRE2, END, 'the big drop -> out'),
 ]
 
