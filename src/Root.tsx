@@ -21,6 +21,7 @@ import { LoveFilm, LOVE_FRAMES } from './v10/Film10';
 import { Ep11Film, EP11_FRAMES } from './v11/Film11';
 import { Cover11 } from './v11/Cover11';
 import { Ep12Film, EP12_FRAMES } from './v12/Film12';
+import { FlowTest, FT_FRAMES } from './v13/FlowTest';
 import { Cover12 } from './v12/Cover12';
 import '@fontsource/cormorant-garamond/600-italic.css';
 import '@fontsource/cormorant-garamond/500-italic.css';
@@ -75,6 +76,7 @@ export const Root: React.FC = () => (
     <Composition id="Cover11Tall" component={Cover11} durationInFrames={1} fps={30} width={1080} height={1440} defaultProps={{ w: 1080, h: 1440 }} />
     <Composition id="Ep11" component={Ep11Film} durationInFrames={EP11_FRAMES} fps={30} width={1920} height={1080} />
     <Composition id="Ep12" component={Ep12Film} durationInFrames={EP12_FRAMES} fps={30} width={1920} height={1080} />
+    <Composition id="Ep13Test" component={FlowTest} durationInFrames={FT_FRAMES} fps={30} width={1920} height={1080} />
     <Composition id="Cover12Wide" component={Cover12} durationInFrames={1} fps={30} width={1440} height={1080} defaultProps={{ w: 1440, h: 1080 }} />
     <Composition id="Cover12Tall" component={Cover12} durationInFrames={1} fps={30} width={1080} height={1440} defaultProps={{ w: 1080, h: 1440 }} />
     <Composition id="CoverEp7Wide" component={CoverEp7} durationInFrames={1} fps={30} width={1440} height={1080} defaultProps={{ w: 1440, h: 1080 }} />
