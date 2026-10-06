@@ -137,7 +137,7 @@ export const Berkson: React.FC<{ T: number }> = ({ T }) => {
         {/* the rule */}
         {rule > 0 && (
           <g opacity={rule}>
-            <rect x={140} y={170} width={1680} height={680} rx={30} fill="rgba(12,6,14,0.92)" />
+            <rect x={100} y={150} width={1720} height={720} rx={30} fill="rgba(12,6,14,0.97)" />
             {[{ n: 1, p: 0.5, y: 380 }, { n: 2, p: 0.75, y: 600 }].map(({ n, p, y }, j) => {
               const k = easeOut(prog(T, 55.0 + j * 0.35, 55.6 + j * 0.35));
               return (
@@ -167,8 +167,8 @@ export const Paris: React.FC<{ T: number }> = ({ T }) => {
   if (!st) return null;
   const a = CUT.dunbar;
   const cam = keyCam(T, [[a, 1, 960, 540, 960, 540], [61.0, 1, 960, 540, 960, 540], [61.9, 1.25, 620, 560, 800, 540], [64.6, 1.25, 620, 560, 800, 540], [65.4, 1, 960, 540, 960, 540]]);
-  const head = easeOut(prog(T, a + 0.4, a + 0.9));
-  const grid = easeOut(prog(T, 58.0, 58.8));
+  const head = easeOut(prog(T, a - 0.25, a + 0.05));
+  const grid = easeOut(prog(T, a - 0.2, a + 0.3));
   const smk = easeOut(prog(T, 61.1, 61.6));
   const bar1 = easeOut(prog(T, 62.2, 63.0));
   const bar2 = easeOut(prog(T, 64.8, 65.8));
@@ -190,7 +190,7 @@ export const Paris: React.FC<{ T: number }> = ({ T }) => {
           {Array.from({ length: NIN }, (_, i) => {
             const c = i % 21, r = Math.floor(i / 21);
             const s = SMOKER_SET.has(i);
-            const o = easeOut(prog(T, 58.0 + (i / NIN) * 0.8, 58.2 + (i / NIN) * 0.8));
+            const o = easeOut(prog(T, a - 0.2 + (i / NIN) * 0.9, a + (i / NIN) * 0.9));
             return <circle key={i} cx={170 + c * 40} cy={350 + r * 26} r={s ? 8 + 4 * smk : 7} fill={s && smk > 0 ? L.accent : 'rgba(255,242,246,0.45)'} opacity={o * (s ? 1 : 1 - 0.5 * smk)} style={s && smk > 0 ? { filter: `drop-shadow(0 0 8px ${L.accentGlow})` } : undefined} />;
           })}
           {smk > 0 && <text x={170} y={810} opacity={smk} style={{ ...BLACK, fontSize: 30, fill: L.accent }}>每天抽烟的：{SMOKERS} 人</text>}
@@ -278,7 +278,7 @@ export const Drop: React.FC<{ T: number }> = ({ T }) => {
             let y: number, o = 1;
             if (t < 0.6) y = lerp(y0, yRim, easeIn(t / 0.6));
             else if (f.pass) { y = yRim + (t - 0.6) * 520; o = 1 - prog(t, 1.4, 2.0); }
-            else { y = yRim - Math.abs(Math.sin((t - 0.6) * 6)) * 30 * Math.exp(-(t - 0.6) * 3); o = 1 - prog(t, 1.6, 2.3); }
+            else { y = yRim - Math.abs(Math.sin((t - 0.6) * 6)) * 30 * Math.exp(-(t - 0.6) * 3); o = 1 - prog(t, 0.9, 1.4); }
             const col = f.pass ? L.accent : 'rgba(255,242,246,0.75)';
             return <Figure key={i} L={L} x={960 + f.x * (y > yRim ? 0.8 : 1)} y={y} s={1.3} col={col} o={o} a={f.sick} b={!f.sick && f.pass} />;
           })}
