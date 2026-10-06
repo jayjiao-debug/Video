@@ -9,7 +9,7 @@ export const Cover12: React.FC<{ w: number; h: number }> = ({ w, h }) => {
   const [ok, setOk] = useState(false);
   useEffect(() => {
     Promise.all(['900 40px "Noto Sans CJK SC"', '700 40px "Noto Sans CJK SC"', '900 40px "Noto Serif CJK SC"', '700 40px "DejaVu Sans Mono"']
-      .map((f) => document.fonts.load(f, '为什么一年一眨眼分钟回忆只剩不到的路0123456789:')).map((p) => p.catch(() => null))).then(() => { setOk(true); continueRender(handle); });
+      .map((f) => document.fonts.load(f, '时间都去哪了分钟回忆只剩不到的路0123456789:')).map((p) => p.catch(() => null))).then(() => { setOk(true); continueRender(handle); });
   }, [handle]);
   if (!ok) return null;
   const tall = h > w;
@@ -50,15 +50,15 @@ export const Cover12: React.FC<{ w: number; h: number }> = ({ w, h }) => {
           <g style={{ fontFamily: F.sans }}>
             <text x={w / 2} y={180} textAnchor="middle" style={{ fontWeight: 900, fontSize: 82, letterSpacing: '0.04em' }} fill={INK}>33分钟的路，</text>
             <text x={w / 2} y={290} textAnchor="middle" style={{ fontWeight: 900, fontSize: 82, letterSpacing: '0.04em' }} fill={INK}>回忆只剩不到<tspan fill={A}>5分钟</tspan></text>
-            <text x={w / 2} y={960} textAnchor="middle" style={{ fontWeight: 900, fontSize: 132, letterSpacing: '0.04em' }} fill={INK}>为什么一年</text>
-            <text x={w / 2} y={1112} textAnchor="middle" style={{ fontWeight: 900, fontSize: 132, letterSpacing: '0.04em' }} fill={A}>一眨眼？</text>
-            <text x={w / 2} y={1170} textAnchor="middle" style={{ fontWeight: 500, fontSize: 30, letterSpacing: '0.4em' }} fill={SEC}>◆ VIBE知识大赏</text>
+            <text x={w / 2} y={960} textAnchor="middle" style={{ fontWeight: 900, fontSize: 150, letterSpacing: '0.04em' }} fill={INK}>时间</text>
+            <text x={w / 2} y={1112} textAnchor="middle" style={{ fontWeight: 900, fontSize: 150, letterSpacing: '0.04em' }} fill={A}>都去哪了？</text>
+            <text x={w / 2} y={1170} textAnchor="middle" style={{ fontWeight: 700, fontSize: 30, letterSpacing: '0.3em' }} fill={SEC}>▸ Juno · VIBE知识大赏</text>
           </g>
         ) : (
           <g style={{ fontFamily: F.sans }}>
             <text x={w / 2} y={130} textAnchor="middle" style={{ fontWeight: 900, fontSize: 70, letterSpacing: '0.04em' }} fill={INK}>33分钟的路，回忆只剩不到<tspan fill={A}>5分钟</tspan></text>
-            <text x={w / 2} y={968} textAnchor="middle" style={{ fontWeight: 900, fontSize: 100, letterSpacing: '0.04em' }} fill={INK}>为什么一年<tspan fill={A}>一眨眼</tspan>？</text>
-            <text x={w / 2} y={1040} textAnchor="middle" style={{ fontWeight: 500, fontSize: 26, letterSpacing: '0.4em' }} fill={SEC}>◆ VIBE知识大赏</text>
+            <text x={w / 2} y={968} textAnchor="middle" style={{ fontWeight: 900, fontSize: 112, letterSpacing: '0.04em' }} fill={INK}>时间<tspan fill={A}>都去哪了</tspan>？</text>
+            <text x={w / 2} y={1040} textAnchor="middle" style={{ fontWeight: 700, fontSize: 26, letterSpacing: '0.3em' }} fill={SEC}>▸ Juno · VIBE知识大赏</text>
           </g>
         )}
       </svg>

@@ -1,8 +1,7 @@
 import React from 'react';
-import { GoldTitle11 } from '../v11/kit11';
 import {
   A, INK, LAB, SEC, TER, F, W, H, cue, segEnd, BLK, TITLE_T, bound, pr, eo, eio, pop, spring, lerp, clamp, rnd, cnt, mix, tcOf,
-  roughEllipse, roughLine, roughCurve, Arrow, G, Grease, GText, Strip, GA, Fr, Header, Tx, Svg, Layer, Chip,
+  roughEllipse, roughLine, roughCurve, Arrow, G, Grease, GText, Strip, GA, Fr, Header, Tx, Svg, Layer, Chip, FilmTitle,
 } from './kit12';
 
 /* ============================== H · hook (0 → whip) ============================== */
@@ -89,8 +88,7 @@ export const TitleScene: React.FC<{ T: number }> = ({ T }) => {
   if (T < a || T > ro + 0.5) return null;
   const kR = eio(T, ro, 0.45);
   const x = -1920 * kR;
-  const f = T * 30, at = (TITLE_T - 0.1) * 30;
-  const drift = -12 * (T - a);
+    const drift = -12 * (T - a);
   const holes = Array.from({ length: 22 }, (_, i) => i * 96 + (((drift % 96) + 96) % 96) - 96);
   return (
     <Layer x={x}>
@@ -103,7 +101,9 @@ export const TitleScene: React.FC<{ T: number }> = ({ T }) => {
           </g>
         ))}
         {T < TITLE_T + 0.1 && <text x={960} y={590} textAnchor="middle" opacity={eo(T, cue('T1') - 0.05, 0.15) * (1 - eo(T, TITLE_T - 0.15, 0.2))} style={{ fontFamily: F.serif, fontWeight: 900, fontSize: 110, letterSpacing: '0.08em' }} fill="#F3EDE2">为什么？</text>}
-        <GoldTitle11 text="为什么一年一眨眼" f={f} at={at} size={120} y={590} step={1} fade={6} id="t12" />
+        <Tx x={960} y={430} size={22} w={700} mono color="#8D969C" anchor="middle" ls="0.3em" o={eo(T, TITLE_T - 0.1, 0.2)}>▸ 第00卷 · VIBE知识大赏</Tx>
+        <FilmTitle T={T} at={TITLE_T - 0.1} y={600} size={132} dark />
+        <Tx x={960} y={690} size={26} w={400} mono color="#8D969C" anchor="middle" ls="0.3em" o={eo(T, TITLE_T + 0.25, 0.25)}>WHERE DID THE TIME GO</Tx>
         {/* splice tape at the trailing edge */}
         <rect x={1924} y={0} width={120} height={H} fill="#EEF2EE" opacity={0.35} />
       </Svg>

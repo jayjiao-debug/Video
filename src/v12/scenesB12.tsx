@@ -1,11 +1,9 @@
 import React from 'react';
 import { random } from 'remotion';
-import { GoldTitle11 } from '../v11/kit11';
-import { Monogram } from '../brand/Brand';
 import { JUNO } from '../brand/identity';
 import {
   A, INK, LAB, SEC, TER, F, W, H, cue, segEnd, BLK, bound, pr, eo, eio, pop, spring, lerp, clamp, rnd, cnt, mix, tcOf, goldOn,
-  roughEllipse, roughLine, roughCurve, Arrow, G, Grease, GText, Strip, GA, Fr, Header, Tx, Svg, Layer, Token, FILM_END,
+  roughEllipse, roughLine, roughCurve, Arrow, G, Grease, GText, Strip, GA, Fr, Header, Tx, Svg, Layer, Token, FILM_END, FilmTitle, TITLE_FULL,
 } from './kit12';
 
 const SChip: React.FC<{ x: number; y: number; label: string; t: number; T: number; size?: number }> = ({ x, y, label, t, T, size = 30 }) => {
@@ -335,7 +333,7 @@ export const PE1Scene: React.FC<{ T: number; x: number }> = ({ T, x }) => {
         </g>
         {T < tNow + 0.2 && (
           <g opacity={1 - eo(T, tNow - 0.45, 0.3)}>
-            <GoldTitle11 text="为什么一年一眨眼" f={T * 30} at={(cue('P1', '为什么') - 0.1) * 30} size={96} y={720} step={1} fade={6} id="p12t" />
+            <FilmTitle T={T} at={cue('P1', '为什么') - 0.1} y={730} size={96} />
           </g>
         )}
         <g opacity={fadeP}>
@@ -450,7 +448,7 @@ export const E34Scene: React.FC<{ T: number; inK: number; off: number }> = ({ T,
     <Layer o={inK}>
       <Svg>
         <g opacity={stripO} transform={`translate(0,${120 * sendK})`}>
-          <Strip x0={-200} x1={2200} y={440} g={GA.wide} perf={off > 0.5 ? 'dark' : 'bright'} frames={fr.filter((_, i) => !(i === 1 && sendK > 0))} edge={[[260 + (pan % 166), '▸ 夏天'], [760 + (pan % 166), '▸ 夏天'], [1260 + (pan % 166), '▸ 夏天']]} />
+          <Strip x0={-200} x1={2200} y={440} g={GA.wide} perf="bright" frames={fr.filter((_, i) => !(i === 1 && sendK > 0))} edge={[[260 + (pan % 166), '▸ 夏天'], [760 + (pan % 166), '▸ 夏天'], [1260 + (pan % 166), '▸ 夏天']]} />
         </g>
         <g opacity={(1 - sendK) * (1 - off)}>
           <Tx x={960} y={400} size={140} w={900} color={A} anchor="middle" tnum o={pop(T, t60)}>60</Tx>
@@ -463,7 +461,7 @@ export const E34Scene: React.FC<{ T: number; inK: number; off: number }> = ({ T,
         {T > tSend && (
           <g opacity={1 - off * 0.75}>
             <rect x={lifted.x - 12} y={lifted.y - 12} width={lifted.w + 24} height={lifted.h + 24} rx={4} fill="url(#g12-film)" filter="url(#g12-liftHi)" />
-            <rect x={lifted.x} y={lifted.y} width={lifted.w} height={lifted.h} rx={3} fill={mix('#F6EAD6', '#2A2F34', off)} />
+            <rect x={lifted.x} y={lifted.y} width={lifted.w} height={lifted.h} rx={3} fill="#F6EAD6" />
             <rect x={lifted.x} y={lifted.y} width={lifted.w} height={lifted.h} rx={3} fill={TINTS[1]} opacity={0.28 * (1 - off)} />
             <use href="#pWheel" x={lifted.x + lifted.w * 0.1} y={lifted.y + lifted.h * 0.05} width={lifted.w * 0.8} height={lifted.h * 0.9} opacity={0.6 * eo(T, tSend + 0.3, 0.4) * (1 - off)} />
             <Token x={lifted.x + lifted.w * 0.42} y={lifted.y + lifted.h * 0.93} s={lifted.w / 640} color={INK} o={eo(T, tSend + 0.3, 0.4) * (1 - off)} />
@@ -489,44 +487,34 @@ export const tOff = () => segEnd('E4b') + 0.3;
 export const EndScene: React.FC<{ T: number }> = ({ T }) => {
   const t0 = tOff();
   if (T < t0) return null;
-  const m = eio(T, t0 + 0.35, 0.6); // circle → ring
-  const bgK = eo(T, t0 + 0.4, 0.5);
-  const f = (T - (t0 + 0.9)) * 30;
+  const m = eio(T, t0 + 0.2, 0.7); // the last grease circle glides up and tightens into the J ring
+  const f = (T - (t0 + 0.75)) * 30;
   const p = (a: number, d: number) => clamp((f - a) / d);
-  const dur = (FILM_END - (t0 + 0.9)) * 30;
+  const dur = (FILM_END - (t0 + 0.75)) * 30;
   const black = clamp((f - (dur - 18)) / 18) ** 2;
-  // morph: the rough grease circle (960,520,300,215) → a gold ring (960,240) r 54
-  const cx = 960, cy = lerp(520, 240, m), rx = lerp(300, 54, m), ry = lerp(215, 54, m);
-  const d = roughEllipse(cx, cy, rx, ry, 77, lerp(1.12, 1.0, m), lerp(0.035, 0, m));
-  const col = mix('#2347E0', '#F1C56D', m);
+  const cx = 960, cy = lerp(525, 230, m), rx = lerp(310, 66, m), ry = lerp(200, 66, m);
+  const d = roughEllipse(cx, cy, rx, ry, 77, lerp(1.12, 1.08, m), lerp(0.035, 0.02, m));
+  const motif: Fr[] = Array.from({ length: 5 }, (_, i) => ({ x: 790 + i * 70, w: 62, state: i === 2 ? 'lit' as const : 'normal' as const, warm: 1, pic: i === 2 ? 'pWheel' : ['pSea', 'pBooks', '', 'pPost', 'pCafe'][i] || undefined, picO: 0.8 }));
   return (
     <>
-      <div style={{ position: 'absolute', inset: 0, opacity: bgK, background: 'radial-gradient(ellipse 70% 70% at 50% 44%, #1b2033 0%, #0c0f1a 50%, #040509 100%)' }} />
       <Svg>
-        {m < 1 && <g filter={m < 0.5 ? 'url(#g12-grease)' : undefined}><path d={d} fill="none" stroke={col} strokeWidth={lerp(8, 2.5, m)} strokeLinecap="round" opacity={1 - p(0, 6)} /></g>}
-        {f > -2 && (
+        <g filter="url(#g12-grease)"><G d={d} p={1} w={lerp(8, 6, m)} /></g>
+        {f > -6 && (
           <g>
-            {Array.from({ length: 50 }, (_, i) => {
-              const x0 = random(`e12x${i}`) * W, y0 = random(`e12y${i}`) * H, z = random(`e12z${i}`);
-              const x = x0 + Math.sin((f + 400 + i * 13) / (60 + z * 40)) * 20, y = ((y0 - (f + 400) * (0.2 + z * 0.6)) % H + H) % H;
-              return <circle key={i} cx={x} cy={y} r={0.8 + z * 2.2} fill="#ffe3a8" opacity={(0.12 + 0.4 * z) * (0.5 + 0.5 * Math.sin((f + 400) / 11 + i)) * bgK} />;
-            })}
-            <g transform={`translate(${W / 2},240)`}><Monogram draw={clamp(0.6 + p(0, 30) * 0.4)} size={1} wordmark={JUNO.name} /></g>
-            <GoldTitle11 text="为什么一年一眨眼" f={f} at={2} size={92} y={468} step={2} id="e12t" />
-            <g transform={`translate(${W / 2 - 210},${560})`} opacity={p(14, 24)}>
-              <rect x={0} y={0} width={420} height={100} fill="none" stroke="#F1C56D" strokeWidth={1.6} />
-              {Array.from({ length: 16 }, (_, i) => <g key={i}><rect x={10 + i * 25.5} y={6} width={9} height={10} fill="#F1C56D" opacity={0.7} /><rect x={10 + i * 25.5} y={84} width={9} height={10} fill="#F1C56D" opacity={0.7} /></g>)}
-              {Array.from({ length: 5 }, (_, i) => <rect key={i} x={20 + i * 80} y={22} width={70} height={56} fill={i === 2 ? '#F1C56D' : 'none'} fillOpacity={0.9} stroke="#F1C56D" strokeWidth={1.4} />)}
-            </g>
-            <text x={W / 2} y={736} textAnchor="middle" opacity={p(20, 14)} style={{ fontFamily: F.serif, fontWeight: 700, fontSize: 46, letterSpacing: '0.06em' }} fill="#f3ede2">你今年最难忘的“第一次”，是什么？</text>
-            <text x={W / 2} y={782} textAnchor="middle" opacity={p(28, 14)} style={{ fontFamily: F.sans, fontSize: 25, letterSpacing: '0.12em' }} fill="rgba(243,237,226,0.58)">@ 那个总说“一年好快”的朋友，这周和TA做一件第一次的事</text>
+            <Tx x={960} y={253} size={64} w={900} anchor="middle" o={p(0, 8)}>J</Tx>
+            <Tx x={960} y={334} size={20} w={700} mono color={SEC} anchor="middle" ls="0.5em" o={p(4, 10)}>JUNO</Tx>
+            <FilmTitle T={T} at={t0 + 0.85} y={470} size={92} q={false} />
+            <g opacity={p(12, 16)}><Strip x0={770} x1={1150} y={520} g={{ h: 100, band: 18, hw: 8, hh: 10, hr: 2, pitch: 16, inset: 4 }} perf="bright" frames={motif} hi /></g>
+            <g opacity={p(18, 14)} filter="url(#g12-grease)"><G d={roughEllipse(965, 570, 52, 44, 141)} p={p(20, 12)} w={6} /></g>
+            <Tx x={960} y={720} size={46} w={700} anchor="middle" o={p(22, 14)}>你今年最难忘的“第一次”，是什么？</Tx>
+            <Tx x={960} y={770} size={25} w={500} color={SEC} anchor="middle" ls="0.1em" o={p(28, 14)}>@ 那个总说“一年好快”的朋友，这周和TA做一件第一次的事</Tx>
             <g opacity={p(34, 16)}>
-              <rect x={W / 2 - 330} y={814} width={660} height={56} rx={28} fill="none" stroke="#e6bd66" strokeOpacity={0.6} />
-              <text x={W / 2} y={850} textAnchor="middle" style={{ fontFamily: F.sans, fontWeight: 500, fontSize: 26, letterSpacing: '0.2em' }} fill="#e6bd66">{JUNO.follow}</text>
+              <rect x={W / 2 - 330} y={806} width={660} height={56} rx={28} fill="none" stroke={A} strokeWidth={2} />
+              <Tx x={960} y={843} size={26} w={500} color={A} anchor="middle" ls="0.2em">{JUNO.follow}</Tx>
             </g>
-            <g opacity={p(42, 16)} style={{ fontFamily: F.sans, fontSize: 17, letterSpacing: '0.03em' }} fill="rgba(243,237,226,0.42)">
-              <text x={W / 2} y={978} textAnchor="middle">《为什么一年一眨眼》 · VIBE知识大赏　|　资料：Janet 1877（经 James 1890）· Wittmann 等 2015 · Lee & Janssen 2019 · Janssen, Naka & Friedman 2013 · Block, Hancock & Zakay 2010 · Stetson, Fiesta & Eagleman 2007</text>
-              <text x={W / 2} y={1004} textAnchor="middle">Jeunehomme 等 2018 · Jeunehomme & D'Argembeau 2020 · Avni-Babad & Ritov 2003 · Kristo, Janssen & Murre 2009 · 国家卫健委 2025年统计公报（“大约60个夏天”为估算）· 图示为示意</text>
+            <g opacity={p(42, 16)}>
+              <Tx x={960} y={978} size={17} w={500} color={TER} anchor="middle">《时间都去哪了》 · VIBE知识大赏　|　资料：Janet 1877（经 James 1890）· Wittmann 等 2015 · Lee & Janssen 2019 · Janssen, Naka & Friedman 2013 · Block, Hancock & Zakay 2010 · Stetson, Fiesta & Eagleman 2007</Tx>
+              <Tx x={960} y={1004} size={17} w={500} color={TER} anchor="middle">Jeunehomme 等 2018 · Jeunehomme & D'Argembeau 2020 · Avni-Babad & Ritov 2003 · Kristo, Janssen & Murre 2009 · 国家卫健委 2025年统计公报（“大约60个夏天”为估算）· 图示为示意</Tx>
             </g>
           </g>
         )}

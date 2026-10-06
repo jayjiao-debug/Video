@@ -413,10 +413,31 @@ export const Captions: React.FC<{ T: number; dark?: (T: number) => boolean }> = 
 export const goldOn = (T: number) => SEGS.some((s) => s.gold && T > s.t0 - 0.2 && T < s.t1 + 0.4);
 export const Mark: React.FC<{ onDark: number; o?: number }> = ({ onDark, o = 1 }) =>
   o <= 0.001 ? null : (
-    <div style={{ position: 'absolute', top: 44, right: 56, opacity: o, fontFamily: F.sans, fontWeight: 500, fontSize: 20, letterSpacing: '0.3em', color: onDark > 0.5 ? 'rgba(243,237,226,.55)' : 'rgba(22,24,26,.52)' }}>
-      <span style={{ color: onDark > 0.5 ? '#F1C56D' : '#C8913A' }}>◆ </span>Juno · VIBE知识大赏
+    <div style={{ position: 'absolute', top: 44, right: 56, opacity: o, fontFamily: F.sans, fontWeight: 700, fontSize: 20, letterSpacing: '0.28em', color: onDark > 0.5 ? 'rgba(244,247,243,.62)' : 'rgba(18,20,23,.55)' }}>
+      <span style={{ fontFamily: F.mono, fontWeight: 700, color: onDark > 0.5 ? '#7D97FF' : A }}>▸ </span>Juno<span style={{ color: onDark > 0.5 ? '#7D97FF' : A }}> · </span>VIBE知识大赏
     </div>
   );
+/** the film's own title type: Noto Sans Black, characters stamp on one by one, accent on the second half,
+    a grease underline drawn after. Works on the light table (ink) and on the black leader (light). */
+export const TITLE_A = '时间', TITLE_B = '都去哪了', TITLE_FULL = '时间都去哪了';
+export const FilmTitle: React.FC<{ T: number; at: number; x?: number; y: number; size: number; dark?: boolean; q?: boolean; o?: number; under?: boolean }> = ({ T, at, x = 960, y, size, dark = false, q = true, o = 1, under = true }) => {
+  if (T < at - 0.01 || o <= 0.001) return null;
+  const chars = [...(TITLE_A + TITLE_B + (q ? '？' : ''))];
+  const ink = dark ? '#F4F7F3' : INK, acc = dark ? '#7D97FF' : A;
+  const w = size * chars.length * 1.04;
+  const x0 = x - w / 2;
+  return (
+    <g opacity={o}>
+      <text x={x} y={y} textAnchor="middle" style={{ fontFamily: F.sans, fontWeight: 900, fontSize: size, letterSpacing: '0.04em' }}>
+        {chars.map((c, i) => {
+          const k = clamp((T - at - i / 30) / (5 / 30));
+          return <tspan key={i} fill={i >= TITLE_A.length && i < TITLE_A.length + TITLE_B.length ? acc : ink} opacity={easeOut(k)}>{c}</tspan>;
+        })}
+      </text>
+      {under && <g filter="url(#g12-grease)"><G d={roughLine(x0 + size * 2.1, y + size * 0.2, x0 + size * 6.0, y + size * 0.17, 131, 2, 6)} p={pr(T, at + chars.length / 30 + 0.05, 0.3)} w={Math.max(6, size / 16)} color={acc} /></g>}
+    </g>
+  );
+};
 /** layer wrapper: full-frame absolutely positioned svg */
 export const Svg: React.FC<{ children: React.ReactNode; style?: React.CSSProperties }> = ({ children, style }) => (
   <svg width={W} height={H} viewBox={`0 0 ${W} ${H}`} style={{ position: 'absolute', left: 0, top: 0, overflow: 'visible', ...style }}>{children}</svg>
