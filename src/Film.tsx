@@ -1,28 +1,29 @@
 import React, { useEffect, useState } from 'react';
 import { AbsoluteFill, Img, continueRender, delayRender, staticFile, useCurrentFrame, useVideoConfig } from 'remotion';
 import { CUT, FPS, SANS, prog, easeOut } from './lib';
-import { World, transAt } from './camera';
-import { Stage1, TitleCard } from './s1';
+import { transAt } from './camera';
+import { SHOTS, CUTS, Balance, TitleCard, PlateShot } from './shots';
+import { Leak, Letterbox } from './cine';
 import { LOOKS, LookCtx, LookId, useLook } from './look';
 import { JUNO } from './brand/identity';
 import { Subtitles } from './subs';
 
-/* 《草稿箱》. During a camera transition the whole stage is rendered SAMPLES times across one frame's time and
+/* 《没走的路》. During a camera transition the whole stage is rendered SAMPLES times across one frame's time and
    averaged (layer k gets opacity 1/(k+1), so every sample weighs the same): real motion blur on the whips and pushes. */
 const SAMPLES = 8;
 
 const useFonts = () => {
   const [handle] = useState(() => delayRender('fonts', { timeoutInMilliseconds: 60000 }));
   useEffect(() => {
-    Promise.all(['700 40px "Noto Serif CJK SC"', '900 40px "Noto Serif CJK SC"', '400 40px "Noto Sans CJK SC"', '900 40px "Noto Sans CJK SC"', '400 40px "JunoMono"', '700 40px "JunoMono"']
+    Promise.all(['700 40px "Noto Serif CJK SC"', '900 40px "Noto Serif CJK SC"', '400 40px "Noto Sans CJK SC"', '900 40px "Noto Sans CJK SC"', '400 40px "JunoMono"', '700 40px "JunoMono"', '700 40px "Cormorant Garamond"']
       .map((f) => document.fonts.load(f, '测试0123P%')).map((p) => p.catch(() => null))).then(() => continueRender(handle));
   }, [handle]);
 };
 
 const StageAt: React.FC<{ T: number }> = ({ T }) => (
   <AbsoluteFill>
-    <World T={T} />
-    <Stage1 T={T} />
+    {SHOTS.map((s, i) => <PlateShot key={i} T={T} shot={s} />)}
+    <Balance T={T} />
     <TitleCard T={T} />
   </AbsoluteFill>
 );
@@ -45,17 +46,21 @@ const FilmInner: React.FC<{ at?: number }> = ({ at }) => {
       <style>{`
         @font-face { font-family: "JunoMono"; src: url(${staticFile('fonts/DejaVuSansMono.ttf')}) format("truetype"); font-weight: 400; }
         @font-face { font-family: "JunoMono"; src: url(${staticFile('fonts/DejaVuSansMono-Bold.ttf')}) format("truetype"); font-weight: 700; }
+        @font-face { font-family: "Cormorant Garamond"; src: url(${staticFile('fonts/cormorant-garamond-latin-600-normal.woff2')}) format("woff2"); font-weight: 600; }
+        @font-face { font-family: "Cormorant Garamond"; src: url(${staticFile('fonts/cormorant-garamond-latin-700-normal.woff2')}) format("woff2"); font-weight: 700; }
       `}</style>
       {Array.from({ length: n }, (_, k) => (
         <AbsoluteFill key={k} style={{ opacity: 1 / (k + 1) }}>
           <StageAt T={T - ((n - 1 - k) / n) * (1 / FPS)} />
         </AbsoluteFill>
       ))}
-      <Subtitles T={T} />
+      <Leak T={T} cuts={CUTS} />
       <AbsoluteFill style={{ pointerEvents: 'none', background: L.vignette }} />
-      <AbsoluteFill style={{ opacity: 0.05, pointerEvents: 'none' }}><Img src={staticFile('grain0.png')} style={{ width: '100%', height: '100%' }} /></AbsoluteFill>
+      <AbsoluteFill style={{ opacity: 0.07, pointerEvents: 'none' }}><Img src={staticFile('grain0.png')} style={{ width: '100%', height: '100%' }} /></AbsoluteFill>
+      <Letterbox />
+      <Subtitles T={T} />
       {mark > 0.001 && (
-        <div style={{ position: 'absolute', top: 44, right: 56, opacity: 0.55 * mark, fontFamily: SANS, fontWeight: 500, fontSize: 20, letterSpacing: '0.3em', color: L.dim }}>
+        <div style={{ position: 'absolute', top: 50, right: 60, opacity: 0.6 * mark, fontFamily: SANS, fontWeight: 500, fontSize: 20, letterSpacing: '0.3em', color: L.dim }}>
           <span style={{ color: L.mark }}>◆ </span>{JUNO.mark}
         </div>
       )}

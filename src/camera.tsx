@@ -1,6 +1,6 @@
 import React from 'react';
 import { AbsoluteFill } from 'remotion';
-import { W, H, prog, easeInOut, expoInOut, hit, lerp, rnd, CUT, FILM_END } from './lib';
+import { W, H, prog, easeInOut, expoInOut, hit, lerp, rnd, CUT, FILM_END, fb } from './lib';
 import { useLook } from './look';
 
 /* The camera of 《最后一面》. Every chapter is a full-frame stage; the camera lives in the transitions between them:
@@ -12,12 +12,17 @@ import { useLook } from './look';
 export type TType = 'whip' | 'tilt' | 'push' | 'roll' | 'shake' | 'blur';
 export type Trans = { at: number; type: TType; d: number; px?: number; py?: number };
 export const TRANS: Trans[] = [
-  { at: CUT.net, type: 'whip', d: 0.42 },
-  { at: CUT.atus, type: 'tilt', d: 0.42 },
-  { at: CUT.dunbar, type: 'whip', d: 0.42 },
+  { at: fb(21), type: 'push', d: 0.45, px: 811, py: 700 },
+  { at: fb(26), type: 'whip', d: 0.42 },
+  { at: CUT.intro, type: 'push', d: 0.5, px: 922, py: 600 },
+  { at: CUT.model, type: 'whip', d: 0.42 },
+  { at: fb(64), type: 'tilt', d: 0.42 },
+  { at: CUT.net, type: 'push', d: 0.5, px: 1392, py: 365 },
+  { at: CUT.atus, type: 'whip', d: 0.42 },
+  { at: CUT.dunbar, type: 'tilt', d: 0.42 },
   { at: CUT.drop, type: 'shake', d: 0.0 },
   { at: CUT.pay, type: 'roll', d: 0.5 },
-  { at: CUT.end, type: 'push', d: 0.5, px: 960, py: 470 },
+  { at: CUT.end, type: 'push', d: 0.5, px: 1354, py: 331 },
 ];
 
 export const transAt = (T: number) => TRANS.find((t) => t.d > 0 && Math.abs(T - t.at) < t.d / 2 + 1 / 30);

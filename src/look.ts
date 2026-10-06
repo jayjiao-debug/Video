@@ -24,7 +24,7 @@ export const LOOKS: Record<LookId, Look> = {
     accent: '#ffb547', accentGlow: 'rgba(255,181,71,0.7)', second: '#7aa2ff', secondGlow: 'rgba(122,162,255,0.6)', mark: '#ffb547',
     pointIn: '#ffb547', pointOut: 'rgba(242,244,248,0.6)', panel: 'rgba(22,28,44,0.92)', panelEdge: 'rgba(242,244,248,0.14)',
     subInk: '#f6f1e6', subShadow: '0 2px 14px rgba(0,0,0,0.95), 0 0 2px rgba(0,0,0,0.9)',
-    subBand: 'linear-gradient(180deg, rgba(4,6,10,0) 0%, rgba(4,6,10,0.72) 55%, rgba(4,6,10,0.9) 100%)', subNum: '#ffc46b',
+    subBand: 'linear-gradient(180deg, rgba(4,6,10,0) 0%, rgba(4,6,10,0.72) 55%, rgba(4,6,10,0.9) 100%)', subNum: '#f4b860',
     vignette: 'radial-gradient(ellipse 75% 70% at 50% 50%, rgba(0,0,0,0) 55%, rgba(0,0,0,0.55) 100%)',
   },
   dusk: {

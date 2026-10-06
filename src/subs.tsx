@@ -17,9 +17,9 @@ export const Subtitles: React.FC<{ T: number }> = ({ T }) => {
   const band = Math.max(0, ...lines.map(([a, z]) => Math.min(easeOut(prog(T, a - 0.3, a)), 1 - prog(T, z + 0.4, z + 0.8))));
   return (
     <>
-      <div style={{ position: 'absolute', left: 0, right: 0, bottom: 0, height: 240, opacity: band, background: L.subBand }} />
+      <div style={{ position: 'absolute', left: 0, right: 0, bottom: 0, height: 0, opacity: band, background: L.subBand }} />
       {cur && (
-        <div style={{ position: 'absolute', left: 0, right: 0, top: 930, textAlign: 'center', opacity: Math.min(easeOut(prog(T, cur[0] - 0.05, cur[0] + 0.12)), 1 - prog(T, cur[1], cur[1] + 0.1)) }}>
+        <div style={{ position: 'absolute', left: 0, right: 0, top: 970, textAlign: 'center', opacity: Math.min(easeOut(prog(T, cur[0] - 0.05, cur[0] + 0.12)), 1 - prog(T, cur[1], cur[1] + 0.1)) }}>
           <span style={{ fontFamily: ZH, fontWeight: 700, fontSize: 56, color: L.subInk, letterSpacing: '0.03em', lineHeight: 1.25, textShadow: L.subShadow, fontVariantNumeric: 'lining-nums' }}><Rich c={L.subNum} s={cur[2].replace(/[。，；：、——]+$/, '')} /></span>
         </div>
       )}

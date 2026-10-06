@@ -1,8 +1,8 @@
 {
-  "id": "mt_dusk-1791290929",
-  "composition": "RegretDusk",
+  "id": "regret_v1-1791292986",
+  "composition": "Regret",
   "start": 0,
-  "end": 1007,
-  "chunks": 12,
-  "output": "mt_dusk"
+  "end": 2908,
+  "chunks": 26,
+  "output": "regret_v1"
 }
