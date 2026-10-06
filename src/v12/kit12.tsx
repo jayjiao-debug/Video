@@ -378,7 +378,10 @@ export const Captions: React.FC<{ T: number; dark?: (T: number) => boolean }> = 
     if (s.gold) {
       // gold line: holds until the next caption-bearing segment starts (or 0.6 s after it ends)
       let z = s.t1 + 0.6;
-      for (let j = i + 1; j < SEGS.length; j++) { if (SEGS[j].caption || SEGS[j].block !== s.block) { z = Math.max(s.t1 + 0.15, SEGS[j].t0 - 0.02); break; } }
+      for (let j = i + 1; j < SEGS.length; j++) {
+        if (SEGS[j].caption) { z = SEGS[j].t0 - 0.02; break; }
+        if (SEGS[j].block !== s.block) { z = Math.max(s.t1 + 0.15, SEGS[j].t0 - 0.02); break; }
+      }
       const prevGold = i > 0 && SEGS[i - 1].gold && SEGS[i - 1].caption && SEGS[i - 1].block === s.block;
       const a = prevGold ? s.t0 + 0.02 : s.t0 - 0.12;
       if (T < a || T > z) return;
@@ -395,7 +398,7 @@ export const Captions: React.FC<{ T: number; dark?: (T: number) => boolean }> = 
       );
       return;
     }
-    const a = s.t0 - 0.06, z = (next && next.caption && !next.gold ? Math.min(s.t1 + 0.12, next.t0 - 0.04) : s.t1 + 0.25);
+    const a = s.t0 - 0.06, z = next && next.caption ? (next.gold ? Math.min(s.t1 + 0.1, next.t0 - 0.16) : Math.min(s.t1 + 0.12, next.t0 - 0.04)) : s.t1 + 0.25;
     if (T < a || T > z) return;
     const o = (a <= 0.01 ? 1 : eo(T, a, 0.12)) * (1 - pr(T, z - 0.1, 0.1));
     out.push(

@@ -19,7 +19,7 @@ export const HookScene: React.FC<{ T: number }> = ({ T }) => {
   const { w1, x1, x2, x3 } = hookFrames(st);
   // camera: table (cx,cy) -> screen (960,595) at scale s
   const tG = cue('H2', '高中') - 0.05, tN = cue('H3', '现在') - 0.05;
-  const c1 = { s: 2.0, cx: 410 + 128 * st, cy: 372 }, c2 = { s: 2.0, cx: x2 + 262, cy: 372 }, c3 = { s: 0.86, cx: 1082 + 128, cy: 455 };
+  const c1 = { s: 2.0 + 0.05 * eo(T, 0, 1.4), cx: 410 + 128 * st + 26 * eio(T, 0, 1.2), cy: 372 }, c2 = { s: 2.0, cx: x2 + 262, cy: 372 }, c3 = { s: 0.86, cx: 1082 + 128, cy: 455 };
   const kG = eio(T, tG, 0.4), kN = eio(T, tN, 0.45);
   let s = lerp(c1.s, c2.s, kG), cx = lerp(c1.cx, c2.cx, kG), cy = lerp(c1.cy, c2.cy, kG);
   s = lerp(s, c3.s, kN); cx = lerp(cx, c3.cx, kN); cy = lerp(cy, c3.cy, kN);
@@ -83,7 +83,7 @@ export const HookScene: React.FC<{ T: number }> = ({ T }) => {
 };
 
 /* ============================== T · title on the black leader ============================== */
-export const tRunOut = () => BLK.B1[0] - 0.5;
+export const tRunOut = () => BLK.B1[0] - 0.25;
 export const TitleScene: React.FC<{ T: number }> = ({ T }) => {
   const a = tWhip() + 0.3, ro = tRunOut();
   if (T < a || T > ro + 0.5) return null;
@@ -103,9 +103,9 @@ export const TitleScene: React.FC<{ T: number }> = ({ T }) => {
           </g>
         ))}
         {T < TITLE_T + 0.1 && <text x={960} y={590} textAnchor="middle" opacity={eo(T, cue('T1') - 0.05, 0.15) * (1 - eo(T, TITLE_T - 0.15, 0.2))} style={{ fontFamily: F.serif, fontWeight: 900, fontSize: 110, letterSpacing: '0.08em' }} fill="#F3EDE2">为什么？</text>}
-        <GoldTitle11 text="为什么一年一眨眼" f={f} at={at} size={120} y={590} step={2} fade={10} id="t12" />
+        <GoldTitle11 text="为什么一年一眨眼" f={f} at={at} size={120} y={590} step={1} fade={6} id="t12" />
         {/* splice tape at the trailing edge */}
-        <rect x={1900} y={0} width={120} height={H} fill="#EEF2EE" opacity={0.35} />
+        <rect x={1924} y={0} width={120} height={H} fill="#EEF2EE" opacity={0.35} />
       </Svg>
     </Layer>
   );
@@ -144,14 +144,14 @@ export const B1Scene: React.FC<{ T: number; x: number }> = ({ T, x }) => {
   const sq = T > tShort ? 1 - 0.12 * Math.sin(Math.PI * pr(T, tShort, 0.2)) : 1;
   const numO = 1 - eo(T, tLong, 0.3);
   const val = T < t5y ? Number(cnt(T, t5p, 5, 0.6)) : Math.round(lerp(5, 20, eio(T, t20p, 0.6)));
-  const age = T < t20p - 0.05 ? '20岁' : '5岁';
+  const age = T < t20p + 0.3 ? '20岁' : '5岁';
   const arrowO = 1 - (pr(T, t5y, 0.15) * (T < t5y + 0.6 ? 1 : 0));
   const arrowP = T < t5y ? pr(T, t5p + 0.75, 0.43) : pr(T, t5y + 0.6, 0.43);
   return (
     <Layer x={x}>
       <Header T={T} a={a} vol="01" field="哲学" title="一年，占你人生多少？" eng="THE PROPORTIONAL THEORY" chip="说法" line="Paul Janet · 1877（经 William James 1890 转述）" chipPulse={tPh} />
       <Svg>
-        <Tx x={148} y={470} size={74} w={900} o={eo(T, t5p - 0.1, 0.25) * numO}>{`${age}的一年 = 人生的`}</Tx>
+        <Tx x={148} y={470} size={74} w={900} o={eo(T, t20, 0.3) * numO}>{`${age}的一年 = 人生的`}</Tx>
         <Tx x={906} y={482} size={176} w={900} color={A} tnum o={eo(T, t5p, 0.2) * numO}>{`${val}%`}</Tx>
         <Tx x={906} y={548} size={34} w={500} color={SEC} o={eo(T, t5p + 0.3, 0.3) * numO}>按比例算 · 估算</Tx>
         <Strip x0={128} x1={1780} y={580} g={GA.life} perf="dim" frames={fr.map((f) => ({ ...f, x: f.x + (1 - eo(T, a, 0.9)) * 1700 }))} tc={tcOf(T)} edge={[[160, 'ISO 400 · 第01卷']]} />
@@ -274,9 +274,9 @@ export const B3Scene: React.FC<{ T: number; x: number }> = ({ T, x }) => {
         <g opacity={eo(T, t86 + 0.5, 0.3)}><rect x={610} y={764} width={28} height={28} rx={4} fill={A} /><Tx x={650} y={790} size={34} w={500} color={LAB}>觉得自己也这样</Tx></g>
         {T > t45 + 0.3 && (
           <g transform={`translate(1410,752) scale(${lerp(1.25, 1, eo(T, t45 + 0.3, 0.22)) * (T > tCalm ? 1 + 0.1 * Math.sin(Math.PI * pr(T, tCalm, 0.3)) : 1)})`} opacity={eo(T, t45 + 0.3, 0.22)}>
-            <rect x={0} y={0} width={372} height={54} rx={5} fill="#E1E6E2" stroke="#7D868C" strokeWidth={1.4} />
-            <Tx x={14} y={38} size={22} w={400} mono color={SEC}>▸</Tx>
-            <Tx x={40} y={39} size={34} w={700}>只是相关，不是因果</Tx>
+            <rect x={0} y={-8} width={470} height={66} rx={6} fill="#E1E6E2" stroke="#7D868C" strokeWidth={1.6} />
+            <Tx x={14} y={38} size={26} w={400} mono color={SEC}>▸</Tx>
+            <Tx x={44} y={41} size={44} w={700}>只是相关，不是因果</Tx>
           </g>
         )}
         {T > tYou - 0.05 && (
@@ -288,7 +288,7 @@ export const B3Scene: React.FC<{ T: number; x: number }> = ({ T, x }) => {
           <G d={roughLine(712, 410, 1208, 406, 51, 1.5, 6)} p={pr(T, tQ, 0.5)} w={6} />
           <G d={roughEllipse(fx + 15, fy + 15, 30, 28, 52)} p={pr(T, tYou, 0.3)} w={6} o={1 - eo(T, tHeard, 0.2)} />
           <GText x={fx + 52} y={fy + 30} p={pr(T, tYou + 0.15, 0.3)} size={40} text="你" o={1 - eo(T, tHeard, 0.2)} />
-          <G d={roughLine(1416, 818, 1772, 816, 53, 1.5, 6)} p={pr(T, tCalm + 0.1, 0.3)} w={6} />
+          <G d={roughLine(1416, 826, 1872, 824, 53, 1.5, 6)} p={pr(T, tCalm + 0.1, 0.3)} w={6} />
         </Grease>
       </Svg>
     </Layer>

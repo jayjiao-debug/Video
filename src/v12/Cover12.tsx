@@ -22,7 +22,9 @@ export const Cover12: React.FC<{ w: number; h: number }> = ({ w, h }) => {
   });
   const KX = 640, KY = 704, kLen = 20 + 4.87 * pitch + 6;
   const replay = ['pPost', 'pPaper', 'pDrink', 'pCafe', 'pWalk'].map((id, i) => ({ x: KX + 20 + i * pitch, w: i < 4 ? 88 : 0.87 * pitch - 7, state: (i < 4 ? 'key' : 'dim') as 'key' | 'dim', pic: id, picO: i < 4 ? 1 : 0.6 }));
-  const blockY = tall ? 560 : 300;
+  const sc = tall ? 0.6 : 0.78;
+  const bx = (w - 1664 * sc) / 2 - 128 * sc;
+  const by = (tall ? 500 : 250) - 340 * sc;
   return (
     <AbsoluteFill style={{ background: 'radial-gradient(ellipse 78% 82% at 50% 40%, #FCFDFB 0%, #F4F7F3 46%, #E6EBE6 82%, #D7DDD8 100%)' }}>
       <Defs12 />
@@ -32,7 +34,7 @@ export const Cover12: React.FC<{ w: number; h: number }> = ({ w, h }) => {
           {Array.from({ length: 14 }, (_, i) => <line key={`h${i}`} x1={0} y1={60 + i * 120} x2={w} y2={60 + i * 120} />)}
         </g>
         {/* the walk (33 frames) and its replay (4.87 frames), at the film's own gauge, scaled to the cover */}
-        <g transform={`translate(${tall ? -40 : -128 * 0.86 + 40},${blockY - 376 * 0.86 * s}) scale(${0.86 * s})`}>
+        <g transform={`translate(${bx},${by}) scale(${sc})`}>
           <Strip x0={128} x1={1792} y={376} g={GA.card} perf="dim" frames={rowFr(0)} />
           <Strip x0={128} x1={148 + 16 * pitch + 12} y={500} g={GA.card} perf="dim" frames={rowFr(1)} />
           <Strip x0={KX} x1={KX + kLen} y={KY} g={GA.card} perf="bright" frames={replay} hi />
@@ -44,13 +46,21 @@ export const Cover12: React.FC<{ w: number; h: number }> = ({ w, h }) => {
           </Grease>
         </g>
         {/* hook + title */}
-        <g style={{ fontFamily: F.sans }}>
-          <text x={w / 2} y={tall ? 210 : 132} textAnchor="middle" style={{ fontWeight: 900, fontSize: tall ? 74 : 70, letterSpacing: '0.04em' }} fill={INK}>33分钟的路，回忆只剩不到5分钟</text>
-          <text x={w / 2} y={tall ? 1180 : 972} textAnchor="middle" style={{ fontFamily: F.sans, fontWeight: 900, fontSize: tall ? 104 : 96, letterSpacing: '0.04em' }} fill={INK}>
-            为什么一年<tspan fill={A}>一眨眼</tspan>？
-          </text>
-          <text x={w / 2} y={tall ? 1300 : 1040} textAnchor="middle" style={{ fontWeight: 500, fontSize: tall ? 30 : 26, letterSpacing: '0.4em' }} fill={SEC}>◆ VIBE知识大赏</text>
-        </g>
+        {tall ? (
+          <g style={{ fontFamily: F.sans }}>
+            <text x={w / 2} y={180} textAnchor="middle" style={{ fontWeight: 900, fontSize: 82, letterSpacing: '0.04em' }} fill={INK}>33分钟的路，</text>
+            <text x={w / 2} y={290} textAnchor="middle" style={{ fontWeight: 900, fontSize: 82, letterSpacing: '0.04em' }} fill={INK}>回忆只剩不到<tspan fill={A}>5分钟</tspan></text>
+            <text x={w / 2} y={960} textAnchor="middle" style={{ fontWeight: 900, fontSize: 132, letterSpacing: '0.04em' }} fill={INK}>为什么一年</text>
+            <text x={w / 2} y={1112} textAnchor="middle" style={{ fontWeight: 900, fontSize: 132, letterSpacing: '0.04em' }} fill={A}>一眨眼？</text>
+            <text x={w / 2} y={1170} textAnchor="middle" style={{ fontWeight: 500, fontSize: 30, letterSpacing: '0.4em' }} fill={SEC}>◆ VIBE知识大赏</text>
+          </g>
+        ) : (
+          <g style={{ fontFamily: F.sans }}>
+            <text x={w / 2} y={130} textAnchor="middle" style={{ fontWeight: 900, fontSize: 70, letterSpacing: '0.04em' }} fill={INK}>33分钟的路，回忆只剩不到<tspan fill={A}>5分钟</tspan></text>
+            <text x={w / 2} y={968} textAnchor="middle" style={{ fontWeight: 900, fontSize: 100, letterSpacing: '0.04em' }} fill={INK}>为什么一年<tspan fill={A}>一眨眼</tspan>？</text>
+            <text x={w / 2} y={1040} textAnchor="middle" style={{ fontWeight: 500, fontSize: 26, letterSpacing: '0.4em' }} fill={SEC}>◆ VIBE知识大赏</text>
+          </g>
+        )}
       </svg>
     </AbsoluteFill>
   );

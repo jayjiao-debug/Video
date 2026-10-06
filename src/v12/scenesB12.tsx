@@ -215,7 +215,7 @@ export const B8Scene: React.FC<{ T: number; x: number; inK: number }> = ({ T, x,
   // draw the deck order so merged frames stack
   const stripX0 = lerp(128, 669, kGold), stripX1 = lerp(1792 - 5 * 135.6 * kDeck, 669 + 4 * 135.6 + 20, kGold);
   const flash = T > tCut && T < tCut + 0.07;
-  const barHero = 180 * eo(T, t5 + 0.5, 0.6), barCmp = 36 * eo(T, t5, 0.6);
+  const barHero = 260 * eo(T, t5 + 0.1, 0.7), barCmp = 52 * eo(T, tCut + 0.5, 0.5);
   const dim = goldOn(T) ? 0.55 : 1;
   return (
     <Layer x={x} o={inK}>
@@ -223,14 +223,15 @@ export const B8Scene: React.FC<{ T: number; x: number; inK: number }> = ({ T, x,
       <Svg>
         <Strip x0={stripX0} x1={stripX1} y={458} g={{ h: 164, band: 40, hw: 13, hh: 17, hr: 3, pitch: 25.6, inset: 11 }} perf="dim" frames={fr} tc={tcOf(T)} />
         {flash && <rect x={pos(29)} y={498} width={125} height={85} fill="#FCFDFB" opacity={0.9} />}
-        <g opacity={dim * (1 - kGold)}>
-          <Tx x={1180} y={636} size={34} w={500} color={LAB} o={eo(T, t5, 0.3)}>被记住的机会</Tx>
-          <rect x={1240} y={830 - barHero} width={80} height={barHero} rx={3} fill={A} />
-          <rect x={1460} y={830 - barCmp} width={80} height={barCmp} rx={3} fill="#AEB6BC" />
-          <Tx x={1280} y={872} size={30} w={700} color={LAB} anchor="middle" o={eo(T, t5, 0.3)}>切换那一刻</Tx>
-          <Tx x={1500} y={872} size={30} w={700} color={LAB} anchor="middle" o={eo(T, t5, 0.3)}>其他时刻</Tx>
-          <Tx x={200} y={820} size={112} w={900} color={A} tnum o={eo(T, t5, 0.2)}>{String(Math.max(1, Math.round(lerp(1, 5, eo(T, t5, 0.6)))))}</Tx>
-          <Tx x={270} y={820} size={56} w={900} color={A} o={pop(T, t5 + 0.6)}>倍以上</Tx>
+        <g opacity={dim}>
+          <Tx x={1250} y={536} size={34} w={500} color={LAB} o={eo(T, tCut + 0.3, 0.3)}>被记住的机会</Tx>
+          <rect x={1250} y={820 - barHero} width={120} height={barHero} rx={4} fill={A} />
+          <rect x={1480} y={820 - barCmp} width={120} height={barCmp} rx={4} fill="#AEB6BC" />
+          <line x1={1220} y1={820} x2={1640} y2={820} stroke={SEC} strokeWidth={2} opacity={eo(T, tCut + 0.3, 0.3)} />
+          <Tx x={1310} y={858} size={32} w={700} color={LAB} anchor="middle" o={eo(T, tCut + 0.3, 0.3)}>切换那一刻</Tx>
+          <Tx x={1540} y={858} size={32} w={700} color={LAB} anchor="middle" o={eo(T, tCut + 0.3, 0.3)}>其他时刻</Tx>
+          <Tx x={240} y={830} size={176} w={900} color={A} tnum o={eo(T, t5, 0.2)}>{String(Math.max(1, Math.round(lerp(1, 5, eo(T, t5, 0.6)))))}</Tx>
+          <Tx x={360} y={830} size={72} w={900} color={A} o={pop(T, t5 + 0.6)}>倍以上</Tx>
         </g>
         {kGold > 0 && <SChip x={1100} y={676} label="示意" t={tGold + 0.6} T={T} />}
         <Grease>
@@ -261,11 +262,12 @@ export const B9Scene: React.FC<{ T: number; x: number }> = ({ T, x }) => {
   const vary = ['pSea', 'pPost', 'pPaper', 'pDrink', 'pCafe', 'pWheel', 'pBooks', 'pSea', 'pPost', 'pDrink'];
   const tTask = cue('B9b', '重复的任务');
   const pre = (t: number) => 560 * eo(T, t, 0.7);
-  const L1 = T < tNow ? pre(tTask) : lerp(560, 1000, clamp((T - tNow) / 0.8)), L2 = T < tNow ? pre(tTask + 0.1) : lerp(560, 731, eo(T, tNow, 0.6));
+  const stampEarly = Math.min(560, 92 * Math.floor(Math.max(0, T - a - 0.4) / 0.32));
+  const L1 = T < tNow ? Math.max(stampEarly, pre(tTask)) : lerp(560, 1000, clamp((T - tNow) / 0.8)), L2 = T < tNow ? pre(tTask + 0.1) : lerp(560, 731, eo(T, tNow, 0.6));
   const L3 = T < tBack ? pre(tTask + 0.2) : lerp(560, 731, eo(T, tBack, 0.6)), L4 = T < tBack ? pre(tTask + 0.3) : lerp(560, 913, eo(T, tBack, 0.6));
   return (
     <Layer x={x}>
-      <Header T={T} a={a} vol="09" field="心理学" title="重复：当下慢，回头短" eng="ROUTINE AND THE PERCEPTION OF TIME" chip="研究" line="Avni-Babad & Ritov · 2003 · 93人 · 20–25岁" />
+      <Header T={T} a={a} vol="09" field="心理学" title="重复：当下慢，回头短" eng="ROUTINE AND THE PERCEPTION OF TIME" chip="研究" line={`Avni-Babad & Ritov · 2003 · ${cnt(T, a + 0.3, 93, 0.8)}人 · 20–25岁`} />
       <Svg>
         <Tx x={148} y={480} size={64} w={900} o={eo(T, a + 0.3, 0.3)}>当下</Tx>
         <Tx x={148} y={720} size={64} w={900} o={eo(T, a + 0.3, 0.3)}>回头看</Tx>
@@ -292,7 +294,7 @@ export const PE1Scene: React.FC<{ T: number; x: number }> = ({ T, x }) => {
   const z = bound('E1', 'E2');
   if (T < a - 0.6 || T > z + 0.7) return null;
   const blink = T > tBl && T < tBl + 0.07;
-  const goldDim = goldOn(T) ? 0.55 : 1;
+  const goldDim = 1 - 0.45 * eo(T, tNow - 0.3, 0.3);
   const fadeP = 1 - eo(T, tGood, 0.4);
   const zipK = eio(T, tNow, 0.4);
   const deckK = eio(T, tBack, 0.5);
@@ -331,6 +333,11 @@ export const PE1Scene: React.FC<{ T: number; x: number }> = ({ T, x }) => {
             {blink && <rect x={698} y={285} width={524} height={220} fill="#fff" opacity={0.9} />}
           </g>
         </g>
+        {T < tNow + 0.2 && (
+          <g opacity={1 - eo(T, tNow - 0.45, 0.3)}>
+            <GoldTitle11 text="为什么一年一眨眼" f={T * 30} at={(cue('P1', '为什么') - 0.1) * 30} size={96} y={720} step={1} fade={6} id="p12t" />
+          </g>
+        )}
         <g opacity={fadeP}>
           <Tx x={148} y={676} size={64} w={900} o={eo(T, tNow - 0.2, 0.3)}>当下</Tx>
           <Tx x={148} y={786} size={64} w={900} o={eo(T, tNow - 0.2, 0.3)}>回头看</Tx>
@@ -401,6 +408,7 @@ export const E2Scene: React.FC<{ T: number; inK: number; outK: number }> = ({ T,
         <Tx x={480} y={752} size={34} w={700} color={LAB} anchor="middle" o={eo(T, tPull + 0.3, 0.3) * lerp(1, 0.5, fadeL)}>一个人</Tx>
         <Tx x={1440} y={752} size={34} w={700} color={LAB} anchor="middle" o={eo(T, tPull + 0.3, 0.3)}>一起</Tx>
         <SChip x={1160} y={780} label="示意" t={tMem + 0.2} T={T} />
+        <SChip x={200} y={780} label="只是相关" t={tMem + 0.35} T={T} />
         <Grease>
           {[0, 1].map((i) => {
             const bx = 1395 + i * 95, by = 520 - i * 15, k = pop(T, tTalk + i * 0.4);
@@ -504,19 +512,19 @@ export const EndScene: React.FC<{ T: number }> = ({ T }) => {
               return <circle key={i} cx={x} cy={y} r={0.8 + z * 2.2} fill="#ffe3a8" opacity={(0.12 + 0.4 * z) * (0.5 + 0.5 * Math.sin((f + 400) / 11 + i)) * bgK} />;
             })}
             <g transform={`translate(${W / 2},240)`}><Monogram draw={clamp(0.6 + p(0, 30) * 0.4)} size={1} wordmark={JUNO.name} /></g>
-            <GoldTitle11 text="为什么一年一眨眼" f={f} at={10} size={92} y={468} id="e12t" />
-            <g transform={`translate(${W / 2 - 210},${560})`} opacity={p(26, 30)}>
+            <GoldTitle11 text="为什么一年一眨眼" f={f} at={2} size={92} y={468} step={2} id="e12t" />
+            <g transform={`translate(${W / 2 - 210},${560})`} opacity={p(14, 24)}>
               <rect x={0} y={0} width={420} height={100} fill="none" stroke="#F1C56D" strokeWidth={1.6} />
               {Array.from({ length: 16 }, (_, i) => <g key={i}><rect x={10 + i * 25.5} y={6} width={9} height={10} fill="#F1C56D" opacity={0.7} /><rect x={10 + i * 25.5} y={84} width={9} height={10} fill="#F1C56D" opacity={0.7} /></g>)}
               {Array.from({ length: 5 }, (_, i) => <rect key={i} x={20 + i * 80} y={22} width={70} height={56} fill={i === 2 ? '#F1C56D' : 'none'} fillOpacity={0.9} stroke="#F1C56D" strokeWidth={1.4} />)}
             </g>
-            <text x={W / 2} y={736} textAnchor="middle" opacity={p(40, 18)} style={{ fontFamily: F.serif, fontWeight: 700, fontSize: 46, letterSpacing: '0.06em' }} fill="#f3ede2">你今年最难忘的“第一次”，是什么？</text>
-            <text x={W / 2} y={782} textAnchor="middle" opacity={p(50, 18)} style={{ fontFamily: F.sans, fontSize: 25, letterSpacing: '0.12em' }} fill="rgba(243,237,226,0.58)">@ 那个总说“一年好快”的朋友，这周和TA做一件第一次的事</text>
-            <g opacity={p(58, 20)}>
+            <text x={W / 2} y={736} textAnchor="middle" opacity={p(20, 14)} style={{ fontFamily: F.serif, fontWeight: 700, fontSize: 46, letterSpacing: '0.06em' }} fill="#f3ede2">你今年最难忘的“第一次”，是什么？</text>
+            <text x={W / 2} y={782} textAnchor="middle" opacity={p(28, 14)} style={{ fontFamily: F.sans, fontSize: 25, letterSpacing: '0.12em' }} fill="rgba(243,237,226,0.58)">@ 那个总说“一年好快”的朋友，这周和TA做一件第一次的事</text>
+            <g opacity={p(34, 16)}>
               <rect x={W / 2 - 330} y={814} width={660} height={56} rx={28} fill="none" stroke="#e6bd66" strokeOpacity={0.6} />
               <text x={W / 2} y={850} textAnchor="middle" style={{ fontFamily: F.sans, fontWeight: 500, fontSize: 26, letterSpacing: '0.2em' }} fill="#e6bd66">{JUNO.follow}</text>
             </g>
-            <g opacity={p(66, 20)} style={{ fontFamily: F.sans, fontSize: 17, letterSpacing: '0.03em' }} fill="rgba(243,237,226,0.42)">
+            <g opacity={p(42, 16)} style={{ fontFamily: F.sans, fontSize: 17, letterSpacing: '0.03em' }} fill="rgba(243,237,226,0.42)">
               <text x={W / 2} y={978} textAnchor="middle">《为什么一年一眨眼》 · VIBE知识大赏　|　资料：Janet 1877（经 James 1890）· Wittmann 等 2015 · Lee & Janssen 2019 · Janssen, Naka & Friedman 2013 · Block, Hancock & Zakay 2010 · Stetson, Fiesta & Eagleman 2007</text>
               <text x={W / 2} y={1004} textAnchor="middle">Jeunehomme 等 2018 · Jeunehomme & D'Argembeau 2020 · Avni-Babad & Ritov 2003 · Kristo, Janssen & Murre 2009 · 国家卫健委 2025年统计公报（“大约60个夏天”为估算）· 图示为示意</text>
             </g>
