@@ -1,0 +1,124 @@
+token present: yes
+sketchfab search "RRS Discovery"
+  saved out/search/rrs-discovery/01_41d1906596d549bb94150425600d3299.jpg 0.0 MB
+sketchfab search "Fram ship"
+  saved out/search/fram-ship/01_23fc292d5b8a4ab6be7c53260e515cb6.jpg 0.0 MB
+sketchfab search "schooner"
+  saved out/search/schooner/01_ee2536a947c24610a21ddf7fd66be598.jpg 0.0 MB
+  saved out/search/schooner/02_1f320f9e96cd4a9d961d7b1553a2feed.jpg 0.0 MB
+  saved out/search/schooner/03_751174e48b764e829410cd323144833c.jpg 0.0 MB
+  saved out/search/schooner/04_1359f1408b6c4dccae835f26cc70f5f2.jpg 0.0 MB
+  saved out/search/schooner/05_21d017e97a754c47be3c4674b39f0e4a.jpg 0.0 MB
+  saved out/search/schooner/06_95c540e289004a7da18683adbdad6125.jpg 0.0 MB
+  saved out/search/schooner/07_b1f98b0e3d4446c1ba4ff9ba2660aff7.jpg 0.0 MB
+  saved out/search/schooner/08_56148c53e9664ee683b598fadb457992.jpg 0.0 MB
+  saved out/search/schooner/09_019f9fde117144439741561d833be605.jpg 0.0 MB
+  saved out/search/schooner/10_2c36f75682a2495ba8df96aec5f36450.jpg 0.0 MB
+  saved out/search/schooner/11_38736322fce047d28b32c916662305cf.jpg 0.0 MB
+  saved out/search/schooner/12_99276cd07de64d8db894bade93d82322.jpg 0.0 MB
+  saved out/search/schooner/13_6e49a9bc95c7451f9bae62ec33969a7f.jpg 0.0 MB
+  saved out/search/schooner/14_4c065e3bb64b4b6e9b1ec74fc9bbdd84.jpg 0.0 MB
+  saved out/search/schooner/15_4a5a10c4049e4ed98ce5bcbc831a0ddc.jpg 0.0 MB
+  saved out/search/schooner/16_d970826eb9d940aab63bea7ee07ff592.jpg 0.0 MB
+sketchfab search "brigantine"
+  saved out/search/brigantine/01_0fbda14eb9c0493da01a713ff810ef1e.jpg 0.0 MB
+  saved out/search/brigantine/02_c79e2d1129034dde86f6ec404d7f16f1.jpg 0.0 MB
+  saved out/search/brigantine/03_e9b7bdd241e745a8a4b98dd2bfc1c925.jpg 0.0 MB
+  saved out/search/brigantine/04_1318e67490854e1199a7f97d976d56c2.jpg 0.0 MB
+sketchfab search "barque"
+  saved out/search/barque/01_b28848015b134700ac9cfb8b94ee962f.jpg 0.0 MB
+  saved out/search/barque/02_5c56a4feeb8e4c67b5a4d903b4a96e5a.jpg 0.0 MB
+  saved out/search/barque/03_170e890a4f4542dead948b6218ec65ff.jpg 0.0 MB
+  saved out/search/barque/04_b018616beead40548d718f4879cfe00d.jpg 0.0 MB
+  saved out/search/barque/05_c7ca783d73a844eb8c595bd526231070.jpg 0.0 MB
+  saved out/search/barque/06_7c92affe55f44f59897a58599cb78f61.jpg 0.0 MB
+  saved out/search/barque/07_407f20ae2b4a4ba090396ef3473b408f.jpg 0.0 MB
+  saved out/search/barque/08_7a302590b032442fa4d94cda3b8e8994.jpg 0.0 MB
+  saved out/search/barque/09_0a850ba9bec34e47bbf0d87bd9a45c4c.jpg 0.0 MB
+  saved out/search/barque/10_290bb9dd29174d4b956988ba1e52e8b0.jpg 0.0 MB
+  saved out/search/barque/11_997bc7a8d5aa41339574862edea4972c.jpg 0.0 MB
+  saved out/search/barque/12_9cd7568dec3348b69669f16f3a54d457.jpg 0.0 MB
+  saved out/search/barque/13_4f0f138a12b54cc4b926ca2824e6ee5d.jpg 0.0 MB
+  saved out/search/barque/14_7697272c2970482e98c6ea6d324abf9c.jpg 0.0 MB
+  saved out/search/barque/15_c2c48c579ec749268d1b543f598cda80.jpg 0.0 MB
+  saved out/search/barque/16_4efa3ecc23bc4f69a4f0facaf3aa5c5d.jpg 0.0 MB
+sketchfab search "three masted ship"
+  saved out/search/three-masted-ship/01_2ceabad6370844d198e4f503435d0b5f.jpg 0.0 MB
+  saved out/search/three-masted-ship/02_019f9fde117144439741561d833be605.jpg 0.0 MB
+  saved out/search/three-masted-ship/03_b097e67c207540628828ebb55afce914.jpg 0.0 MB
+  saved out/search/three-masted-ship/04_f6e963e357b14e7e935bf1aff81b81e3.jpg 0.0 MB
+  saved out/search/three-masted-ship/05_8177e5ec92a247ea82e3144890f55f9f.jpg 0.0 MB
+  saved out/search/three-masted-ship/06_277b16e287e04cf59d94776bfd5f0d65.jpg 0.0 MB
+  saved out/search/three-masted-ship/07_c08f857ea95d409db3b95565ec1f5a79.jpg 0.0 MB
+  saved out/search/three-masted-ship/08_8490acd37fe24074a827d7c5897a3871.jpg 0.0 MB
+  saved out/search/three-masted-ship/09_8e4f9ba8a7834ba39edf6f2877e9b0d7.jpg 0.0 MB
+  saved out/search/three-masted-ship/10_6df4a2b7931541bfb902778eadb8628e.jpg 0.0 MB
+  saved out/search/three-masted-ship/11_9cd7568dec3348b69669f16f3a54d457.jpg 0.0 MB
+  saved out/search/three-masted-ship/12_9a67f6af5e9e4593972a58b6d62843c6.jpg 0.0 MB
+  saved out/search/three-masted-ship/13_473daecc9ea84f6abba3c3e39d337281.jpg 0.0 MB
+  saved out/search/three-masted-ship/14_025d9f63f08b4418b729dc5292f11c80.jpg 0.0 MB
+sketchfab search "whaling ship"
+  saved out/search/whaling-ship/01_de49cd35e4d544f58eb8dbf0cc463e50.jpg 0.0 MB
+  saved out/search/whaling-ship/02_31e4a3bf1680455cbe1316b07b0a5acd.jpg 0.0 MB
+  saved out/search/whaling-ship/03_c5e734545d6e4a93b141ea201c1d3219.jpg 0.0 MB
+  saved out/search/whaling-ship/04_24b7e3b812054f67904235ac9068366c.jpg 0.0 MB
+  saved out/search/whaling-ship/05_97bcc8f915de4987b1f35dc5df28df80.jpg 0.0 MB
+  saved out/search/whaling-ship/06_e4cc3e3d668d48b888621bbc443d615d.jpg 0.0 MB
+  saved out/search/whaling-ship/07_998b074a61464ed4897287eca4d44e8c.jpg 0.0 MB
+  saved out/search/whaling-ship/08_034798735dd74800a9020d325a42d5f0.jpg 0.0 MB
+sketchfab search "steamship 1900"
+  saved out/search/steamship-1900/01_4a66ca23ba7640ae87e7a0117897d9c7.jpg 0.0 MB
+  saved out/search/steamship-1900/02_39a8f03ca4874b35a9b1efa7da3c4d10.jpg 0.0 MB
+  saved out/search/steamship-1900/03_001af7535b894162995cef3f90568ead.jpg 0.0 MB
+  saved out/search/steamship-1900/04_11633fcb90d94468827b1f85f379a8ff.jpg 0.0 MB
+  saved out/search/steamship-1900/05_89aa212c4bb34028819323d0e8826051.jpg 0.0 MB
+  saved out/search/steamship-1900/06_bc0eac0c78634cda9ce4ed7d79d93d91.jpg 0.0 MB
+  saved out/search/steamship-1900/07_4b26c1ba92e34afdb9598b9db19217d0.jpg 0.0 MB
+sketchfab search "tall ship"
+  saved out/search/tall-ship/01_987c186b31974079a52574a20a54f804.jpg 0.0 MB
+  saved out/search/tall-ship/02_b93140adf486475db064eab7da4a675a.jpg 0.0 MB
+  saved out/search/tall-ship/03_c32ca1eb79e043adb8889e5e8cfb1d77.jpg 0.0 MB
+  saved out/search/tall-ship/04_b443e744121643dfa71914938f959fef.jpg 0.0 MB
+  saved out/search/tall-ship/05_b012108d707a459d9428d1e77253df41.jpg 0.0 MB
+  saved out/search/tall-ship/06_33fb9bd9921047e8af017ab3a7006ca7.jpg 0.0 MB
+  saved out/search/tall-ship/07_470dda04cb5f4e76947a36f6996a0106.jpg 0.0 MB
+  saved out/search/tall-ship/08_7f53ceafea814b6890fd0f7dc09c10a4.jpg 0.0 MB
+  saved out/search/tall-ship/09_150e00bf6dff4c52b8ec25f7dd6c38cb.jpg 0.0 MB
+  saved out/search/tall-ship/10_c420e6c3fbb440bf9c9d4e2a8a8b12cc.jpg 0.0 MB
+  saved out/search/tall-ship/11_1bf970d4795e46f8803a23b6fe276d00.jpg 0.0 MB
+  saved out/search/tall-ship/12_209556f72b9540c0ac6d470b648394f3.jpg 0.0 MB
+  saved out/search/tall-ship/13_42bb8fc24d1b4f00851ebc464c876c30.jpg 0.0 MB
+  saved out/search/tall-ship/14_f90f2b7340024a25ba13dffb50d9a39a.jpg 0.0 MB
+  saved out/search/tall-ship/15_cf16758da5044897809f0e91a5250e66.jpg 0.0 MB
+  saved out/search/tall-ship/16_1000128c27d7424599f5d97bd24ade14.jpg 0.0 MB
+sketchfab search "clipper ship"
+  saved out/search/clipper-ship/01_632da93e0e4c4ebab699ecb641803898.jpg 0.0 MB
+  saved out/search/clipper-ship/02_f7f501a830174a21adb1ee5ddbdd4fee.jpg 0.0 MB
+  saved out/search/clipper-ship/03_8d1e45498e6e4c989b24f811c84a10f4.jpg 0.0 MB
+  saved out/search/clipper-ship/04_71375c35b3c646fdb2207e5b4f2fd897.jpg 0.0 MB
+  saved out/search/clipper-ship/05_d4134d96b8134737bc33971aab9dc8be.jpg 0.0 MB
+  saved out/search/clipper-ship/06_dd417c545ad04aee85ea2e03f2f7f1bd.jpg 0.0 MB
+sketchfab search "polar ship"
+  saved out/search/polar-ship/01_31e4a3bf1680455cbe1316b07b0a5acd.jpg 0.0 MB
+  saved out/search/polar-ship/02_e62c83aab1b5441eacb2448ca649ba24.jpg 0.0 MB
+  saved out/search/polar-ship/03_19c0c4ca8c38406ab80f89cc84d9c390.jpg 0.0 MB
+sketchfab search "Terra Nova ship"
+  FAILED: ENOENT: no such file or directory, open 'out/search/terra-nova-ship/results.json'
+sketchfab search "Endurance Shackleton"
+  saved out/search/endurance-shackleton/01_027aaee12ade48388f3bbac141b8cd9f.jpg 0.0 MB
+  saved out/search/endurance-shackleton/02_d57f8ec042c44b4dae1fa828c742c858.jpg 0.0 MB
+  saved out/search/endurance-shackleton/03_be6a7a9e845f4a75b421bb74c33f416f.jpg 0.0 MB
+sketchfab search "Shackleton"
+  saved out/search/shackleton/01_027aaee12ade48388f3bbac141b8cd9f.jpg 0.0 MB
+  saved out/search/shackleton/02_bac0140d40804628aea277abb04f8e44.jpg 0.0 MB
+  saved out/search/shackleton/03_dd6027d79fe14549ab7b2eae0d94de5d.jpg 0.0 MB
+  saved out/search/shackleton/04_65e67eb5bdfd4049ab8f9a253b24a7b7.jpg 0.0 MB
+  saved out/search/shackleton/05_ba5aa1f83eef44c98e1bac2a4b5b8f01.jpg 0.0 MB
+  saved out/search/shackleton/06_a7c60a653db841c0b3abb6a00654882c.jpg 0.0 MB
+  saved out/search/shackleton/07_1a0bbcf211ae4f11a2e502f51679bdac.jpg 0.0 MB
+  saved out/search/shackleton/08_b2d1b5a90e3c4689b2285600749c6f71.jpg 0.0 MB
+  saved out/search/shackleton/09_d57f8ec042c44b4dae1fa828c742c858.jpg 0.0 MB
+  saved out/search/shackleton/10_88a157144c6d44a4864a9a5358f598da.jpg 0.0 MB
+  saved out/search/shackleton/11_be6a7a9e845f4a75b421bb74c33f416f.jpg 0.0 MB
+  saved out/search/shackleton/12_0fb4a9806adf452da15b7bb93a2ecbe7.jpg 0.0 MB
+done

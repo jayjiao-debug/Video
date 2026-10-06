@@ -1,0 +1,58 @@
+[
+  {
+    "n": 1,
+    "uid": "0fbda14eb9c0493da01a713ff810ef1e",
+    "name": "Brigandine armor",
+    "author": "frankestudios71",
+    "license": "CC Attribution",
+    "faces": 31222,
+    "vertices": 15355,
+    "likes": 69,
+    "views": 1963,
+    "animated": false,
+    "url": "https://sketchfab.com/3d-models/none-0fbda14eb9c0493da01a713ff810ef1e",
+    "thumb": "01_0fbda14eb9c0493da01a713ff810ef1e.jpg"
+  },
+  {
+    "n": 2,
+    "uid": "c79e2d1129034dde86f6ec404d7f16f1",
+    "name": "Cuirass",
+    "author": "fractalspace",
+    "license": "CC Attribution",
+    "faces": 101076,
+    "vertices": 50716,
+    "likes": 24,
+    "views": 1634,
+    "animated": false,
+    "url": "https://sketchfab.com/3d-models/none-c79e2d1129034dde86f6ec404d7f16f1",
+    "thumb": "02_c79e2d1129034dde86f6ec404d7f16f1.jpg"
+  },
+  {
+    "n": 3,
+    "uid": "e9b7bdd241e745a8a4b98dd2bfc1c925",
+    "name": "Casa de Braganca",
+    "author": "johnagotinho",
+    "license": "CC Attribution",
+    "faces": 6148002,
+    "vertices": 3079346,
+    "likes": 19,
+    "views": 888,
+    "animated": false,
+    "url": "https://sketchfab.com/3d-models/none-e9b7bdd241e745a8a4b98dd2bfc1c925",
+    "thumb": "03_e9b7bdd241e745a8a4b98dd2bfc1c925.jpg"
+  },
+  {
+    "n": 4,
+    "uid": "1318e67490854e1199a7f97d976d56c2",
+    "name": "Mystic Gambler Brigandine",
+    "author": "antromar3",
+    "license": "CC Attribution",
+    "faces": 1419810,
+    "vertices": 707992,
+    "likes": 0,
+    "views": 18,
+    "animated": false,
+    "url": "https://sketchfab.com/3d-models/none-1318e67490854e1199a7f97d976d56c2",
+    "thumb": "04_1318e67490854e1199a7f97d976d56c2.jpg"
+  }
+]
