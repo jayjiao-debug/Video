@@ -1,8 +1,8 @@
 {
-  "id": "mt_card-1791285464",
-  "composition": "Berkson",
+  "id": "mt_paper-1791285684",
+  "composition": "BerksonPaper",
   "start": 0,
   "end": 1373,
   "chunks": 14,
-  "output": "mt_card"
+  "output": "mt_paper"
 }
