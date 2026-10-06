@@ -174,7 +174,7 @@ export const Lives: S = ({ T, id }) => (
 
 // ------------------------------------------------------------------ 5. the South Pole: surface at polar night, then down into the ice
 export const Pole: S = ({ T, id }) => {
-  const dive = expoInOut(prog(T, 39.4, 41.2));
+  const dive = expoInOut(prog(T, 48.95, 50.5));
   const dy = -lerp(0, 1150, dive);
   return (
     <svg width={W} height={H} viewBox={`0 0 ${W} ${H}`}>
@@ -206,7 +206,7 @@ export const Pole: S = ({ T, id }) => {
         <rect y={700} width={W} height={1700} fill={`url(#${id}-ice)`} />
         {Array.from({ length: 30 }, (_, i) => <line key={i} x1={0} y1={720 + i * 46} x2={W} y2={724 + i * 46} stroke="#8fdcff" strokeOpacity={0.04} strokeWidth={2} />)}
         {Array.from({ length: 23 }, (_, i) => {
-          const x = 140 + i * 75, depth = easeOut(prog(T, 41.4 + i * 0.04, 43.0 + i * 0.04));
+          const x = 140 + i * 75, depth = easeOut(prog(T, 50.6 + i * 0.04, 52.2 + i * 0.04));
           return (
             <g key={i}>
               <line x1={x} y1={700} x2={x} y2={700 + 1620 * depth} stroke="#8fdcff" strokeOpacity={0.25} strokeWidth={2} />
@@ -221,8 +221,9 @@ export const Pole: S = ({ T, id }) => {
 
 // ------------------------------------------------------------------ 6. the cubic kilometre in 3D, a Cherenkov flash
 export const Cube: S = ({ T, id }) => {
-  const yaw = 0.5 + (T - 45.8) * 0.08, pitch = 0.32;
-  const flash = hit(T, 53.8, 0.9);
+  const yaw = 0.5 + (T - 56.98) * 0.07, pitch = 0.32;
+  const flash = hit(T, 60.2, 0.9);
+  const dirK = prog(T, 62.4, 64.2);
   const P = { x: 120, y: 80, z: -60 };
   return (
     <svg width={W} height={H} viewBox={`0 0 ${W} ${H}`}>
@@ -230,6 +231,16 @@ export const Cube: S = ({ T, id }) => {
       <rect width={W} height={H} fill={`url(#${id}-bg)`} />
       {Array.from({ length: 60 }, (_, i) => <circle key={i} cx={rnd(i, 41) * W} cy={((rnd(i, 42) * H - T * 6) % H + H) % H} r={1 + rnd(i, 43) * 2} fill="#cfeaff" opacity={0.15} />)}
       <Lattice yaw={yaw} pitch={pitch} dist={2100} cy={560} light={(x, y, z) => {
+        if (dirK > 0) {
+          const A = [-420, -380, 260], Bq = [420, 420, -300];
+          const D = [Bq[0] - A[0], Bq[1] - A[1], Bq[2] - A[2]], L2 = D[0] * D[0] + D[1] * D[1] + D[2] * D[2];
+          const sP = ((x - A[0]) * D[0] + (y - A[1]) * D[1] + (z - A[2]) * D[2]) / L2;
+          if (sP >= 0 && sP <= dirK) {
+            const d = Math.hypot(A[0] + D[0] * sP - x, A[1] + D[1] * sP - y, A[2] + D[2] * sP - z);
+            const k = Math.exp(-d / 120);
+            if (k > 0.06) return [k, `hsl(${lerp(0, 230, sP)} 95% 60%)`];
+          }
+        }
         if (flash < 0.01) return null;
         const d = Math.hypot(x - P.x, y - P.y, z - P.z);
         const k = flash * Math.exp(-d / 240);
@@ -247,15 +258,25 @@ export const Cube: S = ({ T, id }) => {
 const EV = { a: [-480, -420, 300], b: [460, 380, -260] }; // track from a to b (metres)
 const timeColor = (u: number) => `hsl(${lerp(0, 230, u)} 95% 60%)`; // early red → late blue
 export const Event: S = ({ T, id }) => {
-  const yaw = 0.9 + (T - 57) * 0.05, pitch = 0.22;
-  const bursts = Array.from({ length: 28 }, (_, i) => ({ t: 57.3 + i * 0.13, p: [STRINGS[(i * 29) % 86][0], lerp(Y_TOP, Y_BOT, rnd(i, 51)), STRINGS[(i * 29) % 86][1]] }));
-  const tr = prog(T, 65.9, 67.4);
+  const yaw = 0.9 + (T - 65.1) * 0.04, pitch = 0.22;
+  const bursts = Array.from({ length: 28 }, (_, i) => ({ t: 71.0 + i * 0.08, p: [STRINGS[(i * 29) % STRINGS.length][0], lerp(Y_TOP, Y_BOT, rnd(i, 51)), STRINGS[(i * 29) % STRINGS.length][1]] }));
+  const tr = prog(T, 74.0, 75.5);
   const dir = [EV.b[0] - EV.a[0], EV.b[1] - EV.a[1], EV.b[2] - EV.a[2]], len = Math.hypot(dir[0], dir[1], dir[2]);
   return (
     <svg width={W} height={H} viewBox={`0 0 ${W} ${H}`}>
       <defs><radialGradient id={`${id}-bg`} cx="0.5" cy="0.5" r="0.75"><stop offset="0" stopColor="#0a1c34" /><stop offset="1" stopColor="#02060e" /></radialGradient></defs>
       <rect width={W} height={H} fill={`url(#${id}-bg)`} />
       <Lattice yaw={yaw} pitch={pitch} dist={2000} cx={1000} cy={560} light={(x, y, z) => {
+        // ordinary flashes: muons from the atmosphere, billions a year
+        if (T > 65.2 && T < 71.0) {
+          const n = Math.floor(T * 12);
+          for (let q = 0; q < 3; q++) {
+            const sIdx = Math.floor(rnd(n, q) * STRINGS.length), sy = lerp(Y_TOP, Y_BOT, rnd(n, q + 7));
+            const [qx, qz] = STRINGS[sIdx];
+            const d = Math.hypot(x - qx, y - sy, z - qz);
+            if (d < 120) return [0.5 * (1 - d / 120), '#ffffff'];
+          }
+        }
         // the 28 bursts (2013)
         let best: [number, string] | null = null;
         for (const b of bursts) {
@@ -273,7 +294,7 @@ export const Event: S = ({ T, id }) => {
         if (s < 0 || s > 1 || s > tr) return null;
         const px = EV.a[0] + dir[0] * s - x, py = EV.a[1] + dir[1] * s - y, pz = EV.a[2] + dir[2] * s - z;
         const d = Math.hypot(px, py, pz);
-        const k = Math.exp(-d / 110) * (1 - 0.3 * prog(T, 69, 73));
+        const k = Math.exp(-d / 110) * (1 - 0.3 * prog(T, 78, 81.4));
         return k > 0.06 ? [k, timeColor(s)] : null;
       }} />
       {tr > 0 && (() => {
@@ -318,7 +339,7 @@ export const Blazar: S = ({ T, id }) => {
 
 // ------------------------------------------------------------------ 9. the Milky Way, in light and in neutrinos
 export const Galaxy: S = ({ T, id }) => {
-  const nu = easeInOut(prog(T, 83.4, 85.2));
+  const nu = easeInOut(prog(T, 93.6, 95.4));
   return (
     <svg width={W} height={H} viewBox={`0 0 ${W} ${H}`}>
       <defs>
@@ -360,5 +381,107 @@ export const Night: S = ({ T, id }) => (
   </svg>
 );
 
-export const SETS: Record<string, S> = { body: Body, prize: Prize, earth: EarthCut, lives: Lives, pole: Pole, cube: Cube, event: Event, blazar: Blazar, galaxy: Galaxy, night: Night };
+
+// ------------------------------------------------------------------ 0. cosmic-ray "bullets" curving into the earth (cold open)
+const EARTH0 = { x: 1430, y: 560, r: 170 };
+const rayPath = (i: number, u: number): [number, number] => {
+  const a0 = Math.PI * (0.65 + rnd(i, 1) * 0.7); // start angle (from the left half)
+  const R0 = 1300;
+  const sx = EARTH0.x + Math.cos(a0) * R0, sy = EARTH0.y + Math.sin(a0) * R0 * 0.7;
+  const ea = a0 + (rnd(i, 2) - 0.5) * 1.6, ex = EARTH0.x + Math.cos(ea) * (EARTH0.r + 30), ey = EARTH0.y + Math.sin(ea) * (EARTH0.r + 30);
+  const x = lerp(sx, ex, u), y = lerp(sy, ey, u);
+  const dx = ex - sx, dy = ey - sy, L = Math.hypot(dx, dy);
+  const w = Math.sin(u * Math.PI * (2 + rnd(i, 3) * 3)) * (1 - u) * (120 + rnd(i, 4) * 160);
+  return [x - (dy / L) * w, y + (dx / L) * w];
+};
+export const Rays: S = ({ T, id }) => {
+  const hi = easeOut(prog(T, 9.95, 10.8));
+  return (
+    <svg width={W} height={H} viewBox={`0 0 ${W} ${H}`}>
+      <defs>
+        <radialGradient id={`${id}-bg`} cx="0.75" cy="0.5" r="0.8"><stop offset="0" stopColor="#0c1c34" /><stop offset="1" stopColor="#010309" /></radialGradient>
+        <radialGradient id={`${id}-earth`} cx="0.35" cy="0.35" r="0.75"><stop offset="0" stopColor="#4a8ac8" /><stop offset="0.6" stopColor="#1a4a7a" /><stop offset="1" stopColor="#081a30" /></radialGradient>
+      </defs>
+      <rect width={W} height={H} fill={`url(#${id}-bg)`} />
+      <Stars n={260} seed={111} T={T} />
+      {/* magnetic field lines: faint arcs */}
+      {Array.from({ length: 9 }, (_, k) => <path key={k} d={`M -50 ${120 + k * 110} C 500 ${40 + k * 120 + 60 * Math.sin(T * 0.3 + k)}, 900 ${200 + k * 90}, 1300 ${80 + k * 115}`} stroke="#6aa8ff" strokeOpacity={0.08} strokeWidth={2} fill="none" />)}
+      {/* the unknown shooter */}
+      <text x={300} y={560} textAnchor="middle" style={{ fontFamily: '"Cormorant Garamond", serif', fontWeight: 700, fontSize: 220, fill: '#ffffff', opacity: 0.18 + 0.06 * Math.sin(T * 2) }}>?</text>
+      {/* the earth */}
+      <circle cx={EARTH0.x} cy={EARTH0.y} r={EARTH0.r + 26} fill="#4fb4ff" opacity={0.12} />
+      <circle cx={EARTH0.x} cy={EARTH0.y} r={EARTH0.r} fill={`url(#${id}-earth)`} />
+      {Array.from({ length: 6 }, (_, k) => <ellipse key={k} cx={EARTH0.x - 60 + rnd(k, 5) * 120} cy={EARTH0.y - 80 + rnd(k, 6) * 160} rx={30 + rnd(k, 7) * 40} ry={18 + rnd(k, 8) * 24} fill="#2e6a3c" opacity={0.7} />)}
+      {/* the bullets */}
+      {Array.from({ length: 26 }, (_, i) => {
+        const per = 2.2 + rnd(i, 9) * 1.6, ph = rnd(i, 10) * per;
+        const u = ((T + ph) % per) / per;
+        const pts = Array.from({ length: 14 }, (_, k) => rayPath(i, Math.max(0, u - k * 0.02)));
+        const [hx, hy] = pts[0];
+        const imp = u > 0.96;
+        return (
+          <g key={i} opacity={1 - 0.75 * hi}>
+            <polyline points={pts.map((p) => p.join(',')).join(' ')} fill="none" stroke="#ffd890" strokeOpacity={0.5} strokeWidth={2} strokeLinecap="round" />
+            <circle cx={hx} cy={hy} r={4} fill="#fff4d8" style={{ filter: 'drop-shadow(0 0 6px #f1c56d)' }} />
+            {imp && <circle cx={hx} cy={hy} r={10 + (u - 0.96) * 600} fill="none" stroke="#ffe0a0" strokeOpacity={1 - (u - 0.96) * 25} strokeWidth={2} />}
+          </g>
+        );
+      })}
+      {/* one path, highlighted: where it really came from vs where it seems to come from */}
+      {hi > 0 && (() => {
+        const pts = Array.from({ length: 60 }, (_, k) => rayPath(3, k / 59));
+        const n = Math.floor(60 * hi);
+        const [ex, ey] = pts[59], [px, py] = pts[56];
+        const dx = ex - px, dy = ey - py, L = Math.hypot(dx, dy);
+        return (
+          <g>
+            <polyline points={pts.slice(0, Math.max(2, n)).map((p) => p.join(',')).join(' ')} fill="none" stroke="#f1c56d" strokeWidth={5} strokeLinecap="round" style={{ filter: 'drop-shadow(0 0 10px #f1c56d)' }} />
+            <circle cx={pts[0][0]} cy={pts[0][1]} r={12} fill="#f1c56d" />
+            {hi > 0.9 && <line x1={ex} y1={ey} x2={ex - (dx / L) * 900} y2={ey - (dy / L) * 900} stroke="#ffffff" strokeOpacity={0.6} strokeWidth={2} strokeDasharray="10 10" />}
+          </g>
+        );
+      })()}
+    </svg>
+  );
+};
+
+// ------------------------------------------------------------------ 0b. bent bullet vs straight witness
+export const Curve: S = ({ T, id }) => {
+  const SRC = [330, 540], EAR = [1600, 560];
+  const cr = easeInOut(prog(T, 20.6, 23.2));
+  const nu = easeInOut(prog(T, 26.4, 28.2));
+  const crPts = Array.from({ length: 80 }, (_, k) => {
+    const u = k / 79, x = lerp(SRC[0], EAR[0], u), y = lerp(SRC[1], EAR[1], u);
+    return [x + Math.sin(u * 9) * 40 * (1 - u), y - Math.sin(u * Math.PI * 3.2) * 260 * (1 - u * 0.4)];
+  });
+  return (
+    <svg width={W} height={H} viewBox={`0 0 ${W} ${H}`}>
+      <defs>
+        <radialGradient id={`${id}-bg`} cx="0.2" cy="0.5" r="0.9"><stop offset="0" stopColor="#141028" /><stop offset="1" stopColor="#02040a" /></radialGradient>
+        <radialGradient id={`${id}-disk`} cx="0.5" cy="0.5" r="0.5"><stop offset="0.3" stopColor="#ffd080" stopOpacity="0" /><stop offset="0.45" stopColor="#ffb050" stopOpacity="0.95" /><stop offset="0.75" stopColor="#c05020" stopOpacity="0.4" /><stop offset="1" stopColor="#601808" stopOpacity="0" /></radialGradient>
+        <radialGradient id={`${id}-earth`} cx="0.35" cy="0.35" r="0.75"><stop offset="0" stopColor="#4a8ac8" /><stop offset="1" stopColor="#081a30" /></radialGradient>
+      </defs>
+      <rect width={W} height={H} fill={`url(#${id}-bg)`} />
+      <Stars n={220} seed={121} T={T} />
+      {Array.from({ length: 11 }, (_, k) => <path key={k} d={`M 500 ${-40 + k * 110} C 800 ${100 + k * 90 + 40 * Math.sin(T * 0.5 + k)}, 1100 ${k * 105}, 1450 ${60 + k * 100}`} stroke="#8a7aff" strokeOpacity={0.12} strokeWidth={3} fill="none" />)}
+      {/* the source: a black hole with its disk */}
+      <ellipse cx={SRC[0]} cy={SRC[1]} rx={150} ry={50} fill={`url(#${id}-disk)`} />
+      <circle cx={SRC[0]} cy={SRC[1]} r={34} fill="#000" stroke="#ffcf80" strokeOpacity={0.6} strokeWidth={2} />
+      {/* earth */}
+      <circle cx={EAR[0]} cy={EAR[1]} r={110} fill={`url(#${id}-earth)`} />
+      <circle cx={EAR[0]} cy={EAR[1]} r={126} fill="none" stroke="#4fb4ff" strokeOpacity={0.3} strokeWidth={10} />
+      {/* the cosmic ray, bent */}
+      {cr > 0 && <polyline points={crPts.slice(0, Math.max(2, Math.floor(80 * cr))).map((p) => p.join(',')).join(' ')} fill="none" stroke="#f1c56d" strokeWidth={5} strokeLinecap="round" opacity={1 - 0.5 * nu} style={{ filter: 'drop-shadow(0 0 10px #f1c56d)' }} />}
+      {/* the neutrino, straight */}
+      {nu > 0 && (
+        <g>
+          <line x1={SRC[0]} y1={SRC[1]} x2={lerp(SRC[0], EAR[0], nu)} y2={lerp(SRC[1], EAR[1], nu)} stroke="#8fdcff" strokeWidth={6} strokeLinecap="round" style={{ filter: 'drop-shadow(0 0 12px #4fb4ff)' }} />
+          <circle cx={lerp(SRC[0], EAR[0], nu)} cy={lerp(SRC[1], EAR[1], nu)} r={10} fill="#ffffff" style={{ filter: 'drop-shadow(0 0 14px #8fdcff)' }} />
+        </g>
+      )}
+    </svg>
+  );
+};
+
+export const SETS: Record<string, S> = { rays: Rays, curve: Curve, body: Body, prize: Prize, earth: EarthCut, lives: Lives, pole: Pole, cube: Cube, event: Event, blazar: Blazar, galaxy: Galaxy, night: Night };
 export { easeIn };
