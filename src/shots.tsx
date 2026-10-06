@@ -173,7 +173,7 @@ const EarthCount: React.FC<{ T: number; u: number }> = ({ T }) => {
         <g opacity={bars}>
           <rect x={0} y={128} width={1920} height={824} fill="rgba(4,6,10,0.55)" />
           <Rise T={T} at={86.6} text="30岁以后" x={960} y={270} size={50} color={DIM} anchor="middle" weight={700} />
-          <rect x={620} y={820 - 440 * two} width={260} height={440 * two} rx={10} fill={AMBER} style={{ filter: `drop-shadow(0 0 24px ${AMBER_GLOW})` }} />
+          <rect x={620} y={820 - 220 * bars - 220 * two} width={260} height={220 * bars + 220 * two} rx={10} fill={AMBER} style={{ filter: `drop-shadow(0 0 24px ${AMBER_GLOW})` }} />
           <rect x={1040} y={820 - 220 * bars} width={260} height={220 * bars} rx={10} fill={STEEL} opacity={0.85} />
           <text x={750} y={880} textAnchor="middle" style={{ ...BLACK, fontSize: 40, fill: AMBER }}>没做</text>
           <text x={1170} y={880} textAnchor="middle" style={{ ...BLACK, fontSize: 40, fill: STEEL }}>做错</text>
