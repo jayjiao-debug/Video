@@ -259,7 +259,7 @@ const EV = { a: [-480, -420, 300], b: [460, 380, -260] }; // track from a to b (
 const timeColor = (u: number) => `hsl(${lerp(0, 230, u)} 95% 60%)`; // early red → late blue
 export const Event: S = ({ T, id }) => {
   const yaw = 0.9 + (T - 65.1) * 0.04, pitch = 0.22;
-  const bursts = Array.from({ length: 28 }, (_, i) => ({ t: 71.0 + i * 0.08, p: [STRINGS[(i * 29) % 86][0], lerp(Y_TOP, Y_BOT, rnd(i, 51)), STRINGS[(i * 29) % 86][1]] }));
+  const bursts = Array.from({ length: 28 }, (_, i) => ({ t: 71.0 + i * 0.08, p: [STRINGS[(i * 29) % STRINGS.length][0], lerp(Y_TOP, Y_BOT, rnd(i, 51)), STRINGS[(i * 29) % STRINGS.length][1]] }));
   const tr = prog(T, 74.0, 75.5);
   const dir = [EV.b[0] - EV.a[0], EV.b[1] - EV.a[1], EV.b[2] - EV.a[2]], len = Math.hypot(dir[0], dir[1], dir[2]);
   return (
@@ -271,7 +271,7 @@ export const Event: S = ({ T, id }) => {
         if (T > 65.2 && T < 71.0) {
           const n = Math.floor(T * 12);
           for (let q = 0; q < 3; q++) {
-            const sIdx = Math.floor(rnd(n, q) * 86), sy = lerp(Y_TOP, Y_BOT, rnd(n, q + 7));
+            const sIdx = Math.floor(rnd(n, q) * STRINGS.length), sy = lerp(Y_TOP, Y_BOT, rnd(n, q + 7));
             const [qx, qz] = STRINGS[sIdx];
             const d = Math.hypot(x - qx, y - sy, z - qz);
             if (d < 120) return [0.5 * (1 - d / 120), '#ffffff'];
