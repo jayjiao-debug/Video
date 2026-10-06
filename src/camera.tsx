@@ -9,10 +9,10 @@ import { useLook } from './look';
    (true motion blur), which is where the force of the moves comes from. Between transitions the stages drift slowly
    (translation only: text is never slowly scaled, which made type shimmer in an earlier film). */
 
-export type TType = 'whip' | 'tilt' | 'push' | 'roll' | 'shake';
+export type TType = 'whip' | 'tilt' | 'push' | 'roll' | 'shake' | 'blur';
 export type Trans = { at: number; type: TType; d: number; px?: number; py?: number };
 export const TRANS: Trans[] = [
-  { at: CUT.intro, type: 'whip', d: 0.42 },
+  { at: 10.5, type: 'blur', d: 0.6 }, // the phone leaves
   { at: CUT.atus, type: 'whip', d: 0.42 },
   { at: CUT.dunbar, type: 'tilt', d: 0.42 },
   { at: CUT.drop, type: 'shake', d: 0.0 },
@@ -103,3 +103,15 @@ export const World: React.FC<{ T: number }> = ({ T }) => {
   );
 };
 export { FILM_END };
+
+/** an inner camera from keys [t, z, cx, cy, tx, ty]: zoom z about (cx, cy) placed at screen (tx, ty); moves ease expo */
+export type CamKey = [number, number, number, number, number, number];
+export const keyCam = (T: number, keys: CamKey[]) => {
+  let k = 0;
+  while (k < keys.length - 1 && T >= keys[k + 1][0]) k++;
+  const a = keys[k], b = keys[Math.min(k + 1, keys.length - 1)];
+  const e = b[0] > a[0] ? expoInOut(prog(T, a[0], b[0])) : 0;
+  const v = (j: number) => lerp(a[j], b[j], e);
+  const z = v(1), cx = v(2), cy = v(3), tx = v(4), ty = v(5);
+  return { z, cx, cy, tx, ty, t: `translate(${tx} ${ty}) scale(${z}) translate(${-cx} ${-cy})`, at: (x: number, y: number): [number, number] => [tx + z * (x - cx), ty + z * (y - cy)] };
+};
