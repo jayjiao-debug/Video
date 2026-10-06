@@ -1,9 +1,10 @@
 import React from 'react';
-import { AbsoluteFill, Img, staticFile } from 'remotion';
+import { AbsoluteFill } from 'remotion';
+import { SETS } from './scenes';
 import { prog, easeOut, easeIn, easeInOut, lerp, rnd, hit, clamp, fb, CUT, FILM_END, SANS, ZH, MONO, EN } from './lib';
 import { stageStyle } from './camera';
 
-/* The cinematic engine of 《没走的路》: generated film stills ("plates") moved like a camera (2.5D push / drift /
+/* The cinematic engine of 《没走的路》: hand-drawn SVG sets (scenes.tsx) moved like a camera (2.5D push / drift /
    tilt), graded, with drifting fog and dust in front, letterboxed, and kinetic type on top. Shots cut on the beat
    with whip / push / tilt / roll / shake (camera.tsx), motion-blurred by Film. */
 
@@ -29,7 +30,7 @@ export const PlateShot: React.FC<{ T: number; shot: Shot }> = ({ T, shot }) => {
   return (
     <AbsoluteFill style={{ ...st, overflow: 'hidden', backgroundColor: '#05070a' }}>
       <AbsoluteFill style={{ transform: `perspective(1800px) rotateY(${ry}deg) translate(${x}px, ${y}px) scale(${s})`, transformOrigin: `${k.ox ?? 960}px ${k.oy ?? 540}px` }}>
-        <Img src={staticFile(`plates/${shot.plate}.jpg`)} style={{ width: 1920, height: 1080, objectFit: 'cover' }} />
+        {(() => { const Set = SETS[shot.plate]; return <Set T={T} id={`set${Math.round(shot.a * 100)}`} />; })()}
         {/* grade: lift the shadows to teal, warm the highlights, darken for type */}
         <AbsoluteFill style={{ background: 'linear-gradient(180deg, rgba(8,20,28,0.38) 0%, rgba(8,20,28,0.05) 35%, rgba(30,16,4,0.0) 60%, rgba(8,12,18,0.45) 100%)' }} />
         {(shot.dark ?? 0) > 0 && <AbsoluteFill style={{ backgroundColor: `rgba(4,6,10,${shot.dark})` }} />}

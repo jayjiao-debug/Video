@@ -22,8 +22,8 @@ and not before, generate the Douyin publish package with the `douyin-publish` sk
 (`.claude/skills/douyin-publish/SKILL.md`): title, description with hashtags, 4:3 and 3:4 covers,
 合集, 自主声明, in the owner's habitual format.
 
-No AI-generated video: the owner removed the ManyMotions plugin (`ai-video-editor:*`: ai-video-edit,
-ai-video-shot, video-editing, video-generation). Never generate video clips with AI tools. The other plugin skills
+No AI-generated images or video, anywhere in a film: every set, plate and prop is drawn in code (SVG / three.js).
+The owner removed the ManyMotions plugin (`ai-video-editor:*`); never use image or video generators (Z-Image, etc.). The other plugin skills
 (`video-shotcraft`, `animation-studio`, `remotion:*`) are fine to use where they fit.
 
 What the owner wants:

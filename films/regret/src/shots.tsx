@@ -3,7 +3,7 @@ import { AbsoluteFill } from 'remotion';
 import { PlateShot, Shot, Rise, BigNum, Kicker, AMBER, AMBER_GLOW, STEEL, STEEL_GLOW, INK, DIM, SANS, ZH, MONO, EN, fb, CUT, FILM_END, rnd, hit, prog, easeOut, easeIn, easeInOut, lerp, clamp } from './cine';
 import { JUNO } from './brand/identity';
 
-/* 《没走的路》 shot list. Plates: generated cinematic stills (public/plates). Every overlay is in the plate's own
+/* 《没走的路》 shot list. Sets: drawn in code (scenes.tsx). Every overlay is in the plate's own
    1920×1080 frame; type sits between the letterbox bars (y 128 … 952). */
 
 const BLACK: React.CSSProperties = { fontFamily: SANS, fontWeight: 900 };
@@ -201,7 +201,7 @@ const EndCard: React.FC<{ T: number; u: number }> = ({ T }) => {
       </g>
       <g opacity={o(1.3)} style={{ fontFamily: SANS, fontSize: 17, fill: 'rgba(245,239,228,0.5)' }}>
         <text x={960} y={760} textAnchor="middle">资料：Gilovich & Medvec (1994) JPSP；(1995) Psychological Review · Davidai & Gilovich (2018) Emotion · Gilovich, Medvec & Savitsky (2000) JPSP · Pink (2022) World Regret Survey</text>
-        <text x={960} y={788} textAnchor="middle">注：1994 年"84%"来自 32 人的小样本；2023 年 2600 人的重复实验里，短期结果重现，长期差距明显缩小（Richardson & Gilovich, RSOS）· 画面为 AI 生成</text>
+        <text x={960} y={788} textAnchor="middle">注：1994 年"84%"来自 32 人的小样本；2023 年 2600 人的重复实验里，短期结果重现，长期差距明显缩小（Richardson & Gilovich, RSOS）</text>
       </g>
       <rect width={1920} height={1080} fill="#000" opacity={black} />
     </svg>
