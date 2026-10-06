@@ -286,9 +286,9 @@ const MG = { x0: 1190, x1: 1760, y0: 820, h: 360 };       // mini graph: learnin
 const mgX = (a: number) => MG.x0 + (MG.x1 - MG.x0) * (a - 0.5) / 0.5;
 const mgY = (a: number) => MG.y0 - MG.h * learnRate(a);
 const Bells: React.FC<{ T: number }> = ({ T }) => {
-  const a = cue('W1') - 0.2, out = cue('R1') + 0.6;
+  const a = cue('W1') - 0.2, out = cue('R1') - 0.55;
   if (T < a || T > out + 0.8) return null;
-  const o = 1 - sm(T, out, 0.6);
+  const o = 1 - sm(T, out, 0.5);
   const dl = delta(T), muA = BX.mid - dl, muB = BX.mid + dl;
   const kB = sm(T, cue('W2') - 0.1, 1.0);
   const bell = (mu: number) => poly(Array.from({ length: 161 }, (_, i) => { const x = BX.x0 + (BX.x1 - BX.x0) * i / 160; return [x, BX.y - BX.amp * gauss(x, mu, BX.s)] as P2; }));
@@ -302,6 +302,10 @@ const Bells: React.FC<{ T: number }> = ({ T }) => {
   const kSigma = life(T, cue('W7') + 0.9, out, 0.5, 0.4);
   return (
     <g opacity={o}>
+      <FadeUp k={life(T, cue('W1') - 0.25, cue('W1', '看') - 0.05, 0.35, 0.3)}>
+        <Txt x={960} y={560} size={130} font={F.math} fill={C.yellow}>85%</Txt>
+        <Txt x={960} y={660} size={56} fill={C.white}>为什么偏偏是它？</Txt>
+      </FadeUp>
       <FadeUp k={life(T, cue('W1', '看') - 0.1, cue('W2') + 1.2, 0.4, 0.5)}>
         <Txt x={960} y={300} size={72} fill={C.white}>A 还是 B ？</Txt>
         <Txt x={960} y={360} size={30} fill={C.grey}>一道二选一的题</Txt>
@@ -353,7 +357,7 @@ const Bells: React.FC<{ T: number }> = ({ T }) => {
 const RS = { cx: CH.x0 + CH.L / 2, cy: CH.y0 - CH.L / 2, L: CH.L, Hh: 330 };
 const surfH = (s: number, c: number) => learnRate(Phi(1 + 3.4 * (s - c)));
 const Ridge: React.FC<{ T: number }> = ({ T }) => {
-  const a = cue('R1') - 0.3, out = cue('P1') + 0.2;
+  const a = cue('R1') - 0.15, out = cue('P1') + 0.2;
   if (T < a || T > out + 0.8) return null;
   const o = sm(T, a, 0.6) * (1 - sm(T, out, 0.6));
   const rise = sm(T, cue('R1', '高度') - 0.3, 1.6);
