@@ -47,8 +47,8 @@ export const Drop: React.FC<{ T: number }> = ({ T }) => {
         })}
       </g>
       <g>
-        <text x={120} y={120} style={{ fontFamily: MONO, fontWeight: 700, fontSize: 64, fill: INK }}>{count} 段关系</text>
-        <text x={1800} y={120} textAnchor="end" style={{ fontFamily: MONO, fontWeight: 700, fontSize: 64, fill: RED }}>{count} 个最后一面</text>
+        <text x={120} y={160} style={{ fontFamily: MONO, fontWeight: 700, fontSize: 64, fill: INK }}>{Math.max(1, count)} 段关系</text>
+        <text x={1800} y={160} textAnchor="end" style={{ fontFamily: MONO, fontWeight: 700, fontSize: 64, fill: RED }}>{Math.max(1, count)} 个最后一面</text>
       </g>
       {no > 0 && T < 79.65 && (
         <g transform={`translate(960 560) scale(${0.8 + 0.2 * Math.min(1.1, no)})`}>
@@ -82,6 +82,12 @@ export const Pay: React.FC<{ T: number }> = ({ T }) => {
   return (
     <Stage style={st}>
       <line x1={A[0]} y1={A[1]} x2={Bp[0]} y2={Bp[1]} stroke="rgba(242,240,234,0.3)" strokeWidth={2} strokeDasharray="10 12" strokeDashoffset={T * 80} />
+      {meet < 1 && Array.from({ length: 4 }, (_, i) => {
+        const ph = ((T - a) / 1.3 + i * 0.5) % 2, side = i % 2 ? -1 : 1, f = Math.min(1, ph);
+        if (ph > 1) return null;
+        const sx = side > 0 ? A[0] : Bp[0], ex = 960 - side * 30;
+        return <circle key={`s${i}`} cx={lerp(sx, ex, easeOut(f))} cy={540} r={7} fill={side > 0 ? INK : RED} opacity={(1 - f) * 0.9 * (1 - meet)} style={{ filter: 'drop-shadow(0 0 8px rgba(242,240,234,0.7))' }} />;
+      })}
       {meet < 1 && Array.from({ length: 24 }, (_, i) => {
         const f = ((T * 0.35 + i / 24) % 1);
         return <circle key={i} cx={lerp(A[0], Bp[0], f)} cy={lerp(A[1], Bp[1], f) + Math.sin(f * 12 + T) * 8} r={2.5} fill={INK} opacity={0.4} />;
@@ -129,7 +135,7 @@ export const End: React.FC<{ T: number }> = ({ T }) => {
         </g>
         <g opacity={o(1.2)} style={{ fontFamily: SANS, fontSize: 18, fill: 'rgba(242,240,234,0.45)' }}>
           <text x={960} y={760} textAnchor="middle">资料：Mollenhorst, Volker & Flap (2014) Social Networks · 美国 ATUS 2010–2024（Our World in Data）· Roberts & Dunbar (2011, 2015)</text>
-          <text x={960} y={790} textAnchor="middle">“5 次”“≈58%”为模型计算（假设每年见面机会降两成）· 图表为示意 · “Last meeting theory”为网络流行说法，并无研究依据</text>
+          <text x={960} y={790} textAnchor="middle">“5 次”“≈57%”为模型计算（假设每年见面机会降两成）· 图表为示意 · “Last meeting theory”为网络流行说法，并无研究依据</text>
         </g>
         <rect width={1920} height={1080} fill="#000" opacity={black} />
       </svg>

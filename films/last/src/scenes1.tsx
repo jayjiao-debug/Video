@@ -16,7 +16,7 @@ const BLACK: React.CSSProperties = { fontFamily: SANS, fontWeight: 900 };
 // ------------------------------------------------------------------ hook + title
 const pairAt = (T: number) => {
   const sep = easeIn(prog(T, 5.6, 7.6));
-  const r = lerp(105, 1400, sep);
+  const r = lerp(150, 1500, sep);
   const ang = T * 2.6 + sep * 0.6;
   const cx = 960, cy = 590;
   return { a: [cx + Math.cos(ang) * r, cy + Math.sin(ang) * r * 0.42], b: [cx - Math.cos(ang) * r, cy - Math.sin(ang) * r * 0.42], sep };
@@ -34,7 +34,7 @@ export const Hook: React.FC<{ T: number }> = ({ T }) => {
   const p = pairAt(T);
   const trail = (k: 'a' | 'b', col: string) => Array.from({ length: 16 }, (_, i) => {
     const q = pairAt(T - i * 0.025)[k];
-    return <circle key={i} cx={q[0]} cy={q[1]} r={19 - i * 0.9} fill={col} opacity={0.32 * (1 - i / 16)} />;
+    return <circle key={i} cx={q[0]} cy={q[1]} r={26 - i * 1.2} fill={col} opacity={0.32 * (1 - i / 16)} />;
   });
   const zeroO = easeOut(prog(T, 6.1, 6.4));
   const glitch = T > 6.1 && T < 6.6 ? Math.round(Math.sin(T * 140) * 3) : 0;
@@ -48,25 +48,25 @@ export const Hook: React.FC<{ T: number }> = ({ T }) => {
             return <tspan key={i} opacity={k} dy={i === 0 ? 0 : 0}>{ch}</tspan>;
           })}
         </text>
-        <text x={960} y={322} textAnchor="middle" opacity={easeOut(prog(T, 1.1, 1.4))} style={{ fontFamily: MONO, fontSize: 36, fill: DIM }}>
+        <text x={960} y={322} textAnchor="middle" opacity={easeOut(prog(T, 1.1, 1.4))} style={{ fontFamily: MONO, fontSize: 44, fill: DIM }}>
           <tspan fill={RED} fontWeight={700}>{likes.toFixed(1)}万</tspan> 人点赞
         </text>
         {/* the pair */}
         {trail('a', INK)}{trail('b', RED)}
-        <circle cx={p.a[0]} cy={p.a[1]} r={22} fill={INK} style={{ filter: 'drop-shadow(0 0 14px rgba(242,240,234,0.8))' }} />
-        <circle cx={p.b[0]} cy={p.b[1]} r={22} fill={RED} style={{ filter: 'drop-shadow(0 0 14px rgba(255,61,46,0.9))' }} />
+        <circle cx={p.a[0]} cy={p.a[1]} r={30} fill={INK} style={{ filter: 'drop-shadow(0 0 14px rgba(242,240,234,0.8))' }} />
+        <circle cx={p.b[0]} cy={p.b[1]} r={30} fill={RED} style={{ filter: 'drop-shadow(0 0 14px rgba(255,61,46,0.9))' }} />
         {p.sep < 0.15 && <>
-          <text x={p.a[0]} y={p.a[1] - 38} textAnchor="middle" style={{ fontFamily: SANS, fontSize: 32, fill: INK }}>你</text>
-          <text x={p.b[0]} y={p.b[1] - 38} textAnchor="middle" style={{ fontFamily: SANS, fontSize: 32, fill: RED }}>TA</text>
+          <text x={p.a[0]} y={p.a[1] - 48} textAnchor="middle" style={{ fontFamily: SANS, fontSize: 38, fill: INK }}>你</text>
+          <text x={p.b[0]} y={p.b[1] - 48} textAnchor="middle" style={{ fontFamily: SANS, fontSize: 38, fill: RED }}>TA</text>
         </>}
         {p.sep > 0.02 && <line x1={p.a[0]} y1={p.a[1]} x2={p.b[0]} y2={p.b[1]} stroke="rgba(242,240,234,0.35)" strokeWidth={2} strokeDasharray="10 10" strokeDashoffset={-T * 120} />}
         {/* "课题完成度" ring */}
         {ring > 0 && ringBreak < 1 && (
           <g opacity={1 - ringBreak}>
-            <circle cx={960} cy={590} r={210 + 60 * ringBreak} fill="none" stroke={FAINT} strokeWidth={8} />
-            <circle cx={960} cy={590} r={210 + 60 * ringBreak} fill="none" stroke={RED} strokeWidth={8} strokeDasharray={`${2 * Math.PI * 210 * ring} 9999`} transform="rotate(-90 960 590)" style={{ filter: 'drop-shadow(0 0 10px rgba(255,61,46,0.7))' }} />
-            <text x={960 + 290} y={600} style={{ fontFamily: MONO, fontWeight: 700, fontSize: 72, fill: INK }}>{Math.round(ring * 100)}%</text>
-            <text x={960 + 292} y={644} style={{ fontFamily: SANS, fontSize: 30, fill: DIM }}>课题完成度</text>
+            <circle cx={960} cy={590} r={250 + 60 * ringBreak} fill="none" stroke={FAINT} strokeWidth={10} />
+            <circle cx={960} cy={590} r={250 + 60 * ringBreak} fill="none" stroke={RED} strokeWidth={10} strokeDasharray={`${2 * Math.PI * 250 * ring} 9999`} transform="rotate(-90 960 590)" style={{ filter: 'drop-shadow(0 0 10px rgba(255,61,46,0.7))' }} />
+            <text x={960 + 330} y={600} style={{ fontFamily: MONO, fontWeight: 700, fontSize: 80, fill: INK }}>{Math.round(ring * 100)}%</text>
+            <text x={960 + 332} y={646} style={{ fontFamily: SANS, fontSize: 30, fill: DIM }}>课题完成度</text>
           </g>
         )}
         {zeroO > 0 && (
@@ -158,7 +158,7 @@ export const Model: React.FC<{ T: number }> = ({ T }) => {
   const five = pop(T, 23.8, 0.35);
   const sim = prog(T, 26.0, 26.4);
   const head = lerp(0, YEARS - 1, easeInOut(prog(T, 26.4, 28.9)));
-  const fadeChart = 1 - 0.93 * sim;
+  const fadeChart = 1 - sim;
   const gridO = easeOut(prog(T, 29.6, 30.0));
   const fill = prog(T, 30.0, 32.4) * 400;
   const redSoFar = GRID.slice(0, Math.floor(fill)).filter(Boolean).length;
@@ -229,7 +229,8 @@ export const Model: React.FC<{ T: number }> = ({ T }) => {
           })}
           <text x={X0} y={420} style={{ fontFamily: SANS, fontSize: 30, fill: DIM }}>模拟 400 段关系</text>
           <text x={X0} y={470} style={{ fontFamily: SANS, fontSize: 30, fill: INK }}>第 10 年以后，<tspan fill={RED}>再也没见过</tspan>：</text>
-          <text x={X0} y={640} style={{ fontFamily: MONO, fontWeight: 700, fontSize: 180, fill: RED }}>{fill > 0 ? Math.round((redSoFar / Math.max(1, Math.floor(fill))) * 100) : 0}%</text>
+          {fill < 400 ? <text x={X0} y={620} style={{ fontFamily: MONO, fontWeight: 700, fontSize: 96, fill: INK }}>{Math.floor(fill)}<tspan fontSize={48} fill={DIM}> / 400</tspan></text>
+            : <text x={X0} y={640} style={{ fontFamily: MONO, fontWeight: 700, fontSize: 180 * (0.85 + 0.15 * Math.min(1.1, pop(T, 32.4, 0.35))), fill: RED }}>{Math.round((redSoFar / 400) * 100)}%</text>}
           <text x={X0} y={700} opacity={easeOut(prog(T, 32.4, 32.8))} style={{ fontFamily: SANS, fontSize: 26, fill: DIM }}>模型精确值 ≈ {(ANALYTIC * 100).toFixed(0)}%（基于上面的假设）</text>
         </g>
       )}

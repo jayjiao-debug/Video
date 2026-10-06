@@ -170,8 +170,7 @@ export const Dunbar: React.FC<{ T: number }> = ({ T }) => {
         </g>
         {big > 0 && (
           <g opacity={big}>
-            <rect x={960 - 470} y={470} width={940} height={124} rx={18} fill="rgba(6,6,8,0.85)" />
-            <text x={960} y={566} textAnchor="middle" style={{ ...BLACK, fontSize: 96, fill: INK }}>友情，更依赖<tspan fill={RED}>见面</tspan></text>
+            <text x={240} y={240} style={{ ...BLACK, fontSize: 88, fill: INK }}>友情，更依赖<tspan fill={RED}>见面</tspan></text>
           </g>
         )}
         <Src text="Roberts & Dunbar · Evolution and Human Behavior 2011 / Human Nature 2015" o={easeOut(prog(T, a + 0.3, a + 0.8))} />
