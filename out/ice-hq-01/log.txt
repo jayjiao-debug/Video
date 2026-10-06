@@ -1,0 +1,79 @@
+token id present: yes
+token secret present: yes
+✓ Initialized. View run at 
+https://modal.com/apps/jayjiao249/main/ap-cUGt7Pl3QocO1A8lKh8ps1
+Building image im-d9MZ4zlDrKbzJrpP9GK0VE
+
+=> Step 0: FROM base
+
+=> Step 1: RUN apt-get update
+Get:1 http://archive.ubuntu.com/ubuntu jammy InRelease [270 kB]
+Get:2 https://deb.nodesource.com/node_20.x nodistro InRelease [12.1 kB]
+Get:3 http://archive.ubuntu.com/ubuntu jammy-updates InRelease [128 kB]
+Get:4 http://security.ubuntu.com/ubuntu jammy-security InRelease [129 kB]
+Get:5 http://archive.ubuntu.com/ubuntu jammy-backports InRelease [127 kB]
+Get:6 https://deb.nodesource.com/node_20.x nodistro/main amd64 Packages [14.7 kB]
+Get:7 http://archive.ubuntu.com/ubuntu jammy/restricted amd64 Packages [164 kB]
+Get:8 http://archive.ubuntu.com/ubuntu jammy/main amd64 Packages [1792 kB]
+Get:9 http://archive.ubuntu.com/ubuntu jammy/multiverse amd64 Packages [266 kB]
+Get:10 http://archive.ubuntu.com/ubuntu jammy/universe amd64 Packages [17.5 MB]
+Get:11 http://archive.ubuntu.com/ubuntu jammy-updates/main amd64 Packages [4757 kB]
+Get:12 http://archive.ubuntu.com/ubuntu jammy-updates/universe amd64 Packages [1623 kB]
+Get:13 http://archive.ubuntu.com/ubuntu jammy-updates/restricted amd64 Packages [8212 kB]
+Get:14 http://archive.ubuntu.com/ubuntu jammy-updates/multiverse amd64 Packages [93.2 kB]
+Get:15 http://archive.ubuntu.com/ubuntu jammy-backports/universe amd64 Packages [35.6 kB]
+Get:16 http://archive.ubuntu.com/ubuntu jammy-backports/main amd64 Packages [82.9 kB]
+Get:17 http://security.ubuntu.com/ubuntu jammy-security/restricted amd64 Packages [7907 kB]
+Get:18 http://security.ubuntu.com/ubuntu jammy-security/main amd64 Packages [4419 kB]
+Get:19 http://security.ubuntu.com/ubuntu jammy-security/universe amd64 Packages [1322 kB]
+Get:20 http://security.ubuntu.com/ubuntu jammy-security/multiverse amd64 Packages [84.6 kB]
+Fetched 48.9 MB in 3s (19.3 MB/s)
+Reading package lists...
+
+=> Step 2: RUN apt-get install -y ffmpeg
+Reading package lists...
+Building dependency tree...
+Reading state information...
+ffmpeg is already the newest version (7:4.4.2-0ubuntu0.22.04.1).
+0 upgraded, 0 newly installed, 0 to remove and 148 not upgraded.
+Saving image...
+Image saved, took 643.28ms
+
+Built image im-d9MZ4zlDrKbzJrpP9GK0VE in 6.92s
+
+
+Building image im-8hKOkTlHnYLwfdkXIq96ul
+
+=> Step 0: FROM base
+
+=> Step 1: RUN mkdir -p /app && cd /app && npm init -y >/dev/null && npm i three@0.169 playwright-core@1.48.2
+
+added 2 packages, and audited 3 packages in 2s
+
+found 0 vulnerabilities
+
+=> Step 2: RUN mkdir -p /app/assets && cd /app/assets && curl -sSLO https://raw.githubusercontent.com/jayjiao-debug/Video/asset-output/out/endurance-03/models/merchant_schooner.glb && curl -sSLO https://raw.githubusercontent.com/jayjiao-debug/Video/asset-output/out/endurance-01/polyhaven/belfast_sunset_puresky_2k.hdr && curl -sSLO https://raw.githubusercontent.com/jayjiao-debug/Video/asset-output/out/endurance-01/polyhaven/snow_02/textures/snow_02_diff_2k.jpg && curl -sSLO https://raw.githubusercontent.com/jayjiao-debug/Video/asset-output/out/endurance-01/polyhaven/snow_02/textures/snow_02_nor_gl_2k.jpg && curl -sSLO https://raw.githubusercontent.com/jayjiao-debug/Video/asset-output/out/endurance-01/polyhaven/snow_02/textures/snow_02_rough_2k.jpg
+Saving image...
+Image saved, took 736.86ms
+
+Built image im-8hKOkTlHnYLwfdkXIq96ul in 7.95s
+
+
+✓ Created objects.
+├── ✓ Uploaded /home/runner/work/Video/Video/render_ice.py
+├── ✓ Uploaded /home/runner/work/Video/Video/web
+└── ✓ Created Function chunk.
+0 ['CHUNK_MS_PER_FRAME 3366']
+1 ['CHUNK_MS_PER_FRAME 3256']
+2 ['CHUNK_MS_PER_FRAME 3425']
+3 ['CHUNK_MS_PER_FRAME 3463']
+4 ['CHUNK_MS_PER_FRAME 3655']
+5 ['CHUNK_MS_PER_FRAME 3105']
+6 ['CHUNK_MS_PER_FRAME 2804']
+7 ['CHUNK_MS_PER_FRAME 2517']
+8 ['CHUNK_MS_PER_FRAME 2091']
+9 ['CHUNK_MS_PER_FRAME 1898']
+DONE 121497928
+Stopping app - local entrypoint completed.
+✓ App completed. View run at 
+https://modal.com/apps/jayjiao249/main/ap-cUGt7Pl3QocO1A8lKh8ps1
