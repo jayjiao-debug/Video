@@ -11,14 +11,14 @@ import { W, H, prog, easeInOut, expoInOut, hit, lerp, rnd, CUT, FILM_END, INK } 
 export type TType = 'whip' | 'tilt' | 'push' | 'roll' | 'shake';
 export type Trans = { at: number; type: TType; d: number; px?: number; py?: number };
 export const TRANS: Trans[] = [
-  { at: CUT.intro, type: 'whip', d: 0.5 },
-  { at: CUT.model, type: 'push', d: 0.6, px: 960, py: 470 },
-  { at: CUT.net, type: 'push', d: 0.6, px: 0, py: 0 }, // px/py filled by the model stage (the last red dot)
-  { at: CUT.atus, type: 'whip', d: 0.5 },
-  { at: CUT.dunbar, type: 'tilt', d: 0.5 },
+  { at: CUT.intro, type: 'whip', d: 0.42 },
+  { at: CUT.model, type: 'push', d: 0.5, px: 960, py: 470 },
+  { at: CUT.net, type: 'push', d: 0.5, px: 0, py: 0 }, // px/py filled by the model stage (the last red dot)
+  { at: CUT.atus, type: 'whip', d: 0.42 },
+  { at: CUT.dunbar, type: 'tilt', d: 0.42 },
   { at: CUT.drop, type: 'shake', d: 0.0 },
-  { at: CUT.pay, type: 'roll', d: 0.6 },
-  { at: CUT.end, type: 'push', d: 0.6, px: 960, py: 470 },
+  { at: CUT.pay, type: 'roll', d: 0.5 },
+  { at: CUT.end, type: 'push', d: 0.5, px: 960, py: 470 },
 ];
 
 export const transAt = (T: number) => TRANS.find((t) => t.d > 0 && Math.abs(T - t.at) < t.d / 2 + 1 / 30);
@@ -40,8 +40,8 @@ export const stageStyle = (T: number, a: number, z: number, drift: [number, numb
     if (tin.type === 'roll') { r += -35 * (1 - e); s *= lerp(0.55, 1, e); o *= prog(u, 0.35, 0.6); }
   }
   if (tin?.type === 'shake') {
-    const h = hit(T, a, 0.22);
-    x += Math.sin(T * 97) * 26 * h; y += Math.cos(T * 71) * 18 * h; s *= 1 + 0.07 * h;
+    const h = hit(T, a, 0.14);
+    x += Math.sin(T * 97) * 12 * h; y += Math.cos(T * 71) * 8 * h; s *= 1 + 0.035 * h;
   }
   if (tout && T >= z - dout / 2 && dout > 0) {
     const u = prog(T, z - dout / 2, z + dout / 2);
