@@ -1,8 +1,8 @@
 {
-  "id": "icecube_v1-1791298323",
+  "id": "icecube_v2-1791302389",
   "composition": "IceCube",
   "start": 0,
-  "end": 2908,
-  "chunks": 26,
-  "output": "icecube_v1"
+  "end": 3671,
+  "chunks": 30,
+  "output": "icecube_v2"
 }

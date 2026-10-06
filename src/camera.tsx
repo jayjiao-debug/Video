@@ -13,13 +13,16 @@ export type TType = 'whip' | 'tilt' | 'push' | 'roll' | 'shake' | 'blur';
 export type Trans = { at: number; type: TType; d: number; px?: number; py?: number };
 export const TRANS: Trans[] = [
   { at: CUT.intro, type: 'whip', d: 0.42 },
-  { at: CUT.model, type: 'tilt', d: 0.42 },
-  { at: fb(64), type: 'push', d: 0.5, px: 960, py: 540 },
-  { at: CUT.net, type: 'whip', d: 0.42 },
-  { at: CUT.atus, type: 'push', d: 0.5, px: 960, py: 700 },
-  { at: CUT.dunbar, type: 'roll', d: 0.5 },
+  { at: CUT.curve, type: 'tilt', d: 0.42 },
+  { at: CUT.body, type: 'push', d: 0.5, px: 1600, py: 560 },
+  { at: CUT.pole, type: 'whip', d: 0.42 },
+  { at: CUT.dive, type: 'push', d: 0.5, px: 1360, py: 620 },
+  { at: CUT.cube, type: 'push', d: 0.5, px: 960, py: 700 },
+  { at: CUT.rare, type: 'tilt', d: 0.42 },
   { at: CUT.drop, type: 'shake', d: 0.0 },
-  { at: CUT.pay, type: 'tilt', d: 0.42 },
+  { at: CUT.blazar, type: 'push', d: 0.5, px: 1000, py: 560 },
+  { at: CUT.galaxy, type: 'tilt', d: 0.42 },
+  { at: CUT.years, type: 'whip', d: 0.42 },
   { at: CUT.end, type: 'push', d: 0.5, px: 960, py: 560 },
 ];
 
