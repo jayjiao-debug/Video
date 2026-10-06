@@ -70,6 +70,9 @@ Owner rule (2026-10-06): "Try not to use the CPU [on Modal], rather use from Git
     `egl` / `angle-gl` / `angle-egl` silently fall back to SwiftShader on Modal — check the renderer string in the log
     ("NVIDIA Tesla T4"), never assume.
   - Scene is **2D only** (SVG/CSS/canvas, subtitles, cards, maps) → **GitHub farm** (free, `--gl=swangle` is fine there).
+    A GPU does not speed up ordinary 2D: the time goes to JS, layout, text, screenshot capture and encoding, all CPU
+    (our bench: T4 ≈ L4 per frame because the leftover is screenshot overhead). Exception → treat as GPU: full-frame
+    heavy CSS filters (large `blur()`, `backdrop-filter`, big shadows) or 2D drawn with WebGL/shaders (particles, shader BGs).
   - **Blender Cycles** (only if a hero shot truly needs ray tracing, owner-approved) → **Modal L4** (same $/frame as T4, 25 % faster).
 - **Never request CPU-only Modal functions.** All CPU work runs on GitHub runners or locally: asset downloads, joining
   chunks, ffmpeg finishing, loudness, audio, QA. Inside a Modal GPU container encode with **NVENC** (`h264_nvenc`), not libx264.
