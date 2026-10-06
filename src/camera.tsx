@@ -1,6 +1,7 @@
 import React from 'react';
 import { AbsoluteFill } from 'remotion';
-import { W, H, prog, easeInOut, expoInOut, hit, lerp, rnd, CUT, FILM_END, INK } from './lib';
+import { W, H, prog, easeInOut, expoInOut, hit, lerp, rnd, CUT, FILM_END } from './lib';
+import { useLook } from './look';
 
 /* The camera of 《最后一面》. Every chapter is a full-frame stage; the camera lives in the transitions between them:
    whip pans (horizontal / vertical), zoom-throughs into a point of the outgoing stage, a roll, and a hard cut with a
@@ -12,8 +13,6 @@ export type TType = 'whip' | 'tilt' | 'push' | 'roll' | 'shake';
 export type Trans = { at: number; type: TType; d: number; px?: number; py?: number };
 export const TRANS: Trans[] = [
   { at: CUT.intro, type: 'whip', d: 0.42 },
-  { at: CUT.model, type: 'push', d: 0.5, px: 960, py: 470 },
-  { at: CUT.net, type: 'push', d: 0.5, px: 0, py: 0 }, // px/py filled by the model stage (the last red dot)
   { at: CUT.atus, type: 'whip', d: 0.42 },
   { at: CUT.dunbar, type: 'tilt', d: 0.42 },
   { at: CUT.drop, type: 'shake', d: 0.0 },
@@ -74,21 +73,30 @@ const camOffset = (T: number) => {
 };
 
 export const World: React.FC<{ T: number }> = ({ T }) => {
+  const L = useLook();
   const c = camOffset(T);
-  const G = 64;
+  const G = L.dark ? 64 : 30;
   const gx = ((c.x % G) + G) % G, gy = ((c.y % G) + G) % G;
-  const dots: React.ReactNode[] = [];
-  for (let i = -1; i < W / G + 2; i++) for (let j = -1; j < H / G + 2; j++) dots.push(<circle key={`${i}-${j}`} cx={i * G + gx} cy={j * G + gy} r={1.2} fill="rgba(242,240,234,0.10)" />);
-  const dust = Array.from({ length: 70 }, (_, i) => {
+  const marks: React.ReactNode[] = [];
+  if (L.dark) {
+    for (let i = -1; i < W / G + 2; i++) for (let j = -1; j < H / G + 2; j++) marks.push(<circle key={`${i}-${j}`} cx={i * G + gx} cy={j * G + gy} r={1.2} fill={L.grid} />);
+  } else {
+    const M = G * 5, mx = ((c.x % M) + M) % M, my = ((c.y % M) + M) % M;
+    for (let i = -1; i < W / G + 2; i++) marks.push(<line key={`v${i}`} x1={i * G + gx} x2={i * G + gx} y1={-40} y2={H + 40} stroke={L.grid} strokeWidth={1} />);
+    for (let j = -1; j < H / G + 2; j++) marks.push(<line key={`h${j}`} y1={j * G + gy} y2={j * G + gy} x1={-40} x2={W + 40} stroke={L.grid} strokeWidth={1} />);
+    for (let i = -1; i < W / M + 2; i++) marks.push(<line key={`V${i}`} x1={i * M + mx} x2={i * M + mx} y1={-40} y2={H + 40} stroke={L.gridMajor} strokeWidth={1.6} />);
+    for (let j = -1; j < H / M + 2; j++) marks.push(<line key={`H${j}`} y1={j * M + my} y2={j * M + my} x1={-40} x2={W + 40} stroke={L.gridMajor} strokeWidth={1.6} />);
+  }
+  const dust = Array.from({ length: L.dark ? 70 : 30 }, (_, i) => {
     const z = 0.3 + rnd(i, 1) * 1.2;
     const x = ((rnd(i, 2) * (W + 400) + c.x * z * 0.6 + T * 8 * z) % (W + 400) + W + 400) % (W + 400) - 200;
     const y = ((rnd(i, 3) * (H + 400) + c.y * z * 0.6 - T * 5 * z) % (H + 400) + H + 400) % (H + 400) - 200;
-    return <circle key={i} cx={x} cy={y} r={0.8 + z * 1.4} fill={INK} opacity={0.08 + 0.18 * z} />;
+    return <circle key={i} cx={x} cy={y} r={0.8 + z * 1.4} fill={L.dust} opacity={(L.dark ? 0.08 : 0.05) + (L.dark ? 0.18 : 0.08) * z} />;
   });
   return (
-    <AbsoluteFill style={{ background: 'radial-gradient(ellipse 85% 75% at 50% 45%, #111216 0%, #08080b 60%, #040405 100%)' }}>
+    <AbsoluteFill style={{ background: L.bgGrad }}>
       <svg width={W} height={H} style={{ position: 'absolute', inset: 0, transform: `rotate(${c.r}deg) scale(${c.s})`, transformOrigin: '960px 540px' }}>
-        {dots}
+        {marks}
         {dust}
       </svg>
     </AbsoluteFill>

@@ -2,9 +2,8 @@ import React, { useEffect, useState } from 'react';
 import { AbsoluteFill, Img, continueRender, delayRender, staticFile, useCurrentFrame, useVideoConfig } from 'remotion';
 import { CUT, FPS, SANS, prog, easeOut } from './lib';
 import { World, transAt } from './camera';
-import { Hook, Intro, Model } from './scenes1';
-import { Net, Atus, Dunbar } from './scenes2';
-import { Drop, Pay, End } from './scenes3';
+import { StageA, TitleCard } from './sA';
+import { LOOKS, LookCtx, LookId, useLook } from './look';
 import { JUNO } from './brand/identity';
 import { Subtitles } from './subs';
 
@@ -23,28 +22,26 @@ const useFonts = () => {
 const StageAt: React.FC<{ T: number }> = ({ T }) => (
   <AbsoluteFill>
     <World T={T} />
-    <Hook T={T} />
-    <Intro T={T} />
-    <Model T={T} />
-    <Net T={T} />
-    <Atus T={T} />
-    <Dunbar T={T} />
-    <Drop T={T} />
-    <Pay T={T} />
-    <End T={T} />
+    <StageA T={T} />
+    <TitleCard T={T} />
   </AbsoluteFill>
 );
 
-export const Film: React.FC = () => {
+export const Film: React.FC<{ look?: LookId; at?: number }> = ({ look = 'card', at }) => (
+  <LookCtx.Provider value={LOOKS[look]}><FilmInner at={at} /></LookCtx.Provider>
+);
+
+const FilmInner: React.FC<{ at?: number }> = ({ at }) => {
   useFonts();
+  const L = useLook();
   const frame = useCurrentFrame();
   const { fps } = useVideoConfig();
-  const T = frame / fps;
+  const T = at ?? frame / fps;
   const blur = transAt(T);
   const n = blur ? SAMPLES : 1;
   const mark = easeOut(prog(T, CUT.intro, CUT.intro + 0.8)) * (1 - prog(T, CUT.end - 0.3, CUT.end));
   return (
-    <AbsoluteFill style={{ backgroundColor: '#060608' }}>
+    <AbsoluteFill style={{ backgroundColor: L.bg }}>
       <style>{`
         @font-face { font-family: "JunoMono"; src: url(${staticFile('fonts/DejaVuSansMono.ttf')}) format("truetype"); font-weight: 400; }
         @font-face { font-family: "JunoMono"; src: url(${staticFile('fonts/DejaVuSansMono-Bold.ttf')}) format("truetype"); font-weight: 700; }
@@ -55,11 +52,11 @@ export const Film: React.FC = () => {
         </AbsoluteFill>
       ))}
       <Subtitles T={T} />
-      <AbsoluteFill style={{ pointerEvents: 'none', background: 'radial-gradient(ellipse 75% 70% at 50% 50%, rgba(0,0,0,0) 55%, rgba(0,0,0,0.5) 100%)' }} />
+      <AbsoluteFill style={{ pointerEvents: 'none', background: L.vignette }} />
       <AbsoluteFill style={{ opacity: 0.05, pointerEvents: 'none' }}><Img src={staticFile('grain0.png')} style={{ width: '100%', height: '100%' }} /></AbsoluteFill>
       {mark > 0.001 && (
-        <div style={{ position: 'absolute', top: 44, right: 56, opacity: 0.55 * mark, fontFamily: SANS, fontWeight: 500, fontSize: 20, letterSpacing: '0.3em', color: 'rgba(243,237,226,0.58)' }}>
-          <span style={{ color: '#ff3d2e' }}>◆ </span>{JUNO.mark}
+        <div style={{ position: 'absolute', top: 44, right: 56, opacity: 0.55 * mark, fontFamily: SANS, fontWeight: 500, fontSize: 20, letterSpacing: '0.3em', color: L.dim }}>
+          <span style={{ color: L.mark }}>◆ </span>{JUNO.mark}
         </div>
       )}
     </AbsoluteFill>
