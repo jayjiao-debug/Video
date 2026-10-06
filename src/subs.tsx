@@ -19,8 +19,8 @@ export const Subtitles: React.FC<{ T: number }> = ({ T }) => {
     <>
       <div style={{ position: 'absolute', left: 0, right: 0, bottom: 0, height: 0, opacity: band, background: L.subBand }} />
       {cur && (
-        <div style={{ position: 'absolute', left: 0, right: 0, top: 970, textAlign: 'center', opacity: Math.min(easeOut(prog(T, cur[0] - 0.05, cur[0] + 0.12)), 1 - prog(T, cur[1], cur[1] + 0.1)) }}>
-          <span style={{ fontFamily: ZH, fontWeight: 700, fontSize: 56, color: L.subInk, letterSpacing: '0.03em', lineHeight: 1.25, textShadow: L.subShadow, fontVariantNumeric: 'lining-nums' }}><Rich c={L.subNum} s={cur[2].replace(/[。，；：、——]+$/, '')} /></span>
+        <div style={{ position: 'absolute', left: 0, right: 0, top: 972, textAlign: 'center', opacity: Math.min(easeOut(prog(T, cur[0] - 0.05, cur[0] + 0.12)), 1 - prog(T, cur[1], cur[1] + 0.1)) }}>
+          <span style={{ fontFamily: ZH, fontWeight: 700, fontSize: 68, color: L.subInk, letterSpacing: '0.03em', lineHeight: 1.25, textShadow: '0 0 3px rgba(0,0,0,1), 0 0 3px rgba(0,0,0,1), 0 2px 14px rgba(0,0,0,0.95)', fontVariantNumeric: 'lining-nums' }}><Rich c={L.subNum} s={cur[2].replace(/[。，；：、——]+$/, '')} /></span>
         </div>
       )}
     </>
