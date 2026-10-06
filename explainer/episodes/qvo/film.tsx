@@ -29,8 +29,9 @@ const EndCard: React.FC<{T: number}> = ({T}) => {
 			<g opacity={0.2}>
 				<Graticule kind="full" />
 			</g>
+			<ellipse cx={W / 2} cy={420} rx={760} ry={300} fill="url(#brand-glow)" opacity={0.22} />
 			<g transform={`translate(${W / 2},250)`}>
-				<Monogram draw={pr(T, a, 0.7, ez.io)} size={1} wordmark="Juno" />
+				<Monogram draw={0.35 + 0.65 * pr(T, a, 0.6, ez.io)} size={1} wordmark="Juno" />
 			</g>
 			<defs>
 				<linearGradient id="qvo-gold" x1="0" y1={470 - size * 0.8} x2="0" y2={470 + size * 0.2} gradientUnits="userSpaceOnUse">
@@ -42,7 +43,7 @@ const EndCard: React.FC<{T: number}> = ({T}) => {
 			</defs>
 			<text y={470} textAnchor="middle" style={{fontFamily: SERIF, fontWeight: 900, fontSize: size}}>
 				{[...title].map((ch, i) => (
-					<tspan key={i} x={W / 2 - width / 2 + (i + 0.5) * size} fill="url(#qvo-gold)" opacity={pr(T, a + 0.25 + i * 0.06, 0.4)}>
+					<tspan key={i} x={W / 2 - width / 2 + (i + 0.5) * size} fill="url(#qvo-gold)" opacity={0.25 + 0.75 * pr(T, a + 0.05 + i * 0.04, 0.3)}>
 						{ch}
 					</tspan>
 				))}

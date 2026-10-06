@@ -1331,6 +1331,7 @@ const sceneList = (): Scene[] => {
 		chapter: '07 · 加密',
 		status: 'CURSORS ΔY · LOG qubits',
 		grat: 'logy',
+		cam: (T) => ({s: 1 + 0.06 * pr(T, S('r16b'), E('r16b') - S('r16b') + 0.6, ez.io), x: 1150, y: 520}),
 		draw: (T, sc) => {
 			const drop = pr(T, sc.a, 0.4, ez.arrive);
 			const r16 = S('r16');

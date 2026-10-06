@@ -20,3 +20,9 @@
 | 2026-10-06 02:30–03:00 | build: kit.tsx (scope frame), scenes.tsx (27 scenes), film.tsx (end card) | animator (producer) | | 45 |
 | 2026-10-06 03:00 | gate 3: 43 stills reviewed; fixes: counter render bug, frame-0 subtitle, MEASURE readout off the spike, padlock size, histogram, doubling rows, end-card sources width | producer | | 15 |
 | 2026-10-06 03:05 | full render started (chunked, CRF 16) | producer | | |
+| 2026-10-06 04:10 | v1 render (126 s) + automatic checks | producer | true peak +0.28, black at end card, short subs vanish, 1024 not in facts | 20 |
+| 2026-10-06 04:20 | gate 4 r1 | video-reviewer | FIX FIRST: 4 MAJOR (crypto ends on fear, mushy transition into 结论, duck too late, amplitude picture contradicts VO) + 8 MINOR | 7 |
+| 2026-10-06 04:25–04:55 | v2: new VO line r16b (NIST relief), r12 hedged (理论上), duck 250 ms early, all MAJOR/most MINOR fixed; v3 partial re-render (end card, relief-beat motion) | producer | 130.1 s, 3903 frames, black 0, glitches 0 | 45 |
+| 2026-10-06 05:15 | gate 4 r2 | director | APPROVE (script 5 · visual 5 · info 5 · edit 4 · motion 4 · sound 3) | 3 |
+| 2026-10-06 05:25 | delivery: upload file 26.5 MB (2-pass 1.5 Mbps, −15.0 LUFS, −2.2 dBTP); HD master 201 MB (12 Mbps CBR, −13.9 LUFS, −1.8 dBTP) via GitHub artifact deliver-qvo, md5 checked | producer | | 15 |
+| total | ~4 h 50 min from the owner's message (00:35 → 05:25) | | director rounds: G1 1 revise, G2a approve, G4 1 revise + approve | |
