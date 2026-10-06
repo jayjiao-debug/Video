@@ -5,3 +5,5 @@ output/preview_*.mp4
 output/soundtrack.wav
 # Downloaded reference footage (not ours to redistribute; kept local only)
 input/
+episodes/*/audio/*.wav
+episodes/*/audio/*.mp3
