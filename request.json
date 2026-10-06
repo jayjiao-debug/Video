@@ -1,40 +1,21 @@
 {
-  "id": "effort-models-01",
+  "id": "endurance-01",
   "items": [
-    {
-      "type": "sketchfab",
-      "uid": "bc376f5f58a3426f82ef1de506935213",
-      "name": "shell"
-    },
-    {
-      "type": "sketchfab",
-      "uid": "5f76f9ecd6624681b148783fb76a4854",
-      "name": "metronome"
-    },
-    {
-      "type": "sketchfab",
-      "uid": "c7c82e2445544191b541f2240ae8c4e7",
-      "name": "piano"
-    },
-    {
-      "type": "sketchfab",
-      "uid": "e9f9fa5397814f81bf85ad06acf5bf30",
-      "name": "bambooset"
-    },
-    {
-      "type": "sketchfab",
-      "uid": "a02bf0e3ffe44617ad49daf3cd94fe59",
-      "name": "bamboo"
-    },
-    {
-      "type": "sketchfab",
-      "uid": "2ba27702aabe4d37822956a2b7bf43d8",
-      "name": "lamp"
-    },
-    {
-      "type": "sketchfab",
-      "uid": "174a3fc826414bfc9693d9b00f43fe57",
-      "name": "wallclock"
-    }
+    { "type": "sketchfab", "uid": "88a157144c6d44a4864a9a5358f598da", "name": "james_caird_watt" },
+    { "type": "sketchfab", "uid": "8490acd37fe24074a827d7c5897a3871", "name": "sailing_ship_cyc3w" },
+    { "type": "sketchfab", "uid": "f6542036575c4945b40ffe765b1f537c", "name": "ice_floes_dadema" },
+    { "type": "sketchfab", "uid": "8fad3f7ad75847d2b3b3576d180bb1ff", "name": "oceanic_floes_cat", "optimize": true },
+    { "type": "sketchfab-search", "q": "barquentine", "license": "by", "count": 24 },
+    { "type": "sketchfab-search", "q": "polar expedition ship", "license": "by", "count": 24 },
+    { "type": "sketchfab-search", "q": "wooden ship stern", "license": "by", "count": 24 },
+    { "type": "sketchfab-search", "q": "steam tug", "license": "by", "count": 16 },
+    { "type": "sketchfab-search", "q": "sea ice", "license": "by", "count": 24 },
+    { "type": "sketchfab-search", "q": "iceberg", "license": "by", "count": 16 },
+    { "type": "sketchfab-search", "q": "shipwreck", "license": "by", "count": 24 },
+    { "type": "polyhaven", "id": "kloppenheim_06_puresky", "res": "2k" },
+    { "type": "polyhaven", "id": "belfast_sunset_puresky", "res": "2k" },
+    { "type": "polyhaven", "id": "snow_02", "res": "2k" },
+    { "type": "polyhaven", "id": "brown_planks_03", "res": "2k" },
+    { "type": "url", "url": "https://raw.githubusercontent.com/mrdoob/three.js/r169/examples/textures/waternormals.jpg", "name": "waternormals.jpg", "license": "MIT (three.js)" }
   ]
 }
