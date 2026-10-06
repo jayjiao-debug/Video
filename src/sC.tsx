@@ -122,7 +122,7 @@ export const End: React.FC<{ T: number }> = ({ T }) => {
           <text x={975} y={677} textAnchor="middle" style={{ fontFamily: SANS, fontWeight: 700, fontSize: 26, letterSpacing: '0.2em', fill: L.ink }}>{JUNO.follow}</text>
         </g>
         <g opacity={o(1.2)} style={{ fontFamily: SANS, fontSize: 18, fill: 'rgba(255,242,246,0.42)' }}>
-          <text x={960} y={770} textAnchor="middle">资料：Berkson (1946) Biometrics Bulletin · Ellenberg《魔鬼数学》(2014) · Griffith 等 (2020) Nature Communications · Miyara 等 (2020) · Labro 等 (2022) Intensive Care Med</text>
+          <text x={960} y={770} textAnchor="middle">资料：Berkson (1946) Biometrics Bulletin · Ellenberg《魔鬼数学》(2014) · Griffith 等 (2020) Nature Communications · Miyara 等 (2020) · 尼古丁贴片临床试验 (Intensive Care Med, 2022)</text>
           <text x={960} y={800} textAnchor="middle">1000 人散点为模拟 · 医院、小店数据为示意 · 法国 2020.04.25 限购尼古丁替代品（Euronews）</text>
         </g>
         <rect width={1920} height={1080} fill="#000" opacity={black} />
