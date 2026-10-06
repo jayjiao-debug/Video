@@ -1,0 +1,49 @@
+name: modal
+
+# Push a new job.json to the modal-farm branch. The runner calls Modal with the
+# MODAL_TOKEN_ID / MODAL_TOKEN_SECRET repository secrets, runs `modal run <entry>`,
+# and pushes everything the job wrote to out/ onto the `modal-output` branch under out/<id>/.
+on:
+  push:
+    branches: [modal-farm]
+    paths: ['job.json']
+
+permissions:
+  contents: write
+
+concurrency:
+  group: modal
+  cancel-in-progress: false
+
+jobs:
+  run:
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with: { python-version: '3.11' }
+      - name: run
+        env:
+          MODAL_TOKEN_ID: ${{ secrets.MODAL_TOKEN_ID }}
+          MODAL_TOKEN_SECRET: ${{ secrets.MODAL_TOKEN_SECRET }}
+        run: |
+          mkdir -p out
+          echo "token id present: $([ -n "$MODAL_TOKEN_ID" ] && echo yes || echo no)" | tee -a out/log.txt
+          echo "token secret present: $([ -n "$MODAL_TOKEN_SECRET" ] && echo yes || echo no)" | tee -a out/log.txt
+          pip install -q modal 2>&1 | tail -2
+          ENTRY=$(python -c "import json;print(json.load(open('job.json'))['entry'])")
+          modal run "$ENTRY" 2>&1 | tee -a out/log.txt || echo "modal run exited non-zero" | tee -a out/log.txt
+      - name: publish
+        if: always()
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          ID=$(python -c "import json;print(json.load(open('job.json'))['id'])")
+          find out -type f -size +90M -print0 | while IFS= read -r -d '' f; do split -b 90m -d -a 2 "$f" "$f.part" && rm "$f"; done
+          git clone -q --depth 1 --branch modal-output "https://x-access-token:${GH_TOKEN}@github.com/${{ github.repository }}.git" /tmp/mo || (mkdir -p /tmp/mo && cd /tmp/mo && git init -q && git checkout -q -b modal-output && git remote add origin "https://x-access-token:${GH_TOKEN}@github.com/${{ github.repository }}.git")
+          rm -rf "/tmp/mo/out/$ID"; mkdir -p "/tmp/mo/out/$ID"; cp -r out/. "/tmp/mo/out/$ID/"
+          cd /tmp/mo
+          echo "{\"id\":\"$ID\",\"finished\":$(date -u +%s)}" > latest.json
+          git config user.name "modal-farm"; git config user.email "modal-farm@users.noreply.github.com"
+          git add -A && git commit -q -m "modal: $ID" && git push -q origin modal-output
