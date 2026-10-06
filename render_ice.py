@@ -35,5 +35,5 @@ def main():
     for i, (data, log) in enumerate(chunk.map(range(CHUNKS))):
         p = out / f"chunk{i:02d}.mp4"; p.write_bytes(data); lst.append(f"file '{p.name}'"); print(i, log.strip().splitlines()[-1:] )
     (out / "list.txt").write_text("\n".join(lst))
-    subprocess.run("cd out && ffmpeg -y -v error -f concat -safe 0 -i list.txt -vf \"noise=alls=5:allf=t,vignette=PI/6\" -c:v libx264 -preset slow -crf 16 -movflags +faststart ice_hq.mp4 && rm chunk*.mp4 list.txt", shell=True, check=True)
+    subprocess.run("cd out && ffmpeg -y -v error -f concat -safe 0 -i list.txt -c copy -movflags +faststart ice_hq.mp4 && rm chunk*.mp4 list.txt", shell=True, check=True)
     print("DONE", (out / "ice_hq.mp4").stat().st_size)
