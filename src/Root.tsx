@@ -23,7 +23,14 @@ import { Cover11 } from './v11/Cover11';
 import { Ep12Film, EP12_FRAMES } from './v12/Film12';
 import { FlowTest, FT_FRAMES } from './v13/FlowTest';
 import { Looks13 } from './v13/Looks13';
+import { LooksA } from './v13/LooksA';
+import { LooksM } from './v13/LooksM';
+import { LooksAnime } from './v13/LooksAnime';
+import { LooksVibe } from './v13/LooksVibe';
+import { LooksManga } from './v13/LooksManga';
+import { MangaTeaser, MT_FRAMES } from './v13/MangaTeaser';
 import { Ep13Film, EP13_FRAMES } from './v13/Film13';
+import { Cover13Wide, Cover13Tall } from './v13/Cover13';
 import { Cover12 } from './v12/Cover12';
 import '@fontsource/cormorant-garamond/600-italic.css';
 import '@fontsource/cormorant-garamond/500-italic.css';
@@ -79,6 +86,14 @@ export const Root: React.FC = () => (
     <Composition id="Ep11" component={Ep11Film} durationInFrames={EP11_FRAMES} fps={30} width={1920} height={1080} />
     <Composition id="Ep12" component={Ep12Film} durationInFrames={EP12_FRAMES} fps={30} width={1920} height={1080} />
     <Composition id="Ep13" component={Ep13Film} durationInFrames={EP13_FRAMES} fps={30} width={1920} height={1080} />
+    <Composition id="Cover13Wide" component={Cover13Wide} durationInFrames={1} fps={30} width={1440} height={1080} />
+    <Composition id="Cover13Tall" component={Cover13Tall} durationInFrames={1} fps={30} width={1080} height={1440} />
+    <Composition id="MangaTeaser" component={MangaTeaser} durationInFrames={MT_FRAMES} fps={30} width={1920} height={1080} />
+    <Composition id="LooksManga" component={LooksManga} durationInFrames={3} fps={30} width={1920} height={1080} />
+    <Composition id="LooksVibe" component={LooksVibe} durationInFrames={3} fps={30} width={1920} height={1080} />
+    <Composition id="LooksAnime" component={LooksAnime} durationInFrames={3} fps={30} width={1920} height={1080} />
+    <Composition id="LooksM" component={LooksM} durationInFrames={3} fps={30} width={1920} height={1080} />
+    <Composition id="LooksA" component={LooksA} durationInFrames={3} fps={30} width={1920} height={1080} />
     <Composition id="Looks13" component={Looks13} durationInFrames={6} fps={30} width={1920} height={1080} />
     <Composition id="Ep13Test" component={FlowTest} durationInFrames={FT_FRAMES} fps={30} width={1920} height={1080} />
     <Composition id="Cover12Wide" component={Cover12} durationInFrames={1} fps={30} width={1440} height={1080} defaultProps={{ w: 1440, h: 1080 }} />

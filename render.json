@@ -1,8 +1,8 @@
 {
-  "id": "ep13_v3-1791288651",
-  "composition": "Ep13",
+  "id": "manga_teaser1-1791294416",
+  "composition": "MangaTeaser",
   "start": 0,
-  "end": 3850,
-  "chunks": 16,
-  "output": "ep13_v3"
+  "end": 569,
+  "chunks": 8,
+  "output": "manga_teaser1"
 }
