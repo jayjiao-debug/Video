@@ -1,0 +1,351 @@
+<!doctype html>
+<html><head><meta charset="utf-8">
+<style>
+html,body{margin:0;background:#05070c;overflow:hidden}
+#wrap{position:relative;width:1920px;height:1080px;transform-origin:0 0}
+canvas{display:block}
+.ov{position:absolute;inset:0;pointer-events:none;font-family:"Noto Serif CJK SC","Noto Serif SC",serif}
+#sub{position:absolute;left:0;right:0;bottom:92px;text-align:center;color:#f4efe6;font-size:58px;font-weight:700;letter-spacing:2px;
+ text-shadow:0 3px 14px rgba(0,0,0,.95),0 0 3px #000}
+#sub b{color:#f6cf78;text-shadow:0 0 18px rgba(246,207,120,.55),0 3px 14px #000;font-weight:900}
+#chap{position:absolute;top:44px;left:0;right:0;text-align:center;color:#d9c39a;font-size:24px;letter-spacing:8px;opacity:.9}
+#chap span{display:inline-block;padding:0 28px;position:relative}
+#chap span:before,#chap span:after{content:"";position:absolute;top:50%;width:120px;height:1px;background:#b89a62;opacity:.7}
+#chap span:before{right:100%}#chap span:after{left:100%}
+#mark{position:absolute;top:40px;right:56px;color:#cdb98e;font-size:22px;letter-spacing:4px;opacity:.85}
+#stat{position:absolute;top:96px;right:60px;text-align:right;color:#f6cf78;font-size:84px;font-weight:700;line-height:1;text-shadow:0 0 22px rgba(246,207,120,.35)}
+#stat small{display:block;font-size:24px;color:#cdb98e;letter-spacing:3px;margin-top:10px;font-weight:400}
+#plaque{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;opacity:0}
+#plaque div{border:3px solid #d8b56a;padding:34px 90px;color:#f6cf78;font-size:120px;font-weight:900;letter-spacing:16px;background:rgba(8,10,16,.82);
+ box-shadow:0 0 60px rgba(216,181,106,.25),inset 0 0 0 10px rgba(8,10,16,.82),inset 0 0 0 12px rgba(216,181,106,.5)}
+#end{position:absolute;inset:0;background:#06080d;display:flex;flex-direction:column;align-items:center;justify-content:center;opacity:0;color:#f6cf78}
+#end .j{width:150px;height:150px;border:3px solid #d8b56a;border-radius:50%;font-size:96px;line-height:150px;text-align:center;font-weight:900;margin-bottom:34px}
+#end .t{font-size:72px;font-weight:900;letter-spacing:8px}
+#end .q{color:#f4efe6;font-size:40px;margin-top:26px}
+#end .f{margin-top:36px;border:2px solid #d8b56a;border-radius:40px;padding:12px 40px;font-size:30px;color:#f6cf78}
+#end .s{position:absolute;bottom:52px;color:#8d8678;font-size:20px;letter-spacing:1px}
+#flash{position:absolute;inset:0;background:#fff;opacity:0}
+#vig{position:absolute;inset:0;background:radial-gradient(ellipse at center,rgba(0,0,0,0) 55%,rgba(0,0,0,.55) 100%)}
+</style></head><body>
+<div id="wrap"><div id="three"></div>
+<div class="ov"><div id="vig"></div><div id="chap"><span></span></div><div id="mark">◆ Juno · VIBE知识大赏</div><div id="stat"></div><div id="sub"></div>
+<div id="plaque"><div>谁按错了？</div></div><div id="flash"></div>
+<div id="end"><div class="j">J</div><div class="t">切尔诺贝利，谁按错了</div><div class="q">你最常“犯蠢”的那个地方，是哪一个设计？</div><div class="f">关注 Juno · 一起看懂世界</div>
+<div class="s">资料：IAEA INSAG-1 (1986) / INSAG-7 (1992) · Fitts &amp; Jones (1947) · Roscoe (1997) · FCC (2018) · D. Norman《设计心理学》 · 模型 CC BY：rosser12345678910, ml64, helijah, janwama</div></div>
+</div></div>
+<script type="importmap">{"imports":{"three":"./node_modules/three/build/three.module.js","three/addons/":"./node_modules/three/examples/jsm/"}}</script>
+<script type="module">
+import * as THREE from 'three';
+import {GLTFLoader} from 'three/addons/loaders/GLTFLoader.js';
+import {RGBELoader} from 'three/addons/loaders/RGBELoader.js';
+const Q=new URLSearchParams(location.search);const SC=+(Q.get('s')||1);
+document.getElementById('wrap').style.transform=`scale(${SC})`;
+const W=1920,H=1080;
+const R=new THREE.WebGLRenderer({antialias:true,preserveDrawingBuffer:true});R.setPixelRatio(SC);R.setSize(W,H);
+R.toneMapping=THREE.ACESFilmicToneMapping;R.toneMappingExposure=1.0;R.shadowMap.enabled=true;R.shadowMap.type=THREE.PCFSoftShadowMap;
+document.getElementById('three').appendChild(R.domElement);R.domElement.style.width=W+'px';R.domElement.style.height=H+'px';
+const cam=new THREE.PerspectiveCamera(35,W/H,0.05,8000);
+const $=id=>document.getElementById(id);
+const cl=(x,a=0,b=1)=>Math.min(b,Math.max(a,x)),lerp=(a,b,t)=>a+(b-a)*t,ease=t=>{t=cl(t);return t<.5?4*t*t*t:1-Math.pow(-2*t+2,3)/2};
+const seg=(t,a,b)=>ease((t-a)/(b-a)),V=(x,y,z)=>new THREE.Vector3(x,y,z),vl=(a,b,t)=>a.clone().lerp(b,t);
+let seed=9;const rnd=()=>{seed=(seed*16807)%2147483647;return seed/2147483647};
+const load=(u)=>new Promise((res,rej)=>new GLTFLoader().load(u,res,undefined,rej));
+const [gCore,gPlant,gB17,gDoor,night,dusk]=await Promise.all([load('assets/rbmk_core.glb'),load('assets/chnpp_simplified.glb'),load('assets/b17_helijah.glb'),load('assets/interior_trim.glb'),
+ new Promise(r=>new RGBELoader().load('assets/moonless_golf_2k.hdr',r)),new Promise(r=>new RGBELoader().load('assets/belfast_sunset_puresky_2k.hdr',r))]);
+[night,dusk].forEach(t=>t.mapping=THREE.EquirectangularReflectionMapping);
+const LINES=window.LINES||[];
+function fit(obj,size,axis='max'){obj.updateMatrixWorld(true);const b=new THREE.Box3().setFromObject(obj),s=b.getSize(V()),k=size/(axis==='max'?Math.max(s.x,s.y,s.z):s[axis]);
+ obj.scale.multiplyScalar(k);obj.updateMatrixWorld(true);const b2=new THREE.Box3().setFromObject(obj),c=b2.getCenter(V());obj.position.sub(V(c.x,b2.min.y,c.z));obj.traverse(o=>{if(o.isMesh){o.castShadow=o.receiveShadow=true}});return obj;}
+// ---------- text textures ----------
+function tex(draw,w=1024,h=640){const c=document.createElement('canvas');c.width=w;c.height=h;const g=c.getContext('2d');draw(g,w,h);const t=new THREE.CanvasTexture(c);t.colorSpace=THREE.SRGBColorSpace;t.anisotropy=8;return t;}
+const SERIF='"Noto Serif CJK SC","Noto Serif SC",serif',MONO='"Courier New",monospace';
+function paper(lines,{w=1024,h=640,bg='#e9e0cc',ink='#2b241a',title=null,mark=null}={}){return tex((g,W,H)=>{g.fillStyle=bg;g.fillRect(0,0,W,H);
+ const gr=g.createRadialGradient(W/2,H/2,H*.2,W/2,H/2,W*.8);gr.addColorStop(0,'rgba(0,0,0,0)');gr.addColorStop(1,'rgba(60,40,10,.25)');g.fillStyle=gr;g.fillRect(0,0,W,H);
+ g.fillStyle=ink;let y=70;if(title){g.font=`700 44px ${SERIF}`;g.fillText(title,60,y+10);y+=50;g.fillRect(60,y,W-120,3);y+=60;}
+ for(const L of lines){g.font=L.f||`500 38px ${SERIF}`;g.fillStyle=L.c||ink;g.fillText(L.t,L.x||60,y);if(L.u){const m=g.measureText(L.t);g.fillStyle=L.u;g.fillRect((L.x||60)-4,y+12,m.width+8,7);}y+=L.dy||58;}
+ if(mark){g.save();g.translate(W-230,H-120);g.rotate(-.12);g.strokeStyle=mark.c;g.lineWidth=6;g.strokeRect(-150,-50,300,100);g.fillStyle=mark.c;g.font=`900 52px ${SERIF}`;g.textAlign='center';g.fillText(mark.t,0,18);g.restore();}},w,h);}
+function card(t,w,h,{emis=0}={}){const m=new THREE.MeshStandardMaterial({map:t,roughness:.85,emissive:emis?0xffffff:0,emissiveMap:emis?t:null,emissiveIntensity:emis});return new THREE.Mesh(new THREE.PlaneGeometry(w,h),m);}
+function label3d(text,{size=64,color='#f6cf78',w=1024,h=160,bg=null}={}){const t=tex((g,W,H)=>{if(bg){g.fillStyle=bg;g.fillRect(0,0,W,H)}g.font=`700 ${size}px ${SERIF}`;g.fillStyle=color;g.textAlign='center';g.textBaseline='middle';g.shadowColor=color;g.shadowBlur=18;g.fillText(text,W/2,H/2);},w,h);
+ const m=new THREE.Mesh(new THREE.PlaneGeometry(w/h,1),new THREE.MeshBasicMaterial({map:t,transparent:true,depthWrite:false,toneMapped:false}));return m;}
+
+function inFront(o,d,ox=0,oy=0){cam.updateMatrixWorld();const f=V(0,0,-1).applyQuaternion(cam.quaternion),r=V(1,0,0).applyQuaternion(cam.quaternion),u=V(0,1,0).applyQuaternion(cam.quaternion);
+ o.position.copy(cam.position).add(f.multiplyScalar(d)).add(r.multiplyScalar(ox)).add(u.multiplyScalar(oy));o.quaternion.copy(cam.quaternion);}
+/* =============== S_DOOR =============== */
+const sDoor=new THREE.Scene();sDoor.background=new THREE.Color(0x14100c);sDoor.fog=new THREE.Fog(0x14100c,6,22);
+const door=new THREE.Group();const bronze=new THREE.MeshStandardMaterial({color:0x3a2a1c,metalness:.7,roughness:.4});
+{const W2=1.0,H2=2.2,f=.06;[[0,H2-f/2,W2,f],[0,f/2,W2,f],[-W2/2+f/2,H2/2,f,H2],[W2/2-f/2,H2/2,f,H2]].forEach(([x,y,w,h])=>{const m=new THREE.Mesh(new THREE.BoxGeometry(w,h,.05),bronze);m.position.set(x,y,0);door.add(m);});
+ const glass=new THREE.Mesh(new THREE.PlaneGeometry(W2-2*f,H2-2*f),new THREE.MeshStandardMaterial({color:0x9fb6c4,transparent:true,opacity:.18,roughness:.05,metalness:.2}));glass.position.set(0,H2/2,0);door.add(glass);
+ door.children.forEach(c=>c.position.x+=W2/2);}
+const doorG=new THREE.Group();doorG.add(door);doorG.position.set(-.5,0,0);sDoor.add(doorG);
+const room=new THREE.Mesh(new THREE.PlaneGeometry(6,4),new THREE.MeshBasicMaterial({map:tex((g,W,H)=>{const gr=g.createRadialGradient(W*.55,H*.45,20,W*.55,H*.45,W*.6);gr.addColorStop(0,'#ffd9a0');gr.addColorStop(.4,'#7a4a24');gr.addColorStop(1,'#1a120c');g.fillStyle=gr;g.fillRect(0,0,W,H);
+ for(let i=0;i<14;i++){g.fillStyle=`rgba(255,200,130,${.15+Math.random()*.25})`;g.beginPath();g.arc(Math.random()*W,Math.random()*H*.7,10+Math.random()*40,0,7);g.fill();}},1024,640),toneMapped:false}));room.position.set(0,1.6,-2.5);sDoor.add(room);
+const db=new THREE.Box3(V(-.5,0,-.03),V(.5,2.2,.03));const dc=V(0,1.1,0);
+const wallM=new THREE.MeshStandardMaterial({color:0x3a2e24,roughness:.95});
+[-3.6,3.6].forEach(x=>{const w=new THREE.Mesh(new THREE.PlaneGeometry(6.2,6),wallM);w.position.set(x,3,-.04);sDoor.add(w);});{const w=new THREE.Mesh(new THREE.PlaneGeometry(1.2,3.6),wallM);w.position.set(0,4.0,-.04);sDoor.add(w);}
+const floorD=new THREE.Mesh(new THREE.PlaneGeometry(14,10),new THREE.MeshStandardMaterial({color:0x221a14,roughness:.8}));floorD.rotation.x=-Math.PI/2;sDoor.add(floorD);
+const brass=new THREE.MeshStandardMaterial({color:0xc9a35a,metalness:1,roughness:.28});
+const handle=new THREE.Group();const bar=new THREE.Mesh(new THREE.CylinderGeometry(.022,.022,.75,20),brass);handle.add(bar);
+[-.3,.3].forEach(y=>{const p=new THREE.Mesh(new THREE.CylinderGeometry(.016,.016,.09,12),brass);p.rotation.x=Math.PI/2;p.position.set(0,y,-.045);handle.add(p)});
+const plate=new THREE.Mesh(new THREE.BoxGeometry(.16,.5,.008),brass);plate.visible=false;
+const doorFront=.03;handle.position.set(.36,1.05,doorFront+.09);plate.position.set(handle.position.x,1.05,doorFront+.005);doorG.add(handle,plate);handle.position.x+=.5;plate.position.x=handle.position.x;
+const pushSign=label3d('推',{size:110,color:'#2b241a',w:256,h:256,bg:'#d9cdb4'});pushSign.scale.setScalar(.16);pushSign.position.set(0,1.6,doorFront+.003);doorG.add(pushSign);pushSign.position.x=.5;
+sDoor.add(new THREE.HemisphereLight(0xffd9a8,0x1a1410,.5));
+const lampD=new THREE.SpotLight(0xffc27a,60,12,.6,.6,1.2);lampD.position.set(1.6,3.2,2.4);lampD.target.position.set(0,1.1,0);lampD.castShadow=true;sDoor.add(lampD,lampD.target);
+const doorPivot=new THREE.Group();
+
+/* =============== S_PLANT =============== */
+const sPlant=new THREE.Scene();sPlant.background=new THREE.Color(0x070b14);sPlant.environment=night;sPlant.environmentIntensity=.25;sPlant.fog=new THREE.FogExp2(0x0a0f1a,.0016);
+const plant=gPlant.scene;fit(plant,600);plant.traverse(o=>{if(o.isMesh){o.material=o.material.clone();o.material.color.multiplyScalar(.18);}});sPlant.add(plant);
+const pb=new THREE.Box3().setFromObject(plant);const ground=new THREE.Mesh(new THREE.PlaneGeometry(6000,6000),new THREE.MeshStandardMaterial({color:0x0c1016,roughness:1}));ground.rotation.x=-Math.PI/2;sPlant.add(ground);
+const winM=new THREE.MeshBasicMaterial({color:0xffb45a,toneMapped:false});const winG=new THREE.PlaneGeometry(2.2,1.4);
+const wins=new THREE.InstancedMesh(winG,winM,700);{const m=new THREE.Matrix4();let k=0;for(let i=0;i<700;i++){const x=lerp(pb.min.x+10,pb.max.x-10,rnd()),y=lerp(6,Math.min(40,pb.max.y*.5),rnd());const side=rnd()<.5;
+ m.makeTranslation(x,y,side?pb.max.z+.3:pb.min.z-.3);if(!side)m.multiply(new THREE.Matrix4().makeRotationY(Math.PI));if(rnd()<.18)wins.setMatrixAt(k++,m);}wins.count=k;}
+sPlant.add(wins);
+const sodium=[];for(let i=0;i<10;i++){const L=new THREE.PointLight(0xff9a40,9000,160,2);L.position.set(lerp(pb.min.x,pb.max.x,i/9),28,pb.max.z+40);sPlant.add(L);sodium.push(L);}
+sPlant.add(new THREE.HemisphereLight(0x223355,0x0a0a0a,.4));
+
+/* =============== S_PANEL (AZ-5 + rod position) =============== */
+const sPanel=new THREE.Scene();sPanel.background=new THREE.Color(0x07090d);
+const panelM=new THREE.MeshStandardMaterial({color:0x1f2924,roughness:.75,metalness:.25});
+const panel=new THREE.Mesh(new THREE.BoxGeometry(6,2.6,.2),panelM);panel.position.set(0,1.3,0);sPanel.add(panel);
+const btns=[];const btnG=new THREE.BoxGeometry(.18,.18,.08);
+for(let r=0;r<5;r++)for(let c=0;c<14;c++){const b=new THREE.Mesh(btnG,new THREE.MeshStandardMaterial({color:[0x3c4440,0x51504a,0x2f3a3a][(r+c)%3],roughness:.5,emissive:0x221100,emissiveIntensity:rnd()<.2?2:0}));b.position.set(-2.6+c*.4,.5+r*.38,.12);sPanel.add(b);btns.push(b);}
+const az5=new THREE.Mesh(new THREE.BoxGeometry(.32,.32,.12),new THREE.MeshStandardMaterial({color:0xa01a12,roughness:.4,emissive:0xff2a10,emissiveIntensity:0}));az5.position.set(.2,2.2,.14);sPanel.add(az5);
+const azL=label3d('АЗ-5',{size:90,color:'#f1e8d5',w:512,h:160});azL.scale.setScalar(.22);azL.position.set(.2,2.55,.11);sPanel.add(azL);
+// rod position bars (fairness beat)
+const rodBars=[];for(let i=0;i<24;i++){const bg=new THREE.Mesh(new THREE.PlaneGeometry(.12,1.6),new THREE.MeshBasicMaterial({color:0x1a1f1c}));bg.position.set(-2.4+i*.21,-1.3,.11);
+ const fl=new THREE.Mesh(new THREE.PlaneGeometry(.1,1.6),new THREE.MeshBasicMaterial({color:0xf6cf78,toneMapped:false}));fl.position.copy(bg.position).add(V(0,0,.002));fl.userData.v=i<21?0.06+rnd()*0.08:0.4+rnd()*.4;
+ sPanel.add(bg,fl);rodBars.push(fl);}
+const rodPanel=new THREE.Mesh(new THREE.BoxGeometry(6,2.2,.2),panelM);rodPanel.position.set(0,-1.3,0);sPanel.add(rodPanel);
+const sheet=card(paper([{t:'试验程序（修改稿）',f:`700 40px ${SERIF}`},{t:'—— 功率降至 200 MW'},{t:'—— 继续试验',c:'#9b1c12'},{t:'—— 拔出更多控制棒',c:'#9b1c12'},{t:'（手写修改）',f:`italic 30px ${SERIF}`,c:'#6c5a3e'}]),1.2,.75);
+sheet.position.set(2.2,-.9,.3);sheet.rotation.z=.08;sPanel.add(sheet);
+const lampP=new THREE.SpotLight(0xffc27a,12,10,.7,.7,1.2);lampP.position.set(.6,3.6,2.6);lampP.target.position.set(.2,1.8,0);sPanel.add(lampP,lampP.target);
+sPanel.add(new THREE.AmbientLight(0x30404a,.15));const lampP2=new THREE.SpotLight(0xffc27a,14,10,.8,.7,1.2);lampP2.position.set(1.5,1.5,2.6);lampP2.target.position.set(0,-1.3,0);sPanel.add(lampP2,lampP2.target);
+
+/* =============== S_CORE (reactor top + rods + cut-away) =============== */
+const sCore=new THREE.Scene();sCore.background=new THREE.Color(0x06080c);sCore.fog=new THREE.FogExp2(0x06080c,.035);
+const core=gCore.scene;fit(core,14);sCore.add(core);const cb=new THREE.Box3().setFromObject(core);
+const hallFloor=new THREE.Mesh(new THREE.PlaneGeometry(80,80),new THREE.MeshStandardMaterial({color:0x2a2620,roughness:.9}));hallFloor.rotation.x=-Math.PI/2;hallFloor.position.y=cb.min.y-.01;sCore.add(hallFloor);
+const coreTop=cb.max.y;
+// rods: instanced thin cylinders above the lid, they fall into it
+const RODN=48,rodG=new THREE.CylinderGeometry(.07,.07,1.6,10);const rodM=new THREE.MeshStandardMaterial({color:0x8a8f96,metalness:.8,roughness:.35,emissive:0xff8a30,emissiveIntensity:0});
+const rods=new THREE.InstancedMesh(rodG,rodM,RODN);const rodXZ=[];for(let i=0;i<RODN;i++){let x,z;do{x=(rnd()-.5)*12;z=(rnd()-.5)*12}while(Math.hypot(x,z)>5.6);rodXZ.push([x,z]);}sCore.add(rods);
+function setRods(depth){const m=new THREE.Matrix4();for(let i=0;i<RODN;i++){const [x,z]=rodXZ[i];m.makeTranslation(x,coreTop+.55-depth*4.2,z);rods.setMatrixAt(i,m);}rods.instanceMatrix.needsUpdate=true;}
+setRods(0);
+const coreLamps=[];[[-9,7,6],[9,7,-6],[0,9,10]].forEach(p=>{const L=new THREE.SpotLight(0xffbf70,260,40,.5,.6,1.2);L.position.set(...p);L.target.position.set(0,coreTop,0);L.castShadow=true;sCore.add(L,L.target);coreLamps.push(L);});
+sCore.add(new THREE.AmbientLight(0x223040,.25));
+const heat=new THREE.PointLight(0xff5a20,0,30,1.5);heat.position.set(0,coreTop+.5,0);sCore.add(heat);
+// gauge on the model
+const gauge=new THREE.Group();const gFace=card(tex((g,W,H)=>{g.fillStyle='#e8e0cc';g.beginPath();g.arc(W/2,H/2,W/2-6,0,7);g.fill();g.strokeStyle='#2b241a';g.lineWidth=8;g.stroke();
+ for(let i=0;i<=10;i++){const a=Math.PI*(.8+1.4*i/10);g.beginPath();g.moveTo(W/2+Math.cos(a)*190,H/2+Math.sin(a)*190);g.lineTo(W/2+Math.cos(a)*230,H/2+Math.sin(a)*230);g.lineWidth=i>7?10:5;g.strokeStyle=i>7?'#a01a12':'#2b241a';g.stroke();}
+ g.font=`700 54px ${SERIF}`;g.fillStyle='#2b241a';g.textAlign='center';g.fillText('功率',W/2,H/2+120);},512,512),2.2,2.2);gauge.add(gFace);
+const needle=new THREE.Mesh(new THREE.BoxGeometry(.04,.9,.02),new THREE.MeshBasicMaterial({color:0xa01a12}));needle.geometry.translate(0,.45,0);needle.position.z=.02;gauge.add(needle);
+gauge.position.set(-6.5,coreTop+2.6,3);gauge.rotation.y=.5;sCore.add(gauge);
+// report cards
+const insag1=card(paper([{t:'事故原因',f:`700 46px ${SERIF}`},{t:'主要归于',dy:70},{t:'操作员',f:`900 120px ${SERIF}`,u:'#b0201a',dy:150},{t:'违反规程'}],{title:'INSAG-1 · 1986'}),3.2,2);
+const insag7=card(paper([{t:'修正：反应堆设计',f:`700 46px ${SERIF}`},{t:'停堆棒：开始插入时',dy:62},{t:'反而增加反应性',c:'#9b1c12',f:`800 50px ${SERIF}`,dy:80},{t:'"may well have been the decisive',f:`italic 34px ${SERIF}`,dy:46},{t:' contributory factor"',f:`italic 34px ${SERIF}`}],{title:'INSAG-7 · 1992'}),3.2,2);
+[insag1,insag7].forEach(c=>{c.visible=false;sCore.add(c)});
+const memo=card(paper([{t:'1983 · 同型电站',f:`700 44px ${SERIF}`},{t:'发现：停堆棒插入初期'},{t:'反应性上升'},{t:'拟加限制',f:`900 70px ${SERIF}`,c:'#9b1c12',dy:90},{t:'（未落实）',f:`italic 34px ${SERIF}`,c:'#6c5a3e'}]),2.4,1.5);memo.visible=false;sCore.add(memo);
+const drawer=new THREE.Mesh(new THREE.BoxGeometry(3,.8,2),new THREE.MeshStandardMaterial({color:0x3a2c1f,roughness:.8}));drawer.visible=false;sCore.add(drawer);
+const dust=new THREE.Points(new THREE.BufferGeometry().setAttribute('position',new THREE.Float32BufferAttribute(Array.from({length:900},()=>(rnd()-.5)*8),3)),new THREE.PointsMaterial({color:0xd8c59a,size:.03,transparent:true,opacity:.6}));sCore.add(dust);dust.visible=false;
+
+/* =============== S_CUT (rod channel cut-away, 2.5D) =============== */
+const sCut=new THREE.Scene();sCut.background=new THREE.Color(0x070a10);
+const chan=new THREE.Group();sCut.add(chan);
+const graphiteM=new THREE.MeshStandardMaterial({color:0x2d2f33,roughness:.9});
+const blockL=new THREE.Mesh(new THREE.BoxGeometry(2,8,1),graphiteM);blockL.position.x=-1.45;const blockR=blockL.clone();blockR.position.x=1.45;chan.add(blockL,blockR);
+const water=new THREE.Mesh(new THREE.BoxGeometry(.9,8,.6),new THREE.MeshStandardMaterial({color:0x2a6fa8,transparent:true,opacity:.55,roughness:.1,emissive:0x0a2a50,emissiveIntensity:.6}));chan.add(water);
+const rodC=new THREE.Group();const absorber=new THREE.Mesh(new THREE.CylinderGeometry(.36,.36,4.6,24),new THREE.MeshStandardMaterial({color:0x14161a,metalness:.6,roughness:.4}));absorber.position.y=3.3;
+const gap=new THREE.Mesh(new THREE.CylinderGeometry(.36,.36,1,24),new THREE.MeshStandardMaterial({color:0x2a6fa8,transparent:true,opacity:.35}));gap.position.y=.5;
+const tip=new THREE.Mesh(new THREE.CylinderGeometry(.36,.36,4.4,24),new THREE.MeshStandardMaterial({color:0x5a5d63,roughness:.6,emissive:0x000000}));tip.position.y=-2.2;
+rodC.add(absorber,gap,tip);chan.add(rodC);sCut.background=new THREE.Color(0x0b1018);
+const glow=new THREE.PointLight(0xff6a20,0,8,1.4);glow.position.set(0,-3.3,1.2);sCut.add(glow);
+const zoneB=new THREE.Mesh(new THREE.PlaneGeometry(4,1.6),new THREE.MeshBasicMaterial({color:0xff6a20,transparent:true,opacity:0,toneMapped:false,blending:THREE.AdditiveBlending}));zoneB.position.set(0,-3.2,.62);chan.add(zoneB);
+const lbl=(t,c,x,y,s=.5)=>{const m=label3d(t,{size:70,color:c,w:768,h:160});m.scale.setScalar(s);m.position.set(x,y,.7);chan.add(m);return m;};
+const lAbs=lbl('吸收体（刹车）','#f4efe6',2.7,.9,.55),lTip=lbl('石墨端头','#f4efe6',2.7,-.6,.55),lWat=lbl('水','#8fc4ff',-2.4,-1.0,.55),lCore=lbl('堆芯底部','#cdb98e',-2.5,-1.9,.5);
+const brake=lbl('刹车 →','#f4efe6',-1.0,1.7,.8),gas=lbl('油门？','#ff7a3a',1.4,1.7,.8);brake.visible=gas.visible=false;
+sCut.add(new THREE.AmbientLight(0x405060,1.2));const rim=new THREE.DirectionalLight(0x8fb4ff,1.2);rim.position.set(-4,2,-3);sCut.add(rim);const cutKey=new THREE.DirectionalLight(0xffd9a8,1.6);cutKey.position.set(3,5,6);sCut.add(cutKey);
+const bubbles=new THREE.InstancedMesh(new THREE.SphereGeometry(.05,8,6),new THREE.MeshBasicMaterial({color:0xbfe1ff,transparent:true,opacity:.8}),60);chan.add(bubbles);
+
+/* =============== S_B17 (dusk runway) =============== */
+const sB17=new THREE.Scene();sB17.background=dusk;sB17.backgroundIntensity=.55;sB17.environment=dusk;sB17.environmentIntensity=.55;sB17.fog=new THREE.FogExp2(0x7a5a52,.004);
+const b17=gB17.scene;fit(b17,31.5,'z');const b17g=new THREE.Group();b17g.add(b17);sB17.add(b17g);
+const runway=new THREE.Mesh(new THREE.PlaneGeometry(60,1200),new THREE.MeshStandardMaterial({color:0x2c2a29,roughness:.95}));runway.rotation.x=-Math.PI/2;runway.position.y=-.01;sB17.add(runway);
+const grass=new THREE.Mesh(new THREE.PlaneGeometry(4000,4000),new THREE.MeshStandardMaterial({color:0x2a2c1c,roughness:1}));grass.rotation.x=-Math.PI/2;grass.position.y=-.03;sB17.add(grass);
+const stripeM=new THREE.MeshBasicMaterial({color:0xcfc6b0});for(let i=0;i<40;i++){const s=new THREE.Mesh(new THREE.PlaneGeometry(.8,12),stripeM);s.rotation.x=-Math.PI/2;s.position.set(0,0,-600+i*30);sB17.add(s);}
+const sunB=new THREE.DirectionalLight(0xffa86a,2.6);sunB.position.set(-120,40,-160);sunB.castShadow=true;sunB.shadow.mapSize.set(2048,2048);Object.assign(sunB.shadow.camera,{left:-30,right:30,top:30,bottom:-30,far:600});sB17.add(sunB);
+const sparks=new THREE.InstancedMesh(new THREE.BoxGeometry(.06,.06,.5),new THREE.MeshBasicMaterial({color:0xffc060,toneMapped:false}),160);sparks.visible=false;sB17.add(sparks);
+const chapCard=card(paper([{t:'心理学家',f:`500 40px ${SERIF}`},{t:'查帕尼斯',f:`900 96px ${SERIF}`,dy:120},{t:'1943 · 被派去调查',f:`500 38px ${SERIF}`}],{w:900,h:520}),3.4,1.96);chapCard.visible=false;sB17.add(chapCard);
+
+/* =============== S_COCKPIT (switches) =============== */
+const sCk=new THREE.Scene();sCk.background=new THREE.Color(0x0a0b0e);
+const ckPanelM=new THREE.MeshStandardMaterial({color:0x2f312c,roughness:.75,metalness:.3});
+function pedestal(label){const g=new THREE.Group();const p=new THREE.Mesh(new THREE.BoxGeometry(3,.25,2),ckPanelM);g.add(p);
+ for(let i=0;i<10;i++){const r=new THREE.Mesh(new THREE.CylinderGeometry(.04,.04,.02,12),new THREE.MeshStandardMaterial({color:0x888,metalness:1,roughness:.3}));r.position.set(-1.35+(i%5)*.675,.135,i<5?-.9:.9);g.add(r);}
+ const L=label3d(label,{size:80,color:'#e9dcc0',w:768,h:160});L.scale.setScalar(.6);L.rotation.x=-Math.PI/2;L.position.set(0,.14,.75);g.add(L);sCk.add(g);return g;}
+const chrome=new THREE.MeshStandardMaterial({color:0xd8d8d8,metalness:1,roughness:.18});
+function toggle(){const g=new THREE.Group();const base=new THREE.Mesh(new THREE.CylinderGeometry(.12,.14,.06,24),new THREE.MeshStandardMaterial({color:0x1b1b1b,roughness:.6}));base.position.y=.15;
+ const lev=new THREE.Mesh(new THREE.CylinderGeometry(.03,.045,.55,16),chrome);lev.position.y=.42;lev.rotation.z=.35;const ball=new THREE.Mesh(new THREE.SphereGeometry(.06,16,12),chrome);ball.position.set(-.09,.69,0);
+ const arm=new THREE.Group();arm.add(lev,ball);g.add(base,arm);g.userData.arm=arm;return g;}
+const pA=pedestal('B-17 等');pA.position.set(-2,0,0);const pC=pedestal('C-47');pC.position.set(2,0,0);
+const tg1=toggle(),tg2=toggle();tg1.position.set(-.2,0,0);tg2.position.set(.2,0,0);pA.add(tg1,tg2);
+const tA1=label3d('起落架',{size:70,color:'#f6cf78',w:512,h:140});tA1.scale.setScalar(.14);tA1.rotation.x=-Math.PI/2;tA1.position.set(-.2,.135,.32);const tA2=label3d('襟翼',{size:70,color:'#f6cf78',w:512,h:140});tA2.scale.setScalar(.14);tA2.rotation.x=-Math.PI/2;tA2.position.set(.2,.135,.32);pA.add(tA1,tA2);
+const wheel=new THREE.Mesh(new THREE.TorusGeometry(.09,.04,12,24),new THREE.MeshStandardMaterial({color:0x151515,roughness:.7}));wheel.rotation.y=Math.PI/2;wheel.position.set(-.09,.7,0);
+const wedge=new THREE.Mesh(new THREE.ConeGeometry(.1,.2,3),new THREE.MeshStandardMaterial({color:0x7a1a12,roughness:.6}));wedge.position.set(-.09,.72,0);wedge.rotation.z=Math.PI/2;
+tg1.userData.arm.add(wheel);tg2.userData.arm.add(wedge);wheel.scale.setScalar(.001);wedge.scale.setScalar(.001);
+const tc1=toggle();tc1.position.set(-1.1,0,-.5);const tc2=new THREE.Group();{const b=new THREE.Mesh(new THREE.BoxGeometry(.1,.3,.5),new THREE.MeshStandardMaterial({color:0x1b1b1b}));b.position.y=.25;const k=new THREE.Mesh(new THREE.BoxGeometry(.18,.12,.12),new THREE.MeshStandardMaterial({color:0x6a5a3a}));k.position.set(0,.45,.1);tc2.add(b,k);}tc2.position.set(1.1,0,.4);pC.add(tc1,tc2);
+const zero=label3d('着陆后误收：0',{size:66,color:'#f6cf78',w:900,h:160});zero.scale.setScalar(.35);zero.position.set(0,1.0,0);pC.add(zero);
+const warn=new THREE.PointLight(0xff2a10,0,4,1.5);warn.position.set(-2.4,.9,-.4);sCk.add(warn);const ckLamp=new THREE.SpotLight(0xffc27a,50,12,.55,.6,1.2);ckLamp.position.set(-1.2,3.4,2.6);ckLamp.target.position.set(-2,0,0);ckLamp.castShadow=true;sCk.add(ckLamp,ckLamp.target);
+const ckLamp2=new THREE.SpotLight(0xffc27a,40,12,.55,.6,1.2);ckLamp2.position.set(2.6,3.4,2.6);ckLamp2.target.position.set(2,0,0);sCk.add(ckLamp2,ckLamp2.target);sCk.add(new THREE.AmbientLight(0x2a3340,.4));
+
+/* =============== S_DESK (Hawaii, one continuous 2.5D desk) =============== */
+const sDesk=new THREE.Scene();sDesk.background=new THREE.Color(0x0c0e12);
+const deskTop=new THREE.Mesh(new THREE.BoxGeometry(30,.2,4),new THREE.MeshStandardMaterial({color:0x3b2f25,roughness:.7}));deskTop.position.set(10,-.1,0);sDesk.add(deskTop);
+const deskWall=new THREE.Mesh(new THREE.PlaneGeometry(40,10),new THREE.MeshStandardMaterial({color:0x1d2229,roughness:1}));deskWall.position.set(10,3,-2);sDesk.add(deskWall);
+// phone (x=0)
+const phone=new THREE.Mesh(new THREE.BoxGeometry(.8,.04,1.6),new THREE.MeshStandardMaterial({color:0x0b0b0c,roughness:.3}));phone.position.set(0,.03,.6);sDesk.add(phone);
+const scrT=tex((g,W,H)=>{g.fillStyle='#111';g.fillRect(0,0,W,H);g.fillStyle='#f2f2f2';g.fillRect(30,120,W-60,520);g.fillStyle='#b0201a';g.font=`700 44px ${MONO}`;g.fillText('EMERGENCY ALERT',60,190);
+ g.fillStyle='#111';g.font=`700 38px ${MONO}`;['BALLISTIC MISSILE','THREAT INBOUND TO','HAWAII. SEEK','IMMEDIATE SHELTER.','THIS IS NOT A DRILL.'].forEach((l,i)=>g.fillText(l,60,270+i*64));
+ g.fillStyle='#666';g.font=`400 30px ${SERIF}`;g.fillText('2018-01-13 · 08:07',60,600);},640,1280);
+const screen=new THREE.Mesh(new THREE.PlaneGeometry(.72,1.44),new THREE.MeshBasicMaterial({map:scrT,toneMapped:false,transparent:true,opacity:0}));screen.rotation.x=-Math.PI/2;screen.position.set(0,.052,.6);sDesk.add(screen);
+const phoneGlow=new THREE.PointLight(0xdfe8ff,0,4,1.5);phoneGlow.position.set(0,.6,.6);sDesk.add(phoneGlow);
+// "手滑" tag + X (x=4)
+const slipT=card(paper([{t:'网上流传：',f:`500 40px ${SERIF}`},{t:'“手滑点错了菜单”',f:`800 56px ${SERIF}`,dy:90}],{w:900,h:360,mark:{t:'不是',c:'#b0201a'}}),2.6,1.04);slipT.rotation.x=-Math.PI/2;slipT.position.set(4,.01,.4);sDesk.add(slipT);
+// drill script (x=8)
+const drillT=card(tex((g,W,H)=>{g.fillStyle='#ece6d6';g.fillRect(0,0,W,H);g.fillStyle='#222';g.font=`700 40px ${MONO}`;g.fillText('EXERCISE EXERCISE EXERCISE',50,90);
+ g.font=`400 30px ${MONO}`;['... drill call recording ...','','PACOM (CDW) STATE WARNING POINT','','THIS IS NOT A DRILL','','EXERCISE EXERCISE EXERCISE'].forEach((l,i)=>{if(l==='THIS IS NOT A DRILL'){g.fillStyle='rgba(246,207,120,.85)';g.fillRect(40,170+i*56-38,560,52);g.fillStyle='#8a1410';g.font=`800 38px ${MONO}`;}else{g.fillStyle='#333';g.font=`400 30px ${MONO}`;}g.fillText(l,50,170+i*56);});},900,700),2.4,1.87);
+drillT.rotation.x=-Math.PI/2;drillT.position.set(8,.01,.3);sDesk.add(drillT);
+// monitor with one confirm box (x=12)
+const mon=new THREE.Group();const monB=new THREE.Mesh(new THREE.BoxGeometry(2.6,1.6,.12),new THREE.MeshStandardMaterial({color:0x15171a}));monB.position.y=1.1;
+const monT=tex((g,W,H)=>{g.fillStyle='#d8dde4';g.fillRect(0,0,W,H);g.fillStyle='#24476e';g.fillRect(0,0,W,60);g.fillStyle='#fff';g.font=`700 30px ${SERIF}`;g.fillText('警报系统',20,42);
+ g.fillStyle='#fff';g.fillRect(200,170,600,280);g.strokeStyle='#555';g.lineWidth=3;g.strokeRect(200,170,600,280);g.fillStyle='#111';g.font=`500 32px ${SERIF}`;g.fillText('确定要发送这条警报吗？',250,250);
+ g.font=`400 24px ${SERIF}`;g.fillStyle='#555';g.fillText('（测试和真警报：同一个确认框）',250,300);g.fillStyle='#b0201a';g.fillRect(520,360,220,64);g.fillStyle='#fff';g.font=`700 32px ${SERIF}`;g.fillText('发送',595,404);},1000,620);
+const monS=new THREE.Mesh(new THREE.PlaneGeometry(2.4,1.44),new THREE.MeshBasicMaterial({map:monT,toneMapped:false}));monS.position.set(0,1.1,.07);
+const stand=new THREE.Mesh(new THREE.BoxGeometry(.2,.4,.2),new THREE.MeshStandardMaterial({color:0x15171a}));stand.position.y=.2;mon.add(monB,monS,stand);mon.position.set(12.4,0,-.8);sDesk.add(mon);
+const chair=new THREE.Mesh(new THREE.BoxGeometry(1,1.2,.15),new THREE.MeshStandardMaterial({color:0x22262c}));chair.position.set(12.4,.2,2.4);sDesk.add(chair);
+const one=label3d('一个人 · 一次确认',{size:64,color:'#f6cf78',w:900,h:150});one.scale.setScalar(.55);one.position.set(12.4,2.3,-.7);sDesk.add(one);
+// clock (x=16)
+const clockFace=card(tex((g,W,H)=>{g.fillStyle='#e8e0cc';g.beginPath();g.arc(W/2,H/2,W/2-8,0,7);g.fill();g.strokeStyle='#2b241a';g.lineWidth=10;g.stroke();for(let i=0;i<12;i++){const a=i/12*Math.PI*2;g.beginPath();g.moveTo(W/2+Math.sin(a)*200,H/2-Math.cos(a)*200);g.lineTo(W/2+Math.sin(a)*235,H/2-Math.cos(a)*235);g.lineWidth=8;g.stroke();}},512,512),1.6,1.6);
+clockFace.position.set(16.5,1.9,-1.9);sDesk.add(clockFace);const mHand=new THREE.Mesh(new THREE.BoxGeometry(.04,.65,.02),new THREE.MeshBasicMaterial({color:0x1a1a1a}));mHand.geometry.translate(0,.32,0);mHand.position.set(16.5,1.9,-1.88);sDesk.add(mHand);
+const hHand=new THREE.Mesh(new THREE.BoxGeometry(.06,.42,.02),new THREE.MeshBasicMaterial({color:0x1a1a1a}));hHand.geometry.translate(0,.21,0);hHand.position.set(16.5,1.9,-1.87);sDesk.add(hHand);
+const blank=card(paper([{t:'如果发错了……',f:`700 44px ${SERIF}`},{t:'（预案：空白）',c:'#8a7a5a'}],{w:900,h:420}),1.9,.88);blank.rotation.x=-Math.PI/2;blank.position.set(16.5,.01,.6);sDesk.add(blank);
+// report (x=20)
+const fccT=card(paper([{t:'调查结论',f:`700 46px ${SERIF}`},{t:'人为失误',f:`900 70px ${SERIF}`,dy:90},{t:'＋',f:`900 60px ${SERIF}`,dy:70},{t:'防护不足',f:`900 70px ${SERIF}`,c:'#9b1c12'}],{title:'FCC · 2018',w:900,h:760}),2.2,1.86);fccT.rotation.x=-Math.PI/2;fccT.position.set(20.5,.01,.3);sDesk.add(fccT);
+const deskLamps=[];[0,4,8,12.4,16.5,20.5].forEach(x=>{const L=new THREE.SpotLight(0xffc98a,26,9,.6,.7,1.3);L.position.set(x+.6,4,2.4);L.target.position.set(x,0,0);sDesk.add(L,L.target);deskLamps.push(L);});
+sDesk.add(new THREE.AmbientLight(0x30384a,.3));
+
+/* =============== S_DIO (three dioramas) =============== */
+const sDio=new THREE.Scene();sDio.background=new THREE.Color(0x05070b);
+function plinth(x){const p=new THREE.Mesh(new THREE.CylinderGeometry(1.6,1.7,.3,48),new THREE.MeshStandardMaterial({color:0x1c1a17,roughness:.6}));p.position.set(x,-.15,0);sDio.add(p);
+ const L=new THREE.SpotLight(0xffc27a,45,9,.45,.6,1.2);L.position.set(x,4.5,2);L.target.position.set(x,0,0);sDio.add(L,L.target);return L;}
+const dl=[plinth(-4),plinth(0),plinth(4)];
+const dA=new THREE.Group();const dt1=toggle(),dt2=toggle();dt1.position.x=-.25;dt2.position.x=.25;dA.add(dt1,dt2);dA.scale.setScalar(2.2);dA.position.set(-4,0,0);sDio.add(dA);
+const dWheel=wheel.clone(),dWedge=wedge.clone();dWheel.scale.setScalar(1);dWedge.scale.setScalar(1);dt1.userData.arm.add(dWheel);dt2.userData.arm.add(dWedge);
+const dB=new THREE.Group();const dMon=monB.clone(),dScr=monS.clone();dB.add(dMon,dScr);dB.scale.setScalar(.8);dB.position.set(0,-.3,0);sDio.add(dB);
+const dC=core.clone();dC.scale.multiplyScalar(.2);dC.position.set(4,0,0);sDio.add(dC);
+const dHot=new THREE.PointLight(0xff5a20,0,6,1.3);dHot.position.set(4,1.2,.5);sDio.add(dHot);
+const dLabels=['B-17 · 改形状 → 解决','夏威夷 · 防护不足','切尔诺贝利 · 缺陷被遗忘'].map((t,i)=>{const m=label3d(t,{size:58,color:'#e9dcc0',w:1024,h:140});m.scale.setScalar(.42);m.position.set((-4+i*4)*.9,-.6,1.8);sDio.add(m);return m;});
+sDio.add(new THREE.AmbientLight(0x202838,.4));
+
+/* =============== TIMELINE =============== */
+function subtitle(t){const l=LINES.find(l=>t>=l[0]&&t<l[1]);$('sub').innerHTML=l?l[2].replace(/\[(.+?)\]/g,'<b>$1</b>'):'';}
+const CHAPS=[[0,3,''],[3,15.2,'1986 · 切尔诺贝利'],[15.2,43.5,'1943 · 美军'],[43.5,64.6,'2018 · 夏威夷'],[64.6,87.6,'1992 · 切尔诺贝利'],[87.6,96.4,''],[96.4,105,'你']];
+function chap(t){const c=CHAPS.find(c=>t>=c[0]&&t<c[1]);$('chap').firstChild.textContent=c?c[2]:'';$('chap').style.opacity=c&&c[2]?.9:0;}
+let scene=sDoor;
+window.renderAt=function(t){
+ subtitle(t);chap(t);$('stat').innerHTML='';let fl=0,flc='#fff';$('plaque').style.opacity=0;$('end').style.opacity=0;
+ // ---------- 0-3 door: handle jerks, door won't open
+ if(t<3){scene=sDoor;handle.visible=true;plate.visible=false;doorG.rotation.y=0;
+  const k=seg(t,0,3);cam.position.set(lerp(.9,.55,k),lerp(1.3,1.15,k),lerp(3.0,1.5,k));cam.lookAt(-.05,1.1,doorFront);
+  const j=Math.max(0,Math.sin(Math.max(0,t-.35)*26)*Math.exp(-Math.max(0,t-.35)*7));handle.position.z=doorFront+.09+j*.03;doorG.position.z=j*.006;
+  if(t>2.7){const u=(t-2.7)/.3;cam.position.lerp(V(.36,1.05,.35),ease(u));}
+  if(t>2.85)fl=(t-2.85)/.15,flc='#000';
+ }
+ // ---------- 3-4.6 plant night; 4.6-6.3 AZ-5 panel
+ else if(t<4.6){scene=sPlant;const k=seg(t,3,4.6);const c=pb.getCenter(V());cam.position.set(c.x+lerp(-260,-160,k),lerp(70,48,k),pb.max.z+lerp(330,240,k));cam.lookAt(c.x+lerp(40,120,k),30,c.z);
+  $('stat').innerHTML='01:23<small>1986.4.26 · 凌晨</small>';if(t<3.2)fl=1-(t-3)/.2,flc='#000';}
+ else if(t<6.3){scene=sPanel;const k=seg(t,4.6,6.3);cam.position.set(lerp(1.2,.3,k),lerp(2.6,2.3,k),lerp(3.4,1.6,k));cam.lookAt(.2,2.2,0);
+  const press=cl((t-5.15)/.12);az5.position.z=.14-press*.05;az5.material.emissiveIntensity=press*3;$('stat').innerHTML='01:23:40<small>按下 АЗ-5</small>';}
+ // ---------- 6.3-9.4 rods drop, power climbs, flash
+ else if(t<9.4){scene=sCore;[insag1,insag7,memo,drawer].forEach(o=>o.visible=false);dust.visible=false;
+  const k=seg(t,6.3,9.4);cam.position.set(lerp(11,8,k),lerp(9,7.2,k),lerp(11,8.5,k));cam.lookAt(0,coreTop+.3,0);
+  const d=cl((t-6.4)/3)*0.35;setRods(d);rodM.emissiveIntensity=cl((t-7.2)/1.6)*2.5;heat.intensity=cl((t-7.4)/1.6)*600;coreLamps.forEach(L=>L.intensity=260);
+  needle.rotation.z=lerp(1.1,-1.35,ease(cl((t-6.8)/2.1)));fl=cl((t-9.0)/.15)*(1-cl((t-9.25)/.15));flc='#fff8ee';
+  $('stat').innerHTML='几秒内<small>功率暴涨</small>';}
+ // ---------- 9.4-12.4 after-image + INSAG-1 card
+ else if(t<12.4){scene=sCore;setRods(.35);rodM.emissiveIntensity=0;heat.intensity=0;coreLamps.forEach(L=>L.intensity=55);
+  cam.position.set(7.2,6.4,7.6);cam.lookAt(0,coreTop+.6,0);insag1.visible=true;const k=seg(t,9.5,10.4);
+  inFront(insag1,lerp(10,6.2,k),-1.4,.5);insag1.rotateZ(-.04);
+  if(t<9.7)fl=1-(t-9.4)/.3,flc='#fff8ee';}
+ // ---------- 12.4-15.2 plaque on the drop
+ else if(t<15.2){scene=sCore;cam.position.set(7.2,6.4,7.6);cam.lookAt(0,coreTop+.6,0);insag1.visible=false;coreLamps.forEach(L=>L.intensity=25);
+  const o=cl((t-12.4)/.08)*(1-cl((t-14.95)/.25));$('plaque').style.opacity=o;const sh=Math.exp(-(t-12.4)*6)*8;$('plaque').style.transform=`translate(${Math.sin(t*90)*sh}px,${Math.cos(t*70)*sh}px) scale(${1+.06*Math.exp(-(t-12.4)*8)})`;
+  if(t<12.5)fl=.7*(1-(t-12.4)/.1);}
+ // ---------- 15.2-27.5 B-17 at dusk
+ else if(t<27.5){scene=sB17;sparks.visible=false;chapCard.visible=false;
+  if(t<21.3){const k=seg(t,15.2,21.3);cam.position.set(lerp(38,22,k),lerp(7,3.2,k),lerp(-40,-14,k));cam.lookAt(0,lerp(3,2.6,k),lerp(-4,2,k));if(t<15.45)fl=1-(t-15.2)/.25,flc='#000';}
+  else if(t<24.4){scene=sCk;const k=seg(t,21.3,24.4);const jolt=t>22.6?Math.exp(-(t-22.6)*6)*.03*Math.sin(t*80):0;
+   cam.position.set(lerp(-1.4,-1.75,k)+jolt,lerp(1.3,1.1,k),lerp(1.6,1.25,k));cam.lookAt(-2,.5,0);wheel.scale.setScalar(.001);wedge.scale.setScalar(.001);
+   tg1.userData.arm.rotation.z=t>22.6?-.55*ease(cl((t-22.6)/.25)):0;tg2.userData.arm.rotation.z=0;warn.intensity=t>22.7?(Math.sin(t*14)>0?8:2):0;ckLamp.intensity=50;
+   if(t<21.5)fl=1-(t-21.3)/.2,flc='#000';$('stat').innerHTML='着陆后<small>收起的是起落架</small>';}
+  else{const k=seg(t,24.4,27.5);cam.position.set(lerp(16,10,k),lerp(2.6,8,k),lerp(-6,10,k));cam.lookAt(0,1,4);
+   chapCard.visible=true;inFront(chapCard,7.5,-1.6,.5);if(t>27.2)fl=(t-27.2)/.3,flc='#000';}
+ }
+ // ---------- 27.5-43.5 cockpit switches
+ else if(t<43.5){scene=sCk;warn.intensity=0;
+  let p0,p1;if(t<30.6){const k=seg(t,27.5,30.6);p0=V(0,lerp(4.6,3.6,k),lerp(5.2,4.4,k));p1=V(0,.3,0);if(t<27.75)fl=1-(t-27.5)/.25,flc='#000';$('stat').innerHTML='C-47<small>着陆后误收 0 次</small>';}
+  else if(t<33.9){const k=seg(t,30.6,33.9);p0=vl(V(0,3.6,4.4),V(-2,1.4,1.7),k);p1=vl(V(0,.3,0),V(-2,.55,0),k);}
+  else if(t<37.2){const k=seg(t,33.9,37.2);p0=vl(V(-2,1.4,1.7),V(2,1.6,2),k);p1=vl(V(-2,.55,0),V(2,.4,0),k);}
+  else{const k=seg(t,37.2,39.2);p0=vl(V(2,1.6,2),V(-2,1.05,1.2),k);p1=vl(V(2,.4,0),V(-2,.62,0),k);}
+  cam.position.copy(p0);cam.lookAt(p1);
+  const g=ease(cl((t-38.2)/1.2));wheel.scale.setScalar(Math.max(.001,g));wedge.scale.setScalar(Math.max(.001,g));
+  tg1.userData.arm.rotation.z=t>41?-.5*ease(cl((t-41)/.3)):0;tg2.userData.arm.rotation.z=t>41.8?-.5*ease(cl((t-41.8)/.3)):0;
+  ckLamp.intensity=50+cl((t-42.7)/.8)*900;if(t>42.9)fl=cl((t-42.9)/.6),flc='#fff1d8';if(t>=37.2)$('stat').innerHTML='改个形状<small>一摸就分清</small>';}
+ // ---------- 43.5-64.6 Hawaii desk, one continuous truck
+ else if(t<64.6){scene=sDesk;const xs=[[43.5,0],[48.6,0],[51.9,4],[55,8],[58.4,12.4],[61.5,16.5],[64.6,20.5]];
+  let x=0;for(let i=1;i<xs.length-1;i++){if(t>=xs[i][0]&&t<xs[i+1][0]){x=lerp(xs[i][1],xs[i+1][1],ease(Math.min(1,(t-xs[i][0])/0.9)));}}
+  if(t<48.6){const k=seg(t,43.5,48.6);cam.position.set(lerp(1.2,.15,k),lerp(3.2,1.55,k),lerp(3.2,1.25,k));cam.lookAt(0,0,.6);screen.material.opacity=cl((t-44)/.25);phoneGlow.intensity=cl((t-44)/.25)*6;
+   if(t<43.9)fl=1-(t-43.5)/.4,flc='#fff1d8';$('stat').innerHTML='08:07<small>2018.1.13 · 夏威夷</small>';}
+  else{const look=V(x,0,.2);const camP=V(x+.6,x>11&&x<13?2.4:3.2,x>11&&x<13?4.6:3.4);const atClock=x>15&&x<17.5;if(atClock){camP.set(x+.4,2.2,2.6);}cam.position.copy(camP);cam.lookAt(x>11&&x<13?V(x,1.1,-.8):(atClock?V(x,1.2,-1.2):look));
+   if(t>=58.4&&t<61.5){const k=cl((t-58.4)/2.6);mHand.rotation.z=-k*Math.PI*2*38/60*0+(-(7+38*k)/60)*Math.PI*2;hHand.rotation.z=-((8+(7+38*k)/60)/12)*Math.PI*2;$('stat').innerHTML=Math.round(38*k)+' 分钟<small>才发出更正</small>';}}
+ }
+ // ---------- 64.6-67.9 back to reactor: INSAG-7 over INSAG-1
+ else if(t<67.9){scene=sCore;setRods(.35);rodM.emissiveIntensity=0;heat.intensity=0;coreLamps.forEach(L=>L.intensity=120);
+  const k=seg(t,64.6,67.9);cam.position.set(lerp(6,4.6,k),lerp(7.6,6.2,k),lerp(6,4.8,k));cam.lookAt(0,coreTop,0);
+  insag1.visible=true;insag7.visible=true;inFront(insag1,6.2,-1.3,.5);inFront(insag7,6.15,-1.3,.5+lerp(3.6,0,seg(t,65,66.2)));insag7.rotateZ(.03);if(t<64.9)fl=1-(t-64.6)/.3,flc='#000';}
+ // ---------- 67.9-77.5 cut-away: rod as brake then accelerator, 18 s, quote
+ else if(t<77.5){scene=sCut;const k=seg(t,67.9,77.5);cam.position.set(lerp(1.8,.6,k),lerp(.2,-.4,k),lerp(9.6,9,k));cam.lookAt(0,-.6,0);
+  const fall=cl((t-68.6)/8.4);rodC.position.y=lerp(4.4,-2.4,fall);// moves the rod down through 18 s (compressed)
+  const tipBottom=rodC.position.y-4.4;const disp=cl((-tipBottom-3.2)/1.6);zoneB.material.opacity=cl((t-69.4)/1.2)*.55*(t<76?1:.6);glow.intensity=zoneB.material.opacity*30;
+  brake.visible=t>68.4;gas.visible=t>69.8;
+  const m=new THREE.Matrix4();for(let i=0;i<60;i++){const a=((t*.6+i*.137)%1);m.makeTranslation((((i*.71)%1)-.5)*.7,-3.9+a*2.2,.31);bubbles.setMatrixAt(i,m);}bubbles.instanceMatrix.needsUpdate=true;bubbles.visible=t>69.4;
+  if(t>=71.2){const s=Math.min(18,Math.floor(cl((t-71.2)/2.8)*18));$('stat').innerHTML=s+' 秒<small>停堆棒插到底</small>';}
+  if(t>=74.2){$('stat').innerHTML='很可能<small>INSAG-7 · 决定性推手</small>';}
+  if(t<68.2)fl=1-(t-67.9)/.3,flc='#000';}
+ // ---------- 77.5-80.9 fairness: rods pulled out + edited procedure
+ else if(t<80.9){scene=sPanel;const k=seg(t,77.5,80.9);cam.position.set(lerp(-.6,.4,k),lerp(-.2,-.5,k),lerp(4.6,3.6,k));cam.lookAt(.4,-1.2,0);az5.material.emissiveIntensity=0;az5.position.z=.14;
+  rodBars.forEach(b=>{b.scale.y=b.userData.v;b.position.y=-1.3-.8+.8*b.userData.v;});if(t<77.8)fl=1-(t-77.5)/.3,flc='#000';$('stat').innerHTML='多数控制棒<small>被拔出</small>';}
+ // ---------- 80.9-87.6 1983, memo, drawer
+ else if(t<87.6){scene=sCore;coreLamps.forEach(L=>L.intensity=60);setRods(.35);insag1.visible=insag7.visible=false;
+  const k=seg(t,80.9,87.6);cam.position.set(lerp(9,6,k),lerp(8,4,k),lerp(9,6,k));cam.lookAt(0,coreTop,0);
+  if(t<84.3){const yr=Math.round(lerp(1986,1983,ease(cl((t-80.9)/1.2))));$('stat').innerHTML=yr+'<small>同型电站已查出缺陷</small>';heat.intensity=180*Math.abs(Math.sin(t*2));memo.visible=false;drawer.visible=false;dust.visible=false;}
+  else{heat.intensity=0;memo.visible=true;drawer.visible=true;dust.visible=t>86;const u=seg(t,84.6,86.4);
+   inFront(drawer,4.2,0,-1.55);inFront(memo,4,0,lerp(.2,-1.2,u));memo.material.emissiveIntensity=0;inFront(dust,4,0,-1);$('stat').innerHTML='似乎<small>被忘了</small>';}
+  if(t<81.2)fl=1-(t-80.9)/.3,flc='#000';}
+ // ---------- 87.6-96.4 dioramas
+ else if(t<96.4){scene=sDio;const k=seg(t,87.6,96.4);cam.position.set(0,lerp(2.8,3.6,k),lerp(9,12,k));cam.lookAt(0,.4,0);
+  dl.forEach((L,i)=>L.intensity=t>89.7?45+20*Math.sin(t*3+i):45);
+  const loop=(t*1.6)%1;dt1.userData.arm.rotation.z=t>93.1?-.5:(loop<.5?-.5*ease(loop*2):-.5*(1-ease(loop*2-1)));dt2.userData.arm.rotation.z=t>93.1?0:dt1.userData.arm.rotation.z;
+  dHot.intensity=t>93.1?60+40*Math.sin(t*5):(t>89.7?15:0);dScr.material=monS.material;if(t<87.9)fl=1-(t-87.6)/.3,flc='#000';}
+ // ---------- 96.4-105 door again → push plate → opens
+ else if(t<105){scene=sDoor;const k=seg(t,96.4,105);cam.position.set(lerp(1.1,.7,k),1.3,lerp(3.4,2.6,k));cam.lookAt(-.05,1.1,doorFront);
+  const m=ease(cl((t-101.6)/1));handle.visible=m<.5;handle.scale.setScalar(1-m*.9+.001);plate.visible=m>=.5;plate.scale.setScalar(Math.max(.001,m));
+  doorG.rotation.y=-ease(cl((t-103.2)/1.4))*.9;lampD.intensity=60+ease(cl((t-103.4)/1.4))*80;if(t<96.7)fl=1-(t-96.4)/.3,flc='#000';
+  if(t>=99.4)$('stat').innerHTML='诺曼门<small>《设计心理学》 · 唐·诺曼</small>';}
+ else {$('end').style.opacity=cl((t-105)/.5);}
+ // plant / core / dio only render in their windows; end card covers all
+ $('flash').style.background=flc;$('flash').style.opacity=cl(fl);
+ R.render(scene,cam);
+};
+window.READY=true;
+</script></body></html>
