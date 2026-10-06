@@ -1,0 +1,42 @@
+# Handoff for the next chat (written 2026-10-06)
+
+Read this first, then `.claude/skills/video-reviewer/references/owner-notes.md` (every owner rule, quoted)
+and `.claude/skills/production-crew/references/looks.md` (looks + account numbers).
+Project code and renders live in `/home/claude/diji` (Remotion; `src/`, `episodes/`, `out/`, `cloud_render.py` = GitHub Actions render farm).
+
+## The series in one paragraph
+Juno / VIBE知识大赏 on Douyin: ~2-minute landscape knowledge films, **subtitle-only (no voiceover)**, one counter-intuitive idea,
+the series music track (`public/bgm.mp3`) with the title on the hardest drop, Juno end card, ≤ 28 MB send file at −14 LUFS.
+Best performers: 第几个人 (211万), 它在瞄准谁 (42万), 邓巴数 (40.8万), 德国坦克 / 好人会赢吗 (~14.5万).
+
+## What the owner wants more of (2026-10-06)
+- **3D set-pieces with real downloaded models and a cinematic camera**, like the London V-1 night in 《它在瞄准谁》 and the
+  Titanic lifeboats in 《应该没事吧》. 运镜舒服、爽: long moving shots that flow into the next scene; few hard cuts.
+- An opening that tells the viewer their own situation, why it matters and what they'll get; a tiny emotional story.
+- Music doing the emotion (tape-stop / spin-up, drops on title and reveal); SFX few, quiet, coherent.
+- Never generic: one new thing per film; last 3 episodes' look/metaphor/opening device are off limits.
+
+## What did NOT work (don't bring back)
+3Blue1Brown black analytic look, WebGL procedural landscapes, AI anime stills, bright flat game-UI cards, the ep13 manga /
+pixel / flat-illustration tests, slideshow structure, voiceover, famous textbook topics (survivorship-bias bombers, Monte Carlo
+26 blacks, Concorde, Braess, Tacoma, Titanic again…).
+
+## Open: ep13 《心流》
+Unpublished. Last cut: `/home/claude/diji/out/心流_插画版_v2_发送版.mp4` (flat illustration, built for a voiceover that is now
+dropped). Owner hasn't approved any ep13 look. Park it unless the owner asks; if revived: subtitle-only + 1–2 real 3D set-pieces.
+
+## Next episode (owner picked 2026-10-06): 坚忍号 Endurance
+- **Story:** Shackleton's Imperial Trans-Antarctic Expedition. The *Endurance* was trapped in Weddell Sea pack ice (Jan 1915),
+  crushed and sank (Nov 1915); the 28 men camped on the ice, sailed lifeboats to Elephant Island (Apr 1916), Shackleton and
+  five others crossed ~1,300 km of Southern Ocean in the 7 m lifeboat *James Caird* to South Georgia, crossed its mountains,
+  and every one of the 28 was rescued (Aug 1916). The wreck was found in March 2022 at ~3,008 m, almost intact, name on the stern.
+- **Hook idea:** "最难熬的时候，靠什么撑下去？" Angle = how hope was managed (routines, roles, small next goals, keeping
+  morale), not "heroic leader" trivia. Find the one counter-intuitive idea in research (e.g. breaking an impossible goal into
+  the next small one; routine as survival).
+- **3D set-pieces:** the ship locked and crushed in the ice (camera orbit at dusk, ice pressure ridges); the tiny *James Caird*
+  on huge waves (low camera skimming the swell); the dive to the seabed in 2022 where a light finds the name ENDURANCE.
+- **To verify in research (primary sources only):** all dates, "497 days without setting foot on land", the 28 count
+  (the separate Ross Sea party lost three men — say "Endurance 号上的 28 人"), the 2022 depth/discovery details (Falklands
+  Maritime Heritage Trust / Endurance22), distances. Check 3D model licences (ship, lifeboat, ice) before building.
+- **Process:** brief → research → script (gate 1) → 2–3 looks with a ~15 s moving 3D test of the main set-piece (gate 2)
+  → build → independent review → owner.
