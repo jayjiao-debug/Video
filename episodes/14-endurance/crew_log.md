@@ -6,3 +6,4 @@
 | 2026-10-06 | script v1 + lines.json (34 lines, ~109 s, pace 0% wait) | screenwriter | titles: 先别看终点 / 497天，怎么熬 / 只追下一站 | |
 | 2026-10-06 | script v2 (gate1 r1 notes) + lines.json (34 lines, body 106.4 s, pace 0% wait) | screenwriter | feed 497天，怎么熬 · plaque 先别看终点 | |
 | 2026-10-06 ~22:30 | gate 1 r2: director APPROVE (3 swaps), fresh cold read; producer applied 7 one-line edits, pace 0 % | producer | script v2.1 ready for owner | |
+| 2026-10-06 21:15 | previz v1 (grey-box three.js, silent, 110 s) for owner: camera, transitions, scene order | producer | episodes/14-endurance/previz/ | ~25 |

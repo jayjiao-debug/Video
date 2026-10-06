@@ -1,0 +1,324 @@
+<!doctype html>
+<html><head><meta charset="utf-8">
+<style>
+html,body{margin:0;background:#000;overflow:hidden;font-family:"Noto Sans CJK SC","Noto Serif CJK SC",sans-serif}
+#wrap{position:relative;width:960px;height:540px}
+canvas{display:block}
+.ov{position:absolute;inset:0;pointer-events:none}
+#sub{position:absolute;left:0;right:0;bottom:26px;text-align:center;color:#fff;font-size:30px;font-weight:700;
+ text-shadow:0 2px 6px #000,0 0 2px #000}
+#sub b{color:#f2c14e}
+#tag{position:absolute;left:14px;top:12px;color:#9fe;font:13px monospace;background:rgba(0,0,0,.55);padding:5px 8px;border-radius:4px;max-width:560px;line-height:1.45}
+#clock{position:absolute;right:14px;top:12px;color:#ccc;font:13px monospace;background:rgba(0,0,0,.55);padding:5px 8px;border-radius:4px}
+#flash{position:absolute;inset:0;background:#fff;opacity:0}
+#card{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;opacity:0}
+.plaque{border:3px solid #f2c14e;padding:22px 48px;color:#f2c14e;font-size:64px;font-weight:900;background:rgba(10,14,24,.75);letter-spacing:8px}
+.book{width:520px;height:330px;background:#e9dfc6;color:#3a2e1c;border-radius:4px;padding:28px 36px;box-sizing:border-box;font-family:"Noto Serif CJK SC",serif;box-shadow:0 10px 40px #000}
+.book h3{margin:0 0 18px;font-size:16px;letter-spacing:3px;color:#7a6440}
+.book p{font-size:23px;line-height:1.45;font-style:italic;margin:0}
+.big{color:#fff;font-size:72px;font-weight:900;text-shadow:0 4px 18px #000}
+.end{text-align:center;color:#f2c14e}
+.end .j{font-size:80px;font-weight:900;border:3px solid #f2c14e;width:110px;height:110px;line-height:110px;margin:0 auto 18px;border-radius:50%}
+.end .q{color:#fff;font-size:28px;margin-top:12px}
+.end .s{color:#999;font-size:14px;margin-top:22px}
+#labels{position:absolute;inset:0}
+.lbl{position:absolute;color:#fff;font-size:18px;font-weight:700;transform:translate(-50%,-100%);text-shadow:0 1px 4px #000;white-space:nowrap}
+</style></head>
+<body><div id="wrap"><div id="three"></div>
+<div class="ov" id="labels"></div>
+<div class="ov" id="card"></div>
+<div class="ov" id="flash"></div>
+<div class="ov"><div id="tag"></div><div id="clock"></div><div id="sub"></div></div>
+</div>
+<script type="importmap">{"imports":{"three":"./node_modules/three/build/three.module.js"}}</script>
+<script type="module">
+import * as THREE from 'three';
+const W=960,H=540;
+const R=new THREE.WebGLRenderer({antialias:true,preserveDrawingBuffer:true});
+R.setSize(W,H);R.setPixelRatio(1);document.getElementById('three').appendChild(R.domElement);
+const cam=new THREE.PerspectiveCamera(45,W/H,0.1,4000);
+const lerp=(a,b,t)=>a+(b-a)*t, clamp=(x,a=0,b=1)=>Math.min(b,Math.max(a,x));
+const ease=t=>{t=clamp(t);return t<.5?4*t*t*t:1-Math.pow(-2*t+2,3)/2};
+const seg=(t,a,b)=>ease((t-a)/(b-a));
+const V=(x,y,z)=>new THREE.Vector3(x,y,z);
+const vl=(a,b,t)=>a.clone().lerp(b,t);
+// deterministic rand
+let seed=7;const rnd=()=>{seed=(seed*16807)%2147483647;return (seed-1)/2147483646};
+
+function textTex(txt,{w=1024,h=256,font='bold 150px serif',color='#d8b45a',bg=null}={}){
+ const c=document.createElement('canvas');c.width=w;c.height=h;const g=c.getContext('2d');
+ if(bg){g.fillStyle=bg;g.fillRect(0,0,w,h)}g.fillStyle=color;g.font=font;g.textAlign='center';g.textBaseline='middle';
+ g.fillText(txt,w/2,h/2);const t=new THREE.CanvasTexture(c);t.colorSpace=THREE.SRGBColorSpace;return t;}
+
+/* ---------- SHIP (shared builder) ---------- */
+function makeShip(dark=false){
+ const g=new THREE.Group();
+ const hullM=new THREE.MeshStandardMaterial({color:dark?0x1d2226:0x2b2522,roughness:.9,flatShading:true});
+ const hull=new THREE.Mesh(new THREE.BoxGeometry(44,6,9),hullM);hull.position.y=1;g.add(hull);
+ const bow=new THREE.Mesh(new THREE.ConeGeometry(4.6,9,4),hullM);bow.rotation.z=-Math.PI/2;bow.rotation.x=Math.PI/4;bow.position.set(26,1,0);bow.scale.set(1,1,.7);g.add(bow);
+ const deck=new THREE.Mesh(new THREE.BoxGeometry(10,3,6),new THREE.MeshStandardMaterial({color:dark?0x2a2f33:0x6b5a45,flatShading:true}));deck.position.set(-6,5.5,0);g.add(deck);
+ const mM=new THREE.MeshStandardMaterial({color:dark?0x222:0x4a3b2c});
+ [[14,30],[0,34],[-14,26]].forEach(([x,hgt],i)=>{
+  const m=new THREE.Mesh(new THREE.CylinderGeometry(.35,.5,hgt),mM);m.position.set(x,4+hgt/2,0);g.add(m);
+  if(i<2)for(let k=0;k<3;k++){const y=new THREE.Mesh(new THREE.BoxGeometry(.4,.4,12-k*2.5),mM);y.position.set(x,12+k*7,0);g.add(y)}
+ });
+ return g;}
+
+/* ======================= WORLD 1: SEABED ======================= */
+const sea3=new THREE.Scene();sea3.background=new THREE.Color(0x01040a);sea3.fog=new THREE.FogExp2(0x01060f,.035);
+const stern=new THREE.Group();sea3.add(stern);
+const sternM=new THREE.MeshStandardMaterial({color:0x2c3236,roughness:1,flatShading:true});
+const sb=new THREE.Mesh(new THREE.BoxGeometry(20,10,6),sternM);stern.add(sb);
+const nameP=new THREE.Mesh(new THREE.PlaneGeometry(16,4),new THREE.MeshStandardMaterial({map:textTex('ENDURANCE',{font:'bold 170px serif'}),transparent:true,roughness:.6,metalness:.4}));
+nameP.position.set(0,1.5,3.02);stern.add(nameP);
+const starP=new THREE.Mesh(new THREE.PlaneGeometry(3,3),new THREE.MeshStandardMaterial({map:textTex('★',{w:256,h:256,font:'bold 200px serif'}),transparent:true}));starP.position.set(0,-2.4,3.02);stern.add(starP);
+// mask so only "E" at opening
+const maskM=new THREE.MeshBasicMaterial({color:0x0b1014});const eOnly=(()=>{const c=document.createElement('canvas');c.width=1024;c.height=256;const g=c.getContext('2d');g.font='bold 170px serif';g.textBaseline='middle';
+ const full=g.measureText('ENDURANCE').width,ew=g.measureText('E').width;g.fillStyle='#d8b45a';g.fillText('E',(1024-full)/2,128);const t=new THREE.CanvasTexture(c);t.colorSpace=THREE.SRGBColorSpace;return t;})();
+const fullTex=nameP.material.map;const mask={set visible(v){nameP.material.map=v?eOnly:fullTex;nameP.material.needsUpdate=true;}};
+const silt=new THREE.Mesh(new THREE.PlaneGeometry(300,300),new THREE.MeshStandardMaterial({color:0x1a1f22,roughness:1}));silt.rotation.x=-Math.PI/2;silt.position.y=-5;sea3.add(silt);
+const beam=new THREE.SpotLight(0xffe2b0,900,80,.28,.5,1.2);beam.position.set(0,6,22);sea3.add(beam);sea3.add(beam.target);
+sea3.add(new THREE.AmbientLight(0x10202a,.6));
+// marine snow
+const snowG=new THREE.BufferGeometry();const sn=[];for(let i=0;i<1500;i++)sn.push((rnd()-.5)*60,rnd()*80-5,(rnd()-.5)*60);
+snowG.setAttribute('position',new THREE.Float32BufferAttribute(sn,3));const snowPts=new THREE.Points(snowG,new THREE.PointsMaterial({color:0x8899aa,size:.12}));sea3.add(snowPts);
+
+/* ======================= WORLD 2: ICE ======================= */
+const ice=new THREE.Scene();ice.fog=new THREE.Fog(0xd9a184,120,700);
+const skyC=document.createElement('canvas');skyC.width=4;skyC.height=256;{const g=skyC.getContext('2d');const gr=g.createLinearGradient(0,0,0,256);gr.addColorStop(0,'#1d2a44');gr.addColorStop(.55,'#8a6a78');gr.addColorStop(.8,'#e59a62');gr.addColorStop(1,'#f3c48a');g.fillStyle=gr;g.fillRect(0,0,4,256);}
+const skyT=new THREE.CanvasTexture(skyC);skyT.colorSpace=THREE.SRGBColorSpace;ice.background=skyT;
+ice.add(new THREE.HemisphereLight(0xbfd2ff,0x6a6a7a,1.1));
+const sun=new THREE.DirectionalLight(0xffa060,2.2);sun.position.set(-200,40,-300);ice.add(sun);
+const iceBase=new THREE.Mesh(new THREE.PlaneGeometry(3000,3000),new THREE.MeshStandardMaterial({color:0xcfd8e2,roughness:.95}));iceBase.rotation.x=-Math.PI/2;ice.add(iceBase);
+const floeM=new THREE.MeshStandardMaterial({color:0xe8eef4,roughness:.9,flatShading:true});
+for(let i=0;i<260;i++){const r=4+rnd()*14;const f=new THREE.Mesh(new THREE.CylinderGeometry(r,r*1.05,1+rnd()*1.5,5+Math.floor(rnd()*4)),floeM);
+ const a=rnd()*6.28,d=30+rnd()*500;f.position.set(Math.cos(a)*d,.3,Math.sin(a)*d);f.rotation.y=rnd()*3;ice.add(f);}
+const ridgeM=new THREE.MeshStandardMaterial({color:0xdde6f0,flatShading:true});
+const ridges=[];for(let i=0;i<40;i++){const b=new THREE.Mesh(new THREE.BoxGeometry(3+rnd()*5,1+rnd()*3,2+rnd()*4),ridgeM);
+ const side=i%2?1:-1;b.position.set(-24+rnd()*50,0,side*(6+rnd()*4));b.rotation.set(rnd()*.8,rnd()*3,rnd()*.8*side);b.userData.base=b.position.clone();ridges.push(b);ice.add(b);}
+const ship=makeShip();ice.add(ship);
+// figures
+const figM=new THREE.MeshStandardMaterial({color:0x22262c});const figs=[];
+for(let i=0;i<28;i++){const f=new THREE.Group();const body=new THREE.Mesh(new THREE.ConeGeometry(.55,1.9,6),figM);body.position.y=.95;f.add(body);
+ const hd=new THREE.Mesh(new THREE.SphereGeometry(.32,8,6),figM);hd.position.y=2.1;f.add(hd);
+ f.position.set(-10+(i%7)*2.4+rnd(),0,16+Math.floor(i/7)*2.2+rnd());f.visible=false;figs.push(f);ice.add(f);}
+// boats on ice
+const boatM=new THREE.MeshStandardMaterial({color:0x6a4a32,flatShading:true});
+const iceBoats=[0,1,2].map(i=>{const b=new THREE.Mesh(new THREE.BoxGeometry(6,1.2,2),boatM);b.position.set(-16+i*8,.6,26);b.visible=false;ice.add(b);return b;});
+// coins & photo
+const coins=[];for(let i=0;i<6;i++){const c=new THREE.Mesh(new THREE.CylinderGeometry(.18,.18,.05,16),new THREE.MeshStandardMaterial({color:0xf2c14e,metalness:1,roughness:.3}));c.visible=false;coins.push(c);ice.add(c);}
+const photo=new THREE.Mesh(new THREE.PlaneGeometry(.9,.65),new THREE.MeshBasicMaterial({color:0xd8c8a0}));photo.visible=false;ice.add(photo);
+const tent=new THREE.Mesh(new THREE.ConeGeometry(2.4,3,4),new THREE.MeshStandardMaterial({color:0xffcf80,emissive:0xff9a30,emissiveIntensity:0}));tent.position.set(-30,1.5,40);ice.add(tent);
+
+/* ======================= WORLD 3: MAP ======================= */
+const map=new THREE.Scene();map.background=new THREE.Color(0x0d1724);
+map.add(new THREE.AmbientLight(0xffffff,1.2));const mDir=new THREE.DirectionalLight(0xffffff,1);mDir.position.set(10,40,20);map.add(mDir);
+const ocean=new THREE.Mesh(new THREE.PlaneGeometry(400,400),new THREE.MeshStandardMaterial({color:0x1d3550,roughness:1}));ocean.rotation.x=-Math.PI/2;map.add(ocean);
+function land(pts,color=0xdfe6ec,h=.4){const s=new THREE.Shape();s.moveTo(pts[0][0],pts[0][1]);pts.slice(1).forEach(p=>s.lineTo(p[0],p[1]));
+ const m=new THREE.Mesh(new THREE.ExtrudeGeometry(s,{depth:h,bevelEnabled:false}),new THREE.MeshStandardMaterial({color,flatShading:true}));m.rotation.x=-Math.PI/2;map.add(m);return m;}
+// map coords: x east, -z north. sink=(0,0)
+land([[-120,-40],[-60,-40],[-40,-30],[-30,-34],[-30,-60],[-80,-80],[-130,-90],[-160,-60]]); // Antarctica mainland (south)
+land([[-60,-40],[-42,-8],[-36,10],[-30,22],[-34,24],[-46,8],[-58,-20],[-70,-38]]); // peninsula
+land([[-26,30],[-22,32],[-20,30],[-24,28]],0xeef2f5,.6); // Elephant Island
+land([[40,66],[52,72],[54,70],[42,63]],0xeef2f5,.8); // South Georgia
+// pack ice dots
+const packM=new THREE.MeshStandardMaterial({color:0xb9c8d6});for(let i=0;i<400;i++){const p=new THREE.Mesh(new THREE.CylinderGeometry(.5+rnd(),.6,.15,5),packM);p.position.set(-30+rnd()*50,.1,-25+rnd()*48);map.add(p);}
+const P={sink:V(0,.5,0),camp:V(-4,.5,5),launch:V(-10,.5,16),ei:V(-23,.6,30),sg:V(46,.8,67),stn:V(50,.9,70)};
+// pins
+function pin(color){const g=new THREE.Group();const s=new THREE.Mesh(new THREE.SphereGeometry(.9,12,8),new THREE.MeshStandardMaterial({color,emissive:color,emissiveIntensity:.6}));s.position.y=2.2;g.add(s);
+ const st=new THREE.Mesh(new THREE.CylinderGeometry(.12,.12,2.2),new THREE.MeshStandardMaterial({color:0xffffff}));st.position.y=1.1;g.add(st);g.visible=false;map.add(g);return g;}
+const pinSink=pin(0x8899aa),pinNext=pin(0xf2c14e),pinEI=pin(0xf2c14e),pinSG=pin(0xf2c14e),pinFar=pin(0x667788);
+pinSink.position.copy(P.sink);pinEI.position.copy(P.ei);pinSG.position.copy(P.stn);pinFar.position.set(-36,.5,-6);pinNext.position.set(-7,.5,9);
+// route line (camp -> launch -> EI -> SG -> stn)
+const routePts=[P.camp,P.launch,V(-16,.6,22),P.ei,V(-10,.6,40),V(15,.6,55),P.sg,P.stn].map(v=>v.clone().setY(1));
+const curve=new THREE.CatmullRomCurve3(routePts);const rp=curve.getPoints(400);
+const rGeo=new THREE.BufferGeometry().setFromPoints(rp);const route=new THREE.Line(rGeo,new THREE.LineDashedMaterial({color:0xf2c14e,dashSize:1,gapSize:.6}));route.computeLineDistances();map.add(route);
+const tGoal=new THREE.Line(new THREE.BufferGeometry().setFromPoints([V(0,1,0),V(-40,1,-60),V(-90,1,-70)]),new THREE.LineDashedMaterial({color:0xffffff,dashSize:2,gapSize:1.5}));tGoal.computeLineDistances();map.add(tGoal);
+// little boats markers on map
+const mBoats=[0,1,2].map(()=>{const b=new THREE.Mesh(new THREE.BoxGeometry(1.4,.5,.6),new THREE.MeshStandardMaterial({color:0xffd9a0}));b.visible=false;map.add(b);return b;});
+// experiment bars (on the ice near camp)
+const barsG=new THREE.Group();barsG.position.set(-4,.5,5);map.add(barsG);
+const barDefs=[[55,0xbac6d2],[53,0x5c6670],[74,0xf2c14e]];
+const bars=barDefs.map(([v,c],i)=>{const m=new THREE.Mesh(new THREE.BoxGeometry(2.4,1,2.4),new THREE.MeshStandardMaterial({color:c}));m.position.set(-4+i*4,0,0);m.userData.v=v;m.visible=false;barsG.add(m);return m;});
+// hut on Elephant Island (shown in map world close up)
+const hut=new THREE.Group();hut.position.copy(P.ei);map.add(hut);
+[0,1].forEach(i=>{const b=new THREE.Mesh(new THREE.CylinderGeometry(.6,.6,3.2,8,1,false,0,Math.PI),boatM);b.rotation.z=Math.PI/2;b.position.set(0,.4,-.7+i*1.4);hut.add(b);});
+
+/* ======================= WORLD 4: OPEN SEA ======================= */
+const sea=new THREE.Scene();sea.fog=new THREE.Fog(0x6e7f8c,40,420);sea.background=new THREE.Color(0x77889a);
+sea.add(new THREE.HemisphereLight(0xc0d0e0,0x223040,1.2));const sSun=new THREE.DirectionalLight(0xffffff,1.2);sSun.position.set(50,80,-100);sea.add(sSun);
+const wG=new THREE.PlaneGeometry(800,800,160,160);wG.rotateX(-Math.PI/2);const wBase=wG.attributes.position.array.slice();
+const water=new THREE.Mesh(wG,new THREE.MeshStandardMaterial({color:0x2c4a5e,roughness:.6,flatShading:true}));sea.add(water);
+const caird=new THREE.Group();const ch=new THREE.Mesh(new THREE.BoxGeometry(7,1.6,2),boatM);ch.position.y=.6;caird.add(ch);
+const cm=new THREE.Mesh(new THREE.CylinderGeometry(.08,.1,5),mM0());cm.position.y=3;caird.add(cm);
+const sail=new THREE.Mesh(new THREE.PlaneGeometry(2.4,3),new THREE.MeshStandardMaterial({color:0xcfc6b0,side:2}));sail.position.set(-.8,3.2,0);sail.rotation.y=Math.PI/2;caird.add(sail);
+for(let i=0;i<6;i++){const f=new THREE.Mesh(new THREE.ConeGeometry(.22,.7,6),figM);f.position.set(-2.6+i*1,1.6,0);caird.add(f);}
+const glow=new THREE.PointLight(0xffa040,0,40);glow.position.set(0,2,0);caird.add(glow);sea.add(caird);
+function mM0(){return new THREE.MeshStandardMaterial({color:0x3a2c20})}
+let bigWave=0;
+function waveH(x,z,t){let h=Math.sin(x*.05+t*.9)*1.6+Math.sin(z*.07+t*1.2)*1.2+Math.sin((x+z)*.12+t*1.7)*.5;
+ if(bigWave>0){const d=z+60-bigWave*0; h+=bigWave*26*Math.exp(-Math.pow((z+90-bigWave*55)/16,2));}
+ return h;}
+
+/* ======================= WORLD 5: BEACH / HORIZON ======================= */
+const beach=new THREE.Scene();beach.background=new THREE.Color(0xa9b6c2);beach.fog=new THREE.Fog(0xa9b6c2,60,600);
+beach.add(new THREE.HemisphereLight(0xdde6ee,0x445060,1.3));
+const sand=new THREE.Mesh(new THREE.PlaneGeometry(400,120),new THREE.MeshStandardMaterial({color:0x5a5650,roughness:1}));sand.rotation.x=-Math.PI/2;sand.position.z=40;beach.add(sand);
+const bsea=new THREE.Mesh(new THREE.PlaneGeometry(2000,2000),new THREE.MeshStandardMaterial({color:0x34505f,roughness:.5}));bsea.rotation.x=-Math.PI/2;bsea.position.set(0,-.2,-1000);beach.add(bsea);
+const bfigs=[];for(let i=0;i<22;i++){const f=figs[0].clone();f.visible=true;f.position.set(-16+i*1.5+rnd()*.5,0,-2+rnd()*3);beach.add(f);bfigs.push(f);}
+const bHut=new THREE.Group();[0,1].forEach(i=>{const b=new THREE.Mesh(new THREE.CylinderGeometry(1.4,1.4,7,10,1,false,0,Math.PI),boatM);b.rotation.z=Math.PI/2;b.position.set(14,.5,14+i*2.9);bHut.add(b);});beach.add(bHut);
+const tug=new THREE.Group();const th=new THREE.Mesh(new THREE.BoxGeometry(14,3,4),new THREE.MeshStandardMaterial({color:0x2a2a2a}));th.position.y=1.5;tug.add(th);
+const tf=new THREE.Mesh(new THREE.CylinderGeometry(.9,.9,5),new THREE.MeshStandardMaterial({color:0x553322}));tf.position.y=5;tug.add(tf);
+const tm=new THREE.Mesh(new THREE.CylinderGeometry(.15,.15,10),mM0());tm.position.set(4,6,0);tug.add(tm);beach.add(tug);
+const bIce=[];for(let i=0;i<60;i++){const f=new THREE.Mesh(new THREE.CylinderGeometry(2+rnd()*4,3,1,6),floeM);f.position.set(-200+rnd()*400,0,-80-rnd()*300);beach.add(f);bIce.push(f);}
+
+/* ======================= DOM ======================= */
+const $=id=>document.getElementById(id);
+const LINES=window.LINES;
+function subtitle(t){const l=LINES.find(l=>t>=l[0]&&t<l[1]);$('sub').innerHTML=l?l[2].replace(/\[(.+?)\]/g,'<b>$1</b>'):'';}
+function card(html,op){const c=$('card');if(c.dataset.h!==html){c.innerHTML=html;c.dataset.h=html;}c.style.opacity=op;}
+function flash(t,at,len=.5,color='#fff'){const d=Math.abs(t-at);const f=$('flash');const o=clamp(1-d/len);if(o>+f.style.opacity||!f.dataset.s||f.dataset.s!=String(Math.round(t*100))){} return o;}
+const labelsEl=$('labels');
+function labels(arr){labelsEl.innerHTML=arr.map(([v,txt,col])=>{const p=v.clone().project(cam);if(p.z>1)return '';const x=(p.x*.5+.5)*W,y=(-p.y*.5+.5)*H;
+ return `<div class="lbl" style="left:${x}px;top:${y-6}px;color:${col||'#fff'}">${txt}</div>`}).join('');}
+
+/* ======================= SHOT LIST ======================= */
+const SHOTS=[
+ [0,6.6,'S1 海底开场 · 光柱已在字母E上 → 跟着光往上升','转场：跟光上浮，破水面(白闪)'],
+ [6.6,15.2,'S2 1915黄昏 · 冰中的船(3D①) · 高空缓推 → 28个小人亮起','12.4 标题牌落在最重鼓点'],
+ [15.2,21.1,'S2 环绕冰中船 · 收于甲板高度 · 冰脊挤压，船身倾斜','一镜到底'],
+ [21.1,24.6,'S2 推近一人脚下：金币扔进雪洞，照片留下','连续推镜'],
+ [24.6,30.8,'S3 夜·帐篷光 → 书页《SOUTH·1919》引文','转场：镜头摇向帐篷→书'],
+ [30.8,33.7,'S4 书页→地图(形状匹配) · 旧目标虚线崩塌','地图画布从这里一直用到 1:29'],
+ [33.7,36.6,'S2b 冰上营地远望：船在地平线下沉','插入镜头，回到同一冰原'],
+ [36.6,42.4,'S4 地图俯视：拖艇去陆地300多天 → 远钉熄，近钉"下一站"亮','跳回地图（同一画布）'],
+ [42.4,53.5,'S5 实验：钉子→作业页 · 三根柱 55/53/74','同一地图表面上长出柱子'],
+ [53.5,65.5,'S4 镜头沿航线飞：3条小艇→象岛→北上1000多公里','连续跟线，结尾俯冲入海'],
+ [65.5,75.4,'S6 凯尔德号(3D②) 低机位贴浪 · 炉火"灯塔" · 抬头：是巨浪','巨浪白顶 → 匹配成雪'],
+ [75.4,81.8,'S4 地图：翻雪山到捕鲸站 → 甩回象岛','白→雪的匹配转场'],
+ [81.8,91.2,'S7 象岛海滩 · 倒扣的船屋 · 22人 · 空荡的海平线 · 刻痕"今天"','刻痕线 → 海平线'],
+ [91.2,97.4,'S7 海平线上救援船穿冰而来 · 28/28','同一机位'],
+ [97.4,106.4,'S8 升回地图 → 飞到沉船钉 → 下潜3008米 → 光照出完整ENDURANCE(3D③)','首尾呼应'],
+ [106.4,110,'片尾 Juno 卡','']];
+
+/* ======================= RENDER ======================= */
+let world=sea3;
+window.renderAt=function(t){
+ subtitle(t);$('clock').textContent=t.toFixed(1)+'s';
+ const sh=SHOTS.find(s=>t>=s[0]&&t<s[1])||SHOTS[SHOTS.length-1];$('tag').innerHTML=sh[2]+(sh[3]?'<br><span style="color:#fc8">'+sh[3]+'</span>':'');
+ let fl=0,flc='#fff';card('',0);labels([]);
+ // ---- S1 seabed
+ if(t<6.6){world=sea3;mask.visible=true;
+  const up=seg(t,3.3,6.6);
+  cam.position.set(lerp(2.5,0,up),lerp(1.8,40,up),lerp(9,14,up));cam.lookAt(lerp(-4.5,0,up),lerp(1.5,60,up*up),0);
+  beam.position.set(-1,lerp(3,40,up),14);beam.target.position.set(lerp(-6.2,0,up),lerp(1.5,40,up),0);
+  sea3.fog.density=.035;sea3.background.setRGB(lerp(.004,.12,up*up),lerp(.015,.2,up*up),lerp(.04,.3,up*up));
+  snowPts.position.y=-t*.4; fl=clamp((t-6.2)/.4);
+ }
+ // ---- S2 ice
+ else if(t<24.6||(t>=33.7&&t<36.6)){world=ice;
+  const crush=seg(t,18.3,21.1);
+  ship.rotation.z=crush*.12; ship.rotation.x=crush*.05; ship.position.y=-crush*1.2;
+  ridges.forEach((r,i)=>{r.position.y=r.userData.base.y+crush*(1+(i%5)*.6);r.rotation.x=r.userData.base.x*0+crush*.3*(i%2?1:-1)});
+  const nFig=Math.floor(clamp((t-6.8)/2.9)*28);figs.forEach((f,i)=>f.visible=i<nFig);
+  iceBoats.forEach(b=>b.visible=t>18.3);
+  if(t<12.4){const k=seg(t,6.6,12.4);cam.position.set(lerp(-90,-60,k),lerp(80,38,k),lerp(140,95,k));cam.lookAt(0,4,10);}
+  else if(t<15.2){cam.position.set(-60,38,95);cam.lookAt(0,4,10);}
+  else if(t<21.1){const k=seg(t,15.2,21.1);const a=lerp(2.1,.25,k);const r=lerp(110,40,k);cam.position.set(Math.cos(a)*r,lerp(38,5,k),Math.sin(a)*r);cam.lookAt(0,lerp(4,6,k),0);}
+  else if(t<24.6){const k=seg(t,21.1,24.6);const foot=V(-7.6,0,16);figs.forEach((f,i)=>f.visible=true);
+   cam.position.copy(vl(V(Math.cos(.25)*40,5,Math.sin(.25)*40),V(-5.5,2.2,19.5),k));cam.lookAt(vl(V(0,6,0),foot,k));
+   coins.forEach((c,i)=>{c.visible=k>.3;const d=clamp((t-22.3-i*.12)/.7);c.position.set(-7.6+i*.08,lerp(1.4,-.2,d),16+.3*Math.sin(i));c.rotation.x=d*6});
+   photo.visible=k>.3;photo.position.set(-7.2,lerp(.2,1.6,seg(t,23.2,24.4)),16.6);photo.lookAt(cam.position);}
+  else { // 33.7-36.6 sinking from camp
+   const k=clamp((t-33.7)/2.9);ice.background=skyT;
+   ship.rotation.z=.12;ship.position.y=lerp(-1.2,-26,k*k);figs.forEach((f,i)=>{f.visible=true;f.position.set(-260+(i%14)*1.6,0,300+Math.floor(i/14)*2)});
+   cam.position.set(-262,6,312);cam.lookAt(0,8,0);
+  }
+  if(t<6.9)fl=clamp(1-(t-6.6)/.3);
+  if(t>=12.4&&t<15.2){const o=clamp((t-12.4)/.15)*clamp((15.2-t)/.3);card('<div class="plaque">先别看终点</div>',o);fl=Math.max(fl,clamp(1-(t-12.4)/.25)*.8);}
+ }
+ // ---- S3 night tent + book
+ else if(t<30.8){world=ice;
+  const k=seg(t,24.6,26.2);ice.background=new THREE.Color(0x0b1122);tent.material.emissiveIntensity=2;
+  cam.position.set(lerp(-10,-24,k),lerp(10,4,k),lerp(60,48,k));cam.lookAt(-30,2,40);
+  if(t>25.6){const q='"A man must shape himself to a new mark directly the old one goes to ground."';const n=Math.floor(clamp((t-27.6)/2.2)*q.length);
+   card(`<div class="book"><h3>SOUTH · 1919 · E. SHACKLETON</h3><p>${q.slice(0,n)}</p></div>`,clamp((t-25.6)/.5)*clamp((30.8-t)/.4));}
+ }
+ // ---- MAP world (30.8-33.7, 36.6-65.5 map parts, 75.4-81.8, 97.4-100)
+ else if((t<33.7)||(t>=36.6&&t<63.6)||(t>=75.4&&t<81.8)||(t>=97.4&&t<100.6)){world=map;ice.background=skyT;
+  [pinSink,pinNext,pinEI,pinSG,pinFar].forEach(p=>p.visible=false);mBoats.forEach(b=>b.visible=false);bars.forEach(b=>b.visible=false);
+  route.geometry.setDrawRange(0,0);tGoal.visible=false;
+  if(t<33.7){const k=seg(t,30.8,33.7);cam.position.set(-10,lerp(140,90,k),lerp(30,20,k));cam.lookAt(-10,0,-5);
+   tGoal.visible=true;tGoal.material.opacity=1;tGoal.geometry.setDrawRange(0,k<.55?3:0);
+   if(t<31.3)fl=clamp(1-(t-30.8)/.5)*.9,flc='#e9dfc6';
+   labels([[V(0,2,0),'营地',''],[V(-90,2,-70),k<.55?'横穿南极':'',  '#ccc']]);}
+  else if(t<42.4){pinSink.visible=true;const k=seg(t,36.6,42.4);cam.position.set(lerp(-6,-4,k),lerp(70,40,k),lerp(30,25,k));cam.lookAt(-6,0,2);
+   pinFar.visible=t<40.4;pinNext.visible=t>=39.7;
+   const days=Math.floor(clamp((t-37.2)/2)*300);
+   labels([[pinFar.position.clone().setY(4),t<40.4?'陆地 · '+days+'天':'', '#ccc'],[pinNext.position.clone().setY(4),t>=39.7?'下一站':'','#f2c14e'],[V(0,4,0),'沉船处','#9ab']]);}
+  else if(t<53.5){pinSink.visible=true;const k=seg(t,42.4,44);cam.position.set(-4+lerp(0,-2,k),lerp(40,16,k),lerp(25,22,k));cam.lookAt(-4,lerp(0,3,k),5);
+   const vals=[[45.8,48.3],[48.3,50.9],[50.9,53.5]];
+   bars.forEach((b,i)=>{b.visible=t>=vals[i][0]-.2;const g=seg(t,vals[i][0],vals[i][0]+1.2);const h=Math.max(.01,g*b.userData.v/8);b.scale.y=h;b.position.y=h/2;});
+   const L=[[V(-8,1,5),'远目标','#ccc'],[V(-4,1,5),'不定目标','#999'],[V(0,1,5),'近目标','#f2c14e']];
+   labels(t<45.6?[[V(-4,4,5),'1981 心理学实验 · 做完了几页','#fff']]:L.map(([v,s,c],i)=>[v.clone().setY(bars[i].scale.y+1.4).add(V(-4,0,0)),t>=vals[i][0]?s+' '+Math.round(seg(t,vals[i][0],vals[i][0]+1.2)*barDefs[i][0])+'%':'',c]));
+  }
+  else if(t<63.6){pinSink.visible=true;const k=clamp((t-53.5)/10.1);
+   const draw=t<59.7?lerp(0,.42,seg(t,53.5,59.7)):lerp(.42,1,seg(t,61,63.6));route.geometry.setDrawRange(0,Math.floor(draw*400));
+   const head=curve.getPoint(Math.max(.001,draw));
+   mBoats.forEach((b,i)=>{b.visible=t<61;b.position.copy(curve.getPoint(Math.max(0,draw-i*.012))).setY(1.2)});
+   pinEI.visible=t>58.8;pinSG.visible=t>62.6;
+   const camT=head.clone();cam.position.set(camT.x-6,lerp(30,26,k),camT.z+22);cam.lookAt(camT.x,0,camT.z-4);
+   labels([[P.ei.clone().setY(4),t>58.8?'象岛':'','#f2c14e'],[P.stn.clone().setY(4),t>62.6?'南乔治亚岛':'','#f2c14e'],[V(0,4,0),'沉船处','#9ab']]);
+  }
+  else if(t<81.8){pinSink.visible=true;pinEI.visible=true;pinSG.visible=true;route.geometry.setDrawRange(0,400);
+   if(t<78.7){const k=seg(t,75.4,78.7);cam.position.set(lerp(56,52,k),lerp(14,20,k),lerp(80,82,k));cam.lookAt(50,0,70);labels([[P.stn.clone().setY(4),'捕鲸站 · 翻雪山36小时','#f2c14e']]);}
+   else{const k=seg(t,78.7,80.6);cam.position.copy(vl(V(52,20,82),V(-20,10,40),k));cam.lookAt(vl(V(50,0,70),P.ei,k));labels([[P.ei.clone().setY(3),'象岛 · 22人','#f2c14e']]);}
+   if(t<76)fl=clamp(1-(t-75.4)/.6);
+  }
+  else{ // 97.4-100.6 rise to map, fly to sink pin, dive
+   pinSink.visible=true;pinEI.visible=true;route.geometry.setDrawRange(0,400);const k=seg(t,97.4,99.4),d=seg(t,99.4,100.6);
+   cam.position.copy(vl(vl(V(-23,8,38),V(0,30,20),k),V(0,1,0),d));cam.lookAt(vl(vl(P.ei,V(0,0,0),k),V(0,-10,-1),d));
+   labels([[V(0,4,0),d<.2?'威德尔海 · 沉船处':'','#9ab']]);
+   fl=clamp((t-100.2)/.4);flc='#04101c';
+  }
+ }
+ // ---- dive 63.6-65.5 (map → sea transition handled as fall)
+ else if(t<75.4){world=sea;const tt=t;
+  bigWave=seg(t,71.9,74.4);
+  const pos=wG.attributes.position.array;for(let i=0;i<pos.length;i+=3){pos[i+1]=waveH(wBase[i],wBase[i+2],tt);}wG.attributes.position.needsUpdate=true;wG.computeVertexNormals();
+  const by=waveH(0,0,tt);caird.position.set(0,by+.3,0);caird.rotation.z=Math.sin(tt*.9)*.12;caird.rotation.x=Math.sin(tt*1.2)*.1;
+  const dusk=seg(t,68.4,69.5)*(1-seg(t,71.6,72.2));sea.background.setRGB(lerp(.47,.16,dusk),lerp(.53,.15,dusk),lerp(.6,.2,dusk));sea.fog.color.copy(sea.background);glow.intensity=dusk*400;
+  if(t<65.5){const k=seg(t,63.6,65.5);cam.position.set(lerp(-30,-14,k),lerp(120,4,k),lerp(40,12,k));cam.lookAt(0,by,0);fl=clamp(1-Math.abs(t-63.9)/.3)*.6;flc='#9fb6c8';}
+  else if(t<71.9){const k=seg(t,65.5,71.9);const a=lerp(-.6,.9,k);cam.position.set(Math.sin(a)*14,by+lerp(2,3.5,k),Math.cos(a)*14);cam.lookAt(0,by+1,0);}
+  else{const k=seg(t,71.9,73.2);cam.position.set(6,by+2.5,14);cam.lookAt(vl(V(0,by+1,0),V(0,by+28,-70),k));
+   if(t>74.4)fl=clamp((t-74.4)/1);}
+ }
+ // ---- beach 81.8-97.4
+ else if(t<97.4){world=beach;
+  tug.position.set(lerp(-60,-10,seg(t,91.2,96)),0,lerp(-420,-120,seg(t,91.2,96)));tug.visible=t>91.2;
+  if(t<84.9){const k=seg(t,81.8,84.9);cam.position.set(lerp(30,22,k),lerp(30,6,k),lerp(40,28,k));cam.lookAt(14,0,15);}
+  else if(t<91.2){const k=seg(t,84.9,88);cam.position.set(lerp(22,0,k),lerp(6,7,k),lerp(28,34,k));cam.lookAt(lerp(14,0,k),lerp(0,1,k),lerp(15,-200,k));
+   if(t>88){const n=Math.floor(130*clamp((t-88)/1));card(`<div style="position:absolute;left:0;right:0;bottom:120px;text-align:center;color:#e9dfc6;font:22px monospace;letter-spacing:2px">${'|'.repeat(Math.min(n,60))}<span style="color:#f2c14e;font-weight:900"> | 今天</span></div>`,1);}}
+  else{cam.position.set(0,7,34);cam.lookAt(0,1,-200);
+   bfigs.forEach((f,i)=>f.rotation.z=t>94.7?Math.sin(t*8+i)*.25:0);
+   if(t>94.7)card(`<div style="position:absolute;right:60px;top:70px" class="big">28 / 28</div>`,clamp((t-94.7)/.4));
+   labels([[tug.position.clone().setY(12),'智利"耶尔乔"号 · 第4次','#f2c14e']]);}
+ }
+ // ---- seabed finale 100.6-106.4
+ else if(t<106.4){world=sea3;mask.visible=false;
+  const k=seg(t,100.6,103);cam.position.set(lerp(0,1,k),lerp(30,2,k),lerp(40,16,k));cam.lookAt(0,lerp(-10,0,k),0);
+  const sw=seg(t,101.5,104);beam.position.set(lerp(-8,3,sw),6,16);beam.target.position.set(lerp(-9,4,sw),1,0);
+  if(t>104)beam.target.position.set(0,0,0),beam.angle=lerp(.28,.5,seg(t,104,105.5));
+  sea3.background.setRGB(.004,.015,.04);snowPts.position.y=-t*.4;
+  if(t<101)fl=clamp(1-(t-100.6)/.4),flc='#04101c';
+  if(t>100.2){const n=Math.floor(clamp((t-100.6)/1.4)*3008);$('clock').textContent+=' · 深度 '+n+'m';}
+ }
+ else{ // end card
+  card(`<div class="end"><div class="j">J</div><div style="font-size:42px;font-weight:900">497天，怎么熬</div><div class="q">你现在正在熬的那件事，下一站是什么？</div><div class="s">资料：《South》1919 · RGS · SPRI · Endurance22/FMHT · Bandura & Schunk 1981</div></div>`,clamp((t-106.4)/.6));
+  R.setClearColor(0x000000);R.clear();
+ }
+ const f=$('flash');f.style.background=flc;f.style.opacity=fl;
+ if(t<106.4)R.render(world,cam);
+};
+window.READY=true;
+</script></body></html>
