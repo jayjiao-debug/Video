@@ -1,0 +1,8 @@
+token present: yes
+sketchfab model 4a5a10c4049e4ed98ce5bcbc831a0ddc
+  saved out/models/merchant_schooner.glb 41.5 MB
+  optimized 41.5 -> 36.6 MB
+sketchfab model 027aaee12ade48388f3bbac141b8cd9f
+  saved out/models/endurance_wreck_schmauss.glb 33.9 MB
+  optimized 33.9 -> 18.0 MB
+done
