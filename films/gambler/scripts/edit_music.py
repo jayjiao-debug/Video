@@ -76,7 +76,7 @@ EV = {
     # The beat tracker's grid is half a beat off from the big drop on (b161 = 82.24 sits between the real beats).
     # Measured: the drop hits at 81.40, kicks/claps then fall on 81.40 + n * BEAT (83.48 kick = bar 2, 82.42 clap).
     # So every accent after the drop is placed from the pickup, not from B[].
-    'pickup': segs[6]['film0'] + 0.04, 'drop': segs[6]['film0'] + 0.04 + 4 * BEAT,  # bar 2 of the drop 'secB': film_of(B[176]), 'secC': film_of(B[192]),
+    'pickup': segs[6]['film0'] + 0.04, 'drop': segs[6]['film0'] + 0.04 + 2 * BEAT,  # the clap two beats after the hit (track 82.42) 'secB': film_of(B[176]), 'secC': film_of(B[192]),
     'secD': film_of(B[208]), 'outro': film_of(B[224]), 'end': film,
 }
 (ROOT / 'src/edit.json').write_text(json.dumps(dict(events={k: round(v, 3) for k, v in EV.items()},

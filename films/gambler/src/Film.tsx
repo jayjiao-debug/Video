@@ -254,16 +254,19 @@ const Countdown: React.FC<{ T: number }> = ({ T }) => {
 
 const Win: React.FC<{ T: number }> = ({ T }) => {
   const a = EV.pickup, z = 92.0;
-  if (T < a - 0.14 || T > z + 0.6) return null;
-  const o = (T < a - 0.01 ? 0.12 : 1) * (1 - prog(T, z - 0.2, z + 0.5)); // a dim turn in the dark, lit on the hit
-  const sh = Math.sin(T * 80) * 16 * hit(T, a, 0.25) + Math.sin(T * 70) * 5 * hit(T, EV.drop, 0.2);
+  if (T < a - 0.01 || T > z + 0.6) return null;   // the silent beat stays pure black
+  const o = 1 - prog(T, z - 0.2, z + 0.5);
+  // v1 energy, on the real beats: the flip itself is the hit (starts on the hit frame, done in 3 frames),
+  // the group punches in, and the second accent lands on the clap two beats later (EV.drop)
+  const sh = Math.sin(T * 80) * 16 * hit(T, a, 0.25) + Math.sin(T * 70) * 8 * hit(T, EV.drop, 0.2);
+  const punch = 1 + 0.14 * hit(T, a, 0.22) + 0.05 * hit(T, EV.drop, 0.2);
   const faces = ['押', '中', '了', '！'];
   return (
-    <AbsoluteFill style={{ opacity: o, transform: `translate(${sh}px, ${sh * 0.4}px)` }}>
-      <AbsoluteFill style={{ background: `radial-gradient(circle at 50% 55%, rgba(241,197,109,${0.5 * hit(T, a, 0.6)}) 0%, rgba(0,0,0,0) 60%)` }} />
+    <AbsoluteFill style={{ opacity: o, transform: `translate(${sh}px, ${sh * 0.4}px) scale(${punch})`, transformOrigin: '50% 56%' }}>
+      <AbsoluteFill style={{ background: `radial-gradient(circle at 50% 55%, rgba(241,197,109,${0.5 * hit(T, a, 0.6) + 0.2 * hit(T, EV.drop, 0.4)}) 0%, rgba(0,0,0,0) 60%)` }} />
       {faces.map((f, i) => {
-        // the cards turn in the dark during the silent beat, so the hit frame already shows 押中了！ fully lit
-        return <Card key={i} x={960 + (i - 1.5) * 230} y={600} w={190} flip={easeOut(prog(T, a - 0.12, a - 0.02))} tone="gold" face={<FaceText s={f} size={110} color="#2a1a06" />} lift={30 * hit(T, a, 0.35) + 10 * hit(T, EV.drop, 0.3)} />;
+        const t = a + i * 0.03;
+        return <Card key={i} x={960 + (i - 1.5) * 230} y={600} w={190} flip={T < t ? 0 : 0.5 + 0.5 * easeOut(prog(T, t, t + 0.1))} tone="gold" face={<FaceText s={f} size={110} color="#2a1a06" />} lift={30 * hit(T, t, 0.35) + 14 * hit(T, EV.drop, 0.3)} />;
       })}
       {Array.from({ length: 40 }, (_, i) => {
         const ang = rnd(i) * Math.PI * 2, sp = 300 + 700 * rnd(i, 1), t = T - a;
