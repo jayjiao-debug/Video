@@ -1,0 +1,33 @@
+{
+  "would_keep_watching_after_3s": true,
+  "why": "Barely. Line 1 (0-3.3s) '看不到头的时候，你靠什么撑下去？' alone reads like a generic 鸡汤 opener; I see a hundred of these a day. What actually holds me is line 2 at 3.3s: '船被冰挤碎' + '497天没踩过陆地' is a concrete, weird, visual fact. Then line 3 '28人，全部生还' gives me the 'how?!' itch. So the hook works at ~3.5-6.6s, not inside the first 3s. If the frame under line 1 is not already showing ice/ship, I might flick before line 2.",
+  "first_moment_I_got_curious": "Line 2 (3.3s) '497天没踩过陆地' - then locked in by line 3 (6.6s) '全部生还' and line 5 (15.2s) '一个你今天就能用的办法' (promise of something I can use).",
+  "where_I_would_swipe_away": [
+    "~46-52s (lines 15-16, '一个小实验发现：同样42页算术题' / '只定全做完的孩子，做完55%'): I'm in the middle of a survival adventure and suddenly it's kids doing math homework. Feels like a lecture detour; 55% vs 74% is not a dramatic gap. This is my most likely swipe point.",
+    "~55-61s (lines 18-20, '第一站/第二站/第三站'): if I survive the experiment, the numbered list makes it feel like a PPT summary instead of a story. The real tension (tiny boat, 1000km) only arrives at line 21 (64s) - should come sooner.",
+    "~80-87s (lines 26-27, '座位天天轮换，周六常开音乐会' / new name '怀尔德'): pace drops; a new person appears at 84s and I don't know who he is. Risky at this length (~109s total is long for me)."
+  ],
+  "lines_I_did_not_understand": [
+    "#2 '他们497天没踩过陆地' - who is 'they'? Ship and people not introduced yet (fine as a hook, but I had to wait until line 6 to know it's Antarctica 1915).",
+    "#8 '每人只带2磅：金币扔了，照片留下' - 2磅 means nothing to me instantly (is that ~1kg?). Gold coins and photos is a nice image though.",
+    "#10 '“旧目标一倒，马上定个新目标”' - presented as what Shackleton wrote that night, but it sounds like a modern self-help sentence; I didn't believe it was his real words.",
+    "#12 '不到一个月，船头先沉，船尾最后消失' - why tell me which end sank last? Felt like a random detail. I only understood at #33 (船尾的名字) - and by then I'd half-forgotten it.",
+    "#13 '走去陆地？照这速度要300多天' - what speed? Walking on ice dragging boats? I didn't know they were walking at all.",
+    "#15-17 the experiment - who did it, and does '做完55%' mean they finished 55% of the pages? Took a second read.",
+    "#18 '第一站：在浮冰上活下去' - wait, weren't they already on the ice for months? How did they get from the ice to 象岛? (boats never mentioned) Timeline jumped.",
+    "#19 '象岛' - weird name, didn't know it's a real place; '庆祝“又走完一段”' - celebrated how?",
+    "#20 '6个人去南乔治亚岛求救' - where is that, why there, why only 6?",
+    "#23 '他以为天晴了，其实是巨浪的浪头' - who is 他? I didn't get it: mistaking a wave for a clear sky? Needed to reread; only works if the picture shows it.",
+    "#26 '座位天天轮换' - what seats? Around a fire? In a hut? Unclear why that matters.",
+    "#27 '带队的怀尔德' - brand-new name at 84s; and '老大' in #28 - I guessed it means Shackleton but wasn't sure.",
+    "#29 '离终点最远时，终点就是“今天”' - sounds deep but a bit contradictory on first read; I got it after a pause.",
+    "#30 '第4次救援' - so 3 rescues failed? Never shown; feels like skipped drama."
+  ],
+  "takeaway_in_my_words": "When the finish line is too far to see, don't stare at it - shrink the goal to the next stop (even just 'today'), and keep resetting it. That beat 'just grit your teeth'.",
+  "surprise_that_stuck": "All 28 survived after 497 days off land - and 100 years later the ship's name is still readable at 3008m under the sea. The wave mistaken for clear sky also stuck (once I got it). The 'meals as lighthouse' line is nice.",
+  "title_I_would_click": "2. 497天，怎么熬 - a concrete, extreme number plus a question I want answered; it promises a story, not a lecture. 1 (先别看终点) is intriguing but too abstract without context. 3 (只追下一站) gives away the answer and reads like 鸡汤, I'd scroll past.",
+  "title_that_misleads": "Slightly #2: '熬' suggests grit/endurance, while the film says the answer is NOT '咬牙坚持' - but that twist actually works in its favor. #3 spoils the takeaway before I click.",
+  "what_I_would_comment": "“船尾的名字还清清楚楚，破防了” or “那个小实验能删吗，故事本身就够了” or “所以第一次到第三次救援怎么失败的？”",
+  "payoff_vs_promise": "Line 5 promises '一个你今天就能用的办法'. The answer '只看下一步' risks feeling like 'I already knew that'. The story makes it land, the experiment doesn't add much for me.",
+  "for_frames_only": []
+}
