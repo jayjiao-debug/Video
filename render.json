@@ -1,8 +1,8 @@
 {
-  "id": "icecube_v2c-1791303686",
-  "composition": "IceCube",
+  "id": "gambler_v1-1791308747",
+  "composition": "Gambler",
   "start": 0,
-  "end": 3671,
-  "chunks": 30,
-  "output": "icecube_v2c"
+  "end": 3738,
+  "chunks": 12,
+  "output": "gambler_v1"
 }

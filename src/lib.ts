@@ -1,68 +1,59 @@
-import music from './music.json';
+import edit from './edit.json';
 
-/* 《冰下捉鬼》: the 2026 Nobel Prize in Physics (Francis Halzen, IceCube). Every set drawn in code (no generated
-   images), 2.5D camera, letterbox, kinetic type. BGM only, subtitles burned in. Same music skeleton as 《最后一面》 / 《筛子》:
-   the first drop lands on the title at 8.14 s, the second drop at 73.77 s. Every visual is a pure function of T. */
+/* 《大脑是个赌徒》 (demo). The music is the owner's track re-cut by scripts/edit_music.py to play three tricks on the
+   listener's prediction: the first drop is taken away (silence), given back (title), and the big drop is delayed by an
+   extra bar plus one beat of silence. Every visual is a pure function of T. Picture is a rough demo: the owner asked
+   to judge the music control first. */
 export const FPS = 30;
 export const W = 1920;
 export const H = 1080;
-
-const B: number[] = music.beats;
-const OFFSET = B[16];
-export const MUSIC_OFFSET = OFFSET;
-/** film time of track beat i */
-export const fb = (i: number) => B[i] - OFFSET;
-export const FILM_END = fb(256) + 0.3; // ≈ 122.4 s
+export const EV = edit.events;
+export const BEATS: number[] = edit.beats;
+export const FILM_END = EV.end;
 export const FILM_FRAMES = Math.round(FILM_END * FPS);
-export const FILM_BEATS = B.map((b) => b - OFFSET).filter((t) => t >= 0 && t <= FILM_END);
+export const BEAT = 60 / 117.94;
+/** the most recent beat at or before T (or -1) */
+export const lastBeat = (T: number) => { let b = -1; for (const x of BEATS) { if (x <= T) b = x; else break; } return b; };
 
-// chapter cuts (on beats)
-export const CUT = {
-  title: fb(40), intro: fb(40), curve: fb(56), body: fb(80), pole: fb(96), dive: fb(112), cube: fb(128), rare: fb(144),
-  drop: fb(161), blazar: fb(176), galaxy: fb(192), years: fb(224), end: fb(240),
-};
-
-/** subtitles (burned in; also written to .srt), timed by scripts/lines.py */
+/** subtitles, timed by scripts/lines.py (waiting 11.8 %) */
 export const SUBS: [number, number, string][] = [
-  [0.10, 3.52, '100多年来，宇宙一直在朝地球"开枪"。'],
-  [3.62, 7.32, '有的"子弹"，能量是人类最强加速器的百万倍。'],
-  [7.42, 9.83, '可没人知道，枪手在哪——'],
-  [9.93, 12.05, '因为子弹会拐弯。'],
-  [14.30, 17.00, '今年的诺贝尔物理学奖，'],
-  [17.10, 20.25, '颁给了在南极冰下找"枪手"的人。'],
-  [20.45, 23.40, '宇宙射线带电，被磁场一路掰弯，'],
-  [23.50, 26.16, '落到地球，早就分不清方向。'],
-  [26.26, 29.49, '但现场还会飞出一个"目击者"：中微子。'],
-  [29.59, 32.40, '不带电，不拐弯，沿直线飞回来。'],
-  [32.62, 35.37, '每秒100万亿个穿过你，'],
-  [35.47, 38.36, '一辈子撞上你的概率：1/4。'],
-  [38.46, 40.62, '要抓它，只能靠"大"。'],
-  [40.80, 43.86, '1988年，哈尔岑想到：南极冰。'],
-  [43.96, 46.72, '深处的冰被压得没有气泡，'],
-  [46.82, 48.70, '清澈得惊人。'],
-  [48.95, 51.86, '在冰下1.5到2.5公里，'],
-  [51.96, 54.43, '挂上5160只"眼睛"，'],
-  [54.53, 56.85, '2010年底完工。'],
-  [57.10, 60.07, '中微子偶尔撞上冰里的原子，'],
-  [60.17, 62.23, '闪出一道蓝光；'],
-  [62.33, 65.00, '按光到的先后，算出来向。'],
-  [65.25, 67.63, '每年几十亿次闪光里，'],
-  [67.73, 70.83, '来自宇宙深处的，只占一亿分之一。'],
-  [70.93, 73.60, '2013年，确认了第一批。'],
-  [73.85, 77.74, '2017年9月22日，又一个撞进冰里，'],
-  [77.84, 81.25, '不到一分钟，全球望远镜一起转头——'],
-  [81.50, 84.50, '40亿光年外，一个黑洞的喷流，'],
-  [84.60, 86.44, '正对着地球。'],
-  [86.54, 89.40, '第一次，人类指认出一个"枪手"。'],
-  [89.65, 93.52, '2023年，它用中微子拍下了银河系：'],
-  [93.62, 97.17, '光被尘埃挡住的地方，它能穿过来。'],
-  [97.27, 99.34, '这有什么用？'],
-  [99.44, 102.17, '和第一台望远镜一样：'],
-  [102.27, 105.65, '让人类看见以前看不见的东西。'],
-  [105.95, 108.59, '从1988年的一个想法，'],
-  [108.69, 111.34, '到今天的诺贝尔奖：38年。'],
-  [111.44, 113.80, '那些眼睛，还在冰下等。'],
-  [114.10, 121.90, '你愿意为一个想法，等38年吗？'],
+  [0.10, 2.97, '这首歌，马上要"炸"了。'],
+  [3.07, 6.30, '你的大脑，已经押好了注——'],
+  [6.40, 8.05, '3、2、1——'],
+  [8.30, 10.05, '……没炸？'],
+  [10.25, 13.53, '你愣住的那一下，就是大脑押空了。'],
+  [13.63, 15.40, '再来一次。'],
+  [19.70, 22.72, '听歌时，你的大脑一直在赌：'],
+  [22.82, 25.84, '下一拍是什么？和弦往哪走？'],
+  [25.94, 28.96, '猜对了，大脑就给你发奖励——'],
+  [29.06, 32.40, '哪怕猜中的，只是最普通的一拍。'],
+  [32.60, 36.83, '2019年，科学家拆了745首经典流行歌：'],
+  [36.93, 40.68, '8万个和弦，每个都算出：多好猜？多意外？'],
+  [40.78, 43.43, '最上头的，是两种牌局：'],
+  [43.53, 46.01, '很有把握，却被骗了；'],
+  [46.11, 48.60, '毫无把握，却押中了。'],
+  [49.00, 51.64, '那为什么，drop最爽？'],
+  [51.74, 54.83, '一项研究扫描了听歌人的大脑：'],
+  [54.93, 58.16, '高潮来之前，多巴胺已经开始分泌；'],
+  [58.26, 60.90, '高潮那一刻，再分泌一次。'],
+  [61.15, 64.45, '注意：这首歌，真的要drop了。'],
+  [65.30, 69.14, '从这一秒起，你的大脑就在分泌多巴胺。'],
+  [69.24, 73.08, '研究里，期待在高潮前十几秒就开始了。'],
+  [73.18, 75.57, '这就是"等"的快乐。'],
+  [75.67, 78.70, '那我们，让你再多等一会儿。'],
+  [79.00, 80.83, '再等等……'],
+  [80.93, 82.90, '多加了一小节。'],
+  [85.00, 88.54, '你刚才经历的，就是那个实验。'],
+  [88.64, 92.00, '等得越久，押中的时候越爽。'],
+  [92.20, 96.63, '2013年，60首没听过的新歌，用真钱竞价：'],
+  [96.73, 100.00, '大脑押得越狠，人越舍得掏钱。'],
+  [100.20, 104.22, '而你押注的依据，是这辈子听过的所有歌。'],
+  [104.32, 107.36, '所以，副歌要重复：让你押中。'],
+  [107.46, 111.32, 'drop前要停一下：让你多押一会儿。'],
+  [111.42, 114.30, '儿歌太好猜，噪音没法猜，'],
+  [114.40, 116.30, '都不上头。'],
+  [116.70, 120.20, '下次单曲循环，你的大脑还在赌。'],
+  [120.60, 124.20, '你最近被哪首歌"骗"到了？'],
 ];
 
 export const ZH = '"Noto Serif CJK SC", "Noto Serif SC", serif';
