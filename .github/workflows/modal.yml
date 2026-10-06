@@ -31,7 +31,7 @@ jobs:
           mkdir -p out
           echo "token id present: $([ -n "$MODAL_TOKEN_ID" ] && echo yes || echo no)" | tee -a out/log.txt
           echo "token secret present: $([ -n "$MODAL_TOKEN_SECRET" ] && echo yes || echo no)" | tee -a out/log.txt
-          pip install -q modal 2>&1 | tail -2
+          pip install -q modal 2>&1 | tail -2; sudo apt-get install -y -qq ffmpeg >/dev/null 2>&1 || true
           ENTRY=$(python -c "import json;print(json.load(open('job.json'))['entry'])")
           modal run "$ENTRY" 2>&1 | tee -a out/log.txt || echo "modal run exited non-zero" | tee -a out/log.txt
       - name: publish

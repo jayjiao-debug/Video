@@ -5,10 +5,17 @@ import * as THREE from 'three';
 import {GLTFLoader} from 'three/addons/loaders/GLTFLoader.js';
 import {RGBELoader} from 'three/addons/loaders/RGBELoader.js';
 import {OBB} from 'three/addons/math/OBB.js';
-const W=1280,H=720;
+import {EffectComposer} from 'three/addons/postprocessing/EffectComposer.js';
+import {RenderPass} from 'three/addons/postprocessing/RenderPass.js';
+import {GTAOPass} from 'three/addons/postprocessing/GTAOPass.js';
+import {UnrealBloomPass} from 'three/addons/postprocessing/UnrealBloomPass.js';
+import {OutputPass} from 'three/addons/postprocessing/OutputPass.js';
+const Q=new URLSearchParams(location.search);const HQ=Q.has('hq');const SS=+(Q.get('ss')||1);const MB=+(Q.get('mb')||1);
+const W=1280*SS,H=720*SS;
 const R=new THREE.WebGLRenderer({antialias:true,preserveDrawingBuffer:true});R.setSize(W,H);R.setPixelRatio(1);
 R.toneMapping=THREE.ACESFilmicToneMapping;R.toneMappingExposure=0.95;R.shadowMap.enabled=true;R.shadowMap.type=THREE.PCFSoftShadowMap;
-document.body.appendChild(R.domElement);
+const OUT=document.createElement('canvas');OUT.width=W;OUT.height=H;const O2=OUT.getContext('2d');
+if(MB>1)document.body.appendChild(OUT);else document.body.appendChild(R.domElement);
 const cam=new THREE.PerspectiveCamera(30,W/H,.5,8000);
 const load=(l,u)=>new Promise((res,rej)=>l.load(u,res,undefined,rej));
 const hl=new RGBELoader().setDataType(THREE.FloatType);
@@ -124,7 +131,7 @@ window.INFO={H:[H0,H1],realMasts,prof:window.PROF,bbox:[shipBox.min.toArray(),sh
 // ---- LIGHT: low sun, colour of the HDRI sun
 const sunDir=new THREE.Vector3(Math.cos(sunEl)*Math.sin(-sunPhi+Math.PI/2*0),Math.sin(sunEl),Math.cos(sunEl)*Math.cos(-sunPhi));
 const sunL=new THREE.DirectionalLight(0xffa86c,3.4);sc.add(sunL);sc.add(sunL.target);
-sunL.castShadow=true;sunL.shadow.mapSize.set(4096,4096);Object.assign(sunL.shadow.camera,{left:-60,right:60,top:60,bottom:-60,near:1,far:1200});sunL.shadow.bias=-.0004;sunL.shadow.normalBias=.4;
+sunL.castShadow=true;sunL.shadow.mapSize.set(HQ?8192:4096,HQ?8192:4096);Object.assign(sunL.shadow.camera,{left:-60,right:60,top:60,bottom:-60,near:1,far:1200});sunL.shadow.bias=-.0004;sunL.shadow.normalBias=.4;
 sc.add(new THREE.HemisphereLight(0x8fa6d8,0x4a3a3a,.35));
 {let r=0,g=0,b=0,n=0;const row=Math.floor(img.height*.5)+2;for(let x=0;x<img.width;x++){const i=(row*img.width+x)*4;r+=img.data[i];g+=img.data[i+1];b+=img.data[i+2];n++;}
  const c=new THREE.Color(r/n,g/n,b/n);const m=Math.max(c.r,c.g,c.b);c.multiplyScalar(.85/m);sc.fog=new THREE.FogExp2(c,.0022);window.FOG=c.getHexString();}
@@ -147,6 +154,11 @@ const shipWorldBox=new THREE.Box3();
 window.audit=function(t){const [p]=camAt(t);const issues=[];const g=terrainH(p.x,p.z);if(p.y<g+1.2)issues.push('cam below ground '+(p.y-g).toFixed(2));
  shipWorldBox.setFromObject(ship).expandByScalar(1.5);if(shipWorldBox.containsPoint(p))issues.push('cam inside ship box');
  for(const s of shards){if(s.position.distanceTo(p)<2.5){issues.push('cam near shard');break;}}return issues;};
+let composer=null;
+if(HQ){composer=new EffectComposer(R);composer.setSize(W,H);composer.addPass(new RenderPass(sc,cam));
+ const ao=new GTAOPass(sc,cam,W,H);ao.updateGtaoMaterial({radius:2.0,distanceExponent:1.5,thickness:2.0,scale:1.2,samples:16});ao.blendIntensity=0.9;composer.addPass(ao);
+ composer.addPass(new UnrealBloomPass(new THREE.Vector2(W,H),0.15,0.4,3.0));composer.addPass(new OutputPass());}
+window.__draw=()=>{if(composer)composer.render();else R.render(sc,cam);};
 window.READY=true;
 window.renderAt=function(t){
  const crush=ease(cl((t-10.5)/4.5));
@@ -154,6 +166,9 @@ window.renderAt=function(t){
  for(const s of shards){if(s.userData.near){s.position.y=s.userData.base.y+crush*.9;s.rotation.z=s.userData.rot.z+crush*.12*Math.sign(s.userData.base.x);}}
  const [p,l]=camAt(t);cam.position.copy(p);cam.lookAt(l);
  sunL.target.position.set(0,0,0);
- R.render(sc,cam);
+ window.__draw();
 };
+// motion blur: average MB subframes across a 180-degree shutter (1/48 s)
+{const _r=window.renderAt;window.renderAt=function(t){if(MB<=1){_r(t);return;}
+ for(let k=0;k<MB;k++){const tk=Math.max(0,t+((k+.5)/MB-.5)*(0.5/24));_r(tk);O2.globalAlpha=1/(k+1);O2.drawImage(R.domElement,0,0);}O2.globalAlpha=1;};}
 </script></body></html>
