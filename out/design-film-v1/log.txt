@@ -1,0 +1,105 @@
+token id present: yes
+token secret present: yes
+✓ Initialized. View run at 
+https://modal.com/apps/jayjiao249/main/ap-21PnmbsYlysTNtb0qpMibK
+Building image im-NKq2lJAwjysjyYoZ3Nvfsc
+
+=> Step 0: FROM base
+
+=> Step 1: RUN apt-get update
+Get:1 https://deb.nodesource.com/node_20.x nodistro InRelease [12.1 kB]
+Get:2 http://security.ubuntu.com/ubuntu jammy-security InRelease [129 kB]
+Get:3 http://archive.ubuntu.com/ubuntu jammy InRelease [270 kB]
+Get:4 https://deb.nodesource.com/node_20.x nodistro/main amd64 Packages [14.7 kB]
+Get:5 http://archive.ubuntu.com/ubuntu jammy-updates InRelease [128 kB]
+Get:6 http://security.ubuntu.com/ubuntu jammy-security/main amd64 Packages [4419 kB]
+Get:7 http://archive.ubuntu.com/ubuntu jammy-backports InRelease [127 kB]
+Get:8 http://archive.ubuntu.com/ubuntu jammy/multiverse amd64 Packages [266 kB]
+Get:9 http://archive.ubuntu.com/ubuntu jammy/main amd64 Packages [1792 kB]
+Get:10 http://security.ubuntu.com/ubuntu jammy-security/universe amd64 Packages [1322 kB]
+Get:11 http://security.ubuntu.com/ubuntu jammy-security/multiverse amd64 Packages [84.6 kB]
+Get:12 http://security.ubuntu.com/ubuntu jammy-security/restricted amd64 Packages [7907 kB]
+Get:13 http://archive.ubuntu.com/ubuntu jammy/restricted amd64 Packages [164 kB]
+Get:14 http://archive.ubuntu.com/ubuntu jammy/universe amd64 Packages [17.5 MB]
+Get:15 http://archive.ubuntu.com/ubuntu jammy-updates/universe amd64 Packages [1624 kB]
+Get:16 http://archive.ubuntu.com/ubuntu jammy-updates/restricted amd64 Packages [8212 kB]
+Get:17 http://archive.ubuntu.com/ubuntu jammy-updates/multiverse amd64 Packages [93.2 kB]
+Get:18 http://archive.ubuntu.com/ubuntu jammy-updates/main amd64 Packages [4757 kB]
+Get:19 http://archive.ubuntu.com/ubuntu jammy-backports/main amd64 Packages [82.9 kB]
+Get:20 http://archive.ubuntu.com/ubuntu jammy-backports/universe amd64 Packages [35.6 kB]
+Fetched 48.9 MB in 3s (14.9 MB/s)
+Reading package lists...
+
+=> Step 2: RUN apt-get install -y ffmpeg fonts-noto-cjk
+Reading package lists...
+Building dependency tree...
+Reading state information...
+ffmpeg is already the newest version (7:4.4.2-0ubuntu0.22.04.1).
+Suggested packages:
+  fonts-noto-cjk-extra
+The following NEW packages will be installed:
+  fonts-noto-cjk
+0 upgraded, 1 newly installed, 0 to remove and 148 not upgraded.
+Need to get 61.2 MB of archives.
+After this operation, 93.2 MB of additional disk space will be used.
+Get:1 http://archive.ubuntu.com/ubuntu jammy/main amd64 fonts-noto-cjk all 1:20220127+repack1-1 [61.2 MB]
+debconf: delaying package configuration, since apt-utils is not installed
+Fetched 61.2 MB in 3s (18.6 MB/s)
+Selecting previously unselected package fonts-noto-cjk.
+(Reading database ... 
+[1A(Reading database ... 5%
+[1A(Reading database ... 10%
+[1A(Reading database ... 15%
+[1A(Reading database ... 20%
+[1A(Reading database ... 25%
+[1A(Reading database ... 30%
+[1A(Reading database ... 35%
+[1A(Reading database ... 40%
+[1A(Reading database ... 45%(Reading database ... 50%(Reading database ... 55%(Reading database ... 60%
+[1A(Reading database ... 65%(Reading database ... 70%(Reading database ... 75%(Reading database ... 80%(Reading database ... 85%(Reading database ... 90%(Reading database ... 95%(Reading database ... 100%
+[1A(Reading database ... 34286 files and directories currently installed.)
+Preparing to unpack .../fonts-noto-cjk_1%3a20220127+repack1-1_all.deb ...
+Unpacking fonts-noto-cjk (1:20220127+repack1-1) ...
+Setting up fonts-noto-cjk (1:20220127+repack1-1) ...
+Processing triggers for fontconfig (2.13.1-4.2ubuntu5) ...
+Saving image...
+Image saved, took 562.11ms
+
+Built image im-NKq2lJAwjysjyYoZ3Nvfsc in 14.74s
+
+
+Building image im-amRe2R32EU8dh7nDcEzBF9
+
+=> Step 0: FROM base
+
+=> Step 1: RUN mkdir -p /app && cd /app && npm init -y >/dev/null && npm i three@0.169 playwright-core@1.48.2
+
+added 2 packages, and audited 3 packages in 3s
+
+found 0 vulnerabilities
+
+=> Step 2: RUN mkdir -p /app/assets && cd /app/assets && curl -sSLO https://raw.githubusercontent.com/jayjiao-debug/Video/asset-output/out/design-02/models/rbmk_core.glb && curl -sSLO https://raw.githubusercontent.com/jayjiao-debug/Video/asset-output/out/design-02/models/chnpp_simplified.glb && curl -sSLO https://raw.githubusercontent.com/jayjiao-debug/Video/asset-output/out/design-02/models/b17_helijah.glb && curl -sSLO https://raw.githubusercontent.com/jayjiao-debug/Video/asset-output/out/design-02/models/interior_trim.glb && curl -sSLO https://raw.githubusercontent.com/jayjiao-debug/Video/asset-output/out/design-01/polyhaven/moonless_golf_2k.hdr && curl -sSLO https://raw.githubusercontent.com/jayjiao-debug/Video/asset-output/out/endurance-01/polyhaven/belfast_sunset_puresky_2k.hdr
+Saving image...
+Image saved, took 2.46s
+
+Built image im-amRe2R32EU8dh7nDcEzBF9 in 12.21s
+
+
+✓ Created objects.
+├── ✓ Uploaded /home/runner/work/Video/Video/render_film.py
+├── ✓ Uploaded /home/runner/work/Video/Video/film
+└── ✓ Created Function chunk.
+0 RENDERER ANGLE (NVIDIA, Vulkan 1.4.341 (NVIDIA Tesla T4 (0x00001EB8)), NVIDIA) / MS_PER_FRAME 102
+1 RENDERER ANGLE (NVIDIA, Vulkan 1.4.341 (NVIDIA Tesla T4 (0x00001EB8)), NVIDIA) / MS_PER_FRAME 99
+2 RENDERER ANGLE (NVIDIA, Vulkan 1.4.341 (NVIDIA Tesla T4 (0x00001EB8)), NVIDIA) / MS_PER_FRAME 90
+3 RENDERER ANGLE (NVIDIA, Vulkan 1.4.341 (NVIDIA Tesla T4 (0x00001EB8)), NVIDIA) / MS_PER_FRAME 82
+4 RENDERER ANGLE (NVIDIA, Vulkan 1.4.341 (NVIDIA Tesla T4 (0x00001EB8)), NVIDIA) / MS_PER_FRAME 97
+5 RENDERER ANGLE (NVIDIA, Vulkan 1.4.341 (NVIDIA Tesla T4 (0x00001EB8)), NVIDIA) / MS_PER_FRAME 100
+6 RENDERER ANGLE (NVIDIA, Vulkan 1.4.341 (NVIDIA Tesla T4 (0x00001EB8)), NVIDIA) / MS_PER_FRAME 95
+7 RENDERER ANGLE (NVIDIA, Vulkan 1.4.341 (NVIDIA Tesla T4 (0x00001EB8)), NVIDIA) / MS_PER_FRAME 105
+8 RENDERER ANGLE (NVIDIA, Vulkan 1.4.341 (NVIDIA Tesla T4 (0x00001EB8)), NVIDIA) / MS_PER_FRAME 93
+9 RENDERER ANGLE (NVIDIA, Vulkan 1.4.312 (NVIDIA Tesla T4 (0x00001EB8)), NVIDIA) / MS_PER_FRAME 93
+DONE 81149610
+Stopping app - local entrypoint completed.
+✓ App completed. View run at 
+https://modal.com/apps/jayjiao249/main/ap-21PnmbsYlysTNtb0qpMibK
