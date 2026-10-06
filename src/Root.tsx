@@ -29,6 +29,9 @@ import { LooksAnime } from './v13/LooksAnime';
 import { LooksVibe } from './v13/LooksVibe';
 import { LooksManga } from './v13/LooksManga';
 import { MangaTeaser, MT_FRAMES } from './v13/MangaTeaser';
+import { PixelTeaser, PX_FRAMES } from './v13/PixelTeaser';
+import { PixelFilm, PXF_FRAMES } from './v13/px/Film';
+import { IlFilm, IL_FRAMES } from './v13/il/Film';
 import { Ep13Film, EP13_FRAMES } from './v13/Film13';
 import { Cover13Wide, Cover13Tall } from './v13/Cover13';
 import { Cover12 } from './v12/Cover12';
@@ -88,6 +91,9 @@ export const Root: React.FC = () => (
     <Composition id="Ep13" component={Ep13Film} durationInFrames={EP13_FRAMES} fps={30} width={1920} height={1080} />
     <Composition id="Cover13Wide" component={Cover13Wide} durationInFrames={1} fps={30} width={1440} height={1080} />
     <Composition id="Cover13Tall" component={Cover13Tall} durationInFrames={1} fps={30} width={1080} height={1440} />
+    <Composition id="IlFilm" component={IlFilm} durationInFrames={IL_FRAMES} fps={30} width={1920} height={1080} />
+    <Composition id="PixelFilm" component={PixelFilm} durationInFrames={PXF_FRAMES} fps={30} width={1920} height={1080} />
+    <Composition id="PixelTeaser" component={PixelTeaser} durationInFrames={PX_FRAMES} fps={30} width={1920} height={1080} />
     <Composition id="MangaTeaser" component={MangaTeaser} durationInFrames={MT_FRAMES} fps={30} width={1920} height={1080} />
     <Composition id="LooksManga" component={LooksManga} durationInFrames={3} fps={30} width={1920} height={1080} />
     <Composition id="LooksVibe" component={LooksVibe} durationInFrames={3} fps={30} width={1920} height={1080} />
