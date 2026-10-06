@@ -1,10 +1,20 @@
 import React from 'react';
 import { W, H, C, F, Txt, Glow, Stars, Moon, Cam, Kid, KidBack, sm, life, pop, ease, eo, lerp, clamp, rng, cue, cend, cw, DROP2, VO_END, FILM_END } from './kit';
+import { Monogram, GoldTitle } from '../../brand/Brand';
 import { GameRoom } from './s1';
 import { Board } from './s2';
 
 /* ============ how hard is just right? the learning program and the 85% hill ============ */
-const curve = (a: number) => { const x = (a - 0.85) / 0.13; return Math.exp(-x * x) * (a < 0.85 ? 1 : 1) * (1 - 0.1 * Math.abs(a - 0.85)); };
+/* learning speed in Wilson et al.'s model: z·φ(z) with z = Φ⁻¹(accuracy); 0 at 50% and 100%, peak at Φ(1) ≈ 84% */
+const invPhi = (p: number) => { // Acklam's rational approximation
+  const a = [-39.6968302866538, 220.946098424521, -275.928510446969, 138.357751867269, -30.6647980661472, 2.50662827745924], b = [-54.4760987982241, 161.585836858041, -155.698979859887, 66.8013118877197, -13.2806815528857], c = [-0.00778489400243029, -0.322396458041136, -2.40075827716184, -2.54973253934373, 4.37466414146497, 2.93816398269878], d = [0.00778469570904146, 0.32246712907004, 2.445134137143, 3.75440866190742];
+  if (p <= 0) return -8; if (p >= 1) return 8;
+  if (p < 0.02425) { const q = Math.sqrt(-2 * Math.log(p)); return (((((c[0] * q + c[1]) * q + c[2]) * q + c[3]) * q + c[4]) * q + c[5]) / ((((d[0] * q + d[1]) * q + d[2]) * q + d[3]) * q + 1); }
+  if (p > 1 - 0.02425) { const q = Math.sqrt(-2 * Math.log(1 - p)); return -(((((c[0] * q + c[1]) * q + c[2]) * q + c[3]) * q + c[4]) * q + c[5]) / ((((d[0] * q + d[1]) * q + d[2]) * q + d[3]) * q + 1); }
+  const q = p - 0.5, r = q * q; return (((((a[0] * r + a[1]) * r + a[2]) * r + a[3]) * r + a[4]) * r + a[5]) * q / (((((b[0] * r + b[1]) * r + b[2]) * r + b[3]) * r + b[4]) * r + 1);
+};
+const curve = (a: number) => { const z = invPhi(Math.min(0.99999, Math.max(0.5, a))); return (z * Math.exp(-z * z / 2)) / Math.exp(-0.5); };
+const PEAK = 0.8413;
 const Robot: React.FC<{ x: number; y: number; s?: number; T: number; mood?: 'think' | 'happy' }> = ({ x, y, s = 1, T, mood = 'think' }) => (
   <g transform={`translate(${x},${y + Math.sin(T * 3) * 6}) scale(${s})`}>
     <line x1={0} y1={-170} x2={0} y2={-120} stroke={C.slate} strokeWidth={8} /><circle cx={0} cy={-176} r={14} fill={C.ember} />
@@ -15,16 +25,13 @@ const Robot: React.FC<{ x: number; y: number; s?: number; T: number; mood?: 'thi
 );
 export const Model: React.FC<{ T: number }> = ({ T }) => {
   const m1 = cue('M1'), m2 = cue('M2'), m3 = cue('M3'), m4 = cue('M4'), m5 = cue('M5'), m6 = cue('M6'), m7 = cue('M7');
-  if (T < m2 - 0.05) {
-    return <g><Board T={T} focus={2} reveal={3} /><g opacity={sm(T, m1, 0.3)}><rect width={W} height={H} fill={C.n0} opacity={0.55} /><Txt x={W / 2} y={600} s={180} c={C.gold} w={900} stroke={C.n0}>多难？</Txt></g></g>;
-  }
   // chart frame
   const X0 = 300, X1 = 1700, Y0 = 820, YH = 520;
   const px = (a: number) => X0 + (a - 0.5) / 0.5 * (X1 - X0), py = (v: number) => Y0 - v * YH;
   const chartK = sm(T, m3 - 0.2, 0.5);
   const knob = clamp((T - m3) / (m4 - m3 - 0.2));            // difficulty sweeps; accuracy 100% → 50%
   const nDots = Math.floor(knob * 26);
-  const dots = Array.from({ length: nDots }, (_, i) => { const a = 1 - (i / 25) * 0.5; return [a, curve(a) * (0.92 + 0.08 * Math.sin(i * 2.3))]; });
+  const dots = Array.from({ length: nDots }, (_, i) => { const a = 1 - (i / 25) * 0.5; return [a, curve(a) * (0.94 + 0.06 * Math.sin(i * 2.3))]; });
   const peak = T >= DROP2 - 0.05, pk = pop(T, DROP2, 0.5);
   const robotS = 1 - 0.5 * chartK, robotX = lerp(960, 1620, chartK), robotY = lerp(620, 300, chartK);
   return (
@@ -46,15 +53,15 @@ export const Model: React.FC<{ T: number }> = ({ T }) => {
         {knob > 0.02 && knob < 1 && <g transform={`translate(${px(1 - knob * 0.5)},${py(curve(1 - knob * 0.5)) - 60})`}><path d="M-20,0 L20,0 L0,26 Z" fill={C.gold} /></g>}
         {T > m4 - 0.3 && <path d={Array.from({ length: 101 }, (_, i) => { const a = 0.5 + i / 200; return `${i ? 'L' : 'M'}${px(a).toFixed(1)},${py(curve(a)).toFixed(1)}`; }).join(' ')} stroke={C.gold} strokeWidth={8} fill="none" strokeDasharray={`${2200 * ease((T - m4 + 0.3) / 0.8)} 3000`} />}
         {peak && <g>
-          <Glow x={px(0.85)} y={py(1)} r={300} c="gold" o={0.7 * pk} />
-          <line x1={px(0.85)} y1={py(1)} x2={px(0.85)} y2={Y0} stroke={C.gold} strokeWidth={4} strokeDasharray="12 10" />
-          <g transform={`translate(${px(0.85)},${py(1) - 70}) scale(${pk})`}><Txt x={0} y={0} s={150} c={C.gold} w={900} f={F.num} stroke={C.n0}>85%</Txt></g>
+          <Glow x={px(PEAK)} y={py(1)} r={300} c="gold" o={0.7 * pk} />
+          <line x1={px(PEAK)} y1={py(1)} x2={px(PEAK)} y2={Y0} stroke={C.gold} strokeWidth={4} strokeDasharray="12 10" />
+          <g transform={`translate(${px(PEAK)},${py(1) - 70}) scale(${pk})`}><Txt x={0} y={0} s={150} c={C.gold} w={900} f={F.num} stroke={C.n0}>≈85%</Txt></g>
         </g>}
-        {T > m5 && <g opacity={sm(T, m5, 0.3)}><circle cx={px(1)} cy={py(curve(1))} r={20} fill={C.slate} /><Txt x={px(1) - 30} y={py(curve(1)) - 40} s={40} a="end" c={C.cream}>全对：没学到新东西</Txt></g>}
-        {T > m6 && <g opacity={sm(T, m6, 0.3)}><circle cx={px(0.5)} cy={py(curve(0.5))} r={20} fill={C.slate} /><Txt x={px(0.5) + 30} y={py(curve(0.5)) - 40} s={40} a="start" c={C.cream}>一半对：跟瞎猜差不多</Txt></g>}
+        {T > m5 && <g opacity={sm(T, m5, 0.3)}><circle cx={px(1)} cy={py(curve(1))} r={20} fill={C.slate} /><Txt x={px(1) - 30} y={Y0 - 110} s={40} a="end" c={C.cream}>全对：没学到新东西</Txt></g>}
+        {T > m6 && <g opacity={sm(T, m6, 0.3)}><circle cx={px(0.5)} cy={py(curve(0.5))} r={20} fill={C.slate} /><Txt x={px(0.5) + 30} y={Y0 - 110} s={40} a="start" c={C.cream}>一半对：跟瞎猜差不多</Txt></g>}
         {T > m7 && <g opacity={sm(T, m7, 0.4)}>
-          <rect x={px(0.85)} y={Y0 - 40} width={px(1) - px(0.85)} height={40} fill={C.ember} opacity={0.8} /><Txt x={(px(0.85) + px(1)) / 2} y={Y0 - 52} s={40} c={C.ember} w={900}>错一点</Txt>
-          <Txt x={X1 + 30} y={140} s={28} a="end" c={C.slate}>数学模型的结论，尚未在人身上验证</Txt>
+          <rect x={px(PEAK)} y={Y0 - 40} width={px(1) - px(PEAK)} height={40} fill={C.ember} opacity={0.8} /><Txt x={(px(PEAK) + px(1)) / 2} y={Y0 - 52} s={40} c={C.ember} w={900}>错一点</Txt>
+          <g transform="translate(300,120)"><rect width={720} height={80} rx={40} fill={C.n0} opacity={0.85} stroke={C.slate} strokeWidth={2} /><Txt x={360} y={54} s={38} c={C.cream}>作者的猜想 · 还没在人身上试过</Txt></g>
         </g>}
       </g>}
     </Cam>
@@ -191,11 +198,12 @@ export const EndCard: React.FC<{ T: number; a: number }> = ({ T, a }) => {
       <rect width={W} height={H} fill="url(#night)" />
       <Stars T={T} n={80} seed={12} y1={1080} o={0.6} />
       <Glow x={W / 2} y={420} r={700} c="amber" o={0.3} sy={0.6} />
-      <Txt x={W / 2} y={470} s={170} c={C.cream} w={900} f={F.serif} ls="0.12em">心流</Txt>
+      <g transform={`translate(${W / 2},230)`}><Monogram draw={sm(T, a + 0.1, 1.2)} size={1.1} wordmark="Juno" /></g>
+      <GoldTitle text="心流" f={T * 30} at={(a + 0.5) * 30} size={140} y={500} />
       <Txt x={W / 2} y={600} s={42} c={C.cream} o={sm(T, a + 0.4, 0.4)}>你最近一次忘了时间，是在做什么？</Txt>
       <Txt x={W / 2} y={665} s={30} c={C.slate} o={sm(T, a + 0.7, 0.4)}>@ 那个总说"学不进去"的朋友</Txt>
       <g opacity={sm(T, a + 1, 0.4)}><rect x={W / 2 - 330} y={720} width={660} height={70} rx={35} fill="none" stroke={C.amber} strokeWidth={3} /><Txt x={W / 2} y={767} s={32} c={C.amber} ls="0.1em">关注 Juno · 每期一个反直觉的知识</Txt></g>
-      <Txt x={W / 2} y={1010} s={18} c={C.slate} f={F.num} w={500} o={0.9 * sm(T, a + 1.2, 0.4)}>{SOURCES}</Txt>
+      <Txt x={W / 2} y={1010} s={23} c={C.slate} f={F.num} w={500} o={0.9 * sm(T, a + 1.2, 0.4)}>{SOURCES}</Txt>
     </g>
   );
 };

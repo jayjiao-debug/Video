@@ -132,6 +132,19 @@ export const Clock: React.FC<{ x: number; y: number; r: number; min: number; sec
   );
 };
 export const hhmm = (m: number) => { const h = Math.floor((((m % 1440) + 1440) % 1440) / 60), mm = Math.floor(((m % 60) + 60) % 60); return `${String(h).padStart(2, '0')}:${String(mm).padStart(2, '0')}`; };
+/** condition banner: pops big at the top, then settles into a corner chip */
+export const Chip: React.FC<{ T: number; at: number; n: string; text: string }> = ({ T, at, n, text }) => {
+  if (T < at) return null;
+  const k = pop(T, at, 0.4), m = ease((T - at - 1.3) / 0.5);
+  const x = lerp(W / 2, 250, m), y = lerp(200, 70, m), s = lerp(1, 0.48, m) * k;
+  return (
+    <g transform={`translate(${x},${y}) scale(${s})`}>
+      <rect x={-330} y={-82} width={660} height={140} rx={70} fill={C.n0} opacity={0.92} stroke={C.amber} strokeWidth={5} />
+      <circle cx={-250} cy={-12} r={46} fill={C.amber} /><Txt x={-250} y={12} s={64} c={C.n0} w={900} f={F.num}>{n}</Txt>
+      <Txt x={40} y={14} s={74} c={C.cream} w={900}>{text}</Txt>
+    </g>
+  );
+};
 /** lower-third name card */
 export const NameCard: React.FC<{ x: number; y: number; k: number; name: string; sub: string }> = ({ x, y, k, name, sub }) => (
   <g opacity={k} transform={`translate(${x - 30 * (1 - k)},${y})`}>
@@ -140,11 +153,12 @@ export const NameCard: React.FC<{ x: number; y: number; k: number; name: string;
     <Txt x={32} y={92} s={28} a="start" c={C.gold} w={500}>{sub}</Txt>
   </g>
 );
+const HIDE = new Set(['K2', 'K3', 'K6', 'K10', 'E6']);   // the picture already says these
 /** caption under the picture (the voice line) */
 export const Captions: React.FC<{ T: number }> = ({ T }) => {
-  const s = SEGS.find((g, i) => T >= g.t0 - 0.05 && T < Math.min(g.t1 + 0.25, SEGS[i + 1] ? SEGS[i + 1].t0 - 0.02 : 1e9));
-  if (!s || s.id === 'T1' || s.id === 'E6') return null;
-  const o = Math.min(clamp((T - s.t0 + 0.05) / 0.12), 1);
+  const s = SEGS.find((g, i) => (T >= g.t0 - 0.05 || i === 0) && T < Math.min(g.t1 + 0.25, SEGS[i + 1] ? SEGS[i + 1].t0 - 0.02 : 1e9));
+  if (!s || HIDE.has(s.id)) return null;
+  const o = s === SEGS[0] ? 1 : Math.min(clamp((T - s.t0 + 0.05) / 0.12), 1);
   const txt = s.caption.replace(/[；，。：]$/, '');
   return (
     <div style={{ position: 'absolute', left: 0, right: 0, bottom: 54, textAlign: 'center', opacity: o, fontFamily: F.zh, fontSize: 40, fontWeight: 600, letterSpacing: '0.04em', color: '#FBF4E6', textShadow: '0 0 12px rgba(5,8,25,.95), 0 2px 4px rgba(5,8,25,.9)' }}>{txt}</div>

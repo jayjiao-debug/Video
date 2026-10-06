@@ -14,18 +14,16 @@ const SCENES: Sc[] = [
   [HIT - 0.04, cue('P1') - 0.3, (T) => <Title T={T} />, true],
   [cue('P1') - 0.3, cue('P5') - 0.25, (T) => <Painter T={T} />],
   [cue('P5') - 0.25, cue('K1') - 0.3, (T) => <Interviews T={T} />],
-  [cue('K1') - 0.3, cue('K3') - 0.25, (T) => <Board T={T} focus={T > cue('K2') - 0.1 ? 0 : -1} reveal={T > cue('K2') - 0.1 ? 1 : 0} />],
-  [cue('K3') - 0.25, cue('K6') - 0.3, (T) => <Goals T={T} />],
-  [cue('K6') - 0.3, cue('K7') - 0.15, (T) => <Board T={T} focus={1} reveal={2} />],
-  [cue('K7') - 0.15, cue('K10') - 0.3, (T) => <Feedback T={T} />],
-  [cue('K10') - 0.3, cue('K11') - 0.15, (T) => <Board T={T} focus={2} reveal={3} />],
-  [cue('K11') - 0.15, cue('M1') - 0.2, (T) => <Difficulty T={T} />],
-  [cue('M1') - 0.2, cue('W1') - 0.3, (T) => <Model T={T} />],
+  [cue('K1') - 0.3, cue('K2') - 0.25, (T) => <Board T={T} reveal={0} />],
+  [cue('K2') - 0.25, cue('K6') - 0.25, (T) => <Goals T={T} />],
+  [cue('K6') - 0.25, cue('K10') - 0.25, (T) => <Feedback T={T} />],
+  [cue('K10') - 0.25, cue('M2') - 0.2, (T) => <Difficulty T={T} />],
+  [cue('M2') - 0.2, cue('W1') - 0.3, (T) => <Model T={T} />],
   [cue('W1') - 0.3, cue('E1') - 0.3, (T) => <Work T={T} />],
   [cue('E1') - 0.3, END0, (T) => <Ending T={T} />],
-  [END0, FILM_END + 1, (T) => <EndCard T={T} a={END0} />, true],
+  [END0, FILM_END + 1, (T) => <EndCard T={T} a={END0} />],
 ];
-const XF = 0.25;
+const XF = 0.3;
 
 export const IlFilm: React.FC = () => {
   const f = useCurrentFrame(), T = f / 30;
@@ -42,6 +40,8 @@ export const IlFilm: React.FC = () => {
           return <g key={i} opacity={o}>{s[2](T)}</g>;
         })}
         <Vignette />
+        <defs><linearGradient id="capband" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stopColor="#05070F" stopOpacity="0" /><stop offset="1" stopColor="#05070F" stopOpacity="0.6" /></linearGradient></defs>
+        {T < VO_END + 0.5 && <rect x={0} y={900} width={W} height={180} fill="url(#capband)" />}
       </svg>
       <Grain frame={f} o={0.09} />
       {T < VO_END + 0.5 && <Captions T={T} />}

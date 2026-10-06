@@ -112,12 +112,15 @@ export const Opening: React.FC<{ T: number }> = ({ T }) => {
   const k1 = cw('O5', '三个条件'), into = cw('O6', '装进');
   const fly = ease((T - into) / 0.9);
   const objs = [{ x: 480, lab: '作业', c: C.paper }, { x: 960, lab: '练琴', c: C.wood2 }, { x: 1440, lab: '工作', c: C.n3 }];
-  const pull = sm(T, cend('O6') - 0.2, HIT - cend('O6') + 0.15);
+  const pull = sm(T, cue('T1') + 0.3, HIT - cue('T1') - 0.25);
   return (
     <Cam s={1 + pull * 1.4}>
-      <rect width={W} height={H} fill="url(#room)" />
-      <Glow x={W / 2} y={420} r={900} c="amber" o={0.18} />
-      <Txt x={W / 2} y={190} s={46} c={C.slate} w={500} o={sm(T, o5, 0.4)}>心理学家，研究了几十年</Txt>
+      <rect width={W} height={H} fill="url(#night)" />
+      <Stars T={T} n={120} seed={8} y1={760} />
+      <path d="M760,0 L1160,0 L1500,1080 L420,1080 Z" fill={C.gold} opacity={0.06} />
+      <Glow x={W / 2} y={420} r={900} c="amber" o={0.22} />
+      <path d={`M0,1080 L0,900 ${Array.from({ length: 24 }, (_, i) => `L${i * 84},${900 - ((i * 37) % 5) * 26} L${i * 84 + 70},${900 - ((i * 37) % 5) * 26}`).join(' ')} L1920,900 L1920,1080 Z`} fill={C.n0} />
+      <Txt x={W / 2} y={190} s={46} c={C.slate} w={500} o={sm(T, o5, 0.4)}>心理学家找到的</Txt>
       {[0, 1, 2].map((i) => {
         const p = Math.max(0.55 * sm(T, o5, 0.5), pop(T, k1 + i * 0.18)), x0 = 600 + i * 360, y0 = 470, x1 = objs[i].x, y1 = 640;
         const x = lerp(x0, x1, fly), y = lerp(y0, y1, fly) - Math.sin(fly * Math.PI) * 160;

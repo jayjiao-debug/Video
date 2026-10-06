@@ -1,5 +1,5 @@
 import React from 'react';
-import { W, H, C, F, Txt, Glow, Stars, Moon, Cam, Kid, KidBack, Clock, NameCard, sm, life, pop, ease, eo, lerp, clamp, rng, cue, cend, cw } from './kit';
+import { W, H, C, F, Txt, Glow, Stars, Moon, Cam, Kid, KidBack, Clock, NameCard, Chip, sm, life, pop, ease, eo, lerp, clamp, rng, cue, cend, cw } from './kit';
 
 /* ============ the painter (1960s) ============ */
 export const Painter: React.FC<{ T: number }> = ({ T }) => {
@@ -42,7 +42,6 @@ export const Painter: React.FC<{ T: number }> = ({ T }) => {
       {/* the painter, from behind, at the easel — walks off once it's finished */}
       <g transform={`translate(${lerp(860, 1900, away)},560)`}>
         <KidBack x={0} y={0} s={1.25} hood="#7A4E3A" rim={C.amber} />
-        {!done && <g><line x1={90} y1={150} x2={brush(T)[0] - 860} y2={brush(T)[1] - 560} stroke="#7A4E3A" strokeWidth={34} strokeLinecap="round" /><circle cx={brush(T)[0] - 860} cy={brush(T)[1] - 560} r={14} fill={C.skin} /></g>}
       </g>
       {/* the process glows: the brush's path, not the picture */}
       {trailK > 0 && <g opacity={trailK}>
@@ -50,14 +49,14 @@ export const Painter: React.FC<{ T: number }> = ({ T }) => {
         <path d={Array.from({ length: 300 }, (_, i) => { const [x, y] = brush(i / 30); return `${i ? 'L' : 'M'}${x.toFixed(1)},${y.toFixed(1)}`; }).join(' ')} stroke={C.gold} strokeWidth={5} fill="none" strokeDasharray={`${6000 * ease((T - p4) / 2)} 9000`} opacity={0.9} />
         <Txt x={1300} y={240} s={72} c={C.gold} w={900} stroke={C.n0}>过程</Txt>
       </g>}
-      <NameCard x={110} y={890} k={life(T, p1 + 0.3, p2 + 0.4, 0.4, 0.4)} name="契克森米哈赖" sub="心理学家 · 1960 年代" />
+      {!done && <g transform={`translate(${brush(T)[0]},${brush(T)[1]})`}><circle r={16} fill={C.gold} opacity={0.9} /><Glow x={0} y={0} r={70} c="gold" o={0.6} /></g>}
     </Cam>
   );
 };
 
 /* ============ chess / climbing / dance, then the current ============ */
 export const Interviews: React.FC<{ T: number }> = ({ T }) => {
-  const a = [cw('P5', '下棋'), cw('P5', '攀岩'), cw('P5', '跳舞')], cur = cw('P6', '像被');
+  const a = [cue('P5'), cw('P5', '攀岩'), cw('P5', '跳舞')], cur = cw('P6', '像被');
   const flowK = clamp((T - cur + 0.3) / 1.4), lift = 30 * ease((T - cur) / 1.2);
   const r = rng(13);
   const ribbons = Array.from({ length: 24 }, (_, i) => {
@@ -83,7 +82,7 @@ export const Interviews: React.FC<{ T: number }> = ({ T }) => {
       <rect width={W} height={H} fill="url(#night)" />
       <Stars T={T} n={60} seed={9} y1={400} o={0.6} />
       {vign(0, <g><path d="M-220,300 L-150,120 L150,120 L220,300 Z" fill={C.cream} />{Array.from({ length: 24 }, (_, j) => { const c = j % 6, rr = Math.floor(j / 6); return (c + rr) % 2 ? <path key={j} d={`M${-150 + c * 50 - rr * 18},${120 + rr * 45} l50,0 l${-18 + 0},45 l-50,0 Z`} fill={C.n1} /> : null; })}
-        <path d="M-20,110 L-30,40 Q-40,0 -10,-20 L20,-10 L10,40 L20,110 Z" fill={C.hair} /><ellipse cx={60} cy={-30} rx={40} ry={26} fill={C.skin} /><rect x={90} y={-46} width={180} height={34} rx={16} fill="#7A4E3A" /></g>, '下棋')}
+        <g transform={`translate(${(Math.floor(T * 1.2) % 2) * 50},${-Math.abs(Math.sin(T * 3.8)) * 30})`}><path d="M-20,110 L-30,40 Q-40,0 -10,-20 L20,-10 L10,40 L20,110 Z" fill={C.hair} /></g><path d="M60,110 L54,70 L74,40 L90,70 L84,110 Z" fill={C.cream} /></g>, '下棋')}
       {vign(1, <g><path d="M-260,320 L-120,-420 L260,-420 L260,320 Z" fill="#7A5A4A" />{Array.from({ length: 14 }, (_, j) => <circle key={j} cx={-140 + ((j * 97) % 330)} cy={-300 + ((j * 61) % 560)} r={10} fill={j % 2 ? C.amber : C.ember} />)}
         <line x1={20} y1={-420} x2={20} y2={-60} stroke={C.cream} strokeWidth={4} />
         <g transform={`translate(20,${-20 - (T % 2) * 6})`}><circle cx={0} cy={-60} r={30} fill={C.hair} /><path d="M-30,-30 L30,-30 L24,60 L-24,60 Z" fill={C.ember} /><line x1={-26} y1={-20} x2={-70} y2={-110} stroke={C.ember} strokeWidth={18} strokeLinecap="round" /><line x1={26} y1={-20} x2={70} y2={-70} stroke={C.ember} strokeWidth={18} strokeLinecap="round" /><line x1={-14} y1={60} x2={-50} y2={140} stroke={C.n0} strokeWidth={20} strokeLinecap="round" /><line x1={14} y1={60} x2={40} y2={150} stroke={C.n0} strokeWidth={20} strokeLinecap="round" /></g></g>, '攀岩')}
@@ -149,16 +148,18 @@ const GameScreen: React.FC<{ T: number; children: React.ReactNode }> = ({ T, chi
 );
 export const Goals: React.FC<{ T: number }> = ({ T }) => {
   const k3 = cue('K3'), k4 = cue('K4'), k5 = cue('K5');
+  const k2 = cue('K2');
   if (T < k4 - 0.1) {
     return (
-      <Cam s={1 + (T - k3) * 0.01}>
+      <Cam s={1 + Math.max(0, T - k3) * 0.01}>
         <rect width={W} height={H} fill={C.n0} />
         <GameScreen T={T}>
           <Monster x={1250} y={640} s={1.2} T={T} />
           <g transform={`translate(1250,${400 + Math.sin(T * 6) * 14})`}><path d="M-34,-60 L34,-60 L0,0 Z" fill={C.gold} /><Glow x={0} y={-30} r={90} c="gold" o={0.7} /></g>
           <g transform={`translate(560,720)`}><KidBack x={0} y={0} s={0.8} hood={C.ember} /></g>
-          <g transform="translate(230,170)" opacity={sm(T, k3 + 0.1, 0.3)}><rect width={560} height={170} rx={20} fill={C.n0} opacity={0.85} /><Txt x={36} y={66} s={36} a="start" c={C.gold}>任务</Txt><Txt x={36} y={132} s={54} a="start" c={C.cream} w={900}>打败这只怪</Txt><Txt x={520} y={132} s={44} a="end" c={C.teal} f={F.mono}>0/1</Txt></g>
+          <g transform="translate(230,250)" opacity={sm(T, k3 + 0.1, 0.3)}><rect width={560} height={170} rx={20} fill={C.n0} opacity={0.85} /><Txt x={36} y={66} s={36} a="start" c={C.gold}>任务</Txt><Txt x={36} y={132} s={54} a="start" c={C.cream} w={900}>打败这只怪</Txt><Txt x={520} y={132} s={44} a="end" c={C.teal} f={F.mono}>0/1</Txt></g>
         </GameScreen>
+        <Chip T={T} at={k2} n="1" text="目标清楚" />
       </Cam>
     );
   }
@@ -169,11 +170,12 @@ export const Goals: React.FC<{ T: number }> = ({ T }) => {
       <rect width={W} height={H} fill="url(#warmroom)" />
       <path d="M760,1080 L900,520 L1020,520 L1160,1080 Z" fill="#4A3A48" />
       {Array.from({ length: 6 }, (_, i) => <rect key={i} x={950} y={600 + i * 90 + ((T * 60) % 90)} width={20} height={40} fill={C.paper} opacity={0.5} />)}
-      {Array.from({ length: 7 }, (_, i) => <rect key={i} x={0} y={380 + i * 40} width={W} height={60} fill={C.paper} opacity={0.14 + i * 0.03} />)}
-      <rect x={0} y={300} width={W} height={260} fill={C.paper} opacity={0.35} />
+      <defs><linearGradient id="fog" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stopColor={C.paper} stopOpacity="0" /><stop offset="0.45" stopColor={C.paper} stopOpacity="0.75" /><stop offset="0.7" stopColor={C.paper} stopOpacity="0.35" /><stop offset="1" stopColor={C.paper} stopOpacity="0" /></linearGradient></defs>
+      <rect x={0} y={200} width={W} height={560} fill="url(#fog)" />
+      {[0, 1, 2].map((i) => <ellipse key={i} cx={(i * 700 + T * 40) % 2400 - 240} cy={470 + i * 30} rx={520} ry={70} fill={C.paper} opacity={0.22} />)}
       <g transform="translate(640,560)"><rect x={-8} y={0} width={16} height={260} fill={C.wood} /><rect x={-170} y={-70} width={340} height={100} rx={10} fill={C.wood2} /><Txt x={0} y={0} s={46} c={C.cream} w={900}>复习第三章</Txt></g>
       {[0, 1, 2].map((i) => <Txt key={i} x={980 + (i - 1) * 140} y={330 - i * 20 + Math.sin(T * 2 + i) * 10} s={90} c={C.cream} o={0.5 * sm(T, cw('K4', '复习到哪'), 0.4)} w={900}>?</Txt>)}
-      <g transform={`translate(${lerp(960, 960, walk)},${lerp(980, 880, walk)}) scale(${lerp(0.7, 0.55, walk)})`}><KidBack x={0} y={0} s={1} hood="#5B4A6E" /></g>
+      <g transform={`translate(960,${lerp(860, 780, walk)}) scale(${lerp(0.62, 0.48, walk)})`}><KidBack x={0} y={0} s={1} hood="#5B4A6E" /></g>
       <g transform="translate(1340,780)" opacity={sm(T, k5, 0.4)}><rect width={420} height={110} rx={18} fill={C.n0} opacity={0.85} /><Txt x={30} y={68} s={40} a="start" c={C.cream}>干劲</Txt><rect x={130} y={42} width={260} height={34} rx={17} fill={C.n3} /><rect x={130} y={42} width={260 * (1 - 0.8 * tired)} height={34} rx={17} fill={C.amber} /></g>
     </Cam>
   );
@@ -181,19 +183,20 @@ export const Goals: React.FC<{ T: number }> = ({ T }) => {
 
 /* ---------- ② feedback ---------- */
 export const Feedback: React.FC<{ T: number }> = ({ T }) => {
-  const k7 = cue('K7'), k8 = cue('K8'), k9 = cue('K9');
+  const k6 = cue('K6'), k7 = cue('K7'), k8 = cue('K8'), k9 = cue('K9');
   if (T < k8 - 0.05) {
-    const k = T - k7, n = Math.floor(k / 0.42), ph = (k % 0.42) / 0.42;
+    const k = Math.max(-0.5, T - k7), n = Math.floor(k / 0.42), ph = (k % 0.42) / 0.42;
     const nums = ['+12', '+15', '暴击 +40', '+14', '+18', '+16'];
     return (
       <Cam s={1.02}>
         <rect width={W} height={H} fill={C.n0} />
         <GameScreen T={T}>
-          <Monster x={1180} y={640} s={1.1} hit={ph < 0.2} T={T} />
-          <g transform={`translate(${700 + (ph < 0.25 ? 60 : 0)},720)`}><KidBack x={0} y={0} s={0.8} hood={C.ember} /><line x1={60} y1={40} x2={ph < 0.25 ? 260 : 150} y2={ph < 0.25 ? -80 : -40} stroke={C.cream} strokeWidth={14} strokeLinecap="round" /></g>
-          {nums.slice(0, n + 1).map((t, i) => { const age = k - i * 0.42; if (age > 1.1) return null; return <Txt key={i} x={1180 + ((i * 97) % 200) - 100} y={420 - age * 120} s={i === 2 ? 110 : 80} c={i === 2 ? C.ember : C.gold} w={900} stroke={C.n0} o={1 - clamp((age - 0.8) / 0.3)}>{t}</Txt>; })}
+          <Monster x={1180} y={640} s={1.1} hit={k >= 0 && ph < 0.2} T={T} />
+          <g transform={`translate(${700 + (k >= 0 && ph < 0.25 ? 60 : 0)},720)`}><KidBack x={0} y={0} s={0.8} hood={C.ember} /><line x1={60} y1={40} x2={ph < 0.25 ? 260 : 150} y2={ph < 0.25 ? -80 : -40} stroke={C.cream} strokeWidth={14} strokeLinecap="round" /></g>
+          {k >= 0 && nums.slice(0, n + 1).map((t, i) => { const age = k - i * 0.42; if (age > 1.1) return null; return <Txt key={i} x={1180 + ((i * 97) % 200) - 100} y={420 - age * 120} s={i === 2 ? 110 : 80} c={i === 2 ? C.ember : C.gold} w={900} stroke={C.n0} o={1 - clamp((age - 0.8) / 0.3)}>{t}</Txt>; })}
           <g transform="translate(230,170)"><rect width={620} height={110} rx={20} fill={C.n0} opacity={0.85} /><Txt x={36} y={72} s={36} a="start" c={C.gold} f={F.mono}>EXP</Txt><rect x={130} y={44} width={440} height={30} rx={15} fill={C.n3} /><rect x={130} y={44} width={440 * clamp(k / 2.2)} height={30} rx={15} fill={C.gold} /></g>
         </GameScreen>
+        <Chip T={T} at={k6} n="2" text="马上反馈" />
       </Cam>
     );
   }
@@ -213,8 +216,9 @@ export const Feedback: React.FC<{ T: number }> = ({ T }) => {
   return (
     <Cam s={1.03}>
       <rect width={W} height={H} fill={C.n0} />
-      <path d="M0,980 L1920,600 L1920,1080 L0,1080 Z" fill={C.n1} />
-      <g transform={`translate(${1000 + k * 20},${790 - k * 4})`}><circle r={190} fill={C.n2} /><Txt x={0} y={20} s={64} c={C.slate} w={900}>作业</Txt></g>
+      <Glow x={1500} y={200} r={700} c="cream" o={0.12} /><Moon x={1560} y={170} r={46} />
+      <path d="M0,980 L1920,600 L1920,1080 L0,1080 Z" fill={C.n3} />
+      <g transform={`translate(${1000 + k * 20},${790 - k * 4})`}><circle r={190} fill={C.n4} /><path d="M-120,-150 A190,190 0 0,1 150,-110" stroke={C.amber} strokeWidth={10} fill="none" opacity={0.7} /><Txt x={0} y={20} s={64} c={C.cream} w={900}>作业</Txt></g>
       <g transform={`translate(${780 + k * 20},${800 - k * 4}) rotate(14)`}><KidBack x={0} y={0} s={0.75} hood="#5B4A6E" /></g>
       <Txt x={420} y={300} s={120} c={C.slate} o={0.5} w={900}>?</Txt>
     </Cam>
@@ -254,20 +258,23 @@ const Notebook: React.FC<{ x: number; y: number; T: number }> = ({ x, y, T }) =>
   </g>
 );
 export const Difficulty: React.FC<{ T: number }> = ({ T }) => {
-  const enc = [{ t0: cue('K11'), throw: 0.35, hit: 0.7, wob: [0.95, 1.25, 1.55], end: 1.85 }, { t0: cue('K12'), throw: 0.15, hit: 0.45, wob: [], end: 0.6 }, { t0: cue('K13'), throw: 0.3, hit: 0.65, wob: [0.9, 1.3, 1.7], end: 2.1 }];
+  const m1 = cue('M1');
+  if (T >= m1 - 0.15) return <g><Difficulty T={m1 - 0.16} /><g opacity={sm(T, m1 - 0.15, 0.3)}><rect width={W} height={H} fill={C.n0} opacity={0.8} /><Txt x={W / 2} y={600} s={170} c={C.gold} w={900} stroke={C.n0}>到底多难？</Txt></g></g>;
+  const enc = [{ t0: cue('K11'), throw: 0.2, hit: 0.5, wob: [0.62, 0.78, 0.94], end: 1.15 }, { t0: cue('K12'), throw: 0.15, hit: 0.45, wob: [], end: 0.6 }, { t0: cue('K13'), throw: 0.3, hit: 0.65, wob: [0.9, 1.3, 1.7], end: 2.1 }];
   const kind = T >= enc[2].t0 ? 2 : T >= enc[1].t0 ? 1 : 0, E = enc[kind], k = T - E.t0;
   const caught = k >= E.hit + 0.08 && !(kind === 0 && k >= E.end);
   const mx = 1300, my = 760, hx = 520, hy = 880;
   const sky = ['#5A2430', '#6B6F80', '#2B4C8C'][kind];
   const wi = E.wob.findIndex((w) => k >= w && k < w + 0.22), tilt = wi >= 0 ? ((k - E.wob[wi]) < 0.11 ? -1 : 1) : 0;
-  const names = ['期末卷大魔王', '1+1 小纸条', '错题本'], lv = ['Lv.99', 'Lv.1', 'Lv.12'], rate = [2, 100, 85], rc = [C.ember, C.slate, C.green];
+  const names = ['期末卷大魔王', '1+1 小纸条', '错题本'], lv = ['Lv.99', 'Lv.1', 'Lv.12'], rate = [2, 100, 70], rc = [C.ember, C.slate, C.green];
+  const intro = k < 0;
   return (
     <g>
       <rect width={W} height={H} fill={sky} />
       <Glow x={mx} y={500} r={800} c={kind === 0 ? 'ember' : kind === 2 ? 'gold' : 'cream'} o={0.35} />
       <rect x={0} y={800} width={W} height={280} fill={kind === 1 ? '#4E5262' : kind === 0 ? '#3A1E26' : '#2E6047'} />
       <ellipse cx={mx} cy={812} rx={300} ry={36} fill={C.n0} opacity={0.35} />
-      {!caught && (kind === 0 ? <ExamDemon x={mx} y={my} T={T} /> : kind === 1 ? <Slip x={mx} y={my} T={T} /> : <Notebook x={mx} y={my} T={T} />)}
+      {!caught && !intro && (kind === 0 ? <ExamDemon x={mx} y={my} T={T} /> : kind === 1 ? <Slip x={mx} y={my} T={T} /> : <Notebook x={mx} y={my} T={T} />)}
       {kind === 0 && k >= E.end && k < E.end + 0.3 && Array.from({ length: 14 }, (_, i) => { const a = (i / 14) * Math.PI * 2, rr = 120 + (k - E.end) * 900; return <line key={i} x1={mx + Math.cos(a) * 80} y1={my - 160 + Math.sin(a) * 80} x2={mx + Math.cos(a) * rr} y2={my - 160 + Math.sin(a) * rr} stroke={C.cream} strokeWidth={8} />; })}
       {/* hero from behind */}
       <g transform={`translate(${hx},${hy})`}><KidBack x={0} y={0} s={1.1} hood={C.ember} />
@@ -278,14 +285,15 @@ export const Difficulty: React.FC<{ T: number }> = ({ T }) => {
       {k >= E.throw && k < E.hit && (() => { const u = (k - E.throw) / (E.hit - E.throw); return <Cube x={lerp(hx + 140, mx, u)} y={lerp(hy - 150, my - 60, u) - Math.sin(u * Math.PI) * 300} s={0.9} />; })()}
       {caught && <Cube x={mx} y={790} s={1.1} tilt={tilt} glow={(kind === 2 || kind === 1) && k >= E.end} />}
       {/* plates */}
-      <g transform="translate(110,100)"><rect width={600} height={170} rx={22} fill={C.n0} opacity={0.88} />
+      {!intro && <g><g transform="translate(110,140)"><rect width={600} height={170} rx={22} fill={C.n0} opacity={0.88} />
         <Txt x={36} y={66} s={46} a="start" c={C.cream} w={900}>{names[kind]}</Txt><Txt x={566} y={66} s={38} a="end" c={C.gold} f={F.mono}>{lv[kind]}</Txt>
-        <Txt x={36} y={134} s={36} a="start" c={C.slate}>捕获率</Txt><rect x={170} y={108} width={260} height={28} rx={14} fill={C.n3} /><rect x={170} y={108} width={260 * rate[kind] / 100} height={28} rx={14} fill={rc[kind]} /><Txt x={566} y={136} s={56} a="end" c={rc[kind]} w={900} f={F.num}>{rate[kind]}%</Txt></g>
-      <g transform="translate(110,290)"><rect width={260} height={70} rx={16} fill={C.n0} opacity={0.8} /><Txt x={30} y={48} s={34} a="start" c={C.cream}>你 Lv.10</Txt></g>
+        <Txt x={36} y={134} s={36} a="start" c={C.slate}>捕获率</Txt><rect x={170} y={108} width={260} height={28} rx={14} fill={C.n3} /><rect x={170} y={108} width={260 * rate[kind] / 100} height={28} rx={14} fill={rc[kind]} /><Txt x={566} y={136} s={56} a="end" c={rc[kind]} w={900} f={kind === 2 ? F.zh : F.num}>{kind === 2 ? '??' : `${rate[kind]}%`}</Txt></g>
+      <g transform="translate(110,330)"><rect width={260} height={70} rx={16} fill={C.n0} opacity={0.8} /><Txt x={30} y={48} s={34} a="start" c={C.cream}>你 Lv.10</Txt></g></g>}
       {kind === 0 && k >= E.end + 0.05 && <g transform={`translate(${mx},300) scale(${pop(T, E.t0 + E.end + 0.05)})`}><rect x={-170} y={-60} width={340} height={90} rx={16} fill={C.ember} /><Txt x={0} y={4} s={50} c={C.cream} w={900}>挣脱了！</Txt></g>}
       {kind === 2 && k >= E.end && <g transform={`translate(${mx},560) scale(${pop(T, E.t0 + E.end)})`}><rect x={-180} y={-60} width={360} height={90} rx={16} fill={C.gold} /><Txt x={0} y={4} s={52} c={C.n0} w={900}>抓到了！</Txt></g>}
       {kind === 1 && k >= E.end + 0.1 && <Txt x={mx} y={600} s={46} c={C.cream} o={0.7}>抓到了……</Txt>}
-      <Txt x={W / 2} y={190} s={64} c={rc[kind]} w={900} stroke={C.n0} o={sm(T, E.t0 + 0.1, 0.25)}>{['太难', '太简单', '刚刚好'][kind]}</Txt>
+      {!intro && <Txt x={W / 2 + 200} y={190} s={64} c={rc[kind]} w={900} stroke={C.n0} o={sm(T, E.t0 + 0.1, 0.25)}>{['太难', '太简单', '刚刚好'][kind]}</Txt>}
+      <Chip T={T} at={cue('K10')} n="3" text="难度刚好" />
     </g>
   );
 };
