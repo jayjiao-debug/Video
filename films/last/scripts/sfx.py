@@ -262,22 +262,72 @@ add(T['end'] - 0.3, '推进到片尾', lambda: whoosh(0.65), -6)
 add(T['end'] + 0.2, '片尾标题', lambda: pop(320, 0.2), -18)
 
 # ------------------------------------------------------------------ render
-stem = np.zeros((int((END + 3) * SR), 2))
-srt, k = [], 0
+import re
+import zipfile
+
+CATS = {'whoosh': '1_呼啸甩镜', 'impact': '2_重击', 'subdrop': '3_低频下坠', 'riser': '4_张力上升', 'tick': '5_嗒嗒计数', 'roll': '5_嗒嗒计数',
+        'stream': '5_嗒嗒计数', 'pop': '6_叮与弹出', 'chime': '6_叮与弹出', 'glitch': '7_故障划痕', 'slash': '7_故障划痕', 'buzz': '7_故障划痕',
+        'scan': '8_氛围音', 'drone': '8_氛围音', 'tone_down': '8_氛围音'}
+
+
+def cat_of(fn):
+    names = fn.__code__.co_names
+    for n in names:
+        if n in CATS and n != 'seq':
+            return CATS[n]
+    return '5_嗒嗒计数'
+
+
+def safe(name):
+    """file names that unzip cleanly on Windows / macOS / phones: CJK, letters, digits, underscore only"""
+    name = name.replace('%', '百分').replace('→', '到').replace('✕', '叉')
+    return re.sub(r'_+', '_', re.sub(r'[^0-9A-Za-z\u4e00-\u9fff]+', '_', name)).strip('_')
+
+
+def wav(path, x):
+    subprocess.run(['ffmpeg', '-v', 'error', '-y', '-f', 'f32le', '-ar', str(SR), '-ac', '2', '-i', '-', '-c:a', 'pcm_s16le', str(path)], input=x.astype(np.float32).tobytes(), check=True)
+
+
+for old in (OUT / 'clips').glob('*.wav'):
+    old.unlink()
+(OUT / 'stems').mkdir(exist_ok=True)
+for old in (OUT / 'stems').glob('*.wav'):
+    old.unlink()
+N = int(END * SR)
+stem = np.zeros((N + 3 * SR, 2))
+stems = {}
+srt, rows = [], []
 CUES.sort(key=lambda c: c[0])
+ts = lambda s: f'{int(s // 3600):02d}:{int(s // 60) % 60:02d}:{int(s) % 60:02d},{int(round((s % 1) * 1000)) % 1000:03d}'
 for i, (t0, name, snd, db) in enumerate(CUES, 1):
     x = norm(snd(), db)
+    cat = cat_of(snd)
     a = int(t0 * SR); z = min(len(stem), a + len(x))
     stem[a:z] += x[: z - a]
+    stems.setdefault(cat, np.zeros_like(stem))[a:z] += x[: z - a]
+    fname = f'{i:02d}_{safe(name)}.wav'
+    wav(OUT / 'clips' / fname, x)
     dur = len(x) / SR
-    clip = OUT / 'clips' / f'{i:02d}_{name.replace("/", "-")}.wav'
-    subprocess.run(['ffmpeg', '-v', 'error', '-y', '-f', 'f32le', '-ar', str(SR), '-ac', '2', '-i', '-', str(clip)], input=x.astype(np.float32).tobytes(), check=True)
-    ts = lambda s: f'{int(s // 3600):02d}:{int(s // 60) % 60:02d}:{int(s) % 60:02d},{int(round((s % 1) * 1000)) % 1000:03d}'
     srt.append(f'{i}\n{ts(t0)} --> {ts(t0 + min(dur, 2.5))}\n[音效 {i:02d}] {name}\n')
-stem = stem[: int(END * SR)]
-peak = np.max(np.abs(stem))
-if peak > 0.89:
-    stem *= 0.89 / peak
-subprocess.run(['ffmpeg', '-v', 'error', '-y', '-f', 'f32le', '-ar', str(SR), '-ac', '2', '-i', '-', '-c:a', 'pcm_s24le', str(OUT / '最后一面_音效轨.wav')], input=stem.astype(np.float32).tobytes(), check=True)
+    rows.append(f'{i:02d}\t{ts(t0)[:-4]}.{ts(t0)[-3:]}\t{cat[2:]}\t{name}\t{fname}')
+stem = stem[:N]
+g = min(1.0, 0.89 / (np.max(np.abs(stem)) + 1e-9))
+wav(OUT / '最后一面_音效轨_全部.wav', stem * g)
+for cat, x in stems.items():
+    wav(OUT / 'stems' / f'音效分轨_{cat}.wav', x[:N] * g)
 (OUT / '最后一面_音效.srt').write_text('\n'.join(srt), encoding='utf-8')
-print(len(CUES), 'cues; stem peak', round(20 * np.log10(np.max(np.abs(stem)) + 1e-9), 1), 'dBFS')
+readme = ['《最后一面》音效包（全部为程序合成，无第三方素材）', '',
+          '用法：所有整轨（音效轨_全部，和“分轨_每类一条”里的 8 条）都和视频一样长、从 0 秒开始，放到时间线最开头即对齐。',
+          '用全部那一条，或者用 8 条分轨（二选一，别同时用，否则音量翻倍）。不想要某一类：删掉对应分轨即可。单个音效在“单个音效”文件夹，按编号对应下表和 音效.srt。', '',
+          '编号\t时间\t类别\t名称\t文件']
+(OUT / '音效清单.txt').write_text('\n'.join(readme + rows) + '\n', encoding='utf-8')
+# zip with UTF-8 file names (flag set by zipfile for non-ASCII names) so Chinese names survive on every system
+pack = ROOT / 'out' / '最后一面_音效包.zip'
+with zipfile.ZipFile(pack, 'w', zipfile.ZIP_DEFLATED) as zf:
+    for f in ['音效清单.txt', '最后一面_音效.srt', '最后一面_音效轨_全部.wav']:
+        zf.write(OUT / f, f'最后一面_音效包/{f}')
+    for f in sorted((OUT / 'stems').glob('*.wav')):
+        zf.write(f, f'最后一面_音效包/分轨_每类一条/{f.name}')
+    for f in sorted((OUT / 'clips').glob('*.wav')):
+        zf.write(f, f'最后一面_音效包/单个音效/{f.name}')
+print(len(CUES), 'cues;', len(stems), 'category stems; gain', round(20 * np.log10(g), 1), 'dB; pack', round(pack.stat().st_size / 1e6, 1), 'MB')
