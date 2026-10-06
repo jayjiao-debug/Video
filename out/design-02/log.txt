@@ -1,0 +1,20 @@
+token present: yes
+sketchfab model 9d0ac751c08b4037903d4f8db2f1dc1f
+  saved out/models/rbmk_core.glb 53.1 MB
+  optimized 53.1 -> 53.0 MB
+sketchfab model dc8d54211f3b464ead6f03d6ea3b1c13
+  saved out/models/chnpp_simplified.glb 13.1 MB
+  optimized 13.1 -> 12.8 MB
+sketchfab model 927f07f6ddcf470ab0387ce5829024d5
+  saved out/models/b17_helijah.glb 34.0 MB
+  optimized 34.0 -> 18.8 MB
+sketchfab model 57a2d1021915495bac14cd880d52390e
+  saved out/models/aircraft_knobs.glb 2.6 MB
+  optimized 2.6 -> 1.6 MB
+sketchfab model 1d4a93a0427a43ffabb5cc47c8a819be
+  saved out/models/lever.glb 1.0 MB
+  optimized 1.0 -> 0.1 MB
+sketchfab model 00071c5bb4dd47029843c17c4b7a473f
+  saved out/models/interior_trim.glb 3.4 MB
+  optimized 3.4 -> 1.0 MB
+done

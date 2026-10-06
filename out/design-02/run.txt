@@ -1,0 +1,164 @@
+sketchfab model 9d0ac751c08b4037903d4f8db2f1dc1f
+  saved out/models/rbmk_core.glb 53.1 MB
+npm warn deprecated glob@10.5.0: Old versions of glob are not supported, and contain widely publicized security vulnerabilities, which have been fixed in the current version. Please update. Support for old versions may be purchased (at exorbitant rates) by contacting i@izs.me
+[33m❯[39m dedup
+[32m✔[39m dedup                4ms
+[33m❯[39m instance
+[32m✔[39m instance             1ms
+[33m❯[39m palette
+[32m✔[39m palette              15ms
+[33m❯[39m flatten
+[32m✔[39m flatten              3ms
+[33m❯[39m join
+[32m✔[39m join                 307ms
+[33m❯[39m weld
+[32m✔[39m weld                 368ms
+[33m❯[39m simplify
+[32m✔[39m simplify             272ms
+[33m❯[39m resample
+[32m✔[39m resample             0ms
+[33m❯[39m prune
+[32m✔[39m prune                3ms
+[33m❯[39m sparse
+[32m✔[39m sparse               133ms
+[33m❯[39m textureCompress
+[32m✔[39m textureCompress      3ms
+
+info: rbmk_core.glb (53.05 MB) → rbmk_core.opt.glb (53.03 MB)
+  optimized 53.1 -> 53.0 MB
+sketchfab model dc8d54211f3b464ead6f03d6ea3b1c13
+  saved out/models/chnpp_simplified.glb 13.1 MB
+[33m❯[39m dedup
+[32m✔[39m dedup                6ms
+[33m❯[39m instance
+[32m✔[39m instance             1ms
+[33m❯[39m palette
+[32m✔[39m palette              10ms
+[33m❯[39m flatten
+[32m✔[39m flatten              4ms
+[33m❯[39m join
+[32m✔[39m join                 133ms
+[33m❯[39m weld
+[32m✔[39m weld                 110ms
+[33m❯[39m simplify
+[32m✔[39m simplify             146ms
+[33m❯[39m resample
+[32m✔[39m resample             0ms
+[33m❯[39m prune
+[32m✔[39m prune                3ms
+[33m❯[39m sparse
+[32m✔[39m sparse               50ms
+[33m❯[39m textureCompress
+[32m✔[39m textureCompress      3ms
+
+info: chnpp_simplified.glb (13.08 MB) → chnpp_simplified.opt.glb (12.8 MB)
+  optimized 13.1 -> 12.8 MB
+sketchfab model 927f07f6ddcf470ab0387ce5829024d5
+  saved out/models/b17_helijah.glb 34.0 MB
+[33m❯[39m dedup
+[32m✔[39m dedup                9ms
+[33m❯[39m instance
+[32m✔[39m instance             1ms
+[33m❯[39m palette
+[32m✔[39m palette              1ms
+[33m❯[39m flatten
+[32m✔[39m flatten              3ms
+[33m❯[39m join
+[32m✔[39m join                 235ms
+[33m❯[39m weld
+[32m✔[39m weld                 199ms
+[33m❯[39m simplify
+[32m✔[39m simplify             500ms
+[33m❯[39m resample
+[32m✔[39m resample             0ms
+[33m❯[39m prune
+[32m✔[39m prune                57ms
+[33m❯[39m sparse
+[32m✔[39m sparse               66ms
+[33m❯[39m textureCompress
+[32m✔[39m textureCompress      209ms
+
+info: b17_helijah.glb (33.97 MB) → b17_helijah.opt.glb (18.85 MB)
+  optimized 34.0 -> 18.8 MB
+sketchfab model 57a2d1021915495bac14cd880d52390e
+  saved out/models/aircraft_knobs.glb 2.6 MB
+[33m❯[39m dedup
+[32m✔[39m dedup                5ms
+[33m❯[39m instance
+[32m✔[39m instance             1ms
+[33m❯[39m palette
+[32m✔[39m palette              12ms
+[33m❯[39m flatten
+[32m✔[39m flatten              8ms
+[33m❯[39m join
+[32m✔[39m join                 95ms
+[33m❯[39m weld
+[32m✔[39m weld                 30ms
+[33m❯[39m simplify
+[32m✔[39m simplify             83ms
+[33m❯[39m resample
+[32m✔[39m resample             0ms
+[33m❯[39m prune
+[32m✔[39m prune                3ms
+[33m❯[39m sparse
+[32m✔[39m sparse               14ms
+[33m❯[39m textureCompress
+[32m✔[39m textureCompress      3ms
+
+info: aircraft_knobs.glb (2.61 MB) → aircraft_knobs.opt.glb (1.61 MB)
+  optimized 2.6 -> 1.6 MB
+sketchfab model 1d4a93a0427a43ffabb5cc47c8a819be
+  saved out/models/lever.glb 1.0 MB
+[33m❯[39m dedup
+[32m✔[39m dedup                3ms
+[33m❯[39m instance
+[32m✔[39m instance             0ms
+[33m❯[39m palette
+[32m✔[39m palette              0ms
+[33m❯[39m flatten
+[32m✔[39m flatten              1ms
+[33m❯[39m join
+[32m✔[39m join                 3ms
+[33m❯[39m weld
+[32m✔[39m weld                 5ms
+[33m❯[39m simplify
+[32m✔[39m simplify             4ms
+[33m❯[39m resample
+[32m✔[39m resample             0ms
+[33m❯[39m prune
+[32m✔[39m prune                26ms
+[33m❯[39m sparse
+[32m✔[39m sparse               1ms
+[33m❯[39m textureCompress
+[32m✔[39m textureCompress      89ms
+
+info: lever.glb (954.02 KB) → lever.opt.glb (68.49 KB)
+  optimized 1.0 -> 0.1 MB
+sketchfab model 00071c5bb4dd47029843c17c4b7a473f
+  saved out/models/interior_trim.glb 3.4 MB
+[33m❯[39m dedup
+[32m✔[39m dedup                6ms
+[33m❯[39m instance
+[32m✔[39m instance             1ms
+[33m❯[39m palette
+[32m✔[39m palette              11ms
+[33m❯[39m flatten
+[32m✔[39m flatten              9ms
+[33m❯[39m join
+[32m✔[39m join                 96ms
+[33m❯[39m weld
+[32m✔[39m weld                 23ms
+[33m❯[39m simplify
+[32m✔[39m simplify             68ms
+[33m❯[39m resample
+[32m✔[39m resample             0ms
+[33m❯[39m prune
+[32m✔[39m prune                18ms
+[33m❯[39m sparse
+[32m✔[39m sparse               12ms
+[33m❯[39m textureCompress
+[32m✔[39m textureCompress      99ms
+
+info: interior_trim.glb (3.38 MB) → interior_trim.opt.glb (1.03 MB)
+  optimized 3.4 -> 1.0 MB
+done
