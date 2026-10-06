@@ -1,0 +1,55 @@
+{
+  "reader_note": "Contamination warning: I was told to read only the 'Title options' section of script.md, but my read loaded the whole file, so I also saw the beat sheet, the picture notes and the claims check. I have answered from the subtitles, titles and frames as best I can. The notes on pacing and swiping are still a gut read. Where knowing the plan could have shaped an answer, I say so.",
+  "would_keep_watching_after_3s": true,
+  "why": "Line 1 '听歌起过鸡皮疙瘩吗？' is about me. I have had it, so I nod. Then by 2.75s line 2 says '1分21秒' plus '剪掉呢？', which is a specific number and a dare. I want to hear what happens. One real risk: '这首歌' is a song I have never heard. Chills come from songs I already love, and here I get about 6 seconds of a stranger's build before the drop. If that drop is only a generic library EDM hit, I won't feel anything at the title card. Line 4 '起了吗？不是人人都会' saves this somewhat, because it lets me off the hook if I felt nothing.",
+  "first_moment_I_got_curious": "Line 2 (2.75s), '[剪掉]呢？'. The second jolt is line 22 (65.2s), '第三刀：让它晚到两小节', because a late drop is something I can actually feel. Line 24 '……还没来？' is the best line in the film.",
+  "where_I_would_swipe_away": [
+    "14.8–26.2s (lines 5–8). The drop just hit and suddenly it's a lecture: 38人/7人, 奖赏区, 美食金钱. It feels like a 知识区 template. Line 8 '凭什么？' pulls me back, but only if I'm still there.",
+    "53.2–62.3s (lines 18–20). '多巴胺' is the most overused word in Chinese short-video science. As soon as I see it my thumb gets ready to swipe. '另一块脑区' is vague, as if you're hiding the name. This is the biggest swipe risk in the middle.",
+    "79.7–88.4s (lines 26–28). Three dense lines in a row right after the best demo: 'Huron' (who?), 一种理论, EDM套路. The late drop just paid off, and now you're explaining it to me.",
+    "88–100s overall. Line 9 '第一刀' tells me there will be more cuts but never says how many. By '第四刀' I'm tired of it and don't know it's the last one. If the picture shows '4/4', it helps a lot.",
+    "97.6s (line 32). '920–4400赫兹' is a number I can't feel. My eyes just glaze over it."
+  ],
+  "lines_I_did_not_understand": [
+    "#5 '38人里只有[7人]起': '起' on its own at the end reads cut off. 起什么？ I work it out (鸡皮疙瘩), but it's clunky. Also, which music? It isn't the song I just heard, is it?",
+    "#19 '另一块脑区已在兴奋': which one? It sounds like you're dodging.",
+    "#22 '晚到[两小节]': 小节 is music-class jargon. I don't know how long two 小节 is. '晚到4秒' I would get instantly.",
+    "#26 '心理学家Huron：快到时，身体先[绷紧]': who is Huron? '快到时', fast to what? Also, put next to 高潮/更爽/喂饱你, this line reads dirty. The danmu will notice.",
+    "#27 '先被[吓一下]，再变成爽': what scares me? The silence? The late drop? I'm not sure what the 吓 is.",
+    "#32 '起疙瘩时，920–4400赫兹会变响': the subject is unclear. Does the music get louder in that range, or does my body? I honestly read it as 'my ears hear more' at first.",
+    "#33 '所有声部一下全回来': 声部 is jargon. '所有乐器一下全回来' would be clearer for me.",
+    "#28 'EDM的套路': fine for me, but my mom wouldn't know EDM."
+  ],
+  "takeaway_in_my_words": "Chills aren't only from the loud drop. My brain counts the beat and guesses when the drop will come. The waiting is part of the pleasure, and the hit has to land on time with all the bright sounds coming back at once. Music teases you and then feeds you exactly on the beat.",
+  "surprise_that_stuck": "Cutting the drop only cut chills by about 30%. It didn't kill them, because the build before it is doing a lot of the work. Second: the drop with no build feels weaker even though it's the same sound. That one I can test with my own ears, so it sticks better than any number.",
+  "title_I_would_click": "Honest answer: #2 '我把高潮剪掉了'. It's the one my thumb stops on. It's concrete and a bit cheeky, and I want to know what that sounds like. The one I'd trust and save is #1 '鸡皮疙瘩在等什么', because it has the word I'd search and the question really is the answer of the film. #3 '为什么偏偏是这一秒' means nothing as a cover in the feed, since I don't know which second yet.",
+  "title_that_misleads": "#2 '我把高潮剪掉了'. The content is true, but in a feed 高潮 reads 擦边. Some people will click for the wrong reason and then see a waveform. Add the lines 快到时身体先绷紧 / 更爽 / 喂饱你 and the comment section turns into jokes, not song names.",
+  "what_I_would_comment": "'求BGM！！' would honestly be my first comment, and probably the top comment. The film edits one song for two minutes and, from what I saw, never tells me its name. After that: 'Demo 3 那里我真的在等，等到想骂人，然后它来了，起了' or my own song plus its second.",
+  "for_frames_only": [
+    {
+      "frame": "lookA_hook.png",
+      "what_this_says_in_5s": "This is an editor timeline with scissors over the drop at 01:21.39 and '←起鸡皮疙瘩'. I get the premise right away: they'll cut the song right here. But it looks like a 剪映/audio-editing tutorial. In a feed I'd guess 'how to edit music' and maybe swipe. Clean, but cold."
+    },
+    {
+      "frame": "lookA_key.png",
+      "what_this_says_in_5s": "Keep vs delete, two rows. The meter says '起了' on top and '没了' on the bottom. Very easy to read. But it says the chills go to zero ('没了', and the subtitle says '鸡皮疙瘩就没了'). That contradicts line 13 '少了约三成'. As a viewer I'd notice the picture and the words saying different things."
+    },
+    {
+      "frame": "lookB_hook.png",
+      "what_this_says_in_5s": "Dark red with a glowing waveform, hairs standing up on skin, and '汗毛，起立'. I feel it in my arms before I read anything. It's the moodiest frame and stands out in a bright evening feed. But there's no scissors and no sign of cutting, so it promises a vibe, not an experiment. The skin close-up is slightly gross and medical for some people."
+    },
+    {
+      "frame": "lookB_key.png",
+      "what_this_says_in_5s": "Two rows of hair: '汗毛·起立' vs '汗毛·躺平'. 躺平 is a meme word and made me smile. The top waveform is fine but busy. Same '就没了' subtitle, same contradiction with 少了约三成. The hairs lying flat also say 'zero'."
+    },
+    {
+      "frame": "lookC_hook.png",
+      "what_this_says_in_5s": "A rollercoaster car at the top, '屏住呼吸', '01:21 ↓冲!'. In one second I get the whole film: the build is the climb, the pause is the top, the drop is the drop. It's fun, colourful and shareable. The waiting idea is in the picture before anyone explains it. Downside: it looks a bit kids-edu, and nothing in it says goosebumps or that they're cutting a song."
+    },
+    {
+      "frame": "lookC_key.png",
+      "what_this_says_in_5s": "The track gets cut at the top and the car drives flat into nothing: '平着开：没了'. It's funny and immediately obvious, and it's my favourite of the three key frames. But again '没了' says zero chills, and the dashed ghost drop makes the loss look total. That isn't what the lines claim."
+    }
+  ],
+  "which_hook_frame_would_stop_me": "C (rollercoaster). Its metaphor is the takeaway, and I'd get it at thumb speed. B is a close second for pure mood. A would lose me, because it reads as an editing tutorial."
+}

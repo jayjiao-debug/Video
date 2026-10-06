@@ -31,6 +31,7 @@ import {OX_TEST_N, OxMotionTest} from '../episodes/ox/motiontest';
 import {REGRESS_SHEETS, RegressGallery} from '../episodes/regress/gallery';
 import {LOVE_FRAMES, LoveFilm} from '../episodes/love/film';
 import {QVO_FRAMES, QuantumVO} from '../episodes/qvo/film';
+import {CHILLS_FRAMES, ChillsFilm} from '../episodes/chills/film';
 
 export const Root: React.FC = () => (
 	<>
@@ -64,6 +65,8 @@ export const Root: React.FC = () => (
 		{/* 《同一个中心》, a free-form short (no episode pipeline): audio is episodes/love/music.py, muxed after */}
 		<Composition id="Love" component={LoveFilm} durationInFrames={LOVE_FRAMES} fps={30} width={1920} height={1080} />
 		{/* 《量子计算机不是同时算》 (ep12, voice-over): audio is episodes/qvo/audio/master.wav, muxed after */}
+		{/* 《鸡皮疙瘩在等什么》 (ep13): audio is the edited bgm (crew audio/master.wav), muxed after */}
+		<Composition id="Chills" component={ChillsFilm} durationInFrames={CHILLS_FRAMES} fps={30} width={1920} height={1080} />
 		<Composition id="QuantumVO" component={QuantumVO} durationInFrames={QVO_FRAMES} fps={30} width={1920} height={1080} />
 		<Composition id="RegressGallery" component={RegressGallery} durationInFrames={REGRESS_SHEETS.length} fps={30} width={1920} height={1080} />
 		<Composition id="OxGallery" component={OxGallery} durationInFrames={OX_SHEETS.length} fps={30} width={1920} height={1080} />

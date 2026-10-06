@@ -1,0 +1,258 @@
+[
+ {
+  "id": "hook",
+  "kind": "E0 original: build+breath",
+  "film_from": 0.0,
+  "film_to": 8.097959183673467,
+  "track": [
+   73.32281179138322,
+   81.42077097505668
+  ],
+  "reps": 1,
+  "fx": "none",
+  "gain": 0
+ },
+ {
+  "id": "title",
+  "kind": "E0 the hardest drop (title)",
+  "film_from": 8.097959183673467,
+  "film_to": 12.15564625850341,
+  "track": [
+   81.42077097505668,
+   85.47845804988663
+  ],
+  "reps": 1,
+  "fx": "none",
+  "gain": 0
+ },
+ {
+  "id": "bed1",
+  "kind": "BED loud after the drop",
+  "film_from": 12.15564625850341,
+  "film_to": 26.331428571428575,
+  "track": [
+   85.47845804988663,
+   99.65424036281179
+  ],
+  "reps": 1,
+  "fx": "none",
+  "gain": -8
+ },
+ {
+  "id": "cut1",
+  "kind": "E1 build+breath, drop deleted",
+  "film_from": 26.331428571428575,
+  "film_to": 32.397641723356,
+  "track": [
+   75.35455782312926,
+   81.42077097505668
+  ],
+  "reps": 1,
+  "fx": "none",
+  "gain": 0
+ },
+ {
+  "id": "sil1",
+  "kind": "E1 silence where the drop was",
+  "film_from": 32.397641723356,
+  "film_to": 34.41197278911564,
+  "track": null,
+  "fx": "silence",
+  "gain": 0
+ },
+ {
+  "id": "bed2",
+  "kind": "BED quiet break",
+  "film_from": 34.41197278911564,
+  "film_to": 42.50412698412698,
+  "track": [
+   49.03473922902494,
+   57.12689342403628
+  ],
+  "reps": 1,
+  "fx": "none",
+  "gain": 0
+ },
+ {
+  "id": "cut2",
+  "kind": "E2 quiet bars, no build",
+  "film_from": 42.50412698412698,
+  "film_to": 48.58195011337868,
+  "track": [
+   55.10095238095238,
+   61.17877551020408
+  ],
+  "reps": 1,
+  "fx": "none",
+  "gain": 0
+ },
+ {
+  "id": "drop2",
+  "kind": "E2 drop with no build",
+  "film_from": 48.58195011337868,
+  "film_to": 52.639637188208624,
+  "track": [
+   81.42077097505668,
+   85.47845804988663
+  ],
+  "reps": 1,
+  "fx": "none",
+  "gain": 0
+ },
+ {
+  "id": "bed3",
+  "kind": "BED loud",
+  "film_from": 52.639637188208624,
+  "film_to": 64.78947845804989,
+  "track": [
+   85.47845804988663,
+   97.62829931972789
+  ],
+  "reps": 1,
+  "fx": "none",
+  "gain": -8
+ },
+ {
+  "id": "cut3",
+  "kind": "E4 build",
+  "film_from": 64.78947845804989,
+  "film_to": 68.84136054421768,
+  "track": [
+   75.35455782312926,
+   79.40643990929705
+  ],
+  "reps": 1,
+  "fx": "none",
+  "gain": 0
+ },
+ {
+  "id": "wait3",
+  "kind": "E4 the breath x3 (drop 2 bars late)",
+  "film_from": 68.84136054421768,
+  "film_to": 74.88435374149658,
+  "track": [
+   79.40643990929705,
+   81.42077097505668
+  ],
+  "reps": 3,
+  "fx": "repeat3",
+  "gain": 0
+ },
+ {
+  "id": "drop3",
+  "kind": "E4 the late drop",
+  "film_from": 74.88435374149658,
+  "film_to": 78.94204081632653,
+  "track": [
+   81.42077097505668,
+   85.47845804988663
+  ],
+  "reps": 1,
+  "fx": "none",
+  "gain": 0
+ },
+ {
+  "id": "bed4",
+  "kind": "BED loud",
+  "film_from": 78.94204081632653,
+  "film_to": 89.06013605442176,
+  "track": [
+   85.47845804988663,
+   95.59655328798186
+  ],
+  "reps": 1,
+  "fx": "none",
+  "gain": -8
+ },
+ {
+  "id": "cut4",
+  "kind": "E5 build+breath muffled",
+  "film_from": 89.06013605442176,
+  "film_to": 93.10621315192742,
+  "track": [
+   77.37469387755102,
+   81.42077097505668
+  ],
+  "reps": 1,
+  "fx": "lowpass",
+  "gain": 0
+ },
+ {
+  "id": "drop4",
+  "kind": "E5 the drop muffled",
+  "film_from": 93.10621315192742,
+  "film_to": 97.16390022675736,
+  "track": [
+   81.42077097505668,
+   85.47845804988663
+  ],
+  "reps": 1,
+  "fx": "lowpass",
+  "gain": 0
+ },
+ {
+  "id": "bed5",
+  "kind": "BED muffled",
+  "film_from": 97.16390022675736,
+  "film_to": 105.26766439909296,
+  "track": [
+   85.47845804988663,
+   93.58222222222223
+  ],
+  "reps": 1,
+  "fx": "lowpass",
+  "gain": -6
+ },
+ {
+  "id": "sweep",
+  "kind": "payoff: build, filter opens",
+  "film_from": 105.26766439909296,
+  "film_to": 109.31954648526076,
+  "track": [
+   75.35455782312926,
+   79.40643990929705
+  ],
+  "reps": 1,
+  "fx": "sweep",
+  "gain": 0
+ },
+ {
+  "id": "breath",
+  "kind": "payoff: the original breath",
+  "film_from": 109.31954648526076,
+  "film_to": 111.3338775510204,
+  "track": [
+   79.40643990929705,
+   81.42077097505668
+  ],
+  "reps": 1,
+  "fx": "none",
+  "gain": 0
+ },
+ {
+  "id": "final",
+  "kind": "payoff: the full drop",
+  "film_from": 111.3338775510204,
+  "film_to": 119.44344671201813,
+  "track": [
+   81.42077097505668,
+   89.53034013605442
+  ],
+  "reps": 1,
+  "fx": "none",
+  "gain": 0
+ },
+ {
+  "id": "outro",
+  "kind": "outro bars + fade",
+  "film_from": 119.44344671201813,
+  "film_to": 125.55594104308389,
+  "track": [
+   158.37750566893425,
+   164.49
+  ],
+  "reps": 1,
+  "fx": "fade",
+  "gain": -6
+ }
+]
