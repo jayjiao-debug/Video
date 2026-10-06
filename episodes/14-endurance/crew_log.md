@@ -8,3 +8,4 @@
 | 2026-10-06 ~22:30 | gate 1 r2: director APPROVE (3 swaps), fresh cold read; producer applied 7 one-line edits, pace 0 % | producer | script v2.1 ready for owner | |
 | 2026-10-06 21:15 | previz v1 (grey-box three.js, silent, 110 s) for owner: camera, transitions, scene order | producer | episodes/14-endurance/previz/ | ~25 |
 | 2026-10-06 21:35 | owner sent BGM; true drop at 81.375 s (analyser said 82.24); edit: build→drop on title 12.4, 33 bars, tape-stop into break (Wild wait), spin-up → drop2 at 90.5 (rescue); previz v2 with music | producer | audio/edit.json | ~10 |
+| 2026-10-06 21:50 | owner: 3D only where models/light hold up, 2.5D/2D elsewhere → medium_plan.md; asset request endurance-01 pushed to asset farm | producer | | ~10 |
