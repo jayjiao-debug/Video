@@ -12,7 +12,7 @@ web = (modal.Image.from_registry("mcr.microsoft.com/playwright:v1.48.2-jammy", a
                      "mkdir -p /app/assets && cd /app/assets && " + " && ".join(f"curl -sSLO {u}" for u in ASSETS))
        .add_local_dir("web", "/app/src"))
 app = modal.App("juno-render")
-QUERY = "hq&ss=3&mb=8"
+QUERY = "hq&ss=1&mb=1"  # owner: 1080p is the bar (phone viewing); no 4K / multi-subframe blur
 FRAMES, CHUNKS = 360, 10
 
 @app.function(image=web, gpu="T4", timeout=3600)
@@ -21,8 +21,11 @@ def chunk(i: int) -> tuple[bytes, str]:
     a, b = i * FRAMES // CHUNKS, (i + 1) * FRAMES // CHUNKS
     r = subprocess.run(["node", "chunk.mjs", "/tmp/f", str(a), str(b), QUERY], cwd="/app", capture_output=True, text=True)
     log = (r.stdout + r.stderr)[-800:]
-    subprocess.run(["ffmpeg", "-y", "-v", "error", "-framerate", "24", "-start_number", str(a), "-i", "/tmp/f/f%05d.png",
-                    "-vf", "scale=1920:1080:flags=lanczos", "-c:v", "libx264", "-preset", "slow", "-crf", "14", "-pix_fmt", "yuv420p", "/tmp/c.mp4"], check=True)
+    base = ["ffmpeg", "-y", "-v", "error", "-framerate", "24", "-start_number", str(a), "-i", "/tmp/f/f%05d.png", "-vf", "scale=1920:1080", "-pix_fmt", "yuv420p"]
+    # encode on the GPU (NVENC) so no extra CPU is billed; fall back to a fast CPU encode only if NVENC is unavailable
+    if subprocess.run(base + ["-c:v", "h264_nvenc", "-preset", "p5", "-cq", "19", "/tmp/c.mp4"]).returncode != 0:
+        log += " | NVENC unavailable, used libx264"
+        subprocess.run(base + ["-c:v", "libx264", "-preset", "veryfast", "-crf", "18", "/tmp/c.mp4"], check=True)
     return pathlib.Path("/tmp/c.mp4").read_bytes(), log
 
 @app.local_entrypoint()
@@ -32,5 +35,5 @@ def main():
     for i, (data, log) in enumerate(chunk.map(range(CHUNKS))):
         p = out / f"chunk{i:02d}.mp4"; p.write_bytes(data); lst.append(f"file '{p.name}'"); print(i, log.strip().splitlines()[-1:] )
     (out / "list.txt").write_text("\n".join(lst))
-    subprocess.run("cd out && ffmpeg -y -v error -f concat -safe 0 -i list.txt -vf \"noise=alls=5:allf=t,vignette=PI/6\" -c:v libx264 -preset slow -crf 16 -pix_fmt yuv420p -movflags +faststart ice_hq.mp4 && rm chunk*.mp4 list.txt", shell=True, check=True)
+    subprocess.run("cd out && ffmpeg -y -v error -f concat -safe 0 -i list.txt -vf \"noise=alls=5:allf=t,vignette=PI/6\" -c:v libx264 -preset slow -crf 16 -movflags +faststart ice_hq.mp4 && rm chunk*.mp4 list.txt", shell=True, check=True)
     print("DONE", (out / "ice_hq.mp4").stat().st_size)
