@@ -124,7 +124,7 @@ export const B1Scene: React.FC<{ T: number; x: number }> = ({ T, x }) => {
     for (let i = 1; i <= 20; i++) {
       const kk = clamp((k2 * 20 - (20 - i) * 0.6) / 9);
       const w = i <= 5 ? lerp(w20, w5, k2) : lerp(w20, 0, clamp(k2 * 1.6 - (20 - i) * 0.02));
-      const lit = (i === 20 && k2 < 0.5) || (i === 5 && k2 >= 0.5);
+      const lit = (i === 20 && T < t5y + 0.1) || (i === 5 && T > t5y + 0.45);
       fr.push({ x: xx, w, state: lit ? 'lit' : 'dim', label: w > 30 && !lit ? String(i) : undefined });
       xx += w + (w > 0.5 ? g : 0) * (i <= 5 ? 1 : 1 - kk);
     }
@@ -137,8 +137,10 @@ export const B1Scene: React.FC<{ T: number; x: number }> = ({ T, x }) => {
       xx += w + (w > 0.5 ? g : 0);
     }
   }
-  const litF = fr.find((f) => f.state === 'lit')!;
+  const litF = fr.find((f) => f.state === 'lit') || fr[T < t5y + 0.3 ? fr.length - 1 : 4] || fr[0];
   const litCx = litF.x + litF.w / 2;
+  const ringO = T < t5y ? 1 : T < t5y + 0.5 ? 1 - pr(T, t5y, 0.15) : 1;
+  const ringP = T < t5y + 0.5 ? pr(T, t20, 0.45) : pr(T, t5y + 0.55, 0.45);
   const sq = T > tShort ? 1 - 0.12 * Math.sin(Math.PI * pr(T, tShort, 0.2)) : 1;
   const numO = 1 - eo(T, tLong, 0.3);
   const val = T < t5y ? Number(cnt(T, t5p, 5, 0.6)) : Math.round(lerp(5, 20, eio(T, t20p, 0.6)));
@@ -157,7 +159,7 @@ export const B1Scene: React.FC<{ T: number; x: number }> = ({ T, x }) => {
         <Tx x={1784} y={736} size={34} color={LAB} anchor="end" o={eo(T, a + 0.4, 0.3)}>{T < tLong ? age : '现在'}</Tx>
         <line x1={236} y1={724} x2={1650} y2={724} stroke={TER} strokeWidth={1.5} strokeDasharray="4 6" opacity={eo(T, a + 0.4, 0.3)} />
         <Grease>
-          <G d={roughEllipse(litCx, 632, (litF.w / 2 + 30) * sq, 54 * sq, 4, 1.12, 0.04, 0.05)} p={pr(T, t20, 0.45)} w={7} />
+          <G d={roughEllipse(litCx, 632, (litF.w / 2 + 30) * sq, 54 * sq, 4, 1.12, 0.04, 0.05)} p={ringP} w={7} o={ringO} />
           <G d={roughEllipse(1012, 424, 150, 92, 11, 1.14, 0.03, -0.04)} p={pr(T, t5p + 0.3, 0.45)} w={8} o={numO} />
           <g opacity={arrowO * numO}><Arrow pts={[[1180, 440], [1400, 436], [litCx - 40, 470], [litCx, 568]]} p={arrowP} seed={7} /></g>
           <GText x={1400} y={410} p={pr(T, t5p + 1.1, 0.3)} size={42} text="1 年" o={arrowO * numO * (T < t5y ? 1 : 0)} />

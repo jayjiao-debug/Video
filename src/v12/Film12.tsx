@@ -54,7 +54,7 @@ export const Ep12Film: React.FC = () => {
       {vis(b12 - 0.35, b23 + 0.35) && <B2Scene T={T} x={X(k12, k23)} />}
       {vis(b23 - 0.35, b34 + 0.35) && <B3Scene T={T} x={X(k23, k34)} />}
       {vis(b34 - 0.35, b45 + 0.35) && <B4Scene T={T} x={X(k34, k45)} />}
-      {vis(b45 - 0.35, b56 + 0.35) && <B5Scene T={T} x={X(k45, 0)} dive={dive} />}
+      {vis(b45 - 0.35, b56 + 0.35) && dive < 1 && <B5Scene T={T} x={X(k45, 0)} dive={dive} />}
       {vis(b56 - 0.4, b67 + 0.35) && (
         <div style={{ position: 'absolute', inset: 0, clipPath: dive < 1 ? `circle(${revealR}px at ${lp.x}px ${lp.y}px)` : undefined }}>
           {dive < 1 && <LightTable T={T} warm={0} on={1} gx={gx} />}

@@ -40,7 +40,7 @@ export const B6Scene: React.FC<{ T: number; x: number }> = ({ T, x }) => {
   const fr1: Fr[] = Array.from({ length: 9 }, (_, i) => ({ x: 1084 + i * 60, w: 52, state: 'normal', pic: 'pTower', picO: 0.35 }));
   const play = Math.floor(Math.max(0, T - tGold) * 10);
   const fr2: Fr[] = Array.from({ length: 23 }, (_, i) => ({ x: 1084 + i * 30, w: 24, state: 'acc', pic: (i + play) % 3 === 0 ? 'pTower' : undefined, picO: 0.35 }));
-  const flick = Math.floor(T * 30) % 2;
+  const flick = Math.floor(T * 15) % 2;
   const lens = eio(T, tWrist - 0.2, 0.5) * (1 - eio(T, tNo + 0.6, 0.3));
   const sharp = T < tNo ? 1 : 1 - eo(T, tNo, 0.2);
   const otherDim = gold ? lerp(1, 0.55, gold) : 1;
@@ -71,7 +71,7 @@ export const B6Scene: React.FC<{ T: number; x: number }> = ({ T, x }) => {
             <g key={m}>
               {Array.from({ length: 64 }, (_, i) => {
                 const c = i % 8, r = Math.floor(i / 8);
-                const on = rnd(i + m * 64, Math.floor(T * 30)) > 0.5;
+                const on = rnd(i + m * 64, Math.floor(T * 15)) > 0.5;
                 return <circle key={i} cx={635 + m * 144 + c * 15} cy={642 + r * 15} r={5} fill={on ? '#EEF2EE' : '#2A2F34'} opacity={flick ? 0.9 : 0.75} />;
               })}
             </g>
@@ -110,7 +110,7 @@ export const B6Scene: React.FC<{ T: number; x: number }> = ({ T, x }) => {
             <g opacity={sharp}>
               {[[1, 1, 1, 1, 1, 1, 1, 0], [0, 0, 0, 0, 0, 1, 1, 0], [0, 0, 0, 0, 1, 1, 0, 0], [0, 0, 0, 1, 1, 0, 0, 0], [0, 0, 1, 1, 0, 0, 0, 0], [0, 0, 1, 1, 0, 0, 0, 0], [0, 0, 1, 1, 0, 0, 0, 0], [0, 0, 1, 1, 0, 0, 0, 0]].flatMap((row, r) => row.map((on, c) => <circle key={`${r}-${c}`} cx={-105 + c * 30} cy={-105 + r * 30} r={10} fill={on ? '#EEF2EE' : '#2A2F34'} />))}
             </g>
-            {sharp < 1 && Array.from({ length: 64 }, (_, i) => <circle key={i} cx={-105 + (i % 8) * 30} cy={-105 + Math.floor(i / 8) * 30} r={10} fill={rnd(i, Math.floor(T * 30)) > 0.5 ? '#EEF2EE' : '#2A2F34'} opacity={1 - sharp} />)}
+            {sharp < 1 && Array.from({ length: 64 }, (_, i) => <circle key={i} cx={-105 + (i % 8) * 30} cy={-105 + Math.floor(i / 8) * 30} r={10} fill={rnd(i, Math.floor(T * 15)) > 0.5 ? '#EEF2EE' : '#2A2F34'} opacity={1 - sharp} />)}
             <circle r={164} fill="none" stroke="#15171A" strokeWidth={16} filter="url(#g12-liftHi)" />
             <circle r={151} fill="none" stroke={SEC} strokeWidth={1.5} />
             <circle r={150} fill="none" stroke={A} strokeWidth={3} strokeDasharray="10 8" opacity={sharp} />
@@ -150,8 +150,11 @@ export const B7Scene: React.FC<{ T: number; x: number; push: number }> = ({ T, x
     return { x: KX + 20 + i * PITCH, w: i < 4 ? 88 * (k > 0 ? 1 : 0) : (0.87 * PITCH - 7) * eo(T, tRe + 1.1, 0.3), state: i < 4 ? 'key' : 'dim', pic: T > tFF && T < tFF + 0.7 ? rb[(i + ffk) % 4] : id, picO: i < 4 ? k : 0.6 };
   });
   return (
+    <>
+    <Layer x={x}>
+      <Header T={T} a={a} z={bound('B7', 'B8') - 0.4} vol="07" field="认知心理学" title="回忆会快进" eng="TEMPORAL COMPRESSION IN MEMORY" chip="研究" line={`Jeunehomme 等 · 2018 · ${cnt(T, a + 0.3, 128, 0.8)}名大学生 · 随身相机`} />
+    </Layer>
     <Layer x={x} s={lerp(1, 1.42, push)} cx={140.9} cy={600.9} o={1 - eo(push, 0.45, 0.55)}>
-      <Header T={T} a={a} vol="07" field="认知心理学" title="回忆会快进" eng="TEMPORAL COMPRESSION IN MEMORY" chip="研究" line={`Jeunehomme 等 · 2018 · ${cnt(T, a + 0.3, 128, 0.8)}名大学生 · 随身相机`} />
       <Svg>
         <Tx x={148} y={360} size={40} w={900} o={eo(T, a + 0.3, 0.3)}>散步原片</Tx>
         <Tx x={334} y={360} size={34} w={500} color={SEC} o={eo(T, a + 0.4, 0.3)}>1 格 = 1 分钟</Tx>
@@ -180,6 +183,7 @@ export const B7Scene: React.FC<{ T: number; x: number; push: number }> = ({ T, x
         </Grease>
       </Svg>
     </Layer>
+    </>
   );
 };
 
