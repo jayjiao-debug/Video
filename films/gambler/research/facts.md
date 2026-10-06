@@ -22,3 +22,12 @@
 ## 待定
 
 - 抖音审核：赌博相关画面（筹码、现金、赌桌）可能限流。画面只用牌和翻牌，不出现筹码和钱。
+
+## added for the final (v2 direction)
+
+| # | 屏幕说法 | 原文 / 数字 | 出处 | 状态 |
+|---|---|---|---|---|
+| 12 | 每个人的"甜区"不一样：2025 年，400 多人（144 + 262）在算法生成的旋律里反复二选一（每人 120 次） | "there exists an optimal level of predictability (the predictability sweet spot, PreSS) that is most preferred by individuals"; "striking individual differences" | Mas-Herrero & Marco-Pallarés (2025) PNAS 122(29), https://pmc.ncbi.nlm.nih.gov/articles/PMC12304940/ | VERIFIED |
+| 13 | 爱听爵士的人，甜区更靠"意外" | "Individuals with a higher preference for Jazz music had higher PreSS, that is, a greater preference for surprises" (held controlling for jazz exposure; the only genre that reached significance) | as 12 | VERIFIED |
+| 14 | 甜区和学没学过音乐无关 | "years of musical training did not correlate with PreSS" | as 12 | VERIFIED |
+| 15 | 太好猜和太乱都不好听（倒 U） | quadratic relation between liking and information content | Gold et al. (2019) J Neurosci 39(47):9397 | VERIFIED |
