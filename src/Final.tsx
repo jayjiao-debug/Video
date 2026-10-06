@@ -46,7 +46,9 @@ const lamp = (T: number) => {
 };
 const lightbox = (T: number) => {
   const on = prog(T, EV.break + 0.5, EV.break + 0.6) * (1 - prog(T, EV.riser, EV.riser + 0.3));
-  const flick = T < EV.break + 1.1 && T > EV.break + 0.5 ? (Math.sin(T * 90) > 0.2 ? 1 : 0.35) : 1;
+  // a fluorescent tube catching: two short stutters, then on (no frame-by-frame strobing)
+  const t = T - (EV.break + 0.5);
+  const flick = t < 0 ? 0 : t < 0.1 ? 0.7 : t < 0.2 ? 0.15 : t < 0.27 ? 0.8 : t < 0.4 ? 0.3 : 1;
   return on * flick;
 };
 /** the needle is off the record (the music has been taken away) */
