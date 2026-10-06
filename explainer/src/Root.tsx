@@ -30,6 +30,7 @@ import {OX_SHEETS, OxGallery} from '../episodes/ox/gallery';
 import {OX_TEST_N, OxMotionTest} from '../episodes/ox/motiontest';
 import {REGRESS_SHEETS, RegressGallery} from '../episodes/regress/gallery';
 import {LOVE_FRAMES, LoveFilm} from '../episodes/love/film';
+import {QVO_FRAMES, QuantumVO} from '../episodes/qvo/film';
 
 export const Root: React.FC = () => (
 	<>
@@ -62,6 +63,8 @@ export const Root: React.FC = () => (
 		<Composition id="OxMotionTest" component={OxMotionTest} durationInFrames={OX_TEST_N} fps={30} width={1920} height={1080} />
 		{/* 《同一个中心》, a free-form short (no episode pipeline): audio is episodes/love/music.py, muxed after */}
 		<Composition id="Love" component={LoveFilm} durationInFrames={LOVE_FRAMES} fps={30} width={1920} height={1080} />
+		{/* 《量子计算机不是同时算》 (ep12, voice-over): audio is episodes/qvo/audio/master.wav, muxed after */}
+		<Composition id="QuantumVO" component={QuantumVO} durationInFrames={QVO_FRAMES} fps={30} width={1920} height={1080} />
 		<Composition id="RegressGallery" component={RegressGallery} durationInFrames={REGRESS_SHEETS.length} fps={30} width={1920} height={1080} />
 		<Composition id="OxGallery" component={OxGallery} durationInFrames={OX_SHEETS.length} fps={30} width={1920} height={1080} />
 		<Composition id="CoffeeGallery" component={CoffeeGallery} durationInFrames={COFFEE_SHEETS.length} fps={30} width={1920} height={1080} />

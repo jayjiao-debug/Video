@@ -1,0 +1,33 @@
+{
+  "would_keep_watching_after_3s": true,
+  "why": "Line 1 is something I've actually heard (量子计算机能同时算所有答案), and line 2 '只对了一半' tells me I'm about to be corrected. Then 5 minutes vs 10^25 years is a ridiculous flex, so I stay to find out how.",
+  "first_moment_I_got_curious": "#2 (3.35s) '这句话，只对了一半'. The real hook for me is #9 (28.0s) '它凭什么？' after #7-#8: only 105 qubits vs my phone's billions of bits, and colder than space.",
+  "where_I_would_swipe_away": [
+    "12.05-16.8s: almost 5 seconds with no subtitle right after the big 10^25 number. If nothing moves on screen there, my thumb goes up.",
+    "#14-#16 (46.9-55.4s) '2个要记4个数 / 3个要记8个 / 每多一个翻一倍': it feels like a math lesson, and I don't know why 'remembering numbers' matters. #17 (宇宙原子) pulls me back, but only just.",
+    "#29-#35 (85.2-101.95s) the encryption part: it's interesting (#31-#32 'save it now, crack it later' is creepy, in a good way), but it feels like a second video. By #33-#35 I've stopped connecting it to the coin and the waves.",
+    "#37-#38 (104.6-110.7s) '纠错格子每大一圈': I don't know what this is, so I'd half-skip it waiting for the ending."
+  ],
+  "lines_I_did_not_understand": [
+    "#2 vs #19: #2 says the claim is 'half right', but #19 just says '不是。' Which half was right? I worked it out myself (it holds all of them but you only get one out), but the video never says it.",
+    "#4 '10²⁵ 年': fine on screen, but how big is that? Give me something to compare it to (the age of the universe?).",
+    "#13 '振幅': a new word with no picture yet. It only makes sense later at #22 (像波).",
+    "#14 '要记4个数': 'remember' what, and who is remembering? I accepted it, but I didn't get it.",
+    "#33 '抗量子的新标准，已经发布': whose standard? Does it protect me? It sounds like it should be reassuring, but it lands flat.",
+    "#34 '破解估计要不到100万个量子比特': crack what? And is 1,000,000 a lot compared with the 105 from the start? I needed '现在才105个' next to it to feel the gap.",
+    "#37 '纠错格子每大一圈': no idea what a 纠错格子 is or why it has 圈."
+  ],
+  "takeaway_in_my_words": "A quantum computer doesn't try every answer and hand you the right one. It's like spinning coins whose odds behave like waves, and a clever algorithm makes the wrong answers' waves cancel out (like noise-cancelling headphones), so when you look, you almost always get the right one. That's why it's only crazy-fast on a few kinds of problems, and one of them is breaking today's encryption.",
+  "surprise_that_stuck": "#23 '你的降噪耳机，靠的就是它': the same trick as my AirPods. Second: #31-#32, that encrypted data stolen today can be saved and cracked later. Third: #36, an honest admission that the famous 5-minute problem is useless in itself.",
+  "title_I_would_click": "1. 量子计算机不是同时算: it says 'quantum computer' (so I know what it's about) and it contradicts what I've heard, so I want to see why. The other two titles don't tell me the topic.",
+  "title_that_misleads": "3. 旋转的硬币: without a cover I'd think it's a coin trick or a physics-toy video. 2. 错的答案会自己抵消 reads like a study tip or a life lesson ('wrong answers cancel out'), not quantum.",
+  "what_I_would_comment": "所以量子计算机本质是个降噪耳机？？ / @我那个天天说量子能同时算所有答案的室友 / 那现在我的支付宝密码安全吗",
+  "for_frames_only": [
+    {"frame": "lookA_hook.png", "what_this_says_in_5s": "A supercomputer needs a row of zeros' worth of years (10^25), and a quantum chip did it in under 5 minutes (big red). The contrast is readable in 1 second. The green oscilloscope look feels like a sci-fi lab. The small mono labels at the top (CH1/CH2/T=0.010K) are noise I skip. WOULD STOP: yes, the giant zero row against red '<5分钟' is an instant 'wtf'."},
+    {"frame": "lookA_key.png", "what_this_says_in_5s": "Eight rows of waves. Seven fade to flat, and one (101) grows big and red at 94.1%. '波峰+波谷=0' tells me the flat ones cancelled. I get it in about 4 seconds, but the |000⟩ brackets look like a textbook formula and scare me a little."},
+    {"frame": "lookB_hook.png", "what_this_says_in_5s": "A normal bit is 0 or 1, and a qubit is a spinning coin. It's clear and calm, but it looks like a homework diagram on graph paper, and 'α|0⟩+β|1⟩' is a formula on a hook frame. WOULD STOP: no, it feels like class. The subtitle '秘密藏在旋转的硬币里' is good, but the picture doesn't sell it."},
+    {"frame": "lookB_key.png", "what_this_says_in_5s": "This is the clearest explanation of the six: wave + opposite wave = 0 (wrong answer), wave + same wave = ×2 (right answer), and a bar chart where one answer is 94%. I'd actually learn something from this frame. It still looks like a 课件 slide."},
+    {"frame": "lookC_hook.png", "what_this_says_in_5s": "105 qubits gives a crazy-long flip-board number of combinations ('每多一个比特组合翻一倍'), with a red '真的？' challenging me. It looks like an airport board and has energy. But the long number means nothing to me at a glance, and it doesn't show the 5 min vs 10^25 years hook the script opens with (the subtitle here is also different from line 1). WOULD STOP: maybe, because '真的？' baits me."},
+    {"frame": "lookC_key.png", "what_this_says_in_5s": "A scoreboard: seven answers are '已抵消' in red, one (101, 94.1%) is '放大' in green. This is the fastest read of the three key frames (2 seconds, like a game result screen), but it shows THAT the wrong answers cancel, not HOW (no waves), so the headphone/wave idea is lost here."}
+  ]
+}

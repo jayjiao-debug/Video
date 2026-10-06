@@ -1,0 +1,619 @@
+[
+ {
+  "id": "h1",
+  "section": "hook",
+  "vo": "都说量子计算机，能同时算所有答案",
+  "sub": "都说量子计算机，能同时算所有答案",
+  "screen": [
+   "同时算所有答案？"
+  ],
+  "picture": "Frame 0: dark scope graticule, one green trace already running on CH1. On the first beat (<1 s) the trace bursts into dozens of traces fanning out across the screen (the \"every answer at once\" image). Chapter label top-left: 00 · 传说.",
+  "fact": "13",
+  "start_hint": 0.1,
+  "est": [
+   0.1,
+   3.1
+  ]
+ },
+ {
+  "id": "h2",
+  "section": "hook",
+  "vo": "这句话，其实很误导",
+  "sub": "这句话，其实很误导",
+  "screen": [
+   "误导 ✗"
+  ],
+  "picture": "The fan of traces freezes; a vertical cursor sweeps through it and a red readout stamps 误导 ✗ over the fan.",
+  "fact": "13",
+  "est": [
+   3.35,
+   4.95
+  ]
+ },
+ {
+  "id": "h3",
+  "section": "hook",
+  "vo": "谷歌的芯片，不到五分钟算完一道题",
+  "sub": "谷歌的芯片，不到5分钟算完一道题",
+  "screen": [
+   "CH2 · Google Willow · 2024.12",
+   "< 5 分钟"
+  ],
+  "picture": "Trace morphs into a two-channel compare. CH2 (red): a short sharp burst that ends almost at once; red readout \"< 5 分钟\" lands on a beat.",
+  "fact": "1, 2",
+  "est": [
+   5.2,
+   8.2
+  ]
+ },
+ {
+  "id": "h4",
+  "section": "hook",
+  "vo": "顶级超算估计要十的二十五次方年",
+  "sub": "顶级超算估计要 10²⁵ 年",
+  "screen": [
+   "CH1 · 最快的超级计算机之一",
+   "10,000,000,000,000,000,000,000,000 年",
+   "远超宇宙年龄 · Google 估计"
+  ],
+  "picture": "CH1 (green): a trace that never ends, running off the right edge; the white mono readout counts up zero by zero to 10,000,000,000,000,000,000,000,000 年 (tag: 最快的超级计算机之一 · Google 估计). In the VO-free 11.5–14.2 s the counter is STILL running and the CH1 trace still moving, and a big second readout lands on a beat: 远超宇宙年龄 (138 亿年 marked as a tiny tick at the far left of the time axis). Energy rises into the drop; nothing static.",
+  "fact": "2, 3",
+  "est": [
+   8.45,
+   11.45
+  ]
+ },
+ {
+  "id": "s1",
+  "section": "setup",
+  "vo": "你手机的运行内存，有几百亿个比特",
+  "sub": "你手机的运行内存，有几百亿个比特",
+  "screen": [
+   "8 GB 运行内存（以此计）",
+   "≈ 64,000,000,000 bit"
+  ],
+  "picture": "CH1: a dense digital square wave (bit stream) scrolling fast. Readout: 8 GB 运行内存（以此计）≈ 64,000,000,000 bit.",
+  "fact": "26",
+  "start_hint": 16.8,
+  "est": [
+   16.8,
+   19.8
+  ]
+ },
+ {
+  "id": "s2",
+  "section": "setup",
+  "vo": "每个都是躺平的硬币",
+  "sub": "每个都是躺平的硬币",
+  "screen": [
+   "0",
+   "1",
+   "非 0 即 1"
+  ],
+  "picture": "Zoom into one step of the square wave: its two levels are two coins lying flat, seen edge-on as flat lines, labelled 0 and 1. Nothing moves between them.",
+  "fact": "9",
+  "est": [
+   20.05,
+   21.85
+  ]
+ },
+ {
+  "id": "s3",
+  "section": "setup",
+  "vo": "那块芯片，只有一百零五个量子比特",
+  "sub": "那块芯片，只有105个量子比特",
+  "screen": [
+   "Google Willow",
+   "105 qubits"
+  ],
+  "picture": "Hard switch: a small grid of 105 dots (one per qubit) draws on in a few sweeps; big red readout 105 next to the dim 64,000,000,000.",
+  "fact": "1, 20",
+  "est": [
+   22.1,
+   25.1
+  ]
+ },
+ {
+  "id": "s4",
+  "section": "setup",
+  "vo": "这类芯片，要比太空冷一百多倍",
+  "sub": "这类芯片，要比太空冷100多倍",
+  "screen": [
+   "外太空 2.7 K",
+   "≈ 10 mK",
+   "×100+"
+  ],
+  "picture": "A temperature channel: the trace falls down a log axis past 外太空 2.7 K and settles at ≈10 mK; a ΔY cursor between 2.7 K and 10 mK reads ×100+. Label: 超导量子芯片 (no Willow figure).",
+  "fact": "6, 7, 8",
+  "est": [
+   25.35,
+   27.95
+  ]
+ },
+ {
+  "id": "s5",
+  "section": "setup",
+  "vo": "就凭这一百零五个？",
+  "sub": "就凭这105个？",
+  "screen": [
+   "64,000,000,000  vs  105"
+  ],
+  "picture": "Both readouts side by side, 64,000,000,000 bit (dim) vs 105 qubit (red), cursor blinking on the 105. Music starts to fall away.",
+  "fact": "1, 26",
+  "est": [
+   28.2,
+   29.8
+  ]
+ },
+ {
+  "id": "b1",
+  "section": "break",
+  "vo": "你可以把量子比特，想成旋转的硬币",
+  "sub": "你可以把量子比特，想成旋转的硬币",
+  "screen": [
+   "QUBIT",
+   "示意"
+  ],
+  "picture": "Quiet. One channel, slow sweep. A coin spinning, shown as the scope sees it: its edge traces a slow sine wave. Small label 示意 in the corner. Chapter label: 02 · 量子比特.",
+  "fact": "9",
+  "start_hint": 30.6,
+  "est": [
+   30.6,
+   33.6
+  ]
+ },
+ {
+  "id": "b2",
+  "section": "break",
+  "vo": "转着的时候，零和一叠加在一起",
+  "sub": "转着的时候，0和1[叠加]在一起",
+  "screen": [
+   "|0⟩ + |1⟩",
+   "叠加 SUPERPOSITION"
+  ],
+  "picture": "The sine splits into two thin component traces labelled |0⟩ and |1⟩ that sum back into the one wave.",
+  "fact": "9",
+  "est": [
+   34.85,
+   37.45
+  ]
+ },
+ {
+  "id": "b3",
+  "section": "break",
+  "vo": "一测量，它就随机倒向一面",
+  "sub": "一测量，它就随机倒向一面",
+  "screen": [
+   "TRIG · 测量",
+   "→ 1"
+  ],
+  "picture": "A red trigger marker drops; the wave freezes and collapses to a flat line at level 1. Readout → 1. Silence on the music.",
+  "fact": "10",
+  "est": [
+   38.7,
+   40.9
+  ]
+ },
+ {
+  "id": "b4",
+  "section": "break",
+  "vo": "每面的概率，看振幅，也就是波有多高",
+  "sub": "每面的概率，看[振幅]，也就是波有多高",
+  "screen": [
+   "振幅 = 波的高度",
+   "P = |振幅|²"
+  ],
+  "picture": "The two component waves from b2 come back; a vertical dimension arrow measures each one's height, labelled 振幅 = 波的高度. Beside it, the coin spins and drops again and again, and a small histogram of 0s and 1s builds up with bar heights matching the two waves. Readout P = |振幅|².",
+  "fact": "10",
+  "est": [
+   42.15,
+   45.15
+  ]
+ },
+ {
+  "id": "u1",
+  "section": "build",
+  "vo": "两枚硬币一起转，就有四种组合",
+  "sub": "2枚硬币一起转，就有4种组合",
+  "screen": [
+   "|00⟩ |01⟩ |10⟩ |11⟩",
+   "2 枚 → 4 种"
+  ],
+  "picture": "Build starts. Two spinning-coin traces merge, and the screen splits into 4 channels |00⟩ |01⟩ |10⟩ |11⟩, all running at once, each its own wave. Readout 2 枚 → 4 种组合.",
+  "fact": "11",
+  "start_hint": 46.9,
+  "est": [
+   46.9,
+   49.5
+  ]
+ },
+ {
+  "id": "u2",
+  "section": "build",
+  "vo": "每多一枚，组合就翻一倍",
+  "sub": "每多一枚，组合就翻一倍",
+  "screen": [
+   "2ⁿ",
+   "8 · 16 · 32 · 64 · 128 …"
+  ],
+  "picture": "Channels keep doubling faster than the eye can count (8, 16, 32 …); the channel-count readout ticks on the beats; label 2ⁿ.",
+  "fact": "11",
+  "est": [
+   51.3,
+   53.3
+  ]
+ },
+ {
+  "id": "u2b",
+  "section": "build",
+  "vo": "十枚，就是一千零二十四种",
+  "sub": "10枚，就是1024种",
+  "screen": [
+   "2¹⁰ = 1,024"
+  ],
+  "picture": "ten coin channels; readout 1,024",
+  "fact": "calc"
+ },
+ {
+  "id": "u3",
+  "section": "build",
+  "vo": "三百枚，组合比宇宙的原子还多",
+  "sub": "300枚，组合比宇宙的原子还多",
+  "screen": [
+   "2³⁰⁰ ≈ 2 × 10⁹⁰ 种组合",
+   "可观测宇宙的原子 ≈ 10⁸⁰（估算）"
+  ],
+  "picture": "The traces merge into a solid wall of phosphor glow. Two readouts stacked: 2³⁰⁰ ≈ 2×10⁹⁰ 种组合 above 可观测宇宙的原子 ≈10⁸⁰ (估算); the top one overflows its box.",
+  "fact": "11, 12",
+  "est": [
+   55.1,
+   57.7
+  ]
+ },
+ {
+  "id": "u4",
+  "section": "build",
+  "vo": "所以它是把所有答案，同时算了一遍？",
+  "sub": "所以它是把所有答案，同时算了一遍？",
+  "screen": [
+   "同时算所有答案？"
+  ],
+  "picture": "The hook's question returns over the glowing wall, cursor blinking, music at its highest. Must END by 62.5 s.",
+  "fact": "13",
+  "start_hint": 59.5,
+  "end_by": 62.5,
+  "est": [
+   59.5,
+   62.5
+  ]
+ },
+ {
+  "id": "r1",
+  "section": "reveal",
+  "vo": "不是。",
+  "sub": "不是。",
+  "screen": [
+   "✗"
+  ],
+  "picture": "ON THE DROP (63.1): a trigger cuts the wall; every trace collapses at once into a single spike. Red ✗ over 同时算所有答案.",
+  "fact": "13",
+  "start_hint": 63.1,
+  "est": [
+   63.1,
+   63.5
+  ]
+ },
+ {
+  "id": "r2",
+  "section": "reveal",
+  "vo": "一测量，只倒出一个答案",
+  "sub": "一测量，只倒出一个答案",
+  "screen": [
+   "MEASURE → |1011…⟩",
+   "1 个 · 随机"
+  ],
+  "picture": "Readout: MEASURE → |1011…⟩, 1 个 · 随机. The rest of the screen is empty graticule.",
+  "fact": "10",
+  "est": [
+   63.95,
+   65.95
+  ]
+ },
+ {
+  "id": "r3",
+  "section": "reveal",
+  "vo": "真正的本事，叫干涉",
+  "sub": "真正的本事，叫[干涉]",
+  "screen": [
+   "05 · 干涉 INTERFERENCE",
+   "CH1 + CH2 = MATH"
+  ],
+  "picture": "Chapter label 05 · 干涉. Three rows appear: CH1, CH2 and the MATH channel (CH1 + CH2) below them.",
+  "fact": "14",
+  "est": [
+   66.2,
+   67.8
+  ]
+ },
+ {
+  "id": "r4",
+  "section": "reveal",
+  "vo": "振幅像波，峰撞上谷就抵消",
+  "sub": "振幅像波，峰撞上谷就抵消",
+  "screen": [
+   "波峰 + 波谷 = 0"
+  ],
+  "picture": "CH1 a wave, CH2 the same wave upside down; MATH draws live and comes out flat. Label 波峰 + 波谷 = 0.",
+  "fact": "14",
+  "est": [
+   68.05,
+   70.25
+  ]
+ },
+ {
+  "id": "r5",
+  "section": "reveal",
+  "vo": "你的降噪耳机，靠的就是它",
+  "sub": "你的降噪耳机，靠的就是它",
+  "screen": [
+   "CH1 噪声",
+   "CH2 耳机放出的反相波",
+   "MATH ≈ 安静"
+  ],
+  "picture": "Same three rows, relabelled: CH1 噪声 (a ragged hum), CH2 耳机放出的反相波, MATH ≈ 安静 (almost flat). A simple line icon of headphones, no hands or faces.",
+  "fact": "15",
+  "est": [
+   70.5,
+   72.7
+  ]
+ },
+ {
+  "id": "r6",
+  "section": "reveal",
+  "vo": "算法让错的答案，互相抵消",
+  "sub": "算法让错的答案，互相抵消",
+  "screen": [
+   "|000⟩ … |111⟩",
+   "错的 → 0"
+  ],
+  "picture": "KEY FRAME: back to the 8 channels. Each wrong answer's trace meets its dashed mirror ghost and goes flat, one after another.",
+  "fact": "14",
+  "est": [
+   72.95,
+   75.15
+  ]
+ },
+ {
+  "id": "r7",
+  "section": "reveal",
+  "vo": "对的答案，越叠越强",
+  "sub": "对的答案，越叠越强",
+  "screen": [
+   "|101⟩ ▲ 互相加强",
+   "94.1 %  示意"
+  ],
+  "picture": "|101⟩ turns red and its wave grows taller with each cycle; the readout climbs to 94.1 %, with the 示意 tag attached to the readout from its first frame.",
+  "fact": "14",
+  "est": [
+   75.4,
+   77.0
+  ]
+ },
+ {
+  "id": "r8",
+  "section": "reveal",
+  "vo": "最后一测，大概率就是它",
+  "sub": "最后一测，大概率就是它",
+  "screen": [
+   "RESULT 101",
+   "94.1 %  (示意)"
+  ],
+  "picture": "Trigger fires; the result readout shows RESULT 101 in red. Small 示意.",
+  "fact": "10, 14",
+  "est": [
+   77.25,
+   79.25
+  ]
+ },
+ {
+  "id": "r9",
+  "section": "reveal",
+  "vo": "所以它只在少数题上快得离谱",
+  "sub": "所以它只在少数题上快得离谱",
+  "screen": [
+   "少数题：快得离谱",
+   "大多数题：强不了多少"
+  ],
+  "picture": "Two-row readout: 少数题 ▲▲▲快得离谱 vs 大多数题 ▲ 强不了多少 (Aaronson, SciAm 2008). The VO only reads the first row.",
+  "fact": "14",
+  "est": [
+   79.5,
+   82.1
+  ]
+ },
+ {
+  "id": "r10",
+  "section": "reveal",
+  "vo": "开头那道题只是测速，本身还没什么用",
+  "sub": "开头那道题只是测速，本身还没什么用",
+  "screen": [
+   "10²⁵ 年 vs < 5 分钟",
+   "测速题 · 暂无实际用途（Google）"
+  ],
+  "picture": "Callback: the hook's two-channel compare comes back small, and a stamp lands across it: 测速题 · 暂无实际用途 (Google's own words).",
+  "fact": "4",
+  "est": [
+   82.35,
+   85.55
+  ]
+ },
+ {
+  "id": "r11",
+  "section": "reveal",
+  "vo": "真正的用处，将来或许是新药和电池",
+  "sub": "真正的用处，将来或许是新药和电池",
+  "screen": [
+   "分子模拟 → 新药 · 电池",
+   "将来 · 可能"
+  ],
+  "picture": "A channel draws a simple molecule outline as a Lissajous figure; labels 新药 · 电池 and a small tag 将来 · 可能.",
+  "fact": "21",
+  "est": [
+   85.8,
+   88.8
+  ]
+ },
+ {
+  "id": "r12",
+  "section": "reveal",
+  "vo": "理论上，它还擅长分解大数",
+  "sub": "理论上，它还擅长分解大数",
+  "screen": [
+   "N = p × q",
+   "Shor · 1994"
+  ],
+  "picture": "A long number on the readout splits into two factors: N = p × q. Tag Shor · 1994.",
+  "fact": "16",
+  "est": [
+   89.05,
+   91.25
+  ]
+ },
+ {
+  "id": "r13",
+  "section": "reveal",
+  "vo": "而你用的很多加密，就靠大数难分解",
+  "sub": "而你用的很多加密，就靠大数难分解",
+  "screen": [
+   "RSA",
+   "靠「大数难分解」"
+  ],
+  "picture": "The number is wrapped by a padlock drawn as a trace; label RSA · 靠「大数难分解」. Small 你 marker on the lock (the viewer's data).",
+  "fact": "17",
+  "est": [
+   91.5,
+   94.5
+  ]
+ },
+ {
+  "id": "r14",
+  "section": "reveal",
+  "vo": "你今天的加密数据，可以先存着以后解",
+  "sub": "你今天的加密数据，可以先存着以后解",
+  "screen": [
+   "REF · 已存储 · 今天",
+   "先存后解 HARVEST NOW, DECRYPT LATER（NIST）"
+  ],
+  "picture": "The padlocked trace is captured into the scope's REF memory slot (a saved waveform, dimmed, time stamp 今天) while a time readout runs fast forward. Big label 先存后解; source tag NIST.",
+  "fact": "24",
+  "est": [
+   94.75,
+   97.95
+  ]
+ },
+ {
+  "id": "r15",
+  "section": "reveal",
+  "vo": "破解它，估计要不到一百万个量子比特",
+  "sub": "破解它，估计要不到一百万个量子比特",
+  "screen": [
+   "破解 RSA-2048 需要 < 1,000,000（估计 · 2025）",
+   "Willow  105",
+   "什么时候？专家估计 几年～几十年"
+  ],
+  "picture": "Log-scale ΔY cursors: top cursor at < 1,000,000 labelled 破解 RSA-2048（估计）, bottom cursor at Willow 105 (red); the gap between them is the tall empty space. Small readout: 什么时候？专家估计 几年～几十年 (NIST), on screen only.",
+  "fact": "18, 20, 25",
+  "est": [
+   98.2,
+   101.4
+  ]
+ },
+ {
+  "id": "r16",
+  "section": "reveal",
+  "vo": "谷歌那块才一百零五个，可门槛还在降",
+  "sub": "谷歌那块才105个，可门槛还在降",
+  "screen": [
+   "2019  20,000,000",
+   "2025  < 1,000,000",
+   "2026  ↓ 新论文更少",
+   "好在：抗量子加密标准已发布（NIST · 2024.08）"
+  ],
+  "picture": "The top cursor slides down: 2019 20,000,000 → 2025 <1,000,000 → 2026 ↓ (新论文更少), and the gap to 105 narrows. As the line ends, a green stamp lands on the padlock: 好在：抗量子加密标准已发布（NIST · 2024.08）. It stays through the beat before the payoff.",
+  "fact": "18, 19, 20, 22",
+  "est": [
+   101.65,
+   104.85
+  ]
+ },
+ {
+  "id": "r16b",
+  "section": "reveal",
+  "vo": "好在，抗量子的新加密标准，已经发布了",
+  "sub": "好在，抗量子的新加密标准，已经发布了",
+  "screen": [
+   "好在：抗量子加密标准已发布",
+   "NIST FIPS 203 · 204 · 205 · 2024.08"
+  ],
+  "picture": "green stamp on the lock thumbnail",
+  "fact": "NIST FIPS 203/204/205"
+ },
+ {
+  "id": "r17",
+  "section": "reveal",
+  "vo": "它快，不是因为算得多",
+  "sub": "它快，不是因为算得多",
+  "screen": [
+   "✗ 算得多"
+  ],
+  "picture": "Payoff: the 8-channel key frame again, wide. 算得多 struck through.",
+  "fact": "13, 14",
+  "est": [
+   105.6,
+   107.4
+  ]
+ },
+ {
+  "id": "r18",
+  "section": "reveal",
+  "vo": "而是它让错的答案，自己抵消",
+  "sub": "而是它让错的答案，自己抵消",
+  "screen": [
+   "✓ 错的抵消"
+  ],
+  "picture": "Seven traces go flat together, one red trace stays: ✓ 错的抵消.",
+  "fact": "14",
+  "est": [
+   107.65,
+   110.05
+  ]
+ },
+ {
+  "id": "e1",
+  "section": "end",
+  "vo": "谁说它能同时算所有答案",
+  "sub": "谁说它能同时算所有答案",
+  "screen": [
+   "同时算所有答案？ ✗"
+  ],
+  "picture": "The fan of traces from frame 0 returns for a moment, struck by the red ✗.",
+  "fact": "13",
+  "est": [
+   110.6,
+   112.8
+  ]
+ },
+ {
+  "id": "e2",
+  "section": "end",
+  "vo": "就把这条发给谁",
+  "sub": "就把这条发给谁",
+  "screen": [],
+  "picture": "Cut to the Juno end card (gold J, gold title) with the question text; holds ~5 s with no VO.",
+  "fact": "-",
+  "est": [
+   113.05,
+   114.45
+  ]
+ }
+]
