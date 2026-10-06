@@ -61,7 +61,7 @@ def main():
     ap.add_argument('output')
     ap.add_argument('--start', type=int, default=0)
     ap.add_argument('--end', type=int, required=True, help='last frame, inclusive')
-    ap.add_argument('--chunks', type=int, default=16)
+    ap.add_argument('--chunks', type=int, default=0, help='0 = auto: up to 20 chunks, ~24+ frames each')
     ap.add_argument('--music-start', type=float, default=None)
     ap.add_argument('--fade-in', type=float, default=0.0)
     ap.add_argument('--fade-out', type=float, default=0.5)
@@ -71,7 +71,7 @@ def main():
     job_id = f'{a.output}-{int(time.time())}'
     (FARM / 'render.json').write_text(json.dumps({
         'id': job_id, 'composition': a.composition, 'start': a.start, 'end': a.end,
-        'chunks': a.chunks, 'output': a.output,
+        'chunks': a.chunks or None, 'output': a.output,
     }, indent=2) + '\n')
     sh('git add -A', cwd=FARM)
     sh(['git', 'commit', '-qm', f'render {a.output} ({a.composition} {a.start}-{a.end})'], cwd=FARM)

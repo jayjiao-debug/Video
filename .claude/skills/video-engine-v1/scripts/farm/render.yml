@@ -46,7 +46,12 @@ jobs:
           node-version: 20
           cache: npm
       - name: Chinese serif font
-        run: sudo apt-get update -qq && sudo apt-get install -y -qq fonts-noto-cjk fonts-noto-cjk-extra >/dev/null && fc-list | grep -c "Noto Serif CJK"
+        run: |
+          # Prefer the font files committed in the project (fonts/ or public/fonts/): no network, no apt hang.
+          mkdir -p ~/.fonts
+          if ls fonts/*.[ot]t[fc] public/fonts/*.[ot]t[fc] >/dev/null 2>&1; then cp fonts/*.[ot]t[fc] public/fonts/*.[ot]t[fc] ~/.fonts/ 2>/dev/null || true; fc-cache -f >/dev/null;
+          else timeout 180 bash -c 'sudo apt-get update -qq && sudo apt-get install -y -qq fonts-noto-cjk >/dev/null' || echo "::warning::font install timed out"; fi
+          fc-list | grep -c "Noto Serif CJK" || true
       - run: npm ci --no-audit --no-fund
       - run: npx remotion browser ensure
       - name: Render frames ${{ matrix.chunk.a }}-${{ matrix.chunk.b }}

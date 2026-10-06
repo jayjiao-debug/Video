@@ -61,10 +61,39 @@ Read before starting: `references/craft.md` (story, tools, camera), `references/
 ## 5. QA stills, then render
 - `COMP=<Comp> SCALE=0.5 node scripts/stills.mjs <dir> <t1> <t2> …` then `python3 scripts/sheet.py <dir> <sheet.png>`;
   look at every scene's key moments and transitions against `references/qa-lessons.md`.
-- Render on the farm (GitHub Actions, 20 parallel runners, SwiftShader WebGL):
-  `python3 scripts/cloud_render.py <Comp> <name> --start A --end B --chunks N` (env `VE_PROJECT`, `VE_FARM`,
+### Where to render: GPU (Modal) vs CPU (GitHub) — decide per scene, before rendering
+Owner rule (2026-10-06): "Try not to use the CPU [on Modal], rather use from GitHub." GitHub CPU is free; Modal GPU is cheap; Modal CPU is billed for nothing we can't do free.
+- **Route by content, per scene** (scenes.json / the scene table in Film.tsx):
+  - Scene draws **three.js / @remotion/three** (any WebGL) → **Modal T4**, Chrome flag **`--gl=vulkan`** (Remotion) /
+    `--use-angle=vulkan --enable-features=Vulkan --ignore-gpu-blocklist` (raw Chrome). Measured: T4 ≈ 133 ms/frame vs
+    1,275 ms on 8 CPU cores; L4 only ~7 % faster for ~35 % more money → **T4, not L4**, for WebGL.
+    `egl` / `angle-gl` / `angle-egl` silently fall back to SwiftShader on Modal — check the renderer string in the log
+    ("NVIDIA Tesla T4"), never assume.
+  - Scene is **2D only** (SVG/CSS/canvas, subtitles, cards, maps) → **GitHub farm** (free, `--gl=swangle` is fine there).
+  - **Blender Cycles** (only if a hero shot truly needs ray tracing, owner-approved) → **Modal L4** (same $/frame as T4, 25 % faster).
+- **Never request CPU-only Modal functions.** All CPU work runs on GitHub runners or locally: asset downloads, joining
+  chunks, ffmpeg finishing, loudness, audio, QA. Inside a Modal GPU container encode with **NVENC** (`h264_nvenc`), not libx264.
+- **Quality bar = 1080p** (owner: viewers watch landscape inside a portrait phone). No 4K supersampling, no film grain,
+  no many-subframe motion blur unless the owner asks; deliver ~1.5–2 Mbps.
+- **Parallelism is free** (per-second billing): split GPU work into up to 10 containers (Starter-plan GPU limit),
+  ≥ ~30 frames each so container start-up (~30–60 s) stays a small share. GitHub: up to 20 chunks (the planner now
+  defaults to 20 and auto-splits small fixes at ~24 frames/chunk — never render a fix as one chunk).
+- **Fallback:** if a Modal job fails, times out, or the month's Modal spend is near the owner's cap, render the same
+  frames on the GitHub farm (slower, free) and say so in crew_log.md. Never block delivery on Modal.
+- **Fonts:** commit the subset CJK font files in the project (`fonts/`); the farm installs them from the repo and only
+  falls back to apt with a 180 s timeout (an apt hang once cost 12 min).
+- Modal plumbing: branch `modal-farm` (workflow `modal.yml`, push `job.json` + script) → results on `modal-output`
+  under `out/<id>/`. Secrets `MODAL_TOKEN_ID` / `MODAL_TOKEN_SECRET` are repo secrets (repo is public: never write tokens
+  into files). Benchmarks: modal-output `out/bench-01/summary.json`.
+- **Status (2026-10-06):** raw three.js pages render on Modal T4 (ice-ship test). A Remotion composition render on
+  Modal (`npx remotion render … --gl=vulkan`, split into ≤ 10 GPU chunks, NVENC) is the next build; until its first
+  real test passes (time + $ logged here), Remotion films still render on the GitHub farm.
+
+- GitHub farm (CPU, free, 20 parallel runners, SwiftShader WebGL):
+  `python3 scripts/cloud_render.py <Comp> <name> --start A --end B` (chunks auto: ≤ 20, ~24+ frames each; env `VE_PROJECT`, `VE_FARM`,
   `VE_REPO`). Farm files: `scripts/farm/render.yml` + `plan.mjs` on the `render-farm` branch; output lands on
-  `render-output` and is joined into `out/<name>_pic.mp4`. Whole film (3915 frames, 40 chunks) ≈ 20 min.
+  `render-output` and is joined into `out/<name>_pic.mp4`. Whole film (~3900 frames, 20 chunks) ≈ 20 min on CPU.
+  The farm files live on the project's `render-farm` branch: after changing them here, copy them there (cloud_render.py syncs sources, not the workflow).
 - Long jobs: run in the background (`nohup … &`) and poll; a foreground command is killed at 10 min.
 
 ## 6. Finish, fix by scene, deliver
