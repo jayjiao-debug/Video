@@ -2,14 +2,12 @@ import React, { useEffect, useState } from 'react';
 import { AbsoluteFill, Img, continueRender, delayRender, staticFile, useCurrentFrame, useVideoConfig } from 'remotion';
 import { CUT, FPS, SANS, prog, easeOut } from './lib';
 import { World, transAt } from './camera';
-import { StageA, TitleCard } from './sA';
-import { Berkson, Paris, Drop } from './sB';
-import { Pay, End } from './sC';
+import { Stage1, TitleCard } from './s1';
 import { LOOKS, LookCtx, LookId, useLook } from './look';
 import { JUNO } from './brand/identity';
 import { Subtitles } from './subs';
 
-/* 《筛子》. During a camera transition the whole stage is rendered SAMPLES times across one frame's time and
+/* 《草稿箱》. During a camera transition the whole stage is rendered SAMPLES times across one frame's time and
    averaged (layer k gets opacity 1/(k+1), so every sample weighs the same): real motion blur on the whips and pushes. */
 const SAMPLES = 8;
 
@@ -24,17 +22,12 @@ const useFonts = () => {
 const StageAt: React.FC<{ T: number }> = ({ T }) => (
   <AbsoluteFill>
     <World T={T} />
-    <StageA T={T} />
+    <Stage1 T={T} />
     <TitleCard T={T} />
-    <Berkson T={T} />
-    <Paris T={T} />
-    <Drop T={T} />
-    <Pay T={T} />
-    <End T={T} />
   </AbsoluteFill>
 );
 
-export const Film: React.FC<{ look?: LookId; at?: number }> = ({ look = 'card', at }) => (
+export const Film: React.FC<{ look?: LookId; at?: number }> = ({ look = 'night', at }) => (
   <LookCtx.Provider value={LOOKS[look]}><FilmInner at={at} /></LookCtx.Provider>
 );
 

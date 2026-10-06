@@ -1,45 +1,44 @@
 import { createContext, useContext } from 'react';
 
-/* Two candidate looks for 《筛子》, picked by the owner at the art-direction gate. Every scene reads its colours and
-   motifs from here, so the film renders in either look.
-   card  = "划卡": a dating app at night. Plum-black, hot pink for the people you keep, mint for the maths; people are
-           little profile cards, and the ones you reject swipe off to the left.
-   paper = "坐标纸": a statistician's graph paper. Warm paper, ink-black dots, red pencil for the cut, a yellow
-           highlighter on the numbers; rejected people are rubbed out. */
-export type LookId = 'card' | 'paper';
+/* Two candidate looks for 《草稿箱》, picked by the owner at the art-direction gate.
+   night = "深夜": a chat app at 2 a.m. Blue-black, warm amber for the drafts (what you didn't do), cool blue for the
+           sent messages (what you did). Quiet, close, a phone-lit room.
+   dusk  = "黄昏": the end of a day. A purple-to-ember sky, cream type, sunset orange for the drafts, teal for the
+           sent; a low sun and long light. More cinematic, more about a whole life. */
+export type LookId = 'night' | 'dusk';
 export type Look = {
   id: LookId; dark: boolean;
   bg: string; bgGrad: string; grid: string; gridMajor: string; dust: string;
   ink: string; dim: string; faint: string; accent: string; accentGlow: string; second: string; secondGlow: string; mark: string;
-  pointIn: string; pointOut: string;
+  pointIn: string; pointOut: string; panel: string; panelEdge: string;
   subInk: string; subShadow: string; subBand: string; subNum: string;
   vignette: string;
 };
 
 export const LOOKS: Record<LookId, Look> = {
-  card: {
-    id: 'card', dark: true,
-    bg: '#0b060d', bgGrad: 'radial-gradient(ellipse 85% 75% at 50% 45%, #22102a 0%, #120814 58%, #070308 100%)',
-    grid: 'rgba(255,214,232,0.09)', gridMajor: 'rgba(255,214,232,0.09)', dust: '#ffd6e8',
-    ink: '#fff2f6', dim: 'rgba(255,242,246,0.5)', faint: 'rgba(255,242,246,0.14)',
-    accent: '#ff4f8b', accentGlow: 'rgba(255,79,139,0.75)', second: '#3dffc5', secondGlow: 'rgba(61,255,197,0.6)', mark: '#ff4f8b',
-    pointIn: '#ff4f8b', pointOut: 'rgba(255,242,246,0.78)',
-    subInk: '#fff2f6', subShadow: '0 2px 14px rgba(0,0,0,0.95), 0 0 2px rgba(0,0,0,0.9)',
-    subBand: 'linear-gradient(180deg, rgba(7,3,8,0) 0%, rgba(7,3,8,0.72) 55%, rgba(7,3,8,0.9) 100%)', subNum: '#ff7aa8',
-    vignette: 'radial-gradient(ellipse 75% 70% at 50% 50%, rgba(0,0,0,0) 55%, rgba(0,0,0,0.5) 100%)',
+  night: {
+    id: 'night', dark: true,
+    bg: '#06080e', bgGrad: 'radial-gradient(ellipse 80% 70% at 50% 42%, #141b2c 0%, #0a0e18 58%, #04060a 100%)',
+    grid: 'rgba(200,220,255,0.07)', gridMajor: 'rgba(200,220,255,0.07)', dust: '#cfe0ff',
+    ink: '#f2f4f8', dim: 'rgba(242,244,248,0.5)', faint: 'rgba(242,244,248,0.12)',
+    accent: '#ffb547', accentGlow: 'rgba(255,181,71,0.7)', second: '#7aa2ff', secondGlow: 'rgba(122,162,255,0.6)', mark: '#ffb547',
+    pointIn: '#ffb547', pointOut: 'rgba(242,244,248,0.6)', panel: 'rgba(22,28,44,0.92)', panelEdge: 'rgba(242,244,248,0.14)',
+    subInk: '#f6f1e6', subShadow: '0 2px 14px rgba(0,0,0,0.95), 0 0 2px rgba(0,0,0,0.9)',
+    subBand: 'linear-gradient(180deg, rgba(4,6,10,0) 0%, rgba(4,6,10,0.72) 55%, rgba(4,6,10,0.9) 100%)', subNum: '#ffc46b',
+    vignette: 'radial-gradient(ellipse 75% 70% at 50% 50%, rgba(0,0,0,0) 55%, rgba(0,0,0,0.55) 100%)',
   },
-  paper: {
-    id: 'paper', dark: false,
-    bg: '#efe9dc', bgGrad: 'radial-gradient(ellipse 90% 80% at 50% 45%, #f6f1e6 0%, #ece5d6 65%, #ddd4c1 100%)',
-    grid: 'rgba(70,110,150,0.16)', gridMajor: 'rgba(70,110,150,0.3)', dust: '#6a5a40',
-    ink: '#1c1b20', dim: 'rgba(28,27,32,0.55)', faint: 'rgba(28,27,32,0.16)',
-    accent: '#d8362a', accentGlow: 'rgba(216,54,42,0.0)', second: '#2a5bd6', secondGlow: 'rgba(42,91,214,0.0)', mark: '#d8362a',
-    pointIn: '#1c1b20', pointOut: 'rgba(28,27,32,0.8)',
-    subInk: '#1c1b20', subShadow: '0 0 10px rgba(246,241,230,0.95), 0 0 3px rgba(246,241,230,1)',
-    subBand: 'linear-gradient(180deg, rgba(239,233,220,0) 0%, rgba(239,233,220,0.8) 55%, rgba(239,233,220,0.95) 100%)', subNum: '#d8362a',
-    vignette: 'radial-gradient(ellipse 80% 75% at 50% 50%, rgba(60,40,20,0) 60%, rgba(60,40,20,0.22) 100%)',
+  dusk: {
+    id: 'dusk', dark: true,
+    bg: '#120a14', bgGrad: 'linear-gradient(180deg, #1b1030 0%, #3a1a3c 38%, #7a3a3a 64%, #c8673a 84%, #f0a050 100%)',
+    grid: 'rgba(255,230,200,0.06)', gridMajor: 'rgba(255,230,200,0.06)', dust: '#ffe2b8',
+    ink: '#fff4e6', dim: 'rgba(255,244,230,0.6)', faint: 'rgba(255,244,230,0.16)',
+    accent: '#ff9a3c', accentGlow: 'rgba(255,154,60,0.75)', second: '#5fd0c8', secondGlow: 'rgba(95,208,200,0.55)', mark: '#ff9a3c',
+    pointIn: '#ff9a3c', pointOut: 'rgba(255,244,230,0.65)', panel: 'rgba(30,14,34,0.82)', panelEdge: 'rgba(255,244,230,0.18)',
+    subInk: '#fff4e6', subShadow: '0 2px 14px rgba(20,6,20,0.95), 0 0 2px rgba(20,6,20,0.9)',
+    subBand: 'linear-gradient(180deg, rgba(20,8,20,0) 0%, rgba(20,8,20,0.6) 55%, rgba(20,8,20,0.85) 100%)', subNum: '#ffb86b',
+    vignette: 'radial-gradient(ellipse 80% 75% at 50% 45%, rgba(0,0,0,0) 55%, rgba(10,0,10,0.55) 100%)',
   },
 };
 
-export const LookCtx = createContext<Look>(LOOKS.card);
+export const LookCtx = createContext<Look>(LOOKS.night);
 export const useLook = () => useContext(LookCtx);

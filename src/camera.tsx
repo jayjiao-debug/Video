@@ -12,9 +12,9 @@ import { useLook } from './look';
 export type TType = 'whip' | 'tilt' | 'push' | 'roll' | 'shake' | 'blur';
 export type Trans = { at: number; type: TType; d: number; px?: number; py?: number };
 export const TRANS: Trans[] = [
-  { at: 10.5, type: 'blur', d: 0.6 }, // the phone leaves
-  { at: CUT.atus, type: 'whip', d: 0.42 },
-  { at: CUT.dunbar, type: 'tilt', d: 0.42 },
+  { at: CUT.net, type: 'whip', d: 0.42 },
+  { at: CUT.atus, type: 'tilt', d: 0.42 },
+  { at: CUT.dunbar, type: 'whip', d: 0.42 },
   { at: CUT.drop, type: 'shake', d: 0.0 },
   { at: CUT.pay, type: 'roll', d: 0.5 },
   { at: CUT.end, type: 'push', d: 0.5, px: 960, py: 470 },
@@ -95,6 +95,7 @@ export const World: React.FC<{ T: number }> = ({ T }) => {
   });
   return (
     <AbsoluteFill style={{ background: L.bgGrad }}>
+      {L.id === 'dusk' && <div style={{ position: 'absolute', left: 960 - 520 + c.x * 0.05, top: 760, width: 1040, height: 1040, borderRadius: '50%', background: 'radial-gradient(circle, rgba(255,214,140,0.55) 0%, rgba(255,150,80,0.25) 30%, rgba(255,120,60,0) 62%)' }} />}
       <svg width={W} height={H} style={{ position: 'absolute', inset: 0, transform: `rotate(${c.r}deg) scale(${c.s})`, transformOrigin: '960px 540px' }}>
         {marks}
         {dust}

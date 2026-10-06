@@ -5,7 +5,7 @@ import { FPS, W, H, FILM_FRAMES } from './lib';
 
 export const Root: React.FC = () => (
   <>
-    <Composition id="Berkson" component={Film} durationInFrames={FILM_FRAMES} fps={FPS} width={W} height={H} defaultProps={{ look: 'card' as const }} />
-    <Composition id="BerksonPaper" component={Film} durationInFrames={FILM_FRAMES} fps={FPS} width={W} height={H} defaultProps={{ look: 'paper' as const }} />
+    <Composition id="Regret" component={Film} durationInFrames={FILM_FRAMES} fps={FPS} width={W} height={H} defaultProps={{ look: 'night' as const }} />
+    <Composition id="RegretDusk" component={Film} durationInFrames={FILM_FRAMES} fps={FPS} width={W} height={H} defaultProps={{ look: 'dusk' as const }} />
   </>
 );
