@@ -20,3 +20,4 @@ opening line (about you vs a detour), not the look.
 | 应该没事吧 | Titanic lifeboat seats lit gold from above · brown wood + gold | 28.5% | 49.36% | 0.62% | 3.2万 (21 h old) |
 | 舍不得的是TA吗 (ep11) | night desk, paper ledger page, gold title, 被套牢 seal · navy + cream paper + teal/ochre | | | | |
 | 为什么一年一眨眼 (ep12, first voiceover film) | A 底片灯箱: a film editor's light table, days as film frames, grease-pencil marks, timecodes · light backlight white + film black + one cobalt accent; warm light for the ending | | | | |
+| 心流 (ep13) | 3Blue1Brown analytic: black, manim blue/yellow/red, number line → learning-speed curve, bells, projected ridge surface, channel chart | | | | |
