@@ -21,3 +21,5 @@ opening line (about you vs a detour), not the look.
 | 舍不得的是TA吗 (ep11) | night desk, paper ledger page, gold title, 被套牢 seal · navy + cream paper + teal/ochre | | | | |
 | 为什么一年一眨眼 (ep12, voiceover film; voiceover format dropped 2026-10-06) | A 底片灯箱: a film editor's light table, days as film frames, grease-pencil marks, timecodes · light backlight white + film black + one cobalt accent; warm light for the ending | | | | |
 | 心流 (ep13, unpublished) | Tried and NOT approved: 3Blue1Brown analytic (视觉疲劳), WebGL canyon (太丑), bright flat game UI (太low), AI anime stills, premium manga teaser, pixel-art film, flat "Tank-style" illustration (v2 cut delivered 2026-10-06). Owner: none of these "really worked"; the 3D set-pieces of 它在瞄准谁 / 应该没事吧 did. | | | | |
+| 量子计算机不是同时算 (voice-over, explainer branch) | lab oscilloscope (Phosphor Scope) · #020604 screen + #7DFFB3 phosphor + red signal | | | | |
+| 鸡皮疙瘩在等什么 (explainer branch) | riso-print roller coaster = the song's tension; live edits on the real track strip · paper #F2ECDF + pink #FF48B0 + blue #0078BF + yellow halftone | | | | |
