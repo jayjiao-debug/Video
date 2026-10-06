@@ -163,7 +163,7 @@ export const Stage1: React.FC<{ T: number }> = ({ T }) => {
                   )}
                 </g>
               )}
-              <text x={160} y={850} style={{ fontFamily: SANS, fontSize: 18, fill: L.dim }}>Gilovich & Medvec (1994), JPSP · 研究 5，32 名成年人</text>
+              <text x={160} y={245} style={{ fontFamily: SANS, fontSize: 20, fill: L.dim }}>Gilovich & Medvec (1994), JPSP · 研究 5，32 名成年人</text>
             </g>
           )}
         </g>
