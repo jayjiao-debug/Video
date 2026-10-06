@@ -1,8 +1,8 @@
 {
-  "id": "gambler_final_fix-1791316587",
+  "id": "gambler_final3-1791319857",
   "composition": "GamblerFinal",
-  "start": 1440,
-  "end": 1560,
-  "chunks": 1,
-  "output": "gambler_final_fix"
+  "start": 0,
+  "end": 3738,
+  "chunks": 16,
+  "output": "gambler_final3"
 }
