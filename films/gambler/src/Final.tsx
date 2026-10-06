@@ -29,7 +29,7 @@ const useFonts = () => {
 };
 
 /* ---------------------------------------------------------------- timing */
-const at = (s: string) => { const l = SUBS.find((x) => x[2].includes(s)); if (!l) throw new Error(`no line ${s}`); return l[0]; };
+const at = (s: string) => { const l = SUBS.find((x) => x[2].replace(/[[\]{}]/g, '').includes(s)); if (!l) throw new Error(`no line ${s}`); return l[0]; };
 const down = (k: number) => EV.title + k * 4 * BEAT; // bar downbeats after the title (the grid is right in this section)
 const vis = (T: number, a: number, z: number, fi = 0.3, fo = 0.4) => Math.min(easeOut(prog(T, a, a + fi)), 1 - prog(T, z - fo, z));
 const L_ = {
