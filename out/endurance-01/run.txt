@@ -1,0 +1,211 @@
+sketchfab model 88a157144c6d44a4864a9a5358f598da
+  saved out/models/james_caird_watt.glb 13.2 MB
+npm warn deprecated glob@10.5.0: Old versions of glob are not supported, and contain widely publicized security vulnerabilities, which have been fixed in the current version. Please update. Support for old versions may be purchased (at exorbitant rates) by contacting i@izs.me
+[33m❯[39m dedup
+[32m✔[39m dedup                3ms
+[33m❯[39m instance
+[32m✔[39m instance             1ms
+[33m❯[39m palette
+[32m✔[39m palette              1ms
+[33m❯[39m flatten
+[32m✔[39m flatten              2ms
+[33m❯[39m join
+[32m✔[39m join                 172ms
+[33m❯[39m weld
+[32m✔[39m weld                 117ms
+[33m❯[39m simplify
+[32m✔[39m simplify             458ms
+[33m❯[39m resample
+[32m✔[39m resample             0ms
+[33m❯[39m prune
+[32m✔[39m prune                29ms
+[33m❯[39m sparse
+[32m✔[39m sparse               45ms
+[33m❯[39m textureCompress
+[32m✔[39m textureCompress      142ms
+
+info: james_caird_watt.glb (13.22 MB) → james_caird_watt.opt.glb (8 MB)
+  optimized 13.2 -> 8.0 MB
+sketchfab model 8490acd37fe24074a827d7c5897a3871
+  saved out/models/sailing_ship_cyc3w.glb 4.2 MB
+[33m❯[39m dedup
+[32m✔[39m dedup                3ms
+[33m❯[39m instance
+[32m✔[39m instance             1ms
+[33m❯[39m palette
+[32m✔[39m palette              1ms
+[33m❯[39m flatten
+[32m✔[39m flatten              2ms
+[33m❯[39m join
+[32m✔[39m join                 21ms
+[33m❯[39m weld
+[32m✔[39m weld                 26ms
+[33m❯[39m simplify
+[32m✔[39m simplify             32ms
+[33m❯[39m resample
+[32m✔[39m resample             1ms
+[33m❯[39m prune
+[32m✔[39m prune                37ms
+[33m❯[39m sparse
+[32m✔[39m sparse               10ms
+[33m❯[39m textureCompress
+[32m✔[39m textureCompress      167ms
+
+info: sailing_ship_cyc3w.glb (4.22 MB) → sailing_ship_cyc3w.opt.glb (1.24 MB)
+  optimized 4.2 -> 1.2 MB
+sketchfab model f6542036575c4945b40ffe765b1f537c
+  saved out/models/ice_floes_dadema.glb 0.3 MB
+[33m❯[39m dedup
+[32m✔[39m dedup                3ms
+[33m❯[39m instance
+[32m✔[39m instance             1ms
+[33m❯[39m palette
+[32m✔[39m palette              1ms
+[33m❯[39m flatten
+[32m✔[39m flatten              2ms
+[33m❯[39m join
+[32m✔[39m join                 3ms
+[33m❯[39m weld
+[32m✔[39m weld                 3ms
+[33m❯[39m simplify
+[32m✔[39m simplify             4ms
+[33m❯[39m resample
+[32m✔[39m resample             22ms
+[33m❯[39m prune
+[32m✔[39m prune                21ms
+[33m❯[39m sparse
+[32m✔[39m sparse               1ms
+[33m❯[39m textureCompress
+[32m✔[39m textureCompress      79ms
+
+info: ice_floes_dadema.glb (264.09 KB) → ice_floes_dadema.opt.glb (30.78 KB)
+  optimized 0.3 -> 0.0 MB
+sketchfab model 8fad3f7ad75847d2b3b3576d180bb1ff
+  saved out/models/oceanic_floes_cat.glb 229.2 MB
+[33m❯[39m dedup
+[32m✔[39m dedup                7ms
+[33m❯[39m instance
+[32m✔[39m instance             1ms
+[33m❯[39m palette
+[32m✔[39m palette              1ms
+[33m❯[39m flatten
+[32m✔[39m flatten              4ms
+[33m❯[39m join
+[32m✔[39m join                 1,313ms
+[33m❯[39m weld
+[32m✔[39m weld                 1,775ms
+[33m❯[39m simplify
+[32m✔[39m simplify             1,347ms
+[33m❯[39m resample
+[32m✔[39m resample             0ms
+[33m❯[39m prune
+[32m✔[39m prune                34ms
+[33m❯[39m sparse
+[32m✔[39m sparse               626ms
+[33m❯[39m textureCompress
+[32m✔[39m textureCompress      185ms
+
+info: oceanic_floes_cat.glb (229.16 MB) → oceanic_floes_cat.opt.glb (226.18 MB)
+  optimized 229.2 -> 226.2 MB
+sketchfab search "barquentine"
+  FAILED: ENOENT: no such file or directory, open 'out/search/barquentine/results.json'
+sketchfab search "polar expedition ship"
+  FAILED: ENOENT: no such file or directory, open 'out/search/polar-expedition-ship/results.json'
+sketchfab search "wooden ship stern"
+  saved out/search/wooden-ship-stern/01_72fc6f898a704bd69d3a6283ec362af6.jpg 0.0 MB
+  saved out/search/wooden-ship-stern/02_ea7b72d627724644bdf387cf4f88ff5d.jpg 0.0 MB
+  saved out/search/wooden-ship-stern/03_0987f7b620b644339b4a4311186d043e.jpg 0.0 MB
+  saved out/search/wooden-ship-stern/04_025d9f63f08b4418b729dc5292f11c80.jpg 0.0 MB
+sketchfab search "steam tug"
+  saved out/search/steam-tug/01_e4695b1ff9d24b1e90a222bdf1c90dfb.jpg 0.0 MB
+  saved out/search/steam-tug/02_e3a6e441103145f0a7354717891c0c9d.jpg 0.0 MB
+  saved out/search/steam-tug/03_b09bf20ba1e1407590be0f8d5e2d71e8.jpg 0.0 MB
+  saved out/search/steam-tug/04_3acd43f7c77b424d94dfda75be6312be.jpg 0.0 MB
+sketchfab search "sea ice"
+  saved out/search/sea-ice/01_71994bced6334251ace518ff8b09ecb3.jpg 0.0 MB
+  saved out/search/sea-ice/02_027aaee12ade48388f3bbac141b8cd9f.jpg 0.0 MB
+  saved out/search/sea-ice/03_36105320e882416e870c5f6ee8db2e6b.jpg 0.0 MB
+  saved out/search/sea-ice/04_0e99c843ffd34fa497871ac5fbfc9cb1.jpg 0.0 MB
+  saved out/search/sea-ice/05_765af548d5c74d00bc083795745628e1.jpg 0.0 MB
+  saved out/search/sea-ice/06_a3f1420ce75b4b54ab8a0f8e7489d0e2.jpg 0.0 MB
+  saved out/search/sea-ice/07_08600e523c6f4d889f707c2435f7588e.jpg 0.0 MB
+  saved out/search/sea-ice/08_b623a28f15f4420f88d2ec57d8cce7a5.jpg 0.0 MB
+  saved out/search/sea-ice/09_dfa72d36b8214423a72f3340a241e63d.jpg 0.0 MB
+  saved out/search/sea-ice/10_86ca5d73a6534d8cae5e4eed6793e594.jpg 0.0 MB
+  saved out/search/sea-ice/11_1688acdc607b41859ed3daa62cd4a84f.jpg 0.0 MB
+  saved out/search/sea-ice/12_fff83d9e70104c6bbb176a82a6db0e31.jpg 0.0 MB
+  saved out/search/sea-ice/13_26f797546dc445b48a0b0f5203d215bd.jpg 0.0 MB
+  saved out/search/sea-ice/14_9c7307056c22440691803ab6a9e0ff80.jpg 0.0 MB
+  saved out/search/sea-ice/15_02a413cabaa040d89d550ab38ac81d5e.jpg 0.0 MB
+  saved out/search/sea-ice/16_380c9e13775b42098a0f7eae8579e700.jpg 0.0 MB
+  saved out/search/sea-ice/17_9d8dc34057f34439b40b77a9c3b0582e.jpg 0.0 MB
+  saved out/search/sea-ice/18_ec28c725ca894ef886e16953d3bc0c28.jpg 0.0 MB
+  saved out/search/sea-ice/19_290896dd2ce1484bb0042eb2795a2f1e.jpg 0.0 MB
+  saved out/search/sea-ice/20_ed4d06dfd9244481aa5eb935b95b439f.jpg 0.0 MB
+  saved out/search/sea-ice/21_19c0c4ca8c38406ab80f89cc84d9c390.jpg 0.0 MB
+  saved out/search/sea-ice/22_3636a64719b04172b62d7a8680ebb578.jpg 0.0 MB
+  saved out/search/sea-ice/23_e863537b272c4c389cd0e47f37c2a049.jpg 0.0 MB
+  saved out/search/sea-ice/24_45424f7e4ecf4496ab82a43092b90f80.jpg 0.0 MB
+sketchfab search "iceberg"
+  saved out/search/iceberg/01_fe00cb0ecaca4e4595874b70de7e116b.jpg 0.0 MB
+  saved out/search/iceberg/02_463eef961fc643358a1929bec9f0f18f.jpg 0.0 MB
+  saved out/search/iceberg/03_ff88be1b58d04c6bbbf9744188fae01c.jpg 0.0 MB
+  saved out/search/iceberg/04_3c54f80f27af43c1bc7fb7e9f84c460b.jpg 0.0 MB
+  saved out/search/iceberg/05_ece9bfb8078949138f7c17bdf5290e13.jpg 0.0 MB
+  saved out/search/iceberg/06_95157af5f1bf448f96c7dd0aa32f559b.jpg 0.0 MB
+  saved out/search/iceberg/07_4127e78feed345b9ad59023afb055665.jpg 0.0 MB
+  saved out/search/iceberg/08_a899c505f48245f8a6bd8236d83fe123.jpg 0.0 MB
+  saved out/search/iceberg/09_ee7fe3e41227420b908b4c3f3895c092.jpg 0.0 MB
+  saved out/search/iceberg/10_d6e8265bfc3b4d06afccd0a9d7c44bbc.jpg 0.0 MB
+  saved out/search/iceberg/11_1316c6a0be1d4b2ab46f9022c4aa8f9a.jpg 0.0 MB
+  saved out/search/iceberg/12_d48e92e570204adbaac185d7920708be.jpg 0.0 MB
+  saved out/search/iceberg/13_85dd470ceafe4d658127106358421438.jpg 0.0 MB
+  saved out/search/iceberg/14_efca33938b8941ecbeb35b36edb60c68.jpg 0.0 MB
+  saved out/search/iceberg/15_3952ffbc1f49480b82323bb7d2138178.jpg 0.0 MB
+  saved out/search/iceberg/16_186d2d08315d459092a27afeffd1be70.jpg 0.0 MB
+sketchfab search "shipwreck"
+  saved out/search/shipwreck/01_af2da248227c4dac96fc2570e58e26da.jpg 0.0 MB
+  saved out/search/shipwreck/02_b5648165558e40419f766989e461731d.jpg 0.0 MB
+  saved out/search/shipwreck/03_5942986ea47e42a2a6e1586d5e795280.jpg 0.0 MB
+  saved out/search/shipwreck/04_9826e042e3d94f46980b0b88f7caa7f8.jpg 0.0 MB
+  saved out/search/shipwreck/05_0c3b206157764a358fb2b16e4d90f0b3.jpg 0.0 MB
+  saved out/search/shipwreck/06_06cebc37613c4325807174d562e6a806.jpg 0.0 MB
+  saved out/search/shipwreck/07_b93140adf486475db064eab7da4a675a.jpg 0.0 MB
+  saved out/search/shipwreck/08_0059985fb33047b3ba19137d6efe01a4.jpg 0.0 MB
+  saved out/search/shipwreck/09_0f8b113ffcaf4a07bbe7a641e0e927c4.jpg 0.0 MB
+  saved out/search/shipwreck/10_3c54f80f27af43c1bc7fb7e9f84c460b.jpg 0.0 MB
+  saved out/search/shipwreck/11_ef313bca417b43d59987c6f330a2681f.jpg 0.0 MB
+  saved out/search/shipwreck/12_22865c86e6c441b1b17c65962d29c6fc.jpg 0.0 MB
+  saved out/search/shipwreck/13_1916420a764c4e73b754755d7f2780ce.jpg 0.0 MB
+  saved out/search/shipwreck/14_3cfe056f881f463c95937b8a98bbd8e2.jpg 0.0 MB
+  saved out/search/shipwreck/15_e8cd4cfbfe5e44c79ccd7a7b1f01d86d.jpg 0.0 MB
+  saved out/search/shipwreck/16_8126413e6a054a77b4625ce1e48f28bd.jpg 0.0 MB
+  saved out/search/shipwreck/17_92b6b5db46fb4c2e91803594423cd18b.jpg 0.0 MB
+  saved out/search/shipwreck/18_b9e9100813a84de8871adb9547e5800a.jpg 0.0 MB
+  saved out/search/shipwreck/19_bbb9f14855c84a399145ae83e16f5aeb.jpg 0.0 MB
+  saved out/search/shipwreck/20_8d9fa75d66bf467a90414df9edcacec7.jpg 0.0 MB
+  saved out/search/shipwreck/21_dc14bf79a89042b097f04ab83102e856.jpg 0.0 MB
+  saved out/search/shipwreck/22_5bb435a7cc3d4372830783e53ac56426.jpg 0.0 MB
+  saved out/search/shipwreck/23_7b1cc6900c264981b4c0ec3901879212.jpg 0.0 MB
+  saved out/search/shipwreck/24_5330222ef6f34dbbb84deb1f5bfbe6f0.jpg 0.0 MB
+polyhaven kloppenheim_06_puresky
+  saved out/polyhaven/kloppenheim_06_puresky_2k.hdr 4.4 MB
+  saved out/polyhaven/kloppenheim_06_puresky_preview.jpg 19.0 MB
+polyhaven belfast_sunset_puresky
+  saved out/polyhaven/belfast_sunset_puresky_2k.hdr 4.6 MB
+  saved out/polyhaven/belfast_sunset_puresky_preview.jpg 16.2 MB
+polyhaven snow_02
+  saved out/polyhaven/snow_02/snow_02.gltf 0.0 MB
+  saved out/polyhaven/snow_02/snow_02.bin 2.4 MB
+  saved out/polyhaven/snow_02/textures/snow_02_rough_2k.jpg 0.6 MB
+  saved out/polyhaven/snow_02/textures/snow_02_diff_2k.jpg 1.3 MB
+  saved out/polyhaven/snow_02/textures/snow_02_nor_gl_2k.jpg 4.8 MB
+polyhaven brown_planks_03
+  saved out/polyhaven/brown_planks_03/brown_planks_03.gltf 0.0 MB
+  saved out/polyhaven/brown_planks_03/brown_planks_03.bin 2.4 MB
+  saved out/polyhaven/brown_planks_03/textures/brown_planks_03_rough_2k.jpg 1.0 MB
+  saved out/polyhaven/brown_planks_03/textures/brown_planks_03_diff_2k.jpg 2.4 MB
+  saved out/polyhaven/brown_planks_03/textures/brown_planks_03_nor_gl_2k.jpg 2.4 MB
+url https://raw.githubusercontent.com/mrdoob/three.js/r169/examples/textures/waternormals.jpg
+  saved out/files/waternormals.jpg 0.2 MB
+done
