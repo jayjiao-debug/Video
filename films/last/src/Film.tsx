@@ -57,7 +57,7 @@ export const Film: React.FC = () => {
       <AbsoluteFill style={{ opacity: 0.05, pointerEvents: 'none' }}><Img src={staticFile('grain0.png')} style={{ width: '100%', height: '100%' }} /></AbsoluteFill>
       {mark > 0.001 && (
         <div style={{ position: 'absolute', top: 44, right: 56, opacity: 0.55 * mark, fontFamily: SANS, fontWeight: 500, fontSize: 20, letterSpacing: '0.3em', color: 'rgba(243,237,226,0.58)' }}>
-          <span style={{ color: JUNO.colors.gold }}>◆ </span>{JUNO.mark}
+          <span style={{ color: '#ff3d2e' }}>◆ </span>{JUNO.mark}
         </div>
       )}
     </AbsoluteFill>
