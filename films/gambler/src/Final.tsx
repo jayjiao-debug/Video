@@ -142,10 +142,14 @@ const BrainFilm: React.FC<{ T: number; lb: number }> = ({ T, lb }) => {
       <circle cx={1440} cy={292} r={12 + 30 * arrive + 26 * pulse} fill="url(#heatA)" opacity={arrive} />
       <circle cx={1392} cy={252} r={5} fill={waitHeat > 0.05 ? '#ff8a3a' : ink} />
       <circle cx={1440} cy={292} r={5} fill={arrive > 0.05 ? GOLD : ink} />
-      <text x={1312} y={236} textAnchor="end" opacity={0.4 + 0.6 * Math.min(1, waitHeat * 2)} style={{ fontFamily: ZH, fontWeight: 900, fontSize: 24, fill: '#1a1410' }}>等</text>
-      <text x={1312} y={252} textAnchor="end" opacity={0.4 + 0.6 * Math.min(1, waitHeat * 2)} style={{ fontFamily: SANS, fontWeight: 700, fontSize: 10, fill: ink }}>尾状核</text>
-      <text x={1532} y={318} opacity={0.4 + 0.6 * arrive} style={{ fontFamily: ZH, fontWeight: 900, fontSize: 24, fill: '#1a1410' }}>到</text>
-      <text x={1532} y={334} opacity={0.4 + 0.6 * arrive} style={{ fontFamily: SANS, fontWeight: 700, fontSize: 10, fill: ink }}>伏隔核</text>
+      <g className="lb">
+        <line x1={1392} y1={252} x2={1262} y2={196} stroke={ink} strokeWidth={1.2} opacity={0.5} />
+        <line x1={1440} y1={292} x2={1560} y2={330} stroke={ink} strokeWidth={1.2} opacity={0.5} />
+        <text x={1214} y={190} opacity={0.45 + 0.55 * Math.min(1, waitHeat * 2)} style={{ fontFamily: ZH, fontWeight: 900, fontSize: 26, fill: '#1a1410' }}>等</text>
+        <text x={1214} y={206} opacity={0.45 + 0.55 * Math.min(1, waitHeat * 2)} style={{ fontFamily: SANS, fontWeight: 700, fontSize: 11, fill: ink }}>尾状核</text>
+        <text x={1606} y={342} textAnchor="end" opacity={0.45 + 0.55 * arrive} style={{ fontFamily: ZH, fontWeight: 900, fontSize: 26, fill: '#1a1410' }}>到</text>
+        <text x={1606} y={358} textAnchor="end" opacity={0.45 + 0.55 * arrive} style={{ fontFamily: SANS, fontWeight: 700, fontSize: 11, fill: ink }}>伏隔核</text>
+      </g>
       {/* the song: a waveform strip with a playhead walking to the peak */}
       <g opacity={easeOut(prog(T, L_.scan - 0.2, L_.scan + 0.3))}>
         {Array.from({ length: 60 }, (_, i) => {
@@ -153,7 +157,7 @@ const BrainFilm: React.FC<{ T: number; lb: number }> = ({ T, lb }) => {
           return <rect key={i} x={x} y={392 - amp / 2} width={3} height={amp} fill={u <= ph ? '#c8913a' : ink} opacity={u <= ph ? 0.95 : 0.35} />;
         })}
         <line x1={1232 + 334 * ph} y1={372} x2={1232 + 334 * ph} y2={412} stroke={RED} strokeWidth={2} />
-        <text x={1566} y={366} textAnchor="end" style={{ fontFamily: SANS, fontWeight: 700, fontSize: 11, fill: ink }}>高潮 ▼</text>
+        <text className="lb" x={1566} y={372} textAnchor="end" style={{ fontFamily: SANS, fontWeight: 700, fontSize: 11, fill: ink }}>高潮 ▼</text>
       </g>
     </g>
   );
@@ -259,7 +263,7 @@ const WorldCards: React.FC<{ T: number }> = ({ T }) => {
     ['C', 'G', 'Am', 'F', 'C', 'G'].forEach((c, i) => {
       const t = down(i + 2), x = 560 + i * 160;
       out.push(<Card key={`ch${i}`} x={x} y={712} w={128} flip={flipAt(T, t)} lift={12 * hit(T, t, 0.3)} face={<FaceText s={c} size={58} font={EN} />} />);
-      out.push(<Tag key={`ok${i}`} x={x} y={548 - 24 * prog(T, t, t + 1.7)} s="押中 ✓" size={24} o={vis(T, t + 0.05, t + 1.7, 0.12, 0.4)} />);
+      out.push(<Tag key={`ok${i}`} x={x} y={540} s="押中 ✓" size={24} o={vis(T, t + 0.05, t + 1.7, 0.12, 0.4)} />);
     });
     out.push(<Tag key="n" x={960} y={850} s="和弦为示意" size={15} color={DIM} o={0.7} />);
   }
@@ -283,7 +287,7 @@ const WorldCards: React.FC<{ T: number }> = ({ T }) => {
       out.push(<Tag key="r1" x={1260} y={430} s="被骗了！" size={30} o={vis(T, r1 + 0.05, reset, 0.1, 0.2)} />);
     } else {
       const o = vis(T, reset + 0.8, r2 + 0.05, 0.3, 0.1);
-      ['D', 'G♯', 'F', 'A♭'].forEach((g, i) => out.push(<div key={`g${i}`} style={{ position: 'absolute', left: 1260 - 60 + Math.sin(T * 2 + i * 1.6) * 40, width: 120, top: 470 + Math.cos(T * 1.7 + i) * 20, textAlign: 'center', opacity: o * 0.35, fontFamily: EN, fontWeight: 700, fontSize: 64, color: INK }}>{g}</div>));
+      ['D', 'G♯', 'F', 'A♭'].forEach((g, i) => out.push(<div key={`g${i}`} style={{ position: 'absolute', left: 1260 - 60 + [-46, 40, -20, 52][i], width: 120, top: 470 + [-10, 14, 30, -24][i], textAlign: 'center', opacity: o * (0.22 + 0.16 * Math.sin(T * 2.2 + i * 1.7)), fontFamily: EN, fontWeight: 700, fontSize: 64, color: INK }}>{g}</div>));
       out.push(<Tag key="gq" x={1260} y={430} s="完全没底" size={22} color={INK} o={o} />);
       out.push(<Tag key="r2" x={1260} y={430} s="押中了！" size={30} o={vis(T, r2 + 0.05, SHOT.demo[1], 0.1, 0.2)} />);
     }
@@ -327,11 +331,11 @@ const Stage: React.FC<{ T: number }> = ({ T }) => {
         <svg width={1920} height={1080} style={{ position: 'absolute', inset: 0, overflow: 'visible' }}>
           <Wall T={T} L={L} />
           <Table L={L} />
-          <Turntable T={T} />
           <Lamp T={T} L={L} />
         </svg>
+        <div style={{ position: 'absolute', left: -1500, top: -1500, width: 4920, height: 4080, background: '#000', opacity: L < 0.06 ? 1 : clamp(0.92 * (1 - L), 0, 0.92) }} />
         <WorldCards T={T} />
-        <div style={{ position: 'absolute', left: -1500, top: -1500, width: 4920, height: 4080, background: '#000', opacity: L < 0.06 ? 1 : clamp(1 - L, 0, 0.97) }} />
+        {L < 0.06 && <div style={{ position: 'absolute', left: -1500, top: -1500, width: 4920, height: 4080, background: '#000' }} />}
       </AbsoluteFill>
       <AbsoluteFill style={{ background: 'radial-gradient(ellipse 70% 65% at 50% 58%, rgba(0,0,0,0) 45%, rgba(0,0,0,0.65) 100%)' }} />
       {dim > 0 && <AbsoluteFill style={{ background: `rgba(3,2,2,${dim})` }} />}
@@ -367,13 +371,12 @@ const Graph1: React.FC<{ T: number }> = ({ T }) => {
   const xs: [number, number][] = [[a, 960], [a + 1.0, 960], [L_.bored + 1.9, 500], [L_.noise + 0.2, 500], [L_.noise + 1.9, 1420], [L_.cheung + 0.2, 1420], [L_.cheung + 1.8, 960]];
   let x = 960;
   for (let i = 0; i < xs.length - 1; i++) if (T >= xs[i][0]) x = lerp(xs[i][1], xs[i + 1][1], easeInOut(prog(T, xs[i][0], xs[i + 1][0])));
-  x += Math.sin(T * 1.3) * 6;
-  const y = curveY(x);
+    const y = curveY(x);
   const atPeak = easeOut(prog(T, L_.cheung + 1.6, L_.cheung + 2.1));
   const tagL = vis(T, L_.bored + 1.6, L_.noise + 0.6, 0.3, 0.4), tagR = vis(T, L_.noise + 1.6, L_.cheung + 0.6, 0.3, 0.4);
   return (
     <AbsoluteFill>
-      <svg width={1920} height={1080} style={{ position: 'absolute', inset: 0 }}>
+      <svg className="g" width={1920} height={1080} style={{ position: 'absolute', inset: 0 }}>
         <Axes o={easeOut(prog(T, a, a + 0.4))} left="全猜中" right="全猜不中" />
         <rect x={830} y={GY - GH - 30} width={260} height={GH + 30} fill={GOLD} opacity={0.08 * atPeak} />
         <path d={curvePath()} fill="none" stroke={GOLD} strokeWidth={5} pathLength={1} strokeDasharray="1" strokeDashoffset={1 - draw} style={{ filter: `drop-shadow(0 0 10px ${GOLD_GLOW})` }} />
@@ -401,7 +404,7 @@ const Graph2: React.FC<{ T: number }> = ({ T }) => {
   const train = easeOut(prog(T, L_.train + 0.3, L_.train + 0.8));
   return (
     <AbsoluteFill>
-      <svg width={1920} height={1080} style={{ position: 'absolute', inset: 0 }}>
+      <svg className="g" width={1920} height={1080} style={{ position: 'absolute', inset: 0 }}>
         <Axes o={easeOut(prog(T, a, a + 0.4))} left="偏爱好猜" right="偏爱意外" />
         {PEOPLE.map((p, i) => {
           const pk = lerp(960, p.peak + Math.sin(T * 0.8 + i) * 8, split), w = lerp(250, p.w, split), h = lerp(GH, p.h, split);
@@ -491,7 +494,7 @@ const BuildO: React.FC<{ T: number }> = ({ T }) => {
   return (
     <AbsoluteFill style={{ opacity: o }}>
       <div style={{ position: 'absolute', left: 0, right: 0, top: 176, textAlign: 'center', fontFamily: MONO, fontWeight: 700, fontSize: 22, letterSpacing: '0.5em', color: over ? RED : DIM }}>距离 DROP</div>
-      <div style={{ position: 'absolute', left: 0, right: 0, top: 206, textAlign: 'center', fontFamily: EN, fontWeight: 700, fontSize: 110, color: over ? RED : INK, fontVariantNumeric: 'tabular-nums', textShadow: '0 4px 20px rgba(0,0,0,0.8)' }}>{left.toFixed(1)}</div>
+      <div style={{ position: 'absolute', left: 0, right: 0, top: 210, textAlign: 'center', fontFamily: MONO, fontWeight: 700, fontSize: 96, color: over ? RED : INK, fontVariantNumeric: 'tabular-nums', textShadow: '0 4px 20px rgba(0,0,0,0.8)' }}>{left.toFixed(1)}</div>
       <Big s="+1 小节" y={372} size={96} color={RED} o={vis(T, EV.breath2 + 0.03, EV.hush + 0.03, 0.06, 0.04)} dy={land(T, EV.breath2 + 0.03)} glow="rgba(255,60,40,0.5)" />
     </AbsoluteFill>
   );
@@ -548,6 +551,8 @@ export const Final: React.FC<{ at?: number }> = ({ at: atT }) => {
           @font-face { font-family: "JunoMono"; src: url(${staticFile('fonts/DejaVuSansMono.ttf')}) format("truetype"); font-weight: 400; }
           @font-face { font-family: "JunoMono"; src: url(${staticFile('fonts/DejaVuSansMono-Bold.ttf')}) format("truetype"); font-weight: 700; }
           @font-face { font-family: "Cormorant Garamond"; src: url(${staticFile('fonts/cormorant-garamond-latin-700-normal.woff2')}) format("woff2"); font-weight: 700; }
+          .g text { paint-order: stroke; stroke: rgba(5,4,3,0.92); stroke-width: 10px; stroke-linejoin: round; }
+          .lb text { paint-order: stroke; stroke: #dbe6f0; stroke-width: 6px; stroke-linejoin: round; }
         `}</style>
         <Stage T={T} />
         <Graph1 T={T} />
