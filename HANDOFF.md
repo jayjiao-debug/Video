@@ -45,3 +45,7 @@ dropped). Owner hasn't approved any ep13 look. Park it unless the owner asks; if
 - Repository secrets `MODAL_TOKEN_ID` / `MODAL_TOKEN_SECRET` (Modal profile `jayjiao249`) are set by the owner. Never put tokens in files: this repo is public.
 - The sandbox cannot reach modal.com; GitHub Actions can. Branch `modal-farm` holds `.github/workflows/modal.yml`: push a new `job.json` (`{"id": "...", "entry": "<script.py>"}`) plus the script → the runner does `modal run <entry>` → everything the script writes to `out/` lands on branch `modal-output` under `out/<id>/` (files > 90 MB split into .partNN).
 - Smoke test `check-01` passed: Tesla T4 GPU, `MODAL_OK`.
+- Benchmark `bench-01` (ice-ship scene, 1280×720, modal-output/out/bench-01/summary.json):
+  - three.js in headless Chrome needs `--use-angle=vulkan --enable-features=Vulkan --ignore-gpu-blocklist` to hit the GPU (egl / angle-gl silently fall back to SwiftShader).
+  - three.js: **T4 133 ms/frame** (≈ $0.00002/frame), L4 124 ms, 8-core CPU 1275 ms, this sandbox ≈ 4000 ms. → render three.js/Remotion on **T4**.
+  - Blender Cycles 128 spp + denoise: T4 10.1 s, **L4 7.7 s** per frame (same $/frame ≈ $0.0017) → Cycles on **L4**. The quick Cycles scene port was wrong (glTF parts with separate roots split apart); fix before using Cycles.
