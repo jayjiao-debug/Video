@@ -1,4 +1,87 @@
-{"id":"endurance-03","items":[
- {"type":"sketchfab","uid":"4a5a10c4049e4ed98ce5bcbc831a0ddc","name":"merchant_schooner"},
- {"type":"sketchfab","uid":"027aaee12ade48388f3bbac141b8cd9f","name":"endurance_wreck_schmauss"}
-]}
+{
+ "id": "design-01",
+ "items": [
+  {
+   "type": "sketchfab-search",
+   "q": "chernobyl reactor",
+   "license": "by",
+   "count": 16
+  },
+  {
+   "type": "sketchfab-search",
+   "q": "RBMK",
+   "license": "by",
+   "count": 16
+  },
+  {
+   "type": "sketchfab-search",
+   "q": "nuclear reactor control room",
+   "license": "by",
+   "count": 16
+  },
+  {
+   "type": "sketchfab-search",
+   "q": "reactor hall",
+   "license": "by",
+   "count": 16
+  },
+  {
+   "type": "sketchfab-search",
+   "q": "chernobyl",
+   "license": "by",
+   "count": 16
+  },
+  {
+   "type": "sketchfab-search",
+   "q": "control rod",
+   "license": "by",
+   "count": 16
+  },
+  {
+   "type": "sketchfab-search",
+   "q": "B-17",
+   "license": "by",
+   "count": 16
+  },
+  {
+   "type": "sketchfab-search",
+   "q": "B-17 cockpit",
+   "license": "by",
+   "count": 16
+  },
+  {
+   "type": "sketchfab-search",
+   "q": "bomber cockpit",
+   "license": "by",
+   "count": 16
+  },
+  {
+   "type": "sketchfab-search",
+   "q": "WW2 cockpit",
+   "license": "by",
+   "count": 16
+  },
+  {
+   "type": "sketchfab-search",
+   "q": "aircraft lever",
+   "license": "by",
+   "count": 16
+  },
+  {
+   "type": "sketchfab-search",
+   "q": "toggle switch panel",
+   "license": "by",
+   "count": 16
+  },
+  {
+   "type": "polyhaven",
+   "id": "moonless_golf",
+   "res": "2k"
+  },
+  {
+   "type": "polyhaven",
+   "id": "dikhololo_night",
+   "res": "2k"
+  }
+ ]
+}
