@@ -145,7 +145,7 @@ export const Dunbar: React.FC<{ T: number }> = ({ T }) => {
   const big = easeOut(prog(T, 67.3, 67.6));
   // build-up to the drop: everything starts to tremble
   const tense = easeIn(prog(T, 70.4, CUT.drop));
-  const beatKick = FILM_BEATS.filter((b) => b > 70.4 && b < CUT.drop).reduce((acc, b) => acc + hit(T, b, 0.08), 0);
+  const beatKick = FILM_BEATS.filter((b) => b > 70.4 && b < CUT.drop).reduce((acc, b) => acc + hit(T, b, 0.16), 0);
   const jx = Math.sin(T * 83) * 10 * tense + beatKick * 6, jy = Math.cos(T * 67) * 7 * tense;
   return (
     <Stage style={st}>
@@ -176,7 +176,7 @@ export const Dunbar: React.FC<{ T: number }> = ({ T }) => {
         )}
         <Src text="Roberts & Dunbar · Evolution and Human Behavior 2011 / Human Nature 2015" o={easeOut(prog(T, a + 0.3, a + 0.8))} />
       </g>
-      {tense > 0 && <rect x={0} y={0} width={1920} height={1080} fill={RED} opacity={0.05 * tense + 0.06 * beatKick} />}
+      {tense > 0 && <rect x={0} y={0} width={1920} height={1080} fill={RED} opacity={0.05 * tense + 0.035 * beatKick} />}
     </Stage>
   );
 };
