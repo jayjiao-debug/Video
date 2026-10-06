@@ -70,8 +70,8 @@ const Hook: React.FC<{ T: number }> = ({ T }) => {
         <Txt x={NL.x0 + 24} y={y - GY - 36} size={38} anchor="start" fill={C.grey} o={kY}>学得多快</Txt>
         {kCurve > 0 && <Create d={poly(curvePts)} k={kCurve} stroke={C.blue} w={8} />}
         {/* the extremes on the curve */}
-        <Txt x={px(1, lo) - (lo > 0.3 ? 20 : 0)} y={y - 80} size={46} fill={C.blue} o={lab100}>太简单</Txt>
-        <Txt x={px(0.5, lo) + (lo > 0.3 ? 70 : 0)} y={y - 80} size={46} fill={C.red} o={lab50}>瞎猜</Txt>
+        <Txt x={px(1, lo) - 90 * lo * 2} y={y - lerp(80, 36, lo * 2)} size={46} fill={C.blue} o={lab100}>太简单</Txt>
+        <Txt x={px(0.5, lo) + 150 * lo * 2} y={y - lerp(80, 36, lo * 2)} size={46} fill={C.red} o={lab50}>瞎猜</Txt>
         {/* the peak */}
         {kPeak > 0 && <Create d={`M${peakX},${peakY} L${peakX},${y}`} k={kPeak} stroke={C.yellow} w={3} dash="10 10" o={kPeak} />}
       </g>
@@ -358,7 +358,7 @@ const Ridge: React.FC<{ T: number }> = ({ T }) => {
   const o = sm(T, a, 0.6) * (1 - sm(T, out, 0.6));
   const rise = sm(T, cue('R1', '高度') - 0.3, 1.6);
   const top = sm(T, cue('R3') - 0.25, DROP2 - cue('R3') + 0.75);   // lands just after drop 2
-  const th = lerp(-0.62 + 0.25 * sm(T, cue('R2'), 2.4), 0, top);    // azimuth
+  const th = lerp(-0.92 + 0.18 * sm(T, cue('R2'), 2.4), 0, top);    // azimuth
   const ph = lerp(0.62, Math.PI / 2, top);                            // elevation
   const Hh = RS.Hh * rise;
   const proj = (s: number, c: number, h: number): [number, number, number] => {
@@ -392,7 +392,7 @@ const Ridge: React.FC<{ T: number }> = ({ T }) => {
       <line x1={O[0]} y1={O[1]} x2={Ya[0]} y2={Ya[1]} stroke={C.line} strokeWidth={3} />
       <line x1={O[0]} y1={O[1]} x2={Za[0]} y2={Za[1]} stroke={C.line} strokeWidth={3} opacity={1 - top} />
       <Txt x={Xa[0] + 30} y={Xa[1] + 12} size={36} anchor="start">能力</Txt>
-      <Txt x={Ya[0]} y={Ya[1] - 30} size={36}>挑战</Txt>
+      <Txt x={lerp(Ya[0], Ya[0] - 70, top)} y={lerp(Ya[1] - 30, Ya[1] + 60, top)} size={lerp(36, 42, top)}>挑战</Txt>
       <Txt x={Za[0]} y={Za[1] - 24} size={32} fill={C.yellow} o={(1 - top) * rise}>学得多快</Txt>
       <Txt x={1820} y={980} size={22} anchor="end" fill={C.grey} o={0.8 * (1 - top)}>示意</Txt>
       {/* from above it is the channel */}
@@ -546,7 +546,7 @@ const Games: React.FC<{ T: number }> = ({ T }) => {
       {kS > 0 && <line x1={dot[0] - 40} y1={dot[1] - 44} x2={dot[0] + 40} y2={dot[1] - 44} stroke={C.red} strokeWidth={5} opacity={0.9 * (1 - glow)} />}
       {kS > 0 && <Txt x={dot[0] + 54} y={dot[1] - 34} size={30} anchor="start" fill={C.red} o={(1 - glow) * sm(T, cue('G2', '差一点点') - 0.1, 0.4)}>差一点点</Txt>}
       <circle cx={kS > 0 ? dot[0] : chPt(0.06, 0.06)[0]} cy={kS > 0 ? dot[1] : chPt(0.06, 0.06)[1]} r={13 + 5 * glow * (0.5 + 0.5 * Math.sin(T * 6))} fill={C.yellow} />
-      <Txt x={chPt(0.9, 0.66)[0]} y={chPt(0.9, 0.66)[1]} size={44} fill={C.yellow} o={glow}>刚刚好难</Txt>
+      <Txt x={chPt(1.0, 0.6)[0]} y={chPt(1.0, 0.6)[1]} size={44} fill={C.yellow} o={glow}>刚刚好难</Txt>
     </g>
   );
 };
