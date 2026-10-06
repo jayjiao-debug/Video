@@ -3,6 +3,7 @@ import { AbsoluteFill } from 'remotion';
 import { CUT, FILM_END, ZH, SANS, MONO, INK, DIM, RED, GOLD, prog, easeOut, easeIn, easeInOut, expoInOut, lerp, clamp, rnd, pop, hit } from './lib';
 import { stageStyle } from './camera';
 import { JUNO } from './brand/identity';
+import { TitleLockup } from './logo';
 
 /* Stages 7–9: the second drop (every relationship has a last meeting: 120 lines, 120 red dots, the camera pulling
    out from one of them), the payoff (the pair from the opening comes back together: P(重逢 | 现在就约)), end card. */
@@ -115,18 +116,16 @@ export const End: React.FC<{ T: number }> = ({ T }) => {
     <AbsoluteFill style={{ ...st, backgroundColor: '#060608' }}>
       <svg width={1920} height={1080}>
         <defs>
-          <radialGradient id="end-g" cx="0.5" cy="0.42" r="0.5"><stop offset="0" stopColor="#f6cf78" stopOpacity="0.1" /><stop offset="1" stopColor="#000" stopOpacity="0" /></radialGradient>
+          <radialGradient id="end-g" cx="0.5" cy="0.42" r="0.5"><stop offset="0" stopColor="#ff3d2e" stopOpacity="0.07" /><stop offset="1" stopColor="#000" stopOpacity="0" /></radialGradient>
           <linearGradient id="e-metal" x1="0" y1={280} x2="0" y2={380} gradientUnits="userSpaceOnUse"><stop offset="0" stopColor="#fff3cf" /><stop offset="0.45" stopColor="#f3cd7a" /><stop offset="0.7" stopColor="#c99140" /><stop offset="1" stopColor="#8a5a22" /></linearGradient>
         </defs>
         <rect width={1920} height={1080} fill="url(#end-g)" />
-        <text x={960} y={370} textAnchor="middle" style={{ fontFamily: ZH, fontWeight: 900, fontSize: 110 }}>
-          {[...'《最后一面》'].map((ch, i) => <tspan key={i} fill="url(#e-metal)" opacity={o(i * 0.07, 0.18)}>{ch}</tspan>)}
-        </text>
-        <text x={960} y={490} textAnchor="middle" opacity={o(0.4)} style={{ fontFamily: ZH, fontWeight: 700, fontSize: 54, fill: INK }}>你上一次见 TA，是什么时候？</text>
-        <text x={960} y={548} textAnchor="middle" opacity={o(0.7)} style={{ fontFamily: SANS, fontSize: 26, fill: 'rgba(242,240,234,0.6)', letterSpacing: '0.1em' }}>评论区说一个日期，再把它发给 TA</text>
+        <TitleLockup T={T} at={at} size={120} cy={380} />
+        <text x={960} y={530} textAnchor="middle" opacity={o(0.5)} style={{ fontFamily: SANS, fontWeight: 900, fontSize: 56, fill: INK }}>你上一次见 <tspan fill={RED}>TA</tspan>，是什么时候？</text>
+        <text x={960} y={584} textAnchor="middle" opacity={o(0.7)} style={{ fontFamily: SANS, fontSize: 26, fill: 'rgba(242,240,234,0.6)', letterSpacing: '0.1em' }}>评论区说一个日期，再把它发给 TA</text>
         <g opacity={o(1.0)}>
-          <rect x={960 - 330} y={600} width={660} height={56} rx={28} fill="none" stroke="#f1c56d" strokeOpacity={0.6} />
-          <text x={960} y={637} textAnchor="middle" style={{ fontFamily: ZH, fontWeight: 500, fontSize: 26, letterSpacing: '0.2em', fill: '#f1c56d' }}>{JUNO.follow}</text>
+          <rect x={960 - 330} y={630} width={660} height={56} rx={28} fill="none" stroke={RED} strokeOpacity={0.8} strokeWidth={2} />
+          <text x={960} y={667} textAnchor="middle" style={{ fontFamily: SANS, fontWeight: 700, fontSize: 26, letterSpacing: '0.2em', fill: INK }}>{JUNO.follow}</text>
         </g>
         <g opacity={o(1.2)} style={{ fontFamily: SANS, fontSize: 18, fill: 'rgba(242,240,234,0.45)' }}>
           <text x={960} y={760} textAnchor="middle">资料：Mollenhorst, Volker & Flap (2014) Social Networks · 美国 ATUS 2010–2024（Our World in Data）· Roberts & Dunbar (2011, 2015)</text>

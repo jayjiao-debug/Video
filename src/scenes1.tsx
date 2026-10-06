@@ -2,6 +2,7 @@ import React from 'react';
 import { AbsoluteFill } from 'remotion';
 import { CUT, ZH, SANS, MONO, INK, DIM, FAINT, RED, BLUE, GOLD, prog, easeOut, easeIn, easeInOut, lerp, clamp, rnd, pop, hit, fmt, mulberry } from './lib';
 import { stageStyle } from './camera';
+import { TitleLockup } from './logo';
 
 /* Stages 1–3: the hook (the theory, the pair, "P(重逢) = 0"), the title on the drop, "宇宙 ✕ / 数学", and the model:
    a meeting chance that falls 20 % a year → the expected number of meetings left is 1/(1−0.8) = 5; simulated lives;
@@ -26,7 +27,7 @@ export const Hook: React.FC<{ T: number }> = ({ T }) => {
   if (!st) return null;
   const title = CUT.title;
   const word = 'LAST MEETING THEORY';
-  const dimForTitle = 1 - 0.8 * easeInOut(prog(T, title - 0.25, title + 0.2));
+  const dimForTitle = 1 - 0.93 * easeInOut(prog(T, title - 0.25, title + 0.2));
   const likes = 72.6 * easeOut(prog(T, 1.1, 2.3));
   const ring = easeInOut(prog(T, 2.8, 5.2));
   const ringBreak = prog(T, 5.25, 5.7);
@@ -74,21 +75,8 @@ export const Hook: React.FC<{ T: number }> = ({ T }) => {
           </g>
         )}
       </g>
-      {/* the title, stamped on the drop */}
-      {T > title - 0.05 && (
-        <g>
-          <defs>
-            <linearGradient id="t-metal" x1="0" y1={470} x2="0" y2={640} gradientUnits="userSpaceOnUse">
-              <stop offset="0" stopColor="#fff3cf" /><stop offset="0.45" stopColor="#f3cd7a" /><stop offset="0.7" stopColor="#c99140" /><stop offset="1" stopColor="#8a5a22" />
-            </linearGradient>
-          </defs>
-          <text x={960} y={420} textAnchor="middle" opacity={easeOut(prog(T, title + 0.15, title + 0.5))} style={{ fontFamily: MONO, fontSize: 26, letterSpacing: '0.6em', fill: GOLD }}>LAST MEETING</text>
-          <text x={960} y={610} textAnchor="middle" style={{ fontFamily: ZH, fontWeight: 900, fontSize: 168, letterSpacing: '0.06em' }}>
-            {[...'《最后一面》'].map((ch, i) => <tspan key={i} fill="url(#t-metal)" opacity={easeOut(prog(T, title + i * 0.1, title + i * 0.1 + 0.16))}>{ch}</tspan>)}
-          </text>
-          <text x={960} y={690} textAnchor="middle" opacity={easeOut(prog(T, title + 0.6, title + 1.0))} style={{ fontFamily: ZH, fontWeight: 700, fontSize: 26, letterSpacing: '0.4em', fill: 'rgba(242,240,234,0.7)' }}>VIBE知识大赏</text>
-        </g>
-      )}
+      {/* the title, stamped on the drop (the film's own lockup: the "一" is the line between you and TA) */}
+      {T > title - 0.05 && <g transform={`translate(${Math.sin(T * 90) * 10 * hit(T, title, 0.15)} 0)`}><TitleLockup T={T} at={title} size={200} cy={620} /></g>}
     </Stage>
   );
 };
