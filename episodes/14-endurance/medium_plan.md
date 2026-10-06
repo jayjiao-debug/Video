@@ -30,3 +30,11 @@ Owner (2026-10-06 21:40): "这种3D的视频最核心的就是模型，光源，
 - Download: James Caird (Watt Institution, CC-BY), Sailing ship (cyc3w, CC-BY), ice floes (James Dadema, CC-BY), Oceanic Floes (CATholic, CC-BY).
 - Search (thumbnails for the producer/owner to choose): barquentine / polar ship, steam tug, iceberg, sea ice, rock beach.
 - Poly Haven (CC0): dusk sky HDRI, snow texture, wood planks, paper.
+
+## Lookdev findings (2026-10-06 22:20, real models + real light, assets endurance-01..03 on asset-output)
+- **James Caird (Watt Institution, CC-BY): hero quality.** Name readable on the hull. Needs: sink ~2 m so the museum cradle is under water; overcast sky, dark water. The giant-wave test already reads (wave = displaced ocean mesh) → keep 3D.
+- **No true Endurance model exists under CC-BY.** Searched ~100 results (barque, schooner, polar ship, RRS Discovery, Fram, Shackleton…).
+  - cyc3w "Sailing ship": reads as a pirate galleon (high stern castle, sails set) → reject.
+  - gogiart "Merchant Schooner" (CC-BY, 503k faces): best wooden hull and texture, but 2 masts; Endurance had 3 (barquentine) + a funnel. Usable only as a dusk silhouette after kitbash (add 3rd mast, furl sails, add funnel).
+  - Schmauß "Endurance Ship Wreck discovered" (CC-BY): it *is* the Endurance wreck, but reconstructed from FMHT footage (© FMHT) → director advised against. Too dark in first light test.
+- **Owner decision needed:** (A) kitbashed schooner as a 3D silhouette, (B) ship-in-ice as 2.5D painted silhouette layers (3D kept for Caird + seabed), (C) use the Schmauß wreck scan for the seabed with credit, accepting the risk.
