@@ -6,6 +6,7 @@ import { Hook, Intro, Model } from './scenes1';
 import { Net, Atus, Dunbar } from './scenes2';
 import { Drop, Pay, End } from './scenes3';
 import { JUNO } from './brand/identity';
+import { Subtitles } from './subs';
 
 /* 《最后一面》. During a camera transition the whole stage is rendered SAMPLES times across one frame's time and
    averaged (layer k gets opacity 1/(k+1), so every sample weighs the same): real motion blur on the whips and pushes. */
@@ -53,6 +54,7 @@ export const Film: React.FC = () => {
           <StageAt T={T - ((n - 1 - k) / n) * (1 / FPS)} />
         </AbsoluteFill>
       ))}
+      <Subtitles T={T} />
       <AbsoluteFill style={{ pointerEvents: 'none', background: 'radial-gradient(ellipse 75% 70% at 50% 50%, rgba(0,0,0,0) 55%, rgba(0,0,0,0.5) 100%)' }} />
       <AbsoluteFill style={{ opacity: 0.05, pointerEvents: 'none' }}><Img src={staticFile('grain0.png')} style={{ width: '100%', height: '100%' }} /></AbsoluteFill>
       {mark > 0.001 && (

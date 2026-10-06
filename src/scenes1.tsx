@@ -37,7 +37,7 @@ export const Hook: React.FC<{ T: number }> = ({ T }) => {
     return <circle key={i} cx={q[0]} cy={q[1]} r={19 - i * 0.9} fill={col} opacity={0.32 * (1 - i / 16)} />;
   });
   const zeroO = easeOut(prog(T, 6.1, 6.4));
-  const glitch = T > 6.1 && T < 6.6 ? Math.round(Math.sin(T * 140) * 6) : 0;
+  const glitch = T > 6.1 && T < 6.6 ? Math.round(Math.sin(T * 140) * 3) : 0;
   return (
     <Stage style={st}>
       <g opacity={dimForTitle}>
@@ -76,7 +76,7 @@ export const Hook: React.FC<{ T: number }> = ({ T }) => {
         )}
       </g>
       {/* the title, stamped on the drop (the film's own lockup: the "一" is the line between you and TA) */}
-      {T > title - 0.05 && <g transform={`translate(${Math.sin(T * 90) * 10 * hit(T, title, 0.15)} 0)`}><TitleLockup T={T} at={title} size={200} cy={620} /></g>}
+      {T > title - 0.05 && <g transform={`translate(${Math.sin(T * 90) * 5 * hit(T, title, 0.12)} 0)`}><TitleLockup T={T} at={title} size={200} cy={620} /></g>}
     </Stage>
   );
 };
