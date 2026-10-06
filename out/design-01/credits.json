@@ -1,0 +1,20 @@
+[
+  {
+    "source": "Poly Haven",
+    "id": "moonless_golf",
+    "name": "Moonless Golf",
+    "authors": [
+      "Greg Zaal"
+    ],
+    "license": "CC0"
+  },
+  {
+    "source": "Poly Haven",
+    "id": "dikhololo_night",
+    "name": "Dikhololo Night",
+    "authors": [
+      "Greg Zaal"
+    ],
+    "license": "CC0"
+  }
+]
