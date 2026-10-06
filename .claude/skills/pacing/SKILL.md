@@ -17,6 +17,9 @@ picture.** When the music leaves more time than the story needs, add story first
 only in whole half-phrases. Never let lines sit, and never squeeze the picture to get there:
 the music must still land and the camera must still breathe (§3).
 
+Subtitle type, size (68 px), keyword markers `[gold]` / `{red}` and readability rules live in `juno-brand` §4a.
+The reading budget below counts characters with those markers stripped.
+
 ## 1. The reading budget
 
 A phone viewer reads Chinese subtitles at about **7 characters a second**, plus ~0.5 s to

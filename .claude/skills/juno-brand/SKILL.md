@@ -144,10 +144,47 @@ Drake equation), `serials` (the four drawn numbers).
 - **End question:** asks the viewer to answer in the comments with something
   short (a number, a letter, a choice): 「你会在第几个停下？评论区见」.
 - **Sources:** always on the end card: authors, year, the paper or book.
-- Subtitles: Noto Serif SC, cream text. Gold `[...]` is for the answer, red `{...}`
-  for the wrong belief or the trap. Never use other highlight colours.
+- Subtitles: see §4a (type, size, keywords). Never use highlight colours other than gold and red.
 - Numbers on screen use lining figures (`fontVariantNumeric: 'lining-nums'`):
   Cormorant's default old-style "1" reads as "I".
+
+## 4a. Subtitles: type, size, readability, keywords
+
+Settled with the owner on 《大脑是个赌徒》 (2026-10). Most viewers watch a landscape film on a phone held upright,
+so the 1920-wide frame is shown about 390 pt wide (scale ≈ 0.2). Size and type are chosen for that screen.
+
+**Type**
+- Subtitles use a sans: **Noto Sans CJK SC (思源黑体), weight 700**. Serif (宋体) hairlines vanish on a phone after
+  video compression; a sans keeps even strokes. Do not use the heaviest weight (900) for whole lines: dense characters
+  (糖、懂、赢) fill in.
+- The serif stays for brand moments only: title card, end-card title, big kinetic words.
+- Licence: only fonts free for commercial use in video. Noto/Source Han (OFL), 阿里巴巴普惠体 and HarmonyOS Sans are
+  fine. Never PingFang (苹方) or other system fonts: their licence does not allow embedding in a published video.
+- Numbers: lining figures (`fontVariantNumeric: 'lining-nums'`). A number that changes on screen (a countdown,
+  a counter) uses the monospaced face (JunoMono), so the digits do not change width and the number does not shiver.
+
+**Size and placement**
+- **68 px** on 1920×1080 (≈ 6.3 % of the frame height, ≈ 14 pt on an upright phone; 56 px was ≈ 11 pt, too small).
+- One line, centred in the bottom letterbox bar (bar 952–1080, line top ≈ 972, line-height 1.25). If a line will not
+  fit in one row at 68 px, shorten the line; do not drop to two rows or shrink the type.
+- Cream ink `#f3ede2` with a tight dark outline plus a soft shadow:
+  `textShadow: '0 0 3px #000, 0 0 3px #000, 0 2px 14px rgba(0,0,0,0.95)'`, so it reads over a bright frame too.
+
+**Keywords (emphasis)**
+- **At most one keyword per line**, marked in the line text: `[词]` gold = the answer / the win / the key idea,
+  `{词}` red = the miss / the wrong belief / the trap. Many lines have none (counting lines, transitions).
+- Emphasis is **colour + weight (900)** only. Never change the keyword's size: the whole line would jump.
+- Pick the word the viewer should still remember if they only glance: 「马上要"[炸]"了」, 「……{没炸}？」,
+  「就是大脑{押空}了」, 「却[被骗了]」, 「每个人的"[甜区]"」.
+- Numbers keep their own number colour and are not also marked as keywords.
+- The pacing script ignores the markers when it counts characters (`[`, `]`, `{`, `}` are stripped in `need()`), and any
+  code that looks lines up by their text must strip them too.
+
+**On-screen labels (not subtitles)**
+- Labels, tags and axis text hold still. No drift, no wobble, no slow scaling. A label may fade in/out or land with
+  a fast rise; it may move only with the object it is attached to.
+- A label must never cross a drawing: put it in clear space with a thin leader line, and give text over graphs
+  a halo (`paint-order: stroke` with a dark stroke) so curves never run through letters.
 
 ## 5. Visual rules that read as Juno
 
@@ -191,6 +228,7 @@ and +5 s, and one mid-video frame. Then check:
 - [ ] The end card has: monogram, title, motif, one comment question, follow pill and sources. The music is still playing under it.
 - [ ] Only gold, ink and the dark background on the cards; gold in scenes only for answers.
 - [ ] Copy follows §4: the title is 3–6 characters, the tagline is a question, the kicker names a real source.
+- [ ] Subtitles follow §4a: 思源黑体 700 at 68 px in the bottom bar, outlined; at most one gold/red keyword per line, colour + weight only; labels hold still and never cross a drawing; changing numbers are monospaced.
 
 If any box fails, fix it before sending. If the owner asks for a one-off
 exception, do it for that video only and do not change `identity.ts`.
