@@ -1,0 +1,17 @@
+token present: yes
+sketchfab model d4553cc2008242849214e4cbf8ad8551
+  saved out/models/classroom_titi.glb 8.5 MB
+  optimized 8.5 -> 2.4 MB
+sketchfab model 54bdec1baa5c4855a45a4f956d947960
+  saved out/models/classroom_jp.glb 1.9 MB
+  optimized 1.9 -> 1.0 MB
+sketchfab model fedd5874a0a049b9b8a3b8fb44701362
+  saved out/models/cn_desk.glb 3.1 MB
+  optimized 3.1 -> 0.4 MB
+sketchfab model 2cbc5ee62b144c13a3daa74b833640b3
+  saved out/models/mannequin.glb 3.3 MB
+  optimized 3.3 -> 0.7 MB
+sketchfab model 8e753b1a3f0c40bca87765d2fce02956
+  saved out/models/spotlight.glb 2.3 MB
+  optimized 2.3 -> 0.2 MB
+done
