@@ -1,63 +1,4 @@
-import edit from './edit.json';
-
-/* 《大脑是个赌徒》 (demo). The music is the owner's track re-cut by scripts/edit_music.py to play three tricks on the
-   listener's prediction: the first drop is taken away (silence), given back (title), and the big drop is delayed by an
-   extra bar plus one beat of silence. Every visual is a pure function of T. Picture is a rough demo: the owner asked
-   to judge the music control first. */
-export const FPS = 30;
-export const W = 1920;
-export const H = 1080;
-export const EV = edit.events;
-export const BEATS: number[] = edit.beats;
-export const FILM_END = EV.end;
-export const FILM_FRAMES = Math.round(FILM_END * FPS);
-export const BEAT = 60 / 117.94;
-/** the most recent beat at or before T (or -1) */
-export const lastBeat = (T: number) => { let b = -1; for (const x of BEATS) { if (x <= T) b = x; else break; } return b; };
-
-/** subtitles, timed by scripts/lines.py (see scripts/lines.py) */
-export const SUBS: [number, number, string][] = [
-  [0.10, 2.97, '这首歌，马上要"[炸]"了。'],
-  [3.07, 6.30, '你的大脑，已经[押好了注]——'],
-  [6.40, 8.05, '3、2、1——'],
-  [8.30, 10.05, '……{没炸}？'],
-  [10.25, 13.53, '你愣住的那一下，就是大脑{押空}了。'],
-  [13.63, 15.40, '[再来]一次。'],
-  [19.70, 22.72, '听歌时，你的大脑一直在[赌]：'],
-  [22.82, 25.84, '下一拍是什么？和弦往哪走？'],
-  [25.94, 28.96, '猜对了，大脑就给你发[奖励]——'],
-  [29.06, 32.40, '哪怕猜中的，只是最[普通]的一拍。'],
-  [32.60, 34.89, '可全猜中，几遍就{腻}；'],
-  [34.99, 37.43, '全猜不中，又成了{噪音}。'],
-  [37.53, 41.43, '2019年，研究者分析了8万个流行歌和弦：'],
-  [41.53, 43.82, '[最上头]的，是这两种：'],
-  [43.92, 46.21, '很有把握，却[被骗了]；'],
-  [46.31, 48.60, '毫无把握，却[押中了]。'],
-  [49.00, 51.64, '那为什么，drop[最爽]？'],
-  [51.74, 54.83, '一项研究扫描了听歌人的[大脑]：'],
-  [54.93, 58.16, '高潮[来之前]，多巴胺已经开始分泌；'],
-  [58.26, 60.90, '高潮[那一刻]，再分泌一次。'],
-  [61.15, 64.45, '注意：这首歌，[真的]要drop了。'],
-  [65.30, 69.14, '从这一秒起，你的大脑就在分泌[多巴胺]。'],
-  [69.24, 73.08, '研究里，期待在高潮前[十几秒]就开始了。'],
-  [73.18, 75.57, '这就是"[等]"的快乐。'],
-  [75.67, 78.70, '那我们，让你再[多等]一会儿。'],
-  [79.00, 80.83, '再等等……'],
-  [80.93, 82.90, '{多加}了一小节。'],
-  [85.51, 89.05, '你刚才经历的，就是那个[实验]。'],
-  [89.15, 92.51, '等得越久，押中的时候[越爽]。'],
-  [92.61, 95.16, '但每个人的"[甜区]"，不一样。'],
-  [95.26, 98.95, '2025年，400多人听旋律，反复二选一：'],
-  [99.05, 101.89, '有人偏爱好猜，有人偏爱意外——'],
-  [101.99, 104.82, '爱听[爵士]的人，甜区更靠"意外"；'],
-  [104.92, 107.61, '而这，和学没学过音乐[无关]。'],
-  [107.81, 110.49, '所以，副歌要[重复]：让你押中。'],
-  [110.59, 113.84, 'drop前[停一下]：让你多押一会儿。'],
-  [113.94, 116.91, '你押注的依据，是[听过的所有歌]。'],
-  [117.21, 120.71, '下次单曲循环，你的大脑还在[赌]。'],
-  [121.11, 124.71, '你的甜区偏哪边：好猜，还是意外？'],
-];
-
+import music from './music.json';
 export const ZH = '"Noto Serif CJK SC", "Noto Serif SC", serif';
 export const SANS = '"Noto Sans CJK SC", "Noto Sans SC", sans-serif';
 export const MONO = '"JunoMono", "DejaVu Sans Mono", monospace';
@@ -93,3 +34,44 @@ export const mulberry = (seed: number) => () => {
 };
 export const rnd = (i: number, k = 0) => mulberry(i * 7919 + k * 104729 + 17)();
 export const fmt = (n: number, d = 0) => n.toLocaleString('en-US', { minimumFractionDigits: d, maximumFractionDigits: d });
+
+/* 《大脑的懒惰》: the owner's track, uncut from beat 16 (scripts/music.py). */
+export const FPS = 30, W = 1920, H = 1080;
+export const EV = music.events;
+export const BEAT = music.beat;
+export const FILM_END = EV.p5;                       // 113.63, a phrase boundary; the end card is its last 6.1 s
+export const FILM_FRAMES = Math.round(FILM_END * FPS);
+
+/** subtitles, timed by scripts/lines.py */
+export const SUBS: [number, number, string][] = [
+  [0.05, 2.45, 'A和B，是[同一个颜色]。'],
+  [2.50, 5.15, '盯着B，我把周围[遮住]——'],
+  [5.25, 7.95, 'B在变深——它{一像素没动}。'],
+  [11.75, 15.40, '把阴影[拿开]：B一点没变，它本来就这么深。'],
+  [15.50, 19.51, '这不是眼睛的错，是大脑的一种[省力策略]。'],
+  [19.61, 23.46, '它先猜：B在阴影里，阴影会让东西变暗。'],
+  [23.56, 26.60, '于是自动把B[调亮]了一档。'],
+  [26.70, 30.35, '1867年，亥姆霍兹管这叫"[无意识推理]"：'],
+  [30.45, 33.80, '你看到的不是光，是大脑对光的[推断]。'],
+  [33.95, 36.27, '这原本是一项本领：'],
+  [36.37, 40.45, '阴影里的白纸，读数少了一半，你看它依然是[白纸]。'],
+  [40.90, 44.77, '2015年，一张裙子照片引发全网[争论]。'],
+  [44.88, 49.22, '1401人里：57%看成蓝黑，30%看成[白金]。'],
+  [49.32, 53.04, '以为在阴影里的人，扣除蓝光，看成[白金]；'],
+  [53.14, 56.70, '以为在灯下的人，扣除黄光，看成[蓝黑]。'],
+  [57.15, 60.83, '再看一组：这12个球，分别是什么颜色？'],
+  [60.93, 63.22, '红、绿、蓝、紫、橙……对吧？'],
+  [63.32, 66.38, '我们把每一个球，都取一次色——'],
+  [66.48, 69.54, '第一个：215、199、174。'],
+  [69.64, 72.70, '第二个，[一样]。第三个，还是一样……'],
+  [73.10, 76.00, '12个球，全是[同一种米色]。'],
+  [76.10, 79.00, '彩色的，只是前面那些细线。'],
+  [79.10, 83.12, '2018年，工程学教授诺维克提出了这个错觉。'],
+  [83.22, 86.80, '大脑处理形状很精细，处理颜色却很[节省]：'],
+  [86.90, 89.90, '它会把旁边的颜色，借过来涂上。'],
+  [90.00, 93.12, '你看到的世界，是大脑的[最佳推断]。'],
+  [93.22, 95.62, '这种懒惰，其实是[效率]：'],
+  [95.72, 99.70, '大多数时候推断得很准，所以你几乎从来没发现。'],
+  [99.85, 103.10, '现在你知道A和B一样了。再看一眼——'],
+  [103.20, 105.30, '它们还是{不一样}。'],
+];
