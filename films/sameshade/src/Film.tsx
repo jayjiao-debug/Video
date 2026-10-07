@@ -44,20 +44,18 @@ const SHOT = {
 const inShot = (T: number, k: keyof typeof SHOT) => T >= SHOT[k][0] && T < SHOT[k][1];
 
 /* ---------------------------------------------------------------- screen furniture */
-type Row = { k: string; v: [number, number, number]; o: number };
-/** v3: sized for a phone held upright (the 1920 frame is ~393 pt wide there, so 1 px ≈ 0.2 pt): labels 40 px,
-    a grey value as one 64 px number, a colour as three 46 px numbers. Bottom right, clear of every hero object. */
-const BOX = { right: 36, top: 700, width: 500 };
+type Row = { k: string; v: [number, number, number]; o: number; note?: string };
 const Picker: React.FC<{ rows: Row[]; o?: number; foot?: string; footO?: number }> = ({ rows, o = 1, foot, footO = 1 }) => o <= 0.001 ? null : (
-  <div style={{ position: 'absolute', ...BOX, padding: '14px 24px 16px', borderRadius: 18, background: 'rgba(10,10,12,0.88)', border: '2px solid rgba(243,237,226,0.22)', fontFamily: MONO, color: INK, opacity: o }}>
-    <div style={{ fontSize: 26, letterSpacing: '0.2em', color: DIM, fontFamily: SANS, fontWeight: 700 }}>取色器</div>
-    {rows.map((r, i) => { const grey = r.v[0] === r.v[1] && r.v[1] === r.v[2]; return (
-      <div key={i} style={{ display: 'flex', alignItems: 'center', gap: 16, marginTop: 8, opacity: r.o, height: 76 }}>
-        <span style={{ width: 54, height: 54, borderRadius: 8, background: `rgb(${r.v.join(',')})`, border: '2px solid rgba(255,255,255,0.4)', flexShrink: 0 }} />
-        <span style={{ fontFamily: SANS, fontWeight: 900, fontSize: 42, whiteSpace: 'nowrap', flexGrow: 1 }}>{r.k}</span>
-        <span style={{ fontWeight: 700, fontSize: grey ? 64 : 42, whiteSpace: 'pre' }}>{grey ? r.v[0] : r.v.join(' ')}</span>
-      </div>); })}
-    {foot && <div style={{ marginTop: 6, fontSize: 30, fontFamily: SANS, fontWeight: 700, color: DIM, opacity: footO, whiteSpace: 'nowrap' }}>{foot}</div>}
+  <div style={{ position: 'absolute', right: 70, top: 160, width: 450, padding: '16px 24px 18px', borderRadius: 16, background: 'rgba(10,10,12,0.86)', border: '1px solid rgba(243,237,226,0.18)', fontFamily: MONO, color: INK, opacity: o }}>
+    <div style={{ fontSize: 22, letterSpacing: '0.25em', color: DIM, marginBottom: 10, fontFamily: SANS, fontWeight: 700 }}>取色器 · RGB</div>
+    {rows.map((r, i) => (
+      <div key={i} style={{ display: 'flex', alignItems: 'center', gap: 14, fontSize: 33, fontWeight: 700, marginTop: i ? 10 : 0, opacity: r.o }}>
+        <span style={{ width: 42, height: 42, borderRadius: 7, background: `rgb(${r.v.join(',')})`, border: '1px solid rgba(255,255,255,0.35)', flexShrink: 0 }} />
+        <span style={{ minWidth: 70, fontFamily: SANS, fontWeight: 900, fontSize: 30, whiteSpace: 'nowrap', flexGrow: 1 }}>{r.k}</span>
+        <span style={{ fontVariantNumeric: 'tabular-nums', whiteSpace: 'pre' }}>{r.v.map((x) => String(x).padStart(3, ' ')).join(' ')}</span>
+      </div>
+    ))}
+    {foot && <div style={{ marginTop: 10, fontSize: 24, fontFamily: SANS, fontWeight: 700, color: DIM, opacity: footO }}>{foot}</div>}
   </div>
 );
 const G = (v: number): [number, number, number] => [v, v, v];
@@ -73,8 +71,8 @@ const Cross: React.FC<{ x: number; y: number; o: number; ring?: number }> = ({ x
 
 const Tag: React.FC<{ x: number; y: number; top: string; sub?: string; o: number; dy?: number; color?: string }> = ({ x, y, top, sub, o, dy = 0, color = DIM }) => o <= 0.001 ? null : (
   <div style={{ position: 'absolute', left: x, top: y + dy, opacity: o }}>
-    <div style={{ fontFamily: MONO, fontWeight: 700, fontSize: 18, letterSpacing: '0.25em', color }}>{top}</div>
-    {sub && <div style={{ fontFamily: SANS, fontWeight: 700, fontSize: 24, color: INK, marginTop: 8 }}>{sub}</div>}
+    <div style={{ fontFamily: MONO, fontWeight: 700, fontSize: 22, letterSpacing: '0.2em', color }}>{top}</div>
+    {sub && <div style={{ fontFamily: SANS, fontWeight: 700, fontSize: 31, color: INK, marginTop: 8 }}>{sub}</div>}
   </div>
 );
 
@@ -116,15 +114,15 @@ const slideAt = (T: number) => {
   return 1.65 * (away - back);
 };
 const irisAt = (T: number) => {
-  if (T >= L.hide && T < TITLE) return lerp(1700, 185, easeInOut(prog(T, L.hide + 0.05, TITLE - 0.15)));
-  if (T >= TITLE_OUT - 0.25 && T < TITLE_OUT + 0.35) return lerp(185, 1800, easeIn(prog(T, TITLE_OUT - 0.25, TITLE_OUT + 0.35)));
+  if (T >= L.hide && T < TITLE) return lerp(1500, 150, easeInOut(prog(T, L.hide + 0.05, TITLE - 0.15)));
+  if (T >= TITLE_OUT - 0.25 && T < TITLE_OUT + 0.35) return lerp(150, 1600, easeIn(prog(T, TITLE_OUT - 0.25, TITLE_OUT + 0.35)));
   return 0;
 };
 
 /** opening cursor: to A, click, to B, click, away */
 const CUR = { a0: 0.25, a1: 0.65, b0: 0.8, b1: 1.15, off: 1.5 };
 const cursorAt = (T: number): [number, number, number, number] => {
-  const home: [number, number] = [1660, 800];
+  const home: [number, number] = [1640, 320];
   let x = home[0], y = home[1];
   const ka = easeInOut(prog(T, CUR.a0, CUR.a1)), kb = easeInOut(prog(T, CUR.b0, CUR.b1));
   x = lerp(home[0], AX, ka); y = lerp(home[1], AY, ka);
@@ -134,26 +132,28 @@ const cursorAt = (T: number): [number, number, number, number] => {
   return [x, y, o, ring];
 };
 
-/** what the brain does with A and B: pixel ÷ the light it assumes = the surface it reports (示意). It takes over the
-    eyedropper's box (the values are the same 108s), big enough to read on a phone. */
-const inferO = (T: number) => vis(T, L.guess + 0.1, SHOT.board1[1], 0.3, 0.2);
+/** what the brain does with A and B: pixel ÷ the light it assumes = the surface it reports (示意) */
 const Infer: React.FC<{ T: number }> = ({ T }) => {
-  const o = inferO(T);
+  const o = vis(T, L.guess + 0.1, SHOT.board1[1], 0.3, 0.2);
   if (o <= 0.001) return null;
   const res = easeOut(prog(T, L.bright + 0.1, L.bright + 0.35));
-  const row = (k: string, light: string, f: string, out: number, o2: number) => (
-    <div style={{ marginTop: 6, opacity: o2 }}>
-      <div style={{ fontFamily: SANS, fontWeight: 700, fontSize: 30, color: DIM, lineHeight: 1.15 }}><span style={{ color: INK, fontWeight: 900 }}>{k}</span> · {light}</div>
-      <div style={{ fontFamily: MONO, fontWeight: 700, fontSize: 48, color: INK, whiteSpace: 'pre', lineHeight: 1.05 }}>
-        {DARK}<span style={{ color: DIM }}> ÷ </span>{f}<span style={{ color: DIM }}> = </span><span style={{ color: res > 0.5 ? (out === LIGHT ? GOLD : INK) : DIM }}>{res > 0.01 ? out : '???'}</span>
+  const row = (k: string, light: string, f: string, out: number, word: string, o2: number) => (
+    <div style={{ marginTop: 12, opacity: o2 }}>
+      <div style={{ display: 'flex', alignItems: 'baseline', gap: 12, fontFamily: MONO, fontWeight: 700, fontSize: 33, color: INK, whiteSpace: 'pre' }}>
+        <span style={{ fontFamily: SANS, fontWeight: 900, width: 30 }}>{k}</span><span>{DARK}</span><span style={{ color: DIM }}>÷</span><span>{f}</span>
+        <span style={{ color: DIM }}>=</span><span style={{ color: res > 0.5 ? (out === LIGHT ? GOLD : INK) : DIM, opacity: 0.35 + 0.65 * res }}>{res > 0.01 ? out : '???'}</span>
+      </div>
+      <div style={{ fontFamily: SANS, fontWeight: 700, fontSize: 25, color: DIM, marginTop: 2, marginLeft: 42 }}>
+        {light} → <span style={{ color: res > 0.5 ? INK : DIM }}>{res > 0.01 ? word : '…'}</span>
       </div>
     </div>
   );
   return (
-    <div style={{ position: 'absolute', ...BOX, top: BOX.top - 6, padding: '10px 24px 12px', borderRadius: 18, background: 'rgba(10,10,12,0.9)', border: '2px solid rgba(241,197,109,0.45)', opacity: o }}>
-      <div style={{ fontSize: 26, letterSpacing: '0.12em', color: DIM, fontFamily: SANS, fontWeight: 700 }}>大脑的推断（示意）</div>
-      {row('B', '以为在阴影里', '0.5', LIGHT, 1)}
-      {row('A', '以为在亮处', '1.0', DARK, easeOut(prog(T, L.guess + 0.5, L.guess + 0.8)))}
+    <div style={{ position: 'absolute', right: 70, top: 160, width: 450, padding: '14px 24px 18px', borderRadius: 16, background: 'rgba(10,10,12,0.86)', border: '1px solid rgba(241,197,109,0.35)', opacity: o }}>
+      <div style={{ fontSize: 22, letterSpacing: '0.15em', color: DIM, fontFamily: SANS, fontWeight: 700 }}>大脑的推断 · 示意</div>
+      <div style={{ fontSize: 22, color: DIM, fontFamily: SANS, marginTop: 4 }}>像素 ÷ 以为的光 = 看到的颜色</div>
+      {row('B', '以为在阴影里', '0.5', LIGHT, '浅色格', 1)}
+      {row('A', '以为在亮处', '1.0', DARK, '深色格', easeOut(prog(T, L.guess + 0.5, L.guess + 0.8)))}
     </div>
   );
 };
@@ -184,10 +184,10 @@ const TitleCard: React.FC<{ T: number }> = ({ T }) => {
     <AbsoluteFill style={{ opacity: 1 - out }}>
       {[...'大脑的懒惰'].map((c, i) => {
         const k = easeOut(prog(T, a + 0.08 + i * 0.05, a + 0.26 + i * 0.05));
-        return <div key={i} style={{ position: 'absolute', left: 960 + (i - 2) * 160 - 80, width: 160, top: 618 + (1 - k) * 34, textAlign: 'center', opacity: k, fontFamily: ZH, fontWeight: 900, fontSize: 144, color: GOLD, textShadow: `0 0 30px ${GLOW}` }}>{c}</div>;
+        return <div key={i} style={{ position: 'absolute', left: 960 + (i - 2) * 150 - 75, width: 150, top: 668 + (1 - k) * 34, textAlign: 'center', opacity: k, fontFamily: ZH, fontWeight: 900, fontSize: 132, color: GOLD, textShadow: `0 0 30px ${GLOW}` }}>{c}</div>;
       })}
-      <div style={{ position: 'absolute', left: 960 - 400 * easeOut(prog(T, a + 0.3, a + 0.7)), width: 800 * easeOut(prog(T, a + 0.3, a + 0.7)), top: 820, height: 3, background: GOLD, boxShadow: `0 0 12px ${GLOW}` }} />
-      <div style={{ position: 'absolute', left: 0, right: 0, top: 842, textAlign: 'center', opacity: easeOut(prog(T, a + 0.5, a + 0.9)), fontFamily: MONO, fontWeight: 700, fontSize: 30, letterSpacing: '0.5em', color: DIM }}>{JUNO.series}</div>
+      <div style={{ position: 'absolute', left: 960 - 400 * easeOut(prog(T, a + 0.3, a + 0.7)), width: 800 * easeOut(prog(T, a + 0.3, a + 0.7)), top: 860, height: 3, background: GOLD, boxShadow: `0 0 12px ${GLOW}` }} />
+      <div style={{ position: 'absolute', left: 0, right: 0, top: 880, textAlign: 'center', opacity: easeOut(prog(T, a + 0.5, a + 0.9)), fontFamily: MONO, fontWeight: 700, fontSize: 28, letterSpacing: '0.45em', color: DIM }}>{JUNO.series}</div>
     </AbsoluteFill>
   );
 };
@@ -195,35 +195,38 @@ const TitleCard: React.FC<{ T: number }> = ({ T }) => {
 /* ---------------------------------------------------------------- 2. the paper */
 const PAPER: [number, number, number] = [236, 233, 226];
 const PAPER_SH: [number, number, number] = [118, 116, 113]; // PAPER × 0.5, sampled from the render
-const P_LIT: [number, number] = [560, 600], P_SH: [number, number] = [1120, 600];
+const P_LIT: [number, number] = [700, 640], P_SH: [number, number] = [1240, 640];
 const PaperShot: React.FC<{ T: number }> = ({ T }) => {
   const t = T - SHOT.paper[0];
   const d = -6 * t; // the shadow edge drifts slowly as the light moves (its own clock)
-  const quad = '330,170 1330,170 1410,880 250,880';
+  const quad = '540,300 1380,300 1470,850 450,850';
   return (
     <AbsoluteFill>
       <svg width={1920} height={1080} style={{ position: 'absolute', inset: 0 }}>
         <defs>
           <linearGradient id="pdesk" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stopColor="#2a1e14" /><stop offset="1" stopColor="#120c07" /></linearGradient>
-          <radialGradient id="ppool" cx="0.25" cy="0.2" r="0.7"><stop offset="0" stopColor="#ffcf8a" stopOpacity={0.25} /><stop offset="1" stopColor="#ffb060" stopOpacity={0} /></radialGradient>
-          <filter id="psh" x="-20%" y="-20%" width="140%" height="140%"><feGaussianBlur stdDeviation="8" /></filter>
+          <radialGradient id="ppool" cx="0.3" cy="0.25" r="0.7"><stop offset="0" stopColor="#ffcf8a" stopOpacity={0.25} /><stop offset="1" stopColor="#ffb060" stopOpacity={0} /></radialGradient>
+          <filter id="psh" x="-20%" y="-20%" width="140%" height="140%"><feGaussianBlur stdDeviation="7" /></filter>
           <clipPath id="pclip"><polygon points={quad} /></clipPath>
         </defs>
         <rect width={1920} height={1080} fill="url(#pdesk)" />
-        {Array.from({ length: 26 }, (_, i) => <line key={i} x1={0} y1={i * 40} x2={1920} y2={10 + i * 40} stroke="#000" strokeOpacity={0.14} strokeWidth={2} />)}
+        {Array.from({ length: 22 }, (_, i) => <line key={i} x1={0} y1={140 + i * 40} x2={1920} y2={150 + i * 40} stroke="#000" strokeOpacity={0.14} strokeWidth={2} />)}
         <rect width={1920} height={1080} fill="url(#ppool)" />
-        <polygon points="248,886 1412,886 1420,904 242,904" fill="#000" opacity={0.35} />
+        <polygon points="452,856 1472,856 1480,872 446,872" fill="#000" opacity={0.35} />
         <polygon points={quad} fill={`rgb(${PAPER.join(',')})`} />
+        {/* printed lines, kept clear of the two sample points */}
         <g clipPath="url(#pclip)" fill="#cfc9bd">
-          {Array.from({ length: 11 }, (_, i) => { const y = 230 + i * 58; if (Math.abs(y - 600) < 70) return null; return <rect key={i} x={400 - i * 7} y={y} width={820 + i * 14 - (i % 3) * 140} height={12} />; })}
+          {Array.from({ length: 9 }, (_, i) => { const y = 360 + i * 52; if (Math.abs(y - 640) < 40) return null; return <rect key={i} x={600 - i * 7} y={y} width={720 + i * 14 - (i % 3) * 120} height={10} />; })}
         </g>
-        {/* the shadow of something out of frame (right), across the right half of the page and the desk */}
-        <polygon points={`${830 + d},0 1920,0 1920,1080 ${860 + d},1080`} fill="#000" opacity={0.5} filter="url(#psh)" />
+        {/* the standing book and its shadow across the right half of the page */}
+        <g clipPath="url(#pclip)"><polygon points={`${960 + d},250 1600,250 1600,900 ${975 + d},900`} fill="#000" opacity={0.5} filter="url(#psh)" /></g>
+        <polygon points="1520,180 1640,150 1660,820 1540,860" fill="#3b1f1a" />
+        <polygon points="1640,150 1700,170 1712,806 1660,820" fill="#22110e" />
         <Cross x={P_LIT[0]} y={P_LIT[1]} o={vis(T, SHOT.paper[0] + 0.2, SHOT.paper[1] + 1, 0.2, 0.1)} />
         <Cross x={P_SH[0]} y={P_SH[1]} o={vis(T, SHOT.paper[0] + 0.5, SHOT.paper[1] + 1, 0.2, 0.1)} />
       </svg>
-      <div style={{ position: 'absolute', left: P_LIT[0] - 150, width: 300, top: P_LIT[1] + 40, textAlign: 'center', opacity: vis(T, SHOT.paper[0] + 0.2, SHOT.paper[1] + 1), fontFamily: SANS, fontWeight: 900, fontSize: 40, color: '#4a443c' }}>亮处</div>
-      <div style={{ position: 'absolute', left: P_SH[0] - 150, width: 300, top: P_SH[1] + 40, textAlign: 'center', opacity: vis(T, SHOT.paper[0] + 0.5, SHOT.paper[1] + 1), fontFamily: SANS, fontWeight: 900, fontSize: 40, color: '#1e1b17' }}>阴影里</div>
+      <Tag x={P_LIT[0] - 30} y={P_LIT[1] + 44} top="亮处" color="#4a443c" o={vis(T, SHOT.paper[0] + 0.2, SHOT.paper[1] + 1)} />
+      <Tag x={P_SH[0] - 30} y={P_SH[1] + 44} top="阴影里" color="#1e1b17" o={vis(T, SHOT.paper[0] + 0.5, SHOT.paper[1] + 1)} />
     </AbsoluteFill>
   );
 };
@@ -257,7 +260,7 @@ const DressShot: React.FC<{ T: number }> = ({ T }) => {
   const os = [easeOut(prog(T, L.poll, L.poll + 0.3)), easeOut(prog(T, L.poll + 0.12, L.poll + 0.42))];
   const kR = easeInOut(prog(T, L.shade + 0.1, L.shade + 0.6)), kL = easeInOut(prog(T, L.lamp + 0.1, L.lamp + 0.6));
   const bar = easeInOut(prog(T, L.poll + 0.3, L.poll + 1.2));
-  const DY = 250, S = 1.0;
+  const DY = 290, S = 0.84;
   let acc = 0;
   return (
     <AbsoluteFill style={{ background: 'linear-gradient(180deg, #0e0d12 0%, #15121a 100%)' }}>
@@ -266,33 +269,35 @@ const DressShot: React.FC<{ T: number }> = ({ T }) => {
       <AbsoluteFill style={{ background: 'radial-gradient(ellipse 40% 60% at 22% 50%, rgba(255,190,90,0.22) 0%, rgba(255,190,90,0) 70%)', opacity: kL }} />
       <svg width={1920} height={1080} style={{ position: 'absolute', inset: 0 }}>
         <Dress id="dc" x={960} y={DY + rise(T, L.dress)} s={S} body={DRESS.photo[0]} lace={DRESS.photo[1]} o={oc} />
-        <Dress id="dl" x={400} y={DY + rise(T, L.poll)} s={S} body={DRESS.bb[0]} lace={DRESS.bb[1]} o={os[0]} />
-        <Dress id="dr" x={1520} y={DY + rise(T, L.poll + 0.12)} s={S} body={DRESS.wg[0]} lace={DRESS.wg[1]} o={os[1]} />
-        <Arrow x0={1130} x1={1300} y={560} k={kR} color="#8fb0ff" />
-        <Arrow x0={790} x1={620} y={560} k={kL} color="#ffc46a" />
+        <Dress id="dl" x={460} y={DY + rise(T, L.poll)} s={S} body={DRESS.bb[0]} lace={DRESS.bb[1]} o={os[0]} />
+        <Dress id="dr" x={1460} y={DY + rise(T, L.poll + 0.12)} s={S} body={DRESS.wg[0]} lace={DRESS.wg[1]} o={os[1]} />
+        <Arrow x0={1110} x1={1300} y={560} k={kR} color="#8fb0ff" />
+        <Arrow x0={810} x1={620} y={560} k={kL} color="#ffc46a" />
         {/* the poll as one bar */}
-        {POLL.map(([, v, c], i) => { const x = 460 + 1000 * acc / 100, w = 1000 * v / 100 * bar; acc += v; return <rect key={i} x={x} y={836} width={Math.max(0, w - 3)} height={26} fill={c} opacity={os[0]} />; })}
+        {POLL.map(([, v, c], i) => { const x = 560 + 800 * acc / 100, w = 800 * v / 100 * bar; acc += v; return <rect key={i} x={x} y={792} width={Math.max(0, w - 3)} height={22} fill={c} opacity={os[0]} />; })}
       </svg>
-      <Big s="照片里的裙子（示意）" y={170} size={40} color={DIM} o={oc} />
-      <div style={{ position: 'absolute', left: 400 - 300, width: 600, top: 160, textAlign: 'center', opacity: os[0], fontFamily: SANS, fontWeight: 900, fontSize: 56, color: INK }}>57% 蓝黑</div>
-      <div style={{ position: 'absolute', left: 1520 - 300, width: 600, top: 160, textAlign: 'center', opacity: os[1], fontFamily: SANS, fontWeight: 900, fontSize: 56, color: GOLD }}>30% 白金</div>
-      <div style={{ position: 'absolute', left: 1215 - 150, width: 300, top: 470, textAlign: 'center', opacity: kR, fontFamily: SANS, fontWeight: 900, fontSize: 40, color: '#b9ccff', textShadow: '0 0 6px #000' }}>阴影里</div>
-      <div style={{ position: 'absolute', left: 1215 - 150, width: 300, top: 586, textAlign: 'center', opacity: kR, fontFamily: SANS, fontWeight: 900, fontSize: 40, color: INK, textShadow: '0 0 6px #000' }}>减蓝光</div>
-      <div style={{ position: 'absolute', left: 705 - 150, width: 300, top: 470, textAlign: 'center', opacity: kL, fontFamily: SANS, fontWeight: 900, fontSize: 40, color: '#ffd59a', textShadow: '0 0 6px #000' }}>灯下</div>
-      <div style={{ position: 'absolute', left: 705 - 150, width: 300, top: 586, textAlign: 'center', opacity: kL, fontFamily: SANS, fontWeight: 900, fontSize: 40, color: INK, textShadow: '0 0 6px #000' }}>减黄光</div>
-      <div style={{ position: 'absolute', left: 0, right: 0, top: 874, textAlign: 'center', opacity: os[0] * 0.9, fontFamily: SANS, fontWeight: 700, fontSize: 34, color: DIM }}>1401 人 · Current Biology 2015</div>
+      <Big s="照片里的裙子（示意）" y={222} size={30} color={DIM} o={oc} />
+      <div style={{ position: 'absolute', left: 460 - 300, width: 600, top: 214, textAlign: 'center', opacity: os[0], fontFamily: SANS, fontWeight: 900, fontSize: 44, color: INK }}>57% 看成蓝黑</div>
+      <div style={{ position: 'absolute', left: 1460 - 300, width: 600, top: 214, textAlign: 'center', opacity: os[1], fontFamily: SANS, fontWeight: 900, fontSize: 44, color: GOLD }}>30% 看成白金</div>
+      <div style={{ position: 'absolute', left: 1205 - 150, width: 300, top: 490, textAlign: 'center', opacity: kR, fontFamily: SANS, fontWeight: 700, fontSize: 30, color: '#b9ccff' }}>以为在阴影里</div>
+      <div style={{ position: 'absolute', left: 1205 - 150, width: 300, top: 584, textAlign: 'center', opacity: kR, fontFamily: SANS, fontWeight: 900, fontSize: 33, color: INK }}>扣除蓝光</div>
+      <div style={{ position: 'absolute', left: 715 - 150, width: 300, top: 490, textAlign: 'center', opacity: kL, fontFamily: SANS, fontWeight: 700, fontSize: 30, color: '#ffd59a' }}>以为在灯下</div>
+      <div style={{ position: 'absolute', left: 715 - 150, width: 300, top: 584, textAlign: 'center', opacity: kL, fontFamily: SANS, fontWeight: 900, fontSize: 33, color: INK }}>扣除黄光</div>
+      <div style={{ position: 'absolute', left: 0, right: 0, top: 834, textAlign: 'center', opacity: os[0] * 0.9, fontFamily: SANS, fontWeight: 700, fontSize: 25, color: DIM }}>
+        1401 人 · 蓝黑 57% · 白金 30% · 蓝棕 11% · 其他 2% · Lafer-Sousa 等 2015 Current Biology
+      </div>
     </AbsoluteFill>
   );
 };
 
 /* ---------------------------------------------------------------- 4. the spheres (Novick 2018, Munker–White) */
 export const BEIGE = '#c9b79c';
-export const SPHERE_RGB: [number, number, number] = [215, 199, 174]; // the pixel under the crosshair, sampled from the render
+export const SPHERE_RGB: [number, number, number] = [219, 203, 178]; // the pixel under the crosshair, sampled from the render
 const STRIPE = ['#ff2a2a', '#18c43c', '#2f6bff', '#b23cff', '#ff9a1f', '#14c8d4'];
 const SPH0: [number, number, number][] = [[620, 380, 0], [800, 330, 1], [980, 360, 2], [1160, 330, 3], [1330, 390, 4], [700, 560, 5], [880, 520, 3], [1060, 545, 0], [1250, 560, 1], [760, 740, 2], [960, 720, 4], [1160, 735, 5]];
-const SPH: [number, number, number][] = SPH0.map(([x, y, c]) => [960 + (x - 975) * 1.25, 520 + (y - 535) * 1.25, c]); // v3: ×1.25
-const R = 98, PITCH = 8, SH = 3.4;
-const SAMPLE_DY = -R - 2 + 12 * PITCH + (SH + PITCH) / 2;   // the middle of a gap between two stripes, near the centre
+const SPH: [number, number, number][] = SPH0.map(([x, y, c]) => [Math.round(975 + (x - 975) * 1.08), Math.round(545 + (y - 545) * 1.08), c]); // v3: a touch bigger, same place
+const R = 84, PITCH = 8, SH = 3.4;
+const SAMPLE_DY = -R - 2 + 10 * PITCH + (SH + PITCH) / 2;   // the middle of a gap between two stripes, near the centre
 const PICKS = (() => {
   const t = [L.first + 0.15, L.second + 0.15, L.second + 1.3];
   const left = DROP - 0.3 - (t[2] + 0.35), n = 9, w = Array.from({ length: n }, (_, i) => Math.pow(0.86, i)), sw = w.reduce((a, b) => a + b, 0);
@@ -310,11 +315,11 @@ const Spheres: React.FC<{ stripes: number; wipe?: number; uid: string; sc?: numb
       <clipPath id={`${uid}w`}><rect x={0} y={0} width={1920 * wipe} height={1080} /></clipPath>
     </defs>
     <g transform={`translate(${cx} ${cy}) scale(${sc}) translate(${-cx} ${-cy})`}>
-      <g opacity={stripes} clipPath={`url(#${uid}w)`}>{Array.from({ length: 140 }, (_, i) => <rect key={i} x={-200} y={-20 + i * PITCH} width={2320} height={SH} fill={STRIPE[Math.floor(i / 3) % STRIPE.length]} opacity={0.5} />)}</g>
+      <g opacity={stripes} clipPath={`url(#${uid}w)`}>{Array.from({ length: 110 }, (_, i) => <rect key={i} x={-200} y={100 + i * PITCH} width={2320} height={SH} fill={STRIPE[Math.floor(i / 3) % STRIPE.length]} opacity={0.5} />)}</g>
       {SPH.map(([x, y, c], i) => (
         <g key={i}>
           <circle cx={x} cy={y} r={R} fill={`url(#${uid}sph)`} />
-          <g clipPath={`url(#${uid}c${i})`} opacity={stripes}><g clipPath={`url(#${uid}w)`}>{Array.from({ length: 27 }, (_, k) => <rect key={k} x={x - R - 2} y={y - R - 2 + k * PITCH} width={2 * R + 4} height={SH} fill={STRIPE[c]} />)}</g></g>
+          <g clipPath={`url(#${uid}c${i})`} opacity={stripes}><g clipPath={`url(#${uid}w)`}>{Array.from({ length: 24 }, (_, k) => <rect key={k} x={x - R - 2} y={y - R - 2 + k * PITCH} width={2 * R + 4} height={SH} fill={STRIPE[c]} />)}</g></g>
         </g>
       ))}
     </g>
@@ -342,11 +347,11 @@ const BallsShot: React.FC<{ T: number }> = ({ T }) => {
   const wipe = dropped ? easeInOut(prog(T, L.lines + 0.1, L.lines + 0.8)) : 1;
   const punch = 1 + 0.04 * hit(T, DROP, 0.25);
   // the crosshair: comes out on 取一次色, settles on sphere 1, then jumps from sphere to sphere on its own clock
-  let cx = 1660, cy = 800, co = 0;
+  let cx = 1640, cy = 330, co = 0;
   if (T >= L.pick && T < DROP) {
     co = Math.min(easeOut(prog(T, L.pick, L.pick + 0.3)), 1 - prog(T, DROP - 0.12, DROP));
     const k0 = easeInOut(prog(T, L.pick + 0.2, L.pick + 1.0));
-    cx = lerp(1660, SPH[0][0], k0); cy = lerp(800, SPH[0][1] + SAMPLE_DY, k0);
+    cx = lerp(1640, SPH[0][0], k0); cy = lerp(330, SPH[0][1] + SAMPLE_DY, k0);
     for (let i = 1; i < PICKS.length; i++) {
       const gap = PICKS[i] - PICKS[i - 1], m0 = PICKS[i] - Math.min(0.28, gap * 0.7);
       const k = easeInOut(prog(T, m0, PICKS[i] - 0.02));
@@ -362,12 +367,13 @@ const BallsShot: React.FC<{ T: number }> = ({ T }) => {
         {!dropped && PICKS.map((p, i) => T >= p ? <circle key={i} cx={SPH[i][0]} cy={SPH[i][1]} r={R + 8} fill="none" stroke="#fff" strokeWidth={2} opacity={0.55} /> : null)}
         <Cross x={cx} y={cy} o={co} ring={n > 0 ? Math.max(0, 1 - (T - PICKS[n - 1]) / 0.3) : 0} />
       </svg>
-      <Big s="12 个球 · 1 种颜色" y={22} size={96} color={GOLD} glow={GLOW} o={vis(T, DROP, L.lines, 0.05, 0.3)} dy={rise(T, DROP, 30)} />
+      <Big s="12 个球 · 1 种颜色" y={150} size={84} color={GOLD} glow={GLOW} o={vis(T, DROP, L.lines, 0.05, 0.3)} dy={rise(T, DROP, 30)} />
+      <Tag x={70} y={830} top="DAVID NOVICK · UTEP · 2018" sub="彩色小球错觉（Munker–White 效应）" o={vis(T, L.novick, L.fine, 0.25, 0.25)} dy={rise(T, L.novick, 14)} />
       {lens > 0 && <AbsoluteFill style={{ background: 'rgba(6,6,7,0.82)', opacity: lens }} />}
-      <Lens id="l1" x={510} y={470} r={290} o={lens} tint={0} />
-      <Lens id="l2" x={1120} y={470} r={290} o={lensR} tint={easeInOut(prog(T, L.borrow + 0.3, L.borrow + 1.6))} />
-      <div style={{ position: 'absolute', left: 510 - 300, width: 600, top: 790, textAlign: 'center', opacity: lens, fontFamily: SANS, fontWeight: 900, fontSize: 46, color: INK }}>实际像素（放大）</div>
-      <div style={{ position: 'absolute', left: 1120 - 300, width: 600, top: 790, textAlign: 'center', opacity: lensR, fontFamily: SANS, fontWeight: 900, fontSize: 46, color: INK }}>大脑看到的（示意）</div>
+      <Lens id="l1" x={690} y={520} r={250} o={lens} tint={0} />
+      <Lens id="l2" x={1230} y={520} r={250} o={lensR} tint={easeInOut(prog(T, L.borrow + 0.3, L.borrow + 1.6))} />
+      <div style={{ position: 'absolute', left: 690 - 300, width: 600, top: 790, textAlign: 'center', opacity: lens, fontFamily: SANS, fontWeight: 900, fontSize: 33, color: INK }}>实际像素 · 放大 8 倍</div>
+      <div style={{ position: 'absolute', left: 1230 - 300, width: 600, top: 790, textAlign: 'center', opacity: lensR, fontFamily: SANS, fontWeight: 900, fontSize: 33, color: INK }}>大脑看到的（示意）</div>
     </AbsoluteFill>
   );
 };
@@ -376,9 +382,9 @@ const BallsShot: React.FC<{ T: number }> = ({ T }) => {
 const RecapShot: React.FC<{ T: number }> = ({ T }) => {
   const a = L.world;
   const card = (i: number) => easeOut(prog(T, a + 0.1 + i * 0.12, a + 0.4 + i * 0.12));
-  const xs = [340, 960, 1580], top = 150, w = 580, h = 520;
-  const mini: Proj = { cx: 340, cy0: 268, a: 54, b: 27.9 };
-  const caps: [string, string][] = [['棋盘', '扣掉阴影'], ['裙子', '扣掉光色'], ['彩球', '借用邻色']];
+  const xs = [430, 960, 1490], top = 250, w = 500, h = 420;
+  const mini: Proj = { cx: 430, cy0: 360, a: 44, b: 22.7 };
+  const caps: [string, string][] = [['棋盘', '扣掉了阴影'], ['裙子', '扣掉了光的颜色'], ['彩球', '借来了旁边的颜色']];
   return (
     <AbsoluteFill style={{ background: 'linear-gradient(180deg, #0f0d10 0%, #17130f 100%)' }}>
       {xs.map((x, i) => (
@@ -387,23 +393,23 @@ const RecapShot: React.FC<{ T: number }> = ({ T }) => {
       <svg width={1920} height={1080} style={{ position: 'absolute', inset: 0 }}>
         <g opacity={card(0)} transform={`translate(0 ${(1 - card(0)) * 24})`}><Board p={mini} uid="rb" labels={false} /></g>
         <g opacity={card(1)} transform={`translate(0 ${(1 - card(1)) * 24})`}>
-          <Dress id="rd1" x={880} y={190} s={0.78} body={DRESS.bb[0]} lace={DRESS.bb[1]} />
-          <Dress id="rd2" x={1040} y={190} s={0.78} body={DRESS.wg[0]} lace={DRESS.wg[1]} />
+          <Dress id="rd1" x={885} y={300} s={0.62} body={DRESS.bb[0]} lace={DRESS.bb[1]} />
+          <Dress id="rd2" x={1035} y={300} s={0.62} body={DRESS.wg[0]} lace={DRESS.wg[1]} />
         </g>
         <g opacity={card(2)} transform={`translate(0 ${(1 - card(2)) * 24})`}>
-          <defs>{[0, 1, 2, 3, 4, 5].map((i) => <clipPath key={i} id={`rs${i}`}><circle cx={1440 + (i % 3) * 140} cy={300 + Math.floor(i / 3) * 170} r={60} /></clipPath>)}</defs>
-          {[0, 1, 2, 3, 4, 5].map((i) => { const x = 1440 + (i % 3) * 140, y = 300 + Math.floor(i / 3) * 170; return (
-            <g key={i}><circle cx={x} cy={y} r={60} fill={BEIGE} />
-              <g clipPath={`url(#rs${i})`}>{Array.from({ length: 17 }, (_, k) => <rect key={k} x={x - 62} y={y - 62 + k * 7.5} width={124} height={3.2} fill={STRIPE[i]} />)}</g></g>); })}
+          <defs>{[0, 1, 2, 3, 4, 5].map((i) => <clipPath key={i} id={`rs${i}`}><circle cx={1370 + (i % 3) * 120} cy={390 + Math.floor(i / 3) * 140} r={48} /></clipPath>)}</defs>
+          {[0, 1, 2, 3, 4, 5].map((i) => { const x = 1370 + (i % 3) * 120, y = 390 + Math.floor(i / 3) * 140; return (
+            <g key={i}><circle cx={x} cy={y} r={48} fill={BEIGE} />
+              <g clipPath={`url(#rs${i})`}>{Array.from({ length: 14 }, (_, k) => <rect key={k} x={x - 50} y={y - 50 + k * 7.5} width={100} height={3.2} fill={STRIPE[i]} />)}</g></g>); })}
         </g>
       </svg>
       {xs.map((x, i) => (
-        <div key={i} style={{ position: 'absolute', left: x - w / 2, width: w, top: top + h + 18, textAlign: 'center', opacity: card(i) }}>
-          <div style={{ fontFamily: SANS, fontWeight: 900, fontSize: 48, color: INK }}>{caps[i][0]}</div>
-          <div style={{ fontFamily: SANS, fontWeight: 700, fontSize: 38, color: DIM, marginTop: 6 }}>{caps[i][1]}</div>
+        <div key={i} style={{ position: 'absolute', left: x - w / 2, width: w, top: top + h + 26, textAlign: 'center', opacity: card(i) }}>
+          <div style={{ fontFamily: SANS, fontWeight: 900, fontSize: 38, color: INK }}>{caps[i][0]}</div>
+          <div style={{ fontFamily: SANS, fontWeight: 700, fontSize: 30, color: DIM, marginTop: 6 }}>大脑{caps[i][1]}</div>
         </div>
       ))}
-      <Big s="省力 = 效率" y={40} size={64} color={GOLD} glow={GLOW} o={vis(T, L.eff, SHOT.recap[1], 0.2, 0.2)} dy={rise(T, L.eff, 18)} font={ZH} />
+      <Big s="省力 = 效率" y={150} size={56} color={GOLD} glow={GLOW} o={vis(T, L.eff, SHOT.recap[1], 0.2, 0.2)} dy={rise(T, L.eff, 18)} font={ZH} />
     </AbsoluteFill>
   );
 };
@@ -417,12 +423,12 @@ const EndCard: React.FC<{ T: number }> = ({ T }) => {
   return (
     <AbsoluteFill>
       <AbsoluteFill style={{ background: `rgba(4,4,5,${0.88 * k(0)})` }} />
-      <Big s="大脑的懒惰" y={170} size={120} color={GOLD} o={k(0)} glow={GLOW} font={ZH} />
-      <Big s="那条裙子，你当年看到的是什么颜色？" y={350} size={70} o={k(0.4)} dy={rise(T, a + 0.4)} />
-      <Big s="还不信 A = B？暂停截图，自己取色" y={462} size={44} color={DIM} o={k(0.8)} />
-      <div style={{ position: 'absolute', left: 960 - 330, top: 560, width: 660, height: 64, borderRadius: 32, border: `2px solid ${GOLD}`, opacity: k(1.0), display: 'flex', alignItems: 'center', justifyContent: 'center',
-        fontFamily: SANS, fontWeight: 700, fontSize: 30, letterSpacing: '0.12em', color: INK }}>{JUNO.follow}</div>
-      <div style={{ position: 'absolute', left: 0, right: 0, top: 700, textAlign: 'center', opacity: 0.6 * k(1.2), fontFamily: SANS, fontSize: 20, color: INK, lineHeight: 1.8 }}>
+      <Big s="大脑的懒惰" y={240} size={100} color={GOLD} o={k(0)} glow={GLOW} font={ZH} />
+      <Big s="那条裙子，你当年看到的是什么颜色？" y={404} size={58} o={k(0.4)} dy={rise(T, a + 0.4)} />
+      <Big s="还不信 A = B？暂停 · 截图 · 自己取色" y={496} size={34} color={DIM} o={k(0.8)} />
+      <div style={{ position: 'absolute', left: 960 - 330, top: 572, width: 660, height: 56, borderRadius: 28, border: `2px solid ${GOLD}`, opacity: k(1.0), display: 'flex', alignItems: 'center', justifyContent: 'center',
+        fontFamily: SANS, fontWeight: 700, fontSize: 28, letterSpacing: '0.15em', color: INK }}>{JUNO.follow}</div>
+      <div style={{ position: 'absolute', left: 0, right: 0, top: 690, textAlign: 'center', opacity: 0.6 * k(1.2), fontFamily: SANS, fontSize: 17, color: INK, lineHeight: 1.8 }}>
         资料：Adelson 1995（MIT）· Helmholtz 1867《生理光学手册》· Lafer-Sousa, Hermann &amp; Conway 2015 Current Biology · Novick 2018（UTEP）<br />
         棋盘、裙子、彩球均为代码重绘的示意，不是原图 · "懒惰"为比喻
       </div>
@@ -456,20 +462,20 @@ const Subtitles: React.FC<{ T: number }> = ({ T }) => {
 const PickerNow: React.FC<{ T: number }> = ({ T }) => {
   if (inShot(T, 'board1')) {
     if (T >= TITLE && T < TITLE_OUT + 0.2) return null;
-    const o = (T < TITLE ? easeOut(prog(T, CUR.a1 - 0.1, CUR.a1 + 0.1)) : easeOut(prog(T, TITLE_OUT + 0.2, TITLE_OUT + 0.5))) * (1 - inferO(T));
+    const o = (T < TITLE ? easeOut(prog(T, CUR.a1 - 0.1, CUR.a1 + 0.1)) : easeOut(prog(T, TITLE_OUT + 0.2, TITLE_OUT + 0.5))) * (1 - vis(T, L.guess + 0.1, SHOT.board1[1], 0.3, 0.2));
     return <Picker o={o} rows={[{ k: 'A', v: G(DARK), o: easeOut(prog(T, CUR.a1, CUR.a1 + 0.12)) }, { k: 'B', v: G(DARK), o: easeOut(prog(T, CUR.b1, CUR.b1 + 0.12)) }]} />;
   }
   if (inShot(T, 'paper')) {
     const a = SHOT.paper[0];
-    return <Picker o={easeOut(prog(T, a + 0.2, a + 0.4))} rows={[{ k: '亮处', v: PAPER, o: easeOut(prog(T, a + 0.3, a + 0.45)) }, { k: '阴影', v: PAPER_SH, o: easeOut(prog(T, a + 0.6, a + 0.75)) }]}
-       />;
+    return <Picker o={easeOut(prog(T, a + 0.2, a + 0.4))} rows={[{ k: '亮处', v: PAPER, o: easeOut(prog(T, a + 0.3, a + 0.45)) }, { k: '阴影里', v: PAPER_SH, o: easeOut(prog(T, a + 0.6, a + 0.75)) }]}
+      foot="阴影里 = 亮处 × ½" footO={easeOut(prog(T, L.paper, L.paper + 0.3))} />;
   }
   if (inShot(T, 'balls')) {
     if (T >= L.fine) return <Picker rows={[{ k: '缝隙', v: SPHERE_RGB, o: 1 }, { k: '细线', v: [255, 42, 42], o: 1 }]} o={easeOut(prog(T, L.fine, L.fine + 0.3))} />;
     const n = picked(T);
     if (T >= DROP) return <Picker rows={[{ k: '全部', v: SPHERE_RGB, o: 1 }]} foot="12 个球 · 同一个值" />;
     if (n === 0) return null;
-    return <Picker rows={[{ k: '此球', v: SPHERE_RGB, o: 1 }]} foot={`已取 ${n} / 12`} />;
+    return <Picker rows={[{ k: '这个球', v: SPHERE_RGB, o: 1 }]} foot={`已取 ${n} / 12 · 全部相同`} />;
   }
   if (inShot(T, 'board2') && T < END_CARD) return <Picker rows={[{ k: 'A', v: G(DARK), o: 1 }, { k: 'B', v: G(DARK), o: 1 }]} />;
   return null;
@@ -495,9 +501,11 @@ export const Film: React.FC<{ at?: number }> = ({ at: atT }) => {
       {inShot(T, 'board2') && <BoardShot T={T} uid="b2" />}
       {inShot(T, 'board1') && T < CUR.off + 0.4 && (() => { const [x, y, o, ring] = cursorAt(T); return <svg width={1920} height={1080} style={{ position: 'absolute', inset: 0 }}><Cross x={x} y={y} o={o} ring={ring} /></svg>; })()}
       <Infer T={T} />
+      <Tag x={70} y={800} top="HERMANN VON HELMHOLTZ · 1867" sub="《生理光学手册》：无意识推理" o={vis(T, L.helm, L.skill, 0.25, 0.2)} dy={rise(T, L.helm, 14)} />
       <PickerNow T={T} />
       <TitleCard T={T} />
       <EndCard T={T} />
+      <div style={{ position: 'absolute', left: 0, right: 0, top: 0, height: BAR, background: '#000' }} />
       <div style={{ position: 'absolute', left: 0, right: 0, bottom: 0, height: BAR, background: '#000' }} />
       <Subtitles T={T} />
       {mark > 0.001 && (

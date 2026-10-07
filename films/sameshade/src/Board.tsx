@@ -9,7 +9,7 @@ export const grey = (v: number) => `rgb(${v},${v},${v})`;
 
 // board coords (u, v) in cells -> screen; an isometric diamond centred at (cx, cy0 + 5 b / 2)
 export type Proj = { cx: number; cy0: number; a: number; b: number };
-export const P0: Proj = { cx: 960, cy0: 110, a: 150, b: 77.5 }; // ×1.25 for phone viewing (v3)
+export const P0: Proj = { cx: 960, cy0: 250, a: 120, b: 62 };
 export const pt = (p: Proj, u: number, v: number): [number, number] => [p.cx + (u - v) * p.a, p.cy0 + (u + v) * p.b];
 const poly = (p: Proj, pts: [number, number][]) => pts.map(([u, v]) => pt(p, u, v).join(',')).join(' ');
 
@@ -39,20 +39,20 @@ export const Board: React.FC<{ p?: Proj; shadowOff?: [number, number]; showShado
     }
     const [ax, ay] = pt(p, A_CELL[0] + 0.5, A_CELL[1] + 0.5), [bx, by] = pt(p, B_CELL[0] + 0.5, B_CELL[1] + 0.5);
     const [cx, cy] = pt(p, CYL[0] + slide, CYL[1]);
-    const k = p.a / P0.a, rx = p.a * CYL_R * Math.SQRT2, ry = p.b * CYL_R * Math.SQRT2, H = 188 * k;
+    const k = p.a / P0.a, rx = p.a * CYL_R * Math.SQRT2, ry = p.b * CYL_R * Math.SQRT2, H = 150 * k;
     const bPoly = poly(p, [[B_CELL[0], B_CELL[1]], [B_CELL[0] + 1, B_CELL[1]], [B_CELL[0] + 1, B_CELL[1] + 1], [B_CELL[0], B_CELL[1] + 1]]);
     const aPoly = poly(p, [[A_CELL[0], A_CELL[1]], [A_CELL[0] + 1, A_CELL[1]], [A_CELL[0] + 1, A_CELL[1] + 1], [A_CELL[0], A_CELL[1] + 1]]);
     return (
       <g>
         <defs>
-          <filter id={`${uid}soft`} x="-20%" y="-20%" width="140%" height="140%"><feGaussianBlur stdDeviation={20 * k} /></filter>
+          <filter id={`${uid}soft`} x="-20%" y="-20%" width="140%" height="140%"><feGaussianBlur stdDeviation={16 * k} /></filter>
           <linearGradient id={`${uid}cylG`} x1="0" y1="0" x2="1" y2="0">
             <stop offset="0" stopColor="#1f5a2e" /><stop offset="0.35" stopColor="#3f9a52" /><stop offset="0.6" stopColor="#5cbf6d" /><stop offset="1" stopColor="#1c4d27" />
           </linearGradient>
         </defs>
         {/* board thickness */}
-        <polygon points={`${pt(p, 0, 5).join(',')} ${pt(p, 5, 5).join(',')} ${pt(p, 5, 5)[0]},${pt(p, 5, 5)[1] + 42 * k} ${pt(p, 0, 5)[0]},${pt(p, 0, 5)[1] + 42 * k}`} fill="#3a3a3a" />
-        <polygon points={`${pt(p, 5, 0).join(',')} ${pt(p, 5, 5).join(',')} ${pt(p, 5, 5)[0]},${pt(p, 5, 5)[1] + 42 * k} ${pt(p, 5, 0)[0]},${pt(p, 5, 0)[1] + 42 * k}`} fill="#525252" />
+        <polygon points={`${pt(p, 0, 5).join(',')} ${pt(p, 5, 5).join(',')} ${pt(p, 5, 5)[0]},${pt(p, 5, 5)[1] + 34 * k} ${pt(p, 0, 5)[0]},${pt(p, 0, 5)[1] + 34 * k}`} fill="#3a3a3a" />
+        <polygon points={`${pt(p, 5, 0).join(',')} ${pt(p, 5, 5).join(',')} ${pt(p, 5, 5)[0]},${pt(p, 5, 5)[1] + 34 * k} ${pt(p, 5, 0)[0]},${pt(p, 5, 0)[1] + 34 * k}`} fill="#525252" />
         {cells}
         {showShadow && <polygon points={shadowPoly(p, shadowOff)} fill="#000" opacity={SHADOW_ALPHA} filter={`url(#${uid}soft)`} />}
         {/* B held at its true value (it does not follow the shadow) when we slide the shadow away */}
@@ -96,9 +96,9 @@ export const Board: React.FC<{ p?: Proj; shadowOff?: [number, number]; showShado
           </g>
         )}
         {labels && (
-          <g style={{ fontFamily: '"Noto Sans CJK SC", sans-serif', fontWeight: 900, fontSize: 84 * k }}>
-            <text x={ax} y={ay + 29 * k} textAnchor="middle" opacity={labelO[0]} fill={maskAB > 0.5 ? '#f3ede2' : '#1a1a1a'}>A</text>
-            <text x={bx} y={by + 29 * k} textAnchor="middle" opacity={labelO[1]} fill={maskAB > 0.5 ? '#f3ede2' : '#1a1a1a'}>B</text>
+          <g style={{ fontFamily: '"Noto Sans CJK SC", sans-serif', fontWeight: 900, fontSize: 64 * k }}>
+            <text x={ax} y={ay + 22 * k} textAnchor="middle" opacity={labelO[0]} fill={maskAB > 0.5 ? '#f3ede2' : '#1a1a1a'}>A</text>
+            <text x={bx} y={by + 22 * k} textAnchor="middle" opacity={labelO[1]} fill={maskAB > 0.5 ? '#f3ede2' : '#1a1a1a'}>B</text>
           </g>
         )}
       </g>
