@@ -10,3 +10,4 @@
 | 2026-10-07 02:55 | Gate 4 (video-reviewer) v1: BLOCKED (memo render, 穿模 card/levers) + 6 majors → all fixed | reviewer → producer | review/14_v1/REVIEW.md | |
 | 2026-10-07 03:05 | v2 re-review: READY (no new clipping); 5 optional polish items applied → v3 | reviewer → producer | review/14_v2/REVIEW_v2.md | |
 | 2026-10-07 03:16 | DELIVERED v3: out/谁按错了_v3_发送版.mp4 · 1080p30 · 109 s · 26.1 MB · −14.3 LUFS · −1.0 dBTP. Renders: 3 × (10× T4, ~95 ms/frame, < 1 min each). Waiting for owner OK before the Douyin package. | producer | | ~3 h total |
+| 2026-10-07 14:29 | Owner rejected v3: 'doesnt work… something people can relate to'. Back to topic pitch. | owner | | |
