@@ -33,21 +33,21 @@ const vis = (T: number, a: number, z: number, fi = 0.25, fo = 0.3) => Math.min(e
 const rise = (T: number, a: number, d = 22) => (1 - easeOut(prog(T, a, a + 0.2))) * d; // a fast landing, then still
 const L = {
   hide: at('盯着B'), deeper: at('B在变深'), take: at('把阴影'), guess: at('大脑不测量'), helm: at('1867'),
-  which: at('哪张更长'), thin: at('左边细长'), lift: at('拿起来'), same5: at('只是转了90度'), shep: at('谢泼德'), persp: at('透视'),
-  step: at('一步一停'), alt: at('黄的走'), off: at('拿掉条纹'), contrast: at('边缘的对比'),
-  balls: at('最后一组'), rgb: at('红、绿'), pick: at('取一次色'), first: at('第一个'), second: at('第二个'),
+  glass: at('这块玻璃'), bet1: at('放得进'), lift: at('看好了'), fit: at('严丝合缝'), measure: at('两条长边'), persp: at('透视'),
+  race: at('赛跑'), step: at('一步一停'), tie: at('同时撞线'), again: at('再跑一次'),
+  balls: at('再来一组'), rgb: at('红、绿'), pick: at('取一次色'), first: at('第一个'), second: at('第二个'),
   same: at('同一种米色'), lines: at('彩色的'), save: at('处理颜色很'),
-  dir: at('往哪个方向'), up: at('一直在往上'), right: at('一直在往右'), lazy: at('最省事'),
+  right: at('明明在往右'), fingers: at('两根手指，把'), up: at('一条缝'), lazy: at('最省事'),
   world: at('你看到的世界'), right2: at('都猜对了'), now: at('再看一眼'), still: at('还是不一样'),
 };
 const TITLE = EV.title, DROP = EV.drop, BAR4 = 4 * BEAT;
 const TITLE_OUT = TITLE + 3.3;                    // the card leaves through the board growing back around A and B
 const T1 = TITLE + 7 * BAR4;                      // 22.38 board → tables
 const LAND = TITLE + 11 * BAR4;                   // 30.52 the lifted top lands on the right table
-const T2 = EV.break, OFF = EV.break + 4 * BAR4, ON = 55.45; // feet; stripes off on a downbeat, back after the line
+const T2 = EV.break, OFF = EV.break + 4 * BAR4; // the race: both cross the line together on a downbeat (48.84)
 const T3 = EV.build;                              // 56.98 feet → spheres
 const T4 = DROP + 5 * BAR4;                       // 83.10 spheres → barber pole
-const OPEN = DROP + 8 * BAR4;                     // 89.21 the window opens
+const SLIT = DROP + 8 * BAR4;                     // 89.21 the sides close to a slit
 const T5 = DROP + 11 * BAR4;                      // 95.31 the slit shuts → recap
 const T6 = DROP + 14 * BAR4;                      // 101.42 recap → board
 const END_CARD = DROP + 17 * BAR4;                // 107.52
@@ -58,9 +58,9 @@ const SHOT = {
 const BEATS: number[] = (music as any).beats;
 const nextBeat = (t: number) => t > DROP ? DROP + Math.ceil((t - DROP) / BEAT - 1e-6) * BEAT : (BEATS.find((b) => b >= t - 1e-6) ?? t);
 /** the five shortcuts, stamped into the top bar one by one */
-const STAMPS: [string, string, number][] = [
-  ['阴影', '按阴影调亮', nextBeat(L.helm)], ['透视', '按透视拉长', nextBeat(L.persp)], ['对比', '看对比估速度', nextBeat(L.contrast)],
-  ['借色', '借旁边的颜色', nextBeat(L.save)], ['省事', '挑最省事的答案', nextBeat(L.lazy)],
+const STAMPS: [string, string, number][] = [          // each lands on its reveal hit
+  ['阴影', '按阴影调亮', nextBeat(L.helm)], ['透视', '按透视拉长', TITLE + 11 * BAR4], ['对比', '看对比估速度', EV.break + 4 * BAR4],
+  ['借色', '借旁边的颜色', DROP], ['省事', '挑最省事的答案', DROP + 8 * BAR4],
 ];
 const inShot = (T: number, k: keyof typeof SHOT) => T >= SHOT[k][0] && T < SHOT[k][1];
 
@@ -267,21 +267,56 @@ const Fold: React.FC<{ T: number }> = ({ T }) => {
   );
 };
 
-const LIFT0 = () => L.lift + 0.15;
-const ghostAt = (T: number): P2[] => {
+const LIFT0 = () => L.lift - 0.05;
+/** the glass pane: lies on the left table, flies (turning 90°) and lands exactly on the right one */
+const glassAt = (T: number): P2[] => {
   const k = easeInOut(prog(T, LIFT0(), LAND));
   const a = -Math.PI / 2 * k;
-  const c: P2 = [lerp(C_L[0], C_R[0], k), lerp(C_L[1], C_R[1], k) - 130 * Math.sin(Math.PI * k)];
+  const c: P2 = [lerp(C_L[0], C_R[0], k), lerp(C_L[1], C_R[1], k) - 6 - 130 * Math.sin(Math.PI * k)];
   return quadOf(c, rot(U, a), rot(V, a));
+};
+const Glass: React.FC<{ q: P2[]; o?: number; fit?: number }> = ({ q, o = 1, fit = 0 }) => {
+  const [a, b, c, d] = q;
+  const g = (k: number, j: number): P2 => [lerp(lerp(a[0], b[0], k), lerp(d[0], c[0], k), j), lerp(lerp(a[1], b[1], k), lerp(d[1], c[1], k), j)];
+  return (
+    <g opacity={o}>
+      <polygon points={pts(q)} fill="rgba(170,225,240,0.42)" stroke={fit > 0 ? GOLD : 'rgba(225,248,255,0.95)'} strokeWidth={3 + 3 * fit} />
+      {[[0.2, 0.15, 0.55, 0.4], [0.35, 0.12, 0.7, 0.32]].map(([k0, j0, k1, j1], i) => { const p0 = g(k0, j0), p1 = g(k1, j1); return <line key={i} x1={p0[0]} y1={p0[1]} x2={p1[0]} y2={p1[1]} stroke="#fff" strokeOpacity={0.7} strokeWidth={4} strokeLinecap="round" />; })}
+    </g>
+  );
+};
+/** "push your bet": the options and a 3-2-1 on the beats; on the reveal the right answer turns gold */
+const Bet: React.FC<{ T: number; at: number; reveal: number; opts: string[]; right: number; until: number }> = ({ T, at, reveal, opts, right, until }) => {
+  const o = vis(T, at, until, 0.2, 0.3);
+  if (o <= 0.001) return null;
+  const b0 = nextBeat(at + 0.6), beats = [b0, b0 + BEAT, b0 + 2 * BEAT];
+  const n = beats.filter((b) => T >= b).length, done = T >= beats[2] + BEAT, shown = T >= reveal;
+  const digit = n > 0 && !done ? String(4 - n) : '';
+  return (
+    <div style={{ position: 'absolute', left: 0, right: 0, top: 150, display: 'flex', justifyContent: 'center', alignItems: 'center', gap: 18, opacity: o }}>
+      <span style={{ fontFamily: SANS, fontWeight: 900, fontSize: 34, color: INK, textShadow: '0 0 6px #000, 0 2px 12px #000', marginRight: 6 }}>押一个</span>
+      {opts.map((w, i) => {
+        const win = shown && i === right, lose = shown && i !== right;
+        return (
+          <div key={i} style={{ padding: '10px 26px', borderRadius: 40, border: `3px solid ${win ? GOLD : 'rgba(243,237,226,0.75)'}`, background: win ? `rgba(241,197,109,${0.3 + 0.4 * hit(T, reveal, 0.4)})` : 'rgba(10,10,12,0.78)',
+            fontFamily: SANS, fontWeight: 900, fontSize: 40, color: win ? GOLD : INK, opacity: lose ? 0.35 : 1, boxShadow: win ? `0 0 ${12 + 30 * hit(T, reveal, 0.5)}px ${GLOW}` : 'none' }}>{w}{win ? ' ✓' : ''}</div>
+        );
+      })}
+      <div style={{ width: 84, height: 84, borderRadius: 42, border: `3px solid ${done ? 'rgba(243,237,226,0.3)' : GOLD}`, background: 'rgba(10,10,12,0.78)', display: 'flex', alignItems: 'center', justifyContent: 'center',
+        fontFamily: MONO, fontWeight: 700, fontSize: 52, color: GOLD, marginLeft: 8, transform: `scale(${1 + 0.25 * hit(T, beats[Math.max(0, n - 1)], 0.15) * (n > 0 && !done ? 1 : 0)})` }}>{digit}</div>
+    </div>
+  );
 };
 const YELLOW_RECT: P2[] = [[420, 420], [516, 420], [516, 464], [420, 464]];
 const TablesShot: React.FC<{ T: number }> = ({ T }) => {
   const legL = easeOut(prog(T, T1, T1 + 0.22)), legR = easeOut(prog(T, T1 + 0.08, T1 + 0.3));
   const punch = 1 + 0.03 * hit(T, LAND, 0.22);
-  const lifted = T >= LIFT0() - 0.15, landed = T >= LAND;
-  const out = easeInOut(prog(T, T2 - 0.5, T2));            // tables → feet: the gold top becomes the yellow block
-  const gq = out > 0 ? mix(Q_R, YELLOW_RECT, out) : ghostAt(T);
-  const flash = hit(T, LAND, 0.35);
+  const landed = T >= LAND;
+  const out = easeInOut(prog(T, T2 - 0.5, T2));            // tables → race: the glass becomes the yellow block
+  const glassIn = easeOut(prog(T, L.glass, L.glass + 0.35));
+  const gq = out > 0 ? mix(Q_R, YELLOW_RECT, out) : glassAt(T);
+  const edges = vis(T, L.measure, T2 - 0.5, 0.25, 0.3);
+  const longL: P2[] = [Q_L[0], Q_L[1]], longR: P2[] = [Q_R[0], Q_R[1]];
   return (
     <AbsoluteFill>
       <Room />
@@ -289,45 +324,70 @@ const TablesShot: React.FC<{ T: number }> = ({ T }) => {
         <g transform={`translate(960 600) scale(${punch}) translate(-960 -600)`} opacity={1 - out}>
           <TableDraw q={Q_L} leg={legL} />
           <TableDraw q={Q_R} leg={legR} />
-          {lifted && <polygon points={pts(Q_L)} fill="#1a120c" opacity={0.85 * easeOut(prog(T, LIFT0(), LIFT0() + 0.2))} />}
-          {lifted && <polygon points={pts(Q_L)} fill="none" stroke={GOLD} strokeWidth={2.5} strokeDasharray="10 8" opacity={0.75} />}
+          {/* "measure the two long edges with two fingers": the two long sides light up, same length */}
+          {edges > 0 && [longL, longR].map(([p, q], i) => (
+            <g key={i} opacity={edges}>
+              <line x1={p[0]} y1={p[1]} x2={q[0]} y2={q[1]} stroke={GOLD} strokeWidth={9} strokeLinecap="round" />
+              <circle cx={p[0]} cy={p[1]} r={9} fill={GOLD} /><circle cx={q[0]} cy={q[1]} r={9} fill={GOLD} />
+            </g>
+          ))}
         </g>
       </svg>
       {out > 0 && <AbsoluteFill style={{ background: '#808080', opacity: out }} />}
       <svg width={1920} height={1080} style={{ position: 'absolute', inset: 0 }}>
-        {lifted && <polygon points={pts(gq)} fill={out > 0 ? `rgb(${Math.round(lerp(241, 255, out))},${Math.round(lerp(197, 242, out))},${Math.round(lerp(109, 0, out))})` : landed ? `rgba(241,197,109,${0.4 + 0.5 * flash})` : 'rgba(241,197,109,0.3)'}
-          stroke={out > 0.6 ? 'none' : GOLD} strokeWidth={4} strokeDasharray={landed ? '0' : '14 10'} />}
+        {out > 0 ? <polygon points={pts(gq)} fill={`rgb(${Math.round(lerp(170, 255, out))},${Math.round(lerp(225, 242, out))},${Math.round(lerp(240, 0, out))})`} />
+          : <Glass q={gq} o={glassIn} fit={landed ? 1 : 0} />}
       </svg>
+      {edges > 0 && [longL, longR].map(([p, q], i) => (
+        <div key={i} style={{ position: 'absolute', left: (p[0] + q[0]) / 2 + (i ? -20 : -150), top: i ? 380 : (p[1] + q[1]) / 2 - 30, opacity: edges, fontFamily: MONO, fontWeight: 700, fontSize: 40, color: GOLD,
+          textShadow: '0 0 6px #000, 0 2px 10px #000' }}>300</div>
+      ))}
+      <Bet T={T} at={L.bet1} reveal={LAND} opts={['放得进', '放不进']} right={0} until={L.measure} />
     </AbsoluteFill>
   );
 };
 
-/* ---------------------------------------------------------------- 3. stepping feet (Anstis 2001, Perception) */
-const SPEED = 72, SW = 24;
-const barX = (T: number) => 420 + SPEED * (T - T2);
-const FeetStripes: React.FC<{ wipe?: number; angle?: number; o?: number }> = ({ wipe = 1, angle = 0, o = 1 }) => (
-  <g opacity={o} transform={`rotate(${angle} 960 540)`}>
-    <defs><clipPath id="fw"><rect x={-600} y={-600} width={(1920 + 1200) * wipe} height={2400} /></clipPath></defs>
-    <g clipPath="url(#fw)">{Array.from({ length: 66 }, (_, i) => <rect key={i} x={-600 + i * 2 * SW} y={-600} width={SW} height={2400} fill="#000" />)}
-      {Array.from({ length: 66 }, (_, i) => <rect key={`w${i}`} x={-600 + i * 2 * SW + SW} y={-600} width={SW} height={2400} fill="#fff" />)}</g>
+/* ---------------------------------------------------------------- 3. the race (stepping feet, Anstis 2001, Perception) */
+const SW = 24, FINISH = 1200, X0 = 420;
+const V1 = (FINISH - 4 * SW - X0) / (OFF - T2);               // 84 px/s: both fronts reach the line on the downbeat
+const RW0 = () => L.again - 0.2, RW1 = () => L.again + 0.25;  // rewind, then a second race without stripes
+const RACE2 = () => RW1() + 0.15, R2END = () => T3 - 0.9;
+const V2 = () => (FINISH - 4 * SW - X0) / (R2END() - RACE2());
+const barX = (T: number) => {
+  if (T < RW0()) return X0 + V1 * (T - T2);
+  if (T < RACE2()) { const x1 = X0 + V1 * (RW0() - T2); return lerp(x1, X0, easeInOut(prog(T, RW0(), RW1()))); }
+  return X0 + V2() * Math.min(T - RACE2(), R2END() - RACE2() + 0.6);
+};
+const FeetStripes: React.FC<{ wipe?: number; o?: number }> = ({ wipe = 1, o = 1 }) => (
+  <g opacity={o}>
+    <defs><clipPath id="fw"><rect x={0} y={0} width={1920 * wipe} height={1080} /></clipPath></defs>
+    <g clipPath="url(#fw)">{Array.from({ length: 41 }, (_, i) => <rect key={i} x={i * 2 * SW} y={0} width={SW} height={1080} fill="#000" />)}
+      {Array.from({ length: 41 }, (_, i) => <rect key={`w${i}`} x={i * 2 * SW + SW} y={0} width={SW} height={1080} fill="#fff" />)}</g>
   </g>
 );
 const FeetShot: React.FC<{ T: number }> = ({ T }) => {
   const wipe = easeOut(prog(T, T2, T2 + 0.35));
-  const stripes = T < OFF || T >= ON;
-  const k = easeInOut(prog(T, T3 - 0.5, T3));               // feet → spheres: the stripes turn and become the coloured ones
+  const stripes = T < L.again;
+  const k = easeInOut(prog(T, T3 - 0.5, T3));               // race → spheres: coloured stripes turn in
   const x = barX(T);
+  const crossFlash = hit(T, OFF, 0.4);
   return (
     <AbsoluteFill style={{ background: '#808080' }}>
       {k > 0 && <AbsoluteFill style={{ background: '#0b0b0b', opacity: k }} />}
       <svg width={1920} height={1080} style={{ position: 'absolute', inset: 0 }}>
-        {stripes && <FeetStripes wipe={wipe} angle={90 * k} o={1 - k} />}
+        {stripes && <FeetStripes wipe={wipe} />}
         {k > 0 && <g transform={`rotate(${-90 * (1 - k)} 960 540)`} opacity={k}><ColourStripes /></g>}
         <g opacity={1 - k}>
+          {/* the finish line */}
+          <rect x={FINISH - 5} y={360} width={10} height={360} fill={GOLD} stroke="#000" strokeWidth={3} />
+          <rect x={FINISH - 5} y={360} width={10} height={360} fill={GOLD} opacity={0.5 + 0.5 * crossFlash} />
           <rect x={x} y={420} width={4 * SW} height={44} fill="#fff200" />
           <rect x={x} y={616} width={4 * SW} height={44} fill="#0a1a6e" opacity={easeOut(prog(T, T2, T2 + 0.3))} />
         </g>
       </svg>
+      <div style={{ position: 'absolute', left: FINISH - 100, width: 200, top: 300, textAlign: 'center', opacity: 1 - k, fontFamily: SANS, fontWeight: 900, fontSize: 40, color: GOLD, textShadow: '0 0 6px #000, 0 2px 10px #000' }}>终点</div>
+      <Big s="平局" y={760} size={88} color={GOLD} glow={GLOW} o={vis(T, OFF, L.again - 0.2, 0.06, 0.3)} dy={rise(T, OFF, 26)} />
+      <Bet T={T} at={L.race + 0.2} reveal={OFF} opts={['黄先到', '蓝先到', '同时到']} right={2} until={L.again - 0.2} />
     </AbsoluteFill>
   );
 };
@@ -434,35 +494,49 @@ const BallsShot: React.FC<{ T: number }> = ({ T }) => {
   );
 };
 
-/* ---------------------------------------------------------------- 5. barber pole / aperture problem (Wallach 1935) */
-const SPD = 110, PER = 70;
+/* ---------------------------------------------------------------- 5. barber pole / aperture problem (Wallach 1935), played backwards:
+   first the wide window (clearly moving right), then the viewer is asked to cover the sides with two fingers; on the
+   downbeat two dark bands slide in where the fingers go, and the same stripes now run up. */
+const SPD = 110, PER = 70, WIDE = 1300, SLIT_W = 150;
 const slitW = (T: number) => {
-  const close = easeInOut(prog(T, T4 - 0.7, T4));                     // full frame → slit, as the spheres fall
-  const open = easeInOut(prog(T, OPEN, OPEN + 0.6)) * (1 - easeInOut(prog(T, L.lazy + 0.4, L.lazy + 1.0)));
+  const close = easeInOut(prog(T, T4 - 0.7, T4));                     // full frame → wide window, as the spheres fall
   const shut = easeInOut(prog(T, T5 - 0.4, T5));
-  return Math.max(0, lerp(lerp(2000, 150, close), 1300, open) * (1 - shut));
+  return lerp(2000, WIDE, close) * (1 - shut);
 };
+const fingersAt = (T: number) => easeInOut(prog(T, SLIT - 0.35, SLIT)); // the bands that stand in for the fingers
 const BarberShot: React.FC<{ T: number }> = ({ T }) => {
-  const w = slitW(T), h = lerp(1080, 560, easeInOut(prog(T, T4 - 0.7, T4))), x0 = 960 - w / 2, y0 = 540 - h / 2 + 20 * easeInOut(prog(T, T4 - 0.7, T4));
+  const w = slitW(T), h = lerp(1080, 540, easeInOut(prog(T, T4 - 0.7, T4))), x0 = 960 - w / 2, y0 = 540 - h / 2 + 90 * easeInOut(prog(T, T4 - 0.7, T4));
   const dx = (SPD * (T - (T4 - 0.7))) % PER;
   const intro = easeInOut(prog(T, T4 - 0.7, T4 - 0.2));
-  const punch = 1 + 0.025 * hit(T, OPEN, 0.22);
-  const arrow = vis(T, OPEN + 0.4, L.lazy + 0.5, 0.2, 0.3);
+  const punch = 1 + 0.025 * hit(T, SLIT, 0.22);
+  const f = fingersAt(T), bandW = (WIDE - SLIT_W) / 2;
+  const guide = vis(T, L.fingers + 0.1, SLIT + 0.1, 0.25, 0.15);
+  const arrow = vis(T, L.right, L.fingers + 0.6, 0.2, 0.3);
   return (
     <AbsoluteFill style={{ background: '#101014' }}>
       <svg width={1920} height={1080} style={{ position: 'absolute', inset: 0 }}>
-        <defs><clipPath id="ap"><rect x={x0} y={y0} width={w} height={h} rx={10} /></clipPath></defs>
-        <g transform={`translate(960 560) scale(${punch}) translate(-960 -560)`}>
+        <defs>
+          <clipPath id="ap"><rect x={x0} y={y0} width={w} height={h} rx={10} /></clipPath>
+          <pattern id="hatch" width="18" height="18" patternUnits="userSpaceOnUse" patternTransform="rotate(45)"><rect width="9" height="18" fill="rgba(243,237,226,0.22)" /></pattern>
+        </defs>
+        <g transform={`translate(960 600) scale(${punch}) translate(-960 -600)`}>
           <g clipPath="url(#ap)">
             <rect x={x0} y={y0} width={w} height={h} fill="#f1ece2" opacity={intro} />
             <g transform={`translate(${dx} 0)`} opacity={intro}>
               {Array.from({ length: 70 }, (_, i) => { const x = -1700 + i * PER; return <polygon key={i} points={`${x},0 ${x + 32},0 ${x + 32 + 1080},1080 ${x + 1080},1080`} fill="#c8302a" />; })}
             </g>
+            {/* where to put the fingers, then the bands that do it for you */}
+            {guide > 0 && [x0, 960 + SLIT_W / 2].map((bx, i) => <rect key={`g${i}`} x={bx} y={y0} width={bandW} height={h} fill="url(#hatch)" stroke={GOLD} strokeWidth={4} strokeDasharray="16 10" opacity={guide} />)}
+            {f > 0 && <rect x={x0} y={y0} width={bandW * f} height={h} fill="#16161c" />}
+            {f > 0 && <rect x={x0 + w - bandW * f} y={y0} width={bandW * f} height={h} fill="#16161c" />}
           </g>
           {w > 1 && <rect x={x0} y={y0} width={w} height={h} rx={10} fill="none" stroke="#3a3a44" strokeWidth={10} opacity={intro} />}
         </g>
-        <g opacity={arrow}><line x1={760} y1={890} x2={1140} y2={890} stroke={GOLD} strokeWidth={8} /><polygon points="1140,872 1176,890 1140,908" fill={GOLD} /></g>
+        <g opacity={arrow}><line x1={760} y1={925} x2={1140} y2={925} stroke={GOLD} strokeWidth={8} /><polygon points="1140,907 1176,925 1140,943" fill={GOLD} /></g>
       </svg>
+      {guide > 0 && [x0 + bandW / 2, 960 + SLIT_W / 2 + bandW / 2].map((cx, i) => (
+        <div key={i} style={{ position: 'absolute', left: cx - 200, width: 400, top: 500, textAlign: 'center', opacity: guide, fontFamily: SANS, fontWeight: 900, fontSize: 44, color: GOLD, textShadow: '0 0 8px #000, 0 2px 12px #000' }}>手指挡这里</div>
+      ))}
     </AbsoluteFill>
   );
 };
@@ -527,7 +601,8 @@ const Tally: React.FC<{ T: number }> = ({ T }) => {
   const o = easeOut(prog(T, TITLE_OUT + 0.4, TITLE_OUT + 0.9)) * (1 - prog(T, END_CARD, END_CARD + 0.4));
   if (o <= 0.001) return null;
   return (
-    <div style={{ position: 'absolute', top: 34, left: 0, right: 0, display: 'flex', justifyContent: 'center', gap: 18, opacity: o }}>
+    <div style={{ position: 'absolute', top: 34, left: 0, right: 0, display: 'flex', justifyContent: 'center', alignItems: 'center', gap: 18, opacity: o }}>
+      <span style={{ fontFamily: SANS, fontWeight: 900, fontSize: 28, color: DIM, marginRight: 6 }}>你被骗了几次？</span>
       {STAMPS.map(([w, , t], i) => {
         const on = T >= t, k = easeOut(prog(T, t, t + 0.14)), glow = hit(T, t, 0.5) + (T >= T5 ? hit(T, L.world + 0.2 + i * 0.12, 0.3) : 0);
         return (
@@ -551,8 +626,8 @@ const EndCard: React.FC<{ T: number }> = ({ T }) => {
     <AbsoluteFill>
       <AbsoluteFill style={{ background: `rgba(4,4,5,${0.88 * k(0)})` }} />
       <Big s="大脑的懒惰" y={220} size={100} color={GOLD} o={k(0)} glow={GLOW} font={ZH} />
-      <Big s="这五个里，哪个最骗到你？" y={388} size={64} o={k(0.4)} dy={rise(T, a + 0.4)} />
-      <Big s="还不信？暂停截图，自己量一量" y={490} size={36} color={DIM} o={k(0.8)} />
+      <Big s="五个里，你被骗了几个？" y={388} size={64} o={k(0.4)} dy={rise(T, a + 0.4)} />
+      <Big s="评论区报分 · 不信就暂停截图，自己量" y={490} size={36} color={DIM} o={k(0.8)} />
       <div style={{ position: 'absolute', left: 960 - 330, top: 566, width: 660, height: 58, borderRadius: 29, border: `2px solid ${GOLD}`, opacity: k(1.0), display: 'flex', alignItems: 'center', justifyContent: 'center',
         fontFamily: SANS, fontWeight: 700, fontSize: 28, letterSpacing: '0.15em', color: INK }}>{JUNO.follow}</div>
       <div style={{ position: 'absolute', left: 0, right: 0, top: 690, textAlign: 'center', opacity: 0.6 * k(1.2), fontFamily: SANS, fontSize: 18, color: INK, lineHeight: 1.8 }}>
@@ -604,8 +679,12 @@ const PickerNow: React.FC<{ T: number }> = ({ T }) => {
     const o = (T < TITLE ? easeOut(prog(T, CUR.a1 - 0.1, CUR.a1 + 0.1)) : easeOut(prog(T, TITLE_OUT + 0.2, TITLE_OUT + 0.5))) * (1 - vis(T, L.guess + 1.4, 99, 0.3, 0.2)) * (1 - prog(T, T1 - 0.5, T1 - 0.2));
     return <Picker o={o} rows={[{ k: 'A', v: G(DARK), o: easeOut(prog(T, CUR.a1, CUR.a1 + 0.12)) }, { k: 'B', v: G(DARK), o: easeOut(prog(T, CUR.b1, CUR.b1 + 0.12)) }]} />;
   }
-  if (inShot(T, 'tables')) return <Meter title="量一下 · 像素" o={vis(T, LAND + 0.05, T2 - 0.3, 0.2, 0.2)} rows={[['左桌面', '300 × 121'], ['右桌面', '300 × 121']]} />;
-  if (inShot(T, 'feet')) return <Meter title="速度计 · 像素/秒" o={vis(T, T2 + 0.3, T3 - 0.3, 0.3, 0.25)} rows={[['黄', String(SPEED), '#fff200'], ['蓝', String(SPEED), '#0a1a6e']]} />;
+  if (inShot(T, 'tables')) return <Meter title="量一下 · 像素" o={vis(T, L.measure + 0.3, T2 - 0.3, 0.2, 0.2)} rows={[['左边长边', '300'], ['右边长边', '300']]} />;
+  if (inShot(T, 'feet')) {
+    const v = T < RW0() ? V1 : T < RACE2() ? 0 : V2();
+    const sv = v ? String(Math.round(v)) : '—';
+    return <Meter title={T < RW0() ? '速度计 · 像素/秒' : '第二回合 · 像素/秒'} o={vis(T, OFF, T3 - 0.3, 0.2, 0.25)} rows={[['黄', sv, '#fff200'], ['蓝', sv, '#0a1a6e']]} />;   // after the bet is settled
+  }
   if (inShot(T, 'balls')) {
     if (T >= T4 - 0.72) return null;
     if (T >= L.save) return <Picker rows={[{ k: '缝隙', v: SPHERE_RGB, o: 1 }, { k: '细线', v: [255, 42, 42], o: 1 }]} o={easeOut(prog(T, L.save, L.save + 0.3))} />;
@@ -614,7 +693,7 @@ const PickerNow: React.FC<{ T: number }> = ({ T }) => {
     if (n === 0) return null;
     return <Picker rows={[{ k: '这个球', v: SPHERE_RGB, o: 1 }]} foot={`已取 ${n} / 12 · 全部相同`} />;
   }
-  if (inShot(T, 'barber')) return <Meter title="实际运动" o={vis(T, OPEN + 0.3, T5 - 0.3, 0.3, 0.25)} rows={[['方向', '→ 水平'], ['速度', `${SPD} px/s`]]} />;
+  if (inShot(T, 'barber')) return <Meter title="实际运动 · 全程不变" o={vis(T, T4 + 0.2, T5 - 0.3, 0.3, 0.25)} rows={[['方向', '→ 水平'], ['速度', `${SPD} px/s`]]} />;
   if (inShot(T, 'board2') && T < END_CARD) return <Picker o={easeOut(prog(T, T6 + 0.2, T6 + 0.5))} rows={[{ k: 'A', v: G(DARK), o: 1 }, { k: 'B', v: G(DARK), o: 1 }]} />;
   return null;
 };
