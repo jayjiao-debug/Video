@@ -412,7 +412,7 @@ const BallsShot: React.FC<{ T: number }> = ({ T }) => {
       if (T >= m0) { cx = lerp(SPH[i - 1][0], SPH[i][0], k); cy = lerp(SPH[i - 1][1], SPH[i][1], k) + SAMPLE_DY; }
     }
   }
-  const lens = vis(T, L.save, T4 - 0.5, 0.3, 0.25);
+  const lens = vis(T, L.save, T4 - 0.72, 0.3, 0.22);   // gone before the spheres start to fall
   return (
     <AbsoluteFill>
       <AbsoluteFill style={{ background: '#0b0b0b', opacity: 1 - away }} />
@@ -607,7 +607,7 @@ const PickerNow: React.FC<{ T: number }> = ({ T }) => {
   if (inShot(T, 'tables')) return <Meter title="量一下 · 像素" o={vis(T, LAND + 0.05, T2 - 0.3, 0.2, 0.2)} rows={[['左桌面', '300 × 121'], ['右桌面', '300 × 121']]} />;
   if (inShot(T, 'feet')) return <Meter title="速度计 · 像素/秒" o={vis(T, T2 + 0.3, T3 - 0.3, 0.3, 0.25)} rows={[['黄', String(SPEED), '#fff200'], ['蓝', String(SPEED), '#0a1a6e']]} />;
   if (inShot(T, 'balls')) {
-    if (T >= T4 - 0.5) return null;
+    if (T >= T4 - 0.72) return null;
     if (T >= L.save) return <Picker rows={[{ k: '缝隙', v: SPHERE_RGB, o: 1 }, { k: '细线', v: [255, 42, 42], o: 1 }]} o={easeOut(prog(T, L.save, L.save + 0.3))} />;
     const n = picked(T);
     if (T >= DROP) return <Picker rows={[{ k: '全部', v: SPHERE_RGB, o: 1 }]} foot="12 个球 · 同一个值" />;
