@@ -298,8 +298,8 @@ const Bet: React.FC<{ T: number; at: number; reveal: number; opts: string[]; rig
       {opts.map((w, i) => {
         const win = shown && i === right, lose = shown && i !== right;
         return (
-          <div key={i} style={{ padding: '10px 26px', borderRadius: 40, border: `3px solid ${win ? GOLD : 'rgba(243,237,226,0.75)'}`, background: win ? `rgba(241,197,109,${0.3 + 0.4 * hit(T, reveal, 0.4)})` : 'rgba(10,10,12,0.78)',
-            fontFamily: SANS, fontWeight: 900, fontSize: 40, color: win ? GOLD : INK, opacity: lose ? 0.35 : 1, boxShadow: win ? `0 0 ${12 + 30 * hit(T, reveal, 0.5)}px ${GLOW}` : 'none' }}>{w}{win ? ' ✓' : ''}</div>
+          <div key={i} style={{ padding: '10px 26px', borderRadius: 40, border: `3px solid ${win ? GOLD : 'rgba(243,237,226,0.75)'}`, background: win ? `rgba(${Math.round(40 + 160 * hit(T, reveal, 0.4))},${Math.round(30 + 130 * hit(T, reveal, 0.4))},${Math.round(12 + 60 * hit(T, reveal, 0.4))},0.94)` : 'rgba(10,10,12,0.92)',   // opaque: the bet must read over the stripes
+            fontFamily: SANS, fontWeight: 900, fontSize: 40, color: win ? GOLD : lose ? 'rgba(243,237,226,0.4)' : INK, opacity: 1, boxShadow: win ? `0 0 ${12 + 30 * hit(T, reveal, 0.5)}px ${GLOW}` : 'none' }}>{w}{win ? ' ✓' : ''}</div>
         );
       })}
       <div style={{ width: 84, height: 84, borderRadius: 42, border: `3px solid ${done ? 'rgba(243,237,226,0.3)' : GOLD}`, background: 'rgba(10,10,12,0.78)', display: 'flex', alignItems: 'center', justifyContent: 'center',
