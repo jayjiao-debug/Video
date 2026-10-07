@@ -136,7 +136,10 @@ Drake equation), `serials` (the four drawn numbers).
 ## 4. Copy rules (the "voice")
 
 - **Title:** 3–6 characters, a noun phrase or a short question. Examples:
-  《第几个人》《好人会赢吗》《缘分方程》《德国坦克问题》.
+  《第几个人》《好人会赢吗》《缘分方程》《德国坦克问题》《大脑的懒惰》.
+- **Register: academic, not casual.** The audience comes to *learn*; the title and subtitles should feel like
+  knowledge, not a chat. Prefer 《大脑的懒惰》 over 《大脑是个懒鬼》/《大脑在偷懒》, 「省力策略」 over 「偷懒」,
+  「推断」 over 「瞎猜」. Plain words are fine; slang, memes and jokey phrasing are not (owner, 2026-10).
 - **Tagline:** one question in everyday words. It is the viewer's question, not
   the scientist's: 「什么时候，该停止相亲？」 not 「最优停止理论简介」.
 - **Kicker:** the real source in English small caps, as proof that this is real

@@ -3,7 +3,7 @@ import { AbsoluteFill, continueRender, delayRender, staticFile, useCurrentFrame 
 import { Board, P0, pt, DARK, LIGHT, grey, A_CELL, B_CELL } from './Board';
 import { JUNO } from './brand/identity';
 
-/* Key frames for 《同一个颜色》, one per scene (frame index = scene). Code-drawn; no images. */
+/* Key frames for 《大脑的懒惰》, one per scene (frame index = scene). Code-drawn; no images. */
 const GOLD = '#f1c56d', GLOW = 'rgba(241,197,109,0.7)', INK = '#f3ede2', DIM = 'rgba(243,237,226,0.55)';
 const SANS = '"Noto Sans CJK SC", sans-serif', SERIF = '"Noto Serif CJK SC", serif', MONO = '"JunoMono", monospace';
 
@@ -133,7 +133,7 @@ const SCENES: React.FC[] = [
   () => (
     <Chrome bg="#050505">
       <svg width={1920} height={1080} style={{ position: 'absolute', inset: 0 }}><Board maskAB={1} /></svg>
-      <div style={{ position: 'absolute', left: 0, right: 0, top: 690, textAlign: 'center', fontFamily: SERIF, fontWeight: 900, fontSize: 120, color: GOLD, textShadow: `0 0 30px ${GLOW}` }}>同一个颜色</div>
+      <div style={{ position: 'absolute', left: 0, right: 0, top: 690, textAlign: 'center', fontFamily: SERIF, fontWeight: 900, fontSize: 120, color: GOLD, textShadow: `0 0 30px ${GLOW}` }}>大脑的懒惰</div>
       <Picker rows={[['A', [DARK, DARK, DARK]], ['B', [DARK, DARK, DARK]]]} />
       <Tag n="S1" t="8.1 s DROP · 黑幕收成两块方块 · 标题" />
     </Chrome>
