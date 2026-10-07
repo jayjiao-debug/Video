@@ -46,16 +46,16 @@ const inShot = (T: number, k: keyof typeof SHOT) => T >= SHOT[k][0] && T < SHOT[
 /* ---------------------------------------------------------------- screen furniture */
 type Row = { k: string; v: [number, number, number]; o: number; note?: string };
 const Picker: React.FC<{ rows: Row[]; o?: number; foot?: string; footO?: number }> = ({ rows, o = 1, foot, footO = 1 }) => o <= 0.001 ? null : (
-  <div style={{ position: 'absolute', right: 70, top: 160, width: 370, padding: '16px 22px 18px', borderRadius: 14, background: 'rgba(10,10,12,0.86)', border: '1px solid rgba(243,237,226,0.18)', fontFamily: MONO, color: INK, opacity: o }}>
-    <div style={{ fontSize: 16, letterSpacing: '0.3em', color: DIM, marginBottom: 12, fontFamily: SANS, fontWeight: 700 }}>取色器 · RGB</div>
+  <div style={{ position: 'absolute', right: 70, top: 160, width: 450, padding: '16px 24px 18px', borderRadius: 16, background: 'rgba(10,10,12,0.86)', border: '1px solid rgba(243,237,226,0.18)', fontFamily: MONO, color: INK, opacity: o }}>
+    <div style={{ fontSize: 22, letterSpacing: '0.25em', color: DIM, marginBottom: 10, fontFamily: SANS, fontWeight: 700 }}>取色器 · RGB</div>
     {rows.map((r, i) => (
-      <div key={i} style={{ display: 'flex', alignItems: 'center', gap: 12, fontSize: 25, fontWeight: 700, marginTop: i ? 10 : 0, opacity: r.o }}>
-        <span style={{ width: 32, height: 32, borderRadius: 6, background: `rgb(${r.v.join(',')})`, border: '1px solid rgba(255,255,255,0.35)', flexShrink: 0 }} />
-        <span style={{ minWidth: 92, fontFamily: SANS, fontSize: 23, whiteSpace: 'nowrap', flexGrow: 1 }}>{r.k}</span>
+      <div key={i} style={{ display: 'flex', alignItems: 'center', gap: 14, fontSize: 33, fontWeight: 700, marginTop: i ? 10 : 0, opacity: r.o }}>
+        <span style={{ width: 42, height: 42, borderRadius: 7, background: `rgb(${r.v.join(',')})`, border: '1px solid rgba(255,255,255,0.35)', flexShrink: 0 }} />
+        <span style={{ minWidth: 70, fontFamily: SANS, fontWeight: 900, fontSize: 30, whiteSpace: 'nowrap', flexGrow: 1 }}>{r.k}</span>
         <span style={{ fontVariantNumeric: 'tabular-nums', whiteSpace: 'pre' }}>{r.v.map((x) => String(x).padStart(3, ' ')).join(' ')}</span>
       </div>
     ))}
-    {foot && <div style={{ marginTop: 12, fontSize: 18, fontFamily: SANS, fontWeight: 700, color: DIM, opacity: footO }}>{foot}</div>}
+    {foot && <div style={{ marginTop: 10, fontSize: 24, fontFamily: SANS, fontWeight: 700, color: DIM, opacity: footO }}>{foot}</div>}
   </div>
 );
 const G = (v: number): [number, number, number] => [v, v, v];
@@ -71,8 +71,8 @@ const Cross: React.FC<{ x: number; y: number; o: number; ring?: number }> = ({ x
 
 const Tag: React.FC<{ x: number; y: number; top: string; sub?: string; o: number; dy?: number; color?: string }> = ({ x, y, top, sub, o, dy = 0, color = DIM }) => o <= 0.001 ? null : (
   <div style={{ position: 'absolute', left: x, top: y + dy, opacity: o }}>
-    <div style={{ fontFamily: MONO, fontWeight: 700, fontSize: 18, letterSpacing: '0.25em', color }}>{top}</div>
-    {sub && <div style={{ fontFamily: SANS, fontWeight: 700, fontSize: 24, color: INK, marginTop: 8 }}>{sub}</div>}
+    <div style={{ fontFamily: MONO, fontWeight: 700, fontSize: 22, letterSpacing: '0.2em', color }}>{top}</div>
+    {sub && <div style={{ fontFamily: SANS, fontWeight: 700, fontSize: 31, color: INK, marginTop: 8 }}>{sub}</div>}
   </div>
 );
 
@@ -138,20 +138,20 @@ const Infer: React.FC<{ T: number }> = ({ T }) => {
   if (o <= 0.001) return null;
   const res = easeOut(prog(T, L.bright + 0.1, L.bright + 0.35));
   const row = (k: string, light: string, f: string, out: number, word: string, o2: number) => (
-    <div style={{ marginTop: 14, opacity: o2 }}>
-      <div style={{ display: 'flex', alignItems: 'baseline', gap: 10, fontFamily: MONO, fontWeight: 700, fontSize: 25, color: INK, whiteSpace: 'pre' }}>
-        <span style={{ fontFamily: SANS, fontWeight: 900, width: 26 }}>{k}</span><span>{DARK}</span><span style={{ color: DIM }}>÷</span><span>{f}</span>
+    <div style={{ marginTop: 12, opacity: o2 }}>
+      <div style={{ display: 'flex', alignItems: 'baseline', gap: 12, fontFamily: MONO, fontWeight: 700, fontSize: 33, color: INK, whiteSpace: 'pre' }}>
+        <span style={{ fontFamily: SANS, fontWeight: 900, width: 30 }}>{k}</span><span>{DARK}</span><span style={{ color: DIM }}>÷</span><span>{f}</span>
         <span style={{ color: DIM }}>=</span><span style={{ color: res > 0.5 ? (out === LIGHT ? GOLD : INK) : DIM, opacity: 0.35 + 0.65 * res }}>{res > 0.01 ? out : '???'}</span>
       </div>
-      <div style={{ fontFamily: SANS, fontWeight: 700, fontSize: 19, color: DIM, marginTop: 4, marginLeft: 36 }}>
+      <div style={{ fontFamily: SANS, fontWeight: 700, fontSize: 25, color: DIM, marginTop: 2, marginLeft: 42 }}>
         {light} → <span style={{ color: res > 0.5 ? INK : DIM }}>{res > 0.01 ? word : '…'}</span>
       </div>
     </div>
   );
   return (
-    <div style={{ position: 'absolute', right: 70, top: 330, width: 370, padding: '16px 22px 18px', borderRadius: 14, background: 'rgba(10,10,12,0.86)', border: '1px solid rgba(241,197,109,0.35)', opacity: o }}>
-      <div style={{ fontSize: 16, letterSpacing: '0.2em', color: DIM, fontFamily: SANS, fontWeight: 700 }}>大脑的推断 · 示意</div>
-      <div style={{ fontSize: 16, color: DIM, fontFamily: SANS, marginTop: 6 }}>像素 ÷ 它以为的光 = 它报告的颜色</div>
+    <div style={{ position: 'absolute', right: 70, top: 160, width: 450, padding: '14px 24px 18px', borderRadius: 16, background: 'rgba(10,10,12,0.86)', border: '1px solid rgba(241,197,109,0.35)', opacity: o }}>
+      <div style={{ fontSize: 22, letterSpacing: '0.15em', color: DIM, fontFamily: SANS, fontWeight: 700 }}>大脑的推断 · 示意</div>
+      <div style={{ fontSize: 22, color: DIM, fontFamily: SANS, marginTop: 4 }}>像素 ÷ 以为的光 = 看到的颜色</div>
       {row('B', '以为在阴影里', '0.5', LIGHT, '浅色格', 1)}
       {row('A', '以为在亮处', '1.0', DARK, '深色格', easeOut(prog(T, L.guess + 0.5, L.guess + 0.8)))}
     </div>
@@ -187,7 +187,7 @@ const TitleCard: React.FC<{ T: number }> = ({ T }) => {
         return <div key={i} style={{ position: 'absolute', left: 960 + (i - 2) * 150 - 75, width: 150, top: 668 + (1 - k) * 34, textAlign: 'center', opacity: k, fontFamily: ZH, fontWeight: 900, fontSize: 132, color: GOLD, textShadow: `0 0 30px ${GLOW}` }}>{c}</div>;
       })}
       <div style={{ position: 'absolute', left: 960 - 400 * easeOut(prog(T, a + 0.3, a + 0.7)), width: 800 * easeOut(prog(T, a + 0.3, a + 0.7)), top: 860, height: 3, background: GOLD, boxShadow: `0 0 12px ${GLOW}` }} />
-      <div style={{ position: 'absolute', left: 0, right: 0, top: 880, textAlign: 'center', opacity: easeOut(prog(T, a + 0.5, a + 0.9)), fontFamily: MONO, fontWeight: 700, fontSize: 24, letterSpacing: '0.5em', color: DIM }}>{JUNO.series}</div>
+      <div style={{ position: 'absolute', left: 0, right: 0, top: 880, textAlign: 'center', opacity: easeOut(prog(T, a + 0.5, a + 0.9)), fontFamily: MONO, fontWeight: 700, fontSize: 28, letterSpacing: '0.45em', color: DIM }}>{JUNO.series}</div>
     </AbsoluteFill>
   );
 };
@@ -260,7 +260,7 @@ const DressShot: React.FC<{ T: number }> = ({ T }) => {
   const os = [easeOut(prog(T, L.poll, L.poll + 0.3)), easeOut(prog(T, L.poll + 0.12, L.poll + 0.42))];
   const kR = easeInOut(prog(T, L.shade + 0.1, L.shade + 0.6)), kL = easeInOut(prog(T, L.lamp + 0.1, L.lamp + 0.6));
   const bar = easeInOut(prog(T, L.poll + 0.3, L.poll + 1.2));
-  const DY = 300, S = 0.78;
+  const DY = 290, S = 0.84;
   let acc = 0;
   return (
     <AbsoluteFill style={{ background: 'linear-gradient(180deg, #0e0d12 0%, #15121a 100%)' }}>
@@ -276,14 +276,14 @@ const DressShot: React.FC<{ T: number }> = ({ T }) => {
         {/* the poll as one bar */}
         {POLL.map(([, v, c], i) => { const x = 560 + 800 * acc / 100, w = 800 * v / 100 * bar; acc += v; return <rect key={i} x={x} y={792} width={Math.max(0, w - 3)} height={22} fill={c} opacity={os[0]} />; })}
       </svg>
-      <Big s="照片里的裙子（示意）" y={236} size={24} color={DIM} o={oc} />
-      <div style={{ position: 'absolute', left: 460 - 300, width: 600, top: 226, textAlign: 'center', opacity: os[0], fontFamily: SANS, fontWeight: 900, fontSize: 34, color: INK }}>57% 看成蓝黑</div>
-      <div style={{ position: 'absolute', left: 1460 - 300, width: 600, top: 226, textAlign: 'center', opacity: os[1], fontFamily: SANS, fontWeight: 900, fontSize: 34, color: GOLD }}>30% 看成白金</div>
-      <div style={{ position: 'absolute', left: 1205 - 120, width: 240, top: 500, textAlign: 'center', opacity: kR, fontFamily: SANS, fontWeight: 700, fontSize: 24, color: '#b9ccff' }}>以为在阴影里</div>
-      <div style={{ position: 'absolute', left: 1205 - 120, width: 240, top: 584, textAlign: 'center', opacity: kR, fontFamily: SANS, fontWeight: 900, fontSize: 26, color: INK }}>扣除蓝光</div>
-      <div style={{ position: 'absolute', left: 715 - 120, width: 240, top: 500, textAlign: 'center', opacity: kL, fontFamily: SANS, fontWeight: 700, fontSize: 24, color: '#ffd59a' }}>以为在灯下</div>
-      <div style={{ position: 'absolute', left: 715 - 120, width: 240, top: 584, textAlign: 'center', opacity: kL, fontFamily: SANS, fontWeight: 900, fontSize: 26, color: INK }}>扣除黄光</div>
-      <div style={{ position: 'absolute', left: 0, right: 0, top: 826, textAlign: 'center', opacity: os[0] * 0.9, fontFamily: SANS, fontWeight: 700, fontSize: 20, color: DIM }}>
+      <Big s="照片里的裙子（示意）" y={222} size={30} color={DIM} o={oc} />
+      <div style={{ position: 'absolute', left: 460 - 300, width: 600, top: 214, textAlign: 'center', opacity: os[0], fontFamily: SANS, fontWeight: 900, fontSize: 44, color: INK }}>57% 看成蓝黑</div>
+      <div style={{ position: 'absolute', left: 1460 - 300, width: 600, top: 214, textAlign: 'center', opacity: os[1], fontFamily: SANS, fontWeight: 900, fontSize: 44, color: GOLD }}>30% 看成白金</div>
+      <div style={{ position: 'absolute', left: 1205 - 150, width: 300, top: 490, textAlign: 'center', opacity: kR, fontFamily: SANS, fontWeight: 700, fontSize: 30, color: '#b9ccff' }}>以为在阴影里</div>
+      <div style={{ position: 'absolute', left: 1205 - 150, width: 300, top: 584, textAlign: 'center', opacity: kR, fontFamily: SANS, fontWeight: 900, fontSize: 33, color: INK }}>扣除蓝光</div>
+      <div style={{ position: 'absolute', left: 715 - 150, width: 300, top: 490, textAlign: 'center', opacity: kL, fontFamily: SANS, fontWeight: 700, fontSize: 30, color: '#ffd59a' }}>以为在灯下</div>
+      <div style={{ position: 'absolute', left: 715 - 150, width: 300, top: 584, textAlign: 'center', opacity: kL, fontFamily: SANS, fontWeight: 900, fontSize: 33, color: INK }}>扣除黄光</div>
+      <div style={{ position: 'absolute', left: 0, right: 0, top: 834, textAlign: 'center', opacity: os[0] * 0.9, fontFamily: SANS, fontWeight: 700, fontSize: 25, color: DIM }}>
         1401 人 · 蓝黑 57% · 白金 30% · 蓝棕 11% · 其他 2% · Lafer-Sousa 等 2015 Current Biology
       </div>
     </AbsoluteFill>
@@ -292,10 +292,11 @@ const DressShot: React.FC<{ T: number }> = ({ T }) => {
 
 /* ---------------------------------------------------------------- 4. the spheres (Novick 2018, Munker–White) */
 export const BEIGE = '#c9b79c';
-export const SPHERE_RGB: [number, number, number] = [215, 199, 174]; // the pixel under the crosshair, sampled from the render
+export const SPHERE_RGB: [number, number, number] = [219, 203, 178]; // the pixel under the crosshair, sampled from the render
 const STRIPE = ['#ff2a2a', '#18c43c', '#2f6bff', '#b23cff', '#ff9a1f', '#14c8d4'];
-const SPH: [number, number, number][] = [[620, 380, 0], [800, 330, 1], [980, 360, 2], [1160, 330, 3], [1330, 390, 4], [700, 560, 5], [880, 520, 3], [1060, 545, 0], [1250, 560, 1], [760, 740, 2], [960, 720, 4], [1160, 735, 5]];
-const R = 78, PITCH = 8, SH = 3.4;
+const SPH0: [number, number, number][] = [[620, 380, 0], [800, 330, 1], [980, 360, 2], [1160, 330, 3], [1330, 390, 4], [700, 560, 5], [880, 520, 3], [1060, 545, 0], [1250, 560, 1], [760, 740, 2], [960, 720, 4], [1160, 735, 5]];
+const SPH: [number, number, number][] = SPH0.map(([x, y, c]) => [Math.round(975 + (x - 975) * 1.08), Math.round(545 + (y - 545) * 1.08), c]); // v3: a touch bigger, same place
+const R = 84, PITCH = 8, SH = 3.4;
 const SAMPLE_DY = -R - 2 + 10 * PITCH + (SH + PITCH) / 2;   // the middle of a gap between two stripes, near the centre
 const PICKS = (() => {
   const t = [L.first + 0.15, L.second + 0.15, L.second + 1.3];
@@ -318,7 +319,7 @@ const Spheres: React.FC<{ stripes: number; wipe?: number; uid: string; sc?: numb
       {SPH.map(([x, y, c], i) => (
         <g key={i}>
           <circle cx={x} cy={y} r={R} fill={`url(#${uid}sph)`} />
-          <g clipPath={`url(#${uid}c${i})`} opacity={stripes}><g clipPath={`url(#${uid}w)`}>{Array.from({ length: 22 }, (_, k) => <rect key={k} x={x - R - 2} y={y - R - 2 + k * PITCH} width={2 * R + 4} height={SH} fill={STRIPE[c]} />)}</g></g>
+          <g clipPath={`url(#${uid}c${i})`} opacity={stripes}><g clipPath={`url(#${uid}w)`}>{Array.from({ length: 24 }, (_, k) => <rect key={k} x={x - R - 2} y={y - R - 2 + k * PITCH} width={2 * R + 4} height={SH} fill={STRIPE[c]} />)}</g></g>
         </g>
       ))}
     </g>
@@ -369,10 +370,10 @@ const BallsShot: React.FC<{ T: number }> = ({ T }) => {
       <Big s="12 个球 · 1 种颜色" y={150} size={84} color={GOLD} glow={GLOW} o={vis(T, DROP, L.lines, 0.05, 0.3)} dy={rise(T, DROP, 30)} />
       <Tag x={70} y={830} top="DAVID NOVICK · UTEP · 2018" sub="彩色小球错觉（Munker–White 效应）" o={vis(T, L.novick, L.fine, 0.25, 0.25)} dy={rise(T, L.novick, 14)} />
       {lens > 0 && <AbsoluteFill style={{ background: 'rgba(6,6,7,0.82)', opacity: lens }} />}
-      <Lens id="l1" x={700} y={520} r={230} o={lens} tint={0} />
-      <Lens id="l2" x={1220} y={520} r={230} o={lensR} tint={easeInOut(prog(T, L.borrow + 0.3, L.borrow + 1.6))} />
-      <div style={{ position: 'absolute', left: 700 - 300, width: 600, top: 772, textAlign: 'center', opacity: lens, fontFamily: SANS, fontWeight: 900, fontSize: 26, color: INK }}>实际像素 · 放大 8 倍</div>
-      <div style={{ position: 'absolute', left: 1220 - 300, width: 600, top: 772, textAlign: 'center', opacity: lensR, fontFamily: SANS, fontWeight: 900, fontSize: 26, color: INK }}>大脑看到的（示意）</div>
+      <Lens id="l1" x={690} y={520} r={250} o={lens} tint={0} />
+      <Lens id="l2" x={1230} y={520} r={250} o={lensR} tint={easeInOut(prog(T, L.borrow + 0.3, L.borrow + 1.6))} />
+      <div style={{ position: 'absolute', left: 690 - 300, width: 600, top: 790, textAlign: 'center', opacity: lens, fontFamily: SANS, fontWeight: 900, fontSize: 33, color: INK }}>实际像素 · 放大 8 倍</div>
+      <div style={{ position: 'absolute', left: 1230 - 300, width: 600, top: 790, textAlign: 'center', opacity: lensR, fontFamily: SANS, fontWeight: 900, fontSize: 33, color: INK }}>大脑看到的（示意）</div>
     </AbsoluteFill>
   );
 };
@@ -404,8 +405,8 @@ const RecapShot: React.FC<{ T: number }> = ({ T }) => {
       </svg>
       {xs.map((x, i) => (
         <div key={i} style={{ position: 'absolute', left: x - w / 2, width: w, top: top + h + 26, textAlign: 'center', opacity: card(i) }}>
-          <div style={{ fontFamily: SANS, fontWeight: 900, fontSize: 30, color: INK }}>{caps[i][0]}</div>
-          <div style={{ fontFamily: SANS, fontWeight: 700, fontSize: 24, color: DIM, marginTop: 8 }}>大脑{caps[i][1]}</div>
+          <div style={{ fontFamily: SANS, fontWeight: 900, fontSize: 38, color: INK }}>{caps[i][0]}</div>
+          <div style={{ fontFamily: SANS, fontWeight: 700, fontSize: 30, color: DIM, marginTop: 6 }}>大脑{caps[i][1]}</div>
         </div>
       ))}
       <Big s="省力 = 效率" y={150} size={56} color={GOLD} glow={GLOW} o={vis(T, L.eff, SHOT.recap[1], 0.2, 0.2)} dy={rise(T, L.eff, 18)} font={ZH} />
@@ -424,9 +425,9 @@ const EndCard: React.FC<{ T: number }> = ({ T }) => {
       <AbsoluteFill style={{ background: `rgba(4,4,5,${0.88 * k(0)})` }} />
       <Big s="大脑的懒惰" y={240} size={100} color={GOLD} o={k(0)} glow={GLOW} font={ZH} />
       <Big s="那条裙子，你当年看到的是什么颜色？" y={404} size={58} o={k(0.4)} dy={rise(T, a + 0.4)} />
-      <Big s="还不信 A = B？暂停 · 截图 · 自己取色" y={498} size={28} color={DIM} o={k(0.8)} />
+      <Big s="还不信 A = B？暂停 · 截图 · 自己取色" y={496} size={34} color={DIM} o={k(0.8)} />
       <div style={{ position: 'absolute', left: 960 - 330, top: 572, width: 660, height: 56, borderRadius: 28, border: `2px solid ${GOLD}`, opacity: k(1.0), display: 'flex', alignItems: 'center', justifyContent: 'center',
-        fontFamily: SANS, fontWeight: 700, fontSize: 26, letterSpacing: '0.2em', color: INK }}>{JUNO.follow}</div>
+        fontFamily: SANS, fontWeight: 700, fontSize: 28, letterSpacing: '0.15em', color: INK }}>{JUNO.follow}</div>
       <div style={{ position: 'absolute', left: 0, right: 0, top: 690, textAlign: 'center', opacity: 0.6 * k(1.2), fontFamily: SANS, fontSize: 17, color: INK, lineHeight: 1.8 }}>
         资料：Adelson 1995（MIT）· Helmholtz 1867《生理光学手册》· Lafer-Sousa, Hermann &amp; Conway 2015 Current Biology · Novick 2018（UTEP）<br />
         棋盘、裙子、彩球均为代码重绘的示意，不是原图 · "懒惰"为比喻
@@ -461,7 +462,7 @@ const Subtitles: React.FC<{ T: number }> = ({ T }) => {
 const PickerNow: React.FC<{ T: number }> = ({ T }) => {
   if (inShot(T, 'board1')) {
     if (T >= TITLE && T < TITLE_OUT + 0.2) return null;
-    const o = T < TITLE ? easeOut(prog(T, CUR.a1 - 0.1, CUR.a1 + 0.1)) : easeOut(prog(T, TITLE_OUT + 0.2, TITLE_OUT + 0.5));
+    const o = (T < TITLE ? easeOut(prog(T, CUR.a1 - 0.1, CUR.a1 + 0.1)) : easeOut(prog(T, TITLE_OUT + 0.2, TITLE_OUT + 0.5))) * (1 - vis(T, L.guess + 0.1, SHOT.board1[1], 0.3, 0.2));
     return <Picker o={o} rows={[{ k: 'A', v: G(DARK), o: easeOut(prog(T, CUR.a1, CUR.a1 + 0.12)) }, { k: 'B', v: G(DARK), o: easeOut(prog(T, CUR.b1, CUR.b1 + 0.12)) }]} />;
   }
   if (inShot(T, 'paper')) {
@@ -472,7 +473,7 @@ const PickerNow: React.FC<{ T: number }> = ({ T }) => {
   if (inShot(T, 'balls')) {
     if (T >= L.fine) return <Picker rows={[{ k: '缝隙', v: SPHERE_RGB, o: 1 }, { k: '细线', v: [255, 42, 42], o: 1 }]} o={easeOut(prog(T, L.fine, L.fine + 0.3))} />;
     const n = picked(T);
-    if (T >= DROP) return <Picker rows={[{ k: '全部 12 个', v: SPHERE_RGB, o: 1 }]} />;
+    if (T >= DROP) return <Picker rows={[{ k: '全部', v: SPHERE_RGB, o: 1 }]} foot="12 个球 · 同一个值" />;
     if (n === 0) return null;
     return <Picker rows={[{ k: '这个球', v: SPHERE_RGB, o: 1 }]} foot={`已取 ${n} / 12 · 全部相同`} />;
   }
