@@ -1,0 +1,113 @@
+<!doctype html>
+<html><head><meta charset="utf-8">
+<style>
+html,body{margin:0;background:#07090f;overflow:hidden}
+#wrap{position:relative;width:1920px;height:1080px}
+canvas{position:absolute;inset:0}
+.ov{position:absolute;inset:0;pointer-events:none;font-family:"Noto Serif CJK SC","Noto Serif SC",serif}
+#sub{position:absolute;left:0;right:0;bottom:92px;text-align:center;color:#f4efe6;font-size:62px;font-weight:700;letter-spacing:2px;text-shadow:0 3px 14px rgba(0,0,0,.95),0 0 3px #000}
+#sub b{color:#f6cf78;text-shadow:0 0 18px rgba(246,207,120,.55),0 3px 14px #000;font-weight:900}
+#mark{position:absolute;top:40px;right:56px;color:#cdb98e;font-size:22px;letter-spacing:4px;opacity:.85}
+#plaque{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;opacity:0}
+#plaque div{border:3px solid #d8b56a;padding:34px 80px;color:#f6cf78;font-size:108px;font-weight:900;letter-spacing:12px;background:rgba(8,10,16,.84);
+ box-shadow:0 0 60px rgba(216,181,106,.25),inset 0 0 0 10px rgba(8,10,16,.84),inset 0 0 0 12px rgba(216,181,106,.5)}
+#flash{position:absolute;inset:0;background:#fff8ea;opacity:0}
+</style></head><body>
+<div id="wrap"><canvas id="c" width="1920" height="1080"></canvas>
+<div class="ov"><div id="flash"></div><div id="mark">◆ Juno · VIBE知识大赏</div><div id="sub"></div><div id="plaque"><div>你以为大家都在看你</div></div></div></div>
+<script>
+const LINES=[[0.0,2.6,"你觉得，全屋都在[看你]"],[2.6,5.7,"实际注意到你的，[不到四分之一]"],[5.7,9.0,"康奈尔的实验：本人以为是[一半]"],[9.0,12.4,"那你半夜回放的那一跤呢？"]];
+const C=document.getElementById('c'),g=C.getContext('2d');const W=1920,H=1080;
+const cl=(x,a=0,b=1)=>Math.min(b,Math.max(a,x)),lerp=(a,b,t)=>a+(b-a)*t;
+const ease=t=>{t=cl(t);return t<.5?4*t*t*t:1-Math.pow(-2*t+2,3)/2},eob=t=>{t=cl(t);const c1=1.7,c3=c1+1;return 1+c3*Math.pow(t-1,3)+c1*Math.pow(t-1,2)};
+const seg=(t,a,b)=>ease((t-a)/(b-a));
+const SERIF='"Noto Serif CJK SC","Noto Serif SC",serif';
+// paper grain
+const grain=document.createElement('canvas');grain.width=grain.height=256;{const q=grain.getContext('2d');const im=q.createImageData(256,256);let s=7;for(let i=0;i<im.data.length;i+=4){s=(s*16807)%2147483647;const v=(s%60)-30;im.data[i]=im.data[i+1]=im.data[i+2]=128+v;im.data[i+3]=26;}q.putImageData(im,0,0);}
+const grainP=g.createPattern(grain,'repeat');
+const PAPER='#ece0c6',PAPER_D='#2a2f3d',INK='#141821';
+// audience: 6 heads in the foreground, backs to camera (paper cut-outs)
+const AUD=[[300,930,1.15],[640,960,1.25],[1000,950,1.2],[1360,965,1.28],[1700,935,1.15],[1180,800,.85]].map(([x,y,s],i)=>({x,y,s,i}));
+const LOOKER=2; // the one who keeps looking
+function roundRect(x,y,w,h,r){g.beginPath();g.moveTo(x+r,y);g.arcTo(x+w,y,x+w,y+h,r);g.arcTo(x+w,y+h,x,y+h,r);g.arcTo(x,y+h,x,y,r);g.arcTo(x,y,x+w,y,r);g.closePath();}
+function person(x,y,s,{lit=0,tilt=0,down=0,col=PAPER_D}={}){g.save();g.translate(x,y);g.scale(s,s);
+ // shoulders
+ g.fillStyle=col;roundRect(-120,-40,240,200,90);g.fill();
+ // head (tilts down when looking at own phone)
+ g.save();g.translate(0,-95+down*22);g.rotate(tilt);g.beginPath();g.ellipse(0,0,62,72,0,0,Math.PI*2);g.fillStyle=col;g.fill();
+ if(lit>0){g.globalAlpha=lit;g.lineWidth=7;g.strokeStyle='#f6cf78';g.shadowColor='#f6cf78';g.shadowBlur=30;g.beginPath();g.ellipse(0,0,62,72,0,Math.PI*1.05,Math.PI*1.95);g.stroke();g.shadowBlur=0;g.globalAlpha=1;}
+ g.restore();g.restore();}
+function phone(x,y,s,a){if(a<=0)return;g.save();g.translate(x,y);g.scale(s,s);g.globalAlpha=a;const gr=g.createRadialGradient(0,-60,4,0,-60,170);gr.addColorStop(0,'rgba(150,190,255,.55)');gr.addColorStop(1,'rgba(150,190,255,0)');g.fillStyle=gr;g.beginPath();g.arc(0,-60,170,0,7);g.fill();g.restore();}
+function student(x,y,s,{trip=0,arm=0}={}){g.save();g.translate(x,y);g.scale(s,s);g.rotate(trip);g.fillStyle=PAPER;g.shadowColor='rgba(0,0,0,.6)';g.shadowBlur=24;g.shadowOffsetY=10;
+ roundRect(-26,-210,52,150,26);g.fill();g.beginPath();g.arc(0,-250,34,0,7);g.fill();
+ g.save();g.translate(-12,-70);g.rotate(-trip*1.4);roundRect(-12,0,24,120,12);g.fill();g.restore();g.save();g.translate(12,-70);g.rotate(trip*.6);roundRect(-12,0,24,120,12);g.fill();g.restore();
+ g.shadowBlur=0;g.shadowOffsetY=0;g.fillStyle='rgba(0,0,0,.08)';g.fillRect(-26,-210,52,150);g.restore();}
+function stage(t,zoom,cx,cy){g.setTransform(1,0,0,1,0,0);g.fillStyle='#07090f';g.fillRect(0,0,W,H);
+ g.setTransform(zoom,0,0,zoom,W/2-cx*zoom,H/2-cy*zoom);
+ // back wall & floor
+ const wall=g.createLinearGradient(0,0,0,700);wall.addColorStop(0,'#141a28');wall.addColorStop(1,'#1d2433');g.fillStyle=wall;g.fillRect(-400,-200,2720,900);
+ g.fillStyle='#10131c';g.fillRect(-400,700,2720,700);
+ // floor boards
+ g.strokeStyle='rgba(255,255,255,.03)';g.lineWidth=2;for(let i=0;i<14;i++){g.beginPath();g.moveTo(-400,700+i*30+i*i*2);g.lineTo(2320,700+i*30+i*i*2);g.stroke();}
+ // blackboard + window hints (paper cut)
+ g.fillStyle='#1a2a24';roundRect(820,170,700,300,8);g.fill();g.strokeStyle='#3a3020';g.lineWidth=14;g.stroke();
+ g.fillStyle='rgba(236,224,198,.10)';g.font=`700 44px ${SERIF}`;g.fillText('2000 · 康奈尔大学',870,240);
+ // door (left)
+ const open=eob(cl(t/.35));g.fillStyle='#0b0d14';g.fillRect(300,250,230,460);
+ g.save();g.translate(300,250);g.transform(1-open*.75,-open*.08,0,1,0,0);g.fillStyle='#3b3226';g.fillRect(0,0,230,460);g.fillStyle='#c9a35a';g.beginPath();g.arc(196,240,10,0,7);g.fill();g.restore();
+ g.fillStyle='#e8d9b8';g.save();g.globalAlpha=.85;roundRect(352,320,130,62,6);g.fill();g.fillStyle='#a8322a';g.font=`900 24px ${SERIF}`;g.fillText('实验进行中',357,360);g.restore();
+}
+function spot(x,y,a,r){if(a<=0)return;g.save();g.globalCompositeOperation='lighter';
+ const cone=g.createLinearGradient(x,-200,x,y);cone.addColorStop(0,`rgba(255,244,220,${.0*a})`);cone.addColorStop(1,`rgba(255,240,210,${.22*a})`);
+ g.fillStyle=cone;g.beginPath();g.moveTo(x-40,-200);g.lineTo(x+40,-200);g.lineTo(x+r,y);g.lineTo(x-r,y);g.closePath();g.fill();
+ const pool=g.createRadialGradient(x,y,0,x,y,r*1.2);pool.addColorStop(0,`rgba(255,240,210,${.55*a})`);pool.addColorStop(1,'rgba(255,240,210,0)');g.fillStyle=pool;g.beginPath();g.ellipse(x,y,r*1.25,r*.32,0,0,7);g.fill();g.restore();}
+function gaze(fromX,fromY,toX,toY,a){if(a<=0)return;g.save();g.globalAlpha=a;g.strokeStyle='#f6cf78';g.lineWidth=3;g.setLineDash([14,12]);g.shadowColor='#f6cf78';g.shadowBlur=12;g.beginPath();g.moveTo(fromX,fromY);g.lineTo(toX,toY);g.stroke();g.restore();}
+function tagCard(x,y,lines,a){if(a<=0)return;g.save();g.globalAlpha=a;g.translate(x,y);g.rotate(-.03);g.fillStyle='#ece0c6';g.shadowColor='rgba(0,0,0,.6)';g.shadowBlur=30;g.shadowOffsetY=12;roundRect(0,0,560,250,10);g.fill();g.shadowBlur=0;g.shadowOffsetY=0;
+ g.fillStyle=grainP;g.fillRect(0,0,560,250);
+ lines.forEach(([txt,font,col,yy])=>{g.fillStyle=col;g.font=font;g.fillText(txt,36,yy);});g.restore();}
+function replayBubble(cx,cy,r,t,a){if(a<=0)return;g.save();g.globalAlpha=a;g.beginPath();g.arc(cx,cy,r,0,7);g.save();g.clip();
+ const gr=g.createRadialGradient(cx,cy,10,cx,cy,r);gr.addColorStop(0,'#2a2f3d');gr.addColorStop(1,'#141821');g.fillStyle=gr;g.fillRect(cx-r,cy-r,2*r,2*r);
+ const k=(t*.8)%1;const sx=cx-r*.6+k*r*1.2;const tr=k>.35&&k<.75?Math.sin((k-.35)/.4*Math.PI)*.6:0;
+ g.strokeStyle='rgba(236,224,198,.4)';g.lineWidth=4;g.beginPath();g.moveTo(cx-r,cy+r*.45);g.lineTo(cx+r,cy+r*.45);g.stroke();
+ student(sx,cy+r*.45,r/420,{trip:tr});g.restore();
+ g.lineWidth=8;g.strokeStyle='#f6a35a';g.shadowColor='#f6a35a';g.shadowBlur=20;g.beginPath();g.arc(cx,cy,r,-Math.PI/2,-Math.PI/2+((t*.8)%1)*Math.PI*2);g.stroke();g.shadowBlur=0;
+ g.fillStyle='#f6a35a';g.font=`900 ${Math.round(r*.2)}px ${SERIF}`;g.textAlign='center';g.fillText('↻ 第'+(1+Math.floor(t*.8))+'遍',cx,cy-r*.55);g.textAlign='left';g.restore();}
+const $=id=>document.getElementById(id);
+function subtitle(t){const l=LINES.find(l=>t>=l[0]&&t<l[1]);$('sub').innerHTML=l?l[2].replace(/\[(.+?)\]/g,'<b>$1</b>'):'';}
+window.renderAt=function(t){
+ subtitle(t);let fl=0;
+ // camera: slow push, then dive into the head at 9.0
+ const push=seg(t,0,9);let zoom=lerp(1.0,1.12,push),cx=lerp(960,900,push),cy=lerp(540,520,push);
+ const dive=seg(t,9.0,10.4);zoom=lerp(zoom,2.3,dive);cx=lerp(cx,860,dive);cy=lerp(cy,250,dive);
+ stage(t,zoom,cx,cy);
+ // student enters, small stumble on the first beat
+ const sx=lerp(420,860,eob(cl((t-.05)/.9)));const trip=t>.25&&t<1.0?Math.sin(cl((t-.25)/.75)*Math.PI)*.22:0;
+ const spotA=t<.3?0:lerp(1.25,1,cl((t-.3)/.5))*(t<2.8?1:lerp(1,.55,seg(t,2.8,4.6)));
+ spot(sx,700,spotA,175);student(sx,700,1.3,{trip});
+ // audience heads: light up 0.35-1.7, gaze lines; then go dark one by one 2.8-4.6 except LOOKER
+ const order=[0,4,1,5,3,2];
+ AUD.forEach(a=>{const k=order.indexOf(a.i);const on=cl((t-.35-k*.2)/.25);const offStart=2.8+k*.32;const off=a.i===LOOKER?0:cl((t-offStart)/.25);const lit=on*(1-off);
+  const down=a.i===LOOKER?0:seg(t,offStart,offStart+.5);
+  gaze(a.x,a.y-105*a.s,sx,520,lit*.75);
+  phone(a.x,a.y,a.s,down*.9);
+  person(a.x,a.y,a.s,{lit,down});});
+ if(t>=.3&&t<.4)fl=.45;
+ // counter on the picture (top-left): heads looking
+ const looking=AUD.filter(a=>{const k=order.indexOf(a.i);const on=t>.35+k*.2+.12;const off=a.i!==LOOKER&&t>2.8+k*.32+.12;return on&&!off;}).length;
+ g.setTransform(1,0,0,1,0,0);
+ if(t>.4&&t<9.0){g.save();g.globalAlpha=cl((t-.4)/.3)*(1-seg(t,8.6,9.0));g.fillStyle='#f6cf78';g.font=`900 120px ${SERIF}`;g.textAlign='right';g.shadowColor='rgba(246,207,120,.4)';g.shadowBlur=24;g.fillText(looking+' / 6',1860,210);g.shadowBlur=0;g.font=`500 32px ${SERIF}`;g.fillStyle='#cdb98e';g.fillText('在看你的人',1860,260);g.restore();}
+ // evidence card 5.7-9.0
+ tagCard(110,110,[['康奈尔大学 · 2000 · 实验',`700 34px ${SERIF}`,'#2b241a',62],['本人以为：46% 的人注意到',`800 40px ${SERIF}`,'#b5651d',130],['实际：23%',`900 52px ${SERIF}`,'#1f4f86',205]],cl((t-5.8)/.35)*(1-seg(t,8.7,9.1)));
+ // replay inside his head 9.0-12.4
+ g.fillStyle=`rgba(5,7,12,${.7*cl((t-9.4)/.5)})`;g.fillRect(0,0,W,H);
+ replayBubble(W/2,H/2-60,330,t-9.3,cl((t-9.6)/.4));
+ // plaque on the drop
+ const po=t<12.4?0:cl((t-12.4)/.08)*(1-cl((t-14.95)/.25));$('plaque').style.opacity=po;const sh=t<12.4?0:Math.exp(-(t-12.4)*6)*8;$('plaque').style.transform=`translate(${Math.sin(t*90)*sh}px,${Math.cos(t*70)*sh}px)`;
+ if(t>=12.4&&t<12.5)fl=.5;
+ // grain + vignette
+ g.fillStyle=grainP;g.fillRect(0,0,W,H);const v=g.createRadialGradient(W/2,H/2,H*.35,W/2,H/2,H*.95);v.addColorStop(0,'rgba(0,0,0,0)');v.addColorStop(1,'rgba(0,0,0,.6)');g.fillStyle=v;g.fillRect(0,0,W,H);
+ const b=g.createLinearGradient(0,H,0,H-260);b.addColorStop(0,'rgba(0,0,0,.55)');b.addColorStop(1,'rgba(0,0,0,0)');g.fillStyle=b;g.fillRect(0,H-260,W,260);
+ $('flash').style.opacity=fl;
+};
+window.READY=true;
+</script></body></html>
