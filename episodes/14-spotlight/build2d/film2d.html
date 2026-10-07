@@ -37,7 +37,7 @@ canvas{position:absolute;inset:0}
 <div id="plaque"><div class="p"><div class="a">聚光灯效应</div><div class="b">THE SPOTLIGHT EFFECT</div><div class="c">Gilovich, Medvec &amp; Savitsky · 2000</div></div></div>
 <div id="end"><div class="j">J</div><div class="t">聚光灯效应</div><div class="t2">你以为大家都在看你</div><div class="q">你有没有一次“社死”，后来发现根本没人记得？</div><div class="f">关注 Juno · 一起看懂世界</div>
  <div class="s">资料：Gilovich, Medvec &amp; Savitsky (2000) doi:10.1037/0022-3514.78.2.211 · Savitsky, Epley &amp; Gilovich (2001) doi:10.1037/0022-3514.81.1.44<br>
- Boothby et al. (2018) doi:10.1177/0956797618783714 · 均为小样本实验室研究；群聊与T恤图案为示意</div></div>
+ 均为小样本实验室研究；群聊与T恤图案为示意</div></div>
 </div></div>
 <script>
 const LINES=window.LINES||[];
@@ -329,7 +329,7 @@ const P4=t=>{/* 1:31 everyone busy with themselves; your banner swiped away on e
    if(ban){const y=lerp(-260,40,eob(cl((t-D2-.15-i*.05)/.3)))-sw*420;g.save();g.globalAlpha=1-sw;g.fillStyle='rgba(40,42,50,.95)';rr(30,y,PW-60,230,40);g.fill();txt('高三(2)班',70,y+80,`700 48px ${SANS}`,'#f6cf78');txt('这老师上课好无聊…',70,y+170,`600 52px ${SANS}`,'#eee');g.restore();}
   },.7);
   txt(cap[i],x,y+205,`700 34px ${SERIF}`,GOLD,'center',cl((t-bt2(3)-i*BT/3)/.25),12);});
- g.restore();if(t<D2+.1)return .3;};
+ g.restore();};
 const P5=t=>{/* 1:39 next morning: you just talk in the group again */
  const tr=seg(t,98.9,100.2),k=seg(t,98.9,100.6);room(lerp(.6,1,tr));g.fillStyle=`rgba(255,200,140,${(.08+.10*k)*tr})`;g.fillRect(0,0,W,H);g.save();g.globalCompositeOperation='lighter';const lx=lerp(2600,1500,tr),L=g.createRadialGradient(lx,200,20,lx,200,1100);L.addColorStop(0,`rgba(255,214,150,${.25*k})`);L.addColorStop(1,'rgba(255,214,150,0)');g.fillStyle=L;g.fillRect(0,0,W,H);g.restore();
  const Q='早！今天谁带伞了？☔',sent=bt2(18);
@@ -366,7 +366,7 @@ const $=id=>document.getElementById(id);
 function subtitle(t){const l=LINES.find(l=>t>=l[0]&&t<l[1]);$('sub').innerHTML=l?'<span class="pill">'+l[2].replace(/\[(.+?)\]/g,'<b>$1</b>')+'</span>':'';}
 const CH=[[22.52,56.95,'2000 · 康奈尔大学'],[81.24,87.32,'2018 · 耶鲁大学']];
 function chap(t){const c=CH.find(c=>t>=c[0]&&t<c[1]);$('chap').firstChild.textContent=c?c[2]:'';$('chap').style.opacity=c?.9:0;}
-window.renderAt=function(t){$('sub').className=window.SUBSTYLE||'B';subtitle(t);chap(t);let fl=0;$('plaque').style.opacity=0;$('end').style.opacity=0;g.setTransform(1,0,0,1,0,0);
+const SKIP0=79.22,SKIPN=12.15;window.renderAt=function(t0){const t=t0<SKIP0?t0:t0+SKIPN;$('sub').className=window.SUBSTYLE||'B';subtitle(t0);chap(t);let fl=0;$('plaque').style.opacity=0;$('end').style.opacity=0;g.setTransform(1,0,0,1,0,0);
  const B=beat(t);PULSE=B.p;C.style.transform='none';
  /* S1 0-15.44: wrong group (approved opening) */
  if(t<15.44){room(t<8.8?1:.35);
@@ -458,8 +458,8 @@ window.renderAt=function(t){$('sub').className=window.SUBSTYLE||'B';subtitle(t);
    phoneAt(W/2-380+PW*.39,80+PH*.39,.78,0,()=>{g.fillStyle='#ededed';g.fillRect(0,0,PW,PH);sbar('22:41');g.fillStyle='#f7f7f7';g.fillRect(0,80,PW,110);txt('新室友 · 小林',PW/2,145,`700 34px ${SANS}`,'#111','center');
     [['今天聊得好开心！',260,bt(124)],['我是不是话太多了哈哈',370,bt(126)],['你早点睡～晚安',480,bt(128)]].forEach(([m,y,tt])=>{const a=cl((t-tt)/.15);if(a<=0)return;g.save();g.globalAlpha*=a;g.translate(0,lerp(30,0,eob(cl((t-tt)/.3))));g.fillStyle=GOLD;rr(PW-90-m.length*30-40,y,m.length*30+40,74,16);g.fill();txt(m,PW-110,y+48,`500 30px ${SANS}`,INK,'right');g.restore();});
     if(t>=bt(129))txt('已读',PW-110,590,`500 24px ${SANS}`,'#999','right');},0);
-   if(t>=TS){txt('……',1180,470,`900 120px ${SERIF}`,'#e9dcc0','left',cl((t-TS)/.3));}
-   if(t>=bt(134)){const a=pop(t,bt(134),.3);g.save();g.translate(1180,600);g.scale(a,a);txt('她是不是嫌我烦了？',0,0,`900 64px ${SERIF}`,'#fff4dc','left',1,10);g.restore();}
+   if(t>=bt(129)+.3){txt('……',1180,470,`900 120px ${SERIF}`,'#e9dcc0','left',cl((t-bt(129)-.3)/.3));}
+   if(t>=bt(131)){const a=pop(t,bt(131),.3);g.save();g.translate(1180,600);g.scale(a,a);txt('她是不是嫌我烦了？',0,0,`900 64px ${SERIF}`,'#fff4dc','left',1,10);g.restore();}
    g.restore();}
   if(t>=81.1&&t<86.8){const a=cl((t-81.1)/.4)*(1-cl((t-86.95)/.35));const r=seg(t,bt(136),bt(136)+1.2);g.save();g.globalAlpha=a;
    bar(560,820,240,560,62*r,GOLD,'我对TA的好感','',1);bar(980,820,240,560,48*r,'#f6a35a','我猜TA对我','',1);
