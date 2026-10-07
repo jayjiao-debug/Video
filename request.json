@@ -1,8 +1,65 @@
-{"id":"design-02","items":[
- {"type":"sketchfab","uid":"9d0ac751c08b4037903d4f8db2f1dc1f","name":"rbmk_core"},
- {"type":"sketchfab","uid":"dc8d54211f3b464ead6f03d6ea3b1c13","name":"chnpp_simplified"},
- {"type":"sketchfab","uid":"927f07f6ddcf470ab0387ce5829024d5","name":"b17_helijah"},
- {"type":"sketchfab","uid":"57a2d1021915495bac14cd880d52390e","name":"aircraft_knobs"},
- {"type":"sketchfab","uid":"1d4a93a0427a43ffabb5cc47c8a819be","name":"lever"},
- {"type":"sketchfab","uid":"00071c5bb4dd47029843c17c4b7a473f","name":"interior_trim"}
-]}
+{
+ "id": "spot-01",
+ "items": [
+  {
+   "type": "sketchfab-search",
+   "q": "lecture hall",
+   "license": "by",
+   "count": 16
+  },
+  {
+   "type": "sketchfab-search",
+   "q": "classroom",
+   "license": "by",
+   "count": 16
+  },
+  {
+   "type": "sketchfab-search",
+   "q": "school classroom",
+   "license": "by",
+   "count": 16
+  },
+  {
+   "type": "sketchfab-search",
+   "q": "auditorium",
+   "license": "by",
+   "count": 16
+  },
+  {
+   "type": "sketchfab-search",
+   "q": "stage spotlight",
+   "license": "by",
+   "count": 16
+  },
+  {
+   "type": "sketchfab-search",
+   "q": "spotlight lamp",
+   "license": "by",
+   "count": 16
+  },
+  {
+   "type": "sketchfab-search",
+   "q": "school desk chair",
+   "license": "by",
+   "count": 16
+  },
+  {
+   "type": "sketchfab-search",
+   "q": "cafeteria",
+   "license": "by",
+   "count": 16
+  },
+  {
+   "type": "sketchfab-search",
+   "q": "low poly classroom",
+   "license": "by",
+   "count": 16
+  },
+  {
+   "type": "sketchfab-search",
+   "q": "mannequin",
+   "license": "by",
+   "count": 16
+  }
+ ]
+}
