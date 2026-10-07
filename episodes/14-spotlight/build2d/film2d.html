@@ -32,7 +32,7 @@ canvas{position:absolute;inset:0}
 <div id="plaque"><div class="p"><div class="a">聚光灯效应</div><div class="b">THE SPOTLIGHT EFFECT</div><div class="c">Gilovich, Medvec &amp; Savitsky · 2000</div></div></div>
 <div id="end"><div class="j">J</div><div class="t">聚光灯效应</div><div class="t2">你以为大家都在看你</div><div class="q">你有没有一次“社死”，后来发现根本没人记得？</div><div class="f">关注 Juno · 一起看懂世界</div>
  <div class="s">资料：Gilovich, Medvec &amp; Savitsky (2000) doi:10.1037/0022-3514.78.2.211 · Savitsky, Epley &amp; Gilovich (2001) doi:10.1037/0022-3514.81.1.44<br>
- Boothby et al. (2018) doi:10.1177/0956797618783714 · Wolf, Nafe &amp; Tomasello (2021) doi:10.1177/0956797620980754 · 均为小样本实验室研究；群聊情节为示意</div></div>
+ Boothby et al. (2018) doi:10.1177/0956797618783714 · 均为小样本实验室研究；群聊与T恤图案为示意</div></div>
 </div></div>
 <script>
 const LINES=window.LINES||[];
@@ -46,17 +46,39 @@ function rr(x,y,w,h,r){g.beginPath();g.moveTo(x+r,y);g.arcTo(x+w,y,x+w,y+h,r);g.
 function txt(s,x,y,font,col,align='left',a=1,glow=0){g.save();g.globalAlpha*=a;g.font=font;g.fillStyle=col;g.textAlign=align;if(glow){g.shadowColor=col;g.shadowBlur=glow;}g.fillText(s,x,y);g.restore();}
 const BOK=[];{let s=5;const r=()=>{s=(s*16807)%2147483647;return s/2147483647};for(let i=0;i<26;i++)BOK.push([r()*W,r()*H*.8,20+r()*70,r()<.3?'255,190,120':'120,150,220',.05+r()*.08]);}
 const AV=['#c96b5a','#5a8fc9','#7ac97a','#c9b45a','#9a6bc9','#5ac9b4','#c95a8f','#8fa0b0'];
-function room(dim=1){g.fillStyle='#06080d';g.fillRect(0,0,W,H);BOK.forEach(([x,y,r,c,a])=>{g.fillStyle=`rgba(${c},${a*dim})`;g.beginPath();g.arc(x,y,r,0,7);g.fill();});}
+function room(dim=1){g.fillStyle='#06080d';g.fillRect(0,0,W,H);BOK.forEach(([x,y,r,c,a])=>{g.fillStyle=`rgba(${c},${a*dim*(1+.9*PULSE)})`;g.beginPath();g.arc(x,y,r,0,7);g.fill();});}
 function person(x,y,s,col='#2a2f3d',{lit=0,down=0,glowCol=GOLD}={}){g.save();g.translate(x,y);g.scale(s,s);g.fillStyle=col;rr(-110,-30,220,190,85);g.fill();
  g.save();g.translate(0,-90+down*20);g.beginPath();g.ellipse(0,0,58,68,0,0,7);g.fill();
  if(lit>0){g.globalAlpha=lit;g.lineWidth=7;g.strokeStyle=glowCol;g.shadowColor=glowCol;g.shadowBlur=26;g.beginPath();g.ellipse(0,0,58,68,0,Math.PI*1.05,Math.PI*1.95);g.stroke();}
  g.restore();g.restore();}
 function phoneGlow(x,y,s,a){if(a<=0)return;g.save();g.globalAlpha=a;const gr=g.createRadialGradient(x,y-60*s,4,x,y-60*s,170*s);gr.addColorStop(0,'rgba(150,190,255,.55)');gr.addColorStop(1,'rgba(150,190,255,0)');g.fillStyle=gr;g.beginPath();g.arc(x,y-60*s,170*s,0,7);g.fill();g.restore();}
-function shirt(x,y,s,kind,a=1){g.save();g.globalAlpha=a;g.translate(x,y);g.scale(s,s);g.fillStyle='#f2efe6';g.shadowColor='rgba(0,0,0,.6)';g.shadowBlur=40;g.shadowOffsetY=16;
+function heartP(cx,cy,s){g.beginPath();g.moveTo(cx,cy+s*.9);g.bezierCurveTo(cx-s*1.6,cy-s*.1,cx-s*.9,cy-s*1.25,cx,cy-s*.55);g.bezierCurveTo(cx+s*.9,cy-s*1.25,cx+s*1.6,cy-s*.1,cx,cy+s*.9);g.closePath();}
+function hsh(i,j){let h=(i*73856093)^(j*19349663);h=(h^(h>>>13))*1274126177;return ((h^(h>>>16))>>>0)/4294967296;}
+// pixelated "已打码" portrait: no features, just a mosaic of hair / skin / shirt blocks
+function mosaic(cx,cy,R,pal){const c=14;for(let x=cx-R;x<cx+R;x+=c)for(let y=cy-R*1.15;y<cy+R;y+=c){const dx=(x+c/2-cx)/(R*.5),dy=(y+c/2-cy+R*.1)/(R*.62);const r=hsh(x|0,y|0);let col;
+ const inHead=dx*dx+dy*dy<1,inHair=(dx*dx)/(1.5*1.5)+((dy+.25)*(dy+.25))/(1.25*1.25)<1&&dy<.15;
+ if(inHead&&!(dy<-.35))col=pal.skin[(r*pal.skin.length)|0];else if(inHair)col=pal.hair[(r*pal.hair.length)|0];else if(dy>1.25&&Math.abs(dx)<1.9)col=pal.top[(r*pal.top.length)|0];else col=pal.bg[(r*pal.bg.length)|0];
+ g.fillStyle=col;g.fillRect(x,y,c+.5,c+.5);}}
+function sparkle(x,y,r,a){if(a<=0)return;g.save();g.globalAlpha*=a;g.fillStyle='#fffbe8';g.shadowColor='#fff3b0';g.shadowBlur=12;g.beginPath();g.moveTo(x,y-r);g.quadraticCurveTo(x,y,x+r,y);g.quadraticCurveTo(x,y,x,y+r);g.quadraticCurveTo(x,y,x-r,y);g.quadraticCurveTo(x,y,x,y-r);g.fill();g.restore();}
+function shirt(x,y,s,kind,a=1,t=0,sx=1,shake=0){g.save();g.globalAlpha=a;g.translate(x+Math.sin(t*70)*shake*14,y);g.rotate(Math.sin(t*1.2)*.015+Math.sin(t*55)*shake*.03);g.scale(s*sx,s);const pop=kind==='pop';
+ g.fillStyle=pop?'#fbe3ee':'#18181c';g.shadowColor='rgba(0,0,0,.6)';g.shadowBlur=40;g.shadowOffsetY=16;
  g.beginPath();[[-150,-200],[-55,-225],[0,-195],[55,-225],[150,-200],[235,-110],[175,-55],[130,-110],[130,230],[-130,230],[-130,-110],[-175,-55],[-235,-110]].forEach(([px,py],i)=>i?g.lineTo(px,py):g.moveTo(px,py));g.closePath();g.fill();g.shadowBlur=0;g.shadowOffsetY=0;
- if(kind==='pop'){g.fillStyle='#e04a8a';g.fillRect(-95,-110,190,190);g.fillStyle='#f6e04a';g.beginPath();g.arc(0,-25,62,0,7);g.fill();g.fillStyle='#2b6fd0';g.fillRect(-95,40,190,40);txt('某位过气歌星',0,170,`900 30px ${SERIF}`,'#2b241a','center');}
- else{g.fillStyle='#1a1a1a';g.fillRect(-95,-110,190,190);g.fillStyle=GOLD;g.save();g.translate(0,-15);g.beginPath();for(let i=0;i<10;i++){const r=i%2?32:78,an=i/10*Math.PI*2-Math.PI/2;g.lineTo(Math.cos(an)*r,Math.sin(an)*r);}g.fill();g.restore();txt('有面子的那件',0,170,`900 30px ${SERIF}`,'#2b241a','center');}
+ g.strokeStyle=pop?'#f3a9c8':'#34343c';g.lineWidth=9;g.beginPath();g.moveTo(-55,-222);g.quadraticCurveTo(0,-170,55,-222);g.stroke();
+ if(pop){['#ff5a7a','#ffa14a','#ffe14a','#6fdc6f','#5ab4ff','#a77bff'].forEach((c,i)=>{g.strokeStyle=c;g.lineWidth=11;g.beginPath();g.arc(0,8,168-i*11,Math.PI*1.1,Math.PI*1.9);g.stroke();});
+  g.save();g.shadowColor='#ff4f9a';g.shadowBlur=18;g.fillStyle='#ff4f9a';heartP(0,-6,104);g.fill();g.restore();
+  g.save();heartP(0,-4,86);g.clip();mosaic(0,-14,92,{skin:['#efc39b','#e6b088','#f3cfa9'],hair:['#4a2c18','#5c3820','#6b4226'],top:['#3a5fcf','#4a6fdf'],bg:['#ffd1e3','#ffbfd8','#ffc9de']});g.restore();
+  g.save();g.translate(58,62);g.rotate(-.12);g.fillStyle='#111';rr(-44,-15,88,30,6);g.fill();txt('已打码',0,8,`700 18px ${SANS}`,'#fff','center');g.restore();
+  for(let i=0;i<7;i++){const an=i/7*Math.PI*2+.4,rad=i%2?122:138;sparkle(Math.cos(an)*rad,-10+Math.sin(an)*rad*.85,9+5*Math.sin(t*7+i*1.7),.55+.45*Math.sin(t*5+i));}
+  g.save();g.font=`italic 900 50px ${SERIF}`;g.textAlign='center';const gr=g.createLinearGradient(-130,0,130,0);gr.addColorStop(0,'#ffcf3a');gr.addColorStop(.5,'#ff4fa0');gr.addColorStop(1,'#46c8ff');g.lineWidth=6;g.strokeStyle='#5a1a4a';g.strokeText('SUPERSTAR',0,140);g.fillStyle=gr;g.fillText('SUPERSTAR',0,140);g.restore();
+  txt('♥ 永远支持你 ♥',0,190,`900 26px ${SANS}`,'#e0307a','center');}
+ else{g.save();g.beginPath();g.arc(0,-18,82,0,7);g.clip();mosaic(0,-18,92,{skin:['#c8a272','#b8925f','#d4b080'],hair:['#2b2016','#3a2a1a'],top:['#6b5a3a','#7a6844'],bg:['#5a4c34','#4e422e']});g.restore();
+  g.strokeStyle=GOLD;g.lineWidth=5;g.beginPath();g.arc(0,-18,86,0,7);g.stroke();
+  g.fillStyle=GOLD;for(const sd of[-1,1])for(let i=0;i<8;i++){const an=Math.PI/2+sd*(.5+i*.28);g.save();g.translate(Math.cos(an)*108,-18+Math.sin(an)*108);g.rotate(an+sd*.9);g.beginPath();g.ellipse(0,0,9,20,0,0,7);g.fill();g.restore();}
+  txt('★ ★ ★',0,-128,`900 26px ${SERIF}`,GOLD,'center');txt('LEGEND',0,138,`900 54px ${SERIF}`,GOLD,'center',1,16);txt('限量款 · 只有我有',0,184,`700 24px ${SANS}`,'#cdb98e','center');
+  g.save();g.translate(52,52);g.rotate(-.12);g.fillStyle=GOLD;rr(-44,-15,88,30,6);g.fill();txt('已打码',0,8,`700 18px ${SANS}`,'#111','center');g.restore();}
  g.restore();}
+function note(x,y,tx,ty,lines,a,col=GOLD){if(a<=0)return;g.save();g.globalAlpha=a;g.strokeStyle=col;g.lineWidth=4;g.setLineDash([10,8]);g.beginPath();g.moveTo(x,y);g.lineTo(tx,ty);g.stroke();g.setLineDash([]);g.fillStyle=col;g.beginPath();g.arc(tx,ty,8,0,7);g.fill();
+ lines.forEach(([s,f,c],i)=>txt(s,x,y-14+i*50-(lines.length-1)*50,f,c||col,x<W/2?'right':'left'));g.restore();}
 function bar(x,y,w,h,pct,col,label,val,a=1){g.save();g.globalAlpha=a;g.fillStyle='rgba(240,230,210,.12)';rr(x,y-h,w,h,10);g.fill();const hh=h*pct/100;g.fillStyle=col;g.shadowColor=col;g.shadowBlur=20;rr(x,y-hh,w,hh,10);g.fill();g.shadowBlur=0;
  txt(val,x+w/2,y-hh-24,`900 92px ${SERIF}`,col,'center');txt(label,x+w/2,y+52,`600 36px ${SERIF}`,'#e9dcc0','center');g.restore();}
 function stamp(x,y,s,a,rot=-.08,col='#d24a3a'){if(a<=0)return;g.save();g.globalAlpha=a;g.translate(x,y);g.rotate(rot);g.scale(lerp(1.6,1,cl(a*2)),lerp(1.6,1,cl(a*2)));g.strokeStyle=col;g.lineWidth=7;rr(-s.length*30-30,-52,s.length*60+60,96,10);g.stroke();txt(s,0,22,`900 58px ${SERIF}`,col,'center');g.restore();}
@@ -88,14 +110,44 @@ function drawPhone(t,s,scale,ox,oy,rot=-.025){const d1=Math.sin(t*1.3)*6,d2=Math
  g.shadowColor='rgba(0,0,0,.7)';g.shadowBlur=60;g.fillStyle='#000';rr(0,0,PW,PH,70);g.fill();g.shadowBlur=0;phoneUI(t,s);g.restore();}
 const MORE=[['张悦',AV[4],'报告是交纸质的吗？',300],['王老师',AV[0],'电子版发我邮箱',290],['陈一',AV[5],'收到收到',170],['刘洋',AV[6],'有人带伞了吗 ☔',260],['李思',AV[1],'[表情包]',150],['周周',AV[7],'明天体育课换教室了',320],['张悦',AV[4],'哈哈哈哈哈',190],['陈一',AV[5],'@刘洋 我有两把',230],['王老师',AV[0],'报告别忘了写名字',300],['小米',AV[2],'今晚月亮好圆 🌕',250]];
 
+/* ---------- music grid (bgm_edit_v1: 118.5 bpm, drop 12.40, tape-stop 79.22, drop2 90.47) ---------- */
+const BT=0.5062,D1=12.40,TS=79.22,D2=90.47,bt=i=>D1+BT*i,bt2=j=>D2+BT*j;
+let PULSE=0;
+function beat(t){let base=null;if(t>=D1&&t<TS)base=D1;else if(t>=D2)base=D2;if(base===null)return{p:0,pd:0};const n=Math.floor((t-base)/BT),ph=t-base-n*BT;return{p:Math.exp(-ph*9),pd:n%4===0?Math.exp(-ph*7):0};}
+/* ---------- "整个你": a portrait built from the things people actually noticed ---------- */
+const TRAITS=['真诚','有趣','靠谱','爱笑','温柔','细心','好相处','讲义气','会聊天','有想法','坦率','努力','善良','可爱','随和','幽默','认真','勇敢','聪明','热心','大方','会照顾人','有礼貌','有梗','很暖','好说话','实在','有主见','乐观','耐心','会倾听','敢说真话','靠得住','笑点低','很会夸人','不装','心软','有分寸','爱帮忙','自信','好学','脾气好','会安慰人','很拼','有担当','记性好','会做饭','品味好','讲道理','好脾气','暖心','有礼有节','爱运动','字好看'];
+let TAGS=null,SPECIAL=null;
+function shapeW(y){if(y>=112&&y<=428){const u=(y-270)/165;return 2*150*Math.sqrt(Math.max(0,1-u*u))-14;}if(y<505)return 190;if(y>=505&&y<=960){const yy=Math.max(y-21,505);const ins=yy<690?190-Math.sqrt(Math.max(0,190*190-(690-yy)*(690-yy))):0;return 840-2*ins-26;}return 0;}
+function bust(a){if(a<=0)return;g.save();g.globalAlpha=a;g.beginPath();g.ellipse(960,270,150,165,0,0,7);g.rect(860,410,200,110);rr(540,500,840,520,190);
+ const fg=g.createLinearGradient(0,100,0,1000);fg.addColorStop(0,'rgba(255,214,150,.16)');fg.addColorStop(1,'rgba(255,214,150,.05)');g.fillStyle=fg;g.fill();g.restore();
+ g.save();g.globalAlpha=a*.55;g.strokeStyle=GOLD;g.lineWidth=3;g.shadowColor=GOLD;g.shadowBlur=24;g.beginPath();g.ellipse(960,270,150,165,0,0,7);g.stroke();
+ g.beginPath();g.moveTo(870,428);g.lineTo(870,500);g.lineTo(730,500);g.arcTo(540,500,540,690,190);g.lineTo(540,1080);g.moveTo(1050,428);g.lineTo(1050,500);g.lineTo(1190,500);g.arcTo(1380,500,1380,690,190);g.lineTo(1380,1080);g.stroke();g.restore();}
+function buildTags(){TAGS=[];let k=0;const F=27;g.font=`700 ${F}px ${SANS}`;
+ for(let y=150;y<=880;y+=49){const avail=shapeW(y)-16;if(avail<90)continue;const row=[];let tw=0;
+  while(true){const s=TRAITS[k%TRAITS.length];const w=g.measureText(s).width+26;if(tw+w+(row.length?8:0)>avail)break;tw+=w+(row.length?8:0);row.push([s,w]);k++;}
+  if(!row.length){continue;}let x=960-tw/2;row.forEach(([s,w],i)=>{TAGS.push({s,x:x+w/2,y,w,h:41,c:(k+i*3+y)%3});x+=w+8;});}
+ // the one embarrassing thing sits at chest height, a single tile among all the rest
+ let best=null;TAGS.forEach(tg=>{const d=Math.abs(tg.y-640)+Math.abs(tg.x-990)*.6;if(!best||d<best.d)best={tg,d};});SPECIAL=best.tg;SPECIAL.s='🔒 尴尬小秘密';SPECIAL.c=9;
+ g.font=`700 ${F}px ${SANS}`;SPECIAL.w=g.measureText(SPECIAL.s).width+26;
+ // re-centre that row
+ const rowT=TAGS.filter(q=>q.y===SPECIAL.y);let tw=rowT.reduce((a,q)=>a+q.w,0)+8*(rowT.length-1);let x=960-tw/2;rowT.forEach(q=>{q.x=x+q.w/2;x+=q.w+8;});
+ TAGS.forEach(q=>q.d=Math.hypot(q.x-SPECIAL.x,(q.y-SPECIAL.y)*1.2));}
+function drawTag(q,a,sc=1){if(a<=0)return;g.save();g.globalAlpha*=a;g.translate(q.x,q.y);g.scale(sc,sc);const w=q.w,h=q.h;
+ if(q.c===9){g.shadowColor='#ff6a5a';g.shadowBlur=26;g.fillStyle='#d24a3a';rr(-w/2,-h/2,w,h,20);g.fill();g.shadowBlur=0;txt(q.s,0,11,`700 27px ${SANS}`,'#fff','center');}
+ else if(q.c===0){g.fillStyle='rgba(246,207,120,.95)';rr(-w/2,-h/2,w,h,20);g.fill();txt(q.s,0,10,`700 27px ${SANS}`,INK,'center');}
+ else if(q.c===1){g.fillStyle='rgba(236,224,198,.93)';rr(-w/2,-h/2,w,h,20);g.fill();txt(q.s,0,10,`700 27px ${SANS}`,INK,'center');}
+ else{g.strokeStyle=GOLD;g.lineWidth=3;rr(-w/2,-h/2,w,h,20);g.stroke();txt(q.s,0,10,`700 27px ${SANS}`,GOLD,'center');}
+ g.restore();}
+
 /* ---------- scenes ---------- */
 const $=id=>document.getElementById(id);
 function subtitle(t){const l=LINES.find(l=>t>=l[0]&&t<l[1]);$('sub').innerHTML=l?l[2].replace(/\[(.+?)\]/g,'<b>$1</b>'):'';}
-const CH=[[18.6,57.0,'2000 · 康奈尔大学'],[57.0,74.0,'2001 · 另一个实验'],[77.2,90.5,'2018 · 耶鲁大学']];
+const CH=[[18.47,56.95,'2000 · 康奈尔大学'],[56.95,70.11,'2001 · 另一个实验'],[80.2,90.47,'2018 · 耶鲁大学']];
 function chap(t){const c=CH.find(c=>t>=c[0]&&t<c[1]);$('chap').firstChild.textContent=c?c[2]:'';$('chap').style.opacity=c?.9:0;}
 window.renderAt=function(t){subtitle(t);chap(t);let fl=0;$('plaque').style.opacity=0;$('end').style.opacity=0;g.setTransform(1,0,0,1,0,0);
- /* S1 0-15.2: wrong group (approved opening) */
- if(t<15.2){room(t<8.8?1:.35);
+ const B=beat(t);PULSE=B.p;C.style.transform=`scale(${1+.007*B.pd})`;
+ /* S1 0-15.44: wrong group (approved opening) */
+ if(t<15.44){room(t<8.8?1:.35);
   if(t<8.8){const gl=g.createRadialGradient(W/2,H/2,100,W/2,H/2,900);gl.addColorStop(0,'rgba(220,230,255,.14)');gl.addColorStop(1,'rgba(220,230,255,0)');g.fillStyle=gl;g.fillRect(0,0,W,H);}
   const s={off:t>=8.8,refl:cl((t-9)/.8),alarm:t<.3?0:Math.min(1,(t-.3)/.12)*(t<1.4?(.65+.35*Math.abs(Math.sin(t*9))):1-cl((t-1.4)/.3)),menu:cl((t-1.3)/.15)*(1-cl((t-2.3)/.15)),tap:t>1.85,
    toast:cl((t-2.15)/.12)*(1-cl((t-3.6)/.3)),shake:Math.exp(-Math.max(0,t-2.15)*5),strip:cl((t-3.1)/.3),read:t<3.3?0:t<5.9?lerp(0,19,seg(t,3.3,5.8)):lerp(19,52,seg(t,5.9,7.4))};
@@ -103,79 +155,88 @@ window.renderAt=function(t){subtitle(t);chap(t);let fl=0;$('plaque').style.opaci
   drawPhone(t,s,scale,ox,oy);
   if(s.strip>0&&t<8.8){txt(Math.round(s.read)+'/52',1260,420,`900 150px ${SERIF}`,s.read>=52?RED:GOLD,'left',s.strip,24);txt(s.read>=52?'全部已读':'已读',1270,490,`500 40px ${SERIF}`,'#cdb98e','left',s.strip);}
   if(t>=8.8&&t<8.86)fl=.25;
-  const po=t<12.4?0:cl((t-12.4)/.08)*(1-cl((t-14.95)/.25));$('plaque').style.opacity=po;const sh=t<12.4?0:Math.exp(-(t-12.4)*6)*8;$('plaque').style.transform=`translate(${Math.sin(t*90)*sh}px,${Math.cos(t*70)*sh}px)`;if(t>=12.4&&t<12.5)fl=.5;}
- /* S2 15.2-21.6: the dark phone wakes with a notification -> into the experiment */
- else if(t<21.6){room(.35);const s={off:true,refl:1,notif:cl((t-18.4)/.3)};const k=seg(t,15.2,21.6);drawPhone(t,s,lerp(.95,1.05,k),0,lerp(-60,-160,k));
-  // the idea in one picture: a spotlight ring that is bigger than the room's real attention
-  const a=fade(t,15.4,18.6,.4);if(a>0){g.save();g.globalAlpha=a;g.globalCompositeOperation='lighter';const cx=W/2,cy=420;const sp=g.createRadialGradient(cx,cy,10,cx,cy,520);sp.addColorStop(0,'rgba(255,236,200,.22)');sp.addColorStop(1,'rgba(255,236,200,0)');g.fillStyle=sp;g.beginPath();g.arc(cx,cy,520,0,7);g.fill();g.restore();}
-  if(t>21.2)fl=cl((t-21.2)/.4)*.0;}
- /* S3 21.6-28.3: the T-shirt you have to wear; pre-test says embarrassing */
- else if(t<28.3){room(.6);const k=seg(t,21.6,28.3);shirt(W/2,lerp(560,520,k),lerp(1.15,1.25,k),'pop',cl((t-21.6)/.3));
-  const peers=[[360,980],[620,1010],[1300,1010],[1560,980]];peers.forEach(([x,y],i)=>person(x,y,.9,'#262b38',{lit:t>25.4+i*.15?1:0,glowCol:'#d24a3a'}));
-  stamp(1460,330,'丢人',cl((t-25.6)/.25));if(t>25.6&&t<25.7)fl=.12;}
- /* S4 28.3-37.8: POV opening the door, the room faces you; then out */
- else if(t<37.8){room(.25);const inside=t<34.6;const doorOpen=inside?eob(cl((t-28.4)/.5)):1-seg(t,34.0,34.6);
-  // room seen through the door
+  const po=t<12.4?0:cl((t-12.4)/.08)*(1-cl((t-15.2)/.24));$('plaque').style.opacity=po;const sh=t<12.4?0:Math.exp(-(t-12.4)*6)*8;$('plaque').style.transform=`translate(${Math.sin(t*90)*sh}px,${Math.cos(t*70)*sh}px) scale(${1+.012*B.pd})`;if(t>=12.4&&t<12.5)fl=.5;}
+ /* S2 15.44-22.52: the dark phone wakes with a notification (bar 3) */
+ else if(t<22.52){room(.35);const s={off:true,refl:1,notif:eob(cl((t-18.47)/.3))};const k=seg(t,15.44,22.52);drawPhone(t,s,lerp(.95,1.05,k),0,lerp(-60,-160,k));
+  const a=fade(t,15.6,18.5,.4);if(a>0){g.save();g.globalAlpha=a;g.globalCompositeOperation='lighter';const cx=W/2,cy=420;const sp=g.createRadialGradient(cx,cy,10,cx,cy,520);sp.addColorStop(0,'rgba(255,236,200,.22)');sp.addColorStop(1,'rgba(255,236,200,0)');g.fillStyle=sp;g.beginPath();g.arc(cx,cy,520,0,7);g.fill();g.restore();}
+  if(t>=18.47&&t<18.55)fl=.12;}
+ /* S3 22.52-29.61: the shirt. labels tick on the beat, stamp on bar 7 */
+ else if(t<29.61){room(.6);const k=seg(t,22.52,29.61);const st=t-bt(28);const shake=st>0?Math.exp(-st*5):0;
+  const inA=eob(cl((t-22.52)/.45));shirt(W/2,lerp(1300,540,inA)+lerp(0,-20,k),lerp(1.15,1.22,k),'pop',1,t,1,shake);
+  note(1500,330,1080,430,[['大头照',`900 46px ${SERIF}`,GOLD],['21 × 24 厘米',`700 34px ${SANS}`,'#e9dcc0']],cl((t-bt(22))/.2));
+  note(1500,690,1110,610,[['论文里写的',`600 30px ${SANS}`,'#cdb98e'],['真实尺寸',`600 30px ${SANS}`,'#cdb98e']],cl((t-bt(23))/.2));
+  [['✓ 爱心框',bt(24)],['✓ 彩虹',bt(25)],['✓ 闪粉',bt(26)],['✓ 应援口号',bt(27)]].forEach(([s,tt],i)=>{const a=cl((t-tt)/.15);if(a>0){g.save();g.globalAlpha=a;const sc=lerp(1.5,1,eob(cl((t-tt)/.25)));g.translate(560,330+i*92);g.scale(sc,sc);txt(s,0,0,`900 50px ${SERIF}`,i===3?'#ff7ab0':GOLD,'right',1,14);g.restore();}});
+  const peers=[[300,1000],[600,1030],[1320,1030],[1620,1000]];peers.forEach(([x,y],i)=>person(x,y,.85,'#262b38',{lit:t>bt(28)+i*BT/2?1:0,glowCol:'#d24a3a'}));
+  stamp(960,560,'丢 人',cl((t-bt(28))/.18),-.12);if(t>=bt(28)&&t<bt(28)+.08)fl=.16;}
+ /* S4 29.61-38.72: POV opening the door, the room faces you; then out */
+ else if(t<38.72){room(.25);const inside=t<35.69;const doorOpen=inside?eob(cl((t-29.65)/.5)):1-seg(t,35.1,35.69);
   g.save();g.fillStyle='#141a28';g.fillRect(460,120,1000,860);const L2=g.createRadialGradient(960,560,40,960,560,620);L2.addColorStop(0,'rgba(255,220,170,.22)');L2.addColorStop(1,'rgba(255,220,170,0)');g.fillStyle=L2;g.fillRect(460,120,1000,860);
-  g.fillStyle='#3b3226';rr(600,660,720,60,10);g.fill();[[700,640],[850,610],[1000,600],[1150,610],[1260,640]].forEach(([x,y],i)=>person(x,y,.62,'#2f3646',{lit:inside?cl((t-29.2-i*.1)/.25)*(1-cl((t-31.4)/.4)):0}));
-  // shirt on your chest (POV: bottom of frame)
-  shirt(960,1180,.9,'pop',1);
-  // door leaves
+  g.fillStyle='#3b3226';rr(600,660,720,60,10);g.fill();[[700,640],[850,610],[1000,600],[1150,610],[1260,640]].forEach(([x,y],i)=>person(x,y,.62,'#2f3646',{lit:inside?cl((t-bt(36)-i*BT/4)/.2)*(1-cl((t-33.6)/.4)):0}));
+  shirt(960,1180,.9,'pop',1,t);
   const dw=500*(1-doorOpen);g.fillStyle='#2a2219';g.fillRect(460,120,dw,860);g.fillRect(1460-dw,120,dw,860);g.fillStyle='#0b0d14';g.fillRect(0,0,460,H);g.fillRect(1460,0,460,H);g.fillRect(460,0,1000,120);g.restore();
-  card(1520,180,360,200,[['只看一眼',`800 40px ${SERIF}`,INK,70],['就请出门',`800 40px ${SERIF}`,INK,130]],fade(t,31.2,34.6));
-  if(t>=34.6){g.fillStyle='rgba(6,8,13,.78)';g.fillRect(0,0,W,H);card(560,330,800,300,[['问他：',`600 40px ${SERIF}`,'#6c5a3e',80],['屋里几人能说出',`900 64px ${SERIF}`,INK,170],['T恤上是谁？',`900 64px ${SERIF}`,INK,250]],cl((t-34.7)/.3));}}
- /* S5 37.8-57.0: the numbers, then the proud shirt */
- else if(t<57.0){room(.45);const proud=t>=44.6;const sy=lerp(560,520,seg(t,37.8,57));shirt(520,sy,.95,proud?'star':'pop',1);
-  const A=proud?(t<47.6?0:48*seg(t,47.7,48.6)):46*seg(t,37.9,38.8);const B=proud?(t<50.6?0:8*seg(t,50.7,51.4)):(t<41.3?0:23*seg(t,41.4,42.2));
-  bar(1020,820,230,560,A,GOLD,'他以为',A>0?Math.round(A)+'%':'',1);bar(1360,820,230,560,B,BLUE,'实际',B>0?Math.round(B)+'%':(t>=41.3||t>=50.6?'':'?'),1);
-  const x2=proud?(t>51.6):(t>42.4&&t<44.6);if(x2){txt(proud?'×6':'×2',1720,420,`900 110px ${SERIF}`,GOLD,'left',1,26);}
-  if(t>44.4&&t<44.7)fl=.2;
-  if(t>=53.6){const k=seg(t,53.6,57);g.fillStyle=`rgba(6,8,13,${.6*k})`;g.fillRect(0,0,W,H);[[380,1020],[760,1040],[1160,1040],[1540,1020]].forEach(([x,y],i)=>{phoneGlow(x,y,.95,k);person(x,y,.95,'#262b38',{down:k});});}}
- /* S6 57.0-74.0: 2001 — your self-intro with a secret; the score ruler */
- else if(t<74.0){room(.4);const k=seg(t,57,74);
-  // audience from your POV (backs of heads at the bottom), you face them
-  [[300,1060],[700,1080],[1220,1080],[1620,1060]].forEach(([x,y])=>person(x,y,1.05,'#343b4d',{lit:t>57.4&&t<60.4?.6:0}));
-  // speech bubble with a lock
-  if(t>60.4){const a=cl((t-60.5)/.3)*(1-cl((t-71.6)/.4));g.save();g.globalAlpha=a;g.fillStyle=PAPER;rr(660,610,600,140,40);g.fill();g.beginPath();g.moveTo(760,750);g.lineTo(800,800);g.lineTo(830,750);g.fill();txt('🔒 一个尴尬的小秘密',960,700,`800 50px ${SERIF}`,INK,'center');g.restore();}
-  // ruler 0..100
-  const rx=360,rw=1200,ry=330,ra=cl((t-57.3)/.4);g.save();g.globalAlpha=ra;g.fillStyle='rgba(240,230,210,.22)';rr(rx,ry,rw,16,8);g.fill();
-  [[0,'0'],[50,'50 · 普通'],[100,'100']].forEach(([v,l])=>{g.fillStyle='#cdb98e';g.fillRect(rx+rw*v/100-2,ry-22,4,60);txt(l,rx+rw*v/100,ry+80,`500 30px ${SERIF}`,'#cdb98e','center');});
-  const m1=t>64?52:null,m2=t>67?lerp(52,69,seg(t,67.1,68.3)):null;
-  if(m2){g.fillStyle=GOLD;g.shadowColor=GOLD;g.shadowBlur=20;g.fillRect(rx+rw*.52,ry+2,rw*(m2-52)/100,12);g.shadowBlur=0;}
-  const mark=(v,col,lab,up=1)=>{const x=rx+rw*v/100;g.fillStyle=col;g.beginPath();g.moveTo(x,ry-6);g.lineTo(x-18,ry-34);g.lineTo(x+18,ry-34);g.fill();txt(Math.round(v)+'',x,ry-52,`900 76px ${SERIF}`,col,'center',1,18);txt(lab,x,ry-130,`600 28px ${SERIF}`,col,'center');};
-  if(m1)mark(52,'#f6a35a','你以为');if(m2)mark(m2,BLUE,'别人给的');g.restore();
-  // whole you: spotlight from a dot to the full figure
-  if(t>70.4){const w=seg(t,71.4,72.6);g.save();g.globalCompositeOperation='lighter';const r=lerp(90,520,w);const sp=g.createRadialGradient(960,lerp(680,620,w),10,960,lerp(680,620,w),r);sp.addColorStop(0,'rgba(255,236,200,.35)');sp.addColorStop(1,'rgba(255,236,200,0)');g.fillStyle=sp;g.beginPath();g.arc(960,lerp(680,620,w),r,0,7);g.fill();g.restore();
-   g.save();g.globalAlpha=w;g.fillStyle=PAPER;g.beginPath();g.ellipse(960,520,60,70,0,0,7);g.fill();rr(870,600,180,260,60);g.fill();g.restore();}}
- /* S7 74.0-90.5: after a chat; liking gap; months; age 5 */
- else if(t<90.5){room(.5);
-  if(t<77.2){const s2={clock:'22:41'};g.save();const sc=.78,ox=-380;g.setTransform(sc,0,0,sc,W/2-PW*sc/2+ox,80);g.fillStyle='#0d0f14';rr(0,0,PW,PH,70);g.fill();rr(18,18,PW-36,PH-36,56);g.clip();g.fillStyle='#ededed';g.fillRect(0,0,PW,PH);
-    g.fillStyle='#f7f7f7';g.fillRect(0,80,PW,96);txt('闺蜜',PW/2,140,`700 34px ${SANS}`,'#111','center');
-    [['刚和新室友聊了半小时',260],['我是不是话太多了',370],['她会不会觉得我很尬…',480]].forEach(([m,y],i)=>{const a=cl((t-74.2-i*.6)/.2);g.globalAlpha=a;g.fillStyle=GOLD;rr(PW-90-m.length*30-40,y,m.length*30+40,74,16);g.fill();txt(m,PW-110,y+48,`500 30px ${SANS}`,INK,'right');});g.restore();
-   txt('？',1250,520,`900 260px ${SERIF}`,RED,'center',cl((t-75.6)/.3),30);}
-  else if(t<87.1){const a=cl((t-77.3)/.4);const r=seg(t,77.5,78.7);g.save();g.globalAlpha=a;
+  card(1520,180,360,200,[['只看一眼',`800 40px ${SERIF}`,INK,70],['就请出门',`800 40px ${SERIF}`,INK,130]],fade(t,32.65,35.69,.25));
+  if(t>=35.69){g.fillStyle='rgba(6,8,13,.78)';g.fillRect(0,0,W,H);const a=eob(cl((t-35.69)/.35));g.save();g.translate(960,480);g.scale(lerp(.8,1,a),lerp(.8,1,a));card(-400,-150,800,300,[['问他：',`600 40px ${SERIF}`,'#6c5a3e',80],['屋里几个人能认出',`900 64px ${SERIF}`,INK,170],['T恤上是谁？',`900 64px ${SERIF}`,INK,250]],cl((t-35.69)/.2));g.restore();}}
+ /* S5 38.72-56.95: the numbers, then the proud shirt */
+ else if(t<56.95){room(.45);const proud=t>=44.8;const sy=lerp(560,520,seg(t,38.72,56.95));const fx=Math.abs(Math.cos(cl((t-44.55)/.5)*Math.PI));
+  shirt(520,sy,.95,proud?'star':'pop',1,t,t>44.55&&t<45.05?Math.max(.02,fx):1);
+  const A=proud?(t<47.84?0:48*seg(t,47.84,48.5)):46*seg(t,38.72,39.3);const Bv=proud?(t<50.87?0:8*seg(t,50.87,51.4)):(t<41.76?0:23*seg(t,41.76,42.4));
+  bar(1020,820,230,560,A,GOLD,'他以为',A>.5?Math.round(A)+'%':'',1);bar(1360,820,230,560,Bv,BLUE,'实际',Bv>.5?Math.round(Bv)+'%':'?',1);
+  const x2=proud?(t>bt(78)):(t>bt(60)&&t<44.8);if(x2){const tt=proud?bt(78):bt(60);const sc=lerp(1.6,1,eob(cl((t-tt)/.3)));g.save();g.translate(1720,420);g.scale(sc,sc);txt(proud?'×6':'×2',0,0,`900 110px ${SERIF}`,GOLD,'left',1,26);g.restore();}
+  if(t>=44.8&&t<44.9)fl=.22;
+  if(t>=53.91){const k=seg(t,53.91,55.2);g.fillStyle=`rgba(6,8,13,${.6*k})`;g.fillRect(0,0,W,H);[[380,1020],[760,1040],[1160,1040],[1540,1020]].forEach(([x,y],i)=>{phoneGlow(x,y,.95,cl((t-bt(84)-i*BT/2)/.2));person(x,y,.95,'#262b38',{down:k});});}}
+ /* S6 56.95-75.17: 2001 — the secret, the ruler, then the whole you */
+ else if(t<75.17){room(.4);const zt=t-bt(116);
+  const aud=(lit)=>[[300,1060],[700,1080],[1220,1080],[1620,1060]].forEach(([x,y])=>person(x,y,1.05,'#343b4d',{lit,glowCol:GOLD}));
+  const ro=1-cl((t-bt(114))/.5);
+  if(ro>0){g.save();g.globalAlpha=ro;
+   if(t>bt(96)){const a=eob(cl((t-bt(96))/.35));g.save();g.translate(960,680);g.scale(a,a);g.fillStyle=PAPER;rr(-300,-70,600,140,40);g.fill();g.beginPath();g.moveTo(-200,70);g.lineTo(-160,120);g.lineTo(-130,70);g.fill();txt('🔒 一个尴尬的小秘密',0,20,`800 50px ${SERIF}`,INK,'center');g.restore();}
+   const rx=360,rw=1200,ry=330,ra=cl((t-57.2)/.4);g.globalAlpha=ro*ra;g.fillStyle='rgba(240,230,210,.22)';rr(rx,ry,rw,16,8);g.fill();
+   [[0,'0'],[50,'50 · 普通'],[100,'100']].forEach(([v,l])=>{g.fillStyle='#cdb98e';g.fillRect(rx+rw*v/100-2,ry-22,4,60);txt(l,rx+rw*v/100,ry+80,`500 30px ${SERIF}`,'#cdb98e','center');});
+   const m1=t>bt(104)?52:null,m2=t>bt(108)?lerp(52,69,seg(t,bt(108),bt(108)+.8)):null;
+   if(m2){g.fillStyle=GOLD;g.shadowColor=GOLD;g.shadowBlur=20;g.fillRect(rx+rw*.52,ry+2,rw*(m2-52)/100,12);g.shadowBlur=0;}
+   const mark=(v,col,lab,tt)=>{const x=rx+rw*v/100;const sc=lerp(1.5,1,eob(cl((t-tt)/.3)));g.fillStyle=col;g.beginPath();g.moveTo(x,ry-6);g.lineTo(x-18,ry-34);g.lineTo(x+18,ry-34);g.fill();g.save();g.translate(x,ry-52);g.scale(sc,sc);txt(Math.round(v)+'',0,0,`900 76px ${SERIF}`,col,'center',1,18);g.restore();txt(lab,x,ry-130,`600 28px ${SERIF}`,col,'center');};
+   if(m1)mark(52,'#f6a35a','你以为',bt(104));if(m2)mark(m2,BLUE,'别人给的',bt(108));g.restore();
+   aud(t>57.1&&t<60.49?.6:0);}
+  if(t>bt(114)){if(!TAGS)buildTags();const zin=cl((t-bt(114)-.25)/.5);const pz=1-Math.pow(1-cl((t-bt(116))/2.4),3);const z=lerp(3.3,1,pz);
+   const ax=lerp(960,SPECIAL.x,pz),ay=lerp(680,SPECIAL.y,pz);
+   // warm halo behind the figure
+   g.save();g.globalCompositeOperation='lighter';const hr=lerp(120,640,pz)*(1+.04*B.p);const hg=g.createRadialGradient(960,560,10,960,560,hr);hg.addColorStop(0,`rgba(255,214,150,${.32*zin})`);hg.addColorStop(.6,`rgba(255,190,120,${.10*zin})`);hg.addColorStop(1,'rgba(255,190,120,0)');g.fillStyle=hg;g.fillRect(0,0,W,H);g.restore();
+   g.save();g.translate(ax,ay);g.scale(z,z);g.translate(-SPECIAL.x,-SPECIAL.y);bust(cl((t-bt(116)-.3)/1.2));
+   TAGS.forEach(q=>{if(q===SPECIAL)return;const tt=bt(116)+q.d/620*1.1;const a=cl((t-tt)/.22);const sh=.06*Math.sin(t*2.2+q.x*.01+q.y*.02);drawTag(q,a*(0.88+sh),lerp(.4,1,eob(cl((t-tt)/.35))));});
+   drawTag(SPECIAL,zin,1+.05*Math.exp(-Math.max(0,zt)*2)*Math.sin(t*12));g.restore();
+   // the room, from behind: they look at the whole picture
+   g.save();g.globalAlpha=.9;aud(pz*.7);g.restore();}}
+ /* S7 75.17-90.47: after a chat (tape-stop = the silence), then the liking gap in the quiet break */
+ else if(t<90.47){room(t<TS?.5:.32);
+  if(t<80.2){const ca=1-cl((t-79.8)/.4);g.save();g.globalAlpha=ca;const sc=.78,ox=-380;g.setTransform(sc,0,0,sc,W/2-PW*sc/2+ox,80);g.fillStyle='#0d0f14';rr(0,0,PW,PH,70);g.fill();rr(18,18,PW-36,PH-36,56);g.clip();g.fillStyle='#ededed';g.fillRect(0,0,PW,PH);
+    txt('22:41',58,62,`600 26px ${SANS}`,'#111');g.fillStyle='#f7f7f7';g.fillRect(0,80,PW,110);txt('新室友 · 小林',PW/2,135,`700 34px ${SANS}`,'#111','center');
+    const typing=t>=bt(129)&&t<TS;if(typing){const n=1+Math.floor((t-bt(129))/BT)%3;txt('对方正在输入'+'.'.repeat(n),PW/2,174,`500 24px ${SANS}`,'#2a8a3a','center');}
+    [['今天聊得好开心！',260,bt(124)],['我是不是话太多了哈哈',370,bt(126)],['你早点睡～晚安',480,bt(128)]].forEach(([m,y,tt])=>{const a=cl((t-tt)/.15);if(a<=0)return;g.save();g.globalAlpha=a;const sh=lerp(30,0,eob(cl((t-tt)/.3)));g.translate(0,sh);g.fillStyle=GOLD;rr(PW-90-m.length*30-40,y,m.length*30+40,74,16);g.fill();txt(m,PW-110,y+48,`500 30px ${SANS}`,INK,'right');g.restore();});
+    if(t>=TS){txt('已读',PW-110,590,`500 22px ${SANS}`,'#999','right');}
+    g.restore();
+    if(t>=TS){const a=cl((t-TS)/.12)*ca;txt('……',1180,470,`900 120px ${SERIF}`,'#e9dcc0','left',a);txt('她是不是嫌我烦了？',1180,600,`700 52px ${SERIF}`,'#e9dcc0','left',cl((t-TS-.5)/.4)*ca);}}
+  if(t>=79.9&&t<86.9){const a=cl((t-79.9)/.5)*(1-cl((t-86.5)/.4));const r=seg(t,80.3,81.8);g.save();g.globalAlpha=a;
    bar(560,820,240,560,62*r,GOLD,'我对TA的好感','',1);bar(980,820,240,560,48*r,'#f6a35a','我猜TA对我','',1);
-   if(t>80.6){const gg=seg(t,80.8,81.8);g.setLineDash([16,12]);g.strokeStyle=BLUE;g.lineWidth=5;rr(980,820-560*(48+16*gg)/100,240,560*(48+16*gg)/100,10);g.stroke();g.setLineDash([]);txt('TA的真实好感',1100,820-560*(48+16*gg)/100-28,`700 34px ${SERIF}`,BLUE,'center');
-    if(gg>.9)txt('被低估',1300,560,`900 64px ${SERIF}`,BLUE,'left',1,20);}
-   g.restore();
-   if(t>=83.7){const ca=cl((t-83.8)/.3);const mi=Math.floor(cl((t-84.2)/2.6)*7);g.save();g.globalAlpha=ca;g.fillStyle='#efe7d6';rr(1440,180,320,340,16);g.fill();g.fillStyle='#a8322a';rr(1440,180,320,70,16);g.fill();g.fillRect(1440,220,320,30);txt('室友 · 还在低估',1600,228,`700 30px ${SERIF}`,'#fff','center');
-    txt(['9月','10月','11月','12月','1月','2月','3月'][mi],1600,430,`900 120px ${SERIF}`,INK,'center');g.restore();}}
-  else{const k=seg(t,87.1,90.5);[[740,820],[1180,820]].forEach(([x,y],i)=>person(x,y,.8,i?'#4a5a7a':'#7a4a4a',{lit:.0}));g.fillStyle='#c9a35a';[[930,800],[990,800],[960,750]].forEach(([x,y])=>{g.fillRect(x-24,y-24,48,48);});
-   txt('5岁起',960,330,`900 120px ${SERIF}`,GOLD,'center',cl((t-87.3)/.3),26);txt('小朋友也会低估：对方其实更喜欢你',960,420,`600 40px ${SERIF}`,'#e9dcc0','center',cl((t-87.6)/.3));}}
- /* S8 90.5-93.9: drop — pull back: everyone in their own spotlight, on their own phone */
- else if(t<93.9){room(.2);const k=seg(t,90.5,93.4);const N=40,cols=10;const sc=lerp(1.6,1,k);g.save();g.translate(W/2,H/2-40);g.scale(sc,sc);g.translate(-W/2,-(H/2-40));
-  for(let i=0;i<N;i++){const cx=240+(i%cols)*160,cy=200+Math.floor(i/cols)*190;const on=cl((t-90.55-((i*7)%N)*.02)/.2);
+   if(t>82.97){const gg=seg(t,83.2,84.4);g.setLineDash([16,12]);g.strokeStyle=BLUE;g.lineWidth=5;rr(980,820-560*(48+16*gg)/100,240,560*(48+16*gg)/100,10);g.stroke();g.setLineDash([]);txt('TA的真实好感',1100,820-560*(48+16*gg)/100-28,`700 34px ${SERIF}`,BLUE,'center');
+    txt('被低估',1300,560,`900 64px ${SERIF}`,BLUE,'left',cl((t-84.5)/.4),20);}
+   g.restore();}
+  if(t>=86.72){const ca=cl((t-86.8)/.4)*(1-cl((t-90.1)/.3));const mi=Math.min(6,Math.floor(cl((t-87.3)/(BT*6.2))*7));g.save();g.globalAlpha=ca;g.translate(960,470);const fl2=t>87.3?Math.exp(-((t-87.3)%BT)*10):0;g.scale(1+.02*fl2,1+.02*fl2);
+   g.fillStyle='#efe7d6';g.shadowColor='rgba(0,0,0,.6)';g.shadowBlur=30;rr(-230,-240,460,480,20);g.fill();g.shadowBlur=0;g.fillStyle='#a8322a';rr(-230,-240,460,96,20);g.fill();g.fillRect(-230,-180,460,36);txt('室友之间 · 还在低估',0,-178,`700 36px ${SERIF}`,'#fff','center');
+   txt(['9月','10月','11月','12月','1月','2月','3月'][mi],0,80,`900 170px ${SERIF}`,INK,'center');txt('开学 → 好几个月后',0,190,`600 32px ${SERIF}`,'#6c5a3e','center');g.restore();}
+  if(t>90.0){g.fillStyle=`rgba(0,0,0,${.6*cl((t-90.0)/.4)})`;g.fillRect(0,0,W,H);}}
+ /* S8 90.47-94.52: drop — pull back: everyone in their own spotlight, on their own phone */
+ else if(t<94.52){room(.2);const k=seg(t,90.47,93.6);const N=40,cols=10;const sc=lerp(1.6,1,k);g.save();g.translate(W/2,H/2-40);g.scale(sc,sc);g.translate(-W/2,-(H/2-40));
+  for(let i=0;i<N;i++){const cx=240+(i%cols)*160,cy=200+Math.floor(i/cols)*190;const on=cl((t-90.5-((i*7)%N)*.02)/.2)*(1+.25*B.p);
    g.save();g.globalCompositeOperation='lighter';const sp=g.createRadialGradient(cx,cy,4,cx,cy,90);sp.addColorStop(0,`rgba(255,224,170,${.35*on})`);sp.addColorStop(1,'rgba(255,224,170,0)');g.fillStyle=sp;g.beginPath();g.arc(cx,cy,90,0,7);g.fill();g.restore();
-   phoneGlow(cx,cy+60,.35,on);person(cx,cy+60,.36,i===14?'#5a4a3a':'#2a3040',{down:1});}
-  g.restore();if(t<90.62)fl=.35;}
- /* S9 93.9-97.2: your message buried under everyone else's */
- else if(t<97.2){room(.6);const k=seg(t,94.1,96.6);const s={strip:0,read:0,more:MORE,scroll:lerp(-420,820,k)*0+lerp(0,1300,k)};drawPhone(t,s,.82,0,-20);
-  txt('↑ 你的那条，早被刷上去了',1260,420,`700 44px ${SERIF}`,GOLD,'left',cl((t-95.4)/.4),16);}
- /* S10 97.2-100.6: lights warm up, phone down */
- else if(t<100.6){const k=seg(t,97.2,99.4);room(1);g.fillStyle=`rgba(255,200,140,${.10*k})`;g.fillRect(0,0,W,H);const s={off:true,refl:1};drawPhone(t,s,lerp(.82,.6,k),0,lerp(-20,260,k),lerp(-.025,-.25,k));
-  txt('没那么多人在看你',W/2,360,`900 96px ${SERIF}`,GOLD,'center',cl((t-98.2)/.5),26);}
- else{$('end').style.opacity=cl((t-100.6)/.5);}
- // vignette + subtitle band
+   phoneGlow(cx,cy+60,.35,cl(on));person(cx,cy+60,.36,i===14?'#5a4a3a':'#2a3040',{down:1});}
+  g.restore();if(t<90.6)fl=.35;}
+ /* S9 94.52-98.57: your message buried under everyone else's */
+ else if(t<98.57){room(.6);const k=seg(t,94.7,97.4);const s={strip:0,read:0,more:MORE,scroll:lerp(0,1300,k)};drawPhone(t,s,.82,0,-20);
+  txt('↑ 你的那条，早被刷上去了',1260,420,`700 44px ${SERIF}`,GOLD,'left',cl((t-bt2(10))/.3),16);}
+ /* S10 98.57-102.62: lights warm up, phone down */
+ else if(t<102.62){const k=seg(t,98.57,100.8);room(1);g.fillStyle=`rgba(255,200,140,${.10*k})`;g.fillRect(0,0,W,H);const s={off:true,refl:1};drawPhone(t,s,lerp(.82,.6,k),0,lerp(-20,260,k),lerp(-.025,-.25,k));
+  txt('没那么多人在看你',W/2,360,`900 96px ${SERIF}`,GOLD,'center',cl((t-bt2(18))/.4),26);}
+ else{$('end').style.opacity=cl((t-102.62)/.4);}
  const v=g.createRadialGradient(W/2,H/2,H*.4,W/2,H/2,H*1.0);v.addColorStop(0,'rgba(0,0,0,0)');v.addColorStop(1,'rgba(0,0,0,.6)');g.fillStyle=v;g.fillRect(0,0,W,H);
  const b=g.createLinearGradient(0,H,0,H-300);b.addColorStop(0,'rgba(0,0,0,.75)');b.addColorStop(1,'rgba(0,0,0,0)');g.fillStyle=b;g.fillRect(0,H-300,W,300);
  $('flash').style.opacity=fl;};
