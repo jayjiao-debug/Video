@@ -69,11 +69,12 @@ const Lilac: React.FC<{ t: number }> = ({ t }) => {
   return (
     <AbsoluteFill style={{ background: `rgb(${LILAC_BG},${LILAC_BG},${LILAC_BG})` }}>
       <svg width={1920} height={1080} style={{ position: 'absolute', inset: 0 }}>
-        <defs><filter id="lb" x="-50%" y="-50%" width="200%" height="200%"><feGaussianBlur stdDeviation="20" /></filter></defs>
+        {/* soft discs as radial gradients (a Gaussian-like falloff): the same look as a blur, far cheaper to render */}
+        <defs><radialGradient id="lg"><stop offset="0" stopColor={DISC} stopOpacity={1} /><stop offset="0.38" stopColor={DISC} stopOpacity={0.95} /><stop offset="0.6" stopColor={DISC} stopOpacity={0.6} /><stop offset="0.8" stopColor={DISC} stopOpacity={0.2} /><stop offset="1" stopColor={DISC} stopOpacity={0} /></radialGradient></defs>
         {Array.from({ length: 12 }, (_, i) => {
           if (i === gap) return null;
           const a = (i / 12) * Math.PI * 2 - Math.PI / 2;
-          return <circle key={i} cx={960 + Math.cos(a) * R0} cy={540 + Math.sin(a) * R0} r={46} fill={DISC} filter="url(#lb)" />;
+          return <circle key={i} cx={960 + Math.cos(a) * R0} cy={540 + Math.sin(a) * R0} r={90} fill="url(#lg)" />;
         })}
         <g stroke="#000" strokeWidth={5}><line x1={940} y1={540} x2={980} y2={540} /><line x1={960} y1={520} x2={960} y2={560} /></g>
         <Cross x={gx} y={gy} o={proof} />
