@@ -7,3 +7,6 @@ output/soundtrack.wav
 input/
 episodes/*/audio/*.wav
 episodes/*/audio/*.mp3
+episodes/14-design-blame/out/*pic_master*
+episodes/14-design-blame/out/*_v1_*
+episodes/14-design-blame/out/*_v2_*

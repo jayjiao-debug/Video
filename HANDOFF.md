@@ -49,3 +49,8 @@ dropped). Owner hasn't approved any ep13 look. Park it unless the owner asks; if
   - three.js in headless Chrome needs `--use-angle=vulkan --enable-features=Vulkan --ignore-gpu-blocklist` to hit the GPU (egl / angle-gl silently fall back to SwiftShader).
   - three.js: **T4 133 ms/frame** (≈ $0.00002/frame), L4 124 ms, 8-core CPU 1275 ms, this sandbox ≈ 4000 ms. → render three.js/Remotion on **T4**.
   - Blender Cycles 128 spp + denoise: T4 10.1 s, **L4 7.7 s** per frame (same $/frame ≈ $0.0017) → Cycles on **L4**. The quick Cycles scene port was wrong (glTF parts with separate roots split apart); fix before using Cycles.
+
+## Status 2026-10-07 (overnight, owner asleep)
+- 坚忍号 parked (too cold a topic for Douyin; research, previz, 3D tests kept in episodes/14-endurance).
+- ep14 is now **《切尔诺贝利，谁按错了》** (episodes/14-design-blame): Chernobyl cold open → WWII gear/flap switches (Chapanis) → Hawaii 2018 → Norman door. v3 delivered (out/谁按错了_v3_发送版.mp4), gate-4 READY. Owner has not seen it yet: next = owner notes, then the douyin-publish package only after an explicit OK.
+- Build = one three.js page (build/film.html, renderAt(t)), rendered on Modal T4 via modal-farm `render_film.py` (job id design-film-vN). Music = episodes/14-endurance/audio/bgm_edit_v1.wav (local only, not in git: re-upload if the session is new).

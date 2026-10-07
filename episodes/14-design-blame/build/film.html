@@ -25,11 +25,13 @@ canvas{display:block}
 #end .f{margin-top:36px;border:2px solid #d8b56a;border-radius:40px;padding:12px 40px;font-size:30px;color:#f6cf78}
 #end .s{position:absolute;bottom:52px;color:#8d8678;font-size:20px;letter-spacing:1px}
 #flash{position:absolute;inset:0;background:#fff;opacity:0}
-#vig{position:absolute;inset:0;background:radial-gradient(ellipse at center,rgba(0,0,0,0) 55%,rgba(0,0,0,.55) 100%)}
+#doc{position:absolute;left:150px;top:300px;width:620px;padding:40px 54px;background:#e9e0cc;color:#2b241a;box-shadow:0 20px 60px rgba(0,0,0,.6);transform:rotate(-2deg);opacity:0}
+#doc .a{font-size:34px}#doc .b{font-size:104px;font-weight:900;margin:10px 0 8px}#doc .c{font-size:32px;color:#6c5a3e}
+#vig{position:absolute;inset:0;background:radial-gradient(ellipse at center,rgba(0,0,0,0) 55%,rgba(0,0,0,.55) 100%),linear-gradient(to top,rgba(0,0,0,.45) 0,rgba(0,0,0,.28) 150px,rgba(0,0,0,0) 260px)}
 </style></head><body>
 <div id="wrap"><div id="three"></div>
-<div class="ov"><div id="vig"></div><div id="chap"><span></span></div><div id="mark">◆ Juno · VIBE知识大赏</div><div id="stat"></div><div id="sub"></div>
-<div id="plaque"><div>谁按错了？</div></div><div id="flash"></div>
+<div class="ov"><div id="vig"></div><div id="flash"></div><div id="chap"><span></span></div><div id="mark">◆ Juno · VIBE知识大赏</div><div id="stat"></div><div id="doc"><div class="a">心理学家</div><div class="b">查帕尼斯</div><div class="c">1943 · 被派去调查</div></div><div id="sub"></div>
+<div id="plaque"><div>谁按错了？</div></div>
 <div id="end"><div class="j">J</div><div class="t">切尔诺贝利，谁按错了</div><div class="q">你最常“犯蠢”的那个地方，是哪一个设计？</div><div class="f">关注 Juno · 一起看懂世界</div>
 <div class="s">资料：IAEA INSAG-1 (1986) / INSAG-7 (1992) · Fitts &amp; Jones (1947) · Roscoe (1997) · FCC (2018) · D. Norman《设计心理学》 · 模型 CC BY：rosser12345678910, ml64, helijah, janwama</div></div>
 </div></div>
@@ -62,9 +64,9 @@ const SERIF='"Noto Serif CJK SC","Noto Serif SC",serif',MONO='"Courier New",mono
 function paper(lines,{w=1024,h=640,bg='#e9e0cc',ink='#2b241a',title=null,mark=null}={}){return tex((g,W,H)=>{g.fillStyle=bg;g.fillRect(0,0,W,H);
  const gr=g.createRadialGradient(W/2,H/2,H*.2,W/2,H/2,W*.8);gr.addColorStop(0,'rgba(0,0,0,0)');gr.addColorStop(1,'rgba(60,40,10,.25)');g.fillStyle=gr;g.fillRect(0,0,W,H);
  g.fillStyle=ink;let y=70;if(title){g.font=`700 44px ${SERIF}`;g.fillText(title,60,y+10);y+=50;g.fillRect(60,y,W-120,3);y+=60;}
- for(const L of lines){g.font=L.f||`500 38px ${SERIF}`;g.fillStyle=L.c||ink;g.fillText(L.t,L.x||60,y);if(L.u){const m=g.measureText(L.t);g.fillStyle=L.u;g.fillRect((L.x||60)-4,y+12,m.width+8,7);}y+=L.dy||58;}
+ for(const L of lines){const px=+((L.f||'38px').match(/(\d+)px/)||[0,38])[1];if(px>44)y+=(px-38)*.85;g.font=L.f||`500 38px ${SERIF}`;g.fillStyle=L.c||ink;g.fillText(L.t,L.x||60,y);if(L.u){const m=g.measureText(L.t);g.fillStyle=L.u;g.fillRect((L.x||60)-4,y+12,m.width+8,7);}y+=L.dy||58;}
  if(mark){g.save();g.translate(W-230,H-120);g.rotate(-.12);g.strokeStyle=mark.c;g.lineWidth=6;g.strokeRect(-150,-50,300,100);g.fillStyle=mark.c;g.font=`900 52px ${SERIF}`;g.textAlign='center';g.fillText(mark.t,0,18);g.restore();}},w,h);}
-function card(t,w,h,{emis=0}={}){const m=new THREE.MeshStandardMaterial({map:t,roughness:.85,emissive:emis?0xffffff:0,emissiveMap:emis?t:null,emissiveIntensity:emis});return new THREE.Mesh(new THREE.PlaneGeometry(w,h),m);}
+function card(t,w,h,{emis=0}={}){const m=new THREE.MeshStandardMaterial({map:t,roughness:.85,transparent:true,emissive:emis?0xffffff:0,emissiveMap:emis?t:null,emissiveIntensity:emis});return new THREE.Mesh(new THREE.PlaneGeometry(w,h),m);}
 function label3d(text,{size=64,color='#f6cf78',w=1024,h=160,bg=null}={}){const t=tex((g,W,H)=>{if(bg){g.fillStyle=bg;g.fillRect(0,0,W,H)}g.font=`700 ${size}px ${SERIF}`;g.fillStyle=color;g.textAlign='center';g.textBaseline='middle';g.shadowColor=color;g.shadowBlur=18;g.fillText(text,W/2,H/2);},w,h);
  const m=new THREE.Mesh(new THREE.PlaneGeometry(w/h,1),new THREE.MeshBasicMaterial({map:t,transparent:true,depthWrite:false,toneMapped:false}));return m;}
 
@@ -90,7 +92,7 @@ const plate=new THREE.Mesh(new THREE.BoxGeometry(.16,.5,.008),brass);plate.visib
 const doorFront=.03;handle.position.set(.36,1.05,doorFront+.09);plate.position.set(handle.position.x,1.05,doorFront+.005);doorG.add(handle,plate);handle.position.x+=.5;plate.position.x=handle.position.x;
 const pushSign=label3d('推',{size:110,color:'#2b241a',w:256,h:256,bg:'#d9cdb4'});pushSign.scale.setScalar(.16);pushSign.position.set(0,1.6,doorFront+.003);doorG.add(pushSign);pushSign.position.x=.5;
 sDoor.add(new THREE.HemisphereLight(0xffd9a8,0x1a1410,.5));
-const lampD=new THREE.SpotLight(0xffc27a,60,12,.6,.6,1.2);lampD.position.set(1.6,3.2,2.4);lampD.target.position.set(0,1.1,0);lampD.castShadow=true;sDoor.add(lampD,lampD.target);
+const lampD=new THREE.SpotLight(0xffc27a,60,12,.6,.6,1.2);lampD.position.set(1.6,3.2,2.4);lampD.target.position.set(0,1.1,0);lampD.castShadow=true;sDoor.add(lampD,lampD.target);const rimD=new THREE.PointLight(0xffd9a0,0,3,1.5);rimD.position.set(.9,1.4,.6);sDoor.add(rimD);
 const doorPivot=new THREE.Group();
 
 /* =============== S_PLANT =============== */
@@ -111,14 +113,14 @@ const panel=new THREE.Mesh(new THREE.BoxGeometry(6,2.6,.2),panelM);panel.positio
 const btns=[];const btnG=new THREE.BoxGeometry(.18,.18,.08);
 for(let r=0;r<5;r++)for(let c=0;c<14;c++){const b=new THREE.Mesh(btnG,new THREE.MeshStandardMaterial({color:[0x3c4440,0x51504a,0x2f3a3a][(r+c)%3],roughness:.5,emissive:0x221100,emissiveIntensity:rnd()<.2?2:0}));b.position.set(-2.6+c*.4,.5+r*.38,.12);sPanel.add(b);btns.push(b);}
 const az5=new THREE.Mesh(new THREE.BoxGeometry(.32,.32,.12),new THREE.MeshStandardMaterial({color:0xa01a12,roughness:.4,emissive:0xff2a10,emissiveIntensity:0}));az5.position.set(.2,2.2,.14);sPanel.add(az5);
-const azL=label3d('АЗ-5',{size:90,color:'#f1e8d5',w:512,h:160});azL.scale.setScalar(.22);azL.position.set(.2,2.55,.11);sPanel.add(azL);
+const azL=label3d('AZ-5',{size:90,color:'#f1e8d5',w:512,h:160});azL.scale.setScalar(.22);azL.position.set(.2,2.55,.11);sPanel.add(azL);
 // rod position bars (fairness beat)
 const rodBars=[];for(let i=0;i<24;i++){const bg=new THREE.Mesh(new THREE.PlaneGeometry(.12,1.6),new THREE.MeshBasicMaterial({color:0x1a1f1c}));bg.position.set(-2.4+i*.21,-1.3,.11);
  const fl=new THREE.Mesh(new THREE.PlaneGeometry(.1,1.6),new THREE.MeshBasicMaterial({color:0xf6cf78,toneMapped:false}));fl.position.copy(bg.position).add(V(0,0,.002));fl.userData.v=i<21?0.06+rnd()*0.08:0.4+rnd()*.4;
  sPanel.add(bg,fl);rodBars.push(fl);}
 const rodPanel=new THREE.Mesh(new THREE.BoxGeometry(6,2.2,.2),panelM);rodPanel.position.set(0,-1.3,0);sPanel.add(rodPanel);
 const sheet=card(paper([{t:'试验程序（修改稿）',f:`700 40px ${SERIF}`},{t:'—— 功率降至 200 MW'},{t:'—— 继续试验',c:'#9b1c12'},{t:'—— 拔出更多控制棒',c:'#9b1c12'},{t:'（手写修改）',f:`italic 30px ${SERIF}`,c:'#6c5a3e'}]),1.2,.75);
-sheet.position.set(2.2,-.9,.3);sheet.rotation.z=.08;sPanel.add(sheet);
+sheet.position.set(1.3,-1.05,.3);sheet.rotation.z=.08;sPanel.add(sheet);
 const lampP=new THREE.SpotLight(0xffc27a,12,10,.7,.7,1.2);lampP.position.set(.6,3.6,2.6);lampP.target.position.set(.2,1.8,0);sPanel.add(lampP,lampP.target);
 sPanel.add(new THREE.AmbientLight(0x30404a,.15));const lampP2=new THREE.SpotLight(0xffc27a,14,10,.8,.7,1.2);lampP2.position.set(1.5,1.5,2.6);lampP2.target.position.set(0,-1.3,0);sPanel.add(lampP2,lampP2.target);
 
@@ -142,10 +144,10 @@ const gauge=new THREE.Group();const gFace=card(tex((g,W,H)=>{g.fillStyle='#e8e0c
 const needle=new THREE.Mesh(new THREE.BoxGeometry(.04,.9,.02),new THREE.MeshBasicMaterial({color:0xa01a12}));needle.geometry.translate(0,.45,0);needle.position.z=.02;gauge.add(needle);
 gauge.position.set(-6.5,coreTop+2.6,3);gauge.rotation.y=.5;sCore.add(gauge);
 // report cards
-const insag1=card(paper([{t:'事故原因',f:`700 46px ${SERIF}`},{t:'主要归于',dy:70},{t:'操作员',f:`900 120px ${SERIF}`,u:'#b0201a',dy:150},{t:'违反规程'}],{title:'INSAG-1 · 1986'}),3.2,2);
-const insag7=card(paper([{t:'修正：反应堆设计',f:`700 46px ${SERIF}`},{t:'停堆棒：开始插入时',dy:62},{t:'反而增加反应性',c:'#9b1c12',f:`800 50px ${SERIF}`,dy:80},{t:'"may well have been the decisive',f:`italic 34px ${SERIF}`,dy:46},{t:' contributory factor"',f:`italic 34px ${SERIF}`}],{title:'INSAG-7 · 1992'}),3.2,2);
+const insag1=card(paper([{t:'事故原因',f:`700 46px ${SERIF}`},{t:'主要归于',dy:70},{t:'操作员',f:`900 120px ${SERIF}`,u:'#b0201a',dy:150},{t:'违反规程'}],{title:'INSAG-1 · 1986'}),3.2,2,{emis:.45});
+const insag7=card(paper([{t:'修正：反应堆设计',f:`700 46px ${SERIF}`},{t:'停堆棒：开始插入时',dy:62},{t:'反而增加反应性',c:'#9b1c12',f:`800 50px ${SERIF}`,dy:80},{t:'"may well have been the decisive',f:`italic 34px ${SERIF}`,dy:46},{t:' contributory factor"',f:`italic 34px ${SERIF}`}],{title:'INSAG-7 · 1992'}),3.2,2,{emis:.45});
 [insag1,insag7].forEach(c=>{c.visible=false;sCore.add(c)});
-const memo=card(paper([{t:'1983 · 同型电站',f:`700 44px ${SERIF}`},{t:'发现：停堆棒插入初期'},{t:'反应性上升'},{t:'拟加限制',f:`900 70px ${SERIF}`,c:'#9b1c12',dy:90},{t:'（未落实）',f:`italic 34px ${SERIF}`,c:'#6c5a3e'}]),2.4,1.5);memo.visible=false;sCore.add(memo);
+const memo=card(paper([{t:'1983 · 同型电站',f:`700 44px ${SERIF}`},{t:'发现：停堆棒插入初期'},{t:'反应性上升'},{t:'拟加限制',f:`900 70px ${SERIF}`,c:'#9b1c12',dy:90},{t:'（未落实）',f:`italic 34px ${SERIF}`,c:'#6c5a3e'}]),2.4,1.5,{emis:.8});memo.visible=false;sCore.add(memo);
 const drawer=new THREE.Mesh(new THREE.BoxGeometry(3,.8,2),new THREE.MeshStandardMaterial({color:0x3a2c1f,roughness:.8}));drawer.visible=false;sCore.add(drawer);
 const dust=new THREE.Points(new THREE.BufferGeometry().setAttribute('position',new THREE.Float32BufferAttribute(Array.from({length:900},()=>(rnd()-.5)*8),3)),new THREE.PointsMaterial({color:0xd8c59a,size:.03,transparent:true,opacity:.6}));sCore.add(dust);dust.visible=false;
 
@@ -162,8 +164,8 @@ rodC.add(absorber,gap,tip);chan.add(rodC);sCut.background=new THREE.Color(0x0b10
 const glow=new THREE.PointLight(0xff6a20,0,8,1.4);glow.position.set(0,-3.3,1.2);sCut.add(glow);
 const zoneB=new THREE.Mesh(new THREE.PlaneGeometry(4,1.6),new THREE.MeshBasicMaterial({color:0xff6a20,transparent:true,opacity:0,toneMapped:false,blending:THREE.AdditiveBlending}));zoneB.position.set(0,-3.2,.62);chan.add(zoneB);
 const lbl=(t,c,x,y,s=.5)=>{const m=label3d(t,{size:70,color:c,w:768,h:160});m.scale.setScalar(s);m.position.set(x,y,.7);chan.add(m);return m;};
-const lAbs=lbl('吸收体（刹车）','#f4efe6',2.7,.9,.55),lTip=lbl('石墨端头','#f4efe6',2.7,-.6,.55),lWat=lbl('水','#8fc4ff',-2.4,-1.0,.55),lCore=lbl('堆芯底部','#cdb98e',-2.5,-1.9,.5);
-const brake=lbl('刹车 →','#f4efe6',-1.0,1.7,.8),gas=lbl('油门？','#ff7a3a',1.4,1.7,.8);brake.visible=gas.visible=false;
+const lAbs=lbl('吸收体（刹车）','#f4efe6',1.85,-.25,.38),lTip=lbl('石墨端头','#f4efe6',2.2,-.8,.42),lWat=lbl('水','#8fc4ff',-2.2,-.5,.45),lCore=lbl('堆芯底部','#cdb98e',-2.2,-1.3,.42);
+const brake=lbl('刹车 →','#f4efe6',-.85,.5,.55),gas=lbl('油门？','#ff7a3a',1.05,.5,.55);brake.visible=gas.visible=false;
 sCut.add(new THREE.AmbientLight(0x405060,1.2));const rim=new THREE.DirectionalLight(0x8fb4ff,1.2);rim.position.set(-4,2,-3);sCut.add(rim);const cutKey=new THREE.DirectionalLight(0xffd9a8,1.6);cutKey.position.set(3,5,6);sCut.add(cutKey);
 const bubbles=new THREE.InstancedMesh(new THREE.SphereGeometry(.05,8,6),new THREE.MeshBasicMaterial({color:0xbfe1ff,transparent:true,opacity:.8}),60);chan.add(bubbles);
 
@@ -188,8 +190,8 @@ function toggle(){const g=new THREE.Group();const base=new THREE.Mesh(new THREE.
  const lev=new THREE.Mesh(new THREE.CylinderGeometry(.03,.045,.55,16),chrome);lev.position.y=.42;lev.rotation.z=.35;const ball=new THREE.Mesh(new THREE.SphereGeometry(.06,16,12),chrome);ball.position.set(-.09,.69,0);
  const arm=new THREE.Group();arm.add(lev,ball);g.add(base,arm);g.userData.arm=arm;return g;}
 const pA=pedestal('B-17 等');pA.position.set(-2,0,0);const pC=pedestal('C-47');pC.position.set(2,0,0);
-const tg1=toggle(),tg2=toggle();tg1.position.set(-.2,0,0);tg2.position.set(.2,0,0);pA.add(tg1,tg2);
-const tA1=label3d('起落架',{size:70,color:'#f6cf78',w:512,h:140});tA1.scale.setScalar(.14);tA1.rotation.x=-Math.PI/2;tA1.position.set(-.2,.135,.32);const tA2=label3d('襟翼',{size:70,color:'#f6cf78',w:512,h:140});tA2.scale.setScalar(.14);tA2.rotation.x=-Math.PI/2;tA2.position.set(.2,.135,.32);pA.add(tA1,tA2);
+const tg1=toggle(),tg2=toggle();tg1.position.set(-.3,0,0);tg2.position.set(.3,0,0);pA.add(tg1,tg2);
+const tA1=label3d('起落架',{size:70,color:'#f6cf78',w:512,h:140});tA1.scale.setScalar(.14);tA1.rotation.x=-Math.PI/2;tA1.position.set(-.3,.135,.32);const tA2=label3d('襟翼',{size:70,color:'#f6cf78',w:512,h:140});tA2.scale.setScalar(.14);tA2.rotation.x=-Math.PI/2;tA2.position.set(.3,.135,.32);pA.add(tA1,tA2);
 const wheel=new THREE.Mesh(new THREE.TorusGeometry(.09,.04,12,24),new THREE.MeshStandardMaterial({color:0x151515,roughness:.7}));wheel.rotation.y=Math.PI/2;wheel.position.set(-.09,.7,0);
 const wedge=new THREE.Mesh(new THREE.ConeGeometry(.1,.2,3),new THREE.MeshStandardMaterial({color:0x7a1a12,roughness:.6}));wedge.position.set(-.09,.72,0);wedge.rotation.z=Math.PI/2;
 tg1.userData.arm.add(wheel);tg2.userData.arm.add(wedge);wheel.scale.setScalar(.001);wedge.scale.setScalar(.001);
@@ -226,7 +228,7 @@ const chair=new THREE.Mesh(new THREE.BoxGeometry(1,1.2,.15),new THREE.MeshStanda
 const one=label3d('一个人 · 一次确认',{size:64,color:'#f6cf78',w:900,h:150});one.scale.setScalar(.55);one.position.set(12.4,2.3,-.7);sDesk.add(one);
 // clock (x=16)
 const clockFace=card(tex((g,W,H)=>{g.fillStyle='#e8e0cc';g.beginPath();g.arc(W/2,H/2,W/2-8,0,7);g.fill();g.strokeStyle='#2b241a';g.lineWidth=10;g.stroke();for(let i=0;i<12;i++){const a=i/12*Math.PI*2;g.beginPath();g.moveTo(W/2+Math.sin(a)*200,H/2-Math.cos(a)*200);g.lineTo(W/2+Math.sin(a)*235,H/2-Math.cos(a)*235);g.lineWidth=8;g.stroke();}},512,512),1.6,1.6);
-clockFace.position.set(16.5,1.9,-1.9);sDesk.add(clockFace);const mHand=new THREE.Mesh(new THREE.BoxGeometry(.04,.65,.02),new THREE.MeshBasicMaterial({color:0x1a1a1a}));mHand.geometry.translate(0,.32,0);mHand.position.set(16.5,1.9,-1.88);sDesk.add(mHand);
+clockFace.position.set(16.5,1.9,-1.9);sDesk.add(clockFace);const clockLamp=new THREE.SpotLight(0xffc98a,30,8,.45,.6,1.3);clockLamp.position.set(17.2,3.6,1);clockLamp.target.position.set(16.5,1.9,-1.9);sDesk.add(clockLamp,clockLamp.target);const mHand=new THREE.Mesh(new THREE.BoxGeometry(.04,.65,.02),new THREE.MeshBasicMaterial({color:0x1a1a1a}));mHand.geometry.translate(0,.32,0);mHand.position.set(16.5,1.9,-1.88);sDesk.add(mHand);
 const hHand=new THREE.Mesh(new THREE.BoxGeometry(.06,.42,.02),new THREE.MeshBasicMaterial({color:0x1a1a1a}));hHand.geometry.translate(0,.21,0);hHand.position.set(16.5,1.9,-1.87);sDesk.add(hHand);
 const blank=card(paper([{t:'如果发错了……',f:`700 44px ${SERIF}`},{t:'（预案：空白）',c:'#8a7a5a'}],{w:900,h:420}),1.9,.88);blank.rotation.x=-Math.PI/2;blank.position.set(16.5,.01,.6);sDesk.add(blank);
 // report (x=20)
@@ -239,33 +241,34 @@ const sDio=new THREE.Scene();sDio.background=new THREE.Color(0x05070b);
 function plinth(x){const p=new THREE.Mesh(new THREE.CylinderGeometry(1.6,1.7,.3,48),new THREE.MeshStandardMaterial({color:0x1c1a17,roughness:.6}));p.position.set(x,-.15,0);sDio.add(p);
  const L=new THREE.SpotLight(0xffc27a,45,9,.45,.6,1.2);L.position.set(x,4.5,2);L.target.position.set(x,0,0);sDio.add(L,L.target);return L;}
 const dl=[plinth(-4),plinth(0),plinth(4)];
-const dA=new THREE.Group();const dt1=toggle(),dt2=toggle();dt1.position.x=-.25;dt2.position.x=.25;dA.add(dt1,dt2);dA.scale.setScalar(2.2);dA.position.set(-4,0,0);sDio.add(dA);
+const dA=new THREE.Group();const dt1=toggle(),dt2=toggle();dt1.position.x=-.32;dt2.position.x=.32;dA.add(dt1,dt2);dA.scale.setScalar(2.2);dA.position.set(-4,0,0);sDio.add(dA);
 const dWheel=wheel.clone(),dWedge=wedge.clone();dWheel.scale.setScalar(1);dWedge.scale.setScalar(1);dt1.userData.arm.add(dWheel);dt2.userData.arm.add(dWedge);
 const dB=new THREE.Group();const dMon=monB.clone(),dScr=monS.clone();dB.add(dMon,dScr);dB.scale.setScalar(.8);dB.position.set(0,-.3,0);sDio.add(dB);
 const dC=core.clone();dC.scale.multiplyScalar(.2);dC.position.set(4,0,0);sDio.add(dC);
 const dHot=new THREE.PointLight(0xff5a20,0,6,1.3);dHot.position.set(4,1.2,.5);sDio.add(dHot);
-const dLabels=['B-17 · 改形状 → 解决','夏威夷 · 防护不足','切尔诺贝利 · 缺陷被遗忘'].map((t,i)=>{const m=label3d(t,{size:58,color:'#e9dcc0',w:1024,h:140});m.scale.setScalar(.42);m.position.set((-4+i*4)*.9,-.6,1.8);sDio.add(m);return m;});
+const dLabels=['B-17 · 改形状 → 解决','夏威夷 · 防护不足','切尔诺贝利 · 缺陷被遗忘'].map((t,i)=>{const m=label3d(t,{size:58,color:'#e9dcc0',w:1024,h:140});m.scale.setScalar(.36);m.position.set((-4+i*4)*.88,-.6,1.8);sDio.add(m);return m;});
 sDio.add(new THREE.AmbientLight(0x202838,.4));
 
 /* =============== TIMELINE =============== */
 function subtitle(t){const l=LINES.find(l=>t>=l[0]&&t<l[1]);$('sub').innerHTML=l?l[2].replace(/\[(.+?)\]/g,'<b>$1</b>'):'';}
-const CHAPS=[[0,3,''],[3,15.2,'1986 · 切尔诺贝利'],[15.2,43.5,'1943 · 美军'],[43.5,64.6,'2018 · 夏威夷'],[64.6,87.6,'1992 · 切尔诺贝利'],[87.6,96.4,''],[96.4,105,'你']];
+const CHAPS=[[0,3,''],[3,15.2,'1986 · 切尔诺贝利'],[15.2,43.5,'1943 · 美军'],[43.5,64.6,'2018 · 夏威夷'],[64.6,87.6,'1992 · 切尔诺贝利'],[87.6,96.4,''],[96.4,105,'']];
 function chap(t){const c=CHAPS.find(c=>t>=c[0]&&t<c[1]);$('chap').firstChild.textContent=c?c[2]:'';$('chap').style.opacity=c&&c[2]?.9:0;}
 let scene=sDoor;
 window.renderAt=function(t){
- subtitle(t);chap(t);$('stat').innerHTML='';let fl=0,flc='#fff';$('plaque').style.opacity=0;$('end').style.opacity=0;
+ subtitle(t);chap(t);$('stat').innerHTML='';let fl=0,flc='#fff';$('doc').style.opacity=0;$('plaque').style.opacity=0;$('end').style.opacity=0;
  // ---------- 0-3 door: handle jerks, door won't open
  if(t<3){scene=sDoor;handle.visible=true;plate.visible=false;doorG.rotation.y=0;
   const k=seg(t,0,3);cam.position.set(lerp(.9,.55,k),lerp(1.3,1.15,k),lerp(3.0,1.5,k));cam.lookAt(-.05,1.1,doorFront);
-  const j=Math.max(0,Math.sin(Math.max(0,t-.35)*26)*Math.exp(-Math.max(0,t-.35)*7));handle.position.z=doorFront+.09+j*.03;doorG.position.z=j*.006;
+  const tt=Math.max(0,t-.28);const j=t<.28?0:Math.max(0,Math.sin(tt*26)*Math.exp(-tt*6));handle.position.z=doorFront+.09+j*.12;doorG.position.z=j*.025;
+  const sh=t<.28?0:Math.exp(-(t-.28)*7)*.018;cam.position.x+=Math.sin(t*95)*sh;cam.position.y+=Math.cos(t*80)*sh;rimD.intensity=t<.28?0:40*Math.exp(-(t-.28)*2);
   if(t>2.7){const u=(t-2.7)/.3;cam.position.lerp(V(.36,1.05,.35),ease(u));}
-  if(t>2.85)fl=(t-2.85)/.15,flc='#000';
+  
  }
  // ---------- 3-4.6 plant night; 4.6-6.3 AZ-5 panel
  else if(t<4.6){scene=sPlant;const k=seg(t,3,4.6);const c=pb.getCenter(V());cam.position.set(c.x+lerp(-260,-160,k),lerp(70,48,k),pb.max.z+lerp(330,240,k));cam.lookAt(c.x+lerp(40,120,k),30,c.z);
-  $('stat').innerHTML='01:23<small>1986.4.26 · 凌晨</small>';if(t<3.2)fl=1-(t-3)/.2,flc='#000';}
+  $('stat').innerHTML='01:23<small>1986.4.26 · 凌晨</small>';}
  else if(t<6.3){scene=sPanel;const k=seg(t,4.6,6.3);cam.position.set(lerp(1.2,.3,k),lerp(2.6,2.3,k),lerp(3.4,1.6,k));cam.lookAt(.2,2.2,0);
-  const press=cl((t-5.15)/.12);az5.position.z=.14-press*.05;az5.material.emissiveIntensity=press*3;$('stat').innerHTML='01:23:40<small>按下 АЗ-5</small>';}
+  const press=cl((t-5.15)/.12);az5.position.z=.14-press*.05;az5.material.emissiveIntensity=press*3;$('stat').innerHTML='01:23:40<small>按下 AZ-5</small>';}
  // ---------- 6.3-9.4 rods drop, power climbs, flash
  else if(t<9.4){scene=sCore;[insag1,insag7,memo,drawer].forEach(o=>o.visible=false);dust.visible=false;
   const k=seg(t,6.3,9.4);cam.position.set(lerp(11,8,k),lerp(9,7.2,k),lerp(11,8.5,k));cam.lookAt(0,coreTop+.3,0);
@@ -283,64 +286,66 @@ window.renderAt=function(t){
   if(t<12.5)fl=.7*(1-(t-12.4)/.1);}
  // ---------- 15.2-27.5 B-17 at dusk
  else if(t<27.5){scene=sB17;sparks.visible=false;chapCard.visible=false;
-  if(t<21.3){const k=seg(t,15.2,21.3);cam.position.set(lerp(38,22,k),lerp(7,3.2,k),lerp(-40,-14,k));cam.lookAt(0,lerp(3,2.6,k),lerp(-4,2,k));if(t<15.45)fl=1-(t-15.2)/.25,flc='#000';}
+  if(t<21.3){const k=seg(t,15.2,21.3);cam.position.set(lerp(38,22,k),lerp(7,3.2,k),lerp(-40,-14,k));cam.lookAt(0,lerp(3,2.6,k),lerp(-4,2,k));}
   else if(t<24.4){scene=sCk;const k=seg(t,21.3,24.4);const jolt=t>22.6?Math.exp(-(t-22.6)*6)*.03*Math.sin(t*80):0;
    cam.position.set(lerp(-1.4,-1.75,k)+jolt,lerp(1.3,1.1,k),lerp(1.6,1.25,k));cam.lookAt(-2,.5,0);wheel.scale.setScalar(.001);wedge.scale.setScalar(.001);
-   tg1.userData.arm.rotation.z=t>22.6?-.55*ease(cl((t-22.6)/.25)):0;tg2.userData.arm.rotation.z=0;warn.intensity=t>22.7?(Math.sin(t*14)>0?8:2):0;ckLamp.intensity=50;
-   if(t<21.5)fl=1-(t-21.3)/.2,flc='#000';$('stat').innerHTML='着陆后<small>收起的是起落架</small>';}
-  else{const k=seg(t,24.4,27.5);cam.position.set(lerp(16,10,k),lerp(2.6,8,k),lerp(-6,10,k));cam.lookAt(0,1,4);
-   chapCard.visible=true;inFront(chapCard,7.5,-1.6,.5);if(t>27.2)fl=(t-27.2)/.3,flc='#000';}
+   tg1.userData.arm.rotation.x=t>22.6?.6*ease(cl((t-22.6)/.25)):0;tg2.userData.arm.rotation.x=0;tA1.visible=tA2.visible=false;warn.intensity=t>22.7?(Math.sin(t*14)>0?8:2):0;ckLamp.intensity=50;
+   $('stat').innerHTML='驾驶舱<small>着陆后 · 收起的是起落架</small>';}
+  else{const k=seg(t,24.4,27.5);cam.position.set(lerp(30,24,k),lerp(5,11,k),lerp(-16,12,k));cam.lookAt(0,2,2);
+   chapCard.visible=false;$('doc').style.opacity=cl((t-24.6)/.35)*(1-cl((t-27.2)/.3));$('doc').style.transform=`rotate(-2deg) translateY(${(1-cl((t-24.6)/.35))*30}px)`;}
  }
  // ---------- 27.5-43.5 cockpit switches
  else if(t<43.5){scene=sCk;warn.intensity=0;
-  let p0,p1;if(t<30.6){const k=seg(t,27.5,30.6);p0=V(0,lerp(4.6,3.6,k),lerp(5.2,4.4,k));p1=V(0,.3,0);if(t<27.75)fl=1-(t-27.5)/.25,flc='#000';$('stat').innerHTML='C-47<small>着陆后误收 0 次</small>';}
+  let p0,p1;if(t<30.6){const k=seg(t,27.5,30.6);p0=V(0,lerp(4.6,3.6,k),lerp(5.2,4.4,k));p1=V(0,.3,0);$('stat').innerHTML='C-47<small>着陆后误收 0 次</small>';}
   else if(t<33.9){const k=seg(t,30.6,33.9);p0=vl(V(0,3.6,4.4),V(-2,1.4,1.7),k);p1=vl(V(0,.3,0),V(-2,.55,0),k);}
   else if(t<37.2){const k=seg(t,33.9,37.2);p0=vl(V(-2,1.4,1.7),V(2,1.6,2),k);p1=vl(V(-2,.55,0),V(2,.4,0),k);}
-  else{const k=seg(t,37.2,39.2);p0=vl(V(2,1.6,2),V(-2,1.05,1.2),k);p1=vl(V(2,.4,0),V(-2,.62,0),k);}
+  else{const k=seg(t,37.2,39.2);p0=vl(V(2,1.6,2),V(-2,1.25,1.6),k);p1=vl(V(2,.4,0),V(-2,.62,0),k);}
   cam.position.copy(p0);cam.lookAt(p1);
   const g=ease(cl((t-38.2)/1.2));wheel.scale.setScalar(Math.max(.001,g));wedge.scale.setScalar(Math.max(.001,g));
-  tg1.userData.arm.rotation.z=t>41?-.5*ease(cl((t-41)/.3)):0;tg2.userData.arm.rotation.z=t>41.8?-.5*ease(cl((t-41.8)/.3)):0;
+  tA1.visible=tA2.visible=true;tg1.userData.arm.rotation.x=t>41?.6*ease(cl((t-41)/.3)):0;tg2.userData.arm.rotation.x=t>41.8?.6*ease(cl((t-41.8)/.3)):0;
   ckLamp.intensity=50+cl((t-42.7)/.8)*900;if(t>42.9)fl=cl((t-42.9)/.6),flc='#fff1d8';if(t>=37.2)$('stat').innerHTML='改个形状<small>一摸就分清</small>';}
  // ---------- 43.5-64.6 Hawaii desk, one continuous truck
  else if(t<64.6){scene=sDesk;const xs=[[43.5,0],[48.6,0],[51.9,4],[55,8],[58.4,12.4],[61.5,16.5],[64.6,20.5]];
-  let x=0;for(let i=1;i<xs.length-1;i++){if(t>=xs[i][0]&&t<xs[i+1][0]){x=lerp(xs[i][1],xs[i+1][1],ease(Math.min(1,(t-xs[i][0])/0.9)));}}
+  let x=0;for(let i=1;i<xs.length-1;i++){if(t>=xs[i][0]&&t<xs[i+1][0]){x=lerp(xs[i][1],xs[i+1][1],ease(Math.min(1,(t-xs[i][0])/1.7)));}}
   if(t<48.6){const k=seg(t,43.5,48.6);cam.position.set(lerp(1.2,.15,k),lerp(3.2,1.55,k),lerp(3.2,1.25,k));cam.lookAt(0,0,.6);screen.material.opacity=cl((t-44)/.25);phoneGlow.intensity=cl((t-44)/.25)*6;
    if(t<43.9)fl=1-(t-43.5)/.4,flc='#fff1d8';$('stat').innerHTML='08:07<small>2018.1.13 · 夏威夷</small>';}
-  else{const look=V(x,0,.2);const camP=V(x+.6,x>11&&x<13?2.4:3.2,x>11&&x<13?4.6:3.4);const atClock=x>15&&x<17.5;if(atClock){camP.set(x+.4,2.2,2.6);}cam.position.copy(camP);cam.lookAt(x>11&&x<13?V(x,1.1,-.8):(atClock?V(x,1.2,-1.2):look));
+  else{const bump=(v,c,w)=>{const d=Math.abs(v-c)/w;return d>=1?0:.5+.5*Math.cos(d*Math.PI);};const wm=bump(x,12.4,2.2),wc=bump(x,16.5,2.2);
+   const camP=V(x+.6,3.2,3.4).lerp(V(x+.6,2.4,4.6),wm).lerp(V(x+.4,2.2,2.6),wc);const look=V(x,0,.2).lerp(V(x,1.1,-.8),wm).lerp(V(x,1.2,-1.2),wc);cam.position.copy(camP);cam.lookAt(look);
    if(t>=58.4&&t<61.5){const k=cl((t-58.4)/2.6);mHand.rotation.z=-k*Math.PI*2*38/60*0+(-(7+38*k)/60)*Math.PI*2;hHand.rotation.z=-((8+(7+38*k)/60)/12)*Math.PI*2;$('stat').innerHTML=Math.round(38*k)+' 分钟<small>才发出更正</small>';}}
  }
  // ---------- 64.6-67.9 back to reactor: INSAG-7 over INSAG-1
+ else if(t<65.5){scene=sPanel;const k=seg(t,64.6,65.5);cam.position.set(.2,2.35,lerp(1.6,2.8,k));cam.lookAt(.2,2.3,0);az5.material.emissiveIntensity=3;az5.position.z=.09;$('stat').innerHTML='AZ-5<small>再看一次</small>';}
  else if(t<67.9){scene=sCore;setRods(.35);rodM.emissiveIntensity=0;heat.intensity=0;coreLamps.forEach(L=>L.intensity=120);
   const k=seg(t,64.6,67.9);cam.position.set(lerp(6,4.6,k),lerp(7.6,6.2,k),lerp(6,4.8,k));cam.lookAt(0,coreTop,0);
-  insag1.visible=true;insag7.visible=true;inFront(insag1,6.2,-1.3,.5);inFront(insag7,6.15,-1.3,.5+lerp(3.6,0,seg(t,65,66.2)));insag7.rotateZ(.03);if(t<64.9)fl=1-(t-64.6)/.3,flc='#000';}
+  insag1.visible=true;insag7.visible=true;inFront(insag1,6.2,-1.3,.5);inFront(insag7,6.15,-1.3,.5+lerp(3.6,0,seg(t,65,66.2)));insag7.rotateZ(.03);}
  // ---------- 67.9-77.5 cut-away: rod as brake then accelerator, 18 s, quote
- else if(t<77.5){scene=sCut;const k=seg(t,67.9,77.5);cam.position.set(lerp(1.8,.6,k),lerp(.2,-.4,k),lerp(9.6,9,k));cam.lookAt(0,-.6,0);
+ else if(t<77.5){scene=sCut;const k=seg(t,67.9,77.5);cam.position.set(lerp(1.2,.4,k),lerp(-.2,-.5,k),lerp(6.2,5.6,k));cam.lookAt(0,-.7,0);$('chap').style.opacity=0;
   const fall=cl((t-68.6)/8.4);rodC.position.y=lerp(4.4,-2.4,fall);// moves the rod down through 18 s (compressed)
   const tipBottom=rodC.position.y-4.4;const disp=cl((-tipBottom-3.2)/1.6);zoneB.material.opacity=cl((t-69.4)/1.2)*.55*(t<76?1:.6);glow.intensity=zoneB.material.opacity*30;
   brake.visible=t>68.4;gas.visible=t>69.8;
   const m=new THREE.Matrix4();for(let i=0;i<60;i++){const a=((t*.6+i*.137)%1);m.makeTranslation((((i*.71)%1)-.5)*.7,-3.9+a*2.2,.31);bubbles.setMatrixAt(i,m);}bubbles.instanceMatrix.needsUpdate=true;bubbles.visible=t>69.4;
-  if(t>=71.2){const s=Math.min(18,Math.floor(cl((t-71.2)/2.8)*18));$('stat').innerHTML=s+' 秒<small>停堆棒插到底</small>';}
+  if(t>=71.2){const s=Math.min(18,Math.floor(cl((t-71.2)/1.8)*18));$('stat').innerHTML=s+' 秒<small>停堆棒插到底</small>';}
   if(t>=74.2){$('stat').innerHTML='很可能<small>INSAG-7 · 决定性推手</small>';}
-  if(t<68.2)fl=1-(t-67.9)/.3,flc='#000';}
+  }
  // ---------- 77.5-80.9 fairness: rods pulled out + edited procedure
- else if(t<80.9){scene=sPanel;const k=seg(t,77.5,80.9);cam.position.set(lerp(-.6,.4,k),lerp(-.2,-.5,k),lerp(4.6,3.6,k));cam.lookAt(.4,-1.2,0);az5.material.emissiveIntensity=0;az5.position.z=.14;
-  rodBars.forEach(b=>{b.scale.y=b.userData.v;b.position.y=-1.3-.8+.8*b.userData.v;});if(t<77.8)fl=1-(t-77.5)/.3,flc='#000';$('stat').innerHTML='多数控制棒<small>被拔出</small>';}
+ else if(t<80.9){scene=sPanel;const k=seg(t,77.5,80.9);cam.position.set(lerp(-.4,.3,k),lerp(-.6,-.8,k),lerp(4.8,4.0,k));cam.lookAt(.3,-1.55,0);az5.material.emissiveIntensity=0;az5.position.z=.14;
+  rodBars.forEach(b=>{b.scale.y=b.userData.v;b.position.y=-1.3-.8+.8*b.userData.v;});$('stat').innerHTML='多数控制棒<small>被拔出</small>';}
  // ---------- 80.9-87.6 1983, memo, drawer
  else if(t<87.6){scene=sCore;coreLamps.forEach(L=>L.intensity=60);setRods(.35);insag1.visible=insag7.visible=false;
   const k=seg(t,80.9,87.6);cam.position.set(lerp(9,6,k),lerp(8,4,k),lerp(9,6,k));cam.lookAt(0,coreTop,0);
   if(t<84.3){const yr=Math.round(lerp(1986,1983,ease(cl((t-80.9)/1.2))));$('stat').innerHTML=yr+'<small>同型电站已查出缺陷</small>';heat.intensity=180*Math.abs(Math.sin(t*2));memo.visible=false;drawer.visible=false;dust.visible=false;}
-  else{heat.intensity=0;memo.visible=true;drawer.visible=true;dust.visible=t>86;const u=seg(t,84.6,86.4);
-   inFront(drawer,4.2,0,-1.55);inFront(memo,4,0,lerp(.2,-1.2,u));memo.material.emissiveIntensity=0;inFront(dust,4,0,-1);$('stat').innerHTML='似乎<small>被忘了</small>';}
-  if(t<81.2)fl=1-(t-80.9)/.3,flc='#000';}
+  else{heat.intensity=0;memo.visible=true;drawer.visible=false;dust.visible=false;inFront(memo,5.2,-.2,.35+.15*seg(t,84.3,87.6));memo.material.emissiveIntensity=.8;memo.material.opacity=1-seg(t,86.6,87.5);
+   $('stat').innerHTML='似乎<small>被忘了</small>';}
+  }
  // ---------- 87.6-96.4 dioramas
- else if(t<96.4){scene=sDio;const k=seg(t,87.6,96.4);cam.position.set(0,lerp(2.8,3.6,k),lerp(9,12,k));cam.lookAt(0,.4,0);
-  dl.forEach((L,i)=>L.intensity=t>89.7?45+20*Math.sin(t*3+i):45);
-  const loop=(t*1.6)%1;dt1.userData.arm.rotation.z=t>93.1?-.5:(loop<.5?-.5*ease(loop*2):-.5*(1-ease(loop*2-1)));dt2.userData.arm.rotation.z=t>93.1?0:dt1.userData.arm.rotation.z;
-  dHot.intensity=t>93.1?60+40*Math.sin(t*5):(t>89.7?15:0);dScr.material=monS.material;if(t<87.9)fl=1-(t-87.6)/.3,flc='#000';}
+ else if(t<96.4){scene=sDio;const k=seg(t,87.6,96.4);const o=seg(t,87.6,90.3);const dr=cl((t-90.3)/6.1);cam.position.copy(V(4,2.2,3.2).lerp(V(0,3.4,13),o)).add(V(Math.sin(dr*1.2)*1.8,-.3*dr,-1.6*dr));cam.lookAt(V(4,.3,0).lerp(V(0,.4,0),o));
+  const hit=t>=90.5?Math.exp(-(t-90.5)*3):0;dl.forEach((L,i)=>L.intensity=45+(t>=90.5?20*Math.sin(t*3+i)+140*hit:0));if(t>=90.5&&t<90.62)fl=.35,flc='#fff1d8';
+  const loop=(t*1.6)%1;const lv=t>93.1?0:(loop<.5?.6*ease(loop*2):.6*(1-ease(loop*2-1)));dt1.userData.arm.rotation.x=t>93.1?.6:lv;dt2.userData.arm.rotation.x=t>93.1?0:lv;
+  dHot.intensity=t>93.1?60+40*Math.sin(t*5):(t>90.5?15:0);dScr.material=monS.material;}
  // ---------- 96.4-105 door again → push plate → opens
- else if(t<105){scene=sDoor;const k=seg(t,96.4,105);cam.position.set(lerp(1.1,.7,k),1.3,lerp(3.4,2.6,k));cam.lookAt(-.05,1.1,doorFront);
+ else if(t<105){scene=sDoor;const k=seg(t,96.4,105);cam.position.set(lerp(1.3,.6,k),lerp(1.45,1.25,k),lerp(4.2,2.4,k));cam.lookAt(-.05,1.1,doorFront);
   const m=ease(cl((t-101.6)/1));handle.visible=m<.5;handle.scale.setScalar(1-m*.9+.001);plate.visible=m>=.5;plate.scale.setScalar(Math.max(.001,m));
-  doorG.rotation.y=-ease(cl((t-103.2)/1.4))*.9;lampD.intensity=60+ease(cl((t-103.4)/1.4))*80;if(t<96.7)fl=1-(t-96.4)/.3,flc='#000';
+  doorG.rotation.y=ease(cl((t-103.2)/1.4))*1.1;lampD.intensity=60+ease(cl((t-103.4)/1.4))*80;
   if(t>=99.4)$('stat').innerHTML='诺曼门<small>《设计心理学》 · 唐·诺曼</small>';}
  else {$('end').style.opacity=cl((t-105)/.5);}
  // plant / core / dio only render in their windows; end card covers all
