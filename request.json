@@ -1,7 +1,4 @@
-{"id":"spot-02","items":[
- {"type":"sketchfab","uid":"d4553cc2008242849214e4cbf8ad8551","name":"classroom_titi"},
- {"type":"sketchfab","uid":"54bdec1baa5c4855a45a4f956d947960","name":"classroom_jp"},
- {"type":"sketchfab","uid":"fedd5874a0a049b9b8a3b8fb44701362","name":"cn_desk"},
- {"type":"sketchfab","uid":"2cbc5ee62b144c13a3daa74b833640b3","name":"mannequin"},
- {"type":"sketchfab","uid":"8e753b1a3f0c40bca87765d2fce02956","name":"spotlight"}
+{"id":"sfx-iphone-01","items":[
+ {"type":"url","url":"https://bigsoundbank.com/UPLOAD/wav/0447.wav","name":"bsb0447_iphone_keys.wav","license":"CC0 (BigSoundBank #447, Joseph Sardin)"},
+ {"type":"url","url":"https://bigsoundbank.com/UPLOAD/mp3/0447.mp3","name":"bsb0447_iphone_keys.mp3","license":"CC0 (BigSoundBank #447, Joseph Sardin)"}
 ]}
