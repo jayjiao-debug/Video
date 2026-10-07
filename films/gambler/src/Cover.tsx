@@ -37,11 +37,10 @@ export const Cover: React.FC<{ layout: Layout }> = ({ layout }) => {
   const wide = layout === 'wide';
   const w = wide ? 1440 : 1080, h = wide ? 1080 : 1440;
   // the card row and the lamp above it
-  const cx = wide ? 400 : 540, cy = wide ? 640 : 760, cw = wide ? 130 : 170, gap = wide ? 150 : 196;
+  const cx = wide ? 400 : 540, cy = wide ? 640 : 800, cw = wide ? 130 : 170, gap = wide ? 150 : 196;
   const tableY = cy - (wide ? 40 : 50);
   const tx = wide ? 1065 : 540;
   const lampY = wide ? 0 : -140; // tall: the shade sits above the frame, only the light comes in
-  const y = wide ? { kicker: 300, l1: 450, l2: 600, sub: 690, title: 860, series: 916 } : { kicker: 120, l1: 250, l2: 395, sub: 475, title: 1085, series: 1140 };
   return (
     <AbsoluteFill style={{ background: '#050403', overflow: 'hidden' }}>
       <style>{`
@@ -70,14 +69,11 @@ export const Cover: React.FC<{ layout: Layout }> = ({ layout }) => {
         })}
       </svg>
       {['押', '中', '了', '！'].map((s, i) => <Card key={i} x={cx + (i - 1.5) * gap} y={cy} w={cw} s={s} rot={(i - 1.5) * 2.5} />)}
-      {/* hook */}
-      <div style={{ position: 'absolute', left: tx - 460, width: 920, top: y.kicker - 24, textAlign: 'center', fontFamily: MONO, fontWeight: 700, fontSize: 22, letterSpacing: '0.42em', color: DIM }}>DOPAMINE · ANTICIPATION</div>
-      {['高潮没到，', '多巴胺先到了'].map((l, i) => (
-        <div key={i} className="cv-gold" style={{ position: 'absolute', left: tx - 470, width: 940, top: (i ? y.l2 : y.l1) - 120, textAlign: 'center', fontFamily: ZH, fontWeight: 900, fontSize: wide ? 100 : 114, lineHeight: 1.2, whiteSpace: 'nowrap' }}>{l}</div>
+      {/* just the title: wide = two stacked lines beside the cards, tall = one line above them */}
+      {(wide ? ['大脑是', '个赌徒'] : ['大脑是个赌徒']).map((l, i) => (
+        <div key={i} className="cv-gold" style={{ position: 'absolute', left: tx - 480, width: 960, top: (wide ? 300 + i * 190 : 170), textAlign: 'center', fontFamily: ZH, fontWeight: 900, fontSize: wide ? 170 : 140, lineHeight: 1.1, whiteSpace: 'nowrap' }}>{l}</div>
       ))}
-      <div style={{ position: 'absolute', left: tx - 460, width: 920, top: y.sub - 30, textAlign: 'center', fontFamily: SANS, fontWeight: 700, fontSize: 38, color: INK, textShadow: '0 2px 14px rgba(0,0,0,0.9)' }}>你的大脑，一直在赌下一拍</div>
-      <div style={{ position: 'absolute', left: tx - 460, width: 920, top: y.title - 50, textAlign: 'center', fontFamily: ZH, fontWeight: 900, fontSize: 60, color: INK, textShadow: '0 2px 18px rgba(0,0,0,0.9)' }}>《大脑是个赌徒》</div>
-      <div style={{ position: 'absolute', left: tx - 460, width: 920, top: y.series - 16, textAlign: 'center', fontFamily: MONO, fontWeight: 700, fontSize: 24, letterSpacing: '0.5em', color: GOLD }}>{JUNO.series}</div>
+      <div style={{ position: 'absolute', left: tx - 460, width: 920, top: wide ? 720 : 345, textAlign: 'center', fontFamily: MONO, fontWeight: 700, fontSize: wide ? 28 : 26, letterSpacing: '0.5em', color: DIM }}>{JUNO.series}</div>
       <AbsoluteFill style={{ background: 'radial-gradient(ellipse 80% 75% at 50% 50%, rgba(0,0,0,0) 55%, rgba(0,0,0,0.6) 100%)', pointerEvents: 'none' }} />
       <AbsoluteFill style={{ opacity: 0.06 }}><Img src={staticFile('grain0.png')} style={{ width: '100%', height: '100%' }} /></AbsoluteFill>
     </AbsoluteFill>
