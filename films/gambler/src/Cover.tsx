@@ -37,7 +37,7 @@ export const Cover: React.FC<{ layout: Layout }> = ({ layout }) => {
   const wide = layout === 'wide';
   const w = wide ? 1440 : 1080, h = wide ? 1080 : 1440;
   // the card row and the lamp above it
-  const cx = wide ? 400 : 540, cy = wide ? 640 : 800, cw = wide ? 130 : 170, gap = wide ? 150 : 196;
+  const cx = wide ? 400 : 540, cy = wide ? 640 : 1020, cw = wide ? 130 : 170, gap = wide ? 150 : 196;
   const tableY = cy - (wide ? 40 : 50);
   const tx = wide ? 1065 : 540;
   const lampY = wide ? 0 : -140; // tall: the shade sits above the frame, only the light comes in
@@ -71,9 +71,9 @@ export const Cover: React.FC<{ layout: Layout }> = ({ layout }) => {
       {['押', '中', '了', '！'].map((s, i) => <Card key={i} x={cx + (i - 1.5) * gap} y={cy} w={cw} s={s} rot={(i - 1.5) * 2.5} />)}
       {/* just the title: wide = two stacked lines beside the cards, tall = one line above them */}
       {(wide ? ['大脑是', '个赌徒'] : ['大脑是个赌徒']).map((l, i) => (
-        <div key={i} className="cv-gold" style={{ position: 'absolute', left: tx - 480, width: 960, top: (wide ? 300 + i * 190 : 170), textAlign: 'center', fontFamily: ZH, fontWeight: 900, fontSize: wide ? 170 : 140, lineHeight: 1.1, whiteSpace: 'nowrap' }}>{l}</div>
+        <div key={i} className="cv-gold" style={{ position: 'absolute', left: tx - 480, width: 960, top: (wide ? 300 + i * 190 : 560), textAlign: 'center', fontFamily: ZH, fontWeight: 900, fontSize: wide ? 170 : 140, lineHeight: 1.1, whiteSpace: 'nowrap' }}>{l}</div>
       ))}
-      <div style={{ position: 'absolute', left: tx - 460, width: 920, top: wide ? 720 : 345, textAlign: 'center', fontFamily: MONO, fontWeight: 700, fontSize: wide ? 28 : 26, letterSpacing: '0.5em', color: DIM }}>{JUNO.series}</div>
+      <div style={{ position: 'absolute', left: tx - 460, width: 920, top: wide ? 720 : 740, textAlign: 'center', fontFamily: MONO, fontWeight: 700, fontSize: wide ? 28 : 26, letterSpacing: '0.5em', color: DIM }}>{JUNO.series}</div>
       <AbsoluteFill style={{ background: 'radial-gradient(ellipse 80% 75% at 50% 50%, rgba(0,0,0,0) 55%, rgba(0,0,0,0.6) 100%)', pointerEvents: 'none' }} />
       <AbsoluteFill style={{ opacity: 0.06 }}><Img src={staticFile('grain0.png')} style={{ width: '100%', height: '100%' }} /></AbsoluteFill>
     </AbsoluteFill>
