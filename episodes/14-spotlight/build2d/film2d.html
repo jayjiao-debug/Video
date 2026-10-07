@@ -152,6 +152,106 @@ function drawTag(q,a,sc=1){if(a<=0)return;g.save();g.globalAlpha*=a;g.translate(
  else{g.strokeStyle=GOLD;g.lineWidth=3;rr(-w/2,-h/2,w,h,20);g.stroke();txt(q.s,0,10,`700 27px ${SANS}`,GOLD,'center');}
  g.restore();}
 
+/* ---------- owner-review alternatives (window.OPT = {s1,s2,s4,s5}: 'A'|'B'|'C') ---------- */
+const OPT=window.OPT||{};
+function prof(x,y,sc,col,dir=-1,sit=true){g.save();g.translate(x,y);g.scale(sc*(-dir),sc);g.fillStyle=col;
+ if(sit){rr(-48,-135,96,160,42);g.fill();rr(-120,-6,120,36,16);g.fill();rr(-128,0,32,105,14);g.fill();}else{rr(-50,-140,100,190,44);g.fill();rr(-40,40,34,150,14);g.fill();rr(6,40,34,150,14);g.fill();}
+ g.save();g.translate(-30,-60);g.rotate(-.35);rr(-80,-12,90,28,13);g.fill();g.restore();g.beginPath();g.ellipse(-8,-192,44,50,0,0,7);g.fill();g.beginPath();g.ellipse(-58,-182,13,12,0,0,7);g.fill();g.restore();}
+function thought(x,y,s,a=1){if(a<=0)return;g.save();g.globalAlpha*=a;g.translate(x,y);const sc=lerp(.6,1,eob(cl(a)));g.scale(sc,sc);g.font=`700 26px ${SANS}`;const w=g.measureText(s).width+36;g.fillStyle='rgba(246,236,214,.95)';rr(-w/2,-46,w,52,26);g.fill();g.beginPath();g.arc(-10,14,7,0,7);g.fill();g.beginPath();g.arc(-18,30,4,0,7);g.fill();txt(s,0,-12,`700 26px ${SANS}`,INK,'center');g.restore();}
+const pop=(t,t0,d=.3)=>eob(cl((t-t0)/d));
+const ALT1={
+ A(t){room(.5);g.save();g.globalAlpha=.4;drawPhone(t,{strip:1,read:52},lerp(.87,.72,seg(t,8.8,10)),0,-20);g.restore();
+  const C=['？？？','笑死','老师就在群里啊','已截图','他完了','勇士','哈哈哈哈哈哈','坐等王老师回复','建议连夜转学','社死现场','我录屏了','明天怎么面对老师','名场面','截图发年级群了','哈？','这是能说的吗'];
+  const FZ=bt(-3),tf=Math.min(t,FZ),fz=t>=FZ;
+  for(let i=0;i<64;i++){const sp0=8.8+i*.028;if(tf<sp0)continue;const s=C[(i*7)%C.length],big=i%6===0;const x=120+hsh(i,4)*1500-(tf-sp0)*(220+hsh(i,5)*200);const y=150+((i*5)%10)*76+hsh(i,6)*20;g.save();const pa=pop(tf,sp0,.18);g.globalAlpha=cl(pa*1.5);
+   txt(s,x,y,`${big?900:700} ${big?52:36}px ${SANS}`,fz?'#6a6a70':big?RED:i%3?'#f4efe6':GOLD,'left',fz?.7:.95,fz?0:big?14:0);g.restore();}
+  if(fz){g.fillStyle='rgba(6,8,13,.5)';g.fillRect(0,0,W,H);const a=pop(t,FZ+.05);g.save();g.translate(960,470);g.scale(a,a);g.fillStyle=PAPER;rr(-260,-120,520,240,20);g.fill();
+   const n=t<bt(-1)?'?':String(10+Math.floor(t*31)%80);txt(n+'%',0,48,`900 130px ${SERIF}`,INK,'center');txt('别人真的记得？',0,-70,`700 30px ${SERIF}`,'#6c5a3e','center');g.restore();}},
+ B(t){room(.25);const N=52,cx=960,cy=740,FZ=bt(-3);
+  for(let i=0;i<N;i++){const on=cl((t-8.8-((i*17)%N)*.022)/.12);const sx=80+i*(1760/(N-1)),sy=110+Math.sin(i*1.7)*30;const dim=t>FZ?1-.75*cl((t-FZ-((i*17)%N)*.012)/.2):1;
+   if(on>0){g.save();g.globalAlpha=on*dim;g.globalCompositeOperation='lighter';const gr=g.createLinearGradient(sx,sy,cx,cy);gr.addColorStop(0,'rgba(255,230,170,0)');gr.addColorStop(1,'rgba(255,230,170,.11)');g.fillStyle=gr;g.beginPath();g.moveTo(sx-3,sy);g.lineTo(sx+3,sy);g.lineTo(cx+70,cy+40);g.lineTo(cx-70,cy+40);g.closePath();g.fill();g.restore();}
+   if(t>FZ+((i*17)%N)*.012)txt('?',sx,sy+14,`900 34px ${SERIF}`,GOLD,'center',1,10);else{g.fillStyle=`rgba(255,236,190,${.9*on})`;g.beginPath();g.arc(sx,sy,6,0,7);g.fill();}}
+  const lit=Math.min(52,Math.floor(cl((t-8.8)/1.3)*52));const gl=t<FZ?lit/52:lerp(1,.4,cl((t-FZ)/.6));g.save();g.globalCompositeOperation='lighter';const sp=g.createRadialGradient(cx,cy,10,cx,cy,280);sp.addColorStop(0,`rgba(255,236,200,${.6*gl})`);sp.addColorStop(1,'rgba(255,236,200,0)');g.fillStyle=sp;g.fillRect(0,0,W,H);g.restore();
+  person(cx,cy+40,.8,'#141820');g.fillStyle='rgba(160,200,255,.9)';rr(cx-26,cy+30,52,80,8);g.fill();
+  txt(t<FZ?lit+'/52':'?/52',1500,560,`900 130px ${SERIF}`,t<FZ?RED:GOLD,'left',1,24);txt(t<FZ?'都在看你':'真的吗？',1505,630,`700 40px ${SERIF}`,'#e9dcc0');},
+ C(t){room(.3);const head=(x,dir,a)=>{if(a<=0)return;g.save();g.globalAlpha=a;g.translate(x,560);const s=lerp(.85,1,eob(a));g.scale(-dir*s,s);g.fillStyle='#2a2f3d';g.beginPath();g.ellipse(0,-40,250,280,0,0,7);g.fill();g.beginPath();g.ellipse(-245,-10,30,40,0,0,7);g.fill();rr(-120,200,240,200,60);g.fill();g.restore();};
+  const R=bt(-4);const la=cl((t-8.8)/.3),ra=cl((t-R)/.3);const lx=lerp(960,520,seg(t,R-.3,R+.3));head(lx,1,la);head(lerp(1700,1400,eob(ra)),-1,ra);
+  g.save();g.translate(lx-520,0);g.beginPath();g.ellipse(520,520,230,260,0,0,7);g.clip();const n=Math.min(14,Math.floor((t-8.8)/.11)+1);for(let i=0;i<n;i++){const x=330+(i%3)*130+((i/3|0)%2)*60,y=300+(i/3|0)*90;const a=pop(t,8.8+i*.11,.2);g.save();g.globalAlpha=a*(.55+.45*((i*7)%3)/2);g.fillStyle=GOLD;rr(x,y,170,60,12);g.fill();txt('这老师好无聊',x+14,y+40,`700 22px ${SANS}`,INK);g.restore();}g.restore();
+  txt('你的脑子',lx,190,`800 40px ${SERIF}`,GOLD,'center',la);
+  if(ra>0){g.save();g.globalAlpha=ra;g.translate(lerp(300,0,eob(ra)),0);g.beginPath();g.ellipse(1400,520,230,260,0,0,7);g.clip();[['今晚吃啥',1260,330],['作业还没写',1390,410],['游戏上分',1250,490],['刘海翘了',1420,560],['明天体育课',1280,640],['好困',1450,700]].forEach(([s,x,y],i)=>{const a=cl((t-R-.15-i*BT/2)/.2);if(a<=0)return;g.save();g.globalAlpha*=a;g.fillStyle='rgba(236,224,198,.92)';g.font=`700 26px ${SANS}`;const w=g.measureText(s).width+30;rr(x,y,w,48,24);g.fill();txt(s,x+15,y+34,`700 26px ${SANS}`,INK);g.restore();});
+   const ma=cl((t-bt(-1))/.3);g.globalAlpha=ra*ma*.5;g.fillStyle=GOLD;rr(1480,300,80,26,8);g.fill();g.restore();txt('同学的脑子',1400,190,`800 40px ${SERIF}`,'#e9dcc0','center',ra);txt('← 你那条',1580,318,`600 24px ${SANS}`,'#cdb98e','left',cl((t-bt(-1))/.3));}}
+};
+const ALT2={
+ A(t){g.save();g.globalCompositeOperation='lighter';const sp=g.createRadialGradient(560,560,20,560,560,360);sp.addColorStop(0,'rgba(255,230,180,.35)');sp.addColorStop(1,'rgba(255,230,180,0)');g.fillStyle=sp;g.fillRect(0,0,W,H);g.restore();
+  g.fillStyle='#2a2219';rr(300,800,520,40,8);g.fill();person(560,700,.9,'#1a1e28');
+  const ba=pop(t,bt(96));if(ba>0){g.save();g.translate(570,350);g.scale(ba,ba);card(-190,-55,380,110,[['🔒 我其实……',`800 40px ${SERIF}`,INK,70]],1,-.02);g.restore();}
+  g.fillStyle='#3b3226';rr(980,700,860,60,10);g.fill();const P=['70','68','71','66','72'];[1060,1220,1380,1540,1700].forEach((x,i)=>{prof(x,830,.7,'#36405a',-1);const tt=bt(108)+i*BT/2;const u=cl((t-tt)/.3);if(u<=0)return;g.save();g.translate(x-70,lerp(700,520,eob(u)));g.rotate(-.06+i*.03);g.scale(1,Math.abs(Math.cos((1-u)*Math.PI/2)));g.fillStyle='#f4ecdc';rr(-70,-60,140,110,10);g.fill();g.fillStyle='#8a6a3a';g.fillRect(-6,50,12,90);txt(P[i],0,20,`900 60px ${SERIF}`,'#b0201a','center');g.restore();});
+  const sa=cl((t-64.03)/.3);if(sa>0){g.save();g.globalAlpha=sa;g.fillStyle='rgba(10,10,14,.9)';rr(1080,140,620,170,20);g.fill();g.strokeStyle=GOLD;g.lineWidth=3;rr(1080,140,620,170,20);g.stroke();txt('你以为',1170,205,`700 30px ${SERIF}`,'#f6a35a','center');txt(t>bt(104)?'52':'?',1170,285,`900 76px ${SERIF}`,'#f6a35a','center');
+   const v=t<bt(108)+1.1?null:Math.round(lerp(52,69,seg(t,bt(108)+1.1,bt(108)+1.8)));txt('评委平均',1500,205,`700 30px ${SERIF}`,BLUE,'center');txt(v?String(v):'?',1500,285,`900 76px ${SERIF}`,BLUE,'center',1,18);g.restore();}
+  if(t>bt(104)&&t<bt(108))thought(470,480,'我估计…也就52',cl((t-bt(104))/.25));},
+ B(t){const ia=eob(cl((t-56.95)/.5));g.save();g.translate(960,lerp(1300,500,ia));g.rotate(-.03);g.fillStyle='#f6f1e4';g.shadowColor='rgba(0,0,0,.6)';g.shadowBlur=40;rr(-520,-400,1040,760,10);g.fill();g.shadowBlur=0;
+  g.strokeStyle='rgba(90,140,200,.25)';g.lineWidth=2;for(let y=-300;y<330;y+=56){g.beginPath();g.moveTo(-480,y);g.lineTo(480,y);g.stroke();}
+  txt('自我介绍 · 印象评分',-470,-330,`900 44px ${SERIF}`,INK);txt('姓名：你',300,-330,`600 30px ${SERIF}`,'#555');
+  const L1='大家好，我叫……',L2='说个糗事：我其实……';const n1=Math.floor(cl((t-57.4)/1.0)*L1.length),n2=Math.floor(cl((t-60.49)/.9)*L2.length);
+  txt(L1.slice(0,n1),-470,-250,`500 34px ${SERIF}`,'#334');txt(L2.slice(0,n2),-470,-194,`500 34px ${SERIF}`,'#334');const la=pop(t,bt(96));if(la>0){g.save();g.translate(30,-206);g.scale(la,la);g.fillStyle='rgba(0,0,0,.85)';rr(-150,-22,300,44,6);g.fill();txt('🔒 尴尬小秘密',0,10,`700 28px ${SANS}`,'#fff','center');g.restore();}
+  if(t>64.03)txt('自评：',-470,40,`600 34px ${SERIF}`,'#555');if(t>bt(104)){const r=cl((t-bt(104))/.5);g.save();g.beginPath();g.rect(-360,-60,180*r,160);g.clip();txt('52',-340,60,`500 90px ${SERIF}`,'#4a5a7a');g.restore();txt('（应该刚及格吧…）',-200,50,`500 28px ${SERIF}`,'#6a7a9a','left',cl((t-bt(105))/.3));}
+  if(t>bt(108)){const r=cl((t-bt(108))/.45);g.strokeStyle='#d0261c';g.lineWidth=7;g.beginPath();g.ellipse(250,90,170,130,-.1,-Math.PI/2,-Math.PI/2+Math.PI*2*r);g.stroke();const s=pop(t,bt(109),.3);if(s>0){g.save();g.translate(250,140);g.scale(lerp(1.6,1,s),lerp(1.6,1,s));txt('69',0,0,`900 160px ${SERIF}`,'#d0261c','center',cl(s*2));g.restore();}
+   txt('别人打的  +17',250,250,`700 34px ${SERIF}`,'#d0261c','center',cl((t-bt(111))/.3));}
+  g.restore();},
+ C(t){const x=960,top=170,bot=800,lv=v=>bot-(bot-top-40)*v/100;const ia=cl((t-56.95)/.4);g.save();g.globalAlpha*=ia;
+  g.fillStyle='rgba(240,230,210,.12)';rr(x-50,top,100,bot-top,50);g.fill();g.beginPath();g.arc(x,bot+40,90,0,7);g.fill();
+  for(let v=0;v<=100;v+=10){g.fillStyle='#cdb98e';g.fillRect(x+60,lv(v)-2,v%50?20:40,4);if(v%50===0)txt(v+(v===50?' · 普通':''),x+120,lv(v)+12,`600 30px ${SERIF}`,'#cdb98e');}
+  const m=t<bt(108)?3:lerp(3,69,eob(cl((t-bt(108))/1.0)));g.fillStyle='#e8604a';g.shadowColor='#ff7a5a';g.shadowBlur=30;rr(x-30,lv(m),60,bot-lv(m)+40,30);g.fill();g.beginPath();g.arc(x,bot+40,70,0,7);g.fill();g.shadowBlur=0;txt('🔒',x,bot+62,`60px ${SANS}`,'#fff','center');
+  const ta=pop(t,bt(96));if(ta>0){g.save();g.translate(x+190,bot+40);g.scale(ta,ta);g.fillStyle='#d24a3a';rr(-10,-26,240,52,26);g.fill();txt('尴尬小秘密',110,10,`700 28px ${SANS}`,'#fff','center');g.restore();}
+  if(t>bt(104)){const r=cl((t-bt(104))/.4);g.setLineDash([12,10]);g.strokeStyle='#f6a35a';g.lineWidth=4;g.beginPath();g.moveTo(x-300,lv(52));g.lineTo(lerp(x-300,x-40,r),lv(52));g.stroke();g.setLineDash([]);txt('你以为 52',x-320,lv(52)+14,`900 50px ${SERIF}`,'#f6a35a','right',r);}
+  if(t>bt(108)+.6){txt('别人给的 '+Math.round(Math.min(69,m)),x-320,lv(69)+14,`900 64px ${SERIF}`,'#ff8a6a','right',cl((t-bt(108)-.6)/.3),20);}
+  if(t>bt(111)){const s=pop(t,bt(111));g.save();g.translate(x+260,lv(69)-10);g.scale(s,s);txt('+17',0,0,`900 90px ${SERIF}`,GOLD,'left',1,24);g.restore();}
+  g.restore();}
+};
+const ALT4={
+ A(t){g.fillStyle='#070a14';g.fillRect(0,0,W,H);const z=lerp(3.6,1,seg(t,D2,D2+2.6)),fx=320+2*168+64,fy=190+3*150+50;g.save();g.translate(lerp(960,fx,1-(z-1)/2.6*0)+0,0);g.restore();
+  g.save();g.translate(960,540);g.scale(z,z);g.translate(-lerp(fx,960,(3.6-z)/2.6),-lerp(fy,560,(3.6-z)/2.6));
+  for(let i=0;i<70;i++){g.fillStyle=`rgba(255,255,255,${.2+.5*hsh(i,3)})`;g.fillRect(hsh(i,1)*W,hsh(i,2)*130,2,2);}
+  g.fillStyle='#141824';g.fillRect(260,140,1400,960);for(let r=0;r<5;r++)for(let c=0;c<8;c++){const x=320+c*168,y=190+r*150,me=r===3&&c===2;const d=Math.hypot(c-2,r-3);const on=me||(hsh(r,c)>.12&&t>D2+.2+d*BT/2);
+   g.fillStyle=on?(me?'#ffd98a':['#f2c27a','#e8b06a','#a8c8f0','#f6d6a0'][(r+c)%4]):'#0b0e16';g.fillRect(x,y,128,100);
+   if(on){g.fillStyle='rgba(20,22,30,.85)';g.beginPath();g.ellipse(x+64,y+58,16,18,0,0,7);g.fill();rr(x+38,y+74,52,40,16);g.fill();g.fillStyle='rgba(150,190,255,.9)';g.fillRect(x+56,y+80,16,12);}
+   if(me){g.strokeStyle=GOLD;g.lineWidth=5;g.strokeRect(x-6,y-6,140,112);txt('你',x+64,y-18,`900 34px ${SERIF}`,GOLD,'center');}}
+  [[3,0,'我今天是不是很尬'],[6,1,'他为什么不回我'],[1,4,'刘海好丑'],[5,3,'PPT讲砸了'],[7,4,'我笑太大声了'],[0,1,'考砸了咋办']].forEach(([c,r,s],i)=>thought(320+c*168+64,190+r*150-6,s,cl((t-bt2(4)-i*BT/2)/.25)));g.restore();},
+ B(t){room(.25);const S=['我刚才是不是说错话了','刘海翘了一整天','他为什么不回我','体重又涨了','PPT讲砸了','我笑太大声了','鞋子好旧','迟到被看见了','发错表情包','声音好难听','痘痘好明显','那条群消息'];
+  for(let i=0;i<12;i++){const c=i%4,r=i/4|0,x=170+c*410,y=150+r*250,me=i===11;const a=pop(t,D2+i*BT/2,.3);if(a<=0)continue;g.save();g.translate(x+185,y+110);g.scale(a,a);g.translate(-x-185,-y-110);
+   g.fillStyle=me?'rgba(246,207,120,.18)':'rgba(240,230,210,.07)';rr(x,y,370,220,26);g.fill();if(me){g.strokeStyle=GOLD;g.lineWidth=4;rr(x,y,370,220,26);g.stroke();}
+   g.fillStyle=AV[i%AV.length];g.beginPath();g.arc(x+70,y+150,46,0,7);g.fill();g.save();g.beginPath();g.arc(x+70,y+150,46,0,7);g.clip();g.fillStyle='rgba(0,0,0,.35)';g.beginPath();g.ellipse(x+70,y+140,18,20,0,0,7);g.fill();rr(x+40,y+164,60,50,20);g.fill();g.restore();
+   const s=S[i].length>9?S[i].slice(0,9):S[i];g.font=`700 26px ${SANS}`;const w=g.measureText(s).width+30;g.fillStyle=me?GOLD:'rgba(246,236,214,.95)';rr(x+120,y+40,w,60,28);g.fill();txt(s,x+135,y+80,`700 26px ${SANS}`,INK);
+   txt(me?'你':'同学 '+(i+1),x+130,y+170,`600 24px ${SANS}`,me?GOLD:'#cdb98e');g.restore();}},
+ C(t){room(.15);const z=lerp(2.4,1,seg(t,D2,D2+2.6));g.save();g.translate(960,1080);g.scale(z,z);g.translate(-960,-1080);
+  for(let r=0;r<4;r++)for(let c=0;c<9-r%2;c++){const sc=.5+r*.14,x=200+c*(1520/(8-r%2))+(r%2)*60,y=250+r*170;const on=cl((t-D2-.3-(3-r)*BT)/.25);
+   if(on>0){g.save();g.globalAlpha=on;g.globalCompositeOperation='lighter';const sp=g.createRadialGradient(x,y-60*sc,4,x,y-60*sc,150*sc);sp.addColorStop(0,'rgba(255,224,170,.42)');sp.addColorStop(1,'rgba(255,224,170,0)');g.fillStyle=sp;g.beginPath();g.arc(x,y-60*sc,150*sc,0,7);g.fill();g.restore();}
+   g.fillStyle='#2a2019';rr(x-70*sc,y+30*sc,140*sc,70*sc,12*sc);g.fill();phoneGlow(x,y,sc,on);person(x,y,sc,'#2a3040',{down:1});}
+  const sp=g.createRadialGradient(960,1060,10,960,1060,300);sp.addColorStop(0,'rgba(255,240,210,.5)');sp.addColorStop(1,'rgba(255,240,210,0)');g.fillStyle=sp;g.fillRect(0,700,W,380);person(960,1150,1.2,'#0c0e14');g.restore();
+  txt('台下，没人在看台上',960,170,`800 46px ${SERIF}`,GOLD,'center',cl((t-bt2(5))/.3),14);}
+};
+const ALT5={
+ A(t){const on=t>bt2(18);const w=on?seg(t,bt2(18),bt2(18)+.9):0;room(lerp(.2,1,w));g.fillStyle=`rgba(255,196,130,${.16*w})`;g.fillRect(0,0,W,H);
+  if(w>0){g.save();g.globalCompositeOperation='lighter';const L=g.createRadialGradient(960,180,20,960,180,900);L.addColorStop(0,`rgba(255,214,150,${.4*w})`);L.addColorStop(1,'rgba(255,214,150,0)');g.fillStyle=L;g.fillRect(0,0,W,H);g.restore();}
+  g.fillStyle='#e0b070';g.beginPath();g.moveTo(900,90);g.lineTo(1020,90);g.lineTo(1060,170);g.lineTo(860,170);g.closePath();g.fill();
+  if(!on){g.save();g.globalCompositeOperation='lighter';const s=g.createRadialGradient(760,640,10,760,640,260);s.addColorStop(0,'rgba(255,255,255,.55)');s.addColorStop(1,'rgba(255,255,255,0)');g.fillStyle=s;g.fillRect(0,0,W,H);g.restore();}
+  g.fillStyle='#5a3a24';rr(520,700,880,40,10);g.fill();const fc=on?'#3a3040':'#16161c';prof(560,860,.8,fc,1);prof(1360,860,.8,fc,-1);prof(760,880,.85,on?'#4a3a3a':'#2a2630',1);prof(1160,880,.85,fc,-1);
+  thought(760,540,'哈哈哈',cl((t-bt2(19))/.25));thought(1160,540,'然后呢然后呢',cl((t-bt2(20))/.25));g.fillStyle='#111';rr(930,680,90,22,6);g.fill();
+  txt('没那么多人在看你',W/2,330,`900 84px ${SERIF}`,'#fff4dc','center',cl((t-bt2(21))/.4),20);if(t>=bt2(18)&&t<bt2(18)+.06)return .2;},
+ B(t){g.fillStyle='#d9d2c4';g.fillRect(0,0,W,H);const k=t-99;for(let i=0;i<46;i++){const an=hsh(i,7)*7,sp=60+hsh(i,6)*60;const x=((hsh(i,9)*W+Math.cos(an)*sp*k)%W+W)%W,y=((hsh(i,8)*H*.9+Math.sin(an)*sp*k)%H+H)%H;g.save();g.translate(x,y);g.rotate(an);g.fillStyle=['#4a5a7a','#7a4a4a','#5a7a5a','#7a6a4a','#4a4a5a'][i%5];g.beginPath();g.ellipse(0,0,26,18,0,0,7);g.fill();g.fillStyle='rgba(0,0,0,.3)';g.beginPath();g.arc(6,0,12,0,7);g.fill();g.restore();}
+  const ca=1-cl((t-bt2(19))/1.2);if(ca>0){const sp=g.createRadialGradient(760,520,10,760,520,220);sp.addColorStop(0,`rgba(255,255,240,${.95*ca})`);sp.addColorStop(.8,`rgba(255,250,220,${.5*ca})`);sp.addColorStop(1,'rgba(255,250,220,0)');g.fillStyle=sp;g.beginPath();g.arc(760,520,220,0,7);g.fill();}
+  const m=seg(t,bt2(18),bt2(18)+2.0);const yx=lerp(760,1250,m),yy=520+Math.sin(m*3)*10;for(let j=0;j<6;j++){const f=m-j*.05;if(f<=0)continue;g.fillStyle=`rgba(80,60,40,${.25-.04*j})`;g.beginPath();g.ellipse(lerp(760,1250,f)-20,yy+(j%2?10:-10),10,6,0,0,7);g.fill();}
+  g.save();g.translate(yx,yy);g.fillStyle=GOLD;g.beginPath();g.ellipse(0,0,30,20,0,0,7);g.fill();g.fillStyle='rgba(0,0,0,.3)';g.beginPath();g.arc(8,0,13,0,7);g.fill();g.restore();txt('你',yx,yy-50,`900 40px ${SERIF}`,'#6a4a10','center');
+  txt('没那么多人在看你',W/2,200,`900 84px ${SERIF}`,'#4a3010','center',cl((t-bt2(21))/.4));},
+ C(t){const k=seg(t,99.47,101.6);room(1);const sk=g.createLinearGradient(0,140,0,620);sk.addColorStop(0,'#ffcf8a');sk.addColorStop(1,'#ffe9c4');g.fillStyle=sk;g.fillRect(1160,140,520,480);g.fillStyle='#ffd27a';g.beginPath();g.arc(1420,lerp(700,520,k),90,0,7);g.fill();g.fillStyle='#ffe9c4';g.fillRect(1160,620,520,10);g.strokeStyle='#5a4030';g.lineWidth=14;g.strokeRect(1150,130,540,500);g.beginPath();g.moveTo(1420,130);g.lineTo(1420,630);g.stroke();
+  g.fillStyle=`rgba(255,210,150,${.14*k})`;g.fillRect(0,0,W,H);g.fillStyle='#4a3424';g.fillRect(0,820,W,260);
+  const lit=t>bt2(18);g.save();const sc=.5;g.translate(500,180);g.scale(sc,sc);g.fillStyle='#0d0f14';rr(0,0,PW,PH,70);g.fill();rr(18,18,PW-36,PH-36,56);g.clip();
+   if(!lit){g.fillStyle='#020304';g.fillRect(0,0,PW,PH);}else{g.fillStyle='#ededed';g.fillRect(0,0,PW,PH);txt('07:32',58,62,`600 26px ${SANS}`,'#111');g.fillStyle='#f7f7f7';g.fillRect(0,80,PW,110);txt('新室友 · 小林',PW/2,135,`700 34px ${SANS}`,'#111','center');
+    const m='你早点睡～晚安';g.fillStyle=GOLD;rr(PW-90-m.length*30-40,260,m.length*30+40,74,16);g.fill();txt(m,PW-110,308,`500 30px ${SANS}`,INK,'right');
+    [['昨晚秒睡了哈哈哈😂',380,470,bt2(19)],['今天一起去食堂？',480,420,bt2(20)]].forEach(([s,y,w,tt])=>{const a=pop(t,tt,.3);if(a<=0)return;g.save();g.globalAlpha=cl(a*2);g.translate(0,lerp(30,0,a));g.fillStyle='#fff';rr(110,y,w,74,16);g.fill();txt(s,130,y+48,`500 30px ${SANS}`,'#111');g.restore();});}g.restore();
+  txt('第二天早上',820,300,`700 40px ${SERIF}`,'#6a4a2a','left',cl((t-99.6)/.4));txt('她回了',820,370,`900 70px ${SERIF}`,'#b0501a','left',cl((t-bt2(19))/.3));}
+};
+
 /* ---------- scenes ---------- */
 const $=id=>document.getElementById(id);
 function subtitle(t){const l=LINES.find(l=>t>=l[0]&&t<l[1]);$('sub').innerHTML=l?l[2].replace(/\[(.+?)\]/g,'<b>$1</b>'):'';}
@@ -165,7 +265,7 @@ window.renderAt=function(t){subtitle(t);chap(t);let fl=0;$('plaque').style.opaci
   const s={off:t>=8.8,refl:cl((t-9)/.8),alarm:t<.3?0:Math.min(1,(t-.3)/.12)*(t<1.4?(.65+.35*Math.abs(Math.sin(t*9))):1-cl((t-1.4)/.3)),menu:cl((t-1.3)/.15)*(1-cl((t-2.3)/.15)),tap:t>1.85,
    toast:cl((t-2.15)/.12)*(1-cl((t-3.6)/.3)),shake:Math.exp(-Math.max(0,t-2.15)*5),strip:cl((t-3.1)/.3),read:t<3.3?0:t<5.9?lerp(0,19,seg(t,3.3,5.8)):lerp(19,52,seg(t,5.9,7.4))};
   const out=seg(t,2.9,4.0);let scale=lerp(1.12,.82,out)*lerp(1,1.06,seg(t,5.9,8.6)),ox=lerp(-20,0,out),oy=lerp(-60,-20,out);if(t>=8.8){scale=lerp(.87,.95,seg(t,8.8,12.4));oy=lerp(-20,-60,seg(t,8.8,12.4));}
-  drawPhone(t,s,scale,ox,oy);
+  if(OPT.s1&&t>=8.8&&t<12.4){ALT1[OPT.s1](t);}else drawPhone(t,s,scale,ox,oy);
   if(s.strip>0&&t<8.8){txt(Math.round(s.read)+'/52',1260,420,`900 150px ${SERIF}`,s.read>=52?RED:GOLD,'left',s.strip,24);txt(s.read>=52?'全部已读':'已读',1270,490,`500 40px ${SERIF}`,'#cdb98e','left',s.strip);}
   if(t>=8.8&&t<8.86)fl=.25;
   const po=t<12.4?0:cl((t-12.4)/.08)*(1-cl((t-15.2)/.24));$('plaque').style.opacity=po;const sh=t<12.4?0:Math.exp(-(t-12.4)*6)*8;$('plaque').style.transform=`translate(${Math.sin(t*90)*sh}px,${Math.cos(t*70)*sh}px) scale(${1+.012*B.pd})`;if(t>=12.4&&t<12.5)fl=.5;}
@@ -219,7 +319,8 @@ window.renderAt=function(t){subtitle(t);chap(t);let fl=0;$('plaque').style.opaci
  else if(t<75.17){room(.4);const zt=t-bt(116);
   const aud=(lit)=>[[300,1060],[700,1080],[1220,1080],[1620,1060]].forEach(([x,y])=>person(x,y,1.05,'#343b4d',{lit,glowCol:GOLD}));
   const ro=1-cl((t-bt(114))/.5);
-  if(ro>0){g.save();g.globalAlpha=ro;
+  if(ro>0&&OPT.s2){g.save();g.globalAlpha=ro;ALT2[OPT.s2](t);g.restore();}
+  else if(ro>0){g.save();g.globalAlpha=ro;
    if(t>bt(96)){const a=eob(cl((t-bt(96))/.35));g.save();g.translate(960,680);g.scale(a,a);g.fillStyle=PAPER;rr(-300,-70,600,140,40);g.fill();g.beginPath();g.moveTo(-200,70);g.lineTo(-160,120);g.lineTo(-130,70);g.fill();txt('🔒 一个尴尬的小秘密',0,20,`800 50px ${SERIF}`,INK,'center');g.restore();}
    const rx=360,rw=1200,ry=330,ra=cl((t-57.2)/.4);g.globalAlpha=ro*ra;g.fillStyle='rgba(240,230,210,.22)';rr(rx,ry,rw,16,8);g.fill();
    [[0,'0'],[50,'50 · 普通'],[100,'100']].forEach(([v,l])=>{g.fillStyle='#cdb98e';g.fillRect(rx+rw*v/100-2,ry-22,4,60);txt(l,rx+rw*v/100,ry+80,`500 30px ${SERIF}`,'#cdb98e','center');});
@@ -265,6 +366,7 @@ window.renderAt=function(t){subtitle(t);chap(t);let fl=0;$('plaque').style.opaci
    if(bl>0){const h=(H/2+70)*bl-70;g.fillStyle='#000';g.beginPath();g.moveTo(-10,-10);g.lineTo(W+10,-10);g.lineTo(W+10,h);g.quadraticCurveTo(W/2,h+140*bl,-10,h);g.closePath();g.fill();
     g.beginPath();g.moveTo(-10,H+10);g.lineTo(W+10,H+10);g.lineTo(W+10,H-h);g.quadraticCurveTo(W/2,H-h-140*bl,-10,H-h);g.closePath();g.fill();}}}
  /* S8 91.37-95.42: drop — pull back: everyone in their own spotlight, on their own phone */
+ else if(t<95.42&&OPT.s4){ALT4[OPT.s4](t);if(t<D2+.12)fl=.3;}
  else if(t<95.42){room(.2);const k=seg(t,91.37,94.5);const N=40,cols=10;const sc=lerp(1.6,1,k);g.save();g.translate(W/2,H/2-40);g.scale(sc,sc);g.translate(-W/2,-(H/2-40));
   for(let i=0;i<N;i++){const cx=240+(i%cols)*160,cy=200+Math.floor(i/cols)*190;const on=cl((t-91.4-((i*7)%N)*.02)/.2)*(1+.25*B.p);
    g.save();g.globalCompositeOperation='lighter';const sp=g.createRadialGradient(cx,cy,4,cx,cy,90);sp.addColorStop(0,`rgba(255,224,170,${.35*on})`);sp.addColorStop(1,'rgba(255,224,170,0)');g.fillStyle=sp;g.beginPath();g.arc(cx,cy,90,0,7);g.fill();g.restore();
@@ -274,11 +376,13 @@ window.renderAt=function(t){subtitle(t);chap(t);let fl=0;$('plaque').style.opaci
  else if(t<99.47){room(.6);const k=seg(t,95.6,98.3);const s={strip:0,read:0,more:MORE,scroll:lerp(0,1300,k)};drawPhone(t,s,.82,0,-20);
   txt('↑ 你的那条，早被刷上去了',1260,420,`700 44px ${SERIF}`,GOLD,'left',cl((t-bt2(10))/.3),16);}
  /* S10 99.47-103.52: lights warm up, phone down */
+ else if(t<103.52&&OPT.s5){const r=ALT5[OPT.s5](t);if(r)fl=r;}
  else if(t<103.52){const k=seg(t,99.47,101.7);room(1);g.fillStyle=`rgba(255,200,140,${.10*k})`;g.fillRect(0,0,W,H);const s={off:true,refl:1};drawPhone(t,s,lerp(.82,.6,k),0,lerp(-20,260,k),lerp(-.025,-.25,k));
   txt('没那么多人在看你',W/2,360,`900 96px ${SERIF}`,GOLD,'center',cl((t-bt2(18))/.4),26);}
  else{$('end').style.opacity=cl((t-103.52)/.4);}
  const v=g.createRadialGradient(W/2,H/2,H*.4,W/2,H/2,H*1.0);v.addColorStop(0,'rgba(0,0,0,0)');v.addColorStop(1,'rgba(0,0,0,.6)');g.fillStyle=v;g.fillRect(0,0,W,H);
  const b=g.createLinearGradient(0,H,0,H-300);b.addColorStop(0,'rgba(0,0,0,.75)');b.addColorStop(1,'rgba(0,0,0,0)');g.fillStyle=b;g.fillRect(0,H-300,W,300);
+ if(window.LABEL){g.save();g.fillStyle='rgba(0,0,0,.75)';rr(30,26,760,74,14);g.fill();txt(window.LABEL,56,76,`800 40px ${SERIF}`,GOLD);g.restore();}
  $('flash').style.opacity=fl;};
 window.READY=true;
 </script></body></html>
