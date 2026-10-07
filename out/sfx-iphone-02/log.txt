@@ -1,0 +1,6 @@
+token present: yes
+url https://bigsoundbank.com/UPLOAD/mp3/0448.mp3
+  saved out/files/bsb0448_iphone_camera.mp3 0.2 MB
+url https://bigsoundbank.com/UPLOAD/mp3/1035.mp3
+  saved out/files/bsb1035_iphone_vibrate_hand.mp3 0.8 MB
+done
