@@ -328,7 +328,8 @@ const P4=t=>{/* 1:31 everyone busy with themselves; your banner swiped away on e
 const P5=t=>{/* 1:39 next morning: you just talk in the group again */
  const tr=seg(t,98.9,100.2),k=seg(t,98.9,100.6);room(lerp(.6,1,tr));g.fillStyle=`rgba(255,200,140,${(.08+.10*k)*tr})`;g.fillRect(0,0,W,H);g.save();g.globalCompositeOperation='lighter';const lx=lerp(2600,1500,tr),L=g.createRadialGradient(lx,200,20,lx,200,1100);L.addColorStop(0,`rgba(255,214,150,${.25*k})`);L.addColorStop(1,'rgba(255,214,150,0)');g.fillStyle=L;g.fillRect(0,0,W,H);g.restore();
  const Q='早！今天谁带伞了？☔',sent=bt2(18);
- phoneAt(lerp(960,640,tr),lerp(573,505,tr),lerp(.82,.72,tr),-.025,()=>{g.fillStyle='#ededed';g.fillRect(0,0,PW,PH);sbar('07:40');g.fillStyle='#f7f7f7';g.fillRect(0,80,PW,96);txt('高三(2)班 班级群（52）',PW/2,140,`700 34px ${SANS}`,'#111','center');
+ const r0=-.025,d1=Math.sin(t*1.3)*6,d2=Math.cos(t*1.1)*5,cx0=W/2-PW*.82/2+d1+(PW/2*Math.cos(r0)-PH/2*Math.sin(r0))*.82,cy0=40+d2+(PW/2*Math.sin(r0)+PH/2*Math.cos(r0))*.82;
+ phoneAt(lerp(cx0,640,tr),lerp(cy0,505,tr),lerp(.82,.72,tr),r0,()=>{g.fillStyle='#ededed';g.fillRect(0,0,PW,PH);sbar('07:40');g.fillStyle='#f7f7f7';g.fillRect(0,80,PW,96);txt('高三(2)班 班级群（52）',PW/2,140,`700 34px ${SANS}`,'#111','center');
   const up=0;
   g.save();g.beginPath();g.rect(0,176,PW,PH-176-170);g.clip();g.translate(0,-up);let y=220;
   [['王老师',AV[0],'报告别忘了写名字'],['小米',AV[2],'今晚月亮好圆 🌕']].forEach(([n,c,s])=>{cbub(0,y,n,c,s,false);y+=130;});txt('07:38',PW/2,y+4,`500 22px ${SANS}`,'#999','center');y+=30;
