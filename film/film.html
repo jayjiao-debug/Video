@@ -27,7 +27,7 @@ canvas{display:block}
 #flash{position:absolute;inset:0;background:#fff;opacity:0}
 #doc{position:absolute;left:150px;top:300px;width:620px;padding:40px 54px;background:#e9e0cc;color:#2b241a;box-shadow:0 20px 60px rgba(0,0,0,.6);transform:rotate(-2deg);opacity:0}
 #doc .a{font-size:34px}#doc .b{font-size:104px;font-weight:900;margin:10px 0 8px}#doc .c{font-size:32px;color:#6c5a3e}
-#vig{position:absolute;inset:0;background:radial-gradient(ellipse at center,rgba(0,0,0,0) 55%,rgba(0,0,0,.55) 100%)}
+#vig{position:absolute;inset:0;background:radial-gradient(ellipse at center,rgba(0,0,0,0) 55%,rgba(0,0,0,.55) 100%),linear-gradient(to top,rgba(0,0,0,.45) 0,rgba(0,0,0,.28) 150px,rgba(0,0,0,0) 260px)}
 </style></head><body>
 <div id="wrap"><div id="three"></div>
 <div class="ov"><div id="vig"></div><div id="flash"></div><div id="chap"><span></span></div><div id="mark">◆ Juno · VIBE知识大赏</div><div id="stat"></div><div id="doc"><div class="a">心理学家</div><div class="b">查帕尼斯</div><div class="c">1943 · 被派去调查</div></div><div id="sub"></div>
@@ -164,7 +164,7 @@ rodC.add(absorber,gap,tip);chan.add(rodC);sCut.background=new THREE.Color(0x0b10
 const glow=new THREE.PointLight(0xff6a20,0,8,1.4);glow.position.set(0,-3.3,1.2);sCut.add(glow);
 const zoneB=new THREE.Mesh(new THREE.PlaneGeometry(4,1.6),new THREE.MeshBasicMaterial({color:0xff6a20,transparent:true,opacity:0,toneMapped:false,blending:THREE.AdditiveBlending}));zoneB.position.set(0,-3.2,.62);chan.add(zoneB);
 const lbl=(t,c,x,y,s=.5)=>{const m=label3d(t,{size:70,color:c,w:768,h:160});m.scale.setScalar(s);m.position.set(x,y,.7);chan.add(m);return m;};
-const lAbs=lbl('吸收体（刹车）','#f4efe6',2.2,.05,.42),lTip=lbl('石墨端头','#f4efe6',2.2,-.8,.42),lWat=lbl('水','#8fc4ff',-2.2,-.5,.45),lCore=lbl('堆芯底部','#cdb98e',-2.2,-1.3,.42);
+const lAbs=lbl('吸收体（刹车）','#f4efe6',1.85,-.25,.38),lTip=lbl('石墨端头','#f4efe6',2.2,-.8,.42),lWat=lbl('水','#8fc4ff',-2.2,-.5,.45),lCore=lbl('堆芯底部','#cdb98e',-2.2,-1.3,.42);
 const brake=lbl('刹车 →','#f4efe6',-.85,.5,.55),gas=lbl('油门？','#ff7a3a',1.05,.5,.55);brake.visible=gas.visible=false;
 sCut.add(new THREE.AmbientLight(0x405060,1.2));const rim=new THREE.DirectionalLight(0x8fb4ff,1.2);rim.position.set(-4,2,-3);sCut.add(rim);const cutKey=new THREE.DirectionalLight(0xffd9a8,1.6);cutKey.position.set(3,5,6);sCut.add(cutKey);
 const bubbles=new THREE.InstancedMesh(new THREE.SphereGeometry(.05,8,6),new THREE.MeshBasicMaterial({color:0xbfe1ff,transparent:true,opacity:.8}),60);chan.add(bubbles);
@@ -299,14 +299,14 @@ window.renderAt=function(t){
   let p0,p1;if(t<30.6){const k=seg(t,27.5,30.6);p0=V(0,lerp(4.6,3.6,k),lerp(5.2,4.4,k));p1=V(0,.3,0);$('stat').innerHTML='C-47<small>着陆后误收 0 次</small>';}
   else if(t<33.9){const k=seg(t,30.6,33.9);p0=vl(V(0,3.6,4.4),V(-2,1.4,1.7),k);p1=vl(V(0,.3,0),V(-2,.55,0),k);}
   else if(t<37.2){const k=seg(t,33.9,37.2);p0=vl(V(-2,1.4,1.7),V(2,1.6,2),k);p1=vl(V(-2,.55,0),V(2,.4,0),k);}
-  else{const k=seg(t,37.2,39.2);p0=vl(V(2,1.6,2),V(-2,1.05,1.2),k);p1=vl(V(2,.4,0),V(-2,.62,0),k);}
+  else{const k=seg(t,37.2,39.2);p0=vl(V(2,1.6,2),V(-2,1.25,1.6),k);p1=vl(V(2,.4,0),V(-2,.62,0),k);}
   cam.position.copy(p0);cam.lookAt(p1);
   const g=ease(cl((t-38.2)/1.2));wheel.scale.setScalar(Math.max(.001,g));wedge.scale.setScalar(Math.max(.001,g));
   tA1.visible=tA2.visible=true;tg1.userData.arm.rotation.x=t>41?.6*ease(cl((t-41)/.3)):0;tg2.userData.arm.rotation.x=t>41.8?.6*ease(cl((t-41.8)/.3)):0;
   ckLamp.intensity=50+cl((t-42.7)/.8)*900;if(t>42.9)fl=cl((t-42.9)/.6),flc='#fff1d8';if(t>=37.2)$('stat').innerHTML='改个形状<small>一摸就分清</small>';}
  // ---------- 43.5-64.6 Hawaii desk, one continuous truck
  else if(t<64.6){scene=sDesk;const xs=[[43.5,0],[48.6,0],[51.9,4],[55,8],[58.4,12.4],[61.5,16.5],[64.6,20.5]];
-  let x=0;for(let i=1;i<xs.length-1;i++){if(t>=xs[i][0]&&t<xs[i+1][0]){x=lerp(xs[i][1],xs[i+1][1],ease(Math.min(1,(t-xs[i][0])/0.9)));}}
+  let x=0;for(let i=1;i<xs.length-1;i++){if(t>=xs[i][0]&&t<xs[i+1][0]){x=lerp(xs[i][1],xs[i+1][1],ease(Math.min(1,(t-xs[i][0])/1.7)));}}
   if(t<48.6){const k=seg(t,43.5,48.6);cam.position.set(lerp(1.2,.15,k),lerp(3.2,1.55,k),lerp(3.2,1.25,k));cam.lookAt(0,0,.6);screen.material.opacity=cl((t-44)/.25);phoneGlow.intensity=cl((t-44)/.25)*6;
    if(t<43.9)fl=1-(t-43.5)/.4,flc='#fff1d8';$('stat').innerHTML='08:07<small>2018.1.13 · 夏威夷</small>';}
   else{const bump=(v,c,w)=>{const d=Math.abs(v-c)/w;return d>=1?0:.5+.5*Math.cos(d*Math.PI);};const wm=bump(x,12.4,2.2),wc=bump(x,16.5,2.2);
@@ -338,7 +338,7 @@ window.renderAt=function(t){
    $('stat').innerHTML='似乎<small>被忘了</small>';}
   }
  // ---------- 87.6-96.4 dioramas
- else if(t<96.4){scene=sDio;const k=seg(t,87.6,96.4);const o=seg(t,87.6,90.3);cam.position.copy(V(4,2.2,3.2).lerp(V(0,3.4,13),o));cam.lookAt(V(4,.3,0).lerp(V(0,.4,0),o));
+ else if(t<96.4){scene=sDio;const k=seg(t,87.6,96.4);const o=seg(t,87.6,90.3);const dr=cl((t-90.3)/6.1);cam.position.copy(V(4,2.2,3.2).lerp(V(0,3.4,13),o)).add(V(Math.sin(dr*1.2)*1.8,-.3*dr,-1.6*dr));cam.lookAt(V(4,.3,0).lerp(V(0,.4,0),o));
   const hit=t>=90.5?Math.exp(-(t-90.5)*3):0;dl.forEach((L,i)=>L.intensity=45+(t>=90.5?20*Math.sin(t*3+i)+140*hit:0));if(t>=90.5&&t<90.62)fl=.35,flc='#fff1d8';
   const loop=(t*1.6)%1;const lv=t>93.1?0:(loop<.5?.6*ease(loop*2):.6*(1-ease(loop*2-1)));dt1.userData.arm.rotation.x=t>93.1?.6:lv;dt2.userData.arm.rotation.x=t>93.1?0:lv;
   dHot.intensity=t>93.1?60+40*Math.sin(t*5):(t>90.5?15:0);dScr.material=monS.material;}
