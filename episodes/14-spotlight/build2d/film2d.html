@@ -7,6 +7,10 @@ canvas{position:absolute;inset:0}
 .ov{position:absolute;inset:0;pointer-events:none;font-family:"Noto Serif CJK SC","Noto Serif SC",serif}
 #sub{position:absolute;left:0;right:0;bottom:70px;text-align:center;color:#fbf6ec;font-size:64px;font-weight:900;letter-spacing:2px;line-height:1.2}
 #sub .pill{display:inline-block;padding:10px 34px 14px;border-radius:18px;background:rgba(6,8,13,.80);box-shadow:0 6px 24px rgba(0,0,0,.45);text-shadow:0 2px 6px rgba(0,0,0,.9)}
+#sub.B{font-family:"Noto Sans CJK SC","Noto Sans SC",sans-serif;font-weight:700;color:#fff;letter-spacing:1px}
+#sub.B b{font-weight:700}
+#sub.C{font-family:"Noto Sans CJK SC","Noto Sans SC",sans-serif;font-weight:700;color:#fff;letter-spacing:1px;-webkit-text-stroke:7px #000;paint-order:stroke fill}
+#sub.C .pill{background:none;box-shadow:none;text-shadow:0 3px 10px rgba(0,0,0,.9)}
 #sub b{color:#f6cf78;text-shadow:0 0 18px rgba(246,207,120,.55),0 3px 14px #000;font-weight:900}
 #mark{position:absolute;top:40px;right:56px;color:#cdb98e;font-size:22px;letter-spacing:4px;opacity:.85}
 #chap{position:absolute;top:44px;left:0;right:0;text-align:center;color:#d9c39a;font-size:24px;letter-spacing:8px;opacity:0}
@@ -362,7 +366,7 @@ const $=id=>document.getElementById(id);
 function subtitle(t){const l=LINES.find(l=>t>=l[0]&&t<l[1]);$('sub').innerHTML=l?'<span class="pill">'+l[2].replace(/\[(.+?)\]/g,'<b>$1</b>')+'</span>':'';}
 const CH=[[22.52,56.95,'2000 · 康奈尔大学'],[81.24,87.32,'2018 · 耶鲁大学']];
 function chap(t){const c=CH.find(c=>t>=c[0]&&t<c[1]);$('chap').firstChild.textContent=c?c[2]:'';$('chap').style.opacity=c?.9:0;}
-window.renderAt=function(t){subtitle(t);chap(t);let fl=0;$('plaque').style.opacity=0;$('end').style.opacity=0;g.setTransform(1,0,0,1,0,0);
+window.renderAt=function(t){$('sub').className=window.SUBSTYLE||'B';subtitle(t);chap(t);let fl=0;$('plaque').style.opacity=0;$('end').style.opacity=0;g.setTransform(1,0,0,1,0,0);
  const B=beat(t);PULSE=B.p;C.style.transform='none';
  /* S1 0-15.44: wrong group (approved opening) */
  if(t<15.44){room(t<8.8?1:.35);
