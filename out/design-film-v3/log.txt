@@ -1,0 +1,22 @@
+token id present: yes
+token secret present: yes
+✓ Initialized. View run at 
+https://modal.com/apps/jayjiao249/main/ap-ypxzI0vk1GBQPn1qijWXnc
+✓ Created objects.
+├── ✓ Uploaded /home/runner/work/Video/Video/render_film.py
+├── ✓ Uploaded /home/runner/work/Video/Video/film
+└── ✓ Created Function chunk.
+0 RENDERER ANGLE (NVIDIA, Vulkan 1.4.341 (NVIDIA Tesla T4 (0x00001EB8)), NVIDIA) / MS_PER_FRAME 102
+1 RENDERER ANGLE (NVIDIA, Vulkan 1.4.341 (NVIDIA Tesla T4 (0x00001EB8)), NVIDIA) / MS_PER_FRAME 99
+2 RENDERER ANGLE (NVIDIA, Vulkan 1.4.341 (NVIDIA Tesla T4 (0x00001EB8)), NVIDIA) / MS_PER_FRAME 94
+3 RENDERER ANGLE (NVIDIA, Vulkan 1.4.341 (NVIDIA Tesla T4 (0x00001EB8)), NVIDIA) / MS_PER_FRAME 85
+4 RENDERER ANGLE (NVIDIA, Vulkan 1.4.341 (NVIDIA Tesla T4 (0x00001EB8)), NVIDIA) / MS_PER_FRAME 88
+5 RENDERER ANGLE (NVIDIA, Vulkan 1.4.341 (NVIDIA Tesla T4 (0x00001EB8)), NVIDIA) / MS_PER_FRAME 86
+6 RENDERER ANGLE (NVIDIA, Vulkan 1.4.341 (NVIDIA Tesla T4 (0x00001EB8)), NVIDIA) / MS_PER_FRAME 92
+7 RENDERER ANGLE (NVIDIA, Vulkan 1.4.341 (NVIDIA Tesla T4 (0x00001EB8)), NVIDIA) / MS_PER_FRAME 100
+8 RENDERER ANGLE (NVIDIA, Vulkan 1.4.312 (NVIDIA Tesla T4 (0x00001EB8)), NVIDIA) / MS_PER_FRAME 99
+9 RENDERER ANGLE (NVIDIA, Vulkan 1.4.312 (NVIDIA Tesla T4 (0x00001EB8)), NVIDIA) / MS_PER_FRAME 92
+DONE 81424543
+Stopping app - local entrypoint completed.
+✓ App completed. View run at 
+https://modal.com/apps/jayjiao249/main/ap-ypxzI0vk1GBQPn1qijWXnc
