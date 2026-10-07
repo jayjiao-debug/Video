@@ -1,0 +1,311 @@
+<!doctype html>
+<html><head><meta charset="utf-8">
+<style>
+html,body{margin:0;background:#05070c;overflow:hidden}
+#wrap{position:relative;width:1920px;height:1080px;transform-origin:0 0}
+canvas{display:block}
+.ov{position:absolute;inset:0;pointer-events:none;font-family:"Noto Serif CJK SC","Noto Serif SC",serif}
+#vig{position:absolute;inset:0;background:radial-gradient(ellipse at center,rgba(0,0,0,0) 55%,rgba(0,0,0,.5) 100%),linear-gradient(to top,rgba(0,0,0,.5) 0,rgba(0,0,0,.28) 150px,rgba(0,0,0,0) 260px)}
+#flash{position:absolute;inset:0;background:#fff;opacity:0}
+#sub{position:absolute;left:0;right:0;bottom:92px;text-align:center;color:#f4efe6;font-size:58px;font-weight:700;letter-spacing:2px;text-shadow:0 3px 14px rgba(0,0,0,.95),0 0 3px #000}
+#sub b{color:#f6cf78;text-shadow:0 0 18px rgba(246,207,120,.55),0 3px 14px #000;font-weight:900}
+#chap{position:absolute;top:44px;left:0;right:0;text-align:center;color:#d9c39a;font-size:24px;letter-spacing:8px;opacity:0}
+#chap span{display:inline-block;padding:0 28px;position:relative}
+#chap span:before,#chap span:after{content:"";position:absolute;top:50%;width:120px;height:1px;background:#b89a62;opacity:.7}
+#chap span:before{right:100%}#chap span:after{left:100%}
+#mark{position:absolute;top:40px;right:56px;color:#cdb98e;font-size:22px;letter-spacing:4px;opacity:.85}
+#plaque{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;opacity:0}
+#plaque div{border:3px solid #d8b56a;padding:34px 80px;color:#f6cf78;font-size:104px;font-weight:900;letter-spacing:12px;background:rgba(8,10,16,.82);
+ box-shadow:0 0 60px rgba(216,181,106,.25),inset 0 0 0 10px rgba(8,10,16,.82),inset 0 0 0 12px rgba(216,181,106,.5)}
+/* gauge */
+#gauge{position:absolute;width:520px;height:330px;left:0;top:0;opacity:0;transform-origin:50% 100%}
+#gauge .lab{position:absolute;font-size:30px;letter-spacing:2px}
+#gauge .num{position:absolute;font-size:96px;font-weight:900;line-height:1}
+#gx{position:absolute;left:50%;top:212px;transform:translateX(-50%);color:#f6cf78;font-size:40px;font-weight:900;padding:2px 18px;border:2px solid #d8b56a;border-radius:30px;background:rgba(8,10,16,.7);opacity:0}
+/* rating bar */
+#bar{position:absolute;left:260px;right:260px;top:150px;height:200px;opacity:0}
+#bar .track{position:absolute;left:0;right:0;top:90px;height:14px;background:rgba(240,230,210,.25);border-radius:7px}
+#bar .tick{position:absolute;top:70px;width:3px;height:54px;background:#cdb98e}
+#bar .tl{position:absolute;top:132px;font-size:28px;color:#cdb98e;transform:translateX(-50%)}
+#bar .mk{position:absolute;top:0;transform:translateX(-50%);text-align:center;font-size:64px;font-weight:900;line-height:1}
+#bar .mk small{display:block;font-size:26px;font-weight:500;letter-spacing:2px;margin-top:6px}
+#bar .mk:after{content:"";display:block;margin:8px auto 0;width:0;height:0;border-left:16px solid transparent;border-right:16px solid transparent}
+#m1{color:#f6a35a}#m1:after{border-top:22px solid #f6a35a}#m2{color:#9fd0ff}#m2:after{border-top:22px solid #9fd0ff}
+#gapb{position:absolute;top:88px;height:18px;background:linear-gradient(90deg,#f6a35a,#9fd0ff);border-radius:9px;opacity:0;box-shadow:0 0 24px rgba(246,207,120,.6)}
+/* liking bars */
+#like{position:absolute;right:170px;top:170px;width:560px;height:540px;opacity:0}
+#like .col{position:absolute;bottom:90px;width:150px;border-radius:10px 10px 0 0}
+#like .cl{position:absolute;bottom:20px;width:230px;text-align:center;font-size:30px;color:#f4efe6;transform:translateX(-40px)}
+#lk1{left:30px;background:#f6cf78}#lk2{left:330px;background:#f6a35a}#lk3{left:330px;border:4px dashed #9fd0ff;background:rgba(159,208,255,.12);box-sizing:border-box}
+#lk3l{position:absolute;left:300px;color:#9fd0ff;font-size:28px;width:220px;text-align:center}
+#cal{position:absolute;left:180px;top:190px;width:300px;height:330px;background:#efe7d6;border-radius:14px;box-shadow:0 20px 60px rgba(0,0,0,.6);opacity:0;color:#2b241a;text-align:center;overflow:hidden}
+#cal .top{height:70px;background:#a8322a;color:#fff;font-size:34px;line-height:70px;letter-spacing:6px}
+#cal .m{font-size:116px;font-weight:900;line-height:220px}
+#tag{position:absolute;left:0;top:0;padding:10px 26px;background:rgba(8,10,16,.75);border:2px solid #d8b56a;color:#f6cf78;font-size:34px;font-weight:700;letter-spacing:3px;opacity:0;white-space:nowrap;transform:translate(-50%,-100%)}
+#bub{position:absolute;opacity:0;padding:22px 34px;background:#efe7d6;color:#2b241a;border-radius:26px;font-size:38px;font-weight:700;transform:translate(-50%,-100%);white-space:nowrap}
+#bub:after{content:"";position:absolute;left:44px;bottom:-24px;border-left:18px solid transparent;border-right:18px solid transparent;border-top:26px solid #efe7d6}
+.cb{position:absolute;padding:14px 26px;border-radius:24px;font-size:34px;opacity:0;white-space:nowrap}
+#ring{position:absolute;width:120px;height:120px;border:6px solid rgba(246,163,90,.9);border-top-color:transparent;border-radius:50%;opacity:0;transform:translate(-50%,-50%)}
+#tally{position:absolute;right:220px;top:260px;color:#f4efe6;font-size:40px;opacity:0;text-align:right}
+#tally b{color:#f6a35a;font-size:72px;display:block}
+#end{position:absolute;inset:0;background:#06080d;display:flex;flex-direction:column;align-items:center;justify-content:center;opacity:0;color:#f6cf78}
+#end .j{width:150px;height:150px;border:3px solid #d8b56a;border-radius:50%;font-size:96px;line-height:150px;text-align:center;font-weight:900;margin-bottom:34px}
+#end .t{font-size:72px;font-weight:900;letter-spacing:8px}
+#end .q{color:#f4efe6;font-size:40px;margin-top:26px}
+#end .f{margin-top:36px;border:2px solid #d8b56a;border-radius:40px;padding:12px 40px;font-size:30px;color:#f6cf78}
+#end .s{position:absolute;bottom:46px;color:#8d8678;font-size:19px;letter-spacing:.5px;text-align:center;line-height:1.6}
+</style></head><body>
+<div id="wrap"><div id="three"></div>
+<div class="ov">
+ <div id="vig"></div><div id="flash"></div>
+ <div id="chap"><span></span></div><div id="mark">◆ Juno · VIBE知识大赏</div>
+ <div id="gauge"><svg width="520" height="330" viewBox="0 0 520 330">
+  <path d="M40 300 A220 220 0 0 1 480 300" fill="none" stroke="rgba(240,230,210,.25)" stroke-width="26" stroke-linecap="round"/>
+  <path id="arcA" d="" fill="none" stroke="#f6a35a" stroke-width="26" stroke-linecap="round"/>
+  <path id="arcB" d="" fill="none" stroke="#9fd0ff" stroke-width="14" stroke-linecap="round"/>
+  <line id="ndA" x1="260" y1="300" x2="260" y2="110" stroke="#f6a35a" stroke-width="10" stroke-linecap="round"/>
+  <line id="ndB" x1="260" y1="300" x2="260" y2="130" stroke="#9fd0ff" stroke-width="8" stroke-linecap="round"/>
+  <circle cx="260" cy="300" r="16" fill="#efe7d6"/></svg>
+  <div class="lab" style="left:0;top:-58px;color:#f6a35a">你以为</div><div class="num" id="nA" style="left:0;top:-14px;color:#f6a35a"></div>
+  <div class="lab" style="right:0;top:-58px;color:#9fd0ff;text-align:right">实际</div><div class="num" id="nB" style="right:0;top:-14px;color:#9fd0ff;text-align:right"></div>
+  <div id="gx">×2</div></div>
+ <div id="bar"><div class="track"></div><div id="gapb"></div>
+  <div class="tick" style="left:0"></div><div class="tl" style="left:0">0</div>
+  <div class="tick" style="left:50%"></div><div class="tl" style="left:50%">50 · 普通</div>
+  <div class="tick" style="left:100%"></div><div class="tl" style="left:100%">100</div>
+  <div class="mk" id="m1">52<small>你以为</small></div><div class="mk" id="m2">69<small>别人给的</small></div></div>
+ <div id="like"><div class="col" id="lk1"></div><div class="col" id="lk3"></div><div class="col" id="lk2"></div><div id="lk3l">TA的真实好感</div>
+  <div class="cl" style="left:30px">我对TA的好感</div><div class="cl" style="left:330px">我猜TA对我</div></div>
+ <div id="cal"><div class="top">室友 · 还在低估</div><div class="m" id="calm">9月</div></div>
+ <div id="tag"></div><div id="bub">🔒 小秘密</div>
+ <div class="cb" id="cb1" style="left:250px;top:300px;background:#efe7d6;color:#2b241a">刚才那句是不是很尬…</div>
+ <div class="cb" id="cb2" style="left:330px;top:400px;background:#efe7d6;color:#2b241a">她会不会觉得我很无聊？</div>
+ <div class="cb" id="cb3" style="left:250px;top:500px;background:#a8322a;color:#fff">？？？</div>
+ <div id="ring"></div><div id="tally">同学们觉得：<b>多数 · 丢人</b></div>
+ <div id="sub"></div>
+ <div id="plaque"><div>你以为大家都在看你</div></div>
+ <div id="end"><div class="j">J</div><div class="t">你以为大家都在看你</div><div class="q">你有没有一次“社死”，后来发现根本没人记得？</div><div class="f">关注 Juno · 一起看懂世界</div>
+  <div class="s">资料：Gilovich, Medvec &amp; Savitsky (2000) doi:10.1037/0022-3514.78.2.211 · Savitsky, Epley &amp; Gilovich (2001) doi:10.1037/0022-3514.81.1.44<br>
+  Boothby et al. (2018) doi:10.1177/0956797618783714 · Wolf, Nafe &amp; Tomasello (2021) doi:10.1177/0956797620980754 · 均为小样本实验室研究<br>模型 CC BY：titi_156 (Classroom) · menX1151 (Spotlight)</div></div>
+</div></div>
+<script type="importmap">{"imports":{"three":"./node_modules/three/build/three.module.js","three/addons/":"./node_modules/three/examples/jsm/"}}</script>
+<script type="module">
+import * as THREE from 'three';
+import {GLTFLoader} from 'three/addons/loaders/GLTFLoader.js';
+const Q=new URLSearchParams(location.search);const SC=+(Q.get('s')||1);
+document.getElementById('wrap').style.transform=`scale(${SC})`;
+const W=1920,H=1080;
+const R=new THREE.WebGLRenderer({antialias:true,preserveDrawingBuffer:true});R.setPixelRatio(SC);R.setSize(W,H);
+R.toneMapping=THREE.ACESFilmicToneMapping;R.toneMappingExposure=1.05;R.shadowMap.enabled=true;R.shadowMap.type=THREE.PCFSoftShadowMap;
+document.getElementById('three').appendChild(R.domElement);R.domElement.style.width=W+'px';R.domElement.style.height=H+'px';
+const cam=new THREE.PerspectiveCamera(42,W/H,0.03,200);
+const $=id=>document.getElementById(id);
+const cl=(x,a=0,b=1)=>Math.min(b,Math.max(a,x)),lerp=(a,b,t)=>a+(b-a)*t,ease=t=>{t=cl(t);return t<.5?4*t*t*t:1-Math.pow(-2*t+2,3)/2};
+const seg=(t,a,b)=>ease((t-a)/(b-a)),V=(x,y,z)=>new THREE.Vector3(x,y,z),vl=(a,b,t)=>a.clone().lerp(b,t);
+const load=u=>new Promise((res,rej)=>new GLTFLoader().load(u,res,undefined,rej));
+const [gRoom,gSpot]=await Promise.all([load('assets/classroom_titi.glb'),load('assets/spotlight.glb')]);
+const LINES=window.LINES||[];
+function tex(draw,w=512,h=512){const c=document.createElement('canvas');c.width=w;c.height=h;const g=c.getContext('2d');draw(g,w,h);const t=new THREE.CanvasTexture(c);t.colorSpace=THREE.SRGBColorSpace;return t;}
+const SERIF='"Noto Serif CJK SC","Noto Serif SC",serif';
+
+/* ================= ROOM ================= */
+const sRoom=new THREE.Scene();sRoom.background=new THREE.Color(0x05070c);
+const room=gRoom.scene;room.scale.setScalar(.01);room.updateMatrixWorld(true);{const b=new THREE.Box3().setFromObject(room);room.position.set(-(b.min.x+b.max.x)/2,-b.min.y,-(b.min.z+b.max.z)/2);}
+sRoom.add(room);room.updateMatrixWorld(true);
+const ceilParts=[];room.traverse(o=>{if(!o.isMesh)return;o.receiveShadow=true;o.castShadow=!/ground|wall|ceill/.test(o.name);
+ if(/godray/.test(o.name))o.visible=false;if(/ceill|neon/.test(o.name))ceilParts.push(o);
+ if(o.material){o.material=o.material.clone();if(/wall|ceill/.test(o.name))o.material.color.multiplyScalar(.7);}});
+// lights
+const hemi=new THREE.HemisphereLight(0x7f96c0,0x2a2016,.75);sRoom.add(hemi);
+const moon=new THREE.DirectionalLight(0x9fbaff,1.1);moon.position.set(9,5,1);moon.target.position.set(0,0,0);sRoom.add(moon,moon.target);
+const warmLs=[];[[-2,3.1,-1.5],[2,3.1,-1.5],[-2,3.1,1.8],[2,3.1,1.8]].forEach(p=>{const L=new THREE.PointLight(0xffc98a,0,9,1.6);L.position.set(...p);sRoom.add(L);warmLs.push(L);});
+// figures (no faces, no hands)
+const figMat=c=>new THREE.MeshStandardMaterial({color:new THREE.Color(c).multiplyScalar(1.6),roughness:.7});
+function figure(col=0x3a3f48,seated=true){const g=new THREE.Group();const body=new THREE.Group();g.add(body);
+ const torso=new THREE.Mesh(new THREE.CapsuleGeometry(.15,.42,6,16),figMat(col));torso.position.y=seated?.83:1.12;torso.castShadow=true;body.add(torso);
+ const head=new THREE.Group();head.position.y=seated?1.28:1.57;const hm=new THREE.Mesh(new THREE.SphereGeometry(.12,24,16),figMat(0xd8c2a6));hm.castShadow=true;head.add(hm);
+ const hair=new THREE.Mesh(new THREE.SphereGeometry(.125,24,16,0,Math.PI*2,0,Math.PI*.55),figMat(0x1d1a18));hair.rotation.x=-.35;head.add(hair);body.add(head);
+ if(!seated){[-.08,.08].forEach(x=>{const leg=new THREE.Mesh(new THREE.CapsuleGeometry(.065,.6,4,10),figMat(0x2a2d33));leg.position.set(x,.38,0);leg.castShadow=true;body.add(leg);});}
+ g.userData={torso,head,body};return g;}
+const SEATS=[[-2.62,1.95],[-0.82,1.94],[1.15,1.95],[2.82,1.95],[-2.62,0.59],[-0.82,0.58]];
+const obs=SEATS.map(([x,z],i)=>{const f=figure([0x3a4250,0x4a3f3a,0x3c4a44,0x463c4c,0x40464e,0x4d4438][i]);f.position.set(x,.0,z-.2);sRoom.add(f);return f;});
+// sheets on the observers' desks
+const sheetM=new THREE.MeshStandardMaterial({color:0xe9e0cc,roughness:.9,side:THREE.DoubleSide});
+const sheets=SEATS.map(([x,z])=>{const p=new THREE.Mesh(new THREE.PlaneGeometry(.21,.28),sheetM);p.rotation.x=-Math.PI/2;p.position.set(x,.812,z+.42);sRoom.add(p);return p;});
+// phones (for the reveal)
+const phM=new THREE.MeshBasicMaterial({color:0xcfe0ff,toneMapped:false});
+const phones=SEATS.map(([x,z])=>{const p=new THREE.Mesh(new THREE.PlaneGeometry(.08,.15),phM);p.position.set(x,.95,z+.12);p.rotation.x=-.9;p.visible=false;sRoom.add(p);return p;});
+// student
+const stu=figure(0x5a4a3a,false);sRoom.add(stu);
+const shirtCan=document.createElement('canvas');shirtCan.width=256;shirtCan.height=256;const shirtT=new THREE.CanvasTexture(shirtCan);shirtT.colorSpace=THREE.SRGBColorSpace;
+function drawShirt(kind){const g=shirtCan.getContext('2d');g.clearRect(0,0,256,256);if(kind==='none'){shirtT.needsUpdate=true;return;}
+ if(kind==='pop'){g.fillStyle='#e04a8a';g.fillRect(28,40,200,170);g.fillStyle='#f6e04a';g.beginPath();g.arc(128,110,52,0,7);g.fill();g.fillStyle='#2b6fd0';g.fillRect(28,170,200,40);g.fillStyle='#111';g.font=`900 30px ${SERIF}`;g.textAlign='center';g.fillText('某位歌星',128,200);}
+ else{g.fillStyle='#1a1a1a';g.fillRect(28,40,200,170);g.fillStyle='#f6cf78';g.translate(128,125);g.beginPath();for(let i=0;i<10;i++){const r=i%2?32:78,a=i/10*Math.PI*2-Math.PI/2;g.lineTo(Math.cos(a)*r,Math.sin(a)*r);}g.fill();g.setTransform(1,0,0,1,0,0);}
+ shirtT.needsUpdate=true;}
+drawShirt('none');
+const print=new THREE.Mesh(new THREE.PlaneGeometry(.24,.24),new THREE.MeshStandardMaterial({map:shirtT,transparent:true,roughness:.8}));print.position.set(0,1.18,.152);stu.userData.body.add(print);
+// big spotlight: fixture + light + visible cone + floor pool
+const fixture=gSpot.scene;{fixture.updateMatrixWorld(true);const b=new THREE.Box3().setFromObject(fixture),s=b.getSize(V());fixture.scale.setScalar(.55/Math.max(s.x,s.y,s.z));}
+const fixG=new THREE.Group();fixG.add(fixture);fixG.position.set(-2.2,3.12,4.2);sRoom.add(fixG);const fixL=new THREE.PointLight(0xffe0b0,1.2,2.5,1.5);fixL.position.copy(fixG.position).add(V(.4,-.3,-.6));sRoom.add(fixL);fixture.traverse(o=>{if(o.isMesh){o.castShadow=false;o.material=o.material.clone();o.material.color.multiplyScalar(.6)}});
+const spot=new THREE.SpotLight(0xfff1d8,0,14,.3,.35,1.2);spot.position.copy(fixG.position).add(V(0,-.15,0));spot.castShadow=true;spot.shadow.mapSize.set(2048,2048);spot.shadow.bias=-.0002;sRoom.add(spot,spot.target);
+const coneM=new THREE.MeshBasicMaterial({color:0xfff0d0,transparent:true,opacity:0,depthWrite:false,blending:THREE.AdditiveBlending,side:THREE.DoubleSide,toneMapped:false});
+const cone=new THREE.Mesh(new THREE.ConeGeometry(1,1,48,1,true),coneM);sRoom.add(cone);
+const poolM=new THREE.MeshBasicMaterial({map:tex((g,w,h)=>{const gr=g.createRadialGradient(w/2,h/2,0,w/2,h/2,w/2);gr.addColorStop(0,'rgba(255,240,210,1)');gr.addColorStop(.7,'rgba(255,230,190,.55)');gr.addColorStop(1,'rgba(255,230,190,0)');g.fillStyle=gr;g.fillRect(0,0,w,h);}),transparent:true,opacity:0,depthWrite:false,blending:THREE.AdditiveBlending,toneMapped:false});
+const pool=new THREE.Mesh(new THREE.PlaneGeometry(1,1),poolM);pool.rotation.x=-Math.PI/2;pool.position.y=.015;sRoom.add(pool);
+function aimSpot(target,radius,intensity,color=0xfff1d8){spot.target.position.copy(target);spot.intensity=intensity;spot.color.setHex(color);coneM.color.setHex(color);poolM.color.setHex(color);
+ const top=spot.position,d=top.distanceTo(V(target.x,0,target.z));spot.angle=Math.atan2(radius,d)*1.15;
+ const base=V(target.x,0,target.z);cone.position.copy(top).lerp(base,.5);cone.scale.set(radius,d,radius);cone.lookAt(base);cone.rotateX(Math.PI/2);cone.rotateX(Math.PI);
+ coneM.opacity=intensity>0?Math.min(.1,intensity/900):0;pool.position.set(target.x,.015,target.z);pool.scale.setScalar(radius*2.4);poolM.opacity=intensity>0?Math.min(.65,intensity/220):0;}
+// small personal spotlights for the reveal
+const mini=[...SEATS.map(([x,z])=>V(x,0,z-.2))].map(p=>{const L=new THREE.SpotLight(0xffd59a,0,5,.3,.5,1.2);L.position.set(p.x,3.0,p.z);L.target.position.copy(p);sRoom.add(L,L.target);
+ const c=new THREE.Mesh(new THREE.ConeGeometry(.55,3,32,1,true),new THREE.MeshBasicMaterial({color:0xffd59a,transparent:true,opacity:0,depthWrite:false,blending:THREE.AdditiveBlending,side:THREE.DoubleSide,toneMapped:false}));c.position.set(p.x,1.5,p.z);sRoom.add(c);return {L,c};});
+// door sign
+const signT=tex((g,w,h)=>{g.fillStyle='#efe7d6';g.fillRect(0,0,w,h);g.fillStyle='#a8322a';g.font=`900 64px ${SERIF}`;g.textAlign='center';g.fillText('实验进行中',w/2,110);g.fillStyle='#2b241a';g.font=`500 36px ${SERIF}`;g.fillText('康奈尔大学 · 2000',w/2,190);},512,256);
+const sign=new THREE.Mesh(new THREE.PlaneGeometry(.5,.25),new THREE.MeshStandardMaterial({map:signT,emissive:0xffffff,emissiveMap:signT,emissiveIntensity:.35}));sign.position.set(-3.89,1.55,3.3);sign.rotation.y=Math.PI/2;sRoom.add(sign);
+// little kids
+const kids=[0,1].map(i=>{const k=figure(i?0x4a5a7a:0x7a4a4a,false);k.scale.setScalar(.55);k.position.set(-2.9+i*.75,0,4.0);k.rotation.y=i?-1.2:1.2;k.visible=false;sRoom.add(k);return k;});
+// a chat partner (standing)
+const pal=figure(0x3c4a44,false);pal.visible=false;sRoom.add(pal);const pairL=new THREE.PointLight(0xffd29a,0,4,1.6);pairL.position.set(2.0,2.4,3.2);sRoom.add(pairL);
+// ghost student
+const ghost=figure(0xfff1d8,false);ghost.traverse(o=>{if(o.isMesh){o.material=o.material.clone();o.material.transparent=true;o.material.opacity=.25;o.material.emissive=new THREE.Color(0xfff1d8);o.material.emissiveIntensity=.6;o.castShadow=false;}});ghost.visible=false;sRoom.add(ghost);
+
+/* ================= DORM (ceiling replay) ================= */
+const sDorm=new THREE.Scene();sDorm.background=new THREE.Color(0x05060a);
+const dWall=new THREE.Mesh(new THREE.PlaneGeometry(8,8),new THREE.MeshStandardMaterial({color:0x22262e,roughness:1}));dWall.rotation.x=Math.PI/2;dWall.position.y=2.6;sDorm.add(dWall);
+const bed=new THREE.Mesh(new THREE.BoxGeometry(1.1,.4,2.1),new THREE.MeshStandardMaterial({color:0x3a3530,roughness:.9}));bed.position.set(0,.2,0);sDorm.add(bed);
+const blanket=new THREE.Mesh(new THREE.BoxGeometry(1.0,.18,1.4),new THREE.MeshStandardMaterial({color:0x4a3e5a,roughness:.9}));blanket.position.set(0,.48,.25);sDorm.add(blanket);
+const pillowHead=new THREE.Mesh(new THREE.SphereGeometry(.13,24,16),new THREE.MeshStandardMaterial({color:0xd8a090,roughness:.7,emissive:0x601010,emissiveIntensity:.35}));pillowHead.position.set(0,.55,-.7);sDorm.add(pillowHead);
+const repCan=document.createElement('canvas');repCan.width=512;repCan.height=512;const repT=new THREE.CanvasTexture(repCan);repT.colorSpace=THREE.SRGBColorSpace;
+const rep=new THREE.Mesh(new THREE.CircleGeometry(.9,64),new THREE.MeshBasicMaterial({map:repT,transparent:true,toneMapped:false}));rep.rotation.x=Math.PI/2;rep.position.set(0,2.59,.1);sDorm.add(rep);
+function drawReplay(t){const g=repCan.getContext('2d');g.clearRect(0,0,512,512);const gr=g.createRadialGradient(256,256,20,256,256,256);gr.addColorStop(0,'rgba(255,236,200,.95)');gr.addColorStop(1,'rgba(255,236,200,0)');g.fillStyle=gr;g.fillRect(0,0,512,512);
+ const k=(t*.9)%1;const x=140+k*240,trip=Math.max(0,Math.sin(Math.min(1,k*2.2)*Math.PI))*(k>.35&&k<.75?1:0);g.save();g.translate(x,300);g.rotate(trip*.5);g.fillStyle='#2b241a';g.beginPath();g.ellipse(0,-70,20,48,0,0,7);g.fill();g.beginPath();g.arc(0,-135,20,0,7);g.fill();g.fillRect(-14,-28,10,60);g.fillRect(4,-28,10,60);g.restore();
+ g.strokeStyle='rgba(43,36,26,.6)';g.lineWidth=6;g.beginPath();g.moveTo(80,330);g.lineTo(432,330);g.stroke();g.fillStyle='#a8322a';g.font=`900 34px ${SERIF}`;g.textAlign='center';g.fillText('↻ 第'+(1+Math.floor(t*.9))+'遍',256,420);repT.needsUpdate=true;}
+const dLamp=new THREE.PointLight(0xffd9a8,2.5,6,1.5);dLamp.position.set(0,2.3,.1);sDorm.add(dLamp);sDorm.add(new THREE.AmbientLight(0x30384a,.25));
+
+/* ================= CORRIDOR (shirt) ================= */
+const sCor=new THREE.Scene();sCor.background=new THREE.Color(0x07080b);
+const cWall=new THREE.Mesh(new THREE.PlaneGeometry(10,4),new THREE.MeshStandardMaterial({color:0x5a5d58,roughness:.95}));cWall.position.set(0,2,0);sCor.add(cWall);
+const cFloor=new THREE.Mesh(new THREE.PlaneGeometry(10,6),new THREE.MeshStandardMaterial({color:0x2a2622,roughness:.9}));cFloor.rotation.x=-Math.PI/2;cFloor.position.z=2;sCor.add(cFloor);
+const shirtShape=new THREE.Shape();[[-.5,.62],[-.18,.7],[0,.62],[.18,.7],[.5,.62],[.75,.35],[.55,.22],[.42,.36],[.42,-.62],[-.42,-.62],[-.42,.36],[-.55,.22],[-.75,.35],[-.5,.62]].forEach(([x,y],i)=>i?shirtShape.lineTo(x,y):shirtShape.moveTo(x,y));
+const shirtG=new THREE.ShapeGeometry(shirtShape);{const p=shirtG.attributes.position,uv=shirtG.attributes.uv;for(let i=0;i<p.count;i++)uv.setXY(i,(p.getX(i)+.75)/1.5,(p.getY(i)+.62)/1.32);}
+const shirtBody=new THREE.Mesh(shirtG,new THREE.MeshStandardMaterial({color:0xf2f0ea,roughness:.95}));shirtBody.position.set(0,1.75,.05);sCor.add(shirtBody);
+const shirtPrint=new THREE.Mesh(new THREE.PlaneGeometry(.6,.6),new THREE.MeshStandardMaterial({map:shirtT,transparent:true,roughness:.9}));shirtPrint.position.set(0,1.72,.06);sCor.add(shirtPrint);
+const hanger=new THREE.Mesh(new THREE.TorusGeometry(.5,.012,8,48,Math.PI*.7),new THREE.MeshStandardMaterial({color:0x777,metalness:.8,roughness:.3}));hanger.rotation.z=Math.PI*.15;hanger.position.set(0,2.0,.04);sCor.add(hanger);
+const bulb=new THREE.PointLight(0xffd9a0,9,7,1.5);bulb.position.set(.9,3.0,1.8);sCor.add(bulb);sCor.add(new THREE.AmbientLight(0x30343c,.35));
+const bulbMesh=new THREE.Mesh(new THREE.SphereGeometry(.07,16,12),new THREE.MeshBasicMaterial({color:0xfff0c8,toneMapped:false}));bulbMesh.position.copy(bulb.position);sCor.add(bulbMesh);
+const cStu=figure(0x5a4a3a,false);cStu.position.set(1.6,0,1.2);cStu.visible=false;sCor.add(cStu);
+const cPrint=print.clone();cStu.userData.body.add(cPrint);
+const passers=[0,1,2].map(i=>{const f=figure([0x3a4250,0x4a3f3a,0x3c4a44][i],false);f.position.set(-2.6+i*.9,0,1.3);f.visible=false;sCor.add(f);return f;});
+
+/* ================= helpers ================= */
+function proj(v){const p=v.clone().project(cam);return [(p.x*.5+.5)*W,(-p.y*.5+.5)*H,p.z<1];}
+function arc(pct,r=220){const a=Math.PI*(1-pct/100);const x=260+Math.cos(a)*r,y=300-Math.sin(a)*r;return `M40 300 A220 220 0 0 1 ${x.toFixed(1)} ${y.toFixed(1)}`;}
+function gauge(a,b,{show=1,x=null,y=null,qmark=false,gx=null}={}){const G=$('gauge');G.style.opacity=show;if(x!==null){x=Math.min(1500,Math.max(420,x));y=Math.min(740,Math.max(440,y));G.style.left=(x-260)+'px';G.style.top=(y-330)+'px';}
+ $('arcA').setAttribute('d',a>0?arc(a):'');$('arcB').setAttribute('d',b>0?arc(b,220):'');
+ const nd=(id,p,len)=>{const ang=Math.PI*(1-p/100);$(id).setAttribute('x2',(260+Math.cos(ang)*len).toFixed(1));$(id).setAttribute('y2',(300-Math.sin(ang)*len).toFixed(1));};
+ nd('ndA',a,190);nd('ndB',b,170);$('nA').textContent=a>0?Math.round(a)+'%':'';$('nB').textContent=qmark?'?':(b>0?Math.round(b)+'%':'');$('ndB').style.opacity=(b>0||qmark)?1:0;
+ $('gx').style.opacity=gx?1:0;if(gx)$('gx').textContent=gx;}
+function subtitle(t){const l=LINES.find(l=>t>=l[0]&&t<l[1]);$('sub').innerHTML=l?l[2].replace(/\[(.+?)\]/g,'<b>$1</b>'):'';}
+const CH=[[21.6,57.9,'2000 · 康奈尔大学'],[61.1,74.2,'2001 · 另一个实验'],[77.4,90.5,'2018 · 耶鲁大学']];
+function chap(t){const c=CH.find(c=>t>=c[0]&&t<c[1]);$('chap').firstChild.textContent=c?c[2]:'';$('chap').style.opacity=c?.9:0;}
+const DOOR=V(-3.75,0,3.3);
+function walkStu(p,yaw,trip=0,show=true){stu.visible=show;stu.position.copy(p);stu.rotation.set(0,yaw,0);stu.userData.body.rotation.x=trip;}
+function headsTo(target,amt){obs.forEach(f=>{const h=f.userData.head;const wp=V(f.position.x,1.28,f.position.z);const d=target.clone().sub(wp);const yaw=Math.atan2(d.x,d.z);h.rotation.set(0,yaw*amt,0);});}
+function headsDown(a){obs.forEach(f=>{f.userData.head.rotation.set(a*.55,0,0);});}
+function resetRoom(){warmLs.forEach(L=>L.intensity=.35);hemi.intensity=.75;ceilParts.forEach(o=>o.visible=true);mini.forEach(m=>{m.L.intensity=0;m.c.material.opacity=0});pairL.intensity=0;phones.forEach(p=>p.visible=false);
+ kids.forEach(k=>k.visible=false);pal.visible=false;ghost.visible=false;headsTo(V(0,1.2,5),0);sheets.forEach(s=>s.rotation.set(-Math.PI/2,0,0));obs.forEach(f=>f.visible=true);}
+const camAudit=[];
+/* ================= TIMELINE ================= */
+let scene=sRoom;
+window.renderAt=function(t){
+ subtitle(t);chap(t);let fl=0,flc='#fff';
+ ['plaque','end','bar','like','cal','tag','bub','cb1','cb2','cb3','ring','tally'].forEach(i=>$(i).style.opacity=0);gauge(0,0,{show:0});
+ resetRoom();scene=sRoom;spot.intensity=0;coneM.opacity=0;poolM.opacity=0;drawShirt('none');stu.visible=false;
+ const stuHead=()=>V(stu.position.x,1.9,stu.position.z);
+ // 0-3.5 trip at the door, spotlight slams on
+ if(t<3.5){const k=cl(t/1.6);const p=vl(V(-3.6,0,3.3),V(-2.4,0,3.4),k);const trip=t>.18&&t<1.0?Math.sin(cl((t-.18)/.82)*Math.PI)*.42:0;walkStu(p,Math.PI/2,trip);
+  aimSpot(V(p.x,0,p.z),.75,t<.28?0:lerp(700,420,cl((t-.28)/1)));if(t>=.28&&t<.36)fl=.5,flc='#fff8ea';
+  cam.position.set(lerp(1.9,1.5,cl(t/3.5)),1.6,lerp(4.1,4.25,cl(t/3.5)));cam.lookAt(lerp(-2.6,-2.0,cl(t/3.5)),1.0,2.7);
+  const sh=t<.28?0:Math.exp(-(t-.28)*6)*.02;cam.position.x+=Math.sin(t*90)*sh;cam.position.y+=Math.cos(t*70)*sh;headsTo(stuHead(),cl((t-.4)/.6)*.9);}
+ // 3.5-6.6 dorm ceiling replay
+ else if(t<6.6){scene=sDorm;drawReplay(t-3.5);const k=seg(t,3.5,6.6);cam.position.set(.55,lerp(.9,1.15,k),lerp(.9,.4,k));cam.lookAt(0,2.6,0);if(t<3.62)fl=.6*(1-(t-3.5)/.12),flc='#000';}
+ // 6.6-12.4 imagined: everyone looks; gauge 你以为一半 / 实际 ?
+ else if(t<12.4){walkStu(V(-2.4,0,3.4),Math.PI/2,.38,true);aimSpot(V(-2.4,0,3.4),.75,420);headsTo(V(-2.4,1.3,3.4),1);
+  const k=seg(t,6.6,12.4);cam.position.set(lerp(1.5,.6,k),lerp(1.6,1.55,k),lerp(4.25,4.1,k));cam.lookAt(lerp(-2.0,-2.3,k),1.05,lerp(2.7,3.0,k));
+  const [x,y]=proj(V(-2.4,2.25,3.4));gauge(50*seg(t,6.9,7.8),0,{show:cl((t-6.7)/.3),x:Math.min(1500,Math.max(420,x)),y:Math.max(440,y),qmark:t>9.7});
+  if(t>9.7){const fl2=Math.sin(t*40)>.6?.85:1;spot.intensity*=fl2;}}
+ // 12.4-15.2 plaque
+ else if(t<15.2){walkStu(V(-2.4,0,3.4),Math.PI/2,.38,true);aimSpot(V(-2.4,0,3.4),.75,300);headsTo(V(-2.4,1.3,3.4),1);cam.position.set(.6,1.55,4.1);cam.lookAt(-2.3,1.05,3.0);
+  const o=cl((t-12.4)/.08)*(1-cl((t-14.95)/.25));$('plaque').style.opacity=o;const sh=Math.exp(-(t-12.4)*6)*8;$('plaque').style.transform=`translate(${Math.sin(t*90)*sh}px,${Math.cos(t*70)*sh}px)`;if(t<12.5)fl=.6*(1-(t-12.4)/.1);}
+ // 15.2-21.6 up the beam to the lamp tag, back down; replay loop
+ else if(t<21.6){walkStu(V(-2.4,0,3.4),Math.PI/2,0,true);aimSpot(V(-2.4,0,3.4),.75,380);
+  const up=seg(t,15.2,17.4)*(1-seg(t,18.6,20.4));const look=vl(V(-2.4,1.2,3.4),fixG.position,up);cam.position.copy(vl(V(.35,1.55,1.5),V(-.4,2.3,2.9),up));cam.lookAt(look);
+  if(t>16.4&&t<18.8){const [x,y]=proj(fixG.position.clone().add(V(0,-.42,0)));$('tag').textContent='聚光灯效应';$('tag').style.left='960px';$('tag').style.top='330px';$('tag').style.opacity=cl((t-16.4)/.4)*(1-cl((t-18.4)/.4));}
+  if(t>18.6){const [x,y]=proj(V(-2.4,2.1,3.4));$('ring').style.left=x+'px';$('ring').style.top=y+'px';$('ring').style.opacity=cl((t-19)/.4);$('ring').style.transform=`translate(-50%,-50%) rotate(${t*(t>20.5?260:520)}deg)`;}}
+ // 21.6-25.1 door sign
+ else if(t<25.1){const k=seg(t,21.6,25.1);cam.position.set(lerp(-1.6,-3.0,k),1.55,lerp(2.2,3.25,k));cam.lookAt(-3.9,1.5,3.3);}
+ // 25.1-31.1 corridor shirt + pretest
+ else if(t<31.1){scene=sCor;drawShirt('pop');const k=seg(t,25.1,31.1);cam.position.set(lerp(.4,-.2,k),lerp(1.8,1.7,k),lerp(2.6,2.0,k));cam.lookAt(0,1.72,0);
+  passers.forEach((f,i)=>{f.visible=t>28.3;f.position.x=-2.8+i*.95+(t-28.3)*.25;f.rotation.y=Math.PI*.9;f.userData.body.rotation.x=t>28.6?-.12:0;});
+  if(t>28.6)$('tally').style.opacity=cl((t-28.6)/.4);}
+ // 31.1-37.8 student enters with shirt; observers face door; then leaves
+ else if(t<37.8){drawShirt('pop');let p,yaw=Math.PI/2;if(t<34.6){p=vl(V(-3.6,0,3.3),V(-2.4,0,3.4),seg(t,31.1,32.4));}else{p=vl(V(-2.4,0,3.4),V(-3.6,0,3.3),seg(t,35.4,37.2));yaw=-Math.PI/2;}
+  walkStu(p,yaw,0,true);aimSpot(V(p.x,0,p.z),.75,420);headsTo(V(p.x,1.3,p.z),.55);
+  const k=seg(t,31.1,37.8);cam.position.set(lerp(2.0,1.4,k),1.6,lerp(4.2,4.3,k));cam.lookAt(-2.2,1.0,2.6);}
+ // 37.8-43.7 corridor: student waits, gauge 你以为 46
+ else if(t<43.7){scene=sCor;drawShirt('pop');cStu.visible=true;cStu.rotation.y=-.3;shirtBody.visible=false;shirtPrint.visible=false;hanger.visible=false;
+  const k=seg(t,37.8,43.7);cam.position.set(lerp(-.1,.4,k),1.6,lerp(3.4,3.0,k));cam.lookAt(1.5,1.3,1.2);const [x,y]=proj(V(1.6,2.2,1.2));
+  gauge(46*seg(t,41.3,42.4),0,{show:cl((t-37.9)/.3),x:Math.max(420,Math.min(1500,x)),y:Math.max(440,y)});}
+ // 43.7-57.9 room: sheets flip, 23 ×2; gold shirt 48 → 8 ×6; dolly heads down
+ else if(t<57.9){const gold=t>=46.5;drawShirt(gold?'gold':'pop');walkStu(V(-2.4,0,3.4),Math.PI/2,0,true);
+  aimSpot(V(-2.4,0,3.4),.75,gold?520:lerp(420,210,seg(t,44.2,45.4)),gold?0xffd27a:0xfff1d8);
+  sheets.forEach((s,i)=>{const f=seg(t,43.9+i*.18,44.3+i*.18);s.rotation.set(-Math.PI/2+f*Math.PI,0,0);s.position.y=.812+Math.sin(f*Math.PI)*.12;});
+  if(t<54.8){const k=seg(t,43.7,54.8);cam.position.set(lerp(1.4,.5,k),1.6,lerp(4.3,4.1,k));cam.lookAt(-2.3,1.1,lerp(2.8,3.1,k));headsTo(V(-2.4,1.3,3.4),.2);}
+  else{const k=seg(t,54.8,57.9);cam.position.set(lerp(3.3,-1.2,k),1.4,-.3);cam.lookAt(lerp(2.4,-2.2,k),.95,1.6);headsDown(1);}
+  const [x,y]=proj(V(-2.4,2.25,3.4));const gx=Math.max(420,Math.min(1500,x)),gy=Math.max(440,y);
+  if(!gold){gauge(46,23*seg(t,44.0,45.0),{show:1,x:gx,y:gy,gx:t>45.1?'×2':null});}
+  else if(t<54.8){const a=t<49.3?46*(1-seg(t,46.5,47.2)):48*seg(t,49.3,50.2);const b=t<52?0:8*seg(t,52,52.6);gauge(a,b,{show:1,x:gx,y:gy,gx:t>52.7?'×6':null});}
+  else gauge(48,8,{show:1-seg(t,54.8,55.4),x:1500,y:430,gx:'×6'});}
+ // 57.9-74.2 rating bar, secret bubble, iris
+ else if(t<74.2){walkStu(V(-1.8,0,3.7),Math.PI,0,true);headsTo(V(-1.8,1.4,3.7),.7);
+  const k=seg(t,57.9,74.2);cam.position.set(lerp(1.6,.9,k),1.6,lerp(4.3,4.2,k));cam.lookAt(-1.7,1.1,lerp(2.4,2.8,k));
+  const iris=t<70.7?.75:lerp(.75,.22,seg(t,70.7,71.6));const wide=seg(t,72.4,73.6);aimSpot(V(-1.8,0,3.7),lerp(iris,1.8,wide),lerp(420,160,wide));warmLs.forEach(L=>L.intensity=wide*1.2);
+  const bo=cl((t-58.2)/.5);$('bar').style.opacity=bo;$('m1').style.left='52%';$('m1').style.opacity=t>64.6?cl((t-64.6)/.4):0;
+  const m2=t>67.6?lerp(52,69,seg(t,67.8,69.0)):52;$('m2').style.left=m2+'%';$('m2').style.opacity=t>67.6?1:0;$('gapb').style.left='52%';$('gapb').style.width=(m2-52)+'%';$('gapb').style.opacity=t>68.4?1:0;
+  if(t>61.1){$('bub').style.left='520px';$('bub').style.top='640px';$('bub').style.opacity=cl((t-61.3)/.4)*(1-cl((t-71.4)/.4));}}
+ // 74.2-90.5 chat by the front, liking bars, calendar, kids
+ else if(t<90.5){walkStu(V(1.6,0,3.55),-Math.PI/2+.25,0,true);pal.visible=true;pal.position.set(2.75,0,3.85);pal.rotation.set(0,Math.PI/2+.2,0);obs.forEach(f=>f.visible=t<87.1);
+  warmLs.forEach(L=>L.intensity=1.1);hemi.intensity=.85;
+  const k=seg(t,74.2,87.1);cam.position.set(lerp(-.3,.2,k),1.6,lerp(4.4,4.3,k));cam.lookAt(lerp(2.3,2.1,k),1.2,lerp(3.6,3.7,k));pairL.position.set(2.0,2.4,3.2);pairL.intensity=8;
+  if(t<77.4){[['cb1',74.5],['cb2',75.4],['cb3',76.3]].forEach(([id,a])=>$(id).style.opacity=cl((t-a)/.3));}
+  if(t>=77.4){$('like').style.opacity=cl((t-77.5)/.4);const r=seg(t,77.6,78.8);$('lk1').style.height=(320*r)+'px';$('lk2').style.height=(250*r)+'px';
+   const g=seg(t,80.8,81.8);$('lk3').style.height=(250+70*g)+'px';$('lk3').style.opacity=t>80.6?1:0;$('lk3l').style.bottom=(90+250+70*g+12)+'px';$('lk3l').style.opacity=t>81.2?1:0;}
+  if(t>=83.7&&t<87.1){$('cal').style.opacity=cl((t-83.8)/.3);const mi=Math.floor(cl((t-84.2)/2.6)*7);$('calm').textContent=['9月','10月','11月','12月','1月','2月','3月'][mi];}
+  if(t>=87.1){kids.forEach(k2=>k2.visible=true);stu.visible=false;pal.visible=false;const cx=-2.55;pairL.position.set(-2.5,1.8,3.4);pairL.intensity=6;cam.position.set(lerp(-.9,-1.2,seg(t,87.1,90.5)),1.0,lerp(2.6,2.4,seg(t,87.1,90.5)));cam.lookAt(cx,.5,4.0);
+   $('tag').textContent='5岁起';const [x,y]=proj(V(cx,1.25,4.0));$('tag').style.left=x+'px';$('tag').style.top=Math.max(160,y)+'px';$('tag').style.opacity=cl((t-87.4)/.4);$('like').style.opacity=cl((t-87.6)/.4)*.9;}}
+ // 90.5-93.9 reveal: rise above, everyone in their own spotlight
+ else if(t<93.9){ceilParts.forEach(o=>o.visible=false);walkStu(V(-2.4,0,3.4),Math.PI/2,0,true);drawShirt('pop');
+  const k=seg(t,90.5,93.4);cam.position.copy(vl(V(-.2,1.7,1.0),V(.6,8.2,-3.2),k));cam.lookAt(vl(V(-2.4,1.1,3.4),V(0,0,1.6),k));
+  aimSpot(V(-2.4,0,3.4),lerp(.75,.55,k),lerp(420,260,k));mini.forEach((m,i)=>{const on=cl((t-90.6-i*.12)/.25);m.L.intensity=on*40;m.c.material.opacity=on*.07;});phones.forEach(p=>p.visible=true);headsDown(1);
+  if(t<90.62)fl=.35,flc='#fff1d8';}
+ // 93.9-97.2 back to the doorway: ghost replay, nobody looks
+ else if(t<97.2){walkStu(V(-1.6,0,3.6),Math.PI*.9,0,true);drawShirt('none');mini.forEach(m=>{m.L.intensity=40;m.c.material.opacity=.06});phones.forEach(p=>p.visible=true);headsDown(1);
+  ghost.visible=true;const gk=(t-93.9)%1.6/1.6;ghost.position.copy(vl(V(-3.6,0,3.3),V(-2.4,0,3.4),gk));ghost.rotation.set(0,Math.PI/2,0);ghost.userData.body.rotation.x=gk>.2&&gk<.6?Math.sin((gk-.2)/.4*Math.PI)*.42:0;
+  ghost.traverse(o=>{if(o.isMesh)o.material.opacity=.25*(1-seg(t,96,97.1))});aimSpot(V(-2.6,0,3.4),.75,180);
+  const k=seg(t,93.9,97.2);cam.position.set(lerp(.6,.2,k),1.55,lerp(.2,.8,k));cam.lookAt(-2.4,1.0,3.3);}
+ // 97.2-100.6 spotlight off, warm lights, student sits among others
+ else if(t<100.6){const off=t>97.6;aimSpot(V(-1.6,0,3.6),.75,off?0:180);if(t>=97.6&&t<97.7)fl=.25,flc='#000';warmLs.forEach(L=>L.intensity=off?lerp(.2,1.6,seg(t,97.7,98.9)):0);hemi.intensity=off?1.0:.75;
+  const sit=seg(t,98.0,99.6);const seat=figure;stu.visible=true;stu.position.copy(vl(V(-1.6,0,3.6),V(-0.82,0,0.38),sit));stu.rotation.set(0,lerp(Math.PI*.9,0,sit),0);stu.userData.body.position.y=-.29*sit;
+  headsTo(V(0,1.2,5),0);const k=seg(t,97.2,100.6);cam.position.set(lerp(2.6,3.3,k),lerp(1.8,2.3,k),lerp(-1.6,-3.0,k));cam.lookAt(-.4,.9,1.6);}
+ else{$('end').style.opacity=cl((t-100.6)/.5);}
+ if(t<97.2||t>=100.6)stu.userData.body.position.y=0;
+ $('flash').style.background=flc;$('flash').style.opacity=cl(fl);
+ if(!window.__noR)R.render(scene,cam);
+};
+// clipping audit: camera inside the room box (except the reveal), never inside a figure
+window.audit=function(){window.__noR=true;const bad=[];for(let f=0;f<Math.round(104.6*30);f++){const t=f/30;window.renderAt(t);if(scene!==sRoom)continue;const p=cam.position;
+ const reveal=t>=90.5&&t<93.9;if(!reveal&&(p.x<-3.85||p.x>3.85||p.z<-4.9||p.z>4.75||p.y<.2||p.y>3.3))bad.push([t.toFixed(2),'cam outside room',p.toArray().map(v=>+v.toFixed(2))]);
+ for(const o of [...obs,stu,pal]){if(!o.visible)continue;const d=Math.hypot(p.x-o.position.x,p.z-o.position.z);if(d<.35&&p.y<1.8)bad.push([t.toFixed(2),'cam in figure']);}}
+ window.__noR=false;return bad.slice(0,40);};
+window.READY=true;
+</script></body></html>
