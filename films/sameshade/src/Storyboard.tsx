@@ -121,24 +121,29 @@ const SCENES: React.FC[] = [
     <Chrome sub="A和B，是[同一个颜色]。">
       <svg width={1920} height={1080} style={{ position: 'absolute', inset: 0 }}><Board /></svg>
       <Picker rows={[['A', [DARK, DARK, DARK]], ['B', [DARK, DARK, DARK]]]} />
-      <Tag n="S1" t="开场 0 s" />
+      <Tag n="S1" t="开场 0 s · 第一帧就是完整棋盘" />
     </Chrome>
   ),
+  // 0b · the one opening proof: black closes in on A and B, one continuous take into the drop
+  () => (<Chrome sub="盯着B，我把周围[遮住]——"><svg width={1920} height={1080} style={{ position: 'absolute', inset: 0 }}><Board iris={0.72} /></svg>
+    <Picker rows={[['A', [DARK, DARK, DARK]], ['B', [DARK, DARK, DARK]]]} /><Tag n="S1" t="2.5 s · 黑幕从四周往里收（唯一一步证明）" /></Chrome>),
+  () => (<Chrome sub="B在变深——它{一像素没动}。"><svg width={1920} height={1080} style={{ position: 'absolute', inset: 0 }}><Board iris={0.9} /></svg>
+    <Picker rows={[['A', [DARK, DARK, DARK]], ['B', [DARK, DARK, DARK]]]} /><Tag n="S1" t="5.2 s · 收到只剩两块，下一拍就是 drop" /></Chrome>),
   // 1 · the drop: everything but A and B goes black; the title
   () => (
     <Chrome bg="#050505">
       <svg width={1920} height={1080} style={{ position: 'absolute', inset: 0 }}><Board maskAB={1} /></svg>
-      <div style={{ position: 'absolute', left: 0, right: 0, top: 170, textAlign: 'center', fontFamily: SERIF, fontWeight: 900, fontSize: 120, color: GOLD, textShadow: `0 0 30px ${GLOW}` }}>同一个颜色</div>
+      <div style={{ position: 'absolute', left: 0, right: 0, top: 690, textAlign: 'center', fontFamily: SERIF, fontWeight: 900, fontSize: 120, color: GOLD, textShadow: `0 0 30px ${GLOW}` }}>同一个颜色</div>
       <Picker rows={[['A', [DARK, DARK, DARK]], ['B', [DARK, DARK, DARK]]]} />
-      <Tag n="S1" t="8.1 s DROP · 标题" />
+      <Tag n="S1" t="8.1 s DROP · 黑幕收成两块方块 · 标题" />
     </Chrome>
   ),
   // 2 · the shadow slid away; B keeps its true value and now looks dark
   () => (
-    <Chrome sub="大脑先猜B在阴影里，于是把它[调亮]了。">
+    <Chrome sub="把阴影[拿开]：B一点没变，它本来就这么深。">
       <svg width={1920} height={1080} style={{ position: 'absolute', inset: 0 }}><Board shadowOff={[2.0, 0]} bFixed /></svg>
       <Picker rows={[['B', [DARK, DARK, DARK]], ['B 旁边', [LIGHT, LIGHT, LIGHT]]]} />
-      <Tag n="S2" t="把阴影拿开" />
+      <Tag n="S2" t="11.6 s · 阴影滑走，B 不动（兼做解释，不另起证明）" />
     </Chrome>
   ),
   // 3 · a sheet of paper, half in shadow
@@ -202,18 +207,16 @@ const SCENES: React.FC[] = [
       <Tag n="S7" t="收尾" />
     </Chrome>
   ),
-  // proofs
-  () => (<Chrome sub="不信？[连起来]看——"><svg width={1920} height={1080} style={{ position: 'absolute', inset: 0 }}><Board bridge={1} /></svg>
-    <Picker rows={[['A', [DARK, DARK, DARK]], ['B', [DARK, DARK, DARK]]]} /><Tag n="证明 1" t="同一条色带，从A一直通到B，两头没有接缝" /></Chrome>),
-  () => (<Chrome sub="再把周围，[慢慢]遮住——"><svg width={1920} height={1080} style={{ position: 'absolute', inset: 0 }}><Board iris={0.82} /></svg>
-    <Picker rows={[['A', [DARK, DARK, DARK]], ['B', [DARK, DARK, DARK]]]} /><Tag n="证明 2" t="黑幕从四周往里收，A和B本身一像素没动" /></Chrome>),
-  () => (<Chrome sub="把B[搬]到A旁边——"><svg width={1920} height={1080} style={{ position: 'absolute', inset: 0 }}><Board slideB={0.5} /></svg>
-    <Picker rows={[['搬走的B', [DARK, DARK, DARK]]]} /><Tag n="证明 3" t="B 的复制品滑出阴影，越走越暗" /></Chrome>),
-  () => (<Chrome sub="一模一样。{连条缝都没有}。"><svg width={1920} height={1080} style={{ position: 'absolute', inset: 0 }}><Board slideB={1} /></svg>
-    <Picker rows={[['A', [DARK, DARK, DARK]], ['搬来的B', [DARK, DARK, DARK]]]} /><Tag n="证明 3" t="贴到A旁边，拼成一整块" /></Chrome>),
-  () => (<Chrome sub="还不信？[截图]，用取色器自己看。"><svg width={1920} height={1080} style={{ position: 'absolute', inset: 0 }}><Board /></svg>
-    <div style={{ position: 'absolute', top: 170, left: 0, width: 900, textAlign: 'center', fontFamily: SANS, fontWeight: 900, fontSize: 44, color: GOLD }}>现在暂停 · 截图 · 取色</div>
-    <Picker rows={[['A', [DARK, DARK, DARK]], ['B', [DARK, DARK, DARK]]]} /><Tag n="证明 4" t="让观众自己验证" /></Chrome>),
+  // 8 · end card: the question, plus the screenshot line folded in (no separate beat)
+  () => (
+    <Chrome bg="#050505">
+      <svg width={1920} height={1080} style={{ position: 'absolute', inset: 0, opacity: 0.2 }}><Board labels={false} /></svg>
+      <div style={{ position: 'absolute', left: 0, right: 0, top: 380, textAlign: 'center', fontFamily: SANS, fontWeight: 900, fontSize: 72, color: INK, textShadow: '0 0 4px #000, 0 2px 18px #000' }}>那条裙子，你当年看到的是<span style={{ color: GOLD }}>什么颜色</span>？</div>
+      <div style={{ position: 'absolute', left: 0, right: 0, top: 520, textAlign: 'center', fontFamily: SANS, fontWeight: 700, fontSize: 34, color: DIM, letterSpacing: '0.12em' }}>还不信 A = B？暂停 · 截图 · 自己取色</div>
+      <div style={{ position: 'absolute', left: 0, right: 0, top: 820, textAlign: 'center', fontFamily: MONO, fontSize: 18, color: DIM, letterSpacing: '0.2em' }}>Adelson 1995 · Lafer-Sousa et al. 2015 · Wallisch 2017 · Novick 2018</div>
+      <Tag n="S8" t="片尾卡" />
+    </Chrome>
+  ),
 ];
 
 export const Storyboard: React.FC = () => {
