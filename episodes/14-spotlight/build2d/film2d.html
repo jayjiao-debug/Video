@@ -124,9 +124,9 @@ function drawPhone(t,s,scale,ox,oy,rot=-.025){const d1=Math.sin(t*1.3)*6,d2=Math
 const MORE=[['张悦',AV[4],'报告是交纸质的吗？',300],['王老师',AV[0],'电子版发我邮箱',290],['陈一',AV[5],'收到收到',170],['刘洋',AV[6],'有人带伞了吗 ☔',260],['李思',AV[1],'[表情包]',150],['周周',AV[7],'明天体育课换教室了',320],['张悦',AV[4],'哈哈哈哈哈',190],['陈一',AV[5],'@刘洋 我有两把',230],['王老师',AV[0],'报告别忘了写名字',300],['小米',AV[2],'今晚月亮好圆 🌕',250]];
 
 /* ---------- music grid (bgm_edit_v1: 118.5 bpm, drop 12.40, tape-stop 79.22, drop2 90.47) ---------- */
-const BT=0.5062,D1=12.40,TS=79.22,D2=90.47,bt=i=>D1+BT*i,bt2=j=>D2+BT*j,RB=D2-20*BT,bt3=k=>RB+BT*k;
+const BT=0.5062,D1=12.40,TS=79.22,D2=12.40+156*0.5062,bt=i=>D1+BT*i,bt2=j=>D2+BT*j,RB=D2-20*BT,bt3=k=>RB+BT*k;
 let PULSE=0;
-function beat(t){let base=null;if(t>=D1&&t<TS)base=D1;else if(t>=RB&&t<D2)base=RB;else if(t>=D2)base=D2;if(base===null)return{p:0,pd:0};const n=Math.floor((t-base)/BT),ph=t-base-n*BT;return{p:Math.exp(-ph*9),pd:n%4===0?Math.exp(-ph*7):0};}
+function beat(t){let base=null;if(t>=D1)base=D1;if(base===null)return{p:0,pd:0};const n=Math.floor((t-base)/BT),ph=t-base-n*BT;return{p:Math.exp(-ph*9),pd:n%4===0?Math.exp(-ph*7):0};}
 /* ---------- "整个你": a portrait built from the things people actually noticed ---------- */
 const TRAITS=['真诚','有趣','靠谱','爱笑','温柔','细心','好相处','讲义气','会聊天','有想法','坦率','努力','善良','可爱','随和','幽默','认真','勇敢','聪明','热心','大方','会照顾人','有礼貌','有梗','很暖','好说话','实在','有主见','乐观','耐心','会倾听','敢说真话','靠得住','笑点低','很会夸人','不装','心软','有分寸','爱帮忙','自信','好学','脾气好','会安慰人','很拼','有担当','记性好','会做饭','品味好','讲道理','好脾气','暖心','有礼有节','爱运动','字好看'];
 let TAGS=null,SPECIAL=null;
@@ -155,7 +155,7 @@ function drawTag(q,a,sc=1){if(a<=0)return;g.save();g.globalAlpha*=a;g.translate(
 /* ---------- scenes ---------- */
 const $=id=>document.getElementById(id);
 function subtitle(t){const l=LINES.find(l=>t>=l[0]&&t<l[1]);$('sub').innerHTML=l?l[2].replace(/\[(.+?)\]/g,'<b>$1</b>'):'';}
-const CH=[[18.47,56.95,'2000 · 康奈尔大学'],[56.95,70.11,'2001 · 另一个实验'],[RB,90.47,'2018 · 耶鲁大学']];
+const CH=[[18.47,56.95,'2000 · 康奈尔大学'],[56.95,70.11,'2001 · 另一个实验'],[80.0,D2,'2018 · 耶鲁大学']];
 function chap(t){const c=CH.find(c=>t>=c[0]&&t<c[1]);$('chap').firstChild.textContent=c?c[2]:'';$('chap').style.opacity=c?.9:0;}
 window.renderAt=function(t){subtitle(t);chap(t);let fl=0;$('plaque').style.opacity=0;$('end').style.opacity=0;g.setTransform(1,0,0,1,0,0);
  const B=beat(t);PULSE=B.p;C.style.transform=`scale(${1+.007*B.pd})`;
@@ -181,13 +181,31 @@ window.renderAt=function(t){subtitle(t);chap(t);let fl=0;$('plaque').style.opaci
   [['✓ 传说皮肤框',bt(24)],['✓ 金光特效',bt(25)],['✓ SSR',bt(26)],['✓ 战力 99999',bt(27)]].forEach(([s,tt],i)=>{const a=cl((t-tt)/.15);if(a>0){g.save();g.globalAlpha=a;const sc=lerp(1.5,1,eob(cl((t-tt)/.25)));g.translate(560,330+i*92);g.scale(sc,sc);txt(s,0,0,`900 50px ${SERIF}`,i===3?'#ff7ab0':GOLD,'right',1,14);g.restore();}});
   const peers=[[300,1000],[600,1030],[1320,1030],[1620,1000]];peers.forEach(([x,y],i)=>person(x,y,.85,'#262b38',{lit:t>bt(28)+i*BT/2?1:0,glowCol:'#d24a3a'}));
   stamp(960,560,'丢 人',cl((t-bt(28))/.18),-.12);if(t>=bt(28)&&t<bt(28)+.08)fl=.16;}
- /* S4 29.61-38.72: POV opening the door, the room faces you; then out */
- else if(t<38.72){room(.25);const inside=t<35.69;const doorOpen=inside?eob(cl((t-29.65)/.5)):1-seg(t,35.1,35.69);
-  g.save();g.fillStyle='#141a28';g.fillRect(460,120,1000,860);const L2=g.createRadialGradient(960,560,40,960,560,620);L2.addColorStop(0,'rgba(255,220,170,.22)');L2.addColorStop(1,'rgba(255,220,170,0)');g.fillStyle=L2;g.fillRect(460,120,1000,860);
-  g.fillStyle='#3b3226';rr(600,660,720,60,10);g.fill();[[700,640],[850,610],[1000,600],[1150,610],[1260,640]].forEach(([x,y],i)=>person(x,y,.62,'#2f3646',{lit:inside?cl((t-bt(36)-i*BT/4)/.2)*(1-cl((t-33.6)/.4)):0}));
-  shirt(960,1180,.9,'pop',1,t);
-  const dw=500*(1-doorOpen);g.fillStyle='#2a2219';g.fillRect(460,120,dw,860);g.fillRect(1460-dw,120,dw,860);g.fillStyle='#0b0d14';g.fillRect(0,0,460,H);g.fillRect(1460,0,460,H);g.fillRect(460,0,1000,120);g.restore();
-  card(1520,180,360,200,[['只看一眼',`800 40px ${SERIF}`,INK,70],['就请出门',`800 40px ${SERIF}`,INK,130]],fade(t,32.65,35.69,.25));
+ /* S4 29.61-38.72: side view. you in the bright doorway; everyone seated in profile, turned to the door */
+ else if(t<38.72){room(.22);const inside=t<35.69;const op=inside?eob(cl((t-29.65)/.55)):1-seg(t,35.1,35.69);
+  g.fillStyle='#10141f';g.fillRect(0,0,W,900);g.fillStyle='#1a1712';g.fillRect(0,900,W,180);g.fillStyle='rgba(255,220,170,.06)';g.fillRect(0,900,W,4);
+  // doorway + light spill
+  const DX=300,DY=250,DW=270,DH=650;g.save();g.globalCompositeOperation='lighter';const sp=g.createLinearGradient(DX+DW,0,DX+DW+900,0);sp.addColorStop(0,`rgba(255,222,170,${.22*op})`);sp.addColorStop(1,'rgba(255,222,170,0)');g.fillStyle=sp;g.beginPath();g.moveTo(DX+DW,DY);g.lineTo(DX+DW+900,DY-60);g.lineTo(DX+DW+900,1080);g.lineTo(DX+DW,DY+DH);g.closePath();g.fill();
+  g.fillStyle=`rgba(255,236,200,${.12*op})`;g.beginPath();g.moveTo(DX,DY+DH);g.lineTo(DX+DW,DY+DH);g.lineTo(DX+DW+700,1080);g.lineTo(DX-120,1080);g.closePath();g.fill();g.restore();
+  const dg=g.createLinearGradient(0,DY,0,DY+DH);dg.addColorStop(0,'#fff3dc');dg.addColorStop(1,'#f0cf98');g.fillStyle='#05070b';g.fillRect(DX,DY,DW,DH);g.save();g.globalAlpha=op;g.fillStyle=dg;g.fillRect(DX,DY,DW,DH);g.restore();
+  g.strokeStyle='#3a3024';g.lineWidth=14;g.strokeRect(DX-7,DY-7,DW+14,DH+7);
+  const lw=DW*(1-op);g.fillStyle='#2a2219';g.beginPath();g.moveTo(DX+DW,DY);g.lineTo(DX+DW+lw*.0+ (DW-lw)*.55,DY-40*op);g.lineTo(DX+DW+(DW-lw)*.55,DY+DH+40*op);g.lineTo(DX+DW,DY+DH);g.closePath();g.fill();if(lw>2){g.fillRect(DX,DY,lw,DH);}
+  // you, in the doorway (backlit), wearing the shirt
+  const ya=inside?eob(cl((t-29.9)/.45)):1-seg(t,35.0,35.5);if(ya>0){g.save();g.globalAlpha=ya;const wx=DX+DW/2+lerp(-40,0,ya);person(wx,735,.85,'#141820');shirt(wx,808,.42,'pop',1,t);g.restore();}
+  // the room: seated people in profile, all facing left (the door)
+  const PP=[[1060,800,.78],[1250,770,.7],[1420,815,.86],[1600,775,.72],[1770,820,.9]];
+  const seat=(x,y,sc,col)=>{g.save();g.translate(x,y);g.scale(sc,sc);g.fillStyle='#2a2a30';g.fillRect(52,-150,16,250);g.fillRect(-40,20,110,16);g.fillRect(-36,36,10,64);g.fillRect(58,36,10,64);
+   g.fillStyle=col;rr(-48,-135,96,160,42);g.fill();rr(-120,-6,120,36,16);g.fill();rr(-128,0,32,105,14);g.fill();rr(-150,92,52,18,8);g.fill();
+   g.save();g.translate(-30,-60);g.rotate(-.35);rr(-80,-12,90,28,13);g.fill();g.restore();
+   g.beginPath();g.ellipse(-8,-192,44,50,0,0,7);g.fill();g.beginPath();g.ellipse(-58,-182,13,12,0,0,7);g.fill();g.beginPath();g.moveTo(-50,-160);g.lineTo(-22,-150);g.lineTo(-30,-166);g.fill();g.restore();};
+  // table in front of them
+  PP.slice().sort((p,q)=>p[1]-q[1]).forEach(([x,y,sc])=>seat(x,y,sc,'#36405a'));
+  // eye-lines: each head to your shirt, drawn on the beat
+  const tgx=DX+DW/2,tgy=800;PP.forEach(([x,y,sc],i)=>{const tt=bt(36)+i*BT/2;const k=cl((t-tt)/.3)*(inside?1-cl((t-34.5)/.4):0);if(k<=0)return;const hx=x-70*sc,hy=y-184*sc;
+   g.save();g.strokeStyle='rgba(246,207,120,.85)';g.lineWidth=4;g.setLineDash([12,10]);g.lineDashOffset=-t*40;g.beginPath();g.moveTo(hx,hy);g.lineTo(lerp(hx,tgx,k),lerp(hy,tgy,k));g.stroke();g.setLineDash([]);
+   g.fillStyle=GOLD;g.shadowColor=GOLD;g.shadowBlur=14;g.beginPath();g.arc(hx,hy,6,0,7);g.fill();g.restore();});
+  const hit=PP.reduce((n,p,i)=>n+(t>bt(36)+i*BT/2+.3?1:0),0);if(hit>0&&inside)txt(hit+'/5 在看你',tgx,DY-40,`900 54px ${SERIF}`,GOLD,'center',1-cl((t-34.5)/.4),18);
+  card(1500,140,360,200,[['只看一眼',`800 40px ${SERIF}`,INK,70],['就请出门',`800 40px ${SERIF}`,INK,130]],fade(t,32.65,35.69,.25));
   if(t>=35.69){g.fillStyle='rgba(6,8,13,.78)';g.fillRect(0,0,W,H);const a=eob(cl((t-35.69)/.35));g.save();g.translate(960,480);g.scale(lerp(.8,1,a),lerp(.8,1,a));card(-400,-150,800,300,[['问他：',`600 40px ${SERIF}`,'#6c5a3e',80],['屋里几个人能认出',`900 64px ${SERIF}`,INK,170],['T恤上是谁？',`900 64px ${SERIF}`,INK,250]],cl((t-35.69)/.2));g.restore();}}
  /* S5 38.72-56.95: the numbers, then the proud shirt */
  else if(t<56.95){room(.45);const proud=t>=44.8;const sy=lerp(560,520,seg(t,38.72,56.95));const fx=Math.abs(Math.cos(cl((t-44.55)/.5)*Math.PI));
@@ -220,7 +238,7 @@ window.renderAt=function(t){subtitle(t);chap(t);let fl=0;$('plaque').style.opaci
    // the room, from behind: they look at the whole picture
    g.save();g.globalAlpha=.9;aud(pz*.7);g.restore();}}
  /* S7 75.17-90.47: after a chat (tape-stop = the silence), then the liking gap in the quiet break */
- else if(t<90.47){room(t<TS?.5:t<RB?.25:.42);
+ else if(t<D2){room(t<TS?.5:t<RB?.25:.42);
   if(t<80.2){const ca=1-cl((t-79.8)/.4);g.save();g.globalAlpha=ca;const sc=.78,ox=-380;g.setTransform(sc,0,0,sc,W/2-PW*sc/2+ox,80);g.fillStyle='#0d0f14';rr(0,0,PW,PH,70);g.fill();rr(18,18,PW-36,PH-36,56);g.clip();g.fillStyle='#ededed';g.fillRect(0,0,PW,PH);
     txt('22:41',58,62,`600 26px ${SANS}`,'#111');g.fillStyle='#f7f7f7';g.fillRect(0,80,PW,110);txt('新室友 · 小林',PW/2,135,`700 34px ${SANS}`,'#111','center');
     const typing=t>=bt(129)&&t<TS;if(typing){const n=1+Math.floor((t-bt(129))/BT)%3;txt('对方正在输入'+'.'.repeat(n),PW/2,174,`500 24px ${SANS}`,'#2a8a3a','center');}
@@ -228,28 +246,28 @@ window.renderAt=function(t){subtitle(t);chap(t);let fl=0;$('plaque').style.opaci
     if(t>=TS){txt('已读',PW-110,590,`500 22px ${SANS}`,'#999','right');}
     g.restore();
     if(t>=TS){const a=cl((t-TS)/.12)*ca;txt('……',1180,470,`900 120px ${SERIF}`,'#e9dcc0','left',a);txt('她是不是嫌我烦了？',1180,600,`700 52px ${SERIF}`,'#e9dcc0','left',cl((t-TS-.5)/.4)*ca);}}
-  if(t>=80.0&&t<86.8){const a=cl((t-80.0)/.35)*(1-cl((t-86.42)/.35));const r=seg(t,RB,RB+1.4);g.save();g.globalAlpha=a;
+  if(t>=80.0&&t<86.8){const a=cl((t-80.0)/.35)*(1-cl((t-86.95)/.35));const r=seg(t,bt(134),bt(134)+1.4);g.save();g.globalAlpha=a;
    bar(560,820,240,560,62*r,GOLD,'我对TA的好感','',1);bar(980,820,240,560,48*r,'#f6a35a','我猜TA对我','',1);
-   if(t>bt3(6)){const gg=seg(t,bt3(6),bt3(6)+1.0);g.setLineDash([16,12]);g.strokeStyle=BLUE;g.lineWidth=5;rr(980,820-560*(48+16*gg)/100,240,560*(48+16*gg)/100,10);g.stroke();g.setLineDash([]);txt('TA的真实好感',1100,820-560*(48+16*gg)/100-28,`700 34px ${SERIF}`,BLUE,'center');
-    txt('被低估',1300,560,`900 64px ${SERIF}`,BLUE,'left',cl((t-bt3(8))/.25),20);}
+   if(t>bt3(4)){const gg=seg(t,bt3(4),bt3(4)+1.0);g.setLineDash([16,12]);g.strokeStyle=BLUE;g.lineWidth=5;rr(980,820-560*(48+16*gg)/100,240,560*(48+16*gg)/100,10);g.stroke();g.setLineDash([]);txt('TA的真实好感',1100,820-560*(48+16*gg)/100-28,`700 34px ${SERIF}`,BLUE,'center');
+    txt('被低估',1300,560,`900 64px ${SERIF}`,BLUE,'left',cl((t-bt3(6))/.25),20);}
    g.restore();}
-  if(t>=bt3(12)){const ca=cl((t-bt3(12))/.3)*(1-cl((t-90.1)/.3));const mi=Math.min(6,Math.max(0,Math.floor((t-bt3(13))/BT)+1));g.save();g.globalAlpha=ca;g.translate(960,470);const fl2=t>bt3(13)?Math.exp(-((t-bt3(13))%BT)*10):0;g.scale(1+.02*fl2,1+.02*fl2);
+  if(t>=bt3(12)){const ca=cl((t-bt3(12))/.3)*(1-cl((t-91.0)/.3));const mi=Math.min(6,Math.max(0,Math.floor((t-bt3(13))/BT)+1));g.save();g.globalAlpha=ca;g.translate(960,470);const fl2=t>bt3(13)?Math.exp(-((t-bt3(13))%BT)*10):0;g.scale(1+.02*fl2,1+.02*fl2);
    g.fillStyle='#efe7d6';g.shadowColor='rgba(0,0,0,.6)';g.shadowBlur=30;rr(-230,-240,460,480,20);g.fill();g.shadowBlur=0;g.fillStyle='#a8322a';rr(-230,-240,460,96,20);g.fill();g.fillRect(-230,-180,460,36);txt('室友之间 · 还在低估',0,-178,`700 36px ${SERIF}`,'#fff','center');
    txt(['9月','10月','11月','12月','1月','2月','3月'][mi],0,80,`900 170px ${SERIF}`,INK,'center');txt('开学 → 好几个月后',0,190,`600 32px ${SERIF}`,'#6c5a3e','center');g.restore();}
-  if(t>90.0){g.fillStyle=`rgba(0,0,0,${.6*cl((t-90.0)/.4)})`;g.fillRect(0,0,W,H);}}
- /* S8 90.47-94.52: drop — pull back: everyone in their own spotlight, on their own phone */
- else if(t<94.52){room(.2);const k=seg(t,90.47,93.6);const N=40,cols=10;const sc=lerp(1.6,1,k);g.save();g.translate(W/2,H/2-40);g.scale(sc,sc);g.translate(-W/2,-(H/2-40));
-  for(let i=0;i<N;i++){const cx=240+(i%cols)*160,cy=200+Math.floor(i/cols)*190;const on=cl((t-90.5-((i*7)%N)*.02)/.2)*(1+.25*B.p);
+  if(t>90.95){g.fillStyle=`rgba(0,0,0,${.5*cl((t-90.95)/.42)})`;g.fillRect(0,0,W,H);}}
+ /* S8 91.37-95.42: drop — pull back: everyone in their own spotlight, on their own phone */
+ else if(t<95.42){room(.2);const k=seg(t,91.37,94.5);const N=40,cols=10;const sc=lerp(1.6,1,k);g.save();g.translate(W/2,H/2-40);g.scale(sc,sc);g.translate(-W/2,-(H/2-40));
+  for(let i=0;i<N;i++){const cx=240+(i%cols)*160,cy=200+Math.floor(i/cols)*190;const on=cl((t-91.4-((i*7)%N)*.02)/.2)*(1+.25*B.p);
    g.save();g.globalCompositeOperation='lighter';const sp=g.createRadialGradient(cx,cy,4,cx,cy,90);sp.addColorStop(0,`rgba(255,224,170,${.35*on})`);sp.addColorStop(1,'rgba(255,224,170,0)');g.fillStyle=sp;g.beginPath();g.arc(cx,cy,90,0,7);g.fill();g.restore();
    phoneGlow(cx,cy+60,.35,cl(on));person(cx,cy+60,.36,i===14?'#5a4a3a':'#2a3040',{down:1});}
-  g.restore();if(t<90.6)fl=.35;}
- /* S9 94.52-98.57: your message buried under everyone else's */
- else if(t<98.57){room(.6);const k=seg(t,94.7,97.4);const s={strip:0,read:0,more:MORE,scroll:lerp(0,1300,k)};drawPhone(t,s,.82,0,-20);
+  g.restore();if(t<91.5)fl=.35;}
+ /* S9 95.42-99.47: your message buried under everyone else's */
+ else if(t<99.47){room(.6);const k=seg(t,95.6,98.3);const s={strip:0,read:0,more:MORE,scroll:lerp(0,1300,k)};drawPhone(t,s,.82,0,-20);
   txt('↑ 你的那条，早被刷上去了',1260,420,`700 44px ${SERIF}`,GOLD,'left',cl((t-bt2(10))/.3),16);}
- /* S10 98.57-102.62: lights warm up, phone down */
- else if(t<102.62){const k=seg(t,98.57,100.8);room(1);g.fillStyle=`rgba(255,200,140,${.10*k})`;g.fillRect(0,0,W,H);const s={off:true,refl:1};drawPhone(t,s,lerp(.82,.6,k),0,lerp(-20,260,k),lerp(-.025,-.25,k));
+ /* S10 99.47-103.52: lights warm up, phone down */
+ else if(t<103.52){const k=seg(t,99.47,101.7);room(1);g.fillStyle=`rgba(255,200,140,${.10*k})`;g.fillRect(0,0,W,H);const s={off:true,refl:1};drawPhone(t,s,lerp(.82,.6,k),0,lerp(-20,260,k),lerp(-.025,-.25,k));
   txt('没那么多人在看你',W/2,360,`900 96px ${SERIF}`,GOLD,'center',cl((t-bt2(18))/.4),26);}
- else{$('end').style.opacity=cl((t-102.62)/.4);}
+ else{$('end').style.opacity=cl((t-103.52)/.4);}
  const v=g.createRadialGradient(W/2,H/2,H*.4,W/2,H/2,H*1.0);v.addColorStop(0,'rgba(0,0,0,0)');v.addColorStop(1,'rgba(0,0,0,.6)');g.fillStyle=v;g.fillRect(0,0,W,H);
  const b=g.createLinearGradient(0,H,0,H-300);b.addColorStop(0,'rgba(0,0,0,.75)');b.addColorStop(1,'rgba(0,0,0,0)');g.fillStyle=b;g.fillRect(0,H-300,W,300);
  $('flash').style.opacity=fl;};
