@@ -43,5 +43,13 @@
   ],
   "then": "v1[26.574:]",
   "why": "owner: remove the sound effect at 1:18-1:20 (the track fill before its section change); loop back 24 bars at bar 31 instead of 33"
+ },
+ "v5": {
+  "from": "bgm_edit_v1.wav",
+  "splice": 52.896,
+  "offset_back": 32.397,
+  "crossfade": "equal-power, 1 bar centred on the splice",
+  "end_src": 77.6,
+  "why": "owner: music around 1:19 sounded cut; one unbroken-sounding track, no hard joins; splice chosen by spectral match at the same phrase position, well before the source fill at 76.7"
  }
 }
