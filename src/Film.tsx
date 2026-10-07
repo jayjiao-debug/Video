@@ -47,7 +47,7 @@ const inShot = (T: number, k: keyof typeof SHOT) => T >= SHOT[k][0] && T < SHOT[
 type Row = { k: string; v: [number, number, number]; o: number; note?: string };
 const Picker: React.FC<{ rows: Row[]; o?: number; foot?: string; footO?: number }> = ({ rows, o = 1, foot, footO = 1 }) => o <= 0.001 ? null : (
   <div style={{ position: 'absolute', right: 70, top: 160, width: 370, padding: '16px 22px 18px', borderRadius: 14, background: 'rgba(10,10,12,0.86)', border: '1px solid rgba(243,237,226,0.18)', fontFamily: MONO, color: INK, opacity: o }}>
-    <div style={{ fontSize: 16, letterSpacing: '0.3em', color: DIM, marginBottom: 12, fontFamily: SANS, fontWeight: 700 }}>⌖ 取色器 · RGB</div>
+    <div style={{ fontSize: 16, letterSpacing: '0.3em', color: DIM, marginBottom: 12, fontFamily: SANS, fontWeight: 700 }}>取色器 · RGB</div>
     {rows.map((r, i) => (
       <div key={i} style={{ display: 'flex', alignItems: 'center', gap: 12, fontSize: 25, fontWeight: 700, marginTop: i ? 10 : 0, opacity: r.o }}>
         <span style={{ width: 32, height: 32, borderRadius: 6, background: `rgb(${r.v.join(',')})`, border: '1px solid rgba(255,255,255,0.35)', flexShrink: 0 }} />
@@ -466,7 +466,7 @@ const PickerNow: React.FC<{ T: number }> = ({ T }) => {
   }
   if (inShot(T, 'paper')) {
     const a = SHOT.paper[0];
-    return <Picker rows={[{ k: '亮处', v: PAPER, o: easeOut(prog(T, a + 0.3, a + 0.45)) }, { k: '阴影里', v: PAPER_SH, o: easeOut(prog(T, a + 0.6, a + 0.75)) }]}
+    return <Picker o={easeOut(prog(T, a + 0.2, a + 0.4))} rows={[{ k: '亮处', v: PAPER, o: easeOut(prog(T, a + 0.3, a + 0.45)) }, { k: '阴影里', v: PAPER_SH, o: easeOut(prog(T, a + 0.6, a + 0.75)) }]}
       foot="阴影里 = 亮处 × ½" footO={easeOut(prog(T, L.paper, L.paper + 0.3))} />;
   }
   if (inShot(T, 'balls')) {
