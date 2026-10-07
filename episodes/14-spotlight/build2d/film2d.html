@@ -252,10 +252,89 @@ const ALT5={
   txt('第二天早上',820,300,`700 40px ${SERIF}`,'#6a4a2a','left',cl((t-99.6)/.4));txt('她回了',820,370,`900 70px ${SERIF}`,'#b0501a','left',cl((t-bt2(19))/.3));}
 };
 
+/* ---------- v5: the four weak moments, told on your own phone ---------- */
+function phoneAt(cx,cy,sc,rot,paint,glow=0){g.save();g.translate(cx,cy);g.rotate(rot);g.scale(sc,sc);g.translate(-PW/2,-PH/2);
+ if(glow>0){g.save();g.globalCompositeOperation='lighter';const gr=g.createRadialGradient(PW/2,PH/2,40,PW/2,PH/2,PH*.9);gr.addColorStop(0,`rgba(255,220,160,${.28*glow})`);gr.addColorStop(1,'rgba(255,220,160,0)');g.fillStyle=gr;g.fillRect(-PW,-PH*.4,PW*3,PH*1.8);g.restore();}
+ g.shadowColor='rgba(0,0,0,.7)';g.shadowBlur=60;g.fillStyle='#0d0f14';rr(0,0,PW,PH,70);g.fill();g.shadowBlur=0;g.save();rr(18,18,PW-36,PH-36,56);g.clip();paint();g.restore();g.restore();}
+function sbar(clock,dark){txt(clock,58,62,`600 26px ${SANS}`,dark?'#eee':'#111');txt('▮▮▮  82%',PW-58,62,`600 26px ${SANS}`,dark?'#eee':'#111','right');}
+function cbub(x,y,name,col,text,mine,a=1){if(a<=0)return 0;g.save();g.globalAlpha*=cl(a);g.translate(0,lerp(26,0,eob(cl(a))));g.font=`500 30px ${SANS}`;const w=g.measureText(text).width+44;
+ if(mine){g.fillStyle=AV[3];g.beginPath();g.arc(PW-70,y+40,34,0,7);g.fill();txt('我',PW-70,y+50,`700 28px ${SANS}`,'#fff','center');g.fillStyle=GOLD;rr(PW-118-w,y+4,w,74,16);g.fill();txt(text,PW-118-w+22,y+52,`500 30px ${SANS}`,INK);}
+ else{txt(name,128,y,`500 24px ${SANS}`,'#888');g.fillStyle=col;g.beginPath();g.arc(70,y+40,34,0,7);g.fill();txt(name[0],70,y+50,`700 28px ${SANS}`,'#fff','center');g.fillStyle='#fff';rr(118,y+10,w,74,16);g.fill();txt(text,140,y+58,`500 30px ${SANS}`,'#111');}
+ g.restore();return 1;}
+function keyboard(y0){g.fillStyle='#d6d8dd';g.fillRect(0,y0,PW,PH-y0);for(let r=0;r<4;r++){const n=r===3?3:10-r;const kw=(PW-40-(n-1)*10)/n;for(let k=0;k<n;k++){const w=r===3&&k===1?kw*1.6:kw;g.fillStyle='#fff';rr(20+k*(kw+10)+(r===3&&k===2?kw*.6:0),y0+20+r*92,r===3&&k===1?w:kw,76,10);g.fill();}}}
+const P1=t=>{/* 0:09 panic search; the top hit is the 2000 paper (becomes the title plaque on the drop) */
+ const Q='发错群了 别人会记得多久',S=bt(-3),k=t<S?0:eob(cl((t-S)/.45));
+ phoneAt(960,560,lerp(.87,.84,seg(t,8.8,12.4)),-.02,()=>{g.fillStyle='#f4f4f6';g.fillRect(0,0,PW,PH);sbar('21:10');
+  g.fillStyle='#fff';g.strokeStyle='#e0e0e4';g.lineWidth=3;rr(36,96,PW-72,84,42);g.fill();g.stroke();g.strokeStyle='#999';g.lineWidth=4;g.beginPath();g.arc(84,138,14,0,7);g.stroke();g.beginPath();g.moveTo(94,148);g.lineTo(106,160);g.stroke();
+  const n=Math.floor(cl((t-8.95)/1.5)*Q.length);txt(Q.slice(0,n)+((t*2|0)%2&&t<S?'|':''),120,150,`500 34px ${SANS}`,'#111');
+  if(t<S&&n>3){['发错群了怎么办','发错群了 撤回不了','发错群 社死怎么办','别人会记得我的糗事吗'].forEach((s,i)=>{const a=cl((t-9.3-i*.08)/.15);g.globalAlpha=a;txt('⌕  '+s,60,250+i*84,`500 30px ${SANS}`,'#333');g.fillStyle='#e8e8ea';g.fillRect(60,272+i*84,PW-120,2);g.globalAlpha=1;});}
+  if(t<S+.4)keyboard(lerp(PH-420,PH+20,k));
+  if(t>=S){g.save();g.globalAlpha=k;g.translate(0,lerp(80,0,k));txt('约 1,280,000 条结果',48,236,`500 24px ${SANS}`,'#999');
+   const hl=t>bt(-2)?1:0;g.fillStyle='#fff';g.shadowColor=hl?'rgba(216,181,106,.9)':'rgba(0,0,0,.12)';g.shadowBlur=hl?40:16;rr(32,262,PW-64,430,24);g.fill();g.shadowBlur=0;if(hl){g.strokeStyle='#d8b56a';g.lineWidth=5;rr(32,262,PW-64,430,24);g.stroke();}
+   g.fillStyle='#a8322a';rr(60,292,170,44,10);g.fill();txt('心理学 · 论文',145,323,`700 24px ${SANS}`,'#fff','center');txt('J Pers Soc Psychol · 2000',250,323,`500 24px ${SANS}`,'#888');
+   txt('The Spotlight Effect',60,410,`900 52px ${SERIF}`,'#1a1a1a');txt('聚光灯效应：我们以为别人',60,480,`700 34px ${SANS}`,'#222');txt('很注意自己，其实没有',60,528,`700 34px ${SANS}`,'#222');
+   txt('Gilovich · Medvec · Savitsky',60,600,`500 28px ${SERIF}`,'#666');txt('康奈尔大学 · 被引用 1000+ 次',60,648,`500 26px ${SANS}`,'#999');
+   g.fillStyle='#fff';rr(32,720,PW-64,260,24);g.fill();g.fillStyle='#e9e9ec';rr(60,760,380,30,8);g.fill();rr(60,812,PW-140,24,8);g.fill();rr(60,852,PW-200,24,8);g.fill();g.restore();}
+ },t<S?0:k*.6);
+ if(t>=bt(-2)&&t<bt(-2)+.07)return .12;};
+const P2=t=>{/* 0:57-1:10: 看扁 / the draft / your guess / the real score */
+ const st=t<60.49?0:t<64.03?1:t<67.07?2:3,T0=[56.95,60.49,64.03,67.07][st],sw=eob(cl((t-T0)/.35));const cx=760;
+ phoneAt(cx,515,.74,-.02,()=>{g.save();g.translate(lerp(st?PW*.6:0,0,sw),0);g.globalAlpha*=st?cl(sw*1.4):1;
+  if(st===0){g.fillStyle='#f4f4f6';g.fillRect(0,0,PW,PH);sbar('21:12');g.fillStyle='#fff';g.fillRect(0,80,PW,96);txt('群成员资料',PW/2,140,`700 32px ${SANS}`,'#111','center');
+   const sq=seg(t,bt(92),bt(92)+.25);g.save();g.translate(PW/2,420);g.scale(lerp(1,1.35,sq),lerp(1,.38,sq));g.fillStyle=AV[3];g.beginPath();g.arc(0,0,120,0,7);g.fill();txt('我',0,40,`900 110px ${SANS}`,'#fff','center');g.restore();
+   txt('你',PW/2,lerp(600,560,sq),`900 46px ${SANS}`,'#111','center');txt('高三(2)班 · 群成员',PW/2,lerp(650,610,sq),`500 26px ${SANS}`,'#999','center');
+   txt('大家心里的你（你脑补的）',60,740,`600 26px ${SANS}`,'#999');[['爱吐槽老师',bt(89)],['说话不过脑',bt(90)],['有点尴尬',bt(91)]].forEach(([s,tt],i)=>{const a=pop(t,tt,.25);if(a<=0)return;g.save();g.translate(60+i*190+80,800);g.scale(a,a);g.rotate(-.04+i*.04);g.strokeStyle='#d24a3a';g.lineWidth=4;rr(-82,-28,164,56,28);g.stroke();txt(s,0,10,`700 26px ${SANS}`,'#d24a3a','center');g.restore();});
+   if(t>bt(92)){const a=pop(t,bt(92),.2);g.save();g.translate(PW/2+170,330);g.rotate(.2);g.scale(a,a);txt('啪！',0,0,`900 60px ${SERIF}`,'#d24a3a','center');g.restore();}}
+  if(st===1){g.fillStyle='#fffaf0';g.fillRect(0,0,PW,PH);sbar('21:30');txt('‹ 备忘录',40,140,`600 30px ${SANS}`,'#d8a43a');txt('明天的自我介绍',48,240,`900 48px ${SANS}`,'#111');txt('第 3 版',48,290,`500 26px ${SANS}`,'#aaa');
+   const L=[['大家好，我叫……',60.6,.6],['说个我的糗事：',61.35,.6],['我其实……',62.1,.5]];L.forEach(([s,a0,d],i)=>{const n=Math.floor(cl((t-a0)/d)*s.length);txt(s.slice(0,n),48,380+i*70,`500 36px ${SANS}`,'#333');});
+   const red=bt(100);if(t<red)txt((t*2|0)%2?'|':'',48+36*5,520,`500 36px ${SANS}`,'#d8a43a');else{const a=pop(t,red,.25);g.save();g.translate(48,486);g.scale(a,1);g.fillStyle='#111';rr(0,0,430,56,8);g.fill();g.restore();txt('🔒 尴尬小秘密',70,525,`700 32px ${SANS}`,'#fff','left',cl((t-red-.1)/.2));}
+   keyboard(PH-420);}
+  if(st===2||st===3){g.fillStyle='#f4f4f6';g.fillRect(0,0,PW,PH);sbar('21:41');g.fillStyle='#fff';g.fillRect(0,80,PW,96);txt(st===2?'猜猜大家给你打几分':'大家给你的平均分',PW/2,140,`700 32px ${SANS}`,'#111','center');
+   const rx=70,rw=PW-140,ry=560;g.fillStyle='#ddd';rr(rx,ry,rw,14,7);g.fill();[[0,'0'],[50,'50 · 普通'],[100,'100']].forEach(([v,l])=>{g.fillStyle='#aaa';g.fillRect(rx+rw*v/100-2,ry-14,4,42);txt(l,rx+rw*v/100,ry+70,`500 26px ${SANS}`,'#888','center');});
+   let v=t<bt(102)?lerp(78,60,seg(t,64.1,64.9)):t<bt(104)?60-4*Math.sin((t-bt(102))*9):52;if(st===3)v=52;const gx=rx+rw*v/100;g.fillStyle='#f6a35a';rr(rx,ry,gx-rx,14,7);g.fill();g.fillStyle='#fff';g.strokeStyle='#f6a35a';g.lineWidth=6;g.beginPath();g.arc(gx,ry+7,30,0,7);g.fill();g.stroke();
+   txt(Math.round(v)+'',gx,ry-50,`900 64px ${SERIF}`,'#f6a35a','center');
+   if(st===2){txt('（拖了半天，只敢拖到这）',PW/2,360,`500 28px ${SANS}`,'#999','center',cl((t-bt(104))/.3));g.save();g.translate(PW/2,260);g.scale(lerp(1,.8,cl((t-bt(104))/.3)),1);g.fillStyle=AV[3];g.beginPath();g.ellipse(0,0,70*1.3,70*.45,0,0,7);g.fill();g.restore();}
+   if(st===3){const r=seg(t,67.1,67.9),m=lerp(52,69,r),mx=rx+rw*m/100;g.fillStyle=GOLD;g.shadowColor=GOLD;g.shadowBlur=20;rr(gx,ry,mx-gx,14,7);g.fill();g.shadowBlur=0;g.fillStyle=GOLD;g.beginPath();g.arc(mx,ry+7,30,0,7);g.fill();
+    txt(Math.round(m)+'',mx,ry+150,`900 120px ${SERIF}`,'#c8962a','center');const b=pop(t,bt(110),.3);if(b>0){g.save();g.translate(PW/2+170,260);g.scale(b,b);g.fillStyle='#2a9a4a';rr(-70,-34,140,68,34);g.fill();txt('+17',0,14,`900 40px ${SANS}`,'#fff','center');g.restore();}
+    const ro=pop(t,bt(109),.4);g.save();g.translate(PW/2,260);g.scale(lerp(1.3,1,ro),lerp(.45,1,ro));g.fillStyle=AV[3];g.beginPath();g.arc(0,0,70,0,7);g.fill();txt('我',0,26,`900 64px ${SANS}`,'#fff','center');g.restore();}}
+  g.restore();},.0);
+ if(st===0){[['爱吐槽老师',bt(89)],['说话不过脑',bt(90)],['有点尴尬',bt(91)]].forEach(([w,tt],i)=>{const q=pop(t,tt,.25);if(q<=0)return;g.save();g.translate(1430+(i%2?60:-40),300+i*170);g.rotate(-.06+i*.05);g.scale(q,q);g.globalAlpha*=.95;g.strokeStyle='#e0503a';g.lineWidth=6;rr(-190,-56,380,112,16);g.stroke();txt(w,0,22,`900 64px ${SERIF}`,'#ff6a5a','center',1,12);g.restore();});txt('（你脑补的）',1430,830,`600 34px ${SERIF}`,'#8d8678','center',cl((t-bt(91))/.3));}
+ // the big numbers live next to the phone
+ if(t>=bt(104)){const a=pop(t,bt(104),.3);g.save();g.translate(1420,430);g.scale(a,a);txt('你只敢猜',0,-110,`700 40px ${SERIF}`,'#cdb98e','center');txt('52',0,30,`900 170px ${SERIF}`,'#f6a35a','center',1,20);g.restore();}
+ if(t>=bt(108)){const a=pop(t,bt(108)+.6,.3);g.save();g.translate(1420,760);g.scale(a,a);txt('别人给了',0,-110,`700 40px ${SERIF}`,'#cdb98e','center');txt('69',0,30,`900 170px ${SERIF}`,GOLD,'center',1,26);g.restore();}};
+const P4=t=>{/* 1:31 everyone busy with themselves; your banner swiped away on every phone */
+ room(.15);const k=seg(t,D2,D2+2.4),z=lerp(1.5,1,k);g.save();g.translate(960,500);g.scale(z,z);g.translate(-960,-500);
+ const pos=[[420,255],[960,255],[1500,255],[420,640],[960,640],[1500,640]];const cap=['在打排位','在拍第27张自拍','在等自己的点赞','在纠结自己说错的话','在赶自己的作业','在刷视频'];
+ pos.forEach(([x,y],i)=>{const ap=pop(t,D2+i*.06,.3);if(ap<=0)return;const ban=t<D2+.15+i*.05?0:1,sw=cl((t-bt2(2)-i*BT/2)/.28);
+  phoneAt(x,y,.26*ap,(i%2?.03:-.03),()=>{
+   if(i===0){const gr=g.createLinearGradient(0,0,0,PH);gr.addColorStop(0,'#3a1a6a');gr.addColorStop(1,'#120a24');g.fillStyle=gr;g.fillRect(0,0,PW,PH);txt('排位赛',PW/2,420,`900 110px ${SANS}`,'#fff','center');txt('0:0'+Math.max(0,3-Math.floor(t-D2)),PW/2,620,`900 160px ${SANS}`,'#ff5a5a','center');g.fillStyle='#ffcf3a';g.beginPath();g.arc(170,1000,110,0,7);g.fill();g.beginPath();g.arc(490,1000,110,0,7);g.fill();}
+   if(i===1){g.fillStyle='#111';g.fillRect(0,0,PW,PH);g.fillStyle='#3a3a44';g.beginPath();g.ellipse(PW/2,560,170,200,0,0,7);g.fill();rr(PW/2-250,720,500,420,180);g.fill();txt('第 27 张',PW/2,240,`900 90px ${SANS}`,'#fff','center');g.strokeStyle='#fff';g.lineWidth=14;g.beginPath();g.arc(PW/2,1130,90,0,7);g.stroke();if(((t-D2)/BT|0)%2===0&&(t-D2)%BT<.08){g.fillStyle='rgba(255,255,255,.8)';g.fillRect(0,0,PW,PH);}}
+   if(i===2){g.fillStyle='#f4f4f6';g.fillRect(0,0,PW,PH);const gr=g.createLinearGradient(0,300,0,800);gr.addColorStop(0,'#f6b8a0');gr.addColorStop(1,'#a0b8f6');g.fillStyle=gr;rr(60,300,PW-120,520,24);g.fill();txt('今天的穿搭',70,900,`700 60px ${SANS}`,'#222');txt('♥ 3',70,1040,`900 110px ${SANS}`,'#e0306a');txt('↻',PW-150,1040,`900 110px ${SANS}`,'#999');}
+   if(i===3){g.fillStyle='#ededed';g.fillRect(0,0,PW,PH);g.fillStyle='#f7f7f7';g.fillRect(0,80,PW,110);txt('小林',PW/2,150,`700 50px ${SANS}`,'#111','center');const s='我刚才是不是说错话了',ph=((t-D2)*1.2)%2,n=Math.floor(ph<1?ph*s.length:(2-ph)*s.length);g.fillStyle='#fff';rr(30,PH-300,PW-60,200,30);g.fill();txt(s.slice(0,n)+'|',60,PH-240,`700 54px ${SANS}`,'#111');txt(s.slice(Math.min(n,7)),60,PH-160,`700 0px ${SANS}`,'#111');}
+   if(i===4){g.fillStyle='#fff';g.fillRect(0,0,PW,PH);txt('实验报告',60,300,`900 90px ${SANS}`,'#111');for(let l=0;l<7;l++){g.fillStyle='#e4e4e8';rr(60,380+l*70,PW-120-(l%3)*90,30,8);g.fill();}txt('还差 2 页！',PW/2,1040,`900 100px ${SANS}`,'#d0261c','center');}
+   if(i===5){const gr=g.createLinearGradient(0,0,PW,PH);gr.addColorStop(0,'#1a3a4a');gr.addColorStop(1,'#4a1a3a');g.fillStyle=gr;g.fillRect(0,0,PW,PH);txt('▶',PW/2,700,`900 220px ${SANS}`,'rgba(255,255,255,.8)','center');txt('♥ 12.3w',PW-60,900,`900 54px ${SANS}`,'#fff','right');g.fillStyle='#fff';g.fillRect(40,PH-120,(PW-80)*(((t-D2)*.4)%1),10);}
+   if(ban){const y=lerp(-260,40,eob(cl((t-D2-.15-i*.05)/.3)))-sw*420;g.save();g.globalAlpha=1-sw;g.fillStyle='rgba(40,42,50,.95)';rr(30,y,PW-60,230,40);g.fill();txt('高三(2)班',70,y+80,`700 48px ${SANS}`,'#f6cf78');txt('这老师上课好无聊…',70,y+170,`600 52px ${SANS}`,'#eee');g.restore();}
+  },.7);
+  txt(cap[i],x,y+205,`700 34px ${SERIF}`,GOLD,'center',cl((t-bt2(3)-i*BT/3)/.25),12);});
+ g.restore();if(t<D2+.1)return .3;};
+const P5=t=>{/* 1:39 next morning: you just talk in the group again */
+ const k=seg(t,99.47,101.0);room(1);g.fillStyle=`rgba(255,200,140,${.08+.10*k})`;g.fillRect(0,0,W,H);g.save();g.globalCompositeOperation='lighter';const L=g.createRadialGradient(1500,200,20,1500,200,1100);L.addColorStop(0,`rgba(255,214,150,${.25*k})`);L.addColorStop(1,'rgba(255,214,150,0)');g.fillStyle=L;g.fillRect(0,0,W,H);g.restore();
+ const Q='早！今天谁带伞了？☔',sent=bt2(18);
+ phoneAt(640,505,.72,-.025,()=>{g.fillStyle='#ededed';g.fillRect(0,0,PW,PH);sbar('07:40');g.fillStyle='#f7f7f7';g.fillRect(0,80,PW,96);txt('高三(2)班 班级群（52）',PW/2,140,`700 34px ${SANS}`,'#111','center');
+  const up=0;
+  g.save();g.beginPath();g.rect(0,176,PW,PH-176-170);g.clip();g.translate(0,-up);let y=220;
+  [['王老师',AV[0],'报告别忘了写名字'],['小米',AV[2],'今晚月亮好圆 🌕']].forEach(([n,c,s])=>{cbub(0,y,n,c,s,false);y+=130;});txt('07:38',PW/2,y+4,`500 22px ${SANS}`,'#999','center');y+=30;
+  if(t>=sent){cbub(0,y,'','',Q,true,cl((t-sent)/.2));y+=130;}if(t>=bt2(19)){cbub(0,y,'刘洋',AV[6],'我有！',false,cl((t-bt2(19))/.2));y+=130;}if(t>=bt2(20)){cbub(0,y,'陈一',AV[5],'@你 我有两把 ☂️',false,cl((t-bt2(20))/.2));y+=130;}
+  g.restore();g.fillStyle='#f7f7f7';g.fillRect(0,PH-170,PW,170);g.fillStyle='#fff';rr(40,PH-140,PW-200,70,14);g.fill();
+  const n=t<sent?Math.floor(cl((t-99.6)/.75)*Q.length):0;txt(Q.slice(0,n)+(t<sent&&(t*2|0)%2?'|':''),60,PH-92,`500 30px ${SANS}`,'#111');g.fillStyle=n>0?'#2a9a4a':'#ccc';rr(PW-150,PH-140,110,70,14);g.fill();txt('发送',PW-95,PH-94,`700 28px ${SANS}`,'#fff','center');
+ },0);
+ txt('没那么多人在看你',1360,470,`900 84px ${SERIF}`,GOLD,'center',cl((t-bt2(21))/.4),24);txt('也就没什么好怕的',1360,570,`700 44px ${SERIF}`,'#e9dcc0','center',cl((t-bt2(22))/.4));
+ if(t>=sent&&t<sent+.06)return .12;};
+
 /* ---------- scenes ---------- */
 const $=id=>document.getElementById(id);
 function subtitle(t){const l=LINES.find(l=>t>=l[0]&&t<l[1]);$('sub').innerHTML=l?l[2].replace(/\[(.+?)\]/g,'<b>$1</b>'):'';}
-const CH=[[18.47,56.95,'2000 · 康奈尔大学'],[56.95,70.11,'2001 · 另一个实验'],[82.3,D2,'2018 · 耶鲁大学']];
+const CH=[[18.47,56.95,'2000 · 康奈尔大学'],[82.3,D2,'2018 · 耶鲁大学']];
 function chap(t){const c=CH.find(c=>t>=c[0]&&t<c[1]);$('chap').firstChild.textContent=c?c[2]:'';$('chap').style.opacity=c?.9:0;}
 window.renderAt=function(t){subtitle(t);chap(t);let fl=0;$('plaque').style.opacity=0;$('end').style.opacity=0;g.setTransform(1,0,0,1,0,0);
  const B=beat(t);PULSE=B.p;C.style.transform=`scale(${1+.007*B.pd})`;
@@ -265,7 +344,7 @@ window.renderAt=function(t){subtitle(t);chap(t);let fl=0;$('plaque').style.opaci
   const s={off:t>=8.8,refl:cl((t-9)/.8),alarm:t<.3?0:Math.min(1,(t-.3)/.12)*(t<1.4?(.65+.35*Math.abs(Math.sin(t*9))):1-cl((t-1.4)/.3)),menu:cl((t-1.3)/.15)*(1-cl((t-2.3)/.15)),tap:t>1.85,
    toast:cl((t-2.15)/.12)*(1-cl((t-3.6)/.3)),shake:Math.exp(-Math.max(0,t-2.15)*5),strip:cl((t-3.1)/.3),read:t<3.3?0:t<5.9?lerp(0,19,seg(t,3.3,5.8)):lerp(19,52,seg(t,5.9,7.4))};
   const out=seg(t,2.9,4.0);let scale=lerp(1.12,.82,out)*lerp(1,1.06,seg(t,5.9,8.6)),ox=lerp(-20,0,out),oy=lerp(-60,-20,out);if(t>=8.8){scale=lerp(.87,.95,seg(t,8.8,12.4));oy=lerp(-20,-60,seg(t,8.8,12.4));}
-  if(OPT.s1&&t>=8.8&&t<12.4){ALT1[OPT.s1](t);}else drawPhone(t,s,scale,ox,oy);
+  if(OPT.s1&&t>=8.8&&t<12.4){ALT1[OPT.s1](t);}else if(t>=8.8){const r=P1(Math.min(t,12.4+(t-12.4)*.2));if(r&&t<12.4)fl=r;}else drawPhone(t,s,scale,ox,oy);
   if(s.strip>0&&t<8.8){txt(Math.round(s.read)+'/52',1260,420,`900 150px ${SERIF}`,s.read>=52?RED:GOLD,'left',s.strip,24);txt(s.read>=52?'全部已读':'已读',1270,490,`500 40px ${SERIF}`,'#cdb98e','left',s.strip);}
   if(t>=8.8&&t<8.86)fl=.25;
   const po=t<12.4?0:cl((t-12.4)/.08)*(1-cl((t-15.2)/.24));$('plaque').style.opacity=po;const sh=t<12.4?0:Math.exp(-(t-12.4)*6)*8;$('plaque').style.transform=`translate(${Math.sin(t*90)*sh}px,${Math.cos(t*70)*sh}px) scale(${1+.012*B.pd})`;if(t>=12.4&&t<12.5)fl=.5;}
@@ -320,6 +399,7 @@ window.renderAt=function(t){subtitle(t);chap(t);let fl=0;$('plaque').style.opaci
   const aud=(lit)=>[[300,1060],[700,1080],[1220,1080],[1620,1060]].forEach(([x,y])=>person(x,y,1.05,'#343b4d',{lit,glowCol:GOLD}));
   const ro=1-cl((t-bt(114))/.5);
   if(ro>0&&OPT.s2){g.save();g.globalAlpha=ro;ALT2[OPT.s2](t);g.restore();}
+  else if(ro>0&&!OPT.old){g.save();g.globalAlpha=ro;P2(t);g.restore();}
   else if(ro>0){g.save();g.globalAlpha=ro;
    if(t>bt(96)){const a=eob(cl((t-bt(96))/.35));g.save();g.translate(960,680);g.scale(a,a);g.fillStyle=PAPER;rr(-300,-70,600,140,40);g.fill();g.beginPath();g.moveTo(-200,70);g.lineTo(-160,120);g.lineTo(-130,70);g.fill();txt('🔒 一个尴尬的小秘密',0,20,`800 50px ${SERIF}`,INK,'center');g.restore();}
    const rx=360,rw=1200,ry=330,ra=cl((t-57.2)/.4);g.globalAlpha=ro*ra;g.fillStyle='rgba(240,230,210,.22)';rr(rx,ry,rw,16,8);g.fill();
@@ -367,6 +447,7 @@ window.renderAt=function(t){subtitle(t);chap(t);let fl=0;$('plaque').style.opaci
     g.beginPath();g.moveTo(-10,H+10);g.lineTo(W+10,H+10);g.lineTo(W+10,H-h);g.quadraticCurveTo(W/2,H-h-140*bl,-10,H-h);g.closePath();g.fill();}}}
  /* S8 91.37-95.42: drop — pull back: everyone in their own spotlight, on their own phone */
  else if(t<95.42&&OPT.s4){ALT4[OPT.s4](t);if(t<D2+.12)fl=.3;}
+ else if(t<95.42&&!OPT.old){const r=P4(t);if(r)fl=r;}
  else if(t<95.42){room(.2);const k=seg(t,91.37,94.5);const N=40,cols=10;const sc=lerp(1.6,1,k);g.save();g.translate(W/2,H/2-40);g.scale(sc,sc);g.translate(-W/2,-(H/2-40));
   for(let i=0;i<N;i++){const cx=240+(i%cols)*160,cy=200+Math.floor(i/cols)*190;const on=cl((t-91.4-((i*7)%N)*.02)/.2)*(1+.25*B.p);
    g.save();g.globalCompositeOperation='lighter';const sp=g.createRadialGradient(cx,cy,4,cx,cy,90);sp.addColorStop(0,`rgba(255,224,170,${.35*on})`);sp.addColorStop(1,'rgba(255,224,170,0)');g.fillStyle=sp;g.beginPath();g.arc(cx,cy,90,0,7);g.fill();g.restore();
@@ -377,6 +458,7 @@ window.renderAt=function(t){subtitle(t);chap(t);let fl=0;$('plaque').style.opaci
   txt('↑ 你的那条，早被刷上去了',1260,420,`700 44px ${SERIF}`,GOLD,'left',cl((t-bt2(10))/.3),16);}
  /* S10 99.47-103.52: lights warm up, phone down */
  else if(t<103.52&&OPT.s5){const r=ALT5[OPT.s5](t);if(r)fl=r;}
+ else if(t<103.52&&!OPT.old){const r=P5(t);if(r)fl=r;}
  else if(t<103.52){const k=seg(t,99.47,101.7);room(1);g.fillStyle=`rgba(255,200,140,${.10*k})`;g.fillRect(0,0,W,H);const s={off:true,refl:1};drawPhone(t,s,lerp(.82,.6,k),0,lerp(-20,260,k),lerp(-.025,-.25,k));
   txt('没那么多人在看你',W/2,360,`900 96px ${SERIF}`,GOLD,'center',cl((t-bt2(18))/.4),26);}
  else{$('end').style.opacity=cl((t-103.52)/.4);}
