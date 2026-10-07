@@ -202,6 +202,18 @@ const SCENES: React.FC[] = [
       <Tag n="S7" t="收尾" />
     </Chrome>
   ),
+  // proofs
+  () => (<Chrome sub="不信？[连起来]看——"><svg width={1920} height={1080} style={{ position: 'absolute', inset: 0 }}><Board bridge={1} /></svg>
+    <Picker rows={[['A', [DARK, DARK, DARK]], ['B', [DARK, DARK, DARK]]]} /><Tag n="证明 1" t="同一条色带，从A一直通到B，两头没有接缝" /></Chrome>),
+  () => (<Chrome sub="再把周围，[慢慢]遮住——"><svg width={1920} height={1080} style={{ position: 'absolute', inset: 0 }}><Board iris={0.82} /></svg>
+    <Picker rows={[['A', [DARK, DARK, DARK]], ['B', [DARK, DARK, DARK]]]} /><Tag n="证明 2" t="黑幕从四周往里收，A和B本身一像素没动" /></Chrome>),
+  () => (<Chrome sub="把B[搬]到A旁边——"><svg width={1920} height={1080} style={{ position: 'absolute', inset: 0 }}><Board slideB={0.5} /></svg>
+    <Picker rows={[['搬走的B', [DARK, DARK, DARK]]]} /><Tag n="证明 3" t="B 的复制品滑出阴影，越走越暗" /></Chrome>),
+  () => (<Chrome sub="一模一样。{连条缝都没有}。"><svg width={1920} height={1080} style={{ position: 'absolute', inset: 0 }}><Board slideB={1} /></svg>
+    <Picker rows={[['A', [DARK, DARK, DARK]], ['搬来的B', [DARK, DARK, DARK]]]} /><Tag n="证明 3" t="贴到A旁边，拼成一整块" /></Chrome>),
+  () => (<Chrome sub="还不信？[截图]，用取色器自己看。"><svg width={1920} height={1080} style={{ position: 'absolute', inset: 0 }}><Board /></svg>
+    <div style={{ position: 'absolute', top: 170, left: 0, width: 900, textAlign: 'center', fontFamily: SANS, fontWeight: 900, fontSize: 44, color: GOLD }}>现在暂停 · 截图 · 取色</div>
+    <Picker rows={[['A', [DARK, DARK, DARK]], ['B', [DARK, DARK, DARK]]]} /><Tag n="证明 4" t="让观众自己验证" /></Chrome>),
 ];
 
 export const Storyboard: React.FC = () => {

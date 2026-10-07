@@ -27,8 +27,8 @@ export const shadowPoly = (p: Proj, off: [number, number] = [0, 0]) => {
   return poly(p, pts.map(([u, v]) => [u + off[0], v + off[1]] as [number, number]));
 };
 
-export const Board: React.FC<{ p?: Proj; shadowOff?: [number, number]; showShadow?: boolean; bFixed?: boolean; labels?: boolean; maskAB?: number; cylinder?: boolean }> =
-  ({ p = P0, shadowOff = [0, 0], showShadow = true, bFixed = false, labels = true, maskAB = 0, cylinder = true }) => {
+export const Board: React.FC<{ p?: Proj; shadowOff?: [number, number]; showShadow?: boolean; bFixed?: boolean; labels?: boolean; maskAB?: number; cylinder?: boolean; bridge?: number; iris?: number; slideB?: number }> =
+  ({ p = P0, shadowOff = [0, 0], showShadow = true, bFixed = false, labels = true, maskAB = 0, cylinder = true, bridge = 0, iris = 0, slideB = 0 }) => {
     const cells: React.ReactNode[] = [];
     for (let i = 0; i < 5; i++) for (let j = 0; j < 5; j++) {
       const light = (i + j) % 2 === 0;
@@ -60,6 +60,30 @@ export const Board: React.FC<{ p?: Proj; shadowOff?: [number, number]; showShado
             <rect x={cx - rx} y={cy - H} width={rx * 2} height={H} fill="url(#cylG)" />
             <ellipse cx={cx} cy={cy} rx={rx} ry={ry} fill="url(#cylG)" />
             <ellipse cx={cx} cy={cy - H} rx={rx} ry={ry} fill="#6fd27f" />
+          </g>
+        )}
+        {/* proof 1: a band of the very same grey grows from A to B; it meets both with no seam */}
+        {bridge > 0 && (() => {
+          const k = Math.min(1, bridge), ex = ax + (bx - ax) * k, ey = ay + (by - ay) * k;
+          return <line x1={ax} y1={ay} x2={ex} y2={ey} stroke={grey(DARK)} strokeWidth={46} strokeLinecap="butt" />;
+        })()}
+        {/* proof 3: a copy of B slides out of the shadow and docks beside A (cell 1,1) */}
+        {slideB > 0 && (() => {
+          const du = -1 * slideB, dv = -1 * slideB;
+          const q = poly(p, [[B_CELL[0] + du, B_CELL[1] + dv], [B_CELL[0] + 1 + du, B_CELL[1] + dv], [B_CELL[0] + 1 + du, B_CELL[1] + 1 + dv], [B_CELL[0] + du, B_CELL[1] + 1 + dv]]);
+          const q0 = poly(p, [[B_CELL[0], B_CELL[1]], [B_CELL[0] + 1, B_CELL[1]], [B_CELL[0] + 1, B_CELL[1] + 1], [B_CELL[0], B_CELL[1] + 1]]);
+          return (<g>
+            <polygon points={q0} fill="none" stroke="#f1c56d" strokeWidth={3} strokeDasharray="10 8" opacity={0.7} />
+            <polygon points={q} fill={grey(DARK)} />
+            <polygon points={q} fill="none" stroke="#f1c56d" strokeWidth={3} strokeDasharray="10 8" />
+          </g>);
+        })()}
+        {/* proof 2: an iris of black closes in on A and B, nothing else changes */}
+        {iris > 0 && (
+          <g>
+            <defs><mask id="irisM"><rect x={-2000} y={-2000} width={6000} height={6000} fill="#fff" />
+              <circle cx={ax} cy={ay} r={60 + 1400 * (1 - iris)} fill="#000" /><circle cx={bx} cy={by} r={60 + 1400 * (1 - iris)} fill="#000" /></mask></defs>
+            <rect x={-2000} y={-2000} width={6000} height={6000} fill="#050505" mask="url(#irisM)" />
           </g>
         )}
         {maskAB > 0 && (
