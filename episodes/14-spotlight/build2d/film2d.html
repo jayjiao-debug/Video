@@ -1,0 +1,183 @@
+<!doctype html>
+<html><head><meta charset="utf-8">
+<style>
+html,body{margin:0;background:#06080d;overflow:hidden}
+#wrap{position:relative;width:1920px;height:1080px}
+canvas{position:absolute;inset:0}
+.ov{position:absolute;inset:0;pointer-events:none;font-family:"Noto Serif CJK SC","Noto Serif SC",serif}
+#sub{position:absolute;left:0;right:0;bottom:92px;text-align:center;color:#f4efe6;font-size:62px;font-weight:700;letter-spacing:2px;text-shadow:0 3px 14px rgba(0,0,0,.95),0 0 3px #000}
+#sub b{color:#f6cf78;text-shadow:0 0 18px rgba(246,207,120,.55),0 3px 14px #000;font-weight:900}
+#mark{position:absolute;top:40px;right:56px;color:#cdb98e;font-size:22px;letter-spacing:4px;opacity:.85}
+#chap{position:absolute;top:44px;left:0;right:0;text-align:center;color:#d9c39a;font-size:24px;letter-spacing:8px;opacity:0}
+#chap span{display:inline-block;padding:0 28px;position:relative}
+#chap span:before,#chap span:after{content:"";position:absolute;top:50%;width:120px;height:1px;background:#b89a62;opacity:.7}
+#chap span:before{right:100%}#chap span:after{left:100%}
+#plaque{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;opacity:0}
+#plaque .p{border:3px solid #d8b56a;padding:40px 110px 34px;text-align:center;background:rgba(8,10,16,.88);
+ box-shadow:0 0 60px rgba(216,181,106,.25),inset 0 0 0 10px rgba(8,10,16,.88),inset 0 0 0 12px rgba(216,181,106,.5)}
+#plaque .a{color:#f6cf78;font-size:128px;font-weight:900;letter-spacing:22px;line-height:1.1}
+#plaque .b{color:#cdb98e;font-size:34px;letter-spacing:10px;margin-top:14px;font-family:"Noto Serif SC",Georgia,serif}
+#plaque .c{color:#8d8678;font-size:24px;letter-spacing:3px;margin-top:12px}
+#flash{position:absolute;inset:0;background:#fff8ea;opacity:0}
+#end{position:absolute;inset:0;background:#06080d;display:flex;flex-direction:column;align-items:center;justify-content:center;opacity:0;color:#f6cf78}
+#end .j{width:150px;height:150px;border:3px solid #d8b56a;border-radius:50%;font-size:96px;line-height:150px;text-align:center;font-weight:900;margin-bottom:34px}
+#end .t{font-size:76px;font-weight:900;letter-spacing:14px}
+#end .t2{font-size:30px;color:#cdb98e;letter-spacing:8px;margin-top:6px}
+#end .q{color:#f4efe6;font-size:40px;margin-top:30px}
+#end .f{margin-top:36px;border:2px solid #d8b56a;border-radius:40px;padding:12px 40px;font-size:30px;color:#f6cf78}
+#end .s{position:absolute;bottom:46px;color:#8d8678;font-size:19px;letter-spacing:.5px;text-align:center;line-height:1.6}
+</style></head><body>
+<div id="wrap"><canvas id="c" width="1920" height="1080"></canvas>
+<div class="ov"><div id="flash"></div><div id="chap"><span></span></div><div id="mark">◆ Juno · VIBE知识大赏</div><div id="sub"></div>
+<div id="plaque"><div class="p"><div class="a">聚光灯效应</div><div class="b">THE SPOTLIGHT EFFECT</div><div class="c">Gilovich, Medvec &amp; Savitsky · 2000</div></div></div>
+<div id="end"><div class="j">J</div><div class="t">聚光灯效应</div><div class="t2">你以为大家都在看你</div><div class="q">你有没有一次“社死”，后来发现根本没人记得？</div><div class="f">关注 Juno · 一起看懂世界</div>
+ <div class="s">资料：Gilovich, Medvec &amp; Savitsky (2000) doi:10.1037/0022-3514.78.2.211 · Savitsky, Epley &amp; Gilovich (2001) doi:10.1037/0022-3514.81.1.44<br>
+ Boothby et al. (2018) doi:10.1177/0956797618783714 · Wolf, Nafe &amp; Tomasello (2021) doi:10.1177/0956797620980754 · 均为小样本实验室研究；群聊情节为示意</div></div>
+</div></div>
+<script>
+const LINES=window.LINES||[];
+const C=document.getElementById('c'),g=C.getContext('2d');const W=1920,H=1080;
+const cl=(x,a=0,b=1)=>Math.min(b,Math.max(a,x)),lerp=(a,b,t)=>a+(b-a)*t;
+const ease=t=>{t=cl(t);return t<.5?4*t*t*t:1-Math.pow(-2*t+2,3)/2},eob=t=>{t=cl(t);const c1=1.7,c3=c1+1;return 1+c3*Math.pow(t-1,3)+c1*Math.pow(t-1,2)};
+const seg=(t,a,b)=>ease((t-a)/(b-a)),fade=(t,a,b,f=.3)=>cl((t-a)/f)*(1-cl((t-(b-f))/f));
+const SANS='"Noto Sans CJK SC","Noto Sans SC",sans-serif',SERIF='"Noto Serif CJK SC","Noto Serif SC",serif';
+const GOLD='#f6cf78',BLUE='#9fd0ff',PAPER='#ece0c6',INK='#2b241a',RED='#ff6a5a';
+function rr(x,y,w,h,r){g.beginPath();g.moveTo(x+r,y);g.arcTo(x+w,y,x+w,y+h,r);g.arcTo(x+w,y+h,x,y+h,r);g.arcTo(x,y+h,x,y,r);g.arcTo(x,y,x+w,y,r);g.closePath();}
+function txt(s,x,y,font,col,align='left',a=1,glow=0){g.save();g.globalAlpha*=a;g.font=font;g.fillStyle=col;g.textAlign=align;if(glow){g.shadowColor=col;g.shadowBlur=glow;}g.fillText(s,x,y);g.restore();}
+const BOK=[];{let s=5;const r=()=>{s=(s*16807)%2147483647;return s/2147483647};for(let i=0;i<26;i++)BOK.push([r()*W,r()*H*.8,20+r()*70,r()<.3?'255,190,120':'120,150,220',.05+r()*.08]);}
+const AV=['#c96b5a','#5a8fc9','#7ac97a','#c9b45a','#9a6bc9','#5ac9b4','#c95a8f','#8fa0b0'];
+function room(dim=1){g.fillStyle='#06080d';g.fillRect(0,0,W,H);BOK.forEach(([x,y,r,c,a])=>{g.fillStyle=`rgba(${c},${a*dim})`;g.beginPath();g.arc(x,y,r,0,7);g.fill();});}
+function person(x,y,s,col='#2a2f3d',{lit=0,down=0,glowCol=GOLD}={}){g.save();g.translate(x,y);g.scale(s,s);g.fillStyle=col;rr(-110,-30,220,190,85);g.fill();
+ g.save();g.translate(0,-90+down*20);g.beginPath();g.ellipse(0,0,58,68,0,0,7);g.fill();
+ if(lit>0){g.globalAlpha=lit;g.lineWidth=7;g.strokeStyle=glowCol;g.shadowColor=glowCol;g.shadowBlur=26;g.beginPath();g.ellipse(0,0,58,68,0,Math.PI*1.05,Math.PI*1.95);g.stroke();}
+ g.restore();g.restore();}
+function phoneGlow(x,y,s,a){if(a<=0)return;g.save();g.globalAlpha=a;const gr=g.createRadialGradient(x,y-60*s,4,x,y-60*s,170*s);gr.addColorStop(0,'rgba(150,190,255,.55)');gr.addColorStop(1,'rgba(150,190,255,0)');g.fillStyle=gr;g.beginPath();g.arc(x,y-60*s,170*s,0,7);g.fill();g.restore();}
+function shirt(x,y,s,kind,a=1){g.save();g.globalAlpha=a;g.translate(x,y);g.scale(s,s);g.fillStyle='#f2efe6';g.shadowColor='rgba(0,0,0,.6)';g.shadowBlur=40;g.shadowOffsetY=16;
+ g.beginPath();[[-150,-200],[-55,-225],[0,-195],[55,-225],[150,-200],[235,-110],[175,-55],[130,-110],[130,230],[-130,230],[-130,-110],[-175,-55],[-235,-110]].forEach(([px,py],i)=>i?g.lineTo(px,py):g.moveTo(px,py));g.closePath();g.fill();g.shadowBlur=0;g.shadowOffsetY=0;
+ if(kind==='pop'){g.fillStyle='#e04a8a';g.fillRect(-95,-110,190,190);g.fillStyle='#f6e04a';g.beginPath();g.arc(0,-25,62,0,7);g.fill();g.fillStyle='#2b6fd0';g.fillRect(-95,40,190,40);txt('某位过气歌星',0,170,`900 30px ${SERIF}`,'#2b241a','center');}
+ else{g.fillStyle='#1a1a1a';g.fillRect(-95,-110,190,190);g.fillStyle=GOLD;g.save();g.translate(0,-15);g.beginPath();for(let i=0;i<10;i++){const r=i%2?32:78,an=i/10*Math.PI*2-Math.PI/2;g.lineTo(Math.cos(an)*r,Math.sin(an)*r);}g.fill();g.restore();txt('有面子的那件',0,170,`900 30px ${SERIF}`,'#2b241a','center');}
+ g.restore();}
+function bar(x,y,w,h,pct,col,label,val,a=1){g.save();g.globalAlpha=a;g.fillStyle='rgba(240,230,210,.12)';rr(x,y-h,w,h,10);g.fill();const hh=h*pct/100;g.fillStyle=col;g.shadowColor=col;g.shadowBlur=20;rr(x,y-hh,w,hh,10);g.fill();g.shadowBlur=0;
+ txt(val,x+w/2,y-hh-24,`900 92px ${SERIF}`,col,'center');txt(label,x+w/2,y+52,`600 36px ${SERIF}`,'#e9dcc0','center');g.restore();}
+function stamp(x,y,s,a,rot=-.08,col='#d24a3a'){if(a<=0)return;g.save();g.globalAlpha=a;g.translate(x,y);g.rotate(rot);g.scale(lerp(1.6,1,cl(a*2)),lerp(1.6,1,cl(a*2)));g.strokeStyle=col;g.lineWidth=7;rr(-s.length*30-30,-52,s.length*60+60,96,10);g.stroke();txt(s,0,22,`900 58px ${SERIF}`,col,'center');g.restore();}
+function card(x,y,w,h,lines,a,rot=-.02){if(a<=0)return;g.save();g.globalAlpha=a;g.translate(x,y);g.rotate(rot);g.fillStyle=PAPER;g.shadowColor='rgba(0,0,0,.6)';g.shadowBlur=30;g.shadowOffsetY=12;rr(0,0,w,h,12);g.fill();g.shadowBlur=0;g.shadowOffsetY=0;lines.forEach(([s,f,c,yy])=>txt(s,36,yy,f,c));g.restore();}
+
+/* ---------- phone UI (scene 1 and the bookend) ---------- */
+const PW=660,PH=1300;
+function phoneUI(t,s){g.fillStyle='#0d0f14';rr(0,0,PW,PH,70);g.fill();g.save();rr(18,18,PW-36,PH-36,56);g.clip();
+ if(s.off){g.fillStyle='#020304';g.fillRect(0,0,PW,PH);g.globalAlpha=s.refl;g.fillStyle='rgba(200,190,170,.13)';g.beginPath();g.ellipse(PW/2,400,120,140,0,0,7);g.fill();rr(PW/2-230,560,460,500,200);g.fill();
+  g.strokeStyle='rgba(255,255,255,.06)';g.lineWidth=40;g.beginPath();g.moveTo(80,PH);g.lineTo(PW-60,0);g.stroke();g.globalAlpha=1;
+  if(s.notif>0){g.globalAlpha=s.notif;g.fillStyle='rgba(40,44,54,.92)';rr(40,180,PW-80,150,24);g.fill();txt('📌 康奈尔大学 · 2000',70,240,`700 32px ${SANS}`,'#f6cf78');txt('一项关于“被注意”的实验',70,292,`500 28px ${SANS}`,'#e6e6e6');g.globalAlpha=1;}
+  g.restore();return;}
+ g.fillStyle='#ededed';g.fillRect(0,0,PW,PH);txt(s.clock||'21:07',58,62,`600 26px ${SANS}`,'#111');txt('▮▮▮  82%',PW-58,62,`600 26px ${SANS}`,'#111','right');
+ g.fillStyle='#f7f7f7';g.fillRect(0,80,PW,96);txt('高三(2)班 班级群（52）',PW/2,132,`700 34px ${SANS}`,'#111','center');txt('群成员：王老师、你、还有 50 位同学',PW/2,164,`500 22px ${SANS}`,'#b0201a','center');g.fillStyle='#d8d8d8';g.fillRect(0,176,PW,2);
+ if(s.strip>0){g.globalAlpha=s.strip;g.fillStyle='#f7f7f7';g.fillRect(0,178,PW,118);for(let i=0;i<52;i++){const x=40+(i%13)*45,y=200+Math.floor(i/13)*24;g.fillStyle=i<s.read?AV[i%AV.length]:'#cfcfcf';g.beginPath();g.arc(x,y+8,9,0,7);g.fill();}
+  txt(`已读 ${Math.round(s.read)}/52`,PW-30,290,`700 24px ${SANS}`,s.read>=52?'#b0201a':'#555','right');g.globalAlpha=1;}
+ g.save();g.beginPath();g.rect(0,178,PW,PH-178-170);g.clip();let y=(s.strip>0?310:200)-(s.scroll||0);
+ const av=(x,yy,col,ch)=>{g.fillStyle=col;g.beginPath();g.arc(x,yy,34,0,7);g.fill();txt(ch,x,yy+10,`700 28px ${SANS}`,'#fff','center');};
+ const bub=(name,col,text,w)=>{txt(name,128,y,`500 24px ${SANS}`,'#888');av(70,y+40,col,name[0]);g.fillStyle='#fff';rr(118,y+10,w,74,14);g.fill();txt(text,140,y+58,`500 30px ${SANS}`,'#111');y+=130;};
+ bub('王老师',AV[0],'明早8点前交实验报告',330);bub('李思',AV[1],'收到',120);txt('21:04',PW/2,y+4,`500 22px ${SANS}`,'#999','center');y+=26;
+ const mw=420,mx=PW-128-mw,my=y;av(PW-70,my+44,AV[3],'我');g.fillStyle=GOLD;rr(mx,my,mw,118,16);g.fill();txt('这老师上课好无聊',mx+24,my+48,`500 30px ${SANS}`,INK);txt('又在念PPT 😴',mx+24,my+94,`500 30px ${SANS}`,INK);
+ if(s.alarm>0){g.save();g.globalAlpha=s.alarm;g.strokeStyle='#e0302a';g.lineWidth=6;rr(mx-8,my-8,mw+16,134,20);g.stroke();g.fillStyle='#e0302a';g.beginPath();g.arc(mx-40,my+59,22,0,7);g.fill();txt('!',mx-40,my+70,`900 32px ${SANS}`,'#fff','center');g.restore();}
+ y+=150;
+ (s.more||[]).forEach(([name,col,text,w])=>bub(name,col,text,w));
+ if(s.menu>0){g.save();g.globalAlpha=s.menu;const x2=mx+20,y2=my-110;g.fillStyle='#2b2b2b';rr(x2,y2,380,88,14);g.fill();['复制','转发','引用','撤回'].forEach((w,i)=>txt(w,x2+30+i*90,y2+55,`600 28px ${SANS}`,i===3&&s.tap?GOLD:'#eee'));g.restore();}
+ if(s.toast>0){g.save();g.globalAlpha=s.toast;g.translate(Math.sin(t*60)*s.shake*10,0);g.fillStyle='rgba(30,30,30,.92)';rr(PW/2-250,620,500,120,22);g.fill();txt('无法撤回',PW/2,670,`900 34px ${SANS}`,RED,'center');txt('消息已发出超过 2 分钟',PW/2,715,`500 26px ${SANS}`,'#eee','center');g.restore();}
+ g.restore();g.fillStyle='#f7f7f7';g.fillRect(0,PH-170,PW,170);g.fillStyle='#fff';rr(40,PH-140,PW-80,70,14);g.fill();g.restore();}
+function drawPhone(t,s,scale,ox,oy,rot=-.025){const d1=Math.sin(t*1.3)*6,d2=Math.cos(t*1.1)*5;g.save();g.setTransform(scale,0,0,scale,W/2-PW*scale/2+ox+d1,60+oy+d2);g.rotate(rot);
+ g.shadowColor='rgba(0,0,0,.7)';g.shadowBlur=60;g.fillStyle='#000';rr(0,0,PW,PH,70);g.fill();g.shadowBlur=0;phoneUI(t,s);g.restore();}
+const MORE=[['张悦',AV[4],'报告是交纸质的吗？',300],['王老师',AV[0],'电子版发我邮箱',290],['陈一',AV[5],'收到收到',170],['刘洋',AV[6],'有人带伞了吗 ☔',260],['李思',AV[1],'[表情包]',150],['周周',AV[7],'明天体育课换教室了',320],['张悦',AV[4],'哈哈哈哈哈',190],['陈一',AV[5],'@刘洋 我有两把',230],['王老师',AV[0],'报告别忘了写名字',300],['小米',AV[2],'今晚月亮好圆 🌕',250]];
+
+/* ---------- scenes ---------- */
+const $=id=>document.getElementById(id);
+function subtitle(t){const l=LINES.find(l=>t>=l[0]&&t<l[1]);$('sub').innerHTML=l?l[2].replace(/\[(.+?)\]/g,'<b>$1</b>'):'';}
+const CH=[[18.6,57.0,'2000 · 康奈尔大学'],[57.0,74.0,'2001 · 另一个实验'],[77.2,90.5,'2018 · 耶鲁大学']];
+function chap(t){const c=CH.find(c=>t>=c[0]&&t<c[1]);$('chap').firstChild.textContent=c?c[2]:'';$('chap').style.opacity=c?.9:0;}
+window.renderAt=function(t){subtitle(t);chap(t);let fl=0;$('plaque').style.opacity=0;$('end').style.opacity=0;g.setTransform(1,0,0,1,0,0);
+ /* S1 0-15.2: wrong group (approved opening) */
+ if(t<15.2){room(t<8.8?1:.35);
+  if(t<8.8){const gl=g.createRadialGradient(W/2,H/2,100,W/2,H/2,900);gl.addColorStop(0,'rgba(220,230,255,.14)');gl.addColorStop(1,'rgba(220,230,255,0)');g.fillStyle=gl;g.fillRect(0,0,W,H);}
+  const s={off:t>=8.8,refl:cl((t-9)/.8),alarm:t<.3?0:Math.min(1,(t-.3)/.12)*(t<1.4?(.65+.35*Math.abs(Math.sin(t*9))):1-cl((t-1.4)/.3)),menu:cl((t-1.3)/.15)*(1-cl((t-2.3)/.15)),tap:t>1.85,
+   toast:cl((t-2.15)/.12)*(1-cl((t-3.6)/.3)),shake:Math.exp(-Math.max(0,t-2.15)*5),strip:cl((t-3.1)/.3),read:t<3.3?0:t<5.9?lerp(0,19,seg(t,3.3,5.8)):lerp(19,52,seg(t,5.9,7.4))};
+  const out=seg(t,2.9,4.0);let scale=lerp(1.12,.82,out)*lerp(1,1.06,seg(t,5.9,8.6)),ox=lerp(-20,0,out),oy=lerp(-60,-20,out);if(t>=8.8){scale=lerp(.87,.95,seg(t,8.8,12.4));oy=lerp(-20,-60,seg(t,8.8,12.4));}
+  drawPhone(t,s,scale,ox,oy);
+  if(s.strip>0&&t<8.8){txt(Math.round(s.read)+'/52',1260,420,`900 150px ${SERIF}`,s.read>=52?RED:GOLD,'left',s.strip,24);txt(s.read>=52?'全部已读':'已读',1270,490,`500 40px ${SERIF}`,'#cdb98e','left',s.strip);}
+  if(t>=8.8&&t<8.86)fl=.25;
+  const po=t<12.4?0:cl((t-12.4)/.08)*(1-cl((t-14.95)/.25));$('plaque').style.opacity=po;const sh=t<12.4?0:Math.exp(-(t-12.4)*6)*8;$('plaque').style.transform=`translate(${Math.sin(t*90)*sh}px,${Math.cos(t*70)*sh}px)`;if(t>=12.4&&t<12.5)fl=.5;}
+ /* S2 15.2-21.6: the dark phone wakes with a notification -> into the experiment */
+ else if(t<21.6){room(.35);const s={off:true,refl:1,notif:cl((t-18.4)/.3)};const k=seg(t,15.2,21.6);drawPhone(t,s,lerp(.95,1.05,k),0,lerp(-60,-160,k));
+  // the idea in one picture: a spotlight ring that is bigger than the room's real attention
+  const a=fade(t,15.4,18.6,.4);if(a>0){g.save();g.globalAlpha=a;g.globalCompositeOperation='lighter';const cx=W/2,cy=420;const sp=g.createRadialGradient(cx,cy,10,cx,cy,520);sp.addColorStop(0,'rgba(255,236,200,.22)');sp.addColorStop(1,'rgba(255,236,200,0)');g.fillStyle=sp;g.beginPath();g.arc(cx,cy,520,0,7);g.fill();g.restore();}
+  if(t>21.2)fl=cl((t-21.2)/.4)*.0;}
+ /* S3 21.6-28.3: the T-shirt you have to wear; pre-test says embarrassing */
+ else if(t<28.3){room(.6);const k=seg(t,21.6,28.3);shirt(W/2,lerp(560,520,k),lerp(1.15,1.25,k),'pop',cl((t-21.6)/.3));
+  const peers=[[360,980],[620,1010],[1300,1010],[1560,980]];peers.forEach(([x,y],i)=>person(x,y,.9,'#262b38',{lit:t>25.4+i*.15?1:0,glowCol:'#d24a3a'}));
+  stamp(1460,330,'丢人',cl((t-25.6)/.25));if(t>25.6&&t<25.7)fl=.12;}
+ /* S4 28.3-37.8: POV opening the door, the room faces you; then out */
+ else if(t<37.8){room(.25);const inside=t<34.6;const doorOpen=inside?eob(cl((t-28.4)/.5)):1-seg(t,34.0,34.6);
+  // room seen through the door
+  g.save();g.fillStyle='#141a28';g.fillRect(460,120,1000,860);const L2=g.createRadialGradient(960,560,40,960,560,620);L2.addColorStop(0,'rgba(255,220,170,.22)');L2.addColorStop(1,'rgba(255,220,170,0)');g.fillStyle=L2;g.fillRect(460,120,1000,860);
+  g.fillStyle='#3b3226';rr(600,660,720,60,10);g.fill();[[700,640],[850,610],[1000,600],[1150,610],[1260,640]].forEach(([x,y],i)=>person(x,y,.62,'#2f3646',{lit:inside?cl((t-29.2-i*.1)/.25)*(1-cl((t-31.4)/.4)):0}));
+  // shirt on your chest (POV: bottom of frame)
+  shirt(960,1180,.9,'pop',1);
+  // door leaves
+  const dw=500*(1-doorOpen);g.fillStyle='#2a2219';g.fillRect(460,120,dw,860);g.fillRect(1460-dw,120,dw,860);g.fillStyle='#0b0d14';g.fillRect(0,0,460,H);g.fillRect(1460,0,460,H);g.fillRect(460,0,1000,120);g.restore();
+  card(1520,180,360,200,[['只看一眼',`800 40px ${SERIF}`,INK,70],['就请出门',`800 40px ${SERIF}`,INK,130]],fade(t,31.2,34.6));
+  if(t>=34.6){g.fillStyle='rgba(6,8,13,.78)';g.fillRect(0,0,W,H);card(560,330,800,300,[['问他：',`600 40px ${SERIF}`,'#6c5a3e',80],['屋里几人能说出',`900 64px ${SERIF}`,INK,170],['T恤上是谁？',`900 64px ${SERIF}`,INK,250]],cl((t-34.7)/.3));}}
+ /* S5 37.8-57.0: the numbers, then the proud shirt */
+ else if(t<57.0){room(.45);const proud=t>=44.6;const sy=lerp(560,520,seg(t,37.8,57));shirt(520,sy,.95,proud?'star':'pop',1);
+  const A=proud?(t<47.6?0:48*seg(t,47.7,48.6)):46*seg(t,37.9,38.8);const B=proud?(t<50.6?0:8*seg(t,50.7,51.4)):(t<41.3?0:23*seg(t,41.4,42.2));
+  bar(1020,820,230,560,A,GOLD,'他以为',A>0?Math.round(A)+'%':'',1);bar(1360,820,230,560,B,BLUE,'实际',B>0?Math.round(B)+'%':(t>=41.3||t>=50.6?'':'?'),1);
+  const x2=proud?(t>51.6):(t>42.4&&t<44.6);if(x2){txt(proud?'×6':'×2',1720,420,`900 110px ${SERIF}`,GOLD,'left',1,26);}
+  if(t>44.4&&t<44.7)fl=.2;
+  if(t>=53.6){const k=seg(t,53.6,57);g.fillStyle=`rgba(6,8,13,${.6*k})`;g.fillRect(0,0,W,H);[[380,1020],[760,1040],[1160,1040],[1540,1020]].forEach(([x,y],i)=>{phoneGlow(x,y,.95,k);person(x,y,.95,'#262b38',{down:k});});}}
+ /* S6 57.0-74.0: 2001 — your self-intro with a secret; the score ruler */
+ else if(t<74.0){room(.4);const k=seg(t,57,74);
+  // audience from your POV (backs of heads at the bottom), you face them
+  [[300,1060],[700,1080],[1220,1080],[1620,1060]].forEach(([x,y])=>person(x,y,1.05,'#343b4d',{lit:t>57.4&&t<60.4?.6:0}));
+  // speech bubble with a lock
+  if(t>60.4){const a=cl((t-60.5)/.3)*(1-cl((t-71.6)/.4));g.save();g.globalAlpha=a;g.fillStyle=PAPER;rr(660,610,600,140,40);g.fill();g.beginPath();g.moveTo(760,750);g.lineTo(800,800);g.lineTo(830,750);g.fill();txt('🔒 一个尴尬的小秘密',960,700,`800 50px ${SERIF}`,INK,'center');g.restore();}
+  // ruler 0..100
+  const rx=360,rw=1200,ry=330,ra=cl((t-57.3)/.4);g.save();g.globalAlpha=ra;g.fillStyle='rgba(240,230,210,.22)';rr(rx,ry,rw,16,8);g.fill();
+  [[0,'0'],[50,'50 · 普通'],[100,'100']].forEach(([v,l])=>{g.fillStyle='#cdb98e';g.fillRect(rx+rw*v/100-2,ry-22,4,60);txt(l,rx+rw*v/100,ry+80,`500 30px ${SERIF}`,'#cdb98e','center');});
+  const m1=t>64?52:null,m2=t>67?lerp(52,69,seg(t,67.1,68.3)):null;
+  if(m2){g.fillStyle=GOLD;g.shadowColor=GOLD;g.shadowBlur=20;g.fillRect(rx+rw*.52,ry+2,rw*(m2-52)/100,12);g.shadowBlur=0;}
+  const mark=(v,col,lab,up=1)=>{const x=rx+rw*v/100;g.fillStyle=col;g.beginPath();g.moveTo(x,ry-6);g.lineTo(x-18,ry-34);g.lineTo(x+18,ry-34);g.fill();txt(Math.round(v)+'',x,ry-52,`900 76px ${SERIF}`,col,'center',1,18);txt(lab,x,ry-130,`600 28px ${SERIF}`,col,'center');};
+  if(m1)mark(52,'#f6a35a','你以为');if(m2)mark(m2,BLUE,'别人给的');g.restore();
+  // whole you: spotlight from a dot to the full figure
+  if(t>70.4){const w=seg(t,71.4,72.6);g.save();g.globalCompositeOperation='lighter';const r=lerp(90,520,w);const sp=g.createRadialGradient(960,lerp(680,620,w),10,960,lerp(680,620,w),r);sp.addColorStop(0,'rgba(255,236,200,.35)');sp.addColorStop(1,'rgba(255,236,200,0)');g.fillStyle=sp;g.beginPath();g.arc(960,lerp(680,620,w),r,0,7);g.fill();g.restore();
+   g.save();g.globalAlpha=w;g.fillStyle=PAPER;g.beginPath();g.ellipse(960,520,60,70,0,0,7);g.fill();rr(870,600,180,260,60);g.fill();g.restore();}}
+ /* S7 74.0-90.5: after a chat; liking gap; months; age 5 */
+ else if(t<90.5){room(.5);
+  if(t<77.2){const s2={clock:'22:41'};g.save();const sc=.78,ox=-380;g.setTransform(sc,0,0,sc,W/2-PW*sc/2+ox,80);g.fillStyle='#0d0f14';rr(0,0,PW,PH,70);g.fill();rr(18,18,PW-36,PH-36,56);g.clip();g.fillStyle='#ededed';g.fillRect(0,0,PW,PH);
+    g.fillStyle='#f7f7f7';g.fillRect(0,80,PW,96);txt('闺蜜',PW/2,140,`700 34px ${SANS}`,'#111','center');
+    [['刚和新室友聊了半小时',260],['我是不是话太多了',370],['她会不会觉得我很尬…',480]].forEach(([m,y],i)=>{const a=cl((t-74.2-i*.6)/.2);g.globalAlpha=a;g.fillStyle=GOLD;rr(PW-90-m.length*30-40,y,m.length*30+40,74,16);g.fill();txt(m,PW-110,y+48,`500 30px ${SANS}`,INK,'right');});g.restore();
+   txt('？',1250,520,`900 260px ${SERIF}`,RED,'center',cl((t-75.6)/.3),30);}
+  else if(t<87.1){const a=cl((t-77.3)/.4);const r=seg(t,77.5,78.7);g.save();g.globalAlpha=a;
+   bar(560,820,240,560,62*r,GOLD,'我对TA的好感','',1);bar(980,820,240,560,48*r,'#f6a35a','我猜TA对我','',1);
+   if(t>80.6){const gg=seg(t,80.8,81.8);g.setLineDash([16,12]);g.strokeStyle=BLUE;g.lineWidth=5;rr(980,820-560*(48+16*gg)/100,240,560*(48+16*gg)/100,10);g.stroke();g.setLineDash([]);txt('TA的真实好感',1100,820-560*(48+16*gg)/100-28,`700 34px ${SERIF}`,BLUE,'center');
+    if(gg>.9)txt('被低估',1300,560,`900 64px ${SERIF}`,BLUE,'left',1,20);}
+   g.restore();
+   if(t>=83.7){const ca=cl((t-83.8)/.3);const mi=Math.floor(cl((t-84.2)/2.6)*7);g.save();g.globalAlpha=ca;g.fillStyle='#efe7d6';rr(1440,180,320,340,16);g.fill();g.fillStyle='#a8322a';rr(1440,180,320,70,16);g.fill();g.fillRect(1440,220,320,30);txt('室友 · 还在低估',1600,228,`700 30px ${SERIF}`,'#fff','center');
+    txt(['9月','10月','11月','12月','1月','2月','3月'][mi],1600,430,`900 120px ${SERIF}`,INK,'center');g.restore();}}
+  else{const k=seg(t,87.1,90.5);[[740,820],[1180,820]].forEach(([x,y],i)=>person(x,y,.8,i?'#4a5a7a':'#7a4a4a',{lit:.0}));g.fillStyle='#c9a35a';[[930,800],[990,800],[960,750]].forEach(([x,y])=>{g.fillRect(x-24,y-24,48,48);});
+   txt('5岁起',960,330,`900 120px ${SERIF}`,GOLD,'center',cl((t-87.3)/.3),26);txt('小朋友也会低估：对方其实更喜欢你',960,420,`600 40px ${SERIF}`,'#e9dcc0','center',cl((t-87.6)/.3));}}
+ /* S8 90.5-93.9: drop — pull back: everyone in their own spotlight, on their own phone */
+ else if(t<93.9){room(.2);const k=seg(t,90.5,93.4);const N=40,cols=10;const sc=lerp(1.6,1,k);g.save();g.translate(W/2,H/2-40);g.scale(sc,sc);g.translate(-W/2,-(H/2-40));
+  for(let i=0;i<N;i++){const cx=240+(i%cols)*160,cy=200+Math.floor(i/cols)*190;const on=cl((t-90.55-((i*7)%N)*.02)/.2);
+   g.save();g.globalCompositeOperation='lighter';const sp=g.createRadialGradient(cx,cy,4,cx,cy,90);sp.addColorStop(0,`rgba(255,224,170,${.35*on})`);sp.addColorStop(1,'rgba(255,224,170,0)');g.fillStyle=sp;g.beginPath();g.arc(cx,cy,90,0,7);g.fill();g.restore();
+   phoneGlow(cx,cy+60,.35,on);person(cx,cy+60,.36,i===14?'#5a4a3a':'#2a3040',{down:1});}
+  g.restore();if(t<90.62)fl=.35;}
+ /* S9 93.9-97.2: your message buried under everyone else's */
+ else if(t<97.2){room(.6);const k=seg(t,94.1,96.6);const s={strip:0,read:0,more:MORE,scroll:lerp(-420,820,k)*0+lerp(0,1300,k)};drawPhone(t,s,.82,0,-20);
+  txt('↑ 你的那条，早被刷上去了',1260,420,`700 44px ${SERIF}`,GOLD,'left',cl((t-95.4)/.4),16);}
+ /* S10 97.2-100.6: lights warm up, phone down */
+ else if(t<100.6){const k=seg(t,97.2,99.4);room(1);g.fillStyle=`rgba(255,200,140,${.10*k})`;g.fillRect(0,0,W,H);const s={off:true,refl:1};drawPhone(t,s,lerp(.82,.6,k),0,lerp(-20,260,k),lerp(-.025,-.25,k));
+  txt('没那么多人在看你',W/2,360,`900 96px ${SERIF}`,GOLD,'center',cl((t-98.2)/.5),26);}
+ else{$('end').style.opacity=cl((t-100.6)/.5);}
+ // vignette + subtitle band
+ const v=g.createRadialGradient(W/2,H/2,H*.4,W/2,H/2,H*1.0);v.addColorStop(0,'rgba(0,0,0,0)');v.addColorStop(1,'rgba(0,0,0,.6)');g.fillStyle=v;g.fillRect(0,0,W,H);
+ const b=g.createLinearGradient(0,H,0,H-300);b.addColorStop(0,'rgba(0,0,0,.75)');b.addColorStop(1,'rgba(0,0,0,0)');g.fillStyle=b;g.fillRect(0,H-300,W,300);
+ $('flash').style.opacity=fl;};
+window.READY=true;
+</script></body></html>
