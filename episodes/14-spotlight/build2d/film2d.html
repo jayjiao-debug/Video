@@ -366,7 +366,9 @@ const $=id=>document.getElementById(id);
 function subtitle(t){const l=LINES.find(l=>t>=l[0]&&t<l[1]);$('sub').innerHTML=l?'<span class="pill">'+l[2].replace(/\[(.+?)\]/g,'<b>$1</b>')+'</span>':'';}
 const CH=[[22.52,56.95,'2000 · 康奈尔大学'],[81.24,87.32,'2018 · 耶鲁大学']];
 function chap(t){const c=CH.find(c=>t>=c[0]&&t<c[1]);$('chap').firstChild.textContent=c?c[2]:'';$('chap').style.opacity=c?.9:0;}
-const SKIP0=79.22,SKIPN=12.15;window.renderAt=function(t0){const t=t0<SKIP0?t0:t0+SKIPN;$('sub').className=window.SUBSTYLE||'B';subtitle(t0);chap(t);let fl=0;$('plaque').style.opacity=0;$('end').style.opacity=0;g.setTransform(1,0,0,1,0,0);
+const REMAP=[[15.44, 18.47, 15.437, 19.487], [18.47, 22.52, 19.487, 24.549], [22.52, 26.07, 24.549, 28.598], [26.07, 29.61, 28.598, 32.648], [29.61, 32.65, 32.648, 36.698], [32.65, 35.69, 36.698, 40.747], [35.69, 38.72, 40.747, 44.797], [38.72, 41.76, 44.797, 48.846], [41.76, 44.8, 48.846, 52.896], [44.8, 47.84, 52.896, 56.946], [47.84, 50.87, 56.946, 60.995], [50.87, 53.91, 60.995, 65.045], [53.91, 56.95, 65.045, 69.094], [56.95, 60.49, 69.094, 73.144], [60.49, 64.03, 73.144, 77.194], [64.03, 67.07, 77.194, 81.243], [67.07, 70.11, 81.243, 85.293], [70.11, 75.17, 85.293, 91.367], [75.17, 79.22, 91.367, 97.442], [79.22, 83.27, 97.442, 102.504], [83.27, 87.32, 102.504, 107.566], [87.32, 91.37, 107.566, 113.64], [91.37, 95.5, 113.64, 119.816]];
+function toOld(T){if(T<REMAP[0][2])return T;for(const [oa,ob,na,nb] of REMAP){if(T<nb||(nb===REMAP[REMAP.length-1][3])){const D=(nb-na)/BT,Do=(ob-oa)/BT,u=(T-na)/BT;const uo=u<=2||D<=2?u*(Do<2?Do/Math.max(D,1e-6):1):2+(u-2)*(Do-2)/(D-2);return Math.min(ob,oa+uo*BT);}}return REMAP[REMAP.length-1][1];}
+const SKIP0=79.22,SKIPN=12.15;window.renderAt=function(T){const t0=toOld(T);const t=t0<SKIP0?t0:t0+SKIPN;$('sub').className=window.SUBSTYLE||'B';subtitle(T);chap(t);let fl=0;$('plaque').style.opacity=0;$('end').style.opacity=0;g.setTransform(1,0,0,1,0,0);
  const B=beat(t);PULSE=B.p;C.style.transform='none';
  /* S1 0-15.44: wrong group (approved opening) */
  if(t<15.44){room(t<8.8?1:.35);
