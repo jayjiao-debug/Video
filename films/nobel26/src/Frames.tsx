@@ -11,6 +11,9 @@ export const GLOW = 'rgba(241,197,109,0.6)';
 /* ---------------------------------------------------------------- shared stage */
 export const Fonts = () => (
   <style>{`@font-face { font-family: "JunoMono"; src: url(${staticFile('fonts/DejaVuSansMono-Bold.ttf')}) format("truetype"); font-weight: 700; }
+    @font-face { font-family: "Cormorant Garamond"; src: url(${staticFile('fonts/cormorant-garamond-latin-600-normal.woff2')}) format("woff2"); font-weight: 600; }
+    @font-face { font-family: "Cormorant Garamond"; src: url(${staticFile('fonts/cormorant-garamond-latin-700-normal.woff2')}) format("woff2"); font-weight: 700; }
+    @font-face { font-family: "Cormorant Garamond"; src: url(${staticFile('fonts/cormorant-garamond-latin-500-italic.woff2')}) format("woff2"); font-style: italic; }
     .gold { background: linear-gradient(180deg, #fff3cf 0%, #f1c56d 45%, #c8913a 100%); -webkit-background-clip: text; background-clip: text; color: transparent; }`}</style>
 );
 export const Finish: React.FC = () => (
@@ -70,8 +73,8 @@ export const Icon: React.FC<{ k: Seat['icon']; c: string }> = ({ k, c }) => {
   if (k === 'tax') return <g fill="none" stroke={c} strokeWidth={3}><rect x={-18} y={-20} width={36} height={40} rx={4} /><line x1={-10} y1={-8} x2={10} y2={-8} /><line x1={-10} y1={2} x2={10} y2={2} /><text x={0} y={16} fill={c} stroke="none" fontSize={12} textAnchor="middle" fontFamily={MONO}>%</text></g>;
   return <g fill="none" stroke={c} strokeWidth={3}><rect x={-28} y={-11} width={56} height={22} rx={11} /><circle cx={-16} cy={0} r={5} /><line x1={-12} y1={4} x2={-8} y2={8} /></g>;
 };
-export type PodiumProps = { lit?: [number, number, number]; sub?: string; years?: { seat: number; y: string; good?: boolean }[]; zoom?: number; dimAll?: number };
-export const Podium: React.FC<PodiumProps> = ({ lit = [0.55, 1, 0.55], sub = '呼声最高的：[阿里尔·帕克斯]，哈佛', years = [], zoom = 1, dimAll = 0 }) => {
+export type PodiumProps = { lit?: [number, number, number]; sub?: string; years?: { seat: number; y: string; good?: boolean; o?: number }[]; zoom?: number; dimAll?: number; bare?: boolean };
+export const Podium: React.FC<PodiumProps> = ({ lit = [0.55, 1, 0.55], sub = '呼声最高的：[阿里尔·帕克斯]，哈佛', years = [], zoom = 1, dimAll = 0, bare = false }) => {
   const floor = 860;
   const SE = SEATS.map((s, i) => ({ ...s, lit: lit[i] * (1 - dimAll) }));
   return (
@@ -119,11 +122,12 @@ export const Podium: React.FC<PodiumProps> = ({ lit = [0.55, 1, 0.55], sub = '�
       })}
       {years.map((y, i) => {
         const st = SE[y.seat], top = floor - st.h - 26 - 210 - 96;
-        return <div key={i} style={{ position: 'absolute', left: st.x - 110 + (i % 2) * 0, top: top - (years.filter((z) => z.seat === y.seat).indexOf(y)) * 78, width: 220, textAlign: 'center', fontFamily: MONO, fontWeight: 700, fontSize: 52,
+        const yo = y.o ?? 1;
+        return <div key={i} style={{ position: 'absolute', left: st.x - 110, top: top - (years.filter((z) => z.seat === y.seat).indexOf(y)) * 78, width: 220, opacity: yo, transform: `translateY(${(1 - yo) * -30}px) scale(${1 + 0.15 * (1 - yo)})`, textAlign: 'center', fontFamily: MONO, fontWeight: 700, fontSize: 52,
           color: y.good ? '#1a1206' : INK, background: y.good ? GOLD : 'rgba(30,34,52,0.95)', border: `2px solid ${y.good ? GOLD : 'rgba(243,237,226,0.35)'}`, borderRadius: 14, padding: '6px 0', boxShadow: y.good ? `0 0 40px ${GLOW}` : 'none' }}>{y.y}</div>;
       })}
       </AbsoluteFill>
-      <Finish />
+      {!bare && <Finish />}
       {sub && <Sub s={sub} />}
     </AbsoluteFill>
   );
