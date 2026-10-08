@@ -33,24 +33,25 @@ const vis = (T: number, a: number, z: number, fi = 0.25, fo = 0.3) => Math.min(e
 const rise = (T: number, a: number, d = 22) => (1 - easeOut(prog(T, a, a + 0.2))) * d; // a fast landing, then still
 const L = {
   hide: at('盯着B'), deeper: at('B在变深'), take: at('把阴影'), guess: at('大脑不测量'), helm: at('1867'),
-  glass: at('这块玻璃'), bet1: at('放得进'), lift: at('看好了'), fit: at('严丝合缝'), measure: at('两条长边'), persp: at('透视'),
+  glass: at('这块玻璃'), bet1: at('放得进'), lift: at('看好了'), fit: at('严丝合缝'), measure: at('两条长边'), look2: at('左边还是更长'), persp: at('透视'),
   race: at('赛跑'), step: at('一步一停'), tie: at('同时撞线'), again: at('再跑一次'),
   balls: at('再来一组'), rgb: at('红、绿'), pick: at('取一次色'), first: at('第一个'), second: at('第二个'),
   same: at('同一种米色'), lines: at('彩色的'), save: at('处理颜色很'),
   right: at('明明在往右'), fingers: at('两根手指，把'), up: at('一条缝'), lazy: at('最省事'),
-  world: at('你看到的世界'), right2: at('都猜对了'), now: at('再看一眼'), still: at('还是不一样'),
+  world: at('你看到的世界'), right2: at('都猜对了'), now: at('再看一眼A和B'), still: at('还是不一样'),
 };
 const TITLE = EV.title, DROP = EV.drop, BAR4 = 4 * BEAT;
 const TITLE_OUT = TITLE + 3.3;                    // the card leaves through the board growing back around A and B
-const T1 = TITLE + 7 * BAR4;                      // 22.38 board → tables
-const LAND = TITLE + 11 * BAR4;                   // 30.52 the lifted top lands on the right table
-const T2 = EV.break, OFF = EV.break + 4 * BAR4; // the race: both cross the line together on a downbeat (48.84)
-const T3 = EV.build;                              // 56.98 feet → spheres
-const T4 = DROP + 5 * BAR4;                       // 83.10 spheres → barber pole
-const SLIT = DROP + 8 * BAR4;                     // 89.21 the sides close to a slit
-const T5 = DROP + 11 * BAR4;                      // 95.31 the slit shuts → recap
-const T6 = DROP + 14 * BAR4;                      // 101.42 recap → board
-const END_CARD = DROP + 17 * BAR4;                // 107.52
+// v7 (music lengthened by repeated phrases, scripts/music.py):
+const T1 = TITLE + 8 * BAR4;                      // 24.42 board → tables, on a phrase start
+const LAND = TITLE + 12 * BAR4;                   // 32.56 the glass lands on the right table
+const T2 = EV.break, OFF = EV.break + 5 * BAR4;   // 48.84 race starts; 59.01 both cross the line on a downbeat
+const T3 = EV.build;                              // 69.19 race → spheres
+const T4 = DROP + 5 * BAR4;                       // 95.31 spheres → barber pole
+const SLIT = DROP + 9 * BAR4;                     // 103.45 the sides close to a slit (≈5 s to put fingers on)
+const T5 = DROP + 12 * BAR4;                      // 109.56 the slit shuts → recap
+const T6 = DROP + 16 * BAR4;                      // 117.70 recap → board
+const END_CARD = DROP + 19 * BAR4;                // 123.80; the film ends at drop + 23 bars
 const SHOT = {
   board1: [0, T1], tables: [T1, T2], feet: [T2, T3], balls: [T3, T4], barber: [T4, T5], recap: [T5, T6], board2: [T6, FILM_END],
 } as const;
@@ -59,8 +60,8 @@ const BEATS: number[] = (music as any).beats;
 const nextBeat = (t: number) => t > DROP ? DROP + Math.ceil((t - DROP) / BEAT - 1e-6) * BEAT : (BEATS.find((b) => b >= t - 1e-6) ?? t);
 /** the five shortcuts, stamped into the top bar one by one */
 const STAMPS: [string, string, number][] = [          // each lands on its reveal hit
-  ['阴影', '按阴影调亮', nextBeat(L.helm)], ['透视', '按透视拉长', TITLE + 11 * BAR4], ['对比', '看对比估速度', EV.break + 4 * BAR4],
-  ['借色', '借旁边的颜色', DROP], ['省事', '挑最省事的答案', DROP + 8 * BAR4],
+  ['阴影', '按阴影调亮', nextBeat(L.helm)], ['透视', '按透视拉长', LAND], ['对比', '看对比估速度', OFF],
+  ['借色', '借旁边的颜色', DROP], ['省事', '挑最省事的答案', SLIT],
 ];
 const inShot = (T: number, k: keyof typeof SHOT) => T >= SHOT[k][0] && T < SHOT[k][1];
 
@@ -336,9 +337,9 @@ const TablesShot: React.FC<{ T: number }> = ({ T }) => {
   const punch = 1 + 0.03 * hit(T, LAND, 0.22);
   const landed = T >= LAND;
   const out = easeInOut(prog(T, T2 - 0.5, T2));            // tables → race: the glass becomes the yellow block
-  const glassIn = easeOut(prog(T, L.glass, L.glass + 0.35));
+  const glassIn = easeOut(prog(T, L.glass, L.glass + 0.35)) * (1 - easeInOut(prog(T, L.look2, L.look2 + 0.45)));
   const gq = out > 0 ? mix(Q_R, YELLOW_RECT, out) : glassAt(T);
-  const edges = vis(T, L.measure, T2 - 0.5, 0.25, 0.3);
+  const edges = vis(T, L.measure, L.look2 + 0.4, 0.25, 0.4);
   const longL: P2[] = [Q_L[0], Q_L[1]], longR: P2[] = [Q_R[0], Q_R[1]];
   return (
     <AbsoluteFill>
@@ -358,7 +359,7 @@ const TablesShot: React.FC<{ T: number }> = ({ T }) => {
       </svg>
       {out > 0 && <AbsoluteFill style={{ background: '#808080', opacity: out }} />}
       <svg width={1920} height={1080} style={{ position: 'absolute', inset: 0 }}>
-        {out > 0 ? <polygon points={pts(gq)} fill={`rgb(${Math.round(lerp(170, 255, out))},${Math.round(lerp(225, 242, out))},${Math.round(lerp(240, 0, out))})`} />
+        {out > 0 ? <polygon points={pts(gq)} opacity={easeOut(prog(out, 0, 0.35))} fill={`rgb(${Math.round(lerp(170, 255, out))},${Math.round(lerp(225, 242, out))},${Math.round(lerp(240, 0, out))})`} />
           : <Glass q={gq} o={glassIn} fit={landed ? 1 : 0} />}
       </svg>
       {edges > 0 && [longL, longR].map(([p, q], i) => (
@@ -566,96 +567,132 @@ const BarberShot: React.FC<{ T: number }> = ({ T }) => {
   );
 };
 
-/* ---------------------------------------------------------------- 6. recap: five shortcuts */
-const CARD_X = [240, 600, 960, 1320, 1680], CARD_W = 320, CARD_H = 290, CARD_TOP = 270;
-const MINI_P: Proj = { cx: 240, cy0: 352, a: 26, b: 13.4 };
+/* ---------------------------------------------------------------- 6. recap: five shortcuts, each card still moving on its own clock */
+const CARD_W = 340, CARD_H = 440, CARD_TOP = 180;
+const CARD_X = [0, 1, 2, 3, 4].map((i) => 960 + (i - 2) * 360);
+const MINI_P: Proj = { cx: CARD_X[0], cy0: CARD_TOP + 150, a: 31, b: 16 };
+const MINI_K = 0.32;                                  // tables / glass drawn at 32 % inside their card
 const RecapShot: React.FC<{ T: number }> = ({ T }) => {
+  const t = T - T5;
   const card = (i: number) => easeOut(prog(T, T5 + i * 0.06, T5 + 0.25 + i * 0.06));
   const k = easeInOut(prog(T, T6 - 0.45, T6));               // recap → board: the board card grows into the board
   const others = 1 - easeOut(prog(T, T6 - 0.45, T6 - 0.27));
   const p: Proj = { cx: lerp(MINI_P.cx, P0.cx, k), cy0: lerp(MINI_P.cy0, P0.cy0, k), a: lerp(MINI_P.a, P0.a, k), b: lerp(MINI_P.b, P0.b, k) };
   const dy = (i: number) => (1 - card(i)) * 30;
   const sweep = (i: number) => hit(T, L.world + 0.2 + i * 0.12, 0.3);
+  const osc = (period: number, ph = 0) => 0.5 - 0.5 * Math.cos((2 * Math.PI * (t + ph)) / period);
+  // 1 tables: the glass goes over and back (3.6 s)
+  const gk = easeInOut(osc(3.6));
+  const ga = -Math.PI / 2 * gk;
+  const gc: P2 = [lerp(C_L[0], C_R[0], gk), lerp(C_L[1], C_R[1], gk) - 6 - 110 * Math.sin(Math.PI * gk)];
+  // 2 feet: two blocks crossing the card, looping (2.6 s)
+  const fx = CARD_X[2] - CARD_W / 2 - 40 + ((t * 120) % (CARD_W + 60));
+  // 3 spheres: stripes on and off (1.7 s)
+  const sOn = Math.floor(t / 1.7) % 2 === 0;
+  // 4 barber: stripes running in the slit
+  const bdx = (t * 60) % 24;
+  const by = (i: number) => CARD_TOP + dy(i);
   return (
     <AbsoluteFill style={{ background: 'linear-gradient(180deg, #0f0d10 0%, #17130f 100%)' }}>
       {CARD_X.map((x, i) => (
-        <div key={i} style={{ position: 'absolute', left: x - CARD_W / 2, top: CARD_TOP + dy(i), width: CARD_W, height: CARD_H, borderRadius: 16, background: '#0a0909',
-          border: `2px solid rgba(241,197,109,${0.15 + 0.7 * sweep(i)})`, opacity: card(i) * others }} />
+        <div key={i} style={{ position: 'absolute', left: x - CARD_W / 2, top: by(i), width: CARD_W, height: CARD_H, borderRadius: 18, background: '#0a0909',
+          border: `2px solid rgba(241,197,109,${0.18 + 0.7 * sweep(i)})`, opacity: card(i) * others }} />
       ))}
       <svg width={1920} height={1080} style={{ position: 'absolute', inset: 0 }}>
-        <defs>
-          {CARD_X.map((x, i) => <clipPath key={i} id={`rc${i}`}><rect x={x - CARD_W / 2} y={CARD_TOP + dy(i)} width={CARD_W} height={CARD_H} rx={16} /></clipPath>)}
-        </defs>
-        {/* 0 board (grows into the full board on the way out) */}
-        <g opacity={card(0)} transform={`translate(0 ${dy(0) * (1 - k)})`}><Board p={p} uid="rb" labels={k > 0.9} /></g>
-        {/* 1 tables */}
-        <g opacity={card(1) * others} clipPath="url(#rc1)"><g transform={`translate(600 ${CARD_TOP + 150 + dy(1)}) scale(0.29) translate(-965 -540)`}><TableDraw q={Q_L} leg={1} /><TableDraw q={Q_R} leg={1} /></g></g>
-        {/* 2 feet */}
+        <defs>{CARD_X.map((x, i) => <clipPath key={i} id={`rc${i}`}><rect x={x - CARD_W / 2} y={by(i)} width={CARD_W} height={CARD_H} rx={18} /></clipPath>)}</defs>
+        {/* 0 board: the shadow slides off and back, B never changes (it grows into the board on the way out) */}
+        <g opacity={card(0)} transform={`translate(0 ${dy(0) * (1 - k)})`}><Board p={p} uid="rb" labels={k > 0.9} slide={1.65 * easeInOut(osc(4)) * (1 - k)} bFixed /></g>
+        {/* 1 tables + glass */}
+        <g opacity={card(1) * others} clipPath="url(#rc1)">
+          <g transform={`translate(${CARD_X[1]} ${by(1) + 230}) scale(${MINI_K}) translate(-965 -560)`}>
+            <TableDraw q={Q_L} leg={1} /><TableDraw q={Q_R} leg={1} />
+            <Glass q={quadOf(gc, rot(U, ga), rot(V, ga))} fit={gk > 0.98 ? 1 : 0} />
+          </g>
+        </g>
+        {/* 2 race */}
         <g opacity={card(2) * others} clipPath="url(#rc2)">
-          {Array.from({ length: 21 }, (_, j) => <rect key={j} x={800 + j * 16} y={CARD_TOP + dy(2)} width={8} height={CARD_H} fill={j % 2 ? '#fff' : '#000'} />)}
-          {Array.from({ length: 21 }, (_, j) => <rect key={`b${j}`} x={808 + j * 16} y={CARD_TOP + dy(2)} width={8} height={CARD_H} fill={j % 2 ? '#000' : '#fff'} />)}
-          <rect x={900} y={CARD_TOP + 95 + dy(2)} width={64} height={28} fill="#fff200" /><rect x={900} y={CARD_TOP + 170 + dy(2)} width={64} height={28} fill="#0a1a6e" />
+          {Array.from({ length: 24 }, (_, j) => <rect key={j} x={CARD_X[2] - CARD_W / 2 + j * 16} y={by(2)} width={8} height={CARD_H} fill="#000" />)}
+          {Array.from({ length: 24 }, (_, j) => <rect key={`w${j}`} x={CARD_X[2] - CARD_W / 2 + j * 16 + 8} y={by(2)} width={8} height={CARD_H} fill="#fff" />)}
+          <rect x={fx} y={by(2) + 150} width={40} height={24} fill="#fff200" /><rect x={fx} y={by(2) + 250} width={40} height={24} fill="#0a1a6e" />
         </g>
         {/* 3 spheres */}
         <g opacity={card(3) * others}>
-          <defs>{[0, 1, 2, 3, 4, 5].map((i) => <clipPath key={i} id={`rs${i}`}><circle cx={1220 + (i % 3) * 100} cy={CARD_TOP + 95 + Math.floor(i / 3) * 100 + dy(3)} r={40} /></clipPath>)}</defs>
-          {[0, 1, 2, 3, 4, 5].map((i) => { const x = 1220 + (i % 3) * 100, y = CARD_TOP + 95 + Math.floor(i / 3) * 100 + dy(3); return (
-            <g key={i}><circle cx={x} cy={y} r={40} fill={BEIGE} />
-              <g clipPath={`url(#rs${i})`}>{Array.from({ length: 12 }, (_, j) => <rect key={j} x={x - 42} y={y - 42 + j * 7} width={84} height={3} fill={STRIPE[i]} />)}</g></g>); })}
+          <defs>{[0, 1, 2, 3, 4, 5].map((i) => <clipPath key={i} id={`rs${i}`}><circle cx={CARD_X[3] - 95 + (i % 3) * 95} cy={by(3) + 140 + Math.floor(i / 3) * 120} r={42} /></clipPath>)}</defs>
+          {[0, 1, 2, 3, 4, 5].map((i) => { const x = CARD_X[3] - 95 + (i % 3) * 95, y = by(3) + 140 + Math.floor(i / 3) * 120; return (
+            <g key={i}><circle cx={x} cy={y} r={42} fill={BEIGE} />
+              {sOn && <g clipPath={`url(#rs${i})`}>{Array.from({ length: 13 }, (_, j) => <rect key={j} x={x - 44} y={y - 44 + j * 7} width={88} height={3} fill={STRIPE[i]} />)}</g>}</g>); })}
         </g>
         {/* 4 barber pole */}
         <g opacity={card(4) * others}>
-          <defs><clipPath id="rbp"><rect x={1655} y={CARD_TOP + 30 + dy(4)} width={50} height={CARD_H - 60} rx={6} /></clipPath></defs>
-          <g clipPath="url(#rbp)"><rect x={1600} y={CARD_TOP + dy(4)} width={200} height={CARD_H} fill="#f1ece2" />
-            {Array.from({ length: 20 }, (_, j) => { const x = 1400 + j * 24, y = CARD_TOP + dy(4); return <polygon key={j} points={`${x},${y} ${x + 11},${y} ${x + 11 + CARD_H},${y + CARD_H} ${x + CARD_H},${y + CARD_H}`} fill="#c8302a" />; })}</g>
-          <rect x={1655} y={CARD_TOP + 30 + dy(4)} width={50} height={CARD_H - 60} rx={6} fill="none" stroke="#3a3a44" strokeWidth={4} />
+          <defs><clipPath id="rbp"><rect x={CARD_X[4] - 30} y={by(4) + 40} width={60} height={CARD_H - 80} rx={6} /></clipPath></defs>
+          <g clipPath="url(#rbp)"><rect x={CARD_X[4] - 100} y={by(4)} width={200} height={CARD_H} fill="#f1ece2" />
+            <g transform={`translate(${bdx} 0)`}>{Array.from({ length: 30 }, (_, j) => { const x = CARD_X[4] - 400 + j * 24, y = by(4); return <polygon key={j} points={`${x},${y} ${x + 11},${y} ${x + 11 + CARD_H},${y + CARD_H} ${x + CARD_H},${y + CARD_H}`} fill="#c8302a" />; })}</g></g>
+          <rect x={CARD_X[4] - 30} y={by(4) + 40} width={60} height={CARD_H - 80} rx={6} fill="none" stroke="#3a3a44" strokeWidth={4} />
         </g>
       </svg>
       {CARD_X.map((x, i) => (
-        <div key={i} style={{ position: 'absolute', left: x - CARD_W / 2, width: CARD_W, top: CARD_TOP + CARD_H + 18 + dy(i), textAlign: 'center', opacity: card(i) * others }}>
-          <div style={{ fontFamily: SANS, fontWeight: 900, fontSize: 46, color: GOLD }}>{STAMPS[i][0]}</div>
-          <div style={{ fontFamily: SANS, fontWeight: 700, fontSize: 28, color: DIM, marginTop: 4 }}>{STAMPS[i][1]}</div>
+        <div key={i} style={{ position: 'absolute', left: x - CARD_W / 2, width: CARD_W, top: by(i) + CARD_H + 14, textAlign: 'center', opacity: card(i) * others }}>
+          <div style={{ fontFamily: SANS, fontWeight: 900, fontSize: 54, color: GOLD, lineHeight: 1.1 }}>{STAMPS[i][0]}</div>
+          <div style={{ fontFamily: SANS, fontWeight: 700, fontSize: 32, color: DIM, marginTop: 6 }}>{STAMPS[i][1]}</div>
         </div>
       ))}
     </AbsoluteFill>
   );
 };
 
-/* ---------------------------------------------------------------- the shortcut tally in the top bar */
+/* ---------------------------------------------------------------- the score in the top bar: how many times were you fooled */
 const Tally: React.FC<{ T: number }> = ({ T }) => {
   const o = easeOut(prog(T, TITLE_OUT + 0.4, TITLE_OUT + 0.9)) * (1 - prog(T, END_CARD, END_CARD + 0.4));
   if (o <= 0.001) return null;
+  const n = STAMPS.filter(([, , t]) => T >= t).length;
   return (
-    <div style={{ position: 'absolute', top: 34, left: 0, right: 0, display: 'flex', justifyContent: 'center', alignItems: 'center', gap: 18, opacity: o }}>
-      <span style={{ fontFamily: SANS, fontWeight: 900, fontSize: 28, color: DIM, marginRight: 6 }}>你被骗了几次？</span>
-      {STAMPS.map(([w, , t], i) => {
+    <div style={{ position: 'absolute', top: 34, left: 0, right: 0, display: 'flex', justifyContent: 'center', alignItems: 'center', gap: 14, opacity: o }}>
+      <span style={{ fontFamily: SANS, fontWeight: 900, fontSize: 28, color: DIM, marginRight: 8 }}>你被骗了几次？</span>
+      {STAMPS.map(([, , t], i) => {
         const on = T >= t, k = easeOut(prog(T, t, t + 0.14)), glow = hit(T, t, 0.5) + (T >= T5 ? hit(T, L.world + 0.2 + i * 0.12, 0.3) : 0);
         return (
-          <div key={i} style={{ width: 132, height: 58, borderRadius: 29, border: `2px solid ${on ? GOLD : 'rgba(243,237,226,0.22)'}`, background: on ? `rgba(241,197,109,${0.16 + 0.5 * glow})` : 'transparent',
-            display: 'flex', alignItems: 'center', justifyContent: 'center', transform: `scale(${on ? 1 + 0.18 * (1 - k) : 1})`, boxShadow: on ? `0 0 ${8 + 26 * glow}px ${GLOW}` : 'none' }}>
-            {on && <span style={{ fontFamily: SANS, fontWeight: 900, fontSize: 32, color: GOLD, opacity: k }}>{w}</span>}
+          <div key={i} style={{ width: 58, height: 58, borderRadius: 29, border: `2px solid ${on ? GOLD : 'rgba(243,237,226,0.22)'}`, background: on ? `rgba(241,197,109,${0.75 + 0.25 * glow})` : 'transparent',
+            display: 'flex', alignItems: 'center', justifyContent: 'center', transform: `scale(${on ? 1 + 0.25 * (1 - k) : 1})`, boxShadow: on ? `0 0 ${8 + 26 * glow}px ${GLOW}` : 'none' }}>
+            {on && <span style={{ fontFamily: SANS, fontWeight: 900, fontSize: 34, color: '#1a1206', opacity: k }}>✓</span>}
           </div>
         );
       })}
+      <span style={{ fontFamily: MONO, fontWeight: 700, fontSize: 34, color: GOLD, marginLeft: 10, minWidth: 70 }}>{n}/5</span>
     </div>
   );
 };
 
-/* ---------------------------------------------------------------- end card */
+/* ---------------------------------------------------------------- end card: the five, for counting */
+const Icon: React.FC<{ i: number; x: number; y: number }> = ({ i, x, y }) => {
+  const g = GOLD;
+  return (
+    <g transform={`translate(${x} ${y})`}>
+      <rect x={-46} y={-46} width={92} height={92} rx={14} fill="rgba(241,197,109,0.08)" stroke={g} strokeWidth={2.5} />
+      {i === 0 && <g><polygon points="0,-30 30,-8 0,14 -30,-8" fill="none" stroke={g} strokeWidth={3} /><polygon points="0,-30 15,-19 0,-8 -15,-19" fill={g} /><polygon points="0,14 -15,3 0,-8 15,3" fill={g} opacity={0.5} /><ellipse cx={16} cy={-26} rx={9} ry={5} fill={g} /></g>}
+      {i === 1 && <g><polygon points="-30,-6 -18,-26 30,-12 18,8" fill="none" stroke={g} strokeWidth={3} /><line x1={-26} y1={0} x2={-26} y2={28} stroke={g} strokeWidth={3} /><line x1={14} y1={12} x2={14} y2={30} stroke={g} strokeWidth={3} /></g>}
+      {i === 2 && <g>{[-30, -18, -6, 6, 18].map((sx) => <rect key={sx} x={sx} y={-30} width={6} height={60} fill={g} opacity={0.55} />)}<rect x={-20} y={-14} width={24} height={9} fill={g} /><rect x={-20} y={8} width={24} height={9} fill={g} /></g>}
+      {i === 3 && <g><circle cx={0} cy={0} r={28} fill="none" stroke={g} strokeWidth={3} />{[-16, -8, 0, 8, 16].map((sy) => <line key={sy} x1={-Math.sqrt(784 - sy * sy)} y1={sy} x2={Math.sqrt(784 - sy * sy)} y2={sy} stroke={g} strokeWidth={2} />)}</g>}
+      {i === 4 && <g><rect x={-12} y={-32} width={24} height={64} rx={3} fill="none" stroke={g} strokeWidth={3} />{[-24, -10, 4, 18].map((sy) => <line key={sy} x1={-12} y1={sy} x2={12} y2={sy + 14} stroke={g} strokeWidth={3} />)}</g>}
+    </g>
+  );
+};
 const EndCard: React.FC<{ T: number }> = ({ T }) => {
   const a = END_CARD;
   if (T < a) return null;
   const k = (d: number) => easeOut(prog(T, a + d, a + d + 0.4));
-  const black = easeIn(prog(T, FILM_END - 0.6, FILM_END));
+  const black = easeIn(prog(T, FILM_END - 0.8, FILM_END));
   return (
     <AbsoluteFill>
-      <AbsoluteFill style={{ background: `rgba(4,4,5,${0.88 * k(0)})` }} />
-      <Big s="大脑的懒惰" y={220} size={100} color={GOLD} o={k(0)} glow={GLOW} font={ZH} />
-      <Big s="五个里，你被骗了几个？" y={388} size={64} o={k(0.4)} dy={rise(T, a + 0.4)} />
-      <Big s="评论区报分 · 不信就暂停截图，自己量" y={490} size={36} color={DIM} o={k(0.8)} />
-      <div style={{ position: 'absolute', left: 960 - 330, top: 566, width: 660, height: 58, borderRadius: 29, border: `2px solid ${GOLD}`, opacity: k(1.0), display: 'flex', alignItems: 'center', justifyContent: 'center',
+      <AbsoluteFill style={{ background: `rgba(4,4,5,${0.9 * k(0)})` }} />
+      <Big s="大脑的懒惰" y={150} size={96} color={GOLD} o={k(0)} glow={GLOW} font={ZH} />
+      <svg width={1920} height={1080} style={{ position: 'absolute', inset: 0 }}>
+        {[0, 1, 2, 3, 4].map((i) => <g key={i} opacity={k(0.3 + i * 0.08)}><Icon i={i} x={960 + (i - 2) * 130} y={340} /></g>)}
+      </svg>
+      <Big s="五个里，你被骗了几个？" y={420} size={64} o={k(0.8)} dy={rise(T, a + 0.8)} />
+      <Big s="评论区报分 · 不信就暂停截图，自己量" y={520} size={36} color={DIM} o={k(1.1)} />
+      <div style={{ position: 'absolute', left: 960 - 330, top: 596, width: 660, height: 58, borderRadius: 29, border: `2px solid ${GOLD}`, opacity: k(1.3), display: 'flex', alignItems: 'center', justifyContent: 'center',
         fontFamily: SANS, fontWeight: 700, fontSize: 28, letterSpacing: '0.15em', color: INK }}>{JUNO.follow}</div>
-      <div style={{ position: 'absolute', left: 0, right: 0, top: 690, textAlign: 'center', opacity: 0.6 * k(1.2), fontFamily: SANS, fontSize: 18, color: INK, lineHeight: 1.8 }}>
+      <div style={{ position: 'absolute', left: 0, right: 0, top: 712, textAlign: 'center', opacity: 0.6 * k(1.5), fontFamily: SANS, fontSize: 18, color: INK, lineHeight: 1.8 }}>
         资料：Adelson 1995（MIT）· Helmholtz 1867《生理光学手册》· Shepard 1990《Mind Sights》· Anstis 2001 Perception · Novick 2018（UTEP）· Wallach 1935<br />
         所有图形均为代码重绘 · "懒惰"为比喻
       </div>
@@ -704,7 +741,7 @@ const PickerNow: React.FC<{ T: number }> = ({ T }) => {
     const o = (T < TITLE ? easeOut(prog(T, CUR.a1 - 0.1, CUR.a1 + 0.1)) : easeOut(prog(T, TITLE_OUT + 0.2, TITLE_OUT + 0.5))) * (1 - vis(T, L.guess + 1.4, 99, 0.3, 0.2)) * (1 - prog(T, T1 - 0.5, T1 - 0.2));
     return <Picker o={o} rows={[{ k: 'A', v: G(DARK), o: easeOut(prog(T, CUR.a1, CUR.a1 + 0.12)) }, { k: 'B', v: G(DARK), o: easeOut(prog(T, CUR.b1, CUR.b1 + 0.12)) }]} />;
   }
-  if (inShot(T, 'tables')) return <Meter title="量一下 · 像素" o={vis(T, L.measure + 0.3, T2 - 0.3, 0.2, 0.2)} rows={[['左边长边', '300'], ['右边长边', '300']]} />;
+  if (inShot(T, 'tables')) return <Meter title="量一下 · 像素" o={vis(T, L.measure + 0.3, L.look2 + 0.4, 0.2, 0.4)} rows={[['左边长边', '300'], ['右边长边', '300']]} />;
   if (inShot(T, 'feet')) {
     const v = T < RW0() ? V1 : T < RACE2() ? 0 : V2();
     const sv = v ? String(Math.round(v)) : '—';
