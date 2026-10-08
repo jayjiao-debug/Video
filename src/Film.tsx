@@ -520,11 +520,12 @@ const BallsShot: React.FC<{ T: number }> = ({ T }) => {
 /* ---------------------------------------------------------------- 5. barber pole / aperture problem (Wallach 1935), played backwards:
    first the wide window (clearly moving right), then the viewer is asked to cover the sides with two fingers; on the
    downbeat two dark bands slide in where the fingers go, and the same stripes now run up. */
-const SPD = 110, PER = 70, WIDE = 1300, SLIT_W = 150;
+const SPD = 110, PER = 70, WIDE = 1300, NARROW = 480, SLIT_W = 110; // v6: the window shrinks to two finger-widths + a slit
 const slitW = (T: number) => {
   const close = easeInOut(prog(T, T4 - 0.7, T4));                     // full frame → wide window, as the spheres fall
+  const shrink = easeInOut(prog(T, L.fingers - 0.1, L.fingers + 0.45));   // small enough for two fingertips on a phone
   const shut = easeInOut(prog(T, T5 - 0.4, T5));
-  return lerp(2000, WIDE, close) * (1 - shut);
+  return lerp(lerp(2000, WIDE, close), NARROW, shrink) * (1 - shut);
 };
 const fingersAt = (T: number) => easeInOut(prog(T, SLIT - 0.35, SLIT)); // the bands that stand in for the fingers
 const BarberShot: React.FC<{ T: number }> = ({ T }) => {
@@ -532,8 +533,8 @@ const BarberShot: React.FC<{ T: number }> = ({ T }) => {
   const dx = (SPD * (T - (T4 - 0.7))) % PER;
   const intro = easeInOut(prog(T, T4 - 0.7, T4 - 0.2));
   const punch = 1 + 0.025 * hit(T, SLIT, 0.22);
-  const f = fingersAt(T), bandW = (WIDE - SLIT_W) / 2;
-  const guide = vis(T, L.fingers + 0.1, SLIT + 0.1, 0.25, 0.15);
+  const f = fingersAt(T), bandW = (NARROW - SLIT_W) / 2;
+  const guide = vis(T, L.fingers + 0.45, SLIT + 0.1, 0.25, 0.15);
   const arrow = vis(T, L.right, L.fingers + 0.6, 0.2, 0.3);
   return (
     <AbsoluteFill style={{ background: '#101014' }}>
@@ -558,8 +559,9 @@ const BarberShot: React.FC<{ T: number }> = ({ T }) => {
         <g opacity={arrow}><line x1={760} y1={925} x2={1140} y2={925} stroke={GOLD} strokeWidth={8} /><polygon points="1140,907 1176,925 1140,943" fill={GOLD} /></g>
       </svg>
       {guide > 0 && [x0 + bandW / 2, 960 + SLIT_W / 2 + bandW / 2].map((cx, i) => (
-        <div key={i} style={{ position: 'absolute', left: cx - 200, width: 400, top: 500, textAlign: 'center', opacity: guide, fontFamily: SANS, fontWeight: 900, fontSize: 44, color: GOLD, textShadow: '0 0 8px #000, 0 2px 12px #000' }}>手指挡这里</div>
+        <div key={i} style={{ position: 'absolute', left: cx - 100, width: 200, top: y0 + h / 2 - 48, textAlign: 'center', opacity: guide, fontFamily: SANS, fontWeight: 900, fontSize: 80, color: GOLD, textShadow: '0 0 8px #000, 0 2px 14px #000' }}>挡</div>
       ))}
+      <Big s="两根手指，各挡一边的虚线框" y={y0 - 76} size={40} color={GOLD} o={guide} />
     </AbsoluteFill>
   );
 };
