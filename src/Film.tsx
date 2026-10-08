@@ -90,6 +90,29 @@ const Cross: React.FC<{ x: number; y: number; o: number; ring?: number }> = ({ x
   </g>
 );
 
+/** the eyedropper (pipette), our own drawing: tip at (x, y), body up and to the right. The glass barrel fills with
+    the colour it has just picked (level 0..1); a ring spreads from the tip on each pick. */
+const Dropper: React.FC<{ x: number; y: number; o: number; ring?: number; fill?: string; level?: number }> = ({ x, y, o, ring = 0, fill, level = 0 }) => o <= 0.001 ? null : (
+  <g opacity={o}>
+    {ring > 0 && <circle cx={x} cy={y} r={10 + 44 * (1 - ring)} fill="none" stroke="#fff" strokeWidth={2.5} opacity={ring} />}
+    <g transform={`translate(${x} ${y}) rotate(-45)`}>
+      {/* soft shadow */}
+      <path d="M 4 4 L 40 7 L 40 15 L 126 15 L 126 19 L 138 19 L 138 21 Q 190 21 190 4 Q 190 -13 138 -13 L 138 -11 L 126 -11 L 126 -7 L 40 -7 L 40 1 Z" fill="#000" opacity={0.35} transform="translate(5 7)" />
+      {/* nozzle */}
+      <path d="M 0 0 L 38 -5 L 38 5 Z" fill="rgba(225,240,248,0.85)" stroke="#1b1b20" strokeWidth={2.5} strokeLinejoin="round" />
+      {/* barrel: glass, filling with the picked colour */}
+      <rect x={38} y={-11} width={88} height={22} rx={4} fill="rgba(225,240,248,0.35)" />
+      {fill && level > 0 && <rect x={38} y={-9} width={86 * level} height={18} rx={3} fill={fill} />}
+      <rect x={38} y={-11} width={88} height={22} rx={4} fill="none" stroke="#1b1b20" strokeWidth={3} />
+      <line x1={44} y1={-6} x2={118} y2={-6} stroke="#fff" strokeOpacity={0.75} strokeWidth={2.5} strokeLinecap="round" />
+      {/* collar and rubber bulb */}
+      <rect x={124} y={-15} width={16} height={30} rx={3} fill="#3a3a42" stroke="#1b1b20" strokeWidth={2.5} />
+      <path d="M 140 -13 Q 192 -15 192 0 Q 192 15 140 13 Z" fill="#2a2a30" stroke="#121216" strokeWidth={2.5} />
+      <path d="M 150 -7 Q 176 -8 182 -2" fill="none" stroke="#fff" strokeOpacity={0.35} strokeWidth={3} strokeLinecap="round" />
+    </g>
+  </g>
+);
+
 const Tag: React.FC<{ x: number; y: number; top: string; sub?: string; o: number; dy?: number; color?: string }> = ({ x, y, top, sub, o, dy = 0, color = DIM }) => o <= 0.001 ? null : (
   <div style={{ position: 'absolute', left: x, top: y + dy, opacity: o }}>
     <div style={{ fontFamily: MONO, fontWeight: 700, fontSize: 22, letterSpacing: '0.2em', color }}>{top}</div>
@@ -482,7 +505,7 @@ const BallsShot: React.FC<{ T: number }> = ({ T }) => {
       <SphereSet T={T} stripes={stripesOn ? 1 : 0} wipe={wipe} uid="sp" />
       <svg width={1920} height={1080} style={{ position: 'absolute', inset: 0 }}>
         {!dropped && PICKS.map((p, i) => T >= p ? <circle key={i} cx={SPH[i][0]} cy={SPH[i][1]} r={R + 8} fill="none" stroke="#fff" strokeWidth={2} opacity={0.55} /> : null)}
-        <Cross x={cx} y={cy} o={co} ring={n > 0 ? Math.max(0, 1 - (T - PICKS[n - 1]) / 0.3) : 0} />
+        <Dropper x={cx} y={cy} o={co} ring={n > 0 ? Math.max(0, 1 - (T - PICKS[n - 1]) / 0.3) : 0} fill={`rgb(${SPHERE_RGB.join(',')})`} level={easeOut(prog(T, PICKS[0], PICKS[0] + 0.2))} />
       </svg>
       <Big s="12 个球 · 1 种颜色" y={150} size={84} color={GOLD} glow={GLOW} o={vis(T, DROP, L.lines, 0.05, 0.3)} dy={rise(T, DROP, 30)} />
       {lens > 0 && <AbsoluteFill style={{ background: 'rgba(6,6,7,0.82)', opacity: lens }} />}
@@ -717,7 +740,7 @@ export const Film: React.FC<{ at?: number }> = ({ at: atT }) => {
       {inShot(T, 'balls') && <BallsShot T={T} />}
       {inShot(T, 'recap') && <RecapShot T={T} />}
       {inShot(T, 'board2') && <BoardShot T={T} uid="b2" />}
-      {inShot(T, 'board1') && T < CUR.off + 0.4 && (() => { const [x, y, o, ring] = cursorAt(T); return <svg width={1920} height={1080} style={{ position: 'absolute', inset: 0 }}><Cross x={x} y={y} o={o} ring={ring} /></svg>; })()}
+      {inShot(T, 'board1') && T < CUR.off + 0.4 && (() => { const [x, y, o, ring] = cursorAt(T); return <svg width={1920} height={1080} style={{ position: 'absolute', inset: 0 }}><Dropper x={x} y={y} o={o} ring={ring} fill={`rgb(${DARK},${DARK},${DARK})`} level={easeOut(prog(T, CUR.a1, CUR.a1 + 0.18))} /></svg>; })()}
       <Infer T={T} />
       <PickerNow T={T} />
       <TitleCard T={T} />
