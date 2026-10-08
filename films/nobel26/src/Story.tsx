@@ -169,19 +169,26 @@ const BackRow: React.FC = () => (
 const EndCard: React.FC = () => (
   <AbsoluteFill style={{ background: '#05060c' }}>
     <Hall floorY={900} spots={[{ x: 960, w: 360, a: 0.6, warm: true }]} />
-    <div className="gold" style={{ position: 'absolute', left: 0, right: 0, top: 200, textAlign: 'center', fontFamily: ZH, fontWeight: 900, fontSize: 96 }}>谁会拿诺奖</div>
-    <div style={{ position: 'absolute', left: 0, right: 0, top: 360, display: 'flex', justifyContent: 'center', gap: 28 }}>
+    {/* J monogram, then 《title》 and the motif (a small gold podium) — the brand end card order */}
+    <svg width={1920} height={1080} style={{ position: 'absolute', inset: 0 }}>
+      <circle cx={960} cy={92} r={46} fill="none" stroke={GOLD} strokeWidth={3} />
+      <text x={960} y={112} textAnchor="middle" fontFamily='"Cormorant Garamond", Georgia, serif' fontStyle="italic" fontWeight={700} fontSize={64} fill={GOLD}>J</text>
+      <text x={960} y={164} textAnchor="middle" fontFamily={MONO} fontWeight={700} fontSize={18} letterSpacing="0.5em" fill={GOLD} opacity={0.8}>JUNO</text>
+      {[[-70, 34], [0, 52], [70, 22]].map(([dx, h], i) => <rect key={i} x={960 + dx - 30} y={372 - h} width={60} height={h} fill={GOLD} opacity={i === 1 ? 1 : 0.6} />)}
+    </svg>
+    <div className="gold" style={{ position: 'absolute', left: 0, right: 0, top: 196, textAlign: 'center', fontFamily: ZH, fontWeight: 900, fontSize: 96 }}>《谁会拿诺奖》</div>
+    <div style={{ position: 'absolute', left: 0, right: 0, top: 400, display: 'flex', justifyContent: 'center', gap: 28 }}>
       {[['苏珊·阿西', BRONZE], ['理查德·布伦德尔', '#cfd6de'], ['阿里尔·帕克斯', GOLD]].map(([n, c], i) => (
         <div key={i} style={{ padding: '14px 30px', borderRadius: 14, border: `2px solid ${c}`, fontFamily: ZH, fontWeight: 900, fontSize: 38, color: c }}>{n}</div>
       ))}
       <div style={{ padding: '14px 30px', borderRadius: 14, border: '2px dashed rgba(243,237,226,0.4)', fontFamily: ZH, fontWeight: 900, fontSize: 38, color: 'rgba(243,237,226,0.6)' }}>其他人？</div>
     </div>
-    <div style={{ position: 'absolute', left: 0, right: 0, top: 500, textAlign: 'center', fontFamily: SANS, fontWeight: 900, fontSize: 64, color: INK }}>你觉得是谁？</div>
-    <div style={{ position: 'absolute', left: 0, right: 0, top: 596, textAlign: 'center', fontFamily: SANS, fontWeight: 700, fontSize: 36, color: DIM }}>评论区说说你的理由 · 周一 11:45 揭晓</div>
-    <div style={{ position: 'absolute', left: 0, right: 0, top: 690, display: 'flex', justifyContent: 'center' }}>
+    <div style={{ position: 'absolute', left: 0, right: 0, top: 530, textAlign: 'center', fontFamily: SANS, fontWeight: 900, fontSize: 64, color: INK }}>你觉得是谁？</div>
+    <div style={{ position: 'absolute', left: 0, right: 0, top: 622, textAlign: 'center', fontFamily: SANS, fontWeight: 700, fontSize: 36, color: DIM }}>评论区说说你的理由 · 周一 11:45 揭晓</div>
+    <div style={{ position: 'absolute', left: 0, right: 0, top: 708, display: 'flex', justifyContent: 'center' }}>
       <div style={{ padding: '12px 36px', borderRadius: 40, border: `2px solid ${GOLD}`, fontFamily: SANS, fontWeight: 700, fontSize: 32, color: GOLD }}>{JUNO.follow}</div>
     </div>
-    <div style={{ position: 'absolute', left: 0, right: 0, top: 800, textAlign: 'center', fontFamily: SANS, fontSize: 20, color: 'rgba(243,237,226,0.4)' }}>
+    <div style={{ position: 'absolute', left: 0, right: 0, top: 812, textAlign: 'center', fontFamily: SANS, fontSize: 20, color: 'rgba(243,237,226,0.4)' }}>
       资料：Athey & Ellison 2011 QJE · Blundell, Duncan & Meghir 1998 Econometrica · Berry, Levinsohn & Pakes 1995 Econometrica · Stanford GSB · IFS · nobelprize.org
     </div>
     <Finish />

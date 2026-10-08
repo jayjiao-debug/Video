@@ -358,7 +358,7 @@ export const TitleCard: React.FC<{v: VideoCfg; cfg: BrandCfg; dur: number}> = ({
 						{v.taglineEn}
 					</text>
 					<text x={W / 2} y={884} textAnchor="middle" style={{fontFamily: font.sans, fontSize: 22, letterSpacing: '0.42em', fill: 'rgba(241,197,109,0.75)'}} opacity={prog(f, land + 36, 20)}>
-						{`— ${JUNO.credit} · ${JUNO.series} —`}
+						{`— ${JUNO.series} —`}
 					</text>
 				</g>
 			</svg>
@@ -394,7 +394,7 @@ export const EndCard: React.FC<{v: VideoCfg; cfg: BrandCfg; dur: number}> = ({v,
 					</text>
 				</g>
 				<text x={W / 2} y={1010} textAnchor="middle" style={{fontFamily: font.sans, fontSize: 18, letterSpacing: '0.06em', fill: 'rgba(243,237,226,0.38)'}} opacity={prog(f, 90, 20)}>
-					{`《${v.title}》 · ${JUNO.credit} · ${JUNO.series}　|　${v.sources}`}
+					{`《${v.title}》 · ${JUNO.series}　|　${v.sources}`}
 				</text>
 				<rect width={W} height={H} fill="#000" opacity={black} />
 			</svg>

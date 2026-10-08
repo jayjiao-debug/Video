@@ -8,7 +8,7 @@ export const JUNO = {
 	name: 'Juno',
 	credit: 'Juno 出品',
 	series: 'VIBE知识大赏',
-	follow: '关注 Juno · 每期一个反直觉的知识',
+	follow: '关注 Juno · 一起看懂世界', // channel slogan since 2026-10-08 (the 反直觉 line is retired)
 	/** corner mark, top-right in landscape */
 	mark: 'Juno · VIBE知识大赏',
 	colors: {

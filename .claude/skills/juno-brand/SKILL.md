@@ -26,10 +26,10 @@ retype a brand string or colour in a scene, a yaml or a prompt.
 | | value |
 |---|---|
 | name | **Juno** |
-| credit | **Juno 出品** |
+| credit | retired: never show 「Juno 出品」 on screen (owner) |
 | series | **VIBE知识大赏** |
 | corner mark | **◆ Juno · VIBE知识大赏** |
-| follow line | **关注 Juno · 每期一个反直觉的知识** |
+| follow line (channel slogan since 2026-10-08) | **关注 Juno · 一起看懂世界** (the old 反直觉 line is retired) |
 | brand gold | `#f1c56d` (deep `#c8913a`), on near-black `#05060b`, text `#f3ede2` |
 | title type | Noto Serif SC Black in a metallic gold gradient, inside 《 》, with one light sweep |
 | latin type | Cormorant (small caps kicker above the title, italic English tagline below) |
@@ -70,7 +70,7 @@ then change `identity.ts` once so every video follows.
    - The episode motif.
    - Chinese tagline: one question.
    - English tagline.
-   - `— Juno 出品 · VIBE知识大赏 —`.
+   - `— VIBE知识大赏 —` (no 「Juno 出品」).
    Nothing from the scene underneath may show while the card fades in (hide the
    scene art for the card's first frames).
    **The card must also leave through an object, not a fade or a cut to an
@@ -225,7 +225,7 @@ and +5 s, and one mid-video frame. Then check:
 - [ ] The title lands exactly on a strong beat of the track (卡点); it enters from the hook's object and leaves into the first story shot through an object (no fade to an unrelated world).
 - [ ] Nothing from the scene underneath flashes before or under the title card.
 - [ ] The title card layout matches §2 exactly.
-- [ ] Every brand string comes from `JUNO`: credit `Juno 出品`, series `VIBE知识大赏`.
+- [ ] Every brand string comes from `JUNO`: series `VIBE知识大赏`, follow line `关注 Juno · 一起看懂世界`; no 「Juno 出品」 and no retired 反直觉 slogan anywhere.
 - [ ] The motif is readable and overlaps nothing.
 - [ ] The corner mark is at the top right, small and faint, and the top-left is clear.
 - [ ] The end card has: monogram, title, motif, one comment question, follow pill and sources. The music is still playing under it.
@@ -253,14 +253,14 @@ BRAND (fixed, do not restyle):
 - Title: 《标题》 in a heavy Chinese serif with a metallic gold gradient and one light sweep.
 - Small caps English kicker above it; italic English tagline below; Cormorant for Latin.
 - Monogram: italic gold "J" inside a thin gold ring, wordmark "JUNO".
-- Credit "Juno 出品"; series "VIBE知识大赏"; follow line "关注 Juno · 每期一个反直觉的知识".
+- Series "VIBE知识大赏"; follow line "关注 Juno · 一起看懂世界". Never write "Juno 出品".
 
 STRUCTURE (every video, in this order):
 1. Cold open, as long as the hook needs (usually 7–12 s, under 18 s): the most striking image, already
    moving, subtitle by 1 s, no logo first. It must first show what we are looking at, then ask the question.
 2. Gold title card, 3–5 s long, landing exactly on the first strong music beat after the hook.
    Kicker "[TOPIC · NAME · YEAR]", 《[3–6 字标题]》, motif [one gold object],
-   tagline "[一个日常问题？]", English tagline, "— Juno 出品 · VIBE知识大赏 —".
+   tagline "[一个日常问题？]", English tagline, "— VIBE知识大赏 —".
 3. The story. Corner mark "◆ Juno · VIBE知识大赏" small and faint at the top right the whole time.
    Gold highlights only for answers, red only for the wrong belief.
 4. End card, last 6 s, music continues: J monogram drawing itself, 《标题》, the same motif,
