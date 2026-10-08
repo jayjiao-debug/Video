@@ -34,7 +34,7 @@ const rise = (T: number, a: number, d = 22) => (1 - easeOut(prog(T, a, a + 0.2))
 const L = {
   hide: at('盯着B'), deeper: at('B在变深'), take: at('把阴影'), guess: at('大脑不测量'), helm: at('1867'),
   glass: at('这块玻璃'), bet1: at('放得进'), lift: at('看好了'), fit: at('严丝合缝'), measure: at('两条长边'), look2: at('左边还是更长'), persp: at('透视'),
-  race: at('赛跑'), step: at('一步一停'), tie: at('同时撞线'), again: at('再跑一次'),
+  race: at('赛跑'), step: at('一步一停'), tie: at('同时撞线'), again: at('拿掉条纹再跑'),
   balls: at('再来一组'), rgb: at('红、绿'), pick: at('取一次色'), first: at('第一个'), second: at('第二个'),
   same: at('同一种米色'), lines: at('彩色的'), save: at('处理颜色很'),
   right: at('明明在往右'), fingers: at('两根手指，把'), up: at('一条缝'), lazy: at('最省事'),
@@ -43,15 +43,15 @@ const L = {
 const TITLE = EV.title, DROP = EV.drop, BAR4 = 4 * BEAT;
 const TITLE_OUT = TITLE + 3.3;                    // the card leaves through the board growing back around A and B
 // v7 (music lengthened by repeated phrases, scripts/music.py):
-const T1 = TITLE + 8 * BAR4;                      // 24.42 board → tables, on a phrase start
-const LAND = TITLE + 12 * BAR4;                   // 32.56 the glass lands on the right table
-const T2 = EV.break, OFF = EV.break + 5 * BAR4;   // 48.84 race starts; 59.01 both cross the line on a downbeat
-const T3 = EV.build;                              // 69.19 race → spheres
-const T4 = DROP + 5 * BAR4;                       // 95.31 spheres → barber pole
-const SLIT = DROP + 9 * BAR4;                     // 103.45 the sides close to a slit (≈5 s to put fingers on)
-const T5 = DROP + 12 * BAR4;                      // 109.56 the slit shuts → recap
-const T6 = DROP + 16 * BAR4;                      // 117.70 recap → board
-const END_CARD = DROP + 19 * BAR4;                // 123.80; the film ends at drop + 23 bars
+const T1 = TITLE + 8 * BAR4;                      // 24.75 board → tables, on a phrase start
+const LAND = TITLE + 12 * BAR4;                   // 32.89 the glass lands on the right table
+const T2 = EV.break, OFF = EV.break + 3.5 * BAR4; // 49.17 race starts; 56.30 both cross the line on a beat
+const T3 = EV.build;                              // 65.45 race → spheres
+const T4 = DROP + 5 * BAR4;                       // 91.57 spheres → barber pole
+const SLIT = DROP + 9 * BAR4;                     // 99.71 the sides close to a slit (≈5 s to put fingers on)
+const T5 = DROP + 12 * BAR4;                      // 105.82 the slit shuts → recap
+const T6 = DROP + 16 * BAR4;                      // 113.96 recap → board
+const END_CARD = DROP + 19 * BAR4;                // 120.06; the film ends at drop + 23 bars
 const SHOT = {
   board1: [0, T1], tables: [T1, T2], feet: [T2, T3], balls: [T3, T4], barber: [T4, T5], recap: [T5, T6], board2: [T6, FILM_END],
 } as const;
