@@ -5,11 +5,14 @@ import { Film } from './Film';
 import { Cuts, N_CUTS } from './Cuts';
 import { Demos, SEG } from './Demos';
 import { Demos2, SEG2, N_PARTS } from './Demos2';
+import { Cover } from './Cover';
 import { FPS, W, H, FILM_FRAMES } from './lib';
 
 export const Root: React.FC = () => (
   <>
     <Composition id="Lazy" component={Film} durationInFrames={FILM_FRAMES} fps={FPS} width={W} height={H} />
+    <Composition id="CoverWide" component={Cover} durationInFrames={1} fps={FPS} width={1440} height={1080} defaultProps={{ layout: 'wide' as const }} />
+    <Composition id="CoverTall" component={Cover} durationInFrames={1} fps={FPS} width={1080} height={1440} defaultProps={{ layout: 'tall' as const }} />
     <Composition id="Demos" component={Demos} durationInFrames={Math.round(3 * SEG * 30)} fps={30} width={1920} height={1080} />
     <Composition id="Demos2" component={Demos2} durationInFrames={Math.round(N_PARTS * SEG2 * 30)} fps={30} width={1920} height={1080} />
     <Composition id="Cuts" component={Cuts} durationInFrames={N_CUTS} fps={30} width={1920} height={1080} />
