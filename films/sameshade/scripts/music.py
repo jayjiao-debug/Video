@@ -24,16 +24,21 @@ _, X = wf.read(src); X = X.astype(np.float32) / 32768
 G = lambda i: B[16] + (i - 16) * BEAT
 DROP_TR = 81.40
 EDL = [(G(16), G(64)), (G(48), G(112)), (G(104), None)]
-FADE = int(0.008 * SR)
-parts, segs, film = [], [], 0.0
-for a, z in EDL:
+# joins: an equal-power crossfade 60 ms long centred on each splice (a fade-out/fade-in dip clicks in the quiet section)
+H = int(0.030 * SR)
+segs, film = [], 0.0
+Y = np.zeros((0, 2), np.float32)
+for n, (a, z) in enumerate(EDL):
     i0 = int(round(a * SR)); i1 = len(X) if z is None else int(round(z * SR))
-    seg = X[i0:i1].copy()
-    r = np.linspace(0, 1, FADE)[:, None]
-    seg[:FADE] *= r
-    if z is not None: seg[-FADE:] *= r[::-1]
-    segs.append(dict(src0=a, src1=z if z is not None else len(X) / SR, film0=film)); film += len(seg) / SR; parts.append(seg)
-Y = np.concatenate(parts)
+    seg = X[i0 - (H if n else 0): i1 + (H if z is not None else 0)].copy()
+    segs.append(dict(src0=a, src1=z if z is not None else len(X) / SR, film0=film))
+    if n == 0:
+        Y = seg
+    else:
+        k = np.linspace(0, np.pi / 2, 2 * H)[:, None]
+        tail, head = Y[-2 * H:], seg[:2 * H]
+        Y = np.concatenate([Y[:-2 * H], tail * np.cos(k) + head * np.sin(k), seg[2 * H:]])
+    film += (i1 - i0) / SR
 wf.write(ROOT / 'out/bgm_trim.wav', SR, (np.clip(Y, -1, 1) * 32767).astype(np.int16))
 def film_of(t):
     for s in reversed(segs):
