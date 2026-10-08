@@ -53,7 +53,7 @@ jobs:
         run: |
           npx remotion render src/index.ts ${{ matrix.chunk.comp }} out/chunk_${{ matrix.chunk.i }}.mp4 \
             --frames=${{ matrix.chunk.a }}-${{ matrix.chunk.b }} --gl=swangle --muted \
-            --concurrency=$(nproc) --crf=16 --timeout=180000 --log=warn
+            --concurrency=$(nproc) $(node -p "require('./render.json').flags || '--crf=16'") --timeout=180000 --log=warn
       - uses: actions/upload-artifact@v4
         with:
           name: chunk-${{ matrix.chunk.i }}

@@ -1,8 +1,9 @@
 {
-  "id": "lazy_v8b-1791450582",
+  "id": "lazy_v8hd-1791451504",
   "composition": "Lazy",
-  "start": 840,
-  "end": 1799,
-  "chunks": 4,
-  "output": "lazy_v8b"
+  "start": 0,
+  "end": 3845,
+  "chunks": 16,
+  "output": "lazy_v8hd",
+  "flags": "--image-format=png --crf=10 --x264-preset=slow"
 }
