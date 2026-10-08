@@ -13,7 +13,7 @@ Distilled from 《它在瞄准谁》 and 《应该没事吧》 and the creator's
   fast; 8 seconds with the question landed.
 - **Data must look "wow"**: one dot per person, seats that light up, counters that count, tallies (74 grey of 108;
   500 squares for 99.8%). Numbers on screen always come with the visual that makes them felt.
-- **Slogan**: the end card's follow pill reads `关注 Juno · 一起看懂这个世界` (not the retired 反直觉 line).
+- **Slogan**: the end card's follow pill reads `关注 Juno · 一起看懂世界` (not the retired 反直觉 line).
 - **End on the viewer**: a question in the end card ("火警响了，你会先跑，还是先看别人？") and the same question pinned
   in the comments. A separate 8-second "your dorm" scene was cut: it was weaker than giving the time to the data.
 - **Tie scenes together** when the facts allow it: Kamaishi's children had watched footage of the 2004 tsunami — the

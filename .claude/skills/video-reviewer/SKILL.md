@@ -50,7 +50,7 @@ Open every `sheet_NN.png` with Read (they are 1920 px wide; look closely). For e
   pictures? Look for jarring colour/brightness jumps.
 - **First frame** (t 0): striking on its own as a Douyin cover/first impression? Not dark or empty.
 - **Title card and end card:** present, on brand (Juno end card: J monogram, gold title, question, follow pill
-  `关注 Juno · 一起看懂这个世界`, sources; never "Juno 出品", never the retired 反直觉 slogan), legible, not cut off.
+  `关注 Juno · 一起看懂世界`, sources; never "Juno 出品", never the retired 反直觉 slogan), legible, not cut off.
 - **Sensitive content:** maps with national borders (avoid), real people depicted, disaster deaths handled with
   restraint, nothing that could read as an ad, a QR code, or a link.
 

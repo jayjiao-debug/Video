@@ -89,7 +89,7 @@ First 2–3 looks, then `storyboard.md` for the one the owner picks.
   a ledger vs a casino table vs a chat screen), not just in colour. At least one is a bold, riskier take. None
   may reuse the previous episode's main look (check `references/looks.md`). All share the engine layer: the same
   subtitle style, corner mark and Juno end card, so the series stays recognisable. The end card's follow pill
-  reads `关注 Juno · 一起看懂这个世界` (the channel slogan since 2026-10-08; 反直觉 is retired).
+  reads `关注 Juno · 一起看懂世界` (the channel slogan since 2026-10-08; 反直觉 is retired).
 - **Storyboard:** one coherent look; every transition motivated; first frame striking; text in safe zones;
   buildable in our engine; Juno end card for Juno episodes.
 
