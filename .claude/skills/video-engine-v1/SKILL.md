@@ -1,6 +1,6 @@
 ---
 name: video-engine-v1
-description: Make a Juno / VIBE知识大赏 knowledge film the 《应该没事吧》 way — one counter-intuitive principle told through several data-driven scenes, code-built in Remotion (3D with real downloaded models + 2D flat characters), timed to the music beats, rendered per scene on the GitHub Actions farm, then delivered with send version, scene clips, covers and Douyin posting copy. Use when asked to make, storyboard, render, fix or publish an episode with this engine.
+description: Make a Juno / VIBE知识大赏 knowledge film the 《应该没事吧》 way — one principle told through several data-driven scenes, code-built in Remotion (3D with real downloaded models + 2D flat characters), timed to the music beats, rendered per scene on the GitHub Actions farm, then delivered with send version, scene clips, covers and Douyin posting copy. Use when asked to make, storyboard, render, fix or publish an episode with this engine.
 ---
 
 # Video engine V1
@@ -24,7 +24,7 @@ Read before starting: `references/craft.md` (story, tools, camera), `references/
 - When they flag a problem in one scene, re-render **only that scene** and splice it in (step 6).
 
 ## 1. Topic and research
-- Pick one counter-intuitive principle and 4–6 scenes from different places, eras and scales that all show it, each
+- Pick one principle and 4–6 scenes from different places, eras and scales that all show it, each
   with a number that can be made visual. Open on a concrete paradox, end on a question to the viewer.
 - Research with web search; record sources. Read primary accounts — retellings get details wrong.
 - Every on-screen number gets a row in the script's facts table: claim, source, URL. Each row needs a credible

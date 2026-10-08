@@ -3,7 +3,7 @@
 Distilled from 《它在瞄准谁》 and 《应该没事吧》 and the creator's notes on every draft.
 
 ## The story
-- **One counter-intuitive principle, several very different scenes.** 《应该没事吧》: normalcy bias → Titanic lifeboats
+- **One principle, several very different scenes.** 《应该没事吧》: normalcy bias → Titanic lifeboats
   → smoke-filled room (1968) → 2004 tsunami (Tilly Smith) → 2011 Okawa vs Kamaishi → back to the opening image.
   Different places, eras and scales, one idea. The creator rejected "all ships" ("为什么都是船") — vary the scenes.
 - **Open on a concrete, data-shaped paradox** (40 seats, 12 people; 1178 seats, 414 empty; 1500 in the water), then say

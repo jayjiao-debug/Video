@@ -17,7 +17,7 @@
 ## Douyin upload form (抖音发布页)
 - **作品标题** ≤ 30 字: the paradox as a question ("泰坦尼克号的救生艇，为什么空着400多个座位？").
 - **作品简介** ≤ 1000 字: 3–5 short lines retelling the hook and the principle, the question to the viewer,
-  CC-BY credits for downloaded models, then the topics: `#vibe知识大赏 #<主题> #心理学/#数学之美 #反直觉 #冷知识`.
+  CC-BY credits for downloaded models, then the topics: `#vibe知识大赏 #<主题> #心理学/#数学之美 #冷知识`.
 - **官方活动**: skip unless one genuinely fits.
 - **设置封面**: 横封面 4:3 and 竖封面 3:4 files above.
 - **添加合集**: "VIBE知识大赏".
