@@ -316,6 +316,7 @@ const Bet: React.FC<{ T: number; at: number; reveal: number; opts: string[]; rig
   const b0 = nextBeat(at + 0.6), beats = [b0, b0 + BEAT, b0 + 2 * BEAT];
   const n = beats.filter((b) => T >= b).length, done = T >= beats[2] + BEAT, shown = T >= reveal;
   const digit = n > 0 && !done ? String(4 - n) : '';
+  const gone = easeInOut(prog(T, beats[2] + BEAT - 0.05, beats[2] + BEAT + 0.3));
   return (
     <div style={{ position: 'absolute', left: 0, right: 0, top: 150, display: 'flex', justifyContent: 'center', alignItems: 'center', gap: 18, opacity: o }}>
       <span style={{ fontFamily: SANS, fontWeight: 900, fontSize: 34, color: INK, textShadow: '0 0 6px #000, 0 2px 12px #000', marginRight: 6 }}>押一个</span>
@@ -326,8 +327,11 @@ const Bet: React.FC<{ T: number; at: number; reveal: number; opts: string[]; rig
             fontFamily: SANS, fontWeight: 900, fontSize: 40, color: win ? GOLD : lose ? 'rgba(243,237,226,0.4)' : INK, opacity: 1, boxShadow: win ? `0 0 ${12 + 30 * hit(T, reveal, 0.5)}px ${GLOW}` : 'none' }}>{w}{win ? ' ✓' : ''}</div>
         );
       })}
-      <div style={{ width: 84, height: 84, borderRadius: 42, border: `3px solid ${done ? 'rgba(243,237,226,0.3)' : GOLD}`, background: 'rgba(10,10,12,0.78)', display: 'flex', alignItems: 'center', justifyContent: 'center',
-        fontFamily: MONO, fontWeight: 700, fontSize: 52, color: GOLD, marginLeft: 8, transform: `scale(${1 + 0.25 * hit(T, beats[Math.max(0, n - 1)], 0.15) * (n > 0 && !done ? 1 : 0)})` }}>{digit}</div>
+      {/* the countdown circle: gone once the count is over (it shrinks out and the pills close up to the centre) */}
+      {gone < 1 && <div style={{ width: 84 * (1 - gone), marginLeft: 8 * (1 - gone) - 18 * gone, height: 84, display: 'flex', justifyContent: 'center', overflow: 'visible' }}>
+        <div style={{ flex: 'none', width: 84, height: 84, borderRadius: 42, border: `3px solid ${GOLD}`, background: 'rgba(10,10,12,0.78)', display: 'flex', alignItems: 'center', justifyContent: 'center',
+          fontFamily: MONO, fontWeight: 700, fontSize: 52, color: GOLD, opacity: 1 - gone, transform: `scale(${(1 - 0.6 * gone) * (1 + 0.25 * hit(T, beats[Math.max(0, n - 1)], 0.15) * (n > 0 && !done ? 1 : 0))})` }}>{digit}</div>
+      </div>}
     </div>
   );
 };
