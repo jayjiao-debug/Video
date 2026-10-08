@@ -1,9 +1,9 @@
 {
-  "id": "lazy_v8hd-1791451504",
-  "composition": "Lazy",
+  "id": "nobel_v1-1791488627",
+  "composition": "Nobel",
   "start": 0,
-  "end": 3845,
-  "chunks": 16,
-  "output": "lazy_v8hd",
-  "flags": "--image-format=png --crf=10 --x264-preset=slow"
+  "end": 2868,
+  "chunks": 12,
+  "output": "nobel_v1",
+  "flags": ""
 }

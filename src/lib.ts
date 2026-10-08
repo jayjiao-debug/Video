@@ -1,10 +1,9 @@
-import music from './music.json';
 export const ZH = '"Noto Serif CJK SC", "Noto Serif SC", serif';
 export const SANS = '"Noto Sans CJK SC", "Noto Sans SC", sans-serif';
 export const MONO = '"JunoMono", "DejaVu Sans Mono", monospace';
 export const EN = '"Cormorant Garamond", Georgia, serif';
 
-// palette: near-black, hard white, one hot red (TA / the last meeting), one cold blue (family / the other line), gold = brand
+// palette: stage black-navy, warm white, gold = brand / the favourite, silver and bronze for the podium
 export const BG = '#060608';
 export const INK = '#f2f0ea';
 export const DIM = 'rgba(242,240,234,0.45)';
@@ -35,50 +34,7 @@ export const mulberry = (seed: number) => () => {
 export const rnd = (i: number, k = 0) => mulberry(i * 7919 + k * 104729 + 17)();
 export const fmt = (n: number, d = 0) => n.toLocaleString('en-US', { minimumFractionDigits: d, maximumFractionDigits: d });
 
-/* 《大脑的懒惰》: the owner's track, uncut from beat 16 (scripts/music.py). */
+export const SILVER = '#cfd6de';
+export const BRONZE = '#c98a55';
+export const NAVY = '#070912';
 export const FPS = 30, W = 1920, H = 1080;
-export const EV = music.events;
-export const BEAT = music.beat;
-export const FILM_END = EV.end;                      // drop + 23 bars (v8: the uncut track)
-export const FILM_FRAMES = Math.round(FILM_END * FPS);
-
-/** subtitles, timed by scripts/lines.py */
-export const SUBS: [number, number, string][] = [
-  [0.05, 2.45, 'A和B，是[同一个颜色]。'],
-  [2.50, 5.15, '盯着B，我把周围[遮住]——'],
-  [5.25, 8.10, 'B在变深——它{一像素没动}。'],
-  [12.08, 16.22, '把阴影[拿开]：B一点没变，它本来就这么深。'],
-  [16.32, 20.29, '大脑不测量，它[猜]：B在阴影里，就该调亮。'],
-  [20.39, 24.53, '1867年，亥姆霍兹称之为"[无意识推理]"。'],
-  [24.93, 27.98, '这块玻璃，刚好盖住左边的桌面。'],
-  [28.08, 31.13, '放得进右边那张桌子吗？押一个——'],
-  [31.23, 32.78, '看好了——'],
-  [32.93, 35.75, '{严丝合缝}，两块桌面一模一样。'],
-  [35.85, 38.95, '不信？用两根手指比一比两条长边。'],
-  [39.05, 42.43, '知道了答案，再看一眼：左边还是更长吧？'],
-  [42.53, 45.92, '大脑默认它是立体的，自动按[透视]拉长。'],
-  [46.02, 48.98, '知道了也没用，它照样偷这个懒。'],
-  [49.33, 52.97, '黄蓝两块赛跑，谁先到终点？押一个——'],
-  [53.07, 56.20, '看起来，你追我赶，[一步一停]。'],
-  [56.39, 59.24, '{同时}撞线。它们一直是匀速。'],
-  [59.34, 62.96, '拿掉条纹再跑：大脑靠边缘[对比]估速度。'],
-  [63.06, 65.30, '对比弱，就显得慢。'],
-  [65.61, 69.29, '再来一组：这12个球，分别是什么颜色？'],
-  [69.39, 71.68, '红、绿、蓝、紫、橙……对吧？'],
-  [71.78, 74.84, '我们把每一个球，都取一次色——'],
-  [74.94, 78.00, '第一个：219、203、178。'],
-  [78.10, 81.16, '第二个，[一样]。第三个，还是一样……'],
-  [81.56, 84.46, '12个球，全是[同一种米色]。'],
-  [84.56, 87.46, '彩色的，只是前面那些细线。'],
-  [87.56, 91.36, '大脑处理颜色很[节省]：直接借旁边的。'],
-  [91.76, 94.49, '这些斜条纹，明明在往{右}走。'],
-  [94.59, 97.46, '用两根手指，把左右两边挡住——'],
-  [97.56, 99.56, '挡好了吗？'],
-  [99.86, 102.71, '只剩一条缝，它们就开始往[上]走。'],
-  [102.81, 105.66, '信息不够，大脑挑[最省事]的答案。'],
-  [105.96, 109.04, '你看到的世界，是大脑[最省力]的猜测。'],
-  [109.14, 111.53, '大多数时候，它都猜对了。'],
-  [111.63, 113.76, '所以你几乎没发现。'],
-  [114.11, 116.58, '现在，再看一眼A和B——'],
-  [116.68, 118.86, '它们还是{不一样}。'],
-];

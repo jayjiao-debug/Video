@@ -1,802 +1,470 @@
-import React, { useEffect, useState } from 'react';
-import { AbsoluteFill, continueRender, delayRender, staticFile, useCurrentFrame, useVideoConfig } from 'remotion';
-import { Board, P0, pt, DARK, LIGHT, A_CELL, B_CELL, Proj } from './Board';
-import { EV, BEAT, FILM_END, SUBS, ZH, SANS, MONO, prog, easeOut, easeIn, easeInOut, clamp, lerp, hit } from './lib';
-import music from './music.json';
+import React from 'react';
+import { AbsoluteFill, Img, staticFile, useCurrentFrame } from 'remotion';
+import { ZH, SANS, MONO, EN, INK, DIM, GOLD, SILVER, BRONZE, RED, FPS, clamp, prog, easeOut, easeInOut, lerp, hit, rnd } from './lib';
+import { Fonts, Hall, GLOW, Podium, Car, CARS } from './Frames';
+import { CornerMark } from './brand/CornerMark';
 import { JUNO } from './brand/identity';
+import { SUBS } from './subs';
+import music from './music.json';
 
-/* 《大脑的懒惰》 v3: five shortcuts the brain takes, each one measured: the Adelson checker shadow (lightness), Shepard's
-   tables (perspective), Anstis's footsteps (speed from contrast), Novick's confetti spheres (colour borrowed from
-   neighbours) and the barber pole (the simplest direction). Each illusion hands over to the next through an object:
-   board → table top, gold table top → yellow block, black-and-white stripes → the spheres' coloured stripes,
-   coloured stripes → the barber pole behind a closing slit, slit shut → recap, board card → the board.
-   Locked camera; punches only on the title, the table landing, the drop and the window opening. The eyedropper readout
-   is screen furniture (top right) and always tells the truth: every value it shows is the value of the pixel under
-   the crosshair in the rendered frame (checked by sampling the render). No grain and no vignette anywhere over the
-   board, so A and B stay identical pixels. Every frame is a pure function of T. */
+/* 《谁会拿诺奖》 — the film. The owner's track from 0:00, uncut. Title on B16 (8.47), Pakes on the break (49.17),
+   "who will win" on the build (65.45), the guess lands on the drop (81.40), end card drop + 3 bars, end drop + 7 bars.
+   Every frame is a pure function of T. Shots cut ~0.15 s before their line and dissolve in over 0.3 s. */
 
-const GOLD = '#f1c56d', GLOW = 'rgba(241,197,109,0.7)', INK = '#f3ede2', DIM = 'rgba(243,237,226,0.55)', RED = '#ff5a48';
-const NUM = '#f4b860';
-const BAR = 128;
-const useFonts = () => {
-  const [h] = useState(() => delayRender('fonts', { timeoutInMilliseconds: 60000 }));
-  useEffect(() => {
-    Promise.all(['900 40px "Noto Serif CJK SC"', '400 40px "Noto Sans CJK SC"', '700 40px "Noto Sans CJK SC"', '900 40px "Noto Sans CJK SC"', '400 40px "JunoMono"', '700 40px "JunoMono"']
-      .map((f) => document.fonts.load(f, '测试0123')).map((p) => p.catch(() => null))).then(() => continueRender(h));
-  }, [h]);
-};
+export const EV = music.events as Record<string, number>;
+const BEAT = music.beat as number;
+export const FILM_END = EV.end;
+export const FILM_FRAMES = Math.round(FILM_END * FPS);
+const TITLE = EV.title, TITLE_OUT = TITLE + 3.55, DROP = EV.drop, END_CARD = EV.endcard;
 
-/* ---------------------------------------------------------------- timing */
 const strip = (s: string) => s.replace(/[[\]{}]/g, '');
-const at = (s: string) => { const l = SUBS.find((x) => strip(x[2]).includes(s)); if (!l) throw new Error(`no line ${s}`); return l[0]; };
-const vis = (T: number, a: number, z: number, fi = 0.25, fo = 0.3) => Math.min(easeOut(prog(T, a, a + fi)), 1 - prog(T, z - fo, z));
-const rise = (T: number, a: number, d = 22) => (1 - easeOut(prog(T, a, a + 0.2))) * d; // a fast landing, then still
+const at = (frag: string) => { const l = SUBS.find(([, , s]) => strip(s).includes(frag)); if (!l) throw new Error(frag); return l[0]; };
 const L = {
-  hide: at('盯着B'), deeper: at('B在变深'), take: at('把阴影'), guess: at('大脑不测量'), helm: at('1867'),
-  glass: at('这块玻璃'), bet1: at('放得进'), lift: at('看好了'), fit: at('严丝合缝'), measure: at('两条长边'), look2: at('左边还是更长'), persp: at('透视'),
-  race: at('赛跑'), step: at('一步一停'), tie: at('同时撞线'), again: at('拿掉条纹再跑'),
-  balls: at('再来一组'), rgb: at('红、绿'), pick: at('取一次色'), first: at('第一个'), second: at('第二个'),
-  same: at('同一种米色'), lines: at('彩色的'), save: at('处理颜色很'),
-  right: at('明明在往右'), fingers: at('两根手指，把'), up: at('一条缝'), lazy: at('最省事'),
-  world: at('你看到的世界'), right2: at('都猜对了'), now: at('再看一眼A和B'), still: at('还是不一样'),
+  athey: at('苏珊·阿西'), clark: at('克拉克奖'), auction: at('网上拍卖'), rule: at('规则怎么定'), tower: at('科技公司'),
+  blundell: at('布伦德尔'), tax: at('政府加税'), forms: at('天然实验'), hours: at('没想象中多'), report: at('税制改革'),
+  pakes: at('呼声最高'), car: at('一辆车'), old: at('旧模型'), blp: at('BLP'), merge: at('反垄断'),
+  who: at('谁会赢'), years: at('2020年'), y14: at('2014年'), guess: at('我们猜'), maybe: at('三个都不是'),
 };
-const TITLE = EV.title, DROP = EV.drop, BAR4 = 4 * BEAT;
-const TITLE_OUT = TITLE + 3.3;                    // the card leaves through the board growing back around A and B
-// v7 (music lengthened by repeated phrases, scripts/music.py):
-const T1 = TITLE + 8 * BAR4;                      // 24.75 board → tables, on a phrase start
-const LAND = TITLE + 12 * BAR4;                   // 32.89 the glass lands on the right table
-const T2 = EV.break, OFF = EV.break + 3.5 * BAR4; // 49.17 race starts; 56.30 both cross the line on a beat
-const T3 = EV.build;                              // 65.45 race → spheres
-const T4 = DROP + 5 * BAR4;                       // 91.57 spheres → barber pole
-const SLIT = DROP + 9 * BAR4;                     // 99.71 the sides close to a slit (≈5 s to put fingers on)
-const T5 = DROP + 12 * BAR4;                      // 105.82 the slit shuts → recap
-const T6 = DROP + 16 * BAR4;                      // 113.96 recap → board
-const END_CARD = DROP + 19 * BAR4;                // 120.06; the film ends at drop + 23 bars
-const SHOT = {
-  board1: [0, T1], tables: [T1, T2], feet: [T2, T3], balls: [T3, T4], barber: [T4, T5], recap: [T5, T6], board2: [T6, FILM_END],
-} as const;
-/** the next beat at or after t (after the drop the tracker's grid is half a beat off: count from the measured onset) */
-const BEATS: number[] = (music as any).beats;
-const nextBeat = (t: number) => t > DROP ? DROP + Math.ceil((t - DROP) / BEAT - 1e-6) * BEAT : (BEATS.find((b) => b >= t - 1e-6) ?? t);
-/** the five shortcuts, stamped into the top bar one by one */
-const STAMPS: [string, string, number][] = [          // each lands on its reveal hit
-  ['阴影', '按阴影调亮', nextBeat(L.helm)], ['透视', '按透视拉长', LAND], ['对比', '看对比估速度', OFF],
-  ['借色', '借旁边的颜色', DROP], ['省事', '挑最省事的答案', SLIT],
-];
-const inShot = (T: number, k: keyof typeof SHOT) => T >= SHOT[k][0] && T < SHOT[k][1];
-
-/* ---------------------------------------------------------------- screen furniture */
-type Row = { k: string; v: [number, number, number]; o: number; note?: string };
-const Picker: React.FC<{ rows: Row[]; o?: number; foot?: string; footO?: number }> = ({ rows, o = 1, foot, footO = 1 }) => o <= 0.001 ? null : (
-  <div style={{ position: 'absolute', right: 70, top: 160, width: 450, padding: '16px 24px 18px', borderRadius: 16, background: 'rgba(10,10,12,0.86)', border: '1px solid rgba(243,237,226,0.18)', fontFamily: MONO, color: INK, opacity: o }}>
-    <div style={{ fontSize: 22, letterSpacing: '0.25em', color: DIM, marginBottom: 10, fontFamily: SANS, fontWeight: 700 }}>取色器 · RGB</div>
-    {rows.map((r, i) => (
-      <div key={i} style={{ display: 'flex', alignItems: 'center', gap: 14, fontSize: 33, fontWeight: 700, marginTop: i ? 10 : 0, opacity: r.o }}>
-        <span style={{ width: 42, height: 42, borderRadius: 7, background: `rgb(${r.v.join(',')})`, border: '1px solid rgba(255,255,255,0.35)', flexShrink: 0 }} />
-        <span style={{ minWidth: 70, fontFamily: SANS, fontWeight: 900, fontSize: 30, whiteSpace: 'nowrap', flexGrow: 1 }}>{r.k}</span>
-        <span style={{ fontVariantNumeric: 'tabular-nums', whiteSpace: 'pre' }}>{r.v.map((x) => String(x).padStart(3, ' ')).join(' ')}</span>
-      </div>
-    ))}
-    {foot && <div style={{ marginTop: 10, fontSize: 24, fontFamily: SANS, fontWeight: 700, color: DIM, opacity: footO }}>{foot}</div>}
-  </div>
-);
-const G = (v: number): [number, number, number] => [v, v, v];
-
-/** the eyedropper's crosshair */
-const Cross: React.FC<{ x: number; y: number; o: number; ring?: number }> = ({ x, y, o, ring = 0 }) => o <= 0.001 ? null : (
-  <g opacity={o}>
-    {ring > 0 && <circle cx={x} cy={y} r={18 + 40 * (1 - ring)} fill="none" stroke="#fff" strokeWidth={2} opacity={ring} />}
-    <g stroke="#000" strokeWidth={5} opacity={0.6}><line x1={x - 30} y1={y} x2={x - 9} y2={y} /><line x1={x + 9} y1={y} x2={x + 30} y2={y} /><line x1={x} y1={y - 30} x2={x} y2={y - 9} /><line x1={x} y1={y + 9} x2={x} y2={y + 30} /></g>
-    <g stroke="#fff" strokeWidth={2}><line x1={x - 30} y1={y} x2={x - 9} y2={y} /><line x1={x + 9} y1={y} x2={x + 30} y2={y} /><line x1={x} y1={y - 30} x2={x} y2={y - 9} /><line x1={x} y1={y + 9} x2={x} y2={y + 30} /></g>
-  </g>
-);
-
-/** the eyedropper (pipette), our own drawing: tip at (x, y), body up and to the right. The glass barrel fills with
-    the colour it has just picked (level 0..1); a ring spreads from the tip on each pick. */
-const Dropper: React.FC<{ x: number; y: number; o: number; ring?: number; fill?: string; level?: number }> = ({ x, y, o, ring = 0, fill, level = 0 }) => o <= 0.001 ? null : (
-  <g opacity={o}>
-    {ring > 0 && <circle cx={x} cy={y} r={10 + 44 * (1 - ring)} fill="none" stroke="#fff" strokeWidth={2.5} opacity={ring} />}
-    <g transform={`translate(${x} ${y}) rotate(-45)`}>
-      {/* soft shadow */}
-      <path d="M 4 4 L 40 7 L 40 15 L 126 15 L 126 19 L 138 19 L 138 21 Q 190 21 190 4 Q 190 -13 138 -13 L 138 -11 L 126 -11 L 126 -7 L 40 -7 L 40 1 Z" fill="#000" opacity={0.35} transform="translate(5 7)" />
-      {/* nozzle */}
-      <path d="M 0 0 L 38 -5 L 38 5 Z" fill="rgba(225,240,248,0.85)" stroke="#1b1b20" strokeWidth={2.5} strokeLinejoin="round" />
-      {/* barrel: glass, filling with the picked colour */}
-      <rect x={38} y={-11} width={88} height={22} rx={4} fill="rgba(225,240,248,0.35)" />
-      {fill && level > 0 && <rect x={38} y={-9} width={86 * level} height={18} rx={3} fill={fill} />}
-      <rect x={38} y={-11} width={88} height={22} rx={4} fill="none" stroke="#1b1b20" strokeWidth={3} />
-      <line x1={44} y1={-6} x2={118} y2={-6} stroke="#fff" strokeOpacity={0.75} strokeWidth={2.5} strokeLinecap="round" />
-      {/* collar and rubber bulb */}
-      <rect x={124} y={-15} width={16} height={30} rx={3} fill="#3a3a42" stroke="#1b1b20" strokeWidth={2.5} />
-      <path d="M 140 -13 Q 192 -15 192 0 Q 192 15 140 13 Z" fill="#2a2a30" stroke="#121216" strokeWidth={2.5} />
-      <path d="M 150 -7 Q 176 -8 182 -2" fill="none" stroke="#fff" strokeOpacity={0.35} strokeWidth={3} strokeLinecap="round" />
-    </g>
-  </g>
-);
-
-const Tag: React.FC<{ x: number; y: number; top: string; sub?: string; o: number; dy?: number; color?: string }> = ({ x, y, top, sub, o, dy = 0, color = DIM }) => o <= 0.001 ? null : (
-  <div style={{ position: 'absolute', left: x, top: y + dy, opacity: o }}>
-    <div style={{ fontFamily: MONO, fontWeight: 700, fontSize: 22, letterSpacing: '0.2em', color }}>{top}</div>
-    {sub && <div style={{ fontFamily: SANS, fontWeight: 700, fontSize: 31, color: INK, marginTop: 8 }}>{sub}</div>}
-  </div>
-);
-
-const Big: React.FC<{ s: string; y: number; size: number; color?: string; o?: number; font?: string; glow?: string; dy?: number }> =
-  ({ s, y, size, color = INK, o = 1, font = SANS, glow, dy = 0 }) => o <= 0.001 ? null : (
-    <div style={{ position: 'absolute', left: 0, right: 0, top: y + dy, textAlign: 'center', opacity: o, fontFamily: font, fontWeight: 900, fontSize: size, color,
-      letterSpacing: '0.04em', textShadow: glow ? `0 0 26px ${glow}, 0 4px 18px rgba(0,0,0,0.8)` : '0 0 4px #000, 0 4px 20px rgba(0,0,0,0.9)', whiteSpace: 'pre' }}>{s}</div>
-  );
-
-/* ---------------------------------------------------------------- 1. the board */
-const [AX, AY] = pt(P0, A_CELL[0] + 0.5, A_CELL[1] + 0.5);
-const [BX, BY] = pt(P0, B_CELL[0] + 0.5, B_CELL[1] + 0.5);
-
-/** the room under the board: a dark table seen from above at an angle, a warm light from behind the board (the light
-    that casts the cylinder's shadow towards us). Drawn under the board only; nothing is laid over the squares. */
-const Table: React.FC<{ uid: string }> = ({ uid }) => {
-  const q = (u: number, v: number) => pt(P0, u, v).join(',');
-  return (
-    <svg width={1920} height={1080} style={{ position: 'absolute', inset: 0 }}>
-      <defs>
-        <linearGradient id={`${uid}wall`} x1="0" y1="0" x2="0" y2="1"><stop offset="0" stopColor="#0d0b0d" /><stop offset="1" stopColor="#17130f" /></linearGradient>
-        <linearGradient id={`${uid}tab`} x1="0" y1="0" x2="0" y2="1"><stop offset="0" stopColor="#3a2a1b" /><stop offset="0.5" stopColor="#24190f" /><stop offset="1" stopColor="#120c07" /></linearGradient>
-        <radialGradient id={`${uid}pool`} cx="0.5" cy="0.18" r="0.6"><stop offset="0" stopColor="#ffcf8a" stopOpacity={0.22} /><stop offset="1" stopColor="#ffb060" stopOpacity={0} /></radialGradient>
-        <filter id={`${uid}cs`} x="-20%" y="-20%" width="140%" height="140%"><feGaussianBlur stdDeviation="22" /></filter>
-      </defs>
-      <rect width={1920} height={1080} fill={`url(#${uid}wall)`} />
-      <polygon points={`${q(-1.6, -1.6)} ${q(6.6, -1.6)} ${q(6.6, 6.6)} ${q(-1.6, 6.6)}`} fill={`url(#${uid}tab)`} />
-      {Array.from({ length: 16 }, (_, i) => { const u = -1.6 + (i + 0.5) * (8.2 / 16); const [x0, y0] = pt(P0, u, -1.6), [x1, y1] = pt(P0, u, 6.6); return <line key={i} x1={x0} y1={y0} x2={x1} y2={y1} stroke="#000" strokeOpacity={0.12} strokeWidth={1.5} />; })}
-      <polygon points={`${q(-1.6, -1.6)} ${q(6.6, -1.6)} ${q(6.6, 6.6)} ${q(-1.6, 6.6)}`} fill={`url(#${uid}pool)`} />
-      {/* contact shadow under the board (towards the viewer, away from the light) */}
-      <polygon points={`${q(0.2, 0.6)} ${q(5.4, 0.6)} ${q(5.4, 5.7)} ${q(0.2, 5.7)}`} fill="#000" opacity={0.55} filter={`url(#${uid}cs)`} />
-    </svg>
-  );
-};
-
-const slideAt = (T: number) => {
-  if (T < L.take) return 0;
-  const away = easeInOut(prog(T, L.take + 0.25, L.take + 1.75)), back = easeInOut(prog(T, L.guess + 0.2, L.guess + 1.5));
-  return 1.65 * (away - back);
-};
-const irisAt = (T: number) => {
-  if (T >= L.hide && T < TITLE) return lerp(1500, 150, easeInOut(prog(T, L.hide + 0.05, TITLE - 0.15)));
-  if (T >= TITLE_OUT - 0.25 && T < TITLE_OUT + 0.35) return lerp(150, 1600, easeIn(prog(T, TITLE_OUT - 0.25, TITLE_OUT + 0.35)));
-  return 0;
-};
-
-/** opening cursor: to A, click, to B, click, away */
-const CUR = { a0: 0.25, a1: 0.65, b0: 0.8, b1: 1.15, off: 1.5 };
-const cursorAt = (T: number): [number, number, number, number] => {
-  const home: [number, number] = [1640, 320];
-  let x = home[0], y = home[1];
-  const ka = easeInOut(prog(T, CUR.a0, CUR.a1)), kb = easeInOut(prog(T, CUR.b0, CUR.b1));
-  x = lerp(home[0], AX, ka); y = lerp(home[1], AY, ka);
-  if (T >= CUR.b0) { x = lerp(AX, BX, kb); y = lerp(AY, BY, kb); }
-  const ring = T >= CUR.b1 ? Math.max(0, 1 - (T - CUR.b1) / 0.35) : T >= CUR.a1 ? Math.max(0, 1 - (T - CUR.a1) / 0.35) : 0;
-  const o = Math.min(easeOut(prog(T, 0.05, 0.25)), 1 - prog(T, CUR.off, CUR.off + 0.3));
-  return [x, y, o, ring];
-};
-
-/** what the brain does with A and B: pixel ÷ the light it assumes = the surface it reports (示意) */
-const Infer: React.FC<{ T: number }> = ({ T }) => {
-  const o = vis(T, L.guess + 1.4, T1 - 0.45, 0.3, 0.25);   // after the cylinder has slid back under it
-  if (o <= 0.001) return null;
-  const res = easeOut(prog(T, L.guess + 2.3, L.guess + 2.55));
-  const row = (k: string, light: string, f: string, out: number, word: string, o2: number) => (
-    <div style={{ marginTop: 12, opacity: o2 }}>
-      <div style={{ display: 'flex', alignItems: 'baseline', gap: 12, fontFamily: MONO, fontWeight: 700, fontSize: 33, color: INK, whiteSpace: 'pre' }}>
-        <span style={{ fontFamily: SANS, fontWeight: 900, width: 30 }}>{k}</span><span>{DARK}</span><span style={{ color: DIM }}>÷</span><span>{f}</span>
-        <span style={{ color: DIM }}>=</span><span style={{ color: res > 0.5 ? (out === LIGHT ? GOLD : INK) : DIM, opacity: 0.35 + 0.65 * res }}>{res > 0.01 ? out : '???'}</span>
-      </div>
-      <div style={{ fontFamily: SANS, fontWeight: 700, fontSize: 25, color: DIM, marginTop: 2, marginLeft: 42 }}>
-        {light} → <span style={{ color: res > 0.5 ? INK : DIM }}>{res > 0.01 ? word : '…'}</span>
-      </div>
-    </div>
-  );
-  return (
-    <div style={{ position: 'absolute', right: 70, top: 160, width: 450, padding: '14px 24px 18px', borderRadius: 16, background: 'rgba(10,10,12,0.86)', border: '1px solid rgba(241,197,109,0.35)', opacity: o }}>
-      <div style={{ fontSize: 22, letterSpacing: '0.15em', color: DIM, fontFamily: SANS, fontWeight: 700 }}>大脑的推断 · 示意</div>
-      <div style={{ fontSize: 22, color: DIM, fontFamily: SANS, marginTop: 4 }}>像素 ÷ 以为的光 = 看到的颜色</div>
-      {row('B', '以为在阴影里', '0.5', LIGHT, '浅色格', 1)}
-      {row('A', '以为在亮处', '1.0', DARK, '深色格', easeOut(prog(T, L.guess + 1.8, L.guess + 2.1)))}
-    </div>
-  );
-};
-
-const BoardShot: React.FC<{ T: number; uid: string; open?: boolean }> = ({ T, uid, open }) => {
-  const r = open ? irisAt(T) : 0;
-  const masked = open && T >= TITLE && T < TITLE_OUT - 0.25;
-  const punch = open ? 1 + 0.03 * hit(T, TITLE, 0.22) : 1;
-  const la = open ? [easeOut(prog(T, CUR.a1 - 0.05, CUR.a1 + 0.15)), easeOut(prog(T, CUR.b1 - 0.05, CUR.b1 + 0.15))] as [number, number] : [1, 1] as [number, number];
-  return (
-    <AbsoluteFill>
-      {!masked && <Table uid={uid} />}
-      {masked && <AbsoluteFill style={{ background: '#050505' }} />}
-      <svg width={1920} height={1080} style={{ position: 'absolute', inset: 0 }}>
-        <g transform={`translate(${BX} ${(AY + BY) / 2}) scale(${punch}) translate(${-BX} ${-(AY + BY) / 2})`}>
-          <Board uid={uid} slide={open ? slideAt(T) : 0} bFixed={open && T >= L.take} irisR={r} maskAB={masked ? 1 : 0} labelO={la} />
-        </g>
-      </svg>
-      {open && T >= T1 - 0.55 && <Fold T={T} />}
-    </AbsoluteFill>
-  );
-};
-
-const TitleCard: React.FC<{ T: number }> = ({ T }) => {
-  const a = TITLE;
-  if (T < a - 0.02 || T > TITLE_OUT + 0.1) return null;
-  const out = easeInOut(prog(T, TITLE_OUT - 0.6, TITLE_OUT - 0.3));
-  return (
-    <AbsoluteFill style={{ opacity: 1 - out }}>
-      {[...'大脑的懒惰'].map((c, i) => {
-        const k = easeOut(prog(T, a + 0.08 + i * 0.05, a + 0.26 + i * 0.05));
-        return <div key={i} style={{ position: 'absolute', left: 960 + (i - 2) * 150 - 75, width: 150, top: 668 + (1 - k) * 34, textAlign: 'center', opacity: k, fontFamily: ZH, fontWeight: 900, fontSize: 132, color: GOLD, textShadow: `0 0 30px ${GLOW}` }}>{c}</div>;
-      })}
-      <div style={{ position: 'absolute', left: 960 - 400 * easeOut(prog(T, a + 0.3, a + 0.7)), width: 800 * easeOut(prog(T, a + 0.3, a + 0.7)), top: 860, height: 3, background: GOLD, boxShadow: `0 0 12px ${GLOW}` }} />
-      <div style={{ position: 'absolute', left: 0, right: 0, top: 880, textAlign: 'center', opacity: easeOut(prog(T, a + 0.5, a + 0.9)), fontFamily: MONO, fontWeight: 700, fontSize: 28, letterSpacing: '0.45em', color: DIM }}>{JUNO.series}</div>
-    </AbsoluteFill>
-  );
-};
-
-
-/* ---------------------------------------------------------------- 2. Shepard's tables (Shepard 1990, Mind Sights) */
-type P2 = [number, number];
-const U: P2 = [-118, -276], V: P2 = [112, 46];            // |U| = 300, |V| = 121
-const rot = ([x, y]: P2, a: number): P2 => [x * Math.cos(a) - y * Math.sin(a), x * Math.sin(a) + y * Math.cos(a)];
-const quadOf = (c: P2, u: P2, v: P2): P2[] => { const o: P2 = [c[0] - (u[0] + v[0]) / 2, c[1] - (u[1] + v[1]) / 2]; return [o, [o[0] + u[0], o[1] + u[1]], [o[0] + u[0] + v[0], o[1] + u[1] + v[1]], [o[0] + v[0], o[1] + v[1]]]; };
-const pts = (p: P2[]) => p.map((q) => q.join(',')).join(' ');
-const C_L: P2 = [640, 520], C_R: P2 = [1290, 560];
-const Q_L = quadOf(C_L, U, V), Q_R = quadOf(C_R, rot(U, -Math.PI / 2), rot(V, -Math.PI / 2));
-/** corners in clockwise order from the top-most, so two quads can be morphed without twisting */
-const cw = (q: P2[]): P2[] => {
-  const cx = q.reduce((a, p) => a + p[0], 0) / q.length, cy = q.reduce((a, p) => a + p[1], 0) / q.length;
-  const s = [...q].sort((a, b) => Math.atan2(a[1] - cy, a[0] - cx) - Math.atan2(b[1] - cy, b[0] - cx));
-  const top = s.reduce((bi, p, i) => (p[1] < s[bi][1] ? i : bi), 0);
-  return [...s.slice(top), ...s.slice(0, top)];
-};
-const mix = (a: P2[], b: P2[], k: number): P2[] => { const A = cw(a), B = cw(b); return A.map((p, i) => [lerp(p[0], B[i][0], k), lerp(p[1], B[i][1], k)] as P2); };
-
-const TableDraw: React.FC<{ q: P2[]; leg: number; o?: number }> = ({ q, leg, o = 1 }) => {
-  const TH = 16, LEG = 150 * leg;
-  const low = [...q].sort((a, b) => b[1] - a[1]).slice(0, 3);
-  return (
-    <g opacity={o}>
-      {low.map((p, i) => <rect key={i} x={p[0] - 7} y={p[1] + TH - 4} width={14} height={LEG} fill="#3a2414" />)}
-      {q.map((p, i) => { const n = q[(i + 1) % 4]; return <polygon key={i} points={`${p[0]},${p[1]} ${n[0]},${n[1]} ${n[0]},${n[1] + TH} ${p[0]},${p[1] + TH}`} fill="#5a3518" />; })}
-      <polygon points={pts(q)} fill="#b9773e" />
-      <polygon points={pts(q)} fill="none" stroke="#e0a565" strokeWidth={2} />
-    </g>
-  );
-};
-const Room: React.FC = () => (
-  <AbsoluteFill style={{ background: 'radial-gradient(ellipse 70% 60% at 50% 42%, #2c2219 0%, #140e0a 68%, #070504 100%)' }}>
-    <svg width={1920} height={1080} style={{ position: 'absolute', inset: 0 }}>
-      <rect x={0} y={770} width={1920} height={310} fill="#0e0a07" />
-      <ellipse cx={960} cy={790} rx={900} ry={60} fill="#000" opacity={0.35} />
-    </svg>
-  </AbsoluteFill>
-);
-
-/** board1 → tables: the board's outline folds down into the left table top (last 0.55 s of the board shot) */
-const BOARD_Q: P2[] = [pt(P0, 0, 0), pt(P0, 5, 0), pt(P0, 5, 5), pt(P0, 0, 5)] as P2[];
-const Fold: React.FC<{ T: number }> = ({ T }) => {
-  const k = easeInOut(prog(T, T1 - 0.55, T1));
-  return (
-    <AbsoluteFill>
-      <AbsoluteFill style={{ background: '#0a0706', opacity: 0.92 * easeOut(prog(T, T1 - 0.55, T1 - 0.2)) }} />
-      <svg width={1920} height={1080} style={{ position: 'absolute', inset: 0 }}>
-        <polygon points={pts(mix(BOARD_Q, Q_L, k))} fill={`rgba(185,119,62,${0.25 + 0.75 * k})`} stroke={GOLD} strokeWidth={4} />
-      </svg>
-    </AbsoluteFill>
-  );
-};
-
-const LIFT0 = () => L.lift - 0.05;
-/** the glass pane: lies on the left table, flies (turning 90°) and lands exactly on the right one */
-const glassAt = (T: number): P2[] => {
-  const k = easeInOut(prog(T, LIFT0(), LAND));
-  const a = -Math.PI / 2 * k;
-  const c: P2 = [lerp(C_L[0], C_R[0], k), lerp(C_L[1], C_R[1], k) - 6 - 130 * Math.sin(Math.PI * k)];
-  return quadOf(c, rot(U, a), rot(V, a));
-};
-const Glass: React.FC<{ q: P2[]; o?: number; fit?: number }> = ({ q, o = 1, fit = 0 }) => {
-  const [a, b, c, d] = q;
-  const g = (k: number, j: number): P2 => [lerp(lerp(a[0], b[0], k), lerp(d[0], c[0], k), j), lerp(lerp(a[1], b[1], k), lerp(d[1], c[1], k), j)];
-  return (
-    <g opacity={o}>
-      <polygon points={pts(q)} fill="rgba(170,225,240,0.42)" stroke={fit > 0 ? GOLD : 'rgba(225,248,255,0.95)'} strokeWidth={3 + 3 * fit} />
-      {[[0.2, 0.15, 0.55, 0.4], [0.35, 0.12, 0.7, 0.32]].map(([k0, j0, k1, j1], i) => { const p0 = g(k0, j0), p1 = g(k1, j1); return <line key={i} x1={p0[0]} y1={p0[1]} x2={p1[0]} y2={p1[1]} stroke="#fff" strokeOpacity={0.7} strokeWidth={4} strokeLinecap="round" />; })}
-    </g>
-  );
-};
-/** "push your bet": the options and a 3-2-1 on the beats; on the reveal the right answer turns gold */
-const Bet: React.FC<{ T: number; at: number; reveal: number; opts: string[]; right: number; until: number }> = ({ T, at, reveal, opts, right, until }) => {
-  const o = vis(T, at, until, 0.2, 0.3);
-  if (o <= 0.001) return null;
-  const b0 = nextBeat(at + 0.6), beats = [b0, b0 + BEAT, b0 + 2 * BEAT];
-  const n = beats.filter((b) => T >= b).length, done = T >= beats[2] + BEAT, shown = T >= reveal;
-  const digit = n > 0 && !done ? String(4 - n) : '';
-  const gone = easeInOut(prog(T, beats[2] + BEAT - 0.05, beats[2] + BEAT + 0.3));
-  return (
-    <div style={{ position: 'absolute', left: 0, right: 0, top: 150, display: 'flex', justifyContent: 'center', alignItems: 'center', gap: 18, opacity: o }}>
-      <span style={{ fontFamily: SANS, fontWeight: 900, fontSize: 34, color: INK, textShadow: '0 0 6px #000, 0 2px 12px #000', marginRight: 6 }}>押一个</span>
-      {opts.map((w, i) => {
-        const win = shown && i === right, lose = shown && i !== right;
-        return (
-          <div key={i} style={{ padding: '10px 26px', borderRadius: 40, border: `3px solid ${win ? GOLD : 'rgba(243,237,226,0.75)'}`, background: win ? `rgba(${Math.round(40 + 160 * hit(T, reveal, 0.4))},${Math.round(30 + 130 * hit(T, reveal, 0.4))},${Math.round(12 + 60 * hit(T, reveal, 0.4))},0.94)` : 'rgba(10,10,12,0.92)',   // opaque: the bet must read over the stripes
-            fontFamily: SANS, fontWeight: 900, fontSize: 40, color: win ? GOLD : lose ? 'rgba(243,237,226,0.4)' : INK, opacity: 1, boxShadow: win ? `0 0 ${12 + 30 * hit(T, reveal, 0.5)}px ${GLOW}` : 'none' }}>{w}{win ? ' ✓' : ''}</div>
-        );
-      })}
-      {/* the countdown circle: gone once the count is over (it shrinks out and the pills close up to the centre) */}
-      {gone < 1 && <div style={{ width: 84 * (1 - gone), marginLeft: 8 * (1 - gone) - 18 * gone, height: 84, display: 'flex', justifyContent: 'center', overflow: 'visible' }}>
-        <div style={{ flex: 'none', width: 84, height: 84, borderRadius: 42, border: `3px solid ${GOLD}`, background: 'rgba(10,10,12,0.78)', display: 'flex', alignItems: 'center', justifyContent: 'center',
-          fontFamily: MONO, fontWeight: 700, fontSize: 52, color: GOLD, opacity: 1 - gone, transform: `scale(${(1 - 0.6 * gone) * (1 + 0.25 * hit(T, beats[Math.max(0, n - 1)], 0.15) * (n > 0 && !done ? 1 : 0))})` }}>{digit}</div>
-      </div>}
-    </div>
-  );
-};
-const YELLOW_RECT: P2[] = [[420, 420], [516, 420], [516, 464], [420, 464]];
-const TablesShot: React.FC<{ T: number }> = ({ T }) => {
-  const legL = easeOut(prog(T, T1, T1 + 0.22)), legR = easeOut(prog(T, T1 + 0.08, T1 + 0.3));
-  const punch = 1 + 0.03 * hit(T, LAND, 0.22);
-  const landed = T >= LAND;
-  const out = easeInOut(prog(T, T2 - 0.5, T2));            // tables → race: the glass becomes the yellow block
-  const glassIn = easeOut(prog(T, L.glass, L.glass + 0.35)) * (1 - easeInOut(prog(T, L.look2, L.look2 + 0.45)));
-  const gq = out > 0 ? mix(Q_R, YELLOW_RECT, out) : glassAt(T);
-  const edges = vis(T, L.measure, L.look2 + 0.4, 0.25, 0.4);
-  const longL: P2[] = [Q_L[0], Q_L[1]], longR: P2[] = [Q_R[0], Q_R[1]];
-  return (
-    <AbsoluteFill>
-      <Room />
-      <svg width={1920} height={1080} style={{ position: 'absolute', inset: 0 }}>
-        <g transform={`translate(960 600) scale(${punch}) translate(-960 -600)`} opacity={1 - out}>
-          <TableDraw q={Q_L} leg={legL} />
-          <TableDraw q={Q_R} leg={legR} />
-          {/* "measure the two long edges with two fingers": the two long sides light up, same length */}
-          {edges > 0 && [longL, longR].map(([p, q], i) => (
-            <g key={i} opacity={edges}>
-              <line x1={p[0]} y1={p[1]} x2={q[0]} y2={q[1]} stroke={GOLD} strokeWidth={9} strokeLinecap="round" />
-              <circle cx={p[0]} cy={p[1]} r={9} fill={GOLD} /><circle cx={q[0]} cy={q[1]} r={9} fill={GOLD} />
-            </g>
-          ))}
-        </g>
-      </svg>
-      {out > 0 && <AbsoluteFill style={{ background: '#808080', opacity: out }} />}
-      <svg width={1920} height={1080} style={{ position: 'absolute', inset: 0 }}>
-        {out > 0 ? <polygon points={pts(gq)} opacity={easeOut(prog(out, 0, 0.35))} fill={`rgb(${Math.round(lerp(170, 255, out))},${Math.round(lerp(225, 242, out))},${Math.round(lerp(240, 0, out))})`} />
-          : <Glass q={gq} o={glassIn} fit={landed ? 1 : 0} />}
-      </svg>
-      {edges > 0 && [longL, longR].map(([p, q], i) => (
-        <div key={i} style={{ position: 'absolute', left: (p[0] + q[0]) / 2 + (i ? -20 : -150), top: i ? 380 : (p[1] + q[1]) / 2 - 30, opacity: edges, fontFamily: MONO, fontWeight: 700, fontSize: 40, color: GOLD,
-          textShadow: '0 0 6px #000, 0 2px 10px #000' }}>300</div>
-      ))}
-      <Bet T={T} at={L.bet1} reveal={LAND} opts={['放得进', '放不进']} right={0} until={L.measure} />
-    </AbsoluteFill>
-  );
-};
-
-/* ---------------------------------------------------------------- 3. the race (stepping feet, Anstis 2001, Perception) */
-const SW = 24, FINISH = 1200, X0 = 420;
-const V1 = (FINISH - 4 * SW - X0) / (OFF - T2);               // 84 px/s: both fronts reach the line on the downbeat
-const RW0 = () => L.again - 0.2, RW1 = () => L.again + 0.25;  // rewind, then a second race without stripes
-const RACE2 = () => RW1() + 0.15, R2END = () => T3 - 0.9;
-const V2 = () => (FINISH - 4 * SW - X0) / (R2END() - RACE2());
-const barX = (T: number) => {
-  if (T < RW0()) return X0 + V1 * (T - T2);
-  if (T < RACE2()) { const x1 = X0 + V1 * (RW0() - T2); return lerp(x1, X0, easeInOut(prog(T, RW0(), RW1()))); }
-  return X0 + V2() * Math.min(T - RACE2(), R2END() - RACE2() + 0.6);
-};
-const FeetStripes: React.FC<{ wipe?: number; o?: number }> = ({ wipe = 1, o = 1 }) => (
-  <g opacity={o}>
-    <defs><clipPath id="fw"><rect x={0} y={0} width={1920 * wipe} height={1080} /></clipPath></defs>
-    <g clipPath="url(#fw)">{Array.from({ length: 41 }, (_, i) => <rect key={i} x={i * 2 * SW} y={0} width={SW} height={1080} fill="#000" />)}
-      {Array.from({ length: 41 }, (_, i) => <rect key={`w${i}`} x={i * 2 * SW + SW} y={0} width={SW} height={1080} fill="#fff" />)}</g>
-  </g>
-);
-const FeetShot: React.FC<{ T: number }> = ({ T }) => {
-  const wipe = easeOut(prog(T, T2, T2 + 0.35));
-  const stripes = T < L.again;
-  const k = easeInOut(prog(T, T3 - 0.5, T3));               // race → spheres: coloured stripes turn in
-  const x = barX(T);
-  const crossFlash = hit(T, OFF, 0.4);
-  return (
-    <AbsoluteFill style={{ background: '#808080' }}>
-      {k > 0 && <AbsoluteFill style={{ background: '#0b0b0b', opacity: k }} />}
-      <svg width={1920} height={1080} style={{ position: 'absolute', inset: 0 }}>
-        {stripes && <FeetStripes wipe={wipe} />}
-        {k > 0 && <g transform={`rotate(${-90 * (1 - k)} 960 540)`} opacity={k}><ColourStripes /></g>}
-        <g opacity={1 - k}>
-          {/* the finish line */}
-          <rect x={FINISH - 5} y={360} width={10} height={360} fill={GOLD} stroke="#000" strokeWidth={3} />
-          <rect x={FINISH - 5} y={360} width={10} height={360} fill={GOLD} opacity={0.5 + 0.5 * crossFlash} />
-          <rect x={x} y={420} width={4 * SW} height={44} fill="#fff200" />
-          <rect x={x} y={616} width={4 * SW} height={44} fill="#0a1a6e" opacity={easeOut(prog(T, T2, T2 + 0.3))} />
-        </g>
-      </svg>
-      <div style={{ position: 'absolute', left: FINISH - 100, width: 200, top: 300, textAlign: 'center', opacity: 1 - k, fontFamily: SANS, fontWeight: 900, fontSize: 40, color: GOLD, textShadow: '0 0 6px #000, 0 2px 10px #000' }}>终点</div>
-      <Big s="平局" y={760} size={88} color={GOLD} glow={GLOW} o={vis(T, OFF, L.again - 0.2, 0.06, 0.3)} dy={rise(T, OFF, 26)} />
-      <Bet T={T} at={L.race + 0.2} reveal={OFF} opts={['黄先到', '蓝先到', '同时到']} right={2} until={L.again - 0.2} />
-    </AbsoluteFill>
-  );
-};
-
-/* ---------------------------------------------------------------- 4. the spheres (Novick 2018, Munker–White) */
-export const BEIGE = '#c9b79c';
-export const SPHERE_RGB: [number, number, number] = [219, 203, 178]; // the pixel under the crosshair, sampled from the render
-const STRIPE = ['#ff2a2a', '#18c43c', '#2f6bff', '#b23cff', '#ff9a1f', '#14c8d4'];
-const SPH0: [number, number, number][] = [[620, 380, 0], [800, 330, 1], [980, 360, 2], [1160, 330, 3], [1330, 390, 4], [700, 560, 5], [880, 520, 3], [1060, 545, 0], [1250, 560, 1], [760, 740, 2], [960, 720, 4], [1160, 735, 5]];
-const SPH: [number, number, number][] = SPH0.map(([x, y, c]) => [Math.round(975 + (x - 975) * 1.08), Math.round(545 + (y - 545) * 1.08), c]);
-const R = 84, PITCH = 8, SH = 3.4;
-const SAMPLE_DY = -R - 2 + 10 * PITCH + (SH + PITCH) / 2;
-const ColourStripes: React.FC<{ wipe?: number }> = ({ wipe = 1 }) => (
-  <g>
-    <defs><clipPath id="csw"><rect x={-400} y={-400} width={(1920 + 800) * wipe} height={1880} /></clipPath></defs>
-    <g clipPath="url(#csw)">{Array.from({ length: 236 }, (_, i) => <rect key={i} x={-400} y={-400 + i * PITCH} width={2720} height={SH} fill={STRIPE[Math.floor(i / 3) % STRIPE.length]} opacity={0.5} />)}</g>
-  </g>
-);
-const PICKS = (() => {
-  const t = [L.first + 0.15, L.second + 0.15, L.second + 1.3];
-  const left = DROP - 0.3 - (t[2] + 0.35), n = 9, w = Array.from({ length: n }, (_, i) => Math.pow(0.86, i)), sw = w.reduce((a, b) => a + b, 0);
-  let x = t[2] + 0.35;
-  for (let i = 0; i < n; i++) { t.push(x); x += left * w[i] / sw; }
-  return t;
-})();
-const picked = (T: number) => PICKS.filter((p) => T >= p).length;
-
-const SphereSet: React.FC<{ T: number; stripes: number; wipe: number; uid: string }> = ({ T, stripes, wipe, uid }) => {
-  const punch = 1 + 0.04 * hit(T, DROP, 0.25);
-  return (
-    <svg width={1920} height={1080} style={{ position: 'absolute', inset: 0 }}>
-      <defs>
-        <radialGradient id={`${uid}sph`} cx="0.38" cy="0.32" r="0.75"><stop offset="0" stopColor="#efe2cc" /><stop offset="0.55" stopColor={BEIGE} /><stop offset="1" stopColor="#7d6d58" /></radialGradient>
-        {SPH.map(([x, y], i) => <clipPath key={i} id={`${uid}c${i}`}><circle cx={x} cy={y} r={R} /></clipPath>)}
-        <clipPath id={`${uid}w`}><rect x={0} y={0} width={1920 * wipe} height={1080} /></clipPath>
-      </defs>
-      <g transform={`translate(960 540) scale(${punch}) translate(-960 -540)`}>
-        {SPH.map(([x, y, c], i) => {
-          // on the build hit each sphere pops in (a quick land, then still); on the way out they fall
-          const pin = easeOut(prog(T, T3 + i * 0.025, T3 + 0.2 + i * 0.025)), s = 0.6 + 0.4 * pin + 0.08 * Math.sin(Math.PI * pin) * (1 - pin);
-          const fall = 900 * easeIn(prog(T, T4 - 0.7 + i * 0.02, T4 - 0.12));
-          return (
-            <g key={i} transform={`translate(${x} ${y + fall}) scale(${s}) translate(${-x} ${-y})`} opacity={pin}>
-              <circle cx={x} cy={y} r={R} fill={`url(#${uid}sph)`} />
-              <g clipPath={`url(#${uid}c${i})`} opacity={stripes}><g clipPath={`url(#${uid}w)`}>{Array.from({ length: 24 }, (_, k) => <rect key={k} x={x - R - 2} y={y - R - 2 + k * PITCH} width={2 * R + 4} height={SH} fill={STRIPE[c]} />)}</g></g>
-            </g>
-          );
-        })}
-      </g>
-    </svg>
-  );
-};
-
-const Lens: React.FC<{ x: number; y: number; r: number; o: number; tint: number; id: string }> = ({ x, y, r, o, tint, id }) => {
-  if (o <= 0.001) return null;
-  const Z = 8, m = (k: number) => SPHERE_RGB.map((v, i) => Math.round(lerp(v, [255, 42, 42][i], k))).join(',');
-  return (
-    <svg width={1920} height={1080} style={{ position: 'absolute', inset: 0, opacity: o }}>
-      <defs><clipPath id={id}><circle cx={x} cy={y} r={r} /></clipPath></defs>
-      <g clipPath={`url(#${id})`}>
-        <rect x={x - r} y={y - r} width={2 * r} height={2 * r} fill={`rgb(${m(0.45 * tint)})`} />
-        {Array.from({ length: 8 }, (_, k) => <rect key={k} x={x - r} y={y - r + 14 + k * PITCH * Z} width={2 * r} height={SH * Z} fill="#ff2a2a" />)}
-      </g>
-      <circle cx={x} cy={y} r={r} fill="none" stroke="#fff" strokeOpacity={0.8} strokeWidth={3} />
-    </svg>
-  );
-};
-
-const BallsShot: React.FC<{ T: number }> = ({ T }) => {
-  const n = picked(T), dropped = T >= DROP;
-  const stripesOn = !dropped || T >= L.lines + 0.1;
-  const wipe = dropped ? easeInOut(prog(T, L.lines + 0.1, L.lines + 0.8)) : 1;
-  const away = easeInOut(prog(T, T4 - 0.7, T4));          // spheres → barber pole: the room goes, the spheres fall
-  let cx = 1640, cy = 330, co = 0;
-  if (T >= L.pick && T < DROP) {
-    co = Math.min(easeOut(prog(T, L.pick, L.pick + 0.3)), 1 - prog(T, DROP - 0.12, DROP));
-    const k0 = easeInOut(prog(T, L.pick + 0.2, L.pick + 1.0));
-    cx = lerp(1640, SPH[0][0], k0); cy = lerp(330, SPH[0][1] + SAMPLE_DY, k0);
-    for (let i = 1; i < PICKS.length; i++) {
-      const gap = PICKS[i] - PICKS[i - 1], m0 = PICKS[i] - Math.min(0.28, gap * 0.7);
-      const k = easeInOut(prog(T, m0, PICKS[i] - 0.02));
-      if (T >= m0) { cx = lerp(SPH[i - 1][0], SPH[i][0], k); cy = lerp(SPH[i - 1][1], SPH[i][1], k) + SAMPLE_DY; }
-    }
-  }
-  const lens = vis(T, L.save, T4 - 0.72, 0.3, 0.22);   // gone before the spheres start to fall
-  return (
-    <AbsoluteFill>
-      <AbsoluteFill style={{ background: '#0b0b0b', opacity: 1 - away }} />
-      <svg width={1920} height={1080} style={{ position: 'absolute', inset: 0 }}>
-        <g opacity={(stripesOn ? 1 : 0) * (1 - away)}><ColourStripes wipe={wipe} /></g>
-      </svg>
-      <SphereSet T={T} stripes={stripesOn ? 1 : 0} wipe={wipe} uid="sp" />
-      <svg width={1920} height={1080} style={{ position: 'absolute', inset: 0 }}>
-        {!dropped && PICKS.map((p, i) => T >= p ? <circle key={i} cx={SPH[i][0]} cy={SPH[i][1]} r={R + 8} fill="none" stroke="#fff" strokeWidth={2} opacity={0.55} /> : null)}
-        <Dropper x={cx} y={cy} o={co} ring={n > 0 ? Math.max(0, 1 - (T - PICKS[n - 1]) / 0.3) : 0} fill={`rgb(${SPHERE_RGB.join(',')})`} level={easeOut(prog(T, PICKS[0], PICKS[0] + 0.2))} />
-      </svg>
-      <Big s="12 个球 · 1 种颜色" y={150} size={84} color={GOLD} glow={GLOW} o={vis(T, DROP, L.lines, 0.05, 0.3)} dy={rise(T, DROP, 30)} />
-      {lens > 0 && <AbsoluteFill style={{ background: 'rgba(6,6,7,0.82)', opacity: lens }} />}
-      <Lens id="l1" x={690} y={520} r={250} o={lens} tint={0} />
-      <Lens id="l2" x={1230} y={520} r={250} o={lens} tint={easeInOut(prog(T, L.save + 0.8, L.save + 2.2))} />
-      <div style={{ position: 'absolute', left: 690 - 300, width: 600, top: 790, textAlign: 'center', opacity: lens, fontFamily: SANS, fontWeight: 900, fontSize: 33, color: INK }}>实际像素 · 放大 8 倍</div>
-      <div style={{ position: 'absolute', left: 1230 - 300, width: 600, top: 790, textAlign: 'center', opacity: lens, fontFamily: SANS, fontWeight: 900, fontSize: 33, color: INK }}>大脑看到的（示意）</div>
-    </AbsoluteFill>
-  );
-};
-
-/* ---------------------------------------------------------------- 5. barber pole / aperture problem (Wallach 1935), played backwards:
-   first the wide window (clearly moving right), then the viewer is asked to cover the sides with two fingers; on the
-   downbeat two dark bands slide in where the fingers go, and the same stripes now run up. */
-const SPD = 110, PER = 70, WIDE = 1300, NARROW = 480, SLIT_W = 110; // v6: the window shrinks to two finger-widths + a slit
-const slitW = (T: number) => {
-  const close = easeInOut(prog(T, T4 - 0.7, T4));                     // full frame → wide window, as the spheres fall
-  const shrink = easeInOut(prog(T, L.fingers - 0.1, L.fingers + 0.45));   // small enough for two fingertips on a phone
-  const shut = easeInOut(prog(T, T5 - 0.4, T5));
-  return lerp(lerp(2000, WIDE, close), NARROW, shrink) * (1 - shut);
-};
-const fingersAt = (T: number) => easeInOut(prog(T, SLIT - 0.35, SLIT)); // the bands that stand in for the fingers
-const BarberShot: React.FC<{ T: number }> = ({ T }) => {
-  const w = slitW(T), h = lerp(1080, 540, easeInOut(prog(T, T4 - 0.7, T4))), x0 = 960 - w / 2, y0 = 540 - h / 2 + 90 * easeInOut(prog(T, T4 - 0.7, T4));
-  const dx = (SPD * (T - (T4 - 0.7))) % PER;
-  const intro = easeInOut(prog(T, T4 - 0.7, T4 - 0.2));
-  const punch = 1 + 0.025 * hit(T, SLIT, 0.22);
-  const f = fingersAt(T), bandW = (NARROW - SLIT_W) / 2;
-  const guide = vis(T, L.fingers + 0.45, SLIT + 0.1, 0.25, 0.15);
-  const arrow = vis(T, L.right, L.fingers + 0.6, 0.2, 0.3);
-  return (
-    <AbsoluteFill style={{ background: '#101014' }}>
-      <svg width={1920} height={1080} style={{ position: 'absolute', inset: 0 }}>
-        <defs>
-          <clipPath id="ap"><rect x={x0} y={y0} width={w} height={h} rx={10} /></clipPath>
-          <pattern id="hatch" width="18" height="18" patternUnits="userSpaceOnUse" patternTransform="rotate(45)"><rect width="9" height="18" fill="rgba(243,237,226,0.22)" /></pattern>
-        </defs>
-        <g transform={`translate(960 600) scale(${punch}) translate(-960 -600)`}>
-          <g clipPath="url(#ap)">
-            <rect x={x0} y={y0} width={w} height={h} fill="#f1ece2" opacity={intro} />
-            <g transform={`translate(${dx} 0)`} opacity={intro}>
-              {Array.from({ length: 70 }, (_, i) => { const x = -1700 + i * PER; return <polygon key={i} points={`${x},0 ${x + 32},0 ${x + 32 + 1080},1080 ${x + 1080},1080`} fill="#c8302a" />; })}
-            </g>
-            {/* where to put the fingers, then the bands that do it for you */}
-            {guide > 0 && [x0, 960 + SLIT_W / 2].map((bx, i) => <rect key={`g${i}`} x={bx} y={y0} width={bandW} height={h} fill="url(#hatch)" stroke={GOLD} strokeWidth={4} strokeDasharray="16 10" opacity={guide} />)}
-            {f > 0 && <rect x={x0} y={y0} width={bandW * f} height={h} fill="#16161c" />}
-            {f > 0 && <rect x={x0 + w - bandW * f} y={y0} width={bandW * f} height={h} fill="#16161c" />}
-          </g>
-          {w > 1 && <rect x={x0} y={y0} width={w} height={h} rx={10} fill="none" stroke="#3a3a44" strokeWidth={10} opacity={intro} />}
-        </g>
-        <g opacity={arrow}><line x1={760} y1={925} x2={1140} y2={925} stroke={GOLD} strokeWidth={8} /><polygon points="1140,907 1176,925 1140,943" fill={GOLD} /></g>
-      </svg>
-      {guide > 0 && [x0 + bandW / 2, 960 + SLIT_W / 2 + bandW / 2].map((cx, i) => (
-        <div key={i} style={{ position: 'absolute', left: cx - 100, width: 200, top: y0 + h / 2 - 48, textAlign: 'center', opacity: guide, fontFamily: SANS, fontWeight: 900, fontSize: 80, color: GOLD, textShadow: '0 0 8px #000, 0 2px 14px #000' }}>挡</div>
-      ))}
-      <Big s="两根手指，各挡一边的虚线框" y={y0 - 76} size={40} color={GOLD} o={guide} />
-    </AbsoluteFill>
-  );
-};
-
-/* ---------------------------------------------------------------- 6. recap: five shortcuts, each card still moving on its own clock */
-const CARD_W = 340, CARD_H = 440, CARD_TOP = 180;
-const CARD_X = [0, 1, 2, 3, 4].map((i) => 960 + (i - 2) * 360);
-const MINI_P: Proj = { cx: CARD_X[0], cy0: CARD_TOP + 150, a: 31, b: 16 };
-const MINI_K = 0.32;                                  // tables / glass drawn at 32 % inside their card
-const RecapShot: React.FC<{ T: number }> = ({ T }) => {
-  const t = T - T5;
-  const card = (i: number) => easeOut(prog(T, T5 + i * 0.06, T5 + 0.25 + i * 0.06));
-  const k = easeInOut(prog(T, T6 - 0.45, T6));               // recap → board: the board card grows into the board
-  const others = 1 - easeOut(prog(T, T6 - 0.45, T6 - 0.27));
-  const p: Proj = { cx: lerp(MINI_P.cx, P0.cx, k), cy0: lerp(MINI_P.cy0, P0.cy0, k), a: lerp(MINI_P.a, P0.a, k), b: lerp(MINI_P.b, P0.b, k) };
-  const dy = (i: number) => (1 - card(i)) * 30;
-  const sweep = (i: number) => hit(T, L.world + 0.2 + i * 0.12, 0.3);
-  const osc = (period: number, ph = 0) => 0.5 - 0.5 * Math.cos((2 * Math.PI * (t + ph)) / period);
-  // 1 tables: the glass goes over and back (3.6 s)
-  const gk = easeInOut(osc(3.6));
-  const ga = -Math.PI / 2 * gk;
-  const gc: P2 = [lerp(C_L[0], C_R[0], gk), lerp(C_L[1], C_R[1], gk) - 6 - 110 * Math.sin(Math.PI * gk)];
-  // 2 feet: two blocks crossing the card, looping (2.6 s)
-  const fx = CARD_X[2] - CARD_W / 2 - 40 + ((t * 120) % (CARD_W + 60));
-  // 3 spheres: stripes on and off (1.7 s)
-  const sOn = Math.floor(t / 1.7) % 2 === 0;
-  // 4 barber: stripes running in the slit
-  const bdx = (t * 60) % 24;
-  const by = (i: number) => CARD_TOP + dy(i);
-  return (
-    <AbsoluteFill style={{ background: 'linear-gradient(180deg, #0f0d10 0%, #17130f 100%)' }}>
-      {CARD_X.map((x, i) => (
-        <div key={i} style={{ position: 'absolute', left: x - CARD_W / 2, top: by(i), width: CARD_W, height: CARD_H, borderRadius: 18, background: '#0a0909',
-          border: `2px solid rgba(241,197,109,${0.18 + 0.7 * sweep(i)})`, opacity: card(i) * others }} />
-      ))}
-      <svg width={1920} height={1080} style={{ position: 'absolute', inset: 0 }}>
-        <defs>{CARD_X.map((x, i) => <clipPath key={i} id={`rc${i}`}><rect x={x - CARD_W / 2} y={by(i)} width={CARD_W} height={CARD_H} rx={18} /></clipPath>)}</defs>
-        {/* 0 board: the shadow slides off and back, B never changes (it grows into the board on the way out) */}
-        <g opacity={card(0)} transform={`translate(0 ${dy(0) * (1 - k)})`}><Board p={p} uid="rb" labels={k > 0.9} slide={1.65 * easeInOut(osc(4)) * (1 - k)} bFixed /></g>
-        {/* 1 tables + glass */}
-        <g opacity={card(1) * others} clipPath="url(#rc1)">
-          <g transform={`translate(${CARD_X[1]} ${by(1) + 230}) scale(${MINI_K}) translate(-965 -560)`}>
-            <TableDraw q={Q_L} leg={1} /><TableDraw q={Q_R} leg={1} />
-            <Glass q={quadOf(gc, rot(U, ga), rot(V, ga))} fit={gk > 0.98 ? 1 : 0} />
-          </g>
-        </g>
-        {/* 2 race */}
-        <g opacity={card(2) * others} clipPath="url(#rc2)">
-          {Array.from({ length: 24 }, (_, j) => <rect key={j} x={CARD_X[2] - CARD_W / 2 + j * 16} y={by(2)} width={8} height={CARD_H} fill="#000" />)}
-          {Array.from({ length: 24 }, (_, j) => <rect key={`w${j}`} x={CARD_X[2] - CARD_W / 2 + j * 16 + 8} y={by(2)} width={8} height={CARD_H} fill="#fff" />)}
-          <rect x={fx} y={by(2) + 150} width={40} height={24} fill="#fff200" /><rect x={fx} y={by(2) + 250} width={40} height={24} fill="#0a1a6e" />
-        </g>
-        {/* 3 spheres */}
-        <g opacity={card(3) * others}>
-          <defs>{[0, 1, 2, 3, 4, 5].map((i) => <clipPath key={i} id={`rs${i}`}><circle cx={CARD_X[3] - 95 + (i % 3) * 95} cy={by(3) + 140 + Math.floor(i / 3) * 120} r={42} /></clipPath>)}</defs>
-          {[0, 1, 2, 3, 4, 5].map((i) => { const x = CARD_X[3] - 95 + (i % 3) * 95, y = by(3) + 140 + Math.floor(i / 3) * 120; return (
-            <g key={i}><circle cx={x} cy={y} r={42} fill={BEIGE} />
-              {sOn && <g clipPath={`url(#rs${i})`}>{Array.from({ length: 13 }, (_, j) => <rect key={j} x={x - 44} y={y - 44 + j * 7} width={88} height={3} fill={STRIPE[i]} />)}</g>}</g>); })}
-        </g>
-        {/* 4 barber pole */}
-        <g opacity={card(4) * others}>
-          <defs><clipPath id="rbp"><rect x={CARD_X[4] - 30} y={by(4) + 40} width={60} height={CARD_H - 80} rx={6} /></clipPath></defs>
-          <g clipPath="url(#rbp)"><rect x={CARD_X[4] - 100} y={by(4)} width={200} height={CARD_H} fill="#f1ece2" />
-            <g transform={`translate(${bdx} 0)`}>{Array.from({ length: 30 }, (_, j) => { const x = CARD_X[4] - 400 + j * 24, y = by(4); return <polygon key={j} points={`${x},${y} ${x + 11},${y} ${x + 11 + CARD_H},${y + CARD_H} ${x + CARD_H},${y + CARD_H}`} fill="#c8302a" />; })}</g></g>
-          <rect x={CARD_X[4] - 30} y={by(4) + 40} width={60} height={CARD_H - 80} rx={6} fill="none" stroke="#3a3a44" strokeWidth={4} />
-        </g>
-      </svg>
-      {CARD_X.map((x, i) => (
-        <div key={i} style={{ position: 'absolute', left: x - CARD_W / 2, width: CARD_W, top: by(i) + CARD_H + 14, textAlign: 'center', opacity: card(i) * others }}>
-          <div style={{ fontFamily: SANS, fontWeight: 900, fontSize: 54, color: GOLD, lineHeight: 1.1 }}>{STAMPS[i][0]}</div>
-          <div style={{ fontFamily: SANS, fontWeight: 700, fontSize: 32, color: DIM, marginTop: 6 }}>{STAMPS[i][1]}</div>
-        </div>
-      ))}
-    </AbsoluteFill>
-  );
-};
-
-/* ---------------------------------------------------------------- the score in the top bar: how many times were you fooled */
-const Tally: React.FC<{ T: number }> = ({ T }) => {
-  const o = easeOut(prog(T, TITLE_OUT + 0.4, TITLE_OUT + 0.9)) * (1 - prog(T, END_CARD, END_CARD + 0.4));
-  if (o <= 0.001) return null;
-  const n = STAMPS.filter(([, , t]) => T >= t).length;
-  return (
-    <div style={{ position: 'absolute', top: 34, left: 0, right: 0, display: 'flex', justifyContent: 'center', alignItems: 'center', gap: 14, opacity: o }}>
-      <span style={{ fontFamily: SANS, fontWeight: 900, fontSize: 28, color: DIM, marginRight: 8 }}>你被骗了几次？</span>
-      {STAMPS.map(([, , t], i) => {
-        const on = T >= t, k = easeOut(prog(T, t, t + 0.14)), glow = hit(T, t, 0.5) + (T >= T5 ? hit(T, L.world + 0.2 + i * 0.12, 0.3) : 0);
-        return (
-          <div key={i} style={{ width: 58, height: 58, borderRadius: 29, border: `2px solid ${on ? GOLD : 'rgba(243,237,226,0.22)'}`, background: on ? `rgba(241,197,109,${0.75 + 0.25 * glow})` : 'transparent',
-            display: 'flex', alignItems: 'center', justifyContent: 'center', transform: `scale(${on ? 1 + 0.25 * (1 - k) : 1})`, boxShadow: on ? `0 0 ${8 + 26 * glow}px ${GLOW}` : 'none' }}>
-            {on && <span style={{ fontFamily: SANS, fontWeight: 900, fontSize: 34, color: '#1a1206', opacity: k }}>✓</span>}
-          </div>
-        );
-      })}
-      <span style={{ fontFamily: MONO, fontWeight: 700, fontSize: 34, color: GOLD, marginLeft: 10, minWidth: 70 }}>{n}/5</span>
-    </div>
-  );
-};
-
-/* ---------------------------------------------------------------- end card: the five, for counting */
-const Icon: React.FC<{ i: number; x: number; y: number }> = ({ i, x, y }) => {
-  const g = GOLD;
-  return (
-    <g transform={`translate(${x} ${y})`}>
-      <rect x={-46} y={-46} width={92} height={92} rx={14} fill="rgba(241,197,109,0.08)" stroke={g} strokeWidth={2.5} />
-      {i === 0 && <g><polygon points="0,-30 30,-8 0,14 -30,-8" fill="none" stroke={g} strokeWidth={3} /><polygon points="0,-30 15,-19 0,-8 -15,-19" fill={g} /><polygon points="0,14 -15,3 0,-8 15,3" fill={g} opacity={0.5} /><ellipse cx={16} cy={-26} rx={9} ry={5} fill={g} /></g>}
-      {i === 1 && <g><polygon points="-30,-6 -18,-26 30,-12 18,8" fill="none" stroke={g} strokeWidth={3} /><line x1={-26} y1={0} x2={-26} y2={28} stroke={g} strokeWidth={3} /><line x1={14} y1={12} x2={14} y2={30} stroke={g} strokeWidth={3} /></g>}
-      {i === 2 && <g>{[-30, -18, -6, 6, 18].map((sx) => <rect key={sx} x={sx} y={-30} width={6} height={60} fill={g} opacity={0.55} />)}<rect x={-20} y={-14} width={24} height={9} fill={g} /><rect x={-20} y={8} width={24} height={9} fill={g} /></g>}
-      {i === 3 && <g><circle cx={0} cy={0} r={28} fill="none" stroke={g} strokeWidth={3} />{[-16, -8, 0, 8, 16].map((sy) => <line key={sy} x1={-Math.sqrt(784 - sy * sy)} y1={sy} x2={Math.sqrt(784 - sy * sy)} y2={sy} stroke={g} strokeWidth={2} />)}</g>}
-      {i === 4 && <g><rect x={-12} y={-32} width={24} height={64} rx={3} fill="none" stroke={g} strokeWidth={3} />{[-24, -10, 4, 18].map((sy) => <line key={sy} x1={-12} y1={sy} x2={12} y2={sy + 14} stroke={g} strokeWidth={3} />)}</g>}
-    </g>
-  );
-};
-const EndCard: React.FC<{ T: number }> = ({ T }) => {
-  const a = END_CARD;
-  if (T < a) return null;
-  const k = (d: number) => easeOut(prog(T, a + d, a + d + 0.4));
-  const black = easeIn(prog(T, FILM_END - 0.8, FILM_END));
-  return (
-    <AbsoluteFill>
-      <AbsoluteFill style={{ background: `rgba(4,4,5,${0.9 * k(0)})` }} />
-      <Big s="大脑的懒惰" y={150} size={96} color={GOLD} o={k(0)} glow={GLOW} font={ZH} />
-      <svg width={1920} height={1080} style={{ position: 'absolute', inset: 0 }}>
-        {[0, 1, 2, 3, 4].map((i) => <g key={i} opacity={k(0.3 + i * 0.08)}><Icon i={i} x={960 + (i - 2) * 130} y={340} /></g>)}
-      </svg>
-      <Big s="五个里，你被骗了几个？" y={420} size={64} o={k(0.8)} dy={rise(T, a + 0.8)} />
-      <Big s="评论区报分 · 不信就暂停截图，自己量" y={520} size={36} color={DIM} o={k(1.1)} />
-      <div style={{ position: 'absolute', left: 960 - 330, top: 596, width: 660, height: 58, borderRadius: 29, border: `2px solid ${GOLD}`, opacity: k(1.3), display: 'flex', alignItems: 'center', justifyContent: 'center',
-        fontFamily: SANS, fontWeight: 700, fontSize: 28, letterSpacing: '0.15em', color: INK }}>{JUNO.follow}</div>
-      <div style={{ position: 'absolute', left: 0, right: 0, top: 712, textAlign: 'center', opacity: 0.6 * k(1.5), fontFamily: SANS, fontSize: 18, color: INK, lineHeight: 1.8 }}>
-        资料：Adelson 1995（MIT）· Helmholtz 1867《生理光学手册》· Shepard 1990《Mind Sights》· Anstis 2001 Perception · Novick 2018（UTEP）· Wallach 1935<br />
-        所有图形均为代码重绘 · "懒惰"为比喻
-      </div>
-      <AbsoluteFill style={{ background: '#000', opacity: black }} />
-    </AbsoluteFill>
-  );
-};
+const vis = (T: number, a: number, z: number, fi = 0.25, fo = 0.25) => Math.min(easeOut(prog(T, a, a + fi)), 1 - prog(T, z - fo, z));
+const nextBeat = (t: number) => { const b = (music.beats as number[]).find((x) => x >= t - 0.02); return b ?? t; };
 
 /* ---------------------------------------------------------------- subtitles */
 const Rich: React.FC<{ s: string }> = ({ s }) => (
-  <>{s.split(/(\[[^\]]+\]|\{[^}]+\}|[0-9][0-9.,%]*)/).filter(Boolean).map((seg, i) => {
-    if (seg.startsWith('[')) return <span key={i} style={{ color: GOLD, fontWeight: 900 }}>{seg.slice(1, -1)}</span>;
-    if (seg.startsWith('{')) return <span key={i} style={{ color: RED, fontWeight: 900 }}>{seg.slice(1, -1)}</span>;
-    if (/^[0-9]/.test(seg)) return <span key={i} style={{ color: NUM }}>{seg}</span>;
-    return <span key={i}>{seg}</span>;
-  })}</>
+  <>{s.split(/(\[[^\]]+\]|\{[^}]+\})/).filter(Boolean).map((seg, i) => seg.startsWith('[') ? <span key={i} style={{ color: GOLD, fontWeight: 900 }}>{seg.slice(1, -1)}</span>
+    : seg.startsWith('{') ? <span key={i} style={{ color: RED, fontWeight: 900 }}>{seg.slice(1, -1)}</span> : <span key={i}>{seg}</span>)}</>
 );
 const Subtitles: React.FC<{ T: number }> = ({ T }) => {
   const cur = SUBS.find(([a, z]) => T >= a - 0.05 && T < z + 0.1);
   if (!cur) return null;
   return (
     <div style={{ position: 'absolute', left: 0, right: 0, top: 972, textAlign: 'center', opacity: Math.min(easeOut(prog(T, cur[0] - 0.05, cur[0] + 0.12)), 1 - prog(T, cur[1], cur[1] + 0.1)) }}>
-      <span style={{ fontFamily: SANS, fontWeight: 700, fontSize: 68, color: INK, letterSpacing: '0.03em', lineHeight: 1.25, textShadow: '0 0 3px #000, 0 0 3px #000, 0 2px 14px rgba(0,0,0,0.95)', fontVariantNumeric: 'lining-nums' }}>
+      <span style={{ fontFamily: SANS, fontWeight: 700, fontSize: 68, color: INK, letterSpacing: '0.03em', textShadow: '0 0 3px #000, 0 0 3px #000, 0 2px 14px rgba(0,0,0,0.95)', fontVariantNumeric: 'lining-nums' }}>
         <Rich s={cur[2].replace(/[。，；：、——]+$/, '')} />
       </span>
     </div>
   );
 };
 
-/* ---------------------------------------------------------------- the measuring box per shot */
-const Meter: React.FC<{ title: string; rows: [string, string, string?][]; o: number }> = ({ title, rows, o }) => o <= 0.001 ? null : (
-  <div style={{ position: 'absolute', right: 70, top: 160, width: 450, padding: '16px 24px 18px', borderRadius: 16, background: 'rgba(10,10,12,0.86)', border: '1px solid rgba(243,237,226,0.18)', fontFamily: MONO, color: INK, opacity: o }}>
-    <div style={{ fontSize: 22, letterSpacing: '0.2em', color: DIM, marginBottom: 10, fontFamily: SANS, fontWeight: 700 }}>{title}</div>
-    {rows.map(([k, v, sw], i) => (
-      <div key={i} style={{ display: 'flex', alignItems: 'center', gap: 14, fontSize: 33, fontWeight: 700, marginTop: i ? 10 : 0 }}>
-        {sw && <span style={{ width: 42, height: 42, borderRadius: 7, background: sw, border: '1px solid rgba(255,255,255,0.35)', flexShrink: 0 }} />}
-        <span style={{ fontFamily: SANS, fontWeight: 900, fontSize: 30, flexGrow: 1, whiteSpace: 'nowrap' }}>{k}</span>
-        <span style={{ whiteSpace: 'pre' }}>{v}</span>
-      </div>
-    ))}
-  </div>
-);
-const PickerNow: React.FC<{ T: number }> = ({ T }) => {
-  if (inShot(T, 'board1')) {
-    if (T >= TITLE && T < TITLE_OUT + 0.2) return null;
-    const o = (T < TITLE ? easeOut(prog(T, CUR.a1 - 0.1, CUR.a1 + 0.1)) : easeOut(prog(T, TITLE_OUT + 0.2, TITLE_OUT + 0.5))) * (1 - vis(T, L.guess + 1.4, 99, 0.3, 0.2)) * (1 - prog(T, T1 - 0.5, T1 - 0.2));
-    return <Picker o={o} rows={[{ k: 'A', v: G(DARK), o: easeOut(prog(T, CUR.a1, CUR.a1 + 0.12)) }, { k: 'B', v: G(DARK), o: easeOut(prog(T, CUR.b1, CUR.b1 + 0.12)) }]} />;
-  }
-  if (inShot(T, 'tables')) return <Meter title="量一下 · 像素" o={vis(T, L.measure + 0.3, L.look2 + 0.4, 0.2, 0.4)} rows={[['左边长边', '300'], ['右边长边', '300']]} />;
-  if (inShot(T, 'feet')) {
-    const v = T < RW0() ? V1 : T < RACE2() ? 0 : V2();
-    const sv = v ? String(Math.round(v)) : '—';
-    return <Meter title={T < RW0() ? '速度计 · 像素/秒' : '第二回合 · 像素/秒'} o={vis(T, OFF, T3 - 0.3, 0.2, 0.25)} rows={[['黄', sv, '#fff200'], ['蓝', sv, '#0a1a6e']]} />;   // after the bet is settled
-  }
-  if (inShot(T, 'balls')) {
-    if (T >= T4 - 0.72) return null;
-    if (T >= L.save) return <Picker rows={[{ k: '缝隙', v: SPHERE_RGB, o: 1 }, { k: '细线', v: [255, 42, 42], o: 1 }]} o={easeOut(prog(T, L.save, L.save + 0.3))} />;
-    const n = picked(T);
-    if (T >= DROP) return <Picker rows={[{ k: '全部', v: SPHERE_RGB, o: 1 }]} foot="12 个球 · 同一个值" />;
-    if (n === 0) return null;
-    return <Picker rows={[{ k: '这个球', v: SPHERE_RGB, o: 1 }]} foot={`已取 ${n} / 12 · 全部相同`} />;
-  }
-  if (inShot(T, 'barber')) return <Meter title="实际运动 · 全程不变" o={vis(T, T4 + 0.2, T5 - 0.3, 0.3, 0.25)} rows={[['方向', '→ 水平'], ['速度', `${SPD} px/s`]]} />;
-  if (inShot(T, 'board2') && T < END_CARD) return <Picker o={easeOut(prog(T, T6 + 0.2, T6 + 0.5))} rows={[{ k: 'A', v: G(DARK), o: 1 }, { k: 'B', v: G(DARK), o: 1 }]} />;
-  return null;
+/* ---------------------------------------------------------------- cold open: the envelope on the lectern */
+const Envelope: React.FC<{ T: number; open?: number }> = ({ T, open = 0 }) => {
+  const push = 1 + 0.07 * easeInOut(prog(T, 0, TITLE));
+  const pod = easeOut(prog(T, 4.7, 6.2));
+  const glow = 22 + 26 * pod + 30 * hit(T, TITLE, 0.4);
+  const sec = Math.floor(T); // the second hand ticks on its own clock, not the music
+  return (
+    <AbsoluteFill style={{ background: '#05060c', transform: `scale(${push})`, transformOrigin: '960px 560px' }}>
+      <Hall floorY={840} spots={[{ x: 960, w: 300, a: 0.6 + 0.3 * easeOut(prog(T, 0, 1.2)), warm: true }]} />
+      <svg width={1920} height={1080} style={{ position: 'absolute', inset: 0 }}>
+        <defs>
+          <linearGradient id="lect" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stopColor="#2a2016" /><stop offset="1" stopColor="#0c0906" /></linearGradient>
+          <linearGradient id="env" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stopColor="#ffe9b5" /><stop offset="0.5" stopColor={GOLD} /><stop offset="1" stopColor="#a8742c" /></linearGradient>
+        </defs>
+        {[[560, 210], [960, 300], [1360, 150]].map(([x, h], i) => <rect key={i} x={x - 180} y={840 - h * pod} width={360} height={h * pod} fill="#141a2c" opacity={0.75} />)}
+        <polygon points="800,600 1120,600 1080,840 840,840" fill="url(#lect)" />
+        <polygon points="770,575 1150,575 1120,600 800,600" fill="#3a2c1c" />
+        <rect x={930} y={640} width={60} height={60} rx={30} fill="none" stroke={GOLD} strokeOpacity={0.35} strokeWidth={3} />
+        <g transform="translate(960 548) rotate(-4)" style={{ filter: `drop-shadow(0 0 ${glow}px ${GLOW})` }}>
+          <rect x={-150} y={-46} width={300} height={92} rx={6} fill="url(#env)" />
+          {/* the flap opens for the title */}
+          <polygon points={`-150,-46 0,${lerp(10, -110, open)} 150,-46`} fill={open > 0 ? '#e9c27a' : 'none'} stroke="#8a5d22" strokeWidth={3} />
+          {open < 0.5 && <><circle cx={0} cy={10} r={17} fill="#8c1c1c" /><circle cx={0} cy={10} r={9} fill="none" stroke="#c74a3a" strokeWidth={2} /></>}
+        </g>
+        <g transform="translate(1560 250)">
+          <circle r={110} fill="#0d1120" stroke="rgba(243,237,226,0.5)" strokeWidth={5} />
+          {Array.from({ length: 12 }, (_, i) => { const a = (i / 12) * Math.PI * 2; return <line key={i} x1={Math.sin(a) * 88} y1={-Math.cos(a) * 88} x2={Math.sin(a) * 100} y2={-Math.cos(a) * 100} stroke={INK} strokeWidth={i % 3 ? 3 : 6} />; })}
+          <line x1={0} y1={0} x2={Math.sin((11.75 / 12) * Math.PI * 2) * 58} y2={-Math.cos((11.75 / 12) * Math.PI * 2) * 58} stroke={INK} strokeWidth={9} strokeLinecap="round" />
+          <line x1={0} y1={0} x2={-86} y2={0} stroke={GOLD} strokeWidth={6} strokeLinecap="round" />
+          <line x1={0} y1={0} x2={Math.sin(((50 + sec) / 60) * Math.PI * 2) * 96} y2={-Math.cos(((50 + sec) / 60) * Math.PI * 2) * 96} stroke={RED} strokeWidth={2.5} />
+          <circle r={9} fill={GOLD} />
+        </g>
+      </svg>
+      <div style={{ position: 'absolute', left: 1450, width: 220, top: 380, textAlign: 'center', fontFamily: MONO, fontWeight: 700, fontSize: 26, color: DIM, letterSpacing: '0.15em' }}>STOCKHOLM</div>
+    </AbsoluteFill>
+  );
 };
 
-export const Film: React.FC<{ at?: number }> = ({ at: atT }) => {
-  useFonts();
-  const frame = useCurrentFrame();
-  const { fps } = useVideoConfig();
-  const T = atT ?? frame / fps;
-  const mark = (T < TITLE ? 0 : easeOut(prog(T, TITLE_OUT + 0.3, TITLE_OUT + 1.0))) * (1 - prog(T, END_CARD, END_CARD + 0.4));
+/* ---------------------------------------------------------------- the gold title card, out of the envelope */
+const MotifPodium: React.FC<{ s?: number }> = ({ s = 1 }) => (
+  <svg width={240 * s} height={70 * s} viewBox="-120 -60 240 70">
+    {[[-70, 34, 0.6], [0, 52, 1], [70, 22, 0.6]].map(([dx, h, o], i) => <rect key={i} x={dx - 30} y={-h} width={60} height={h} fill={GOLD} opacity={o} />)}
+  </svg>
+);
+const TitleCard: React.FC<{ T: number }> = ({ T }) => {
+  if (T < TITLE - 0.25 || T > TITLE_OUT) return null;
+  const open = easeOut(prog(T, TITLE - 0.25, TITLE));
+  const grow = easeOut(prog(T, TITLE, TITLE + 0.45));
+  const out = easeInOut(prog(T, TITLE_OUT - 0.55, TITLE_OUT));
+  const chars = [...'谁会拿诺奖'];
+  const stamp = (i: number) => TITLE + 0.3 + i * BEAT / 2;
+  const pour = nextBeat(stamp(4) + BEAT);
   return (
-    <AbsoluteFill style={{ backgroundColor: '#050505' }}>
-      <style>{`
-        @font-face { font-family: "JunoMono"; src: url(${staticFile('fonts/DejaVuSansMono.ttf')}) format("truetype"); font-weight: 400; }
-        @font-face { font-family: "JunoMono"; src: url(${staticFile('fonts/DejaVuSansMono-Bold.ttf')}) format("truetype"); font-weight: 700; }
-      `}</style>
-      {inShot(T, 'board1') && <BoardShot T={T} uid="b1" open />}
-      {inShot(T, 'tables') && <TablesShot T={T} />}
-      {inShot(T, 'feet') && <FeetShot T={T} />}
-      {(inShot(T, 'barber') || (T >= T4 - 0.7 && T < T4)) && <BarberShot T={T} />}
-      {inShot(T, 'balls') && <BallsShot T={T} />}
-      {inShot(T, 'recap') && <RecapShot T={T} />}
-      {inShot(T, 'board2') && <BoardShot T={T} uid="b2" />}
-      {inShot(T, 'board1') && T < CUR.off + 0.4 && (() => { const [x, y, o, ring] = cursorAt(T); return <svg width={1920} height={1080} style={{ position: 'absolute', inset: 0 }}><Dropper x={x} y={y} o={o} ring={ring} fill={`rgb(${DARK},${DARK},${DARK})`} level={easeOut(prog(T, CUR.a1, CUR.a1 + 0.18))} /></svg>; })()}
-      <Infer T={T} />
-      <PickerNow T={T} />
-      <TitleCard T={T} />
-      <EndCard T={T} />
-      <div style={{ position: 'absolute', left: 0, right: 0, top: 0, height: BAR, background: '#000' }} />
-      <div style={{ position: 'absolute', left: 0, right: 0, bottom: 0, height: BAR, background: '#000' }} />
-      <Tally T={T} />
-      <Subtitles T={T} />
-      {mark > 0.001 && (
-        <div style={{ position: 'absolute', top: 50, right: 60, opacity: 0.6 * mark, fontFamily: SANS, fontWeight: 500, fontSize: 20, letterSpacing: '0.3em', color: 'rgba(243,237,226,0.58)' }}>
-          <span style={{ color: GOLD }}>◆ </span>{JUNO.mark}
+    <AbsoluteFill>
+      <Envelope T={T} open={open} />
+      <AbsoluteFill style={{ background: `rgba(3,4,8,${0.55 + 0.35 * grow})` }} />
+      {/* the card rises from the envelope and fills the frame; at the end it falls back into its motif, which becomes the podium */}
+      <div style={{ position: 'absolute', left: 960 - 560, top: 540 - 300, width: 1120, height: 600, borderRadius: 26,
+        transform: `translate(0px, ${lerp(10, 0, grow)}px) scale(${lerp(0.26, 1, grow) * (1 - 0.25 * out)})`, transformOrigin: '50% 52%', opacity: 1 - out,
+        background: 'linear-gradient(180deg, #14110c, #0a0907)', border: `3px solid ${GOLD}`, boxShadow: `0 0 ${60 + 60 * hit(T, pour, 0.5)}px ${GLOW}`,
+        display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center' }}>
+        <div style={{ fontFamily: EN, fontWeight: 600, fontSize: 30, letterSpacing: '0.32em', color: GOLD, fontVariant: 'small-caps', opacity: easeOut(prog(T, TITLE + 0.2, TITLE + 0.5)) }}>economic sciences · stockholm · mmxxvi</div>
+        <div style={{ display: 'flex', alignItems: 'baseline', marginTop: 10 }}>
+          {['《', ...chars, '》'].map((c, i) => {
+            const k = i === 0 || i === 6 ? prog(T, stamp(0), stamp(0) + 0.12) : prog(T, stamp(i - 1), stamp(i - 1) + 0.12);
+            const gold = prog(T, pour, pour + 0.4);
+            return <span key={i} className={gold > 0.5 ? 'gold' : undefined} style={{ fontFamily: ZH, fontWeight: 900, fontSize: 138, opacity: k, color: gold > 0.5 ? undefined : INK,
+              transform: `scale(${1 + 0.25 * (1 - easeOut(k))})`, display: 'inline-block' }}>{c}</span>;
+          })}
         </div>
-      )}
+        <div style={{ marginTop: 12, opacity: easeOut(prog(T, pour, pour + 0.3)) }}><MotifPodium /></div>
+        <div style={{ fontFamily: SANS, fontWeight: 700, fontSize: 38, color: INK, marginTop: 16, opacity: easeOut(prog(T, pour + 0.2, pour + 0.5)) }}>这三位，做了什么研究？</div>
+        <div style={{ fontFamily: EN, fontStyle: 'italic', fontSize: 30, color: DIM, marginTop: 6, opacity: easeOut(prog(T, pour + 0.3, pour + 0.6)) }}>Who will win the 2026 prize in economics?</div>
+        <div style={{ fontFamily: MONO, fontWeight: 700, fontSize: 22, letterSpacing: '0.4em', color: 'rgba(241,197,109,0.7)', marginTop: 16, opacity: easeOut(prog(T, pour + 0.4, pour + 0.7)) }}>— {JUNO.series} —</div>
+      </div>
+    </AbsoluteFill>
+  );
+};
+
+/* ---------------------------------------------------------------- the research set pieces (animated) */
+const Dark: React.FC<{ children: React.ReactNode; warm?: boolean; spot?: number }> = ({ children, warm, spot = 0.7 }) => (
+  <AbsoluteFill style={{ background: '#05060c' }}>
+    <Hall floorY={900} spots={[{ x: 960, w: 340, a: spot, warm }]} />
+    {children}
+  </AbsoluteFill>
+);
+const Medal: React.FC<{ t: number }> = ({ t }) => {
+  const sw = 9 * Math.exp(-t / 0.9) * Math.sin(t * 4.2) * (t > 0 ? 1 : 0);
+  const drop = easeOut(prog(t, 0, 0.5));
+  const shine = prog(t, 0.6, 1.4);
+  return (
+    <Dark warm>
+      <svg width={1920} height={1080} style={{ position: 'absolute', inset: 0 }}>
+        <defs>
+          <radialGradient id="md" cx="0.35" cy="0.3" r="0.8"><stop offset="0" stopColor="#fff" stopOpacity={0.9} /><stop offset="0.3" stopColor={GOLD} /><stop offset="1" stopColor="#5a3c14" /></radialGradient>
+          <clipPath id="mdc"><circle cx={960} cy={480} r={170} /></clipPath>
+        </defs>
+        <g transform={`translate(0 ${lerp(-500, 0, drop)}) rotate(${sw} 960 100)`}>
+          <path d="M 900 100 L 960 330 L 1020 100" fill="none" stroke="#8c1c1c" strokeWidth={46} />
+          <circle cx={960} cy={480} r={170} fill="url(#md)" style={{ filter: `drop-shadow(0 0 40px ${GLOW})` }} />
+          <circle cx={960} cy={480} r={140} fill="none" stroke="#7a5420" strokeWidth={4} opacity={0.6} />
+          <text x={960} y={505} textAnchor="middle" fontFamily={MONO} fontWeight={700} fontSize={84} fill="#3a2508">2007</text>
+          <rect x={760 + 440 * shine} y={280} width={60} height={420} fill="#fff" opacity={0.35 * Math.sin(Math.PI * shine)} transform={`rotate(20 960 480)`} clipPath="url(#mdc)" />
+        </g>
+      </svg>
+      <div style={{ position: 'absolute', left: 0, right: 0, top: 690, textAlign: 'center', fontFamily: SANS, fontWeight: 900, fontSize: 48, color: INK, opacity: easeOut(prog(t, 0.4, 0.8)) }}>约翰·贝茨·克拉克奖</div>
+      <div style={{ position: 'absolute', left: 0, right: 0, top: 762, textAlign: 'center', fontFamily: SANS, fontWeight: 700, fontSize: 30, color: DIM, letterSpacing: '0.2em', opacity: easeOut(prog(t, 0.6, 1)) }}>授予 40 岁以下、在美国工作的经济学家</div>
+    </Dark>
+  );
+};
+const BIDS = [3.2, 2.85, 2.4, 1.9, 1.75, 1.6, 1.4, 1.2, 1.05, 0.9, 0.8, 0.65, 0.55, 0.45, 0.4, 0.3];
+const Auction: React.FC<{ t: number; ruleO: number }> = ({ t, ruleO }) => {
+  const slots = [{ y: 390, b: 3.2, name: 'A 店 · 轻量跑鞋' }, { y: 520, b: 2.85, name: 'B 店 · 专业竞速' }, { y: 650, b: 2.4, name: 'C 店 · 学生特价' }];
+  const typed = Math.min(2, Math.floor(t / 0.18));
+  return (
+    <AbsoluteFill style={{ background: '#04050b' }}>
+      <svg width={1920} height={1080} style={{ position: 'absolute', inset: 0 }}>
+        <defs><radialGradient id="screen" cx="0.5" cy="0.35" r="0.6"><stop offset="0" stopColor="#1b2a4a" stopOpacity={0.9} /><stop offset="1" stopColor="#04050b" stopOpacity={0} /></radialGradient></defs>
+        <rect width={1920} height={1080} fill="url(#screen)" />
+        {/* all the bids rise at once; the losers settle below, dimmed */}
+        {BIDS.slice(3).map((b, i) => {
+          const col = i % 7, row = Math.floor(i / 7), x = 420 + col * 180 + (row ? 90 : 0), y = 856 + row * 72;
+          const k = easeOut(prog(t, 0.45 + 0.04 * i, 0.85 + 0.04 * i)), lose = prog(t, 1.5, 1.9);
+          const shown = b * clamp((t - 0.45) / 0.6);
+          return (
+            <g key={i} opacity={k * lerp(1, 0.5, lose)} transform={`translate(0 ${lerp(120, 0, k)})`}>
+              <rect x={x - 66} y={y - 24} width={132} height={48} rx={24} fill="rgba(20,26,44,0.9)" stroke={lose > 0.5 ? 'rgba(200,210,240,0.3)' : GOLD} strokeWidth={2} />
+              <text x={x} y={y + 10} textAnchor="middle" fontFamily={MONO} fontWeight={700} fontSize={26} fill={lose > 0.5 ? '#8f9abd' : INK}>¥{shown.toFixed(2)}</text>
+              <line x1={x - 40} y1={y} x2={x + 40} y2={y} stroke="#8f9abd" strokeWidth={2} opacity={0.6 * lose} />
+            </g>
+          );
+        })}
+      </svg>
+      <div style={{ position: 'absolute', left: 460, width: 1000, top: 200, height: 112, borderRadius: 56, background: 'linear-gradient(180deg, rgba(36,44,70,0.95), rgba(18,22,38,0.95))', border: '2px solid rgba(243,237,226,0.3)',
+        boxShadow: `0 0 ${60 + 60 * hit(t, 0.4, 0.4)}px rgba(90,130,220,0.3)`, display: 'flex', alignItems: 'center', paddingLeft: 44, gap: 26 }}>
+        <svg width={48} height={48} viewBox="0 0 48 48"><circle cx={20} cy={20} r={13} fill="none" stroke={INK} strokeWidth={4} /><line x1={30} y1={30} x2={42} y2={42} stroke={INK} strokeWidth={5} strokeLinecap="round" /></svg>
+        <span style={{ fontFamily: SANS, fontWeight: 700, fontSize: 52, color: INK }}>{'跑鞋'.slice(0, typed)}</span>
+        <span style={{ width: 4, height: 54, background: GOLD, marginLeft: -16, opacity: Math.floor(t * 2) % 2 ? 1 : 0.2 }} />
+      </div>
+      {slots.map((s, i) => {
+        const k = easeOut(prog(t, 1.5 + i * 0.22, 1.85 + i * 0.22));
+        return (
+          <div key={i} style={{ position: 'absolute', left: 460, width: 1000, top: s.y, height: 104, borderRadius: 18, background: 'rgba(14,18,32,0.92)', border: `2px solid ${i === 0 ? GOLD : 'rgba(241,197,109,0.45)'}`,
+            boxShadow: i === 0 ? `0 0 34px ${GLOW}` : 'none', display: 'flex', alignItems: 'center', padding: '0 34px', gap: 22, opacity: 0.25 + 0.75 * k }}>
+            <span style={{ fontFamily: SANS, fontWeight: 900, fontSize: 24, color: '#1a1206', background: GOLD, borderRadius: 8, padding: '4px 12px' }}>广告位 {i + 1}</span>
+            <span style={{ fontFamily: SANS, fontWeight: 700, fontSize: 40, color: INK, flexGrow: 1, opacity: k, transform: `translateX(${lerp(60, 0, k)}px)` }}>{s.name}</span>
+            <span style={{ fontFamily: MONO, fontWeight: 700, fontSize: 36, color: GOLD, opacity: k }}>¥{s.b.toFixed(2)}</span>
+            <span style={{ fontFamily: SANS, fontWeight: 700, fontSize: 22, color: DIM, opacity: k }}>/ 每次点击</span>
+          </div>
+        );
+      })}
+      <div style={{ position: 'absolute', left: 0, right: 0, top: 772, textAlign: 'center', fontFamily: SANS, fontWeight: 700, fontSize: 24, letterSpacing: '0.3em', color: 'rgba(243,237,226,0.45)', opacity: prog(t, 1.6, 2) }}>其余出价 · 落选</div>
+      {ruleO > 0 && <div style={{ position: 'absolute', left: 1490, top: 392, width: 330, padding: '18px 22px', borderRadius: 16, background: 'rgba(10,12,22,0.94)', border: `2px solid ${GOLD}`, fontFamily: SANS, color: INK, opacity: ruleO, transform: `translateX(${lerp(40, 0, ruleO)}px)` }}>
+        <div style={{ fontSize: 22, letterSpacing: '0.25em', color: DIM, fontWeight: 700 }}>拍卖规则</div>
+        <div style={{ fontSize: 34, fontWeight: 900, marginTop: 8 }}>谁排第一？</div>
+        <div style={{ fontSize: 28, fontWeight: 700, marginTop: 8, color: GOLD }}>谁付多少？</div>
+        <div style={{ fontSize: 28, fontWeight: 700, marginTop: 4, color: 'rgba(243,237,226,0.7)' }}>你先看到谁？</div>
+      </div>}
+    </AbsoluteFill>
+  );
+};
+const Tower: React.FC<{ t: number }> = ({ t }) => {
+  const lit = easeOut(prog(t, 0.6, 1.0));
+  return (
+    <Dark>
+      <svg width={1920} height={1080} style={{ position: 'absolute', inset: 0 }}>
+        <defs><linearGradient id="tw" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stopColor="#101830" /><stop offset="1" stopColor="#1d2a4a" /></linearGradient></defs>
+        <g transform={`translate(0 ${lerp(30, 0, easeOut(prog(t, 0, 0.6)))})`}>
+          <polygon points="760,140 1160,190 1160,900 760,900" fill="url(#tw)" stroke="#2c3a60" strokeWidth={3} />
+          {Array.from({ length: 14 }, (_, r) => Array.from({ length: 7 }, (_, c) => {
+            const g = r === 5 && c === 3, x = 790 + c * 52, y = 230 + r * 46;
+            const tw = 0.06 + 0.12 * rnd(r * 7 + c) + 0.05 * Math.sin(t * (0.6 + rnd(r * 7 + c, 3)) + r);
+            return <rect key={`${r}-${c}`} x={x} y={y} width={36} height={28} fill={g ? GOLD : '#9fb6d8'} opacity={g ? 0.15 + 0.85 * lit : tw} style={g ? { filter: `drop-shadow(0 0 ${16 * lit}px ${GLOW})` } : undefined} />;
+          }))}
+        </g>
+      </svg>
+      <div style={{ position: 'absolute', left: 1210, top: 440, padding: '14px 24px', borderRadius: 14, border: `2px solid ${GOLD}`, background: 'rgba(10,12,22,0.92)', fontFamily: SANS, color: INK, opacity: lit, transform: `translateX(${lerp(30, 0, lit)}px)` }}>
+        <div style={{ fontSize: 36, fontWeight: 900 }}>微软 · 顾问首席经济学家</div>
+        <div style={{ fontSize: 26, fontWeight: 700, color: DIM, marginTop: 6 }}>6 年 · 最早的"科技经济学家"之一</div>
+      </div>
+    </Dark>
+  );
+};
+const Payslip: React.FC<{ t: number; mode: 'tax' | 'hours' }> = ({ t, mode }) => {
+  const flip = mode === 'tax' ? prog(t, 0.7, 0.9) : 1;
+  const enter = easeOut(prog(t, 0, 0.45));
+  return (
+    <Dark>
+      <div style={{ position: 'absolute', left: 520, top: 210, width: 520, height: 560, borderRadius: 16, background: '#f1ece2', boxShadow: '0 20px 60px rgba(0,0,0,0.6)', padding: '36px 40px', fontFamily: SANS, color: '#1b1b20',
+        transform: `rotate(-2deg) translateY(${mode === 'tax' ? lerp(60, 0, enter) : 0}px)`, opacity: mode === 'tax' ? enter : 1 }}>
+        <div style={{ fontSize: 34, fontWeight: 900, letterSpacing: '0.2em' }}>工资条</div>
+        <div style={{ height: 3, background: '#1b1b20', margin: '14px 0 26px', opacity: 0.3 }} />
+        {[['税前工资', mode === 'hours' ? `¥${Math.round(lerp(10000, 12000, easeOut(prog(t, 0.2, 1.0)))).toLocaleString('en-US')}` : '¥10,000'],
+          ['税率', mode === 'tax' ? (flip > 0.5 ? '25%' : '20%') : '20%'], ['到手', mode === 'tax' ? (flip > 0.5 ? '¥7,500' : '¥8,000') : `¥${Math.round(lerp(8000, 9600, easeOut(prog(t, 0.2, 1.0)))).toLocaleString('en-US')}`]].map(([k, v], i) => (
+          <div key={i} style={{ display: 'flex', justifyContent: 'space-between', fontSize: 38, fontWeight: 700, margin: '18px 0', color: i === 1 && mode === 'tax' && flip > 0.5 ? '#c0302a' : '#1b1b20',
+            transform: i === 1 && mode === 'tax' ? `scale(${1 + 0.12 * hit(t, 0.8, 0.25)})` : undefined }}><span>{k}</span><span style={{ fontFamily: MONO }}>{v}</span></div>
+        ))}
+        <div style={{ position: 'absolute', bottom: 26, left: 40, fontSize: 22, color: 'rgba(27,27,32,0.5)' }}>示意数字</div>
+      </div>
+      <div style={{ position: 'absolute', left: 1200, top: 230, width: 300, textAlign: 'center', fontFamily: SANS, fontWeight: 900, fontSize: 34, color: INK }}>{mode === 'tax' ? '工作时间' : '工资 vs 工时'}</div>
+      <svg width={1920} height={1080} style={{ position: 'absolute', inset: 0 }}>
+        {mode === 'tax' ? (() => {
+          const h = 280 + (t > 0.9 ? 22 * Math.sin((t - 0.9) * 2.4) * Math.exp(-(t - 0.9) / 2.5) : 0);
+          return <>
+            <rect x={1300} y={330} width={100} height={420} rx={10} fill="none" stroke="rgba(243,237,226,0.35)" strokeWidth={3} />
+            <rect x={1300} y={750 - h} width={100} height={h} rx={10} fill={INK} opacity={0.8} />
+            <text x={1350} y={430} textAnchor="middle" fontFamily={SANS} fontWeight={900} fontSize={90} fill={GOLD} opacity={prog(t, 1.0, 1.3)}>?</text>
+          </>;
+        })() : (() => {
+          const w = 420 * easeOut(prog(t, 0.2, 1.0)), h = 190 * easeOut(prog(t, 0.9, 2.2));
+          return <>
+            <rect x={1220} y={750 - w} width={100} height={w} rx={10} fill={GOLD} opacity={0.9} />
+            <rect x={1380} y={750 - h} width={100} height={h} rx={10} fill={INK} opacity={0.85} />
+            <text x={1270} y={800} textAnchor="middle" fontFamily={SANS} fontWeight={700} fontSize={30} fill={DIM}>工资</text>
+            <text x={1430} y={800} textAnchor="middle" fontFamily={SANS} fontWeight={700} fontSize={30} fill={DIM}>工时</text>
+          </>;
+        })()}
+      </svg>
+    </Dark>
+  );
+};
+const Forms: React.FC<{ t: number }> = ({ t }) => (
+  <Dark>
+    {[0, 1, 2].map((i) => {
+      const k = easeOut(prog(t, 0.1 + i * 0.35, 0.55 + i * 0.35));
+      return (
+        <div key={i} style={{ position: 'absolute', left: 600 + i * 230, top: 230 + i * 30, width: 420, height: 520, borderRadius: 12, background: i === 2 ? '#f6f1e6' : '#d8d2c4',
+          transform: `translateX(${lerp(500, 0, k)}px) rotate(${lerp(12, -6 + i * 5, k)}deg)`, opacity: k, boxShadow: '0 16px 50px rgba(0,0,0,0.6)', padding: '30px 34px', fontFamily: SANS, color: '#1b1b20' }}>
+          <div style={{ fontSize: 30, fontWeight: 900 }}>英国税表</div>
+          <div style={{ fontFamily: MONO, fontSize: 26, marginTop: 6, color: '#7a2a20' }}>税改 {['①', '②', '③'][i]} · 198X</div>
+          {Array.from({ length: 7 }, (_, n) => <div key={n} style={{ height: 14, background: '#1b1b20', opacity: 0.12, margin: '22px 0', width: `${60 + 35 * rnd(n, i)}%` }} />)}
+        </div>
+      );
+    })}
+    <div style={{ position: 'absolute', left: 260, top: 420, fontFamily: SANS, fontWeight: 900, fontSize: 40, color: INK, lineHeight: 1.5, opacity: easeOut(prog(t, 1.2, 1.6)) }}>改革前<br /><span style={{ color: GOLD }}>→</span> 改革后<br /><span style={{ fontSize: 28, color: DIM }}>同一批人，怎么变？</span></div>
+  </Dark>
+);
+const Report: React.FC<{ t: number }> = ({ t }) => {
+  const k = prog(t, 0, 0.55), y = -260 * (1 - easeOut(k)) + 18 * Math.sin(Math.PI * clamp((t - 0.55) / 0.25)) * (t > 0.55 && t < 0.8 ? 1 : 0);
+  return (
+    <Dark warm>
+      <svg width={1920} height={1080} style={{ position: 'absolute', inset: 0 }}>
+        <polygon points="700,700 1220,700 1260,760 740,760" fill="#1c140c" />
+        <g transform={`translate(0 ${y})`}>
+          <rect x={720} y={420} width={480} height={280} fill="#2b4a6e" />
+          <rect x={720} y={420} width={480} height={34} fill="#203a58" />
+          {Array.from({ length: 9 }, (_, i) => <line key={i} x1={1200} y1={430 + i * 30} x2={1240} y2={440 + i * 30} stroke="#e8e0cc" strokeWidth={6} />)}
+          <polygon points="1200,420 1240,450 1240,730 1200,700" fill="#e8e0cc" />
+          <text x={960} y={540} textAnchor="middle" fontFamily={SANS} fontWeight={900} fontSize={44} fill="#f1ece2">米尔利斯税制评论</text>
+          <text x={960} y={598} textAnchor="middle" fontFamily={MONO} fontWeight={700} fontSize={26} fill={GOLD} letterSpacing="0.15em">Mirrlees Review · 2011</text>
+        </g>
+      </svg>
+    </Dark>
+  );
+};
+
+/* ---------------------------------------------------------------- the cars */
+const Cars: React.FC<{ T: number }> = ({ T }) => {
+  const floor = 700, xs = [300, 640, 960, 1280, 1620], Lc = 270;
+  const tagO = easeOut(prog(T, L.car + 0.3, L.car + 0.6)), buyers = easeOut(prog(T, L.car + 0.8, L.car + 1.3));
+  const draw = easeInOut(prog(T, L.old - 0.05, L.old + 0.9));
+  const mix = easeInOut(prog(T, L.blp + 0.2, L.blp + 1.4)); // 0 = old model (even), 1 = BLP (to the most similar)
+  const merge = easeOut(prog(T, L.merge, L.merge + 0.6));
+  const priceUp = easeOut(prog(T, L.merge + 0.9, L.merge + 1.3));
+  return (
+    <AbsoluteFill style={{ background: '#05060c' }}>
+      <Hall floorY={floor} spots={[{ x: 300, w: 230, a: 0.8, warm: true }, { x: 640, w: 230, a: 0.4 + 0.4 * mix, warm: true }, { x: 960, w: 200, a: 0.35 }, { x: 1280, w: 200, a: 0.3 }, { x: 1620, w: 200, a: 0.25 }]} />
+      <svg width={1920} height={1080} style={{ position: 'absolute', inset: 0 }}>
+        {Array.from({ length: 22 }, (_, i) => { const u = i / 21; return <line key={i} x1={960 + (u - 0.5) * 2200} y1={floor} x2={960 + (u - 0.5) * 5200} y2={1080} stroke="#fff" strokeOpacity={0.035} strokeWidth={2} />; })}
+        {Array.from({ length: 36 }, (_, i) => <circle key={i} cx={300 + (rnd(i) - 0.5) * 210 + 4 * Math.sin(T * 1.3 + i)} cy={300 + rnd(i, 1) * 90 + 3 * Math.cos(T * 1.1 + i)} r={7} fill={INK} opacity={0.75 * buyers * (1 - merge)} />)}
+        {CARS.map((c, i) => {
+          if (i === 0 || draw <= 0) return null;
+          const f = lerp(0.42, c.flow, mix), w = 2 + 26 * f, gold = mix > 0.6 && c.flow > 0.9;
+          const d = `M 330 330 C ${430 + i * 60} ${170 - i * 18}, ${xs[i] - 120} ${200 - i * 10}, ${xs[i]} ${floor - Lc * 0.62}`;
+          return <path key={i} d={d} pathLength={1} strokeDasharray="1 1" strokeDashoffset={1 - draw} fill="none" stroke={gold ? GOLD : '#e9e2d0'} strokeOpacity={(0.3 + 0.7 * f) * (1 - merge)}
+            strokeWidth={w} strokeLinecap="round" style={{ filter: gold ? `drop-shadow(0 0 12px ${GLOW})` : 'none' }} />;
+        })}
+        {CARS.map((c, i) => <g key={i} transform={merge > 0 && i < 2 ? `translate(${(i === 0 ? 1 : -1) * 40 * merge} 0)` : undefined}><Car x={xs[i]} y={floor} L={Lc} k={c.k} col={c.col} id={`fc${i}`} /></g>)}
+        {merge > 0 && <g opacity={merge}>
+          <rect x={160} y={560} width={620} height={170} rx={18} fill="none" stroke={GOLD} strokeWidth={4} strokeDasharray="14 10" />
+        </g>}
+      </svg>
+      <div style={{ position: 'absolute', left: 190, top: 420, padding: '8px 18px', borderRadius: 12, background: 'rgba(14,16,26,0.92)', border: `2px solid ${RED}`, fontFamily: MONO, fontWeight: 700, fontSize: 30, color: INK,
+        opacity: tagO * (1 - merge), transform: `scale(${1 + 0.2 * hit(T, L.car + 0.3, 0.25)})` }}>价格 <span style={{ color: RED }}>↑ 10%</span></div>
+      {CARS.map((c, i) => (
+        <div key={i} style={{ position: 'absolute', left: xs[i] - 150, width: 300, top: floor + 28, textAlign: 'center', fontFamily: SANS, fontWeight: 900, fontSize: 34,
+          color: i === 1 && mix > 0.6 ? GOLD : i === 0 ? RED : 'rgba(243,237,226,0.7)' }}>{i === 0 ? '这辆涨价' : i === 1 && mix > 0.6 ? '最像的轿车' : ['', '轿车', '两厢车', 'SUV', '皮卡'][i]}</div>
+      ))}
+      <div style={{ position: 'absolute', left: 1180, top: 150, padding: '10px 22px', borderRadius: 12, border: `2px solid ${mix > 0.5 ? GOLD : 'rgba(243,237,226,0.4)'}`, fontFamily: SANS, fontWeight: 900, fontSize: 34,
+        color: mix > 0.5 ? GOLD : INK, background: 'rgba(14,16,26,0.9)', opacity: draw * (1 - merge) }}>{mix > 0.5 ? 'BLP（1995）：跑向最像的' : '旧模型：按份额平分'}</div>
+      {merge > 0 && <>
+        <div style={{ position: 'absolute', left: 160, width: 620, top: 160, textAlign: 'center', fontFamily: SANS, fontWeight: 900, fontSize: 40, color: INK, opacity: merge }}>
+          <span style={{ border: '2px solid rgba(243,237,226,0.5)', borderRadius: 12, padding: '8px 18px' }}>甲公司</span>
+          <span style={{ color: GOLD, margin: '0 18px' }}>＋</span>
+          <span style={{ border: '2px solid rgba(243,237,226,0.5)', borderRadius: 12, padding: '8px 18px' }}>乙公司</span>
+        </div>
+        <div style={{ position: 'absolute', left: 300, width: 340, top: 280, textAlign: 'center', padding: '8px 0', borderRadius: 12, background: 'rgba(14,16,26,0.92)', border: `2px solid ${GOLD}`, fontFamily: MONO, fontWeight: 700, fontSize: 30, color: GOLD, opacity: priceUp,
+          transform: `translateY(${lerp(20, 0, priceUp)}px)` }}>合并后：价格 ↑ ？</div>
+      </>}
+    </AbsoluteFill>
+  );
+};
+
+/* ---------------------------------------------------------------- drop, back row, end card */
+const Burst: React.FC<{ T: number }> = ({ T }) => {
+  const k = easeOut(prog(T, DROP, DROP + 0.5)), punch = 1 + 0.06 * hit(T, DROP, 0.25);
+  return (
+    <AbsoluteFill style={{ background: '#05060c' }}>
+      <Hall floorY={900} spots={[{ x: 960, w: 420, a: 1, warm: true }]} />
+      <svg width={1920} height={1080} style={{ position: 'absolute', inset: 0 }}>
+        <g transform={`translate(960 470) scale(${lerp(0.5, 1, k)}) rotate(${(T - DROP) * 3}) translate(-960 -470)`}>
+          {Array.from({ length: 28 }, (_, i) => { const a = (i / 28) * Math.PI * 2; return <line key={i} x1={960 + Math.cos(a) * 330} y1={470 + Math.sin(a) * 210} x2={960 + Math.cos(a) * 980} y2={470 + Math.sin(a) * 640} stroke={GOLD} strokeWidth={3 + 5 * rnd(i)} opacity={(0.12 + 0.25 * rnd(i, 2)) * k} />; })}
+        </g>
+      </svg>
+      <div style={{ position: 'absolute', left: 560, width: 800, top: 260, height: 420, borderRadius: 28, background: 'linear-gradient(180deg, rgba(30,26,18,0.96), rgba(12,10,8,0.96))', border: `4px solid ${GOLD}`, boxShadow: `0 0 ${120 + 100 * hit(T, DROP, 0.5)}px ${GLOW}`,
+        display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: 12, transform: `scale(${lerp(0.7, 1, k) * punch})` }}>
+        <div className="gold" style={{ fontFamily: ZH, fontWeight: 900, fontSize: 120 }}>帕克斯</div>
+        <div style={{ fontFamily: MONO, fontWeight: 700, fontSize: 34, letterSpacing: '0.2em', color: INK }}>ARIEL PAKES</div>
+        <div style={{ fontFamily: SANS, fontWeight: 700, fontSize: 30, color: DIM }}>哈佛大学 · 产业组织</div>
+      </div>
+    </AbsoluteFill>
+  );
+};
+const BackRow: React.FC<{ t: number }> = ({ t }) => (
+  <AbsoluteFill>
+    <Podium lit={[0.4, 0.75, 0.4]} sub="" bare />
+    {['迈克尔·伍德福德', '罗伯特·巴罗', '大卫·奥托', '恩斯特·费尔'].map((n, i) => {
+      const k = easeOut(prog(t, 0.3 + i * 0.25, 0.7 + i * 0.25));
+      return <div key={i} style={{ position: 'absolute', left: 150 + i * 440, top: 110, width: 300, height: 92, borderRadius: 14, border: '2px dashed rgba(243,237,226,0.3)', background: 'rgba(12,14,24,0.85)',
+        display: 'flex', alignItems: 'center', justifyContent: 'center', fontFamily: ZH, fontWeight: 900, fontSize: 34, color: 'rgba(243,237,226,0.6)', opacity: k, transform: `translateY(${lerp(-20, 0, k)}px)` }}>{n}</div>;
+    })}
+  </AbsoluteFill>
+);
+const EndCard: React.FC<{ t: number }> = ({ t }) => {
+  const ring = easeInOut(prog(t, 0, 0.8)), f = (a: number) => easeOut(prog(t, a, a + 0.4));
+  return (
+    <AbsoluteFill style={{ background: '#05060c' }}>
+      <Hall floorY={900} spots={[{ x: 960, w: 360, a: 0.6, warm: true }]} />
+      <svg width={1920} height={1080} style={{ position: 'absolute', inset: 0 }}>
+        <circle cx={960} cy={92} r={46} fill="none" stroke={GOLD} strokeWidth={3} pathLength={1} strokeDasharray="1 1" strokeDashoffset={1 - ring} transform="rotate(-90 960 92)" />
+        <text x={960} y={112} textAnchor="middle" fontFamily={EN} fontStyle="italic" fontWeight={700} fontSize={64} fill={GOLD} opacity={f(0.4)}>J</text>
+        <text x={960} y={164} textAnchor="middle" fontFamily={MONO} fontWeight={700} fontSize={18} letterSpacing="0.5em" fill={GOLD} opacity={0.8 * f(0.6)}>JUNO</text>
+      </svg>
+      <div className="gold" style={{ position: 'absolute', left: 0, right: 0, top: 196, textAlign: 'center', fontFamily: ZH, fontWeight: 900, fontSize: 96, opacity: f(0.5) }}>《谁会拿诺奖》</div>
+      <div style={{ position: 'absolute', left: 0, right: 0, top: 316, display: 'flex', justifyContent: 'center', opacity: f(0.8) }}><MotifPodium s={0.9} /></div>
+      <div style={{ position: 'absolute', left: 0, right: 0, top: 400, display: 'flex', justifyContent: 'center', gap: 28, opacity: f(1.0) }}>
+        {[['苏珊·阿西', BRONZE], ['理查德·布伦德尔', SILVER], ['阿里尔·帕克斯', GOLD]].map(([n, c], i) => (
+          <div key={i} style={{ padding: '14px 30px', borderRadius: 14, border: `2px solid ${c}`, fontFamily: ZH, fontWeight: 900, fontSize: 38, color: c }}>{n}</div>
+        ))}
+        <div style={{ padding: '14px 30px', borderRadius: 14, border: '2px dashed rgba(243,237,226,0.4)', fontFamily: ZH, fontWeight: 900, fontSize: 38, color: 'rgba(243,237,226,0.6)' }}>其他人？</div>
+      </div>
+      <div style={{ position: 'absolute', left: 0, right: 0, top: 530, textAlign: 'center', fontFamily: SANS, fontWeight: 900, fontSize: 64, color: INK, opacity: f(1.3) }}>你觉得是谁？</div>
+      <div style={{ position: 'absolute', left: 0, right: 0, top: 622, textAlign: 'center', fontFamily: SANS, fontWeight: 700, fontSize: 36, color: DIM, opacity: f(1.5) }}>评论区说说你的理由 · 周一 11:45 揭晓</div>
+      <div style={{ position: 'absolute', left: 0, right: 0, top: 708, display: 'flex', justifyContent: 'center', opacity: f(1.8) }}>
+        <div style={{ padding: '12px 36px', borderRadius: 40, border: `2px solid ${GOLD}`, fontFamily: SANS, fontWeight: 700, fontSize: 32, color: GOLD }}>{JUNO.follow}</div>
+      </div>
+      <div style={{ position: 'absolute', left: 0, right: 0, top: 812, textAlign: 'center', fontFamily: SANS, fontSize: 20, color: 'rgba(243,237,226,0.4)', opacity: f(2.0) }}>
+        资料：Athey & Ellison 2011 QJE · Blundell, Duncan & Meghir 1998 Econometrica · Berry, Levinsohn & Pakes 1995 Econometrica · Stanford GSB · IFS · nobelprize.org
+      </div>
+    </AbsoluteFill>
+  );
+};
+
+/* ---------------------------------------------------------------- the edit */
+const lit = (T: number, from: [number, number, number], to: [number, number, number], a: number, d = 0.5): [number, number, number] => {
+  const k = easeInOut(prog(T, a, a + d)); return [0, 1, 2].map((i) => lerp(from[i], to[i], k)) as [number, number, number];
+};
+const PodiumShot: React.FC<{ T: number }> = ({ T }) => {
+  const AT: [number, number, number] = [0.3, 0.3, 1], BL: [number, number, number] = [1, 0.3, 0.3], PK: [number, number, number] = [0.3, 1, 0.3], ALL: [number, number, number] = [0.45, 0.45, 0.45];
+  let l: [number, number, number] = ALL, dim = 0, zoom = 1;
+  let years: { seat: number; y: string; good?: boolean; o?: number }[] = [];
+  if (T < L.blundell - 0.2) l = lit(T, ALL, AT, TITLE_OUT - 0.1);
+  else if (T < L.pakes - 0.2) l = lit(T, ALL, BL, L.blundell - 0.2);
+  else if (T < L.who - 0.2) l = lit(T, ALL, PK, L.pakes - 0.2);
+  else {
+    l = lit(T, PK, [0.3, 0.6, 0.3], L.years); dim = (1 - prog(T, L.years, L.years + 0.5)) * 0.6 * easeOut(prog(T, L.who - 0.2, L.who + 0.3));
+    const y1 = nextBeat(L.years + 0.6), y2 = nextBeat(L.years + 2.0), y3 = nextBeat(L.years + 3.2), y4 = nextBeat(L.y14 + 1.6);
+    years = [{ seat: 2, y: '2020', o: prog(T, y1, y1 + 0.15) }, { seat: 0, y: '2021', o: prog(T, y2, y2 + 0.15) }, { seat: 0, y: '2023', o: prog(T, y3, y3 + 0.15) }];
+    if (T >= L.y14) { l = lit(T, [0.3, 0.6, 0.3], [0.2, 1, 0.2], L.y14); years.push({ seat: 1, y: '2014', good: true, o: prog(T, y4, y4 + 0.15) }); }
+    zoom = 1 + 0.35 * easeInOut(prog(T, L.guess, DROP));
+  }
+  return <Podium lit={l} dimAll={dim} years={years.filter((y) => (y.o ?? 1) > 0)} zoom={zoom} sub="" bare />;
+};
+
+type Shot = { a: number; z: number; el: (T: number) => React.ReactNode };
+const SHOTS: Shot[] = [
+  { a: 0, z: TITLE - 0.2, el: (T) => <Envelope T={T} /> },
+  { a: TITLE_OUT - 0.5, z: L.clark - 0.15, el: (T) => <PodiumShot T={T} /> },
+  { a: L.clark - 0.15, z: L.auction - 0.15, el: (T) => <Medal t={T - (L.clark - 0.15)} /> },
+  { a: L.auction - 0.15, z: L.tower - 0.15, el: (T) => <Auction t={T - (L.auction - 0.15)} ruleO={easeOut(prog(T, L.rule, L.rule + 0.35))} /> },
+  { a: L.tower - 0.15, z: L.blundell - 0.15, el: (T) => <Tower t={T - (L.tower - 0.15)} /> },
+  { a: L.blundell - 0.15, z: L.tax - 0.15, el: (T) => <PodiumShot T={T} /> },
+  { a: L.tax - 0.15, z: L.forms - 0.15, el: (T) => <Payslip t={T - (L.tax - 0.15)} mode="tax" /> },
+  { a: L.forms - 0.15, z: L.hours - 0.15, el: (T) => <Forms t={T - (L.forms - 0.15)} /> },
+  { a: L.hours - 0.15, z: L.report - 0.15, el: (T) => <Payslip t={T - (L.hours - 0.15)} mode="hours" /> },
+  { a: L.report - 0.15, z: L.pakes - 0.15, el: (T) => <Report t={T - (L.report - 0.15)} /> },
+  { a: L.pakes - 0.15, z: L.car - 0.15, el: (T) => <PodiumShot T={T} /> },
+  { a: L.car - 0.15, z: L.who - 0.15, el: (T) => <Cars T={T} /> },
+  { a: L.who - 0.15, z: DROP, el: (T) => <PodiumShot T={T} /> },
+  { a: DROP, z: L.maybe - 0.1, el: (T) => <Burst T={T} /> },
+  { a: L.maybe - 0.1, z: END_CARD, el: (T) => <BackRow t={T - (L.maybe - 0.1)} /> },
+  { a: END_CARD, z: FILM_END + 1, el: (T) => <EndCard t={T - END_CARD} /> },
+];
+
+export const Film: React.FC = () => {
+  const T = useCurrentFrame() / FPS;
+  const markO = (1 - vis(T, TITLE - 0.25, TITLE_OUT, 0.15, 0.3)) * (1 - prog(T, END_CARD, END_CARD + 0.4));
+  return (
+    <AbsoluteFill style={{ background: '#05060c' }}>
+      <Fonts />
+      {SHOTS.map((s, i) => {
+        if (T < s.a - (i ? 0.3 : 0) || T >= s.z) return null;
+        const o = i === 0 || s.a === DROP ? 1 : easeInOut(prog(T, s.a - 0.3, s.a));
+        return <AbsoluteFill key={i} style={{ opacity: o }}>{s.el(T)}</AbsoluteFill>;
+      })}
+      <TitleCard T={T} />
+      <AbsoluteFill style={{ background: 'radial-gradient(ellipse 85% 80% at 50% 45%, rgba(0,0,0,0) 55%, rgba(0,0,0,0.7) 100%)' }} />
+      <AbsoluteFill style={{ opacity: 0.05 }}><Img src={staticFile('grain0.png')} style={{ width: '100%', height: '100%' }} /></AbsoluteFill>
+      <CornerMark o={markO} />
+      <Subtitles T={T} />
     </AbsoluteFill>
   );
 };
