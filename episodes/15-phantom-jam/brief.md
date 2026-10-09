@@ -22,3 +22,8 @@ Owner sent a reference (Vibe知识大赏《再见》, 46万赞) and asked for it
 - numbered chapters (00 · SEE YOU AROUND) shown inside the scene; HUD (legend + counters top-right, progress timeline top); paper data cards inside the scene; closed loop (last chapter returns to the first shot).
 Plan: borrow the format, not their content (no line=life metaphor, no their station names). Road = the lines, your car = black lane; chapters 00 堵了 → 01 幽灵堵车 (ring) → 02 往后跑 (ring unrolls, night motorway light trails) → 03 临界点 → 04 一辆车 → 05 你 → 06 loop.
 Build: three.js 0.169 (build3d/one.html), swiftshader WebGL in headless Chromium, ~0.5 s/frame.
+
+## 360 / 全景 idea (owner, 2026-10-09 23:10)
+Owner: make it a VR/全景 video the viewer explores by turning the phone. Built a 16 s test (build3d/pano.html): CubeCamera 6×1536 → equirect 3840×1920 shader, ~6 s/frame on swiftshader; spherical metadata injected with google/spatial-media (`spatialmedia -i`). Viewer stands at the centre of the 230 m ring, cars circle round them, the jam drifts backwards so they must turn to follow it.
+Open question: does the Douyin phone feed play it as interactive 360 (gyro/drag)? Only third-party posts claim so; official info found is the PICO "VR全景创作计划" (uploads via 抖音创作服务平台, distributed to PICO). Owner to test with a private upload.
+Design rules if we go 360: camera only translates (viewer owns rotation), slow moves; the default front view must work as a normal film; text repeated at 0/120/240° or anchored in front with hints; ≥4K equirect, big text.
