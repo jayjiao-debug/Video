@@ -1,0 +1,21 @@
+name: deliver-jam360
+on:
+  push:
+    branches: [deliver-jam360]
+jobs:
+  package:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Join parts and check
+        run: |
+          mkdir -p out
+          cat parts/a.mov.part* > "out/幽灵堵车_360_4K_全景声.mov"
+          cat parts/b.mp4.part* > "out/幽灵堵车_360_4K_立体声.mp4"
+          cd out && md5sum -c ../parts/md5.txt && ls -la
+      - uses: actions/upload-artifact@v4
+        with:
+          name: 幽灵堵车_360_4K_测试
+          path: out/
+          compression-level: 0
+          retention-days: 30
