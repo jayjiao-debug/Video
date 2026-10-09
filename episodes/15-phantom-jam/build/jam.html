@@ -1,0 +1,122 @@
+<!doctype html><html><head><meta charset="utf-8"><style>
+html,body{margin:0;background:#F3EFE6;overflow:hidden}
+#c{position:absolute;left:0;top:0;width:1920px;height:1080px}
+#sub{position:absolute;left:0;right:0;bottom:70px;text-align:center;font-size:64px;line-height:1.2;font-family:"Noto Sans CJK SC","Noto Sans SC",sans-serif;font-weight:700;color:#fff;letter-spacing:1px}
+#sub .pill{display:inline-block;padding:10px 34px 14px;border-radius:18px;background:rgba(6,8,13,.80);box-shadow:0 6px 24px rgba(0,0,0,.25);text-shadow:0 2px 6px rgba(0,0,0,.9)}
+#sub b{color:#f6cf78;text-shadow:0 0 18px rgba(246,207,120,.55),0 3px 14px #000;font-weight:700}
+</style></head><body><canvas id="c" width="1920" height="1080"></canvas><div id="sub"></div>
+<script src="sim.js"></script><script>
+const cv=document.getElementById('c'),g=cv.getContext('2d');
+const F='"Noto Sans CJK SC","Noto Sans SC",sans-serif';
+const BG='#F3EFE6',INK='#2B2B2B',WATER='#D3E4EC';
+const C={red:'#E5493A',blue:'#2F73C8',yel:'#F4B42C',grn:'#3FA35B',pur:'#8E5BB5'};
+const STOP='#E5493A';
+const cl=(x,a=0,b=1)=>Math.max(a,Math.min(b,x)),pr=(t,a,b)=>cl((t-a)/(b-a)),eo=x=>1-Math.pow(1-x,3),eio=x=>x<.5?4*x*x*x:1-Math.pow(-2*x+2,3)/2;
+const lerp=(a,b,f)=>a+(b-a)*f;
+function mix(h1,h2,f){const p=h=>[1,3,5].map(i=>parseInt(h.slice(i,i+2),16));const a=p(h1),b=p(h2);return 'rgb('+a.map((v,i)=>Math.round(lerp(v,b[i],f))).join(',')+')';}
+function shade(h,k){const p=[1,3,5].map(i=>parseInt(h.slice(i,i+2),16));return 'rgb('+p.map(v=>Math.round(v*k)).join(',')+')';}
+const LINES=[
+[0,2.8,'堵了[40分钟]'],[2.8,5.0,'到前面一看——'],[5.0,7.6,'[什么都没有]'],[7.6,10.0,'然后，突然就通了'],[10.0,12.4,'那刚才，是谁堵的？'],
+[15.6,18.2,'2008年，日本'],[18.2,21.2,'科学家做了个很简单的实验'],[21.2,24.0,'一条[230米]的圆形跑道'],[24.0,26.8,'[22辆车]，绕着圈开'],
+[26.8,29.6,'跟着前车，[安全地开]'],[29.6,32.2,'一开始，一切正常'],[32.2,34.8,'有一辆车，[慢了一点点]'],[34.8,37.4,'后车刹得[更重一点]'],
+[37.4,40.0,'再后面的，[直接停了]'],[40.0,43.0,'一个堵车，凭空出现'],[43.0,46.4,'堵点，却在[往后跑]']];
+function subtitle(t){const l=LINES.find(l=>t>=l[0]&&t<l[1]);document.getElementById('sub').innerHTML=l?'<span class="pill">'+l[2].replace(/\[(.+?)\]/g,'<b>$1</b>')+'</span>':'';}
+function rr(x,y,w,h,r){g.beginPath();g.moveTo(x+r,y);g.arcTo(x+w,y,x+w,y+h,r);g.arcTo(x+w,y+h,x,y+h,r);g.arcTo(x,y+h,x,y,r);g.arcTo(x,y,x+w,y,r);g.closePath();}
+function car(x,y,ang,col,s=1,al=1,ghost=false){g.save();g.globalAlpha*=al;g.translate(x,y);g.rotate(ang);g.scale(s,s);rr(-19,-11,38,22,6);
+ if(ghost){g.fillStyle='rgba(255,255,255,.9)';g.fill();g.setLineDash([6,5]);g.lineWidth=3;g.strokeStyle=INK;g.stroke();}else{g.fillStyle=col;g.fill();}
+ g.restore();}
+function station(x,y,shape,s=1,al=1){g.save();g.globalAlpha*=al;g.translate(x,y);g.scale(s,s);g.fillStyle='#fff';g.strokeStyle=INK;g.lineWidth=6;g.beginPath();
+ if(shape==='c')g.arc(0,0,17,0,7);else if(shape==='s')g.rect(-16,-16,32,32);else{g.moveTo(0,-20);g.lineTo(19,14);g.lineTo(-19,14);g.closePath();}
+ g.fill();g.stroke();g.restore();}
+function poly(pts,col,w,al=1,frac=1){g.save();g.globalAlpha*=al;g.strokeStyle=col;g.lineWidth=w;g.lineCap='round';g.lineJoin='round';g.beginPath();
+ // draw first `frac` of length
+ let L=0;const seg=[];for(let i=1;i<pts.length;i++){const d=Math.hypot(pts[i][0]-pts[i-1][0],pts[i][1]-pts[i-1][1]);seg.push(d);L+=d;}
+ let rem=L*frac;g.moveTo(pts[0][0],pts[0][1]);for(let i=1;i<pts.length&&rem>0;i++){const d=seg[i-1],f=Math.min(1,rem/d);g.lineTo(lerp(pts[i-1][0],pts[i][0],f),lerp(pts[i-1][1],pts[i][1],f));rem-=d;}
+ g.stroke();g.restore();}
+function label(x,y,txt,size=30,al=1,col=INK,align='center',wt=700){g.save();g.globalAlpha*=al;g.font=`${wt} ${size}px ${F}`;g.fillStyle=col;g.textAlign=align;g.textBaseline='middle';g.fillText(txt,x,y);g.restore();}
+function tag(x,y,txt,al=1,size=30){g.save();g.globalAlpha*=al;g.font=`700 ${size}px ${F}`;const w=g.measureText(txt).width+44,h=size+26;rr(x-w/2,y-h/2,w,h,h/2);g.fillStyle='#fff';g.fill();g.lineWidth=4;g.strokeStyle=INK;g.stroke();g.fillStyle=INK;g.textAlign='center';g.textBaseline='middle';g.fillText(txt,x,y+1);g.restore();return w;}
+
+/* ---------- shot A: the jammed road (world coords, camera pans in x) ---------- */
+const ROAD=[[-900,640],[1250,640],[1450,440],[3300,440]];
+function roadPt(s){let acc=0;for(let i=1;i<ROAD.length;i++){const a=ROAD[i-1],b=ROAD[i],d=Math.hypot(b[0]-a[0],b[1]-a[1]);if(s<=acc+d||i===ROAD.length-1){const f=(s-acc)/d;return [lerp(a[0],b[0],f),lerp(a[1],b[1],f),Math.atan2(b[1]-a[1],b[0]-a[0])];}acc+=d;}}
+const ROADLEN=(()=>{let L=0;for(let i=1;i<ROAD.length;i++)L+=Math.hypot(ROAD[i][0]-ROAD[i-1][0],ROAD[i][1]-ROAD[i-1][1]);return L;})();
+const NCARS=60,GAP=46,FRONT=2850; // arc-length position of the first queued car
+const DECO=[ // decorative city lines (world coords)
+ {c:C.blue,p:[[200,-100],[200,300],[520,620],[520,1300]]},
+ {c:C.red,p:[[-900,200],[700,200],[1000,500],[1000,1300]]},
+ {c:C.grn,p:[[1800,-100],[1800,250],[2300,750],[3400,750]]},
+ {c:C.pur,p:[[2600,-100],[2600,1300]]}];
+const STNS=[[200,140,'t'],[520,860,'c'],[-300,200,'s'],[700,200,'c'],[1000,980,'t'],[1800,180,'c'],[2700,750,'t'],[2600,200,'s'],[2600,1000,'c'],[-600,640,'c'],[3150,440,'s']];
+function shotA(T,alpha){
+ const cam=lerp(0,1450,eio(pr(T,2.9,5.0)));g.save();g.globalAlpha=alpha;g.translate(-cam,0);
+ // river
+ g.save();g.fillStyle=WATER;g.beginPath();g.moveTo(-1000,900);g.lineTo(900,900);g.lineTo(1300,1300);g.lineTo(-1000,1300);g.closePath();g.fill();
+ g.beginPath();g.moveTo(2100,-50);g.lineTo(2400,250);g.lineTo(3500,250);g.lineTo(3500,-50);g.closePath();g.fill();g.restore();
+ for(const d of DECO)poly(d.p,d.c,16,.9);
+ poly(ROAD,C.yel,18);
+ for(const s of STNS)station(s[0],s[1],s[2]);
+ // cars: queued & stopped until 7.6, then a start-up wave travels back up the queue
+ for(let i=0;i<NCARS;i++){const s0=FRONT-i*GAP;const tStart=7.7+i*0.12;const dt=Math.max(0,T-tStart);const acc=260;let s=s0+Math.min(0.5*acc*dt*dt, 0.5*acc*1.6*1.6+acc*1.6*(dt-1.6)) ;
+  if(dt<1.6)s=s0+0.5*acc*dt*dt;else s=s0+0.5*acc*1.6*1.6+acc*1.6*(dt-1.6);
+  if(s>ROADLEN-140)continue;const p=roadPt(s);const v=cl(dt/1.2);const col=mix(STOP,'#9C6A00',v);car(p[0],p[1],p[2],col);}
+ // front: nothing there
+ const fa=pr(T,5.0,5.5)*(1-pr(T,7.4,7.9));if(fa>0){const items=['车祸','修路','收费站'];items.forEach((s,k)=>{const x=2300+k*230,y=300,a=fa*pr(T,5.0+k*.25,5.4+k*.25);if(a<=0)return;const w=tag(x,y,s,a,30);
+  const st=pr(T,5.5+k*.3,5.85+k*.3);if(st>0){g.save();g.globalAlpha=a;g.strokeStyle=C.red;g.lineWidth=6;g.lineCap='round';g.beginPath();g.moveTo(x-w/2+8,y);g.lineTo(x-w/2+8+(w-16)*st,y);g.stroke();g.restore();}});}
+ g.restore();
+ // timer pill (screen space)
+ const ta=alpha*(1-pr(T,7.6,8.2));if(ta>0){const sec=Math.min(2400,Math.floor(2392+pr(T,0,2.4)*8));const mm=String(Math.floor(sec/60)).padStart(2,'0'),ss=String(sec%60).padStart(2,'0');
+  g.save();g.globalAlpha=ta;rr(1580,48,280,84,42);g.fillStyle='#fff';g.fill();g.lineWidth=5;g.strokeStyle=INK;g.stroke();
+  g.beginPath();g.arc(1632,90,20,0,7);g.lineWidth=5;g.stroke();g.beginPath();g.moveTo(1632,90);g.lineTo(1632,77);g.moveTo(1632,90);g.lineTo(1642,96);g.stroke();
+  g.font=`700 46px ${F}`;g.fillStyle=sec>=2400?C.red:INK;g.textBaseline='middle';g.fillText(mm+':'+ss,1670,92);g.restore();}
+}
+/* ---------- shot B: title ---------- */
+function shotB(T,alpha){g.save();g.globalAlpha=alpha;
+ poly([[-50,640],[1970,640]],C.yel,18);station(1700,640,'s');station(220,640,'c');
+ const gx=lerp(300,1640,((T-12.4)/6)%1);car(gx,640,0,'',1.7,1,true);
+ const a=eo(pr(T,12.5,13.1));label(960,470,'幽灵堵车',150,a,INK,'center',900);
+ g.fillStyle=INK;g.globalAlpha=alpha*a;g.fillRect(960-260*a,560,520*a,6);
+ g.restore();}
+/* ---------- shot C: the ring experiment ---------- */
+const RING=ringSim({N:22,L:230,T:80,dt:0.02,every:2,kick:{i:0,t0:13.6,t1:15.0,dec:2.6}});
+const CX=960,CY=462,R=340,K=2,SIM0=25.4;
+function simAt(T){const s=Math.max(0,(T-SIM0)*K);const k=s/RING.dt;const i=Math.min(RING.frames.length-2,Math.floor(k)),f=k-i;const A=RING.frames[i],B=RING.frames[i+1];
+ return {x:A.x.map((x,j)=>lerp(x,B.x[j],f)),v:A.v.map((v,j)=>lerp(v,B.v[j],f))};}
+function ringXY(x,off=0){const a=-Math.PI/2+x/230*2*Math.PI;return [CX+(R+off)*Math.cos(a),CY+(R+off)*Math.sin(a),a+Math.PI/2];}
+function gridXY(j){const col=j%11,row=Math.floor(j/11);return [CX-230+col*46,CY-22+row*44,0];}
+function shotC(T,alpha){g.save();g.globalAlpha=alpha;
+ // place tag
+ tag(250,110,'2008 · 日本',pr(T,15.6,16.1),34);
+ // ring drawing
+ const dr=eio(pr(T,21.2,22.4));if(dr>0){g.save();g.strokeStyle=C.blue;g.lineWidth=16;g.lineCap='round';g.beginPath();g.arc(CX,CY,R,-Math.PI/2,-Math.PI/2+dr*2*Math.PI);g.stroke();g.restore();}
+ // 230 m label
+ const la=pr(T,22.2,22.7);if(la>0){g.save();g.globalAlpha*=la;g.strokeStyle=INK;g.lineWidth=3;g.setLineDash([2,9]);g.lineCap='round';g.beginPath();g.arc(CX,CY,R+56,-0.55,0.55);g.stroke();g.restore();
+  tag(CX+R+150,CY,'周长 230 米',la,30);}
+ const st=simAt(T);
+ const jamIdx=[];for(let j=0;j<22;j++)if(st.v[j]<1.4)jamIdx.push(j);
+ for(let j=0;j<22;j++){let p;const ap=pr(T,18.4+j*0.06,18.7+j*0.06);if(ap<=0)continue;
+  const mv=eio(pr(T,24.0+j*0.04,25.2+j*0.04));const ga=gridXY(j);const rg=ringXY(st.x[j]);
+  p=[lerp(ga[0],rg[0],mv),lerp(ga[1],rg[1],mv),lerp(0,rg[2],mv)];
+  const vv=st.v[j]*3.6;const col=mix(STOP,'#225390',cl((vv-4)/20));
+  car(p[0],p[1],p[2],col,eo(ap));}
+ // highlights: the car that slows, then the one behind
+ const hl=(j,a,b)=>{const h=pr(T,a,a+.3)*(1-pr(T,b-.3,b));if(h<=0)return;const p=ringXY(st.x[j]);g.save();g.globalAlpha*=h;g.strokeStyle=INK;g.lineWidth=4;g.beginPath();g.arc(p[0],p[1],34,0,7);g.stroke();g.restore();};
+ hl(0,32.2,35.0);hl(21,34.8,37.6);
+ // counters
+ label(250,200,'22 辆',40,pr(T,24.0,24.5),INK,'center',900);
+ const sa=pr(T,29.6,30.1)*(1-pr(T,32.0,32.4));if(sa>0)tag(CX,CY,'≈ 30 km/h',sa,34);
+ // backward-moving jam arrow
+ const ba=pr(T,43.0,43.5);if(ba>0&&jamIdx.length){let sx=0,sy=0;for(const j of jamIdx){const a=st.x[j]/230*2*Math.PI;sx+=Math.cos(a);sy+=Math.sin(a);}const m=Math.atan2(sy,sx)/(2*Math.PI)*230;
+  const a0=-Math.PI/2+m/230*2*Math.PI;g.save();g.globalAlpha*=ba;g.strokeStyle=STOP;g.lineWidth=7;g.lineCap='round';g.beginPath();g.arc(CX,CY,R-62,a0+0.25,a0-0.35,true);g.stroke();
+  const ea=a0-0.35,ex=CX+(R-62)*Math.cos(ea),ey=CY+(R-62)*Math.sin(ea),tx=Math.sin(ea),ty=-Math.cos(ea);g.fillStyle=STOP;g.beginPath();g.moveTo(ex+tx*18,ey+ty*18);g.lineTo(ex-tx*4+Math.cos(ea)*13,ey-ty*4+Math.sin(ea)*13);g.lineTo(ex-tx*4-Math.cos(ea)*13,ey-ty*4-Math.sin(ea)*13);g.closePath();g.fill();g.restore();
+  const lx=CX+(R-150)*Math.cos(a0),ly=CY+(R-150)*Math.sin(a0);tag(lx,ly,'堵点 ≈20 km/h ←',ba,30);
+  // cars still go forward
+  tag(CX,CY,'车 → 往前开',ba,30);}
+ g.restore();}
+window.renderAt=function(T){g.setTransform(1,0,0,1,0,0);g.fillStyle=BG;g.fillRect(0,0,1920,1080);
+ const aA=1-pr(T,12.2,12.6),aB=pr(T,12.2,12.6)*(1-pr(T,15.0,15.5)),aC=pr(T,15.1,15.6);
+ if(aA>0)shotA(T,aA);if(aB>0)shotB(T,aB);if(aC>0)shotC(T,aC);
+ // corner mark
+ label(1868,1040,'Juno',26,.35,INK,'right',700);
+ subtitle(T);};
+window.READY=true;
+</script></body></html>
