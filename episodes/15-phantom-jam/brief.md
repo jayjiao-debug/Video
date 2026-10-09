@@ -30,3 +30,6 @@ Design rules if we go 360: camera only translates (viewer owns rotation), slow m
 
 ## 3D audio demo (owner, 2026-10-09 23:36)
 build3d/flat.html: flat 16:9, 16.58 s (ends on bar 8 of the Slowed BGM, one-bar cos² fade 14.557→16.58). Binaural sound rendered offline with Web Audio HRTF PannerNodes (OfflineAudioContext at 44.1 kHz, `renderAudio('sfx'|'orbit')`, aud.mjs): each car = speed-scaled tyre roar at its 3D position; each hard brake = a soft hiss at that car, so the braking wave is heard travelling round the listener; listener turns with the camera. A = song untouched + 3D cars (SFX bus 0.6, SFX ducked only where peak > −0.3 dBFS); B = song itself orbiting the head (8D style, period 4 bars) + 3D cars. Sim time ×1.8 (the 360 test used ×3, which the owner felt spun too fast: "疯狂转圈圈").
+
+## 4K 360 + spatial audio test (owner, 2026-10-09 23:47–23:48: "只支持4K", "need to be 3D also" = 3D 环绕声)
+build3d/pano2.html (4096×2048 equirect, cube faces 1600, ~12 s/frame/worker), dump.js → cars.json, foa.py → first-order ambisonics (ambiX ACN/SN3D) for the cars + the untouched song as head-locked stereo (6 ch PCM, `spatialmedia -i -a`), plus a stereo fallback mp4 (front L/R decode, SFX ducked only above −0.3 dBFS). Delivered via deliver-jam360 artifact (run 37997433371).
