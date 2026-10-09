@@ -1,0 +1,100 @@
+<!doctype html><html><head><meta charset="utf-8"><style>
+html,body{margin:0;background:#E9E3D5;overflow:hidden;width:1920px;height:1080px}
+canvas{position:absolute;left:0;top:0}
+#vig{position:absolute;inset:0;pointer-events:none;background:radial-gradient(ellipse at 50% 45%,rgba(0,0,0,0) 55%,rgba(60,45,25,.22) 100%)}
+#sub{position:absolute;left:0;right:0;bottom:70px;text-align:center;font-size:64px;line-height:1.2;font-family:"Noto Sans CJK SC",sans-serif;font-weight:700;color:#fff;letter-spacing:1px}
+#sub .pill{display:inline-block;padding:10px 34px 14px;border-radius:18px;background:rgba(6,8,13,.80);box-shadow:0 6px 24px rgba(0,0,0,.25);text-shadow:0 2px 6px rgba(0,0,0,.9)}
+#sub b{color:#f6cf78;text-shadow:0 0 18px rgba(246,207,120,.55),0 3px 14px #000;font-weight:700}
+#hp{position:absolute;right:64px;top:48px;font-family:"Noto Sans CJK SC",sans-serif;background:rgba(246,242,233,.94);border:1.5px solid #3a342b;padding:12px 20px;display:flex;align-items:center;gap:14px;color:#1f1b16}
+#hp .t{font-size:24px;font-weight:900}#hp .s{font-size:13px;letter-spacing:3px;color:#8a8070;font-weight:700}
+#chap{position:absolute;left:64px;top:44px;font-family:"Noto Sans CJK SC",sans-serif;color:#1f1b16}
+#chap .k{font-size:15px;letter-spacing:4px;color:#8a8070;font-weight:700}#chap .n{font-size:46px;font-weight:900;line-height:1;margin-top:6px;display:flex;align-items:baseline;gap:12px}#chap .n span{font-size:26px}
+#chap .bar{width:300px;height:3px;background:#1f1b16;margin-top:12px}
+#dir{position:absolute;left:50%;top:150px;transform:translateX(-50%);font-family:"Noto Sans CJK SC",sans-serif;font-size:30px;font-weight:900;color:#C8473A;opacity:0}
+</style></head><body>
+<div id="vig"></div>
+<div id="chap"><div class="k">01 · PHANTOM JAM</div><div class="n">01<span>一个圈</span></div><div class="bar"></div></div>
+<div id="hp"><svg width="34" height="30" viewBox="0 0 34 30"><path d="M4 20v-5a13 13 0 0 1 26 0v5" fill="none" stroke="#1f1b16" stroke-width="3"/><rect x="2" y="17" width="7" height="11" rx="2" fill="#1f1b16"/><rect x="25" y="17" width="7" height="11" rx="2" fill="#1f1b16"/></svg><div><div class="t">戴上耳机</div><div class="s">3D SOUND</div></div></div>
+<div id="dir">◀ 堵点在这边</div>
+<div id="sub"></div>
+<script type="importmap">{"imports":{"three":"./node_modules/three/build/three.module.js","three/addons/":"./node_modules/three/examples/jsm/"}}</script>
+<script src="sim.js"></script>
+<script type="module">
+import * as THREE from 'three';
+import { RoundedBoxGeometry } from 'three/addons/geometries/RoundedBoxGeometry.js';
+const W=1920,H=1080,DUR=16.58,K=1.8,KICK=6.4*K;
+const R=new THREE.WebGLRenderer({antialias:true,preserveDrawingBuffer:true});R.setPixelRatio(1);R.setSize(W,H);R.outputColorSpace=THREE.SRGBColorSpace;document.body.prepend(R.domElement);
+const S=new THREE.Scene();S.background=new THREE.Color(0xE9E3D5);S.fog=new THREE.Fog(0xE9E3D5,60,240);
+S.add(new THREE.HemisphereLight(0xffffff,0xd9cfbf,1.6));const dl=new THREE.DirectionalLight(0xffffff,1.3);dl.position.set(-30,60,20);S.add(dl);
+const cl=(x,a=0,b=1)=>Math.max(a,Math.min(b,x)),pr=(t,a,b)=>cl((t-a)/(b-a)),eio=x=>x<.5?4*x*x*x:1-Math.pow(-2*x+2,3)/2;
+{const c=document.createElement('canvas');c.width=c.height=512;const g=c.getContext('2d');g.fillStyle='#E9E3D5';g.fillRect(0,0,512,512);
+ for(let i=0;i<2600;i++){g.fillStyle=`rgba(120,100,70,${Math.random()*0.035})`;g.fillRect(Math.random()*512,Math.random()*512,2,2);}
+ g.strokeStyle='rgba(120,105,80,.18)';g.lineWidth=1;for(let i=0;i<=8;i++){g.beginPath();g.moveTo(i*64,0);g.lineTo(i*64,512);g.stroke();g.beginPath();g.moveTo(0,i*64);g.lineTo(512,i*64);g.stroke();}
+ g.strokeStyle='rgba(110,95,70,.36)';g.lineWidth=2.5;g.strokeRect(0,0,512,512);
+ const t=new THREE.CanvasTexture(c);t.wrapS=t.wrapT=THREE.RepeatWrapping;t.repeat.set(50,50);t.offset.set(0.5,0.5);t.anisotropy=8;t.colorSpace=THREE.SRGBColorSpace;
+ const m=new THREE.Mesh(new THREE.PlaneGeometry(1000,1000),new THREE.MeshBasicMaterial({map:t}));m.rotation.x=-Math.PI/2;S.add(m);}
+const basic=c=>new THREE.MeshBasicMaterial({color:c});const RAD=230/(2*Math.PI);
+{const r=new THREE.Mesh(new THREE.RingGeometry(RAD-0.7,RAD+0.7,256),basic(0x2F73C8));r.rotation.x=-Math.PI/2;r.position.y=0.05;S.add(r);
+ const s=new THREE.Mesh(new THREE.RingGeometry(RAD-0.5,RAD+1.1,256),new THREE.MeshBasicMaterial({color:0x3a2c18,transparent:true,opacity:.12,depthWrite:false}));s.rotation.x=-Math.PI/2;s.position.y=0.02;S.add(s);}
+function arcLine(r,a0,a1,col){const m=new THREE.Mesh(new THREE.RingGeometry(r-0.6,r+0.6,128,1,a0,a1-a0),basic(col));m.rotation.x=-Math.PI/2;m.position.y=0.04;S.add(m);}
+arcLine(70,0.3,1.4,0x7FA38A);arcLine(80,2.2,3.6,0xD2A23A);arcLine(64,4.1,5.2,0x9A86B8);arcLine(90,5.4,6.1,0xC8473A);
+// you: a small marker at the centre
+{const d=new THREE.Mesh(new THREE.CircleGeometry(1.1,40),basic(0x1f1d1a));d.rotation.x=-Math.PI/2;d.position.y=0.06;S.add(d);const w=new THREE.Mesh(new THREE.CircleGeometry(0.6,40),basic(0xEDEBE6));w.rotation.x=-Math.PI/2;w.position.y=0.07;S.add(w);}
+const sim=ringSim({N:22,L:230,T:40,dt:0.02,every:1,kick:{i:0,t0:KICK,t1:KICK+2.0,dec:3.5}});
+const OFF=-(sim.frames[Math.round(KICK/sim.dt)].x[0]/230)*2*Math.PI; // car 0 is straight ahead when it brakes
+const geo=new RoundedBoxGeometry(3.0,1.6,5.8,3,0.55);const BLUE=new THREE.Color(0x225390),RED=new THREE.Color(0xC8473A);
+const cars=[];for(let j=0;j<22;j++){const m=new THREE.Mesh(geo,new THREE.MeshLambertMaterial({color:BLUE.clone()}));S.add(m);cars.push(m);}
+function state(T){const s=Math.max(0,T*K);const k=Math.min(sim.frames.length-2,s/sim.dt);const i=Math.floor(k),f=k-i;const A=sim.frames[i],B=sim.frames[i+1];
+ const x=[],v=[];for(let j=0;j<22;j++){x.push(A.x[j]+(B.x[j]-A.x[j])*f);v.push(A.v[j]+(B.v[j]-A.v[j])*f);}return {x,v};}
+const ang=x=>x/230*2*Math.PI+OFF;
+function jamAngle(T){const st=state(T);let sx=0,sy=0,n=0;for(let j=0;j<22;j++){const w=cl((3-st.v[j])/3);if(w<=0)continue;const a=ang(st.x[j]);sx+=Math.sin(a)*w;sy+=Math.cos(a)*w;n+=w;}return n>0.2?Math.atan2(sx,sy):null;}
+// camera yaw: straight ahead, then (from 10.6 s) slowly turns to follow the jam; smoothed over a 1.5 s window, unwrapped
+const YAW=[];{let prev=0;for(let i=0;i<=Math.ceil(DUR*30);i++){const T=i/30;let acc=0,c=0;for(let k=0;k<10;k++){const a=jamAngle(Math.max(0,T-k*0.15));if(a===null)continue;let d=a-prev;while(d>Math.PI)d-=2*Math.PI;while(d<-Math.PI)d+=2*Math.PI;acc+=prev+d;c++;}
+ const target=c?acc/c:0;const w=eio(pr(T,10.6,13.4));const y=target*w;YAW.push(y);prev=c?target:prev;}}
+const yawAt=T=>{const k=cl(T*30,0,YAW.length-1);const i=Math.floor(k),f=k-i;return YAW[i]+((YAW[Math.min(i+1,YAW.length-1)])-YAW[i])*f;};
+const cam=new THREE.PerspectiveCamera(58,W/H,0.1,1000);const CH=7.5;
+const LINES=[[0,3.2,'你站在跑道[正中间]'],[3.2,6.4,'22辆车，绕着你开'],[6.4,9.6,'有一辆车，[慢了一点点]'],[9.6,12.8,'后面的车，一辆接一辆停下'],[12.8,16.4,'听——堵点在[往后跑]']];
+const $=id=>document.getElementById(id);
+window.renderAt=function(T){const st=state(T);
+ for(let j=0;j<22;j++){const a=ang(st.x[j]);cars[j].position.set(Math.sin(a)*RAD,0.9,-Math.cos(a)*RAD);cars[j].rotation.y=Math.PI/2-a;cars[j].material.color.copy(RED).lerp(BLUE,cl((st.v[j]*3.6-4)/20));}
+ const y=yawAt(T);cam.position.set(0,CH,0);cam.lookAt(Math.sin(y)*RAD,1.2,-Math.cos(y)*RAD);R.render(S,cam);
+ $('hp').style.opacity=1-pr(T,5.6,6.4);$('dir').style.opacity=pr(T,10.4,10.9)*(1-pr(T,13.2,13.8));
+ const L=LINES.find(l=>T>=l[0]&&T<l[1]);$('sub').innerHTML=L?'<span class="pill">'+L[2].replace(/\[(.+?)\]/g,'<b>$1</b>')+'</span>':'';};
+/* ---------- binaural audio, rendered offline (Web Audio HRTF) ---------- */
+window.renderAudio=async function(variant){const doSfx=variant==='sfx';const SR=44100,N=Math.round(DUR*SR);const ctx=new OfflineAudioContext(2,N,SR);
+ const L=ctx.listener;const step=1/60;
+ for(let t=0;t<=DUR;t+=step){const y=yawAt(t);L.positionX.setValueAtTime(0,t);L.positionY.setValueAtTime(CH,t);L.positionZ.setValueAtTime(0,t);
+  L.forwardX.setValueAtTime(Math.sin(y),t);L.forwardY.setValueAtTime(0,t);L.forwardZ.setValueAtTime(-Math.cos(y),t);L.upX.setValueAtTime(0,t);L.upY.setValueAtTime(1,t);L.upZ.setValueAtTime(0,t);}
+ const sfx=ctx.createGain();sfx.gain.value=0.6;sfx.connect(ctx.destination);
+ // brown noise buffer
+ const nb=ctx.createBuffer(1,SR*4,SR);{const d=nb.getChannelData(0);let b=0;for(let i=0;i<d.length;i++){b=(b+0.02*(Math.random()*2-1))/1.02;d[i]=b*3.5;}}
+ const wb=ctx.createBuffer(1,SR*2,SR);{const d=wb.getChannelData(0);for(let i=0;i<d.length;i++)d[i]=Math.random()*2-1;}
+ function panner(){const p=ctx.createPanner();p.panningModel='HRTF';p.distanceModel='inverse';p.refDistance=RAD;p.rolloffFactor=1;p.connect(sfx);return p;}
+ for(let j=0;j<22&&doSfx;j++){const p=panner();
+  const src=ctx.createBufferSource();src.buffer=nb;src.loop=true;const lp=ctx.createBiquadFilter();lp.type='lowpass';lp.Q.value=0.7;const g=ctx.createGain();g.gain.value=0;
+  src.connect(lp).connect(g).connect(p);src.start(0,(j*0.37)%3.5);
+  let prevV=null;
+  for(let t=0;t<=DUR;t+=step){const st=state(t);const a=ang(st.x[j]);const px=Math.sin(a)*RAD,pz=-Math.cos(a)*RAD;
+   p.positionX.setValueAtTime(px,t);p.positionY.setValueAtTime(0.9,t);p.positionZ.setValueAtTime(pz,t);
+   const v=st.v[j];const sp=cl(v/11.1);g.gain.setValueAtTime(0.02+0.12*sp*sp,t);lp.frequency.setValueAtTime(160+900*sp,t);
+   // brake event: hard deceleration -> a soft tyre/brake hiss at the car's position
+   if(prevV!==null){const acc=(v-prevV)/step;if(acc<-1.6&&!p._b){p._b=t;const bs=ctx.createBufferSource();bs.buffer=wb;const bp=ctx.createBiquadFilter();bp.type='bandpass';bp.frequency.value=2200+Math.random()*500;bp.Q.value=2.5;
+     const bg=ctx.createGain();bg.gain.setValueAtTime(0,t);bg.gain.linearRampToValueAtTime(1.3,t+0.05);bg.gain.exponentialRampToValueAtTime(0.001,t+0.75);bs.connect(bp).connect(bg).connect(p);bs.start(t,Math.random());bs.stop(t+0.8);}
+    if(acc>-0.5&&p._b&&t-p._b>1.5)p._b=0;}
+   prevV=v;}}
+if(variant==='orbit'){
+ // music: untouched stereo (A) or orbiting the listener's head (B); one-bar fade ending on the downbeat at 16.58 s
+ const ab=await (await fetch('bgm.mp3')).arrayBuffer();const mb=await ctx.decodeAudioData(ab);
+ const ms=ctx.createBufferSource();ms.buffer=mb;const mg=ctx.createGain();
+ const f0=14.557,f1=16.58;for(let t=f0;t<=f1;t+=0.01){const u=(t-f0)/(f1-f0);mg.gain.setValueAtTime(Math.cos(u*Math.PI/2)**2,t);}mg.gain.setValueAtTime(0,f1);
+ if(variant==='orbit'){const p=ctx.createPanner();p.panningModel='HRTF';p.distanceModel='linear';p.refDistance=1;p.maxDistance=1000;p.rolloffFactor=0;
+  const per=8.0992;for(let t=0;t<=DUR;t+=step){const y=yawAt(t),o=2*Math.PI*t/per;const rx=Math.sin(o)*3,rz=-Math.cos(o)*3;
+   p.positionX.setValueAtTime(rx*Math.cos(y)-rz*Math.sin(y),t);p.positionY.setValueAtTime(CH,t);p.positionZ.setValueAtTime(rx*Math.sin(y)+rz*Math.cos(y),t);}
+  const mk=ctx.createGain();mk.gain.value=1.25;ms.connect(mg).connect(mk).connect(p);p.connect(ctx.destination);}
+ ms.start(0);}
+ const out=await ctx.startRendering();
+ // 32-bit float interleaved -> base64
+ const a=out.getChannelData(0),b=out.getChannelData(1);const f=new Float32Array(N*2);for(let i=0;i<N;i++){f[2*i]=a[i];f[2*i+1]=b[i];}
+ const u8=new Uint8Array(f.buffer);let s='';for(let i=0;i<u8.length;i+=0x8000)s+=String.fromCharCode.apply(null,u8.subarray(i,i+0x8000));return btoa(s);};
+await document.fonts.ready;window.READY=true;
+</script></body></html>
