@@ -1,0 +1,151 @@
+<!doctype html><html><head><meta charset="utf-8"><style>
+html,body{margin:0;background:#E9E3D5;overflow:hidden;width:1920px;height:1080px}
+canvas{position:absolute;left:0;top:0}
+#vig{position:absolute;inset:0;pointer-events:none;background:radial-gradient(ellipse at 50% 45%,rgba(0,0,0,0) 55%,rgba(60,45,25,.22) 100%)}
+.hud{position:absolute;font-family:"Noto Sans CJK SC",sans-serif;color:#222}
+#chap{left:64px;top:44px}
+#chap .k{font-size:15px;letter-spacing:4px;color:#8a8070;font-weight:700}
+#chap .n{font-size:46px;font-weight:900;line-height:1;margin-top:6px;display:flex;align-items:baseline;gap:12px}
+#chap .n span{font-size:26px}
+#chap .bar{width:300px;height:3px;background:#222;margin-top:12px}
+#leg{right:64px;top:44px;width:270px;background:rgba(246,242,233,.92);border:1.5px solid #3a342b;padding:14px 18px 12px;box-shadow:0 4px 18px rgba(60,45,25,.12)}
+#leg .t{font-size:13px;letter-spacing:3px;color:#8a8070;font-weight:700;margin-bottom:8px}
+#leg .r{display:flex;align-items:center;gap:12px;font-size:18px;font-weight:700;margin:5px 0}
+#leg .sw{width:34px;height:7px;border-radius:4px}
+#leg .ct{display:flex;justify-content:space-between;border-top:1px solid #b9b0a0;margin-top:10px;padding-top:9px;font-size:16px;font-weight:700}
+#leg .ct b{font-size:22px;font-variant-numeric:tabular-nums}
+#prog{left:50%;transform:translateX(-50%);top:48px;width:520px}
+#prog .ln{height:2px;background:#b9b0a0;position:relative}
+#prog .fill{position:absolute;left:0;top:0;height:2px;background:#222}
+#prog .dot{position:absolute;top:-5px;width:12px;height:12px;border-radius:6px;background:#222;margin-left:-6px}
+#prog .lb{display:flex;justify-content:space-between;font-size:14px;color:#8a8070;font-weight:700;margin-top:8px;letter-spacing:1px}
+#title{position:absolute;left:0;right:0;top:300px;text-align:center;font-family:"Noto Sans CJK SC",sans-serif;color:#1f1b16;opacity:0}
+#title .k{font-size:22px;letter-spacing:10px;color:#6f6556;font-weight:700}
+#title .n{font-size:150px;font-weight:900;line-height:1.05;margin-top:10px;display:inline-flex;align-items:baseline;gap:26px}
+#title .n i{font-style:normal;font-size:150px}
+#title .bar{width:620px;height:7px;background:#1f1b16;margin:22px auto 0}
+#sub{position:absolute;left:0;right:0;bottom:70px;text-align:center;font-size:64px;line-height:1.2;font-family:"Noto Sans CJK SC","Noto Sans SC",sans-serif;font-weight:700;color:#fff;letter-spacing:1px}
+#sub .pill{display:inline-block;padding:10px 34px 14px;border-radius:18px;background:rgba(6,8,13,.80);box-shadow:0 6px 24px rgba(0,0,0,.25);text-shadow:0 2px 6px rgba(0,0,0,.9)}
+#sub b{color:#f6cf78;text-shadow:0 0 18px rgba(246,207,120,.55),0 3px 14px #000;font-weight:700}
+</style></head><body>
+<div id="vig"></div>
+<div id="chap" class="hud"><div class="k">00 · STUCK</div><div class="n">00<span>堵了</span></div><div class="bar"></div></div>
+<div id="prog" class="hud"><div class="ln"><div class="fill"></div><div class="dot"></div></div><div class="lb"><span>你的位置</span><span>队伍长度 ≈ 1.6 公里</span><span>最前面</span></div></div>
+<div id="leg" class="hud"><div class="t">LEGEND · 图例</div>
+ <div class="r"><div class="sw" style="background:#1f1d1a"></div>你</div>
+ <div class="r"><div class="sw" style="background:linear-gradient(90deg,#7FA38A 0 33%,#D2A23A 33% 66%,#6F8FB8 66%)"></div>别的车</div>
+ <div class="r"><div class="sw" style="background:#C8473A"></div>停着不动</div>
+ <div class="ct"><span>已经堵了</span><b id="tm">39:52</b></div>
+ <div class="ct" style="border:0;margin-top:0;padding-top:4px"><span>前方事故</span><b id="acc">?</b></div></div>
+<div id="title"><div class="k">01 · PHANTOM JAM</div><div class="n">01<i>幽灵堵车</i></div><div class="bar"></div></div>
+<div id="sub"></div>
+<script type="importmap">{"imports":{"three":"./node_modules/three/build/three.module.js","three/addons/":"./node_modules/three/examples/jsm/"}}</script>
+<script type="module">
+import * as THREE from 'three';
+import { RoundedBoxGeometry } from 'three/addons/geometries/RoundedBoxGeometry.js';
+const W=1920,H=1080,PAPER=0xE9E3D5;
+const R=new THREE.WebGLRenderer({antialias:true,preserveDrawingBuffer:true});R.setPixelRatio(1);R.setSize(W,H);R.setClearColor(PAPER);
+R.outputColorSpace=THREE.SRGBColorSpace;document.body.prepend(R.domElement);
+const S=new THREE.Scene();S.fog=new THREE.Fog(PAPER,60,230);
+const cam=new THREE.PerspectiveCamera(42,W/H,0.1,1000);
+S.add(new THREE.HemisphereLight(0xffffff,0xd9cfbf,1.6));const dl=new THREE.DirectionalLight(0xffffff,1.4);dl.position.set(-30,60,20);S.add(dl);
+const cl=(x,a=0,b=1)=>Math.max(a,Math.min(b,x)),pr=(t,a,b)=>cl((t-a)/(b-a)),eio=x=>x<.5?4*x*x*x:1-Math.pow(-2*x+2,3)/2,eo=x=>1-Math.pow(1-x,3);
+// ---- ground: paper + grid
+{const c=document.createElement('canvas');c.width=c.height=512;const g=c.getContext('2d');g.fillStyle='#E9E3D5';g.fillRect(0,0,512,512);
+ for(let i=0;i<2600;i++){g.fillStyle=`rgba(120,100,70,${Math.random()*0.035})`;g.fillRect(Math.random()*512,Math.random()*512,2,2);}
+ g.strokeStyle='rgba(120,105,80,.16)';g.lineWidth=1;for(let i=0;i<=8;i++){g.beginPath();g.moveTo(i*64,0);g.lineTo(i*64,512);g.stroke();g.beginPath();g.moveTo(0,i*64);g.lineTo(512,i*64);g.stroke();}
+ g.strokeStyle='rgba(110,95,70,.34)';g.lineWidth=2.5;g.strokeRect(0,0,512,512);
+ const t=new THREE.CanvasTexture(c);t.wrapS=t.wrapT=THREE.RepeatWrapping;t.repeat.set(60,60);t.anisotropy=8;t.colorSpace=THREE.SRGBColorSpace;
+ const m=new THREE.Mesh(new THREE.PlaneGeometry(1200,1200),new THREE.MeshBasicMaterial({map:t}));m.rotation.x=-Math.PI/2;S.add(m);}
+// ---- flat ribbons (lines) with fake shadow and terminus rings
+const basic=c=>new THREE.MeshBasicMaterial({color:c});
+const shMat=new THREE.MeshBasicMaterial({color:0x3a2c18,transparent:true,opacity:.13,depthWrite:false});
+function ribbon(pts,w,color,y=0.06){ // pts: [[x,z],...]
+ const sh=new THREE.Shape();const L=[],Rr=[];
+ for(let i=0;i<pts.length;i++){const a=pts[Math.max(0,i-1)],b=pts[Math.min(pts.length-1,i+1)];let dx=b[0]-a[0],dz=b[1]-a[1];const l=Math.hypot(dx,dz);dx/=l;dz/=l;
+  L.push([pts[i][0]-dz*w/2,pts[i][1]+dx*w/2]);Rr.push([pts[i][0]+dz*w/2,pts[i][1]-dx*w/2]);}
+ const all=L.concat(Rr.reverse());sh.moveTo(all[0][0],-all[0][1]);for(const p of all.slice(1))sh.lineTo(p[0],-p[1]);
+ const geo=new THREE.ShapeGeometry(sh);const m=new THREE.Mesh(geo,basic(color));m.rotation.x=-Math.PI/2;m.position.y=y;S.add(m);
+ const s=new THREE.Mesh(geo,shMat);s.rotation.x=-Math.PI/2;s.position.set(0.22,0.012,0.22);S.add(s);
+ for(const e of [pts[0],pts[pts.length-1]]){const d=new THREE.Mesh(new THREE.CircleGeometry(w*0.95,28),basic(color));d.rotation.x=-Math.PI/2;d.position.set(e[0],y+0.002,e[1]);S.add(d);}
+ return m;}
+function smooth(pts,n=10){ // chaikin-ish rounding of polyline corners
+ let p=pts;for(let k=0;k<3;k++){const q=[p[0]];for(let i=0;i<p.length-1;i++){const a=p[i],b=p[i+1];q.push([a[0]*.75+b[0]*.25,a[1]*.75+b[1]*.25],[a[0]*.25+b[0]*.75,a[1]*.25+b[1]*.75]);}q.push(p[p.length-1]);p=q;}return p;}
+// motorway: 4 lanes running along -z
+const LANES=[{x:-1.95,c:0x7FA38A,car:0x5f8a6c},{x:-0.65,c:0x1f1d1a,car:0x1f1d1a},{x:0.65,c:0xD2A23A,car:0xb58622},{x:1.95,c:0x6F8FB8,car:0x52739e}];
+const Z0=40,Z1=-330;for(const l of LANES)ribbon([[l.x,Z0],[l.x,Z1]],0.62,l.c);
+// side lines for a map feel
+ribbon(smooth([[-60,-20],[-14,-20],[-6,-28],[-6,-110],[-30,-134],[-80,-134]]),0.62,0x9A86B8);
+ribbon(smooth([[70,10],[22,10],[12,0],[12,-60],[40,-88],[90,-88]]),0.62,0xC8473A);
+ribbon(smooth([[-90,-230],[-20,-230],[-8,-242],[-8,-300]]),0.62,0x7FA38A);
+ribbon(smooth([[80,-160],[30,-160],[16,-174],[16,-260],[60,-304]]),0.62,0xD2A23A);
+// station pills across the motorway
+function pill(x,z,len,rot=0){const g=new THREE.Group();const sh=new THREE.Shape();const r=0.7,hl=len/2;
+ sh.absarc(0,hl-r,r,0,Math.PI,false);sh.absarc(0,-hl+r,r,Math.PI,2*Math.PI,false);
+ const o=new THREE.Mesh(new THREE.ExtrudeGeometry(sh,{depth:0.25,bevelEnabled:false}),basic(0x1f1d1a));
+ const sh2=new THREE.Shape();const r2=0.42;sh2.absarc(0,hl-r,r2,0,Math.PI,false);sh2.absarc(0,-hl+r,r2,Math.PI,2*Math.PI,false);
+ const i=new THREE.Mesh(new THREE.ExtrudeGeometry(sh2,{depth:0.27,bevelEnabled:false}),basic(0xEDEBE6));
+ g.add(o,i);g.rotation.x=-Math.PI/2;g.rotation.z=rot;g.position.set(x,0.08,z);S.add(g);return g;}
+// ground text
+function gtext(lines,x,z,size,rot=0,opts={}){const c=document.createElement('canvas');c.width=1024;c.height=320;const g=c.getContext('2d');
+ g.textAlign=opts.align||'left';g.textBaseline='alphabetic';const ax=opts.align==='center'?512:20;
+ g.fillStyle=opts.color||'#1f1b16';g.font=`900 150px "Noto Sans CJK SC"`;g.fillText(lines[0],ax,170);
+ if(lines[1]){g.fillStyle=opts.color2||'#6f6556';g.font=`700 58px "Noto Sans CJK SC"`;g.letterSpacing='6px';g.fillText(lines[1],ax,260);}
+ const t=new THREE.CanvasTexture(c);t.colorSpace=THREE.SRGBColorSpace;t.anisotropy=8;const mat=new THREE.MeshBasicMaterial({map:t,transparent:true,depthWrite:false,opacity:1});
+ const m=new THREE.Mesh(new THREE.PlaneGeometry(size*3.2,size),mat);m.rotation.x=-Math.PI/2;m.rotation.z=rot;m.position.set(x,0.1,z);S.add(m);return m;}
+pill(0,-178.6,6.6,Math.PI/2);gtext(['最前面','THE FRONT'],8.6,-180.5,3.6,0.0);
+const tags=[['车祸','ACCIDENT',9.5,-194],['修路','ROADWORK',9.5,-203],['收费站','TOLL',9.5,-212]].map(([a,b,x,z])=>{const m=gtext([a,b],x-3,z,3.2,0,{align:'left'});
+ // strike bar
+ const s=new THREE.Mesh(new THREE.PlaneGeometry(1,0.32),basic(0xC8473A));s.rotation.x=-Math.PI/2;s.position.set(x-3-4.6,0.13,z-0.15);s.scale.x=0.001;S.add(s);m.material.opacity=0;return {m,s,x:x-3-4.6};});
+
+// ---- cars
+const carGeo=new RoundedBoxGeometry(0.78,0.34,1.6,3,0.16);const carSh=new THREE.Mesh(new THREE.PlaneGeometry(0.9,1.75),shMat);
+const RED=new THREE.Color(0xC8473A);const cars=[];const GAP=2.85,FRONT=-174,NPL=70;
+for(let li=0;li<LANES.length;li++)for(let i=0;i<NPL;i++){const off=(li%2)*0.9+(li===3?0.4:0);const z0=FRONT+off+i*GAP+(li===1?0:0);
+ const mat=new THREE.MeshLambertMaterial({color:RED.clone()});const m=new THREE.Mesh(carGeo,mat);m.position.set(LANES[li].x,0.3,z0);S.add(m);
+ const sh=carSh.clone();sh.rotation.x=-Math.PI/2;sh.position.set(LANES[li].x+0.25,0.015,z0+0.25);S.add(sh);
+ cars.push({m,sh,li,i,z0,base:new THREE.Color(LANES[li].car)});}
+const YOU=cars.find(c=>c.li===1&&c.i===50);YOU.you=true;
+// "you" marker: white ring around your car + label
+const ring=new THREE.Mesh(new THREE.RingGeometry(1.5,1.68,48),basic(0x1f1d1a));ring.rotation.x=-Math.PI/2;S.add(ring);
+const youTag=gtext(['你','YOU'],0,0,2.2,0);
+// ---- camera keys: [t, pos, look]
+const K=[
+ [0.0,[-4.5,7.5,YOU.z0+13],[-0.4,0,YOU.z0-6]],
+ [2.6,[-3.6,8.2,YOU.z0+9],[0,0,YOU.z0-12]],
+ [4.6,[-2,11,YOU.z0-20],[0.5,0,YOU.z0-55]],
+ [6.8,[-3,12.5,-150],[1,0,-186]],
+ [8.8,[-6,17,-176],[8,0,-202]],
+ [10.6,[-5,17.5,-181],[8.5,0,-205]],
+ [12.4,[9,15,-206],[0,0,-150]],
+ [14.6,[10,26,-176],[0,0,-110]],
+ [17.6,[0,120,-108],[0,0,-109]],
+ [21.0,[0,150,-104],[0,0,-105]]];
+function herm(T,idx){let i=0;while(i<K.length-2&&T>K[i+1][0])i++;const t0=K[i][0],t1=K[i+1][0];const u=cl((T-t0)/(t1-t0));
+ const P=j=>new THREE.Vector3(...K[cl(j,0,K.length-1)][idx]),Tt=j=>K[cl(j,0,K.length-1)][0];
+ const m=j=>{if(j<=0||j>=K.length-1)return new THREE.Vector3();return P(j+1).sub(P(j-1)).multiplyScalar(1/(Tt(j+1)-Tt(j-1)));};
+ const h00=2*u**3-3*u**2+1,h10=u**3-2*u**2+u,h01=-2*u**3+3*u**2,h11=u**3-u**2,d=t1-t0;
+ return P(i).multiplyScalar(h00).add(m(i).multiplyScalar(h10*d)).add(P(i+1).multiplyScalar(h01)).add(m(i+1).multiplyScalar(h11*d));}
+const LINES=[[0,2.6,'堵了[40分钟]'],[2.6,6.6,'到前面一看——'],[6.6,10.8,'[什么都没有]'],[10.8,14.4,'然后，突然就通了'],[14.4,17.8,'那刚才，是谁堵的？']];
+const $=id=>document.getElementById(id);
+window.renderAt=function(T){
+ const p=herm(T,1),l=herm(T,2);cam.position.copy(p);cam.lookAt(l);
+ // cars: start-up wave from the front at 11.0, each row 0.16 s later
+ for(const c of cars){const ts=11.0+c.i*0.16+c.li*0.05;const dt=Math.max(0,T-ts);const a=3.2,tv=2.2;const s=dt<tv?0.5*a*dt*dt:0.5*a*tv*tv+a*tv*(dt-tv);
+  const z=c.z0-s;c.m.position.z=z;c.sh.position.z=z+0.25;const f=cl(dt/0.9);c.m.material.color.copy(RED).lerp(c.base,f);c.m.visible=c.sh.visible=z>Z1+6;}
+ ring.position.set(YOU.m.position.x,0.07,YOU.m.position.z);youTag.position.set(YOU.m.position.x+0.25,0.1,YOU.m.position.z+0.5);
+ const ra=1-pr(T,3.6,4.6);ring.material.opacity=ra;ring.material.transparent=true;youTag.material.opacity=ra;ring.visible=ra>0;
+ tags.forEach((g,k)=>{const a=pr(T,7.0+k*.35,7.5+k*.35);g.m.material.opacity=a;const st=eo(pr(T,7.9+k*.4,8.4+k*.4));g.s.scale.x=Math.max(.001,st*7.6);g.s.position.x=g.x+st*3.8;g.s.visible=st>0;});
+ R.render(S,cam);
+ // HUD
+ const sec=Math.min(2400,2392+Math.floor(pr(T,0,2.4)*8));$('tm').textContent=String(Math.floor(sec/60)).padStart(2,'0')+':'+String(sec%60).padStart(2,'0');$('tm').style.color=sec>=2400?'#C8473A':'#222';
+ $('acc').textContent=T<8.6?'?':'0';$('acc').style.color=T<8.6?'#222':'#C8473A';
+ const pp=0.08+0.88*eio(pr(T,2.8,7.2));document.querySelector('#prog .fill').style.width=pp*100+'%';document.querySelector('#prog .dot').style.left=pp*100+'%';
+ const ha=1-pr(T,16.6,17.4);for(const id of ['chap','prog','leg'])$(id).style.opacity=ha;
+ const ta=eo(pr(T,17.6,18.4));$('title').style.opacity=ta;$('title').style.transform=`translateY(${(1-ta)*16}px)`;
+ const L=LINES.find(x=>T>=x[0]&&T<x[1]);$('sub').innerHTML=L?'<span class="pill">'+L[2].replace(/\[(.+?)\]/g,'<b>$1</b>')+'</span>':'';
+};
+await document.fonts.load('900 150px "Noto Sans CJK SC"');await document.fonts.ready;
+// re-draw ground texts after fonts load: simplest is to reload textures; fonts are local so first draw already has them in practice
+window.READY=true;
+</script></body></html>

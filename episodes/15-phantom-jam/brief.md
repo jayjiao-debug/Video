@@ -15,3 +15,10 @@
 - **Engine rules carried over from ep14:** subtitle standard B (Noto Sans CJK SC Bold, white, gold key words, dark rounded strip rgba(6,8,13,.80), 64 px, bottom 70 px) — on a pale background this strip still works; no whole-screen beat pulses, no flashes; nothing pulses on a metronome.
 - **Must avoid:** Braess / induced demand (done in 《越修越堵》); overclaiming ("所有堵车都是幽灵堵车" — say "很多"); blaming individuals; Wikipedia/百度百科/知乎.
 - **Approvals:** owner: look demo early, then the cut.
+
+## Format change (owner, 2026-10-09 19:15)
+Owner sent a reference (Vibe知识大赏《再见》, 46万赞) and asked for its format: 一镜到底. Analysis:
+- one continuous camera low over a tilted paper map with a grid; "you" = black line among coloured lines; station pills with big bilingual ground labels; camera rises to overhead, dives into a night city (buildings rise, lines become light trails) and back, no hard cuts;
+- numbered chapters (00 · SEE YOU AROUND) shown inside the scene; HUD (legend + counters top-right, progress timeline top); paper data cards inside the scene; closed loop (last chapter returns to the first shot).
+Plan: borrow the format, not their content (no line=life metaphor, no their station names). Road = the lines, your car = black lane; chapters 00 堵了 → 01 幽灵堵车 (ring) → 02 往后跑 (ring unrolls, night motorway light trails) → 03 临界点 → 04 一辆车 → 05 你 → 06 loop.
+Build: three.js 0.169 (build3d/one.html), swiftshader WebGL in headless Chromium, ~0.5 s/frame.
