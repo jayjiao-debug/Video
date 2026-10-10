@@ -1,6 +1,6 @@
 {
- "id": "hm-03",
+ "id": "hm-04",
  "items": [
-  {"type":"url","url":"https://eutils.ncbi.nlm.nih.gov/entrez/eutils/esearch.fcgi?db=pubmed&term=Small+Zatorre+chocolate+pleasure+aversion+2001&retmode=json","name":"s_choc.json","license":"ref"}
+  {"type":"url","url":"https://eutils.ncbi.nlm.nih.gov/entrez/eutils/efetch.fcgi?db=pubmed&id=11522575&rettype=abstract&retmode=text","name":"choc.txt","license":"ref"}
  ]
 }
