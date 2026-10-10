@@ -79,4 +79,4 @@ def main(lines_path, wav_path, json_path, total=10.0):
     for l in timing: print(f"{l['t']:5.2f} → typed {l['typed']:5.2f}, shown until {l['end']:5.2f}  {l['text']}")
 
 if __name__ == '__main__':
-    main(*sys.argv[1:4])
+    main(*sys.argv[1:4], *([float(sys.argv[4])] if len(sys.argv) > 4 else []))
