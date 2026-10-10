@@ -36,7 +36,7 @@ export const radioAt = (T: number): RadioState => {
     gap: lock ? 0.012 : 0.05 + 0.75 * near,
     flicker: lock ? 0 : on * (0.15 + 0.85 * near),
     flood: lock ? easeOut(prog(T, TITLE, TITLE + 0.5)) : 0,
-    moon: 0.55 + 0.45 * easeInOut(prog(T, 1.5, 6.0)),
+    moon: (0.55 + 0.45 * easeInOut(prog(T, 1.5, 6.0))) * (1 - 0.6 * easeOut(prog(T, TITLE, TITLE + 0.6))),
   };
 };
 
@@ -48,8 +48,8 @@ const KEYS: Key[] = [
   { t: 5.6, pos: [needleX(0.48) + 0.03, D.y + 0.012, D.z + 0.13], look: [needleX(0.5), D.y, D.z], fov: 28, ap: 0.014, bloom: 0.75 },
   { t: 7.2, pos: [needleX(0.63) + 0.03, 0.275, D.z + 0.25], look: [needleX(0.62), 0.27, D.z], fov: 30, ap: 0.01, bloom: 0.75 },
   { t: TITLE, pos: [0.155, 0.278, D.z + 0.21], look: [0.135, 0.272, D.z], fov: 30, ap: 0.01, bloom: 0.8 },
-  { t: TITLE + 0.9, pos: [0.6, 0.56, 1.55], look: [0.0, 0.33, 0.0], fov: 34, ap: 0.0012, bloom: 0.6, whip: true },
-  { t: OPEN_END, pos: [0.53, 0.52, 1.4], look: [0.0, 0.33, 0.0], fov: 34, ap: 0.0012, bloom: 0.55 },
+  { t: TITLE + 0.9, pos: [0.6, 0.56, 1.55], look: [0.0, 0.33, 0.0], fov: 34, ap: 0.0012, bloom: 0.42, whip: true },
+  { t: OPEN_END, pos: [0.53, 0.52, 1.4], look: [0.0, 0.33, 0.0], fov: 34, ap: 0.0012, bloom: 0.4 },
 ];
 
 export const LINES: Line[] = [

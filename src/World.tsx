@@ -10,7 +10,7 @@ import { RenderPass } from 'three/examples/jsm/postprocessing/RenderPass.js';
 import { UnrealBloomPass } from 'three/examples/jsm/postprocessing/UnrealBloomPass.js';
 import { BokehPass } from 'three/examples/jsm/postprocessing/BokehPass.js';
 import { OutputPass } from 'three/examples/jsm/postprocessing/OutputPass.js';
-import { walnutTex, clothTex, dialTex, DIAL, eyeDraw, nightTex, wallTex, oakTex, glowTex, clockTex, canvasTex } from './tex';
+import { hash, walnutTex, clothTex, dialTex, DIAL, eyeDraw, nightTex, wallTex, oakTex, glowTex, clockTex, canvasTex } from './tex';
 
 export type RadioState = {
   power: number;   // dial backlight and tube warmth, 0..1
@@ -41,7 +41,9 @@ const Radio: React.FC<{ s: RadioState; T: number }> = ({ s, T }) => {
   const gap = Math.max(0.015, s.gap + jitter * 0.18);
   const glowE = s.power * (0.85 + 0.15 * (1 - s.flicker)) * (1 - 0.25 * s.flicker * Math.abs(Math.sin(T * 53)));
   eyeDraw(eye.c.getContext('2d')!, gap, Math.min(1, glowE)); eye.t.needsUpdate = true;
-  const lit = s.power * (1 - s.flicker * 0.45 * (0.5 + 0.5 * Math.sin(T * 47) * Math.sin(T * 29 + 2)));
+  // static: the pilot lamps sag and catch at random, a little every frame
+  const fr = Math.floor(T * 30), sag = hash(fr) * 0.6 + hash(Math.floor(T * 7)) * 0.4;
+  const lit = s.power * (1 - s.flicker * 0.62 * sag);
   const nx = needleX(s.needle);
   const knobA = -s.needle * Math.PI * 3.2;
   const wood = <meshPhysicalMaterial map={tx.walnut} roughness={0.42} clearcoat={0.85} clearcoatRoughness={0.18} />;
@@ -59,7 +61,7 @@ const Radio: React.FC<{ s: RadioState; T: number }> = ({ s, T }) => {
         <mesh key={i} position={[P.grille.x + x, P.grille.y + y, 0.124]}><boxGeometry args={[w, h, 0.006]} /><meshStandardMaterial color="#c79a52" metalness={1} roughness={0.25} /></mesh>))}
       {/* dial: printed glass, lit from behind */}
       <mesh position={[P.dial.x, P.dial.y, 0.1222]}><planeGeometry args={[DIAL_W, DIAL_H]} />
-        <meshStandardMaterial map={tx.dial} emissiveMap={tx.dialGlow} emissive={new THREE.Color('#ffb25c')} emissiveIntensity={0.02 + 0.5 * lit - 0.12 * s.flood} roughness={0.6} /></mesh>
+        <meshStandardMaterial map={tx.dial} emissiveMap={tx.dialGlow} emissive={new THREE.Color('#ffb25c')} emissiveIntensity={0.02 + 0.5 * lit - 0.22 * s.flood} roughness={0.6} /></mesh>
       <mesh position={[P.dial.x, P.dial.y, 0.1248]}><planeGeometry args={[DIAL_W, DIAL_H]} /><meshPhysicalMaterial color="#ffffff" transparent opacity={0.06} roughness={0.12} metalness={0} clearcoat={0.6} /></mesh>
       {[[0, DIAL_H / 2 + 0.004, DIAL_W + 0.016, 0.008], [0, -DIAL_H / 2 - 0.004, DIAL_W + 0.016, 0.008], [DIAL_W / 2 + 0.004, 0, 0.008, DIAL_H], [-DIAL_W / 2 - 0.004, 0, 0.008, DIAL_H]].map(([x, y, w, h], i) => (
         <mesh key={i} position={[P.dial.x + x, P.dial.y + y, 0.1245]}><boxGeometry args={[w, h, 0.007]} /><meshStandardMaterial color="#c79a52" metalness={1} roughness={0.25} /></mesh>))}
@@ -82,14 +84,14 @@ const Radio: React.FC<{ s: RadioState; T: number }> = ({ s, T }) => {
       {/* tubes behind the back panel: a warm halo on the wall behind the set */}
       <pointLight position={[0, 0.3, -0.2]} intensity={1.1 * s.power} distance={1.2} decay={2} color="#ff9a44" />
       {/* the radio's own light: warm spill from the dial onto the desk and the grille */}
-      <pointLight position={[P.dial.x, 0.04, 0.34]} intensity={0.35 * lit} distance={1.6} decay={2} color="#ffb060" />
+      <pointLight position={[P.dial.x, 0.16, 0.3]} intensity={0.22 * lit} distance={1.6} decay={2} color="#ffb060" />
     </group>
   );
 };
 
 const Room: React.FC<{ s: RadioState; T: number }> = ({ s, T }) => {
   const tx = useMemo(() => ({ night: nightTex(), wall: wallTex(), oak: oakTex(), clock: clockTex(), lamp: glowTex('rgba(255,214,150,1)', 'rgba(255,170,80,0)'),
-    page: canvasTex(1024, 1400, (g) => { g.fillStyle = '#efe6d2'; g.fillRect(0, 0, 1024, 1400); g.strokeStyle = 'rgba(80,110,160,0.35)'; g.lineWidth = 2; for (let y = 160; y < 1400; y += 64) { g.beginPath(); g.moveTo(60, y); g.lineTo(964, y); g.stroke(); } }) }), []);
+    page: canvasTex(1024, 1400, (g) => { g.fillStyle = '#b9b0a0'; g.fillRect(0, 0, 1024, 1400); g.strokeStyle = 'rgba(80,110,160,0.35)'; g.lineWidth = 2; for (let y = 160; y < 1400; y += 64) { g.beginPath(); g.moveTo(60, y); g.lineTo(964, y); g.stroke(); } }) }), []);
   const hh = (T / 3600) * Math.PI * 2 + 3.9, mm = (T / 60) * Math.PI * 2 * 0.2 + 0.4;
   return (
     <group>
