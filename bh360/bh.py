@@ -29,21 +29,22 @@ def to_np(a):
     return a.get() if hasattr(a, 'get') else a
 
 # ---------------------------------------------------------------- orbit table
-def orbit_table(r0, nb=7000, dphi=0.003, phimax=4 * math.pi):
+def orbit_table(r0, nb=7000, dphi=0.003, phimax=4 * math.pi, X=None):
     """u(φ) for photons leaving radius r0, inward (k=0) and outward (k=1) starting branches, for impact parameters b."""
+    X = X if X is not None else xp
     bc = 3 * math.sqrt(3)
     bmax = r0 / math.sqrt(1 - 2 / r0) * 1.0001
     # dense around the critical b (the photon ring), log-spaced elsewhere
-    t = xp.linspace(-1, 1, nb)
-    b = xp.unique(xp.concatenate([bc + (bmax - bc) * xp.clip(t, 0, 1) ** 4, bc - bc * xp.clip(-t, 0, 1) ** 4]))
+    t = X.linspace(-1, 1, nb)
+    b = X.unique(X.concatenate([bc + (bmax - bc) * X.clip(t, 0, 1) ** 4, bc - bc * X.clip(-t, 0, 1) ** 4]))
     b = b[(b > 1e-4) & (b <= bmax)]
     ns = int(phimax / dphi)
     tabs = []
     u0 = 1 / r0
     for sgn in (+1, -1):  # +1: moving inward (u grows), −1: outward
-        U = xp.full((len(b), ns), xp.nan, xp.float32)
-        u = xp.full(len(b), u0); w = sgn * xp.sqrt(xp.maximum(1 / b ** 2 - u0 ** 2 * (1 - 2 * u0), 0))
-        alive = xp.ones(len(b), bool); end = xp.full(len(b), xp.nan); fate = xp.zeros(len(b), xp.int8)  # 1 = captured, 2 = escaped
+        U = X.full((len(b), ns), X.nan, X.float32)
+        u = X.full(len(b), u0); w = sgn * X.sqrt(X.maximum(1 / b ** 2 - u0 ** 2 * (1 - 2 * u0), 0))
+        alive = X.ones(len(b), bool); end = X.full(len(b), X.nan); fate = X.zeros(len(b), X.int8)  # 1 = captured, 2 = escaped
         f = lambda u: 3 * u * u - u
         for i in range(ns):
             U[alive, i] = u[alive]

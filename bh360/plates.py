@@ -16,9 +16,7 @@ import numpy as np
 from concurrent.futures import ThreadPoolExecutor
 def table_cpu(r):
     # the photon-orbit table is a long sequential loop over small arrays: faster on the CPU, and it overlaps the GPU frame
-    g = bh.xp; bh.xp = np
-    try: return bh.orbit_table(r)
-    finally: bh.xp = g
+    return bh.orbit_table(r, X=np)
 def to_dev(t):
     b, dphi, tabs = t; X = bh.xp
     return X.asarray(b), dphi, [dict(U=X.asarray(x['U']), end=X.asarray(x['end']), fate=X.asarray(x['fate'])) for x in tabs]

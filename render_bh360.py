@@ -34,7 +34,7 @@ def chunk(a: int, b: int, frames: str = ""):
         base = f"ffmpeg -y -v error -framerate {FPS} -start_number {a} -i /tmp/o/{k}%05d.jpg -pix_fmt yuv420p"
         if sh(f"{base} -c:v h264_nvenc -preset p6 -rc vbr {q} /tmp/{k}.mp4", log) != 0:
             sh(f"{base} -c:v libx264 -preset veryfast -crf 18 /tmp/{k}.mp4", log)
-        out[k] = pathlib.Path(f"/tmp/{k}.mp4").read_bytes()
+        if pathlib.Path(f"/tmp/{k}.mp4").exists(): out[k] = pathlib.Path(f"/tmp/{k}.mp4").read_bytes()
     return out, "\n".join(log)
 
 @app.local_entrypoint()
