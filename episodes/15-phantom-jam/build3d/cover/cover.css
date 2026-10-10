@@ -1,0 +1,11 @@
+#cover{position:absolute;left:0;right:0;display:flex;flex-direction:column;align-items:center;pointer-events:none}
+#cover.wide{top:560px}#cover.tall{top:660px}
+#cover .sign{position:relative;background:#1D7A4C;border-radius:26px;padding:40px 86px 46px;box-shadow:0 22px 50px rgba(20,50,35,.35);text-align:center;color:#fff}
+#cover .sign:after{content:"";position:absolute;inset:13px;border:6px solid #fff;border-radius:15px}
+#cover .sign i{position:absolute;width:14px;height:14px;border-radius:7px;background:radial-gradient(circle at 35% 35%,#f4f6f3,#9fb3a7);box-shadow:0 1px 2px rgba(0,0,0,.35)}
+#cover .bar{width:70px;height:10px;margin:0 auto 20px;border-radius:5px;background:linear-gradient(90deg,#3FAE49 0 25%,#F5B700 25% 50%,#2F7FD3 50% 75%,#F28C28 75%)}
+#cover .l1{font-size:96px;font-weight:900;letter-spacing:10px;line-height:1.15;margin-right:-10px}
+#cover .l2{font-size:132px;font-weight:900;letter-spacing:8px;line-height:1.1;margin-right:-8px}
+#cover .l2 b{color:#F5C02A;font-size:150px}
+#cover .ser{margin-top:28px;font-size:38px;font-weight:700;color:#34495E;letter-spacing:4px;background:rgba(255,255,255,.92);padding:10px 34px 12px;border-radius:999px;box-shadow:0 6px 18px rgba(30,40,50,.14)}
+#cover.tall .sign{padding:36px 64px 42px}#cover.tall .l1{font-size:92px}#cover.tall .l2{font-size:118px;letter-spacing:4px}#cover.tall .l2 b{font-size:138px}
