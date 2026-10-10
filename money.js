@@ -14,7 +14,7 @@ export async function makeMoney(THREE,R){
  const rim=new THREE.DirectionalLight(0xa9bde8,.5);rim.position.set(-6,3,-6);S.add(rim);const fill=new THREE.DirectionalLight(0xffe2b0,1.4);fill.position.set(3,5,8);S.add(fill);
  // two rows of people in front of the towers
  const rows=[[0,0xf6cf78,'most'],[1.5,0x8fb0ff,'low']].map(([dz,col,id])=>LV.map((_,i)=>{const x=-6.5+i*2.6;const f=figure(THREE,{h:1.2});f.position.set(x,0,.2+dz);S.add(f);const s=sprite(THREE,gt,col,1.6);s.position.set(x,.8,.15+dz);S.add(s);const pl=pool(THREE,col,.8,0);pl.position.set(x,.012,.2+dz);S.add(pl);return {f,s,pl};}));
- const cp=camPath(THREE,[[64.8,-9.5,2.6,7.4,-4.5,1.3,-1],[69.2,-2.0,3.2,9.4,0,1.5,-1],[73.4,4.0,3.4,9.6,3,1.4,-.5]]);
+ const cp=camPath(THREE,[[64.8,-9.5,2.0,7.4,-4.5,.9,-1],[69.2,-2.0,2.5,9.4,0,1.1,-1],[73.4,4.0,2.7,9.6,3,1.1,-.5]]);
  function update(T){const [p,l]=cp(T);cam.position.copy(p);cam.lookAt(l);tickDust(T,p.clone().setY(0));
   const grow=pr(T,65.2,67.6);towers.forEach((t,i)=>{const k=cl(grow*LV.length-i);t.g.count=Math.max(1,Math.round(t.n*eo(k)));});
   // brightness by income step (shape illustrative): the main row rises every step; the blue row rises until $10万 then stays flat

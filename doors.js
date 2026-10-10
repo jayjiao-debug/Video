@@ -7,7 +7,7 @@ export async function makeDoors(THREE,R){
  const cam=new THREE.PerspectiveCamera(34,16/9,.05,400);
  // mirror floor + dark glaze on top
  const mir=new Reflector(new THREE.PlaneGeometry(200,200),{textureWidth:1920,textureHeight:1080,color:0x8a8f99,clipBias:.003});mir.rotation.x=-Math.PI/2;S.add(mir);
- const glaze=new THREE.Mesh(new THREE.PlaneGeometry(200,200),new THREE.MeshBasicMaterial({color:0x03050b,transparent:true,opacity:.72,depthWrite:false}));glaze.rotation.x=-Math.PI/2;glaze.position.y=.002;S.add(glaze);
+ const glaze=new THREE.Mesh(new THREE.PlaneGeometry(200,200),new THREE.MeshBasicMaterial({color:0x03050b,transparent:true,opacity:.72,depthWrite:false}));glaze.rotation.x=-Math.PI/2;glaze.position.y=.002;glaze.renderOrder=-10;S.add(glaze);
  const W=2.2,H=4.4,DX=3.2;
  const frameM=new THREE.MeshStandardMaterial({color:0x2a2216,metalness:.9,roughness:.35,emissive:0x3a2a10,emissiveIntensity:.4});
  S.add(new THREE.AmbientLight(0x1a2240,.6));

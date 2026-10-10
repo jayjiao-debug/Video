@@ -3,7 +3,7 @@ import {Reflector} from 'three/addons/objects/Reflector.js';
 export function stage(THREE,{fog=.05,glaze=.74,dust=600,bg=0x010207}={}){
  const S=new THREE.Scene();S.background=new THREE.Color(bg);S.fog=new THREE.FogExp2(0x02040b,fog);
  const mir=new Reflector(new THREE.PlaneGeometry(160,160),{textureWidth:1280,textureHeight:720,color:0x8a8f99,clipBias:.003});mir.rotation.x=-Math.PI/2;S.add(mir);
- const gz=new THREE.Mesh(new THREE.PlaneGeometry(160,160),new THREE.MeshBasicMaterial({color:0x03050b,transparent:true,opacity:glaze,depthWrite:false}));gz.rotation.x=-Math.PI/2;gz.position.y=.002;S.add(gz);
+ const gz=new THREE.Mesh(new THREE.PlaneGeometry(160,160),new THREE.MeshBasicMaterial({color:0x03050b,transparent:true,opacity:glaze,depthWrite:false}));gz.rotation.x=-Math.PI/2;gz.position.y=.002;gz.renderOrder=-10;S.add(gz);
  S.add(new THREE.AmbientLight(0x1a2240,.5));
  let sd=77;const rn=()=>(sd=(sd*16807)%2147483647)/2147483647;
  const dg=new THREE.BufferGeometry();const dp=new Float32Array(dust*3);const DB=Array.from({length:dust},()=>[(rn()-.5)*18,rn()*6,(rn()-.5)*18,rn()]);dg.setAttribute('position',new THREE.BufferAttribute(dp,3));
