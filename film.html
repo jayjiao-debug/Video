@@ -432,12 +432,12 @@ window.renderAt=function(T){
  $('km').style.opacity=1-pr(T,15.6,16.4);const pp=0.04+0.92*eio(pr(T,3.4,7.6));$('km').querySelector('.fill').style.width=pp*100+'%';$('km').querySelector('.car').style.left=pp*100+'%';
  const ci=CARDS.findIndex(c=>T>=c[0]&&T<c[1]);if(ci!==pk){pk=ci;$('card').innerHTML=ci>=0?CARDS[ci][2]:'';}
  $('card').style.display=ci>=0?'block':'none';if(ci>=0){const c=CARDS[ci];$('card').style.opacity=pr(T,c[0],c[0]+0.6)*(1-pr(T,c[1]-0.6,c[1]));}
- $('plaque').style.opacity=pr(T,16.58,16.9)*(1-pr(T,20.2,20.8));$('plaque').style.transform=`scale(${1.06-0.06*eo(pr(T,16.58,17.3))})`;
+ $('plaque').style.opacity=0;$('title').style.opacity=pr(T,16.58,16.9)*(1-pr(T,20.2,20.8));$('title').style.transform=`translate(-50%,${(1-eo(pr(T,16.58,17.2)))*18}px)`;
  $('end').style.opacity=pr(T,125.4,126.4);
  {const fz=pr(T,33.0,33.3)*(1-pr(T,36.0,36.3)),ff=pr(T,49.2,49.5)*(1-pr(T,52.2,52.5));const md=fz>0?'fz':(ff>0?'ff':'');if($('tb').dataset.m!==md){$('tb').dataset.m=md;$('tb').innerHTML=md==='fz'?'<i class="pz"></i><i class="pz"></i><span>定格</span>':(md==='ff'?'<i class="tr"></i><i class="tr"></i><span>快进</span>':'');}
   $('tb').style.opacity=Math.max(fz,ff);$('flash').style.opacity=T>=FRZ[0]&&T<FRZ[0]+0.8?0.45*Math.exp(-(T-FRZ[0])/0.12):0;}
  const L=LINES.find(x=>T>=x[0]&&T<x[1]);$('sub').innerHTML=L?'<span class="pill">'+L[2].replace(/\[(.+?)\]/g,'<b>$1</b>')+'</span>':'';$('sub').style.opacity=T>125.4?0:1;};
-$('gauge').style.display='none';$('vms').style.display='block';$('km').style.display='block';$('chap').style.display='flex';$('title').style.display='none';
+$('gauge').style.display='none';$('vms').style.display='block';$('km').style.display='block';$('chap').style.display='flex';$('title').style.display='flex';$('title').style.top='400px';{const t=$('title');t.querySelector('.ex').textContent='J';t.querySelectorAll('div div')[3].textContent='PHANTOM TRAFFIC JAM';}
 
 await document.fonts.load('900 60px "Noto Sans CJK SC"');await document.fonts.ready;window.READY=true;
 </script></body></html>
