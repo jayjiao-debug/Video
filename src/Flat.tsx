@@ -17,7 +17,7 @@ const FLAP_STITCH = 'M -126 -212 L -127 -150 Q -114 -100 0 -96 Q 114 -100 127 -1
 const BODY_STITCH = 'M -130 -12 Q -146 -12 -145 -26 L -126 -192';
 const HANDLE = 'M -78 -224 C -78 -338, 78 -338, 78 -224';
 
-export const Bag2D: React.FC<{ x: number; y: number; s?: number; look: Look; leather?: string; id: string; stitch?: string; tag?: boolean; outline?: string }> = ({ x, y, s = 1, look, leather = '#7a1c22', id, stitch, tag = true, outline }) => {
+export const Bag2D: React.FC<{ x: number; y: number; s?: number; look: Look; leather?: string; id: string; stitch?: string; tag?: boolean; outline?: string; swing?: number; glowStitch?: boolean }> = ({ x, y, s = 1, look, leather = '#7a1c22', id, stitch, tag = true, outline, swing = 0, glowStitch = false }) => {
   const flat = look === 'A';
   const line = outline ?? (flat ? GOLD : 'rgba(0,0,0,0.35)'); const st = stitch ?? (flat ? GOLD : '#e8d2a8');
   return (
@@ -43,19 +43,19 @@ export const Bag2D: React.FC<{ x: number; y: number; s?: number; look: Look; lea
       {/* flap */}
       {!flat && <path d={FLAP} fill="rgba(0,0,0,0.35)" transform="translate(4 10)" />}
       <path d={FLAP} fill={flat ? leather : `url(#${id}-flap)`} stroke={line} strokeWidth={flat ? 3 : 1.5} />
-      <path d={FLAP_STITCH} fill="none" stroke={st} strokeWidth={2.2} strokeDasharray="7 6" />
+      <path d={FLAP_STITCH} fill="none" stroke={st} strokeWidth={glowStitch ? 3 : 2.2} strokeDasharray="7 6" style={glowStitch ? { filter: 'drop-shadow(0 0 6px #9ef0ff) drop-shadow(0 0 16px #6ad8ff)' } : undefined} />
       {/* clasp */}
       <rect x={-34} y={-108} width={68} height={22} rx={4} fill={`url(#${id}-gold)`} stroke={GOLD_D} strokeWidth={1.5} />
       <rect x={-24} y={-101} width={48} height={8} rx={4} fill={GOLD_D} opacity={0.6} />
       {/* feet */}
       {[-120, 120].map((fx) => <ellipse key={fx} cx={fx} cy={3} rx={9} ry={4} fill={`url(#${id}-gold)`} />)}
       {/* the signature: a gold price-tag charm on a short chain */}
-      {tag && <>{Array.from({ length: 6 }, (_, i) => <circle key={i} cx={82 + i * 6} cy={-214 + i * 9} r={3.2} fill="none" stroke={GOLD} strokeWidth={1.8} />)}
+      {tag && <g transform={`rotate(${swing} 78 -224)`}>{Array.from({ length: 6 }, (_, i) => <circle key={i} cx={82 + i * 6} cy={-214 + i * 9} r={3.2} fill="none" stroke={GOLD} strokeWidth={1.8} />)}
       <g transform="translate(116 -150) rotate(-10)">
         <path d="M -20 -26 L 20 -26 L 20 26 L -20 26 Z" fill={`url(#${id}-gold)`} stroke={GOLD_D} strokeWidth={1.5} />
         <circle cx={0} cy={-16} r={4} fill="#1a0e04" />
         <text x={0} y={18} textAnchor="middle" fontFamily={font.latin} fontWeight={700} fontSize={30} fill="#5a3a10">€</text>
-      </g></>}
+      </g></g>}
     </g>
   );
 };
