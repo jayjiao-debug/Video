@@ -62,13 +62,13 @@ function WORLDS(T,o){const Ax=560,Bx=1360,base=700;const ga=eo(pr(T,53.1,54.8)),
   coins(Bx-70,base,Math.round(40*gb),52,'#ffe7a0','#c8963e',o*(1-m),11);coins(Bx+80,base,Math.round(80*gb),52,'#d8dde8','#6a7080',o*(1-m)*1,6.6);}
  if(vac){const tile=(x,n,c)=>{for(let k=0;k<Math.round(n*m);k++){X.globalAlpha=o*.9;X.fillStyle=c;X.shadowBlur=12;X.shadowColor=c;X.fillRect(x-48,base-8-k*16,96,11);X.shadowBlur=0;}};tile(Ax-70,10,'#9fd0ff');tile(Ax+80,5,'#5d6f94');tile(Bx-70,20,'#9fd0ff');tile(Bx+80,40,'#5d6f94');}
  // 257 people as dots walking to A or B
- const w1=pr(T,61.2,64.4),w2=pr(T,65.8,68.6);WAL.forEach(w=>{const g1=eio(cl((w1-w.d*.4)/.6)),g2=eio(cl((w2-w.d*.4)/.6));const tx1=(w.A?Ax:Bx)+Math.cos(w.a)*w.r*230,ty1=800+Math.sin(w.a)*w.r*24;const tx2=(w.A2?Ax:Bx)+Math.cos(w.a)*w.r*230;
+ const w1=pr(T,61.1,62.6),w2=pr(T,65.8,68.6);WAL.forEach(w=>{const g1=eio(cl((w1-w.d*.4)/.6)),g2=eio(cl((w2-w.d*.4)/.6));const tx1=(w.A?Ax:Bx)+Math.cos(w.a)*w.r*230,ty1=800+Math.sin(w.a)*w.r*24;const tx2=(w.A2?Ax:Bx)+Math.cos(w.a)*w.r*230;
   const x=lerp(lerp(w.x0,tx1,g1),tx2,g2),y=lerp(lerp(w.y0,ty1,g1),ty1,g2);if(T>60.9)dot(x,y,4,vac?'#9fd0ff':'#fff0d0',o*.95,6);});
  const lab=(x,y,t,c,op)=>`<div class="t" style="left:${x}px;top:${y}px;transform:translateX(-50%);font-size:28px;color:${c};opacity:${op}">${t}</div>`;
  if(!vac){h+=lab(Ax-70,base-20*11*ga-70,'你 5万',G,ga)+lab(Ax+80,base-10*11*ga-70,'别人 2.5万','#c9cfdb',ga)+lab(Bx-70,base-40*11*gb-70,'你 10万',G,gb)+lab(Bx+80,base-80*6.6*gb-70,'别人 20万','#c9cfdb',gb);}
- else h+=lab(Ax,base-260,'你的假期，比别人多','#9fd0ff',pr(T,66,66.5))+lab(Bx,base-700,'你的假期更多，但别人更多','#9fd0ff',pr(T,66,66.5));
+ else h+=lab(Ax,base-260,'你的假期，比别人多','#9fd0ff',pr(T,66,66.5))+lab(Bx,base-560,'你的假期更多，但别人更多','#9fd0ff',pr(T,66,66.5));
  h+=`<div class="t serif" style="left:${Ax}px;top:${base+24}px;transform:translateX(-50%);font-size:52px;color:#fff">A</div><div class="t serif" style="left:${Bx}px;top:${base+24}px;transform:translateX(-50%);font-size:52px;color:#fff">B</div>`;
- const pa=T<65.2?Math.round(48*eo(pr(T,61.4,64.4))):Math.round(lerp(48,15,eo(pr(T,65.9,68.6))));
+ const pa=T<65.2?Math.round(48*eo(pr(T,61.2,62.4))):Math.round(lerp(48,15,eo(pr(T,65.9,68.6))));
  h+=big(vac?'换成假期 · 选 A 的人':'选 A 的人',pa,'%',vac?'#9fd0ff':G,pr(T,61.3,61.7))+(vac?`<div class="t" style="left:120px;top:330px;font-size:34px;color:#fff;opacity:${pr(T,68.4,68.9)}">85% 只要自己的假期更多</div>`:'');
  h+=`<div class="t" style="left:960px;top:150px;transform:translateX(-50%);font-size:28px;color:#c9b98f;letter-spacing:4px;opacity:${pr(T,49.2,49.7)*(1-pr(T,61.0,61.4))}">物价完全一样 · 你想住在哪个世界？</div>`+note('Solnick &amp; Hemenway (1998) · 哈佛公共卫生学院 257 人 · 塔高按比例',pr(T,49.2,49.7));
  return h;}
@@ -107,7 +107,7 @@ function END(T,o){const g=pr(T,109.9,110.6)*(1-pr(T,113.6,114.2));const ch=pr(T,
  if(ch>0)h+=`<div style="opacity:${ch}"><div style="position:absolute;left:330px;top:400px;width:300px;padding:22px 26px;border-radius:20px;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.15)"><div style="font-size:22px;color:#9aa2b4;font-weight:700">跟室友比</div><div class="serif" style="font-size:52px;font-weight:900;color:${RED}">−¥2,000</div></div>
   <div style="position:absolute;left:1290px;top:400px;width:300px;padding:22px 26px;border-radius:20px;background:rgba(246,207,120,.08);border:1px solid rgba(246,207,120,.4)"><div style="font-size:22px;color:#c9b98f;font-weight:700">跟去年的自己比</div><div class="serif" style="font-size:52px;font-weight:900;color:${G}">+¥4,000</div></div></div>`;
  return h;}
-const SCN=[{w:[0,20.9],f:HOOK},{w:[20.6,49.0],f:MONK},{w:[48.9,73.3],f:WORLDS},{w:[73.2,97.7],f:WALL},{w:[97.6,105.8],f:STREET},{w:[105.7,130],f:END}];
+const SCN=[{w:[0,20.9],f:HOOK},{w:[20.6,49.0],f:MONK},{w:[48.9,73.3],f:WORLDS},{w:[73.2,97.7],f:WALL},{w:[97.6,105.8],f:STREET},{w:[105.7,125.7],f:END}];
 const LINES=[[0,4.4,'你拿到人生第一份实习工资：[4000]'],[4.4,8.5,'开心了[整整三天]'],[8.5,12.5,'然后室友说：他的是[6000]'],[12.5,16.4,'你的4000，突然就[不香了]'],
  [20.6,24.7,'别怪自己。连[猴子]都这样'],[24.7,28.7,'科学家让卷尾猴，用小石子换[黄瓜]'],[28.7,32.8,'两只都换到黄瓜：[95%]照常交换'],[32.8,36.8,'可旁边那只，同样干活，换到[葡萄]'],[36.8,40.9,'这只就不干了：掉到[60%]'],[40.9,44.9,'旁边那只[啥也不干]就拿葡萄：只剩[20%]'],[44.9,48.9,'不是黄瓜变难吃了，是[旁边有葡萄]'],
  [48.98,53.0,'人呢？哈佛问过257个人一道题'],[53.0,57.0,'A世界：你年入5万，别人[2.5万]'],[57.0,61.1,'B世界：你年入10万，别人[20万]'],[61.1,65.1,'B多挣一倍，可[48%]的人选了A'],[65.2,69.2,'换成假期呢？[85%]的人只要自己多'],[69.2,73.2,'原来我们，偏偏在[钱]上最爱比'],
