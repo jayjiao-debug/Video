@@ -1,0 +1,16 @@
+token present: yes
+url https://bigsoundbank.com/UPLOAD/mp3/3506.mp3
+  saved out/files/bsb3506_horn3.mp3 0.0 MB
+url https://bigsoundbank.com/UPLOAD/mp3/0258.mp3
+  saved out/files/bsb0258_car_horn2.mp3 0.1 MB
+url https://bigsoundbank.com/UPLOAD/mp3/0969.mp3
+  saved out/files/bsb0969_car_horn7.mp3 0.2 MB
+url https://bigsoundbank.com/UPLOAD/mp3/0850.mp3
+  saved out/files/bsb0850_car_horn5.mp3 0.3 MB
+url https://bigsoundbank.com/UPLOAD/mp3/3438.mp3
+  saved out/files/bsb3438_honk90.mp3 0.3 MB
+url https://bigsoundbank.com/UPLOAD/mp3/3593.mp3
+  saved out/files/bsb3593_bus_horns.mp3 0.1 MB
+url https://bigsoundbank.com/UPLOAD/mp3/0122.mp3
+  saved out/files/bsb0122_autoroute.mp3 1.5 MB
+done
