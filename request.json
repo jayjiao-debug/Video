@@ -1,9 +1,6 @@
 {
- "id": "hm-02",
+ "id": "hm-03",
  "items": [
-  {"type":"url","url":"https://www.ebi.ac.uk/europepmc/webservices/rest/PMC10013834/fullTextXML","name":"kkm2023.xml","license":"PNAS open access (CC BY-NC-ND), reference"},
-  {"type":"url","url":"https://www.ebi.ac.uk/europepmc/webservices/rest/PMC4224996/fullTextXML","name":"hill2014.xml","license":"PMC author manuscript, reference"},
-  {"type":"url","url":"https://www.ebi.ac.uk/europepmc/webservices/rest/PMC7848527/fullTextXML","name":"kill2021.xml","license":"PNAS open access, reference"},
-  {"type":"url","url":"https://news.harvard.edu/gazette/story/2010/11/wandering-mind-not-a-happy-mind/","name":"harvard_gazette_2010.html","license":"Harvard Gazette, reference"}
+  {"type":"url","url":"https://eutils.ncbi.nlm.nih.gov/entrez/eutils/esearch.fcgi?db=pubmed&term=Small+Zatorre+chocolate+pleasure+aversion+2001&retmode=json","name":"s_choc.json","license":"ref"}
  ]
 }
