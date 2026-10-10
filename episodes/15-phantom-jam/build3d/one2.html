@@ -1,0 +1,168 @@
+<!doctype html><html><head><meta charset="utf-8"><style>
+html,body{margin:0;background:#E4E6E1;overflow:hidden;width:1920px;height:1080px}
+canvas{position:absolute;left:0;top:0}
+#vig{position:absolute;inset:0;pointer-events:none;background:radial-gradient(ellipse at 50% 45%,rgba(0,0,0,0) 58%,rgba(30,40,45,.20) 100%)}
+.F{font-family:"Noto Sans CJK SC",sans-serif}
+/* highway-sign chapter plate */
+.plate{position:absolute;background:#1D7A4C;border-radius:12px;box-shadow:0 6px 18px rgba(20,40,30,.25);color:#fff}
+.plate:before{content:"";position:absolute;inset:5px;border:3px solid #fff;border-radius:8px}
+#chap{left:60px;top:44px;padding:14px 26px 14px 18px;display:flex;align-items:center;gap:16px}
+#chap .ex{background:#fff;color:#1D7A4C;font-weight:900;font-size:30px;border-radius:7px;padding:2px 10px;line-height:1.15}
+#chap .t{font-size:34px;font-weight:900;line-height:1}
+#chap .s{font-size:13px;letter-spacing:4px;font-weight:700;opacity:.85;margin-top:6px}
+/* variable-message sign (情报板) */
+#vms{position:absolute;left:auto;right:60px;top:44px;background:#111312;border-radius:8px;padding:12px 16px;box-shadow:0 6px 18px rgba(0,0,0,.3);border:3px solid #2b2e2c}
+/* km strip */
+#km{position:absolute;left:50%;transform:translateX(-50%);top:58px;width:560px}
+#km .ln{height:4px;background:#b9bdb6;border-radius:2px;position:relative}
+#km .fill{position:absolute;left:0;top:0;height:4px;background:#1f1d1a;border-radius:2px}
+#km .tk{position:absolute;top:-6px;width:2px;height:16px;background:#8b908a}
+#km .car{position:absolute;top:-11px;margin-left:-13px;width:26px;height:26px;border-radius:13px;background:#1f1d1a;color:#fff;font-size:14px;font-weight:900;display:flex;align-items:center;justify-content:center}
+#km .lb{display:flex;justify-content:space-between;font-size:15px;color:#6d726c;font-weight:700;margin-top:12px}
+#title{position:absolute;left:50%;top:330px;transform:translateX(-50%);padding:34px 64px 30px 40px;display:flex;align-items:center;gap:34px;opacity:0}
+#title .ex{background:#fff;color:#1D7A4C;font-weight:900;font-size:84px;border-radius:14px;padding:4px 22px;line-height:1.1}
+#title .t{font-size:136px;font-weight:900;line-height:1}
+#title .s{font-size:28px;letter-spacing:12px;font-weight:700;opacity:.85;margin-top:14px}
+#sub{position:absolute;left:0;right:0;bottom:70px;text-align:center;font-size:64px;line-height:1.2;font-family:"Noto Sans CJK SC","Noto Sans SC",sans-serif;font-weight:700;color:#fff;letter-spacing:1px}
+#sub .pill{display:inline-block;padding:10px 34px 14px;border-radius:18px;background:rgba(6,8,13,.80);box-shadow:0 6px 24px rgba(0,0,0,.25);text-shadow:0 2px 6px rgba(0,0,0,.9)}
+#sub b{color:#f6cf78;text-shadow:0 0 18px rgba(246,207,120,.55),0 3px 14px #000;font-weight:700}
+</style></head><body class="F">
+<div id="vig"></div>
+<div id="chap" class="plate F"><div class="ex">00</div><div><div class="t">堵了</div><div class="s">STUCK</div></div></div>
+<div id="km" class="F"><div class="ln"><div class="fill"></div><div class="tk" style="left:20%"></div><div class="tk" style="left:40%"></div><div class="tk" style="left:60%"></div><div class="tk" style="left:80%"></div><div class="car">你</div></div><div class="lb"><span>K0 你</span><span>队伍 ≈ 1.6 km</span><span>最前面 K1.6</span></div></div>
+<canvas id="vms" width="420" height="150"></canvas>
+<div id="title" class="plate F"><div class="ex">01</div><div><div class="t">幽灵堵车</div><div class="s">PHANTOM JAM</div></div></div>
+<div id="sub"></div>
+<script type="importmap">{"imports":{"three":"./node_modules/three/build/three.module.js","three/addons/":"./node_modules/three/examples/jsm/"}}</script>
+<script type="module">
+import * as THREE from 'three';
+import { RoundedBoxGeometry } from 'three/addons/geometries/RoundedBoxGeometry.js';
+import { mergeGeometries } from 'three/addons/utils/BufferGeometryUtils.js';
+const W=1920,H=1080,BG=0xE4E6E1;
+const R=new THREE.WebGLRenderer({antialias:true,preserveDrawingBuffer:true});R.setPixelRatio(1);R.setSize(W,H);R.setClearColor(BG);
+R.outputColorSpace=THREE.SRGBColorSpace;document.body.prepend(R.domElement);
+const S=new THREE.Scene();S.fog=new THREE.Fog(BG,60,230);
+const cam=new THREE.PerspectiveCamera(42,W/H,0.1,1000);
+S.add(new THREE.HemisphereLight(0xffffff,0xc9cec6,1.7));const dl=new THREE.DirectionalLight(0xffffff,1.5);dl.position.set(-30,60,20);S.add(dl);
+const cl=(x,a=0,b=1)=>Math.max(a,Math.min(b,x)),pr=(t,a,b)=>cl((t-a)/(b-a)),eio=x=>x<.5?4*x*x*x:1-Math.pow(-2*x+2,3)/2,eo=x=>1-Math.pow(1-x,3);
+// ---- ground: light concrete with a dot grid (no line grid)
+{const c=document.createElement('canvas');c.width=c.height=256;const g=c.getContext('2d');g.fillStyle='#E4E6E1';g.fillRect(0,0,256,256);
+ for(let i=0;i<1400;i++){g.fillStyle=`rgba(70,80,75,${Math.random()*0.04})`;g.fillRect(Math.random()*256,Math.random()*256,2,2);}
+ g.fillStyle='rgba(60,70,65,.32)';for(let y=0;y<4;y++)for(let x=0;x<4;x++){g.beginPath();g.arc(x*64+32,y*64+32,2.6,0,7);g.fill();}
+ const t=new THREE.CanvasTexture(c);t.wrapS=t.wrapT=THREE.RepeatWrapping;t.repeat.set(150,150);t.anisotropy=8;t.colorSpace=THREE.SRGBColorSpace;
+ const m=new THREE.Mesh(new THREE.PlaneGeometry(1200,1200),new THREE.MeshBasicMaterial({map:t}));m.rotation.x=-Math.PI/2;S.add(m);}
+const basic=c=>new THREE.MeshBasicMaterial({color:c});
+const shMat=new THREE.MeshBasicMaterial({color:0x1c2522,transparent:true,opacity:.14,depthWrite:false});
+function ribbon(pts,w,color,y=0.06){const sh=new THREE.Shape();const L=[],Rr=[];
+ for(let i=0;i<pts.length;i++){const a=pts[Math.max(0,i-1)],b=pts[Math.min(pts.length-1,i+1)];let dx=b[0]-a[0],dz=b[1]-a[1];const l=Math.hypot(dx,dz);dx/=l;dz/=l;
+  L.push([pts[i][0]-dz*w/2,pts[i][1]+dx*w/2]);Rr.push([pts[i][0]+dz*w/2,pts[i][1]-dx*w/2]);}
+ const all=L.concat(Rr.reverse());sh.moveTo(all[0][0],-all[0][1]);for(const p of all.slice(1))sh.lineTo(p[0],-p[1]);
+ const geo=new THREE.ShapeGeometry(sh);const m=new THREE.Mesh(geo,basic(color));m.rotation.x=-Math.PI/2;m.position.y=y;S.add(m);
+ const s=new THREE.Mesh(geo,shMat);s.rotation.x=-Math.PI/2;s.position.set(0.18,0.012,0.18);S.add(s);
+ for(const e of [pts[0],pts[pts.length-1]]){const d=new THREE.Mesh(new THREE.CircleGeometry(w*1.25,28),basic(0xffffff));d.rotation.x=-Math.PI/2;d.position.set(e[0],y+0.003,e[1]);S.add(d);
+  const d2=new THREE.Mesh(new THREE.RingGeometry(w*0.85,w*1.25,28),basic(color));d2.rotation.x=-Math.PI/2;d2.position.set(e[0],y+0.004,e[1]);S.add(d2);}
+ return m;}
+function smooth(pts){let p=pts;for(let k=0;k<3;k++){const q=[p[0]];for(let i=0;i<p.length-1;i++){const a=p[i],b=p[i+1];q.push([a[0]*.75+b[0]*.25,a[1]*.75+b[1]*.25],[a[0]*.25+b[0]*.75,a[1]*.25+b[1]*.75]);}q.push(p[p.length-1]);p=q;}return p;}
+// 4 lanes, saturated transit colours; you = black
+const LANES=[{x:-1.95,c:0x22A699,car:0x178276},{x:-0.65,c:0x1f1d1a,car:0x26282b},{x:0.65,c:0xF2A51A,car:0xD98C0B},{x:1.95,c:0x2E6FD8,car:0x2559B3}];
+const Z0=40,Z1=-330;for(const l of LANES)ribbon([[l.x,Z0],[l.x,Z1]],0.55,l.c);
+// white dashed lane separators between the lines
+{const g=[];for(const x of [-1.3,0,1.3])for(let z=Z0;z>Z1;z-=4){const b=new THREE.PlaneGeometry(0.09,1.6);b.rotateX(-Math.PI/2);b.translate(x,0.05,z);g.push(b);}
+ S.add(new THREE.Mesh(mergeGeometries(g),basic(0xffffff)));}
+ribbon(smooth([[-60,-20],[-14,-20],[-6,-28],[-6,-110],[-30,-134],[-80,-134]]),0.55,0x8E5BB5);
+ribbon(smooth([[70,10],[22,10],[12,0],[12,-60],[40,-88],[90,-88]]),0.55,0x22A699);
+ribbon(smooth([[-90,-230],[-20,-230],[-8,-242],[-8,-300]]),0.55,0xF2A51A);
+ribbon(smooth([[80,-160],[30,-160],[16,-174],[16,-260],[60,-304]]),0.55,0x2E6FD8);
+// ---- canvas helpers
+function ctex(w,h,draw){const c=document.createElement('canvas');c.width=w;c.height=h;const g=c.getContext('2d');draw(g,w,h);const t=new THREE.CanvasTexture(c);t.colorSpace=THREE.SRGBColorSpace;t.anisotropy=8;return {c,g,t};}
+function rr(g,x,y,w,h,r){g.beginPath();g.moveTo(x+r,y);g.arcTo(x+w,y,x+w,y+h,r);g.arcTo(x+w,y+h,x,y+h,r);g.arcTo(x,y+h,x,y,r);g.arcTo(x,y,x+w,y,r);g.closePath();}
+// LED dot-matrix text (情报板 style)
+function led(g,lines,W,H,{pitch=6,color='#FFB21A',off='#2a2418'}={}){g.fillStyle='#111312';g.fillRect(0,0,W,H);
+ const c=document.createElement('canvas');c.width=Math.floor(W/pitch);c.height=Math.floor(H/pitch);const q=c.getContext('2d');q.fillStyle='#000';q.fillRect(0,0,c.width,c.height);
+ q.textBaseline='middle';q.textAlign='center';const n=lines.length;
+ lines.forEach((l,i)=>{q.font=`900 ${l.size||Math.floor(c.height/n*0.82)}px "Noto Sans CJK SC"`;q.fillStyle=l.color||'#fff';q.fillText(l.t,c.width/2,(i+0.5)*c.height/n+1);});
+ const d=q.getImageData(0,0,c.width,c.height).data;
+ for(let y=0;y<c.height;y++)for(let x=0;x<c.width;x++){const k=(y*c.width+x)*4;const on=d[k]+d[k+1]+d[k+2]>200;
+  g.fillStyle=on?(d[k]>200&&d[k+1]<120?'#FF4A3A':color):off;g.beginPath();g.arc(x*pitch+pitch/2,y*pitch+pitch/2,pitch*0.36,0,7);g.fill();}}
+// ---- overhead gantry at the front of the queue (green highway sign)
+{const G=new THREE.Group();const post=new THREE.MeshLambertMaterial({color:0x9aa09a});
+ for(const x of [-3.8,3.8]){const p=new THREE.Mesh(new THREE.CylinderGeometry(0.16,0.16,6.2,12),post);p.position.set(x,3.1,0);G.add(p);}
+ const beam=new THREE.Mesh(new THREE.BoxGeometry(7.9,0.3,0.3),post);beam.position.set(0,5.9,0);G.add(beam);
+ const sg=ctex(1024,300,(g,w,h)=>{g.fillStyle='#1D7A4C';rr(g,0,0,w,h,26);g.fill();g.strokeStyle='#fff';g.lineWidth=10;rr(g,16,16,w-32,h-32,16);g.stroke();
+  g.fillStyle='#fff';g.textAlign='center';g.font='900 132px "Noto Sans CJK SC"';g.fillText('最前面',w/2,170);g.font='700 44px "Noto Sans CJK SC"';g.letterSpacing='10px';g.fillText('FRONT OF THE QUEUE',w/2,250);});
+ const panel=new THREE.Mesh(new THREE.PlaneGeometry(6.6,1.95),new THREE.MeshBasicMaterial({map:sg.t}));panel.position.set(0,5.0,0.2);G.add(panel);
+ G.position.set(0,0,-178.6);S.add(G);}
+// ---- roadside variable-message sign (情报板): what is ahead?
+const vmsT=ctex(720,360,()=>{});const vms3=new THREE.Group();
+{const post=new THREE.MeshLambertMaterial({color:0x9aa09a});const p=new THREE.Mesh(new THREE.CylinderGeometry(0.18,0.18,4.2,12),post);p.position.set(0,2.1,0);vms3.add(p);
+ const box=new THREE.Mesh(new THREE.BoxGeometry(6.4,3.4,0.35),new THREE.MeshLambertMaterial({color:0x2b2e2c}));box.position.set(0,5.4,-0.1);vms3.add(box);
+ const face=new THREE.Mesh(new THREE.PlaneGeometry(6.0,3.0),new THREE.MeshBasicMaterial({map:vmsT.t}));face.position.set(0,5.4,0.09);vms3.add(face);
+ vms3.position.set(8.5,0,-201);vms3.rotation.y=-0.56;S.add(vms3);}
+let vmsKey='';function drawVMS(T){const rows=[];const items=[['车祸',7.0],['施工',7.6],['收费站',8.2]];
+ for(const [n,t0] of items)rows.push({t:T>=t0?`${n} ── ${T>=t0+0.35?'无':'?'}`:' ',color:T>=t0+0.35?'#ff2020':'#fff'});
+ const key=rows.map(r=>r.t).join('|');if(key===vmsKey)return;vmsKey=key;
+ const g=vmsT.g;g.clearRect(0,0,720,360);
+ // draw: title row amber, items: name amber, 无 red
+ led(g,[{t:'前方情况',color:'#fff'},...rows],720,360,{pitch:4});
+ // recolour the 无 glyphs red: simple overlay pass — draw items again in red only on the right third
+ vmsT.t.needsUpdate=true;}
+// ---- cars: body + glass cabin + wheels + brake lights + red glow when stopped
+const bodyG=new RoundedBoxGeometry(0.84,0.3,1.7,3,0.13);
+const cabG=new RoundedBoxGeometry(0.68,0.26,0.86,3,0.11);
+const wheelG=(()=>{const g=[];for(const x of [-0.43,0.43])for(const z of [-0.52,0.5]){const c=new THREE.CylinderGeometry(0.15,0.15,0.12,14);c.rotateZ(Math.PI/2);c.translate(x,0.15,z);g.push(c);}return mergeGeometries(g);})();
+const lightG=(()=>{const g=[];for(const x of [-0.28,0.28]){const b=new THREE.BoxGeometry(0.2,0.08,0.04);b.translate(x,0.33,0.86);g.push(b);}return mergeGeometries(g);})();
+const wheelM=new THREE.MeshLambertMaterial({color:0x1d1f21});
+const glowT=ctex(128,128,(g)=>{const r=g.createRadialGradient(64,64,0,64,64,64);r.addColorStop(0,'rgba(255,70,50,.9)');r.addColorStop(1,'rgba(255,70,50,0)');g.fillStyle=r;g.fillRect(0,0,128,128);}).t;
+const glowG=new THREE.PlaneGeometry(1.6,1.3);glowG.rotateX(-Math.PI/2);
+const shG=new THREE.PlaneGeometry(0.98,1.85);shG.rotateX(-Math.PI/2);
+const cars=[];const GAP=2.85,FRONT=-174,NPL=70;
+for(let li=0;li<LANES.length;li++)for(let i=0;i<NPL;i++){const off=(li%2)*0.9+(li===3?0.4:0);const z0=FRONT+off+i*GAP;
+ const g=new THREE.Group();const col=new THREE.Color(LANES[li].car);
+ const body=new THREE.Mesh(bodyG,new THREE.MeshLambertMaterial({color:col}));body.position.y=0.3;g.add(body);
+ const cab=new THREE.Mesh(cabG,new THREE.MeshLambertMaterial({color:col.clone().lerp(new THREE.Color(0xEAF2F6),0.62)}));cab.position.set(0,0.55,0.12);g.add(cab);
+ g.add(new THREE.Mesh(wheelG,wheelM));
+ const lm=new THREE.MeshBasicMaterial({color:0x5a1712});const lights=new THREE.Mesh(lightG,lm);g.add(lights);
+ const gm=new THREE.MeshBasicMaterial({map:glowT,transparent:true,depthWrite:false,blending:THREE.AdditiveBlending,opacity:1});const glow=new THREE.Mesh(glowG,gm);glow.position.set(0,0.03,1.35);g.add(glow);
+ const sh=new THREE.Mesh(shG,shMat);sh.position.set(0.2,0.015,0.2);g.add(sh);
+ g.position.set(LANES[li].x,0,z0);S.add(g);cars.push({g,li,i,z0,lm,gm});}
+const YOU=cars.find(c=>c.li===1&&c.i===50);
+// "you" pin (billboard)
+const pinT=ctex(256,320,(g)=>{g.fillStyle='#1f1d1a';g.beginPath();g.arc(128,118,104,Math.PI*0.82,Math.PI*0.18);g.lineTo(128,312);g.closePath();g.fill();
+ g.fillStyle='#fff';g.beginPath();g.arc(128,118,78,0,7);g.fill();g.fillStyle='#1f1d1a';g.font='900 96px "Noto Sans CJK SC"';g.textAlign='center';g.textBaseline='middle';g.fillText('你',128,122);}).t;
+const pin=new THREE.Sprite(new THREE.SpriteMaterial({map:pinT,transparent:true,depthTest:false}));pin.scale.set(1.5,1.875,1);pin.renderOrder=10;S.add(pin);
+// ---- camera keys
+const K=[
+ [0.0,[-4.5,7.5,YOU.z0+13],[-0.4,0,YOU.z0-6]],
+ [2.6,[-3.6,8.2,YOU.z0+9],[0,0,YOU.z0-12]],
+ [4.6,[-2,11,YOU.z0-20],[0.5,0,YOU.z0-55]],
+ [6.8,[-3,11,-152],[1,2,-186]],
+ [8.8,[-5,10,-180],[8,4,-201]],
+ [10.6,[-4,10.5,-184],[8.5,4.5,-202]],
+ [12.4,[9,15,-206],[0,0,-150]],
+ [14.6,[10,26,-176],[0,0,-110]],
+ [17.6,[0,120,-108],[0,0,-109]],
+ [21.0,[0,150,-104],[0,0,-105]]];
+function herm(T,idx){let i=0;while(i<K.length-2&&T>K[i+1][0])i++;const t0=K[i][0],t1=K[i+1][0];const u=cl((T-t0)/(t1-t0));
+ const P=j=>new THREE.Vector3(...K[cl(j,0,K.length-1)][idx]),Tt=j=>K[cl(j,0,K.length-1)][0];
+ const m=j=>{if(j<=0||j>=K.length-1)return new THREE.Vector3();return P(j+1).sub(P(j-1)).multiplyScalar(1/(Tt(j+1)-Tt(j-1)));};
+ const h00=2*u**3-3*u**2+1,h10=u**3-2*u**2+u,h01=-2*u**3+3*u**2,h11=u**3-u**2,d=t1-t0;
+ return P(i).multiplyScalar(h00).add(m(i).multiplyScalar(h10*d)).add(P(i+1).multiplyScalar(h01)).add(m(i+1).multiplyScalar(h11*d));}
+const LINES=[[0,2.6,'堵了[40分钟]'],[2.6,6.6,'到前面一看——'],[6.6,10.8,'[什么都没有]'],[10.8,14.4,'然后，突然就通了'],[14.4,17.8,'那刚才，是谁堵的？']];
+const $=id=>document.getElementById(id);const vmsC=$('vms').getContext('2d');let hudKey='';
+const BRAKE_ON=new THREE.Color(0xFF3B2A),BRAKE_OFF=new THREE.Color(0x5a1712);
+window.renderAt=function(T){
+ const p=herm(T,1),l=herm(T,2);cam.position.copy(p);cam.lookAt(l);
+ for(const c of cars){const ts=11.0+c.i*0.16+c.li*0.05;const dt=Math.max(0,T-ts);const a=3.2,tv=2.2;const s=dt<tv?0.5*a*dt*dt:0.5*a*tv*tv+a*tv*(dt-tv);
+  const z=c.z0-s;c.g.position.z=z;const f=cl(dt/0.7);c.lm.color.copy(BRAKE_ON).lerp(BRAKE_OFF,f);c.gm.opacity=1-f;c.g.visible=z>Z1+6;}
+ pin.position.set(YOU.g.position.x,2.3,YOU.g.position.z);pin.material.opacity=1-pr(T,3.6,4.6);pin.visible=pin.material.opacity>0;
+ drawVMS(T);R.render(S,cam);
+ // HUD: 情报板 counters
+ const sec=Math.min(2400,2392+Math.floor(pr(T,0,2.4)*8));const tm=String(Math.floor(sec/60)).padStart(2,'0')+':'+String(sec%60).padStart(2,'0');
+ const k=tm+(T<8.6?'?':'0');if(k!==hudKey){hudKey=k;led(vmsC,[{t:'已堵 '+tm,color:sec>=2400?'#ff3a2a':'#fff'},{t:'前方事故 '+(T<8.6?'?':'0'),color:'#fff'}],420,150,{pitch:3});}
+ const pp=0.04+0.92*eio(pr(T,2.8,7.2));document.querySelector('#km .fill').style.width=pp*100+'%';document.querySelector('#km .car').style.left=pp*100+'%';
+ const ha=1-pr(T,16.6,17.4);for(const id of ['chap','km','vms'])$(id).style.opacity=ha;
+ const ta=eo(pr(T,17.6,18.4));$('title').style.opacity=ta;$('title').style.transform=`translate(-50%,${(1-ta)*18}px)`;
+ const L=LINES.find(x=>T>=x[0]&&T<x[1]);$('sub').innerHTML=L?'<span class="pill">'+L[2].replace(/\[(.+?)\]/g,'<b>$1</b>')+'</span>':'';
+};
+await document.fonts.load('900 150px "Noto Sans CJK SC"');await document.fonts.ready;window.READY=true;
+</script></body></html>
