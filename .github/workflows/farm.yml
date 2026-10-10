@@ -1,0 +1,35 @@
+name: farm-jam15
+on:
+  push:
+    branches: [farm-jam15]
+jobs:
+  render:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        chunk: [0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19]
+    steps:
+      - uses: actions/checkout@v4
+      - run: sudo apt-get update -qq && sudo apt-get install -y -qq fonts-noto-cjk ffmpeg >/dev/null
+      - run: npm install --silent && npx playwright install chromium >/dev/null
+      - name: render chunk
+        run: |
+          N=3899; C=${{ matrix.chunk }}; A=$(( N*C/20 )); B=$(( N*(C+1)/20 ))
+          for w in 0 1 2; do node capchunk.mjs film.html fr $A $B $w 3 & done; wait
+          ls fr | wc -l
+          ffmpeg -loglevel error -y -framerate 30 -start_number $A -i fr/f%05d.jpg -c:v libx264 -preset slow -crf 14 -pix_fmt yuv420p chunk_$(printf %02d $C).mp4
+      - uses: actions/upload-artifact@v4
+        with: { name: "chunk-${{ matrix.chunk }}", path: "chunk_*.mp4", compression-level: 0, retention-days: 3 }
+  join:
+    needs: render
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/download-artifact@v4
+        with: { path: parts, merge-multiple: true }
+      - run: |
+          sudo apt-get install -y -qq ffmpeg >/dev/null; ls -la parts
+          for f in $(ls parts/chunk_*.mp4 | sort); do echo "file '$f'"; done > list.txt
+          ffmpeg -loglevel error -f concat -safe 0 -i list.txt -c copy film_video.mp4; ls -la film_video.mp4
+      - uses: actions/upload-artifact@v4
+        with: { name: film_video, path: film_video.mp4, compression-level: 0, retention-days: 7 }
