@@ -1,0 +1,36 @@
+This paper investigates whether individuals feel worse off when others around them earn more. In
+
+other words, do people care about relative position and does "lagging behind the Joneses" diminish
+
+well-being? To answer this question, I match individual-level panel data containing a number of
+
+indicators of well-being to information about local average earnings. I find that, controlling for an
+
+individual's own income, higher earnings of neighbors are associated with lower levels of self-
+
+reported happiness. The data's panel nature and rich set of measures of well-being and behavior
+
+indicate that this association is not driven by selection or by changes in the way people define
+
+happiness. There is suggestive evidence that the negative effect of increases in neighbors' earnings
+
+on own well-being is most likely caused by interpersonal preferences, i.e. people having utility
+
+functions that depend on relative consumption in addition to absolute consumption.
+
+Erzo F.P. Luttmer
+JFK School of Government
+Harvard University
+Cambridge, MA 02138
+and NBER
+erzo_luttmer@harvard.edu
+1. Introduction
+
+
+
+         Classical economists understood that individuals are motivated at least partly by concerns
+
+about relative position. Adam Smith (1759), for example, wrote: “Nothing is so mortifying as to
+
+be obliged to expose our distress to the view of the public, and to feel, that though our situation
+

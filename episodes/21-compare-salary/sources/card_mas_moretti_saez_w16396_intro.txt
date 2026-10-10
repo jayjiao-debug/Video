@@ -1,0 +1,140 @@
+                                 NBER WORKING PAPER SERIES
+
+
+
+
+                              INEQUALITY AT WORK:
+                 THE EFFECT OF PEER SALARIES ON JOB SATISFACTION
+
+                                             David Card
+                                            Alexandre Mas
+                                            Enrico Moretti
+                                            Emmanuel Saez
+
+                                         Working Paper 16396
+                                 http://www.nber.org/papers/w16396
+
+
+                      NATIONAL BUREAU OF ECONOMIC RESEARCH
+                               1050 Massachusetts Avenue
+                                 Cambridge, MA 02138
+                                    September 2010
+
+
+
+
+We are grateful to Stefano Dellavigna, Ray Fisman, Kevin Hallock, Lawrence Katz, Andrew Oswald,
+and numerous seminar participants for many helpful comments. We thank the Princeton Survey Research
+Center, particularly Edward Freeland and Naila Rahman for their assistance in implementing the surveys.
+We are grateful to the Center for Equitable Growth at UC Berkeley and the Industrial Relations Section
+at Princeton University for research support. This paper reflects solely the views of the authors and
+not necessarily the views of the institutions they belong to, nor those of the National Bureau of Economic
+Research.
+
+NBER working papers are circulated for discussion and comment purposes. They have not been peer-
+reviewed or been subject to the review by the NBER Board of Directors that accompanies official
+NBER publications.
+
+© 2010 by David Card, Alexandre Mas, Enrico Moretti, and Emmanuel Saez. All rights reserved.
+Short sections of text, not to exceed two paragraphs, may be quoted without explicit permission provided
+that full credit, including © notice, is given to the source.
+Inequality at Work: The Effect of Peer Salaries on Job Satisfaction
+David Card, Alexandre Mas, Enrico Moretti, and Emmanuel Saez
+NBER Working Paper No. 16396
+September 2010, Revised April 2011
+JEL No. J0
+
+                                           ABSTRACT
+
+We use a simple theoretical framework and a randomized manipulation of access to information on
+peers' wages to provide new evidence on the effects of relative pay on individual job satisfaction and
+job search intentions. A randomly chosen subset of employees of the University of California (UC)
+was informed about a new website listing the pay of University employees. All employees were then
+surveyed about their job satisfaction and job search intentions. Our information treatment doubles
+the fraction of employees using the website, with the vast majority of new users accessing data on
+the pay of colleagues in their own department. We find an asymmetric response to the information
+treatment: workers with salaries below the median for their pay unit and occupation report lower pay
+and job satisfaction, while those earning above the median report no higher satisfaction. Likewise,
+below-median earners report a significant increase in the likelihood of looking for a new job, while
+above-median earners are unaffected. Our findings suggest that job satisfaction depends directly on
+relative pay comparisons, and that this relationship is non-linear.
+
+
+David Card                                        Enrico Moretti
+Department of Economics                           University of California, Berkeley
+549 Evans Hall, #3880                             Department of Economics
+University of California, Berkeley                549 Evans Hall
+Berkeley, CA 94720-3880                           Berkeley, CA 94720-3880
+and NBER                                          and NBER
+card@econ.berkeley.edu                            moretti@econ.berkeley.edu
+
+Alexandre Mas                                     Emmanuel Saez
+Industrial Relations Section                      Department of Economics
+Firestone Library                                 University of California, Berkeley
+Princeton University                              549 Evans Hall #3880
+Princeton, NJ 08544                               Berkeley, CA 94720
+and NBER                                          and NBER
+amas@princeton.edu                                saez@econ.berkeley.edu
+1         Introduction
+Economists have long been interested in the possibility that individuals care about both their
+absolute income and their income relative to others.1 Relative income concerns have important
+implications for microeconomic and macroeconomic policy,2 and for understanding the impact of
+income inequality.3 Recent studies have documented a systematic correlation between measures
+of relative income and reported job satisfaction (e.g., Clark and Oswald, 1996), happiness (e.g.,
+Luttmer, 2005 and Solnick and Hemenway 1998), health and longevity (e.g., Marmot, 2004),
+and reward-related brain activity (e.g., Fliessbach et al. 2007).4 Despite confirmatory evidence
+from laboratory experiments (e.g., Fehr and Schmidt, 1999), the interpretation of the empiri-
+cal evidence is not always straightforward. Relative pay effects pose a daunting challenge for
+research design, since credible identification hinges on the ability to isolate exogenous variation
+in the pay of the relevant peer group.
+        In this paper we propose and implement a new strategy for evaluating the effect of relative
+pay comparisons, based on a randomized manipulation of access to information on co-workers’
+wages.5 Following a court decision on California’s “right to know” law, the Sacramento Bee
+newspaper established a website (www.sacbee.com/statepay) in early 2008 that made it possible
+to search for the salary of any state employee, including faculty and staff at the University of
+California. In the months after this website was launched we contacted a random subset of
+employees at three UC campuses, informing them about the existence of the site.6 A few days
+    1
+     Early classical references are Smith (1759) and Veblen (1899). Modern formal analysis began with Duesen-
+berry’s (1949) relative income model of consumption. Easterlin (1974) used this model to explain the weak link
+between national income growth and happiness. Hamermesh (1975) presents a seminal analysis of the effect of
+relative pay on worker effort. Akerlof and Yellen (1990) provide an extensive review of the literature (mostly
+outside economics) on the impact of relative pay comparisons.
+   2
+     For example, Boskin and Sheshinski (1978) show how optimal taxation is affected by relative income concerns.
+More recently, Grossman and Helpman (2007) develop the implications of relative wage concerns for the optimal
+extent of off-shoring. Fuhrer and Moore (1995) introduce relative wage concerns in an overlapping contract
+macro wage model.
+   3
+     Most of the work on inequality has focused on the explanations for the rise in earnings inequality in recent
+decades (see reviews by Katz and Autor, 1999 and Acemoglu and Autor, 2011). However, there is less work on
+the question of why inequality per se is a matter of public concern.
+   4
+     There are also studies that have concluded a more important role for absolute income than relative income,
+for example, Stevenson and Wolfers (2008). Kuhn et al. (2011) find that people do not experience reduced
+happiness when their neighbors win the lottery.
+   5
+     A number of recent empirical studies in behavioral economics have used similar methods that manipulate
+information–rather than the underlying economic parameters–to uncover the effects of various policies. See
+Hastings and Weinstein (2009) on school quality, Jensen (2010) on returns to education in developing countries;
+Chetty, Looney, and Kroft (2009) on sales taxes, Chetty and Saez (2009) on the Earned Income Tax Credit, and
+Kling et al. (2008) on Medicare prescription drug plans.
+   6
+     Initially the website was relatively unknown. Even as late as June 2009, when we conducted the last of
+later we surveyed all campus employees to elicit information about their use of the Sacramento
+Bee website, their pay and job satisfaction, and their job search intentions. We compare the
+answers from workers in the treatment group (who were informed of the site) and the control
+group (who were not). We use administrative salary data matched to the survey responses
+to compare the effects of the information treatment on individuals who were earning above or
+below the median pay in their unit and occupation, and estimate models that allow the response
+to treatment to depend on an individual’s salary relative to the median for his or her unit and
+occupation. Throughout our analysis we define peers as co-workers in the same occupation
+group (faculty vs. staff) and the same unit (i.e., department or school) within the University.
+    Theoretically there are two broad reasons why information on peer salaries may affect work-
+ers’ utilities. Much of the existing relative pay literature assumes that workers’ preferences
+depend directly on their salary relative to their peers’. Alternatively, workers may have no
+direct concern about co-workers’ pay but may use peer wages to help predict their own future
+pay, as in the “tunnel effect” of Hirschman and Rothschild (1973).7 These models have different
+predictions on how information on co-worker salary affects utility.
+    In the relative utility model, we assume that individuals value their position relative to
+co-workers in the same pay unit and occupation, and that in the absence of external informa-
