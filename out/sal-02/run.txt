@@ -1,0 +1,5 @@
+url https://www.nber.org/system/files/working_papers/w5114/w5114.pdf
+  saved out/files/shafir_w5114.pdf 2.2 MB
+url https://eml.berkeley.edu/~saez/card-mas-moretti-saezAER12ucpay.pdf
+  saved out/files/card2012_aer.pdf 1.0 MB
+done
