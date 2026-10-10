@@ -1,0 +1,9 @@
+url https://www.nber.org/system/files/working_papers/w16396/w16396.pdf
+  saved out/files/card2010_w16396.pdf 0.4 MB
+url https://api.crossref.org/works/10.1016/S0167-2681(98)00089-4
+  saved out/files/cr_solnick.json 0.0 MB
+url https://api.crossref.org/works/10.1162/003355397555208
+  saved out/files/cr_shafir.json 0.0 MB
+url https://www.nber.org/system/files/working_papers/w5701/w5701.pdf
+  saved out/files/shafir_w5701.pdf 2.7 MB
+done
