@@ -27,5 +27,5 @@ export function redraw(tex,fn){const {c,g}=tex.userData;g.fillStyle='#000';g.fil
 // steam: a column of soft additive heat puffs; returns update(T)
 export function steam(parent,{n=26,heat=.16,x=0,y=0,z=0,rise=.9,spread=.06}={}){const ps=[];let sd=7;const rn=()=>(sd=(sd*16807)%2147483647)/2147483647;
  for(let i=0;i<n;i++){const m=new THREE.Mesh(new THREE.PlaneGeometry(1,1),heatAdd({heat,map:BLOB}));parent.add(m);ps.push({m,ph:rn(),sw:rn()*6.28});}
- return (T,cam,k=1)=>ps.forEach(p=>{const u=(T*.32+p.ph)%1;p.m.position.set(x+Math.sin(u*5+p.sw)*spread*(.4+u),y+u*rise,z+Math.cos(u*4+p.sw)*spread*.6);const s=.05+u*.22;p.m.scale.set(s,s,s);p.m.material.uniforms.uHeat.value=heat*k*Math.sin(Math.PI*u)*(1-u*.4);if(cam)p.m.quaternion.copy(cam.quaternion);});}
+ return (T,cam,k=1)=>ps.forEach(p=>{const u=(T*.32+p.ph)%1;p.m.position.set(x+Math.sin(u*5+p.sw)*spread*(.4+u),y+u*rise,z+Math.cos(u*4+p.sw)*spread*.6);const s=.05+u*.22;p.m.scale.set(s,s,s);p.m.material.uniforms.uHeat.value=heat*k*Math.sin(Math.PI*u)*(1-u*.4);p.m.scale.multiplyScalar(1+.8*(k-1));if(cam)p.m.quaternion.copy(cam.quaternion);});}
 export const FONT='"Noto Sans CJK SC",sans-serif';

@@ -20,7 +20,7 @@ function capuchin(){const g=new THREE.Group();const body=heatMat({heat:.7,vol:.5
  // arms: shoulder → elbow → hand, posed in set()
  const arms=[];for(const z of [-.1,.1]){const up=capsuleBetween(V3(0,0,0),V3(0,-.14,0),.04,body),lo=capsuleBetween(V3(0,0,0),V3(0,-.14,0),.035,body);const hand=new THREE.Mesh(new THREE.SphereGeometry(.04,14,10),face);g.add(up);g.add(lo);g.add(hand);arms.push({up,lo,hand,z});}
  const place=(m,a,b2,r)=>{const d=new THREE.Vector3().subVectors(b2,a);const L=d.length();m.position.copy(a).addScaledVector(d,.5);m.quaternion.setFromUnitVectors(V3(0,1,0),d.clone().normalize());m.scale.set(1,L/.14/1.6+.0,1);};
- function set({heat=.7,reach=0,eat=0,turn=0,slump=0,throwA=0}){body.uniforms.uHeat.value=heat;face.uniforms.uHeat.value=heat+.12;cap.uniforms.uHeat.value=heat-.08;
+ function set({heat=.7,reach=0,eat=0,turn=0,slump=0,throwA=0}){body.uniforms.uHeat.value=heat;face.uniforms.uHeat.value=heat>.3?heat+.12:heat;cap.uniforms.uHeat.value=heat-.08;
   headG.rotation.y=turn;headG.rotation.z=-.15*eat-.25*slump;headG.position.y=.56-.04*slump;torso.rotation.z=-.35-.2*slump;
   const hands=[];arms.forEach((A,i)=>{const sh=V3(.06,.42,A.z);let tgt;
    if(i===1){tgt=V3(lerp(.2,.44,reach),lerp(.24,.2,reach),A.z*.6);tgt.lerp(V3(.2,.52,.05),eat);if(throwA>0){const k=Math.sin(Math.PI*cl(throwA));tgt=V3(lerp(.1,-.05,k),lerp(.4,.72,k),.12);}}
@@ -43,23 +43,23 @@ export function makeLab(){
   const W=1.6,H=1.25,D=1.0;for(const [x,z] of [[-W/2,-D/2],[W/2,-D/2],[-W/2,D/2],[W/2,D/2]])g.add(capsuleBetween(V3(x,0,z),V3(x,H,z),.02,barM));
   for(const y of [0,H])for(const z of [-D/2,D/2])g.add(capsuleBetween(V3(-W/2,y,z),V3(W/2,y,z),.02,barM));
   for(const y of [0,H])for(const x of [-W/2,W/2])g.add(capsuleBetween(V3(x,y,-D/2),V3(x,y,D/2),.02,barM));
-  for(const i of [1,2,3,5,6,7]){const x=-W/2+i*W/8+.06;g.add(capsuleBetween(V3(x,0,D/2),V3(x,H,D/2),.005,barM));}
   const floorC=rbox(W,.03,D,.01,heatMat({heat:.14,vol:.2,recv:.8}),1);floorC.rotation.x=Math.PI/2;g.add(floorC);
   const tray=rbox(.34,.03,.26,.01,heatMat({heat:.18,vol:.3,recv:.6}),1);tray.rotation.x=Math.PI/2;tray.position.set(.45,.02,D/2+.13);g.add(tray);
   const lamp=new THREE.Mesh(new THREE.CylinderGeometry(.14,.2,.1,32),heatMat({heat:.55,vol:.3}));lamp.position.set(0,H+.25,0);g.add(lamp);const lb=new THREE.Mesh(new THREE.SphereGeometry(.07,20,12),heatMat({heat:1.1,vol:.1}));lb.position.set(0,H+.19,0);g.add(lb);S.add(capsuleBetween(V3(cx,.8+H+.29,-.55),V3(cx,3,-.55),.012,barM));
   cages.push(g);}
  const mA=capuchin(),mB=capuchin();mA.g.position.set(-1.0,.83,-.55);mB.g.position.set(.9,.83,-.55);S.add(mA.g);S.add(mB.g);
- const tokM=heatMat({heat:-.05,vol:.4,ice:.6});const tok=[0,1].map(()=>{const m=new THREE.Mesh(new THREE.SphereGeometry(.05,16,12),tokM);m.scale.set(1.2,.7,1);S.add(m);return m;});
- const cuke=()=>{const g=new THREE.Group();const m=new THREE.Mesh(new THREE.CapsuleGeometry(.04,.16,6,16),heatMat({heat:.36,vol:.35}));m.rotation.z=Math.PI/2;g.add(m);S.add(g);return {g,m};};
+ const tokM=heatMat({heat:-.05,vol:.4,ice:.6});const tok=[0,1].map(()=>{const m=new THREE.Mesh(new THREE.SphereGeometry(.065,16,12),tokM);m.scale.set(1.2,.7,1);S.add(m);return m;});
+ const cuke=()=>{const g=new THREE.Group();const m=new THREE.Mesh(new THREE.CapsuleGeometry(.055,.24,6,16),heatMat({heat:.38,vol:.35}));m.rotation.z=Math.PI/2;g.add(m);S.add(g);return {g,m};};
  const cA=cuke(),cB=cuke();
- const grapeM=heatMat({heat:1.02,vol:.55});const grape=new THREE.Group();{let q=5;const r2=()=>(q=(q*16807)%2147483647)/2147483647;for(let i=0;i<14;i++){const row=Math.floor(i/4);const s=new THREE.Mesh(new THREE.SphereGeometry(.03,18,12),grapeM);const a=r2()*6.28,rr=(.05-row*.012)*Math.sqrt(r2());s.position.set(Math.cos(a)*rr,.05-row*.03,Math.sin(a)*rr);grape.add(s);}grape.add(capsuleBetween(V3(0,.06,0),V3(.02,.12,0),.006,heatMat({heat:.5,vol:.2})));}S.add(grape);
+ const grapeM=heatMat({heat:1.12,vol:.55});const grape=new THREE.Group();{let q=5;const r2=()=>(q=(q*16807)%2147483647)/2147483647;for(let i=0;i<14;i++){const row=Math.floor(i/4);const s=new THREE.Mesh(new THREE.SphereGeometry(.03,18,12),grapeM);const a=r2()*6.28,rr=(.05-row*.012)*Math.sqrt(r2());s.position.set(Math.cos(a)*rr,.05-row*.03,Math.sin(a)*rr);grape.add(s);}grape.add(capsuleBetween(V3(0,.06,0),V3(.02,.12,0),.006,heatMat({heat:.5,vol:.2})));}S.add(grape);
+ const STASH=V3(1.22,1.12,-.62);const stash=grape.clone();stash.scale.setScalar(1.7);stash.position.copy(STASH);S.add(stash);const dish=new THREE.Mesh(new THREE.CylinderGeometry(.13,.1,.02,32),heatMat({heat:.3,vol:.3}));dish.position.copy(STASH).add(V3(0,-.07,0));S.add(dish);const post=capsuleBetween(V3(STASH.x,.83,STASH.z),V3(STASH.x,STASH.y-.08,STASH.z),.015,heatMat({heat:.25,vol:.3}));S.add(post);
  // the exchange cycle, one per bar from bar 12 (24.68): beat0 hand out token → beat1–2 food slides in → beat3 eat
  const SL=[-1.0+.95+.45-.0,.95+.45]; // tray x (world) for A and B
  const slot=i=>V3(cages[i].position.x+.45,.83,-.55+.5+.13);
  function cyc(T){if(T<B(12))return null;const n=Math.floor((T-B(12))/2.0248);const u=((T-B(12))/2.0248)%1;return {n,u};}
  const K=[[B(10),-.2,3.2,1.2, 0,1.2,-.6,40],[B(10)+1.6,0,1.6,3.2, 0,1.25,-.6,34],[B(12),0,1.55,3.0, 0,1.25,-.6,34],[B(12)+1.6,-1.2,1.35,1.55, -1.0,1.2,-.4,34],[B(14),-1.15,1.36,1.5, -1.0,1.2,-.4,34],
   [B(14)+1.4,0,1.5,3.0, 0,1.25,-.55,34],[B(16),0,1.5,2.95, 0,1.25,-.55,34],[B(16)+1.4,.95,1.32,1.45, .95,1.2,-.4,32],[B(18),.92,1.32,1.45, .9,1.2,-.4,32],[B(18)+1.4,-1.75,1.45,1.55, -.25,1.15,-.55,36],[B(20),-1.72,1.45,1.5, -.25,1.15,-.55,36],
-  [B(20)+1.4,0,1.55,3.1, 0,1.25,-.55,36],[B(22),0,1.55,3.0, 0,1.25,-.55,36],[B(23),.2,1.42,2.2, .45,1.15,-.4,30],[B(24),.92,1.2,.15, .95,1.05,-.25,26]];
+  [B(20)+1.4,0,1.55,3.1, 0,1.25,-.55,36],[B(22),0,1.55,3.0, 0,1.25,-.55,36],[B(23),.8,1.3,1.6, 1.1,1.0,-.6,30],[B(24),1.28,.93,-.42, 1.28,.88,-.72,30]];
  const cp=camPath(K);
  function update(T){const [p,l,f]=cp(T);cam.position.copy(p);cam.lookAt(l);cam.fov=f||34;cam.updateProjectionMatrix();
   const c=cyc(T);const grapePhase=T>=B(16);const refuse=T>=B(18);const effort=T>=B(20);
@@ -83,9 +83,9 @@ export function makeLab(){
    eB=eat;const handB=V3(mB.g.position.x+.44,mB.g.position.y+.2,mB.g.position.z+.06);tB.position.copy(handB.clone().lerp(slot(1),out));
    const food=gB?grape:cB.g;food.visible=u>.3;food.position.copy(slot(1).lerp(handB,inn));if(eat>0)food.position.lerp(V3(mB.g.position.x+.2,mB.g.position.y+.52,mB.g.position.z+.05),eat);food.scale.setScalar(1-.6*eat);}
   mA.set({heat:hA,reach:rA,eat:eA,turn:refuse?-.5:(grapePhase?-.35*eio(pr(T,B(16)+.4,B(16)+1)):0),slump:pr(T,B(18),B(18)+.6)*.8,throwA:thr});
-  mB.set({heat:hB,reach:rB,eat:eB});
-  setHL([[cages[0].position.x,1.9,-.55,.2,.75],[cages[1].position.x,1.9,-.55,.2+.08*(grapePhase?1:0),.75],[grape.position.x,grape.position.y,grape.position.z,grape.visible?.25:0,.3]]);}
- function params(T){const haze=1-eio(pr(T,B(10),B(10)+1.2));const end=eio(pr(T,B(23)+.6,B(24)));return {amb,lo:0,hi:1.15,t:T,shim:1,iso:1,bloom:1,haze:Math.max(haze,end),hazeL:.7};}
+  mB.set({heat:hB,reach:rB,eat:eB});stash.visible=dish.visible=post.visible=T>=B(16);if(stash.visible)stash.scale.setScalar(1.7*eo(pr(T,B(16),B(16)+.35)));
+  setHL([[cages[0].position.x,1.9,-.55,.2,.75],[cages[1].position.x,1.9,-.55,.2+.08*(grapePhase?1:0),.75],[STASH.x,STASH.y,STASH.z,T>=B(16)?.3:0,.4]]);}
+ function params(T){const haze=1-eio(pr(T,B(10),B(10)+1.2));const end=eio(pr(T,B(23)+.6,B(24)));return {amb,lo:0,hi:1.15,t:T,shim:1,iso:1,bloom:1,haze:Math.max(haze,end),hazeL:.5};}
  const pj=v=>{const p=v.clone().project(cam);return [(p.x*.5+.5)*1920,(-p.y*.5+.5)*1080,p.z];};
  function hud(T){if(T<B(10)+.8)return '';let h='';
   const v=T<B(18)?95:(T<B(20)?Math.round(lerp(95,60,eo(pr(T,B(18),B(18)+.5)))):Math.round(lerp(60,20,eo(pr(T,B(20),B(20)+.5)))));

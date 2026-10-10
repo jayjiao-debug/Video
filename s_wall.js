@@ -25,7 +25,7 @@ export function makeWall(){
    for(const zz of [-.08,.08]){g.add(capsuleBetween(V3(0,.88*s,zz*s),V3(0,.06,zz*1.1*s),.06*s,mC));}
    for(const xx of [-.21,.21]){g.add(capsuleBetween(V3(xx*s,1.3*s,0),V3(xx*1.15*s,.92*s,0),.045*s,mC));}
    g.position.set(x,y+.42,z+.1);g.rotation.y=0;S.add(g);people.push({g,mC,mS,t,k,x,rank:t*NP+k,ph:rn()});}}
- const YOU=people.find(p=>p.t===2&&p.k===6);
+ const YOU=people.find(p=>p.t===1&&p.k===6);
  // the median isotherm: a thin hot sheet between tier 2 and tier 3
  const medM=heatAdd({heat:0,map:null});const med=new THREE.Mesh(new THREE.PlaneGeometry(12,.06),heatMat({heat:2.2,vol:0}));med.position.set(0,2.98,-2.86);med.visible=false;S.add(med);
  // warm doorway on the right (找新工作)
@@ -49,11 +49,11 @@ export function makeWall(){
    const go=below?eio(pr(T,B(42)+q.ph*.8,B(43)+q.ph)):0;q.g.rotation.y=-go*1.1;q.g.position.x=q.x+go*(.5+q.ph*.6);if(below&&T>B(46)){const k=eio(pr(T,B(46)+q.ph*1.2,B(48)));q.g.position.x=lerp(q.g.position.x,DR.x-.3+q.ph*.4,k*(q.t===0?1:.0));q.g.position.z+=k*(q.t===0?(DR.z-q.g.position.z)*.8:0);}});
   doorM.uniforms.uHeat.value=lerp(.2,1.05,eio(pr(T,B(42),B(42)+.6)));
   setHL([[0,4.2,-6.3,.18*on,3.5],[DR.x,1.3,DR.z+.3,.5*pr(T,B(42),B(42)+.6),2.2],[0,2.98,-2.86,T>=B(40)?.18*Math.exp(-(T-B(40))*1.5):0,2.5]]);}
- function params(T){return {amb,lo:0,hi:1.15,t:T,shim:.6,iso:1,bloom:1,flash:0,haze:Math.max(1-eio(pr(T,B(36),B(36)+.9)),eio(pr(T,B(47)+1.2,B(48)))),hazeL:.75};}
+ function params(T){return {amb,lo:0,hi:1.15,t:T,shim:.6,iso:1,bloom:1,flash:0,haze:Math.max(1-eio(pr(T,B(36),B(36)+.9)),eio(pr(T,B(47)+1.2,B(48)))),hazeL:.5};}
  const pj=v=>{const p=v.clone().project(cam);return [(p.x*.5+.5)*1920,(-p.y*.5+.5)*1080,p.z];};
  function hud(T){let h='';const o=pr(T,B(36)+.5,B(37));
-  if(T>=B(39)-.2){const [x,y,z]=pj(YOU.g.position.clone().add(V3(0,1.55,0)));const [x2,y2]=pj(YOU.g.position.clone().add(V3(0,1.85,0)));const r=Math.max(18,(y-y2)*1.1);const oo=pr(T,B(39),B(39)+.4);if(z<1)h+=`<div style="position:absolute;left:${x-r}px;top:${y-r}px;width:${2*r}px;height:${2*r}px;border-radius:50%;border:5px solid #F6CF78;box-shadow:0 0 24px #F6CF78,inset 0 0 18px rgba(246,207,120,.6);opacity:${oo}"></div><div class="t" style="left:${x+r+14}px;top:${y-34}px;font-size:56px;color:#F6CF78;opacity:${oo}">你</div>`;}
-  if(T>=B(40)){const [x1,y1]=pj(V3(3.2,3.1,-2.86));h+=`<div class="t" style="left:${x1}px;top:${y1-56}px;font-size:46px;color:#FFFFFA;opacity:${pr(T,B(40),B(40)+.25)}">— 中位数</div>`;
+  if(T>=B(39)-.2){const [x,y,z]=pj(YOU.g.position.clone().add(V3(0,1.55,0)));const [x2,y2]=pj(YOU.g.position.clone().add(V3(0,1.85,0)));const r=Math.max(18,(y-y2)*1.1);const oo=pr(T,B(39),B(39)+.4);if(z<1)h+=`<div style="position:absolute;left:${x-r}px;top:${y-r}px;width:${2*r}px;height:${2*r}px;border-radius:50%;border:5px solid ${T>=B(40)+.5?'#9ff0ff':'#F6CF78'};box-shadow:0 0 24px ${T>=B(40)+.5?'#50E6FF':'#F6CF78'};opacity:${oo}"></div><div class="t" style="left:${x+r+14}px;top:${y-34}px;font-size:56px;color:#F6CF78;opacity:${oo}">你</div>`;}
+  if(T>=B(40)){const [x1,y1]=pj(V3(3.2,3.1,-2.86));if(x1>120&&x1<1600)h+=`<div class="t" style="left:${x1}px;top:${y1-56}px;font-size:46px;color:#FFFFFA;opacity:${pr(T,B(40),B(40)+.25)}">— 中位数</div>`;
    const pp=pr(T,B(40)+.506,B(40)+.62);h+=`<div class="t" style="right:110px;top:600px;font-size:110px;color:#EBFFFF;opacity:${(pp>0?1:0)*(1-pr(T,B(42)-.3,B(42)))};transform:scale(${lerp(1.35,1,eo(pp))});transform-origin:right center;text-shadow:0 0 30px rgba(80,230,255,.9),0 4px 14px rgba(20,10,60,.9)">满意度▼</div>`;}
   if(T>=B(42)){const [x,y,z]=pj(V3(DR.x,3.0,DR.z));if(z<1)h+=`<div class="t" style="left:${x}px;top:${y}px;transform:translate(-50%,-100%);font-size:48px;color:#FFEC96;opacity:${pr(T,B(42)+.3,B(42)+.7)}">找新工作</div>`;}
   if(T>=B(44)&&T<B(46)){const [x,y]=pj(V3(-3.6,3.6,-4.5));h+=`<div class="t" style="left:${x}px;top:${y}px;font-size:46px;color:#FFEC96;opacity:${pr(T,B(44)+.3,B(44)+.7)}">高于中位数 · 满意度 不变</div>`;}

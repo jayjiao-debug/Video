@@ -35,7 +35,7 @@ export function heatMat({heat=.5,vol=.35,rim=0,map=null,ink=.6,ice=0,side=THREE.
  const m=new THREE.ShaderMaterial({uniforms:{uHL:HL,uHLr:HLR,uRecv:{value:recv},uMot:{value:mot},uHeat:{value:heat},uVol:{value:vol},uInk:{value:ink},uFogN:{value:fog[0]},uFogF:{value:fog[1]},uAmb:{value:amb},uRim:{value:rim},uIce:{value:ice},uMap:{value:map},uHasMap:{value:map?1:0}},
   vertexShader:HV,fragmentShader:HF,side});m.userData.heat=true;return m;}
 // additive heat (steam, glows, shimmer sources): adds heat on top, no depth write
-export function heatAdd({heat=.3,map=null}={}){return new THREE.ShaderMaterial({uniforms:{uHeat:{value:heat},uMap:{value:map}},transparent:true,depthWrite:false,blending:THREE.AdditiveBlending,
+export function heatAdd({heat=.3,map=null}={}){return new THREE.ShaderMaterial({uniforms:{uHeat:{value:heat},uMap:{value:map}},transparent:true,depthWrite:false,blending:THREE.CustomBlending,blendEquation:THREE.AddEquation,blendSrc:THREE.OneFactor,blendDst:THREE.OneFactor,blendSrcAlpha:THREE.ZeroFactor,blendDstAlpha:THREE.OneFactor,
  vertexShader:`varying vec2 vUv;void main(){vUv=uv;gl_Position=projectionMatrix*modelViewMatrix*vec4(position,1.);}`,
  fragmentShader:`uniform float uHeat;uniform sampler2D uMap;varying vec2 vUv;void main(){float a=texture2D(uMap,vUv).r;gl_FragColor=vec4(uHeat*a,0.,0.,0.);}`});}
 export function blobTex(){const c=document.createElement('canvas');c.width=c.height=128;const g=c.getContext('2d');const r=g.createRadialGradient(64,64,0,64,64,64);r.addColorStop(0,'#fff');r.addColorStop(.35,'rgba(255,255,255,.55)');r.addColorStop(1,'rgba(255,255,255,0)');g.fillStyle=r;g.fillRect(0,0,128,128);const t=new THREE.CanvasTexture(c);return t;}
