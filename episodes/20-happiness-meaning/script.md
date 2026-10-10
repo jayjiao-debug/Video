@@ -97,3 +97,6 @@ SFX: 5 soft two-tone pings at 24.9, 25.6, 26.3, 27.0 and 27.7 s (the app's rando
 - The 132-nation card shows directions only. No country is singled out and the map shows no borders.
 - These are correlational studies. Lines use 研究发现 / 更… / 通常, never 证明.
 - Lines 27–28 are reflection, and the film gives no verdict: the end card asks the viewer.
+
+## Delivery v1 (2026-10-10 21:23)
+Farm run 38078749691 → join 38079272102 (md5 6718fa8d…). Mix = s130f untouched + 5 pings (sfx20.py, mix17.py). Send version 快乐还是意义_v1.mp4 (2-pass 1500k, 27.7 MB); HD master made locally (64.8 MB), link on request. Checks: 3899 frames / 129.97 s, no black runs ≥0.4 s, review contact sheets at ~3 s spacing.
