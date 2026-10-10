@@ -1,0 +1,8 @@
+token present: yes
+url https://eoimages.gsfc.nasa.gov/images/imagerecords/144000/144898/BlackMarble_2016_01deg.jpg
+  saved out/files/blackmarble_2016_3600.jpg 0.8 MB
+url https://eoimages.gsfc.nasa.gov/images/imagerecords/144000/144898/BlackMarble_2016_3km.jpg
+  saved out/files/blackmarble_2016_3km.jpg 8.1 MB
+url https://eoimages.gsfc.nasa.gov/images/imagerecords/73000/73909/world.topo.bathy.200412.3x5400x2700.jpg
+  saved out/files/bluemarble_5400.jpg 2.6 MB
+done
