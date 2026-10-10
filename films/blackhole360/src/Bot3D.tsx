@@ -63,8 +63,8 @@ const backCanvas = () => {
   const t = new THREE.CanvasTexture(c); t.colorSpace = THREE.SRGBColorSpace; return t;
 };
 
-export const Bot: React.FC<{ e?: Expr; pos?: [number, number, number]; yaw?: number; tilt?: number; scale?: number; handL?: number; handR?: number; bob?: number; stretch?: number }> =
-  ({ e = 'normal', pos = [0, 0, 0], yaw = 0, tilt = 0, scale = 1, handL = 0, handR = 0, bob = 0, stretch = 1 }) => {
+export const Bot: React.FC<{ e?: Expr; pos?: [number, number, number]; yaw?: number; tilt?: number; scale?: number; handL?: number; handR?: number; bob?: number; stretch?: number; talk?: number; flame?: number }> =
+  ({ e = 'normal', pos = [0, 0, 0], yaw = 0, tilt = 0, scale = 1, handL = 0, handR = 0, bob = 0, stretch = 1, talk = 0, flame = 1 }) => {
     const body = useMemo(() => new RoundedBoxGeometry(1, 0.94, 0.9, 8, 0.22), []);
     const screenGeo = useMemo(() => {
       const w = 0.7, h = 0.56, r = 0.13, sh = new THREE.Shape();
@@ -85,7 +85,7 @@ export const Bot: React.FC<{ e?: Expr; pos?: [number, number, number]; yaw?: num
         <mesh geometry={body} material={ivory} />
         {/* face: gold bezel + screen */}
         <mesh position={[0, 0.03, 0.43]} geometry={screenGeo} material={gold} />
-        <mesh position={[0, 0.03, 0.4665]}>
+        <mesh position={[0, 0.03, 0.4665]} scale={[1 + 0.03 * talk, 1 - 0.07 * talk, 1]}>
           <planeGeometry args={[0.66, 0.516]} />
           <meshBasicMaterial map={face} transparent toneMapped={false} />
         </mesh>
@@ -102,7 +102,7 @@ export const Bot: React.FC<{ e?: Expr; pos?: [number, number, number]; yaw?: num
         ))}
         {/* antenna */}
         <mesh position={[0.16, 0.6, 0]} material={dark}><cylinderGeometry args={[0.022, 0.022, 0.26, 16]} /></mesh>
-        <mesh position={[0.16, 0.77, 0]} material={bulb}><sphereGeometry args={[0.085, 32, 24]} /></mesh>
+        <mesh position={[0.16, 0.77, 0]} material={bulb} scale={1 + 0.35 * talk}><sphereGeometry args={[0.085, 32, 24]} /></mesh>
         {/* floating round hands (no arms) */}
         {[[-1, handL], [1, handR]].map(([s, h]) => (
           <mesh key={s} position={[0.7 * s, -0.12 + 0.36 * h, 0.06]} rotation={[0, 0, -0.5 * s * h]} material={ivory}>
@@ -111,7 +111,7 @@ export const Bot: React.FC<{ e?: Expr; pos?: [number, number, number]; yaw?: num
         ))}
         {/* thruster */}
         <mesh position={[0, -0.52, 0]} material={dark}><cylinderGeometry args={[0.16, 0.12, 0.08, 32]} /></mesh>
-        <sprite position={[0, -0.63, 0.05]} scale={[0.42, 0.42, 1]}>
+        <sprite position={[0, -0.6 - 0.08 * flame, 0.05]} scale={[0.42 * (0.6 + 0.4 * flame), 0.42 * flame, 1]}>
           <spriteMaterial map={glowTex} transparent blending={THREE.AdditiveBlending} depthWrite={false} toneMapped={false} />
         </sprite>
       </group>

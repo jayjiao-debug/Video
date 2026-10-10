@@ -102,16 +102,28 @@ def bb_rgb_vec(T):
     return c / np.maximum(c.max(-1, keepdims=True), 1e-6)
 
 # ---------------------------------------------------------------- render
-def render(r0, W=3840, fall=False, tilt_deg=8.0, r_out=22.0, sky=None, table=None, yaw0=0.0, t=0.0, tpeak=5200, gain=1.8):
+def render(r0, W=3840, fall=False, tilt_deg=8.0, r_out=22.0, sky=None, table=None, yaw0=0.0, t=0.0, tpeak=5200, gain=1.8, view=None):
+    """view = (w, h, fov_deg, pitch_deg): a flat (rectilinear) camera looking at the black hole instead of the 360 frame"""
     H = W // 2
     b_tab, dphi, tabs = table if table is not None else orbit_table(r0)
     sky = sky if sky is not None else make_sky()
     # observer frame: x forward (to the black hole), y left, z up
-    lon = (np.arange(W, dtype=np.float32) + 0.5) / W * 2 * np.pi - np.pi + yaw0
-    lat = np.pi / 2 - (np.arange(H, dtype=np.float32) + 0.5) / H * np.pi
-    LON, LAT = np.meshgrid(lon, lat)
-    d = np.stack([np.cos(LAT) * np.cos(-LON), np.cos(LAT) * np.sin(-LON), np.sin(LAT)], -1).astype(np.float64)
-    del LON, LAT
+    if view is None:
+        lon = (np.arange(W, dtype=np.float32) + 0.5) / W * 2 * np.pi - np.pi + yaw0
+        lat = np.pi / 2 - (np.arange(H, dtype=np.float32) + 0.5) / H * np.pi
+        LON, LAT = np.meshgrid(lon, lat)
+        d = np.stack([np.cos(LAT) * np.cos(-LON), np.cos(LAT) * np.sin(-LON), np.sin(LAT)], -1).astype(np.float64)
+        del LON, LAT
+    else:
+        vw, vh, fov, pitch = view[:4]; vyaw = math.radians(view[4]) if len(view) > 4 else 0.0
+        f = (vw / 2) / math.tan(math.radians(fov / 2))
+        xs, ys = np.meshgrid(np.arange(vw) - vw / 2 + 0.5, np.arange(vh) - vh / 2 + 0.5)
+        d = np.stack([np.full(xs.shape, f), -xs, -ys], -1).astype(np.float64)
+        d /= np.linalg.norm(d, axis=-1, keepdims=True)
+        pr = math.radians(pitch); cp, sp = math.cos(pr), math.sin(pr)
+        d = np.stack([d[..., 0] * cp - d[..., 2] * sp, d[..., 1], d[..., 0] * sp + d[..., 2] * cp], -1)
+        cy, sy = math.cos(vyaw), math.sin(vyaw)
+        d = np.stack([d[..., 0] * cy - d[..., 1] * sy, d[..., 0] * sy + d[..., 1] * cy, d[..., 2]], -1)
     # aberration: a camera falling in from rest at infinity moves inward (+x) at v = sqrt(2/r) relative to the static frame.
     # a direction d seen by the moving camera corresponds to d_s in the static frame (cos θ_s = (cos θ − v)/(1 − v cos θ)).
     dopp_cam = np.ones(d.shape[:2])
