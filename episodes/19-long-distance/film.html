@@ -1,0 +1,145 @@
+<!doctype html><html><head><meta charset="utf-8"><style>
+*{box-sizing:border-box}
+html,body{margin:0;width:1920px;height:1080px;overflow:hidden;background:#03050b;font-family:"Noto Sans CJK SC",sans-serif}
+canvas{position:absolute;left:0;top:0}
+#world{position:absolute;inset:0}
+.sc{position:absolute;inset:0}
+.lab{position:absolute;transform:translate(-50%,-100%);color:#fff;font-size:40px;font-weight:900;text-shadow:0 2px 12px rgba(0,0,0,.9);white-space:nowrap;z-index:5}
+#sub{position:absolute;left:0;right:0;bottom:70px;text-align:center;z-index:40}
+#sub span{display:inline-block;background:rgba(6,8,13,.80);color:#fff;font-size:64px;font-weight:900;padding:10px 34px 14px;border-radius:18px}
+#sub b{color:#F6CF78}
+#km{position:absolute;left:0;right:0;top:70px;text-align:center;font-family:"Noto Serif CJK SC",serif;font-size:120px;font-weight:900;color:#f6cf78;text-shadow:0 0 40px rgba(246,207,120,.45);z-index:6}
+#km small{display:block;font-size:28px;color:#c9b98f;letter-spacing:6px;font-family:"Noto Sans CJK SC";font-weight:700}
+.mark{position:absolute;right:44px;top:34px;font-size:22px;font-weight:700;letter-spacing:2px;color:#f6cf78;opacity:.6;z-index:30}
+.t{position:absolute;font-weight:900}.serif{font-family:"Noto Serif CJK SC",serif}
+#plaque{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;opacity:0;z-index:35;pointer-events:none}
+#plaque .p{position:relative;padding:50px 110px 44px;text-align:center;background:rgba(8,12,26,.72);border-radius:18px;box-shadow:0 0 80px rgba(0,0,0,.6)}
+#plaque .p:after{content:"";position:absolute;inset:10px;border:2px solid rgba(246,207,120,.65);border-radius:12px}
+#plaque .k{font-family:"Noto Serif CJK SC",serif;color:#f6cf78;font-size:26px;letter-spacing:12px}
+#plaque .a{font-family:"Noto Serif CJK SC",serif;font-size:104px;font-weight:900;letter-spacing:8px;margin-top:18px;background:linear-gradient(180deg,#fff1c7 0%,#f6cf78 45%,#c8963e 100%);-webkit-background-clip:text;color:transparent}
+#plaque .b{font-family:"Noto Serif CJK SC",serif;font-style:italic;color:#c9b98f;font-size:28px;letter-spacing:8px;margin-top:14px}
+#end{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;opacity:0;z-index:50;color:#f2ead8;background:rgba(5,7,14,.94)}
+#end .j{width:150px;height:150px;border:4px solid #f6cf78;border-radius:50%;font-size:96px;line-height:146px;text-align:center;font-weight:900;margin-bottom:30px;color:#f6cf78;font-family:"Noto Serif CJK SC",serif}
+#end .tt{font-size:76px;font-weight:900;letter-spacing:12px;font-family:"Noto Serif CJK SC",serif;color:#f6cf78}
+#end .q{font-size:44px;margin-top:30px;font-weight:700}
+#end .f{margin-top:36px;border:3px solid #f6cf78;border-radius:44px;padding:12px 44px;font-size:32px;color:#f6cf78;font-weight:700}
+#end .s{position:absolute;bottom:40px;color:#8a8f9e;font-size:19px;text-align:center;line-height:1.6}
+</style></head><body>
+<div id="world"></div>
+<div class="mark">◆ Juno · VIBE知识大赏</div><div id="km"></div>
+<div class="lab" id="lGZ"></div><div class="lab" id="lCQ"></div>
+<div id="plaque"><div class="p"><div class="k">VIBE知识大赏</div><div class="a">异地恋，真的更容易分手吗？</div><div class="b">DOES DISTANCE BREAK LOVE?</div></div></div>
+<div id="end"><div class="j">J</div><div class="tt">异地恋，真的更容易分手吗</div><div class="q">你们现在，隔着多少公里？</div><div class="f">关注 Juno · 一起看懂世界</div>
+<div class="s">Jiang &amp; Hancock (2013) Journal of Communication 63(3), 556–577 · Stafford, Merolla &amp; Castle (2006) J. Social &amp; Personal Relationships 23(6), 901–919<br>Stafford &amp; Merolla (2007) J. Social &amp; Personal Relationships 24(1), 37–54 · Earth at night: NASA Earth Observatory, Black Marble 2016</div></div>
+<div id="sub"></div>
+<script type="importmap">{"imports":{"three":"./node_modules/three/build/three.module.js"}}</script>
+<script type="module">
+import * as THREE from 'three';
+const R=new THREE.WebGLRenderer({antialias:true,preserveDrawingBuffer:true});R.setPixelRatio(1);R.setSize(1920,1080);R.outputColorSpace=THREE.SRGBColorSpace;document.body.prepend(R.domElement);
+const S=new THREE.Scene();const cam=new THREE.PerspectiveCamera(32,16/9,0.01,100);
+const cl=(x,a=0,b=1)=>Math.max(a,Math.min(b,x)),pr=(t,a,b)=>cl((t-a)/(b-a)),eio=x=>x<.5?4*x*x*x:1-Math.pow(-2*x+2,3)/2,eo=x=>1-Math.pow(1-x,3),sst=x=>x*x*(3-2*x),lerp=(a,b,f)=>a+(b-a)*f;
+const pop=(T,t0,d=0.35)=>{const k=pr(T,t0,t0+d);return k<=0?0:(k>=1?1:eo(k)*(1+0.15*Math.sin(Math.PI*k)));};
+const $=id=>document.getElementById(id);
+const ll=(lat,lon,r=1)=>{const p=(lon+180)*Math.PI/180,la=lat*Math.PI/180;return new THREE.Vector3(-Math.cos(p)*Math.cos(la)*r,Math.sin(la)*r,Math.sin(p)*Math.cos(la)*r);};
+const tex=await new THREE.TextureLoader().loadAsync('tex/bm8k.jpg');tex.colorSpace=THREE.SRGBColorSpace;tex.anisotropy=8;
+const earth=new THREE.Mesh(new THREE.SphereGeometry(1,192,128),new THREE.ShaderMaterial({uniforms:{map:{value:tex}},
+ vertexShader:`varying vec2 vUv;varying vec3 vN;varying vec3 vV;void main(){vUv=uv;vN=normalize(normalMatrix*normal);vec4 mv=modelViewMatrix*vec4(position,1.);vV=normalize(-mv.xyz);gl_Position=projectionMatrix*mv;}`,
+ fragmentShader:`uniform sampler2D map;varying vec2 vUv;varying vec3 vN;varying vec3 vV;void main(){vec3 c=texture2D(map,vUv).rgb;float l=dot(c,vec3(.33));
+  vec3 lights=vec3(1.0,.80,.45)*pow(l,1.15)*1.9;vec3 base=mix(vec3(.02,.04,.10),vec3(.05,.09,.20),c.b*2.0);float fr=pow(1.-max(dot(vN,vV),0.),3.);
+  gl_FragColor=vec4(base+lights+vec3(.15,.35,.8)*fr*.6,1.);}`}));S.add(earth);
+const atm=new THREE.Mesh(new THREE.SphereGeometry(1.025,128,96),new THREE.ShaderMaterial({transparent:true,depthWrite:false,blending:THREE.AdditiveBlending,
+ vertexShader:`varying vec3 vN;varying vec3 vV;void main(){vN=normalize(normalMatrix*normal);vec4 mv=modelViewMatrix*vec4(position,1.);vV=normalize(-mv.xyz);gl_Position=projectionMatrix*mv;}`,
+ fragmentShader:`varying vec3 vN;varying vec3 vV;void main(){float d=max(dot(vN,vV),0.);float f=pow(1.-d,4.0)*smoothstep(0.0,0.12,d);gl_FragColor=vec4(.35,.6,1.,f*.9);}`}));S.add(atm);
+{const g=new THREE.BufferGeometry();const p=[];let s=9;const r=()=>{s=(s*16807)%2147483647;return s/2147483647;};for(let i=0;i<2500;i++){const v=new THREE.Vector3(r()-.5,r()-.5,r()-.5).normalize().multiplyScalar(40);p.push(v.x,v.y,v.z);}
+ g.setAttribute('position',new THREE.Float32BufferAttribute(p,3));S.add(new THREE.Points(g,new THREE.PointsMaterial({color:0xffffff,size:0.06,transparent:true,opacity:.55})));}
+const GZ=[23.1291,113.2644],CQ=[29.5630,106.5516];const pGZ=ll(...GZ,1.004),pCQ=ll(...CQ,1.004);
+const arcPt=(t,lift=0.05)=>{const a=pGZ.clone().normalize(),b=pCQ.clone().normalize();const ang=a.angleTo(b);const v=a.clone().multiplyScalar(Math.sin((1-t)*ang)).add(b.clone().multiplyScalar(Math.sin(t*ang))).divideScalar(Math.sin(ang));return v.multiplyScalar(1.003+lift*Math.sin(Math.PI*t));};
+const arcCurve=new THREE.CatmullRomCurve3(Array.from({length:65},(_,i)=>arcPt(i/64)));
+const arcMat=new THREE.MeshBasicMaterial({color:0xf6cf78,transparent:true,opacity:.95}),glowMat=new THREE.MeshBasicMaterial({color:0xf6cf78,transparent:true,opacity:.25,depthWrite:false});let arc=null,arcG=null,arcKey='';
+function setArc(a,b){const k=a.toFixed(3)+'_'+b.toFixed(3);if(k===arcKey)return;arcKey=k;if(arc){S.remove(arc);arc.geometry.dispose();S.remove(arcG);arcG.geometry.dispose();arc=null;}if(b-a<=0.002)return;
+ const pts=Array.from({length:40},(_,i)=>arcCurve.getPoint(lerp(a,b,i/39)));const c=new THREE.CatmullRomCurve3(pts);arc=new THREE.Mesh(new THREE.TubeGeometry(c,80,0.0016,8),arcMat);arcG=new THREE.Mesh(new THREE.TubeGeometry(c,80,0.0055,8),glowMat);S.add(arc);S.add(arcG);}
+const dotTex=(()=>{const c=document.createElement('canvas');c.width=c.height=128;const g=c.getContext('2d');const r=g.createRadialGradient(64,64,0,64,64,64);r.addColorStop(0,'rgba(255,255,255,1)');r.addColorStop(.25,'rgba(255,220,150,.9)');r.addColorStop(1,'rgba(255,200,120,0)');g.fillStyle=r;g.fillRect(0,0,128,128);return new THREE.CanvasTexture(c);})();
+const mk=(p,col)=>{const s=new THREE.Sprite(new THREE.SpriteMaterial({map:dotTex,color:col,transparent:true,depthWrite:false,depthTest:false}));s.position.copy(p);s.scale.set(.03,.03,1);S.add(s);return s;};
+const dGZ=mk(pGZ,0xffd98a),dCQ=mk(pCQ,0xffb0c0),trav=mk(pGZ,0xffe7a8),flash=mk(pCQ,0xffd0b0);
+const pulses=[];for(let i=0;i<6;i++){const s=new THREE.Sprite(new THREE.SpriteMaterial({map:dotTex,color:i%2?0xffb0c0:0xffe7a8,transparent:true,depthWrite:false,depthTest:false}));s.scale.set(.018,.018,1);S.add(s);pulses.push(s);}
+const mid=[(GZ[0]+CQ[0])/2,(GZ[1]+CQ[1])/2];
+// camera key segments [T, lat, lon, dist, lookAtMid 0..1]
+const KA=[[0,14,92,3.8,.15],[3.0,20,100,3.2,.3],[6.0,22,110,1.9,.85],[9.0,16,111,1.45,1],[16.4,15,110,1.38,1],[21,15,109.5,1.36,1]];
+const KB=[[64,16,111,1.5,1],[69,16,111,1.45,1],[77.2,24,107.5,1.3,1.8],[81.6,24.5,107.2,1.28,1.85]];
+const KC=[[105,24.5,107.2,1.28,1.85],[110,20,107,1.6,1.4],[121,10,103,4.6,.4],[131,8,99,5.4,.2]];
+const camK=(K,T)=>{let i=0;while(i<K.length-2&&T>K[i+1][0])i++;const a=K[i],b=K[i+1];const u=eio(pr(T,a[0],b[0]));return [lerp(a[1],b[1],u),lerp(a[2],b[2],u),lerp(a[3],b[3],u),lerp(a[4],b[4],u)];};
+const proj=v=>{const p=v.clone().project(cam);return [(p.x*.5+.5)*1920,(-p.y*.5+.5)*1080,p.z];};
+function globe(T){let K=null,op=0;if(T<21.4){K=KA;op=1-pr(T,20.6,21.4);}else if(T>64&&T<82){K=KB;op=pr(T,64.6,65.6)*(1-pr(T,81.2,81.9));}else if(T>104.8){K=KC;op=pr(T,105.2,106.4);}
+ R.domElement.style.opacity=op;if(!K){$('lGZ').style.opacity=0;$('lCQ').style.opacity=0;$('km').innerHTML='';return;}
+ const [lat,lon,d,lm]=camK(K,T);cam.position.copy(ll(lat,lon,d));{const m=ll(mid[0],mid[1],1);const look=lm<=1?m.multiplyScalar(lm):m.lerp(pCQ.clone(),lm-1);cam.lookAt(look);}cam.up.set(0,1,0);
+ let a=0,b=0,km=null,tv=false;
+ if(K===KA){b=eio(pr(T,6.4,8.6));km=Math.round(979*b);}
+ if(K===KB){const u=eio(pr(T,69.2,77.2));a=u;b=1;tv=T>69&&T<77.6;km=Math.round(979*(1-u));trav.position.copy(arcCurve.getPoint(u));}
+ if(K===KC){a=b=0;}
+ setArc(a,b);trav.visible=tv;trav.scale.set(.045,.045,1);
+ const ds=K===KA?lerp(.018,.03,pr(T,5,7)):.03;dGZ.scale.set(ds,ds,1);dCQ.scale.set(ds,ds,1);dGZ.visible=!(K===KB&&T>77.2)&&K!==KC;
+ const fl=K===KB?pr(T,77.0,77.5)*(1-0.6*pr(T,77.6,79)):(K===KC?1:0);flash.visible=fl>0;const fs=K===KC?.026+.005*Math.sin(T*2):.028+.026*fl;flash.scale.set(fs,fs,1);
+ const pulOn=(K===KA&&T>10)||(K===KB&&T<69);pulses.forEach((s,i)=>{const ph=((T*0.35+i/6)%1);s.visible=pulOn;if(pulOn){const q=i%2?1-ph:ph;s.position.copy(arcCurve.getPoint(q));const k=Math.sin(Math.PI*ph);s.scale.set(.012+.02*k,.012+.02*k,1);}});
+ R.render(S,cam);
+ const lab=(el,v,t,o)=>{const [x,y,z]=proj(v);el.textContent=t;el.style.left=x+'px';el.style.top=(y-26)+'px';el.style.opacity=z<1?o*op:0;};
+ const lo=K===KA?pr(T,6,7)*(1-pr(T,15.6,16.4)):(K===KB?pr(T,65.6,66.4)*(1-pr(T,80.8,81.3)):0);
+ lab($('lGZ'),pGZ,'你 · 广州',K===KB?lo*(1-pr(T,76.5,77.2)):lo);lab($('lCQ'),pCQ,K===KB&&T>77.2?'你们 · 重庆':'TA · 重庆',lo);
+ const ko=K===KA?pr(T,6.2,6.6)*(1-pr(T,15.6,16.4)):(K===KB?pr(T,69.0,69.4)*(1-pr(T,80.8,81.3)):0);$('km').style.opacity=ko*op;$('km').innerHTML=km!==null&&ko>0?`${km} km<small>直线距离</small>`:'';}
+/* ---------------- 2D scenes ---------------- */
+const G='#F6CF78',GL='rgba(246,207,120,',RED='#ff6a5a';
+const bg=`<div style="position:absolute;inset:0;background:radial-gradient(ellipse at 50% 45%,#16203d 0%,#0b1022 60%,#05070e 100%)"></div>`;
+const glow=(x,y,r,c='rgba(246,207,120,.16)')=>`<div style="position:absolute;left:${x-r}px;top:${y-r}px;width:${2*r}px;height:${2*r}px;border-radius:50%;background:radial-gradient(circle,${c},rgba(0,0,0,0) 62%)"></div>`;
+const phone=(x,y,s,inner,st='')=>`<div style="position:absolute;left:${x-110*s}px;top:${y-220*s}px;width:${220*s}px;height:${440*s}px;border-radius:${34*s}px;background:#0d1018;box-shadow:0 20px 50px rgba(0,0,0,.6);padding:${9*s}px;${st}"><div style="width:100%;height:100%;border-radius:${26*s}px;background:#151b2b;overflow:hidden;position:relative">${inner}</div></div>`;
+const fig=(x,floor,h,c,soft=0,op=1)=>{const w=h*0.36,hd=h*0.16;return `<svg style="position:absolute;left:${x-w/2-30}px;top:${floor-h-30}px;overflow:visible;opacity:${op};${soft?`filter:drop-shadow(0 0 ${soft}px rgba(255,180,200,.9))`:''}" width="${w+60}" height="${h+60}" viewBox="-30 -30 ${w+60} ${h+60}"><circle cx="${w/2}" cy="${hd}" r="${hd}" fill="${c}"/><path d="M${w*0.08} ${h} L${w*0.1} ${hd*2.35} Q${w/2} ${hd*1.75} ${w*0.9} ${hd*2.35} L${w*0.92} ${h} Z" fill="${c}"/></svg>`;};
+const heart=(x,y,s,c,crack=0)=>`<svg style="position:absolute;left:${x-50*s}px;top:${y-45*s}px;overflow:visible" width="${100*s}" height="${90*s}" viewBox="0 0 100 90"><g transform="translate(${-crack*6},0) rotate(${-crack*8} 50 85)"><path d="M50 85 C 10 60 0 35 15 18 C 28 4 45 8 50 22 L42 40 L56 52 L46 70 Z" fill="${c}"/></g><g transform="translate(${crack*6},0) rotate(${crack*8} 50 85)"><path d="M50 85 L46 70 L56 52 L42 40 L50 22 C 55 8 72 4 85 18 C 100 35 90 60 50 85 Z" fill="${c}"/></g></svg>`;
+const arcY=x=>470-170*Math.sin(Math.PI*cl((x-370)/1180));
+const BUBS=[[21.3,'在干嘛',0,240,.0],[24.9,'今天其实有点难过，想跟你说说…',1,420,.1],[28.9,'我小时候最怕的事，好像从没跟别人讲过',0,460,.2],[33.0,'其实我也是。我也想跟你讲讲我的',1,460,.3],[37.0,'晚安。明天也打给你',0,360,.1]];
+const S2=T=>{let b='';for(const [t0,txt,dir,w] of BUBS){const k=eio(pr(T,t0,t0+1.4));if(k<=0)continue;const fade=1-pr(T,t0+5.6,t0+6.4);if(fade<=0)continue;
+  const sx=dir?1550:370,ex=dir?520:1400;const x=lerp(sx,ex,k);const y=arcY(x)-60+(1-k)*20;const grow=lerp(0.55,1,k);const idx=BUBS.findIndex(q=>q[0]===t0);const warm=['#e9e3d6','#F6E2B8','#FFD9A0','#FFC9B8','#FFD9A0'][idx];
+  b+=`<div style="position:absolute;left:${x-w/2}px;top:${y-40}px;width:${w}px;padding:16px 24px;border-radius:22px;background:${warm};font-size:${26+idx*2}px;color:#2a2018;opacity:${fade};transform:scale(${grow});box-shadow:0 0 ${20+idx*14}px ${GL}.4)">${txt}</div>`;}
+ const warmth=pr(T,28.7,32.8);
+ return `${bg}${glow(960,420,lerp(200,560,warmth),'rgba(255,190,150,.16)')}${phone(250,480,1.0,fig(110,400,240,'#2c3a66'))}${phone(1670,480,1.0,fig(110,400,240,'#5b3a52'))}
+ <svg style="position:absolute;left:0;top:0" width="1920" height="1080"><path d="M370 470 Q 960 130 1550 470" fill="none" stroke="${G}" stroke-width="4" stroke-dasharray="2 14" stroke-linecap="round" opacity=".6"/></svg>${b}
+ <div class="t" style="left:640px;top:620px;font-size:46px;color:${G};opacity:${pr(T,33,33.5)*(1-pr(T,40.2,40.8))}">见不到 → 说得更多、更深</div>
+ <div class="t" style="left:820px;top:700px;font-size:30px;color:#9aa2b4;opacity:${pr(T,21,21.5)*(1-pr(T,28.4,28.9))}">一周的聊天日记</div>`;};
+const S3=T=>{const zoom=lerp(1.2,1.7,eio(pr(T,40.9,43.5)));const beauty=eio(pr(T,45.2,47.4));const slider=eio(pr(T,48.9,51.5));
+ let sp='';[[60,200],[300,150],[90,470],[310,420],[200,90],[250,560],[40,600]].forEach(([x,y],i)=>{sp+=`<div style="position:absolute;left:${x}px;top:${y}px;font-size:34px;color:#fff;opacity:${beauty*(0.5+0.5*Math.sin(T*3+i))}">✦</div>`;});
+ const inner=`<div style="position:absolute;inset:0;background:radial-gradient(circle at 50% 45%,${beauty>0?`rgba(110,60,110,${0.5+0.5*beauty})`:'#20283c'},#151b2b)"></div>${fig(187,690,430,beauty>0.5?'#ffc4d0':'#6b6f86',26*beauty)}${sp}
+  <div style="position:absolute;left:24px;top:30px;font-size:30px;color:#fff;font-weight:900;background:rgba(255,157,176,${0.5*beauty});padding:6px 18px;border-radius:999px;opacity:${beauty}">✨ 自动美颜</div>`;
+ const stab=pr(T,57,58);const flick=0.55+0.45*Math.abs(Math.sin(T*7.3)*Math.sin(T*3.1));const dim=1-0.7*pr(T,61.1,62.4);
+ return `${bg}${glow(960,460,420,'rgba(255,157,176,.18)')}<div style="opacity:${dim}">${phone(stab>0?lerp(960,620,eio(stab)):960,470,stab>0?lerp(zoom,1.3,eio(stab)):zoom,inner)}
+ <div style="opacity:${pr(T,48.9,49.4)*(1-pr(T,56.4,57))}"><div class="t" style="left:1290px;top:300px;font-size:36px;color:#ffc4d0">美颜</div><div style="position:absolute;left:1290px;top:370px;width:420px;height:16px;border-radius:8px;background:rgba(255,255,255,.12)"><div style="width:${slider*100}%;height:100%;border-radius:8px;background:#ff9db0"></div></div><div class="t" style="left:${1290+slider*420-20}px;top:350px;width:56px;height:56px;border-radius:50%;background:#fff;box-shadow:0 0 20px #ff9db0"></div><div class="t" style="left:1290px;top:420px;font-size:30px;color:#9aa2b4">把对方想得比实际更好</div></div>
+ <div style="opacity:${stab}">${heart(1180,420,1.5,G)}<div class="t" style="left:1110px;top:520px;font-size:34px;color:${G}">异地</div>
+  <div style="opacity:${flick}">${heart(1520,420,1.5,'#8b8fa3')}</div><div class="t" style="left:1430px;top:520px;font-size:34px;color:#9aa2b4">天天见面</div>
+  <div class="t" style="left:1150px;top:620px;font-size:30px;color:#9aa2b4">分开的时候，异地的更稳</div></div></div>`;};
+const S5=T=>{const c=eo(pr(T,82.2,82.9));const big=pop(T,81.45);return `${bg}
+ <div style="transform:scale(${pop(T,81.4)})">${heart(560,500,2.1,G)}</div><div style="transform:scale(${pop(T,81.6)})">${heart(960,500,2.1,G)}</div><div style="transform:scale(${pop(T,81.8)})">${heart(1360,500,2.1,c>0.3?RED:G,c)}</div>
+ <div class="t serif" style="left:700px;top:170px;font-size:120px;color:#fff;transform:scale(${big});opacity:${big>0?1:0}">约 <span style="color:#ff8a7a">1/3</span></div>
+ <div class="t serif" style="left:1250px;top:650px;font-size:52px;color:#ff8a7a;opacity:${pr(T,85.6,86.2)}">3个月内</div>
+ <div style="position:absolute;left:1200px;top:740px;display:flex;gap:16px;opacity:${pr(T,86,86.6)}">${[1,2,3].map(m=>`<div style="width:70px;height:70px;border-radius:10px;background:${T>86+m*0.6?'rgba(255,106,90,.85)':'rgba(255,255,255,.1)'};color:#fff;font-size:28px;font-weight:900;display:flex;align-items:center;justify-content:center">${m}月</div>`).join('')}</div>`;};
+const S6=T=>{const off=pr(T,90.0,90.25)*(Math.sin(T*60)>0?1:0.3)+pr(T,90.25,90.6)*0;const beauty=T<90?1:(T<90.6?(Math.sin(T*70)>0?1:0):0);const step=eio(pr(T,90.8,92.6));
+ const inner=`<div style="position:absolute;inset:0;background:radial-gradient(circle at 50% 45%,${beauty?'#5a3a5e':'#20283c'},#151b2b)"></div>${fig(154,560,360,beauty?'#ffc4d0':'#6b6f86',beauty?22:0,1-step)}
+  <div style="position:absolute;left:24px;top:30px;font-size:24px;color:#fff;font-weight:900;background:rgba(255,157,176,.5);padding:4px 14px;border-radius:999px;opacity:${beauty};text-decoration:${beauty?'none':'line-through'}">✨ 美颜</div>`;
+ const cards=[['以前看不到的缺点',1440,280,93.9],['没了自己的时间',1470,450,97.9],['吵架 · 吃醋',1450,620,99.2]];
+ const risk=pr(T,101.8,102.4);
+ return `${bg}${phone(560,470,1.4,inner)}${fig(lerp(560,1260,step),820,lerp(360,440,step),'#8b8fa3',0,step)}
+ ${cards.map(([t,x,y,t0])=>`<div class="t" style="left:${x}px;top:${y}px;font-size:38px;color:#e9e3d6;background:rgba(255,255,255,.07);padding:12px 24px;border-radius:14px;border:2px solid rgba(255,255,255,.15);transform:scale(${pop(T,t0)});opacity:${(pop(T,t0)>0?1:0)*(1-risk*0.7)}">${t}</div>`).join('')}
+ <div style="opacity:${risk}"><div class="t" style="left:260px;top:860px;font-size:34px;color:#ffc4d0">分开时想得越美</div><div style="position:absolute;left:560px;top:878px;width:${lerp(0,520,eio(pr(T,102,104)))}px;height:14px;border-radius:7px;background:linear-gradient(90deg,#ff9db0,${RED})"></div><div class="t" style="left:1110px;top:850px;font-size:52px;color:${RED};opacity:${pr(T,103.6,104)}">越危险</div></div>`;};
+const S6b=T=>``;
+const SCN=[{w:[20.8,40.9],f:S2},{w:[40.9,65.0],f:S3},{w:[81.4,89.8],f:S5},{w:[89.8,105.6],f:S6}];
+// note: S5 and S6 share the dark bg; S5->S6 crossfade
+const LINES=[[0,3.4,'你在[广州]'],[3.4,6.4,'TA 在[重庆]'],[6.4,10.0,'中间隔着[979公里]'],[10.0,13.0,'身边的人都说：异地[走不远]'],[13.0,16.4,'可研究的答案，[反过来了]'],
+ [20.8,24.7,'研究者让情侣，记了一周的聊天'],[24.7,28.7,'有异地的，也有天天见面的'],[28.7,32.8,'结果，异地的情侣[更亲密]'],[32.8,36.8,'因为见不到，[说得更多]'],[36.8,40.9,'把心里话，都打成了字'],
+ [40.9,44.9,'还有一个原因'],[44.9,48.9,'隔着屏幕，你会[自动美颜]'],[48.9,53.0,'把对方，想得比实际[更好]'],[53.0,57.0,'所以分开的时候'],[57.0,61.1,'异地情侣，[反而更稳]'],[61.1,65.1,'可是，问题来了——'],
+ [65.2,69.2,'毕业了，终于可以在一起'],[69.2,73.2,'距离，从979公里'],[73.2,77.2,'一点点，变成了[0]'],[77.2,81.3,'研究者跟踪了这些团聚的情侣……'],
+ [81.4,85.6,'约[三分之一]'],[85.6,89.8,'在团聚后[3个月]内分手'],
+ [89.8,93.8,'美颜，[关掉了]'],[93.8,97.8,'以前看不到的缺点，都看见了'],[97.8,101.8,'没了自己的时间，吵架吃醋也多了'],[101.8,105.8,'分开时想得越美，[越危险]'],
+ [105.8,109.8,'所以，距离没有杀死爱情'],[109.8,113.8,'它只是给爱情，加了一层滤镜'],[113.8,117.8,'见面以后，才是[真正的考试]'],[117.8,121.4,'学会爱一个，[不美颜的TA]'],[121.4,125.4,'你们，隔着多少公里？']];
+window.renderAt=function(T){globe(T);let h='';
+ for(const s of SCN){const [a,b]=s.w;if(T<a-0.5||T>b+0.5)continue;const e=eio(pr(T,a-0.5,a+0.5)),x=eio(pr(T,b-0.5,b+0.5));h+=`<div class="sc" style="opacity:${e*(1-x)};transform:scale(${1+0.03*sst(pr(T,a,b))})">${s.f(T)}</div>`;}
+ $('world').innerHTML=h;
+ const L=LINES.find(l=>T>=l[0]&&T<l[1]);$('sub').innerHTML=L&&T<125.4?'<span>'+L[2].replace(/\[(.+?)\]/g,'<b>$1</b>')+'</span>':'';
+ $('plaque').style.opacity=pr(T,16.58,16.9)*(1-pr(T,20.2,20.8));$('plaque').style.transform=`scale(${1.06-0.06*eo(pr(T,16.58,17.3))})`;
+ $('end').style.opacity=pr(T,125.4,126.4);};
+await document.fonts.load('900 60px "Noto Sans CJK SC"');await document.fonts.load('900 60px "Noto Serif CJK SC"');await document.fonts.ready;window.renderAt(0);window.READY=true;
+</script></body></html>

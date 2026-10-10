@@ -126,3 +126,6 @@
 1. 异地恋，真的更容易分手吗？（直接问，也最好搜）
 2. 异地不可怕，见面才危险（用反转当钩子）
 3. 隔着屏幕，你会自动给TA美颜（画面最有记忆点）
+
+## Film v1 (2026-10-10)
+film.html: three.js night Earth (NASA Black Marble 2016, public domain; no borders drawn) for the hook (广州→重庆 979 km great-circle arc), the reunion countdown 979→0 km (1:05–1:21) and the ending pull-back; 2D scenes in between (bubbles along the thread, 自动美颜 phone + slider, 1/3 hearts on the 1:21 drop, 美颜关掉 + cards). Song untouched (s130f), 5 soft message pops. Rendered on farm-jam15 (needs tex/bm8k.jpg = 8192 px downscale of BlackMarble_2016_3km).
