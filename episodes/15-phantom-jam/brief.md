@@ -82,3 +82,4 @@ build3d/film3.html (same 129.97 s, same song cut):
 
 - v3.1 (owner 11:37 "the beeping is too long"): opening horns cut to short honks (0.2–0.6 s), dense only 0–1.6 s, faded out by ~4 s (was 9 s); motorway bed gone by 5 s. Video unchanged.
 - v3.2 (owner 11:39 "what is that swooshing sound at the beginning, make it disappear; noise fade out about 0:02.50, very quickly"): removed the camera-rush whoosh (4.1 s) and the "it clears" whoosh (10.6 s); horns = a dense 2 s burst, fade 1.4→2.5 s; nothing else under the song until the brake at 32.6 s.
+- v3.3 (owner 11:41 "still too much, more pleasant beeps, under 1 second, try a different swoosh"): real horn recordings dropped; three synthesized soft two-tone beeps in the song key (C#5+E5 ×2, then F#4+A4), all over by 0.75 s; new swoosh = airy band-passed pink noise sweeping 350→1800→700 Hz and panning L→R, 4.6–7.2 s under the rush forward (same style on the 81 s crane-up).

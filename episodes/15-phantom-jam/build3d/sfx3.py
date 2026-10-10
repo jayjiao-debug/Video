@@ -13,15 +13,14 @@ H=[norm(rd(f)) for f in ['bsb0258_car_horn2.wav','bsb0850_car_horn5.wav','bsb096
 # trim long horn files to short honks (random 0.3-1.4 s slices with fades)
 def slice_(x,mx):
     L=int(SR*rng.uniform(0.18,mx));st=rng.integers(0,max(1,len(x)-L));y=x[st:st+L].copy();f=int(SR*0.02);y[:f]*=np.linspace(0,1,f)[:,None];y[-f*3:]*=np.linspace(1,0,f*3)[:,None];return y
-hb=np.zeros((int(SR*12),2))
-t=0.0
-while t<2.2:
-    x=slice_(H[rng.integers(len(H))],0.6);i=int(t*SR);n=min(len(x),len(hb)-i);p=rng.uniform(-0.8,0.8)
-    hb[i:i+n,0]+=x[:n,0]*(1-max(0,p))*rng.uniform(.45,1);hb[i:i+n,1]+=x[:n,1]*(1+min(0,p))*rng.uniform(.45,1)
-    t+=rng.uniform(0.08,0.22)
-tt=np.arange(len(hb))/SR;env=np.where(tt<1.4,1,np.cos(np.clip((tt-1.4)/1.1,0,1)*np.pi/2)**2)*np.minimum(1,tt/0.05)
-put(hb*env[:,None],0.0,1.4)
-amb=rd('bsb0122_autoroute.wav')[:int(SR*12)];ta=np.arange(len(amb))/SR;put(bp(amb,60,3000)*(np.cos(np.clip((ta-1.0)/1.5,0,1)*np.pi/2)**2)[:,None],0,0.25)
+# opening: a few friendly two-tone "beep-beep"s (in the song's key, F# minor), all over by 0.8 s
+def beep(f1,f2,d,g=1.0):
+    n=int(SR*(d+0.06));t=np.arange(n)/SR;y=np.zeros(n)
+    for f in (f1,f2):
+        for h,a in ((1,1.0),(2,0.18),(3,0.22),(5,0.06)):y+=a*np.sin(2*np.pi*f*h*t*(1+0.0015*np.sin(2*np.pi*5*t)))
+    e=np.minimum(1,t/0.006)*np.clip((d+0.035-t)/0.035,0,1);return bp(y*e,150,5000)/4*g
+put(beep(554.4,659.3,0.10),0.00,0.55,-0.35);put(beep(554.4,659.3,0.10),0.16,0.55,-0.35)
+put(beep(370.0,440.0,0.26),0.40,0.50,0.35)
 def whoosh(d,f0,f1,peak=0.6):
     n=int(SR*d);x=rng.standard_normal(n);t=np.arange(n)/SR;y=np.zeros(n);fc=f0*(f1/f0)**(t/d)
     # time-varying lowpass via one-pole
@@ -30,7 +29,16 @@ def whoosh(d,f0,f1,peak=0.6):
     e=np.sin(np.pi*np.clip(t/d,0,1))**2*np.exp(-((t/d-peak)**2)*0)
     w=(t/d);e=np.where(w<peak,np.sin(np.pi/2*w/peak)**2,np.cos(np.pi/2*(w-peak)/(1-peak))**2)
     y=norm(y*e);return np.stack([y,np.roll(y,int(SR*0.012))],1)
-put(whoosh(4.0,200,1600,0.45),81.0,0.5)       # crane up on the drop
+def air(d,f0,fp,f1,peak=0.55,pan=(-0.6,0.6)):
+    n=int(SR*d);w=rng.standard_normal(n);W=np.fft.rfft(w);fr=np.fft.rfftfreq(n,1/SR);W[1:]/=np.sqrt(fr[1:]);p=np.fft.irfft(W,n);p/=np.abs(p).max()
+    hop=512;win=2048;out_=np.zeros(n+win);hw=np.hanning(win);ff=np.fft.rfftfreq(win,1/SR)
+    for i in range(0,n-win,hop):
+        u=(i+win/2)/n;fc=np.exp(np.interp(u,[0,peak,1],np.log([f0,fp,f1])));G=np.exp(-0.5*(np.log2(np.maximum(ff,1)/fc)/0.7)**2)
+        out_[i:i+win]+=np.fft.irfft(np.fft.rfft(p[i:i+win]*hw)*G,win)*hw
+    y=out_[:n];t=np.arange(n)/n;e=np.where(t<peak,np.sin(np.pi/2*t/peak)**2,np.cos(np.pi/2*(t-peak)/(1-peak))**2);y=y*e;y/=np.abs(y).max()
+    pn=np.interp(t,[0,1],pan);return np.stack([y*np.sqrt((1-pn)/2),y*np.sqrt((1+pn)/2)],1)*1.4
+put(air(2.6,350,1800,700,0.55),4.6,0.32)        # rush to the front of the queue
+put(air(4.0,250,1500,500,0.45,(0.4,-0.4)),81.0,0.45)       # crane up on the drop
 put(whoosh(3.0,300,1400,0.5),44.9,0.14)        # dive to the chase cam
 def squeak(d=0.42,f=2300,g=1):
     n=int(SR*d);t=np.arange(n)/SR;ph=2*np.pi*np.cumsum(f*(1+0.012*np.sin(2*np.pi*31*t))-300*t/d)/SR;y=(np.sin(ph)+0.3*np.sin(2*ph))*np.minimum(1,t/0.03)*np.exp(-t/0.18);return bp(y,900,7000)*g
