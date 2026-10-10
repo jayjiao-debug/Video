@@ -1,7 +1,7 @@
 {
- "id": "sal-02",
+ "id": "sal-03",
  "items": [
-  {"type":"url","url":"https://www.nber.org/system/files/working_papers/w5114/w5114.pdf","name":"shafir_w5114.pdf","license":"NBER working paper, reference"},
-  {"type":"url","url":"https://eml.berkeley.edu/~saez/card-mas-moretti-saezAER12ucpay.pdf","name":"card2012_aer.pdf","license":"author copy, reference"}
+  {"type":"url","url":"https://eutils.ncbi.nlm.nih.gov/entrez/eutils/efetch.fcgi?db=pubmed&id=13679918&rettype=abstract&retmode=text","name":"brosnan.txt","license":"ref"},
+  {"type":"url","url":"https://www.nber.org/system/files/working_papers/w10667/w10667.pdf","name":"luttmer_w10667.pdf","license":"NBER working paper, reference"}
  ]
 }
