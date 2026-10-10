@@ -30,7 +30,7 @@ const RIM = new THREE.Vector3(0, 3.05, 0);
 const shotFrom = (i: number) => {
   const s = Math.sin(i * 12.9898) * 43758.5453, r = s - Math.floor(s);
   const side = i % 2 ? 1 : -1;
-  return new THREE.Vector3(side * (1.6 + 1.4 * r), 2.2 + 0.6 * r, 4.2 + 1.5 * ((i * 0.37) % 1));
+  return new THREE.Vector3(side * (2.0 + 1.6 * r), 2.2 + 0.6 * r, 2.6 + 1.3 * ((i * 0.37) % 1));
 };
 /** ball position for make i at time T (null when not on screen) */
 function ballAt(i: number, T: number): THREE.Vector3 | null {
@@ -97,27 +97,17 @@ const ANGLES: Record<string, { pos: [number, number, number]; look: [number, num
 };
 const shakeAt = (T: number) => { let k = 0; MAKES.forEach((m, i) => { const d = T - m; if (d >= 0 && d < 0.14) k = Math.max(k, (ACCENT.has(i) ? 1 : 0.35) * (1 - d / 0.14)); }); return k; };
 function camAt(T: number) {
-  const sh = shakeAt(T), j = new THREE.Vector3(Math.sin(T * 97) * 0.035 * sh, Math.cos(T * 83) * 0.03 * sh, 0);
-  const shot = MAKES.filter((m) => T >= m + CUT).length; // 0 = ball-cam, 1..12 = montage, 13 = after the last make
-  if (shot === 0) {
-    const p = ballAt(0, T) || RIM.clone(), q = ballAt(0, Math.max(0, T - 0.05)) || p;
-    const back = p.clone().sub(q); if (back.lengthSq() < 1e-6) back.set(0, 0, -1); back.normalize();
-    return { pos: p.clone().sub(back.multiplyScalar(0.75)).add(new THREE.Vector3(0.05, 0.16, 0)).add(j), look: RIM.clone(), fov: 64 };
-  }
-  if (shot <= 12) {
-    const A = ANGLES[ANG[shot - 1]], t0 = MAKES[shot - 1] + CUT, t1 = MAKES[shot] + CUT, u = clamp((T - t0) / (t1 - t0));
-    const pos = new THREE.Vector3(...A.pos).add(new THREE.Vector3(...A.push).multiplyScalar(u)).add(j);
-    return { pos, look: new THREE.Vector3(...A.look), fov: A.fov };
-  }
-  // after the 13th make: from the front angle, accelerate into the rim and on through the tunnel
-  const E = ANGLES.E, t0 = MAKES[12] + CUT, dive = prog(T, t0 + 0.35, TITLE);
-  let pos = new THREE.Vector3(...E.pos).add(new THREE.Vector3(...E.push));
-  if (T > t0 + 0.35) { const k = Math.pow(dive, 2.2); pos = new THREE.Vector3(lerp(pos.x, 0, easeOut(dive)), lerp(pos.y, 3.05, easeOut(dive)), lerp(pos.z, 0, k)); }
+  // v3: one continuous shot (the owner preferred v1's single camera). A slow dolly that drifts from the right to the
+  // centre, close enough that the ball and the net read on a phone, then the accelerating dive into the rim.
+  const sh = shakeAt(T) * 0.45, j = new THREE.Vector3(Math.sin(T * 97) * 0.02 * sh, Math.cos(T * 83) * 0.018 * sh, 0);
+  const a = easeInOut(prog(T, 0, 7.1)), dive = prog(T, 7.1, TITLE);
+  let pos = new THREE.Vector3(lerp(1.7, 0.2, a), lerp(2.0, 2.55, a), lerp(6.4, 4.4, a));
+  if (T > 7.1) { const k = Math.pow(dive, 2.2); pos = new THREE.Vector3(lerp(0.2, 0, easeOut(dive)), lerp(2.55, 3.05, easeOut(dive)), lerp(4.4, 0, k)); }
   if (T > TITLE) { const d = T - TITLE; pos = new THREE.Vector3(0, 3.05, -(7.06 / 0.55) * (1 - Math.exp(-0.55 * d))); }
-  const look = new THREE.Vector3(0, 3.0, 0).lerp(new THREE.Vector3(0, 3.05, -60), easeInOut(prog(T, 7.5, TITLE)));
+  const look = new THREE.Vector3(lerp(0.15, 0, a), lerp(3.35, 3.15, a), 0).lerp(new THREE.Vector3(0, 3.05, -60), easeInOut(prog(T, 7.5, TITLE)));
   if (T > TITLE) look.set(0, 3.05, pos.z - 60);
   const ts = T > TITLE && T < TITLE + 0.12 ? 0.03 * Math.sin((T - TITLE) * 120) : 0;
-  return { pos: pos.add(new THREE.Vector3(ts, ts * 0.6, 0)).add(j), look, fov: lerp(E.fov, 62, easeInOut(prog(T, 7.3, TITLE + 0.3))) };
+  return { pos: pos.add(new THREE.Vector3(ts, ts * 0.6, 0)).add(j), look, fov: lerp(40, 62, easeInOut(prog(T, 7.4, TITLE + 0.3))) };
 }
 
 /* ---------------------------------------------------------------- the arena (three.js) */
@@ -137,6 +127,10 @@ const Arena: React.FC<{ T: number }> = ({ T }) => {
     }
     return { pos, col, seed };
   }, []);
+  const dust = useMemo(() => { const n = 500, pos = new Float32Array(n * 3); for (let i = 0; i < n; i++) { const r = Math.sqrt((i * 0.618) % 1) * 2.6, a = i * 2.39996;
+    pos.set([Math.cos(a) * r, ((i * 0.37) % 1) * 10, Math.sin(a) * r * 0.8 + 0.6], i * 3); } return pos; }, []);
+  const heads = useMemo(() => { const out: [number, number, number, number][] = []; for (let row = 0; row < 7; row++) for (let k = 0; k < 46; k++) {
+    const ang = ((k + (row % 2) * 0.5) / 46 - 0.5) * Math.PI * 1.05, r = 13 + row * 1.9; out.push([Math.sin(ang) * r, 1.3 + row * 1.25, -Math.cos(ang) * r * 0.8 - 3, 0.85 + ((k * 7 + row * 3) % 5) * 0.06]); } return out; }, []);
   // net: 12 strands, 6 levels, diamond weave
   const net = useMemo(() => new THREE.BufferGeometry().setAttribute('position', new THREE.BufferAttribute(new Float32Array(12 * 6 * 2 * 3 * 2), 3)), []);
   {
@@ -180,7 +174,9 @@ const Arena: React.FC<{ T: number }> = ({ T }) => {
         {/* net */}
         <lineSegments geometry={net}><lineBasicMaterial color="#f2efe8" transparent opacity={0.9 * arenaO} /></lineSegments>
         {/* scoreboard hanging behind */}
-        <mesh visible={false} position={[0, 7.4, -7]}><planeGeometry args={[4.2, 1.575]} /><meshBasicMaterial map={board} transparent opacity={arenaO} toneMapped={false} /></mesh>
+        <mesh position={[0, 5.2, -2.2]}><planeGeometry args={[2.9, 1.0875]} /><meshBasicMaterial map={board} transparent opacity={arenaO} toneMapped={false} /></mesh>
+        <mesh position={[0, 5.2, -2.25]}><planeGeometry args={[3.04, 1.2]} /><meshStandardMaterial color="#14161c" roughness={0.6} transparent opacity={arenaO} /></mesh>
+        {fg === 13 ? <sprite position={[0, 5.2, -2.1]} scale={[5 + 2 * Math.exp(-(T - MAKES[12]) / 0.25), 2.6, 1]}><spriteMaterial map={tex.bokeh} color={GOLD} transparent opacity={arenaO * (0.35 + 0.5 * Math.exp(-(T - MAKES[12]) / 0.3))} blending={THREE.AdditiveBlending} depthWrite={false} /></sprite> : null}
         {/* crowd lights */}
         <points>
           <bufferGeometry><bufferAttribute attach="attributes-position" args={[crowd.pos, 3]} /><bufferAttribute attach="attributes-color" args={[crowd.col, 3]} /></bufferGeometry>
@@ -201,12 +197,32 @@ const Arena: React.FC<{ T: number }> = ({ T }) => {
           <sprite key={'b' + i} position={[0, 2.95, 0.02]} scale={[(ACCENT.has(i) ? 2.4 : 1.4) * (0.6 + d * 3), (ACCENT.has(i) ? 2.4 : 1.4) * (0.6 + d * 3), 1]}>
             <spriteMaterial map={tex.bokeh} color="#ffd89a" transparent opacity={arenaO * (1 - d / 0.3) * 0.9} blending={THREE.AdditiveBlending} depthWrite={false} />
           </sprite>) : null; })}
+        {/* dust motes drifting in the roof light */}
+        <points position={[0, -((T * 0.12) % 1) * 0.6, 0]}>
+          <bufferGeometry><bufferAttribute attach="attributes-position" args={[dust, 3]} /></bufferGeometry>
+          <pointsMaterial size={0.035} map={tex.bokeh} color="#ffe9c4" transparent opacity={0.55 * arenaO} depthWrite={false} blending={THREE.AdditiveBlending} sizeAttenuation />
+        </points>
+        {/* two side beams crossing the haze */}
+        {[-1, 1].map((sd) => (
+          <mesh key={'beam' + sd} position={[sd * 7, 8.5, -3]} rotation={[0.25, 0, sd * 0.55]}><cylinderGeometry args={[0.2, 2.4, 16, 32, 1, true]} />
+            <meshBasicMaterial map={tex.cone} transparent opacity={0.09 * arenaO} depthWrite={false} blending={THREE.AdditiveBlending} side={THREE.DoubleSide} toneMapped={false} /></mesh>))}
+        {/* the crowd: dark heads and shoulders against the lights in the stands */}
+        {heads.map(([hx, hy, hz, sc], i) => (
+          <group key={'h' + i} position={[hx, hy, hz]} scale={sc}>
+            <mesh position={[0, 0.32, 0]}><sphereGeometry args={[0.2, 10, 8]} /><meshStandardMaterial color="#0c0d12" roughness={0.9} transparent opacity={arenaO} /></mesh>
+            <mesh><sphereGeometry args={[0.34, 10, 8, 0, Math.PI * 2, 0, Math.PI / 2]} /><meshStandardMaterial color="#090a0e" roughness={0.9} transparent opacity={0.85 * arenaO} /></mesh>
+          </group>))}
+        {/* sheen of the roof light on the varnished floor, stretched towards the camera */}
+        <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, 0.012, 3.2]} scale={[1, 3.2, 1]}><planeGeometry args={[2.4, 2.4]} /><meshBasicMaterial map={tex.pool} transparent opacity={0.35 * arenaO} depthWrite={false} blending={THREE.AdditiveBlending} toneMapped={false} /></mesh>
+        {/* motion trails behind the balls in flight */}
+        {MAKES.flatMap((_, i) => [0.035, 0.07, 0.105, 0.14].map((dt, k) => { const p = ballAt(i, T - dt), now = ballAt(i, T); return p && now && T - dt < MAKES[i] ? (
+          <mesh key={'tr' + i + k} position={p}><sphereGeometry args={[0.12 * (1 - k * 0.12), 16, 12]} /><meshBasicMaterial color="#ffb070" transparent opacity={(0.22 - k * 0.05) * arenaO} depthWrite={false} blending={THREE.AdditiveBlending} toneMapped={false} /></mesh>) : null; }))}
         {/* balls */}
         {MAKES.map((_, i) => { const p = ballAt(i, T); return p ? (
           <mesh key={i} position={p} rotation={[T * 9 + i, T * 3, 0]}><sphereGeometry args={[0.12, 40, 28]} /><meshStandardMaterial map={tex.ball} roughness={0.75} transparent opacity={arenaO} /></mesh>) : null; })}
       </group>
       {/* rim: becomes the first ring of the tunnel */}
-      <mesh position={[0, 3.05, 0]} rotation={[Math.PI / 2, 0, 0]}>
+      <mesh position={[0, 3.05, 0]} rotation={[(Math.PI / 2) * (1 - easeInOut(prog(T, 7.55, 8.25))), 0, 0]} scale={1 + 1.2 * easeInOut(prog(T, 7.9, TITLE))}>
         <torusGeometry args={[0.23, 0.012, 16, 64]} />
         <meshStandardMaterial color="#e2541e" emissive="#ff6a2a" emissiveIntensity={0.3 + 2.2 * tunnelO + (flash(T) ? 0.6 : 0)} roughness={0.4} metalness={0.3} />
       </mesh>
@@ -343,7 +359,7 @@ export const Opening: React.FC = () => {
   const flashO = T >= TITLE ? Math.exp(-(T - TITLE) / 0.09) * 0.85 : 0;
   const fadeIn = 1;
   // a short white pop on every make (stronger on the accents)
-  let pop = 0; MAKES.forEach((m, i) => { const d = T - m; if (d >= 0 && d < 0.12) pop = Math.max(pop, (ACCENT.has(i) ? 0.32 : 0.14) * (1 - d / 0.12)); });
+  let pop = 0; MAKES.forEach((m, i) => { const d = T - m; if (d >= 0 && d < 0.12) pop = Math.max(pop, (i === 12 ? 0.3 : ACCENT.has(i) ? 0.12 : 0.05) * (1 - d / 0.12)); });
   return (
     <AbsoluteFill style={{ background: '#040509' }}>
       <style>{`@font-face { font-family: "JunoMono"; src: url(${staticFile('fonts/DejaVuSansMono-Bold.ttf')}) format("truetype"); font-weight: 700; }
@@ -358,8 +374,6 @@ export const Opening: React.FC = () => {
       </AbsoluteFill>
       {/* vignette */}
       <AbsoluteFill style={{ background: 'radial-gradient(ellipse at 50% 45%, rgba(0,0,0,0) 50%, rgba(0,0,0,0.55) 100%)' }} />
-      <Counter T={T} />
-      <Big37 T={T} />
       <NameCard T={T} />
       <TitleCard T={T} />
       <Subtitle T={T} />
