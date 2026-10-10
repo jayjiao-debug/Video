@@ -212,7 +212,7 @@ function poseTitle(T) {
   });
 }
 // corner mark (360 only; the flat view has its own HTML mark) and the "turn around" hint
-const mark = canvasPlane(1100, 120, 1.55); face(mark, at(36, 21, 5.5)); mark.layers.set(1); scene.add(mark);
+const mark = canvasPlane(1100, 120, 1.55); face(mark, at(52, 27, 5.5)); mark.layers.set(1); scene.add(mark);
 draw(mark, 'm', (g) => { g.font = `40px ${SANS}`; g.textBaseline = 'middle'; g.letterSpacing = '12px'; g.fillStyle = GOLD; g.fillText('◆', 10, 60); g.fillStyle = 'rgba(243,237,226,0.85)'; g.fillText('Juno · VIBE知识大赏', 70, 60); });
 const hint = canvasPlane(1000, 300, 1.4); face(hint, at(0, -11, 4.6)); hint.layers.set(1); scene.add(hint);
 draw(hint, 'h', (g, W, H) => {
