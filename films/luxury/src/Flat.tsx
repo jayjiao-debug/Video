@@ -7,8 +7,8 @@ import { AbsoluteFill, staticFile, useCurrentFrame } from 'remotion';
 import { font } from './brand/lib';
 import { JUNO } from './brand/identity';
 
-const GOLD = '#d9b36c', GOLD_D = '#a87c3a', GOLD_L = '#f4dca0', INK = '#f3ede2';
-type Look = 'A' | 'B';
+export const GOLD = '#d9b36c', GOLD_D = '#a87c3a', GOLD_L = '#f4dca0', INK = '#f3ede2';
+export type Look = 'A' | 'B';
 
 /* ------------------------------------------------------------------ the hero bag (our design) */
 const BODY = 'M -142 0 Q -160 0 -158 -18 L -132 -202 Q -130 -220 -112 -220 L 112 -220 Q 130 -220 132 -202 L 158 -18 Q 160 0 142 0 Z';
@@ -17,9 +17,9 @@ const FLAP_STITCH = 'M -126 -212 L -127 -150 Q -114 -100 0 -96 Q 114 -100 127 -1
 const BODY_STITCH = 'M -130 -12 Q -146 -12 -145 -26 L -126 -192';
 const HANDLE = 'M -78 -224 C -78 -338, 78 -338, 78 -224';
 
-export const Bag2D: React.FC<{ x: number; y: number; s?: number; look: Look; leather?: string; id: string }> = ({ x, y, s = 1, look, leather = '#7a1c22', id }) => {
+export const Bag2D: React.FC<{ x: number; y: number; s?: number; look: Look; leather?: string; id: string; stitch?: string; tag?: boolean; outline?: string }> = ({ x, y, s = 1, look, leather = '#7a1c22', id, stitch, tag = true, outline }) => {
   const flat = look === 'A';
-  const line = flat ? GOLD : 'rgba(0,0,0,0.35)';
+  const line = outline ?? (flat ? GOLD : 'rgba(0,0,0,0.35)'); const st = stitch ?? (flat ? GOLD : '#e8d2a8');
   return (
     <g transform={`translate(${x} ${y}) scale(${s})`}>
       <defs>
@@ -37,31 +37,31 @@ export const Bag2D: React.FC<{ x: number; y: number; s?: number; look: Look; lea
       {[-78, 78].map((hx) => <circle key={hx} cx={hx} cy={-224} r={11} fill="none" stroke={`url(#${id}-gold)`} strokeWidth={5} />)}
       {/* body */}
       <path d={BODY} fill={flat ? leather : `url(#${id}-body)`} stroke={line} strokeWidth={flat ? 3 : 1.5} />
-      <path d={BODY_STITCH} fill="none" stroke={flat ? GOLD : '#e8d2a8'} strokeWidth={2} strokeDasharray="7 6" opacity={0.85} />
-      <path d={BODY_STITCH} fill="none" stroke={flat ? GOLD : '#e8d2a8'} strokeWidth={2} strokeDasharray="7 6" opacity={0.85} transform="scale(-1 1)" />
-      <path d="M -128 -10 L 128 -10" stroke={flat ? GOLD : '#e8d2a8'} strokeWidth={2} strokeDasharray="7 6" opacity={0.85} />
+      <path d={BODY_STITCH} fill="none" stroke={st} strokeWidth={2} strokeDasharray="7 6" opacity={0.85} />
+      <path d={BODY_STITCH} fill="none" stroke={st} strokeWidth={2} strokeDasharray="7 6" opacity={0.85} transform="scale(-1 1)" />
+      <path d="M -128 -10 L 128 -10" stroke={st} strokeWidth={2} strokeDasharray="7 6" opacity={0.85} />
       {/* flap */}
       {!flat && <path d={FLAP} fill="rgba(0,0,0,0.35)" transform="translate(4 10)" />}
       <path d={FLAP} fill={flat ? leather : `url(#${id}-flap)`} stroke={line} strokeWidth={flat ? 3 : 1.5} />
-      <path d={FLAP_STITCH} fill="none" stroke={flat ? GOLD : '#efd9ae'} strokeWidth={2.2} strokeDasharray="7 6" />
+      <path d={FLAP_STITCH} fill="none" stroke={st} strokeWidth={2.2} strokeDasharray="7 6" />
       {/* clasp */}
       <rect x={-34} y={-108} width={68} height={22} rx={4} fill={`url(#${id}-gold)`} stroke={GOLD_D} strokeWidth={1.5} />
       <rect x={-24} y={-101} width={48} height={8} rx={4} fill={GOLD_D} opacity={0.6} />
       {/* feet */}
       {[-120, 120].map((fx) => <ellipse key={fx} cx={fx} cy={3} rx={9} ry={4} fill={`url(#${id}-gold)`} />)}
       {/* the signature: a gold price-tag charm on a short chain */}
-      {Array.from({ length: 6 }, (_, i) => <circle key={i} cx={82 + i * 6} cy={-214 + i * 9} r={3.2} fill="none" stroke={GOLD} strokeWidth={1.8} />)}
+      {tag && <>{Array.from({ length: 6 }, (_, i) => <circle key={i} cx={82 + i * 6} cy={-214 + i * 9} r={3.2} fill="none" stroke={GOLD} strokeWidth={1.8} />)}
       <g transform="translate(116 -150) rotate(-10)">
         <path d="M -20 -26 L 20 -26 L 20 26 L -20 26 Z" fill={`url(#${id}-gold)`} stroke={GOLD_D} strokeWidth={1.5} />
         <circle cx={0} cy={-16} r={4} fill="#1a0e04" />
         <text x={0} y={18} textAnchor="middle" fontFamily={font.latin} fontWeight={700} fontSize={30} fill="#5a3a10">€</text>
-      </g>
+      </g></>}
     </g>
   );
 };
 
 /* ------------------------------------------------------------------ the other icons (category archetypes) */
-const Watch2D: React.FC<{ x: number; y: number; s?: number; look: Look }> = ({ x, y, s = 1, look }) => (
+export const Watch2D: React.FC<{ x: number; y: number; s?: number; look: Look }> = ({ x, y, s = 1, look }) => (
   <g transform={`translate(${x} ${y}) scale(${s})`}>
     <rect x={-26} y={-150} width={52} height={70} rx={10} fill="#3a1d12" stroke={look === 'A' ? GOLD : 'none'} strokeWidth={2} />
     <rect x={-26} y={20} width={52} height={70} rx={10} fill="#3a1d12" stroke={look === 'A' ? GOLD : 'none'} strokeWidth={2} />
@@ -76,7 +76,7 @@ const Watch2D: React.FC<{ x: number; y: number; s?: number; look: Look }> = ({ x
     <rect x={76} y={-8} width={12} height={16} rx={3} fill={GOLD} />
   </g>
 );
-const Ring2D: React.FC<{ x: number; y: number; s?: number; look: Look }> = ({ x, y, s = 1, look }) => (
+export const Ring2D: React.FC<{ x: number; y: number; s?: number; look: Look }> = ({ x, y, s = 1, look }) => (
   <g transform={`translate(${x} ${y}) scale(${s})`}>
     {/* open velvet box */}
     <path d="M -70 -150 L 70 -150 L 66 -60 L -66 -60 Z" fill="#1b2b55" stroke={look === 'A' ? GOLD : 'none'} strokeWidth={2} />
@@ -91,7 +91,7 @@ const Ring2D: React.FC<{ x: number; y: number; s?: number; look: Look }> = ({ x,
     <path d="M 26 -128 L 29 -118 L 39 -115 L 29 -112 L 26 -102 L 23 -112 L 13 -115 L 23 -118 Z" fill="#ffffff" />
   </g>
 );
-const Perfume2D: React.FC<{ x: number; y: number; s?: number; look: Look }> = ({ x, y, s = 1, look }) => (
+export const Perfume2D: React.FC<{ x: number; y: number; s?: number; look: Look }> = ({ x, y, s = 1, look }) => (
   <g transform={`translate(${x} ${y}) scale(${s})`}>
     <rect x={-58} y={-150} width={116} height={150} rx={14} fill="rgba(220,235,255,0.18)" stroke={look === 'A' ? GOLD : 'rgba(255,255,255,0.6)'} strokeWidth={3} />
     <rect x={-46} y={-108} width={92} height={96} rx={8} fill="#d99a32" opacity={0.9} />
@@ -102,7 +102,7 @@ const Perfume2D: React.FC<{ x: number; y: number; s?: number; look: Look }> = ({
     <circle cx={-8} cy={-200} r={7} fill={GOLD_L} opacity={0.8} />
   </g>
 );
-const Lipstick2D: React.FC<{ x: number; y: number; s?: number }> = ({ x, y, s = 1 }) => (
+export const Lipstick2D: React.FC<{ x: number; y: number; s?: number }> = ({ x, y, s = 1 }) => (
   <g transform={`translate(${x} ${y}) scale(${s})`}>
     <rect x={-24} y={-90} width={48} height={90} rx={4} fill={GOLD} stroke={GOLD_D} strokeWidth={2} />
     <rect x={-24} y={-60} width={48} height={6} fill={GOLD_D} />
@@ -111,7 +111,7 @@ const Lipstick2D: React.FC<{ x: number; y: number; s?: number }> = ({ x, y, s = 
     <path d="M -15 -160 L 15 -184 L 15 -176 L -15 -152 Z" fill="#e0405a" opacity={0.7} />
   </g>
 );
-const Heel2D: React.FC<{ x: number; y: number; s?: number; look: Look }> = ({ x, y, s = 1, look }) => (
+export const Heel2D: React.FC<{ x: number; y: number; s?: number; look: Look }> = ({ x, y, s = 1, look }) => (
   <g transform={`translate(${x} ${y}) scale(${s})`}>
     {/* a plain pointed pump: black patent, gold heel tip, black sole */}
     <path d="M -150 0 Q -150 -14 -120 -16 L -40 -26 Q 10 -34 40 -80 Q 60 -112 96 -116 Q 120 -118 124 -96 L 120 -60 L 108 0 L 98 0 L 104 -58 Q 70 -46 40 -30 Q 0 -6 -60 -2 Z" fill="#0d0d10" stroke={look === 'A' ? GOLD : 'rgba(255,235,210,0.35)'} strokeWidth={2.5} />
@@ -121,7 +121,7 @@ const Heel2D: React.FC<{ x: number; y: number; s?: number; look: Look }> = ({ x,
 );
 
 /* ------------------------------------------------------------------ backdrops */
-const Grain: React.FC<{ f: number; o?: number }> = ({ f, o = 0.08 }) => (
+export const Grain: React.FC<{ f: number; o?: number }> = ({ f, o = 0.08 }) => (
   <svg width={1920} height={1080} style={{ position: 'absolute', inset: 0, opacity: o }}>
     <filter id="g"><feTurbulence type="fractalNoise" baseFrequency="0.85" numOctaves={2} seed={f % 50} /><feColorMatrix values="0 0 0 0 1  0 0 0 0 1  0 0 0 0 1  0 0 0 1.3 -0.45" /></filter>
     <rect width={1920} height={1080} filter="url(#g)" />
@@ -129,7 +129,7 @@ const Grain: React.FC<{ f: number; o?: number }> = ({ f, o = 0.08 }) => (
 );
 
 /** A · hero: the bag in a deco arch, sunburst behind, title */
-const AHero: React.FC = () => (
+export const AHero: React.FC = () => (
   <svg width={1920} height={1080} style={{ position: 'absolute', inset: 0, fontVariantNumeric: 'lining-nums' }}>
     <rect width={1920} height={1080} fill="#0b0a09" />
     {/* sunburst */}
@@ -154,7 +154,7 @@ const AHero: React.FC = () => (
 );
 
 /** A · lineup: every icon on a stepped deco stand */
-const ALineup: React.FC = () => (
+export const ALineup: React.FC = () => (
   <svg width={1920} height={1080} style={{ position: 'absolute', inset: 0 }}>
     <rect width={1920} height={1080} fill="#0b0a09" />
     <g transform="translate(960 900)">{Array.from({ length: 60 }, (_, i) => { const a = -Math.PI + (i / 59) * Math.PI; return <line key={i} x1={Math.cos(a) * 200} y1={Math.sin(a) * 200} x2={Math.cos(a) * 1100} y2={Math.sin(a) * 1100} stroke={GOLD} strokeOpacity={i % 2 ? 0.07 : 0.16} strokeWidth={2} />; })}</g>
