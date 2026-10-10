@@ -1,11 +1,9 @@
 {
- "id": "hm-01",
+ "id": "hm-02",
  "items": [
-  {"type":"url","url":"https://eutils.ncbi.nlm.nih.gov/entrez/eutils/efetch.fcgi?db=pubmed&id=21071660,20823223,33468644,36857342,690806,24335603,24815612&rettype=abstract&retmode=text","name":"abstracts.txt","license":"NCBI PubMed abstracts (reference)"},
-  {"type":"url","url":"https://eutils.ncbi.nlm.nih.gov/entrez/eutils/esearch.fcgi?db=pubmed&term=Oishi+Diener+%22meaning+in+life%22+poor+nations&retmode=json","name":"s_oishi.json","license":"ref"},
-  {"type":"url","url":"https://eutils.ncbi.nlm.nih.gov/entrez/eutils/esearch.fcgi?db=pubmed&term=Hill+Turiano+purpose+in+life+mortality&retmode=json","name":"s_hill.json","license":"ref"},
-  {"type":"url","url":"https://eutils.ncbi.nlm.nih.gov/entrez/eutils/esearch.fcgi?db=pubmed&term=Baumeister+happy+life+meaningful+life+differences&retmode=json","name":"s_baum.json","license":"ref"},
-  {"type":"url","url":"https://eutils.ncbi.nlm.nih.gov/entrez/eutils/esearch.fcgi?db=pubmed&term=Kahneman+day+reconstruction+method+2004&retmode=json","name":"s_drm.json","license":"ref"},
-  {"type":"url","url":"https://eutils.ncbi.nlm.nih.gov/entrez/eutils/esearch.fcgi?db=pubmed&term=Alimujiang+purpose+in+life+mortality+2019&retmode=json","name":"s_alim.json","license":"ref"}
+  {"type":"url","url":"https://www.ebi.ac.uk/europepmc/webservices/rest/PMC10013834/fullTextXML","name":"kkm2023.xml","license":"PNAS open access (CC BY-NC-ND), reference"},
+  {"type":"url","url":"https://www.ebi.ac.uk/europepmc/webservices/rest/PMC4224996/fullTextXML","name":"hill2014.xml","license":"PMC author manuscript, reference"},
+  {"type":"url","url":"https://www.ebi.ac.uk/europepmc/webservices/rest/PMC7848527/fullTextXML","name":"kill2021.xml","license":"PNAS open access, reference"},
+  {"type":"url","url":"https://news.harvard.edu/gazette/story/2010/11/wandering-mind-not-a-happy-mind/","name":"harvard_gazette_2010.html","license":"Harvard Gazette, reference"}
  ]
 }
