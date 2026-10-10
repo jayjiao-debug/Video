@@ -7,6 +7,7 @@ import { ThreeCanvas } from '@remotion/three';
 import * as THREE from 'three';
 import { Stage, Cam } from './Stage';
 import { Bag, BAG } from './Bag';
+import { RingBox, Watch, Perfume, Scarf, GiftBox } from './Props';
 import { stoneTex, cardTex, silhouetteTex, shutterTex, plasterTex } from './ltex';
 import { oakTex, glowTex, nightTex } from './tex';
 import { GOLD, INK } from './art';
@@ -209,9 +210,46 @@ const Breakdown: React.FC = () => (
   </group>
 );
 
+/** the window display: a stepped travertine stand, every icon of luxury on it, the bag at the top */
+const Display: React.FC = () => {
+  const tx = useMemo(() => ({ trav: stoneTex('travertine'), marble: stoneTex('marble') }), []);
+  const step = (w: number, h: number, d: number, z: number) => <group><mesh position={[0, h / 2, z]} castShadow receiveShadow><boxGeometry args={[w, h, d]} /><meshPhysicalMaterial color="#08080a" roughness={0.12} clearcoat={1} clearcoatRoughness={0.05} /></mesh><mesh position={[0, h - 0.002, z + d / 2 + 0.001]}><boxGeometry args={[w, 0.004, 0.003]} /><meshStandardMaterial color="#c79a52" metalness={0.7} roughness={0.25} emissive="#3a2608" emissiveIntensity={0.5} /></mesh></group>;
+  return (
+    <group>
+      <mesh rotation={[-Math.PI / 2, 0, 0]} receiveShadow><planeGeometry args={[6, 6]} /><meshStandardMaterial map={tx.marble} roughness={0.12} metalness={0.1} /></mesh>
+      <mesh position={[0, 1.2, -1.2]}><planeGeometry args={[6, 3]} /><meshStandardMaterial map={tx.trav} color="#3a3128" roughness={0.9} /></mesh>
+      {step(1.1, 0.07, 0.22, 0.12)}{step(0.9, 0.16, 0.22, -0.1)}{step(0.56, 0.27, 0.26, -0.34)}
+      <Bag position={[0, 0.27, -0.34]} rotation={[0, -0.18, 0]} />
+      <group position={[-0.3, 0.16, -0.12]} scale={1.5}><Perfume rotation={[0, 0.5, 0]} /></group>
+      <group position={[0.3, 0.16, -0.12]} scale={1.3}><GiftBox rotation={[0, -0.4, 0]} /></group>
+      <group position={[0.0, 0.16, -0.08]}><Scarf /></group>
+      <group position={[-0.25, 0.07, 0.12]} scale={1.7}><RingBox rotation={[0, 0.35, 0]} /></group>
+      <group position={[0.25, 0.07, 0.12]} scale={1.7}><Watch rotation={[0, -0.3, 0]} t={0.07} /></group>
+      <Spot position={[0.3, 2.2, 1.4]} target={[0, 0.15, -0.1]} angle={0.32} penumbra={0.6} intensity={17} color="#ffe2b8" castShadow />
+      <Spot position={[-1.2, 1.4, -1.0]} target={[0, 0.3, -0.3]} angle={0.5} penumbra={0.8} intensity={10} color="#ffc98a" />
+      <Spot position={[1.2, 1.4, -1.0]} target={[0, 0.3, -0.3]} angle={0.5} penumbra={0.8} intensity={8} color="#9fb4e0" />
+      <Beam pos={[0.3, 2.2, 1.4]} h={2.0} r={0.5} o={0.03} />
+      <ambientLight intensity={0.03} />
+    </group>
+  );
+};
+
+/** the hero bag in three colourways, to choose the film's one */
+const Colorways: React.FC = () => (
+  <group>
+    <mesh rotation={[-Math.PI / 2, 0, 0]} receiveShadow><planeGeometry args={[6, 6]} /><meshStandardMaterial color="#0a0a0b" roughness={0.18} /></mesh>
+    {[['#0d0d0f', -0.42], ['#6a0f16', 0], ['#8a4a22', 0.42]].map(([col, x]) => (
+      <group key={col as string}>
+        <Bag position={[x as number, 0, 0]} rotation={[0, -0.2, 0]} color={col as string} />
+        <Spot position={[(x as number) + 0.1, 1.6, 0.6]} target={[x as number, 0.12, 0]} angle={0.17} penumbra={0.6} intensity={12} color="#ffe6c4" castShadow />
+      </group>))}
+    <ambientLight intensity={0.04} />
+  </group>
+);
+
 /* ------------------------------------------------------------------ key frames */
 type K = { name: string; set: React.ReactNode; cam: Cam; sub?: string; bg?: string; overlay?: 'title' | 'breakdown' };
-const c = (pos: [number, number, number], look: [number, number, number], fov: number, ap: number, bloom: number, exposure = 1, env = 0.12): Cam =>
+const c = (pos: [number, number, number], look: [number, number, number], fov: number, ap: number, bloom: number, exposure = 1, env = 0.4): Cam =>
   ({ pos, look, fov, focus: Math.hypot(pos[0] - look[0], pos[1] - look[1], pos[2] - look[2]), aperture: ap, bloom, exposure, env });
 
 export const KEYS: K[] = [
@@ -224,6 +262,9 @@ export const KEYS: K[] = [
   { name: '07 卖不掉的', set: <Unsold />, cam: c([0.6, 0.8, 2.7], [0, 0.75, -0.5], 36, 0.002, 0.55), sub: '2018年，一个品牌销毁了2860万英镑的存货。' },
   { name: '08 假的 · 紫外灯下', set: <Fakes />, cam: c([0.0, 0.28, 0.85], [0, 0.14, 0], 32, 0.006, 0.8, 1.1), sub: '全球假货贸易：4670亿美元。', bg: '#05030a' },
   { name: '09 揭晓 · 差价拆开', set: <Breakdown />, cam: c([0.55, 0.42, 1.0], [0.2, 0.18, 0], 34, 0.003, 0.6), overlay: 'breakdown' },
+  { name: '10 橱窗 · 奢侈品全家福', set: <Display />, cam: c([0.14, 0.62, 1.32], [0, 0.24, -0.16], 34, 0.003, 0.6), sub: '包、表、钻戒、香水、丝巾——同一套欲望。' },
+  { name: '11 主角特写 · 金色价签', set: <Boutique />, cam: c([0.3, 1.2, 0.66], [0.03, 1.1, 0], 30, 0.008, 0.6) },
+  { name: '12 主角 · 三种配色', set: <Colorways />, cam: c([0, 0.42, 1.25], [0, 0.14, 0], 32, 0.002, 0.55) },
 ];
 
 const Overlay: React.FC<{ k: K }> = ({ k }) => {

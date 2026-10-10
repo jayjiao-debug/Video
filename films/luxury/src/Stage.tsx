@@ -2,7 +2,6 @@
 import React, { useEffect, useMemo } from 'react';
 import { useFrame, useThree } from '@react-three/fiber';
 import * as THREE from 'three';
-import { RoomEnvironment } from 'three/examples/jsm/environments/RoomEnvironment.js';
 import { EffectComposer } from 'three/examples/jsm/postprocessing/EffectComposer.js';
 import { RenderPass } from 'three/examples/jsm/postprocessing/RenderPass.js';
 import { UnrealBloomPass } from 'three/examples/jsm/postprocessing/UnrealBloomPass.js';
@@ -32,9 +31,29 @@ const Post: React.FC<{ cam: Cam }> = ({ cam }) => {
   return null;
 };
 
+/** a black product-photography studio: one big softbox overhead, two tall strips, a warm card behind.
+    Metal and lacquer pick up crisp highlights while the diffuse light stays low. */
+const studio = () => {
+  const sc = new THREE.Scene(); sc.background = new THREE.Color('#000');
+  const box = (w: number, h: number, pos: [number, number, number], rot: [number, number, number], col: string, k: number) => {
+    const m = new THREE.Mesh(new THREE.PlaneGeometry(w, h), new THREE.MeshBasicMaterial({ color: new THREE.Color(col).multiplyScalar(k), side: THREE.DoubleSide }));
+    m.position.set(...pos); m.rotation.set(...rot); sc.add(m);
+  };
+  box(4, 2, [0, 4, 0], [Math.PI / 2, 0, 0], '#fff4e6', 3);
+  box(0.6, 3, [-3, 1.5, 1], [0, Math.PI / 2.5, 0], '#ffe3c0', 4);
+  box(0.6, 3, [3, 1.5, 1], [0, -Math.PI / 2.5, 0], '#e6eeff', 3);
+  box(3, 1, [0, 1, -4], [0, 0, 0], '#ffcf96', 1.5);
+  box(2, 0.4, [0, 0.6, 4], [0, Math.PI, 0], '#ffffff', 2);
+  box(8, 8, [0, -2.5, 0], [Math.PI / 2, 0, 0], '#6a5338', 1.0); // warm bounce off the floor, so metal facing down still reads as gold
+  return sc;
+};
+
 const Env: React.FC<{ k: number }> = ({ k }) => {
   const { gl, scene } = useThree();
-  useEffect(() => { const pm = new THREE.PMREMGenerator(gl); const env = pm.fromScene(new RoomEnvironment(), 0.04).texture; scene.environment = env; return () => { env.dispose(); pm.dispose(); }; }, [gl, scene]);
+  // built during render, not in an effect: a still is captured on the very first frame, before effects run
+  const env = useMemo(() => { const pm = new THREE.PMREMGenerator(gl); const t = pm.fromScene(studio(), 0.02).texture; pm.dispose(); return t; }, [gl]);
+  useEffect(() => () => env.dispose(), [env]);
+  scene.environment = env;
   (scene as unknown as { environmentIntensity: number }).environmentIntensity = k;
   return null;
 };
@@ -47,7 +66,7 @@ export const Stage: React.FC<{ cam: Cam; bg?: string; children: React.ReactNode 
   return (
     <>
       <color attach="background" args={[bg]} />
-      <Env k={cam.env ?? 0.15} />
+      <Env k={cam.env ?? 0.4} />
       {children}
       <Post cam={cam} />
     </>

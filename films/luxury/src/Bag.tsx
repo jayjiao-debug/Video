@@ -3,9 +3,10 @@
 import React, { useMemo } from 'react';
 import * as THREE from 'three';
 import { leatherTex } from './ltex';
+import { canvasTex } from './tex';
 
 export const BAG = { w: 0.32, top: 0.25, h: 0.22, d: 0.12 };
-const GOLD = { color: '#d8b06a', metalness: 1, roughness: 0.22 };
+const GOLD = { color: '#e0b468', metalness: 0.7, roughness: 0.28, emissive: '#3a2608', emissiveIntensity: 0.6 };
 
 const roundedTrapezoid = (wb: number, wt: number, h: number, r: number) => {
   const s = new THREE.Shape(), b = wb / 2, t = wt / 2;
@@ -25,12 +26,15 @@ export type BagProps = {
   /** under UV light: stitches fluoresce (a fake's optical-brightener thread) */
   uv?: number;
   sheen?: number;
+  /** the gold tag charm */
+  tag?: boolean;
 };
 
-export const Bag: React.FC<BagProps & JSX.IntrinsicElements['group']> = ({ color = '#5a1a1c', explode = 0, uv = 0, sheen = 1, ...g }) => {
+export const Bag: React.FC<BagProps & JSX.IntrinsicElements['group']> = ({ color = '#5a1a1c', explode = 0, uv = 0, sheen = 1, tag = true, ...g }) => {
   const tx = useMemo(() => leatherTex(color), [color]);
+  const tagTex = useMemo(() => canvasTex(128, 112, (c) => { c.clearRect(0, 0, 128, 112); c.fillStyle = '#5a3a10'; c.font = '700 96px "Cormorant Garamond", Georgia, serif'; c.textAlign = 'center'; c.fillText('€', 64, 92); }), []);
   const geo = useMemo(() => {
-    const body = new THREE.ExtrudeGeometry(roundedTrapezoid(BAG.w, BAG.top, BAG.h, 0.03), { depth: BAG.d, bevelEnabled: true, bevelThickness: 0.012, bevelSize: 0.01, bevelSegments: 6, curveSegments: 24 });
+    const body = new THREE.ExtrudeGeometry(roundedTrapezoid(BAG.w, BAG.top, BAG.h, 0.018), { depth: BAG.d, bevelEnabled: true, bevelThickness: 0.012, bevelSize: 0.01, bevelSegments: 6, curveSegments: 24 });
     body.translate(0, 0, -BAG.d / 2);
     const flap = new THREE.ExtrudeGeometry(flapShape(BAG.top, 0.13), { depth: 0.004, bevelEnabled: true, bevelThickness: 0.002, bevelSize: 0.002, bevelSegments: 3, curveSegments: 24 });
     const arch = new THREE.CatmullRomCurve3([new THREE.Vector3(-0.075, 0, 0), new THREE.Vector3(-0.06, 0.07, 0), new THREE.Vector3(0, 0.105, 0), new THREE.Vector3(0.06, 0.07, 0), new THREE.Vector3(0.075, 0, 0)]);
@@ -38,9 +42,11 @@ export const Bag: React.FC<BagProps & JSX.IntrinsicElements['group']> = ({ color
     // stitches along the flap edge: short dashes following the curve
     const curve = new THREE.QuadraticBezierCurve3(new THREE.Vector3(BAG.top / 2 - 0.006, -0.068, 0), new THREE.Vector3(0, -0.13, 0), new THREE.Vector3(-BAG.top / 2 + 0.006, -0.068, 0));
     const pts = curve.getSpacedPoints(46);
-    return { body, flap, handle, pts };
+    // saddle stitches around the front and back faces, 8 mm inside the edge
+    const outline = roundedTrapezoid(BAG.w - 0.012, BAG.top - 0.012, BAG.h - 0.012, 0.026).getSpacedPoints(150).map((p) => new THREE.Vector2(p.x, p.y + 0.006));
+    return { body, flap, handle, pts, outline };
   }, []);
-  const leather = <meshPhysicalMaterial map={tx.map} bumpMap={tx.bump} bumpScale={0.6} roughness={0.42} clearcoat={0.35 * sheen} clearcoatRoughness={0.35} sheen={0.4} sheenColor={new THREE.Color('#ffd9c0')} />;
+  const leather = <meshPhysicalMaterial map={tx.map} bumpMap={tx.bump} bumpScale={0.6} roughness={0.38} clearcoat={0.6 * sheen} clearcoatRoughness={0.22} sheen={0.15} sheenColor={new THREE.Color("#ffd9c0")} />;
   const e = explode, up = (k: number) => k * e;
   const stitchCol = new THREE.Color(uv > 0 ? '#d8e4ff' : '#c9b9a0');
   return (
@@ -57,14 +63,28 @@ export const Bag: React.FC<BagProps & JSX.IntrinsicElements['group']> = ({ color
           </mesh>))}
         {/* bar clasp */}
         <group position={[0, -0.112, 0.008 + up(0.08)]}>
-          <mesh castShadow><boxGeometry args={[0.05, 0.016, 0.006]} /><meshStandardMaterial {...GOLD} /></mesh>
+          <mesh castShadow><boxGeometry args={[0.062, 0.02, 0.007]} /><meshStandardMaterial {...GOLD} /></mesh>
           <mesh position={[0, 0, 0.004]}><boxGeometry args={[0.042, 0.006, 0.004]} /><meshStandardMaterial {...GOLD} roughness={0.12} /></mesh>
         </group>
       </group>
+      {/* saddle stitching on both faces: the tell of hand work */}
+      {[1, -1].map((side) => geo.outline.map((p, i) => { const q = geo.outline[(i + 1) % geo.outline.length]; return (
+        <mesh key={side + '-' + i} position={[p.x, p.y + 0.012, side * (BAG.d / 2 + 0.0121)]} rotation={[0, 0, Math.atan2(q.y - p.y, q.x - p.x)]}>
+          <boxGeometry args={[0.0034, 0.001, 0.001]} /><meshStandardMaterial color={stitchCol} emissive={stitchCol} emissiveIntensity={uv * 3.2} roughness={0.8} />
+        </mesh>); }))}
       {/* handle and its gold rings */}
       <group position={[0, BAG.h + 0.022 + up(0.14), 0]}>
         <mesh geometry={geo.handle} castShadow>{leather}</mesh>
         {[-0.075, 0.075].map((x) => <mesh key={x} position={[x, -0.004, 0]} rotation={[0, Math.PI / 2, 0]}><torusGeometry args={[0.011, 0.0028, 12, 32]} /><meshStandardMaterial {...GOLD} /></mesh>)}
+        {/* the signature: a gold price-tag charm hanging off the handle on a short chain */}
+        {tag && <group>
+          {Array.from({ length: 7 }, (_, i) => { const u = i / 6; return <mesh key={i} position={[0.083 + u * 0.065, -0.008 - u * 0.05 - Math.sin(u * Math.PI) * 0.006, 0.01 + u * 0.03]} rotation={[0, i % 2 ? Math.PI / 2 : 0, 0.6]}><torusGeometry args={[0.0034, 0.0009, 8, 20]} /><meshStandardMaterial {...GOLD} /></mesh>; })}
+          <group position={[0.15, -0.085, 0.042]} rotation={[0, -0.5, 0.05]}>
+            <mesh castShadow><boxGeometry args={[0.03, 0.042, 0.0024]} /><meshStandardMaterial {...GOLD} roughness={0.15} /></mesh>
+            <mesh position={[0, 0.014, 0]} rotation={[Math.PI / 2, 0, 0]}><cylinderGeometry args={[0.003, 0.003, 0.003, 16]} /><meshStandardMaterial color="#2a1a0a" /></mesh>
+            <mesh position={[0, -0.005, 0.0013]}><planeGeometry args={[0.02, 0.018]} /><meshStandardMaterial map={tagTex} transparent metalness={0.7} roughness={0.3} color="#e0b468" /></mesh>
+          </group>
+        </group>}
       </group>
       {/* feet */}
       {[[-0.12, -0.04], [0.12, -0.04], [-0.12, 0.04], [0.12, 0.04]].map(([x, z], i) => (
