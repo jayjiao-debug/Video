@@ -1,4 +1,47 @@
-{"id":"sfx-iphone-02","items":[
- {"type":"url","url":"https://bigsoundbank.com/UPLOAD/mp3/0448.mp3","name":"bsb0448_iphone_camera.mp3","license":"CC0 (BigSoundBank #448)"},
- {"type":"url","url":"https://bigsoundbank.com/UPLOAD/mp3/1035.mp3","name":"bsb1035_iphone_vibrate_hand.mp3","license":"CC0 (BigSoundBank #1035)"}
-]}
+{
+ "id": "jam-sfx-01",
+ "items": [
+  {
+   "type": "url",
+   "url": "https://bigsoundbank.com/UPLOAD/wav/3506.wav",
+   "name": "bsb3506_horn3.wav",
+   "license": "CC0 (BigSoundBank #3506)"
+  },
+  {
+   "type": "url",
+   "url": "https://bigsoundbank.com/UPLOAD/wav/0258.wav",
+   "name": "bsb0258_car_horn2.wav",
+   "license": "CC0 (BigSoundBank #258)"
+  },
+  {
+   "type": "url",
+   "url": "https://bigsoundbank.com/UPLOAD/wav/0969.wav",
+   "name": "bsb0969_car_horn7.wav",
+   "license": "CC0 (BigSoundBank #969)"
+  },
+  {
+   "type": "url",
+   "url": "https://bigsoundbank.com/UPLOAD/wav/0850.wav",
+   "name": "bsb0850_car_horn5.wav",
+   "license": "CC0 (BigSoundBank #850)"
+  },
+  {
+   "type": "url",
+   "url": "https://bigsoundbank.com/UPLOAD/wav/3438.wav",
+   "name": "bsb3438_honk90.wav",
+   "license": "CC0 (BigSoundBank #3438)"
+  },
+  {
+   "type": "url",
+   "url": "https://bigsoundbank.com/UPLOAD/wav/3593.wav",
+   "name": "bsb3593_bus_horns.wav",
+   "license": "CC0 (BigSoundBank #3593)"
+  },
+  {
+   "type": "url",
+   "url": "https://bigsoundbank.com/UPLOAD/wav/0122.wav",
+   "name": "bsb0122_autoroute.wav",
+   "license": "CC0 (BigSoundBank #122)"
+  }
+ ]
+}
