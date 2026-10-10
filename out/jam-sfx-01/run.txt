@@ -1,0 +1,15 @@
+url https://bigsoundbank.com/UPLOAD/wav/3506.wav
+  saved out/files/bsb3506_horn3.wav 0.0 MB
+url https://bigsoundbank.com/UPLOAD/wav/0258.wav
+  saved out/files/bsb0258_car_horn2.wav 0.0 MB
+url https://bigsoundbank.com/UPLOAD/wav/0969.wav
+  saved out/files/bsb0969_car_horn7.wav 0.0 MB
+url https://bigsoundbank.com/UPLOAD/wav/0850.wav
+  saved out/files/bsb0850_car_horn5.wav 0.0 MB
+url https://bigsoundbank.com/UPLOAD/wav/3438.wav
+  saved out/files/bsb3438_honk90.wav 0.0 MB
+url https://bigsoundbank.com/UPLOAD/wav/3593.wav
+  saved out/files/bsb3593_bus_horns.wav 0.0 MB
+url https://bigsoundbank.com/UPLOAD/wav/0122.wav
+  saved out/files/bsb0122_autoroute.wav 0.0 MB
+done
