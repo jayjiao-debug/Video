@@ -1,0 +1,27 @@
+===== container 0
+$ nvidia-smi --query-gpu=name,memory.total,driver_version --format=csv,noheader -> rc 0 in 0s
+Tesla T4, 15360 MiB, 610.57.04
+
+$ rm -rf /tmp/w && cp -r /app/bh360 /tmp/w -> rc 0 in 0s
+
+$ cd /tmp/w && python plates.py 0 0 /tmp/w/plates --gpu --frames 15,282,414 -> rc 0 in 61s
+SKY_S 7.9
+PLATE_S_PER_FRAME 17.09
+
+$ cd /tmp/w && python drive.py 0 0 /tmp/o --frames 15,282,414 -> rc 0 in 6s
+RENDERER ANGLE (NVIDIA, Vulkan 1.4.341 (NVIDIA Tesla T4 (0x00001EB8)), NVIDIA)
+MS_PER_FRAME 928
+
+===== container 1
+$ nvidia-smi --query-gpu=name,memory.total,driver_version --format=csv,noheader -> rc 0 in 0s
+Tesla T4, 15360 MiB, 610.57.04
+
+$ rm -rf /tmp/w && cp -r /app/bh360 /tmp/w -> rc 0 in 0s
+
+$ cd /tmp/w && python plates.py 0 0 /tmp/w/plates --gpu --frames 558,738,852 -> rc 0 in 61s
+SKY_S 7.7
+PLATE_S_PER_FRAME 17.18
+
+$ cd /tmp/w && python drive.py 0 0 /tmp/o --frames 558,738,852 -> rc 0 in 17s
+RENDERER ANGLE (NVIDIA, Vulkan 1.4.341 (NVIDIA Tesla T4 (0x00001EB8)), NVIDIA)
+MS_PER_FRAME 1024
