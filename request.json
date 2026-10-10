@@ -1,6 +1,9 @@
 {
- "id": "antarctic-01",
+ "id": "gide-01",
  "items": [
-  {"type":"url","url":"https://eoimages.gsfc.nasa.gov/images/imagerecords/73000/73909/world.topo.bathy.200412.3x21600x10800.jpg","name":"bluemarble_topobathy_21600.jpg","license":"NASA Earth Observatory (public domain), Blue Marble Next Generation w/ topography and bathymetry, Dec 2004"}
+  {"type":"url","url":"https://www.gutenberg.org/cache/epub/79693/pg79693.txt","name":"strait_is_the_gate_bussy.txt","license":"Project Gutenberg #79693 (public domain in the USA)"},
+  {"type":"url","url":"https://fr.wikisource.org/wiki/La_Porte_%C3%A9troite","name":"wikisource_porte_etroite_index.html","license":"Wikisource text, public domain (Gide d.1951)"},
+  {"type":"url","url":"https://faculty.chicagobooth.edu/-/media/faculty/mcgill/research/key-differences.pdf","name":"baumeister2013_try1.pdf","license":"paper (reference only)"},
+  {"type":"url","url":"https://www.gsb.stanford.edu/sites/default/files/publication-pdf/somekeydifferenceshappylifemeaningfullife_2012.pdf","name":"baumeister2013_try2.pdf","license":"paper (reference only)"}
  ]
 }
