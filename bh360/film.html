@@ -1,0 +1,18 @@
+<!doctype html>
+<html><head><meta charset="utf-8">
+<style>
+@font-face{font-family:"Cormorant Garamond";src:url(fonts/cormorant-garamond-latin-600-normal.woff2) format("woff2");font-weight:600}
+@font-face{font-family:"Cormorant Garamond";src:url(fonts/cormorant-garamond-latin-500-italic.woff2) format("woff2");font-weight:500;font-style:italic}
+@font-face{font-family:"JMono";src:url(fonts/DejaVuSansMono-Bold.ttf) format("truetype");font-weight:700}
+html,body{margin:0;background:#000;overflow:hidden}
+canvas{display:block;position:absolute;left:0}
+#flat{top:var(--eqh)}
+#mark{position:absolute;right:56px;top:calc(var(--eqh) + 44px);font:20px "Noto Sans CJK SC",sans-serif;letter-spacing:.3em;color:rgba(243,237,226,.58);opacity:.55}
+#mark b{color:#f1c56d;font-weight:400}
+</style>
+<script type="importmap">{"imports":{"three":"./lib/three.module.js","three/addons/":"./lib/"}}</script>
+</head><body>
+<canvas id="eq"></canvas><canvas id="flat"></canvas>
+<div id="mark"><b>◆ </b>Juno · VIBE知识大赏</div>
+<script type="module" src="film.js"></script>
+</body></html>
