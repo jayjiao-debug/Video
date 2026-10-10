@@ -1,9 +1,9 @@
 {
-  "id": "tune_open2-1791659346",
-  "composition": "ColdOpen",
+  "id": "lux_v1-1791665001",
+  "composition": "Lux",
   "start": 0,
-  "end": 329,
-  "chunks": 16,
-  "output": "tune_open2",
+  "end": 3672,
+  "chunks": 20,
+  "output": "lux_v1",
   "flags": ""
 }

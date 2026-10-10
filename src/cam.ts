@@ -1,6 +1,6 @@
 /* Camera path: Catmull-Rom through keyed shots so moves flow into each other; a key can ask for a hard
    expo-out move instead (the whip-back on the lock). Each key: time, position, look-at, fov, focus distance, aperture, bloom. */
-import type { Cam } from './World';
+import type { Cam } from './Stage';
 
 export type Key = { t: number; pos: number[]; look: number[]; fov: number; ap: number; bloom: number; focus?: number; whip?: boolean };
 const cr = (p0: number, p1: number, p2: number, p3: number, u: number) =>
