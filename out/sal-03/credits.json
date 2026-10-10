@@ -1,0 +1,10 @@
+[
+  {
+    "source": "https://eutils.ncbi.nlm.nih.gov/entrez/eutils/efetch.fcgi?db=pubmed&id=13679918&rettype=abstract&retmode=text",
+    "license": "ref"
+  },
+  {
+    "source": "https://www.nber.org/system/files/working_papers/w10667/w10667.pdf",
+    "license": "NBER working paper, reference"
+  }
+]
