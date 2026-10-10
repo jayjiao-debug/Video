@@ -47,3 +47,7 @@ build3d/scenes2.html (`shot(0..6)`): no night scene (02 is now a daytime motorwa
 ## Background + cel look (owner, 2026-10-10 08:48–08:52)
 "too many elements, lets stick to a clear background for now" → background option A (plain cream, no blocks/parks/buildings).
 "give the vehicle a more 2D 3D look like dark edges" → build3d/scenes3.html: cars use MeshToonMaterial (3-band gradient) + a constant-width ink outline (inverted hull on mergeVertices smooth normals, offset in clip space, 2.4 px, #2C3E50 slate, not black). `INK.on` toggles it; `shot(9)` is the close-up test.
+
+## Style locked for now (owner, 2026-10-10 09:02: screenshot of the plain 3D car close-up + "lets rather stick to this, add the grids, then give me a demo")
+Rejected after trying: ink outlines/toon, Borderlands hatching, Mini Motorways-like miniature city (all reverted). Kept: car B without outlines (Lambert), cream ground + map grid (fine 4 m lines, stronger tile border), colourful lanes (green/yellow-you/blue/orange), mixed-colour cars, thin map lines with white stations, one river, green gantry + LED boards, green chapter plates, slate subtitle strip.
+Demo v3 (build3d/demo.html, 30.755 s = 15 bars, untouched BGM with a one-bar fade 28.73→30.755): 00 behind your car → fly over the queue → gantry + roadside LED board fills in "车祸/施工/收费站 —— 无" → camera turns back, start-up wave → rises over the map → title "01 幽灵堵车" on the bar-9 downbeat (18.6 s) → glides across the grid to the red 230 m ring (22 cars at real speed) → data card.
