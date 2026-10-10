@@ -3,7 +3,7 @@
 html,body{margin:0;width:1920px;height:1080px;overflow:hidden;background:#02040a;font-family:"Noto Sans CJK SC",sans-serif}
 canvas{position:absolute;left:0;top:0}
 #bg2,#dim{position:absolute;inset:0;opacity:0}
-#dim{background:#02040a}
+#dim{background:#02040a;z-index:34}
 #bg2{background:radial-gradient(ellipse at 50% 42%,#15203f 0%,#0a1022 58%,#04060d 100%)}
 #bg2:after{content:"";position:absolute;inset:0;background-image:linear-gradient(rgba(246,207,120,.035) 1px,transparent 1px),linear-gradient(90deg,rgba(246,207,120,.035) 1px,transparent 1px);background-size:80px 80px}
 #world,#ovl{position:absolute;inset:0}
@@ -37,9 +37,9 @@ canvas{position:absolute;left:0;top:0}
 <div id="dim"></div><div id="bg2"></div><canvas id="fx" width="1920" height="1080"></canvas>
 <div id="world"></div><div id="hud"></div>
 <div class="mark">◆ Juno · VIBE知识大赏</div><div id="src"></div>
-<div id="plaque"><div class="p"><div class="k">VIBE知识大赏</div><div class="a">快乐，还是意义？</div><div class="b">HAPPINESS OR MEANING</div></div></div>
-<div id="end"><div class="j">J</div><div class="tt">快乐，还是意义？</div><div class="q">你会推开哪一扇门？评论区：A 快乐 · B 意义</div><div class="f">关注 Juno · 一起看懂世界</div>
-<div class="s">资料：Killingsworth &amp; Gilbert (2010) Science · Brickman, Coates &amp; Janoff-Bulman (1978) JPSP · Kahneman &amp; Deaton (2010) PNAS · Killingsworth (2021) PNAS · Killingsworth, Kahneman &amp; Mellers (2023) PNAS<br>Oishi &amp; Diener (2014) Psychological Science · Baumeister, Vohs, Aaker &amp; Garbinsky (2013) J. Positive Psychology · Hill &amp; Turiano (2014) Psychological Science · Gide《窄门》(1909) · 夜光地图 NASA Black Marble · 图表为示意</div></div>
+<div id="plaque"><div class="p"><div class="k">VIBE知识大赏</div><div class="a">为什么一比，就觉得穷？</div><div class="b">THE COMPARISON TRAP</div></div></div>
+<div id="end"><div class="j">J</div><div class="tt">为什么一比，就觉得穷？</div><div class="q">你最常拿自己，跟谁比？评论区说说</div><div class="f">关注 Juno · 一起看懂世界</div>
+<div class="s">资料：Brosnan &amp; de Waal (2003) Nature 425:297–299 · Emory Report (2003) · Solnick &amp; Hemenway (1998) J. Economic Behavior &amp; Organization 37(3) · Harvard Magazine (1996)<br>Card, Mas, Moretti &amp; Saez (2012) American Economic Review 102(6) · Luttmer (2005) Quarterly Journal of Economics 120(3) · 开头的工资是举例 · 画面为示意</div></div>
 <div id="sub"></div>
 <script type="importmap">{"imports":{"three":"./node_modules/three/build/three.module.js","three/addons/":"./node_modules/three/examples/jsm/"}}</script>
 <script type="module" src="main.js"></script>

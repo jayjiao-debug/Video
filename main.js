@@ -1,153 +1,126 @@
-import * as THREE from 'three';
-import {U as UT} from './util.js';
-import {makeDoors} from './doors.js';
-import {makeMind} from './mind.js';
-import {makeChoc} from './choc.js';
-import {makeLotto} from './lotto.js';
-import {makeMoney} from './money.js';
-import {makeOrbs} from './orbs.js';
-import {makePath} from './path.js';
-import {makeWorld} from './world.js';
-const {cl,pr,eio,eo,sst,lerp,pop}=UT;
+// ep21 《为什么一比，就觉得穷？》 — all 2D (DOM/SVG + one canvas), navy + gold, one lit subject per beat. renderAt(T) is pure in T.
+import {U} from './util.js';
+const {cl,pr,eio,eo,sst,lerp,pop}=U;
 const $=id=>document.getElementById(id);
-const R=new THREE.WebGLRenderer({antialias:true,preserveDrawingBuffer:true});R.setPixelRatio(1);R.setSize(1920,1080);R.outputColorSpace=THREE.SRGBColorSpace;R.setClearColor(0x02040a,1);document.body.prepend(R.domElement);
-/* ---------- compositor ---------- */
-const rtA=new THREE.WebGLRenderTarget(1920,1080,{samples:4,type:THREE.HalfFloatType}),rtB=new THREE.WebGLRenderTarget(1920,1080,{samples:4,type:THREE.HalfFloatType});
-const qS=new THREE.Scene(),qC=new THREE.OrthographicCamera(-1,1,1,-1,0,1);
-const qM=new THREE.ShaderMaterial({uniforms:{a:{value:rtA.texture},b:{value:rtB.texture},f:{value:0},fl:{value:0},ma:{value:1},mb:{value:1},ex:{value:1}},vertexShader:`varying vec2 v;void main(){v=uv;gl_Position=vec4(position.xy,0.,1.);}`,
- fragmentShader:`uniform sampler2D a,b;uniform float f,fl,ma,mb,ex;varying vec2 v;
- vec3 fit(vec3 v){vec3 a=v*(v+0.0245786)-0.000090537;vec3 b=v*(0.983729*v+0.4329510)+0.238081;return a/b;}
- vec3 aces(vec3 c){const mat3 I=mat3(vec3(0.59719,0.07600,0.02840),vec3(0.35458,0.90834,0.13383),vec3(0.04823,0.01566,0.83777));const mat3 O=mat3(vec3(1.60475,-0.10208,-0.00327),vec3(-0.53108,1.10813,-0.07276),vec3(-0.07367,-0.00605,1.07602));c*=ex/0.6;c=I*c;c=fit(c);c=O*c;return clamp(c,0.,1.);}
- vec3 srgb(vec3 c){c=clamp(c,0.,1.);return mix(c*12.92,1.055*pow(c,vec3(1./2.4))-0.055,step(0.0031308,c));}
- vec3 tm(vec3 c,float m){return srgb(m>.5?aces(c):c);}
- void main(){vec2 q=v-.5;float vig=1.-.28*dot(q,q)*2.;vec3 A=tm(texture2D(a,v).rgb,ma),B=tm(texture2D(b,v).rgb,mb);vec3 c=mix(A,B,f)*vig+vec3(1.,.95,.86)*fl;gl_FragColor=vec4(c,1.);}`});
-qS.add(new THREE.Mesh(new THREE.PlaneGeometry(2,2),qM));
-const doors=await makeDoors(THREE,R),mind=await makeMind(THREE,R),choc=await makeChoc(THREE,R),lotto=await makeLotto(THREE,R),money=await makeMoney(THREE,R),world=await makeWorld(THREE,R),orbs=await makeOrbs(THREE,R),path=await makePath(THREE,R);
-const GLW=[[0,21.7,doors],[21.0,37.3,mind],[36.7,53.4,choc],[52.8,65.6,lotto],[65.0,73.5,money],[72.9,75.3,doors],[74.7,89.9,world],[89.3,102.0,orbs],[101.4,110.0,path],[109.4,130,doors]];
-const VIG=[mind,choc,lotto,money,orbs,path];
-/* ---------- 2D ---------- */
-const G='#F6CF78',RG='#ffb3a0',BL='#a9bde8',RED='#ff6a5a',GR='#7d8597';
+const G='#F6CF78',GD='#c8963e',BL='#9fb6e8',GR='#7d8597',CU='#8fcf6a',GP='#b07ad8',W='#e9e3d6',RED='#ff8a7a';
 const fx=$('fx'),X=fx.getContext('2d',{willReadFrequently:true});
-let seed=13;const rng=()=>(seed=(seed*16807)%2147483647)/2147483647;
-const card=(x,y,w,h,inner,st='')=>`<div class="card" style="left:${x}px;top:${y}px;width:${w}px;height:${h}px;${st}">${inner}</div>`;
-const note=(t,o=1,y=900)=>`<div class="t" style="left:960px;top:${y}px;transform:translateX(-50%);font-size:22px;color:${GR};font-weight:700;opacity:${o}">${t}</div>`;
-function dot(x,y,r,c,a=1,glow=12){X.globalAlpha=a;X.shadowBlur=glow;X.shadowColor=c;X.fillStyle=c;X.beginPath();X.arc(x,y,r,0,7);X.fill();X.shadowBlur=0;}
-// LOTTO 40.9–53.0
-const CONF=Array.from({length:60},()=>[rng(),rng(),rng()]);
-function LOTTO(T,o){const t1=pop(T,41.2,.5);const ph=eio(pr(T,41.0,42.0));
- for(let i=0;i<22;i++){const a=pr(T,42.2+i*.03,42.6+i*.03);dot(500+(i%11)*48,330+Math.floor(i/11)*54,14,G,o*a,16);dot(1124+(i%11)*48,330+Math.floor(i/11)*54,14,'#e9e3d6',o*a,6);}
- CONF.forEach(([a,b,c])=>{const k=pr(T,41.4+c*.4,43.8+c*.6);if(k<=0||k>=1)return;X.globalAlpha=o*(1-k);X.fillStyle=c>.5?G:'#fff2c8';X.save();X.translate(520+a*440,250+eo(k)*240+b*40);X.rotate(k*8+a*6);X.fillRect(-5,-2,10,4);X.restore();});
- const m1=eio(pr(T,45.2,46.6)),m2=eio(pr(T,49.2,50.6));const bar=(x,h,c,lab)=>`<div class="bar" style="left:${x}px;top:${820-h}px;width:120px;height:${h}px;border-radius:12px 12px 0 0;background:${c}"></div><div class="t" style="left:${x+60}px;top:832px;transform:translateX(-50%);font-size:28px;color:#e9e3d6">${lab}</div>`;
- const showA=pr(T,44.9,45.3)*(1-pr(T,48.6,49.0)),showB=pr(T,48.98,49.4);
- return `<div class="lbl" style="left:960px;top:170px;transform:translateX(-50%)">1978 · 彩票大奖得主 vs 普通人</div>
- <div class="t" style="left:762px;top:250px;transform:translateX(-50%);font-size:34px;color:${G};opacity:${pr(T,42.2,42.6)}">22 位大奖得主</div><div class="t" style="left:1344px;top:250px;transform:translateX(-50%);font-size:34px;color:#e9e3d6;opacity:${pr(T,42.2,42.6)}">22 位普通人</div>
- <div style="position:absolute;left:840px;top:${lerp(380,140,0)}px;width:240px;height:130px;opacity:${ph*(1-pr(T,42.0,42.4))};transform:perspective(900px) rotateY(${lerp(90,0,ph)}deg) scale(${t1});border-radius:14px;background:linear-gradient(135deg,#fff1c7,#f6cf78 45%,#c8963e);display:flex;align-items:center;justify-content:center;font-size:56px;font-weight:900;color:#3a2a10;box-shadow:0 0 60px rgba(246,207,120,.6)">大奖</div>
- <div style="opacity:${showA}"><div class="lbl" style="left:960px;top:470px;transform:translateX(-50%)">整体有多快乐</div>${bar(700,250*m1,G,'大奖得主')}${bar(1100,244*m1,'#e9e3d6','普通人')}<div class="t serif" style="left:960px;top:640px;transform:translateX(-50%);font-size:90px;color:#fff;opacity:${pr(T,46.4,46.8)}">≈</div></div>
- <div style="opacity:${showB}"><div class="lbl" style="left:960px;top:470px;transform:translateX(-50%)">从日常小事里得到的快乐</div>${bar(700,140*m2,G,'大奖得主')}${bar(1100,240*m2,'#e9e3d6','普通人')}
-  <div class="t" style="left:960px;top:510px;transform:translateX(-50%);font-size:30px;color:#c9b98f;opacity:${pr(T,50.4,50.8)}">平常的小乐子，没那么香了</div></div>
- ${note('Brickman, Coates &amp; Janoff-Bulman (1978) · 柱高为示意，方向来自论文',pr(T,45,45.5),892)}`;}
-// MONEY 53.0–73.2 : log-income chart drawn on canvas
-const CX0=330,CX1=1600,CY0=760,CY1=250;const xL=f=>CX0+(CX1-CX0)*f,yL=v=>CY0-(CY0-CY1)*v;const X75=.42,X100=.50;
-const TICKS=[['$1.5万',0],['$3万',.17],['$6万',.36],['$12万',.55],['$25万',.75],['$50万+',.95]];
-function line(fn,f0,f1,c,w,a,dash){X.globalAlpha=a;X.strokeStyle=c;X.lineWidth=w;X.setLineDash(dash||[]);X.shadowBlur=14;X.shadowColor=c;X.beginPath();for(let k=0;k<=80;k++){const f=lerp(f0,f1,k/80);const p=[xL(f),yL(fn(f))];k?X.lineTo(...p):X.moveTo(...p);}X.stroke();X.setLineDash([]);X.shadowBlur=0;}
-const kd=f=>f<X75?.1+.62*(f/X75)-.12*Math.pow(f/X75,3):.6;
-const mk=f=>.12+.62*f;
-const PCT=[[.85,'最快乐',G,f=>.42+.5*f+.18*Math.pow(f,3)],[.7,'',G,f=>.32+.52*f],[.5,'中间',G,f=>.22+.52*f],[.3,'',G,f=>.13+.5*f],[.15,'最不快乐',BL,f=>f<X100?.03+.52*f:.03+.52*X100+.02*(f-X100)]];
-function MONEY(T,o){X.globalAlpha=o*.35;X.strokeStyle='#9aa2b4';X.lineWidth=1.5;X.beginPath();X.moveTo(CX0,CY0);X.lineTo(CX1,CY0);X.moveTo(CX0,CY0);X.lineTo(CX0,CY1-30);X.stroke();
- let h='';TICKS.forEach(([s,f])=>{h+=`<div class="t" style="left:${xL(f)}px;top:${CY0+16}px;transform:translateX(-50%);font-size:24px;color:${GR};font-weight:700">${s}</div>`;});
- h+=`<div class="t" style="left:${CX0-20}px;top:${CY1-60}px;font-size:26px;color:${GR};font-weight:700">快乐 ↑</div><div class="t" style="left:${CX1-40}px;top:${CY0+56}px;font-size:24px;color:${GR};font-weight:700">年收入（对数刻度）→</div>`;
- const a=eio(pr(T,53.3,55.6)),b=eio(pr(T,57.3,59.6)),fan=eio(pr(T,65.4,67.6)),low=pr(T,69.3,69.8);
- const kdA=1-pr(T,64.8,65.6),mkA=1-pr(T,64.8,65.6);
- if(kdA>0)line(kd,0,a,'#e9e3d6',4,o*kdA*(T>57?(T>61.1?.9:.5):1),[10,8]);
- if(T>57&&mkA>0)line(mk,0,b,G,5,o*mkA);
- if(T>65){PCT.forEach(([p,lab,c,fn],i)=>{const isLow=i===4;const al=isLow?(.6+.4*low):(1-.55*low);line(fn,0,fan,c,isLow?5:3.5,o*al*(i===0||isLow?1:.8));
-   if(fan>.95&&lab)h+=`<div class="t" style="left:${xL(.97)+14}px;top:${yL(fn(.97))-18}px;font-size:26px;color:${c};opacity:${isLow?1:1-.5*low}">${lab}</div>`;});}
- const kdo=pr(T,55.4,55.9)*(1-pr(T,64.8,65.4));if(kdo>0)h+=`<div style="opacity:${kdo}"><div style="position:absolute;left:${xL(X75)}px;top:${CY1-20}px;height:${CY0-CY1+20}px;border-left:2px dashed rgba(233,227,214,.35)"></div><div class="t serif" style="left:${xL(X75)+14}px;top:${yL(.6)-80}px;font-size:44px;color:#e9e3d6">$7.5万 · 到顶？</div></div>`;
- const mko=pr(T,59.4,59.9)*(1-pr(T,64.8,65.4));if(mko>0)h+=`<div class="t serif" style="left:${xL(.86)}px;top:${yL(mk(.86))-84}px;transform:translateX(-50%);font-size:44px;color:${G};opacity:${mko}">没有顶</div>`;
- const vs=pr(T,61.2,61.7)*(1-pr(T,65.0,65.4));if(vs>0)h+=`<div style="opacity:${vs}">${card(660,120,600,110,`<div class="t" style="left:0;right:0;top:20px;text-align:center;font-size:30px;color:#fff">卡尼曼 × Killingsworth × Mellers</div><div class="t" style="left:0;right:0;top:64px;text-align:center;font-size:22px;color:${G};letter-spacing:4px">2023 · 对抗性合作 · 重新算同一份数据</div>`)}</div>`;
- if(low>0)h+=`<div style="opacity:${low}"><div style="position:absolute;left:${xL(X100)}px;top:${CY1-20}px;height:${CY0-CY1+20}px;border-left:2px dashed rgba(169,189,232,.55)"></div><div class="t serif" style="left:${xL(X100)+14}px;top:${CY0-70}px;font-size:46px;color:${BL}">$10万</div></div>`;
- const src=T<57?'Kahneman &amp; Deaton (2010) PNAS · 45万份回答':(T<61.1?'Killingsworth (2021) PNAS · 3.3万人 · 172万条手机记录':'Killingsworth, Kahneman &amp; Mellers (2023) PNAS');
- const lead=T<57?`<div class="t" style="left:120px;top:140px;font-size:30px;color:#e9e3d6;opacity:${pr(T,53.2,53.6)}">诺奖得主 · 卡尼曼</div>`:'';
- return `${h}${lead}${note(src+' · 曲线为示意',1,880)}`;}
-// VENN 89.5–101.6
-function VENN(T,o){const join=eio(pr(T,89.7,91.4)),st=eio(pr(T,93.7,95.6)),flow=pr(T,97.6,98.2);const cx=960,cy=470,sep=lerp(520,250,join);
- const rH=lerp(230,190,st),rM=lerp(230,265,st);const aH=lerp(1,.55,st),aM=lerp(1,1.25,st);
- const ring=(x,r,c,a)=>{X.globalAlpha=o*Math.min(1,a);X.strokeStyle=c;X.lineWidth=6;X.shadowBlur=30*a;X.shadowColor=c;X.beginPath();X.arc(x,cy,r,0,7);X.stroke();X.shadowBlur=0;X.globalAlpha=o*.08*a;X.fillStyle=c;X.fill();};
- ring(cx-sep/2,rH,RG,aH);ring(cx+sep/2,rM,G,aM);
- if(flow>0){for(let k=0;k<60;k++){const ang=k/60*6.283+T*.2;const ph=((T*.5+k*.137)%1);const rr1=lerp(rH+90,rH*.2,ph),rr2=lerp(rM*.2,rM+110,ph);
-   dot(cx-sep/2+Math.cos(ang)*rr1,cy+Math.sin(ang)*rr1,3,RG,o*flow*Math.sin(Math.PI*ph),8);dot(cx+sep/2+Math.cos(ang)*rr2,cy+Math.sin(ang)*rr2,3,G,o*flow*Math.sin(Math.PI*ph),8);}}
- let h=`<div class="t serif" style="left:${cx-sep/2-rH*.55}px;top:${cy-50}px;transform:translateX(-50%);font-size:64px;color:${RG};opacity:${aH>.7?1:.7}">快乐</div><div class="t serif" style="left:${cx+sep/2+rM*.55}px;top:${cy-50}px;transform:translateX(-50%);font-size:64px;color:${G}">意义</div>
- <div class="t" style="left:${cx}px;top:${cy-24}px;transform:translateX(-50%);font-size:30px;color:#fff;opacity:${pr(T,91.2,91.7)*(1-pr(T,93.4,93.8))}">大部分重叠</div>`;
- if(T>93.5){const v=st;h+=`<div style="opacity:${pr(T,93.5,93.9)*(1-pr(T,97.4,97.8))}"><div class="lbl" style="left:${cx}px;top:760px;transform:translateX(-50%)">压力 · 担心 · 焦虑</div><div style="position:absolute;left:${cx-300}px;top:800px;width:600px;height:12px;border-radius:6px;background:rgba(255,255,255,.1)"><div style="width:${v*100}%;height:100%;border-radius:6px;background:linear-gradient(90deg,${RG},${RED})"></div></div>
-  <div class="t" style="left:${cx-sep/2-rH*.55}px;top:${cy+30}px;transform:translateX(-50%);font-size:40px;color:${RG};opacity:${v}">↓</div><div class="t" style="left:${cx+sep/2+rM*.55}px;top:${cy+30}px;transform:translateX(-50%);font-size:40px;color:${G};opacity:${v}">↑</div></div>`;}
- if(flow>0)h+=`<div class="t" style="left:${cx-sep/2-rH*.55}px;top:${cy+40}px;transform:translateX(-50%);font-size:40px;color:#fff;opacity:${flow}">得到</div><div class="t" style="left:${cx+sep/2+rM*.55}px;top:${cy+40}px;transform:translateX(-50%);font-size:40px;color:#fff;opacity:${flow}">给出</div>`;
- return `<div class="lbl" style="left:960px;top:150px;transform:translateX(-50%)">一项大规模调查 · 区分快乐和意义</div>${h}${note('Baumeister, Vohs, Aaker &amp; Garbinsky (2013) J. Positive Psychology',1,880)}`;}
-// LIFE 101.6–109.7 : two curves over 14 years (shape is illustrative)
-function LIFE(T,o){const k=eio(pr(T,101.9,108.6));const yrs=Math.round(14*k);const x0=360,x1=1560,y0=300,y1=760;const yP=f=>y0+150*Math.pow(f,1.6),yN=f=>y0+330*Math.pow(f,1.5);
- X.globalAlpha=o*.3;X.strokeStyle='#9aa2b4';X.lineWidth=1.5;X.beginPath();X.moveTo(x0,y1);X.lineTo(x1,y1);X.stroke();
- const cv=(fn,c,w)=>{X.globalAlpha=o;X.strokeStyle=c;X.lineWidth=w;X.shadowBlur=14;X.shadowColor=c;X.beginPath();for(let i=0;i<=80;i++){const f=k*i/80;const p=[lerp(x0,x1,f),fn(f)];i?X.lineTo(...p):X.moveTo(...p);}X.stroke();X.shadowBlur=0;};
- cv(yN,'#9aa2b4',4);cv(yP,G,5);
- const d=pr(T,105.8,106.4);
- return `<div class="lbl" style="left:${x0}px;top:200px">美国中年人跟踪研究 · 仍然在世的比例</div>
- <div class="t serif" style="left:${lerp(x0,x1,k)+16}px;top:${yP(k)-70}px;font-size:40px;color:${G};opacity:${d}">人生有目标</div><div class="t" style="left:${lerp(x0,x1,k)+16}px;top:${yN(k)+10}px;font-size:32px;color:#c9cfdb;opacity:${d}">目标感低</div>
- ${[0,2,4,6,8,10,12,14].map(y=>`<div class="t" style="left:${lerp(x0,x1,y/14)}px;top:${y1+14}px;transform:translateX(-50%);font-size:22px;color:${GR};font-weight:700">${y}年</div>`).join('')}
- <div class="t serif" style="left:1560px;top:150px;transform:translateX(-100%);font-size:110px;color:${G};line-height:1">${yrs}<span style="font-size:42px"> 年</span></div>
- ${note('Hill &amp; Turiano (2014) Psychological Science · 已控制其他幸福感指标 · 曲线为示意',1,880)}`;}
-// SUMMARY 109.7–117.8
-const SUMH=[['46.9%','的清醒时间在走神，走神时更不开心'],['22 位','大奖得主，并没有更快乐'],['20%','最不快乐的人，过了10万美元就不涨']];
-const SUMM=[['132 国','穷国的人，反而更觉得人生有意义'],['压力 ↑','意义越高，快乐越低'],['14 年','有目标的人，活得更久']];
-function SUM(T,o){const col=(x,title,c,rows,t0)=>`<div class="t serif" style="left:${x}px;top:170px;font-size:72px;color:${c};opacity:${pr(T,t0-.2,t0+.2)}">${title}</div>`+rows.map(([n,s],i)=>{const t=t0+.3+i*.35;const u=eo(pr(T,t,t+.5));return `<div style="position:absolute;left:${x}px;top:${300+i*150+20*(1-u)}px;width:640px;opacity:${u}"><div class="serif" style="font-size:60px;font-weight:900;color:${c};line-height:1.1">${n}</div><div style="font-size:30px;font-weight:700;color:#e9e3d6;margin-top:6px">${s}</div></div>`;}).join('');
- const dimq=pr(T,113.8,114.4);
- return `<div style="opacity:${1-.6*dimq}">${col(220,'快乐',RG,SUMH,110.0)}${col(1060,'意义',G,SUMM,110.6)}<div style="position:absolute;left:960px;top:200px;height:600px;border-left:1px solid rgba(246,207,120,.25)"></div></div>
- <div class="t serif" style="left:960px;top:420px;transform:translateX(-50%) scale(${pop(T,113.9,.5)});font-size:150px;color:#fff;opacity:${dimq}">?</div>`;}
-const SCN=[];
-function sumHud(T){if(T<109.6||T>118.3)return '';const o=pr(T,109.8,110.3)*(1-pr(T,117.6,118.2));
- const col=(x,al,rows,c,t0)=>rows.map(([n,t],i)=>{const u=eo(pr(T,t0+i*.35,t0+.5+i*.35));return `<div style="position:absolute;left:${x}px;top:${300+i*150+16*(1-u)}px;width:420px;text-align:${al};opacity:${u}"><div class="serif" style="font-size:58px;font-weight:900;color:${c};line-height:1.1">${n}</div><div style="font-size:27px;font-weight:700;color:#e9e3d6;margin-top:6px">${t}</div></div>`;}).join('');
- const q=pr(T,113.9,114.4);
- return `<div style="opacity:${o}">${col(90,'right',[['46.9%','的时间心不在焉'],['越吃越难受','同一种快乐，越用越淡'],['22 位大奖得主','并没有更快乐']],RG,110.0)}${col(1410,'left',[['132 国','穷国更觉得有意义'],['压力 ↑','意义越高，快乐越低'],['14 年','有目标的人活得更久']],G,110.6)}
- <div class="t serif" style="left:960px;top:380px;transform:translateX(-50%) scale(${pop(T,113.9,.5)});font-size:160px;color:#fff;opacity:${q};text-shadow:0 0 40px rgba(0,0,0,.8)">?</div></div>`;}
-/* world HUD 74.7–89.6 */
-function worldHud(T){if(T<75||T>89.9)return '';const o=pr(T,75.6,76.2)*(1-pr(T,89.2,89.7));const s1=pr(T,77.3,77.8),s2=pr(T,81.4,81.7),s3=pr(T,85.5,86);
- const arrow=(up,c,on,big=1)=>`<span class="serif" style="display:inline-block;font-size:${64*big}px;color:${c};opacity:${on};transform:scale(${on>0?1:0})">${up?'↑':'↓'}</span>`;
- return `<div style="opacity:${o}">${card(110,170,560,470,`<div class="lbl" style="left:36px;top:30px">Gallup 世界民意调查 · 132 国</div>
-  <div class="t" style="left:250px;top:84px;font-size:28px;color:#e9e3d6">富裕国家</div><div class="t" style="left:410px;top:84px;font-size:28px;color:#e9e3d6">贫穷国家</div>
-  <div class="t" style="left:36px;top:160px;font-size:34px;color:#fff">对生活满意</div><div class="t" style="left:275px;top:130px">${arrow(1,G,s1)}</div><div class="t" style="left:440px;top:130px">${arrow(0,GR,s1)}</div>
-  <div class="t" style="left:36px;top:280px;font-size:34px;color:#fff">觉得有意义</div><div class="t" style="left:275px;top:250px">${arrow(0,GR,s2)}</div><div class="t" style="left:440px;top:236px">${arrow(1,G,s2,1.3)}</div>
-  <div class="t" style="left:36px;top:390px;font-size:28px;color:${G};opacity:${s3}">原因之一：宗教信仰更强</div>`)}
- ${note('Oishi &amp; Diener (2014) Psychological Science',1,880)}</div>`;}
-/* doors labels */
-function doorHud(T){const lab=(x,t,c,o)=>{if(o<=0)return '';const p=new THREE.Vector3(x,4.95,0).project(doors.cam);if(p.z>1)return '';if((-p.y*.5+.5)*1080-60<90)return '';return `<div class="t serif" style="left:${(p.x*.5+.5)*1920}px;top:${(-p.y*.5+.5)*1080-60}px;transform:translateX(-50%);font-size:52px;color:${c};opacity:${o};text-shadow:0 0 30px rgba(0,0,0,.9)">${t}</div>`;};
- let o=0;if(T<20.5)o=pr(T,1.5,2.4)*(1-pr(T,16.2,16.6));else if(T>118)o=pr(T,118.4,119.2)*(1-pr(T,125,125.4));if(o<=0)return '';
- const oL=o*(T<20.5?(T>8.5&&T<12.5?.45:1):1),oR=o*(T<20.5?(T>4.4&&T<8.5?.45:1):1);return lab(-3.2,'快乐',RG,oL)+lab(3.2,'意义',G,oR);}
-/* timing */
-const LINES=[[0,4.4,'今晚，你面前有[两扇门]'],[4.4,8.5,'左边：刷两小时手机，[很爽]'],[8.5,12.5,'右边：去做那件[很难的事]'],[12.5,16.4,'选哪扇，你会[过得更好]？'],
- [20.6,24.7,'先进左边。哈佛给2250人装了个[App]'],[24.7,28.7,'随时问：你[现在]在想什么？开心吗？'],[28.7,32.8,'结果：近一半时间，人在这儿，[心不在]'],[32.8,36.8,'而心一飘走，人就[不开心]了'],
- [36.8,40.9,'另一个实验：让人一块接一块吃[巧克力]'],[40.9,44.9,'第一块：[真好吃]'],[44.9,48.9,'吃到吃不下还在吃：[变成难受]'],[48.98,53.0,'同一种快乐，会[越用越淡]'],
- [53.0,57.0,'那中彩票呢？研究者找来[22位]大奖得主'],[57.0,61.1,'结果：他们并不比普通人[更快乐]'],[61.1,65.1,'连平常的小乐子，都[没那么香]了'],
- [65.2,69.2,'钱呢？对大多数人：钱越多，[越快乐]'],[69.2,73.2,'但最不快乐的那20%，过了[10万美元]就不涨'],
- [73.2,77.2,'再进右边。一份调查，横跨[132个国家]'],[77.2,81.3,'富裕国家的人，对生活[更满意]'],[81.4,85.4,'可穷国的人，反而觉得人生[更有意义]'],[85.4,89.5,'原因之一：他们[更虔诚]'],
- [89.5,93.5,'另一项研究发现：快乐和意义，大部分[重叠]'],[93.5,97.6,'但压力越大：意义[越高]，快乐[越低]'],[97.6,101.6,'快乐更像[得到]，意义更像[给出]'],
- [101.6,105.7,'还有一项研究，跟踪了成年人[14年]'],[105.7,109.7,'觉得人生有目标的人，[活得更久]'],
- [109.7,113.8,'快乐，是此刻的[感受]；意义，是一生的[故事]'],[113.8,117.8,'科学能算出代价，但[选不了答案]'],
- [117.8,121.9,'一百多年前，有本小说写：“我们生来[不是为了幸福]”'],[121.9,125.4,'你呢？今晚，[推开哪一扇]？']];
+let seed=21;const rng=()=>(seed=(seed*16807)%2147483647)/2147483647;
+const spot=(x,y,r,c='246,207,120',a=.16)=>`<div style="position:absolute;left:${x-r}px;top:${y-r}px;width:${2*r}px;height:${2*r}px;border-radius:50%;background:radial-gradient(circle,rgba(${c},${a}),rgba(${c},0) 62%)"></div>`;
+const floor=(y,a=.25)=>`<div style="position:absolute;left:0;right:0;top:${y}px;height:2px;background:linear-gradient(90deg,transparent,rgba(246,207,120,${a}),transparent)"></div>`;
+const note=(t,o=1)=>`<div class="t" style="left:960px;top:892px;transform:translateX(-50%);font-size:22px;color:${GR};font-weight:700;opacity:${o}">${t}</div>`;
+const big=(lab,val,unit,c,o=1,x=120,y=150)=>`<div style="position:absolute;left:${x}px;top:${y}px;opacity:${o}"><div class="lbl" style="position:static">${lab}</div><div class="t serif" style="position:static;font-size:128px;color:${c};line-height:1.1">${val}<span style="font-size:50px">${unit}</span></div></div>`;
+// faceless person silhouette standing on y=floor
+const person=(x,fy,h,c='#0c1020',glow='',op=1,rim=G)=>{const w=h*.36,hd=h*.16;return `<svg style="position:absolute;left:${x-w/2-40}px;top:${fy-h-40}px;overflow:visible;opacity:${op};${glow?`filter:drop-shadow(0 0 ${glow}px ${rim})`:''}" width="${w+80}" height="${h+80}" viewBox="-40 -40 ${w+80} ${h+80}"><circle cx="${w/2}" cy="${hd}" r="${hd}" fill="${c}"/><path d="M${w*.08} ${h} L${w*.1} ${hd*2.35} Q${w/2} ${hd*1.75} ${w*.9} ${hd*2.35} L${w*.92} ${h} Z" fill="${c}"/></svg>`;};
+// stylised capuchin silhouette (faceless), facing right; flip with sx=-1
+const monkey=(x,fy,s,sx=1,c='#0c1020',rim='')=>`<svg style="position:absolute;left:${x-120*s}px;top:${fy-230*s}px;overflow:visible;transform:scaleX(${sx});${rim?`filter:drop-shadow(0 0 10px ${rim})`:''}" width="${240*s}" height="${240*s}" viewBox="-120 -230 240 240">
+ <path d="M-40 -10 C -110 -10 -120 -110 -70 -120 C -40 -126 -50 -80 -78 -88" fill="none" stroke="${c}" stroke-width="12" stroke-linecap="round"/>
+ <ellipse cx="0" cy="-60" rx="52" ry="62" fill="${c}"/><circle cx="18" cy="-150" r="40" fill="${c}"/><circle cx="-14" cy="-178" r="12" fill="${c}"/><circle cx="48" cy="-176" r="12" fill="${c}"/>
+ <path d="M30 -88 Q 70 -70 78 -40" stroke="${c}" stroke-width="18" stroke-linecap="round" fill="none"/><path d="M-26 -10 L -30 0 M 22 -10 L 26 0" stroke="${c}" stroke-width="18" stroke-linecap="round"/></svg>`;
+const cucumber=(x,y,s=1,o=1)=>`<svg style="position:absolute;left:${x-30*s}px;top:${y-30*s}px;opacity:${o}" width="${60*s}" height="${60*s}" viewBox="-30 -30 60 60"><circle r="26" fill="#3f7a2c"/><circle r="21" fill="#cfe6a8"/><g fill="#8fb870">${[0,1,2,3,4,5].map(i=>`<ellipse cx="${Math.cos(i*1.05)*9}" cy="${Math.sin(i*1.05)*9}" rx="2.4" ry="4" transform="rotate(${i*60} ${Math.cos(i*1.05)*9} ${Math.sin(i*1.05)*9})"/>`).join('')}</g></svg>`;
+const grape=(x,y,s=1,o=1)=>`<svg style="position:absolute;left:${x-30*s}px;top:${y-30*s}px;opacity:${o};overflow:visible;filter:drop-shadow(0 0 ${14*s}px rgba(200,140,255,.8))" width="${60*s}" height="${60*s}" viewBox="-30 -30 60 60"><defs><radialGradient id="gq" cx="35%" cy="30%"><stop offset="0" stop-color="#e6c8ff"/><stop offset=".35" stop-color="#8a4fb8"/><stop offset="1" stop-color="#3a1858"/></radialGradient></defs><circle r="24" fill="url(#gq)"/><path d="M0 -24 q 4 -10 12 -12" stroke="#6a8a3a" stroke-width="3" fill="none"/></svg>`;
+const token=(x,y,o=1)=>`<div style="position:absolute;left:${x-20}px;top:${y-16}px;width:40px;height:32px;border-radius:45% 55% 50% 50%;background:radial-gradient(circle at 35% 30%,#c9cdd6,#6a6f7a);opacity:${o}"></div>`;
+// coins: canvas ellipse stacks
+function coins(cx,base,n,w,c1='#ffe7a0',c2='#c8963e',a=1,gap=9){X.globalAlpha=a;for(let k=0;k<n;k++){const y=base-k*gap;X.fillStyle=c2;X.beginPath();X.ellipse(cx,y+3,w,w*.28,0,0,7);X.fill();const g=X.createLinearGradient(cx-w,0,cx+w,0);g.addColorStop(0,c2);g.addColorStop(.45,c1);g.addColorStop(1,c2);X.fillStyle=g;X.beginPath();X.ellipse(cx,y,w,w*.28,0,0,7);X.fill();}}
+function dot(x,y,r,c,a=1,glow=10){X.globalAlpha=a;X.shadowBlur=glow;X.shadowColor=c;X.fillStyle=c;X.beginPath();X.arc(x,y,r,0,7);X.fill();X.shadowBlur=0;}
+// phone card
+const phone=(x,y,s,{title,amount,sub,col=G,dim=0,glow=.5})=>`<div style="position:absolute;left:${x-150*s}px;top:${y-300*s}px;width:${300*s}px;height:${600*s}px;border-radius:${44*s}px;background:#0b0d14;box-shadow:0 30px 70px rgba(0,0,0,.6),0 0 ${80*glow}px rgba(246,207,120,${.35*glow});padding:${12*s}px">
+ <div style="width:100%;height:100%;border-radius:${34*s}px;background:linear-gradient(180deg,#151b2c,#07090f);position:relative;overflow:hidden">
+ <div style="position:absolute;left:${18*s}px;right:${18*s}px;top:${170*s}px;border-radius:${24*s}px;background:rgba(255,255,255,.07);padding:${22*s}px ${22*s}px">
+  <div style="font-size:${20*s}px;color:#9aa2b4;font-weight:700">${title}</div><div style="font-family:'Noto Serif CJK SC';font-size:${58*s}px;font-weight:900;color:${col};margin-top:${8*s}px;white-space:nowrap">${amount}</div><div style="font-size:${20*s}px;color:#c9cfdb;font-weight:700;margin-top:${6*s}px;min-height:${26*s}px">${sub}</div></div>
+ <div style="position:absolute;inset:0;background:rgba(3,4,8,${dim})"></div></div></div>`;
+/* ---------------- scenes ---------------- */
+// S0 hook 0–20.8
+function HOOK(T,o){const day=T<4.4?0:Math.min(3,1+Math.floor((T-4.4)/1.3));const in2=eio(pr(T,8.4,9.8));const dim=.68*pr(T,12.5,13.8);const pl=pr(T,16.4,17);
+ const x1=lerp(960,730,in2);
+ return `${spot(x1,470,lerp(520,420,in2),'246,207,120',.2*(1-dim*.8))}${in2>0?spot(lerp(1500,1180,in2),470,420,'255,255,255',.12*in2):''}
+ ${phone(x1,480,1.3,{title:'实习工资 · 到账',amount:'¥4,000',sub:day?`开心的第 ${day} 天`:'刚刚',dim,glow:1-dim})}
+ ${in2>0?`<div style="opacity:${in2}">${phone(lerp(1650,1190,in2),480,1.3,{title:'室友的实习工资',amount:'¥6,000',sub:'',col:'#fff',glow:.6})}</div>`:''}`;}
+// S1 monkeys 20.6–49.0
+function MONK(T,o){const ph=T<32.8?0:(T<40.9?1:2);const refuse=pr(T,36.8,37.8);
+ const cyc=((T-24.7+20)%2.2)/2.2;const out=eio(cl(cyc/.35)),inn=eio(cl((cyc-.42)/.35));
+ const Ax=640,Bx=1280,fy=720;
+ const box=(x,lit)=>`<div style="position:absolute;left:${x-280}px;top:270px;width:560px;height:470px;border:2px solid rgba(160,180,215,.25);border-radius:10px;background:linear-gradient(180deg,rgba(150,170,210,.04),rgba(150,170,210,.02))"></div>${spot(x,520,330,'246,207,120',lit)}`;
+ let h=box(Ax,.18*(1-.5*refuse))+box(Bx,ph?.24:.18)+floor(fy,.2);
+ // tray line between monkey and the experimenter's slot (the front, bottom of each box)
+ const tAx=lerp(Ax+70,Ax+70,out),tAy=lerp(600,800,out);const tBx=Bx-70,tBy=lerp(600,800,out);
+ h+=monkey(Ax-50,fy,1.5,refuse>.5?-1:1,'#0c1020',refuse>.5?'':'rgba(246,207,120,.5)')+monkey(Bx+50,fy,1.5,-1,'#0c1020','rgba(246,207,120,.5)');
+ if(T>24.7){if(!(refuse>0&&ph>0))h+=token(tAx,tAy,1-inn);if(ph<2)h+=token(tBx,tBy,1-inn);
+  // rewards come in from the bottom
+  const rAx=Ax+70,rAy=lerp(820,600,refuse>0?0:inn);h+=cucumber(refuse>0?Ax+150+60*refuse:rAx,refuse>0?800:rAy,1.9,refuse>0?1-.4*refuse:inn);
+  const rBy=lerp(820,600,inn);h+=ph===0?cucumber(Bx-80,rBy,1.9,inn):grape(Bx-80,rBy,1.8,inn);}
+ const v=T<36.8?95:(T<40.9?Math.round(lerp(95,60,eo(pr(T,36.9,38.2)))):Math.round(lerp(60,20,eo(pr(T,41.0,42.4)))));
+ h+=`<div class="t" style="left:${Ax}px;top:250px;transform:translateX(-50%);font-size:32px;color:#c9e6a8;opacity:${pr(T,25,25.5)}">这只：黄瓜</div>
+ <div class="t" style="left:${Bx}px;top:250px;transform:translateX(-50%);font-size:32px;color:${ph?'#d9b0ff':'#c9e6a8'};opacity:${pr(T,25,25.5)}">旁边：${ph===0?'黄瓜':(ph===1?'葡萄（同样干活）':'葡萄（什么都不干）')}</div>
+ ${big('愿意完成交换',v,'%',v<90?RED:G,pr(T,28.7,29.1))}${note('Brosnan &amp; de Waal (2003) Nature · 卷尾猴 · 用小石子换食物',pr(T,25,25.5))}`;
+ return h;}
+// S2 two worlds 48.9–73.4
+const WAL=Array.from({length:257},(_,i)=>({x0:200+rng()*1520,y0:930+rng()*60,a:rng()*6.28,r:Math.sqrt(rng()),d:rng(),A:i<123,A2:i<39}));
+function WORLDS(T,o){const Ax=560,Bx=1360,base=700;const ga=eo(pr(T,53.1,54.8)),gb=eo(pr(T,57.1,59.6));const vac=T>65.2,m=eio(pr(T,65.2,66.2));
+ let h=spot(Ax,560,380,'246,207,120',.14)+spot(Bx,560,380,'246,207,120',.14)+floor(base+16,.25);
+ // coins: 1 coin per 2.5k
+ if(m<1){coins(Ax-70,base,Math.round(20*ga),52,'#ffe7a0','#c8963e',o*(1-m),11);coins(Ax+80,base,Math.round(10*ga),52,'#d8dde8','#6a7080',o*(1-m),11);
+  coins(Bx-70,base,Math.round(40*gb),52,'#ffe7a0','#c8963e',o*(1-m),11);coins(Bx+80,base,Math.round(80*gb),52,'#d8dde8','#6a7080',o*(1-m)*1,6.6);}
+ if(vac){const tile=(x,n,c)=>{for(let k=0;k<Math.round(n*m);k++){X.globalAlpha=o*.9;X.fillStyle=c;X.shadowBlur=12;X.shadowColor=c;X.fillRect(x-48,base-8-k*16,96,11);X.shadowBlur=0;}};tile(Ax-70,10,'#9fd0ff');tile(Ax+80,5,'#5d6f94');tile(Bx-70,20,'#9fd0ff');tile(Bx+80,40,'#5d6f94');}
+ // 257 people as dots walking to A or B
+ const w1=pr(T,61.2,64.4),w2=pr(T,65.8,68.6);WAL.forEach(w=>{const g1=eio(cl((w1-w.d*.4)/.6)),g2=eio(cl((w2-w.d*.4)/.6));const tx1=(w.A?Ax:Bx)+Math.cos(w.a)*w.r*230,ty1=800+Math.sin(w.a)*w.r*24;const tx2=(w.A2?Ax:Bx)+Math.cos(w.a)*w.r*230;
+  const x=lerp(lerp(w.x0,tx1,g1),tx2,g2),y=lerp(lerp(w.y0,ty1,g1),ty1,g2);if(T>60.9)dot(x,y,4,vac?'#9fd0ff':'#fff0d0',o*.95,6);});
+ const lab=(x,y,t,c,op)=>`<div class="t" style="left:${x}px;top:${y}px;transform:translateX(-50%);font-size:28px;color:${c};opacity:${op}">${t}</div>`;
+ if(!vac){h+=lab(Ax-70,base-20*11*ga-70,'你 5万',G,ga)+lab(Ax+80,base-10*11*ga-70,'别人 2.5万','#c9cfdb',ga)+lab(Bx-70,base-40*11*gb-70,'你 10万',G,gb)+lab(Bx+80,base-80*6.6*gb-70,'别人 20万','#c9cfdb',gb);}
+ else h+=lab(Ax,base-260,'你的假期，比别人多','#9fd0ff',pr(T,66,66.5))+lab(Bx,base-700,'你的假期更多，但别人更多','#9fd0ff',pr(T,66,66.5));
+ h+=`<div class="t serif" style="left:${Ax}px;top:${base+24}px;transform:translateX(-50%);font-size:52px;color:#fff">A</div><div class="t serif" style="left:${Bx}px;top:${base+24}px;transform:translateX(-50%);font-size:52px;color:#fff">B</div>`;
+ const pa=T<65.2?Math.round(48*eo(pr(T,61.4,64.4))):Math.round(lerp(48,15,eo(pr(T,65.9,68.6))));
+ h+=big(vac?'换成假期 · 选 A 的人':'选 A 的人',pa,'%',vac?'#9fd0ff':G,pr(T,61.3,61.7))+(vac?`<div class="t" style="left:120px;top:330px;font-size:34px;color:#fff;opacity:${pr(T,68.4,68.9)}">85% 只要自己的假期更多</div>`:'');
+ h+=`<div class="t" style="left:960px;top:150px;transform:translateX(-50%);font-size:28px;color:#c9b98f;letter-spacing:4px;opacity:${pr(T,49.2,49.7)*(1-pr(T,61.0,61.4))}">物价完全一样 · 你想住在哪个世界？</div>`+note('Solnick &amp; Hemenway (1998) · 哈佛公共卫生学院 257 人 · 塔高按比例',pr(T,49.2,49.7));
+ return h;}
+// S3 the pay wall 73.2–97.7
+const BARS=Array.from({length:24},(_,i)=>({w:lerp(860,200,Math.pow(i/23,.8))*(.92+.16*rng())}));
+const STAFF=Array.from({length:12},(_,i)=>({below:i>=6,x:(i>=6?1030:400)+(i%6)*82+(rng()-.5)*14,ph:rng()}));
+function WALL(T,o){const on=pr(T,73.6,75.4),hit=pr(T,81.4,82.6),job=eio(pr(T,85.5,87.6)),look=pr(T,89.6,90.2)*(1-pr(T,93.2,93.6));
+ const px=560,py=140,pw=800,ph=520;let rows='';BARS.forEach((b,i)=>{const a=cl(on*30-i);const below=i>=12;const c=below&&hit>0?`rgba(${Math.round(lerp(246,111,hit))},${Math.round(lerp(207,134,hit))},${Math.round(lerp(120,192,hit))},.9)`:'rgba(246,207,120,.85)';
+  rows+=`<div style="position:absolute;left:${px+150}px;top:${py+70+i*18}px;width:${b.w*.62*a}px;height:10px;border-radius:5px;background:${c}"></div><div style="position:absolute;left:${px+30}px;top:${py+70+i*18}px;width:96px;height:10px;border-radius:5px;background:rgba(255,255,255,.12);opacity:${a}"></div>`;});
+ const sc=pr(T,77.3,81.0);const scanY=py+66+((sc*3)%1)*24*18;const medY=py+70+11.5*18+4;
+ let h=`${spot(960,420,560,'246,207,120',.1)}<div style="position:absolute;left:${px}px;top:${py}px;width:${pw}px;height:${ph}px;border-radius:18px;background:rgba(10,14,28,.92);border:1px solid rgba(246,207,120,.25);box-shadow:0 30px 80px rgba(0,0,0,.6);opacity:${pr(T,73.3,73.9)}">
+  <div style="position:absolute;left:30px;top:22px;font-size:26px;font-weight:900;color:#fff">加州大学 · 员工工资 · 全部可查</div><div style="position:absolute;right:30px;top:22px;font-size:20px;color:#9aa2b4;font-weight:700">2008 · 报纸网站</div></div>${rows}
+  ${sc>0&&sc<1?`<div style="position:absolute;left:${px+20}px;top:${scanY}px;width:${pw-40}px;height:20px;border-radius:6px;background:rgba(255,242,208,.18);box-shadow:0 0 20px rgba(255,242,208,.3)"></div><div style="position:absolute;left:${px+pw-90}px;top:${scanY-8}px;width:30px;height:30px;border-radius:50%;border:4px solid #fff2d0;box-shadow:0 0 14px #fff2d0"></div>`:''}
+  <div style="position:absolute;left:${px+20}px;top:${medY}px;width:${pw-40}px;border-top:2px dashed rgba(255,255,255,${.8*pr(T,79.6,80.4)})"></div><div class="t" style="left:${px+pw+16}px;top:${medY-18}px;font-size:26px;color:#fff;opacity:${pr(T,79.6,80.4)}">中位数</div>`;
+ // people below the panel
+ const fy=820;h+=floor(fy,.2);STAFF.forEach(s=>{const d=s.below?hit:0;const x=s.x+(s.below?job*(120+s.ph*80):0);const c=s.below?`rgba(${Math.round(lerp(255,143,d))},${Math.round(lerp(217,166,d))},${Math.round(lerp(160,216,d))},${lerp(.55,.3,d)})`:`rgba(255,217,160,${.55+.25*look*Math.abs(Math.sin(T*6))})`;
+  h+=`<div style="position:absolute;left:${x-46}px;top:${fy-150}px;width:92px;height:150px;border-radius:50%;background:radial-gradient(circle,${c},transparent 70%)"></div>`+person(x,fy,140,'#0c1020','',1);});
+ h+=`<div style="position:absolute;left:1690px;top:640px;width:110px;height:230px;border-radius:6px;background:linear-gradient(180deg,rgba(159,208,255,.55),rgba(159,208,255,.15));box-shadow:0 0 60px rgba(159,208,255,.5);opacity:${pr(T,85.4,86.2)}"></div><div class="t" style="left:1745px;top:596px;transform:translateX(-50%);font-size:28px;color:#9fd0ff;opacity:${pr(T,85.6,86.2)}">找新工作</div>
+  <div class="t" style="left:624px;top:${fy+14}px;transform:translateX(-50%);font-size:26px;color:${G};opacity:${pr(T,81.6,82.2)}">高于中位数</div><div class="t" style="left:1244px;top:${fy+14}px;transform:translateX(-50%);font-size:26px;color:${BL};opacity:${pr(T,81.6,82.2)}">低于中位数</div>
+  ${note('Card, Mas, Moretti &amp; Saez (2012) American Economic Review · 名单为示意',pr(T,73.6,74.1))}`;
+ return h;}
+// S4 the street 97.6–105.8
+function STREET(T,o){const up=eo(pr(T,97.9,101.2)),me=pr(T,101.6,102.4);const fy=760;let h=floor(fy,.25);
+ const houses=[260,520,780,1140,1400,1660];const mine=960;
+ houses.forEach((x,i)=>{const b=lerp(.35,1,up);h+=`${spot(x,fy-120,200,'255,214,140',.12*b)}<svg style="position:absolute;left:${x-100}px;top:${fy-220}px" width="200" height="220" viewBox="0 0 200 220"><path d="M10 100 L100 20 L190 100 L190 220 L10 220 Z" fill="#0c1020"/><rect x="40" y="120" width="44" height="44" fill="rgba(255,214,140,${.25+.7*b})"/><rect x="116" y="120" width="44" height="44" fill="rgba(255,214,140,${.25+.7*b})"/></svg>`;});
+ const myGlow=lerp(.75,.32,me);
+ h+=`${spot(mine,fy-130,lerp(260,170,me),'255,214,140',.2*myGlow)}<svg style="position:absolute;left:${mine-120}px;top:${fy-260}px;filter:drop-shadow(0 0 ${lerp(24,6,me)}px rgba(246,207,120,.8))" width="240" height="260" viewBox="0 0 240 260"><path d="M12 120 L120 24 L228 120 L228 260 L12 260 Z" fill="#0c1020" stroke="rgba(246,207,120,.6)" stroke-width="2"/><rect x="50" y="140" width="52" height="52" fill="rgba(255,214,140,.75)"/><rect x="138" y="140" width="52" height="52" fill="rgba(255,214,140,.75)"/></svg>
+ <div class="t" style="left:${mine}px;top:${fy+14}px;transform:translateX(-50%);font-size:30px;color:${G}">你 · 收入不变</div><div class="t" style="left:420px;top:${fy+14}px;transform:translateX(-50%);font-size:28px;color:#e9c98a;opacity:${pr(T,98.6,99.1)}">邻居 · 挣得越来越多 ↑</div>
+ <div class="t" style="left:${mine}px;top:${fy-330}px;transform:translateX(-50%);font-size:34px;color:#fff;opacity:${me}">你的快乐 ↓</div>${note('Luttmer (2005) Quarterly Journal of Economics · 已控制本人收入 · 示意',pr(T,98,98.5))}`;
+ return h;}
+// S5 ending 105.7–125.4
+function END(T,o){const g=pr(T,109.9,110.6)*(1-pr(T,113.6,114.2));const ch=pr(T,113.9,114.5)*(1-pr(T,117.6,118.1));const last=pr(T,117.8,118.4);
+ let h=spot(960,480,520,'246,207,120',.18);
+ const sub=last>0?'去年这时候：¥0':'';h+=phone(960,480,1.3,{title:last>0?'跟去年的自己比':'实习工资 · 到账',amount:last>0?'+¥4,000':'¥4,000',sub,dim:.3*(1-last)*(1-ch),glow:.4+.6*last});
+ if(g>0)h+=grape(1150,620,1.6,g);
+ if(ch>0)h+=`<div style="opacity:${ch}"><div style="position:absolute;left:330px;top:400px;width:300px;padding:22px 26px;border-radius:20px;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.15)"><div style="font-size:22px;color:#9aa2b4;font-weight:700">跟室友比</div><div class="serif" style="font-size:52px;font-weight:900;color:${RED}">−¥2,000</div></div>
+  <div style="position:absolute;left:1290px;top:400px;width:300px;padding:22px 26px;border-radius:20px;background:rgba(246,207,120,.08);border:1px solid rgba(246,207,120,.4)"><div style="font-size:22px;color:#c9b98f;font-weight:700">跟去年的自己比</div><div class="serif" style="font-size:52px;font-weight:900;color:${G}">+¥4,000</div></div></div>`;
+ return h;}
+const SCN=[{w:[0,20.9],f:HOOK},{w:[20.6,49.0],f:MONK},{w:[48.9,73.3],f:WORLDS},{w:[73.2,97.7],f:WALL},{w:[97.6,105.8],f:STREET},{w:[105.7,130],f:END}];
+const LINES=[[0,4.4,'你拿到人生第一份实习工资：[4000]'],[4.4,8.5,'开心了[整整三天]'],[8.5,12.5,'然后室友说：他的是[6000]'],[12.5,16.4,'你的4000，突然就[不香了]'],
+ [20.6,24.7,'别怪自己。连[猴子]都这样'],[24.7,28.7,'科学家让卷尾猴，用小石子换[黄瓜]'],[28.7,32.8,'两只都换到黄瓜：[95%]照常交换'],[32.8,36.8,'可旁边那只，同样干活，换到[葡萄]'],[36.8,40.9,'这只就不干了：掉到[60%]'],[40.9,44.9,'旁边那只[啥也不干]就拿葡萄：只剩[20%]'],[44.9,48.9,'不是黄瓜变难吃了，是[旁边有葡萄]'],
+ [48.98,53.0,'人呢？哈佛问过257个人一道题'],[53.0,57.0,'A世界：你年入5万，别人[2.5万]'],[57.0,61.1,'B世界：你年入10万，别人[20万]'],[61.1,65.1,'B多挣一倍，可[48%]的人选了A'],[65.2,69.2,'换成假期呢？[85%]的人只要自己多'],[69.2,73.2,'原来我们，偏偏在[钱]上最爱比'],
+ [73.2,77.2,'2008年，一家报纸把加州大学的工资[放上了网]'],[77.2,81.3,'研究者提醒一部分员工：[可以去查同事]'],[81.4,85.4,'低于中位数的人：满意度[下降]'],[85.4,89.5,'而且[更想跳槽]'],[89.5,93.5,'高于中位数的人呢？[并没有更开心]'],[93.5,97.6,'比较这笔账，只有[比输的人]在痛'],
+ [97.6,101.6,'还有研究发现：自己收入不变，[邻居]挣得越多'],[101.6,105.7,'人就[越不快乐]'],
+ [105.7,109.7,'所以觉得穷，不一定是[钱少]'],[109.7,113.8,'是你身边，总有一颗[葡萄]'],[113.8,117.8,'比较是天性，但[跟谁比]，你能选'],[117.8,121.9,'跟去年的自己比，你[多了4000]'],[121.9,125.4,'你最常拿自己，跟[谁]比？']];
 window.LINES=LINES;
-const SRC=[[20.6,36.8,'','Killingsworth &amp; Gilbert (2010) Science · 哈佛'],[36.8,53.0,'','Small, Zatorre 等 (2001) Brain · 刻度为示意'],[117.8,121.9,'','André Gide《La Porte étroite》(1909) · 1947年诺贝尔文学奖得主']];
-window.renderAt=function(T){
- const act=[];for(const [a,b,s] of GLW){if(T>=a&&T<=b)act.push([s,pr(T,a,a+0.6)*(1-pr(T,b-0.6,b))]);}
- for(const [s] of act)s.update(T);
- let flash=0;for(const [s] of act)if(s.flash)flash=Math.max(flash,s.flash(T));
- if(act.length===0){R.setRenderTarget(null);R.clear();}
- else{const a=act[0],b=act[1]||null;R.setRenderTarget(rtA);R.clear();R.render(a[0].scene,a[0].cam);let f=0;if(b){R.setRenderTarget(rtB);R.clear();R.render(b[0].scene,b[0].cam);const sa=a[1],sb=b[1];f=sb/Math.max(1e-4,sa+sb);if(sa>=.999&&sb<1)f=sb;if(sb>=.999)f=sa<1?1-sa:1;}
-  qM.uniforms.f.value=b?f:0;qM.uniforms.ma.value=a[0].linear?0:1;qM.uniforms.mb.value=b&&b[0].linear?0:1;qM.uniforms.fl.value=flash;R.setRenderTarget(null);R.render(qS,qC);}
- const glOp=Math.max(0,...act.map(x=>x[1]));R.domElement.style.opacity=Math.max(glOp,flash>0?1:0);
- X.setTransform(1,0,0,1,0,0);X.globalAlpha=1;X.clearRect(0,0,1920,1080);X.fillStyle='rgba(0,0,0,0.004)';X.fillRect(0,0,2,2);
- let h='',twoD=0;for(const s of SCN){const [a,b]=s.w;if(T<a-0.5||T>b+0.5)continue;const e=eio(pr(T,a-0.5,a+0.5)),x=eio(pr(T,b-0.5,b+0.5)),o=e*(1-x),sc=1+0.03*sst(pr(T,a,b));twoD=Math.max(twoD,o);
+window.renderAt=function(T){X.setTransform(1,0,0,1,0,0);X.globalAlpha=1;X.clearRect(0,0,1920,1080);X.fillStyle='rgba(0,0,0,0.004)';X.fillRect(0,0,2,2);
+ let h='';for(const s of SCN){const [a,b]=s.w;if(T<a-0.5||T>b+0.5)continue;const e=a<=0?1:eio(pr(T,a-0.5,a+0.5)),x=b>=130?0:eio(pr(T,b-0.5,b+0.5)),o=e*(1-x),sc=1+0.03*sst(pr(T,a,b));
   X.save();X.translate(960,540);X.scale(sc,sc);X.translate(-960,-540);h+=`<div class="sc" style="opacity:${o};transform:scale(${sc})">${s.f(T,o)}</div>`;X.restore();}
- $('world').innerHTML=h;$('bg2').style.opacity=Math.min(1,twoD*1.2);
- $('hud').innerHTML=VIG.map(v=>v.hud?v.hud(T):'').join('')+worldHud(T)+doorHud(T)+sumHud(T);
- $('dim').style.opacity=0.5*pr(T,16.4,16.9)*(1-pr(T,20.3,20.9));
- const sr=SRC.find(s=>T>=s[0]&&T<s[1]);$('src').style.opacity=sr?pr(T,sr[0],sr[0]+0.4)*(1-pr(T,sr[1]-0.3,sr[1])):0;if(sr)$('src').innerHTML=`${sr[2]?`<i>${sr[2]}</i>`:''}${sr[3]}`;
+ $('world').innerHTML=h;$('bg2').style.opacity=1;
  const L=LINES.find(l=>T>=l[0]&&T<l[1]);$('sub').innerHTML=L&&T<125.4?'<span>'+L[2].replace(/\[(.+?)\]/g,'<b>$1</b>')+'</span>':'';
+ $('dim').style.opacity=0.55*pr(T,16.4,16.9)*(1-pr(T,20.3,20.9));
  $('plaque').style.opacity=pr(T,16.58,16.9)*(1-pr(T,20.2,20.8));$('plaque').style.transform=`scale(${1.06-0.06*eo(pr(T,16.58,17.3))})`;
  $('end').style.opacity=pr(T,125.4,126.4);};
 await document.fonts.load('900 60px "Noto Sans CJK SC"');await document.fonts.load('900 60px "Noto Serif CJK SC"');await document.fonts.ready;window.renderAt(0);window.READY=true;
