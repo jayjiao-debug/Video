@@ -115,10 +115,28 @@ function deco(S,lines){for(const [pts,col] of lines){const sm=[];for(let i=0;i<p
 function arrow(S,x,z,dir,col,len=6){const sh=new THREE.Shape();sh.moveTo(-0.35,0);sh.lineTo(-0.35,len-1.4);sh.lineTo(-0.9,len-1.4);sh.lineTo(0,len);sh.lineTo(0.9,len-1.4);sh.lineTo(0.35,len-1.4);sh.lineTo(0.35,0);sh.closePath();
  const g=new THREE.ShapeGeometry(sh);g.rotateX(-Math.PI/2);if(dir>0)g.rotateY(Math.PI);const m=new THREE.Mesh(g,basic(col));m.position.set(x,0.06,z);S.add(m);}
 function label3(S,txt,col,x,y,z,w=8){const t=ctex(900,140,(c)=>{c.fillStyle=col;c.font='900 92px "Noto Sans CJK SC"';c.textAlign='center';c.fillText(txt,450,108);});const sp=new THREE.Sprite(new THREE.SpriteMaterial({map:t,depthTest:false}));sp.scale.set(w,w*140/900,1);sp.position.set(x,y,z);sp.renderOrder=8;S.add(sp);}
-function mapDeco(S){river(S,[[-260,-120],[-40,-150],[60,-210],[300,-230]],22);
+function mapDeco(S){texture(S,window.__opt||0);river(S,[[-260,-120],[-40,-150],[60,-210],[300,-230]],22);
  deco(S,[[[[-90,-30],[-20,-30],[-12,-38],[-12,-110],[-40,-138],[-120,-138]],0x8E5CA8],[[[90,0],[24,0],[14,-10],[14,-70],[44,-100],[110,-100]],0x00A6B4],[[[-110,-200],[-24,-200],[-10,-214],[-10,-290]],0xE8413C]]);
  station(S,-40,-30,'c',1.5);station(S,-12,-80,'s',1.5);station(S,44,-100,'t',1.5);station(S,60,0,'c',1.5);station(S,-60,-200,'t',1.5);}
-window.shot=function(n){let S,K;
+
+function rrShape(w,h,r){const s=new THREE.Shape();s.moveTo(-w/2+r,-h/2);s.lineTo(w/2-r,-h/2);s.quadraticCurveTo(w/2,-h/2,w/2,-h/2+r);s.lineTo(w/2,h/2-r);s.quadraticCurveTo(w/2,h/2,w/2-r,h/2);s.lineTo(-w/2+r,h/2);s.quadraticCurveTo(-w/2,h/2,-w/2,h/2-r);s.lineTo(-w/2,-h/2+r);s.quadraticCurveTo(-w/2,-h/2,-w/2+r,-h/2);return s;}
+function texture(S,opt){if(!opt)return;let seed=7;const rnd=()=>{seed=(seed*16807)%2147483647;return seed/2147483647;};
+ // paper grain
+ const gt=ctex(512,512,(g)=>{g.fillStyle='#F3EFE6';g.fillRect(0,0,512,512);for(let i=0;i<9000;i++){const v=rnd();g.fillStyle=v<.5?`rgba(120,100,70,${rnd()*0.06})`:`rgba(255,255,255,${rnd()*0.25})`;g.fillRect(rnd()*512,rnd()*512,1+rnd()*2,1+rnd()*2);}});
+ gt.wrapS=gt.wrapT=THREE.RepeatWrapping;gt.repeat.set(40,40);const gm=new THREE.Mesh(new THREE.PlaneGeometry(800,800),new THREE.MeshBasicMaterial({map:gt}));gm.rotation.x=-Math.PI/2;gm.position.y=0.002;S.add(gm);
+ // city blocks between streets, slightly darker cream; white streets show as gaps
+ const blocks=[],parks=[];for(let bx=-150;bx<150;bx+=14)for(let bz=-320;bz<60;bz+=14){const cx=bx+7+3,cz=bz+7;if(Math.abs(cx)<7.5)continue;
+  const w=8+rnd()*3.5,h=8+rnd()*3.5;const g=new THREE.ShapeGeometry(rrShape(w,h,1.4));g.rotateX(-Math.PI/2);g.translate(cx+(rnd()-.5)*1.5,0.006,cz+(rnd()-.5)*1.5);
+  if(opt>=2&&rnd()<0.12)parks.push(g);else blocks.push(g);}
+ S.add(new THREE.Mesh(mergeGeometries(blocks),new THREE.MeshBasicMaterial({color:0xE4DAC6})));
+ if(parks.length){S.add(new THREE.Mesh(mergeGeometries(parks),new THREE.MeshBasicMaterial({color:0xD9E8C8})));
+  // low-poly trees on parks
+  const tr=[];for(const p of parks){p.computeBoundingBox();const b=p.boundingBox;for(let k=0;k<5;k++){const t=new THREE.ConeGeometry(0.7,1.8,6);t.translate(b.min.x+1.5+rnd()*(b.max.x-b.min.x-3),0.9,b.min.z+1.5+rnd()*(b.max.z-b.min.z-3));tr.push(t);}}
+  S.add(new THREE.Mesh(mergeGeometries(tr),new THREE.MeshLambertMaterial({color:0x8CC07A})));}
+ if(opt>=2){// a few low white buildings for parallax
+  const bl=[];for(let k=0;k<90;k++){const x=(rnd()<.5?-1:1)*(12+rnd()*60),z=40-rnd()*330;if(Math.abs(x)<10)continue;const h=0.8+rnd()*3.5;const b=new RoundedBoxGeometry(5+rnd()*3,h,5+rnd()*3,2,0.5);b.translate(x,h/2,z);bl.push(b);}
+  S.add(new THREE.Mesh(mergeGeometries(bl),new THREE.MeshLambertMaterial({color:0xFFFFFF})));}}
+window.shot=function(n,opt=0){let S,K;window.__opt=opt;
  if(n===0){S=scene();S.fog=new THREE.Fog(0xF3EFE6,50,180);mapDeco(S);motorway(S,40,-260);
   for(let q=0;q<60;q++)LANES.forEach(([x,c],li)=>addCar(S,c===C.black?0xEAA800:c,x,10-q*2.85-(li%2)*0.9,'brake'));
   const p=pinSprite();p.position.set(-0.65,2.0,-14.25);S.add(p);const fr=frontA();fr.position.set(0,0,-170);S.add(fr);
