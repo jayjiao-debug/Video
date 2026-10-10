@@ -50,11 +50,11 @@ function ballAt(i: number, T: number): THREE.Vector3 | null {
 const netKick = (T: number) => { let k = 0; for (const tm of MAKES) { const d = T - tm; if (d >= 0 && d < 0.55) k = Math.max(k, Math.sin(Math.PI * d / 0.55) * Math.exp(-d * 2)); } return k; };
 
 /* ---------------------------------------------------------------- textures */
-const canvasTex = (w: number, h: number, draw: (g: CanvasRenderingContext2D) => void) => {
+export const canvasTex = (w: number, h: number, draw: (g: CanvasRenderingContext2D) => void) => {
   const c = document.createElement('canvas'); c.width = w; c.height = h; draw(c.getContext('2d')!);
   const t = new THREE.CanvasTexture(c); t.colorSpace = THREE.SRGBColorSpace; t.anisotropy = 8; return t;
 };
-const ballTex = () => canvasTex(1024, 512, (g) => {
+export const ballTex = () => canvasTex(1024, 512, (g) => {
   const gr = g.createLinearGradient(0, 0, 0, 512); gr.addColorStop(0, '#c4561f'); gr.addColorStop(0.5, '#e07a34'); gr.addColorStop(1, '#b44c1a');
   g.fillStyle = gr; g.fillRect(0, 0, 1024, 512);
   for (let i = 0; i < 9000; i++) { g.fillStyle = `rgba(80,30,10,${Math.random() * 0.15})`; g.fillRect(Math.random() * 1024, Math.random() * 512, 2, 2); } // pebbled leather
@@ -63,17 +63,17 @@ const ballTex = () => canvasTex(1024, 512, (g) => {
   for (const x of [256, 768]) { g.beginPath(); g.moveTo(x, 0); g.lineTo(x, 512); g.stroke(); }
   for (const off of [0, 512]) { g.beginPath(); for (let y = 0; y <= 512; y += 8) { const x = off + 128 + 110 * Math.cos((y / 512) * Math.PI); y ? g.lineTo(x, y) : g.moveTo(x, y); } g.stroke(); }
 });
-const floorTex = () => canvasTex(2048, 2048, (g) => {
+export const floorTex = () => canvasTex(2048, 2048, (g) => {
   for (let i = 0; i < 64; i++) { const l = 120 + Math.random() * 30; g.fillStyle = `rgb(${l + 60},${l + 25},${l - 25})`; g.fillRect(i * 32, 0, 32, 2048); }
   g.strokeStyle = 'rgba(60,30,10,0.35)'; g.lineWidth = 2; for (let i = 0; i < 64; i++) { g.beginPath(); g.moveTo(i * 32, 0); g.lineTo(i * 32, 2048); g.stroke(); }
   g.strokeStyle = 'rgba(245,240,230,0.9)'; g.lineWidth = 10; // the key and the three-point arc, seen from the court
   g.strokeRect(1024 - 240, 0, 480, 760); g.beginPath(); g.arc(1024, 760, 240, 0, Math.PI); g.stroke();
   g.beginPath(); g.arc(1024, 80, 860, 0.12, Math.PI - 0.12); g.stroke();
 });
-const glowTex = (inner: string, outer: string) => canvasTex(256, 256, (g) => {
+export const glowTex = (inner: string, outer: string) => canvasTex(256, 256, (g) => {
   const gr = g.createRadialGradient(128, 128, 0, 128, 128, 128); gr.addColorStop(0, inner); gr.addColorStop(1, outer); g.fillStyle = gr; g.fillRect(0, 0, 256, 256);
 });
-const coneTex = () => canvasTex(64, 256, (g) => {
+export const coneTex = () => canvasTex(64, 256, (g) => {
   const gr = g.createLinearGradient(0, 0, 0, 256); gr.addColorStop(0, 'rgba(255,236,200,0.0)'); gr.addColorStop(0.15, 'rgba(255,236,200,0.5)'); gr.addColorStop(1, 'rgba(255,236,200,0.0)');
   g.fillStyle = gr; g.fillRect(0, 0, 64, 256);
 });
@@ -234,7 +234,7 @@ const Arena: React.FC<{ T: number }> = ({ T }) => {
 };
 
 /** rings and streaks down −Z from the rim: the light tunnel */
-const Tunnel: React.FC<{ T: number; o: number }> = ({ T, o }) => {
+export const Tunnel: React.FC<{ T: number; o: number }> = ({ T, o }) => {
   const rings = useMemo(() => Array.from({ length: 34 }, (_, i) => i), []);
   const streaks = useMemo(() => {
     const n = 420, p = new Float32Array(n * 6), c = new Float32Array(n * 6);
@@ -356,7 +356,7 @@ const Big37: React.FC<{ T: number }> = ({ T }) => {
   );
 };
 
-export const Opening: React.FC = () => {
+export const Opening: React.FC<{ inFilm?: boolean }> = ({ inFilm = false }) => {
   const f = useCurrentFrame(), T = f / FPS;
   const flashO = T >= TITLE ? Math.exp(-(T - TITLE) / 0.09) * 0.85 : 0;
   const fadeIn = 1;
@@ -378,9 +378,9 @@ export const Opening: React.FC = () => {
       <AbsoluteFill style={{ background: 'radial-gradient(ellipse at 50% 45%, rgba(0,0,0,0) 50%, rgba(0,0,0,0.55) 100%)' }} />
       <NameCard T={T} />
       <TitleCard T={T} />
-      <Subtitle T={T} />
+      {inFilm ? null : <Subtitle T={T} />}
       <AbsoluteFill style={{ background: '#fff6e0', opacity: Math.max(flashO, pop) }} />
-      <div style={{ position: 'absolute', top: 44, right: 56, opacity: 0.55 * (T < TITLE - 0.2 ? fadeIn : 0), fontFamily: font.sans, fontWeight: 500, fontSize: 20, letterSpacing: '0.3em', color: 'rgba(243,237,226,0.58)' }}>
+      <div style={{ position: 'absolute', top: 44, right: 56, opacity: inFilm ? 0 : 0.55 * (T < TITLE - 0.2 ? fadeIn : 0), fontFamily: font.sans, fontWeight: 500, fontSize: 20, letterSpacing: '0.3em', color: 'rgba(243,237,226,0.58)' }}>
         <span style={{ color: GOLD }}>◆ </span>{JUNO.mark}
       </div>
     </AbsoluteFill>
