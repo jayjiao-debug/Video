@@ -1,6 +1,9 @@
 {
- "id": "hm-04",
+ "id": "sal-01",
  "items": [
-  {"type":"url","url":"https://eutils.ncbi.nlm.nih.gov/entrez/eutils/efetch.fcgi?db=pubmed&id=11522575&rettype=abstract&retmode=text","name":"choc.txt","license":"ref"}
+  {"type":"url","url":"https://www.nber.org/system/files/working_papers/w16396/w16396.pdf","name":"card2010_w16396.pdf","license":"NBER working paper, reference"},
+  {"type":"url","url":"https://api.crossref.org/works/10.1016/S0167-2681(98)00089-4","name":"cr_solnick.json","license":"ref"},
+  {"type":"url","url":"https://api.crossref.org/works/10.1162/003355397555208","name":"cr_shafir.json","license":"ref"},
+  {"type":"url","url":"https://www.nber.org/system/files/working_papers/w5701/w5701.pdf","name":"shafir_w5701.pdf","license":"NBER working paper, reference"}
  ]
 }
