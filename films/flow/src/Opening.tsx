@@ -23,11 +23,13 @@ const lerp = (a: number, b: number, k: number) => a + (b - a) * k;
 /* ---------------------------------------------------------------- the shots */
 // 13 makes. The first swish lands on the track's first accent (0.334 s: frame 0 is already mid-flight), the big ones on
 // the strong accents (marked *), the rest in between, off the grid, so the montage accelerates without a metronome.
-const MAKES = [0.334, 1.05, 1.62, 2.369, 2.877, 3.33, 3.895, 4.404, 4.86, 5.3, 5.93, 6.439, 6.947];
+const MAKES = [0.334, 1.05, 1.62, 2.369, 2.877, 3.33, 3.895, 4.404, 4.86, 5.3, 5.93, 6.439, 8.32]; // the 13th is the viewer's own shot
 const ACCENT = new Set([0, 3, 4, 6, 7, 10, 11, 12]);
-const flightOf = (i: number) => (i === 0 ? 0.9 : Math.max(0.6, MAKES[i] - MAKES[i - 1] + 0.15));
+const VIEWER = 12, RELEASE = 7.2;
+const flightOf = (i: number) => (i === 0 ? 0.9 : i === VIEWER ? MAKES[VIEWER] - RELEASE : Math.max(0.6, MAKES[i] - MAKES[i - 1] + 0.15));
 const RIM = new THREE.Vector3(0, 3.05, 0);
 const shotFrom = (i: number) => {
+  if (i === VIEWER) return new THREE.Vector3(0.12, 1.8, 5.2); // from just below the camera: the viewer's hands
   const s = Math.sin(i * 12.9898) * 43758.5453, r = s - Math.floor(s);
   const side = i % 2 ? 1 : -1;
   return new THREE.Vector3(side * (2.0 + 1.6 * r), 2.2 + 0.6 * r, 2.6 + 1.3 * ((i * 0.37) % 1));
@@ -39,7 +41,7 @@ function ballAt(i: number, T: number): THREE.Vector3 | null {
   if (T <= tm) { // arc into the rim
     const u = (T - t0) / FLIGHT, p0 = shotFrom(i);
     const p = p0.clone().lerp(RIM.clone().add(new THREE.Vector3(0, 0.05, 0)), u);
-    p.y += Math.sin(Math.PI * u) * (1.0 + 0.5 * FLIGHT) * (1 - u * 0.3);
+    p.y += Math.sin(Math.PI * u) * (i === VIEWER ? 2.1 : 1.0 + 0.5 * FLIGHT) * (1 - u * 0.3);
     return p;
   }
   const d = T - tm; // through the net and down
@@ -97,17 +99,26 @@ const ANGLES: Record<string, { pos: [number, number, number]; look: [number, num
 };
 const shakeAt = (T: number) => { let k = 0; MAKES.forEach((m, i) => { const d = T - m; if (d >= 0 && d < 0.14) k = Math.max(k, (ACCENT.has(i) ? 1 : 0.35) * (1 - d / 0.14)); }); return k; };
 function camAt(T: number) {
-  // v3: one continuous shot (the owner preferred v1's single camera). A slow dolly that drifts from the right to the
-  // centre, close enough that the ball and the net read on a phone, then the accelerating dive into the rim.
-  const sh = shakeAt(T) * 0.45, j = new THREE.Vector3(Math.sin(T * 97) * 0.02 * sh, Math.cos(T * 83) * 0.018 * sh, 0);
-  const a = easeInOut(prog(T, 0, 7.1)), dive = prog(T, 7.1, TITLE);
-  let pos = new THREE.Vector3(lerp(1.7, 0.2, a), lerp(2.0, 2.55, a), lerp(6.4, 4.4, a));
-  if (T > 7.1) { const k = Math.pow(dive, 2.2); pos = new THREE.Vector3(lerp(0.2, 0, easeOut(dive)), lerp(2.55, 3.05, easeOut(dive)), lerp(4.4, 0, k)); }
-  if (T > TITLE) { const d = T - TITLE; pos = new THREE.Vector3(0, 3.05, -(7.06 / 0.55) * (1 - Math.exp(-0.55 * d))); }
-  const look = new THREE.Vector3(lerp(0.15, 0, a), lerp(3.35, 3.15, a), 0).lerp(new THREE.Vector3(0, 3.05, -60), easeInOut(prog(T, 7.5, TITLE)));
-  if (T > TITLE) look.set(0, 3.05, pos.z - 60);
+  // one continuous shot: a slow dolly to the viewer's spot at the line, then the viewer's own shot — the camera follows
+  // the ball up, over and down into the hoop, and on through the rim into the tunnel on the title hit
+  const a = easeInOut(prog(T, 0, 7.0));
+  const stand = new THREE.Vector3(lerp(1.7, 0.2, a), lerp(2.0, 2.45, a), lerp(6.4, 5.6, a));
+  let pos = stand.clone(), look = new THREE.Vector3(lerp(0.15, 0, a), lerp(3.35, 3.15, a), 0), fov = 40;
+  if (T > RELEASE - 0.15) {
+    const f = easeInOut(prog(T, RELEASE - 0.15, RELEASE + 0.35)); // the camera lets go of the stand and starts to chase
+    const b = ballAt(VIEWER, Math.max(RELEASE, T - 0.14)) || RIM.clone();
+    const follow = b.clone().add(new THREE.Vector3(0.05, 0.32, 0.75));
+    const w = Math.pow(prog(T, 7.95, TITLE), 1.6); // the last stretch: line up with the rim and go through it
+    const through = new THREE.Vector3(0, 3.05, lerp(0.9, 0, prog(T, 7.95, TITLE)));
+    pos = stand.clone().lerp(follow.lerp(through, w), f);
+    const lb = ballAt(VIEWER, T) || RIM.clone();
+    look = look.clone().lerp(lb.lerp(RIM, 0.35), f).lerp(new THREE.Vector3(0, 3.05, -60), easeInOut(prog(T, 8.05, TITLE)));
+    fov = lerp(40, 52, f);
+  }
+  if (T > TITLE) { const d = T - TITLE; pos = new THREE.Vector3(0, 3.05, -(7.06 / 0.55) * (1 - Math.exp(-0.55 * d))); look = new THREE.Vector3(0, 3.05, pos.z - 60); }
+  fov = lerp(fov, 62, easeInOut(prog(T, 8.2, TITLE + 0.3)));
   const ts = T > TITLE && T < TITLE + 0.12 ? 0.03 * Math.sin((T - TITLE) * 120) : 0;
-  return { pos: pos.add(new THREE.Vector3(ts, ts * 0.6, 0)).add(j), look, fov: lerp(40, 62, easeInOut(prog(T, 7.4, TITLE + 0.3))) };
+  return { pos: pos.add(new THREE.Vector3(ts, ts * 0.6, 0)), look, fov };
 }
 
 /* ---------------------------------------------------------------- the arena (three.js) */
@@ -145,9 +156,10 @@ const Arena: React.FC<{ T: number }> = ({ T }) => {
   camera.position.copy(cam.pos); camera.lookAt(cam.look);
   (camera as THREE.PerspectiveCamera).fov = cam.fov; (camera as THREE.PerspectiveCamera).updateProjectionMatrix();
 
-  const arenaO = 1 - prog(T, 7.75, TITLE - 0.05); // the arena dissolves as the tunnel forms
-  const tunnelO = prog(T, 7.3, TITLE);
-  const clockS = Math.max(0, 720 * (1 - prog(T, 0.4, 6.55)));
+  const arenaO = 1 - prog(T, 8.3, TITLE + 0.05); // the arena dissolves as the tunnel forms
+  const tunnelO = prog(T, 8.1, TITLE);
+  const bbO = arenaO * (1 - prog(T, 8.12, 8.3)); // the glass board goes first: the camera flies through where it was
+  const clockS = Math.max(0, 720 * (1 - prog(T, 0.4, 8.3)));
   const fg = MAKES.filter((m) => T >= m).length;
   const clock = `${Math.floor(clockS / 60)}:${String(Math.floor(clockS % 60)).padStart(2, '0')}`;
   const board = useMemo(() => boardTex(clock, fg, fg === 13 ? 37 : Math.round(fg * 2.7)), [clock, fg]);
@@ -166,10 +178,10 @@ const Arena: React.FC<{ T: number }> = ({ T }) => {
         <mesh position={[0, 8, 0.6]}><cylinderGeometry args={[0.25, 3.2, 12, 48, 1, true]} /><meshBasicMaterial map={tex.cone} transparent opacity={0.22 * arenaO} depthWrite={false} blending={THREE.AdditiveBlending} side={THREE.DoubleSide} toneMapped={false} /></mesh>
         {/* stanchion + backboard */}
         <mesh position={[0, 1.6, -1.6]}><boxGeometry args={[0.28, 3.2, 0.28]} /><meshStandardMaterial color="#20232b" roughness={0.6} transparent opacity={arenaO} /></mesh>
-        <mesh position={[0, 3.25, -0.95]} rotation={[0.6, 0, 0]}><boxGeometry args={[0.16, 0.16, 1.4]} /><meshStandardMaterial color="#20232b" roughness={0.6} transparent opacity={arenaO} /></mesh>
-        <mesh position={[0, 3.5, -0.15]}><boxGeometry args={[1.83, 1.07, 0.03]} /><meshPhysicalMaterial color="#cfe3ff" transmission={0} transparent opacity={0.12 * arenaO} roughness={0.05} /></mesh>
+        <mesh position={[0, 3.25, -0.95]} rotation={[0.6, 0, 0]}><boxGeometry args={[0.16, 0.16, 1.4]} /><meshStandardMaterial color="#20232b" roughness={0.6} transparent opacity={bbO} /></mesh>
+        <mesh position={[0, 3.5, -0.15]}><boxGeometry args={[1.83, 1.07, 0.03]} /><meshPhysicalMaterial color="#cfe3ff" transmission={0} transparent opacity={0.12 * bbO} roughness={0.05} /></mesh>
         {[[0, 4.02, 1.83, 0.05], [0, 2.98, 1.83, 0.05], [-0.9, 3.5, 0.05, 1.07], [0.9, 3.5, 0.05, 1.07], [0, 3.3, 0.59, 0.04], [0, 3.21 + 0.22, 0.04, 0.45], [-0.28, 3.43, 0.04, 0.45], [0.28, 3.43, 0.04, 0.45]].map(([px, py, w, h], i) => (
-          <mesh key={i} position={[px, py, -0.13]}><planeGeometry args={[w, h]} /><meshBasicMaterial color="#f4f1ea" transparent opacity={0.85 * arenaO} toneMapped={false} /></mesh>
+          <mesh key={i} position={[px, py, -0.13]}><planeGeometry args={[w, h]} /><meshBasicMaterial color="#f4f1ea" transparent opacity={0.85 * bbO} toneMapped={false} /></mesh>
         ))}
         {/* net */}
         <lineSegments geometry={net}><lineBasicMaterial color="#f2efe8" transparent opacity={0.9 * arenaO} /></lineSegments>
@@ -187,16 +199,6 @@ const Arena: React.FC<{ T: number }> = ({ T }) => {
           <sprite key={'c' + i} position={[(i - 10.5) * 2.4, 15 + Math.cos((i - 10.5) * 0.18) * 1.5, -10 - Math.abs(i - 10.5) * 0.8]} scale={[1.4, 1.4, 1]}>
             <spriteMaterial map={tex.bokeh} color="#ffe2b0" transparent opacity={0.8 * arenaO} blending={THREE.AdditiveBlending} depthWrite={false} />
           </sprite>))}
-        {/* a few camera flashes in the stands on the makes */}
-        {MAKES.flatMap((m, i) => Array.from({ length: ACCENT.has(i) ? 9 : 3 }, (_, k) => { const d = T - m - k * 0.03; return d >= 0 && d < 0.09 ? (
-          <sprite key={i + '-' + k} position={[(((i * 7.3 + k * 5.1) % 30) - 15), 3 + ((i * 3.1 + k * 2.3) % 9), -12 - ((i * 5.7 + k * 3.3) % 12)]} scale={[1.8, 1.8, 1]}>
-            <spriteMaterial map={tex.bokeh} color="#ffffff" transparent opacity={arenaO * (1 - d / 0.09)} blending={THREE.AdditiveBlending} depthWrite={false} />
-          </sprite>) : null; }))}
-        {/* burst of light at the rim on every make */}
-        {MAKES.map((m, i) => { const d = T - m; return d >= 0 && d < 0.3 ? (
-          <sprite key={'b' + i} position={[0, 2.95, 0.02]} scale={[(ACCENT.has(i) ? 2.4 : 1.4) * (0.6 + d * 3), (ACCENT.has(i) ? 2.4 : 1.4) * (0.6 + d * 3), 1]}>
-            <spriteMaterial map={tex.bokeh} color="#ffd89a" transparent opacity={arenaO * (1 - d / 0.3) * 0.9} blending={THREE.AdditiveBlending} depthWrite={false} />
-          </sprite>) : null; })}
         {/* dust motes drifting in the roof light */}
         <points position={[0, -((T * 0.12) % 1) * 0.6, 0]}>
           <bufferGeometry><bufferAttribute attach="attributes-position" args={[dust, 3]} /></bufferGeometry>
@@ -215,14 +217,14 @@ const Arena: React.FC<{ T: number }> = ({ T }) => {
         {/* sheen of the roof light on the varnished floor, stretched towards the camera */}
         <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, 0.012, 3.2]} scale={[1, 3.2, 1]}><planeGeometry args={[2.4, 2.4]} /><meshBasicMaterial map={tex.pool} transparent opacity={0.35 * arenaO} depthWrite={false} blending={THREE.AdditiveBlending} toneMapped={false} /></mesh>
         {/* motion trails behind the balls in flight */}
-        {MAKES.flatMap((_, i) => [0.035, 0.07, 0.105, 0.14].map((dt, k) => { const p = ballAt(i, T - dt), now = ballAt(i, T); return p && now && T - dt < MAKES[i] ? (
+        {MAKES.flatMap((_, i) => [0.035, 0.07, 0.105, 0.14].map((dt, k) => { const p = ballAt(i, T - dt), now = ballAt(i, T); return p && now && i !== VIEWER && T - dt < MAKES[i] ? (
           <mesh key={'tr' + i + k} position={p}><sphereGeometry args={[0.12 * (1 - k * 0.12), 16, 12]} /><meshBasicMaterial color="#ffb070" transparent opacity={(0.22 - k * 0.05) * arenaO} depthWrite={false} blending={THREE.AdditiveBlending} toneMapped={false} /></mesh>) : null; }))}
         {/* balls */}
         {MAKES.map((_, i) => { const p = ballAt(i, T); return p ? (
           <mesh key={i} position={p} rotation={[T * 9 + i, T * 3, 0]}><sphereGeometry args={[0.12, 40, 28]} /><meshStandardMaterial map={tex.ball} roughness={0.75} transparent opacity={arenaO} /></mesh>) : null; })}
       </group>
       {/* rim: becomes the first ring of the tunnel */}
-      <mesh position={[0, 3.05, 0]} rotation={[(Math.PI / 2) * (1 - easeInOut(prog(T, 7.55, 8.25))), 0, 0]} scale={1 + 1.2 * easeInOut(prog(T, 7.9, TITLE))}>
+      <mesh position={[0, 3.05, 0]} rotation={[(Math.PI / 2) * (1 - easeInOut(prog(T, 8.33, 8.46))), 0, 0]} scale={1 + 1.2 * easeInOut(prog(T, 8.35, TITLE))}>
         <torusGeometry args={[0.23, 0.012, 16, 64]} />
         <meshStandardMaterial color="#e2541e" emissive="#ff6a2a" emissiveIntensity={0.3 + 2.2 * tunnelO + (flash(T) ? 0.6 : 0)} roughness={0.4} metalness={0.3} />
       </mesh>
@@ -359,7 +361,7 @@ export const Opening: React.FC = () => {
   const flashO = T >= TITLE ? Math.exp(-(T - TITLE) / 0.09) * 0.85 : 0;
   const fadeIn = 1;
   // a short white pop on every make (stronger on the accents)
-  let pop = 0; MAKES.forEach((m, i) => { const d = T - m; if (d >= 0 && d < 0.12) pop = Math.max(pop, (i === 12 ? 0.3 : ACCENT.has(i) ? 0.12 : 0.05) * (1 - d / 0.12)); });
+  const pop = 0;
   return (
     <AbsoluteFill style={{ background: '#040509' }}>
       <style>{`@font-face { font-family: "JunoMono"; src: url(${staticFile('fonts/DejaVuSansMono-Bold.ttf')}) format("truetype"); font-weight: 700; }
