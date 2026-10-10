@@ -45,3 +45,12 @@ Sources (copies in sources/):
 - Harvard Magazine May–June 1996 (Solnick & Hemenway's Two World Study, published JEBO 1998 37(3):373–383)
 - Card, Mas, Moretti & Saez (2012) AER 102(6) (NBER w16396)
 - Luttmer (2005) QJE 120(3) (NBER w10667)
+
+## v2 look (2026-10-10)
+Owner note on v1: "为什么图片都这么dark，try following the tank video esstetics".
+v2 keeps every line and timing and changes only the look, following 德国坦克: 2D flat illustration, moonlit blue night scenes with a big moon,
+warm orange lamps and windows, coloured faceless cartoon figures and capuchins, bold serif subtitles with gold-gradient keywords,
+a chapter line at the top centre, the title cast on a bronze plaque, sources moved to a small line under the subtitles.
+Scenes: dorm room at night (two students from behind) · lab with glass enclosures and a moonlit window · two towns under one moon ·
+a campus hall with the salary list as a cream newspaper page · a moonlit street where the neighbours' houses grow · a rooftop under a huge moon.
+Mean frame brightness rose from about 27/255 (v1) to about 100/255.

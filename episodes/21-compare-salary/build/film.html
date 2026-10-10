@@ -1,46 +1,39 @@
 <!doctype html><html><head><meta charset="utf-8"><style>
 *{box-sizing:border-box}
-html,body{margin:0;width:1920px;height:1080px;overflow:hidden;background:#02040a;font-family:"Noto Sans CJK SC",sans-serif}
+html,body{margin:0;width:1920px;height:1080px;overflow:hidden;background:#2b4a80;font-family:"Noto Sans CJK SC",sans-serif}
 canvas{position:absolute;left:0;top:0}
-#bg2,#dim{position:absolute;inset:0;opacity:0}
-#dim{background:#02040a;z-index:34}
-#bg2{background:radial-gradient(ellipse at 50% 42%,#15203f 0%,#0a1022 58%,#04060d 100%)}
-#bg2:after{content:"";position:absolute;inset:0;background-image:linear-gradient(rgba(246,207,120,.035) 1px,transparent 1px),linear-gradient(90deg,rgba(246,207,120,.035) 1px,transparent 1px);background-size:80px 80px}
-#world,#ovl{position:absolute;inset:0}
+#dim{position:absolute;inset:0;opacity:0;background:#0d1a36;z-index:34}
+#back,#world{position:absolute;inset:0}
 .sc{position:absolute;inset:0}
-.lab{position:absolute;transform:translate(-50%,-100%);color:#fff;font-size:36px;font-weight:900;text-shadow:0 2px 14px rgba(0,0,0,.95);white-space:nowrap;text-align:center}
-.lab small{display:block;font-size:20px;letter-spacing:4px;color:#e8d9b0;font-weight:700}
-#sub{position:absolute;left:0;right:0;bottom:70px;text-align:center;z-index:40}
-#sub span{display:inline-block;background:rgba(6,8,13,.80);color:#fff;font-size:64px;font-weight:900;padding:10px 34px 14px;border-radius:18px}
-#sub b{color:#F6CF78}
-.mark{position:absolute;right:44px;top:34px;font-size:22px;font-weight:700;letter-spacing:2px;color:#f6cf78;opacity:.6;z-index:30}
-#src{position:absolute;left:44px;top:30px;font-size:21px;font-weight:700;letter-spacing:1px;color:#d8cba6;z-index:30;padding:6px 16px 7px 14px;border-left:4px solid #f6cf78;background:rgba(8,12,26,.55);opacity:0}
-#src i{font-style:normal;color:#f6cf78;margin-right:10px}
-.t{position:absolute;font-weight:900;white-space:nowrap}.serif{font-family:"Noto Serif CJK SC",serif}
-.lbl{position:absolute;font-size:22px;letter-spacing:6px;color:#c9b98f;font-weight:700;white-space:nowrap}
-.bar{position:absolute;border-radius:12px}
-.card{position:absolute;border-radius:22px;background:rgba(8,12,26,.80);border:2px solid rgba(246,207,120,.35);box-shadow:0 20px 60px rgba(0,0,0,.5)}
+#sub{position:absolute;left:0;right:0;bottom:66px;text-align:center;z-index:40}
+#sub span{display:inline-block;background:rgba(10,18,40,.62);color:#fff;font-family:"Noto Serif CJK SC",serif;font-size:66px;font-weight:700;padding:8px 36px 14px;border-radius:14px;text-shadow:0 3px 8px rgba(0,0,0,.45);letter-spacing:1px}
+#sub b{font-weight:700;background:linear-gradient(180deg,#fff6d2 0%,#f8d27e 48%,#e09a3c 100%);-webkit-background-clip:text;background-clip:text;color:transparent;text-shadow:none;filter:drop-shadow(0 2px 3px rgba(0,0,0,.45))}
+.mark{position:absolute;right:44px;top:34px;font-size:22px;font-weight:700;letter-spacing:2px;color:#ffe3a6;opacity:.8;z-index:30;text-shadow:0 1px 6px rgba(10,20,45,.8)}
+#chap{position:absolute;left:0;right:0;top:30px;text-align:center;font-family:"Noto Serif CJK SC",serif;font-weight:700;font-size:28px;letter-spacing:8px;color:#fbecc8;z-index:30;text-shadow:0 2px 10px rgba(10,20,45,.85)}
+.src{position:absolute;left:0;right:0;bottom:18px;text-align:center;font-size:19px;font-weight:700;letter-spacing:1px;color:rgba(243,234,214,.85);white-space:nowrap;text-shadow:0 1px 6px rgba(10,20,45,.9);z-index:41}
+.t{position:absolute;font-weight:900;white-space:nowrap;text-shadow:0 2px 10px rgba(10,20,45,.9),0 0 3px rgba(10,20,45,.9)}.serif{font-family:"Noto Serif CJK SC",serif;font-weight:700}
+.lbl{position:absolute;font-size:24px;letter-spacing:6px;color:#fbecc8;font-weight:700;white-space:nowrap;text-shadow:0 2px 8px rgba(10,20,45,.9)}
 #hud{position:absolute;inset:0;z-index:20;pointer-events:none}
 #plaque{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;opacity:0;z-index:35;pointer-events:none}
-#plaque .p{position:relative;padding:50px 120px 44px;text-align:center;background:rgba(8,12,26,.66);border-radius:18px;box-shadow:0 0 80px rgba(0,0,0,.6)}
-#plaque .p:after{content:"";position:absolute;inset:10px;border:2px solid rgba(246,207,120,.65);border-radius:12px}
-#plaque .k{font-family:"Noto Serif CJK SC",serif;color:#f6cf78;font-size:26px;letter-spacing:12px}
-#plaque .a{font-family:"Noto Serif CJK SC",serif;font-size:120px;font-weight:900;letter-spacing:10px;margin-top:18px;background:linear-gradient(180deg,#fff1c7 0%,#f6cf78 45%,#c8963e 100%);-webkit-background-clip:text;color:transparent}
-#plaque .b{font-family:"Noto Serif CJK SC",serif;font-style:italic;color:#c9b98f;font-size:28px;letter-spacing:8px;margin-top:14px}
-#end{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;opacity:0;z-index:50;color:#f2ead8;background:rgba(5,7,14,.94)}
-#end .j{width:150px;height:150px;border:4px solid #f6cf78;border-radius:50%;font-size:96px;line-height:146px;text-align:center;font-weight:900;margin-bottom:30px;color:#f6cf78;font-family:"Noto Serif CJK SC",serif}
-#end .tt{font-size:76px;font-weight:900;letter-spacing:12px;font-family:"Noto Serif CJK SC",serif;color:#f6cf78}
+#plaque .p{position:relative;padding:54px 120px 48px;text-align:center;border-radius:14px;background:linear-gradient(160deg,#e2ad68 0%,#b07434 30%,#8a5424 58%,#c99050 82%,#a86c30 100%);box-shadow:0 26px 70px rgba(5,10,25,.55),inset 0 3px 0 rgba(255,232,186,.65),inset 0 -4px 0 rgba(60,30,8,.55)}
+#plaque .p:after{content:"";position:absolute;inset:14px;border:3px solid rgba(74,40,12,.55);border-radius:8px;box-shadow:inset 0 1px 0 rgba(255,220,160,.35),0 1px 0 rgba(255,220,160,.35)}
+#plaque .r{position:absolute;width:18px;height:18px;border-radius:50%;background:radial-gradient(circle at 35% 30%,#ffe2ad,#9a6028 60%,#5a3412)}
+#plaque .k{font-family:"Noto Serif CJK SC",serif;color:#4a2a0e;font-size:26px;letter-spacing:12px;font-weight:700;text-shadow:0 1px 0 rgba(255,220,160,.6)}
+#plaque .a{font-family:"Noto Serif CJK SC",serif;font-size:118px;font-weight:700;letter-spacing:10px;margin-top:16px;color:#4f2d10;text-shadow:0 -2px 0 rgba(40,20,5,.65),0 3px 0 rgba(255,218,160,.7)}
+#plaque .b{font-family:"Noto Serif CJK SC",serif;color:#4a2a0e;font-size:28px;letter-spacing:10px;margin-top:12px;font-weight:700;opacity:.85;text-shadow:0 1px 0 rgba(255,220,160,.6)}
+#end{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;opacity:0;z-index:50;color:#f6eedc;background:radial-gradient(ellipse at 50% 40%,#2c4f8c 0%,#1a3263 60%,#11234a 100%)}
+#end .j{width:150px;height:150px;border:4px solid #f6cf78;border-radius:50%;font-size:96px;line-height:146px;text-align:center;font-weight:700;margin-bottom:30px;color:#f6cf78;font-family:"Noto Serif CJK SC",serif;box-shadow:0 0 50px rgba(246,207,120,.35)}
+#end .tt{font-size:76px;font-weight:700;letter-spacing:12px;font-family:"Noto Serif CJK SC",serif;background:linear-gradient(180deg,#fff6d2,#f6cf78 50%,#d9953a);-webkit-background-clip:text;color:transparent}
 #end .q{font-size:44px;margin-top:30px;font-weight:700}
 #end .f{margin-top:36px;border:3px solid #f6cf78;border-radius:44px;padding:12px 44px;font-size:32px;color:#f6cf78;font-weight:700}
-#end .s{position:absolute;bottom:34px;color:#8a8f9e;font-size:18px;text-align:center;line-height:1.6}
+#end .s{position:absolute;bottom:34px;color:#b9c3da;font-size:18px;text-align:center;line-height:1.6}
 </style></head><body>
-<div id="dim"></div><div id="bg2"></div><canvas id="fx" width="1920" height="1080"></canvas>
-<div id="world"></div><div id="hud"></div>
-<div class="mark">◆ Juno · VIBE知识大赏</div><div id="src"></div>
-<div id="plaque"><div class="p"><div class="k">VIBE知识大赏</div><div class="a">为什么一比，就觉得穷？</div><div class="b">THE COMPARISON TRAP</div></div></div>
+<div id="back"></div><canvas id="fx" width="1920" height="1080"></canvas>
+<div id="world"></div><div id="hud"></div><div id="dim"></div>
+<div class="mark">◆ Juno · VIBE知识大赏</div><div id="chap"></div>
+<div id="plaque"><div class="p"><i class="r" style="left:26px;top:26px"></i><i class="r" style="right:26px;top:26px"></i><i class="r" style="left:26px;bottom:26px"></i><i class="r" style="right:26px;bottom:26px"></i><div class="k">VIBE知识大赏</div><div class="a">为什么一比，就觉得穷？</div><div class="b">THE COMPARISON TRAP</div></div></div>
 <div id="end"><div class="j">J</div><div class="tt">为什么一比，就觉得穷？</div><div class="q">你最常拿自己，跟谁比？评论区说说</div><div class="f">关注 Juno · 一起看懂世界</div>
 <div class="s">资料：Brosnan &amp; de Waal (2003) Nature 425:297–299 · Emory Report (2003) · Solnick &amp; Hemenway (1998) J. Economic Behavior &amp; Organization 37(3) · Harvard Magazine (1996)<br>Card, Mas, Moretti &amp; Saez (2012) American Economic Review 102(6) · Luttmer (2005) Quarterly Journal of Economics 120(3) · 开头的工资是举例 · 画面为示意</div></div>
 <div id="sub"></div>
-<script type="importmap">{"imports":{"three":"./node_modules/three/build/three.module.js","three/addons/":"./node_modules/three/examples/jsm/"}}</script>
 <script type="module" src="main.js"></script>
 </body></html>
