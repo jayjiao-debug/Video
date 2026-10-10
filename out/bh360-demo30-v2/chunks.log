@@ -1,0 +1,239 @@
+===== chunk 0
+$ nvidia-smi --query-gpu=name,memory.total,driver_version --format=csv,noheader -> rc 0 in 0s
+Tesla T4, 15360 MiB, 610.57.04
+
+$ rm -rf /tmp/w && cp -r /app/bh360 /tmp/w -> rc 0 in 0s
+
+$ cd /tmp/w && python plates.py 0 90 /tmp/w/plates --gpu  -> rc 0 in 151s
+SKY_S 7.6
+PLATE_S_PER_FRAME 1.58
+/tmp/w/bh.py:48: RuntimeWarning: overflow encountered in multiply
+  f = lambda u: 3 * u * u - u
+/tmp/w/bh.py:48: RuntimeWarning: invalid value encountered in subtract
+  f = lambda u: 3 * u * u - u
+/tmp/w/bh.py:56: RuntimeWarning: overflow encountered in multiply
+  u = u + dphi / 6 * (k1u + 2 * k2u + 2 * k3u + k4u); w = w + dphi / 6 * (k1w + 2 * k2w + 2 * k3w + k4w)
+
+$ cd /tmp/w && python drive.py 0 90 /tmp/o  -> rc 0 in 60s
+RENDERER ANGLE (NVIDIA, Vulkan 1.4.341 (NVIDIA Tesla T4 (0x00001EB8)), NVIDIA)
+MS_PER_FRAME 599
+
+$ ffmpeg -y -v error -framerate 30 -start_number 0 -i /tmp/o/e%05d.jpg -pix_fmt yuv420p -c:v -> rc 0 in 6s
+
+$ ffmpeg -y -v error -framerate 30 -start_number 0 -i /tmp/o/d%05d.jpg -pix_fmt yuv420p -c:v -> rc 0 in 3s
+
+===== chunk 1
+$ nvidia-smi --query-gpu=name,memory.total,driver_version --format=csv,noheader -> rc 0 in 0s
+Tesla T4, 15360 MiB, 610.57.04
+
+$ rm -rf /tmp/w && cp -r /app/bh360 /tmp/w -> rc 0 in 0s
+
+$ cd /tmp/w && python plates.py 90 180 /tmp/w/plates --gpu  -> rc 0 in 152s
+SKY_S 7.5
+PLATE_S_PER_FRAME 1.59
+/tmp/w/bh.py:48: RuntimeWarning: overflow encountered in multiply
+  f = lambda u: 3 * u * u - u
+/tmp/w/bh.py:48: RuntimeWarning: invalid value encountered in subtract
+  f = lambda u: 3 * u * u - u
+/tmp/w/bh.py:56: RuntimeWarning: overflow encountered in multiply
+  u = u + dphi / 6 * (k1u + 2 * k2u + 2 * k3u + k4u); w = w + dphi / 6 * (k1w + 2 * k2w + 2 * k3w + k4w)
+
+$ cd /tmp/w && python drive.py 90 180 /tmp/o  -> rc 0 in 56s
+RENDERER ANGLE (NVIDIA, Vulkan 1.4.341 (NVIDIA Tesla T4 (0x00001EB8)), NVIDIA)
+MS_PER_FRAME 581
+
+$ ffmpeg -y -v error -framerate 30 -start_number 90 -i /tmp/o/e%05d.jpg -pix_fmt yuv420p -c: -> rc 0 in 6s
+
+$ ffmpeg -y -v error -framerate 30 -start_number 90 -i /tmp/o/d%05d.jpg -pix_fmt yuv420p -c: -> rc 0 in 2s
+
+===== chunk 2
+$ nvidia-smi --query-gpu=name,memory.total,driver_version --format=csv,noheader -> rc 0 in 0s
+Tesla T4, 15360 MiB, 610.57.04
+
+$ rm -rf /tmp/w && cp -r /app/bh360 /tmp/w -> rc 0 in 0s
+
+$ cd /tmp/w && python plates.py 180 270 /tmp/w/plates --gpu  -> rc 0 in 155s
+SKY_S 7.6
+PLATE_S_PER_FRAME 1.62
+/tmp/w/bh.py:48: RuntimeWarning: overflow encountered in multiply
+  f = lambda u: 3 * u * u - u
+/tmp/w/bh.py:48: RuntimeWarning: invalid value encountered in subtract
+  f = lambda u: 3 * u * u - u
+/tmp/w/bh.py:56: RuntimeWarning: overflow encountered in multiply
+  u = u + dphi / 6 * (k1u + 2 * k2u + 2 * k3u + k4u); w = w + dphi / 6 * (k1w + 2 * k2w + 2 * k3w + k4w)
+
+$ cd /tmp/w && python drive.py 180 270 /tmp/o  -> rc 0 in 56s
+RENDERER ANGLE (NVIDIA, Vulkan 1.4.341 (NVIDIA Tesla T4 (0x00001EB8)), NVIDIA)
+MS_PER_FRAME 579
+
+$ ffmpeg -y -v error -framerate 30 -start_number 180 -i /tmp/o/e%05d.jpg -pix_fmt yuv420p -c -> rc 0 in 6s
+
+$ ffmpeg -y -v error -framerate 30 -start_number 180 -i /tmp/o/d%05d.jpg -pix_fmt yuv420p -c -> rc 0 in 2s
+
+===== chunk 3
+$ nvidia-smi --query-gpu=name,memory.total,driver_version --format=csv,noheader -> rc 0 in 0s
+Tesla T4, 15360 MiB, 610.57.04
+
+$ rm -rf /tmp/w && cp -r /app/bh360 /tmp/w -> rc 0 in 0s
+
+$ cd /tmp/w && python plates.py 270 360 /tmp/w/plates --gpu  -> rc 0 in 152s
+SKY_S 8.0
+PLATE_S_PER_FRAME 1.58
+/tmp/w/bh.py:48: RuntimeWarning: overflow encountered in multiply
+  f = lambda u: 3 * u * u - u
+/tmp/w/bh.py:48: RuntimeWarning: invalid value encountered in subtract
+  f = lambda u: 3 * u * u - u
+/tmp/w/bh.py:56: RuntimeWarning: overflow encountered in multiply
+  u = u + dphi / 6 * (k1u + 2 * k2u + 2 * k3u + k4u); w = w + dphi / 6 * (k1w + 2 * k2w + 2 * k3w + k4w)
+
+$ cd /tmp/w && python drive.py 270 360 /tmp/o  -> rc 0 in 73s
+RENDERER ANGLE (NVIDIA, Vulkan 1.4.341 (NVIDIA Tesla T4 (0x00001EB8)), NVIDIA)
+MS_PER_FRAME 603
+
+$ ffmpeg -y -v error -framerate 30 -start_number 270 -i /tmp/o/e%05d.jpg -pix_fmt yuv420p -c -> rc 0 in 8s
+
+$ ffmpeg -y -v error -framerate 30 -start_number 270 -i /tmp/o/d%05d.jpg -pix_fmt yuv420p -c -> rc 0 in 2s
+
+===== chunk 4
+$ nvidia-smi --query-gpu=name,memory.total,driver_version --format=csv,noheader -> rc 0 in 0s
+Tesla T4, 15360 MiB, 610.57.04
+
+$ rm -rf /tmp/w && cp -r /app/bh360 /tmp/w -> rc 0 in 0s
+
+$ cd /tmp/w && python plates.py 360 450 /tmp/w/plates --gpu  -> rc 0 in 152s
+SKY_S 8.0
+PLATE_S_PER_FRAME 1.58
+/tmp/w/bh.py:48: RuntimeWarning: overflow encountered in multiply
+  f = lambda u: 3 * u * u - u
+/tmp/w/bh.py:48: RuntimeWarning: invalid value encountered in subtract
+  f = lambda u: 3 * u * u - u
+/tmp/w/bh.py:56: RuntimeWarning: overflow encountered in multiply
+  u = u + dphi / 6 * (k1u + 2 * k2u + 2 * k3u + k4u); w = w + dphi / 6 * (k1w + 2 * k2w + 2 * k3w + k4w)
+
+$ cd /tmp/w && python drive.py 360 450 /tmp/o  -> rc 0 in 73s
+RENDERER ANGLE (NVIDIA, Vulkan 1.4.341 (NVIDIA Tesla T4 (0x00001EB8)), NVIDIA)
+MS_PER_FRAME 600
+
+$ ffmpeg -y -v error -framerate 30 -start_number 360 -i /tmp/o/e%05d.jpg -pix_fmt yuv420p -c -> rc 0 in 8s
+
+$ ffmpeg -y -v error -framerate 30 -start_number 360 -i /tmp/o/d%05d.jpg -pix_fmt yuv420p -c -> rc 0 in 2s
+
+===== chunk 5
+$ nvidia-smi --query-gpu=name,memory.total,driver_version --format=csv,noheader -> rc 0 in 0s
+Tesla T4, 15360 MiB, 610.57.04
+
+$ rm -rf /tmp/w && cp -r /app/bh360 /tmp/w -> rc 0 in 0s
+
+$ cd /tmp/w && python plates.py 450 540 /tmp/w/plates --gpu  -> rc 0 in 152s
+SKY_S 7.9
+PLATE_S_PER_FRAME 1.58
+/tmp/w/bh.py:48: RuntimeWarning: overflow encountered in multiply
+  f = lambda u: 3 * u * u - u
+/tmp/w/bh.py:48: RuntimeWarning: invalid value encountered in subtract
+  f = lambda u: 3 * u * u - u
+/tmp/w/bh.py:56: RuntimeWarning: overflow encountered in multiply
+  u = u + dphi / 6 * (k1u + 2 * k2u + 2 * k3u + k4u); w = w + dphi / 6 * (k1w + 2 * k2w + 2 * k3w + k4w)
+
+$ cd /tmp/w && python drive.py 450 540 /tmp/o  -> rc 0 in 74s
+RENDERER ANGLE (NVIDIA, Vulkan 1.4.341 (NVIDIA Tesla T4 (0x00001EB8)), NVIDIA)
+MS_PER_FRAME 611
+
+$ ffmpeg -y -v error -framerate 30 -start_number 450 -i /tmp/o/e%05d.jpg -pix_fmt yuv420p -c -> rc 0 in 7s
+
+$ ffmpeg -y -v error -framerate 30 -start_number 450 -i /tmp/o/d%05d.jpg -pix_fmt yuv420p -c -> rc 0 in 2s
+
+===== chunk 6
+$ nvidia-smi --query-gpu=name,memory.total,driver_version --format=csv,noheader -> rc 0 in 0s
+Tesla T4, 15360 MiB, 610.57.04
+
+$ rm -rf /tmp/w && cp -r /app/bh360 /tmp/w -> rc 0 in 0s
+
+$ cd /tmp/w && python plates.py 540 630 /tmp/w/plates --gpu  -> rc 0 in 151s
+SKY_S 7.8
+PLATE_S_PER_FRAME 1.58
+/tmp/w/bh.py:48: RuntimeWarning: overflow encountered in multiply
+  f = lambda u: 3 * u * u - u
+/tmp/w/bh.py:48: RuntimeWarning: invalid value encountered in subtract
+  f = lambda u: 3 * u * u - u
+/tmp/w/bh.py:56: RuntimeWarning: overflow encountered in multiply
+  u = u + dphi / 6 * (k1u + 2 * k2u + 2 * k3u + k4u); w = w + dphi / 6 * (k1w + 2 * k2w + 2 * k3w + k4w)
+
+$ cd /tmp/w && python drive.py 540 630 /tmp/o  -> rc 0 in 64s
+RENDERER ANGLE (NVIDIA, Vulkan 1.4.341 (NVIDIA Tesla T4 (0x00001EB8)), NVIDIA)
+MS_PER_FRAME 588
+
+$ ffmpeg -y -v error -framerate 30 -start_number 540 -i /tmp/o/e%05d.jpg -pix_fmt yuv420p -c -> rc 0 in 6s
+
+$ ffmpeg -y -v error -framerate 30 -start_number 540 -i /tmp/o/d%05d.jpg -pix_fmt yuv420p -c -> rc 0 in 2s
+
+===== chunk 7
+$ nvidia-smi --query-gpu=name,memory.total,driver_version --format=csv,noheader -> rc 0 in 0s
+Tesla T4, 15360 MiB, 580.95.05
+
+$ rm -rf /tmp/w && cp -r /app/bh360 /tmp/w -> rc 0 in 0s
+
+$ cd /tmp/w && python plates.py 630 720 /tmp/w/plates --gpu  -> rc 0 in 181s
+SKY_S 9.3
+PLATE_S_PER_FRAME 1.89
+/tmp/w/bh.py:48: RuntimeWarning: overflow encountered in multiply
+  f = lambda u: 3 * u * u - u
+/tmp/w/bh.py:48: RuntimeWarning: invalid value encountered in subtract
+  f = lambda u: 3 * u * u - u
+/tmp/w/bh.py:56: RuntimeWarning: overflow encountered in multiply
+  u = u + dphi / 6 * (k1u + 2 * k2u + 2 * k3u + k4u); w = w + dphi / 6 * (k1w + 2 * k2w + 2 * k3w + k4w)
+
+$ cd /tmp/w && python drive.py 630 720 /tmp/o  -> rc 0 in 71s
+RENDERER ANGLE (NVIDIA, Vulkan 1.4.312 (NVIDIA Tesla T4 (0x00001EB8)), NVIDIA)
+MS_PER_FRAME 735
+
+$ ffmpeg -y -v error -framerate 30 -start_number 630 -i /tmp/o/e%05d.jpg -pix_fmt yuv420p -c -> rc 0 in 8s
+
+$ ffmpeg -y -v error -framerate 30 -start_number 630 -i /tmp/o/d%05d.jpg -pix_fmt yuv420p -c -> rc 0 in 3s
+
+===== chunk 8
+$ nvidia-smi --query-gpu=name,memory.total,driver_version --format=csv,noheader -> rc 0 in 0s
+Tesla T4, 15360 MiB, 580.95.05
+
+$ rm -rf /tmp/w && cp -r /app/bh360 /tmp/w -> rc 0 in 0s
+
+$ cd /tmp/w && python plates.py 720 810 /tmp/w/plates --gpu  -> rc 0 in 182s
+SKY_S 9.3
+PLATE_S_PER_FRAME 1.9
+/tmp/w/bh.py:48: RuntimeWarning: overflow encountered in multiply
+  f = lambda u: 3 * u * u - u
+/tmp/w/bh.py:48: RuntimeWarning: invalid value encountered in subtract
+  f = lambda u: 3 * u * u - u
+/tmp/w/bh.py:56: RuntimeWarning: overflow encountered in multiply
+  u = u + dphi / 6 * (k1u + 2 * k2u + 2 * k3u + k4u); w = w + dphi / 6 * (k1w + 2 * k2w + 2 * k3w + k4w)
+
+$ cd /tmp/w && python drive.py 720 810 /tmp/o  -> rc 0 in 70s
+RENDERER ANGLE (NVIDIA, Vulkan 1.4.312 (NVIDIA Tesla T4 (0x00001EB8)), NVIDIA)
+MS_PER_FRAME 736
+
+$ ffmpeg -y -v error -framerate 30 -start_number 720 -i /tmp/o/e%05d.jpg -pix_fmt yuv420p -c -> rc 0 in 8s
+
+$ ffmpeg -y -v error -framerate 30 -start_number 720 -i /tmp/o/d%05d.jpg -pix_fmt yuv420p -c -> rc 0 in 3s
+
+===== chunk 9
+$ nvidia-smi --query-gpu=name,memory.total,driver_version --format=csv,noheader -> rc 0 in 0s
+Tesla T4, 15360 MiB, 580.95.05
+
+$ rm -rf /tmp/w && cp -r /app/bh360 /tmp/w -> rc 0 in 0s
+
+$ cd /tmp/w && python plates.py 810 900 /tmp/w/plates --gpu  -> rc 0 in 172s
+SKY_S 11.3
+PLATE_S_PER_FRAME 1.76
+/tmp/w/bh.py:48: RuntimeWarning: overflow encountered in multiply
+  f = lambda u: 3 * u * u - u
+/tmp/w/bh.py:48: RuntimeWarning: invalid value encountered in subtract
+  f = lambda u: 3 * u * u - u
+/tmp/w/bh.py:56: RuntimeWarning: overflow encountered in multiply
+  u = u + dphi / 6 * (k1u + 2 * k2u + 2 * k3u + k4u); w = w + dphi / 6 * (k1w + 2 * k2w + 2 * k3w + k4w)
+
+$ cd /tmp/w && python drive.py 810 900 /tmp/o  -> rc 0 in 67s
+RENDERER ANGLE (NVIDIA, Vulkan 1.4.312 (NVIDIA Tesla T4 (0x00001EB8)), NVIDIA)
+MS_PER_FRAME 689
+
+$ ffmpeg -y -v error -framerate 30 -start_number 810 -i /tmp/o/e%05d.jpg -pix_fmt yuv420p -c -> rc 0 in 7s
+
+$ ffmpeg -y -v error -framerate 30 -start_number 810 -i /tmp/o/d%05d.jpg -pix_fmt yuv420p -c -> rc 0 in 3s
