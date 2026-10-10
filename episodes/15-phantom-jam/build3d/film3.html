@@ -249,7 +249,7 @@ function setBrake(c,f){if(c.tm)c.tm.color.copy(BOFF).lerp(BON,f);c.gm.opacity=f;
 // A: the queue
 const carsA=[];const GAP=2.85,FRONT_S=40+174,NPL=70;
 LANE.forEach(([d],li)=>{for(let i=0;i<NPL;i++){const s0=FRONT_S-(li%2)*0.9-i*GAP;const you=li===1&&i===50;const k=mkCar(you?0xEAA800:PAL[Math.floor(rr2()*PAL.length)]);S.add(k.g);carsA.push({...k,li,i,s0,d,you});}});
-const YOU=carsA.find(c=>c.you);
+const YOU=carsA.find(c=>c.you);for(const c of carsA)c.gm.visible=false; // v3.5: flat brake-glow quads shimmered at the low opening angle
 function placeOnA(c,s){const q=pathA(s,c.d);c.g.position.set(q[0],0,q[1]);c.g.rotation.y=-q[2];c.g.visible=s<LEN_A-20;}
 const pinA=pinSprite();S.add(pinA);
 const qT=ctex(512,512,(g)=>{g.fillStyle='#34495E';g.beginPath();g.arc(256,256,240,0,7);g.fill();g.fillStyle='#fff';g.beginPath();g.arc(256,256,192,0,7);g.fill();g.fillStyle='#34495E';g.font='900 128px "Noto Sans CJK SC"';g.textAlign='center';g.textBaseline='middle';g.fillText('队头',256,232);g.font='700 46px "Noto Sans CJK SC"';g.fillText('K 1.6',256,334);});
@@ -341,6 +341,9 @@ LANE.forEach(([d],li)=>{const gap=li===1?11:8.6;for(let i=0;i<30;i++){const you=
 const YC=carsC.find(c=>c.you);const AHC=carsC.find(c=>c.li===1&&c.i===5);const pinC=pinSprite();S.add(pinC);
 const bumpA=T=>Math.sin(Math.PI*pr(T,114.0,117.4))**2,bumpY=T=>Math.sin(Math.PI*pr(T,114.6,117.8))**2;
 const zYC=t=>YC.z0-VC*Math.max(0,t-TC0)+1.6*bumpY(t);
+// ---- soft blob car shadows above the lane lines (v3.5: hard-edged slivers shimmered in the low opening shot)
+{const st=ctex(128,256,(g)=>{g.clearRect(0,0,128,256);g.filter='blur(13px)';g.fillStyle='#fff';rr(g,26,26,76,204,32);g.fill();});shMat.map=st;shMat.opacity=0.30;shMat.needsUpdate=true;
+ S.traverse(o=>{if(o.isMesh&&o.material===shMat){const sc=(o.parent&&o.parent.scale.y)||1;o.position.y=0.12/sc;o.scale.set(1.35,1,1.18);o.renderOrder=8;}});}
 // ---- HTML pill labels projected from 3D (kept out of the subtitle band)
 const LBS=[];function pill(txt,col,px=40){const d=document.createElement('div');d.textContent=txt;d.style.cssText=`position:absolute;left:0;top:0;transform:translate(-50%,-100%);white-space:nowrap;font-family:'Noto Sans CJK SC';font-weight:900;font-size:${px}px;color:${col};background:rgba(255,255,255,.92);padding:6px 22px 8px;border-radius:999px;box-shadow:0 6px 18px rgba(30,40,50,.12);opacity:0;pointer-events:none`;document.body.insertBefore(d,document.getElementById('sub'));const o={p:new THREE.Vector3(),a:0,el:d};LBS.push(o);return o;}
 const L_slow=pill('就是这一脚刹车','#D7362F',46),L_back=pill('堵车：还在，往后挪','#D7362F',44);

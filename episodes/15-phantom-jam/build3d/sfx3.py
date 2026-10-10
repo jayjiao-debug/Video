@@ -19,8 +19,10 @@ def beep(f1,f2,d,g=1.0):
     for f in (f1,f2):
         for h,a in ((1,1.0),(2,0.18),(3,0.22),(5,0.06)):y+=a*np.sin(2*np.pi*f*h*t*(1+0.0015*np.sin(2*np.pi*5*t)))
     e=np.minimum(1,t/0.006)*np.clip((d+0.035-t)/0.035,0,1);return bp(y*e,150,5000)/4*g
-put(beep(554.4,659.3,0.10),0.00,0.55,-0.35);put(beep(554.4,659.3,0.10),0.16,0.55,-0.35)
-put(beep(370.0,440.0,0.26),0.40,0.50,0.35)
+# v3.5: the sweet spot — a small 1.4 s traffic-jam chorus, louder, still soft-edged
+for t0,f1,f2,d,g,p in [(0.00,554.4,659.3,0.13,1.0,-0.4),(0.20,554.4,659.3,0.13,1.0,-0.4),(0.46,370.0,440.0,0.36,0.9,0.4),
+                       (0.62,440.0,554.4,0.11,0.8,0.0),(0.78,440.0,554.4,0.11,0.8,0.0),(1.02,554.4,659.3,0.30,0.95,-0.4)]:
+    put(beep(f1,f2,d),t0,g*1.45,p)
 def whoosh(d,f0,f1,peak=0.6):
     n=int(SR*d);x=rng.standard_normal(n);t=np.arange(n)/SR;y=np.zeros(n);fc=f0*(f1/f0)**(t/d)
     # time-varying lowpass via one-pole
