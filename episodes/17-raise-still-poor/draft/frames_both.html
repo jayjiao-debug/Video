@@ -1,0 +1,144 @@
+<!doctype html><html><head><meta charset="utf-8"><style>
+*{box-sizing:border-box}
+html,body{margin:0;width:1920px;height:1080px;overflow:hidden;font-family:"Noto Sans CJK SC",sans-serif}
+.f{position:absolute;inset:0;overflow:hidden}
+.mark{position:absolute;left:44px;top:34px;font-size:22px;font-weight:700;letter-spacing:2px;opacity:.55}
+.sub{position:absolute;left:0;right:0;bottom:70px;text-align:center;z-index:20}
+.sub span{display:inline-block;background:rgba(6,8,13,.80);color:#fff;font-size:64px;font-weight:900;padding:10px 34px 14px;border-radius:18px;letter-spacing:1px}
+.sub b{color:#F6CF78}
+.phone{position:absolute;width:480px;height:960px;border-radius:64px;background:#15171c;padding:16px;box-shadow:0 40px 90px rgba(20,25,35,.35)}
+.scr{width:100%;height:100%;border-radius:50px;overflow:hidden;position:relative}
+.sb{display:flex;justify-content:space-between;padding:18px 34px 0;font-size:22px;font-weight:700}
+.tag{position:absolute;font-weight:900}
+/* ---------- salary world: warm paper + bank red + money green ---------- */
+.W{background:radial-gradient(ellipse at 50% 40%,#FBF7EE 0%,#EFE7D6 70%,#E4D9C3 100%);color:#2E2A24}
+.lock{background:linear-gradient(160deg,#3B4A5C,#22303F 60%,#1A2430)}
+.lock .clock{color:#fff;text-align:center;font-size:120px;font-weight:300;margin-top:70px;letter-spacing:2px}
+.lock .date{color:rgba(255,255,255,.8);text-align:center;font-size:26px}
+.noti{margin:48px 18px 0;background:rgba(255,255,255,.93);border-radius:30px;padding:24px 26px;box-shadow:0 10px 30px rgba(0,0,0,.25)}
+.noti .h{display:flex;align-items:center;gap:12px;font-size:21px;color:#6b665e;font-weight:700}
+.noti .ic{width:40px;height:40px;border-radius:10px;background:#C8102E;color:#fff;display:flex;align-items:center;justify-content:center;font-weight:900;font-size:22px}
+.noti .t{font-size:26px;margin-top:12px;line-height:1.45;color:#2e2a24}
+.noti .m{font-size:52px;font-weight:900;color:#C8102E;margin-top:6px}
+.chip{display:inline-block;border-radius:999px;padding:8px 24px;font-weight:900}
+.door{position:absolute;top:120px;width:620px;height:720px;border-radius:28px 28px 8px 8px;background:#FFFDF8;box-shadow:0 30px 70px rgba(60,45,20,.18);border:6px solid #2E2A24}
+.door .lab{position:absolute;top:-62px;left:0;right:0;text-align:center;font-size:52px;font-weight:900}
+.door .bars{position:absolute;bottom:90px;left:0;right:0;display:flex;justify-content:center;align-items:flex-end;gap:70px}
+.bar{width:120px;border-radius:14px 14px 0 0;position:relative}
+.bar .v{position:absolute;top:-64px;left:-40px;right:-40px;text-align:center;font-size:40px;font-weight:900}
+.bar .n{position:absolute;bottom:-56px;left:-40px;right:-40px;text-align:center;font-size:32px;font-weight:700;color:#6b665e}
+.page{background:#fff}
+.slip{position:absolute;top:150px;width:560px;height:620px;background:#FFFDF8;border-radius:18px;box-shadow:0 26px 60px rgba(60,45,20,.18);padding:36px 44px;border-top:16px solid #2F7F5E}
+.slip h3{margin:0;font-size:44px;font-weight:900}.slip .r{display:flex;justify-content:space-between;font-size:34px;margin-top:22px;font-weight:700;color:#4a443c}
+.slip .r b{font-size:40px}
+/* ---------- read-receipt world: cool lilac grey + chat green ---------- */
+.R{background:radial-gradient(ellipse at 50% 40%,#F4F3F8 0%,#E3E1EC 70%,#D3D0E0 100%);color:#232533}
+.chat{background:#EDEDED}
+.chat .top{background:#F7F7F7;padding:16px 0 18px;text-align:center;font-size:28px;font-weight:700;border-bottom:1px solid #ddd}
+.bub{max-width:330px;font-size:30px;padding:18px 24px;border-radius:14px;line-height:1.35;position:relative}
+.me{background:#8EDB6C;margin:0 26px 0 auto}
+.them{background:#fff;margin:0 auto 0 26px}
+.read{text-align:right;margin:10px 30px 0 0;font-size:22px;color:#8a8f98;font-weight:700}
+.av{width:58px;height:58px;border-radius:12px;background:#B9C3D6;display:inline-block}
+.row{display:flex;align-items:flex-start;gap:14px;margin:26px 22px 0}
+.ball{position:absolute;width:56px;height:56px;border-radius:50%;background:#F28C28;box-shadow:0 8px 18px rgba(0,0,0,.18)}
+.fig{position:absolute;width:120px}
+.fig .hd{width:96px;height:96px;border-radius:50%;margin:0 auto}
+.fig .bd{width:120px;height:150px;border-radius:60px 60px 18px 18px;margin-top:10px}
+.opt{position:absolute;font-size:40px;font-weight:900;padding:18px 40px;border-radius:999px;background:#fff;box-shadow:0 12px 30px rgba(40,40,70,.16)}
+.timer{position:absolute;font-size:120px;font-weight:900;letter-spacing:4px}
+</style></head><body>
+<div id="root"></div>
+<script>
+const P=(x,y,inner,scr='')=>`<div class="phone" style="left:${x}px;top:${y}px"><div class="scr ${scr}">${inner}</div></div>`;
+const sub=t=>`<div class="sub"><span>${t.replace(/\[(.+?)\]/g,'<b>$1</b>')}</span></div>`;
+const mark=c=>`<div class="mark" style="color:${c}">◆ Juno · VIBE知识大赏</div>`;
+const F={
+// ===================== 工资 =====================
+W1:()=>`<div class="f W">${mark('#2E2A24')}
+ ${P(720,60,`<div class="sb" style="color:#fff"><span>9:41</span><span>5G ▮▮▮</span></div><div class="clock">9:41</div><div class="date">10月10日 星期五</div>
+  <div class="noti"><div class="h"><div class="ic">银</div>某某银行 · 现在</div><div class="t">您尾号8826的账户<br>工资收入</div><div class="m">¥9,800.00</div></div>`,'lock')}
+ <div class="tag chip" style="left:1250px;top:370px;background:#2F7F5E;color:#fff;font-size:46px;transform:rotate(-4deg)">比去年 +1,200</div>
+ <div class="tag" style="left:330px;top:300px;font-size:150px;color:#C8102E;opacity:.12">¥</div>
+ ${sub('涨薪了，每月多了[1200]')}</div>`,
+W2:()=>`<div class="f W">${mark('#2E2A24')}
+ <div class="door" style="left:240px"><div class="lab">A</div><div class="bars">
+   <div class="bar" style="height:250px;background:#2F7F5E"><div class="v">5万</div><div class="n">你</div></div>
+   <div class="bar" style="height:125px;background:#BDB4A3"><div class="v">2.5万</div><div class="n">别人</div></div></div></div>
+ <div class="door" style="left:1060px"><div class="lab">B</div><div class="bars">
+   <div class="bar" style="height:250px;background:#2F7F5E"><div class="v">10万</div><div class="n">你</div></div>
+   <div class="bar" style="height:500px;background:#BDB4A3"><div class="v">20万</div><div class="n">别人</div></div></div></div>
+ <div class="tag" style="left:900px;top:430px;font-size:80px;font-weight:900;color:#C8102E">?</div>
+ <div class="tag chip" style="left:330px;top:210px;background:#C8102E;color:#fff;font-size:40px">约一半的人选这里</div>
+ ${sub('可大约[一半的人]选了 A')}</div>`,
+W3:()=>{let rows='';const names=['周 · 研究员','李 · 讲师','郑 · 辅导员','王 · 实验员','吴 · 技术员','孙 · 图书管理','陈 · 行政'];const sal=['$72,300','$61,900','$52,600','$48,200','$44,800','$41,700','$39,400'];
+ names.forEach((n,i)=>{const low=i>=4;if(i==4)rows+='<div style="border-top:5px dashed #C8102E;margin:2px 0"></div>';rows+=`<div style="display:flex;justify-content:space-between;padding:16px 26px;font-size:26px;border-bottom:1px solid #eee;${low?'background:#F6E3E3;color:#8a2d2d':''}"><span>${n}</span><b>${sal[i]}</b></div>`;});
+ return `<div class="f W">${mark('#2E2A24')}
+ ${P(720,60,`<div class="sb"><span>9:41</span><span>5G ▮▮▮</span></div><div style="padding:24px 26px 10px;font-size:20px;color:#888;font-weight:700">某某报 · 2008</div>
+  <div style="padding:0 26px;font-size:36px;font-weight:900;line-height:1.3">本州公职人员工资<br>全部可查</div>
+  <div style="margin:20px 26px;border:3px solid #2E2A24;border-radius:14px;padding:14px 18px;font-size:26px">🔍 输入同事名字…<span style="border-left:3px solid #C8102E;margin-left:4px"></span></div>${rows}
+`,'page')}
+ <div class="tag chip" style="left:1250px;top:560px;background:#C8102E;color:#fff;font-size:40px">中位数</div>
+ <div class="tag" style="left:1250px;top:660px;font-size:38px;font-weight:900;color:#8a2d2d">低于它的人：<br>更想跳槽</div>
+ ${sub('发现自己[低于中位数]的人')}</div>`},
+W4:()=>`<div class="f W">${mark('#2E2A24')}
+ <div class="slip" style="left:300px"><h3>小A 的工资条</h3><div class="r"><span>涨薪</span><b style="color:#2F7F5E">+2%</b></div><div class="r"><span>物价</span><b>不变</b></div>
+  <div style="font-size:120px;margin-top:40px;text-align:center">🛒</div><div style="text-align:center;font-size:30px;color:#2F7F5E;font-weight:900">能多买 2%</div></div>
+ <div class="slip" style="left:1060px"><h3>小B 的工资条</h3><div class="r"><span>涨薪</span><b style="color:#2F7F5E">+5%</b></div><div class="r"><span>物价</span><b style="color:#C8102E">+4%</b></div>
+  <div style="font-size:120px;margin-top:40px;text-align:center">🛒</div><div style="text-align:center;font-size:30px;color:#8a7f70;font-weight:900">只多买 1%</div></div>
+ <div class="tag chip" style="left:1180px;top:80px;background:#F6CF78;color:#2E2A24;font-size:40px">😊 大多数人觉得他更开心</div>
+ ${sub('大多数人说：[小B]')}</div>`,
+W5:()=>`<div class="f W" style="background:radial-gradient(ellipse at 50% 30%,#FFF6DF 0%,#F2E3C2 60%,#E2CDA2 100%)">${mark('#2E2A24')}
+ ${P(720,60,`<div class="sb" style="color:#fff"><span>9:41</span><span>5G ▮▮▮</span></div><div class="clock">9:41</div><div class="date">10月13日 星期一</div>
+  <div class="noti"><div class="h"><div class="ic">银</div>某某银行</div><div class="t">您尾号8826的账户<br>工资收入</div><div class="m">¥9,800.00</div></div>`,'lock')}
+ <div class="tag chip" style="left:300px;top:260px;background:#fff;font-size:40px;box-shadow:0 10px 26px rgba(0,0,0,.12)">🧳 一次周末旅行</div>
+ <div class="tag chip" style="left:260px;top:420px;background:#fff;font-size:40px;box-shadow:0 10px 26px rgba(0,0,0,.12)">📚 一门课</div>
+ <div class="tag chip" style="left:1260px;top:330px;background:#fff;font-size:40px;box-shadow:0 10px 26px rgba(0,0,0,.12)">💰 存下 14,400 / 年</div>
+ ${sub('先看看：它能让你[多做点什么]')}</div>`,
+// ===================== 已读不回 =====================
+R1:()=>`<div class="f R">${mark('#232533')}
+ ${P(720,60,`<div class="sb"><span>21:07</span><span>5G ▮▮▮</span></div><div class="top">小林</div>
+  <div style="text-align:center;font-size:20px;color:#999;margin:26px 0 10px">20:41</div>
+  <div class="row" style="justify-content:flex-end"><div class="bub me">在吗？明天有空吗</div><div class="av" style="background:#F2C46B"></div></div>
+  <div class="read" style="font-size:30px;color:#3b4050">已读</div>
+  <div style="position:absolute;bottom:0;left:0;right:0;height:96px;background:#F7F7F7;border-top:1px solid #ddd;display:flex;align-items:center;padding:0 22px"><div style="flex:1;height:58px;background:#fff;border-radius:10px"></div></div>`,'chat')}
+ <div class="timer" style="left:1270px;top:250px;color:#232533">2:26:00</div><div class="tag" style="left:1278px;top:400px;font-size:36px;color:#6b6f80;font-weight:700">已经过去了</div>
+ <div class="tag chip" style="left:330px;top:250px;background:#232533;color:#fff;font-size:48px">已读</div><svg style="position:absolute;left:0;top:0" width="1920" height="1080"><path d="M520 290 C 640 290 700 290 860 262" fill="none" stroke="#232533" stroke-width="6" stroke-linecap="round"/><path d="M842 246 L 866 262 L 840 280" fill="none" stroke="#232533" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+ ${sub('显示：[已读]')}</div>`,
+R2:()=>{const fig=(x,y,c,arm)=>`<div class="fig" style="left:${x}px;top:${y}px"><div class="hd" style="background:${c}"></div><div class="bd" style="background:${c}"></div>${arm?'<div style="position:absolute;top:110px;left:-30px;width:180px;height:16px;background:'+c+';border-radius:8px;transform:rotate(-20deg)"></div>':''}</div>`;
+ return `<div class="f R">${mark('#232533')}
+ <div style="position:absolute;left:360px;top:110px;width:1200px;height:760px;border-radius:30px;background:#fff;box-shadow:0 30px 80px rgba(40,40,70,.18)"></div>
+ ${fig(520,250,'#8E9BB8')}${fig(1280,250,'#8E9BB8')}${fig(900,560,'#F2C46B',true)}
+ <svg style="position:absolute;left:0;top:0" width="1920" height="1080"><path d="M640 300 Q 960 120 1280 300" fill="none" stroke="#F28C28" stroke-width="6" stroke-dasharray="14 14"/><path d="M640 330 Q 960 190 1280 330" fill="none" stroke="#F28C28" stroke-width="4" stroke-dasharray="10 16" opacity=".45"/></svg>
+ <div class="ball" style="left:930px;top:178px"></div>
+ <div class="tag" style="left:930px;top:820px;font-size:34px;font-weight:900;color:#B07A10">你</div>
+ <div class="tag chip" style="left:1300px;top:150px;background:#232533;color:#fff;font-size:30px">对方是电脑程序</div>
+ ${sub('另外两个人，[不再抛给你]')}</div>`},
+R3:()=>`<div class="f R">${mark('#232533')}
+ ${P(720,60,`<div class="sb"><span>23:40</span><span>5G ▮▮▮</span></div><div class="top">小林</div>
+  <div class="row" style="justify-content:flex-end;margin-top:60px"><div class="bub me">在吗？明天有空吗</div><div class="av" style="background:#F2C46B"></div></div><div class="read" style="font-size:26px">已读</div>`,'chat')}
+ <div class="opt" style="left:250px;top:250px;color:#8a2d2d">他不想理我？</div>
+ <div class="opt" style="left:1290px;top:250px;color:#2F6FC0">他只是在忙？</div>
+ <div style="position:absolute;left:250px;top:560px;width:390px;height:34px;border-radius:17px;background:#fff;box-shadow:0 8px 20px rgba(40,40,70,.12)"><div style="width:50%;height:100%;border-radius:17px;background:#E8413C"></div></div>
+ <div class="tag" style="left:250px;top:610px;font-size:40px;font-weight:900;color:#E8413C">也许会 · 50%</div>
+ <svg style="position:absolute;left:1270px;top:520px" width="420" height="180"><polyline points="0,90 40,90 60,20 80,160 100,40 120,140 140,70 170,120 200,30 230,150 260,80 300,90 420,90" fill="none" stroke="#E8413C" stroke-width="7" stroke-linejoin="round"/></svg>
+ <div class="tag" style="left:1300px;top:710px;font-size:34px;font-weight:700;color:#6b6f80">心跳：最乱的时候</div>
+ ${sub('已读不回，就是那个[50%]')}</div>`,
+R4:()=>`<div class="f R">${mark('#232533')}
+ <div style="position:absolute;left:960px;top:0;bottom:0;width:4px;background:#232533;opacity:.15"></div>
+ <div class="tag" style="left:330px;top:90px;font-size:40px;font-weight:900">你这边</div><div class="tag" style="left:1330px;top:90px;font-size:40px;font-weight:900">他那边</div>
+ <div class="timer" style="left:220px;top:300px;color:#E8413C">02:00:00</div><div class="tag" style="left:230px;top:450px;font-size:38px;font-weight:700;color:#6b6f80">"怎么还不回？"</div>
+ ${P(1240,150,`<div class="sb"><span>18:25</span><span>5G ▮▮▮</span></div><div class="top">微信 (99+)</div>
+  ${['工作群 · [23条]','家人群 · [12条]','快递 · 您的包裹已到','同学群 · [41条]','你 · 在吗？明天有空吗','公众号 · 今日推荐'].map((t,i)=>`<div style="display:flex;gap:16px;align-items:center;padding:18px 22px;border-bottom:1px solid #e5e5e5;background:${i==4?'#FFF6D6':'#fff'}"><div class="av" style="background:${i==4?'#F2C46B':'#C9CFDA'}"></div><div style="font-size:24px;${i==4?'font-weight:900':''}">${t}</div></div>`).join('')}`,'chat')}
+ <div class="tag chip" style="left:1020px;top:640px;background:#2F6FC0;color:#fff;font-size:34px;transform:rotate(-3deg)">"不急，晚点回"</div>
+ ${sub('收消息的人觉得：[不急]')}</div>`,
+R5:()=>`<div class="f R" style="background:radial-gradient(ellipse at 50% 35%,#FFF4E2 0%,#EEDDC6 60%,#D9C3A6 100%)">${mark('#3a2e22')}
+ ${P(720,60,`<div class="sb"><span>08:12</span><span>5G ▮▮▮</span></div><div class="top">小林</div>
+  <div class="row" style="justify-content:flex-end;margin-top:40px"><div class="bub me">在吗？明天有空吗</div><div class="av" style="background:#F2C46B"></div></div><div class="read" style="font-size:26px">已读</div>
+  <div class="row" style="margin-top:34px"><div class="av"></div><div class="bub them">明天可以呀 😊<br>昨晚加班才看到</div></div>`,'chat')}
+ <div class="tag" style="left:300px;top:380px;font-size:46px;font-weight:900;color:#7a5a30;line-height:1.5">他只是<br>还没来得及</div>
+ ${sub('只是，[还不知道而已]')}</div>`,
+};
+const id=new URLSearchParams(location.search).get('f');document.getElementById('root').innerHTML=F[id]();
+document.fonts.ready.then(()=>{window.READY=true});
+</script></body></html>

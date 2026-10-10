@@ -1,0 +1,66 @@
+<!doctype html><html><head><meta charset="utf-8"><style>
+*{box-sizing:border-box}
+html,body{margin:0;width:1920px;height:1080px;overflow:hidden;font-family:"Noto Sans CJK SC",sans-serif}
+#bg,#world,#ovl{position:absolute;inset:0}
+.sc{position:absolute;inset:0;will-change:transform}
+.mark{position:absolute;left:44px;top:34px;font-size:22px;font-weight:700;letter-spacing:2px;opacity:.55;z-index:30}
+#sub{position:absolute;left:0;right:0;bottom:70px;text-align:center;z-index:40}
+#sub span{display:inline-block;background:rgba(6,8,13,.80);color:#fff;font-size:64px;font-weight:900;padding:10px 34px 14px;border-radius:18px;letter-spacing:1px}
+#sub b{color:#F6CF78}
+.phone{position:absolute;width:480px;height:960px;border-radius:64px;background:#15171c;padding:16px;box-shadow:0 40px 90px rgba(20,25,35,.35)}
+.scr{width:100%;height:100%;border-radius:50px;overflow:hidden;position:relative}
+.sb{display:flex;justify-content:space-between;padding:18px 34px 0;font-size:22px;font-weight:700}
+.tag{position:absolute;font-weight:900}
+.chip{display:inline-block;border-radius:999px;padding:8px 24px;font-weight:900;white-space:nowrap}
+.lock{background:linear-gradient(160deg,#3B4A5C,#22303F 60%,#1A2430)}
+.lock .clock{color:#fff;text-align:center;font-size:120px;font-weight:300;margin-top:70px;letter-spacing:2px}
+.lock .date{color:rgba(255,255,255,.8);text-align:center;font-size:26px}
+.noti{margin:48px 18px 0;background:rgba(255,255,255,.93);border-radius:30px;padding:24px 26px;box-shadow:0 10px 30px rgba(0,0,0,.25)}
+.noti .h{display:flex;align-items:center;gap:12px;font-size:21px;color:#6b665e;font-weight:700}
+.noti .ic{width:40px;height:40px;border-radius:10px;background:#C8102E;color:#fff;display:flex;align-items:center;justify-content:center;font-weight:900;font-size:22px}
+.noti .t{font-size:26px;margin-top:12px;line-height:1.45;color:#2e2a24}
+.noti .m{font-size:52px;font-weight:900;color:#C8102E;margin-top:6px}
+.chat{background:#EDEDED}
+.chat .top{background:#F7F7F7;padding:16px 0 18px;text-align:center;font-size:28px;font-weight:700;border-bottom:1px solid #ddd}
+.bub{max-width:330px;font-size:30px;padding:18px 24px;border-radius:14px;line-height:1.35;position:relative}
+.me{background:#8EDB6C;margin:0 26px 0 auto}
+.them{background:#fff;margin:0 auto 0 26px}
+.read{text-align:right;margin:10px 30px 0 0;font-size:26px;color:#5b6070;font-weight:700}
+.av{width:58px;height:58px;border-radius:12px;background:#B9C3D6;display:inline-block;flex:none}
+.row{display:flex;align-items:flex-start;gap:14px;margin:26px 22px 0}
+/* title plaque + end card */
+#plaque{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;opacity:0;z-index:35;pointer-events:none}
+#plaque .p{position:relative;background:#FFFDF8;border-radius:22px;padding:52px 110px 44px;text-align:center;box-shadow:0 22px 60px rgba(30,30,40,.25)}
+#plaque .p:after{content:"";position:absolute;inset:12px;border:4px solid var(--acc);border-radius:13px}
+#plaque .bar{width:70px;height:10px;margin:0 auto 22px;border-radius:5px;background:var(--acc)}
+#plaque .a{font-size:110px;font-weight:900;letter-spacing:10px;line-height:1.15;color:#22252e}
+#plaque .b{font-size:30px;letter-spacing:8px;margin-top:16px;color:#6b6f78;font-family:"Noto Serif SC",Georgia,serif}
+#end{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;opacity:0;z-index:50;color:#22252e}
+#end .j{width:150px;height:150px;border:4px solid #22252e;border-radius:50%;font-size:96px;line-height:146px;text-align:center;font-weight:900;margin-bottom:30px;background:#fff}
+#end .t{font-size:76px;font-weight:900;letter-spacing:12px}
+#end .q{font-size:44px;margin-top:30px;font-weight:700}
+#end .f{margin-top:36px;border:3px solid var(--acc);border-radius:44px;padding:12px 44px;font-size:32px;color:var(--acc);font-weight:700;background:#fff}
+#end .s{position:absolute;bottom:40px;color:#7d808a;font-size:19px;text-align:center;line-height:1.6}
+</style></head><body>
+<div id="bg"></div><div id="world"></div><div id="ovl"></div>
+<div class="mark" id="mark">◆ Juno · VIBE知识大赏</div>
+<div id="plaque"><div class="p"><div class="bar"></div><div class="a" id="pa"></div><div class="b" id="pb"></div></div></div>
+<div id="end"><div class="j">J</div><div class="t" id="et"></div><div class="q" id="eq"></div><div class="f">关注 Juno · 一起看懂世界</div><div class="s" id="es"></div></div>
+<div id="sub"></div>
+<script>
+const cl=(x,a=0,b=1)=>Math.max(a,Math.min(b,x)),pr=(t,a,b)=>cl((t-a)/(b-a)),eo=x=>1-Math.pow(1-x,3),eio=x=>x<.5?4*x*x*x:1-Math.pow(-2*x+2,3)/2,sst=x=>x*x*(3-2*x),lerp=(a,b,f)=>a+(b-a)*f;
+const pop=(T,t0,d=0.35)=>{const k=pr(T,t0,t0+d);return k<=0?0:(k>=1?1:eo(k)*(1+0.15*Math.sin(Math.PI*k)));};
+const $=id=>document.getElementById(id);
+const P=(x,y,inner,scr='',st='')=>`<div class="phone" style="left:${x}px;top:${y}px;${st}"><div class="scr ${scr}">${inner}</div></div>`;
+const vis=(T,t0,d=0.3)=>pr(T,t0,t0+d);
+window.FILM=null;
+window.renderAt=function(T){const F=window.FILM;$('bg').style.background=F.bg(T);let h='';
+ for(const s of F.scenes){const [a,b]=s.w;if(T<a-0.45||T>b+0.45)continue;const e=a<=0?1:eio(pr(T,a-0.45,a+0.45)),x=b>=999?0:eio(pr(T,b-0.45,b+0.45));
+  const dx=(1-e)*620-x*620,zs=1+0.035*sst(pr(T,a,Math.min(b,a+30)));h+=`<div class="sc" style="transform:translateX(${dx}px) scale(${zs});opacity:${e*(1-x)}">${s.f(T)}</div>`;}
+ $('world').innerHTML=h;$('ovl').innerHTML=F.ovl?F.ovl(T):'';
+ const L=F.lines.find(l=>T>=l[0]&&T<l[1]);$('sub').innerHTML=L&&T<125.4?'<span>'+L[2].replace(/\[(.+?)\]/g,'<b>$1</b>')+'</span>':'';
+ $('plaque').style.opacity=pr(T,16.58,16.9)*(1-pr(T,20.2,20.8));$('plaque').style.transform=`scale(${1.06-0.06*eo(pr(T,16.58,17.3))})`;
+ $('end').style.opacity=pr(T,125.4,126.4);$('end').style.background=F.endBg;
+};
+</script>
+</body></html>
