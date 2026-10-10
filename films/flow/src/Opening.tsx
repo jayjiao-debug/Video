@@ -21,9 +21,11 @@ const easeInOut = (x: number) => (x < 0.5 ? 4 * x * x * x : 1 - Math.pow(-2 * x 
 const lerp = (a: number, b: number, k: number) => a + (b - a) * k;
 
 /* ---------------------------------------------------------------- the shots */
-// 13 makes, accelerating, deliberately not on the beat grid (a time-lapse of one quarter, not a metronome)
-const MAKES = [0.75, 1.62, 2.38, 3.02, 3.58, 4.06, 4.47, 4.84, 5.17, 5.47, 5.76, 6.03, 6.3];
-const FLIGHT = 0.62; // seconds of arc we see before the ball reaches the rim
+// 13 makes. The first swish lands on the track's first accent (0.334 s: frame 0 is already mid-flight), the big ones on
+// the strong accents (marked *), the rest in between, off the grid, so the montage accelerates without a metronome.
+const MAKES = [0.334, 1.05, 1.62, 2.369, 2.877, 3.33, 3.895, 4.404, 4.86, 5.3, 5.93, 6.439, 6.947];
+const ACCENT = new Set([0, 3, 4, 6, 7, 10, 11, 12]);
+const flightOf = (i: number) => (i === 0 ? 0.9 : Math.max(0.6, MAKES[i] - MAKES[i - 1] + 0.15));
 const RIM = new THREE.Vector3(0, 3.05, 0);
 const shotFrom = (i: number) => {
   const s = Math.sin(i * 12.9898) * 43758.5453, r = s - Math.floor(s);
@@ -32,12 +34,12 @@ const shotFrom = (i: number) => {
 };
 /** ball position for make i at time T (null when not on screen) */
 function ballAt(i: number, T: number): THREE.Vector3 | null {
-  const tm = MAKES[i], t0 = tm - FLIGHT;
+  const tm = MAKES[i], FLIGHT = flightOf(i), t0 = tm - FLIGHT;
   if (T < t0 || T > tm + 0.9) return null;
   if (T <= tm) { // arc into the rim
     const u = (T - t0) / FLIGHT, p0 = shotFrom(i);
     const p = p0.clone().lerp(RIM.clone().add(new THREE.Vector3(0, 0.05, 0)), u);
-    p.y += Math.sin(Math.PI * u) * 1.3 * (1 - u * 0.3);
+    p.y += Math.sin(Math.PI * u) * (1.0 + 0.5 * FLIGHT) * (1 - u * 0.3);
     return p;
   }
   const d = T - tm; // through the net and down
@@ -84,6 +86,40 @@ const boardTex = (clock: string, fg: number, pts: number) => canvasTex(1024, 384
   g.shadowBlur = 0; g.font = '700 34px "Noto Sans CJK SC", sans-serif'; g.fillStyle = 'rgba(243,237,226,0.6)'; g.textAlign = 'left'; g.fillText('投篮', 74, 262); g.textAlign = 'right'; g.fillText('得分', 950, 262);
 });
 
+/* ---------------------------------------------------------------- the montage camera */
+const CUT = 0.06; // cut this long after each swish, so the hit frames are seen
+const ANG = ['B', 'C', 'D', 'E', 'B', 'C', 'D', 'B', 'C', 'D', 'B', 'E'];
+const ANGLES: Record<string, { pos: [number, number, number]; look: [number, number, number]; fov: number; push: [number, number, number] }> = {
+  B: { pos: [0.35, 1.05, 1.5], look: [0, 3.15, -0.05], fov: 58, push: [0, 0.15, -0.25] }, // under the rim, looking up through the net
+  C: { pos: [3.1, 3.05, 0.5], look: [0, 3.0, 0.05], fov: 34, push: [-0.35, 0, 0] }, // side profile, long lens
+  D: { pos: [0.15, 5.4, 0.55], look: [0, 3.0, 0.0], fov: 48, push: [0, -0.3, 0] }, // from above: the ball drops through the ring
+  E: { pos: [0.6, 2.2, 7.2], look: [0, 3.0, 0], fov: 30, push: [0, 0.05, -0.5] }, // front, wide: the arena and the stands
+};
+const shakeAt = (T: number) => { let k = 0; MAKES.forEach((m, i) => { const d = T - m; if (d >= 0 && d < 0.14) k = Math.max(k, (ACCENT.has(i) ? 1 : 0.35) * (1 - d / 0.14)); }); return k; };
+function camAt(T: number) {
+  const sh = shakeAt(T), j = new THREE.Vector3(Math.sin(T * 97) * 0.035 * sh, Math.cos(T * 83) * 0.03 * sh, 0);
+  const shot = MAKES.filter((m) => T >= m + CUT).length; // 0 = ball-cam, 1..12 = montage, 13 = after the last make
+  if (shot === 0) {
+    const p = ballAt(0, T) || RIM.clone(), q = ballAt(0, Math.max(0, T - 0.05)) || p;
+    const back = p.clone().sub(q); if (back.lengthSq() < 1e-6) back.set(0, 0, -1); back.normalize();
+    return { pos: p.clone().sub(back.multiplyScalar(0.75)).add(new THREE.Vector3(0.05, 0.16, 0)).add(j), look: RIM.clone(), fov: 64 };
+  }
+  if (shot <= 12) {
+    const A = ANGLES[ANG[shot - 1]], t0 = MAKES[shot - 1] + CUT, t1 = MAKES[shot] + CUT, u = clamp((T - t0) / (t1 - t0));
+    const pos = new THREE.Vector3(...A.pos).add(new THREE.Vector3(...A.push).multiplyScalar(u)).add(j);
+    return { pos, look: new THREE.Vector3(...A.look), fov: A.fov };
+  }
+  // after the 13th make: from the front angle, accelerate into the rim and on through the tunnel
+  const E = ANGLES.E, t0 = MAKES[12] + CUT, dive = prog(T, t0 + 0.35, TITLE);
+  let pos = new THREE.Vector3(...E.pos).add(new THREE.Vector3(...E.push));
+  if (T > t0 + 0.35) { const k = Math.pow(dive, 2.2); pos = new THREE.Vector3(lerp(pos.x, 0, easeOut(dive)), lerp(pos.y, 3.05, easeOut(dive)), lerp(pos.z, 0, k)); }
+  if (T > TITLE) { const d = T - TITLE; pos = new THREE.Vector3(0, 3.05, -(7.06 / 0.55) * (1 - Math.exp(-0.55 * d))); }
+  const look = new THREE.Vector3(0, 3.0, 0).lerp(new THREE.Vector3(0, 3.05, -60), easeInOut(prog(T, 7.5, TITLE)));
+  if (T > TITLE) look.set(0, 3.05, pos.z - 60);
+  const ts = T > TITLE && T < TITLE + 0.12 ? 0.03 * Math.sin((T - TITLE) * 120) : 0;
+  return { pos: pos.add(new THREE.Vector3(ts, ts * 0.6, 0)).add(j), look, fov: lerp(E.fov, 62, easeInOut(prog(T, 7.3, TITLE + 0.3))) };
+}
+
 /* ---------------------------------------------------------------- the arena (three.js) */
 const additive = (m: THREE.Material) => { m.transparent = true; m.depthWrite = false; m.blending = THREE.AdditiveBlending; return m; };
 
@@ -110,19 +146,12 @@ const Arena: React.FC<{ T: number }> = ({ T }) => {
     for (let s = 0; s < 12; s++) for (let l = 0; l < 5; l++) { for (const [a, b] of [[P(s, l), P(s, l + 1)], [P(s + 1, l), P(s, l + 1)]]) { arr.set(a, o); arr.set(b, o + 3); o += 6; } }
     net.attributes.position.needsUpdate = true;
   }
-  // camera: slow push, then accelerate into the rim, through it, and on down the tunnel
-  const a = easeInOut(prog(T, 0, 6.6)), dive = prog(T, 6.6, TITLE);
-  let z = lerp(10.5, 6.2, a), y = lerp(1.45, 2.35, a), x = lerp(0.9, 0.25, a);
-  if (T > 6.6) { const k = Math.pow(dive, 2.2); z = lerp(6.2, 0, k); y = lerp(2.35, 3.05, easeOut(dive)); x = lerp(0.25, 0, easeOut(dive)); }
-  if (T > TITLE) { const d = T - TITLE; z = -(7.06 / 0.55) * (1 - Math.exp(-0.55 * d)); y = 3.05; x = 0; }
-  const shake = T > TITLE && T < TITLE + 0.12 ? 0.03 * Math.sin((T - TITLE) * 120) : 0;
-  camera.position.set(x + shake, y + shake * 0.6, z);
-  const look = new THREE.Vector3(0, 3.0, 0).lerp(new THREE.Vector3(0, 3.05, -60), easeInOut(prog(T, 7.2, TITLE)));
-  if (T > TITLE) look.set(0, 3.05, z - 60);
-  camera.lookAt(look);
-  (camera as THREE.PerspectiveCamera).fov = lerp(42, 62, easeInOut(prog(T, 6.9, TITLE + 0.3))); (camera as THREE.PerspectiveCamera).updateProjectionMatrix();
+  // camera: a montage cut on every make (ball-cam first), then from the wide front angle a dive into the rim and down the tunnel
+  const cam = camAt(T);
+  camera.position.copy(cam.pos); camera.lookAt(cam.look);
+  (camera as THREE.PerspectiveCamera).fov = cam.fov; (camera as THREE.PerspectiveCamera).updateProjectionMatrix();
 
-  const arenaO = 1 - prog(T, 7.7, TITLE - 0.05); // the arena dissolves as the tunnel forms
+  const arenaO = 1 - prog(T, 7.75, TITLE - 0.05); // the arena dissolves as the tunnel forms
   const tunnelO = prog(T, 7.3, TITLE);
   const clockS = Math.max(0, 720 * (1 - prog(T, 0.4, 6.55)));
   const fg = MAKES.filter((m) => T >= m).length;
@@ -151,7 +180,7 @@ const Arena: React.FC<{ T: number }> = ({ T }) => {
         {/* net */}
         <lineSegments geometry={net}><lineBasicMaterial color="#f2efe8" transparent opacity={0.9 * arenaO} /></lineSegments>
         {/* scoreboard hanging behind */}
-        <mesh position={[0, 7.4, -7]}><planeGeometry args={[4.2, 1.575]} /><meshBasicMaterial map={board} transparent opacity={arenaO} toneMapped={false} /></mesh>
+        <mesh visible={false} position={[0, 7.4, -7]}><planeGeometry args={[4.2, 1.575]} /><meshBasicMaterial map={board} transparent opacity={arenaO} toneMapped={false} /></mesh>
         {/* crowd lights */}
         <points>
           <bufferGeometry><bufferAttribute attach="attributes-position" args={[crowd.pos, 3]} /><bufferAttribute attach="attributes-color" args={[crowd.col, 3]} /></bufferGeometry>
@@ -163,10 +192,15 @@ const Arena: React.FC<{ T: number }> = ({ T }) => {
             <spriteMaterial map={tex.bokeh} color="#ffe2b0" transparent opacity={0.8 * arenaO} blending={THREE.AdditiveBlending} depthWrite={false} />
           </sprite>))}
         {/* a few camera flashes in the stands on the makes */}
-        {MAKES.map((m, i) => (T >= m && T < m + 0.08 ? (
-          <sprite key={i} position={[((i * 7.3) % 24) - 12, 4 + ((i * 3.1) % 7), -14 - ((i * 5.7) % 8)]} scale={[1.6, 1.6, 1]}>
-            <spriteMaterial map={tex.bokeh} color="#ffffff" transparent opacity={arenaO} blending={THREE.AdditiveBlending} depthWrite={false} />
-          </sprite>) : null))}
+        {MAKES.flatMap((m, i) => Array.from({ length: ACCENT.has(i) ? 9 : 3 }, (_, k) => { const d = T - m - k * 0.03; return d >= 0 && d < 0.09 ? (
+          <sprite key={i + '-' + k} position={[(((i * 7.3 + k * 5.1) % 30) - 15), 3 + ((i * 3.1 + k * 2.3) % 9), -12 - ((i * 5.7 + k * 3.3) % 12)]} scale={[1.8, 1.8, 1]}>
+            <spriteMaterial map={tex.bokeh} color="#ffffff" transparent opacity={arenaO * (1 - d / 0.09)} blending={THREE.AdditiveBlending} depthWrite={false} />
+          </sprite>) : null; }))}
+        {/* burst of light at the rim on every make */}
+        {MAKES.map((m, i) => { const d = T - m; return d >= 0 && d < 0.3 ? (
+          <sprite key={'b' + i} position={[0, 2.95, 0.02]} scale={[(ACCENT.has(i) ? 2.4 : 1.4) * (0.6 + d * 3), (ACCENT.has(i) ? 2.4 : 1.4) * (0.6 + d * 3), 1]}>
+            <spriteMaterial map={tex.bokeh} color="#ffd89a" transparent opacity={arenaO * (1 - d / 0.3) * 0.9} blending={THREE.AdditiveBlending} depthWrite={false} />
+          </sprite>) : null; })}
         {/* balls */}
         {MAKES.map((_, i) => { const p = ballAt(i, T); return p ? (
           <mesh key={i} position={p} rotation={[T * 9 + i, T * 3, 0]}><sphereGeometry args={[0.12, 40, 28]} /><meshStandardMaterial map={tex.ball} roughness={0.75} transparent opacity={arenaO} /></mesh>) : null; })}
@@ -269,10 +303,47 @@ const TitleCard: React.FC<{ T: number }> = ({ T }) => {
   );
 };
 
+/** the shot counter, top centre: slams in on every make, harder on the accents */
+const Counter: React.FC<{ T: number }> = ({ T }) => {
+  const n = MAKES.filter((m) => T >= m).length; if (!n) return null;
+  const last = MAKES[n - 1], d = T - last, big = ACCENT.has(n - 1);
+  const sc = 1 + (big ? 0.55 : 0.25) * Math.exp(-d / 0.07);
+  const out = 1 - prog(T, 6.95, 7.1);
+  const clockS = Math.max(0, 720 * (1 - prog(T, 0.2, MAKES[12])));
+  return (
+    <div style={{ position: 'absolute', left: 0, right: 0, top: 70, textAlign: 'center', opacity: out }}>
+      <div style={{ fontFamily: font.sans, fontWeight: 700, fontSize: 26, letterSpacing: '0.5em', color: 'rgba(243,237,226,0.7)' }}>第三节 · 投篮</div>
+      <div style={{ display: 'inline-block', transform: `scale(${sc})`, fontFamily: 'JunoMono, monospace', fontWeight: 700, fontSize: 112, lineHeight: 1.05, color: n === 13 ? GOLD : INK,
+        textShadow: `0 0 ${big ? 40 : 20}px rgba(241,197,109,${0.35 + 0.4 * Math.exp(-d / 0.1)})` }}>{n}<span style={{ fontSize: 56, color: 'rgba(243,237,226,0.55)' }}>/13</span></div>
+      <div style={{ fontFamily: 'JunoMono, monospace', fontWeight: 700, fontSize: 30, color: '#ff7a4a', letterSpacing: '0.12em' }}>{Math.floor(clockS / 60)}:{String(Math.floor(clockS % 60)).padStart(2, '0')}</div>
+    </div>
+  );
+};
+/** the 13th make: 37 slams onto the screen with a shockwave */
+const Big37: React.FC<{ T: number }> = ({ T }) => {
+  const t0 = MAKES[12], d = T - t0; if (d < 0) return null;
+  const k = easeOut(clamp(d / 0.12)), out = 1 - prog(T, 7.95, 8.35);
+  if (out <= 0) return null;
+  const ring = clamp(d / 0.6);
+  return (
+    <AbsoluteFill style={{ opacity: out }}>
+      <div style={{ position: 'absolute', left: '50%', top: 470, width: 40 + ring * 1300, height: 40 + ring * 1300, transform: 'translate(-50%,-50%)', borderRadius: '50%',
+        border: `${6 * (1 - ring) + 1}px solid rgba(241,197,109,${0.8 * (1 - ring)})` }} />
+      <div style={{ position: 'absolute', left: 0, right: 0, top: 300, textAlign: 'center', transform: `scale(${lerp(2.2, 1, k)})`, opacity: k }}>
+        <span style={{ fontFamily: 'JunoMono, monospace', fontWeight: 700, fontSize: 300, lineHeight: 1, backgroundImage: 'linear-gradient(180deg,#fbe3a6 0%,#f1c56d 55%,#c8913a 100%)',
+          WebkitBackgroundClip: 'text', color: 'transparent', filter: 'drop-shadow(0 0 40px rgba(241,197,109,0.6))' }}>37</span>
+        <span style={{ fontFamily: font.sans, fontWeight: 900, fontSize: 90, color: GOLD, marginLeft: 12 }}>分</span>
+      </div>
+    </AbsoluteFill>
+  );
+};
+
 export const Opening: React.FC = () => {
   const f = useCurrentFrame(), T = f / FPS;
   const flashO = T >= TITLE ? Math.exp(-(T - TITLE) / 0.09) * 0.85 : 0;
-  const fadeIn = easeOut(prog(T, 0, 0.5));
+  const fadeIn = 1;
+  // a short white pop on every make (stronger on the accents)
+  let pop = 0; MAKES.forEach((m, i) => { const d = T - m; if (d >= 0 && d < 0.12) pop = Math.max(pop, (ACCENT.has(i) ? 0.32 : 0.14) * (1 - d / 0.12)); });
   return (
     <AbsoluteFill style={{ background: '#040509' }}>
       <style>{`@font-face { font-family: "JunoMono"; src: url(${staticFile('fonts/DejaVuSansMono-Bold.ttf')}) format("truetype"); font-weight: 700; }
@@ -287,10 +358,12 @@ export const Opening: React.FC = () => {
       </AbsoluteFill>
       {/* vignette */}
       <AbsoluteFill style={{ background: 'radial-gradient(ellipse at 50% 45%, rgba(0,0,0,0) 50%, rgba(0,0,0,0.55) 100%)' }} />
+      <Counter T={T} />
+      <Big37 T={T} />
       <NameCard T={T} />
       <TitleCard T={T} />
       <Subtitle T={T} />
-      <AbsoluteFill style={{ background: '#fff6e0', opacity: flashO }} />
+      <AbsoluteFill style={{ background: '#fff6e0', opacity: Math.max(flashO, pop) }} />
       <div style={{ position: 'absolute', top: 44, right: 56, opacity: 0.55 * (T < TITLE - 0.2 ? fadeIn : 0), fontFamily: font.sans, fontWeight: 500, fontSize: 20, letterSpacing: '0.3em', color: 'rgba(243,237,226,0.58)' }}>
         <span style={{ color: GOLD }}>◆ </span>{JUNO.mark}
       </div>
