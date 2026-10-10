@@ -1,0 +1,13 @@
+url https://eutils.ncbi.nlm.nih.gov/entrez/eutils/efetch.fcgi?db=pubmed&id=21071660,20823223,33468644,36857342,690806,24335603,24815612&rettype=abstract&retmode=text
+  saved out/files/abstracts.txt 0.0 MB
+url https://eutils.ncbi.nlm.nih.gov/entrez/eutils/esearch.fcgi?db=pubmed&term=Oishi+Diener+%22meaning+in+life%22+poor+nations&retmode=json
+  saved out/files/s_oishi.json 0.0 MB
+url https://eutils.ncbi.nlm.nih.gov/entrez/eutils/esearch.fcgi?db=pubmed&term=Hill+Turiano+purpose+in+life+mortality&retmode=json
+  saved out/files/s_hill.json 0.0 MB
+url https://eutils.ncbi.nlm.nih.gov/entrez/eutils/esearch.fcgi?db=pubmed&term=Baumeister+happy+life+meaningful+life+differences&retmode=json
+  FAILED: 429 https://eutils.ncbi.nlm.nih.gov/entrez/eutils/esearch.fcgi?db=pubmed&term=Baumeister+happy+life+meaningful+life+differences&retmode=json
+url https://eutils.ncbi.nlm.nih.gov/entrez/eutils/esearch.fcgi?db=pubmed&term=Kahneman+day+reconstruction+method+2004&retmode=json
+  FAILED: 429 https://eutils.ncbi.nlm.nih.gov/entrez/eutils/esearch.fcgi?db=pubmed&term=Kahneman+day+reconstruction+method+2004&retmode=json
+url https://eutils.ncbi.nlm.nih.gov/entrez/eutils/esearch.fcgi?db=pubmed&term=Alimujiang+purpose+in+life+mortality+2019&retmode=json
+  FAILED: 429 https://eutils.ncbi.nlm.nih.gov/entrez/eutils/esearch.fcgi?db=pubmed&term=Alimujiang+purpose+in+life+mortality+2019&retmode=json
+done
