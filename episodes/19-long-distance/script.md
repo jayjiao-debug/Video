@@ -129,3 +129,16 @@
 
 ## Film v1 (2026-10-10)
 film.html: three.js night Earth (NASA Black Marble 2016, public domain; no borders drawn) for the hook (广州→重庆 979 km great-circle arc), the reunion countdown 979→0 km (1:05–1:21) and the ending pull-back; 2D scenes in between (bubbles along the thread, 自动美颜 phone + slider, 1/3 hearts on the 1:21 drop, 美颜关掉 + cards). Song untouched (s130f), 5 soft message pops. Rendered on farm-jam15 (needs tex/bm8k.jpg = 8192 px downscale of BlackMarble_2016_3km).
+
+## Film v2 (2026-10-10) — owner notes: globe too big → China map only; faster tempo; open on 一对情侣 一个在广州 / 一个在重庆 + their messages; prove it with dynamic data scenes and a stats summary
+film2.html: flat tilted China night-lights map (tex/cn_night.jpg = Black Marble 2016 crop lon 96–124, lat 16–42; no borders, faint 5° graticule only), spotlight follows the camera target.
+- 0:00 一对情侣 → camera swoops to 广州, pans to 重庆 → arc + 979 km → chat bubbles fly along the arc (6 soft pops)
+- 0:21 研究① Jiang & Hancock 2013: 63 couple glyphs fly into a grid (20.97 岁, 约73% 大学生) → sort 30 异地 / 33 天天见面 (异地组平均相隔 539 mi ≈ 867 km)
+- 0:33 3,024 interaction dots rain into 7 day columns → morph into two bars 3.19 vs 3.69 次/人/天
+- 0:41 by medium: 见面 0.20 vs 2.08; 电话 1.01 vs 0.29; 消息 1.39 vs 1.12; 视频 0.23 vs 0.01
+- 0:45 zooming 1–7 scales: 亲密感 6.08 vs 5.80 (+0.28); 自我表露 5.95 vs 5.59 (+0.36)
+- 0:53 idealization: perceived partner disclosure 5.86 vs 5.63, partner's self-report controlled (p<.05) → 自动美颜 sparkle
+- 1:05 map, 研究② Stafford & Merolla 2007 card (理想化↑ 沟通满意度↑ 分开时更稳定↑) → GZ light travels to CQ, 979→0 km
+- 1:21 drop, 研究③ Stafford, Merolla & Castle 2006: 30 glyphs, 10 flash → break along a 3-month timeline (示意 1 in 3)
+- 1:30 why: 24h ring (自主), filter OFF + 正/负面了解↑, 冲突/嫉妒↑ (direction only, marked 示意), 2007 risk field (想得越美 × 见面隔得越久)
+- 1:46 three study cards over the dimmed map → 距离不可怕，见面才是考试 → 你们，隔着多少公里？(? km)
