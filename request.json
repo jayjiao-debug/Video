@@ -1,8 +1,6 @@
 {
- "id": "earth-01",
+ "id": "antarctic-01",
  "items": [
-  {"type":"url","url":"https://eoimages.gsfc.nasa.gov/images/imagerecords/144000/144898/BlackMarble_2016_01deg.jpg","name":"blackmarble_2016_3600.jpg","license":"NASA Earth Observatory (public domain), Black Marble 2016"},
-  {"type":"url","url":"https://eoimages.gsfc.nasa.gov/images/imagerecords/144000/144898/BlackMarble_2016_3km.jpg","name":"blackmarble_2016_3km.jpg","license":"NASA Earth Observatory (public domain), Black Marble 2016"},
-  {"type":"url","url":"https://eoimages.gsfc.nasa.gov/images/imagerecords/73000/73909/world.topo.bathy.200412.3x5400x2700.jpg","name":"bluemarble_5400.jpg","license":"NASA Earth Observatory (public domain), Blue Marble Next Generation"}
+  {"type":"url","url":"https://eoimages.gsfc.nasa.gov/images/imagerecords/73000/73909/world.topo.bathy.200412.3x21600x10800.jpg","name":"bluemarble_topobathy_21600.jpg","license":"NASA Earth Observatory (public domain), Blue Marble Next Generation w/ topography and bathymetry, Dec 2004"}
  ]
 }
