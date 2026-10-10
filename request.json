@@ -1,9 +1,7 @@
 {
- "id": "gide-01",
+ "id": "gide-02",
  "items": [
-  {"type":"url","url":"https://www.gutenberg.org/cache/epub/79693/pg79693.txt","name":"strait_is_the_gate_bussy.txt","license":"Project Gutenberg #79693 (public domain in the USA)"},
-  {"type":"url","url":"https://fr.wikisource.org/wiki/La_Porte_%C3%A9troite","name":"wikisource_porte_etroite_index.html","license":"Wikisource text, public domain (Gide d.1951)"},
-  {"type":"url","url":"https://faculty.chicagobooth.edu/-/media/faculty/mcgill/research/key-differences.pdf","name":"baumeister2013_try1.pdf","license":"paper (reference only)"},
-  {"type":"url","url":"https://www.gsb.stanford.edu/sites/default/files/publication-pdf/somekeydifferenceshappylifemeaningfullife_2012.pdf","name":"baumeister2013_try2.pdf","license":"paper (reference only)"}
+  {"type":"url","url":"https://faculty-gsb.stanford.edu/aaker/pages/documents/somekeydifferenceshappylifemeaningfullife_2012.pdf","name":"baumeister2013.pdf","license":"reference only"},
+  {"type":"url","url":"https://www.gsb.stanford.edu/faculty-research/publications/some-key-differences-between-happy-life-meaningful-life","name":"gsb_page.html","license":"reference only"}
  ]
 }
