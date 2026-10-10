@@ -1,0 +1,9 @@
+url https://www.gutenberg.org/cache/epub/79693/pg79693.txt
+  saved out/files/strait_is_the_gate_bussy.txt 0.3 MB
+url https://fr.wikisource.org/wiki/La_Porte_%C3%A9troite
+  saved out/files/wikisource_porte_etroite_index.html 0.1 MB
+url https://faculty.chicagobooth.edu/-/media/faculty/mcgill/research/key-differences.pdf
+  FAILED: 404 https://faculty.chicagobooth.edu/-/media/faculty/mcgill/research/key-differences.pdf
+url https://www.gsb.stanford.edu/sites/default/files/publication-pdf/somekeydifferenceshappylifemeaningfullife_2012.pdf
+  FAILED: 404 https://www.gsb.stanford.edu/sites/default/files/publication-pdf/somekeydifferenceshappylifemeaningfullife_2012.pdf
+done
