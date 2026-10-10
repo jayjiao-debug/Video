@@ -50,17 +50,17 @@ export async function makeDoors(THREE,R){
  // camera keys [T, x, y, z, lookX, lookY, lookZ]
  const KA=[[0,0,1.5,27,0,1.8,0],[4.4,-.6,1.4,17,-.6,1.9,0],[8.5,-2.4,1.25,10.5,-2.6,2.0,0],[12.5,2.4,1.25,10.5,2.6,2.0,0],[16.5,0,2.0,15.5,0,1.9,0],[20.4,-.4,1.8,12.5,-1.6,2.0,0],[21.6,-3.2,2.1,.6,-3.2,2.2,-6]];
  const KB=[[72.6,0,1.7,12,1.0,2.0,0],[73.6,1.6,1.9,6.5,3.0,2.1,0],[75.0,3.2,2.3,.5,3.2,2.6,-6]];
- const KC=[[117.4,0,1.15,9.0,0,1.6,0],[121.9,0,1.5,10.5,0,2.0,0],[126,0,2.0,15,0,2.0,0]];
+ const KC=[[109.2,0,2.3,18,0,2.1,0],[117.8,0,1.9,15,0,2.0,0],[121.9,0,1.2,8.6,0,1.6,0],[126,0,1.9,13.5,0,2.0,0]];
  const camK=(K,T)=>{let i=0;while(i<K.length-2&&T>K[i+1][0])i++;const a=K[i],b=K[i+1];const u=eio(pr(T,a[0],b[0]));const f=j=>lerp(a[j],b[j],u);return [new THREE.Vector3(f(1),f(2),f(3)),new THREE.Vector3(f(4),f(5),f(6))];};
  function update(T){const K=T<40?KA:(T<100?KB:KC);const [p,l]=camK(K,T);cam.position.copy(p);cam.lookAt(l);
   let iL=1,iR=1;if(T<40){iL=.35+.65*pr(T,0.4,2)+.5*pr(T,4.4,5.2)*(1-pr(T,8.3,9));iR=.35+.65*pr(T,0.4,2)+.5*pr(T,8.5,9.3)*(1-pr(T,12.3,13));iL=Math.min(iL,1.4);iR=Math.min(iR,1.4);if(T>20.4){iL+=1.5*pr(T,20.4,21.5);}}
-  else if(T<100){iL=.6;iR=1+1.6*pr(T,73.6,75);}else{iL=lerp(.4,1.1,pr(T,118.2,119.5));iR=lerp(.4,1.1,pr(T,118.2,119.5));}
+  else if(T<100){iL=.6;iR=1+1.6*pr(T,73.6,75);}else{iL=lerp(.55,1.1,pr(T,117.8,119.5));iR=iL;}
   const [L,Rr]=doors;L.m.uniforms.I.value=iL;L.m.uniforms.t.value=T;L.m.uniforms.fl.value=1;Rr.m.uniforms.I.value=iR;Rr.m.uniforms.t.value=T;Rr.m.uniforms.fl.value=0;
   for(const [d,i] of [[L,iL],[Rr,iR]]){d.pool.material.uniforms.I.value=i;d.beam.material.uniforms.I.value=i;d.lamp.intensity=8*i;}
   const sOn=(T<40?pr(T,4.4,5.0)*(1-pr(T,8.6,9.6))+.3:.3);for(let i=0;i<SP;i++){const [a,b,c,s]=SB[i];const ph=(T*(.4+s*.6)+a*7)%1;sp[i*3]=-DX+(b-.5)*W*.9;sp[i*3+1]=.3+ph*H*.95;sp[i*3+2]=.25+c*.6;sa[i]=sOn*Math.pow(Math.sin(Math.PI*ph),3)*(.5+.5*Math.sin(T*9+i));}
   sg.attributes.position.needsUpdate=true;sg.attributes.a.needsUpdate=true;
   for(let i=0;i<DN;i++){const [x,y,z,s]=DB[i];dp[i*3]=x+Math.sin(T*.2+s*20)*.3;dp[i*3+1]=(y+T*.05*(.3+s))%6;dp[i*3+2]=z;}dg.attributes.position.needsUpdate=true;
-  fig.visible=!(T>20.8&&T<100&&T<72.6)&&!(T>74.4&&T<117);
+  fig.visible=!(T>20.8&&T<72.6)&&!(T>74.4&&T<109);
   aura.material.uniforms.I.value=fig.visible?(T>100?1:.6):0;
   const step=T>121.9?eio(pr(T,121.9,123.6))*.6:0;fig.position.z=3.2-step;}
  const flash=T=>Math.max(T>21.1&&T<21.9?Math.exp(-Math.pow((T-21.5)/0.16,2)):0,T>74.2&&T<75.6?Math.exp(-Math.pow((T-74.85)/0.3,2)):0)*0.9;

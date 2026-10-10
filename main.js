@@ -1,7 +1,12 @@
 import * as THREE from 'three';
 import {U as UT} from './util.js';
 import {makeDoors} from './doors.js';
-import {makePhones} from './phones.js';
+import {makeMind} from './mind.js';
+import {makeChoc} from './choc.js';
+import {makeLotto} from './lotto.js';
+import {makeMoney} from './money.js';
+import {makeOrbs} from './orbs.js';
+import {makePath} from './path.js';
 import {makeWorld} from './world.js';
 const {cl,pr,eio,eo,sst,lerp,pop}=UT;
 const $=id=>document.getElementById(id);
@@ -17,8 +22,9 @@ const qM=new THREE.ShaderMaterial({uniforms:{a:{value:rtA.texture},b:{value:rtB.
  vec3 tm(vec3 c,float m){return srgb(m>.5?aces(c):c);}
  void main(){vec2 q=v-.5;float vig=1.-.28*dot(q,q)*2.;vec3 A=tm(texture2D(a,v).rgb,ma),B=tm(texture2D(b,v).rgb,mb);vec3 c=mix(A,B,f)*vig+vec3(1.,.95,.86)*fl;gl_FragColor=vec4(c,1.);}`});
 qS.add(new THREE.Mesh(new THREE.PlaneGeometry(2,2),qM));
-const doors=await makeDoors(THREE,R),phones=await makePhones(THREE,R),world=await makeWorld(THREE,R);
-const GLW=[[0,21.7,doors],[20.9,41.2,phones],[72.6,75.3,doors],[74.7,89.9,world],[117.3,130,doors]];
+const doors=await makeDoors(THREE,R),mind=await makeMind(THREE,R),choc=await makeChoc(THREE,R),lotto=await makeLotto(THREE,R),money=await makeMoney(THREE,R),world=await makeWorld(THREE,R),orbs=await makeOrbs(THREE,R),path=await makePath(THREE,R);
+const GLW=[[0,21.7,doors],[21.0,37.3,mind],[36.7,53.4,choc],[52.8,65.6,lotto],[65.0,73.5,money],[72.9,75.3,doors],[74.7,89.9,world],[89.3,102.0,orbs],[101.4,110.0,path],[109.4,130,doors]];
+const VIG=[mind,choc,lotto,money,orbs,path];
 /* ---------- 2D ---------- */
 const G='#F6CF78',RG='#ffb3a0',BL='#a9bde8',RED='#ff6a5a',GR='#7d8597';
 const fx=$('fx'),X=fx.getContext('2d',{willReadFrequently:true});
@@ -94,7 +100,12 @@ function SUM(T,o){const col=(x,title,c,rows,t0)=>`<div class="t serif" style="le
  const dimq=pr(T,113.8,114.4);
  return `<div style="opacity:${1-.6*dimq}">${col(220,'快乐',RG,SUMH,110.0)}${col(1060,'意义',G,SUMM,110.6)}<div style="position:absolute;left:960px;top:200px;height:600px;border-left:1px solid rgba(246,207,120,.25)"></div></div>
  <div class="t serif" style="left:960px;top:420px;transform:translateX(-50%) scale(${pop(T,113.9,.5)});font-size:150px;color:#fff;opacity:${dimq}">?</div>`;}
-const SCN=[{w:[40.9,53.0],f:LOTTO},{w:[53.0,73.0],f:MONEY},{w:[89.5,101.6],f:VENN},{w:[101.6,109.7],f:LIFE},{w:[109.7,117.6],f:SUM}];
+const SCN=[];
+function sumHud(T){if(T<109.6||T>118.3)return '';const o=pr(T,109.8,110.3)*(1-pr(T,117.6,118.2));
+ const col=(x,al,rows,c,t0)=>rows.map(([n,t],i)=>{const u=eo(pr(T,t0+i*.35,t0+.5+i*.35));return `<div style="position:absolute;left:${x}px;top:${300+i*150+16*(1-u)}px;width:420px;text-align:${al};opacity:${u}"><div class="serif" style="font-size:58px;font-weight:900;color:${c};line-height:1.1">${n}</div><div style="font-size:27px;font-weight:700;color:#e9e3d6;margin-top:6px">${t}</div></div>`;}).join('');
+ const q=pr(T,113.9,114.4);
+ return `<div style="opacity:${o}">${col(90,'right',[['46.9%','的时间心不在焉'],['越吃越难受','同一种快乐，越用越淡'],['22 位大奖得主','并没有更快乐']],RG,110.0)}${col(1410,'left',[['132 国','穷国更觉得有意义'],['压力 ↑','意义越高，快乐越低'],['14 年','有目标的人活得更久']],G,110.6)}
+ <div class="t serif" style="left:960px;top:380px;transform:translateX(-50%) scale(${pop(T,113.9,.5)});font-size:160px;color:#fff;opacity:${q};text-shadow:0 0 40px rgba(0,0,0,.8)">?</div></div>`;}
 /* world HUD 74.7–89.6 */
 function worldHud(T){if(T<75||T>89.9)return '';const o=pr(T,75.6,76.2)*(1-pr(T,89.2,89.7));const s1=pr(T,77.3,77.8),s2=pr(T,81.4,81.7),s3=pr(T,85.5,86);
  const arrow=(up,c,on,big=1)=>`<span class="serif" style="display:inline-block;font-size:${64*big}px;color:${c};opacity:${on};transform:scale(${on>0?1:0})">${up?'↑':'↓'}</span>`;
@@ -109,17 +120,18 @@ function doorHud(T){const lab=(x,t,c,o)=>{if(o<=0)return '';const p=new THREE.Ve
  let o=0;if(T<20.5)o=pr(T,1.5,2.4)*(1-pr(T,16.2,16.6));else if(T>118)o=pr(T,118.4,119.2)*(1-pr(T,125,125.4));if(o<=0)return '';
  const oL=o*(T<20.5?(T>8.5&&T<12.5?.45:1):1),oR=o*(T<20.5?(T>4.4&&T<8.5?.45:1):1);return lab(-3.2,'快乐',RG,oL)+lab(3.2,'意义',G,oR);}
 /* timing */
-const LINES=[[0,4.4,'今晚，你面前有[两扇门]'],[4.4,8.5,'一扇：刷两小时手机，[很开心]'],[8.5,12.5,'一扇：去做那件[很难的事]'],[12.5,16.4,'哪一扇，会让你[过得更好]？'],
- [20.6,24.7,'先拆“快乐”。哈佛做过一个[手机实验]'],[24.7,28.7,'随机提醒2250人：你[现在]开心吗？'],[28.7,32.8,'结果，人有[46.9%]的清醒时间在走神'],[32.8,36.8,'而走神的时候，人通常[更不开心]'],[36.8,40.9,'快乐，只住在[此刻]'],
- [40.9,44.9,'那中大奖呢？研究者找来[22位]彩票得主'],[44.9,48.9,'他们并不比普通人[更快乐]'],[48.98,53.0,'从日常小事里得到的快乐，反而[更少]'],
- [53.0,57.0,'诺奖得主卡尼曼说：年入[7.5万美元]，快乐到顶'],[57.0,61.1,'做手机实验的那位学者说：[没有顶]'],[61.1,65.1,'结论打架，两人决定[一起重算]'],[65.2,69.2,'结果：大多数人，钱越多[越快乐]'],[69.2,73.2,'只有最不快乐的约20%，过了[10万美元]就不涨'],
- [73.2,77.2,'再拆“意义”。一份调查，横跨[132个国家]'],[77.2,81.3,'富裕国家的人，对生活[更满意]'],[81.4,85.4,'可穷国的人，反而觉得人生[更有意义]'],[85.4,89.5,'原因之一：他们[更虔诚]'],
+const LINES=[[0,4.4,'今晚，你面前有[两扇门]'],[4.4,8.5,'左边：刷两小时手机，[很爽]'],[8.5,12.5,'右边：去做那件[很难的事]'],[12.5,16.4,'选哪扇，你会[过得更好]？'],
+ [20.6,24.7,'先进左边。哈佛给2250人装了个[App]'],[24.7,28.7,'随时问：你[现在]在想什么？开心吗？'],[28.7,32.8,'结果：近一半时间，人在这儿，[心不在]'],[32.8,36.8,'而心一飘走，人就[不开心]了'],
+ [36.8,40.9,'另一个实验：让人一块接一块吃[巧克力]'],[40.9,44.9,'第一块：[真好吃]'],[44.9,48.9,'吃到吃不下还在吃：[变成难受]'],[48.98,53.0,'同一种快乐，会[越用越淡]'],
+ [53.0,57.0,'那中彩票呢？研究者找来[22位]大奖得主'],[57.0,61.1,'结果：他们并不比普通人[更快乐]'],[61.1,65.1,'连平常的小乐子，都[没那么香]了'],
+ [65.2,69.2,'钱呢？对大多数人：钱越多，[越快乐]'],[69.2,73.2,'但最不快乐的那20%，过了[10万美元]就不涨'],
+ [73.2,77.2,'再进右边。一份调查，横跨[132个国家]'],[77.2,81.3,'富裕国家的人，对生活[更满意]'],[81.4,85.4,'可穷国的人，反而觉得人生[更有意义]'],[85.4,89.5,'原因之一：他们[更虔诚]'],
  [89.5,93.5,'另一项研究发现：快乐和意义，大部分[重叠]'],[93.5,97.6,'但压力越大：意义[越高]，快乐[越低]'],[97.6,101.6,'快乐更像[得到]，意义更像[给出]'],
  [101.6,105.7,'还有一项研究，跟踪了成年人[14年]'],[105.7,109.7,'觉得人生有目标的人，[活得更久]'],
  [109.7,113.8,'快乐，是此刻的[感受]；意义，是一生的[故事]'],[113.8,117.8,'科学能算出代价，但[选不了答案]'],
  [117.8,121.9,'一百多年前，有本小说写：“我们生来[不是为了幸福]”'],[121.9,125.4,'你呢？今晚，[推开哪一扇]？']];
 window.LINES=LINES;
-const SRC=[[20.6,40.9,'','Killingsworth &amp; Gilbert (2010) Science · 哈佛'],[117.8,121.9,'','André Gide《La Porte étroite》(1909) · 1947年诺贝尔文学奖得主']];
+const SRC=[[20.6,36.8,'','Killingsworth &amp; Gilbert (2010) Science · 哈佛'],[36.8,53.0,'','Small, Zatorre 等 (2001) Brain · 刻度为示意'],[117.8,121.9,'','André Gide《La Porte étroite》(1909) · 1947年诺贝尔文学奖得主']];
 window.renderAt=function(T){
  const act=[];for(const [a,b,s] of GLW){if(T>=a&&T<=b)act.push([s,pr(T,a,a+0.6)*(1-pr(T,b-0.6,b))]);}
  for(const [s] of act)s.update(T);
@@ -132,7 +144,7 @@ window.renderAt=function(T){
  let h='',twoD=0;for(const s of SCN){const [a,b]=s.w;if(T<a-0.5||T>b+0.5)continue;const e=eio(pr(T,a-0.5,a+0.5)),x=eio(pr(T,b-0.5,b+0.5)),o=e*(1-x),sc=1+0.03*sst(pr(T,a,b));twoD=Math.max(twoD,o);
   X.save();X.translate(960,540);X.scale(sc,sc);X.translate(-960,-540);h+=`<div class="sc" style="opacity:${o};transform:scale(${sc})">${s.f(T,o)}</div>`;X.restore();}
  $('world').innerHTML=h;$('bg2').style.opacity=Math.min(1,twoD*1.2);
- $('hud').innerHTML=(phones.hud?phones.hud(T):'')+worldHud(T)+doorHud(T);
+ $('hud').innerHTML=VIG.map(v=>v.hud?v.hud(T):'').join('')+worldHud(T)+doorHud(T)+sumHud(T);
  $('dim').style.opacity=0.5*pr(T,16.4,16.9)*(1-pr(T,20.3,20.9));
  const sr=SRC.find(s=>T>=s[0]&&T<s[1]);$('src').style.opacity=sr?pr(T,sr[0],sr[0]+0.4)*(1-pr(T,sr[1]-0.3,sr[1])):0;if(sr)$('src').innerHTML=`${sr[2]?`<i>${sr[2]}</i>`:''}${sr[3]}`;
  const L=LINES.find(l=>T>=l[0]&&T<l[1]);$('sub').innerHTML=L&&T<125.4?'<span>'+L[2].replace(/\[(.+?)\]/g,'<b>$1</b>')+'</span>':'';
