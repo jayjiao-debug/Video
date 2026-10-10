@@ -44,6 +44,15 @@ canvas{position:absolute;left:0;top:0}
 #tb .tr{display:inline-block;width:0;height:0;border-top:19px solid transparent;border-bottom:19px solid transparent;border-left:26px solid #34495E;margin-right:-4px}
 #tb span{margin-left:16px}
 #flash{position:absolute;inset:0;background:#fff;opacity:0;pointer-events:none}
+
+/* title plaque as a road sign (owner 11:47: keep the plaque layout, make it like a road sign) */
+#plaque .p{position:relative;border:none!important;background:#1D7A4C!important;border-radius:22px!important;padding:52px 120px 44px!important;box-shadow:0 18px 44px rgba(20,50,35,.30)!important}
+#plaque .p:after{content:"";position:absolute;inset:12px;border:5px solid #fff;border-radius:13px;pointer-events:none}
+#plaque .p:before{position:relative;z-index:1}
+#plaque .a{color:#fff!important}
+#plaque .b{color:rgba(255,255,255,.88)!important}
+#plaque .c{color:rgba(255,255,255,.66)!important}
+#plaque .p i{position:absolute;width:12px;height:12px;border-radius:6px;background:radial-gradient(circle at 35% 35%,#f4f6f3,#9fb3a7);box-shadow:0 1px 2px rgba(0,0,0,.35)}
 </style></head><body>
 <div id="vig"></div>
 <div id="chap" class="plate"><div class="ex">00</div><div><div class="t">堵了</div><div class="s">STUCK</div></div></div>
@@ -52,7 +61,7 @@ canvas{position:absolute;left:0;top:0}
 <div id="card"></div>
 <div id="gauge"><div class="t">每公里有多少辆车</div><div class="tr"><div class="m"></div><div class="pt"></div></div><div class="lb"><span>空</span><span style="margin-left:170px">临界点</span><span>挤</span></div></div>
 <div id="title" class="plate" style="left:50%;top:330px;transform:translateX(-50%);padding:34px 64px 30px 40px;display:flex;align-items:center;gap:34px;opacity:0"><div class="ex" style="background:#fff;color:#1D7A4C;font-weight:900;font-size:84px;border-radius:14px;padding:4px 22px;line-height:1.1">01</div><div><div style="font-size:136px;font-weight:900;line-height:1">幽灵堵车</div><div style="font-size:28px;letter-spacing:12px;font-weight:700;opacity:.85;margin-top:14px">PHANTOM JAM</div></div></div>
-<div id="plaque"><div class="p"><div class="a">幽灵堵车</div><div class="b">PHANTOM TRAFFIC JAM</div><div class="c">Sugiyama et al. · 2008</div></div></div>
+<div id="plaque"><div class="p"><i style="left:30px;top:30px"></i><i style="right:30px;top:30px"></i><i style="left:30px;bottom:30px"></i><i style="right:30px;bottom:30px"></i><div class="a">幽灵堵车</div><div class="b">PHANTOM TRAFFIC JAM</div><div class="c">Sugiyama et al. · 2008</div></div></div>
 <div id="end"><div class="j">J</div><div class="t">幽灵堵车</div><div class="t2">前面什么都没有，为什么还堵</div><div class="q">你有没有堵过一段「什么都没有」的路？</div><div class="f">关注 Juno · 一起看懂世界</div>
 <div class="s">Sugiyama et al. (2008) Traffic jams without bottlenecks, New J. Phys. 10, 033001<br>Redelmeier &amp; Tibshirani (1999) Why cars in the next lane seem to go faster, Nature 401, 35<br>Stern et al. (2018) Dissipation of stop-and-go waves via control of autonomous vehicles, Transp. Res. C 89, 205–221</div></div>
 <div id="tb"></div><div id="flash"></div><div id="sub"></div>
@@ -432,12 +441,12 @@ window.renderAt=function(T){
  $('km').style.opacity=1-pr(T,15.6,16.4);const pp=0.04+0.92*eio(pr(T,3.4,7.6));$('km').querySelector('.fill').style.width=pp*100+'%';$('km').querySelector('.car').style.left=pp*100+'%';
  const ci=CARDS.findIndex(c=>T>=c[0]&&T<c[1]);if(ci!==pk){pk=ci;$('card').innerHTML=ci>=0?CARDS[ci][2]:'';}
  $('card').style.display=ci>=0?'block':'none';if(ci>=0){const c=CARDS[ci];$('card').style.opacity=pr(T,c[0],c[0]+0.6)*(1-pr(T,c[1]-0.6,c[1]));}
- $('plaque').style.opacity=0;$('title').style.opacity=pr(T,16.58,16.9)*(1-pr(T,20.2,20.8));$('title').style.transform=`translate(-50%,${(1-eo(pr(T,16.58,17.2)))*18}px)`;
+ $('plaque').style.opacity=pr(T,16.58,16.9)*(1-pr(T,20.2,20.8));$('plaque').style.transform=`scale(${1.06-0.06*eo(pr(T,16.58,17.3))})`;
  $('end').style.opacity=pr(T,125.4,126.4);
  {const fz=pr(T,33.0,33.3)*(1-pr(T,36.0,36.3)),ff=pr(T,49.2,49.5)*(1-pr(T,52.2,52.5));const md=fz>0?'fz':(ff>0?'ff':'');if($('tb').dataset.m!==md){$('tb').dataset.m=md;$('tb').innerHTML=md==='fz'?'<i class="pz"></i><i class="pz"></i><span>定格</span>':(md==='ff'?'<i class="tr"></i><i class="tr"></i><span>快进</span>':'');}
   $('tb').style.opacity=Math.max(fz,ff);$('flash').style.opacity=T>=FRZ[0]&&T<FRZ[0]+0.8?0.45*Math.exp(-(T-FRZ[0])/0.12):0;}
  const L=LINES.find(x=>T>=x[0]&&T<x[1]);$('sub').innerHTML=L?'<span class="pill">'+L[2].replace(/\[(.+?)\]/g,'<b>$1</b>')+'</span>':'';$('sub').style.opacity=T>125.4?0:1;};
-$('gauge').style.display='none';$('vms').style.display='block';$('km').style.display='block';$('chap').style.display='flex';$('title').style.display='flex';$('title').style.top='400px';{const t=$('title');t.querySelector('.ex').textContent='J';t.querySelectorAll('div div')[3].textContent='PHANTOM TRAFFIC JAM';}
+$('gauge').style.display='none';$('vms').style.display='block';$('km').style.display='block';$('chap').style.display='flex';$('title').style.display='none';
 
 await document.fonts.load('900 60px "Noto Sans CJK SC"');await document.fonts.ready;window.READY=true;
 </script></body></html>
