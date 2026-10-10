@@ -15,13 +15,13 @@ def slice_(x,mx):
     L=int(SR*rng.uniform(0.18,mx));st=rng.integers(0,max(1,len(x)-L));y=x[st:st+L].copy();f=int(SR*0.02);y[:f]*=np.linspace(0,1,f)[:,None];y[-f*3:]*=np.linspace(1,0,f*3)[:,None];return y
 hb=np.zeros((int(SR*12),2))
 t=0.0
-while t<3.4:
+while t<2.2:
     x=slice_(H[rng.integers(len(H))],0.6);i=int(t*SR);n=min(len(x),len(hb)-i);p=rng.uniform(-0.8,0.8)
     hb[i:i+n,0]+=x[:n,0]*(1-max(0,p))*rng.uniform(.45,1);hb[i:i+n,1]+=x[:n,1]*(1+min(0,p))*rng.uniform(.45,1)
-    t+=rng.uniform(0.10,0.30)*(1+t/2)
-tt=np.arange(len(hb))/SR;env=np.where(tt<1.6,1,np.cos(np.clip((tt-1.6)/2.6,0,1)*np.pi/2)**2)*np.minimum(1,tt/0.05)
+    t+=rng.uniform(0.08,0.22)
+tt=np.arange(len(hb))/SR;env=np.where(tt<1.4,1,np.cos(np.clip((tt-1.4)/1.1,0,1)*np.pi/2)**2)*np.minimum(1,tt/0.05)
 put(hb*env[:,None],0.0,1.4)
-amb=rd('bsb0122_autoroute.wav')[:int(SR*12)];ta=np.arange(len(amb))/SR;put(bp(amb,60,3000)*(np.cos(np.clip((ta-1)/4,0,1)*np.pi/2)**2)[:,None],0,0.25)
+amb=rd('bsb0122_autoroute.wav')[:int(SR*12)];ta=np.arange(len(amb))/SR;put(bp(amb,60,3000)*(np.cos(np.clip((ta-1.0)/1.5,0,1)*np.pi/2)**2)[:,None],0,0.25)
 def whoosh(d,f0,f1,peak=0.6):
     n=int(SR*d);x=rng.standard_normal(n);t=np.arange(n)/SR;y=np.zeros(n);fc=f0*(f1/f0)**(t/d)
     # time-varying lowpass via one-pole
@@ -30,8 +30,6 @@ def whoosh(d,f0,f1,peak=0.6):
     e=np.sin(np.pi*np.clip(t/d,0,1))**2*np.exp(-((t/d-peak)**2)*0)
     w=(t/d);e=np.where(w<peak,np.sin(np.pi/2*w/peak)**2,np.cos(np.pi/2*(w-peak)/(1-peak))**2)
     y=norm(y*e);return np.stack([y,np.roll(y,int(SR*0.012))],1)
-put(whoosh(3.4,300,2400,0.55),4.1,0.5)        # rush to the front
-put(whoosh(2.2,400,1800,0.7),10.6,0.16)        # it clears
 put(whoosh(4.0,200,1600,0.45),81.0,0.5)       # crane up on the drop
 put(whoosh(3.0,300,1400,0.5),44.9,0.14)        # dive to the chase cam
 def squeak(d=0.42,f=2300,g=1):
