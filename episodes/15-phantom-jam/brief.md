@@ -43,3 +43,7 @@ Scene openings (build3d/scenes.html, `shot(0..6)`): 00 堵了 (behind your car, 
 
 ## Look v3 (owner, 2026-10-10 08:37: "不要用夜间了，color scheme尽量不用黑色（除了这两个牌子），参考 mini metro 的画风，确保 Dynamic 的画面还有一镜到底")
 build3d/scenes2.html (`shot(0..6)`): no night scene (02 is now a daytime motorway with a red brake band + green "车 往前开" / red "堵点 往后跑" floor arrows). No black anywhere except the two LED boards: your lane/car = yellow #F5B700 (pin yellow), lanes green #3FAE49 / blue #2F7FD3 / orange #F28C28, ring red #E8413C with multicolour cars, map lines purple/cyan/red with white stations (circle/square/triangle, slate outline), pale-blue rivers, cream ground #F3EFE6 without grid, light-blue car glass, slate #34495E for text, subtitle strip slate rgba(44,62,80,.9) instead of near-black. Flatter lighting (hemisphere 2.4, sun 0.85). Lower, more dramatic camera angles.
+
+## Background + cel look (owner, 2026-10-10 08:48–08:52)
+"too many elements, lets stick to a clear background for now" → background option A (plain cream, no blocks/parks/buildings).
+"give the vehicle a more 2D 3D look like dark edges" → build3d/scenes3.html: cars use MeshToonMaterial (3-band gradient) + a constant-width ink outline (inverted hull on mergeVertices smooth normals, offset in clip space, 2.4 px, #2C3E50 slate, not black). `INK.on` toggles it; `shot(9)` is the close-up test.
