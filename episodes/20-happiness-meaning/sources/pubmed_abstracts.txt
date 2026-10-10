@@ -1,0 +1,212 @@
+1. Science. 2010 Nov 12;330(6006):932. doi: 10.1126/science.1192439.
+
+A wandering mind is an unhappy mind.
+
+Killingsworth MA(1), Gilbert DT.
+
+Author information:
+(1)Harvard University, Cambridge, MA 02138, USA. mkilling@fas.harvard.edu
+
+We developed a smartphone technology to sample people's ongoing thoughts, 
+feelings, and actions and found (i) that people are thinking about what is not 
+happening almost as often as they are thinking about what is and (ii) found that 
+doing so typically makes them unhappy.
+
+DOI: 10.1126/science.1192439
+PMID: 21071660 [Indexed for MEDLINE]
+
+
+2. Proc Natl Acad Sci U S A. 2010 Sep 21;107(38):16489-93. doi: 
+10.1073/pnas.1011492107. Epub 2010 Sep 7.
+
+High income improves evaluation of life but not emotional well-being.
+
+Kahneman D(1), Deaton A.
+
+Author information:
+(1)Center for Health and Well-being, Princeton University, Princeton, NJ 08544, 
+USA. kahneman@princeton.edu
+
+Recent research has begun to distinguish two aspects of subjective well-being. 
+Emotional well-being refers to the emotional quality of an individual's everyday 
+experience--the frequency and intensity of experiences of joy, stress, sadness, 
+anger, and affection that make one's life pleasant or unpleasant. Life 
+evaluation refers to the thoughts that people have about their life when they 
+think about it. We raise the question of whether money buys happiness, 
+separately for these two aspects of well-being. We report an analysis of more 
+than 450,000 responses to the Gallup-Healthways Well-Being Index, a daily survey 
+of 1,000 US residents conducted by the Gallup Organization. We find that 
+emotional well-being (measured by questions about emotional experiences 
+yesterday) and life evaluation (measured by Cantril's Self-Anchoring Scale) have 
+different correlates. Income and education are more closely related to life 
+evaluation, but health, care giving, loneliness, and smoking are relatively 
+stronger predictors of daily emotions. When plotted against log income, life 
+evaluation rises steadily. Emotional well-being also rises with log income, but 
+there is no further progress beyond an annual income of ~$75,000. Low income 
+exacerbates the emotional pain associated with such misfortunes as divorce, ill 
+health, and being alone. We conclude that high income buys life satisfaction but 
+not happiness, and that low income is associated both with low life evaluation 
+and low emotional well-being.
+
+DOI: 10.1073/pnas.1011492107
+PMCID: PMC2944762
+PMID: 20823223 [Indexed for MEDLINE]
+
+Conflict of interest statement: The authors declare no conflict of interest.
+
+
+3. Proc Natl Acad Sci U S A. 2021 Jan 26;118(4):e2016976118. doi: 
+10.1073/pnas.2016976118.
+
+Experienced well-being rises with income, even above $75,000 per year.
+
+Killingsworth MA(1).
+
+Author information:
+(1)The Wharton School, University of Pennsylvania, Philadelphia, PA 19104 
+mattkil@upenn.edu.
+
+What is the relationship between money and well-being? Research distinguishes 
+between two forms of well-being: people's feelings during the moments of life 
+(experienced well-being) and people's evaluation of their lives when they pause 
+and reflect (evaluative well-being). Drawing on 1,725,994 experience-sampling 
+reports from 33,391 employed US adults, the present results show that both 
+experienced and evaluative well-being increased linearly with log(income), with 
+an equally steep slope for higher earners as for lower earners. There was no 
+evidence for an experienced well-being plateau above $75,000/y, contrary to some 
+influential past research. There was also no evidence of an income threshold at 
+which experienced and evaluative well-being diverged, suggesting that higher 
+incomes are associated with both feeling better day-to-day and being more 
+satisfied with life overall.
+
+Copyright © 2020 the Author(s). Published by PNAS.
+
+DOI: 10.1073/pnas.2016976118
+PMCID: PMC7848527
+PMID: 33468644
+
+Conflict of interest statement: The authors declare no competing interest.
+
+
+4. Proc Natl Acad Sci U S A. 2023 Mar 7;120(10):e2208661120. doi: 
+10.1073/pnas.2208661120. Epub 2023 Mar 1.
+
+Income and emotional well-being: A conflict resolved.
+
+Killingsworth MA(1), Kahneman D(2), Mellers B(1).
+
+Author information:
+(1)University of Pennsylvania, Philadelphia, PA 19104.
+(2)Princeton University, Princeton, NJ 08544.
+
+Do larger incomes make people happier? Two authors of the present paper have 
+published contradictory answers. Using dichotomous questions about the preceding 
+day, [Kahneman and Deaton, Proc. Natl. Acad. Sci. U.S.A. 107, 16489-16493 
+(2010)] reported a flattening pattern: happiness increased steadily with 
+log(income) up to a threshold and then plateaued. Using experience sampling with 
+a continuous scale, [Killingsworth, Proc. Natl. Acad. Sci. U.S.A. 118, 
+e2016976118 (2021)] reported a linear-log pattern in which average happiness 
+rose consistently with log(income). We engaged in an adversarial collaboration 
+to search for a coherent interpretation of both studies. A reanalysis of 
+Killingsworth's experienced sampling data confirmed the flattening pattern only 
+for the least happy people. Happiness increases steadily with log(income) among 
+happier people, and even accelerates in the happiest group. Complementary 
+nonlinearities contribute to the overall linear-log relationship. We then 
+explain why Kahneman and Deaton overstated the flattening pattern and why 
+Killingsworth failed to find it. We suggest that Kahneman and Deaton might have 
+reached the correct conclusion if they had described their results in terms of 
+unhappiness rather than happiness; their measures could not discriminate among 
+degrees of happiness because of a ceiling effect. The authors of both studies 
+failed to anticipate that increased income is associated with systematic changes 
+in the shape of the happiness distribution. The mislabeling of the dependent 
+variable and the incorrect assumption of homogeneity were consequences of 
+practices that are standard in social science but should be questioned more 
+often. We flag the benefits of adversarial collaboration.
+
+DOI: 10.1073/pnas.2208661120
+PMCID: PMC10013834
+PMID: 36857342 [Indexed for MEDLINE]
+
+Conflict of interest statement: The authors declare no competing interest.
+
+
+5. J Pers Soc Psychol. 1978 Aug;36(8):917-27. doi: 10.1037//0022-3514.36.8.917.
+
+Lottery winners and accident victims: is happiness relative?
+
+Brickman P, Coates D, Janoff-Bulman R.
+
+Adaptation level theory suggests that both contrast and habituation will operate 
+to prevent the winning of a fortune from elevating happiness as much as might be 
+expected. Contrast with the peak experience of winning should lessen the impact 
+of ordinary pleasures, while habituation should eventually reduce the value of 
+new pleasures made possible by winning. Study 1 compared a sample of 22 major 
+lottery winners with 22 controls and also with a group of 29 paralyzed accident 
+victims who had been interviewed previously. As predicted, lottery winners were 
+not happier than controls and took significantly less pleasure from a series of 
+mundane events. Study 2 indicated that these effects were not due to preexisting 
+differences between people who buy or do not buy lottery tickets or between 
+interviews that made or did not make the lottery salient. Paraplegics also 
+demonstrated a contrast effect, not by enhancing minor pleasures but by 
+idealizing their past, which did not help their present happiness.
+
+DOI: 10.1037//0022-3514.36.8.917
+PMID: 690806 [Indexed for MEDLINE]
+
+
+6. Psychol Sci. 2014 Feb;25(2):422-30. doi: 10.1177/0956797613507286. Epub 2013
+Dec  13.
+
+Residents of poor nations have a greater sense of meaning in life than residents 
+of wealthy nations.
+
+Oishi S(1), Diener E.
+
+Author information:
+(1)1Department of Psychology, University of Virginia.
+
+Using Gallup World Poll data, we examined the role of societal wealth for 
+meaning in life across 132 nations. Although life satisfaction was substantially 
+higher in wealthy nations than in poor nations, meaning in life was higher in 
+poor nations than in wealthy nations. In part, meaning in life was higher in 
+poor nations because people in those nations were more religious. The mediating 
+role of religiosity remained significant after we controlled for potential third 
+variables, such as education, fertility rate, and individualism. As Frankl 
+(1963) stated in Man's Search for Meaning, it appears that meaning can be 
+attained even under objectively dire living conditions, and religiosity plays an 
+important role in this search.
+
+DOI: 10.1177/0956797613507286
+PMID: 24335603 [Indexed for MEDLINE]
+
+
+7. Psychol Sci. 2014 Jul;25(7):1482-6. doi: 10.1177/0956797614531799. Epub 2014
+May  8.
+
+Purpose in life as a predictor of mortality across adulthood.
+
+Hill PL(1), Turiano NA(2).
+
+Author information:
+(1)Department of Psychology, Carleton University patrick.hill@carleton.ca.
+(2)Department of Psychiatry, University of Rochester Medical Center, Rochester, 
+New York.
+
+Having a purpose in life has been cited consistently as an indicator of healthy 
+aging for several reasons, including its potential for reducing mortality risk. 
+In the current study, we sought to extend previous findings by examining whether 
+purpose in life promotes longevity across the adult years, using data from the 
+longitudinal Midlife in the United States (MIDUS) sample. Proportional-hazards 
+models demonstrated that purposeful individuals lived longer than their 
+counterparts did during the 14 years after the baseline assessment, even when 
+controlling for other markers of psychological and affective well-being. 
+Moreover, these longevity benefits did not appear to be conditional on the 
+participants' age, how long they lived during the follow-up period, or whether 
+they had retired from the workforce. In other words, having a purpose in life 
+appears to widely buffer against mortality risk across the adult years.
+
+© The Author(s) 2014.
+
+DOI: 10.1177/0956797614531799
+PMCID: PMC4224996
+PMID: 24815612 [Indexed for MEDLINE]
