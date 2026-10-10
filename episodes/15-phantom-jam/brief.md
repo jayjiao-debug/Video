@@ -79,3 +79,5 @@ build3d/film3.html (same 129.97 s, same song cut):
 - 04: automated car hangs back on a smoothed speed; teal 「空当」 zone on the ring between it and the car ahead. 05: same teal zone in your lane ahead of you (「多留的车距」) replacing the red bracket; car ahead brakes at 114 s, the gap shrinks, you only lightly slow.
 - Camera path probed for every frame (probe.mjs): no frame-to-frame jumps; fastest look rotation ≈ 70°/s for <1 s (dive to the chase cam).
 - Audio: song untouched; SFX bus ×0.6, SFX gain dropped only where song+SFX would pass −0.3 dBFS; −9.8 LUFS.
+
+- v3.1 (owner 11:37 "the beeping is too long"): opening horns cut to short honks (0.2–0.6 s), dense only 0–1.6 s, faded out by ~4 s (was 9 s); motorway bed gone by 5 s. Video unchanged.
