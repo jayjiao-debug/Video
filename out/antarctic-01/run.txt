@@ -1,0 +1,3 @@
+url https://eoimages.gsfc.nasa.gov/images/imagerecords/73000/73909/world.topo.bathy.200412.3x21600x10800.jpg
+  saved out/files/bluemarble_topobathy_21600.jpg 29.9 MB
+done
