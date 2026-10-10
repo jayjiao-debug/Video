@@ -33,6 +33,6 @@ export async function makeOrbs(THREE,R){
   const [hx,hy]=pj(H.g.position.clone().add(new THREE.Vector3(-.5,1.05,0))),[mx,my]=pj(M.g.position.clone().add(new THREE.Vector3(.5,1.45,0)));const hy2=hy-90,my2=my-90;const st=pr(T,93.7,95.8),fl=pr(T,97.7,98.2);
   return `<div style="opacity:${o}"><div class="t serif" style="left:${hx}px;top:${hy2}px;transform:translateX(-50%);font-size:56px;color:#ffb3a0">快乐${st>.3?` <span style="font-size:48px">↓</span>`:''}</div><div class="t serif" style="left:${mx}px;top:${my2}px;transform:translateX(-50%);font-size:56px;color:#F6CF78">意义${st>.3?` <span style="font-size:48px">↑</span>`:''}</div>
   <div class="t" style="left:${hx}px;top:${hy2+70}px;transform:translateX(-50%);font-size:34px;color:#fff;opacity:${fl}">得到</div><div class="t" style="left:${mx}px;top:${my2+70}px;transform:translateX(-50%);font-size:34px;color:#fff;opacity:${fl}">给出</div>
-  <div class="t" style="left:960px;top:150px;transform:translateX(-50%);font-size:30px;color:#e9e3d6;opacity:${pr(T,93.7,94.2)*(1-pr(T,97.2,97.6))}">压力 · 担心 · 焦虑</div>
+  <div style="position:absolute;left:120px;top:150px;opacity:${pr(T,93.7,94.2)*(1-pr(T,97.2,97.6))}"><div class="lbl" style="position:static">压力 · 担心 · 焦虑</div><div class="t serif" style="position:static;font-size:96px;color:#ff8a7a;line-height:1.15">↑</div></div>
   <div class="t" style="left:960px;top:892px;transform:translateX(-50%);font-size:22px;color:#7d8597;font-weight:700">Baumeister, Vohs, Aaker &amp; Garbinsky (2013) J. Positive Psychology</div></div>`;}
  return {scene:S,cam,update,hud};}
