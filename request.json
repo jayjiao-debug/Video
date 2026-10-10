@@ -1,46 +1,46 @@
 {
- "id": "jam-sfx-01",
+ "id": "jam-sfx-02",
  "items": [
   {
    "type": "url",
-   "url": "https://bigsoundbank.com/UPLOAD/wav/3506.wav",
-   "name": "bsb3506_horn3.wav",
+   "url": "https://bigsoundbank.com/UPLOAD/mp3/3506.mp3",
+   "name": "bsb3506_horn3.mp3",
    "license": "CC0 (BigSoundBank #3506)"
   },
   {
    "type": "url",
-   "url": "https://bigsoundbank.com/UPLOAD/wav/0258.wav",
-   "name": "bsb0258_car_horn2.wav",
+   "url": "https://bigsoundbank.com/UPLOAD/mp3/0258.mp3",
+   "name": "bsb0258_car_horn2.mp3",
    "license": "CC0 (BigSoundBank #258)"
   },
   {
    "type": "url",
-   "url": "https://bigsoundbank.com/UPLOAD/wav/0969.wav",
-   "name": "bsb0969_car_horn7.wav",
+   "url": "https://bigsoundbank.com/UPLOAD/mp3/0969.mp3",
+   "name": "bsb0969_car_horn7.mp3",
    "license": "CC0 (BigSoundBank #969)"
   },
   {
    "type": "url",
-   "url": "https://bigsoundbank.com/UPLOAD/wav/0850.wav",
-   "name": "bsb0850_car_horn5.wav",
+   "url": "https://bigsoundbank.com/UPLOAD/mp3/0850.mp3",
+   "name": "bsb0850_car_horn5.mp3",
    "license": "CC0 (BigSoundBank #850)"
   },
   {
    "type": "url",
-   "url": "https://bigsoundbank.com/UPLOAD/wav/3438.wav",
-   "name": "bsb3438_honk90.wav",
+   "url": "https://bigsoundbank.com/UPLOAD/mp3/3438.mp3",
+   "name": "bsb3438_honk90.mp3",
    "license": "CC0 (BigSoundBank #3438)"
   },
   {
    "type": "url",
-   "url": "https://bigsoundbank.com/UPLOAD/wav/3593.wav",
-   "name": "bsb3593_bus_horns.wav",
+   "url": "https://bigsoundbank.com/UPLOAD/mp3/3593.mp3",
+   "name": "bsb3593_bus_horns.mp3",
    "license": "CC0 (BigSoundBank #3593)"
   },
   {
    "type": "url",
-   "url": "https://bigsoundbank.com/UPLOAD/wav/0122.wav",
-   "name": "bsb0122_autoroute.wav",
+   "url": "https://bigsoundbank.com/UPLOAD/mp3/0122.mp3",
+   "name": "bsb0122_autoroute.mp3",
    "license": "CC0 (BigSoundBank #122)"
   }
  ]
