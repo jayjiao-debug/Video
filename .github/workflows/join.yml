@@ -1,0 +1,17 @@
+name: farm-jam15-join
+on:
+  push:
+    branches: [farm-jam15-join]
+permissions:
+  contents: write
+  actions: read
+jobs:
+  out:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/download-artifact@v4
+        with: { name: film_video, path: v, run-id: 38035862421, github-token: "${{ secrets.GITHUB_TOKEN }}", repository: "${{ github.repository }}" }
+      - run: |
+          ls -la v; mkdir out; cd out; split -b 45M -d ../v/film_video.mp4 film.part; md5sum ../v/film_video.mp4 | cut -d' ' -f1 > md5.txt; ls -la
+          git init -q; git checkout -q -b farm-jam15-out; git add -A; git -c user.name=farm -c user.email=farm@noreply commit -qm out
+          git push -f "https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}" farm-jam15-out
