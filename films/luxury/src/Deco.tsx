@@ -6,21 +6,21 @@ import { font } from './brand/lib';
 import { JUNO } from './brand/identity';
 import { Bag2D, Watch2D, Ring2D, Perfume2D, Lipstick2D, Heel2D, Grain, AHero, ALineup, GOLD, GOLD_D, GOLD_L, INK } from './Flat';
 
-const BG = '#0b0a09', PANEL = '#14110d', VIOLET = '#8a5cff', UV = '#bff4ff';
+export const BG = '#0b0a09', PANEL = '#14110d', VIOLET = '#8a5cff', UV = '#bff4ff';
 
 /** rays from a point, a fan between two angles */
-const Sunburst: React.FC<{ cx: number; cy: number; r0: number; r1: number; n?: number; a0?: number; a1?: number; o?: number; color?: string }> =
+export const Sunburst: React.FC<{ cx: number; cy: number; r0: number; r1: number; n?: number; a0?: number; a1?: number; o?: number; color?: string }> =
   ({ cx, cy, r0, r1, n = 48, a0 = -Math.PI, a1 = 0, o = 0.2, color = GOLD }) => (
     <g>{Array.from({ length: n }, (_, i) => { const a = a0 + (i / (n - 1)) * (a1 - a0); return <line key={i} x1={cx + Math.cos(a) * r0} y1={cy + Math.sin(a) * r0} x2={cx + Math.cos(a) * r1} y2={cy + Math.sin(a) * r1} stroke={color} strokeOpacity={i % 2 ? o * 0.45 : o} strokeWidth={2} />; })}</g>
   );
 /** a stepped deco frame line around the picture */
-const Frame: React.FC<{ color?: string }> = ({ color = GOLD }) => (
+export const Frame: React.FC<{ color?: string }> = ({ color = GOLD }) => (
   <g fill="none" stroke={color} strokeWidth={2} opacity={0.5}>
     <path d="M 60 120 L 60 60 L 120 60 M 1800 60 L 1860 60 L 1860 120 M 1860 960 L 1860 1020 L 1800 1020 M 120 1020 L 60 1020 L 60 960" />
     <path d="M 80 140 L 80 80 L 140 80 M 1780 80 L 1840 80 L 1840 140 M 1840 940 L 1840 1000 L 1780 1000 M 140 1000 L 80 1000 L 80 940" opacity={0.6} />
   </g>
 );
-const Card: React.FC<{ x: number; y: number; w: number; h: number; rot?: number; lines: [string, number, string?][]; bg?: string }> = ({ x, y, w, h, rot = 0, lines, bg = '#f1e8d6' }) => {
+export const Card: React.FC<{ x: number; y: number; w: number; h: number; rot?: number; lines: [string, number, string?][]; bg?: string }> = ({ x, y, w, h, rot = 0, lines, bg = '#f1e8d6' }) => {
   let yy = -h / 2 + 8; const total = lines.reduce((s, l) => s + l[1] * 1.2, 0); yy = -total / 2;
   return (
     <g transform={`translate(${x} ${y}) rotate(${rot})`}>
@@ -126,7 +126,7 @@ const S04: React.FC = () => (
 );
 
 /* ------------------------------------------------------------------ 05 price: the same wine */
-const Glass: React.FC<{ x: number; y: number; warm: boolean }> = ({ x, y, warm }) => (
+export const Glass: React.FC<{ x: number; y: number; warm: boolean }> = ({ x, y, warm }) => (
   <g transform={`translate(${x} ${y})`}>
     {warm && <Sunburst cx={0} cy={-240} r0={160} r1={520} n={40} a0={-Math.PI} a1={Math.PI} o={0.22} />}
     <path d="M -110 -420 Q -120 -270 -40 -220 L -10 -200 L -10 -40 Q -10 -10 -80 0 L 80 0 Q 10 -10 10 -40 L 10 -200 L 40 -220 Q 120 -270 110 -420" fill="none" stroke={warm ? GOLD : 'rgba(243,237,226,0.45)'} strokeWidth={4} />
@@ -166,7 +166,7 @@ const S06: React.FC = () => (
 );
 
 /* ------------------------------------------------------------------ 07 the unsold */
-const Flame: React.FC<{ x: number; s: number }> = ({ x, s }) => (
+export const Flame: React.FC<{ x: number; s: number }> = ({ x, s }) => (
   <g transform={`translate(${x} 900) scale(${s})`}>
     <path d="M 0 0 C -60 -40, -40 -120, -10 -170 C 0 -120, 30 -110, 20 -60 C 50 -90, 60 -40, 40 0 Z" fill="#e0782a" />
     <path d="M 0 0 C -30 -30, -20 -80, 0 -110 C 4 -80, 24 -70, 16 -36 C 30 -50, 32 -20, 22 0 Z" fill={GOLD_L} />
