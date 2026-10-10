@@ -19,7 +19,7 @@ const woodTex = () => canvasTex(2048, 1024, (g) => {
 });
 /** the notebook spread; written as time passes */
 const PEOPLE = [['攀岩者', 50.2], ['画家', 51.1], ['棋手', 51.9], ['作曲家', 52.7], ['运动员', 53.5], ['外科医生', 54.3]] as const;
-const pageTex = (T: number) => canvasTex(2048, 1400, (g) => {
+const pageTex = (T: number, v5 = false) => canvasTex(2048, 1400, (g) => {
   g.fillStyle = '#efe7d6'; g.fillRect(0, 0, 2048, 1400);
   const sh = g.createLinearGradient(980, 0, 1068, 0); sh.addColorStop(0, 'rgba(0,0,0,0)'); sh.addColorStop(0.5, 'rgba(0,0,0,0.22)'); sh.addColorStop(1, 'rgba(0,0,0,0)'); g.fillStyle = sh; g.fillRect(980, 0, 88, 1400);
   g.strokeStyle = 'rgba(80,110,150,0.25)'; g.lineWidth = 2; for (let y = 160; y < 1360; y += 70) { g.beginPath(); g.moveTo(60, y); g.lineTo(990, y); g.moveTo(1060, y); g.lineTo(1990, y); g.stroke(); }
@@ -39,7 +39,7 @@ const pageTex = (T: number) => canvasTex(2048, 1400, (g) => {
   }
   const rules = (T > 93) ? 1 : 0; if (rules) {
     g.fillStyle = '#2d2620'; g.font = '700 64px "Noto Sans CJK SC", sans-serif';
-    [['① 调频', 94.0], ['② 开关', 94.6], ['③ 篮筐', 95.2]].forEach(([w, t0], i) => { if (T > (t0 as number)) g.fillText(w as string, 1140, 1030 + i * 100); });
+    (v5 ? [['① 难度', 94.0], ['② 目标', 94.6], ['③ 反馈', 95.2]] : [['① 调频', 94.0], ['② 开关', 94.6], ['③ 篮筐', 95.2]]).forEach(([w, t0], i) => { if (T > (t0 as number)) g.fillText(w as string, 1140, 1030 + i * 100); });
   }
 });
 const dialTex = (needle: number, on: number) => canvasTex(1024, 256, (g) => {
@@ -53,11 +53,11 @@ const grilleTex = () => canvasTex(512, 512, (g) => { g.fillStyle = '#3a2a1c'; g.
 /** where the radio's needle points: noise (too hard) → silence (too easy) → the station */
 const needleAt = (T: number) => { if (T < 65.6) return 0.5; if (T < 67.6) return lerp(0.5, 0.1, easeInOut(prog(T, 65.6, 66.4))); if (T < 69.5) return lerp(0.1, 0.9, easeInOut(prog(T, 67.6, 68.4))); return lerp(0.9, 0.52, easeInOut(prog(T, 69.5, 70.3))); };
 
-const DeskWorld: React.FC<{ T: number }> = ({ T }) => {
+const DeskWorld: React.FC<{ T: number; v5?: boolean }> = ({ T, v5 = false }) => {
   const { camera } = useThree();
   const tx = useMemo(() => ({ wood: woodTex(), glow: glowTex('rgba(255,226,170,1)', 'rgba(255,200,120,0)'), cone: coneTex(), grille: grilleTex() }), []);
   const pageKey = Math.round(T * 6);
-  const page = useMemo(() => pageTex(T), [pageKey]); // eslint-disable-line react-hooks/exhaustive-deps
+  const page = useMemo(() => pageTex(T, v5), [pageKey, v5]); // eslint-disable-line react-hooks/exhaustive-deps
   const radioOn = prog(T, 65.45, 65.9) * (T > 72.6 && T < 93 ? 0 : 1);
   const nd = needleAt(T);
   const dial = useMemo(() => dialTex(nd, radioOn), [Math.round(nd * 200), Math.round(radioOn * 10)]); // eslint-disable-line react-hooks/exhaustive-deps
@@ -166,16 +166,16 @@ const Tips: React.FC<{ T: number }> = ({ T }) => {
   );
 };
 
-export const DeskScene: React.FC<{ T: number }> = ({ T }) => (
+export const DeskScene: React.FC<{ T: number; v5?: boolean }> = ({ T, v5 = false }) => (
   <AbsoluteFill style={{ background: '#05060a' }}>
     <ThreeCanvas width={1920} height={1080} camera={{ fov: 42, position: [0.45, 1.55, 2.3], near: 0.02, far: 40 }} gl={{ antialias: true }}>
       <color attach="background" args={['#05060a']} />
-      <DeskWorld T={T} />
+      <DeskWorld T={T} v5={v5} />
     </ThreeCanvas>
     <AbsoluteFill style={{ background: 'radial-gradient(ellipse at 45% 50%, rgba(0,0,0,0) 45%, rgba(0,0,0,0.6) 100%)' }} />
     <NameCard T={T} t0={49.8} t1={57.5} x={110} y={250} align="right" name="契克森米哈赖" latin="MIHALY CSIKSZENTMIHALYI · 1934–2021"
       rows={[['心理学家', 50.4], ['访谈了运动员、画家、棋手……', 51.0], ['《心流》· 1990', 51.6, true]]} />
     <RadioPanel T={T} />
-    <Tips T={T} />
+    {!v5 && <Tips T={T} />}
   </AbsoluteFill>
 );
