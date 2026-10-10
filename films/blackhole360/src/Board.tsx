@@ -59,14 +59,41 @@ const Plate: React.FC<{ p: string; dim?: number }> = ({ p, dim = 0 }) => (
 );
 
 /* ---------------------------------------------------------------- props */
-const JConstellation = () => {
-  const pts: [number, number][] = [[1040, 230], [1120, 230], [1080, 240], [1082, 360], [1078, 470], [1050, 540], [990, 560], [940, 520]];
+const NasaConstellation = () => {
+  /* "NASA" drawn as a constellation: plain star dots joined by faint lines (no NASA logo shapes) */
+  const L: Record<string, [number, number][][]> = {
+    N: [[[0, 1], [0, 0], [1, 1], [1, 0]]],
+    A: [[[0, 1], [0.5, 0], [1, 1]], [[0.25, 0.55], [0.75, 0.55]]],
+    S: [[[0.95, 0.12], [0.5, 0], [0.05, 0.18], [0.25, 0.47], [0.78, 0.55], [0.95, 0.82], [0.5, 1], [0.05, 0.88]]],
+  };
+  const W = 110, H = 160, GAP = 55, X0 = 1000, Y0 = 150;
   return (
     <svg width={1920} height={1080} style={{ position: 'absolute', inset: 0 }}>
-      <polyline points={pts.slice(2).map((p) => p.join(',')).join(' ')} fill="none" stroke={GOLD} strokeWidth={2} opacity={0.5} />
-      <line x1={1040} y1={230} x2={1120} y2={230} stroke={GOLD} strokeWidth={2} opacity={0.5} />
-      {pts.map(([x, y], i) => <circle key={i} cx={x} cy={y} r={i % 3 ? 6 : 9} fill="#fff6dc" style={{ filter: `drop-shadow(0 0 10px ${GOLD})` }} />)}
-      <circle cx={1030} cy={400} r={250} fill="none" stroke={GOLD} strokeWidth={1.5} opacity={0.25} strokeDasharray="4 10" />
+      {[...'NASA'].map((ch, k) => L[ch].map((stroke, j) => {
+        const pts = stroke.map(([u, v]) => [X0 + k * (W + GAP) + u * W, Y0 + v * H]);
+        return (
+          <g key={`${k}-${j}`}>
+            <polyline points={pts.map((q) => q.join(',')).join(' ')} fill="none" stroke={GOLD} strokeWidth={2} opacity={0.45} />
+            {pts.map(([x, y], i) => <circle key={i} cx={x} cy={y} r={(i + k) % 3 ? 5.5 : 8.5} fill="#fff6dc" style={{ filter: `drop-shadow(0 0 10px ${GOLD})` }} />)}
+          </g>
+        );
+      }))}
+    </svg>
+  );
+};
+const Dust = () => {
+  /* the pure-fall beat: dust streaking past outwards from the point we fall towards */
+  const cx = 970, cy = 520;
+  return (
+    <svg width={1920} height={1080} style={{ position: 'absolute', inset: 0 }}>
+      {Array.from({ length: 90 }, (_, i) => {
+        const a = (i * 2.399963) % (2 * Math.PI), r0 = 260 + ((i * 97) % 700), len = 30 + r0 * 0.12;
+        const x0 = cx + r0 * Math.cos(a), y0 = cy + r0 * Math.sin(a) * 0.8, x1 = cx + (r0 + len) * Math.cos(a), y1 = cy + (r0 + len) * Math.sin(a) * 0.8;
+        return <line key={i} x1={x0} y1={y0} x2={x1} y2={y1} stroke="#fff3df" strokeWidth={1 + r0 / 400} strokeLinecap="round" opacity={0.25 + 0.5 * (r0 / 960)} />;
+      })}
+      <circle cx={cx} cy={cy} r={280} fill="none" stroke={GOLD} strokeWidth={2} strokeDasharray="6 12" opacity={0.5} />
+      <circle cx={cx} cy={cy} r={235} fill="none" stroke={GOLD} strokeWidth={1.5} strokeDasharray="6 12" opacity={0.3} />
+      <text x={cx + 315} y={cy - 250} fontFamily={SANS} fontWeight={700} fontSize={24} fill={GOLD}>4 秒内，黑洞阴影变大一圈</text>
     </svg>
   );
 };
@@ -100,27 +127,6 @@ const Letter = () => (
     <div style={{ position: 'absolute', left: 26, bottom: 20, fontFamily: '"Cormorant Garamond", Georgia, serif', fontStyle: 'italic', fontSize: 26 }}>K. Schwarzschild</div>
   </div>
 );
-const Checker = () => {
-  /* the A/B board from 《大脑的懒惰》, wrapped by the lens into an Einstein arc hugging the shadow (sketch) */
-  const cx = 1230, cy = 560, N = 16, A0 = Math.PI * 1.06, DA = Math.PI * 0.88 / N;
-  const P = (a: number, r: number) => `${cx + r * Math.cos(a)},${cy + r * Math.sin(a) * 0.8}`;
-  const cell = (i: number, row: number) => { const a0 = A0 + i * DA, a1 = a0 + DA, r0 = 360 + row * 48, r1 = r0 + 48; return `${P(a0, r0)} ${P(a1, r0)} ${P(a1, r1)} ${P(a0, r1)}`; };
-  const iA = 5, iB = 10; // A sits on a light square's row, B in the shadowed row: both are the same grey
-  const mid = (i: number, row: number) => { const a = A0 + (i + 0.5) * DA, r = 360 + row * 48 + 24; return [cx + r * Math.cos(a), cy + r * Math.sin(a) * 0.8]; };
-  const [ax, ay] = mid(iA, 1), [bx, by] = mid(iB, 0);
-  return (
-    <svg width={1920} height={1080} style={{ position: 'absolute', inset: 0 }}>
-      {[0, 1].map((row) => Array.from({ length: N }, (_, i) => {
-        const isA = i === iA && row === 1, isB = i === iB && row === 0;
-        const light = (i + row) % 2 === 0;
-        return <polygon key={`${row}-${i}`} points={cell(i, row)} fill={isA || isB ? '#8a8a8a' : light ? '#d9d6cf' : row === 0 ? '#3e3d3b' : '#5d5c59'} stroke="rgba(0,0,0,0.35)" strokeWidth={1} opacity={0.92} />;
-      }))}
-      <text x={ax} y={ay + 9} textAnchor="middle" fontFamily={SANS} fontWeight={900} fontSize={28} fill="#fff">A</text>
-      <text x={bx} y={by + 9} textAnchor="middle" fontFamily={SANS} fontWeight={900} fontSize={28} fill="#fff">B</text>
-      <text x={cx} y={cy - 470} textAnchor="middle" fontFamily={SANS} fontWeight={700} fontSize={24} fill={GOLD}>棋盘在黑洞背后，光被弯过来，成了一道弧</text>
-    </svg>
-  );
-};
 const Beams = () => (
   <svg width={1920} height={1080} style={{ position: 'absolute', inset: 0 }}>
     {/* traced-looking rays from 小J's torch: straight far away, bent near the hole, one goes round the back */}
@@ -207,11 +213,11 @@ type Panel = { el: React.ReactNode };
 const P: Panel[] = [
   { el: <><Plate p="p1_far" /><Bots bots={[{ x: 430, y: 560, s: 1.3, e: 'wink', hr: 0.9 }]} /><Bubble x={580} y={330} t="嗨，我是这趟的向导，小J。" /><Caption n={1} t="0:00" title="小J 嗖地飞进来，挥手打招呼" look="前" /></> },
   { el: <><Plate p="p1_far" dim={0.6} /><div style={{ position: 'absolute', left: 0, right: 0, top: 330, textAlign: 'center', fontFamily: SERIF, fontWeight: 900, fontSize: 150, color: GOLD, textShadow: '0 0 34px rgba(241,197,109,0.6)' }}>《掉进黑洞》</div><Bots bots={[{ x: 240, y: 800, s: 0.9, e: 'happy', yaw: 0.6 }]} /><Caption n={2} t="0:08" title="金色标题落在第一个重拍，小J 退到一边抬头看" look="前" /></> },
-  { el: <><Plate p="p2_back" /><JConstellation /><Bots bots={[{ x: 520, y: 620, s: 1.1, e: 'surprised', hr: 0.8, yaw: 0.6 }]} /><Bubble x={620} y={380} t="先回头，跟正常的星空说再见。" /><Tag x={1200} y={600} t="彩蛋：只有回头的人才看到 J 星座" /><Caption n={3} t="0:12" kind="彩蛋" title="小J 飞到你身后：正常的星空和银河，还有一个 J 星座" look="后" /></> },
+  { el: <><Plate p="p2_back" /><NasaConstellation /><Bots bots={[{ x: 520, y: 620, s: 1.1, e: 'surprised', hr: 0.8, yaw: 0.6 }]} /><Bubble x={620} y={380} t="先回头，跟正常的星空说再见。" /><Tag x={1200} y={600} t="彩蛋：只有回头的人才看到 NASA 星座" /><Caption n={3} t="0:12" kind="彩蛋" title="小J 飞到你身后：正常的星空和银河，还有一个 NASA 星座" look="后" /></> },
   { el: <><Plate p="p3_mid" /><SunRow /><Tag x={830} y={600} t="视界直径 ≈ 17 个太阳" /><Bots bots={[{ x: 380, y: 600, s: 1.1, e: 'happy', hl: 0.7, hr: 0.7, yaw: 0.5 }]} /><Bubble x={480} y={330} t="它的视界，能并排放下17个太阳。" /><Caption n={4} t="0:17" kind="道具" title="一排太阳从黑影这头排到那头" look="前" /></> },
   { el: <><Plate p="p3_mid" /><Letter /><Bots bots={[{ x: 820, y: 700, s: 0.9, e: 'surprised', yaw: -0.3 }]} /><Bubble x={900} y={760} t="1916年，有人在战壕里算出了黑洞。" /><Caption n={5} t="0:22" kind="彩蛋" title="一封旧信飘过：史瓦西在一战前线写给爱因斯坦" look="左" /></> },
   { el: <><Plate p="p3_mid" dim={0.45} /><OrbitInset /><Bots bots={[{ x: 420, y: 560, s: 1.1, e: 'squint', yaw: 0.4 }]} /><Bubble x={520} y={330} t={'别怕，它不会把你"吸"过去。'} /><Caption n={6} t="0:28" kind="道具" title="太阳换成同样重的黑洞：地球轨道一模一样" look="前" /></> },
-  { el: <><Plate p="p1_far" /><Checker /><Bots bots={[{ x: 430, y: 560, s: 1.1, e: 'wink' }]} /><Bubble x={540} y={330} t="A和B，还是同一个颜色。" /><Caption n={7} t="0:33" kind="彩蛋" title="《大脑的懒惰》的棋盘飘过，被黑洞弯成一道弧" look="前" /></> },
+  { el: <><Plate p="p3_mid" /><Dust /><Bots bots={[{ x: 300, y: 760, s: 0.8, e: 'normal', yaw: 0.9 }]} /><Caption n={7} t="0:33" kind="留白" title="纯下坠 4 秒：没字幕没道具，尘埃擦身而过，黑洞一点点变大" look="前" /></> },
   { el: <><Plate p="p3_mid" /><Beams /><Bots bots={[{ x: 470, y: 560, s: 1.0, e: 'normal', hr: 0.6, yaw: 0.9 }]} /><Bubble x={300} y={250} t="我开个手电：看，光绕过去了。" /><Caption n={8} t="0:37" kind="道具" title="小J 打手电：光线按真实物理弯折，有一束绕到黑洞背后" look="前" /></> },
   { el: <><Plate p="p5_near" /><Tag x={200} y={700} t="→ 冲你转来：更亮、更蓝" c={BLUE} /><Tag x={1350} y={700} t="← 远离你：更暗、更红" c={RED} /><Bots bots={[{ x: 1500, y: 330, s: 0.8, e: 'squint', yaw: -0.4 }]} /><Bubble x={640} y={130} t="左边亮右边暗，不是我没开灯。" /><Caption n={9} t="0:43" kind="道具" title="盘上浮出两个箭头：气体转得接近一半光速" look="前" /></> },
   { el: <><Plate p="p5_near" dim={0.55} /><Spectrum /><Bots bots={[{ x: 420, y: 400, s: 1.0, e: 'squint', yaw: 0.3 }]} /><Bubble x={540} y={200} t="大部分光你看不见，颜色是我翻译的。" /><Caption n={10} t="0:49" kind="道具" title="一条光谱尺：它的光大多在紫外和 X 射线" look="前" /></> },
