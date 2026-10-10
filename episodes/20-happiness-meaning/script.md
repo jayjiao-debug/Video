@@ -100,3 +100,20 @@ SFX: 5 soft two-tone pings at 24.9, 25.6, 26.3, 27.0 and 27.7 s (the app's rando
 
 ## Delivery v1 (2026-10-10 21:23)
 Farm run 38078749691 → join 38079272102 (md5 6718fa8d…). Mix = s130f untouched + 5 pings (sfx20.py, mix17.py). Send version 快乐还是意义_v1.mp4 (2-pass 1500k, 27.7 MB); HD master made locally (64.8 MB), link on request. Checks: 3899 frames / 129.97 s, no black runs ≥0.4 s, review contact sheets at ~3 s spacing.
+
+## v2 (2026-10-10 22:10) — owner: meaning half strong; happiness half not intriguing/easy; visuals too long, generic, boring
+- Happiness half rewritten for plain words and surprise.
+  - Kept: the App (2250 people, near half the time "人在这儿，心不在").
+  - New: the chocolate experiment. Small, Zatorre, Dagher, Evans & Jones-Gotman (2001) *Brain* 124(9):1720–33: people "ate chocolate to beyond satiety", rating each piece from very pleasant to unpleasant ("from pleasure to aversion"). Lines: 第一块：真好吃 / 吃到吃不下还在吃：变成难受 / 同一种快乐，会越用越淡 (interpretation, consistent with habituation in Brickman 1978).
+  - Then the lottery (3 lines), and money in 2 plain lines; the Kahneman-vs-Killingsworth back-story was cut.
+- Every beat is now its own lit 3D diorama on the same black mirror floor:
+  - desk + lamp, with the person's blue light-double drifting away;
+  - a chocolate bar on a plinth vanishing piece by piece, beside a pleasure gauge;
+  - a winner under falling gold coins next to an ordinary person, equal halos, small joys dimming at the winner;
+  - gold coin towers per income step with two rows of people (blue row stops brightening at $10万);
+  - the world-at-night map with gold light columns that collapse on the drop;
+  - two orbs of light under a stress weight, with particles taken in vs given out;
+  - a 14-lamp road walked by two groups;
+  - the doors again, with the evidence columns beside them.
+- Fix: the floor glaze now draws first (renderOrder −10). Before, it darkened the lower half of additive objects.
+- Delivered 快乐还是意义_v2.mp4 (farm run 38082145311, md5 cfeaaff2…).
