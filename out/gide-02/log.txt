@@ -1,0 +1,6 @@
+token present: yes
+url https://faculty-gsb.stanford.edu/aaker/pages/documents/somekeydifferenceshappylifemeaningfullife_2012.pdf
+  FAILED: fetch failed
+url https://www.gsb.stanford.edu/faculty-research/publications/some-key-differences-between-happy-life-meaningful-life
+  saved out/files/gsb_page.html 0.2 MB
+done
