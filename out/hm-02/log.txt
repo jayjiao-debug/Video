@@ -1,0 +1,10 @@
+token present: yes
+url https://www.ebi.ac.uk/europepmc/webservices/rest/PMC10013834/fullTextXML
+  saved out/files/kkm2023.xml 0.1 MB
+url https://www.ebi.ac.uk/europepmc/webservices/rest/PMC4224996/fullTextXML
+  FAILED: 500 https://www.ebi.ac.uk/europepmc/webservices/rest/PMC4224996/fullTextXML
+url https://www.ebi.ac.uk/europepmc/webservices/rest/PMC7848527/fullTextXML
+  saved out/files/kill2021.xml 0.1 MB
+url https://news.harvard.edu/gazette/story/2010/11/wandering-mind-not-a-happy-mind/
+  saved out/files/harvard_gazette_2010.html 0.1 MB
+done

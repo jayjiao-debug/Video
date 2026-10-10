@@ -1,0 +1,14 @@
+[
+  {
+    "source": "https://www.ebi.ac.uk/europepmc/webservices/rest/PMC10013834/fullTextXML",
+    "license": "PNAS open access (CC BY-NC-ND), reference"
+  },
+  {
+    "source": "https://www.ebi.ac.uk/europepmc/webservices/rest/PMC7848527/fullTextXML",
+    "license": "PNAS open access, reference"
+  },
+  {
+    "source": "https://news.harvard.edu/gazette/story/2010/11/wandering-mind-not-a-happy-mind/",
+    "license": "Harvard Gazette, reference"
+  }
+]
