@@ -1,0 +1,93 @@
+<!doctype html><html><head><meta charset="utf-8"><style>
+html,body{margin:0;width:1920px;height:1080px;overflow:hidden;background:#000}
+canvas{position:absolute;left:0;top:0}
+.sub{position:absolute;bottom:70px;left:50%;transform:translateX(-50%);font-family:'Noto Sans CJK SC';font-weight:900;font-size:64px;color:#fff;background:rgba(6,8,13,.80);border-radius:18px;padding:10px 34px;white-space:nowrap;line-height:1.25;z-index:5}
+.sub b{color:#F6CF78;font-weight:900}
+.mark{position:absolute;right:44px;top:34px;font-family:'Noto Sans CJK SC';font-size:22px;font-weight:700;letter-spacing:2px;color:#fff;opacity:.92;text-shadow:0 1px 8px rgba(40,20,80,.75);z-index:5}
+.lab{position:absolute;font-family:'Noto Sans CJK SC';font-weight:900;color:#fff;z-index:4;white-space:nowrap}
+</style>
+<script type="importmap">{"imports":{"three":"/tmp/claude-0/-home-claude-video/131bbb47-cdc6-59f9-b59e-78638f10b457/scratchpad/ep21/node_modules/three/build/three.module.js","three/addons/":"/tmp/claude-0/-home-claude-video/131bbb47-cdc6-59f9-b59e-78638f10b457/scratchpad/ep21/node_modules/three/examples/jsm/"}}</script>
+</head><body>
+<div class="mark">◆ Juno · VIBE知识大赏</div>
+<div id="labs"></div>
+<div class="sub">低于中位数的人：满意度<b>下降</b></div>
+<script type="module">
+import * as THREE from 'three';
+import {RoundedBoxGeometry} from 'three/addons/geometries/RoundedBoxGeometry.js';
+import {EffectComposer} from 'three/addons/postprocessing/EffectComposer.js';
+import {RenderPass} from 'three/addons/postprocessing/RenderPass.js';
+import {UnrealBloomPass} from 'three/addons/postprocessing/UnrealBloomPass.js';
+import {OutputPass} from 'three/addons/postprocessing/OutputPass.js';
+const W=1920,H=1080;
+const r=new THREE.WebGLRenderer({antialias:true});r.setSize(W,H);r.toneMapping=THREE.ACESFilmicToneMapping;r.toneMappingExposure=1.0;document.body.appendChild(r.domElement);
+function canvasTex(w,h,draw){const c=document.createElement('canvas');c.width=w;c.height=h;draw(c.getContext('2d'),w,h);const t=new THREE.CanvasTexture(c);t.colorSpace=THREE.SRGBColorSpace;t.anisotropy=8;return t}
+const SPEC=['#ff2a6d','#ff9a3c','#ffe94d','#4dff8b','#3cd2ff','#6a5cff','#c04dff'];
+const envTex=canvasTex(2048,1024,(x,w,h)=>{let g=x.createLinearGradient(0,0,0,h);g.addColorStop(0,'#1c0c55');g.addColorStop(.38,'#8a2bd6');g.addColorStop(.5,'#ff5fb4');g.addColorStop(.56,'#ff9a62');g.addColorStop(.7,'#4b1a8f');g.addColorStop(1,'#120632');x.fillStyle=g;x.fillRect(0,0,w,h);
+ x.fillStyle='#ffffff';[[180,120,50,360],[700,160,40,300],[1240,100,60,380],[1650,180,40,260]].forEach(([a,b,c,d])=>x.fillRect(a,b,c,d));x.fillStyle='#7ff3ff';x.fillRect(980,300,40,240);});
+envTex.mapping=THREE.EquirectangularReflectionMapping;
+const pm=new THREE.PMREMGenerator(r);const envRT=pm.fromEquirectangular(envTex);
+const s=new THREE.Scene();s.environment=envRT.texture;s.fog=new THREE.Fog(0x8a2fb0,16,58);
+const cam=new THREE.PerspectiveCamera(34,W/H,.05,200);
+const bgTex=canvasTex(2048,1024,(x,w,h)=>{let g=x.createLinearGradient(0,0,w,h*.6);g.addColorStop(0,'#1e0d5c');g.addColorStop(.4,'#5a1fa8');g.addColorStop(.7,'#b23aa8');g.addColorStop(1,'#ff8a5b');x.fillStyle=g;x.fillRect(0,0,w,h);
+ const cols=['#7CF5FF','#FF7BE0','#FFE08A','#B9A3FF','#FFFFFF'];for(let i=0;i<70;i++){const px=(i*263)%w,py=200+((i*149)%600),R=8+((i*31)%40);x.filter=`blur(${3+R/9}px)`;x.globalAlpha=.14+((i*7)%10)/30;x.fillStyle=cols[i%5];x.beginPath();x.arc(px,py,R,0,7);x.fill()}x.globalAlpha=1;x.filter='none';});
+const bg=new THREE.Mesh(new THREE.PlaneGeometry(260,110),new THREE.MeshBasicMaterial({map:bgTex,toneMapped:false,fog:false}));bg.position.set(0,14,-60);s.add(bg);
+const hzTex=canvasTex(16,512,(x,w,h)=>{let g=x.createLinearGradient(0,0,0,h);g.addColorStop(0,'rgba(138,47,176,0)');g.addColorStop(.55,'rgba(138,47,176,.85)');g.addColorStop(1,'rgba(138,47,176,1)');x.fillStyle=g;x.fillRect(0,0,w,h)});
+const hz=new THREE.Mesh(new THREE.PlaneGeometry(300,16),new THREE.MeshBasicMaterial({map:hzTex,transparent:true,toneMapped:false,fog:false,depthWrite:false}));hz.position.set(0,2,-58);s.add(hz);
+const floor=new THREE.Mesh(new THREE.PlaneGeometry(200,200),new THREE.MeshPhysicalMaterial({color:0x2c1460,roughness:.3,metalness:.2,clearcoat:1,clearcoatRoughness:.2,envMapIntensity:.55}));floor.rotation.x=-Math.PI/2;s.add(floor);
+// ---------- pay list as glass tubes, sorted: tallest at the back, shortest in front ----------
+const N=22,MED=2.55;const pays=[];for(let i=0;i<N;i++){pays.push(i<11?5.7-i*.25:2.3-(i-11)*.1)} // back(i=0) -> front(i=N-1)
+const YOU=12;
+const warmTex=canvasTex(64,512,(x,w,h)=>{let g=x.createLinearGradient(0,0,0,h);g.addColorStop(0,'#ffd27a');g.addColorStop(.3,'#ff8a4c');g.addColorStop(.62,'#ff3f9e');g.addColorStop(1,'#7a22d0');x.fillStyle=g;x.fillRect(0,0,w,h)});
+const coldTex=canvasTex(64,512,(x,w,h)=>{let g=x.createLinearGradient(0,0,0,h);g.addColorStop(0,'#d8fbff');g.addColorStop(.3,'#5fd8ff');g.addColorStop(1,'#1b2a9a');x.fillStyle=g;x.fillRect(0,0,w,h)});
+const warmGlass=new THREE.MeshPhysicalMaterial({color:0xffffff,transmission:1,thickness:.25,roughness:0,ior:1.5,iridescence:.9,iridescenceIOR:1.4,iridescenceThicknessRange:[250,650],envMapIntensity:1.8,dispersion:3});
+const frostGlass=new THREE.MeshPhysicalMaterial({color:0xe6f6ff,transmission:1,thickness:.25,roughness:.42,ior:1.4,envMapIntensity:1.4,iridescence:.3});
+const tubes=[];
+for(let i=0;i<N;i++){
+ const h=pays[i],below=h<MED;const t=i/(N-1);
+ // positions: a gentle diagonal from back-right to front-left
+ const x=-8.4+t*15.6,z=-7.2+t*4.6;
+ const g=new THREE.Group();g.position.set(x,0,z);s.add(g);
+ const glass=new THREE.Mesh(new THREE.CylinderGeometry(.34,.34,h,40,1),below?frostGlass:warmGlass);glass.position.y=h/2;g.add(glass);
+ const cap=new THREE.Mesh(new THREE.SphereGeometry(.34,40,16,0,Math.PI*2,0,Math.PI/2),below?frostGlass:warmGlass);cap.position.y=h;g.add(cap);
+ // the light inside: warm = full and bright; cold = drained to a low, dim level
+ const fill=below?h*.55:h*.96;
+ const core=new THREE.Mesh(new THREE.CylinderGeometry(.22,.22,fill,24,1),new THREE.MeshBasicMaterial({map:below?coldTex:warmTex,toneMapped:false,color:below?0x8fb4ff:0xd8c8d8}));core.position.y=fill/2;g.add(core);
+ // base ring
+ const base=new THREE.Mesh(new THREE.CylinderGeometry(.42,.46,.12,40),new THREE.MeshPhysicalMaterial({color:below?0x9fc8ff:0xffd7a0,metalness:1,roughness:.5,envMapIntensity:1.1}));base.position.y=.06;g.add(base);
+ tubes.push({g,x,z,h,below});
+}
+// frost sparkles on cold tubes
+const spTex=canvasTex(64,64,(x,w,h)=>{let g=x.createRadialGradient(32,32,0,32,32,32);g.addColorStop(0,'rgba(255,255,255,1)');g.addColorStop(.25,'rgba(200,245,255,.6)');g.addColorStop(1,'rgba(150,220,255,0)');x.fillStyle=g;x.fillRect(0,0,w,h);x.fillStyle='rgba(255,255,255,.9)';x.fillRect(31,0,2,64);x.fillRect(0,31,64,2)});
+const spMat=new THREE.SpriteMaterial({map:spTex,blending:THREE.AdditiveBlending,depthWrite:false,toneMapped:false,fog:false});
+let seed=7;const rnd=()=>{seed=(seed*16807)%2147483647;return seed/2147483647};
+tubes.filter(t=>t.below).forEach(t=>{for(let k=0;k<9;k++){const sp=new THREE.Sprite(spMat);const a=rnd()*6.28;sp.position.set(t.x+Math.cos(a)*.36,rnd()*t.h,t.z+Math.sin(a)*.36);const sc=.08+rnd()*.16;sp.scale.set(sc,sc,1);s.add(sp)}});
+// ---------- the median plane: a sheet of light ----------
+const mpTex=canvasTex(1024,1024,(x,w,h)=>{let g=x.createRadialGradient(w/2,h/2,0,w/2,h/2,w/2);g.addColorStop(0,'rgba(170,250,255,.55)');g.addColorStop(.6,'rgba(120,200,255,.22)');g.addColorStop(1,'rgba(120,120,255,0)');x.fillStyle=g;x.fillRect(0,0,w,h);
+ x.strokeStyle='rgba(220,255,255,.12)';x.lineWidth=2;for(let i=0;i<=24;i++){x.beginPath();x.moveTo(i*w/24,0);x.lineTo(i*w/24,h);x.stroke();x.beginPath();x.moveTo(0,i*h/24);x.lineTo(w,i*h/24);x.stroke()}
+ x.globalCompositeOperation='destination-in';let m=x.createRadialGradient(w/2,h/2,0,w/2,h/2,w/2);m.addColorStop(0,'rgba(0,0,0,1)');m.addColorStop(.7,'rgba(0,0,0,.8)');m.addColorStop(1,'rgba(0,0,0,0)');x.fillStyle=m;x.fillRect(0,0,w,h)});
+const mp=new THREE.Mesh(new THREE.PlaneGeometry(26,16),new THREE.MeshBasicMaterial({map:mpTex,transparent:true,blending:THREE.AdditiveBlending,depthWrite:false,toneMapped:false,side:THREE.DoubleSide,fog:false}));mp.rotation.x=-Math.PI/2;mp.position.set(-.6,MED,-4.9);mp.rotation.z=-.29;s.add(mp);
+// glowing rings where the warm tubes pierce the plane; shock ring expanding (the drop hit)
+const ringMat=new THREE.MeshBasicMaterial({color:0xbff8ff,transparent:true,blending:THREE.AdditiveBlending,depthWrite:false,toneMapped:false,fog:false});
+tubes.filter(t=>!t.below).forEach(t=>{const rg=new THREE.Mesh(new THREE.TorusGeometry(.42,.025,8,64),ringMat);rg.rotation.x=Math.PI/2;rg.position.set(t.x,MED,t.z);s.add(rg)});
+for(let k=0;k<3;k++){const m=ringMat.clone();m.opacity=.7-k*.2;const rg=new THREE.Mesh(new THREE.TorusGeometry(1.4+k*1.1,.035-k*.008,8,160),m);rg.rotation.x=Math.PI/2;const yt=tubes[YOU];rg.position.set(yt.x,MED,yt.z);s.add(rg)}
+// "you" tube highlight: gold base halo
+const yt=tubes[YOU];
+const haloTex=canvasTex(256,256,(x,w,h)=>{let g=x.createRadialGradient(128,128,0,128,128,128);g.addColorStop(0,'rgba(246,207,120,.9)');g.addColorStop(1,'rgba(246,207,120,0)');x.fillStyle=g;x.fillRect(0,0,w,h)});
+const yh=new THREE.Mesh(new THREE.PlaneGeometry(1.8,1.8),new THREE.MeshBasicMaterial({map:haloTex,transparent:true,blending:THREE.AdditiveBlending,depthWrite:false,toneMapped:false,fog:false}));yh.rotation.x=-Math.PI/2;yh.position.set(yt.x,.01,yt.z);s.add(yh);
+{const gm=new THREE.MeshBasicMaterial({color:0xF6CF78,transparent:true,blending:THREE.AdditiveBlending,toneMapped:false,fog:false});const rg=new THREE.Mesh(new THREE.TorusGeometry(.5,.03,8,64),gm);rg.rotation.x=Math.PI/2;rg.position.set(yt.x,yt.h+.06,yt.z);s.add(rg);}
+// lights
+const key=new THREE.DirectionalLight(0xfff0e6,1.0);key.position.set(5,9,4);s.add(key);
+const p1=new THREE.PointLight(0xff4fd0,40,20);p1.position.set(3,5,-6);s.add(p1);
+const p2=new THREE.PointLight(0x4fe6ff,50,16);p2.position.set(-3,1.6,0);s.add(p2);
+s.add(new THREE.HemisphereLight(0xb79cff,0x2a1060,.35));
+const comp=new EffectComposer(r);comp.addPass(new RenderPass(s,cam));comp.addPass(new UnrealBloomPass(new THREE.Vector2(W,H),.5,.5,.88));comp.addPass(new OutputPass());
+function proj(v){const p=v.clone().project(cam);return [(p.x+1)/2*W,(1-p.y)/2*H]}
+window.renderAt=t=>{cam.position.set(-3.2,3.6,8.6);cam.lookAt(.4,2.25,-4.2);cam.updateMatrixWorld();comp.render();
+ const [yx,yy]=proj(new THREE.Vector3(yt.x,yt.h+.5,yt.z));const [mx,my]=proj(new THREE.Vector3(7.4,MED,-2.6));
+ document.getElementById('labs').innerHTML=`<div class="lab" style="left:${yx-44}px;top:${yy-40}px;font-size:56px;color:#F6CF78;text-shadow:0 0 18px rgba(246,207,120,.8),0 2px 6px rgba(30,10,60,.8)">你 ▾</div>
+ <div class="lab" style="left:${Math.min(mx+20,1600)}px;top:${my-90}px;font-size:44px;color:#E6FDFF;text-shadow:0 0 18px rgba(80,230,255,1),0 2px 6px rgba(30,10,60,.8)">— 中位数</div>
+ <div class="lab" style="left:1250px;top:150px;font-size:92px;color:#CFF7FF;text-shadow:0 0 28px rgba(60,200,255,1),0 2px 8px rgba(20,10,60,.9)">满意度▼</div>`;};
+const ov=document.createElement('canvas');ov.width=W;ov.height=H;ov.style.cssText='position:absolute;left:0;top:0;mix-blend-mode:screen;pointer-events:none;z-index:2';document.body.appendChild(ov);
+const o=ov.getContext('2d');let lg=o.createRadialGradient(1750,-60,0,1750,-60,950);lg.addColorStop(0,'rgba(255,200,170,.45)');lg.addColorStop(.45,'rgba(255,100,190,.16)');lg.addColorStop(1,'rgba(120,80,255,0)');o.fillStyle=lg;o.fillRect(0,0,W,H);
+window.READY=true;
+</script></body></html>

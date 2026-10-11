@@ -1,0 +1,86 @@
+{
+  "label": "gate2a",
+  "viewer": "20yo male uni student, Douyin, portrait phone, landscape video playing small (~1/4 screen), ~5s per frame",
+  "frames": [
+    {
+      "frame": "1 lookA_hook",
+      "what_I_think_its_about": "Someone's first internship pay (4000) shown on a shiny phone. Feels like it'll be a 'is 4000 a lot?' or 'how to spend your first paycheck' video.",
+      "eye_went_first": "The white lens-flare blob at the top right of the phone, then the 4000 on the card. The flare is actually brighter than the number, so it pulls my eye off the point for a beat.",
+      "stop_scrolling": "maybe -- the subtitle '人生第一份实习工资：4000' hits me personally (I'm hunting internships), so the WORDS might stop me. The picture alone wouldn't; it looks like a phone ad.",
+      "look": "Polished but generic. Glass phone on a purple pedestal with a prism is the standard C4D/AI-render 'premium product' look I've seen a thousand times in phone launches and course ads. 精致 but not new.",
+      "unreadable_at_phone_size": "'实习工资 · 到账' and '刚刚' on the card are tiny pale grey-blue on white, gone at quarter-screen. The 4000 on the card is readable. Watermark top right is unreadable (fine).",
+      "vibe_word": "广告感"
+    },
+    {
+      "frame": "2 lookA_key",
+      "what_I_think_its_about": "A row of glass test tubes / capsules: tall orange ones on the left, short blue ones on the right, a '你' marker in between, and '满意度▼'. So people below some median are less happy.",
+      "eye_went_first": "The big glowing '满意度▼' top right, then the orange tubes on the left.",
+      "stop_scrolling": "maybe -- pretty, but I had to work out what the tubes mean. Is tube height salary or satisfaction? Both? The left side keeps going down smoothly so the 'cliff' at the median doesn't jump out.",
+      "look": "Shiny and colorful, a bit 炫, but it reads like a fancy bar chart. Same purple-pink glass world as frame 1, so consistent, but nothing I'd screenshot.",
+      "unreadable_at_phone_size": "The '— 中位数' label floats on the right with no visible line connecting it to anything, so I don't know where the median actually is. '你▼' is small and sits in the glow ripples, easy to miss. The sparkles in the blue tubes are noise.",
+      "vibe_word": "漂亮但抽象"
+    },
+    {
+      "frame": "3 lookB_hook",
+      "what_I_think_its_about": "Celebrating a first paycheck of 4000 -- balloons, confetti, party.",
+      "eye_went_first": "The giant pink balloon '4000', no contest. Instantly read it.",
+      "stop_scrolling": "maybe leaning no -- it's the clearest of the three hooks, but it looks like a birthday e-card or a 拼多多/bank app promo banner. 4000 shows up THREE times (balloon, phone card, subtitle), which feels repetitive. I don't feel a question yet, just 'yay money'.",
+      "look": "Cheerful but kind of childish/cheap. Balloon-number + confetti is a template look.",
+      "unreadable_at_phone_size": "'开心的第1天' on the phone card is tiny pink-on-white, unreadable. The phone is shoved into the bottom-left corner and half cut off by the subtitle box.",
+      "vibe_word": "喜庆"
+    },
+    {
+      "frame": "4 lookB_key",
+      "what_I_think_its_about": "Oh -- the monkey experiment! One gets cucumber, the other gets grapes for the same work. I've seen the clip of the angry capuchin throwing the cucumber back. So the video is about unfairness/comparison, not the number itself.",
+      "eye_went_first": "The green '这只：黄瓜' tag, then the cucumber, then the purple grapes.",
+      "stop_scrolling": "yes -- this is the most 'story' frame of all six. I recognize the meme and want to see the monkey get mad. If this were the opening I'd stop.",
+      "look": "Cute but toy-like. The monkeys look like balloon animals / clay figures, a bit uncanny (bald heads with a dark cap, blank faces). The grape monkey's face is completely covered by the grapes, so I can't see either monkey's emotion -- and emotion is the whole point of that experiment.",
+      "unreadable_at_phone_size": "Labels and subtitle all readable. The background confetti and balloons are busy and add nothing here.",
+      "vibe_word": "童趣"
+    },
+    {
+      "frame": "5 lookC_hook",
+      "what_I_think_its_about": "A thermal-camera view of a desk: the phone with the 4000 payment is glowing hotter than 'you' (37.4 vs MAX 39.6). Like the money makes you 'heat up' -- excitement measured as temperature.",
+      "eye_went_first": "The glowing yellow-orange phone in the center, then '你 · 37.4°C'.",
+      "stop_scrolling": "yes -- 'wait, why is this a thermal camera?' That's a real question in my head in under 2 seconds. Also looks like something off a 监控/科技 channel, which I don't usually see for a money topic.",
+      "look": "New and 高级. Feels like a sci-fi HUD / 赛博 surveillance shot. Haven't seen salary content shot like this.",
+      "unreadable_at_phone_size": "'IR · 满意度热像' top right is tiny and thin -- that's the one label that explains the concept, and I can't read it at quarter-screen. 'MAX 39.6°C' is borderline. '刚刚' is red on orange, gone. The ¥ sign merges into the blown-out 4000 glow. The dark empty rectangle top left (a monitor?) reads as a dead black hole.",
+      "vibe_word": "赛博"
+    },
+    {
+      "frame": "6 lookC_key",
+      "what_I_think_its_about": "A crowd of people split by a glowing line: everyone above the median is warm orange, everyone below is cold blue. 'You' are boxed just under the line. So being just a bit below the median makes you 'go cold' -- less satisfied.",
+      "eye_went_first": "The bright horizontal line, then the yellow box with '你' right under it.",
+      "stop_scrolling": "yes -- this one gets me in the gut (扎心). It's the clearest key frame: warm vs cold = happy vs unhappy carries over from the thermal hook, no explanation needed. Seeing myself just barely below the line is exactly the anxiety.",
+      "look": "高级 and new-looking. The orange figures on top are clean; the bottom half is messier.",
+      "unreadable_at_phone_size": "The bottom crowd is a mess of contour lines that turns into visual mush at small size -- looks glitchy/dirty rather than 'cold'. The '中位数' label next to the line is fine. All main text readable.",
+      "vibe_word": "扎心"
+    }
+  ],
+  "for_frames_only": [
+    {"frame": "1 lookA_hook", "what_this_says_in_5s": "Shiny phone ad: you got 4000 for your first internship."},
+    {"frame": "2 lookA_key", "what_this_says_in_5s": "Some glass bar chart: below the median, satisfaction drops. Had to decode it."},
+    {"frame": "3 lookB_hook", "what_this_says_in_5s": "Party! 4000! (feels like a promo card)"},
+    {"frame": "4 lookB_key", "what_this_says_in_5s": "The cucumber vs grape monkey experiment -- it's about unfairness. Want to see what happens."},
+    {"frame": "5 lookC_hook", "what_this_says_in_5s": "Thermal camera: the 4000 paycheck is the hottest thing in the room. Why thermal? Curious."},
+    {"frame": "6 lookC_key", "what_this_says_in_5s": "Above median = warm, below = cold, and you're just under the line. Ouch."}
+  ],
+  "would_keep_watching_2min": "C",
+  "why_C_for_2min": "It's the only style where the visual itself is the idea (heat = satisfaction), and the hook and key frame share one metaphor, so I'd expect it to keep paying off. A is pretty but I'd forget it; B has the best single story beat (the monkeys) but the party look makes the whole thing feel like a kids' explainer.",
+  "feels_never_seen_before": "C -- thermal-camera framing for a salary/psychology topic is new to me. A is the most generic (standard glass-render look). B's monkey experiment is well-known content, just restyled.",
+  "steal_from_B": "The monkey cucumber/grape scene is the strongest hook CONTENT of all six. If C could do the monkeys in thermal (the cucumber monkey going cold while the grape one glows), that would be the one I'd send to friends.",
+  "would_keep_watching_after_3s": true,
+  "why": "For C: 'why is this a thermal camera?' plus the internship-pay subtitle. For A/B I'd stay only for the subtitle text, not the picture.",
+  "first_moment_I_got_curious": "Frame 5 (C hook): the phone glowing hotter than the person.",
+  "where_I_would_swipe_away": [
+    "Frame 3 (B hook): looks like a promo banner, 4000 repeated three times, no question raised",
+    "Frame 2 (A key): if it takes more than a second to work out what the tubes measure"
+  ],
+  "lines_I_did_not_understand": [
+    "Frame 2: '— 中位数' label -- where is the median line? Nothing connects to it",
+    "Frame 5: 'IR · 满意度热像' -- couldn't read it at phone size, and it's the label that explains the whole concept"
+  ],
+  "takeaway_in_my_words": "Earning a bit less than the median makes you feel worse than you'd expect, even if the money itself is fine -- it's comparison, not the amount.",
+  "surprise_that_stuck": "Being boxed as '你' just under the glowing line in frame 6.",
+  "what_I_would_comment": "On C: '热成像这个创意绝了，我现在体温估计零下' / On B: '黄瓜猴就是我本人'"
+}

@@ -1,0 +1,94 @@
+<!doctype html><html><head><meta charset="utf-8"><style>
+html,body{margin:0;width:1920px;height:1080px;overflow:hidden;background:#000}
+canvas{position:absolute;left:0;top:0}
+.sub{position:absolute;bottom:70px;left:50%;transform:translateX(-50%);font-family:'Noto Sans CJK SC';font-weight:900;font-size:64px;color:#fff;background:rgba(6,8,13,.80);border-radius:18px;padding:10px 34px;white-space:nowrap;line-height:1.25;z-index:5}
+.sub b{color:#F6CF78;font-weight:900}
+.mark{position:absolute;right:44px;top:34px;font-family:'Noto Sans CJK SC';font-size:22px;font-weight:700;letter-spacing:2px;color:#fff;opacity:.92;text-shadow:0 1px 8px rgba(20,30,60,.75);z-index:5}
+</style>
+<script type="importmap">{"imports":{"three":"/tmp/claude-0/-home-claude-video/131bbb47-cdc6-59f9-b59e-78638f10b457/scratchpad/ep21/node_modules/three/build/three.module.js","three/addons/":"/tmp/claude-0/-home-claude-video/131bbb47-cdc6-59f9-b59e-78638f10b457/scratchpad/ep21/node_modules/three/examples/jsm/"}}</script>
+</head><body>
+<div class="mark">◆ Juno · VIBE知识大赏</div>
+<div class="sub">你拿到人生第一份实习工资：<b>4000</b></div>
+<script type="module">
+import * as THREE from 'three';
+import {RoundedBoxGeometry} from 'three/addons/geometries/RoundedBoxGeometry.js';
+import {FontLoader} from 'three/addons/loaders/FontLoader.js';
+import {TextGeometry} from 'three/addons/geometries/TextGeometry.js';
+import * as BGU from 'three/addons/utils/BufferGeometryUtils.js';
+import {EffectComposer} from 'three/addons/postprocessing/EffectComposer.js';
+import {RenderPass} from 'three/addons/postprocessing/RenderPass.js';
+import {UnrealBloomPass} from 'three/addons/postprocessing/UnrealBloomPass.js';
+import {OutputPass} from 'three/addons/postprocessing/OutputPass.js';
+const W=1920,H=1080;
+const r=new THREE.WebGLRenderer({antialias:true});r.setSize(W,H);r.toneMapping=THREE.ACESFilmicToneMapping;r.toneMappingExposure=1.05;document.body.appendChild(r.domElement);
+function canvasTex(w,h,draw){const c=document.createElement('canvas');c.width=w;c.height=h;draw(c.getContext('2d'),w,h);const t=new THREE.CanvasTexture(c);t.colorSpace=THREE.SRGBColorSpace;t.anisotropy=8;return t}
+// party studio env: teal/pink gradient, big softboxes and a ring of coloured gels (for chrome)
+const envTex=canvasTex(2048,1024,(x,w,h)=>{let g=x.createLinearGradient(0,0,0,h);g.addColorStop(0,'#0fd6d0');g.addColorStop(.35,'#7b6cff');g.addColorStop(.5,'#ff6fb5');g.addColorStop(.62,'#ffd36b');g.addColorStop(1,'#3a1a7a');x.fillStyle=g;x.fillRect(0,0,w,h);
+ x.fillStyle='#ffffff';[[150,150,220,240],[820,120,160,300],[1350,170,260,220],[1800,140,120,280]].forEach(([a,b,c,d])=>x.fillRect(a,b,c,d));
+ x.fillStyle='#4ff6ff';x.fillRect(560,380,120,120);x.fillStyle='#ff4fb8';x.fillRect(1120,380,120,120);x.fillStyle='#fff06b';x.fillRect(1620,400,90,90);});
+envTex.mapping=THREE.EquirectangularReflectionMapping;
+const pm=new THREE.PMREMGenerator(r);const env=pm.fromEquirectangular(envTex).texture;
+const s=new THREE.Scene();s.environment=env;
+const cam=new THREE.PerspectiveCamera(32,W/H,.05,200);
+// backdrop: seamless paper sweep, saturated gradient + glitter bokeh + confetti
+const bgTex=canvasTex(2048,1152,(x,w,h)=>{let g=x.createRadialGradient(w*.55,h*.45,50,w*.55,h*.5,w*.75);g.addColorStop(0,'#3fe6e0');g.addColorStop(.35,'#1a9fb8');g.addColorStop(.7,'#4a2bb8');g.addColorStop(1,'#24105e');x.fillStyle=g;x.fillRect(0,0,w,h);
+ const cols=['#ffffff','#ff7fd0','#fff07a','#ff9ad6','#b9f7ff'];for(let i=0;i<120;i++){const px=(i*263)%w,py=(i*149)%h,R=6+((i*31)%36);x.filter=`blur(${2+R/7}px)`;x.globalAlpha=.20+((i*7)%10)/26;x.fillStyle=cols[i%5];x.beginPath();x.arc(px,py,R,0,7);x.fill()}
+ x.filter='none';x.globalAlpha=1;});
+const bg=new THREE.Mesh(new THREE.PlaneGeometry(80,45),new THREE.MeshBasicMaterial({map:bgTex,toneMapped:false}));bg.position.set(0,6,-26);s.add(bg);
+// table: glossy candy lacquer
+const table=new THREE.Mesh(new THREE.CylinderGeometry(6,6,.3,96),new THREE.MeshPhysicalMaterial({color:0xff6eb8,roughness:.2,clearcoat:1,clearcoatRoughness:.05,envMapIntensity:.8}));table.position.y=-.15;s.add(table);
+// phone on a little stand, screen with the notification
+const phone=new THREE.Group();phone.position.set(-2.0,0,3.0);phone.rotation.set(0,.42,0);s.add(phone);
+const body=new THREE.Mesh(new RoundedBoxGeometry(1.0,2.0,.1,8,.1),new THREE.MeshPhysicalMaterial({color:0xf2f2ff,metalness:.9,roughness:.15,iridescence:.6,envMapIntensity:1.2}));body.position.y=1.02;body.rotation.x=-.18;phone.add(body);
+const uiTex=canvasTex(1000,2000,(x,w,h)=>{let g=x.createLinearGradient(0,0,0,h);g.addColorStop(0,'#2a1b6e');g.addColorStop(1,'#ff5fae');x.fillStyle=g;x.beginPath();x.roundRect(0,0,w,h,90);x.fill();
+ x.fillStyle='rgba(236,230,250,.95)';x.beginPath();x.roundRect(60,420,w-120,640,70);x.fill();
+ x.fillStyle='#5a2bb0';x.font="900 76px 'Noto Sans CJK SC'";x.textAlign='center';x.fillText('实习工资 · 到账',w/2,560);
+ x.fillStyle='#1b0f45';x.font="bold 236px 'DejaVu Sans'";x.fillText('4000',w/2+44,830);x.font="bold 112px 'DejaVu Sans'";x.fillText('¥',140,790);
+ x.fillStyle='#ff3f9e';x.font="900 64px 'Noto Sans CJK SC'";x.fillText('开心的第 1 天',w/2,990);});
+const ui=new THREE.Mesh(new THREE.PlaneGeometry(.92,1.84),new THREE.MeshBasicMaterial({map:uiTex,toneMapped:false}));ui.position.set(0,1.02,.052);ui.rotation.x=-.18;phone.add(ui);
+// shadow blob under things
+const shTex=canvasTex(256,256,(x,w,h)=>{let g=x.createRadialGradient(128,128,0,128,128,128);g.addColorStop(0,'rgba(10,40,60,.55)');g.addColorStop(1,'rgba(10,40,60,0)');x.fillStyle=g;x.fillRect(0,0,w,h)});
+function shadow(px,pz,sc){const m=new THREE.Mesh(new THREE.PlaneGeometry(sc,sc*.6),new THREE.MeshBasicMaterial({map:shTex,transparent:true,depthWrite:false}));m.rotation.x=-Math.PI/2;m.position.set(px,.005,pz);s.add(m)}
+shadow(-2.0,3.0,2.2);
+// chrome-pink foil balloon digits "4000" rising out of the phone
+const font=await new FontLoader().loadAsync('/tmp/claude-0/-home-claude-video/131bbb47-cdc6-59f9-b59e-78638f10b457/scratchpad/ep21/node_modules/three/examples/fonts/helvetiker_bold.typeface.json');
+const crTex=(()=>{const c=document.createElement('canvas');c.width=c.height=512;const x=c.getContext('2d');x.fillStyle='rgb(128,128,255)';x.fillRect(0,0,512,512);
+ let sd=3;const R=()=>{sd=(sd*16807)%2147483647;return sd/2147483647};for(let i=0;i<220;i++){const a=R()*6.28,l=20+R()*90,px=R()*512,py=R()*512;x.strokeStyle=`rgba(${128+Math.cos(a+1.57)*90|0},${128+Math.sin(a+1.57)*90|0},235,.35)`;x.lineWidth=1+R()*2.5;x.beginPath();x.moveTo(px,py);x.lineTo(px+Math.cos(a)*l,py+Math.sin(a)*l);x.stroke()}
+ x.filter='blur(1.5px)';x.drawImage(c,0,0);const t=new THREE.CanvasTexture(c);t.wrapS=t.wrapT=THREE.RepeatWrapping;t.repeat.set(.9,.9);return t})();
+const foil=new THREE.MeshPhysicalMaterial({color:0xff6ec7,metalness:1,roughness:.16,iridescence:.45,iridescenceIOR:1.5,iridescenceThicknessRange:[200,600],envMapIntensity:1.6,clearcoat:.6});
+function puffText(str,size){let g=new TextGeometry(str,{font,size,depth:size*.06,curveSegments:12,bevelEnabled:true,bevelThickness:size*.26,bevelSize:size*.09,bevelSegments:14});g.center();
+ const uv=g.attributes.uv;g.deleteAttribute('normal');g=BGU.mergeVertices(g,1e-4);g.computeVertexNormals();
+ // inflate: push vertices along the smoothed normal, more on the faces than at the rim -> pillow
+ const P=g.attributes.position,N=g.attributes.normal;for(let i=0;i<P.count;i++){const nz=Math.abs(N.getZ(i));const k=size*.05*nz;P.setXYZ(i,P.getX(i)+N.getX(i)*k,P.getY(i)+N.getY(i)*k,P.getZ(i)+N.getZ(i)*k*1.6)}
+ g.computeVertexNormals();return g}
+const digits=new THREE.Group();s.add(digits);
+const chars='4000';const offs=[-2.15,-.72,.72,2.15];const rots=[[.08,-.18,.12],[-.05,-.06,-.06],[.04,.08,.07],[-.07,.2,-.1]];const ys=[3.95,4.25,4.05,4.35];
+const tops=[];
+chars.split('').forEach((c,i)=>{const m=new THREE.Mesh(puffText(c,1.45),foil);m.position.set(offs[i]+.5,ys[i],-.6+(i%2)*.25);m.rotation.set(...rots[i]);digits.add(m);tops.push(m)});
+// ribbons from each digit down to the phone (curly)
+const ribMat=new THREE.MeshPhysicalMaterial({color:0xfff2a8,metalness:1,roughness:.25,envMapIntensity:1.4});
+tops.forEach((m,i)=>{const a=new THREE.Vector3(m.position.x,m.position.y-1.05,m.position.z);const b=new THREE.Vector3(-2.0+(i-1.5)*.1,2.02,3.0);
+ const pts=[];for(let k=0;k<=40;k++){const t=k/40;const p=a.clone().lerp(b,t);p.x+=Math.sin(t*18+i)*.06*(1-t);p.z+=Math.cos(t*18+i)*.06*(1-t);pts.push(p)}
+ const g=new THREE.TubeGeometry(new THREE.CatmullRomCurve3(pts),120,.012,6,false);s.add(new THREE.Mesh(g,ribMat))});
+// confetti pieces (instanced)
+const cg=new THREE.PlaneGeometry(.09,.16);const confCols=[0xffffff,0x7ffcff,0xfff07a,0xff4fb8,0x9b7bff,0x2be0d0];
+let seed=11;const rnd=()=>{seed=(seed*16807)%2147483647;return seed/2147483647};
+for(let i=0;i<160;i++){const m=new THREE.Mesh(cg,new THREE.MeshPhysicalMaterial({color:confCols[i%6],metalness:.8,roughness:.25,side:THREE.DoubleSide,envMapIntensity:1.4}));
+ m.position.set(-6+rnd()*12,.3+rnd()*6.5,-4+rnd()*5.5);if(m.position.x>3.2&&m.position.y>5.4)m.position.y-=2.2;m.rotation.set(rnd()*6,rnd()*6,rnd()*6);s.add(m)}
+// a few round latex balloons in the back (soft, out of focus feel via fog-less distance)
+const latex=(c)=>new THREE.MeshPhysicalMaterial({color:c,roughness:.28,clearcoat:1,clearcoatRoughness:.1,sheen:.5,envMapIntensity:1.0,transmission:0});
+[[-5.2,4.6,-6,1.1,0x7ffcff],[5.6,5.2,-7,1.3,0xfff07a],[4.4,2.2,-3.6,.8,0x9b7bff],[-4.2,1.6,-3.0,.7,0xff4fb8]].forEach(([x,y,z,sc,c])=>{const m=new THREE.Mesh(new THREE.SphereGeometry(1,48,32),latex(c));m.scale.set(sc,sc*1.15,sc);m.position.set(x,y,z);s.add(m)});
+// lights
+const key=new THREE.DirectionalLight(0xffffff,1.6);key.position.set(4,8,6);s.add(key);
+const p1=new THREE.PointLight(0x4ff6ff,40,18);p1.position.set(-5,4,3);s.add(p1);
+const p2=new THREE.PointLight(0xff4fb8,40,18);p2.position.set(5,3,3);s.add(p2);
+s.add(new THREE.HemisphereLight(0xffffff,0x6a3cff,.5));
+const comp=new EffectComposer(r);comp.addPass(new RenderPass(s,cam));comp.addPass(new UnrealBloomPass(new THREE.Vector2(W,H),.45,.5,.95));comp.addPass(new OutputPass());
+window.renderAt=t=>{cam.position.set(-.2,1.7,10.6);cam.lookAt(.2,2.75,0);comp.render()};
+const ov=document.createElement('canvas');ov.width=W;ov.height=H;ov.style.cssText='position:absolute;left:0;top:0;pointer-events:none;z-index:2';document.body.appendChild(ov);
+const o=ov.getContext('2d');let vg=o.createRadialGradient(W*.55,H*.4,380,W*.55,H*.45,1250);vg.addColorStop(0,'rgba(30,10,80,0)');vg.addColorStop(1,'rgba(30,10,90,.55)');o.fillStyle=vg;o.fillRect(0,0,W,H);
+const star=(x,y,L,a)=>{o.save();o.globalCompositeOperation='screen';for(const [dx,dy] of [[1,0],[0,1]]){let g=o.createLinearGradient(x-dx*L,y-dy*L,x+dx*L,y+dy*L);g.addColorStop(0,'rgba(255,255,255,0)');g.addColorStop(.5,`rgba(255,255,255,${a})`);g.addColorStop(1,'rgba(255,255,255,0)');o.strokeStyle=g;o.lineWidth=3;o.beginPath();o.moveTo(x-dx*L,y-dy*L);o.lineTo(x+dx*L,y+dy*L);o.stroke()}
+ let rg=o.createRadialGradient(x,y,0,x,y,L*.3);rg.addColorStop(0,`rgba(255,255,255,${a})`);rg.addColorStop(1,'rgba(255,255,255,0)');o.fillStyle=rg;o.beginPath();o.arc(x,y,L*.3,0,7);o.fill();o.restore()};
+star(905,170,60,.9);star(1385,160,46,.8);star(612,262,38,.7);star(1146,226,30,.7);star(470,700,26,.6);
+window.READY=true;
+</script></body></html>

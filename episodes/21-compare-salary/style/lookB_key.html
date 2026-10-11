@@ -1,0 +1,122 @@
+<!doctype html><html><head><meta charset="utf-8"><style>
+html,body{margin:0;width:1920px;height:1080px;overflow:hidden;background:#000}
+canvas{position:absolute;left:0;top:0}
+.sub{position:absolute;bottom:70px;left:50%;transform:translateX(-50%);font-family:'Noto Sans CJK SC';font-weight:900;font-size:64px;color:#fff;background:rgba(6,8,13,.80);border-radius:18px;padding:10px 34px;white-space:nowrap;line-height:1.25;z-index:5}
+.sub b{color:#F6CF78;font-weight:900}
+.pill{position:absolute;font-family:'Noto Sans CJK SC';font-weight:900;font-size:44px;color:#fff;padding:8px 26px;border-radius:40px;white-space:nowrap;z-index:4;box-shadow:0 6px 24px rgba(20,10,60,.35)}
+.mark{position:absolute;right:44px;top:34px;font-family:'Noto Sans CJK SC';font-size:22px;font-weight:700;letter-spacing:2px;color:#fff;opacity:.92;text-shadow:0 1px 8px rgba(20,30,60,.75);z-index:5}
+</style>
+<script type="importmap">{"imports":{"three":"/tmp/claude-0/-home-claude-video/131bbb47-cdc6-59f9-b59e-78638f10b457/scratchpad/ep21/node_modules/three/build/three.module.js","three/addons/":"/tmp/claude-0/-home-claude-video/131bbb47-cdc6-59f9-b59e-78638f10b457/scratchpad/ep21/node_modules/three/examples/jsm/"}}</script>
+</head><body>
+<div class="mark">◆ Juno · VIBE知识大赏</div>
+<div id="labs"></div>
+<div class="sub">可旁边那只，同样干活，换到<b>葡萄</b></div>
+<script type="module">
+import * as THREE from 'three';
+import {RoundedBoxGeometry} from 'three/addons/geometries/RoundedBoxGeometry.js';
+import {FontLoader} from 'three/addons/loaders/FontLoader.js';
+import {TextGeometry} from 'three/addons/geometries/TextGeometry.js';
+import * as BGU from 'three/addons/utils/BufferGeometryUtils.js';
+import {EffectComposer} from 'three/addons/postprocessing/EffectComposer.js';
+import {RenderPass} from 'three/addons/postprocessing/RenderPass.js';
+import {UnrealBloomPass} from 'three/addons/postprocessing/UnrealBloomPass.js';
+import {OutputPass} from 'three/addons/postprocessing/OutputPass.js';
+const W=1920,H=1080;
+const r=new THREE.WebGLRenderer({antialias:true});r.setSize(W,H);r.toneMapping=THREE.ACESFilmicToneMapping;r.toneMappingExposure=1.05;document.body.appendChild(r.domElement);
+function canvasTex(w,h,draw){const c=document.createElement('canvas');c.width=w;c.height=h;draw(c.getContext('2d'),w,h);const t=new THREE.CanvasTexture(c);t.colorSpace=THREE.SRGBColorSpace;t.anisotropy=8;return t}
+// party studio env: teal/pink gradient, big softboxes and a ring of coloured gels (for chrome)
+const envTex=canvasTex(2048,1024,(x,w,h)=>{let g=x.createLinearGradient(0,0,0,h);g.addColorStop(0,'#0fd6d0');g.addColorStop(.35,'#7b6cff');g.addColorStop(.5,'#ff6fb5');g.addColorStop(.62,'#ffd36b');g.addColorStop(1,'#3a1a7a');x.fillStyle=g;x.fillRect(0,0,w,h);
+ x.fillStyle='#ffffff';[[150,150,220,240],[820,120,160,300],[1350,170,260,220],[1800,140,120,280]].forEach(([a,b,c,d])=>x.fillRect(a,b,c,d));
+ x.fillStyle='#4ff6ff';x.fillRect(560,380,120,120);x.fillStyle='#ff4fb8';x.fillRect(1120,380,120,120);x.fillStyle='#fff06b';x.fillRect(1620,400,90,90);});
+envTex.mapping=THREE.EquirectangularReflectionMapping;
+const pm=new THREE.PMREMGenerator(r);const env=pm.fromEquirectangular(envTex).texture;
+const s=new THREE.Scene();s.environment=env;
+const cam=new THREE.PerspectiveCamera(32,W/H,.05,200);
+// backdrop: seamless paper sweep, saturated gradient + glitter bokeh + confetti
+const bgTex=canvasTex(2048,1152,(x,w,h)=>{let g=x.createRadialGradient(w*.55,h*.45,50,w*.55,h*.5,w*.75);g.addColorStop(0,'#3fe6e0');g.addColorStop(.35,'#1a9fb8');g.addColorStop(.7,'#4a2bb8');g.addColorStop(1,'#24105e');x.fillStyle=g;x.fillRect(0,0,w,h);
+ const cols=['#ffffff','#ff7fd0','#fff07a','#ff9ad6','#b9f7ff'];for(let i=0;i<120;i++){const px=(i*263)%w,py=(i*149)%h,R=6+((i*31)%36);x.filter=`blur(${2+R/7}px)`;x.globalAlpha=.20+((i*7)%10)/26;x.fillStyle=cols[i%5];x.beginPath();x.arc(px,py,R,0,7);x.fill()}
+ x.filter='none';x.globalAlpha=1;});
+const bg=new THREE.Mesh(new THREE.PlaneGeometry(80,45),new THREE.MeshBasicMaterial({map:bgTex,toneMapped:false}));bg.position.set(0,6,-26);s.add(bg);
+
+const table=new THREE.Mesh(new THREE.CylinderGeometry(9,9,.3,128),new THREE.MeshPhysicalMaterial({color:0xff6eb8,roughness:.2,clearcoat:1,clearcoatRoughness:.05,envMapIntensity:.8}));table.position.y=-.15;s.add(table);
+const shTex=canvasTex(256,256,(x,w,h)=>{let g=x.createRadialGradient(128,128,0,128,128,128);g.addColorStop(0,'rgba(60,10,60,.5)');g.addColorStop(1,'rgba(60,10,60,0)');x.fillStyle=g;x.fillRect(0,0,w,h)});
+function shadow(px,pz,sc){const m=new THREE.Mesh(new THREE.PlaneGeometry(sc,sc*.6),new THREE.MeshBasicMaterial({map:shTex,transparent:true,depthWrite:false}));m.rotation.x=-Math.PI/2;m.position.set(px,.005,pz);s.add(m)}
+const latex=(c,rough=.22)=>new THREE.MeshPhysicalMaterial({color:c,roughness:rough,clearcoat:1,clearcoatRoughness:.08,sheen:.4,sheenColor:new THREE.Color(0xffffff),envMapIntensity:1.1});
+// stools (candy cylinders)
+function stool(x,c){const m=new THREE.Mesh(new THREE.CylinderGeometry(1.0,1.08,1.0,64),latex(c,.3));m.position.set(x,.5,0);s.add(m);shadow(x,0,3.4);return m}
+stool(-2.4,0x7b5cff);stool(2.4,0x2bd6d0);
+// --- twisted-balloon capuchin: capsules + pinches; faceless, dark cap, cream muzzle
+const CAR=latex(0xe0873a),CREAM=latex(0xf6dcb4),CAP=latex(0x5a2c14);
+function cap(r,len,mat){return new THREE.Mesh(new THREE.CapsuleGeometry(r,len,12,32),mat)}
+function seg(g,a,b,r,mat){const d=b.clone().sub(a);const m=cap(r,Math.max(.01,d.length()-r*1.2),mat);m.position.copy(a.clone().add(b).multiplyScalar(.5));m.quaternion.setFromUnitVectors(new THREE.Vector3(0,1,0),d.clone().normalize());g.add(m);return m}
+function ball(g,p,r,mat,sc){const m=new THREE.Mesh(new THREE.SphereGeometry(r,40,28),mat);m.position.copy(p);if(sc)m.scale.set(...sc);g.add(m);return m}
+const V=(x,y,z)=>new THREE.Vector3(x,y,z);
+function monkey(x,face,lookAt,mood){
+ const g=new THREE.Group();g.position.set(x,1.0,0);g.rotation.y=face;s.add(g);
+ // body + pelvis
+ seg(g,V(0,.25,0),V(0,1.05,.02),.34,CAR);
+ // legs (sitting): thigh forward, shin down
+ for(const sx of [-1,1]){seg(g,V(.2*sx,.25,.05),V(.3*sx,.3,.7),.13,CAR);seg(g,V(.3*sx,.3,.7),V(.28*sx,0.06,.82),.12,CAR);ball(g,V(.28*sx,.05,.9),.1,CREAM)}
+ // head group (can turn)
+ const hd=new THREE.Group();hd.position.set(0,1.55,.05);g.add(hd);
+ ball(hd,V(0,0,0),.42,CAR,[1,.95,.92]);
+ ball(hd,V(0,.27,-.02),.3,CAP,[1.05,.45,1.0]);           // dark cap
+ ball(hd,V(0,-.1,.32),.24,CREAM,[1.15,.85,.75]);         // muzzle disc, no features
+ for(const sx of [-1,1]){ball(hd,V(.4*sx,.04,-.04),.11,CAR,[.55,1,1]);ball(hd,V(.43*sx,.04,-.02),.07,CREAM,[.4,.8,.8])} // ears
+ hd.rotation.y=lookAt;hd.rotation.x=mood;
+ // tail: long curling balloon
+ const pts=[V(0,.3,-.3),V(.1,.4,-.9),V(.5,1.2,-1.1),V(.7,1.9,-.8),V(.45,2.25,-.5),V(.2,2.1,-.35)];
+ g.add(new THREE.Mesh(new THREE.TubeGeometry(new THREE.CatmullRomCurve3(pts),80,.09,16,false),CAR));
+ ball(g,pts[5],.09,CAR);
+ return {g,hd};
+}
+// left: has the cucumber, head turned to the neighbour; right: receives the grape
+const L=monkey(-2.4,.35,.75,.05),R=monkey(2.4,-.3,-.1,-.12);
+// left arms: one holds cucumber low, lazily
+{const g=L.g;for(const sx of [-1,1]){const sh=V(.3*sx,.95,.08);const el=V(.42*sx,.62,.42);const hn=V(.22*sx,.55,.72);seg(g,sh,el,.11,CAR);seg(g,el,hn,.1,CAR);ball(g,hn,.11,CREAM)}
+ const cu=cap(.13,.8,latex(0x5fc94a,.35));cu.position.set(0,.58,.86);cu.rotation.z=Math.PI/2+.25;cu.rotation.y=.2;g.add(cu);
+ // nubs on the cucumber balloon
+ for(let i=0;i<6;i++){const n=new THREE.Mesh(new THREE.SphereGeometry(.03,10,8),latex(0x3e9a34));n.position.set(-.4+i*.16,.6+Math.sin(i)*.05,.98);g.add(n)}}
+// right arms: raised, holding the grape cluster up into the light
+const grape=new THREE.Group();
+{const g=R.g;const hnL=V(.18,1.5,.75),hnR=V(.62,1.62,.62);
+ seg(g,V(-.3,.98,.06),V(-.2,1.2,.55),.11,CAR);seg(g,V(-.2,1.2,.55),hnL,.1,CAR);ball(g,hnL,.11,CREAM);
+ seg(g,V(.3,.98,.06),V(.62,1.2,.35),.11,CAR);seg(g,V(.62,1.2,.35),hnR,.1,CAR);ball(g,hnR,.11,CREAM);
+ grape.position.set(.42,1.45,.85);g.add(grape);}
+const GR=new THREE.MeshPhysicalMaterial({color:0x7a1fd6,roughness:.1,clearcoat:1,clearcoatRoughness:.03,sheen:.5,sheenColor:new THREE.Color(0xff9cff),envMapIntensity:1.3,emissive:0x2a0660,emissiveIntensity:.5});
+const gp=[[0,.0,0],[-.2,.1,.05],[.2,.1,.05],[0,.2,.12],[-.11,.32,0],[.11,.32,0],[-.3,.3,-.05],[.3,.3,-.05],[0,.42,.08],[-.18,.5,-.02],[.18,.5,-.02],[0,.6,0]];
+gp.forEach(([x,y,z])=>{const m=new THREE.Mesh(new THREE.SphereGeometry(.13,32,24),GR);m.position.set(x,y,z);m.scale.set(1,1.12,1);grape.add(m)});
+const st=new THREE.Mesh(new THREE.TubeGeometry(new THREE.CatmullRomCurve3([V(0,.6,0),V(.04,.78,0),V(.14,.86,0)]),20,.03,8),latex(0x4caf50));grape.add(st);
+const lf=new THREE.Mesh(new THREE.SphereGeometry(.14,24,16),latex(0x6fdc5a));lf.scale.set(1.3,.25,.8);lf.position.set(.2,.82,0);lf.rotation.z=-.4;grape.add(lf);
+// spotlight on the grape + glow + sparkles
+const spot=new THREE.SpotLight(0xffe6ff,22,16,.3,.7,1.2);spot.position.set(3.2,7.5,3);spot.target.position.set(2.4,2.6,.5);s.add(spot);s.add(spot.target);
+function canvasSprite(draw,sc,pos,op){const t=canvasTex(256,256,draw);const m=new THREE.Sprite(new THREE.SpriteMaterial({map:t,blending:THREE.AdditiveBlending,depthWrite:false,toneMapped:false,opacity:op}));m.scale.set(sc,sc,1);m.position.copy(pos);s.add(m);return m}
+const gw=(x,w,h)=>{let g=x.createRadialGradient(128,128,0,128,128,128);g.addColorStop(0,'rgba(255,200,255,.9)');g.addColorStop(.35,'rgba(200,90,255,.45)');g.addColorStop(1,'rgba(120,40,255,0)');x.fillStyle=g;x.fillRect(0,0,w,h)};
+const gpos=new THREE.Vector3();
+// light cone (volumetric fake)
+const coneTex=canvasTex(256,512,(x,w,h)=>{let g=x.createLinearGradient(0,0,0,h);g.addColorStop(0,'rgba(255,240,255,0)');g.addColorStop(1,'rgba(255,220,255,.55)');x.fillStyle=g;x.beginPath();x.moveTo(w*.46,0);x.lineTo(w*.54,0);x.lineTo(w,h);x.lineTo(0,h);x.fill()});
+const cone=new THREE.Mesh(new THREE.PlaneGeometry(2.4,6.4),new THREE.MeshBasicMaterial({map:coneTex,transparent:true,blending:THREE.AdditiveBlending,depthWrite:false,toneMapped:false,opacity:.22}));cone.position.set(2.7,5.3,.2);cone.rotation.z=-.08;s.add(cone);
+// confetti burst around the grape only
+const cg=new THREE.PlaneGeometry(.08,.14);const confCols=[0xffffff,0xfff07a,0xff4fb8,0x9b7bff,0x7ffcff];
+let seed=5;const rnd=()=>{seed=(seed*16807)%2147483647;return seed/2147483647};
+for(let i=0;i<90;i++){const a=rnd()*6.28,rr=.6+rnd()*2.4;const m=new THREE.Mesh(cg,new THREE.MeshPhysicalMaterial({color:confCols[i%5],metalness:.8,roughness:.25,side:THREE.DoubleSide,envMapIntensity:1.4}));
+ m.position.set(2.5+Math.cos(a)*rr,3.0+Math.sin(a)*rr*.8,.4+rnd()*1.2-.6);if(m.position.x>3.0&&m.position.y>4.3)m.position.y-=1.6;m.rotation.set(rnd()*6,rnd()*6,rnd()*6);s.add(m)}
+// background balloons
+[[-6.5,4.8,-7,1.2,0x7ffcff],[6.8,5.6,-8,1.4,0xfff07a],[-5.6,2.2,-4.5,.8,0xff4fb8],[7.2,2.0,-5,.9,0x9b7bff]].forEach(([x,y,z,sc,c])=>{const m=new THREE.Mesh(new THREE.SphereGeometry(1,48,32),latex(c,.28));m.scale.set(sc,sc*1.15,sc);m.position.set(x,y,z);s.add(m)});
+// lights
+const key=new THREE.DirectionalLight(0xffffff,1.2);key.position.set(-4,8,6);s.add(key);
+const p1=new THREE.PointLight(0x4ff6ff,30,18);p1.position.set(-6,3,4);s.add(p1);
+const p2=new THREE.PointLight(0xff4fb8,26,18);p2.position.set(6,2,4);s.add(p2);
+s.add(new THREE.HemisphereLight(0xffffff,0x6a3cff,.4));
+const comp=new EffectComposer(r);comp.addPass(new RenderPass(s,cam));comp.addPass(new UnrealBloomPass(new THREE.Vector2(W,H),.45,.5,.95));comp.addPass(new OutputPass());
+function proj(v){const p=v.clone().project(cam);return [(p.x+1)/2*W,(1-p.y)/2*H]}
+window.renderAt=t=>{cam.position.set(0,2.75,8.3);cam.lookAt(0,2.2,0);cam.updateMatrixWorld();R.g.updateMatrixWorld();grape.getWorldPosition(gpos);
+ canvasSprite(gw,2.4,gpos.clone().add(V(0,.3,.3)),.6);
+ comp.render();
+ const [lx,ly]=proj(V(-2.4,3.35,0)),[rx,ry]=proj(V(2.4,3.35,0));
+ document.getElementById('labs').innerHTML=`<div class="pill" style="left:${lx-150}px;top:${ly-130}px;background:linear-gradient(90deg,#3e9a34,#5fc94a)">这只：黄瓜</div>
+ <div class="pill" style="left:${rx+60}px;top:${Math.max(130,ry-60)}px;background:linear-gradient(90deg,#7a22d0,#c04dff)">旁边：葡萄</div>`};
+const ov=document.createElement('canvas');ov.width=W;ov.height=H;ov.style.cssText='position:absolute;left:0;top:0;pointer-events:none;z-index:2';document.body.appendChild(ov);
+const o=ov.getContext('2d');let vg=o.createRadialGradient(W*.6,H*.35,380,W*.55,H*.45,1250);vg.addColorStop(0,'rgba(30,10,80,0)');vg.addColorStop(1,'rgba(30,10,90,.5)');o.fillStyle=vg;o.fillRect(0,0,W,H);
+window.READY=true;
+</script></body></html>

@@ -1,0 +1,84 @@
+<!doctype html><html><head><meta charset="utf-8"><style>
+html,body{margin:0;width:1920px;height:1080px;overflow:hidden;background:#000}
+canvas{position:absolute;left:0;top:0}
+.sub{position:absolute;bottom:70px;left:50%;transform:translateX(-50%);font-family:'Noto Sans CJK SC';font-weight:900;font-size:64px;color:#fff;background:rgba(6,8,13,.80);border-radius:18px;padding:10px 34px;white-space:nowrap;line-height:1.25;z-index:5}
+.sub b{color:#F6CF78;font-weight:900}
+.mark{position:absolute;right:44px;top:34px;font-family:'Noto Sans CJK SC';font-size:22px;font-weight:700;letter-spacing:2px;color:#fff;opacity:.92;text-shadow:0 1px 8px rgba(40,20,80,.75);z-index:5}
+</style>
+<script type="importmap">{"imports":{"three":"/tmp/claude-0/-home-claude-video/131bbb47-cdc6-59f9-b59e-78638f10b457/scratchpad/ep21/node_modules/three/build/three.module.js","three/addons/":"/tmp/claude-0/-home-claude-video/131bbb47-cdc6-59f9-b59e-78638f10b457/scratchpad/ep21/node_modules/three/examples/jsm/"}}</script>
+</head><body>
+<div class="mark">◆ Juno · VIBE知识大赏</div>
+<div class="sub">你拿到人生第一份实习工资：<b>4000</b></div>
+<script type="module">
+import * as THREE from 'three';
+import {RoundedBoxGeometry} from 'three/addons/geometries/RoundedBoxGeometry.js';
+import {EffectComposer} from 'three/addons/postprocessing/EffectComposer.js';
+import {RenderPass} from 'three/addons/postprocessing/RenderPass.js';
+import {UnrealBloomPass} from 'three/addons/postprocessing/UnrealBloomPass.js';
+import {OutputPass} from 'three/addons/postprocessing/OutputPass.js';
+const W=1920,H=1080;
+const r=new THREE.WebGLRenderer({antialias:true});r.setSize(W,H);r.toneMapping=THREE.ACESFilmicToneMapping;r.toneMappingExposure=1.0;document.body.appendChild(r.domElement);
+function canvasTex(w,h,draw){const c=document.createElement('canvas');c.width=w;c.height=h;draw(c.getContext('2d'),w,h);const t=new THREE.CanvasTexture(c);t.colorSpace=THREE.SRGBColorSpace;t.anisotropy=8;return t}
+const SPEC=['#ff2a6d','#ff9a3c','#ffe94d','#4dff8b','#3cd2ff','#6a5cff','#c04dff'];
+// ---------- studio environment in the episode palette (PMREM from a scene) ----------
+const envTex=canvasTex(2048,1024,(x,w,h)=>{let g=x.createLinearGradient(0,0,0,h);g.addColorStop(0,'#1c0c55');g.addColorStop(.38,'#8a2bd6');g.addColorStop(.5,'#ff5fb4');g.addColorStop(.56,'#ff9a62');g.addColorStop(.7,'#4b1a8f');g.addColorStop(1,'#120632');x.fillStyle=g;x.fillRect(0,0,w,h);
+ // softboxes (bright strips) for crisp glass highlights
+ x.fillStyle='#ffffff';[[180,120,90,360],[700,160,60,300],[1240,100,120,380],[1650,180,70,260]].forEach(([a,b,c,d])=>{x.globalAlpha=1;x.fillRect(a,b,c,d)});
+ x.fillStyle='#7ff3ff';x.fillRect(980,300,40,240);x.fillStyle='#ffd27a';x.fillRect(420,330,30,200);});
+envTex.mapping=THREE.EquirectangularReflectionMapping;
+const pm=new THREE.PMREMGenerator(r);const envRT=pm.fromEquirectangular(envTex);
+const s=new THREE.Scene();s.environment=envRT.texture;s.fog=new THREE.Fog(0xc440b6,8,24);
+const cam=new THREE.PerspectiveCamera(30,W/H,.05,200);
+// ---------- backdrop: gallery wall, deep saturated gradient + blurred tall windows + bokeh ----------
+const bgTex=canvasTex(2048,1024,(x,w,h)=>{let g=x.createLinearGradient(0,0,w,h*.6);g.addColorStop(0,'#24106a');g.addColorStop(.35,'#7a22c4');g.addColorStop(.62,'#e23fb2');g.addColorStop(.86,'#ff8a5b');g.addColorStop(1,'#ffc36b');x.fillStyle=g;x.fillRect(0,0,w,h);
+ x.filter='blur(30px)';for(let i=0;i<8;i++){x.fillStyle=`rgba(255,215,245,${.10+.05*(i%3)})`;x.fillRect(80+i*260,60,90,700)}
+ const cols=['#7CF5FF','#FF7BE0','#FFE08A','#B9A3FF','#FFFFFF','#FF9A62'];for(let i=0;i<80;i++){const px=(i*263)%w,py=300+((i*149)%560),R=10+((i*31)%44);x.filter=`blur(${3+R/9}px)`;x.globalAlpha=.18+((i*7)%10)/28;x.fillStyle=cols[i%6];x.beginPath();x.arc(px,py,R,0,7);x.fill()}
+ x.globalAlpha=1;x.filter='none';});
+const bg=new THREE.Mesh(new THREE.PlaneGeometry(70,35),new THREE.MeshBasicMaterial({map:bgTex,toneMapped:false,fog:false}));bg.position.set(0,7,-24);s.add(bg);
+const hzTex=canvasTex(16,512,(x,w,h)=>{let g=x.createLinearGradient(0,0,0,h);g.addColorStop(0,'rgba(196,64,182,0)');g.addColorStop(.55,'rgba(196,64,182,.85)');g.addColorStop(1,'rgba(196,64,182,1)');x.fillStyle=g;x.fillRect(0,0,w,h)});
+const hz=new THREE.Mesh(new THREE.PlaneGeometry(90,10),new THREE.MeshBasicMaterial({map:hzTex,transparent:true,toneMapped:false,fog:false,depthWrite:false}));hz.position.set(0,1.5,-23);s.add(hz);
+// ---------- floor: polished dark lilac lacquer, reflects the studio env ----------
+const floor=new THREE.Mesh(new THREE.PlaneGeometry(200,200),new THREE.MeshPhysicalMaterial({color:0x3a1d6e,roughness:.32,metalness:.2,clearcoat:1,clearcoatRoughness:.22,envMapIntensity:.55}));floor.rotation.x=-Math.PI/2;s.add(floor);
+// ---------- pedestal (soft pearl, not white-hot) ----------
+const ped=new THREE.Mesh(new RoundedBoxGeometry(2.4,1.0,1.5,6,.05),new THREE.MeshPhysicalMaterial({color:0xf3e6ff,transmission:1,thickness:1.4,roughness:.06,ior:1.5,dispersion:4,iridescence:.4,envMapIntensity:1.6,attenuationColor:new THREE.Color(0xd9a6ff),attenuationDistance:2.5}));ped.position.set(0,.5,0);s.add(ped);
+// ---------- the glass phone ----------
+const phone=new THREE.Group();phone.position.set(-.05,1.0+1.0,0);phone.rotation.set(-.04,.24,0);s.add(phone);
+const pGlass=new THREE.Mesh(new RoundedBoxGeometry(1.0,2.0,.12,8,.1),new THREE.MeshPhysicalMaterial({color:0xffffff,transmission:1,thickness:.6,roughness:0,ior:1.6,dispersion:8,iridescence:1,iridescenceIOR:1.45,iridescenceThicknessRange:[260,620],envMapIntensity:2.0,specularIntensity:1}));phone.add(pGlass);
+const uiTex=canvasTex(1000,2000,(x,w,h)=>{x.clearRect(0,0,w,h);
+ x.textAlign='center';
+ x.shadowColor='rgba(255,120,220,.9)';x.shadowBlur=80;x.fillStyle='rgba(226,214,248,.92)';x.beginPath();x.roundRect(64,560,w-128,620,70);x.fill();x.shadowBlur=0;
+ let cg=x.createLinearGradient(64,560,w-64,1180);cg.addColorStop(0,'rgba(255,120,220,.22)');cg.addColorStop(1,'rgba(90,220,255,.26)');x.fillStyle=cg;x.beginPath();x.roundRect(64,560,w-128,620,70);x.fill();
+ x.fillStyle='#4A2C8F';x.font="900 74px 'Noto Sans CJK SC'";x.fillText('实习工资 · 到账',w/2,700);
+ x.fillStyle='#1a0a45';x.font="bold 240px 'DejaVu Sans'";x.fillText('4000',w/2+46,970);x.font="bold 116px 'DejaVu Sans'";x.fillText('¥',138,930);
+ x.fillStyle='#8a5bd6';x.font="900 62px 'Noto Sans CJK SC'";x.fillText('刚刚',w/2,1108);
+ x.fillStyle='rgba(255,255,255,.8)';x.beginPath();x.roundRect(w/2-150,h-90,300,14,7);x.fill();
+});
+const ui=new THREE.Mesh(new THREE.PlaneGeometry(.94,1.88),new THREE.MeshBasicMaterial({map:uiTex,transparent:true,toneMapped:false}));ui.position.z=.064;phone.add(ui);
+// inner glow sheet behind the glass (opaque pass -> refracted by the glass)
+const glowTex=canvasTex(512,1024,(x,w,h)=>{let g=x.createRadialGradient(w/2,h*.48,0,w/2,h*.48,h*.6);g.addColorStop(0,'#ffd2f4');g.addColorStop(.35,'#ff5fc8');g.addColorStop(.75,'#6a3cff');g.addColorStop(1,'#2a1470');x.fillStyle=g;x.fillRect(0,0,w,h)});
+const gl=new THREE.Mesh(new THREE.PlaneGeometry(.9,1.86),new THREE.MeshBasicMaterial({map:glowTex,toneMapped:false}));gl.position.z=-.03;phone.add(gl);
+// ---------- prism + spectral fan ----------
+const tri=new THREE.Shape();tri.moveTo(-.26,0);tri.lineTo(.26,0);tri.lineTo(0,.42);tri.lineTo(-.26,0);
+const prism=new THREE.Mesh(new THREE.ExtrudeGeometry(tri,{depth:.5,bevelEnabled:true,bevelThickness:.02,bevelSize:.02,bevelSegments:3}),new THREE.MeshPhysicalMaterial({color:0xffffff,transparent:true,opacity:.42,roughness:0,metalness:.1,iridescence:1,iridescenceIOR:1.6,iridescenceThicknessRange:[300,900],envMapIntensity:3.2,depthWrite:false,side:THREE.DoubleSide}));
+prism.position.set(.88,1.0+.02,.18);prism.rotation.set(0,-.55,0);s.add(prism);
+const rbTex=canvasTex(1024,256,(x,w,h)=>{const g=x.createLinearGradient(0,0,0,h);SPEC.forEach((c,i,a)=>g.addColorStop(i/(a.length-1),c));x.fillStyle=g;x.fillRect(0,0,w,h);
+ x.globalCompositeOperation='destination-out';let m=x.createLinearGradient(0,0,w,0);m.addColorStop(0,'rgba(0,0,0,1)');m.addColorStop(.08,'rgba(0,0,0,0)');m.addColorStop(.55,'rgba(0,0,0,.2)');m.addColorStop(1,'rgba(0,0,0,1)');x.fillStyle=m;x.fillRect(0,0,w,h);
+ let v=x.createLinearGradient(0,0,0,h);v.addColorStop(0,'rgba(0,0,0,1)');v.addColorStop(.18,'rgba(0,0,0,0)');v.addColorStop(.82,'rgba(0,0,0,0)');v.addColorStop(1,'rgba(0,0,0,1)');x.fillStyle=v;x.fillRect(0,0,w,h)});
+function fan(w,h,pos,rot,op){const g=new THREE.PlaneGeometry(w,h);g.translate(w/2,0,0);const p=g.attributes.position;for(let i=0;i<p.count;i++){const u=p.getX(i)/w;p.setY(i,p.getY(i)*(.15+u*1.4))}
+ const m=new THREE.Mesh(g,new THREE.MeshBasicMaterial({map:rbTex,transparent:true,depthWrite:false,opacity:op,toneMapped:false,side:THREE.DoubleSide,fog:false}));m.position.copy(pos);m.rotation.set(...rot);s.add(m);return m}
+fan(1.6,.55,new THREE.Vector3(.74,1.006,.40),[-Math.PI/2,0,Math.PI-.08],.8);   // across the pedestal top toward the phone
+fan(6,1.3,new THREE.Vector3(-1.1,.004,.75),[-Math.PI/2,0,Math.PI-.35],.45);       // spilling onto the floor
+{const g=new THREE.PlaneGeometry(.95,.32);const m=new THREE.Mesh(g,new THREE.MeshBasicMaterial({map:rbTex,transparent:true,blending:THREE.AdditiveBlending,depthWrite:false,opacity:.55,toneMapped:false,fog:false}));m.position.set(.05,-.55,.066);m.rotation.z=-.22;phone.add(m);}
+// ---------- lights ----------
+const key=new THREE.DirectionalLight(0xfff0e6,1.2);key.position.set(5,8,4);s.add(key);
+const p1=new THREE.PointLight(0xff4fd0,26,14);p1.position.set(-2.6,3.4,-1.6);s.add(p1);
+const p2=new THREE.PointLight(0x4fe6ff,22,14);p2.position.set(2.6,2.6,2.4);s.add(p2);
+s.add(new THREE.HemisphereLight(0xb79cff,0x2a1060,.35));
+const comp=new EffectComposer(r);comp.addPass(new RenderPass(s,cam));comp.addPass(new UnrealBloomPass(new THREE.Vector2(W,H),.6,.5,.93));comp.addPass(new OutputPass());
+window.renderAt=t=>{const k=t/4.4;cam.position.set(-1.8+.35*k,2.8,6.3-.5*k);cam.lookAt(.25,1.74,0);comp.render()};
+const ov=document.createElement('canvas');ov.width=W;ov.height=H;ov.style.cssText='position:absolute;left:0;top:0;mix-blend-mode:screen;pointer-events:none;z-index:2';document.body.appendChild(ov);
+const o=ov.getContext('2d');let lg=o.createRadialGradient(1700,-80,0,1700,-80,900);lg.addColorStop(0,'rgba(255,220,170,.55)');lg.addColorStop(.4,'rgba(255,120,170,.22)');lg.addColorStop(1,'rgba(120,80,255,0)');o.fillStyle=lg;o.fillRect(0,0,W,H);
+o.save();o.translate(1500,120);o.rotate(.5);SPEC.forEach((c,i)=>{o.globalAlpha=.10;o.fillStyle=c;o.fillRect(-1400,i*18,2800,18)});o.restore();
+o.globalAlpha=1;let fl=o.createRadialGradient(845,330,0,845,330,260);fl.addColorStop(0,'rgba(255,255,255,.5)');fl.addColorStop(1,'rgba(255,255,255,0)');o.save();o.translate(845,330);o.scale(1.6,.035);o.translate(-845,-360);o.fillStyle=fl;o.fillRect(0,0,W,H);o.restore();
+window.READY=true;
+</script></body></html>

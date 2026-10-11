@@ -1,0 +1,88 @@
+<!doctype html><html><head><meta charset="utf-8"><style>
+html,body{margin:0;width:1920px;height:1080px;overflow:hidden;background:#000}
+canvas{position:absolute;left:0;top:0}
+.sub{position:absolute;bottom:70px;left:50%;transform:translateX(-50%);font-family:'Noto Sans CJK SC';font-weight:900;font-size:64px;color:#fff;background:rgba(6,8,13,.80);border-radius:18px;padding:10px 34px;white-space:nowrap;line-height:1.25}
+.sub b{color:#F6CF78;font-weight:900}
+.mark{position:absolute;right:44px;top:34px;font-family:'Noto Sans CJK SC';font-size:22px;font-weight:700;letter-spacing:2px;color:#fff;opacity:.88;text-shadow:0 1px 6px rgba(0,0,0,.7)}
+.hud{position:absolute;font-family:'DejaVu Sans Mono';color:#EFFFFF;text-shadow:0 0 10px rgba(120,255,255,.6)}
+</style></head><body>
+<canvas id="c" width="1920" height="1080"></canvas>
+<div class="hud" style="left:1536px;top:92px;font-size:22px;letter-spacing:3px;opacity:.85">IR · 满意度热像</div>
+<div class="mark">◆ Juno · VIBE知识大赏</div>
+<div class="sub">你拿到人生第一份实习工资：<b>4000</b></div>
+<script>
+const W=1920,H=1080,T=3.0;
+// ---------- heat field ----------
+const hc=document.createElement('canvas');hc.width=W;hc.height=H;const h=hc.getContext('2d');
+const g=v=>{v=Math.max(0,Math.min(255,v|0));return `rgb(${v},${v},${v})`};
+function hash(x,y){let n=x*374761393+y*668265263;n=(n^(n>>13))*1274126177;return ((n^(n>>16))>>>0)/4294967295}
+// ambient room: warm-ish gradient so the frame is never black
+let gr=h.createLinearGradient(0,0,0,H);gr.addColorStop(0,g(70));gr.addColorStop(.55,g(92));gr.addColorStop(1,g(118));h.fillStyle=gr;h.fillRect(0,0,W,H);
+// window (cold) top-left area + radiator glow
+h.filter='blur(30px)';h.fillStyle=g(30);h.fillRect(120,40,520,360);h.fillStyle=g(150);h.fillRect(150,430,460,40);
+// bunk bed frame in background (cool metal)
+h.filter='blur(6px)';h.fillStyle=g(52);h.fillRect(1260,120,24,640);h.fillRect(1800,120,24,640);h.fillRect(1260,300,560,22);h.fillRect(1260,560,560,22);
+// roommate asleep (blob, mild warm) on upper bunk -- foreshadow
+h.filter='blur(22px)';h.fillStyle=g(138);h.beginPath();h.ellipse(1560,262,210,44,0,0,7);h.fill();h.fillStyle=g(175);h.beginPath();h.arc(1360,250,42,0,7);h.fill();
+// desk surface: lukewarm, with heat pooled under the phone
+h.filter='blur(4px)';h.fillStyle=g(84);h.fillRect(0,760,W,320);
+h.filter='blur(60px)';h.fillStyle=g(150);h.beginPath();h.ellipse(1010,800,360,70,0,0,7);h.fill();
+// mug with steam
+h.filter='blur(5px)';h.fillStyle=g(205);h.beginPath();h.roundRect(1430,600,150,180,18);h.fill();h.lineWidth=22;h.strokeStyle=g(190);h.beginPath();h.arc(1590,680,40,-1.3,1.3);h.stroke();
+for(let i=0;i<7;i++){h.filter=`blur(${14+i*5}px)`;h.fillStyle=g(200-i*16);const y=560-i*62,x=1505+Math.sin(i*1.3+T*1.7)*30*i/3;h.beginPath();h.ellipse(x,y,26+i*7,40,Math.sin(i)*.4,0,7);h.fill();}
+// you: over-the-shoulder, back of head (cool hair), warm neck + shoulders, cropped at left
+h.filter='blur(14px)';h.fillStyle=g(200);h.beginPath();h.moveTo(-120,1080);h.bezierCurveTo(-90,900,60,850,230,850);h.bezierCurveTo(400,850,560,910,590,1080);h.fill();
+h.fillStyle=g(226);h.beginPath();h.ellipse(240,830,74,70,0,0,7);h.fill();
+h.filter='blur(7px)';h.fillStyle=g(206);h.beginPath();h.ellipse(122,712,22,40,-.25,0,7);h.fill();
+h.filter='blur(5px)';h.fillStyle=g(124);h.beginPath();h.moveTo(240,540);h.bezierCurveTo(370,540,382,660,372,740);h.bezierCurveTo(360,812,300,826,240,826);h.bezierCurveTo(180,826,120,812,110,740);h.bezierCurveTo(100,660,110,540,240,540);h.fill();
+// phone: body warm, screen HOT
+h.save();h.translate(1000,440);h.rotate(-0.05);
+h.filter='blur(14px)';h.fillStyle=g(160);h.beginPath();h.roundRect(-215,-380,430,760,62);h.fill();
+h.filter='blur(3px)';h.fillStyle=g(186);h.beginPath();h.roundRect(-196,-360,392,720,50);h.fill();
+let sg=h.createLinearGradient(0,-340,0,340);sg.addColorStop(0,g(200));sg.addColorStop(1,g(172));h.fillStyle=sg;h.beginPath();h.roundRect(-180,-344,360,688,40);h.fill();
+// notification card (warm orange), digits white-hot
+h.filter='blur(2px)';h.fillStyle=g(196);h.beginPath();h.roundRect(-160,-250,320,330,30);h.fill();
+h.filter='blur(16px)';h.fillStyle=g(225);h.beginPath();h.ellipse(0,-40,150,70,0,0,7);h.fill();
+h.filter='blur(1px)';h.fillStyle=g(255);h.font="bold 104px 'DejaVu Sans'";h.textAlign='center';h.textBaseline='middle';h.fillText('4000',22,-40);
+h.font="bold 50px 'DejaVu Sans'";h.fillText('¥',-130,-56);
+h.font="900 40px 'Noto Sans CJK SC'";h.fillStyle=g(246);h.fillText('实习工资 · 到账',0,-185);
+h.font="900 36px 'Noto Sans CJK SC'";h.fillStyle=g(150);h.fillText('刚刚',0,40);
+h.fillStyle=g(150);h.beginPath();h.roundRect(-60,300,120,10,5);h.fill();
+h.restore();
+// desk lamp glow, top centre-right (off-frame source)
+h.filter='blur(50px)';h.fillStyle=g(176);h.beginPath();h.ellipse(1150,-60,220,110,0,0,7);h.fill();
+h.filter='none';
+// ---------- map through LUT ----------
+const stops=[[0,[6,2,24]],[.16,[38,10,104]],[.32,[104,22,150]],[.46,[186,34,128]],[.58,[238,62,86]],[.70,[255,118,26]],[.82,[255,190,40]],[.92,[255,236,150]],[1,[255,255,250]]];
+const lut=new Uint8Array(256*3);for(let i=0;i<256;i++){const x=i/255;let k=0;while(k<stops.length-2&&x>stops[k+1][0])k++;const [a,ca]=stops[k],[b,cb]=stops[k+1];const f=Math.min(1,Math.max(0,(x-a)/(b-a)));for(let j=0;j<3;j++)lut[i*3+j]=ca[j]+(cb[j]-ca[j])*f}
+const id=h.getImageData(0,0,W,H),d=id.data;const raw=new Uint8Array(W*H);for(let i=0;i<W*H;i++)raw[i]=d[i*4];
+for(let y=0;y<H;y++)for(let x=0;x<W;x++){const p=(y*W+x)*4;let v=d[p]+(hash(x,y)-.5)*7;v=Math.max(0,Math.min(255,v|0));let r=lut[v*3],gg=lut[v*3+1],bb=lut[v*3+2];const q=y*W+x;if(x<W-1&&y<H-1){const a0=raw[q]>>4,a1=raw[q+1]>>4,a2=raw[q+W]>>4;if(a0!==a1||a0!==a2){const k=raw[q]>120?.30:.16;r+=(255-r)*k;gg+=(255-gg)*k;bb+=(255-bb)*k}}d[p]=r;d[p+1]=gg;d[p+2]=bb}
+const c=document.getElementById('c'),x=c.getContext('2d');x.putImageData(id,0,0);
+// bloom
+const bc=document.createElement('canvas');bc.width=W;bc.height=H;const b=bc.getContext('2d');b.filter='blur(28px) brightness(1.1)';b.drawImage(c,0,0);
+x.globalCompositeOperation='screen';x.globalAlpha=.55;x.drawImage(bc,0,0);x.globalAlpha=1;
+// anamorphic streak from the hot digits
+let st=x.createRadialGradient(1000,400,0,1000,400,900);st.addColorStop(0,'rgba(255,250,230,.55)');st.addColorStop(.25,'rgba(255,160,90,.18)');st.addColorStop(1,'rgba(255,80,160,0)');
+x.save();x.translate(1000,400);x.scale(1,.035);x.translate(-1000,-400);x.fillStyle=st;x.fillRect(0,0,W,H);x.restore();
+// chromatic fringe
+x.globalCompositeOperation='lighter';x.globalAlpha=.06;x.drawImage(c,3,0);x.globalAlpha=1;
+// vignette
+x.globalCompositeOperation='multiply';let vg=x.createRadialGradient(W/2,H/2,300,W/2,H/2,1200);vg.addColorStop(0,'#fff');vg.addColorStop(1,'#8a6f9a');x.fillStyle=vg;x.fillRect(0,0,W,H);
+x.globalCompositeOperation='source-over';
+// scanlines
+x.fillStyle='rgba(0,0,0,.06)';for(let y=0;y<H;y+=3)x.fillRect(0,y,W,1);
+// HUD: frame corners, readout box on phone, scale bar
+x.strokeStyle='rgba(230,255,255,.85)';x.lineWidth=3;
+const corner=(cx,cy,sx,sy,l)=>{x.beginPath();x.moveTo(cx,cy+sy*l);x.lineTo(cx,cy);x.lineTo(cx+sx*l,cy);x.stroke()};
+corner(60,60,1,1,60);corner(60,1020,1,-1,60);corner(1860,1020,-1,-1,60);
+// target box on phone
+x.strokeStyle='rgba(230,255,255,.95)';x.lineWidth=3;[[760,60],[1240,60],[760,840],[1240,840]].forEach(([cx,cy],i)=>corner(cx,cy,i%2?-1:1,i<2?1:-1,40));
+x.font="700 30px 'DejaVu Sans Mono'";x.fillStyle='#EFFFFF';x.shadowColor='rgba(0,0,0,.6)';x.shadowBlur=8;
+x.fillText('MAX 39.6°C',1262,96);
+// scale bar right
+const sbx=1840,sby=300,sbh=380;for(let i=0;i<sbh;i++){const v=255-(i/sbh*255|0);x.fillStyle=`rgb(${lut[v*3]},${lut[v*3+1]},${lut[v*3+2]})`;x.fillRect(sbx,sby+i,18,1)}
+x.font="600 20px 'DejaVu Sans Mono'";x.fillStyle='#fff';x.textAlign='right';x.fillText('40°',sbx-8,sby+8);x.fillText('20°',sbx-8,sby+sbh);
+// label near you
+x.textAlign='left';x.font="900 34px 'Noto Sans CJK SC'";x.fillStyle='#fff';x.fillText('你 · 37.4°C',300,510);
+x.shadowBlur=0;
+</script></body></html>

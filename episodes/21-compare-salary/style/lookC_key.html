@@ -1,0 +1,79 @@
+<!doctype html><html><head><meta charset="utf-8"><style>
+html,body{margin:0;width:1920px;height:1080px;overflow:hidden;background:#000}
+canvas{position:absolute;left:0;top:0}
+.sub{position:absolute;bottom:70px;left:50%;transform:translateX(-50%);font-family:'Noto Sans CJK SC';font-weight:900;font-size:64px;color:#fff;background:rgba(6,8,13,.80);border-radius:18px;padding:10px 34px;white-space:nowrap;line-height:1.25}
+.sub b{color:#F6CF78;font-weight:900}
+.mark{position:absolute;right:44px;top:34px;font-family:'Noto Sans CJK SC';font-size:22px;font-weight:700;letter-spacing:2px;color:#fff;opacity:.88;text-shadow:0 1px 6px rgba(0,0,0,.7)}
+.lab{position:absolute;font-family:'Noto Sans CJK SC';font-weight:900;color:#fff;text-shadow:0 0 18px rgba(0,0,0,.55),0 2px 4px rgba(0,0,0,.6)}
+</style></head><body>
+<canvas id="c" width="1920" height="1080"></canvas>
+<div class="lab" style="left:1470px;top:300px;font-size:44px">▲ 高于中位数</div>
+<div class="lab" style="left:1470px;top:490px;font-size:44px;color:#BFF6FF;text-shadow:0 0 22px rgba(80,220,255,.9)">▼ 低于中位数</div>
+<div class="lab" style="left:1470px;top:396px;font-size:40px;color:#DFFBFF;text-shadow:0 0 20px rgba(80,230,255,1);letter-spacing:4px">— 中位数 —</div>
+<div class="lab" style="left:1440px;top:600px;font-size:92px;color:#BFF6FF;text-shadow:0 0 30px rgba(60,200,255,1),0 0 4px #fff">满意度▼</div>
+<div class="mark">◆ Juno · VIBE知识大赏</div>
+<div class="sub">低于中位数的人：满意度<b>下降</b></div>
+<script>
+const W=1920,H=1080;
+const hc=document.createElement('canvas');hc.width=W;hc.height=H;const h=hc.getContext('2d');
+const g=v=>{v=Math.max(0,Math.min(255,v|0));return `rgb(${v},${v},${v})`};
+function hash(x,y){let n=x*374761393+y*668265263;n=(n^(n>>13))*1274126177;return ((n^(n>>16))>>>0)/4294967295}
+// hall ambient: warm above the line, cold below
+let gr=h.createLinearGradient(0,0,0,H);gr.addColorStop(0,g(104));gr.addColorStop(.40,g(98));gr.addColorStop(.43,g(26));gr.addColorStop(1,g(18));h.fillStyle=gr;h.fillRect(0,0,W,H);
+// tiers (rows sorted by pay, top = highest). perspective: lower rows nearer, bigger
+const MED=452; // median line y
+const rows=[[178,.46],[262,.55],[352,.65],[440,.75],[585,.86],[712,.98],[850,1.1],[1000,1.24]].map(([y,s])=>({y,s}));
+function figure(cx,base,s,v,lean){
+ h.save();h.translate(cx,base);h.rotate(lean||0);
+ h.filter=`blur(${5*s}px)`;h.fillStyle=g(v-22);h.beginPath();h.moveTo(-36*s,0);h.bezierCurveTo(-40*s,-62*s,-32*s,-94*s,0,-96*s);h.bezierCurveTo(32*s,-94*s,40*s,-62*s,36*s,0);h.fill();
+ h.fillStyle=g(v);h.beginPath();h.arc(0,-122*s,23*s,0,7);h.fill();
+ h.filter=`blur(${9*s}px)`;h.fillStyle=g(v+12);h.beginPath();h.ellipse(0,-72*s,15*s,22*s,0,0,7);h.fill();
+ h.restore();
+}
+const CX=820;
+rows.forEach((r,i)=>{
+ const below=i>=4;const n=7+i;const span=760+i*120;const x0=CX-span/2;
+ h.filter='blur(3px)';h.fillStyle=g(below?52:124);h.fillRect(x0-50,r.y+2,span+100,9*r.s+3);
+ for(let k=0;k<n;k++){const cx=x0+span*(k+.5)/n+((k*53+i*17)%19-9);
+  const you=(i==4&&k==5);const warm=you?150:below?(84+((k*37+i*11)%16)):(210+((k*41+i*7)%36)-i*5);
+  figure(cx,r.y,r.s*(1+((k*13)%5)*.03),warm,below?0.035*((k%3)-1):0);}
+});
+// frost breath / cold air sinking below the line
+for(let i=0;i<18;i++){h.filter=`blur(${30+(i%5)*6}px)`;h.fillStyle=g(30+(i%4)*4);h.beginPath();h.ellipse((i*233)%1920,MED+90+((i*97)%560),140,40,0,0,7);h.fill();}
+// warm rising air above
+
+h.filter='none';
+// LUT
+const stops=[[0,[6,2,24]],[.16,[38,10,104]],[.32,[104,22,150]],[.46,[186,34,128]],[.58,[238,62,86]],[.70,[255,118,26]],[.82,[255,190,40]],[.92,[255,236,150]],[1,[255,255,250]]];
+const lut=new Uint8Array(256*3);for(let i=0;i<256;i++){const x=i/255;let k=0;while(k<stops.length-2&&x>stops[k+1][0])k++;const [a,ca]=stops[k],[b,cb]=stops[k+1];const f=Math.min(1,Math.max(0,(x-a)/(b-a)));for(let j=0;j<3;j++)lut[i*3+j]=ca[j]+(cb[j]-ca[j])*f}
+const id=h.getImageData(0,0,W,H),d=id.data;const raw=new Uint8Array(W*H);for(let i=0;i<W*H;i++)raw[i]=d[i*4];
+for(let yy=0;yy<H;yy++)for(let x=0;x<W;x++){const p=(yy*W+x)*4;let v=d[p]+(hash(x,yy)-.5)*7;v=Math.max(0,Math.min(255,v|0));let r=lut[v*3],gg=lut[v*3+1],bb=lut[v*3+2];const q=yy*W+x;
+ // cold side gets an icy cyan tint (frost), the thermal "cold" colour of this film
+ if(yy>MED){const f=Math.min(1,(yy-MED)/60)*.7*Math.max(0,1-v/80);r=r*(1-f)+16*f;gg=gg*(1-f)+70*f;bb=bb*(1-f)+170*f}
+ if(x<W-1&&yy<H-1){const a0=raw[q]>>4,a1=raw[q+1]>>4,a2=raw[q+W]>>4;if(a0!==a1||a0!==a2){if(yy>MED){r+=(150-r)*.35;gg+=(240-gg)*.45;bb+=(255-bb)*.5}else{r+=(255-r)*.28;gg+=(255-gg)*.28;bb+=(255-bb)*.28}}}
+ d[p]=r;d[p+1]=gg;d[p+2]=bb}
+const c=document.getElementById('c'),x=c.getContext('2d');x.putImageData(id,0,0);
+const bc=document.createElement('canvas');bc.width=W;bc.height=H;const b=bc.getContext('2d');b.filter='blur(26px)';b.drawImage(c,0,0);
+x.globalCompositeOperation='screen';x.globalAlpha=.5;x.drawImage(bc,0,0);x.globalAlpha=1;
+// MEDIAN laser line + impact shock ring from it (the drop hit)
+x.globalCompositeOperation='lighter';
+let lg=x.createLinearGradient(0,MED-40,0,MED+40);lg.addColorStop(0,'rgba(80,230,255,0)');lg.addColorStop(.5,'rgba(160,250,255,.9)');lg.addColorStop(1,'rgba(80,230,255,0)');x.fillStyle=lg;x.fillRect(0,MED-40,W,80);
+x.fillStyle='rgba(255,255,255,1)';x.fillRect(0,MED-2,W,4);
+let fl=x.createRadialGradient(960,MED,0,960,MED,900);fl.addColorStop(0,'rgba(200,250,255,.8)');fl.addColorStop(1,'rgba(80,200,255,0)');x.save();x.translate(960,MED);x.scale(1,.04);x.translate(-960,-MED);x.fillStyle=fl;x.fillRect(0,0,W,H);x.restore();
+// shock ring (ellipse, perspective) expanding downward
+for(let k=0;k<3;k++){x.strokeStyle=`rgba(120,235,255,${.55-k*.15})`;x.lineWidth=10-k*3;x.filter=`blur(${2+k*3}px)`;x.beginPath();x.ellipse(CX,MED,700+k*110,150+k*46,0,0.04,Math.PI-0.04);x.stroke();}
+x.filter='none';
+// ice crystals sparkle below
+for(let i=0;i<14;i++){const px=hash(i,17)*1500+80,py=MED+50+hash(i,19)*420,L=10+hash(i,23)*22;for(const [dx,dy] of [[1,0],[0,1]]){let gl=x.createLinearGradient(px-dx*L,py-dy*L,px+dx*L,py+dy*L);gl.addColorStop(0,'rgba(200,250,255,0)');gl.addColorStop(.5,'rgba(230,255,255,.85)');gl.addColorStop(1,'rgba(200,250,255,0)');x.strokeStyle=gl;x.lineWidth=2;x.beginPath();x.moveTo(px-dx*L,py-dy*L);x.lineTo(px+dx*L,py+dy*L);x.stroke();}}
+for(let i=0;i<160;i++){const px=hash(i,7)*W,py=MED+30+hash(i,9)*560,sz=1+hash(i,3)*2.5;x.fillStyle=`rgba(200,250,255,${.25+hash(i,5)*.5})`;x.beginPath();x.arc(px,py,sz,0,7);x.fill();}
+x.globalCompositeOperation='multiply';let vg=x.createRadialGradient(W/2,H/2,300,W/2,H/2,1200);vg.addColorStop(0,'#fff');vg.addColorStop(1,'#7a6a96');x.fillStyle=vg;x.fillRect(0,0,W,H);
+x.globalCompositeOperation='source-over';
+x.fillStyle='rgba(0,0,0,.06)';for(let yy=0;yy<H;yy+=3)x.fillRect(0,yy,W,1);
+// "you" marker: first row under the line
+const r4=rows[4],sp=760+4*120,xs=CX-sp/2,cxy=xs+sp*(5.5)/11+((5*53+4*17)%19-9);
+x.strokeStyle='#F6CF78';x.lineWidth=4;x.shadowColor='rgba(246,207,120,.95)';x.shadowBlur=16;const bw=96*r4.s,bh=162*r4.s;x.strokeRect(cxy-bw/2,r4.y-bh,bw,bh+6);
+x.font="900 46px 'Noto Sans CJK SC'";x.fillStyle='#F6CF78';x.textAlign='center';x.fillText('你',cxy,r4.y+56);x.shadowBlur=0;
+// HUD corners + scale
+x.strokeStyle='rgba(230,255,255,.85)';x.lineWidth=3;const corner=(cx,cy,sx,sy,l)=>{x.beginPath();x.moveTo(cx,cy+sy*l);x.lineTo(cx,cy);x.lineTo(cx+sx*l,cy);x.stroke()};
+corner(60,60,1,1,60);corner(60,1020,1,-1,60);corner(1860,1020,-1,-1,60);
+</script></body></html>

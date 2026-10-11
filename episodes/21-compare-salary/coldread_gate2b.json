@@ -1,0 +1,71 @@
+{
+  "persona": "20yo male university student, Douyin portrait feed, landscape video playing at about 1/4 screen",
+  "would_keep_watching_after_3s": true,
+  "why": "The first frame is a glowing phone with ¥4000 on it and the line 你拿到人生第一份实习工资：4000. I'm a student and internship pay is something I actually think about, so the number grabs me before I've worked out what the art style is. The thermal-camera look is different from the usual talking head or PPT knowledge video. I stop to see where 4000 is going.",
+  "first_moment_I_got_curious": "about 9.5-11.5s: 然后室友说：他的是6000, and the 室友 ¥6000 marker jumps above 你的 ¥4000 on the satisfaction bar. That's the hook: my number didn't change but my marker moved down. It's the cleanest visual in the whole thing.",
+  "where_I_would_swipe_away": [
+    "around 13.5s: the frame is mostly empty purple with two blue windows and a phone cut off at the left edge showing just '0'. It looks like the camera missed the shot. Combined with the subtitle staying the same for 2+ seconds, this is a dead moment and my thumb starts moving.",
+    "around 21.5-26s: 别怪自己。连猴子都这样. I know the cucumber/grape monkey meme, so I wonder 'is this the one I've already seen?' If the clip doesn't get to the famous moment (monkey throwing the cucumber back) fast, I might leave.",
+    "around 46s to 74s (not in the sheets, so I can't judge it), then the switch to 2008 加州大学 salaries at 74.5s. A second study after the monkeys feels like the 'lecture part' starting. If the jump isn't framed as 'and humans do exactly the same thing', this is where I'd swipe."
+  ],
+  "lines_I_did_not_understand": [
+    "t3: 越开心 越热 sits at the BOTTOM of the bar, next to the cold purple end, so at first glance it reads as 'bottom = happier'. It took me a second look to get that hot/top = happy.",
+    "t38: 这只就不干了 — 这只 which one? In this frame there's only one figure and it's a blue blob, so if I'd just swiped in I wouldn't know it's a monkey or why it quit.",
+    "t26: 用小石子换黄瓜 — I can't see a stone or a cucumber anywhere. The small orange dome shapes could be food bowls, lamps, anything.",
+    "t80.5/82.4: the floating white dashes — no idea what they are (salary bars? the median?).",
+    "t81.9: 低于中位数的人：满意度下降. The cyan people are under the line, but the front row of orange people is also visually below or in front of it. Who exactly is below the median? It reads like three groups, not two."
+  ],
+  "takeaway_in_my_words": "Your pay didn't change, but finding out someone next to you gets more makes you less happy. Even monkeys stop working when the neighbour gets grapes for the same job, and when real employees could look up co-workers' salaries, the ones below the middle got less satisfied.",
+  "surprise_that_stuck": "The 95% -> 60% -> 20% drop, especially the 20% one: the neighbour gets grapes for doing NOTHING. Plus the line 不是黄瓜变难吃了，是旁边有葡萄. I'd repeat that line to my roommate.",
+  "title_I_would_click": "Not shown titles in this round. The line I'd click on as a title is 不是黄瓜变难吃了，是旁边有葡萄 or something like '室友工资比你高2000，你会难受吗？'",
+  "title_that_misleads": "n/a (no titles given this round)",
+  "what_I_would_comment": "'所以千万别问室友工资' or '那个啥也不干拿葡萄的猴子是我老板吧' — the 20% monkey is the most comment-worthy moment.",
+  "for_frames_only": [
+    {
+      "frame": "proof_t3.png (first seconds)",
+      "what_this_says_in_5s": "Someone just got their first ¥4000 internship pay and there's a 'happiness meter'. Video about salary and how it feels.",
+      "eye_goes_first": "The blinding white phone and the ¥4000, then the subtitle 4000 in yellow.",
+      "would_I_stop": "yes — internship salary is relevant to me and the number is huge and readable even small.",
+      "looks": "新 / 炫. The thermal-camera look feels fresh and not cheap. But the phone covering the face looks like a phone-headed person, slightly odd.",
+      "unreadable_or_bad_at_phone_size": "The phone text 实习工资·到账 is clipped on both sides (实 and 账 cut by the screen bezel glow). The ¥4000 digits have wobbly purple distortion, which looks like a rendering bug when small. The mug on the right is cut off and sits behind the meter, making that corner messy. The legend 越开心越热 at the bottom of the bar is misleading (see above). The Juno watermark is fine.",
+      "vibe_word": "暖"
+    },
+    {
+      "frame": "proof_t38.png (~0:38)",
+      "what_this_says_in_5s": "Something blue in a cage stopped doing a task, willingness dropped to 60%. Some experiment.",
+      "eye_goes_first": "The big cyan 60%, then the blue blob in the middle.",
+      "would_I_stop": "maybe — 60% is a strong number but out of context I don't know what 这只 is.",
+      "looks": "A bit creepy / unclear. At quarter size the blue monkey doesn't read as a monkey. With the dark round ears it looks like a blue bowling pin or penguin wearing headphones. A cage bar runs straight down the middle of its body, which looks like a glitch rather than 'behind bars'. The floating red disc at the top and the half blue dome on the left are unidentifiable.",
+      "unreadable_or_bad_at_phone_size": "The citation line Brosnan & de Waal (2003) is far too small to read, though I don't need to. Monkey silhouette not recognizable. No cucumber or grape visible in this frame, so the 'unfair' cause is missing from the shot.",
+      "vibe_word": "冷"
+    },
+    {
+      "frame": "proof_t81.9.png (~1:22)",
+      "what_this_says_in_5s": "A crowd of people, a glowing line, 'you' circled, people below the median get less satisfied. Looks like a data chart made of people.",
+      "eye_goes_first": "The bright horizontal glowing line, then the yellow circle with 你.",
+      "would_I_stop": "maybe — it looks impressive and 高级, but it's busy and I need more than 5 seconds to understand it.",
+      "looks": "炫 but 拥挤. Lots of glowing figures overlapping each other. The front row of large orange figures blocks the cyan ones, which are supposed to be the point.",
+      "unreadable_or_bad_at_phone_size": "The label at the right edge is cut off ('— 中', presumably 中位数). There's a ghosted 满意度 watermark at the bottom right that is almost invisible. It's unclear which people are 'below the median', since orange figures are in front of and below the line too. The orange salary bars at the top bleed into the figures. Citation is unreadable (fine).",
+      "vibe_word": "拥挤"
+    }
+  ],
+  "contact_sheet_problem_tiles": [
+    "mh 5: the whole frame is one giant orange blob (head close-up?). At small size I couldn't tell what it is; only the subtitle 开心了整整三天 and the mug carry it.",
+    "mh 13.5: worst tile. Nearly empty frame, two blue rectangles at the top, phone cut off at the left edge with a stray '0'. Looks like a mis-framed shot.",
+    "mh 15.5: the phone turned orange on an orange body, so it's low contrast. 开心的第3天 on the phone is unreadable small. The idea (phone cooled down) is good but barely visible.",
+    "mh 9.5: the 室友 ¥6000 phone is tiny, and the roommate figure is a dim orange shape you can barely see. The label above carries it.",
+    "mh 11.5 GOOD: the 室友 ¥6000 marker pushing 你的 ¥4000 down the bar is the clearest idea in the video.",
+    "ml 21.5/23: fine and clear (two warm monkeys), but red lamp shapes are cut off at the top edge.",
+    "ml 26: 用小石子换黄瓜, but I see neither stone nor cucumber. The monkey reaches toward nothing.",
+    "ml 34: the grape is a white glowing burst that reads as a flash or explosion, not grapes. Could use a visible grape bunch shape or colour.",
+    "ml 38: the blue monkey turns into a headphone blob (see frame 2).",
+    "ml 42: the blue monkey is jammed against the left edge, half cut off, and the big 20% number sits on top of it. It looks like a layout collision.",
+    "ml 46 GOOD: best line in the video, 不是黄瓜变难吃了，是旁边有葡萄, and blue vs. warm monkey side by side is readable. The 20% still overlaps the blue monkey's head though.",
+    "mw 74.5: the header 加州大学·员工工资·全部可查 is readable, but '2008 · 报纸...' is cut off at the right edge.",
+    "mw 80.5: the floating white dashes in the crowd are a mystery. Everyone is orange, so nothing tells me what changed.",
+    "mw 82.4: '中位' is cut off at the right edge, and 满意度▼ floats mid-frame over the people.",
+    "Gap: the sheets jump from 46s to 74.5s and stop at 82.4s, so I can't judge 46-74 or the ending."
+  ],
+  "would_watch_to_end_2min": "Probably not all the way. I'd get through the salary-roommate setup and the monkeys (about 50s) because the 95 -> 60 -> 20 countdown pulls me along. When it switches to a second study (UC salaries, 2008), it starts to feel like a lecture, and I'd likely leave somewhere around 1:15-1:30 unless I know a payoff is coming. My guess is a 40-50% chance I finish.",
+  "one_thing_that_would_make_me_more_likely": "Promise a payoff for ME in the first 5 seconds and pay it off at the end, e.g. '最后告诉你：知道室友工资后怎么不难受' or '所以该不该问室友工资？看到最后'. Right now nothing tells me what I'll get by staying past the monkeys. Second choice: show the famous moment where the monkey throws the cucumber back. That's the meme everyone knows, and it's the most shareable beat; I didn't see it in any tile."
+}
