@@ -306,8 +306,10 @@ export const S03S04: React.FC<{ T: number }> = ({ T }) => {
   // reframe to rows 2–3
   const push = eio(T, b(41) - 0.1, 0.7);
   // book closes on bar 7, camera pulls back
-  const close = eio(T, CUT.s4, 0.52);
-  const pull = eio(T, CUT.s4, 0.52);
+  // v6: the cover shuts exactly on the next beat's clap (b45) and the title slams in on that same hit
+  const close = eio(T, CUT.s4, TITLE_HIT - CUT.s4);
+  const pull = eio(T, CUT.s4, TITLE_HIT - CUT.s4);
+  const kick = T >= TITLE_HIT ? Math.exp(-(T - TITLE_HIT) / 0.14) : 0;
   // title push, then open on bar 8
   const open = eio(T, CUT.s5, 0.55);
   const pushIn = eio(T, CUT.s5, 0.42);
@@ -318,7 +320,7 @@ export const S03S04: React.FC<{ T: number }> = ({ T }) => {
   s = lerp(s, 0.82 * brand, pull);
   cx = lerp(cx, 960, pull);
   cy = lerp(cy, 470, pull);
-  s = lerp(s, 1, pushIn);
+  s = lerp(s, 1, pushIn) * (1 + 0.025 * kick);
   // red pen row
   const penP = pr(T, b(41), 1.05);
   const blink = T > b(43) && T < b(43) + 0.6 ? (Math.floor((T - b(43)) / 0.15) % 2 === 0 ? 1 : 0.25) : T >= b(43) + 0.6 ? 1 : 1;
@@ -395,8 +397,14 @@ const CoverInside: React.FC = () => (
     <div style={{ position: 'absolute', left: 14, top: 12, right: 14, bottom: 12, borderRadius: 3, background: 'linear-gradient(90deg,#e4d8bd,#efe5cf 60%,#e7dcc3)', boxShadow: 'inset 0 0 80px rgba(120,90,50,.25)' }} />
   </div>
 );
+/** the title card's music hit: the clap on bar 7 beat 2 (track 23.22 s) */
+export const TITLE_HIT = b(45);
 const Cover: React.FC<{ T: number; f: number }> = ({ T, f }) => {
-  const flare = f >= 26 ? Math.exp(-(f - 26) / 9) : 0;
+  const HF = (TITLE_HIT - CUT.s4) * 30; // the hit, in cover frames
+  const flare = f >= HF ? Math.exp(-(f - HF) / 9) : 0;
+  // slam: big → 1 over 4 frames, landing hard on the hit
+  const slamK = clamp((f - (HF - 4)) / 4);
+  const slamS = 1 + 0.3 * Math.pow(1 - slamK, 2);
   return (
     <>
       {/* page block (cream) on the fore-edge and bottom edge, under the cloth */}
@@ -408,15 +416,16 @@ const Cover: React.FC<{ T: number; f: number }> = ({ T, f }) => {
       </div>
       <Svg>
         <g transform="translate(0 -94)">
-          <text x={960} y={400} textAnchor="middle" opacity={eo(T, CUT.s4 + 0.32, 0.4)} style={{ fontFamily: F.serif, fontWeight: 600, fontSize: 30, letterSpacing: '0.32em' }} fill="#e6bd66">感情里的经济学 · 沉没成本 × 博弈</text>
-          <g opacity={eo(T, CUT.s4 + 0.32, 0.5)} stroke="#e6bd66" strokeWidth={1.2}>
+          <text x={960} y={400} textAnchor="middle" opacity={eo(T, TITLE_HIT + 0.08, 0.3)} style={{ fontFamily: F.serif, fontWeight: 600, fontSize: 30, letterSpacing: '0.32em' }} fill="#e6bd66">感情里的经济学 · 沉没成本 × 博弈</text>
+          <g opacity={eo(T, TITLE_HIT + 0.08, 0.35)} stroke="#e6bd66" strokeWidth={1.2}>
             <line x1={640} y1={438} x2={890} y2={438} /><line x1={1030} y1={438} x2={1280} y2={438} />
             <path d="M960,432 L966,438 L960,444 L954,438 Z" fill="#e6bd66" stroke="none" />
           </g>
-          <GoldTitle11 text="舍不得的，是TA吗？" f={f} at={6} step={1.5} fade={10} size={120} y={590} />
+          <g transform={`translate(960 560) scale(${slamS}) translate(-960 -560)`}><GoldTitle11 text="舍不得的，是TA吗？" f={f} at={HF - 4} step={0} fade={4} size={120} y={590} /></g>
+          {flare > 0.01 && <rect x={300} y={430} width={1320} height={220} fill="#f1c56d" opacity={0.22 * flare} filter="url(#k-soft)" />}
           <ellipse cx={960} cy={548} rx={760 * (0.4 + flare)} ry={2 + 2.5 * flare} fill="#fff1cf" opacity={0.55 * flare} />
           {Array.from({ length: 36 }, (_, i) => {
-            const t = f - 26;
+            const t = f - HF;
             if (t < 0 || t > 40) return null;
             const a = random(`c11a${i}`) * Math.PI * 2, d = t * (3 + random(`c11d${i}`) * 9) * Math.exp(-t / 30);
             return <circle key={i} cx={960 + Math.cos(a) * d * 1.6} cy={548 + Math.sin(a) * d * 0.4} r={1 + random(`c11r${i}`) * 2} fill="#ffe3a8" opacity={Math.max(0, 1 - t / 40)} />;
