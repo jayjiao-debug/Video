@@ -288,4 +288,4 @@ export const WORLDS = [
   { st: Ink, BG: InkBG, cam0: { z: 0.92, cy: -250 }, cam1: { z: 1.55, cy: -420 }, shadow: '#141414', so: 0.15 },
   { st: Gouache, BG: GouacheBG, cam0: { z: 0.92, cy: -250 }, cam1: { z: 1.68, cy: -420 }, shadow: '#3c3a6e', so: 0.32 },
 ];
-export { add };
+export { add, mix, rng, ridge };

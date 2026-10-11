@@ -1,7 +1,10 @@
 import React from 'react';
 import { AbsoluteFill, useCurrentFrame } from 'remotion';
 import { Figure } from './Figure';
-import { WORLDS, Cam, Ctx } from './styles';
+import { WORLDS as W1, Cam, Ctx } from './styles';
+import { WORLDS2 } from './styles2';
+const WORLDS: any[] = [...W1, ...WORLDS2];
+const DARK = new Set([1, 3, 5]);
 import { fit, walk, blend, STAND, POINT, HAUL, HUDDLE, WAVE, Pose, travel, travelAt, travelSmooth, ease, prog, lerp, HANDS, Hand } from './rig';
 import { Grain } from '../v13/il/kit';
 
@@ -19,42 +22,47 @@ const camAt = (w: (typeof WORLDS)[number], t: number): Cam => {
   const k = ease(prog(t, 2.6, 5.7));
   return { cx: X0 + travelSmooth(TR, t) * S + lerp(270, 200, k), cy: lerp(w.cam0.cy, w.cam1.cy, k), z: lerp(w.cam0.z, w.cam1.z, k) };
 };
-export const CS_FRAMES = CLIP * 30 * WORLDS.length;
+export const CS_FRAMES = CLIP * 30 * 4;
 const ZH = '"Noto Serif CJK SC", "Noto Serif SC", serif';
 
 const Label: React.FC<{ i: number; dark?: boolean }> = ({ i, dark }) => {
   const w = WORLDS[i].st, col = dark ? '#f6e7c8' : '#2a2320';
   return (
     <g>
-      <text x={70} y={96} fontFamily={ZH} fontSize={26} fill={col} opacity={0.75} letterSpacing={4}>角色画风测试 · {i + 1}/4</text>
+      <text x={70} y={96} fontFamily={ZH} fontSize={26} fill={col} opacity={0.75} letterSpacing={4}>角色画风测试 · {i + 1}/{WORLDS.length}</text>
       <text x={70} y={150} fontFamily={ZH} fontSize={46} fontWeight={700} fill={col}>{w.id} · {w.name}</text>
       <text x={72} y={188} fontFamily='Georgia, serif' fontSize={24} fontStyle="italic" fill={col} opacity={0.8}>{w.en}</text>
     </g>
   );
 };
 
-export const World: React.FC<{ i: number; t: number }> = ({ i, t }) => {
-  const w = WORLDS[i], cam = camAt(w, t), camEnd = camAt(w, CLIP);
+export const World: React.FC<{ i: number; t: number }> = ({ i, t: t0 }) => {
+  const w = WORLDS[i], step = w.hold ? Math.floor(t0 * w.hold) : 0, t = w.hold ? step / w.hold : t0;
+  const h = (n: number) => { const v = Math.sin(n * 127.1 + 311.7) * 43758.5453; return v - Math.floor(v) - 0.5; };
+  const jig = w.hold ? h(step) * 1.6 : 0, weave = w.weave ? `translate(${(h(t0 * 30) * 1.4).toFixed(2)} ${(h(t0 * 30 + 7) * 1.4).toFixed(2)})` : undefined;
+  const cam = camAt(w, t), camEnd = camAt(w, CLIP);
   const prints = TR.prints.map((p) => ({ x: X0 + p.x * S, t: p.t }));
   const c: Ctx = { t, cam, camEnd, prints };
-  const BG = w.BG, x = X0 + travelAt(TR, t) * S;
+  const BG = w.BG, x = X0 + travelAt(TR, t) * S + jig;
   const zl = cam.z;
   return (
     <svg width={1920} height={1080} style={{ position: 'absolute', inset: 0 }}>
       <defs>{w.st.defs}</defs>
+      <g transform={weave}>
       <BG c={c} />
       <g transform={`translate(960 540) scale(${zl}) translate(${-cam.cx} ${-cam.cy})`}>
         {w.so > 0 && <ellipse cx={x + (i === 3 ? 150 : 10)} cy={4} rx={i === 3 ? 210 : 90} ry={12} fill={w.shadow} opacity={w.so} />}
         <Figure pose={plan(t)} st={w.st} t={t} x={x} y={0} s={S} />
       </g>
       <BG c={c} fg />
-      <Label i={i} dark={i === 1 || i === 3} />
+      </g>
+      <Label i={i} dark={DARK.has(i)} />
     </svg>
   );
 };
 
-export const CharStyles: React.FC = () => {
-  const f = useCurrentFrame(), i = Math.min(WORLDS.length - 1, Math.floor(f / (CLIP * 30))), t = (f - i * CLIP * 30) / 30;
+export const CharStyles: React.FC<{ set?: number }> = ({ set = 0 }) => {
+  const f = useCurrentFrame(), j = Math.min(3, Math.floor(f / (CLIP * 30))), i = set * 4 + j, t = (f - j * CLIP * 30) / 30;
   const fade = Math.min(1, t / 0.25, (CLIP - t) / 0.25);
   return (
     <AbsoluteFill style={{ background: '#000' }}>
@@ -70,8 +78,8 @@ export const CharStyles: React.FC = () => {
 const SHEET_POSES: [string, Pose][] = [['站 stand', STAND], ['走 walk', walk(0.15)], ['指 point', POINT], ['拉 haul', HAUL], ['冷 huddle', HUDDLE], ['挥手 wave', WAVE(0.3)]];
 const SHEET_HANDS: [string, Hand][] = [['放松 relax', 'relax'], ['握拳 fist', 'fist'], ['指 point', 'point'], ['张开 open', 'open']];
 export const CharSheet: React.FC<{ i: number }> = ({ i }) => {
-  const w = WORLDS[i], st = w.st, dark = i === 1 || i === 3;
-  const bg = ['#efe2c4', '#f2a34a', '#ede5d4', '#2b2f57'][i], ink = dark ? '#f6e7c8' : '#2a2320';
+  const w = WORLDS[i], st = w.st, dark = DARK.has(i);
+  const bg = ['#efe2c4', '#f2a34a', '#ede5d4', '#2b2f57', '#cfe8ff', '#3a2a48', '#dfe9f0', '#efe6d2'][i], ink = dark ? '#f6e7c8' : '#2a2320';
   return (
     <AbsoluteFill style={{ background: bg }}>
       <svg width={1920} height={1080}>
