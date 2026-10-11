@@ -14,6 +14,7 @@ import type { SceneDef } from '../scene';
 import { pop, prog, easeOut, easeInOut, swing, impulse, clamp, lerp } from '../scene';
 import { HeroBag, Cut, rect, archFrame, rays, circle, ring } from '../foil';
 import { Backdrop, MirrorFloor, PaperCard, Word, Beam } from '../kit';
+import { FoilText } from './S10_kit';
 import { strokePath, resample, bagOutline, Ribbon, useGlow, useHolo, glassMat, Box, CutM, monotone, rectHole, velvet } from './S06_lib';
 
 const BREAK = 49.008, SIG_T = 51.033, GET_T = 55.083;
@@ -57,12 +58,13 @@ const Set: React.FC<{ T: number }> = ({ T }) => {
   const plaques = easeOut(prog(T, 45.3, 45.9));
   const px = penX(T), drawn = clamp((px - X0) / (X1 - X0)), pens = T >= 46.9;
   // the window switches on like a shop light: two blips, then on
-  const blip = T < SIG_T ? 0 : T < SIG_T + 0.05 ? 1 : T < SIG_T + 0.1 ? 0.25 : T < SIG_T + 0.16 ? 1 : 1;
-  const win = blip;
-  const sigKick = impulse(T, SIG_T, 0.35);
+  const win = easeOut(prog(T, SIG_T - 0.02, SIG_T + 0.15));            // a clean 5-frame snap up, no dips
+  const sigKick = prog(T, SIG_T - 0.02, SIG_T + 0.09) * (1 - easeOut(prog(T, SIG_T + 0.09, SIG_T + 0.7)));   // 3-frame attack, ~18-frame decay
+  const penVis = 1 - prog(Math.min(px, X1), XG - 0.3, XG - 0.12);
   const got = easeOut(prog(T, GET_T - 0.2, GET_T + 0.8));
-  const ribbonHolo = useHolo(0.55), flare = useHolo(1.3);
-  const core = useGlow('#fff1d8', 1.8), likeM = useGlow('#ffc860', 1.35);
+  const ribbonHolo = useGlow('#ff9a30', 0.7), flare = useGlow('#ffd890', 1.6); flare.opacity = clamp(sigKick);
+  const core = useGlow('#ffe4b0', 1.5), likeM = useGlow('#ffc860', 1.35);
+  const head = useGlow('#ffe4b0', 1.5); head.opacity = penVis;
   const pane = useGlow('#ffb45a', 0.85); pane.opacity = win;
   const glare = useMemo(() => new THREE.MeshBasicMaterial({ color: '#fff4e0', transparent: true, opacity: 0.035, depthWrite: false, toneMapped: false }), []);
   const wy = want(Math.min(px, X1)), ly = like(Math.min(px, X1));
@@ -119,10 +121,10 @@ const Set: React.FC<{ T: number }> = ({ T }) => {
         <CutM d={MULL} m={satin} position={[0, 0, -0.008]} depth={0.006} />
         <Box w={WW / 1000 + 0.12} h={0.03} d={0.08} kind="lacquer" color={WARM} position={[0, -0.03, 0.03]} />
         {/* the plaque on the wall beside it */}
-        <group position={[WW / 2000 + 0.16, WH / 1000 * 0.5, 0.005]} scale={plaques}>
+        <group position={[-0.17, YW + PEAK - WY + 0.02, 0.012]} scale={plaques}>
           <Cut d={rect(-70, -34, 140, 68)} kind="lacquer" color="#0a0705" depth={0.006} />
           <Cut d={rect(-70, -34, 140, 68) + ' ' + rectHole(-64, -28, 128, 56)} kind="gold" position={[0, 0, 0.0065]} depth={0.001} bevel={0} />
-          <Word text="信号" size={0.062} kind="gold" position={[0, 0, 0.009]} />
+          <FoilText text="信号" glyph={0.04} position={[0, 0, 0.009]} />
         </group>
       </group>
       {/* light spilling through the window once it is on (behind the wall, so the mullions cast shadows) */}
@@ -139,13 +141,13 @@ const Set: React.FC<{ T: number }> = ({ T }) => {
         {[-0.25, 0.2, 1.0, 1.45].map((x) => <mesh key={x} material={satin} position={[x, (YW + CH) / 2, RAIL_Z]}><boxGeometry args={[0.006, YW - CH, 0.006]} /></mesh>)}
         {/* labels at the start of each line */}
         <group scale={plaques} position={[0.02, YW + 0.075, RAIL_Z]}>
-          <Word text="想要" size={0.1} kind="cream" color="#f2d08a" position={[-0.04, 0, 0]} />
-          <Word text="多巴胺" size={0.04} kind="cream" weight="700" position={[0.12, -0.014, 0]} />
+          <FoilText text="想要" glyph={0.062} position={[-0.04, 0, 0]} />
+          <FoilText text="多巴胺" glyph={0.026} fill="#f3ede2" weight="700" position={[0.12, -0.016, 0]} />
         </group>
         <group scale={plaques} position={[0.02, CH + 0.04, CZ + CD / 2 - 0.03]}>
           <Cut d={rect(-60, -32, 120, 64)} kind="lacquer" color="#0a0705" position={[0, 0, -0.004]} depth={0.004} />
           <Cut d={rect(-60, -32, 120, 64) + ' ' + rectHole(-55, -27, 110, 54)} kind="gold" position={[0, 0, 0.0005]} depth={0.001} bevel={0} />
-          <Word text="喜欢" size={0.06} kind="cream" color="#f2d08a" position={[0, 0, 0.003]} />
+          <FoilText text="喜欢" glyph={0.038} position={[0, 0, 0.003]} />
           <Box w={0.004} h={0.01} d={0.004} kind="gold" position={[0, -0.042, -0.004]} />
         </group>
         {/* the bag in its box at the end of the counter */}
@@ -161,13 +163,13 @@ const Set: React.FC<{ T: number }> = ({ T }) => {
       {/* ---------- the two lines of light ---------- */}
       {pens && <>
         <group position={[0, 0, RAIL_Z + 0.012]}>
-          <Ribbon pts={WANT} w={0.013} u={drawn} material={ribbonHolo} />
+          <Ribbon pts={WANT} w={0.011} u={drawn} material={ribbonHolo} />
           <Ribbon pts={WANT} w={0.0045} u={drawn} material={core} z={0.003} />
           {drawn < 0.999 && <>
-            <CutM d={DIAMOND(11)} m={core} position={[px, wy, 0.005]} depth={0.001} bevel={0} shadow={false} />
-            <pointLight position={[px, wy, 0.08]} intensity={0.12} distance={0.6} color="#ffe2b8" decay={2} />
+            {penVis > 0.01 && <CutM d={DIAMOND(10)} m={head} position={[px, wy, 0.005]} depth={0.001} bevel={0} shadow={false} />}
+            {penVis > 0.01 && <pointLight position={[px, wy, 0.08]} intensity={0.08 * penVis} distance={0.45} color="#ffe2b8" decay={2} />}
           </>}
-          {sigKick > 0.03 && <CutM d={rays(16, 26, 140, 0, Math.PI * 2 * (15 / 16), 0.06)} m={flare} position={[XS, YW + PEAK, 0.006]} scale={0.5 + 0.5 * (1 - sigKick)} depth={0.001} bevel={0} shadow={false} />}
+          {sigKick > 0.02 && <CutM d={rays(16, 26, 140, 0, Math.PI * 2 * (15 / 16), 0.05)} m={flare} position={[XS, YW + PEAK, 0.006]} scale={0.55 + 0.35 * prog(T, SIG_T, SIG_T + 0.7)} depth={0.001} bevel={0} shadow={false} />}
         </group>
         <group position={[0, 0, LIKE_Z + 0.003]}>
           <Ribbon pts={LIKE} w={0.008} u={drawn} material={likeM} />
@@ -192,13 +194,13 @@ export const S06: SceneDef = {
   keys: [
     { t: 41.207, pos: [-1.3, 0.54, 1.02], look: [-0.86, 0.47, -0.15], fov: 34, ap: 0.005, bloom: 0.65 },
     { t: 42.932, pos: [-1.06, 0.5, 0.76], look: [-0.82, 0.46, -0.12], fov: 33, ap: 0.006, bloom: 0.65 },
-    { t: 44.3, pos: [-1.0, 0.5, 0.72], look: [-0.78, 0.46, -0.1], fov: 33, ap: 0.006, bloom: 0.65 },
-    { t: 46.981, pos: [0.12, 0.74, 1.15], look: [0.36, 0.48, -0.35], fov: 36, ap: 0.004, bloom: 0.65 },
-    { t: BREAK, pos: [0.2, 0.74, 1.02], look: [0.42, 0.5, -0.4], fov: 36, ap: 0.004, bloom: 0.7 },
-    { t: SIG_T, pos: [0.46, 0.8, 1.42], look: [0.58, 0.62, -0.55], fov: 36, ap: 0.004, bloom: 0.75 },
-    { t: 53.058, pos: [0.72, 0.76, 1.2], look: [0.86, 0.5, -0.4], fov: 35, ap: 0.004, bloom: 0.72 },
-    { t: GET_T, pos: [1.0, 0.74, 1.04], look: [1.16, 0.44, -0.25], fov: 35, ap: 0.005, bloom: 0.72 },
-    { t: 57.08, pos: [1.2, 0.62, 0.46], look: [1.2, 0.48, -0.12], fov: 33, ap: 0.008, bloom: 0.75 },
+    { t: 43.9, pos: [-1.0, 0.5, 0.72], look: [-0.78, 0.46, -0.1], fov: 33, ap: 0.006, bloom: 0.65 },
+    { t: 45.3, pos: [0.58, 0.8, 1.32], look: [0.62, 0.56, -0.3], fov: 36, ap: 0.003, bloom: 0.62 },
+    { t: 48.9, pos: [0.6, 0.79, 1.2], look: [0.62, 0.56, -0.3], fov: 36, ap: 0.003, bloom: 0.65 },
+    { t: SIG_T, pos: [0.56, 0.78, 1.02], look: [0.58, 0.62, -0.4], fov: 36, ap: 0.003, bloom: 0.72 },
+    { t: 53.058, pos: [0.8, 0.75, 1.02], look: [0.88, 0.52, -0.3], fov: 36, ap: 0.003, bloom: 0.7 },
+    { t: GET_T, pos: [1.0, 0.73, 1.08], look: [1.12, 0.46, -0.2], fov: 36, ap: 0.004, bloom: 0.7 },
+    { t: 57.08, pos: [1.2, 0.62, 0.52], look: [1.2, 0.47, -0.12], fov: 34, ap: 0.006, bloom: 0.72 },
   ],
   lines: [
     { t: 41.0, end: 44.9, text: '第二步：等候名单，让你买不到。' },

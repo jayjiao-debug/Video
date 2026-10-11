@@ -12,6 +12,7 @@ import { impulse, prog, easeOut } from '../scene';
 import { HeroBag, Cut, rect, circle, archFrame, cutGeo } from '../foil';
 import { Backdrop, MirrorFloor } from '../kit';
 import { Spot, Caption, hash } from './S03_parts';
+import { Glow } from './S10_kit';
 
 /* S05 materials see a WARM environment of their own: the shared club env has a cyan strip on the +x side, and looking
    down the shopfront every grazing gold/velvet surface mirrored it as teal. A material's own envMap overrides the scene's. */
@@ -178,6 +179,14 @@ const Set: React.FC<{ T: number }> = ({ T }) => {
       {/* the red runner to the door */}
       <mesh position={[DX, 0.003, -0.08]} receiveShadow><boxGeometry args={[0.32, 0.004, 0.94]} /><meshPhysicalMaterial color="#5a0614" roughness={0.75} sheen={1} sheenColor="#ff4060" /></mesh>
       <RopeLine />
+      {/* the street side: a row of deco lamp posts, so the far side of the frame is lit night, not void */}
+      {[-2.6, -1.3, 0.0, 1.3, 2.6, 3.9].map((x, i) => <group key={i} position={[x, 0, 1.0]}>
+        <mesh position={[0, 0.006, 0]} material={plainGold('#d8a856')}><cylinderGeometry args={[0.03, 0.036, 0.012, 20]} /></mesh>
+        <mesh position={[0, 0.36, 0]} material={plainGold('#d8a856')}><cylinderGeometry args={[0.006, 0.009, 0.72, 10]} /></mesh>
+        <mesh position={[0, 0.735, 0]} material={plainGold('#d8a856')}><cylinderGeometry args={[0.02, 0.012, 0.018, 16]} /></mesh>
+        <mesh position={[0, 0.77, 0]}><sphereGeometry args={[0.03, 20, 14]} /><meshBasicMaterial color={new THREE.Color('#ffd49a').multiplyScalar(1.7)} toneMapped={false} /></mesh>
+        <Glow w={0.9} h={0.9} color="#ffb060" o={0.16} position={[0, 0.004, 0]} rotation={[-Math.PI / 2, 0, 0]} />
+      </group>)}
       {/* the doorman by the closed rope */}
       <Person who={{ h: 480, man: true }} flip position={[DX + 0.3, 0, -0.32]} rotation={[0, 0.3, 0]} />
       {/* the queue, nearest the door first */}
@@ -202,10 +211,10 @@ export const S05: SceneDef = {
   keys: [
     { t: 32.806, pos: [DX, 0.45 * F, FZ + D0], look: [DX, 0.43 * F, FZ], fov: 34, ap: 0.004, bloom: 0.6 },
     { t: 33.6, pos: [DX - 0.04, 0.3, FZ + D0 + 0.22], look: [DX - 0.02, 0.27, FZ], fov: 34, ap: 0.004, bloom: 0.6 },
-    { t: 34.83, pos: [-0.25, 0.42, 1.6], look: [-0.85, 0.3, -0.3], fov: 34, ap: 0.003, bloom: 0.6 },
-    { t: 36.85, pos: [-2.55, 0.33, 0.68], look: [-0.7, 0.3, -0.2], fov: 34, ap: 0.003, bloom: 0.6 },
-    { t: 38.88, pos: [-1.25, 0.31, 0.52], look: [0.4, 0.3, -0.25], fov: 34, ap: 0.004, bloom: 0.6 },
-    { t: 40.607, pos: [0.18, 0.3, 0.55], look: [DX, 0.3, -0.45], fov: 34, ap: 0.004, bloom: 0.62 },
+    { t: 34.83, pos: [-0.25, 0.42, 1.6], look: [-0.85, 0.3, -0.3], fov: 34, ap: 0.0025, bloom: 0.6 },
+    { t: 36.85, pos: [-2.55, 0.33, 0.68], look: [-0.7, 0.3, -0.2], fov: 34, ap: 0.0025, bloom: 0.6 },
+    { t: 38.88, pos: [-1.25, 0.31, 0.52], look: [0.4, 0.3, -0.25], fov: 34, ap: 0.0025, bloom: 0.6 },
+    { t: 40.607, pos: [0.18, 0.3, 0.55], look: [DX, 0.3, -0.45], fov: 34, ap: 0.003, bloom: 0.62 },
   ],
   lines: [
     { t: 32.9, end: 36.75, text: '第一步：门口限流，让人排队。' },

@@ -9,7 +9,7 @@ import type { SceneDef } from '../scene';
 import { pop, prog, easeOut, impulse, clamp, lerp } from '../scene';
 import { Cut, rect, ring, circle } from '../foil';
 import { Backdrop, MirrorFloor, PaperCard, Curtains, Beam } from '../kit';
-import { strokePath, quadPts, useGlow, useHolo, glassMat, Box, CutM, Caption } from './S06_lib';
+import { strokePath, quadPts, useGlow, useHolo, glassMat, Box, CutM, Caption, velvet } from './S06_lib';
 import { Spot, DIAMOND } from './S06_waiting';
 
 type P = [number, number];
@@ -42,7 +42,8 @@ const STABS = [64.447, 64.699, 64.952];
 
 const Glass: React.FC<{ x: number; price: string; warm: number; T: number }> = ({ x, price, warm, T }) => (
   <group position={[x, 0.14, 0.02]}>
-    <Cut d={WINE} kind="glow" color="#3c0410" glow={0.3 * warm} position={[0, 0, -0.004]} depth={0.004} shadow={false} />
+    <Cut d={WINE} kind="glow" color="#2e030c" glow={0.25 * warm} position={[0, 0, -0.004]} depth={0.004} shadow={false} />
+    <Cut d={'M -49.5 -160 L 49.5 -160 L 49.6 -146 Q 30 -138 0 -137 Q -30 -138 -49.6 -146 Z'} kind="glow" color="#6e0a1c" glow={0.3 * warm} position={[0, 0, -0.0035]} depth={0.001} bevel={0} shadow={false} />
     <Cut d={'M -46 -159 L 46 -159 L 46 -161.5 L -46 -161.5 Z'} kind="glow" color="#ff5a5a" glow={0.2 + 0.5 * warm} position={[0, 0, 0.001]} depth={0.0005} bevel={0} shadow={false} />
     <CutM d={GLASS} m={glassMat()} position={[0, 0, 0.002]} depth={0.002} bevel={0} shadow={false} />
     <Cut d={RIM} kind="chrome" position={[0, 0, 0.0045]} depth={0.0012} bevel={0} />
@@ -63,12 +64,15 @@ const Brain: React.FC<{ x: number; drop: number; spot: number; T: number }> = ({
   return (
     <group position={[x, y, -0.02]} rotation={[0, 0, 0.04 * (1 - drop)]}>
       <Box w={0.0016} h={1.4} d={0.0016} kind="gold" position={[0, 0.045, 0]} />
-      <Cut d={BRAIN_RIM} kind="gold" position={[0, 0, -0.004]} depth={0.002} bevel={0} />
-      <Cut d={BRAIN} kind="black" depth={0.004} bevel={0.0008} />
-      <Cut d={GYRI} kind="gold" color="#b08a48" position={[0, 0, 0.0052]} depth={0.0006} bevel={0} shadow={false} />
+      <Cut d={BRAIN_RIM} kind="gold" position={[0, 0, -0.006]} depth={0.002} bevel={0} />
+      <CutM d={BRAIN} m={velvet('#120806')} depth={0.004} bevel={0.0008} />
+      <Cut d={poly(brainPts(0.9))} kind="lacquer" color="#4a0712" position={[0.004, 0.002, 0.005]} depth={0.003} bevel={0.0008} />
+      <Cut d={poly(brainPts(0.72))} kind="lacquer" color="#6a0c1a" position={[0.008, 0.004, 0.009]} depth={0.003} bevel={0.0008} />
+      <Cut d={GYRI} kind="gold" position={[0, 0, 0.0125]} depth={0.0012} bevel={0} />
+      <Cut d={circle(0, 0, 14)} kind="gold" position={[SPOT[0], SPOT[1], 0.0125]} depth={0.0015} bevel={0.0004} />
       {spot > 0.01 && <>
-        <CutM d={circle(0, 0, 9)} m={g} position={[SPOT[0], SPOT[1], 0.007]} depth={0.0005} bevel={0} shadow={false} />
-        <CutM d={circle(0, 0, 22)} m={h} position={[SPOT[0], SPOT[1], 0.0065]} depth={0.0005} bevel={0} shadow={false} />
+        <CutM d={circle(0, 0, 9)} m={g} position={[SPOT[0], SPOT[1], 0.0145]} depth={0.0005} bevel={0} shadow={false} />
+        <CutM d={circle(0, 0, 24)} m={h} position={[SPOT[0], SPOT[1], 0.014]} depth={0.0005} bevel={0} shadow={false} />
         <pointLight position={[SPOT[0], SPOT[1], 0.05]} intensity={0.05 * spot} distance={0.4} color="#ffb070" decay={2} />
       </>}
     </group>
@@ -122,7 +126,8 @@ const Set: React.FC<{ T: number }> = ({ T }) => {
       <Spot p={[2.4, 1.2, 1.0]} at={[0.1, 0.45, 0]} angle={0.5} i={1 + 8 * riser} color="#ffe2c0" pen={0.9} />
       <Beam from={[0.25, 2.2, 0.0]} len={2.0} r={0.24} o={0.02 + 0.05 * warm} color="#ffd9a8" />
       <Beam from={[-0.25, 2.2, 0.0]} len={2.0} r={0.24} o={0.02} color="#f0ece4" />
-      <Spot p={[0, 2.2, 0.8]} at={[0, 0.6, -0.02]} angle={0.3} i={10 * drop} color="#ffe2c0" pen={0.7} />
+      <Spot p={[0, 2.2, 0.9]} at={[0, 0.62, -0.02]} angle={0.32} i={4 + 10 * drop} color="#ffe2c0" pen={0.7} />
+      <Spot p={[0.25, 1.0, 1.0]} at={[0, 0.3, -0.2]} angle={0.18} i={6 * (1 - prog(T, 58.4, 60))} color="#ffd9a8" pen={0.7} />
       <ambientLight intensity={0.015} />
     </group>
   );
@@ -133,14 +138,14 @@ const Overlay: React.FC<{ T: number }> = ({ T }) => <Caption T={T} t0={57.5} t1=
 export const S07: SceneDef = {
   id: 'S07_wine', t0: 57.106, t1: 65.206, x: 84, enter: 'cut', Set, Overlay, env: 0.4,
   keys: [
-    { t: 57.106, pos: [0.0, 0.3, 0.3], look: [0.0, 0.28, -0.2], fov: 32, ap: 0.01, bloom: 0.85 },
-    { t: 59.131, pos: [0.0, 0.37, 1.12], look: [0.0, 0.26, -0.1], fov: 33, ap: 0.004, bloom: 0.75 },
-    { t: 60.2, pos: [0.03, 0.37, 1.06], look: [0.03, 0.26, -0.1], fov: 33, ap: 0.004, bloom: 0.75 },
-    { t: 61.157, pos: [0.12, 0.36, 0.9], look: [0.12, 0.27, -0.05], fov: 33, ap: 0.005, bloom: 0.75 },
-    { t: 62.7, pos: [0.16, 0.37, 0.8], look: [0.17, 0.28, -0.05], fov: 33, ap: 0.005, bloom: 0.8 },
-    { t: 63.18, pos: [0.06, 0.62, 1.05], look: [0.03, 0.6, -0.05], fov: 34, ap: 0.005, bloom: 0.8 },
-    { t: 64.45, pos: [0.24, 0.6, 0.66], look: [0.25, 0.58, 0], fov: 33, ap: 0.006, bloom: 0.9 },
-    { t: 65.18, pos: [0.305, 0.585, 0.16], look: [0.305, 0.58, 0], fov: 30, ap: 0.012, bloom: 1.1 },
+    { t: 57.106, pos: [0.0, 0.33, 0.46], look: [0.0, 0.3, -0.2], fov: 33, ap: 0.006, bloom: 0.8 },
+    { t: 59.131, pos: [0.0, 0.38, 1.2], look: [0.0, 0.26, -0.1], fov: 34, ap: 0.003, bloom: 0.72 },
+    { t: 60.2, pos: [0.03, 0.38, 1.14], look: [0.03, 0.26, -0.1], fov: 34, ap: 0.003, bloom: 0.72 },
+    { t: 61.157, pos: [0.12, 0.37, 0.98], look: [0.13, 0.27, -0.05], fov: 34, ap: 0.004, bloom: 0.75 },
+    { t: 62.6, pos: [0.15, 0.4, 0.9], look: [0.16, 0.31, -0.05], fov: 34, ap: 0.004, bloom: 0.75 },
+    { t: 63.18, pos: [0.06, 0.58, 1.12], look: [0.03, 0.55, -0.05], fov: 35, ap: 0.004, bloom: 0.78 },
+    { t: 64.45, pos: [0.22, 0.6, 0.72], look: [0.25, 0.58, 0], fov: 33, ap: 0.005, bloom: 0.85 },
+    { t: 65.18, pos: [0.305, 0.585, 0.17], look: [0.305, 0.58, 0], fov: 30, ap: 0.01, bloom: 1.0 },
   ],
   lines: [
     { t: 57.2, end: 60.6, text: '第三步：价格。同一瓶酒，标两个价；' },

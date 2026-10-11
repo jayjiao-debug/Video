@@ -54,7 +54,7 @@ const CONF = Array.from({ length: 30 }, (_, i) => {
 
 const skyTex = (() => { let t: THREE.Texture | null = null; return () => t ?? (t = (() => {
   const c = document.createElement('canvas'); c.width = 4; c.height = 256; const g = c.getContext('2d')!;
-  const gr = g.createLinearGradient(0, 0, 0, 256); gr.addColorStop(0, '#050a1e'); gr.addColorStop(0.65, '#0c1a40'); gr.addColorStop(1, '#22356e');
+  const gr = g.createLinearGradient(0, 0, 0, 256); gr.addColorStop(0, '#04050f'); gr.addColorStop(0.65, '#0b1028'); gr.addColorStop(1, '#1d2244');
   g.fillStyle = gr; g.fillRect(0, 0, 4, 256); const x = new THREE.CanvasTexture(c); x.colorSpace = THREE.SRGBColorSpace; return x; })()); })();
 
 const Set: React.FC<{ T: number }> = ({ T }) => {
@@ -67,7 +67,7 @@ const Set: React.FC<{ T: number }> = ({ T }) => {
   const sky = useMemo(() => new THREE.MeshBasicMaterial({ map: skyTex(), toneMapped: false }), []);
   const moon = useGlow('#f2f4ff', 1.8), moonHalo = useGlow('#8ea6dc', 0.6);
   moonHalo.opacity = 0.35;
-  const warmWin = useGlow('#ffc98a', 1.1), coolWin = useGlow('#9fc4ff', 1.0);
+  const warmWin = useGlow('#ffc98a', 1.1), coolWin = useGlow('#ffe6b8', 0.7);
   const keyCol = new THREE.Color('#fff0d8').lerp(new THREE.Color('#8aa6ff'), cool);
   const wall = rect(-3000, -2600, 6000, 2800) + ' ' + rectHole(WIN.x0 * 1000, -WIN.y1 * 1000, (WIN.x1 - WIN.x0) * 1000, (WIN.y1 - WIN.y0) * 1000);
   const fw = (WIN.x1 - WIN.x0) * 1000, fh = (WIN.y1 - WIN.y0) * 1000;
@@ -167,8 +167,8 @@ export const S08: SceneDef = {
     { t: 65.71, pos: [BAG_X + 0.03, 0.39, 0.66], look: [BAG_X, 0.38, 0.0], fov: 32, ap: 0.007, bloom: 0.85 },
     { t: 67.231, pos: [0.08, 0.44, 1.05], look: [0.04, 0.42, -0.2], fov: 33, ap: 0.005, bloom: 0.8 },
     { t: 69.257, pos: [0.22, 0.5, 1.3], look: [0.12, 0.46, -0.3], fov: 34, ap: 0.004, bloom: 0.75 },
-    { t: 71.281, pos: [0.4, 0.58, 1.32], look: [0.42, 0.62, -0.6], fov: 34, ap: 0.004, bloom: 0.75 },
-    { t: 72.3, pos: [0.58, 0.74, 0.7], look: [0.72, 0.86, -1.2], fov: 34, ap: 0.004, bloom: 0.8 },
+    { t: 71.281, pos: [0.36, 0.62, 1.3], look: [0.6, 0.74, -1.0], fov: 34, ap: 0.004, bloom: 0.75 },
+    { t: 72.3, pos: [0.6, 0.82, 0.5], look: [0.76, 0.92, -1.3], fov: 34, ap: 0.004, bloom: 0.8 },
     { t: 73.28, pos: [0.8, 0.96, -0.5], look: [0.84, 1.0, -1.58], fov: 33, ap: 0.006, bloom: 0.95 },
   ],
   lines: [

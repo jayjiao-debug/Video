@@ -76,9 +76,9 @@ const Set: React.FC<{ T: number }> = ({ T }) => {
   const open = easeOut(prog(T, SHUT, SHUT + 0.38));
   const dead = easeOut(prog(T, GAP, GAP + 0.18));                  // the gap: everything dies
   const surge = impulse(T, SHUT, 0.5);
-  const build = easeIn(prog(T, GAP + 0.3, 81.4));                  // the gap builds: glow and embers grow into the drop
+  const build = Math.pow(prog(T, GAP + 0.1, 81.4), 1.15);                  // the gap builds: glow and embers grow into the drop
   const fire = (0.55 + 0.45 * open) * (1 - dead);
-  const flameH = fire * (1 + 0.25 * surge) + 0.18 * dead * (1 - build) + 0.45 * build * dead;
+  const flameH = fire * (1 + 0.25 * surge) + dead * (0.22 + 0.6 * build);
   const flick = 0.85 + 0.15 * wob(T * 2.2, 3);
   const rollU = prog(T, ROLL, LAND), value = 28600000 * (1 - Math.pow(1 - rollU, 4));
   const land = slam(T, LAND, 0.1), kick = impulse(T, LAND, 0.25) + 0.6 * impulse(T, SHUT, 0.3);
@@ -87,7 +87,7 @@ const Set: React.FC<{ T: number }> = ({ T }) => {
   glowM.forEach((m) => { m.opacity = clamp(flameH * 1.2); });
   const inner = useGlow('#6a1606', 1.0); inner.opacity = 0.35 + 0.65 * fire;
   const core = useMemo(() => new THREE.MeshBasicMaterial({ color: new THREE.Color('#ff8a3a').multiplyScalar(1.6), map: radialTex(), transparent: true, depthWrite: false, toneMapped: false, blending: THREE.AdditiveBlending }), []);
-  core.opacity = clamp(0.3 * dead + 0.7 * build * dead);
+  core.opacity = clamp(dead * (0.45 + 0.55 * build));
   const hole = useGlow('#ff8a30', 1.6); hole.opacity = 0.85 * (1 - open);
   const leak = useGlow('#ff7a20', 1.6); leak.opacity = (1 - open) * (0.6 + 0.4 * wob(T * 3, 1));
   const ember = useGlow('#ff8a30', 2.2);
@@ -165,8 +165,8 @@ const Set: React.FC<{ T: number }> = ({ T }) => {
 
       {/* light: a dim key; the fire as a second shadow light out of the mouth; the gap kills them all */}
       <Spot p={[-0.2, 2.4, 1.1]} at={[0.0, 0.3, -0.3]} angle={0.55} i={(7 + 3 * kick) * (1 - dead)} color="#ffdcb8" shadow />
-      <Spot p={[0.38, 0.38, -0.82]} at={[-0.4, 0.12, 0.6]} angle={1.1} i={(6 + 14 * open + 5 * surge + 4 * kick) * (1 - dead) * flick + 6 * build * dead} color="#ff7a2c" shadow pen={0.6} />
-      <pointLight position={[0.35, 0.45, -0.45]} intensity={(0.6 + 1.8 * open) * (1 - dead) * flick + 1.2 * build * dead} distance={3} color="#ff6a20" decay={2} />
+      <Spot p={[0.38, 0.38, -0.82]} at={[-0.4, 0.12, 0.6]} angle={1.1} i={(6 + 14 * open + 5 * surge + 4 * kick) * (1 - dead) * flick + (1.5 + 8 * build) * dead} color="#ff7a2c" shadow pen={0.6} />
+      <pointLight position={[0.35, 0.45, -0.45]} intensity={(0.6 + 1.8 * open) * (1 - dead) * flick + (0.3 + 1.4 * build) * dead} distance={3} color="#ff6a20" decay={2} />
       <Spot p={[2.4, 1.4, 1.0]} at={[0.6, 0.5, -0.6]} angle={0.45} i={3 * (1 - dead)} color="#ffb070" pen={0.9} />
       <ambientLight intensity={(0.03 + 0.04 * open) * (1 - dead)} color="#ffb080" />
     </group>
@@ -180,7 +180,7 @@ export const S09: SceneDef = {
   keys: [
     { t: 73.304, pos: [0.35, 0.4, 0.2], look: [0.35, 0.39, -0.72], fov: 33, ap: 0.006, bloom: 0.8 },
     { t: 74.0, pos: [0.35, 0.4, 0.1], look: [0.35, 0.39, -0.72], fov: 33, ap: 0.006, bloom: 0.8 },
-    { t: 74.75, pos: [0.0, 0.52, 1.0], look: [0.15, 0.36, -0.5], fov: 35, ap: 0.004, bloom: 0.85 },
+    { t: 74.75, pos: [0.0, 0.62, 1.05], look: [0.15, 0.24, -0.5], fov: 35, ap: 0.004, bloom: 0.85 },
     { t: 75.329, pos: [-0.2, 0.5, 1.12], look: [-0.05, 0.32, -0.32], fov: 35, ap: 0.004, bloom: 0.8 },
     { t: 76.4, pos: [-0.12, 0.62, 1.3], look: [0.1, 0.42, -0.45], fov: 35, ap: 0.004, bloom: 0.8 },
     { t: LAND, pos: [0.22, 0.95, 1.45], look: [0.35, 0.46, -0.7], fov: 35, ap: 0.004, bloom: 0.85 },

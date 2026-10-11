@@ -93,3 +93,19 @@ export const Ribbon: React.FC<{ pts: [number, number][]; k: number; w?: number; 
 /** points along an arc (centre c, radius r, from a0 sweeping len) */
 export const arcPts = (c: [number, number], r: number, a0: number, len: number, n = 64): [number, number][] =>
   Array.from({ length: n + 1 }, (_, i) => { const a = a0 + (len * i) / n; return [c[0] + Math.cos(a) * r, c[1] + Math.sin(a) * r]; });
+
+/** a warm private environment (no cyan/violet strips) for materials that must stay gold/black when they mirror the room */
+const _warm = { t: null as THREE.Texture | null };
+export const warmEnvTex = (gl: THREE.WebGLRenderer) => {
+  if (_warm.t) return _warm.t;
+  const sc = new THREE.Scene(); sc.background = new THREE.Color('#000');
+  const strip = (w: number, h: number, pos: [number, number, number], rot: [number, number, number], col: string, k: number) => {
+    const m = new THREE.Mesh(new THREE.PlaneGeometry(w, h), new THREE.MeshBasicMaterial({ color: new THREE.Color(col).multiplyScalar(k), side: THREE.DoubleSide })); m.position.set(...pos); m.rotation.set(...rot); sc.add(m); };
+  strip(6, 1.2, [0, 4, 0], [Math.PI / 2, 0, 0], '#fff2dc', 2.0);
+  strip(0.6, 4, [-3.2, 1.6, 0.8], [0, Math.PI / 2.3, 0], '#ffb070', 2.0);
+  strip(0.6, 4, [3.2, 1.6, 0.8], [0, -Math.PI / 2.3, 0], '#ffd29a', 2.0);
+  strip(4, 0.5, [0, 0.4, 3.6], [0, Math.PI, 0], '#ffc860', 2.4);
+  strip(3, 0.6, [0, 2.4, -3.6], [0, 0, 0], '#b07040', 1.4);
+  strip(10, 10, [0, -3, 0], [Math.PI / 2, 0, 0], '#140c06', 1);
+  const pm = new THREE.PMREMGenerator(gl); _warm.t = pm.fromScene(sc, 0.015).texture; pm.dispose(); return _warm.t;
+};

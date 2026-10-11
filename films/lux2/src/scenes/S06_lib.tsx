@@ -85,7 +85,7 @@ export const CutM: React.FC<{ d: string; m: THREE.Material; depth?: number; beve
 
 /** a folded-paper box: w × h × d metres, standing on its base at the group origin */
 export const Box: React.FC<{ w: number; h: number; d: number; kind?: Kind; color?: string } & JSX.IntrinsicElements['group']> = ({ w, h, d, kind = 'black', color, ...g }) => (
-  <group {...g}><mesh position={[0, h / 2, 0]} castShadow receiveShadow material={mat(kind, color)}><boxGeometry args={[w, h, d]} /></mesh></group>
+  <group {...g}><mesh position={[0, h / 2, 0]} castShadow receiveShadow material={kind === 'black' ? velvet(color ?? '#0c0807') : mat(kind, color)}><boxGeometry args={[w, h, d]} /></mesh></group>
 );
 
 /** a flame tongue (px, base at 0, tip at -h), leaning by `lean` px */

@@ -7,7 +7,7 @@ import React, { useMemo } from 'react';
 import * as THREE from 'three';
 import type { SceneDef } from '../scene';
 import { slam, impulse, swing, prog, easeOut, easeInOut } from '../scene';
-import { HeroBag, Cut, rect, circle, ring, cutGeo } from '../foil';
+import { HeroBag, Cut, rect, circle, ring, cutGeo, BAG } from '../foil';
 import { Backdrop, MirrorFloor, Word, Beam } from '../kit';
 import { holoMat, mat } from '../foil';
 import { Spot, Caption, hash, glowMat } from './S03_parts';
@@ -122,23 +122,44 @@ const HIDES = [
   { x: 0.7, z: -1.04, w: 390, h: 610, c: '#3d140c', s: 5 },
   { x: 1.12, z: -0.84, w: 420, h: 630, c: '#2e0a14', s: 6 },
 ];
+/* the pattern room: cream card patterns of OUR bag (body, flap, handle) hanging on brass clips: reads as "this is where
+   the bag is cut", on-style paper-cut, and lit softly so it stays background */
+const HOLE = 'M 9 -200 A 9 9 0 1 1 -9 -200 A 9 9 0 1 1 9 -200 Z';
+const PATTERNS: { d: string; top: number; x: number; z: number; s: number; r: number }[] = [
+  { d: BAG.body + ' ' + HOLE, top: 220, x: -1.12, z: -1.02, s: 1.7, r: 0.04 },
+  { d: BAG.flap + ' ' + 'M 9 -190 A 9 9 0 1 1 -9 -190 A 9 9 0 1 1 9 -190 Z', top: 222, x: -0.64, z: -0.82, s: 1.8, r: -0.03 },
+  { d: BAG.handle, top: 350, x: -0.2, z: -1.06, s: 1.5, r: 0.02 },
+  { d: BAG.body + ' ' + HOLE, top: 220, x: 0.3, z: -0.86, s: 1.6, r: -0.05 },
+  { d: BAG.flap + ' ' + 'M 9 -190 A 9 9 0 1 1 -9 -190 A 9 9 0 1 1 9 -190 Z', top: 222, x: 0.8, z: -1.04, s: 1.7, r: 0.03 },
+  { d: BAG.body + ' ' + HOLE, top: 220, x: 1.22, z: -0.84, s: 1.5, r: 0.05 },
+];
 const Hides: React.FC<{ T: number }> = ({ T }) => (
   <group>
-    <Cut d={rect(-1500, -6, 3000, 12)} kind="gold" depth={0.01} position={[0, 1.12, -0.95]} />
-    {HIDES.map((h, i) => {
-      const sway = 0.025 * Math.sin(T * 0.7 + i * 1.7) + 0.012 * Math.sin(T * 1.3 + i);
+    <Cut d={rect(-1600, -6, 3200, 12)} kind="gold" depth={0.01} position={[0, 1.12, -0.95]} />
+    {PATTERNS.map((h, i) => {
+      const sway = h.r + 0.02 * Math.sin(T * 0.7 + i * 1.7) + 0.01 * Math.sin(T * 1.3 + i);
       return <group key={i} position={[h.x, 1.12, h.z]} rotation={[0, 0, sway]}>
         <Cut d={rect(-3, 0, 6, 40)} kind="gold" depth={0.004} position={[0, 0, 0.004]} />
-        <CutM d={hidePath(h.s, h.w, h.h)} m={leather(h.c)} position={[0, -0.035, 0]} depth={0.005} />
-        <Cut d={rect(-22, 0, 44, 18)} kind="gold" depth={0.006} position={[0, -0.03, 0.006]} />
+        <Cut d={h.d} kind="paper" color="#7a6a50" depth={0.0025} bevel={0.0008} position={[0, -0.035 - (h.top / 1000) * h.s, 0]} scale={h.s} />
+        <Cut d={rect(-22, 0, 44, 20)} kind="gold" depth={0.006} position={[0, -0.03, 0.006]} />
       </group>;
     })}
   </group>
 );
+/* dust turning in the file's light shaft */
+const Dust: React.FC<{ T: number }> = ({ T }) => {
+  const a = [-0.62, 1.25, 1.05], b = [-0.3, 0.48, 0.17];
+  return <group>{Array.from({ length: 26 }, (_, i) => {
+    const u = (hash(i, 1) + T * 0.012 * (0.5 + hash(i, 2))) % 1, r = 0.07 * hash(i, 3), ang = hash(i, 4) * 6.28 + T * 0.3 * (hash(i, 5) - 0.5);
+    const p = [0, 1, 2].map((k) => a[k] + (b[k] - a[k]) * (0.25 + 0.6 * u));
+    const tw = 0.6 + 0.4 * Math.sin(T * (1 + hash(i, 6) * 2) + i);
+    return <mesh key={i} position={[p[0] + Math.cos(ang) * r, p[1] + Math.sin(ang) * r, p[2] + (hash(i, 7) - 0.5) * 0.06]} material={glowMat('#ffe2b0', 0.9 * tw, true)}><circleGeometry args={[0.0018 + 0.0018 * hash(i, 8), 8]} /></mesh>;
+  })}</group>;
+};
 const Windows: React.FC<{ glow: number }> = ({ glow }) => (
   <group position={[0, 0, -1.5]}>
     {[-0.82, 0, 0.82].map((x) => <group key={x} position={[x, 0, 0]}>
-      <mesh position={[0, 0.98, -0.04]}><planeGeometry args={[0.52, 0.84]} /><meshBasicMaterial color={new THREE.Color('#2a3d86').multiplyScalar(glow)} toneMapped={false} /></mesh>
+      <mesh position={[0, 0.98, -0.04]}><planeGeometry args={[0.52, 0.84]} /><meshBasicMaterial color={new THREE.Color('#161b33').multiplyScalar(glow)} toneMapped={false} /></mesh>
       <Cut d={rframe(540, 860, 16) + ' ' + [-90, 90].map((v) => rect(v - 4, -420, 8, 840)).join(' ') + ' ' + [-210, -70, 70, 210].map((v) => rect(-262, v - 4, 524, 8)).join(' ')} kind="gold" color="#b8913f" depth={0.008} position={[0, 0.98, 0]} />
     </group>)}
   </group>
@@ -209,7 +230,7 @@ const Set: React.FC<{ T: number }> = ({ T }) => {
       <Backdrop burst="none" />
       <MirrorFloor />
       <Windows glow={0.75 + 0.1 * on} />
-      <Beam from={[0.0, 1.45, -1.45]} len={2.0} r={0.4} o={0.03} color="#9fb4ff" tilt={[0.55, 0.2]} />
+      <Beam from={[0.0, 1.45, -1.45]} len={2.0} r={0.4} o={0.02} color="#c8b8a0" tilt={[0.55, 0.2]} />
       <Hides T={T} />
       <Pendants on={on} />
       {/* the bench: velvet top, gold edge, black front */}
@@ -221,6 +242,12 @@ const Set: React.FC<{ T: number }> = ({ T }) => {
       <Lamp k={k} />
       <HeroBag position={[0.24, 0.3, -0.02]} light={1.25} swing={swing(T, HIT, 9) + 4 * Math.sin(T * 1.1)} />
       <CourtDoc T={T} />
+      <Dust T={T} />
+      {/* a big spool at the front-left corner of the bench: blurred foreground for the orbit onto the file */}
+      <group position={[-0.62, 0.3, 0.27]} scale={1.7}>
+        <Cut d={SPOOL.flange} kind="gold" depth={0.006} />
+        <Cut d={SPOOL.body} kind="lacquer" color="#8a0f22" depth={0.005} position={[0, 0, -0.001]} />
+      </group>
       {/* foreground: a leather strap and a hide corner hanging close to the lens, so the pull-back has something to pass */}
       <group position={[-0.62, 1.25, 0.52]} rotation={[0, 0, 0.02 * Math.sin(T * 0.9)]}><Cut d={rect(-14, 0, 28, 640)} kind="lacquer" color="#4a0a16" depth={0.004} /><Cut d={rect(-14, 600, 28, 8)} kind="gold" depth={0.005} /></group>
       <group position={[0.86, 1.2, 0.46]} rotation={[0, -0.3, 0.03 * Math.sin(T * 0.6 + 1)]}><CutM d={hidePath(9, 420, 640)} m={leather('#1a0a0c')} depth={0.005} /></group>
@@ -251,17 +278,21 @@ export const S03: SceneDef = {
   id: 'S03_workshop', t0: 12.4, t1: 24.707, x: 28, enter: 'whip', Set, Overlay,
   /* push down the file that accelerates INTO the hit (16.6), a 2-frame kick, a held beat, then a crane-back that resolves on
      bar 18.628, a truck right that resolves as the tag swings in (20.653), and a push onto bag + tag into the whip-pan. */
+  /* 12.7–16.6: an orbit onto the file that ACCELERATES (10° / 1.6 s, 10° / 1.3 s, 11° / 1.0 s) past the foreground spool,
+     the highlighter sweeping as we come round, landing square-on for the slam; a 2-frame punch, a held beat; a crane-back
+     that resolves on bar 18.628; a truck right resolving as the tag swings in (20.653); then a push onto the bag, square
+     and centred, which is the MATCH CUT into S04 (the same bag, same size and place, on the turntable). */
   keys: [
-    { t: 12.7, pos: [-0.24, 0.5, 1.04], look: [-0.33, 0.418, 0.17], fov: 30, ap: 0.007, bloom: 0.6 },
-    { t: 14.6, pos: [-0.255, 0.49, 1.015], look: [-0.33, 0.418, 0.17], fov: 30, ap: 0.007, bloom: 0.6 },
-    { t: 15.9, pos: [-0.275, 0.478, 0.975], look: [-0.325, 0.417, 0.17], fov: 30, ap: 0.008, bloom: 0.6 },
+    { t: 12.7, pos: [-0.68, 0.48, 0.83], look: [-0.31, 0.43, 0.17], fov: 30, ap: 0.007, bloom: 0.6 },
+    { t: 14.3, pos: [-0.56, 0.475, 0.884], look: [-0.315, 0.424, 0.17], fov: 30, ap: 0.007, bloom: 0.6 },
+    { t: 15.6, pos: [-0.432, 0.47, 0.918], look: [-0.318, 0.42, 0.17], fov: 30, ap: 0.008, bloom: 0.6 },
     { t: 16.6, pos: [-0.29, 0.466, 0.925], look: [-0.32, 0.416, 0.17], fov: 30, ap: 0.008, bloom: 0.62 },
     { t: 16.67, pos: [-0.295, 0.462, 0.9], look: [-0.32, 0.416, 0.17], fov: 30, ap: 0.008, bloom: 0.65 },
     { t: 17.25, pos: [-0.293, 0.464, 0.907], look: [-0.32, 0.417, 0.17], fov: 30, ap: 0.008, bloom: 0.6 },
     { t: 18.628, pos: [0.06, 0.64, 1.2], look: [0.1, 0.45, 0.0], fov: 32, ap: 0.004, bloom: 0.6 },
     { t: 20.653, pos: [0.26, 0.62, 1.14], look: [0.16, 0.47, -0.02], fov: 32, ap: 0.004, bloom: 0.6 },
-    { t: 22.678, pos: [0.36, 0.61, 1.02], look: [0.24, 0.5, -0.02], fov: 32, ap: 0.005, bloom: 0.6 },
-    { t: 24.407, pos: [0.47, 0.58, 0.93], look: [0.4, 0.46, -0.02], fov: 32, ap: 0.006, bloom: 0.62 },
+    { t: 22.678, pos: [0.3, 0.56, 1.1], look: [0.22, 0.46, -0.02], fov: 32, ap: 0.005, bloom: 0.6 },
+    { t: 24.69, pos: [0.24, 0.5, 0.93], look: [0.24, 0.47, -0.02], fov: 32, ap: 0.004, bloom: 0.6 },
   ],
   lines: [
     { t: 12.5, end: 16.45, text: '2024年，米兰法院公布了一份调查文件：' },
