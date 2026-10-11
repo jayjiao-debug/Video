@@ -7,3 +7,4 @@
 - 2026-10-12 00:32 · #3 start: 一颗会回来的彗星
 - 2026-10-12 00:32 · #4 start: 韩信点兵
 - 2026-10-12 00:41 · research done (parallel, ~7–9 min each): ep22 41 rows (34 OK, 3 UNVERIFIED: Mawangdui C-14 lab result not found → script must not claim it); ep23 38 rows (34 OK, 3 UNV); ep24 40 rows (37 OK, 2 UNV); ep25 34 rows (31 OK, 2 UNV)
+- 2026-10-12 00:53 · scripts done (parallel, 9–12 min): ep22 '死后会变慢的钟' 38 lines; ep23 '200段线，最多查8次' 38 lines; ep24 '死后16年，它回来了' 39 lines; ep25 '不数人头，怎么点兵？' 40 lines; all pace PASS
