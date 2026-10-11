@@ -1,5 +1,6 @@
 import React from 'react';
 import { Composition } from 'remotion';
+import { CharStyles, CharSheet as RigSheet, CS_FRAMES } from './chars/Demo';
 import { Test3D } from './t3/Test3D';
 import { Open3D } from './t3/Open3D';
 import { Reveal3D } from './t3/Reveal3D';
@@ -144,5 +145,7 @@ export const Root: React.FC = () => (
     <Composition id="CoverV3Wide" component={CoverV3} durationInFrames={1} fps={30} width={1440} height={1080} defaultProps={{ w: 1440, h: 1080 }} />
     <Composition id="V3Film" component={V3Film} durationInFrames={3915} fps={30} width={1920} height={1080} />
     <Composition id="V2Film" component={V2Film} durationInFrames={3915} fps={30} width={1920} height={1080} />
+    <Composition id="CharStyles" component={CharStyles} durationInFrames={CS_FRAMES} fps={30} width={1920} height={1080} />
+    {[0, 1, 2, 3].map((i) => <Composition key={i} id={`CharSheet${i}`} component={RigSheet} durationInFrames={1} fps={30} width={1920} height={1080} defaultProps={{ i }} />)}
   </>
 );

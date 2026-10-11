@@ -1,8 +1,8 @@
 {
-  "id": "\u5fc3\u6d41_\u63d2\u753b\u7248_v2-1791305477",
-  "composition": "IlFilm",
+  "id": "charstyles-1791718148",
+  "composition": "CharStyles",
   "start": 0,
-  "end": 4003,
-  "chunks": 20,
-  "output": "\u5fc3\u6d41_\u63d2\u753b\u7248_v2"
+  "end": 719,
+  "chunks": 12,
+  "output": "charstyles"
 }
