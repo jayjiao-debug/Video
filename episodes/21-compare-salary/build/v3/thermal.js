@@ -61,18 +61,18 @@ void main(){vec2 uv=vUv;
  float H=h.r;float glow=(max(b1.r-H,0.)*.75+max(b2.r-H,0.)*.4)*(1.-h.a); // heat bleeding out of hot objects
  float cold=min(H,0.);float Hc=max(H,0.)+glow;
  // auto-range: displayed temperature relative to the hottest thing the camera is ranging on
- if(uHaze>0.){float hn=noise(vUv*vec2(5.,3.)+vec2(0.,-uT*.6))*.6+noise(vUv*vec2(11.,6.)+vec2(3.,-uT*1.1))*.4;Hc=mix(Hc,uHazeL*(.75+.5*hn),uHaze);H=mix(H,max(H,0.),uHaze);}
- float x=(Hc-uLo)/(uHi-uLo);
+ float x=(Hc-uLo)/(uHi-uLo);float hn=noise(vUv*vec2(5.,3.)+vec2(0.,-uT*.6))*.6+noise(vUv*vec2(11.,6.)+vec2(3.,-uT*1.1))*.4;
+ if(uHaze>0.){x=mix(x,.44*(.78+.44*hn),uHaze);H=mix(H,max(H,0.),uHaze);}
  vec3 col;
  if(H<-0.001){float k=clamp(-H*1.4,0.,1.);col=mix(iron((uAmb-uLo)/(uHi-uLo)),ice(.35+.65*k),smoothstep(0.,.12,k));}
  else col=iron(x);
  // ice rim on cold objects
- col=mix(col,vec3(.75,.98,1.),clamp(h.b,0.,1.)*.75);
+ col=mix(col,vec3(.75,.98,1.),clamp(h.b,0.,1.)*.75*(1.-uHaze));
  // isotherms: soft lines only where heat changes
  float cf=((b1.r*.65+b2.r*.35)-uLo)/(uHi-uLo)*10.;float fw=fwidth(cf);float l=abs(fract(cf+.5)-.5);float iso=(1.-smoothstep(fw*.6,fw*1.6,l))*smoothstep(.004,.03,fw)*(1.-smoothstep(.25,.6,fw))*uIso;
- iso*=1.-smoothstep(0.,.3,max(h.a,texture2D(tB1,uv).a*3.));col=mix(col,min(col*1.35+vec3(.22),vec3(1.)),iso*.55);
+ iso*=1.-smoothstep(0.,.3,max(h.a,texture2D(tB1,uv).a*3.));col=mix(col,min(col*1.35+vec3(.22),vec3(1.)),iso*.55*(1.-uHaze));
  // bloom on the hottest band
- float bb=max(b2.r*0.6+b1.r*.4-.5*uHi,0.)/uHi;col+=iron(.9)*bb*uBloom*1.4*(1.-h.a);
+ float bb=max(b2.r*0.6+b1.r*.4-.5*uHi,0.)/uHi;col+=iron(.9)*bb*uBloom*1.4*(1.-h.a)*(1.-uHaze);
  // freeze front (the drop): below uFreezeY the frame turns to frost
  if(uFreeze>0.){float fz=smoothstep(uFreezeY+.02,uFreezeY-.02,vUv.y)*uFreeze;float n=noise(vUv*vec2(160.,90.))*.5+noise(vUv*vec2(40.,22.))*.5;col=mix(col,mix(col,ice(.55+.4*n),.6),fz);}
  col+=uFlash;
@@ -99,9 +99,11 @@ export const V3=(x,y,z)=>new THREE.Vector3(x,y,z);
 export function capsuleBetween(a,b,r,mat){const d=new THREE.Vector3().subVectors(b,a);const L=d.length();const m=new THREE.Mesh(new THREE.CapsuleGeometry(r,Math.max(.001,L),6,14),mat);m.position.copy(a).addScaledVector(d,.5);m.quaternion.setFromUnitVectors(new THREE.Vector3(0,1,0),d.clone().normalize());return m;}
 export function rbox(w,h,d,r,mat,seg=4){const s=new THREE.Shape();const x=-w/2,y=-h/2;s.moveTo(x+r,y);s.lineTo(x+w-r,y);s.quadraticCurveTo(x+w,y,x+w,y+r);s.lineTo(x+w,y+h-r);s.quadraticCurveTo(x+w,y+h,x+w-r,y+h);s.lineTo(x+r,y+h);s.quadraticCurveTo(x,y+h,x,y+h-r);s.lineTo(x,y+r);s.quadraticCurveTo(x,y,x+r,y);
  const g=new THREE.ExtrudeGeometry(s,{depth:d,bevelEnabled:true,bevelThickness:Math.min(r,d/2)*.6,bevelSize:Math.min(r,d/2)*.6,bevelSegments:seg,curveSegments:seg*2});g.translate(0,0,-d/2);return new THREE.Mesh(g,mat);}
-// Camera through keys [T,x,y,z,lx,ly,lz]: eased move between consecutive keys (identical keys = hold). Optional 8th value = fov.
-export function camPath(K){return T=>{let i=0;while(i<K.length-2&&T>K[i+1][0])i++;const a=K[i],c=K[i+1];const u=Math.min(1,Math.max(0,(T-a[0])/(c[0]-a[0])));const e=u*u*u*(u*(u*6-15)+10);
+// Camera through keys [T,x,y,z,lx,ly,lz,fov]: eased move between consecutive keys. A "hold" (same position as the previous key) is turned
+// into a slow push: the held key is moved 3.5 % toward its target, and hold segments use a gentle smoothstep so the frame never freezes.
+export function camPath(K0,{drift=true}={}){const K=K0.map(k=>k.slice());for(let i=1;i<K.length&&drift;i++){const a=K[i-1],c=K[i];const same=Math.abs(a[1]-c[1])+Math.abs(a[2]-c[2])+Math.abs(a[3]-c[3])<1e-4;c.hold=same;
+  if(same){const f=.035;c[1]=a[1]+(c[4]-a[1])*f;c[2]=a[2]+(c[5]-a[2])*f;c[3]=a[3]+(c[6]-a[3])*f;}}
+ return T=>{let i=0;while(i<K.length-2&&T>K[i+1][0])i++;const a=K[i],c=K[i+1];const u=Math.min(1,Math.max(0,(T-a[0])/(c[0]-a[0])));const e=c.hold?u*u*(3-2*u)*.6+u*.4:u*u*u*(u*(u*6-15)+10);
  const f=j=>a[j]+(c[j]-a[j])*e;return [V3(f(1),f(2),f(3)),V3(f(4),f(5),f(6)),a[7]!==undefined?f(7):undefined];};}
-
 export function setCapsule(m,a,b){const d=new THREE.Vector3().subVectors(b,a);const L=d.length();m.position.copy(a).addScaledVector(d,.5);m.quaternion.setFromUnitVectors(new THREE.Vector3(0,1,0),d.clone().normalize());m.scale.set(1,Math.max(.05,L/m.userData.L),1);}
 export function capsule(r,L,mat){const m=new THREE.Mesh(new THREE.CapsuleGeometry(r,L,6,14),mat);m.userData.L=L+2*r;return m;}

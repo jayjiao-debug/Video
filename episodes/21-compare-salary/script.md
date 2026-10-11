@@ -23,7 +23,7 @@ Owner: "do the video comparing salary and that we compare ourself to others"; th
 | 53.0 | A世界：你年入5万，别人[2.5万] | coin towers, 1 coin = 2.5万 | same, "prices are identical" |
 | 57.0 | B世界：你年入10万，别人[20万] | | |
 | 61.1 | B多挣一倍，可[48%]的人选了A | 257 dots walk; 123 to A | "48 percent … rejected … everyone, including themselves, becoming richer" |
-| 65.2 | 换成假期呢？[85%]的人只要自己多 | towers become day tiles; dots re-sort | "Eighty-five percent … maximize their weeks of vacation, even if others had more" |
+| 65.2 | 换成假期呢？[85%]的人选了B (v3; was 只要自己多, which could be misread) | towers become day tiles; dots re-sort | "Eighty-five percent … maximize their weeks of vacation, even if others had more" |
 | 69.2 | 原来我们，偏偏在[钱]上最爱比 | | interpretation of the contrast |
 | 73.2 | 2008年，一家报纸把加州大学的工资[放上了网] | anonymous pay wall (names illustrative) | Card et al.: Sacramento Bee website, early 2008 |
 | 77.2 | 研究者提醒一部分员工：[可以去查同事] | scan bar | randomly selected subset informed about the website |

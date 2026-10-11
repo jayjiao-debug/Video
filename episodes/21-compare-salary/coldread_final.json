@@ -1,0 +1,88 @@
+{
+  "label": "final",
+  "persona": "20-year-old male student, evening Douyin scroll, portrait phone, landscape video playing small in the middle",
+  "runtime_seen": "about 130 s (8 full sheets x 16 s + 2 s)",
+  "would_keep_watching_after_3s": true,
+  "why": "0-3s: '你拿到人生第一份实习工资：4000' with a glowing phone in a thermal-camera look. Getting your first internship pay is my exact life right now, and the infrared look is something I don't usually see in my feed, so I stop scrolling. By 8-15s the roommate's ¥6000 phone floats in and my 4000 phone cools from white-yellow to orange ('你的4000，突然就不香了'). That has happened to me, so I'm hooked.",
+  "first_moment_I_got_curious": "8 s, '然后室友说：他的是6000'. The second phone shows up and mine visibly cools down. That's when I understood the colour means something.",
+  "where_I_would_swipe_away": [
+    "17-20 s (biggest risk): the title card '为什么一比，就觉得穷? THE COMPARISON TRAP' holds for 2 s, then about 2 s of blurry orange with no subtitle and nothing to read. The hook has already paid off and now it feels like an intro. If the monkey line at 21 s came 1-2 s sooner I'd stay.",
+    "49-64 s: the Harvard A-world/B-world part. On a small landscape video the labels '你5万 / 别人2.5万 / 你10万 / 别人20万' are tiny, and I have to do maths in my head. I stayed, but this is the first stretch that feels like class.",
+    "73-80 s: '2008年，一家报纸把加州大学的工资放上了网' is study number three. I can feel a 'here comes another paper' list starting. The crowd turning blue at 81 s brought me back, but some people would leave here.",
+    "96-97 s and 107 s: more orange-blur transitions. One giant dark silhouette leg fills the screen at 97 s, and it looks like a glitch."
+  ],
+  "lines_I_did_not_understand": [
+    "4-7 s '开心了整整三天' / '开心的第2天/第3天': the blue windows with dark blobs behind the phone. I couldn't tell what they were (a dorm window at night? a calendar?). The day counter is fine, the background isn't.",
+    "65-68 s '换成假期呢？85%的人选了B': the bars only say '你的假期 / 别人的' with no numbers, so I didn't know what the B-world vacation actually was. I just took the 85% on trust. The punchline 'we only compare on money' still landed, but I couldn't check it.",
+    "61 s: the counter shows 44% while the subtitle says 48%. Probably a count-up animation, but for one frame it looks like a typo.",
+    "89-92 s '高于中位数的人呢？并没有更开心': almost every figure in front is blue, including the ones that should be above the line. The orange people behind the line are probably the above-median group, but at phone size it reads as 'everyone is sad'."
+  ],
+  "takeaway_in_my_words": "Feeling poor usually isn't about how much money you have. It's because someone next to you got the grape. Monkeys reject cucumbers when the neighbour gets grapes, people would take less money as long as others have even less, and workers who find out they're below the median get unhappy. Comparing is human nature, but you get to pick who you compare with, so compare with last year's you (0 → 4000).",
+  "surprise_that_stuck": "48% of people would take a world where they earn LESS (5万) as long as everyone else earns 2.5万. Almost half! I laughed and then realised I'd probably pick A too. Close second: the monkey's willingness dropping 95% → 60% → 20% just because the neighbour gets grapes for doing nothing.",
+  "title_I_would_click": "'为什么一比，就觉得穷?' It's a question I've literally asked myself after seeing classmates' internship offers. It's short and personal, and the word 穷 pulls you in.",
+  "title_that_misleads": "None really. 'THE COMPARISON TRAP' in English is decorative and a bit 'trying to be international'. It doesn't mislead, I just skipped it.",
+  "what_I_would_comment": "跟去年的自己比：去年0，今年还是0，稳定 (Compared with last year's me: 0 last year, 0 this year, nice and stable). Or I'd tag my roommate: '@室友 你就是那颗葡萄' (you're the grape).",
+
+  "swipe_moment_most_likely": "17-20 s. Title card plus about 2 s of subtitle-less orange blur right after the hook has resolved. Nothing new to read or see, and my thumb is already moving.",
+
+  "three_best_moments": [
+    "37-44 s: the monkey goes from hot orange to ice-blue the moment the neighbour gets a grape, while the % drops 95 → 60 → 20. This is the shot that makes the thermal idea click with zero explanation. If I screenshot anything, it's this.",
+    "81-92 s: the glowing median line cuts through the crowd, everyone under it flips to blue, '你' is circled among them, and a bright '找新工作' door opens on the right. Very readable and a bit cinematic. It feels like an ad for a sci-fi movie.",
+    "118-121 s: switching to '跟去年的自己比 +¥4000' makes the phone blast white-hot and fill the frame, and the 去年的你 ¥0 marker sits at the bottom of the scale. A satisfying payoff that turns the whole colour system around. The '-¥2,000 vs +¥4,000' cards at 114 s set it up nicely."
+  ],
+
+  "confusing_cheap_creepy": {
+    "confusing": [
+      "Blue windows with blobs at 5-10 s, can't tell what they are.",
+      "Vacation bars without numbers at 65-68 s.",
+      "Above-median people are hard to tell apart from below-median people at 89-92 s."
+    ],
+    "cheap": [
+      "The orange-blur transitions (19-20, 96-97, 107 s) look like a placeholder or a loading frame, not a style choice.",
+      "The houses at 98-109 s are blobby and a bit melted, with lower polish than the monkeys and crowd.",
+      "The A/B 'world' islands at 53-64 s look like generic 3D bar charts with a thermal filter on top.",
+      "The citation lines at the bottom are unreadable at phone size. That's fine as proof that sources exist, but they look like noise."
+    ],
+    "creepy": [
+      "The faceless blue crowd at 81-95 s is slightly eerie, like a dystopian 'everyone is a number' shot. That mostly works in its favour, but it's cold.",
+      "The single giant dark silhouette leg at 97 s looks like a horror jump frame for 1 s.",
+      "The monkeys are not creepy. They look like gummy bears, cute."
+    ]
+  },
+
+  "thermal_idea_clear_throughout": {
+    "verdict": "Clear at the start, middle and end. Muddy in two stretches.",
+    "clear": [
+      "0-16 s: the legend '满意度 / 越开心 越热' plus my phone cooling when the roommate's 6000 appears. I got it, though the legend top-right is tiny on a small landscape video. I understood it from the cooling, not from reading the legend.",
+      "21-48 s monkeys: hot = fine, blue = angry. Perfect.",
+      "81-95 s crowd: below the line = blue = unhappy. Perfect.",
+      "110-125 s ending: the comparison flips and the phone glows white-hot. Perfect, and it brings back the opening legend."
+    ],
+    "muddy": [
+      "53-72 s Harvard worlds: here heat seems to mean MONEY (taller, richer bars glow brighter; '别人20万' is the hottest thing on screen), not happiness. If hotter = happier, the 别人20万 tower glowing brightest suggests the rich other guy is happiest, which is the point, but it isn't how I read it. I read it as a bar chart.",
+      "98-109 s houses: the neighbour houses glow and mine is cold. Is that income or happiness? The '你的快乐↓' label rescues it, but it's tiny."
+    ]
+  },
+
+  "what_I_would_tell_a_friend": "There's a video that films everything like a thermal camera, where hotter means happier. Your 4000 salary goes cold the second your roommate says he got 6000. Then it shows monkeys going on strike when the one next to them gets grapes, and says half of people would rather earn less as long as everyone else earns even less. The point: you don't feel poor because you have little money, you feel poor because of who you compare with, so compare with last year's you.",
+
+  "would_share": "Probably yes, into the dorm group chat with '室友看看你干的好事' (roommate, look what you've done). The salary-comparison topic is perfect timing for internship season. I wouldn't post it to my own feed, though. It's a 'send to a specific person' video, not a 'repost to show my taste' video.",
+
+  "score_高级_炫_never_seen": 8,
+  "score_高级_reason": "I've seen plenty of animated explainers, but not one shot entirely in a fake thermal camera where the colour itself carries the emotion. The monkeys and the blue crowd look expensive. Points off for the blur transitions, the blobby houses and the generic bar towers.",
+  "score_would_watch_to_end": 7,
+  "score_watch_reason": "The hook and the monkeys carry me to about 48 s easily. The Harvard maths and the third study (49-80 s) are where I start checking how much is left, because 2 minutes is long for me. The crowd going blue and the white-hot ending pay it off. Fix 17-20 s and make 49-64 s readable and it's an 8.",
+
+  "for_frames_only": [
+    {"frame": "0-3 s phone '¥4000 实习工资·到账' glowing", "what_this_says_in_5s": "First paycheck, I'm happy. Thermal look is new to me, I stop."},
+    {"frame": "8-15 s roommate ¥6000 phone, mine turns orange", "what_this_says_in_5s": "His is more, mine just got 'colder'. Colour = mood, got it."},
+    {"frame": "17-20 s title card + orange blur", "what_this_says_in_5s": "Intro / loading... thumb ready to swipe."},
+    {"frame": "37-44 s blue monkey, 60% → 20%", "what_this_says_in_5s": "Monkey is furious because the other one got grapes. Funny and instantly clear."},
+    {"frame": "53-64 s A world / B world bars", "what_this_says_in_5s": "Some chart with 万 numbers. Too small to read, have to listen to get it."},
+    {"frame": "81-92 s crowd under median line turns blue, '你' circled", "what_this_says_in_5s": "If you're below average, you're the cold one. Ouch, that's me."},
+    {"frame": "98-109 s cold house among glowing houses", "what_this_says_in_5s": "Neighbours richer, my house cold. Roughly clear, looks less polished."},
+    {"frame": "114-117 s '跟室友比 -¥2,000' vs '跟去年的自己比 +¥4,000'", "what_this_says_in_5s": "Same money, two scores, I pick which one. Nice."},
+    {"frame": "118-121 s white-hot phone '+¥4000 去年这时候 ¥0'", "what_this_says_in_5s": "Compare with past me and I'm on fire. Satisfying ending."},
+    {"frame": "126-129 s end card '为什么一比，就觉得穷? 你最常拿自己跟谁比?评论区说说'", "what_this_says_in_5s": "Clean end card, asks me to comment, I'd type something about my roommate."}
+  ]
+}

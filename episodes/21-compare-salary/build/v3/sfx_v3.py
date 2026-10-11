@@ -38,7 +38,7 @@ def put(x,t,pan=0.,g=1.):
     i=int(t*SR);x=x[:max(0,len(o)-i)];o[i:i+len(x),0]+=x*g*(1-max(0,pan));o[i:i+len(x),1]+=x*g*(1+min(0,pan))
 db=lambda d:10**(d/20)
 # ignite events (the swell peaks ~0.3 s after the downbeat it belongs to)
-for t,pan,d in [(B(4)-.15,.35,-10),(B(8)-.25,0,-7),(B(16)-.15,.3,-11),(B(42)-.15,.4,-11),(B(58)-.2,0,-8)]:
+for t,pan,d in [(0.383-.12,0,-13),(B(4)-.15,.35,-10),(B(8)-.25,0,-7),(B(16)-.15,.3,-11),(B(42)-.15,.4,-11),(B(58)-.2,0,-8)]:
     put(ignite(),t,pan,db(d))
 # haze whooshes into each transition (end on the cut)
 for tc in [B(10),B(24),B(36),B(48),B(52)]:
