@@ -1,6 +1,7 @@
 import walk from './data/walk.json';
 import pickup from './data/pickup.json';
 import explain from './data/explain.json';
+import putdown from './data/putdown.json';
 
 /* Shared 3D motion for the two character renderers (flat 2D at 35°, cel-shaded 3D).
    The skeleton is the mocap actor's own (no retargeting, so feet and hands land where the actor's did);
@@ -10,7 +11,7 @@ import explain from './data/explain.json';
 export type V3 = [number, number, number];
 export type J = Record<string, V3>;
 type Clip = {fps: number; frames: J[]};
-export const CLIPS = {walk: walk as unknown as Clip, pickup: pickup as unknown as Clip, explain: explain as unknown as Clip};
+export const CLIPS = {walk: walk as unknown as Clip, pickup: pickup as unknown as Clip, putdown: putdown as unknown as Clip, explain: explain as unknown as Clip};
 
 export const add = (a: V3, b: V3): V3 => [a[0] + b[0], a[1] + b[1], a[2] + b[2]];
 export const sub = (a: V3, b: V3): V3 => [a[0] - b[0], a[1] - b[1], a[2] - b[2]];
@@ -148,14 +149,15 @@ const track = makeTrack([
 	{clip: CLIPS.walk, at: 0, from: 0.05},
 	{clip: CLIPS.pickup, at: 2.2, from: 0.15, xf: 0.45},
 	{clip: hold, at: 5.2, xf: 0.5},
-	{clip: CLIPS.explain, at: 7.6, from: 1.6, xf: 0.6},
+	{clip: CLIPS.putdown, at: 7.3, from: 0.0, xf: 0.5},
+	{clip: CLIPS.explain, at: 9.3, from: 0.0, xf: 0.7},
 ]);
-export const DEMO_T = 12;
+export const DEMO_T = 13.5;
 export const T_READ = 5.25;
-export const T_TALK = 7.6;
-export const T_GRAB = (() => {
-	let best = 3, low = 9;
-	for (let t = 2.6; t < 4.8; t += 1 / 30) {
+export const T_TALK = 9.4;
+const lowest = (a: number, b: number) => {
+	let best = a, low = 9;
+	for (let t = a; t < b; t += 1 / 30) {
 		const y = track(t).RightHand[1];
 		if (y < low) {
 			low = y;
@@ -163,10 +165,14 @@ export const T_GRAB = (() => {
 		}
 	}
 	return Math.round(best * 30) / 30;
-})();
+};
+export const T_GRAB = lowest(2.6, 4.8);
+export const T_PUT = lowest(7.6, 9.2);
 const grip = (j: J): V3 => lerp3(j.RightHand, j.RightHandIndex1, 0.5);
-export const LANTERN_SPOT: V3 = (() => {
-	const g = grip(track(T_GRAB));
+export const LANTERN_SPOT: V3 = grip(track(T_GRAB));
+/** where it is set down: under the hand at the put-down moment, on the floor */
+export const LANTERN_REST: V3 = (() => {
+	const g = grip(track(T_PUT));
 	return [g[0], g[1], g[2]];
 })();
 /** the camera direction (subject → camera): the character's right side, turned 35° toward the front, 6° above */
@@ -179,20 +185,19 @@ export const camDir = (yaw = CAM_YAW, pitch = 6): V3 => {
 export const demoAt = (t: number) => {
 	let j = track(t);
 	const tf = torso(j);
-	const kRead = smooth((t - T_READ) / 0.7) * (1 - smooth((t - T_TALK) / 0.6));
-	const kLow = smooth((t - T_TALK) / 0.6);
+	const kRead = smooth((t - T_READ) / 0.7) * (1 - smooth((t - 7.25) / 0.6));
 	const h0 = head(j);
 	const down: V3 = [0.15, -1, 0];
 	j = ikArm(j, 'Right', add(add(h0.c, mul(tf.fwd, 0.2)), [0, -0.05, -0.06]), kRead, down);
-	j = ikArm(j, 'Right', add(add(j.RightArm, [0, -0.33, 0]), add(mul(tf.fwd, 0.07), [0, 0, -0.03])), kLow, down);
-	const held = t >= T_GRAB;
-	const lantern: V3 = held ? grip(j) : LANTERN_SPOT;
-	// look: the lantern on the floor while approaching, the lantern in hand while reading, the camera while talking
+	const held = t >= T_GRAB && t < T_PUT;
+	const lantern: V3 = held ? grip(j) : t >= T_PUT ? LANTERN_REST : LANTERN_SPOT;
+	// look: the lantern on the floor while approaching, in hand while reading, where it goes down, then the camera
 	const kFloor = smooth((t - 1.0) / 0.6) * (1 - smooth((t - T_GRAB - 0.3) / 0.5));
-	const kHand = smooth((t - T_READ - 0.2) / 0.5) * (1 - smooth((t - T_TALK) / 0.5));
-	const kCam = smooth((t - T_TALK - 0.3) / 0.6);
-	const target = kHand > 0.01 ? add(lantern, [0, -0.08, 0]) : kCam > 0.01 ? add(h0.c, mul(camDir(), 2)) : LANTERN_SPOT;
-	const kLook = Math.max(kFloor, kHand, kCam * 0.8);
+	const kHand = smooth((t - T_READ - 0.2) / 0.5) * (1 - smooth((t - 7.3) / 0.5));
+	const kPut = smooth((t - 7.4) / 0.4) * (1 - smooth((t - T_PUT - 0.4) / 0.5));
+	const kCam = smooth((t - T_TALK - 0.2) / 0.6);
+	const target = kHand > 0.01 ? add(lantern, [0, -0.08, 0]) : kPut > 0.01 ? LANTERN_REST : kCam > 0.01 ? add(h0.c, mul(camDir(), 2)) : LANTERN_SPOT;
+	const kLook = Math.max(kFloor, kHand, kPut, kCam * 0.85);
 	const hd = head(j, target, kLook);
-	return {j, lantern, held, head: hd, expr: t > T_TALK ? 'smile' : t > T_READ ? 'thinking' : 'neutral', talk: t > T_TALK + 0.4 && Math.sin(t * 15) > 0};
+	return {j, lantern, held, head: hd, expr: t > T_TALK ? 'smile' : t > T_READ && t < 7.3 ? 'thinking' : 'neutral', talk: t > T_TALK + 0.3 && Math.sin(t * 15) > 0 && Math.sin(t * 2.3) > -0.6};
 };
