@@ -1,5 +1,6 @@
 import React from 'react';
 import { Composition } from 'remotion';
+import { MascotSheet, MascotReel, MR_FRAMES } from './chars/MascotDemo';
 import { CharStyles, CharSheet as RigSheet, CS_FRAMES } from './chars/Demo';
 import { Test3D } from './t3/Test3D';
 import { Open3D } from './t3/Open3D';
@@ -148,5 +149,7 @@ export const Root: React.FC = () => (
     <Composition id="CharStyles" component={CharStyles} durationInFrames={CS_FRAMES} fps={30} width={1920} height={1080} />
     <Composition id="CharStyles2" component={CharStyles} durationInFrames={CS_FRAMES} fps={30} width={1920} height={1080} defaultProps={{ set: 1 }} />
     {[0, 1, 2, 3, 4, 5, 6, 7].map((i) => <Composition key={i} id={`CharSheet${i}`} component={RigSheet} durationInFrames={1} fps={30} width={1920} height={1080} defaultProps={{ i }} />)}
+    <Composition id="MascotReel" component={MascotReel} durationInFrames={MR_FRAMES} fps={30} width={1920} height={1080} />
+    {[0, 1, 2, 3].map((i) => <Composition key={i} id={`MascotSheet${i}`} component={MascotSheet} durationInFrames={1} fps={30} width={1920} height={1080} defaultProps={{ i }} />)}
   </>
 );

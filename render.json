@@ -1,8 +1,8 @@
 {
-  "id": "charstyles2-1791719682",
-  "composition": "CharStyles2",
+  "id": "mascotreel-1791735206",
+  "composition": "MascotReel",
   "start": 0,
-  "end": 719,
-  "chunks": 12,
-  "output": "charstyles2"
+  "end": 599,
+  "chunks": 10,
+  "output": "mascotreel"
 }
