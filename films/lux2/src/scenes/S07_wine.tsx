@@ -22,7 +22,7 @@ const glassLine = (): P[] => {
 };
 const RIM = strokePath(glassLine(), 2.4) + ' ' + strokePath([[-42, -224], [42, -224]], 2.4);
 const WINE = 'M -3 -95 Q -49 -100 -49.6 -150 L -49.4 -160 L 49.4 -160 L 49.6 -150 Q 49 -100 3 -95 Z';
-const SHINE = strokePath(quadPts([-40, -112], [-48, -150], [-38, -205], 10), 3.2);
+const SHINE = strokePath(quadPts([-42, -118], [-48, -152], [-40, -200], 10), 1.8);
 /* the bottle */
 const BOTTLE = 'M -42 0 L 42 0 L 42 -200 Q 42 -240 14 -262 L 13 -330 L 15 -332 L 15 -346 L -15 -346 L -15 -332 L -13 -330 L -14 -262 Q -42 -240 -42 -200 Z';
 /* a brain in profile, facing right (+x): cerebrum, cerebellum, stem */
@@ -46,7 +46,7 @@ const Glass: React.FC<{ x: number; price: string; warm: number; T: number }> = (
     <Cut d={'M -46 -159 L 46 -159 L 46 -161.5 L -46 -161.5 Z'} kind="glow" color="#ff5a5a" glow={0.2 + 0.5 * warm} position={[0, 0, 0.001]} depth={0.0005} bevel={0} shadow={false} />
     <CutM d={GLASS} m={glassMat()} position={[0, 0, 0.002]} depth={0.002} bevel={0} shadow={false} />
     <Cut d={RIM} kind="chrome" position={[0, 0, 0.0045]} depth={0.0012} bevel={0} />
-    <Cut d={SHINE} kind="glow" color="#ffffff" glow={0.4} position={[0, 0, 0.006]} depth={0.0005} bevel={0} shadow={false} />
+    <Cut d={SHINE} kind="glow" color="#b8ad9c" glow={0} position={[0, 0, 0.006]} depth={0.0005} bevel={0} shadow={false} />
     {/* the price tag on a gold thread, tied round the stem */}
     <Cut d={strokePath([[3, -80], [28, -74], [40, -70]], 1.1)} kind="gold" position={[0, 0, 0.008]} depth={0.0008} bevel={0} shadow={false} />
     <group position={[0.052, 0.062, 0.012]} rotation={[0.05, -0.12, -0.14 + 0.03 * Math.sin(T * 0.9 + x * 9)]}>
@@ -77,7 +77,7 @@ const Brain: React.FC<{ x: number; drop: number; spot: number; T: number }> = ({
 
 const Set: React.FC<{ T: number }> = ({ T }) => {
   const warm = easeOut(prog(T, 60.7, 61.6));
-  const halo = useHolo(1.1); (halo as THREE.ShaderMaterial).uniforms.k.value = 0.25 + 0.85 * warm;
+  const halo = useHolo(0.8); (halo as THREE.ShaderMaterial).uniforms.k.value = 0.2 + 0.6 * warm;
   const riser = easeOut(prog(T, 63.18, 65.1));
   const drop = pop(T, 63.18, 0.34);
   const stab = STABS.reduce((s, t) => s + impulse(T, t, 0.09), 0);
@@ -92,7 +92,7 @@ const Set: React.FC<{ T: number }> = ({ T }) => {
       <Cut d={ring(0, 0, 452, 460)} kind="gold" position={[0, 0.5, -0.9]} shadow={false} />
       {[-0.62, 0.62].map((x) => <Cut key={x} d={rect(-6, -1500, 12, 1500)} kind="gold" position={[x, 0, -0.88]} shadow={false} />)}
       {/* the bar */}
-      <Box w={1.3} h={0.14} d={0.42} position={[0, 0, -0.06]} />
+      <Box w={1.3} h={0.14} d={0.42} position={[0, 0, -0.06]} kind="lacquer" color="#0d0907" />
       <Cut d={rect(-650, -6, 1300, 5)} kind="gold" position={[0, 0.14, 0.151]} depth={0.001} bevel={0} shadow={false} />
       <Cut d={Array.from({ length: 21 }, (_, i) => rect(-600 + i * 60 - 1, -122, 2, 104)).join(' ')} kind="gold" color="#8a6a32" position={[0, 0, 0.151]} depth={0.0006} bevel={0} shadow={false} />
       {/* the one bottle */}
@@ -106,7 +106,8 @@ const Set: React.FC<{ T: number }> = ({ T }) => {
       </group>
       {/* the halo behind the $90 glass */}
       {warm > 0.001 && <group position={[0.25, 0.31, -0.07]} scale={0.6 + 0.4 * warm}>
-        <CutM d={ring(0, 0, 118, 125) + ' ' + ring(0, 0, 98, 100)} m={halo} depth={0.001} bevel={0} shadow={false} />
+        <Cut d={ring(0, 0, 118, 124)} kind="gold" depth={0.002} bevel={0} shadow={false} />
+        <CutM d={ring(0, 0, 100, 102.5)} m={halo} position={[0, 0, 0.001]} depth={0.001} bevel={0} shadow={false} />
       </group>}
       <Glass x={-0.25} price="$10" warm={0} T={T} />
       <Glass x={0.25} price="$90" warm={warm} T={T} />
@@ -115,12 +116,13 @@ const Set: React.FC<{ T: number }> = ({ T }) => {
 
       {/* light: a dim key, a cool spot on $10, a spot on $90 that warms; the riser brings the kickers up */}
       <Spot p={[0, 2.3, 1.1]} at={[0, 0.3, -0.1]} angle={0.42} i={6 + 4 * riser} shadow />
-      <Spot p={[-0.32, 1.7, 0.7]} at={[-0.25, 0.26, 0.02]} angle={0.2} i={3.2} color="#e4ebff" pen={0.8} />
-      <Spot p={[0.32, 1.7, 0.7]} at={[0.25, 0.26, 0.02]} angle={0.2} i={lerp(3.2, 9, warm)} color={new THREE.Color('#e4ebff').lerp(new THREE.Color('#ffc98a'), warm)} pen={0.8} shadow />
-      <Spot p={[-2.4, 1.2, 1.0]} at={[-0.1, 0.45, 0]} angle={0.5} i={1 + 8 * riser} color="#ff3ec8" pen={0.9} />
-      <Spot p={[2.4, 1.2, 1.0]} at={[0.1, 0.45, 0]} angle={0.5} i={1 + 8 * riser} color="#29e6ff" pen={0.9} />
+      <Spot p={[-0.32, 1.7, 0.7]} at={[-0.25, 0.26, 0.02]} angle={0.2} i={1.8} color="#f0ece4" pen={0.8} />
+      <Spot p={[0.32, 1.7, 0.7]} at={[0.25, 0.26, 0.02]} angle={0.2} i={lerp(3.2, 9, warm)} color={new THREE.Color('#f0ece4').lerp(new THREE.Color('#ffc98a'), warm)} pen={0.8} shadow />
+      <Spot p={[-2.4, 1.2, 1.0]} at={[-0.1, 0.45, 0]} angle={0.5} i={1 + 8 * riser} color="#ffb070" pen={0.9} />
+      <Spot p={[2.4, 1.2, 1.0]} at={[0.1, 0.45, 0]} angle={0.5} i={1 + 8 * riser} color="#ffe2c0" pen={0.9} />
       <Beam from={[0.25, 2.2, 0.0]} len={2.0} r={0.24} o={0.02 + 0.05 * warm} color="#ffd9a8" />
-      <Beam from={[-0.25, 2.2, 0.0]} len={2.0} r={0.24} o={0.025} color="#dfe8ff" />
+      <Beam from={[-0.25, 2.2, 0.0]} len={2.0} r={0.24} o={0.02} color="#f0ece4" />
+      <Spot p={[0, 2.2, 0.8]} at={[0, 0.6, -0.02]} angle={0.3} i={10 * drop} color="#ffe2c0" pen={0.7} />
       <ambientLight intensity={0.015} />
     </group>
   );
@@ -132,10 +134,12 @@ export const S07: SceneDef = {
   id: 'S07_wine', t0: 57.106, t1: 65.206, x: 84, enter: 'cut', Set, Overlay, env: 0.4,
   keys: [
     { t: 57.106, pos: [0.0, 0.3, 0.3], look: [0.0, 0.28, -0.2], fov: 32, ap: 0.01, bloom: 0.85 },
-    { t: 59.0, pos: [0.0, 0.36, 1.0], look: [0.0, 0.25, -0.1], fov: 33, ap: 0.005, bloom: 0.75 },
-    { t: 60.7, pos: [0.1, 0.36, 0.9], look: [0.1, 0.25, -0.05], fov: 33, ap: 0.005, bloom: 0.75 },
-    { t: 63.18, pos: [0.06, 0.46, 1.2], look: [0.03, 0.42, -0.05], fov: 34, ap: 0.005, bloom: 0.8 },
-    { t: 64.45, pos: [0.24, 0.58, 0.66], look: [0.25, 0.57, 0], fov: 33, ap: 0.006, bloom: 0.9 },
+    { t: 59.131, pos: [0.0, 0.37, 1.12], look: [0.0, 0.26, -0.1], fov: 33, ap: 0.004, bloom: 0.75 },
+    { t: 60.2, pos: [0.03, 0.37, 1.06], look: [0.03, 0.26, -0.1], fov: 33, ap: 0.004, bloom: 0.75 },
+    { t: 61.157, pos: [0.12, 0.36, 0.9], look: [0.12, 0.27, -0.05], fov: 33, ap: 0.005, bloom: 0.75 },
+    { t: 62.7, pos: [0.16, 0.37, 0.8], look: [0.17, 0.28, -0.05], fov: 33, ap: 0.005, bloom: 0.8 },
+    { t: 63.18, pos: [0.06, 0.62, 1.05], look: [0.03, 0.6, -0.05], fov: 34, ap: 0.005, bloom: 0.8 },
+    { t: 64.45, pos: [0.24, 0.6, 0.66], look: [0.25, 0.58, 0], fov: 33, ap: 0.006, bloom: 0.9 },
     { t: 65.18, pos: [0.305, 0.585, 0.16], look: [0.305, 0.58, 0], fov: 30, ap: 0.012, bloom: 1.1 },
   ],
   lines: [

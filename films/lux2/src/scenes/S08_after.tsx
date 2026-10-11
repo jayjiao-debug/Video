@@ -65,7 +65,7 @@ const Set: React.FC<{ T: number }> = ({ T }) => {
   const flashM = OFF.map(() => useGlow('#ff9a40', 0.9)); // eslint-disable-line react-hooks/rules-of-hooks
   flashM.forEach((m, g) => { m.opacity = clamp(impulse(T, OFF[g], 0.22) * 0.45); });
   const sky = useMemo(() => new THREE.MeshBasicMaterial({ map: skyTex(), toneMapped: false }), []);
-  const moon = useGlow('#e6eeff', 1.6), moonHalo = useGlow('#7e98d8', 0.5);
+  const moon = useGlow('#f2f4ff', 1.8), moonHalo = useGlow('#8ea6dc', 0.6);
   moonHalo.opacity = 0.35;
   const warmWin = useGlow('#ffc98a', 1.1), coolWin = useGlow('#9fc4ff', 1.0);
   const keyCol = new THREE.Color('#fff0d8').lerp(new THREE.Color('#8aa6ff'), cool);
@@ -152,8 +152,8 @@ const Set: React.FC<{ T: number }> = ({ T }) => {
       <Spot p={[-0.35, 2.3, 1.2]} at={[BAG_X, 0.34, 0]} angle={0.36} i={(7 + 22 * left) * (1 + 0.6 * blaze)} color={keyCol} shadow />
       <Spot p={[BAG_X - 1.1, 0.45, 0.9]} at={[BAG_X, 0.34, 0.04]} angle={0.22} i={0.6 + 4 * left} color={keyCol} pen={0.8} />
       <Spot p={[0.85, 1.25, -1.2]} at={[BAG_X + 0.05, 0.25, 0.05]} angle={0.36} i={3 + 15 * cool} color="#9db8ff" shadow pen={0.35} />
-      <Spot p={[-2.4, 1.1, 1.1]} at={[0, 0.4, -0.2]} angle={0.55} i={(2 + 6 * blaze) * left} color="#ff3ec8" pen={0.9} />
-      <Spot p={[2.4, 1.1, 1.1]} at={[0, 0.4, -0.2]} angle={0.55} i={(2 + 6 * blaze) * left + 2 * cool} color="#29e6ff" pen={0.9} />
+      <Spot p={[-2.4, 1.1, 1.1]} at={[0, 0.4, -0.2]} angle={0.55} i={(2 + 6 * blaze) * left} color="#ffb070" pen={0.9} />
+      <Spot p={[2.4, 1.1, 1.1]} at={[0, 0.4, -0.2]} angle={0.55} i={(2 + 6 * blaze) * left + 2 * cool} color="#ffe2c0" pen={0.9} />
       <Beam from={[BAG_X, 2.4, 0.0]} len={2.2} r={0.36} o={0.05 * left + 0.05 * blaze} color={`#${keyCol.getHexString()}`} />
       <ambientLight intensity={0.012} />
     </group>
@@ -164,11 +164,12 @@ export const S08: SceneDef = {
   id: 'S08_after', t0: 65.206, t1: 73.304, x: 98, enter: 'cut', Set, env: 0.55,
   keys: [
     { t: 65.206, pos: [BAG_X - 0.02, 0.37, 0.5], look: [BAG_X - 0.01, 0.37, 0.04], fov: 32, ap: 0.008, bloom: 0.85 },
-    { t: 65.8, pos: [BAG_X + 0.03, 0.39, 0.66], look: [BAG_X, 0.38, 0.0], fov: 32, ap: 0.007, bloom: 0.95 },
-    { t: 68.0, pos: [0.06, 0.44, 1.05], look: [0.02, 0.42, -0.2], fov: 33, ap: 0.005, bloom: 0.8 },
-    { t: 69.257, pos: [0.16, 0.48, 1.25], look: [0.08, 0.45, -0.3], fov: 34, ap: 0.004, bloom: 0.75 },
-    { t: 71.5, pos: [0.36, 0.5, 1.45], look: [0.14, 0.46, -0.35], fov: 34, ap: 0.004, bloom: 0.7 },
-    { t: 73.28, pos: [0.48, 0.49, 1.6], look: [0.12, 0.45, -0.35], fov: 34, ap: 0.004, bloom: 0.7 },
+    { t: 65.71, pos: [BAG_X + 0.03, 0.39, 0.66], look: [BAG_X, 0.38, 0.0], fov: 32, ap: 0.007, bloom: 0.85 },
+    { t: 67.231, pos: [0.08, 0.44, 1.05], look: [0.04, 0.42, -0.2], fov: 33, ap: 0.005, bloom: 0.8 },
+    { t: 69.257, pos: [0.22, 0.5, 1.3], look: [0.12, 0.46, -0.3], fov: 34, ap: 0.004, bloom: 0.75 },
+    { t: 71.281, pos: [0.4, 0.58, 1.32], look: [0.42, 0.62, -0.6], fov: 34, ap: 0.004, bloom: 0.75 },
+    { t: 72.3, pos: [0.58, 0.74, 0.7], look: [0.72, 0.86, -1.2], fov: 34, ap: 0.004, bloom: 0.8 },
+    { t: 73.28, pos: [0.8, 0.96, -0.5], look: [0.84, 1.0, -1.58], fov: 33, ap: 0.006, bloom: 0.95 },
   ],
   lines: [
     { t: 65.3, end: 68.9, text: '可拿到手以后，那股劲很快就退了。' },

@@ -97,3 +97,52 @@ export const dashCubic = (p0: [number, number], p1: [number, number], p2: [numbe
 /** smooth 0..1 window: rises over [a, a+ri], falls over [b-fo, b] */
 export const win = (T: number, a: number, b: number, ri = 0.3, fo = 0.3) =>
   Math.min(1, Math.max(0, (T - a) / ri)) * (1 - Math.min(1, Math.max(0, (T - (b - fo)) / fo)));
+
+/* ------------------------------------------------------------------ v2: crisp foil text (no holo rim) */
+const serifCJK = '"Noto Serif CJK SC", "Noto Sans CJK SC", serif';
+const ftCache = new Map<string, { tex: THREE.CanvasTexture; aspect: number; glyphFrac: number }>();
+/** text drawn once on a canvas: solid gold gradient with a dark bevel edge and a soft drop shadow (or a flat colour) */
+export const foilTex = (text: string, fill: 'gold' | string = 'gold', weight = '900', px = 200, family = serifCJK, shadow = 0.7, spacing = 0) => {
+  const key = `${text}|${fill}|${weight}|${px}|${family}|${shadow}|${spacing}`; const hit = ftCache.get(key); if (hit) return hit;
+  const c = document.createElement('canvas'); const g = c.getContext('2d')!;
+  const font = `${weight} ${px}px ${family}`; g.font = font;
+  const chars = [...text]; const widths = chars.map((ch) => g.measureText(ch).width); const tw = widths.reduce((a, b) => a + b, 0) + spacing * px * (chars.length - 1);
+  const pad = px * 0.32, W = Math.ceil(tw + pad * 2), H = Math.ceil(px * 1.3 + pad * 2);
+  c.width = W; c.height = H; g.font = font; g.textBaseline = 'middle';
+  const draw = (dx: number, dy: number) => { let x = pad + dx; chars.forEach((ch, i) => { g.fillText(ch, x, H / 2 + dy); x += widths[i] + spacing * px; }); };
+  if (shadow > 0) { g.save(); g.shadowColor = `rgba(0,0,0,${shadow})`; g.shadowBlur = px * 0.14; g.shadowOffsetY = px * 0.06; g.fillStyle = 'rgba(0,0,0,0.9)'; draw(0, 0); g.restore(); }
+  if (fill === 'gold') {
+    g.fillStyle = '#5a3a10'; draw(px * 0.012, px * 0.02);                         // the dark bevel underneath
+    const gr = g.createLinearGradient(0, H / 2 - px * 0.5, 0, H / 2 + px * 0.5);
+    gr.addColorStop(0, '#fff2c8'); gr.addColorStop(0.32, '#f7d27c'); gr.addColorStop(0.55, '#e0a848'); gr.addColorStop(0.78, '#b47a2c'); gr.addColorStop(1, '#e9bd62');
+    g.fillStyle = gr; draw(0, 0);
+  } else { g.fillStyle = fill; draw(0, 0); }
+  const tex = new THREE.CanvasTexture(c); tex.colorSpace = THREE.SRGBColorSpace; tex.anisotropy = 8; tex.generateMipmaps = true;
+  const r = { tex, aspect: W / H, glyphFrac: px / H }; ftCache.set(key, r); return r;
+};
+const foilVS = 'varying vec2 vUv; void main(){ vUv = uv; gl_Position = projectionMatrix * modelViewMatrix * vec4(position,1.0); }';
+const foilFS = `uniform sampler2D map; uniform float sheen; uniform float gain; uniform float sheenK; varying vec2 vUv;
+  void main(){ vec4 c = texture2D(map, vUv); if (c.a < 0.01) discard;
+    float m = smoothstep(0.08, 0.35, max(c.r, max(c.g, c.b)));
+    float band = exp(-pow((vUv.x - sheen + (vUv.y - 0.5) * 0.35) / 0.05, 2.0));
+    gl_FragColor = vec4(c.rgb * gain + band * m * sheenK * vec3(1.0, 0.93, 0.78), c.a); }`;
+/** a word in crisp foil: `glyph` = glyph height in metres. `sheen` 0..1 sweeps a highlight across (−1 = none). */
+export const FoilText: React.FC<{ text: string; glyph: number; fill?: 'gold' | string; weight?: string; family?: string; gain?: number; sheen?: number; shadow?: number; spacing?: number; opacity?: number } & JSX.IntrinsicElements['group']> =
+  ({ text, glyph, fill = 'gold', weight = '900', family, gain = 1.12, sheen = -1, shadow = 0.7, spacing = 0, opacity = 1, ...g }) => {
+    const t = foilTex(text, fill, weight, 200, family ?? serifCJK, shadow, spacing);
+    const m = useMemo(() => new THREE.ShaderMaterial({ uniforms: { map: { value: t.tex }, sheen: { value: -1 }, gain: { value: gain }, sheenK: { value: 1.6 } }, vertexShader: foilVS, fragmentShader: foilFS, transparent: true, depthWrite: false }), [t, gain]);
+    m.uniforms.sheen.value = sheen < 0 ? -9 : -0.15 + sheen * 1.3; m.uniforms.gain.value = gain * opacity;
+    const h = glyph / t.glyphFrac, w = h * t.aspect;
+    return <group {...g}><mesh material={m}><planeGeometry args={[w, h]} /></mesh></group>;
+  };
+/** a soft warm glow on a wall: additive radial gradient */
+let _rad: THREE.Texture | null = null;
+const radTex = () => _rad ?? (_rad = (() => { const c = document.createElement('canvas'); c.width = c.height = 256; const g = c.getContext('2d')!; const gr = g.createRadialGradient(128, 128, 0, 128, 128, 128);
+  gr.addColorStop(0, 'rgba(255,255,255,1)'); gr.addColorStop(0.35, 'rgba(255,255,255,0.45)'); gr.addColorStop(1, 'rgba(255,255,255,0)'); g.fillStyle = gr; g.fillRect(0, 0, 256, 256); return new THREE.CanvasTexture(c); })());
+export const Glow: React.FC<{ w: number; h: number; color?: string; o?: number } & JSX.IntrinsicElements['group']> = ({ w, h, color = '#ffb85a', o = 0.5, ...g }) => (
+  <group {...g}><mesh><planeGeometry args={[w, h]} /><meshBasicMaterial map={radTex()} color={color} transparent opacity={o} blending={THREE.AdditiveBlending} depthWrite={false} toneMapped={false} /></mesh></group>
+);
+/** a glossy lacquer floor (cheaper than the mirror) */
+export const GlossFloor: React.FC<{ size?: number; color?: string } & JSX.IntrinsicElements['group']> = ({ size = 16, color = '#07050a', ...g }) => (
+  <group {...g}><mesh rotation={[-Math.PI / 2, 0, 0]} receiveShadow><planeGeometry args={[size, size]} /><meshPhysicalMaterial color={color} roughness={0.32} clearcoat={0.6} clearcoatRoughness={0.15} metalness={0.2} /></mesh></group>
+);

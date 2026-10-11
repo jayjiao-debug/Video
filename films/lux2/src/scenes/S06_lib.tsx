@@ -118,3 +118,12 @@ export const Caption: React.FC<{ T: number; t0: number; t1: number; text: string
   const k = easeOut(prog(T, t0, t0 + 0.35)) * (1 - prog(T, t1 - 0.3, t1)); if (k <= 0) return null;
   return <div style={{ position: 'absolute', top: 150, right: 56, opacity: k, fontFamily: font.sans, fontWeight: 500, fontSize: 26, color: 'rgba(243,237,226,0.6)', letterSpacing: '0.04em', textShadow: '0 2px 10px rgba(0,0,0,0.9)', transform: `translateY(${(1 - k) * 8}px)`, fontVariantNumeric: 'lining-nums' }}>{text}</div>;
 };
+
+/** a matte warm-black velvet we own (no env reflections, no purple sheen) for walls and big plates */
+const _velvet = new Map<string, THREE.Material>();
+export const velvet = (color = '#0b0807') => _velvet.get(color) ?? (_velvet.set(color, new THREE.MeshStandardMaterial({ color, roughness: 1, metalness: 0, envMapIntensity: 0.12 })), _velvet.get(color)!);
+/** a soft radial glow texture */
+let _rad: THREE.Texture | null = null;
+export const radialTex = () => _rad ?? (_rad = (() => { const c = document.createElement('canvas'); c.width = c.height = 256; const g = c.getContext('2d')!;
+  const gr = g.createRadialGradient(128, 128, 0, 128, 128, 128); gr.addColorStop(0, 'rgba(255,255,255,1)'); gr.addColorStop(0.35, 'rgba(255,255,255,0.45)'); gr.addColorStop(1, 'rgba(255,255,255,0)');
+  g.fillStyle = gr; g.fillRect(0, 0, 256, 256); const t = new THREE.CanvasTexture(c); return t; })());
