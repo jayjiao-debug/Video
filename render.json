@@ -1,9 +1,9 @@
 {
-  "id": "lux_v1-1791666196",
-  "composition": "Lux",
+  "id": "lux2_v1-1791679100",
+  "composition": "Lux2",
   "start": 0,
-  "end": 3672,
-  "chunks": 20,
-  "output": "lux_v1",
+  "end": 3899,
+  "chunks": 30,
+  "output": "lux2_v1",
   "flags": ""
 }
