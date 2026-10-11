@@ -1,8 +1,8 @@
 {
-  "id": "toon3d-1791745532",
-  "composition": "Toon3D",
+  "id": "flat35-1791745946",
+  "composition": "Flat35",
   "start": 0,
   "end": 359,
   "chunks": 12,
-  "output": "toon3d"
+  "output": "flat35"
 }
