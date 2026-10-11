@@ -6,6 +6,7 @@ import { slam, pop, impulse } from '../scene';
 import { HeroBag, Cut, rect } from '../foil';
 import { Backdrop, MirrorFloor, Word, Confetti, Beam } from '../kit';
 import { JUNO } from '../brand/identity';
+import { Spot } from './S10_kit';
 
 const Set: React.FC<{ T: number }> = ({ T }) => {
   const s1 = slam(T, 8.505, 0.1), s2 = slam(T, 8.505 + 0.2, 0.1), sub = pop(T, 9.265, 0.3), k = impulse(T, 8.505, 0.25);
@@ -23,9 +24,9 @@ const Set: React.FC<{ T: number }> = ({ T }) => {
           <Word text={`— ${JUNO.series} —`} size={0.025} kind="gold" weight="700" position={[0, -0.28, 0]} scale={sub} />
         </>}
       </group>
-      <spotLight position={[0, 2.4, 1.6]} angle={0.4} penumbra={0.7} intensity={16 + 20 * k} color="#fff0d8" castShadow shadow-mapSize={[2048, 2048]} shadow-bias={-0.0004} />
-      <spotLight position={[-2.4, 1.0, 1.2]} angle={0.6} penumbra={0.9} intensity={10} color="#ff3ec8" />
-      <spotLight position={[2.4, 1.0, 1.2]} angle={0.6} penumbra={0.9} intensity={10} color="#29e6ff" />
+      <Spot p={[0, 2.4, 1.6]} at={[0, 0.4, 0]} angle={0.4} pen={0.7} i={16 + 20 * k} color="#fff0d8" shadow />
+      <Spot p={[-2.4, 1.0, 1.2]} at={[0, 0.4, 0]} angle={0.6} pen={0.9} i={10} color="#ff3ec8" />
+      <Spot p={[2.4, 1.0, 1.2]} at={[0, 0.4, 0]} angle={0.6} pen={0.9} i={10} color="#29e6ff" />
       <Beam from={[0, 2.6, -0.4]} len={2.6} r={0.9} o={0.05 + 0.08 * k} />
       <Confetti T={T} box={[2.6, 1.4, 1.2]} center={[0, 0.6, 0.2]} n={44} seed={2} />
       <ambientLight intensity={0.04} />

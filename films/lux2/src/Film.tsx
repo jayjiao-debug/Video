@@ -50,7 +50,11 @@ export const camAt = (T: number) => {
 
 /** screen-space motion between two camera poses (uv), for motion blur */
 const tmpA = new THREE.PerspectiveCamera(), tmpB = new THREE.PerspectiveCamera();
+const sceneAt = (T: number) => SCENES.findIndex((s) => T >= s.t0 && T < s.t1);
 const screenMotion = (T: number) => {
+  // across a hard cut there is no motion to blur: the previous frame belongs to another shot
+  const i0 = sceneAt(T - 1 / 30), i1 = sceneAt(T);
+  if (i0 !== i1 && i1 >= 0 && SCENES[i1].enter === 'cut') return { mb: [0, 0] as [number, number], speed: 0 };
   const c0 = camAt(T - 1 / 30), c1 = camAt(T);
   const set = (cam: THREE.PerspectiveCamera, c: ReturnType<typeof camAt>) => { cam.fov = c.fov; cam.aspect = 16 / 9; cam.position.set(...c.pos); cam.up.set(Math.sin(c.roll), Math.cos(c.roll), 0); cam.lookAt(new THREE.Vector3(...c.look)); cam.updateProjectionMatrix(); cam.updateMatrixWorld(); };
   set(tmpA, c0); set(tmpB, c1);
@@ -58,6 +62,19 @@ const screenMotion = (T: number) => {
   let mx = (b2.x - a.x) / 2, my = (b2.y - a.y) / 2; const m = Math.hypot(mx, my);
   if (m > 0.12) { mx *= 0.12 / m; my *= 0.12 / m; }
   return { mb: [mx, my] as [number, number], speed: m };
+};
+
+/** the corridor between stages: tall slivers of gold and holo light behind everything, seen only in passing */
+const barMat = [new THREE.MeshBasicMaterial({ color: new THREE.Color('#f0c46a').multiplyScalar(1.4), toneMapped: false }), new THREE.MeshBasicMaterial({ color: new THREE.Color('#ff6ad8').multiplyScalar(1.2), toneMapped: false }), new THREE.MeshBasicMaterial({ color: new THREE.Color('#5ae8ff').multiplyScalar(1.2), toneMapped: false })];
+const barGeo = new THREE.PlaneGeometry(0.02, 3.2);
+const Corridor: React.FC<{ x: number }> = ({ x }) => {
+  const from = Math.floor((x - 12) / 0.7), to = Math.ceil((x + 12) / 0.7);
+  const bars: React.ReactNode[] = [];
+  for (let i = from; i <= to; i++) {
+    const bx = i * 0.7, local = ((bx % 14) + 14) % 14; if (local < 5.2 || local > 8.8) continue; // only in the gaps between stages
+    bars.push(<mesh key={i} geometry={barGeo} material={barMat[((i % 3) + 3) % 3]} position={[bx, 1.2 + 0.5 * Math.sin(i * 1.7), -1.2 - (i % 4) * 0.35]} />);
+  }
+  return <group>{bars}</group>;
 };
 
 const ALL_LINES = SCENES.flatMap((s) => s.lines).sort((a, b) => a.t - b.t);
@@ -82,6 +99,7 @@ export const Film: React.FC = () => {
       <ThreeCanvas width={1920} height={1080} camera={{ fov: 34, position: [0, 0.4, 1.4], near: 0.01, far: 80 }} gl={{ antialias: true }} shadows>
         <Stage cam={cam} T={T} bg={cur.bg}>
           {visible.map((s) => <group key={s.id} position={[s.x, 0, 0]}><s.Set T={T} /></group>)}
+          <Corridor x={c.pos[0]} />
         </Stage>
       </ThreeCanvas>
       {visible.map((s) => s.Overlay ? <s.Overlay key={s.id + 'o'} T={T} /> : null)}
