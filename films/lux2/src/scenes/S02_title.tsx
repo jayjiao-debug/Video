@@ -6,21 +6,22 @@ import { slam, pop, impulse } from '../scene';
 import { HeroBag, Cut, rect } from '../foil';
 import { Backdrop, MirrorFloor, Word, Confetti, Beam } from '../kit';
 import { JUNO } from '../brand/identity';
-import { Spot } from './S10_kit';
+import { Spot, FoilText } from './S10_kit';
+import { backOut, prog } from '../scene';
 
 const Set: React.FC<{ T: number }> = ({ T }) => {
-  const s1 = slam(T, 8.505, 0.12), s2 = slam(T, 8.505, 0.16), sub = pop(T, 9.265, 0.3), k = impulse(T, 8.505, 0.25);
+  const land = (a: number) => (T < a ? 0 : 1), sc = (a: number) => 1 + 0.18 * (1 - backOut(prog(T, a, a + 0.22))), s1 = land(8.505), s2 = land(8.505), sub = pop(T, 9.265, 0.3), k = impulse(T, 8.505, 0.25);
   return (
     <group>
       <Backdrop burst="gold" burstY={0.1} />
       <MirrorFloor />
-      <HeroBag position={[0, 0, -0.75]} scale={1.3} swing={8} />
+      <HeroBag position={[0, -0.02, -1.0]} scale={1.0} swing={8} />
       <group position={[0, 0.8, 0.05]}>
-        <group position={[0, 0.17, 0]} scale={1 + 1.5 * (1 - s1)}>{s1 > 0 && <Word text="你买的" size={0.2} kind="gold" />}</group>
-        <group position={[0, -0.05, 0]} scale={1 + 1.5 * (1 - s2)}>{s2 > 0 && <Word text="不是包" size={0.2} kind="gold" />}</group>
+        <group position={[0, 0.14, 0]} scale={sc(8.505)}>{s1 > 0 && <FoilText text="你买的" glyph={0.125} sheen={prog(T, 8.75, 9.6)} />}</group>
+        <group position={[0, -0.02, 0]} scale={sc(8.505)}>{s2 > 0 && <FoilText text="不是包" glyph={0.125} sheen={prog(T, 8.9, 9.75)} />}</group>
         {sub > 0 && <>
           <Cut d={rect(-200, -2, 400, 4)} kind="gold" position={[0, -0.17, 0]} scale={[sub, 1, 1]} shadow={false} />
-          <Word text="53欧元的包，凭什么卖2600？" size={0.045} kind="cream" weight="700" position={[0, -0.22, 0]} scale={sub} />
+          <FoilText text="53欧元的包，凭什么卖2600？" glyph={0.036} fill="#f3ede2" weight="700" position={[0, -0.22, 0]} scale={sub} />
           <Word text={`— ${JUNO.series} —`} size={0.025} kind="gold" weight="700" position={[0, -0.28, 0]} scale={sub} />
         </>}
       </group>

@@ -36,7 +36,7 @@ export const Word: React.FC<{ text: string; size: number; kind?: 'holo' | 'gold'
     </group>;
   };
 /** a paper card with printed lines (price tag, notice, court file) */
-export const PaperCard: React.FC<{ w: number; h: number; lines: [string, number, string?, string?][]; paper?: string } & JSX.IntrinsicElements['group']> = ({ w, h, lines, paper = '#efe6d2', ...g }) => {
+export const PaperCard: React.FC<{ w: number; h: number; lines: [string, number, string?, string?][]; paper?: string; unlit?: number } & JSX.IntrinsicElements['group']> = ({ w, h, lines, paper = '#efe6d2', unlit = 0, ...g }) => {
   const tex = useMemo(() => {
     const c = document.createElement('canvas'); const S = 1024 / Math.max(w, h); c.width = Math.round(w * S); c.height = Math.round(h * S); const x = c.getContext('2d')!;
     x.fillStyle = paper; x.fillRect(0, 0, c.width, c.height);
@@ -46,7 +46,7 @@ export const PaperCard: React.FC<{ w: number; h: number; lines: [string, number,
     lines.forEach(([t, k, font, col]) => { const px = k * c.height; y += px * 1.0; x.font = `${font ?? '900'} ${px}px "Noto Serif CJK SC", serif`; x.fillStyle = col ?? '#1d1a16'; x.textAlign = 'center'; x.fillText(t, c.width / 2, y); y += px * 0.3; });
     const t = new THREE.CanvasTexture(c); t.colorSpace = THREE.SRGBColorSpace; t.anisotropy = 8; return t;
   }, [w, h, paper]); // eslint-disable-line react-hooks/exhaustive-deps
-  return <group {...g}><mesh castShadow receiveShadow><boxGeometry args={[w, h, 0.003]} /><meshStandardMaterial map={tex} roughness={0.9} /></mesh></group>;
+  return <group {...g}><mesh castShadow receiveShadow><boxGeometry args={[w, h, 0.003]} />{unlit > 0 ? <meshBasicMaterial map={tex} color={new THREE.Color(unlit, unlit, unlit)} toneMapped={false} /> : <meshStandardMaterial map={tex} roughness={0.9} />}</mesh></group>;
 };
 
 /* ------------------------------------------------------------------ the stage */

@@ -122,7 +122,7 @@ export const Film: React.FC = () => {
         </Stage>
       </ThreeCanvas>
       {visible.map((s) => s.Overlay ? <s.Overlay key={s.id + 'o'} T={T} /> : null)}
-      {T < END_CARD && <div style={{ position: 'absolute', left: 0, right: 0, bottom: 0, height: 270, background: 'linear-gradient(180deg, rgba(0,0,0,0) 0%, rgba(0,0,0,0.5) 70%, rgba(0,0,0,0.6) 100%)' }} />}
+      {T < END_CARD && <div style={{ position: 'absolute', left: 0, right: 0, bottom: 0, height: 300, background: 'linear-gradient(180deg, rgba(0,0,0,0) 0%, rgba(0,0,0,0.62) 60%, rgba(0,0,0,0.72) 100%)' }} />}
       <Subtitles T={T} lines={ALL_LINES} />
       <div style={{ position: 'absolute', top: 44, right: 56, opacity: 0.55 * markO, fontFamily: font.sans, fontWeight: 500, fontSize: 20, letterSpacing: '0.3em', color: 'rgba(243,237,226,0.58)' }}>
         <span style={{ color: GOLD }}>◆ </span>{JUNO.mark}

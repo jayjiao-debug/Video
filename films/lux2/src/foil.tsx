@@ -43,7 +43,13 @@ export const holoMat = (tint: string, k: number, mask: THREE.Texture | null = nu
       #include <colorspace_fragment>
     }`,
 });
-export type Kind = 'holo' | 'gold' | 'chrome' | 'black' | 'lacquer' | 'paper' | 'glow' | 'rosegold';
+/** pebbled calf grain; extruded UVs are in mm, so one tile = 70 mm */
+let _pebble: THREE.Texture | null = null;
+const pebble = () => _pebble ?? (_pebble = (() => { const t = tex(1024, 1024, (g) => {
+  g.fillStyle = '#808080'; g.fillRect(0, 0, 1024, 1024);
+  for (let i = 0; i < 9000; i++) { const x = rnd() * 1024, y = rnd() * 1024, r = 5 + rnd() * 9; const gr = g.createRadialGradient(x - r * 0.3, y - r * 0.3, 0, x, y, r); gr.addColorStop(0, 'rgba(255,255,255,0.55)'); gr.addColorStop(0.7, 'rgba(128,128,128,0.15)'); gr.addColorStop(1, 'rgba(0,0,0,0.35)'); g.fillStyle = gr; g.beginPath(); g.arc(x, y, r, 0, 7); g.fill(); }
+}); t.repeat.set(1 / 70, 1 / 70); return t; })());
+export type Kind = 'leather' | 'holo' | 'gold' | 'chrome' | 'black' | 'lacquer' | 'paper' | 'glow' | 'rosegold';
 const cache = new Map<string, THREE.Material>();
 export const mat = (kind: Kind, color = '#ffffff', extra = 0): THREE.Material => {
   const key = `${kind}|${color}|${extra}`; const hit = cache.get(key); if (hit) return hit;
@@ -54,6 +60,7 @@ export const mat = (kind: Kind, color = '#ffffff', extra = 0): THREE.Material =>
     case 'rosegold': m = new THREE.MeshPhysicalMaterial({ color: '#f2a88a', metalness: 1, roughness: 0.22, iridescence: 0.5, iridescenceIOR: 1.5, iridescenceThicknessRange: [250, 600] }); break;
     case 'chrome': m = new THREE.MeshPhysicalMaterial({ color: '#f4f6ff', metalness: 1, roughness: 0.06 }); break;
     case 'black': m = new THREE.MeshPhysicalMaterial({ color: color === '#ffffff' ? '#0a0910' : color, roughness: 0.92, sheen: 0.6, sheenColor: new THREE.Color('#5a4a8a'), sheenRoughness: 0.5, bumpMap: tooth(), bumpScale: 0.3 }); break;
+    case 'leather': m = new THREE.MeshPhysicalMaterial({ color, roughness: 0.42, clearcoat: 0.55, clearcoatRoughness: 0.22, sheen: 0.5, sheenColor: new THREE.Color('#ff9a8a'), sheenRoughness: 0.45, bumpMap: pebble(), bumpScale: 1.4, specularIntensity: 0.8 }); break;
     case 'lacquer': m = new THREE.MeshPhysicalMaterial({ color, roughness: 0.2, clearcoat: 1, clearcoatRoughness: 0.03, specularIntensity: 1, sheen: 0.3, sheenColor: new THREE.Color('#ff8a90'), bumpMap: tooth(), bumpScale: 0.05 }); break;
     case 'paper': m = new THREE.MeshStandardMaterial({ color: color === '#ffffff' ? '#efe6d2' : color, roughness: 0.95, bumpMap: tooth(), bumpScale: 0.2 }); break;
     case 'glow': m = new THREE.MeshBasicMaterial({ color: new THREE.Color(color).multiplyScalar(1 + extra), toneMapped: false }); break;
@@ -132,16 +139,26 @@ export const HeroBag: React.FC<{ swing?: number; leather?: string; stitch?: Kind
         <pointLight position={[0.32, 0.46, 0.5]} intensity={0.9 * light} distance={1.6} decay={2} color="#ffe2c0" />
         <pointLight position={[-0.34, 0.42, -0.3]} intensity={0.7 * light} distance={1.2} decay={2} color="#bcd4ff" />
       </>}
-      {/* layers 6 mm apart, so they throw shadows on one another */}
-      <Cut d={BAG.handle} kind="lacquer" color={leather} position={[0, 0, -0.012]} />
-      <Cut d={BAG.body} kind="lacquer" color={leather} />
-      <Cut d={STITCH.body} kind={glowStitch ? 'glow' : stitch} color={stitchColor} glow={glowStitch} depth={0.001} bevel={0} position={[0, 0, 0.0085]} shadow={false} />
-      <Cut d={BAG.flap} kind="lacquer" color={leather} position={[0, 0, 0.012]} />
-      <Cut d={STITCH.flap} kind={glowStitch ? 'glow' : stitch} color={stitchColor} glow={glowStitch} depth={0.001} bevel={0} position={[0, 0, 0.0205]} shadow={false} />
-      <Cut d={BAG.clasp} kind="gold" position={[0, 0, 0.022]} />
-      {[-78, 78].map((x) => <Cut key={x} d={ring(x, -222, 7, 12)} kind="gold" position={[0, 0, 0.006]} />)}
-      {[-120, 120].map((x) => <Cut key={x} d={`M ${x - 10} 0 L ${x + 10} 0 L ${x + 7} 6 L ${x - 7} 6 Z`} kind="gold" />)}
-      {tag && <group position={[0.078, 0.222, 0.026]} rotation={[0, 0, (-swing * Math.PI) / 180]}>
+      {/* leather panels with a soft rolled edge (deep bevel) and a darker painted edge behind each */}
+      <Cut d={BAG.handle} kind="leather" color={leather} depth={0.008} bevel={0.006} position={[0, 0, -0.014]} />
+      <Cut d={BAG.body} kind="lacquer" color="#2a0207" depth={0.008} bevel={0.0085} position={[0, 0, -0.002]} shadow={false} />
+      <Cut d={BAG.body} kind="leather" color={leather} depth={0.012} bevel={0.007} />
+      {/* raised saddle thread (cream, or glowing under UV) */}
+      <Cut d={STITCH.body} kind={glowStitch ? 'glow' : stitch === 'gold' ? 'paper' : stitch} color={glowStitch ? stitchColor : stitchColor ?? '#efe0bf'} glow={glowStitch} depth={0.0012} bevel={0.0005} position={[0, 0, 0.0195]} shadow={false} />
+      <Cut d={BAG.flap} kind="lacquer" color="#2a0207" depth={0.006} bevel={0.0075} position={[0, 0, 0.0185]} shadow={false} />
+      <Cut d={BAG.flap} kind="leather" color={leather} depth={0.008} bevel={0.006} position={[0, 0, 0.0205]} />
+      <Cut d={STITCH.flap} kind={glowStitch ? 'glow' : stitch === 'gold' ? 'paper' : stitch} color={glowStitch ? stitchColor : stitchColor ?? '#efe0bf'} glow={glowStitch} depth={0.0012} bevel={0.0005} position={[0, 0, 0.0348]} shadow={false} />
+      {/* the clasp: a bevelled gold plate, a raised bar with an engraved diamond, two rivets */}
+      <group position={[0, 0, 0.0345]}>
+        <Cut d="M -40 -110 L 40 -110 Q 46 -110 46 -104 L 46 -88 Q 46 -82 40 -82 L -40 -82 Q -46 -82 -46 -88 L -46 -104 Q -46 -110 -40 -110 Z" kind="gold" depth={0.002} bevel={0.0015} />
+        <Cut d="M -30 -101 L 30 -101 Q 34 -101 34 -97 L 34 -95 Q 34 -91 30 -91 L -30 -91 Q -34 -91 -34 -95 L -34 -97 Q -34 -101 -30 -101 Z" kind="gold" depth={0.002} bevel={0.0012} position={[0, 0, 0.0035]} />
+        <Cut d="M 0 -100.5 L 4.5 -96 L 0 -91.5 L -4.5 -96 Z" kind="lacquer" color="#5a3a10" depth={0.0006} bevel={0} position={[0, 0, 0.0075]} shadow={false} />
+        {[-39, 39].map((x) => <Cut key={x} d={circle(x, -96, 3.2)} kind="gold" depth={0.0015} bevel={0.0012} position={[0, 0, 0.0035]} shadow={false} />)}
+      </group>
+      {/* round gold rings where the handle meets the body */}
+      {[-0.078, 0.078].map((x) => <mesh key={x} position={[x, 0.222, 0.004]} castShadow><torusGeometry args={[0.0105, 0.0032, 16, 40]} /><primitive object={mat('gold')} attach="material" /></mesh>)}
+      {[-120, 120].map((x) => <Cut key={x} d={`M ${x - 11} 0 L ${x + 11} 0 L ${x + 8} 7 L ${x - 8} 7 Z`} kind="gold" depth={0.006} bevel={0.002} position={[0, 0, 0.002]} />)}
+      {tag && <group position={[0.078, 0.222, 0.042]} rotation={[0, 0, (-swing * Math.PI) / 180]}>
         {Array.from({ length: 6 }, (_, i) => <Cut key={i} d={ring(0, 0, 2.2, 3.6)} kind="gold" depth={0.0015} bevel={0} position={[0.004 + i * 0.005, -0.008 - i * 0.009, 0]} shadow={false} />)}
         <Cut d={BAG.tag} kind="holo" position={[0.036, -0.076, 0]} scale={1.15} />
       </group>}
