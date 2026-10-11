@@ -1,0 +1,7 @@
+out/
+node_modules
+public/bgm.mp3
+public/bgm_a.mp3
+public/models/
+public/hdri/
+public/waternormals.jpg
