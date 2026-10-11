@@ -60,6 +60,8 @@ tagged with the role that owns it). Rubric: `references/rubric.md`.
   ask which one) and gate 4 (the cut). When the owner is away, take the director's top title / top look, note
   that in `crew_log.md`, and continue.
 - While the owner is choosing at gate 1, the art director can already sketch looks from the brief; don't idle.
+- Fixing a note: change one thing, send the owner the corrected still of exactly that shot, and wait for his OK
+  before re-rendering anything (owner, 2026-10-12).
 - People on screen (2D cast): follow `references/figure-rules.md`. Place every figure with `<Person>` (what the
   body is doing and what it touches), aim hands at points on the body or the prop, and run `pose_check.mjs`
   until it prints PASS before any still with a person goes to the owner. Body-logic errors (legs from the chest,
