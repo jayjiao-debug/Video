@@ -56,7 +56,7 @@ export function makeWorlds(){
   setHL([[PA.x-.45,.3+.5*ga,.4,.25*ga*coinsOn,.9],[PB.x+.45,.3+2*gb,.4,.3*gb*coinsOn,1.6],[PA.x,.3,1.0,.1,2.6],[PB.x,.3,1.0,.1,2.6]]);}
  function params(T){const haze=1-eio(pr(T,B(24),B(24)+1.0));const out=eio(pr(T,B(35)+1.2,B(36)));return {amb,lo:-.05,hi:1.15,t:T,shim:.8,iso:1,bloom:1,haze:Math.max(haze,out),hazeL:.55};}
  const pj=v=>{const p=v.clone().project(cam);return [(p.x*.5+.5)*1920,(-p.y*.5+.5)*1080,p.z];};
- function hud(T){let h='';const lab=(v,t,c,o)=>{const [x,y,z]=pj(v);if(z>1||x<160||x>1780||y<120||o<=0)return '';return `<div class="t" style="left:${x}px;top:${y}px;transform:translate(-50%,-100%);font-size:44px;color:${c};opacity:${o}">${t}</div>`;};
+ function hud(T){let h='';const lab=(v,t,c,o)=>{const [x,y,z]=pj(v);if(z>1||x<160||x>1780||y<120||o<=0)return '';return `<div class="t" style="left:${x}px;top:${y}px;transform:translate(-50%,-100%);font-size:58px;color:${c};opacity:${o}">${t}</div>`;};
   const ga=eo(pr(T,B(26)+.25,B(27)+.5)),gb=eo(pr(T,B(28)+.25,B(29)+.5));const vac=pr(T,B(32),B(32)+1.0124);const lo=1-pr(T,B(31)+1,B(32));
   if(T<B(26)+.2)h+=`<div class="t" style="left:960px;top:130px;transform:translateX(-50%);font-size:48px;color:#FFFFFA;opacity:${pr(T,B(24)+1.2,B(24)+1.7)}">物价完全一样 · 你想住在哪个世界？</div>`;
   h+=lab(V3(PA.x,.3,2.4),'A 世界','#fff',pr(T,B(24)+1.3,B(24)+1.8))+lab(V3(PB.x,.3,2.4),'B 世界','#fff',pr(T,B(24)+1.3,B(24)+1.8));
@@ -64,7 +64,7 @@ export function makeWorlds(){
   h+=lab(V3(PB.x-.45,.3+40*.05*gb+.15,.2),'你 10万','#F6CF78',gb*lo)+lab(V3(PB.x+.45,.3+80*.05*gb+.15,.2),'别人 20万','#fff',gb*lo);
   if(vac>0){const vo=pr(T,B(32)+.3,B(32)+.7)*(1-pr(T,B(34),B(34)+.5));h+=lab(V3(PA.x-.45,.3+10*.12*eio(vac)+.2,.2),'你的假期','#F6CF78',vo)+lab(V3(PA.x+.45,.3+5*.12*eio(vac)+.2,.2),'别人的','#fff',vo)+lab(V3(PB.x-.45,.3+20*.12*eio(vac)+.2,.2),'你的假期','#F6CF78',vo)+lab(V3(PB.x+.45,.3+40*.12*eio(vac)+.2,.2),'别人的','#fff',vo);}
   if(T>=B(34))h+=lab(V3(PA.x-.45,.3+20*.05+.15,.2),'只有钱，一比就烫','#FFEC96',pr(T,B(34)+.3,B(34)+.7)*(1-pr(T,B(35)+.5,B(35)+1)));
-  const pa=T<B(32)?Math.round(48*eo(pr(T,B(30),B(30)+.6))):Math.round(85*eo(pr(T,B(32)+.05,B(32)+.55)));const showP=pr(T,B(30),B(30)+.25)*(1-pr(T,B(34)-.3,B(34)));
+  const pa=T<B(32)?Math.round(48*eo(pr(T,B(30),B(30)+.3))):Math.round(85*eo(pr(T,B(32)+.05,B(32)+.55)));const showP=pr(T,B(30),B(30)+.25)*(1-pr(T,B(34)-.3,B(34)));
   if(showP>0)h+=`<div style="position:absolute;left:96px;top:150px;opacity:${showP}"><div class="t" style="position:static;font-size:40px;color:#fff3d6">${T<B(32)?'选 A 的人':'换成假期 · 选 B 的人'}</div><div class="t" style="position:static;font-size:150px;line-height:1.05;color:${T<B(32)?'#FFEC96':'#EBFFFF'}">${pa}<span style="font-size:64px">%</span></div></div>`;
   return h+`<div class="src" style="opacity:${pr(T,B(24)+1.2,B(24)+1.7)}">Solnick &amp; Hemenway (1998) · 哈佛公共卫生学院 257 人 · 塔高按收入比例 · 假期为示意</div>`;}
  return {scene:S,cam,update,params,hud};}

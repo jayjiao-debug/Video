@@ -14,10 +14,10 @@ export function makeStreet(){
  const XS=[-9,-6,-3,0,3,6,9];const houses=XS.map((x,i)=>{const mine=i===3;const w=2.2,h=mine?2.0:1.8+rn()*.5;const wallM=heatMat({heat:.3,vol:.3,recv:.9}),winM=heatMat({heat:.55,vol:0}),roofM=heatMat({heat:.26,vol:.3});
   const g=new THREE.Group();g.position.set(x,0,-3.2);S.add(g);const body=rbox(w,h,2.0,.04,wallM,1);body.position.y=h/2;g.add(body);
   const roof=new THREE.Mesh(new THREE.ConeGeometry(w*.82,.9,4),roofM);roof.position.y=h+.45;roof.rotation.y=Math.PI/4;roof.scale.z=.7;g.add(roof);
-  const wins=[];for(const [wx,wy] of [[-.5,h*.62],[.5,h*.62],[-.5,h*.25],[.5,h*.25]]){const wn=new THREE.Mesh(new THREE.PlaneGeometry(.5,.45),winM);wn.position.set(wx,wy,1.01);g.add(wn);wins.push(wn);}
+  const wins=[];for(const [wx,wy] of [[-.5,h*.66],[.5,h*.66]]){const wn=new THREE.Mesh(new THREE.PlaneGeometry(.5,.45),winM);wn.position.set(wx,wy,1.01);g.add(wn);wins.push(wn);}
   const door=new THREE.Mesh(new THREE.PlaneGeometry(.45,.8),heatMat({heat:.35,vol:0}));door.position.set(0,.4,1.03);g.add(door);
   const trimM=heatMat({heat:.2,vol:.3,recv:.6});const eave=rbox(w+.5,.08,2.5,.02,trimM,1);eave.rotation.x=Math.PI/2;eave.position.set(0,h+.02,0);g.add(eave);
-  for(const [wx,wy] of [[-.5,h*.62],[.5,h*.62],[-.5,h*.25],[.5,h*.25]]){const fr=rbox(.6,.55,.05,.01,trimM,1);fr.position.set(wx,wy,1.0);g.add(fr);const sill=rbox(.7,.05,.12,.01,trimM,1);sill.position.set(wx,wy-.3,1.05);g.add(sill);}
+  for(const [wx,wy] of [[-.5,h*.66],[.5,h*.66]]){const fr=rbox(.6,.55,.05,.01,trimM,1);fr.position.set(wx,wy,1.0);g.add(fr);const sill=rbox(.7,.05,.12,.01,trimM,1);sill.position.set(wx,wy-.3,1.05);g.add(sill);}
   const dfr=rbox(.6,.9,.05,.01,trimM,1);dfr.position.set(0,.45,1.0);g.add(dfr);
   const chim=rbox(.25,.6,.25,.02,roofM,1);chim.position.set(.55,h+.6,-.2);g.add(chim);
   const step=rbox(.8,.1,.3,.01,trimM,1);step.rotation.x=Math.PI/2;step.position.set(0,.05,1.15);g.add(step);

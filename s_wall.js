@@ -46,7 +46,7 @@ export function makeWall(){
    q.mC.uniforms.uHeat.value=h;q.mS.uniforms.uHeat.value=hs;
    q.mC.uniforms.uIce.value=below?cl(fr*3):0;
    // 更想跳槽: the cold ones turn toward the door and drift that way
-   const go=below?eio(pr(T,B(42)+q.ph*.8,B(43)+q.ph)):0;q.g.rotation.y=-go*1.1;q.g.position.x=q.x+go*(.5+q.ph*.6);q.g.visible=true;if(below&&q.t===0&&T>B(46)){const k=eio(pr(T,B(46)+q.ph*1.1,B(47)+.9+q.ph*.4));q.g.position.x=lerp(q.g.position.x,DR.x,k);q.g.position.z=lerp(q.g.position.z,DR.z-.3,k);q.g.visible=k<.92;}});
+   const go=below?eio(pr(T,B(42)+q.ph*.8,B(43)+q.ph)):0;q.g.rotation.y=-go*1.1;q.g.position.x=q.x+go*(.5+q.ph*.6);q.g.visible=true;if(below&&q.t===0&&T>B(46)){const k=eio(pr(T,B(46)+q.ph*1.1,B(47)+.9+q.ph*.4));q.g.position.x=lerp(q.g.position.x,DR.x,k);q.g.position.z=lerp(q.g.position.z,DR.z-.3,k);q.g.visible=k<.92&&q.g.position.distanceTo(cam.position)>1.6;}});
   doorM.uniforms.uHeat.value=lerp(.2,1.05,eio(pr(T,B(42),B(42)+.6)));
   setHL([[0,4.2,-6.3,.18*on,3.5],[DR.x,1.3,DR.z+.3,.5*pr(T,B(42),B(42)+.6),2.2],[0,2.98,-2.86,T>=B(40)?.18*Math.exp(-(T-B(40))*1.5):0,2.5]]);}
  function params(T){return {amb,lo:0,hi:1.15,t:T,shim:.6,iso:1,bloom:1,flash:0,haze:Math.max(1-eio(pr(T,B(36),B(36)+.9)),eio(pr(T,B(47)+1.2,B(48)))),hazeL:.5};}
@@ -55,7 +55,7 @@ export function makeWall(){
   if(T>=B(39)-.2){const [x,y,z]=pj(YOU.g.position.clone().add(V3(0,1.55,0)));const [x2,y2]=pj(YOU.g.position.clone().add(V3(0,1.85,0)));const r=Math.max(18,(y-y2)*1.1);const oo=pr(T,B(39),B(39)+.4);if(z<1)h+=`<div style="position:absolute;left:${x-r}px;top:${y-r}px;width:${2*r}px;height:${2*r}px;border-radius:50%;border:5px solid ${T>=B(40)+.5?'#9ff0ff':'#F6CF78'};box-shadow:0 0 24px ${T>=B(40)+.5?'#50E6FF':'#F6CF78'};opacity:${oo}"></div><div class="t" style="left:${x+r+14}px;top:${y-34}px;font-size:56px;color:#F6CF78;opacity:${oo}">你</div>`;}
   if(T>=B(40)){const [x1,y1]=pj(V3(3.2,3.1,-2.86));if(x1>120&&x1<1600)h+=`<div class="t" style="left:${x1}px;top:${y1-56}px;font-size:46px;color:#FFFFFA;opacity:${pr(T,B(40),B(40)+.25)}">— 中位数</div>`;
    const pp=pr(T,B(40)+.506,B(40)+.62);h+=`<div class="t" style="right:110px;top:600px;font-size:110px;color:#EBFFFF;opacity:${(pp>0?1:0)*(1-pr(T,B(42)-.3,B(42)))};transform:scale(${lerp(1.35,1,eo(pp))});transform-origin:right center;text-shadow:0 0 30px rgba(80,230,255,.9),0 4px 14px rgba(20,10,60,.9)">满意度▼</div>`;}
-  if(T>=B(42)){const [x,y,z]=pj(V3(DR.x,3.0,DR.z));if(z<1)h+=`<div class="t" style="left:${x}px;top:${y}px;transform:translate(-50%,-100%);font-size:48px;color:#FFEC96;opacity:${pr(T,B(42)+.3,B(42)+.7)}">找新工作</div>`;}
+  if(T>=B(42)){const [x,y,z]=pj(V3(DR.x,3.0,DR.z));if(z<1)h+=`<div class="t" style="left:${Math.min(x,1700)}px;top:${y}px;transform:translate(-50%,-100%);font-size:48px;color:#FFEC96;opacity:${pr(T,B(42)+.3,B(42)+.7)}">找新工作</div>`;}
   if(T>=B(44)&&T<B(46)){const [x,y]=pj(V3(-3.6,3.6,-4.5));h+=`<div class="t" style="left:${x}px;top:${y}px;font-size:46px;color:#FFEC96;opacity:${pr(T,B(44)+.3,B(44)+.7)}">高于中位数 · 满意度 不变</div>`;}
   return h+`<div class="src" style="opacity:${o}">Card, Mas, Moretti &amp; Saez (2012) American Economic Review · 名单为示意</div>`;}
  return {scene:S,cam,update,params,hud};}
