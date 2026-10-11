@@ -1,0 +1,14 @@
+# Brief: 一夜修好电话线
+
+- **Episode:** ep23 · **Series:** VIBE知识大赏 (Juno)
+- **Idea in one sentence:** Halving the search (bisection): checking the middle and throwing away half finds one fault among N places in about log2(N) checks — 10 km of line with a pole every 50 m (200 poles) needs ~8 checks, not 200.
+- **Why a 18–25 viewer cares:** It turns a hopeless search into a few steps; the same trick finds the commit that broke code (git bisect), the bad bulb in a string of lights, and is how a guessing game is won.
+- **Takeaway (one line the viewer should remember):** (screenwriter proposes)
+- **Length target:** ~120 s · **Format:** 1920×1080, subtitle-only (NO voiceover), series music (diji public/bgm.mp3, played from 0): intro 0–16.6, **title on drop 1 at 16.625**, main 20.7, breakdown 49.0, build 63.2, silent gap 79.4–81.4, **key reveal on drop 2 at 81.432**, outro 115.9 (end card), FIN 121.95. One bar ≈ 2.03 s.
+- **Visual direction:** the Tank-episode 2D look (flat illustration, the owner-approved figure system; people are few and pose-checked), like the pond episode 《池塘里有多少条鱼？》. Title card themed to the episode's world (juno-brand §2.2).
+- **Structure required by the owner:** the opening is a tiny emotional story that tells the viewer their own situation, why it matters and what they'll get; ONE counter-intuitive idea explained so an ordinary person understands what is done, why, and what it is for; then the catch (when it fails / its limit) and a callback ending.
+- **Owner rules:** when a topic is a school/textbook classic, NEVER say so (no "你在课本里见过", no worksheets on screen); show the real situation and let viewers recognise it; recognition may be invited only in the end-card question. Academic register, no slang. ≤16 字 per line.
+- **Must avoid:** Wikipedia/百度百科/知乎 as sources; invented numbers (illustrative numbers labelled 示意); maps with national borders; "Juno 出品"; voiceover.
+- **Owner approvals required:** gate 1 (title + script), key frames, gate 4 (cut)
+- **Unattended overnight run (2026-10-12):** the owner is asleep; producer takes defaults and logs them in crew_log.md.
+- **Must include: a real, sourced fault-location/bisection story (e.g. telegraph/cable fault location history, or git bisect in a famous bug hunt, or a documented utility practice) — research what is real and documented; the arithmetic (2^8 = 256 ≥ 200) shown plainly; the catch (needs one fault and a yes/no test at any point; two faults or intermittent faults break it).**
