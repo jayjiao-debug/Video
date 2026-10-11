@@ -1,0 +1,32 @@
+{
+  "label": "gate1",
+  "inputs_read": ["lines.json (all 38 lines)", "script.md title options 1-3"],
+  "contamination_note": "script.md has no way to jump to a section, so to find 'Title options' I read lines 1-87 and 200-218. That means I also saw the logline, the takeaway, the 'decisions' list and the rationale for each title before I wrote this. I wrote the viewer reactions below from the subtitles alone and tried to ignore the plan. Still, my takeaway and title pick are NOT a clean cold read. The '高一数学二分法电话线题' recognition is my own: it's the 10千米 / 每50米一根杆 example from 人教版必修一. The plan mentions it too, though.",
+  "hook_strength_first_8s": "Medium. L1 '明早交论文，电脑却一直报错' is my exact nightmare, so it gets me past 3 s easily. L2 '后台一长串' is vague, though: background of what? Task manager? L3 '一次测一半最省事' (5.9 s) is a bit odd and gives me a small 'huh?', but I don't know what 'testing half' of a list means for a computer. Before 8 s there's no number and no picture of the trick in words. The real hook is L5-L6 (11.6-16.4 s): 200 vs 8. If those came earlier I'd be hooked hard instead of only mildly.",
+  "would_keep_watching_after_3s": true,
+  "why": "Deadline plus a broken computer is my life, so I want to know the fix. But my reason is 'I hope this helps my laptop', not 'this is amazing'. If by 10 s it still looked like a generic tech-tips video I'd leave.",
+  "first_moment_I_got_curious": "L6 at 14.3 s, '测一半：最多[8]次'. 200 down to 8 is the first thing that made me think 'wait, how?'. L3 (5.9 s) was only a weak nudge.",
+  "where_I_would_swipe_away": [
+    "16.4-20.8 s: 4.4 s with no subtitle, right after the best hook. If the picture or title card isn't strong this is the most likely place I leave, because I already got the '8' and might think I've seen the point.",
+    "63-75 s (L21-L25: 程序员 / Git / bisect / 675个版本 / 内核开发者): I'm not a programmer. The film quietly drops my 论文 story and starts talking to coders. 'Git' and 'bisect' mean nothing to me. This is the second most likely swipe.",
+    "38.5-41.4 s (L13 '修好后，每个剪口都要再接上'): a small procedural detail that slows things down in the middle of the build-up. Not a swipe by itself, but it's where my attention dips."
+  ],
+  "lines_I_did_not_understand": [
+    "L2 '后台一长串': a long list of what? Processes? Startup apps? Services? The word '服务' only appears at L19, so for 55 s I don't know what list we're halving.",
+    "L3 '微软官方：一次测[一半]最省事': test half of what, and how? Turn half off? I only understood this at L19-L20 ('先只勾一半服务，重启一次').",
+    "L4 '通信兵修电话线，也这样找': the jump from my laptop to soldiers is abrupt. 'Also finds it this way', but I don't know what 'this way' is yet.",
+    "L9 '剪开线，接上电话，两头各试一次': cutting a dead line to test it feels backwards at first. And '两头' here means the two directions from the cut, not the two ends of the whole line. Took a second read.",
+    "L10 '摇手柄': I've never used a crank phone. I worked it out from context but needed the picture.",
+    "L23 '官方示例：675个版本，约10步': whose official example? Git's? Versions of what? It reads like a citation, not something I can picture.",
+    "L24 '内核开发者': which kernel? Linux is never named. '平均每天用它一次': who is this person?",
+    "L31 '他说：这是“无条件的好东西”': who is 他? No name was given. And '无条件的好东西' sounds like a stiff translation, not something a person would say.",
+    "L37 '天亮前，找到了那[一项]': satisfying, but WHICH item? I wanted the reveal (e.g. some driver or sync service) and didn't get one."
+  ],
+  "takeaway_in_my_words": "When something's broken and there are lots of possible causes, don't check them one by one. Split them in half, test, throw away the good half, repeat. Even a huge pile shrinks fast: doubling the pile only costs one more check. But it only works if there's just one problem and your test never lies.",
+  "surprise_that_stuck": "L17-L18: '线再长一倍，只多查1次' and '100万个位置，也只要20次'. Doubling costing only +1 is the bit I'd repeat to a friend. The '256 > 200' line is fine but feels like homework.",
+  "title_I_would_click": "1. '200段线，最多查8次'. Two hard numbers with a big gap, so I want to know how. Small risk: '200段线' alone doesn't say what kind of line (phone? power? something to do with sewing?). It still reads as a puzzle with an answer, which makes me click.",
+  "title_that_misleads": "2. '电话线断在哪？' promises a phone-line repair story, but more than half the film is about my laptop and programmers' code. It also looks like an old math word problem, so I'd scroll past it. 3. '一次测一半' could be read as an exam or test tip, or even a medical test. It's too vague to tell me the topic, and it isn't strong enough to stop my thumb.",
+  "what_I_would_comment": "'这不就是高一数学二分法那道电话线题吗，原来真能救论文' plus a second one: '所以到底是哪一项服务出的问题？？'",
+  "for_frames_only": [],
+  "for_frames_only_note": "No frames were provided for this gate. I only read subtitles and titles."
+}

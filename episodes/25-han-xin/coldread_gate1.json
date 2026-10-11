@@ -1,0 +1,31 @@
+{
+  "would_keep_watching_after_3s": true,
+  "why": "Only just. #1-#2 (0-5.4s) are a complaint I've lived myself: 军训报数 goes wrong and the whole company starts over. I recognise it, but nothing has made me curious yet. If the picture is a generic drill-ground shot, this could feel like a vlog and my thumb would hover. The hook really arrives at #3 (5.55s, '排[三次]队就够了') and gets stronger at #4 (8.11s, 'just from the leftovers you know it's 128'). That's a concrete promise with a weird exact number. #6 (13.66s, '藏在加密钥匙里') is what fully hooked me, because it jumps from 军训 to encryption. Hook strength in the first 8s: medium. The payoff line #3 sits at 5.5s, so a picky scroller gets about 5s of setup with no question asked yet.",
+  "first_moment_I_got_curious": "#3 at 5.55s ('其实，排[三次]队就够了'). That's when I wanted to know how. The 'I'm staying' moment is #6 at 13.66s (加密钥匙).",
+  "where_I_would_swipe_away": [
+    "16.4s-20.8s: no subtitle for 4.4 seconds right after the hook. Unless something visually strong fills it, this dead gap is the most dangerous point in the film.",
+    "47.5s-58.1s (#17-#20): six numbers in about 10 seconds (70, 21, 15, 233, 210, 23). '每个只在一种排法里，多出1个' goes by too fast for me to work out what it means. This is where I'd start losing focus.",
+    "71.5s-79.3s (#25-#28): RSA, 除数n, p and q, then '私钥里存了三个数 dP、dQ、qInv'. For a non-CS viewer that's a wall of jargon. Then there's a 2-second gap after #28 (79.3-81.45s). This is my most likely real swipe point.",
+    "89.7s-97.5s (#31-#34): 'qInv 拼回解密结果' and 'q乘qInv除以p剩1'. If I've survived #28 I might stay, but only because I want the 128 callback, not because I follow this part."
+  ],
+  "lines_I_did_not_understand": [
+    "#4: '看每次多出几个' - I didn't know yet what 'extra' meant (people left over in an incomplete last row?). It became clear at #8, but on first hearing it's vague.",
+    "#7: '一百多人，有100种可能' - it took me a beat to see this means 100-199. It reads like a strange statement on its own.",
+    "#8: '三人排多2、五人排多3' - too compressed. I first read it as '3 people line up and 2 are extra'. '三人一排多2' would be clearer. Also, this is the first time we hear our company's actual remainders, and they're given very fast.",
+    "#13: '和我们连队一模一样' - who is 我们? Is the narrator one of the people at 军训? It works, but the narrator's identity was never set up.",
+    "#18: '每个只在一种排法里，多出1个' - I didn't get it. Does 70 leave 1 when lined up in threes and divide evenly into fives and sevens? I would need to see it on screen. As text alone it means nothing to me.",
+    "#20: '再减去[210]' - why 210? 105 is only explained in the next line (#21), so the subtraction comes before its reason and feels like magic. Swapping #20 and #21, or saying '减两个105', would help.",
+    "#24: '大衍求一术' - it's just a name here. I didn't know what '求一' meant until #34, 30 seconds later.",
+    "#26: '除数n' - divisor of what? Nobody told me RSA divides anything. #25 says '在算余数', but I don't know what is being divided by n.",
+    "#27-#28: 'dP、dQ、qInv' - pure code variable names. I can't read them aloud or picture them. They feel like they're aimed at programmers.",
+    "#32: '再用qInv，拼回解密结果' - I don't know what is being joined back together, or why it's faster or better.",
+    "#35: '除数之间，不能有公因数' - fine as a rule. The #36 example (除4剩1、除6剩2 无解) went too fast for me to see why it has no solution (odd vs even)."
+  ],
+  "takeaway_in_my_words": "Line a group up in threes, then fives, then sevens, and only note how many are left over. If you roughly know the size ('一百多'), that pins down the exact number (128) without counting anyone. The puzzle comes from 《孙子算经》, about 1600 years old. The 韩信 version is a later legend, and the original answer is 23. 23, 128 and 233 are all correct, because they differ by multiples of 105. 秦九韶 later turned it into a general method. The same trick, known in the West as the 'Chinese Remainder Theorem', is used today to speed up RSA decryption. The catch is that the divisors can't share a factor, and you have to already know the rough range.",
+  "surprise_that_stuck": "First, the original book's answer is 23, not 128, and both are 'right'. That's the moment where it clicked (#16 to #22). Second, the oldest record doesn't mention 韩信 at all (#10). Third, the name 'Chinese Remainder Theorem' (#29-#30). I'd tell a friend that one.",
+  "title_I_would_click": "#2 '韩信点兵，原文没有韩信'. Honestly, as a scroller, this is the one that grabs me. It sounds like a myth being busted, and I know the 韩信点兵 phrase from school. #1 '不数人头，怎么点兵？' is solid and matches the film best, but '点兵' sounds a bit textbook and doesn't make me need to know. #3 '排三次队，数清一百多人' reads like a life hack, and I don't believe it's practical.",
+  "title_that_misleads": "#2 could set me up for a history-gossip or '韩信 was fake' video. Instead about 70% is maths and RSA, so people who click for the history may feel baited when dP/dQ/qInv shows up. #3 slightly oversells usefulness: in real 军训, lining up three times plus mental arithmetic is slower than just recounting, and the instructor would laugh.",
+  "what_I_would_comment": "教官：你排三次队的工夫，我都数完三遍了。不过「中国剩余定理」这个名字是真的帅，原书答案是23那里我愣了一下。dP dQ qInv 那段有没有学计算机的来翻译一下",
+  "for_frames_only": [],
+  "notes": "No frames were provided, so for_frames_only is empty. Disclosure: while looking for the Title options section in script.md (no search tool available), I saw script.md lines 1-15 (a 'choices made' section saying the company is 128, with line references) and the short rationale/risk notes under each title option (lines 86-101). I tried to judge from the subtitles alone, but my title-misleads point for #2 overlaps with the risk note written under it."
+}

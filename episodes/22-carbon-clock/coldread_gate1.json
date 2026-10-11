@@ -1,0 +1,33 @@
+{
+  "label": "gate1",
+  "contamination_note": "I read lines.json first and formed my reactions from it. I could not jump straight to the Title options section of script.md, so I read lines 1-85 in chunks. That means I also saw the logline, takeaway, music map, checks, 'Decisions taken without the owner' and the start of the beat sheet. All my judgments below come from the subtitles. Where something I saw in the script might have shaped a judgment, I say so. Discount the title pick a little, because the script explains why each title was chosen.",
+  "hook_first_8s": {
+    "rating": "medium (about 6/10)",
+    "detail": "0-2.5s '展柜里写着：距今几千年' is a museum label I have actually stood in front of. It is relatable but it is a statement, not a question, so on its own it is flat. 2.65-5.06s '可木炭身上，没写日期' is the first small itch: right, so how DO they know? 5.16-8.29s '每克碳每分钟滴答约[15]下' has a concrete number, but I don't know what is ticking yet. It is half curiosity, half 'huh?'. The real hook ('死后，滴答越来越慢' at 8.4s and '你身上也有这只钟，正在走' at 13.7s) arrives just after the 8-second window."
+  },
+  "would_keep_watching_after_3s": true,
+  "why": "Barely. At 3s I have only one line, '展柜里写着：距今几千年', and its draw is 'I've wondered this too'. If the visual is a real-looking museum case seen through a phone, I stay. If it's a generic stock shot, this line alone would not stop my thumb. What keeps me is line 2 arriving fast at 2.65s and setting up a puzzle.",
+  "first_moment_I_got_curious": "Line 4 (8.39s) '死后，滴答越来越[慢]': a clock that slows after death is a weird image. Line 6 (13.7s) '你身上也有这只钟，正在走' is when I actually leaned in, because now it's about me.",
+  "where_I_would_swipe_away": [
+    "16.4-20.8s: 4.4s with no subtitle, right after the best line. If the title card and music drop are not visually strong, the cliffhanger turns into dead air and I scroll.",
+    "23.58s '空气里，有极少量的[碳14]': the moment I see 碳14, I recognise high-school content (half-life). Many people my age think 'I've learned this' here. The tick metaphor was more interesting than the textbook word.",
+    "32.19-46.06s ('每过约5730年' -> '1.1万年' -> '化学家利比' -> '它叫碳14测年'): this is the textbook section. Naming the method at 46s confirms 'this is a 科普 lesson'. This is my most likely swipe point, around 40-46s.",
+    "63.25-75.96s, the China lab sequence: 1959, 1965, 4 pieces of wood, lab founded. Dates stack up with no emotional stakes. Right after '1960年 诺贝尔奖' the clock jumps back to 1959, which feels like a list. Second most likely swipe window. If I've stayed past 76s, the '前提：空气里碳14不变' line plus the silence pulls me through to the reveal."
+  ],
+  "lines_I_did_not_understand": [
+    "#3 (5.16s) '每克碳每分钟滴答约15下': ticking of what? Nothing ever says that one tick = one carbon-14 atom decaying. Later '滴答少一半' and '剩1/4' treat ticks and amount as the same thing, and I had to guess that link.",
+    "#6 (13.7s) '你身上也有这只钟，正在走': if my clock only slows after death, what does 正在走 mean while I'm alive? Is it counting down on me now? It's creepy in a good way, but the film never comes back to 'you'. So is MY body's C-14 doubled from nuclear tests? (I was born around 2006.)",
+    "#9 (26.28s) '活着时，体内含量和空气[同步]': 同步 is vague. Same amount? Same ratio? It's fine as a feeling, fuzzy as a fact.",
+    "#12 (35.07s) '剩1/4，就是约[1.1万]年': I had to do the 2 x 5730 math in 2.6 seconds while reading. It's OK, but it flies by.",
+    "#24-26 (66.17-75.96s) '1965年，新实验室也先考自己' ... '中国第一间碳14实验室，这才成立': how does a lab test itself before it exists? And whose new lab is it? 'Chinese' is only implied by the previous line.",
+    "#31 (89.54s) '前提错了：空气里碳14一直在变': my biggest confusion. If the premise was wrong, why did Libby's pharaoh wood and China's 4 woods all match? Were those tests lucky, or is the error small? The film just told me the clock passed its exam, then says it was built on a wrong premise. I need one line reconciling the two.",
+    "#36 (104.27s) '往前，超过约5万年就剩太少' and #37 '往后，核弹尖峰成了新的[钟]': 往前/往后 took me a second (into the past / toward now). And how is the bomb spike a clock? Not explained. It's an intriguing last-second idea that leaves me hanging.",
+    "#33 (95.46s) '每圈树轮，年份精确到一年': for a living tree, sure, but how do you know the year of a ring in wood that's thousands of years old? Not explained (only a small itch)."
+  ],
+  "takeaway_in_my_words": "Anything that was alive takes in a bit of carbon-14 from the air. After it dies, no new C-14 comes in, and what's left decays by half about every 5730 years. Measure how much is left and you can work out how long ago it died. But the air's C-14 isn't actually constant (nuclear tests doubled it in the 1960s), so scientists check the reading against tree rings of known years.",
+  "surprise_that_stuck": "Nuclear tests in the 1960s nearly doubled the carbon-14 in the air, and everything alive then had doubled C-14 in its body too. That's the one I'd repeat to a friend. A smaller one: China's first C-14 lab had to pass a test on 4 woods of known age before it was allowed to open.",
+  "title_I_would_click": "谁定的\"距今几千年\". It's literally a thought I've had in a museum, so I'd recognise it instantly in the feed and want the answer. 死后会变慢的钟 is second: more mysterious, but I might not click because I can't tell what genre it is. 一块木炭有多老 reads like a calm lesson and I'd scroll past.",
+  "title_that_misleads": "死后会变慢的钟, mildly. Cold in the feed, it reads like a 鸡汤 piece about grief and time, or a 灵异/urban-legend story, not science. Some people who click for that vibe will leave at 碳14. 谁定的\"距今几千年\" is also slightly off: 谁 promises a person or institution, but the answer is a method (Libby only partly covers it). Caveat: I had already seen the script's own risk notes for these titles before deciding.",
+  "what_I_would_comment": "等一下，前面说法老墓那次'吻合得令人满意'，后面又说前提错了，那当年是测对了还是运气好？还有我们这代人身上的碳14是不是也偏高，死后会被测年轻？",
+  "for_frames_only": []
+}

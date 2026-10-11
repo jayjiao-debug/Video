@@ -1,0 +1,27 @@
+{
+  "would_keep_watching_after_3s": true,
+  "why": "L1 '这颗彗星，你这辈子多半只见一次' is about me, so I stop for a second. But by L2 (76年) I already know it is 哈雷彗星. We all learned that in school, so for 3-8 s I am thinking 'I know this one'. What keeps me is L3 (1705, Halley wrote something), which hints at a story and not a textbook recap. The first 8 s get a medium hook score, about 6/10. The real hook is L5 at 11.4 s, '可到那一年，他该[102]岁了'. That is the line that makes me want the ending. If it came earlier, I would be locked in sooner. The '多半' in L1 also takes some force out of the opening.",
+  "first_moment_I_got_curious": "L5 (11.4 s) '可到那一年，他该[102]岁了'. He made a prediction he knew he could not live to check. Second spike: L12 (35.1 s) '不是三颗彗星，是[同一颗]'.",
+  "where_I_would_swipe_away": [
+    "16.4-20.8 s: 4.4 s with no subtitle right after the hook. If the title animation isn't strong, my thumb moves here.",
+    "20.8-34.96 s (L7-L11): a run of method steps (orbits, 24 records, Newton, three matching, three years). Each line is clear, but there is no tension until L12. This is the most likely place for me to drop off.",
+    "63.25-71.15 s (L22-L24): 518天, 100天, 618天 back to back. It feels like a maths class and I stop reading the numbers. The '吃饭也在算' line just before is the human bit that holds me.",
+    "95.19-109.39 s (L33-L37): after the reveal it feels like the story is over. '其实，它早就来过' and the 74/79-year part feel like an appendix. 公元前240年 / 中国史书 pulls me back for a moment, but L36-L37 lose me again until 2061 shows up."
+  ],
+  "lines_I_did_not_understand": [
+    "L18 '巴黎，三个人重算它的归期': which three people? No names, no hint who they are or why Paris.",
+    "L20 '拉朗德回忆': a name drops out of nowhere. Is 拉朗德 one of the three? I had to guess.",
+    "L22 '比起没有行星，木星让它晚[518]天': I don't get 'compared with no planets'. Late compared with what, Halley's date? L15 already said Halley blamed Jupiter, so did he not count it? I can't tell whose number this is correcting.",
+    "L4 vs L16: L4 says '1758年它会回来', L16 says '1758年底到次年初'. A small shift, but I noticed it.",
+    "L25-L26 then L28 and L31-L32: they predicted closest-to-Sun in mid-April 1759, plus or minus a month. Then it is seen on 25 Dec 1758 and is closest on 13 March, '早了约一个月'. So did they get it right or not? A month early with a one-month margin sits right on the edge. The film never tells me if this counts as a win, and the climax feels a bit unresolved for me.",
+    "L28 vs L26: they predicted the date it is 'closest to the Sun', but the reveal is the date someone 'saw it'. For a second I thought it showed up four months early, until I worked out these are two different events.",
+    "L37 '行星一拉，每一圈都得重算': so is 2061 certain or not? Right after this line, L38 states 2061 flatly."
+  ],
+  "takeaway_in_my_words": "Halley worked out that three comets in old records were really one comet on a loop. He predicted a return year he knew he would be dead for. After he died, people in Paris redid the sums with Jupiter and Saturn pulling on it. It came back 16 years after his death, roughly when they said. It comes again in 2061, which he never saw and I probably will (I'll be about 55).",
+  "surprise_that_stuck": "That he published a prediction for a year when he'd be 102, meaning he knew he'd never see it. Runner-up: Jupiter and Saturn together held the comet back by 618 days, almost two years. Also that a farmer, not a famous astronomer, saw it first.",
+  "title_I_would_click": "1. 死后16年，它回来了. 'Who died? What came back?' is a real curiosity gap and I would tap. 2. 他没等到的那颗彗星 is nicer, but 彗星 + 没等到 tells me 'Halley's comet' straight away, so I might think I already know it and scroll on. 3. 写给身后的预言 reads like an essay title on a WeChat article; I would not stop for it.",
+  "title_that_misleads": "Option 1 is slightly risky. Without context, '死后16年，它回来了' can read like a pet/ghost/family-loss story, so some people may tap expecting something emotional and personal and get astronomy. Also, if it appears as the title card at ~16.6 s, it lands right after L6 '要等[53]年，才有答案'. I would get 53 and then 16 back to back and briefly wonder which number matters. None of the three is false.",
+  "what_I_would_comment": "2061年我55岁，到时候谁还记得这条视频来报到。 Also a real question: 早了一个月，到底算算准了还是没算准？",
+  "for_frames_only": [],
+  "process_note": "No frames were given, so for_frames_only is empty. To find the 'Title options' section I paged through script.md in small chunks. Along the way I saw parts I should not have: the logline, the music map, part of the facts table, the end-card question and the beat sheet (which comes right after the title options). I based my reactions above on the subtitles only, but this cold read is not fully blind. A future run should give the title lines directly or give the line range."
+}
