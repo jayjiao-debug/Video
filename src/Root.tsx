@@ -1,5 +1,7 @@
 import React from 'react';
 import { Composition } from 'remotion';
+import { Toon3D, TOON3D_N } from './chars3/Toon3D';
+import { Flat35, FLAT35_N } from './chars3/Flat35';
 import { MascotSheet, MascotReel, MR_FRAMES } from './chars/MascotDemo';
 import { CharStyles, CharSheet as RigSheet, CS_FRAMES } from './chars/Demo';
 import { Test3D } from './t3/Test3D';
@@ -151,5 +153,7 @@ export const Root: React.FC = () => (
     {[0, 1, 2, 3, 4, 5, 6, 7].map((i) => <Composition key={i} id={`CharSheet${i}`} component={RigSheet} durationInFrames={1} fps={30} width={1920} height={1080} defaultProps={{ i }} />)}
     <Composition id="MascotReel" component={MascotReel} durationInFrames={MR_FRAMES} fps={30} width={1920} height={1080} />
     {[0, 1, 2, 3].map((i) => <Composition key={i} id={`MascotSheet${i}`} component={MascotSheet} durationInFrames={1} fps={30} width={1920} height={1080} defaultProps={{ i }} />)}
+    <Composition id="Flat35" component={Flat35} durationInFrames={FLAT35_N} fps={30} width={1920} height={1080} />
+    <Composition id="Toon3D" component={Toon3D} durationInFrames={TOON3D_N} fps={30} width={1920} height={1080} />
   </>
 );
