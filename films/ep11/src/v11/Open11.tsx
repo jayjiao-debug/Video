@@ -10,7 +10,7 @@ const FLIP = 0.42;
 /* S01 cold open · S02 the experiment · S03 into the ledger · S04 title card */
 
 /* ---------------------------------------------------------------- S01 */
-const Ticket: React.FC<{ stampO?: number }> = ({ stampO = 1 }) => (
+export const Ticket: React.FC<{ stampO?: number }> = ({ stampO = 1 }) => (
   <g>
     <rect x={-410} y={-150} width={820} height={300} rx={10} fill="#000" opacity={0.55} filter="url(#k-soft)" transform="translate(10 34)" />
     <path d="M-410,-150 H174 A26 26 0 0 0 226,-150 H410 V150 H226 A26 26 0 0 0 174,150 H-410 Z" fill="url(#k-tix)" />
