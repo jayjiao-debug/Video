@@ -48,8 +48,8 @@ export function makeLab(){
   const lamp=new THREE.Mesh(new THREE.CylinderGeometry(.14,.2,.1,32),heatMat({heat:.55,vol:.3}));lamp.position.set(0,H+.25,0);g.add(lamp);const lb=new THREE.Mesh(new THREE.SphereGeometry(.07,20,12),heatMat({heat:1.1,vol:.1}));lb.position.set(0,H+.19,0);g.add(lb);S.add(capsuleBetween(V3(cx,.8+H+.29,-.55),V3(cx,3,-.55),.012,barM));
   cages.push(g);}
  const mA=capuchin(),mB=capuchin();mA.g.position.set(-1.0,.83,-.55);mB.g.position.set(.9,.83,-.55);S.add(mA.g);S.add(mB.g);
- const tokM=heatMat({heat:-.05,vol:.4,ice:.6});const tok=[0,1].map(()=>{const m=new THREE.Mesh(new THREE.SphereGeometry(.065,16,12),tokM);m.scale.set(1.2,.7,1);S.add(m);return m;});
- const cuke=()=>{const g=new THREE.Group();const m=new THREE.Mesh(new THREE.CapsuleGeometry(.055,.24,6,16),heatMat({heat:.38,vol:.35}));m.rotation.z=Math.PI/2;g.add(m);S.add(g);return {g,m};};
+ const tokM=heatMat({heat:-.35,vol:.4,ice:.8});const tok=[0,1].map(()=>{const m=new THREE.Mesh(new THREE.SphereGeometry(.08,16,12),tokM);m.scale.set(1.2,.7,1);S.add(m);return m;});
+ const cuke=()=>{const g=new THREE.Group();const m=new THREE.Mesh(new THREE.CapsuleGeometry(.065,.3,6,16),heatMat({heat:.58,vol:.35}));m.rotation.z=Math.PI/2;g.add(m);S.add(g);return {g,m};};
  const cA=cuke(),cB=cuke();
  const grapeM=heatMat({heat:1.12,vol:.55});const grape=new THREE.Group();{let q=5;const r2=()=>(q=(q*16807)%2147483647)/2147483647;for(let i=0;i<14;i++){const row=Math.floor(i/4);const s=new THREE.Mesh(new THREE.SphereGeometry(.03,18,12),grapeM);const a=r2()*6.28,rr=(.05-row*.012)*Math.sqrt(r2());s.position.set(Math.cos(a)*rr,.05-row*.03,Math.sin(a)*rr);grape.add(s);}grape.add(capsuleBetween(V3(0,.06,0),V3(.02,.12,0),.006,heatMat({heat:.5,vol:.2})));}S.add(grape);
  const STASH=V3(1.22,1.12,-.62);const stash=grape.clone();stash.scale.setScalar(1.7);stash.position.copy(STASH);S.add(stash);const dish=new THREE.Mesh(new THREE.CylinderGeometry(.13,.1,.02,32),heatMat({heat:.3,vol:.3}));dish.position.copy(STASH).add(V3(0,-.07,0));S.add(dish);const post=capsuleBetween(V3(STASH.x,.83,STASH.z),V3(STASH.x,STASH.y-.08,STASH.z),.015,heatMat({heat:.25,vol:.3}));S.add(post);
@@ -57,7 +57,7 @@ export function makeLab(){
  const SL=[-1.0+.95+.45-.0,.95+.45]; // tray x (world) for A and B
  const slot=i=>V3(cages[i].position.x+.45,.83,-.55+.5+.13);
  function cyc(T){if(T<B(12))return null;const n=Math.floor((T-B(12))/2.0248);const u=((T-B(12))/2.0248)%1;return {n,u};}
- const K=[[B(10),-.2,3.2,1.2, 0,1.2,-.6,40],[B(10)+1.6,0,1.6,3.2, 0,1.25,-.6,34],[B(12),0,1.55,3.0, 0,1.25,-.6,34],[B(12)+1.6,-1.2,1.35,1.55, -1.0,1.2,-.4,34],[B(14),-1.15,1.36,1.5, -1.0,1.2,-.4,34],
+ const K=[[B(10),-.2,3.2,1.2, 0,1.2,-.6,40],[B(10)+1.6,0,1.6,3.2, 0,1.25,-.6,34],[B(12),0,1.55,3.0, 0,1.25,-.6,34],[B(12)+1.6,-.6,1.35,1.25, -.6,.98,-.3,34],[B(14),-.6,1.35,1.22, -.6,.98,-.3,34],
   [B(14)+1.4,0,1.5,3.0, 0,1.25,-.55,34],[B(16),0,1.5,2.95, 0,1.25,-.55,34],[B(16)+1.4,.95,1.32,1.45, .95,1.2,-.4,32],[B(18),.92,1.32,1.45, .9,1.2,-.4,32],[B(18)+1.4,-1.75,1.45,1.55, -.25,1.15,-.55,36],[B(20),-1.72,1.45,1.5, -.25,1.15,-.55,36],
   [B(20)+1.4,0,1.55,3.1, 0,1.25,-.55,36],[B(22),0,1.55,3.0, 0,1.25,-.55,36],[B(23),.8,1.3,1.6, 1.1,1.0,-.6,30],[B(24),1.28,.93,-.42, 1.28,.88,-.72,30]];
  const cp=camPath(K);

@@ -36,24 +36,24 @@ export function makeHook(){
  const mate=standingPerson({skin:.8,cloth:.52,h:1.74,noArms:true});mate.position.set(.56,0,-1.22);mate.rotation.y=-2.3;S.add(mate);
  const mHands=[-1,1].map(s=>{const m=new THREE.Mesh(new THREE.SphereGeometry(.03,14,10),heatMat({heat:.74,vol:.45}));m.scale.set(.8,1.25,1);S.add(m);return {m,s};});
  const P2=phone({heat:1.0});P2.userData.sm.uniforms.uInk.value=1.3;P2.position.copy(PH2);P2.lookAt(V3(0,1.27,-.3));P2.scale.setScalar(1.2);S.add(P2);
- const draw1=day=>(g,w,h)=>{g.textAlign='center';g.font=`900 60px ${FONT}`;g.fillText('实习工资 · 到账',w/2,300);g.font=`900 150px ${FONT}`;g.fillText('¥4000',w/2,500);g.font=`900 62px ${FONT}`;g.fillText(day?`开心的第 ${day} 天`:'刚刚',w/2,660);};
+ const draw1=(day,bn=1)=>(g,w,h)=>{if(bn<1){g.globalAlpha=1;}const by=lerp(-120,0,bn);g.fillRect(40,by+60,w-80,96);g.fillStyle='#000';g.font=`900 54px ${FONT}`;g.textAlign='center';g.fillText('+¥4000 已到账',w/2,by+126);g.fillStyle='#fff';g.textAlign='center';g.font=`900 60px ${FONT}`;g.fillText('实习工资 · 到账',w/2,300);g.font=`900 150px ${FONT}`;g.fillText('¥4000',w/2,500);g.font=`900 62px ${FONT}`;g.fillText(day?`开心的第 ${day} 天`:'刚刚',w/2,660);};
  const draw2=(g,w,h)=>{g.textAlign='center';g.font=`900 60px ${FONT}`;g.fillText('室友的实习工资',w/2,300);g.font=`900 150px ${FONT}`;g.fillText('¥6000',w/2,500);};
  redraw(P2.userData.tex,draw2);let lastDay=-1;
  const plTex=(()=>{const c=document.createElement('canvas');c.width=2048;c.height=640;const g=c.getContext('2d');g.fillStyle='#000';g.fillRect(0,0,2048,640);g.fillStyle='#fff';g.textAlign='center';g.font=`900 168px ${FONT}`;g.fillText('为什么一比，就觉得穷？',1024,315);g.font=`700 60px "DejaVu Sans"`;g.fillText('T H E   C O M P A R I S O N   T R A P',1024,470);
   g.strokeStyle='#fff';g.lineWidth=12;g.strokeRect(46,46,1956,548);return new THREE.CanvasTexture(c);})();
  const plM=heatMat({heat:1.1,vol:.1,map:plTex,ink:.9});const plaque=new THREE.Group();plaque.add(rbox(1.62,.52,.04,.03,heatMat({heat:.9,vol:.3}),2));
  const plFace=new THREE.Mesh(new THREE.PlaneGeometry(1.6,.5),plM);plFace.position.z=.04;plaque.add(plFace);plaque.visible=false;S.add(plaque);
- const K=[[0,0,1.27,-.32, 0,1.02,-.68,34],[B(2),0,1.27,-.33, 0,1.02,-.68,34],[B(2)+1.0,0,1.28,-.3, 0,1.42,-1.4,46],[B(4),0,1.28,-.3, 0,1.43,-1.4,46],
+ const K=[[0,0,1.27,-.3, 0,1.02,-.68,34],[B(2),0,1.26,-.4, 0,1.02,-.68,34],[B(2)+1.0,0,1.28,-.3, 0,1.42,-1.4,46],[B(4),0,1.28,-.3, 0,1.43,-1.4,46],
   [B(4)+.9,.03,1.28,-.3, .23,.74,-1.14,50],[B(6),.03,1.28,-.3, .24,.74,-1.14,50],[B(6)+1.2,0,1.27,-.33, -.02,1.0,-.68,36],[B(8),0,1.27,-.36, 0,1.02,-.68,34],
   [B(9),0,1.27,-.37, 0,1.02,-.68,34],[B(9)+.9,-.2,1.12,-.5, MUG.x,MUG.y+.2,MUG.z,38],[B(10),-.3,1.08,-.72, MUG.x,MUG.y+.35,MUG.z-.02,36]];
  const PK=[[0,0,1.02,-.66, -.5,0,0],[B(2),0,1.03,-.66, -.5,0,0],[B(2)+1.0,-.16,1.25,-.72, -.05,.15,0],[B(4),-.16,1.25,-.72, -.05,.15,0],[B(4)+.9,-.1,1.0,-.62, -.6,.15,0],[B(6),-.1,1.0,-.62, -.6,.15,0],[B(6)+1.2,0,1.02,-.66, -.5,0,0],[B(10),0,1.02,-.66, -.5,0,0]];
- const cp=camPath(K),pp=camPath(PK);
+ const cp=camPath(K),pp=camPath(PK,{drift:false});
  function update(T){const [p,l,f]=cp(T);cam.position.copy(p);cam.lookAt(l);cam.fov=f;cam.updateProjectionMatrix();tickSteam(T,cam,1+.8*pr(T,B(9),B(10)));
   const [pq,prt]=pp(T);P1.position.copy(pq);P1.rotation.set(prt.x,prt.y,0,'YXZ');P1.updateMatrixWorld(true);
   arms.forEach(A=>{const hand=V3(A.s*.04,-.035,-.008).applyMatrix4(P1.matrixWorld);A.h.position.copy(hand);setCapsule(A.a,hand.clone().add(V3(A.s*.36,-.32,.22)),hand);});
-  const day=T<B(2)?0:Math.min(3,1+Math.floor((T-B(2))/1.0124));if(day!==lastDay){redraw(P1.userData.tex,draw1(day));lastDay=day;}
+  const day=T<B(2)?0:Math.min(3,1+Math.floor((T-B(2))/1.0124));const bn=eo(pr(T,.383,.65));if(day!==lastDay||T<.8){redraw(P1.userData.tex,draw1(day,bn));lastDay=day;}
   const dph=T<B(2)||T>B(3)+1.0124?-1:((T-B(2))/1.0124)%1;const sunUp=dph<0?0:Math.sin(Math.PI*dph);winM.uniforms.uHeat.value=lerp(-.04,.3,sunUp);sun.visible=sunUp>.02;sun.position.set(-.42+.84*Math.max(dph,0),1.32+.5*sunUp,-1.585);
-  const on=eo(pr(T,B(4),B(4)+.5));const off=eio(pr(T,B(7),B(7)+.5));P2.userData.sm.uniforms.uHeat.value=lerp(lerp(.15,1.55,on),.28,off);P2.userData.body.material.uniforms.uHeat.value=lerp(.15,1.1,on);P2.visible=T>B(4)-.4&&T<B(7)+.6;P2.updateMatrixWorld(true);mHands.forEach(H=>{H.m.position.copy(V3(H.s*.042,-.03,-.006).applyMatrix4(P2.matrixWorld));H.m.visible=P2.visible;});
+  const on=eo(pr(T,B(4),B(4)+.5));const off=eio(pr(T,B(7),B(7)+.5));P2.userData.sm.uniforms.uHeat.value=lerp(lerp(.15,1.55,on),.28,off);P2.userData.body.material.uniforms.uHeat.value=lerp(.15,1.1,on);{const k=eio(pr(T,B(6)+.2,B(6)+1.1));P2.position.copy(PH2).add(V3(.05*k,-.5*k,-.12*k));P2.lookAt(V3(0,1.27,-.3));}P2.visible=T>B(4)-.4&&T<B(7)+.6;P2.updateMatrixWorld(true);mHands.forEach(H=>{H.m.position.copy(V3(H.s*.042,-.03,-.006).applyMatrix4(P2.matrixWorld));H.m.visible=P2.visible;});
   const pk=pr(T,B(8),B(8)+.5);plaque.visible=T>=B(8)&&T<B(9)+1.3;const hideP=T>=B(8)+.2&&T<B(10);P1.visible=!hideP;arms.forEach(A=>{A.a.visible=A.h.visible=!hideP;});if(plaque.visible){const fw=cam.getWorldDirection(new THREE.Vector3());const up=V3(0,1,0).applyQuaternion(cam.quaternion);
    const tp=cam.position.clone().addScaledVector(fw,lerp(.36,.3,eo(pk))).addScaledVector(up,lerp(-.06,.008,eo(pk))-.25*eio(pr(T,B(9)+.3,B(9)+1.3)));plaque.position.copy(tp);plaque.quaternion.copy(cam.quaternion);plaque.scale.setScalar(lerp(.02,.122,eo(pk)));
    plM.uniforms.uHeat.value=lerp(2.0,1.2,eo(pr(T,B(8),B(8)+1.0)));}

@@ -35,18 +35,18 @@ export function makeWorlds(){
  const bodies=new THREE.InstancedMesh(new THREE.CapsuleGeometry(.06,.22,4,8),bodyM,N),heads=new THREE.InstancedMesh(new THREE.SphereGeometry(.055,10,8),headM,N);bodies.frustumCulled=heads.frustumCulled=false;S.add(bodies);S.add(heads);
  const P=Array.from({length:N},(_,i)=>{const x0=(rn()-.5)*5.2,z0=2.2+rn()*2.2;const toA=i<123,toA2=i<39;const ang=rn()*6.28,rr=.6+Math.sqrt(rn())*1.3;return {x0,z0,toA,toA2,ang,rr,d:rn(),ph:rn()};});
  const D=new THREE.Object3D();
- const K=[[B(24),PA.x-.45,1.5,1.4, PA.x-.45,.6,0,30],[B(24)+1.6,0,2.5,7.4, 0,.9,0,44],[B(26),0,2.5,7.3, 0,.9,0,44],[B(26)+1.3,PA.x+.6,2.2,4.6, PA.x,1.0,0,40],[B(28),PA.x+.7,2.25,4.5, PA.x,1.0,0,40],
-  [B(28)+1.4,PB.x-1.0,3.0,8.8, PB.x,2.3,0,42],[B(30),PB.x-1.05,3.05,8.7, PB.x,2.3,0,42],[B(30)+1.3,0,5.0,11.5, 0,1.7,.8,40],[B(32),0,5.0,11.4, 0,1.7,.8,40],[B(34),0,5.4,13.2, 0,2.0,.6,42],
+ const K=[[B(24),PA.x-.45,1.5,1.4, PA.x-.45,.6,0,30],[B(24)+1.6,0,2.5,7.4, 0,.9,0,44],[B(26),0,2.5,7.3, 0,.9,0,44],[B(26)+1.3,PA.x+.6,2.2,4.6, PA.x,1.0,0,40],[B(27)+.2,PA.x+.7,2.25,4.5, PA.x,1.0,0,40],
+  [B(28)+.3,PB.x-1.0,3.0,8.8, PB.x,2.3,0,42],[B(30),PB.x-1.05,3.05,8.7, PB.x,2.3,0,42],[B(30)+1.3,0,5.0,11.5, 0,1.7,.8,40],[B(32),0,5.0,11.4, 0,1.7,.8,40],[B(34),0,6.0,15.5, 0,2.2,.6,42],
   [B(35),PA.x-.2,1.3,2.6, PA.x-.45,.85,.2,34],[B(36),PA.x-.43,.85,.7, PA.x-.45,.82,.2,28]];
  const cp=camPath(K);
  function update(T){const [p,l,f]=cp(T);cam.position.copy(p);cam.lookAt(l);cam.fov=f;cam.updateProjectionMatrix();sky.position.copy(p);
   const ga=eo(pr(T,B(26)+.25,B(27)+.5)),gb=eo(pr(T,B(28)+.25,B(29)+.5));const vac=pr(T,B(32),B(32)+1.0124),cool=pr(T,B(34),B(34)+1.0124);
   // the first coin: the white grape-bloom becomes your first coin
   tw.aY.im.count=Math.max(T>=B(24)?1:0,Math.round(20*ga));tw.aO.im.count=Math.round(10*ga);tw.bY.im.count=Math.round(40*gb);tw.bO.im.count=Math.round(80*gb);
-  const coinsOn=1-eio(vac)+eio(cool);for(const k in tw){tw[k].im.visible=coinsOn>.02;tw[k].m.uniforms.uHeat.value=({aY:1.0,aO:.66,bY:.62,bO:1.05})[k]*lerp(.3,1,coinsOn)+(k==='aY'&&T<B(25)?.4:0);}
+  const coinsOn=1-eio(vac)+eio(cool);for(const k in tw){tw[k].im.visible=coinsOn>.02;tw[k].m.uniforms.uHeat.value=({aY:1.0,aO:.66,bY:.62,bO:1.05})[k]*lerp(.3,1,coinsOn)*(1-.3*pr(T,B(35),B(35)+1.0))+(k==='aY'&&T<B(25)?.4:0);}
   for(const k in tl){tl[k].im.count=Math.round(tl[k].n*eio(vac));tl[k].im.visible=vac>0&&cool<1;tl[k].m.uniforms.uHeat.value=({aY:.95,aO:.5,bY:.95,bO:.75})[k]*(1-.8*cool);}
   // people: walk to A/B on 61.13, re-sort on 65.18 (vacation)
-  const w1=pr(T,B(30)+.2,B(31)+.6),w2=pr(T,B(32)+.5,B(33)+.8);
+  const w1=pr(T,B(30)+.2,B(31)+.6),w2=pr(T,B(32)+.05,B(33)+.2);
   P.forEach((q,i)=>{const g1=eio(cl((w1-q.d*.35)/.65)),g2=eio(cl((w2-q.d*.35)/.65));const tA=q.toA?PA:PB,tB=q.toA2?PA:PB;
    const x1=tA.x+Math.cos(q.ang)*q.rr,z1=tA.z+.4+Math.abs(Math.sin(q.ang))*q.rr*.9,x2=tB.x+Math.cos(q.ang)*q.rr,z2=tB.z+.4+Math.abs(Math.sin(q.ang))*q.rr*.9;
    let x=lerp(q.x0,x1,g1),z=lerp(q.z0,z1,g1);x=lerp(x,x2,g2);z=lerp(z,z2,g2);const onP=Math.hypot(x-PA.x,z-PA.z)<2.3||Math.hypot(x-PB.x,z-PB.z)<2.3;
@@ -64,7 +64,7 @@ export function makeWorlds(){
   h+=lab(V3(PB.x-.45,.3+40*.05*gb+.15,.2),'你 10万','#F6CF78',gb*lo)+lab(V3(PB.x+.45,.3+80*.05*gb+.15,.2),'别人 20万','#fff',gb*lo);
   if(vac>0){const vo=pr(T,B(32)+.3,B(32)+.7)*(1-pr(T,B(34),B(34)+.5));h+=lab(V3(PA.x-.45,.3+10*.12*eio(vac)+.2,.2),'你的假期','#F6CF78',vo)+lab(V3(PA.x+.45,.3+5*.12*eio(vac)+.2,.2),'别人的','#fff',vo)+lab(V3(PB.x-.45,.3+20*.12*eio(vac)+.2,.2),'你的假期','#F6CF78',vo)+lab(V3(PB.x+.45,.3+40*.12*eio(vac)+.2,.2),'别人的','#fff',vo);}
   if(T>=B(34))h+=lab(V3(PA.x-.45,.3+20*.05+.15,.2),'只有钱，一比就烫','#FFEC96',pr(T,B(34)+.3,B(34)+.7)*(1-pr(T,B(35)+.5,B(35)+1)));
-  const pa=T<B(32)?Math.round(48*eo(pr(T,B(30),B(30)+.6))):Math.round(lerp(0,85,eio(pr(T,B(32)+.5,B(33)+.8))));const showP=pr(T,B(30),B(30)+.25)*(1-pr(T,B(34)-.3,B(34)));
-  if(showP>0)h+=`<div style="position:absolute;left:96px;top:150px;opacity:${showP}"><div class="t" style="position:static;font-size:40px;color:#fff3d6">${T<B(32)?'选 A 的人':'只要自己假期多的人'}</div><div class="t" style="position:static;font-size:150px;line-height:1.05;color:${T<B(32)?'#FFEC96':'#EBFFFF'}">${pa}<span style="font-size:64px">%</span></div></div>`;
+  const pa=T<B(32)?Math.round(48*eo(pr(T,B(30),B(30)+.6))):Math.round(85*eo(pr(T,B(32)+.05,B(32)+.55)));const showP=pr(T,B(30),B(30)+.25)*(1-pr(T,B(34)-.3,B(34)));
+  if(showP>0)h+=`<div style="position:absolute;left:96px;top:150px;opacity:${showP}"><div class="t" style="position:static;font-size:40px;color:#fff3d6">${T<B(32)?'选 A 的人':'换成假期 · 选 B 的人'}</div><div class="t" style="position:static;font-size:150px;line-height:1.05;color:${T<B(32)?'#FFEC96':'#EBFFFF'}">${pa}<span style="font-size:64px">%</span></div></div>`;
   return h+`<div class="src" style="opacity:${pr(T,B(24)+1.2,B(24)+1.7)}">Solnick &amp; Hemenway (1998) · 哈佛公共卫生学院 257 人 · 塔高按收入比例 · 假期为示意</div>`;}
  return {scene:S,cam,update,params,hud};}

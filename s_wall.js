@@ -32,10 +32,10 @@ export function makeWall(){
  const DR=V3(4.9,0,-1.2);const doorM=heatMat({heat:.2,vol:.1,side:THREE.DoubleSide});const door=new THREE.Mesh(new THREE.PlaneGeometry(1.4,2.6),doorM);door.position.copy(DR).setY(1.3);door.rotation.y=-.45;S.add(door);
  {const jm=heatMat({heat:.24,vol:.3});const dx=Math.cos(.45)*.75,dz=Math.sin(.45)*.75;S.add(capsuleBetween(V3(DR.x-dx,0,DR.z-dz),V3(DR.x-dx,2.65,DR.z-dz),.06,jm));S.add(capsuleBetween(V3(DR.x+dx,0,DR.z+dz),V3(DR.x+dx,2.65,DR.z+dz),.06,jm));S.add(capsuleBetween(V3(DR.x-dx,2.65,DR.z-dz),V3(DR.x+dx,2.65,DR.z+dz),.06,jm));}
  const K=[[B(36),.6,4.95,-1.0, .5,4.75,-6.6,44],[B(37)+1.8,.1,4.85,-1.4, .1,4.6,-6.6,44],[B(38),.1,4.85,-1.4, .1,4.6,-6.6,44],[B(39),0,3.3,2.4, 0,2.6,-4.0,40],[B(39)+1.9,0,2.6,4.2, 0,2.0,-3.6,40],
-  [B(40)+1.0,0,2.15,5.4, 0,1.9,-3.2,40],[B(42),.4,1.9,5.6, .8,1.5,-2.6,40],[B(43)+1.0,1.6,2.0,6.0, 2.6,1.6,-2.2,40],[B(44),1.5,2.6,6.2, .5,2.4,-3.2,40],[B(46),.8,3.2,7.2, 0,2.2,-3.5,40],[B(47)+.6,3.0,1.8,4.4, 4.9,1.4,-1.2,40],[B(48),4.45,1.4,-.25, 4.9,1.35,-1.2,40]];
+  [B(40)+1.0,0,2.15,5.4, 0,1.9,-3.2,40],[B(42),.4,1.95,5.6, .8,1.6,-2.6,40],[B(44),1.1,2.5,6.0, .9,2.3,-3.0,40],[B(46),2.0,2.4,5.6, 2.2,2.0,-2.6,40],[B(47)+.6,3.2,2.3,4.0, 4.9,1.5,-1.2,40],[B(48),4.3,2.35,.9, 4.9,1.4,-1.2,40]];
  const cp=camPath(K);
  function update(T){const [p,l,f]=cp(T);cam.position.copy(p);cam.lookAt(l);cam.fov=f||36;cam.updateProjectionMatrix();
-  const on=pr(T,B(36)+.2,B(37));rows.forEach((r,i)=>{const a=cl(on*28-i*.9);r.bar.scale.x=Math.max(.001,r.w*a);r.bar.position.x=-2.8+r.w*a/2;r.nm.visible=a>0;});
+  const on=pr(T,B(36)+.2,B(37));scrM.uniforms.uInk.value=.32*(1-pr(T,B(39),B(39)+.8));rows.forEach((r,i)=>{const a=cl(on*28-i*.9);r.bar.scale.x=Math.max(.001,r.w*a);r.bar.position.x=-2.8+r.w*a/2;r.nm.visible=a>0;});
   // scan bar on 77.2–79.3, stops on your row in the gap
   const sc=pr(T,B(38),B(39));const yRow=rows[14].y;
   rows.forEach((r,i)=>{const hit=sc>0&&sc<1?Math.exp(-Math.pow((r.y-lerp(rows[0].y,yRow,eio(sc)))/.12,2)):0;r.bar.material.uniforms.uHeat.value=.72+.45*hit+(T>B(39)&&i===14?.35:0);});
@@ -46,7 +46,7 @@ export function makeWall(){
    q.mC.uniforms.uHeat.value=h;q.mS.uniforms.uHeat.value=hs;
    q.mC.uniforms.uIce.value=below?cl(fr*3):0;
    // 更想跳槽: the cold ones turn toward the door and drift that way
-   const go=below?eio(pr(T,B(42)+q.ph*.8,B(43)+q.ph)):0;q.g.rotation.y=-go*1.1;q.g.position.x=q.x+go*(.5+q.ph*.6);if(below&&T>B(46)){const k=eio(pr(T,B(46)+q.ph*1.2,B(48)));q.g.position.x=lerp(q.g.position.x,DR.x-.3+q.ph*.4,k*(q.t===0?1:.0));q.g.position.z+=k*(q.t===0?(DR.z-q.g.position.z)*.8:0);}});
+   const go=below?eio(pr(T,B(42)+q.ph*.8,B(43)+q.ph)):0;q.g.rotation.y=-go*1.1;q.g.position.x=q.x+go*(.5+q.ph*.6);q.g.visible=true;if(below&&q.t===0&&T>B(46)){const k=eio(pr(T,B(46)+q.ph*1.1,B(47)+.9+q.ph*.4));q.g.position.x=lerp(q.g.position.x,DR.x,k);q.g.position.z=lerp(q.g.position.z,DR.z-.3,k);q.g.visible=k<.92;}});
   doorM.uniforms.uHeat.value=lerp(.2,1.05,eio(pr(T,B(42),B(42)+.6)));
   setHL([[0,4.2,-6.3,.18*on,3.5],[DR.x,1.3,DR.z+.3,.5*pr(T,B(42),B(42)+.6),2.2],[0,2.98,-2.86,T>=B(40)?.18*Math.exp(-(T-B(40))*1.5):0,2.5]]);}
  function params(T){return {amb,lo:0,hi:1.15,t:T,shim:.6,iso:1,bloom:1,flash:0,haze:Math.max(1-eio(pr(T,B(36),B(36)+.9)),eio(pr(T,B(47)+1.2,B(48)))),hazeL:.5};}
