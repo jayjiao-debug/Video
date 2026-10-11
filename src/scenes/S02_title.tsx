@@ -9,13 +9,13 @@ import { JUNO } from '../brand/identity';
 import { Spot } from './S10_kit';
 
 const Set: React.FC<{ T: number }> = ({ T }) => {
-  const s1 = slam(T, 8.505, 0.1), s2 = slam(T, 8.505 + 0.2, 0.1), sub = pop(T, 9.265, 0.3), k = impulse(T, 8.505, 0.25);
+  const s1 = slam(T, 8.505, 0.12), s2 = slam(T, 8.505, 0.16), sub = pop(T, 9.265, 0.3), k = impulse(T, 8.505, 0.25);
   return (
     <group>
-      <Backdrop burst="holo" burstY={0.1} glow={0.3} />
+      <Backdrop burst="gold" burstY={0.1} />
       <MirrorFloor />
-      <HeroBag position={[0, 0, -0.55]} scale={1.6} swing={8} />
-      <group position={[0, 0.5, 0.05]}>
+      <HeroBag position={[0, 0, -0.75]} scale={1.3} swing={8} />
+      <group position={[0, 0.8, 0.05]}>
         <group position={[0, 0.17, 0]} scale={1 + 1.5 * (1 - s1)}>{s1 > 0 && <Word text="你买的" size={0.2} kind="gold" />}</group>
         <group position={[0, -0.05, 0]} scale={1 + 1.5 * (1 - s2)}>{s2 > 0 && <Word text="不是包" size={0.2} kind="gold" />}</group>
         {sub > 0 && <>
@@ -37,9 +37,9 @@ const Set: React.FC<{ T: number }> = ({ T }) => {
 export const S02: SceneDef = {
   id: 'S02_title', t0: 8.505, t1: 12.4, x: 14, enter: 'cut', Set,
   keys: [
-    { t: 8.505, pos: [0.05, 0.52, 0.42], look: [0, 0.5, 0], fov: 40, ap: 0.006, bloom: 0.75, roll: 0.08 },
-    { t: 9.4, pos: [0.08, 0.55, 0.95], look: [0, 0.48, 0], fov: 38, ap: 0.004, bloom: 0.8, roll: 0.02 },
-    { t: 12.1, pos: [0.15, 0.6, 1.3], look: [0, 0.46, -0.1], fov: 38, ap: 0.003, bloom: 0.7, roll: 0 },
+    { t: 8.505, pos: [0.04, 0.76, 0.95], look: [0, 0.72, 0], fov: 40, ap: 0.004, bloom: 0.75, roll: 0 },
+    { t: 9.4, pos: [0.06, 0.76, 1.08], look: [0, 0.71, 0], fov: 38, ap: 0.004, bloom: 0.7, roll: 0 },
+    { t: 12.1, pos: [0.12, 0.78, 1.38], look: [0, 0.68, -0.1], fov: 38, ap: 0.003, bloom: 0.7, roll: 0 },
   ],
   lines: [],
 };

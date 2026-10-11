@@ -5,12 +5,40 @@
    and trucks along it toward the door (rope and stanchions sliding past in front, figures in depth behind,
    their long shadows thrown by the light pouring out of the door). 37.616: one warm pulse from the doorway. */
 import React, { useMemo } from 'react';
+import { useThree } from '@react-three/fiber';
 import * as THREE from 'three';
 import type { SceneDef } from '../scene';
-import { impulse } from '../scene';
-import { HeroBag, Cut, rect, circle, archFrame, mat } from '../foil';
-import { Backdrop, MirrorFloor, Confetti } from '../kit';
+import { impulse, prog, easeOut } from '../scene';
+import { HeroBag, Cut, rect, circle, archFrame, cutGeo } from '../foil';
+import { Backdrop, MirrorFloor } from '../kit';
 import { Spot, Caption, hash } from './S03_parts';
+
+/* S05 materials see a WARM environment of their own: the shared club env has a cyan strip on the +x side, and looking
+   down the shopfront every grazing gold/velvet surface mirrored it as teal. A material's own envMap overrides the scene's. */
+const warm = { t: null as THREE.Texture | null };
+const warmEnv = (gl: THREE.WebGLRenderer) => {
+  if (warm.t) return warm.t;
+  const sc = new THREE.Scene(); sc.background = new THREE.Color('#000');
+  const strip = (w: number, h: number, pos: [number, number, number], rot: [number, number, number], col: string, k: number) => {
+    const m = new THREE.Mesh(new THREE.PlaneGeometry(w, h), new THREE.MeshBasicMaterial({ color: new THREE.Color(col).multiplyScalar(k), side: THREE.DoubleSide })); m.position.set(...pos); m.rotation.set(...rot); sc.add(m); };
+  strip(6, 1.2, [0, 4, 0], [Math.PI / 2, 0, 0], '#fff2dc', 2.0);
+  strip(0.6, 4, [-3.2, 1.6, 0.8], [0, Math.PI / 2.3, 0], '#ffb070', 2.2);
+  strip(0.6, 4, [3.2, 1.6, 0.8], [0, -Math.PI / 2.3, 0], '#ffd29a', 2.2);
+  strip(4, 0.5, [0, 0.4, 3.6], [0, Math.PI, 0], '#ffc860', 2.6);
+  strip(3, 0.6, [0, 2.4, -3.6], [0, 0, 0], '#b07040', 1.6);
+  strip(10, 10, [0, -3, 0], [Math.PI / 2, 0, 0], '#1a1008', 1);
+  const pm = new THREE.PMREMGenerator(gl); warm.t = pm.fromScene(sc, 0.015).texture; pm.dispose(); return warm.t;
+};
+const mc = new Map<string, THREE.MeshPhysicalMaterial>();
+const plainGold = (c = '#e8b860') => mc.get('g' + c) ?? (mc.set('g' + c, new THREE.MeshPhysicalMaterial({ color: c, metalness: 1, roughness: 0.28, clearcoat: 0.3, envMap: warm.t, envMapIntensity: 1 })), mc.get('g' + c)!);
+const velvet2 = (c = '#0b0a10') => mc.get('v' + c) ?? (mc.set('v' + c, new THREE.MeshPhysicalMaterial({ color: c, roughness: 0.9, sheen: 0.5, sheenColor: new THREE.Color('#6a4a30'), sheenRoughness: 0.5, envMap: warm.t, envMapIntensity: 0.6 })), mc.get('v' + c)!);
+const WarmEnv: React.FC = () => { const { gl } = useThree(); const t = warmEnv(gl); if (velvet.envMap !== t) { velvet.envMap = t; velvet.needsUpdate = true; } return null; };
+const MCut: React.FC<{ d: string; m: THREE.Material; depth?: number; bevel?: number; shadow?: boolean } & JSX.IntrinsicElements['group']> = ({ d, m, depth, bevel, shadow = true, ...g }) => {
+  const geo = useMemo(() => cutGeo(d, depth, bevel), [d, depth, bevel]);
+  return <group {...g}><mesh geometry={geo} material={m} castShadow={shadow} receiveShadow={shadow} /></group>;
+};
+const GCut: React.FC<{ d: string; color?: string; depth?: number; bevel?: number; shadow?: boolean } & JSX.IntrinsicElements['group']> = ({ color, ...p }) => <MCut m={plainGold(color)} {...p} />;
+const BCut: React.FC<{ d: string; color?: string; depth?: number; bevel?: number; shadow?: boolean } & JSX.IntrinsicElements['group']> = ({ color, ...p }) => <MCut m={velvet2(color)} {...p} />;
 
 const PULSE = 37.616;
 /* door geometry = S04's arch × F (R 0.31, spring 0.64, echoes +0.045/+0.09/+0.135) */
@@ -46,10 +74,10 @@ const Person: React.FC<{ who: Who; flip?: boolean } & JSX.IntrinsicElements['gro
   return (
     <group {...g}>
       <group scale={[(flip ? -1 : 1) * who.h / 440, who.h / 440, 1]}>
-        {ps.map((d, i) => <Cut key={i} d={d} kind="black" color="#07060b" depth={0.004} bevel={0.0014} />)}
+        {ps.map((d, i) => <BCut key={i} d={d} color="#07060b" depth={0.004} bevel={0.0014} />)}
         {/* gilt edge on the side that faces the door light: a gold copy just behind, nudged toward the door */}
-        {ps.map((d, i) => <Cut key={'g' + i} d={d} kind="gold" depth={0.002} bevel={0} position={[0.0028, 0.0012, -0.003]} shadow={false} />)}
-        {who.phone && <mesh position={[0.05, 0.445, 0.006]} rotation={[0, 0, -0.4]}><planeGeometry args={[0.014, 0.024]} /><meshBasicMaterial color={new THREE.Color('#d6ecff').multiplyScalar(2.2)} toneMapped={false} /></mesh>}
+        {ps.map((d, i) => <GCut key={'g' + i} d={d} depth={0.002} bevel={0} position={[0.0028, 0.0012, -0.003]} shadow={false} />)}
+        {who.phone && <mesh position={[0.05, 0.445, 0.006]} rotation={[0, 0, -0.4]}><planeGeometry args={[0.014, 0.024]} /><meshBasicMaterial color={new THREE.Color('#d6ecff').multiplyScalar(1.0)} toneMapped={false} /></mesh>}
       </group>
     </group>
   );
@@ -64,9 +92,9 @@ const ropeGeo = (a: [number, number, number], b: [number, number, number], sag =
 };
 const Post: React.FC<{ x: number; z: number }> = ({ x, z }) => (
   <group position={[x, 0, z]}>
-    <mesh position={[0, 0.004, 0]} material={mat('gold')} castShadow><cylinderGeometry args={[0.026, 0.03, 0.008, 24]} /></mesh>
-    <mesh position={[0, POST_H / 2, 0]} material={mat('gold')} castShadow><cylinderGeometry args={[0.0065, 0.0065, POST_H, 12]} /></mesh>
-    <mesh position={[0, POST_H + 0.01, 0]} material={mat('gold')} castShadow><sphereGeometry args={[0.014, 16, 12]} /></mesh>
+    <mesh position={[0, 0.004, 0]} material={plainGold('#e8b860')} castShadow><cylinderGeometry args={[0.026, 0.03, 0.008, 24]} /></mesh>
+    <mesh position={[0, POST_H / 2, 0]} material={plainGold('#e8b860')} castShadow><cylinderGeometry args={[0.0065, 0.0065, POST_H, 12]} /></mesh>
+    <mesh position={[0, POST_H + 0.01, 0]} material={plainGold('#e8b860')} castShadow><sphereGeometry args={[0.014, 16, 12]} /></mesh>
   </group>
 );
 const velvet = new THREE.MeshPhysicalMaterial({ color: '#4a0612', roughness: 0.7, sheen: 1, sheenColor: new THREE.Color('#c0283c'), sheenRoughness: 0.5 });
@@ -85,42 +113,53 @@ const RopeLine: React.FC = () => {
 };
 
 /* ---------------------------------------------------------------- the facade */
-const WINDOWS = [1.62, 0.2, -0.62, -1.44, -2.26];
-const Facade: React.FC<{ glow: number }> = ({ glow }) => (
+const WINDOWS = [1.62, 2.42, 3.22, 4.02, 0.2, -0.62, -1.44, -2.26];
+const LW = R - 0.013; // each door leaf (inner opening half-width)
+const frameP = (x: number, y: number, w: number, h: number, t: number) => `${rect(x, y, w, h)} M ${x + t} ${y + t} L ${x + t} ${y + h - t} L ${x + w - t} ${y + h - t} L ${x + w - t} ${y + t} Z`;
+const CHAMP = '#f7d7a8';
+const Facade: React.FC<{ glow: number; door: number; open: number }> = ({ glow, door, open }) => (
   <group position={[0, 0, FZ]}>
-    <Cut d={rect(-3400, -1250, 6000, 1250)} kind="black" color="#0b0a10" depth={0.01} />
-    <Cut d={rect(-3400, -1252, 6000, 12)} kind="gold" depth={0.014} position={[0, 0, 0.004]} />
-    <Cut d={rect(-3400, -1214, 6000, 4)} kind="gold" depth={0.012} position={[0, 0, 0.004]} />
-    <Cut d={rect(-3400, -46, 6000, 6)} kind="gold" depth={0.012} position={[0, 0, 0.004]} />
+    <BCut d={rect(-3400, -1250, 11000, 1250)} color="#0b0a10" depth={0.01} />
+    {/* the upper storeys right of the crown: black, so the street beyond reads as night (and hides the stage gap) */}
+    <BCut d={rect(1250, -3200, 6400, 1960)} color="#07060a" depth={0.01} position={[0, 0, -0.01]} shadow={false} />
+    <BCut d={rect(-3400, -3200, 2900, 1960)} color="#07060a" depth={0.01} position={[0, 0, -0.01]} shadow={false} />
+    <GCut d={rect(-3400, -1252, 11000, 12)} depth={0.014} position={[0, 0, 0.004]} />
+    <GCut d={rect(-3400, -1214, 11000, 4)} depth={0.012} position={[0, 0, 0.004]} />
+    <GCut d={rect(-3400, -46, 11000, 6)} depth={0.012} position={[0, 0, 0.004]} />
     {/* pilasters: three fluted gold lines each */}
-    {[0.61, -0.21, -1.03, -1.85, -2.67, 1.22, 2.02].map((x) => <group key={x} position={[x, 0, 0.006]}>
-      {[-16, 0, 16].map((o) => <Cut key={o} d={rect(o - 2, -1180, 4, 1120)} kind="gold" depth={0.006} bevel={0} shadow={false} />)}
-      <Cut d={rect(-30, -1204, 60, 18)} kind="gold" depth={0.01} />
+    {[0.61, -0.21, -1.03, -1.85, -2.67, 1.22, 2.02, 2.82, 3.62, 4.42].map((x) => <group key={x} position={[x, 0, 0.006]}>
+      {[-16, 0, 16].map((o) => <GCut key={o} d={rect(o - 2, -1180, 4, 1120)} depth={0.006} bevel={0} shadow={false} />)}
+      <GCut d={rect(-30, -1204, 60, 18)} depth={0.01} />
     </group>)}
     {/* display windows: arched, warm, each with a small bag on a plinth */}
     {WINDOWS.map((x, i) => <group key={x} position={[x, 0.16, 0]}>
-      <Cut d={archSolid(300, 330)} kind="glow" color="#ffb46a" glow={glow * 0.42 - 1} depth={0.002} bevel={0} position={[0, 0, 0.003]} shadow={false} />
-      <Cut d={archFrame(316, 488, 9)} kind="gold" depth={0.016} position={[0, 0, 0.005]} />
-      <Cut d={rect(-80, -60, 160, 60)} kind="black" depth={0.02} position={[0, 0, 0.012]} />
-      <Cut d={rect(-84, -62, 168, 4)} kind="gold" depth={0.022} position={[0, 0, 0.012]} />
+      <Cut d={archSolid(300, 330)} kind="glow" color="#ffb46a" glow={glow * 0.5 - 1} depth={0.002} bevel={0} position={[0, 0, 0.003]} shadow={false} />
+      <GCut d={archFrame(316, 488, 9)} depth={0.016} position={[0, 0, 0.005]} />
+      <BCut d={rect(-80, -60, 160, 60)} depth={0.02} position={[0, 0, 0.012]} />
+      <GCut d={rect(-84, -62, 168, 4)} depth={0.022} position={[0, 0, 0.012]} />
       <Cut d={rect(-150, -6, 300, 4)} kind="glow" color="#ffcf8f" glow={0.6} depth={0.002} bevel={0} position={[0, 0.0, 0.03]} shadow={false} />
-      <HeroBag position={[0, 0.062, 0.026]} scale={0.5} leather={i % 2 ? '#6e0818' : '#1a1418'} tag={false} />
+      {x < 2 && <HeroBag position={[0, 0.062, 0.026]} scale={0.5} leather={i % 2 ? '#8c0c20' : '#1a1418'} tag={false} light={0} />}
     </group>)}
     {/* the door: S04's arch, scaled; glass leaves over a warm glow */}
     <group position={[DX, 0, 0.006]}>
-      <Cut d={archSolid(R * 2000 - 26, SPR * 1000)} kind="glow" color="#ffcf8f" glow={glow - 1} depth={0.002} bevel={0} shadow={false} />
-      <Cut d={[rect(-2, -SPR * 1000 - 40, 4, SPR * 1000 + 40), rect(-R * 1000, -SPR * 1000, R * 2000, 4), rect(-R * 1000, -SPR * 1000 * 0.52, R * 2000, 3)].join(' ')} kind="gold" depth={0.006} bevel={0} position={[0, 0, 0.004]} />
-      <Cut d={rect(-22, -232, 8, 40) + ' ' + rect(14, -232, 8, 40)} kind="gold" depth={0.01} position={[0, 0, 0.004]} />
-      <Cut d={archRing(R * 1000, 5, SPR * 1000)} kind="gold" depth={0.012} position={[0, 0, 0.006]} />
-      <Cut d={archRing(R * 1000 - 13, 2.4, SPR * 1000)} kind="holo" depth={0.006} bevel={0} position={[0, 0, 0.007]} shadow={false} />
-      <Cut d={archRing((0.31 + 0.045) * F * 1000, 4, SPR * 1000)} kind="gold" depth={0.01} position={[0, 0, 0.002]} />
-      <Cut d={archRing((0.31 + 0.09) * F * 1000, 2.2, SPR * 1000)} kind="holo" depth={0.006} bevel={0} position={[0, 0, 0.001]} shadow={false} />
-      <Cut d={archRing((0.31 + 0.135) * F * 1000, 4, SPR * 1000)} kind="gold" depth={0.01} position={[0, 0, 0.0]} />
-      <Cut d="M 0 -14 L 10 0 L 0 14 L -10 0 Z" kind="gold" depth={0.006} position={[0, SPR + R, 0.012]} />
+      <Cut d={archSolid(R * 2000 - 26, SPR * 1000)} kind="glow" color="#ffd7a0" glow={door - 1} depth={0.002} bevel={0} shadow={false} />
+      <GCut d={rect(-R * 1000, -SPR * 1000, R * 2000, 5)} depth={0.008} bevel={0} position={[0, 0, 0.004]} />
+      {/* two glass leaves (frosted, gold frames) that swing open toward the street on the hit */}
+      {[-1, 1].map((sd) => <group key={sd} position={[sd * LW, 0, 0.01]} rotation={[0, sd * open * 1.2, 0]}>
+        <Cut d={rect(sd < 0 ? 0 : -LW * 1000, -SPR * 1000 + 3, LW * 1000, SPR * 1000 - 3)} kind="glow" color="#ffcf8f" glow={-0.6} depth={0.002} bevel={0} shadow={false} />
+        <GCut d={frameP(sd < 0 ? 0 : -LW * 1000, -SPR * 1000 + 3, LW * 1000, SPR * 1000 - 3, 7) + ' ' + rect(sd < 0 ? 0 : -LW * 1000, -SPR * 500, LW * 1000, 4)} depth={0.006} bevel={0} position={[0, 0, 0.003]} />
+        <GCut d={rect(sd < 0 ? LW * 1000 - 24 : -LW * 1000 + 16, -232, 8, 46)} depth={0.012} position={[0, 0, 0.004]} />
+      </group>)}
+      <GCut d={archRing(R * 1000, 5, SPR * 1000)} depth={0.012} position={[0, 0, 0.006]} />
+      <GCut d={archRing(R * 1000 - 13, 2.4, SPR * 1000)} color={CHAMP} depth={0.006} bevel={0} position={[0, 0, 0.007]} shadow={false} />
+      <GCut d={archRing((0.31 + 0.045) * F * 1000, 4, SPR * 1000)} depth={0.01} position={[0, 0, 0.002]} />
+      <GCut d={archRing((0.31 + 0.09) * F * 1000, 2.2, SPR * 1000)} color={CHAMP} depth={0.006} bevel={0} position={[0, 0, 0.001]} shadow={false} />
+      <GCut d={archRing((0.31 + 0.135) * F * 1000, 4, SPR * 1000)} depth={0.01} position={[0, 0, 0.0]} />
+      <GCut d="M 0 -14 L 10 0 L 0 14 L -10 0 Z" depth={0.006} position={[0, SPR + R, 0.012]} />
       {/* stepped deco crown above the cornice */}
-      <Cut d="M -260 -1250 L -260 -1310 L -170 -1310 L -170 -1370 L -80 -1370 L -80 -1430 L 80 -1430 L 80 -1370 L 170 -1370 L 170 -1310 L 260 -1310 L 260 -1250 Z" kind="black" color="#0b0a10" depth={0.01} position={[0, 0, -0.006]} />
-      <Cut d="M -260 -1310 L -170 -1310 L -170 -1370 L -80 -1370 L -80 -1430 L 80 -1430 L 80 -1370 L 170 -1370 L 170 -1310 L 260 -1310 L 260 -1302 L 162 -1302 L 162 -1362 L 72 -1362 L 72 -1422 L -72 -1422 L -72 -1362 L -162 -1362 L -162 -1302 L -260 -1302 Z" kind="gold" depth={0.012} position={[0, 0, -0.004]} />
-      <Cut d="M 0 -1400 L 18 -1376 L 0 -1352 L -18 -1376 Z" kind="gold" depth={0.012} position={[0, 0, 0.0]} />
+      <BCut d="M -260 -1250 L -260 -1310 L -170 -1310 L -170 -1370 L -80 -1370 L -80 -1430 L 80 -1430 L 80 -1370 L 170 -1370 L 170 -1310 L 260 -1310 L 260 -1250 Z" color="#0b0a10" depth={0.01} position={[0, 0, -0.006]} />
+      <GCut d="M -260 -1310 L -170 -1310 L -170 -1370 L -80 -1370 L -80 -1430 L 80 -1430 L 80 -1370 L 170 -1370 L 170 -1310 L 260 -1310 L 260 -1302 L 162 -1302 L 162 -1362 L 72 -1362 L 72 -1422 L -72 -1422 L -72 -1362 L -162 -1362 L -162 -1302 L -260 -1302 Z" depth={0.012} position={[0, 0, -0.004]} />
+      <GCut d="M 0 -1400 L 18 -1376 L 0 -1352 L -18 -1376 Z" depth={0.012} position={[0, 0, 0.0]} />
     </group>
   </group>
 );
@@ -128,12 +167,14 @@ const Facade: React.FC<{ glow: number }> = ({ glow }) => (
 /* ---------------------------------------------------------------- the set */
 const Set: React.FC<{ T: number }> = ({ T }) => {
   const p = impulse(T, PULSE, 0.35), hit = impulse(T, 32.806, 0.3);
-  const glow = 0.62 + 0.7 * p + 0.25 * hit;
+  const glow = 0.72 + 0.6 * p + 0.25 * hit;
+  const open = easeOut(prog(T, 32.806, 33.35)), door = 0.7 + 0.55 * open + 0.6 * p + 0.5 * hit;
   return (
     <group>
-      <Backdrop burst="holo" burstY={1.2} glow={0.32} n={40} position={[DX, 0, 0]} />
+      <WarmEnv />
+      <Backdrop burst="gold" burstY={1.2} n={40} position={[DX, 0, 0]} />
       <MirrorFloor />
-      <Facade glow={glow} />
+      <Facade glow={glow} door={door} open={open} />
       {/* the red runner to the door */}
       <mesh position={[DX, 0.003, -0.08]} receiveShadow><boxGeometry args={[0.32, 0.004, 0.94]} /><meshPhysicalMaterial color="#5a0614" roughness={0.75} sheen={1} sheenColor="#ff4060" /></mesh>
       <RopeLine />
@@ -142,11 +183,9 @@ const Set: React.FC<{ T: number }> = ({ T }) => {
       {/* the queue, nearest the door first */}
       {QUEUE.map((w, i) => <Person key={i} who={w} position={[0.56 - i * 0.235 + (hash(i, 8) - 0.5) * 0.05, 0, -0.04 + (hash(i, 9) - 0.5) * 0.08]} rotation={[0, -0.5, 0]} />)}
       {/* light pours out of the door along the line */}
-      <Spot pos={[DX - 0.02, 0.36, FZ + 0.12]} at={[-1.2, 0.05, 0.35]} intensity={1.4 * (1 + 0.9 * p + 0.6 * hit)} angle={0.9} penumbra={0.6} color="#ffc98a" shadow decay={1.6} />
+      <Spot pos={[DX - 0.02, 0.36, FZ + 0.12]} at={[-1.2, 0.05, 0.35]} intensity={(1.0 + 1.8 * open) * (1 + 0.9 * p + 0.5 * hit)} angle={0.9} penumbra={0.6} color="#ffc98a" shadow decay={1.6} />
       <Spot pos={[-0.6, 2.6, 2.2]} at={[-0.6, 0.3, -0.4]} intensity={13} angle={0.75} penumbra={0.9} color="#fff0d8" shadow />
-      <Spot pos={[-3.2, 0.8, 1.2]} at={[-1, 0.3, 0]} intensity={3.5} angle={0.5} penumbra={0.9} color="#ff3ec8" />
-      <Spot pos={[3.0, 0.8, 1.4]} at={[0, 0.3, 0]} intensity={1.6} angle={0.5} penumbra={0.9} color="#29e6ff" />
-      <Confetti T={T} box={[3.4, 1.0, 1.4]} center={[-1.0, 0.6, 0.3]} n={30} seed={5} fall={0.02} />
+      <Spot pos={[-2.6, 1.4, 1.8]} at={[-1.2, 0.35, -0.4]} intensity={4} angle={0.6} penumbra={0.9} color="#ffd9b0" />
       <ambientLight intensity={0.03} />
     </group>
   );
@@ -154,22 +193,24 @@ const Set: React.FC<{ T: number }> = ({ T }) => {
 
 const Overlay: React.FC<{ T: number }> = ({ T }) => <Caption T={T} t0={37} t1={40.7} text="一种解释：模仿欲望（勒内·基拉尔）" />;
 
-/* match: S04 ends at camera z 2.06, look y 0.4, arch at z −0.3 (distance 2.36). Scaled by F about the door. */
+/* match: S04 ends with the camera 0.45 above its arch base, looking at 0.43 above it, 2.36 m away. Scaled by F about the door.
+   Moves: hold on the door while it opens → pull back + pan left that resolves on bar 34.828 (queue against the windows)
+   → glide to the far end, settling on bar 36.853 → truck back along the line, accelerating into the whip at 40.907. */
 const D0 = 2.36 * F;
 export const S05: SceneDef = {
   id: 'S05_queue', t0: 32.806, t1: 40.907, x: 56, enter: 'cut', Set, Overlay,
   keys: [
-    { t: 32.806, pos: [DX, 0.42 * F, FZ + D0], look: [DX, 0.4 * F, FZ], fov: 34, ap: 0.005, bloom: 0.6 },
-    { t: 34.0, pos: [DX - 0.25, 0.5, FZ + D0 + 0.55], look: [DX - 0.3, 0.3, FZ], fov: 34, ap: 0.004, bloom: 0.6 },
-    { t: 35.1, pos: [-1.2, 0.78, 2.2], look: [-0.9, 0.3, -0.3], fov: 36, ap: 0.003, bloom: 0.6 },
-    { t: 36.5, pos: [-2.85, 0.3, 0.56], look: [-0.8, 0.3, -0.1], fov: 34, ap: 0.006, bloom: 0.6 },
-    { t: 38.6, pos: [-1.4, 0.3, 0.47], look: [0.3, 0.3, -0.2], fov: 34, ap: 0.007, bloom: 0.6 },
-    { t: 40.607, pos: [0.05, 0.3, 0.5], look: [DX, 0.3, -0.45], fov: 34, ap: 0.008, bloom: 0.62 },
+    { t: 32.806, pos: [DX, 0.45 * F, FZ + D0], look: [DX, 0.43 * F, FZ], fov: 34, ap: 0.004, bloom: 0.6 },
+    { t: 33.6, pos: [DX - 0.04, 0.3, FZ + D0 + 0.22], look: [DX - 0.02, 0.27, FZ], fov: 34, ap: 0.004, bloom: 0.6 },
+    { t: 34.83, pos: [-0.25, 0.42, 1.6], look: [-0.85, 0.3, -0.3], fov: 34, ap: 0.003, bloom: 0.6 },
+    { t: 36.85, pos: [-2.55, 0.33, 0.68], look: [-0.7, 0.3, -0.2], fov: 34, ap: 0.003, bloom: 0.6 },
+    { t: 38.88, pos: [-1.25, 0.31, 0.52], look: [0.4, 0.3, -0.25], fov: 34, ap: 0.004, bloom: 0.6 },
+    { t: 40.607, pos: [0.18, 0.3, 0.55], look: [DX, 0.3, -0.45], fov: 34, ap: 0.004, bloom: 0.62 },
   ],
   lines: [
     { t: 32.9, end: 36.75, text: '第一步：门口限流，让人排队。' },
     { t: 36.85, end: 40.8, text: '我们想要的，往往是别人想要的。' },
   ],
   hits: [[PULSE, 0.3]],
-  bg: '#030308',
+  bg: '#030308', env: 0.35,
 };

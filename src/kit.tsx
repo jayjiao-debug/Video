@@ -28,10 +28,10 @@ export const Word: React.FC<{ text: string; size: number; kind?: 'holo' | 'gold'
       if (kind === 'glow') return new THREE.MeshBasicMaterial({ color: new THREE.Color(color ?? '#ffffff').multiplyScalar(glow), alphaMap: t.tex, transparent: true, toneMapped: false, depthWrite: false });
       return new THREE.MeshBasicMaterial({ color: color ?? (kind === 'ink' ? '#1d1a16' : '#f3ede2'), alphaMap: t.tex, transparent: true, depthWrite: false });
     }, [t, kind, color, glow]);
-    const rim = useMemo(() => (kind === 'gold' ? holoMat('#ffffff', 1.3, textTex(text, weight, 160).tex) : null), [kind, text, weight]);
+    const rim = useMemo(() => (kind === 'gold' ? holoMat('#ffffff', 0.8, textTex(text, weight, 160).tex) : null), [kind, text, weight]);
     const h = size, w = (size * t.w) / t.h;
     return <group {...g}>
-      {rim && <mesh material={rim} position={[0.004 * size * 10, -0.004 * size * 10, -0.004]} scale={1.015}><planeGeometry args={[w, h]} /></mesh>}
+      {rim && <mesh material={rim} position={[0.0022 * size * 10, -0.0022 * size * 10, -0.004]} scale={1.008}><planeGeometry args={[w, h]} /></mesh>}
       <mesh material={m}><planeGeometry args={[w, h]} /></mesh>
     </group>;
   };
@@ -78,10 +78,10 @@ export const Beam: React.FC<{ from: [number, number, number]; len: number; r: nu
 /** foil confetti / glints drifting in a volume (deterministic) */
 export const Confetti: React.FC<{ n?: number; box: [number, number, number]; center?: [number, number, number]; T: number; fall?: number; seed?: number }> = ({ n = 40, box, center = [0, 0.5, 0], T, fall = 0.03, seed = 1 }) => (
   <group position={center}>
-    {Array.from({ length: n }, (_, i) => {
+    {Array.from({ length: Math.round(n * 0.4) }, (_, i) => {
       const h = (k: number) => { const s = Math.sin((i + 1) * (k + seed) * 12.9898) * 43758.5453; return s - Math.floor(s); };
       const y = ((h(2) * box[1] - T * fall * (0.5 + h(5))) % box[1] + box[1]) % box[1] - box[1] / 2;
-      return <Cut key={i} d={i % 3 ? 'M 0 -9 L 7 0 L 0 9 L -7 0 Z' : 'M -6 -6 L 6 -6 L 6 6 L -6 6 Z'} kind={i % 4 ? 'holo' : 'gold'} depth={0.0006} bevel={0} shadow={false}
+      return <Cut key={i} d={i % 3 ? 'M 0 -9 L 7 0 L 0 9 L -7 0 Z' : 'M -6 -6 L 6 -6 L 6 6 L -6 6 Z'} kind={i % 4 === 0 ? 'holo' : 'gold'} depth={0.0006} bevel={0} shadow={false}
         position={[(h(1) - 0.5) * box[0], y, (h(3) - 0.5) * box[2]]} rotation={[T * (0.4 + h(6)) + h(7) * 6, T * 0.7 * h(8) + h(9) * 6, h(4) * 6]} scale={0.8 + h(10) * 1.2} />;
     })}
   </group>

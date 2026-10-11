@@ -7,8 +7,8 @@ import * as THREE from 'three';
 import type { SceneDef } from '../scene';
 import { prog, easeOut, impulse, backOut, swing, clamp } from '../scene';
 import { HeroBag, Cut, rect, ring, circle, archFrame } from '../foil';
-import { Backdrop, MirrorFloor, Beam, Confetti } from '../kit';
-import { Spot, rrect, rframe, spark } from './S10_kit';
+import { Backdrop, MirrorFloor, Beam } from '../kit';
+import { Spot, rrect, rframe, spark, Glow } from './S10_kit';
 
 const P1 = 106.718, P2 = 107.731, DIM = 109.757, DIM2 = 111.781;
 
@@ -103,7 +103,8 @@ const Set: React.FC<{ T: number }> = ({ T }) => {
   const solo = easeOut(prog(T, DIM, DIM + 0.6));
   return (
     <group>
-      <Backdrop burst="holo" burstY={1.0} glow={0.25 + 0.1 * house} />
+      <Backdrop burst="gold" burstY={1.0} />
+      <Glow w={3.0} h={2.4} color="#ff9a3a" o={0.2 * house + 0.12 * solo} position={[0, 0.9, -1.5]} />
       <MirrorFloor />
       <Cut d={archFrame(1300, 1420, 34)} kind="gold" position={[0, 0, -1.02]} />
       <Cut d={archFrame(1400, 1480, 6)} kind="gold" position={[0, 0, -1.1]} shadow={false} />
@@ -125,13 +126,12 @@ const Set: React.FC<{ T: number }> = ({ T }) => {
       <PopUp T={T} at={P2 - 0.3} p={[0.0, 0.09, 0.12]} s={1.4}><Lipstick /></PopUp>
       <PopUp T={T} at={P2 - 0.26} p={[0.55, 0.09, 0.06]} s={1.45}><Pump /></PopUp>
 
-      <Spot p={[0.2, 3.1, 2.3]} at={[0, 0.2, -0.3]} i={(26 + 10 * (k1 + k2)) * house} angle={0.42} pen={0.6} shadow />
+      <Spot p={[0.2, 3.1, 2.3]} at={[0, 0.2, -0.3]} i={(34 + 12 * (k1 + k2)) * house} angle={0.42} pen={0.6} shadow />
       <Spot p={[0, 2.8, 0.1]} at={[0, 0.45, -0.74]} i={34 * solo} angle={0.11} pen={0.5} shadow map={1024} />
-      <Spot p={[-2.5, 1.1, 1.4]} at={[0, 0.22, -0.3]} i={8 * house} color="#ff3ec8" angle={0.42} pen={0.9} />
-      <Spot p={[2.5, 1.1, 1.4]} at={[0, 0.22, -0.3]} i={7 * house} color="#29e6ff" angle={0.42} pen={0.9} />
+      <Spot p={[-2.5, 1.1, 1.4]} at={[0, 0.22, -0.3]} i={5 * house} color="#ff3ec8" angle={0.42} pen={0.9} />
+      <Spot p={[2.5, 1.1, 1.4]} at={[0, 0.22, -0.3]} i={5 * house} color="#29e6ff" angle={0.42} pen={0.9} />
       <Beam from={[0, 2.8, -0.7]} len={2.5} r={0.22} o={0.07 * solo} />
       <Beam from={[0.2, 3.0, 0.2]} len={3.0} r={0.9} o={0.04 * house + 0.03 * (k1 + k2)} />
-      <Confetti T={T} box={[2.4, 1.4, 1.4]} center={[0, 0.7, 0]} n={34} seed={7} fall={0.03} />
       <ambientLight intensity={0.035 * clamp(house)} />
     </group>
   );
@@ -140,11 +140,12 @@ const Set: React.FC<{ T: number }> = ({ T }) => {
 export const S13: SceneDef = {
   id: 'S13_lineup', t0: 105.707, t1: 113.806, x: 168, enter: 'whip', Set,
   keys: [
-    { t: 106.007, pos: [-0.95, 0.38, 1.3], look: [-0.25, 0.32, -0.3], fov: 36, ap: 0.005, bloom: 0.75 },
-    { t: 107.9, pos: [-0.22, 0.5, 1.62], look: [0, 0.34, -0.3], fov: 38, ap: 0.004, bloom: 0.7 },
-    { t: 109.8, pos: [0.5, 0.74, 1.5], look: [0, 0.37, -0.35], fov: 38, ap: 0.004, bloom: 0.7 },
-    { t: 111.8, pos: [0.42, 1.0, 1.0], look: [0, 0.46, -0.6], fov: 36, ap: 0.005, bloom: 0.75 },
-    { t: 113.806, pos: [0.22, 0.82, 0.42], look: [-0.04, 0.54, -0.74], fov: 32, ap: 0.008, bloom: 0.8 },
+    { t: 106.007, pos: [-0.8, 0.42, 1.25], look: [-0.2, 0.36, -0.3], fov: 36, ap: 0.003, bloom: 0.7 },
+    { t: 107.731, pos: [-0.15, 0.52, 1.62], look: [0, 0.37, -0.3], fov: 38, ap: 0.002, bloom: 0.65 },
+    { t: 108.7, pos: [0.14, 0.6, 1.62], look: [0, 0.38, -0.32], fov: 38, ap: 0.002, bloom: 0.65 },
+    { t: 109.757, pos: [0.45, 0.78, 1.45], look: [0, 0.42, -0.4], fov: 38, ap: 0.002, bloom: 0.65 },
+    { t: 111.781, pos: [0.3, 0.8, 0.75], look: [0.05, 0.52, -0.74], fov: 34, ap: 0.003, bloom: 0.7 },
+    { t: 113.806, pos: [0.2, 0.52, -0.42], look: [0.137, 0.485, -0.709], fov: 30, ap: 0.006, bloom: 0.75 },
   ],
   lines: [
     { t: 105.8, end: 109.7, text: '包、表、钻戒、香水，都是同一套设计。' },

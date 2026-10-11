@@ -8,10 +8,12 @@ import React, { useMemo } from 'react';
 import type { SceneDef } from '../scene';
 import { prog, easeOut, easeInOut, impulse, slam, swing } from '../scene';
 import { HeroBag, Cut, rect } from '../foil';
-import { MirrorFloor, Word, Confetti, Beam, Backdrop } from '../kit';
+import { MirrorFloor, Word, Beam, Backdrop } from '../kit';
 import { mat } from '../foil';
 import { Spot, GLine, Ribbon, arcPts } from './S03_parts';
 
+const P = 0.22; // the plinth: everything on it sits above the subtitle band
+const CHAMP = '#ffd9a8';
 const DONE = 28.7, YU = 26.731, WANG = 27.236, ECHO = [30.781, 31.54, 32.3];
 /* the arch: legs at ±R from the floor to the spring line SPR, a semicircle above. Front-on it is the S05 door. */
 export const ARCH = { R: 0.31, SPR: 0.64, Z: -0.3 };
@@ -29,15 +31,15 @@ const spiralPts = (eye: [number, number], r0: number, turns: number): [number, n
 };
 
 const Grid: React.FC<{ T: number; flare: number }> = ({ T, flare }) => {
-  const xs = Array.from({ length: 29 }, (_, i) => -1.4 + i * 0.1), ys = Array.from({ length: 16 }, (_, i) => i * 0.1);
+  const xs = Array.from({ length: 49 }, (_, i) => -2.4 + i * 0.1), ys = Array.from({ length: 16 }, (_, i) => i * 0.1);
   return (
     <group position={[0, 0, -0.85]}>
-      {xs.map((x, i) => { const major = Math.abs(Math.round(x * 10)) % 5 === 0; const k = easeOut(prog(T, 24.75 + Math.abs(x) * 0.45, 25.5 + Math.abs(x) * 0.45));
+      {xs.map((x, i) => { const major = Math.abs(Math.round(x * 10)) % 5 === 0; const k = easeOut(prog(T, 24.5 + Math.abs(x) * 0.08, 24.9 + Math.abs(x) * 0.08));
         return <GLine key={'v' + i} a={[x, 0]} b={[x, 1.5]} k={k} w={major ? 0.0028 : 0.0016} color="#d9a441" bright={(major ? 0.42 : 0.2) * (1 + flare)} />; })}
-      {ys.map((y, i) => { const major = i % 5 === 0; const k = easeOut(prog(T, 24.85 + y * 0.4, 25.7 + y * 0.4));
+      {ys.map((y, i) => { const major = i % 5 === 0; const k = easeOut(prog(T, 24.52 + y * 0.12, 24.95 + y * 0.12));
         return <group key={'h' + i}>
-          <GLine a={[0, y]} b={[1.45, y]} k={k} w={major ? 0.0028 : 0.0016} color="#d9a441" bright={(major ? 0.42 : 0.2) * (1 + flare)} />
-          <GLine a={[0, y]} b={[-1.45, y]} k={k} w={major ? 0.0028 : 0.0016} color="#d9a441" bright={(major ? 0.42 : 0.2) * (1 + flare)} />
+          <GLine a={[0, y]} b={[2.45, y]} k={k} w={major ? 0.0028 : 0.0016} color="#d9a441" bright={(major ? 0.42 : 0.2) * (1 + flare)} />
+          <GLine a={[0, y]} b={[-2.45, y]} k={k} w={major ? 0.0028 : 0.0016} color="#d9a441" bright={(major ? 0.42 : 0.2) * (1 + flare)} />
         </group>; })}
       {prog(T, 26.0, 26.4) > 0 && <Word text="1 : 1" size={0.04} kind="glow" color="#d9a441" glow={0.9} position={[-1.2, 1.36, 0.002]} scale={easeOut(prog(T, 26.0, 26.4))} />}
     </group>
@@ -45,7 +47,7 @@ const Grid: React.FC<{ T: number; flare: number }> = ({ T, flare }) => {
 };
 
 const Set: React.FC<{ T: number }> = ({ T }) => {
-  const flare = 1.4 * impulse(T, DONE, 0.45);
+  const flare = 1.4 * impulse(T, DONE, 0.45), gridIn = 1.6 * (1 - prog(T, 25.0, 26.2));
   const spin = -0.9 + 0.11 * (T - 24.707);
   const arch = useMemo(() => archPts(ARCH.R, ARCH.SPR), []);
   const halfL = useMemo(() => halfArch(ARCH.R, ARCH.SPR, -1), []), halfR = useMemo(() => halfArch(ARCH.R, ARCH.SPR, 1), []);
@@ -60,19 +62,24 @@ const Set: React.FC<{ T: number }> = ({ T }) => {
   const b = (x: number) => x * (1 + flare);
   return (
     <group>
-      <Backdrop burst="holo" burstY={0.5} glow={0.18} n={36} />
+      <Backdrop burst="none" />
       <MirrorFloor />
-      <Grid T={T} flare={flare * 0.6} />
+      <Grid T={T} flare={flare * 0.6 + gridIn} />
+      {/* the plinth: black, a gold edge; its front face is what sits behind the subtitles */}
+      <mesh position={[0, P / 2, -0.04]} castShadow receiveShadow><boxGeometry args={[1.15, P, 0.66]} /><meshPhysicalMaterial color="#0b090a" roughness={0.75} specularIntensity={0.2} /></mesh>
+      <Cut d={rect(-575, -5, 1150, 5)} kind="gold" depth={0.004} bevel={0} position={[0, P, 0.29]} shadow={false} />
+      <Cut d={rect(-575, -3, 1150, 3)} kind="gold" depth={0.004} bevel={0} position={[0, 0.012, 0.29]} shadow={false} />
+      <group position={[0, P, 0]}>
       {/* the great arch: two lines rise and meet at the keystone on 28.7, then it holds as one */}
       <group position={[0, 0, ARCH.Z]}>
         {T < DONE ? <>
           <Ribbon pts={halfL} k={hk} w={0.006} color={GOLD} bright={1.5} />
           <Ribbon pts={halfR} k={hk} w={0.006} color={GOLD} bright={1.5} />
         </> : <Ribbon pts={arch} k={1} w={0.006} color={GOLD} bright={b(1.5)} />}
-        <Ribbon pts={inner} k={easeInOut(prog(T, 27.5, DONE + 0.2))} w={0.0022} holo />
+        <Ribbon pts={inner} k={easeInOut(prog(T, 27.5, DONE + 0.2))} w={0.0022} color={CHAMP} bright={b(1.1)} />
         {/* the bar-15 fill stacks echo arches: a stepped deco portal */}
         {echoes.map((p, i) => { const k = easeOut(prog(T, ECHO[i], ECHO[i] + 0.16)); const kick = impulse(T, ECHO[i], 0.3);
-          return <Ribbon key={i} pts={p} k={k} w={i === 1 ? 0.0024 : 0.0045} holo={i === 1} color={GOLD} bright={1.1 + 1.6 * kick} z={-0.02 * (i + 1)} />; })}
+          return <Ribbon key={i} pts={p} k={k} w={i === 1 ? 0.0024 : 0.0045} color={i === 1 ? CHAMP : GOLD} bright={1.1 + 1.6 * kick} z={-0.02 * (i + 1)} />; })}
         {/* keystone diamond */}
         {T >= DONE - 0.05 && <Cut d="M 0 -22 L 16 0 L 0 22 L -16 0 Z" kind="gold" depth={0.006} position={[0, ARCH.SPR + ARCH.R + 0.0, 0.01]} scale={slam(T, DONE, 0.1) * (1 + 0.6 * impulse(T, DONE, 0.15))} />}
       </group>
@@ -87,13 +94,13 @@ const Set: React.FC<{ T: number }> = ({ T }) => {
       <group rotation={[0, spin, 0]}>
         <mesh position={[0, 0.016, 0]} castShadow receiveShadow><cylinderGeometry args={[0.25, 0.26, 0.032, 72]} /><meshPhysicalMaterial color="#0a0910" roughness={0.3} clearcoat={1} clearcoatRoughness={0.05} /></mesh>
         <mesh position={[0, 0.0335, 0]} material={mat('gold')}><cylinderGeometry args={[0.252, 0.252, 0.004, 72]} /></mesh>
-        <mesh position={[0, 0.0358, 0]} receiveShadow><cylinderGeometry args={[0.236, 0.236, 0.002, 72]} /><meshPhysicalMaterial color="#120e16" roughness={0.85} sheen={0.6} sheenColor="#5a4a8a" /></mesh>
+        <mesh position={[0, 0.0358, 0]} receiveShadow><cylinderGeometry args={[0.236, 0.236, 0.002, 72]} /><meshPhysicalMaterial color="#120e16" roughness={0.85} sheen={0.6} sheenColor="#a07a3a" /></mesh>
         {Array.from({ length: 36 }, (_, i) => { const a = (i / 36) * Math.PI * 2; return (
           <mesh key={i} position={[Math.sin(a) * 0.255, 0.018, Math.cos(a) * 0.255]} rotation={[0, a, 0]} material={mat('gold')}><boxGeometry args={[0.003, i % 9 ? 0.012 : 0.026, 0.002]} /></mesh>); })}
-        <HeroBag position={[0, 0.037, 0]} swing={swing(T, 25.0, 6) + 3 * Math.sin(T * 0.9)} />
+        <HeroBag position={[0, 0.037, 0]} light={1.3} swing={swing(T, 25.0, 6) + 3 * Math.sin(T * 0.9)} />
       </group>
       {/* golden spiral (holo) whose eye is the clasp, in a plane just in front of the bag */}
-      <Ribbon pts={spiral} k={easeInOut(prog(T, 26.1, 27.6))} w={0.0024} holo z={0.09} />
+      <Ribbon pts={spiral} k={easeInOut(prog(T, 26.1, 27.6))} w={0.0026} color={CHAMP} bright={b(0.95)} z={0.09} />
       {/* dimension lines in front */}
       <group position={[0, 0, 0.2]}>
         {(() => { const k = easeOut(prog(T, 26.2, 26.8)); return <>
@@ -116,13 +123,11 @@ const Set: React.FC<{ T: number }> = ({ T }) => {
         {yu > 0 && <Word text="欲" size={0.15} kind="gold" position={[-0.088, 0.62, 0.35 * (1 - yu)]} scale={1 + 1.2 * (1 - yu)} />}
         {wang > 0 && <Word text="望" size={0.15} kind="gold" position={[0.088, 0.62, 0.35 * (1 - wang)]} scale={1 + 1.2 * (1 - wang)} />}
       </group>
+      </group>
       {/* light */}
-      <Spot pos={[0.2, 2.3, 1.4]} at={[0, 0.15, 0]} intensity={9 + 8 * impulse(T, DONE, 0.3)} angle={0.22} penumbra={0.8} color="#fff0d8" shadow />
-      <Spot pos={[-2.0, 1.0, 1.0]} at={[0, 0.42, 0]} intensity={2.2} angle={0.4} penumbra={0.9} color="#ff3ec8" />
-      <Spot pos={[2.0, 1.0, 1.0]} at={[0, 0.42, 0]} intensity={2.2} angle={0.4} penumbra={0.9} color="#29e6ff" />
-      <Spot pos={[0, 1.6, -1.2]} at={[0, 0.3, 0]} intensity={3} angle={0.4} penumbra={0.9} color="#ffd9a0" />
-      <Beam from={[0.06, 2.2, 0.6]} len={2.2} r={0.34} o={0.035 + 0.05 * impulse(T, DONE, 0.4)} tilt={[0.28, 0]} />
-      <Confetti T={T} box={[1.6, 1.0, 0.9]} center={[0, 0.55, 0.2]} n={22} seed={4} />
+      <Spot pos={[0.25, 2.4, 1.4]} at={[0, P + 0.15, 0]} intensity={11 + 8 * impulse(T, DONE, 0.3)} angle={0.2} penumbra={0.6} color="#fff0d8" shadow />
+      <Spot pos={[0, 1.8, -1.2]} at={[0, P + 0.25, 0]} intensity={4} angle={0.35} penumbra={0.9} color="#ffd9a0" />
+      <Beam from={[0.07, 2.3, 0.62]} len={2.1} r={0.3} o={0.03 + 0.05 * impulse(T, DONE, 0.4)} tilt={[0.3, 0]} />
       <ambientLight intensity={0.03} />
     </group>
   );
@@ -130,12 +135,15 @@ const Set: React.FC<{ T: number }> = ({ T }) => {
 
 export const S04: SceneDef = {
   id: 'S04_design', t0: 24.707, t1: 32.806, x: 42, enter: 'whip', Set,
+  /* one orbit with a ramp: slow drift while the construction draws, a fast swing to the right that RESOLVES on the
+     keystone (28.7), a settle, then a push-in that accelerates into the cut on 32.806. Bars: 26.728 28.753 30.778 32.803 */
   keys: [
-    { t: 25.007, pos: [-0.72, 0.34, 0.98], look: [0, 0.3, -0.1], fov: 34, ap: 0.006, bloom: 0.75 },
-    { t: 26.9, pos: [-0.55, 0.44, 1.55], look: [0, 0.36, -0.12], fov: 34, ap: 0.005, bloom: 0.75 },
-    { t: 28.7, pos: [0.22, 0.5, 1.75], look: [0, 0.4, -0.15], fov: 34, ap: 0.004, bloom: 0.85 },
-    { t: 30.75, pos: [0.4, 0.45, 1.95], look: [0, 0.4, -0.2], fov: 34, ap: 0.004, bloom: 0.8 },
-    { t: 32.79, pos: [0, 0.42, 2.06], look: [0, 0.4, -0.3], fov: 34, ap: 0.003, bloom: 0.85 },
+    { t: 25.007, pos: [-0.75, 0.56, 1.45], look: [0, 0.5, -0.1], fov: 34, ap: 0.005, bloom: 0.7 },
+    { t: 26.73, pos: [-0.6, 0.6, 1.62], look: [0, 0.52, -0.12], fov: 34, ap: 0.005, bloom: 0.7 },
+    { t: 28.7, pos: [0.3, 0.66, 1.92], look: [0, 0.58, -0.15], fov: 34, ap: 0.004, bloom: 0.75 },
+    { t: 29.5, pos: [0.38, 0.66, 2.05], look: [0, 0.6, -0.2], fov: 34, ap: 0.004, bloom: 0.7 },
+    { t: 31.3, pos: [0.22, 0.68, 2.4], look: [0, 0.64, -0.26], fov: 34, ap: 0.003, bloom: 0.7 },
+    { t: 32.79, pos: [0, 0.67, 2.06], look: [0, 0.65, -0.3], fov: 34, ap: 0.003, bloom: 0.72 },
   ],
   lines: [
     { t: 24.8, end: 28.6, text: '多出来的钱，买的是欲望。' },

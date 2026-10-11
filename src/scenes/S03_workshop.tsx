@@ -8,9 +8,9 @@ import * as THREE from 'three';
 import type { SceneDef } from '../scene';
 import { slam, impulse, swing, prog, easeOut, easeInOut } from '../scene';
 import { HeroBag, Cut, rect, circle, ring, cutGeo } from '../foil';
-import { Backdrop, MirrorFloor, Word, Confetti, Beam } from '../kit';
+import { Backdrop, MirrorFloor, Word, Beam } from '../kit';
 import { holoMat, mat } from '../foil';
-import { Spot, Caption, hash } from './S03_parts';
+import { Spot, Caption, hash, glowMat } from './S03_parts';
 
 const HIT = 16.603, TAG = 20.657;
 
@@ -50,7 +50,7 @@ const rframe = (w: number, h: number, t: number) => {
 const PRICE_TAG = 'M -78 -30 L -52 -56 L 52 -56 L 78 -30 L 78 56 L -78 56 Z M 6 -38 A 6 6 0 1 1 -6 -38 A 6 6 0 1 1 6 -38 Z';
 
 /* ---------------------------------------------------------------- the court file (canvas) */
-const DOC_W = 0.21, DOC_H = 0.297, HL_LINE = 8, LINE0 = 360, LSTEP = 50;
+const DOC_W = 0.21, DOC_H = 0.297, HL_LINE = 5, LINE0 = 360, LSTEP = 50;
 const docTex = () => {
   const W = 1024, H = 1448, c = document.createElement('canvas'); c.width = W; c.height = H; const g = c.getContext('2d')!;
   g.fillStyle = '#efe6d2'; g.fillRect(0, 0, W, H);
@@ -84,26 +84,28 @@ const CourtDoc: React.FC<{ T: number }> = ({ T }) => {
   const hl = useMemo(() => holoMat('#ffffff', 1.25, markerMask()), []);
   const sweep = easeInOut(prog(T, 14.35, 15.55));
   const y = lineY(HL_LINE), x0 = -0.082, x1 = 0.088, L = (x1 - x0) * sweep;
-  const s = slam(T, HIT, 0.12), land = T >= HIT;
+  const LAND = HIT - 0.013; // frame 498 (16.600) shows it landed
+  const s = slam(T, LAND, 0.09), land = T >= LAND, u = easeOut(prog(T, LAND, LAND + 0.35));
   const kick = impulse(T, HIT, 0.12);
   return (
-    <group position={[-0.36, 0.45, 0.17]} rotation={[-0.12 - 0.05 * kick, 0.28, 0]}>
+    <group position={[-0.3, 0.45, 0.17]} rotation={[-0.12 - 0.05 * kick, 0.28, 0]}>
       <mesh castShadow receiveShadow><boxGeometry args={[DOC_W, DOC_H, 0.003]} /><meshStandardMaterial map={tex} roughness={0.9} /></mesh>
       {/* a black backing card, so the file reads as a mounted exhibit */}
       <Cut d={rect(-113, -156, 226, 312)} kind="black" depth={0.003} position={[0, 0, -0.006]} />
       {L > 0.001 && <mesh material={hl} position={[x0 + L / 2, y, 0.0022]}><planeGeometry args={[L, 0.016]} /></mesh>}
       {/* the stamp: a black label with a gold frame, slammed on the hit */}
-      {s > 0 && <group position={[0.012, -0.06, 0.004 + 0.18 * (1 - s)]} rotation={[0, 0, -0.09]} scale={1 + 2.4 * (1 - s)}>
+      {s > 0 && <group position={[0.012, -0.024, 0.004 + 0.12 * (1 - s)]} rotation={[0, 0, -0.09]} scale={(1 + 0.9 * (1 - s)) * (1 - 0.05 * impulse(T, LAND, 0.07))}>
         <Cut d={rrect(156, 64, 8)} kind="black" color="#08070c" depth={0.0015} bevel={0.0006} />
         <Cut d={rframe(146, 54, 3)} kind="gold" depth={0.0008} bevel={0} position={[0, 0, 0.0022]} shadow={false} />
         <Word text="€53 / 只" size={0.04} kind="gold" position={[0, 0.001, 0.0035]} />
       </group>}
       {/* gold flecks thrown off by the impact */}
+      {land && T < LAND + 0.4 && <mesh position={[0.012, -0.024, 0.003]} material={glowMat('#ffd27a', 2.2 * (1 - u), true)}><ringGeometry args={[0.05 + 0.13 * u, 0.054 + 0.13 * u + 0.004 * (1 - u), 64]} /></mesh>}
       {land && T < HIT + 0.9 && Array.from({ length: 22 }, (_, i) => {
-        const a = hash(i, 1) * Math.PI * 2, sp = 0.05 + hash(i, 2) * 0.12, u = easeOut(prog(T, HIT, HIT + 0.7)), d = T - HIT;
+        const a = hash(i, 1) * Math.PI * 2, sp = 0.05 + hash(i, 2) * 0.12, u = easeOut(prog(T, LAND, LAND + 0.7)), d = T - LAND;
         const fade = 1 - prog(T, HIT + 0.35, HIT + 0.9);
         return <Cut key={i} d="M 0 -5 L 4 0 L 0 5 L -4 0 Z" kind={i % 3 ? 'gold' : 'holo'} depth={0.0005} bevel={0} shadow={false}
-          position={[0.012 + Math.cos(a) * sp * u * 1.4, -0.06 + Math.sin(a) * sp * u - 0.05 * d * d, 0.01 + hash(i, 3) * 0.06 * u]} rotation={[d * 9 * hash(i, 4), d * 7, a]} scale={fade * (0.8 + hash(i, 5))} />;
+          position={[0.012 + Math.cos(a) * sp * u * 1.4, -0.024 + Math.sin(a) * sp * u - 0.05 * d * d, 0.01 + hash(i, 3) * 0.06 * u]} rotation={[d * 9 * hash(i, 4), d * 7, a]} scale={fade * (0.8 + hash(i, 5))} />;
       })}
       {/* the brass ledge it leans on */}
       <Cut d={rect(-120, 146, 240, 10)} kind="gold" depth={0.012} position={[0, 0, 0.004]} />
@@ -156,7 +158,7 @@ const Machine: React.FC = () => (
 );
 const Spools: React.FC = () => (
   <group>
-    {[[0.4, -0.2, '#f0c46a'], [0.5, -0.24, '#8a0f22'], [0.6, -0.17, '#efe6d2']].map(([x, z, col], i) => (
+    {[[0.52, 0.22, '#f0c46a'], [0.61, 0.19, '#8a0f22'], [0.69, 0.25, '#efe6d2']].map(([x, z, col], i) => (
       <group key={i} position={[x as number, 0.3, z as number]}>
         <Cut d={SPOOL.flange} kind="black" depth={0.006} />
         <Cut d={SPOOL.body} kind={col === '#f0c46a' ? 'gold' : 'lacquer'} color={col as string} depth={0.005} position={[0, 0, -0.001]} />
@@ -164,7 +166,7 @@ const Spools: React.FC = () => (
   </group>
 );
 /* the lamp: base on the bench at the back right, two arms, the shade over the middle of the bench */
-const LAMP = { base: [-0.66, 0.3] as [number, number], elbow: [-0.6, 0.9] as [number, number], head: [-0.04, 0.86] as [number, number], z: -0.26 };
+const LAMP = { base: [-0.66, 0.3] as [number, number], elbow: [-0.6, 0.9] as [number, number], head: [0.18, 0.86] as [number, number], z: -0.26 };
 const Arm: React.FC<{ a: [number, number]; b: [number, number]; z: number }> = ({ a, b, z }) => {
   const L = Math.hypot(b[0] - a[0], b[1] - a[1]), ang = Math.atan2(b[1] - a[1], b[0] - a[0]);
   return <group position={[a[0], a[1], z]} rotation={[0, 0, ang]}><Cut d={rect(0, -6, L * 1000, 12)} kind="black" color="#121018" depth={0.008} /><Cut d={rect(0, -1.5, L * 1000, 3)} kind="gold" depth={0.001} bevel={0} position={[0, 0, 0.0095]} /></group>;
@@ -206,7 +208,7 @@ const Set: React.FC<{ T: number }> = ({ T }) => {
     <group>
       <Backdrop burst="none" />
       <MirrorFloor />
-      <Windows glow={0.55 + 0.1 * on} />
+      <Windows glow={0.75 + 0.1 * on} />
       <Beam from={[0.0, 1.45, -1.45]} len={2.0} r={0.4} o={0.03} color="#9fb4ff" tilt={[0.55, 0.2]} />
       <Hides T={T} />
       <Pendants on={on} />
@@ -217,27 +219,27 @@ const Set: React.FC<{ T: number }> = ({ T }) => {
       <Machine />
       <Spools />
       <Lamp k={k} />
-      <HeroBag position={[0.16, 0.3, -0.02]} swing={swing(T, HIT, 9) + 4 * Math.sin(T * 1.1)} />
+      <HeroBag position={[0.24, 0.3, -0.02]} light={1.25} swing={swing(T, HIT, 9) + 4 * Math.sin(T * 1.1)} />
       <CourtDoc T={T} />
       {/* foreground: a leather strap and a hide corner hanging close to the lens, so the pull-back has something to pass */}
       <group position={[-0.62, 1.25, 0.52]} rotation={[0, 0, 0.02 * Math.sin(T * 0.9)]}><Cut d={rect(-14, 0, 28, 640)} kind="lacquer" color="#4a0a16" depth={0.004} /><Cut d={rect(-14, 600, 28, 8)} kind="gold" depth={0.005} /></group>
       <group position={[0.86, 1.2, 0.46]} rotation={[0, -0.3, 0.03 * Math.sin(T * 0.6 + 1)]}><CutM d={hidePath(9, 420, 640)} m={leather('#1a0a0c')} depth={0.005} /></group>
       {/* €2,600 · the shop's tag swings in on its gold thread */}
-      {tagSwing !== null && <group position={[0.54, 1.14, 0.04]} rotation={[0, 0, tagSwing]}>
-        <mesh position={[0, -0.21, 0]} material={mat('gold')}><boxGeometry args={[0.0016, 0.42, 0.0016]} /></mesh>
-        <group position={[0, -0.42 - 0.067, 0]}>
+      {tagSwing !== null && <group position={[0.6, 1.14, 0.0]} rotation={[0, 0, tagSwing]}>
+        <mesh position={[0, -0.25, 0]} material={mat('gold')}><boxGeometry args={[0.0016, 0.5, 0.0016]} /></mesh>
+        <group position={[0, -0.5 - 0.067, 0]}>
           <group scale={1.2}><Cut d={PRICE_TAG} kind="gold" depth={0.003} />
-          <Word text="€2,600" size={0.044} kind="ink" color="#2a1a06" position={[0, -0.01, 0.0045]} />
-          <Word text="店 里 同 款" size={0.013} kind="ink" color="#2a1a06" weight="700" position={[0, -0.04, 0.0045]} /></group>
+          <Cut d={'M -70 -27 L -48 -49 L 48 -49 L 70 -27 L 70 49 L -70 49 Z M 6 -38 A 6 6 0 1 1 -6 -38 A 6 6 0 1 1 6 -38 Z'} kind="glow" color="#e8dcc2" glow={-0.32} depth={0.001} bevel={0} position={[0, 0, 0.0032]} shadow={false} />
+          <Word text="€2,600" size={0.044} kind="ink" color="#2a1a06" position={[0, -0.006, 0.0048]} />
+          <Word text="店 里 同 款" size={0.013} kind="ink" color="#2a1a06" weight="700" position={[0, -0.038, 0.0048]} /></group>
         </group>
       </group>}
       {/* light: the lamp is the key (and the only shadow); work lights stutter on at the hit; a cool window rim */}
-      <Spot pos={[LAMP.head[0], LAMP.head[1] - 0.05, LAMP.z + 0.12]} at={[-0.06, 0.3, 0.1]} intensity={1.5 + 2.2 * k} angle={0.62} penumbra={0.9} color="#ffe6c0" shadow />
-      <Spot pos={[0, 2.6, 1.2]} at={[0.1, 0.4, -0.2]} intensity={on * 3.2} angle={0.42} penumbra={1} color="#fff0d8" />
-      <Spot pos={[0.3, 1.8, -1.4]} at={[0.1, 0.45, 0]} intensity={4} angle={0.5} penumbra={0.9} color="#8aa6ff" />
-      <Spot pos={[-2.2, 1.1, 1.2]} at={[0, 0.62, -0.1]} intensity={1.6} angle={0.3} penumbra={0.9} color="#ff3ec8" />
-      <Spot pos={[2.2, 1.1, 1.2]} at={[0, 0.62, -0.1]} intensity={1.6} angle={0.3} penumbra={0.9} color="#29e6ff" />
-      <Confetti T={T} box={[1.0, 0.6, 0.5]} center={[-0.1, 0.62, 0.0]} n={14} seed={3} fall={0.015} />
+      {/* two firm pools: the lamp on the bag (key, shadows), a tight spot on the file (it falls off before the subtitle band) */}
+      <Spot pos={[LAMP.head[0], LAMP.head[1] - 0.05, LAMP.z + 0.16]} at={[0.24, 0.3, 0.0]} intensity={2.0 + 2.4 * k} angle={0.44} penumbra={0.45} color="#ffe6c0" shadow />
+      <Spot pos={[-0.62, 1.25, 1.05]} at={[-0.3, 0.48, 0.17]} intensity={3.3} angle={0.15} penumbra={0.5} color="#fff2dc" />
+      <Spot pos={[0.3, 2.6, 1.2]} at={[0.15, 0.4, -0.1]} intensity={on * 3.5} angle={0.3} penumbra={0.8} color="#fff0d8" />
+      <Spot pos={[0.3, 1.8, -1.4]} at={[0.1, 0.5, 0]} intensity={5} angle={0.5} penumbra={0.9} color="#9ab2ff" />
       <ambientLight intensity={0.035} />
     </group>
   );
@@ -247,15 +249,19 @@ const Overlay: React.FC<{ T: number }> = ({ T }) => <Caption T={T} t0={17} t1={2
 
 export const S03: SceneDef = {
   id: 'S03_workshop', t0: 12.4, t1: 24.707, x: 28, enter: 'whip', Set, Overlay,
+  /* push down the file that accelerates INTO the hit (16.6), a 2-frame kick, a held beat, then a crane-back that resolves on
+     bar 18.628, a truck right that resolves as the tag swings in (20.653), and a push onto bag + tag into the whip-pan. */
   keys: [
-    { t: 12.7, pos: [-0.2, 0.52, 0.86], look: [-0.34, 0.41, 0.17], fov: 32, ap: 0.012, bloom: 0.75 },
-    { t: 14.5, pos: [-0.25, 0.5, 0.74], look: [-0.35, 0.41, 0.17], fov: 32, ap: 0.014, bloom: 0.7 },
-    { t: 16.6, pos: [-0.3, 0.47, 0.6], look: [-0.355, 0.405, 0.17], fov: 32, ap: 0.016, bloom: 0.8 },
-    { t: 16.95, pos: [-0.29, 0.48, 0.64], look: [-0.35, 0.405, 0.17], fov: 32, ap: 0.014, bloom: 0.75 },
-    { t: 18.4, pos: [-0.1, 0.66, 1.08], look: [-0.12, 0.43, 0.04], fov: 34, ap: 0.008, bloom: 0.7 },
-    { t: 20.6, pos: [0.2, 0.74, 1.32], look: [0.04, 0.5, -0.05], fov: 34, ap: 0.006, bloom: 0.7 },
-    { t: 22.6, pos: [0.4, 0.68, 1.22], look: [0.12, 0.5, -0.05], fov: 34, ap: 0.007, bloom: 0.7 },
-    { t: 24.407, pos: [0.6, 0.64, 1.14], look: [0.2, 0.5, -0.05], fov: 34, ap: 0.007, bloom: 0.72 },
+    { t: 12.7, pos: [-0.24, 0.5, 1.04], look: [-0.33, 0.418, 0.17], fov: 30, ap: 0.007, bloom: 0.6 },
+    { t: 14.6, pos: [-0.255, 0.49, 1.015], look: [-0.33, 0.418, 0.17], fov: 30, ap: 0.007, bloom: 0.6 },
+    { t: 15.9, pos: [-0.275, 0.478, 0.975], look: [-0.325, 0.417, 0.17], fov: 30, ap: 0.008, bloom: 0.6 },
+    { t: 16.6, pos: [-0.29, 0.466, 0.925], look: [-0.32, 0.416, 0.17], fov: 30, ap: 0.008, bloom: 0.62 },
+    { t: 16.67, pos: [-0.295, 0.462, 0.9], look: [-0.32, 0.416, 0.17], fov: 30, ap: 0.008, bloom: 0.65 },
+    { t: 17.25, pos: [-0.293, 0.464, 0.907], look: [-0.32, 0.417, 0.17], fov: 30, ap: 0.008, bloom: 0.6 },
+    { t: 18.628, pos: [0.06, 0.64, 1.2], look: [0.1, 0.45, 0.0], fov: 32, ap: 0.004, bloom: 0.6 },
+    { t: 20.653, pos: [0.26, 0.62, 1.14], look: [0.16, 0.47, -0.02], fov: 32, ap: 0.004, bloom: 0.6 },
+    { t: 22.678, pos: [0.36, 0.61, 1.02], look: [0.24, 0.5, -0.02], fov: 32, ap: 0.005, bloom: 0.6 },
+    { t: 24.407, pos: [0.47, 0.58, 0.93], look: [0.4, 0.46, -0.02], fov: 32, ap: 0.006, bloom: 0.62 },
   ],
   lines: [
     { t: 12.5, end: 16.45, text: '2024年，米兰法院公布了一份调查文件：' },
