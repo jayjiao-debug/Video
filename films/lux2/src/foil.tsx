@@ -54,7 +54,7 @@ export const mat = (kind: Kind, color = '#ffffff', extra = 0): THREE.Material =>
     case 'rosegold': m = new THREE.MeshPhysicalMaterial({ color: '#f2a88a', metalness: 1, roughness: 0.22, iridescence: 0.5, iridescenceIOR: 1.5, iridescenceThicknessRange: [250, 600] }); break;
     case 'chrome': m = new THREE.MeshPhysicalMaterial({ color: '#f4f6ff', metalness: 1, roughness: 0.06 }); break;
     case 'black': m = new THREE.MeshPhysicalMaterial({ color: color === '#ffffff' ? '#0a0910' : color, roughness: 0.92, sheen: 0.6, sheenColor: new THREE.Color('#5a4a8a'), sheenRoughness: 0.5, bumpMap: tooth(), bumpScale: 0.3 }); break;
-    case 'lacquer': m = new THREE.MeshPhysicalMaterial({ color, roughness: 0.25, clearcoat: 1, clearcoatRoughness: 0.04, iridescence: 0.25, iridescenceIOR: 1.3, bumpMap: tooth(), bumpScale: 0.08 }); break;
+    case 'lacquer': m = new THREE.MeshPhysicalMaterial({ color, roughness: 0.2, clearcoat: 1, clearcoatRoughness: 0.03, specularIntensity: 1, sheen: 0.3, sheenColor: new THREE.Color('#ff8a90'), bumpMap: tooth(), bumpScale: 0.05 }); break;
     case 'paper': m = new THREE.MeshStandardMaterial({ color: color === '#ffffff' ? '#efe6d2' : color, roughness: 0.95, bumpMap: tooth(), bumpScale: 0.2 }); break;
     case 'glow': m = new THREE.MeshBasicMaterial({ color: new THREE.Color(color).multiplyScalar(1 + extra), toneMapped: false }); break;
   }
@@ -124,9 +124,14 @@ export const STITCH = {
   body: stitchPath([[-128, -12], [-145, -26], [-126, -192]]) + ' ' + stitchPath([[128, -12], [145, -26], [126, -192]]) + ' ' + stitchPath([[-128, -10], [128, -10]]),
 };
 
-export const HeroBag: React.FC<{ swing?: number; leather?: string; stitch?: Kind; stitchColor?: string; glowStitch?: number; tag?: boolean } & JSX.IntrinsicElements['group']> =
-  ({ swing = 0, leather = '#6e0818', stitch = 'gold', stitchColor, glowStitch = 0, tag = true, ...g }) => (
+export const HeroBag: React.FC<{ swing?: number; leather?: string; stitch?: Kind; stitchColor?: string; glowStitch?: number; tag?: boolean; light?: number } & JSX.IntrinsicElements['group']> =
+  ({ swing = 0, leather = '#8c0c20', stitch = 'gold', stitchColor, glowStitch = 0, tag = true, light = 1, ...g }) => (
     <group {...g}>
+      {/* product lighting that travels with the bag: a warm key high front-right, a cool rim behind-left */}
+      {light > 0 && <>
+        <pointLight position={[0.32, 0.46, 0.5]} intensity={0.9 * light} distance={1.6} decay={2} color="#ffe2c0" />
+        <pointLight position={[-0.34, 0.42, -0.3]} intensity={0.7 * light} distance={1.2} decay={2} color="#bcd4ff" />
+      </>}
       {/* layers 6 mm apart, so they throw shadows on one another */}
       <Cut d={BAG.handle} kind="lacquer" color={leather} position={[0, 0, -0.012]} />
       <Cut d={BAG.body} kind="lacquer" color={leather} />

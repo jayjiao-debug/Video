@@ -21,7 +21,6 @@ const KEYS: GKey[] = SCENES.flatMap((s, i) => s.keys.map((k) => ({ ...k, scene: 
 
 const cr = (p0: number, p1: number, p2: number, p3: number, u: number) => 0.5 * (2 * p1 + (-p0 + p2) * u + (2 * p0 - 5 * p1 + 4 * p2 - p3) * u * u + (-p0 + 3 * p1 - 3 * p2 + p3) * u * u * u);
 const ss = (u: number) => u * u * (3 - 2 * u);
-const quint = (u: number) => (u < 0.5 ? 16 * u ** 5 : 1 - Math.pow(-2 * u + 2, 5) / 2);
 
 /** the camera at film time T (world space) */
 export const camAt = (T: number) => {
@@ -31,8 +30,8 @@ export const camAt = (T: number) => {
   const u = Math.max(0, Math.min(1, (T - b.t) / (c.t - b.t)));
   let pos: number[], look: number[], k: number;
   if (b.scene !== c.scene) {
-    const enter = SCENES[c.scene].enter;
-    k = enter === 'cut' ? (T >= SCENES[c.scene].t0 ? 1 : 0) : quint(u);
+    // both kinds switch shots exactly at t0; a 'whip' adds a fast pan across the cut (see whipYaw)
+    k = T >= SCENES[c.scene].t0 ? 1 : 0;
     pos = [0, 1, 2].map((n) => b.world[n] + (c.world[n] - b.world[n]) * k);
     look = [0, 1, 2].map((n) => b.wlook[n] + (c.wlook[n] - b.wlook[n]) * k);
   } else {
@@ -45,7 +44,22 @@ export const camAt = (T: number) => {
   const fov = mix((q) => q.fov, 34), ap = mix((q) => q.ap, 0.003), bloom = mix((q) => q.bloom, 0.6), roll = mix((q) => q.roll, 0);
   const dist = Math.hypot(pos[0] - look[0], pos[1] - look[1], pos[2] - look[2]);
   const focus = b.focus !== undefined && c.focus !== undefined ? mix((q) => q.focus, dist) : dist;
-  return { pos: pos as [number, number, number], look: look as [number, number, number], fov, ap, bloom, roll, focus };
+  // the whip-pan: the outgoing shot accelerates into a pan, the cut lands mid-pan, the incoming shot decelerates out of it
+  const yaw = whipYaw(T);
+  if (yaw !== 0) {
+    const dx = look[0] - pos[0], dz = look[2] - pos[2], cs = Math.cos(yaw), sn = Math.sin(yaw);
+    look = [pos[0] + dx * cs - dz * sn, look[1], pos[2] + dx * sn + dz * cs];
+  }
+  return { pos: pos as [number, number, number], look: look as [number, number, number], fov, ap, bloom, roll, focus, yaw };
+};
+const WHIPS = SCENES.filter((s) => s.enter === 'whip').map((s) => s.t0);
+const WHIP_IN = 0.28, WHIP_OUT = 0.36, WHIP_MAX = 0.75;
+export const whipYaw = (T: number) => {
+  for (const t0 of WHIPS) {
+    if (T >= t0 - WHIP_IN && T < t0) return -WHIP_MAX * Math.pow((T - (t0 - WHIP_IN)) / WHIP_IN, 3);
+    if (T >= t0 && T < t0 + WHIP_OUT) return WHIP_MAX * Math.pow(1 - (T - t0) / WHIP_OUT, 3);
+  }
+  return 0;
 };
 
 /** screen-space motion between two camera poses (uv), for motion blur */
@@ -54,8 +68,11 @@ const sceneAt = (T: number) => SCENES.findIndex((s) => T >= s.t0 && T < s.t1);
 const screenMotion = (T: number) => {
   // across a hard cut there is no motion to blur: the previous frame belongs to another shot
   const i0 = sceneAt(T - 1 / 30), i1 = sceneAt(T);
-  if (i0 !== i1 && i1 >= 0 && SCENES[i1].enter === 'cut') return { mb: [0, 0] as [number, number], speed: 0 };
-  const c0 = camAt(T - 1 / 30), c1 = camAt(T);
+  const c1 = camAt(T);
+  const hfov = 2 * Math.atan(Math.tan((c1.fov * Math.PI) / 360) * (16 / 9));
+  const panBlur = (whipYaw(T) - whipYaw(T - 1 / 30)) / hfov;   // pan across the cut, in screen widths per frame
+  if (i0 !== i1 && i1 >= 0) { const m = Math.min(0.14, Math.abs(panBlur)); return { mb: [Math.sign(panBlur) * m, 0] as [number, number], speed: SCENES[i1].enter === 'cut' ? 0 : m }; }
+  const c0 = camAt(T - 1 / 30);
   const set = (cam: THREE.PerspectiveCamera, c: ReturnType<typeof camAt>) => { cam.fov = c.fov; cam.aspect = 16 / 9; cam.position.set(...c.pos); cam.up.set(Math.sin(c.roll), Math.cos(c.roll), 0); cam.lookAt(new THREE.Vector3(...c.look)); cam.updateProjectionMatrix(); cam.updateMatrixWorld(); };
   set(tmpA, c0); set(tmpB, c1);
   const p = new THREE.Vector3(...c1.look), a = p.clone().project(tmpA), b2 = p.clone().project(tmpB);
@@ -83,9 +100,11 @@ const HITS: [number, number][] = [...A.map((t): [number, number] => [t, t === 81
 export const Film: React.FC = () => {
   const f = useCurrentFrame(), T = f / 30;
   const c = camAt(T), { mb, speed } = screenMotion(T);
-  let flash = 0, ca = 0.1, shake = 0;
-  for (const [h, s] of HITS) { if (T >= h && T < h + 1.2 && s > 0) { const d = T - h; flash += 0.22 * s * Math.exp(-d / 0.07); ca += 0.9 * s * Math.exp(-d / 0.16); shake += 0.012 * s * Math.exp(-d / 0.1); } }
-  ca += Math.min(1.2, speed * 25);
+  // colour fringing only as a 2–4 frame accent on hits and whips, never as a constant look
+  let flash = 0, ca = 0, shake = 0;
+  for (const [h, s] of HITS) { if (T >= h && T < h + 1.2 && s > 0) { const d = T - h; flash += 0.2 * s * Math.exp(-d / 0.06); ca += 0.35 * s * Math.exp(-d / 0.05); shake += 0.012 * s * Math.exp(-d / 0.1); } }
+  for (const t0 of WHIPS) { const d = Math.abs(T - t0); if (d < 0.1) flash += 0.1 * (1 - d / 0.1); }
+  ca += Math.min(0.35, speed * 4);
   const sh = [Math.sin(T * 91) * shake, Math.cos(T * 77) * shake, 0];
   const cur = SCENES.find((s) => T >= s.t0 && T < s.t1) ?? SCENES[SCENES.length - 1];
   const cam: Cam = { pos: [c.pos[0] + sh[0], c.pos[1] + sh[1], c.pos[2]], look: c.look, fov: c.fov, focus: c.focus, aperture: c.ap, bloom: c.bloom, roll: c.roll, ca, flash: Math.min(0.9, flash), mb, env: cur.env ?? 1, exposure: cur.exposure ?? 1 };
@@ -103,6 +122,7 @@ export const Film: React.FC = () => {
         </Stage>
       </ThreeCanvas>
       {visible.map((s) => s.Overlay ? <s.Overlay key={s.id + 'o'} T={T} /> : null)}
+      {T < END_CARD && <div style={{ position: 'absolute', left: 0, right: 0, bottom: 0, height: 270, background: 'linear-gradient(180deg, rgba(0,0,0,0) 0%, rgba(0,0,0,0.5) 70%, rgba(0,0,0,0.6) 100%)' }} />}
       <Subtitles T={T} lines={ALL_LINES} />
       <div style={{ position: 'absolute', top: 44, right: 56, opacity: 0.55 * markO, fontFamily: font.sans, fontWeight: 500, fontSize: 20, letterSpacing: '0.3em', color: 'rgba(243,237,226,0.58)' }}>
         <span style={{ color: GOLD }}>◆ </span>{JUNO.mark}
