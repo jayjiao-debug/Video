@@ -60,6 +60,10 @@ tagged with the role that owns it). Rubric: `references/rubric.md`.
   ask which one) and gate 4 (the cut). When the owner is away, take the director's top title / top look, note
   that in `crew_log.md`, and continue.
 - While the owner is choosing at gate 1, the art director can already sketch looks from the brief; don't idle.
+- People on screen (2D cast): follow `references/figure-rules.md`. Place every figure with `<Person>` (what the
+  body is doing and what it touches), aim hands at points on the body or the prop, and run `pose_check.mjs`
+  until it prints PASS before any still with a person goes to the owner. Body-logic errors (legs from the chest,
+  sitting in the air, floating hands) are a blocking failure, not a polish note.
 - Build (animator role, done by the producer for now): follow `storyboard.md` and `lines.json` exactly; stills per
   scene → gate 3 before the full render. Two layers:
   - **Engine (always reuse):** subtitle bar and reading timing, music beat grid and cut timing, title on the
