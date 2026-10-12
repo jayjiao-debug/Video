@@ -122,7 +122,7 @@ export const Hall: React.FC<{t: number}> = ({t}) => {
 					<line x1={xP + 70} x2={mix(xB, xP + 70, xP - 40)} y1={hi - 20} y2={mix(xB, hi - 20, lo + 30)} stroke={C.red} strokeWidth={9} strokeLinecap="round" opacity={xB > 0 ? 1 : 0} />
 					<g opacity={enter(t, st(10) + 1.3)} transform={riseT(enter(t, st(10) + 1.3))}><SL x={xP} y={yb - 40} text="到账这天：不变" size={44} /></g>
 					<circle cx={xN + 15} cy={(lo + hi) / 2} r={60 + 90 * pulse} fill="none" stroke={C.gold} strokeWidth={4} opacity={pulse > 0 ? 1 - pulse : 0} />
-					<g opacity={enter(t, st(11) + 0.4)} transform={riseT(enter(t, st(11) + 0.4))}><SL x={xN + 120} y={hi - 60} text="听说那天，就变了" size={64} anchor="start" col={C.gold} weight={900} /></g>
+					<g opacity={enter(t, st(11) + 0.4)} transform={riseT(enter(t, st(11) + 0.4))}><SL x={xN + 90} y={hi + 110} text="听说那天，就变了" size={64} anchor="start" col={C.gold} weight={900} /></g>
 				</svg>
 			</Cam>
 			{/* the boss's banner: lands on 今天, then flies into the phone (T3) */}

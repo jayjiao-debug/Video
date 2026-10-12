@@ -142,8 +142,8 @@ export const CardsScene: React.FC<{t: number}> = ({t}) => {
 	const sig = ramp(t, st(40) + 0.2, st(40) + 1.3, E.MOVE);
 	const seal = slam(t, st(40) + 1.2);
 	const tear = t < st(41) + 0.3 ? 0 : land(t, st(41) + 0.3, {damping: 18, stiffness: 90});
-	const fall = ramp(t, 122.9, 123.5, E.EXIT);
-	const tilt = ramp(t, 123.2, 124.0, E.CAM);
+	const fall = ramp(t, 122.7, 123.3, E.EXIT);
+	const tilt = ramp(t, 122.9, 123.7, E.CAM);
 	const pool = 1 - ramp(t, st(41) + 0.5, st(41) + 1.3, E.EXIT);
 	const dx = 1220, dy = 470;
 	const half = (side: -1 | 1) => (
@@ -185,7 +185,7 @@ export const CardsScene: React.FC<{t: number}> = ({t}) => {
 				{blow > 0 && blow < 1 && Array.from({length: 8}, (_, i) => <line key={i} x1={700 - blow * 900 + i * 40} x2={660 - blow * 900 + i * 40} y1={300 + i * 30} y2={340 + i * 30} stroke="#9aa3ad" strokeOpacity={0.5} strokeWidth={2} />)}
 				{/* 我保证: unfolds from the flying paper, signed, sealed, torn */}
 				<g transform={`translate(0 ${(1 - Math.min(1, settle)) * -40}) translate(${dx} ${dy}) scale(1 ${mix(unfold, 0.4, 1)}) translate(${-dx} ${-dy})`} opacity={Math.min(1, unfold * 3)}>
-					<rect x={dx - 290} y={dy - 180} width={600} height={400} fill="#000" opacity={0.5} style={{filter: 'blur(16px)'}} />
+					<rect x={dx - 290} y={dy - 180} width={600} height={400} fill="#000" opacity={0.5 * (1 - Math.min(1, tear))} style={{filter: 'blur(16px)'}} />
 					{half(-1)}
 					{half(1)}
 				</g>
@@ -199,8 +199,8 @@ const riseTnum = (p: number) => (1 - p) * 32;
 
 /* ===================== the same loop near you: 123.2–127.3 ===================== */
 export const NearCity: React.FC<{t: number}> = ({t}) => {
-	if (t < 123.2 || t > 127.35) return null;
-	const up = ramp(t, 123.2, 124.0, E.CAM);
+	if (t < 122.5 || t > 127.35) return null;
+	const up = ramp(t, 122.5, 123.4, E.CAM);
 	const dive = ramp(t, 126.5, 127.3, E.CAM);
 	const loopP = ramp(t, 124.0, 125.0, E.MOVE);
 	return (

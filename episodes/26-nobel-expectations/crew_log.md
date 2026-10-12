@@ -21,3 +21,4 @@
 | 2026-10-12 18:05 | 试镜: opening 0–20.7 s (phone + 饼 + medal title), 2D + 3D medal still | producer | sent | |
 | 2026-10-12 19:20 | 初剪 v1: full 2:43 film rendered (2D + 3D stills), send version 14 MB | producer | sent | |
 | 2026-10-12 20:26 | v2 full cut: v1 story beats + look B craft (owner picked B, asked for readability; B-only intro felt weaker) | producer | sent | |
+| 2026-10-12 21:55 | v3 full cut from director notes v2 (no dips/flashes, camera, shared objects, new props); medal kept as before per owner | producer | sent | |

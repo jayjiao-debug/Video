@@ -49,7 +49,7 @@ const Coin: React.FC<{x: number; y: number; r: number; ang: number; grade: numbe
 				<text x={x} y={y + r * 0.16} textAnchor="middle" style={{fontFamily: NUM, fontSize: r * 0.5, fontWeight: 700}} fill="#5e3f10" opacity={0.7 * (1 - grade)}>2026</text>
 			</g>
 			{/* grade toward the 3D still's bronze */}
-			<ellipse cx={x} cy={y} rx={rx} ry={r} fill="#7a5220" opacity={0.55 * grade} style={{mixBlendMode: 'multiply'}} />
+			<ellipse cx={x} cy={y} rx={rx} ry={r} fill="#24140a" opacity={0.95 * grade} style={{mixBlendMode: 'multiply'}} />
 		</g>
 	);
 };
@@ -180,10 +180,7 @@ export const TitleD: React.FC<{t: number}> = ({t}) => {
 			<AbsoluteFill style={{opacity: img, transform: `scale(${settle})`, transformOrigin: `${MEDAL.x}px ${MEDAL.y}px`}}>
 				<Img src={staticFile('ep26/medal.png')} style={{width: W, height: H}} />
 			</AbsoluteFill>
-			{/* a glint sweeps across the gold after the drop */}
-			<AbsoluteFill style={{opacity: img, transform: `scale(${settle})`, transformOrigin: `${MEDAL.x}px ${MEDAL.y}px`, clipPath: `ellipse(430px 456px at ${MEDAL.x}px ${MEDAL.y}px)`, mixBlendMode: 'screen'}}>
-				<div style={{position: 'absolute', top: -200, height: 1500, width: 220, left: mix(ramp(u, 0.25, 1.4, E.MOVE), -300, 1100), transform: 'rotate(22deg)', background: 'linear-gradient(90deg, rgba(255,240,200,0) 0%, rgba(255,240,200,0.55) 50%, rgba(255,240,200,0) 100%)', filter: 'blur(6px)'}} />
-			</AbsoluteFill>
+
 			<div style={{position: 'absolute', left: 900, top: 330, width: 960, textAlign: 'center', opacity: 1 - out, transform: `translateY(${-60 * out}px)`}}>
 				<div style={{fontFamily: SERIF, fontWeight: 900, fontSize: 116, lineHeight: 1.2, color: C.ink, ...riseStyle(r1, true, 40)}}>画饼，</div>
 				<div style={{fontFamily: SERIF, fontWeight: 900, fontSize: 116, lineHeight: 1.2, color: C.gold, ...riseStyle(r2, true, 40)}}>到底有没有用？</div>
