@@ -17,7 +17,7 @@ const HIT = CUT.title;
 export const HOOK_END = CUT.cards;
 
 /* H1 · three rank plaques drop, then the question splits the frame */
-const plaque = (g: G, x: number, y: number, n: string) => {
+export const plaque = (g: G, x: number, y: number, n: string) => {
   const w = 250, h = 320;
   const body = g.createLinearGradient(x - w / 2, y - h, x + w / 2, y); body.addColorStop(0, '#231a2b'); body.addColorStop(0.6, '#120d17'); body.addColorStop(1, '#07050a');
   g.fillStyle = body; g.beginPath(); (g as any).roundRect(x - w / 2, y - h, w, h, 14); g.fill();
@@ -25,9 +25,12 @@ const plaque = (g: G, x: number, y: number, n: string) => {
   g.strokeStyle = 'rgba(255,255,255,.35)'; g.lineWidth = 1.5; g.beginPath(); g.moveTo(x - w / 2 + 14, y - h + 2); g.lineTo(x + w / 2 - 14, y - h + 2); g.stroke();
   g.textAlign = 'center'; g.textBaseline = 'middle';
   g.fillStyle = 'rgba(255,190,230,.75)'; g.font = `700 34px "Noto Serif CJK SC"`; g.fillText('第', x, y - h + 62); g.fillText('名', x, y - 58);
-  g.save(); g.shadowColor = 'rgba(255,110,205,.9)'; g.shadowBlur = 30; g.fillStyle = '#ffd1ea'; g.font = `700 150px "Cormorant Garamond"`; g.fillText(n, x, y - h / 2 + 4); g.restore();
+  // lining digits, centred on their real outline (Cormorant's old-style 7 hangs below the line)
+  g.save(); g.shadowColor = 'rgba(255,110,205,.9)'; g.shadowBlur = 30; g.fillStyle = '#ffd1ea'; g.font = `900 150px "Noto Serif CJK SC"`; g.textBaseline = 'alphabetic';
+  { const m = g.measureText(n); g.fillText(n, x + (m.actualBoundingBoxLeft - m.actualBoundingBoxRight) / 2, y - h / 2 + 4 + (m.actualBoundingBoxAscent - m.actualBoundingBoxDescent) / 2); }
+  g.restore();
 };
-const DROPS = [bt(0), bt(2), bt(4)];
+export const DROPS = [bt(0), bt(2), bt(4)];
 export const H1: React.FC<{ T: number; f: number }> = ({ T, f }) => {
   const split = eio(T, bt(6), 0.45);
   // camera: slow dolly, plus a soft damped dip on each landing (no shake)

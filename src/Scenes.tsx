@@ -216,7 +216,52 @@ const pokerFlip = (g: G, x: number, t: number) => {
   g.restore();
 };
 const DIE_FACES: [number, number, number][] = [[5, 3, 1], [6, 2, 4], [1, 4, 5], [3, 6, 5], [2, 1, 3], [4, 5, 6]];
+/* gallery die: three takes for the owner (0 = v3 hop-and-spin) */
+export const GAL = { die: 0 };
+const ivoryDie = (g: G, x: number, y: number, a: number, pips: number, top = 5, side = 3) => {
+  const d = a * 0.26, P: Record<number, number[][]> = { 1: [[0, 0]], 2: [[-1, -1], [1, 1]], 3: [[-1, -1], [0, 0], [1, 1]], 4: [[-1, -1], [1, -1], [-1, 1], [1, 1]], 5: [[-1, -1], [1, -1], [0, 0], [-1, 1], [1, 1]], 6: [[-1, -1], [1, -1], [-1, 0], [1, 0], [-1, 1], [1, 1]] };
+  g.fillStyle = '#fbf8f2'; g.beginPath(); g.moveTo(x - a / 2, y - a); g.lineTo(x - a / 2 + d, y - a - d); g.lineTo(x + a / 2 + d, y - a - d); g.lineTo(x + a / 2, y - a); g.closePath(); g.fill();
+  g.fillStyle = '#cfc8bb'; g.beginPath(); g.moveTo(x + a / 2, y - a); g.lineTo(x + a / 2 + d, y - a - d); g.lineTo(x + a / 2 + d, y - d); g.lineTo(x + a / 2, y); g.closePath(); g.fill();
+  const fr = g.createLinearGradient(x - a / 2, y - a, x + a / 2, y); fr.addColorStop(0, '#fffdf8'); fr.addColorStop(1, '#e2dccf');
+  g.fillStyle = fr; g.beginPath(); (g as any).roundRect(x - a / 2, y - a, a, a, a * 0.14); g.fill();
+  g.fillStyle = pips === 1 ? '#c8102e' : '#1b1b22'; P[pips].forEach(([i, j]) => { g.beginPath(); g.arc(x + i * a * 0.26, y - a / 2 + j * a * 0.26, a * (pips === 1 ? 0.11 : 0.075), 0, 6.3); g.fill(); });
+  g.fillStyle = 'rgba(27,27,34,.75)'; P[top].forEach(([i, j]) => { g.beginPath(); g.ellipse(x + d / 2 + i * a * 0.24 + j * d * 0.25, y - a - d / 2 + j * d * 0.28, a * 0.055, a * 0.022, 0, 0, 6.3); g.fill(); });
+  g.fillStyle = 'rgba(27,27,34,.65)'; P[side].forEach(([i, j]) => { g.beginPath(); g.ellipse(x + a / 2 + d / 2 + i * d * 0.25, y - a / 2 - d / 2 + j * a * 0.24 - i * d * 0.25, a * 0.02, a * 0.05, 0, 0, 6.3); g.fill(); });
+};
+const dieTakes = (g: G, x: number, t: number) => {
+  const A = 112;
+  if (GAL.die === 1) {
+    // take 1 · dropped: falls straight, two small bounces, a squash, no spin
+    t += 0.3;                                                    // falls from the moment it appears
+    const FALL = 0.34, k = clamp(t / FALL), after = Math.max(0, t - FALL);
+    const y = t < FALL ? -(1 - k * k) * 300 : -Math.abs(Math.sin(after * 11)) * 34 * Math.exp(-after * 5.5);
+    const sq = t < FALL ? 0 : 0.07 * Math.exp(-after * 9) * Math.abs(Math.cos(after * 11));
+    const pips = t < FALL ? 2 : after < 0.29 ? 6 : 5;
+    g.save(); g.translate(x, FLOOR); g.scale(1 + sq * 0.6, 1 - sq); g.translate(-x, -FLOOR); ivoryDie(g, x, FLOOR + y, A, pips); g.restore();
+    return;
+  }
+  if (GAL.die === 2) {
+    // take 2 · rolled in: tumbles over its edges from the right, a new face every quarter turn, slowing to rest
+    const dur = 0.95, q = clamp(t / dur), u = 1 - Math.pow(1 - q, 2.2), N = 3;
+    const turns = (1 - u) * N, face = Math.ceil(turns - 1e-6), resid = -(face - turns) * (Math.PI / 2);
+    const xx = lerp(x + 320, x, u), lift = (A / 2) * (Math.abs(Math.cos(resid)) + Math.abs(Math.sin(resid)) - 1), cy = FLOOR - lift - A / 2;
+    g.save(); g.translate(xx, cy); g.rotate(resid); g.translate(-xx, -cy); ivoryDie(g, xx, FLOOR - lift, A, [5, 2, 6, 4][face % 4], [3, 3, 5, 1][face % 4], [1, 6, 4, 2][face % 4]); g.restore();
+    return;
+  }
+  // take 3 · under a cup: a dice cup lifts away and the die is simply there
+  ivoryDie(g, x, FLOOR, A, 5);
+  const lift = eio(t, 0.15, 0.7), cx = x + 18, top = FLOOR - 230 - lift * 420, tilt = lift * 0.18;
+  if (lift < 1) {
+    g.save(); g.globalAlpha *= 1 - pr(t, 0.6, 0.25); g.translate(cx, top + 115); g.rotate(tilt); g.translate(-cx, -(top + 115));
+    const cg = g.createLinearGradient(cx - 100, 0, cx + 100, 0); cg.addColorStop(0, '#1a0f0a'); cg.addColorStop(0.45, '#4a2a18'); cg.addColorStop(0.6, '#6b3e22'); cg.addColorStop(1, '#140a06');
+    g.fillStyle = cg; g.beginPath(); g.moveTo(cx - 70, top); g.lineTo(cx + 70, top); g.lineTo(cx + 104, top + 230); g.lineTo(cx - 104, top + 230); g.closePath(); g.fill();
+    g.fillStyle = goldRim; g.fillRect(cx - 106, top + 214, 212, 16); g.fillRect(cx - 72, top - 4, 144, 10);
+    g.restore();
+  }
+};
+const goldRim = '#c9973f';
 const dieRoll = (g: G, x: number, t: number) => {
+  if (GAL.die) return dieTakes(g, x, t);
   const { c, p } = once(t, 0.5, 1.0, 3.1), q = clamp((p - 0.5) / 0.5);
   if (q <= 0) return die(g, x, FLOOR - 62, 1.0, DIE_FACES[c % 6]);
   // three hops, each lower and shorter, tumbling
