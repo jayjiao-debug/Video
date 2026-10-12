@@ -1,46 +1,46 @@
-/* 《一句话，让钱变便宜》 · 2026 经济学奖解读. Documentary body, three light climaxes. Music: the channel track from 0 s. */
+/* 《是菜还是非？》 · 游戏的运气光谱. Low-key product photography look. Music: the channel track from 0 s. */
 import React, { useEffect, useState } from 'react';
 import { AbsoluteFill, continueRender, delayRender, useCurrentFrame } from 'remotion';
 import { FontFaces, FONT_LOADS, Grade, Grain, Bars, Subs, F, hit } from './kit';
 import { CUT, LINES } from './time';
-import { G1, G2, G3, G4, G6, G7, G11, G12, G12b, GEnd, G3_START } from './Glow';
-import { S5, S8, S9, S10 } from './Light';
+import { S0, S1, S2, S3, S4, S5, S6, S7, S8, S9, S10, S11, S12, SEnd, TITLE_START } from './Scenes';
 export { FILM_FRAMES } from './time';
 
-type Shot = { a: number; z: number; light?: boolean; el: (T: number, f: number) => React.ReactNode };
+type Shot = { a: number; z: number; el: (T: number, f: number) => React.ReactNode };
 const SHOTS: Shot[] = [
-  { a: 0, z: CUT.yield, light: true, el: (T, f) => <G1 T={T} f={f} /> },
-  { a: CUT.yield, z: G3_START, light: true, el: (T, f) => <G2 T={T} f={f} /> },
-  { a: G3_START, z: CUT.laur, light: true, el: (T, f) => <G3 T={T} f={f} /> },
-  { a: CUT.laur, z: CUT.agg, light: true, el: (T, f) => <G4 T={T} f={f} /> },
-  { a: CUT.agg, z: CUT.oil, light: true, el: (T, f) => <S5 T={T} f={f} /> },
-  { a: CUT.oil, z: CUT.hall, light: true, el: (T, f) => <G6 T={T} f={f} /> },
-  { a: CUT.hall, z: CUT.city, light: true, el: (T, f) => <G7 T={T} f={f} /> },
-  { a: CUT.city, z: CUT.wfd, light: true, el: (T, f) => <S8 T={T} f={f} /> },
-  { a: CUT.wfd, z: CUT.gap, light: true, el: (T, f) => <S9 T={T} f={f} /> },
-  { a: CUT.gap, z: CUT.fg, light: true, el: (T, f) => <S10 T={T} f={f} /> },
-  { a: CUT.fg, z: CUT.banks, light: true, el: (T, f) => <G11 T={T} f={f} /> },
-  { a: CUT.banks, z: CUT.trust, light: true, el: (T, f) => <G12 T={T} f={f} /> },
-  { a: CUT.trust, z: CUT.end, light: true, el: (T, f) => <G12b T={T} f={f} /> },
-  { a: CUT.end, z: CUT.fin + 1, light: true, el: (T, f) => <GEnd T={T} f={f} /> },
+  { a: 0, z: TITLE_START, el: (T, f) => <S0 T={T} f={f} /> },
+  { a: TITLE_START, z: CUT.gallery, el: (T, f) => <S1 T={T} f={f} /> },
+  { a: CUT.gallery, z: CUT.chess, el: (T, f) => <S2 T={T} f={f} /> },
+  { a: CUT.chess, z: CUT.go, el: (T, f) => <S3 T={T} f={f} /> },
+  { a: CUT.go, z: CUT.solved, el: (T, f) => <S4 T={T} f={f} /> },
+  { a: CUT.solved, z: CUT.poker, el: (T, f) => <S5 T={T} f={f} /> },
+  { a: CUT.poker, z: CUT.mahjong, el: (T, f) => <S6 T={T} f={f} /> },
+  { a: CUT.mahjong, z: CUT.question, el: (T, f) => <S7 T={T} f={f} /> },
+  { a: CUT.question, z: CUT.gap, el: (T, f) => <S8 T={T} f={f} /> },
+  { a: CUT.gap, z: CUT.result, el: (T, f) => <S9 T={T} f={f} /> },
+  { a: CUT.result, z: CUT.pool, el: (T, f) => <S10 T={T} f={f} /> },
+  { a: CUT.pool, z: CUT.close, el: (T, f) => <S11 T={T} f={f} /> },
+  { a: CUT.close, z: CUT.end, el: (T, f) => <S12 T={T} f={f} /> },
+  { a: CUT.end, z: CUT.fin + 1, el: (T, f) => <SEnd T={T} f={f} /> },
 ];
-const SLAMS = [CUT.oil, CUT.drop, CUT.banks];
+const SLAMS = [CUT.king, CUT.drop, CUT.result];
+const LOADS = [...FONT_LOADS, '400 40px "DejaVu Sans"', '900 40px "Noto Serif CJK SC"'];
 
 export const Film: React.FC = () => {
   const f = useCurrentFrame(), T = f / 30;
   const [h] = useState(() => delayRender('film-fonts', { timeoutInMilliseconds: 60000 }));
   const [ok, setOk] = useState(false);
-  useEffect(() => { Promise.all(FONT_LOADS.map((x) => document.fonts.load(x, '一句话让钱变便宜0123456789').catch(() => null))).then(() => { setOk(true); continueRender(h); }); }, [h]);
+  useEffect(() => { Promise.all(LOADS.map((x) => document.fonts.load(x, '是菜还是非国际象棋围棋麻将0123456789').catch(() => null))).then(() => { setOk(true); continueRender(h); }); }, [h]);
   const shot = SHOTS.find((s) => T >= s.a && T < s.z) ?? SHOTS[SHOTS.length - 1];
-  const markO = T < G3_START ? 1 : T < CUT.laur ? 0 : T < CUT.end ? 1 : 0;
-  const flash = SLAMS.reduce((m, s) => m + 0.22 * hit(T, s, 0.09), 0);
+  const markO = T < TITLE_START ? 1 : T < CUT.gallery ? 0 : T < CUT.end ? 1 : 0;
+  const flash = SLAMS.reduce((m, s) => m + 0.2 * hit(T, s, 0.09), 0);
   return (
     <AbsoluteFill style={{ background: '#000' }}>
       <FontFaces />
       {ok && (
         <>
           {shot.el(T, f)}
-          {T < CUT.end && <Grade warm={shot.light ? 0.03 : 0.12} />}
+          {T < CUT.end && <Grade warm={0.03} />}
           <Grain T={T} />
           <div style={{ position: 'absolute', inset: 0, background: '#fff1d6', opacity: flash, mixBlendMode: 'screen' }} />
           <Bars />
