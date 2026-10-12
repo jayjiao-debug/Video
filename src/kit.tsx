@@ -99,7 +99,12 @@ export const Subs: React.FC<{ T: number; lines: Line[] }> = ({ T, lines }) => (
       const rise = (1 - eo(T, a, 0.3)) * 6;
       return (
         <div key={i} style={{ position: 'absolute', left: 0, right: 0, bottom: 24, textAlign: 'center', opacity: o, transform: `translateY(${rise}px)`, fontFamily: F.sans, fontWeight: 500, fontSize: 50, letterSpacing: '0.05em', color: C.cream, ...LNUM }}>
-          {s.split(/(\[[^\]]+\])/).map((x, j) => x.startsWith('[') ? <span key={j} style={{ color: C.goldHi }}>{x.slice(1, -1)}</span> : <span key={j}>{x}</span>)}
+          {s.split(/(\[[^\]]+\])/).map((x, j) => {
+            const hl = x.startsWith('['), t = hl ? x.slice(1, -1) : x;
+            // colour carries meaning: skill = blue, luck = magenta, gold for everything else that is highlighted
+            const col = !hl ? undefined : /菜|实力/.test(t) ? '#9cc8ff' : /非|运气/.test(t) ? '#ff9ed6' : C.goldHi;
+            return <span key={j} style={col ? { color: col } : undefined}>{t.split(/\^(\d+)/).map((u, k) => (k % 2 ? <sup key={k} style={{ fontSize: '0.58em', verticalAlign: '0.75em', lineHeight: 0 }}>{u}</sup> : <React.Fragment key={k}>{u}</React.Fragment>))}</span>;
+          })}
         </div>
       );
     })}
