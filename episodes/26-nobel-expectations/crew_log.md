@@ -17,3 +17,4 @@
 | 2026-10-12 17:00 | gate 2b: 12-frame hybrid storyboard (4×3D, 8×2D), storyboard.md | producer | sent | 45 |
 | 2026-10-12 17:05 | v3 script: boss's 饼 as the spine (owner: 和我有什么关系) | producer | | |
 | 2026-10-12 17:20 | v4 script: slower (~4 字/秒), full 2:42 track, 49 lines | producer | sent | |
+| 2026-10-12 17:25 | v4.1: no-finance-background pass (bridge to 全国, 借新还旧, 央行能印钱) | producer | sent | |
