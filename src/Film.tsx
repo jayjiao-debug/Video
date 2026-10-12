@@ -3,26 +3,26 @@ import React, { useEffect, useState } from 'react';
 import { AbsoluteFill, continueRender, delayRender, useCurrentFrame } from 'remotion';
 import { FontFaces, FONT_LOADS, Grade, Grain, Bars, Subs, F, hit } from './kit';
 import { CUT, LINES } from './time';
-import { S1, S2, S3, S4, S6, S7, S11, S12, S12b, EndCard } from './Doc';
+import { G1, G2, G3, G4, G6, G7, G11, G12, G12b, GEnd, G3_START } from './Glow';
 import { S5, S8, S9, S10 } from './Light';
 export { FILM_FRAMES } from './time';
 
 type Shot = { a: number; z: number; light?: boolean; el: (T: number, f: number) => React.ReactNode };
 const SHOTS: Shot[] = [
-  { a: 0, z: CUT.yield, el: (T) => <S1 T={T} /> },
-  { a: CUT.yield, z: CUT.title - 0.15, el: (T) => <S2 T={T} /> },
-  { a: CUT.title - 0.15, z: CUT.laur, el: (T) => <S3 T={T} /> },
-  { a: CUT.laur, z: CUT.agg, el: (T) => <S4 T={T} /> },
+  { a: 0, z: CUT.yield, light: true, el: (T, f) => <G1 T={T} f={f} /> },
+  { a: CUT.yield, z: G3_START, light: true, el: (T, f) => <G2 T={T} f={f} /> },
+  { a: G3_START, z: CUT.laur, light: true, el: (T, f) => <G3 T={T} f={f} /> },
+  { a: CUT.laur, z: CUT.agg, light: true, el: (T, f) => <G4 T={T} f={f} /> },
   { a: CUT.agg, z: CUT.oil, light: true, el: (T, f) => <S5 T={T} f={f} /> },
-  { a: CUT.oil, z: CUT.hall, el: (T) => <S6 T={T} /> },
-  { a: CUT.hall, z: CUT.city, el: (T) => <S7 T={T} /> },
+  { a: CUT.oil, z: CUT.hall, light: true, el: (T, f) => <G6 T={T} f={f} /> },
+  { a: CUT.hall, z: CUT.city, light: true, el: (T, f) => <G7 T={T} f={f} /> },
   { a: CUT.city, z: CUT.wfd, light: true, el: (T, f) => <S8 T={T} f={f} /> },
   { a: CUT.wfd, z: CUT.gap, light: true, el: (T, f) => <S9 T={T} f={f} /> },
   { a: CUT.gap, z: CUT.fg, light: true, el: (T, f) => <S10 T={T} f={f} /> },
-  { a: CUT.fg, z: CUT.banks, el: (T) => <S11 T={T} /> },
-  { a: CUT.banks, z: CUT.trust, el: (T) => <S12 T={T} /> },
-  { a: CUT.trust, z: CUT.end, el: (T) => <S12b T={T} /> },
-  { a: CUT.end, z: CUT.fin + 1, el: (T) => <EndCard T={T} /> },
+  { a: CUT.fg, z: CUT.banks, light: true, el: (T, f) => <G11 T={T} f={f} /> },
+  { a: CUT.banks, z: CUT.trust, light: true, el: (T, f) => <G12 T={T} f={f} /> },
+  { a: CUT.trust, z: CUT.end, light: true, el: (T, f) => <G12b T={T} f={f} /> },
+  { a: CUT.end, z: CUT.fin + 1, light: true, el: (T, f) => <GEnd T={T} f={f} /> },
 ];
 const SLAMS = [CUT.oil, CUT.drop, CUT.banks];
 
@@ -32,7 +32,7 @@ export const Film: React.FC = () => {
   const [ok, setOk] = useState(false);
   useEffect(() => { Promise.all(FONT_LOADS.map((x) => document.fonts.load(x, '一句话让钱变便宜0123456789').catch(() => null))).then(() => { setOk(true); continueRender(h); }); }, [h]);
   const shot = SHOTS.find((s) => T >= s.a && T < s.z) ?? SHOTS[SHOTS.length - 1];
-  const markO = T < CUT.title - 0.2 ? 1 : T < CUT.laur ? 0 : T < CUT.end ? 1 : 0;
+  const markO = T < G3_START ? 1 : T < CUT.laur ? 0 : T < CUT.end ? 1 : 0;
   const flash = SLAMS.reduce((m, s) => m + 0.22 * hit(T, s, 0.09), 0);
   return (
     <AbsoluteFill style={{ background: '#000' }}>
