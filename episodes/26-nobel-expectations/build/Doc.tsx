@@ -297,7 +297,139 @@ const DocKey: React.FC = () => {
 	);
 };
 
-const FR: React.FC[] = [DocHook, DocKey];
+
+/* ---------- title · 16.8 s: a generic gold medal (laurel + 2026; not the real Nobel design), raking key light ---------- */
+const medalBump = () => {
+	const c = document.createElement('canvas');
+	c.width = c.height = 1024;
+	const g = c.getContext('2d')!;
+	g.fillStyle = '#707070';
+	g.fillRect(0, 0, 1024, 1024);
+	g.fillStyle = '#d8d8d8';
+	g.strokeStyle = '#d8d8d8';
+	g.lineWidth = 14;
+	g.beginPath();
+	g.arc(512, 512, 470, 0, Math.PI * 2);
+	g.stroke();
+	// laurel: leaves along two arcs
+	for (const side of [-1, 1]) {
+		for (let i = 0; i < 16; i++) {
+			const a = Math.PI / 2 + side * (0.35 + i * 0.16);
+			const x = 512 + Math.cos(a) * 360, y = 512 + Math.sin(a) * 360;
+			g.save();
+			g.translate(x, y);
+			g.rotate(a + side * 0.9);
+			g.beginPath();
+			g.ellipse(0, 0, 46, 17, 0, 0, Math.PI * 2);
+			g.fill();
+			g.restore();
+		}
+	}
+	g.font = `900 210px "DejaVu Sans", sans-serif`;
+	g.textAlign = 'center';
+	g.textBaseline = 'middle';
+	g.fillText('2026', 512, 520);
+	const t = new THREE.CanvasTexture(c);
+	t.center.set(0.5, 0.5);
+	t.rotation = Math.PI / 2;
+	return t;
+};
+const DocTitle: React.FC = () => {
+	const bump = useMemo(() => medalBump(), []);
+	const e = useEnv;
+	return (
+		<AbsoluteFill style={{background: '#04050a'}}>
+			<Stage3D cam={{pos: [1.3, 0.5, 4.4], target: [0.75, 0.05, 0], fov: 30}} bg="#05060a" env={0.25} focus={4.5} aperture={0.004} bloom={0.5} threshold={0.9} vig={0.85} grain={0.04}>
+				<Shadows />
+				<KeySpot from={[-2.2, 2.0, 3.4]} to={[-0.25, 0, 0]} intensity={190} angle={0.45} />
+				<pointLight position={[1.5, 1.2, -3]} color="#7fa6ff" intensity={10} decay={2} />
+				<ambientLight intensity={0.01} />
+				<group position={[-0.25, 0.05, 0]} rotation={[0.08, 0.5, 0.06]}>
+					<mesh rotation={[Math.PI / 2, 0, 0]} castShadow>
+						<cylinderGeometry args={[1, 1, 0.09, 128]} />
+						<MedalMat bump={bump} />
+					</mesh>
+					<mesh>
+						<torusGeometry args={[1, 0.05, 24, 160]} />
+						<MedalMat />
+					</mesh>
+				</group>
+				<mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, -1.15, 0]} receiveShadow>
+					<planeGeometry args={[30, 30]} />
+					<meshPhysicalMaterial color="#0c0907" roughness={0.6} />
+				</mesh>
+				<Dust n={300} box={[5, 3, 3]} center={[0, 0.4, 0]} size={0.012} />
+			</Stage3D>
+			<svg width={W} height={H} viewBox={`0 0 ${W} ${H}`} style={{position: 'absolute', inset: 0}}>
+				<defs>
+					<linearGradient id="tt-gold" x1="0" y1="330" x2="0" y2="470" gradientUnits="userSpaceOnUse">
+						<stop offset="0" stopColor="#fff3cf" />
+						<stop offset="0.5" stopColor="#f3cd7a" />
+						<stop offset="1" stopColor="#b8862a" />
+					</linearGradient>
+				</defs>
+				<text x={1380} y={450} textAnchor="middle" style={{fontFamily: '"Noto Serif CJK SC", serif', fontWeight: 900, fontSize: 104}} fill="url(#tt-gold)">《一句话，</text>
+				<text x={1420} y={590} textAnchor="middle" style={{fontFamily: '"Noto Serif CJK SC", serif', fontWeight: 900, fontSize: 104}} fill="url(#tt-gold)">值多少钱？》</text>
+				<line x1={1150} x2={1650} y1={650} y2={650} stroke={GOLD} strokeOpacity={0.6} strokeWidth={1.5} />
+				<text x={1400} y={700} textAnchor="middle" style={tx(30, 500)} fill="#e6dcc6" letterSpacing="0.2em">2026 诺贝尔经济学奖 · 霍尔 & 伍德福德</text>
+			</svg>
+		</AbsoluteFill>
+	);
+};
+const MedalMat: React.FC<{bump?: THREE.Texture}> = ({bump}) => {
+	const e = useEnv();
+	return <meshPhysicalMaterial color="#d2a24e" metalness={1} roughness={0.3} bumpMap={bump} bumpScale={bump ? 2.2 : 0} {...envProps(e, 0.35)} />;
+};
+
+/* ---------- reveal · 82.5 s: the strongbox opens — empty, dust turning in the beam ---------- */
+const Steel: React.FC = () => {
+	const e = useEnv();
+	return <meshPhysicalMaterial color="#6b6e72" metalness={0.8} roughness={0.5} {...envProps(e, 0.25)} />;
+};
+const DocVault: React.FC = () => {
+	const w = 2.4, d = 1.6, h = 0.9, t = 0.06;
+	return (
+		<AbsoluteFill style={{background: '#04050a'}}>
+			<Stage3D cam={{pos: [0, 3.5, 5.2], target: [0, 0.35, -0.2], fov: 34}} bg="#05060a" env={0.25} focus={5.6} aperture={0.002} bloom={0.55} threshold={0.88} vig={0.85} grain={0.04}>
+				<Shadows />
+				<KeySpot from={[0.3, 5.5, 1.2]} to={[0, 0, 0]} intensity={230} angle={0.42} />
+				<pointLight position={[0, 3.2, -4.5]} color="#7fa6ff" intensity={22} decay={2} />
+				<ambientLight intensity={0.01} />
+				<mesh rotation={[-Math.PI / 2, 0, 0]} receiveShadow>
+					<planeGeometry args={[30, 30]} />
+					<meshPhysicalMaterial color="#0d0a08" roughness={0.5} clearcoat={0.4} />
+				</mesh>
+				<group position={[0, 0, 0]}>
+					{/* inside floor, lined with dark felt */}
+					<mesh position={[0, t, 0]} rotation={[-Math.PI / 2, 0, 0]} receiveShadow>
+						<planeGeometry args={[w - 2 * t, d - 2 * t]} />
+						<meshStandardMaterial color="#3a1414" roughness={0.95} />
+					</mesh>
+					{[[0, h / 2, d / 2, w, h, t], [0, h / 2, -d / 2, w, h, t], [w / 2, h / 2, 0, t, h, d], [-w / 2, h / 2, 0, t, h, d]].map(([x, y, z, sx, sy, sz], i) => (
+						<mesh key={i} position={[x, y, z]} castShadow receiveShadow>
+							<boxGeometry args={[sx, sy, sz]} />
+							<Steel />
+						</mesh>
+					))}
+					{/* the lid, hinged open at the back */}
+					<group position={[0, h, -d / 2]} rotation={[-1.95, 0, 0]}>
+						<mesh position={[0, 0.0, d / 2]} castShadow>
+							<boxGeometry args={[w + 0.06, t * 1.6, d + 0.06]} />
+							<Steel />
+						</mesh>
+					</group>
+				</group>
+				<SoftBeam from={[0.3, 5.5, 1.2]} to={[0, 0.05, 0]} r0={0.1} r1={1.4} k={0.22} />
+				<Dust n={500} box={[2.2, 2.2, 1.5]} center={[0, 1.1, 0]} size={0.014} />
+			</Stage3D>
+			<svg width={W} height={H} viewBox={`0 0 ${W} ${H}`} style={{position: 'absolute', inset: 0}}>
+				<Sub t="[一分钱都没有]" />
+			</svg>
+		</AbsoluteFill>
+	);
+};
+
+const FR: React.FC[] = [DocHook, DocKey, DocTitle, DocVault];
 const DocFrame: React.FC<{i: number}> = ({i}) => {
 	const C = FR[i];
 	return <C />;
