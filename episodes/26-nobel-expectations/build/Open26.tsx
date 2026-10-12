@@ -1,5 +1,5 @@
 import React from 'react';
-import {AbsoluteFill, Composition, Img, interpolate, registerRoot, spring, staticFile, useCurrentFrame, Easing} from 'remotion';
+import {AbsoluteFill, Img, interpolate, spring, staticFile, useCurrentFrame, Easing} from 'remotion';
 import {Sub, lineAt} from '../kf/common';
 import lines from './ep26v4_open.json';
 
@@ -132,6 +132,7 @@ const Bing: React.FC<{x: number; y: number; r: number; o?: number; bite?: number
 		return [x + Math.cos(a) * d, y + Math.sin(a) * d, (i * 47) % 180];
 	});
 	const bx = x + r * 0.78, by = y - r * 0.62;
+	const uid = `b${Math.round(x)}_${Math.round(r)}`;
 	return (
 		<g opacity={o} transform={`translate(${x} ${y}) scale(${sx} 1) translate(${-x} ${-y})`}>
 			<defs>
@@ -141,13 +142,13 @@ const Bing: React.FC<{x: number; y: number; r: number; o?: number; bite?: number
 					<stop offset="0.9" stopColor="#9c5d22" />
 					<stop offset="1" stopColor="#6e3d14" />
 				</radialGradient>
-				<mask id="bite">
+				<mask id={uid}>
 					<rect x={x - r - 10} y={y - r - 10} width={2 * r + 20} height={2 * r + 20} fill="#fff" />
 					{bite > 0 && [[0, 0, 0.36], [-0.3, 0.12, 0.2], [0.14, 0.32, 0.22]].map(([dx, dy, rr], i) => <circle key={i} cx={bx + dx * r} cy={by + dy * r} r={rr * r * bite} fill="#000" />)}
 				</mask>
 			</defs>
 			<ellipse cx={x + 14} cy={y + r * 0.95} rx={r * 0.95} ry={r * 0.16} fill="#000" opacity={0.45} />
-			<g mask="url(#bite)">
+			<g mask={`url(#${uid})`}>
 				<circle cx={x} cy={y} r={r} fill="url(#crust)" />
 				<circle cx={x} cy={y} r={r * 0.86} fill="none" stroke="#7a4317" strokeOpacity={0.35} strokeWidth={r * 0.05} />
 				{[-0.35, 0, 0.35].map((k, i) => <path key={i} d={`M${x - r * 0.55} ${y + k * r - r * 0.12} q ${r * 0.55} ${-r * 0.18} ${r * 1.1} 0`} stroke="#6b3812" strokeOpacity={0.4} strokeWidth={r * 0.06} fill="none" strokeLinecap="round" />)}
@@ -335,5 +336,5 @@ const Open26: React.FC = () => {
 	);
 };
 
-const Root: React.FC = () => <Composition id="OPEN26" component={Open26} durationInFrames={T.end} fps={FPS} width={W} height={H} />;
-registerRoot(Root);
+export {Room, Grain, Vignette, Phone, StatusBar, Banner, LockScreen, AppScreen, Bubble, Bing, Medal2D, lerp, ease, GOLD, SANS, SERIF, W, H, FPS, T};
+export default Open26;

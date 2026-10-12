@@ -386,7 +386,7 @@ const Steel: React.FC = () => {
 	const e = useEnv();
 	return <meshPhysicalMaterial color="#6b6e72" metalness={0.8} roughness={0.5} {...envProps(e, 0.25)} />;
 };
-const DocVault: React.FC = () => {
+const DocVault: React.FC<{lid?: number; bare?: boolean}> = ({lid = -1.95, bare}) => {
 	const w = 2.4, d = 1.6, h = 0.9, t = 0.06;
 	return (
 		<AbsoluteFill style={{background: '#04050a'}}>
@@ -412,7 +412,7 @@ const DocVault: React.FC = () => {
 						</mesh>
 					))}
 					{/* the lid, hinged open at the back */}
-					<group position={[0, h, -d / 2]} rotation={[-1.95, 0, 0]}>
+					<group position={[0, h, -d / 2]} rotation={[lid, 0, 0]}>
 						<mesh position={[0, 0.0, d / 2]} castShadow>
 							<boxGeometry args={[w + 0.06, t * 1.6, d + 0.06]} />
 							<Steel />
@@ -422,15 +422,17 @@ const DocVault: React.FC = () => {
 				<SoftBeam from={[0.3, 5.5, 1.2]} to={[0, 0.05, 0]} r0={0.1} r1={1.4} k={0.22} />
 				<Dust n={500} box={[2.2, 2.2, 1.5]} center={[0, 1.1, 0]} size={0.014} />
 			</Stage3D>
-			<svg width={W} height={H} viewBox={`0 0 ${W} ${H}`} style={{position: 'absolute', inset: 0}}>
+			{!bare && <svg width={W} height={H} viewBox={`0 0 ${W} ${H}`} style={{position: 'absolute', inset: 0}}>
 				<Sub t="[一分钱都没有]" />
-			</svg>
+			</svg>}
 		</AbsoluteFill>
 	);
 };
 
 const DocMedalBare: React.FC = () => <DocTitle bare />;
-const FR: React.FC[] = [DocHook, DocKey, DocTitle, DocVault, DocMedalBare];
+const VaultShut: React.FC = () => <DocVault lid={0} bare />;
+const VaultOpen: React.FC = () => <DocVault bare />;
+const FR: React.FC[] = [DocHook, DocKey, DocTitle, DocVault, DocMedalBare, VaultShut, VaultOpen];
 const DocFrame: React.FC<{i: number}> = ({i}) => {
 	const C = FR[i];
 	return <C />;
