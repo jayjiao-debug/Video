@@ -1,0 +1,34 @@
+{
+  "label": "gate1_r4",
+  "title_seen": "利率没动，只改了一句话",
+  "would_keep_watching_after_3s": true,
+  "why": "Barely. Line #1 '听说下周涨价，你今天就买了' is something I've actually done (Double 11, a milk tea price going up), so I nod. On its own it reads like an ad, though. The title is what keeps me: 'rates didn't move, they only changed one sentence' makes me want to see the sentence.",
+  "would_keep_watching_after_8s": true,
+  "why_8s": "By about 7s I see the actual sentence (#3 '低利息，至少到2013年年中'), so the title's promise is paid off quickly. That's good. But 2011 and the US central bank feel far from me. I stay because I want to know what that one sentence did, not because I care about 2011.",
+  "first_moment_I_got_curious": "#2 (3.0s) '美国央行没动利息，只改了一句话'. I wondered how one sentence could matter and what the link to the 'buy before the price goes up' line was. Real curiosity came back at #18 (69.4s) '这个计划一次都没用过'.",
+  "where_I_would_swipe_away": [
+    "12.9s-16.5s: 3.6 seconds with no subtitle right after #4. If nothing big is on screen, this is where my thumb moves. #4 '做预测的人也信了' is also a weak payoff. Some forecasters believing it isn't exciting, and I wanted to hear what happened to normal people or prices.",
+    "16.5s-25s (#5-#6): 'This year's Nobel' plus a name, 霍尔, that I've never heard of. It suddenly feels like a lecture. 'Nobel' buys a little respect but also says 'homework is coming'.",
+    "32.2s-44.6s (#9-#11): second name, 伍德福德, then a list ('花钱、定价、还有公司招不招你'), then '利息降到底'. This is the densest stretch. '公司招不招你' grabs me for a second as a student who needs a job, but nothing follows up on it.",
+    "78s-93.8s (#20-#23): the ending repeats itself. The 告示 metaphor comes up for the third time and '说清楚、让人信' sounds like a textbook summary. #20 '一句话也能让借钱变贵' has no example, so it's abstract. If I'm still here I'd probably swipe at around 85s, before the nice last line."
+  ],
+  "lines_I_did_not_understand": [
+    "#4 '做预测的人' - who? Economists? Banks? Why should I care that they believed it?",
+    "#6 '霍尔' and #9 '伍德福德' - names with no intro. I don't know who they are, and I don't know if they're the Nobel winners or just quoted people.",
+    "#8 '剩下的，多是月光族' - I had to stop and think. If 月光族 spend everything now, isn't that also 'spending by future income'? Then I got it: they spend what's in hand, not what they expect. It took a second, and on Douyin I don't have a second.",
+    "#10 '定价' - who is setting prices? Shops? Companies? It's lumped in with '花钱' and '招不招你' and goes by too fast.",
+    "#11 '利息降到底' - why does it matter that the rate is already at the bottom? I guessed 'they can't cut any more, so all they have left is talking', but the video doesn't say it. That's the key logic and I had to fill it in myself.",
+    "#11 vs #1 shop metaphor - the shop in #1 posts 'prices go UP next week, buy now'. The central bank notice is 'rates stay LOW for a long time'. The direction feels flipped. I wasn't sure whether the notice is meant to make me spend now or relax.",
+    "#16 '借条' - I think it means government bonds. A cute word, but I'm not 100% sure.",
+    "#17 '少付约1块' - from 7 down to about 6? I can do the math, but 1 yuan sounds tiny. I don't feel how big that is for a country."
+  ],
+  "takeaway_in_my_words": "When the central bank can't cut rates any more, it can still move things just by saying what it will do later. If people believe it, they act on it today. The big example is the ECB boss saying 'whatever it takes': Spain's borrowing got cheaper and the bank never even used the plan.",
+  "surprise_that_stuck": "#18-#19: the plan to buy Spain's bonds was used zero times by 2015, and the announcement alone was enough. That is the one fact I'd remember tomorrow. '相信我，这就够了' (#15) is a cool line too.",
+  "title_I_would_click": "利率没动，只改了一句话 - yes, I'd click. It's a small puzzle (nothing changed, but something changed), and it doesn't need finance knowledge to feel curious.",
+  "title_that_misleads": "Not really misleading. But the title is about the 2011 US sentence, and the best part of the video is the 2012 Europe 'whatever it takes' story, so the title undersells the payoff. The folder name hints at a phone, and nothing about phones appears in the lines. Not my problem as a viewer, but if the cover shows a phone I'd be confused.",
+  "what_I_would_comment": "“相信我，这就够了” 这句太帅了，一次都没用就把利息压下来了？所以央行其实是靠嘴吃饭 😂 / 霍尔和伍德福德是谁啊，能不能先介绍一下",
+  "what_I_would_tell_a_friend": "央行有时候啥都不用做，说一句'我会出手'，大家信了，借钱就变便宜了。欧洲那个行长说了句'不惜一切代价'，计划一次都没用过就管用了。",
+  "watch_to_end_score_1_to_10": 6,
+  "score_reason": "The hook and the Spain/'whatever it takes' section are good. The no-subtitle gap at 12.9-16.5s, the two unintroduced names, and a repetitive last 15 seconds bring it down. At about 94s it's long for this kind of topic, and I'd probably leave around 80-85s.",
+  "for_frames_only": []
+}
