@@ -351,7 +351,8 @@ const fdie = (g: G, x: number, y: number, a: number, glyph: string, pips: number
   if (glyph) {
     g.save(); g.shadowColor = `rgba(255,214,140,${0.5 + 0.5 * glow})`; g.shadowBlur = 20 + 30 * glow;
     const gg = g.createLinearGradient(0, y - a, 0, y); gg.addColorStop(0, '#fff3cf'); gg.addColorStop(0.5, '#f0c873'); gg.addColorStop(1, '#b07c32');
-    g.fillStyle = gg; g.font = `900 ${a * 0.7}px "Noto Serif CJK SC"`; g.textAlign = 'center'; g.textBaseline = 'middle'; g.fillText(glyph, x, y - a / 2 + a * 0.04); g.restore();
+    g.fillStyle = gg; g.font = `900 ${a * 0.7}px "Noto Serif CJK SC"`; g.textAlign = 'center'; g.textBaseline = 'alphabetic';
+    { const m = g.measureText(glyph); g.fillText(glyph, x + (m.actualBoundingBoxLeft - m.actualBoundingBoxRight) / 2, y - a / 2 + (m.actualBoundingBoxAscent - m.actualBoundingBoxDescent) / 2); } g.restore();
   } else {
     const P: Record<number, number[][]> = { 1: [[0, 0]], 2: [[-1, -1], [1, 1]], 3: [[-1, -1], [0, 0], [1, 1]], 4: [[-1, -1], [1, -1], [-1, 1], [1, 1]], 5: [[-1, -1], [1, -1], [0, 0], [-1, 1], [1, 1]], 6: [[-1, -1], [1, -1], [-1, 0], [1, 0], [-1, 1], [1, 1]] };
     g.fillStyle = '#f0c873'; P[pips].forEach(([i, j]) => { g.beginPath(); g.arc(x + i * a * 0.27, y - a / 2 + j * a * 0.27, a * 0.075, 0, 6.3); g.fill(); });
