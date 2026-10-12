@@ -105,8 +105,10 @@ export const G1: React.FC<{ T: number; f: number }> = ({ T, f }) => {
       g.restore();
     }}>
       <Slate a="WASHINGTON, D.C." b="2011.08.09  14:15" o={eo(T, 1.0, 0.5)} />
+      <Lbl x={960} y={250} s="央行 = 管一个国家利息高低的机构" size={30} col={C.cream} anchor="center" o={eo(T, 0.9, 0.5) * (1 - pr(T, 4.2, 0.4))} />
       <Lbl x={960} y={380} s="FEDERAL RESERVE · PRESS RELEASE" size={18} serif={false} col={C.dim} ls="0.4em" anchor="center" o={eo(T, 0.6, 0.6) * (1 - push * 0.5)} />
       <Chapter n="I" t="一句话" o={eo(T, 1.3, 0.5)} />
+      <Lbl x={960} y={680} s="（低利息）至少维持到 2013 年年中" size={30} col={C.goldHi} anchor="center" o={eo(T, 4.9, 0.5)} />
     </Light>
   );
 };
@@ -133,14 +135,14 @@ export const G2: React.FC<{ T: number; f: number }> = ({ T, f }) => {
       if (T >= LAND) { sparks(g, end[0], end[1], LAND, T, 110, GOLD, 1.6, 7); glowDot(g, end[0], end[1], 60, 0.35); }
       g.restore();
     }}>
-      <Lbl x={220} y={210} s="两年期美国国债利率 · 2011年8月9日" size={30} o={eo(T, CUT.yield + 0.1, 0.5)} />
+      <Lbl x={220} y={210} s="美国政府借两年钱的利息 · 2011年8月9日" size={30} o={eo(T, CUT.yield + 0.1, 0.5)} />
       <Lbl x={X(0.62) + 14} y={262} s="14:15 声明发布" size={18} col={C.gold} serif={false} ls="0.2em" o={eo(T, MARK, 0.3)} />
       <div style={{ position: 'absolute', left: end[0] + 34, top: end[1] - 50, opacity: clamp(pop(T, LAND, 0.3)), transform: `scale(${pop(T, LAND, 0.3)})`, transformOrigin: '0 50%' }}>
         <div style={{ fontFamily: F.lat, fontWeight: 700, fontSize: 72, color: C.goldHi, textShadow: `0 0 30px rgba(${GOLD},.6)`, ...LNUM }}>0.20%</div>
         <div style={{ fontFamily: F.serif, fontWeight: 700, fontSize: 26, letterSpacing: '0.2em', color: C.gold }}>收盘 · 历史最低</div>
       </div>
       <div style={{ position: 'absolute', left: 1580, top: 300, width: 240, padding: '22px 0', border: `1.5px solid rgba(${GOLD},.45)`, boxShadow: `0 0 30px rgba(${GOLD},.15), inset 0 0 30px rgba(${GOLD},.08)`, textAlign: 'center', opacity: eo(T, LAND + 0.3, 0.4) }}>
-        <div style={{ fontFamily: F.serif, fontWeight: 700, fontSize: 22, letterSpacing: '0.2em', color: C.dim }}>政策利率</div>
+        <div style={{ fontFamily: F.serif, fontWeight: 700, fontSize: 22, letterSpacing: '0.2em', color: C.dim }}>央行定的利息</div>
         <div style={{ fontFamily: F.lat, fontWeight: 700, fontSize: 58, color: C.cream, marginTop: 6, ...LNUM }}>0–0.25%</div>
         {T >= STAMP - 0.08 && <div style={{ display: 'inline-block', marginTop: 12, padding: '4px 14px', border: `2px solid ${C.red}`, color: '#ff8a6e', boxShadow: '0 0 18px rgba(255,120,90,.5)', fontFamily: F.serif, fontWeight: 900, fontSize: 24, letterSpacing: '0.3em', transform: `rotate(-6deg) scale(${lerp(1.6, 1, eo(T, STAMP - 0.08, 0.08))})`, opacity: eo(T, STAMP - 0.08, 0.06) }}>未变</div>}
       </div>
@@ -222,7 +224,7 @@ export const G4: React.FC<{ T: number; f: number }> = ({ T, f }) => {
       g.restore();
     }}>
       <div style={{ position: 'absolute', inset: 0, transformOrigin: '960px 540px', transform: `scale(${lerp(1, 1.04, pr(T, CUT.laur, 8))})` }}>
-        <Card x={250} k={a} cn="罗伯特·霍尔" en="Robert E. Hall" inst="斯坦福大学" born="1943年生 · 美国" work="J. Political Economy · 1978" workSub="人一辈子怎么花钱" />
+        <Card x={250} k={a} cn="罗伯特·霍尔" en="Robert E. Hall" inst="斯坦福大学" born="1943年生 · 美国" work="J. Political Economy · 1978" workSub="人是怎么决定花多少钱的" />
         <Card x={1030} k={b} cn="迈克尔·伍德福德" en="Michael Woodford" inst="哥伦比亚大学" born="1955年生 · 美国" work="Interest and Prices · 2003" workSub="央行的一句话为什么管用" />
       </div>
       <Slate a="STOCKHOLM" b="2026.10.12  11:45" o={eo(T, CUT.laur + 0.3, 0.5)} />
@@ -270,7 +272,7 @@ export const G6: React.FC<{ T: number; f: number }> = ({ T, f }) => {
       g.restore();
     }}>
       <div style={{ position: 'absolute', inset: 0, transformOrigin: '720px 720px', transform: `scale(${camS})` }}>
-        <Lbl x={330} y={210} s="美国：物价涨幅（纵）× 失业率（横）" size={28} o={eo(T, CUT.oil + 1.2, 0.5)} />
+        <Lbl x={330} y={210} s="美国：越往上＝涨价越多 · 越往右＝失业越多" size={28} o={eo(T, CUT.oil + 1.2, 0.5)} />
         {[0, 4, 8, 12].map((p) => <Lbl key={p} x={300} y={Y(p) - 14} s={`${p}%`} size={22} col={C.dim} anchor="right" serif={false} o={eo(T, CUT.oil + 1.2, 0.5)} />)}
         {[3, 5, 7, 9].map((u) => <Lbl key={u} x={X(u) - 16} y={838} s={`${u}%`} size={22} col={C.dim} serif={false} o={eo(T, CUT.oil + 1.2, 0.5)} />)}
         {S60.map((y, i) => <Lbl key={y} x={X(UNEMP[y]) + 12} y={Y(INFL[y]) - 34} s={`'${String(y).slice(2)}`} size={20} col="rgba(127,214,200,.8)" serif={false} o={eo(T, at60(i), 0.3)} />)}
@@ -297,7 +299,7 @@ export const G6: React.FC<{ T: number; f: number }> = ({ T, f }) => {
 /* ================================================================ G7 · Hall: one light, then a life as two trails (49.01 – 63.18) */
 export const G7: React.FC<{ T: number; f: number }> = ({ T, f }) => {
   const inc = (sim as any).hall.income as number[], con = (sim as any).hall.cons as number[];
-  const X = (q: number) => 200 + q * 8.6, Y = (v: number) => 840 - (v - 90) * 5.2;
+  const X = (q: number) => 200 + q * 8.6, Y = (v: number) => 840 - (v - 90) * 3.6;
   const D0 = 52.9, D1 = 61.5;
   const qf = lerp(0, 159, clamp((T - D0) / (D1 - D0))), q = Math.floor(qf);
   const tq = (qq: number) => D0 + (qq / 159) * (D1 - D0);
@@ -327,15 +329,15 @@ export const G7: React.FC<{ T: number; f: number }> = ({ T, f }) => {
     }}>
       <Lbl x={960} y={640} s="一个家庭" size={32} col={C.cream} ls="0.4em" anchor="center" o={eo(T, CUT.hall + 0.5, 0.5) * (1 - zoom)} />
       <div style={{ position: 'absolute', inset: 0, opacity: chartO }}>
-        <Lbl x={200} y={210} s="— 收入" size={26} col="#9fe3d6" />
+        <Lbl x={200} y={210} s="— 进账" size={26} col="#9fe3d6" />
         <Lbl x={340} y={210} s="— 花钱" size={26} col={C.goldHi} />
-        <Lbl x={X(20) + 14} y={Y(160) - 20} s="奖金" size={26} col="#9fe3d6" o={eo(T, tq(21), 0.3)} />
+        <Lbl x={X(20) + 14} y={Y(160) - 20} s="压岁钱（一次性）" size={26} col="#9fe3d6" o={eo(T, tq(21), 0.3)} />
         <Lbl x={X(24) + 12} y={Y(104) - 40} s="花钱几乎不动" size={22} col={C.dim} serif={false} o={eo(T, tq(23), 0.3)} />
-        <Lbl x={X(60) + 14} y={300} s="涨薪的消息" size={28} col={C.goldHi} o={eo(T, tq(60), 0.3)} />
-        <Lbl x={X(60) + 14} y={342} s="花钱线立刻整体抬升" size={22} col={C.dim} serif={false} o={eo(T, tq(60) + 0.2, 0.3)} />
+        <Lbl x={X(60) + 14} y={430} s="零花钱以后每月都涨" size={28} col={C.goldHi} o={eo(T, tq(60), 0.3)} />
+        <Lbl x={X(60) + 14} y={472} s="花钱线立刻整体抬升" size={22} col={C.dim} serif={false} o={eo(T, tq(60) + 0.2, 0.3)} />
         <Note x={200} y={880} s="一个人 40 年 · 按霍尔 1978 模型模拟（示意）" />
         {formula > 0 && (
-          <div style={{ position: 'absolute', right: 150, top: 220, textAlign: 'right', clipPath: `inset(-20px ${(1 - formula) * 100}% -20px -20px)` }}>
+          <div style={{ position: 'absolute', right: 150, top: 262, textAlign: 'right', clipPath: `inset(-20px ${(1 - formula) * 100}% -20px -20px)` }}>
             <div style={{ fontFamily: F.lat, fontStyle: 'italic', fontWeight: 500, fontSize: 92, color: C.goldHi, textShadow: `0 0 30px rgba(${GOLD},.6), 0 0 80px rgba(${GOLD},.3)` }}>
               C<sub style={{ fontSize: 46 }}>t+1</sub> = C<sub style={{ fontSize: 46 }}>t</sub> + <span style={{ fontFamily: F.serif, fontStyle: 'normal', fontWeight: 900, fontSize: 70 }}>新消息</span>
             </div>
@@ -366,15 +368,15 @@ export const G11: React.FC<{ T: number; f: number }> = ({ T, f }) => {
       g.restore();
     }}>
       <div style={{ position: 'absolute', inset: 0, transformOrigin: '760px 560px', transform: `scale(${lerp(1.0, 1.05, pr(T, CUT.fg, 8))})` }}>
-        <Lbl x={260} y={210} s="经济活动 · 伍德福德模型实验" size={28} />
-        <Lbl x={X(0) + 12} y={262} s="经济下滑 · 利率已经是 0" size={22} col="#9fe3d6" />
+        <Lbl x={260} y={210} s="经济好坏 · 伍德福德模型里的实验" size={28} />
+        <Lbl x={X(0) + 12} y={262} s="坏年景 · 利息已经降到 0" size={22} col="#9fe3d6" />
         <Lbl x={160} y={Y(0) - 14} s="正常" size={22} col={C.dim} />
-        <Lbl x={X(3)} y={Y(fg.x_no[3]) + 26} s="只管今天" size={28} col="#ff9a7e" o={eo(T, CUT.fg + 1.2, 0.4)} />
-        <Lbl x={X(10)} y={Y(fg.x_fg[10]) - 64} s='先说一句"低利率会保持更久"' size={28} col={C.goldHi} o={eo(T, CUT.fg + 2.4, 0.4)} />
+        <Lbl x={X(3)} y={Y(fg.x_no[3]) + 26} s="什么都不说" size={28} col="#ff9a7e" o={eo(T, CUT.fg + 1.2, 0.4)} />
+        <Lbl x={X(10)} y={Y(fg.x_fg[10]) - 64} s='先说一句"低利息会保持更久"' size={28} col={C.goldHi} o={eo(T, CUT.fg + 2.4, 0.4)} />
         <Lbl x={X(2) + 18} y={(Y(fg.x_fg[2]) + Y(fg.x_no[2])) / 2 - 16} s="一句话的差别" size={26} col={C.gold} o={gapK} />
         <Note x={260} y={890} s="按新凯恩斯模型模拟 · 只示意方向" />
         <div style={{ position: 'absolute', left: 1580, top: 330, width: 230, padding: '20px 0', border: `1.5px solid rgba(${GOLD},.45)`, boxShadow: `0 0 30px rgba(${GOLD},.15)`, textAlign: 'center' }}>
-          <div style={{ fontFamily: F.serif, fontWeight: 700, fontSize: 22, letterSpacing: '0.2em', color: C.dim }}>利率</div>
+          <div style={{ fontFamily: F.serif, fontWeight: 700, fontSize: 22, letterSpacing: '0.2em', color: C.dim }}>利息</div>
           <div style={{ fontFamily: F.lat, fontWeight: 700, fontSize: 70, color: C.cream, ...LNUM }}>0%</div>
           <div style={{ fontFamily: F.serif, fontWeight: 700, fontSize: 22, color: C.gold, letterSpacing: '0.2em' }}>一分没动</div>
         </div>
@@ -428,7 +430,7 @@ export const G12: React.FC<{ T: number; f: number }> = ({ T, f }) => {
 
 /* ================================================================ G12b · trust: the sentence in light flickers, scatters, re-forms (105.71 – 113.81) */
 export const G12b: React.FC<{ T: number; f: number }> = ({ T, f }) => {
-  const DOUBT = 109.0, BACK = 111.7;
+  const DOUBT = 108.6, BACK = 111.7;
   const scatter = eo(T, DOUBT, 0.9) * (1 - eio(T, BACK, 0.45));
   return (
     <Light f={f} draw={(g) => {
@@ -458,8 +460,8 @@ export const GEnd: React.FC<{ T: number; f: number }> = ({ T, f }) => {
         <text x={960} y={252} textAnchor="middle" style={{ fontFamily: F.lat, fontStyle: 'italic', fontWeight: 500, fontSize: 64 }} fill={C.gold} opacity={fo(0.4)}>J</text>
         <text x={960} y={304} textAnchor="middle" style={{ fontFamily: F.mono, fontWeight: 700, fontSize: 18, letterSpacing: '0.5em' }} fill={C.gold} opacity={0.8 * fo(0.6)}>JUNO</text>
         <text x={960} y={430} textAnchor="middle" opacity={fo(0.5)} style={{ fontFamily: F.serif, fontWeight: 900, fontSize: 92 }} fill="url(#gec)">《一句话，让钱变便宜》</text>
-        <text x={960} y={540} textAnchor="middle" opacity={fo(0.9)} style={{ fontFamily: F.serif, fontWeight: 700, fontSize: 46, letterSpacing: '0.06em' }} fill={C.cream}>央行的一句话，会改变你的打算吗？</text>
-        <text x={960} y={590} textAnchor="middle" opacity={fo(1.1)} style={{ fontFamily: F.sans, fontWeight: 500, fontSize: 25, letterSpacing: '0.12em' }} fill={C.dim}>评论区聊聊：你会等降息再做决定吗？</text>
+        <text x={960} y={540} textAnchor="middle" opacity={fo(0.9)} style={{ fontFamily: F.serif, fontWeight: 700, fontSize: 46, letterSpacing: '0.06em' }} fill={C.cream}>你会因为“听说要涨价”，就提前买吗？</text>
+        <text x={960} y={590} textAnchor="middle" opacity={fo(1.1)} style={{ fontFamily: F.sans, fontWeight: 500, fontSize: 25, letterSpacing: '0.12em' }} fill={C.dim}>评论区聊聊：你被“预期”带着走过吗？</text>
       </svg>
       <div style={{ position: 'absolute', left: 0, right: 0, top: 640, display: 'flex', justifyContent: 'center', opacity: fo(1.4) }}>
         <div style={{ padding: '10px 36px', borderRadius: 40, border: `1.5px solid ${C.gold}`, boxShadow: `0 0 24px rgba(${GOLD},.25)`, fontFamily: F.sans, fontWeight: 500, fontSize: 28, letterSpacing: '0.2em', color: C.gold }}>{JUNO.follow}</div>
