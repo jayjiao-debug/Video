@@ -18,3 +18,4 @@
 | 2026-10-12 17:05 | v3 script: boss's 饼 as the spine (owner: 和我有什么关系) | producer | | |
 | 2026-10-12 17:20 | v4 script: slower (~4 字/秒), full 2:42 track, 49 lines | producer | sent | |
 | 2026-10-12 17:25 | v4.1: no-finance-background pass (bridge to 全国, 借新还旧, 央行能印钱) | producer | sent | |
+| 2026-10-12 18:05 | 试镜: opening 0–20.7 s (phone + 饼 + medal title), 2D + 3D medal still | producer | sent | |

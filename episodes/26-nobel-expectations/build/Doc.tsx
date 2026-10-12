@@ -334,7 +334,7 @@ const medalBump = () => {
 	t.rotation = Math.PI / 2;
 	return t;
 };
-const DocTitle: React.FC = () => {
+const DocTitle: React.FC<{bare?: boolean}> = ({bare}) => {
 	const bump = useMemo(() => medalBump(), []);
 	const e = useEnv;
 	return (
@@ -360,7 +360,7 @@ const DocTitle: React.FC = () => {
 				</mesh>
 				<Dust n={300} box={[5, 3, 3]} center={[0, 0.4, 0]} size={0.012} />
 			</Stage3D>
-			<svg width={W} height={H} viewBox={`0 0 ${W} ${H}`} style={{position: 'absolute', inset: 0}}>
+			{!bare && <svg width={W} height={H} viewBox={`0 0 ${W} ${H}`} style={{position: 'absolute', inset: 0}}>
 				<defs>
 					<linearGradient id="tt-gold" x1="0" y1="330" x2="0" y2="470" gradientUnits="userSpaceOnUse">
 						<stop offset="0" stopColor="#fff3cf" />
@@ -372,7 +372,7 @@ const DocTitle: React.FC = () => {
 				<text x={1420} y={590} textAnchor="middle" style={{fontFamily: '"Noto Serif CJK SC", serif', fontWeight: 900, fontSize: 104}} fill="url(#tt-gold)">值多少钱？》</text>
 				<line x1={1150} x2={1650} y1={650} y2={650} stroke={GOLD} strokeOpacity={0.6} strokeWidth={1.5} />
 				<text x={1400} y={700} textAnchor="middle" style={tx(30, 500)} fill="#e6dcc6" letterSpacing="0.2em">2026 诺贝尔经济学奖 · 霍尔 & 伍德福德</text>
-			</svg>
+			</svg>}
 		</AbsoluteFill>
 	);
 };
@@ -429,7 +429,8 @@ const DocVault: React.FC = () => {
 	);
 };
 
-const FR: React.FC[] = [DocHook, DocKey, DocTitle, DocVault];
+const DocMedalBare: React.FC = () => <DocTitle bare />;
+const FR: React.FC[] = [DocHook, DocKey, DocTitle, DocVault, DocMedalBare];
 const DocFrame: React.FC<{i: number}> = ({i}) => {
 	const C = FR[i];
 	return <C />;
