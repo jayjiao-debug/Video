@@ -1,6 +1,7 @@
 import React, {useLayoutEffect, useMemo, useRef} from 'react';
 import {AbsoluteFill, Composition, registerRoot} from 'remotion';
 import * as THREE from 'three';
+import {useThree} from '@react-three/fiber';
 import {Stage3D, envProps, useEnv} from '../../episodes/xuming/three/stage3d';
 import {Sub} from '../kf/common';
 
@@ -119,24 +120,68 @@ const Dust: React.FC<{n: number; box: [number, number, number]; center?: [number
 	);
 };
 
-/** a volumetric beam faked with nested additive cones */
-const Beam: React.FC<{top: [number, number, number]; len: number; r0: number; r1: number; color?: string; k?: number}> = ({top, len, r0, r1, color = '#ffd9a0', k = 1}) => (
-	<group position={[top[0], top[1] - len / 2, top[2]]}>
-		{[1, 0.75, 0.5, 0.3].map((s, i) => (
-			<mesh key={i}>
-				<cylinderGeometry args={[r0 * s, r1 * s, len, 64, 1, true]} />
-				<meshBasicMaterial color={color} transparent opacity={0.035 * k * (1 + i * 0.6)} depthWrite={false} toneMapped={false} blending={THREE.AdditiveBlending} side={THREE.DoubleSide} />
-			</mesh>
-		))}
-	</group>
-);
+/** soft shadows on (PCF soft); set before the first frame */
+const Shadows: React.FC = () => {
+	const {gl} = useThree();
+	gl.shadowMap.enabled = true;
+	gl.shadowMap.type = THREE.PCFSoftShadowMap;
+	return null;
+};
+
+/** THE key light: one spotlight with soft shadows, aimed at the hero */
+const KeySpot: React.FC<{from: [number, number, number]; to: [number, number, number]; intensity: number; angle: number; color?: string}> = ({from, to, intensity, angle, color = '#ffd9a8'}) => {
+	const target = useMemo(() => {
+		const o = new THREE.Object3D();
+		o.position.set(...to);
+		o.updateMatrixWorld();
+		return o;
+	}, [to[0], to[1], to[2]]);
+	return (
+		<>
+			<primitive object={target} />
+			<spotLight position={from} target={target} color={color} intensity={intensity} angle={angle} penumbra={0.85} decay={2} distance={0} castShadow shadow-mapSize-width={2048} shadow-mapSize-height={2048} shadow-bias={-0.0004} shadow-radius={6} />
+		</>
+	);
+};
+
+/** a soft volumetric beam along the key light: bright core, smooth edges, fades along its length */
+const beamFrag = /* glsl */ `
+uniform vec3 uColor; uniform float uK; varying vec3 vN; varying vec3 vV; varying float vY;
+void main(){
+  float core = pow(abs(dot(normalize(vN), normalize(vV))), 2.2);   // brightest where we look through the middle
+  float along = smoothstep(0.0, 0.25, vY) * (1.0 - smoothstep(0.55, 1.0, vY)); // fade in near the lamp, fade out at the floor
+  float a = core * along * uK;
+  gl_FragColor = vec4(uColor * a, a);
+}`;
+const beamVert = /* glsl */ `
+varying vec3 vN; varying vec3 vV; varying float vY;
+void main(){
+  vec4 mv = modelViewMatrix * vec4(position, 1.0);
+  vN = normalMatrix * normal; vV = -mv.xyz; vY = uv.y;
+  gl_Position = projectionMatrix * mv;
+}`;
+const SoftBeam: React.FC<{from: [number, number, number]; to: [number, number, number]; r0: number; r1: number; k?: number; color?: string}> = ({from, to, r0, r1, k = 0.35, color = '#ffd9a8'}) => {
+	const {pos, quat, len} = useMemo(() => {
+		const A = new THREE.Vector3(...from), B = new THREE.Vector3(...to);
+		const dir = B.clone().sub(A);
+		const L = dir.length() * 1.25;
+		const q = new THREE.Quaternion().setFromUnitVectors(new THREE.Vector3(0, -1, 0), dir.clone().normalize());
+		return {pos: A.clone().add(dir.clone().normalize().multiplyScalar(L / 2)), quat: q, len: L};
+	}, [from.join(), to.join()]);
+	const mat = useMemo(() => new THREE.ShaderMaterial({uniforms: {uColor: {value: new THREE.Color(color)}, uK: {value: k}}, vertexShader: beamVert, fragmentShader: beamFrag, transparent: true, depthWrite: false, blending: THREE.AdditiveBlending, side: THREE.FrontSide}), [color, k]);
+	return (
+		<mesh position={pos} quaternion={quat} material={mat}>
+			<cylinderGeometry args={[r0, r1, len, 96, 1, true]} />
+		</mesh>
+	);
+};
 
 const Note: React.FC<{tex: THREE.Texture; position: [number, number, number]; rotation: [number, number, number]; s?: number; glow?: number; o?: number}> = ({tex, position, rotation, s = 1, glow = 0.25, o = 1}) => {
 	const e = useEnv();
 	return (
-		<mesh position={position} rotation={rotation} scale={s}>
+		<mesh position={position} rotation={rotation} scale={s} castShadow receiveShadow>
 			<planeGeometry args={[2, 1, 24, 12]} />
-			<meshPhysicalMaterial map={tex} emissiveMap={tex} emissive="#ffffff" emissiveIntensity={glow} roughness={0.55} sheen={0.6} side={THREE.DoubleSide} transparent opacity={o} {...envProps(e, 0.4)} />
+			<meshPhysicalMaterial map={tex} color="#b8ae9b" emissiveMap={tex} emissive="#ffffff" emissiveIntensity={glow} roughness={0.7} side={THREE.DoubleSide} transparent opacity={o} {...envProps(e, 0.15)} />
 		</mesh>
 	);
 };
@@ -157,9 +202,9 @@ const Coins: React.FC<{items: {p: [number, number, number]; r: [number, number, 
 		ref.current!.instanceMatrix.needsUpdate = true;
 	}, [items]);
 	return (
-		<instancedMesh ref={ref} args={[undefined, undefined, items.length]}>
+		<instancedMesh ref={ref} args={[undefined, undefined, items.length]} castShadow receiveShadow>
 			<cylinderGeometry args={[0.16, 0.16, 0.022, 48]} />
-			<meshPhysicalMaterial color="#b98a3a" metalness={1} roughness={0.3} bumpMap={bump} bumpScale={0.6} {...envProps(e, 0.35)} />
+			<meshPhysicalMaterial color="#c99642" metalness={1} roughness={0.34} bumpMap={bump} bumpScale={0.5} {...envProps(e, 0.22)} />
 		</instancedMesh>
 	);
 };
@@ -178,14 +223,15 @@ const DocHook: React.FC = () => {
 	}, []);
 	const bokeh = useMemo(() => {
 		const r = rnd(11);
-		return Array.from({length: 70}, () => ({p: [(r() - 0.5) * 34, -3 + r() * 9, -16 - r() * 6] as [number, number, number], c: r() > 0.3 ? '#ffb45e' : '#9fc3ff', s: 0.08 + r() * 0.16}));
+		return Array.from({length: 40}, () => ({p: [(r() - 0.5) * 34, -3 + r() * 9, -16 - r() * 6] as [number, number, number], c: r() > 0.3 ? '#a8763a' : '#4f6488', s: 0.08 + r() * 0.14}));
 	}, []);
 	return (
 		<AbsoluteFill style={{background: '#04050a'}}>
-			<Stage3D cam={{pos: [0, -0.4, 6.2], target: [0, 0.3, 0], fov: 38}} bg="#05060b" env={0.9} focus={6.0} aperture={0.004} bloom={0.55} threshold={0.88} vig={0.85} grain={0.04}>
-				<pointLight position={[2.5, 4, 3]} color="#ffcf96" intensity={9} decay={2} />
-				<pointLight position={[-4, 1, -3]} color="#7fa6ff" intensity={7} decay={2} />
-				<ambientLight intensity={0.05} />
+			<Stage3D cam={{pos: [0, -0.4, 6.2], target: [0, 0.3, 0], fov: 38}} bg="#05060b" env={0.35} focus={5.85} aperture={0.0028} bloom={0.55} threshold={0.88} vig={0.85} grain={0.04}>
+				<Shadows />
+				<KeySpot from={[-3.2, 6.5, 2.2]} to={[-0.6, 0.15, 0.4]} intensity={150} angle={0.3} />
+				<pointLight position={[3.5, 2.5, -4]} color="#7fa6ff" intensity={14} decay={2} />
+				<ambientLight intensity={0.015} />
 				{bokeh.map((b, i) => (
 					<mesh key={i} position={b.p}>
 						<sphereGeometry args={[b.s, 12, 8]} />
@@ -198,7 +244,7 @@ const DocHook: React.FC = () => {
 				{notes.slice(1).map((n, i) => (
 					<Note key={i} tex={n.tex} position={n.p} rotation={n.rot} s={n.s} glow={0.04} o={0.9} />
 				))}
-				<Beam top={[1.2, 7, -1]} len={10} r0={0.3} r1={3.2} k={0.35} />
+				<SoftBeam from={[-3.2, 6.5, 0.6]} to={[-0.9, 0.0, -1.4]} r0={0.12} r1={2.2} k={0.4} />
 				<Dust n={500} box={[12, 8, 8]} center={[0, 0.5, -1]} size={0.018} />
 			</Stage3D>
 			<svg width={W} height={H} viewBox={`0 0 ${W} ${H}`} style={{position: 'absolute', inset: 0}}>
@@ -230,15 +276,18 @@ const DocKey: React.FC = () => {
 	const tex = useMemo(() => noteTexture('欧 洲 央 行 · 承 诺', '不惜一切代价', '保住欧元 · 伦敦 · 2012年7月26日', '#1f4a3c', '#efe6cf', 'No. 20120726'), []);
 	return (
 		<AbsoluteFill style={{background: '#04050a'}}>
-			<Stage3D cam={{pos: [0, 7.4, 11.5], target: [0, -0.8, 0], fov: 34}} bg="#05060a" env={0.9} fog={[12, 30]} focus={11.0} aperture={0.0005} bloom={0.45} threshold={0.93} vig={0.85} grain={0.04}>
-				<pointLight position={[0, 9, 1]} color="#ffd9a0" intensity={36} decay={2} />
-				<pointLight position={[0, 4.5, 4.5]} color="#fff0d8" intensity={1.2} decay={2} />
-				<pointLight position={[-6, 2, -5]} color="#7fa6ff" intensity={18} decay={2} />
-				<pointLight position={[6, 1, 4]} color="#ff9a5a" intensity={8} decay={2} />
-				<ambientLight intensity={0.04} />
+			<Stage3D cam={{pos: [0, 7.4, 11.5], target: [0, -0.8, 0], fov: 34}} bg="#05060a" env={0.3} fog={[12, 30]} focus={11.0} aperture={0.0005} bloom={0.45} threshold={0.93} vig={0.85} grain={0.04}>
+				<Shadows />
+				<KeySpot from={[0.4, 10.5, 4.2]} to={[0, 0.6, 0.6]} intensity={520} angle={0.36} />
+				<pointLight position={[0, 6, -9]} color="#6f8fff" intensity={30} decay={2} />
+				<ambientLight intensity={0.012} />
+				<mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, -2.75, 0]} receiveShadow>
+					<planeGeometry args={[60, 60]} />
+					<meshPhysicalMaterial color="#0b0907" roughness={0.55} clearcoat={0.4} clearcoatRoughness={0.4} />
+				</mesh>
 				<Coins items={coins} />
-				<Beam top={[0, 12, 2.0]} len={12} r0={0.25} r1={1.8} k={0.4} />
-				<Note tex={tex} position={[0, 1.6, 1.2]} rotation={[-0.55, 0.06, -0.03]} s={1.7} glow={0.03} />
+				<SoftBeam from={[0.4, 10.5, 4.2]} to={[0, 0.6, 0.6]} r0={0.1} r1={2.0} k={0.5} />
+				<Note tex={tex} position={[0, 1.6, 1.2]} rotation={[-0.55, 0.06, -0.03]} s={1.7} glow={0.0} />
 				<Dust n={400} box={[9, 7, 7]} center={[0, 0.5, 0]} size={0.015} />
 			</Stage3D>
 			<svg width={W} height={H} viewBox={`0 0 ${W} ${H}`} style={{position: 'absolute', inset: 0}}>

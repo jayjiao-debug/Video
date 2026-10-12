@@ -12,3 +12,4 @@
 | 2026-10-12 15:40 | gate 2a r2: E 行情终端, F 钞票版画 (2 frames each) + D 3D 讲台 direction sample (primitives; needs real models) | producer (art-director role) | sheet sent | 35 |
 | 2026-10-12 15:20 | owner: "我想要不同的风格，高级纪录片，华丽炫技的" → round 3 | owner | | |
 | 2026-10-12 16:05 | gate 2a r3: 3D documentary look (drifting engraved notes with DOF/bokeh; 3,800-coin spiral frozen under a beam with the promise note). ~20 s/frame on CPU → film needs the GPU/farm render | producer (art-director role) | 2 frames sent | 45 |
+| 2026-10-12 15:34 | owner: "你的光源把握的很有问题" → relit: one shadow-casting key spot per shot, soft shader beam along it, rim from behind, hero brightest, speculars down | producer | v2 light sent | 25 |
