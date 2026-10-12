@@ -68,11 +68,12 @@ export const strip = (g: G, x0: number, x1: number, y = FLOOR + 40, a = 1, fifty
 
 /* ---------------------------------------------------------------- lacquered chess king */
 const KING_HALF: [number, number][] = [[0, 0], [74, 0], [76, -10], [66, -20], [70, -28], [52, -40], [44, -58], [34, -120], [30, -178], [46, -188], [48, -198], [32, -205], [36, -214], [50, -246], [34, -262], [12, -268], [12, -280], [7, -280], [7, -294], [22, -294], [22, -306], [7, -306], [7, -322], [0, -322]];
-export const king = (g: G, x: number, y: number, s: number, rimL = '120,175,255', rimR = '170,150,255', light = 1) => {
+export const king = (g: G, x: number, y: number, s: number, rimL = '120,175,255', rimR = '170,150,255', light = 1, ivory = false) => {
   const pts = [...KING_HALF.map(([a, b]) => [x + a * s, y + b * s]), ...[...KING_HALF].reverse().map(([a, b]) => [x - a * s, y + b * s])];
   const path = () => { g.beginPath(); pts.forEach(([a, b], i) => (i ? g.lineTo(a, b) : g.moveTo(a, b))); g.closePath(); };
   const gr = g.createLinearGradient(x - 76 * s, 0, x + 76 * s, 0);
-  gr.addColorStop(0, `rgba(${rimL},${0.95 * light})`); gr.addColorStop(0.06, '#2a3550'); gr.addColorStop(0.28, '#161d30'); gr.addColorStop(0.55, '#0a0d16'); gr.addColorStop(0.88, '#222a44'); gr.addColorStop(1, `rgba(${rimR},${0.8 * light})`);
+  if (ivory) { gr.addColorStop(0, '#fff6e4'); gr.addColorStop(0.18, '#efe3c8'); gr.addColorStop(0.5, '#cbbb98'); gr.addColorStop(0.85, '#8d7f62'); gr.addColorStop(1, `rgba(${rimR},${0.8 * light})`); }
+  else { gr.addColorStop(0, `rgba(${rimL},${0.95 * light})`); gr.addColorStop(0.06, '#2a3550'); gr.addColorStop(0.28, '#161d30'); gr.addColorStop(0.55, '#0a0d16'); gr.addColorStop(0.88, '#222a44'); gr.addColorStop(1, `rgba(${rimR},${0.8 * light})`); }
   path(); g.fillStyle = gr; g.fill();
   // top light: a soft specular band down the left third
   g.save(); path(); g.clip();
@@ -112,9 +113,16 @@ export const tile = (g: G, x: number, y: number, s: number, ch: string, chCol: s
   g.fillStyle = fr; g.beginPath(); (g as any).roundRect(x, y - h, w, h, 6 * s); g.fill();
   g.strokeStyle = faceUp ? 'rgba(255,255,255,.6)' : 'rgba(150,230,190,.35)'; g.lineWidth = 1; g.beginPath(); g.moveTo(x + 4 * s, y - h + 2); g.lineTo(x + w - 4 * s, y - h + 2); g.stroke();
   if (faceUp) {
-    g.font = `900 ${h * 0.6}px "Noto Serif CJK SC"`; g.textAlign = 'center'; g.textBaseline = 'middle';
-    g.fillStyle = 'rgba(0,0,0,.18)'; g.fillText(ch, x + w / 2 + 1.5, y - h / 2 + 3.5);
-    g.fillStyle = chCol; g.fillText(ch, x + w / 2, y - h / 2 + 2);
+    g.textAlign = 'center'; g.textBaseline = 'middle';
+    if (ch.length === 2) {
+      // a character tile: the numeral over a red 萬
+      g.font = `900 ${h * 0.36}px "Noto Serif CJK SC"`; g.fillStyle = chCol; g.fillText(ch[0], x + w / 2, y - h * 0.7);
+      g.font = `900 ${h * 0.38}px "Noto Serif CJK SC"`; g.fillStyle = '#b4161b'; g.fillText(ch[1], x + w / 2, y - h * 0.29);
+    } else {
+      g.font = `900 ${h * 0.6}px "Noto Serif CJK SC"`;
+      g.fillStyle = 'rgba(0,0,0,.18)'; g.fillText(ch, x + w / 2 + 1.5, y - h / 2 + 3.5);
+      g.fillStyle = chCol; g.fillText(ch, x + w / 2, y - h / 2 + 2);
+    }
   }
   if (glow > 0) { g.save(); g.globalCompositeOperation = 'lighter'; const gl = g.createRadialGradient(x + w / 2, y - h / 2, 0, x + w / 2, y - h / 2, w * 1.4); gl.addColorStop(0, `rgba(255,214,140,${0.25 * glow})`); gl.addColorStop(1, 'rgba(255,214,140,0)'); g.fillStyle = gl; g.fillRect(x - w, y - h * 1.6, w * 3, h * 2.4); g.restore(); }
 };

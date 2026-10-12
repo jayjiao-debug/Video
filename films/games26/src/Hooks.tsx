@@ -199,7 +199,7 @@ export const HD: React.FC<{ T: number; f: number; sp?: number }> = ({ T, f, sp =
       }
       withReflection(g, () => { if (sp === 1) spatulaAt(g); panSide(g, PX, PY + panY, 1.6, panRot); }, 0.22);
       floorFade(g);
-      if (sp === 3) { g.save(); g.translate(560, FLOOR + 112); g.scale(1, 0.5); g.rotate(-2.05); spatula(g, 0, 0, 1.45, 0, pr(T, bt(0), 0.9) < 1 ? pr(T, bt(0), 0.9) : -1); g.restore(); add(g, () => glowDot(g, 420, FLOOR + 60, 260, 0.2, GOLD)); }
+      if (sp === 3) { g.save(); g.translate(640, FLOOR + 92); g.scale(1, 0.5); g.rotate(-1.9); spatula(g, 0, 0, 1.3, 0); g.restore(); add(g, () => glowDot(g, 470, FLOOR + 70, 260, 0.2, GOLD)); }
       LAND.forEach((d) => { if (T > d) add(g, () => sparks(g, PX, PY - 70, d, T, 30, GOLD, 0.6, d)); });
       if (T >= SPLIT) add(g, () => { sparks(g, PX, flight(SPLIT - 0.001).y, SPLIT, T, 140, '255,214,180', 2.0, 7); glowDot(g, PX, flight(SPLIT - 0.001).y, 300, 0.5 * hit(T, SPLIT, 0.35), GOLD); });
       g.restore();

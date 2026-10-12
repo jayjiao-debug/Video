@@ -12,9 +12,9 @@ type G = CanvasRenderingContext2D;
 const mixc = (a: number[], b: number[], k: number) => a.map((v, i) => Math.round(lerp(v, b[i], k))).join(',');
 const specAt = (u: number) => mixc([120, 175, 255], [255, 110, 205], clamp(u));
 const cam = (g: G, s: number, cx = 960, cy = 600, dx = 0) => { g.translate(cx + dx, cy); g.scale(s, s); g.translate(-cx, -cy); };
-const kingAt = (g: G, x: number, y: number, s: number, rot = 0, light = 1, rimL = '120,175,255', rimR = '150,160,255') => {
-  if (!rot) return king(g, x, y, s, rimL, rimR, light);
-  const px = x + 74 * s * Math.sign(rot); g.save(); g.translate(px, y); g.rotate(rot); g.translate(-px, -y); king(g, x, y, s, rimL, rimR, light); g.restore();
+const kingAt = (g: G, x: number, y: number, s: number, rot = 0, light = 1, rimL = '120,175,255', rimR = '150,160,255', ivory = false) => {
+  if (!rot) return king(g, x, y, s, rimL, rimR, light, ivory);
+  const px = x + 74 * s * Math.sign(rot); g.save(); g.translate(px, y); g.rotate(rot); g.translate(-px, -y); king(g, x, y, s, rimL, rimR, light, ivory); g.restore();
 };
 
 /* ---------------------------------------------------------------- labels */
@@ -57,17 +57,18 @@ export const S0: React.FC<{ T: number; f: number }> = ({ T, f }) => {
     );
   }
   if (part === 1) {
-    const HAND: [string, string, boolean][] = [['3', '♣', false], ['4', '♦', true], ['6', '♠', false], ['7', '♥', true], ['9', '♣', false]];
+    const RANKS = ['3', '3', '4', '4', '5', '6', '6', '7', '8', '8', '9', '10', '10', 'J', 'Q', 'Q', 'K'], SUITS: [string, boolean][] = [['♠', false], ['♥', true], ['♣', false], ['♦', true]];
+    const HAND: [string, string, boolean][] = RANKS.map((r, i) => [r, SUITS[(i * 3 + 1) % 4][0], SUITS[(i * 3 + 1) % 4][1]]);
     return (
       <Scene f={f} draw={(g) => {
         stage(g, T); bokeh(g, T, 18, 0.8);
         g.save(); cam(g, lerp(1.0, 1.05, pr(T, CUT.cards, 4)));
         spot(g, 960, 760, 1, '255,225,235');
-        withReflection(g, () => HAND.forEach(([r, su, red], i) => { const k = eo(T, CUT.cards + i * 0.13, 0.35); if (k <= 0) return; const a = (i - 2) * 0.16; card(g, 960 + (i - 2) * 120 * k, FLOOR + 10 - 20 * Math.cos(a) * k + (1 - k) * 60, 1.25, r, su, red, a * k); }), 0.2);
+        withReflection(g, () => { const open = eio(T, CUT.cards + 0.05, 0.75); HAND.forEach(([r, su, red], i) => { const a = (i - 8) * 0.095 * open, R = 70, PX = 960, PY = FLOOR + R - 4; card(g, PX + Math.sin(a) * R, PY - Math.cos(a) * R, 1.15, r, su, red, a); }); }, 0.1);
         floorFade(g);
         g.restore();
       }}>
-        <Lb x={960} y={180} s="一手烂牌" size={40} col="#ffd1ea" sub="NO PAIRS · NO BOMBS" o={eo(T, CUT.cards + 1.2, 0.4)} />
+        <Lb x={960} y={150} s="一手烂牌" size={40} col="#ffd1ea" sub="NO 2 · NO JOKER · NO BOMB" o={eo(T, CUT.cards + 1.2, 0.4)} />
       </Scene>
     );
   }
@@ -78,9 +79,9 @@ export const S0: React.FC<{ T: number; f: number }> = ({ T, f }) => {
         stage(g, T); bokeh(g, T, 16, 0.8);
         g.save(); cam(g, lerp(1.04, 1.1, pr(T, CUT.king, 3.5)), 960, 620);
         spot(g, 960, 520, 1.2, '210,225,255');
-        withReflection(g, () => { kingAt(g, 1080, FLOOR, 0.62, 0, 0.9, '255,214,140', '255,200,120'); kingAt(g, 840, FLOOR, 0.9, -fall * 1.45); }, 0.28);
+        withReflection(g, () => { kingAt(g, 1110, FLOOR, 0.9, 0, 1, '255,236,200', '255,214,160', true); kingAt(g, 820, FLOOR, 0.9, -fall * 1.45); }, 0.28);
         floorFade(g);
-        if (fall >= 1) add(g, () => { sparks(g, 700, FLOOR - 10, bt(19) + 0.7, T, 40, '200,220,255', 0.7, 5); });
+        if (fall >= 1) add(g, () => { sparks(g, 640, FLOOR - 10, bt(19) + 0.7, T, 40, '200,220,255', 0.7, 5); });
         g.restore();
       }}>
         <Lb x={960} y={170} s="将死" size={44} col="#cfe0ff" sub="CHECKMATE" o={eo(T, bt(20), 0.4)} />
@@ -152,7 +153,7 @@ export const S1: React.FC<{ T: number; f: number }> = ({ T, f }) => {
       <svg width={W} height={H} style={{ position: 'absolute', inset: 0 }}>
         <defs><linearGradient id="s1g" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stopColor="#fff3cf" /><stop offset=".5" stopColor="#f0c873" /><stop offset="1" stopColor="#b07c32" /></linearGradient></defs>
         <text x={960} y={482} textAnchor="middle" opacity={crisp * 0.92} style={{ fontFamily: F.serif, fontWeight: 900, fontSize: 150, letterSpacing: '0.04em' }} fill="url(#s1g)">《是菜还是非？》</text>
-        <text x={960} y={572} textAnchor="middle" opacity={eo(T, HIT + 0.5, 0.5)} style={{ fontFamily: F.mono, fontWeight: 700, fontSize: 20, letterSpacing: '0.42em' }} fill={C.dim}>LUCK · SKILL · EVERY GAME YOU PLAY</text>
+        <text x={960} y={572} textAnchor="middle" opacity={eo(T, HIT + 0.5, 0.5)} style={{ fontFamily: F.mono, fontWeight: 700, fontSize: 20, letterSpacing: '0.42em' }} fill={C.dim}>SKILL · LUCK · EVERY GAME YOU PLAY</text>
       </svg>
     </Scene>
   );
@@ -201,7 +202,7 @@ const shopRoll = (g: G, x: number, t: number) => {
 };
 const mjFlip = (g: G, x: number, t: number) => {
   tile(g, x - 78, FLOOR, 1.0, '中', '#b4161b'); tile(g, x - 16, FLOOR, 1.0, '發', '#1f7a3d');
-  const { c, p } = once(t, 0.4, 0.84, 4.1), DRAW = [['東', '#1b1b1b'], ['九', '#1a3c8f'], ['白', '#1b1b1b'], ['五', '#b4161b'], ['北', '#1b1b1b']][c % 5];
+  const { c, p } = once(t, 0.4, 0.84, 4.1), DRAW = [['東', '#1b1b1b'], ['九萬', '#1b1b1b'], ['白', '#1b1b1b'], ['五萬', '#1b1b1b'], ['北', '#1b1b1b']][c % 5];
   const ang = p < 0.4 ? 0 : p < 0.5 ? (p - 0.4) / 0.1 : p < 0.85 ? 1 : p < 0.95 ? 1 - (p - 0.85) / 0.1 : 0;
   const sq = Math.abs(Math.cos(ang * Math.PI)), up = ang >= 0.5, cx = x + 46 + 28, lift = Math.sin(ang * Math.PI) * 26;
   g.save(); g.translate(cx, 0); g.scale(Math.max(0.03, sq), 1); g.translate(-cx, 0);
@@ -284,13 +285,13 @@ const OBJ: Obj[] = [
   { u: 0.42, name: '金铲铲', en: 'AUTO-BATTLER', w: 300, draw: shopRoll },
   { u: 0.58, name: '麻将', en: 'MAHJONG', w: 260, draw: mjFlip },
   { u: 0.72, name: '德州扑克', en: "HOLD'EM", w: 260, draw: pokerFlip },
-  { u: 0.87, name: '飞行棋', en: 'DICE', w: 220, draw: dieRoll },
+  { u: 0.87, name: '扔骰子', en: 'DICE', w: 220, draw: dieRoll },
   { u: 1.0, name: '掷硬币', en: 'COIN', w: 220, draw: coinToss },
 ];
 const gx = (u: number) => lerp(GX0 + 90, GX1 - 90, u);
 const gallery = (g: G, T: number, appear: (i: number) => number, dim: (i: number) => number = () => 1, at: (i: number) => number = () => T) => {
   OBJ.forEach((o, i) => { const k = appear(i); if (k > 0) spot(g, gx(o.u), o.w * 1.2, 0.9 * k * dim(i), o.u < 0.3 ? '200,220,255' : o.u > 0.7 ? '255,215,235' : '235,225,255'); });
-  OBJ.forEach((o, i) => { const k = appear(i); if (k <= 0) return; g.save(); g.globalAlpha = clamp(k * 1.5) * (0.25 + 0.75 * dim(i)); g.translate(0, (1 - easeInOut(clamp(k))) * 40); withReflection(g, () => o.draw(g, gx(o.u), at(i)), 0.25); g.restore(); });
+  OBJ.forEach((o, i) => { const k = appear(i); if (k <= 0) return; g.save(); g.globalAlpha = clamp(k * 1.5) * (0.25 + 0.75 * dim(i)); g.translate(0, (1 - easeInOut(clamp(k))) * 40); g.save(); g.beginPath(); g.rect(0, 0, W, FLOOR + 84); g.clip(); withReflection(g, () => o.draw(g, gx(o.u), at(i)), 0.25); g.restore(); g.restore(); });
 };
 const GalleryLabels: React.FC<{ appear: (i: number) => number; dim?: (i: number) => number }> = ({ appear, dim = () => 1 }) => (
   <>{OBJ.map((o, i) => <Lb key={o.name} x={gx(o.u)} y={FLOOR + 120} s={o.name} size={28} sub={o.en} o={clamp(appear(i) * 1.4) * (0.3 + 0.7 * dim(i))} />)}</>
@@ -312,6 +313,7 @@ export const S2: React.FC<{ T: number; f: number }> = ({ T, f }) => {
       <GalleryLabels appear={ap} />
       <Lb x={300} y={FLOOR + 210} s="← 全靠实力" size={26} col="#9cc8ff" o={eo(T, bt(41), 0.4)} />
       <Lb x={1620} y={FLOOR + 210} s="全靠运气 →" size={26} col="#ff9ed6" o={eo(T, bt(48), 0.4)} />
+      <Lb x={960} y={FLOOR + 214} s="（位置为示意）" size={18} col="rgba(239,232,218,.45)" o={eo(T, bt(49), 0.4)} />
     </Scene>
   );
 };
@@ -319,20 +321,29 @@ export const S2: React.FC<{ T: number; f: number }> = ({ T, f }) => {
 /* ================================================================ S3 · chess: settled in theory (28.76 – 40.91) */
 export const S3: React.FC<{ T: number; f: number }> = ({ T, f }) => {
   const tree = pr(T, CUT.tree, 1.6), outsK = [bt(72), bt(74), bt(76)].map((t) => pop(T, t, 0.3));
-  const root = [960, FLOOR - 330], outs = [[560, 270], [960, 235], [1360, 270]];
+  const root = [960, FLOOR - 0.8 * 330 - 6], outs = [[600, 205], [960, 190], [1320, 205]];
   return (
     <Scene f={f} draw={(g) => {
       stage(g, T); bokeh(g, T, 16, 0.7);
       g.save(); cam(g, lerp(1.0, 1.06, pr(T, CUT.chess, 12)), 960, 560);
-      spot(g, 960, 460, 1.2, '210,225,255'); spot(g, 620, 260, 0.6 * (1 - pr(T, CUT.tree, 0.6)), '200,220,255');
-      withReflection(g, () => { king(g, 960, FLOOR, 1.05); if (T < CUT.tree + 0.6) [[-40, 0, true], [30, -4, false], [0, -26, false], [-60, 22, false]].forEach(([dx, dy, wh]) => stone(g, 620 + (dx as number), FLOOR - 14 + (dy as number), 34, wh as boolean)); }, 0.3);
+      spot(g, 960, 460, 1.2, '210,225,255'); spot(g, 620, 320, 0.85 * (1 - pr(T, CUT.tree, 0.6)), '220,230,255');
+      withReflection(g, () => { king(g, 960, FLOOR, 0.8); if (T < CUT.tree + 0.6) [[-40, 0, true], [30, -4, false], [0, -26, false], [-60, 22, false], [52, 20, true], [10, 18, true]].forEach(([dx, dy, wh]) => stone(g, 620 + (dx as number), FLOOR - 14 + (dy as number), 34, wh as boolean)); }, 0.3);
       if (tree > 0) add(g, () => {
-        for (let i = 0; i < 420; i++) {
-          const o = outs[i % 3], mx = 960 + (rnd(i, 1) - 0.5) * 1600, my = 330 + (rnd(i, 2) - 0.5) * 140;
-          const k = clamp(tree * 1.4 - rnd(i, 4) * 0.4); if (k <= 0) continue;
-          g.strokeStyle = `rgba(150,190,255,${(0.03 + 0.05 * rnd(i, 3)) * (1 - 0.5 * clamp(outsK[i % 3]))})`; g.lineWidth = 1; g.beginPath(); g.moveTo(root[0], root[1]);
-          for (let q = 1; q <= 20 * k; q++) { const u = q / 20, a = (1 - u) * (1 - u), b = 2 * (1 - u) * u, c = u * u; g.lineTo(a * root[0] + b * mx + c * o[0], a * root[1] + b * my + c * o[1]); }
-          g.stroke();
+        // every move branches (3 shown per node), level by level, up to 81 positions; then each ends in one of three results
+        const RY = root[1], LV = 4, X0 = 470, X1 = 1450, STEP = (RY - 262) / LV;
+        const node = (l: number, j: number): [number, number] => [X0 + ((j + 0.5) * (X1 - X0)) / Math.pow(3, l + 1), RY - (l + 1) * STEP];
+        for (let l = 0; l < LV; l++) {
+          const k = clamp(tree * LV * 1.05 - l), n = Math.pow(3, l + 1); if (k <= 0) break;
+          for (let j = 0; j < n; j++) {
+            const [cx, cy] = node(l, j), [px, py] = l ? node(l - 1, Math.floor(j / 3)) : [root[0], root[1]];
+            g.strokeStyle = `rgba(150,190,255,${0.5 - l * 0.09})`; g.lineWidth = 1.6 - l * 0.3; g.beginPath(); g.moveTo(px, py); g.lineTo(lerp(px, cx, k), lerp(py, cy, k)); g.stroke();
+            if (k >= 1) glowDot(g, cx, cy, 7 - l, 0.8, '200,220,255');
+          }
+        }
+        for (let j = 0; j < 81; j++) {
+          const o = Math.floor(rnd(j, 41) * 3), k = clamp(outsK[o]); if (k <= 0) continue;
+          const [lx, ly] = node(LV - 1, j), [ox, oy] = outs[o];
+          g.strokeStyle = `rgba(255,214,140,${0.16 * k})`; g.lineWidth = 1; g.beginPath(); g.moveTo(lx, ly); g.quadraticCurveTo(lx, (ly + oy) / 2, lerp(lx, ox, k), lerp(ly, oy, k)); g.stroke();
         }
         glowDot(g, root[0], root[1], 90, 0.45, '200,220,255');
         outs.forEach(([x, y], i) => { const k = outsK[i]; if (k > 0) { glowDot(g, x, y, 110 * k, 0.32, '255,214,140'); glowDot(g, x, y, 12, k, '255,244,220'); } });
@@ -340,10 +351,10 @@ export const S3: React.FC<{ T: number; f: number }> = ({ T, f }) => {
       floorFade(g);
       g.restore();
     }}>
-      {['先手赢', '和棋', '后手赢'].map((s, i) => <Lb key={s} x={[560, 960, 1360][i]} y={[180, 145, 180][i]} s={s} size={34} col={C.goldHi} o={clamp(outsK[i])} />)}
-      <Lb x={620} y={FLOOR + 110} s="围棋 · 国际象棋" size={28} sub="PERFECT INFORMATION" o={1 - pr(T, CUT.tree, 0.5)} />
+      {['先手赢', '和棋', '后手赢'].map((s, i) => <Lb key={s} x={[560, 960, 1360][i]} y={[120, 105, 120][i]} s={s} size={34} col={C.goldHi} o={clamp(outsK[i])} />)}
+      <Lb x={790} y={FLOOR + 110} s="围棋 · 国际象棋" size={28} sub="PERFECT INFORMATION" o={1 - pr(T, CUT.tree, 0.5)} />
       <Lb x={960} y={150} s="信息全公开 · 没有骰子" size={40} col="#cfe0ff" sub="EVERYTHING ON THE TABLE" o={eo(T, 28.95, 0.4) * (1 - pr(T, CUT.tree - 0.3, 0.3))} />
-      <Lb x={960} y={FLOOR + 140} s="ZERMELO · 1913" size={16} col="rgba(239,232,218,.5)" ls="0.4em" o={eo(T, CUT.tree + 0.5, 0.5)} />
+      <Lb x={960} y={FLOOR + 140} s="ZERMELO · 1913" size={16} col="rgba(239,232,218,.75)" ls="0.4em" o={eo(T, CUT.tree + 0.5, 0.5)} />
     </Scene>
   );
 };
@@ -409,48 +420,61 @@ export const S5: React.FC<{ T: number; f: number }> = ({ T, f }) => {
       floorFade(g);
       g.restore();
     }}>
-      <Lb x={560} y={190} s="五子棋：先手必胜" size={36} col={C.goldHi} o={eo(T, 53.2, 0.4)} />
+      <Lb x={560} y={190} s={T < 52.9 ? '五子棋' : '五子棋：先手必胜'} size={36} col={T < 52.9 ? '#efe8da' : C.goldHi} o={eo(T, 49.3, 0.4)} />
       <Lb x={1360} y={190} s={`跳棋：和棋`} size={36} col="#efe8da" sub={`SOLVED ${years >= 1989 ? '1989 → ' + years : ''}`} o={eo(T, 54.5, 0.4)} />
       <Lb x={960} y={120} s="已被电脑「算穿」的游戏" size={24} col="#a8ccff" ls="0.3em" o={eo(T, CUT.solved + 0.2, 0.4)} />
     </Scene>
   );
 };
 
-/* ================================================================ S6 · poker: hidden cards, a bluff (57.11 – 65.21) */
+/* ================================================================ S6 · poker: hidden information, then a bluff (57.11 – 65.21)
+   the AI pushes its chips, you fold your A-K, it takes the pot, and only then shows what it had: 2-7, nothing */
 export const S6: React.FC<{ T: number; f: number }> = ({ T, f }) => {
-  const flip = pr(T, bt(120) + 0.2, 0.45);
-  const cardBack = (g: G, x: number, y: number, s: number, rot: number) => { const w = 110 * s, h = 154 * s; g.save(); g.translate(x, y); g.rotate(rot); const gr = g.createLinearGradient(-w / 2, -h, w / 2, 0); gr.addColorStop(0, '#3b1a4a'); gr.addColorStop(1, '#1a0b22'); g.fillStyle = gr; g.beginPath(); (g as any).roundRect(-w / 2, -h, w, h, 9 * s); g.fill(); g.strokeStyle = 'rgba(255,150,220,.6)'; g.lineWidth = 1.5; g.stroke(); g.strokeStyle = 'rgba(255,150,220,.25)'; for (let k = -6; k < 10; k++) { g.beginPath(); g.moveTo(-w / 2 + 8, -h + 8 + k * 14 * s); g.lineTo(w / 2 - 8, -h + 8 + k * 14 * s + 40 * s); g.stroke(); } g.restore(); };
+  const PUSH = 61.2, FOLD = 61.95, TAKE = 62.6, SHOW = 63.25;
+  const push = eio(T, PUSH, 0.5), fold = eio(T, FOLD, 0.45), take = eio(T, TAKE, 0.5), flip = pr(T, SHOW, 0.45);
+  const cardBack = (g: G, x: number, y: number, s: number, rot: number) => backOf(g, x, y, s, rot);
+  const chips = (g: G, x: number, y: number, n: number, gold: boolean) => { for (let k = 0; k < n; k++) coin(g, x, y - k * 9, 30, 0.35, gold); };
   return (
     <Scene f={f} draw={(g) => {
       stage(g, T); bokeh(g, T, 16, 0.7);
-      g.save(); cam(g, lerp(1.0, 1.06, pr(T, CUT.poker, 8)), 960, 650);
-      spot(g, 960, 900, 1, '255,215,235');
+      g.save(); cam(g, lerp(1.0, 1.05, pr(T, CUT.poker, 8)), 960, 650);
+      spot(g, 960, 900, 1, '255,215,235'); spot(g, 1300, 360, 0.25 + 0.5 * flip, '255,200,235');
       withReflection(g, () => {
-        // the opponent's two cards (hidden → flipped: a bluff with nothing)
+        // the AI's two cards: hidden, then shown
         [[-70, -0.12], [60, 0.1]].forEach(([dx, rot], i) => {
           const x = 1300 + dx, sq = Math.abs(Math.cos(flip * Math.PI));
           g.save(); g.translate(x, 0); g.scale(Math.max(0.02, sq), 1); g.translate(-x, 0);
           if (flip < 0.5) cardBack(g, x, FLOOR - 40, 1.15, rot); else card(g, x, FLOOR - 40, 1.15, i ? '7' : '2', i ? '♦' : '♣', !!i, rot);
           g.restore();
         });
-        // your cards
-        card(g, 560, FLOOR + 10, 1.15, 'A', '♠', false, -0.12); card(g, 650, FLOOR + 16, 1.15, 'K', '♠', false, 0.1);
-        // chips
-        for (let s = 0; s < 3; s++) for (let k = 0; k < 6 + s * 3; k++) coin(g, 900 + s * 70, FLOOR - 10 - k * 9, 30, 0.35, s !== 1);
+        // your A-K: folded (slides back and turns down, dims)
+        g.save(); g.globalAlpha *= 1 - 0.55 * fold;
+        [[560, -0.12, 'A'], [650, 0.1, 'K']].forEach(([x, rot, r]) => {
+          const xx = (x as number) - 70 * fold, sq = Math.abs(Math.cos(Math.min(1, fold) * Math.PI));
+          g.save(); g.translate(xx, 0); g.scale(Math.max(0.02, sq), 1); g.translate(-xx, 0);
+          if (fold < 0.5) card(g, xx, FLOOR, 1.15, r as string, '♠', false, rot as number); else cardBack(g, xx, FLOOR, 1.15, rot as number);
+          g.restore();
+        });
+        g.restore();
+        // chips: your stack stays; the AI's stack is pushed into the pot, then the pot goes to the AI
+        chips(g, 790, FLOOR - 10, 6, true);
+        const aiX = lerp(lerp(1130, 960, push), 1140, take);
+        chips(g, aiX, FLOOR - 10, 12, false); chips(g, lerp(960, 1190, take), FLOOR - 10, 4 * Math.min(1, push * 3) | 0, true);
       }, 0.22);
       floorFade(g);
       g.restore();
     }}>
-      <Lb x={1300} y={170} s={flip < 0.5 ? '隐藏信息：对手的牌' : '2 · 7 —— 什么都没有'} size={34} col={flip < 0.5 ? '#ffaee0' : C.goldHi} sub={flip < 0.5 ? 'HIDDEN INFORMATION' : 'BLUFF'} />
-      <Lb x={600} y={FLOOR + 140} s="你的牌" size={26} />
-      <Lb x={960} y={120} s="PLURIBUS · CMU × FACEBOOK AI · 2019" size={16} col="rgba(239,232,218,.5)" ls="0.4em" o={eo(T, bt(120), 0.4)} />
+      <Lb x={1300} y={150} s={flip < 0.5 ? (T < PUSH ? '隐藏信息：对手的牌' : 'AI：全押') : '2 · 7 —— 什么都没有'} size={34} col={flip < 0.5 ? '#ffaee0' : C.goldHi} sub={flip < 0.5 ? (T < PUSH ? 'HIDDEN INFORMATION' : 'ALL IN') : 'BLUFF'} />
+      <Lb x={600} y={FLOOR + 140} s={T < FOLD + 0.2 ? '你的牌' : '你：弃牌'} size={26} col={T < FOLD + 0.2 ? '#efe8da' : '#a8ccff'} />
+      <Lb x={1300} y={FLOOR + 140} s="AI · PLURIBUS" size={22} col="rgba(239,232,218,.75)" ls="0.25em" o={eo(T, 61.1, 0.4)} />
+      <Lb x={960} y={110} s="PLURIBUS · CMU × FACEBOOK AI · 2019" size={16} col="rgba(239,232,218,.6)" ls="0.4em" o={eo(T, 61.1, 0.4)} />
     </Scene>
   );
 };
 
 /* ================================================================ S7 · mahjong (65.21 – 73.31) */
 export const S7: React.FC<{ T: number; f: number }> = ({ T, f }) => {
-  const HAND = [['一', '#1b1b1b'], ['二', '#1b1b1b'], ['三', '#1b1b1b'], ['五', '#b4161b'], ['五', '#b4161b'], ['中', '#b4161b'], ['中', '#b4161b'], ['中', '#b4161b'], ['東', '#1b1b1b'], ['南', '#1b1b1b'], ['西', '#1b1b1b'], ['北', '#1b1b1b'], ['發', '#1f7a3d'], ['九', '#1a3c8f']];
+  const HAND = [['一萬', '#1b1b1b'], ['二萬', '#1b1b1b'], ['三萬', '#1b1b1b'], ['五萬', '#1b1b1b'], ['五萬', '#1b1b1b'], ['中', '#b4161b'], ['中', '#b4161b'], ['中', '#b4161b'], ['東', '#1b1b1b'], ['南', '#1b1b1b'], ['西', '#1b1b1b'], ['北', '#1b1b1b'], ['發', '#1f7a3d'], ['九萬', '#1b1b1b']];
   const rank = clamp(pr(T, 69.4, 2.2)), dan = Math.max(1, Math.round(lerp(1, 10, easeInOut(rank))));
   return (
     <Scene f={f} draw={(g) => {
@@ -474,7 +498,7 @@ export const S7: React.FC<{ T: number; f: number }> = ({ T, f }) => {
         <div style={{ fontFamily: F.serif, fontWeight: 900, fontSize: 58, color: C.goldHi, textShadow: '0 0 24px rgba(255,214,140,.6)' }}>{['一', '二', '三', '四', '五', '六', '七', '八', '九', '十'][dan - 1]}段</div>
       </div>
       <Lb x={1660} y={790} s="天凤段位" size={22} col={C.dim} o={eo(T, 69.3, 0.4)} />
-      <div style={{ position: 'absolute', left: 0, right: 0, top: 300, textAlign: 'center', opacity: eo(T, 65.6, 0.4) * (1 - pr(T, 69.0, 0.3)), fontFamily: F.lat, fontWeight: 700, fontSize: 120, color: '#ffe7b8', textShadow: '0 0 30px rgba(255,214,140,.7)' }}>
+      <div style={{ position: 'absolute', left: 0, right: 0, top: 300, textAlign: 'center', opacity: eo(T, 65.6, 0.4) * (1 - pr(T, 69.0, 0.3)), fontFamily: F.serif, fontWeight: 900, fontSize: 110, color: '#ffe7b8', textShadow: '0 0 30px rgba(255,214,140,.7)', ...LNUM }}>
         &gt; 10<sup style={{ fontSize: 64 }}>48</sup>
       </div>
     </Scene>
@@ -488,11 +512,11 @@ export const S8: React.FC<{ T: number; f: number }> = ({ T, f }) => {
     <Scene f={f} draw={(g) => {
       stage(g, T); bokeh(g, T, 14, 0.6);
       g.save(); cam(g, lerp(1.04, 1.0, pr(T, CUT.question, 5)), 960, 700);
-      gallery(g, T, () => 1, () => 0.55, () => 99);
+      gallery(g, T, () => 1, (i) => (i === 4 || i === 1 ? 0.75 : lerp(0.55, 0.22, line)), () => 99);
       floorFade(g); strip(g, GX0, GX1, FLOOR + 92, 1, line);
       g.restore();
     }}>
-      <GalleryLabels appear={() => 1} dim={() => 0.6} />
+      <GalleryLabels appear={() => 1} dim={(i) => (i === 4 || i === 1 ? 0.85 : lerp(0.6, 0.25, line))} />
       <Lb x={960} y={96} s="？" size={120} col={C.goldHi} o={clamp(pop(T, CUT.question + 0.2, 0.3)) * (1 - line)} />
       <Lb x={960} y={FLOOR - 250} s="50%" size={56} col={C.goldHi} o={line} />
     </Scene>
@@ -509,64 +533,90 @@ export const S9: React.FC<{ T: number; f: number }> = ({ T, f }) => {
       spot(g, 960, 1500, 0.4 + 0.5 * eo(T, CUT.drop, 0.3), '255,230,190');
       const cols = 9;
       for (let r = 2; r >= 0; r--) for (let i = 0; i < cols; i++) {
-        const s = 0.6 - r * 0.08, x = 960 + (i - (cols - 1) / 2) * (190 - r * 22), y = FLOOR - r * 70;
+        const s = 0.6 - r * 0.08, x = 960 + (i - (cols - 1) / 2 + (r % 2) * 0.5) * (190 - r * 22), y = FLOOR - r * 70;
         const flipme = (i + r) % 2 === 1, d = Math.hypot(x - 960, (y - FLOOR) * 3);
         const k = R > 0 ? clamp((R * 600 - d) / 160) : 0;
-        if (flipme && k > 0) { coin(g, x, y - 40 - 120 * Math.sin(k * Math.PI) * (1 - k), 52 - r * 6, lerp(0.05, 0.38, k), true); if (k < 1) add(g, () => sparks(g, x, y - 40, T - 0.25, T, 26, GOLD, 0.6, i * 7 + r)); }
-        else king(g, x, y, s * (flipme ? 1 - k * 0.6 : 1), '120,175,255', '160,150,255', (flipme ? 1 - k : 1) * (T < CUT.drop ? 0.4 + 0.6 * eo(T, CUT.gap + i * 0.06, 0.3) : 1));
+        const piece = () => { if (flipme && k > 0) coin(g, x, y - 40 - 120 * Math.sin(k * Math.PI) * (1 - k), 52 - r * 6, lerp(0.05, 0.38, k), true); else king(g, x, y, s * (flipme ? 1 - k * 0.6 : 1), '120,175,255', '160,150,255', (flipme ? 1 - k : 1) * (T < CUT.drop ? 0.4 + 0.6 * eo(T, CUT.gap + i * 0.06, 0.3) : 1)); };
+        g.save(); g.globalAlpha *= 0.2; g.translate(0, 2 * y); g.scale(1, -1); piece(); g.restore(); piece();
+        if (flipme && k > 0 && k < 1) add(g, () => sparks(g, x, y - 40, T - 0.25, T, 26, GOLD, 0.6, i * 7 + r));
       }
       floorFade(g);
       strip(g, GX0, GX1, FLOOR + 92, 0.9, lift);
-      if (R > 0 && R < 3) add(g, () => { g.strokeStyle = `rgba(255,214,140,${0.4 * (1 - R / 3)})`; g.lineWidth = 3; g.beginPath(); g.ellipse(960, FLOOR - 40, R * 600, R * 200, 0, 0, 6.3); g.stroke(); });
+      if (R > 0 && R < 3) add(g, () => { g.beginPath(); g.rect(0, FLOOR - 230, W, 320); g.clip(); g.strokeStyle = `rgba(255,214,140,${0.4 * (1 - R / 3)})`; g.lineWidth = 3; g.beginPath(); g.ellipse(960, FLOOR - 40, R * 600, R * 200, 0, 0, 6.3); g.stroke(); });
       g.restore();
     }}>
       <Lb x={960} y={130} s="一半国际象棋 ＋ 一半掷硬币 ＝「一半运气」标准线" size={28} col={C.goldHi} o={eo(T, 85.1, 0.4)} />
-      <Lb x={960} y={130} s="DUERSCH · LAMBRECHT · OECHSSLER · 2020" size={16} col="rgba(239,232,218,.5)" ls="0.4em" o={eo(T, CUT.drop + 0.4, 0.4) * (1 - pr(T, 84.8, 0.3))} />
+      <Lb x={960} y={130} s="每个王 = 一局国际象棋" size={30} col="#cfe0ff" o={eo(T, 79.6, 0.35) * (1 - pr(T, CUT.drop + 1.2, 0.3))} />
+      <Lb x={960} y={180} s="DUERSCH · LAMBRECHT · OECHSSLER · 2020" size={16} col="rgba(239,232,218,.6)" ls="0.4em" o={eo(T, CUT.drop + 0.4, 0.4) * (1 - pr(T, 84.8, 0.3))} />
     </Scene>
   );
 };
 
-/* ================================================================ S10 · the result (89.51 – 97.61) */
+/* ================================================================ S10 · the result (89.51 – 97.61), staged like everything else
+   part 1: chess / chess-with-half-coin-flips / hold'em on their stands, the rating spread above each (Duersch et al. 2020:
+   171.7, 44.9, 22.9). part 2: four 105-game races between a player one level better (53.3 % per game) and an average one */
+const WALKS = (() => {
+  const walk = (seed: number) => { const out = [0]; for (let i = 1; i <= 105; i++) out.push(out[i - 1] + (rnd(i, seed) < 0.533 ? 1 : -1)); return out; };
+  const ups: number[][] = [], downs: number[][] = [];
+  for (let sd = 1; sd < 900 && (ups.length < 3 || downs.length < 1); sd++) { const w = walk(sd * 7 + 3), e = w[105], cross = w.slice(5, 40).some((v) => v <= 0) && w.slice(5, 40).some((v) => v >= 0); if (!cross) continue; if (e >= 6 && e <= 16 && ups.length < 3) ups.push(w); else if (e <= -4 && e >= -10 && downs.length < 1) downs.push(w); }
+  return [...ups, ...downs];
+})();
+const STANDS = [
+  { x: 420, name: '国际象棋', num: '170+', u: 0.18 },
+  { x: 960, name: '一半掷硬币的国际象棋', num: '45', u: 0.5 },
+  { x: 1500, name: '德州扑克', num: '< 30', u: 0.82 },
+];
 export const S10: React.FC<{ T: number; f: number }> = ({ T, f }) => {
-  const slide = eio(T, 89.9, 1.0), second = T >= 93.5;
-  // 100 games: a stronger player's running lead (deterministic walk, tuned so the lead is visible)
-  const walk = (seed: number, p: number) => { const out: number[] = [0]; for (let i = 1; i <= 100; i++) out.push(out[i - 1] + (rnd(i, seed) < p ? 1 : -1)); return out; };
-  const A = walk(3, 0.6), AMX = Math.max(...A.map(Math.abs), 1);
-  const n = Math.floor(lerp(1, 100, pr(T, 93.6, 3.2)));
+  const second = T >= 93.5;
+  const ap = (i: number) => eo(T, 89.6 + i * 0.22, 0.35);
+  const n = Math.floor(lerp(1, 105, eio(T, 93.7, 2.1)));
   return (
     <Scene f={f} draw={(g) => {
-      stage(g, T); bokeh(g, T, 12, 0.5);
+      stage(g, T); bokeh(g, T, 14, 0.6);
+      g.save(); cam(g, lerp(1.02, 1.0, pr(T, CUT.result, 4)), 960, 640);
       if (!second) {
-        floorFade(g); strip(g, GX0, GX1, FLOOR - 40, 1, 1);
-        const px = lerp(gx(0.12), gx(0.66), slide);
-        add(g, () => { glowDot(g, gx(0), FLOOR - 40, 50, 0.5, '120,175,255'); glowDot(g, gx(0.12), FLOOR - 40, 50, 0.5, '120,175,255'); glowDot(g, px, FLOOR - 40, 70, 0.7, '255,110,205'); glowDot(g, px, FLOOR - 40, 12, 1, '255,244,220'); });
+        STANDS.forEach((st, i) => spot(g, st.x, 380, 0.85 * ap(i), i === 2 ? '255,205,235' : i === 1 ? '240,230,255' : '205,220,255'));
+        withReflection(g, () => {
+          g.save(); g.globalAlpha *= ap(0); king(g, 420, FLOOR, 0.62); g.restore();
+          g.save(); g.globalAlpha *= ap(1); king(g, 920, FLOOR, 0.52); coin(g, 1010, FLOOR - 22, 48, 0.35, true); g.restore();
+          g.save(); g.globalAlpha *= ap(2); card(g, 1470, FLOOR, 0.95, 'A', '♠', false, -0.16); card(g, 1530, FLOOR + 4, 0.95, 'K', '♥', true, 0.14); g.restore();
+        }, 0.22);
+        floorFade(g);
+        strip(g, GX0, GX1, FLOOR + 92, 1, 1);
+        add(g, () => STANDS.forEach((st, i) => { const x = gx(st.u); glowDot(g, x, FLOOR + 92, 46, 0.6 * ap(i), specAt(st.u)); glowDot(g, x, FLOOR + 92, 8, ap(i), '255,244,220'); }));
+        if (T > 91.0) add(g, () => glowDot(g, 1500, 400, 260, 0.22 * eo(T, 91.0, 0.4), '255,110,205'));
       } else {
-        const X = (i: number) => 260 + i * 14, Y = (v: number) => 560 - (v / AMX) * 270;
-        g.strokeStyle = 'rgba(255,255,255,.12)'; g.beginPath(); g.moveTo(260, 560); g.lineTo(1660, 560); g.stroke();
-        add(g, () => {
-          g.strokeStyle = 'rgba(255,214,140,.9)'; g.lineWidth = 3; g.beginPath(); for (let i = 0; i <= n; i++) { const y = Y(A[i]); if (i) g.lineTo(X(i), y); else g.moveTo(X(i), y); } g.stroke();
-          glowDot(g, X(n), Y(A[n]), 40, 0.6, GOLD);
-        });
+        // four races on a glass plane above the floor; zero line = level
+        const X = (i: number) => 330 + i * 12.6, Y = (v: number) => 470 - v * 13;
+        spot(g, 960, 1500, 0.55, '235,225,255');
+        floorFade(g);
+        g.strokeStyle = 'rgba(255,255,255,.18)'; g.lineWidth = 1.5; g.setLineDash([6, 8]); g.beginPath(); g.moveTo(X(0), Y(0)); g.lineTo(X(105), Y(0)); g.stroke(); g.setLineDash([]);
+        add(g, () => WALKS.forEach((w, k) => {
+          const col = w[105] > 0 ? '120,175,255' : '255,110,205';
+          g.strokeStyle = `rgba(${col},.9)`; g.lineWidth = 3; g.beginPath(); for (let i = 0; i <= n; i++) { const y = Y(w[i]); if (i) g.lineTo(X(i), y); else g.moveTo(X(i), y); } g.stroke();
+          glowDot(g, X(n), Y(w[n]), 36, 0.7, col); glowDot(g, X(n), Y(w[n]), 6, 1, '255,244,220');
+          if (n >= 105) { g.fillStyle = `rgba(${col},.9)`; g.font = '700 26px "Noto Sans CJK SC"'; g.textAlign = 'left'; g.textBaseline = 'middle'; g.fillText(w[105] > 0 ? '赢得多' : '输得多', X(105) + 24, Y(w[105]) + (k === 1 ? 12 : k === 0 ? -12 : 0)); }
+        }));
       }
+      g.restore();
     }}>
       {!second && (
         <>
-          <Lb x={960} y={FLOOR - 290} s="50%" size={48} col={C.goldHi} />
-          <Lb x={gx(0.06)} y={FLOOR - 10} s="围棋 · 国际象棋" size={26} col="#a8ccff" />
-          <Lb x={lerp(gx(0.12), gx(0.66), slide)} y={FLOOR - 10} s="德州扑克" size={30} col="#ffaee0" />
-          <div style={{ position: 'absolute', left: 260, top: 200, width: 1400, display: 'flex', justifyContent: 'space-around', opacity: eo(T, 91.0, 0.4) }}>
-            {[['国际象棋', '170+'], ['一半掷硬币的国际象棋', '45'], ['德州扑克', '< 30']].map(([a, b]) => (
-              <div key={a} style={{ textAlign: 'center' }}><div style={{ fontFamily: F.lat, fontWeight: 700, fontSize: 92, color: C.goldHi, textShadow: '0 0 24px rgba(255,214,140,.6)', ...LNUM }}>{b}</div><div style={{ fontFamily: F.serif, fontWeight: 700, fontSize: 26, color: C.dim }}>{a}</div></div>
-            ))}
-          </div>
-          <Lb x={960} y={384} s="评分的拉开程度：越大 = 越看实力" size={18} col="rgba(239,232,218,.5)" ls="0.25em" o={eo(T, 91.3, 0.4)} />
+          <Lb x={960} y={110} s="数字越大 = 越看实力" size={34} col="#efe8da" sub="RATING SPREAD · DUERSCH ET AL. 2020" o={eo(T, 89.7, 0.35)} />
+          {STANDS.map((st, i) => (
+            <React.Fragment key={st.name}>
+              <div style={{ position: 'absolute', left: st.x - 200, width: 400, top: 250, textAlign: 'center', opacity: ap(i), transform: `scale(${lerp(1.1, 1, ap(i))})`, fontFamily: F.serif, fontWeight: 900, fontSize: 96, color: i === 2 ? '#ffc4e6' : i === 0 ? '#cfe0ff' : C.goldHi, textShadow: '0 0 24px rgba(0,0,0,.8)', ...LNUM }}>{st.num}</div>
+              <Lb x={st.x} y={FLOOR + 130} s={st.name} size={26} col={i === 2 ? '#ffaee0' : i === 0 ? '#a8ccff' : '#efe8da'} o={ap(i)} />
+            </React.Fragment>
+          ))}
+          <Lb x={1500} y={370} s="比一半运气还靠运气" size={24} col="#ff9ed6" o={eo(T, 91.0, 0.4)} />
         </>
       )}
       {second && (
         <>
-          <Lb x={600} y={200} s={`第 ${n} 局`} size={44} col="#efe8da" />
-          <Lb x={700} y={600} s="强一档的人：领先越拉越大（示意）" size={24} col={C.dim} />
-          <Lb x={1500} y={590} s="75%" size={96} col={C.goldHi} o={eo(T, 96.2, 0.3)} />
+          <Lb x={960} y={110} s={`第 ${n} 局`} size={40} col="#efe8da" />
+          <Lb x={960} y={170} s="强一档的人 vs 普通人：谁赢得多（示意）" size={22} col={C.dim} />
+          <Lb x={960} y={680} s="4 场里 3 场是强的人领先 ≈ 75%" size={40} col={C.goldHi} o={eo(T, 95.85, 0.35)} />
         </>
       )}
     </Scene>
@@ -582,7 +632,7 @@ const GRABS = (() => { const out: { t: number; col: number; to: number }[] = [];
 export const S11: React.FC<{ T: number; f: number }> = ({ T, f }) => {
   const partB = T >= 101.85;
   if (!partB) {
-    const n = REROLLS.filter((r) => T >= r).length, coins = 9 - n, last = n ? REROLLS[n - 1] : -1;
+    const n = REROLLS.filter((r) => T >= r).length, coins = 10 - 2 * n, last = n ? REROLLS[n - 1] : -1;
     return (
       <Scene f={f} draw={(g) => {
         stage(g, T); bokeh(g, T, 16, 0.7);
@@ -600,13 +650,13 @@ export const S11: React.FC<{ T: number; f: number }> = ({ T, f }) => {
           for (let k = 0; k < coins; k++) coin(g, 1560, FLOOR - 10 - k * 11, 44, 0.35, true);
         }, 0.22);
         // a coin leaves the stack on every refresh
-        REROLLS.forEach((r0) => { const q = pr(T, r0 - 0.02, 0.32); if (q > 0 && q < 1) coin(g, lerp(1560, 1660, q), FLOOR - 110 - 160 * Math.sin(q * Math.PI), 34, Math.abs(Math.cos(q * 9)) * 0.9 + 0.05, true); });
+        REROLLS.forEach((r0) => [0, 0.06].forEach((dl, j) => { const q = pr(T, r0 - 0.02 + dl, 0.32); if (q > 0 && q < 1) coin(g, lerp(1560, 1660 + j * 40, q), FLOOR - 60 - j * 11 - 160 * Math.sin(q * Math.PI), 34, Math.abs(Math.cos(q * 9)) * 0.9 + 0.05, true); }));
         floorFade(g);
         if (n === 4) add(g, () => { glowDot(g, 660, FLOOR - 130, 220, 0.35 * eo(T, REROLLS[3] + 0.15, 0.2), GOLD); sparks(g, 660, FLOOR - 130, REROLLS[3] + 0.15, T, 50, GOLD, 1, 31); });
         g.restore();
       }}>
-        <Lb x={860} y={150} s="刷新 = 看运气" size={40} col="#ffaee0" sub="REFRESH THE SHOP" o={eo(T, 97.9, 0.4) * (1 - pr(T, 100.85, 0.3))} />
-        <Lb x={960} y={150} s="什么时候刷、刷几次、留多少金币 = 看实力" size={36} col="#a8ccff" sub="ECONOMY · TEAM BUILDING" o={eo(T, 101.0, 0.35)} />
+        <Lb x={860} y={150} s="刷新 = 看运气" size={40} col="#ffaee0" sub="REFRESH THE SHOP · 2 金币一次" o={eo(T, 97.9, 0.4) * (1 - pr(T, 99.75, 0.25))} />
+        <Lb x={960} y={150} s="什么时候刷、刷几次、留多少金币 = 看实力" size={36} col="#a8ccff" sub="ECONOMY · TEAM BUILDING" o={eo(T, 99.95, 0.35)} />
         <Lb x={1560} y={FLOOR + 110} s={`金币 ${coins}`} size={24} col={C.goldHi} o={eo(T, CUT.pool + 0.3, 0.3)} />
       </Scene>
     );
@@ -636,14 +686,14 @@ export const S11: React.FC<{ T: number; f: number }> = ({ T, f }) => {
       // you
       hexPedestal(g, 960, FLOOR + 80, 120, '255,214,140', 1);
       const yours = clamp((T - 104.55) / 0.2);
-      if (yours > 0) [0, 1, 2, 3, 4].forEach((j) => shopCard(g, 960 + (j - 2) * 76, FLOOR + 40, 62, 84, [0, 2, 1, 0, 1][j], false, clamp(yours * 2 - j * 0.15)));
+      if (yours > 0) [0, 1, 2, 3, 4].forEach((j) => shopCard(g, 960 + (j - 2) * 76, FLOOR + 22, 62, 84, [0, 2, 1, 0, 1][j], false, clamp(yours * 2 - j * 0.15)));
       floorFade(g);
       g.restore();
     }}>
-      <Lb x={960} y={110} s="8 个人 · 共用一个卡池（示意）" size={24} col="#d6c8ff" ls="0.3em" />
-      <Lb x={STACK_X(GOLD_COL)} y={STACK_Y - 250} s="你要的 ★" size={28} col={C.goldHi} o={eo(T, 102.0, 0.3) * (1 - pr(T, 104.4, 0.3))} />
+      <Lb x={960} y={110} s="8 个人 · 共用一个卡池（示意）" size={24} col="#d6c8ff" ls="0.3em" o={1 - pr(T, 103.5, 0.25)} />
+      <Lb x={STACK_X(GOLD_COL)} y={STACK_Y + 14} s="↑ 你要的 ★" size={26} col={C.goldHi} o={eo(T, 102.0, 0.3) * (1 - pr(T, 104.4, 0.3))} />
       <Lb x={960} y={FLOOR + 140} s="你" size={30} col={C.goldHi} />
-      <Lb x={960} y={STACK_Y - 250} s="被别人拿走的，你就刷不到" size={30} col="#efe8da" o={eo(T, 104.7, 0.35)} />
+      <Lb x={960} y={100} s="被别人拿走的，你就刷不到" size={34} col="#efe8da" o={eo(T, 103.7, 0.35)} />
     </Scene>
   );
 };
@@ -667,7 +717,7 @@ export const S12: React.FC<{ T: number; f: number }> = ({ T, f }) => {
       floorFade(g); strip(g, GX0, GX1, FLOOR + 92, 0.6 + 0.4 * (1 - pr(T, 110, 2)));
       g.restore();
       // one game vs a hundred: a tally of tiny coins along the top
-      add(g, () => { for (let i = 0; i < coins; i++) { const x = 360 + (i % 50) * 24, y = 170 + Math.floor(i / 50) * 34; glowDot(g, x, y, 9, 0.8, i % 3 ? '255,214,140' : '120,175,255'); } });
+      add(g, () => { for (let i = 0; i < coins; i++) { const x = 360 + (i % 50) * 24, y = 170 + Math.floor(i / 50) * 34; glowDot(g, x, y, 9, 0.85, rnd(i, 99) < 0.6 ? '120,175,255' : '255,110,205'); } });
     }}>
       <Lb x={960} y={235} s={coins > 0 ? `${coins} 局` : ''} size={30} col={C.goldHi} />
       <GalleryLabels appear={() => 1} dim={off} />
@@ -685,7 +735,7 @@ export const SEnd: React.FC<{ T: number; f: number }> = ({ T, f }) => {
         <circle cx={960} cy={232} r={46} fill="none" stroke={C.gold} strokeWidth={3} pathLength={1} strokeDasharray="1 1" strokeDashoffset={1 - ring} transform="rotate(-90 960 232)" />
         <text x={960} y={252} textAnchor="middle" style={{ fontFamily: F.lat, fontStyle: 'italic', fontWeight: 500, fontSize: 64 }} fill={C.gold} opacity={fo(0.4)}>J</text>
         <text x={960} y={304} textAnchor="middle" style={{ fontFamily: F.mono, fontWeight: 700, fontSize: 18, letterSpacing: '0.5em' }} fill={C.gold} opacity={0.8 * fo(0.6)}>JUNO</text>
-        <text x={960} y={432} textAnchor="middle" opacity={fo(0.5)} style={{ fontFamily: F.serif, fontWeight: 900, fontSize: 100 }} fill="url(#gec2)">《是菜还是非？》</text>
+        <text x={960} y={432} textAnchor="middle" opacity={fo(0.5)} style={{ fontFamily: F.serif, fontWeight: 900, fontSize: 100 }} fill="url(#gec2)">《是菜还是非？<tspan dx="-34">》</tspan></text>
         <text x={960} y={540} textAnchor="middle" opacity={fo(0.9)} style={{ fontFamily: F.serif, fontWeight: 700, fontSize: 46, letterSpacing: '0.06em' }} fill={C.cream}>你最常玩的游戏，运气占几成？</text>
         <text x={960} y={592} textAnchor="middle" opacity={fo(1.1)} style={{ fontFamily: F.sans, fontWeight: 500, fontSize: 26, letterSpacing: '0.12em' }} fill={C.dim}>@ 那个总说自己"非"的朋友</text>
       </svg>

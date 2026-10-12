@@ -26,7 +26,7 @@ const SHOTS: Shot[] = [
   { a: CUT.close, z: CUT.end, el: (T, f) => <S12 T={T} f={f} /> },
   { a: CUT.end, z: CUT.fin + 1, el: (T, f) => <SEnd T={T} f={f} /> },
 ];
-const SLAMS = [CUT.king, CUT.title, CUT.drop, CUT.result];
+const SLAMS = [CUT.title, CUT.drop, CUT.result];
 const LOADS = [...FONT_LOADS, '400 40px "DejaVu Sans"', '900 40px "Noto Serif CJK SC"'];
 
 export const Film: React.FC = () => {
@@ -35,7 +35,7 @@ export const Film: React.FC = () => {
   const [ok, setOk] = useState(false);
   useEffect(() => { Promise.all(LOADS.map((x) => document.fonts.load(x, '是菜还是非国际象棋围棋麻将0123456789').catch(() => null))).then(() => { setOk(true); continueRender(h); }); }, [h]);
   const shot = SHOTS.find((s) => T >= s.a && T < s.z) ?? SHOTS[SHOTS.length - 1];
-  const markO = T < CUT.gallery ? 1 - pr(T, CUT.title - 2, 0.4) : T < CUT.end ? eo(T, CUT.gallery, 0.4) : 0;
+  const markO = T < CUT.gallery ? 1 - pr(T, CUT.title - 0.3, 0.3) : T < CUT.end ? eo(T, CUT.gallery, 0.4) : 0;
   const flash = SLAMS.reduce((m, s) => m + 0.2 * hit(T, s, 0.09), 0);
   return (
     <AbsoluteFill style={{ background: '#000' }}>

@@ -24,7 +24,7 @@ export const plaque = (g: G, x: number, y: number, n: string) => {
   g.strokeStyle = 'rgba(255,170,225,.55)'; g.lineWidth = 2; g.beginPath(); (g as any).roundRect(x - w / 2 + 12, y - h + 12, w - 24, h - 24, 8); g.stroke();
   g.strokeStyle = 'rgba(255,255,255,.35)'; g.lineWidth = 1.5; g.beginPath(); g.moveTo(x - w / 2 + 14, y - h + 2); g.lineTo(x + w / 2 - 14, y - h + 2); g.stroke();
   g.textAlign = 'center'; g.textBaseline = 'middle';
-  g.fillStyle = 'rgba(255,190,230,.75)'; g.font = `700 34px "Noto Serif CJK SC"`; g.fillText('第', x, y - h + 62); g.fillText('名', x, y - 58);
+  g.fillStyle = 'rgba(255,200,235,.9)'; g.font = `900 48px "Noto Serif CJK SC"`; g.fillText('第', x, y - h + 62); g.fillText('名', x, y - 60);
   // lining digits, centred on their real outline (Cormorant's old-style 7 hangs below the line)
   g.save(); g.shadowColor = 'rgba(255,110,205,.9)'; g.shadowBlur = 30; g.fillStyle = '#ffd1ea'; g.font = `900 150px "Noto Serif CJK SC"`; g.textBaseline = 'alphabetic';
   { const m = g.measureText(n); g.fillText(n, x + (m.actualBoundingBoxLeft - m.actualBoundingBoxRight) / 2, y - h / 2 + 4 + (m.actualBoundingBoxAscent - m.actualBoundingBoxDescent) / 2); }
@@ -229,7 +229,7 @@ const GoldTitle: React.FC<{ T: number; o?: number; tint?: boolean }> = ({ T, o =
       <g transform={`translate(960 ${TY}) scale(${sc}) translate(-960 ${-TY})`} opacity={k}>
         {TITLE.split('').map((ch, i) => <text key={i} x={charX(i)} y={TY + FS * 0.36} textAnchor="middle" style={{ fontFamily: F.serif, fontWeight: 900, fontSize: FS }} fill="url(#tg)">{ch}</text>)}
       </g>
-      <text x={960} y={TY + 150} textAnchor="middle" opacity={eo(T, HIT + 0.5, 0.5) * o} style={{ fontFamily: F.mono, fontWeight: 700, fontSize: 20, letterSpacing: '0.42em' }} fill={C.dim}>LUCK · SKILL · EVERY GAME YOU PLAY</text>
+      <text x={960} y={TY + 150} textAnchor="middle" opacity={eo(T, HIT + 0.5, 0.5) * o} style={{ fontFamily: F.mono, fontWeight: 700, fontSize: 20, letterSpacing: '0.42em' }} fill={C.dim}>SKILL · LUCK · EVERY GAME YOU PLAY</text>
     </svg>
   );
 };
@@ -333,34 +333,45 @@ const TT3: React.FC<{ T: number; f: number }> = ({ T, f }) => {
     }}>
       <Lb x={960 - 3 * 172 - 70} y={FLOOR - 172} s="《" size={100} col={C.goldHi} o={eo(T, HIT, 0.25)} />
       <Lb x={960 + 3 * 172 + 80} y={FLOOR - 172} s="》" size={100} col={C.goldHi} o={eo(T, HIT, 0.25)} />
-      <Lb x={960} y={FLOOR - 310} s="LUCK · SKILL · EVERY GAME YOU PLAY" size={20} col={C.dim} ls="0.42em" o={eo(T, HIT + 0.5, 0.5)} />
+      <Lb x={960} y={FLOOR - 310} s="SKILL · LUCK · EVERY GAME YOU PLAY" size={20} col={C.dim} ls="0.42em" o={eo(T, HIT + 0.5, 0.5)} />
     </Scene>
   );
 };
 
 /* T4 · six dice tumble in and land on the hit, the question on their front faces */
-const fdie = (g: G, x: number, y: number, a: number, glyph: string, pips: number, glow = 0) => {
-  const d = a * 0.28;
-  g.fillStyle = '#1c1c22'; g.beginPath(); g.moveTo(x - a / 2, y - a); g.lineTo(x - a / 2 + d, y - a - d); g.lineTo(x + a / 2 + d, y - a - d); g.lineTo(x + a / 2, y - a); g.closePath(); g.fill();
-  g.fillStyle = '#060608'; g.beginPath(); g.moveTo(x + a / 2, y - a); g.lineTo(x + a / 2 + d, y - a - d); g.lineTo(x + a / 2 + d, y - d); g.lineTo(x + a / 2, y); g.closePath(); g.fill();
-  const fr = g.createLinearGradient(x - a / 2, y - a, x + a / 2, y); fr.addColorStop(0, '#2c2c34'); fr.addColorStop(0.55, '#121216'); fr.addColorStop(1, '#050507');
-  g.fillStyle = fr; g.beginPath(); (g as any).roundRect(x - a / 2, y - a, a, a, a * 0.12); g.fill();
-  g.strokeStyle = 'rgba(255,255,255,.28)'; g.lineWidth = 1.5; g.beginPath(); g.moveTo(x - a / 2 + 10, y - a + 2); g.lineTo(x + a / 2 - 10, y - a + 2); g.stroke();
-  // top face pips (gold), small
-  g.fillStyle = 'rgba(240,200,115,.85)'; [[-0.2, 0], [0.2, 0]].forEach(([u]) => { g.beginPath(); g.ellipse(x + u * a + d / 2, y - a - d / 2, a * 0.05, a * 0.025, 0, 0, 6.3); g.fill(); });
-  if (glyph) {
-    g.save(); g.shadowColor = `rgba(255,214,140,${0.5 + 0.5 * glow})`; g.shadowBlur = 20 + 30 * glow;
-    const gg = g.createLinearGradient(0, y - a, 0, y); gg.addColorStop(0, '#fff3cf'); gg.addColorStop(0.5, '#f0c873'); gg.addColorStop(1, '#b07c32');
-    g.fillStyle = gg; g.font = `900 ${a * 0.7}px "Noto Serif CJK SC"`; g.textAlign = 'center'; g.textBaseline = 'alphabetic';
-    { const m = g.measureText(glyph); g.fillText(glyph, x + (m.actualBoundingBoxLeft - m.actualBoundingBoxRight) / 2, y - a / 2 + (m.actualBoundingBoxAscent - m.actualBoundingBoxDescent) / 2); } g.restore();
-  } else {
-    const P: Record<number, number[][]> = { 1: [[0, 0]], 2: [[-1, -1], [1, 1]], 3: [[-1, -1], [0, 0], [1, 1]], 4: [[-1, -1], [1, -1], [-1, 1], [1, 1]], 5: [[-1, -1], [1, -1], [0, 0], [-1, 1], [1, 1]], 6: [[-1, -1], [1, -1], [-1, 0], [1, 0], [-1, 1], [1, 1]] };
-    g.fillStyle = '#f0c873'; P[pips].forEach(([i, j]) => { g.beginPath(); g.arc(x + i * a * 0.27, y - a / 2 + j * a * 0.27, a * 0.075, 0, 6.3); g.fill(); });
+/** a black die drawn as a real cube in oblique view at any roll angle: the front square turns, the depth stays fixed,
+    and only the side faces that face the depth direction are drawn, so every face shares its edges */
+const fdie = (g: G, x: number, y: number, a: number, glyph: string, pips: number, glow = 0, rot = 0) => {
+  const d = a * 0.28, cx = x, cy = y - a / 2, ox = d, oy = -d, c = Math.cos(rot), s = Math.sin(rot);
+  const P = (u: number, v: number): [number, number] => [cx + u * c - v * s, cy + u * s + v * c];
+  const F = [P(-a / 2, -a / 2), P(a / 2, -a / 2), P(a / 2, a / 2), P(-a / 2, a / 2)];
+  for (let i = 0; i < 4; i++) {
+    const p0 = F[i], p1 = F[(i + 1) % 4], ex = p1[0] - p0[0], ey = p1[1] - p0[1], nx = ey, ny = -ex;   // outward normal (clockwise square)
+    const facing = (nx * ox + ny * oy) / (Math.hypot(nx, ny) * Math.hypot(ox, oy));
+    if (facing <= 0.02) continue;
+    const up = -ny / Math.hypot(nx, ny);                                                                  // how much this face points up (lit from above)
+    g.fillStyle = up > 0.3 ? '#22222a' : '#0b0b0e';
+    g.beginPath(); g.moveTo(p0[0], p0[1]); g.lineTo(p1[0], p1[1]); g.lineTo(p1[0] + ox, p1[1] + oy); g.lineTo(p0[0] + ox, p0[1] + oy); g.closePath(); g.fill();
+    if (up > 0.3) { g.fillStyle = 'rgba(240,200,115,.8)'; [0.35, 0.65].forEach((t) => { g.beginPath(); g.arc(p0[0] + ex * t + ox * 0.5, p0[1] + ey * t + oy * 0.5, a * 0.035, 0, 6.3); g.fill(); }); }
   }
+  g.save(); g.translate(cx, cy); g.rotate(rot);
+  const fr = g.createLinearGradient(-a / 2, -a / 2, a / 2, a / 2); fr.addColorStop(0, '#2c2c34'); fr.addColorStop(0.55, '#121216'); fr.addColorStop(1, '#050507');
+  g.fillStyle = fr; g.beginPath(); (g as any).roundRect(-a / 2, -a / 2, a, a, a * 0.12); g.fill();
+  g.strokeStyle = 'rgba(255,255,255,.28)'; g.lineWidth = 1.5; g.beginPath(); g.moveTo(-a / 2 + 10, -a / 2 + 2); g.lineTo(a / 2 - 10, -a / 2 + 2); g.stroke();
+  if (glyph) {
+    g.shadowColor = `rgba(255,214,140,${0.5 + 0.5 * glow})`; g.shadowBlur = 20 + 30 * glow;
+    const gg = g.createLinearGradient(0, -a / 2, 0, a / 2); gg.addColorStop(0, '#fff3cf'); gg.addColorStop(0.5, '#f0c873'); gg.addColorStop(1, '#b07c32');
+    g.fillStyle = gg; g.font = `900 ${a * 0.7}px "Noto Serif CJK SC"`; g.textAlign = 'center'; g.textBaseline = 'alphabetic';
+    const m = g.measureText(glyph); g.fillText(glyph, (m.actualBoundingBoxLeft - m.actualBoundingBoxRight) / 2, (m.actualBoundingBoxAscent - m.actualBoundingBoxDescent) / 2);
+  } else {
+    const PP: Record<number, number[][]> = { 1: [[0, 0]], 2: [[-1, -1], [1, 1]], 3: [[-1, -1], [0, 0], [1, 1]], 4: [[-1, -1], [1, -1], [-1, 1], [1, 1]], 5: [[-1, -1], [1, -1], [0, 0], [-1, 1], [1, 1]], 6: [[-1, -1], [1, -1], [-1, 0], [1, 0], [-1, 1], [1, 1]] };
+    g.fillStyle = '#f0c873'; PP[pips].forEach(([i, j]) => { g.beginPath(); g.arc(i * a * 0.27, j * a * 0.27, a * 0.075, 0, 6.3); g.fill(); });
+  }
+  g.restore();
 };
 export const TT4: React.FC<{ T: number; f: number }> = ({ T, f }) => {
   const CH = '是菜还是非？'.split(''), A = 150;
-  const ign = eio(T, T0, 1.1), after = eo(T, HIT, 0.6);
+  const ign = 0.35 + 0.65 * eio(T, T0, 0.9), after = eo(T, HIT, 0.6);
   // one die, tumbling like a real cube: it rolls over its edges, a new face every quarter turn, slowing to rest
   const dieAt = (g: G, i: number, tt: number, alpha: number) => {
     const land = HIT - (5 - i) * 0.07, dur = 1.55 + 0.25 * rnd(i, 2), q = clamp((tt - (land - dur)) / dur);
@@ -373,8 +384,7 @@ export const TT4: React.FC<{ T: number; f: number }> = ({ T, f }) => {
     const sq = tt >= land ? 0.06 * Math.exp(-(tt - land) * 12) * Math.cos((tt - land) * 22) : 0;
     const y = FLOOR - lift - hop, cx = x, cy = y - A / 2;
     g.save(); g.globalAlpha *= alpha; g.translate(cx, y); g.scale(1 + sq * 0.5, 1 - sq); g.translate(-cx, -y);
-    g.translate(cx, cy); g.rotate(resid); g.translate(-cx, -cy);
-    fdie(g, x, y, A, face === 0 ? CH[i] : '', 1 + ((face + i * 2) % 6), tt >= land ? Math.exp(-(tt - land) * 2) : 0);
+    fdie(g, x, y, A, face === 0 ? CH[i] : '', 1 + ((face + i * 2) % 6), tt >= land ? Math.exp(-(tt - land) * 2) : 0, resid);
     g.restore();
   };
   return (
@@ -393,7 +403,7 @@ export const TT4: React.FC<{ T: number; f: number }> = ({ T, f }) => {
       <Lb x={1620} y={FLOOR + 90} s="运气" size={56} col="#ffaee0" sub="LUCK" o={eo(T, T0 + 1.0, 0.4) * (1 - eio(T, 14.8, 0.6))} />
       <Lb x={960 - 3 * 178 - 60} y={FLOOR - 145} s="《" size={100} col={C.goldHi} o={eo(T, HIT, 0.3)} />
       <Lb x={960 + 3 * 178 + 85} y={FLOOR - 145} s="》" size={100} col={C.goldHi} o={eo(T, HIT, 0.3)} />
-      <Lb x={960} y={FLOOR - 290} s="LUCK · SKILL · EVERY GAME YOU PLAY" size={20} col={C.dim} ls="0.42em" o={eo(T, HIT + 0.5, 0.5)} />
+      <Lb x={960} y={FLOOR - 290} s="SKILL · LUCK · EVERY GAME YOU PLAY" size={20} col={C.dim} ls="0.42em" o={eo(T, HIT + 0.5, 0.5)} />
     </Scene>
   );
 };
