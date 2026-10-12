@@ -1,4 +1,195 @@
-# Script: 利率没动，只改了一句话 / 相信我，这就够了  (v4, 2026-10-12, "大众也能懂的")
+# ep16 script v6 — 18–23岁、没有金融知识也能看懂 (producer, 2026-10-12)
+
+Owner notes: 「大众也能懂的」 → 「18-23岁没有金融知识也能看得懂的」 → 「don't use agents」 (this version written by the producer directly).
+v6 fixes from the two non-finance student cold reads on v5 (5/10, 6/10):
+- 央行 no longer appears before the title; the hook ends on a cliffhanger (这一招，就藏在今年的诺贝尔奖里).
+- Why "降不动" matters is said (美国想让大家多花钱).
+- What people did after believing is shown (几分钟内，大家就当真了 · 专家也改了口).
+- The teacher analogy keeps one direction: words make people act now (必考 → 复习; 借钱便宜 → 现在就去花); the confusing 「两年内不加作业」 is gone.
+- Woodford's line has a verb and examples (你买不买车、公司招不招你 / 看的是以后几年).
+- Spain's 7块 gets a scale in the picture (2012年最高); the drop is said as 「约七分之一」 instead of 「才1块」.
+- The teacher comes back mid-story (补考班兜底) instead of disappearing for 40 s.
+- The 2013 reverse case is cut (it confused both readers); 「前提是：大家得信它」 keeps the caveat.
+- ~102 s of lines + end card ≈ 108 s.
+
+Title plaque (14.5–18.1 s): the feed title itself, so the 3.6 s has text: 「央行也会说“这题必考”」 + 2026诺贝尔经济学奖.
+Titles: 1 央行也会说“这题必考” (both students' pick) · 2 今年诺奖：说话也能管用 · 3 利息没动，只改了一句话.
+End card: 「老师哪一句话，让你当晚就开始复习？」 · @一个每月准时月光的朋友.
+
+| # | t | line | facts row | picture |
+|---|---|---|---|---|
+| 1 | 0.0 | 老师只说了一句：“这题期末[必考]” | — 比喻 | 黑板上粉笔写“必考”，圈一下落在第一拍 |
+| 2 | 3.7 | 当晚，全班都在刷这道题 | — 比喻 | 教室夜景，一排台灯同时亮起 |
+| 3 | 7.0 | 他什么都没做，大家却已经动了 | 5, 6 原理 | 讲台空着，老师双手插兜；台下全在动 |
+| 4 | 10.7 | 这一招，就藏在今年的[诺贝尔奖]里 | 1, 20 | 黑板一角浮出诺贝尔奖章轮廓，推进 → 片名牌 |
+| 5 | 18.1 | 每个国家都有个“老师”：[央行] | —（央行=管一国利息的银行） | 黑板变成国家地图剪影上的讲台（不画真实地图边界），名牌“央行 = 管一国利息的银行” |
+| 6 | 21.5 | 它定借钱的利息：借100块，一年多还几块 | 利息机制（常识） | 100块钞票 + 小硬币表示要多还的钱 |
+| 7 | 25.6 | 2011年，美国想让大家多花钱 | 20, 26 | 黑板写“让大家多花钱” |
+| 8 | 29.0 | 可利息已经接近0，[降不动了] | 20, 26 | 利息刻度尺降到0，撞底 |
+| 9 | 32.6 | 它只改了一句：低利息“[至少到2013年年中]” | 26 | 粉笔把一句话改上日期，标签“2011.8.9 美国央行声明” |
+| 10 | 36.7 | 几分钟内，大家就当真了 | 27（Woodford 2012 当天走势） | 当天利率曲线几分钟内下坠（标签：市场利率·当天·Woodford 2012） |
+| 11 | 40.0 | 专家也改了口：[近两年]都不会涨 | 28（7个季度≈近两年） | 7个格子依次点亮（标签：专家预测·加息前等待≥7个季度） |
+| 12 | 43.7 | 意思是：借钱便宜，[现在]就去花、去干 | 20（用意：刺激经济） | 标签“用意”；人群开始走动 |
+| 13 | 47.6 | 今年的诺奖得主：霍尔和伍德福德 | 1, 2 | 两张名牌：2026诺贝尔经济学奖得主（斯坦福 / 哥伦比亚），无照片 |
+| 14 | 51.5 | 霍尔：花多少，看你觉得[以后]挣多少 | 13 | 钱包与未来工资条 |
+| 15 | 55.4 | 10户里约[8户]，真这么花钱 | 14 | 10个小人亮8个 |
+| 16 | 58.8 | 剩下的，多是[月光族] | 14 | 剩下2个钱包见底 |
+| 17 | 61.8 | 伍德福德：你买不买车、公司招不招你 | 22 | 车、工位两个图标挂在一条“以后几年”的时间线上 |
+| 18 | 65.8 | 看的不是今天，是[以后几年]的利息 | 22 | 时间线往后亮起，今天那格变暗 |
+| 19 | 69.6 | 2012年，西班牙借100块，一年要付近[7块] | 33（月均，2012年最高） | 100块旁边7枚硬币，标签“2012年最高 · 10年期 · 月均” |
+| 20 | 73.6 | 欧洲央行行长说：“不惜一切代价” | 31 | 引语卡片，名牌“时任欧洲央行行长”，无照片 |
+| 21 | 77.3 | “相信我，[这就够了]” | 31 | 引语放大 |
+| 22 | 80.1 | 6周后，又公布了一个[兜底]计划 | 35 | 一张折起来的“兜底计划”盖章（标签：6周后 · 2012.9.6） |
+| 23 | 83.8 | 就像老师说：谁挂了，有补考班兜底 | — 比喻（OMT=兜底） | 黑板写“补考班”，门口挂“暂不开放” |
+| 24 | 87.6 | 研究估算：利息因此少了约[七分之一] | 55（10年期约−1个点 ÷ 6.80% ≈ 七分之一，计算） | 7枚硬币少约1枚（标签：研究估算 · Altavilla 等 2016 · 10年期） |
+| 25 | 91.6 | 可到2015年，这个计划[一次都没用过] | 36, 56 | “兜底计划”卡片上盖“未使用 · 截至2015” |
+| 26 | 95.4 | 前提是：大家得[信]它 | 21 | 黑板写“信” |
+| 27 | 98.4 | 你怎么看明天，[今天]就怎么做 | 13 | 回到开头的黑板，“必考”二字 |
+
+
+# History
+
+# Script: 相信我，这就够了 / 央行也会说"这题必考"  (v5, 2026-10-12, 「18-23岁没有金融知识也能看得懂的」)
+
+**Logline:** A teacher says only one thing, 「这题期末必考」, and the whole class studies that night. A country has a "teacher" too: its central bank. In 2011 the US central bank couldn't lower interest any further. It only said 「低利息至少到2013年年中」, and even forecasters believed it. In 2012 Europe's central-bank chief said 「相信我，这就够了」. Spain paid less to borrow, and the backup plan was never used. This year's Nobel is about why words about tomorrow change today.
+**Takeaway:** 老师一句话，你今晚就刷题。央行一句话，大家今天就改主意。前提是大家信。你怎么看明天，今天就怎么做。
+**Length:** about 105 s.
+- Lines run 0–98.6 s. The end card runs 98.6–104.9 s.
+- Title plaque on the drop: 12.3–15.9 s.
+- 「相信我，这就够了」 lands at 69.6 s (66 %, the emotional peak at 2/3). The reveal 「一次都没用过」 lands at 81.6 s (78 %).
+- 24 lines, 3.95 s on screen on average.
+- The producer refits to the track. If the track's big drop must hit the reveal at 2/3, cut line 12 and fold its 8户 into line 13's picture (saves 4 s).
+
+**pace.py (v5):** no line is too fast and waiting is 0.0 s (0 %). The only CHECK flag is 12.3–15.9 s, the planned title plaque on the drop.
+
+## Revision notes (owner: 「18-23岁没有金融知识也能看得懂的」 → v5)
+- **1. Analogy from a student's life.** The shop is replaced by a teacher. 「老师只说了一句：这题期末必考」 opens the film and is carried through:
+  - line 4: 国家也有这样的"老师"：央行;
+  - line 9: 2011 = 「两年内不加作业」;
+  - line 22: Draghi = 「没人会挂」, and the backup class was never opened;
+  - line 24: the end, back in the classroom.
+
+  The analogy only explains. Each real case is still told with its verified facts (mapping table below).
+- **2. First-time glosses.**
+  - Central bank and 利息 are glossed in one line (5): 「它管着借钱的利息：借100块，要多还几块」.
+  - 「降不动了」 explains why "only saying" matters.
+  - Not in v5 subtitles: 国债, 借条, 欧元, 预测机构, 美联储, 表态, 利率.
+  - 欧洲央行 becomes 「欧洲的央行」.
+  - The bond-buying plan is 「备用计划：必要时出钱兜底」, with the technical name (OMT) only in the picture tag.
+- **3. The stake.**
+  - The opening is the student's own moment (a teacher, the exam, studying tonight).
+  - The concrete life stake is 「花钱、定价，还有公司招不招你」 (line 15, row 22: expected rates drive spending, pricing, hiring). It is true and it is not advice.
+  - I did not use 花呗/分期, because no row covers them, and 花呗 charges are fees, not "利息" in the strict sense.
+  - I did not use 爸妈房贷 either, because it would pull China into the story; the brief allows China for mechanics only.
+- **4. The beats readers loved are kept.** 「相信我，这就够了」 (18), 「一次都没用过」 (21), 月光族 (13). Laureates: 「今年诺贝尔经济学奖：霍尔和伍德福德」 + one plain line each (11, 14). 10户约8户 is kept because it reads instantly.
+- **5. Rules.**
+  - 24 lines at ~4 s each.
+  - pace.py clean.
+  - Every number comes from a verified row.
+  - 研究估算 tag on line 20.
+  - 「只是说 / 这几番话」 wording, with no 只因一句话.
+  - No advice.
+  - 2013 is folded into the credibility line: 「前提是大家信。话也会让借钱变贵」 (rows 21, 39). The 2013 numbers and 「原因之一」 are in the picture.
+- **Producer/director swap carried over from v4 r4:** line 8 uses the director's 「连专家也信了：[近两年]借钱都便宜」 (row 28) instead of 做预测的人.
+- **Changed from earlier don't-change items, by the owner's new audience brief:**
+  - The last line is now 「你怎么看明天，今天就怎么做」 instead of 「…就怎么花」. 做 covers both studying (the teacher) and spending (Hall). If you want the old word, 花 is a one-character swap with the same timing.
+  - 2013 is no longer its own beat.
+  - The end-card question now uses the teacher analogy. The @ prompt is unchanged.
+
+## Analogy mapping (real fact ↔ teacher version)
+| Real fact (verified) | Row | Teacher version (explains only) | Where |
+|---|---|---|---|
+| Households and firms decide by looking at the future. Central banks that communicate plans change that view of the future. | 5, 6 | The teacher says 「这题期末必考」 and does nothing else. The class studies tonight because they believe him. | lines 1–3 |
+| A central bank sets the interest people pay to borrow. | general, 53 (mechanics) | The central bank is the country's "teacher": its words set the rules people plan by. | lines 4–5 |
+| 2011: the US rate was already 0–0.25 % and couldn't be cut further. The FOMC changed nothing except stating low rates "at least through mid-2013". | 20, 26 | The teacher can't make the course any easier, so he promises 「两年内不加作业」. | lines 6–7, 9 |
+| Forecasters' median expected wait before a rate rise jumped to 7+ quarters (≈21 months, close to two years). Woodford calls it "a clear effect of the FOMC forward guidance". | 28 | 「全班都信了」: everyone plans around "no extra homework for two years". | lines 8–9 |
+| Hall: spending depends on expected future income. About 80 % of households in the data behaved that way; the rest were hand-to-mouth (月光族). | 13, 14 | (No teacher version. This is the student's own wallet.) | lines 11–13 |
+| Woodford: what matters is the expected path of rates over the next years. It drives spending, pricing and hiring. | 22 | Like 「期末必考」: what you expect at the end of term decides what you do tonight. | lines 14–15 |
+| 2012: Spain's 10-year borrowing cost averaged 6.80 % in July, the 2012 high. Draghi on 26 Jul: "whatever it takes … believe me, it will be enough". | 31, 33 | The teacher tells a class that is failing: 「相信我，没人会挂」. | lines 16–18, 22 |
+| 6 weeks later the ECB announced OMT (buy those countries' bonds if needed). | 35, 56 | The teacher sets up a backup tutoring class (补课班) for anyone who needs it. | line 19 |
+| The announcements cut Spain's 10-year yield by about 1 point (≈ −115 / −97 bp). This is a study's event estimate (研究估算). | 55 | Grades go up before the backup class even starts. | line 20 |
+| By Jan 2015 OMT "has not been implemented in any specific case". The ECB later told the EU court that the announcement alone was enough (the ECB's claim). | 36, 56, 57 | 「补课班一次没开」. | lines 21–22 |
+| Forward guidance needs credibility. In 2013, a hint about buying fewer bonds came as US 10-year rates rose from 1.76 % to 2.81 %; the Fed lists its own communications as one cause. | 21, 38, 39 | Only works if the class believes the teacher. And a careless word from him can scare the class just as fast. | line 23 |
+
+## Title options (a non-finance 20-year-old gets them at a glance)
+1. **央行也会说"这题必考"** (9). The film's own analogy, in a student's language. It is curious (why would a bank say that?) and true to the idea: forward guidance announces the future so people act today. **Feed and cover.**
+2. **今年诺奖：说话也能管用** (10). Carries 诺奖 for topicality. "也能" keeps it honest: the film shows the precondition (大家信) and that words can backfire.
+3. **利息没动，只说了一句话** (10). The 2011 paradox in plain words (利息 instead of 利率). Lines 6–8 pay it off by 33 s.
+
+In-film plaque on the drop: 「相信我，这就够了」 + 「2026 诺贝尔经济学奖」. It pays off at 69.6 s and again in line 22.
+
+## Beat sheet
+| Beat | Time | Purpose | What the viewer learns / feels |
+|---|---|---|---|
+| Hook | 0–12.3 | the student's own moment → the topic | A teacher's one sentence makes the whole class study tonight. A country has a teacher like that: the central bank. |
+| Title | 12.3–15.9 | plaque on the drop | 「相信我，这就够了」 · 2026 诺贝尔经济学奖 |
+| Case 1 | 15.9–37.1 | 2011, told plainly | It sets borrowing interest (100块 → how much extra). In 2011 US interest was near 0 and couldn't go lower. The central bank only said 「低利息至少到2013年年中」, and experts believed it: borrowing would stay cheap for nearly two years. Like 「两年内不加作业」. |
+| Why (Nobel) | 37.1–61.1 | the prize in one line each | Hall: you spend by what you think you'll earn later (10户约8户; the rest 月光族). Woodford: the next few years' interest is what matters, for spending, prices and whether a company hires you. |
+| Case 2 | 61.1–90.5 | Draghi; peak at 69.6, **REVEAL at 81.6** | Spain pays nearly 7块 a year on 100块 → 「不惜一切代价」 → 「相信我，这就够了」 → a backup plan → about 1块 less (研究估算) → **never used once by 2015** → 就像老师说"没人会挂"，补课班一次没开. |
+| Payoff | 90.5–98.6 | condition + back to the classroom | It only works if people believe, and words can also make borrowing dearer. 你怎么看明天，今天就怎么做. |
+| End card | 98.6–104.9 | comments | Juno end card |
+
+## Lines (v5)
+Brackets = highlight. Times are provisional. Need = 0.5 + n/7 + 0.6 s.
+**Prop world:** a classroom blackboard. The teacher (a generic illustrated figure, not a real person) writes on it. When a central bank speaks, its sentence is chalked on the same board, so the board is where words become plans. A coin stack on the teacher's desk shows "借100块，要多还几块". No faces of real people, no logos, no phones.
+
+| # | Start | End | Line (≤ 16 字) | Chars | Needs | Picture (what is on screen) | Fact # |
+|---|---|---|---|---|---|---|---|
+| 1 | 0.0 | 3.2 | 老师只说了一句：“这题期末[必考]” | 13 | 2.96 | **Frame 0, moving on the first beat:** a blackboard. Chalk circles one problem and writes 「期末必考」. The teacher turns away and does nothing else. | — (everyday moment, no fact claim) |
+| 2 | 3.2 | 5.9 | 当晚，全班都在刷这道题 | 10 | 2.53 | Night: a row of dorm desk lamps clicks on one by one. Every desk has the same circled problem. | — |
+| 3 | 5.9 | 9.2 | 他什么都没做，大家却已经动了 | 13 | 2.96 | Split: the teacher's empty desk (no action) beside the busy lit desks. | 5, 6 (the principle) |
+| 4 | 9.2 | 12.3 | 国家也有这样的“老师”：[央行] | 11 | 2.67 | The blackboard widens into a country-sized board. The teacher's spot becomes a generic building plaque 「央行」 (no real seal). | — |
+| — | 12.3 | 15.9 | (title, no subtitle) | — | — | **Drop.** Plaque 「相信我，这就够了」, small 「2026 诺贝尔经济学奖」. | 1 |
+| 5 | 15.9 | 20.3 | 它管着借钱的利息：借100块，要多还几块 | 16 | 3.39 | A 100块 note on the desk with a small stack of extra coins: 「要多还的 = 利息」. The 央行 plaque has a dial that sets how tall the stack is. | general mechanics (53) |
+| 6 | 20.3 | 24.4 | 2011年，美国的利息接近0，降不动了 | 14 | 3.10 | 「美国」 board, date 「2011.8」. The dial is already at the floor: 「0–0.25%」, 「降不动了」. Almost no coins on the 100块. | 20, 26 |
+| 7 | 24.4 | 28.6 | 央行只是说：低利息“[至少到2013年年中]” | 15 | 3.24 | Chalk writes on the board 「低利息，至少到2013年年中」 (small: "at least through mid-2013", 「美国央行 · 美联储」). A calendar strip 2011.8 → 2013年中 rolls out. | 26 |
+| 8 | 28.6 | 32.7 | 连专家也信了：[近两年]借钱都便宜 | 14 | 3.10 | Experts with notepads (forecasters) pin cards 「下次涨利息：近两年后」 under the chalk line. 7 quarter boxes tick on: 「7个季度以上 ≈ 21个月 · 预测中位数」. | 28 (计算) |
+| 9 | 32.7 | 37.1 | 像老师说“两年内不加作业”，全班都信了 | 16 | 3.39 | Inset: the classroom board says 「两年内不加作业」 and students relax and plan. The inset sits beside the real chalk line, which shows the mapping. | analogy for 26, 28 |
+| 10 | 37.1 | 41.5 | 今年诺贝尔经济学奖：霍尔和伍德福德 | 16 | 3.39 | Two name cards, no photos: 「罗伯特·霍尔 · 美国经济学家 · 斯坦福」 and 「迈克尔·伍德福德 · 美国经济学家 · 哥伦比亚大学」. Small: official citation + 「意译：为宏观经济稳定政策打下微观基础」. | 1, 2 |
+| 11 | 41.5 | 45.9 | 霍尔：今天花多少，看你觉得以后挣多少 | 16 | 3.39 | A student's wallet. A thought bubble 「以后能挣多少？」 sets how much comes out today. | 13 |
+| 12 | 45.9 | 49.9 | 10户里约[8户]，真是这么花钱的 | 13 | 2.96 | 10 small houses. 8 light up. Tag 「霍尔等，1982，家庭花钱数据」. | 14 |
+| 13 | 49.9 | 53.1 | 剩下的，多是[月光族] | 8 | 2.24 | The 2 dark houses: an empty wallet and the calendar flipping to month-end. Light humour. | 14 (gloss of "hand to mouth") |
+| 14 | 53.1 | 57.3 | 伍德福德：要紧的是[以后几年]的利息 | 15 | 3.24 | Woodford's card. The board shows 「今年 / 明年 / 后年 / 再后年」. 「今年」 dims, the later three glow, like 「期末」 on a term calendar. | 22 |
+| 15 | 57.3 | 61.1 | 花钱、定价，还有公司[招不招你] | 12 | 2.81 | Strings from the glowing years down to a shopping bag, a price tag and a 「招聘 / 实习」 notice. All three twitch together. | 22 |
+| 16 | 61.1 | 65.5 | 2012年，西班牙政府借100块，一年付近[7块] | 16 | 3.39 | 「西班牙」 board (neutral outline, no other maps). A 100块 note with **7 coins** stacked beside it. Tag 「借10年 · 2012年7月平均6.80% · 当年最高」. | 33 (计算) |
+| 17 | 65.5 | 69.6 | 欧洲的央行行长说：“不惜一切代价” | 14 | 3.10 | A podium and microphone, no face. Name tag 「马里奥·德拉吉 · 时任欧洲央行行长」. Full quote card 「在职责范围内，欧洲央行准备不惜一切代价保住欧元」 + 「伦敦，2012.7.26」. | 31 |
+| 18 | 69.6 | 72.8 | “相信我，[这就够了]” | 7 | 2.10 | The last line is chalked big on the Spain board, like the 「必考」 circle from frame 0. | 31 |
+| 19 | 72.8 | 77.2 | 6周后，备用计划来了：必要时[出钱兜底] | 15 | 3.24 | Calendar 7.26 → 9.6. A sealed box on the desk 「备用计划（OMT）：必要时买这些国家的国债」. | 35, 56 |
+| 20 | 77.2 | 81.6 | 这几番话，让西班牙每100块少付约[1块] | 16 | 3.39 | The 7-coin stack loses about **one coin**. Show the total, or three date steps 7.26 / 8.2 / 9.6 with **8.2 going up**, never three equal down-steps. Tag 「研究估算 · Altavilla 等，2016 · 借10年」. | 55 (ES 10-yr −115/−97 bp) |
+| 21 | 81.6 | 85.8 | 可到2015年，这个计划[一次都没用过] | 14 | 3.10 | **REVEAL.** The box is still sealed, with dust on it. Tag 「截至2015年1月：一次都没用过」 + 「欧盟法院新闻稿」. Small, optional: 「欧洲央行后来对法院说：光是宣布就够了（意译）」. Hold. | 36, 56, 57 |
+| 22 | 86.1 | 90.5 | 就像老师说“没人会挂”，补课班一次没开 | 15 | 3.24 | Inset classroom: the board says 「相信我，没人会挂」. The door sign 「补课班」 stays closed, and the class's grades tick up anyway. | analogy for 31, 36, 55 |
+| 23 | 90.5 | 94.6 | 前提是大家信。话也会让借钱变贵 | 14 | 3.10 | The classroom board, with one chalk line smudged. Small real tag: 「2013：美国央行暗示少买债后，借10年 1.76% → 2.81%（4→9月平均）；美联储：原因之一是自己的话」. | 21, 38, 39 |
+| 24 | 94.6 | 98.6 | 你怎么看明天，[今天]就怎么做 | 12 | 2.81 | Back to frame 0: the 「期末必考」 board, and the dorm lamps still on. Freeze into the end card. | 13, 5 |
+| — | 98.6 | 104.9 | (end card) | — | — | Juno end card: 「关注 Juno · 一起看懂世界」 + question + sources line. | — |
+
+## End card
+Question for comments: 「老师哪一句话，让你当晚就开始复习？」 (Alternative tied to Hall: 「你花钱，看的是现在的生活费，还是以后能挣多少？」)
+@ prompt: 「@一个每月准时月光的朋友」
+Sources line: 来源：瑞典皇家科学院 2026经济学奖新闻稿及背景资料；Woodford (2012) Jackson Hole论文；美联储前瞻指引时间线、2013年7月货币政策报告；欧洲央行 2012.7.26 讲话；Altavilla, Giannone & Lenza (2016) IJCB；欧盟法院新闻稿 2/15、70/15；OECD、美联储H.15（经FRED）
+
+## Notes for director / art director (v5)
+- **Rows used:** 1, 2, 5, 6, 13, 14, 20, 21, 22, 26, 28, 31, 33, 35, 36, 38, 39, 55, 56, 57.
+- **Calculations (计算):**
+  - 近两年 ≈ 7 quarters = 21 months (row 28).
+  - 100块 → 7块 = 6.80 % (row 33).
+  - 约1块 = −115 / −97 bp (row 55).
+  - 6周 (row 35).
+- **Plain-word glosses:**
+  - 利息 = the US policy rate / Spain's 10-year government borrowing cost; the picture tags say which.
+  - 做预测的人 = Blue Chip forecasters (median).
+  - 出钱兜底 = OMT (buying those countries' bonds if needed).
+- **Causation:**
+  - Line 20 needs its 研究估算 tag.
+  - Line 23 says 「也会」. The 「原因之一」 hedge is in its picture tag.
+  - Line 3 is the analogy's own moment, not a fact claim.
+- **Analogy limits:** the teacher stays a generic figure. Every real number appears only on the real-case boards, never on the classroom insets.
+- **Cut order if the track is shorter** (about 4 s each): 12 (put 8户 into line 13's picture), then 9, then 2.
+
+---
+
+# History (superseded versions, kept for the record)
+
+## v4 — Script: 利率没动，只改了一句话 / 相信我，这就够了  (v4, 2026-10-12, "大众也能懂的")
 
 **Logline:** A shop posts 「下周涨价」 and you buy today. In 2011 the US central bank did the same with interest: it changed nothing and only wrote 「低利息，至少到2013年年中」, and even forecasters believed it. In 2012 the head of Europe's central bank said 「相信我，这就够了」. Spain paid less to borrow, and the rescue plan was never used. This year's Nobel is about why words about tomorrow change today.
 **Takeaway:** 央行的话，就像商店那张告示：你怎么看明天，今天就怎么花。
@@ -11,12 +202,12 @@
 
 **pace.py (v4):** no line is too fast and waiting is 0.0 s (0 %). The only CHECK flag is 12.9–16.5 s, the planned title plaque on the drop.
 
-## Producer edits after gate 1 r4 (director swaps 1–3)
+### Producer edits after gate 1 r4 (director swaps 1–3)
 - Line 4 → 「连专家也信了：[近两年]借钱都便宜」 (row 28)
 - Line 11 → 「利息降不下去了，央行就像商店：[贴告示]」 (row 20)
 - Line 12 → 「2011年那张告示的意思：借钱便宜，[早点花]」 (rows 20, 22; picture tag 用意)
 
-## Revision notes (owner note on v3 → v4: 「大众也能懂的」)
+### Revision notes (owner note on v3 → v4: 「大众也能懂的」)
 - **Rule 1, zero economics.**
   - Not on screen in v4: 利率, 国债, 年息, 加息, 预测机构, 表态, 两年期, 美联储.
   - Words used instead: 利息, 借100块一年要付多少, 借条 (for government bonds), 做预测的人, 这几番话, 告示.
@@ -48,14 +239,14 @@
   - Changed by the owner's note: the 2013 beat is now 1 line (「原因之一」 moves to the picture), and the 1970s line is cut.
   - The producer's post-r3 edits (lines 13 and 24 of v3) are superseded. Their 100块 framing for 2013 is used in the line 20 picture.
 
-## Title options (for a general audience)
+### Title options (for a general audience)
 1. **利率没动，只改了一句话** (10). It passes: 利率 is an everyday word, and the paradox (nothing changed, yet something changed) needs no economics. Lines 2–3 pay it off by 9 s. **Feed and cover.**
 2. **今年诺奖：说话也是政策** (10). Carries 诺奖, so it tells people why to watch now. The plain claim is backed by rows 6 and 20, and line 20 shows it cutting both ways.
 3. **央行的话，为什么值钱** (8). A plain question anyone gets at a glance, with no jargon and no overclaim: the film shows when words worked and that they can backfire.
 
 In-film plaque on the drop: still 「相信我，这就够了」 + 「2026 诺贝尔经济学奖」. It pays off at line 15 and line 19.
 
-## Beat sheet
+### Beat sheet
 | Beat | Time | Purpose | What the viewer learns / feels |
 |---|---|---|---|
 | Hook | 0–12.9 | everyday moment → paradox → it worked | You buy today because of next week's price. In 2011 the US central bank didn't touch interest, only wrote 「低利息至少到2013年年中」, and even forecasters believed it: no rise for nearly two years. |
@@ -67,7 +258,7 @@ In-film plaque on the drop: still 「相信我，这就够了」 + 「2026 诺�
 | Payoff | 86.0–93.8 | back to the shop | 央行的话，就像商店那张告示 → 你怎么看明天，今天就怎么花 |
 | End card | 93.8–100 | comments | Juno end card |
 
-## Lines (v4)
+### Lines (v4)
 Brackets = highlight. Times are provisional. Need = 0.5 + n/7 + 0.6 s.
 **Prop world:** a shop window with a notice board. In the opening it holds a shop's 「下周涨价」 notice. When a central bank speaks, its sentence is pinned to the same board. A coin stack beside the window shows "借100块，一年付几块".
 
@@ -99,12 +290,12 @@ Brackets = highlight. Times are provisional. Need = 0.5 + n/7 + 0.6 s.
 | 23 | 89.8 | 93.8 | 你怎么看明天，[今天]就怎么花 | 12 | 2.8 | Callback to frame 0: the hand with the item, and the basket from line 6 settles. Freeze into the end card. | 13 |
 | — | 93.8 | 100.0 | (end card) | — | — | Juno end card: 「关注 Juno · 一起看懂世界」 + question + sources line. | — |
 
-## End card
+### End card
 Question for comments: 「你花钱，看的是现在的生活费，还是以后能挣多少？」
 @ prompt: 「@一个每月准时月光的朋友」
 Sources line: 来源：瑞典皇家科学院 2026经济学奖新闻稿及背景资料；Woodford (2012) Jackson Hole论文；美联储前瞻指引时间线、2013年7月货币政策报告；欧洲央行 2012.7.26 讲话；Altavilla, Giannone & Lenza (2016) IJCB；欧盟法院新闻稿 2/15、70/15；OECD、美联储H.15（经FRED）
 
-## Notes for director / art director (v4)
+### Notes for director / art director (v4)
 - **Rows used:** 1, 2, 6, 9, 13, 14, 20, 21, 22, 26, 28, 31, 33, 35–39, 55–57.
 - **Calculations (计算):**
   - 近两年 ≈ 7 quarters = 21 months (row 28).
@@ -123,9 +314,6 @@ Sources line: 来源：瑞典皇家科学院 2026经济学奖新闻稿及背景�
   - Line 4 is the laureate's analysis (row 28: "a clear effect of the FOMC forward guidance").
 - **Cut order if the track is shorter** (each cut saves about 4 s): 8 (月光族), then 12 (keep the callback in the picture of line 11), then 19.
 
----
-
-# History (superseded versions, kept for the record)
 
 ## v3 header
 
