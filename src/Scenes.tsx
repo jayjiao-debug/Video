@@ -162,14 +162,15 @@ export const S1: React.FC<{ T: number; f: number }> = ({ T, f }) => {
 const GX0 = 120, GX1 = 1800;
 type Obj = { u: number; name: string; en: string; w: number; draw: (g: G, x: number, t: number) => void };
 /* each object has its own idle action on its own clock (periods are not multiples of the beat; see edit-rhythm §2) */
-const cyc = (t: number, P: number, off: number) => { const u = (t + off) / P; return { c: Math.floor(u), p: u - Math.floor(u) }; };
+/* v3: no loops. each object performs its action once when it appears, then rests (the owner: too much movement is worse) */
+const once = (t: number, a: number, b: number, P: number) => ({ c: 0, p: a + clamp(t / ((b - a) * P)) * (b - a) });
 const GO_BASE: [number, number, boolean][] = [[-40, 0, true], [30, -4, false], [0, -26, false], [-60, 22, false], [52, 20, true], [10, 18, true]];
 const GO_MORE: [number, number][] = [[-22, 28, ], [64, -10], [-70, -8], [36, 34], [-8, -48], [80, 30], [-86, 30], [20, -30]];
 const goStones = (g: G, x: number, t: number) => {
   GO_BASE.forEach(([dx, dy, wh]) => stone(g, x + dx, FLOOR - 14 + dy, 34, wh));
   // stones placed one at a time, unhurried and uneven, like a player thinking
   let tk = 0.7;
-  for (let k = 0; k < GO_MORE.length; k++) {
+  for (let k = 0; k < 1; k++) {
     if (t < tk) break;
     const e = clamp((t - tk) / 0.28), drop = (1 - e) * (1 - e) * 70, bounce = e >= 1 ? 0 : 0;
     const [dx, dy] = GO_MORE[k];
@@ -179,17 +180,17 @@ const goStones = (g: G, x: number, t: number) => {
   }
 };
 const chessMove = (g: G, x: number, t: number) => {
-  const { c, p } = cyc(t, 3.7, 0.9), from = c % 2 ? 26 : -26, to = -from;
+  const { c, p } = once(t, 0.6, 0.9, 3.7), from = c % 2 ? 26 : -26, to = -from;
   const m = easeInOut(clamp((p - 0.6) / 0.3)), lift = Math.sin(Math.PI * clamp((p - 0.6) / 0.3)) * 22;
   king(g, x + lerp(from, to, m), FLOOR - lift, 0.92);
   if (p > 0.9 && p < 0.99) add(g, () => glowDot(g, x + to, FLOOR, 60, 0.35 * (1 - (p - 0.9) / 0.09), '200,220,255'));
 };
 const shopRoll = (g: G, x: number, t: number) => {
   // the spatula, a light glint running up it now and then
-  const gl = cyc(t, 4.3, 2.0);
+  const gl = once(t, 0, 0.3, 4.3);
   spatula(g, x + 6, FLOOR, 0.74, 0.05, gl.p < 0.3 ? gl.p / 0.3 : -1);
   // a three-slot shop above it that rerolls (fast click-click, then a pause)
-  const { c, p } = cyc(t, 2.35, 0.4), roll = clamp((p - 0.78) / 0.18);
+  const { c, p } = once(t, 0.78, 0.96, 2.35), roll = clamp((p - 0.78) / 0.18);
   [-1, 0, 1].forEach((j) => {
     const cx = x + j * 70, cy = FLOOR - 322, kOld = Math.floor(rnd(c * 3 + j, 71) * 5), kNew = Math.floor(rnd((c + 1) * 3 + j, 71) * 5);
     const r = clamp(roll * 1.6 - (j + 1) * 0.25), sq = Math.abs(Math.cos(r * Math.PI));
@@ -200,7 +201,7 @@ const shopRoll = (g: G, x: number, t: number) => {
 };
 const mjFlip = (g: G, x: number, t: number) => {
   tile(g, x - 78, FLOOR, 1.0, '中', '#b4161b'); tile(g, x - 16, FLOOR, 1.0, '發', '#1f7a3d');
-  const { c, p } = cyc(t, 4.1, 1.3), DRAW = [['東', '#1b1b1b'], ['九', '#1a3c8f'], ['白', '#1b1b1b'], ['五', '#b4161b'], ['北', '#1b1b1b']][c % 5];
+  const { c, p } = once(t, 0.4, 0.84, 4.1), DRAW = [['東', '#1b1b1b'], ['九', '#1a3c8f'], ['白', '#1b1b1b'], ['五', '#b4161b'], ['北', '#1b1b1b']][c % 5];
   const ang = p < 0.4 ? 0 : p < 0.5 ? (p - 0.4) / 0.1 : p < 0.85 ? 1 : p < 0.95 ? 1 - (p - 0.85) / 0.1 : 0;
   const sq = Math.abs(Math.cos(ang * Math.PI)), up = ang >= 0.5, cx = x + 46 + 28, lift = Math.sin(ang * Math.PI) * 26;
   g.save(); g.translate(cx, 0); g.scale(Math.max(0.03, sq), 1); g.translate(-cx, 0);
@@ -208,7 +209,7 @@ const mjFlip = (g: G, x: number, t: number) => {
 };
 const pokerFlip = (g: G, x: number, t: number) => {
   card(g, x - 26, FLOOR, 0.95, 'A', '♠', false, -0.16);
-  const { p } = cyc(t, 3.45, 0.2), ang = p < 0.35 ? 0 : p < 0.45 ? (p - 0.35) / 0.1 : p < 0.85 ? 1 : p < 0.95 ? 1 - (p - 0.85) / 0.1 : 0;
+  const { p } = once(t, 0.35, 0.84, 3.45), ang = p < 0.35 ? 0 : p < 0.45 ? (p - 0.35) / 0.1 : p < 0.85 ? 1 : p < 0.95 ? 1 - (p - 0.85) / 0.1 : 0;
   const cx = x + 28, sq = Math.abs(Math.cos(ang * Math.PI)), lift = Math.sin(ang * Math.PI) * 18;
   g.save(); g.translate(cx, 0); g.scale(Math.max(0.03, sq), 1); g.translate(-cx, 0);
   if (ang >= 0.5) card(g, cx, FLOOR + 6 - lift, 0.95, 'K', '♥', true, 0.14); else backOf(g, cx, FLOOR + 6 - lift, 0.95, 0.14);
@@ -216,7 +217,7 @@ const pokerFlip = (g: G, x: number, t: number) => {
 };
 const DIE_FACES: [number, number, number][] = [[5, 3, 1], [6, 2, 4], [1, 4, 5], [3, 6, 5], [2, 1, 3], [4, 5, 6]];
 const dieRoll = (g: G, x: number, t: number) => {
-  const { c, p } = cyc(t, 3.1, 1.7), q = clamp((p - 0.5) / 0.5);
+  const { c, p } = once(t, 0.5, 1.0, 3.1), q = clamp((p - 0.5) / 0.5);
   if (q <= 0) return die(g, x, FLOOR - 62, 1.0, DIE_FACES[c % 6]);
   // three hops, each lower and shorter, tumbling
   const hops = [0.45, 0.33, 0.22], hs = [80, 32, 10]; let acc = 0, y = 0, hopI = 3, hq = 0;
@@ -227,7 +228,7 @@ const dieRoll = (g: G, x: number, t: number) => {
   g.save(); g.translate(x, FLOOR - 62 - y); g.rotate(spin); g.translate(-x, -(FLOOR - 62 - y)); die(g, x, FLOOR - 62 - y, 1.0, faces); g.restore();
 };
 const coinToss = (g: G, x: number, t: number) => {
-  const { p } = cyc(t, 2.85, 0.6), q = clamp((p - 0.42) / 0.42);
+  const { p } = once(t, 0.42, 0.86, 2.85), q = clamp((p - 0.42) / 0.42);
   if (q <= 0 || q >= 1) { const s = q >= 1 ? hit(p, 0.84, 0.03) : 0; return coin(g, x, FLOOR - 22 - 6 * s, 78, 0.35 + 0.05 * s, true); }
   const ph = Math.acos(0.35) + q * (6 * Math.PI), y = 4 * 180 * q * (1 - q);
   coin(g, x, FLOOR - 22 - y, 78, Math.max(0.04, Math.abs(Math.cos(ph))), true);
@@ -442,7 +443,7 @@ export const S8: React.FC<{ T: number; f: number }> = ({ T, f }) => {
     <Scene f={f} draw={(g) => {
       stage(g, T); bokeh(g, T, 14, 0.6);
       g.save(); cam(g, lerp(1.04, 1.0, pr(T, CUT.question, 5)), 960, 700);
-      gallery(g, T, () => 1, () => 0.55, () => T - CUT.question + 6);
+      gallery(g, T, () => 1, () => 0.55, () => 99);
       floorFade(g); strip(g, GX0, GX1, FLOOR + 92, 1, line);
       g.restore();
     }}>
@@ -617,7 +618,7 @@ export const S12: React.FC<{ T: number; f: number }> = ({ T, f }) => {
     <Scene f={f} draw={(g) => {
       stage(g, T); bokeh(g, T, 12, 0.5);
       g.save(); cam(g, lerp(1.04, 1.0, pr(T, CUT.close, 8)), 960, 700);
-      gallery(g, T, () => 1, (i) => Math.max(0.15, off(i)), (i) => Math.min(T, 110.2 + (6 - i) * 0.25) - CUT.close + 12);
+      gallery(g, T, () => 1, (i) => Math.max(0.15, off(i)), () => 99);
       floorFade(g); strip(g, GX0, GX1, FLOOR + 92, 0.6 + 0.4 * (1 - pr(T, 110, 2)));
       g.restore();
       // one game vs a hundred: a tally of tiny coins along the top
@@ -654,3 +655,5 @@ export const SEnd: React.FC<{ T: number; f: number }> = ({ T, f }) => {
     </Scene>
   );
 };
+
+export { Lb, Scene, add, cam };
