@@ -97,9 +97,9 @@ const K1: React.FC<{ f: number }> = ({ f }) => { const T = 1.2; return (
   </Frame>
 ); };
 
-const GAMES: { u: number; name: string; draw: (g: CanvasRenderingContext2D, x: number, y: number) => void }[] = [
-  { u: 0.03, name: '围棋', draw: (g, x, y) => go(g, x, y, 90, specCol(0.02), 1, 9, 14) },
-  { u: 0.14, name: '国际象棋', draw: (g, x, y) => chess(g, x, y, 92, specCol(0.1)) },
+const GAMES: { u: number; name: string; dx?: number; draw: (g: CanvasRenderingContext2D, x: number, y: number) => void }[] = [
+  { u: 0, dx: 70, name: '围棋', draw: (g, x, y) => go(g, x, y, 90, specCol(0.02), 1, 9, 14) },
+  { u: 0, dx: 230, name: '国际象棋', draw: (g, x, y) => chess(g, x, y, 92, specCol(0.1)) },
   { u: 0.42, name: '金铲铲', draw: (g, x, y) => { const p = hexGrid(g, x, y, 18, 3, 3, specCol(0.42)); p.forEach(([a, b], i) => i % 2 || glowDot(g, a, b, 6, 0.9, WHITE)); } },
   { u: 0.6, name: '麻将', draw: (g, x, y) => { ['中', '发', '萬'].forEach((ch, i) => tile(g, x - 54 + i * 38, y - 26, 34, 50, ch, specCol(0.6), 1)); } },
   { u: 0.7, name: '德州扑克', draw: (g, x, y) => { card(g, x - 18, y, 48, 'A♠', specCol(0.7), 1, -0.15); card(g, x + 18, y, 48, 'K♥', specCol(0.7), 1, 0.12); } },
@@ -109,9 +109,10 @@ const GAMES: { u: number; name: string; draw: (g: CanvasRenderingContext2D, x: n
 const K2: React.FC<{ f: number }> = ({ f }) => { const T = 3; return (
   <Frame f={f} T={T} sub="把游戏排成一条线：左边全靠[实力]，右边全靠[运气]" draw={(g) => {
     bg(g, T); spectrum(g, 640, 1);
-    GAMES.forEach((gm, gi) => { const x = lerp(SX0, SX1, gm.u), gy = gi % 2 ? 270 : 450; g.save(); g.translate(x, gy); g.scale(1.6, 1.6); g.translate(-x, -gy); gm.draw(g, x, gy); g.restore(); g.strokeStyle = `rgba(${specCol(gm.u)},.5)`; g.lineWidth = 1; g.setLineDash([3, 6]); g.beginPath(); g.moveTo(x, gy + 80); g.lineTo(x, 628); g.stroke(); g.setLineDash([]); glowDot(g, x, 640, 22, 0.9, specCol(gm.u)); });
+    GAMES.forEach((gm, gi) => { const x0 = lerp(SX0, SX1, gm.u), x = x0 + (gm.dx ?? 0), gy = gi % 2 ? 270 : 450; g.save(); g.translate(x, gy); g.scale(1.6, 1.6); g.translate(-x, -gy); gm.draw(g, x, gy); g.restore(); g.strokeStyle = `rgba(${specCol(gm.u)},.5)`; g.lineWidth = 1; g.setLineDash([3, 6]); g.beginPath(); g.moveTo(x, gy + 80); g.lineTo(x0, 628); g.stroke(); g.setLineDash([]); glowDot(g, x0, 640, 22, 0.9, specCol(gm.u)); });
   }}>
-    {GAMES.map((gm) => <Lbl key={gm.name} x={lerp(SX0, SX1, gm.u)} y={680} s={gm.name} size={30} col="#f3ede2" anchor="center" />)}
+    {GAMES.filter((gm) => gm.u > 0).map((gm) => <Lbl key={gm.name} x={lerp(SX0, SX1, gm.u)} y={680} s={gm.name} size={30} col="#f3ede2" anchor="center" />)}
+    <Lbl x={SX0 - 10} y={680} s="围棋 · 国际象棋" size={30} col="#f3ede2" />
     <Lbl x={SX0} y={760} s="◀ 全靠实力" size={28} col="#9cc8ff" />
     <Lbl x={SX1} y={760} s="全靠运气 ▶" size={28} col="#ff9ed6" anchor="right" />
   </Frame>
@@ -190,7 +191,7 @@ const K7: React.FC<{ f: number }> = ({ f }) => { const T = 82.2; return (
 const K8: React.FC<{ f: number }> = ({ f }) => { const T = 92; return (
   <Frame f={f} T={T} sub="结果：德州扑克，比这条线[还靠运气]" draw={(g) => {
     bg(g, T); spectrum(g, 470, 1, 1);
-    const pts = [['围棋', 0.02], ['国际象棋', 0.1], ['标准线', 0.5], ['德州扑克', 0.66]] as [string, number][];
+    const pts = [['围棋', 0.0], ['国际象棋', 0.0], ['标准线', 0.5], ['德州扑克', 0.66]] as [string, number][];
     pts.forEach(([n, u]) => { const x = lerp(SX0, SX1, u); if (n !== '标准线') { glowDot(g, x, 470, 60, 0.5, specCol(u)); glowDot(g, x, 470, 12, 1, WHITE); } });
     trail(g, [[lerp(SX0, SX1, 0.45), 470], [lerp(SX0, SX1, 0.66), 470]], MAG, 2.4, 1, true);
   }}>
