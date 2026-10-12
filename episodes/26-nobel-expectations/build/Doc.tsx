@@ -339,9 +339,11 @@ const DocTitle: React.FC<{bare?: boolean}> = ({bare}) => {
 	const e = useEnv;
 	return (
 		<AbsoluteFill style={{background: '#04050a'}}>
-			<Stage3D cam={{pos: [1.3, 0.5, 4.4], target: [0.75, 0.05, 0], fov: 30}} bg="#05060a" env={0.25} focus={4.5} aperture={0.004} bloom={0.5} threshold={0.9} vig={0.85} grain={0.04}>
+			<Stage3D cam={{pos: [1.3, 0.5, 4.4], target: [0.75, 0.05, 0], fov: 30}} bg="#05060a" env={0.55} focus={4.5} aperture={0.004} bloom={0.35} threshold={0.95} vig={0.85} grain={0.04}>
 				<Shadows />
-				<KeySpot from={[-2.2, 2.0, 3.4]} to={[-0.25, 0, 0]} intensity={190} angle={0.45} />
+				<KeySpot from={[-2.2, 2.0, 3.4]} to={[-0.25, 0, 0]} intensity={200} angle={0.45} />
+				
+				<pointLight position={[0.9, 0.9, 1.2]} color="#fff1d0" intensity={6} decay={2} />
 				<pointLight position={[1.5, 1.2, -3]} color="#7fa6ff" intensity={10} decay={2} />
 				<ambientLight intensity={0.01} />
 				<group position={[-0.25, 0.05, 0]} rotation={[0.08, 0.5, 0.06]}>
@@ -378,7 +380,7 @@ const DocTitle: React.FC<{bare?: boolean}> = ({bare}) => {
 };
 const MedalMat: React.FC<{bump?: THREE.Texture}> = ({bump}) => {
 	const e = useEnv();
-	return <meshPhysicalMaterial color="#d2a24e" metalness={1} roughness={0.3} bumpMap={bump} bumpScale={bump ? 2.2 : 0} {...envProps(e, 0.35)} />;
+	return <meshPhysicalMaterial color="#dcab52" metalness={1} roughness={0.27} bumpMap={bump} bumpScale={bump ? 2.2 : 0} {...envProps(e, 0.55)} />;
 };
 
 /* ---------- reveal · 82.5 s: the strongbox opens — empty, dust turning in the beam ---------- */
