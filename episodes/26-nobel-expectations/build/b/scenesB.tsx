@@ -26,7 +26,7 @@ export const VaultScene: React.FC<{t: number}> = ({t}) => {
 		return {x: 820 + ((i * 53) % 280), y: 120 + u * 640, r: 1.5 + (i % 3), o: Math.sin(u * Math.PI) * 0.6};
 	});
 	return (
-		<Cam x={mix(inn, -1400, 0)} s={push * mix(dive, 1, 2.6)} fx={960} fy={600} o={1 - ramp(t, 83.7, 84.1, E.EXIT)}>
+		<Cam x={mix(inn, -1500, 0) + mix(ramp(t, 76.2, 77.2, E.CAM), 0, 0)} s={push * mix(dive, 1, 2.6)} fx={960} fy={600} o={1 - ramp(t, 83.7, 84.1, E.EXIT)}>
 			<svg width={W} height={H} style={{position: 'absolute', inset: 0}}>
 				<defs>
 					<linearGradient id="beam" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stopColor="#ffe3a0" stopOpacity={0.22} /><stop offset="1" stopColor="#ffe3a0" stopOpacity={0} /></linearGradient>

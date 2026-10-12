@@ -205,11 +205,11 @@ export const Loop: React.FC<{t: number}> = ({t}) => {
 		cam = {x: 0, y: mix(back, 0, 180), s: mix(push, 1, 1.06) * mix(back, 1, 0.75), r: 4 * rot, o: 1 - ramp(t, 63.2, 63.9, E.EXIT), br: 1};
 	} else if (calmP) {
 		const inn = ramp(t, 73.0, 73.8, E.CAM), side = ramp(t, 73.9, 74.6, E.CAM), outT = ramp(t, 76.2, 77.2, E.CAM);
-		cam = {x: mix(inn, 1400, 0) + mix(side, 0, -400) + mix(outT, 0, 1400), y: 0, s: mix(side, 1, 0.8), r: 0, o: 1, br: 1};
+		cam = {x: mix(inn, 2200, 0) + mix(side, 0, -400) + mix(outT, 0, 2300), y: 0, s: mix(side, 1, 0.8), r: 0, o: 1, br: 1};
 	} else {
 		const inn = ramp(t, 86.4, 87.4, E.CAM), push = ramp(t, st(30), st(30) + 2.2, E.CAM), back = ramp(t, st(33), st(33) + 2.2, E.CAM);
 		const wipe = ramp(t, 98.2, 99.0, E.CAM);
-		cam = {x: mix(inn, 1400, 0), y: 0, s: mix(push, 1, 1.08) * mix(back, 1, 0.92), r: 0, o: 1 - ramp(t, 98.6, 99.0, E.EXIT), br: mix(wipe, 1, 0.15)};
+		cam = {x: mix(inn, 2200, 0), y: 0, s: mix(push, 1, 1.08) * mix(back, 1, 0.92), r: 0, o: 1 - ramp(t, 98.6, 99.0, E.EXIT), br: mix(wipe, 1, 0.15)};
 	}
 	// forming
 	const pool = ramp(t, 49.0, 49.7, E.CAM);
@@ -340,7 +340,7 @@ export const Loop: React.FC<{t: number}> = ({t}) => {
 };
 
 /* ===================== ECB + Draghi's 饼: 62.9–74.0 ===================== */
-export const LEC = {x: 480, top: 640, bx: 480, by: 330, br: 150};
+export const LEC = {x: 1250, top: 640, bx: 1250, by: 330, br: 150};
 export const Bank: React.FC<{t: number}> = ({t}) => {
 	if (t < 62.9 || t > 74.0) return null;
 	const rise = enter(t, 63.0, 1.2);
@@ -352,7 +352,7 @@ export const Bank: React.FC<{t: number}> = ({t}) => {
 	const notes = Array.from({length: 10}, (_, i) => {
 		const a = st(23) + 0.2 + i * 0.07;
 		const p = ramp(t, a, a + 0.75, E.MOVE);
-		return {p, x: mix(p, 1250, 900), y: mix(p, 860, 790 - i * 6) - Math.sin(p * Math.PI) * 160, r: mix(p, -20 + i * 4, 0)};
+		return {p, x: mix(p, 420, 820), y: mix(p, 860, 790 - i * 6) - Math.sin(p * Math.PI) * 160, r: mix(p, -20 + i * 4, 0)};
 	});
 	const brick = ramp(t, st(23) + 1.0, st(23) + 1.3, E.MOVE);
 	const lect = enter(t, st(24) - 0.1, 0.7);
@@ -366,13 +366,13 @@ export const Bank: React.FC<{t: number}> = ({t}) => {
 					<radialGradient id="spot"><stop offset="0" stopColor="#ffd998" stopOpacity={0.35} /><stop offset="1" stopColor="#ffd998" stopOpacity={0} /></radialGradient>
 				</defs>
 				<g transform={`translate(0 ${(1 - rise) * 320})`} opacity={Math.min(1, rise / 0.4)}>
-					<Towers x={1180} y={900} floorsLit={floors} spec={0.5 + 0.5 * tilt} />
+					<Towers x={170} y={900} floorsLit={floors} spec={0.5 + 0.5 * tilt} />
 				</g>
-				<g opacity={enter(t, 63.6)} transform={riseT(enter(t, 63.6))}><SL x={1630} y={140} text="欧洲央行" size={64} /></g>
+				<g opacity={enter(t, 63.6)} transform={riseT(enter(t, 63.6))}><SL x={720} y={140} text="欧洲央行" size={64} anchor="start" /></g>
 				{/* notes stream from the slot into a banded brick */}
 				{t > st(23) + 0.2 && brick < 1 && notes.map((n, i) => n.p > 0 && <Note key={i} x={n.x} y={n.y} rot={n.r} s={0.8} />)}
-				{brick > 0 && <g opacity={brick}><Brick x={900} y={790} s={0.9} /></g>}
-				<g opacity={env(t, st(23) + 0.4, st(24) + 0.2)} transform={riseT(enter(t, st(23) + 0.4))}><SL x={900} y={640} text="能印钱" size={64} col={C.gold} weight={900} /></g>
+				{brick > 0 && <g opacity={brick}><Brick x={820} y={790} s={0.9} /></g>}
+				<g opacity={env(t, st(23) + 0.4, st(24) + 0.2)} transform={riseT(enter(t, st(23) + 0.4))}><SL x={820} y={640} text="能印钱" size={64} col={C.gold} weight={900} /></g>
 				{/* the lectern in its own spot; the 饼 rises out of its light */}
 				<g opacity={Math.min(1, lect / 0.6)} transform={riseT(lect, 40)}>
 					<ellipse cx={LEC.x} cy={LEC.top + 120} rx={330} ry={260} fill="url(#spot)" />
@@ -390,10 +390,10 @@ export const Bank: React.FC<{t: number}> = ({t}) => {
 						</g>
 					</g>
 				)}
-				<g opacity={env(t, st(24) + 0.3, 73.0)} transform={riseT(enter(t, st(24) + 0.3))}><Plate2 x={LEC.x + 230} y={250} name="德拉吉 · 欧洲央行行长" sub="2012 年 7 月 · 伦敦" /></g>
+				<g opacity={env(t, st(24) + 0.3, 73.0)} transform={riseT(enter(t, st(24) + 0.3))}><Plate2 x={LEC.x - 210} y={250} name="德拉吉 · 欧洲央行行长" sub="2012 年 7 月 · 伦敦" anchor="end" /></g>
 				<g opacity={env(t, st(25) + 0.2, 73.0)} transform={riseT(enter(t, st(25) + 0.2))}>
-					<SL x={LEC.x + 30} y={570} text="要多少，给多少 · 上限" size={52} />
-					<path d={`M${LEC.x + 335} 553 c 18 -26 46 -26 46 0 s -28 26 -46 0 s -28 -26 -46 0 s 28 26 46 0`} stroke={C.gold} strokeWidth={6} fill="none" pathLength={1} strokeDasharray={`${inf} 1`} transform={`translate(28 0)`} />
+					<SL x={LEC.x - 30} y={570} text="要多少，给多少 · 上限" size={52} />
+					<path d={`M${LEC.x + 300} 553 c 18 -26 46 -26 46 0 s -28 26 -46 0 s -28 -26 -46 0 s 28 26 46 0`} stroke={C.gold} strokeWidth={6} fill="none" pathLength={1} strokeDasharray={`${inf} 1`} transform={`translate(28 0)`} />
 				</g>
 			</svg>
 		</Cam>
