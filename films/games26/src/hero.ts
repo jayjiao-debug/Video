@@ -280,3 +280,46 @@ export const shopCard = (g: G, x: number, y: number, w: number, h: number, tier:
     g.fillStyle = '#ffe7a8'; g.font = `900 ${w * 0.3}px "DejaVu Sans"`; g.textAlign = 'center'; g.textBaseline = 'middle'; g.fillText('★', x, y - h + w * 0.2); }
   g.restore();
 };
+
+/* ---------------------------------------------------------------- golden frying pan (金锅锅), three views */
+const goldLin = (g: G, x0: number, y0: number, x1: number, y1: number) => { const gr = g.createLinearGradient(x0, y0, x1, y1); gr.addColorStop(0, '#5a3d12'); gr.addColorStop(0.3, '#c9973f'); gr.addColorStop(0.55, '#fbe3a2'); gr.addColorStop(0.75, '#d6a54a'); gr.addColorStop(1, '#4a3210'); return gr; };
+const panHandle = (g: G, x0: number, len: number, w: number) => {
+  g.fillStyle = goldLin(g, 0, -w, 0, w); g.fillRect(x0, -w * 0.35, len * 0.22, w * 0.7);
+  const hg = g.createLinearGradient(0, -w / 2, 0, w / 2); hg.addColorStop(0, '#6e4c1e'); hg.addColorStop(0.45, '#2a1a0a'); hg.addColorStop(1, '#140c05');
+  g.fillStyle = hg; g.beginPath(); (g as any).roundRect(x0 + len * 0.2, -w / 2, len * 0.8, w, w / 2); g.fill();
+  g.fillStyle = '#0a0604'; g.beginPath(); g.arc(x0 + len * 0.92, 0, w * 0.18, 0, 6.3); g.fill();
+};
+/** upright, its cooking face to the camera (a gold disc with a handle); (x, y) = centre of the disc */
+export const panUp = (g: G, x: number, y: number, r: number, rot = 0.5, glow = 0) => {
+  g.save(); g.translate(x, y); g.rotate(rot);
+  panHandle(g, r * 0.92, r * 1.45, r * 0.2);
+  g.fillStyle = '#3a2808'; g.beginPath(); g.arc(r * 0.04, r * 0.05, r, 0, 6.3); g.fill();                    // thickness behind
+  g.fillStyle = goldLin(g, -r, -r, r, r); g.beginPath(); g.arc(0, 0, r, 0, 6.3); g.fill();                    // rim
+  const inner = g.createRadialGradient(-r * 0.3, -r * 0.35, r * 0.05, 0, 0, r * 0.9);
+  inner.addColorStop(0, '#f6d58c'); inner.addColorStop(0.5, '#b8862f'); inner.addColorStop(1, '#6a4a16');
+  g.fillStyle = inner; g.beginPath(); g.arc(0, 0, r * 0.86, 0, 6.3); g.fill();
+  g.strokeStyle = 'rgba(255,236,190,.18)'; g.lineWidth = 1.2; [0.25, 0.42, 0.6, 0.75].forEach((k) => { g.beginPath(); g.arc(0, 0, r * k, 0, 6.3); g.stroke(); });
+  g.strokeStyle = 'rgba(255,248,220,.75)'; g.lineWidth = r * 0.03; g.beginPath(); g.arc(0, 0, r * 0.95, Math.PI * 1.05, Math.PI * 1.55); g.stroke();
+  if (glow > 0) { g.globalCompositeOperation = 'lighter'; const gl = g.createRadialGradient(0, 0, 0, 0, 0, r * 1.6); gl.addColorStop(0, `rgba(255,214,140,${0.45 * glow})`); gl.addColorStop(1, 'rgba(255,214,140,0)'); g.fillStyle = gl; g.fillRect(-r * 1.6, -r * 1.6, r * 3.2, r * 3.2); }
+  g.restore();
+};
+/** lying on the floor, seen from the front and above; (x, y) = centre of the rim ellipse */
+export const panFlat = (g: G, x: number, y: number, rx: number, ry: number, depth = 0.26) => {
+  const d = rx * depth;
+  g.save(); g.translate(x + rx * 0.98, y - ry * 0.15); g.rotate(-0.22); panHandle(g, 0, rx * 1.2, ry * 0.32); g.restore();
+  g.fillStyle = goldLin(g, x - rx, 0, x + rx, 0); g.beginPath(); g.ellipse(x, y + d * 0.55, rx * 0.86, ry * 0.86, 0, 0, Math.PI); g.lineTo(x - rx, y); g.ellipse(x, y, rx, ry, 0, Math.PI, 0, true); g.closePath(); g.fill();
+  g.fillStyle = goldLin(g, x - rx, y - ry, x + rx, y + ry); g.beginPath(); g.ellipse(x, y, rx, ry, 0, 0, 6.3); g.fill();
+  const inner = g.createLinearGradient(0, y - ry, 0, y + ry); inner.addColorStop(0, '#5e4212'); inner.addColorStop(0.6, '#a7792c'); inner.addColorStop(1, '#e2b862');
+  g.fillStyle = inner; g.beginPath(); g.ellipse(x, y + ry * 0.04, rx * 0.9, ry * 0.86, 0, 0, 6.3); g.fill();
+  g.strokeStyle = 'rgba(255,240,200,.6)'; g.lineWidth = 2; g.beginPath(); g.ellipse(x, y, rx * 0.99, ry * 0.98, 0, Math.PI * 1.1, Math.PI * 1.9); g.stroke();
+};
+/** side view for a toss: (x, y) = centre of the base; rot tilts it */
+export const panSide = (g: G, x: number, y: number, s: number, rot = 0) => {
+  g.save(); g.translate(x, y); g.rotate(rot); g.scale(s, s);
+  g.save(); g.translate(160, -36); g.rotate(-0.28); panHandle(g, 0, 210, 22); g.restore();
+  g.fillStyle = goldLin(g, -170, 0, 170, 0); g.beginPath(); g.moveTo(-170, -46); g.lineTo(170, -46); g.lineTo(135, -4); g.quadraticCurveTo(128, 0, 118, 0); g.lineTo(-118, 0); g.quadraticCurveTo(-128, 0, -135, -4); g.closePath(); g.fill();
+  const inner = g.createLinearGradient(0, -60, 0, -32); inner.addColorStop(0, '#4a3210'); inner.addColorStop(1, '#a7792c');
+  g.fillStyle = inner; g.beginPath(); g.ellipse(0, -46, 168, 16, 0, 0, 6.3); g.fill();
+  g.strokeStyle = 'rgba(255,240,200,.7)'; g.lineWidth = 2; g.beginPath(); g.ellipse(0, -46, 170, 17, 0, Math.PI * 0.05, Math.PI * 0.95); g.stroke();
+  g.restore();
+};
