@@ -336,5 +336,5 @@ const Open26: React.FC = () => {
 	);
 };
 
-export {Room, Grain, Vignette, Phone, StatusBar, Banner, LockScreen, AppScreen, Bubble, Bing, Medal2D, lerp, ease, GOLD, SANS, SERIF, W, H, FPS, T};
+export {Shot1, Room, Grain, Vignette, Phone, StatusBar, Banner, LockScreen, AppScreen, Bubble, Bing, Medal2D, lerp, ease, GOLD, SANS, SERIF, W, H, FPS, T};
 export default Open26;
