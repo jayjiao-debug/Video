@@ -217,7 +217,7 @@ const pokerFlip = (g: G, x: number, t: number) => {
 };
 const DIE_FACES: [number, number, number][] = [[5, 3, 1], [6, 2, 4], [1, 4, 5], [3, 6, 5], [2, 1, 3], [4, 5, 6]];
 /* gallery die: three takes for the owner (0 = v3 hop-and-spin) */
-export const GAL = { die: 0 };
+export const GAL = { die: 1 };   // the owner picked take 1 (dropped, no spin)
 const ivoryDie = (g: G, x: number, y: number, a: number, pips: number, top = 5, side = 3) => {
   const d = a * 0.26, P: Record<number, number[][]> = { 1: [[0, 0]], 2: [[-1, -1], [1, 1]], 3: [[-1, -1], [0, 0], [1, 1]], 4: [[-1, -1], [1, -1], [-1, 1], [1, 1]], 5: [[-1, -1], [1, -1], [0, 0], [-1, 1], [1, 1]], 6: [[-1, -1], [1, -1], [-1, 0], [1, 0], [-1, 1], [1, 1]] };
   g.fillStyle = '#fbf8f2'; g.beginPath(); g.moveTo(x - a / 2, y - a); g.lineTo(x - a / 2 + d, y - a - d); g.lineTo(x + a / 2 + d, y - a - d); g.lineTo(x + a / 2, y - a); g.closePath(); g.fill();

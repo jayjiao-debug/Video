@@ -118,31 +118,89 @@ const HC: React.FC<{ T: number; f: number }> = ({ T, f }) => {
   );
 };
 
-/* D · stir-fry toss: the pan flips one plaque up three times (8 → 7 → 8); the last toss bursts into 菜？ | 非？ --------- */
-const HD: React.FC<{ T: number; f: number }> = ({ T, f }) => {
-  const TOSS = [bt(0), bt(2), bt(4)], LAND = [bt(2), bt(4)], PX = 960, PY = FLOOR - 30;
-  const jerk = TOSS.reduce((m, t) => m + -0.32 * Math.exp(-Math.pow((T - t + 0.04) / 0.07, 2)), 0);
-  const catchDip = LAND.reduce((m, d) => m + (T < d ? 0 : 10 * Math.exp(-(T - d) * 9) * Math.cos((T - d) * 20)), 0);
-  // the plaque's flight
-  let px = PX, py = PY - 125, rot = 0, num = '8', vis = 1;
-  const k = TOSS.findIndex((t, i) => T >= t && T < (LAND[i] ?? 99));
-  if (k >= 0) {
-    const t0 = TOSS[k], t1 = LAND[k] ?? SPLIT, q = clamp((T - t0) / (t1 - t0)), apex = k === 2 ? 300 : 340;
-    py = PY - 125 - 4 * apex * q * (1 - q) * (k === 2 ? 1 + q * 0.3 : 1); rot = q * Math.PI * 2 * (k === 1 ? -1 : 1);
-    num = k === 0 ? (q < 0.5 ? '8' : '7') : k === 1 ? (q < 0.5 ? '7' : '8') : '8';
-    if (k === 2 && T >= SPLIT - 0.02) vis = 0;
-  } else if (T >= bt(2) && T < bt(4)) num = '7';
-  if (T >= SPLIT) vis = 0;
+/* D · stir-fry toss, polished: the pan flicks the plaque up, it flips over like a card (the number changes while it is
+   edge-on), drops back into the pan a moment before the next beat, and is tossed again on the beat. The last toss shows
+   the plaque's back, a gold "？", which splits into 菜？ | 非？. `sp` = where the spatula stands (1 plinth, 2 leaning behind, 3 lying in front). */
+const PLQ = 0.78;
+const plaqueBack = (g: G, x: number, y: number) => {
+  const w = 250, h = 320;
+  const body = g.createLinearGradient(x - w / 2, y - h, x + w / 2, y); body.addColorStop(0, '#2a1d33'); body.addColorStop(1, '#0b0810');
+  g.fillStyle = body; g.beginPath(); (g as any).roundRect(x - w / 2, y - h, w, h, 14); g.fill();
+  g.strokeStyle = 'rgba(227,183,101,.7)'; g.lineWidth = 2; g.beginPath(); (g as any).roundRect(x - w / 2 + 12, y - h + 12, w - 24, h - 24, 8); g.stroke();
+  g.save(); g.shadowColor = 'rgba(255,214,140,.8)'; g.shadowBlur = 26; g.fillStyle = '#f0c873'; g.font = '900 150px "Noto Serif CJK SC"'; g.textAlign = 'center'; g.textBaseline = 'middle'; g.fillText('？', x, y - h / 2 + 6); g.restore();
+};
+/** a plaque turning about its horizontal axis: phi 0 = front, π = back */
+const flipPlaque = (g: G, x: number, cy: number, phi: number, oldN: string, newN: string, tilt = 0, alpha = 1, clip = 0, apart = 0) => {
+  const c = Math.cos(phi), sy = Math.max(0.025, Math.abs(c));
+  const wrapped = ((phi % (2 * Math.PI)) + 2 * Math.PI) % (2 * Math.PI);
+  const side = wrapped < Math.PI / 2 || wrapped >= 1.5 * Math.PI ? 'front' : 'back';
+  const n = phi < Math.PI / 2 ? oldN : newN;
+  g.save(); g.globalAlpha *= alpha; g.translate(x, cy); g.rotate(tilt); g.scale(PLQ, PLQ * sy);
+  if (clip) { g.beginPath(); g.rect(clip < 0 ? -200 : 0, -200, 200, 400); g.clip(); g.translate(clip * apart, 0); }
+  if (side === 'front') plaque(g, 0, 160, n); else plaqueBack(g, 0, 160);
+  // light: the face darkens as it turns away, and catches a glint when it comes square to the camera
+  g.fillStyle = `rgba(0,0,0,${0.5 * (1 - sy)})`; g.fillRect(-126, -161, 252, 322);
+  if (sy > 0.9) { g.globalCompositeOperation = 'lighter'; g.fillStyle = `rgba(255,240,250,${0.18 * (sy - 0.9) / 0.1})`; g.fillRect(-126, -161, 252, 322); }
+  g.restore();
+};
+const plinth = (g: G, x: number, y: number, w: number, h: number) => {
+  const d = 22;
+  g.fillStyle = '#1b1922'; g.beginPath(); g.moveTo(x - w / 2, y - h); g.lineTo(x - w / 2 + d, y - h - d * 0.6); g.lineTo(x + w / 2 + d, y - h - d * 0.6); g.lineTo(x + w / 2, y - h); g.closePath(); g.fill();
+  g.fillStyle = '#08080b'; g.beginPath(); g.moveTo(x + w / 2, y - h); g.lineTo(x + w / 2 + d, y - h - d * 0.6); g.lineTo(x + w / 2 + d, y - d * 0.6); g.lineTo(x + w / 2, y); g.closePath(); g.fill();
+  const fr = g.createLinearGradient(0, y - h, 0, y); fr.addColorStop(0, '#1d1b25'); fr.addColorStop(1, '#0a090d');
+  g.fillStyle = fr; g.fillRect(x - w / 2, y - h, w, h);
+  g.strokeStyle = 'rgba(255,214,140,.35)'; g.lineWidth = 1.2; g.beginPath(); g.moveTo(x - w / 2, y - h); g.lineTo(x + w / 2, y - h); g.stroke();
+};
+export const HD: React.FC<{ T: number; f: number; sp?: number }> = ({ T, f, sp = 1 }) => {
+  const PX = 960, PY = FLOOR - 10, REST = PY - 165;
+  const TOSS = [bt(0), bt(2), bt(4)], LAND = [bt(2) - 0.24, bt(4) - 0.24];
+  const NUM = ['8', '7', '8'];
+  // the pan: a small dip before each toss (anticipation), the flick, and a soft give on each catch
+  const g1 = (t: number, w: number) => Math.exp(-Math.pow(t / w, 2));
+  const panRot = TOSS.reduce((m, t) => m - 0.26 * g1(T - t + 0.02, 0.075), 0) + LAND.reduce((m, d) => m + (T < d ? 0 : 0.05 * Math.exp(-(T - d) * 8) * Math.sin((T - d) * 18)), 0);
+  const panY = TOSS.reduce((m, t) => m + 9 * g1(T - t + 0.13, 0.06) - 14 * g1(T - t, 0.06), 0) + LAND.reduce((m, d) => m + (T < d ? 0 : 11 * Math.exp(-(T - d) * 9) * Math.cos((T - d) * 19)), 0);
+  // where the plaque is
+  const flight = (tt: number) => {
+    const k = [0, 1, 2].findIndex((i) => tt >= TOSS[i] && tt < (i < 2 ? LAND[i] : 99));
+    if (k < 0) { const n = tt < TOSS[0] ? NUM[0] : tt < TOSS[2] && tt >= LAND[0] && tt < TOSS[1] ? NUM[1] : NUM[2]; return { y: REST + panY, phi: 0, oldN: n, newN: n, tilt: 0, sq: 0, k }; }
+    if (k < 2) {
+      const q = (tt - TOSS[k]) / (LAND[k] - TOSS[k]), ease = 0.85 * q + 0.15 * q * q * (3 - 2 * q);
+      return { y: REST + panY - 4 * 235 * q * (1 - q), phi: 2 * Math.PI * ease, oldN: NUM[k], newN: NUM[k + 1], tilt: 0.1 * Math.sin(2 * Math.PI * q) * (k ? -1 : 1), sq: 0, k };
+    }
+    // last toss: rises to its apex on the split beat, turning over once to its back (the gold ？)
+    const dur = 2 * (SPLIT - TOSS[2]), q = Math.min((tt - TOSS[2]) / dur, 0.5);
+    return { y: REST + panY - 4 * 220 * q * (1 - q), phi: Math.PI * Math.min(1, q / 0.5) * (0.9 + 0.1 * Math.min(1, q / 0.5)), oldN: NUM[2], newN: NUM[2], tilt: 0.06 * Math.sin(Math.PI * q), sq: 0, k };
+  };
+  const now = flight(T), apart = eio(T, SPLIT, 0.5);
+  const landSq = LAND.reduce((m, d) => m + (T < d ? 0 : 0.06 * Math.exp(-(T - d) * 12)), 0);
+  const spatulaAt = (g: G) => {
+    if (sp === 1) { plinth(g, 380, FLOOR, 200, 74); spatula(g, 380, FLOOR - 74, 1.0, 0.0, pr(T, bt(0), 0.8) < 1 ? pr(T, bt(0), 0.8) : -1); }
+    if (sp === 2) { g.save(); g.globalAlpha *= 0.85; spatula(g, 1210, FLOOR - 30, 1.3, 0.3, pr(T, bt(0), 0.9) < 1 ? pr(T, bt(0), 0.9) : -1); g.restore(); }
+  };
   return (
     <Scene f={f} draw={(g) => {
       stage(g, T); bokeh(g, T, 22, 0.8);
       g.save(); cam(g, lerp(1.0, 1.05, eio(T, 0, HOOK_END)), 960, 600);
-      spot(g, 960, 900, 0.5 + 0.45 * eo(T, bt(0), 0.2), '255,230,200'); spot(g, 380, 340, 0.7, '255,230,190');
-      if (vis > 0) { g.save(); g.translate(px, py + catchDip); g.rotate(rot); g.scale(0.78, 0.78); plaque(g, 0, 160, num); g.restore(); }
-      withReflection(g, () => { spatula(g, 380, FLOOR, 0.85, 0.05); panSide(g, PX, PY + catchDip, 1.6, jerk); }, 0.22);
+      spot(g, PX, 900, 0.5 + 0.45 * eo(T, bt(0), 0.25), '255,230,200');
+      if (sp === 1) spot(g, 380, 320, 0.75, '255,230,190');
+      if (sp === 2) spot(g, 1210, 600, 0.45, '255,230,190');
+      // spatula behind the pan (2) is drawn first
+      if (sp === 2) withReflection(g, () => spatulaAt(g), 0.2);
+      // the plaque: fine motion blur while it flies, then the plaque itself
+      if (T < SPLIT) {
+        if (now.k >= 0) [0.012, 0.024, 0.036].forEach((dt) => { const p = flight(T - dt); flipPlaque(g, PX, p.y, p.phi, p.oldN, p.newN, p.tilt, 0.1); });
+        g.save(); g.translate(PX, now.y + 128 * PLQ); g.scale(1 + landSq * 0.5, 1 - landSq); g.translate(-PX, -(now.y + 128 * PLQ));
+        flipPlaque(g, PX, now.y, now.phi, now.oldN, now.newN, now.tilt); g.restore();
+      } else if (apart < 1) {
+        // the gold ？ splits: each half drifts to its side and fades into the words
+        const p = flight(SPLIT - 0.001);
+        [-1, 1].forEach((sd) => { g.save(); g.translate(PX, p.y); g.rotate(sd * 0.35 * apart); g.translate(-PX, -p.y); flipPlaque(g, PX, p.y, Math.PI, '8', '8', 0, 1 - apart, sd, 260 * apart); g.restore(); });
+      }
+      withReflection(g, () => { if (sp === 1) spatulaAt(g); panSide(g, PX, PY + panY, 1.6, panRot); }, 0.22);
       floorFade(g);
-      LAND.forEach((d) => { if (T > d) add(g, () => sparks(g, PX, PY - 60, d, T, 40, GOLD, 0.8, d)); });
-      if (T >= SPLIT) add(g, () => { sparks(g, 960, PY - 330, SPLIT, T, 140, '255,200,235', 2.2, 7); glowDot(g, 960, PY - 330, 300, 0.5 * hit(T, SPLIT, 0.35), '255,214,240'); });
+      if (sp === 3) { g.save(); g.translate(560, FLOOR + 112); g.scale(1, 0.5); g.rotate(-2.05); spatula(g, 0, 0, 1.45, 0, pr(T, bt(0), 0.9) < 1 ? pr(T, bt(0), 0.9) : -1); g.restore(); add(g, () => glowDot(g, 420, FLOOR + 60, 260, 0.2, GOLD)); }
+      LAND.forEach((d) => { if (T > d) add(g, () => sparks(g, PX, PY - 70, d, T, 30, GOLD, 0.6, d)); });
+      if (T >= SPLIT) add(g, () => { sparks(g, PX, flight(SPLIT - 0.001).y, SPLIT, T, 140, '255,214,180', 2.0, 7); glowDot(g, PX, flight(SPLIT - 0.001).y, 300, 0.5 * hit(T, SPLIT, 0.35), GOLD); });
       g.restore();
       splitFx(g, T);
     }}>
@@ -189,14 +247,9 @@ const HE: React.FC<{ T: number; f: number }> = ({ T, f }) => {
 type Clip = { tag: string; name: string; a: number; z: number; die?: number; el: (T: number, f: number) => React.ReactNode };
 const G0 = 23.6, G1 = 27.6;
 const CLIPS: Clip[] = [
-  { tag: '开场 A', name: '陈列：金铲铲 + 金锅锅在重拍亮灯，三块牌落在中间', a: 0, z: HOOK_END, el: (T, f) => <HA T={T} f={f} /> },
-  { tag: '开场 B', name: '锅当铜锣：每块牌落地锅就“嗡”一下，最后铲子劈下来分屏', a: 0, z: HOOK_END, el: (T, f) => <HB T={T} f={f} /> },
-  { tag: '开场 C', name: '牌掉进锅里：哐、哐、哐，铲子立在旁边', a: 0, z: HOOK_END, el: (T, f) => <HC T={T} f={f} /> },
-  { tag: '开场 D', name: '颠勺：锅把牌颠起来三次 8→7→8，最后一颠炸成 菜？|非？', a: 0, z: HOOK_END, el: (T, f) => <HD T={T} f={f} /> },
-  { tag: '开场 E', name: '徽章：锅铲交叉成徽章，升到顶上，三块牌落在下面', a: 0, z: HOOK_END, el: (T, f) => <HE T={T} f={f} /> },
-  { tag: '骰子 1', name: '直接掉下来：落地弹两下，不转', a: G0, z: G1, die: 1, el: (T, f) => <S2 T={T} f={f} /> },
-  { tag: '骰子 2', name: '从右边滚进来：沿着棱翻三面，减速停下', a: G0, z: G1, die: 2, el: (T, f) => <S2 T={T} f={f} /> },
-  { tag: '骰子 3', name: '骰盅：盅掀起来，骰子就在那里，骰子本身不动', a: G0, z: G1, die: 3, el: (T, f) => <S2 T={T} f={f} /> },
+  { tag: '颠勺 1', name: '铲子立在左边的黑色展台上', a: 0, z: HOOK_END, el: (T, f) => <HD T={T} f={f} sp={1} /> },
+  { tag: '颠勺 2', name: '铲子斜倚在锅后面，大而暗，像背景', a: 0, z: HOOK_END, el: (T, f) => <HD T={T} f={f} sp={2} /> },
+  { tag: '颠勺 3', name: '铲子斜放在锅前的地面上，静物摆拍', a: 0, z: HOOK_END, el: (T, f) => <HD T={T} f={f} sp={3} /> },
 ];
 const SLATE = 30;
 const frames = (c: Clip) => Math.round((c.z - c.a) * 30);
@@ -212,7 +265,7 @@ export const Tests2: React.FC = () => {
   for (; idx < CLIPS.length; idx++) { const n = SLATE + frames(CLIPS[idx]); if (fr < acc + n) break; acc += n; }
   idx = Math.min(idx, CLIPS.length - 1);
   const c = CLIPS[idx], local = fr - acc;
-  GAL.die = c.die ?? 0;
+  GAL.die = c.die ?? 1;
   if (!ok) return <AbsoluteFill style={{ background: '#000' }}><FontFaces /></AbsoluteFill>;
   if (local < SLATE) {
     return (

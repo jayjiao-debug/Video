@@ -4,12 +4,13 @@ import { AbsoluteFill, continueRender, delayRender, useCurrentFrame } from 'remo
 import { FontFaces, FONT_LOADS, Grade, Grain, Bars, Subs, F, hit, pr, eo } from './kit';
 import { CUT, LINES } from './time';
 import { S0, S2, S3, S4, S5, S6, S7, S8, S9, S10, S11, S12, SEnd } from './Scenes';
-import { H1, TT4, HOOK_END } from './Tests';
+import { TT4, HOOK_END } from './Tests';
+import { HD } from './Hooks';
 export { FILM_FRAMES } from './time';
 
 type Shot = { a: number; z: number; el: (T: number, f: number) => React.ReactNode };
 const SHOTS: Shot[] = [
-  { a: 0, z: HOOK_END, el: (T, f) => <H1 T={T} f={f} /> },
+  { a: 0, z: HOOK_END, el: (T, f) => <HD T={T} f={f} /> },
   { a: HOOK_END, z: CUT.strip, el: (T, f) => <S0 T={T} f={f} /> },
   { a: CUT.strip, z: CUT.gallery, el: (T, f) => <TT4 T={T} f={f} /> },
   { a: CUT.gallery, z: CUT.chess, el: (T, f) => <S2 T={T} f={f} /> },
