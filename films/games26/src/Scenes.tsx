@@ -57,14 +57,14 @@ export const S0: React.FC<{ T: number; f: number }> = ({ T, f }) => {
     );
   }
   if (part === 1) {
-    const RANKS = ['3', '3', '4', '4', '5', '6', '6', '7', '8', '8', '9', '10', '10', 'J', 'Q', 'Q', 'K'], SUITS: [string, boolean][] = [['♠', false], ['♥', true], ['♣', false], ['♦', true]];
+    const RANKS = ['3', '3', '3', '4', '5', '5', '7', '7', '7', '8', '9', '9', 'J', 'J', 'Q', 'K', 'K'], SUITS: [string, boolean][] = [['♠', false], ['♥', true], ['♣', false], ['♦', true]];
     const HAND: [string, string, boolean][] = RANKS.map((r, i) => [r, SUITS[(i * 3 + 1) % 4][0], SUITS[(i * 3 + 1) % 4][1]]);
     return (
       <Scene f={f} draw={(g) => {
         stage(g, T); bokeh(g, T, 18, 0.8);
         g.save(); cam(g, lerp(1.0, 1.05, pr(T, CUT.cards, 4)));
         spot(g, 960, 760, 1, '255,225,235');
-        withReflection(g, () => { const open = eio(T, CUT.cards + 0.05, 0.75); HAND.forEach(([r, su, red], i) => { const a = (i - 8) * 0.095 * open, R = 70, PX = 960, PY = FLOOR + R - 4; card(g, PX + Math.sin(a) * R, PY - Math.cos(a) * R, 1.15, r, su, red, a); }); }, 0.1);
+        withReflection(g, () => { const open = eio(T, CUT.cards + 0.05, 0.75); HAND.forEach(([r, su, red], i) => { const a = (i - 8) * 0.095 * open, R = 34, PX = 960, PY = FLOOR - 40; card(g, PX + Math.sin(a) * R, PY - Math.cos(a) * R, 1.45, r, su, red, a); }); }, 0.06);
         floorFade(g);
         g.restore();
       }}>
@@ -321,7 +321,7 @@ export const S2: React.FC<{ T: number; f: number }> = ({ T, f }) => {
 /* ================================================================ S3 · chess: settled in theory (28.76 – 40.91) */
 export const S3: React.FC<{ T: number; f: number }> = ({ T, f }) => {
   const tree = pr(T, CUT.tree, 1.6), outsK = [bt(72), bt(74), bt(76)].map((t) => pop(T, t, 0.3));
-  const root = [960, FLOOR - 0.8 * 330 - 6], outs = [[600, 205], [960, 190], [1320, 205]];
+  const root = [960, FLOOR - 0.8 * 330 - 6], outs = [[600, 230], [960, 215], [1320, 230]];
   return (
     <Scene f={f} draw={(g) => {
       stage(g, T); bokeh(g, T, 16, 0.7);
@@ -330,7 +330,7 @@ export const S3: React.FC<{ T: number; f: number }> = ({ T, f }) => {
       withReflection(g, () => { king(g, 960, FLOOR, 0.8); if (T < CUT.tree + 0.6) [[-40, 0, true], [30, -4, false], [0, -26, false], [-60, 22, false], [52, 20, true], [10, 18, true]].forEach(([dx, dy, wh]) => stone(g, 620 + (dx as number), FLOOR - 14 + (dy as number), 34, wh as boolean)); }, 0.3);
       if (tree > 0) add(g, () => {
         // every move branches (3 shown per node), level by level, up to 81 positions; then each ends in one of three results
-        const RY = root[1], LV = 4, X0 = 470, X1 = 1450, STEP = (RY - 262) / LV;
+        const RY = root[1], LV = 4, X0 = 470, X1 = 1450, STEP = (RY - 287) / LV;
         const node = (l: number, j: number): [number, number] => [X0 + ((j + 0.5) * (X1 - X0)) / Math.pow(3, l + 1), RY - (l + 1) * STEP];
         for (let l = 0; l < LV; l++) {
           const k = clamp(tree * LV * 1.05 - l), n = Math.pow(3, l + 1); if (k <= 0) break;
@@ -351,10 +351,10 @@ export const S3: React.FC<{ T: number; f: number }> = ({ T, f }) => {
       floorFade(g);
       g.restore();
     }}>
-      {['先手赢', '和棋', '后手赢'].map((s, i) => <Lb key={s} x={[560, 960, 1360][i]} y={[120, 105, 120][i]} s={s} size={34} col={C.goldHi} o={clamp(outsK[i])} />)}
-      <Lb x={790} y={FLOOR + 110} s="围棋 · 国际象棋" size={28} sub="PERFECT INFORMATION" o={1 - pr(T, CUT.tree, 0.5)} />
+      {['先手赢', '和棋', '后手赢'].map((s, i) => <Lb key={s} x={[560, 960, 1360][i]} y={[145, 130, 145][i]} s={s} size={34} col={C.goldHi} o={clamp(outsK[i])} />)}
+      <Lb x={790} y={FLOOR + 140} s="围棋 · 国际象棋" size={28} sub="PERFECT INFORMATION" o={1 - pr(T, CUT.tree, 0.5)} />
       <Lb x={960} y={150} s="信息全公开 · 没有骰子" size={40} col="#cfe0ff" sub="EVERYTHING ON THE TABLE" o={eo(T, 28.95, 0.4) * (1 - pr(T, CUT.tree - 0.3, 0.3))} />
-      <Lb x={960} y={FLOOR + 140} s="ZERMELO · 1913" size={16} col="rgba(239,232,218,.75)" ls="0.4em" o={eo(T, CUT.tree + 0.5, 0.5)} />
+      <Lb x={960} y={FLOOR + 200} s="ZERMELO · 1913" size={16} col="rgba(239,232,218,.75)" ls="0.4em" o={eo(T, CUT.tree + 0.5, 0.5)} />
     </Scene>
   );
 };
@@ -458,8 +458,8 @@ export const S6: React.FC<{ T: number; f: number }> = ({ T, f }) => {
         g.restore();
         // chips: your stack stays; the AI's stack is pushed into the pot, then the pot goes to the AI
         chips(g, 790, FLOOR - 10, 6, true);
-        const aiX = lerp(lerp(1130, 960, push), 1140, take);
-        chips(g, aiX, FLOOR - 10, 12, false); chips(g, lerp(960, 1190, take), FLOOR - 10, 4 * Math.min(1, push * 3) | 0, true);
+        const aiX = lerp(lerp(1110, 960, push), 1040, take);
+        chips(g, aiX, FLOOR - 10, 12, false); chips(g, lerp(960, 985, take), FLOOR - 10, 4 * Math.min(1, push * 3) | 0, true);
       }, 0.22);
       floorFade(g);
       g.restore();
@@ -531,9 +531,10 @@ export const S9: React.FC<{ T: number; f: number }> = ({ T, f }) => {
       stage(g, T); bokeh(g, T, 20, 0.8 * eo(T, CUT.drop, 0.3) + 0.2);
       g.save(); cam(g, lerp(1.06, 1.0, eio(T, CUT.gap, 3)) + 0.02 * hit(T, CUT.drop, 0.25), 960, 640);
       spot(g, 960, 1500, 0.4 + 0.5 * eo(T, CUT.drop, 0.3), '255,230,190');
+      strip(g, GX0, GX1, FLOOR + 92, 0, lift);                 // only the 50% marker, behind the pieces
       const cols = 9;
       for (let r = 2; r >= 0; r--) for (let i = 0; i < cols; i++) {
-        const s = 0.6 - r * 0.08, x = 960 + (i - (cols - 1) / 2 + (r % 2) * 0.5) * (190 - r * 22), y = FLOOR - r * 70;
+        const s = 0.6 - r * 0.08, x = 960 + (i - (cols - 1) / 2 + r * 0.34) * (190 - r * 22), y = FLOOR - r * 70;
         const flipme = (i + r) % 2 === 1, d = Math.hypot(x - 960, (y - FLOOR) * 3);
         const k = R > 0 ? clamp((R * 600 - d) / 160) : 0;
         const piece = () => { if (flipme && k > 0) coin(g, x, y - 40 - 120 * Math.sin(k * Math.PI) * (1 - k), 52 - r * 6, lerp(0.05, 0.38, k), true); else king(g, x, y, s * (flipme ? 1 - k * 0.6 : 1), '120,175,255', '160,150,255', (flipme ? 1 - k : 1) * (T < CUT.drop ? 0.4 + 0.6 * eo(T, CUT.gap + i * 0.06, 0.3) : 1)); };
@@ -541,7 +542,7 @@ export const S9: React.FC<{ T: number; f: number }> = ({ T, f }) => {
         if (flipme && k > 0 && k < 1) add(g, () => sparks(g, x, y - 40, T - 0.25, T, 26, GOLD, 0.6, i * 7 + r));
       }
       floorFade(g);
-      strip(g, GX0, GX1, FLOOR + 92, 0.9, lift);
+      strip(g, GX0, GX1, FLOOR + 92, 0.9, 0);
       if (R > 0 && R < 3) add(g, () => { g.beginPath(); g.rect(0, FLOOR - 230, W, 320); g.clip(); g.strokeStyle = `rgba(255,214,140,${0.4 * (1 - R / 3)})`; g.lineWidth = 3; g.beginPath(); g.ellipse(960, FLOOR - 40, R * 600, R * 200, 0, 0, 6.3); g.stroke(); });
       g.restore();
     }}>
@@ -576,14 +577,16 @@ export const S10: React.FC<{ T: number; f: number }> = ({ T, f }) => {
       g.save(); cam(g, lerp(1.02, 1.0, pr(T, CUT.result, 4)), 960, 640);
       if (!second) {
         STANDS.forEach((st, i) => spot(g, st.x, 380, 0.85 * ap(i), i === 2 ? '255,205,235' : i === 1 ? '240,230,255' : '205,220,255'));
+        g.save(); g.beginPath(); g.rect(0, 0, W, FLOOR + 84); g.clip();
         withReflection(g, () => {
           g.save(); g.globalAlpha *= ap(0); king(g, 420, FLOOR, 0.62); g.restore();
           g.save(); g.globalAlpha *= ap(1); king(g, 920, FLOOR, 0.52); coin(g, 1010, FLOOR - 22, 48, 0.35, true); g.restore();
           g.save(); g.globalAlpha *= ap(2); card(g, 1470, FLOOR, 0.95, 'A', '♠', false, -0.16); card(g, 1530, FLOOR + 4, 0.95, 'K', '♥', true, 0.14); g.restore();
         }, 0.22);
+        g.restore();
         floorFade(g);
         strip(g, GX0, GX1, FLOOR + 92, 1, 1);
-        add(g, () => STANDS.forEach((st, i) => { const x = gx(st.u); glowDot(g, x, FLOOR + 92, 46, 0.6 * ap(i), specAt(st.u)); glowDot(g, x, FLOOR + 92, 8, ap(i), '255,244,220'); }));
+        add(g, () => STANDS.forEach((st, i) => { const x = st.x; glowDot(g, x, FLOOR + 92, 46, 0.6 * ap(i), specAt(st.u)); glowDot(g, x, FLOOR + 92, 8, ap(i), '255,244,220'); }));
         if (T > 91.0) add(g, () => glowDot(g, 1500, 400, 260, 0.22 * eo(T, 91.0, 0.4), '255,110,205'));
       } else {
         // four races on a glass plane above the floor; zero line = level
@@ -591,18 +594,18 @@ export const S10: React.FC<{ T: number; f: number }> = ({ T, f }) => {
         spot(g, 960, 1500, 0.55, '235,225,255');
         floorFade(g);
         g.strokeStyle = 'rgba(255,255,255,.18)'; g.lineWidth = 1.5; g.setLineDash([6, 8]); g.beginPath(); g.moveTo(X(0), Y(0)); g.lineTo(X(105), Y(0)); g.stroke(); g.setLineDash([]);
-        add(g, () => WALKS.forEach((w, k) => {
+        WALKS.forEach((w) => {
           const col = w[105] > 0 ? '120,175,255' : '255,110,205';
-          g.strokeStyle = `rgba(${col},.9)`; g.lineWidth = 3; g.beginPath(); for (let i = 0; i <= n; i++) { const y = Y(w[i]); if (i) g.lineTo(X(i), y); else g.moveTo(X(i), y); } g.stroke();
-          glowDot(g, X(n), Y(w[n]), 36, 0.7, col); glowDot(g, X(n), Y(w[n]), 6, 1, '255,244,220');
-          if (n >= 105) { g.fillStyle = `rgba(${col},.9)`; g.font = '700 26px "Noto Sans CJK SC"'; g.textAlign = 'left'; g.textBaseline = 'middle'; g.fillText(w[105] > 0 ? '赢得多' : '输得多', X(105) + 24, Y(w[105]) + (k === 1 ? 12 : k === 0 ? -12 : 0)); }
-        }));
+          g.strokeStyle = `rgba(${col},.92)`; g.lineWidth = 3; g.lineJoin = 'round'; g.beginPath(); for (let i = 0; i <= n; i++) { const y = Y(w[i]); if (i) g.lineTo(X(i), y); else g.moveTo(X(i), y); } g.stroke();
+          add(g, () => { glowDot(g, X(n), Y(w[n]), 30, 0.6, col); glowDot(g, X(n), Y(w[n]), 5, 1, '255,244,220'); });
+        });
+        if (n >= 105) { const ups = WALKS.filter((w) => w[105] > 0), dn = WALKS.find((w) => w[105] <= 0)!; const yu = Math.min(...ups.map((w) => Y(w[105]))); g.font = '700 28px "Noto Sans CJK SC"'; g.textAlign = 'left'; g.textBaseline = 'middle'; g.fillStyle = '#9cc8ff'; g.fillText('赢得多 ×3', X(105) + 28, yu - 26); g.fillStyle = '#ff9ed6'; g.fillText('输得多 ×1', X(105) + 28, Y(dn[105]) + 4); }
       }
       g.restore();
     }}>
       {!second && (
         <>
-          <Lb x={960} y={110} s="数字越大 = 越看实力" size={34} col="#efe8da" sub="RATING SPREAD · DUERSCH ET AL. 2020" o={eo(T, 89.7, 0.35)} />
+          <Lb x={960} y={110} s="数字越大 = 越看实力" size={34} col="#efe8da" sub="RATING SPREAD · DUERSCH ET AL. 2020" o={eo(T, 89.55, 0.35)} />
           {STANDS.map((st, i) => (
             <React.Fragment key={st.name}>
               <div style={{ position: 'absolute', left: st.x - 200, width: 400, top: 250, textAlign: 'center', opacity: ap(i), transform: `scale(${lerp(1.1, 1, ap(i))})`, fontFamily: F.serif, fontWeight: 900, fontSize: 96, color: i === 2 ? '#ffc4e6' : i === 0 ? '#cfe0ff' : C.goldHi, textShadow: '0 0 24px rgba(0,0,0,.8)', ...LNUM }}>{st.num}</div>
@@ -717,9 +720,15 @@ export const S12: React.FC<{ T: number; f: number }> = ({ T, f }) => {
       floorFade(g); strip(g, GX0, GX1, FLOOR + 92, 0.6 + 0.4 * (1 - pr(T, 110, 2)));
       g.restore();
       // one game vs a hundred: a tally of tiny coins along the top
-      add(g, () => { for (let i = 0; i < coins; i++) { const x = 360 + (i % 50) * 24, y = 170 + Math.floor(i / 50) * 34; glowDot(g, x, y, 9, 0.85, rnd(i, 99) < 0.6 ? '120,175,255' : '255,110,205'); } });
+      add(g, () => {
+        const win = (i: number) => rnd(i, 99) < 0.6, order: number[] = []; for (let i = 0; i < 100; i++) if (win(i)) order.push(i); for (let i = 0; i < 100; i++) if (!win(i)) order.push(i);
+        const sortK = eio(T, 109.7, 0.9);
+        for (let i = 0; i < coins; i++) { const j = order.indexOf(i), x = lerp(360 + (i % 50) * 24, 360 + (j % 50) * 24, sortK), y = lerp(170 + Math.floor(i / 50) * 34, 170 + Math.floor(j / 50) * 34, sortK); glowDot(g, x, y, 9, 0.85, win(i) ? '120,175,255' : '255,110,205'); }
+      });
     }}>
       <Lb x={960} y={235} s={coins > 0 ? `${coins} 局` : ''} size={30} col={C.goldHi} />
+      <Lb x={960} y={280} s="蓝 = 赢 · 粉 = 输" size={20} col="rgba(239,232,218,.7)" o={eo(T, 107.4, 0.4)} />
+      <Lb x={960} y={110} s="强一档的人：约 6 : 4" size={26} col="#9cc8ff" o={eo(T, 110.4, 0.4)} />
       <GalleryLabels appear={() => 1} dim={off} />
     </Scene>
   );

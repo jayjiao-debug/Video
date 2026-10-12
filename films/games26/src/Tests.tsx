@@ -348,7 +348,7 @@ const fdie = (g: G, x: number, y: number, a: number, glyph: string, pips: number
   for (let i = 0; i < 4; i++) {
     const p0 = F[i], p1 = F[(i + 1) % 4], ex = p1[0] - p0[0], ey = p1[1] - p0[1], nx = ey, ny = -ex;   // outward normal (clockwise square)
     const facing = (nx * ox + ny * oy) / (Math.hypot(nx, ny) * Math.hypot(ox, oy));
-    if (facing <= 0.02) continue;
+    if (facing <= 0.12) continue;
     const up = -ny / Math.hypot(nx, ny);                                                                  // how much this face points up (lit from above)
     g.fillStyle = up > 0.3 ? '#22222a' : '#0b0b0e';
     g.beginPath(); g.moveTo(p0[0], p0[1]); g.lineTo(p1[0], p1[1]); g.lineTo(p1[0] + ox, p1[1] + oy); g.lineTo(p0[0] + ox, p0[1] + oy); g.closePath(); g.fill();
@@ -374,10 +374,10 @@ export const TT4: React.FC<{ T: number; f: number }> = ({ T, f }) => {
   const ign = 0.35 + 0.65 * eio(T, T0, 0.9), after = eo(T, HIT, 0.6);
   // one die, tumbling like a real cube: it rolls over its edges, a new face every quarter turn, slowing to rest
   const dieAt = (g: G, i: number, tt: number, alpha: number) => {
-    const land = HIT - (5 - i) * 0.07, dur = 1.55 + 0.25 * rnd(i, 2), q = clamp((tt - (land - dur)) / dur);
+    const land = HIT - (5 - i) * 0.07, dur = 1.6, q = clamp((tt - (land - dur)) / dur);
     if (q <= 0) return;
     const u = 1 - Math.pow(1 - q, 1.45), N = 5 + (i % 3);            // still rolling when it lands: the last quarter turn ends on its beat
-    const xf = 960 + (i - 2.5) * 178, x = lerp(W + 160 + i * 50, xf, u);
+    const xf = 960 + (i - 2.5) * 178, x = lerp(W + 160 + i * 205, xf, u);
     const turns = (1 - u) * N, face = Math.ceil(turns - 1e-6), resid = (face - turns) * (Math.PI / 2) * -1;   // the title face only comes up as it lands
     const lift = (A / 2) * (Math.abs(Math.cos(resid)) + Math.abs(Math.sin(resid)) - 1);
     const hop = 110 * Math.pow(1 - u, 1.5) * Math.abs(Math.sin(Math.PI * 2 * u));
