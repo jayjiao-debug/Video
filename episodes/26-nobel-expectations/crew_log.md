@@ -15,3 +15,4 @@
 | 2026-10-12 15:34 | owner: "你的光源把握的很有问题" → relit: one shadow-casting key spot per shot, soft shader beam along it, rim from behind, hero brightest, speculars down | producer | v2 light sent | 25 |
 | 2026-10-12 16:15 | owner: "i dont like all 3D … 2D can be just as powerful" → hybrid | owner | | |
 | 2026-10-12 17:00 | gate 2b: 12-frame hybrid storyboard (4×3D, 8×2D), storyboard.md | producer | sent | 45 |
+| 2026-10-12 17:05 | v3 script: boss's 饼 as the spine (owner: 和我有什么关系) | producer | | |

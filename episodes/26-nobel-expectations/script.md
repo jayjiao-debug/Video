@@ -1,77 +1,57 @@
-# Script: 一句话，值多少钱？（ep26 · 2026 诺贝尔经济学奖 · v2 2026-10-12 · 大众版）
+# Script: 画饼，到底有没有用？（ep26 · 2026 诺贝尔经济学奖 · v3 2026-10-12）
 
-**Angle:** 2026 Economics prize to Robert E. Hall & Michael Woodford, "for microeconomic foundations of macroeconomic stabilisation" (facts #2). Plain idea: people act on what they *expect*; so a central bank's *promise* can move the economy, as long as it is believed. Real case: Draghi's "whatever it takes" (26 Jul 2012) and OMT, which was never used (#11–#18).
-**Takeaway:** 一句话的分量，在于有人信。
-**Music anchors:** title on drop 1 16.625 · breakdown 49.0 (Draghi on stage) · build 63.2 (the numbers fall) · silent gap 79.4–81.4 (the empty basket) · drop 2 81.43 (「一次都没买」) · end card 115.87.
-**Pace:** `pace.py lines_arr.json --film-end 122`: 0 % waiting, no line too fast; only gaps are the title and the silent gap. All lines ≤ 16 字.
+**Owner note (16:51):** v2「没有看下去的欲望，和我有什么关系」；开头三句「有很强的共鸣」。
+**v3 fix:** the boss's promise is the spine of the whole film. Every beat answers "what does this mean for me": Hall = why you spent tonight; the spiral = you hear 裁员 and stop spending; Draghi = the biggest 饼 ever drawn, and it worked; the catch = why your boss's 饼 stops working. Europe is down from 59 s to 27 s.
+**Takeaway:** 饼有没有用，看画饼的人说话算不算数。
+**Music anchors (unchanged):** title on drop 1 16.625 · breakdown 49.0 · build 63.2 · silent gap 79.4–81.4 · drop 2 81.43 · end card 115.87.
+**Pace:** pace.py: 0 % waiting; all lines ≤ 16 字.
 
-## Title options (≤ 10 字)
-1. **一句话，值多少钱？** (recommended) — a question the viewer wants answered; the film answers it twice (Spain's extra interest halved; zero bonds bought).
-2. **不惜一切代价** — Draghi's famous phrase; recognisable to finance viewers, cold for others.
-3. **让你花钱的，是预期** — closest to the prize idea and the viewer's own life, but sounds like 科普.
+## Title options
+1. **画饼，到底有没有用？** (recommended) — everyone has been 画饼'd; the film answers it.
+2. **一句话，值多少钱？** — the v2 title; still the last line.
 
 **Title-card sub-line:** 2026 诺贝尔经济学奖 · 霍尔 & 伍德福德
-**End-card question:** 你会因为一句承诺，提前花钱吗？
-
-## Beat sheet
-| Beat | Time | What the viewer gets |
-|---|---|---|
-| Hook | 0–16.4 | Their own situation (spending a raise before it arrives) → the same force moved Europe → this year's Nobel. |
-| Hall | 20.7–35.2 | People spend on news about the future; a country is millions of such people → manage expectations, steady the economy. |
-| Crisis | 35.3–49.0 | Woodford asks how a central bank should talk; Spain at 7%, the fear spiral. |
-| The sentence | 49.0–63.2 | Draghi's words, verbatim; no amount, no method: a promise. |
-| Numbers fall | 63.2–79.4 | No-limit plan; Spain's extra interest 6+ → <3 points; "how much did it buy?" |
-| Reveal | 81.4–94.0 | Zero. Because people believed. Woodford: a promise, not a forecast. |
-| Catch | 94.1–106.2 | Only if believed; broken promises stop working; expectations can also drag an economy down. |
-| Callback | 106.3–115.8 | Back to the raise; whether you believe decides tonight's spending; takeaway. |
-
-## v1 → v2 (owner, 14:37: "需要能让大众都懂的")
-- The euro crisis is now told as an everyday loan: Spain borrows, lenders fear, interest climbs, fear comes true. Draghi = "没人敢借给它，我借".
-- Cut the finance jargon: 国债, 利差 points (6 → 3), OMT, 细则. Kept one number (7%) and one plain comparison (比德国多付的利息，砍半).
-- Woodford's "promise, not forecast" → “我保证” vs “我觉得”.
+**End-card question:** 老板画的饼，你吃过几次？
 
 ## Lines and picture
 | # | Start | End | Subtitle | Picture | Facts |
 |---|---|---|---|---|---|
-| 1 | 0.00 | 2.36 | 老板说：明年给你涨工资 | 年轻人看手机：老板消息「明年给你涨工资」。 | 示意 |
-| 2 | 2.46 | 5.22 | 钱还没到，你今晚就多花了一点 | 同一晚外卖App：他换了贵一点的套餐，余额没变。 | 示意 |
-| 3 | 5.32 | 7.82 | 让你花钱的，不是钱，是[预期] | 他头顶浮出发光小气泡（预期），牵着他的手去点单。 | #4,#6 |
-| 4 | 7.92 | 10.28 | 2012年，有人只说了一句话 | 镜头拉远到城市夜景，一支话筒剪影。tag 2012。 | #11 |
-| 5 | 10.38 | 13.27 | 一分钱没花，欧洲的危机就[降温]了 | 一团红色火焰（危机）在城市上空被一句话吹小。 | #19 |
-| 6 | 13.37 | 16.40 | 今年诺贝尔经济学奖，讲的就是这个 | 金色奖章（通用设计）落下，转标题。 | #1,#2 |
-| T | 16.63 | 20.70 | *(标题卡)* | 《一句话，值多少钱？》 副题：2026 诺贝尔经济学奖 · 霍尔 & 伍德福德 | — |
-| 7 | 20.75 | 23.43 | 先说[霍尔]：人花钱，看的是以后 | 霍尔：学者剪影（无真实肖像），名牌「霍尔 · 斯坦福」。 | #6 |
-| 8 | 23.53 | 26.08 | 1978年：钱到账那天，并不多花 | tag 1978。工资到账提示弹出，他的消费柱子不动。 | #6 |
-| 9 | 26.18 | 28.86 | 听说要涨工资那天，你就变了 | 倒回收到消息那一刻：消费柱子在那时就升起。 | #6 |
-| 10 | 28.96 | 31.51 | 全国几亿人，都是这样的你 | 一个人变成成千上万个小人，各自头顶小气泡。 | #4 |
-| 11 | 31.61 | 33.89 | 管住[预期]，经济就更稳 | 气泡连成网，网下的经济曲线变平稳。 | #3,#4 |
-| 12 | 33.99 | 36.80 | 再说[伍德福德]：央行该怎么说话 | 伍德福德：剪影，名牌「伍德福德 · 哥伦比亚」。 | #8,#9 |
-| 13 | 36.90 | 39.18 | 2012年，西班牙急着借钱 | 借钱桌：一个写着「西班牙」的人（城市剪影，无地图国界）伸手借钱。 | #13 |
-| 14 | 39.28 | 41.42 | 大家越怕它还不上 | 桌对面的出借人们头顶冒出「怕」的气泡。 | logic |
-| 15 | 41.52 | 44.20 | 借给它的利息就越高：冲破[7%] | 借条上的利息数字往上跳，冲破7%红线。 | #13 |
-| 16 | 44.30 | 46.71 | 利息越高，它就越还不上 | 借款人背上的债越压越重。 | logic |
-| 17 | 46.81 | 48.95 | 越怕，就越[真]会出事 | 漩涡：怕 → 利息↑ → 更还不上 → 更怕，越转越快。 | logic (self-fulfilling) |
-| 18 | 49.05 | 52.07 | 这时，欧洲央行的[德拉吉]上台 | breakdown：伦敦会场，剪影人物上台，名牌「德拉吉 · 欧洲央行行长」。 | #11 |
-| 19 | 52.17 | 55.03 | 只说了一句：“不惜[一切代价]” | 他的话变成发光大字，悬在会场上空。 | #12 |
-| 20 | 55.13 | 57.38 | “相信我，这就够了” | 第二句落下，漩涡减速。 | #12 |
-| 21 | 57.48 | 60.34 | 意思是：没人敢借给它，我借 | 他走到借钱桌边，手按在桌上：「我借」。 | #18 (simplified: OMT = buy its bonds) |
-| 22 | 60.44 | 63.15 | 钱还没出，先给一个[承诺] | 他的手是空的，桌上只放下一张写着「承诺」的卡片。 | #12 |
-| 23 | 63.25 | 66.53 | 后来又说：借多少，[不设上限] | build：卡片上加一行「上限：∞」。 | #18 |
-| 24 | 66.63 | 69.38 | 怕的人，一下子少了 | 出借人头顶的「怕」气泡一个个灭掉。 | #15 |
-| 25 | 69.48 | 72.06 | 利息开始往下掉 | 借条上的利息数字往下跳。 | #14,#15 |
-| 26 | 72.16 | 75.97 | 比德国多付的利息，不到一年[砍半] | 两根柱子：比德国多付的那段，从高处缩掉一半（tag 2012.7 → 2013.5）。 | #14 |
-| 27 | 76.07 | 79.35 | 那么，央行最后借出去多少？ | 一只金库/钱袋特写，上面一个问号。 | #16 |
-| G | 79.35 | 81.45 | *(无字幕)* | 静默：钱袋特写，还没打开。 | — |
-| 28 | 81.45 | 83.62 | [一分钱都没有] | drop 2：钱袋打开——空的。大字「0」。 | #16 |
-| 29 | 83.72 | 86.51 | 那个计划，一次都没用过 | 「计划」文件夹上盖章：未使用。 | #16 |
-| 30 | 86.61 | 89.57 | 因为大家[信]了：它真会出手 | 所有出借人头顶亮起「信」。 | #9 (inference) |
-| 31 | 89.67 | 92.62 | 伍德福德说：央行要给[承诺] | 伍德福德剪影，tag 2012 · 8月。 | #9 |
-| 32 | 92.72 | 95.52 | 要说“我保证”，不是“我觉得” | 两张卡：「我保证」压过「我觉得」。 | #9 (paraphrase of promise vs forecast) |
-| 33 | 95.62 | 97.94 | 但这招有个[前提] | 冷色。 |  |
-| 34 | 98.04 | 100.52 | 话要有人[信]，才算数 | 「信」的灯泡给整个画面供电。 | #9 |
-| 35 | 100.62 | 103.58 | 说了做不到，下次就没人信 | 一张没兑现的卡片碎掉，旁边的灯跟着灭。 | logic |
-| 36 | 103.68 | 106.63 | 预期能救经济，也能拖垮它 | 回到漩涡：同一张网，可以托住，也可以拖下去。 | #4 |
-| 37 | 106.73 | 109.37 | 回到你：老板说的加薪 | 回到开头的年轻人，老板消息还在屏幕上。 | callback |
-| 38 | 109.47 | 112.59 | 你信不信，决定你今晚怎么花 | 他的手指悬在下单键上。 | callback |
-| 39 | 112.69 | 115.80 | 一句话值多少钱？看[多少人信] | 他的气泡变成金色光点，汇入城市夜景，转片尾卡。 | takeaway |
-| E | 115.87 | ~122 | *(片尾卡)* | Juno 片尾卡：「你会因为一句承诺，提前花钱吗？」 | — |
+| 1 | 0.00 | 2.42 | 老板说：明年给你涨工资 | 他手机亮起：老板消息「明年给你涨工资」。 | 示意 |
+| 2 | 2.52 | 5.35 | 钱还没到，你今晚就多花了一点 | 同一晚，外卖App里他换了贵一点的套餐；余额没变。 | 示意 |
+| 3 | 5.45 | 8.01 | 让你花钱的，不是钱，是[预期] | 他头顶浮出一个发光的气泡（预期）。 | #4,#6 |
+| 4 | 8.11 | 10.67 | 说白了：老板给你[画了个饼] | 气泡变成一张金色的「饼」，画在老板的消息上。 | callback |
+| 5 | 10.77 | 13.33 | 饼还没到手，你就先吃上了 | 他咬了一口这张饼——钱包还是原样。 | callback |
+| 6 | 13.43 | 16.40 | 今年的诺贝尔经济学奖，就讲这个 | 饼翻面，变成奖章，转标题。 | #1,#2 |
+| 7 | 20.75 | 23.22 | 1978年，经济学家[霍尔]发现 | tag 1978。霍尔：名牌，无肖像。 | #6 |
+| 8 | 23.32 | 25.80 | 钱到账那天，人并不多花 | 工资到账提示弹出，他的消费线不动。 | #6 |
+| 9 | 25.90 | 28.51 | 多花，是在[听说]要涨的那天 | 倒回收到消息那一刻：消费线在那里就跳起来。 | #6 |
+| 10 | 28.61 | 30.94 | 你花的不是钱，是[以后] | 他的购物车里装的是「明年」。 | #6 |
+| 11 | 31.04 | 33.51 | 全国几亿人，都这样花钱 | 他变成满城的窗户，每扇窗里一个人在下单。 | callback |
+| 12 | 33.61 | 36.51 | 所以一句话，能让全国一起掏钱 | 整座城的消费线一起抬起。 | #4 |
+| 13 | 36.61 | 39.22 | 反过来也一样：听说要[裁员] | 同一部手机：「明年可能裁员」。 | logic |
+| 14 | 39.32 | 41.65 | 你今晚，就少花了一点 | 他把购物车里的东西一件件放回去。 | logic |
+| 15 | 41.75 | 44.22 | 你少花，楼下的店就少赚 | 楼下小店的灯暗了一档。 | logic |
+| 16 | 44.32 | 46.66 | 店少赚，就真的要裁人 | 小店老板的手机上：「下月起不招人了」。 | logic |
+| 17 | 46.76 | 48.95 | 越怕，就越[真]会出事 | 漩涡：怕→少花→少赚→裁人→更怕。 | logic（自我实现） |
+| 18 | 49.05 | 52.13 | 2012年，整个欧洲掉进这个漩涡 | 镜头拉远：同一个漩涡，铺满欧洲的夜景（无国界地图）。 | #13 |
+| 19 | 52.23 | 55.01 | 西班牙借钱，利息冲破[7%] | 借条「西班牙」，利息数字冲破7%红线。 | #13 |
+| 20 | 55.11 | 58.50 | 这时，欧洲央行的[德拉吉]画了个饼 | breakdown：剪影上台，名牌「德拉吉 · 欧洲央行」，他手里是一张饼。 | #11 |
+| 21 | 58.60 | 60.75 | “不惜[一切代价]” | 他的话变成发光大字。 | #12 |
+| 22 | 60.85 | 63.15 | “相信我，这就够了” | 第二句落下，漩涡开始减速。 | #12 |
+| 23 | 63.25 | 66.57 | 饼还没兑现，怕的人先少了 | 饼悬在漩涡中心，周围的「怕」一个个灭掉。 | #15 |
+| 24 | 66.67 | 69.28 | 利息开始往下掉 | 利息数字往下跳。 | #14,#15 |
+| 25 | 69.38 | 73.22 | 比德国多付的利息，不到一年[砍半] | 两根柱子：多付的那段缩掉一半（2012.7→2013.5）。 | #14 |
+| 26 | 73.32 | 75.76 | 漩涡，慢慢停了 | 漩涡停住。 | #19 |
+| 27 | 75.86 | 79.35 | 那么，这个饼，央行掏了多少钱？ | 一只金库，问号。 | #16 |
+| 28 | 81.45 | 83.78 | [一分钱都没有] | drop 2：金库打开——空的。 | #16,#17 |
+| 29 | 83.88 | 86.90 | 那个计划，一次都没用过 | 「计划」文件夹盖章：未使用。 | #16 |
+| 30 | 87.00 | 90.19 | 因为大家[信]了：它真会出手 | 满城窗户一起亮起「信」。 | #9（推论） |
+| 31 | 90.29 | 93.64 | [伍德福德]说：央行要说“我保证” | 伍德福德：名牌，无肖像。tag 2012。 | #9 |
+| 32 | 93.74 | 96.08 | 而不是“我觉得” | 「我保证」压过灰色的「我觉得」。 | #9 |
+| 33 | 96.18 | 99.37 | 回到你：老板的饼，你还信吗？ | 回到他：老板的消息还在屏幕上。 | callback |
+| 34 | 99.47 | 102.65 | 如果上次说涨薪，他没兑现 | 聊天记录往上翻：去年也说过涨薪，下面没有下文。 | callback |
+| 35 | 102.75 | 105.77 | 这次，你一分都不会多花 | 他关掉外卖App。 | callback |
+| 36 | 105.87 | 109.06 | 饼有没有用，不看画得多大 | 一张巨大的饼，很薄。 | logic |
+| 37 | 109.16 | 112.34 | 看画饼的人，[说话算不算数] | 一张小饼，但上面盖着「已兑现」。 | #9 |
+| 38 | 112.44 | 115.80 | 一句话值多少钱？看[多少人信] | 他的气泡变成金色光点，汇入城市夜景，转片尾卡。 | takeaway |
+| E | 115.87 | ~122 | *(片尾卡)* | 「老板画的饼，你吃过几次？」 | — |
