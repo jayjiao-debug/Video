@@ -13,3 +13,6 @@ episodes/14-design-blame/out/*_v2_*
 
 # HD masters are delivered via deliver-* branches, never committed here
 episodes/*/out/*_高清原片.mp4
+
+# Douyin covers are delivered in chat, not committed (public repo)
+episodes/*/out/封面_*.png
