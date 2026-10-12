@@ -180,7 +180,7 @@ export const S9: React.FC<{ T: number; f: number }> = ({ T, f }) => {
           })}
         </div>
       ))}
-      <div style={{ position: 'absolute', right: 230, top: 210, fontFamily: F.serif, fontWeight: 700, fontSize: 26, color: C.goldHi, letterSpacing: '0.12em', opacity: eo(T, IGNITE + 0.3, 0.4) }}>E = 大家的预期</div>
+      <div style={{ position: 'absolute', right: 230, top: 210, fontFamily: F.serif, fontWeight: 700, fontSize: 26, color: C.goldHi, letterSpacing: '0.12em', opacity: eo(T, IGNITE + 0.3, 0.4) }}>E = 大家心里的预期</div>
       <Chapter n="IV" t="伍德福德" />
     </AbsoluteFill>
   );
@@ -256,9 +256,9 @@ export const S10: React.FC<{ T: number; f: number }> = ({ T, f }) => {
       <div style={{ position: 'absolute', left: 120, top: 150, opacity: lab, fontFamily: F.mono, fontWeight: 700, fontSize: 19, letterSpacing: '0.32em', color: 'rgba(239,232,218,.55)', ...LNUM }}>
         10,000 个家庭 <span style={{ color: '#e3b765' }}>· 改变计划的 {n.toLocaleString('en-US')}</span>
       </div>
-      <div style={{ position: 'absolute', right: 120, top: 140, width: 220, padding: '16px 0', border: '1.5px solid rgba(239,232,218,.25)', textAlign: 'center', background: 'rgba(5,5,6,.6)', opacity: lab }}>
-        <div style={{ fontFamily: F.serif, fontWeight: 700, fontSize: 20, letterSpacing: '0.2em', color: 'rgba(239,232,218,.55)' }}>政策利率</div>
-        <div style={{ fontFamily: F.lat, fontWeight: 700, fontSize: 62, color: C.cream, ...LNUM }}>0%</div>
+      <div style={{ position: 'absolute', right: 120, top: 140, width: 250, padding: '16px 0', border: '1.5px solid rgba(239,232,218,.25)', textAlign: 'center', background: 'rgba(5,5,6,.6)', opacity: lab }}>
+        <div style={{ fontFamily: F.serif, fontWeight: 700, fontSize: 20, letterSpacing: '0.2em', color: 'rgba(239,232,218,.55)' }}>央行定的利息</div>
+        <div style={{ fontFamily: F.lat, fontWeight: 700, fontSize: 56, color: C.cream, ...LNUM }}>0–0.25%</div>
         <div style={{ fontFamily: F.serif, fontWeight: 700, fontSize: 20, color: '#e3b765', letterSpacing: '0.2em' }}>一分没动</div>
       </div>
       <Note x={120} y={190} s="示意：每个光点代表一个家庭" o={lab * 0.8} />
