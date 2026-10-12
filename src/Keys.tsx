@@ -4,7 +4,7 @@
    brand gold only for the thing that matters in the shot. Everything drawn in code. One frame per composition frame. */
 import React, { useEffect, useState } from 'react';
 import { AbsoluteFill, continueRender, delayRender, staticFile, useCurrentFrame } from 'remotion';
-import sim from '../sim/sim.json';
+import sim from './sim.json';
 
 const W = 1920, H = 1080, BAR = 104; // letterbox bars (2.39 picture inside 16:9; subtitles sit in the lower bar)
 const C = {
