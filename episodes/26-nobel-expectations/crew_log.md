@@ -8,3 +8,5 @@
 | 2026-10-12 15:00 | script.md + lines.json v1, 37 lines, pace 0 % waiting | producer (screenwriter role) | gate 1: self fact-check per line; sent titles + lines to owner | 15 |
 | 2026-10-12 14:45 | owner: likes the cold open and 《一句话，值多少钱？》 → gate 1 passed | owner | | |
 | 2026-10-12 15:20 | gate 2a: 3 looks × 2 frames (A 夜城借条 / B 纸片剧场 / C 气泡城), pose check PASS; sheet sent | producer (art-director role) | waiting for the owner's pick | 30 |
+| 2026-10-12 15:02 | owner: "卡通画风不适合" → round 2 | owner | | |
+| 2026-10-12 15:40 | gate 2a r2: E 行情终端, F 钞票版画 (2 frames each) + D 3D 讲台 direction sample (primitives; needs real models) | producer (art-director role) | sheet sent | 35 |
