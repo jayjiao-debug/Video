@@ -63,8 +63,8 @@ export const Sub: React.FC<{t: string}> = ({t}) => {
 	return (
 		<>
 			<AbsoluteFill style={{background: 'linear-gradient(180deg, rgba(0,0,0,0) 76%, rgba(0,0,0,0.55) 92%, rgba(0,0,0,0.7) 100%)'}} />
-			<div style={{position: 'absolute', left: 0, right: 0, bottom: 62, textAlign: 'center', fontFamily: SANS, fontWeight: 600, fontSize: 60, color: C.ink, letterSpacing: '0.05em', textShadow: '0 2px 14px rgba(0,0,0,0.95), 0 0 2px rgba(0,0,0,0.9)'}}>
-				{parts.map((p, i) => (p.startsWith('[') ? <span key={i} style={{color: C.gold, fontWeight: 800}}>{p.slice(1, -1)}</span> : <span key={i}>{p}</span>))}
+			<div style={{position: 'absolute', left: 0, right: 0, bottom: 62, textAlign: 'center', fontFamily: SANS, fontWeight: 800, fontSize: 64, color: C.ink, letterSpacing: '0.04em', textShadow: '0 2px 14px rgba(0,0,0,0.95), 0 0 2px rgba(0,0,0,0.9)'}}>
+				{parts.map((p, i) => (p.startsWith('[') ? <span key={i} style={{color: C.gold, fontWeight: 900}}>{p.slice(1, -1)}</span> : <span key={i}>{p}</span>))}
 			</div>
 		</>
 	);
