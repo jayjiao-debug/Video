@@ -1,0 +1,42 @@
+{
+  "label": "gate1_r1",
+  "line_numbering": "#1 = first subtitle (0.0s), #34 = last subtitle (112.5s), in file order",
+  "would_keep_watching_after_3s": true,
+  "why": "Barely. #1 '你家房贷、你的存款，都跟着利率走' sounds like a bank ad or a topic for my parents. I'm 20, I don't have a mortgage and my savings are basically my 生活费, so '你家房贷' tells me this isn't for me. I only stay because the clip is short and #2 starts coming up. If #2 came any later I'd already be gone.",
+  "would_keep_watching_after_8s": true,
+  "why_8s": "Yes. #2 + #3 ('利率一动没动 / 只在声明里，加了一句话') is the real hook. One sentence moving markets is a little puzzle and I want to know what the sentence was. But #4 '两年期利率跌到0.1%出头' falls flat: I don't know what 两年期利率 is (a loan? a bond? whose?), and I'm not told what it was before, so 0.1% means nothing to me. The hook is set, and the payoff number doesn't land.",
+  "first_moment_I_got_curious": "#3 (6.3s) '它只在声明里，加了[一句话]'. The second spike was #21 (69.9s) '相信我，这就够了'.",
+  "where_I_would_swipe_away": [
+    "12.7s-16.3s: 3.6 seconds with no subtitle right after the hook. If there's no voice or strong visual here, this is my most likely swipe.",
+    "16.3s-26.2s (#5-#7): it turns into '2026诺贝尔经济学奖：霍尔、伍德福德' and then 1970年代美国通胀. Two names I've never heard plus a history lesson, right when I'm waiting to find out what 'the sentence' was. It feels like the hook got dropped for a lecture. Second most likely swipe.",
+    "52.4s-59.3s (#16-#17): the hook finally pays off and it's abstract. '开头那句话就是：提前说出打算'. I still don't know what the sentence actually said. I waited 45 seconds for this and got a category, not the quote. Disappointing.",
+    "59.3s-66.3s (#18-#19): '7个季度' (I have to do math: about 1.75 years?) and then it suddenly jumps from the US to Spain. Two cold facts in a row and a change of scene. Tempted to swipe.",
+    "89.4s-95.6s (#27-#28): '放慢买债' and '美债利率从1.76%涨到2.81%'. Nobody explained that the Fed was buying bonds in the first place, and I can't tell if 1 percentage point is a lot. By 1:30 the length itself is a swipe risk on Douyin."
+  ],
+  "lines_I_did_not_understand": [
+    "#4 '两年期利率': which rate? A bank loan rate? A government bond? For two years of what? And there's no 'before' number, so 0.1% has no scale.",
+    "#12 '伍德福德的书，成了央行的[实验室]': a book became a lab? I don't get the metaphor. Does it mean central banks used his book as a guide? I had to read it twice.",
+    "#16 '利率降到0后': can interest rates actually be 0? Why does 0 mean they need 'a trick'? It's never explained that at 0 you can't cut any further.",
+    "#17 '开头那句话就是：提前说出打算': still too vague. What was the actual sentence? Something like 'rates stay low until 2013'? I want the words.",
+    "#18 '预测机构改口：加息要等7个季度以上': who are 预测机构? Why is 7个季度 a big deal? Saying '将近两年' would land faster than making me do 季度 math.",
+    "#19 '西班牙政府借钱利率近7%': is 7% high? I don't know what normal is. I know nothing about the 2012 euro crisis, so I don't feel any danger here.",
+    "#22 '买债计划': the central bank buys whose debt, and why does that help Spain? Jargon with no explanation.",
+    "#27 '美联储暗示要放慢买债': I didn't know the Fed was buying bonds. 'Slowing down' something I never knew was happening means nothing to me.",
+    "#28 '美债利率': 美债 = US government bonds? And why does its 'interest rate' going up matter to anyone? I only get it a little because #29 links it to 房贷.",
+    "Not confusing: 加息, 通胀, 月光族, 承诺 vs 预测. 国债 / 收益率 / 加点 don't appear, which is good."
+  ],
+  "takeaway_in_my_words": "I'd tell a friend: '央行有时候根本不用真的动利率，只要提前把以后打算怎么做说清楚，大家信了，市场自己就动了。欧洲那个行长说了句“不惜一切代价”，救市计划一次都没用就把利率压下去了。但反过来，说错一句话也能把房贷利率搞上去。因为大家今天怎么花钱，看的都是对明天的预期。'",
+  "surprise_that_stuck": "#24: the bond-buying plan worked and was '一次都没用过'. Just saying it was enough. Close second is #11: 80% of families plan on future income and '剩下的，多是月光族'. I laughed, and that's the only line that felt like it was about people like me.",
+  "best_lines_for_me": [
+    "#15 '花钱、定价，还有公司[招不招你]': the only line that touches my life (jobs after graduation). This should be closer to the front.",
+    "#21 '相信我，这就够了': dramatic, sounds like a movie line.",
+    "#34 '你怎么看明天，今天就怎么花': good closing line, I'd remember it."
+  ],
+  "title_I_would_click": "2) 利率没动，只加了一句话. It's a puzzle: how does one sentence move anything? It matches the first 9 seconds, so the video delivers what the title promised. The word 利率 makes it sound a bit like finance content, but the 'only one sentence' part is curious enough that I'd tap.",
+  "title_that_misleads": "1) 相信我，这就够了. In my feed this reads as a 情感/恋爱/鸡汤 video, or a drama clip. I might tap out of curiosity, but when I get 房贷 and 利率 I'd feel baited and swipe. Also the line doesn't show up until 70s, so it doesn't connect to the opening. 3) 央行说句话，为什么管用 is accurate but sounds like a 思政课/经济学课 question. Lowest click chance for me, though not misleading.",
+  "what_I_would_comment": "'所以开头那句话原文到底是啥？？' and maybe '德拉吉：嘴炮也是生产力' / '月光族表示：与我无关'",
+  "id_watch_to_the_end_1_to_10": 6,
+  "score_reason": "The hook (#2-#3) and the Draghi section (#19-#24) are good. I lose about 2 points for the Nobel/1970s detour right after the hook plus the silent gap, about 1 for never showing the actual sentence, and about 1 for unexplained bond jargon (买债, 美债利率, 两年期利率). At 116s it's long for me.",
+  "for_frames_only": [],
+  "for_frames_note": "No frames were provided in this task, only subtitle lines and titles."
+}

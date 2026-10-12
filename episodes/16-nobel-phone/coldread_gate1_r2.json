@@ -1,0 +1,41 @@
+{
+  "label": "gate1_r2",
+  "viewer": "20-year-old university student in China, scrolling Douyin in the evening; I know a little econ from the news, not from a course",
+  "would_keep_watching_after_3s": true,
+  "why": "Line 1 (0-2.9s) '听说下周涨价，你今天就买了' is about me. I really do this with 618 / Double 11 presales and milk tea price hikes, so I nod and stay. The turn to '2011年，美联储' at 2.9s is the risky moment: it suddenly sounds like a finance lecture. '利率没动，只改了一句话' saves it because it's a small puzzle. How does one sentence do anything?",
+  "would_keep_watching_after_8s": "barely yes",
+  "why_8s": "Line 3 (6.2-8.9s) gives me the actual sentence, '至少到2013年年中', so I get it: they promised. But by 8s I still don't know what that did to anyone, and line 4 doesn't really pay it off (see confusion #4). I'm staying on curiosity alone, not because I've been rewarded yet.",
+  "first_moment_I_got_curious": "Line 2 (2.9s): '利率没动，只改了一句话'. A sentence that works like a policy is the hook. Line 1 made me relate; line 2 made me curious.",
+  "where_I_would_swipe_away": [
+    "12.4-16.0s: there are 3.6 seconds with no subtitle at all. If nothing big happens on screen here, this is where I leave. It comes right after a confusing line 4, so I'm already unsure.",
+    "16.0-20.0s (line 5): '2026诺贝尔经济学奖：霍尔、伍德福德'. I don't know these names. Without a face or a one-line 'who', this feels like a news ticker. The 'it's this year's Nobel' angle does help a bit.",
+    "31.6-43.7s (lines 9-12): '1970年代…旧办法就失灵' and '央行先在纸上试政策'. This is the most abstract stretch and has no story or number in it. My thumb starts moving here. Line 13 '公司招不招你' (47.5s) pulls me back, but only if I'm still there.",
+    "83.5-104s (lines 22-26): after '这个计划一次都没用过' (79-83s) the video feels finished. That was the peak. Then a court shows up, then a second story about the Fed in 2013. It feels like a second video stuck on the end, and I'd probably swipe around 88-92s."
+  ],
+  "lines_I_did_not_understand": [
+    "#4 (8.9s) '预测机构改口：加息要等21个月以上': which forecasters? 改口 from what? Mid-2013 is already about 21-22 months after 2011, so to me it sounds like the same fact said twice. I can't feel any change. Tell me what they expected BEFORE (e.g. '原来以为半年就加').",
+    "#5 (16s) '霍尔、伍德福德': who are they? A country, a university, or 'one studied X, one studied Y' would help.",
+    "#8 (24.4s) '1982年一查': who checked, and households where? American ones? It reads like an orphaned fact.",
+    "#10 (31.6s) '旧办法就失灵': what old method? I have no idea what got broken.",
+    "#11 (35.7s) '模型…在纸上试政策': I sort of get it (a simulation), but it doesn't land as anything concrete.",
+    "#17 (58.9s) jumping to Spain: why Spain all of a sudden? The 'borrow 100, pay nearly 7' framing is great, but I don't know if 7 is scary. Is normal 2? 3? Give me a comparison.",
+    "#18 '欧洲央行时任行长': no name. Fine, but it makes the quote feel anonymous.",
+    "#20 (70.3s) '买它们的国债': who is 它们? Spain plus others? Plural came out of nowhere.",
+    "#21 (74.6s) '三次表态后': I only saw ONE statement ('不惜一切代价'). What were the other two? And '两年期利率' of whom? Spain's?",
+    "#23 (83.5s) '欧洲央行对法院说': why is there a court? Who sued? This came out of nowhere and confused me the most.",
+    "#25 (91.4s) '美联储暗示要少买点债': why was the Fed buying bonds in the first place? Never set up.",
+    "#26 (95.4s) '利率涨了约六成': a rate going up 60% when rates are already percentages is confusing. Is it 60% of the rate, or 0.6 points? Saying 'from about X% to Y%' would be clearer."
+  ],
+  "takeaway_in_my_words": "Central banks don't only move by changing interest rates. If they tell everyone what they'll do in the future and people believe it, everyone changes how they spend and borrow today, so the words alone do the job. It's like hearing a price hike is coming and buying today. Words cut both ways, though: say the wrong thing and rates jump.",
+  "surprise_that_stuck": "Line 22: the ECB's rescue plan was 'never used even once', yet rates still fell about 2 points. Saying 'trust me' was enough. That's the part I'd remember and repeat. Second place: 'trust me, that's enough' as an actual central bank quote.",
+  "what_I_would_tell_a_friend": "'Did you know the head of the European Central Bank basically said 相信我 and Spain's borrowing costs fell? They had a bailout plan they never used. This year's economics Nobel is about that: if people believe what the central bank says about the future, that's already the policy.'",
+  "title_I_would_click": "1) 利率没动，只改了一句话. It's a puzzle with a contradiction in it (nothing changed, yet something changed), and it doesn't need any econ background. 3) 今年诺奖：说话也是政策 is my close second this week because 'this year's Nobel' is in the news, but '说话也是政策' sounds a bit like a slogan and I'd tap it less.",
+  "title_that_misleads": "2) 相信我，这就够了. Out of context it reads like a romance, motivation, or emotional-quote video. I'd expect a love story and feel tricked by an economics lecture. 4) 央行说句话，为什么管用 is accurate but sounds like a textbook question, so it's not misleading, just dull.",
+  "title_ranking": ["1 利率没动，只改了一句话", "3 今年诺奖：说话也是政策", "4 央行说句话，为什么管用", "2 相信我，这就够了"],
+  "what_I_would_comment": "'所以央行的话就是大型“听说下周涨价”是吧 😂' or, if I'm in a picky mood: '法院那段是啥？没看懂谁告了谁'",
+  "watch_to_end_score_1_to_10": 6,
+  "score_reason": "The opening and the Spain/'trust me'/never-used arc (58-83s) are strong, concrete and surprising. What costs points: the confusing payoff at line 4 plus the 3.6s silent gap right after it, the abstract theory stretch at 31-44s, and the court + 2013 Fed section that feels like a second ending after the real peak at 83s. If it ended right after line 22 with the closing line, I'd say 7-8.",
+  "for_frames_only": [
+    {"frame": "not provided", "what_this_says_in_5s": "No frames were given for this cold read; subtitle lines and titles only."}
+  ]
+}
