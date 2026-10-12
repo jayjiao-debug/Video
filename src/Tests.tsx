@@ -14,7 +14,7 @@ const BLUE = '120,175,255', MAG = '255,110,205';
 const HIT = CUT.title;
 
 /* ================================================================ HOOKS (0 – 4.456) */
-const HOOK_END = CUT.cards;
+export const HOOK_END = CUT.cards;
 
 /* H1 · three rank plaques drop, then the question splits the frame */
 const plaque = (g: G, x: number, y: number, n: string) => {
@@ -28,25 +28,41 @@ const plaque = (g: G, x: number, y: number, n: string) => {
   g.save(); g.shadowColor = 'rgba(255,110,205,.9)'; g.shadowBlur = 30; g.fillStyle = '#ffd1ea'; g.font = `700 150px "Cormorant Garamond"`; g.fillText(n, x, y - h / 2 + 4); g.restore();
 };
 const DROPS = [bt(0), bt(2), bt(4)];
-const H1: React.FC<{ T: number; f: number }> = ({ T, f }) => {
-  const split = eio(T, bt(6), 0.35);
-  const shake = DROPS.reduce((m, d) => m + 10 * hit(T, d, 0.08), 0);
+export const H1: React.FC<{ T: number; f: number }> = ({ T, f }) => {
+  const split = eio(T, bt(6), 0.45);
+  // camera: slow dolly, plus a soft damped dip on each landing (no shake)
+  const dip = DROPS.reduce((m, d) => m + (T < d ? 0 : 7 * Math.exp(-(T - d) * 6) * Math.sin((T - d) * 16)), 0);
+  const FALL = 0.36;
+  const drawPlaque = (g: G, i: number, tt: number, alpha = 1) => {
+    const d = DROPS[i], k = clamp((tt - (d - FALL)) / FALL); if (k <= 0) return;
+    const after = Math.max(0, tt - d);
+    const bounce = tt < d ? 0 : 16 * Math.exp(-after * 8) * Math.abs(Math.sin(after * 15));
+    const sq = tt < d ? 0 : 0.045 * Math.exp(-after * 12);
+    const x = 560 + i * 400, y = FLOOR - (1 - k * k) * 620 - bounce;
+    g.save(); g.globalAlpha *= alpha; g.translate(x, y); g.scale(1 + sq * 0.6, 1 - sq); g.translate(-x, -y); plaque(g, x, y, ['8', '7', '8'][i]); g.restore();
+  };
   return (
     <Scene f={f} draw={(g) => {
       stage(g, T); bokeh(g, T, 22, 0.8);
-      g.save(); cam(g, lerp(1.0, 1.07, pr(T, 0, HOOK_END)), 960, 620); g.translate(0, shake * Math.sin(T * 90));
-      DROPS.forEach((d, i) => spot(g, 560 + i * 400, 420, 0.9 * eo(T, d - 0.1, 0.2), '255,200,235'));
-      withReflection(g, () => DROPS.forEach((d, i) => { const k = clamp((T - (d - 0.2)) / 0.2); if (k <= 0) return; plaque(g, 560 + i * 400, FLOOR - (1 - k * k) * 700, ['8', '7', '8'][i]); }), 0.22);
+      g.save(); cam(g, lerp(1.0, 1.06, eio(T, 0, HOOK_END)), 960, 620); g.translate(0, dip);
+      DROPS.forEach((d, i) => spot(g, 560 + i * 400, 420, 0.9 * eio(T, d - 0.35, 0.4), '255,200,235'));
+      withReflection(g, () => DROPS.forEach((d, i) => {
+        // a little motion blur while falling: two fading ghosts behind
+        if (T < d) [0.008, 0.016, 0.024, 0.032].forEach((dt) => drawPlaque(g, i, T - dt, 0.09));
+        drawPlaque(g, i, T);
+      }), 0.22);
       floorFade(g);
-      DROPS.forEach((d, i) => { if (T > d) add(g, () => sparks(g, 560 + i * 400, FLOOR, d, T, 50, '255,170,225', 0.9, i)); });
+      DROPS.forEach((d, i) => { if (T > d) add(g, () => { sparks(g, 560 + i * 400, FLOOR, d, T, 46, '255,170,225', 0.8, i); glowDot(g, 560 + i * 400, FLOOR, 220, 0.35 * Math.exp(-(T - d) * 4), '255,140,210'); }); });
       g.restore();
       if (split > 0) {
-        add(g, () => { g.fillStyle = `rgba(${BLUE},${0.18 * split})`; g.fillRect(0, 0, 960, H); g.fillStyle = `rgba(${MAG},${0.18 * split})`; g.fillRect(960, 0, 960, H); const lg = g.createLinearGradient(940, 0, 980, 0); lg.addColorStop(0, 'rgba(255,244,220,0)'); lg.addColorStop(0.5, `rgba(255,244,220,${0.9 * split})`); lg.addColorStop(1, 'rgba(255,244,220,0)'); g.fillStyle = lg; g.fillRect(940, 0, 40, H); });
+        add(g, () => { g.fillStyle = `rgba(${BLUE},${0.18 * split})`; g.fillRect(0, 0, 960, H); g.fillStyle = `rgba(${MAG},${0.18 * split})`; g.fillRect(960, 0, 960, H); const lg = g.createLinearGradient(930, 0, 990, 0); lg.addColorStop(0, 'rgba(255,244,220,0)'); lg.addColorStop(0.5, `rgba(255,244,220,${0.9 * split})`); lg.addColorStop(1, 'rgba(255,244,220,0)'); g.fillStyle = lg; g.fillRect(930, 0, 60, H * clamp(split * 1.4)); });
       }
     }}>
-      <Lb x={960} y={120} s="最近三把" size={26} col="rgba(255,200,235,.8)" ls="0.4em" o={eo(T, 0.5, 0.3) * (1 - split)} />
-      <Lb x={480} y={250} s="菜？" size={150} col="#bcd6ff" o={clamp(pop(T, bt(6), 0.3))} />
-      <Lb x={1440} y={250} s="非？" size={150} col="#ffc4e6" o={clamp(pop(T, bt(6) + 0.12, 0.3))} />
+      <Lb x={960} y={120} s="最近三把" size={26} col="rgba(255,200,235,.8)" ls="0.4em" o={eo(T, 0.5, 0.4) * (1 - split)} />
+      {[['菜？', 480, '#bcd6ff', 'rgba(120,175,255,.7)', 0], ['非？', 1440, '#ffc4e6', 'rgba(255,110,205,.7)', 0.12]].map(([s, x, col, sh, dl]) => {
+        const k = eo(T, bt(6) + (dl as number), 0.45);
+        return <div key={s as string} style={{ position: 'absolute', left: (x as number) - 300, width: 600, top: 240, textAlign: 'center', opacity: k, transform: `translateY(${(1 - k) * 24}px) scale(${lerp(1.12, 1, k)})`, fontFamily: F.serif, fontWeight: 900, fontSize: 150, color: col as string, textShadow: `0 0 40px ${sh}` }}>{s}</div>;
+      })}
     </Scene>
   );
 };
@@ -338,31 +354,41 @@ const fdie = (g: G, x: number, y: number, a: number, glyph: string, pips: number
     g.fillStyle = '#f0c873'; P[pips].forEach(([i, j]) => { g.beginPath(); g.arc(x + i * a * 0.27, y - a / 2 + j * a * 0.27, a * 0.075, 0, 6.3); g.fill(); });
   }
 };
-const TT4: React.FC<{ T: number; f: number }> = ({ T, f }) => {
+export const TT4: React.FC<{ T: number; f: number }> = ({ T, f }) => {
   const CH = '是菜还是非？'.split(''), A = 150;
+  const ign = eio(T, T0, 1.1), after = eo(T, HIT, 0.6);
+  // one die, tumbling like a real cube: it rolls over its edges, a new face every quarter turn, slowing to rest
+  const dieAt = (g: G, i: number, tt: number, alpha: number) => {
+    const land = HIT - (5 - i) * 0.07, dur = 1.55 + 0.25 * rnd(i, 2), q = clamp((tt - (land - dur)) / dur);
+    if (q <= 0) return;
+    const u = 1 - Math.pow(1 - q, 1.45), N = 5 + (i % 3);            // still rolling when it lands: the last quarter turn ends on its beat
+    const xf = 960 + (i - 2.5) * 178, x = lerp(W + 160 + i * 50, xf, u);
+    const turns = (1 - u) * N, face = Math.ceil(turns - 1e-6), resid = (face - turns) * (Math.PI / 2) * -1;   // the title face only comes up as it lands
+    const lift = (A / 2) * (Math.abs(Math.cos(resid)) + Math.abs(Math.sin(resid)) - 1);
+    const hop = 110 * Math.pow(1 - u, 1.5) * Math.abs(Math.sin(Math.PI * 2 * u));
+    const sq = tt >= land ? 0.06 * Math.exp(-(tt - land) * 12) * Math.cos((tt - land) * 22) : 0;
+    const y = FLOOR - lift - hop, cx = x, cy = y - A / 2;
+    g.save(); g.globalAlpha *= alpha; g.translate(cx, y); g.scale(1 + sq * 0.5, 1 - sq); g.translate(-cx, -y);
+    g.translate(cx, cy); g.rotate(resid); g.translate(-cx, -cy);
+    fdie(g, x, y, A, face === 0 ? CH[i] : '', 1 + ((face + i * 2) % 6), tt >= land ? Math.exp(-(tt - land) * 2) : 0);
+    g.restore();
+  };
   return (
     <Scene f={f} draw={(g) => {
       stage(g, T); bokeh(g, T, 18, 0.7);
-      g.save(); cam(g, lerp(1.0, 1.05, pr(T, T0, HIT - T0)) + 0.015 * hit(T, HIT, 0.25), 960, 620);
-      spot(g, 960, 1300, 0.9, '255,230,190');
-      withReflection(g, () => CH.forEach((ch, i) => {
-        const land = HIT - (5 - i) * 0.07, start = land - 1.6 - 0.25 * rnd(i, 2), q = clamp((T - start) / (land - start));
-        if (q <= 0) return;
-        const xf = 960 + (i - 2.5) * 178, x = lerp(W + 200 + i * 60, xf, 1 - (1 - q) * (1 - q));
-        const bounces = 3, bq = q * bounces, hb = (1 - Math.floor(bq) / bounces) * 160 * (1 - q), y = FLOOR - Math.abs(Math.sin(bq * Math.PI)) * hb;
-        const rot = q < 1 ? (1 - q) * 9 * (1 + 0.2 * i) : 0, landed = q >= 1;
-        const cx = x, cy = y - A / 2;
-        g.save(); g.translate(cx, cy); g.rotate(rot); g.translate(-cx, -cy);
-        fdie(g, x, y, A, landed ? ch : '', 1 + (Math.floor(q * 12 + i) % 6), hit(T, land, 0.5));
-        g.restore();
-        if (landed) add(g, () => sparks(g, xf, FLOOR - 4, land, T, 22, GOLD, 0.6, i));
-      }), 0.26);
+      g.save(); cam(g, lerp(1.0, 1.05, eio(T, T0, HIT - T0)) + 0.012 * hit(T, HIT, 0.3), 960, 620);
+      spot(g, 960, 1300, 0.35 + 0.55 * eio(T, 14.2, 1.2), '255,230,190');
       floorFade(g);
-      if (T >= HIT) add(g, () => glowDot(g, 960, FLOOR - 80, 700, 0.12 * eo(T, HIT, 0.3)));
+      if (ign > 0) { strip(g, 960 - 820 * ign, 960 + 820 * ign, FLOOR + 40, 1 - 0.5 * after); add(g, () => { glowDot(g, 960 - 820 * ign, FLOOR + 40, 120, 0.4 * ign * (1 - 0.6 * after), BLUE); glowDot(g, 960 + 820 * ign, FLOOR + 40, 120, 0.4 * ign * (1 - 0.6 * after), MAG); }); }
+      withReflection(g, () => CH.forEach((_, i) => { if (T < HIT) [0.008, 0.016, 0.024, 0.032].forEach((dt) => dieAt(g, i, T - dt, 0.08)); dieAt(g, i, T, 1); }), 0.26);
+      CH.forEach((_, i) => { const land = HIT - (5 - i) * 0.07; if (T >= land) add(g, () => sparks(g, 960 + (i - 2.5) * 178, FLOOR - 4, land, T, 22, GOLD, 0.6, i)); });
+      if (T >= HIT) add(g, () => glowDot(g, 960, FLOOR - 80, 700, 0.12 * after));
       g.restore();
     }}>
-      <Lb x={960 - 3 * 178 - 60} y={FLOOR - 145} s="《" size={100} col={C.goldHi} o={eo(T, HIT, 0.25)} />
-      <Lb x={960 + 3 * 178 + 85} y={FLOOR - 145} s="》" size={100} col={C.goldHi} o={eo(T, HIT, 0.25)} />
+      <Lb x={300} y={FLOOR + 90} s="实力" size={56} col="#a8ccff" sub="SKILL" o={eo(T, T0 + 0.8, 0.4) * (1 - eio(T, 14.8, 0.6))} />
+      <Lb x={1620} y={FLOOR + 90} s="运气" size={56} col="#ffaee0" sub="LUCK" o={eo(T, T0 + 1.0, 0.4) * (1 - eio(T, 14.8, 0.6))} />
+      <Lb x={960 - 3 * 178 - 60} y={FLOOR - 145} s="《" size={100} col={C.goldHi} o={eo(T, HIT, 0.3)} />
+      <Lb x={960 + 3 * 178 + 85} y={FLOOR - 145} s="》" size={100} col={C.goldHi} o={eo(T, HIT, 0.3)} />
       <Lb x={960} y={FLOOR - 290} s="LUCK · SKILL · EVERY GAME YOU PLAY" size={20} col={C.dim} ls="0.42em" o={eo(T, HIT + 0.5, 0.5)} />
     </Scene>
   );
