@@ -4,7 +4,7 @@ import { AbsoluteFill } from 'remotion';
 import { C, F, W, H, BAR, LNUM, Cam, Pool, Slate, Chapter, Note, clamp, pr, eo, eio, lerp, pop, hit, rnd, win, easeOut } from './kit';
 import { CUT, bt } from './time';
 import { JUNO } from './brand/identity';
-import sim from '../sim/sim.json';
+import sim from './sim.json';
 
 /* ---------------------------------------------------------------- S1 · the statement (0 – 8.5) */
 const TYPED = [
