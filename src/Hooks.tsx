@@ -127,7 +127,8 @@ const plaqueBack = (g: G, x: number, y: number) => {
   const body = g.createLinearGradient(x - w / 2, y - h, x + w / 2, y); body.addColorStop(0, '#2a1d33'); body.addColorStop(1, '#0b0810');
   g.fillStyle = body; g.beginPath(); (g as any).roundRect(x - w / 2, y - h, w, h, 14); g.fill();
   g.strokeStyle = 'rgba(227,183,101,.7)'; g.lineWidth = 2; g.beginPath(); (g as any).roundRect(x - w / 2 + 12, y - h + 12, w - 24, h - 24, 8); g.stroke();
-  g.save(); g.shadowColor = 'rgba(255,214,140,.8)'; g.shadowBlur = 26; g.fillStyle = '#f0c873'; g.font = '900 150px "Noto Serif CJK SC"'; g.textAlign = 'center'; g.textBaseline = 'middle'; g.fillText('？', x, y - h / 2 + 6); g.restore();
+  g.save(); g.shadowColor = 'rgba(255,214,140,.8)'; g.shadowBlur = 26; g.fillStyle = '#f0c873'; g.font = '900 150px "Noto Serif CJK SC"'; g.textAlign = 'center'; g.textBaseline = 'alphabetic';
+  { const m = g.measureText('？'); g.fillText('？', x + (m.actualBoundingBoxLeft - m.actualBoundingBoxRight) / 2, y - h / 2 + (m.actualBoundingBoxAscent - m.actualBoundingBoxDescent) / 2); } g.restore();
 };
 /** a plaque turning about its horizontal axis: phi 0 = front, π = back */
 const flipPlaque = (g: G, x: number, cy: number, phi: number, oldN: string, newN: string, tilt = 0, alpha = 1, clip = 0, apart = 0) => {
@@ -151,7 +152,7 @@ const plinth = (g: G, x: number, y: number, w: number, h: number) => {
   g.fillStyle = fr; g.fillRect(x - w / 2, y - h, w, h);
   g.strokeStyle = 'rgba(255,214,140,.35)'; g.lineWidth = 1.2; g.beginPath(); g.moveTo(x - w / 2, y - h); g.lineTo(x + w / 2, y - h); g.stroke();
 };
-export const HD: React.FC<{ T: number; f: number; sp?: number }> = ({ T, f, sp = 1 }) => {
+export const HD: React.FC<{ T: number; f: number; sp?: number }> = ({ T, f, sp = 3 }) => {
   const PX = 960, PY = FLOOR - 10, REST = PY - 165;
   const TOSS = [bt(0), bt(2), bt(4)], LAND = [bt(2) - 0.24, bt(4) - 0.24];
   const NUM = ['8', '7', '8'];
