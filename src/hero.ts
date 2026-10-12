@@ -205,3 +205,78 @@ export const shards = (g: G, x: number, y: number, t: number, n = 90, col = '255
   g.restore();
 };
 export { lerp };
+
+/* ---------------------------------------------------------------- card back (dark lattice) */
+export const cardBack = (g: G, x: number, y: number, s: number, rot = 0, col = '255,150,220') => {
+  const w = 110 * s, h = 154 * s;
+  g.save(); g.translate(x, y); g.rotate(rot);
+  g.fillStyle = 'rgba(0,0,0,.45)'; g.beginPath(); (g as any).roundRect(-w / 2 + 6, -h + 8, w, h, 9 * s); g.fill();
+  const gr = g.createLinearGradient(-w / 2, -h, w / 2, 0); gr.addColorStop(0, '#3b1a4a'); gr.addColorStop(1, '#1a0b22');
+  g.fillStyle = gr; g.beginPath(); (g as any).roundRect(-w / 2, -h, w, h, 9 * s); g.fill();
+  g.strokeStyle = `rgba(${col},.6)`; g.lineWidth = 1.5; g.stroke();
+  g.save(); g.beginPath(); (g as any).roundRect(-w / 2 + 7 * s, -h + 7 * s, w - 14 * s, h - 14 * s, 5 * s); g.clip();
+  g.strokeStyle = `rgba(${col},.22)`; g.lineWidth = 1;
+  for (let k = -12; k < 12; k++) { g.beginPath(); g.moveTo(-w, -h + k * 12 * s); g.lineTo(w, -h + k * 12 * s + w * 1.4); g.stroke(); g.beginPath(); g.moveTo(w, -h + k * 12 * s); g.lineTo(-w, -h + k * 12 * s + w * 1.4); g.stroke(); }
+  g.restore(); g.restore();
+};
+
+/* ---------------------------------------------------------------- coin with an engraved glyph, any squash (sx, sy) and edge direction */
+export const coinFace = (g: G, x: number, y: number, r: number, sx: number, sy: number, glyph = '', edge: [number, number] = [0, 1], tint = '') => {
+  const rx = Math.max(1.2, r * sx), ry = Math.max(1.2, r * sy), th = r * 0.13;
+  for (let k = 5; k >= 1; k--) { const q = k / 5; g.fillStyle = k === 5 ? '#4a3210' : '#8a6424'; g.beginPath(); g.ellipse(x + edge[0] * th * q, y + edge[1] * th * q, rx, ry, 0, 0, 6.3); g.fill(); }
+  const face = g.createRadialGradient(x - rx * 0.3, y - ry * 0.4, r * 0.05, x, y, r * 1.05);
+  face.addColorStop(0, '#fff3c4'); face.addColorStop(0.35, '#f0c86e'); face.addColorStop(0.8, '#b8862f'); face.addColorStop(1, '#7a561b');
+  g.fillStyle = face; g.beginPath(); g.ellipse(x, y, rx, ry, 0, 0, 6.3); g.fill();
+  g.strokeStyle = 'rgba(122,86,27,.85)'; g.lineWidth = Math.max(1, r * 0.04); g.beginPath(); g.ellipse(x, y, rx * 0.8, ry * 0.8, 0, 0, 6.3); g.stroke();
+  if (glyph && sx > 0.12 && sy > 0.12) {
+    g.save(); g.translate(x, y); g.scale(sx, sy);
+    g.font = `900 ${r * 0.95}px "Noto Serif CJK SC"`; g.textAlign = 'center'; g.textBaseline = 'middle';
+    g.fillStyle = 'rgba(255,248,220,.55)'; g.fillText(glyph, 1.5, r * 0.06 + 1.5);
+    g.fillStyle = tint || '#6b4a14'; g.fillText(glyph, 0, r * 0.06);
+    g.restore();
+  }
+  g.save(); g.globalCompositeOperation = 'lighter'; g.fillStyle = 'rgba(255,255,255,.28)'; g.beginPath(); g.ellipse(x - rx * 0.35, y - ry * 0.4, rx * 0.3, ry * 0.12 + 1, -0.3, 0, 6.3); g.fill(); g.restore();
+};
+
+/* ---------------------------------------------------------------- golden spatula (金铲铲), standing on its blade; origin = blade bottom centre */
+export const spatula = (g: G, x: number, y: number, s: number, rot = 0, glint = -1) => {
+  g.save(); g.translate(x, y); g.rotate(rot); g.scale(s, s);
+  const gold = (x0: number, x1: number) => { const gr = g.createLinearGradient(x0, 0, x1, 0); gr.addColorStop(0, '#5a3d12'); gr.addColorStop(0.3, '#c9973f'); gr.addColorStop(0.55, '#fbe3a2'); gr.addColorStop(0.75, '#d6a54a'); gr.addColorStop(1, '#4a3210'); return gr; };
+  // handle
+  const hg = g.createLinearGradient(-16, 0, 16, 0); hg.addColorStop(0, '#22160a'); hg.addColorStop(0.45, '#6e4c1e'); hg.addColorStop(0.6, '#8a6428'); hg.addColorStop(1, '#1c1208');
+  g.fillStyle = hg; g.beginPath(); (g as any).roundRect(-15, -405, 30, 225, 14); g.fill();
+  g.fillStyle = '#0d0905'; g.beginPath(); g.arc(0, -382, 6, 0, 6.3); g.fill();
+  g.fillStyle = gold(-15, 15); g.beginPath(); (g as any).roundRect(-15, -412, 30, 12, 5); g.fill();
+  // ferrule + neck
+  g.fillStyle = gold(-14, 14); g.fillRect(-14, -188, 28, 22);
+  g.fillStyle = gold(-11, 11); g.beginPath(); g.moveTo(-11, -166); g.lineTo(11, -166); g.lineTo(18, -122); g.lineTo(-18, -122); g.closePath(); g.fill();
+  // blade
+  g.fillStyle = gold(-58, 58); g.beginPath(); g.moveTo(-38, -122); g.lineTo(38, -122); g.lineTo(56, -14); g.quadraticCurveTo(56, 0, 42, 0); g.lineTo(-42, 0); g.quadraticCurveTo(-56, 0, -56, -14); g.closePath(); g.fill();
+  g.strokeStyle = 'rgba(255,240,200,.55)'; g.lineWidth = 1.5; g.beginPath(); g.moveTo(-38, -121); g.lineTo(38, -121); g.stroke();
+  g.fillStyle = '#2e1e07'; [-22, 0, 22].forEach((sx) => { g.beginPath(); (g as any).roundRect(sx - 4.5, -100, 9, 72, 4.5); g.fill(); });
+  if (glint >= 0 && glint <= 1) {
+    g.save(); g.globalCompositeOperation = 'lighter'; g.beginPath(); g.moveTo(-58, -14); g.lineTo(-56, -14); g.rect(-60, -420, 120, 422); g.clip();
+    const yy = lerp(30, -440, glint); const gl = g.createLinearGradient(0, yy - 40, 0, yy + 40); gl.addColorStop(0, 'rgba(255,240,200,0)'); gl.addColorStop(0.5, 'rgba(255,240,200,.55)'); gl.addColorStop(1, 'rgba(255,240,200,0)');
+    g.fillStyle = gl; g.fillRect(-60, yy - 40, 120, 80); g.restore();
+  }
+  g.restore();
+};
+
+/* ---------------------------------------------------------------- generic auto-battler shop card: tier colour border, gem emblem, cost pips */
+export const TIER = ['160,160,172', '90,200,120', '80,150,255', '190,110,255', '255,200,90'];
+export const shopCard = (g: G, x: number, y: number, w: number, h: number, tier: number, star = false, a = 1) => {
+  const c = TIER[tier];
+  g.save(); g.globalAlpha *= a;
+  g.fillStyle = 'rgba(0,0,0,.5)'; g.beginPath(); (g as any).roundRect(x - w / 2 + 5, y - h + 6, w, h, w * 0.08); g.fill();
+  const body = g.createLinearGradient(0, y - h, 0, y); body.addColorStop(0, '#1d1b2a'); body.addColorStop(1, '#0c0b13');
+  g.fillStyle = body; g.beginPath(); (g as any).roundRect(x - w / 2, y - h, w, h, w * 0.08); g.fill();
+  g.strokeStyle = `rgba(${c},.95)`; g.lineWidth = Math.max(1.5, w * 0.03); g.stroke();
+  const gy = y - h * 0.58, gr = w * 0.26;
+  const gem = g.createLinearGradient(x - gr, gy - gr, x + gr, gy + gr); gem.addColorStop(0, `rgba(${c},1)`); gem.addColorStop(1, `rgba(${c},.35)`);
+  g.fillStyle = gem; g.beginPath(); g.moveTo(x, gy - gr); g.lineTo(x + gr * 0.8, gy); g.lineTo(x, gy + gr); g.lineTo(x - gr * 0.8, gy); g.closePath(); g.fill();
+  g.strokeStyle = 'rgba(255,255,255,.5)'; g.lineWidth = 1; g.beginPath(); g.moveTo(x - gr * 0.8, gy); g.lineTo(x, gy - gr); g.lineTo(x + gr * 0.8, gy); g.stroke();
+  for (let k = 0; k <= tier; k++) { g.fillStyle = `rgba(${c},.9)`; g.beginPath(); g.arc(x + (k - tier / 2) * w * 0.12, y - h * 0.13, Math.max(1.5, w * 0.035), 0, 6.3); g.fill(); }
+  if (star) { g.save(); g.globalCompositeOperation = 'lighter'; const gl = g.createRadialGradient(x, gy, 0, x, gy, w * 0.9); gl.addColorStop(0, 'rgba(255,214,140,.45)'); gl.addColorStop(1, 'rgba(255,214,140,0)'); g.fillStyle = gl; g.fillRect(x - w, gy - w, w * 2, w * 2); g.restore();
+    g.fillStyle = '#ffe7a8'; g.font = `900 ${w * 0.3}px "DejaVu Sans"`; g.textAlign = 'center'; g.textBaseline = 'middle'; g.fillText('★', x, y - h + w * 0.2); }
+  g.restore();
+};

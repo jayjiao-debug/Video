@@ -4,7 +4,7 @@ import React from 'react';
 import { AbsoluteFill } from 'remotion';
 import { C, F, LNUM, Canvas, glowDot, rnd, clamp, lerp, pr, eo, eio, pop, hit, easeInOut } from './kit';
 import { textPts, particleText, sparks, GOLD } from './lightkit';
-import { stage, bokeh, spot, withReflection, floorFade, strip, king, stone, tile, card, die, coin, hexPedestal, shards, FLOOR, W, H } from './hero';
+import { stage, bokeh, spot, withReflection, floorFade, strip, king, stone, tile, card, die, coin, hexPedestal, shards, cardBack as backOf, coinFace, spatula, shopCard, FLOOR, W, H } from './hero';
 import { CUT, bt } from './time';
 import { JUNO } from './brand/identity';
 
@@ -88,42 +88,71 @@ export const S0: React.FC<{ T: number; f: number }> = ({ T, f }) => {
     );
   }
   // part 3: the strip ignites; luck vs skill
-  const k = eio(T, CUT.strip, 1.1), out = 1 - pr(T, CUT.title - 0.4, 0.25);
+  const k = eio(T, CUT.strip, 1.1);
   return (
-    <Scene f={f} o={out} draw={(g) => {
+    <Scene f={f} draw={(g) => {
       stage(g, T); bokeh(g, T, 22, 0.9);
       g.save(); cam(g, lerp(1.0, 1.05, pr(T, CUT.strip, 4.5)));
       floorFade(g);
       if (k > 0) strip(g, 960 - 820 * k, 960 + 820 * k, FLOOR + 40, 1);
+      { const a = eo(T, bt(25), 0.5); if (a > 0) { g.save(); g.globalAlpha = a; coinFace(g, 960, FLOOR + 40 - 100 * 0.2, 100, 1, 0.3, '菜', [0, 1]); g.restore(); add(g, () => glowDot(g, 960, FLOOR + 20, 200, 0.25 * a, GOLD)); } }
       add(g, () => { glowDot(g, 960 - 820 * k, FLOOR + 40, 120, 0.4 * k, '120,175,255'); glowDot(g, 960 + 820 * k, FLOOR + 40, 120, 0.4 * k, '255,110,205'); });
-      const q = pop(T, bt(27), 0.3); if (q > 0) add(g, () => glowDot(g, 960, FLOOR - 120, 300 * q, 0.25, GOLD));
       g.restore();
     }}>
       <Lb x={300} y={FLOOR + 90} s="实力" size={56} col="#a8ccff" sub="SKILL" o={eo(T, CUT.strip + 0.8, 0.4)} />
       <Lb x={1620} y={FLOOR + 90} s="运气" size={56} col="#ffaee0" sub="LUCK" o={eo(T, CUT.strip + 1.0, 0.4)} />
-      <Lb x={960} y={FLOOR - 230} s="？" size={150} col={C.goldHi} o={clamp(pop(T, bt(27), 0.3))} />
     </Scene>
   );
 };
 
-/* ================================================================ S1 · title */
-export const TITLE_START = CUT.title - 0.6;
+/* ================================================================ S1 · title: a coin tossed between 菜 and 非, landing on the hit */
+export const TITLE_START = bt(27);
+const COIN_R = 100, LAND_Y = FLOOR + 40;
+const strip3 = (g: G, T: number) => {
+  floorFade(g); strip(g, 140, 1780, LAND_Y, 1);
+  add(g, () => { glowDot(g, 140, LAND_Y, 120, 0.4, '120,175,255'); glowDot(g, 1780, LAND_Y, 120, 0.4, '255,110,205'); });
+};
 export const S1: React.FC<{ T: number; f: number }> = ({ T, f }) => {
-  const HIT = CUT.title, crisp = eo(T, HIT + 0.05, 0.4), out = 1 - pr(T, CUT.gallery - 0.25, 0.25);
+  const HIT = CUT.title, t0 = TITLE_START, crisp = eo(T, HIT + 0.03, 0.35), out = 1 - pr(T, CUT.gallery - 0.25, 0.25);
+  const q = clamp((T - t0) / (HIT - t0));
+  const PH0 = Math.acos(0.3), REVS = 5;                           // leaves the strip lying flat, lands edge-on after 5 turns
+  const phi = PH0 + q * (REVS * 2 * Math.PI + Math.PI / 2 - PH0);
+  const air = T < HIT, cy = LAND_Y - 4 * 450 * q * (1 - q);
+  // after the landing it spins on its edge, slowing (an own clock: ~3.4 → 2.6 turns a second)
+  const ts = Math.max(0, T - HIT), theta = 2 * Math.PI * (3.4 * ts - 0.1 * ts * ts) + Math.PI / 2;
+  const showA = air ? Math.cos(phi) >= 0 : Math.cos(theta) >= 0;   // 菜 or 非 facing us
+  const tint = showA ? '120,175,255' : '255,110,205';
   return (
     <Scene f={f} o={out} draw={(g) => {
-      stage(g, T); bokeh(g, T, 22, 0.7); floorFade(g);
-      strip(g, 140, 1780, FLOOR + 40, 0.7);
+      stage(g, T); bokeh(g, T, 22, 0.9);
+      g.save(); cam(g, lerp(1.0, 1.05, pr(T, CUT.strip, 4.5)) + 0.015 * hit(T, HIT, 0.25));
+      strip3(g, T);
       add(g, () => {
-        particleText(g, textPts('《是菜还是非？》', '900 150px "Noto Serif CJK SC"', 960, 470, 3), T, TITLE_START, HIT, GOLD, 21, 1100);
-        if (T >= HIT) { sparks(g, 960, 470, HIT, T, 180, GOLD, 3.4, 9); g.fillStyle = `rgba(255,244,220,${0.6 * hit(T, HIT, 0.25)})`; g.fillRect(200, 469, 1520, 3); }
-        glowDot(g, 960, 470, 760, 0.1 * crisp);
+        particleText(g, textPts('《是菜还是非？》', '900 150px "Noto Serif CJK SC"', 960, 430, 3), T, bt(29), HIT, GOLD, 21, 1100);
+        if (T >= HIT) { sparks(g, 960, LAND_Y - 4, HIT, T, 160, GOLD, 2.6, 9); sparks(g, 960, 430, HIT, T, 120, GOLD, 3.0, 4); g.fillStyle = `rgba(255,244,220,${0.6 * hit(T, HIT, 0.25)})`; g.fillRect(200, 429, 1520, 3); }
+        glowDot(g, 960, 430, 760, 0.1 * crisp);
+        glowDot(g, 960, (air ? cy : LAND_Y - COIN_R), 190, 0.22, tint);
       });
+      if (air) {
+        const c = Math.cos(phi), y = cy - COIN_R * 0.2;
+        // the reflection on the floor, then the coin
+        g.save(); g.globalAlpha = 0.1 * clamp(1 - (LAND_Y - y) / 400); g.translate(0, 2 * LAND_Y); g.scale(1, -1); coinFace(g, 960, y, COIN_R, 1, Math.abs(c), showA ? '菜' : '非', [0, Math.sin(phi) > 0 ? 1 : -1]); g.restore();
+        coinFace(g, 960, y, COIN_R, 1, Math.abs(c), showA ? '菜' : '非', [0, Math.sin(phi) > 0 ? 1 : -1]);
+      } else {
+        const c = Math.cos(theta), y = LAND_Y - COIN_R, wob = 0.03 * Math.sin(ts * 5);
+        g.save(); g.translate(960, LAND_Y); g.rotate(wob); g.translate(-960, -LAND_Y);
+        g.save(); g.globalAlpha = 0.08; g.translate(0, 2 * LAND_Y); g.scale(1, -1); coinFace(g, 960, y, COIN_R, Math.abs(c), 1, showA ? '菜' : '非', [Math.sin(theta) > 0 ? 1 : -1, 0]); g.restore();
+        coinFace(g, 960, y, COIN_R, Math.abs(c), 1, showA ? '菜' : '非', [Math.sin(theta) > 0 ? 1 : -1, 0]);
+        g.restore();
+      }
+      g.restore();
     }}>
+      <Lb x={300} y={FLOOR + 90} s="实力" size={56} col="#a8ccff" sub="SKILL" o={1 - pr(T, HIT - 0.2, 0.3)} />
+      <Lb x={1620} y={FLOOR + 90} s="运气" size={56} col="#ffaee0" sub="LUCK" o={1 - pr(T, HIT - 0.2, 0.3)} />
       <svg width={W} height={H} style={{ position: 'absolute', inset: 0 }}>
         <defs><linearGradient id="s1g" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stopColor="#fff3cf" /><stop offset=".5" stopColor="#f0c873" /><stop offset="1" stopColor="#b07c32" /></linearGradient></defs>
-        <text x={960} y={522} textAnchor="middle" opacity={crisp * 0.9} style={{ fontFamily: F.serif, fontWeight: 900, fontSize: 150, letterSpacing: '0.04em' }} fill="url(#s1g)">《是菜还是非？》</text>
-        <text x={960} y={620} textAnchor="middle" opacity={eo(T, HIT + 0.5, 0.5)} style={{ fontFamily: F.mono, fontWeight: 700, fontSize: 20, letterSpacing: '0.42em' }} fill={C.dim}>LUCK · SKILL · EVERY GAME YOU PLAY</text>
+        <text x={960} y={482} textAnchor="middle" opacity={crisp * 0.92} style={{ fontFamily: F.serif, fontWeight: 900, fontSize: 150, letterSpacing: '0.04em' }} fill="url(#s1g)">《是菜还是非？》</text>
+        <text x={960} y={572} textAnchor="middle" opacity={eo(T, HIT + 0.5, 0.5)} style={{ fontFamily: F.mono, fontWeight: 700, fontSize: 20, letterSpacing: '0.42em' }} fill={C.dim}>LUCK · SKILL · EVERY GAME YOU PLAY</text>
       </svg>
     </Scene>
   );
@@ -131,20 +160,91 @@ export const S1: React.FC<{ T: number; f: number }> = ({ T, f }) => {
 
 /* ================================================================ the gallery (shared by S2, S8, S12) */
 const GX0 = 120, GX1 = 1800;
-type Obj = { u: number; name: string; en: string; w: number; draw: (g: G, x: number, T: number) => void };
+type Obj = { u: number; name: string; en: string; w: number; draw: (g: G, x: number, t: number) => void };
+/* each object has its own idle action on its own clock (periods are not multiples of the beat; see edit-rhythm §2) */
+const cyc = (t: number, P: number, off: number) => { const u = (t + off) / P; return { c: Math.floor(u), p: u - Math.floor(u) }; };
+const GO_BASE: [number, number, boolean][] = [[-40, 0, true], [30, -4, false], [0, -26, false], [-60, 22, false], [52, 20, true], [10, 18, true]];
+const GO_MORE: [number, number][] = [[-22, 28, ], [64, -10], [-70, -8], [36, 34], [-8, -48], [80, 30], [-86, 30], [20, -30]];
+const goStones = (g: G, x: number, t: number) => {
+  GO_BASE.forEach(([dx, dy, wh]) => stone(g, x + dx, FLOOR - 14 + dy, 34, wh));
+  // stones placed one at a time, unhurried and uneven, like a player thinking
+  let tk = 0.7;
+  for (let k = 0; k < GO_MORE.length; k++) {
+    if (t < tk) break;
+    const e = clamp((t - tk) / 0.28), drop = (1 - e) * (1 - e) * 70, bounce = e >= 1 ? 0 : 0;
+    const [dx, dy] = GO_MORE[k];
+    g.save(); g.globalAlpha *= clamp(e * 3); stone(g, x + dx, FLOOR - 14 + dy - drop - bounce, 34, k % 2 === 0); g.restore();
+    if (e >= 1 && t - tk < 0.9) add(g, () => { g.strokeStyle = `rgba(255,236,200,${0.5 * (1 - (t - tk - 0.28) / 0.62)})`; g.lineWidth = 1.5; g.beginPath(); g.ellipse(x + dx, FLOOR - 14 + dy + 4, 20 + 50 * (t - tk), 6 + 15 * (t - tk), 0, 0, 6.3); g.stroke(); });
+    tk += 1.55 + 0.9 * rnd(k, 61);
+  }
+};
+const chessMove = (g: G, x: number, t: number) => {
+  const { c, p } = cyc(t, 3.7, 0.9), from = c % 2 ? 26 : -26, to = -from;
+  const m = easeInOut(clamp((p - 0.6) / 0.3)), lift = Math.sin(Math.PI * clamp((p - 0.6) / 0.3)) * 22;
+  king(g, x + lerp(from, to, m), FLOOR - lift, 0.92);
+  if (p > 0.9 && p < 0.99) add(g, () => glowDot(g, x + to, FLOOR, 60, 0.35 * (1 - (p - 0.9) / 0.09), '200,220,255'));
+};
+const shopRoll = (g: G, x: number, t: number) => {
+  // the spatula, a light glint running up it now and then
+  const gl = cyc(t, 4.3, 2.0);
+  spatula(g, x + 6, FLOOR, 0.74, 0.05, gl.p < 0.3 ? gl.p / 0.3 : -1);
+  // a three-slot shop above it that rerolls (fast click-click, then a pause)
+  const { c, p } = cyc(t, 2.35, 0.4), roll = clamp((p - 0.78) / 0.18);
+  [-1, 0, 1].forEach((j) => {
+    const cx = x + j * 70, cy = FLOOR - 322, kOld = Math.floor(rnd(c * 3 + j, 71) * 5), kNew = Math.floor(rnd((c + 1) * 3 + j, 71) * 5);
+    const r = clamp(roll * 1.6 - (j + 1) * 0.25), sq = Math.abs(Math.cos(r * Math.PI));
+    g.save(); g.translate(cx, cy); g.scale(Math.max(0.03, sq), 1); g.translate(-cx, -cy);
+    const tier = r < 0.5 ? kOld : kNew; shopCard(g, cx, cy, 60, 82, tier, tier === 4);
+    g.restore();
+  });
+};
+const mjFlip = (g: G, x: number, t: number) => {
+  tile(g, x - 78, FLOOR, 1.0, '中', '#b4161b'); tile(g, x - 16, FLOOR, 1.0, '發', '#1f7a3d');
+  const { c, p } = cyc(t, 4.1, 1.3), DRAW = [['東', '#1b1b1b'], ['九', '#1a3c8f'], ['白', '#1b1b1b'], ['五', '#b4161b'], ['北', '#1b1b1b']][c % 5];
+  const ang = p < 0.4 ? 0 : p < 0.5 ? (p - 0.4) / 0.1 : p < 0.85 ? 1 : p < 0.95 ? 1 - (p - 0.85) / 0.1 : 0;
+  const sq = Math.abs(Math.cos(ang * Math.PI)), up = ang >= 0.5, cx = x + 46 + 28, lift = Math.sin(ang * Math.PI) * 26;
+  g.save(); g.translate(cx, 0); g.scale(Math.max(0.03, sq), 1); g.translate(-cx, 0);
+  tile(g, x + 46, FLOOR - lift, 1.0, up ? DRAW[0] : '', up ? DRAW[1] : '', up); g.restore();
+};
+const pokerFlip = (g: G, x: number, t: number) => {
+  card(g, x - 26, FLOOR, 0.95, 'A', '♠', false, -0.16);
+  const { p } = cyc(t, 3.45, 0.2), ang = p < 0.35 ? 0 : p < 0.45 ? (p - 0.35) / 0.1 : p < 0.85 ? 1 : p < 0.95 ? 1 - (p - 0.85) / 0.1 : 0;
+  const cx = x + 28, sq = Math.abs(Math.cos(ang * Math.PI)), lift = Math.sin(ang * Math.PI) * 18;
+  g.save(); g.translate(cx, 0); g.scale(Math.max(0.03, sq), 1); g.translate(-cx, 0);
+  if (ang >= 0.5) card(g, cx, FLOOR + 6 - lift, 0.95, 'K', '♥', true, 0.14); else backOf(g, cx, FLOOR + 6 - lift, 0.95, 0.14);
+  g.restore();
+};
+const DIE_FACES: [number, number, number][] = [[5, 3, 1], [6, 2, 4], [1, 4, 5], [3, 6, 5], [2, 1, 3], [4, 5, 6]];
+const dieRoll = (g: G, x: number, t: number) => {
+  const { c, p } = cyc(t, 3.1, 1.7), q = clamp((p - 0.5) / 0.5);
+  if (q <= 0) return die(g, x, FLOOR - 62, 1.0, DIE_FACES[c % 6]);
+  // three hops, each lower and shorter, tumbling
+  const hops = [0.45, 0.33, 0.22], hs = [80, 32, 10]; let acc = 0, y = 0, hopI = 3, hq = 0;
+  for (let i = 0; i < 3; i++) { if (q < acc + hops[i]) { hopI = i; hq = (q - acc) / hops[i]; break; } acc += hops[i]; }
+  if (hopI < 3) y = 4 * hs[hopI] * hq * (1 - hq);
+  const spin = hopI < 3 ? (1 - hopI / 3) * Math.sin(hq * Math.PI) * 0.9 * (c % 2 ? 1 : -1) : 0;
+  const faces = hopI < 3 ? DIE_FACES[(c + hopI + 2) % 6] : DIE_FACES[(c + 1) % 6];
+  g.save(); g.translate(x, FLOOR - 62 - y); g.rotate(spin); g.translate(-x, -(FLOOR - 62 - y)); die(g, x, FLOOR - 62 - y, 1.0, faces); g.restore();
+};
+const coinToss = (g: G, x: number, t: number) => {
+  const { p } = cyc(t, 2.85, 0.6), q = clamp((p - 0.42) / 0.42);
+  if (q <= 0 || q >= 1) { const s = q >= 1 ? hit(p, 0.84, 0.03) : 0; return coin(g, x, FLOOR - 22 - 6 * s, 78, 0.35 + 0.05 * s, true); }
+  const ph = Math.acos(0.35) + q * (6 * Math.PI), y = 4 * 180 * q * (1 - q);
+  coin(g, x, FLOOR - 22 - y, 78, Math.max(0.04, Math.abs(Math.cos(ph))), true);
+};
 const OBJ: Obj[] = [
-  { u: 0.0, name: '围棋', en: 'GO', w: 220, draw: (g, x) => { [[-40, 0, true], [30, -4, false], [0, -26, false], [-60, 22, false], [52, 20, true], [10, 18, true]].forEach(([dx, dy, wh]) => stone(g, x + (dx as number), FLOOR - 14 + (dy as number), 34, wh as boolean)); } },
-  { u: 0.12, name: '国际象棋', en: 'CHESS', w: 260, draw: (g, x) => king(g, x, FLOOR, 0.92) },
-  { u: 0.42, name: '金铲铲', en: 'AUTO-BATTLER', w: 300, draw: (g, x) => { hexPedestal(g, x, FLOOR - 40, 120, specAt(0.42)); add(g, () => glowDot(g, x, FLOOR - 120, 70, 0.5, specAt(0.42))); king(g, x, FLOOR - 50, 0.28, '255,214,140', specAt(0.5), 1); } },
-  { u: 0.58, name: '麻将', en: 'MAHJONG', w: 260, draw: (g, x) => { tile(g, x - 78, FLOOR, 1.0, '中', '#b4161b'); tile(g, x - 16, FLOOR, 1.0, '發', '#1f7a3d'); tile(g, x + 46, FLOOR, 1.0, '', '', false); } },
-  { u: 0.72, name: '德州扑克', en: "HOLD'EM", w: 260, draw: (g, x) => { card(g, x - 26, FLOOR, 0.95, 'A', '♠', false, -0.16); card(g, x + 28, FLOOR + 6, 0.95, 'K', '♥', true, 0.14); } },
-  { u: 0.87, name: '飞行棋', en: 'DICE', w: 220, draw: (g, x) => die(g, x, FLOOR - 62, 1.0, [5, 3, 1]) },
-  { u: 1.0, name: '掷硬币', en: 'COIN', w: 220, draw: (g, x, T) => coin(g, x, FLOOR - 22 - 30 * Math.abs(Math.sin(T * 3)), 78, 0.12 + 0.3 * Math.abs(Math.cos(T * 6)), true) },
+  { u: 0.0, name: '围棋', en: 'GO', w: 220, draw: goStones },
+  { u: 0.12, name: '国际象棋', en: 'CHESS', w: 260, draw: chessMove },
+  { u: 0.42, name: '金铲铲', en: 'AUTO-BATTLER', w: 300, draw: shopRoll },
+  { u: 0.58, name: '麻将', en: 'MAHJONG', w: 260, draw: mjFlip },
+  { u: 0.72, name: '德州扑克', en: "HOLD'EM", w: 260, draw: pokerFlip },
+  { u: 0.87, name: '飞行棋', en: 'DICE', w: 220, draw: dieRoll },
+  { u: 1.0, name: '掷硬币', en: 'COIN', w: 220, draw: coinToss },
 ];
 const gx = (u: number) => lerp(GX0 + 90, GX1 - 90, u);
-const gallery = (g: G, T: number, appear: (i: number) => number, dim: (i: number) => number = () => 1) => {
+const gallery = (g: G, T: number, appear: (i: number) => number, dim: (i: number) => number = () => 1, at: (i: number) => number = () => T) => {
   OBJ.forEach((o, i) => { const k = appear(i); if (k > 0) spot(g, gx(o.u), o.w * 1.2, 0.9 * k * dim(i), o.u < 0.3 ? '200,220,255' : o.u > 0.7 ? '255,215,235' : '235,225,255'); });
-  OBJ.forEach((o, i) => { const k = appear(i); if (k <= 0) return; g.save(); g.globalAlpha = clamp(k * 1.5) * (0.25 + 0.75 * dim(i)); g.translate(0, (1 - easeInOut(clamp(k))) * 40); withReflection(g, () => o.draw(g, gx(o.u), T), 0.25); g.restore(); });
+  OBJ.forEach((o, i) => { const k = appear(i); if (k <= 0) return; g.save(); g.globalAlpha = clamp(k * 1.5) * (0.25 + 0.75 * dim(i)); g.translate(0, (1 - easeInOut(clamp(k))) * 40); withReflection(g, () => o.draw(g, gx(o.u), at(i)), 0.25); g.restore(); });
 };
 const GalleryLabels: React.FC<{ appear: (i: number) => number; dim?: (i: number) => number }> = ({ appear, dim = () => 1 }) => (
   <>{OBJ.map((o, i) => <Lb key={o.name} x={gx(o.u)} y={FLOOR + 120} s={o.name} size={28} sub={o.en} o={clamp(appear(i) * 1.4) * (0.3 + 0.7 * dim(i))} />)}</>
@@ -158,7 +258,7 @@ export const S2: React.FC<{ T: number; f: number }> = ({ T, f }) => {
     <Scene f={f} o={eo(T, CUT.gallery - 0.05, 0.25)} draw={(g) => {
       stage(g, T); bokeh(g, T, 12, 0.55);
       g.save(); cam(g, lerp(1.0, 1.03, pr(T, CUT.gallery, 8)), 960, 700);
-      gallery(g, T, ap);
+      gallery(g, T, ap, () => 1, (i) => Math.max(0, T - APPEAR[i] - 0.3));
       floorFade(g); strip(g, GX0, GX1, FLOOR + 92, 1);
       OBJ.forEach((o, i) => { if (T > APPEAR[i]) add(g, () => sparks(g, gx(o.u), FLOOR + 92, APPEAR[i], T, 26, specAt(o.u), 0.6, i)); });
       g.restore();
@@ -195,7 +295,8 @@ export const S3: React.FC<{ T: number; f: number }> = ({ T, f }) => {
       g.restore();
     }}>
       {['先手赢', '和棋', '后手赢'].map((s, i) => <Lb key={s} x={[560, 960, 1360][i]} y={[180, 145, 180][i]} s={s} size={34} col={C.goldHi} o={clamp(outsK[i])} />)}
-      <Lb x={620} y={FLOOR + 110} s="围棋 · 国际象棋" size={28} sub="NO DICE · NO HIDDEN CARDS" o={1 - pr(T, CUT.tree, 0.5)} />
+      <Lb x={620} y={FLOOR + 110} s="围棋 · 国际象棋" size={28} sub="PERFECT INFORMATION" o={1 - pr(T, CUT.tree, 0.5)} />
+      <Lb x={960} y={150} s="信息全公开 · 没有骰子" size={40} col="#cfe0ff" sub="EVERYTHING ON THE TABLE" o={eo(T, 28.95, 0.4) * (1 - pr(T, CUT.tree - 0.3, 0.3))} />
       <Lb x={960} y={FLOOR + 140} s="ZERMELO · 1913" size={16} col="rgba(239,232,218,.5)" ls="0.4em" o={eo(T, CUT.tree + 0.5, 0.5)} />
     </Scene>
   );
@@ -294,7 +395,7 @@ export const S6: React.FC<{ T: number; f: number }> = ({ T, f }) => {
       floorFade(g);
       g.restore();
     }}>
-      <Lb x={1300} y={170} s={flip < 0.5 ? '对手的牌：看不见' : '2 · 7 —— 什么都没有'} size={34} col={flip < 0.5 ? '#ffaee0' : C.goldHi} sub={flip < 0.5 ? 'HIDDEN' : 'BLUFF'} />
+      <Lb x={1300} y={170} s={flip < 0.5 ? '隐藏信息：对手的牌' : '2 · 7 —— 什么都没有'} size={34} col={flip < 0.5 ? '#ffaee0' : C.goldHi} sub={flip < 0.5 ? 'HIDDEN INFORMATION' : 'BLUFF'} />
       <Lb x={600} y={FLOOR + 140} s="你的牌" size={26} />
       <Lb x={960} y={120} s="PLURIBUS · CMU × FACEBOOK AI · 2019" size={16} col="rgba(239,232,218,.5)" ls="0.4em" o={eo(T, bt(120), 0.4)} />
     </Scene>
@@ -322,7 +423,7 @@ export const S7: React.FC<{ T: number; f: number }> = ({ T, f }) => {
         add(g, () => { glowDot(g, x, yy, 60, 0.6, GOLD); if (rank >= 1) sparks(g, x, y1, 71.6, T, 60, GOLD, 1.2, 77); });
       }
     }}>
-      <Lb x={760} y={150} s={T < 69.2 ? '136 张牌 · 你只看得见自己这 14 张' : 'SUPHX · 微软亚洲研究院'} size={28} col="#f0d9a8" />
+      <Lb x={760} y={150} s={T < 69.2 ? '136 张牌 · 你只看得见自己这 14 张' : 'SUPHX · 微软亚洲研究院'} size={28} col="#f0d9a8" sub={T < 69.2 ? 'HIDDEN INFORMATION' : undefined} />
       <div style={{ position: 'absolute', left: 1460, width: 400, top: 160, textAlign: 'center', opacity: eo(T, 69.3, 0.4) }}>
         <div style={{ fontFamily: F.serif, fontWeight: 900, fontSize: 58, color: C.goldHi, textShadow: '0 0 24px rgba(255,214,140,.6)' }}>{['一', '二', '三', '四', '五', '六', '七', '八', '九', '十'][dan - 1]}段</div>
       </div>
@@ -341,12 +442,12 @@ export const S8: React.FC<{ T: number; f: number }> = ({ T, f }) => {
     <Scene f={f} draw={(g) => {
       stage(g, T); bokeh(g, T, 14, 0.6);
       g.save(); cam(g, lerp(1.04, 1.0, pr(T, CUT.question, 5)), 960, 700);
-      gallery(g, T, () => 1, () => 0.55);
+      gallery(g, T, () => 1, () => 0.55, () => T - CUT.question + 6);
       floorFade(g); strip(g, GX0, GX1, FLOOR + 92, 1, line);
       g.restore();
     }}>
       <GalleryLabels appear={() => 1} dim={() => 0.6} />
-      <Lb x={960} y={180} s="？" size={150} col={C.goldHi} o={clamp(pop(T, CUT.question + 0.2, 0.3)) * (1 - line)} />
+      <Lb x={960} y={96} s="？" size={120} col={C.goldHi} o={clamp(pop(T, CUT.question + 0.2, 0.3)) * (1 - line)} />
       <Lb x={960} y={FLOOR - 250} s="50%" size={56} col={C.goldHi} o={line} />
     </Scene>
   );
@@ -426,36 +527,86 @@ export const S10: React.FC<{ T: number; f: number }> = ({ T, f }) => {
   );
 };
 
-/* ================================================================ S11 · 金铲铲: a shared pool (97.61 – 105.71) */
+/* ================================================================ S11 · 金铲铲: the shop (luck) and the pool everyone shares (97.61 – 105.71) */
+const REROLLS = [98.38, 99.27, 99.93, 100.47];                 // a player clicking refresh: a pause, then faster (own clock)
+const SHOPS = [[0, 1, 0, 2, 1], [1, 0, 2, 0, 1], [2, 1, 1, 0, 3], [0, 2, 1, 1, 0], [1, 4, 0, 2, 1]];
+const STACK_X = (c: number) => 960 + (c - 3) * 150, STACK_Y = FLOOR - 90, GOLD_COL = 3;
+const RIVALS: [number, number][] = [[200, FLOOR + 60], [300, FLOOR - 120], [560, FLOOR - 270], [1360, FLOOR - 270], [1620, FLOOR - 120], [1720, FLOOR + 60], [960, FLOOR - 380]];
+const GRABS = (() => { const out: { t: number; col: number; to: number }[] = []; let t = 102.25; for (let k = 0; k < 26; k++) { const col = k % 3 === 0 || k % 7 === 2 ? GOLD_COL : Math.floor(rnd(k, 81) * 7); out.push({ t, col, to: Math.floor(rnd(k, 82) * 7) }); t += 0.05 + 0.1 * rnd(k, 83); } return out; })();
 export const S11: React.FC<{ T: number; f: number }> = ({ T, f }) => {
-  const pull = pr(T, 101.9, 3.0);
-  const players = Array.from({ length: 8 }, (_, k) => { const a = (k / 8) * 6.283 + Math.PI / 2; return [960 + Math.cos(a) * 620, FLOOR - 80 + Math.sin(a) * 170] as [number, number]; });
+  const partB = T >= 101.85;
+  if (!partB) {
+    const n = REROLLS.filter((r) => T >= r).length, coins = 9 - n, last = n ? REROLLS[n - 1] : -1;
+    return (
+      <Scene f={f} draw={(g) => {
+        stage(g, T); bokeh(g, T, 16, 0.7);
+        g.save(); cam(g, lerp(1.0, 1.05, pr(T, CUT.pool, 4.3)), 960, 640);
+        spot(g, 860, 1100, 1, '235,225,255'); spot(g, 1560, 340, 0.6, '255,230,190');
+        withReflection(g, () => {
+          for (let j = 0; j < 5; j++) {
+            const cx = 460 + j * 200, r = n ? clamp((T - last - j * 0.03) / 0.16) : 1;
+            const tier = r < 0.5 ? SHOPS[n - 1][j] : SHOPS[n][j];
+            g.save(); g.translate(cx, 0); g.scale(Math.max(0.03, Math.abs(Math.cos(r * Math.PI))), 1); g.translate(-cx, 0);
+            shopCard(g, cx, FLOOR, 160, 220, tier, tier === 4, eo(T, CUT.pool + j * 0.06, 0.3));
+            g.restore();
+          }
+          // the gold you spend on each refresh
+          for (let k = 0; k < coins; k++) coin(g, 1560, FLOOR - 10 - k * 11, 44, 0.35, true);
+        }, 0.22);
+        // a coin leaves the stack on every refresh
+        REROLLS.forEach((r0) => { const q = pr(T, r0 - 0.02, 0.32); if (q > 0 && q < 1) coin(g, lerp(1560, 1660, q), FLOOR - 110 - 160 * Math.sin(q * Math.PI), 34, Math.abs(Math.cos(q * 9)) * 0.9 + 0.05, true); });
+        floorFade(g);
+        if (n === 4) add(g, () => { glowDot(g, 660, FLOOR - 130, 220, 0.35 * eo(T, REROLLS[3] + 0.15, 0.2), GOLD); sparks(g, 660, FLOOR - 130, REROLLS[3] + 0.15, T, 50, GOLD, 1, 31); });
+        g.restore();
+      }}>
+        <Lb x={860} y={150} s="刷新 = 看运气" size={40} col="#ffaee0" sub="REFRESH THE SHOP" o={eo(T, 97.9, 0.4) * (1 - pr(T, 100.85, 0.3))} />
+        <Lb x={960} y={150} s="什么时候刷、刷几次、留多少金币 = 看实力" size={36} col="#a8ccff" sub="ECONOMY · TEAM BUILDING" o={eo(T, 101.0, 0.35)} />
+        <Lb x={1560} y={FLOOR + 110} s={`金币 ${coins}`} size={24} col={C.goldHi} o={eo(T, CUT.pool + 0.3, 0.3)} />
+      </Scene>
+    );
+  }
+  // part B · the shared pool: everyone draws from the same stacks
+  const left = Array.from({ length: 7 }, (_, c) => (c === GOLD_COL ? 15 : 9) - GRABS.filter((x) => x.col === c && T >= x.t).length);
   return (
     <Scene f={f} draw={(g) => {
-      stage(g, T); bokeh(g, T, 16, 0.6);
-      g.save(); cam(g, lerp(1.0, 1.05, pr(T, CUT.pool, 8)), 960, 600);
-      spot(g, 960, 700, 1, '235,225,255');
-      // players' pedestals (back first)
-      const order = players.map((p, k) => [p, k] as [[number, number], number]).sort((a, b) => a[0][1] - b[0][1]);
-      order.forEach(([[x, y], k]) => { hexPedestal(g, x, y, lerp(48, 70, (y - (FLOOR - 250)) / 340), k === 0 ? '255,214,140' : specAt(0.42), 1); });
-      // the shared pool: a cloud of glowing cards
-      add(g, () => {
-        for (let i = 0; i < 360; i++) {
-          const a = rnd(i, 1) * 6.283, r = 150 * Math.sqrt(rnd(i, 2)), owner = i % 8, k = clamp(pull * 1.6 - rnd(i, 3) * 0.6);
-          const sx = 960 + Math.cos(a + T * 0.3) * r, sy = FLOOR - 300 + Math.sin(a + T * 0.3) * r * 0.45, [px, py] = players[owner];
-          const x = lerp(sx, px, easeInOut(k)), y = lerp(sy, py - 40, easeInOut(k)) - Math.sin(k * Math.PI) * 60;
-          glowDot(g, x, y, 5, 0.75, owner === 0 ? GOLD : specAt(0.42));
-        }
-        glowDot(g, 960, FLOOR - 300, 260, 0.12 * (1 - pull), specAt(0.42));
+      stage(g, T); bokeh(g, T, 14, 0.6);
+      g.save(); cam(g, lerp(1.04, 1.0, eio(T, 101.85, 3.8)), 960, 600);
+      spot(g, 960, 900, 0.9, '235,225,255');
+      // rival seats (back first)
+      [...RIVALS].sort((a, b) => a[1] - b[1]).forEach(([x, y]) => hexPedestal(g, x, y, lerp(56, 92, (y - (FLOOR - 380)) / 440), '190,150,240', 0.9));
+      // the stacks
+      for (let c = 0; c < 7; c++) {
+        const x = STACK_X(c);
+        for (let k = 0; k < Math.max(0, left[c]); k++) { const tier = c === GOLD_COL ? 4 : c % 4; g.save(); g.translate(0, 0); shopCardSlab(g, x, STACK_Y - k * 10, tier); g.restore(); }
+        if (c === GOLD_COL) add(g, () => glowDot(g, x, STACK_Y - 70, 160, 0.3, GOLD));
+      }
+      // cards in flight to the rivals
+      GRABS.forEach((gr) => {
+        const q = pr(T, gr.t, 0.45); if (q <= 0 || q >= 1) return;
+        const [tx, ty] = RIVALS[gr.to], sx = STACK_X(gr.col), sy = STACK_Y - 10 * 9, e = easeInOut(q);
+        const x = lerp(sx, tx, e), y = lerp(sy, ty - 40, e) - Math.sin(q * Math.PI) * 140;
+        shopCard(g, x, y, 52, 70, gr.col === GOLD_COL ? 4 : gr.col % 4, false);
       });
+      // you
+      hexPedestal(g, 960, FLOOR + 80, 120, '255,214,140', 1);
+      const yours = clamp((T - 104.55) / 0.2);
+      if (yours > 0) [0, 1, 2, 3, 4].forEach((j) => shopCard(g, 960 + (j - 2) * 76, FLOOR + 40, 62, 84, [0, 2, 1, 0, 1][j], false, clamp(yours * 2 - j * 0.15)));
       floorFade(g);
       g.restore();
     }}>
-      <Lb x={960} y={FLOOR - 470} s="公共卡池" size={34} col="#efe8da" sub="SHARED POOL" o={1 - pull} />
-      <Lb x={players[0][0]} y={players[0][1] + 40} s="你" size={32} col={C.goldHi} />
-      <Lb x={960} y={130} s="8 个人 · 同一个卡池" size={24} col="#d6c8ff" ls="0.3em" />
+      <Lb x={960} y={110} s="8 个人 · 共用一个卡池（示意）" size={24} col="#d6c8ff" ls="0.3em" />
+      <Lb x={STACK_X(GOLD_COL)} y={STACK_Y - 250} s="你要的 ★" size={28} col={C.goldHi} o={eo(T, 102.0, 0.3) * (1 - pr(T, 104.4, 0.3))} />
+      <Lb x={960} y={FLOOR + 140} s="你" size={30} col={C.goldHi} />
+      <Lb x={960} y={STACK_Y - 250} s="被别人拿走的，你就刷不到" size={30} col="#efe8da" o={eo(T, 104.7, 0.35)} />
     </Scene>
   );
+};
+/* a card lying in a stack: a thin slab seen from the front-top */
+const shopCardSlab = (g: G, x: number, y: number, tier: number) => {
+  const w = 124, d = 34, c = ['160,160,172', '90,200,120', '80,150,255', '190,110,255', '255,200,90'][tier];
+  g.fillStyle = '#121019'; g.beginPath(); g.moveTo(x - w / 2, y); g.lineTo(x + w / 2, y); g.lineTo(x + w / 2 - 10, y - d); g.lineTo(x - w / 2 + 10, y - d); g.closePath(); g.fill();
+  g.strokeStyle = `rgba(${c},.85)`; g.lineWidth = 1.5; g.stroke();
+  g.fillStyle = `rgba(${c},.6)`; g.fillRect(x - w / 2, y, w, 7);
 };
 
 /* ================================================================ S12 · close (105.71 – 113.81) */
@@ -466,7 +617,7 @@ export const S12: React.FC<{ T: number; f: number }> = ({ T, f }) => {
     <Scene f={f} draw={(g) => {
       stage(g, T); bokeh(g, T, 12, 0.5);
       g.save(); cam(g, lerp(1.04, 1.0, pr(T, CUT.close, 8)), 960, 700);
-      gallery(g, T, () => 1, (i) => Math.max(0.15, off(i)));
+      gallery(g, T, () => 1, (i) => Math.max(0.15, off(i)), (i) => Math.min(T, 110.2 + (6 - i) * 0.25) - CUT.close + 12);
       floorFade(g); strip(g, GX0, GX1, FLOOR + 92, 0.6 + 0.4 * (1 - pr(T, 110, 2)));
       g.restore();
       // one game vs a hundred: a tally of tiny coins along the top
