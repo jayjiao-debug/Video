@@ -47,7 +47,7 @@ export const spot = (g: G, x: number, w: number, a = 1, col = '255,236,205', top
 /** draw `fn` and its reflection in the glossy floor */
 export const withReflection = (g: G, fn: () => void, strength = 0.28) => {
   fn();
-  g.save(); g.globalAlpha = strength; g.translate(0, 2 * FLOOR); g.scale(1, -1); fn(); g.restore();
+  g.save(); g.globalAlpha *= strength; g.translate(0, 2 * FLOOR); g.scale(1, -1); fn(); g.restore();
 };
 /** fade reflections into the floor (call once after all reflected objects) */
 export const floorFade = (g: G) => {

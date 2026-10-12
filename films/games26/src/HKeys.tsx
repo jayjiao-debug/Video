@@ -104,7 +104,7 @@ const H4: React.FC<{ f: number }> = ({ f }) => { const T = 72; return (
     for (let r = 1; r >= 0; r--) for (let i = 0; i < 17; i++) tile(g, 270 + i * 80 + r * 18, FLOOR - 140 - r * 34, 0.95, '', '', false);
     // your hand: 14 face-up tiles in front, lit
     const HAND = [['一', '#1b1b1b'], ['二', '#1b1b1b'], ['三', '#1b1b1b'], ['五', '#b4161b'], ['五', '#b4161b'], ['中', '#b4161b'], ['中', '#b4161b'], ['中', '#b4161b'], ['東', '#1b1b1b'], ['南', '#1b1b1b'], ['西', '#1b1b1b'], ['北', '#1b1b1b'], ['發', '#1f7a3d'], ['九', '#1a3c8f']];
-    withReflection(g, () => HAND.forEach(([ch, col], i) => tile(g, 380 + i * 82, FLOOR + 6, 1.08, ch, col, true, 0.4)), 0.22);
+    withReflection(g, () => HAND.forEach(([ch, col], i) => tile(g, 380 + i * 82, FLOOR, 1.08, ch, col, true, 0.4)), 0.22);
     floorFade(g);
   }}>
     <Lb x={960} y={150} s="136 张牌 · 你只看得见自己这 14 张" size={30} col="#f0d9a8" />
