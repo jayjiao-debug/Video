@@ -399,8 +399,8 @@ export const TT4: React.FC<{ T: number; f: number }> = ({ T, f }) => {
       if (T >= HIT) add(g, () => glowDot(g, 960, FLOOR - 80, 700, 0.12 * after));
       g.restore();
     }}>
-      <Lb x={300} y={FLOOR + 90} s="实力" size={56} col="#a8ccff" sub="SKILL" o={eo(T, T0 + 0.8, 0.4) * (1 - eio(T, 14.8, 0.6))} />
-      <Lb x={1620} y={FLOOR + 90} s="运气" size={56} col="#ffaee0" sub="LUCK" o={eo(T, T0 + 1.0, 0.4) * (1 - eio(T, 14.8, 0.6))} />
+      <Lb x={300} y={FLOOR + 74} s="实力" size={56} col="#a8ccff" sub="SKILL" o={eo(T, T0 + 0.8, 0.4) * (1 - eio(T, 14.8, 0.6))} />
+      <Lb x={1620} y={FLOOR + 74} s="运气" size={56} col="#ffaee0" sub="LUCK" o={eo(T, T0 + 1.0, 0.4) * (1 - eio(T, 14.8, 0.6))} />
       <Lb x={960 - 3 * 178 - 60} y={FLOOR - 145} s="《" size={100} col={C.goldHi} o={eo(T, HIT, 0.3)} />
       <Lb x={960 + 3 * 178 + 85} y={FLOOR - 145} s="》" size={100} col={C.goldHi} o={eo(T, HIT, 0.3)} />
       <Lb x={960} y={FLOOR - 290} s="SKILL · LUCK · EVERY GAME YOU PLAY" size={20} col={C.dim} ls="0.42em" o={eo(T, HIT + 0.5, 0.5)} />
