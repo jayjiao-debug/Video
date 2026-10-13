@@ -91,6 +91,8 @@ export const glowDot = (g: CanvasRenderingContext2D, x: number, y: number, r: nu
 };
 
 /** subtitles in the lower letterbox bar */
+/** subtitle style: size / weight / distance from the bottom edge (px at 1080p) */
+export const SUB = { size: 66, weight: 700, bottom: 58 };
 export const Subs: React.FC<{ T: number; lines: Line[] }> = ({ T, lines }) => (
   <>
     {lines.map(([a, z, s], i) => {
@@ -98,7 +100,7 @@ export const Subs: React.FC<{ T: number; lines: Line[] }> = ({ T, lines }) => (
       if (o <= 0) return null;
       const rise = (1 - eo(T, a, 0.3)) * 6;
       return (
-        <div key={i} style={{ position: 'absolute', left: 0, right: 0, bottom: 24, textAlign: 'center', opacity: o, transform: `translateY(${rise}px)`, fontFamily: F.sans, fontWeight: 500, fontSize: 50, letterSpacing: '0.05em', color: C.cream, ...LNUM }}>
+        <div key={i} style={{ position: 'absolute', left: 0, right: 0, bottom: SUB.bottom, textAlign: 'center', opacity: o, transform: `translateY(${rise}px)`, fontFamily: F.sans, fontWeight: SUB.weight, fontSize: SUB.size, letterSpacing: '0.04em', color: C.cream, textShadow: '0 2px 6px rgba(0,0,0,.9), 0 0 2px rgba(0,0,0,.9)', ...LNUM }}>
           {s.split(/(\[[^\]]+\])/).map((x, j) => {
             const hl = x.startsWith('['), t = hl ? x.slice(1, -1) : x;
             // colour carries meaning: skill = blue, luck = magenta, gold for everything else that is highlighted
