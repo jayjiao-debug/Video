@@ -1,0 +1,251 @@
+{
+ "title": "深度工作 · 试做片",
+ "chapters": [
+  "你的一晚",
+  "第一关",
+  "今晚就用"
+ ],
+ "lines": [
+  {
+   "text": "你打开书，想认真看一会儿。",
+   "key": "认真",
+   "chapter": 0,
+   "events": [
+    {
+     "at": "start",
+     "do": "prop_in",
+     "sprite": "book_open",
+     "slot": "desk"
+    }
+   ],
+   "camera": "wide"
+  },
+  {
+   "text": "三分钟后，手机亮了一下。",
+   "key": "手机",
+   "chapter": 0,
+   "events": [
+    {
+     "at": "key",
+     "do": "prop_in",
+     "sprite": "phone",
+     "slot": "desk_right"
+    },
+    {
+     "at": "key",
+     "do": "pose",
+     "pose": "look"
+    }
+   ],
+   "camera": "mid_phone"
+  },
+  {
+   "text": "再抬头，一个小时没了。",
+   "key": "一个小时",
+   "chapter": 0,
+   "events": [
+    {
+     "at": "start",
+     "do": "pose",
+     "pose": "idle"
+    },
+    {
+     "at": "key",
+     "do": "clock_spin"
+    },
+    {
+     "at": "key",
+     "do": "pose",
+     "pose": "shock"
+    }
+   ],
+   "camera": "wide"
+  },
+  {
+   "text": "这不是你意志力差。",
+   "key": "意志力",
+   "chapter": 0,
+   "events": [
+    {
+     "at": "start",
+     "do": "stat_card",
+     "focus": 2,
+     "distract": 9
+    },
+    {
+     "at": "start",
+     "do": "pose",
+     "pose": "think"
+    }
+   ],
+   "camera": "mid"
+  },
+  {
+   "text": "今天这本书，叫《深度工作》。",
+   "key": "深度工作",
+   "chapter": 0,
+   "events": [
+    {
+     "at": "start",
+     "do": "stat_card_out"
+    },
+    {
+     "at": "key",
+     "do": "book_reveal"
+    }
+   ],
+   "camera": "mid"
+  },
+  {
+   "text": "第一关：切换的代价。",
+   "key": "切换",
+   "chapter": 1,
+   "events": [
+    {
+     "at": "start",
+     "do": "book_reveal_out"
+    },
+    {
+     "at": "start",
+     "do": "title_card",
+     "label": "第一关",
+     "sub": "切换的代价"
+    }
+   ],
+   "camera": "wide"
+  },
+  {
+   "text": "每看一眼手机，注意力都会留下一截。",
+   "key": "留下一截",
+   "chapter": 1,
+   "events": [
+    {
+     "at": "start",
+     "do": "title_card_out"
+    },
+    {
+     "at": "start",
+     "do": "stat_card",
+     "focus": 8,
+     "distract": 2
+    },
+    {
+     "at": "key",
+     "do": "stat_set",
+     "focus": 5,
+     "distract": 6
+    },
+    {
+     "at": "start",
+     "do": "pose",
+     "pose": "idle"
+    }
+   ],
+   "camera": "mid"
+  },
+  {
+   "text": "回到书上，脑子还卡在消息里。",
+   "key": "卡在消息里",
+   "chapter": 1,
+   "events": [
+    {
+     "at": "key",
+     "do": "stat_set",
+     "focus": 2,
+     "distract": 9
+    },
+    {
+     "at": "key",
+     "do": "fx",
+     "fx": "MISS"
+    }
+   ],
+   "camera": "close"
+  },
+  {
+   "text": "所以今晚，试一件事：",
+   "key": "今晚",
+   "chapter": 2,
+   "events": [
+    {
+     "at": "start",
+     "do": "stat_card_out"
+    },
+    {
+     "at": "key",
+     "do": "skill_card",
+     "label": "技能 · 隔离"
+    }
+   ],
+   "camera": "wide"
+  },
+  {
+   "text": "把手机放进另一个房间，只要五十分钟。",
+   "key": "另一个房间",
+   "chapter": 2,
+   "events": [
+    {
+     "at": "start",
+     "do": "skill_card_out"
+    },
+    {
+     "at": "key",
+     "do": "prop_out",
+     "sprite": "phone"
+    },
+    {
+     "at": "end",
+     "do": "stat_card",
+     "focus": 9,
+     "distract": 1
+    },
+    {
+     "at": "key",
+     "do": "pose",
+     "pose": "deduce"
+    },
+    {
+     "at": "end",
+     "do": "pose",
+     "pose": "read"
+    }
+   ],
+   "camera": "mid"
+  }
+ ],
+ "cameras": {
+  "wide": {
+   "zoom": 5,
+   "x": 240,
+   "y": 150
+  },
+  "mid": {
+   "zoom": 6,
+   "x": 222,
+   "y": 172
+  },
+  "mid_phone": {
+   "zoom": 6,
+   "x": 238,
+   "y": 172
+  },
+  "close": {
+   "zoom": 8,
+   "x": 205,
+   "y": 186
+  },
+  "establish": {
+   "zoom": 4,
+   "x": 240,
+   "y": 135
+  }
+ },
+ "narrator": "obrien",
+ "narrator_pos": {
+  "x": 166,
+  "y": 166,
+  "front": true
+ },
+ "default_pose": "idle",
+ "portrait": "obrien_look"
+}

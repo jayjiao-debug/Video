@@ -1,0 +1,13 @@
+node_modules/
+__pycache__/
+*.pyc
+# renders and generated audio are rebuilt by the scripts; finished cuts live in deliverables/
+out/
+*/out/
+tts_cache/
+*/tts_cache/
+public/audio/*.wav
+case01/audio/*.wav
+# Detective Conan fan-art tests stay private (copyrighted character, public repo)
+public/sprites/conan*
+tools/conan*.py
