@@ -11,6 +11,7 @@ name the culprit in the comments, and then the solution is shown.
 | `case01_v2.mp4` | Case 1 v2 without the opening, 2:36 |
 | `opening_v1.mp4` | Series opening only, 12.5 s |
 | `case01_script.md` | Case 1 clues and solution |
+| `vn_sample.mp4`, `vn_faces_sheet.png` | Visual-novel style test: detailed 128×128 portraits (Holmes, secretary) with layered expressions, 25 s dialogue |
 | `sherlock_movement_test_v5.mp4`, `sherlock_cute_faces.png` | The approved character: v3 rig with the cute expression faces |
 
 ## Decisions already made by the owner
@@ -21,6 +22,13 @@ name the culprit in the comments, and then the solution is shown.
 - **Opening:** the owner asked for one like the *Moonflower Murders*–style fan opening (navy, black and white
   silhouettes, a cut on every beat, round shapes morphing into each other). The pixel version is in `opening/`.
   The series title "像素福尔摩斯" is a placeholder until the owner picks a name.
+
+## Visual-novel portraits (`vn/`)
+The owner asked whether the characters could look more real, with specific facial expressions.
+`vn/vn_faces.py` takes one generated bust per character and pixelises it to 128×128. Expressions are then painted
+onto that same bust as layers (eyes, brows, mouth, extras), so the character never drifts between expressions.
+`vn/vn_scene.py` renders the dialogue sample: typed text with blips, mouth flaps, blinks, a 追问！ shout,
+and a flash and speed lines on the shock beat. Not yet approved by the owner.
 
 ## Pipeline
 All art is drawn on a 216x384 grid and shown at 5x (1080x1920, 30 fps). The frames are rendered with PIL and piped into ffmpeg.
