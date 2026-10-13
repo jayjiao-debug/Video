@@ -43,8 +43,8 @@ const Scene: React.FC<{ f: number; draw: (g: G) => void; children?: React.ReactN
 const add = (g: G, fn: () => void) => { g.save(); g.globalCompositeOperation = 'lighter'; fn(); g.restore(); };
 
 /* ================================================================ S0 · cold open (0 – 16.6) */
-export const S0: React.FC<{ T: number; f: number }> = ({ T, f }) => {
-  const part = T < CUT.cards ? 0 : T < CUT.king ? 1 : T < CUT.strip ? 2 : 3;
+export const S0: React.FC<{ T: number; f: number; pt?: number }> = ({ T, f, pt }) => {
+  const part = pt ?? (T < CUT.cards ? 0 : T < CUT.king ? 1 : T < CUT.strip ? 2 : 3);
   if (part === 0) {
     const brk = pr(T, 0.5, 1.6), s = lerp(1.0, 1.07, pr(T, 0, CUT.cards));
     return (
@@ -303,7 +303,7 @@ const gallery = (g: G, T: number, appear: (i: number) => number, dim: (i: number
   OBJ.forEach((o, i) => { const k = appear(i); if (k <= 0) return; g.save(); g.globalAlpha = clamp(k * 1.5) * (0.25 + 0.75 * dim(i)); g.translate(0, (1 - easeInOut(clamp(k))) * 40); g.save(); g.beginPath(); g.rect(0, 0, W, FLOOR + 84); g.clip(); withReflection(g, () => o.draw(g, gx(o.u), at(i)), 0.25); g.restore(); g.restore(); });
 };
 const GalleryLabels: React.FC<{ appear: (i: number) => number; dim?: (i: number) => number }> = ({ appear, dim = () => 1 }) => (
-  <>{OBJ.map((o, i) => <Lb key={o.name} x={gx(o.u)} y={FLOOR + 116} s={o.name} size={28} o={clamp(appear(i) * 1.4) * (0.3 + 0.7 * dim(i))} />)}</>
+  <>{OBJ.map((o, i) => <Lb key={o.name} x={gx(o.u)} y={FLOOR + 104} s={o.name} size={28} o={clamp(appear(i) * 1.4) * (0.3 + 0.7 * dim(i))} />)}</>
 );
 
 /* ================================================================ S2 · the spectrum (20.66 – 28.76) */
@@ -311,7 +311,7 @@ const APPEAR = [bt(40), bt(41), bt(43), bt(44), bt(45), bt(47), bt(48)];
 export const S2: React.FC<{ T: number; f: number }> = ({ T, f }) => {
   const ap = (i: number) => eo(T, APPEAR[i], 0.45);
   return (
-    <Scene f={f} o={eo(T, CUT.gallery - 0.05, 0.25)} draw={(g) => {
+    <Scene f={f} draw={(g) => {
       stage(g, T); bokeh(g, T, 12, 0.55);
       g.save(); cam(g, lerp(1.0, 1.03, pr(T, CUT.gallery, 8)), 960, 700);
       gallery(g, T, ap, () => 1, (i) => Math.max(0, T - APPEAR[i] - 0.3));
@@ -359,7 +359,7 @@ export const S3: React.FC<{ T: number; f: number }> = ({ T, f }) => {
       g.restore();
     }}>
       {['先手赢', '和棋', '后手赢'].map((s, i) => <Lb key={s} x={[560, 960, 1360][i]} y={[145, 130, 145][i]} s={s} size={34} col={C.goldHi} o={clamp(outsK[i])} />)}
-      <Lb x={790} y={FLOOR + 140} s="围棋 · 国际象棋" size={28} sub="PERFECT INFORMATION" o={1 - pr(T, CUT.tree, 0.5)} />
+      <Lb x={790} y={FLOOR + 104} s="围棋 · 国际象棋" size={28} o={1 - pr(T, CUT.tree, 0.5)} />
       <Lb x={960} y={150} s="信息全公开 · 没有骰子" size={40} col="#cfe0ff" sub="EVERYTHING ON THE TABLE" o={eo(T, 28.95, 0.4) * (1 - pr(T, CUT.tree - 0.3, 0.3))} />
       <Lb x={960} y={FLOOR + 140} s="ZERMELO · 1913" size={16} col="rgba(239,232,218,.75)" ls="0.4em" o={eo(T, CUT.tree + 0.5, 0.5)} />
     </Scene>
@@ -472,8 +472,8 @@ export const S6: React.FC<{ T: number; f: number }> = ({ T, f }) => {
       g.restore();
     }}>
       <Lb x={1300} y={150} s={flip < 0.5 ? (T < PUSH ? '隐藏信息：对手的牌' : 'AI：全押') : '2 · 7 —— 什么都没有'} size={34} col={flip < 0.5 ? '#ffaee0' : C.goldHi} sub={flip < 0.5 ? (T < PUSH ? 'HIDDEN INFORMATION' : 'ALL IN') : 'BLUFF'} />
-      <Lb x={600} y={FLOOR + 140} s={T < FOLD + 0.2 ? '你的牌' : '你：弃牌'} size={26} col={T < FOLD + 0.2 ? '#efe8da' : '#a8ccff'} />
-      <Lb x={1300} y={FLOOR + 140} s="AI · PLURIBUS" size={22} col="rgba(239,232,218,.75)" ls="0.25em" o={eo(T, 61.1, 0.4)} />
+      <Lb x={600} y={FLOOR + 118} s={T < FOLD + 0.2 ? '你的牌' : '你：弃牌'} size={26} col={T < FOLD + 0.2 ? '#efe8da' : '#a8ccff'} />
+      <Lb x={1300} y={FLOOR + 118} s="AI · PLURIBUS" size={22} col="rgba(239,232,218,.75)" ls="0.25em" o={eo(T, 61.1, 0.4)} />
       <Lb x={960} y={110} s="PLURIBUS · CMU × FACEBOOK AI · 2019" size={16} col="rgba(239,232,218,.6)" ls="0.4em" o={eo(T, 61.1, 0.4)} />
     </Scene>
   );
@@ -554,8 +554,8 @@ export const S9: React.FC<{ T: number; f: number }> = ({ T, f }) => {
       g.restore();
     }}>
       <Lb x={960} y={130} s="一半国际象棋 ＋ 一半掷硬币 ＝「一半运气」标准线" size={28} col={C.goldHi} o={eo(T, 85.1, 0.4)} />
-      <Lb x={960} y={130} s="每个王 = 一局国际象棋" size={30} col="#cfe0ff" o={eo(T, 79.6, 0.35) * (1 - pr(T, CUT.drop + 1.2, 0.3))} />
-      <Lb x={960} y={180} s="DUERSCH · LAMBRECHT · OECHSSLER · 2020" size={16} col="rgba(239,232,218,.6)" ls="0.4em" o={eo(T, CUT.drop + 0.4, 0.4) * (1 - pr(T, 84.8, 0.3))} />
+      <Lb x={960} y={130} s="每个王 = 一局国际象棋" size={30} col="#cfe0ff" o={eo(T, 79.6, 0.35) * (1 - pr(T, CUT.drop + 0.05, 0.25))} />
+      <Lb x={960} y={136} s="DUERSCH · LAMBRECHT · OECHSSLER · 2020" size={16} col="rgba(239,232,218,.6)" ls="0.4em" o={eo(T, CUT.drop + 0.45, 0.4) * (1 - pr(T, 84.8, 0.3))} />
     </Scene>
   );
 };
@@ -574,8 +574,8 @@ const STANDS = [
   { x: 960, name: '一半掷硬币的国际象棋', num: '45', u: 0.5 },
   { x: 1500, name: '德州扑克', num: '< 30', u: 0.82 },
 ];
-export const S10: React.FC<{ T: number; f: number }> = ({ T, f }) => {
-  const second = T >= 93.5;
+export const S10: React.FC<{ T: number; f: number; sec?: boolean }> = ({ T, f, sec }) => {
+  const second = sec ?? T >= 93.5;
   const ap = (i: number) => eo(T, 89.6 + i * 0.22, 0.35);
   const n = Math.floor(lerp(1, 105, eio(T, 93.7, 2.1)));
   return (
@@ -616,7 +616,7 @@ export const S10: React.FC<{ T: number; f: number }> = ({ T, f }) => {
           {STANDS.map((st, i) => (
             <React.Fragment key={st.name}>
               <div style={{ position: 'absolute', left: st.x - 200, width: 400, top: 250, textAlign: 'center', opacity: ap(i), transform: `scale(${lerp(1.1, 1, ap(i))})`, fontFamily: F.serif, fontWeight: 900, fontSize: 96, color: i === 2 ? '#ffc4e6' : i === 0 ? '#cfe0ff' : C.goldHi, textShadow: '0 0 24px rgba(0,0,0,.8)', ...LNUM }}>{st.num}</div>
-              <Lb x={st.x} y={FLOOR + 130} s={st.name} size={26} col={i === 2 ? '#ffaee0' : i === 0 ? '#a8ccff' : '#efe8da'} o={ap(i)} />
+              <Lb x={st.x} y={FLOOR + 110} s={st.name} size={26} col={i === 2 ? '#ffaee0' : i === 0 ? '#a8ccff' : '#efe8da'} o={ap(i)} />
             </React.Fragment>
           ))}
           <Lb x={1500} y={392} s="比一半运气还靠运气" size={24} col="#ff9ed6" o={eo(T, 91.0, 0.4)} />
@@ -639,8 +639,8 @@ const SHOPS = [[0, 1, 0, 2, 1], [1, 0, 2, 0, 1], [2, 1, 1, 0, 3], [0, 2, 1, 1, 0
 const STACK_X = (c: number) => 960 + (c - 3) * 150, STACK_Y = FLOOR - 90, GOLD_COL = 3;
 const RIVALS: [number, number][] = [[200, FLOOR + 60], [300, FLOOR - 120], [560, FLOOR - 270], [1360, FLOOR - 270], [1620, FLOOR - 120], [1720, FLOOR + 60], [960, FLOOR - 380]];
 const GRABS = (() => { const out: { t: number; col: number; to: number }[] = []; let t = 102.25; for (let k = 0; k < 26; k++) { const col = k % 3 === 0 || k % 7 === 2 ? GOLD_COL : Math.floor(rnd(k, 81) * 7); out.push({ t, col, to: Math.floor(rnd(k, 82) * 7) }); t += 0.05 + 0.1 * rnd(k, 83); } return out; })();
-export const S11: React.FC<{ T: number; f: number }> = ({ T, f }) => {
-  const partB = T >= 101.85;
+export const S11: React.FC<{ T: number; f: number; pb?: boolean }> = ({ T, f, pb }) => {
+  const partB = pb ?? T >= 101.85;
   if (!partB) {
     const n = REROLLS.filter((r) => T >= r).length, coins = 10 - 2 * n, last = n ? REROLLS[n - 1] : -1;
     return (
@@ -700,10 +700,10 @@ export const S11: React.FC<{ T: number; f: number }> = ({ T, f }) => {
       floorFade(g);
       g.restore();
     }}>
-      <Lb x={960} y={110} s="8 个人 · 共用一个卡池（示意）" size={24} col="#d6c8ff" ls="0.3em" o={1 - pr(T, 103.5, 0.25)} />
-      <Lb x={STACK_X(GOLD_COL)} y={STACK_Y + 14} s="↑ 你要的 ★" size={26} col={C.goldHi} o={eo(T, 102.0, 0.3) * (1 - pr(T, 104.4, 0.3))} />
-      <Lb x={960} y={FLOOR + 140} s="你" size={30} col={C.goldHi} />
-      <Lb x={960} y={100} s="被别人拿走的，你就刷不到" size={34} col="#efe8da" o={eo(T, 103.7, 0.35)} />
+      <Lb x={960} y={110} s="8 个人 · 共用一个卡池（示意）" size={24} col="#d6c8ff" ls="0.3em" o={1 - pr(T, 102.1, 0.3)} />
+      <Lb x={STACK_X(GOLD_COL)} y={STACK_Y + 14} s="↑ 你要的 ★" size={26} col={C.goldHi} o={eo(T, 102.0, 0.3) * (1 - pr(T, 104.05, 0.25))} />
+      <Lb x={960} y={FLOOR + 126} s="你" size={30} col={C.goldHi} />
+      <Lb x={960} y={110} s="被别人拿走的，你就刷不到" size={34} col="#efe8da" o={eo(T, 103.8, 0.35)} />
     </Scene>
   );
 };
@@ -734,7 +734,7 @@ export const S12: React.FC<{ T: number; f: number }> = ({ T, f }) => {
       });
     }}>
       <Lb x={960} y={232} s={coins > 0 ? `${coins} 局　·　蓝 = 赢　粉 = 输` : ''} size={30} col={C.goldHi} />
-      <Lb x={960} y={110} s="强一档的人：约 6 : 4" size={26} col="#9cc8ff" o={eo(T, 110.4, 0.4)} />
+      <Lb x={960} y={96} s="强一档的人：约 6 : 4" size={26} col="#9cc8ff" o={eo(T, 110.4, 0.4)} />
       <GalleryLabels appear={() => 1} dim={off} />
     </Scene>
   );

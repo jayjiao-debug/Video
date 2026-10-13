@@ -44,7 +44,7 @@ const SplitWords: React.FC<{ T: number; y?: number }> = ({ T, y = 240 }) => (
     })}
   </>
 );
-const Tag: React.FC<{ T: number; y?: number; s?: string }> = ({ T, y = 120, s = '金铲铲 · 最近三把' }) => <Lb x={960} y={y} s={s} size={28} col="rgba(255,214,140,.9)" ls="0.4em" o={eo(T, 0.5, 0.4) * (1 - eio(T, SPLIT, 0.45))} />;
+const Tag: React.FC<{ T: number; y?: number; s?: string }> = ({ T, y = 120, s = '金铲铲 · 最近三把' }) => <Lb x={960} y={y} s={s} size={28} col="rgba(255,214,140,.9)" ls="0.4em" o={eo(T, 0.5, 0.4) * (1 - eio(T, bt(4), 0.4))} />;
 
 /* A · showroom: the spatula and the pan light up on the hit, then the three plaques fall between them ------------- */
 const HA: React.FC<{ T: number; f: number }> = ({ T, f }) => {
