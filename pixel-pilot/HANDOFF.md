@@ -23,6 +23,14 @@ name the culprit in the comments, and then the solution is shown.
   silhouettes, a cut on every beat, round shapes morphing into each other). The pixel version is in `opening/`.
   The series title "像素福尔摩斯" is a placeholder until the owner picks a name.
 
+## Series world (`world/`)
+The owner asked for a world with a big villain, a larger conspiracy, unexplained mysteries and charismatic recurring
+characters, so that dedicated viewers "get" it. `world/series_bible.md` (Chinese) is the series bible: Holmes once
+named Watson as a murderer on planted evidence (1891) and swore never to name a culprit first, which is why the viewer
+is the detective; a hidden network called 差一刻 sells "a quarter hour, an object, and a ready-made suspect"; the
+season-1 plan has 12 episodes, with Case 1 retrofitted and its solution unchanged; a writer-only answer key; an easter-egg system;
+and production rules. `world/concepts_draft.md` keeps the three draft concepts it was built from. Not yet approved by the owner.
+
 ## Visual-novel portraits (`vn/`)
 The owner asked whether the characters could look more real, with specific facial expressions.
 `vn/vn_faces.py` takes one generated bust per character and pixelises it to 128×128. Expressions are then painted
