@@ -18,13 +18,22 @@ const kingAt = (g: G, x: number, y: number, s: number, rot = 0, light = 1, rimL 
 };
 
 /* ---------------------------------------------------------------- labels */
-const Lb: React.FC<{ x: number; y: number; s: string; size?: number; col?: string; sub?: string; o?: number; ls?: string }> = ({ x, y, s, size = 30, col = '#efe8da', sub, o = 1, ls = '0.18em' }) =>
-  o <= 0 ? null : (
+/* legibility rules (phone, portrait feed: 1080p px ≈ 0.035 mm): anything to be read in Chinese is at least 44 px and set in
+   黑体 below 60 px (宋体 hairlines vanish when small); notes in brackets at least 30 px; Latin footnotes at least 22 px;
+   nothing to be read below 70 % opacity. Big display text (60 px and up) keeps the brand serif. */
+const readable = (col: string) => col.replace(/rgba\(([^)]*),\s*([0-9.]+)\)/, (m, rgb, a) => `rgba(${rgb},${Math.max(0.75, parseFloat(a))})`);
+const Lb: React.FC<{ x: number; y: number; s: string; size?: number; col?: string; sub?: string; o?: number; ls?: string }> = ({ x, y, s, size = 30, col = '#efe8da', sub, o = 1, ls = '0.18em' }) => {
+  if (o <= 0) return null;
+  const latin = /^[\x00-\x7F·×→←—\s]+$/.test(s), note = /^[（(]/.test(s);
+  const px = latin ? Math.max(size, 22) : Math.max(size, note ? 30 : 44);
+  const display = px >= 60;
+  return (
     <div style={{ position: 'absolute', left: x - 700, width: 1400, top: y, textAlign: 'center', opacity: o }}>
-      <div style={{ fontFamily: F.serif, fontWeight: 700, fontSize: size, letterSpacing: ls, color: col, textShadow: '0 2px 14px rgba(0,0,0,.95)', ...LNUM }}>{s}</div>
-      {sub && <div style={{ fontFamily: F.mono, fontWeight: 700, fontSize: 15, letterSpacing: '0.3em', color: 'rgba(239,232,218,.45)', marginTop: 6 }}>{sub}</div>}
+      <div style={{ fontFamily: display ? F.serif : latin ? F.mono : F.sans, fontWeight: display ? 700 : latin ? 700 : 700, fontSize: px, letterSpacing: display || latin ? ls : '0.06em', color: readable(col), textShadow: '0 2px 10px rgba(0,0,0,.95), 0 0 2px rgba(0,0,0,.9)', ...LNUM }}>{s}</div>
+      {sub && <div style={{ fontFamily: F.mono, fontWeight: 700, fontSize: 20, letterSpacing: '0.24em', color: 'rgba(239,232,218,.72)', marginTop: 6 }}>{sub}</div>}
     </div>
   );
+};
 const Scene: React.FC<{ f: number; draw: (g: G) => void; children?: React.ReactNode; o?: number }> = ({ f, draw, children, o = 1 }) => (
   <AbsoluteFill style={{ background: '#030305', opacity: o }}>
     <Canvas dep={f} draw={(g) => { g.save(); draw(g); g.restore(); g.globalCompositeOperation = 'source-over'; }} />
@@ -294,7 +303,7 @@ const gallery = (g: G, T: number, appear: (i: number) => number, dim: (i: number
   OBJ.forEach((o, i) => { const k = appear(i); if (k <= 0) return; g.save(); g.globalAlpha = clamp(k * 1.5) * (0.25 + 0.75 * dim(i)); g.translate(0, (1 - easeInOut(clamp(k))) * 40); g.save(); g.beginPath(); g.rect(0, 0, W, FLOOR + 84); g.clip(); withReflection(g, () => o.draw(g, gx(o.u), at(i)), 0.25); g.restore(); g.restore(); });
 };
 const GalleryLabels: React.FC<{ appear: (i: number) => number; dim?: (i: number) => number }> = ({ appear, dim = () => 1 }) => (
-  <>{OBJ.map((o, i) => <Lb key={o.name} x={gx(o.u)} y={FLOOR + 120} s={o.name} size={28} sub={o.en} o={clamp(appear(i) * 1.4) * (0.3 + 0.7 * dim(i))} />)}</>
+  <>{OBJ.map((o, i) => <Lb key={o.name} x={gx(o.u)} y={FLOOR + 116} s={o.name} size={28} o={clamp(appear(i) * 1.4) * (0.3 + 0.7 * dim(i))} />)}</>
 );
 
 /* ================================================================ S2 · the spectrum (20.66 – 28.76) */
@@ -311,9 +320,7 @@ export const S2: React.FC<{ T: number; f: number }> = ({ T, f }) => {
       g.restore();
     }}>
       <GalleryLabels appear={ap} />
-      <Lb x={300} y={FLOOR + 210} s="← 全靠实力" size={26} col="#9cc8ff" o={eo(T, bt(41), 0.4)} />
-      <Lb x={1620} y={FLOOR + 210} s="全靠运气 →" size={26} col="#ff9ed6" o={eo(T, bt(48), 0.4)} />
-      <Lb x={960} y={FLOOR + 214} s="（位置为示意）" size={18} col="rgba(239,232,218,.45)" o={eo(T, bt(49), 0.4)} />
+      <Lb x={960} y={130} s="（位置为示意）" size={30} col="rgba(239,232,218,.75)" o={eo(T, bt(49), 0.4)} />
     </Scene>
   );
 };
@@ -354,7 +361,7 @@ export const S3: React.FC<{ T: number; f: number }> = ({ T, f }) => {
       {['先手赢', '和棋', '后手赢'].map((s, i) => <Lb key={s} x={[560, 960, 1360][i]} y={[145, 130, 145][i]} s={s} size={34} col={C.goldHi} o={clamp(outsK[i])} />)}
       <Lb x={790} y={FLOOR + 140} s="围棋 · 国际象棋" size={28} sub="PERFECT INFORMATION" o={1 - pr(T, CUT.tree, 0.5)} />
       <Lb x={960} y={150} s="信息全公开 · 没有骰子" size={40} col="#cfe0ff" sub="EVERYTHING ON THE TABLE" o={eo(T, 28.95, 0.4) * (1 - pr(T, CUT.tree - 0.3, 0.3))} />
-      <Lb x={960} y={FLOOR + 200} s="ZERMELO · 1913" size={16} col="rgba(239,232,218,.75)" ls="0.4em" o={eo(T, CUT.tree + 0.5, 0.5)} />
+      <Lb x={960} y={FLOOR + 140} s="ZERMELO · 1913" size={16} col="rgba(239,232,218,.75)" ls="0.4em" o={eo(T, CUT.tree + 0.5, 0.5)} />
     </Scene>
   );
 };
@@ -599,7 +606,7 @@ export const S10: React.FC<{ T: number; f: number }> = ({ T, f }) => {
           g.strokeStyle = `rgba(${col},.92)`; g.lineWidth = 3; g.lineJoin = 'round'; g.beginPath(); for (let i = 0; i <= n; i++) { const y = Y(w[i]); if (i) g.lineTo(X(i), y); else g.moveTo(X(i), y); } g.stroke();
           add(g, () => { glowDot(g, X(n), Y(w[n]), 30, 0.6, col); glowDot(g, X(n), Y(w[n]), 5, 1, '255,244,220'); });
         });
-        if (n >= 105) { const ups = WALKS.filter((w) => w[105] > 0), dn = WALKS.find((w) => w[105] <= 0)!; const yu = Math.min(...ups.map((w) => Y(w[105]))); g.font = '700 28px "Noto Sans CJK SC"'; g.textAlign = 'left'; g.textBaseline = 'middle'; g.fillStyle = '#9cc8ff'; g.fillText('赢得多 ×3', X(105) + 28, yu - 26); g.fillStyle = '#ff9ed6'; g.fillText('输得多 ×1', X(105) + 28, Y(dn[105]) + 4); }
+        if (n >= 105) { const ups = WALKS.filter((w) => w[105] > 0), dn = WALKS.find((w) => w[105] <= 0)!; const yu = Math.min(...ups.map((w) => Y(w[105]))); g.font = '700 38px "Noto Sans CJK SC"'; g.textAlign = 'left'; g.textBaseline = 'middle'; g.fillStyle = '#9cc8ff'; g.fillText('赢得多 ×3', X(105) + 28, yu - 26); g.fillStyle = '#ff9ed6'; g.fillText('输得多 ×1', X(105) + 28, Y(dn[105]) + 4); }
       }
       g.restore();
     }}>
@@ -612,7 +619,7 @@ export const S10: React.FC<{ T: number; f: number }> = ({ T, f }) => {
               <Lb x={st.x} y={FLOOR + 130} s={st.name} size={26} col={i === 2 ? '#ffaee0' : i === 0 ? '#a8ccff' : '#efe8da'} o={ap(i)} />
             </React.Fragment>
           ))}
-          <Lb x={1500} y={370} s="比一半运气还靠运气" size={24} col="#ff9ed6" o={eo(T, 91.0, 0.4)} />
+          <Lb x={1500} y={392} s="比一半运气还靠运气" size={24} col="#ff9ed6" o={eo(T, 91.0, 0.4)} />
         </>
       )}
       {second && (
@@ -726,8 +733,7 @@ export const S12: React.FC<{ T: number; f: number }> = ({ T, f }) => {
         for (let i = 0; i < coins; i++) { const j = order.indexOf(i), x = lerp(360 + (i % 50) * 24, 360 + (j % 50) * 24, sortK), y = lerp(170 + Math.floor(i / 50) * 34, 170 + Math.floor(j / 50) * 34, sortK); glowDot(g, x, y, 9, 0.85, win(i) ? '120,175,255' : '255,110,205'); }
       });
     }}>
-      <Lb x={960} y={235} s={coins > 0 ? `${coins} 局` : ''} size={30} col={C.goldHi} />
-      <Lb x={960} y={280} s="蓝 = 赢 · 粉 = 输" size={20} col="rgba(239,232,218,.7)" o={eo(T, 107.4, 0.4)} />
+      <Lb x={960} y={232} s={coins > 0 ? `${coins} 局　·　蓝 = 赢　粉 = 输` : ''} size={30} col={C.goldHi} />
       <Lb x={960} y={110} s="强一档的人：约 6 : 4" size={26} col="#9cc8ff" o={eo(T, 110.4, 0.4)} />
       <GalleryLabels appear={() => 1} dim={off} />
     </Scene>
@@ -751,7 +757,7 @@ export const SEnd: React.FC<{ T: number; f: number }> = ({ T, f }) => {
       <div style={{ position: 'absolute', left: 0, right: 0, top: 640, display: 'flex', justifyContent: 'center', opacity: fo(1.4) }}>
         <div style={{ padding: '10px 36px', borderRadius: 40, border: `1.5px solid ${C.gold}`, fontFamily: F.sans, fontWeight: 500, fontSize: 28, letterSpacing: '0.2em', color: C.gold }}>{JUNO.follow}</div>
       </div>
-      <div style={{ position: 'absolute', left: 0, right: 0, top: 770, textAlign: 'center', opacity: fo(1.8), fontFamily: F.sans, fontSize: 17, color: 'rgba(239,232,218,.42)', lineHeight: '28px', ...LNUM }}>
+      <div style={{ position: 'absolute', left: 0, right: 0, top: 770, textAlign: 'center', opacity: fo(1.8), fontFamily: F.sans, fontSize: 22, color: 'rgba(239,232,218,.75)', lineHeight: '34px', ...LNUM }}>
         <div>资料：Duersch, Lambrecht & Oechssler, European Economic Review 2020 · Schaeffer et al., Science 2007 · Brown & Sandholm, Science 2019</div>
         <div>Li et al. 2020 (Suphx) · Tromp 2016 (Go positions) · Zermelo 1913 · 100 局曲线为示意</div>
       </div>
