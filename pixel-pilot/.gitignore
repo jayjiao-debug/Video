@@ -14,3 +14,5 @@ ep01_dark/audio/*.wav
 # Detective Conan fan-art tests stay private (copyrighted character, public repo)
 public/sprites/conan*
 tools/conan*.py
+# preview strips written by ep01_dark/cells.py
+ep01_dark/art_src/*_cells.png
