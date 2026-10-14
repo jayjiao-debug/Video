@@ -1,41 +1,36 @@
-/* 《是菜还是非？》 · 游戏的运气光谱. Low-key product photography look. Music: the channel track from 0 s. */
+/* 《谁打来的？》 · 电话恐惧. The cold open (Ring2: freeze, the owner's WeChat ringtone, the slam) and then the story,
+   in the same language. Every shot change is a short dissolve with a gentle push (from games26). */
 import React, { useEffect, useState } from 'react';
 import { AbsoluteFill, continueRender, delayRender, useCurrentFrame } from 'remotion';
 import { FontFaces, FONT_LOADS, Grade, Grain, Bars, Subs, F, hit, pr, eo } from './kit';
-import { CUT, LINES } from './time';
-import { S0, S2, S3, S4, S5, S6, S7, S8, S9, S10, S11, S12, SEnd } from './Scenes';
-import { TT4, HOOK_END } from './Tests';
-import { HD } from './Hooks';
-export { FILM_FRAMES } from './time';
+import { CUT, LINES, FILM_FRAMES, SLAM, P0 } from './time';
+import { Ring2 } from './Ring2';
+import { S1, Title, S2, S2c, S3a, S3b, S3c, S4a, S4b, S4c, S5c, S5e, S6a, S6c, S6d, S6e, SEnd } from './Scenes';
+export { FILM_FRAMES };
 
 type Shot = { a: number; z: number; el: (T: number, f: number) => React.ReactNode };
-// every scene change (including the switches inside a scene) is a short dissolve with a gentle push:
-// the outgoing shot drifts forward and softens, the incoming one settles in, centred just before the cut so the new
-// picture owns the beat
 const SHOTS: Shot[] = [
-  { a: 0, z: HOOK_END, el: (T, f) => <HD T={T} f={f} /> },
-  { a: HOOK_END, z: CUT.king, el: (T, f) => <S0 T={T} f={f} pt={1} /> },
-  { a: CUT.king, z: CUT.strip, el: (T, f) => <S0 T={T} f={f} pt={2} /> },
-  { a: CUT.strip, z: CUT.gallery, el: (T, f) => <TT4 T={T} f={f} /> },
-  { a: CUT.gallery, z: CUT.chess, el: (T, f) => <S2 T={T} f={f} /> },
-  { a: CUT.chess, z: CUT.go, el: (T, f) => <S3 T={T} f={f} /> },
-  { a: CUT.go, z: CUT.solved, el: (T, f) => <S4 T={T} f={f} /> },
-  { a: CUT.solved, z: CUT.poker, el: (T, f) => <S5 T={T} f={f} /> },
-  { a: CUT.poker, z: CUT.mahjong, el: (T, f) => <S6 T={T} f={f} /> },
-  { a: CUT.mahjong, z: CUT.question, el: (T, f) => <S7 T={T} f={f} /> },
-  { a: CUT.question, z: CUT.gap, el: (T, f) => <S8 T={T} f={f} /> },
-  { a: CUT.gap, z: CUT.result, el: (T, f) => <S9 T={T} f={f} /> },
-  { a: CUT.result, z: 93.5, el: (T, f) => <S10 T={T} f={f} sec={false} /> },
-  { a: 93.5, z: CUT.pool, el: (T, f) => <S10 T={T} f={f} sec /> },
-  { a: CUT.pool, z: 101.85, el: (T, f) => <S11 T={T} f={f} pb={false} /> },
-  { a: 101.85, z: CUT.close, el: (T, f) => <S11 T={T} f={f} pb /> },
-  { a: CUT.close, z: CUT.end, el: (T, f) => <S12 T={T} f={f} /> },
+  { a: 0, z: CUT.p23, el: () => <Ring2 bare /> },
+  { a: CUT.p23, z: CUT.why + 0.4, el: (T, f) => <S1 T={T} f={f} /> },
+  { a: CUT.why + 0.4, z: CUT.tOut, el: (T, f) => <Title T={T} f={f} /> },
+  { a: CUT.tOut, z: CUT.sixty, el: (T, f) => <S2 T={T} f={f} /> },
+  { a: CUT.sixty, z: CUT.breakA, el: (T, f) => <S2c T={T} f={f} /> },
+  { a: CUT.breakA, z: CUT.reasons, el: (T, f) => <S3a T={T} f={f} /> },
+  { a: CUT.reasons, z: CUT.notOver, el: (T, f) => <S3b T={T} f={f} /> },
+  { a: CUT.notOver, z: CUT.build, el: (T, f) => <S3c T={T} f={f} /> },
+  { a: CUT.build, z: CUT.friend, el: (T, f) => <S4a T={T} f={f} /> },
+  { a: CUT.friend, z: CUT.split, el: (T, f) => <S4b T={T} f={f} /> },
+  { a: CUT.split, z: CUT.exp2, el: (T, f) => <S4c T={T} f={f} /> },
+  { a: CUT.exp2, z: CUT.timeSame, el: (T, f) => <S5c T={T} f={f} /> },
+  { a: CUT.timeSame, z: CUT.coda, el: (T, f) => <S5e T={T} f={f} /> },
+  { a: CUT.coda, z: CUT.booked, el: (T, f) => <S6a T={T} f={f} /> },
+  { a: CUT.booked, z: CUT.ask, el: (T, f) => <S6c T={T} f={f} /> },
+  { a: CUT.ask, z: CUT.call, el: (T, f) => <S6d T={T} f={f} /> },
+  { a: CUT.call, z: CUT.end, el: (T, f) => <S6e T={T} f={f} /> },
   { a: CUT.end, z: CUT.fin + 1, el: (T, f) => <SEnd T={T} f={f} /> },
 ];
 const PRE = 0.32, POST = 0.18;
 const smooth = (x: number) => { const k = Math.max(0, Math.min(1, x)); return k * k * (3 - 2 * k); };
-/** one shot in a dissolve; `text` fades the shot's text (everything but its canvas) on its own, so two scenes' labels
-    never sit on top of each other: the old text is gone before the midpoint, the new text arrives after it */
 const Layer: React.FC<{ id: string; o?: number; s?: number; blur?: number; text?: number; children: React.ReactNode }> = ({ id, o = 1, s = 1, blur = 0, text = 1, children }) => (
   <div className={id} style={{ position: 'absolute', inset: 0, opacity: o, transform: s !== 1 ? `scale(${s})` : undefined }}>
     <style>{`.${id} > div > canvas { filter: ${blur > 0.05 ? `blur(${blur}px)` : 'none'}; } .${id} > div > :not(canvas) { filter: opacity(${text.toFixed(3)}); }`}</style>
@@ -56,16 +51,22 @@ const picture = (T: number, f: number) => {
     </>
   );
 };
-const SLAMS = [CUT.title, CUT.drop, CUT.result];
-const LOADS = [...FONT_LOADS, '400 40px "DejaVu Sans"', '900 40px "Noto Serif CJK SC"'];
+const SLAMS = [CUT.title, CUT.build, CUT.drop, CUT.coda];
+const LOADS = [...FONT_LOADS, '900 40px "Noto Serif CJK SC"'];
+const GLYPHS = '谁打来的？《》铃声一响你是开心还是心里一紧发消息打电话说错了撤不回冷场比起通话更想不接理由都怕这个年被拦下的诈骗全年天平均每通德州大学奥斯汀分校芝加哥老朋友很久没聊随机分配写邮件事前预测实际尴尬度连接感示意研究报告为显著差异未给统一刻度实验二陌生人两两聊天方式打字视频语音看不见脸也一样用时差不多同一份调查岁有好消息希望来约好呼叫中关注一起懂世界评论区资料英国名成年人公安部通报数据柱状图同事学外婆室友妈老板快递前任客服班主任房东外卖领导号码每个从0123456789%≈亿万';
 
 export const Film: React.FC = () => {
   const f = useCurrentFrame(), T = f / 30;
   const [h] = useState(() => delayRender('film-fonts', { timeoutInMilliseconds: 60000 }));
   const [ok, setOk] = useState(false);
-  useEffect(() => { Promise.all(LOADS.map((x) => document.fonts.load(x, '是菜还是非国际象棋围棋麻将0123456789').catch(() => null))).then(() => { setOk(true); continueRender(h); }); }, [h]);
-  const markO = T < CUT.gallery ? 1 - pr(T, CUT.title - 0.3, 0.3) : T < CUT.end ? eo(T, CUT.gallery, 0.4) : 0;
-  const flash = SLAMS.reduce((m, s) => m + 0.2 * hit(T, s, 0.09), 0);
+  useEffect(() => { Promise.all(LOADS.map((x) => document.fonts.load(x, GLYPHS).catch(() => null))).then(() => { setOk(true); continueRender(h); }); }, [h]);
+  // the corner mark: on from the start, hidden while the title card is up, back after it, gone under the end card
+  const markO = T < CUT.tOut ? 1 - pr(T, CUT.title - 0.3, 0.3) : T < CUT.end ? eo(T, CUT.tOut, 0.4) * (1 - pr(T, CUT.end - 0.3, 0.3)) : 0;
+  const flash = SLAMS.reduce((m, s) => m + 0.18 * hit(T, s, 0.09), 0);
+  // during the cold open's pause the picture (and its grain, and the subtitle) stand still
+  const frozen = T >= P0 && T < SLAM;
+  const subT = frozen ? P0 : T;
+  const lines = LINES.filter(([a]) => !(a < P0 && T >= SLAM));
   return (
     <AbsoluteFill style={{ background: '#000' }}>
       <FontFaces />
@@ -73,13 +74,13 @@ export const Film: React.FC = () => {
         <>
           {picture(T, f)}
           {T < CUT.end && <Grade warm={0.03} />}
-          <Grain T={T} />
-          <div style={{ position: 'absolute', inset: 0, background: '#fff1d6', opacity: flash, mixBlendMode: 'screen' }} />
+          <Grain T={frozen ? P0 : T} />
+          {T > CUT.p23 - 0.4 && <div style={{ position: 'absolute', inset: 0, background: '#fff1d6', opacity: flash, mixBlendMode: 'screen' }} />}
           <Bars />
           <div style={{ position: 'absolute', right: 56, top: 36, opacity: 0.9 * markO, fontFamily: F.sans, fontWeight: 500, fontSize: 18, letterSpacing: '0.3em', color: 'rgba(243,237,226,.5)' }}>
             <span style={{ color: '#e3b765' }}>◆ </span>Juno · VIBE知识大赏
           </div>
-          <Subs T={T} lines={LINES} />
+          <Subs T={subT} lines={lines} />
         </>
       )}
     </AbsoluteFill>

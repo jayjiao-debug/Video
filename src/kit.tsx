@@ -101,10 +101,10 @@ export const Subs: React.FC<{ T: number; lines: Line[] }> = ({ T, lines }) => (
       const rise = (1 - eo(T, a, 0.3)) * 6;
       return (
         <div key={i} style={{ position: 'absolute', left: 0, right: 0, bottom: SUB.bottom, textAlign: 'center', opacity: o, transform: `translateY(${rise}px)`, fontFamily: F.sans, fontWeight: SUB.weight, fontSize: SUB.size, letterSpacing: '0.04em', color: C.cream, textShadow: '0 2px 6px rgba(0,0,0,.9), 0 0 2px rgba(0,0,0,.9)', ...LNUM }}>
-          {s.split(/(\[[^\]]+\])/).map((x, j) => {
-            const hl = x.startsWith('['), t = hl ? x.slice(1, -1) : x;
-            // colour carries meaning: skill = blue, luck = magenta, gold for everything else that is highlighted
-            const col = !hl ? undefined : /菜|实力/.test(t) ? '#9cc8ff' : /非|运气/.test(t) ? '#ff9ed6' : C.goldHi;
+          {s.split(/(\[[^\]]+\]|\{[^}]+\})/).map((x, j) => {
+            const mg = x.startsWith('{'), hl = mg || x.startsWith('['), t = hl ? x.slice(1, -1) : x;
+            // colour carries meaning: the tightening (fear, scams, awkwardness) = magenta, warm / answers = gold
+            const col = !hl ? undefined : mg ? '#ff9ed6' : /一紧|没好事|诈骗|骚扰|尴尬|不高兴/.test(t) && !/没有更尴尬/.test(t) ? '#ff9ed6' : C.goldHi;
             return <span key={j} style={col ? { color: col } : undefined}>{t.split(/\^(\d+)/).map((u, k) => (k % 2 ? <sup key={k} style={{ fontSize: '0.58em', verticalAlign: '0.75em', lineHeight: 0 }}>{u}</sup> : <React.Fragment key={k}>{u}</React.Fragment>))}</span>;
           })}
         </div>
