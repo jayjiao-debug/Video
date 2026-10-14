@@ -12,6 +12,8 @@ name the culprit in the comments, and then the solution is shown.
 | `opening_v1.mp4` | Series opening only, 12.5 s |
 | `case01_script.md` | Case 1 clues and solution |
 | `vn_sample.mp4`, `vn_faces_sheet.png` | Visual-novel style test: detailed 128×128 portraits (Holmes, secretary) with layered expressions, 25 s dialogue |
+| `dossier_sample.mp4` | Suspect dossier card (秘书伊迪丝), 5.6 s: Live2D-style idle (breathing, head tilt, hair sway, blink, glance), file card, 嫌疑人 stamp. Made by `vn/dossier.py` |
+| `douyin_safe_zone_check.png`, `dossier_safe_zone.png` | Douyin UI overlay zones drawn over Case 1, the VN sample and the dossier card (`tools/safe_zone_overlay.py`) |
 | `sherlock_movement_test_v5.mp4`, `sherlock_cute_faces.png` | The approved character: v3 rig with the cute expression faces |
 
 ## Decisions already made by the owner
@@ -65,6 +67,12 @@ ffmpeg -i out/opening_raw.mp4 -i out/opening.wav -c:v copy -af loudnorm=I=-14:TP
   The sources are in `case01/art_src/`.
 
 ## Open items
+- **Douyin safe zone (measured from the owner's upload-preview screenshot):** top tabs cover y 0–220, the right icon column covers
+  x 910–1080 / y 640–1890, the caption and music line cover x 0–910 / y 1400–1920. Keep clues and text inside x 40–900, y 220–1400.
+  Case 1 and `vn_sample.mp4` currently put subtitles, the interrogation box and the 笔记 bar in covered areas and need relaying out.
+- **BGM:** the owner's track ("Bye Bye Baby Blue" DJ remix, about 118 bpm) is a commercial recording, loud end to end. Advice given: add it from
+  Douyin's music library at upload rather than burning it in, use it as the opening theme only, and keep our own score under dialogue.
+- Answers to the owner's nine questions about interactivity, fairness, voices, game potential and so on: `notes/qa.md`.
 - **Voice is a placeholder.** It uses free Google Translate TTS. edge-tts was blocked in the cloud environment.
   A production voice, from a TTS service or real recordings, is still needed.
 - The nephew's portrait cut-out lost its dark jacket fill. The opening fills it back in; the case portrait card does not yet.
