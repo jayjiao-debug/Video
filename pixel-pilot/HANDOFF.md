@@ -7,7 +7,8 @@ name the culprit in the comments, and then the solution is shown.
 ## Finished cuts (`deliverables/`)
 | File | What it is |
 |---|---|
-| `case01_v2_with_opening.mp4` | Case 1 with the series opening, 2:48. This is the latest cut. |
+| `case01_v3_with_opening.mp4` | Case 1 with the series opening, 2:49, laid out for the Douyin safe zone. This is the latest cut. |
+| `case01_v2_with_opening.mp4` | The same before the safe-zone relayout (subtitles sat under Douyin's caption) |
 | `case01_v2.mp4` | Case 1 v2 without the opening, 2:36 |
 | `opening_v1.mp4` | Series opening only, 12.5 s |
 | `case01_script.md` | Case 1 clues and solution |
@@ -69,7 +70,9 @@ ffmpeg -i out/opening_raw.mp4 -i out/opening.wav -c:v copy -af loudnorm=I=-14:TP
 ## Open items
 - **Douyin safe zone (measured from the owner's upload-preview screenshot):** top tabs cover y 0–220, the right icon column covers
   x 910–1080 / y 640–1890, the caption and music line cover x 0–910 / y 1400–1920. Keep clues and text inside x 40–900, y 220–1400.
-  Case 1 and `vn_sample.mp4` currently put subtitles, the interrogation box and the 笔记 bar in covered areas and need relaying out.
+  Case 1 is laid out for this (`SAFE_*` constants at the top of `case01/case_render.py`; subtitles wrap at 12 characters
+  and sit just above y 1395, the 笔记 bar sits under the tabs, the evidence board fits in three columns inside x 900).
+  `vn_sample.mp4` still puts its text box in the caption area and needs the same treatment if the VN style is kept.
 - **BGM:** the owner's track ("Bye Bye Baby Blue" DJ remix, about 118 bpm) is a commercial recording, loud end to end. Advice given: add it from
   Douyin's music library at upload rather than burning it in, use it as the opening theme only, and keep our own score under dialogue.
 - Answers to the owner's nine questions about interactivity, fairness, voices, game potential and so on: `notes/qa.md`.

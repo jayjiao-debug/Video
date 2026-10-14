@@ -14,6 +14,11 @@ import numpy as np
 from PIL import Image, ImageDraw
 from case_kit import *   # noqa: F401,F403  (assets, helpers, timeline)
 
+# Douyin overlay: tabs cover y < 220, the icon column x > 910 (from y 640), the caption y > 1400.
+# Text and clues stay inside x 40-900, y 220-1400 (tools/safe_zone_overlay.py draws the zones).
+SAFE_T, SAFE_B, SAFE_R, SAFE_CX = 220, 1395, 900, 470
+WRAP = 12
+
 s_ = lambda i: S[IDX[i]]
 e_ = lambda i: E[IDX[i]]
 k_ = lambda i: KY[IDX[i]]
@@ -66,13 +71,13 @@ NAMES = {"B": "管家", "S": "秘书", "P": "侄子"}
 
 def hud(frame, t):
     d = ImageDraw.Draw(frame)
-    d.rectangle((0, 0, W, 132), fill=(16, 12, 24, 230))
-    d.rectangle((0, 132, W, 137), fill=(52, 40, 66, 255))
-    frame.alpha_composite(text_img("第一案 · 雨夜书房", 3, GOLD), (36, 18))
-    frame.alpha_composite(text_img("笔记", 3, CREAM), (36, 72))
+    y = SAFE_T
+    d.rectangle((0, 0, W, y + 76), fill=(16, 12, 24, 230))
+    d.rectangle((0, y + 76, W, y + 81), fill=(52, 40, 66, 255))
+    frame.alpha_composite(text_img("笔记", 3, CREAM), (36, y + 10))
     x = 150
     for tc, lab in CLUES:
-        box = (x, 66, x + 142, 124)
+        box = (x, y + 8, x + 142, y + 66)
         if t >= tc:
             hot = t - tc < 0.3
             d.rectangle(box, fill=(232, 182, 72) if hot else (60, 44, 24), outline=GOLD)
@@ -80,21 +85,42 @@ def hud(frame, t):
         else:
             d.rectangle(box, outline=(80, 64, 96))
             im = text_img("?", 3, (110, 92, 130), None)
-        frame.alpha_composite(im, (x + 71 - im.width // 2, 68))
+        frame.alpha_composite(im, (x + 71 - im.width // 2, y + 10))
         x += 152
 
 
 def wrap(txt, n=14):
-    """Greedy: break after the last punctuation that fits in n chars, else at n."""
-    rows = []
-    while len(txt) > n:
-        if len(txt) <= n + 2 and all(ch in "，。：？！…" for ch in txt[n:]):
-            break                          # never leave punctuation alone on a row
-        cut = max([i + 1 for i, ch in enumerate(txt[:n]) if ch in "，。：？！…"] or [n])
-        if cut < n // 2:
-            cut = n
-        rows.append(txt[:cut]); txt = txt[cut:]
-    return rows + ([txt] if txt else [])
+    """Fewest rows of at most n characters (one trailing punctuation mark may overhang), balanced,
+    preferring breaks after punctuation; a row never starts with punctuation."""
+    P = "，。：？！…、"
+    L = len(txt)
+    if L <= n:
+        return [txt]
+    best = None
+    kmin = -(-L // n)
+    for k in range(kmin, L + 1):
+        ideal = L / k
+        # cost[j], cut[j]: best split of txt[:j] into some rows
+        cost = {0: (0.0, [])}
+        for j in range(1, L + 1):
+            for i in list(cost):
+                seg = txt[i:j]
+                body = seg[:-1] if seg[-1] in P else seg
+                if len(body) > n or seg[0] in P or len(cost[i][1]) >= k:
+                    continue
+                if j < L and txt[j] in P:
+                    continue
+                c = cost[i][0] + (len(seg) - ideal) ** 2 + (0 if seg[-1] in P or j == L else 60)
+                if j not in cost or c < cost[j][0]:
+                    cost[j] = (c, cost[i][1] + [seg])
+        if L in cost:
+            c = cost[L][0] + 40 * (k - kmin)    # one extra row is worth it to avoid a mid-phrase break
+            if best is None or c < best[0]:
+                best = (c, cost[L][1])
+            if k > kmin:
+                break
+    best = best and best[1]
+    return best or [txt[i:i + n] for i in range(0, L, n)]
 
 
 def line_at(t):
@@ -109,12 +135,14 @@ def subtitle(frame, t):
     if idx is None:
         return
     ln = LINES[idx]
-    rows = wrap(ln["t"])
+    if ln["id"] == "ask":     # the evidence board carries this line on screen
+        return
+    rows = wrap(ln["t"], WRAP)
     d = ImageDraw.Draw(frame)
     if ln["w"] in NAMES:      # interrogation box: name plate + text typed out as they speak
-        y0 = 1520
-        d.rectangle((24, y0, W - 24, y0 + 90 + 74 * len(rows)), fill=(250, 244, 226, 245), outline=K, width=8)
-        d.rectangle((36, y0 + 12, W - 36, y0 + 78 + 74 * len(rows)), outline=(190, 170, 130), width=3)
+        y0 = SAFE_B - 90 - 74 * len(rows)
+        d.rectangle((24, y0, SAFE_R + 4, y0 + 90 + 74 * len(rows)), fill=(250, 244, 226, 245), outline=K, width=8)
+        d.rectangle((36, y0 + 12, SAFE_R - 8, y0 + 78 + 74 * len(rows)), outline=(190, 170, 130), width=3)
         tagim = text_img(NAMES[ln["w"]], 3, CREAM, None)
         d.rectangle((48, y0 - 50, 48 + tagim.width + 36, y0 + 4), fill=(120, 40, 44), outline=K, width=5)
         frame.alpha_composite(tagim, (66, y0 - 44))
@@ -125,16 +153,16 @@ def subtitle(frame, t):
             part = r[: max(0, shown - used)]
             used += len(r)
             if part:
-                frame.alpha_composite(text_img(part, 4, INK, None), (70, y))
+                frame.alpha_composite(text_img(part, 4, INK, None), (60, y))
             y += 74
         if frac >= 1 and (t * 2) % 1 < 0.5:
-            d.polygon([(W - 90, y0 + 54 + 74 * len(rows)), (W - 60, y0 + 54 + 74 * len(rows)), (W - 75, y0 + 70 + 74 * len(rows))], fill=(120, 40, 44))
+            d.polygon([(SAFE_R - 60, y0 + 54 + 74 * len(rows)), (SAFE_R - 30, y0 + 54 + 74 * len(rows)), (SAFE_R - 45, y0 + 70 + 74 * len(rows))], fill=(120, 40, 44))
         return
-    y = 1590
+    y = SAFE_B + 5 - 30 - 70 * len(rows)
     d.rectangle((0, y - 30, W, y + 70 * len(rows) + 30), fill=(14, 10, 20, 205))
     for r in rows:
         im = text_img(r, 4, CREAM, INK, spans=[(ln["k"], GOLD)] if ln["k"] in r else [])
-        frame.alpha_composite(im, (W // 2 - im.width // 2, y))
+        frame.alpha_composite(im, (SAFE_CX - im.width // 2, y))
         y += 70
 
 
@@ -172,8 +200,8 @@ def choice_menu(frame, t, t0, items, pick):
     if t < t0:
         return
     d = ImageDraw.Draw(frame)
-    x0, y0 = 120, 1120
-    d.rectangle((x0, y0, W - 120, y0 + 80 + 76 * len(items)), fill=(16, 12, 24, 235), outline=GOLD, width=6)
+    x0, y0 = 80, 790
+    d.rectangle((x0, y0, SAFE_R - 40, y0 + 80 + 76 * len(items)), fill=(16, 12, 24, 235), outline=GOLD, width=6)
     frame.alpha_composite(text_img("你先看哪里？", 3, GOLD), (x0 + 30, y0 + 18))
     cur = [0, 1, 2, 1, 0][min(4, int((t - t0) / 0.18))] if pick == 0 else min(pick, int((t - t0) / 0.28))
     for i, it in enumerate(items):
@@ -213,11 +241,11 @@ def shot_intro(t):
     f = camera(study_at(t), 108, 200, 5).convert("RGBA")
     darken(f, 0.6)
     pose = "deduce" if t > s_("rule") + 0.3 else "idle"
-    holmes(f, t, pose, W / 2, 1540, 9, talking=True, enter=s_("me"), leave=e_("rule") + 0.05)
+    holmes(f, t, pose, SAFE_CX, 1120, 8, talking=True, enter=s_("me"), leave=e_("rule") + 0.05)
     if s_("me") + 0.3 < t < e_("me") + 0.2:
-        tag(f, "福尔摩斯", W / 2, 600, t=t - s_("me") - 0.3)
+        tag(f, "福尔摩斯", SAFE_CX, 520, t=t - s_("me") - 0.3)
     if t > k_("me") - 0.1:
-        stamp(f, "侦探：你", W / 2, 470, t - k_("me") + 0.1, GOLD, 6, -6)
+        stamp(f, "侦探：你", SAFE_CX, 370, t - k_("me") + 0.1, GOLD, 6, -6)
     return f
 
 
@@ -255,25 +283,30 @@ def shot_clock(t):
     if t > k_("clock") - 0.25:
         k = ramp(t, k_("clock") - 0.25, 0.25)
         paste_c(f, up(CLOCK, 10), W / 2, 820, k)
-        tag(f, "9:45", W / 2, 1280, RED, WHITE, 5, t - k_("clock"))
+        tag(f, "9:45", W / 2, 420, RED, WHITE, 5, t - k_("clock"))
     return f
 
 
-TEA_CAM = (118, 236, 10)
+TEA_CAM = (127, 236, 8)
+
+
+def tea_xy(x, y):
+    """Screen point laid out for the old zoom-10 tea framing -> the same spot in TEA_CAM."""
+    return SAFE_CX + (x - 540) * 0.8, 960 + (y - 960) * 0.8
 
 
 def shot_tea(t):
     t0 = s_("tea")
     f = study_lit(t, [(t0, 150, 300, 10), (t0 + 0.7, *TEA_CAM)],
-                  lambda t: (330 + 230 * ramp(t, s_("poison") + 1.0, 0.6), 950, 330 + 160 * ramp(t, s_("poison") + 1.0, 0.6)))
+                  lambda t: (*tea_xy(330 + 230 * ramp(t, s_("poison") + 1.0, 0.6), 950), 300 + 130 * ramp(t, s_("poison") + 1.0, 0.6)))
     d = ImageDraw.Draw(f)
     if t > s_("poison") + 0.3:
         if (t * 3) % 1 < 0.7:
-            d.rectangle((30, 820, 260, 1010), outline=RED, width=8)
-        tag(f, "茶杯：有毒", 200, 740, RED, WHITE, 3, t - s_("poison") - 0.3)
+            d.rectangle((*tea_xy(30, 820), *tea_xy(260, 1010)), outline=RED, width=8)
+        tag(f, "茶杯：有毒", *tea_xy(200, 700), RED, WHITE, 3, t - s_("poison") - 0.3)
     if t > k_("poison"):
-        d.rectangle((760, 840, 1075, 1110), outline=GREEN, width=8)
-        tag(f, "茶壶：没毒", 880, 760, GREEN, INK, 3, t - k_("poison"))
+        d.rectangle((*tea_xy(760, 840), *tea_xy(1075, 1110)), outline=GREEN, width=8)
+        tag(f, "茶壶：没毒", *tea_xy(880, 720), GREEN, INK, 3, t - k_("poison"))
     return f
 
 
@@ -285,22 +318,23 @@ def shot_rain(t):
 
 def _rain_tag(t):
     f = study_lit(t, [(0, 106, 110, 6)], (W / 2, 800))
-    tag(f, "9:30 开始下雨", W / 2, 1320, SKY, INK, 4, t - k_("rain"))
+    tag(f, "9:30 开始下雨", SAFE_CX, 1060, SKY, INK, 4, t - k_("rain"))
     return f
 
 
 def will_card(f, t, t_key, glow=False):
-    big = up(WILL, 8)
-    paste_c(f, big, W / 2, 880)
-    x0, y0 = W / 2 - big.width / 2, 880 - big.height / 2
+    big = up(WILL, 7)
+    cx, cy = SAFE_CX, 790
+    paste_c(f, big, cx, cy)
+    x0, y0 = cx - big.width / 2, cy - big.height / 2
     head = text_img("遗嘱", 6, INK, None)
-    f.alpha_composite(head, (int(W / 2 - head.width / 2), int(y0 + 36)))
+    f.alpha_composite(head, (int(cx - head.width / 2), int(y0 + 28)))
     rows = [("明天起：", INK), ("侄子若与", INK), ("秘书成婚，", INK), ("取消其全部", RED), ("继承权。", RED)]
     for k, (s, col) in enumerate(rows):
         if glow or t >= t_key - 2.2 + 0.4 * k:
-            f.alpha_composite(text_img(s, 4, col, None), (int(x0 + 60), int(y0 + 170 + 92 * k)))
+            f.alpha_composite(text_img(s, 4, col, None), (int(x0 + 50), int(y0 + 150 + 82 * k)))
     if glow or t >= t_key:
-        ImageDraw.Draw(f).rectangle((x0 + 60, y0 + 170 + 92 * 4 + 66, x0 + 60 + 4 * 16 * 4, y0 + 170 + 92 * 4 + 76), fill=RED)
+        ImageDraw.Draw(f).rectangle((x0 + 50, y0 + 150 + 82 * 4 + 66, x0 + 50 + 4 * 16 * 4, y0 + 150 + 82 * 4 + 76), fill=RED)
 
 
 def shot_will(t):
@@ -325,7 +359,7 @@ def shot_three(t):
     for i, (n, lab) in enumerate(SUS):
         tt = t - (s_("three") + 0.15 * i)
         if tt > 0:
-            portrait_card(f, n, 200 + i * 340, 820 + (1 - ease(tt / 0.3)) * 1200, 2, "？", sil=t < k_("three") + 0.6)
+            portrait_card(f, n, 170 + i * 300, 800 + (1 - ease(tt / 0.3)) * 1200, 2, "？", sil=t < k_("three") + 0.6)
     return f
 
 
@@ -334,10 +368,10 @@ def interrogate(t, who, extra=None):
     i = [n for n, _ in SUS].index(who)
     for j, (m, l2) in enumerate(SUS):
         if j != i:
-            portrait_card(f, m, 180 + j * 360, 300, 1, l2, alpha=0.5)
+            portrait_card(f, m, 170 + j * 300, 390, 1, l2, alpha=0.5)
     lv = loud(t)
     bob = 5 if (t * 2) % 1 < 0.5 else 0
-    box = portrait_card(f, who, W / 2, 900 + bob - (5 if lv > 0.3 else 0), 6, None)
+    box = portrait_card(f, who, SAFE_CX, 830 + bob - (5 if lv > 0.3 else 0), 5, None)
     if extra:
         extra(f, t, box)
     return f
@@ -346,18 +380,18 @@ def interrogate(t, who, extra=None):
 def shot_butler(t):
     def ex(f, t, box):
         if t > k_("b3"):
-            stamp(f, "厨娘作证 ✓", W / 2 + 120, 1290, t - k_("b3"), GREEN, 4)
+            stamp(f, "厨娘作证 ✓", SAFE_CX + 120, 1000, t - k_("b3"), GREEN, 4)
     return interrogate(t, "butler", ex)
 
 
 def shot_secretary(t):
     def ex(f, t, box):
         tw = up(TYPEW, 2)
-        f.alpha_composite(tw, (W - tw.width - 20, 1170 - tw.height))
+        f.alpha_composite(tw, (SAFE_R - tw.width - 10, 1150 - tw.height))
         if s_("s1") < t < e_("s2") and (t * 9) % 1 < 0.5:
-            tag(f, "嗒嗒嗒", W - 150, 860, CREAM, INK, 2)
+            tag(f, "嗒嗒嗒", SAFE_R - 140, 860, CREAM, INK, 2)
         if t > k_("s2"):
-            stamp(f, "两小时没停 ✓", W / 2 - 60, 1290, t - k_("s2"), GREEN, 4)
+            stamp(f, "两小时没停 ✓", SAFE_CX - 60, 1000, t - k_("s2"), GREEN, 4)
     return interrogate(t, "secretary", ex)
 
 
@@ -414,13 +448,13 @@ def evidence_imgs(t):
 def shot_pause(t):
     f = room_dark(t)
     if t < k_("ask") - 0.05:
-        holmes(f, t, "idle", W / 2, 1500, 8, talking=True, enter=s_("ready"))
+        holmes(f, t, "idle", SAFE_CX, 1120, 8, talking=True, enter=s_("ready"))
         return f
-    paste_c(f, text_img("是谁下的毒？", 7, GOLD), W / 2, 250 - (1 - ramp(t, k_("ask"), 0.25)) * 200)
+    paste_c(f, text_img("是谁下的毒？", 7, GOLD), 400, 300 - (1 - ramp(t, k_("ask"), 0.25)) * 200)
     for i, (n, lab) in enumerate(SUS):
-        portrait_card(f, n, 190 + i * 350, 520, 1, f"{i + 1} {lab}")
+        portrait_card(f, n, 170 + i * 300, 470, 1, f"{i + 1} {lab}")
     for i, (img, lab) in enumerate(evidence_imgs(t)):
-        ev_card(f, 40 + (i % 3) * 340, 700 + (i // 3) * 380, 320, 360, img, lab)
+        ev_card(f, 40 + (i % 3) * 290, 620 + (i // 3) * 335, 280, 320, img, lab)
     hold0 = e_("ask")
     if t > hold0:
         n = 5 - int(t - hold0)
@@ -428,23 +462,23 @@ def shot_pause(t):
             ph = (t - hold0) % 1
             num = text_img(str(n), 10, RED)
             s = 1 + 0.3 * (1 - ph / 0.2) if ph < 0.2 else 1
-            paste_c(f, num.resize((int(num.width * s), int(num.height * s)), Image.NEAREST), W / 2, 1520)
+            paste_c(f, num.resize((int(num.width * s), int(num.height * s)), Image.NEAREST), 830, 300)
         if (t * 2) % 1 < 0.6:
-            paste_c(f, text_img("⏸ 暂停 · 把推理写在评论区", 3, WHITE), W / 2, 1680)
+            paste_c(f, text_img("⏸ 暂停 · 把推理写在评论区", 3, WHITE), SAFE_CX, 1340)
     return f
 
 
 def mini_holmes(f, t, pose="idle"):
-    holmes(f, t, pose, 170, 1560, 5, talking=True)
+    """Dropped: below the narrator band it sat in Douyin's caption area."""
 
 
 def shot_r0(t):
     f = room_dark(t)
     flash(f, 1 - (t - s_("r0")) / 0.3)
-    portrait_card(f, "nephew", W / 2, 820, 5, "侄子？")
+    portrait_card(f, "nephew", SAFE_CX, 760, 5, "侄子？")
     if t > k_("r0"):
-        stamp(f, "侄子？", W / 2 + 80, 1180, t - k_("r0"), GOLD, 6)
-    paste_c(f, text_img("答案揭晓", 6, GOLD), W / 2, 260)
+        stamp(f, "侄子？", SAFE_CX + 80, 1060, t - k_("r0"), GOLD, 6)
+    paste_c(f, text_img("答案揭晓", 6, GOLD), SAFE_CX, 320)
     mini_holmes(f, t, "deduce")
     return f
 
@@ -455,34 +489,34 @@ def umbrellas(t, wet=True):
 
 def shot_r1(t):
     f = Image.new("RGBA", (W, H), (14, 10, 20, 255))
-    paste_c(f, umbrellas(t), W / 2, 780)
-    tag(f, "医生的：滴水", 300, 380, SKY, INK, 3, t - s_("r1"))
-    tag(f, "侄子的：干的", 790, 380, GOLD, INK, 3, t - s_("r1") - 0.6)
+    paste_c(f, umbrellas(t), SAFE_CX, 740)
+    tag(f, "医生的：滴水", 240, 360, SKY, INK, 3, t - s_("r1"))
+    tag(f, "侄子的：干的", 700, 360, GOLD, INK, 3, t - s_("r1") - 0.6)
     if t > k_("r1") - 0.4:
-        stamp(f, "他早就到了", W / 2 + 120, 1300, t - k_("r1") + 0.4, RED, 5)
+        stamp(f, "他早就到了", SAFE_CX + 100, 960, t - k_("r1") + 0.4, RED, 5)
     mini_holmes(f, t)
     return f
 
 
 def shot_r2(t):
     f = Image.new("RGBA", (W, H), (14, 10, 20, 255))
-    paste_c(f, up(HAND, 5), 330, 760)
+    paste_c(f, up(HAND, 5), 300, 720)
     tw = up(TYPEW, 3)
-    paste_c(f, tw, 760, 1060)
+    paste_c(f, tw, 700, 940)
     if t > k_("r2") - 0.6:
         d = ImageDraw.Draw(f)
-        d.line((420, 560, 700, 960), fill=GOLD, width=10)
-        tag(f, "= 打字机色带", 700, 560, GOLD, INK, 4, t - k_("r2") + 0.6)
+        d.line((390, 520, 650, 900), fill=GOLD, width=10)
+        tag(f, "= 打字机色带", 640, 420, GOLD, INK, 4, t - k_("r2") + 0.6)
     mini_holmes(f, t)
     return f
 
 
 def shot_r3(t):
     f = Image.new("RGBA", (W, H), (14, 10, 20, 255))
-    paste_c(f, up(TYPEW, 4), W / 2, 640)
+    paste_c(f, up(TYPEW, 4), SAFE_CX, 620)
     d = ImageDraw.Draw(f)
-    y = 1120
-    x0, x1 = 90, 990
+    y = 1000
+    x0, x1 = 70, 870
     d.rectangle((x0, y, x1, y + 40), fill=(60, 50, 70))
     k = clamp((t - s_("r3")) / 1.6)
     mid = x0 + (x1 - x0) * 0.62     # ~9:15
@@ -494,13 +528,13 @@ def shot_r3(t):
     f.alpha_composite(text_img("8:00", 2, CREAM), (x0 - 20, y - 50))
     f.alpha_composite(text_img("10:00", 2, CREAM), (x1 - 60, y - 50))
     if (t * 9) % 1 < 0.5:
-        tag(f, "嗒嗒嗒", 860, 340, CREAM, INK, 2)
+        tag(f, "嗒嗒嗒", 780, 340, CREAM, INK, 2)
     mini_holmes(f, t)
     return f
 
 
 def shot_r4(t):
-    f = study_lit(t, [(s_("r4"), 108, 192, 5), (s_("r4") + 1.0, *TEA_CAM)], (330, 950))
+    f = study_lit(t, [(s_("r4"), 108, 192, 5), (s_("r4") + 1.0, *TEA_CAM)], tea_xy(330, 950))
     if t < s_("r4") + 1.2:
         f = rewind_fx(f, t)
     mini_holmes(f, t)
@@ -526,7 +560,7 @@ def shot_r6(t):
     f = room_dark(t)
     marks = [("butler", "白发", False), ("nephew", "金发", False), ("secretary", "暗红", True)]
     for i, (n, lab, hit) in enumerate(marks):
-        x = 190 + i * 350
+        x = 170 + i * 300
         portrait_card(f, n, x, 760, 2, lab, glow=(90, 30, 30) if hit and t > k_("r6") else None)
         tt = t - (s_("r6") + 0.8 * i)
         if tt > 0 and not hit:
@@ -541,7 +575,7 @@ def shot_r7(t):
     f = camera(study_at(t, poison=(t - (k_("r7") - 0.5)) / 0.5 if t > k_("r7") - 0.5 else None), 100, 232, 10).convert("RGBA")
     darken(f, 0.35)
     k = ease((t - s_("r7")) / 1.2)
-    portrait_card(f, "secretary", W + 200 - 520 * k, 700, 3, None, sil=t < k_("r7") - 0.6)
+    portrait_card(f, "secretary", W + 200 - 600 * k, 700, 3, None, sil=t < k_("r7") - 0.6)
     tag(f, "9:42", 200, 300, RED, WHITE, 5, t - s_("r7"))
     mini_holmes(f, t)
     return f
@@ -560,17 +594,16 @@ def shot_r8(t):
 def shot_culprit(t):
     f = room_dark(t)
     hit = t > k_("r9")
-    portrait_card(f, "secretary", W / 2, 720, 5, "秘书", glow=(60, 20, 26) if hit else None)
+    portrait_card(f, "secretary", SAFE_CX, 680, 5, "秘书", glow=(60, 20, 26) if hit else None)
     if hit:
-        stamp(f, "凶手", W / 2 + 60, 940, t - k_("r9"), (255, 72, 72), 9)
+        stamp(f, "凶手", SAFE_CX + 60, 900, t - k_("r9"), (255, 72, 72), 9)
     t_help = s_("r9") + (e_("r9") - s_("r9")) * 0.5
     if t > t_help:
-        portrait_card(f, "nephew", 880, 1290, 1, None)
-        stamp(f, "帮手", 880, 1300, t - t_help, GOLD, 3)
+        portrait_card(f, "nephew", 790, 1080, 1, None)
+        stamp(f, "帮手", 790, 1090, t - t_help, GOLD, 3)
     if hit:
         dx, dy = shake(t, k_("r9"), 22)
         f = f.transform(f.size, Image.AFFINE, (1, 0, -dx, 0, 1, -dy))
-    holmes(f, t, "deduce", 190, 1560, 5)
     return f
 
 
@@ -578,7 +611,7 @@ def shot_outro(t):
     f = room_dark(t)
     darken(f, 0.1)
     pose = "sit" if t < s_("end") + 1.6 else "idle"
-    holmes(f, t, pose, W / 2, 1450, 9, talking=pose == "idle")
+    holmes(f, t, pose, SAFE_CX, 1120, 8, talking=pose == "idle")
     if t > k_("end") - 0.2:
         paste_c(f, text_img("第二案 · 敬请期待", 4, GOLD), W / 2, 380, ramp(t, k_("end") - 0.2, 0.3))
     return f
@@ -598,7 +631,7 @@ NO_HUD = {shot_cold, shot_door, shot_title}
 def frame_at(t):
     fn = [f for t0, f in SHOTS if t >= t0 - 0.12][-1]
     f = fn(t)
-    if fn not in NO_HUD and t < s_("r0"):
+    if fn not in NO_HUD and t < s_("r0") and not (fn is shot_pause and t >= k_("ask") - 0.05):
         hud(f, t)
     subtitle(f, t)
     for t0, _ in SHOTS[1:]:
