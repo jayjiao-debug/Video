@@ -322,12 +322,26 @@ export const panFlat = (g: G, x: number, y: number, rx: number, ry: number, dept
   g.strokeStyle = 'rgba(255,240,200,.6)'; g.lineWidth = 2; g.beginPath(); g.ellipse(x, y, rx * 0.99, ry * 0.98, 0, Math.PI * 1.1, Math.PI * 1.9); g.stroke();
 };
 /** side view for a toss: (x, y) = centre of the base; rot tilts it */
-export const panSide = (g: G, x: number, y: number, s: number, rot = 0) => {
+/** layer 'back' = handle + the inside of the pan; 'front' = the front wall and lip, drawn over anything sitting in the pan;
+    `sweep` 0..1 runs a highlight across the front wall (a flick catching the light) */
+export const panSide = (g: G, x: number, y: number, s: number, rot = 0, layer: 'all' | 'back' | 'front' = 'all', sweep = -1) => {
   g.save(); g.translate(x, y); g.rotate(rot); g.scale(s, s);
-  g.save(); g.translate(160, -36); g.rotate(-0.28); panHandle(g, 0, 210, 22); g.restore();
-  g.fillStyle = goldLin(g, -170, 0, 170, 0); g.beginPath(); g.moveTo(-170, -46); g.lineTo(170, -46); g.lineTo(135, -4); g.quadraticCurveTo(128, 0, 118, 0); g.lineTo(-118, 0); g.quadraticCurveTo(-128, 0, -135, -4); g.closePath(); g.fill();
-  const inner = g.createLinearGradient(0, -60, 0, -32); inner.addColorStop(0, '#4a3210'); inner.addColorStop(1, '#a7792c');
-  g.fillStyle = inner; g.beginPath(); g.ellipse(0, -46, 168, 16, 0, 0, 6.3); g.fill();
-  g.strokeStyle = 'rgba(255,240,200,.7)'; g.lineWidth = 2; g.beginPath(); g.ellipse(0, -46, 170, 17, 0, Math.PI * 0.05, Math.PI * 0.95); g.stroke();
+  if (layer !== 'front') {
+    g.save(); g.translate(160, -36); g.rotate(-0.28); panHandle(g, 0, 210, 22); g.restore();
+    g.fillStyle = goldLin(g, -170, 0, 170, 0); g.beginPath(); g.ellipse(0, -46, 170, 17, 0, 0, 6.3); g.fill();
+    const inner = g.createLinearGradient(0, -60, 0, -32); inner.addColorStop(0, '#4a3210'); inner.addColorStop(1, '#a7792c');
+    g.fillStyle = inner; g.beginPath(); g.ellipse(0, -46, 166, 15, 0, 0, 6.3); g.fill();
+  }
+  if (layer !== 'back') {
+    // front wall: its top edge is the near half of the rim
+    const wall = () => { g.beginPath(); g.moveTo(-170, -46); g.ellipse(0, -46, 170, 17, 0, Math.PI, 0, true); g.lineTo(135, -4); g.quadraticCurveTo(128, 0, 118, 0); g.lineTo(-118, 0); g.quadraticCurveTo(-128, 0, -135, -4); g.closePath(); };
+    g.fillStyle = goldLin(g, -170, 0, 170, 0); wall(); g.fill();
+    g.strokeStyle = 'rgba(255,240,200,.75)'; g.lineWidth = 2; g.beginPath(); g.ellipse(0, -46, 170, 17, 0, Math.PI * 0.05, Math.PI * 0.95); g.stroke();
+    if (sweep >= 0 && sweep <= 1) {
+      g.save(); wall(); g.clip(); g.globalCompositeOperation = 'lighter';
+      const sx = lerp(-260, 260, sweep), gr = g.createLinearGradient(sx - 60, 0, sx + 60, 0); gr.addColorStop(0, 'rgba(255,245,215,0)'); gr.addColorStop(0.5, 'rgba(255,245,215,.55)'); gr.addColorStop(1, 'rgba(255,245,215,0)');
+      g.fillStyle = gr; g.fillRect(-200, -70, 400, 80); g.restore();
+    }
+  }
   g.restore();
 };

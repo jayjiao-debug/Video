@@ -73,7 +73,14 @@ export const S0: React.FC<{ T: number; f: number; pt?: number }> = ({ T, f, pt }
         stage(g, T); bokeh(g, T, 18, 0.8);
         g.save(); cam(g, lerp(1.0, 1.05, pr(T, CUT.cards, 4)));
         spot(g, 960, 760, 1, '255,225,235');
-        withReflection(g, () => { const open = eio(T, CUT.cards + 0.05, 0.75); HAND.forEach(([r, su, red], i) => { const a = (i - 8) * 0.095 * open, R = 34, PX = 960, PY = FLOOR - 40; card(g, PX + Math.sin(a) * R, PY - Math.cos(a) * R, 1.45, r, su, red, a); }); }, 0.06);
+        // the hand fans open wide (the cards' own motion), with a soft trail while it opens, then a light sweeps across it
+        const open = eio(T, CUT.cards + 0.05, 0.8), PX = 960, PY = FLOOR - 24, R = 120, STEP = 0.15;
+        const fan = (k: number, alpha: number) => HAND.forEach(([r, su, red], i) => { const a = (i - 8) * STEP * k; g.save(); g.globalAlpha *= alpha; card(g, PX + Math.sin(a) * R, PY - Math.cos(a) * R, 1.38, r, su, red, a); g.restore(); });
+        add(g, () => { const sh = g.createRadialGradient(PX, FLOOR + 4, 0, PX, FLOOR + 4, 420); sh.addColorStop(0, 'rgba(255,190,220,.10)'); sh.addColorStop(1, 'rgba(255,190,220,0)'); g.fillStyle = sh; g.fillRect(PX - 420, FLOOR - 60, 840, 120); });
+        if (open < 1) [0.06, 0.12, 0.18].forEach((d, j) => fan(eio(T - d, CUT.cards + 0.05, 0.8), 0.12 - j * 0.03));
+        fan(open, 1);
+        const sw = pr(T, CUT.cards + 1.1, 0.9);
+        if (sw > 0 && sw < 1) add(g, () => { const x = lerp(PX - 520, PX + 520, sw); const gr = g.createLinearGradient(x - 90, 0, x + 90, 0); gr.addColorStop(0, 'rgba(255,245,230,0)'); gr.addColorStop(0.5, 'rgba(255,245,230,.28)'); gr.addColorStop(1, 'rgba(255,245,230,0)'); g.save(); g.translate(x, PY - 180); g.rotate(0.35); g.translate(-x, -(PY - 180)); g.fillStyle = gr; g.fillRect(x - 90, PY - 460, 180, 520); g.restore(); });
         floorFade(g);
         g.restore();
       }}>
