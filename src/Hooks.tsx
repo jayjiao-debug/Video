@@ -2,7 +2,7 @@
    All run 0 – 4.456 s on the track: hit at 0.40, plaques on beats, the frame splits into 菜？ | 非？ on bt(6). */
 import React, { useEffect, useState } from 'react';
 import { AbsoluteFill, continueRender, delayRender, useCurrentFrame } from 'remotion';
-import { C, F, FontFaces, FONT_LOADS, Grade, Grain, Bars, Subs, glowDot, clamp, lerp, pr, eo, eio, hit } from './kit';
+import { C, F, FontFaces, FONT_LOADS, Grade, Grain, Bars, Subs, glowDot, clamp, lerp, pr, eo, eio, hit, rnd } from './kit';
 import { sparks, GOLD } from './lightkit';
 import { stage, bokeh, spot, withReflection, floorFade, spatula, panUp, panFlat, panSide, FLOOR, H } from './hero';
 import { Lb, Scene, add, cam, S2, GAL } from './Scenes';
@@ -153,7 +153,7 @@ const plinth = (g: G, x: number, y: number, w: number, h: number) => {
   g.strokeStyle = 'rgba(255,214,140,.35)'; g.lineWidth = 1.2; g.beginPath(); g.moveTo(x - w / 2, y - h); g.lineTo(x + w / 2, y - h); g.stroke();
 };
 export const HD: React.FC<{ T: number; f: number; sp?: number }> = ({ T, f, sp = 3 }) => {
-  const PX = 960, PY = FLOOR - 10, REST = PY - 165;
+  const PX = 960, PY = FLOOR - 10, REST = PY - 156;
   const TOSS = [bt(0), bt(2), bt(4)], LAND = [bt(2) - 0.24, bt(4) - 0.24];
   const NUM = ['8', '7', '8'];
   // the pan: a small dip before each toss (anticipation), the flick, and a soft give on each catch
@@ -187,19 +187,35 @@ export const HD: React.FC<{ T: number; f: number; sp?: number }> = ({ T, f, sp =
       if (sp === 2) spot(g, 1210, 600, 0.45, '255,230,190');
       // spatula behind the pan (2) is drawn first
       if (sp === 2) withReflection(g, () => spatulaAt(g), 0.2);
-      // the plaque: fine motion blur while it flies, then the plaque itself
+      // heat: a few embers rising from the pan, on their own slow clock
+      add(g, () => { for (let i = 0; i < 26; i++) { const life = 2.6 + 1.4 * rnd(i, 61), t = ((T + rnd(i, 62) * life) % life) / life; const x = PX + (rnd(i, 63) - 0.5) * 300 + Math.sin(T * 1.3 + i) * 14 * t, y = PY - 80 - t * 340; glowDot(g, x, y, 5 + 6 * (1 - t), 0.55 * Math.sin(Math.PI * t) * eo(T, 0.2, 0.6), i % 3 ? '255,180,90' : '255,226,160'); } });
+      const sweepOf = (tt: number) => { const t0 = TOSS.find((t) => tt >= t - 0.05 && tt < t + 0.45); return t0 === undefined ? -1 : (tt - (t0 - 0.05)) / 0.5; };
+      // the pan, back half (handle and the inside)
+      withReflection(g, () => { if (sp === 1) spatulaAt(g); panSide(g, PX, PY + panY, 1.6, panRot, 'back'); }, 0.22);
+      // the plaque sits in the pan and flies out of it: a light trail along its path, then the plaque itself
       if (T < SPLIT) {
-        if (now.k >= 0) [0.012, 0.024, 0.036].forEach((dt) => { const p = flight(T - dt); flipPlaque(g, PX, p.y, p.phi, p.oldN, p.newN, p.tilt, 0.1); });
+        if (now.k >= 0) {
+          const pts: [number, number][] = []; for (let j = 14; j >= 0; j--) { const p = flight(T - j * 0.018); pts.push([PX, p.y]); }
+          add(g, () => { g.lineCap = 'round'; for (let j = 1; j < pts.length; j++) { const a = j / pts.length; g.strokeStyle = `rgba(255,214,150,${0.32 * a})`; g.lineWidth = 80 * a; g.beginPath(); g.moveTo(pts[j - 1][0], pts[j - 1][1]); g.lineTo(pts[j][0], pts[j][1]); g.stroke(); } });
+          [0.012, 0.024].forEach((dt) => { const p = flight(T - dt); flipPlaque(g, PX, p.y, p.phi, p.oldN, p.newN, p.tilt, 0.1); });
+        }
         g.save(); g.translate(PX, now.y + 128 * PLQ); g.scale(1 + landSq * 0.5, 1 - landSq); g.translate(-PX, -(now.y + 128 * PLQ));
         flipPlaque(g, PX, now.y, now.phi, now.oldN, now.newN, now.tilt); g.restore();
-      } else if (apart < 1) {
+        // a glint each time the face turns square to the camera mid-air
+        if (now.k >= 0) { const c = Math.abs(Math.cos(now.phi)); if (c > 0.93 && now.phi > 0.5) add(g, () => { const a = (c - 0.93) / 0.07; glowDot(g, PX + 80, now.y - 100, 70, 0.6 * a, '255,240,250'); g.fillStyle = `rgba(255,250,240,${0.8 * a})`; g.fillRect(PX + 80 - 34, now.y - 101, 68, 2); g.fillRect(PX + 79, now.y - 135, 2, 68); }); }
+      }
+      // the pan, front wall: covers the bottom of the plaque, so it reads as sitting inside
+      withReflection(g, () => panSide(g, PX, PY + panY, 1.6, panRot, 'front', sweepOf(T)), 0.22);
+      if (T >= SPLIT && apart < 1) {
         // the gold ？ splits: each half drifts to its side and fades into the words
         const p = flight(SPLIT - 0.001);
         [-1, 1].forEach((sd) => { g.save(); g.translate(PX, p.y); g.rotate(sd * 0.35 * apart); g.translate(-PX, -p.y); flipPlaque(g, PX, p.y, Math.PI, '8', '8', 0, 1 - apart, sd, 260 * apart); g.restore(); });
+        add(g, () => { const r = 40 + 900 * eo(T, SPLIT, 0.7); g.strokeStyle = `rgba(255,214,150,${0.5 * (1 - pr(T, SPLIT, 0.7))})`; g.lineWidth = 3; g.beginPath(); g.ellipse(PX, p.y, r, r * 0.6, 0, 0, 6.3); g.stroke(); });
       }
-      withReflection(g, () => { if (sp === 1) spatulaAt(g); panSide(g, PX, PY + panY, 1.6, panRot); }, 0.22);
       floorFade(g);
       if (sp === 3) { g.save(); g.translate(640, FLOOR + 92); g.scale(1, 0.5); g.rotate(-1.9); spatula(g, 0, 0, 1.3, 0); g.restore(); add(g, () => glowDot(g, 470, FLOOR + 70, 260, 0.2, GOLD)); }
+      // each catch: a clang ring across the pan and a puff of sparks
+      LAND.forEach((d) => { if (T > d && T < d + 0.6) add(g, () => { const q = (T - d) / 0.6; g.strokeStyle = `rgba(255,222,160,${0.6 * (1 - q)})`; g.lineWidth = 2.5; g.beginPath(); g.ellipse(PX, PY - 74, 120 + 260 * q, 18 + 40 * q, 0, 0, 6.3); g.stroke(); }); });
       LAND.forEach((d) => { if (T > d) add(g, () => sparks(g, PX, PY - 70, d, T, 30, GOLD, 0.6, d)); });
       if (T >= SPLIT) add(g, () => { sparks(g, PX, flight(SPLIT - 0.001).y, SPLIT, T, 140, '255,214,180', 2.0, 7); glowDot(g, PX, flight(SPLIT - 0.001).y, 300, 0.5 * hit(T, SPLIT, 0.35), GOLD); });
       g.restore();
