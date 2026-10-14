@@ -219,7 +219,7 @@ export const Title: React.FC<P> = ({ T, f }) => {
     }}>
       {card && (
         <>
-          <div style={{ position: 'absolute', left: 0, right: 0, top: 268, textAlign: 'center', opacity: eo(T, h + 0.4, 0.4) * textO, fontFamily: F.lat, fontWeight: 600, fontSize: 30, letterSpacing: '0.3em', color: C.gold }}>TELEPHOBIA · KUMAR & EPLEY · MMXXI</div>
+          <div style={{ position: 'absolute', left: 0, right: 0, top: 268, textAlign: 'center', opacity: eo(T, h + 0.4, 0.4) * textO, fontFamily: F.lat, fontWeight: 600, fontSize: 30, letterSpacing: '0.3em', color: C.gold }}>TELEPHOBIA · UK SURVEY · MMXXIV</div>
           <div style={{ position: 'absolute', left: 580, width: 960, top: 470 - 76, textAlign: 'center', opacity: textO, fontFamily: F.serif, fontWeight: 900, fontSize: 120, lineHeight: '152px', letterSpacing: '0.02em', whiteSpace: 'nowrap' }}>
             {glyphs.map((c, i) => {
               const a = at(i), k = eo(T, a, 0.16);
@@ -399,8 +399,8 @@ export const S3c: React.FC<P> = ({ T, f }) => {
       {T >= land && <Src T={T} a={land + 0.6} x={0} y={724} s="公安部 · 2026-01-08 新闻发布会" align="center" o={1 - pr(T, per - 0.2, 0.3)} />}
       {T >= per && <Lbl T={T} a={per + 0.3} x={960} y={384} s="1 格 = 1 天" col="rgba(239,232,218,.85)" />}
       {T >= per && (
-        <div style={{ position: 'absolute', left: 0, right: 0, top: 620, textAlign: 'center', opacity: eo(T, per + 1.27, 0.3), transform: `translateY(${(1 - eo(T, per + 1.27, 0.35)) * 24}px)`, fontFamily: F.serif, fontWeight: 900, fontSize: 92, color: C.cream, textShadow: shadow }}>
-          每天 <span style={{ fontFamily: F.mono, color: MAGH }}>≈986万</span> 通
+        <div style={{ position: 'absolute', left: 0, right: 0, top: 620, textAlign: 'center', opacity: eo(T, per + 1.27, 0.3), transform: `translateY(${(1 - eo(T, per + 1.27, 0.35)) * 24}px)`, fontFamily: F.sans, fontWeight: 900, fontSize: 88, color: C.cream, textShadow: shadow }}>
+          每天<span style={{ color: MAGH, margin: '0 0.25em' }}>≈986万</span>通
         </div>
       )}
     </Scene>
@@ -475,7 +475,7 @@ export const S4b: React.FC<P> = ({ T, f }) => {
 /* ================================================================== S4c · the experiment and the drop (58.7 → 74.97) */
 export const S4c: React.FC<P> = ({ T, f }) => {
   const a = CUT.split, pred = CUT.predict, chose = CUT.chose, res = CUT.result, drop = CUT.drop, bond = CUT.bond;
-  const LX = 620, RX = 1300, OY = 640, GY = 450, GS = 0.8;
+  const LX = 620, RX = 1300, OY = 672, GY = 490, GS = 0.72;
   const gaugeIn = eo(T, pred, 0.4) * (1 - eo(T, bond - 0.1, 0.35));
   const spring = (t0: number, v: number) => { if (T < t0) return 0.05; const q = T - t0; return v + (0.05 - v) * Math.exp(-q * 5) * Math.cos(q * 14); };
   const tremble = T >= res && T < drop ? 0.014 * Math.sin(T * 47) * pr(T, res, 2) : 0;
@@ -496,18 +496,19 @@ export const S4c: React.FC<P> = ({ T, f }) => {
       // twenty participants split into the two rooms
       for (let i = 0; i < 20; i++) {
         const side = i % 2 ? 1 : -1, k = eio(T, a + 0.1 + i * 0.03, 0.8);
-        const x = lerp(960 + (rnd(i, 3) - 0.5) * 120, (side > 0 ? RX : LX) + ((i >> 1) - 4.5) * 26, k), y = lerp(560 + (rnd(i, 4) - 0.5) * 60, 742, k);
+        const x = lerp(960 + (rnd(i, 3) - 0.5) * 120, (side > 0 ? RX : LX) + ((i >> 1) - 4.5) * 26, k), y = lerp(560 + (rnd(i, 4) - 0.5) * 60, 768, k);
         g.fillStyle = `rgba(${CREAMC},${0.75 * eo(T, a, 0.3) * (1 - eo(T, bond - 0.2, 0.4))})`; g.beginPath(); g.arc(x, y, 7, 0, 6.3); g.fill();
       }
-      g.save(); g.globalAlpha = eo(T, a, 0.4) * focusL * objO; g.translate(0, objDY);
+      // dimmed with brightness, not alpha, so overlapping parts of an object never show through each other
+      g.save(); g.globalAlpha = eo(T, a, 0.4); g.filter = `brightness(${(focusL * (1 - 0.6 * eo(T, bond - 0.1, 0.4))).toFixed(3)})`; g.translate(0, objDY);
       withReflection(g, () => handset(g, LX, OY - 30, 1.15, -0.1, 1), 0.12);
       g.restore();
-      g.save(); g.globalAlpha = eo(T, a + 0.15, 0.4) * focusR * objO; g.translate(0, objDY);
+      g.save(); g.globalAlpha = eo(T, a + 0.15, 0.4); g.filter = `brightness(${(focusR * (1 - 0.6 * eo(T, bond - 0.1, 0.4))).toFixed(3)})`; g.translate(0, objDY);
       withReflection(g, () => envelope(g, RX, OY - 70 - 10 * eo(T, chose, 0.5) * (1 - eo(T, res, 0.4)), 0.95, 0.06), 0.12);
       g.restore();
       if (T >= chose && T < res + 0.4) add(g, () => glow(g, RX, OY - 70, 320, 0.25 * eo(T, chose, 0.5) * (1 - pr(T, res, 0.4)), GOLD));
       // the room labels live in the picture, so they move with the camera
-      const lab = (x: number, s: string, o: number) => { g.save(); g.globalAlpha = o; g.fillStyle = C.cream; g.font = '700 44px "Noto Sans CJK SC"'; g.textAlign = 'center'; g.textBaseline = 'top'; g.shadowColor = 'rgba(0,0,0,.9)'; g.shadowBlur = 20; g.fillText(s, x, 790 + objDY); g.restore(); };
+      const lab = (x: number, s: string, o: number) => { g.save(); g.globalAlpha = o; g.fillStyle = C.cream; g.font = '700 44px "Noto Sans CJK SC"'; g.textAlign = 'center'; g.textBaseline = 'top'; g.shadowColor = 'rgba(0,0,0,.9)'; g.shadowBlur = 20; g.fillText(s, x, 806 + objDY); g.restore(); };
       const labO = 1 - eo(T, bond - 0.2, 0.3);
       lab(LX, '打电话', eo(T, a + 0.3, 0.3) * (0.55 + 0.45 * focusL) * labO);
       lab(RX, '写邮件', eo(T, a + 0.45, 0.3) * (0.55 + 0.45 * focusR) * labO);
@@ -534,7 +535,8 @@ export const S4c: React.FC<P> = ({ T, f }) => {
     }}>
       <Lbl T={T} a={a + 0.1} x={960} y={190} s="随机分成两组" col="rgba(239,232,218,.85)" o={1 - pr(T, pred - 0.2, 0.3)} />
       {gaugeIn > 0 && T < bond && <Lbl T={T} a={pred + 0.1} x={960} y={330} s={T >= drop ? <span style={{ color: GOLDH }}>实际</span> : <span style={{ color: MAGH }}>事前预测</span>} o={gaugeIn * (1 - eo(T, res, 0.3) * (1 - eo(T, drop + 0.3, 0.3)))} />}
-      {gaugeIn > 0 && <Lbl T={T} a={pred + 0.1} x={960} y={400} s="尴尬度（示意）" col="rgba(239,232,218,.85)" o={gaugeIn * (1 - eo(T, res, 0.3) * (1 - eo(T, drop + 0.3, 0.3)))} />}
+      {gaugeIn > 0 && <Lbl T={T} a={pred + 0.1} x={960} y={400} s="尴尬度" col="rgba(239,232,218,.85)" o={gaugeIn * (1 - eo(T, res, 0.3) * (1 - eo(T, drop + 0.3, 0.3)))} />}
+      {gaugeIn > 0 && <Src T={T} a={pred + 0.3} x={0} y={462} s="（示意）" align="center" o={gaugeIn * (1 - eo(T, res, 0.3) * (1 - eo(T, drop + 0.3, 0.3)))} />}
       {T >= bond - 0.2 && <Lbl T={T} a={bond} x={960} y={300} s="连接感" />}
       {T >= bond && <Src T={T} a={bond + 0.5} x={0} y={880} s="示意：只表示“显著更高”，非实际比例" align="center" />}
       <Slam T={T} a={drop} top={122} size={104} gold o={1 - pr(T, bond - 0.25, 0.3)}>并没有更尴尬</Slam>
