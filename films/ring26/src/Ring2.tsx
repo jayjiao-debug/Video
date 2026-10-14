@@ -5,6 +5,7 @@ import React, { useEffect, useState } from 'react';
 import { AbsoluteFill, continueRender, delayRender, useCurrentFrame } from 'remotion';
 import { C, F, FontFaces, FONT_LOADS, Grade, Bars, Subs, Canvas, glowDot, clamp, lerp, pr, eo, eio, hit, rnd } from './kit';
 import { textPts, particleText, sparks, GOLD } from './lightkit';
+import { feather } from './art';
 import { stage, bokeh, spot, floorFade, FLOOR, W, H } from './hero';
 
 // film-time anchors
@@ -22,8 +23,8 @@ const add = (g: G, fn: () => void) => { g.save(); g.globalCompositeOperation = '
 const BLUE = '120,175,255', MAG = '255,110,205';
 
 // the slot machine of callers (own clock: fast, then slowing, landing on a beat)
-const CALLERS = ['妈妈', '老板', '快递', '前任', '客服', '班主任', '房东', '外卖', '领导', '陌生号码'];
-const SLOT_A = beat(6), SLOT_LAND = beat(12);
+const CALLERS = ['陌生号码', '老板', '快递', '前任', '客服', '班主任', '房东', '外卖', '领导', '妈妈'];   // lands on 妈妈: the 56% is about family and friends
+const SLOT_A = beat(7), SLOT_LAND = beat(12);
 const slotPos = (t: number) => {            // index (float) of the card in the window
   const q = clamp((t - SLOT_A) / (SLOT_LAND - SLOT_A)), e = 1 - Math.pow(1 - q, 3);
   return e * (CALLERS.length - 1 + 3 * 10) ;   // spins through the list three times, lands on the last
@@ -44,7 +45,7 @@ const callerCard = (g: G, x: number, y: number, name: string, a: number, hot = 0
 
 const LINES: [number, number, string][] = [
   [0.12, 1.6, '每天，你的大脑都在悄悄做一件事——'],
-  [beat(6) - 0.05, SLOT_LAND - 0.1, '第一反应：谁打来的？'],
+  [beat(7) - 0.05, SLOT_LAND - 0.1, '第一反应：谁打来的？'],
   [SLOT_LAND + 0.05, 14.8, '56%的英国年轻人觉得：突然来电，多半{没好事}'],
 ];
 
@@ -52,11 +53,11 @@ export const Ring2: React.FC<{ bare?: boolean }> = ({ bare = false }) => {
   const fr = useCurrentFrame(), t = fr / 30, v = pic(t);
   const [h] = useState(() => delayRender('ring2-fonts', { timeoutInMilliseconds: 60000 }));
   const [ok, setOk] = useState(false);
-  useEffect(() => { Promise.all(FONT_LOADS.map((x) => document.fonts.load(x, '铃声一响你是开心还是心里一紧谁打来的妈老板快递前任客服班主任房东外卖领导陌生号码'))).catch(() => null).then(() => { setOk(true); continueRender(h); }); }, [h]);
+  useEffect(() => { Promise.all(FONT_LOADS.map((x) => document.fonts.load(x, '铃声一响你是开心还是心里一紧谁打来的妈老板快递前任客服班主任房东外卖领导陌生号码亲友突然来电岁'))).catch(() => null).then(() => { setOk(true); continueRender(h); }); }, [h]);
   const after = t >= SLAM;
   const boom = after ? hit(t, SLAM, 0.35) : 0;
-  const l1 = eo(t, SLAM, 0.18), l2 = eo(t, beat(2), 0.2), out12 = 1 - pr(t, beat(6) - 0.25, 0.25);
-  const slotOn = t >= SLOT_A - 0.2;
+  const l1 = eo(t, SLAM, 0.18), l2 = eo(t, beat(2), 0.2), out12 = 1 - pr(t, beat(7) - 0.3, 0.25);
+  const slotOn = t >= SLOT_A - 0.02;
   const dep = Math.round(v * 30);
   const sub = (s: number) => (t < SLAM && s > P0 ? P0 : t < SLAM ? Math.min(t, P0) : t);
   return (
@@ -82,14 +83,14 @@ export const Ring2: React.FC<{ bare?: boolean }> = ({ bare = false }) => {
               // the slot machine of callers
               if (slotOn) {
                 const p = slotPos(t), base = Math.floor(p), frac = p - base, land = t >= SLOT_LAND;
-                const a = eo(t, SLOT_A - 0.2, 0.25), sx = 960 - 230 * eio(t, SLOT_LAND + 0.25, 0.45);
-                g.save(); g.beginPath(); g.rect(0, 330, W, 420); g.clip();
-                for (let j = -2; j <= 2; j++) {
-                  const idx = ((base + j) % CALLERS.length + CALLERS.length) % CALLERS.length, y = 540 + (j - frac) * 170;
-                  const near = 1 - Math.min(1, Math.abs(y - 540) / 260);
-                  callerCard(g, sx, y, CALLERS[idx], a * (0.25 + 0.75 * near), land && j === 0 ? 1 : 0);
-                }
-                g.restore();
+                const a = eo(t, SLOT_A - 0.02, 0.25), sx = 960 - 230 * eio(t, SLOT_LAND + 0.25, 0.45);
+                feather(g, 310, 770, 90, (c) => {
+                  for (let j = -2; j <= 2; j++) {
+                    const idx = ((base + j) % CALLERS.length + CALLERS.length) % CALLERS.length, y = 540 + (j - frac) * 170;
+                    const near = 1 - Math.min(1, Math.abs(y - 540) / 260);
+                    callerCard(c, sx, y, CALLERS[idx], a * (0.25 + 0.75 * near) * (land && j !== 0 ? 1 - eo(t, SLOT_LAND + 0.2, 0.4) * 0.6 : 1), land && j === 0 ? 1 : 0);
+                  }
+                });
                 // motion streaks while spinning fast
                 const speed = clamp(1 - (t - SLOT_A) / (SLOT_LAND - SLOT_A));
                 if (speed > 0.15 && !land) add(g, () => { g.fillStyle = `rgba(255,255,255,${0.05 * speed})`; for (let k = 0; k < 6; k++) g.fillRect(700 + k * 90, 330, 2, 420); });
@@ -99,7 +100,7 @@ export const Ring2: React.FC<{ bare?: boolean }> = ({ bare = false }) => {
               g.restore();
             }} />
             {/* the question, slammed in */}
-            {after && t < beat(6) && (
+            {after && t < beat(7) && (
               <div style={{ position: 'absolute', left: 0, right: 0, top: 300, textAlign: 'center', opacity: out12 }}>
                 <div style={{ fontFamily: F.serif, fontWeight: 900, fontSize: 150, color: C.cream, letterSpacing: '0.06em', opacity: l1, transform: `scale(${lerp(1.35, 1, eo(t, SLAM, 0.22))})`, textShadow: '0 6px 40px rgba(0,0,0,.9)' }}>铃声一响——</div>
                 <div style={{ fontFamily: F.serif, fontWeight: 900, fontSize: 108, marginTop: 24, letterSpacing: '0.04em', opacity: l2, transform: `scale(${lerp(1.25, 1, eo(t, beat(2), 0.22))})`, textShadow: '0 6px 40px rgba(0,0,0,.9)' }}>
@@ -110,8 +111,8 @@ export const Ring2: React.FC<{ bare?: boolean }> = ({ bare = false }) => {
             {t >= SLOT_LAND + 0.45 && (
               <div style={{ position: 'absolute', left: 1060, top: 452, opacity: eo(t, SLOT_LAND + 0.45, 0.25) }}>
                 <div style={{ fontFamily: F.mono, fontWeight: 700, fontSize: 120, lineHeight: 1, color: '#ff9ed6', textShadow: '0 4px 30px rgba(0,0,0,.9)' }}>{Math.round(56 * eo(t, SLOT_LAND + 0.45, 0.8))}%</div>
-                <div style={{ fontFamily: F.sans, fontWeight: 700, fontSize: 44, marginTop: 14, color: C.cream, opacity: eo(t, SLOT_LAND + 1.1, 0.3) }}>觉得突然来电<span style={{ color: '#ff9ed6' }}>没好事</span></div>
-                <div style={{ fontFamily: F.mono, fontWeight: 700, fontSize: 22, marginTop: 16, letterSpacing: '0.2em', color: 'rgba(239,232,218,.75)', opacity: eo(t, SLOT_LAND + 1.3, 0.3) }}>OPINIUM / USWITCH · 2024 · 18–34 岁</div>
+                <div style={{ fontFamily: F.sans, fontWeight: 700, fontSize: 44, marginTop: 14, color: C.cream, opacity: eo(t, SLOT_LAND + 1.1, 0.3) }}>亲友突然来电</div>
+                <div style={{ fontFamily: F.sans, fontWeight: 500, marginTop: 16, letterSpacing: '0.08em', fontSize: 30, color: 'rgba(239,232,218,.9)', opacity: eo(t, SLOT_LAND + 1.3, 0.3) }}>OPINIUM / USWITCH · 2024 · 18–34 岁</div>
               </div>
             )}
           </AbsoluteFill>

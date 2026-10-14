@@ -48,6 +48,8 @@ def sync_sources():
     for f in (PROJECT / 'public').iterdir():
         if f.name.startswith('bgm') and f.suffix == '.mp3':
             continue  # music never leaves this machine; the farm keeps silent stand-ins
+        if f.name.startswith('ring'):
+            continue  # the owner's ringtone recording is never pushed (the repo is public)
         if f.name == 'vo' or f.suffix == '.wav':
             continue  # nor does the voice-over (the picture does not need it)
         dst = FARM / 'public' / f.name

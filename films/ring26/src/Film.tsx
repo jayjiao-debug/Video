@@ -11,8 +11,8 @@ export { FILM_FRAMES };
 type Shot = { a: number; z: number; el: (T: number, f: number) => React.ReactNode };
 const SHOTS: Shot[] = [
   { a: 0, z: CUT.p23, el: () => <Ring2 bare /> },
-  { a: CUT.p23, z: CUT.why + 0.4, el: (T, f) => <S1 T={T} f={f} /> },
-  { a: CUT.why + 0.4, z: CUT.tOut, el: (T, f) => <Title T={T} f={f} /> },
+  { a: CUT.p23, z: CUT.why, el: (T, f) => <S1 T={T} f={f} /> },
+  { a: CUT.why, z: CUT.tOut, el: (T, f) => <Title T={T} f={f} /> },
   { a: CUT.tOut, z: CUT.sixty, el: (T, f) => <S2 T={T} f={f} /> },
   { a: CUT.sixty, z: CUT.breakA, el: (T, f) => <S2c T={T} f={f} /> },
   { a: CUT.breakA, z: CUT.reasons, el: (T, f) => <S3a T={T} f={f} /> },
@@ -51,9 +51,9 @@ const picture = (T: number, f: number) => {
     </>
   );
 };
-const SLAMS = [CUT.title, CUT.build, CUT.drop, CUT.coda];
+const SLAMS = [CUT.title, CUT.build, CUT.drop, CUT.coda, CUT.end];
 const LOADS = [...FONT_LOADS, '900 40px "Noto Serif CJK SC"'];
-const GLYPHS = '谁打来的？《》铃声一响你是开心还是心里一紧发消息打电话说错了撤不回冷场比起通话更想不接理由都怕这个年被拦下的诈骗全年天平均每通德州大学奥斯汀分校芝加哥老朋友很久没聊随机分配写邮件事前预测实际尴尬度连接感示意研究报告为显著差异未给统一刻度实验二陌生人两两聊天方式打字视频语音看不见脸也一样用时差不多同一份调查岁有好消息希望来约好呼叫中关注一起懂世界评论区资料英国名成年人公安部通报数据柱状图同事学外婆室友妈老板快递前任客服班主任房东外卖领导号码每个从0123456789%≈亿万';
+const GLYPHS = '推销诈骗出事了亲友突然来电成两组收到消息费时格约好时间再看完这条最想给新闻发布会只表示显著高于非比例必见脸谁打来的？《》铃声一响你是开心还是心里一紧发消息打电话说错了撤不回冷场比起通话更想不接理由都怕这个年被拦下的诈骗全年天平均每通德州大学奥斯汀分校芝加哥老朋友很久没聊随机分配写邮件事前预测实际尴尬度连接感示意研究报告为显著差异未给统一刻度实验二陌生人两两聊天方式打字视频语音看不见脸也一样用时差不多同一份调查岁有好消息希望来约好呼叫中关注一起懂世界评论区资料英国名成年人公安部通报数据柱状图同事学外婆室友妈老板快递前任客服班主任房东外卖领导号码每个从0123456789%≈亿万';
 
 export const Film: React.FC = () => {
   const f = useCurrentFrame(), T = f / 30;
@@ -77,7 +77,7 @@ export const Film: React.FC = () => {
           <Grain T={frozen ? P0 : T} />
           {T > CUT.p23 - 0.4 && <div style={{ position: 'absolute', inset: 0, background: '#fff1d6', opacity: flash, mixBlendMode: 'screen' }} />}
           <Bars />
-          <div style={{ position: 'absolute', right: 56, top: 36, opacity: 0.9 * markO, fontFamily: F.sans, fontWeight: 500, fontSize: 18, letterSpacing: '0.3em', color: 'rgba(243,237,226,.5)' }}>
+          <div style={{ position: 'absolute', right: 56, top: 36, opacity: 0.9 * markO, fontFamily: F.sans, fontWeight: 500, fontSize: 20, letterSpacing: '0.3em', color: 'rgba(243,237,226,.6)' }}>
             <span style={{ color: '#e3b765' }}>◆ </span>Juno · VIBE知识大赏
           </div>
           <Subs T={subT} lines={lines} />
