@@ -282,7 +282,7 @@ export const onAir = (g: G, x: number, y: number, s: number, on: number) => {
 };
 
 /** a message bubble: typing dots, or text being written (chars: how many characters are visible) */
-export const bubble = (g: G, x: number, y: number, s: number, text: string, chars: number, mine = true, a = 1, T = 0) => {
+export const bubble = (g: G, x: number, y: number, s: number, text: string, chars: number, mine = true, a = 1, T = 0, caret = true) => {
   if (a <= 0) return;
   g.save(); g.globalAlpha *= a;
   g.font = `500 ${40 * s}px "Noto Sans CJK SC"`;
@@ -293,7 +293,7 @@ export const bubble = (g: G, x: number, y: number, s: number, text: string, char
   g.beginPath(); if (mine) { g.moveTo(x - 24 * s, y + h / 2 - 16 * s); g.lineTo(x + 12 * s, y + h / 2 + 6 * s); g.lineTo(x - 2 * s, y + h / 2 - 34 * s); } else { g.moveTo(x + 24 * s, y + h / 2 - 16 * s); g.lineTo(x - 12 * s, y + h / 2 + 6 * s); g.lineTo(x + 2 * s, y + h / 2 - 34 * s); } g.fill();
   if (shown) { g.fillStyle = mine ? '#2a1e10' : '#eee'; g.textAlign = 'left'; g.textBaseline = 'middle'; g.fillText(shown, x0 + 32 * s, y + 2 * s);
     // caret
-    if (Math.floor(T * 2.2) % 2 === 0) { g.fillStyle = mine ? '#2a1e10' : '#eee'; g.fillRect(x0 + 34 * s + tw, y - 22 * s, 3 * s, 44 * s); } }
+    if (caret && Math.floor(T * 2.2) % 2 === 0) { g.fillStyle = mine ? '#2a1e10' : '#eee'; g.fillRect(x0 + 34 * s + tw, y - 22 * s, 3 * s, 44 * s); } }
   else for (let k = 0; k < 3; k++) { const b = 0.5 + 0.5 * Math.sin(T * 7 - k * 0.9); g.fillStyle = `rgba(42,30,16,${0.35 + 0.5 * b})`; g.beginPath(); g.arc(x0 + w / 2 + (k - 1) * 30 * s, y - 6 * b * s, 9 * s, 0, 6.3); g.fill(); }
   g.restore();
 };
@@ -392,4 +392,19 @@ export const bars3 = (g: G, x: number, y: number, s: number, v: [number, number,
     g.fillStyle = gr; rr(g, bx, y - h, bw, h, 10 * s); g.fill();
     g.fillStyle = '#efe8da'; g.font = `700 ${46 * s}px "Noto Sans CJK SC"`; g.textAlign = 'center'; g.textBaseline = 'top'; g.fillText(labels[i], bx + bw / 2, y + 18 * s);
   }
+};
+
+/** draw `fn` into a band y0..y1 (in the current transform) whose top and bottom `edge` px fade out softly */
+let OFF: HTMLCanvasElement | null = null;
+export const feather = (g: G, y0: number, y1: number, edge: number, fn: (c: G) => void) => {
+  if (!OFF) { OFF = document.createElement('canvas'); OFF.width = W; OFF.height = H; }
+  const o = OFF.getContext('2d')!;
+  o.setTransform(1, 0, 0, 1, 0, 0); o.globalCompositeOperation = 'source-over'; o.globalAlpha = 1; o.clearRect(0, 0, W, H);
+  o.setTransform(g.getTransform());
+  o.save(); o.beginPath(); o.rect(-4 * W, y0, 9 * W, y1 - y0); o.clip(); fn(o); o.restore();
+  o.globalCompositeOperation = 'destination-in';
+  const gr = o.createLinearGradient(0, y0, 0, y1), k = edge / (y1 - y0);
+  gr.addColorStop(0, 'rgba(0,0,0,0)'); gr.addColorStop(k, 'rgba(0,0,0,1)'); gr.addColorStop(1 - k, 'rgba(0,0,0,1)'); gr.addColorStop(1, 'rgba(0,0,0,0)');
+  o.fillStyle = gr; o.fillRect(-4 * W, y0, 9 * W, y1 - y0);
+  g.save(); g.setTransform(1, 0, 0, 1, 0, 0); g.drawImage(OFF, 0, 0); g.restore();
 };

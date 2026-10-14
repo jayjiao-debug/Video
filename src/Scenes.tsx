@@ -8,7 +8,7 @@ import { AbsoluteFill } from 'remotion';
 import { C, F, Canvas, clamp, lerp, pr, eo, eio, hit, rnd, glowDot } from './kit';
 import { sparks } from './lightkit';
 import { stage, bokeh, spot, floorFade, withReflection, FLOOR, W } from './hero';
-import { callerCard, onAir, bubble, handset, envelope, gauge, flapBoard, calendar, glow } from './art';
+import { callerCard, onAir, bubble, handset, envelope, gauge, flapBoard, calendar, glow, feather } from './art';
 import { CUT, beat, B } from './time';
 import { JUNO } from './brand/identity';
 
@@ -46,9 +46,11 @@ const Count: React.FC<{ T: number; a: number; to: number; x: number; y: number; 
 const Lbl: React.FC<{ T: number; a: number; x: number; y: number; s: React.ReactNode; size?: number; col?: string; o?: number; align?: 'left' | 'center' | 'right'; w?: number; serif?: boolean }> = ({ T, a, x, y, s, size = 44, col = C.cream, o = 1, align = 'center', w = 800, serif }) => (
   <div style={{ position: 'absolute', left: align === 'center' ? x - w / 2 : align === 'right' ? x - w : x, width: w, top: y, textAlign: align, opacity: eo(T, a, 0.3) * o, transform: `translateY(${(1 - eo(T, a, 0.35)) * 12}px)`, fontFamily: serif ? F.serif : F.sans, fontWeight: serif ? 900 : 700, fontSize: size, color: col, letterSpacing: '0.04em', textShadow: shadow, whiteSpace: 'nowrap' }}>{s}</div>
 );
-const Src: React.FC<{ T: number; a: number; x: number; y: number; s: string; o?: number; align?: 'left' | 'center' }> = ({ T, a, x, y, s, o = 1, align = 'left' }) => (
-  <div style={{ position: 'absolute', left: align === 'center' ? 0 : x, right: align === 'center' ? 0 : undefined, top: y, textAlign: align, opacity: 0.8 * eo(T, a, 0.3) * o, fontFamily: F.mono, fontWeight: 700, fontSize: 22, letterSpacing: '0.2em', color: 'rgba(239,232,218,.85)', whiteSpace: 'nowrap' }}>{s}</div>
-);
+/** a source note: Latin-only notes stay small mono; anything with Chinese is 30 px so it reads on a phone */
+const Src: React.FC<{ T: number; a: number; x: number; y: number; s: string; o?: number; align?: 'left' | 'center' }> = ({ T, a, x, y, s, o = 1, align = 'left' }) => {
+  const cjk = /[\u4e00-\u9fff]/.test(s);
+  return <div style={{ position: 'absolute', left: align === 'center' ? 0 : x, right: align === 'center' ? 0 : undefined, top: y, textAlign: align, opacity: eo(T, a, 0.3) * o, fontFamily: cjk ? F.sans : F.mono, fontWeight: cjk ? 500 : 700, fontSize: cjk ? 30 : 22, letterSpacing: cjk ? '0.08em' : '0.2em', color: 'rgba(239,232,218,.9)', whiteSpace: 'nowrap', textShadow: shadow }}>{s}</div>;
+};
 
 /* ------------------------------------------------------------------ small objects */
 /** a small standing phone glyph for the 100-person grids. state: 0 ringing (cool), 1 dead (dark, magenta slash), 2 warm (gold) */
@@ -86,7 +88,7 @@ const pick = (n: number, seed: number, from?: number[]) => {
   return pool.slice(0, n);
 };
 const DEAD23 = pick(23, 11), DEAD_SET = new Set(DEAD23);
-const WARM53 = pick(53, 17, Array.from({ length: 100 }, (_, i) => i).filter((i) => !DEAD_SET.has(i)));
+const WARM53 = pick(53, 17);
 const ORDER = (set: number[]) => { const m = new Map<number, number>(); set.forEach((v, j) => m.set(v, j)); return m; };
 const DEAD_ORD = ORDER(DEAD23), WARM_ORD = ORDER(WARM53);
 
@@ -120,15 +122,15 @@ const ringArcs = (g: G, x: number, y: number, T: number, col: string, a = 1, per
 const wheelPos = (T: number, a: number, land: number, n: number, turns = 2) => { const q = clamp((T - a) / (land - a)), e = 1 - Math.pow(1 - q, 3); return e * (n - 1 + turns * n); };
 const wheel = (g: G, T: number, items: string[], a: number, land: number, x: number, y: number, o: { turns?: number; alpha?: number; col?: string; avatar?: boolean; w?: number } = {}) => {
   const p = wheelPos(T, a, land, items.length, o.turns ?? 2), base = Math.floor(p), frac = p - base, landed = T >= land, col = o.col ?? MAG;
-  g.save(); g.beginPath(); g.rect(0, y - 230, W, 460); g.clip();
-  for (let j = -2; j <= 2; j++) {
-    const idx = ((base + j) % items.length + items.length) % items.length, yy = y + (j - frac) * 170;
-    const near = 1 - Math.min(1, Math.abs(yy - y) / 260);
-    const fadeOthers = landed && j !== 0 ? 1 - eo(T, land + 0.2, 0.4) : 1;
-    if (o.avatar === false) nameCard(g, x, yy, items[idx], (o.alpha ?? 1) * (0.25 + 0.75 * near) * fadeOthers, landed && j === 0 ? 1 : 0, col, o.w);
-    else callerCard(g, x, yy, items[idx], (o.alpha ?? 1) * (0.25 + 0.75 * near) * fadeOthers, landed && j === 0 ? 1 : 0, 1, col);
-  }
-  g.restore();
+  feather(g, y - 240, y + 240, 90, (c) => {
+    for (let j = -2; j <= 2; j++) {
+      const idx = ((base + j) % items.length + items.length) % items.length, yy = y + (j - frac) * 170;
+      const near = 1 - Math.min(1, Math.abs(yy - y) / 260);
+      const fadeOthers = landed && j !== 0 ? 1 - eo(T, land + 0.2, 0.4) : 1;
+      if (o.avatar === false) nameCard(c, x, yy, items[idx], (o.alpha ?? 1) * (0.25 + 0.75 * near) * fadeOthers, landed && j === 0 ? 1 : 0, col, o.w);
+      else callerCard(c, x, yy, items[idx], (o.alpha ?? 1) * (0.25 + 0.75 * near) * fadeOthers, landed && j === 0 ? 1 : 0, 1, col);
+    }
+  });
   const speed = clamp(1 - (T - a) / (land - a));
   if (T > a && speed > 0.15 && !landed) add(g, () => { g.fillStyle = `rgba(255,255,255,${0.05 * speed * (o.alpha ?? 1)})`; for (let k = 0; k < 6; k++) g.fillRect(x - 200 + k * 80, y - 230, 2, 460); });
   if (landed) add(g, () => { glowDot(g, x, y, 460, 0.4 * hit(T, land, 0.5), col); sparks(g, x, y, land, T, 70, col, 1.3, 3); });
@@ -153,9 +155,9 @@ const boom = (g: G, x: number, y: number, t0: number, T: number, col: string, n 
   });
 };
 
-/* ================================================================== S1 · 23% never answer (14.95 → 18.9) */
+/* ================================================================== S1 · 23% never answer (15.2 → 18.52) */
 export const S1: React.FC<P> = ({ T, f }) => {
-  const a = CUT.p23, why = CUT.why;
+  const a = CUT.p23, why = CUT.why, d0 = CUT.dead23;
   const dim = 1 - 0.45 * eo(T, why, 0.6);
   return (
     <Scene f={f} draw={(g) => {
@@ -163,137 +165,143 @@ export const S1: React.FC<P> = ({ T, f }) => {
       g.save(); cam(g, 1 + 0.03 * pr(T, a, 4) + 0.05 * eio(T, why, 2.4));
       for (let i = 0; i < 100; i++) {
         const [x, y] = gridPos(i), c = i % GRID.cols, r = Math.floor(i / GRID.cols);
-        const ap = eo(T, a - 0.25 + c * 0.018 + r * 0.05, 0.3);
-        const dj = DEAD_ORD.get(i), dead = dj === undefined ? 0 : eo(T, a + 0.9 + dj * 0.04, 0.15);
+        const ap = eo(T, a - 0.4 + c * 0.016 + r * 0.04, 0.3);
+        const dj = DEAD_ORD.get(i), dead = dj === undefined ? 0 : eo(T, d0 + dj * 0.035, 0.15);
         miniPhone(g, x, y, 1, ap * (dead > 0 ? 1 : dim), T, i, dead, 0);
-        if (dj !== undefined && dead > 0) add(g, () => glow(g, x, y, 60, 0.35 * hit(T, a + 0.9 + dj * 0.04, 0.25), MAG));
+        if (dj !== undefined && dead > 0) add(g, () => glow(g, x, y, 60, 0.35 * hit(T, d0 + dj * 0.035, 0.25), MAG));
       }
       floorFade(g); g.restore();
     }}>
-      <Count T={T} a={a + 0.9} to={23} x={0} y={150} size={130} col={MAGH} align="center" />
-      <Src T={T} a={a + 1.6} x={0} y={790} s="OPINIUM / USWITCH · 2024 · 18–34 岁 · 每格 = 1 人" align="center" o={1 - pr(T, why, 0.4)} />
+      <Count T={T} a={d0} to={23} x={0} y={150} size={130} col={MAGH} align="center" />
+      <Src T={T} a={d0 + 0.7} x={0} y={790} s="OPINIUM / USWITCH · 2024 · 18–34 岁 · 每格 = 1 人" align="center" o={1 - pr(T, why, 0.4)} />
     </Scene>
   );
 };
 
-/* ================================================================== Title (18.9 → 24.05): the wheel lands on the title */
+/* ================================================================== Title (18.52 → 24.05): the wheel lands on the title */
 const TITLE = '谁打来的？';
 const CALLERS = ['妈妈', '老板', '快递', '前任', '客服', '班主任', '房东', '外卖', '领导', '陌生号码'];
+const goldText: React.CSSProperties = { background: 'linear-gradient(180deg,#fff3cf 0%,#f0c873 52%,#b07c32 100%)', WebkitBackgroundClip: 'text', backgroundClip: 'text', color: 'transparent' };
 export const Title: React.FC<P> = ({ T, f }) => {
-  const h = CUT.title, out = eio(T, CUT.tOut - 0.45, 0.45);
+  const h = CUT.title, out = eio(T, CUT.tOut - 0.5, 0.5);
   const card = T >= h;
   const glyphs = ['《', ...TITLE, '》'];
-  const pour = eio(T, beat(36), 0.4), sweep = pr(T, beat(37), 0.7);
-  const textO = 1 - out;
+  // 《 谁 》 land on the hit; 打 来 的 ？ follow one per half-beat
+  const at = (i: number) => (i === 0 || i === 1 || i === glyphs.length - 1 ? h : h + (i - 1) * B / 2);
+  const pour = eio(T, beat(35), 0.45), sw = pr(T, beat(36.5), 0.6);
+  const textO = 1 - eo(T, CUT.tOut - 0.6, 0.3);
+  const sheen = sw > 0 && sw < 1 ? `linear-gradient(105deg, rgba(255,250,235,0) ${sw * 160 - 40}%, rgba(255,252,240,.95) ${sw * 160 - 25}%, rgba(255,250,235,0) ${sw * 160 - 10}%), ` : '';
   return (
     <Scene f={f} draw={(g) => {
       base(g, T, { a: 0.5 + 0.35 * hit(T, h, 0.5), col: card ? '255,226,180' : '235,228,255', bok: 0.8 + 0.6 * hit(T, h, 0.5) });
-      g.save(); cam(g, 1 + 0.03 * hit(T, h, 0.35) + 0.02 * pr(T, h, 3));
-      // the wheel spins through callers and slows into the title slot
-      if (!card) wheel(g, T, CALLERS, CUT.why + 0.2, h, 960, 470, { turns: 2, alpha: eo(T, CUT.why + 0.2, 0.3), col: GOLD });
+      g.save(); cam(g, 1 + 0.03 * hit(T, h, 0.35) + 0.02 * pr(T, h, 3) * (1 - out));
+      if (!card) wheel(g, T, CALLERS, CUT.why + 0.05, h, 960, 470, { turns: 2, alpha: eo(T, CUT.why, 0.3), col: GOLD });
       else {
-        // the title card: a big caller card in gold (the episode's motif), shrinking toward the next scene's bubble on the way out
-        const s = lerp(1, 0.55, out), x = lerp(960, 600, out), y = lerp(470, 440, out);
-        const w = 1140 * s, hh = 230 * s;
-        add(g, () => glow(g, x, y, 900 * s, 0.25 + 0.3 * hit(T, h, 0.5), GOLD));
-        const body = g.createLinearGradient(0, y - hh / 2, 0, y + hh / 2); body.addColorStop(0, 'rgba(34,28,22,.95)'); body.addColorStop(1, 'rgba(14,11,9,.95)');
-        g.fillStyle = body; rr(g, x - w / 2, y - hh / 2, w, hh, 40 * s); g.fill();
-        g.strokeStyle = `rgba(${GOLD},${0.55 + 0.45 * hit(T, h, 0.6)})`; g.lineWidth = 3; g.stroke();
-        // gold avatar + ring arcs (motif)
-        const ax = x - w / 2 + 130 * s;
-        g.fillStyle = `rgba(${GOLD},.28)`; g.beginPath(); g.arc(ax, y, 70 * s, 0, 6.3); g.fill();
-        g.fillStyle = `rgba(${GOLD},.9)`; g.beginPath(); g.arc(ax, y - 16 * s, 23 * s, 0, 6.3); g.fill(); g.beginPath(); g.ellipse(ax, y + 36 * s, 38 * s, 22 * s, 0, Math.PI, 0); g.fill();
-        if (out < 0.5) ringArcs(g, ax, y, T, GOLD, 0.8 * (1 - out * 2), 1.2, 80 * s, 160 * s);
+        // the title card: a big gold caller card (the motif); on the way out it becomes the next scene's message bubble
+        const x = lerp(960, 729, out), y = lerp(470, 440, out), w = lerp(1140, 262, out), hh = lerp(230, 147, out);
+        add(g, () => glow(g, x, y, lerp(900, 300, out), (0.25 + 0.3 * hit(T, h, 0.5)) * (1 - out), GOLD));
+        const body = g.createLinearGradient(0, y - hh / 2, 0, y + hh / 2);
+        body.addColorStop(0, `rgba(${lerp(34, 240, out) | 0},${lerp(28, 222, out) | 0},${lerp(22, 186, out) | 0},.95)`);
+        body.addColorStop(1, `rgba(${lerp(14, 225, out) | 0},${lerp(11, 205, out) | 0},${lerp(9, 165, out) | 0},.95)`);
+        g.fillStyle = body; rr(g, x - w / 2, y - hh / 2, w, hh, lerp(40, 51, out)); g.fill();
+        g.strokeStyle = `rgba(${GOLD},${(0.55 + 0.45 * hit(T, h, 0.6)) * (1 - out)})`; g.lineWidth = 3; g.stroke();
+        const ax = x - w / 2 + 130 * (1 - out), ao = clamp(1 - out * 2.5);
+        if (ao > 0) {
+          g.save(); g.globalAlpha = ao;
+          g.fillStyle = `rgba(${GOLD},.28)`; g.beginPath(); g.arc(ax, y, 70, 0, 6.3); g.fill();
+          g.fillStyle = `rgba(${GOLD},.9)`; g.beginPath(); g.arc(ax, y - 16, 23, 0, 6.3); g.fill(); g.beginPath(); g.ellipse(ax, y + 36, 38, 22, 0, Math.PI, 0); g.fill();
+          g.restore();
+          ringArcs(g, ax, y, T, GOLD, 0.8 * ao, 1.2, 80, 160);
+        }
         sparks(g, 960, 470, h, T, 160, GOLD, 2.4, 21);
       }
       floorFade(g); g.restore();
     }}>
       {card && (
         <>
-          <div style={{ position: 'absolute', left: 0, right: 0, top: 268, textAlign: 'center', opacity: eo(T, h + 0.5, 0.4) * textO, fontFamily: F.lat, fontWeight: 600, fontSize: 30, letterSpacing: '0.3em', color: C.gold }}>TELEPHOBIA · OPINIUM × USWITCH · MMXXIV</div>
-          <div style={{ position: 'absolute', left: 580, width: 960, top: 470 - 76, textAlign: 'center', opacity: textO, fontFamily: F.serif, fontWeight: 900, fontSize: 120, lineHeight: '152px', letterSpacing: '0.02em', whiteSpace: 'nowrap', transform: `translateY(${-30 * out}px)` }}>
+          <div style={{ position: 'absolute', left: 0, right: 0, top: 268, textAlign: 'center', opacity: eo(T, h + 0.4, 0.4) * textO, fontFamily: F.lat, fontWeight: 600, fontSize: 30, letterSpacing: '0.3em', color: C.gold }}>TELEPHOBIA · KUMAR & EPLEY · MMXXI</div>
+          <div style={{ position: 'absolute', left: 580, width: 960, top: 470 - 76, textAlign: 'center', opacity: textO, fontFamily: F.serif, fontWeight: 900, fontSize: 120, lineHeight: '152px', letterSpacing: '0.02em', whiteSpace: 'nowrap' }}>
             {glyphs.map((c, i) => {
-              const a = h + i * B / 2, k = eo(T, a, 0.16);
-              return <span key={i} style={{ display: 'inline-block', opacity: T < a ? 0 : k, transform: `scale(${lerp(1.5, 1, k)})`, color: C.cream, position: 'relative', marginLeft: c === '》' ? '-0.42em' : undefined }}>{c}</span>;
+              const a = at(i), k = eo(T, a, 0.16);
+              return <span key={i} style={{ display: 'inline-block', opacity: T < a ? 0 : k, transform: `scale(${lerp(1.4, 1, k)})`, color: C.cream, marginLeft: c === '》' ? '-0.42em' : undefined }}>{c}</span>;
             })}
-            {/* the gold pour: the same line in gold, revealed left → right, then one light sweep */}
+            {/* the gold pour (left → right) and one light sweep, both clipped to the glyphs */}
             <div style={{ position: 'absolute', inset: 0, clipPath: `inset(0 ${100 - 100 * pour}% 0 0)` }}>
-              {glyphs.map((c, i) => <span key={i} style={{ display: 'inline-block', marginLeft: c === '》' ? '-0.42em' : undefined, background: 'linear-gradient(180deg,#fff3cf 0%,#f0c873 52%,#b07c32 100%)', WebkitBackgroundClip: 'text', backgroundClip: 'text', color: 'transparent' }}>{c}</span>)}
+              {glyphs.map((c, i) => <span key={i} style={{ display: 'inline-block', marginLeft: c === '》' ? '-0.42em' : undefined, ...goldText, backgroundImage: `${sheen}linear-gradient(180deg,#fff3cf 0%,#f0c873 52%,#b07c32 100%)` }}>{c}</span>)}
             </div>
-            {sweep > 0 && sweep < 1 && <div style={{ position: 'absolute', inset: 0, mixBlendMode: 'screen', background: `linear-gradient(105deg, transparent ${sweep * 140 - 30}%, rgba(255,250,230,.55) ${sweep * 140 - 20}%, transparent ${sweep * 140 - 10}%)`, WebkitMaskImage: 'linear-gradient(#000,#000)' }} />}
           </div>
-          <div style={{ position: 'absolute', left: 0, right: 0, top: 628, textAlign: 'center', opacity: eo(T, h + 1.0, 0.4) * textO, fontFamily: F.serif, fontWeight: 700, fontSize: 48, letterSpacing: '0.06em', color: C.cream, textShadow: shadow }}>铃声一响，你是<span style={{ color: '#ffd59a' }}>开心</span>，还是<span style={{ color: MAGH }}>心里一紧</span>？</div>
-          <div style={{ position: 'absolute', left: 0, right: 0, top: 702, textAlign: 'center', opacity: 0.85 * eo(T, h + 1.4, 0.4) * textO, fontFamily: F.lat, fontStyle: 'italic', fontWeight: 500, fontSize: 34, color: 'rgba(239,232,218,.85)' }}>Who's calling, and why does the ring make us flinch?</div>
-          <div style={{ position: 'absolute', left: 0, right: 0, top: 768, textAlign: 'center', opacity: eo(T, h + 1.7, 0.4) * textO, fontFamily: F.sans, fontWeight: 500, fontSize: 28, letterSpacing: '0.3em', color: C.gold }}>— {JUNO.series} —</div>
+          <div style={{ position: 'absolute', left: 0, right: 0, top: 628, textAlign: 'center', opacity: eo(T, h + 0.9, 0.4) * textO, fontFamily: F.serif, fontWeight: 700, fontSize: 48, letterSpacing: '0.06em', color: C.cream, textShadow: shadow }}>铃声一响，你是<span style={{ color: '#ffd59a' }}>开心</span>，还是<span style={{ color: MAGH }}>心里一紧</span>？</div>
+          <div style={{ position: 'absolute', left: 0, right: 0, top: 702, textAlign: 'center', opacity: 0.9 * eo(T, h + 1.2, 0.4) * textO, fontFamily: F.lat, fontStyle: 'italic', fontWeight: 500, fontSize: 34, color: 'rgba(239,232,218,.9)' }}>Who's calling, and why does the ring make us flinch?</div>
+          <div style={{ position: 'absolute', left: 0, right: 0, top: 768, textAlign: 'center', opacity: eo(T, h + 1.5, 0.4) * textO, fontFamily: F.sans, fontWeight: 500, fontSize: 30, letterSpacing: '0.3em', color: C.gold }}>— {JUNO.series} —</div>
         </>
       )}
     </Scene>
   );
 };
 
-/* ================================================================== S2 · draft vs live (24.05 → 33.15) */
+/* ================================================================== S2 · draft vs live (24.05 → 33.2) */
 const typed = (t: number) => {         // the draft: types 在吗, deletes it, types 这周末有空吗？ (own clock)
-  if (t < 0.3) return { s: '', n: 0 };
-  if (t < 1.3) return { s: '在吗', n: clamp((t - 0.3) / 0.25) * 2 };
-  if (t < 1.6) return { s: '在吗', n: 2 * (1 - clamp((t - 1.3) / 0.25)) };
-  if (t < 1.75) return { s: '', n: 0 };
-  return { s: '这周末有空吗？', n: clamp((t - 1.75) / 0.9) * 7 };
+  if (t < 0.15) return { s: '', n: 0, done: false };
+  if (t < 1.2) return { s: '在吗', n: clamp((t - 0.15) / 0.3) * 2, done: false };
+  if (t < 1.5) return { s: '在吗', n: 2 * (1 - clamp((t - 1.2) / 0.25)), done: false };
+  if (t < 1.65) return { s: '', n: 0, done: false };
+  return { s: '这周末有空吗？', n: clamp((t - 1.65) / 0.9) * 7, done: false };
 };
 const wave = (x: number, t: number) => { const u = x * 0.035 - t * 9; return (Math.sin(u) * 0.5 + Math.sin(u * 2.3 + 1) * 0.3 + Math.sin(u * 5.1 + 2) * 0.2) * (0.55 + 0.45 * Math.sin(u * 0.21)); };
 export const S2: React.FC<P> = ({ T, f }) => {
-  const a = CUT.draft, live = CUT.live, slip = 30.1, still = 31.65;
-  const lampOn = T >= live ? 1 : 0, lit = eo(T, live, 0.12);
+  const a = CUT.draft, live = CUT.live, slip = 30.1, still = 31.65, end = CUT.sixty;
+  const lit = eo(T, live, 0.12);
   const leftDim = 1 - 0.6 * eo(T, live, 0.5);
   const d = typed(T - a);
   const WX0 = 1040, WX1 = 1700, WY = 600;
   const flat = eio(T, still, 0.35);
-  const slipX = WX1 - (T - slip) * 520;        // the slip scrolls left with the voice
+  const slipX = WX1 - (T - slip) * 420;        // the slip scrolls left with the voice and can't be pulled back
+  const slipO = T < slip ? 0 : clamp((slipX - WX0 + 20) / 80);
+  // the key light: from the title's centre to the draft, over to the lamp, then back to centre for the 61% grid
+  const spX = T < live ? lerp(960, 640, eio(T, a, 0.5)) : T < end - 0.6 ? lerp(640, 1370, eio(T, live, 0.6)) : lerp(1370, 960, eio(T, end - 0.6, 0.5));
+  const spCol = T >= live && T < end - 0.6 ? '255,215,215' : '235,228,255';
   return (
     <Scene f={f} draw={(g) => {
-      base(g, T, { x: lerp(600, 1360, eio(T, live, 0.6)), a: 0.5 + 0.25 * hit(T, live, 0.6), col: T >= live ? '255,215,215' : '235,228,255' });
+      base(g, T, { x: spX, a: 0.5 + 0.25 * hit(T, live, 0.6), col: spCol });
       g.save(); cam(g, 1 + 0.02 * pr(T, a, 9));
-      // left: the message draft
       g.save(); g.globalAlpha = leftDim;
-      bubble(g, 860, 440, 1.75, d.s, d.n, true, eo(T, a, 0.3), T);
+      bubble(g, 860, 440, 1.75, d.s, d.n, true, 1, T, true);
       g.restore();
-      // right: the ON AIR lamp and the live voice
       onAir(g, 1370, 330, 1.3, lit);
       if (T >= live) {
         const ap = eo(T, live, 0.3);
         add(g, () => {
           for (let x = WX0; x <= WX1; x += 6) {
-            const amp = 120 * (1 - 0.92 * flat * clamp((WX1 - x) / 60 + 1)) * clamp((x - WX0) / 60);
+            const amp = 130 * (1 - 0.94 * flat) * clamp((x - WX0) / 60);
             const v = Math.abs(wave(x, T)) * amp + 3;
-            const isSlip = T >= slip && Math.abs(x - slipX) < 60;
-            g.fillStyle = isSlip ? `rgba(${MAG},${0.95 * ap})` : `rgba(255,${200 - 60 * lit | 0},${200 - 60 * lit | 0},${0.75 * ap})`;
+            const isSlip = T >= slip && Math.abs(x - slipX) < 55 && slipO > 0;
+            g.fillStyle = isSlip ? `rgba(${MAG},${0.95 * ap * slipO})` : `rgba(255,${200 - 60 * lit | 0},${200 - 60 * lit | 0},${0.75 * ap})`;
             g.fillRect(x - 2, WY - v, 4, 2 * v);
           }
-          // the 'now' playhead
-          g.fillStyle = `rgba(255,120,120,${ap})`; g.fillRect(WX1 + 8, WY - 110, 3, 220);
-          glowDot(g, WX1 + 9, WY - 112, 24, 0.8 * ap, '255,110,110');
+          g.fillStyle = `rgba(255,120,120,${ap})`; g.fillRect(WX1 + 8, WY - 130, 3, 260);
+          glowDot(g, WX1 + 9, WY - 132, 24, 0.8 * ap, '255,110,110');
         });
-        if (T >= slip && slipX > WX0 - 40) add(g, () => glow(g, slipX, WY, 110, 0.35 * clamp((slipX - WX0 + 40) / 80), MAG));
+        if (slipO > 0) add(g, () => glow(g, slipX, WY, 110, 0.35 * slipO, MAG));
       }
       floorFade(g); g.restore();
     }}>
-      <Lbl T={T} a={a + 0.1} x={700} y={230} s="发消息" col={C.cream} o={leftDim} />
+      <Lbl T={T} a={a + 0.1} x={700} y={230} s="发消息" o={leftDim} />
       <Lbl T={T} a={live} x={1370} y={150} s="打电话" />
-      {T >= slip && T < still + 0.2 && <Lbl T={T} a={slip + 0.1} x={Math.max(WX0 + 40, slipX)} y={WY - 190} s="说错了" col={MAGH} o={1 - pr(T, still - 0.1, 0.3)} w={300} />}
-      {T >= slip + 0.8 && <Lbl T={T} a={slip + 0.8} x={WX0 + 30} y={WY + 120} s="撤不回" col={MAGH} align="left" w={300} o={1 - pr(T, still - 0.1, 0.3)} />}
+      {slipO > 0 && <Lbl T={T} a={slip + 0.1} x={slipX} y={WY - 160} s="说错了" col={MAGH} o={slipO} w={300} />}
+      {T >= slip + 0.9 && <Lbl T={T} a={slip + 0.9} x={WX0 - 30} y={WY + 150} s="撤不回" col={MAGH} align="left" w={300} o={1 - pr(T, still - 0.1, 0.3)} />}
       {T >= still && (
         <>
-          <Lbl T={T} a={still + 0.15} x={1370} y={WY - 200} s="冷场" col={MAGH} w={300} />
-          <div style={{ position: 'absolute', left: 1370 - 200, width: 400, top: WY + 110, textAlign: 'center', opacity: eo(T, still + 0.2, 0.3), fontFamily: F.mono, fontWeight: 700, fontSize: 56, color: MAGH, textShadow: shadow }}>00:0{Math.min(9, Math.floor((T - still) * 1.6))}</div>
+          <Lbl T={T} a={still + 0.15} x={1370} y={WY - 160} s="冷场" col={MAGH} w={300} o={1 - pr(T, end - 0.5, 0.3)} />
+          <div style={{ position: 'absolute', left: 1370 - 200, width: 400, top: WY + 130, textAlign: 'center', opacity: eo(T, still + 0.2, 0.3) * (1 - pr(T, end - 0.5, 0.3)), fontFamily: F.mono, fontWeight: 700, fontSize: 56, color: MAGH, textShadow: shadow }}>00:0{Math.min(9, Math.floor((T - still) * 1.6))}</div>
         </>
       )}
     </Scene>
   );
 };
 
-/* ================================================================== S2c · 61% would rather text (33.15 → 37.0) */
+/* ================================================================== S2c · 61% would rather receive a message (33.2 → 37.0) */
 export const S2c: React.FC<P> = ({ T, f }) => {
   const a = CUT.sixty;
-  const LIT = new Set(Array.from({ length: 61 }, (_, i) => i));   // the first 61, filling left to right, row by row
   return (
     <Scene f={f} draw={(g) => {
       base(g, T, { a: 0.5 });
@@ -301,34 +309,44 @@ export const S2c: React.FC<P> = ({ T, f }) => {
       for (let i = 0; i < 100; i++) {
         const [x, y] = gridPos(i), c = i % GRID.cols, r = Math.floor(i / GRID.cols);
         const ap = eo(T, a - 0.2 + c * 0.015 + r * 0.04, 0.3);
-        const on = LIT.has(i) ? eo(T, a + 0.6 + i * 0.012, 0.15) : 0;
+        const on = i < 61 ? eo(T, a + 0.5 + i * 0.012, 0.15) : 0;
         miniBubble(g, x, y, 1.05, ap, on);
         if (on > 0) add(g, () => glow(g, x, y, 50, 0.12 * on, '240,222,186'));
       }
       floorFade(g); g.restore();
     }}>
-      <Count T={T} a={a + 0.6} to={61} x={0} y={150} size={130} align="center" />
-      <Src T={T} a={a + 1.2} x={0} y={790} s="OPINIUM / USWITCH · 2024 · 18–34 岁 · 更想发消息" align="center" />
+      <Count T={T} a={a + 0.5} to={61} x={0} y={150} size={130} align="center" />
+      <Src T={T} a={a + 1.1} x={0} y={790} s="OPINIUM / USWITCH · 2024 · 18–34 岁 · 更想收到消息" align="center" />
     </Scene>
   );
 };
 
 /* ================================================================== S3a · the unknown number (37.0 → 40.1) */
+const GHOSTS: [string, number, number, number][] = [['推销？', 560, 300, 37.75], ['诈骗？', 1380, 380, 38.25], ['出事了？', 600, 590, 38.75]];
 export const S3a: React.FC<P> = ({ T, f }) => {
-  const a = CUT.breakA;
+  const a = CUT.breakA, s = 1.35, PH = 380 * s;
   return (
     <Scene f={f} draw={(g) => {
       base(g, T, { a: 0.45, col: '245,215,235' });
-      g.save(); cam(g, 1 + 0.05 * eio(T, a - 0.5, 4), 960, 560);
-      phoneUp(g, 960, FLOOR, 0.9, MAG, 0.55 + 0.15 * Math.sin(T * 3.2));
-      ringArcs(g, 960, FLOOR - 170, T, MAG, 0.7, 1.4, 150, 420);
-      callerCard(g, 960, 230, '陌生号码', eo(T, a + 0.2, 0.5), 0.5 + 0.2 * Math.sin(T * 3.2), 0.9, MAG);
+      g.save(); cam(g, 1 + 0.04 * eio(T, a - 0.5, 4), 960, 560);
+      phoneUp(g, 960, FLOOR, s, MAG, 0.55 + 0.15 * Math.sin(T * 3.2));
+      ringArcs(g, 960, FLOOR - PH / 2, T, MAG, 0.6, 1.4, PH * 0.6, PH * 1.1);
+      // the screen: a plain avatar and the words 陌生号码 (no app UI)
+      const cy = FLOOR - PH * 0.62;
+      g.fillStyle = 'rgba(255,255,255,.18)'; g.beginPath(); g.arc(960, cy - 70, 46, 0, 6.3); g.fill();
+      g.fillStyle = 'rgba(255,255,255,.7)'; g.beginPath(); g.arc(960, cy - 82, 15, 0, 6.3); g.fill(); g.beginPath(); g.ellipse(960, cy - 46, 25, 15, 0, Math.PI, 0); g.fill();
+      g.fillStyle = '#fff'; g.font = '900 50px "Noto Sans CJK SC"'; g.textAlign = 'center'; g.textBaseline = 'middle'; g.fillText('陌生号码', 960, cy + 20);
+      GHOSTS.forEach(([, x, y, t0]) => { if (T >= t0) add(g, () => glow(g, x, y + 30, 160, 0.25 * eo(T, t0, 0.4), MAG)); });
       floorFade(g); g.restore();
-    }} />
+    }}>
+      {GHOSTS.map(([w, x, y, t0], i) => (
+        <div key={i} style={{ position: 'absolute', left: x - 200, width: 400, top: y, textAlign: 'center', opacity: eo(T, t0, 0.4) * (0.75 + 0.25 * Math.sin(T * 4 + i * 2)), transform: `translateY(${(1 - eo(T, t0, 0.5)) * 14}px)`, fontFamily: F.sans, fontWeight: 900, fontSize: 56, color: MAGH, textShadow: shadow }}>{w}</div>
+      ))}
+    </Scene>
   );
 };
 
-/* ================================================================== S3b · why people don't pick up (40.1 → 44.0) */
+/* ================================================================== S3b · why people don't pick up (40.1 → 44.09) */
 const REASONS = ['在忙', '不想被打扰', '想先知道是谁', '骚扰或诈骗'];
 export const S3b: React.FC<P> = ({ T, f }) => {
   const a = CUT.reasons, land = CUT.land63;
@@ -336,56 +354,53 @@ export const S3b: React.FC<P> = ({ T, f }) => {
     <Scene f={f} draw={(g) => {
       base(g, T, { a: 0.5 + 0.2 * hit(T, land, 0.6), col: T >= land ? '255,214,235' : '235,228,255' });
       g.save(); cam(g, 1 + 0.02 * pr(T, a, 4));
-      wheel(g, T, REASONS, a + 0.05, land, 760, 520, { turns: 2, alpha: eo(T, a, 0.25), avatar: false, w: 620 });
+      wheel(g, T, REASONS, a + 0.05, land, 760, 520, { turns: 1, alpha: eo(T, a, 0.25), avatar: false, w: 620 });
       floorFade(g); g.restore();
     }}>
-      <Lbl T={T} a={a + 0.1} x={760} y={190} s="不接电话的理由" col="rgba(239,232,218,.8)" />
+      <Lbl T={T} a={a + 0.1} x={760} y={190} s="不接电话的理由" col="rgba(239,232,218,.85)" />
       <Count T={T} a={land + 0.05} to={63} x={1140} y={440} size={130} col={MAGH} />
-      <Lbl T={T} a={land + 0.4} x={1146} y={590} s="选了这一条" col={C.cream} align="left" w={500} />
+      <Lbl T={T} a={land + 0.4} x={1146} y={590} s="选了这一条" align="left" w={500} />
       <Src T={T} a={land + 0.6} x={1146} y={666} s="OPINIUM / USWITCH · 2024 · 全体受访者" />
     </Scene>
   );
 };
 
-/* ================================================================== S3c · 36亿 (44.0 → 53.2) */
+/* ================================================================== S3c · 36亿 (44.09 → 53.2) */
 const DIGITS = '0123456789';
 export const S3c: React.FC<P> = ({ T, f }) => {
   const a = CUT.notOver, land = CUT.flap, per = CUT.perDay;
-  const up = eio(T, per - 0.1, 0.6);      // the board rises to make room for the per-day count
+  const up = eio(T, per - 0.1, 0.6);
   const tiles = '36亿';
+  const lockAt = (i: number) => land - 0.5 + i * 0.25;
   return (
     <Scene f={f} draw={(g) => {
       base(g, T, { a: 0.45 + 0.25 * hit(T, land, 0.6), col: '255,214,235' });
       g.save(); cam(g, 1 + 0.02 * pr(T, a, 9));
-      // tiles roll through digits on their own clock and lock one by one into 3, 6, 亿
-      const ap = eo(T, a + 0.2, 0.4);
-      const txt = tiles.split('').map((c, i) => {
-        const lock = land - 0.5 + i * 0.25;
-        return T >= lock ? c : DIGITS[Math.floor((T * 18 + i * 3.7)) % 10];
-      }).join('');
-      const flips = tiles.split('').map((_, i) => { const lock = land - 0.5 + i * 0.25; return T >= lock ? eo(T, lock, 0.12) : ((T * 18 + i * 3.7) % 1); });
+      const ap = eo(T, a + 0.1, 0.4);
+      const txt = tiles.split('').map((c, i) => (T >= lockAt(i) ? c : DIGITS[Math.floor(T * 14 + i * 3.7) % 10])).join('');
+      const flips = tiles.split('').map((_, i) => (T >= lockAt(i) ? eo(T, lockAt(i), 0.12) : (T * 14 + i * 3.7) % 1));
       g.save(); g.globalAlpha = ap;
       const by = lerp(450, 270, up), bs = lerp(1.6, 0.75, up);
       flapBoard(g, 960, by, bs, txt, flips, T >= land ? MAGH : '#f3ede2');
       g.restore();
-      if (T >= land) add(g, () => { glow(g, 960, by, 700 * bs, 0.3 * hit(T, land, 0.8) + 0.08, MAG); sparks(g, 960, by, land, T, 120, MAG, 2.2, 31); });
-      // a year of days: 365 cells filling, each worth ~986万
+      if (T >= land) add(g, () => { glow(g, 960, by, 700 * bs, 0.3 * hit(T, land, 0.8) + 0.08, MAG); sparks(g, 960, by, land, T, 110, MAG, 2.0, 31); });
+      // one year of days: 365 cells filling, one cell = one day
       if (T >= per) {
         const cols = 73, cw = 18, ch = 18, gap = 4, x0 = 960 - (cols * (cw + gap)) / 2, y0 = 470;
         for (let i = 0; i < 365; i++) {
-          const c = i % cols, r = Math.floor(i / cols), on = eo(T, per + 0.3 + c * 0.016, 0.12);
+          const c = i % cols, r = Math.floor(i / cols), on = eo(T, per + 0.3 + c * 0.012, 0.12);
           g.fillStyle = on > 0 ? `rgba(${MAG},${0.25 + 0.6 * on})` : 'rgba(255,255,255,.06)';
           g.fillRect(x0 + c * (cw + gap), y0 + r * (ch + gap), cw, ch);
         }
       }
       floorFade(g); g.restore();
     }}>
-      {T >= land && <Lbl T={T} a={land + 0.3} x={960} y={650} s="2025 年，被拦下的诈骗电话" o={1 - pr(T, per - 0.2, 0.3)} />}
-      {T >= land && <Src T={T} a={land + 0.6} x={0} y={724} s="公安部 · 2026-01-09 通报" align="center" o={1 - pr(T, per - 0.2, 0.3)} />}
-      {T >= per && <Lbl T={T} a={per + 0.3} x={960} y={384} s="全年 365 天" col="rgba(239,232,218,.75)" size={44} />}
+      {T >= land && <Lbl T={T} a={land + 0.3} x={960} y={650} s="被拦下的诈骗电话 · 2025 年" o={1 - pr(T, per - 0.2, 0.3)} />}
+      {T >= land && <Src T={T} a={land + 0.6} x={0} y={724} s="公安部 · 2026-01-08 新闻发布会" align="center" o={1 - pr(T, per - 0.2, 0.3)} />}
+      {T >= per && <Lbl T={T} a={per + 0.3} x={960} y={384} s="1 格 = 1 天" col="rgba(239,232,218,.85)" />}
       {T >= per && (
-        <div style={{ position: 'absolute', left: 0, right: 0, top: 620, textAlign: 'center', opacity: eo(T, per + 1.5, 0.3), transform: `scale(${lerp(1.25, 1, eo(T, per + 1.5, 0.22))})`, fontFamily: F.serif, fontWeight: 900, fontSize: 92, color: C.cream, textShadow: shadow }}>
-          平均每天 <span style={{ fontFamily: F.mono, color: MAGH }}>≈986万</span> 通
+        <div style={{ position: 'absolute', left: 0, right: 0, top: 620, textAlign: 'center', opacity: eo(T, per + 1.27, 0.3), transform: `translateY(${(1 - eo(T, per + 1.27, 0.35)) * 24}px)`, fontFamily: F.serif, fontWeight: 900, fontSize: 92, color: C.cream, textShadow: shadow }}>
+          每天 <span style={{ fontFamily: F.mono, color: MAGH }}>≈986万</span> 通
         </div>
       )}
     </Scene>
@@ -393,35 +408,34 @@ export const S3c: React.FC<P> = ({ T, f }) => {
 };
 
 /* ================================================================== S4a · the researchers (53.2 → 55.8) */
-const nameplate = (name: string, aff: string, ini: string) => ({ name, aff, ini });
-const PEOPLE = [nameplate('Amit Kumar', '德州大学奥斯汀分校', 'AK'), nameplate('Nicholas Epley', '芝加哥大学', 'NE')];
+const PEOPLE = [{ name: 'Amit Kumar', aff: '德州大学奥斯汀分校', ini: 'AK' }, { name: 'Nicholas Epley', aff: '芝加哥大学', ini: 'NE' }];
+const PX = [620, 1300];
 export const S4a: React.FC<P> = ({ T, f }) => {
   const a = CUT.build;
   return (
     <Scene f={f} draw={(g) => {
-      base(g, T, { a: 0.5 + 0.3 * hit(T, a, 0.6), col: '235,228,255' });
+      base(g, T, { a: 0.5 + 0.3 * hit(T, a, 0.6), col: '235,228,255', w: 1100 });
       g.save(); cam(g, 1 + 0.02 * pr(T, a, 3));
-      PEOPLE.forEach((_, i) => {
-        const x = i ? 1330 : 590, y = 470, k = eo(T, a + i * 0.25, 0.4);
+      PX.forEach((x, i) => {
+        const y = 470, k = eo(T, a + i * 0.2, 0.4);
         g.save(); g.globalAlpha = k; g.translate(0, (1 - k) * 30);
         const w = 640, h = 250;
         const bd = g.createLinearGradient(0, y - h / 2, 0, y + h / 2); bd.addColorStop(0, 'rgba(30,29,38,.95)'); bd.addColorStop(1, 'rgba(12,11,17,.95)');
         g.fillStyle = bd; rr(g, x - w / 2, y - h / 2, w, h, 26); g.fill();
         g.strokeStyle = 'rgba(239,232,218,.25)'; g.lineWidth = 2; g.stroke();
-        g.strokeStyle = 'rgba(239,232,218,.5)'; g.beginPath(); g.arc(x - w / 2 + 110, y, 62, 0, 6.3); g.stroke();
+        g.strokeStyle = 'rgba(239,232,218,.5)'; g.beginPath(); g.arc(x - w / 2 + 104, y, 62, 0, 6.3); g.stroke();
         g.restore();
       });
       sparks(g, 960, 470, a, T, 60, CREAMC, 1.2, 41);
       floorFade(g); g.restore();
     }}>
-      <Src T={T} a={a + 0.2} x={0} y={250} s="KUMAR & EPLEY · JOURNAL OF EXPERIMENTAL PSYCHOLOGY: GENERAL · 2021" align="center" />
       {PEOPLE.map((p, i) => {
-        const x = i ? 1330 : 590, k = eo(T, a + i * 0.25, 0.4);
+        const x = PX[i], k = eo(T, a + i * 0.2, 0.4);
         return (
           <React.Fragment key={i}>
-            <div style={{ position: 'absolute', left: x - 320 + 110 - 62, width: 124, top: 470 - 30, textAlign: 'center', opacity: k, fontFamily: F.lat, fontWeight: 600, fontSize: 48, lineHeight: '60px', color: C.cream }}>{p.ini}</div>
-            <div style={{ position: 'absolute', left: x - 320 + 200, top: 470 - 72, opacity: k, fontFamily: F.lat, fontWeight: 700, fontSize: 52, color: C.cream, whiteSpace: 'nowrap' }}>{p.name}</div>
-            <div style={{ position: 'absolute', left: x - 320 + 202, top: 470 + 6, opacity: 0.85 * k, fontFamily: F.sans, fontWeight: 700, fontSize: 40, color: 'rgba(239,232,218,.85)', whiteSpace: 'nowrap' }}>{p.aff}</div>
+            <div style={{ position: 'absolute', left: x - 320 + 104 - 62, width: 124, top: 470 - 30, textAlign: 'center', opacity: k, fontFamily: F.lat, fontWeight: 600, fontSize: 48, lineHeight: '60px', color: C.cream }}>{p.ini}</div>
+            <div style={{ position: 'absolute', left: x - 320 + 190, top: 470 - 78, opacity: k, fontFamily: F.lat, fontWeight: 700, fontSize: 52, color: C.cream, whiteSpace: 'nowrap' }}>{p.name}</div>
+            <div style={{ position: 'absolute', left: x - 320 + 192, top: 470 + 4, opacity: 0.9 * k, fontFamily: F.sans, fontWeight: 700, fontSize: 44, color: 'rgba(239,232,218,.9)', whiteSpace: 'nowrap' }}>{p.aff}</div>
           </React.Fragment>
         );
       })}
@@ -431,148 +445,166 @@ export const S4a: React.FC<P> = ({ T, f }) => {
 
 /* ================================================================== S4b · an old friend (55.8 → 58.7) */
 export const S4b: React.FC<P> = ({ T, f }) => {
-  const a = CUT.friend, L = 520, R = 1400, Y = 470;
-  const draw = eio(T, a + 0.3, 1.2);
+  const a = CUT.friend, L = 560, R = 1360, Y = 470, cs = 0.9, half = 280 * cs;
+  const draw = eio(T, a + 0.25, 1.1);
   return (
     <Scene f={f} draw={(g) => {
-      base(g, T, { a: 0.45, col: '255,226,190' });
+      base(g, T, { a: 0.45, col: '255,226,190', w: 1100 });
       g.save(); cam(g, 1 + 0.03 * pr(T, a, 3.5));
-      add(g, () => { glow(g, L, Y, 120, 0.5 * eo(T, a, 0.4), GOLD); glow(g, R, Y, 120, 0.5 * eo(T, a + 0.2, 0.4), GOLD); });
-      g.fillStyle = `rgba(${GOLD},.95)`; [L, R].forEach((x, i) => { g.globalAlpha = eo(T, a + i * 0.2, 0.4); g.beginPath(); g.arc(x, Y, 16, 0, 6.3); g.fill(); });
-      g.globalAlpha = 1;
-      g.setLineDash([10, 14]); g.strokeStyle = 'rgba(239,232,218,.55)'; g.lineWidth = 3;
-      g.beginPath(); g.moveTo(L + 30, Y); g.lineTo(lerp(L + 30, R - 30, draw), Y); g.stroke(); g.setLineDash([]);
+      callerCard(g, L, Y, '你', eo(T, a, 0.4), 0, cs, GOLD);
+      callerCard(g, R, Y, '老朋友', eo(T, a + 0.15, 0.4), 0.4 * eo(T, a + 1.4, 0.5), cs, GOLD);
+      // a thread between them, drawn in from both ends; it never meets: frayed in the middle
+      const x0 = L + half, x1 = R - half, mid = (x0 + x1) / 2, gapW = 46;
+      g.strokeStyle = 'rgba(239,232,218,.6)'; g.lineWidth = 3; g.lineCap = 'round';
+      g.beginPath(); g.moveTo(x0, Y); g.lineTo(lerp(x0, mid - gapW, draw), Y + Math.sin(T * 1.3) * 2); g.stroke();
+      g.beginPath(); g.moveTo(x1, Y); g.lineTo(lerp(x1, mid + gapW, draw), Y - Math.sin(T * 1.1) * 2); g.stroke();
+      if (draw > 0.95) {
+        g.lineWidth = 1.5; g.strokeStyle = 'rgba(239,232,218,.45)';
+        for (let k = 0; k < 4; k++) {
+          const sd = k % 2 ? 1 : -1, ex = mid + sd * gapW, ang = (rnd(k, 7) - 0.5) * 1.2 + Math.sin(T * 2 + k) * 0.15;
+          g.beginPath(); g.moveTo(ex, Y); g.lineTo(ex - sd * Math.cos(ang) * 22, Y + Math.sin(ang) * 22); g.stroke();
+        }
+      }
       floorFade(g); g.restore();
     }}>
-      <Lbl T={T} a={a + 0.1} x={L} y={Y + 50} s="你" />
-      <Lbl T={T} a={a + 0.3} x={R} y={Y + 50} s="老朋友" />
-      <Lbl T={T} a={a + 1.3} x={(L + R) / 2} y={Y - 100} s="很久没聊了" col="rgba(239,232,218,.8)" />
+      <Lbl T={T} a={a + 1.2} x={960} y={Y - 110} s="很久没聊了" col="rgba(239,232,218,.85)" />
     </Scene>
   );
 };
 
-/* ================================================================== S4c → S5b · the experiment and the drop (58.7 → 74.8) */
+/* ================================================================== S4c · the experiment and the drop (58.7 → 74.97) */
 export const S4c: React.FC<P> = ({ T, f }) => {
   const a = CUT.split, pred = CUT.predict, chose = CUT.chose, res = CUT.result, drop = CUT.drop, bond = CUT.bond;
-  const LX = 620, RX = 1300, OY = 640, GY = 450;
+  const LX = 620, RX = 1300, OY = 640, GY = 450, GS = 0.8;
   const gaugeIn = eo(T, pred, 0.4) * (1 - eo(T, bond - 0.1, 0.35));
-  // magenta (predicted) needles swing in with a damped spring; the phone's gold (actual) needle arrives on the drop
   const spring = (t0: number, v: number) => { if (T < t0) return 0.05; const q = T - t0; return v + (0.05 - v) * Math.exp(-q * 5) * Math.cos(q * 14); };
-  const tremble = T >= res && T < drop ? 0.012 * Math.sin(T * 60) * pr(T, res, 2) : 0;
-  const predL = spring(pred + 0.15, 0.86) + tremble, predR = spring(pred + 0.35, 0.36);
+  const tremble = T >= res && T < drop ? 0.014 * Math.sin(T * 47) * pr(T, res, 2) : 0;
+  const predL = spring(pred + 0.15, 0.86) + tremble, predR = spring(pred + 0.35, 0.36) - tremble * 0.6;
   const actL = T >= drop ? 0.86 + (0.37 - 0.86) * (1 - Math.exp(-(T - drop) * 9) * Math.cos((T - drop) * 10)) : 0.86;
   const ghost = T >= drop ? 0.35 : 1;
-  const focusL = 1 - 0.55 * eo(T, chose, 0.4) * (1 - eo(T, drop, 0.3));
-  const focusR = T >= res && T < drop ? 1 - 0.45 * eo(T, res, 0.4) : 1;
-  const camS = 1 + 0.02 * pr(T, a, 6) + 0.1 * eio(T, res, 2.2) * (1 - eio(T, drop, 0.5)) + 0.03 * hit(T, drop, 0.3);
-  const camK = eio(T, res, 2.2) * (1 - eio(T, drop, 0.5));
+  const focusL = 1 - 0.55 * eo(T, chose, 0.4) * (1 - eo(T, res, 0.6));
+  const focusR = 1 - 0.45 * eo(T, res, 0.4) * (1 - eo(T, drop, 0.3));
+  const objO = 1 - 0.7 * eo(T, bond - 0.1, 0.4), objDY = 70 * eio(T, bond - 0.1, 0.5);
+  const camK = eio(T, res, 2.2) * (1 - eio(T, drop, 0.4));
+  const camS = 1 + 0.02 * pr(T, a, 6) + 0.12 * camK + 0.03 * hit(T, drop, 0.3) + 0.05 * eio(T, bond, 2.7);
   const bondK = eo(T, bond, 0.9);
   return (
     <Scene f={f} draw={(g) => {
       const spX = T < chose ? 960 : T < res ? lerp(960, RX, eio(T, chose, 0.6)) : T < drop ? lerp(RX, LX, eio(T, res, 0.6)) : lerp(LX, 960, eio(T, drop, 0.5));
       base(g, T, { x: spX, w: T >= chose && T < drop + 0.4 ? 560 : 900, a: 0.5 + 0.4 * hit(T, drop, 0.5), col: T >= drop ? '255,226,180' : '235,228,255', bok: 0.8 + 0.8 * hit(T, drop, 0.5) });
-      g.save(); cam(g, camS, lerp(960, LX, camK), lerp(520, GY - 40, camK), lerp(0, 960 - LX, camK) * 0.6, 0);
-      // a stream of 20 participants splitting into the two rooms
+      g.save(); cam(g, camS, lerp(960, LX, camK), lerp(520, GY - 40, camK), (960 - LX) * camK * 0.6, 0);
+      // twenty participants split into the two rooms
       for (let i = 0; i < 20; i++) {
         const side = i % 2 ? 1 : -1, k = eio(T, a + 0.1 + i * 0.03, 0.8);
         const x = lerp(960 + (rnd(i, 3) - 0.5) * 120, (side > 0 ? RX : LX) + ((i >> 1) - 4.5) * 26, k), y = lerp(560 + (rnd(i, 4) - 0.5) * 60, 742, k);
         g.fillStyle = `rgba(${CREAMC},${0.75 * eo(T, a, 0.3) * (1 - eo(T, bond - 0.2, 0.4))})`; g.beginPath(); g.arc(x, y, 7, 0, 6.3); g.fill();
       }
-      // the two objects on the stage
-      g.save(); g.globalAlpha = eo(T, a, 0.4) * focusL;
-      withReflection(g, () => handset(g, LX, OY - 30, 1.15, -0.1, 1), 0.2);
+      g.save(); g.globalAlpha = eo(T, a, 0.4) * focusL * objO; g.translate(0, objDY);
+      withReflection(g, () => handset(g, LX, OY - 30, 1.15, -0.1, 1), 0.12);
       g.restore();
-      g.save(); g.globalAlpha = eo(T, a + 0.15, 0.4) * focusR;
-      withReflection(g, () => envelope(g, RX, OY - 70 - 10 * eo(T, chose, 0.5) * (T < res ? 1 : 1 - eo(T, res, 0.4)), 0.95, 0.06), 0.2);
+      g.save(); g.globalAlpha = eo(T, a + 0.15, 0.4) * focusR * objO; g.translate(0, objDY);
+      withReflection(g, () => envelope(g, RX, OY - 70 - 10 * eo(T, chose, 0.5) * (1 - eo(T, res, 0.4)), 0.95, 0.06), 0.12);
       g.restore();
       if (T >= chose && T < res + 0.4) add(g, () => glow(g, RX, OY - 70, 320, 0.25 * eo(T, chose, 0.5) * (1 - pr(T, res, 0.4)), GOLD));
-      // the dials: predicted awkwardness
+      // the room labels live in the picture, so they move with the camera
+      const lab = (x: number, s: string, o: number) => { g.save(); g.globalAlpha = o; g.fillStyle = C.cream; g.font = '700 44px "Noto Sans CJK SC"'; g.textAlign = 'center'; g.textBaseline = 'top'; g.shadowColor = 'rgba(0,0,0,.9)'; g.shadowBlur = 20; g.fillText(s, x, 790 + objDY); g.restore(); };
+      const labO = 1 - eo(T, bond - 0.2, 0.3);
+      lab(LX, '打电话', eo(T, a + 0.3, 0.3) * (0.55 + 0.45 * focusL) * labO);
+      lab(RX, '写邮件', eo(T, a + 0.45, 0.3) * (0.55 + 0.45 * focusR) * labO);
       if (gaugeIn > 0) {
         g.save(); g.globalAlpha = gaugeIn;
-        gauge(g, LX, GY - 40, 0.62, '', predL, actL, ghost, T >= drop ? 1 : 0);
-        gauge(g, RX, GY - 40, 0.62, '', predR, 0.36, ghost, T >= drop ? eo(T, drop + 0.2, 0.3) : 0);
+        gauge(g, LX, GY - 40, GS, '', predL, actL, ghost, T >= drop ? 1 : 0);
+        gauge(g, RX, GY - 40, GS, '', predR, 0.36, ghost, T >= drop ? eo(T, drop + 0.2, 0.3) : 0);
         g.restore();
       }
-      // the drop: connection bars rise where the dials were
+      // connection: two bars on a baseline above the (now dimmed) objects. 示意: the paper reports a significant difference, not a scale
       if (T >= bond - 0.2) {
-        const bar = (x: number, v: number, col: string, label: number) => {
-          const hh = 300 * v * bondK, w = 120;
-          const gr = g.createLinearGradient(0, GY + 60 - hh, 0, GY + 60); gr.addColorStop(0, `rgba(${col},.95)`); gr.addColorStop(1, `rgba(${col},.3)`);
-          g.fillStyle = gr; rr(g, x - w / 2, GY + 60 - hh, w, Math.max(1, hh), 12); g.fill();
-          if (label) add(g, () => glow(g, x, GY + 60 - hh, 160, 0.4 * bondK, col));
+        const BY = 440;
+        g.fillStyle = `rgba(${CREAMC},${0.4 * bondK})`; g.fillRect(LX - 150, BY, RX - LX + 300, 2);
+        const bar = (x: number, v: number, col: string, lit: number) => {
+          const hh = 250 * v * bondK, w = 130;
+          const gr = g.createLinearGradient(0, BY - hh, 0, BY); gr.addColorStop(0, `rgba(${col},.95)`); gr.addColorStop(1, `rgba(${col},.3)`);
+          g.fillStyle = gr; rr(g, x - w / 2, BY - hh, w, Math.max(1, hh), 12); g.fill();
+          if (lit) add(g, () => glow(g, x, BY - hh, 170, 0.45 * bondK, col));
         };
-        g.fillStyle = `rgba(${CREAMC},${0.35 * bondK})`; g.fillRect(LX - 140, GY + 60, RX - LX + 280, 2);
-        bar(LX, 1.0, GOLD, 1); bar(RX, 0.45, '170,170,182', 0);
+        bar(LX, 1.0, GOLD, 1); bar(RX, 0.75, '170,170,182', 0);
       }
-      if (T >= drop) { boom(g, LX, GY - 40, drop, T, GOLD, 220); }
+      if (T >= drop) add(g, () => { sparks(g, LX, GY - 40, drop, T, 220, GOLD, 3, 5); glowDot(g, LX, GY - 40, 700, 0.35 * hit(T, drop, 0.35), GOLD); });
       floorFade(g); g.restore();
     }}>
-      <Src T={T} a={a + 0.1} x={0} y={180} s="随机分配" align="center" o={1 - pr(T, pred - 0.2, 0.3)} />
-      <Lbl T={T} a={a + 0.3} x={LX} y={790} s="打电话" o={focusL * (1 - eo(T, res, 0.3) * (1 - eo(T, drop, 0.3)))} />
-      <Lbl T={T} a={a + 0.45} x={RX} y={790} s="写邮件" o={focusR * (1 - eo(T, res, 0.3) * (1 - eo(T, drop, 0.3)))} />
-      {gaugeIn > 0 && T < bond && <Lbl T={T} a={pred + 0.1} x={960} y={320} s={T >= drop ? <span style={{ color: GOLDH }}>实际</span> : <span style={{ color: MAGH }}>事前预测</span>} o={gaugeIn * (1 - eo(T, res, 0.3) * (1 - eo(T, drop + 0.3, 0.3)))} />}
-      {gaugeIn > 0 && <Lbl T={T} a={pred + 0.1} x={960} y={392} s="尴尬度" col="rgba(239,232,218,.75)" o={gaugeIn * (1 - eo(T, res, 0.3) * (1 - eo(T, drop + 0.3, 0.3)))} />}
+      <Lbl T={T} a={a + 0.1} x={960} y={190} s="随机分成两组" col="rgba(239,232,218,.85)" o={1 - pr(T, pred - 0.2, 0.3)} />
+      {gaugeIn > 0 && T < bond && <Lbl T={T} a={pred + 0.1} x={960} y={330} s={T >= drop ? <span style={{ color: GOLDH }}>实际</span> : <span style={{ color: MAGH }}>事前预测</span>} o={gaugeIn * (1 - eo(T, res, 0.3) * (1 - eo(T, drop + 0.3, 0.3)))} />}
+      {gaugeIn > 0 && <Lbl T={T} a={pred + 0.1} x={960} y={400} s="尴尬度（示意）" col="rgba(239,232,218,.85)" o={gaugeIn * (1 - eo(T, res, 0.3) * (1 - eo(T, drop + 0.3, 0.3)))} />}
       {T >= bond - 0.2 && <Lbl T={T} a={bond} x={960} y={300} s="连接感" />}
-      {T >= bond && <Src T={T} a={bond + 0.5} x={0} y={890 - 4} s="示意 · 研究报告为显著差异，未给统一刻度" align="center" />}
-      <Slam T={T} a={drop} top={122} size={104} gold o={1 - pr(T, bond - 0.2, 0.3)}>并没有更尴尬</Slam>
+      {T >= bond && <Src T={T} a={bond + 0.5} x={0} y={880} s="示意：只表示“显著更高”，非实际比例" align="center" />}
+      <Slam T={T} a={drop} top={122} size={104} gold o={1 - pr(T, bond - 0.25, 0.3)}>并没有更尴尬</Slam>
     </Scene>
   );
 };
 
-/* ================================================================== S5c · strangers: text, video, voice (74.8 → 82.5) */
-const mediaIcon = (g: G, kind: number, x0: number, y0: number, a: number, lit: number, sc = 1.5) => {
-  g.save(); g.globalAlpha = a; g.translate(x0, y0); g.scale(sc, sc); const x = 0, y = 0;
+/* ================================================================== S5c · strangers: text, video, voice (74.97 → 82.4) */
+/** solid lit objects: a chat bubble, a small camera, a speaker grille with a live voice */
+const mediaIcon = (g: G, kind: number, x: number, y: number, a: number, lit: number, T: number, sc = 1.5) => {
+  g.save(); g.globalAlpha = a; g.translate(x, y); g.scale(sc, sc);
   const col = lit ? GOLD : CREAMC;
-  g.strokeStyle = `rgba(${col},.9)`; g.lineWidth = 6; g.lineCap = 'round'; g.lineJoin = 'round';
-  if (kind === 0) {           // typing: a bubble with three dots
-    rr(g, x - 70, y - 48, 140, 96, 30); g.stroke();
-    g.fillStyle = `rgba(${col},.9)`; for (let k = 0; k < 3; k++) { g.beginPath(); g.arc(x - 30 + k * 30, y, 8, 0, 6.3); g.fill(); }
-  } else if (kind === 1) {    // video: a camera body and lens wedge
-    rr(g, x - 80, y - 46, 110, 92, 18); g.stroke();
-    g.beginPath(); g.moveTo(x + 40, y - 14); g.lineTo(x + 80, y - 38); g.lineTo(x + 80, y + 38); g.lineTo(x + 40, y + 14); g.closePath(); g.stroke();
-  } else {                    // voice: a sound wave
-    for (let k = -4; k <= 4; k++) { const hh = (Math.abs(k) === 4 ? 14 : 18 + 40 * Math.abs(Math.sin(k * 1.3 + 0.4))); g.beginPath(); g.moveTo(x + k * 18, y - hh); g.lineTo(x + k * 18, y + hh); g.stroke(); }
+  const mat = g.createLinearGradient(0, -60, 0, 60);
+  mat.addColorStop(0, lit ? '#fff1cf' : '#f3ead6'); mat.addColorStop(1, lit ? '#b58a42' : '#9c8f78');
+  if (kind === 0) {
+    g.fillStyle = mat; rr(g, -74, -50, 148, 100, 32); g.fill();
+    g.beginPath(); g.moveTo(30, 44); g.lineTo(58, 70); g.lineTo(52, 40); g.fill();
+    for (let k = 0; k < 3; k++) { const b = 0.5 + 0.5 * Math.sin(T * 7 - k * 0.9); g.fillStyle = `rgba(42,30,16,${0.45 + 0.45 * b})`; g.beginPath(); g.arc(-32 + k * 32, -6 * b, 9, 0, 6.3); g.fill(); }
+  } else if (kind === 1) {
+    g.fillStyle = mat; rr(g, -84, -48, 118, 96, 18); g.fill();
+    g.beginPath(); g.moveTo(40, -14); g.lineTo(84, -40); g.lineTo(84, 40); g.lineTo(40, 14); g.closePath(); g.fill();
+    g.fillStyle = '#1a1612'; g.beginPath(); g.arc(-25, 0, 24, 0, 6.3); g.fill();
+    g.fillStyle = `rgba(255,70,70,${Math.floor(T * 1.6) % 2 ? 0.2 : 0.95})`; g.beginPath(); g.arc(-66, -30, 7, 0, 6.3); g.fill();
+  } else {
+    g.fillStyle = mat; g.beginPath(); g.arc(0, 0, 66, 0, 6.3); g.fill();
+    g.strokeStyle = '#2a2016'; g.lineWidth = 6; g.lineCap = 'round';
+    for (let k = -3; k <= 3; k++) { const hh = 6 + 34 * Math.abs(wave(k * 40, T)) * (1 - Math.abs(k) / 4.5); g.beginPath(); g.moveTo(k * 15, -hh); g.lineTo(k * 15, hh); g.stroke(); }
   }
   g.restore();
+  if (lit) add(g, () => glow(g, x, y, 140 * sc, 0.18, col));
 };
 export const S5c: React.FC<P> = ({ T, f }) => {
   const a = CUT.exp2, bars = CUT.bars;
-  const XS = [560, 960, 1360], V = [0.32, 0.82, 0.8], IY = 600;
+  const XS = [560, 960, 1360], V = [0.65, 0.9, 0.9], IY = 600;
   return (
     <Scene f={f} draw={(g) => {
-      base(g, T, { a: 0.5, col: '255,232,200', w: 1100 });
-      g.save(); cam(g, 1 + 0.025 * pr(T, a, 7.5));
+      base(g, T, { x: lerp(960, 1100, eio(T, a, 7)), a: 0.5, col: '255,232,200', w: 1100 });
+      g.save(); cam(g, 1 + 0.05 * eio(T, a, 7.4), 960, 560);
       XS.forEach((x, i) => {
-        const k = eo(T, a + 0.15 + i * 0.2, 0.4);
-        mediaIcon(g, i, x, IY, k, T >= bars && i > 0 ? 1 : 0);
+        const k = eo(T, a + 0.15 + i * 0.25, 0.4);
+        mediaIcon(g, i, x, IY, k, T >= bars && i > 0 ? 1 : 0, T);
+        g.save(); g.globalAlpha = eo(T, a + 0.3 + i * 0.25, 0.3); g.fillStyle = T >= bars && i ? GOLDH : C.cream; g.font = '700 44px "Noto Sans CJK SC"'; g.textAlign = 'center'; g.textBaseline = 'top'; g.shadowColor = 'rgba(0,0,0,.9)'; g.shadowBlur = 20;
+        g.fillText(['打字', '视频', '语音'][i], x, IY + 140);
+        if (i === 2 && T >= bars + 1.4) { g.globalAlpha = eo(T, bars + 1.4, 0.3); g.fillStyle = GOLDH; g.fillText('不必看见脸', x, IY + 200); }
+        g.restore();
         if (T >= bars) {
-          const hh = 290 * V[i] * eo(T, bars + 0.1 + i * 0.12, 0.8), w = 120, by = IY - 120;
+          const hh = 270 * V[i] * eo(T, bars + 0.1 + i * 0.12, 0.8), w = 120, by = IY - 130;
           const col = i ? GOLD : '170,170,182';
           const gr = g.createLinearGradient(0, by - hh, 0, by); gr.addColorStop(0, `rgba(${col},.95)`); gr.addColorStop(1, `rgba(${col},.25)`);
           g.fillStyle = gr; rr(g, x - w / 2, by - hh, w, Math.max(1, hh), 12); g.fill();
           if (i) add(g, () => glow(g, x, by - hh, 150, 0.3, GOLD));
         }
       });
-      if (T >= bars + 1.5) add(g, () => { g.strokeStyle = `rgba(${GOLD},${0.7 * eo(T, bars + 1.5, 0.4)})`; g.lineWidth = 3; g.beginPath(); g.arc(1360, IY, 150, 0, 6.3); g.stroke(); });
+      if (T >= bars + 1.4) add(g, () => { g.strokeStyle = `rgba(${GOLD},${0.75 * eo(T, bars + 1.4, 0.4)})`; g.lineWidth = 3; g.beginPath(); g.arc(1360, IY, 122, 0, 6.3); g.stroke(); });
       floorFade(g); g.restore();
     }}>
-      <Src T={T} a={a + 0.1} x={0} y={170} s="实验二 · 陌生人两两聊天，随机分配方式" align="center" o={1 - pr(T, bars - 0.2, 0.3)} />
-      {['打字', '视频', '语音'].map((s, i) => <Lbl key={i} T={T} a={a + 0.3 + i * 0.2} x={XS[i]} y={IY + 110} s={s} col={T >= bars && i ? GOLDH : C.cream} />)}
+      <Lbl T={T} a={a + 0.1} x={960} y={170} s="实验二：陌生人两两聊天" col="rgba(239,232,218,.85)" o={1 - pr(T, bars - 0.3, 0.3)} />
       {T >= bars && <Lbl T={T} a={bars + 0.2} x={960} y={140} s="连接感" />}
-      {T >= bars + 1.5 && <Lbl T={T} a={bars + 1.5} x={1360} y={IY + 172} s="看不见脸也一样" col={GOLDH} w={420} size={44} align="center" />}
-      {T >= bars && <Src T={T} a={bars + 0.6} x={0} y={890} s="示意 · 语音、视频都显著高于打字" align="center" />}
+      {T >= bars && <Src T={T} a={bars + 0.6} x={0} y={880} s="示意：语音、视频都显著高于打字，非实际比例" align="center" />}
     </Scene>
   );
 };
 
-/* ================================================================== S5e · same time (82.5 → 85.6) */
+/* ================================================================== S5e · same time (82.4 → 85.6) */
 const stopwatch = (g: G, x: number, y: number, r: number, v: number, a: number, col: string) => {
   g.save(); g.globalAlpha = a;
   g.fillStyle = '#0d0c12'; g.beginPath(); g.arc(x, y, r, 0, 6.3); g.fill();
   g.strokeStyle = `rgba(${col},.85)`; g.lineWidth = 5; g.stroke();
   g.fillStyle = `rgba(${col},.85)`; g.fillRect(x - 14, y - r - 26, 28, 18);
   for (let k = 0; k < 12; k++) { const an = k / 12 * Math.PI * 2; g.fillStyle = 'rgba(255,255,255,.35)'; g.fillRect(x + Math.sin(an) * (r - 18) - 2, y - Math.cos(an) * (r - 18) - 2, 4, 4); }
-  // filled sweep
   add(g, () => { g.fillStyle = `rgba(${col},.18)`; g.beginPath(); g.moveTo(x, y); g.arc(x, y, r - 8, -Math.PI / 2, -Math.PI / 2 + v * Math.PI * 2); g.closePath(); g.fill(); });
   const an = v * Math.PI * 2; g.strokeStyle = `rgba(${col},1)`; g.lineWidth = 5; g.lineCap = 'round';
   g.beginPath(); g.moveTo(x, y); g.lineTo(x + Math.sin(an) * (r - 24), y - Math.cos(an) * (r - 24)); g.stroke();
@@ -585,58 +617,57 @@ export const S5e: React.FC<P> = ({ T, f }) => {
     <Scene f={f} draw={(g) => {
       base(g, T, { a: 0.5, w: 1100 });
       g.save(); cam(g, 1 + 0.02 * pr(T, a, 3));
-      stopwatch(g, 620, 470, 170, vL, eo(T, a, 0.35), GOLD);
-      stopwatch(g, 1300, 470, 170, vR, eo(T, a + 0.1, 0.35), CREAMC);
-      handset(g, 620, 730, 0.42, -0.1); envelope(g, 1300, 730, 0.36, 0.05);
+      stopwatch(g, 620, 450, 180, vL, eo(T, a, 0.35), GOLD);
+      stopwatch(g, 1300, 450, 180, vR, eo(T, a + 0.1, 0.35), CREAMC);
+      handset(g, 620, 735, 0.5, -0.1); envelope(g, 1300, 735, 0.42, 0.05);
       floorFade(g); g.restore();
     }}>
-      <div style={{ position: 'absolute', left: 0, right: 0, top: 410, textAlign: 'center', opacity: eo(T, a + 1.6, 0.3), fontFamily: F.serif, fontWeight: 900, fontSize: 120, color: C.cream, textShadow: shadow }}>≈</div>
-      <Lbl T={T} a={a + 1.8} x={960} y={190} s="用时差不多" />
-      <Src T={T} a={a + 1.9} x={0} y={890} s="KUMAR & EPLEY 2021 · 实验一" align="center" />
+      <div style={{ position: 'absolute', left: 0, right: 0, top: 380, textAlign: 'center', opacity: eo(T, a + 1.6, 0.3), fontFamily: F.serif, fontWeight: 900, fontSize: 130, color: C.cream, textShadow: shadow }}>≈</div>
+      <Src T={T} a={a + 1.9} x={0} y={880} s="KUMAR & EPLEY 2021 · 实验一" align="center" />
     </Scene>
   );
 };
 
-/* ================================================================== S6a · the same young people (85.6 → 92.3) */
+/* ================================================================== S6a · the same survey (85.6 → 92.18) */
 export const S6a: React.FC<P> = ({ T, f }) => {
-  const a = CUT.coda, good = CUT.good;
+  const a = CUT.coda, w0 = CUT.warm;
   return (
     <Scene f={f} draw={(g) => {
-      base(g, T, { a: 0.5 + 0.25 * hit(T, a, 0.6), col: T >= good ? '255,226,180' : '235,228,255' });
-      g.save(); cam(g, 1 + 0.03 * pr(T, a, 6.7));
+      base(g, T, { a: 0.5 + 0.25 * hit(T, a, 0.6), col: T >= w0 ? '255,226,180' : '235,228,255' });
+      g.save(); cam(g, 1 + 0.03 * pr(T, a, 6.6));
       for (let i = 0; i < 100; i++) {
         const [x, y] = gridPos(i), c = i % GRID.cols, r = Math.floor(i / GRID.cols);
         const ap = eo(T, a - 0.2 + c * 0.012 + r * 0.03, 0.3);
-        const dead = DEAD_SET.has(i) ? 1 - eo(T, good, 0.4) : 0;
-        const wj = WARM_ORD.get(i), warm = wj === undefined ? 0 : eo(T, good + 0.3 + wj * 0.03, 0.2);
-        miniPhone(g, x, y, 1, ap * (T >= good && !warm ? 0.55 : 1), T, i, dead, warm);
-        if (warm > 0) add(g, () => glow(g, x, y, 70, 0.4 * hit(T, good + 0.3 + (wj ?? 0) * 0.03, 0.3), GOLD));
+        const wj = WARM_ORD.get(i), warm = wj === undefined ? 0 : eo(T, w0 + wj * 0.025, 0.2);
+        const dead = DEAD_SET.has(i) ? 1 - eo(T, w0 - 0.3, 0.4) : 0;
+        miniPhone(g, x, y, 1, ap * (T >= w0 && !warm ? 0.5 : 1), T, i, dead, warm);
+        if (warm > 0) add(g, () => glow(g, x, y, 70, 0.4 * hit(T, w0 + (wj ?? 0) * 0.025, 0.3), GOLD));
       }
       floorFade(g); g.restore();
     }}>
-      <Src T={T} a={a + 0.1} x={0} y={180} s="同一份调查 · 18–34 岁" align="center" o={1 - pr(T, good, 0.3)} />
-      <Count T={T} a={good + 0.3} to={53} x={0} y={150} size={130} col={GOLDH} align="center" />
-      <Lbl T={T} a={good + 1.0} x={960} y={824} s={<>有好消息，<span style={{ color: GOLDH }}>希望你打电话来说</span></>} />
+      <Lbl T={T} a={a + 0.1} x={960} y={170} s="18–34 岁" col="rgba(239,232,218,.85)" o={1 - pr(T, w0 - 0.3, 0.3)} />
+      <Count T={T} a={w0} to={53} x={0} y={150} size={130} col={GOLDH} align="center" />
+      <Lbl T={T} a={w0 + 0.7} x={960} y={790} s={<>有好消息，<span style={{ color: GOLDH }}>希望你打电话来说</span></>} />
     </Scene>
   );
 };
 
-/* ================================================================== S6c · a booked call (92.3 → 95.2) */
+/* ================================================================== S6c · a booked call (92.18 → 95.2) */
 export const S6c: React.FC<P> = ({ T, f }) => {
   const a = CUT.booked;
   return (
     <Scene f={f} draw={(g) => {
-      base(g, T, { x: 740, a: 0.5, col: '255,226,180' });
+      base(g, T, { x: lerp(960, 740, eio(T, a, 0.5)), a: 0.5, col: '255,226,180' });
       g.save(); cam(g, 1 + 0.025 * pr(T, a, 3));
       g.save(); g.globalAlpha = eo(T, a, 0.4); g.translate(0, (1 - eo(T, a, 0.5)) * 30);
-      calendar(g, 740, 480, 1.3, '20:00', '通话', 1, eo(T, a + 0.6, 0.4));
+      calendar(g, 740, 480, 1.3, '20:00', '通话', 1, eo(T, a + 0.5, 0.4));
       g.restore();
-      add(g, () => glow(g, 740, 480 + 1.3 * (-90 + 2 * 56 + 28), 300, 0.3 * eo(T, a + 0.6, 0.4), GOLD));
+      add(g, () => glow(g, 740, 480 + 1.3 * (-90 + 2 * 56 + 28), 300, 0.3 * eo(T, a + 0.5, 0.4), GOLD));
       floorFade(g); g.restore();
     }}>
-      <Count T={T} a={a + 0.4} to={68} x={1120} y={380} size={130} col={GOLDH} />
-      <Lbl T={T} a={a + 0.9} x={1126} y={530} s="更喜欢约好的电话" align="left" w={600} />
-      <Src T={T} a={a + 1.1} x={1126} y={606} s="OPINIUM / USWITCH · 2024 · 18–34 岁" />
+      <Count T={T} a={a + 0.3} to={68} x={1120} y={380} size={130} col={GOLDH} />
+      <Lbl T={T} a={a + 0.8} x={1126} y={530} s="先约好时间，再打" align="left" w={600} />
+      <Src T={T} a={a + 1.0} x={1126} y={606} s="OPINIUM / USWITCH · 2024 · 18–34 岁" />
     </Scene>
   );
 };
@@ -644,14 +675,14 @@ export const S6c: React.FC<P> = ({ T, f }) => {
 /* ================================================================== S6d · 方便吗？ (95.2 → 98.8) */
 export const S6d: React.FC<P> = ({ T, f }) => {
   const a = CUT.ask;
-  const n1 = clamp((T - a - 0.3) / 0.6) * 4, n2 = T >= a + 2.2 ? clamp((T - a - 2.2) / 0.5) * 6 : 0;
+  const n1 = clamp((T - a - 0.25) / 0.6) * 4, n2 = T >= a + 2.0 ? clamp((T - a - 2.0) / 0.5) * 5 : 0;
   return (
     <Scene f={f} draw={(g) => {
-      base(g, T, { a: 0.5, col: '255,226,180', w: 1000 });
+      base(g, T, { x: lerp(740, 960, eio(T, a, 0.5)), a: 0.5, col: '255,226,180', w: 1000 });
       g.save(); cam(g, 1 + 0.03 * pr(T, a, 3.6));
-      bubble(g, 1400, 380, 1.8, '方便吗？', n1, true, eo(T, a, 0.3), T);
-      if (T >= a + 1.3) bubble(g, 520, 580, 1.8, n2 > 0 ? '方便，打吧' : '', n2 > 0 ? n2 : 0, false, eo(T, a + 1.3, 0.3), T);
-      if (T >= a + 2.7) add(g, () => glow(g, 760, 580, 380, 0.25 * hit(T, a + 2.7, 0.6), GOLD));
+      bubble(g, 1300, 400, 1.8, '方便吗？', n1, true, eo(T, a, 0.3), T, n1 < 4);
+      if (T >= a + 1.2) bubble(g, 620, 580, 1.8, n2 > 0 ? '方便，打吧' : '', n2, false, eo(T, a + 1.2, 0.3), T, n2 > 0 && n2 < 5);
+      if (T >= a + 2.6) add(g, () => glow(g, 860, 580, 380, 0.25 * hit(T, a + 2.6, 0.6), GOLD));
       floorFade(g); g.restore();
     }} />
   );
@@ -665,47 +696,49 @@ export const S6e: React.FC<P> = ({ T, f }) => {
     <Scene f={f} draw={(g) => {
       base(g, T, { a: 0.5 + 0.35 * hit(T, land, 0.6), col: '255,226,180', bok: 0.8 + 0.5 * hit(T, land, 0.5) });
       g.save(); cam(g, 1 + 0.03 * pr(T, a, 3));
-      wheel(g, T, FRIENDS, a + 0.05, land, 960, 470, { turns: 1, alpha: eo(T, a, 0.25), col: GOLD });
-      if (T >= land) ringArcs(g, 960 - 280 + 86, 470, T, GOLD, 0.8, 1.0, 70, 200);
+      wheel(g, T, FRIENDS, a + 0.05, land, 960, 540, { turns: 1, alpha: eo(T, a, 0.25), col: GOLD });
+      if (T >= land) ringArcs(g, 960 - 280 + 86, 540, T, GOLD, 0.8, 1.0, 70, 200);
       floorFade(g); g.restore();
     }}>
-      {T >= land && <Lbl T={T} a={land + 0.3} x={960} y={600} s="呼叫中……" col={GOLDH} />}
+      {T >= land && <Lbl T={T} a={land + 0.3} x={960} y={660} s="呼叫中……" col={GOLDH} />}
     </Scene>
   );
 };
 
 /* ================================================================== End card (101.8 → 108) */
 export const SEnd: React.FC<P> = ({ T, f }) => {
-  const t = T - CUT.end, ring = eio(t, 0, 0.8), fo = (a: number) => eo(t, a, 0.4), black = pr(T, CUT.fin - 0.5, 0.5);
+  const t = T - CUT.end, ring = eio(t, 0, 0.8), fo = (a: number) => eo(t, a, 0.35), black = pr(T, CUT.fin - 0.5, 0.5);
+  const mv = eio(t, 0, 0.6);
+  const tk = eo(t, 0, 0.25);
   return (
     <Scene f={f} draw={(g) => {
       stage(g, T); bokeh(g, T, 20, 0.6); floorFade(g);
       add(g, () => { glowDot(g, 960, 420, 800, 0.07, GOLD); sparks(g, 960, 232, CUT.end, T, 80, GOLD, 1.2, 77); });
-      // the motif: the gold caller card, small
-      const k = fo(1.2), y = 532;
-      g.save(); g.globalAlpha = k;
-      const w = 420, hh = 96;
-      g.fillStyle = 'rgba(30,25,20,.95)'; rr(g, 960 - w / 2, y - hh / 2, w, hh, 22); g.fill();
-      g.strokeStyle = `rgba(${GOLD},.8)`; g.lineWidth = 2; g.stroke();
-      g.fillStyle = `rgba(${GOLD},.3)`; g.beginPath(); g.arc(960 - w / 2 + 56, y, 30, 0, 6.3); g.fill();
-      g.fillStyle = `rgba(${GOLD},.9)`; g.beginPath(); g.arc(960 - w / 2 + 56, y - 7, 10, 0, 6.3); g.fill(); g.beginPath(); g.ellipse(960 - w / 2 + 56, y + 15, 16, 10, 0, Math.PI, 0); g.fill();
-      g.restore();
-      g.save(); g.globalAlpha = k; g.fillStyle = '#f6d58e'; g.font = '900 46px "Noto Sans CJK SC"'; g.textAlign = 'left'; g.textBaseline = 'middle'; g.fillText('老朋友', 960 - w / 2 + 112, y + 2); g.restore();
-      ringArcs(g, 960 - 210 + 56, y, T, GOLD, 0.6 * k, 1.3, 40, 90);
+      // the 老朋友 card carried over from the last shot, settling into the motif
+      const x = 960, y = lerp(540, 532, mv), w = lerp(560, 420, mv), hh = lerp(150, 96, mv);
+      g.fillStyle = 'rgba(30,25,20,.95)'; rr(g, x - w / 2, y - hh / 2, w, hh, lerp(28, 22, mv)); g.fill();
+      g.strokeStyle = `rgba(${GOLD},.85)`; g.lineWidth = 2; g.stroke();
+      const ax = x - w / 2 + lerp(86, 56, mv), ar = lerp(46, 30, mv);
+      g.fillStyle = `rgba(${GOLD},.3)`; g.beginPath(); g.arc(ax, y, ar, 0, 6.3); g.fill();
+      g.fillStyle = `rgba(${GOLD},.9)`; g.beginPath(); g.arc(ax, y - ar * 0.22, ar * 0.33, 0, 6.3); g.fill(); g.beginPath(); g.ellipse(ax, y + ar * 0.5, ar * 0.53, ar * 0.32, 0, Math.PI, 0); g.fill();
+      g.fillStyle = '#f6d58e'; g.font = `900 ${lerp(66, 46, mv)}px "Noto Sans CJK SC"`; g.textAlign = 'left'; g.textBaseline = 'middle'; g.fillText('老朋友', ax + lerp(80, 56, mv), y + 2);
+      ringArcs(g, ax, y, T, GOLD, 0.6, 1.3, ar + 10, ar + 60);
     }}>
       <svg width={1920} height={1080} style={{ position: 'absolute', inset: 0 }}>
         <defs><linearGradient id="gec" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stopColor="#fff3cf" /><stop offset=".5" stopColor="#f0c873" /><stop offset="1" stopColor="#b07c32" /></linearGradient></defs>
         <circle cx={960} cy={222} r={46} fill="none" stroke={C.gold} strokeWidth={3} pathLength={1} strokeDasharray="1 1" strokeDashoffset={1 - ring} transform="rotate(-90 960 222)" />
-        <text x={960} y={242} textAnchor="middle" style={{ fontFamily: F.lat, fontStyle: 'italic', fontWeight: 500, fontSize: 64 }} fill={C.gold} opacity={fo(0.4)}>J</text>
-        <text x={960} y={294} textAnchor="middle" style={{ fontFamily: F.mono, fontWeight: 700, fontSize: 18, letterSpacing: '0.5em' }} fill={C.gold} opacity={0.8 * fo(0.6)}>JUNO</text>
-        <text x={960} y={420} textAnchor="middle" opacity={fo(0.5)} style={{ fontFamily: F.serif, fontWeight: 900, fontSize: 100 }} fill="url(#gec)">《谁打来的？<tspan dx="-34">》</tspan></text>
-        <text x={960} y={652} textAnchor="middle" opacity={fo(1.5)} style={{ fontFamily: F.serif, fontWeight: 700, fontSize: 50, letterSpacing: '0.06em' }} fill={C.cream}>铃声一响，你最怕谁打来？评论区说说</text>
+        <text x={960} y={242} textAnchor="middle" style={{ fontFamily: F.lat, fontStyle: 'italic', fontWeight: 500, fontSize: 64 }} fill={C.gold} opacity={fo(0.3)}>J</text>
+        <text x={960} y={296} textAnchor="middle" style={{ fontFamily: F.mono, fontWeight: 700, fontSize: 22, letterSpacing: '0.5em' }} fill={C.gold} opacity={0.85 * fo(0.5)}>JUNO</text>
+        <g style={{ transformOrigin: '960px 390px', transform: `scale(${lerp(1.15, 1, tk)})` }} opacity={tk}>
+          <text x={960} y={420} textAnchor="middle" style={{ fontFamily: F.serif, fontWeight: 900, fontSize: 100 }} fill="url(#gec)">《谁打来的？<tspan dx="-34">》</tspan></text>
+        </g>
+        <text x={960} y={652} textAnchor="middle" opacity={fo(1.0)} style={{ fontFamily: F.serif, fontWeight: 700, fontSize: 50, letterSpacing: '0.06em' }} fill={C.cream}>看完这条，你最想打给谁？评论区说说</text>
       </svg>
-      <div style={{ position: 'absolute', left: 0, right: 0, top: 706, display: 'flex', justifyContent: 'center', opacity: fo(1.8) }}>
+      <div style={{ position: 'absolute', left: 0, right: 0, top: 706, display: 'flex', justifyContent: 'center', opacity: fo(1.3) }}>
         <div style={{ padding: '10px 36px', borderRadius: 40, border: `1.5px solid ${C.gold}`, fontFamily: F.sans, fontWeight: 500, fontSize: 30, letterSpacing: '0.2em', color: C.gold }}>{JUNO.follow}</div>
       </div>
-      <div style={{ position: 'absolute', left: 0, right: 0, top: 800, textAlign: 'center', opacity: fo(2.1), fontFamily: F.sans, fontSize: 22, color: 'rgba(239,232,218,.75)', lineHeight: '34px' }}>
-        <div>资料：Opinium / Uswitch 2024（英国 2000 名成年人）· 公安部 2026-01-09 通报（2025 年数据）</div>
+      <div style={{ position: 'absolute', left: 0, right: 0, top: 800, textAlign: 'center', opacity: fo(1.6), fontFamily: F.sans, fontSize: 26, color: 'rgba(239,232,218,.88)', lineHeight: '38px' }}>
+        <div>资料：Opinium / Uswitch 2024（英国 2000 名成年人）· 公安部 2026-01-08 新闻发布会（2025 年数据）</div>
         <div>Kumar & Epley, Journal of Experimental Psychology: General, 2021 · 柱状图为示意</div>
       </div>
       <div style={{ position: 'absolute', inset: 0, background: '#000', opacity: black }} />
