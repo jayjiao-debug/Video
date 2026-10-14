@@ -1,9 +1,9 @@
 {
-  "id": "ring_v2-1792012948",
+  "id": "ring_v3-1792014404",
   "composition": "Film",
   "start": 0,
   "end": 3239,
   "chunks": 30,
-  "output": "ring_v2",
+  "output": "ring_v3",
   "flags": ""
 }

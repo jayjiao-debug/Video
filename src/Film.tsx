@@ -46,7 +46,7 @@ const picture = (T: number, f: number) => {
   const k = smooth((T - (b - PRE)) / (PRE + POST));
   return (
     <>
-      <Layer id="xf-out" s={1 + 0.035 * k} blur={3 * k} text={1 - smooth(k * 2.2)}>{SHOTS[p].el(T, f)}</Layer>
+      <Layer id="xf-out" s={1 + 0.035 * k} blur={3 * k} text={1 - smooth(k * 1.5)}>{SHOTS[p].el(T, f)}</Layer>
       <Layer id="xf-in" o={k} s={1.03 - 0.03 * k} text={smooth(k * 2 - 1)}>{SHOTS[q].el(T, f)}</Layer>
     </>
   );
@@ -62,7 +62,7 @@ export const Film: React.FC = () => {
   useEffect(() => { Promise.all(LOADS.map((x) => document.fonts.load(x, GLYPHS).catch(() => null))).then(() => { setOk(true); continueRender(h); }); }, [h]);
   // the corner mark: on from the start, hidden while the title card is up, back after it, gone under the end card
   const markO = T < CUT.tOut ? 1 - pr(T, CUT.title - 0.3, 0.3) : T < CUT.end ? eo(T, CUT.tOut, 0.4) * (1 - pr(T, CUT.end - 0.3, 0.3)) : 0;
-  const flash = SLAMS.reduce((m, s) => m + 0.18 * hit(T, s, 0.09), 0);
+  const flash = SLAMS.reduce((m, s) => m + 0.1 * hit(T, s, 0.09), 0);
   // during the cold open's pause the picture (and its grain, and the subtitle) stand still
   const frozen = T >= P0 && T < SLAM;
   const subT = frozen ? P0 : T;
