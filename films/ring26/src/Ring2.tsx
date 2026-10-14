@@ -45,10 +45,10 @@ const callerCard = (g: G, x: number, y: number, name: string, a: number, hot = 0
 const LINES: [number, number, string][] = [
   [0.12, 1.6, '每天，你的大脑都在悄悄做一件事——'],
   [beat(6) - 0.05, SLOT_LAND - 0.1, '第一反应：谁打来的？'],
-  [SLOT_LAND + 0.05, SLOT_LAND + 3.2, '英国一项调查：56%的年轻人觉得，突然来电多半[没好事]'],
+  [SLOT_LAND + 0.05, 14.8, '56%的英国年轻人觉得：突然来电，多半{没好事}'],
 ];
 
-export const Ring2: React.FC = () => {
+export const Ring2: React.FC<{ bare?: boolean }> = ({ bare = false }) => {
   const fr = useCurrentFrame(), t = fr / 30, v = pic(t);
   const [h] = useState(() => delayRender('ring2-fonts', { timeoutInMilliseconds: 60000 }));
   const [ok, setOk] = useState(false);
@@ -82,18 +82,18 @@ export const Ring2: React.FC = () => {
               // the slot machine of callers
               if (slotOn) {
                 const p = slotPos(t), base = Math.floor(p), frac = p - base, land = t >= SLOT_LAND;
-                const a = eo(t, SLOT_A - 0.2, 0.25);
+                const a = eo(t, SLOT_A - 0.2, 0.25), sx = 960 - 230 * eio(t, SLOT_LAND + 0.25, 0.45);
                 g.save(); g.beginPath(); g.rect(0, 330, W, 420); g.clip();
                 for (let j = -2; j <= 2; j++) {
                   const idx = ((base + j) % CALLERS.length + CALLERS.length) % CALLERS.length, y = 540 + (j - frac) * 170;
                   const near = 1 - Math.min(1, Math.abs(y - 540) / 260);
-                  callerCard(g, 960, y, CALLERS[idx], a * (0.25 + 0.75 * near), land && j === 0 ? 1 : 0);
+                  callerCard(g, sx, y, CALLERS[idx], a * (0.25 + 0.75 * near), land && j === 0 ? 1 : 0);
                 }
                 g.restore();
                 // motion streaks while spinning fast
                 const speed = clamp(1 - (t - SLOT_A) / (SLOT_LAND - SLOT_A));
                 if (speed > 0.15 && !land) add(g, () => { g.fillStyle = `rgba(255,255,255,${0.05 * speed})`; for (let k = 0; k < 6; k++) g.fillRect(700 + k * 90, 330, 2, 420); });
-                if (land) add(g, () => { glowDot(g, 960, 540, 420, 0.4 * hit(t, SLOT_LAND, 0.5), MAG); sparks(g, 960, 540, SLOT_LAND, t, 80, MAG, 1.4, 3); });
+                if (land) add(g, () => { glowDot(g, sx, 540, 420, 0.4 * hit(t, SLOT_LAND, 0.5), MAG); sparks(g, sx, 540, SLOT_LAND, t, 80, MAG, 1.4, 3); });
               }
               floorFade(g);
               g.restore();
@@ -107,17 +107,21 @@ export const Ring2: React.FC = () => {
                 </div>
               </div>
             )}
-            {t >= SLOT_LAND && (
-              <div style={{ position: 'absolute', left: 0, right: 0, top: 790, textAlign: 'center', opacity: eo(t, SLOT_LAND + 0.4, 0.3), fontFamily: F.mono, fontWeight: 700, fontSize: 22, letterSpacing: '0.24em', color: 'rgba(239,232,218,.75)' }}>OPINIUM / USWITCH · 2024 · 英国 2000 人</div>
+            {t >= SLOT_LAND + 0.45 && (
+              <div style={{ position: 'absolute', left: 1060, top: 452, opacity: eo(t, SLOT_LAND + 0.45, 0.25) }}>
+                <div style={{ fontFamily: F.mono, fontWeight: 700, fontSize: 120, lineHeight: 1, color: '#ff9ed6', textShadow: '0 4px 30px rgba(0,0,0,.9)' }}>{Math.round(56 * eo(t, SLOT_LAND + 0.45, 0.8))}%</div>
+                <div style={{ fontFamily: F.sans, fontWeight: 700, fontSize: 44, marginTop: 14, color: C.cream, opacity: eo(t, SLOT_LAND + 1.1, 0.3) }}>觉得突然来电<span style={{ color: '#ff9ed6' }}>没好事</span></div>
+                <div style={{ fontFamily: F.mono, fontWeight: 700, fontSize: 22, marginTop: 16, letterSpacing: '0.2em', color: 'rgba(239,232,218,.75)', opacity: eo(t, SLOT_LAND + 1.3, 0.3) }}>OPINIUM / USWITCH · 2024 · 18–34 岁</div>
+              </div>
             )}
           </AbsoluteFill>
-          <Grade warm={0.03} />
+          {!bare && <Grade warm={0.03} />}
           <div style={{ position: 'absolute', inset: 0, background: '#fff1d6', opacity: 0.32 * hit(t, SLAM, 0.08) + 0.14 * hit(t, beat(2), 0.07) + 0.14 * hit(t, SLOT_LAND, 0.07), mixBlendMode: 'screen' }} />
-          <Bars />
-          <div style={{ position: 'absolute', right: 56, top: 36, opacity: 0.9, fontFamily: F.sans, fontWeight: 500, fontSize: 18, letterSpacing: '0.3em', color: 'rgba(243,237,226,.5)' }}>
+          {!bare && <Bars />}
+          {!bare && <div style={{ position: 'absolute', right: 56, top: 36, opacity: 0.9, fontFamily: F.sans, fontWeight: 500, fontSize: 18, letterSpacing: '0.3em', color: 'rgba(243,237,226,.5)' }}>
             <span style={{ color: '#e3b765' }}>◆ </span>Juno · VIBE知识大赏
-          </div>
-          <Subs T={t < SLAM ? Math.min(t, P0) : t} lines={LINES.filter(([a]) => !(a < P0 && t >= SLAM)) as any} />
+          </div>}
+          {!bare && <Subs T={t < SLAM ? Math.min(t, P0) : t} lines={LINES.filter(([a]) => !(a < P0 && t >= SLAM)) as any} />}
         </>
       )}
     </AbsoluteFill>

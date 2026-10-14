@@ -301,18 +301,18 @@ export const bubble = (g: G, x: number, y: number, s: number, text: string, char
 /** an old telephone handset (the 'call' side of the experiment): a curved grip with an ear cup and a mouth cup */
 export const handset = (g: G, x: number, y: number, s: number, rot = -0.2, lit = 1) => {
   g.save(); g.translate(x, y); g.rotate(rot); g.scale(s, s);
-  const gr = g.createLinearGradient(0, -110, 0, 60); gr.addColorStop(0, '#45454e'); gr.addColorStop(0.4, '#1a1a20'); gr.addColorStop(1, '#060608');
+  const gr = g.createLinearGradient(0, -110, 0, 60); gr.addColorStop(0, '#f3e9d2'); gr.addColorStop(0.5, '#cbb994'); gr.addColorStop(1, '#7d6a4c');
   // grip
-  g.strokeStyle = '#0d0d11'; g.lineWidth = 50; g.lineCap = 'round';
+  g.strokeStyle = '#4a3c2a'; g.lineWidth = 50; g.lineCap = 'round';
   g.beginPath(); g.moveTo(-118, -38); g.quadraticCurveTo(0, -112, 118, -38); g.stroke();
   g.strokeStyle = gr; g.lineWidth = 44; g.stroke();
   g.strokeStyle = `rgba(${AMBER},${0.45 * lit})`; g.lineWidth = 3; g.beginPath(); g.moveTo(-110, -60); g.quadraticCurveTo(0, -132, 110, -60); g.stroke();
   // cups
   for (const cx of [-132, 132]) {
     g.fillStyle = gr; g.beginPath(); g.moveTo(cx - 36, -52); g.lineTo(cx + 36, -52); g.lineTo(cx + 62, 34); g.lineTo(cx - 62, 34); g.closePath(); g.fill();
-    g.fillStyle = '#0a0a0d'; g.beginPath(); g.ellipse(cx, 34, 62, 17, 0, 0, 6.3); g.fill();
+    g.fillStyle = '#5a4a34'; g.beginPath(); g.ellipse(cx, 34, 62, 17, 0, 0, 6.3); g.fill();
     g.strokeStyle = `rgba(${AMBER},${0.4 * lit})`; g.lineWidth = 2.5; g.stroke();
-    g.fillStyle = '#1e1e24'; for (let k = 0; k < 5; k++) { g.beginPath(); g.arc(cx + (k - 2) * 16, 34 + (k % 2 ? 4 : -3), 3.5, 0, 6.3); g.fill(); }
+    g.fillStyle = '#2a2016'; for (let k = 0; k < 5; k++) { g.beginPath(); g.arc(cx + (k - 2) * 16, 34 + (k % 2 ? 4 : -3), 3.5, 0, 6.3); g.fill(); }
   }
   g.restore();
 };
