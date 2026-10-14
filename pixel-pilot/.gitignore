@@ -8,6 +8,8 @@ tts_cache/
 */tts_cache/
 public/audio/*.wav
 case01/audio/*.wav
+# the owner's BGM is a commercial track: its edit is rebuilt from the upload, never committed
+ep01_room13/audio/*.wav
 # Detective Conan fan-art tests stay private (copyrighted character, public repo)
 public/sprites/conan*
 tools/conan*.py
