@@ -1,13 +1,13 @@
 """Checks on the finished cut: picture hits against the beat grid, metronome runs, and whether the
 beat grid still sits on the music's onsets after the edit.
 
-python3 ep_check.py ../deliverables/ep01_room13.mp4
+python3 ep_check.py ../deliverables/ep01_room13.mp4 [timeline.json]
 """
 import json, pathlib, subprocess, sys
 import numpy as np
 
 HERE = pathlib.Path(__file__).resolve().parent
-TL = json.loads((HERE / "timeline.json").read_text())
+TL = json.loads(pathlib.Path(sys.argv[2] if len(sys.argv) > 2 else HERE / "timeline.json").read_text())
 BEATS = np.array(TL["beats"])
 FPS, w, h = 30, 108, 192
 
