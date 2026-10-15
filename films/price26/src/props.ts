@@ -6,7 +6,7 @@ import { rnd, lerp, clamp } from './kit';
 
 type G = CanvasRenderingContext2D;
 export const W = 1920, H = 1080;
-export const INK = '#2a2016', PAPER = '#efe6d2', GOLD = '241,197,109', MAG = '255,110,205', AMB = '255,190,120';
+export const INK = '#2a2016', PAPER = '#efe6d2', GOLD = '241,197,109', MAG = '235,82,64', AMB = '255,190,120';
 const rr = (g: G, x: number, y: number, w: number, h: number, r: number) => { g.beginPath(); (g as any).roundRect(x, y, w, h, r); };
 const shadow = (g: G, blur: number, dy: number, a = 0.55) => { g.shadowColor = `rgba(0,0,0,${a})`; g.shadowBlur = blur; g.shadowOffsetY = dy; g.shadowOffsetX = dy * 0.4; };
 const noShadow = (g: G) => { g.shadowColor = 'transparent'; g.shadowBlur = 0; g.shadowOffsetX = g.shadowOffsetY = 0; };
@@ -89,7 +89,7 @@ export const placeValue = (g: G, x: number, y: number, digits: string, kk: numbe
     const cx = x0 + i * cw + cw / 2;
     g.fillStyle = i === hl ? `rgb(${GOLD})` : i === hl2 ? `rgb(${MAG})` : INK; g.font = '900 200px "JunoMono"'; g.textAlign = 'center'; g.textBaseline = 'middle'; g.fillText(d, cx, y - 36);
     // value bar on the desk below
-    const hh = 330 * Math.sqrt(vals[i] / maxV) * clamp(kAt(i));
+    const hh = (vals[i] > 0 ? Math.max(4, 330 * vals[i] / maxV) : 0) * clamp(kAt(i));   // to scale
     if (hh > 1) {
       const gr = g.createLinearGradient(0, y + 110, 0, y + 110 + hh); gr.addColorStop(0, `rgba(${GOLD},.95)`); gr.addColorStop(1, `rgba(${GOLD},.25)`);
       shadow(g, 18, 8, 0.5); g.fillStyle = gr; rr(g, cx - 54, y + 110, 108, hh, 8); g.fill(); noShadow(g);
@@ -140,25 +140,43 @@ export const graphPaper = (g: G, x: number, y: number, w: number, h: number, rot
   g.restore();
 };
 
-/** price vs mileage: a smooth decline with a step down at every 10,000 (the cliffs), drawn in ink with gold cliffs */
-export const cliffChart = (g: G, x: number, y: number, w: number, h: number, k: number, hl = -1) => {
-  const m0 = 50000, m1 = 110000, px = (m: number) => x + (m - m0) / (m1 - m0) * w;
-  const price = (m: number) => 12000 - (m - m0) * 0.055 - Math.floor(m / 10000) * 190;
-  const py = (p: number) => y + h - (p - 7600) / (12000 - 7600) * h;
+/** price vs mileage: a steady decline (~$100 per 1,000 miles) with a ~$200 step down at every 10,000 (Lacetera, Pope &
+    Sydnor 2012), in ink with red cliffs. z zooms the window from 50k–110k (z = 0) to 75k–85k (z = 1). The line is
+    clipped to the plot. Returns the mapping so labels can be pinned to the data. */
+export const RED_INK = '#b8322a';
+export const carPrice = (m: number) => 12000 - (m - 50000) * 0.1 - Math.floor(m / 10000) * 200;
+export const cliffChart = (g: G, x: number, y: number, w: number, h: number, k: number, z = 0, hl = -1) => {
+  const ze = z * z * (3 - 2 * z);
+  const m0 = lerp(50000, 75000, ze), m1 = lerp(110000, 85000, ze);
+  const pHi = carPrice(m0) + lerp(250, 120, ze), pLo = carPrice(m1) - lerp(250, 120, ze);
+  const px = (m: number) => x + (m - m0) / (m1 - m0) * w;
+  const py = (p: number) => y + h - (p - pLo) / (pHi - pLo) * h;
   g.strokeStyle = INK; g.lineWidth = 3;
   g.beginPath(); g.moveTo(x, y); g.lineTo(x, y + h); g.lineTo(x + w, y + h); g.stroke();
-  g.fillStyle = INK; g.font = '700 22px "JunoMono"'; g.textAlign = 'center'; g.textBaseline = 'top';
-  for (let m = 60000; m <= 100000; m += 10000) g.fillText(`${m / 1000}k`, px(m), y + h + 10);
-  const end = m0 + (m1 - m0) * clamp(k);
-  g.strokeStyle = '#3a2a1a'; g.lineWidth = 5; g.lineJoin = 'round'; g.beginPath();
-  for (let m = m0; m <= end; m += 100) { const X = px(m), Y = py(price(m)); m === m0 ? g.moveTo(X, Y) : g.lineTo(X, Y); }
-  g.stroke();
-  // mark the cliffs
-  for (let m = 60000; m <= 100000; m += 10000) {
-    if (m > end) break;
-    const X = px(m), Y0 = py(price(m - 1)), Y1 = py(price(m));
-    g.strokeStyle = `rgba(${m === hl ? MAG : '200,60,80'},.95)`; g.lineWidth = m === hl ? 7 : 5; g.beginPath(); g.moveTo(X, Y0); g.lineTo(X, Y1); g.stroke();
+  g.fillStyle = INK; g.font = '700 24px "JunoMono"'; g.textAlign = 'center'; g.textBaseline = 'top';
+  const step = m1 - m0 > 15000 ? 10000 : 2000;
+  for (let m = Math.ceil(m0 / step) * step; m <= m1; m += step) {
+    const X = px(m); if (X < x + 10 || X > x + w - 10) continue;
+    g.globalAlpha = m % 10000 === 0 ? 1 : 0.55; g.fillText(`${m / 1000}k`, X, y + h + 10);
+    g.fillRect(X - 1, y + h, 2, 8);
   }
+  g.globalAlpha = 1;
+  g.save(); g.beginPath(); g.rect(x + 2, y - 4, w - 2, h + 2); g.clip();
+  const end = m0 + (m1 - m0) * clamp(k), dm = (m1 - m0) / 600;
+  g.strokeStyle = '#3a2a1a'; g.lineWidth = 5; g.lineJoin = 'round'; g.beginPath();
+  for (let m = m0; m <= end; m += dm) {
+    const X = px(m), Y = py(carPrice(m));
+    const c = Math.floor(m / 10000) !== Math.floor((m - dm) / 10000);
+    if (m === m0) g.moveTo(X, Y); else if (c) { const mc = Math.floor(m / 10000) * 10000; g.lineTo(px(mc), py(carPrice(mc - 1))); g.lineTo(px(mc), py(carPrice(mc))); g.lineTo(X, Y); } else g.lineTo(X, Y);
+  }
+  g.stroke();
+  for (let m = 60000; m <= 100000; m += 10000) {   // the cliffs, in red
+    if (m > end || m < m0 || m > m1) continue;
+    const X = px(m), Y0 = py(carPrice(m - 1)), Y1 = py(carPrice(m));
+    g.strokeStyle = m === hl ? `rgb(${MAG})` : RED_INK; g.lineWidth = m === hl ? 8 : 6; g.beginPath(); g.moveTo(X, Y0); g.lineTo(X, Y1); g.stroke();
+  }
+  g.restore();
+  return { px, py };
 };
 
 /** a catalogue page with three swatches of the same dress and three prices */
@@ -196,7 +214,7 @@ export const calendarPage = (g: G, x: number, y: number, s: number, big: string,
   g.fillStyle = '#f3ede0'; g.font = '700 34px "Noto Sans CJK SC"'; g.textAlign = 'center'; g.textBaseline = 'middle'; g.fillText(small, 0, -132);
   g.fillStyle = INK; g.font = '900 150px "Noto Serif CJK SC"'; g.fillText(big, 0, 30);
   for (let k = 0; k < 6; k++) { g.fillStyle = '#1a1410'; g.beginPath(); g.arc(-110 + k * 44, -170, 7, 0, 6.3); g.fill(); }
-  if (mark > 0) { g.strokeStyle = `rgba(200,40,60,${0.9 * mark})`; g.lineWidth = 7; g.beginPath(); g.ellipse(0, 30, 120 * mark, 90 * mark, -0.1, 0, 6.3); g.stroke(); }
+  if (mark > 0) { g.strokeStyle = `rgba(184,50,42,${0.95 * mark})`; g.lineWidth = 7; g.beginPath(); g.ellipse(0, 30, 120 * mark, 90 * mark, -0.1, 0, 6.3); g.stroke(); }
   g.restore();
 };
 

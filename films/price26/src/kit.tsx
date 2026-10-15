@@ -4,7 +4,7 @@ import React, { useLayoutEffect, useRef } from 'react';
 import { staticFile } from 'remotion';
 import type { Line } from './time';
 
-export const W = 1920, H = 1080, BAR = 104;
+export const W = 1920, H = 1080, BAR = 128;
 export const C = {
   bg: '#0d0c0b', paper: '#e8dfcb', ink: '#1d1a16', ink2: '#4a443b',
   cream: '#efe8da', dim: 'rgba(239,232,218,.55)', faint: 'rgba(239,232,218,.14)', hair: 'rgba(239,232,218,.22)',
@@ -92,7 +92,7 @@ export const glowDot = (g: CanvasRenderingContext2D, x: number, y: number, r: nu
 
 /** subtitles in the lower letterbox bar */
 /** subtitle style: size / weight / distance from the bottom edge (px at 1080p) */
-export const SUB = { size: 66, weight: 700, bottom: 58 };
+export const SUB = { size: 68, weight: 700, bottom: 23 };   // brand §4a: one line centred in the 952–1080 bar
 export const Subs: React.FC<{ T: number; lines: Line[] }> = ({ T, lines }) => (
   <>
     {lines.map(([a, z, s], i) => {
@@ -100,12 +100,12 @@ export const Subs: React.FC<{ T: number; lines: Line[] }> = ({ T, lines }) => (
       if (o <= 0) return null;
       const rise = (1 - eo(T, a, 0.3)) * 6;
       return (
-        <div key={i} style={{ position: 'absolute', left: 0, right: 0, bottom: SUB.bottom, textAlign: 'center', opacity: o, transform: `translateY(${rise}px)`, fontFamily: F.sans, fontWeight: SUB.weight, fontSize: SUB.size, letterSpacing: '0.04em', color: C.cream, textShadow: '0 2px 6px rgba(0,0,0,.9), 0 0 2px rgba(0,0,0,.9)', ...LNUM }}>
+        <div key={i} style={{ position: 'absolute', left: 0, right: 0, bottom: SUB.bottom, textAlign: 'center', opacity: o, transform: `translateY(${rise}px)`, fontFamily: F.sans, fontWeight: SUB.weight, fontSize: SUB.size, letterSpacing: '0.04em', lineHeight: 1.25, whiteSpace: 'nowrap', color: '#f3ede2', textShadow: '0 0 3px #000, 0 0 3px #000, 0 2px 14px rgba(0,0,0,0.95)', ...LNUM }}>
           {s.split(/(\[[^\]]+\]|\{[^}]+\})/).map((x, j) => {
             const mg = x.startsWith('{'), hl = mg || x.startsWith('['), t = hl ? x.slice(1, -1) : x;
             // colour carries meaning: the tightening (fear, scams, awkwardness) = magenta, warm / answers = gold
-            const col = !hl ? undefined : mg ? '#ff9ed6' : /一紧|没好事|诈骗|骚扰|尴尬|不高兴/.test(t) && !/没有更尴尬/.test(t) ? '#ff9ed6' : C.goldHi;
-            return <span key={j} style={col ? { color: col } : undefined}>{t.split(/\^(\d+)/).map((u, k) => (k % 2 ? <sup key={k} style={{ fontSize: '0.58em', verticalAlign: '0.75em', lineHeight: 0 }}>{u}</sup> : <React.Fragment key={k}>{u}</React.Fragment>))}</span>;
+            const col = !hl ? undefined : mg ? '#ff6b5e' : C.goldHi;   // brand: gold = the answer, red = the trap; nothing else
+            return <span key={j} style={col ? { color: col, fontWeight: 900 } : undefined}>{t.split(/\^(\d+)/).map((u, k) => (k % 2 ? <sup key={k} style={{ fontSize: '0.58em', verticalAlign: '0.75em', lineHeight: 0 }}>{u}</sup> : <React.Fragment key={k}>{u}</React.Fragment>))}</span>;
           })}
         </div>
       );
