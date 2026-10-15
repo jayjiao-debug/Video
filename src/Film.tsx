@@ -145,7 +145,7 @@ const stationC = (g: G, T: number) => {
   const dg = eo(T, GROOVE, 0.25) * (1 - eo(T, d1 - 0.4, 0.3));
   const fx = tx + firstDigitX(g, '9.99') * ts;
   if (dg > 0) { g.save(); g.globalCompositeOperation = 'lighter'; glowDot(g, fx, ty + 10, 150, 0.55 * dg + 0.25 * hit(T, GROOVE, 0.6), GOLD); g.restore(); }
-  g.save(); g.globalAlpha = eo(T, CUT.T_OUT - 0.5, 0.4); tag(g, tx, ty, ts, tr, '9.99'); g.restore();
+  g.save(); g.globalAlpha = eo(T, CUT.T_OUT - 0.1, 0.4); tag(g, tx, ty, ts, tr, '9.99'); g.restore();
   // a reading light sweeps left to right across the price
   const sw = pr(T, at('a1') + 0.4, 1.1);
   if (sw > 0 && sw < 1) {
