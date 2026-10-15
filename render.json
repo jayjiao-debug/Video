@@ -1,9 +1,9 @@
 {
-  "id": "face_mt-1792085067",
-  "composition": "MotionTest",
+  "id": "price_v1-1792089968",
+  "composition": "Film",
   "start": 0,
-  "end": 305,
-  "chunks": 10,
-  "output": "face_mt",
+  "end": 4070,
+  "chunks": 30,
+  "output": "price_v1",
   "flags": ""
 }
