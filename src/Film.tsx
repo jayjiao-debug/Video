@@ -24,9 +24,9 @@ const KEYS: Key[] = [
   { t: 0, c: ctr('A', 0, -10), s: 1.0 },
   { t: bt(14), c: ctr('A', -170, 30), s: 1.1, d: 2.6 },                       // h3: lean in on the 9.99
   { t: CUT.S1, c: ctr('C', 0, 0), s: 1.0, d: CUT.T_OUT - CUT.TITLE - 0.25 },    // under the title card
-  { t: CUT.S2, c: ctr('D', 0, -30), s: 1.0, d: GLIDE },
+  { t: CUT.S2, c: ctr('D', 0, -80), s: 1.0, d: GLIDE },
   { t: CUT.S3, c: ctr('E', -500, -20), s: 1.3, d: GLIDE },
-  { t: near(at('c5')), c: ctr('E', 480, -70), s: 1.5, d: 1.8 },
+  { t: near(till('c4') + 1.9), c: ctr('E', 480, -70), s: 1.5, d: 1.8 },   // only once c4 has been read
   { t: CUT.S4, c: ctr('F', 0, -20), s: 1.0, d: GLIDE },
   { t: CUT.S5, c: ctr('G', 0, -40), s: 1.0, d: GLIDE },
   { t: CUT.S6, c: ctr('A', 0, -10), s: 1.0, d: GLIDE + 0.5 },
@@ -122,7 +122,7 @@ const stationA = (g: G, T: number) => {
   if (T > at('f3') - 0.1) {
     const a = eo(T, at('f3') - 0.1, 0.4), w = eio(T, at('f3') + 0.3, 0.8);
     if (T > at('f3') + 0.7) { g.save(); g.globalCompositeOperation = 'lighter'; glowDot(g, 640, A_BASE - A_TALL, 220, 0.4 * hit(T, at('f3') + 0.7, 0.8), GOLD); g.restore(); }
-    g.save(); g.translate(880, 455 + (1 - a) * 40); g.rotate(0.07); g.globalAlpha = a;
+    g.save(); g.translate(965, 690 + (1 - a) * 40); g.rotate(0.07); g.globalAlpha = a;
     g.shadowColor = 'rgba(0,0,0,.55)'; g.shadowBlur = 24; g.shadowOffsetY = 10;
     g.fillStyle = '#f3ead6'; g.fillRect(-150, -85, 300, 170); g.shadowColor = 'transparent';
     g.strokeStyle = 'rgba(120,150,190,.35)'; g.lineWidth = 2;
@@ -145,7 +145,7 @@ const stationC = (g: G, T: number) => {
   const dg = eo(T, GROOVE, 0.25) * (1 - eo(T, d1 - 0.4, 0.3));
   const fx = tx + firstDigitX(g, '9.99') * ts;
   if (dg > 0) { g.save(); g.globalCompositeOperation = 'lighter'; glowDot(g, fx, ty + 10, 150, 0.55 * dg + 0.25 * hit(T, GROOVE, 0.6), GOLD); g.restore(); }
-  tag(g, tx, ty, ts, tr, '9.99');
+  g.save(); g.globalAlpha = eo(T, CUT.T_OUT - 0.5, 0.4); tag(g, tx, ty, ts, tr, '9.99'); g.restore();
   // a reading light sweeps left to right across the price
   const sw = pr(T, at('a1') + 0.4, 1.1);
   if (sw > 0 && sw < 1) {
@@ -188,14 +188,16 @@ const stationE = (g: G, T: number) => {
   odometer(g, 460, 520, 1.15, v);
   if (T > r1) { g.save(); g.globalCompositeOperation = 'lighter'; glowDot(g, 460 - 240, 520, 220, 0.4 * hit(T, r1, 0.8) + (T > at('c4') ? 0.12 : 0), MAG); sparks(g, 230, 520, r1, T, 60, MAG, 1.2, 5); g.restore(); }
   // the chart on graph paper
-  graphPaper(g, 1060, 200, 780, 540, 0);
+  const pa = eo(T, near(till('c4') + 1.9) - 1.5, 0.8);
+  if (pa <= 0) return;
+  g.save(); g.globalAlpha = pa; graphPaper(g, 1060, 200, 780, 540, 0); g.restore();
   const ax = eo(T, at('c5'), 0.5);
   if (ax <= 0) return;
   g.save(); g.globalAlpha = ax;
   const ck = T < at('c6') ? 0 : eio(T, at('c6'), bt(128) - at('c6'));          // drawn through c6, done on the 65.2 build hit
   const z = eio(T, at('c7') - 0.2, 0.9) * (1 - eio(T, at('c9') - 0.2, 0.9));
   const { px, py } = cliffChart(g, PL.x, PL.y, PL.w, PL.h, ck, z, T > at('c7') ? 80000 : -1);
-  txt(g, '车价', PL.x - 14, PL.y - 22, '700 28px "Noto Sans CJK SC"', INK, 'left');
+  txt(g, '车价', PL.x + 14, PL.y + 14, '700 28px "Noto Sans CJK SC"', INK, 'left');
   txt(g, '里程 · 英里', PL.x + PL.w, PL.y + PL.h + 58, '700 24px "Noto Sans CJK SC"', 'rgba(42,32,22,.75)', 'right');
   // −$200, pinned to the 80k cliff once we are zoomed in
   if (z > 0.6 && T < at('c9')) {
@@ -205,16 +207,16 @@ const stationE = (g: G, T: number) => {
   // c8: the two drops side by side, to scale: 100 miles before the line vs across it
   if (T > at('c8') && T < at('c9') + 0.4) {
     const q = eo(T, at('c8'), 0.5) * (1 - pr(T, at('c9') - 0.2, 0.5));
-    const top = 300, rx = [1560, 1700];
+    const top = 448, rx = [1215, 1335], sc = 0.7;
     g.save(); g.globalAlpha *= q;
-    g.fillStyle = 'rgba(239,233,218,.92)'; g.fillRect(1490, 250, 300, 300);
-    g.strokeStyle = 'rgba(42,32,22,.35)'; g.lineWidth = 2; g.strokeRect(1490, 250, 300, 300);
-    txt(g, '79.8k→79.9k', rx[0], 272, '700 19px "JunoMono"', INK);
-    txt(g, '79.9k→80k', rx[1], 272, '700 19px "JunoMono"', INK);
-    g.fillStyle = 'rgba(42,32,22,.75)'; g.fillRect(rx[0] - 30, top, 60, 10 * eo(T, at('c8') + 0.3, 0.4));
-    g.fillStyle = RED_INK; g.fillRect(rx[1] - 30, top, 60, 200 * eo(T, at('c8') + 0.7, 0.6));
-    txt(g, '−$10', rx[0], top + 40, '900 32px "JunoMono"', INK);
-    txt(g, '−$200', rx[1], top + 228, '900 32px "JunoMono"', RED_INK);
+    g.fillStyle = 'rgba(239,233,218,.94)'; g.fillRect(1150, 410, 250, 226);
+    g.strokeStyle = 'rgba(42,32,22,.35)'; g.lineWidth = 2; g.strokeRect(1150, 410, 250, 226);
+    txt(g, '79.8k→79.9k', rx[0], 428, '700 17px "JunoMono"', INK);
+    txt(g, '79.9k→80k', rx[1], 428, '700 17px "JunoMono"', INK);
+    g.fillStyle = 'rgba(42,32,22,.75)'; g.fillRect(rx[0] - 26, top, 52, 10 * sc * eo(T, at('c8') + 0.3, 0.4));
+    g.fillStyle = RED_INK; g.fillRect(rx[1] - 26, top, 52, 200 * sc * eo(T, at('c8') + 0.7, 0.6));
+    txt(g, '−$10', rx[0], top + 38, '900 30px "JunoMono"', INK);
+    txt(g, '−$200', rx[1] - 6, top + 140 + 24, '900 28px "JunoMono"', RED_INK);
     g.restore();
   }
   // c9: how many cars come to auction, by mileage: it jumps just before each 10,000
@@ -222,7 +224,7 @@ const stationE = (g: G, T: number) => {
     const q = eo(T, at('c9') + 0.5, 0.9);
     g.save(); g.beginPath(); g.rect(PL.x + 2, PL.y, PL.w, PL.h); g.clip();
     for (let m = 51000; m < 110000; m += 1000) {
-      const r = m % 10000, spike = r >= 8000 ? 1 + 4 * ((r - 8000) / 2000) ** 2 : 1;
+      const r = m % 10000, spike = r === 9000 ? 5 : r === 8000 ? 2 : 1;
       const hh = 16 * spike * q * (0.85 + 0.3 * rnd(m, 3));
       g.fillStyle = spike > 2 ? 'rgba(184,50,42,.85)' : 'rgba(58,42,26,.45)'; g.fillRect(px(m + 500) - 3, PL.y + PL.h - hh, 6, hh);
     }
@@ -319,7 +321,7 @@ export const Film: React.FC = () => {
             g.fillStyle = p; g.fillRect(0, 0, 1920, 1080); g.restore();
             const v = g.createRadialGradient(960, 540, 300, 960, 540, 1150); v.addColorStop(0, 'rgba(0,0,0,0)'); v.addColorStop(1, 'rgba(0,0,0,.72)'); g.fillStyle = v; g.fillRect(0, 0, 1920, 1080);
             // title and end card sit on a darkened desk
-            const dim = Math.max(0.84 * titleO, endO);
+            const dim = Math.max(0.9 * titleO, endO);
             if (dim > 0) { g.fillStyle = `rgba(4,3,3,${dim})`; g.fillRect(0, 0, 1920, 1080); }
             if (T >= CUT.TITLE && T < CUT.T_OUT) { g.save(); g.globalCompositeOperation = 'lighter'; sparks(g, 960, 380, CUT.TITLE, T, 160, GOLD, 2.4, 21); g.restore(); }
           }} />
@@ -350,7 +352,7 @@ export const Film: React.FC = () => {
           {/* the slammed words on the 113.8 s hit */}
           {T >= SLAM80 && T < at('e7') && (
             <div style={{ position: 'absolute', left: 0, right: 0, top: 862, textAlign: 'center', opacity: eo(T, SLAM80, 0.18) * (1 - pr(T, at('e7') - 0.3, 0.3)), transform: `scale(${lerp(1.35, 1, eo(T, SLAM80, 0.22))})`, fontFamily: F.serif, fontWeight: 900, fontSize: 84, color: C.cream, textShadow: '0 6px 30px rgba(0,0,0,.95)' }}>
-              只差几周，就被归进了<span style={{ color: MG }}>「80多岁」</span>
+              只隔一个生日，就被归进了<span style={{ color: MG }}>「80多岁」</span>
             </div>
           )}
           {/* end card */}

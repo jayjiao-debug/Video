@@ -154,7 +154,7 @@ export const cliffChart = (g: G, x: number, y: number, w: number, h: number, k: 
   g.strokeStyle = INK; g.lineWidth = 3;
   g.beginPath(); g.moveTo(x, y); g.lineTo(x, y + h); g.lineTo(x + w, y + h); g.stroke();
   g.fillStyle = INK; g.font = '700 24px "JunoMono"'; g.textAlign = 'center'; g.textBaseline = 'top';
-  const step = ze > 0.5 ? 1000 : 10000;
+  const step = m1 - m0 > 15000 ? 10000 : 2000;
   for (let m = Math.ceil(m0 / step) * step; m <= m1; m += step) {
     const X = px(m); if (X < x + 10 || X > x + w - 10) continue;
     g.globalAlpha = m % 10000 === 0 ? 1 : 0.55; g.fillText(`${m / 1000}k`, X, y + h + 10);

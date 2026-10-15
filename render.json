@@ -1,9 +1,9 @@
 {
-  "id": "price_v2-1792092141",
+  "id": "price_v2b-1792092593",
   "composition": "Film",
   "start": 0,
   "end": 4146,
   "chunks": 30,
-  "output": "price_v2",
+  "output": "price_v2b",
   "flags": ""
 }
