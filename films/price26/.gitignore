@@ -1,0 +1,6 @@
+node_modules
+out/
+public/bgm*.mp3
+public/ring*
+public/vo/
+public/faces/
