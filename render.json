@@ -1,9 +1,9 @@
 {
-  "id": "ring_v3-1792014404",
-  "composition": "Film",
+  "id": "face_mt-1792085067",
+  "composition": "MotionTest",
   "start": 0,
-  "end": 3239,
-  "chunks": 30,
-  "output": "ring_v3",
+  "end": 305,
+  "chunks": 10,
+  "output": "face_mt",
   "flags": ""
 }
