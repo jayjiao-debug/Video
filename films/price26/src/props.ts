@@ -76,8 +76,10 @@ export const tray = (g: G, x: number, y: number, w: number, h: number, label: st
 };
 
 /** a big row of digits printed on a paper strip, each with a bar under it whose height = the place value it carries */
-export const placeValue = (g: G, x: number, y: number, digits: string, k: number, hl = -1) => {
+export const placeValue = (g: G, x: number, y: number, digits: string, kk: number | number[], hl = -1, hl2 = -1, a = 1) => {
   const n = digits.length, cw = 190, x0 = x - (n * cw) / 2;
+  const kAt = (i: number) => (Array.isArray(kk) ? kk[i] ?? 0 : clamp(kk * 1.3 - i * 0.12));
+  g.save(); g.globalAlpha *= a;
   // paper strip
   shadow(g, 30, 12); g.fillStyle = PAPER; rr(g, x0 - 50, y - 150, n * cw + 100, 220, 6); g.fill(); noShadow(g);
   g.strokeStyle = 'rgba(80,60,30,.12)'; for (let i = 0; i < 12; i++) { g.beginPath(); g.moveTo(x0 - 50, y - 150 + i * 20); g.lineTo(x0 + n * cw + 50, y - 150 + i * 20); g.stroke(); }
@@ -85,16 +87,17 @@ export const placeValue = (g: G, x: number, y: number, digits: string, k: number
   const maxV = Math.max(...vals, 1);
   digits.split('').forEach((d, i) => {
     const cx = x0 + i * cw + cw / 2;
-    g.fillStyle = i === hl ? `rgb(${GOLD})` : INK; g.font = '900 200px "JunoMono"'; g.textAlign = 'center'; g.textBaseline = 'middle'; g.fillText(d, cx, y - 36);
+    g.fillStyle = i === hl ? `rgb(${GOLD})` : i === hl2 ? `rgb(${MAG})` : INK; g.font = '900 200px "JunoMono"'; g.textAlign = 'center'; g.textBaseline = 'middle'; g.fillText(d, cx, y - 36);
     // value bar on the desk below
-    const hh = 330 * Math.sqrt(vals[i] / maxV) * clamp(k * 1.3 - i * 0.12);
+    const hh = 330 * Math.sqrt(vals[i] / maxV) * clamp(kAt(i));
     if (hh > 1) {
       const gr = g.createLinearGradient(0, y + 110, 0, y + 110 + hh); gr.addColorStop(0, `rgba(${GOLD},.95)`); gr.addColorStop(1, `rgba(${GOLD},.25)`);
       shadow(g, 18, 8, 0.5); g.fillStyle = gr; rr(g, cx - 54, y + 110, 108, hh, 8); g.fill(); noShadow(g);
     }
     g.fillStyle = 'rgba(243,237,226,.85)'; g.font = '700 30px "JunoMono"'; g.textBaseline = 'top';
-    if (k > 0.3 + i * 0.1) g.fillText(vals[i].toLocaleString('en-US'), cx, y + 120 + Math.max(hh, 0) + 12);
+    if (kAt(i) > 0.3) g.fillText(vals[i].toLocaleString('en-US'), cx, y + 120 + Math.max(hh, 0) + 12);
   });
+  g.restore();
 };
 
 /** a mechanical odometer: chrome bezel, black drums; value may be fractional so the last drums roll */
