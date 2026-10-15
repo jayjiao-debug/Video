@@ -87,7 +87,7 @@ const stationA = (g: G, T: number) => {
   // 0–0.4: the 10.00 tag lands; FLIP (1.418): it turns over to 9.99; PAIR (3.443): it steps left, a 10.00 slides in
   const land = eo(T, 0, 0.4), f = clamp((T - FLIP) / 0.28), pk = eio(T, PAIR, 0.7);
   const x1 = lerp(960, 640, pk), y1 = lerp(470, 330, pk), s1 = lerp(1.6, 1.0, pk) * lerp(1.25, 1, land);
-  g.save(); g.globalAlpha = eo(T, 0, 0.2);
+  g.save();
   // the felt-price columns: both rise to (almost) the same height, then the 9.99 one sinks
   const rise = eo(T, bt(7), 0.6), sink = eio(T, bt(9), 0.5) * (1 - eio(T, at('f3'), 0.7));
   if (T > bt(7)) {
@@ -134,11 +134,13 @@ const stationA = (g: G, T: number) => {
 };
 
 // station C: the 9.99 tag is read left to right, the first digit lights up, and the tag drops into the 9块多 tray
-const C_TAG = [960, 250] as const;
+const C_TAG = [960, 272] as const;
 const stationC = (g: G, T: number) => {
   const d1 = near(at('a3') + 0.1), d2 = d1 + 2 * B;
+  g.save(); g.globalAlpha = eo(T, CUT.T_OUT - 0.1, 0.4);
   tray(g, 300, 380, 560, 400, '9块多', hit(T, d1, 0.6) + (T > at('a4') ? 0.6 : 0), GOLD);
   tray(g, 1060, 380, 560, 400, '10块', hit(T, d2, 0.6) * 0.8 + (T > at('a4') ? 0.4 : 0), '255,214,190');
+  g.restore();
   const k1 = eio(T, d1 - 0.4, 0.4);
   const tx = lerp(C_TAG[0], 600, k1), ty = lerp(C_TAG[1], 580, k1), ts = lerp(0.8, 0.85, k1), tr = lerp(-0.04, -0.12, k1);
   // the first digit glows from the groove hit until the tag drops
@@ -152,7 +154,7 @@ const stationC = (g: G, T: number) => {
     const x = lerp(tx - 200, tx + 220, sw);
     g.save(); g.globalCompositeOperation = 'lighter';
     const lg = g.createLinearGradient(x - 70, 0, x + 70, 0); lg.addColorStop(0, 'rgba(255,230,170,0)'); lg.addColorStop(0.5, 'rgba(255,230,170,.45)'); lg.addColorStop(1, 'rgba(255,230,170,0)');
-    g.fillStyle = lg; g.fillRect(x - 70, ty - 90, 140, 180); g.restore();
+    g.beginPath(); g.rect(tx - 185, ty - 80, 370, 160); g.clip(); g.fillStyle = lg; g.fillRect(x - 70, ty - 90, 140, 180); g.restore();
   }
   if (T > d2 - 0.4) { const k2 = eo(T, d2 - 0.4, 0.35); tag(g, 1360, lerp(-200, 580, k2), lerp(1.2, 0.85, k2), 0.08, '10.00'); }
   if (T > at('a4')) {   // the gap: ¥0.01, chalked between the trays
@@ -185,8 +187,8 @@ const stationE = (g: G, T: number) => {
   const r0 = at('c3') + 0.2, r1 = near(r0 + 2.4);
   // it creeps up to 79999 while c2 is read, then the carry rolls every drum at once, ending on a beat
   const v = T < at('c2') ? 79990 : T < r0 ? 79990 + Math.floor(9 * eio(T, at('c2'), r0 - at('c2') - 0.3) + 1e-6) : T < r1 ? 79999 + (1 - Math.pow(1 - pr(T, r0, r1 - r0), 2)) : 80000;
-  odometer(g, 460, 520, 1.15, v);
-  if (T > r1) { g.save(); g.globalCompositeOperation = 'lighter'; glowDot(g, 460 - 240, 520, 220, 0.4 * hit(T, r1, 0.8) + (T > at('c4') ? 0.12 : 0), MAG); sparks(g, 230, 520, r1, T, 60, MAG, 1.2, 5); g.restore(); }
+  odometer(g, 440, 520, 1.15, v);
+  if (T > r1) { g.save(); g.globalCompositeOperation = 'lighter'; glowDot(g, 440 - 240, 520, 220, 0.4 * hit(T, r1, 0.8) + (T > at('c4') ? 0.12 : 0), MAG); sparks(g, 230, 520, r1, T, 60, MAG, 1.2, 5); g.restore(); }
   // the chart on graph paper
   const pa = eo(T, near(till('c4') + 1.9) - 1.5, 0.8);
   if (pa <= 0) return;
@@ -194,10 +196,10 @@ const stationE = (g: G, T: number) => {
   const ax = eo(T, at('c5'), 0.5);
   if (ax <= 0) return;
   g.save(); g.globalAlpha = ax;
-  const ck = T < at('c6') ? 0 : eio(T, at('c6'), bt(128) - at('c6'));          // drawn through c6, done on the 65.2 build hit
+  const ck = T < at('c5') + 0.4 ? 0 : eio(T, at('c5') + 0.4, bt(128) - at('c5') - 0.4);   // drawn through c5–c6, done on the 65.2 build hit
   const z = eio(T, at('c7') - 0.2, 0.9) * (1 - eio(T, at('c9') - 0.2, 0.9));
   const { px, py } = cliffChart(g, PL.x, PL.y, PL.w, PL.h, ck, z, T > at('c7') ? 80000 : -1);
-  txt(g, '车价', PL.x + 14, PL.y + 14, '700 28px "Noto Sans CJK SC"', INK, 'left');
+  txt(g, '车', PL.x - 32, PL.y + 24, '700 28px "Noto Sans CJK SC"', INK); txt(g, '价', PL.x - 32, PL.y + 56, '700 28px "Noto Sans CJK SC"', INK);
   txt(g, '里程 · 英里', PL.x + PL.w, PL.y + PL.h + 58, '700 24px "Noto Sans CJK SC"', 'rgba(42,32,22,.75)', 'right');
   // −$200, pinned to the 80k cliff once we are zoomed in
   if (z > 0.6 && T < at('c9')) {
@@ -216,7 +218,7 @@ const stationE = (g: G, T: number) => {
     g.fillStyle = 'rgba(42,32,22,.75)'; g.fillRect(rx[0] - 26, top, 52, 10 * sc * eo(T, at('c8') + 0.3, 0.4));
     g.fillStyle = RED_INK; g.fillRect(rx[1] - 26, top, 52, 200 * sc * eo(T, at('c8') + 0.7, 0.6));
     txt(g, '−$10', rx[0], top + 38, '900 30px "JunoMono"', INK);
-    txt(g, '−$200', rx[1] - 6, top + 140 + 24, '900 28px "JunoMono"', RED_INK);
+    g.globalAlpha *= eo(T, at('c8') + 1.0, 0.3); txt(g, '−$200', rx[1] - 6, top + 140 + 24, '900 28px "JunoMono"', RED_INK);
     g.restore();
   }
   // c9: how many cars come to auction, by mileage: it jumps just before each 10,000
@@ -285,7 +287,7 @@ const stationG = (g: G, T: number) => {
 /* ---------------------------------------------------------------- the film */
 const LOADS = [...FONT_LOADS, '900 40px "Noto Serif CJK SC"'];
 const GLYPHS = '实际只差心里觉得的价格一大截都是「30多」「40多」车价里程·英里送去拍卖的车80岁生日前两周后≈10¥$0123456789.,+−→≈⅓块多只便宜了一分钱为什么感觉一大截你定也被这骗过读个数我们从左往右看到第位大脑就开始估进格子硬是两这是不说明很笨其实聪明的捷径最边代表七万后那什么都决定有所以平时几乎对还省力它会出错偏在进位刻再多跳成值没变判断却了美国多万笔二手车拍卖记录里里程表每过整英里价掉截比贵约美元可之间差卖家懂快时送去突然定人站道悬崖上女装目录做实验同条裙子标三个反而卖得更好起来专业呢年研究者翻查老医保数据样心脏病发作住院还几周满岁搭桥手术刚过有被归进其他前没落差笨太下次先心里把读成生日差一分钱为看比便那么评论区坑过资料';
-const Slate: React.FC<{ s: string; a: number }> = ({ s, a }) => (a <= 0 ? null : <div style={{ position: 'absolute', left: 96, top: 150, opacity: a, padding: '6px 14px', borderRadius: 6, background: 'rgba(8,6,5,.72)', fontFamily: F.mono, fontWeight: 700, fontSize: 24, letterSpacing: '0.3em', color: 'rgba(239,232,218,.92)' }}>{s}</div>);
+const Slate: React.FC<{ s: string; a: number }> = ({ s, a }) => (a <= 0 ? null : <div style={{ position: 'absolute', left: '50%', top: 146, transform: 'translateX(-50%)', whiteSpace: 'nowrap', opacity: a, padding: '6px 14px', borderRadius: 6, background: 'rgba(8,6,5,.72)', fontFamily: F.mono, fontWeight: 700, fontSize: 24, letterSpacing: '0.3em', color: 'rgba(239,232,218,.92)' }}>{s}</div>);
 const slateA = (T: number, a: number, z: number) => Math.min(eo(T, a, 0.4), 1 - pr(T, z - 0.4, 0.4));
 
 export const Film: React.FC = () => {
@@ -351,7 +353,7 @@ export const Film: React.FC = () => {
           )}
           {/* the slammed words on the 113.8 s hit */}
           {T >= SLAM80 && T < at('e7') && (
-            <div style={{ position: 'absolute', left: 0, right: 0, top: 862, textAlign: 'center', opacity: eo(T, SLAM80, 0.18) * (1 - pr(T, at('e7') - 0.3, 0.3)), transform: `scale(${lerp(1.35, 1, eo(T, SLAM80, 0.22))})`, fontFamily: F.serif, fontWeight: 900, fontSize: 84, color: C.cream, textShadow: '0 6px 30px rgba(0,0,0,.95)' }}>
+            <div style={{ position: 'absolute', left: 0, right: 0, top: 812, textAlign: 'center', opacity: eo(T, SLAM80, 0.18) * (1 - pr(T, at('e7') - 0.3, 0.3)), transform: `scale(${lerp(1.35, 1, eo(T, SLAM80, 0.22))})`, fontFamily: F.serif, fontWeight: 900, fontSize: 84, color: C.cream, textShadow: '0 6px 30px rgba(0,0,0,.95)' }}>
               只隔一个生日，就被归进了<span style={{ color: MG }}>「80多岁」</span>
             </div>
           )}
