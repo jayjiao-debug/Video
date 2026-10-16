@@ -5,7 +5,7 @@ import React, { useEffect, useState } from 'react';
 import { AbsoluteFill, Img, continueRender, delayRender, staticFile, useCurrentFrame } from 'remotion';
 import '@fontsource/ma-shan-zheng';
 import CUT from './cut.json';
-import RAW from '../lines_v7.json';
+import RAW from './lines.json';
 import { JUNO } from './brand/identity';
 import { BAR, FontFaces, Subs, clamp, eo, lerp, pr } from './kit';
 
