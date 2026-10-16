@@ -91,12 +91,12 @@ const chalkLine = (g: G, pts: Pt[], p: number, w = 5, o = 1, col = CHALK) => {
 const wobbly = (x0: number, y0: number, x1: number, y1: number, n = 40, amp = 3, seed = 1): Pt[] => Array.from({ length: n + 1 }, (_, i) => { const t = i / n; return [x0 + (x1 - x0) * t, y0 + (y1 - y0) * t + amp * Math.sin(t * 13 + seed) * Math.sin(t * 5.3 + seed * 2)]; });
 
 /** a chalk heart (tip at cx, cy + size*0.45) whose inside fills from the bottom with warm light to level k */
-const chalkHeart = (g: G, cx: number, cy: number, size: number, k: number, p: number, o: number) => {
+const chalkHeart = (g: G, cx: number, cy: number, size: number, k: number, p: number, o: number, halo = true) => {
   if (p <= 0 || o <= 0) return;
   const sc = size / 320, top = cy - size * 0.42, tip = cy + size * 0.45;
   const pts: Pt[] = [...P.bez([0, 0], [-160, -110], [-120, -260], [0, -190], 24), ...P.bez([0, -190], [120, -260], [160, -110], [0, 0], 24)].map(([x, y]) => [cx + x * sc, tip + y * sc * 1.0]);
   if (k > 0.01) {
-    if (k > 0.3) glow(g, cx, cy, size * 1.4 * k, 0.32 * k * o);
+    if (halo && k > 0.3) glow(g, cx, cy, size * 1.4 * k, 0.32 * k * o);
     g.save(); g.beginPath(); pts.forEach(([x, y], i) => (i ? g.lineTo(x, y) : g.moveTo(x, y))); g.closePath(); g.clip();
     const lvl = tip - (tip - top) * k;
     const gr = g.createLinearGradient(0, tip, 0, lvl); gr.addColorStop(0, `rgba(${WARM},${0.85 * o})`); gr.addColorStop(1, `rgba(${WARM},${0.55 * o})`);
@@ -105,6 +105,38 @@ const chalkHeart = (g: G, cx: number, cy: number, size: number, k: number, p: nu
     g.restore();
   }
   chalkLine(g, pts, p, Math.max(4, size / 34), o, k > 0.3 ? WARM : CHALK);
+};
+
+/* ------------------------------------------------------------ crumbling into chalk dust */
+const DIS_SPEED = 170;   // px/s, the same for all three
+type Dis = { id: string; x: number; y: number; s: number; tin: number; din: number; warm: number; hx: number; hy: number; hs: number; hk: number; th: number; t0: number; xmin: number; pts: [number, number, boolean][] };
+const hash = (i: number, k = 0) => { const v = Math.sin(i * 12.9898 + k * 78.233) * 43758.5453; return v - Math.floor(v); };
+const heartPts = (cx: number, cy: number, size: number): Pt[] => { const sc = size / 320, tip = cy + size * 0.45; return [...P.bez([0, 0], [-160, -110], [-120, -260], [0, -190], 24), ...P.bez([0, -190], [120, -260], [160, -110], [0, 0], 24)].map(([x, y]) => [cx + x * sc, tip + y * sc]); };
+const makeDis = (id: string, x: number, y: number, s: number, tin: number, din: number, warm: number, hx: number, hy: number, hs: number, hk: number, th: number, t0: number): Dis => {
+  const pts: [number, number, boolean][] = [];
+  const walk = (poly: Pt[], step: number, warmPt: boolean) => { for (let i = 1; i < poly.length; i++) { const [ax, ay] = poly[i - 1], [bx, by] = poly[i], d = Math.hypot(bx - ax, by - ay), n = Math.max(1, Math.round(d / step)); for (let k = 0; k < n; k++) pts.push([ax + (bx - ax) * k / n, ay + (by - ay) * k / n, warmPt]); } };
+  for (const st of record(id).strokes) { if (st.a < 0.5) continue; if (st.kind === 'line') walk(st.pts.map(([a, b]) => [x + a * s, y + b * s] as Pt), 4, false); if (st.kind === 'dot') pts.push([x + st.pts[0][0] * s, y + st.pts[0][1] * s, false]); }
+  const hp = heartPts(hx, hy, hs); walk(hp, 4, hk > 0.3);
+  if (hk > 0.01) { const path = new Path2D(); hp.forEach(([a, b], i) => (i ? path.lineTo(a, b) : path.moveTo(a, b))); path.closePath(); const c = document.createElement('canvas').getContext('2d')!; const top = hy - hs * 0.42, tip = hy + hs * 0.45, lvl = tip - (tip - top) * hk; for (let yy = lvl; yy < tip; yy += 7) for (let xx = hx - hs; xx < hx + hs; xx += 7) if (c.isPointInPath(path, xx, yy)) pts.push([xx, yy, true]); }
+  const xmin = Math.min(...pts.map((p) => p[0]));
+  return { id, x, y, s, tin, din, warm, hx, hy, hs, hk, th, t0, xmin, pts };
+};
+let DIS: Dis[] = [];
+const ensureDis = () => { if (DIS.length) return; DIS = [
+  makeDis('fly', 470, 780, 0.9, 22.5, 1.2, 0, 470, 545, 80, 0.04, 27.7, 34.0),
+  makeDis('cat', 960, 790, 0.8, 23.0, 1.6, 0.45, 960, 420, 160, 0.55, 27.9, 35.4),
+  makeDis('rhino', 1440, 790, 0.62, 23.5, 2.0, 0.8, 1440, 440, 250, 1.0, 28.1, 36.9),
+]; };
+const crumble = (g: G, d: Dis, T: number) => {
+  const LIFE = 2.4;
+  d.pts.forEach(([x, y, warm], i) => {
+    const tr = d.t0 + (x - d.xmin) / DIS_SPEED + hash(i) * 0.18;
+    if (T < tr) return; const age = T - tr; if (age > LIFE) return;
+    const h1 = hash(i, 1), h2 = hash(i, 2), e = age / LIFE;
+    const px = x + age * (70 + 90 * h1) + 18 * Math.sin(age * 2.4 + h2 * 6), py = y - age * (40 + 70 * h2) - 25 * e * e;
+    g.fillStyle = `rgba(${warm ? WARM : CHALK},${(warm ? 0.9 : 0.75) * (1 - e) * (1 - e)})`;
+    const r = (warm ? 2.6 : 2.2) * (1 - 0.5 * e); g.fillRect(px - r, py - r, 2 * r, 2 * r);
+  });
 };
 
 /* ------------------------------------------------------------ the board */
@@ -141,10 +173,11 @@ const dust = (g: G, x: number, y: number, t: number, n = 40, col = CHALK) => {
 /* ------------------------------------------------------------ the picture */
 const fade = (T: number, a: number, z: number, fi = 0.6, fo = 0.6) => Math.min(eo(T, a, fi), 1 - pr(T, z - fo, fo));
 const draw = (g: G, T: number) => {
+  ensureDis();
   g.drawImage(board(), 0, 0);
   // camera: a slow push per scene
-  const shake = T >= 20.0 && T < 20.6 ? Math.exp(-(T - 20.0) / 0.07) : 0;
-  g.save(); g.translate(14 * shake * Math.sin(T * 91), 10 * shake * Math.cos(T * 73));
+  // the whole picture sits a little higher so the bottom stays clear for the subtitles
+  g.save(); g.translate(0, -45);
 
   // A · the cat under the lamp (0–5.6)
   const oA = fade(T, 0, 5.7, 0.01, 0.6);
@@ -183,25 +216,30 @@ const draw = (g: G, T: number) => {
   if (oC > 0) {
     glow(g, 960, 470, 420, 0.13 * oC, '170,195,240');
     chalkPuppet(g, 'window', 960, 830, 0.82, eo(T, 16.8, 1.4), oC);
-    const alive = T < 20.0;
-    if (alive) { const tw = Math.sin(T * 23) > 0.92 ? 3 : 0; chalkPuppet(g, 'fly', 1100 + tw, 820, 0.62, eo(T, 17.2, 1.0), oC); }
-    else { g.fillStyle = `rgba(${CHALK},${0.12 * oC})`; g.beginPath(); g.ellipse(1100, 790, 60, 24, 0, 0, 7); g.fill(); dust(g, 1100, 790, T - 20.0, 60); }
-    if (T >= 20.0 && T < 20.4) { g.fillStyle = `rgba(255,250,240,${0.45 * Math.exp(-(T - 20.0) / 0.08)})`; g.fillRect(-50, -50, 2020, 1180); }
+    // the swat, kept quiet: a soft shadow passes over and the fly is simply rubbed out, leaving a faint smudge
+    const sh = Math.min(eo(T, 19.75, 0.2), 1 - pr(T, 20.05, 0.35));
+    if (sh > 0) { const gr = g.createRadialGradient(1100, 790, 0, 1100, 790, 200); gr.addColorStop(0, `rgba(4,6,10,${0.4 * sh})`); gr.addColorStop(1, 'rgba(4,6,10,0)'); g.fillStyle = gr; g.fillRect(900, 590, 400, 400); }
+    const fo = 1 - pr(T, 20.0, 0.35);
+    if (fo > 0) { const tw = T < 20.0 && Math.sin(T * 23) > 0.92 ? 3 : 0; chalkPuppet(g, 'fly', 1100 + tw, 820, 0.62, eo(T, 17.2, 1.0), oC * fo); }
+    if (T > 20.0) { g.fillStyle = `rgba(${CHALK},${0.1 * oC * eo(T, 20.05, 0.4)})`; g.beginPath(); g.ellipse(1100, 795, 56, 20, -0.1, 0, 7); g.fill(); }
   }
-  // D · fly, cat, rhino, each with a chalk heart that fills with warm light: how much we ache for it (22.5–40)
-  const oD = fade(T, 22.5, 40.2, 0.6, 2.4);
+  // D · fly, cat, rhino, each with a chalk heart that fills with warm light: how much we ache for it (22.5–34),
+  //     then all three crumble into chalk dust, left to right at the same speed (34–40)
+  const oD = fade(T, 22.5, 42, 0.6, 0.01);
   if (oD > 0) {
     const fillK = eo(T, 28.4, 2.4);
-    chalkPuppet(g, 'fly', 470, 780, 0.9, eo(T, 22.5, 1.2), oD);
-    chalkPuppet(g, 'cat', 960, 790, 0.8, eo(T, 23.0, 1.6), oD, 0.45 * fillK);
-    chalkPuppet(g, 'rhino', 1440, 790, 0.62, eo(T, 23.5, 2.0), oD, 0.8 * fillK);
-    chalkLine(g, wobbly(200, 792, 1720, 795, 60, 2, 4), eo(T, 22.6, 1.2), 4, oD * 0.8);
-    chalkHeart(g, 470, 545, 80, 0.04 * fillK, eo(T, 27.7, 0.8), oD);
-    chalkHeart(g, 960, 420, 160, 0.55 * fillK, eo(T, 27.9, 0.9), oD);
-    chalkHeart(g, 1440, 440, 250, 1.0 * fillK, eo(T, 28.1, 1.0), oD);
+    chalkLine(g, wobbly(200, 792, 1720, 795, 60, 2, 4), eo(T, 22.6, 1.2), 4, oD * 0.8 * (1 - pr(T, 38.6, 2.0)));
+    for (const d of DIS) {
+      const front = T < d.t0 ? -1 : d.xmin + (T - d.t0) * DIS_SPEED;
+      const hk = d.hk * fillK, remain = front < 0 ? 1 : clamp((d.hx + d.hs * 0.5 - front) / d.hs);
+      if (hk > 0.3) glow(g, d.hx, d.hy, d.hs * 1.4 * hk, 0.32 * hk * oD * remain);
+      g.save(); if (front > 0) { g.beginPath(); g.rect(front, -200, 3000, 1600); g.clip(); }
+      chalkPuppet(g, d.id, d.x, d.y, d.s, eo(T, d.tin, d.din), oD, d.warm * fillK);
+      chalkHeart(g, d.hx, d.hy, d.hs, hk, eo(T, d.th, 0.9), oD, false);
+      g.restore();
+      if (T >= d.t0) crumble(g, d, T);
+    }
   }
-  // build to the title: one warm point grows in the dark
-  if (T > 38.5 && T < 47.5) glow(g, 960, 470, 60 + 380 * eo(T, 38.6, 3.6), (0.18 + 0.25 * eo(T, 38.6, 3.6)) * (1 - pr(T, 46.4, 1.0)));
 
   // E · the ending (163–182.6): a chalk circle around us; everyone outside is dim and cold. Then the circle grows,
   //     and whoever it reaches turns warm.
@@ -223,13 +261,11 @@ const draw = (g: G, T: number) => {
   g.restore();
   // the title on the hit: light burst + chalk dust
   if (T >= TITLE - 0.05 && T < 47.6) {
-    const o = 1 - pr(T, 46.6, 0.9), k = eo(T, TITLE, 0.18);
-    glow(g, 960, 470, 700, 0.5 * Math.exp(-(T - TITLE) / 0.5) * o);
+    const o = 1 - pr(T, 46.6, 0.9), k = T >= TITLE - 0.02 ? 1 : 0;
+    if (T >= TITLE - 0.02) glow(g, 960, 470, 760, 0.55 * Math.exp(-(T - TITLE) / 0.45) * o);
     const tt = chalkText('生命平等吗？', 170, JUNO.colors.gold, '"Ma Shan Zheng"');
-    g.save(); g.globalAlpha = o * k; g.translate(960, 470); g.scale(lerp(1.12, 1, k) + 0.01 * (T - TITLE), lerp(1.12, 1, k) + 0.01 * (T - TITLE)); g.drawImage(tt, -960, -200); g.restore();
-    const ss = chalkText(`— ${JUNO.series} —`, 40, `rgb(${CHALK})`, '"Noto Sans CJK SC"');
-    g.save(); g.globalAlpha = o * eo(T, TITLE + 1.0, 0.6) * 0.8; g.drawImage(ss, 0, 420); g.restore();
-    dust(g, 960, 470, T - TITLE, 120, WARM);
+    g.save(); g.globalAlpha = o * k; g.translate(960, 470); g.scale(1 + 0.008 * (T - TITLE), 1 + 0.008 * (T - TITLE)); g.drawImage(tt, -960, -200); g.restore();
+    dust(g, 960, 470, T - TITLE + 0.02, 120, WARM);
   }
   // end card
   if (T >= END) {
@@ -265,13 +301,12 @@ export const Chalk: React.FC = () => {
       <style>{`@font-face { font-family: "PatrickHand"; src: url(${staticFile('fonts/patrick-hand-latin-400-normal.woff2')}) format("woff2"); }`}</style>
       {ok && <>
         <Canvas dep={f} draw={(g) => draw(g, T)} />
-        <div style={{ position: 'absolute', right: 56, top: 44, opacity: titleOn || endOn ? 0 : 0.85, fontFamily: '"Noto Sans CJK SC", sans-serif', fontWeight: 500, fontSize: 20, letterSpacing: '0.3em', color: 'rgba(243,237,226,.55)' }}><span style={{ color: '#e3b765' }}>◆ </span>{JUNO.mark}</div>
         {LINES.map(([a, z, t], i) => {
           const o = Math.min(eo(T, a, 0.2), 1 - pr(T, z - 0.18, 0.18));
           if (o <= 0) return null;
           const parts = t.split(/(\[[^\]]+\]|\{[^}]+\})/);
           return (
-            <div key={i} style={{ position: 'absolute', left: 0, right: 0, bottom: 118, textAlign: 'center', opacity: o, transform: `translateY(${(1 - eo(T, a, 0.35)) * 8}px)`, fontFamily: '"Noto Sans CJK SC", sans-serif', fontWeight: 900, fontSize: 70, letterSpacing: '0.04em', color: '#fbf7ee', whiteSpace: 'nowrap',
+            <div key={i} style={{ position: 'absolute', left: 0, right: 0, bottom: 44, textAlign: 'center', opacity: o, transform: `translateY(${(1 - eo(T, a, 0.35)) * 8}px)`, fontFamily: '"Noto Sans CJK SC", sans-serif', fontWeight: 900, fontSize: 74, letterSpacing: '0.04em', color: '#fbf7ee', whiteSpace: 'nowrap',
               textShadow: '0 0 2px #000, 3px 0 0 #000, -3px 0 0 #000, 0 3px 0 #000, 0 -3px 0 #000, 2px 2px 0 #000, -2px 2px 0 #000, 2px -2px 0 #000, -2px -2px 0 #000, 0 4px 16px rgba(0,0,0,.8)' }}>
               {parts.map((x, j) => { const hl = x.startsWith('[') || x.startsWith('{'); return <span key={j} style={hl ? { color: x.startsWith('[') ? '#f6d58e' : '#ff8a7a' } : undefined}>{hl ? x.slice(1, -1) : x}</span>; })}
             </div>
