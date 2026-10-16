@@ -33,14 +33,14 @@ const pw = (T: number, pts: [number, number][]) => {   // piecewise-linear map
 const bump = (T: number, a: number, z: number, f = 0.25) => Math.min(eo(T, a, f), 1 - pr(T, z - f, f));
 
 /* ================================================================ the car's state at film time T */
-type State = { p: Pose; sy: number; spin: number; under: number; side: number; rear: number; down: number; streak: number; ground: boolean };
+export type State = { p: Pose; sy: number; spin: number; under: number; side: number; rear: number; down: number; streak: number; ground: boolean };
 const V = 937, S0 = 450, T_DECK = (S_END - S0) / V;          // 7.0 s: leaves the deck in the hook
 const flight = (u: number, a0 = 0) => {
   const x = DECK_END - 2300 * (1 - Math.pow(1 - clamp(u), 1.6)), y = lerp(-2 * R + RW, -RW, smooth3(u));
   return freePose(x, y, Math.PI + 0.06 * Math.sin(Math.PI * u) + a0);
 };
-const LANDX = DECK_END - 2300;
-const hookState = (t: number): State => {
+export const LANDX = DECK_END - 2300;
+export const hookState = (t: number): State => {
   if (t < T_DECK) { const s = S0 + V * t; return { p: poseOnTrack(s), sy: 1, spin: s / RW, under: s > 900 ? 1 : 0.5, side: 0, rear: 0, down: 0, streak: 1, ground: false }; }
   const tf = T_DECK + 3.54;
   if (t < tf) {
@@ -49,8 +49,8 @@ const hookState = (t: number): State => {
   }
   return { p: freePose(LANDX, -RW, Math.PI), sy: -1, spin: S_END / RW + 21, under: 0, side: 0, rear: 0, down: 0, streak: 0, ground: true };
 };
-const T_CEIL = (S_TOP + 800 - S0) / V;   // 5.40 s into the hook: the spot on the ceiling we rewind to
-const stateAt = (T: number): State => {
+export const T_CEIL = (S_TOP + 800 - S0) / V;   // 5.40 s into the hook: the spot on the ceiling we rewind to
+export const stateAt = (T: number): State => {
   if (T < 15.0) return hookState(T);
   if (T < HIT.CEIL) return hookState(lerp(10.54, T_CEIL, eio(T, 15.0, HIT.CEIL - 15.0)));
   if (T < HIT.BACK) return { ...hookState(T_CEIL), streak: 0, under: 1 };
@@ -75,8 +75,8 @@ const stateAt = (T: number): State => {
 };
 
 /* ================================================================ camera: a follow cam whose framing eases between keys */
-type K = { t: number; s: number; ox: number; oy: number; r?: number; d?: number };
-const KEYS: K[] = [
+export type K = { t: number; s: number; ox: number; oy: number; r?: number; d?: number };
+export const KEYS: K[] = [
   { t: 0, s: 0.62, ox: -320, oy: 40, r: -0.05 },
   { t: 4.3, s: 0.6, ox: 0, oy: 230, r: 0, d: 3.2 },
   { t: 8.2, s: 0.6, ox: -150, oy: 120, d: 2.5 },
@@ -97,32 +97,32 @@ const KEYS: K[] = [
   { t: 70.4, s: 0.62, ox: -700, oy: -500, d: 2.4 },
   { t: 77.5, s: 0.6, ox: -820, oy: -560, d: 1.2 },
 ];
-const camFrame = (T: number) => {
+export const camFrame = (T: number, KS: K[] = KEYS) => {
   // i = the latest key whose move has started; ease from the key before it
-  let i = 0; while (i < KEYS.length - 1 && T >= KEYS[i + 1].t - (KEYS[i + 1].d ?? 1.5)) i++;
-  if (i === 0) return KEYS[0];
-  const a = KEYS[i - 1], b = KEYS[i], d = b.d ?? 1.5, q = eio(T, b.t - d, d);
+  let i = 0; while (i < KS.length - 1 && T >= KS[i + 1].t - (KS[i + 1].d ?? 1.5)) i++;
+  if (i === 0) return KS[0];
+  const a = KS[i - 1], b = KS[i], d = b.d ?? 1.5, q = eio(T, b.t - d, d);
   return { t: T, s: lerp(a.s, b.s, q), ox: lerp(a.ox, b.ox, q), oy: lerp(a.oy, b.oy, q), r: lerp(a.r ?? 0, b.r ?? 0, q) };
 };
-const camAt = (T: number): Cam => {
+export const camAt = (T: number, KS: K[] = KEYS): Cam => {
   let x = 0, y = 0, n = 0;
   for (let k = 0; k <= 4; k++) { const t = T - k * 0.04; const st = stateAt(Math.max(0, t)); const w = k === 0 ? 3 : 1 - k / 6; x += st.p.x * w; y += st.p.y * w; n += w; }
-  const f = camFrame(T);
+  const f = camFrame(T, KS);
   return { x: x / n + f.ox, y: y / n + f.oy, s: f.s, r: f.r ?? 0 };
 };
 
 /* ================================================================ drawing helpers */
-const label = (g: G, s: string, x: number, y: number, size = 34, col = '243,237,226', align: CanvasTextAlign = 'left', weight = 700, font = 'Noto Sans CJK SC', a = 1) => {
+export const label = (g: G, s: string, x: number, y: number, size = 34, col = '243,237,226', align: CanvasTextAlign = 'left', weight = 700, font = 'Noto Sans CJK SC', a = 1) => {
   if (a <= 0) return;
   g.save(); g.globalAlpha *= a; g.font = `${weight} ${size}px "${font}"`; g.textAlign = align; g.textBaseline = 'middle';
   g.lineWidth = 6; g.strokeStyle = 'rgba(0,0,0,.65)'; g.strokeText(s, x, y); g.fillStyle = `rgb(${col})`; g.fillText(s, x, y); g.restore();
 };
-const leader = (g: G, a: [number, number], b: [number, number], col = GOLD, al = 1) => {
+export const leader = (g: G, a: [number, number], b: [number, number], col = GOLD, al = 1) => {
   if (al <= 0) return;
   g.save(); g.globalAlpha *= al; g.strokeStyle = `rgba(${col},.85)`; g.lineWidth = 2; g.beginPath(); g.moveTo(a[0], a[1]); g.lineTo(b[0], b[1]); g.stroke();
   g.fillStyle = `rgb(${col})`; g.beginPath(); g.arc(a[0], a[1], 5, 0, 7); g.fill(); g.restore();
 };
-const stage = (g: G, T: number, cam: Cam, freeze: number) => {
+export const stage = (g: G, T: number, cam: Cam, freeze: number) => {
   const groundY = 540 + (0 - cam.y) * cam.s, horizon = 540 + (0 - cam.y) * cam.s * 0.22 - 40;
   g.save();
   g.save(); g.translate(960, 540); g.rotate(cam.r ?? 0); g.translate(-960, -540);
@@ -146,7 +146,7 @@ const stage = (g: G, T: number, cam: Cam, freeze: number) => {
   g.restore();
 };
 /** dust thrown up where the car lands */
-const dust = (g: G, x: number, t0: number, T: number, power = 1) => {
+export const dust = (g: G, x: number, t0: number, T: number, power = 1) => {
   const age = T - t0; if (age < 0 || age > 3.2) return;
   for (let i = 0; i < 22; i++) {
     const side = i % 2 ? 1 : -1, sp = 300 + 500 * ((i * 37) % 11) / 11, d = sp * (1 - Math.exp(-age * 1.6));
@@ -156,7 +156,7 @@ const dust = (g: G, x: number, t0: number, T: number, power = 1) => {
     g.fillStyle = gr; g.fillRect(px - r, py - r, 2 * r, 2 * r);
   }
 };
-const streaks = (g: G, p: Pose, k: number) => {
+export const streaks = (g: G, p: Pose, k: number) => {
   if (k <= 0) return;
   g.save(); g.globalCompositeOperation = 'lighter';
   const c = Math.cos(p.a), s = Math.sin(p.a);
@@ -169,7 +169,7 @@ const streaks = (g: G, p: Pose, k: number) => {
   g.restore();
 };
 /** the car seen from the nose (for the roll), screen space */
-const frontView = (g: G, cx: number, cy: number, ang: number, jet: number, T: number) => {
+export const frontView = (g: G, cx: number, cy: number, ang: number, jet: number, T: number) => {
   g.save(); g.translate(cx, cy); g.scale(0.78, 0.78); g.rotate(ang);
   g.fillStyle = '#262a34'; g.strokeStyle = `rgba(${CYAN},.95)`; g.lineWidth = 3;
   g.beginPath(); g.moveTo(-170, 34); g.lineTo(-178, 0); g.quadraticCurveTo(-170, -26, -110, -34); g.quadraticCurveTo(-70, -40, -56, -44);
