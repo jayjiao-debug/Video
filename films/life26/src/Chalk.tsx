@@ -6,7 +6,7 @@ import { AbsoluteFill, continueRender, delayRender, staticFile, useCurrentFrame 
 import '@fontsource/ma-shan-zheng';
 import RAW from './lines.json';
 import { JUNO } from './brand/identity';
-import { Canvas, FontFaces, clamp, eo, lerp, pr } from './kit';
+import { Canvas, FontFaces, clamp, eio, eo, lerp, pr } from './kit';
 import * as P from './puppets';
 import { PUPPETS } from './Asset';
 
@@ -87,9 +87,9 @@ const tint = (warm: number) => { const q = Math.round(clamp(warm) * 4) / 4; retu
 /** stroke the current path as chalk: a faint dust smear, a grainy body, a thin denser core */
 const chalkStroke = (g: G, col: string, w: number, o: number, light = false) => {
   g.setLineDash([]); g.lineCap = 'round'; g.lineJoin = 'round';
-  if (!light) { g.strokeStyle = `rgba(${col},${0.07 * o})`; g.lineWidth = w * 3.4; g.stroke(); }
-  g.globalAlpha = (light ? 0.3 : 0.95) * o; g.strokeStyle = grain(g, col); g.lineWidth = w * (light ? 0.9 : 1.45); g.stroke(); g.globalAlpha = 1;
-  if (!light) { g.strokeStyle = `rgba(${col},${0.28 * o})`; g.lineWidth = w * 0.5; g.stroke(); }
+  if (!light) { g.strokeStyle = `rgba(${col},${0.035 * o})`; g.lineWidth = w * 3.0; g.stroke(); }
+  g.globalAlpha = (light ? 0.18 : 0.6) * o; g.strokeStyle = grain(g, col); g.lineWidth = w * (light ? 0.8 : 1.25); g.stroke(); g.globalAlpha = 1;
+  if (!light) { g.strokeStyle = `rgba(${col},${0.62 * o})`; g.lineWidth = w * 0.75; g.stroke(); }
 };
 const glow = (g: G, x: number, y: number, r: number, a: number, col = WARM) => {
   if (a <= 0.002 || r <= 0) return;
@@ -161,6 +161,47 @@ const crumble = (g: G, d: Dis, T: number, speed = DIS_SPEED, fall = false, life 
   });
 };
 
+/* ------------------------------------------------------------ people, names, bubbles, a flower */
+const nameTag = (g: G, text: string, x: number, y: number, o: number) => {
+  if (!text || o <= 0) return;
+  const c = chalkText(text, 44, `rgb(${CHALK})`, '"Ma Shan Zheng"');
+  g.save(); g.globalAlpha = o * 0.9; g.drawImage(c, x - 960, y - 200); g.restore();
+};
+const person = (g: G, id: string, x: number, y: number, s: number, p: number, o: number, name: string) => {
+  if (o <= 0) return;
+  chalkPuppet(g, id, x, y, s, p, o);
+  nameTag(g, name, x, y + 46, o * clamp((p - 0.6) / 0.4));
+};
+const BUBTXT = new Map<string, HTMLCanvasElement>();
+const bubbleText = (lines: string[], size: number, latin: boolean) => {
+  const key = lines.join('|') + size; if (BUBTXT.has(key)) return BUBTXT.get(key)!;
+  const c = document.createElement('canvas'); c.width = 1400; c.height = 400; const t = c.getContext('2d')!;
+  t.font = `${size}px ${latin ? '"PatrickHand"' : '"Ma Shan Zheng"'}`; t.textAlign = 'center'; t.textBaseline = 'middle'; t.fillStyle = `rgb(${CHALK})`;
+  const lh = size * 1.18; lines.forEach((l, i) => t.fillText(l, 700, 200 + (i - (lines.length - 1) / 2) * lh));
+  grainMask(t, 1400, 400, key.length * 7);
+  BUBTXT.set(key, c); return c;
+};
+/** a chalk speech bubble centred at (x, y), w × h, its tail toward the speaker (side -1 = left/below-left) */
+const bubble = (g: G, x: number, y: number, w: number, h: number, side: number, p: number, o: number, lines: string[], latin: boolean, size: number) => {
+  if (p <= 0 || o <= 0) return;
+  const r = 50, x0 = x - w / 2, y0 = y - h / 2, x1 = x + w / 2, y1 = y + h / 2, pts: Pt[] = [];
+  const arc = (cx: number, cy: number, a0: number) => P.ell(cx, cy, r, r, a0, a0 + Math.PI / 2, 8);
+  const tx = side < 0 ? x0 + w * 0.22 : x1 - w * 0.22;
+  pts.push(...arc(x1 - r, y0 + r, -Math.PI / 2), ...arc(x1 - r, y1 - r, 0));
+  pts.push([tx + 40, y1], [tx + side * 90, y1 + 80], [tx - 10, y1]);
+  pts.push(...arc(x0 + r, y1 - r, Math.PI / 2), ...arc(x0 + r, y0 + r, Math.PI), [x1 - r, y0]);
+  g.fillStyle = `rgba(10,13,20,${0.35 * o})`; g.beginPath(); pts.forEach(([a, b], i) => (i ? g.lineTo(a, b) : g.moveTo(a, b))); g.fill();
+  chalkLine(g, pts, p, 4.5, o);
+  const k = clamp((p - 0.55) / 0.45);
+  if (k > 0) { g.save(); g.globalAlpha = o * k; g.drawImage(bubbleText(lines, size, latin), x - 700, y - 200); g.restore(); }
+};
+const flower = (g: G, x: number, y: number, p: number, o: number, warm: number) => {
+  const col = tint(warm);
+  chalkLine(g, P.bez([x, y], [x - 8, y - 60], [x + 8, y - 110], [x, y - 160], 20), clamp(p * 2), 4, o, col);
+  chalkLine(g, P.bez([x, y - 70], [x + 30, y - 90], [x + 50, y - 80], [x + 56, y - 66], 12), clamp(p * 2 - 0.5), 3.5, o, col);
+  for (let i = 0; i < 6; i++) { const a = i / 6 * Math.PI * 2; chalkLine(g, P.ell(x + Math.cos(a) * 22, y - 160 + Math.sin(a) * 22, 16, 16, 0, Math.PI * 2, 16), clamp(p * 2 - 1 + i * 0.02), 3.5, o, col); }
+};
+
 /* ------------------------------------------------------------ the title layer: drawn once, in board coordinates */
 let TL: { chalk: HTMLCanvasElement; snap: { d: number; i: number; tx: number; ty: number }[] } | null = null;
 const TITLE_CHARS = ['生', '命', '平', '等', '吗', '？'];
@@ -208,7 +249,7 @@ const board = () => {
 const grainMask = (g: G, w: number, h: number, seed: number) => {
   const m = document.createElement('canvas'); m.width = w; m.height = h; const t = m.getContext('2d')!;
   P.reseed(seed);
-  for (let i = 0; i < w * h / 3.2; i++) { t.fillStyle = `rgba(0,0,0,${0.55 + P.rand() * 0.45})`; t.fillRect(P.rand() * w, P.rand() * h, 1 + P.rand() * 2.4, 1 + P.rand() * 1.8); }
+  for (let i = 0; i < w * h / 1.9; i++) { t.fillStyle = `rgba(0,0,0,${0.7 + P.rand() * 0.3})`; t.fillRect(P.rand() * w, P.rand() * h, 1 + P.rand() * 2.4, 1 + P.rand() * 1.8); }
   g.globalCompositeOperation = 'destination-in'; g.drawImage(m, 0, 0); g.globalCompositeOperation = 'source-over';
 };
 /** the title in warm chalk, cached */
@@ -300,6 +341,106 @@ const draw = (g: G, T: number) => {
     }
   }
 
+  // ================================================================ the middle (47–163)
+  // M1 · the survey (47–63): a researcher asks; the answer is a line of hearts that empty as life gets further from us
+  const oM1 = fade(T, 47.0, 63.0, 0.6, 0.7);
+  if (oM1 > 0) {
+    const oR = fade(T, 47.0, 53.2, 0.6, 0.6);
+    person(g, 'researcher', 300, 830, 0.78, eo(T, 47.1, 1.6), oR, '研究者 · 法国');
+    bubble(g, 1060, 330, 800, 230, -1, eo(T, 47.6, 0.8), oR, ["Si vous ne pouviez en", "sauver qu'un, lequel ?"], true, 56);
+    const line: [string, number, number, number][] = [['we', 330, 0.46, 1], ['dog', 600, 0.46, 0.8], ['bird', 860, 0.55, 0.6], ['frog', 1110, 0.55, 0.42], ['fish', 1370, 0.55, 0.26], ['fly', 1620, 0.62, 0.08]];
+    const oL = eo(T, 53.0, 0.8) * oM1;
+    if (oL > 0) {
+      chalkLine(g, wobbly(200, 832, 1760, 834, 60, 2, 11), eo(T, 53.0, 1.2), 4, oL);
+      for (let i = 0; i <= 26; i++) chalkLine(g, [[220 + i * 58, 834], [220 + i * 58, i % 5 ? 852 : 866]], eo(T, 53.2 + i * 0.03, 0.3), 3, oL * 0.8);
+      line.forEach(([id, x, sc, k], i) => {
+        chalkPuppet(g, id, x, 825, sc, eo(T, 53.3 + i * 0.25, 1.2), oL, 0.7 * k * eo(T, 55.4, 1.5));
+        chalkHeart(g, x, 470, 90, k * eo(T, 55.4 + i * 0.15, 1.6), eo(T, 54.4 + i * 0.2, 0.7), oL);
+      });
+    }
+  }
+  // M2 · 庄子 and 惠子 on the bridge (63–71)
+  const oM2 = fade(T, 63.0, 71.2, 0.6, 0.6);
+  if (oM2 > 0) {
+    chalkLine(g, P.bez([140, 860], [600, 720], [1320, 720], [1780, 860], 50), eo(T, 63.0, 1.4), 5, oM2);
+    for (let i = -7; i <= 7; i++) { const x = 960 + i * 110, y = 860 - 140 * (1 - (i / 8.6) ** 2); chalkLine(g, [[x, y], [x, y - 60]], eo(T, 63.3 + (i + 7) * 0.04, 0.4), 3.5, oM2); }
+    for (let i = 0; i < 5; i++) chalkLine(g, wobbly(260 + i * 300, 930 + (i % 2) * 18, 420 + i * 300, 930 + (i % 2) * 18, 12, 4, i), eo(T, 63.8 + i * 0.15, 0.6), 3, oM2 * 0.6, '170,200,230');
+    person(g, 'zhuang', 340, 790, 0.72, eo(T, 63.2, 1.6), oM2, '庄子');
+    person(g, 'hui', 1580, 790, 0.72, eo(T, 63.5, 1.6), oM2, '惠子');
+    bubble(g, 760, 330, 600, 230, -1, eo(T, 65.85, 0.7), oM2, ['儵鱼出游从容，', '是鱼之乐也。'], false, 60);
+    bubble(g, 1180, 520, 560, 210, 1, eo(T, 68.07, 0.7), oM2, ['子非鱼，', '安知鱼之乐？'], false, 64);
+  }
+  // M3 · Nagel and the bat; a closed circle we cannot step into (71–82)
+  const oM3 = fade(T, 71.1, 82.2, 0.6, 0.8);
+  if (oM3 > 0) {
+    person(g, 'nagel', 320, 830, 0.78, eo(T, 71.2, 1.6), oM3, '内格尔 · Nagel');
+    bubble(g, 900, 300, 660, 220, -1, eo(T, 71.5, 0.7), oM3, ['What is it like', 'to be a bat?'], true, 66);
+    const by = 600 + 10 * Math.sin(T * 2.2);
+    chalkPuppet(g, 'bat', 1360, by, 1.0, eo(T, 72.2, 1.6), oM3);
+    chalkLine(g, P.ell(1360, by - 120, 250, 210, -Math.PI / 2, Math.PI * 1.5, 90), eo(T, 75.2, 1.4), 5, oM3, WARM);
+  }
+  // M4 · where to draw the line: a row of lives; each philosopher draws the boundary somewhere else (81–122.6)
+  const ROW: [string, number, number][] = [['we', 640, 0.44], ['dog', 850, 0.44], ['chicken', 1060, 0.44], ['fish', 1270, 0.5], ['fly', 1460, 0.56], ['flower', 1650, 1]];
+  const rowLife = (oR: number, bx: number, allWarm: number, t0: number) => {
+    chalkLine(g, wobbly(480, 832, 1780, 834, 50, 2, 21), eo(T, t0, 1.0), 4, oR);
+    ROW.forEach(([id, x, sc], i) => {
+      const inside = Math.max(allWarm, clamp((bx - x) / 40 + 0.5));
+      const o = oR * (0.4 + 0.6 * inside), p = eo(T, t0 + 0.2 + i * 0.25, 1.2);
+      if (id === 'flower') flower(g, x, 830, p, o, 0.8 * inside); else chalkPuppet(g, id, x, 825, sc, p, o, 0.8 * inside);
+    });
+  };
+  const oM4 = fade(T, 81.1, 122.6, 0.7, 0.6);
+  if (oM4 > 0) {
+    // the boundary: Kant after us; Bentham and Singer after the fish
+    const bx = T < 97.6 ? 745 : lerp(745, 1365, eio(T, 97.6, 1.4));
+    const showB = T > 84.4 ? 1 : 0;
+    rowLife(oM4, showB ? bx : -999, 0, 81.2);
+    if (showB) chalkLine(g, wobbly(bx, 380, bx, 880, 30, 3, 5).map(([a, b]) => [b * 0 + a + 3 * Math.sin(b / 40), b] as Pt), eo(T, 84.5, 0.9), 6, oM4, WARM);
+    const oK = fade(T, 83.8, 97.0, 0.6, 0.5), oB = fade(T, 97.0, 105.3, 0.5, 0.5), oS = fade(T, 105.3, 122.6, 0.5, 0.6);
+    person(g, 'kant', 250, 830, 0.72, eo(T, 83.9, 1.4), oK, '康德 · Kant');
+    bubble(g, 900, 300, 940, 230, -1, eo(T, 84.2, 0.7), oK * (1 - pr(T, 90.9, 0.4)), ['Der Mensch existiert als', 'Zweck an sich selbst.'], true, 58);
+    bubble(g, 900, 300, 980, 230, -1, eo(T, 91.3, 0.7), oK, ['Wer gegen Tiere grausam ist,', 'wird auch hart gegen Menschen.'], true, 54);
+    person(g, 'bentham', 250, 830, 0.72, eo(T, 97.1, 1.4), oB, '边沁 · Bentham');
+    bubble(g, 960, 300, 1180, 230, -1, eo(T, 99.4, 0.7), oB, ['The question is not, Can they reason?', 'nor, Can they talk? but, Can they suffer?'], true, 46);
+    person(g, 'singer', 250, 830, 0.72, eo(T, 105.4, 1.4), oS, '辛格 · Singer');
+    bubble(g, 860, 300, 720, 190, -1, eo(T, 105.7, 0.7), oS * (1 - pr(T, 111.3, 0.4)), ['All animals are equal.'], true, 62);
+    bubble(g, 860, 300, 560, 190, -1, eo(T, 117.6, 0.7), oS, ['Speciesism.'], true, 70);
+    // one chicken's pain, one dog's pain: two equal hearts
+    if (T > 111.6) { const kk = eo(T, 112.0, 1.4); chalkHeart(g, 850, 600, 110, 0.75 * kk, eo(T, 111.7, 0.6), oS); chalkHeart(g, 1060, 600, 110, 0.75 * kk, eo(T, 111.9, 0.6), oS); }
+  }
+  // M5 · Schweitzer on the river (122.6–137.3)
+  const oM5 = fade(T, 122.6, 137.4, 0.7, 0.7);
+  if (oM5 > 0) {
+    glow(g, 1500, 640, 520, 0.28 * oM5);
+    chalkLine(g, wobbly(100, 700, 1820, 700, 60, 2, 31), eo(T, 122.7, 1.2), 3.5, oM5 * 0.7);
+    for (let i = 0; i < 7; i++) chalkLine(g, wobbly(150 + i * 240, 900 + (i % 3) * 30, 330 + i * 240, 900 + (i % 3) * 30, 12, 4, i + 3), eo(T, 123.0 + i * 0.1, 0.6), 3, oM5 * 0.55, '170,200,230');
+    const dx = 120 * pr(T, 122.7, 14.7);
+    chalkPuppet(g, 'boat', 900 + dx, 900, 0.85, eo(T, 122.8, 1.6), oM5);
+    person(g, 'schweitzer', 720 + dx, 800, 0.6, eo(T, 123.0, 1.6), oM5, '');
+    nameTag(g, '史怀哲 · Schweitzer', 720 + dx, 952, oM5 * eo(T, 124.0, 0.6));
+    chalkPuppet(g, 'hippo', 300, 900, 0.7, eo(T, 125.8, 1.4), oM5); chalkPuppet(g, 'hippo', 1640, 910, 0.6, eo(T, 126.3, 1.4), oM5);
+    bubble(g, 1240, 330, 680, 190, -1, eo(T, 129.2, 0.7), oM5 * (1 - pr(T, 131.6, 0.3)), ['Ehrfurcht vor dem Leben.'], true, 56);
+    bubble(g, 1180, 330, 1000, 230, -1, eo(T, 131.9, 0.7), oM5, ['Ich bin Leben, das leben will,', 'inmitten von Leben, das leben will.'], true, 52);
+  }
+  // M6 · no ranking: the row again, the boundary gone, every life warm (137.3–146.2)
+  const oM6 = fade(T, 137.3, 146.2, 0.7, 0.6);
+  if (oM6 > 0) {
+    rowLife(oM6, 9999, eo(T, 137.8, 1.6), 137.3);
+    person(g, 'schweitzer', 250, 830, 0.72, eo(T, 137.4, 1.2), oM6, '史怀哲 · Schweitzer');
+  }
+  // M7 · Lecky: circles of kindness widening (146.3–163)
+  const oM7 = fade(T, 146.2, 163.0, 0.6, 0.9);
+  if (oM7 > 0) {
+    const oLk = fade(T, 146.2, 157.6, 0.5, 0.6);
+    person(g, 'lecky', 250, 830, 0.72, eo(T, 146.3, 1.4), oLk, '莱基 · Lecky');
+    bubble(g, 900, 300, 920, 230, -1, eo(T, 146.6, 0.7), oLk * (1 - pr(T, 152.9, 0.4)), ['…soon the circle expanding…', 'and finally, the animal world.'], true, 52);
+    const cx = 1180, cy = 700;
+    const rings: [number, number][] = [[150, 148.9], [300, 151.5], [460, 154.2]];
+    rings.forEach(([r, t0], i) => { glow(g, cx, cy, r * 1.1, 0.12 * eo(T, t0, 1.0) * oM7); chalkLine(g, P.ell(cx, cy, r, r * 0.5, -Math.PI / 2, Math.PI * 1.5, 100), eo(T, t0, 1.2), 4.5, oM7 * (1 - 0.3 * i / 3), WARM); });
+    chalkPuppet(g, 'we', cx - 40, 760, 0.36, eo(T, 148.9, 1.0), oM7, 0.6); chalkPuppet(g, 'we', cx + 40, 760, 0.3, eo(T, 149.2, 1.0), oM7, 0.6);
+    chalkPuppet(g, 'researcher', cx - 200, 770, 0.3, eo(T, 151.6, 1.0), oM7, 0.4); chalkPuppet(g, 'singer', cx + 210, 770, 0.3, eo(T, 151.8, 1.0), oM7, 0.4); chalkPuppet(g, 'nagel', cx + 120, 640, 0.26, eo(T, 152.0, 1.0), oM7, 0.4);
+    chalkPuppet(g, 'dog', cx - 390, 790, 0.34, eo(T, 154.4, 1.0), oM7, 0.3); chalkPuppet(g, 'cat', cx + 380, 790, 0.36, eo(T, 154.6, 1.0), oM7, 0.3); chalkPuppet(g, 'bird', cx + 300, 560, 0.4, eo(T, 154.8, 1.0), oM7, 0.3);
+  }
   // E · the ending (163–182.6): a chalk circle around us; everyone outside is dim and cold. Then the circle grows,
   //     and whoever it reaches turns warm.
   const oE = fade(T, 163.0, END + 2.5, 0.8, 1.2);
