@@ -35,19 +35,13 @@ export const Cover: React.FC<{ layout: 'wide' | 'tall' }> = ({ layout }) => {
           <div style={{ position: 'absolute', inset: 0, background: tall
             ? 'linear-gradient(180deg,#05060b 0%,#05060b 20%,rgba(5,6,11,0) 30%,rgba(5,6,11,0) 64%,#05060b 78%)'
             : 'linear-gradient(0deg,#05060b 0%,#05060b 26%,rgba(5,6,11,0) 52%)' }} />
-          {/* the hook */}
-          <div style={{ position: 'absolute', left: tall ? 0 : 90, right: tall ? 0 : undefined, top: tall ? 90 : 600, textAlign: tall ? 'center' : 'left' }}>
-            <div style={{ fontFamily: F.serif, fontWeight: 900, fontSize: tall ? 116 : 104, lineHeight: 1.18, letterSpacing: '0.03em', ...gold, filter: 'drop-shadow(0 4px 18px rgba(0,0,0,.85))' }}>
-              倒挂着背600升气<br />它能飞多久？
-            </div>
-          </div>
           {/* series line and title */}
-          <div style={{ position: 'absolute', left: tall ? 0 : undefined, right: tall ? 0 : 90, top: tall ? 930 : 880, textAlign: tall ? 'center' : 'right' }}>
+          <div style={{ position: 'absolute', left: tall ? 0 : 90, right: tall ? 0 : undefined, top: tall ? 90 : 700, textAlign: tall ? 'center' : 'left' }}>
             <div style={{ display: 'inline-flex', alignItems: 'center', gap: 18 }}>
               <div style={{ width: 44, height: 44, borderRadius: 22, border: `2px solid ${C.gold}`, display: 'flex', alignItems: 'center', justifyContent: 'center', fontFamily: F.lat, fontStyle: 'italic', fontSize: 30, color: C.gold }}>J</div>
               <div style={{ fontFamily: F.sans, fontWeight: 700, fontSize: 30, letterSpacing: '0.42em', color: C.gold }}>VIBE知识大赏</div>
             </div>
-            <div style={{ fontFamily: F.serif, fontWeight: 900, fontSize: tall ? 66 : 58, color: C.cream, marginTop: 16, letterSpacing: '0.06em' }}>《这车真能飞？<span style={{ marginLeft: '-0.42em' }}>》</span></div>
+            <div style={{ fontFamily: F.serif, fontWeight: 900, fontSize: tall ? 120 : 116, lineHeight: 1.2, marginTop: 18, letterSpacing: '0.03em', ...gold, filter: 'drop-shadow(0 4px 18px rgba(0,0,0,.85))' }}>《这车真能飞？<span style={{ marginLeft: '-0.42em' }}>》</span></div>
           </div>
         </>
       )}
