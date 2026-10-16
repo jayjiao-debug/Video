@@ -96,9 +96,9 @@ export const Call: React.FC<{n: string; x: number; y: number; tx: number; ty: nu
 );
 export const Fig: React.FC<{x: number; y: number; n: string; t: string}> = ({x, y, n, t}) => (
 	<g>
-		<text x={x} y={y} style={{fontFamily: SANS, fontSize: 30, fontWeight: 700, letterSpacing: '0.18em'}} fill={B.inkMute}>{`FIG. ${n}`}</text>
-		<text x={x} y={y + 52} style={{fontFamily: SANS, fontSize: 44, fontWeight: 900}} fill={B.ink}>{t}</text>
-		<line x1={x} y1={y + 70} x2={x + 300} y2={y + 70} stroke={B.inkMute} strokeWidth={2} />
+		<text x={x} y={y} style={{fontFamily: SANS, fontSize: 34, fontWeight: 700, letterSpacing: '0.18em'}} fill={B.inkMute}>{`FIG. ${n}`}</text>
+		<text x={x} y={y + 60} style={{fontFamily: SANS, fontSize: 52, fontWeight: 900}} fill={B.ink}>{t}</text>
+		<line x1={x} y1={y + 82} x2={x + 360} y2={y + 82} stroke={B.inkMute} strokeWidth={2} />
 	</g>
 );
 
