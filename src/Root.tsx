@@ -5,7 +5,7 @@ import { Film, FILM_FRAMES } from './Film';
 
 export const Root: React.FC = () => (
   <>
-    <Composition id="Keyframes" component={Keyframes} durationInFrames={8} fps={30} width={1920} height={1080} />
+    <Composition id="Keyframes" component={Keyframes} durationInFrames={7} fps={30} width={1920} height={1080} />
     <Composition id="Film" component={Film} durationInFrames={FILM_FRAMES} fps={30} width={1920} height={1080} />
   </>
 );

@@ -1,389 +1,382 @@
-/* 《差一分钱》: one long documentary take over a case desk. Every object lies at its own station on the desk; the camera
-   glides from station to station, each glide landing on a beat. Text that belongs to the desk (annotations) is drawn
-   in the picture so it moves with the camera; subtitles, slates and the slammed words sit on the glass. */
+/* 《倒挂飞车》: one continuous take that follows one car through the whole test site.
+   0–10.5   hook: up the wall, hanging upside down, off the end, a kickflip, a soft landing
+   10.5     title (over the landing, no cut)
+   15–18.4  rewind back up to the ceiling
+   21–28.8  quiet: time stops, x-ray: the fans, the air, 40 t vs 2 t, 5 %
+   28.8–44  off the end again, slowed: the tanks, the nozzles, action/reaction, the roll on 39.0, the brake on 41.8
+   44–67    the jump over a row of parked vehicles (54.2 up, 66.8 down)
+   69–82    quiet: parked at the hangar, three versions, 2028 on the wall (77.5)
+   82–90    end card over the car driving off
+   Everything is drawn in code; the car and vehicles are original and unbranded. */
 import React, { useEffect, useState } from 'react';
 import { AbsoluteFill, continueRender, delayRender, useCurrentFrame } from 'remotion';
-import { C, F, FontFaces, FONT_LOADS, Grade, Grain, Bars, Subs, Canvas, clamp, lerp, eo, eio, pr, hit, rnd, glowDot } from './kit';
-import { sparks } from './lightkit';
-import { tag, tray, placeValue, odometer, graphPaper, cliffChart, carPrice, catalogue, calendarPage, chart, pencil, GOLD, MAG, RED_INK, INK } from './props';
-import { LINES, CUT, at, till, bt, near, B, SLAM80, FILM_FRAMES, GLIDE, FLIP, PAIR, GROOVE, DROP } from './time';
+import { C, F, FontFaces, FONT_LOADS, Grain, Bars, Subs, Canvas, glowDot, clamp, lerp, eo, eio, pr, hit } from './kit';
+import {
+  sky, mesas, mast, ground, rig, car, plume, arrow, ribbon, vehicle, hangar, withCam, toScreen, poseOnTrack, freePose, carToWorld, carDir,
+  R, RW, S_TOP, S_END, DECK_END, GOLD, CYAN, RED, WARM, type Cam, type Pose,
+} from './world';
+import { LINES, HIT, FIN, FILM_FRAMES, B } from './time';
 import { JUNO } from './brand/identity';
 export { FILM_FRAMES };
 
 type G = CanvasRenderingContext2D;
-const GL = '#f6d58e', MG = '#ff6b5e';
-// station origins on the desk (each is a 1920×1080 "page" of the desk)
-const ST = { A: [0, 0], C: [2300, 0], D: [4600, 0], E: [4600, 1500], F: [2300, 1500], G: [0, 1500] } as const;
-const ctr = (k: keyof typeof ST, dx = 0, dy = 0) => [ST[k][0] + 960 + dx, ST[k][1] + 540 + dy] as const;
+const MASTS = [2700, -1200, -3600, -6200, -9000, -11800];
+const HANGAR: [number, number] = [-13200, -10600];
+const VEH: [number, 'sedan' | 'suv' | 'pickup' | 'truck'][] = [[-6550, 'sedan'], [-7100, 'suv'], [-7700, 'pickup'], [-8400, 'truck']];
+const PARK = -10300;
+const smooth3 = (u: number) => { u = clamp(u); return u * u * (3 - 2 * u); };
+const pw = (T: number, pts: [number, number][]) => {   // piecewise-linear map
+  if (T <= pts[0][0]) return pts[0][1];
+  for (let i = 1; i < pts.length; i++) if (T <= pts[i][0]) return lerp(pts[i - 1][1], pts[i][1], (T - pts[i - 1][0]) / (pts[i][0] - pts[i - 1][0]));
+  return pts[pts.length - 1][1];
+};
+const bump = (T: number, a: number, z: number, f = 0.25) => Math.min(eo(T, a, f), 1 - pr(T, z - f, f));
 
-/* ---------------------------------------------------------------- camera: arrive at each key on a beat */
-// Moves between stations take 4 beats with a sine ease (peak ≈ 60 px a frame) and start only once the last line of the
-// station has been read; the title card covers the first move.
-type Key = { t: number; c: readonly [number, number]; s: number; d?: number };
-const KEYS: Key[] = [
-  { t: 0, c: ctr('A', 0, -10), s: 1.0 },
-  { t: bt(14), c: ctr('A', -170, 30), s: 1.1, d: 2.6 },                       // h3: lean in on the 9.99
-  { t: CUT.S1, c: ctr('C', 0, 0), s: 1.0, d: CUT.T_OUT - CUT.TITLE - 0.25 },    // under the title card
-  { t: CUT.S2, c: ctr('D', 0, -80), s: 1.0, d: GLIDE },
-  { t: CUT.S3, c: ctr('E', -500, -20), s: 1.3, d: GLIDE },
-  { t: near(till('c4') + 1.9), c: ctr('E', 480, -70), s: 1.5, d: 1.8 },   // only once c4 has been read
-  { t: CUT.S4, c: ctr('F', 0, -20), s: 1.0, d: GLIDE },
-  { t: CUT.S5, c: ctr('G', 0, -40), s: 1.0, d: GLIDE },
-  { t: CUT.S6, c: ctr('A', 0, -10), s: 1.0, d: GLIDE + 0.5 },
+/* ================================================================ the car's state at film time T */
+type State = { p: Pose; sy: number; spin: number; under: number; side: number; rear: number; down: number; streak: number; ground: boolean };
+const V = 937, S0 = 450, T_DECK = (S_END - S0) / V;          // 7.0 s: leaves the deck in the hook
+const flight = (u: number, a0 = 0) => {
+  const x = DECK_END - 2300 * (1 - Math.pow(1 - clamp(u), 1.6)), y = lerp(-2 * R + RW, -RW, smooth3(u));
+  return freePose(x, y, Math.PI + 0.06 * Math.sin(Math.PI * u) + a0);
+};
+const LANDX = DECK_END - 2300;
+const hookState = (t: number): State => {
+  if (t < T_DECK) { const s = S0 + V * t; return { p: poseOnTrack(s), sy: 1, spin: s / RW, under: s > 900 ? 1 : 0.5, side: 0, rear: 0, down: 0, streak: 1, ground: false }; }
+  const tf = T_DECK + 3.54;
+  if (t < tf) {
+    const u = (t - T_DECK) / 3.54;
+    return { p: flight(u), sy: Math.cos(Math.PI * eio(t, 7.6, 1.3)), spin: S_END / RW + (t - T_DECK) * 6, under: 0, side: bump(t, 7.5, 8.9, 0.2), rear: 0, down: bump(t, 9.0, 10.5, 0.25), streak: 0.4, ground: false };
+  }
+  return { p: freePose(LANDX, -RW, Math.PI), sy: -1, spin: S_END / RW + 21, under: 0, side: 0, rear: 0, down: 0, streak: 0, ground: true };
+};
+const T_CEIL = (S_TOP + 800 - S0) / V;   // 5.40 s into the hook: the spot on the ceiling we rewind to
+const stateAt = (T: number): State => {
+  if (T < 15.0) return hookState(T);
+  if (T < HIT.CEIL) return hookState(lerp(10.54, T_CEIL, eio(T, 15.0, HIT.CEIL - 15.0)));
+  if (T < HIT.BACK) return { ...hookState(T_CEIL), streak: 0, under: 1 };
+  if (T < 30.6) { const s = S_TOP + 800 + 1500 * Math.pow(pr(T, HIT.BACK, 1.8), 1.6); return { p: poseOnTrack(s), sy: 1, spin: s / RW, under: 1, side: 0, rear: 0, down: 0, streak: 0.5, ground: false }; }
+  if (T < HIT.LAND) {
+    const u = pw(T, [[30.6, 0], [HIT.ROLL, 0.36], [HIT.BRAKE, 0.62], [HIT.LAND, 1]]);
+    return { p: flight(u), sy: Math.cos(Math.PI * eio(T, HIT.ROLL - 0.65, 1.3)), spin: S_END / RW + (T - 30.6) * 1.5, under: 0, side: bump(T, HIT.ROLL - 0.8, HIT.ROLL + 0.8, 0.2), rear: bump(T, 35.1, 37.6, 0.3), down: bump(T, HIT.BRAKE, HIT.LAND - 0.1, 0.25), streak: 0, ground: false };
+  }
+  const sp0 = S_END / RW + 21;
+  if (T < 50.0) return { p: freePose(LANDX, -RW, Math.PI), sy: -1, spin: sp0, under: 0, side: 0, rear: 0, down: 0, streak: 0, ground: true };
+  if (T < HIT.JUMP) { const x = LANDX - 1500 * Math.pow(pr(T, 50.0, HIT.JUMP - 50.0), 2); return { p: freePose(x, -RW, Math.PI), sy: -1, spin: sp0 + (LANDX - x) / RW, under: 0, side: 0, rear: 0, down: 0, streak: 0.3, ground: true }; }
+  const X0 = LANDX - 1500;
+  if (T < HIT.LAND2) {
+    const u = pw(T, [[HIT.JUMP, 0], [56.5, 0.33], [61.5, 0.6], [HIT.LAND2, 1]]);
+    const x = X0 - 3200 * u, y = -RW - 1000 * Math.pow(Math.sin(Math.PI * u), 0.85);
+    return { p: freePose(x, y, Math.PI + 0.07 * Math.cos(Math.PI * u)), sy: -1, spin: sp0 + 1500 / RW + u * 20, under: 0, side: 0, rear: 0, down: Math.max(bump(T, HIT.JUMP, 55.8, 0.15), 0.45 * bump(T, 55.6, HIT.DESC + 0.2, 0.4), bump(T, HIT.DESC, HIT.LAND2 - 0.1, 0.3)), streak: 0, ground: false };
+  }
+  const X1 = X0 - 3200;
+  if (T < HIT.END + 0.6) { const x = lerp(X1, PARK, eo(T, HIT.LAND2, 3.4)); return { p: freePose(x, -RW, Math.PI), sy: -1, spin: sp0 + (LANDX - x) / RW, under: 0, side: 0, rear: 0, down: 0, streak: 0, ground: true }; }
+  const x = PARK - 2600 * Math.pow(pr(T, HIT.END + 0.6, 6), 1.8);
+  return { p: freePose(x, -RW, Math.PI), sy: -1, spin: sp0 + (LANDX - x) / RW, under: 0, side: 0, rear: 0, down: 0, streak: 0.2, ground: true };
+};
+
+/* ================================================================ camera: a follow cam whose framing eases between keys */
+type K = { t: number; s: number; ox: number; oy: number; r?: number; d?: number };
+const KEYS: K[] = [
+  { t: 0, s: 0.62, ox: -320, oy: 40, r: -0.05 },
+  { t: 4.3, s: 0.6, ox: 0, oy: 230, r: 0, d: 3.2 },
+  { t: 8.2, s: 0.6, ox: -150, oy: 120, d: 2.5 },
+  { t: 10.6, s: 0.6, ox: -150, oy: -300, d: 2.2 },
+  { t: 14.8, s: 0.64, ox: -150, oy: -320, d: 4 },
+  { t: 16.4, s: 0.6, ox: 0, oy: 150, d: 1.4 },
+  { t: 19.2, s: 0.74, ox: 40, oy: 200, d: 1.6 },
+  { t: 22.4, s: 1.12, ox: 60, oy: 100, d: 1.8 },
+  { t: 30.2, s: 0.8, ox: -200, oy: 200, d: 1.6 },
+  { t: 33.0, s: 0.9, ox: -60, oy: 90, d: 2.4 },
+  { t: 41.0, s: 0.8, ox: -60, oy: 40, d: 2 },
+  { t: 45.4, s: 0.66, ox: -150, oy: -280, d: 1.4 },
+  { t: 48.0, s: 0.42, ox: -1400, oy: -600, d: 2.2 },
+  { t: 53.0, s: 0.5, ox: -700, oy: -420, d: 2.6 },
+  { t: 57.0, s: 0.56, ox: -260, oy: 240, d: 2.6 },
+  { t: 63.0, s: 0.56, ox: -260, oy: 60, d: 2 },
+  { t: 67.4, s: 0.6, ox: -500, oy: -380, d: 2 },
+  { t: 70.4, s: 0.62, ox: -700, oy: -500, d: 2.4 },
+  { t: 77.5, s: 0.6, ox: -820, oy: -560, d: 1.2 },
 ];
-const sine = (q: number) => 0.5 - 0.5 * Math.cos(Math.PI * clamp(q));
-const camAt = (T: number) => {
-  let i = 0; while (i < KEYS.length - 1 && T >= KEYS[i + 1].t - (KEYS[i + 1].d ?? 1)) i++;
-  const k = KEYS[i], n = KEYS[i + 1];
-  // where the hold drift had got to when the move starts, so the move picks up from there without a jump
-  const drift = (kk: Key, T2: number, nn?: Key) => {
-    const hold = (nn ? nn.t - (nn.d ?? 1) : CUT.FIN) - kk.t, q = pr(T2, kk.t, Math.max(1, hold));
-    return { x: kk.c[0] + 14 * q, y: kk.c[1] - 8 * q, s: kk.s * (1 + 0.03 * q) };
-  };
-  if (n && T >= n.t - (n.d ?? 1)) {
-    const d = n.d ?? 1, from = drift(k, n.t - d, n), q = sine((T - (n.t - d)) / d);
-    return { x: lerp(from.x, n.c[0], q), y: lerp(from.y, n.c[1], q), s: lerp(from.s, n.s, q) * (1 - 0.015 * Math.sin(q * Math.PI)) };
-  }
-  return drift(k, T, n);
+const camFrame = (T: number) => {
+  // i = the latest key whose move has started; ease from the key before it
+  let i = 0; while (i < KEYS.length - 1 && T >= KEYS[i + 1].t - (KEYS[i + 1].d ?? 1.5)) i++;
+  if (i === 0) return KEYS[0];
+  const a = KEYS[i - 1], b = KEYS[i], d = b.d ?? 1.5, q = eio(T, b.t - d, d);
+  return { t: T, s: lerp(a.s, b.s, q), ox: lerp(a.ox, b.ox, q), oy: lerp(a.oy, b.oy, q), r: lerp(a.r ?? 0, b.r ?? 0, q) };
+};
+const camAt = (T: number): Cam => {
+  let x = 0, y = 0, n = 0;
+  for (let k = 0; k <= 4; k++) { const t = T - k * 0.04; const st = stateAt(Math.max(0, t)); const w = k === 0 ? 3 : 1 - k / 6; x += st.p.x * w; y += st.p.y * w; n += w; }
+  const f = camFrame(T);
+  return { x: x / n + f.ox, y: y / n + f.oy, s: f.s, r: f.r ?? 0 };
 };
 
-/* ---------------------------------------------------------------- the desk in world space */
-const deskWorld = (g: G, x0: number, y0: number, x1: number, y1: number) => {
-  g.fillStyle = '#120b08'; g.fillRect(x0, y0, x1 - x0, y1 - y0);
-  for (let r = Math.floor(y0 / 120) - 1; r <= Math.ceil(y1 / 120); r++) {
-    const y = r * 120, c = 16 + 7 * rnd(r, 2);
-    g.fillStyle = `rgb(${c + 16},${c + 6},${c - 3})`; g.fillRect(x0, y, x1 - x0, 118);
-    g.fillStyle = 'rgba(0,0,0,.55)'; g.fillRect(x0, y + 117, x1 - x0, 3);
-    g.strokeStyle = 'rgba(255,200,150,.04)'; g.lineWidth = 1.2;
-    for (let k = 0; k < 13; k++) { const yy = y + 6 + k * 9 + 3 * rnd(r, k); g.beginPath(); g.moveTo(x0, yy); for (let x = Math.floor(x0 / 96) * 96; x <= x1 + 96; x += 96) g.lineTo(x, yy + Math.sin(x * 0.0045 + k * 1.7 + r) * 3.2); g.stroke(); }
-    // butt joints between boards
-    const jx = (r * 1373) % 2400;
-    for (let x = Math.floor(x0 / 2400) * 2400 + jx; x < x1; x += 2400) { g.fillStyle = 'rgba(0,0,0,.4)'; g.fillRect(x, y, 3, 118); }
-  }
+/* ================================================================ drawing helpers */
+const label = (g: G, s: string, x: number, y: number, size = 34, col = '243,237,226', align: CanvasTextAlign = 'left', weight = 700, font = 'Noto Sans CJK SC', a = 1) => {
+  if (a <= 0) return;
+  g.save(); g.globalAlpha *= a; g.font = `${weight} ${size}px "${font}"`; g.textAlign = align; g.textBaseline = 'middle';
+  g.lineWidth = 6; g.strokeStyle = 'rgba(0,0,0,.65)'; g.strokeText(s, x, y); g.fillStyle = `rgb(${col})`; g.fillText(s, x, y); g.restore();
 };
-
-/* ---------------------------------------------------------------- stations */
-const stamp = (T: number, t0: number) => eo(T, t0, 0.22);
-const pctType = (s: string, t0: number, T: number) => s.slice(0, Math.max(0, Math.min(s.length, Math.floor((T - t0) / 0.07))));
-const txt = (g: G, s: string, x: number, y: number, font: string, col: string, align: CanvasTextAlign = 'center', base: CanvasTextBaseline = 'middle') => {
-  g.font = font; g.fillStyle = col; g.textAlign = align; g.textBaseline = base; g.fillText(s, x, y);
+const leader = (g: G, a: [number, number], b: [number, number], col = GOLD, al = 1) => {
+  if (al <= 0) return;
+  g.save(); g.globalAlpha *= al; g.strokeStyle = `rgba(${col},.85)`; g.lineWidth = 2; g.beginPath(); g.moveTo(a[0], a[1]); g.lineTo(b[0], b[1]); g.stroke();
+  g.fillStyle = `rgb(${col})`; g.beginPath(); g.arc(a[0], a[1], 5, 0, 7); g.fill(); g.restore();
 };
-/** where the first digit of a tag's price sits (tag-local x), for glows */
-const firstDigitX = (g: G, text: string) => {
-  g.save(); g.font = '900 118px "Noto Serif CJK SC"'; const tw = g.measureText(text).width, dw = g.measureText(text[0]).width; g.restore();
-  return -Math.max(360, tw + 190) / 2 + 120 + dw / 2;
-};
-const goldColumn = (g: G, x: number, base: number, hh: number, w = 150) => {
-  if (hh <= 1) return;
-  const gr = g.createLinearGradient(0, base - hh, 0, base); gr.addColorStop(0, `rgba(${GOLD},.97)`); gr.addColorStop(1, `rgba(${GOLD},.28)`);
-  g.save(); g.shadowColor = 'rgba(0,0,0,.5)'; g.shadowBlur = 20; g.shadowOffsetY = 8;
-  g.fillStyle = gr; g.beginPath(); (g as any).roundRect(x - w / 2, base - hh, w, hh, 10); g.fill(); g.restore();
-};
-
-// station A: the hook and the take-home. Two tags, and under each a column for the price you *feel*.
-const A_BASE = 880, A_TALL = 360, A_SHORT = 0.66 * A_TALL;
-const stationA = (g: G, T: number) => {
-  pencil(g, 1700, 800, -0.45);
-  // 0–0.4: the 10.00 tag lands; FLIP (1.418): it turns over to 9.99; PAIR (3.443): it steps left, a 10.00 slides in
-  const land = eo(T, 0, 0.4), f = clamp((T - FLIP) / 0.28), pk = eio(T, PAIR, 0.7);
-  const x1 = lerp(960, 640, pk), y1 = lerp(470, 330, pk), s1 = lerp(1.6, 1.0, pk) * lerp(1.25, 1, land);
+const stage = (g: G, T: number, cam: Cam, freeze: number) => {
+  const groundY = 540 + (0 - cam.y) * cam.s, horizon = 540 + (0 - cam.y) * cam.s * 0.22 - 40;
   g.save();
-  // the felt-price columns: both rise to (almost) the same height, then the 9.99 one sinks
-  const rise = eo(T, bt(7), 0.6), sink = eio(T, bt(9), 0.5) * (1 - eio(T, at('f3'), 0.7));
-  if (T > bt(7)) {
-    goldColumn(g, 640, A_BASE, rise * lerp(A_TALL - 2, A_SHORT, sink));
-    goldColumn(g, 1290, A_BASE, rise * A_TALL);
-    // the real prices: a dashed line across both, almost exactly level
-    const la = eo(T, bt(8), 0.4);
-    g.save(); g.globalAlpha *= la; g.strokeStyle = 'rgba(243,237,226,.75)'; g.lineWidth = 3; g.setLineDash([14, 12]);
-    g.beginPath(); g.moveTo(520, A_BASE - A_TALL); g.lineTo(1410, A_BASE - A_TALL); g.stroke(); g.setLineDash([]);
-    txt(g, '实际只差 ¥0.01', 965, A_BASE - A_TALL - 30, '700 34px "Noto Sans CJK SC"', 'rgba(243,237,226,.9)');
-    txt(g, '心里觉得的价格', 965, A_BASE - 40, '700 32px "Noto Sans CJK SC"', `rgba(${GOLD},.9)`);
-    g.restore();
-    // the gap you feel, in red
-    const ga = eo(T, bt(10), 0.4) * (1 - eo(T, at('f3'), 0.5));
-    if (ga > 0) {
-      const top = A_BASE - A_TALL, bot = A_BASE - A_SHORT, x = 740;
-      g.save(); g.globalAlpha *= ga; g.strokeStyle = 'rgb(235,82,64)'; g.lineWidth = 5;
-      g.beginPath(); g.moveTo(x - 14, top); g.lineTo(x, top); g.lineTo(x, bot); g.lineTo(x - 14, bot); g.stroke();
-      txt(g, '一大截', x + 22, (top + bot) / 2, '900 46px "Noto Serif CJK SC"', 'rgb(255,107,94)', 'left');
-      g.restore();
-    }
-  }
-  const glow2 = hit(T, at('f2') + 0.2, 0.9);
-  if (glow2 > 0) {
-    g.save(); g.globalCompositeOperation = 'lighter'; glowDot(g, x1, y1, 330 * s1, 0.35 * glow2, GOLD); g.restore();
-  }
-  tag(g, x1, y1, s1, lerp(-0.08, -0.05, pk), f < 0.5 ? '10.00' : '9.99', { flip: f > 0 && f < 1 ? f : 0 });
-  if (T > FLIP) { g.save(); g.globalCompositeOperation = 'lighter'; sparks(g, x1, y1, FLIP, T, 90, GOLD, 1.6, 3); g.restore(); }
-  if (T > PAIR - 0.05) tag(g, lerp(2350, 1290, eo(T, PAIR, 0.6)), 330, 1.0, 0.05, '10.00');
+  if (freeze > 0) g.filter = `saturate(${1 - 0.55 * freeze}) brightness(${1 - 0.3 * freeze})`;
+  g.save(); g.translate(960, 540); g.rotate(cam.r ?? 0); g.translate(-960, -540);
+  sky(g, 1920, 1080, horizon); mesas(g, 1920, horizon, cam.x);
+  const df = g.createLinearGradient(0, horizon, 0, Math.max(horizon + 10, groundY)); df.addColorStop(0, '#2a1e30'); df.addColorStop(1, '#17131d');
+  g.fillStyle = df; g.fillRect(-300, horizon, 2520, Math.max(0, groundY - horizon) + 4);
   g.restore();
-  // the take-home: the column rises back, and a note card says what to read it as
-  if (T > at('f3') - 0.1) {
-    const a = eo(T, at('f3') - 0.1, 0.4), w = eio(T, at('f3') + 0.3, 0.8);
-    if (T > at('f3') + 0.7) { g.save(); g.globalCompositeOperation = 'lighter'; glowDot(g, 640, A_BASE - A_TALL, 220, 0.4 * hit(T, at('f3') + 0.7, 0.8), GOLD); g.restore(); }
-    g.save(); g.translate(965, 690 + (1 - a) * 40); g.rotate(0.07); g.globalAlpha = a;
-    g.shadowColor = 'rgba(0,0,0,.55)'; g.shadowBlur = 24; g.shadowOffsetY = 10;
-    g.fillStyle = '#f3ead6'; g.fillRect(-150, -85, 300, 170); g.shadowColor = 'transparent';
-    g.strokeStyle = 'rgba(120,150,190,.35)'; g.lineWidth = 2;
-    for (let i = 0; i < 3; i++) { g.beginPath(); g.moveTo(-130, -30 + i * 40); g.lineTo(130, -30 + i * 40); g.stroke(); }
-    g.save(); g.beginPath(); g.rect(-150, -85, 300 * w, 170); g.clip();
-    txt(g, '≈10', 0, 6, '900 112px "Noto Serif CJK SC"', '#26232e');
-    g.restore(); g.restore();
-  }
-};
-
-// station C: the 9.99 tag is read left to right, the first digit lights up, and the tag drops into the 9块多 tray
-const C_TAG = [960, 272] as const;
-const stationC = (g: G, T: number) => {
-  const d1 = near(at('a3') + 0.1), d2 = d1 + 2 * B;
-  g.save(); g.globalAlpha = eo(T, CUT.T_OUT - 0.1, 0.4);
-  tray(g, 300, 380, 560, 400, '9块多', hit(T, d1, 0.6) + (T > at('a4') ? 0.6 : 0), GOLD);
-  tray(g, 1060, 380, 560, 400, '10块', hit(T, d2, 0.6) * 0.8 + (T > at('a4') ? 0.4 : 0), '255,214,190');
+  withCam(g, cam, () => {
+    MASTS.forEach((x, i) => mast(g, x, 2100 + 250 * (i % 2), [x + (i % 2 ? -900 : 900), -200], 1));
+    hangar(g, HANGAR[0], HANGAR[1], 1500);
+    rig(g, T);
+    ground(g, -18000, 6000, MASTS);
+    VEH.forEach(([x, k]) => vehicle(g, x, k));
+  });
+  g.save(); g.globalCompositeOperation = 'lighter';
+  const hz = g.createLinearGradient(0, groundY - 380 * cam.s, 0, groundY + 40); hz.addColorStop(0, 'rgba(255,170,110,0)'); hz.addColorStop(0.8, 'rgba(255,170,110,.10)'); hz.addColorStop(1, 'rgba(255,170,110,0)');
+  g.fillStyle = hz; g.fillRect(0, groundY - 380 * cam.s, 1920, 420 * cam.s + 40);
   g.restore();
-  const k1 = eio(T, d1 - 0.4, 0.4);
-  const tx = lerp(C_TAG[0], 600, k1), ty = lerp(C_TAG[1], 580, k1), ts = lerp(0.8, 0.85, k1), tr = lerp(-0.04, -0.12, k1);
-  // the first digit glows from the groove hit until the tag drops
-  const dg = eo(T, GROOVE, 0.25) * (1 - eo(T, d1 - 0.4, 0.3));
-  const fx = tx + firstDigitX(g, '9.99') * ts;
-  if (dg > 0) { g.save(); g.globalCompositeOperation = 'lighter'; glowDot(g, fx, ty + 10, 150, 0.55 * dg + 0.25 * hit(T, GROOVE, 0.6), GOLD); g.restore(); }
-  g.save(); g.globalAlpha = eo(T, CUT.T_OUT - 0.1, 0.4); tag(g, tx, ty, ts, tr, '9.99'); g.restore();
-  // a reading light sweeps left to right across the price
-  const sw = pr(T, at('a1') + 0.4, 1.1);
-  if (sw > 0 && sw < 1) {
-    const x = lerp(tx - 200, tx + 220, sw);
-    g.save(); g.globalCompositeOperation = 'lighter';
-    const lg = g.createLinearGradient(x - 70, 0, x + 70, 0); lg.addColorStop(0, 'rgba(255,230,170,0)'); lg.addColorStop(0.5, 'rgba(255,230,170,.45)'); lg.addColorStop(1, 'rgba(255,230,170,0)');
-    g.beginPath(); g.rect(tx - 185, ty - 80, 370, 160); g.clip(); g.fillStyle = lg; g.fillRect(x - 70, ty - 90, 140, 180); g.restore();
-  }
-  if (T > d2 - 0.4) { const k2 = eo(T, d2 - 0.4, 0.35); tag(g, 1360, lerp(-200, 580, k2), lerp(1.2, 0.85, k2), 0.08, '10.00'); }
-  if (T > at('a4')) {   // the gap: ¥0.01, chalked between the trays
-    const a = eo(T, at('a4'), 0.4);
-    g.save(); g.globalAlpha = a; g.strokeStyle = `rgba(${GOLD},.9)`; g.lineWidth = 4; g.setLineDash([10, 10]);
-    g.beginPath(); g.moveTo(880, 590); g.lineTo(1040, 590); g.stroke(); g.setLineDash([]);
-    txt(g, '¥0.01', 960, 545, '700 46px "JunoMono"', `rgb(${GOLD})`);
-    g.restore();
+  g.restore();
+};
+/** dust thrown up where the car lands */
+const dust = (g: G, x: number, t0: number, T: number, power = 1) => {
+  const age = T - t0; if (age < 0 || age > 3.2) return;
+  for (let i = 0; i < 22; i++) {
+    const side = i % 2 ? 1 : -1, sp = 300 + 500 * ((i * 37) % 11) / 11, d = sp * (1 - Math.exp(-age * 1.6));
+    const px = x + side * (80 + d), py = -10 - 30 * ((i * 13) % 7) / 7 - 60 * (1 - Math.exp(-age)) * ((i * 7) % 5) / 5;
+    const r = 40 + 120 * (1 - Math.exp(-age * 1.2)) * (0.6 + 0.4 * ((i * 5) % 3) / 3), al = 0.32 * power * (1 - age / 3.2);
+    const gr = g.createRadialGradient(px, py, 0, px, py, r); gr.addColorStop(0, `rgba(190,165,150,${al})`); gr.addColorStop(1, 'rgba(190,165,150,0)');
+    g.fillStyle = gr; g.fillRect(px - r, py - r, 2 * r, 2 * r);
   }
 };
-
-const stationD = (g: G, T: number) => {
-  const a = eo(T, CUT.S2 - 0.8, 0.6);
-  const k0 = eo(T, at('b3') + 0.3, 0.7), kAll = eo(T, at('b5'), 0.9);
-  const ks = [Math.max(k0, kAll), kAll, kAll, T > at('b4') ? 1 : 0, T > at('b4') ? 1 : 0];
-  placeValue(g, 960, 320, '79900', ks, T > at('b3') ? 0 : -1, T > at('b4') && T < at('b5') ? 4 : -1, a);
-  if (T > at('b6')) {   // tick: reading only the first digit is right almost every time
-    const q = eio(T, at('b6') + 0.3, 0.5);
-    g.save(); g.strokeStyle = `rgba(${GOLD},.95)`; g.lineWidth = 12; g.lineCap = 'round'; g.lineJoin = 'round';
-    const P = [[1500, 660], [1560, 720], [1680, 580]]; const L1 = Math.hypot(60, 60), L2 = Math.hypot(120, 140), dd = q * (L1 + L2);
-    g.beginPath(); g.moveTo(P[0][0], P[0][1]);
-    if (dd <= L1) g.lineTo(lerp(P[0][0], P[1][0], dd / L1), lerp(P[0][1], P[1][1], dd / L1)); else { g.lineTo(P[1][0], P[1][1]); g.lineTo(lerp(P[1][0], P[2][0], (dd - L1) / L2), lerp(P[1][1], P[2][1], (dd - L1) / L2)); }
-    g.stroke(); g.restore();
-  }
-};
-
-// station E: the odometer rolls over; then the price-vs-mileage chart, which zooms in on the 80k cliff and out again
-const PL = { x: 1140, y: 262, w: 640, h: 380 };
-const stationE = (g: G, T: number) => {
-  const r0 = at('c3') + 0.2, r1 = near(r0 + 2.4);
-  // it creeps up to 79999 while c2 is read, then the carry rolls every drum at once, ending on a beat
-  const v = T < at('c2') ? 79990 : T < r0 ? 79990 + Math.floor(9 * eio(T, at('c2'), r0 - at('c2') - 0.3) + 1e-6) : T < r1 ? 79999 + (1 - Math.pow(1 - pr(T, r0, r1 - r0), 2)) : 80000;
-  odometer(g, 440, 520, 1.15, v);
-  if (T > r1) { g.save(); g.globalCompositeOperation = 'lighter'; glowDot(g, 440 - 240, 520, 220, 0.4 * hit(T, r1, 0.8) + (T > at('c4') ? 0.12 : 0), MAG); sparks(g, 230, 520, r1, T, 60, MAG, 1.2, 5); g.restore(); }
-  // the chart on graph paper
-  const pa = eo(T, near(till('c4') + 1.9) - 1.5, 0.8);
-  if (pa <= 0) return;
-  g.save(); g.globalAlpha = pa; graphPaper(g, 1060, 200, 780, 540, 0); g.restore();
-  const ax = eo(T, at('c5'), 0.5);
-  if (ax <= 0) return;
-  g.save(); g.globalAlpha = ax;
-  const ck = T < at('c5') + 0.4 ? 0 : eio(T, at('c5') + 0.4, bt(128) - at('c5') - 0.4);   // drawn through c5–c6, done on the 65.2 build hit
-  const z = eio(T, at('c7') - 0.2, 0.9) * (1 - eio(T, at('c9') - 0.2, 0.9));
-  const { px, py } = cliffChart(g, PL.x, PL.y, PL.w, PL.h, ck, z, T > at('c7') ? 80000 : -1);
-  txt(g, '车', PL.x - 32, PL.y + 24, '700 28px "Noto Sans CJK SC"', INK); txt(g, '价', PL.x - 32, PL.y + 56, '700 28px "Noto Sans CJK SC"', INK);
-  txt(g, '里程 · 英里', PL.x + PL.w, PL.y + PL.h + 58, '700 24px "Noto Sans CJK SC"', 'rgba(42,32,22,.75)', 'right');
-  // −$200, pinned to the 80k cliff once we are zoomed in
-  if (z > 0.6 && T < at('c9')) {
-    const q = clamp((z - 0.6) / 0.3), Y = (py(carPrice(79999)) + py(carPrice(80000))) / 2;
-    g.save(); g.globalAlpha *= q; txt(g, '−$200', px(80000) + 18, Y, '900 46px "JunoMono"', RED_INK, 'left'); g.restore();
-  }
-  // c8: the two drops side by side, to scale: 100 miles before the line vs across it
-  if (T > at('c8') && T < at('c9') + 0.4) {
-    const q = eo(T, at('c8'), 0.5) * (1 - pr(T, at('c9') - 0.2, 0.5));
-    const top = 448, rx = [1215, 1335], sc = 0.7;
-    g.save(); g.globalAlpha *= q;
-    g.fillStyle = 'rgba(239,233,218,.94)'; g.fillRect(1150, 410, 250, 226);
-    g.strokeStyle = 'rgba(42,32,22,.35)'; g.lineWidth = 2; g.strokeRect(1150, 410, 250, 226);
-    txt(g, '79.8k→79.9k', rx[0], 428, '700 17px "JunoMono"', INK);
-    txt(g, '79.9k→80k', rx[1], 428, '700 17px "JunoMono"', INK);
-    g.fillStyle = 'rgba(42,32,22,.75)'; g.fillRect(rx[0] - 26, top, 52, 10 * sc * eo(T, at('c8') + 0.3, 0.4));
-    g.fillStyle = RED_INK; g.fillRect(rx[1] - 26, top, 52, 200 * sc * eo(T, at('c8') + 0.7, 0.6));
-    txt(g, '−$10', rx[0], top + 38, '900 30px "JunoMono"', INK);
-    g.globalAlpha *= eo(T, at('c8') + 1.0, 0.3); txt(g, '−$200', rx[1] - 6, top + 140 + 24, '900 28px "JunoMono"', RED_INK);
-    g.restore();
-  }
-  // c9: how many cars come to auction, by mileage: it jumps just before each 10,000
-  if (T > at('c9') - 0.2) {
-    const q = eo(T, at('c9') + 0.5, 0.9);
-    g.save(); g.beginPath(); g.rect(PL.x + 2, PL.y, PL.w, PL.h); g.clip();
-    for (let m = 51000; m < 110000; m += 1000) {
-      const r = m % 10000, spike = r === 9000 ? 5 : r === 8000 ? 2 : 1;
-      const hh = 16 * spike * q * (0.85 + 0.3 * rnd(m, 3));
-      g.fillStyle = spike > 2 ? 'rgba(184,50,42,.85)' : 'rgba(58,42,26,.45)'; g.fillRect(px(m + 500) - 3, PL.y + PL.h - hh, 6, hh);
-    }
-    g.restore();
-    g.save(); g.globalAlpha *= q; txt(g, '送去拍卖的车', PL.x + 16, PL.y + PL.h - 110, '700 24px "Noto Sans CJK SC"', RED_INK, 'left'); g.restore();
+const streaks = (g: G, p: Pose, k: number) => {
+  if (k <= 0) return;
+  g.save(); g.globalCompositeOperation = 'lighter';
+  const c = Math.cos(p.a), s = Math.sin(p.a);
+  for (let i = 0; i < 9; i++) {
+    const off = (i / 8 - 0.5) * 220, back = 380 + 60 * (i % 3), L = 700 * (0.5 + 0.5 * ((i * 37) % 7) / 7);
+    const x0 = p.x - c * back - s * off, y0 = p.y - s * back + c * off;
+    const lg = g.createLinearGradient(x0, y0, x0 - c * L, y0 - s * L); lg.addColorStop(0, `rgba(${WARM},${0.5 * k})`); lg.addColorStop(1, `rgba(${WARM},0)`);
+    g.strokeStyle = lg; g.lineWidth = 3; g.beginPath(); g.moveTo(x0, y0); g.lineTo(x0 - c * L, y0 - s * L); g.stroke();
   }
   g.restore();
 };
-
-// station F: the catalogue slaps down on the drop
-const stationF = (g: G, T: number) => {
-  if (T < CUT.S4 - 0.14) return;
-  const k = eo(T, CUT.S4 - 0.14, 0.14), sc = lerp(1.12, 1, k);
-  g.save(); g.globalAlpha = clamp(k * 3); g.translate(960, 500); g.scale(sc, sc); g.translate(-960, -500);
-  catalogue(g, 370, 180, ['$34', '$39', '$44'], [0.76, 1.0, 0.81], eo(T, near(at('d3') + 0.1), 0.5), T > at('d3') ? 1 : -1);
-  // bars: units as reported (16 · 21 · 17)
-  if (T > at('d5')) {   // $34 and $39 both read as "thirty-something"; $44 as "forty-something"
-    const q = eio(T, at('d5'), 0.5), q2 = eio(T, at('d5') + 0.5, 0.5);
-    const br = (x0: number, x1: number, label: string, col: string, qq: number) => {
-      const y = 712, mid = (x0 + x1) / 2, hw = (x1 - x0) / 2 * qq;
-      g.strokeStyle = col; g.lineWidth = 5; g.lineCap = 'round';
-      g.beginPath(); g.moveTo(mid - hw, y - 14); g.lineTo(mid - hw, y); g.lineTo(mid + hw, y); g.lineTo(mid + hw, y - 14); g.moveTo(mid, y); g.lineTo(mid, y + 12); g.stroke();
-      g.save(); g.globalAlpha *= qq; txt(g, label, mid, y + 44, '900 42px "Noto Serif CJK SC"', col); g.restore();
-    };
-    br(370 + 200 - 90, 370 + 590 + 90, '都是「30多」', '#9a6a1c', q);
-    br(370 + 980 - 90, 370 + 980 + 90, '「40多」', RED_INK, q2);
-  }
+/** the car seen from the nose (for the roll), screen space */
+const frontView = (g: G, cx: number, cy: number, ang: number, jet: number, T: number) => {
+  g.save(); g.translate(cx, cy); g.scale(0.78, 0.78); g.rotate(ang);
+  g.fillStyle = '#262a34'; g.strokeStyle = `rgba(${CYAN},.95)`; g.lineWidth = 3;
+  g.beginPath(); g.moveTo(-170, 34); g.lineTo(-178, 0); g.quadraticCurveTo(-170, -26, -110, -34); g.quadraticCurveTo(-70, -40, -56, -44);
+  g.quadraticCurveTo(-36, -92, 0, -94); g.quadraticCurveTo(36, -92, 56, -44); g.quadraticCurveTo(70, -40, 110, -34); g.quadraticCurveTo(170, -26, 178, 0); g.lineTo(170, 34); g.closePath(); g.fill(); g.stroke();
+  g.fillStyle = '#0f1626'; g.beginPath(); g.moveTo(-46, -46); g.quadraticCurveTo(0, -90, 46, -46); g.closePath(); g.fill();
+  g.fillStyle = '#08080b'; g.beginPath(); (g as any).roundRect(-176, 22, 46, 44, 8); g.fill(); g.beginPath(); (g as any).roundRect(130, 22, 46, 44, 8); g.fill();
+  g.fillStyle = 'rgba(220,240,255,.9)'; g.fillRect(-150, -8, 60, 6); g.fillRect(90, -8, 60, 6);
+  if (jet > 0) plume(g, 182, -40, -0.35, 220, jet, T, 3, 0.5);
   g.restore();
-  if (T > CUT.S4) { g.save(); g.globalCompositeOperation = 'lighter'; sparks(g, 960, 830, CUT.S4, T, 70, '255,200,140', 1.3, 13); g.restore(); }
 };
 
-// station G: the calendar counts up to the birthday; the two patient charts; the slam
-const page = (g: G, x: number, y: number, s: number, T: number, flips: [number, string][], first: string, mark = 0) => {
-  let shown = first, sq = 1;
-  for (const [t, v] of flips) { if (T >= t) shown = v; else if (T > t - 0.3) { const q = pr(T, t - 0.3, 0.3); sq = Math.abs(Math.cos(q * Math.PI)); if (q >= 0.5) shown = v; } }
-  g.save(); g.translate(x, y); g.scale(1, Math.max(0.04, sq)); g.translate(-x, -y); calendarPage(g, x, y, s, shown, '生日', mark); g.restore();
-};
-const stationG = (g: G, T: number) => {
-  const a = eo(T, CUT.S5 - 0.9, 0.6);
-  g.save(); g.globalAlpha = a; g.translate(960, 470); g.scale(0.82, 0.82); g.translate(-960, -470);
-  const in1 = eo(T, at('e2'), 0.5), in2 = eo(T, at('e2') + 0.25, 0.5);
-  g.save(); g.translate(0, (1 - in1) * 60); g.globalAlpha *= in1; chart(g, 560, 470, '80岁生日前两周', pctType('7.0%', at('e4') + 1.0, T), '#2a2016', -0.05); g.restore();
-  g.save(); g.translate(0, (1 - in2) * 60); g.globalAlpha *= in2; chart(g, 1360, 470, '80岁生日后两周', pctType('5.3%', at('e5') + 0.9, T), RED_INK, 0.04); g.restore();
-  // the calendar counts the birthdays up, and turns to 80 exactly on the slam
-  page(g, 960, 250, 0.8, T, [[near(at('e2')), '78'], [near(at('e3')), '79'], [SLAM80, '80']], '77', T >= SLAM80 ? eo(T, SLAM80 + 0.05, 0.35) : 0);
-  g.restore();
-  if (T >= SLAM80) { g.save(); g.globalCompositeOperation = 'lighter'; sparks(g, 960, 290, SLAM80, T, 140, MAG, 2.2, 9); g.restore(); }
-  // e7: the other birthdays: only 80 is circled
-  if (T > at('e7') - 0.1) {
-    const ages = ['77', '78', '79', '80', '81', '82', '83'];
-    ages.forEach((s, i) => {
-      const q = eo(T, at('e7') + i * 0.07, 0.35);
-      g.save(); g.globalAlpha = q * (s === '80' ? 1 : 0.85); calendarPage(g, 960 + (i - 3) * 132, 832 + (1 - q) * 30, 0.3, s, '生日', s === '80' ? eo(T, at('e7') + 0.8, 0.4) : 0); g.restore();
-    });
-  }
-};
-
-/* ---------------------------------------------------------------- the film */
-const LOADS = [...FONT_LOADS, '900 40px "Noto Serif CJK SC"'];
-const GLYPHS = '实际只差心里觉得的价格一大截都是「30多」「40多」车价里程·英里送去拍卖的车80岁生日前两周后≈10¥$0123456789.,+−→≈⅓块多只便宜了一分钱为什么感觉一大截你定也被这骗过读个数我们从左往右看到第位大脑就开始估进格子硬是两这是不说明很笨其实聪明的捷径最边代表七万后那什么都决定有所以平时几乎对还省力它会出错偏在进位刻再多跳成值没变判断却了美国多万笔二手车拍卖记录里里程表每过整英里价掉截比贵约美元可之间差卖家懂快时送去突然定人站道悬崖上女装目录做实验同条裙子标三个反而卖得更好起来专业呢年研究者翻查老医保数据样心脏病发作住院还几周满岁搭桥手术刚过有被归进其他前没落差笨太下次先心里把读成生日差一分钱为看比便那么评论区坑过资料';
-const Slate: React.FC<{ s: string; a: number }> = ({ s, a }) => (a <= 0 ? null : <div style={{ position: 'absolute', left: '50%', top: 146, transform: 'translateX(-50%)', whiteSpace: 'nowrap', opacity: a, padding: '6px 14px', borderRadius: 6, background: 'rgba(8,6,5,.72)', fontFamily: F.mono, fontWeight: 700, fontSize: 24, letterSpacing: '0.3em', color: 'rgba(239,232,218,.92)' }}>{s}</div>);
-const slateA = (T: number, a: number, z: number) => Math.min(eo(T, a, 0.4), 1 - pr(T, z - 0.4, 0.4));
-
+/* ================================================================ the film */
+const GLYPHS = '车底约4平方米外面空气推力吨只有2高压瓶个喷口升10600反方向一侧往下刹从头看抓地倍特斯拉称未经实测定金5万美元单双座仅邀请不能上路会飞多久公布倒带慢放定格加进器风扇把的抽走示意−–·×¼‖◀';
+const TITLE = '倒挂飞车';
 export const Film: React.FC = () => {
   const f = useCurrentFrame(), T = f / 30;
   const [h] = useState(() => delayRender('film', { timeoutInMilliseconds: 60000 }));
   const [ok, setOk] = useState(false);
-  useEffect(() => { Promise.all(LOADS.map((x) => document.fonts.load(x, GLYPHS).catch(() => null))).then(() => { setOk(true); continueRender(h); }); }, [h]);
-  const cam = camAt(T);
-  const titleO = T < CUT.TITLE - 0.05 ? 0 : 1 - pr(T, CUT.T_OUT - 0.5, 0.5);
-  const endO = eo(T, CUT.END, 0.6);
-  const markO = (1 - (T >= CUT.TITLE - 0.3 && T < CUT.T_OUT ? 1 : 0)) * (1 - endO);
-  const title = '差一分钱';
+  useEffect(() => { Promise.all([...FONT_LOADS, '900 40px "Noto Serif CJK SC"', '900 40px "Noto Sans CJK SC"'].map((x) => document.fonts.load(x, GLYPHS).catch(() => null))).then(() => { setOk(true); continueRender(h); }); }, [h]);
+  const titleO = T < HIT.TITLE - 0.05 ? 0 : 1 - pr(T, 14.3, 0.5);
+  const endO = eo(T, HIT.END, 0.7);
+  const markO = (1 - (T >= HIT.TITLE - 0.3 && T < 14.8 ? 1 : 0)) * (1 - endO);
+  const freeze = bump(T, HIT.QUIET, HIT.BACK, 0.7);
+  const rewind = bump(T, 15.0, HIT.CEIL, 0.2);
+  const slow = Math.max(bump(T, 30.6, HIT.LAND, 0.4), bump(T, 56.5, 61.5, 0.4));
   return (
     <AbsoluteFill style={{ background: '#000' }}>
       <FontFaces />
       {ok && (
         <>
           <Canvas dep={f} draw={(g) => {
-            g.save(); g.translate(960, 540); g.scale(cam.s, cam.s); g.translate(-cam.x, -cam.y);
-            const hw = 960 / cam.s + 40, hh = 540 / cam.s + 40;
-            deskWorld(g, cam.x - hw, cam.y - hh, cam.x + hw, cam.y + hh);
-            const on = (k: keyof typeof ST, fn: () => void) => {
-              const [ox, oy] = ST[k];
-              if (ox + 1920 < cam.x - hw || ox > cam.x + hw || oy + 1080 < cam.y - hh || oy > cam.y + hh) return;
-              g.save(); g.translate(ox, oy); fn(); g.restore();
-            };
-            on('A', () => stationA(g, T)); on('C', () => stationC(g, T)); on('D', () => stationD(g, T));
-            on('E', () => stationE(g, T)); on('F', () => stationF(g, T)); on('G', () => stationG(g, T));
-            g.restore();
-            // the lamp follows the camera; a vignette holds the frame
-            g.save(); g.globalCompositeOperation = 'lighter';
-            const p = g.createRadialGradient(780, 400, 30, 860, 480, 1050); p.addColorStop(0, 'rgba(255,190,120,.30)'); p.addColorStop(0.45, 'rgba(255,170,100,.10)'); p.addColorStop(1, 'rgba(255,160,90,0)');
-            g.fillStyle = p; g.fillRect(0, 0, 1920, 1080); g.restore();
-            const v = g.createRadialGradient(960, 540, 300, 960, 540, 1150); v.addColorStop(0, 'rgba(0,0,0,0)'); v.addColorStop(1, 'rgba(0,0,0,.72)'); g.fillStyle = v; g.fillRect(0, 0, 1920, 1080);
-            // title and end card sit on a darkened desk
-            const dim = Math.max(0.9 * titleO, endO);
-            if (dim > 0) { g.fillStyle = `rgba(4,3,3,${dim})`; g.fillRect(0, 0, 1920, 1080); }
-            if (T >= CUT.TITLE && T < CUT.T_OUT) { g.save(); g.globalCompositeOperation = 'lighter'; sparks(g, 960, 380, CUT.TITLE, T, 160, GOLD, 2.4, 21); g.restore(); }
+            const st = stateAt(T), cam = camAt(T), p = st.p, sy = st.sy;
+            stage(g, T, cam, freeze);
+            const toS = (x: number, y: number) => toScreen(cam, x, y);
+            withCam(g, cam, () => {
+              // landing dust and the contact shadow
+              dust(g, LANDX, 10.54, T); dust(g, LANDX, HIT.LAND, T); dust(g, LANDX - 4700, HIT.LAND2, T, 0.8);
+              if (st.ground) { g.fillStyle = 'rgba(0,0,0,.55)'; g.beginPath(); g.ellipse(p.x, 4, 400, 14, 0, 0, 7); g.fill(); }
+              else if (p.y > -1400) { const k = clamp(1 - (-p.y) / 1400); g.fillStyle = `rgba(0,0,0,${0.4 * k})`; g.beginPath(); g.ellipse(p.x, 4, 400 * (0.6 + 0.4 * k), 12, 0, 0, 7); g.fill(); }
+              // rewind ghosts: where the car is coming back from
+              if (rewind > 0 && T < HIT.CEIL) {
+                const ht = lerp(10.54, T_CEIL, eio(T, 15.0, HIT.CEIL - 15.0));
+                for (let i = 3; i >= 1; i--) { const gs = hookState(Math.min(10.54, ht + i * 0.07)); g.save(); g.globalAlpha = 0.1 * rewind * (1 - i / 4); car(g, gs.p, { sy: gs.sy, rim: 0 }); g.restore(); }
+              }
+              streaks(g, p, st.streak * (1 - freeze));
+              // jets that sit behind the body
+              if (st.down > 0) for (const lx of [300, 120, -140, -300]) plume(g, ...carToWorld(p, sy, lx, 44), carDir(p, sy, Math.PI / 2), 640, st.down, T, lx);
+              if (st.rear > 0) plume(g, ...carToWorld(p, sy, -382, -30), carDir(p, sy, Math.PI), 620, st.rear, T, 9);
+              // the x-ray: on in the freeze, half on while the tanks and nozzles are explained
+              const xr = Math.max(freeze, 0.55 * bump(T, 29.1, 37.8, 0.4));
+              car(g, p, { sy, spin: st.spin, rim: 1, under: st.under * (1 - freeze), xray: xr, fans: freeze, tanks: Math.max(0.25 * freeze, bump(T, 29.1, 37.8, 0.4)), nozzles: bump(T, 31.6, 37.8, 0.4), T });
+              if (st.side > 0) plume(g, ...carToWorld(p, sy, 20, 0), Math.PI / 2 + 0.35, 520, st.side, T, 7, 0);
+              // freeze: the air pulled out from under the car, flowing (dashes move), and the push of the outside air
+              if (freeze > 0) {
+                for (let i = 0; i < 8; i++) {
+                  const lx0 = 330 - i * 88, fx = lx0 > -20 ? 110 : -150, pts: [number, number][] = [];
+                  for (let k = 0; k <= 30; k++) {
+                    const q = k / 30; let lx: number, ly: number;
+                    if (q < 0.35) { const u = q / 0.35; lx = lerp(lx0, fx, u); ly = lerp(52, 38, u * u); }
+                    else if (q < 0.7) { const u = (q - 0.35) / 0.35; lx = lerp(fx, -380, u); ly = lerp(38, 22, u); }
+                    else { const u = (q - 0.7) / 0.3; lx = -380 - 260 * u; ly = 22 - 6 * u + (i - 3.5) * 9 * u; }
+                    pts.push(carToWorld(p, 1, lx, ly));
+                  }
+                  g.save(); g.setLineDash([26, 18]); g.lineDashOffset = -T * 160; ribbon(g, pts, CYAN, 2.5, 0.8 * freeze, 0); g.restore();
+                }
+                for (let i = 0; i < 6; i++) {
+                  const a = eo(T, 21.4 + i * 0.07, 0.4) * freeze, lx = [-330, -220, -110, 110, 220, 330][i], [x, y] = carToWorld(p, 1, lx, -330 - 30 * (1 - a));
+                  if (a > 0) arrow(g, x, y, -Math.PI / 2, 150, 26, `rgba(${GOLD},.92)`, a);
+                }
+                const wa = eo(T, 24.1, 0.4) * freeze;   // the car's weight: a small arrow down
+                if (wa > 0) { const [x, y] = carToWorld(p, 1, -20, -150); arrow(g, x, y, Math.PI / 2, 110, 18, 'rgba(243,237,226,.9)', wa); }
+              }
+              // action and reaction: gas out of the tail, the car pushed the other way
+              const nr = bump(T, 35.4, 37.8, 0.3);
+              if (nr > 0) { const [x, y] = carToWorld(p, sy, 380, 0); arrow(g, x + 30 * Math.cos(carDir(p, sy, 0)), y, carDir(p, sy, 0), 220, 30, `rgba(${GOLD},.95)`, nr); }
+              // the brake: jets down, the car held up
+              const br = bump(T, HIT.BRAKE + 0.2, HIT.LAND - 0.2, 0.3);
+              if (br > 0) for (const lx of [-200, 200]) { const [x, y] = carToWorld(p, sy, lx, 330); arrow(g, x, y + 0, -Math.PI / 2, 150, 24, `rgba(${GOLD},.9)`, br); }
+              // the jump: thrust vs grip, as Tesla states it
+              const cmp = bump(T, 57.0, 62.6, 0.4);
+              if (cmp > 0) { const bx = p.x + 640, by = p.y + 360; arrow(g, bx, by, -Math.PI / 2, 90, 30, 'rgba(243,237,226,.92)', cmp); arrow(g, bx + 220, by, -Math.PI / 2, 90 + 310 * eo(T, 57.4, 0.7), 30, `rgba(${GOLD},.95)`, cmp); }
+              // the hangar wall: 2028 lands on the hit
+              const y8 = eo(T, HIT.Y2028, 0.35);
+              if (T > HIT.Y2028) {
+                g.save(); g.globalCompositeOperation = 'lighter';
+                const r = g.createRadialGradient(-11900, -900, 0, -11900, -900, 1000); r.addColorStop(0, `rgba(255,214,150,${0.3 * y8 + 0.25 * hit(T, HIT.Y2028, 0.4)})`); r.addColorStop(1, 'rgba(255,200,130,0)'); g.fillStyle = r; g.fillRect(-13000, -2000, 2200, 2000);
+                g.restore();
+                g.save(); g.translate(-11900, -900); g.scale(lerp(1.18, 1, y8), lerp(1.18, 1, y8)); g.globalAlpha = y8 * (1 - endO * 0.95);
+                g.font = '900 520px "Noto Serif CJK SC"'; g.textAlign = 'center'; g.textBaseline = 'middle';
+                const tg = g.createLinearGradient(0, -250, 0, 250); tg.addColorStop(0, '#fff3cf'); tg.addColorStop(0.5, '#f0c873'); tg.addColorStop(1, '#b07c32'); g.fillStyle = tg; g.fillText('2028', 0, 0); g.restore();
+              }
+            });
+            // ---------------------------------------------------------------- labels that live on the picture (screen space)
+            if (freeze > 0) {
+              const [ux, uy] = toS(...carToWorld(p, 1, 0, 60));
+              const ka = eo(T, 21.6, 0.4) * freeze;
+              if (ka > 0) { g.save(); g.globalAlpha = ka; g.strokeStyle = `rgba(${CYAN},.9)`; g.lineWidth = 2; const [a1, a2] = [toS(...carToWorld(p, 1, 340, 70)), toS(...carToWorld(p, 1, -380, 70))]; g.beginPath(); g.moveTo(a1[0], a1[1] - 14); g.lineTo(a1[0], a1[1] - 26); g.lineTo(a2[0], a2[1] - 26); g.lineTo(a2[0], a2[1] - 14); g.stroke(); g.restore(); label(g, '车底约4平方米', ux - 60, uy - 52, 28, CYAN, 'center', 700, 'Noto Sans CJK SC', ka); }
+              const [ex, ey] = toS(...carToWorld(p, 1, -520, 16));
+              const fa = eo(T, 21.2, 0.4) * freeze;
+              leader(g, [ex, ey], [ex + 30, ey + 70], CYAN, fa); label(g, '风扇把车底的空气抽走', ex - 150, ey + 98, 30, CYAN, 'left', 700, 'Noto Sans CJK SC', fa);
+              label(g, '外面的空气：约40吨的推力', 1200, 868, 38, GOLD, 'left', 700, 'Noto Sans CJK SC', eo(T, 21.6, 0.4) * freeze);
+              label(g, '车只有约2吨', 1200, 914, 32, '243,237,226', 'left', 700, 'Noto Sans CJK SC', eo(T, 24.2, 0.4) * freeze);
+              const ga = eo(T, 26.3, 0.5) * freeze;
+              if (ga > 0) {
+                const gx = 110, gy = 800;
+                g.save(); g.globalAlpha = ga; g.fillStyle = 'rgba(8,10,18,.72)'; g.beginPath(); (g as any).roundRect(gx - 30, gy - 290, 330, 340, 16); g.fill();
+                const bar = (x: number, v: number, col: string, t: string) => { g.fillStyle = 'rgba(255,255,255,.08)'; g.fillRect(x, gy - 220, 70, 220); g.fillStyle = col; g.fillRect(x, gy - 220 * v, 70, 220 * v); label(g, t, x + 35, gy + 30, 28, '243,237,226', 'center'); };
+                bar(gx + 20, 1, `rgba(${GOLD},.95)`, '外面'); bar(gx + 180, 1 - 0.05 * eo(T, 26.8, 0.8), `rgba(${CYAN},.95)`, '车底');
+                g.strokeStyle = `rgb(${RED})`; g.lineWidth = 3; g.beginPath(); g.moveTo(gx + 170, gy - 220); g.lineTo(gx + 260, gy - 220); g.stroke();
+                label(g, '−5%', gx + 215, gy - 250, 34, RED, 'center', 900, 'JunoMono');
+                label(g, '空气（示意）', gx + 70, gy - 262, 22, '200,200,210', 'center');
+                g.restore();
+              }
+            }
+            // tanks and nozzles
+            const ta = bump(T, 29.3, 31.5, 0.3);
+            if (ta > 0) { const [x, y] = toS(...carToWorld(p, sy, 250, -10)); leader(g, [x, y], [x + 70, y + 150], GOLD, ta); label(g, '高压气瓶（示意）', x + 80, y + 172, 30, GOLD, 'left', 700, 'Noto Sans CJK SC', ta); }
+            const na = bump(T, 31.8, 34.9, 0.3);
+            if (na > 0) { const [x, y] = toS(...carToWorld(p, sy, 300, -34)); leader(g, [x, y], [x + 60, y + 170], CYAN, na); label(g, '喷口 ×10', x + 70, y + 192, 32, CYAN, 'left', 700, 'Noto Sans CJK SC', na); }
+            const nr = bump(T, 35.4, 37.8, 0.3);
+            if (nr > 0) { const [x, y] = toS(...carToWorld(p, sy, -650, -30)); label(g, '气 →', x, y - 70, 32, CYAN, 'center', 700, 'Noto Sans CJK SC', nr); const [x2, y2] = toS(...carToWorld(p, sy, 560, 0)); label(g, '← 车', x2, y2 - 70, 32, GOLD, 'center', 700, 'Noto Sans CJK SC', nr); }
+            // the roll, seen from the nose
+            const ia = bump(T, HIT.ROLL - 1.2, HIT.ROLL + 2.2, 0.35);
+            if (ia > 0) {
+              const ix = 1360, iy = 190, iw = 440, ih = 320;
+              g.save(); g.globalAlpha = ia; g.fillStyle = 'rgba(8,10,18,.8)'; g.strokeStyle = `rgba(${CYAN},.6)`; g.lineWidth = 2; g.beginPath(); (g as any).roundRect(ix, iy, iw, ih, 16); g.fill(); g.stroke();
+              label(g, '从车头看', ix + 24, iy + 34, 26, CYAN);
+              const ang = Math.PI * (1 - eio(T, HIT.ROLL - 0.65, 1.3));
+              frontView(g, ix + iw / 2, iy + ih / 2 + 30, ang, st.side, T);
+              g.strokeStyle = `rgba(${GOLD},.95)`; g.lineWidth = 7; g.lineCap = 'round'; g.beginPath(); g.arc(ix + iw / 2, iy + ih / 2 + 30, 120, -2.75, -1.75); g.stroke();
+              arrow(g, ix + iw / 2 + 120 * Math.cos(-2.75), iy + ih / 2 + 30 + 120 * Math.sin(-2.75), -2.75 - Math.PI / 2, 44, 16, `rgba(${GOLD},.95)`);
+              g.restore();
+            }
+            const cmp = bump(T, 57.0, 62.6, 0.4);
+            if (cmp > 0) { const [bx, by] = toS(p.x + 640, p.y + 360); label(g, '抓地力', bx, by + 28, 26, '243,237,226', 'center', 700, 'Noto Sans CJK SC', cmp); label(g, '喷气推力', bx + 123, by + 28, 26, GOLD, 'center', 700, 'Noto Sans CJK SC', cmp); label(g, '4–5倍', bx + 180, by - 210, 40, GOLD, 'left', 900, 'JunoMono', cmp * eo(T, 57.9, 0.3)); label(g, '特斯拉称，未经实测', bx + 180, by - 168, 22, '200,200,210', 'left', 700, 'Noto Sans CJK SC', cmp * eo(T, 60.2, 0.3)); }
+            // three versions, standing on the apron in the quiet
+            const ca = bump(T, 69.7, HIT.END + 0.3, 0.4);
+            if (ca > 0) {
+              const cards: [string, string[], string][] = [['Performance', ['定金 5万美元'], '双座'], ['Thrust', ['加推进器'], '双座'], ['Rocket · 会飞', ['单座 · 仅邀请', '{不能上路}'], '']];
+              cards.forEach(([a, b, c], i) => {
+                const k = eo(T, 69.75 + i * 0.12, 0.4) * ca, x = 1060 + i * 280, y = 250 + (1 - k) * 20;
+                const hl = (i === 2 && T > 71.8) || (i === 0 && T > 79.7);
+                g.save(); g.globalAlpha = k * (T > 71.8 && !hl ? 0.6 : 1); g.fillStyle = i === 2 ? 'rgba(40,18,16,.85)' : 'rgba(10,12,20,.8)'; g.strokeStyle = i === 2 ? `rgba(${RED},.9)` : `rgba(${GOLD},${hl ? 1 : 0.7})`; g.lineWidth = hl ? 3 : 2;
+                g.beginPath(); (g as any).roundRect(x, y, 260, 190, 14); g.fill(); g.stroke();
+                label(g, a, x + 130, y + 42, 34, i === 2 ? RED : GOLD, 'center', 700, 'Cormorant Garamond');
+                b.forEach((t, j) => label(g, t.replace(/[{}]/g, ''), x + 130, y + 92 + j * 34, 26, t.startsWith('{') ? RED : '243,237,226', 'center'));
+                if (c) label(g, c, x + 130, y + 150, 24, '200,200,210', 'center');
+                g.restore();
+              });
+              label(g, '飞多高、飞多久：未公布', 1060, 490, 34, RED, 'left', 700, 'Noto Sans CJK SC', eo(T, 74.8, 0.4) * ca);
+            }
+            // vignette; title and end card sit on a dimmed (not black) frame
+            const v = g.createRadialGradient(960, 540, 420, 960, 540, 1150); v.addColorStop(0, 'rgba(0,0,0,0)'); v.addColorStop(1, 'rgba(0,0,0,.55)'); g.fillStyle = v; g.fillRect(0, 0, 1920, 1080);
+            const dim = Math.max(0.5 * titleO, 0.72 * endO);
+            if (dim > 0) { g.fillStyle = `rgba(4,4,8,${dim})`; g.fillRect(0, 0, 1920, 1080); }
           }} />
-          <Grade warm={0.06} />
           <Grain T={T} />
-          <div style={{ position: 'absolute', inset: 0, background: '#fff1d6', opacity: 0.08 * hit(T, FLIP, 0.08) + 0.14 * hit(T, CUT.TITLE, 0.08) + 0.12 * hit(T, DROP, 0.08) + 0.16 * hit(T, SLAM80, 0.08), mixBlendMode: 'screen' }} />
           <Bars />
-          {/* slates: where the evidence comes from */}
-          <Slate s="J. CONSUMER RESEARCH · THOMAS & MORWITZ · 2005" a={slateA(T, at('a2'), CUT.S2 - GLIDE + 0.2)} />
-          <Slate s="22 MILLION USED-CAR SALES · LACETERA, POPE & SYDNOR" a={slateA(T, at('c5'), CUT.S4 - GLIDE + 0.2)} />
-          <Slate s="ANDERSON & SIMESTER · 2003" a={slateA(T, at('d2'), CUT.S5 - GLIDE + 0.2)} />
-          <Slate s="MEDICARE · NEJM 2020" a={slateA(T, at('e2'), CUT.S6 - GLIDE + 0.2)} />
-          {/* title card */}
+          {/* time indicators */}
+          {rewind > 0 && <Ind s="◀◀  倒带" o={rewind} />}
+          {freeze > 0 && <Ind s="‖  定格" o={freeze} />}
+          {slow > 0 && <Ind s="慢放 ×¼" o={slow} />}
+          {/* title card, over the landing */}
           {titleO > 0 && (
             <>
-              <div style={{ position: 'absolute', left: 0, right: 0, top: 210, textAlign: 'center', opacity: titleO * eo(T, CUT.TITLE + 0.3, 0.4), fontFamily: F.lat, fontWeight: 600, fontSize: 30, letterSpacing: '0.3em', color: C.gold }}>LEFT-DIGIT EFFECT · THOMAS & MORWITZ · MMV</div>
-              <div style={{ position: 'absolute', left: 0, right: 0, top: 268, textAlign: 'center', opacity: titleO, fontFamily: F.serif, fontWeight: 900, fontSize: 150, lineHeight: '190px', whiteSpace: 'nowrap' }}>
-                {['《', ...title, '》'].map((c, i) => {
-                  const t0 = i === 0 || i === 5 ? CUT.TITLE : CUT.TITLE + (i - 1) * B / 2, k = stamp(T, t0);
+              <div style={{ position: 'absolute', left: 0, right: 0, top: 230, textAlign: 'center', opacity: titleO * eo(T, HIT.TITLE + 0.3, 0.4), fontFamily: F.lat, fontWeight: 600, fontSize: 28, letterSpacing: '0.3em', color: C.gold }}>ROADSTER · McGREGOR, TEXAS · 2026.10.15</div>
+              <div style={{ position: 'absolute', left: 0, right: 0, top: 284, textAlign: 'center', opacity: titleO, fontFamily: F.serif, fontWeight: 900, fontSize: 150, lineHeight: '190px', whiteSpace: 'nowrap' }}>
+                {['《', ...TITLE, '》'].map((c, i) => {
+                  const t0 = i === 0 || i === TITLE.length + 1 ? HIT.TITLE : HIT.TITLE + (i - 1) * B / 2, k = eo(T, t0, 0.22);
                   return <span key={i} style={{ display: 'inline-block', opacity: T < t0 ? 0 : k, transform: `scale(${lerp(1.4, 1, k)})`, background: 'linear-gradient(180deg,#fff3cf 0%,#f0c873 52%,#b07c32 100%)', WebkitBackgroundClip: 'text', backgroundClip: 'text', color: 'transparent', filter: 'drop-shadow(0 6px 30px rgba(0,0,0,.9))' }}>{c}</span>;
                 })}
               </div>
-              <div style={{ position: 'absolute', left: 0, right: 0, top: 700, textAlign: 'center', opacity: titleO * eo(T, CUT.TITLE + 0.9, 0.4), fontFamily: F.serif, fontWeight: 700, fontSize: 50, color: C.cream, textShadow: '0 4px 20px rgba(0,0,0,.9)' }}>为什么9.99，看起来比10块便宜那么多？</div>
-              <div style={{ position: 'absolute', left: 0, right: 0, top: 774, textAlign: 'center', opacity: 0.9 * titleO * eo(T, CUT.TITLE + 1.2, 0.4), fontFamily: F.lat, fontStyle: 'italic', fontWeight: 500, fontSize: 34, color: 'rgba(239,232,218,.9)' }}>One cent, one whole digit.</div>
-              <div style={{ position: 'absolute', left: 0, right: 0, top: 838, textAlign: 'center', opacity: titleO * eo(T, CUT.TITLE + 1.5, 0.4), fontFamily: F.sans, fontWeight: 500, fontSize: 30, letterSpacing: '0.3em', color: C.gold }}>— {JUNO.series} —</div>
+              <div style={{ position: 'absolute', left: 0, right: 0, top: 500, textAlign: 'center', opacity: titleO * eo(T, HIT.TITLE + 1.0, 0.4), fontFamily: F.serif, fontWeight: 700, fontSize: 50, color: C.cream, textShadow: '0 4px 20px rgba(0,0,0,.9)' }}>一辆车，凭什么倒挂、还能飞？</div>
+              <div style={{ position: 'absolute', left: 0, right: 0, top: 574, textAlign: 'center', opacity: 0.9 * titleO * eo(T, HIT.TITLE + 1.3, 0.4), fontFamily: F.lat, fontStyle: 'italic', fontWeight: 500, fontSize: 34, color: 'rgba(239,232,218,.9)' }}>Hold on. Let go.</div>
+              <div style={{ position: 'absolute', left: 0, right: 0, top: 636, textAlign: 'center', opacity: titleO * eo(T, HIT.TITLE + 1.6, 0.4), fontFamily: F.sans, fontWeight: 500, fontSize: 30, letterSpacing: '0.3em', color: C.gold }}>— {JUNO.series} —</div>
             </>
           )}
-          {/* the slammed words on the 113.8 s hit */}
-          {T >= SLAM80 && T < at('e7') && (
-            <div style={{ position: 'absolute', left: 0, right: 0, top: 812, textAlign: 'center', opacity: eo(T, SLAM80, 0.18) * (1 - pr(T, at('e7') - 0.3, 0.3)), transform: `scale(${lerp(1.35, 1, eo(T, SLAM80, 0.22))})`, fontFamily: F.serif, fontWeight: 900, fontSize: 84, color: C.cream, textShadow: '0 6px 30px rgba(0,0,0,.95)' }}>
-              只隔一个生日，就被归进了<span style={{ color: MG }}>「80多岁」</span>
-            </div>
-          )}
-          {/* end card */}
+          {/* end card, over the car driving off */}
           {endO > 0 && (
             <>
               <svg width={1920} height={1080} style={{ position: 'absolute', inset: 0, opacity: endO }}>
                 <defs><linearGradient id="gec" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stopColor="#fff3cf" /><stop offset=".5" stopColor="#f0c873" /><stop offset="1" stopColor="#b07c32" /></linearGradient></defs>
-                <circle cx={960} cy={222} r={46} fill="none" stroke={C.gold} strokeWidth={3} pathLength={1} strokeDasharray="1 1" strokeDashoffset={1 - eio(T, CUT.END, 0.8)} transform="rotate(-90 960 222)" />
-                <text x={960} y={242} textAnchor="middle" style={{ fontFamily: F.lat, fontStyle: 'italic', fontWeight: 500, fontSize: 64 }} fill={C.gold} opacity={eo(T, CUT.END + 0.3, 0.4)}>J</text>
-                <text x={960} y={296} textAnchor="middle" style={{ fontFamily: F.mono, fontWeight: 700, fontSize: 22, letterSpacing: '0.5em' }} fill={C.gold} opacity={0.85 * eo(T, CUT.END + 0.5, 0.4)}>JUNO</text>
-                <text x={960} y={430} textAnchor="middle" opacity={eo(T, CUT.END, 0.3)} style={{ fontFamily: F.serif, fontWeight: 900, fontSize: 104 }} fill="url(#gec)">《差一分钱》</text>
-                <text x={960} y={650} textAnchor="middle" opacity={eo(T, CUT.END + 1.0, 0.4)} style={{ fontFamily: F.serif, fontWeight: 700, fontSize: 50, letterSpacing: '0.06em' }} fill={C.cream}>你上次被「.99」打动，买了什么？</text>
+                <circle cx={960} cy={232} r={46} fill="none" stroke={C.gold} strokeWidth={3} pathLength={1} strokeDasharray="1 1" strokeDashoffset={1 - eio(T, HIT.END, 0.8)} transform="rotate(-90 960 232)" />
+                <text x={960} y={252} textAnchor="middle" style={{ fontFamily: F.lat, fontStyle: 'italic', fontWeight: 500, fontSize: 64 }} fill={C.gold} opacity={eo(T, HIT.END + 0.3, 0.4)}>J</text>
+                <text x={960} y={306} textAnchor="middle" style={{ fontFamily: F.mono, fontWeight: 700, fontSize: 22, letterSpacing: '0.5em' }} fill={C.gold} opacity={0.85 * eo(T, HIT.END + 0.5, 0.4)}>JUNO</text>
+                <text x={960} y={440} textAnchor="middle" opacity={eo(T, HIT.END, 0.3)} style={{ fontFamily: F.serif, fontWeight: 900, fontSize: 104 }} fill="url(#gec)">《倒挂飞车》</text>
+                {/* motif: the outside air pushing up, three gold arrows */}
+                {[-60, 0, 60].map((dx, i) => <path key={i} opacity={eo(T, HIT.END + 0.6 + i * 0.08, 0.4)} transform={`translate(${960 + dx} 520)`} d="M -9 22 L -9 -2 L -20 -2 L 0 -24 L 20 -2 L 9 -2 L 9 22 Z" fill={C.gold} />)}
+                <text x={960} y={640} textAnchor="middle" opacity={eo(T, HIT.END + 1.0, 0.4)} style={{ fontFamily: F.serif, fontWeight: 700, fontSize: 50, letterSpacing: '0.06em' }} fill={C.cream}>三个版本，你选哪个？</text>
               </svg>
-              <div style={{ position: 'absolute', left: 0, right: 0, top: 706, display: 'flex', justifyContent: 'center', opacity: endO * eo(T, CUT.END + 1.3, 0.4) }}>
+              <div style={{ position: 'absolute', left: 0, right: 0, top: 700, display: 'flex', justifyContent: 'center', opacity: endO * eo(T, HIT.END + 1.3, 0.4) }}>
                 <div style={{ padding: '10px 36px', borderRadius: 40, border: `1.5px solid ${C.gold}`, fontFamily: F.sans, fontWeight: 500, fontSize: 30, letterSpacing: '0.2em', color: C.gold }}>{JUNO.follow}</div>
               </div>
-              <div style={{ position: 'absolute', left: 0, right: 0, top: 800, textAlign: 'center', opacity: endO * eo(T, CUT.END + 1.6, 0.4), fontFamily: F.sans, fontSize: 26, color: 'rgba(239,232,218,.88)', lineHeight: '38px' }}>
-                <div>资料：Thomas & Morwitz, J. Consumer Research 2005 · Lacetera, Pope & Sydnor, AER 2012</div>
-                <div>Anderson & Simester, Quant. Marketing & Economics 2003 · Olenski et al., NEJM 2020</div>
+              <div style={{ position: 'absolute', left: 0, right: 0, top: 800, textAlign: 'center', opacity: endO * eo(T, HIT.END + 1.6, 0.4), fontFamily: F.sans, fontSize: 26, color: 'rgba(239,232,218,.88)', lineHeight: '38px' }}>
+                <div>资料：TechCrunch · Fox Business · Electrek（2026年10月15日）</div>
+                <div>画面为示意，车辆为原创造型</div>
               </div>
-              <div style={{ position: 'absolute', inset: 0, background: '#000', opacity: pr(T, CUT.FIN - 0.5, 0.5) }} />
             </>
           )}
-          {/* the motif on the end card: the price tag, in gold */}
-          {endO > 0 && <Canvas dep={f} draw={(g) => { g.save(); g.globalAlpha = endO * eo(T, CUT.END + 0.6, 0.4); tag(g, 960, 528, 0.55, -0.05, '9.99', { col: '#8a6420' }); g.restore(); }} />}
-          <div style={{ position: 'absolute', right: 56, top: 36, opacity: 0.9 * markO, fontFamily: F.sans, fontWeight: 500, fontSize: 20, letterSpacing: '0.3em', color: 'rgba(243,237,226,.6)' }}><span style={{ color: '#e3b765' }}>◆ </span>Juno · VIBE知识大赏</div>
-          <Subs T={T} lines={LINES.filter(([a]) => a < CUT.END && a !== at('e6')) as any} />
+          <div style={{ position: 'absolute', right: 56, top: 36, opacity: 0.9 * markO, fontFamily: F.sans, fontWeight: 500, fontSize: 20, letterSpacing: '0.3em', color: 'rgba(243,237,226,.6)' }}><span style={{ color: '#e3b765' }}>◆ </span>{JUNO.mark}</div>
+          <Subs T={T} lines={LINES as any} />
+          <div style={{ position: 'absolute', inset: 0, background: '#000', opacity: 0 * pr(T, FIN - 0.3, 0.3) }} />
         </>
       )}
     </AbsoluteFill>
   );
 };
+const Ind: React.FC<{ s: string; o: number }> = ({ s, o }) => (
+  <div style={{ position: 'absolute', left: 64, top: 150, opacity: o, fontFamily: F.sans, fontWeight: 700, fontSize: 26, letterSpacing: '0.2em', color: 'rgba(243,237,226,.85)', padding: '6px 16px', borderRadius: 6, background: 'rgba(8,6,5,.55)' }}>{s}</div>
+);
+void glowDot;
