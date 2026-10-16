@@ -137,8 +137,8 @@ const makeDis = (id: string, x: number, y: number, s: number, tin: number, din: 
   return { id, x, y, s, tin, din, warm, hx, hy, hs, hk, th, t0, xmin, pts };
 };
 let DIS: Dis[] = [];
-let FLY_DIS: Dis;
-const ensureDis = () => { if (DIS.length) return; FLY_DIS = makeDis('fly', 1100, 820, 0.62, 17.2, 1.0, 0, 0, 0, 0, 0, 0, 20.0); DIS = [
+let FLY_DIS: Dis, CAT_DIS: Dis, RHINO_DIS: Dis;
+const ensureDis = () => { if (DIS.length) return; FLY_DIS = makeDis('fly', 1100, 820, 0.62, 17.2, 1.0, 0, 0, 0, 0, 0, 0, 20.0); CAT_DIS = makeDis('cat', 1040, 800, 0.9, 1.1, 2.0, 0, 0, 0, 0, 0, 0, 4.0); RHINO_DIS = makeDis('rhino', 940, 800, 1.05, 7.9, 2.8, 0, 0, 0, 0, 0, 0, 14.0); DIS = [
   makeDis('fly', 470, 780, 0.9, 22.5, 1.2, 0, 470, 545, 80, 0.04, 27.7, 35.0),
   makeDis('cat', 960, 790, 0.8, 23.0, 1.6, 0.45, 960, 420, 160, 0.55, 27.9, 36.6),
   makeDis('rhino', 1440, 790, 0.62, 23.5, 2.0, 0.8, 1440, 440, 250, 1.0, 28.1, 38.2),
@@ -286,7 +286,11 @@ const draw = (g: G, T: number) => {
     glow(g, 1000, 800, 330, 0.28 * eo(T, 1.4, 1.6) * oA);
     chalkLine(g, wobbly(180, 802, 1740, 806, 60, 2, 1), eo(T, 0.1, 1.4), 5, oA);
     chalkPuppet(g, 'lamp', 780, 800, 0.9, eo(T, 0.3, 1.8), oA);
-    chalkPuppet(g, 'cat', 1040, 800, 0.9, eo(T, 1.1, 2.0), oA, 0.15);
+    // the cat dies: it rises away as chalk dust while "很多人会难过一整天" (4.0–)
+    { const f0 = T < CAT_DIS.t0 ? -1 : CAT_DIS.xmin + (T - CAT_DIS.t0) * 150;
+      g.save(); if (f0 > 0) { g.beginPath(); g.rect(f0, -200, 3000, 1600); g.clip(); }
+      chalkPuppet(g, 'cat', 1040, 800, 0.9, eo(T, 1.1, 2.0), oA, 0.15); g.restore();
+      if (T >= CAT_DIS.t0) crumble(g, CAT_DIS, T, 150, false, 2.2); }
     g.restore();
   }
   // B · Sudan (5.6–16.8)
@@ -300,11 +304,16 @@ const draw = (g: G, T: number) => {
       chalkLine(g, [...P.ell(x, 560 + (1 - sc) * 120, 170 * sc, 34 * sc, Math.PI, Math.PI * 2, 30)], eo(T, t0 + 0.5, 0.9), 5, oB);
       chalkLine(g, wobbly(x - 170 * sc, 560 + (1 - sc) * 120, x + 170 * sc, 562 + (1 - sc) * 120, 20, 3, x + 1), eo(T, t0 + 0.9, 0.7), 4, oB);
     }
+    // Sudan dies: while the world's small lights come on, he rises away as chalk dust (14.0–)
+    const f1 = T < RHINO_DIS.t0 ? -1 : RHINO_DIS.xmin + (T - RHINO_DIS.t0) * 280;
+    g.save(); if (f1 > 0) { g.beginPath(); g.rect(f1, -200, 3000, 1600); g.clip(); }
     chalkPuppet(g, 'rhino', 940, 800, 1.05, eo(T, 7.9, 2.8), oB, 0.1);
     // its name, written in chalk
     const nm = chalkText('Sudan', 90, `rgb(${CHALK})`, '"PatrickHand"');
     const kn = eo(T, 11.5, 0.9);
     if (kn > 0) { g.save(); g.globalAlpha = oB; g.beginPath(); g.rect(0, 0, 760 + 400 * kn, 1080); g.clip(); g.drawImage(nm, -40, 640); g.restore(); }
+    g.restore();
+    if (T >= RHINO_DIS.t0) crumble(g, RHINO_DIS, T, 280, false, 2.4);
     // the world's attention: small warm lights blooming
     if (T > 13.6) { P.reseed(7); for (let i = 0; i < 70; i++) { const x = 80 + P.rand() * 1760, y = 60 + P.rand() * 540, t0 = 13.7 + P.rand() * 2.4; const a = eo(T, t0, 0.6) * (0.55 + 0.45 * Math.sin(T * 3 + i)) * oB; glow(g, x, y, 14 + P.rand() * 18, 0.8 * a); } }
     g.restore();
@@ -321,7 +330,7 @@ const draw = (g: G, T: number) => {
     g.save(); if (front > 0) { g.beginPath(); g.rect(front, -200, 3000, 1600); g.clip(); }
     chalkPuppet(g, 'fly', 1100, 820, 0.62, eo(T, 17.2, 1.0), oC);
     g.restore();
-    if (T >= 20.0) crumble(g, FLY_DIS, T, 260, true, 1.9);
+    if (T >= 20.0) crumble(g, FLY_DIS, T, 260, false, 2.0);
   }
   // D · fly, cat, rhino, each with a chalk heart that fills with warm light: how much we ache for it (22.5–34),
   //     then all three crumble into chalk dust, left to right at the same speed (34–40)
