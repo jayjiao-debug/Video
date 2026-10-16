@@ -212,7 +212,7 @@ export const Film: React.FC = () => {
               // rewind ghosts: where the car is coming back from
               if (rewind > 0 && T < HIT.CEIL) {
                 const ht = lerp(10.54, T_CEIL, eio(T, 15.0, HIT.CEIL - 15.0));
-                for (let i = 3; i >= 1; i--) { const gs = hookState(Math.min(10.54, ht + i * 0.07)); g.save(); g.globalAlpha = 0.1 * rewind * (1 - i / 4); car(g, gs.p, { sy: gs.sy, rim: 0 }); g.restore(); }
+                void ht;   // (ghost copies read as a stack of cars; the rewind sign and streaks carry it)
               }
               streaks(g, p, st.streak * (1 - freeze));
               // jets that sit behind the body
