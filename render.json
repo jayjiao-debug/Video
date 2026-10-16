@@ -1,9 +1,9 @@
 {
-  "id": "life_demo-1792185826",
-  "composition": "Film",
+  "id": "chalk_open-1792187724",
+  "composition": "Chalk",
   "start": 0,
-  "end": 5663,
-  "chunks": 30,
-  "output": "life_demo",
+  "end": 1427,
+  "chunks": 15,
+  "output": "chalk_open",
   "flags": ""
 }
