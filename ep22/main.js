@@ -87,7 +87,7 @@ row.children.forEach(v=>v.position.x+=G.ROW_C-ROWX);
 const PH=surf(atS(S_STOP).a,atS(S_STOP).b);// hang point on the ceiling
 const LINES=[[0.12,3.59,'这车正往一面墙上开'],[3.59,7.07,'墙越来越陡，它还在往上冲'],[7.07,10.54,'直到整辆车[倒过来]'],[10.54,14.01,'然后，它[停]在了天花板上'],
  [17.50,20.97,'停着都不掉，靠的不是速度'],[20.97,24.44,'车底有风扇，把空气[往外抽]'],[24.44,27.91,'车底空气少了，外面的就把它[按住]'],[27.91,31.40,'车底约4㎡，外面空气推着约[40吨]'],[31.40,34.88,'车只有约[2吨]：少约[5%]就够'],
- [34.88,36.61,'然后，它[冲了出去]'],[36.61,40.31,'车里塞满了[高压气瓶]'],[40.31,43.80,'一侧猛喷，车就[翻个身]'],[45.30,48.79,'往下喷，落地前[刹一下]'],[48.79,52.26,'再来：前面停着[一排车]'],[52.26,55.73,'这次，往下[猛喷]'],
+ [34.88,37.04,'然后，它[冲了出去]'],[37.04,40.31,'车里塞满了[高压气瓶]'],[40.31,43.80,'一侧猛喷，车就[翻个身]'],[45.30,48.79,'往下喷，落地前[刹一下]'],[48.79,52.26,'再来：前面停着[一排车]'],[52.26,55.73,'这次，往下[猛喷]'],
  [55.73,59.21,'一边喷，一边在空中[翻转]'],[59.21,62.68,'特斯拉称：推力是抓地力的[4–5倍]'],[62.68,66.17,'还说：0到60英里/时[不到1秒]'],[66.17,69.64,'这些都还[没人实测过]'],
  [69.64,73.11,'会飞的版本：[单座]，受邀才能买'],[73.11,76.59,'也[不能上路]；能飞多久，[没公布]'],[76.59,80.06,'[2028]年，才开始量产'],[80.06,83.53,'最便宜的版本，定金[5万美元]'],[83.53,87.02,'倒挂靠[抽气]，起飞靠[喷气]']];
 window.LINES=LINES;
@@ -108,10 +108,12 @@ const KEYS=[
  {a:36.9,b:38.4,fn:T=>{const P=car.position;const o=sm(37.4,40.3,T);const ang=-.12+.3*o;const r=8.4;return {p:P.clone().add(V3(-Math.sin(.68+ang)*r*.75,-1.0,-Math.cos(.68+ang)*r)),l:P.clone().add(V3(.25,-.15,0)),u:UP,f:42};}},
  {a:40.6,b:43.6,fn:T=>{const P=car.position;const k=sm(43,47.5,T);return {p:P.clone().add(V3(-8.5,lerp(1.8,1.0,k),-11.5)).setY(Math.max(1.2,P.y+lerp(1.8,1.0,k))),l:P.clone().add(V3(4,.6,0)),u:UP,f:44};}},
  {a:46.6,b:49.0,fn:T=>{const P=car.position;return {p:P.clone().add(V3(-7.2,1.9,-4.2)),l:P.clone().add(V3(5,.7,0)),u:UP,f:46};}},
- {a:51.0,b:51.1,fn:T=>{const P=car.position;const ch={p:P.clone().add(V3(-7.2,1.9,-4.2)),l:P.clone().add(V3(5,.7,0))};const x=G.ROW_C-9+8*sm(52,60,T);const lx=lerp(G.ROW_C,P.x,.6);const ly=lerp(3.4,P.y+.6,.55);
-   const w=ease(sm(51.0,54.0,T)),wl=ease(sm(53.0,54.4,T));const cl0=P.clone().add(V3(.5,.7,0));return {p:ch.p.lerp(V3(x,1.7,-14.5),w),l:ch.l.lerp(cl0,ease(sm(51,52.5,T))).lerp(V3(lx+1,ly,0),wl),u:UP,f:lerp(46,48,w)};}},
+ {a:51.0,b:51.1,fn:T=>{const P=car.position;const ch={p:P.clone().add(V3(-7.2,1.9,-4.2)),l:P.clone().add(V3(5,.7,0))};
+   // the camera settles beside the take-off point: the car charges past it, then it pans with the jump over the row
+   const x=lerp(G.X_T-4.5,G.ROW_C-5,ease(sm(54.4,59.4,T)));const rc=V3(x,1.6,-11.5);const lx=lerp(P.x+1.5,lerp(G.ROW_C,P.x,.6),ease(sm(54.0,55.2,T)));const ly=lerp(.8,lerp(3.4,P.y+.6,.6),ease(sm(54.0,55.0,T)));
+   const w=ease(sm(51.4,53.9,T));return {p:ch.p.lerp(rc,w),l:ch.l.lerp(V3(lx,ly,0),w),u:UP,f:lerp(46,50,w)};}},
  {a:59.0,b:61.4,fn:T=>{const P=car.position;const lag=3*sm(62.68,63.8,T)*(1-sm(64.5,67.6,T));const o=ease(sm(59.5,68.5,T));return {p:V3(P.x-lerp(7.4,3.2,o)-lag,lerp(1.9,1.3,o),-lerp(4.4,7.0,o)),l:V3(P.x+lerp(5,1.2,o),.75,0),u:UP,f:46};}},
- {a:68.0,b:71.6,fn:T=>{const P=PEND;const d=1.6*sm(70,83.5,T);const up=sm(83.3,87,T);return {p:P.clone().add(V3(-3.6+d,1.0+2.2*up,-7.3+1.2*up)),l:P.clone().add(V3(.6+d*.6,.9+1.4*up,0)),u:UP,f:36};}},
+ {a:68.0,b:71.6,fn:T=>{const P=PEND;const d=1.6*sm(70,83.5,T);const up=sm(83.3,87,T);return {p:P.clone().add(V3(-3.6+d-1.5*up,1.0+2.6*up,-7.3-3.2*up)),l:P.clone().add(V3(.6+d*.6,.9+.5*up,0)),u:UP,f:36};}},
 ];
 const _p=V3(0,0,0),_l=V3(0,0,0),_u=V3(0,0,0);
 function camAt(T){let i=0;while(i+1<KEYS.length&&T>=KEYS[i+1].a)i++;let c=KEYS[i].fn(T);
