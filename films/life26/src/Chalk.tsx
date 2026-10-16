@@ -49,12 +49,12 @@ const record = (id: string) => {
 
 const CHALK = '242,236,222', WARM = '255,206,140';
 /** draw a recorded puppet as chalk at (x, y), scale s; `p` reveals it along its length; `warm` 0..1 tints it */
-const chalkPuppet = (g: G, id: string, x: number, y: number, s: number, p: number, o = 1, warm = 0) => {
+const chalkPuppet = (g: G, id: string, x: number, y: number, s: number, p: number, o = 1, warm = 0, flip = false) => {
   if (o <= 0.002 || p <= 0) return;
   const { strokes, total } = record(id);
   const col = tint(warm);
   let budget = p * total * 1.02, lastFull = true;
-  g.save(); g.translate(x, y); g.scale(s, s); g.lineCap = 'round'; g.lineJoin = 'round';
+  g.save(); g.translate(x, y); g.scale(flip ? -s : s, s); g.lineCap = 'round'; g.lineJoin = 'round';
   for (const st of strokes) {
     const main = st.a > 0.5;
     if (st.kind === 'dot') { if (budget <= 0) break; g.fillStyle = `rgba(${col},${0.85 * o})`; g.beginPath(); g.arc(st.pts[0][0], st.pts[0][1], st.w, 0, 7); g.fill(); continue; }
@@ -265,7 +265,7 @@ const chalkText = (s: string, size: number, col: string, font: string) => {
 const dust = (g: G, x: number, y: number, t: number, n = 40, col = CHALK) => {
   if (t < 0 || t > 1.4) return;
   P.reseed(Math.round(x + y));
-  for (let i = 0; i < n; i++) { const a = P.rand() * Math.PI * 2, v = 80 + P.rand() * 380, r = 1.5 + P.rand() * 3.5; const px = x + Math.cos(a) * v * eo(t, 0, 1.2), py = y + Math.sin(a) * v * eo(t, 0, 1.2) + 60 * t * t; g.fillStyle = `rgba(${col},${0.7 * (1 - t / 1.4)})`; g.beginPath(); g.arc(px, py, r, 0, 7); g.fill(); }
+  for (let i = 0; i < n; i++) { const a = P.rand() * Math.PI * 2, v = 80 + P.rand() * (n > 150 ? 900 : 380), r = 1.5 + P.rand() * 3.5; const px = x + Math.cos(a) * v * eo(t, 0, 1.2), py = y + Math.sin(a) * v * eo(t, 0, 1.2) + 60 * t * t; g.fillStyle = `rgba(${col},${0.7 * (1 - t / 1.4)})`; g.beginPath(); g.arc(px, py, r, 0, 7); g.fill(); }
 };
 
 /* ------------------------------------------------------------ the picture */
@@ -365,6 +365,18 @@ const draw = (g: G, T: number) => {
     chalkLine(g, P.bez([140, 860], [600, 720], [1320, 720], [1780, 860], 50), eo(T, 63.0, 1.4), 5, oM2);
     for (let i = -7; i <= 7; i++) { const x = 960 + i * 110, y = 860 - 140 * (1 - (i / 8.6) ** 2); chalkLine(g, [[x, y], [x, y - 60]], eo(T, 63.3 + (i + 7) * 0.04, 0.4), 3.5, oM2); }
     for (let i = 0; i < 5; i++) chalkLine(g, wobbly(260 + i * 300, 930 + (i % 2) * 18, 420 + i * 300, 930 + (i % 2) * 18, 12, 4, i), eo(T, 63.8 + i * 0.15, 0.6), 3, oM2 * 0.6, '170,200,230');
+    const FISH_SWIM: [number, number, number, number, boolean][] = [[520, 905, 0.36, 46, false], [1010, 930, 0.32, -38, true], [1340, 900, 0.3, 52, false], [760, 945, 0.28, -30, true]];
+    FISH_SWIM.forEach(([x0, y0, sc, v, fl], i) => {
+      const t = T - 63.0, x = x0 + v * t, y = y0 + 6 * Math.sin(t * 1.7 + i * 2);
+      chalkPuppet(g, 'fish', x, y, sc, eo(T, 63.6 + i * 0.25, 1.0), oM2 * 0.85, 0.15, fl);
+    });
+    // a leap on 鱼真快乐
+    const lj = pr(T, 66.0, 1.1);
+    if (lj > 0 && lj < 1) {
+      const lx = lerp(880, 1100, lj), ly = 905 - 150 * Math.sin(lj * Math.PI);
+      g.save(); g.translate(lx, ly); g.rotate(lerp(-0.7, 0.7, lj)); chalkPuppet(g, 'fish', 0, 0, 0.36, 1, oM2, 0.3); g.restore();
+      for (const [px, t0] of [[880, 66.0], [1100, 67.05]] as const) { const k = pr(T, t0, 0.9); if (k > 0 && k < 1) chalkLine(g, P.ell(px, 925, 30 + 70 * k, 8 + 14 * k, 0, Math.PI * 2, 40), 1, 3, oM2 * (1 - k), '170,200,230'); }
+    }
     person(g, 'zhuang', 340, 790, 0.72, eo(T, 63.2, 1.6), oM2, '庄子');
     person(g, 'hui', 1580, 790, 0.72, eo(T, 63.5, 1.6), oM2, '惠子');
     bubble(g, 760, 330, 600, 230, -1, eo(T, 65.85, 0.7), oM2, ['儵鱼出游从容，', '是鱼之乐也。'], false, 60);
@@ -428,35 +440,52 @@ const draw = (g: G, T: number) => {
     rowLife(oM6, 9999, eo(T, 137.8, 1.6), 137.3);
     person(g, 'schweitzer', 250, 830, 0.72, eo(T, 137.4, 1.2), oM6, '史怀哲 · Schweitzer');
   }
-  // M7 · Lecky: circles of kindness widening (146.3–163)
-  const oM7 = fade(T, 146.2, 163.0, 0.6, 0.9);
+  // M7 · Lecky: circles of kindness widening (146.3–163.2); then (159.6–163.2) the rings close back in on us and slide
+  //      to the centre, ending as exactly the small circle the ending starts from
+  const oM7 = fade(T, 146.2, 163.25, 0.6, 0.05);
   if (oM7 > 0) {
     const oLk = fade(T, 146.2, 157.6, 0.5, 0.6);
     person(g, 'lecky', 250, 830, 0.72, eo(T, 146.3, 1.4), oLk, '莱基 · Lecky');
     bubble(g, 900, 300, 920, 230, -1, eo(T, 146.6, 0.7), oLk * (1 - pr(T, 152.9, 0.4)), ['…soon the circle expanding…', 'and finally, the animal world.'], true, 52);
-    const cx = 1180, cy = 700;
+    const k = eio(T, 159.6, 3.6), cx = lerp(1180, 960, k), cy = 700, ryk = lerp(0.5, 0.55, k);
     const rings: [number, number][] = [[150, 148.9], [300, 151.5], [460, 154.2]];
-    rings.forEach(([r, t0], i) => { glow(g, cx, cy, r * 1.1, 0.12 * eo(T, t0, 1.0) * oM7); chalkLine(g, P.ell(cx, cy, r, r * 0.5, -Math.PI / 2, Math.PI * 1.5, 100), eo(T, t0, 1.2), 4.5, oM7 * (1 - 0.3 * i / 3), WARM); });
-    chalkPuppet(g, 'we', cx - 40, 760, 0.36, eo(T, 148.9, 1.0), oM7, 0.6); chalkPuppet(g, 'we', cx + 40, 760, 0.3, eo(T, 149.2, 1.0), oM7, 0.6);
-    chalkPuppet(g, 'researcher', cx - 200, 770, 0.3, eo(T, 151.6, 1.0), oM7, 0.4); chalkPuppet(g, 'singer', cx + 210, 770, 0.3, eo(T, 151.8, 1.0), oM7, 0.4); chalkPuppet(g, 'nagel', cx + 120, 640, 0.26, eo(T, 152.0, 1.0), oM7, 0.4);
-    chalkPuppet(g, 'dog', cx - 390, 790, 0.34, eo(T, 154.4, 1.0), oM7, 0.3); chalkPuppet(g, 'cat', cx + 380, 790, 0.36, eo(T, 154.6, 1.0), oM7, 0.3); chalkPuppet(g, 'bird', cx + 300, 560, 0.4, eo(T, 154.8, 1.0), oM7, 0.3);
+    rings.forEach(([r0, t0], i) => {
+      const r = lerp(r0, 190, k), oi = i === 0 ? 1 : 1 - clamp((k - 0.55) / 0.45);
+      glow(g, cx, cy + 40 * k, lerp(r0 * 1.1, 190 * 1.15, k), lerp(0.12, i === 0 ? 0.38 : 0, k) * eo(T, t0, 1.0) * oM7 * oi);
+      chalkLine(g, P.ell(cx, cy, r, r * ryk, -Math.PI / 2, Math.PI * 1.5, 100), eo(T, t0, 1.2), lerp(4.5, 6, k), oM7 * oi * (1 - 0.3 * i / 3 * (1 - k)), WARM);
+    });
+    const fadeOthers = 1 - clamp(k * 1.6);
+    chalkPuppet(g, 'we', lerp(1140, 960, k), lerp(760, 820, k), lerp(0.36, 0.6, k), eo(T, 148.9, 1.0), oM7, 0.6);
+    chalkPuppet(g, 'we', cx + 40, 760, 0.3, eo(T, 149.2, 1.0), oM7 * fadeOthers, 0.6);
+    chalkPuppet(g, 'researcher', cx - 200, 770, 0.3, eo(T, 151.6, 1.0), oM7 * fadeOthers, 0.4); chalkPuppet(g, 'singer', cx + 210, 770, 0.3, eo(T, 151.8, 1.0), oM7 * fadeOthers, 0.4); chalkPuppet(g, 'nagel', cx + 120, 640, 0.26, eo(T, 152.0, 1.0), oM7 * fadeOthers, 0.4);
+    chalkPuppet(g, 'dog', cx - 390, 790, 0.34, eo(T, 154.4, 1.0), oM7 * fadeOthers, 0.3); chalkPuppet(g, 'cat', cx + 380, 790, 0.36, eo(T, 154.6, 1.0), oM7 * fadeOthers, 0.3); chalkPuppet(g, 'bird', cx + 300, 560, 0.4, eo(T, 154.8, 1.0), oM7 * fadeOthers, 0.3);
+    chalkLine(g, wobbly(160, 822, 1760, 826, 60, 2, 8), eo(T, 160.4, 1.6), 4, 0.6 * oM7);
   }
-  // E · the ending (163–182.6): a chalk circle around us; everyone outside is dim and cold. Then the circle grows,
-  //     and whoever it reaches turns warm.
-  const oE = fade(T, 163.0, END + 2.5, 0.8, 1.2);
+  // E · the ending (163.2–182.6): us in a small circle; everyone else outside, dim and cold. On the drop (168.40) the
+  //     circle blasts open, every life lights up and gets a full heart.
+  const oE = fade(T, 163.2, END + 2.5, 0.01, 1.2);
   if (oE > 0) {
-    const r = T < 167.1 ? 190 : lerp(190, 1300, eo(T, 167.1, 4.6)), cx = 960, cy = 700, ry = 0.55;
-    const warmAll = eo(T, 177.3, 3.0);
-    glow(g, cx, cy + 40, r * 1.15, 0.38 * oE);
-    chalkLine(g, wobbly(160, 822, 1760, 826, 60, 2, 8), eo(T, 163.1, 1.5), 4, oE * 0.6);
-    chalkLine(g, P.ell(cx, cy, r, r * ry, -Math.PI / 2, Math.PI * 1.5, 140), eo(T, 163.3, 1.4), 6, oE, WARM);
-    chalkPuppet(g, 'we', 960, 820, 0.6, eo(T, 163.2, 1.8), oE, 0.6 + 0.4 * warmAll);
-    const crowd: [string, number, number, number, number][] = [['cat', 640, 820, 0.55, 163.8], ['dog', 1290, 820, 0.5, 164.0], ['rhino', 1620, 830, 0.5, 164.2], ['chicken', 330, 830, 0.5, 164.4], ['fly', 470, 560, 0.55, 164.6], ['bird', 1470, 540, 0.55, 164.8], ['frog', 790, 580, 0.5, 165.0], ['fish', 1150, 540, 0.5, 165.2]];
-    for (const [id, x, y, s, t0] of crowd) {
+    const DROP = 168.40, td = T - DROP;
+    const r = T < 167.2 ? 190 : T < DROP ? lerp(190, 225, eio(T, 167.2, DROP - 167.2)) : lerp(225, 1700, eo(T, DROP, 0.75)), cx = 960, cy = 700, ry = 0.55;
+    const warmAll = eo(T, 177.3, 3.0), punch = td > 0 ? Math.exp(-td / 0.45) : 0;
+    g.save(); g.translate(960, 640); g.scale(1 + 0.045 * punch, 1 + 0.045 * punch); g.translate(-960, -640);
+    glow(g, cx, cy + 40, r * 1.15, (0.38 + 0.12 * eo(T, DROP, 0.6)) * oE);
+    if (td > 0) glow(g, cx, cy, 1500, 0.6 * Math.exp(-td / 0.6) * oE);
+    chalkLine(g, wobbly(160, 822, 1760, 826, 60, 2, 8), 1, 4, oE * 0.6);
+    chalkLine(g, P.ell(cx, cy, r, r * ry, -Math.PI / 2, Math.PI * 1.5, 140), 1, 6, oE, WARM);
+    if (td > 0 && td < 1.0) chalkLine(g, P.ell(cx, cy, r * 1.2 + 200 * td, (r * 1.2 + 200 * td) * ry, 0, Math.PI * 2, 140), 1, 10 * (1 - td), oE * (1 - td), WARM);
+    chalkPuppet(g, 'we', 960, 820, 0.6, 1, oE, 0.6 + 0.4 * Math.max(warmAll, eo(T, DROP, 0.4)));
+    const crowd: [string, number, number, number, number, number][] = [['cat', 640, 820, 0.55, 163.4, 125], ['dog', 1290, 820, 0.5, 163.6, 105], ['rhino', 1620, 830, 0.5, 163.8, 125], ['chicken', 330, 830, 0.5, 164.0, 125], ['fly', 470, 560, 0.55, 164.2, 50], ['bird', 1470, 540, 0.55, 164.4, 60], ['frog', 790, 580, 0.5, 164.6, 60], ['fish', 1150, 540, 0.5, 164.8, 50]];
+    crowd.forEach(([id, x, y, s, t0, hgt], i) => {
       const d = Math.hypot((x - cx) / r, (y - 80 - cy) / (r * ry)), inside = clamp((1.1 - d) / 0.2);
-      const warm = Math.max(inside * 0.85, warmAll * 0.9, id === 'rhino' ? inside * eo(T, 169.7, 1.0) : 0);
+      const warm = Math.max(inside * 0.85, warmAll * 0.9);
       chalkPuppet(g, id, x, y, s, eo(T, t0, 1.8), oE * (0.3 + 0.7 * inside), warm);
-    }
+      // on the drop: a full heart over every one of them, the fly's as full as the rhino's
+      if (td > 0) { const k = eo(T, DROP + 0.05 + i * 0.03, 0.35), hs = 78 * (0.6 + 0.4 * k + 0.25 * Math.exp(-Math.max(0, td - i * 0.03) / 0.18)); chalkHeart(g, x, y - (hgt + 280) * s - 40, hs, k, k, oE); }
+    });
+    if (td > 0) { const k = eo(T, DROP + 0.02, 0.35); chalkHeart(g, 960, 820 - 450 * 0.6 - 70, 84 * (0.6 + 0.4 * k), k, k, oE); }
+    if (td > 0) dust(g, cx, cy, td, 180, WARM);
+    g.restore();
   }
   g.restore();
   // the title on the hit: every grain of the three lives' dust flies into the letters, which stand on their ground line
