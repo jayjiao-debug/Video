@@ -35,7 +35,7 @@ const comp=new EffectComposer(R);comp.addPass(new RenderPass(S,cam));
 comp.addPass(new ShaderPass({uniforms:{tDiffuse:{value:null}},vertexShader:`varying vec2 vUv;void main(){vUv=uv;gl_Position=projectionMatrix*modelViewMatrix*vec4(position,1.);}`,
  fragmentShader:`uniform sampler2D tDiffuse;varying vec2 vUv;void main(){vec4 c=texture2D(tDiffuse,vUv);if(!(c.r==c.r)||!(c.g==c.g)||!(c.b==c.b))c=vec4(0.);gl_FragColor=vec4(clamp(c.rgb,0.,40.),1.);}`}));
 const bloom=new UnrealBloomPass(new THREE.Vector2(960,540),.55,.6,.86);comp.addPass(bloom);window.BLOOM=bloom;
-const grade=new ShaderPass({uniforms:{tDiffuse:{value:null},uVig:{value:.32},uSunUV:{value:new THREE.Vector2(.5,.5)},uRay:{value:.0},uCool:{value:0}},
+const grade=window.GRADE=new ShaderPass({uniforms:{tDiffuse:{value:null},uVig:{value:.32},uSunUV:{value:new THREE.Vector2(.5,.5)},uRay:{value:.0},uCool:{value:0}},
  vertexShader:`varying vec2 vUv;void main(){vUv=uv;gl_Position=projectionMatrix*modelViewMatrix*vec4(position,1.);}`,
  fragmentShader:`uniform sampler2D tDiffuse;uniform float uVig,uRay,uCool;uniform vec2 uSunUV;varying vec2 vUv;
  void main(){vec4 c=texture2D(tDiffuse,vUv);
@@ -65,7 +65,10 @@ function camRel(fr,off,look,fov){const {P,T,N,Z}=fr;cam.position.copy(P).addScal
  const L=P.clone().addScaledVector(T,look[0]).addScaledVector(N,look[1]).addScaledVector(Z,look[2]);cam.up.copy(fr.up||new THREE.Vector3(0,1,0));cam.lookAt(L);cam.fov=fov;cam.updateProjectionMatrix();}
 function frameOfCar(){const T=new THREE.Vector3(1,0,0).applyQuaternion(car.quaternion),N=new THREE.Vector3(0,1,0).applyQuaternion(car.quaternion),Z=new THREE.Vector3(0,0,1).applyQuaternion(car.quaternion);return {P:car.position.clone(),T,N,Z};}
 function sunUV(){const p=cam.position.clone().addScaledVector(SUN,1000).project(cam);return new THREE.Vector2(p.x*.5+.5,p.y*.5+.5);}
-function finish(){sunL.position.copy(car.position).addScaledVector(SUN,150);sunL.target.position.copy(car.position);sky.position.copy(cam.position);grade.uniforms.uSunUV.value.copy(sunUV());comp.render();}
+function finish(){sunL.position.copy(car.position).addScaledVector(SUN,150);sunL.target.position.copy(car.position);sky.position.copy(cam.position);grade.uniforms.uSunUV.value.copy(sunUV());
+ // light shafts only when the sun is actually in front of the lens (a sun behind the camera projects to a jumping point → global flicker)
+ const fwd=new THREE.Vector3(0,0,-1).applyQuaternion(cam.quaternion);const k=sm(.55,.85,fwd.dot(SUN));const uv=grade.uniforms.uSunUV.value;const onS=sm(-.35,.0,Math.min(uv.x,uv.y,1-uv.x,1-uv.y));
+ const r0=grade.uniforms.uRay.value;grade.uniforms.uRay.value=0*r0*k*onS;comp.render();grade.uniforms.uRay.value=r0;}
 // ---- HUD helpers
 const pj=v=>{const p=v.clone().project(cam);return [(p.x*.5+.5)*1920,(-p.y*.5+.5)*1080,p.z];};
 let H='',SV='';

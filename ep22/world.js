@@ -10,7 +10,7 @@ export function skyMat(){return new THREE.ShaderMaterial({side:THREE.BackSide,de
  float n2(vec2 p){vec2 i=floor(p),f=fract(p);f=f*f*(3.-2.*f);return mix(mix(h(i),h(i+vec2(1,0)),f.x),mix(h(i+vec2(0,1)),h(i+vec2(1,1)),f.x),f.y);}
  void main(){vec3 d=normalize(vD);float y=max(d.y,-.02);float sd=max(dot(d,uSun),0.);
   vec3 c=mix(uHor,uMid,smoothstep(0.,.12,y));c=mix(c,uZen,smoothstep(.08,.6,y));
-  c+=vec3(1.,.62,.36)*pow(sd,6.)*.55*(1.-smoothstep(0.,.5,y));c+=vec3(1.,.8,.55)*pow(sd,60.)*1.2;c+=vec3(1.,.95,.85)*smoothstep(.9993,.9997,sd)*7.;
+  c+=vec3(1.,.62,.36)*pow(sd,6.)*.55*(1.-smoothstep(0.,.5,y));c+=vec3(1.,.8,.55)*pow(sd,60.)*1.2;c+=vec3(1.,.95,.85)*smoothstep(.9993,.9997,sd)*2.5;
   // thin cloud streaks lit from below
   vec2 q=d.xz/(y+.08);float cl=smoothstep(.55,.9,n2(q*vec2(.9,3.)+3.)*.7+n2(q*3.1)*.3)*smoothstep(.03,.14,y)*(1.-smoothstep(.3,.6,y));
   c=mix(c,vec3(1.,.78,.66)*1.05+vec3(.5,.25,.1)*pow(sd,4.),cl*.55);
