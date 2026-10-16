@@ -20,31 +20,31 @@ const L = (a: number, s: string): Line => [a, a + need(s), s];
 const LINES2: Line[] = [
   L(0.3, '特斯拉新跑车：倒挂、翻身、飞过一排车'),
   L(4.0, '看起来，像科幻片'),
-  L(7.0, '是真本事，还是营销？'),
+  L(7.0, '是真本事，还是{营销}？'),
   // title 10.54
-  L(15.1, '倒回去，先看第一招：倒挂'),
-  L(18.4, '车底风扇抽气，外面空气把车按住'),
+  L(15.1, '倒回去，先看第一招：[倒挂]'),
+  L(18.4, '车底风扇抽气，外面空气把车[按住]'),
   L(21.7, '这招，50多年前就有人玩过'),
   L(24.65, '2025年，已有车在台架上倒开过'),
-  L(28.95, '真本事，但不是新本事'),
-  L(31.5, '第二招：空中翻身'),
-  L(33.7, '原理：气往一边喷，车往反方向转'),
-  L(36.8, '火箭上，用的是同一类喷口'),
-  L(39.6, '难的不是原理，是控制'),
+  L(28.95, '[真本事]，但不是新本事'),
+  L(31.5, '第二招：[空中翻身]'),
+  L(33.7, '原理：气往一边喷，车往[反方向]转'),
+  L(36.8, '火箭上，用的是[同一类喷口]'),
+  L(39.6, '难的不是原理，是[控制]'),
   L(42.1, '10个喷口，什么时候喷、喷多久'),
-  L(45.1, '第三招：飞过一排车'),
+  L(45.1, '第三招：[飞过一排车]'),
   L(47.6, '它背着600升压缩气'),
-  L(50.3, '估算：大约300公斤'),
-  L(52.9, '全部喷完，最多悬停十秒左右'),
-  L(56.0, '直升机推外面的空气，能一直飞'),
-  L(59.1, '它推自己背的气，用完就落地'),
+  L(50.3, '估算一下：这罐气有多重？'),
+  L(52.9, '全部喷完，最多悬停[十秒左右]'),
+  L(56.0, '直升机推外面的空气，能[一直飞]'),
+  L(59.1, '它推自己背的气，用完就{落地}'),
   L(62.1, '0.59秒到60英里，约4.6g'),
-  L(66.95, '轮胎做不到，只能靠喷气'),
-  L(69.7, '最大的问号，不在技术'),
+  L(66.95, '轮胎做不到，只能靠[喷气]'),
+  L(69.7, '最大的{问号}，不在技术'),
   L(72.3, '2017年说：2020年交车'),
-  L(75.3, '续航、座位，都缩水了'),
-  L(77.55, '现在说：[2028年]才量产'),
-  L(80.3, '马斯克说：安全不是主要目标'),
+  L(75.3, '续航、座位，都{缩水}了'),
+  L(77.55, '现在说：2028年才量产'),
+  L(80.3, '马斯克说：{安全}不是主要目标'),
 ];
 const HITS = { TITLE: 10.54, V1: 28.8, V2: 44.44, V3: 66.81, Y2028: 77.46, V4: 80.06 };
 const KEYS2: K[] = [...KEYS.filter((k) => k.t < 67), { t: 67.4, s: 0.6, ox: -200, oy: -380, d: 2 }, { t: 70.4, s: 0.62, ox: 430, oy: -470, d: 2.4 }];
@@ -106,6 +106,16 @@ const tankG = (g: G, x: number, y: number, w: number, h: number, fill: number) =
 };
 const lab = (g: G, s: string, x: number, y: number, size: number, col: string, a: number, align: CanvasTextAlign = 'left', weight = 700, font = 'Noto Sans CJK SC') => label(g, s, x, y, size, col, align, weight, font, a);
 
+/** boards enter with a small spring (rise + settle) and leave with a lift; tin = first visible, tout = gone */
+type MV = { a: number; s: number; dy: number };
+const mv = (T: number, tin: number, tout: number): MV => {
+  const i = pr(T, tin, 0.45), o = pr(T, tout - 0.4, 0.4);
+  const back = (x: number) => { const c = 1.9; return 1 + (c + 1) * Math.pow(x - 1, 3) + c * Math.pow(x - 1, 2); };
+  return { a: Math.min(clamp(i * 2.2), 1 - eio(o, 0, 1)), s: lerp(0.9, 1, back(i)) * lerp(1, 0.97, eio(o, 0, 1)), dy: (1 - back(i)) * 60 - 50 * eio(o, 0, 1) };
+};
+const bxf = (g: G, m: MV, cx: number, cy: number) => { g.translate(cx, cy + m.dy); g.scale(m.s, m.s); g.translate(-cx, -cy); };
+const num = (v: number, d = 0) => (d ? v.toFixed(d) : String(Math.round(v)));
+
 /* ================================================================ the film */
 const GLYPHS = '特斯拉新跑车倒挂翻身飞过一排看起来像科幻片是真本事还营销三个绝活哪这能风扇吸地被逐出只比场夺冠随即禁静止下压力约2吨台架上着开喷气发布会演示但不新火箭用的同类口冷推进缩反方向转猎鹰9号级滑行时氮姿态示意难在控制10什么候久它背最够悬停秒左右600升现说高690巴据≈300公斤估算钟表盘全部完把托空中重速度理想限直升机外面不就落跳0到英里平均4.6g轮胎给宣称分靠第三实测大问号交件2017承诺2026续航620座位版本仅邀请路马克安主要目标存疑等尾评论区打资料·—→《》倒带慢放定格×¼‖◀年1970197820252028现在缩水抽按住空气';
 const TITLE = '这车真能飞？';
@@ -126,9 +136,12 @@ export const Analysis: React.FC = () => {
       {ok && (
         <>
           <Canvas dep={f} draw={(g) => {
+            // impact: a short decaying shake when a verdict stamp lands
+            const sh = STAMPS.reduce((acc, s) => acc + (T >= s.t + 0.18 ? Math.exp(-(T - s.t - 0.18) / 0.09) : 0), 0);
+            if (sh > 0.01) { g.translate(960 + 16 * sh * Math.sin(T * 97), 540 + 11 * sh * Math.cos(T * 83)); g.scale(1.025, 1.025); g.translate(-960, -540); }
             const st = stateAt(T), cam = camAt(T, KEYS2), p: Pose = st.p, sy = st.sy;
             // the timeline board (21.6–30.4) sits on a frozen, dimmed frame
-            const tlA = Math.min(eo(T, 21.5, 0.6), 1 - pr(T, 29.9, 0.6));
+            const mTL = mv(T, 21.5, 30.5), tlA = mTL.a;
             stage(g, T, cam, Math.max(xray * 0.7, tlA));
             const toS = (x: number, y: number) => toScreen(cam, x, y);
             withCam(g, cam, () => {
@@ -175,6 +188,7 @@ export const Analysis: React.FC = () => {
             }
             // 倒挂: the timeline
             if (tlA > 0) {
+              g.save(); bxf(g, mTL, 960, 520);
               panel(g, 100, 170, 1720, 700, tlA, `rgba(${GOLD},.35)`, 0.95);
               g.save(); g.globalAlpha *= tlA;
               const xs = [330, 760, 1190, 1620], yrs = ['1970', '1978', '2025', '2026'];
@@ -192,35 +206,41 @@ export const Analysis: React.FC = () => {
                 g.restore();
               });
               g.restore();
+              g.restore();
             }
             // 翻身: the rocket inset
-            const ra = Math.min(eo(T, 36.6, 0.4), 1 - pr(T, 41.8, 0.4));
+            const mR = mv(T, 36.6, 42.2), ra = mR.a;
             if (ra > 0) {
+              g.save(); bxf(g, mR, 1560, 490);
               panel(g, 1300, 170, 520, 640, ra, `rgba(${CYAN},.4)`);
               g.save(); g.globalAlpha *= ra; rocket(g, 1560, 740, 1.0);
               plume(g, 1528, 330, Math.PI + 0.2, 180, 1, T, 5, 0.4); plume(g, 1592, 330, -0.2, 180, 1, T * 1.1, 6, 0.4); g.restore();
               lab(g, '火箭一级 · 氮气喷口调姿态（示意）', 1560, 780, 22, DIM, ra, 'center');
+              g.restore();
             }
             const nz = Math.min(eo(T, 42.2, 0.3), 1 - pr(T, 44.6, 0.3));
             if (nz > 0) { const [x, y] = toS(...carToWorld(p, sy, 300, -34)); lab(g, '喷口 ×10', x + 40, y - 120, 36, CYAN, nz, 'left', 900); }
             // 飞: the tank and the hover clock
-            const ta = Math.min(eo(T, 47.5, 0.5), 1 - pr(T, 55.6, 0.5));
+            const mT = mv(T, 47.5, 56.1), ta = mT.a;
             if (ta > 0) {
+              g.save(); bxf(g, mT, 500, 405);
               panel(g, 90, 170, 820, 470, ta);
               g.save(); g.globalAlpha *= ta; tankG(g, 140, 210, 120, 380, lerp(1, 0.08, eio(T, 53.0, 2.4))); g.restore();
-              lab(g, '600升（特斯拉现场说）', 300, 240, 32, CREAM, ta); lab(g, '最高约690巴（据MotorTrend）', 300, 286, 26, DIM, ta);
-              lab(g, '≈ 300公斤气（估算）', 300, 350, 38, CYAN, ta * eo(T, 50.3, 0.4), 'left', 900);
+              lab(g, `${num(600 * eo(T, 47.7, 0.7))}升（特斯拉现场说）`, 300, 240, 32, CREAM, ta); lab(g, '最高约690巴（据MotorTrend）', 300, 286, 26, DIM, ta);
+              lab(g, `≈ ${num(300 * eo(T, 51.4, 0.8))}公斤气（估算）`, 300, 350, 38, CYAN, ta * eo(T, 51.3, 0.25), 'left', 900);
               const ck = eo(T, 52.9, 0.4) * ta;
               if (ck > 0) {
                 g.save(); g.globalAlpha *= ck; g.translate(560, 500); g.strokeStyle = 'rgba(255,255,255,.12)'; g.lineWidth = 18; g.beginPath(); g.arc(0, 0, 90, 0, 7); g.stroke();
                 g.strokeStyle = `rgba(${GOLD},.95)`; g.beginPath(); g.arc(0, 0, 90, -Math.PI / 2, -Math.PI / 2 + Math.PI * 2 * (10 / 60) * eio(T, 53.0, 2.4)); g.stroke(); g.restore();
-                lab(g, '≈10秒', 700, 480, 56, GOLD, ck, 'left', 900, 'JunoMono'); lab(g, '一分钟表盘上的10秒', 700, 536, 22, DIM, ck);
+                lab(g, `≈${num(10 * eio(T, 53.0, 2.4))}秒`, 700, 480, 56, GOLD, ck, 'left', 900, 'JunoMono'); lab(g, '一分钟表盘上的10秒', 700, 536, 22, DIM, ck);
                 lab(g, '估算：车约2吨，喷速按理想上限', 300, 610, 22, DIM, ck);
               }
+              g.restore();
             }
             // 飞: helicopter vs car
-            const he = Math.min(eo(T, 55.9, 0.5), 1 - pr(T, 61.9, 0.5));
+            const mH = mv(T, 55.9, 62.4), he = mH.a;
             if (he > 0) {
+              g.save(); bxf(g, mH, 500, 430);
               panel(g, 90, 170, 820, 520, he, `rgba(${CYAN},.4)`);
               g.save(); g.globalAlpha *= he; g.beginPath(); g.rect(90, 170, 820, 520); g.clip();
               heli(g, 300, 380, 0.62, T);
@@ -229,22 +249,26 @@ export const Analysis: React.FC = () => {
               for (const dx of [-90, 90]) plume(g, 690 + dx, 430, Math.PI / 2, 150, 1, T, dx, 0.4);
               g.strokeStyle = 'rgba(255,255,255,.14)'; g.lineWidth = 2; g.beginPath(); g.moveTo(500, 200); g.lineTo(500, 660); g.stroke();
               g.restore();
-              lab(g, '空气用不完', 300, 620, 30, CYAN, he, 'center'); lab(g, '→ 一直飞', 300, 656, 26, CYAN, he, 'center');
-              lab(g, '气用完就落地', 690, 620, 30, RED, he * eo(T, 59.1, 0.4), 'center'); lab(g, '→ 只能跳', 690, 656, 26, RED, he * eo(T, 59.1, 0.4), 'center');
+              lab(g, '空气：无限', 300, 630, 32, CYAN, he, 'center');
+              lab(g, '气：只有一罐', 690, 630, 32, RED, he * eo(T, 59.1, 0.4), 'center');
+              g.restore();
             }
             // 4.6 g
-            const ga = Math.min(eo(T, 62.0, 0.5), 1 - pr(T, 69.4, 0.5));
+            const mG = mv(T, 62.0, 69.9), ga = mG.a;
             if (ga > 0) {
+              g.save(); bxf(g, mG, 540, 370);
               panel(g, 90, 170, 900, 400, ga);
-              const bar = (y: number, v: number, t: string, val: string, col: string, k: number) => { g.save(); g.globalAlpha *= ga; g.fillStyle = 'rgba(255,255,255,.06)'; g.fillRect(330, y, 560, 60); g.fillStyle = `rgba(${col},.9)`; g.fillRect(330, y, 560 * v / 5 * k, 60); g.restore(); lab(g, t, 310, y + 30, 28, CREAM, ga, 'right'); lab(g, val, 340 + 560 * v / 5 * k, y + 30, 36, col, ga * k, 'left', 900, 'JunoMono'); };
+              const bar = (y: number, v: number, t: string, val: string, col: string, k: number) => { g.save(); g.globalAlpha *= ga; g.fillStyle = 'rgba(255,255,255,.06)'; g.fillRect(330, y, 560, 60); g.fillStyle = `rgba(${col},.9)`; g.fillRect(330, y, 560 * v / 5 * k, 60); g.restore(); lab(g, t, 310, y + 30, 28, CREAM, ga, 'right'); lab(g, val.replace('#', num(v * k, 1)), 340 + 560 * v / 5 * k, y + 30, 36, col, ga * clamp(k * 3), 'left', 900, 'JunoMono'); };
               bar(240, 1.1, '轮胎能给的', '约1g', CREAM, eo(T, 62.3, 0.5));
-              bar(350, 4.63, '它宣称的', '4.6g', GOLD, eo(T, 63.0, 0.9));
-              lab(g, '多出来的，只能靠喷气', 540, 470, 32, GOLD, ga * eo(T, 66.95, 0.4), 'center');
+              bar(350, 4.63, '它宣称的', '#g', GOLD, eo(T, 63.0, 0.9));
+              lab(g, '差的约3.5g，全靠喷气', 540, 470, 32, GOLD, ga * eo(T, 64.2, 0.4), 'center');
               lab(g, '0.59秒：特斯拉宣称，未经第三方实测', 540, 520, 22, DIM, ga, 'center');
+              g.restore();
             }
             // 现实: promises vs now
-            const pa = Math.min(eo(T, 71.9, 0.5), 1 - pr(T, END - 0.2, 0.6));
+            const mP = mv(T, 71.9, END + 0.4), pa = mP.a;
             if (pa > 0) {
+              g.save(); bxf(g, mP, 1400, 510);
               panel(g, 960, 160, 880, 700, pa);
               lab(g, '2017年 承诺', 1360, 220, 30, DIM, pa, 'center'); lab(g, '现在', 1660, 220, 30, GOLD, pa, 'center');
               const rows: [string, string, string, number][] = [['交车', '2020年', '2028年量产', 72.3], ['续航', '620英里', '300多英里', 75.4], ['座位', '4个', '最多2个', 75.8], ['会飞的版本', '—', '仅邀请·不能上路', 76.2]];
@@ -253,10 +277,11 @@ export const Analysis: React.FC = () => {
                 g.save(); g.globalAlpha *= ka; g.fillStyle = 'rgba(255,255,255,.05)'; g.fillRect(1000, y - 32, 800, 64); g.restore();
                 lab(g, k, 1030, y, 28, CREAM, ka); lab(g, a, 1360, y, 30, DIM, ka, 'center');
                 const kb = i === 0 ? eo(T, HITS.Y2028, 0.3) : ka;
-                if (i === 0) { g.save(); g.translate(1660, y); g.scale(lerp(1.6, 1, kb), lerp(1.6, 1, kb)); lab(g, b, 0, 0, 32, GOLD, pa * kb, 'center', 900); g.restore(); if (T < HITS.Y2028) lab(g, '？', 1660, y, 32, DIM, ka, 'center'); }
+                if (i === 0) { g.save(); g.translate(1660, y); g.scale(lerp(1.6, 1, kb), lerp(1.6, 1, kb)); lab(g, b, 0, 0, 32, GOLD, pa * kb, 'center', 900); g.restore(); if (T < HITS.Y2028) lab(g, '……', 1660, y, 32, DIM, ka, 'center'); }
                 else lab(g, b, 1660, y, 28, RED, kb, 'center', 900);
               });
               lab(g, '马斯克："安全不是主要目标"', 1030, 680, 30, CREAM, pa * eo(T, 80.2, 0.4));
+              g.restore();
             }
             // verdict stamps: land big at centre-right, hold, then fly to the scoreboard (top left)
             STAMPS.forEach((s, i) => {
@@ -266,6 +291,8 @@ export const Analysis: React.FC = () => {
               const x = lerp(bigX, sx, fly), y = lerp(bigY, sy2, fly), r = lerp(i === 0 ? 92 : 118, 48, fly);
               if (fly < 1 && land < 1) { g.save(); g.globalCompositeOperation = 'lighter'; const gg = g.createRadialGradient(bigX, bigY, 0, bigX, bigY, 260); gg.addColorStop(0, `rgba(${s.col},${0.35 * (1 - land)})`); gg.addColorStop(1, `rgba(${s.col},0)`); g.fillStyle = gg; g.fillRect(bigX - 260, bigY - 260, 520, 520); g.restore(); }
               stamp(g, x, y, s.big, s.small, s.col, land * (1 - endO), r);
+              const w = pr(T, s.t + 0.12, 0.55);
+              if (w > 0 && w < 1) { g.save(); g.strokeStyle = `rgba(${s.col},${0.8 * (1 - w)})`; g.lineWidth = 6 * (1 - w) + 1; g.beginPath(); g.arc(bigX, bigY, r * (1 + 1.4 * eo(w, 0, 1)), 0, 7); g.stroke(); g.restore(); }
             });
             // the empty scoreboard slots from the first verdict on
             if (T > HITS.V1 + 2.2 && endO < 1) STAMPS.forEach((s, i) => { if (T < s.t + 2.9) { g.save(); g.globalAlpha = 0.5 * (1 - endO); g.setLineDash([6, 6]); g.strokeStyle = `rgba(${GOLD},.6)`; g.lineWidth = 2; g.beginPath(); g.arc(110 + i * 112, 866, 44, 0, 7); g.stroke(); g.restore(); } lab(g, s.slot, 110 + i * 112, 800, 20, DIM, 1 - endO, 'center'); });
