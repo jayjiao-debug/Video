@@ -96,12 +96,6 @@ export const Flood: React.FC<{sx: number; sy: number; tx: number; ty: number; sp
 				<path d={`M 0 -14 L ${L} ${-L * spread} L ${L} ${L * spread} L 0 14 Z`} fill={`url(#${id}-beam)`} filter={`url(#${id}-bb)`} style={{mixBlendMode: 'screen'}} />
 				{motes > 0 && <g clipPath={`url(#${id}-bc)`}><Air x={0} y={-L * spread} w={L} h={L * spread * 2} n={motes} seed={11} t={t} col="#fff4e0" r={2} o={0.6} density={(x) => 1 - x / (L * 1.4)} /></g>}
 			</g>
-			{/* lamp head on a short stand, lens facing the target */}
-			<rect x={sx - 6} y={sy} width={12} height={90} fill="#141a22" />
-			<g transform={`rotate(${ang} ${sx} ${sy})`}>
-				<path d={`M ${sx - 46} ${sy - 30} L ${sx + 6} ${sy - 40} L ${sx + 6} ${sy + 40} L ${sx - 46} ${sy + 30} Z`} fill="#202833" stroke="#3a4656" strokeWidth={2} />
-				<rect x={sx + 4} y={sy - 40} width={10} height={80} rx={4} fill="#fffaf0" />
-			</g>
 			<circle cx={sx} cy={sy} r={90} fill="#fff6e6" opacity={0.3} filter={`url(#${id}-bb)`} />
 		</g>
 	);

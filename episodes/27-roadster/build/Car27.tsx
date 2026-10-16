@@ -10,7 +10,7 @@ export const WHEELS: [number, number][] = [[220, 236], [790, 236]];
 export const NOZZLES: [number, number, number][] = [[118, 232, 90], [330, 232, 90], [690, 232, 90], [905, 232, 90], [26, 186, 180], [996, 204, 0]];
 export const TANKS: [number, number, number, number][] = [[300, 196, 420, 24], [120, 140, 160, 30], [130, 176, 150, 26], [690, 166, 210, 30], [520, 152, 100, 26]];
 
-export type CarProps = {id: string; x: number; y: number; s?: number; rot?: number; xray?: number; spin?: number; tanks?: number; nozzles?: number; fan?: number; o?: number; lightFrom?: 'below' | 'above'};
+export type CarProps = {id: string; x: number; y: number; s?: number; rot?: number; fx?: number; fy?: number; py?: number; shadow?: number; tankN?: number; nozN?: number; xray?: number; spin?: number; tanks?: number; nozzles?: number; fan?: number; o?: number; lightFrom?: 'below' | 'above'};
 
 const Wheel: React.FC<{cx: number; cy: number; id: string; spin: number; ghost: number}> = ({cx, cy, id, spin, ghost}) => (
 	<g opacity={1 - ghost * 0.55}>
@@ -27,10 +27,10 @@ const Wheel: React.FC<{cx: number; cy: number; id: string; spin: number; ghost: 
 	</g>
 );
 
-export const Car: React.FC<CarProps> = ({id, x, y, s = 1, rot = 0, xray = 0, spin = 0, tanks = 1, nozzles = 0, fan = 0, o = 1, lightFrom = 'above'}) => {
+export const Car: React.FC<CarProps> = ({id, x, y, s = 1, rot = 0, fx = 1, fy = 1, py = 292, shadow = 1, tankN = 99, nozN = 99, xray = 0, spin = 0, tanks = 1, nozzles = 0, fan = 0, o = 1, lightFrom = 'above'}) => {
 	const lit = lightFrom === 'below';
 	return (
-		<g transform={`translate(${x} ${y}) rotate(${rot}) scale(${s}) translate(-510 -292)`} opacity={o}>
+		<g transform={`translate(${x} ${y}) rotate(${rot}) scale(${s * fx} ${s * fy}) translate(-510 ${-py})`} opacity={o}>
 			<defs>
 				<linearGradient id={`${id}-paint`} x1="0" y1={lit ? '1' : '0'} x2="0" y2={lit ? '0' : '1'}>
 					<stop offset="0" stopColor="#ffffff" />
@@ -69,7 +69,7 @@ export const Car: React.FC<CarProps> = ({id, x, y, s = 1, rot = 0, xray = 0, spi
 				<filter id={`${id}-soft`} x="-20%" y="-50%" width="140%" height="200%"><feGaussianBlur stdDeviation="10" /></filter>
 			</defs>
 			{/* contact shadow */}
-			<ellipse cx={510} cy={294} rx={470} ry={14} fill="#000" opacity={0.45 * (1 - xray)} filter={`url(#${id}-soft)`} />
+			<ellipse cx={510} cy={294} rx={470} ry={14} fill="#000" opacity={0.45 * (1 - xray) * shadow} filter={`url(#${id}-soft)`} />
 			{/* solid body */}
 			<g opacity={1 - xray}>
 				<path d={BODY} fill={`url(#${id}-paint)`} />
@@ -108,7 +108,7 @@ export const Car: React.FC<CarProps> = ({id, x, y, s = 1, rot = 0, xray = 0, spi
 			{tanks > 0 && xray > 0 && (
 				<g opacity={tanks * xray} clipPath={`url(#${id}-clip)`}>
 					{TANKS.map(([tx, ty, tw, th], i) => (
-						<g key={i}>
+						<g key={i} opacity={Math.max(0, Math.min(1, tankN - i))} transform={`translate(${tx + tw / 2} ${ty + th / 2}) scale(${0.6 + 0.4 * Math.max(0, Math.min(1, tankN - i))}) translate(${-(tx + tw / 2)} ${-(ty + th / 2)})`}>
 							<rect x={tx} y={ty} width={tw} height={th} rx={th / 2} fill={`url(#${id}-copv)`} stroke={K.frost} strokeWidth={2} />
 							<rect x={tx} y={ty} width={tw} height={th} rx={th / 2} fill={`url(#${id}-weave)`} />
 							<rect x={tx + th / 2} y={ty + 4} width={tw - th} height={3} rx={1.5} fill="rgba(255,255,255,0.35)" />
@@ -120,7 +120,7 @@ export const Car: React.FC<CarProps> = ({id, x, y, s = 1, rot = 0, xray = 0, spi
 			<Wheel cx={WHEELS[1][0]} cy={WHEELS[1][1]} id={id} spin={spin} ghost={xray} />
 			{/* nozzles */}
 			{nozzles > 0 && NOZZLES.map(([nx, ny, a], i) => (
-				<g key={i} opacity={nozzles} transform={`rotate(${a - 90} ${nx} ${ny})`}>
+				<g key={i} opacity={nozzles * Math.max(0, Math.min(1, nozN - i))} transform={`rotate(${a - 90} ${nx} ${ny})`}>
 					<circle cx={nx} cy={ny} r={13} fill="#0b1520" stroke={K.amber} strokeWidth={3} />
 					<circle cx={nx} cy={ny} r={5} fill={K.amber} />
 				</g>
