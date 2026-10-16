@@ -2,7 +2,7 @@
    slates, chapter marks, light pools, the canvas layer and the subtitle track. */
 import React, { useLayoutEffect, useRef } from 'react';
 import { staticFile } from 'remotion';
-import type { Line } from './time';
+export type Line = [number, number, string];
 
 export const W = 1920, H = 1080, BAR = 128;
 export const C = {
