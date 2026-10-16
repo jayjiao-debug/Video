@@ -125,7 +125,6 @@ const leader = (g: G, a: [number, number], b: [number, number], col = GOLD, al =
 const stage = (g: G, T: number, cam: Cam, freeze: number) => {
   const groundY = 540 + (0 - cam.y) * cam.s, horizon = 540 + (0 - cam.y) * cam.s * 0.22 - 40;
   g.save();
-  if (freeze > 0) g.filter = `saturate(${1 - 0.55 * freeze}) brightness(${1 - 0.3 * freeze})`;
   g.save(); g.translate(960, 540); g.rotate(cam.r ?? 0); g.translate(-960, -540);
   sky(g, 1920, 1080, horizon); mesas(g, 1920, horizon, cam.x);
   const df = g.createLinearGradient(0, horizon, 0, Math.max(horizon + 10, groundY)); df.addColorStop(0, '#2a1e30'); df.addColorStop(1, '#17131d');
@@ -138,6 +137,8 @@ const stage = (g: G, T: number, cam: Cam, freeze: number) => {
     ground(g, -18000, 6000, MASTS);
     VEH.forEach(([x, k]) => vehicle(g, x, k));
   });
+  // time stopped: drain the colour and dim the set (composite ops; canvas filters are far too slow headless)
+  if (freeze > 0) { g.save(); g.globalCompositeOperation = 'saturation'; g.fillStyle = `rgba(128,128,128,${0.6 * freeze})`; g.fillRect(0, 0, 1920, 1080); g.globalCompositeOperation = 'source-over'; g.fillStyle = `rgba(6,8,16,${0.3 * freeze})`; g.fillRect(0, 0, 1920, 1080); g.restore(); }
   g.save(); g.globalCompositeOperation = 'lighter';
   const hz = g.createLinearGradient(0, groundY - 380 * cam.s, 0, groundY + 40); hz.addColorStop(0, 'rgba(255,170,110,0)'); hz.addColorStop(0.8, 'rgba(255,170,110,.10)'); hz.addColorStop(1, 'rgba(255,170,110,0)');
   g.fillStyle = hz; g.fillRect(0, groundY - 380 * cam.s, 1920, 420 * cam.s + 40);
