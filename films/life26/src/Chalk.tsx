@@ -6,7 +6,7 @@ import { AbsoluteFill, continueRender, delayRender, staticFile, useCurrentFrame 
 import '@fontsource/ma-shan-zheng';
 import RAW from './lines.json';
 import { JUNO } from './brand/identity';
-import { Canvas, FontFaces, Subs, clamp, eo, lerp, pr } from './kit';
+import { Canvas, FontFaces, clamp, eo, lerp, pr } from './kit';
 import * as P from './puppets';
 import { PUPPETS } from './Asset';
 
@@ -90,6 +90,23 @@ const chalkLine = (g: G, pts: Pt[], p: number, w = 5, o = 1, col = CHALK) => {
 };
 const wobbly = (x0: number, y0: number, x1: number, y1: number, n = 40, amp = 3, seed = 1): Pt[] => Array.from({ length: n + 1 }, (_, i) => { const t = i / n; return [x0 + (x1 - x0) * t, y0 + (y1 - y0) * t + amp * Math.sin(t * 13 + seed) * Math.sin(t * 5.3 + seed * 2)]; });
 
+/** a chalk heart (tip at cx, cy + size*0.45) whose inside fills from the bottom with warm light to level k */
+const chalkHeart = (g: G, cx: number, cy: number, size: number, k: number, p: number, o: number) => {
+  if (p <= 0 || o <= 0) return;
+  const sc = size / 320, top = cy - size * 0.42, tip = cy + size * 0.45;
+  const pts: Pt[] = [...P.bez([0, 0], [-160, -110], [-120, -260], [0, -190], 24), ...P.bez([0, -190], [120, -260], [160, -110], [0, 0], 24)].map(([x, y]) => [cx + x * sc, tip + y * sc * 1.0]);
+  if (k > 0.01) {
+    if (k > 0.3) glow(g, cx, cy, size * 1.4 * k, 0.32 * k * o);
+    g.save(); g.beginPath(); pts.forEach(([x, y], i) => (i ? g.lineTo(x, y) : g.moveTo(x, y))); g.closePath(); g.clip();
+    const lvl = tip - (tip - top) * k;
+    const gr = g.createLinearGradient(0, tip, 0, lvl); gr.addColorStop(0, `rgba(${WARM},${0.85 * o})`); gr.addColorStop(1, `rgba(${WARM},${0.55 * o})`);
+    g.fillStyle = gr; g.fillRect(cx - size, lvl, size * 2, tip - lvl + 4);
+    g.strokeStyle = `rgba(255,236,200,${0.6 * o})`; g.lineWidth = 3; g.beginPath(); g.moveTo(cx - size, lvl); g.lineTo(cx + size, lvl); g.stroke();
+    g.restore();
+  }
+  chalkLine(g, pts, p, Math.max(4, size / 34), o, k > 0.3 ? WARM : CHALK);
+};
+
 /* ------------------------------------------------------------ the board */
 let BOARD: HTMLCanvasElement | null = null;
 const board = () => {
@@ -171,32 +188,37 @@ const draw = (g: G, T: number) => {
     else { g.fillStyle = `rgba(${CHALK},${0.12 * oC})`; g.beginPath(); g.ellipse(1100, 790, 60, 24, 0, 0, 7); g.fill(); dust(g, 1100, 790, T - 20.0, 60); }
     if (T >= 20.0 && T < 20.4) { g.fillStyle = `rgba(255,250,240,${0.45 * Math.exp(-(T - 20.0) / 0.08)})`; g.fillRect(-50, -50, 2020, 1180); }
   }
-  // D · fly, cat, rhino; how much light each one gets (22.5–40)
+  // D · fly, cat, rhino, each with a chalk heart that fills with warm light: how much we ache for it (22.5–40)
   const oD = fade(T, 22.5, 40.2, 0.6, 2.4);
   if (oD > 0) {
-    const lit = eo(T, 27.7, 2.2), breathe = 1 + 0.05 * Math.sin(T * 1.6);
-    glow(g, 1440, 640, 430 * lit * breathe, 0.42 * oD);
-    glow(g, 960, 660, 250 * lit * breathe, 0.34 * oD);
-    glow(g, 470, 690, 60 * lit, 0.2 * oD);
+    const fillK = eo(T, 28.4, 2.4);
     chalkPuppet(g, 'fly', 470, 780, 0.9, eo(T, 22.5, 1.2), oD);
-    chalkPuppet(g, 'cat', 960, 790, 0.8, eo(T, 23.0, 1.6), oD, 0.4 * lit);
-    chalkPuppet(g, 'rhino', 1440, 790, 0.62, eo(T, 23.5, 2.0), oD, 0.75 * lit);
+    chalkPuppet(g, 'cat', 960, 790, 0.8, eo(T, 23.0, 1.6), oD, 0.45 * fillK);
+    chalkPuppet(g, 'rhino', 1440, 790, 0.62, eo(T, 23.5, 2.0), oD, 0.8 * fillK);
     chalkLine(g, wobbly(200, 792, 1720, 795, 60, 2, 4), eo(T, 22.6, 1.2), 4, oD * 0.8);
+    chalkHeart(g, 470, 545, 80, 0.04 * fillK, eo(T, 27.7, 0.8), oD);
+    chalkHeart(g, 960, 420, 160, 0.55 * fillK, eo(T, 27.9, 0.9), oD);
+    chalkHeart(g, 1440, 440, 250, 1.0 * fillK, eo(T, 28.1, 1.0), oD);
   }
   // build to the title: one warm point grows in the dark
   if (T > 38.5 && T < 47.5) glow(g, 960, 470, 60 + 380 * eo(T, 38.6, 3.6), (0.18 + 0.25 * eo(T, 38.6, 3.6)) * (1 - pr(T, 46.4, 1.0)));
 
-  // E · the ending (163–182.6): we in a small circle of light, then the circle grows and everyone is inside
+  // E · the ending (163–182.6): a chalk circle around us; everyone outside is dim and cold. Then the circle grows,
+  //     and whoever it reaches turns warm.
   const oE = fade(T, 163.0, END + 2.5, 0.8, 1.2);
   if (oE > 0) {
-    const r = T < 167.1 ? 230 : lerp(230, 1250, eo(T, 167.1, 4.2));
+    const r = T < 167.1 ? 190 : lerp(190, 1300, eo(T, 167.1, 4.6)), cx = 960, cy = 700, ry = 0.55;
     const warmAll = eo(T, 177.3, 3.0);
-    glow(g, 960, 700, r * 1.25, (0.4 + 0.15 * warmAll) * oE);
-    chalkLine(g, P.ell(960, 760, r, r * 0.42, 0, Math.PI * 2, 120), clamp(eo(T, 163.2, 1.6)), 3.5, oE * (1 - eo(T, 168.5, 2.0)), WARM);
-    chalkLine(g, wobbly(160, 822, 1760, 826, 60, 2, 8), eo(T, 163.1, 1.5), 4, oE * 0.7);
-    chalkPuppet(g, 'we', 960, 820, 0.6, eo(T, 163.2, 1.8), oE, 0.5 + 0.5 * warmAll);
-    const crowd: [string, number, number, number, number][] = [['cat', 640, 820, 0.55, 167.5], ['dog', 1290, 820, 0.5, 167.8], ['rhino', 1620, 830, 0.5, 168.1], ['chicken', 330, 830, 0.5, 168.4], ['fly', 470, 560, 0.55, 168.7], ['bird', 1470, 540, 0.55, 169.0], ['frog', 790, 580, 0.5, 169.3], ['fish', 1150, 540, 0.5, 169.6]];
-    for (const [id, x, y, s, t0] of crowd) chalkPuppet(g, id, x, y, s, eo(T, t0, 1.8), oE, (id === 'rhino' ? Math.max(eo(T, 169.7, 1.2) * 0.9, warmAll) : warmAll) * 0.9);
+    glow(g, cx, cy + 40, r * 1.15, 0.38 * oE);
+    chalkLine(g, wobbly(160, 822, 1760, 826, 60, 2, 8), eo(T, 163.1, 1.5), 4, oE * 0.6);
+    chalkLine(g, P.ell(cx, cy, r, r * ry, -Math.PI / 2, Math.PI * 1.5, 140), eo(T, 163.3, 1.4), 6, oE, WARM);
+    chalkPuppet(g, 'we', 960, 820, 0.6, eo(T, 163.2, 1.8), oE, 0.6 + 0.4 * warmAll);
+    const crowd: [string, number, number, number, number][] = [['cat', 640, 820, 0.55, 163.8], ['dog', 1290, 820, 0.5, 164.0], ['rhino', 1620, 830, 0.5, 164.2], ['chicken', 330, 830, 0.5, 164.4], ['fly', 470, 560, 0.55, 164.6], ['bird', 1470, 540, 0.55, 164.8], ['frog', 790, 580, 0.5, 165.0], ['fish', 1150, 540, 0.5, 165.2]];
+    for (const [id, x, y, s, t0] of crowd) {
+      const d = Math.hypot((x - cx) / r, (y - 80 - cy) / (r * ry)), inside = clamp((1.1 - d) / 0.2);
+      const warm = Math.max(inside * 0.85, warmAll * 0.9, id === 'rhino' ? inside * eo(T, 169.7, 1.0) : 0);
+      chalkPuppet(g, id, x, y, s, eo(T, t0, 1.8), oE * (0.3 + 0.7 * inside), warm);
+    }
   }
   g.restore();
   // the title on the hit: light burst + chalk dust
@@ -244,7 +266,17 @@ export const Chalk: React.FC = () => {
       {ok && <>
         <Canvas dep={f} draw={(g) => draw(g, T)} />
         <div style={{ position: 'absolute', right: 56, top: 44, opacity: titleOn || endOn ? 0 : 0.85, fontFamily: '"Noto Sans CJK SC", sans-serif', fontWeight: 500, fontSize: 20, letterSpacing: '0.3em', color: 'rgba(243,237,226,.55)' }}><span style={{ color: '#e3b765' }}>◆ </span>{JUNO.mark}</div>
-        <Subs T={T} lines={LINES as any} />
+        {LINES.map(([a, z, t], i) => {
+          const o = Math.min(eo(T, a, 0.2), 1 - pr(T, z - 0.18, 0.18));
+          if (o <= 0) return null;
+          const parts = t.split(/(\[[^\]]+\]|\{[^}]+\})/);
+          return (
+            <div key={i} style={{ position: 'absolute', left: 0, right: 0, bottom: 118, textAlign: 'center', opacity: o, transform: `translateY(${(1 - eo(T, a, 0.35)) * 8}px)`, fontFamily: '"Noto Sans CJK SC", sans-serif', fontWeight: 900, fontSize: 70, letterSpacing: '0.04em', color: '#fbf7ee', whiteSpace: 'nowrap',
+              textShadow: '0 0 2px #000, 3px 0 0 #000, -3px 0 0 #000, 0 3px 0 #000, 0 -3px 0 #000, 2px 2px 0 #000, -2px 2px 0 #000, 2px -2px 0 #000, -2px -2px 0 #000, 0 4px 16px rgba(0,0,0,.8)' }}>
+              {parts.map((x, j) => { const hl = x.startsWith('[') || x.startsWith('{'); return <span key={j} style={hl ? { color: x.startsWith('[') ? '#f6d58e' : '#ff8a7a' } : undefined}>{hl ? x.slice(1, -1) : x}</span>; })}
+            </div>
+          );
+        })}
       </>}
     </AbsoluteFill>
   );
