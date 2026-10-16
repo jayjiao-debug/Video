@@ -18,6 +18,7 @@ function roundPoly(P,rad,per=8,seg=6){const out=[];const n=P.length;const cs=[];
  for(let i=0;i<n;i++){const {p1,b,p2}=cs[i];for(let k=0;k<per;k++){const t=k/per;out.push([(1-t)*(1-t)*p1[0]+2*(1-t)*t*b[0]+t*t*p2[0],(1-t)*(1-t)*p1[1]+2*(1-t)*t*b[1]+t*t*p2[1]]);}
   const q=cs[(i+1)%n].p1;for(let k=0;k<seg;k++){const t=k/seg;out.push([p2[0]+(q[0]-p2[0])*t,p2[1]+(q[1]-p2[1])*t]);}}
  return out;}
+function fixNormals(geo){const n=geo.attributes.normal;for(let i=0;i<n.count;i++){const x=n.getX(i),y=n.getY(i),z=n.getZ(i);const l=Math.hypot(x,y,z);if(!(l>1e-6))n.setXYZ(i,0,1,0);else n.setXYZ(i,x/l,y/l,z/l);}n.needsUpdate=true;}
 export function makeCar({paint='#C8261A'}={}){
  const g=new THREE.Group();const {L,R,XF,XR}=DIM;
  // ---- side/plan profiles over u ∈ [0 nose, 1 tail]
@@ -41,8 +42,8 @@ export function makeCar({paint='#C8261A'}={}){
      if(Math.abs(z)>wIn){const blend=sm(rr+.1,rr-.01,Math.abs(dx));const z2=lerp(z,Math.sign(z)*lerp(wIn,Math.abs(z),k),blend);if(Math.abs(z)-Math.abs(z2)>.03)dk[pi]=Math.min(dk[pi],.04);z=z2;}}}return [z,y];});
   NV=pts.length;secs.push(pts);for(let j=0;j<=NV;j++){const [z,y]=pts[j%NV];pos.push(x,y,z);uvs.push(u,j/NV);const d=dk[j%NV];col.push(d,d,d);}}
  for(let i=0;i<NU;i++)for(let j=0;j<NV;j++){const a=i*(NV+1)+j,b=a+NV+1;idx.push(a,a+1,b,a+1,b+1,b);}
- const bg=new THREE.BufferGeometry();bg.setAttribute('position',new THREE.Float32BufferAttribute(pos,3));bg.setAttribute('uv',new THREE.Float32BufferAttribute(uvs,2));bg.setAttribute('color',new THREE.Float32BufferAttribute(col,3));bg.setIndex(idx);bg.computeVertexNormals();
- const paintM=new THREE.MeshPhysicalMaterial({color:paint,metalness:.1,roughness:.42,clearcoat:1,clearcoatRoughness:.05,envMapIntensity:.85,vertexColors:true});
+ const bg=new THREE.BufferGeometry();bg.setAttribute('position',new THREE.Float32BufferAttribute(pos,3));bg.setAttribute('uv',new THREE.Float32BufferAttribute(uvs,2));bg.setAttribute('color',new THREE.Float32BufferAttribute(col,3));bg.setIndex(idx);bg.computeVertexNormals();fixNormals(bg);
+ const paintM=new THREE.MeshPhysicalMaterial({color:paint,metalness:.1,roughness:.42,clearcoat:1,clearcoatRoughness:.08,envMapIntensity:.85,vertexColors:true});
  const body=new THREE.Mesh(bg,paintM);body.castShadow=true;body.receiveShadow=true;g.add(body);
  const darkM=new THREE.MeshPhysicalMaterial({color:'#111214',metalness:.3,roughness:.5,clearcoat:.5,envMapIntensity:.6});
  // nose & tail caps (fill the tiny end sections)
@@ -52,8 +53,8 @@ export function makeCar({paint='#C8261A'}={}){
  const CU=90,CV=48,cp=[],ci=[];const X0=.98,X1=-1.2;for(let i=0;i<=CU;i++){const t=i/CU;const x=lerp(X0,X1,t);const uu=(L/2-x)/L;const base=top(uu)-.012;const h=gu(t),w=gw(t)*hw(uu)*.8;
   for(let j=0;j<=CV;j++){const a=j/CV*Math.PI;const s=Math.sin(a),c=Math.cos(a);const z=Math.sign(c)*Math.pow(Math.abs(c),.75)*w;const y=base+Math.pow(s,.55)*h;cp.push(x,y,z);}}
  for(let i=0;i<CU;i++)for(let j=0;j<CV;j++){const a=i*(CV+1)+j,b=a+CV+1;ci.push(a,b,a+1,a+1,b,b+1);}
- const cg=new THREE.BufferGeometry();cg.setAttribute('position',new THREE.Float32BufferAttribute(cp,3));cg.setIndex(ci);cg.computeVertexNormals();
- const glassM=new THREE.MeshPhysicalMaterial({color:'#0a0e12',metalness:.2,roughness:.03,clearcoat:1,clearcoatRoughness:.01,envMapIntensity:1.5,transparent:true,opacity:.96,side:THREE.DoubleSide});
+ const cg=new THREE.BufferGeometry();cg.setAttribute('position',new THREE.Float32BufferAttribute(cp,3));cg.setIndex(ci);cg.computeVertexNormals();fixNormals(cg);
+ const glassM=new THREE.MeshPhysicalMaterial({color:'#0a0e12',metalness:.2,roughness:.09,clearcoat:1,clearcoatRoughness:.07,envMapIntensity:1.5,transparent:true,opacity:.96,side:THREE.DoubleSide});
  const canopy=new THREE.Mesh(cg,glassM);canopy.castShadow=true;g.add(canopy);
  // ---- details: front splitter, side skirt blade, rear diffuser fins, ducktail, lamps
  const splitter=new THREE.Mesh(new THREE.BoxGeometry(.3,.025,1.1),darkM);splitter.position.set(L/2-.3,.125,0);g.add(splitter);

@@ -56,36 +56,35 @@ export function makeFX(S,car){
  const tmpQ=new THREE.Quaternion();
  function L2W(v){return v.clone().applyQuaternion(car.quaternion).add(car.position);}
  function D2W(v){return v.clone().applyQuaternion(car.quaternion);}
- function set(o){const t=o.t||0;air.clear();gap.clear();jetS.clear();glowSlab.visible=false;shafts.visible=heads.visible=false;fp.visible=false;cores.forEach(c=>c.visible=false);puffs.forEach(p=>p.m.visible=false);
+ const H=(i,k)=>{const x=Math.sin(i*12.9898+k*78.233+.5)*43758.5453;return x-Math.floor(x);};
+ // ground bursts (landing frost) and tyre smoke: extra puff pool
+ const bp=[];for(let i=0;i<90;i++){const m=new THREE.Mesh(new THREE.PlaneGeometry(1,1),new THREE.MeshBasicMaterial({map:ptex,transparent:true,depthWrite:false,opacity:0,color:new THREE.Color(1.1,1.08,1.06)}));S.add(m);m.visible=false;bp.push(m);}
+ function set(o){const t=o.t||0;air.clear();gap.clear();jetS.clear();glowSlab.visible=false;shafts.visible=heads.visible=false;fp.visible=false;cores.forEach(c=>c.visible=false);puffs.forEach(p=>p.m.visible=false);bp.forEach(m=>m.visible=false);
   const cam=S.userData.cam;
-  if(o.suck){const k=o.suck;const up=D2W(V(0,1,0));// car up (toward the road)
-   const roofOut=up.clone().negate();// below the car (outside air side)
-   // dense outside air: streaks rising toward the roof, converging; brighter near the car
-   for(let i=0;i<air.n;i++){const lx=(rn()-.5)*7.2,lz=(rn()-.5)*3.6;const depth=.5+Math.pow(rn(),.7)*6.5;const ph=(rn()+t*(.35+rn()*.25))%1;
-    const d=depth*(1-ph);const P=L2W(V(lx*(.55+.45*d/7),1.2+d,lz*(.55+.45*d/7)));const len=.3+.6*rn();const P1=P.clone().addScaledVector(up,-len);
-    const inside=Math.abs(lx)<2.25&&Math.abs(lz)<1.0;const near=Math.exp(-d*.35);const a=0;
-    air.set(i,P,P1,.035+.03*near,.62,.86,1.,a);}
-   // thin gap air: few particles in the 13 cm gap, drawn rearward to the fans and blown out as amber filaments
-   for(let i=0;i<gap.n;i++){const ph=(rn()+t*(.5+rn()*.3))%1;const lane=(rn()-.5)*1.5;const sx=(rn()-.5)*3.6;let P,P1;
-    if(ph<.6){const u=ph/.6;const x=sx-(sx+2.25)*u*u;const z=lane*(1-u*.7);P=L2W(V(x,.065,z));P1=L2W(V(x-.35,.065,z*(1-.05)));}
-    else{const u=(ph-.6)/.4;const x=-2.3-u*5.5;const z=lane*.4*(1+u*1.6);const y=.3+u*.4*(rn()-.3);P=L2W(V(x,y,z));P1=L2W(V(x-.6-u,y,z));}
-    gap.set(i,P,P1,.03,1.,.62,.28,k*(i<gap.n*.18||ph>.6?.85:.0));}
-   shafts.visible=heads.visible=true;let ai=0;for(let layer=0;layer<1;layer++)for(let ix=0;ix<6;ix++)for(let iz=0;iz<3;iz++){const x=-1.75+ix*.7,z=-.62+iz*.62;const len=1.7;const wave=.5+.5*Math.sin(t*5-ix*.6-layer*1.3);
-     const y0=1.62+len;const s=k*(.85+.15*wave);_o.position.set(x+layer*.06,y0,z+(layer-1)*.09);_o.rotation.set(Math.PI,0,0);_o.scale.set(1,len*s,1);_o.updateMatrix();shafts.setMatrixAt(ai,_o.matrix);
-     _o.position.set(x+layer*.06,y0-len*s,z+(layer-1)*.09);_o.scale.set(1,1,1);_o.rotation.set(Math.PI,0,0);_o.updateMatrix();heads.setMatrixAt(ai,_o.matrix);ai++;}
-   shafts.count=heads.count=ai;shafts.instanceMatrix.needsUpdate=heads.instanceMatrix.needsUpdate=true;arM.opacity=.85*k;hdM.opacity=.95*k;
-   // soft blue glow slab under the car (the "heavy" outside air)
+  if(o.suck>0){const k=o.suck;
+   // thin gap air: particles in the 13 cm gap, drawn rearward to the fans and blown out behind as amber filaments
+   for(let i=0;i<gap.n;i++){const ph=(H(i,1)+t*(.5+H(i,2)*.3))%1;const lane=(H(i,3)-.5)*1.5;const sx=(H(i,4)-.5)*3.6;let P,P1;
+    if(ph<.6){const u=ph/.6;const x=sx-(sx+2.25)*u*u;const z=lane*(1-u*.7);P=L2W(V(x,.065,z));P1=L2W(V(x-.35,.065,z*.95));}
+    else{const u=(ph-.6)/.4;const x=-2.3-u*5.5;const z=lane*.4*(1+u*1.6);const y=.3+u*.4*(H(i,5)-.3);P=L2W(V(x,y,z));P1=L2W(V(x-.6-u,y,z));}
+    gap.set(i,P,P1,.03,1.,.62,.28,k*(i<gap.n*.18||ph>.6?.85:.0)*Math.sin(Math.PI*ph));}
+   shafts.visible=heads.visible=true;let ai=0;for(let ix=0;ix<6;ix++)for(let iz=0;iz<3;iz++){const x=-1.75+ix*.7,z=-.62+iz*.62;const len=1.7;const wave=.5+.5*Math.sin(t*5-ix*.6);
+     const y0=1.62+len;const s=Math.max(.001,(o.arrows??k)*(.85+.15*wave));_o.position.set(x,y0,z);_o.rotation.set(Math.PI,0,0);_o.scale.set(1,len*s,1);_o.updateMatrix();shafts.setMatrixAt(ai,_o.matrix);
+     _o.position.set(x,y0-len*s,z);_o.scale.set(1,1,1);_o.updateMatrix();heads.setMatrixAt(ai,_o.matrix);ai++;}
+   shafts.count=heads.count=ai;shafts.instanceMatrix.needsUpdate=heads.instanceMatrix.needsUpdate=true;arM.opacity=.85*(o.arrows??k);hdM.opacity=.95*(o.arrows??k);
    glowSlab.visible=true;glowSlab.position.copy(L2W(V(0,2.8,0)));glowSlab.quaternion.copy(car.quaternion).multiply(tmpQ.setFromEuler(new THREE.Euler(Math.PI/2,0,0)));glowSlab.scale.set(11,5.5,1);glowSlab.material.uniforms.uK.value=k;glowSlab.material.uniforms.uT.value=t;
-   fp.visible=true;fpM.uniforms.uK.value=k*(o.fp??1);
-   car.userData.fans.forEach((f,i)=>f.rotation.x=t*40+i);}
+   fp.visible=true;fpM.uniforms.uK.value=k*(o.fp??1);}
+  car.userData.fans.forEach((f,i)=>f.rotation.x=t*40+i);
   if(o.jets){let pi=0,ji=0;for(const [i,k] of o.jets){if(k<=0)continue;const n=nz[i];const c=cores[i];c.visible=true;const L=(i<4?3.4:2.4)*(.4+.6*k);c.scale.set(i<4?.55:.45,L,i<4?.55:.45);c.material.uniforms.uK.value=k;c.material.uniforms.uT.value=t;
     const P0=L2W(n.p),D=D2W(n.d);
-    for(let q=0;q<130&&ji<jetS.n;q++,ji++){const ph=(rn()+t*(1.6+rn()))%1;const spread=.05+ph*.35;const off=V(rn()-.5,rn()-.5,rn()-.5).multiplyScalar(spread*2.2);const P=P0.clone().addScaledVector(D,.2+ph*L*1.4).add(off);const P1=P.clone().addScaledVector(D,.35+ph*.6);
-     jetS.set(ji,P,P1,.03+ph*.05,.85,.95,1.,k*.9*(1-ph));}
-    // frost puffs at the end of each plume, or spreading on the ground
+    for(let q=0;q<130&&ji<jetS.n;q++,ji++){const ph=(H(ji,1)+t*(1.6+H(ji,2)))%1;const spread=.05+ph*.35;const off=V(H(ji,3)-.5,H(ji,4)-.5,H(ji,5)-.5).multiplyScalar(spread*2.2);const P=P0.clone().addScaledVector(D,.2+ph*L*1.4).add(off);const P1=P.clone().addScaledVector(D,.35+ph*.6);
+     if(P.y<.05||P1.y<.05)continue;jetS.set(ji,P,P1,.03+ph*.05,.85,.95,1.,k*.9*(1-ph));}
     for(let q=0;q<14&&pi<puffs.length;q++,pi++){const p=puffs[pi];const ph=(p.ph+t*(.45+p.sp*.3))%1;let P=P0.clone().addScaledVector(D,L*(.5+ph*1.1));
-     if(o.ground!==undefined&&P.y<.6){P.y=.5+ph*.4;}
-     P.add(V(Math.sin(p.ph*40)*ph*1.3,Math.cos(p.sp*33)*ph*.8,Math.sin(p.sp*21)*ph*1.3));
-     const s=.5+ph*(i<4?2.6:2.0);p.m.visible=true;p.m.position.copy(P);p.m.scale.set(s,s,s);p.m.material.opacity=k*.5*Math.sin(Math.PI*Math.min(1,ph*1.2))*(1-ph*.5);if(cam)p.m.quaternion.copy(cam.quaternion);p.m.rotateZ(p.ph*6.28+t*.4);}}}
+     P.add(V(Math.sin(p.ph*40)*ph*1.3,Math.cos(p.sp*33)*ph*.8,Math.sin(p.sp*21)*ph*1.3));if(P.y<.4+ph*.5)P.y=.4+ph*.5;
+     const s=.5+ph*(i<4?2.6:2.0);p.m.visible=true;p.m.position.copy(P);p.m.scale.set(s,s,s);p.m.material.opacity=k*(i<4?.22:.3)*Math.sin(Math.PI*Math.min(1,ph*1.2))*(1-ph*.5);if(cam)p.m.quaternion.copy(cam.quaternion);p.m.rotateZ(p.ph*6.28+t*.4);}}}
+  // bursts: [{pos, age, kind:'frost'|'smoke', n}]
+  let bi=0;for(const b of (o.bursts||[])){if(b.age<0||b.age>2.6)continue;const n=b.n||30;for(let q=0;q<n&&bi<bp.length;q++,bi++){const m=bp[bi];const a=H(bi,7)*6.283,sp=.6+H(bi,8);
+    const r=(b.kind==='smoke'?1.5:3.6)*sp*(1-Math.exp(-b.age*2.2));const P=b.pos.clone().add(V(Math.cos(a)*r*(b.kind==='smoke'?.6:1)-(b.kind==='smoke'?b.age*2.5*H(bi,9):0),.35+b.age*(.25+.4*H(bi,9)),Math.sin(a)*r));
+    const s=(b.kind==='smoke'?1.0:1.2)+b.age*(.9+H(bi,10));m.visible=true;m.position.copy(P);m.scale.set(s,s,s);m.material.color.setRGB(...(b.kind==='smoke'?[.82,.8,.79]:[1.1,1.08,1.06]));
+    m.material.opacity=(b.kind==='smoke'?.3:.3)*Math.min(1,b.age*8)*Math.exp(-b.age*1.3);if(cam)m.quaternion.copy(cam.quaternion);m.rotateZ(H(bi,11)*6.28+b.age*.3);}}
   air.flush();gap.flush();jetS.flush();}
  return {set};}

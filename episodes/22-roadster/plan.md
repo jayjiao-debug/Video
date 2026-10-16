@@ -36,3 +36,14 @@ Music (measured): kick pattern repeats every 3.474 s, bars at 0.12 + 3.474k (92 
 | 80.06 | | 最便宜的版本，定金[5万美元] |
 | 83.53 | camera rises, recap | 倒挂靠[抽气]，起飞靠[喷气] |
 | 87.02 | Juno end card, fade | 你最想看它跳过什么？ |
+
+## v5 build log (2026-10-16)
+- Title: 倒挂靠抽气，起飞靠喷气 (owner OK). Built by me, no agents.
+- Render: Modal T4 ×10 via modal-farm (`render_ep22.py`, Vulkan, "NVIDIA Tesla T4" confirmed), ~95 ms/frame, ~1.5 min per full film.
+- 穿模 check over all 2,715 frames (`chk.mjs`, `mar.mjs`): 0 bad frames. Minimum clearances: body to wall 2.5 cm (wheels on the true surface,
+  per-wheel suspension), body to ground 1.5 cm, car over the clay row 2.66 m, camera ≥1.1 m inside the tube wall, camera ≥3.2 m from the car.
+- Fixes on the way: NaN black frame (glass roughness too low → specular overflow in bloom; NaN guard pass added), light-shaft gather
+  flicker (removed), camera roll levelled near the ceiling so the car reads upside down, take-off camera, run-out orbit, ending pull-back.
+- Sound: song untouched 0–90.49 s, cos² fade over the last bar (87.02–90.49); synthesized compressed-air hisses, two landing thumps, one skid;
+  SFX RMS ≤ music RMS (−2 dB max).
+- Deliverables: 倒挂靠抽气，起飞靠喷气.mp4 (send, 18.9 MB), _高清原片.mp4 (138 MB, not committed).
