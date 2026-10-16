@@ -1,0 +1,22 @@
+<!doctype html><html><head><meta charset="utf-8"><style>
+html,body{margin:0;width:1920px;height:1080px;overflow:hidden;background:#d9a888;font-family:"Noto Sans CJK SC",sans-serif}
+canvas{position:absolute;left:0;top:0}#hud{position:absolute;inset:0;z-index:20;pointer-events:none}
+#hud svg{position:absolute;inset:0}
+.lab{position:absolute;color:#fff;font-weight:900;white-space:nowrap;text-shadow:0 2px 14px rgba(10,20,40,.55),0 0 2px rgba(10,20,40,.6)}
+.lab .k{font-size:34px;font-weight:700;letter-spacing:2px;color:#e8f4ff;display:block;margin-bottom:-6px}
+.lab .n{font-family:"Inter Display","Inter",sans-serif;font-weight:900;font-size:120px;letter-spacing:-3px;line-height:1}
+.lab .u{font-size:54px;color:#F6CF78;margin-left:6px}
+.lab .y{font-size:44px;color:#F6CF78;margin-right:8px;vertical-align:28px}
+.lab.s .n{font-size:84px}.lab.s .u{font-size:42px}.lab.s .y{font-size:34px;vertical-align:18px}
+.tag{position:absolute;font-size:26px;font-weight:700;color:#fff;background:rgba(10,18,30,.55);border:1.5px solid rgba(246,207,120,.85);border-radius:30px;padding:6px 18px;white-space:nowrap}
+#sub{position:absolute;left:0;right:0;bottom:70px;text-align:center;z-index:40}
+#sub span{display:inline-block;background:rgba(6,8,13,.80);color:#fff;font-size:64px;font-weight:900;padding:10px 34px 14px;border-radius:18px}
+#sub b{color:#F6CF78}
+.mark{position:absolute;right:44px;top:34px;font-size:22px;font-weight:700;letter-spacing:2px;color:#fff;opacity:.85;z-index:30;text-shadow:0 1px 6px rgba(20,20,40,.7)}
+.plaque{position:absolute;left:0;right:0;top:330px;text-align:center;z-index:35}
+.plaque .t{display:inline-block;font-size:110px;font-weight:900;color:#fff;letter-spacing:6px;text-shadow:0 6px 40px rgba(20,10,30,.6),0 0 3px rgba(20,10,30,.5)}
+.plaque .t b{color:#F6CF78}
+.plaque .d{font-size:30px;font-weight:700;color:#fff;letter-spacing:6px;margin-top:6px;text-shadow:0 2px 12px rgba(20,10,30,.7)}
+</style></head><body><div id="gl"></div><div id="hud"></div><div class="mark">◆ Juno · VIBE知识大赏</div><div id="sub"></div>
+<script type="importmap">{"imports":{"three":"./node_modules/three/build/three.module.js","three/addons/":"./node_modules/three/examples/jsm/"}}</script>
+<script type="module" src="main.js"></script></body></html>
