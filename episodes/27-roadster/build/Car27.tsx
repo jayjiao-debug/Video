@@ -10,11 +10,11 @@ export const WHEELS: [number, number][] = [[220, 236], [790, 236]];
 export const NOZZLES: [number, number, number][] = [[118, 232, 90], [330, 232, 90], [690, 232, 90], [905, 232, 90], [26, 186, 180], [996, 204, 0]];
 export const TANKS: [number, number, number, number][] = [[300, 196, 420, 24], [120, 140, 160, 30], [130, 176, 150, 26], [690, 166, 210, 30], [520, 152, 100, 26]];
 
-export type CarProps = {id: string; x: number; y: number; s?: number; rot?: number; fx?: number; fy?: number; py?: number; shadow?: number; fanSpin?: number; tankN?: number; nozN?: number; xray?: number; spin?: number; tanks?: number; nozzles?: number; fan?: number; o?: number; lightFrom?: 'below' | 'above'};
+export type CarProps = {id: string; x: number; y: number; s?: number; rot?: number; fx?: number; fy?: number; py?: number; shadow?: number; ink?: number; fanSpin?: number; tankN?: number; nozN?: number; xray?: number; spin?: number; tanks?: number; nozzles?: number; fan?: number; o?: number; lightFrom?: 'below' | 'above'};
 
 const Wheel: React.FC<{cx: number; cy: number; id: string; spin: number; ghost: number}> = ({cx, cy, id, spin, ghost}) => (
 	<g opacity={1 - ghost * 0.55}>
-		<circle cx={cx} cy={cy} r={56} fill="#121418" />
+		<circle cx={cx} cy={cy} r={56} fill="#121418" stroke="#120d10" strokeWidth={6} />
 		<circle cx={cx} cy={cy} r={54} fill="none" stroke="#2c3038" strokeWidth={6} />
 		<circle cx={cx} cy={cy} r={38} fill={`url(#${id}-rim)`} />
 		<g transform={`rotate(${spin} ${cx} ${cy})`}>
@@ -27,7 +27,7 @@ const Wheel: React.FC<{cx: number; cy: number; id: string; spin: number; ghost: 
 	</g>
 );
 
-export const Car: React.FC<CarProps> = ({id, x, y, s = 1, rot = 0, fx = 1, fy = 1, py = 292, shadow = 1, fanSpin, tankN = 99, nozN = 99, xray = 0, spin = 0, tanks = 1, nozzles = 0, fan = 0, o = 1, lightFrom = 'above'}) => {
+export const Car: React.FC<CarProps> = ({id, x, y, s = 1, rot = 0, fx = 1, fy = 1, py = 292, shadow = 1, ink = 0, fanSpin, tankN = 99, nozN = 99, xray = 0, spin = 0, tanks = 1, nozzles = 0, fan = 0, o = 1, lightFrom = 'above'}) => {
 	const lit = lightFrom === 'below';
 	return (
 		<g transform={`translate(${x} ${y}) rotate(${rot}) scale(${s * fx} ${s * fy}) translate(-510 ${-py})`} opacity={o}>
@@ -83,6 +83,20 @@ export const Car: React.FC<CarProps> = ({id, x, y, s = 1, rot = 0, fx = 1, fy = 
 				{/* lights */}
 				<path d="M 946 176 C 966 180, 984 188, 992 198 L 984 200 C 972 192, 958 186, 944 182 Z" fill="#fff8e8" />
 				<path d="M 31 150 L 44 146 L 44 176 L 30 180 Z" fill={K.red} />
+				{ink > 0 && (
+					<g opacity={ink}>
+						{/* comic ink: hatching in the lower shadow, heavy outlines */}
+						<g clipPath={`url(#${id}-clip)`}>
+							{Array.from({length: 60}, (_, i) => <line key={i} x1={i * 18} y1={168} x2={i * 18 + 40} y2={232} stroke="#120d10" strokeWidth={3} opacity={0.55} />)}
+							<rect x={0} y={196} width={1000} height={40} fill="#120d10" opacity={0.35} />
+						</g>
+						<path d={BODY} fill="none" stroke="#120d10" strokeWidth={9} strokeLinejoin="round" />
+						<path d={GLASS} fill="none" stroke="#120d10" strokeWidth={6} strokeLinejoin="round" />
+						<path d="M 60 150 C 300 128, 640 140, 960 182" stroke="#120d10" strokeWidth={4} fill="none" />
+						<path d="M 300 128 L 296 214 M 612 126 C 618 160, 616 196, 606 220" stroke="#120d10" strokeWidth={4} fill="none" />
+						<path d="M 470 76 C 420 78, 380 88, 340 104" stroke="#ffffff" strokeWidth={7} fill="none" strokeLinecap="round" />
+					</g>
+				)}
 			</g>
 			{/* x-ray body */}
 			{xray > 0 && (

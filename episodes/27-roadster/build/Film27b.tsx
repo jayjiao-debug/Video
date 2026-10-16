@@ -72,10 +72,10 @@ const carAt = (t: number): St => {
 	}
 	if (t < 51.6) { // off the lip: push away, roll in slow motion, brake with the jets, land
 		const u = pw(t, [[39.0, 0], [41.4, 0.27], [49.1, 0.72], [51.6, 1]]);
-		const fy = u < 0.3 ? -1 : u > 0.6 ? 1 : -Math.cos((Math.PI * (u - 0.3)) / 0.3);
+		const fy = u < 0.41 ? -1 : u > 0.56 ? 1 : -Math.cos((Math.PI * (u - 0.41)) / 0.15);
 		const y0 = CEIL + HALF, y1 = GROUND - HALF;
 		return {...base, x: mix(u, C.lipX, LAND_X), y: y0 + (y1 - y0) * u * u, fx: -1, fy, spin: 6000 + u * 300,
-			jets: Math.max(1 - r(u, 0.05, 0.2), r(u, 0.74, 0.8) * (1 - r(u, 0.97, 1))), top: r(u, 0.3, 0.36) * (1 - r(u, 0.55, 0.6)),
+			jets: Math.max(1 - r(u, 0.05, 0.2), r(u, 0.74, 0.8) * (1 - r(u, 0.97, 1))), top: r(u, 0.39, 0.43) * (1 - r(u, 0.54, 0.58)),
 			xray: r(t, 41.2, 41.8) * (1 - r(t, 50.3, 51.2)), shadow: r(u, 0.85, 1)};
 	}
 	if (t < 54.2) { const x = mix(r(t, 51.6, 54.2, EZ.lin), LAND_X, KICK_X); return {...base, ...fromWheel(x, GROUND, 0), fx: -1, spin: -x}; }
@@ -190,8 +190,47 @@ const Bar: React.FC<{label: string; val: string; frac: number; col: string; p: n
 	</div>
 );
 
+/* ---------------- 2.5D comic layers (Borderlands-style look) ---------------- */
+const Mesas: React.FC = () => (
+	<g filter="url(#ink)">
+		{Array.from({length: 9}, (_, i) => {
+			const x = -2400 + i * 620, w = 300 + (i % 3) * 140, h = 140 + ((i * 37) % 90);
+			return (
+				<g key={i}>
+					<path d={`M ${x} 880 L ${x + 40} ${880 - h} L ${x + w - 30} ${880 - h} L ${x + w} 880 Z`} fill="#8a3d5a" />
+					<path d={`M ${x + 40} ${880 - h} L ${x + w - 30} ${880 - h} L ${x + w - 26} ${880 - h + 18} L ${x + 36} ${880 - h + 18} Z`} fill="#c0607a" />
+					<path d={`M ${x + w * 0.55} ${880 - h + 18} L ${x + w - 26} ${880 - h + 18} L ${x + w} 880 L ${x + w * 0.62} 880 Z`} fill="#5e2744" />
+				</g>
+			);
+		})}
+	</g>
+);
+const Stands: React.FC = () => (
+	<g filter="url(#ink)">
+		{Array.from({length: 10}, (_, i) => {
+			const x = -4200 + i * 760;
+			return (
+				<g key={i} fill="#3b2433">
+					<path d={`M ${x} 880 L ${x + 30} ${700} L ${x + 70} ${700} L ${x + 100} 880 Z`} />
+					<rect x={x + 160} y={620} width={26} height={260} /><rect x={x + 140} y={600} width={66} height={24} />
+					<circle cx={x + 173} cy={596} r={9} fill="#ffe7a8" />
+				</g>
+			);
+		})}
+	</g>
+);
+const Posts: React.FC = () => (
+	<g filter="url(#ink)">
+		{Array.from({length: 60}, (_, i) => {
+			const x = -12000 + i * 420;
+			return <g key={i}><rect x={x} y={1010} width={30} height={260} fill="#2a1a16" /><rect x={x - 10} y={1000} width={50} height={22} fill="#e0b04a" /></g>;
+		})}
+		<rect x={-12000} y={1060} width={26000} height={16} fill="#2a1a16" />
+	</g>
+);
+
 /* ---------------- the film ---------------- */
-export const Film27b: React.FC = () => {
+export const Film27b: React.FC<{bl?: boolean}> = ({bl = false}) => {
 	const f = useCurrentFrame();
 	const t = f / FPS;
 	const c = carAt(t);
@@ -208,30 +247,60 @@ export const Film27b: React.FC = () => {
 	const title = r(t, 10.56, 10.95, Easing.bezier(0.2, 1.4, 0.4, 1)) * (1 - r(t, 12.7, 13.2));
 	const speed = t >= 59.2 && t < 67.6 ? Math.min(60, 60 * r(t, 61.8, 62.7, EZ.lin)) : 0;
 	const mark = r(t, 0.6, 1.2) * (1 - r(t, END_AT - 0.5, END_AT));
-	const sl = (px: number) => px / cam.z; // keep in-world labels at a constant screen size
+	const sl = (px: number) => px / cam.z;
+	const hs = H / 2 + (880 - cam.cy) * cam.z;
+	const layerT = (p: number) => `translate(${W / 2} ${hs}) rotate(${cam.roll}) scale(${1 + (cam.z - 1) * p}) translate(${-cam.cx * p} -880)`; // keep in-world labels at a constant screen size
 	return (
-		<AbsoluteFill style={{background: '#0d1628'}}>
+		<AbsoluteFill style={{background: bl ? '#211433' : '#0d1628'}}>
 			<svg width={W} height={H} viewBox={`0 0 ${W} ${H}`} style={{position: 'absolute', inset: 0}}>
 				<defs>
-					<linearGradient id="bsky" x1="0" y1="-1600" x2="0" y2="880" gradientUnits="userSpaceOnUse">
-						<stop offset="0" stopColor="#0b1324" /><stop offset="0.5" stopColor={K.skyTop} /><stop offset="0.8" stopColor={K.skyMid} /><stop offset="0.96" stopColor={K.skyLow} /><stop offset="1" stopColor={K.glow} />
-					</linearGradient>
-					<linearGradient id="bgnd" x1="0" y1="880" x2="0" y2="1600" gradientUnits="userSpaceOnUse">
-						<stop offset="0" stopColor="#2a313c" /><stop offset="0.1" stopColor={K.ground} /><stop offset="1" stopColor="#12171e" />
-					</linearGradient>
+					{bl ? (
+						<>
+							<linearGradient id="bsky" x1="0" y1="0" x2="0" y2="1">
+								{[[0, '#211433'], [0.32, '#3f1f4d'], [0.5, '#7a2c57'], [0.64, '#c24a52'], [0.77, '#ee8a45'], [0.9, '#ffcf6a']].map(([o, c], i, a) => (
+									<React.Fragment key={i}><stop offset={o as number} stopColor={c as string} /><stop offset={i + 1 < a.length ? (a[i + 1][0] as number) - 0.0001 : 1} stopColor={c as string} /></React.Fragment>
+								))}
+							</linearGradient>
+							<linearGradient id="bgnd" x1="0" y1="880" x2="0" y2="1600" gradientUnits="userSpaceOnUse">
+								<stop offset="0" stopColor="#d39a55" /><stop offset="0.08" stopColor="#d39a55" /><stop offset="0.0801" stopColor="#a8643a" /><stop offset="0.3" stopColor="#a8643a" /><stop offset="0.3001" stopColor="#7a4429" /><stop offset="1" stopColor="#4a2919" />
+							</linearGradient>
+						</>
+					) : (
+						<>
+							<linearGradient id="bsky" x1="0" y1="-1600" x2="0" y2="880" gradientUnits="userSpaceOnUse">
+								<stop offset="0" stopColor="#0b1324" /><stop offset="0.5" stopColor={K.skyTop} /><stop offset="0.8" stopColor={K.skyMid} /><stop offset="0.96" stopColor={K.skyLow} /><stop offset="1" stopColor={K.glow} />
+							</linearGradient>
+							<linearGradient id="bgnd" x1="0" y1="880" x2="0" y2="1600" gradientUnits="userSpaceOnUse">
+								<stop offset="0" stopColor="#2a313c" /><stop offset="0.1" stopColor={K.ground} /><stop offset="1" stopColor="#12171e" />
+							</linearGradient>
+						</>
+					)}
+					<filter id="post" x="0" y="0" width="100%" height="100%" filterUnits="userSpaceOnUse">
+						<feComponentTransfer><feFuncR type="discrete" tableValues="0.04 0.2 0.38 0.58 0.78 0.95" /><feFuncG type="discrete" tableValues="0.04 0.2 0.38 0.58 0.78 0.95" /><feFuncB type="discrete" tableValues="0.06 0.22 0.4 0.6 0.8 0.95" /></feComponentTransfer>
+					</filter>
+					<filter id="ink" x="-10%" y="-10%" width="120%" height="120%">
+						<feMorphology in="SourceAlpha" operator="dilate" radius="4" result="d" /><feFlood floodColor="#120d10" /><feComposite in2="d" operator="in" result="o" />
+						<feMerge><feMergeNode in="o" /><feMergeNode in="SourceGraphic" /></feMerge>
+					</filter>
+					<pattern id="dots" width="14" height="14" patternUnits="userSpaceOnUse"><circle cx="7" cy="7" r="2.6" fill="#120d10" /></pattern>
 				</defs>
+				<g>
+				{bl && <rect x={-200} y={Math.min(Math.max(hs, 760), H + 120) - 1500} width={W + 400} height={1500} fill="url(#bsky)" />}
+				{bl && <rect x={0} y={0} width={W} height={Math.max(0, hs - 500)} fill="url(#dots)" opacity={0.1} />}
+				{bl && <g transform={layerT(0.18)}><Mesas /></g>}
+				{bl && <g transform={layerT(0.45)}><Stands /></g>}
 				<g transform={`translate(${W / 2} ${H / 2}) rotate(${cam.roll}) scale(${cam.z}) translate(${-cam.cx} ${-cam.cy})`}>
-					<rect x={-10000} y={-1800} width={13500} height={2681} fill="url(#bsky)" />
+					{!bl && <rect x={-10000} y={-1800} width={13500} height={2681} fill="url(#bsky)" />}
 					<rect x={-10000} y={880} width={13500} height={900} fill="url(#bgnd)" />
-					{[0, -1700, -3400, -5100, -6800, -8500].map((dx) => <Horizon key={dx} hy={880} dx={dx} />)}
-					<Course />
+					{!bl && [0, -1700, -3400, -5100, -6800, -8500].map((dx) => <Horizon key={dx} hy={880} dx={dx} />)}
+					<g filter={bl ? 'url(#ink)' : undefined}><Course /></g>
 					<rect x={-10000} y={GROUND + 3} width={13500} height={900} fill="url(#bgnd)" />
 					<rect x={-10000} y={GROUND} width={C.cx + 10000} height={4} fill="#d9e1ea" opacity={0.3} />
 					{Array.from({length: 40}, (_, i) => <rect key={i} x={-9800 + i * 300} y={GROUND + 70} width={150} height={8} fill="#d9e1ea" opacity={0.14} />)}
 					<Flood id="bf1" sx={1000} sy={1010} tx={1100} ty={CEIL + 60} spread={0.2} motes={110} t={t} />
 					<Flood id="bf2" sx={-2200} sy={1020} tx={-2800} ty={300} spread={0.26} motes={90} t={t} o={0.85} />
 					<Flood id="bf3" sx={-7300} sy={1020} tx={-8000} ty={700} spread={0.3} motes={70} t={t} o={0.9} />
-					<Lineup x={-3700} y={GROUND + 2} s={1.0} />
+					<g filter={bl ? 'url(#ink)' : undefined}><Lineup x={-3700} y={GROUND + 2} s={1.0} /></g>
 					{/* speed streaks on the hard runs */}
 					{(t < 3.3 || (t > 59.2 && t < 66.8)) && Array.from({length: 14}, (_, i) => {
 						const k = rng(i + 3); const yy = c.y - 120 + k() * 260; const len = 200 + k() * 400;
@@ -248,7 +317,7 @@ export const Film27b: React.FC = () => {
 						const q = carPt(c, lx, ly);
 						return <Plume key={i} id={`bt${i}`} x={q.x} y={q.y} a={(c.fy > 0 ? -90 : 90) + c.rot + (i ? 20 : -20)} L={170} w={0.24} o={c.top} seed={i + 7 + (f % 4)} />;
 					})}
-					<Car id="bcar" x={c.x} y={c.y} s={S} rot={c.rot} fx={c.fx} fy={c.fy} py={170} spin={c.spin} fanSpin={t * 900} xray={c.xray} fan={onCeil ? c.xray : 0} tanks={fly || t >= 69 ? 1 : 0} tankN={tanksN} nozzles={fly || t >= 69 ? c.xray : 0} nozN={fly ? 6 * r(t, 44.0, 45.4, EZ.lin) : 6} shadow={c.shadow} />
+					<Car id="bcar" ink={bl ? 1 - c.xray : 0} x={c.x} y={c.y} s={S} rot={c.rot} fx={c.fx} fy={c.fy} py={170} spin={c.spin} fanSpin={t * 900} xray={c.xray} fan={onCeil ? c.xray : 0} tanks={fly || t >= 69 ? 1 : 0} tankN={tanksN} nozzles={fly || t >= 69 ? c.xray : 0} nozN={fly ? 6 * r(t, 46.6, 48.0, EZ.lin) : 6} shadow={c.shadow} />
 					{scan >= 0 && (() => { const a = carPt(c, 1000 - scan * 1000, -40), b = carPt(c, 1000 - scan * 1000, 300); return <line x1={a.x} y1={a.y} x2={b.x} y2={b.y} stroke="#dff4ff" strokeWidth={sl(5)} opacity={Math.sin(Math.PI * scan)} />; })()}
 					{/* pressure arrows: room-side air pushing the car into the ceiling */}
 					{onCeil && arrows > 0.01 && [180, 510, 840].map((lx, i) => {
@@ -273,7 +342,7 @@ export const Film27b: React.FC = () => {
 					})()}
 					{fly && (() => {
 						const tk = carPt(c, 520, 210), nz = carPt(c, 905, 232);
-						const o1 = r(t, 41.4, 41.9, EZ.out) * (1 - r(t, 43.9, 44.3)), o2 = r(t, 44.0, 44.5, EZ.out) * (1 - r(t, 46.4, 46.8));
+						const o1 = r(t, 41.4, 41.9, EZ.out) * (1 - r(t, 43.9, 44.3)), o2 = r(t, 46.6, 47.1, EZ.out) * (1 - r(t, 48.8, 49.2));
 						return (
 							<g>
 								<Lab x={tk.x} y={tk.y + sl(c.fy > 0 ? 90 : -70)} size={sl(46)} col={K.frost} o={o1}>高压气瓶</Lab>
@@ -292,6 +361,8 @@ export const Film27b: React.FC = () => {
 							</g>
 						);
 					})()}
+				</g>
+				{bl && <g transform={layerT(1.45)}><Posts /></g>}
 				</g>
 			</svg>
 			{/* breakdown 1 read-outs */}
@@ -350,5 +421,10 @@ export const Film27b: React.FC = () => {
 		</AbsoluteFill>
 	);
 };
-const Root: React.FC = () => <Composition id="FILM27B" component={Film27b} durationInFrames={Math.round(FILM_END * FPS)} fps={FPS} width={W} height={H} />;
+const Root: React.FC = () => (
+	<>
+		<Composition id="FILM27B" component={Film27b} durationInFrames={Math.round(FILM_END * FPS)} fps={FPS} width={W} height={H} />
+		<Composition id="FILM27BL" component={Film27b} defaultProps={{bl: true}} durationInFrames={Math.round(FILM_END * FPS)} fps={FPS} width={W} height={H} />
+	</>
+);
 registerRoot(Root);
