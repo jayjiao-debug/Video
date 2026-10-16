@@ -52,7 +52,7 @@ const CHALK = '242,236,222', WARM = '255,206,140';
 const chalkPuppet = (g: G, id: string, x: number, y: number, s: number, p: number, o = 1, warm = 0) => {
   if (o <= 0.002 || p <= 0) return;
   const { strokes, total } = record(id);
-  const col = warm > 0 ? `${Math.round(lerp(242, 255, warm))},${Math.round(lerp(236, 206, warm))},${Math.round(lerp(222, 140, warm))}` : CHALK;
+  const col = tint(warm);
   let budget = p * total * 1.02, lastFull = true;
   g.save(); g.translate(x, y); g.scale(s, s); g.lineCap = 'round'; g.lineJoin = 'round';
   for (const st of strokes) {
@@ -69,11 +69,27 @@ const chalkPuppet = (g: G, id: string, x: number, y: number, s: number, p: numbe
       if (acc + d >= use) { const k = (use - acc) / d; g.lineTo(ax + (bx - ax) * k, ay + (by - ay) * k); break; }
       g.lineTo(bx, by); acc += d;
     }
-    const w = st.w * (main ? 0.85 : 0.7);
-    g.setLineDash([]); g.strokeStyle = `rgba(${col},${(main ? 0.72 : 0.22) * o})`; g.lineWidth = w; g.stroke();
-    if (main) { g.setLineDash([1.6, 3.2]); g.strokeStyle = `rgba(${col},${0.3 * o})`; g.lineWidth = w * 1.6; g.stroke(); g.setLineDash([]); }
+    chalkStroke(g, col, st.w * 0.95 / Math.max(0.5, s), o, !main);
   }
   g.restore();
+};
+/** chalk grain: a tile of specks in the given colour, used as the stroke paint so every line breaks up like chalk */
+const GRAIN = new Map<string, CanvasPattern>();
+const grain = (g: G, col: string) => {
+  const key = col; if (GRAIN.has(key)) return GRAIN.get(key)!;
+  const c = document.createElement('canvas'); c.width = 256; c.height = 256; const t = c.getContext('2d')!;
+  P.reseed(col.length * 13 + 5);
+  for (let i = 0; i < 16000; i++) { t.fillStyle = `rgba(${col},${0.3 + P.rand() * 0.7})`; const w = 0.8 + P.rand() * 2.2; t.fillRect(P.rand() * 256, P.rand() * 256, w, 0.8 + P.rand() * 1.6); }
+  for (let i = 0; i < 120; i++) { t.strokeStyle = `rgba(${col},.5)`; t.lineWidth = 0.8; const x = P.rand() * 256, y = P.rand() * 256; t.beginPath(); t.moveTo(x, y); t.lineTo(x + 6 + P.rand() * 10, y + (P.rand() - 0.5) * 2); t.stroke(); }
+  const p = g.createPattern(c, 'repeat')!; GRAIN.set(key, p); return p;
+};
+const tint = (warm: number) => { const q = Math.round(clamp(warm) * 4) / 4; return `${Math.round(lerp(242, 255, q))},${Math.round(lerp(236, 206, q))},${Math.round(lerp(222, 140, q))}`; };
+/** stroke the current path as chalk: a faint dust smear, a grainy body, a thin denser core */
+const chalkStroke = (g: G, col: string, w: number, o: number, light = false) => {
+  g.setLineDash([]); g.lineCap = 'round'; g.lineJoin = 'round';
+  if (!light) { g.strokeStyle = `rgba(${col},${0.07 * o})`; g.lineWidth = w * 3.4; g.stroke(); }
+  g.globalAlpha = (light ? 0.3 : 0.95) * o; g.strokeStyle = grain(g, col); g.lineWidth = w * (light ? 0.9 : 1.45); g.stroke(); g.globalAlpha = 1;
+  if (!light) { g.strokeStyle = `rgba(${col},${0.28 * o})`; g.lineWidth = w * 0.5; g.stroke(); }
 };
 const glow = (g: G, x: number, y: number, r: number, a: number, col = WARM) => {
   if (a <= 0.002 || r <= 0) return;
@@ -85,8 +101,7 @@ const chalkLine = (g: G, pts: Pt[], p: number, w = 5, o = 1, col = CHALK) => {
   let L = 0; for (let i = 1; i < pts.length; i++) L += Math.hypot(pts[i][0] - pts[i - 1][0], pts[i][1] - pts[i - 1][1]);
   let use = p * L, acc = 0; g.beginPath(); g.moveTo(pts[0][0], pts[0][1]);
   for (let i = 1; i < pts.length; i++) { const d = Math.hypot(pts[i][0] - pts[i - 1][0], pts[i][1] - pts[i - 1][1]); if (acc + d >= use) { const k = (use - acc) / d; g.lineTo(pts[i - 1][0] + (pts[i][0] - pts[i - 1][0]) * k, pts[i - 1][1] + (pts[i][1] - pts[i - 1][1]) * k); break; } g.lineTo(pts[i][0], pts[i][1]); acc += d; }
-  g.lineCap = 'round'; g.strokeStyle = `rgba(${col},${0.7 * o})`; g.lineWidth = w; g.stroke();
-  g.setLineDash([1.6, 3.2]); g.strokeStyle = `rgba(${col},${0.28 * o})`; g.lineWidth = w * 1.7; g.stroke(); g.setLineDash([]);
+  chalkStroke(g, col, w, o);
 };
 const wobbly = (x0: number, y0: number, x1: number, y1: number, n = 40, amp = 3, seed = 1): Pt[] => Array.from({ length: n + 1 }, (_, i) => { const t = i / n; return [x0 + (x1 - x0) * t, y0 + (y1 - y0) * t + amp * Math.sin(t * 13 + seed) * Math.sin(t * 5.3 + seed * 2)]; });
 
@@ -108,7 +123,7 @@ const chalkHeart = (g: G, cx: number, cy: number, size: number, k: number, p: nu
 };
 
 /* ------------------------------------------------------------ crumbling into chalk dust */
-const DIS_SPEED = 170;   // px/s, the same for all three
+const DIS_SPEED = 125;   // px/s, the same for all three
 type Dis = { id: string; x: number; y: number; s: number; tin: number; din: number; warm: number; hx: number; hy: number; hs: number; hk: number; th: number; t0: number; xmin: number; pts: [number, number, boolean][] };
 const hash = (i: number, k = 0) => { const v = Math.sin(i * 12.9898 + k * 78.233) * 43758.5453; return v - Math.floor(v); };
 const heartPts = (cx: number, cy: number, size: number): Pt[] => { const sc = size / 320, tip = cy + size * 0.45; return [...P.bez([0, 0], [-160, -110], [-120, -260], [0, -190], 24), ...P.bez([0, -190], [120, -260], [160, -110], [0, 0], 24)].map(([x, y]) => [cx + x * sc, tip + y * sc]); };
@@ -116,27 +131,62 @@ const makeDis = (id: string, x: number, y: number, s: number, tin: number, din: 
   const pts: [number, number, boolean][] = [];
   const walk = (poly: Pt[], step: number, warmPt: boolean) => { for (let i = 1; i < poly.length; i++) { const [ax, ay] = poly[i - 1], [bx, by] = poly[i], d = Math.hypot(bx - ax, by - ay), n = Math.max(1, Math.round(d / step)); for (let k = 0; k < n; k++) pts.push([ax + (bx - ax) * k / n, ay + (by - ay) * k / n, warmPt]); } };
   for (const st of record(id).strokes) { if (st.a < 0.5) continue; if (st.kind === 'line') walk(st.pts.map(([a, b]) => [x + a * s, y + b * s] as Pt), 4, false); if (st.kind === 'dot') pts.push([x + st.pts[0][0] * s, y + st.pts[0][1] * s, false]); }
-  const hp = heartPts(hx, hy, hs); walk(hp, 4, hk > 0.3);
-  if (hk > 0.01) { const path = new Path2D(); hp.forEach(([a, b], i) => (i ? path.lineTo(a, b) : path.moveTo(a, b))); path.closePath(); const c = document.createElement('canvas').getContext('2d')!; const top = hy - hs * 0.42, tip = hy + hs * 0.45, lvl = tip - (tip - top) * hk; for (let yy = lvl; yy < tip; yy += 7) for (let xx = hx - hs; xx < hx + hs; xx += 7) if (c.isPointInPath(path, xx, yy)) pts.push([xx, yy, true]); }
+  const hp = hs > 0 ? heartPts(hx, hy, hs) : []; if (hs > 0) walk(hp, 4, hk > 0.3);
+  if (hs > 0 && hk > 0.01) { const path = new Path2D(); hp.forEach(([a, b], i) => (i ? path.lineTo(a, b) : path.moveTo(a, b))); path.closePath(); const c = document.createElement('canvas').getContext('2d')!; const top = hy - hs * 0.42, tip = hy + hs * 0.45, lvl = tip - (tip - top) * hk; for (let yy = lvl; yy < tip; yy += 7) for (let xx = hx - hs; xx < hx + hs; xx += 7) if (c.isPointInPath(path, xx, yy)) pts.push([xx, yy, true]); }
   const xmin = Math.min(...pts.map((p) => p[0]));
   return { id, x, y, s, tin, din, warm, hx, hy, hs, hk, th, t0, xmin, pts };
 };
 let DIS: Dis[] = [];
-const ensureDis = () => { if (DIS.length) return; DIS = [
-  makeDis('fly', 470, 780, 0.9, 22.5, 1.2, 0, 470, 545, 80, 0.04, 27.7, 34.0),
-  makeDis('cat', 960, 790, 0.8, 23.0, 1.6, 0.45, 960, 420, 160, 0.55, 27.9, 35.4),
-  makeDis('rhino', 1440, 790, 0.62, 23.5, 2.0, 0.8, 1440, 440, 250, 1.0, 28.1, 36.9),
+let FLY_DIS: Dis;
+const ensureDis = () => { if (DIS.length) return; FLY_DIS = makeDis('fly', 1100, 820, 0.62, 17.2, 1.0, 0, 0, 0, 0, 0, 0, 20.0); DIS = [
+  makeDis('fly', 470, 780, 0.9, 22.5, 1.2, 0, 470, 545, 80, 0.04, 27.7, 35.0),
+  makeDis('cat', 960, 790, 0.8, 23.0, 1.6, 0.45, 960, 420, 160, 0.55, 27.9, 36.6),
+  makeDis('rhino', 1440, 790, 0.62, 23.5, 2.0, 0.8, 1440, 440, 250, 1.0, 28.1, 38.2),
 ]; };
-const crumble = (g: G, d: Dis, T: number) => {
-  const LIFE = 2.4;
+const LIFE = 2.6;
+const dustAt = (d: Dis, i: number, T: number, speed = DIS_SPEED, fall = false) => {
+  const [x, y] = d.pts[i];
+  const tr = d.t0 + (x - d.xmin) / speed + hash(i) * 0.18, age = Math.max(0, T - tr);
+  const h1 = hash(i, 1), h2 = hash(i, 2), e = Math.min(1, age / LIFE);
+  if (fall) return { px: x + age * (20 + 30 * h1) * (h2 - 0.4), py: y + age * (14 + 26 * h2) + 4 * Math.sin(age * 3 + h1 * 6), age, e, tr };
+  return { px: x + age * (70 + 90 * h1) + 18 * Math.sin(age * 2.4 + h2 * 6), py: y - age * (40 + 70 * h2) - 25 * e * e, age, e, tr };
+};
+const crumble = (g: G, d: Dis, T: number, speed = DIS_SPEED, fall = false, life = LIFE) => {
   d.pts.forEach(([x, y, warm], i) => {
-    const tr = d.t0 + (x - d.xmin) / DIS_SPEED + hash(i) * 0.18;
-    if (T < tr) return; const age = T - tr; if (age > LIFE) return;
-    const h1 = hash(i, 1), h2 = hash(i, 2), e = age / LIFE;
-    const px = x + age * (70 + 90 * h1) + 18 * Math.sin(age * 2.4 + h2 * 6), py = y - age * (40 + 70 * h2) - 25 * e * e;
+    const q = dustAt(d, i, T, speed, fall);
+    if (T < q.tr || q.age > life) return;
+    const e = q.age / life, px = q.px, py = q.py; void x; void y;
     g.fillStyle = `rgba(${warm ? WARM : CHALK},${(warm ? 0.9 : 0.75) * (1 - e) * (1 - e)})`;
     const r = (warm ? 2.6 : 2.2) * (1 - 0.5 * e); g.fillRect(px - r, py - r, 2 * r, 2 * r);
   });
+};
+
+/* ------------------------------------------------------------ the title layer: drawn once, in board coordinates */
+let TL: { chalk: HTMLCanvasElement; snap: { d: number; i: number; tx: number; ty: number }[] } | null = null;
+const TITLE_CHARS = ['生', '命', '平', '等', '吗', '？'];
+const titleLayer = () => {
+  if (TL) return TL;
+  const size = 216, base = 760, adv = size * 0.9, qadv = size * 0.62;
+  const total = adv * 5 + qadv, x0 = 960 - total / 2;
+  const paint = (t: CanvasRenderingContext2D, col: string, halo: boolean) => {
+    t.textBaseline = 'alphabetic'; t.textAlign = 'center'; t.fillStyle = col;
+    if (halo) { t.shadowColor = `rgba(${WARM},.55)`; t.shadowBlur = 26; }
+    TITLE_CHARS.forEach((ch, i) => { const q = i === 5, fs = q ? size * 0.72 : size; t.font = `${fs}px "Ma Shan Zheng"`; const cx = x0 + (q ? adv * 5 + qadv / 2 : adv * i + adv / 2); t.save(); t.translate(cx, base - 34); t.rotate((hash(i, 9) - 0.5) * 0.06); t.fillText(ch, 0, 0); t.restore(); });
+    t.shadowBlur = 0;
+  };
+  const chalk = document.createElement('canvas'); chalk.width = 1920; chalk.height = 1080; const c = chalk.getContext('2d')!;
+  paint(c, JUNO.colors.gold, true); paint(c, '#ffe2a6', false); grainMask(c, 1920, 1080, 4242);
+  // targets for the dust: sample the solid letters
+  const solid = document.createElement('canvas'); solid.width = 1920; solid.height = 1080; const sc = solid.getContext('2d')!;
+  paint(sc, '#fff', false);
+  const img = sc.getImageData(0, 0, 1920, 1080).data, tg: Pt[] = [];
+  for (let y = 380; y < 800; y += 5) for (let x = 200; x < 1720; x += 5) if (img[(y * 1920 + x) * 4 + 3] > 140) tg.push([x, y]);
+  tg.sort((a, b) => a[0] - b[0]);
+  const src: { d: number; i: number; x: number }[] = [];
+  DIS.forEach((d, di) => d.pts.forEach((_, i) => { const q = dustAt(d, i, TITLE - 0.02); src.push({ d: di, i, x: q.px }); }));
+  src.sort((a, b) => a.x - b.x);
+  const snap = src.map((s0, j) => { const t = tg[Math.min(tg.length - 1, Math.floor(j * tg.length / src.length))]; return { d: s0.d, i: s0.i, tx: t[0] + (hash(j, 3) - 0.5) * 3, ty: t[1] + (hash(j, 4) - 0.5) * 3 }; });
+  TL = { chalk, snap }; return TL;
 };
 
 /* ------------------------------------------------------------ the board */
@@ -148,20 +198,27 @@ const board = () => {
   const gr = g.createLinearGradient(0, 0, 0, 1080); gr.addColorStop(0, '#11151d'); gr.addColorStop(1, '#191d26'); g.fillStyle = gr; g.fillRect(0, 0, 1920, 1080);
   for (let i = 0; i < 70; i++) { const x = P.rand() * 1920, y = P.rand() * 1080, r = 80 + P.rand() * 260; const s = g.createRadialGradient(x, y, 0, x, y, r); s.addColorStop(0, 'rgba(240,236,225,.035)'); s.addColorStop(1, 'rgba(240,236,225,0)'); g.fillStyle = s; g.fillRect(x - r, y - r, 2 * r, 2 * r); }
   for (let i = 0; i < 9000; i++) { g.fillStyle = `rgba(240,236,225,${P.rand() * 0.06})`; g.fillRect(P.rand() * 1920, P.rand() * 1080, 1 + P.rand() * 1.5, 1 + P.rand() * 1.5); }
+  for (let i = 0; i < 14; i++) { const x = P.rand() * 1920, y = P.rand() * 1080, r = 120 + P.rand() * 220; g.strokeStyle = 'rgba(240,236,225,.016)'; g.lineWidth = 50 + P.rand() * 40; g.beginPath(); g.arc(x, y, r, P.rand() * 6, P.rand() * 6 + 2.5); g.stroke(); }
+  for (let i = 0; i < 60; i++) { const x = P.rand() * 1920, y = P.rand() * 1080; g.strokeStyle = 'rgba(240,236,225,.035)'; g.lineWidth = 3; g.beginPath(); g.moveTo(x, y); for (let k = 1; k < 6; k++) g.lineTo(x + k * 14, y + (P.rand() - 0.5) * 16); g.stroke(); }
   for (let i = 0; i < 40; i++) { g.strokeStyle = 'rgba(240,236,225,.025)'; g.lineWidth = 30 + P.rand() * 40; const x = P.rand() * 1920, y = P.rand() * 1080; g.beginPath(); g.moveTo(x, y); g.lineTo(x + 200 + P.rand() * 300, y + (P.rand() - 0.5) * 60); g.stroke(); }
   const v = g.createRadialGradient(960, 520, 420, 960, 540, 1150); v.addColorStop(0, 'rgba(0,0,0,0)'); v.addColorStop(1, 'rgba(0,0,0,.55)'); g.fillStyle = v; g.fillRect(0, 0, 1920, 1080);
   BOARD = c; return c;
 };
-/** the title in warm chalk: text eroded by specks, cached */
+/** keep only a speckled ~70 % of what is drawn: the chalk texture for text */
+const grainMask = (g: G, w: number, h: number, seed: number) => {
+  const m = document.createElement('canvas'); m.width = w; m.height = h; const t = m.getContext('2d')!;
+  P.reseed(seed);
+  for (let i = 0; i < w * h / 3.2; i++) { t.fillStyle = `rgba(0,0,0,${0.55 + P.rand() * 0.45})`; t.fillRect(P.rand() * w, P.rand() * h, 1 + P.rand() * 2.4, 1 + P.rand() * 1.8); }
+  g.globalCompositeOperation = 'destination-in'; g.drawImage(m, 0, 0); g.globalCompositeOperation = 'source-over';
+};
+/** the title in warm chalk, cached */
 const TITLE_CACHE = new Map<string, HTMLCanvasElement>();
 const chalkText = (s: string, size: number, col: string, font: string) => {
   const key = s + size + col; if (TITLE_CACHE.has(key)) return TITLE_CACHE.get(key)!;
   const c = document.createElement('canvas'); c.width = 1920; c.height = 400; const g = c.getContext('2d')!;
-  g.font = `${size}px ${font}`; g.textAlign = 'center'; g.textBaseline = 'middle'; g.fillStyle = col; g.fillText(s, 960, 200);
-  P.reseed(s.length * 31);
-  g.globalCompositeOperation = 'destination-out';
-  for (let i = 0; i < 26000; i++) { g.fillStyle = `rgba(0,0,0,${0.25 + P.rand() * 0.6})`; g.fillRect(P.rand() * 1920, P.rand() * 400, 1 + P.rand() * 2.2, 1 + P.rand() * 1.6); }
-  for (let i = 0; i < 180; i++) { g.strokeStyle = 'rgba(0,0,0,.35)'; g.lineWidth = 1.2; const x = P.rand() * 1920, y = P.rand() * 400; g.beginPath(); g.moveTo(x, y); g.lineTo(x + 30 + P.rand() * 60, y + (P.rand() - 0.5) * 8); g.stroke(); }
+  g.font = `${size}px ${font}`; g.textAlign = 'center'; g.textBaseline = 'middle'; g.fillStyle = col;
+  g.shadowColor = col; g.shadowBlur = size * 0.12; g.fillText(s, 960, 200); g.shadowBlur = 0;
+  grainMask(g, 1920, 400, s.length * 31);
   TITLE_CACHE.set(key, c); return c;
 };
 const dust = (g: G, x: number, y: number, t: number, n = 40, col = CHALK) => {
@@ -219,16 +276,18 @@ const draw = (g: G, T: number) => {
     // the swat, kept quiet: a soft shadow passes over and the fly is simply rubbed out, leaving a faint smudge
     const sh = Math.min(eo(T, 19.75, 0.2), 1 - pr(T, 20.05, 0.35));
     if (sh > 0) { const gr = g.createRadialGradient(1100, 790, 0, 1100, 790, 200); gr.addColorStop(0, `rgba(4,6,10,${0.4 * sh})`); gr.addColorStop(1, 'rgba(4,6,10,0)'); g.fillStyle = gr; g.fillRect(900, 590, 400, 400); }
-    const fo = 1 - pr(T, 20.0, 0.35);
-    if (fo > 0) { const tw = T < 20.0 && Math.sin(T * 23) > 0.92 ? 3 : 0; chalkPuppet(g, 'fly', 1100 + tw, 820, 0.62, eo(T, 17.2, 1.0), oC * fo); }
-    if (T > 20.0) { g.fillStyle = `rgba(${CHALK},${0.1 * oC * eo(T, 20.05, 0.4)})`; g.beginPath(); g.ellipse(1100, 795, 56, 20, -0.1, 0, 7); g.fill(); }
+    const front = T < 20.0 ? -1 : FLY_DIS.xmin + (T - 20.0) * 260;
+    g.save(); if (front > 0) { g.beginPath(); g.rect(front, -200, 3000, 1600); g.clip(); }
+    chalkPuppet(g, 'fly', 1100, 820, 0.62, eo(T, 17.2, 1.0), oC);
+    g.restore();
+    if (T >= 20.0) crumble(g, FLY_DIS, T, 260, true, 1.9);
   }
   // D · fly, cat, rhino, each with a chalk heart that fills with warm light: how much we ache for it (22.5–34),
   //     then all three crumble into chalk dust, left to right at the same speed (34–40)
-  const oD = fade(T, 22.5, 42, 0.6, 0.01);
+  const oD = fade(T, 22.5, 47.6, 0.6, 1.0);
   if (oD > 0) {
     const fillK = eo(T, 28.4, 2.4);
-    chalkLine(g, wobbly(200, 792, 1720, 795, 60, 2, 4), eo(T, 22.6, 1.2), 4, oD * 0.8 * (1 - pr(T, 38.6, 2.0)));
+    chalkLine(g, wobbly(200, 792, 1720, 795, 60, 2, 4), eo(T, 22.6, 1.2), 4, oD * 0.8);
     for (const d of DIS) {
       const front = T < d.t0 ? -1 : d.xmin + (T - d.t0) * DIS_SPEED;
       const hk = d.hk * fillK, remain = front < 0 ? 1 : clamp((d.hx + d.hs * 0.5 - front) / d.hs);
@@ -237,7 +296,7 @@ const draw = (g: G, T: number) => {
       chalkPuppet(g, d.id, d.x, d.y, d.s, eo(T, d.tin, d.din), oD, d.warm * fillK);
       chalkHeart(g, d.hx, d.hy, d.hs, hk, eo(T, d.th, 0.9), oD, false);
       g.restore();
-      if (T >= d.t0) crumble(g, d, T);
+      if (T >= d.t0 && T < TITLE - 0.02) crumble(g, d, T);
     }
   }
 
@@ -259,13 +318,22 @@ const draw = (g: G, T: number) => {
     }
   }
   g.restore();
-  // the title on the hit: light burst + chalk dust
-  if (T >= TITLE - 0.05 && T < 47.6) {
-    const o = 1 - pr(T, 46.6, 0.9), k = T >= TITLE - 0.02 ? 1 : 0;
-    if (T >= TITLE - 0.02) glow(g, 960, 470, 760, 0.55 * Math.exp(-(T - TITLE) / 0.45) * o);
-    const tt = chalkText('生命平等吗？', 170, JUNO.colors.gold, '"Ma Shan Zheng"');
-    g.save(); g.globalAlpha = o * k; g.translate(960, 470); g.scale(1 + 0.008 * (T - TITLE), 1 + 0.008 * (T - TITLE)); g.drawImage(tt, -960, -200); g.restore();
-    dust(g, 960, 470, T - TITLE + 0.02, 120, WARM);
+  // the title on the hit: every grain of the three lives' dust flies into the letters, which stand on their ground line
+  if (T >= TITLE - 0.02 && T < 47.6) {
+    const o = 1 - pr(T, 46.6, 0.9), t = T - TITLE + 0.02;
+    g.save(); g.translate(0, -45);
+    glow(g, 960, 640, 820, 0.5 * Math.exp(-t / 0.5) * o);
+    const tl = titleLayer();
+    g.save(); g.globalAlpha = o * eo(t, 0.14, 0.34); g.drawImage(tl.chalk, 0, 0); g.restore();
+    if (t < 0.75) {
+      const k = 1 - Math.pow(1 - clamp(t / 0.3), 3), a = 0.95 * (1 - pr(t, 0.3, 0.4));
+      for (const s0 of tl.snap) {
+        const q = dustAt(DIS[s0.d], s0.i, TITLE - 0.02);
+        const x = lerp(q.px, s0.tx, k), y = lerp(q.py, s0.ty, k);
+        g.fillStyle = `rgba(${WARM},${a})`; g.fillRect(x - 1.8, y - 1.8, 3.6, 3.6);
+      }
+    }
+    g.restore();
   }
   // end card
   if (T >= END) {
