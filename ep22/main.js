@@ -126,8 +126,10 @@ function placeState(st){if(st.mode==='ramp')placeOnRamp(st.s);else placeFree(st.
 {const st=stateAt(89);placeState(st);PEND=car.position.clone();}
 // ---- the frame
 const sub=t=>{$('sub').innerHTML=t?'<span>'+t.replace(/\[(.+?)\]/g,'<b>$1</b>')+'</span>':'';};
+function groundLift(st){if(!st.ground)return;car.updateMatrixWorld(true);let mn=1e9;const w=new THREE.Vector3();for(const [o,v] of bodyPts){w.copy(v).applyMatrix4(o.matrixWorld);if(w.y<mn)mn=w.y;}
+ const need=.015-mn;if(need>0){car.position.y+=need;const up=new THREE.Vector3(0,1,0).applyQuaternion(car.quaternion);car.userData.wheels.forEach(wh=>wh.g.position.y-=need/up.y);}}
 window.renderAt=function(T){H='';SV='';
- const st=stateAt(T);placeState(st);
+ const st=stateAt(T);placeState(st);groundLift(st);
  // x-ray / freeze amounts
  const xS=sm(20.97,21.7,T)*(1-sm(34.2,34.88,T)),xF=sm(37.3,37.8,T)*(1-sm(40.31,40.9,T));const xr=Math.max(xS,xF);
  car.userData.setXray(xr);grade.uniforms.uCool.value=.62*xr;grade.uniforms.uRay.value=lerp(.35,.1,xr);
@@ -166,7 +168,7 @@ await document.fonts.load('900 60px "Noto Sans CJK SC"');await document.fonts.lo
 // ---- 穿模 checker: returns a list of problems at time T (no rendering)
 const bodyPts=(()=>{const out=[];const wheelSet=new Set();car.userData.wheels.forEach(w=>w.g.traverse(o=>wheelSet.add(o)));car.traverse(o=>{if(wheelSet.has(o))return;if(o.isMesh&&o.geometry&&o.visible&&o.material.blending!==THREE.AdditiveBlending&&!o.isInstancedMesh){const p=o.geometry.attributes.position;if(!p)return;const step=Math.max(1,Math.floor(p.count/400));for(let i=0;i<p.count;i+=step)out.push([o,new THREE.Vector3().fromBufferAttribute(p,i)]);}});return out;})();
 const rowBoxes=row.children.map(v=>{v.updateMatrixWorld(true);return new THREE.Box3().setFromObject(v);});
-window.check=function(T){const st=stateAt(T);placeState(st);car.updateMatrixWorld(true);const c=camAt(T);const P=c.p;const bad=[];
+window.check=function(T){const st=stateAt(T);placeState(st);groundLift(st);car.updateMatrixWorld(true);const c=camAt(T);const P=c.p;const bad=[];
  const inTube=P.x>-2&&P.x<X2+1;const r=Math.hypot(P.y-RC,P.z);if(inTube&&r>RC-.35&&r<RC+1.8)bad.push('cam-in-wall r='+r.toFixed(2));
  if(P.y<.5)bad.push('cam-low y='+P.y.toFixed(2));
  const cb=new THREE.Box3().setFromObject(car);if(cb.distanceToPoint(P)<.4)bad.push('cam-in-car');
@@ -177,5 +179,10 @@ window.check=function(T){const st=stateAt(T);placeState(st);car.updateMatrixWorl
  if(st.mode!=='ramp'&&minY<-.02)bad.push('car-in-ground '+minY.toFixed(3));
  if(rowHit)bad.push('car-in-row x'+rowHit);
  return {T,bad,clr:st.mode==='ramp'?+minR.toFixed(3):+minY.toFixed(3),cam:[+P.x.toFixed(1),+P.y.toFixed(1),+P.z.toFixed(1)]};};
+window.margins=function(){let ramp=1e9,row=1e9,camCar=1e9,camWall=1e9,ground=1e9;const w=new THREE.Vector3();
+ for(let f=0;f<=2715;f++){const T=f/30;const st=stateAt(T);placeState(st);groundLift(st);car.updateMatrixWorld(true);const P=camAt(T).p;const cb=new THREE.Box3().setFromObject(car);camCar=Math.min(camCar,cb.distanceToPoint(P));
+  if(P.x>-2&&P.x<X2+1){const r=Math.hypot(P.y-RC,P.z);camWall=Math.min(camWall,RC-r);}
+  for(const [o,v] of bodyPts){w.copy(v).applyMatrix4(o.matrixWorld);if(st.mode==='ramp')ramp=Math.min(ramp,RC-Math.hypot(w.y-RC,w.z));else{ground=Math.min(ground,w.y);for(const b of rowBoxes)if(w.x>b.min.x&&w.x<b.max.x&&w.z>b.min.z&&w.z<b.max.z)row=Math.min(row,w.y-b.max.y);}}}
+ return {ramp,row,camCar,camWall,ground};};
 window.stateAt=stateAt;window.G=G;window.camAt=camAt;window.car=car;window.CAMERA=cam;
 window.renderAt(0);window.READY=true;
