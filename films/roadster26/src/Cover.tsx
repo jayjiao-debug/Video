@@ -23,25 +23,25 @@ export const Cover: React.FC<{ layout: 'wide' | 'tall' }> = ({ layout }) => {
   const [ok, setOk] = useState(false);
   useEffect(() => { Promise.all([...FONT_LOADS, '900 40px "Noto Serif CJK SC"'].map((x) => document.fonts.load(x, '倒挂着背600升气它能飞多久？这车真VIBE知识大赏特斯拉新跑0123456789').catch(() => null))).then(() => { setOk(true); continueRender(h); }); }, [h]);
   const tall = layout === 'tall';
-  const s = tall ? 1.0 : 0.82, ox = tall ? -420 : -60, oy = tall ? 300 : 40;
+  const s = tall ? 1440 / 1080 : 1.0, ox = tall ? 540 - 960 * 1440 / 1080 : -240, oy = 0;
   return (
     <AbsoluteFill style={{ background: '#05060b', fontVariantNumeric: 'lining-nums' }}>
       <FontFaces />
       {ok && (
         <>
           <div style={{ position: 'absolute', left: ox, top: oy, width: 1920, height: 1080, transform: `scale(${s})`, transformOrigin: '0 0' }}>
-            <Frame fx={tall ? 960 : 1360} fy={tall ? 300 : 300} s={tall ? 0.95 : 0.9} />
+            <Frame fx={960} fy={tall ? 300 : 330} s={tall ? 0.95 : 0.9} />
           </div>
           <div style={{ position: 'absolute', inset: 0, background: tall
-            ? 'linear-gradient(180deg,#05060b 0%,#05060b 20%,rgba(5,6,11,0) 30%,rgba(5,6,11,0) 64%,#05060b 78%)'
-            : 'linear-gradient(0deg,#05060b 0%,#05060b 26%,rgba(5,6,11,0) 52%)' }} />
+            ? 'linear-gradient(180deg,#05060b 0%,rgba(5,6,11,0) 12%,rgba(5,6,11,0) 62%,#05060b 86%)'
+            : 'linear-gradient(0deg,#05060b 0%,rgba(5,6,11,.4) 14%,rgba(5,6,11,0) 40%)' }} />
           {/* series line and title */}
-          <div style={{ position: 'absolute', left: tall ? 0 : 90, right: tall ? 0 : undefined, top: tall ? 90 : 700, textAlign: tall ? 'center' : 'left' }}>
+          <div style={{ position: 'absolute', left: 0, right: 0, top: tall ? 640 : 560, textAlign: 'center' }}>
             <div style={{ display: 'inline-flex', alignItems: 'center', gap: 18 }}>
               <div style={{ width: 44, height: 44, borderRadius: 22, border: `2px solid ${C.gold}`, display: 'flex', alignItems: 'center', justifyContent: 'center', fontFamily: F.lat, fontStyle: 'italic', fontSize: 30, color: C.gold }}>J</div>
               <div style={{ fontFamily: F.sans, fontWeight: 700, fontSize: 30, letterSpacing: '0.42em', color: C.gold }}>VIBE知识大赏</div>
             </div>
-            <div style={{ fontFamily: F.serif, fontWeight: 900, fontSize: tall ? 120 : 116, lineHeight: 1.2, marginTop: 18, letterSpacing: '0.03em', ...gold, filter: 'drop-shadow(0 4px 18px rgba(0,0,0,.85))' }}>《这车真能飞？<span style={{ marginLeft: '-0.42em' }}>》</span></div>
+            <div style={{ fontFamily: F.serif, fontWeight: 900, fontSize: tall ? 130 : 140, lineHeight: 1.2, marginTop: 18, letterSpacing: '0.03em', ...gold, filter: 'drop-shadow(0 4px 18px rgba(0,0,0,.85))' }}>《这车真能飞？<span style={{ marginLeft: '-0.42em' }}>》</span></div>
           </div>
         </>
       )}
