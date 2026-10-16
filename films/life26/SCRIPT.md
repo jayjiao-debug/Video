@@ -1,20 +1,20 @@
-# 《生命平等吗？》 script draft v4 (philosophical, new hook)
+# 《生命平等吗？》 script draft v5 (philosophical, owner's cold open)
 
 Track: Cry For Me, 3:05 cut (cry_3min_B). Quiet intro 0–35, build, full 55–160, fade 2:41, silent ~3:00.
 Times are film seconds; reading budget checked with script_v3.py.
 
-## 1 · Cold open (0–35, quiet intro) · the bus dilemma, Sudan, the uncounted
-- 0.8 一辆失控的公交车冲过来
-- 3.6 你只能救一个
-- 5.8 你的狗，还是一个陌生游客
-- 9.0 2013年，美国研究者问了500多人
-- 12.6 约[40%]的人，救了自己的狗
-- 15.8 2018年，最后一只雄性北方白犀牛死了
-- 19.8 它叫苏丹，全世界都为它难过
-- 23.2 而每一天，两亿多只鸡、鸭、猪被宰杀
-- 27.0 没有一只，有名字
-- 29.6 都是一条命
-- 31.8 为什么心疼的程度，差这么多
+## 1 · Cold open (0–35, quiet intro) · cat, Sudan, fly (owner's order)
+- 0.8 路边一只猫被车撞了
+- 4.0 很多人会难过一整天
+- 7.4 2018年，肯尼亚
+- 9.8 世界上最后一只雄性北方白犀牛死了
+- 13.8 它叫苏丹，45岁
+- 16.4 全世界都为它难过
+- 19.8 一只苍蝇落在窗台上
+- 23.2 一巴掌，没人会多看一眼
+- 26.8 苍蝇、猫、犀牛
+- 29.0 都是一条命
+- 31.2 为什么心疼的程度，差这么多
 
 ## 2 · Title ≈35 (music lifts): 《生命平等吗？》
 
@@ -72,7 +72,7 @@ Times are film seconds; reading budget checked with script_v3.py.
 - 152.2 在我们的感觉里，从来不平等
 - 155.4 但这个圈，一直在变大
 - 158.4 苏丹让全世界难过
-- 161.0 不是因为它比一只鸡更值钱
+- 161.0 不是因为它比苍蝇更值钱
 - 163.8 是因为我们[看见了它]
 - 166.6 庄子说
 - 168.6 天地与我并生，而[万物与我为一]
