@@ -1,0 +1,46 @@
+token id present: yes
+token secret present: yes
+✓ Initialized. View run at 
+https://modal.com/apps/jayjiao249/main/ap-J7RIdmI7fKbJZdoubnE0Zj
+✓ Created objects.
+├── ✓ Uploaded /home/runner/work/Video/Video/render_ep22.py
+├── ✓ Uploaded /home/runner/work/Video/Video/ep22
+└── ✓ Created Function chunk.
+an error occurred during closing of asynchronous generator <async_generator object async_merge at 0x7fb91af12880>
+asyncgen: <async_generator object async_merge at 0x7fb91af12880>
+Traceback (most recent call last):
+  File "/opt/hostedtoolcache/Python/3.11.17/x64/lib/python3.11/site-packages/modal/_utils/async_utils.py", line 858, in __iter__
+    yield from run_async_gen(runner, self._async_iterable)
+GeneratorExit
+
+During handling of the above exception, another exception occurred:
+
+RuntimeError: aclose(): asynchronous generator is already running
+an error occurred during closing of asynchronous generator <async_generator object Synchronizer._run_generator_async at 0x7fb91afc9340>
+asyncgen: <async_generator object Synchronizer._run_generator_async at 0x7fb91afc9340>
+Traceback (most recent call last):
+  File "/opt/hostedtoolcache/Python/3.11.17/x64/lib/python3.11/site-packages/modal/_utils/async_utils.py", line 858, in __iter__
+    yield from run_async_gen(runner, self._async_iterable)
+GeneratorExit
+
+During handling of the above exception, another exception occurred:
+
+RuntimeError: aclose(): asynchronous generator is already running
+Task was destroyed but it is pending!
+task: <Task pending name='Task-1043' coro=<<async_generator_athrow without __name__>()> wait_for=<Future finished result=None>>
+0 0 271 RENDERER ANGLE (NVIDIA, Vulkan 1.4.341 (NVIDIA Tesla T4 (0x00001EB8)), NVIDIA) / MS_PER_FRAME 101
+1 271 543 RENDERER ANGLE (NVIDIA, Vulkan 1.4.341 (NVIDIA Tesla T4 (0x00001EB8)), NVIDIA) / MS_PER_FRAME 89
+2 543 814 RENDERER ANGLE (NVIDIA, Vulkan 1.4.341 (NVIDIA Tesla T4 (0x00001EB8)), NVIDIA) / MS_PER_FRAME 93
+3 814 1086 RENDERER ANGLE (NVIDIA, Vulkan 1.4.341 (NVIDIA Tesla T4 (0x00001EB8)), NVIDIA) / MS_PER_FRAME 107
+4 1086 1357 RENDERER ANGLE (NVIDIA, Vulkan 1.4.341 (NVIDIA Tesla T4 (0x00001EB8)), NVIDIA) / MS_PER_FRAME 96
+5 1357 1629 RENDERER ANGLE (NVIDIA, Vulkan 1.4.341 (NVIDIA Tesla T4 (0x00001EB8)), NVIDIA) / MS_PER_FRAME 95
+6 1629 1900 RENDERER ANGLE (NVIDIA, Vulkan 1.4.341 (NVIDIA Tesla T4 (0x00001EB8)), NVIDIA) / MS_PER_FRAME 96
+7 1900 2172 RENDERER ANGLE (NVIDIA, Vulkan 1.4.341 (NVIDIA Tesla T4 (0x00001EB8)), NVIDIA) / MS_PER_FRAME 84
+8 2172 2443 RENDERER ANGLE (NVIDIA, Vulkan 1.4.341 (NVIDIA Tesla T4 (0x00001EB8)), NVIDIA) / MS_PER_FRAME 90
+9 2443 2715 RENDERER ANGLE (NVIDIA, Vulkan 1.4.341 (NVIDIA Tesla T4 (0x00001EB8)), NVIDIA) / MS_PER_FRAME 83
+DONE 133122945
+Stopping app - local entrypoint completed.
+✓ App completed. View run at 
+https://modal.com/apps/jayjiao249/main/ap-J7RIdmI7fKbJZdoubnE0Zj
+Task was destroyed but it is pending!
+task: <Task pending name='Task-1045' coro=<Synchronizer._run_function_async() done, defined at /opt/hostedtoolcache/Python/3.11.17/x64/lib/python3.11/site-packages/synchronicity/synchronizer.py:550> wait_for=<Future pending cb=[shield.<locals>._outer_done_callback() at /opt/hostedtoolcache/Python/3.11.17/x64/lib/python3.11/asyncio/tasks.py:908, Task.task_wakeup()]>>
