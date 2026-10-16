@@ -10,7 +10,7 @@ export const WHEELS: [number, number][] = [[220, 236], [790, 236]];
 export const NOZZLES: [number, number, number][] = [[118, 232, 90], [330, 232, 90], [690, 232, 90], [905, 232, 90], [26, 186, 180], [996, 204, 0]];
 export const TANKS: [number, number, number, number][] = [[300, 196, 420, 24], [120, 140, 160, 30], [130, 176, 150, 26], [690, 166, 210, 30], [520, 152, 100, 26]];
 
-export type CarProps = {id: string; x: number; y: number; s?: number; rot?: number; fx?: number; fy?: number; py?: number; shadow?: number; tankN?: number; nozN?: number; xray?: number; spin?: number; tanks?: number; nozzles?: number; fan?: number; o?: number; lightFrom?: 'below' | 'above'};
+export type CarProps = {id: string; x: number; y: number; s?: number; rot?: number; fx?: number; fy?: number; py?: number; shadow?: number; fanSpin?: number; tankN?: number; nozN?: number; xray?: number; spin?: number; tanks?: number; nozzles?: number; fan?: number; o?: number; lightFrom?: 'below' | 'above'};
 
 const Wheel: React.FC<{cx: number; cy: number; id: string; spin: number; ghost: number}> = ({cx, cy, id, spin, ghost}) => (
 	<g opacity={1 - ghost * 0.55}>
@@ -27,7 +27,7 @@ const Wheel: React.FC<{cx: number; cy: number; id: string; spin: number; ghost: 
 	</g>
 );
 
-export const Car: React.FC<CarProps> = ({id, x, y, s = 1, rot = 0, fx = 1, fy = 1, py = 292, shadow = 1, tankN = 99, nozN = 99, xray = 0, spin = 0, tanks = 1, nozzles = 0, fan = 0, o = 1, lightFrom = 'above'}) => {
+export const Car: React.FC<CarProps> = ({id, x, y, s = 1, rot = 0, fx = 1, fy = 1, py = 292, shadow = 1, fanSpin, tankN = 99, nozN = 99, xray = 0, spin = 0, tanks = 1, nozzles = 0, fan = 0, o = 1, lightFrom = 'above'}) => {
 	const lit = lightFrom === 'below';
 	return (
 		<g transform={`translate(${x} ${y}) rotate(${rot}) scale(${s * fx} ${s * fy}) translate(-510 ${-py})`} opacity={o}>
@@ -96,7 +96,7 @@ export const Car: React.FC<CarProps> = ({id, x, y, s = 1, rot = 0, fx = 1, fy = 
 					<g opacity={fan}>
 						<rect x={420} y={206} width={180} height={24} rx={8} fill="#0d2233" stroke={K.xray} strokeWidth={2.5} />
 						{[0, 1, 2, 3, 4, 5, 6, 7].map((i) => {
-							const p = ((i / 8 + spin / 360) % 1 + 1) % 1;
+							const p = ((i / 8 + (fanSpin ?? spin) / 360) % 1 + 1) % 1;
 							const xx = 430 + p * 160;
 							return <path key={i} d={`M ${xx} 210 L ${xx + 14} 226`} stroke={K.xray} strokeWidth={3} opacity={0.4 + 0.6 * Math.sin(p * Math.PI)} />;
 						})}
