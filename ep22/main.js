@@ -97,7 +97,11 @@ function carFrame(){const T=V3(1,0,0).applyQuaternion(car.quaternion),N=V3(0,1,0
 const rel=(fr,o)=>fr.P.clone().addScaledVector(fr.T,o[0]).addScaledVector(fr.N,o[1]).addScaledVector(fr.Z,o[2]);
 let PEND=null;
 const KEYS=[
- {a:-1,b:0,fn:T=>{const fr=carFrame();const k=sm(0,10,T);return {p:rel(fr,[-7.2-.8*k,3.0+.4*k,lerp(-.6,1.0,k)]),l:rel(fr,[lerp(4.5,1.6,k),lerp(.2,.55,k),0]),u:fr.N.clone().lerp(UP,.45+.2*k).normalize(),f:48};}},
+ {a:-1,b:0,fn:T=>{const fr=carFrame();const k=sm(0,10,T);if(window.OVR){const O=window.OVR;return {p:rel(fr,O.o),l:rel(fr,O.l),u:fr.N.clone().lerp(UP,O.u).normalize(),f:46};}const q=ease(sm(0,3.4,T));const p=rel(fr,[lerp(-6.5,-4.5,q)-.6*k,lerp(2.6,2.4,q),lerp(2.5,5.0,q)]),l=rel(fr,[lerp(2.0,1.2,q),.5,0]);
+  // roll: follow ~70% of the wall's bank at the start, then level out so the car reads upside down on the ceiling
+  const d=l.clone().sub(p).normalize();const u0=UP.clone().addScaledVector(d,-UP.dot(d)).normalize();const nn=fr.N.clone().addScaledVector(d,-fr.N.dot(d)).normalize();
+  const ang=Math.acos(cl(u0.dot(nn),-1,1));const f=.7*(1-ease(sm(3.5,9.0,T)));let u=u0.clone().applyAxisAngle(d,ang*f);const u2=u0.clone().applyAxisAngle(d,-ang*f);if(u2.dot(nn)>u.dot(nn))u=u2;
+  return {p,l,u,f:46};}},
  {a:9.6,b:13.6,fn:T=>{const d=1.6*sm(13.6,21,T);return {p:PH.clone().add(V3(-14+d,-12.5,-8.5)),l:PH.clone().add(V3(2.5+d*.6,-.6,1)),u:UP,f:40};}},
  {a:19.6,b:23.2,fn:T=>{const d=.9*sm(23,34,T);return {p:PH.clone().add(V3(-1.7+d,-3.6,-6.4)),l:PH.clone().add(V3(.2+d*.5,-1.55,0)),u:UP,f:46};}},
  {a:34.3,b:36.3,fn:T=>{const P=car.position;return {p:P.clone().add(V3(-9,-6.2,-7.4)),l:P.clone().add(V3(2.5,-1.6,0)),u:UP,f:44};}},
@@ -106,7 +110,7 @@ const KEYS=[
  {a:46.6,b:49.0,fn:T=>{const P=car.position;return {p:P.clone().add(V3(-7.2,1.9,-4.2)),l:P.clone().add(V3(5,.7,0)),u:UP,f:46};}},
  {a:51.0,b:51.1,fn:T=>{const P=car.position;const ch={p:P.clone().add(V3(-7.2,1.9,-4.2)),l:P.clone().add(V3(5,.7,0))};const x=G.ROW_C-9+8*sm(52,60,T);const lx=lerp(G.ROW_C,P.x,.6);const ly=lerp(3.4,P.y+.6,.55);
    const w=ease(sm(51.0,54.0,T)),wl=ease(sm(53.0,54.4,T));const cl0=P.clone().add(V3(.5,.7,0));return {p:ch.p.lerp(V3(x,1.7,-14.5),w),l:ch.l.lerp(cl0,ease(sm(51,52.5,T))).lerp(V3(lx+1,ly,0),wl),u:UP,f:lerp(46,48,w)};}},
- {a:59.0,b:61.4,fn:T=>{const P=car.position;const lag=3*sm(62.68,63.8,T)*(1-sm(64.5,67.6,T));return {p:V3(P.x-7.4-lag,1.9,-4.4),l:V3(P.x+5,.75,0),u:UP,f:46};}},
+ {a:59.0,b:61.4,fn:T=>{const P=car.position;const lag=3*sm(62.68,63.8,T)*(1-sm(64.5,67.6,T));const o=ease(sm(59.5,68.5,T));return {p:V3(P.x-lerp(7.4,3.2,o)-lag,lerp(1.9,1.3,o),-lerp(4.4,7.0,o)),l:V3(P.x+lerp(5,1.2,o),.75,0),u:UP,f:46};}},
  {a:68.0,b:71.6,fn:T=>{const P=PEND;const d=1.6*sm(70,83.5,T);const up=sm(83.3,87,T);return {p:P.clone().add(V3(-3.6+d,1.0+2.2*up,-7.3+1.2*up)),l:P.clone().add(V3(.6+d*.6,.9+1.4*up,0)),u:UP,f:36};}},
 ];
 const _p=V3(0,0,0),_l=V3(0,0,0),_u=V3(0,0,0);
