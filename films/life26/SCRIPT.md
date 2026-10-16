@@ -1,19 +1,20 @@
-# 《生命平等吗？》 script draft v1
+# 《生命平等吗？》 script draft v2
 
 Track: Cry For Me, 3:05 cut (cry_3min_B: 0–123.32 + 238.86–end). Quiet intro 0–35, build, full 55–160, fade 2:41, silent ~3:00.
 Times are film seconds; line lengths checked with the reading budget (script_draft.py).
 
-## 1 · Cold open (0–35, quiet intro) · night, rain, a shoe and a frog
-- 1.5 那天晚上下着雨
-- 5.0 我踩到了一只青蛙
-- 9.5 它没有叫
-- 12.5 我却在原地站了很久
-- 17.0 可昨天我拍死一只蚊子
-- 20.0 一点感觉都没有
-- 23.5 要是踩到的是一只猫的尾巴
-- 27.0 我会难受好几天
-- 30.0 都是一条命
-- 32.2 为什么心疼的程度，差这么多
+## 1 · Cold open (0–35, quiet intro) · a fly, a cat, the last rhino (no personal story)
+- 1.5 一只苍蝇落在窗台上
+- 5.0 一巴掌，没人会多看一眼
+- 8.6 路边一只猫被车撞了
+- 11.8 很多人会难过一整天
+- 15.0 2018年，肯尼亚
+- 17.4 世界上最后一只雄性北方白犀牛死了
+- 21.4 它叫苏丹，45岁
+- 23.9 全世界都为它难过
+- 26.8 苍蝇、猫、犀牛
+- 29.0 都是一条命
+- 31.2 为什么心疼的程度，差这么多
 
 ## 2 · Title ≈35 (music lifts): 《生命平等吗？》
 
@@ -26,8 +27,8 @@ Times are film seconds; line lengths checked with the reading budget (script_dra
 - 58.0 和人类越近，越被同情
 - 61.0 猩猩排在羚羊前面
 - 63.6 越远，越难感同身受
-- 66.5 青蛙和我们，约3.5亿年前就分开了
-- 70.3 蚊子，还要再早一倍
+- 66.5 猫和我们，约9000万年前才分开
+- 70.0 苍蝇，6亿多年前就分开了
 - 73.0 我们心疼的，不全是生命
 - 75.8 是它[像不像我们]
 - 78.5 大眼睛、会皱眉、会哭叫
@@ -65,9 +66,9 @@ Times are film seconds; line lengths checked with the reading budget (script_dra
 - 155.3 在我们的心里，从来不平等
 - 158.6 可那份不平等，量的不是它们
 - 162.2 是我们和它们的[距离]
-- 165.3 那天让我难过的
-- 167.5 不是青蛙比蚊子更值钱
-- 170.3 是那一刻，我[看见了它]
+- 165.3 苏丹让全世界难过
+- 167.8 不是因为它比苍蝇更值钱
+- 170.6 是因为我们[看见了它]
 
 ## 8 · End card (≈174–181): 你会为哪种动物难过？评论区说说
 
@@ -78,4 +79,5 @@ Times are film seconds; line lengths checked with the reading budget (script_dra
 - Loughnan, Haslam & Bastian (2010) Appetite 55(1):156 (dried beef vs dried nuts; cow's moral status lower after meat)
 - Our World in Data / FAO: 83 billion land animals slaughtered for meat, 2022
 - Bentham (1789) An Introduction to the Principles of Morals and Legislation, ch. 17 footnote
-- Estimate: divergence times human–frog ≈ 350 Mya, human–insect ≈ 2× that (TimeTree-scale, labelled 约)
+- Sudan, last male northern white rhino, died at Ol Pejeta, Kenya, March 2018, aged 45 (CBC, 20 Mar 2018)
+- Estimate: divergence human–cat ≈ 90 Mya, human–fly > 600 Mya (labelled 约 / 多)
