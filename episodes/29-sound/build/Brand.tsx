@@ -198,7 +198,7 @@ export const Motif: React.FC<{kind: VideoCfg['motif']; p: number; f: number}> = 
 	if ((kind as string) === 'wave') {
 		// 《为什么好听？》: a gold sound wave drawn on, with two ear-coloured rings breathing at its ends
 		let d = '';
-		for (let x = -260; x <= 260; x += 4) d += `${x === -260 ? 'M' : 'L'} ${x} ${Math.sin(x / 26) * 34 * Math.cos((x / 260) * Math.PI / 2)} `;
+		for (let x = -260; x <= 260; x += 4) d += `${x === -260 ? 'M' : 'L'} ${x} ${Math.sin(x / 26 - f * 0.08) * 34 * Math.cos((x / 260) * Math.PI / 2)} `;
 		const b = 1 + 0.06 * Math.sin(f / 6);
 		return (
 			<g>

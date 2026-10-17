@@ -234,7 +234,7 @@ const S4Spec: React.FC<{t: number}> = ({t}) => {
 				<Lab x={fx(45) + 40} y={280} t="45 Hz" s={80} w={900} />
 			</g>
 			<g opacity={win(t, hpA, phA, 0.3, 0.3)}>
-				<Lab x={fx(9000)} y={290} t="每秒上万次" s={72} c={C.mag} w={900} />
+				<Lab x={fx(9000)} y={205} t="每秒上万次" s={72} c={C.mag} w={900} />
 			</g>
 			<g opacity={ghost}>
 				<circle cx={fx(45) + 40} cy={250} r={100 + 20 * pulse} fill={C.cyan} opacity={0.1 + 0.15 * pulse} filter="url(#soft)" />
@@ -266,7 +266,7 @@ const Stage: React.FC<{t: number; gone: number; back?: number}> = ({t, gone, bac
 						{bits}
 						<circle cx={x} cy={y} r={rad} fill={s.c} opacity={0.85 * o} filter="url(#glow2)" />
 						{back > 0 && s.mid && <circle cx={x} cy={y} r={rad + 220 * back} fill="none" stroke={s.c} strokeWidth={6} opacity={(1 - back) * 0.8} />}
-						{s.n && <Lab x={x} y={y - rad - 22} t={s.n} s={48} c={s.c} o={s.mid ? o : 1} />}
+						{s.n && <Lab x={x} y={y - rad - 22} t={s.n} s={52} c={s.c} o={s.mid ? o : 1} />}
 					</g>
 				);
 			})}
@@ -291,9 +291,11 @@ const S5Ratio: React.FC<{t: number}> = ({t}) => {
 	for (let n = 0; n < 8; n++) ticks.push(<Lab key={n} x={300 + 175 * n + 175 / 4} y={540} t={String(n + 1)} s={44} c={C.gold} o={r(t, a + 0.3 + n * 0.14, a + 0.5 + n * 0.14)} />);
 	return (
 		<g>
-			<g opacity={win(t, 45.2, 48.15, 0.3, 0.3)}>
+			<g opacity={win(t, 44.95, 48.45, 0.3, 0.35)}>
 			<path d={wave(300, 1700, 400, 120, 1400, undefined, 0)} fill="none" stroke={C.cyan} strokeWidth={9} filter="url(#glow)" />
 			<path d={wave(300, 1700, 680, 60, 175, undefined, ph * 0)} fill="none" stroke={C.gold} strokeWidth={6} filter="url(#glow)" pathLength={1} strokeDasharray="1 1" strokeDashoffset={1 - d} />
+			</g>
+			<g opacity={win(t, 45.3, 48.15, 0.25, 0.3)}>
 			<Lab x={300} y={250} t="鼓 45 Hz：振 1 次" s={56} c={C.cyan} a="start" />
 			<Lab x={300} y={830} t="主音 363 Hz：振 8 次" s={56} c={C.gold} a="start" o={r(t, a + 0.4, a + 0.8)} />
 			{ticks}
@@ -337,11 +339,16 @@ const S8Gotcha: React.FC<{t: number}> = ({t}) => {
 	const [a, b, c] = T.gotcha, p = 1 - beatPh(t);
 	return (
 		<g>
-			{t < b - 0.05 && <Arrow dir={-1} k={r(t, a - 0.25, a + 0.12) * (1 - r(t, b - 0.25, b - 0.05))} pulse={p} />}
-			{t >= b - 0.05 && t < c && <Arrow dir={1} k={r(t, b - 0.05, b + 0.3) * (1 - r(t, c - 0.25, c - 0.02))} pulse={p} />}
-			<Lab x={960} y={230} t="声音在左边" s={96} w={900} o={win(t, a - 0.05, b - 0.05, 0.15, 0.15)} />
+			{t < c + 0.1 && (() => {
+				// one arrow that flips on the bar (it never disappears), then slides away under the reveal
+				const flip = mix(-1, 1, sm(lin(t, b - 0.09, b + 0.09))), k = r(t, a - 0.25, a + 0.12), out = r(t, c - 0.15, c + 0.1);
+				return <g opacity={k * (1 - out)} transform={`translate(${960 - (1 - k) * 500 * -1 + out * 300 * flip} 470) scale(${-flip * (1 + 0.015 * p)} ${1 + 0.015 * p})`}>
+					<g filter="url(#glow)"><path d="M 420 -50 L -200 -50 L -200 -170 L -480 0 L -200 170 L -200 50 L 420 50 Z" fill="#cfe0ff" opacity={0.82} /></g>
+				</g>;
+			})()}
+			<Lab x={960} y={230} t="声音在左边" s={96} w={900} o={win(t, a - 0.05, b + 0.05, 0.15, 0.15)} />
 			<Lab x={960} y={230} t="现在在右边" s={96} w={900} o={win(t, b - 0.05, c - 0.02, 0.15, 0.15)} />
-			<g opacity={win(t, c, 70.45, 0.2, 0.25)}>
+			<g opacity={win(t, c - 0.05, 70.45, 0.25, 0.25)}>
 				<Lab x={960} y={260} t="骗你的！" s={110} c={C.gold} w={900} />
 				<Lab x={960} y={400} t="← 那一下，声音其实只在右耳" s={52} c={C.mag} />
 				<Lab x={960} y={480} t="→ 那一下，声音其实只在左耳" s={52} c={C.cyan} />
@@ -470,7 +477,7 @@ const S12Harm: React.FC<{t: number}> = ({t}) => {
 	const lissO = w2 * (1 - r(t, 113.0, 113.6));
 	return (
 		<g>
-			<path d={wave(140, 1100, 330, 70 * w1, 240, undefined, (2 * Math.PI * s) / 240)} fill="none" stroke={C.cyan} strokeWidth={6} filter="url(#glow)" />
+			<path d={wave(140, 1100, 330, 70, 240, undefined, (2 * Math.PI * s) / 240)} fill="none" stroke={C.cyan} strokeWidth={6} filter="url(#glow)" opacity={w1} />
 			{w2 > 0 && <path d={wave(140, 1100, 560, 70 * w2, wl2, undefined, (2 * Math.PI * s) / wl2)} fill="none" stroke={c2} strokeWidth={6} filter="url(#glow)" />}
 			{lines}
 			<Lab x={120} y={345} t="363" s={40} c={C.cyan} a="end" o={w1} />
@@ -512,7 +519,7 @@ const S13Sad: React.FC<{t: number}> = ({t}) => {
 // 14 · recap: one bar each (bass, treble, no middle, left-right, around you)
 const S14Recap: React.FC<{t: number}> = ({t}) => {
 	const R = T.recap as number[];
-	const seg = (j: number) => (j === 0 ? win(t, R[0] - 0.15, R[2] + 0.1, 0.3, 0.3) : j === 2 ? win(t, R[2] - 0.1, R[3] + 0.15, 0.25, 0.3) : win(t, R[j] - 0.05, R[j + 1] + 0.15, 0.25, 0.3));
+	const seg = (j: number) => (j === 0 ? win(t, R[0] - 0.25, R[2] + 0.15, 0.3, 0.3) : j === 2 ? win(t, R[2] - 0.15, R[3] + 0.15, 0.25, 0.3) : win(t, R[j] - 0.3, R[j + 1] + 0.15, 0.25, 0.3));
 	const push = (j: number, node: React.ReactNode) => { const k = seg(j); if (k <= 0.001) return null; const s = mix(0.94, 1, sm(lin(t, R[j], R[j] + 0.4))); return <g key={j} opacity={k} transform={`translate(960 480) scale(${s}) translate(-960 -480)`}>{node}</g>; };
 	const i = fi(t), th = t > g('rot_end') ? thEnd(t) : 0, [cx, cy] = [960 + Math.sin(th) * 380, 470 - Math.cos(th) * 150];
 	return (
@@ -551,7 +558,7 @@ const S15Fin: React.FC<{t: number}> = ({t}) => {
 // ------------------------------------------------------------------ film
 const BG: [number, string][] = [[0, '#121a3a'], [72.5, '#121a3a'], [76, '#1c1340'], [80.6, '#24194f'], [86, '#151c42'], [112.8, '#151c42'], [115, '#13243f'], [130.2, '#13243f'], [131, '#121a3a'], [140.5, '#121a3a'], [143, '#1a1a46']];
 const bgAt = (t: number) => { for (let i = 1; i < BG.length; i++) if (t < BG[i][0]) return lerpC(BG[i - 1][1], BG[i][1], sm(lin(t, BG[i - 1][0], BG[i][0]))); return BG[BG.length - 1][1]; };
-const subAt = (t: number) => { for (const [s, e, txt] of lines as [number, number, string][]) if (t >= s && t < e) return {txt, o: Math.min(lin(t, s, s + 0.15), 1 - lin(t, e - 0.15, e))}; return null; };
+const subAt = (t: number) => { for (const [s, e, txt] of lines as [number, number, string][]) if (t >= s && t < e) return {txt, o: Math.min(s <= 0 ? 1 : lin(t, s, s + 0.15), 1 - lin(t, e - 0.15, e))}; return null; };
 const Sub: React.FC<{t: string}> = ({t}) => (
 	<div style={{position: 'absolute', left: 0, right: 0, bottom: 58, display: 'flex', justifyContent: 'center'}}>
 		<div style={{position: 'relative', padding: '26px 120px'}}>
@@ -563,9 +570,9 @@ const Sub: React.FC<{t: string}> = ({t}) => (
 type Sc = [React.FC<{t: number}>, number, number, number, number];
 const SCENES: Sc[] = [
 	[S1Wave, 0, 9.65, 0, 0.25], [S2Ping, 9.25, 15.85, 0.35, 0.3], [S3Pump, 15.35, 25.1, 0.4, 0.3], [S4Spec, 24.45, 38.35, 0.15, 0.45],
-	[S5Stage, 37.95, 45.3, 0.45, 0.35], [S5Ratio, 45.0, 48.45, 0.35, 0.35], [S6Bin, 48.15, 60.35, 0.4, 0.4], [S7Age, 60.0, 64.8, 0.4, 0.3],
+	[S5Stage, 37.95, 45.3, 0.45, 0.35], [S5Ratio, 44.9, 48.5, 0.01, 0.01], [S6Bin, 48.0, 60.35, 0.4, 0.4], [S7Age, 60.0, 64.8, 0.4, 0.3],
 	[S8Gotcha, 64.5, 70.5, 0.0, 0.3], [S9Prec, 70.15, 75.4, 0.35, 0.45], [S10Combo, 75.0, DROP, 0.5, 0], [S11Drop, DROP, 87.6, 0, 0.8],
-	[S12Harm, 86.5, 113.8, 0.01, 0.5], [S13Sad, 113.45, 130.75, 0.55, 0.35], [S14Recap, 130.3, 140.95, 0.25, 0.3], [S15Fin, 140.45, END, 0.6, 0],
+	[S12Harm, 86.5, 113.8, 0.01, 0.5], [S13Sad, 113.45, 130.65, 0.55, 0.35], [S14Recap, 130.2, 140.95, 0.01, 0.3], [S15Fin, 140.45, END, 0.6, 0],
 ];
 export const Film29: React.FC = () => {
 	const t = useCurrentFrame() / FPS;

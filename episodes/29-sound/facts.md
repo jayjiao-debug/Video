@@ -20,5 +20,5 @@
 | 拍频 = 两个频率之差；钢琴调音师就是听“拍”消失来调准 | OpenStax University Physics Vol.1 §17.6 Beats https://oer.xyzhomework.com/ebooks/html/university-physics-volume-1/ch17/17-6-beats.html |
 | 人的毛细胞被过大的声音损伤后无法修复或再生，造成永久听力损失（包括耳机听大声音乐） | NIDCD “How does loud noise cause hearing loss?” https://www.nidcd.nih.gov/health/how-does-noise-damage-your-hearing |
 | 双耳拍频：两只耳朵各听一个频率，大脑“造出”第三个声音，频率=两者之差（363/369 → 6 Hz）；声音本身里没有它 | Oster, G. (1973) “Auditory beats in the brain”, Scientific American 229(4):94–102；Hearing Health Matters “Binaural Beat Therapy Revisited” https://hearinghealthmatters.org/hearing-international/2017/binaural-beat-therapy/ ；本片配乐实测 L 363.3 / R 369.3 Hz |
-| 优先效应：两个相同的声音先后到达（相差几毫秒到几十毫秒），人听到的位置由先到的那个决定（本片右/左耳晚 18 ms） | Litovsky, Colburn, Yost & Guzman (1999) “The precedence effect”, JASA 106(4):1633–1654 https://bhsl.waisman.wisc.edu/documents/the-precedence-effect/ |
+| 优先效应：两个相同的声音先后到达（相差几毫秒到几十毫秒），人听到的位置由先到的那个决定（本片右/左耳晚 18 ms ≈ 0.02 秒） | Litovsky, Colburn, Yost & Guzman (1999) “The precedence effect”, JASA 106(4):1633–1654 https://bhsl.waisman.wisc.edu/documents/the-precedence-effect/ |
 | 缺失的基频（幽灵低音）：去掉基频、只留泛音，人听到的音高不变——大脑从泛音里“补”出低音 | Fay, R. R. (Loyola Univ. Chicago, Parmly Hearing Institute), ASA 146th meeting pressroom https://acoustics.org/pressroom/httpdocs/146th/Fay.htm |
