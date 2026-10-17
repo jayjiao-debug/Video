@@ -1,9 +1,9 @@
 {
-  "id": "v9l-1792199141",
-  "composition": "ChalkLines",
+  "id": "v3card-1792222118",
+  "composition": "Puppet",
   "start": 0,
-  "end": 5825,
+  "end": 5663,
   "chunks": 30,
-  "output": "v9l",
+  "output": "v3card",
   "flags": "--image-format=png --crf=14"
 }
