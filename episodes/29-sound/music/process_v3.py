@@ -259,7 +259,7 @@ y = y * (1 - k) + pp * k
 # the octave and fifth from the harmony demo come back under the closing lines, swelling over a bar into bar 73,
 # where the picture's particles line up into one wave
 E['return'] = (OB(72), OB(76))
-ret = note(2 * ROOT, OB(72), OB(76), level=0.05, att=BAR, rel=BAR) + note(1.5 * ROOT, OB(72) + BAR * 0.5, OB(76), level=0.045, att=BAR, rel=BAR)
+ret = note(2 * ROOT, OB(72), OB(76), level=0.08, att=BAR * 0.5, rel=BAR) + note(1.5 * ROOT, OB(72) + BAR * 0.5, OB(76), level=0.07, att=BAR * 0.5, rel=BAR)
 y += np.stack([ret, ret])
 
 # ------------------------------------------------------------ MASTERCLASS 1: reverse-reverb "inhale" into the drop
@@ -271,6 +271,9 @@ ir = rng_.standard_normal((2, n)) * np.exp(-np.arange(n) / (0.32 * SR)); ir /= n
 from scipy.signal import fftconvolve
 wet = np.stack([fftconvolve(seg[c], ir[c])[:n] for c in range(2)])[:, ::-1]
 L1 = int(BEAT * 1.5 * SR); wet = wet[:, -L1:] * np.linspace(0, 1, L1) ** 2
+env = np.convolve(np.abs(wet).sum(0), np.ones(441) / 441, 'same')     # music review r2: peak 12 ms before the hit
+sh = L1 - 1 - int(0.012 * SR) - int(np.argmax(env))
+wet = np.roll(wet, sh, axis=1); wet[:, :max(sh, 0)] = 0
 wet *= 10 ** (-8 / 20) * np.sqrt((y[:, i40 - L1:i40] ** 2).mean()) / max(np.sqrt((wet ** 2).mean()), 1e-9)
 y[:, i40 - L1:i40] += wet.astype(np.float32)
 E['inhale'] = (OB(40) - BEAT * 1.5, OB(40))
@@ -289,7 +292,7 @@ if TS0 < N / SR:
 # −14 LUFS, then a look-ahead true-peak limiter at −1.5 dBTP (4× oversampled detector). Mux the result with NO loudnorm.
 y = y * 10 ** ((-14.0 - pyln.Meter(SR).integrated_loudness(y.T)) / 20)
 pk = np.abs(resample_poly(y, 4, 1, axis=1)).max(0).reshape(-1, 4).max(1)[:y.shape[1]]
-g = np.minimum(1.0, 10 ** (-1.6 / 20) / np.maximum(pk, 1e-9))
+g = np.minimum(1.0, 10 ** (-2.1 / 20) / np.maximum(pk, 1e-9))
 LA = int(0.004 * SR); g = minimum_filter1d(g, 2 * LA + 1)
 gd = g[::44].copy(); rel = np.exp(-1 / 80.0)                       # 1 ms steps, 80 ms release
 for i in range(1, len(gd)): gd[i] = min(gd[i], rel * gd[i - 1] + (1 - rel) * gd[i])

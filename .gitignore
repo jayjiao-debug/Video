@@ -30,3 +30,7 @@ episodes/*/review/qa/frames/
 episodes/*/review/qa/*.jpg
 episodes/*/review/qa/*.png
 episodes/*/review/music/*.png
+episodes/30-music-genres/music/*.m4a
+episodes/30-music-genres/music/*.wav
+episodes/30-music-genres/out/*.mp4
+episodes/30-music-genres/style/*.png
