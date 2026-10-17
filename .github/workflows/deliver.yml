@@ -1,0 +1,29 @@
+name: deliver-life26
+on:
+  push:
+    branches: [deliver-life26]
+jobs:
+  package:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Join parts and check
+        run: |
+          mkdir -p out
+          cat parts/sticker.mp4.part* > "out/生命平等吗_贴纸版_v9_高清原片.mp4"
+          cat parts/lines.mp4.part* > "out/生命平等吗_线条版_v9_高清原片.mp4"
+          echo "$(cat parts/sticker.md5)  out/生命平等吗_贴纸版_v9_高清原片.mp4" | md5sum -c -
+          echo "$(cat parts/lines.md5)  out/生命平等吗_线条版_v9_高清原片.mp4" | md5sum -c -
+          ls -la out
+      - uses: actions/upload-artifact@v4
+        with:
+          name: 生命平等吗_贴纸版_v9_高清原片
+          path: out/生命平等吗_贴纸版_v9_高清原片.mp4
+          compression-level: 0
+          retention-days: 30
+      - uses: actions/upload-artifact@v4
+        with:
+          name: 生命平等吗_线条版_v9_高清原片
+          path: out/生命平等吗_线条版_v9_高清原片.mp4
+          compression-level: 0
+          retention-days: 30
