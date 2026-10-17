@@ -15,3 +15,7 @@
 | 两个接近的频率会产生拍（“呜哇”），拍频=两频率之差；363 与 385 Hz 相差约22 Hz。泛音之间的拍造成不协和的“粗糙感”；简单比例（2:1、3:2）泛音重合，故协和（Helmholtz；Plomp） | SFU Sonic Studio Handbook “Consonance” https://www.sfu.ca/sonic-studio-webdav/cmns/Handbook/Consonance.html ；Plomp & Levelt 1965 |
 | 喀麦隆北部的马法人从未听过西方音乐，却能以高于随机的水平听出快乐、悲伤、害怕 | Fritz et al. 2009, Current Biology；ScienceDaily 报道 https://sciencedaily.com/releases/2009/03/090319132909.htm |
 | 音乐带来强烈快感（起鸡皮疙瘩）时，纹状体释放多巴胺；高潮之前的“期待”阶段（尾状核）也在活动 | Salimpoor et al. 2011, Nature Neuroscience 14:257 https://www.zlab.mcgill.ca/publications/docs/salimpoor_2011_nn.pdf |
+| 腹语效应：看到的位置会“拉走”听到的位置——看电视电影时，声音像从演员嘴里发出，而非真正的喇叭 | Alais & Burr 2004, Current Biology 14:257 https://flore.unifi.it/bitstream/2158/202581/1/AlaisBurr_Ventril.pdf |
+| 《敦刻尔克》配乐大量使用谢泼德音（无限上升的听觉错觉），点子来自诺兰 | CBC Radio q（汉斯·季默访谈）https://www.cbc.ca/radio/q/blog/hans-zimmer-explains-the-audio-trickery-that-made-dunkirk-audiences-nauseous-1.4311684 |
+| 拍频 = 两个频率之差；钢琴调音师就是听“拍”消失来调准 | OpenStax University Physics Vol.1 §17.6 Beats https://oer.xyzhomework.com/ebooks/html/university-physics-volume-1/ch17/17-6-beats.html |
+| 人的毛细胞被过大的声音损伤后无法修复或再生，造成永久听力损失（包括耳机听大声音乐） | NIDCD “How does loud noise cause hearing loss?” https://www.nidcd.nih.gov/health/how-does-noise-damage-your-hearing |
