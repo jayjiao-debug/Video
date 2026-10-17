@@ -62,6 +62,7 @@ const roll = (bus, t0, t1, n, g0, g1, seg, row = 'S', fn = () => I.snare({ decay
 
 // ---------------------------------------------------------------- grid player: one bar of a 16-step pattern
 const KICK = I.kick({ punch: 1.1, tail: 0.3 }), KICK_SOFT = I.kick({ punch: 0.6, tail: 0.22 }), SNARE = I.snare(), CLAP = I.clap({ spread: 0.012 });
+const TICK_HI = I.woodTick(1.5);   // MUSIC FIX 5: the 'ONE' of the reggae count
 const HAT = I.hat(false, 5), OHAT = I.hat(true, 9), RIM = I.rim(1, 3), CRASH = I.crash(6), TICK = I.woodTick(1);
 function bar16(seg, t0, barLen, pat, { swing = 0.5, gains = {}, sounds = {}, lazy = 0, barIdx = 0, rows = {} } = {}) {
 	// pat: {row: 'x...x...' 16 chars}; 'X' accent, 'x' hit, 'o' ghost
@@ -102,7 +103,7 @@ const seg = (name, t0, bpm, bars) => { const beat = 60 / bpm, bar = beat * 4; SE
 { const s = seg('bed', 4.0, 120, 6);
 	for (let b = 0; b < 6; b++) {
 		const t0 = s.t0 + b * s.bar;
-		bar16('bed', t0, s.bar, { T: 'x...x...x...x...', K: 'x.......x.......', ...(b >= 4 ? { H: 'x.x.x.x.x.x.x.x.' } : {}) }, { gains: { T: 0.18, K: 0.35, H: 0.12 }, sounds: { K: KICK_SOFT }, barIdx: b });
+		bar16('bed', t0, s.bar, { T: 'x...x...x...x...', K: 'x.......x.......', ...(b >= 4 ? { H: 'x.x.x.x.x.x.x.x.' } : {}) }, { gains: { T: b < 2 ? 0.3 : 0.18, K: b < 2 ? 0.6 : 0.35, H: 0.12 }, sounds: { K: KICK_SOFT }, barIdx: b });   // MUSIC FIX 11: b1–2 were −7.7 dB (plan: ~−6)
 		if (b >= 2) { const ph = b % 2; const notes = ph === 0 ? [['A', 0, 4]] : [['F', 0, 2], ['G', 2, 2]]; for (const [r, bb, d] of notes) B.bass.addMono(I.bass(ROOT[r], d * s.beat * 0.95, { bright: 0.4 }), t0 + bb * s.beat, 0.42); }
 		if (b === 5) { for (const n of chordNotes('A', 'm')) { const p = I.padNote(n, s.bar, { cutoff: 900, attack: 0.5 }); B.pad.addStereo(p.L, p.R, t0, 0.09); } roll(B.drums, t0 + 2 * s.beat, t0 + s.bar, 8, 0.15, 0.5, 'bed'); }
 	}
@@ -144,7 +145,7 @@ function rockBand(segName, t0, s, bIdx, { guitar = true, lead = true, bassOn = t
 		if (b >= 2) { const chs = b % 2 === 0 ? [['A', 'm', 0, 4]] : [['F', '', 0, 2], ['G', '', 2, 2]]; for (const [r, q, bb, d] of chs) for (const n of chordNotes(r, q, [12])) { const p = I.padNote(n + 12, d * s.beat, { cutoff: 2200, attack: 0.05, release: 0.3 }); B.pad.addStereo(p.L, p.R, t0 + bb * s.beat, 0.06); } }
 	}
 	themeAt('house', s.t0 + 2 * s.bar, s.beat, (n, d) => I.pluck(n, { decay: 0.22, cutoff: 3600 }), { part: [0, 2], gain: 0.42 });
-	themeAt('house', s.t0 + 4 * s.bar - s.bar, s.beat, (n, d) => I.pluck(n, { decay: 0.22, cutoff: 3600 }), { part: [1, 2], gain: 0.42 });
+	themeAt('house', s.t0 + 4 * s.bar, s.beat, (n, d) => I.pluck(n, { decay: 0.22, cutoff: 3600 }), { part: [0, 1], gain: 0.42 });   // MUSIC FIX 2: was a second copy of theme bar 2 on top of the first (doubled notes at 37.81); b5 = theme bar 1, as in jazz/trap
 	SEG.house.kicks = kicks;
 	roll(B.drums, s.t1 - s.beat, s.t1, 4, 0.3, 0.5, 'house');
 }
@@ -167,13 +168,15 @@ const lofiBus = new Bus(N);
 		const t0 = s.t0 + b * s.bar;
 		bar16('lofi', t0, s.bar, { K: 'X......x..x.....', S: '....X.......X...', H: 'x.x.x.x.x.x.x.x.' }, { swing: 0.6, lazy: 0.012, gains: { K: 0.7, S: 0.4, H: 0.07 }, sounds: { K: I.kick({ punch: 0.5, tail: 0.22 }), S: I.snare({ tone: 0.5, snap: 0.4, decay: 0.14 }) }, barIdx: b });
 		const chs = b % 2 === 0 ? [['A', 'm', 0, 4, [10, 14]]] : [['F', '', 0, 2, [11, 14]], ['G', '', 2, 2, [9]]];
-		for (const [r, q, bb, d, ext] of chs) for (const n of chordNotes(r, q, ext)) lofiBus.addMono(I.epiano(n, d * s.beat * 0.9, { index: 0.9, decay: 1.6 }), t0 + bb * s.beat, 0.11);
+		for (const [r, q, bb, d, ext] of chs) { if (d === 4) for (const n of chordNotes(r, q, ext)) lofiBus.addMono(I.epiano(n, 1.5 * s.beat, { index: 0.9, decay: 1.6 }), t0 + 2.5 * s.beat, 0.08); }   // MUSIC FIX 6: a re-struck Rhodes on the and-of-3 (the end of each Am bar fell to −37 LUFS at 54.2–54.6)
+		for (const [r, q, bb, d, ext] of chs) for (const n of chordNotes(r, q, ext)) lofiBus.addMono(I.epiano(n, d * s.beat * 1.02, { index: 0.9, decay: 1.6 }), t0 + bb * s.beat, 0.11);   // MUSIC FIX 6: chords ring to the next downbeat (0.9 left a −37 LUFS hole at 54.2–54.6)
 		B.bass.addMono(I.bass(b % 2 === 0 ? ROOT.A : ROOT.F, s.beat * 1.8, { bright: 0.25, sub: 0.9 }), t0, 0.42);
 	}
 	themeAt('lofi', s.t0 + s.bar, s.beat, (n, d) => I.epiano(n, d, { index: 1.2 }), { swing: 0.6, gain: 0.5, bus: lofiBus });
 	themeAt('lofi', s.t0 + 3 * s.bar, s.beat, (n, d) => I.epiano(n, d, { index: 1.2 }), { swing: 0.6, part: [0, 1], gain: 0.5, bus: lofiBus });
 	MIX.lofi(lofiBus, { wow: 1, flutter: 0.8, lowpass: 5000 }); lofiBus.mixInto(B.keys, 1.0);
-	const vin = I.vinyl(s.t1 - s.t0 + 0.4, { crackle: 1.3, hiss: 0.9 }); B.fx.addMono(vin, s.t0, 0.55);
+	roll(B.drums, s.t1 - s.beat, s.t1, 3, 0.12, 0.25, 'lofi', 'S', () => I.snare({ tone: 0.5, snap: 0.4, decay: 0.1 }));   // MUSIC FIX 8: the plan's 1-beat fill into reggae (was missing)
+	const vin = I.vinyl(s.t1 - s.t0, { crackle: 1.3, hiss: 0.9 }); for (let i = 0; i < 1440; i++) vin[vin.length - 1 - i] *= i / 1440; B.fx.addMono(vin, s.t0, 0.55);   // MUSIC FIX 16: crackle stops ON the reggae downbeat (its 0.4 s tail sat on the empty beat 1 and, on a phone, made beat 1 as loud as beat 3)
 	for (let k = 0; k < 40; k++) EV.push({ t: s.t0 + k * (s.t1 - s.t0) / 40, seg: 'lofi', row: 'V', v: 0.5 });
 }
 // 7 · reggae one drop 63.99–76.29 (78), 4 bars. b1–2 drums alone + tick on all 4 beats · b3 + bass + skank + melodica · b4
@@ -186,7 +189,8 @@ function skank(segName, t0, s, bIdx, gain = 0.2) {
 { const s = seg('reggae', 63.99, 78, 4);
 	for (let b = 0; b < 4; b++) {
 		const t0 = s.t0 + b * s.bar;
-		bar16('reggae', t0, s.bar, { K: '........X.......', R: '........x.......', H: '..x.x.x.x.x.x.x.', ...(b < 2 ? { T: 'x...x...x...x...' } : {}) }, { swing: 0.62, gains: { K: 0.9, R: 0.45, H: 0.1, T: 0.2 }, rows: { R: 'S' }, barIdx: b });
+		bar16('reggae', t0, s.bar, { K: '........X.......', R: '........x.......', H: '..x.x.x.x.x.x.x.', ...(b < 2 ? { T: 'x...x...x...x...' } : {}) }, { swing: 0.62, gains: { K: 0.9, R: b < 2 ? 0.62 : 0.45, H: 0.1, T: 0.36 }, rows: { R: 'S' }, barIdx: b });
+		if (b < 2) B.drums.addMono(TICK_HI, t0, 0.12);   // MUSIC FIX 5: count tick +5 dB, a faint higher 'ONE' pitch cue, rim on 3 +3 dB — on a phone (no sub) beat 3 must still be the loudest beat and beat 1 no louder than 2 and 4
 		if (b >= 2) { skank('reggae', t0, s, b); B.bass.addMono(I.bass(b % 2 === 0 ? ROOT.A : ROOT.F, s.beat * 1.4, { bright: 0.3, sub: 1 }), t0 + 0.5 * s.beat, 0.5); B.bass.addMono(I.bass(b % 2 === 0 ? ROOT.A + 7 : ROOT.G, s.beat * 1.2, { bright: 0.3, sub: 1 }), t0 + 2.5 * s.beat, 0.45); }
 	}
 	themeAt('reggae', s.t0 + 2 * s.bar, s.beat, (n, d) => melodica(n, d), { gain: 0.5 });
@@ -211,22 +215,24 @@ function skank(segName, t0, s, bIdx, gain = 0.2) {
 	for (let b = 0; b < 5; b++) {
 		const t0 = s.t0 + b * s.bar, step = s.bar / 16;
 		const chs = b % 2 === 0 ? [['A', 'm', [10]], ['A', 'm', [10]]] : [['F', '', [11]], ['G', '', [10]]];
-		[0, 8].forEach((st, k) => { const r = chs[k][0]; B.bass.addMono(I.guitar(ROOT[r], s.beat * 1.6, { bright: 0.3, sustain: 0.998 }), t0 + st * step, 0.85); EV.push({ t: t0 + st * step, seg: 'bossa', row: 'K', step: st, bar: b, v: 0.8 }); });
-		[0, 3, 6, 10, 13].forEach((st) => { const [r, q, ext] = chs[st < 8 ? 0 : 1]; const g = sumBufs(chordNotes(r, q, ext).slice(1).map((n, j) => gainBuf(I.guitar(n + 12, 0.25, { bright: 0.35, sustain: 0.996, seed: j + 5 }), 0.3))); B.keys.addMono(g, t0 + st * step, 0.45, 0.15); EV.push({ t: t0 + st * step, seg: 'bossa', row: 'G', step: st, bar: b, v: 0.7 }); });
+		[0, 8].forEach((st, k) => { const r = chs[k][0]; B.bass.addMono(I.guitar(ROOT[r], s.beat * 1.6, { bright: 0.3, sustain: 0.998 }), t0 + st * step, 0.85 * (b === 0 ? 1.4 : 1));   /* MUSIC FIX 10: b1 solo was −7.4 dB under the body */ EV.push({ t: t0 + st * step, seg: 'bossa', row: 'K', step: st, bar: b, v: 0.8 }); });
+		[0, 3, 6, 10, 13].forEach((st) => { const [r, q, ext] = chs[st < 8 ? 0 : 1]; const g = sumBufs(chordNotes(r, q, ext).slice(1).map((n, j) => gainBuf(I.guitar(n + 12, 0.25, { bright: 0.35, sustain: 0.996, seed: j + 5 }), 0.3))); B.keys.addMono(lpBuf(g, 3200), t0 + st * step, 0.5 * (b === 0 ? 1.4 : 1), 0.15);   /* MUSIC FIX 15: nylon is dark — 2–5 kHz in bossa was 3 dB above rock's */   /* MUSIC FIX 10 */ EV.push({ t: t0 + st * step, seg: 'bossa', row: 'G', step: st, bar: b, v: 0.7 }); });
 	}
 	themeAt('bossa', s.t0 + s.bar, s.beat, (n, d) => flute(n, d), { gain: 0.5, ahead: 0.5 });
 	themeAt('bossa', s.t0 + 3 * s.bar, s.beat, (n, d) => flute(n, d), { gain: 0.5, ahead: 0.5 });
+	B.fx.addMono(I.noiseSweep(s.beat, 600, 7000, { shape: (x) => x * x }), s.t1 - s.beat, 0.22);   // MUSIC FIX 8: 1-beat riser into trap (bossa has no kit, so no drum fill)
 }
 // 10 · trap 100.52–110.81 (140, felt 70), 6 bars. 808, 打 on 9 only, 次 with rolls; bell theme
 function trapBar(segName, t0, s, b, rollDense) {
 	bar16(segName, t0, s.bar, { K: 'X......x..x.....', S: '........X.......' }, { gains: { K: 0.55, S: 0.6 }, sounds: { S: CLAP }, barIdx: b });
 	const step = s.bar / 16;
 	for (let st = 0; st < 16; st += 2) { const roll32 = rollDense && (st === 6 || st === 14); const n = roll32 ? 4 : (rollDense && st === 12 ? 3 : 1); for (let k = 0; k < n; k++) { const t = t0 + (st + k * 2 / n) * step; B.drums.addMono(HAT, t, 0.14 * (0.7 + 0.3 * k / n), 0.2); EV.push({ t, seg: segName, row: 'H', step: st, bar: b, v: 0.6 }); } }
-	const r = b % 2 === 0 ? ROOT.A : ROOT.F; B.bass.addMono(I.bass808(r - 12 + 12, s.beat * 1.7, { drive: 1.3, glide: 0 }), t0, 0.55); B.bass.addMono(I.bass808(r, s.beat * 1.0, { drive: 1.3, glide: b % 2 ? 5 : 0 }), t0 + 7 * step, 0.45);
+	const r = b % 2 === 0 ? ROOT.A : ROOT.F; B.bass.addMono(I.bass808(r - 12, s.beat * 1.7, { drive: 1.6, glide: 0 }), t0, 0.62); B.bass.addMono(I.bass808(r, s.beat * 1.0, { drive: 1.3, glide: b % 2 ? 5 : 0 }), t0 + 7 * step, 0.45);
 }
 { const s = seg('trap', 100.52, 140, 6);
 	for (let b = 0; b < 6; b++) trapBar('trap', s.t0 + b * s.bar, s, b, b >= 2);
 	themeAt('trap', s.t0 + 3 * s.bar, s.beat, (n, d) => I.bell(440 * Math.pow(2, (n - 69) / 12), 0.35, 1.6, 2), { gain: 0.42 });
+	roll(B.drums, s.t1 - s.beat, s.t1, 8, 0.1, 0.24, 'trap', 'H', () => HAT);   // MUSIC FIX 8: 1-beat 32nd hat zipper into metal
 	themeAt('trap', s.t0 + 5 * s.bar, s.beat, (n, d) => I.bell(440 * Math.pow(2, (n - 69) / 12), 0.35, 1.6, 2), { part: [0, 1], gain: 0.42 });
 }
 // 11 · metal 110.81–122.81 (160), 8 bars. normal (b1–4) · muddy chords (b5–6) · clean power chords (b7–8)
@@ -238,30 +244,35 @@ function trapBar(segName, t0, s, b, rollDense) {
 		const r = (b % 2 === 0 ? ROOT.A : ROOT.F) - 12 + 12, r2 = b % 2 === 0 ? ROOT.A : ROOT.G;
 		if (b < 4) { for (let st = 0; st < 16; st += 2) B.keys.addMono(pm(st < 8 ? r : r2, step * 1.6), t0 + st * step, 0.22, st % 4 ? 0.3 : -0.3); }
 		else { const chs = b < 6 ? (b % 2 === 0 ? [chordNotes('A', 'm', [10, 14])] : [chordNotes('F', '', [11, 14]), chordNotes('G', '', [10, 13])]) : (b % 2 === 0 ? [[45, 52, 57]] : [[41, 48, 53], [43, 50, 55]]);
-			chs.forEach((ns, k) => { const dur = s.bar / chs.length; const g = lpBuf(dist(sumBufs(ns.map((n, j) => gainBuf(I.guitar(n, dur, { bright: 0.7, sustain: 0.998, seed: j + 9 }), 0.4))), 9), 5000); B.keys.addMono(g, t0 + k * dur, 0.3, -0.25); B.keys.addMono(g, t0 + k * dur + 0.012, 0.3, 0.25); EV.push({ t: t0 + k * dur, seg: 'metal', row: b < 6 ? 'MUD' : 'CLEAN', step: k * 8, bar: b, v: 1 }); }); }
+			chs.forEach((ns, k) => { const dur = s.bar / chs.length; const g = lpBuf(dist(sumBufs(ns.map((n, j) => gainBuf(I.guitar(n, dur, { bright: 0.7, sustain: 0.998, seed: j + 9 }), 0.4))), 14), 5000);   /* MUSIC FIX 12: drive 9 → 14 on BOTH muddy and clean bars (gate note 5c) */ B.keys.addMono(g, t0 + k * dur, 0.3, -0.25); B.keys.addMono(g, t0 + k * dur + 0.012, 0.3, 0.25); EV.push({ t: t0 + k * dur, seg: 'metal', row: b < 6 ? 'MUD' : 'CLEAN', step: k * 8, bar: b, v: 1 }); }); }
 	}
 	for (let p = 0; p < 4; p++) themeAt('metal', s.t0 + p * 2 * s.bar, s.beat, (n, d) => lpBuf(dist(I.guitar(n, d, { bright: 0.75, sustain: 0.9985 }), 6), 5200), { gain: 0.3, pan: 0 });
 	B.drums.addMono(CRASH, s.t1 - s.beat, 0.3);
 }
 // 12 · theme 2 122.81–128.81 (120), 3 bars: the same e-piano as 16.0 over the same pulse
 { const s = seg('theme2', 122.81, 120, 3);
-	for (let b = 0; b < 3; b++) { const t0 = s.t0 + b * s.bar; bar16('theme2', t0, s.bar, { T: 'x...x...x...x...', K: 'x.......x.......' }, { gains: { T: 0.16, K: 0.34 }, sounds: { K: KICK_SOFT }, barIdx: b }); }
+	for (let b = 0; b < 3; b++) { const t0 = s.t0 + b * s.bar; bar16('theme2', t0, s.bar, b < 2 ? { T: 'x...x...x...x...', K: 'x.......x.......' } : { T: 'x...x...x...x...', K: 'x...x...x...x...', H: 'x.x.x.x.x.x.x.x.' }, { gains: { T: 0.16, K: b < 2 ? 0.34 : 0.5, H: 0.12 }, sounds: { K: KICK_SOFT }, barIdx: b }); }   // MUSIC FIX 7: b3 builds (kick every beat + 次 8ths); it was a −8.9 dB hole, then a +8.5 dB jump into the recap
 	themeAt('theme2', s.t0, s.beat, (n, d) => I.epiano(n, d, { index: 1.8 }), { gain: 0.62, bus: B.keys });
 	B.bass.addMono(I.bass(ROOT.A, s.bar * 0.95, { bright: 0.4 }), s.t0, 0.42); B.bass.addMono(I.bass(ROOT.F, s.beat * 1.9, { bright: 0.4 }), s.t0 + s.bar, 0.42); B.bass.addMono(I.bass(ROOT.G, s.beat * 1.9, { bright: 0.4 }), s.t0 + s.bar + 2 * s.beat, 0.42);
-	for (const n of chordNotes('A', 'm', [12])) { const p = I.padNote(n, 2 * 2, { cutoff: 1400, attack: 0.4 }); B.pad.addStereo(p.L, p.R, s.t0 + 2 * s.bar, 0.07); }
-	roll(B.drums, s.t1 - s.beat, s.t1, 4, 0.25, 0.45, 'theme2');
+	for (const n of chordNotes('A', 'm', [12])) { const p = I.padNote(n, 2 * 2, { cutoff: 1800, attack: 0.4 }); B.pad.addStereo(p.L, p.R, s.t0 + 2 * s.bar, 0.12); }   // MUSIC FIX 7
+	B.bass.addMono(I.bass(ROOT.A, s.bar * 0.95, { bright: 0.5 }), s.t0 + 2 * s.bar, 0.42);   // MUSIC FIX 7
+	roll(B.drums, s.t1 - s.beat, s.t1, 4, 0.3, 0.55, 'theme2');
 }
 // 13 · recap callbacks 128.81–138.96: one bar each of rock, jazz, lo-fi, reggae
-{ seg('recap', 128.81, 120, 4);
+{ seg('recap', 128.81, 120, 4); SEG.recap.t1 = 138.96;   // MUSIC FIX 13: metadata — the 4 callback bars end at 138.96 (2+2+3.08+3.08), not 136.81
 	const rk = SEG.rock, jz = SEG.jazz;
-	bar16('recap', 128.81, 2.0, ROCK, { gains: { K: 0.85, S: 0.62, H: 0.16 }, barIdx: 0 });
+	bar16('recap', 128.81, 2.0, ROCK, { gains: { K: 0.78, S: 0.58, H: 0.16 }, barIdx: 0 });   // MUSIC FIX 7: theme2 → recap step +2.1 → ≤ +2 dB
 	B.bass.addMono(I.bass(ROOT.A, 1.9, { bright: 0.6 }), 128.81, 0.35);
+	roll(B.drums, 130.31, 130.81, 4, 0.25, 0.45, 'recap');   // MUSIC FIX 8: the plan's 1-beat fill before each callback
 	bar16('recap', 130.81, 2.0, { R: 'x...x.x.x...x.x.', F: '....x.......x...' }, { swing: 0.667, gains: { R: 0.55, F: 0.25 }, sounds: { R: ride(1, 0.9), F: I.hat(false, 12) }, rows: { R: 'X', F: 'H' }, barIdx: 1 });
 	[45, 48, 52, 53].forEach((n, k) => B.bass.addMono(I.bass(n, 0.42, { bright: 0.35, sub: 0.8 }), 130.81 + k * 0.5, 0.5));
+	roll(B.drums, 132.31, 132.81, 3, 0.12, 0.22, 'recap', 'S', () => I.snare({ tone: 0.4, snap: 0.3, decay: 0.07 }));   // MUSIC FIX 8
 	const lb = 60 / 78 * 4;
-	bar16('recap', 132.81, lb, { K: 'X......x..x.....', S: '....X.......X...', H: 'x.x.x.x.x.x.x.x.' }, { swing: 0.6, lazy: 0.012, gains: { K: 0.7, S: 0.4, H: 0.07 }, sounds: { K: I.kick({ punch: 0.5, tail: 0.22 }) }, barIdx: 2 });
-	B.fx.addMono(I.vinyl(lb + 0.2, { crackle: 1.3 }), 132.81, 0.55); for (const n of chordNotes('A', 'm', [10, 14])) B.keys.addMono(I.epiano(n, lb * 0.9, { index: 0.9, decay: 1.6 }), 132.81, 0.1);
-	bar16('recap', 135.89, lb, { K: '........X.......', R: '........x.......', H: '..x.x.x.x.x.x.x.' }, { swing: 0.62, gains: { K: 0.9, R: 0.45, H: 0.1 }, rows: { R: 'S' }, barIdx: 3 });
+	bar16('recap', 132.81, lb, { K: 'X......x..x.....', S: '....X.......X...', H: 'x.x.x.x.x.x.x.x.' }, { swing: 0.6, lazy: 0.012, gains: { K: 0.85, S: 0.5, H: 0.09 }, sounds: { K: I.kick({ punch: 0.5, tail: 0.22 }) }, barIdx: 2 });   // MUSIC FIX 14: recap lo-fi +2 dB (it sat −5 dB under jazz, then reggae jumped +3.1 dB)
+	B.fx.addMono(I.vinyl(lb + 0.2, { crackle: 1.3 }), 132.81, 0.55); for (const n of chordNotes('A', 'm', [10, 14])) B.keys.addMono(I.epiano(n, lb * 1.02, { index: 0.9, decay: 1.6 }), 132.81, 0.13);   // MUSIC FIX 6
+	roll(B.drums, 135.89 - lb / 4, 135.89, 3, 0.12, 0.25, 'recap', 'S', () => I.snare({ tone: 0.5, snap: 0.4, decay: 0.1 }));   // MUSIC FIX 8
+	bar16('recap', 135.89, lb, { K: '........X.......', R: '........x.......', H: '..x.x.x.x.x.x.x.', T: 'x...x...x...x...' }, { swing: 0.62, gains: { K: 0.9, R: 0.62, H: 0.1, T: 0.36 }, rows: { R: 'S' }, barIdx: 3 });
+	B.drums.addMono(TICK_HI, 135.89, 0.12);   // MUSIC FIX 9: the same 1-2-3-4 count as the teaching bar (beat 1 was −45 dB: read as a dropout)
 	skank('recap', 135.89, { beat: 60 / 78 }, 3, 0.25);
 	B.bass.addMono(I.bass(ROOT.A, 1.0, { bright: 0.3, sub: 1 }), 135.89 + 0.38, 0.45);
 	roll(B.drums, 138.96 - 60 / 78, 138.96, 4, 0.25, 0.45, 'recap');
@@ -278,7 +289,7 @@ function trapBar(segName, t0, s, b, rollDense) {
 
 // ---------------------------------------------------------------- room tone: a dark pad wherever the arrangement is sparse
 function bedPad(t0, dur, chord = chordNotes('A', 'm'), cutoff = 700, g = 0.055) { for (const n of chord) { const p = I.padNote(n, dur, { cutoff, attack: 0.6, release: 0.8 }); B.pad.addStereo(p.L, p.R, t0, g); } }
-bedPad(3.7, 10.3, chordNotes('A', 'm'), 750, 0.22);
+bedPad(3.7, 10.3, chordNotes('A', 'm'), 750, 0.28);   // MUSIC FIX 11
 bedPad(SEG.reggae.t0, 2 * SEG.reggae.bar, chordNotes('A', 'm'), 900, 0.18);
 bedPad(135.89, 60 / 78 * 4, chordNotes('A', 'm'), 900, 0.18);
 
@@ -287,16 +298,17 @@ bedPad(135.89, 60 / 78 * 4, chordNotes('A', 'm'), 900, 0.18);
 { const h = SEG.house; const padH = new Bus(N); for (let i = Math.round(h.t0 * SR); i < Math.round(h.t1 * SR); i++) { padH.L[i] = B.pad.L[i]; padH.R[i] = B.pad.R[i]; B.pad.L[i] = 0; B.pad.R[i] = 0; } MIX.sidechain([padH], h.kicks, { depth: 0.7, release: 0.18 }); padH.mixInto(B.pad); }
 // reverb send (keys, lead, pad)
 for (const [bus, g] of [[B.keys, 0.18], [B.lead, 0.22], [B.pad, 0.25]]) bus.mixInto(B.verb, g);
-reverb(B.verb, { room: 0.82, damp: 0.3 });
+B.verb = reverb(B.verb, { room: 0.82, damp: 0.3 });   // MUSIC FIX 1: reverb() RETURNS the wet bus; the dry send was being mixed back in (no reverb at all, mono-dry mix)
 const mixBus = new Bus(N);
-const G = { drums: 1.0, bass: 0.9, keys: 1.0, lead: 1.0, pad: 1.0, fx: 0.8, verb: 0.6 };
+const G = { drums: 1.0, bass: 0.9, keys: 1.0, lead: 1.0, pad: 1.0, fx: 0.8, verb: 1.2 };   // MUSIC FIX 1: wet return +6 dB (side was −26…−31 dB re mid: still bone dry)
 for (const k of Object.keys(B)) B[k].mixInto(mixBus, G[k]);
 
 // ---------------------------------------------------------------- hook scan 0–4 s: 8 slices of 0.25 s from the finished genres, one per beat
-const SCAN = [['rock', 20.0], ['jazz', 45.68], ['house', 37.81], ['reggae', 70.14], ['trap', 105.66], ['metal', 113.81], ['lofi', 57.84], ['bossa', 94.98]];
+const SCAN = [['rock', 20.0], ['jazz', 45.68], ['house', 37.81], ['reggae', 70.899], ['trap', 105.66], ['metal', 113.81], ['lofi', 57.84], ['bossa', 94.98]];
 SCAN.forEach(([g, src], k) => {
 	const t = k * 0.5, a = Math.round(src * SR), len = Math.round(0.25 * SR), d = Math.round(t * SR);
-	for (let i = 0; i < len; i++) { const env = Math.min(1, i / 120, (len - i) / 240); mixBus.L[d + i] += mixBus.L[a + i] * env; mixBus.R[d + i] += mixBus.R[a + i] * env; }
+	let pw = 0; for (let i = 0; i < len; i++) pw += mixBus.L[a + i] ** 2 + mixBus.R[a + i] ** 2; const sg = Math.min(3.2, 0.33 / Math.sqrt(pw / (2 * len) + 1e-12));   // MUSIC FIX 4: level-match the 8 snippets (reggae was −16 dB, bossa −10 dB under rock)
+		const fi = Math.round(0.005 * SR), fo = Math.round(0.008 * SR); for (let i = 0; i < len; i++) { const env = Math.min(1, i / fi, (len - i) / fo); mixBus.L[d + i] += mixBus.L[a + i] * env * sg; mixBus.R[d + i] += mixBus.R[a + i] * env * sg; }   // MUSIC FIX 4: 5 ms in / 8 ms out (2.5/5 ms clicked at 1.25, 2.50, 2.75)
 	EV.push({ t, seg: 'scan', row: 'SCAN', genre: g, v: 1 });
 	const tk = I.woodTick(1); mixBus.addMono(tk, t + 0.25, 0.12);
 });
@@ -304,7 +316,7 @@ SCAN.forEach(([g, src], k) => {
 MIX.highpass(mixBus, 22);
 MIX.fadeOut(mixBus, LEN - SEG.bonus.bar, LEN);
 const out = { L: mixBus.L.subarray(0, Math.round(LEN * SR)), R: mixBus.R.subarray(0, Math.round(LEN * SR)), n: Math.round(LEN * SR) };
-MIX.master(out, 0.9, 0.84, { truePeak: true, lufs: -14 });
+MIX.master(out, 0.9, 0.74, { truePeak: true, lufs: -14 });   // AAC adds ~1 dB on the drop: ceiling 0.74   // MUSIC FIX 3: ceiling 0.84 measured −1.40 dBTP; 0.81 keeps ≤ −1.5 after AAC
 fs.mkdirSync('out', { recursive: true });
 MIX.writeWav('out/music.wav', out);
 EV.sort((a, b) => a.t - b.t); MEL.sort((a, b) => a.t - b.t);
