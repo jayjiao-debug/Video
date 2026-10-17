@@ -16,3 +16,6 @@ episodes/*/out/*_高清原片.mp4
 
 # Douyin covers are delivered in chat, not committed (public repo)
 episodes/*/out/封面_*.png
+
+# ep28 rendered covers stay local (public repo)
+episodes/28-life-equal/out/*.png
