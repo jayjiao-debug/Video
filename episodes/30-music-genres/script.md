@@ -113,7 +113,7 @@ n = characters as pace.py counts them; Need = 0.5 + n/7 + 0.6 s. All lines ≤ 1
 | 22 | 72.83 | 76.24 | 吉他只弹短短的“嚓、嚓” | 9 | 2.39 | b4 | 招牌 row = 吉他嚓: short sharp flashes, each with a 嚓 stamp. | 25 |
 | 23 | 76.48 | 79.29 | 线索齐了，考考你：这是哪种？ | 11 | 2.67 | quiz b1 | All 4 slots glow (4/4). The tag shows "？". Buttons: A House · B 雷鬼 · C 摇滚. The 动 row lights on every beat (the lure). | — |
 | 24 | 79.29 | 81.54 | 先在心里选一个 | 7 | 2.10 | b2; ticks 80.04 / 80.79 / 81.54 | Countdown 3 · 2 · 1 on the beats. | — |
-| 25 | 82.29 | 85.29 | 是[雷鬼]！它也能每拍都[动] | 10 | 2.53 | b3 REVEAL, skank +6 dB | On the downbeat B lights green; A House shakes "差一点". | 26 |
+| 25 | 82.29 | 85.29 | 是[雷鬼]！另一种打法：每拍都[动] | 10 | 2.53 | b3 REVEAL, skank +6 dB | On the downbeat B lights green; A House shakes "差一点". | 26 |
 | 26 | 85.29 | 88.11 | 但它很慢，吉他还在“嚓” | 9 | 2.39 | b4 | Slot 3 (needle left of 走路) and slot 4 (嚓) light as the real tells. | 15, 25 |
 | 27 | 88.11 | 91.24 | 只听一个线索，容易被骗 | 10 | 2.53 | b5, fill | Slot 1 alone lights, then flickers "✗"; all 4 light together. | 26 |
 | 28 | 93.14 | 96.60 | [波萨诺瓦]：像悄悄弹的桑巴 | 11 | 2.67 | bossa b2: + breathy theme | Tag 波萨诺瓦. Soft, low-contrast glow; the drum rows are empty of a kit but still light: fed by guitar strings drawn across the grid. | 37 |
@@ -135,7 +135,7 @@ n = characters as pace.py counts them; Need = 0.5 + n/7 + 0.6 s. All lines ≤ 1
 
 ## End card
 - **Question for comments:** 最后一题：这段是什么曲风？用这4步听，评论区写答案
-- **Pinned comment (producer, after publishing):** 答案：Trap！① 鼓点：[打]隔好久才来一下 ② 直的，但[次]一会儿就滚成"拉拉链" ③ 跟着[次]快、跟着[打]慢：又快又慢 ④ 最显眼：拉链一样的[次]和又长又低的808。软软的钢琴是障眼法，你被骗了吗？ (Rows 10, 28; it uses only what the film taught.)
+- **Pinned comment (producer, after publishing):** 答案：Trap！① 鼓点：[打]隔好久才来一下 ② [次]一会儿就滚成"拉拉链" ③ 跟着[次]快、跟着[打]慢：又快又慢 ④ 最显眼：拉链一样的[次]和又长又低的808。软软的钢琴是障眼法，你被骗了吗？ (Rows 10, 28; it uses only what the film taught.)
 - **Sources line:** Gjerdingen & Perrott 2008 (J. New Music Research) · Mace et al. 2012 (Psychology of Music) · Siedenburg & Müllensiefen 2017 · MacDougall & Moore 2005 (J. Appl. Physiol.) · Dahl et al. 2014 · Open Music Theory · Winston & Saywood 2019 · Neal 2022 · Herbst 2017, 2019 · Smithsonian 2019 · Modern Drummer 2018 · MusicRadar · TIDAL 2020
 
 ## Wording decisions (unchanged from v1 unless marked)
