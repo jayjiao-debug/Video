@@ -22,8 +22,8 @@ const DROP = 42.47;
 /* camera moves [start, end, cx, cy, scale]; holds drift slowly */
 const MOVES: [number, number, number, number, number][] = [
 	[0, 0, 720, 600, 1.0],
-	[5.6, 7.6, 2200, 590, 1.0],
-	[17.0, 18.7, 3720, 540, 1.05],
+	[4.6, 7.6, 2200, 590, 1.0],
+	[16.0, 18.9, 3720, 540, 1.05],
 	[22.4, 24.8, 2190, 470, 0.42],
 ];
 const camAt = (t: number) => {
@@ -31,7 +31,7 @@ const camAt = (t: number) => {
 	let since = 0;
 	for (const [a, b, x, y, z] of MOVES) {
 		if (t >= b) { [cx, cy, s] = [x, y, z]; since = b; }
-		else if (t > a) { const k = r(t, a, b); return {cx: mix(cx, x, k), cy: mix(cy, y, k), s: mix(s, z, k)}; }
+		else if (t > a) { const u = cl((t - a) / (b - a)); const k = u * u * u * (u * (u * 6 - 15) + 10); const arc = Math.sin(Math.PI * k) * (z > 0.9 ? 1 : 0.4); return {cx: mix(cx, x, k), cy: mix(cy, y, k) - 70 * arc, s: mix(s, z, k) * (1 - 0.14 * arc)}; }
 	}
 	return {cx, cy, s: s * (1 + Math.min(t - since, 12) * (s < 0.6 ? 0.002 : 0.004))};
 };
@@ -41,7 +41,7 @@ const camAt = (t: number) => {
    motes of light that rise and fade. No masks, no dark chunks. `blobs` = ellipses [cx, cy, rx, ry] covering the body,
    used to start the motes inside it. ---------- */
 type Blob = [number, number, number, number];
-const Vanish: React.FC<{id: string; t: number; t0: number; dur: number; blobs: Blob[]; n?: number; seed?: number; render: (shadow: boolean) => React.ReactNode}> = ({id, t, t0, dur, blobs, n = 60, seed = 7, render}) => {
+const Vanish: React.FC<{id: string; t: number; t0: number; dur: number; blobs: Blob[]; n?: number; seed?: number; wind?: number; render: (shadow: boolean) => React.ReactNode}> = ({id, t, t0, dur, blobs, n = 60, seed = 7, wind = 0, render}) => {
 	const p = cl((t - t0) / dur);
 	if (p <= 0) return <>{render(true)}</>;
 	const xs = blobs.map((b) => [b[0] - b[2], b[0] + b[2]]).flat(), ys = blobs.map((b) => [b[1] - b[3], b[1] + b[3]]).flat();
@@ -58,7 +58,7 @@ const Vanish: React.FC<{id: string; t: number; t0: number; dur: number; blobs: B
 		const te = t0 + R() * dur * 0.85, life = 1.6 + R() * 1.2, sp = R(), ph = R() * 6, rad = 2.6 + R() * 4, gold = R() < 0.3;
 		const age = t - te; if (age <= 0 || age > life) continue;
 		const k = age / life;
-		const mx = px + age * (30 + sp * 50) + Math.sin(age * 2.2 + ph) * 16, my = py - age * (60 + sp * 70) - age * age * 10;
+		const mx = px + age * (30 + sp * 50) + wind * age * age * (50 + sp * 60) + Math.sin(age * 2.2 + ph) * 16, my = py - age * (60 + sp * 70) - age * age * 10;
 		motes.push(<circle key={i} cx={mx} cy={my} r={rad * (1 - 0.5 * k)} fill={gold ? '#f6cf86' : '#fff1d2'} opacity={Math.sin(Math.min(1, k * 4) * Math.PI / 2) * (1 - k) * 0.95} />);
 	}
 	return (
@@ -162,6 +162,20 @@ const Heart: React.FC<{id: string; x: number; y: number; size: number; level: nu
 
 /* ---------- pieces ---------- */
 const Pool: React.FC<{x: number; y: number; rx: number; ry: number; k: number}> = ({x, y, rx, ry, k}) => <ellipse cx={x} cy={y} rx={rx} ry={ry} fill="url(#pool28)" opacity={k} />;
+
+/** a stream of warm motes travelling along an arc from one scene to the next (the light that leads the camera) */
+const Trail: React.FC<{t: number; t0: number; from: [number, number]; via: [number, number]; to: [number, number]; n?: number; seed?: number; travel?: number}> = ({t, t0, from, via, to, n = 46, seed = 17, travel = 2.6}) => {
+	const R = rng(seed); const out: React.ReactNode[] = [];
+	for (let i = 0; i < n; i++) {
+		const st = t0 + R() * 1.2, sp = 0.8 + R() * 0.4, off = (R() - 0.5) * 90, ph = R() * 6, rad = 2.4 + R() * 3.6, gold = R() < 0.35;
+		const u = cl(((t - st) / travel) * sp); if (u <= 0 || u >= 1) continue;
+		const k = u * u * (3 - 2 * u);
+		const x = (1 - k) * (1 - k) * from[0] + 2 * k * (1 - k) * via[0] + k * k * to[0];
+		const y = (1 - k) * (1 - k) * from[1] + 2 * k * (1 - k) * via[1] + k * k * to[1] + off * Math.sin(Math.PI * k) + Math.sin(t * 2 + ph) * 8;
+		out.push(<circle key={i} cx={x} cy={y} r={rad} fill={gold ? '#f6cf86' : '#fff1d2'} opacity={Math.sin(Math.PI * u) * 0.9} />);
+	}
+	return <g>{out}</g>;
+};
 const Motes: React.FC<{x: number; y: number; rx: number; ry: number; t: number; n?: number; seed?: number; o?: number}> = ({x, y, rx, ry, t, n = 22, seed = 3, o = 1}) => {
 	const R = rng(seed); const out: React.ReactNode[] = [];
 	for (let i = 0; i < n; i++) {
@@ -331,7 +345,7 @@ export const Film28: React.FC = () => {
 	const cardsOn = t >= 32.9;
 	const worldO = 1 - r(t, 32.9, 34.0);
 	const sudanGrow = r(t, 13.7, 16.5);
-	const flyLamp = mix(0.28, 0.42, r(t, 22.4, 24.8));
+	const flyLamp = t < 22.4 ? mix(0.05, 0.32, r(t, 17.6, 18.9)) : mix(0.28, 0.42, r(t, 22.4, 24.8));
 	const flyIn = r(t, 17.0, 18.3);
 	const fx = mix(4320, 3780, flyIn), fy = mix(260, 706, flyIn) - Math.sin(flyIn * Math.PI) * 120;
 	const slap = r(t, 19.6, 19.82), unslap = r(t, 20.3, 21.0);
@@ -350,13 +364,14 @@ export const Film28: React.FC = () => {
 						<stop offset="0" stopColor={P.lampHi} stopOpacity="1" /><stop offset="0.45" stopColor={P.lamp} stopOpacity="0.92" />
 						<stop offset="0.8" stopColor={P.lampLo} stopOpacity="0.35" /><stop offset="1" stopColor={P.lampLo} stopOpacity="0" />
 					</radialGradient>
+					<filter id="fgblur" x="-100%" y="-100%" width="300%" height="300%"><feGaussianBlur stdDeviation="16" /></filter>
 					<linearGradient id="road" x1="0" x2="1"><stop offset="0" stopColor="#2e2a36" stopOpacity="0" /><stop offset="0.15" stopColor="#2e2a36" /><stop offset="0.85" stopColor="#2e2a36" /><stop offset="1" stopColor="#2e2a36" stopOpacity="0" /></linearGradient>
 					<linearGradient id="earth" x1="0" x2="1"><stop offset="0" stopColor="#4a3c3a" stopOpacity="0" /><stop offset="0.18" stopColor="#4a3c3a" stopOpacity="0.8" /><stop offset="0.82" stopColor="#4a3c3a" stopOpacity="0.8" /><stop offset="1" stopColor="#4a3c3a" stopOpacity="0" /></linearGradient>
 				</defs>
 				<g transform={`translate(${shakeX} ${shakeY})`}>
 				<g transform={world} opacity={worldO}>
 					{/* A · roadside */}
-					<Pool x={mix(690, 680, r(t, 22.4, 24.8))} y={720} rx={mix(520, 400, r(t, 22.4, 24.8))} ry={mix(300, 220, r(t, 22.4, 24.8))} k={mix(1, 0.85, r(t, 22.4, 24.8))} />
+					<Pool x={mix(690, 680, r(t, 22.4, 24.8))} y={720} rx={mix(520, 400, r(t, 22.4, 24.8))} ry={mix(300, 220, r(t, 22.4, 24.8))} k={t < 22.4 ? mix(1, 0.4, r(t, 5.4, 7.6)) : mix(0.4, 0.85, r(t, 22.4, 24.8))} />
 					<rect x={-100} y={760} width={1700} height={300} fill="url(#road)" opacity={0.8} />
 					<rect x={0} y={748} width={1500} height={16} fill="#8d8378" opacity={0.8} />
 					{[0, 1, 2, 3].map((i) => <rect key={i} x={60 + i * 380} y={900} width={190} height={12} fill={P.cream} opacity={0.32} />)}
@@ -366,7 +381,7 @@ export const Film28: React.FC = () => {
 					{[0, 1, 2].map((i) => { const k = lin(t, 0.15 + i * 0.1, 1.15 + i * 0.1); return <rect key={i} x={mix(-700, 1700, k)} y={812 + i * 24} width={620 - i * 140} height={7} rx={3} fill="#ffe2b0" opacity={(0.32 - i * 0.07) * Math.sin(k * Math.PI)} style={{filter: 'blur(3px)'}} />; })}
 					{solo && <>
 						<g opacity={1 - r(t, 3.7, 5.2)}>{shadow(680, 748, mix(80, 100, r(t, 1.8, 2.7)), 0.35)}</g>
-						<Vanish id="dc" t={t} t0={3.7} dur={1.9} n={110} seed={5} blobs={[[680, 718, 88, 32], [775, 712, 30, 30]]} render={(sh2) => {
+						<Vanish id="dc" t={t} t0={3.7} dur={1.9} n={110} seed={5} wind={1} blobs={[[680, 718, 88, 32], [775, 712, 30, 30]]} render={(sh2) => {
 							const k = r(t, 1.9, 2.8), stag = lin(t, 0.95, 2.0);
 							const sway = Math.sin(stag * Math.PI * 3) * 6 * (1 - stag) * (stag > 0 ? 1 : 0) + (t < 0.95 ? 0 : 0);
 							return <CatP x={680} y={748} s={1.5} k={k} head={r(t, 2.7, 3.5)} sway={sway} tail={t < 1 ? Math.sin(t * 5) : 0} shadowOn={sh2} />;
@@ -375,12 +390,12 @@ export const Film28: React.FC = () => {
 					<Motes x={760} y={600} rx={420} ry={200} t={t} seed={5} />
 
 					{/* B · Sudan */}
-					<Pool x={2200} y={650} rx={mix(620, 780, sudanGrow)} ry={mix(400, 480, sudanGrow)} k={mix(0.92, 1, sudanGrow)} />
+					<Pool x={2200} y={650} rx={mix(620, 780, sudanGrow)} ry={mix(400, 480, sudanGrow)} k={mix(0.12, 0.92, r(t, 6.2, 7.8)) * (t > 16 && t < 22.4 ? mix(1, 0.5, r(t, 16.6, 18.6)) : 1) + 0.08 * sudanGrow} />
 					<rect x={1450} y={748} width={1500} height={250} fill="url(#earth)" />
 					<Acacia x={2720} y={750} s={1.1} />
 					{solo && <>
 						<g opacity={1 - r(t, 14.4, 16.6)}>{shadow(2190, 748, mix(300, 330, r(t, 8.0, 10.2)), 0.35)}</g>
-						<Vanish id="dr" t={t} t0={14.3} dur={2.4} n={240} seed={9} blobs={[[2151, 674, 190, 100], [2257, 644, 95, 80], [2410, 700, 62, 40]]} render={(sh2) => <RhinoK x={2170} y={750} s={1.9} down={r(t, 8.2, 10.6)} headDown={r(t, 10.0, 12.2)} breathe={t < 8.2 ? Math.sin(t * 2.4) : 0} shadowOn={sh2} />} />
+						<Vanish id="dr" t={t} t0={14.3} dur={2.4} n={240} seed={9} wind={1} blobs={[[2151, 674, 190, 100], [2257, 644, 95, 80], [2410, 700, 62, 40]]} render={(sh2) => <RhinoK x={2170} y={750} s={1.9} down={r(t, 8.2, 10.6)} headDown={r(t, 10.0, 12.2)} breathe={t < 8.2 ? Math.sin(t * 2.4) : 0} shadowOn={sh2} />} />
 					</>}
 					{[[1760, 760], [1900, 768], [2520, 762], [2620, 770], [2060, 770]].map(([gx, gy], i) => <path key={i} d={`M ${gx - 14} ${gy} L ${gx - 6} ${gy - 26} L ${gx} ${gy - 6} L ${gx + 6} ${gy - 30} L ${gx + 14} ${gy}`} fill={P.cut} opacity={0.8} />)}
 					<g opacity={r(t, 5.8, 6.4) * (1 - r(t, 22.4, 23.4))}><Tag x={1700} y={330} size={42}>2018 · 肯尼亚</Tag></g>
@@ -404,8 +419,21 @@ export const Film28: React.FC = () => {
 
 					{/* the three, as they were, with their hearts */}
 					{!solo && <Spirits t={t} />}
+					{t > 4.2 && t < 9 && <Trail t={t} t0={4.3} from={[760, 640]} via={[1450, 260]} to={[2230, 400]} seed={17} />}
+					{t > 15.6 && t < 20 && <Trail t={t} t0={15.8} from={[2300, 600]} via={[3000, 220]} to={[3760, 660]} seed={23} />}
 				</g>
 
+
+				{solo && (() => {
+					const R = rng(77); const out: React.ReactNode[] = [];
+					for (let i = 0; i < 16; i++) {
+						const wx = -400 + R() * 5000, y = 60 + R() * 560, rr = 30 + R() * 70, o = 0.06 + R() * 0.1;
+						const x = 960 + (wx - cam.cx) * 1.55 * cam.s;
+						if (x < -200 || x > W + 200) continue;
+						out.push(<circle key={i} cx={x} cy={y} r={rr} fill="#ffe6bd" opacity={o * (1 - r(t, 21.6, 22.6))} filter="url(#fgblur)" />);
+					}
+					return <g>{out}</g>;
+				})()}
 				{/* the 52 cards and the ruler (screen space) */}
 				{cardsOn && <Pool x={mix(960, 420, r(t, DROP, DROP + 1.1))} y={mix(470, 680, r(t, DROP, DROP + 1.1))} rx={mix(1000, 900, r(t, DROP, DROP + 1.1))} ry={520} k={r(t, 32.9, 33.8)} />}
 				{cardsOn && <Ruler t={t} />}
