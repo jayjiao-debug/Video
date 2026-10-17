@@ -24,21 +24,21 @@ const Scene: React.FC<{s: number; x: number; y: number}> = ({s, x, y}) => (
 const Title: React.FC<{size: number; top: number; split?: boolean}> = ({size, top, split}) => (
 	<div style={{position: 'absolute', top, width: '100%', textAlign: 'center'}}>
 		<div style={{fontFamily: SANS, fontWeight: 700, fontSize: size * 0.24, letterSpacing: '0.42em', color: JUNO.colors.gold, opacity: 0.9}}>{JUNO.series}</div>
-		<div style={{fontFamily: SERIF, fontWeight: 700, fontSize: size, letterSpacing: '0.05em', lineHeight: 1.15, marginTop: size * 0.08, background: 'linear-gradient(180deg, #fff3d2 0%, #f1c56d 55%, #c8913a 100%)', WebkitBackgroundClip: 'text', backgroundClip: 'text', color: 'transparent', filter: 'drop-shadow(0 6px 22px rgba(10,6,12,0.75))'}}>{split ? <>生命<br />平等吗？</> : '生命平等吗？'}</div>
+		<div style={{fontFamily: SERIF, fontWeight: 700, fontSize: size, letterSpacing: '0.03em', lineHeight: 1.15, whiteSpace: 'nowrap', marginTop: size * 0.08, background: 'linear-gradient(180deg, #fff3d2 0%, #f1c56d 55%, #c8913a 100%)', WebkitBackgroundClip: 'text', backgroundClip: 'text', color: 'transparent', filter: 'drop-shadow(0 6px 22px rgba(10,6,12,0.75))'}}>{split ? <>生命<br />平等吗？</> : '生命平等吗？'}</div>
 	</div>
 );
 const Cover: React.FC<{layout: 'wide' | 'tall'}> = ({layout}) => {
 	const wide = layout === 'wide';
 	const W = wide ? 1440 : 1080, H = wide ? 1080 : 1440;
 	const s = wide ? 0.76 : 0.6;             // the scene, scaled to show the whole field
-	const sx = (W - 1920 * s) / 2, sy = wide ? H - 1080 * s + 30 : 600;
+	const sx = (W - 1920 * s) / 2, sy = wide ? H - 1080 * s + 30 : 470;
 	return (
 		<AbsoluteFill style={{background: `linear-gradient(180deg, ${P.duskTop}, ${P.dusk} 55%, ${P.duskLow})`, overflow: 'hidden'}}>
 			<Scene s={s} x={sx} y={sy} />
-			<AbsoluteFill style={{background: `linear-gradient(180deg, rgba(43,37,50,0) ${wide ? 82 : 72}%, #2b2532 ${wide ? 100 : 90}%)`}} />
+			<AbsoluteFill style={{background: `linear-gradient(180deg, rgba(43,37,50,0) ${wide ? 82 : 66}%, #2b2532 ${wide ? 100 : 77.5}%)`}} />
 			<AbsoluteFill style={{background: 'radial-gradient(ellipse at 50% 55%, rgba(0,0,0,0) 55%, rgba(14,10,18,0.6) 100%)'}} />
 			<AbsoluteFill style={{background: `linear-gradient(180deg, rgba(20,16,26,0.85) 0%, rgba(20,16,26,0.35) ${wide ? 30 : 34}%, rgba(20,16,26,0) ${wide ? 44 : 46}%)`}} />
-			<Title size={wide ? 168 : 200} top={wide ? 70 : 110} split={!wide} />
+			<Title size={wide ? 168 : 150} top={wide ? 70 : 170} />
 		</AbsoluteFill>
 	);
 };
