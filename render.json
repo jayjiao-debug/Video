@@ -1,9 +1,9 @@
 {
-  "id": "v3card-1792222118",
+  "id": "v3card2-1792225038",
   "composition": "Puppet",
   "start": 0,
   "end": 5663,
   "chunks": 30,
-  "output": "v3card",
+  "output": "v3card2",
   "flags": "--image-format=png --crf=14"
 }
