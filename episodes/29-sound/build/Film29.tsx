@@ -146,11 +146,11 @@ const Spectrum: React.FC<{t: number; cut?: number; cutO?: number; ghost?: number
 			<line x1={SX0} x2={SX1} y1={SY + 4} y2={SY + 4} stroke={C.dim} strokeWidth={2} />
 			{[50, 100, 1000, 10000].map((f) => <text key={f} x={fx(f)} y={SY + 48} textAnchor="middle" style={{fontFamily: SANS, fontWeight: 700, fontSize: 40}} fill={C.dim}>{f >= 1000 ? `${f / 1000}k` : f}</text>)}
 			<text x={SX1} y={SY + 48} textAnchor="end" style={{fontFamily: SANS, fontWeight: 700, fontSize: 40}} fill={C.dim}>Hz</text>
-			{cut && cutO > 0 && <g opacity={cutO}><line x1={fx(cut)} x2={fx(cut)} y1={SY - 430} y2={SY + 10} stroke={C.gold} strokeWidth={4} strokeDasharray="14 10" /><Lab x={fx(cut)} y={SY - 450} t={`${cut} Hz`} s={44} c={C.gold} /></g>}
+			{cut && cutO > 0 && <g opacity={cutO}><line x1={fx(cut)} x2={fx(cut)} y1={SY - 430} y2={SY + 10} stroke={C.gold} strokeWidth={4} strokeDasharray="14 10" /><Lab x={fx(cut)} y={SY - 450} t={`${cut} Hz`} s={52} c={C.gold} /></g>}
 			{fc && <g>
 				<rect x={fx(fc)} y={SY - 440} width={SX1 + 60 - fx(fc)} height={450} fill="#05070f" opacity={0.78} />
 				<line x1={fx(fc)} x2={fx(fc)} y1={SY - 440} y2={SY + 10} stroke={C.gold} strokeWidth={4} />
-				<Lab x={fx(fc) - 16} y={SY - 455} t={`还听得见：${Math.round(fc / 100) * 100} Hz`} s={44} c={C.gold} a="end" />
+				<Lab x={fx(fc) - 20} y={SY - 300} t={`${Math.round(fc / 100) * 100} Hz`} s={96} c={C.gold} a="end" w={900} /><Lab x={fx(fc) - 20} y={SY - 410} t="你还听得见吗？" s={52} c={C.gold} a="end" />
 			</g>}
 		</g>
 	);
@@ -163,11 +163,11 @@ const PH = (() => { const a = [0]; for (let i = 1; i < 340; i++) a.push(a[i - 1]
 const S1Wave: React.FC<{t: number}> = ({t}) => {
 	const s = SPD(t), k = (s - 1) / 0.26, wl = 560 / Math.pow(s, 2.6);
 	const env = (x: number) => Math.sin(((x - 80) / 1760) * Math.PI);
-	const amp = 150 * (1 + 0.1 * lowAt(t)) * r(t, 0, 0.6);
+	const amp = 150 * (1 + 0.1 * lowAt(t));
 	return (
-		<g>
+		<g transform={`translate(960 470) scale(${mix(1, 0.12, sm(lin(t, 9.0, 9.6)))}) translate(-960 -470)`}>
 			<path d={wave(80, 1840, 520, amp, wl, env, PH[cl(Math.round(t * FPS), 0, 339)])} fill="none" stroke={lerpC(C.cyan, C.gold, k)} strokeWidth={7} filter="url(#glow2)" />
-			<Labs t={t} y={280} items={[[0.5, 4.45, '慢放：每一次振动都被拉长', C.cyan], [4.5, 8.4, '调快 ×1.26 → 波变密 → 音变高', C.gold], [8.45, 9.6, '放回原速 → 波变稀 → 又变低', C.cyan]]} />
+			<Labs t={t} y={280} items={[[-1, 4.45, '慢放：每一次振动都被拉长', C.cyan], [4.5, 8.4, '调快 ×1.26 → 波变密 → 音变高', C.gold], [8.45, 9.25, '放回原速 → 波变稀 → 又变低', C.cyan]]} />
 		</g>
 	);
 };
@@ -184,9 +184,11 @@ const S2Ping: React.FC<{t: number}> = ({t}) => {
 	const i = fi(t);
 	return (
 		<g>
-			<Rings t={t} div={1} x={960} y={470} s={1.1} />
-			<Head x={960} y={470} s={1.1} lo={earLv(LV.L[i])} ro={earLv(LV.R[i])} />
-			<Labs t={t} y={230} items={[[9.5, 12.6, '声音每拍换一只耳朵'], [12.6, 15.7, '每一圈，都是空气在振动', C.gold]]} />
+			<g transform={`translate(${mix(0, -680, sm(lin(t, 15.0, 15.8)))} 0) translate(960 470) scale(${mix(0.4, 1, sm(lin(t, 9.3, 9.9))) * mix(1, 0.5, sm(lin(t, 15.0, 15.8)))}) translate(-960 -470)`}>
+				<Rings t={t} div={1} x={960} y={470} s={1.1} />
+				<Head x={960} y={470} s={1.1} lo={earLv(LV.L[i])} ro={earLv(LV.R[i])} />
+			</g>
+			<Labs t={t} y={230} items={[[9.6, 12.6, '声音每拍换一只耳朵'], [12.6, 15.0, '每一圈，都是空气在振动', C.gold]]} />
 		</g>
 	);
 };
@@ -195,9 +197,9 @@ const PUMP = (() => { const R = rng(31); return Array.from({length: 5200}, () =>
 const S3Pump: React.FC<{t: number}> = ({t}) => {
 	const lam = 300, k = (2 * Math.PI) / lam, w = (2 * Math.PI) / BEAT, A = 38 * r(t, 15.5, 16.2), tau = t - OB(8);
 	const cone = A * Math.sin(-w * tau + Math.PI);
-	const squeeze = Math.cos(w * tau) > 0;
+	const squeeze = Math.cos(w * tau) > 0, sq = sm(lin(t, 24.2, 25.0));
 	return (
-		<g>
+		<g transform={`translate(0 ${SY}) scale(1 ${1 - 0.95 * sq}) translate(0 ${-SY})`}>
 			{PUMP.map((p, i) => {
 				const phi = k * (p.x - 360) - w * tau + Math.PI, x = p.x + A * Math.sin(phi), c = Math.cos(phi);
 				const dens = c < -0.55;
@@ -208,9 +210,9 @@ const S3Pump: React.FC<{t: number}> = ({t}) => {
 				<path d="M 220 360 L 330 280 L 330 680 L 220 600 Z" fill="#1c2546" stroke={C.cyan} strokeWidth={4} />
 				<ellipse cx={335} cy={480} rx={18} ry={200} fill={C.cyan} opacity={squeeze ? 0.75 : 0.3} />
 			</g>
-			<Lab x={300} y={240} t="推 → 挤紧" s={52} c={C.gold} o={squeeze ? 1 : 0.3} />
-			<Lab x={300} y={790} t="退 ← 松开" s={52} c={C.ink} o={squeeze ? 0.3 : 1} />
-			<Labs t={t} x={1150} y={120} s={52} items={[[15.9, 21.1, '一挤一松，一路传到你耳朵'], [21.18, 26, '1 秒挤松 N 次 = N 赫兹（Hz）', C.gold]]} />
+			<Lab x={300} y={240} t="推 → 挤紧" s={52} c={C.gold} o={(squeeze ? 1 : 0.3) * (1 - r(t, 23.9, 24.3))} />
+			<Lab x={300} y={790} t="退 ← 松开" s={52} c={C.ink} o={(squeeze ? 0.3 : 1) * (1 - r(t, 23.9, 24.3))} />
+			<Labs t={t} x={1150} y={120} s={52} items={[[15.9, 21.1, '一挤一松，一路传到你耳朵'], [21.18, 24.4, '1 秒挤松 N 次 = N 赫兹（Hz）', C.gold]]} />
 		</g>
 	);
 };
@@ -220,19 +222,19 @@ const S4Spec: React.FC<{t: number}> = ({t}) => {
 	const ghost = win(t, phA + 0.2, phB, 0.4, 0.3), pulse = 1 - beatPh(t);
 	return (
 		<g>
-			<Spectrum t={t} cut={t < hpA ? 220 : t < phA ? 3000 : 130} cutO={win(t, lpA, phB, 0.3, 0.3)} ghost={ghost} />
-			<Labs t={t} y={150} items={[[24.6, lpA, '把整首歌按频率摊开'], [lpA, hpA, '只留 220 Hz 以下：鼓和贝斯', C.cyan], [hpA, phA, '只留 3000 Hz 以上：镲片、齿音', C.mag], [phA, phA + 2.0, '删掉 130 Hz 以下的一切'], [phA + 2.0, phB + 0.2, '大脑从上面的泛音，补出了低音', C.gold]]} />
+			<g transform={`translate(0 ${SY}) scale(1 ${sm(lin(t, 24.5, 25.3))}) translate(0 ${-SY})`}><Spectrum t={t} cut={t < hpA ? 220 : t < phA ? 3000 : 130} cutO={win(t, lpA, phB, 0.3, 0.3)} ghost={ghost} /></g>
+			<Labs t={t} y={150} items={[[24.85, lpA, '把整首歌按频率摊开'], [lpA, hpA, '只留 220 Hz 以下：鼓和贝斯', C.cyan], [hpA, phA, '只留 3000 Hz 以上：镲片、齿音', C.mag], [phA, phA + 2.0, '删掉 130 Hz 以下的一切'], [phA + 1.6, phB - 0.1, '大脑从上面的泛音，补出了低音', C.gold]]} />
 			<g opacity={win(t, lpA, hpA, 0.3, 0.3)} filter="url(#glow2)">
-				<circle cx={fx(45)} cy={240} r={70 + 26 * lw} fill="none" stroke={C.cyan} strokeWidth={7} />
-				<Lab x={fx(45)} y={258} t="45 Hz" s={48} />
+				<circle cx={fx(45) + 40} cy={250} r={100 + 26 * lw} fill="none" stroke={C.cyan} strokeWidth={7} />
+				<Lab x={fx(45) + 40} y={280} t="45 Hz" s={80} w={900} />
 			</g>
 			<g opacity={win(t, hpA, phA, 0.3, 0.3)}>
-				<Lab x={fx(10000)} y={258} t="每秒上万次" s={48} c={C.mag} />
+				<Lab x={fx(9000)} y={290} t="每秒上万次" s={72} c={C.mag} w={900} />
 			</g>
 			<g opacity={ghost}>
-				<circle cx={fx(45)} cy={240} r={70 + 20 * pulse} fill={C.cyan} opacity={0.1 + 0.15 * pulse} filter="url(#soft)" />
-				<circle cx={fx(45)} cy={240} r={70 + 20 * pulse} fill="none" stroke={C.cyan} strokeWidth={4} strokeDasharray="10 10" />
-				<Lab x={fx(45)} y={258} t="45 Hz？" s={48} c={C.cyan} />
+				<circle cx={fx(45) + 40} cy={250} r={100 + 20 * pulse} fill={C.cyan} opacity={0.1 + 0.15 * pulse} filter="url(#soft)" />
+				<circle cx={fx(45) + 40} cy={250} r={100 + 20 * pulse} fill="none" stroke={C.cyan} strokeWidth={4} strokeDasharray="10 10" />
+				<Lab x={fx(45) + 40} y={280} t="45 Hz？" s={80} c={C.cyan} w={900} />
 			</g>
 		</g>
 	);
@@ -246,7 +248,8 @@ const SRC = [
 const Stage: React.FC<{t: number; gone: number; back?: number}> = ({t, gone, back = 0}) => {
 	const lw = lowAt(t), R = rng(5);
 	return (
-		<g>
+		<g transform="translate(960 790) scale(1.14) translate(-960 -790)">
+			{gone > 0.05 && <g opacity={gone}><circle cx={960} cy={310} r={64} fill="none" stroke={C.gold} strokeWidth={4} strokeDasharray="12 10" /><circle cx={960} cy={530} r={56} fill="none" stroke={C.cyan} strokeWidth={4} strokeDasharray="12 10" /><Lab x={960} y={430} t="这里空了" s={56} c={C.gold} /></g>}
 			<path d="M 470 780 A 520 520 0 0 1 1450 780" fill="none" stroke={C.dim} strokeWidth={2} strokeDasharray="4 14" />
 			{SRC.map((s, i) => {
 				const a = (s.a * Math.PI) / 180, x = 960 + Math.sin(a) * s.d, y = 780 - Math.cos(a) * s.d;
@@ -258,7 +261,7 @@ const Stage: React.FC<{t: number; gone: number; back?: number}> = ({t, gone, bac
 						{bits}
 						<circle cx={x} cy={y} r={rad} fill={s.c} opacity={0.85 * o} filter="url(#glow2)" />
 						{back > 0 && s.mid && <circle cx={x} cy={y} r={rad + 220 * back} fill="none" stroke={s.c} strokeWidth={6} opacity={(1 - back) * 0.8} />}
-						{s.n && <Lab x={x} y={y - rad - 22} t={s.n} s={42} c={s.c} o={s.mid ? 0.25 + 0.75 * o : 1} />}
+						{s.n && <Lab x={x} y={y - rad - 22} t={s.n} s={48} c={s.c} o={s.mid ? o : 1} />}
 					</g>
 				);
 			})}
@@ -273,22 +276,24 @@ const S5Stage: React.FC<{t: number}> = ({t}) => {
 	return (
 		<g>
 			<Stage t={t} gone={gone} back={back} />
-			<Labs t={t} y={150} items={[[cA - 0.1, cB, '左声道 − 右声道：正中间的声音互相抵消'], [cB, cB + 3.0, '合回来！主音 ≈ 363 Hz', C.gold]]} />
+			<Labs t={t} y={100} items={[[cA - 0.1, cB, '左声道 − 右声道：正中间的声音互相抵消'], [cB, cB + 2.6, '合回来！主音 ≈ 363 Hz', C.gold]]} />
 		</g>
 	);
 };
 const S5Ratio: React.FC<{t: number}> = ({t}) => {
 	const a = 45.3, d = r(t, a, a + 1.4), ph = (t - a) * 0.6;
 	const ticks = [];
-	for (let n = 0; n < 8; n++) ticks.push(<Lab key={n} x={300 + 175 * n + 175 / 4} y={540} t={String(n + 1)} s={40} c={C.gold} o={r(t, a + 0.3 + n * 0.14, a + 0.5 + n * 0.14)} />);
+	for (let n = 0; n < 8; n++) ticks.push(<Lab key={n} x={300 + 175 * n + 175 / 4} y={540} t={String(n + 1)} s={44} c={C.gold} o={r(t, a + 0.3 + n * 0.14, a + 0.5 + n * 0.14)} />);
 	return (
 		<g>
+			<g opacity={win(t, 45.2, 48.15, 0.3, 0.3)}>
 			<path d={wave(300, 1700, 400, 120, 1400, undefined, 0)} fill="none" stroke={C.cyan} strokeWidth={9} filter="url(#glow)" />
 			<path d={wave(300, 1700, 680, 60, 175, undefined, ph * 0)} fill="none" stroke={C.gold} strokeWidth={6} filter="url(#glow)" pathLength={1} strokeDasharray="1 1" strokeDashoffset={1 - d} />
-			<Lab x={300} y={250} t="鼓 45 Hz：振 1 次" s={48} c={C.cyan} a="start" />
-			<Lab x={300} y={830} t="主音 363 Hz：振 8 次" s={48} c={C.gold} a="start" o={r(t, a + 0.4, a + 0.8)} />
+			<Lab x={300} y={250} t="鼓 45 Hz：振 1 次" s={56} c={C.cyan} a="start" />
+			<Lab x={300} y={830} t="主音 363 Hz：振 8 次" s={56} c={C.gold} a="start" o={r(t, a + 0.4, a + 0.8)} />
 			{ticks}
 			<Lab x={1700} y={830} t="× 8" s={96} c={C.gold} a="end" w={900} o={r(t, a + 1.4, a + 1.8)} />
+			</g>
 		</g>
 	);
 };
@@ -299,11 +304,11 @@ const S6Bin: React.FC<{t: number}> = ({t}) => {
 		<g>
 			{[0, 1, 2, 3].map((j) => <path key={`l${j}`} d={wave(120, 760, 330 + j * 70, 22, 46, (x) => cl((x - 120) / 120), t * 9 + j)} fill="none" stroke={C.cyan} strokeWidth={4} opacity={(0.75 - j * 0.12) * on} filter="url(#glow)" />)}
 			{[0, 1, 2, 3].map((j) => <path key={`r${j}`} d={wave(1160, 1800, 330 + j * 70, 22, 45.25, (x) => cl((1800 - x) / 120), -t * 9 + j)} fill="none" stroke={C.mag} strokeWidth={4} opacity={(0.75 - j * 0.12) * on} filter="url(#glow)" />)}
-			<Lab x={440} y={250} t="左耳 363 Hz" s={52} c={C.cyan} /><Lab x={1480} y={250} t="右耳 369 Hz" s={52} c={C.mag} />
+			<Lab x={440} y={250} t="左耳 363 Hz" s={52} c={C.cyan} o={win(t, 48.5, 60.0, 0.3, 0.3)} /><Lab x={1480} y={250} t="右耳 369 Hz" s={52} c={C.mag} o={win(t, 48.5, 60.0, 0.3, 0.3)} />
 			<Head x={960} y={440} s={1.15} lo={earLv(LV.L[i])} ro={earLv(LV.R[i])} core={r(t, 57.4, 58.2)} />
 			{[0, 1, 2].map((j) => <ellipse key={j} cx={960} cy={440} rx={(40 + j * 26) * (1 + 0.12 * wob * on)} ry={(48 + j * 30) * (1 + 0.12 * wob * on)} fill="none" stroke={C.gold} strokeWidth={5 - j} opacity={(0.8 - j * 0.22) * on} filter="url(#glow)" />)}
-			<Lab x={710} y={580} t="只有 363" s={40} c={C.cyan} o={r(t, 54.3, 54.7)} /><Lab x={1210} y={580} t="只有 369" s={40} c={C.mag} o={r(t, 54.3, 54.7)} />
-			<Labs t={t} y={720} items={[[51.0, 54.27, '369 − 363 = 6 Hz', C.gold], [54.27, 57.54, '6 Hz：两只耳朵里都没有', C.gold], [57.54, 60.3, '6 Hz：你大脑自己算出来的', C.gold]]} />
+			<Lab x={640} y={590} t="只有 363" s={52} c={C.cyan} o={win(t, 54.3, 59.95, 0.3, 0.3)} /><Lab x={1280} y={590} t="只有 369" s={52} c={C.mag} o={win(t, 54.3, 59.95, 0.3, 0.3)} />
+			<Lab x={960} y={760} t="6 Hz" s={110} c={C.gold} w={900} o={win(t, 51.0, 60.0, 0.3, 0.3)} /><Labs t={t} y={850} s={52} items={[[51.0, 54.27, '369 − 363 = 6', C.gold], [54.27, 57.54, '只在你的脑子里', C.gold], [57.54, 59.95, '大脑自己算出来的', C.gold]]} />
 		</g>
 	);
 };
@@ -313,22 +318,22 @@ const S7Age: React.FC<{t: number}> = ({t}) => {
 	return (
 		<g>
 			<Spectrum t={t} fc={fc < 15500 ? fc : undefined} />
-			<Labs t={t} y={150} items={[[60.1, 64.75, '年纪越大，高处的声音先消失']]} />
+			<Labs t={t} y={150} items={[[60.45, 64.4, '年纪越大，高处的声音先消失']]} />
 		</g>
 	);
 };
 // 8 · the prank: the arrow says left, the sound is in the right ear (and back)
 const Arrow: React.FC<{dir: -1 | 1; k: number; pulse: number}> = ({dir, k, pulse}) => (
 	<g transform={`translate(${960 + dir * (1 - k) * -500} 470) scale(${-dir * (1 + 0.04 * pulse)} ${1 + 0.04 * pulse})`} opacity={k}>
-		<g filter="url(#glow2)"><path d="M 420 -50 L -200 -50 L -200 -170 L -480 0 L -200 170 L -200 50 L 420 50 Z" fill={C.ink} opacity={0.95} /></g>
+		<g filter="url(#glow)"><path d="M 420 -50 L -200 -50 L -200 -170 L -480 0 L -200 170 L -200 50 L 420 50 Z" fill="#cfe0ff" opacity={0.82} /></g>
 	</g>
 );
 const S8Gotcha: React.FC<{t: number}> = ({t}) => {
 	const [a, b, c] = T.gotcha, p = 1 - beatPh(t);
 	return (
 		<g>
-			{t < b - 0.05 && <Arrow dir={-1} k={r(t, a - 0.05, a + 0.2) * (1 - r(t, b - 0.2, b - 0.05))} pulse={p} />}
-			{t >= b - 0.05 && t < c && <Arrow dir={1} k={r(t, b - 0.05, b + 0.2) * (1 - r(t, c - 0.2, c - 0.02))} pulse={p} />}
+			{t < b - 0.05 && <Arrow dir={-1} k={r(t, a - 0.25, a + 0.12) * (1 - r(t, b - 0.25, b - 0.05))} pulse={p} />}
+			{t >= b - 0.05 && t < c && <Arrow dir={1} k={r(t, b - 0.05, b + 0.3) * (1 - r(t, c - 0.25, c - 0.02))} pulse={p} />}
 			<Lab x={960} y={230} t="声音在左边" s={96} w={900} o={win(t, a - 0.05, b - 0.05, 0.15, 0.15)} />
 			<Lab x={960} y={230} t="现在在右边" s={96} w={900} o={win(t, b - 0.05, c - 0.02, 0.15, 0.15)} />
 			<g opacity={win(t, c, 70.45, 0.2, 0.25)}>
@@ -343,17 +348,17 @@ const S8Gotcha: React.FC<{t: number}> = ({t}) => {
 // 9 · precedence: equally loud, one ear 18 ms late → the sound sits on the early side
 const S9Prec: React.FC<{t: number}> = ({t}) => {
 	const [p0, p1] = T.prec, early = t < p1 ? -1 : 1, ph = beatPh(t);
-	const ring = (side: number, lag: number) => { const q = ph - lag; if (q < 0) return null; return <ellipse cx={960 + side * 121} cy={500} rx={30 + 220 * q} ry={40 + 250 * q} fill="none" stroke={side < 0 ? C.cyan : C.mag} strokeWidth={5} opacity={(1 - q) * 0.85} filter="url(#glow)" />; };
+	const ring = (side: number, lag: number) => { const q = ph - lag; if (q < 0) return null; return <ellipse cx={960 + side * 160} cy={520} rx={40 + 300 * q} ry={52 + 330 * q} fill="none" stroke={side < 0 ? C.cyan : C.mag} strokeWidth={5} opacity={(1 - q) * 0.85} filter="url(#glow)" />; };
 	const sw = r(t, p1 - 0.15, p1 + 0.15), ex = mix(-1, 1, sw);
 	return (
 		<g>
 			{ring(early, 0)}{ring(-early, 0.12)}
-			<Head x={960} y={500} s={1.1} lo={0.9} ro={0.9} />
-			<circle cx={960 + ex * 470} cy={500} r={34} fill={C.gold} filter="url(#glow2)" opacity={0.9} />
-			<Lab x={960 + ex * 470} y={430} t="听起来在这边" s={42} c={C.gold} />
-			<Lab x={960 + early * 150} y={720} t="先到" s={44} c={C.gold} />
-			<Lab x={960 - early * 150} y={720} t="晚 0.02 秒" s={44} c={C.dim} />
-			<Labs t={t} y={200} items={[[p0 + 1.5, 73.2, '两耳一样响，只差一点点时间'], [73.2, 75.2, '大脑只信先到的那只耳朵', C.gold]]} />
+			<Head x={960} y={520} s={1.5} lo={0.9} ro={0.9} />
+			<circle cx={960 + ex * 600} cy={520} r={44} fill={C.gold} filter="url(#glow2)" opacity={0.9} />
+			<Lab x={960 + ex * 600} y={440} t="听起来在这边" s={52} c={C.gold} />
+			<Lab x={960 + early * 200} y={800} t="先到" s={72} c={C.gold} w={900} />
+			<Lab x={960 - early * 230} y={800} t="晚 0.02 秒" s={72} c={C.ink} w={900} />
+			<Labs t={t} y={200} items={[[p0 + 1.5, 73.2, '第二招：两耳一样响，只差一点点时间'], [73.2, 74.95, '大脑只信先到的那只耳朵', C.gold]]} />
 		</g>
 	);
 };
@@ -376,9 +381,11 @@ const S10Combo: React.FC<{t: number}> = ({t}) => {
 		<g opacity={1 - 0.22 * gapK} transform={`translate(960 480) scale(${1 - 0.06 * gapK}) translate(-960 -480)`}>
 			{rings}
 			<g opacity={headO}>{trail}<Head x={960} y={470} s={0.8} lo={earLv(LV.L[i])} ro={earLv(LV.R[i])} /></g>
-			{[[sA, '① 永远在上升的音阶', 380], [g('rot_build'), '② ＋ 360° 绕头转', 960], [77.0, '③ ＋ 越来越亮、越响', 1540]].map(([a, txt, x], j) => (
-				<Lab key={j} x={x as number} y={160} t={txt as string} s={44} c={j === 2 ? C.gold : C.ink} o={r(t, a as number, (a as number) + 0.3)} />
+			{[[75.3, '① 永远在上升的音阶', 380], [76.2, '② ＋ 360° 绕头转', 960], [77.4, '③ ＋ 越来越亮、越响', 1540]].map(([a, txt, x], j) => (
+				<Lab key={j} x={x as number} y={160} t={txt as string} s={52} c={j === 2 ? C.gold : C.ink} o={r(t, a as number, (a as number) + 0.3)} />
 			))}
+			<Lab x={300} y={330} t="↑ 高处慢慢淡出" s={52} c={C.dim} o={win(t, 75.6, 79.6, 0.4, 0.4)} />
+			<Lab x={300} y={860} t="低处悄悄补进 ↑" s={52} c={C.dim} o={win(t, 75.6, 79.6, 0.4, 0.4)} />
 		</g>
 	);
 };
@@ -404,20 +411,23 @@ const TP = (TT as any).pts as number[][];
 const TPX = (() => { const R = rng(41); return TP.map(([x, y]) => { const f = cl((x - 336) / 1248); return {x, y, a: R() * 6.283, d: 760 + R() * 520, s: 2.4 + R() * 1.4, ph: R() * 6.28, c: f < 0.5 ? lerpC(C.cyan, C.gold, f * 2) : lerpC(C.gold, C.mag, (f - 0.5) * 2), ox: (x - 960) / 700, oy: (y - 440) / 300 - 0.6}; }); })();
 const PTitle: React.FC<{t: number}> = ({t}) => {
 	const u = t - DROP;
-	if (u < 0 || t > 86.0) return null;
-	const k = 1 - Math.pow(1 - cl(u / 0.26), 3), out = r(t, 85.0, 85.9), lw = lowAt(t);
-	const lab = r(t, DROP + 0.2, DROP + 0.5) * (1 - out);
+	if (u < 0 || t > 87.6) return null;
+	const k = 1 - Math.pow(1 - cl(u / 0.26), 3), out = sm(lin(t, 85.0, 86.6)), lw = lowAt(t), gone = r(t, 86.8, 87.5);
+	const lab = r(t, DROP + 0.2, DROP + 0.5) * (1 - r(t, 85.0, 85.4));
 	const env = (x: number) => Math.sin(cl((x - 300) / 1320) * Math.PI);
+	const sW = 60 * t, wy = (x: number) => 330 + Math.sin(((x - 140) / 240) * Math.PI * 2 - (2 * Math.PI * sW) / 240) * 70;
 	return (
 		<g>
 			<g filter="url(#glow)">
 				{TPX.map((p, i) => {
 					const sx = 960 + Math.cos(p.a) * p.d, sy = 440 + Math.sin(p.a) * p.d * 0.62;
-					const x = mix(sx, p.x, k) + Math.sin(t * 5 + p.ph) * 1.1 + p.ox * 320 * out, y = mix(sy, p.y, k) + Math.cos(t * 4 + p.ph) * 1.1 + p.oy * 220 * out;
-					return <circle key={i} cx={x.toFixed(1)} cy={y.toFixed(1)} r={(p.s * (1 + 0.28 * lw) * (1 - 0.5 * out)).toFixed(2)} fill={p.c} opacity={(0.55 + 0.45 * k) * (1 - out)} />;
+					// exit: every particle pours onto the 363 Hz wave of the next scene (staggered left → right)
+					const q = sm(cl((out * 1.6) - (i / TPX.length) * 0.6)), tx = 140 + (i / TPX.length) * 960;
+					const x = mix(mix(sx, p.x, k) + Math.sin(t * 5 + p.ph) * 1.1, tx, q), y = mix(mix(sy, p.y, k) + Math.cos(t * 4 + p.ph) * 1.1, wy(tx), q);
+					return <circle key={i} cx={x.toFixed(1)} cy={y.toFixed(1)} r={(p.s * (1 + 0.28 * lw) * (1 - 0.35 * q)).toFixed(2)} fill={q > 0.7 ? C.cyan : p.c} opacity={(0.55 + 0.45 * k) * (1 - gone)} />;
 				})}
 			</g>
-			<text x={960} y={286} textAnchor="middle" opacity={lab} style={{fontFamily: SANS, fontWeight: 700, fontSize: 40, letterSpacing: '0.4em'}} fill={C.gold}>{JUNO.series}</text>
+			<text x={968} y={286} textAnchor="middle" opacity={lab} style={{fontFamily: SANS, fontWeight: 700, fontSize: 40, letterSpacing: '0.4em'}} fill={C.gold}>{JUNO.series}</text>
 			<path d={wave(300, 1620, 618, 22 * (0.35 + lw), 92, env, t * 7)} fill="none" stroke={C.gold} strokeWidth={5} opacity={lab} filter="url(#glow)" />
 		</g>
 	);
@@ -445,7 +455,7 @@ const S12Harm: React.FC<{t: number}> = ({t}) => {
 	const [rA] = T.root, [oA] = T.oct, [fA] = T.fifth, [cA, cB] = T.clash;
 	const wl2 = t < fA - 0.2 ? 120 : t < cA ? mix(120, 160, r(t, fA - 0.2, fA + 0.2)) : t < 108.2 ? mix(160, 226.5, r(t, cA, cA + 0.3)) : mix(226.5, 160, r(t, 108.2, 108.8));
 	const clash = t >= cA && t < 108.8 ? r(t, cA, cA + 0.3) * (1 - r(t, 108.2, 108.8)) : 0;
-	const s = 60 * t, w1 = r(t, rA - 0.4, rA + 0.3), w2 = r(t, oA - 0.6, oA + 0.2);
+	const s = 60 * t, w1 = r(t, 86.6, 87.4), w2 = r(t, oA - 0.6, oA + 0.2);
 	const L = wl2 < 140 ? 240 : 480, aligned = 1 - clash;
 	const lines: React.ReactNode[] = [];
 	for (let x = 140 + (((s % L) + L) % L); x <= 1100; x += L) lines.push(<line key={x} x1={x} x2={x} y1={240} y2={650} stroke={C.gold} strokeWidth={4} strokeDasharray="10 10" opacity={0.85 * aligned * w2} />);
@@ -480,7 +490,7 @@ const S13Sad: React.FC<{t: number}> = ({t}) => {
 	const am = cosr((t - rA) / BAR) * (1 - cosr((t - (rB - BAR)) / BAR));
 	const pos = (th: number) => [960 + Math.sin(th) * 420, 520 - Math.cos(th) * 170];
 	const trail: React.ReactNode[] = [];
-	for (let j = 0; j < 80; j++) { const tt = Math.max(rA, t - j * 0.045); const [x, y] = pos(thSlow(tt)); trail.push(<circle key={j} cx={x} cy={y} r={10 - j * 0.1} fill={C.blue} opacity={(1 - j / 80) * am} filter={j < 2 ? 'url(#glow2)' : undefined} />); }
+	for (let j = 0; j < 80; j++) { const tt = Math.max(rA, t - j * 0.045); const [x, y] = pos(thSlow(tt)); trail.push(<circle key={j} cx={x} cy={y} r={15 - j * 0.15} fill={C.blue} opacity={(1 - j / 80) * am} filter={j < 2 ? 'url(#glow2)' : undefined} />); }
 	const chills = r(t, 127.6, 128.4);
 	const i = fi(t);
 	return (
@@ -488,25 +498,29 @@ const S13Sad: React.FC<{t: number}> = ({t}) => {
 			{RAIN.map((p, j) => { const y = ((p.y + rt * p.v) % (H + 80)) - 40; return <line key={j} x1={p.x} y1={y} x2={p.x - 4} y2={y + p.l} stroke={C.blue} strokeWidth={1.6} opacity={p.o * (1 - 0.3 * slowK)} />; })}
 			{chills > 0 && MOTES.map((p, j) => { const y = H - (((H - p.y) + (t - 127.6) * p.v) % H); return <circle key={j} cx={p.x + Math.sin(t + p.ph) * 10} cy={y} r={p.r} fill={C.gold} opacity={chills * 0.7} />; })}
 			{trail}
-			<Head x={960} y={520} s={0.9} l={C.blue} r={C.blue} lo={earLv(LV.L[i]) * 0.8} ro={earLv(LV.R[i]) * 0.8} />
-			<Labs t={t} y={200} items={[[rA, slA, '慢慢绕着你转：每 8 秒一圈', C.blue], [slA, slB, '再降 2 个半音 · 更慢', C.blue], [slB, 127.6, '难过时，说话也变慢、变低', C.blue], [127.6, 130.6, '慢速环绕 → 最容易起鸡皮疙瘩', C.gold]]} />
-			<Labs t={t} y={270} s={40} items={[[116.6, 127.5, '研究：Juslin & Laukka 2003', C.dim], [127.6, 130.5, '研究：Honda 等 2020', C.dim]]} />
+			<Head x={960} y={520} s={1.15} l={C.blue} r={C.blue} lo={earLv(LV.L[i])} ro={earLv(LV.R[i])} core={0.55} />
+			<Labs t={t} y={200} items={[[rA, 116.6, '慢放：更慢、更低', C.blue], [116.66, slA, '又慢又低 → 常被听成悲伤', C.blue], [slA, slB, '再降 2 个半音 · 更慢', C.blue], [slB, 127.5, '难过时，说话也变慢、变低', C.blue], [127.6, 130.4, '慢慢绕着你转 → 更容易起鸡皮疙瘩', C.gold]]} />
+			<Labs t={t} y={270} s={40} items={[[116.66, 127.5, '研究：Juslin & Laukka 2003', C.dim], [127.6, 130.4, '研究：Honda 等 2020', C.dim]]} />
 		</g>
 	);
 };
 // 14 · recap: one bar each (bass, treble, no middle, left-right, around you)
 const S14Recap: React.FC<{t: number}> = ({t}) => {
 	const R = T.recap as number[];
-	const seg = (j: number) => win(t, R[j] - 0.05, R[j + 1], 0.15, 0.15);
+	const seg = (j: number) => (j === 0 ? win(t, R[0] - 0.15, R[2] + 0.1, 0.3, 0.3) : j === 2 ? win(t, R[2] - 0.1, R[3] + 0.15, 0.25, 0.3) : win(t, R[j] - 0.05, R[j + 1] + 0.15, 0.25, 0.3));
 	const push = (j: number, node: React.ReactNode) => { const k = seg(j); if (k <= 0.001) return null; const s = mix(0.94, 1, sm(lin(t, R[j], R[j] + 0.4))); return <g key={j} opacity={k} transform={`translate(960 480) scale(${s}) translate(-960 -480)`}>{node}</g>; };
 	const i = fi(t), th = t > g('rot_end') ? thEnd(t) : 0, [cx, cy] = [960 + Math.sin(th) * 380, 470 - Math.cos(th) * 150];
 	return (
 		<g>
-			{push(0, <><Spectrum t={t} cut={220} /><Lab x={960} y={150} t="220 Hz 以下" c={C.cyan} /></>)}
-			{push(1, <><Spectrum t={t} cut={3000} /><Lab x={960} y={150} t="3000 Hz 以上" c={C.mag} /></>)}
-			{push(2, <><Stage t={t} gone={1} /><Lab x={960} y={150} t="L − R" /></>)}
-			{push(3, <><Rings t={t} div={2} x={960} y={470} s={1.1} /><Head x={960} y={470} s={1.1} lo={earLv(LV.L[i])} ro={earLv(LV.R[i])} /></>)}
-			{push(4, <><circle cx={cx} cy={cy} r={14} fill={C.gold} filter="url(#glow2)" /><Head x={960} y={470} s={0.8} lo={earLv(LV.L[i])} ro={earLv(LV.R[i])} /><Lab x={960} y={150} t="360°" c={C.gold} /></>)}
+			{push(0, <><Spectrum t={t} cut={t < R[1] ? 220 : 3000} /><Lab x={960} y={150} t="220 Hz 以下" c={C.cyan} o={win(t, R[0] - 0.1, R[1], 0.2, 0.15)} /><Lab x={960} y={150} t="3000 Hz 以上" c={C.mag} o={win(t, R[1], R[2], 0.15, 0.2)} /></>)}
+			{push(2, <><Stage t={t} gone={1} /><Lab x={960} y={100} t="左 − 右：中间没了" /></>)}
+			{seg(3) + seg(4) > 0.001 && (() => { const up = sm(lin(t, R[3] - 0.15, R[3] + 0.3)), hx = 960, hy = mix(790, 470, up), hs = mix(0.63, 1.0, up); const o3 = seg(3), o4 = win(t, R[4] - 0.1, R[5] + 0.2, 0.25, 0.3); return (
+				<g>
+					<g opacity={o3}><Rings t={t} div={2} x={hx} y={hy} s={hs} /></g>
+					<g opacity={o4}><circle cx={cx} cy={cy} r={16} fill={C.gold} filter="url(#glow2)" /><Lab x={960} y={150} t="360°" c={C.gold} o={1 - r(t, 140.2, 140.5)} /></g>
+					<g opacity={Math.max(o3, o4)}><Head x={hx} y={hy} s={hs} lo={earLv(LV.L[i])} ro={earLv(LV.R[i])} /></g>
+				</g>
+			); })()}
 		</g>
 	);
 };
@@ -530,7 +544,7 @@ const S15Fin: React.FC<{t: number}> = ({t}) => {
 };
 
 // ------------------------------------------------------------------ film
-const BG: [number, string][] = [[0, '#0a1026'], [72.5, '#0a1026'], [76, '#160f30'], [80.6, '#1d1440'], [86, '#101634'], [112.8, '#101634'], [115, '#0d1a2e'], [130.2, '#0d1a2e'], [131, '#0a1026'], [140.5, '#0a1026'], [143, '#141436']];
+const BG: [number, string][] = [[0, '#121a3a'], [72.5, '#121a3a'], [76, '#1c1340'], [80.6, '#24194f'], [86, '#151c42'], [112.8, '#151c42'], [115, '#13243f'], [130.2, '#13243f'], [131, '#121a3a'], [140.5, '#121a3a'], [143, '#1a1a46']];
 const bgAt = (t: number) => { for (let i = 1; i < BG.length; i++) if (t < BG[i][0]) return lerpC(BG[i - 1][1], BG[i][1], sm(lin(t, BG[i - 1][0], BG[i][0]))); return BG[BG.length - 1][1]; };
 const subAt = (t: number) => { for (const [s, e, txt] of lines as [number, number, string][]) if (t >= s && t < e) return {txt, o: Math.min(lin(t, s, s + 0.15), 1 - lin(t, e - 0.15, e))}; return null; };
 const Sub: React.FC<{t: string}> = ({t}) => (
@@ -543,17 +557,17 @@ const Sub: React.FC<{t: string}> = ({t}) => (
 );
 type Sc = [React.FC<{t: number}>, number, number, number, number];
 const SCENES: Sc[] = [
-	[S1Wave, 0, 9.45, 0, 0.4], [S2Ping, 9.4, 15.65, 0.35, 0.4], [S3Pump, 15.55, 25.0, 0.35, 0.6], [S4Spec, 24.6, 38.2, 0.5, 0.35],
-	[S5Stage, 38.0, 45.25, 0.35, 0.35], [S5Ratio, 45.1, 48.42, 0.3, 0.3], [S6Bin, 48.22, 60.32, 0.35, 0.35], [S7Age, 60.1, 64.66, 0.4, 0.35],
-	[S8Gotcha, 64.5, 70.45, 0.2, 0.25], [S9Prec, 70.3, 75.1, 0.3, 0.5], [S10Combo, 72.89, DROP, 1.6, 0], [S11Drop, DROP, 87.6, 0, 0.8],
-	[S12Harm, 86.7, 113.7, 0.4, 0.4], [S13Sad, 113.5, 130.55, 0.6, 0.3], [S14Recap, 130.4, 140.75, 0.1, 0.2], [S15Fin, 140.6, END, 0.6, 0],
+	[S1Wave, 0, 9.65, 0, 0.25], [S2Ping, 9.25, 15.85, 0.35, 0.3], [S3Pump, 15.35, 25.1, 0.4, 0.3], [S4Spec, 24.45, 38.35, 0.15, 0.45],
+	[S5Stage, 37.95, 45.3, 0.45, 0.35], [S5Ratio, 45.0, 48.45, 0.35, 0.35], [S6Bin, 48.15, 60.35, 0.4, 0.4], [S7Age, 60.0, 64.8, 0.4, 0.3],
+	[S8Gotcha, 64.5, 70.5, 0.0, 0.3], [S9Prec, 70.15, 75.4, 0.35, 0.45], [S10Combo, 75.0, DROP, 0.5, 0], [S11Drop, DROP, 87.6, 0, 0.8],
+	[S12Harm, 86.5, 113.8, 0.01, 0.5], [S13Sad, 113.45, 130.75, 0.55, 0.35], [S14Recap, 130.3, 140.95, 0.25, 0.3], [S15Fin, 140.45, END, 0.6, 0],
 ];
 export const Film29: React.FC = () => {
 	const t = useCurrentFrame() / FPS;
 	const s = subAt(t);
 	const j = t >= DROP ? Math.exp(-(t - DROP) * 9) : 0;
 	const shake = `translate(${Math.sin((t - DROP) * 70) * 10 * j} ${Math.cos((t - DROP) * 55) * 7 * j})`;
-	const outro = 1 - 0.5 * r(t, OUTRO, OUTRO + 0.8);
+	const outro = 1 - 0.35 * r(t, OUTRO + 0.3, OUTRO + 1.4);
 	return (
 		<AbsoluteFill style={{background: `radial-gradient(ellipse at 50% 45%, ${bgAt(t)} 0%, #060914 75%)`}}>
 			<svg width={W} height={H} style={{position: 'absolute', inset: 0}}>
@@ -563,8 +577,8 @@ export const Film29: React.FC = () => {
 					{SCENES.map(([S, a, b, fin, fout], i) => { if (t < a || t > b) return null; const o = win(t, a, b, fin, fout); return o > 0.001 ? <g key={i} opacity={o}><S t={t} /></g> : null; })}
 					<PTitle t={t} />
 				</g>
-				<Pill t="戴上耳机，效果最佳" o={win(t, 0.15, 9.3, 0.4, 0.4)} />
-				<Pill t="接下来几段，一定要戴耳机" o={win(t, 44.9, 48.3, 0.35, 0.35)} />
+				<Pill t="戴上耳机，效果最佳" o={win(t, -1, 9.3, 0.4, 0.4)} />
+				<Pill t="接下来几段，一定要戴耳机" o={win(t, 45.35, 48.3, 0.35, 0.35)} />
 				<rect width={W} height={H} fill="url(#vig)" />
 			</svg>
 			{s && t < OUTRO && <div style={{opacity: s.o}}><Sub t={s.txt} /></div>}
