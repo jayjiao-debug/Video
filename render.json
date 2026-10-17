@@ -1,9 +1,9 @@
 {
-  "id": "v3card2-1792225038",
-  "composition": "Puppet",
+  "id": "dims_v1-1792257360",
+  "composition": "Film",
   "start": 0,
-  "end": 5663,
+  "end": 3713,
   "chunks": 30,
-  "output": "v3card2",
+  "output": "dims_v1",
   "flags": "--image-format=png --crf=14"
 }
