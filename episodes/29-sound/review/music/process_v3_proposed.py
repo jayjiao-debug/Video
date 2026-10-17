@@ -159,7 +159,7 @@ E['prec'] = (OB(34), OB(35), OB(37))                            # bar 34: right 
 # FIX 11: hold the "left late" state through bar 36 so 大脑只信先到的那只耳朵 (73.2–75.8) is still heard as a demo
 m = mono(y)
 kR = win(OB(32), OB(33), 0.05, 0.05); kL = win(OB(33), OB(34), 0.05, 0.05)
-gl = np.stack([m * 0.06, m * 1.12]); gr = np.stack([m * 1.12, m * 0.06])   # FIX 12: 1.35 drove 6 dB of limiting
+gl = np.stack([m * 0.06, m * 1.12]); gr = np.stack([m * 1.12, m * 0.06])   # FIX 12: 1.35 put these hard-panned bars on the limiter
 y = y * (1 - kR - kL) + gl * kR + gr * kL
 m = mono(y)
 k1 = win(OB(34), OB(35), 0.05, 0.05); k2 = win(OB(35), OB(37), 0.05, 0.3)
