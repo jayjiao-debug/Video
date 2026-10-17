@@ -6,6 +6,7 @@ import TM from './timing29.json';
 import lines from './lines29.json';
 import live from './live29.json';
 import spectra from './spectra29.json';
+import TT from './title29.json';
 
 /* ep29 《为什么好听？》 — look "空气粒子场": deep navy space full of glowing air particles; every principle is
    particles moving. Cyan = left ear / low, magenta = right ear / high, gold = the answer.
@@ -48,7 +49,7 @@ const ageFc = (t: number) => { const [a, b, c] = T.age; const k = cosr((t - a) /
 const openK = (t: number) => cosr((t - g('open')) / (g('open', 1) - g('open')));
 // the film's own clock: it holds still in the 0.42 s of silence before the drop
 const GAP = DROP - 0.42;
-const te = (t: number) => (t < GAP ? t : t < DROP ? GAP : t - 0.42);
+const te = (t: number) => t;   // owner: no freeze before the drop (it read as a stutter)
 
 // ------------------------------------------------------------------ shared pieces
 const Defs = () => (
@@ -108,7 +109,7 @@ const Air: React.FC<{t: number}> = ({t}) => {
 	const e = te(t), lw = lowAt(t);
 	// swirl with the 360° rotations, contract in the silence, blow outward on the drop
 	const swirl = 0.12 * (t > g('rot_build') - 1 && t < DROP + 4 ? thBuild(Math.min(t, DROP)) : 0) + 0.08 * (t > g('rot_slow') ? thSlow(Math.min(t, g('rot_slow', 1))) : 0) + 0.08 * (t > g('rot_end') ? thEnd(t) : 0);
-	const gapK = r(t, GAP, DROP - 0.02) * (t < DROP ? 1 : 0);
+	const gapK = 0;
 	const blow = t >= DROP ? sm(lin(t, DROP, DROP + 0.7)) * (1 - r(t, DROP + 1.2, DROP + 6)) : 0;
 	const sc = (1 + 0.014 * lw) * (1 - 0.1 * gapK) * (1 + 0.45 * blow);
 	return (
@@ -358,7 +359,7 @@ const S9Prec: React.FC<{t: number}> = ({t}) => {
 };
 // 10 · the combo: an endlessly rising scale + the music circling the head faster and faster + opening up
 const S10Combo: React.FC<{t: number}> = ({t}) => {
-	const [sA] = T.shepard, e = te(t), bright = 0.3 + 0.7 * openK(e), gapK = r(t, GAP, DROP - 0.02) * (t < DROP ? 1 : 0);
+	const [sA] = T.shepard, e = te(t), bright = 0.3 + 0.7 * openK(e), gapK = 0;
 	const climb = 0.11 * (e - sA) + 0.11 * Math.max(0, e - (g('shepard', 1) - BAR));
 	const rings: React.ReactNode[] = [];
 	const N = 14;
@@ -393,6 +394,31 @@ const S11Drop: React.FC<{t: number}> = ({t}) => {
 			})}
 			{[0, 1].map((j) => { const q = Math.max(0, u - j * 0.15); const R = 160 + 1200 * (1 - Math.exp(-q * 1.5)); return <ellipse key={j} cx={960} cy={480} rx={R} ry={R * 0.62} fill="none" stroke={j ? C.mag : C.gold} strokeWidth={26 - j * 12} opacity={0.6 * Math.exp(-q * 0.7)} filter="url(#glow2)" />; })}
 			<circle cx={960} cy={480} r={200} fill={C.gold} opacity={0.16 * fade} filter="url(#soft)" />
+		</g>
+	);
+};
+/* the title is made of the same air: on the drop, particles from a wide ring slam into the letters (left half
+   cyan, centre gold, right half magenta — the two ears and the answer), breathe with the kick, ride a gold sound
+   wave, and blow back into the air when the title leaves. */
+const TP = (TT as any).pts as number[][];
+const TPX = (() => { const R = rng(41); return TP.map(([x, y]) => { const f = cl((x - 336) / 1248); return {x, y, a: R() * 6.283, d: 760 + R() * 520, s: 2.4 + R() * 1.4, ph: R() * 6.28, c: f < 0.5 ? lerpC(C.cyan, C.gold, f * 2) : lerpC(C.gold, C.mag, (f - 0.5) * 2), ox: (x - 960) / 700, oy: (y - 440) / 300 - 0.6}; }); })();
+const PTitle: React.FC<{t: number}> = ({t}) => {
+	const u = t - DROP;
+	if (u < 0 || t > 86.0) return null;
+	const k = 1 - Math.pow(1 - cl(u / 0.26), 3), out = r(t, 85.0, 85.9), lw = lowAt(t);
+	const lab = r(t, DROP + 0.2, DROP + 0.5) * (1 - out);
+	const env = (x: number) => Math.sin(cl((x - 300) / 1320) * Math.PI);
+	return (
+		<g>
+			<g filter="url(#glow)">
+				{TPX.map((p, i) => {
+					const sx = 960 + Math.cos(p.a) * p.d, sy = 440 + Math.sin(p.a) * p.d * 0.62;
+					const x = mix(sx, p.x, k) + Math.sin(t * 5 + p.ph) * 1.1 + p.ox * 320 * out, y = mix(sy, p.y, k) + Math.cos(t * 4 + p.ph) * 1.1 + p.oy * 220 * out;
+					return <circle key={i} cx={x.toFixed(1)} cy={y.toFixed(1)} r={(p.s * (1 + 0.28 * lw) * (1 - 0.5 * out)).toFixed(2)} fill={p.c} opacity={(0.55 + 0.45 * k) * (1 - out)} />;
+				})}
+			</g>
+			<text x={960} y={286} textAnchor="middle" opacity={lab} style={{fontFamily: SANS, fontWeight: 700, fontSize: 40, letterSpacing: '0.4em'}} fill={C.gold}>{JUNO.series}</text>
+			<path d={wave(300, 1620, 618, 22 * (0.35 + lw), 92, env, t * 7)} fill="none" stroke={C.gold} strokeWidth={5} opacity={lab} filter="url(#glow)" />
 		</g>
 	);
 };
@@ -535,12 +561,12 @@ export const Film29: React.FC = () => {
 				<g transform={shake} opacity={outro}>
 					<Air t={t} />
 					{SCENES.map(([S, a, b, fin, fout], i) => { if (t < a || t > b) return null; const o = win(t, a, b, fin, fout); return o > 0.001 ? <g key={i} opacity={o}><S t={t} /></g> : null; })}
+					<PTitle t={t} />
 				</g>
 				<Pill t="戴上耳机，效果最佳" o={win(t, 0.15, 9.3, 0.4, 0.4)} />
 				<Pill t="接下来几段，一定要戴耳机" o={win(t, 44.9, 48.3, 0.35, 0.35)} />
 				<rect width={W} height={H} fill="url(#vig)" />
 			</svg>
-			<Title t={t} />
 			{s && t < OUTRO && <div style={{opacity: s.o}}><Sub t={s.txt} /></div>}
 			<Sequence from={Math.round(OUTRO * FPS)}><EndCard v={{id: 'ep29', src: '', title: '为什么好听？', kicker: '', tagline: '', taglineEn: '', motif: 'wave', card: [0, 0], extend: 0, question: '你单曲循环最多的是哪首歌？评论区说说', sources: '来源：NIDCD；SFU Sonic Studio Handbook；Juslin & Laukka 2003；Honda 等 2020；本曲频谱实测', duration: 0} as any} cfg={{videos: []} as any} dur={Math.round((END - OUTRO) * FPS)} /></Sequence>
 			<div style={{position: 'absolute', top: 40, right: 56, opacity: t < OUTRO ? 0.55 : 0, fontFamily: SANS, fontWeight: 500, fontSize: 20, letterSpacing: '0.3em', color: C.ink}}>{JUNO.mark}</div>

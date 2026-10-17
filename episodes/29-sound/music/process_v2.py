@@ -192,7 +192,7 @@ sh *= (0.06 * cres).astype(np.float32)
 y += np.stack([sh, sh])
 # crescendo of the whole mix and a breath of silence before the drop
 y *= (0.6 + 0.4 * cosr((t - OB(36)) / (OB(40) - 0.5 - OB(36)))) ** (1.0 * ((t > OB(36)) & (t < OB(40))))
-gap = 1 - win(OB(40) - 0.42, OB(40), 0.05, 0.02)
+gap = 1.0   # owner: no silent stop before the drop (felt like a stutter)
 y *= gap
 
 # ------------------------------------------------------------ the drop: wider stereo for two bars
