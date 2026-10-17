@@ -131,9 +131,9 @@ const Knob: React.FC<{t: number}> = ({t}) => {
 			<circle r={170} fill="#2b2d31" stroke="#5b5e64" strokeWidth={4} />
 			<circle r={120} fill="#3b3e44" stroke="#1b1c1f" strokeWidth={6} />
 			<line x1={0} y1={0} x2={Math.sin(ang) * 105} y2={-Math.cos(ang) * 105} stroke={C.mint} strokeWidth={10} strokeLinecap="round" filter="url(#glowT)" />
-			<T x={-150} y={240} t="慢" s={52} />
+			<T x={-100} y={240} t="慢" s={56} c={C.key} />
 			<T x={0} y={-200} t="走路" s={56} c={C.mint} />
-			<T x={150} y={240} t="快" s={52} />
+			<T x={110} y={240} t="快" s={52} />
 			<T x={0} y={290} t="TEMPO" s={40} w={700} c={C.mintDim} ls="0.3em" />
 			<g opacity={turn * 0} />
 		</g>
@@ -225,7 +225,7 @@ const Vfd: React.FC<{text: string; label?: string; x0?: number; x1?: number; y0?
 /** the VFD text flips in (split-flap) whenever the genre changes */
 const VfdFlip: React.FC<{t: number; text: string; bloom: number}> = ({t, text, bloom}) => {
 	const sa = segAt(t), dt = sa ? t - sa.s.t0 : 9;
-	const k = dt < 0.16 ? sm(dt / 0.16) : 1;
+	const k = t < 0.5 || dt >= 0.16 ? 1 : sm(dt / 0.16);
 	return <g transform={`translate(960 80) scale(1 ${0.15 + 0.85 * k}) translate(-960 -80)`}><Vfd text={text} bloom={bloom} /></g>;
 };
 /** context row: tempo strip with the walking mark (BPM numbers only where a line cites them) */
@@ -270,6 +270,7 @@ const Pops: React.FC<{t: number; segs: string[]; o?: number; size?: number}> = (
 	ALL.forEach((e, idx) => {
 		if (!segs.includes(e.seg) || e.gr < 1 || e.gr > 3) return;
 		const dt = t - e.t; if (dt < 0 || dt > 0.45) return;
+		const segEnd = e.seg === 'recap' ? 130.81 : SEGS[e.seg].t1; if (t > segEnd - 0.08) return;
 		const k = 1 - dt / 0.45, sy = ['', '次', '打', '动'][e.gr];
 		out.push(<T key={`p${idx}`} x={cx(e.st) + 46} y={cyR(e.gr) - 10 - dt * 90} t={sy} s={size} c={ROWC[e.gr]} o={o * k} glow />);
 	});
@@ -366,7 +367,7 @@ export const Film30: React.FC = () => {
 		<AbsoluteFill style={{background: '#111214'}}>
 			<svg width={W} height={H} style={{position: 'absolute', inset: 0}}>
 				<Defs />
-				<g transform={`translate(960 556) scale(${mix(1, 0.3, endK)}) translate(-960 -556)`} opacity={1 - endK}>
+				<g transform={`translate(960 556) scale(${mix(1, 0.3, endK)}) translate(-960 -556)`} opacity={1 - r(t, OUTRO, OUTRO + 0.35)}>
 				<g transform={camT}>
 					{/* faceplate, wider than the frame (the knob sits off-frame left) */}
 					<rect x={-520} y={-60} width={2960} height={1100} fill="url(#panelG)" />
@@ -400,8 +401,8 @@ export const Film30: React.FC = () => {
 					{/* syllable pops: rock, the first house bar, the recap rock bar */}
 					<Pops t={t} segs={t < 34 ? ['rock', 'house'] : t >= 128.81 && t < 130.81 ? ['recap'] : []} o={t < 22 ? 0 : 1} />
 
-					{inTitle && (() => { const fo = sm(lin(t, 22.55, 22.95)); return <g transform={`translate(960 126) scale(${t < 20.17 ? mix(1.25, 1, lin(t, 20.0, 20.17)) : 1}) translate(-960 -126)`} opacity={titleK}>
-						<Vfd text={fo < 0.5 ? '同一段旋律，8种曲风' : '摇滚'} label={fo < 0.5 ? '' : '曲风'} x0={mix(300, 600, fo)} x1={mix(1620, 1320, fo)} y0={mix(26, 28, fo)} y1={mix(236, 132, fo)} size={fo < 0.5 ? mix(108, 70, fo * 2) : 84} bloom={1 - lin(t, 20, 20.6)} />
+					{inTitle && (() => { const fo = sm(lin(t, 22.55, 22.95)); return <g transform={`translate(960 226) scale(${t < 20.17 ? mix(1.2, 1, lin(t, 20.0, 20.17)) : 1}) translate(-960 -226)`} opacity={titleK}>
+						<Vfd text={fo < 0.5 ? '同一段旋律，8种曲风' : '摇滚'} label={fo < 0.5 ? '' : '曲风'} x0={mix(330, 600, fo)} x1={mix(1590, 1320, fo)} y0={mix(116, 28, fo)} y1={mix(336, 132, fo)} size={fo < 0.5 ? mix(108, 70, fo * 2) : 84} bloom={1 - lin(t, 20, 20.6)} />
 					</g>; })()}
 					{/* hook window */}
 					{t < 3.5 && <HookWindow t={t} scanK={scanK} />}
@@ -422,7 +423,7 @@ export const Film30: React.FC = () => {
 					{t >= 96.83 && t < 100.2 && <g opacity={win(t, 96.83, 100.2, 0.25, 0.3)}><rect x={1180} y={680} width={640} height={92} rx={46} fill={C.key} /><T x={1500} y={744} t="✓ 吉他也能打鼓点" s={52} w={800} c="#2a1a05" /></g>}
 					{t >= 100.52 && t < 104.6 && <T x={760} y={744} t="808：又低又长的电子鼓" s={52} c={C.G} o={win(t, 100.6, 104.6, 0.3, 0.3)} />}
 					{t >= 8.0 && t < 10.9 && <T x={960} y={744} t="看完你也能分出来 · 结尾有一题" s={52} c={C.key} o={win(t, 8.2, 10.8, 0.3, 0.3)} />}
-					{ln === 27 && t < 89.6 && <T x={505} y={650} t="✗ 只听这一个" s={52} c={C.red} o={win(t, 88.2, 89.6, 0.15, 0.2) * (0.6 + 0.4 * Math.abs(Math.sin(t * 14)))} />}
+					{ln === 27 && t < 89.6 && <T x={720} y={744} a="start" t="✗ 只听这一个" s={52} c={C.red} o={win(t, 88.2, 89.6, 0.15, 0.2) * (0.6 + 0.4 * Math.abs(Math.sin(t * 14)))} />}
 					<rect x={-520} y={0} width={2960} height={800} fill="url(#vig)" />
 				</g>
 				</g>
@@ -430,10 +431,10 @@ export const Film30: React.FC = () => {
 				<rect x={0} y={792} width={W} height={288} fill="url(#bezelG)" opacity={1 - endK} />
 				<line x1={0} x2={W} y1={793} y2={793} stroke="#5b5e64" strokeWidth={2} opacity={1 - endK} />
 			</svg>
-			{t >= OUTRO && <Sequence from={Math.round(OUTRO * FPS)}><EndCard v={{id: 'ep30', src: '', title: '同一段旋律，8种曲风', kicker: '', tagline: '', taglineEn: '', motif: 'none', card: [0, 0], extend: 0, question: '你的答案是？评论区见', sources: '来源：Gjerdingen & Perrott 2008；Mace 等 2012；MacDougall & Moore 2005；Dahl 等 2014；Open Music Theory；Winston & Saywood 2019；Neal 2022；Herbst 2017/2019；Smithsonian 2019；Modern Drummer；MusicRadar；TIDAL｜全片音乐为代码合成', duration: 0} as any} cfg={{videos: []} as any} dur={Math.round((END - OUTRO) * FPS)} /></Sequence>}
+			{t >= OUTRO && <Sequence from={Math.round(OUTRO * FPS)}><EndCard v={{id: 'ep30', src: '', title: '同一段旋律，8种曲风', kicker: '', tagline: '', taglineEn: '', motif: 'none', card: [0, 0], extend: 0, question: '你的答案是？评论区见', sources: '来源：Gjerdingen & Perrott 2008 · Mace 等 2012 · MacDougall & Moore 2005 · Open Music Theory · Herbst 2019｜音乐为代码合成', duration: 0} as any} cfg={{videos: []} as any} dur={Math.round((END - OUTRO) * FPS)} /></Sequence>}
 			{t >= OUTRO && <svg width={W} height={H} style={{position: 'absolute', inset: 0}}><Defs /><MiniPads t={t} /></svg>}
 			{sub && (() => { const prev = LN[ln - 2], next = LN[ln]; const fin = sub[0] <= 0 || (prev && sub[0] - prev[1] < 0.12) ? 1 : lin(t, sub[0], sub[0] + 0.15); const fout = next && next[0] - sub[1] < 0.12 ? 1 : 1 - lin(t, sub[1] - 0.15, sub[1]); return <div style={{opacity: Math.min(fin, fout)}}><Sub t={sub[2]} /></div>; })()}
-			<div style={{position: 'absolute', top: 36, right: 58, opacity: t < OUTRO ? 0.6 * (1 - r(t, 51.1, 51.5) * (1 - r(t, 54.3, 54.75))) : 0, fontFamily: SANS, fontWeight: 500, fontSize: 24, letterSpacing: '0.32em', color: C.silk}}>{JUNO.mark}</div>
+			<div style={{position: 'absolute', top: 36, right: 58, opacity: t < OUTRO ? 0.6 : 0, fontFamily: SANS, fontWeight: 500, fontSize: 24, letterSpacing: '0.32em', color: C.silk}}>{JUNO.mark}</div>
 		</AbsoluteFill>
 	);
 };
@@ -442,7 +443,7 @@ export const Film30: React.FC = () => {
 const HookWindow: React.FC<{t: number; scanK: number}> = ({t, scanK}) => {
 	const half = r(t, 2.6, 2.85), k = scanK < 0 ? 7 : scanK;
 	const w0 = (k % 4) * 4, x0 = sx(w0) - 12, x1 = sx(w0 + 1) + PADW + 12, xm = mix(x1, sx(w0) + PADW + 12, half);
-	const o = 1 - r(t, 3.15, 3.45);
+	const o = 1 - r(t, 3.4, 3.5);
 	return (
 		<g opacity={o}>
 			<rect x={x0} y={240} width={xm - x0} height={ROWY[3] + PADH - 230} rx={18} fill="none" stroke={C.mint} strokeWidth={6} filter="url(#glowT)" />
@@ -452,7 +453,7 @@ const HookWindow: React.FC<{t: number; scanK: number}> = ({t, scanK}) => {
 	);
 };
 const Bars: React.FC<{t: number}> = ({t}) => {
-	const up = r(t, 3.3, 4.0), up2 = r(t, 3.8, 4.4), split = r(t, 5.3, 5.7), drain = 1 - r(t, 8.0, 8.5);
+	const up = r(t, 3.5, 4.1), up2 = r(t, 4.0, 4.5), split = r(t, 5.3, 5.7), drain = 1 - r(t, 8.0, 8.5);
 	const base = ROWY[3] + PADH - 6, full = 520;
 	const hG = full * 0.54 * up * drain, hR = full * 0.2 * up2 * drain;
 	const a = sx(6), b = sx(10);
@@ -470,8 +471,8 @@ const Bars: React.FC<{t: number}> = ({t}) => {
 			<rect x={b} y={base - hR} width={PADW * 2 + 16} height={hR} rx={10} fill="#dfe2e8" opacity={0.55 * (1 - 0.6 * split)} />
 			<T x={b + PADW + 8} y={base - hR - 18} t="20%" s={72} c="#dfe2e8" o={up2 * (1 - split) * drain} />
 			<g opacity={(1 - split) * drain}>
-				<T x={a + PADW + 8} y={720} t="猜对" s={52} c={C.mint} /><T x={b + PADW + 8} y={720} t="瞎猜" s={52} c="#dfe2e8" />
-				<T x={b + PADW + 8} y={770} t="5种曲风里选" s={40} w={700} c="#c9c3b3" />
+				<T x={a + PADW + 8} y={720} t="猜对" s={52} c={C.mint} o={up} /><T x={b + PADW + 8} y={720} t="瞎猜" s={52} c="#dfe2e8" o={up2} />
+				<T x={b + PADW + 8} y={770} t="5种曲风里选" s={40} w={700} c="#c9c3b3" o={up2} />
 			</g>
 		</g>
 	);
@@ -554,12 +555,12 @@ const SigRow: React.FC<{t: number; sa: ReturnType<typeof segAt>; dim: number; ln
 		for (let x = stripX0; x <= stripX1; x += 6) { const ph = (x - stripX0) / 38 - t * 18; let v = Math.sin(ph); v = mix(v, Math.tanh(v * 6), jag) + (jag * (Math.sin(x * 1.7 + t * 50) * 0.12)); d += `${x === stripX0 ? 'M' : 'L'} ${x} ${y + 39 - v * 30} `; }
 		const mud = ALL.filter((e) => e.row === 'MUD' && e.t <= t).pop(), clean = ALL.filter((e) => e.row === 'CLEAN' && e.t <= t).pop();
 		const showMud = ln === 34 && mud, showClean = ln === 35 && clean;
-		const smear = showMud ? r(t, mud!.t + 0.15, mud!.t + 0.6) : 0;
+		const smear = showMud ? r(t, mud!.t + 0.55, mud!.t + 0.9) : 0;
 		return <g>
 			<rect x={stripX0} y={y + 4} width={stripX1 - stripX0} height={PADH - 14} rx={12} fill={C.vfd} stroke={C.well} strokeWidth={3} />
 			<path d={d} fill="none" stroke={C.G} strokeWidth={4} opacity={showMud || showClean ? 0.25 : dim} filter="url(#glowT)" />
 			{showMud && [0, 1, 2, 3, 4].map((i) => <circle key={i} cx={mix(960 - 240 + i * 120, 960, smear)} cy={y + 39} r={mix(22, 46, smear)} fill={mix(0, 1, smear) > 0.5 ? '#8a7f86' : [C.K, C.S, C.H, C.G, '#b28cff'][i]} opacity={mix(1, 0.35, smear)} filter="url(#glowT)" />)}
-			{showMud && <T x={stripX1 - 24} y={y + 58} t="5个音" s={52} c="#fff" a="end" o={1 - smear} />}{showClean && <T x={stripX1 - 24} y={y + 58} t="2个音" s={52} c="#fff" a="end" />}
+			{showMud && <T x={stripX1 - 24} y={y + 58} t={smear > 0.5 ? '糊成一团' : '5个音'} s={52} c="#fff" a="end" />}{showClean && <T x={stripX1 - 24} y={y + 58} t="2个音" s={52} c="#fff" a="end" />}
 			{showClean && [0, 1].map((i) => <circle key={i} cx={960 - 90 + i * 180} cy={y + 39} r={28} fill={[C.K, C.S][i]} stroke="#fff" strokeWidth={5} filter="url(#glowT)" />)}
 		</g>;
 	}
@@ -643,14 +644,14 @@ const Quiz: React.FC<{t: number}> = ({t}) => {
 const MiniPads: React.FC<{t: number}> = ({t}) => {
 	const sa = segAt(t); if (!sa || sa.k !== 'bonus') return null;
 	const st = padState(t, 'bonus', sa.bar, sa.b0), k = r(t, OUTRO, OUTRO + 0.9) * (1 - r(t, END - 0.6, END));
-	const x0 = 640, y0 = 528, pw = 27, ph = 27;
+	const x0 = 640, y0 = 512, pw = 27, ph = 27;
 	return (
 		<g opacity={k}>
 			{[0, 1, 2, 3].map((g) => Array.from({length: 16}, (_, s) => { const v = st.lit[g][s]; const x = x0 + s * 30 + Math.floor(s / 4) * 8; return <g key={`${g}${s}`}>
 				<rect x={x} y={y0 + g * 30} width={pw} height={ph} rx={6} fill="#3a3c41" />
 				{v > 0.01 && <rect x={x} y={y0 + g * 30} width={pw} height={ph} rx={6} fill={ROWC[g]} opacity={v} filter="url(#glowT)" />}
 			</g>; }))}
-			<rect x={1172} y={548} width={100} height={70} rx={10} fill={C.vfd} /><T x={1222} y={600} t="？" s={52} c={C.mint} />
+			<rect x={1172} y={532} width={100} height={70} rx={10} fill={C.vfd} /><T x={1222} y={584} t="？" s={52} c={C.mint} />
 		</g>
 	);
 };
