@@ -1,9 +1,9 @@
 {
-  "id": "dims_v1-1792257360",
+  "id": "dims_v2-1792258105",
   "composition": "Film",
   "start": 0,
   "end": 3713,
   "chunks": 30,
-  "output": "dims_v1",
+  "output": "dims_v2",
   "flags": "--image-format=png --crf=14"
 }

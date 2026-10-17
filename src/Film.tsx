@@ -144,7 +144,7 @@ const sceneVisitor = (g: G, T: number) => {
   const A = p3(c, [-2.6, -2, 2.4]);
   const xr = win(T, 39.5, 42.4, 0.5, 0.5), sA = lerp(0.85, 3.2, eio(T, 39.4, 0.8)) - lerp(0, 2.35, eio(T, 42.0, 0.6));
   if (T < 42.6) { const ax = lerp(A[0], 960, eio(T, 39.4, 0.8) * (1 - eio(T, 42.0, 0.6))), ay = lerp(A[1], 640, eio(T, 39.4, 0.8) * (1 - eio(T, 42.0, 0.6)));
-    if (xr < 0.99) ant(g, ax, ay, sA, 1 - xr); if (xr > 0) antXray(g, ax, ay, sA, T, xr); }
+    g.save(); g.globalAlpha *= eo(T, 36.3, 0.5); if (xr < 0.99) ant(g, ax, ay, sA, 1 - xr); g.restore(); if (xr > 0) antXray(g, ax, ay, sA, T, xr); }
   if (xr > 0) big(g, '从第四维看，里面一览无余', 960, 170, 30, AMBER, xr, 'center', 700);
   // a knot that comes undone
   const oK = win(T, 42.2, 44.9, 0.4, 0.5);
