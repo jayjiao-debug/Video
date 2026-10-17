@@ -5,7 +5,7 @@ from pathlib import Path
 pic, name = Path(sys.argv[1]), sys.argv[2]
 out = Path('out'); master = out / f'{name}.mp4'; send = out / f'{name}_发送版.mp4'; log = f'/tmp/claude-0/x264_{pic.stem}'
 run = lambda c: subprocess.run(c, check=True, capture_output=True, text=True)
-run(['ffmpeg', '-v', 'error', '-y', '-i', str(pic), '-i', 'out/music_v8.wav', '-map', '0:v', '-map', '1:a', '-c:v', 'copy', '-c:a', 'aac', '-b:a', '256k', '-ar', '48000',
+run(['ffmpeg', '-v', 'error', '-y', '-i', str(pic), '-i', (sys.argv[3] if len(sys.argv) > 3 else 'out/music_v8.wav'), '-map', '0:v', '-map', '1:a', '-c:v', 'copy', '-c:a', 'aac', '-b:a', '256k', '-ar', '48000',
      '-movflags', '+faststart', '-shortest', str(master)])
 for p in (1, 2):
     c = ['ffmpeg', '-v', 'error', '-y', '-i', str(master), '-c:v', 'libx264', '-preset', 'slow', '-tune', 'animation', '-b:v', '1020k', '-maxrate', '2400k', '-bufsize', '4800k',
