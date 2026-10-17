@@ -7,35 +7,35 @@ import { JUNO } from './brand/identity';
 type G = CanvasRenderingContext2D;
 type V = number[];
 const W = 1920, H = 1080;
-const CYAN = '170,215,255', AMBER = '255,190,110', GOLD = '255,214,140', ROSE = '255,120,110';
+export const CYAN = '170,215,255', AMBER = '255,190,110', GOLD = '255,214,140', ROSE = '255,120,110';
 
 /* ------------------------------------------------------------ randomness, background */
-let seed = 1; const rnd = () => { seed = (seed * 16807) % 2147483647; return (seed - 1) / 2147483646; };
-const space = (g: G, warmth = 0) => {
+export let seed = 1; export const rnd = () => { seed = (seed * 16807) % 2147483647; return (seed - 1) / 2147483646; };
+export const space = (g: G, warmth = 0) => {
   const gr = g.createRadialGradient(W * 0.5, H * 0.46, 60, W * 0.5, H * 0.5, 1250);
   gr.addColorStop(0, warmth ? '#1b1a2c' : '#121a33'); gr.addColorStop(0.55, '#0a1024'); gr.addColorStop(1, '#04060e');
   g.fillStyle = gr; g.fillRect(0, 0, W, H);
   seed = 7; for (let i = 0; i < 420; i++) { const x = rnd() * W, y = rnd() * H, r = rnd() * 1.6 + 0.3, a = rnd() * 0.5 + 0.1; g.fillStyle = `rgba(200,220,255,${a * 0.6})`; g.beginPath(); g.arc(x, y, r, 0, 7); g.fill(); }
   seed = 11; for (let i = 0; i < 9; i++) { const x = rnd() * W, y = rnd() * H, r = 120 + rnd() * 260; const b = g.createRadialGradient(x, y, 0, x, y, r); b.addColorStop(0, `rgba(90,120,220,${0.05 + rnd() * 0.05})`); b.addColorStop(1, 'rgba(90,120,220,0)'); g.fillStyle = b; g.fillRect(x - r, y - r, 2 * r, 2 * r); }
 };
-const vignette = (g: G) => { const v = g.createRadialGradient(W / 2, H / 2, 500, W / 2, H / 2, 1200); v.addColorStop(0, 'rgba(0,0,0,0)'); v.addColorStop(1, 'rgba(0,0,0,.55)'); g.fillStyle = v; g.fillRect(0, 0, W, H); };
-const glowDot = (g: G, x: number, y: number, r: number, col: string, a: number) => { const b = g.createRadialGradient(x, y, 0, x, y, r); b.addColorStop(0, `rgba(${col},${a})`); b.addColorStop(0.4, `rgba(${col},${a * 0.35})`); b.addColorStop(1, `rgba(${col},0)`); g.fillStyle = b; g.fillRect(x - r, y - r, 2 * r, 2 * r); };
+export const vignette = (g: G) => { const v = g.createRadialGradient(W / 2, H / 2, 500, W / 2, H / 2, 1200); v.addColorStop(0, 'rgba(0,0,0,0)'); v.addColorStop(1, 'rgba(0,0,0,.55)'); g.fillStyle = v; g.fillRect(0, 0, W, H); };
+export const glowDot = (g: G, x: number, y: number, r: number, col: string, a: number) => { const b = g.createRadialGradient(x, y, 0, x, y, r); b.addColorStop(0, `rgba(${col},${a})`); b.addColorStop(0.4, `rgba(${col},${a * 0.35})`); b.addColorStop(1, `rgba(${col},0)`); g.fillStyle = b; g.fillRect(x - r, y - r, 2 * r, 2 * r); };
 
 /* ------------------------------------------------------------ 3D camera and n-dimensional geometry */
-type Cam = { yaw: number; pitch: number; dist: number; f: number; cx: number; cy: number; tx?: number; ty?: number; tz?: number };
-const p3 = (c: Cam, [x, y, z]: V): [number, number, number] => {
+export type Cam = { yaw: number; pitch: number; dist: number; f: number; cx: number; cy: number; tx?: number; ty?: number; tz?: number };
+export const p3 = (c: Cam, [x, y, z]: V): [number, number, number] => {
   x -= c.tx ?? 0; y -= c.ty ?? 0; z -= c.tz ?? 0;
   const cy = Math.cos(c.yaw), sy = Math.sin(c.yaw); [x, z] = [x * cy - z * sy, x * sy + z * cy];
   const cp = Math.cos(c.pitch), sp = Math.sin(c.pitch); [y, z] = [y * cp - z * sp, y * sp + z * cp];
   const d = c.dist + z, k = c.f / d; return [c.cx + x * k, c.cy - y * k, d];
 };
-const cube = (n: number) => { const vs: V[] = []; for (let i = 0; i < 1 << n; i++) vs.push(Array.from({ length: n }, (_, k) => (i >> k) & 1 ? 1 : -1)); const es: [number, number, number][] = []; for (let i = 0; i < vs.length; i++) for (let k = 0; k < n; k++) { const j = i ^ (1 << k); if (j > i) es.push([i, j, k]); } return { vs, es }; };
-const rot = (v: V, i: number, j: number, a: number) => { const o = v.slice(), c = Math.cos(a), s = Math.sin(a); o[i] = v[i] * c - v[j] * s; o[j] = v[i] * s + v[j] * c; return o; };
+export const cube = (n: number) => { const vs: V[] = []; for (let i = 0; i < 1 << n; i++) vs.push(Array.from({ length: n }, (_, k) => (i >> k) & 1 ? 1 : -1)); const es: [number, number, number][] = []; for (let i = 0; i < vs.length; i++) for (let k = 0; k < n; k++) { const j = i ^ (1 << k); if (j > i) es.push([i, j, k]); } return { vs, es }; };
+export const rot = (v: V, i: number, j: number, a: number) => { const o = v.slice(), c = Math.cos(a), s = Math.sin(a); o[i] = v[i] * c - v[j] * s; o[j] = v[i] * s + v[j] * c; return o; };
 /** n-dimensional → 3D by perspective, one dimension at a time (the 4th, then the 5th…) */
-const down3 = (v: V, D = 3.2): V => { let u = v.slice(); while (u.length > 3) { const w = u.pop()!, k = D / (D - w); u = u.map((x) => x * k); } return u; };
+export const down3 = (v: V, D = 3.2): V => { let u = v.slice(); while (u.length > 3) { const w = u.pop()!, k = D / (D - w); u = u.map((x) => x * k); } return u; };
 
 /* ------------------------------------------------------------ glowing strokes */
-const glowSeg = (g: G, segs: [number, number, number, number][], col: string, w: number, a: number) => {
+export const glowSeg = (g: G, segs: [number, number, number, number][], col: string, w: number, a: number) => {
   g.save(); g.globalCompositeOperation = 'lighter'; g.lineCap = 'round';
   for (const [lw, la] of [[w * 7, 0.05], [w * 2.8, 0.16], [w, 0.95]] as const) {
     g.strokeStyle = `rgba(${col},${a * la})`; g.lineWidth = lw; g.beginPath();
@@ -44,11 +44,11 @@ const glowSeg = (g: G, segs: [number, number, number, number][], col: string, w:
   }
   g.restore();
 };
-const glowPath = (g: G, pts: [number, number][], col: string, w: number, a: number, close = false) => {
+export const glowPath = (g: G, pts: [number, number][], col: string, w: number, a: number, close = false) => {
   const s: [number, number, number, number][] = []; for (let i = 1; i < pts.length; i++) s.push([pts[i - 1][0], pts[i - 1][1], pts[i][0], pts[i][1]]); if (close) s.push([pts[pts.length - 1][0], pts[pts.length - 1][1], pts[0][0], pts[0][1]]);
   glowSeg(g, s, col, w, a);
 };
-const floor = (g: G, c: Cam, y = -1.6, size = 9, a = 0.22) => {
+export const floor = (g: G, c: Cam, y = -1.6, size = 9, a = 0.22) => {
   const segs: [number, number, number, number][] = [];
   for (let i = -size; i <= size; i++) { const A = p3(c, [i, y, -size]), B = p3(c, [i, y, size]); segs.push([A[0], A[1], B[0], B[1]]); const C = p3(c, [-size, y, i]), D = p3(c, [size, y, i]); segs.push([C[0], C[1], D[0], D[1]]); }
   g.save(); g.globalAlpha = 1; glowSeg(g, segs, '90,130,220', 1.2, a); g.restore();
@@ -56,7 +56,7 @@ const floor = (g: G, c: Cam, y = -1.6, size = 9, a = 0.22) => {
 };
 
 /* ------------------------------------------------------------ the ant: small, warm, round, side view, facing right */
-const ant = (g: G, x: number, y: number, s: number, glow = 1) => {
+export const ant = (g: G, x: number, y: number, s: number, glow = 1) => {
   g.save(); g.translate(x, y); g.scale(s, s);
   glowDot(g, 0, -30, 120, AMBER, 0.28 * glow);
   g.lineCap = 'round'; g.strokeStyle = '#3a2412'; g.lineWidth = 5;
@@ -76,7 +76,7 @@ const sub = (g: G, s: string, hl?: [string, string]) => {
   parts.forEach((p, i) => { put(p, '#fbf7ee'); if (hl && i < parts.length - 1) put(hl[0], hl[1]); });
   g.restore();
 };
-const label = (g: G, s: string, x: number, y: number, size = 34, col = '220,232,255', a = 0.9, align: CanvasTextAlign = 'left', weight = 700) => { g.save(); g.font = `${weight} ${size}px "Noto Sans CJK SC"`; g.textAlign = align; g.fillStyle = `rgba(${col},${a})`; g.shadowColor = 'rgba(0,0,0,.8)'; g.shadowBlur = 12; g.fillText(s, x, y); g.restore(); };
+export const label = (g: G, s: string, x: number, y: number, size = 34, col = '220,232,255', a = 0.9, align: CanvasTextAlign = 'left', weight = 700) => { g.save(); g.font = `${weight} ${size}px "Noto Sans CJK SC"`; g.textAlign = align; g.fillStyle = `rgba(${col},${a})`; g.shadowColor = 'rgba(0,0,0,.8)'; g.shadowBlur = 12; g.fillText(s, x, y); g.restore(); };
 const tag = (g: G, s: string) => label(g, s, 56, 84, 26, '200,215,255', 0.55, 'left', 500);
 const mark = (g: G) => label(g, `◆ ${JUNO.mark}`, W - 56, 64, 22, '243,237,226', 0.45, 'right', 500);
 
@@ -86,14 +86,14 @@ const tesseractSegs = (c: Cam, aXW: number, aYW: number, aZW = 0, scale = 1.3) =
   const P = vs.map((v) => { let u = rot(v, 0, 3, aXW); u = rot(u, 1, 3, aYW); u = rot(u, 2, 3, aZW); u = rot(u, 0, 2, 0.5); return p3(c, down3(u).map((q) => q * scale)); });
   return { P, es };
 };
-const drawTesseract = (g: G, c: Cam, aXW: number, aYW: number, aZW = 0, scale = 1.3, a = 1) => {
+export const drawTesseract = (g: G, c: Cam, aXW: number, aYW: number, aZW = 0, scale = 1.3, a = 1) => {
   const { P, es } = tesseractSegs(c, aXW, aYW, aZW, scale);
   const base = es.filter((e) => e[2] < 3).map(([i, j]) => [P[i][0], P[i][1], P[j][0], P[j][1]] as [number, number, number, number]);
   const w4 = es.filter((e) => e[2] === 3).map(([i, j]) => [P[i][0], P[i][1], P[j][0], P[j][1]] as [number, number, number, number]);
   glowSeg(g, base, CYAN, 3.2, a); glowSeg(g, w4, AMBER, 3.4, a);
   P.forEach(([x, y]) => glowDot(g, x, y, 16, LIGHT, 0.9 * a));
 };
-const LIGHT = '235,245,255';
+export const LIGHT = '235,245,255';
 
 export const KEYS: { t: string; draw: (g: G) => void }[] = [
   // 1 · hook, 0:04 — the line drags sideways into a plane; the ant stands where the line was
