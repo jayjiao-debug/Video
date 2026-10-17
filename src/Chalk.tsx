@@ -24,6 +24,9 @@ const LINES = RL.map(([a, z, s], i, arr) => {
 });
 
 const CHALK = '242,236,222', WARM = '255,206,140', INK = '30,27,24', RIM = '246,241,231';
+/** the two looks share everything but how a character is drawn: 'sticker' = flat colour, light rim, dark lines; 'lines' = light lines on the board */
+export type Look = 'sticker' | 'lines';
+let MODE: Look = 'sticker';
 const hex = (h: string) => { const n = parseInt(h.slice(1), 16); return `${(n >> 16) & 255},${(n >> 8) & 255},${n & 255}`; };
 const mix = (a: string, b: string, k: number) => { const A = a.split(',').map(Number), B = b.split(',').map(Number); return A.map((v, i) => Math.round(lerp(v, B[i], clamp(k)))).join(','); };
 const hash = (i: number, k = 0) => { const v = Math.sin(i * 12.9898 + k * 78.233) * 43758.5453; return v - Math.floor(v); };
@@ -76,6 +79,26 @@ const figure = (g: G, id: string, x: number, y: number, s: number, p: number, o 
   if (R.light) {
     let budget = p * R.total * 1.02;
     for (const st of R.strokes) { if (st.kind !== 'line' || st.a < 0.5 || budget <= 0) continue; strokePart(g, st.pts, Math.min(st.len, budget)); budget -= st.len; lightStroke(g, CHALK, st.w * 1.25 / Math.max(0.5, s) * 0.95, o); }
+    g.restore(); return;
+  }
+  if (MODE === 'lines') {
+    const fo = o * clamp(p * 2.4), col = mix(CHALK, WARM, warm);
+    // a soft silhouette in the board's colour, so a line behind a character does not run through it
+    if (fo > 0.002) { g.globalAlpha = fo * 0.62; g.fillStyle = 'rgb(18,22,30)'; R.body.forEach((b, i) => { if (!b.closed || R.fills[i] === null) return; shapePath(g, b); g.fill(); }); g.globalAlpha = 1; }
+    const iw = (0.55 + 0.9 * s) / s;
+    let budget = p * R.total * 1.02;
+    for (const st of R.strokes) {
+      if (st.kind === 'dot') { if (budget <= 0) break; g.fillStyle = `rgba(${col},${o})`; g.beginPath(); g.arc(st.pts[0][0], st.pts[0][1], st.w * Math.min(1.5, iw * 0.85), 0, 7); g.fill(); continue; }
+      if (st.kind === 'fill') {
+        if (budget <= 0) break; const c = (st.col || '').toLowerCase(); if (c === '#ffffff') continue;
+        const dark = c === '#1d1915' || c === '#3a3238'; g.globalAlpha = o * st.a * (dark ? 0.85 : 0.8); g.fillStyle = dark ? `rgb(${col})` : st.col;
+        g.beginPath(); st.pts.forEach(([a, b], i) => (i ? g.lineTo(a, b) : g.moveTo(a, b))); g.closePath(); g.fill(); g.globalAlpha = 1; continue;
+      }
+      if (st.a < 0.5) continue;
+      if (budget <= 0) break;
+      strokePart(g, st.pts, Math.min(st.len, budget)); budget -= st.len;
+      lightStroke(g, col, st.w * iw * 0.85, o);
+    }
     g.restore(); return;
   }
   const fo = o * clamp(p * 2.4);
@@ -148,9 +171,19 @@ const makeDis = (id: string, x: number, y: number, s: number, t0: number, speed:
   const colIdx = R.body.map((_, i) => { const f = R.fills[i]; if (!f) return -1; const k = hex(f); let j = cols.indexOf(k); if (j < 0) { cols.push(k); j = cols.length - 1; } return j; });
   const all = R.body.flatMap((b) => b.pts);
   const x0 = x + Math.min(...all.map((p) => p[0])) * s - 10, x1 = x + Math.max(...all.map((p) => p[0])) * s + 10, y0 = y + Math.min(...all.map((p) => p[1])) * s - 10, y1 = y + Math.max(...all.map((p) => p[1])) * s + 10;
-  const step = 6.5;
-  for (let yy = y0; yy < y1; yy += step) for (let xx = x0; xx < x1; xx += step) {
-    for (let i = R.body.length - 1; i >= 0; i--) { if (!R.body[i].closed || colIdx[i] < 0) continue; if (c.isPointInPath(paths[i], xx, yy)) { pts.push([xx, yy, colIdx[i]]); break; } }
+  if (MODE === 'lines') {
+    cols[0] = CHALK;
+    for (const st of R.strokes) {
+      if (st.kind === 'dot') { pts.push([x + st.pts[0][0] * s, y + st.pts[0][1] * s, 0]); continue; }
+      if (st.kind !== 'line' || st.a < 0.5) continue;
+      const poly = st.pts.map(([a, b]) => [x + a * s, y + b * s] as Pt);
+      for (let i = 1; i < poly.length; i++) { const [ax, ay] = poly[i - 1], [bx, by] = poly[i], d = Math.hypot(bx - ax, by - ay), n = Math.max(1, Math.round(d / 3.5)); for (let k = 0; k < n; k++) pts.push([ax + (bx - ax) * k / n, ay + (by - ay) * k / n, (o.warm ?? 0) > 0.5 ? 1 : 0]); }
+    }
+  } else {
+    const step = 6.5;
+    for (let yy = y0; yy < y1; yy += step) for (let xx = x0; xx < x1; xx += step) {
+      for (let i = R.body.length - 1; i >= 0; i--) { if (!R.body[i].closed || colIdx[i] < 0) continue; if (c.isPointInPath(paths[i], xx, yy)) { pts.push([xx, yy, colIdx[i]]); break; } }
+    }
   }
   const hs = o.hs ?? 0;
   if (hs > 0) {
@@ -227,7 +260,7 @@ const bubble = (g: G, x: number, y: number, w: number, h: number, side: number, 
   pts.push(...arc(x1 - r, y0 + r, -Math.PI / 2), ...arc(x1 - r, y1 - r, 0));
   pts.push([tx + 40, y1], [tx + side * 90, y1 + 80], [tx - 10, y1]);
   pts.push(...arc(x0 + r, y1 - r, Math.PI / 2), ...arc(x0 + r, y0 + r, Math.PI), [x1 - r, y0]);
-  g.fillStyle = `rgba(10,13,20,${0.6 * o})`; g.beginPath(); pts.forEach(([a, b], i) => (i ? g.lineTo(a, b) : g.moveTo(a, b))); g.fill();
+  g.fillStyle = `rgba(10,13,20,${0.6 * o * clamp(p * 1.6)})`; g.beginPath(); pts.forEach(([a, b], i) => (i ? g.lineTo(a, b) : g.moveTo(a, b))); g.fill();
   line(g, pts, p, 4, o * q);
   const k = clamp((p - 0.55) / 0.45);
   if (k > 0) { g.save(); g.globalAlpha = o * k * (latin ? 0.62 : 1); g.drawImage(bubbleText(lines, size, latin), x - 700, y - 200); g.restore(); }
@@ -249,17 +282,18 @@ const flower = (g: G, x: number, y: number, s: number, p: number, o: number, war
 /* ------------------------------------------------------------ the title layer, drawn once */
 let TL: { img: HTMLCanvasElement; snap: { d: number; i: number; tx: number; ty: number }[] } | null = null;
 const TITLE_CHARS = ['生', '命', '平', '等', '吗', '？'];
-let DIS: Dis[] = [];
+let DIS: Dis[] = [], DIS_MODE = '';
 let FLY_DIS: Dis, CAT_DIS: Dis, RHINO_DIS: Dis;
 const ensureDis = () => {
-  if (DIS.length) return;
-  CAT_DIS = makeDis('cat', 1040, 800, 1.15, 2.2, 170);
-  RHINO_DIS = makeDis('rhino', 940, 800, 1.2, 13.3, 420);
+  if (DIS.length && DIS_MODE === MODE) return;
+  DIS_MODE = MODE; TL = null;
+  CAT_DIS = makeDis('cat', 1040, 800, 1.15, 2.2, 200);
+  RHINO_DIS = makeDis('rhino', 940, 800, 1.6, 13.3, 380);
   FLY_DIS = makeDis('fly', 1100, 820, 0.62, 20.0, 260);
   DIS = [
     makeDis('fly', 470, 780, 0.9, 35.0, 160, { hx: 470, hy: 545, hs: 80, hk: 0.04, th: 26.5, tin: 22.5, din: 1.2 }),
-    makeDis('cat', 960, 790, 0.95, 36.6, 160, { hx: 960, hy: 400, hs: 160, hk: 0.55, th: 26.62, tin: 23.0, din: 1.6, warm: 0.45 }),
-    makeDis('rhino', 1440, 795, 0.72, 38.2, 160, { hx: 1470, hy: 420, hs: 240, hk: 1.0, th: 26.75, tin: 23.5, din: 2.0, warm: 0.8 }),
+    makeDis('cat', 960, 790, 0.95, 36.6, 160, { hx: 960, hy: 368, hs: 160, hk: 0.55, th: 26.62, tin: 23.0, din: 1.6, warm: 0.45 }),
+    makeDis('rhino', 1450, 795, 0.95, 38.2, 160, { hx: 1480, hy: 420, hs: 240, hk: 1.0, th: 26.75, tin: 23.5, din: 2.0, warm: 0.8 }),
   ];
 };
 const titleLayer = () => {
@@ -344,10 +378,10 @@ const draw = (g: G, T: number) => {
       line(g, [...P.ell(x, ty, 170 * sc, 34 * sc, Math.PI, Math.PI * 2, 30), [x - 170 * sc, ty]], eo(T, t0 + 0.4, 0.8), 4, oB, '200,230,190');
     }
     g.save(); clipStanding(g, RHINO_DIS, T);
-    figure(g, 'rhino', 940, 800, 1.2, eo(T, 6.3, 2.0), oB, 0.05);
-    const kn = eo(T, L(4) + 0.15, 0.9);
-    if (kn > 0) { g.save(); g.globalAlpha = oB; g.beginPath(); g.rect(0, 0, 1180 + 220 * kn, 1080); g.clip(); g.drawImage(text('苏丹', 76, '#f4efe4', `700 ${SANS}`, 10), 1290 - 960, 360 - 200); g.restore(); line(g, [[1250, 410], [1150, 470]], kn, 4, oB * 0.8); }
+    figure(g, 'rhino', 940, 800, 1.6, eo(T, 6.3, 2.0), oB, 0.05);
     g.restore();
+    const kn = eo(T, L(4) + 0.15, 0.9), on = oB * (1 - pr(T, 13.3, 0.5));
+    if (kn > 0 && on > 0) { g.save(); g.globalAlpha = on; g.beginPath(); g.rect(0, 0, 1180 + 220 * kn, 1080); g.clip(); g.drawImage(text('苏丹', 76, '#f4efe4', `700 ${SANS}`, 10), 1290 - 960, 290 - 200); g.restore(); line(g, [[1232, 338], [1160, 420]], kn, 4, on * 0.8); }
     crumble(g, RHINO_DIS, T, 2.6, oB);
     if (T > 14.2) { P.reseed(7); for (let i = 0; i < 80; i++) { const x = 80 + P.rand() * 1760, y = 60 + P.rand() * 560, t0 = 14.3 + P.rand() * 2.0; const a = eo(T, t0, 0.6) * (0.55 + 0.45 * Math.sin(T * 3 + i)) * oB; glow(g, x, y, 16 + P.rand() * 18, 0.85 * a); } }
     g.restore();
@@ -446,7 +480,7 @@ const draw = (g: G, T: number) => {
     line(g, wobbly(450, 832, 1840, 834, 50, 2, 21), eo(T, t0, 1.0), 4, oR);
     ROW.forEach(([id, x, sc], i) => {
       const inside = Math.max(allWarm, clamp((bx - x) / 40 + 0.5));
-      const o = oR * (0.35 + 0.65 * inside), p = eo(T, t0 + 0.2 + i * 0.2, 1.0);
+      const o = oR * ((MODE === 'lines' ? 0.45 : 0.35) + (MODE === 'lines' ? 0.55 : 0.65) * inside), p = eo(T, t0 + 0.2 + i * 0.2, 1.0);
       if (id === 'flower') flower(g, x, 830, 1.15, p, o, 0.8 * inside); else figure(g, id, x, 825, sc, p, o, 0.8 * inside);
       if (hearts > 0) { const hurt = (id === 'fish' || id === 'flower') ? harm : 0; heart(g, x, 440, 100, hearts * 0.7 * (1 - 0.55 * hurt), hearts, oR, false); }
     });
@@ -535,7 +569,7 @@ const draw = (g: G, T: number) => {
     g.save(); cam(g, sE, 960, 600);
     // warmth: a small pool in the circle before the drop; after it, a broad warm floor behind everyone, the board stays dark
     if (td < 0) glow(g, cx, cy + 40, r * 1.15, 0.4 * oE);
-    else { glow(g, 960, 760, lerp(300, 1250, eo(T, DROP, 0.9)), 0.32 * oE); glow(g, 960, 760, 600, 0.12 * oE * warmAll); }
+    else { glow(g, 960, 760, lerp(300, 1100, eo(T, DROP, 0.9)), 0.24 * oE); glow(g, 960, 760, 560, 0.1 * oE * warmAll); }
     if (td > 0) glow(g, cx, cy, 1500, 0.55 * Math.exp(-td / 0.5) * oE);
     line(g, wobbly(-300, 822, 2220, 826, 90, 2, 8), 1, 4, oE * 0.6);
     if (r < 1600) line(g, P.ell(cx, cy, r, r * ry, -Math.PI / 2, Math.PI * 1.5, 140), 1, 6, oE * (td > 0 ? 1 - clamp(td / 0.7) : 1), WARM);
@@ -543,7 +577,7 @@ const draw = (g: G, T: number) => {
     const beat = (i: number) => (T > L(59) ? 0.06 * Math.sin((T - L(59)) * 5.2 + i * 0.4) : 0);
     // who is there from the start (outside the circle until the drop) and who arrives after it
     type Who = [string, number, number, number, number, number?];   // id, x, y, s, t0 (draw on), heart size
-    const crowd: Who[] = [['chicken', 330, 835, 0.55, HAND + 0.3], ['cat', 640, 830, 0.6, HAND + 0.4], ['dog', 1290, 830, 0.56, HAND + 0.5], ['rhino', 1640, 838, 0.52, HAND + 0.6],
+    const crowd: Who[] = [['chicken', 330, 835, 0.55, HAND + 0.3], ['cat', 640, 830, 0.6, HAND + 0.4], ['dog', 1290, 830, 0.56, HAND + 0.5], ['rhino', 1650, 838, 0.62, HAND + 0.6],
       ['fly', 470, 560, 0.62, HAND + 0.7], ['frog', 790, 590, 0.56, HAND + 0.8], ['fish', 1150, 550, 0.56, HAND + 0.9], ['bird', 1480, 540, 0.6, HAND + 1.0]];
     const late: Who[] = [
       ['rabbit', 150, 832, 0.5, L(55) + 0.3], ['mouse', 820, 912, 0.5, L(55) + 0.6], ['butterfly', 1660, 330, 0.5, L(55) + 0.9],
@@ -617,7 +651,8 @@ const draw = (g: G, T: number) => {
   }
 };
 
-export const Chalk: React.FC = () => {
+export const Chalk: React.FC<{ look?: Look }> = ({ look = 'sticker' }) => {
+  MODE = look;
   const f = useCurrentFrame(), T = f / 30;
   const [h] = useState(() => delayRender('fonts', { timeoutInMilliseconds: 60000 }));
   const [ok, setOk] = useState(false);
@@ -650,7 +685,8 @@ export const Chalk: React.FC = () => {
 /* ------------------------------------------------------------ model sheet: every character in the clear look */
 export const SHEET_IDS = ['cat', 'rhino', 'fly', 'dog', 'chicken', 'bird', 'frog', 'fish', 'bat', 'hippo', 'rabbit', 'mouse', 'snail', 'turtle', 'butterfly', 'hedgehog', 'duck', 'pig',
   'researcher', 'zhuang', 'hui', 'nagel', 'kant', 'bentham', 'singer', 'schweitzer', 'lecky', 'we', 'we_soft', 'p_long', 'p_cap', 'p_side', 'lamp', 'boat'];
-export const ChalkSheet: React.FC = () => {
+export const ChalkSheet: React.FC<{ look?: Look }> = ({ look = 'sticker' }) => {
+  MODE = look;
   const [h] = useState(() => delayRender('fonts', { timeoutInMilliseconds: 60000 }));
   const [ok, setOk] = useState(false);
   useEffect(() => { Promise.all(['700 40px "Noto Sans CJK SC"'].map((x) => document.fonts.load(x, '研究者法国').catch(() => null))).then(() => { setOk(true); continueRender(h); }); }, [h]);

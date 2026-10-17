@@ -14,6 +14,8 @@ export const Root: React.FC = () => (
     <Composition id="Bg" component={Bg as any} durationInFrames={1} fps={30} width={1920} height={1080} defaultProps={{ id: 'night' }} />
     <Composition id="Film" component={Film} durationInFrames={FILM_FRAMES} fps={30} width={1920} height={1080} />
     <Composition id="Chalk" component={Chalk} durationInFrames={CHALK_FRAMES} fps={30} width={1920} height={1080} />
+    <Composition id="ChalkLines" component={Chalk} durationInFrames={CHALK_FRAMES} fps={30} width={1920} height={1080} defaultProps={{ look: 'lines' as const }} />
     <Composition id="ChalkSheet" component={ChalkSheet} durationInFrames={1} fps={30} width={1920} height={1080} />
+    <Composition id="ChalkLinesSheet" component={ChalkSheet} durationInFrames={1} fps={30} width={1920} height={1080} defaultProps={{ look: 'lines' as const }} />
   </>
 );
