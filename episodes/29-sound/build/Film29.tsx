@@ -254,7 +254,7 @@ const Stage: React.FC<{t: number; gone: number; back?: number}> = ({t, gone, bac
 	const lw = lowAt(t), R = rng(5);
 	return (
 		<g transform="translate(960 790) scale(1.14) translate(-960 -790)">
-			{gone > 0.05 && <g opacity={gone}><circle cx={960} cy={310} r={64} fill="none" stroke={C.gold} strokeWidth={4} strokeDasharray="12 10" /><circle cx={960} cy={530} r={56} fill="none" stroke={C.cyan} strokeWidth={4} strokeDasharray="12 10" /><Lab x={960} y={430} t="这里空了" s={56} c={C.gold} /></g>}
+			{gone > 0.05 && <g opacity={sm(cl((gone - 0.4) / 0.6))}><circle cx={960} cy={310} r={64} fill="none" stroke={C.gold} strokeWidth={4} strokeDasharray="12 10" /><circle cx={960} cy={530} r={56} fill="none" stroke={C.cyan} strokeWidth={4} strokeDasharray="12 10" /><Lab x={960} y={430} t="这里空了" s={56} c={C.gold} /></g>}
 			<path d="M 470 780 A 520 520 0 0 1 1450 780" fill="none" stroke={C.dim} strokeWidth={2} strokeDasharray="4 14" />
 			{SRC.map((s, i) => {
 				const a = (s.a * Math.PI) / 180, x = 960 + Math.sin(a) * s.d, y = 780 - Math.cos(a) * s.d;
@@ -266,6 +266,7 @@ const Stage: React.FC<{t: number; gone: number; back?: number}> = ({t, gone, bac
 						{bits}
 						<circle cx={x} cy={y} r={rad} fill={s.c} opacity={0.85 * o} filter="url(#glow2)" />
 						{back > 0 && s.mid && <circle cx={x} cy={y} r={rad + 220 * back} fill="none" stroke={s.c} strokeWidth={6} opacity={(1 - back) * 0.8} />}
+						{back > 0 && s.n === '主旋律' && <Lab x={x + rad + 30} y={y + 18} t="≈ 363 Hz" s={56} c={C.gold} a="start" o={win(t, 42.3, 44.9, 0.25, 0.3)} />}
 						{s.n && <Lab x={x} y={y - rad - 22} t={s.n} s={52} c={s.c} o={s.mid ? o : 1} />}
 					</g>
 				);
@@ -281,7 +282,7 @@ const S5Stage: React.FC<{t: number}> = ({t}) => {
 	return (
 		<g>
 			<Stage t={t} gone={gone} back={back} />
-			<Labs t={t} y={100} items={[[cA - 0.1, cB, '左声道 − 右声道：正中间的声音互相抵消'], [cB, cB + 2.6, '合回来！主音 ≈ 363 Hz', C.gold]]} />
+			<Labs t={t} y={100} items={[[cA - 0.1, cB, '左声道 − 右声道：正中间的声音互相抵消']]} />
 		</g>
 	);
 };
