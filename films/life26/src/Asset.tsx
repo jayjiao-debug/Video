@@ -19,7 +19,7 @@ export const PUPPETS: Record<string, () => P.Puppet> = {
   p_cap: () => P.person({ hair: 'cap', face: 'calm', dress: 'shirt', cloth: '#a6c7a0', hairCol: '#5b6b8a' }),
   p_side: () => P.person({ hair: 'side', face: 'smile', dress: 'coat', cloth: '#e0c37a', hairCol: '#7a6a5a' }),
   cat: () => P.CAT, rhino: () => P.RHINO, fly: () => P.FLY, dog: () => P.DOG, chicken: () => P.CHICKEN, bird: () => P.BIRD, frog: () => P.FROG, fish: () => P.FISH, bat: () => P.BAT, hippo: () => P.HIPPO,
-  rabbit: () => P.RABBIT, mouse: () => P.MOUSE, snail: () => P.SNAIL, turtle: () => P.TURTLE, butterfly: () => P.BUTTERFLY, hedgehog: () => P.HEDGEHOG, duck: () => P.DUCK, pig: () => P.PIG,
+  flower: () => P.FLOWER, rabbit: () => P.RABBIT, mouse: () => P.MOUSE, snail: () => P.SNAIL, turtle: () => P.TURTLE, butterfly: () => P.BUTTERFLY, hedgehog: () => P.HEDGEHOG, duck: () => P.DUCK, pig: () => P.PIG,
   lamp: () => P.LAMP, window: () => P.WINDOW, swatter: () => P.SWATTER, heart: () => P.heart(0), clipboard: () => P.CLIPBOARD, ruler: () => P.RULER, boat: () => P.BOAT, bridge: () => P.BRIDGE, sign: () => P.SIGN, tag: () => P.TAG,
   b_s_l: () => P.bubble(520, 170, -1), b_s_r: () => P.bubble(520, 170, 1), b_m_l: () => P.bubble(680, 210, -1), b_m_r: () => P.bubble(680, 210, 1),
   b_l_l: () => P.bubble(860, 250, -1), b_l_r: () => P.bubble(860, 250, 1), b_xl_l: () => P.bubble(1060, 300, -1), b_xl_r: () => P.bubble(1060, 300, 1),
@@ -31,11 +31,11 @@ const Cv: React.FC<{ w: number; h: number; draw: (g: CanvasRenderingContext2D) =
   return <canvas ref={ref} width={w} height={h} style={{ position: 'absolute', left: 0, top: 0 }} />;
 };
 
-export const Asset: React.FC<{ id: string }> = ({ id }) => (
+export const Asset: React.FC<{ id: string; k?: number }> = ({ id, k = 1 }) => (
   <AbsoluteFill style={{ background: 'transparent' }}>
-    <Cv w={2000} h={1400} draw={(g) => {
+    <Cv w={2000 * k} h={1400 * k} draw={(g) => {
       P.reseed(id.split('').reduce((a, c) => a + c.charCodeAt(0), 7));
-      P.cutout(g, PUPPETS[id](), 1000, 1100, 1, 2000, 1400);
+      P.cutout(g, PUPPETS[id](), 1000 * k, 1100 * k, k, 2000 * k, 1400 * k);
     }} />
   </AbsoluteFill>
 );
