@@ -24,7 +24,7 @@ const Scene: React.FC<{s: number; x: number; y: number}> = ({s, x, y}) => (
 const Title: React.FC<{size: number; top: number; split?: boolean}> = ({size, top, split}) => (
 	<div style={{position: 'absolute', top, width: '100%', textAlign: 'center'}}>
 		<div style={{fontFamily: SANS, fontWeight: 700, fontSize: size * 0.24, letterSpacing: '0.42em', color: JUNO.colors.gold, opacity: 0.9}}>{JUNO.series}</div>
-		<div style={{fontFamily: SERIF, fontWeight: 700, fontSize: size, letterSpacing: '0.03em', lineHeight: 1.15, whiteSpace: 'nowrap', marginTop: size * 0.08, background: 'linear-gradient(180deg, #fff3d2 0%, #f1c56d 55%, #c8913a 100%)', WebkitBackgroundClip: 'text', backgroundClip: 'text', color: 'transparent', filter: 'drop-shadow(0 6px 22px rgba(10,6,12,0.75))'}}>{split ? <>生命<br />平等吗？</> : '生命平等吗？'}</div>
+		<div style={{fontFamily: SERIF, fontWeight: 700, fontSize: size, letterSpacing: '0.03em', lineHeight: 1.15, whiteSpace: 'nowrap', marginTop: size * 0.08, background: 'linear-gradient(180deg, #fff3d2 0%, #f1c56d 55%, #c8913a 100%)', WebkitBackgroundClip: 'text', backgroundClip: 'text', color: 'transparent', filter: 'drop-shadow(0 6px 22px rgba(10,6,12,0.75))'}}>{split ? <>生命<br />平等吗<span style={{marginRight: '-0.5em'}}>？</span></> : <>生命平等吗<span style={{marginRight: '-0.5em'}}>？</span></>}</div>
 	</div>
 );
 const Cover: React.FC<{layout: 'wide' | 'tall'}> = ({layout}) => {
