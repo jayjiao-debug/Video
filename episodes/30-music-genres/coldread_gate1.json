@@ -1,0 +1,39 @@
+{
+  "_note": "Line numbers below count subtitles from #1 = [0.0] '只听[0.25秒]...' to #44 = [126.5] '用这4步听...'. I only read subtitle text and the three titles; I could not hear the music, so anything about how a section sounds is a guess based on the text.",
+
+  "would_keep_watching_after_3s": true,
+  "why": "'只听0.25秒就猜得出曲风' is a specific, slightly unbelievable number, so it makes me want to test myself. Then #3 '学没学过音乐，几乎一样' tells me I'm good at this even though I never studied music, and #4 '你听得出来，却说不出为什么' is exactly how I feel about music. Three lines in and it's about me. The one weak spot is #2 '实验里，猜对的明显比瞎猜多': it sounds like it's hedging. Which experiment, and how much better? '明显比瞎猜多' sounds like it's a lot less impressive than 0.25 seconds.",
+
+  "first_moment_I_got_curious": "#6 at 13.6s '同一段旋律，换成8种曲风'. That's when I know there's a demo I can actually hear and not just someone talking. The first real 'oh!' is #11 at 30.4s '人每分钟约走120步' -> '最常见的舞曲速度：120拍左右'. I'd want to walk around my room to check it.",
+
+  "where_I_would_swipe_away": [
+    "16.2s-22.0s: '先听原版：只有旋律' and then about 3.5s with no subtitle, just a bare melody. That's the plainest sound in the whole video and it lands right when I'm deciding whether to stay. If the melody isn't catchy I'm gone at around 20s. It should be shorter, or a line like '记住这段，后面一个音都不改' should sit on screen while it plays.",
+    "Around 85-100s (Trap and Metal): by genre 7 and 8 it starts to feel like a list. Each one is good on its own, but the rhythm is the same every time: genre name, two or three facts, next. The reggae quiz at 63s picked me up, but nothing like that comes after it, so this is where my thumb starts to twitch.",
+    "107s-122s, the 4-question recap: four lines of 2.5s each that read like a lesson summary ('第一…第二…第三…第四…'). I already got the payoff at #35 '旋律一个音都没改', so I'd probably swipe here and never see the final quiz at 123s. Nothing earlier tells me there's one more test at the end, so I have no reason to wait for it.",
+    "Lower risk: 0-16s is six lines of talking before I hear any genre. It's fine if music plays underneath, but if it's only voice I'd get impatient around 11s ('其实，靠4个线索就能说清' feels like a lecture setup)."
+  ],
+
+  "lines_I_did_not_understand": [
+    "#2 '实验里，猜对的明显比瞎猜多': what experiment? '明显比' is vague. It made the 0.25s claim feel weaker and not stronger.",
+    "#5 '靠4个线索就能说清': I was promised 4 clues, but during the genre section nobody says 'this is clue 1' etc. I only find out what the 4 clues are at 107s. In the middle I couldn't tell which clue each genre was teaching.",
+    "#8 '底鼓1、3拍，军鼓2、4拍': I don't know what 底鼓 or 军鼓 are or which sound is which. #9 '动次打次' saved it, and I'd put that first and the drum terms second.",
+    "#14 '叮——叮哒': I can't read a rhythm off text. I'm counting on the audio to make this click. '蹦蹦跳跳' helped more than the onomatopoeia did.",
+    "#15 '前面的摇滚：一样长，是\"直\"的': what is 'the same length'? Beats? Notes? It took me a second to see that it's comparing with the 长-短 of jazz.",
+    "#27 '波萨诺瓦': I've never heard the word. There's no anchor like '咖啡店常放的那种'. The thumb-as-kick-drum idea (#28) is cool, but I don't know what the genre is supposed to make me feel.",
+    "#30 '踩镲': I don't know this word either. '像拉拉链' rescued it.",
+    "#31 'Trap听起来又快又慢': I like the paradox, but you have to put #29 (snare is slow) and #30 (hi-hat is fast) together yourself. Some people won't make the link in 2 seconds.",
+    "#32 vs #34: first '吉他声被故意\"弄脏\"', then '又干净又重'. Dirty and clean right next to each other confused me at first. Later I understood it means 'two notes stay clear even through the distortion', but it reads like a contradiction."
+  ],
+
+  "takeaway_in_my_words": "Genre isn't the melody. It's what you put around it: where the drums hit, whether the rhythm is even or swung, whether it's faster or slower than walking, and which instrument sticks out most. Change those and the same tune becomes rock, jazz, reggae or metal.",
+
+  "surprise_that_stuck": "Two things. (1) Dance music is about 120 BPM, the same as walking pace. I'll remember that and probably repeat it to people. (2) The reggae quiz: reggae can also put the kick drum on every beat, so if you only listen to the kick you'd think it's House. '只听一个线索，容易被骗' is the line that turns a list into a skill. Runner-up: metal plays only two notes because a full chord would turn to mush under distortion. That one really was 原来如此.",
+
+  "title_I_would_click": "同一段旋律，8种曲风. It promises something I can hear right away (one tune, 8 versions), it's concrete, and it matches what the video actually delivers. On Douyin I'd click to hear the transformations even if I didn't care about the theory.",
+  "title_that_misleads": "你怎么听出是爵士？: jazz gets about 8 seconds (#13-#15) out of 130. I'd click expecting a jazz deep-dive and feel baited when it moves on to House and Lo-fi. 4步听出曲风 isn't exactly misleading, but it sounds like a dry tutorial, and the 4 steps don't show up as steps until 107s, so the middle doesn't feel like '4 steps' while I'm watching.",
+
+  "what_I_would_comment": "'雷鬼那题我第一反应是House，被骗了哈哈' and maybe '走路120步那个我真去试了'. For the final quiz I'd post my guess, but only if I made it that far. Someone in the comments would definitely ask '原版旋律是什么歌' and '波萨诺瓦能不能单独出一期'.",
+
+  "for_frames_only": [],
+  "_for_frames_only_note": "No frames were provided for this read, only subtitles and titles."
+}
