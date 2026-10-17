@@ -174,18 +174,17 @@ def meter(x, y, w, h, val):
 
 
 def checks(x, y, w, h, gap, labels):
-    s = []
-    X = x
-    for k, lab in enumerate(labels):
-        if k:
-            X += 78 + 52 * len(lab.replace('·', '')) + (26 if '·' in prev else 0) + gap
-        prev = lab
+    """Hand-drawn ticked boxes; spacing follows each label's width."""
+    widths = [78 + sum(26 if c == '·' else 52 for c in lab) for lab in labels]
+    gap = (X1 - x - sum(widths)) / (len(labels) - 1)
+    s, X = [], x
+    for lab, wd in zip(labels, widths):
         s.append('<g filter="url(#rough)">')
-        s.append(f'<rect x="{X}" y="{y+h/2-28}" width="56" height="56" rx="4" fill="none" stroke="{INK}" stroke-width="4"/>')
-        s.append(f'<path d="M{X+8},{y+h/2+2} L{X+26},{y+h/2+22} L{X+66},{y+h/2-40}" fill="none" stroke="{RED}" stroke-width="9" stroke-linecap="round" stroke-linejoin="round"/>')
+        s.append(f'<rect x="{X:.1f}" y="{y+h/2-28}" width="56" height="56" rx="4" fill="none" stroke="{INK}" stroke-width="4"/>')
+        s.append(f'<path d="M{X+8:.1f},{y+h/2+2} L{X+26:.1f},{y+h/2+22} L{X+66:.1f},{y+h/2-40}" fill="none" stroke="{RED}" stroke-width="9" stroke-linecap="round" stroke-linejoin="round"/>')
         s.append('</g>')
-        s.append(f'<text x="{X+78}" y="{y+h/2+19}" font-size="52" font-weight="900" fill="{INK}">{lab}</text>')
-        X -= 0
+        s.append(f'<text x="{X+78:.1f}" y="{y+h/2+19}" font-size="52" font-weight="900" fill="{INK}">{lab}</text>')
+        X += wd + gap
     return ''.join(s)
 
 
