@@ -1,0 +1,44 @@
+{
+  "label": "gate4",
+  "viewer": "20yo, Douyin evening scroll, earbuds in, subtitles only",
+  "would_keep_watching_after_3s": true,
+  "why": "#1 '你听的这首歌，被放慢过' hits me directly because I listen to 慢放/0.8x versions all the time, so I want to know what that does. #2-#4 then actually speed it up so I hear it change, which is proof and not just talk. #5 '声音还能在两只耳朵间跳' is a promise of a trick for earbuds people, so I stay for that. Risk: if the song is not one I recognise, #1 has no hook and is only a sentence.",
+  "first_moment_I_got_curious": "#5 (9.5s) '声音还能在两只耳朵间跳'. #1-#4 I already half-knew (fast = chipmunk), but #5 promised something I have never tried.",
+  "where_I_would_swipe_away": [
+    "15.7-23.9s (#7-#9 喇叭挤紧/松开/赫兹): #5 just promised an ear trick and I get 初中物理 instead. The speaker-particle frame looks nice, but these 8 seconds are where my thumb moves. I stay only because 拆开听 at #10 arrives fast.",
+    "42.2-48.3s (#15-#16 '主音约360赫兹，正好是鼓声的8倍'): a number fact with no payoff. 'So what that it's 8x?' Nothing pays it off right away (the ratio idea doesn't come until 91s), so it feels like padding.",
+    "80.5-87s (title explosion '为什么好听？'): the particles, the big golden ring and a 3-second gap with no subtitle look exactly like an outro. I would think the video is over and swipe, not knowing the second half (the actual answer to the title) is coming. This is my biggest drop-off point.",
+    "130.5-140.7s (#47-#51 低音/高音/去掉中间/左右跳/绕着你转): 10 seconds of single-word recap. With earbuds the audio montage might be fun, but as a subtitle reader it is a list of things I just saw. I'd swipe here before the ending line."
+  ],
+  "lines_I_did_not_understand": [
+    "#13 '低音全删了，你还听得见鼓吗？' asks a question and never answers it in the subtitles. The frame says '大脑从上面的泛音，补出了低音', but that is small on-screen text I would miss while reading the subtitle. Do I hear it or not? This should be a big 哇 moment and it gets thrown away.",
+    "#15-#16 '主音约360赫兹 / 正好是鼓声的8倍': why should I care about 8x? I can't tell whether it's a coincidence, a rule, or a setup.",
+    "#17 '左耳363，右耳369赫兹': a sudden jump. Why are my ears getting different numbers now? There's no line like '现在给两只耳朵各放一个音'. Also 6 Hz (369-363) is only in the frame, never in a subtitle, so I don't see that the 摇晃 speed = the difference.",
+    "#21-#22 '年纪越大，高音越先听不见 / 就像这样——': 就像这样 what? It lasts 1.6s and the next line is '声音在左边'. I can't tell if I was supposed to hear a high tone and failed (am I old??) or if the demo got cut. Confusing and a little worrying.",
+    "#28 '一个永远在上升的音': how can a sound rise forever? It's never explained, so it's spectacle only. Cool, but I feel tricked into not understanding.",
+    "#42-#44 '研究发现：又慢又低的音乐 / 再放慢一点—— / 常常被听成悲伤': the action cue #43 sits in the middle of the sentence, so when I read it, it breaks the meaning. I re-read #42 and #44 to join them.",
+    "#52 '你听见的，是一场振动接力': 接力 from what to what? The video never shows the chain speaker -> air -> eardrum -> brain as a relay, so the closing metaphor comes from nowhere."
+  ],
+  "takeaway_in_my_words": "Sound is just air being squeezed and released a certain number of times per second. Speed it up and it gets higher. A lot of what you 'hear' is made up by your brain: a wobble that exists in neither ear, a direction that comes only from a 0.02s delay. Two notes sound nice together when their vibrations line up in simple ratios like 2:1 or 3:2, and they sound sour when they almost line up. Slowed-down songs feel sad because slow and low is how sad people talk.",
+  "surprise_that_stuck": "#25-#27 '骗你的！两耳一样响，一边只晚0.02秒 / 大脑只信先到的那只耳朵'. I fully believed the arrow, and finding out it was only a 0.02s delay is the one fact I'd repeat to someone. Second place: #19-#20, the wobble 'exists in neither ear'.",
+  "title_I_would_click": "《为什么好听？》 only weakly. It's a generic question I've seen 100 times, and the frames are prettier than the title. I would click something like '戴上耳机：这个声音只存在你脑子里' or '你听的慢放版，为什么更伤感？'. The second one ties to the hook line and to the real payoff at #41-#46.",
+  "title_that_misleads": "《为什么好听？》 is misleading. The first 80 seconds are about sound tricks and the brain, not about why something sounds good. The answer only arrives at 84-113s, and it is '和弦比例简单所以好听', which is too thin: every pop song uses those chords, so it doesn't explain why THIS song is good. If I clicked for the title, I'd feel the answer came late and was shallow.",
+  "what_I_would_comment": "'0.02秒那个真的骗到我了，我还特意摘了一只耳机😂' plus, honestly, '低音删了到底还听不听得见鼓？没说啊' and '年纪越大高音听不见那里，是不是有个音我没听到？？我才20'",
+  "for_frames_only": [
+    {"frame": "0:01 慢放：波被拉长", "what_this_says_in_5s": "Slowing a song stretches the wave. Clear and calm, a good opener."},
+    {"frame": "0:05 调快：变高 (×1.26 → +4个半音)", "what_this_says_in_5s": "Squeezed wave = higher. The '+4个半音' is nerd detail I skip, but the squashed wave tells the story without it."},
+    {"frame": "0:16 喇叭推空气 (挤紧/松开)", "what_this_says_in_5s": "Speaker pushes particles into bands. Beautiful and instantly readable, which is why the slow subtitles here feel redundant."},
+    {"frame": "0:26 只留低音（真实频谱）45 Hz", "what_this_says_in_5s": "A bar chart where only the left part is lit means only bass is left. I get it, but it's a chart, so 'class' feeling."},
+    {"frame": "0:34 幽灵低音 '45 Hz?' + '大脑从上面的泛音，补出了低音'", "what_this_says_in_5s": "This frame has the best fact in the video (the brain fills in a missing bass), but it's in small yellow text in the corner while the subtitle asks a question. In 5s I read the subtitle and miss the answer."},
+    {"frame": "0:50 双耳拍频 363/369, '6 Hz：只在你脑子里'", "what_this_says_in_5s": "Two ears, two slightly different waves, a beat 'only in your head'. Very clear and the strongest single frame. '6 Hz：只在你脑子里' should be the subtitle, not just a label."},
+    {"frame": "1:05 恶作剧：箭头骗你", "what_this_says_in_5s": "A giant arrow, 声音在左边. Simple and bold, and it works because it looks so sure of itself before 骗你的."},
+    {"frame": "1:16 组合技：上升音阶+360°", "what_this_says_in_5s": "Spiral coils around a head: something is circling me and climbing. Looks like a climax. It doesn't tell me why the tone rises forever."},
+    {"frame": "1:21 主鼓点：炸开+片名", "what_this_says_in_5s": "Big gold ring + title = 'this is the ending / channel outro'. Pretty, but it signals the end at the halfway point."},
+    {"frame": "1:36 五度 3:2 (363 vs 545 + Lissajous loop)", "what_this_says_in_5s": "Two waves with dotted lines lining up every 3 vs 2 cycles. This is the clearest 原来如此 visual. The figure-8 loop on the right I don't understand, but it looks nice."},
+    {"frame": "1:57 慢放更伤感 (-2个半音·每8秒绕一圈, rain)", "what_this_says_in_5s": "Rain + slow orbit around head = sad mood. The mood comes through even without the numbers."},
+    {"frame": "2:31 结尾 (particle cloud around head)", "what_this_says_in_5s": "All the sounds as dots around me. A calm ending, but generic. Nothing to screenshot."},
+    {"frame": "title29 79.8-80.8s (spiral + ①②③ labels)", "what_this_says_in_5s": "The ①永远上升 ②360° ③越来越响 labels help a lot: they tell me three effects are stacking. Without them the spiral is just pretty."},
+    {"frame": "title29 81.1-81.4s (particle burst into title)", "what_this_says_in_5s": "Explosion, then the title appears. Strong 'wow' visually, but it reads as a finale."},
+    {"frame": "title29 82.5-85.4s (title with wavy line, then dissolving + '可为什么，有的声音好听？')", "what_this_says_in_5s": "Once the subtitle question shows at 84.5s I understand the video is continuing. But that's 3-4s after the burst, and many people are gone by then. The dissolve at 85.4s looks nice."}
+  ]
+}
