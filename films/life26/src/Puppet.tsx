@@ -12,7 +12,7 @@ import { FontFaces, clamp, eio, eo, lerp, pr } from './kit';
 import * as P from './puppets';
 
 export const PUPPET_FRAMES = Math.round(188.8 * 30);
-const TITLE = 42.27, END = 182.6;
+const TITLE = 42.42, END = 182.6;   // the title on the track's strongest hit (42.48), not 6 frames ahead of it
 type G = CanvasRenderingContext2D;
 type Pt = [number, number];
 const INK = '#1d1915', WARM = '255,206,140', LIGHT = '255,240,214';
@@ -32,7 +32,8 @@ const BG_IDS = ['night', 'savanna', 'room', 'studio', 'pond', 'dusk', 'river'];
 const loadImg = (src: string) => new Promise<HTMLImageElement>((res) => { const im = new Image(); im.onload = () => res(im); im.onerror = () => res(im); im.src = src; });
 const loadAll = () => Promise.all([
   ...Object.keys(AS).map((id) => loadImg(staticFile(`${(CUT2 as any)[id] ? 'cut2' : 'cut'}/${id}.png`)).then((im) => IMG.set(id, im))),
-  ...BG_IDS.map((id) => loadImg(staticFile(`bg/${id}.jpg`)).then((im) => IMG.set('bg_' + id, im))),
+  ...Object.keys(AS).flatMap((id) => ['sh', 'rim', 'dk'].map((v) => loadImg(staticFile(`cut_${v}/${id}.png`)).then((im) => IMG.set(`${v}_${id}`, im)))),
+  ...BG_IDS.map((id) => loadImg(staticFile(`bg2/${id}.jpg`)).then((im) => IMG.set('bg_' + id, im))),
 ]);
 
 let NOW = 0;
@@ -44,19 +45,30 @@ const glow = (g: G, x: number, y: number, r: number, a: number, col = WARM) => {
   g.fillStyle = gr; g.fillRect(x - r, y - r, 2 * r, 2 * r);
 };
 
+/** a warm pool of light lying on the floor (an ellipse), so warmth lights the ground around a puppet instead of the air behind it */
+const pool = (g: G, x: number, y: number, r: number, a: number, ry: number, col = WARM) => { if (a <= 0.002) return; g.save(); g.translate(x, y); g.scale(1, ry); glow(g, 0, 0, r, a, col); g.restore(); };
+const SH_PAD = 90;
 /** a cardboard puppet with its feet at (x, y), scale s (puppet units). p 0..1 brings it up from below the way a stick puppet comes on;
  *  warm 0..1 lights it from behind; sway = the hand holding the stick */
-const card = (g: G, id: string, x: number, y: number, s: number, p: number, o = 1, warm = 0, flip = false, sway = 1) => {
+type CardOpt = { fade?: boolean; dark?: number };
+const card = (g: G, id: string, x: number, y: number, s: number, p: number, o = 1, warm = 0, flip = false, sway = 1, opt: CardOpt = {}) => {
   const a = AS[id], im = IMG.get(id);
   if (!a || !im || o <= 0.002 || p <= 0) return;
   const k = clamp(p), sc = s / a.k, ph = (x * 0.013 + id.length * 1.7);
-  const rise = (1 - backOut(k)) * 420 * Math.max(0.5, s), al = o * clamp(k * 3);
-  if (warm > 0.02) glow(g, x, y - a.ay * sc * 0.5, Math.max(a.w, a.h) * sc * 0.55, 0.42 * warm * o);
+  // set pieces (opt.fade) are already on stage and fade in with their set; characters come up from below like a stick puppet
+  const rise = opt.fade ? 0 : (1 - backOut(k)) * 420 * Math.max(0.5, s), al = o * clamp(opt.fade ? k : k * 3);
+  if (warm > 0.02) glow(g, x, y - a.ay * sc * 0.5, Math.max(a.w, a.h) * sc * 0.5, 0.22 * warm * o, '255,186,100');
   const rot = sway * (0.022 * Math.sin(NOW * 2.1 + ph) + 0.01 * Math.sin(NOW * 3.7 + ph * 2)) * (1 - 0.5 * (1 - k));
-  g.save(); g.globalAlpha = al; g.translate(x, y + rise + sway * 4 * Math.sin(NOW * 2.6 + ph)); g.rotate(rot); if (flip) g.scale(-1, 1);
-  g.drawImage(im, -a.ax * sc, -a.ay * sc, a.w * sc, a.h * sc);
+  g.save(); g.translate(x, y + rise + sway * 4 * Math.sin(NOW * 2.6 + ph)); g.rotate(rot); if (flip) g.scale(-1, 1);
+  const sh = IMG.get('sh_' + id), off = Math.max(0.5, s);
+  if (sh) { g.globalAlpha = al; g.drawImage(sh, -(a.ax + SH_PAD) * sc + 22 * off, -(a.ay + SH_PAD) * sc + 30 * off, sh.width * sc, sh.height * sc); }
+  g.globalAlpha = al; g.drawImage(im, -a.ax * sc, -a.ay * sc, a.w * sc, a.h * sc);
+  const dk = IMG.get('dk_' + id); if (dk && (opt.dark ?? 0) > 0.01) { g.globalAlpha = al * clamp(opt.dark!); g.drawImage(dk, -a.ax * sc, -a.ay * sc, a.w * sc, a.h * sc); }
+  const rim = IMG.get('rim_' + id); if (rim && warm > 0.05) { g.globalAlpha = al * 0.7 * clamp(warm); g.drawImage(rim, -a.ax * sc, -a.ay * sc, a.w * sc, a.h * sc); }
   g.restore();
 };
+/** the hand holding the stick goes still before a puppet dies (eased, not switched off) */
+const still = (T: number, t: number) => 1 - eio(T, t - 0.3, 0.3);
 /** where a puppet's head is (for hearts above it) */
 const topOf = (id: string, y: number, s: number) => { const a = AS[id]; const sc = s / a.k; return y - (a.ay * sc) + 18 * s; };
 
@@ -114,7 +126,7 @@ let DIS: Dis[] = [];
 let FLY_DIS: Dis, CAT_DIS: Dis, RHINO_DIS: Dis;
 const ensureDis = () => {
   if (DIS.length) return;
-  FLY_DIS = makeDis('fly', 1100, 820, 0.62, 17.2, 1.0, 0, 0, 0, 0, 0, 0, 20.0); CAT_DIS = makeDis('cat', 1040, 800, 0.9, 1.1, 2.0, 0, 0, 0, 0, 0, 0, 4.0); RHINO_DIS = makeDis('rhino', 940, 800, 1.05, 7.9, 2.8, 0, 0, 0, 0, 0, 0, 14.0);
+  FLY_DIS = makeDis('fly', 1100, 820, 0.62, 17.2, 1.0, 0, 0, 0, 0, 0, 0, 20.0); CAT_DIS = makeDis('cat', 1040, 800, 0.9, 0.6, 0.8, 0, 0, 0, 0, 0, 0, 2.67); RHINO_DIS = makeDis('rhino', 940, 800, 1.05, 7.9, 2.8, 0, 0, 0, 0, 0, 0, 13.17);
   DIS = [
     makeDis('fly', 470, 780, 0.9, 22.5, 1.2, 0, 470, 545, 80, 0.04, 27.7, 35.0),
     makeDis('cat', 960, 790, 0.8, 23.0, 1.6, 0.45, 960, 420, 160, 0.55, 27.9, 36.6),
@@ -206,11 +218,12 @@ const titleLayer = () => {
 const BGS: [string, number][] = [['night', 0], ['savanna', 5.6], ['room', 16.8], ['studio', 22.5], ['pond', 63.0], ['dusk', 71.1], ['studio', 81.1], ['river', 122.6], ['studio', 137.3], ['dusk', 146.2]];
 const background = (g: G, T: number) => {
   let bi = 0; for (let i = 0; i < BGS.length; i++) if (T >= BGS[i][1]) bi = i;
-  const fadeIn = bi > 0 ? eo(T, BGS[bi][1], 0.6) : 1, push = 1 + 0.03 * clamp((T - BGS[bi][1]) / 20);
-  g.save(); g.translate(960, 560); g.scale(push, push); g.translate(-960, -560);
-  if (bi > 0 && fadeIn < 1) { const pb = IMG.get('bg_' + BGS[bi - 1][0]); if (pb) g.drawImage(pb, 0, 0, 1920, 1080); }
-  const b = IMG.get('bg_' + BGS[bi][0]); if (b) { g.globalAlpha = fadeIn; g.drawImage(b, 0, 0, 1920, 1080); g.globalAlpha = 1; }
-  g.restore();
+  // a real dissolve (0.9 s, eased both ways); the outgoing set keeps its own push so nothing jumps
+  const pushAt = (i: number, t: number) => 1 + 0.03 * clamp((t - BGS[i][1]) / 20);
+  const at = (i: number, sc: number, a: number) => { const b = IMG.get('bg_' + BGS[i][0]); if (!b || a <= 0) return; g.save(); g.globalAlpha = a; g.translate(960, 560); g.scale(sc, sc); g.translate(-960, -560); g.drawImage(b, 0, 0, 1920, 1080); g.restore(); };
+  const fadeIn = bi > 0 ? eio(T, BGS[bi][1], 0.9) : 1;
+  if (bi > 0 && fadeIn < 1) at(bi - 1, pushAt(bi - 1, T), 1);
+  at(bi, pushAt(bi, T), fadeIn);
 };
 
 /* ------------------------------------------------------------ the picture (v3, scene by scene) */
@@ -226,30 +239,31 @@ const draw = (g: G, T: number) => {
     const s = 1 + 0.025 * T; g.save(); g.translate(960, 600); g.scale(s, s); g.translate(-960, -600);
     glow(g, 910, 230, 260, 0.45 * eo(T, 1.0, 1.5) * oA);
     g.save(); g.globalAlpha = 0.24 * eo(T, 1.2, 1.6) * oA; const cone = g.createLinearGradient(0, 230, 0, 800); cone.addColorStop(0, 'rgba(255,206,140,.9)'); cone.addColorStop(1, 'rgba(255,206,140,0.15)'); g.fillStyle = cone; g.beginPath(); g.moveTo(880, 240); g.lineTo(940, 240); g.lineTo(1200, 800); g.lineTo(780, 800); g.closePath(); g.fill(); g.restore();
-    glow(g, 1000, 800, 330, 0.3 * eo(T, 1.4, 1.6) * oA);
-    card(g, 'lamp', 780, 800, 0.9, eo(T, 0.3, 1.0), oA, 0, false, 0.4);
-    g.save(); clipFront(g, T < CAT_DIS.t0 ? -1e9 : CAT_DIS.xmin + (T - CAT_DIS.t0) * 150); card(g, 'cat', 1040, 800, 0.9, eo(T, 1.1, 1.0), oA, 0.15, false, T < 3.9 ? 1 : 0); g.restore();
-    if (T >= CAT_DIS.t0) crumble(g, CAT_DIS, T, 150, 2.2);
+    pool(g, 1000, 835, 430, 0.36 * eo(T, 0.4, 1.4) * oA, 0.3);
+    card(g, 'lamp', 780, 800, 0.9, eo(T, 0.0, 0.5), oA, 0, false, 0.4, { fade: true });
+    // the cat: there with the first line; on "被车撞了" it breaks into flakes; "很多人会难过一整天" is read over the empty pool of light
+    g.save(); clipFront(g, T < CAT_DIS.t0 ? -1e9 : CAT_DIS.xmin + (T - CAT_DIS.t0) * 330); card(g, 'cat', 1040, 800, 0.9, eo(T, 0.6, 0.8), oA, 0.15, false, still(T, 2.6)); g.restore();
+    if (T >= CAT_DIS.t0) crumble(g, CAT_DIS, T, 330, 1.6);
     g.restore();
   }
   // B · Sudan (5.6–16.8)
   const oB = fade(T, 5.6, 16.8);
   if (oB > 0) {
     const s = 1 + 0.012 * (T - 5.6); g.save(); g.translate(960, 640); g.scale(s, s); g.translate(-960, -640);
-    glow(g, 1500, 760, 520, 0.35 * eo(T, 5.8, 2.0) * oB);
-    g.save(); clipFront(g, T < RHINO_DIS.t0 ? -1e9 : RHINO_DIS.xmin + (T - RHINO_DIS.t0) * 280);
-    card(g, 'rhino', 940, 800, 1.05, eo(T, 7.9, 1.2), oB, 0.1, false, T < 13.9 ? 1 : 0);
-    const kn = eo(T, 11.5, 0.9);
-    if (kn > 0) { g.save(); g.beginPath(); g.rect(0, 0, 760 + 400 * kn, 1080); g.clip(); tag(g, 'Sudan', 930, 862, oB); g.restore(); }
-    g.restore();
-    if (T >= RHINO_DIS.t0) crumble(g, RHINO_DIS, T, 280, 2.4);
-    if (T > 13.6) { P.reseed(7); for (let i = 0; i < 70; i++) { const x = 80 + P.rand() * 1760, y = 60 + P.rand() * 540, t0 = 13.7 + P.rand() * 2.4; const a = eo(T, t0, 0.6) * (0.55 + 0.45 * Math.sin(T * 3 + i)) * oB; glow(g, x, y, 14 + P.rand() * 18, 0.85 * a); } }
+    glow(g, 1610, 470, 300, 0.28 * eo(T, 5.8, 2.0) * oB); pool(g, 940, 812, 560, 0.22 * eo(T, 7.9, 1.5) * oB, 0.22);
+    // Sudan: after his name he breaks into flakes; his name tag stays where he stood, and the world's small lights gather over the empty place
+    const fR = T < RHINO_DIS.t0 ? -1e9 : RHINO_DIS.xmin + (T - RHINO_DIS.t0) * 500;
+    g.save(); clipFront(g, fR); card(g, 'rhino', 940, 800, 1.05, eo(T, 7.9, 1.2), oB, 0.1, false, still(T, 13.1)); g.restore();
+    const kn = eo(T, 11.5, 0.9), drop = eo(T, RHINO_DIS.t0 + (870 - RHINO_DIS.xmin) / 500, 0.35);
+    if (kn > 0) { g.save(); g.beginPath(); g.rect(0, 0, 760 + 400 * kn, 1080); g.clip(); g.translate(930, 862 + 50 * drop); g.rotate(0.12 * drop); tag(g, 'Sudan', 0, 0, oB); g.restore(); }
+    if (T >= RHINO_DIS.t0) crumble(g, RHINO_DIS, T, 500, 1.8);
+    if (T > 14.2) { P.reseed(7); for (let i = 0; i < 70; i++) { const near = i % 2 === 0, x = near ? 600 + P.rand() * 700 : 80 + P.rand() * 1760, y = near ? 260 + P.rand() * 420 : 60 + P.rand() * 540, t0 = 14.3 + P.rand() * 1.6; const a = eo(T, t0, 0.6) * (0.55 + 0.45 * Math.sin(T * 3 + i)) * oB; glow(g, x, y, 14 + P.rand() * 18, 0.85 * a); } }
     g.restore();
   }
   // C · the fly on the sill (16.8–22.5)
   const oC = fade(T, 16.8, 22.5);
   if (oC > 0) {
-    card(g, 'window', 960, 830, 0.82, eo(T, 16.8, 0.8), oC, 0, false, 0.3);
+    card(g, 'window', 960, 830, 0.82, eo(T, 16.8, 0.6), oC, 0, false, 0.3, { fade: true });
     const sh = Math.min(eo(T, 19.75, 0.2), 1 - pr(T, 20.05, 0.35));
     if (sh > 0) { const gr = g.createRadialGradient(1100, 790, 0, 1100, 790, 220); gr.addColorStop(0, `rgba(20,12,6,${0.5 * sh})`); gr.addColorStop(1, 'rgba(20,12,6,0)'); g.fillStyle = gr; g.fillRect(880, 570, 440, 440); }
     g.save(); clipFront(g, T < 20.0 ? -1e9 : FLY_DIS.xmin + (T - 20.0) * 260); card(g, 'fly', 1100, 820, 0.62, eo(T, 17.2, 0.8), oC, 0, false, T < 19.9 ? 1 : 0); g.restore();
@@ -264,7 +278,7 @@ const draw = (g: G, T: number) => {
       const hk = d.hk * fillK, remain = front < -1e8 ? 1 : clamp((d.hx + d.hs * 0.5 - front) / d.hs);
       if (hk > 0.3) glow(g, d.hx, d.hy, d.hs * 1.5 * hk, 0.38 * hk * oD * remain);
       g.save(); clipFront(g, front);
-      card(g, d.id, d.x, d.y, d.s, eo(T, d.tin, d.din * 0.7), oD, d.warm * fillK, false, 0);
+      card(g, d.id, d.x, d.y, d.s, eo(T, d.tin, d.din * 0.7), oD, d.warm * fillK, false, 0, { fade: true });
       heart(g, d.hx, d.hy, d.hs, hk, eo(T, d.th, 0.6), oD, false);
       g.restore();
       if (T >= d.t0 && T < TITLE - 0.02) crumble(g, d, T);
@@ -280,7 +294,7 @@ const draw = (g: G, T: number) => {
     const row: [string, number, number, number][] = [['we', 330, 0.46, 1], ['dog', 600, 0.46, 0.8], ['bird', 860, 0.55, 0.6], ['frog', 1110, 0.55, 0.42], ['fish', 1370, 0.55, 0.26], ['fly', 1620, 0.62, 0.08]];
     const oL = eo(T, 53.0, 0.8) * oM1;
     if (oL > 0) {
-      card(g, 'ruler', 1000, 922, 1.0, eo(T, 53.0, 0.8), oL, 0, false, 0.3);
+      card(g, 'ruler', 1000, 922, 1.0, eo(T, 53.0, 0.6), oL, 0, false, 0.3, { fade: true });
       row.forEach(([id, x, sc, k], i) => {
         card(g, id, x, 825, sc, eo(T, 53.3 + i * 0.25, 0.8), oL, 0.7 * k * eo(T, 55.4, 1.5));
         heart(g, x, 470, 90, k * eo(T, 55.4 + i * 0.15, 1.6), eo(T, 54.4 + i * 0.2, 0.5), oL);
@@ -290,7 +304,7 @@ const draw = (g: G, T: number) => {
   // M2 · 庄子 and 惠子 on the bridge (63–71)
   const oM2 = fade(T, 63.0, 71.2, 0.6, 0.6);
   if (oM2 > 0) {
-    card(g, 'bridge', 960, 862, 1.0, eo(T, 63.0, 0.8), oM2, 0, false, 0.2);
+    card(g, 'bridge', 960, 862, 1.0, eo(T, 63.0, 0.6), oM2, 0, false, 0.2, { fade: true });
     const FISH_SWIM: [number, number, number, number, boolean][] = [[520, 905, 0.36, 46, false], [1010, 930, 0.32, -38, true], [1340, 900, 0.3, 52, false], [760, 945, 0.28, -30, true]];
     FISH_SWIM.forEach(([x0, y0, sc, v, fl], i) => { const t = T - 63.0, x = x0 + v * t, y = y0 + 6 * Math.sin(t * 1.7 + i * 2); card(g, 'fish', x, y, sc, eo(T, 63.6 + i * 0.25, 0.8), oM2 * 0.95, 0.15, fl); });
     const lj = pr(T, 66.0, 1.1);
@@ -318,7 +332,7 @@ const draw = (g: G, T: number) => {
   const rowLife = (oR: number, bx: number, allWarm: number, t0: number) => {
     ROW.forEach(([id, x, sc], i) => {
       const inside = Math.max(allWarm, clamp((bx - x) / 40 + 0.5));
-      card(g, id, x, 825, sc, eo(T, t0 + 0.2 + i * 0.25, 0.8), oR * (0.45 + 0.55 * inside), 0.8 * inside);
+      card(g, id, x, 825, sc, eo(T, t0 + 0.2 + i * 0.25, 0.8), oR, 0.8 * inside, false, 1, { dark: 0.85 * (1 - inside) });
     });
   };
   const oM4 = fade(T, 81.1, 122.6, 0.7, 0.6);
@@ -341,10 +355,10 @@ const draw = (g: G, T: number) => {
   // M5 · Schweitzer on the river (122.6–137.3)
   const oM5 = fade(T, 122.6, 137.4, 0.7, 0.7);
   if (oM5 > 0) {
-    glow(g, 1500, 640, 520, 0.22 * oM5);
+    glow(g, 1500, 470, 380, 0.22 * oM5); pool(g, 960, 905, 600, 0.16 * oM5, 0.2);
     const dx = 120 * pr(T, 122.7, 14.7);
     person(g, 'schweitzer', 720 + dx, 800, 0.6, eo(T, 123.0, 1.0), oM5, '');
-    card(g, 'boat', 900 + dx, 900, 0.85, eo(T, 122.8, 1.0), oM5, 0, false, 0.6);
+    card(g, 'boat', 900 + dx, 900, 0.85, eo(T, 122.6, 0.6), oM5, 0, false, 0.6, { fade: true });
     tag(g, '史怀哲 · Schweitzer', 720 + dx, 470, oM5 * eo(T, 124.0, 0.6));
     card(g, 'hippo', 300, 900, 0.7, eo(T, 125.8, 0.9), oM5, 0, false, 0.4); card(g, 'hippo', 1640, 910, 0.6, eo(T, 126.3, 0.9), oM5, 0, false, 0.4);
     bubble(g, 1240, 330, 680, 190, -1, eo(T, 129.2, 0.5), oM5 * (1 - pr(T, 131.6, 0.3)), ['Ehrfurcht vor dem Leben.'], true, 52);
@@ -383,7 +397,8 @@ const draw = (g: G, T: number) => {
     const shade = 0.42 * (1 - eo(T, DROP, 0.5)) * oE;
     if (shade > 0) { g.save(); g.translate(0, 45); g.fillStyle = `rgba(8,8,16,${shade})`; g.fillRect(0, 0, 1920, 1080); g.restore(); }
     g.save(); g.translate(960, 640); g.scale(1 + 0.045 * punch, 1 + 0.045 * punch); g.translate(-960, -640);
-    glow(g, cx, cy + 40, Math.min(r * 1.15, 900), (0.38 + 0.08 * eo(T, DROP, 0.6)) * oE * (r > 400 ? 0.7 : 1));
+    if (td < 0.3) glow(g, cx, cy + 40, Math.min(r * 1.15, 900), 0.38 * oE * (1 - clamp(td / 0.3)));
+    if (td > 0) pool(g, 960, 800, 950, 0.3 * eo(T, DROP, 0.6) * oE, 0.36);
     if (td > 0) glow(g, cx, cy, 1500, 0.55 * Math.exp(-td / 0.6) * oE);
     if (r < 1600) light(g, P.ell(cx, cy, r, r * ry, -Math.PI / 2, Math.PI * 1.5, 140), 1, 5.5, oE * (td > 0 ? 1 - clamp(td / 0.8) : 1));
     if (td > 0 && td < 1.0) light(g, P.ell(cx, cy, r * 1.2 + 200 * td, (r * 1.2 + 200 * td) * ry, 0, Math.PI * 2, 140), 1, 9 * (1 - td), oE * (1 - td));
@@ -391,7 +406,7 @@ const draw = (g: G, T: number) => {
     crowd.forEach(([id, x, y, s, t0], i) => {
       const d = Math.hypot((x - cx) / r, (y - 80 - cy) / (r * ry)), inside = clamp((1.1 - d) / 0.2);
       const warm = Math.max(inside * 0.85, warmAll * 0.9);
-      card(g, id, x, y, s, eo(T, t0, 1.0), oE * (0.45 + 0.55 * inside), warm);
+      card(g, id, x, y, s, eo(T, t0, 1.0), oE, warm, false, 1, { dark: 0.8 * (1 - inside) });
       if (td > 0) { const k = eo(T, DROP + 0.05 + i * 0.03, 0.35), hs = 78 * (0.6 + 0.4 * k + 0.25 * Math.exp(-Math.max(0, td - i * 0.03) / 0.18)); heart(g, x, topOf(id, y, s) - 46, hs, k, k, oE); }
     });
     card(g, 'we', 960, 820, 0.6, 1, oE, 0.6 + 0.4 * Math.max(warmAll, eo(T, DROP, 0.4)));
