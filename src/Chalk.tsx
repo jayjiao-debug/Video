@@ -1,6 +1,6 @@
-/* 《生命平等吗？》 look C · 暖夜粉笔: chalk drawings that draw themselves on a dark night board, one warm light.
-   Sample cut: the cold open to the title (0–47 s) and the ending + end card (163–188.8 s). The drawings reuse the puppet
-   ink (puppets.ts) through a recording context, replayed as chalk lines with a reveal. No canvas filters. */
+/* 《生命平等吗？》 v8 · clear look: flat-colour "sticker" characters (light rim, dark lines) on a clean dark board; hearts, rings,
+   glows and the title stay warm light. Lines are re-timed to src/lines.json (timeline_v8.py, 6.3 characters a second);
+   scene times are written relative to those lines (L(i)), so a re-pace moves the pictures with the words. */
 import React, { useEffect, useState } from 'react';
 import { AbsoluteFill, continueRender, delayRender, staticFile, useCurrentFrame } from 'remotion';
 import '@fontsource/ma-shan-zheng';
@@ -10,20 +10,30 @@ import { Canvas, FontFaces, clamp, eio, eo, lerp, pr } from './kit';
 import * as P from './puppets';
 import { PUPPETS } from './Asset';
 
-export const CHALK_FRAMES = Math.round(188.8 * 30);
-const TITLE = 42.27, END = 182.6;
+export const FILM_END = 194.2;
+export const CHALK_FRAMES = Math.round(FILM_END * 30);
+const TITLE = 42.36, END = 187.9, DROP = 168.40;
 type G = CanvasRenderingContext2D;
 type Pt = [number, number];
-type Stroke = { pts: Pt[]; w: number; a: number; kind: 'line' | 'dot' | 'fill'; len: number };
 
-const LINES = (RAW as [number, number, string][]).map(([a, z, s], i, arr) => {
+const RL = RAW as [number, number, string][];
+const L = (i: number) => RL[i][0];
+const LINES = RL.map(([a, z, s], i, arr) => {
   const nxt = i + 1 < arr.length ? arr[i + 1][0] : END;
   return [a, Math.min(nxt - 0.12, z + 0.6), s] as [number, number, string];
 });
 
-/* ------------------------------------------------------------ recording the puppet ink as polylines */
-const CACHE = new Map<string, { strokes: Stroke[]; total: number }>();
-const record = (id: string) => {
+const CHALK = '242,236,222', WARM = '255,206,140', INK = '30,27,24', RIM = '246,241,231';
+const hex = (h: string) => { const n = parseInt(h.slice(1), 16); return `${(n >> 16) & 255},${(n >> 8) & 255},${n & 255}`; };
+const mix = (a: string, b: string, k: number) => { const A = a.split(',').map(Number), B = b.split(',').map(Number); return A.map((v, i) => Math.round(lerp(v, B[i], clamp(k)))).join(','); };
+const hash = (i: number, k = 0) => { const v = Math.sin(i * 12.9898 + k * 78.233) * 43758.5453; return v - Math.floor(v); };
+
+/* ------------------------------------------------------------ recording a puppet: its shapes, fills and ink */
+type Stroke = { pts: Pt[]; w: number; a: number; kind: 'line' | 'dot' | 'fill'; len: number; col: string };
+type Rec = { strokes: Stroke[]; total: number; body: P.Shape[]; fills: (string | null)[]; light: boolean; m: number; minY: number; minX: number; maxX: number };
+const LIGHT = new Set(['window']);
+const CACHE = new Map<string, Rec>();
+const record = (id: string): Rec => {
   if (CACHE.has(id)) return CACHE.get(id)!;
   P.reseed(id.split('').reduce((a, c) => a + c.charCodeAt(0), 7));
   const strokes: Stroke[] = [];
@@ -35,179 +45,226 @@ const record = (id: string) => {
     lineTo(x: number, y: number) { cur.push([x, y]); },
     closePath() { if (cur.length) cur.push([cur[0][0], cur[0][1]]); },
     arc(x: number, y: number, r: number) { dot = [x, y, r]; },
-    stroke() { for (const s of [...subs, cur]) if (s.length > 1) { let len = 0; for (let i = 1; i < s.length; i++) len += Math.hypot(s[i][0] - s[i - 1][0], s[i][1] - s[i - 1][1]); strokes.push({ pts: s.slice(), w: rec.lineWidth, a: rec.globalAlpha, kind: 'line', len }); } },
-    fill() { if (dot) strokes.push({ pts: [[dot[0], dot[1]]], w: dot[2], a: 1, kind: 'dot', len: 4 }); else if (cur.length > 2) strokes.push({ pts: cur.slice(), w: 0, a: rec.globalAlpha, kind: 'fill', len: 10 }); },
+    stroke() { for (const s of [...subs, cur]) if (s.length > 1) { let len = 0; for (let i = 1; i < s.length; i++) len += Math.hypot(s[i][0] - s[i - 1][0], s[i][1] - s[i - 1][1]); strokes.push({ pts: s.slice(), w: rec.lineWidth, a: rec.globalAlpha, kind: 'line', len, col: '' }); } },
+    fill() { if (dot) strokes.push({ pts: [[dot[0], dot[1]]], w: dot[2], a: 1, kind: 'dot', len: 4, col: '' }); else if (cur.length > 2) strokes.push({ pts: cur.slice(), w: 0, a: rec.globalAlpha, kind: 'fill', len: 10, col: String(rec.fillStyle) }); },
     save() {}, restore() {}, translate() {}, scale() {}, rotate() {}, fillRect() {},
   };
-  PUPPETS[id]().ink(rec as G);
-  // keep the main pass of each marker line (the faint second pass doubles as chalk texture, at low alpha)
+  const pup = PUPPETS[id]();
+  pup.ink(rec as G);
   const total = strokes.reduce((a, s) => a + (s.a > 0.5 ? s.len : 0), 0) || 1;
-  const out = { strokes, total };
+  const all = pup.body.flatMap((b) => b.pts);
+  const out: Rec = { strokes, total, body: pup.body, fills: pup.fills ?? pup.body.map(() => pup.tint ?? '#c9a272'), light: LIGHT.has(id), m: pup.m ?? 16,
+    minY: Math.min(...all.map((p) => p[1])), minX: Math.min(...all.map((p) => p[0])), maxX: Math.max(...all.map((p) => p[0])) };
   CACHE.set(id, out);
   return out;
 };
+const shapePath = (g: G, b: P.Shape) => { g.beginPath(); b.pts.forEach(([x, y], i) => (i ? g.lineTo(x, y) : g.moveTo(x, y))); if (b.closed) g.closePath(); };
+const strokePart = (g: G, pts: Pt[], use: number) => {
+  g.beginPath(); let acc = 0; g.moveTo(pts[0][0], pts[0][1]);
+  for (let i = 1; i < pts.length; i++) {
+    const [ax, ay] = pts[i - 1], [bx, by] = pts[i], d = Math.hypot(bx - ax, by - ay);
+    if (acc + d >= use) { const k = (use - acc) / Math.max(d, 1e-6); g.lineTo(ax + (bx - ax) * k, ay + (by - ay) * k); break; }
+    g.lineTo(bx, by); acc += d;
+  }
+};
 
-const CHALK = '242,236,222', WARM = '255,206,140';
-/** draw a recorded puppet as chalk at (x, y), scale s; `p` reveals it along its length; `warm` 0..1 tints it */
-const chalkPuppet = (g: G, id: string, x: number, y: number, s: number, p: number, o = 1, warm = 0, flip = false) => {
+/** a character as a sticker at (x, y) (its feet), scale s. p 0..1 draws it on (colour first, then the lines); warm 0..1 = in the circle of care */
+const figure = (g: G, id: string, x: number, y: number, s: number, p: number, o = 1, warm = 0, flip = false) => {
   if (o <= 0.002 || p <= 0) return;
-  const { strokes, total } = record(id);
-  const col = tint(warm);
-  let budget = p * total * 1.02, lastFull = true;
+  const R = record(id);
   g.save(); g.translate(x, y); g.scale(flip ? -s : s, s); g.lineCap = 'round'; g.lineJoin = 'round';
-  for (const st of strokes) {
-    const main = st.a > 0.5;
-    if (st.kind === 'dot') { if (budget <= 0) break; g.fillStyle = `rgba(${col},${0.85 * o})`; g.beginPath(); g.arc(st.pts[0][0], st.pts[0][1], st.w, 0, 7); g.fill(); continue; }
-    if (st.kind === 'fill') { if (budget <= 0) break; g.fillStyle = `rgba(${col},${0.22 * o})`; g.beginPath(); st.pts.forEach(([a, b], i) => (i ? g.lineTo(a, b) : g.moveTo(a, b))); g.closePath(); g.fill(); continue; }
-    let use = st.len;
-    if (main) { if (budget <= 0) break; use = Math.min(st.len, budget); lastFull = budget >= st.len; budget -= st.len; }
-    else if (!lastFull) continue;
-    // partial polyline
-    g.beginPath(); let acc = 0; g.moveTo(st.pts[0][0], st.pts[0][1]);
-    for (let i = 1; i < st.pts.length; i++) {
-      const [ax, ay] = st.pts[i - 1], [bx, by] = st.pts[i], d = Math.hypot(bx - ax, by - ay);
-      if (acc + d >= use) { const k = (use - acc) / d; g.lineTo(ax + (bx - ax) * k, ay + (by - ay) * k); break; }
-      g.lineTo(bx, by); acc += d;
-    }
-    chalkStroke(g, col, st.w * 0.95 / Math.max(0.5, s), o, !main);
+  if (R.light) {
+    let budget = p * R.total * 1.02;
+    for (const st of R.strokes) { if (st.kind !== 'line' || st.a < 0.5 || budget <= 0) continue; strokePart(g, st.pts, Math.min(st.len, budget)); budget -= st.len; lightStroke(g, CHALK, st.w * 1.25 / Math.max(0.5, s) * 0.95, o); }
+    g.restore(); return;
+  }
+  const fo = o * clamp(p * 2.4);
+  if (fo > 0.002) {
+    const rimW = (6.5 + 4 * warm) / s, rc = mix(RIM, WARM, warm * 0.9);
+    g.globalAlpha = fo; g.fillStyle = `rgb(${rc})`; g.strokeStyle = `rgb(${rc})`;
+    R.body.forEach((b, i) => { if (b.closed && R.fills[i] === null) return; shapePath(g, b); if (b.closed) { g.lineWidth = 2 * rimW; g.fill(); g.stroke(); } else { g.lineWidth = R.m * 2 + 2 * rimW; g.stroke(); } });
+    R.body.forEach((b, i) => { const c = R.fills[i]; if (!c) return; shapePath(g, b); if (b.closed) { g.fillStyle = c; g.fill(); } else { g.strokeStyle = c; g.lineWidth = R.m * 2; g.stroke(); } });
+    if (warm > 0.02) { g.globalAlpha = fo * 0.16 * warm; g.fillStyle = `rgb(${WARM})`; R.body.forEach((b, i) => { if (!b.closed || !R.fills[i]) return; shapePath(g, b); g.fill(); }); }
+    g.globalAlpha = 1;
+  }
+  const iw = (0.55 + 0.9 * s) / s;
+  let budget = p * R.total * 1.02;
+  for (const st of R.strokes) {
+    if (st.kind === 'dot') { if (budget <= 0) break; g.fillStyle = `rgba(${INK},${o})`; g.beginPath(); g.arc(st.pts[0][0], st.pts[0][1], st.w * Math.min(1.5, iw * 0.85), 0, 7); g.fill(); continue; }
+    if (st.kind === 'fill') { if (budget <= 0) break; g.globalAlpha = o * st.a; g.fillStyle = st.col || `rgb(${INK})`; g.beginPath(); st.pts.forEach(([a, b], i) => (i ? g.lineTo(a, b) : g.moveTo(a, b))); g.closePath(); g.fill(); g.globalAlpha = 1; continue; }
+    if (st.a < 0.5) continue;
+    if (budget <= 0) break;
+    strokePart(g, st.pts, Math.min(st.len, budget)); budget -= st.len;
+    g.strokeStyle = `rgba(${INK},${o})`; g.lineWidth = st.w * iw; g.stroke();
   }
   g.restore();
 };
-/** chalk grain: a tile of specks in the given colour, used as the stroke paint so every line breaks up like chalk */
-const GRAIN = new Map<string, CanvasPattern>();
-const grain = (g: G, col: string) => {
-  const key = col; if (GRAIN.has(key)) return GRAIN.get(key)!;
-  const c = document.createElement('canvas'); c.width = 256; c.height = 256; const t = c.getContext('2d')!;
-  P.reseed(col.length * 13 + 5);
-  for (let i = 0; i < 16000; i++) { t.fillStyle = `rgba(${col},${0.3 + P.rand() * 0.7})`; const w = 0.8 + P.rand() * 2.2; t.fillRect(P.rand() * 256, P.rand() * 256, w, 0.8 + P.rand() * 1.6); }
-  for (let i = 0; i < 120; i++) { t.strokeStyle = `rgba(${col},.5)`; t.lineWidth = 0.8; const x = P.rand() * 256, y = P.rand() * 256; t.beginPath(); t.moveTo(x, y); t.lineTo(x + 6 + P.rand() * 10, y + (P.rand() - 0.5) * 2); t.stroke(); }
-  const p = g.createPattern(c, 'repeat')!; GRAIN.set(key, p); return p;
-};
-const tint = (warm: number) => { const q = Math.round(clamp(warm) * 4) / 4; return `${Math.round(lerp(242, 255, q))},${Math.round(lerp(236, 206, q))},${Math.round(lerp(222, 140, q))}`; };
-/** stroke the current path as chalk: a faint dust smear, a grainy body, a thin denser core */
-const chalkStroke = (g: G, col: string, w: number, o: number, light = false) => {
+/** the top of a character drawn at (y, s): where a heart above it goes */
+const topOf = (id: string, y: number, s: number) => y + record(id).minY * s;
+
+/* ------------------------------------------------------------ light lines: the ground, rings, hearts, bubbles */
+const lightStroke = (g: G, col: string, w: number, o: number) => {
   g.setLineDash([]); g.lineCap = 'round'; g.lineJoin = 'round';
-  if (!light) { g.strokeStyle = `rgba(${col},${0.035 * o})`; g.lineWidth = w * 3.0; g.stroke(); }
-  g.globalAlpha = (light ? 0.18 : 0.6) * o; g.strokeStyle = grain(g, col); g.lineWidth = w * (light ? 0.8 : 1.25); g.stroke(); g.globalAlpha = 1;
-  if (!light) { g.strokeStyle = `rgba(${col},${0.62 * o})`; g.lineWidth = w * 0.75; g.stroke(); }
+  g.strokeStyle = `rgba(${col},${0.1 * o})`; g.lineWidth = w * 2.6; g.stroke();
+  g.strokeStyle = `rgba(${col},${0.95 * o})`; g.lineWidth = w; g.stroke();
 };
 const glow = (g: G, x: number, y: number, r: number, a: number, col = WARM) => {
   if (a <= 0.002 || r <= 0) return;
   const gr = g.createRadialGradient(x, y, 0, x, y, r); gr.addColorStop(0, `rgba(${col},${a})`); gr.addColorStop(0.45, `rgba(${col},${a * 0.38})`); gr.addColorStop(1, `rgba(${col},0)`);
   g.fillStyle = gr; g.fillRect(x - r, y - r, 2 * r, 2 * r);
 };
-const chalkLine = (g: G, pts: Pt[], p: number, w = 5, o = 1, col = CHALK) => {
+const line = (g: G, pts: Pt[], p: number, w = 5, o = 1, col = CHALK) => {
   if (p <= 0 || o <= 0) return;
-  let L = 0; for (let i = 1; i < pts.length; i++) L += Math.hypot(pts[i][0] - pts[i - 1][0], pts[i][1] - pts[i - 1][1]);
-  let use = p * L, acc = 0; g.beginPath(); g.moveTo(pts[0][0], pts[0][1]);
-  for (let i = 1; i < pts.length; i++) { const d = Math.hypot(pts[i][0] - pts[i - 1][0], pts[i][1] - pts[i - 1][1]); if (acc + d >= use) { const k = (use - acc) / d; g.lineTo(pts[i - 1][0] + (pts[i][0] - pts[i - 1][0]) * k, pts[i - 1][1] + (pts[i][1] - pts[i - 1][1]) * k); break; } g.lineTo(pts[i][0], pts[i][1]); acc += d; }
-  chalkStroke(g, col, w, o);
+  let Ln = 0; for (let i = 1; i < pts.length; i++) Ln += Math.hypot(pts[i][0] - pts[i - 1][0], pts[i][1] - pts[i - 1][1]);
+  strokePart(g, pts, p * Ln); lightStroke(g, col, w * 1.35, o);
 };
 const wobbly = (x0: number, y0: number, x1: number, y1: number, n = 40, amp = 3, seed = 1): Pt[] => Array.from({ length: n + 1 }, (_, i) => { const t = i / n; return [x0 + (x1 - x0) * t, y0 + (y1 - y0) * t + amp * Math.sin(t * 13 + seed) * Math.sin(t * 5.3 + seed * 2)]; });
-
-/** a chalk heart (tip at cx, cy + size*0.45) whose inside fills from the bottom with warm light to level k */
-const chalkHeart = (g: G, cx: number, cy: number, size: number, k: number, p: number, o: number, halo = true) => {
+const heartPts = (cx: number, cy: number, size: number): Pt[] => { const sc = size / 320, tip = cy + size * 0.45; return [...P.bez([0, 0], [-160, -110], [-120, -260], [0, -190], 24), ...P.bez([0, -190], [120, -260], [160, -110], [0, 0], 24)].map(([x, y]) => [cx + x * sc, tip + y * sc]); };
+/** a heart (centre cx, cy) whose inside fills from the bottom with warm light to level k */
+const heart = (g: G, cx: number, cy: number, size: number, k: number, p: number, o: number, halo = true) => {
   if (p <= 0 || o <= 0) return;
-  const sc = size / 320, top = cy - size * 0.42, tip = cy + size * 0.45;
-  const pts: Pt[] = [...P.bez([0, 0], [-160, -110], [-120, -260], [0, -190], 24), ...P.bez([0, -190], [120, -260], [160, -110], [0, 0], 24)].map(([x, y]) => [cx + x * sc, tip + y * sc * 1.0]);
+  const pts = heartPts(cx, cy, size), top = cy - size * 0.42, tip = cy + size * 0.45;
+  g.save(); g.beginPath(); pts.forEach(([x, y], i) => (i ? g.lineTo(x, y) : g.moveTo(x, y))); g.closePath();
+  g.fillStyle = `rgba(14,17,24,${0.7 * o * clamp(p * 2)})`; g.fill(); g.restore();
   if (k > 0.01) {
     if (halo && k > 0.3) glow(g, cx, cy, size * 1.4 * k, 0.32 * k * o);
     g.save(); g.beginPath(); pts.forEach(([x, y], i) => (i ? g.lineTo(x, y) : g.moveTo(x, y))); g.closePath(); g.clip();
     const lvl = tip - (tip - top) * k;
-    const gr = g.createLinearGradient(0, tip, 0, lvl); gr.addColorStop(0, `rgba(${WARM},${0.85 * o})`); gr.addColorStop(1, `rgba(${WARM},${0.55 * o})`);
+    const gr = g.createLinearGradient(0, tip, 0, lvl); gr.addColorStop(0, `rgba(${WARM},${0.95 * o})`); gr.addColorStop(1, `rgba(${WARM},${0.7 * o})`);
     g.fillStyle = gr; g.fillRect(cx - size, lvl, size * 2, tip - lvl + 4);
-    g.strokeStyle = `rgba(255,236,200,${0.6 * o})`; g.lineWidth = 3; g.beginPath(); g.moveTo(cx - size, lvl); g.lineTo(cx + size, lvl); g.stroke();
+    g.strokeStyle = `rgba(255,240,210,${0.8 * o})`; g.lineWidth = Math.max(2, size / 40); g.beginPath(); g.moveTo(cx - size, lvl); g.lineTo(cx + size, lvl); g.stroke();
     g.restore();
   }
-  chalkLine(g, pts, p, Math.max(4, size / 34), o, k > 0.3 ? WARM : CHALK);
+  line(g, pts, p, Math.max(4.5, size / 24), o, k > 0.3 ? WARM : CHALK);
 };
 
-/* ------------------------------------------------------------ crumbling into chalk dust */
-const DIS_SPEED = 125;   // px/s, the same for all three
-type Dis = { id: string; x: number; y: number; s: number; tin: number; din: number; warm: number; hx: number; hy: number; hs: number; hk: number; th: number; t0: number; xmin: number; pts: [number, number, boolean][] };
-const hash = (i: number, k = 0) => { const v = Math.sin(i * 12.9898 + k * 78.233) * 43758.5453; return v - Math.floor(v); };
-const heartPts = (cx: number, cy: number, size: number): Pt[] => { const sc = size / 320, tip = cy + size * 0.45; return [...P.bez([0, 0], [-160, -110], [-120, -260], [0, -190], 24), ...P.bez([0, -190], [120, -260], [160, -110], [0, 0], 24)].map(([x, y]) => [cx + x * sc, tip + y * sc]); };
-const makeDis = (id: string, x: number, y: number, s: number, tin: number, din: number, warm: number, hx: number, hy: number, hs: number, hk: number, th: number, t0: number): Dis => {
-  const pts: [number, number, boolean][] = [];
-  const walk = (poly: Pt[], step: number, warmPt: boolean) => { for (let i = 1; i < poly.length; i++) { const [ax, ay] = poly[i - 1], [bx, by] = poly[i], d = Math.hypot(bx - ax, by - ay), n = Math.max(1, Math.round(d / step)); for (let k = 0; k < n; k++) pts.push([ax + (bx - ax) * k / n, ay + (by - ay) * k / n, warmPt]); } };
-  for (const st of record(id).strokes) { if (st.a < 0.5) continue; if (st.kind === 'line') walk(st.pts.map(([a, b]) => [x + a * s, y + b * s] as Pt), 4, false); if (st.kind === 'dot') pts.push([x + st.pts[0][0] * s, y + st.pts[0][1] * s, false]); }
-  const hp = hs > 0 ? heartPts(hx, hy, hs) : []; if (hs > 0) walk(hp, 4, hk > 0.3);
-  if (hs > 0 && hk > 0.01) { const path = new Path2D(); hp.forEach(([a, b], i) => (i ? path.lineTo(a, b) : path.moveTo(a, b))); path.closePath(); const c = document.createElement('canvas').getContext('2d')!; const top = hy - hs * 0.42, tip = hy + hs * 0.45, lvl = tip - (tip - top) * hk; for (let yy = lvl; yy < tip; yy += 7) for (let xx = hx - hs; xx < hx + hs; xx += 7) if (c.isPointInPath(path, xx, yy)) pts.push([xx, yy, true]); }
+/* ------------------------------------------------------------ crumbling into dust, front edge ragged, the dust in each part's own colour */
+type Dis = { id: string; x: number; y: number; s: number; t0: number; speed: number; seed: number; xmin: number; pts: [number, number, number][]; cols: string[]; hx: number; hy: number; hs: number; hk: number; th: number; tin: number; din: number; warm: number };
+const edgeOff = (y: number, seed: number) => -40 * (0.5 + 0.25 * Math.sin(y / 31 + seed) + 0.15 * Math.sin(y / 11.3 + seed * 2.1) + 0.1 * Math.sin(y / 5.1 + seed * 3.7));
+const makeDis = (id: string, x: number, y: number, s: number, t0: number, speed: number, o: { hx?: number; hy?: number; hs?: number; hk?: number; th?: number; tin?: number; din?: number; warm?: number } = {}): Dis => {
+  const R = record(id), pts: [number, number, number][] = [], cols: string[] = [hex('#f6f1e7'), WARM];
+  const c = document.createElement('canvas').getContext('2d')!;
+  const paths = R.body.map((b) => { const pa = new Path2D(); b.pts.forEach(([a, bb], i) => (i ? pa.lineTo(x + a * s, y + bb * s) : pa.moveTo(x + a * s, y + bb * s))); if (b.closed) pa.closePath(); return pa; });
+  const colIdx = R.body.map((_, i) => { const f = R.fills[i]; if (!f) return -1; const k = hex(f); let j = cols.indexOf(k); if (j < 0) { cols.push(k); j = cols.length - 1; } return j; });
+  const all = R.body.flatMap((b) => b.pts);
+  const x0 = x + Math.min(...all.map((p) => p[0])) * s - 10, x1 = x + Math.max(...all.map((p) => p[0])) * s + 10, y0 = y + Math.min(...all.map((p) => p[1])) * s - 10, y1 = y + Math.max(...all.map((p) => p[1])) * s + 10;
+  const step = 6.5;
+  for (let yy = y0; yy < y1; yy += step) for (let xx = x0; xx < x1; xx += step) {
+    for (let i = R.body.length - 1; i >= 0; i--) { if (!R.body[i].closed || colIdx[i] < 0) continue; if (c.isPointInPath(paths[i], xx, yy)) { pts.push([xx, yy, colIdx[i]]); break; } }
+  }
+  const hs = o.hs ?? 0;
+  if (hs > 0) {
+    const hp = heartPts(o.hx!, o.hy!, hs);
+    for (let i = 1; i < hp.length; i++) { const [ax, ay] = hp[i - 1], [bx, by] = hp[i], d = Math.hypot(bx - ax, by - ay), n = Math.max(1, Math.round(d / 5)); for (let k = 0; k < n; k++) pts.push([ax + (bx - ax) * k / n, ay + (by - ay) * k / n, (o.hk ?? 0) > 0.3 ? 1 : 0]); }
+    if ((o.hk ?? 0) > 0.01) { const path = new Path2D(); hp.forEach(([a, b], i) => (i ? path.lineTo(a, b) : path.moveTo(a, b))); path.closePath(); const top = o.hy! - hs * 0.42, tip = o.hy! + hs * 0.45, lvl = tip - (tip - top) * o.hk!; for (let yy = lvl; yy < tip; yy += 7) for (let xx = o.hx! - hs; xx < o.hx! + hs; xx += 7) if (c.isPointInPath(path, xx, yy)) pts.push([xx, yy, 1]); }
+  }
+  const seed = id.length * 1.7 + x * 0.013;
   const xmin = Math.min(...pts.map((p) => p[0]));
-  return { id, x, y, s, tin, din, warm, hx, hy, hs, hk, th, t0, xmin, pts };
+  return { id, x, y, s, t0, speed, seed, xmin, pts, cols, hx: o.hx ?? 0, hy: o.hy ?? 0, hs, hk: o.hk ?? 0, th: o.th ?? 0, tin: o.tin ?? 0, din: o.din ?? 1, warm: o.warm ?? 0 };
 };
-let DIS: Dis[] = [];
-let FLY_DIS: Dis, CAT_DIS: Dis, RHINO_DIS: Dis;
-const ensureDis = () => { if (DIS.length) return; FLY_DIS = makeDis('fly', 1100, 820, 0.62, 17.2, 1.0, 0, 0, 0, 0, 0, 0, 20.0); CAT_DIS = makeDis('cat', 1040, 800, 0.9, 1.1, 2.0, 0, 0, 0, 0, 0, 0, 4.0); RHINO_DIS = makeDis('rhino', 940, 800, 1.05, 7.9, 2.8, 0, 0, 0, 0, 0, 0, 14.0); DIS = [
-  makeDis('fly', 470, 780, 0.9, 22.5, 1.2, 0, 470, 545, 80, 0.04, 27.7, 35.0),
-  makeDis('cat', 960, 790, 0.8, 23.0, 1.6, 0.45, 960, 420, 160, 0.55, 27.9, 36.6),
-  makeDis('rhino', 1440, 790, 0.62, 23.5, 2.0, 0.8, 1440, 440, 250, 1.0, 28.1, 38.2),
-]; };
+const front = (d: Dis, T: number) => (T < d.t0 ? -1e9 : d.xmin + (T - d.t0) * d.speed);
+/** clip to what is still standing: right of the ragged front */
+const clipStanding = (g: G, d: Dis, T: number) => {
+  if (T < d.t0) return;
+  const f = front(d, T); g.beginPath(); g.moveTo(f + edgeOff(-300, d.seed), -300);
+  for (let y = -300; y <= 1500; y += 8) g.lineTo(f + edgeOff(y, d.seed), y);
+  g.lineTo(5000, 1500); g.lineTo(5000, -300); g.closePath(); g.clip();
+};
 const LIFE = 2.6;
-const dustAt = (d: Dis, i: number, T: number, speed = DIS_SPEED, fall = false) => {
+const dustAt = (d: Dis, i: number, T: number) => {
   const [x, y] = d.pts[i];
-  const tr = d.t0 + (x - d.xmin) / speed + hash(i) * 0.18, age = Math.max(0, T - tr);
+  const tr = d.t0 + (x - edgeOff(y, d.seed) - d.xmin) / d.speed + hash(i) * 0.15, age = Math.max(0, T - tr);
   const h1 = hash(i, 1), h2 = hash(i, 2), e = Math.min(1, age / LIFE);
-  if (fall) return { px: x + age * (20 + 30 * h1) * (h2 - 0.4), py: y + age * (14 + 26 * h2) + 4 * Math.sin(age * 3 + h1 * 6), age, e, tr };
-  return { px: x + age * (70 + 90 * h1) + 18 * Math.sin(age * 2.4 + h2 * 6), py: y - age * (40 + 70 * h2) - 25 * e * e, age, e, tr };
+  return { px: x + age * (70 + 90 * h1) + 18 * Math.sin(age * 2.4 + h2 * 6), py: y - age * (40 + 70 * h2) - 25 * e * e, age, tr };
 };
-const crumble = (g: G, d: Dis, T: number, speed = DIS_SPEED, fall = false, life = LIFE) => {
-  d.pts.forEach(([x, y, warm], i) => {
-    const q = dustAt(d, i, T, speed, fall);
-    if (T < q.tr || q.age > life) return;
-    const e = q.age / life, px = q.px, py = q.py; void x; void y;
-    g.fillStyle = `rgba(${warm ? WARM : CHALK},${(warm ? 0.9 : 0.75) * (1 - e) * (1 - e)})`;
-    const r = (warm ? 2.6 : 2.2) * (1 - 0.5 * e); g.fillRect(px - r, py - r, 2 * r, 2 * r);
-  });
+const crumble = (g: G, d: Dis, T: number, life = LIFE, o = 1) => {
+  if (T < d.t0) return;
+  for (let i = 0; i < d.pts.length; i++) {
+    const q = dustAt(d, i, T);
+    if (T < q.tr || q.age > life) continue;
+    const e = q.age / life, ci = d.pts[i][2];
+    g.fillStyle = `rgba(${mix(d.cols[ci], WARM, e * 0.6)},${0.95 * (1 - e) * (1 - e) * o})`;
+    g.beginPath(); g.arc(q.px, q.py, 2.9 * (1 - 0.45 * e), 0, 7); g.fill();
+  }
 };
 
-/* ------------------------------------------------------------ people, names, bubbles, a flower */
-const nameTag = (g: G, text: string, x: number, y: number, o: number) => {
-  if (!text || o <= 0) return;
-  const c = chalkText(text, 44, `rgb(${CHALK})`, '"Ma Shan Zheng"');
-  g.save(); g.globalAlpha = o * 0.9; g.drawImage(c, x - 960, y - 200); g.restore();
+/* ------------------------------------------------------------ text: name tags, bubbles, the title */
+const TXT = new Map<string, HTMLCanvasElement>();
+/** a line of text centred at (960, 200) on a 1920×400 canvas, with a dark outline so it reads on anything */
+const text = (s: string, size: number, col: string, font: string, outline = 0) => {
+  const key = [s, size, col, font, outline].join('|'); if (TXT.has(key)) return TXT.get(key)!;
+  const c = document.createElement('canvas'); c.width = 1920; c.height = 400; const g = c.getContext('2d')!;
+  const wm = font.match(/^(\d+) (.*)$/);
+  g.font = wm ? `${wm[1]} ${size}px ${wm[2]}` : `${size}px ${font}`; g.textAlign = 'center'; g.textBaseline = 'middle'; g.lineJoin = 'round';
+  if (outline) { g.strokeStyle = 'rgba(8,10,14,.92)'; g.lineWidth = outline; g.strokeText(s, 960, 200); }
+  g.fillStyle = col; g.fillText(s, 960, 200);
+  TXT.set(key, c); return c;
 };
-const person = (g: G, id: string, x: number, y: number, s: number, p: number, o: number, name: string) => {
+const SANS = '"Noto Sans CJK SC"';
+const nameTag = (g: G, s: string, x: number, y: number, o: number) => {
+  if (!s || o <= 0) return;
+  g.save(); g.globalAlpha = o; g.drawImage(text(s, 46, '#f4efe4', `700 ${SANS}`, 9), x - 960, y - 200); g.restore();
+};
+const person = (g: G, id: string, x: number, y: number, s: number, p: number, o: number, name: string, warm = 0) => {
   if (o <= 0) return;
-  chalkPuppet(g, id, x, y, s, p, o);
-  nameTag(g, name, x, y + 46, o * clamp((p - 0.6) / 0.4));
+  figure(g, id, x, y, s, p, o, warm);
+  nameTag(g, name, x, y + 50, o * clamp((p - 0.5) / 0.4));
 };
-const BUBTXT = new Map<string, HTMLCanvasElement>();
+const BUB = new Map<string, HTMLCanvasElement>();
 const bubbleText = (lines: string[], size: number, latin: boolean) => {
-  const key = lines.join('|') + size; if (BUBTXT.has(key)) return BUBTXT.get(key)!;
+  const key = lines.join('|') + size; if (BUB.has(key)) return BUB.get(key)!;
   const c = document.createElement('canvas'); c.width = 1400; c.height = 400; const t = c.getContext('2d')!;
   t.font = `${size}px ${latin ? '"PatrickHand"' : '"Ma Shan Zheng"'}`; t.textAlign = 'center'; t.textBaseline = 'middle'; t.fillStyle = `rgb(${CHALK})`;
   const lh = size * 1.18; lines.forEach((l, i) => t.fillText(l, 700, 200 + (i - (lines.length - 1) / 2) * lh));
-  grainMask(t, 1400, 400, key.length * 7);
-  BUBTXT.set(key, c); return c;
+  BUB.set(key, c); return c;
 };
-/** a chalk speech bubble centred at (x, y), w × h, its tail toward the speaker (side -1 = left/below-left) */
+/** a speech bubble centred at (x, y), w × h, tail toward the speaker. Foreign-language quotes are drawn quieter: the subtitle carries them */
 const bubble = (g: G, x: number, y: number, w: number, h: number, side: number, p: number, o: number, lines: string[], latin: boolean, size: number) => {
   if (p <= 0 || o <= 0) return;
-  const r = 50, x0 = x - w / 2, y0 = y - h / 2, x1 = x + w / 2, y1 = y + h / 2, pts: Pt[] = [];
+  const q = latin ? 0.6 : 1, r = 46, x0 = x - w / 2, y0 = y - h / 2, x1 = x + w / 2, y1 = y + h / 2, pts: Pt[] = [];
   const arc = (cx: number, cy: number, a0: number) => P.ell(cx, cy, r, r, a0, a0 + Math.PI / 2, 8);
   const tx = side < 0 ? x0 + w * 0.22 : x1 - w * 0.22;
   pts.push(...arc(x1 - r, y0 + r, -Math.PI / 2), ...arc(x1 - r, y1 - r, 0));
   pts.push([tx + 40, y1], [tx + side * 90, y1 + 80], [tx - 10, y1]);
   pts.push(...arc(x0 + r, y1 - r, Math.PI / 2), ...arc(x0 + r, y0 + r, Math.PI), [x1 - r, y0]);
-  g.fillStyle = `rgba(10,13,20,${0.35 * o})`; g.beginPath(); pts.forEach(([a, b], i) => (i ? g.lineTo(a, b) : g.moveTo(a, b))); g.fill();
-  chalkLine(g, pts, p, 4.5, o);
+  g.fillStyle = `rgba(10,13,20,${0.6 * o})`; g.beginPath(); pts.forEach(([a, b], i) => (i ? g.lineTo(a, b) : g.moveTo(a, b))); g.fill();
+  line(g, pts, p, 4, o * q);
   const k = clamp((p - 0.55) / 0.45);
-  if (k > 0) { g.save(); g.globalAlpha = o * k; g.drawImage(bubbleText(lines, size, latin), x - 700, y - 200); g.restore(); }
+  if (k > 0) { g.save(); g.globalAlpha = o * k * (latin ? 0.62 : 1); g.drawImage(bubbleText(lines, size, latin), x - 700, y - 200); g.restore(); }
 };
-const flower = (g: G, x: number, y: number, p: number, o: number, warm: number) => {
-  const col = tint(warm);
-  chalkLine(g, P.bez([x, y], [x - 8, y - 60], [x + 8, y - 110], [x, y - 160], 20), clamp(p * 2), 4, o, col);
-  chalkLine(g, P.bez([x, y - 70], [x + 30, y - 90], [x + 50, y - 80], [x + 56, y - 66], 12), clamp(p * 2 - 0.5), 3.5, o, col);
-  for (let i = 0; i < 6; i++) { const a = i / 6 * Math.PI * 2; chalkLine(g, P.ell(x + Math.cos(a) * 22, y - 160 + Math.sin(a) * 22, 16, 16, 0, Math.PI * 2, 16), clamp(p * 2 - 1 + i * 0.02), 3.5, o, col); }
+const flower = (g: G, x: number, y: number, s: number, p: number, o: number, warm: number) => {
+  const col = mix(CHALK, WARM, warm);
+  g.save(); g.translate(x, y); g.scale(s, s); g.translate(-x, -y);
+  line(g, P.bez([x, y], [x - 8, y - 60], [x + 8, y - 110], [x, y - 160], 20), clamp(p * 2), 5, o, '140,200,130');
+  line(g, P.bez([x, y - 70], [x + 30, y - 90], [x + 50, y - 80], [x + 56, y - 66], 12), clamp(p * 2 - 0.5), 4.5, o, '140,200,130');
+  const k = clamp(p * 2 - 1);
+  if (k > 0) {
+    for (let i = 0; i < 6; i++) { const a = i / 6 * Math.PI * 2, px = x + Math.cos(a) * 24, py = y - 160 + Math.sin(a) * 24; g.fillStyle = `rgba(240,140,150,${o * k})`; g.beginPath(); g.arc(px, py, 18, 0, 7); g.fill(); }
+    g.fillStyle = `rgba(${mix('246,214,120', WARM, warm)},${o * k})`; g.beginPath(); g.arc(x, y - 160, 15, 0, 7); g.fill();
+    g.strokeStyle = `rgba(${col},${0.5 * o * k})`; g.lineWidth = 3; g.beginPath(); g.arc(x, y - 160, 44, 0, 7); g.stroke();
+  }
+  g.restore();
 };
 
-/* ------------------------------------------------------------ the title layer: drawn once, in board coordinates */
-let TL: { chalk: HTMLCanvasElement; snap: { d: number; i: number; tx: number; ty: number }[] } | null = null;
+/* ------------------------------------------------------------ the title layer, drawn once */
+let TL: { img: HTMLCanvasElement; snap: { d: number; i: number; tx: number; ty: number }[] } | null = null;
 const TITLE_CHARS = ['生', '命', '平', '等', '吗', '？'];
+let DIS: Dis[] = [];
+let FLY_DIS: Dis, CAT_DIS: Dis, RHINO_DIS: Dis;
+const ensureDis = () => {
+  if (DIS.length) return;
+  CAT_DIS = makeDis('cat', 1040, 800, 1.15, 2.2, 170);
+  RHINO_DIS = makeDis('rhino', 940, 800, 1.2, 13.3, 420);
+  FLY_DIS = makeDis('fly', 1100, 820, 0.62, 20.0, 260);
+  DIS = [
+    makeDis('fly', 470, 780, 0.9, 35.0, 160, { hx: 470, hy: 545, hs: 80, hk: 0.04, th: 26.5, tin: 22.5, din: 1.2 }),
+    makeDis('cat', 960, 790, 0.95, 36.6, 160, { hx: 960, hy: 400, hs: 160, hk: 0.55, th: 26.62, tin: 23.0, din: 1.6, warm: 0.45 }),
+    makeDis('rhino', 1440, 795, 0.72, 38.2, 160, { hx: 1470, hy: 420, hs: 240, hk: 1.0, th: 26.75, tin: 23.5, din: 2.0, warm: 0.8 }),
+  ];
+};
 const titleLayer = () => {
   if (TL) return TL;
-  const size = 216, base = 760, adv = size * 0.9, qadv = size * 0.62;
+  const size = 216, base = 700, adv = size * 0.9, qadv = size * 0.62;
   const total = adv * 5 + qadv, x0 = 960 - total / 2;
   const paint = (t: CanvasRenderingContext2D, col: string, halo: boolean) => {
     t.textBaseline = 'alphabetic'; t.textAlign = 'center'; t.fillStyle = col;
@@ -215,321 +272,348 @@ const titleLayer = () => {
     TITLE_CHARS.forEach((ch, i) => { const q = i === 5, fs = q ? size * 0.72 : size; t.font = `${fs}px "Ma Shan Zheng"`; const cx = x0 + (q ? adv * 5 + qadv / 2 : adv * i + adv / 2); t.save(); t.translate(cx, base - 34); t.rotate((hash(i, 9) - 0.5) * 0.06); t.fillText(ch, 0, 0); t.restore(); });
     t.shadowBlur = 0;
   };
-  const chalk = document.createElement('canvas'); chalk.width = 1920; chalk.height = 1080; const c = chalk.getContext('2d')!;
-  paint(c, JUNO.colors.gold, true); paint(c, '#ffe2a6', false); grainMask(c, 1920, 1080, 4242);
-  // targets for the dust: sample the solid letters
+  const img = document.createElement('canvas'); img.width = 1920; img.height = 1080; const c = img.getContext('2d')!;
+  paint(c, JUNO.colors.gold, true); paint(c, '#ffe2a6', false);
   const solid = document.createElement('canvas'); solid.width = 1920; solid.height = 1080; const sc = solid.getContext('2d')!;
   paint(sc, '#fff', false);
-  const img = sc.getImageData(0, 0, 1920, 1080).data, tg: Pt[] = [];
-  for (let y = 380; y < 800; y += 5) for (let x = 200; x < 1720; x += 5) if (img[(y * 1920 + x) * 4 + 3] > 140) tg.push([x, y]);
+  const im = sc.getImageData(0, 0, 1920, 1080).data, tg: Pt[] = [];
+  for (let y = 320; y < 760; y += 5) for (let x = 200; x < 1720; x += 5) if (im[(y * 1920 + x) * 4 + 3] > 140) tg.push([x, y]);
   tg.sort((a, b) => a[0] - b[0]);
   const src: { d: number; i: number; x: number }[] = [];
   DIS.forEach((d, di) => d.pts.forEach((_, i) => { const q = dustAt(d, i, TITLE - 0.02); src.push({ d: di, i, x: q.px }); }));
   src.sort((a, b) => a.x - b.x);
   const snap = src.map((s0, j) => { const t = tg[Math.min(tg.length - 1, Math.floor(j * tg.length / src.length))]; return { d: s0.d, i: s0.i, tx: t[0] + (hash(j, 3) - 0.5) * 3, ty: t[1] + (hash(j, 4) - 0.5) * 3 }; });
-  TL = { chalk, snap }; return TL;
+  TL = { img, snap }; return TL;
 };
 
-/* ------------------------------------------------------------ the board */
+/* ------------------------------------------------------------ the board: clean dark slate, a soft vignette, a whisper of dither against banding */
 let BOARD: HTMLCanvasElement | null = null;
 const board = () => {
   if (BOARD) return BOARD;
   const c = document.createElement('canvas'); c.width = 1920; c.height = 1080; const g = c.getContext('2d')!;
-  P.reseed(99);
-  const gr = g.createLinearGradient(0, 0, 0, 1080); gr.addColorStop(0, '#11151d'); gr.addColorStop(1, '#191d26'); g.fillStyle = gr; g.fillRect(0, 0, 1920, 1080);
-  for (let i = 0; i < 70; i++) { const x = P.rand() * 1920, y = P.rand() * 1080, r = 80 + P.rand() * 260; const s = g.createRadialGradient(x, y, 0, x, y, r); s.addColorStop(0, 'rgba(240,236,225,.035)'); s.addColorStop(1, 'rgba(240,236,225,0)'); g.fillStyle = s; g.fillRect(x - r, y - r, 2 * r, 2 * r); }
-  for (let i = 0; i < 9000; i++) { g.fillStyle = `rgba(240,236,225,${P.rand() * 0.06})`; g.fillRect(P.rand() * 1920, P.rand() * 1080, 1 + P.rand() * 1.5, 1 + P.rand() * 1.5); }
-  for (let i = 0; i < 14; i++) { const x = P.rand() * 1920, y = P.rand() * 1080, r = 120 + P.rand() * 220; g.strokeStyle = 'rgba(240,236,225,.016)'; g.lineWidth = 50 + P.rand() * 40; g.beginPath(); g.arc(x, y, r, P.rand() * 6, P.rand() * 6 + 2.5); g.stroke(); }
-  for (let i = 0; i < 60; i++) { const x = P.rand() * 1920, y = P.rand() * 1080; g.strokeStyle = 'rgba(240,236,225,.035)'; g.lineWidth = 3; g.beginPath(); g.moveTo(x, y); for (let k = 1; k < 6; k++) g.lineTo(x + k * 14, y + (P.rand() - 0.5) * 16); g.stroke(); }
-  for (let i = 0; i < 40; i++) { g.strokeStyle = 'rgba(240,236,225,.025)'; g.lineWidth = 30 + P.rand() * 40; const x = P.rand() * 1920, y = P.rand() * 1080; g.beginPath(); g.moveTo(x, y); g.lineTo(x + 200 + P.rand() * 300, y + (P.rand() - 0.5) * 60); g.stroke(); }
-  const v = g.createRadialGradient(960, 520, 420, 960, 540, 1150); v.addColorStop(0, 'rgba(0,0,0,0)'); v.addColorStop(1, 'rgba(0,0,0,.55)'); g.fillStyle = v; g.fillRect(0, 0, 1920, 1080);
+  const gr = g.createLinearGradient(0, 0, 0, 1080); gr.addColorStop(0, '#121620'); gr.addColorStop(1, '#1a1e28'); g.fillStyle = gr; g.fillRect(0, 0, 1920, 1080);
+  const v = g.createRadialGradient(960, 520, 420, 960, 540, 1150); v.addColorStop(0, 'rgba(0,0,0,0)'); v.addColorStop(1, 'rgba(0,0,0,.5)'); g.fillStyle = v; g.fillRect(0, 0, 1920, 1080);
+  const im = g.getImageData(0, 0, 1920, 1080), d = im.data; P.reseed(99);
+  for (let i = 0; i < d.length; i += 4) { const n = (P.rand() - 0.5) * 2.2; d[i] += n; d[i + 1] += n; d[i + 2] += n; }
+  g.putImageData(im, 0, 0);
   BOARD = c; return c;
-};
-/** keep only a speckled ~70 % of what is drawn: the chalk texture for text */
-const grainMask = (g: G, w: number, h: number, seed: number) => {
-  const m = document.createElement('canvas'); m.width = w; m.height = h; const t = m.getContext('2d')!;
-  P.reseed(seed);
-  for (let i = 0; i < w * h / 1.9; i++) { t.fillStyle = `rgba(0,0,0,${0.7 + P.rand() * 0.3})`; t.fillRect(P.rand() * w, P.rand() * h, 1 + P.rand() * 2.4, 1 + P.rand() * 1.8); }
-  g.globalCompositeOperation = 'destination-in'; g.drawImage(m, 0, 0); g.globalCompositeOperation = 'source-over';
-};
-/** the title in warm chalk, cached */
-const TITLE_CACHE = new Map<string, HTMLCanvasElement>();
-const chalkText = (s: string, size: number, col: string, font: string) => {
-  const key = s + size + col; if (TITLE_CACHE.has(key)) return TITLE_CACHE.get(key)!;
-  const c = document.createElement('canvas'); c.width = 1920; c.height = 400; const g = c.getContext('2d')!;
-  g.font = `${size}px ${font}`; g.textAlign = 'center'; g.textBaseline = 'middle'; g.fillStyle = col;
-  g.shadowColor = col; g.shadowBlur = size * 0.12; g.fillText(s, 960, 200); g.shadowBlur = 0;
-  grainMask(g, 1920, 400, s.length * 31);
-  TITLE_CACHE.set(key, c); return c;
 };
 const dust = (g: G, x: number, y: number, t: number, n = 40, col = CHALK) => {
   if (t < 0 || t > 1.4) return;
   P.reseed(Math.round(x + y));
-  for (let i = 0; i < n; i++) { const a = P.rand() * Math.PI * 2, v = 80 + P.rand() * (n > 150 ? 900 : 380), r = 1.5 + P.rand() * 3.5; const px = x + Math.cos(a) * v * eo(t, 0, 1.2), py = y + Math.sin(a) * v * eo(t, 0, 1.2) + 60 * t * t; g.fillStyle = `rgba(${col},${0.7 * (1 - t / 1.4)})`; g.beginPath(); g.arc(px, py, r, 0, 7); g.fill(); }
+  for (let i = 0; i < n; i++) { const a = P.rand() * Math.PI * 2, v = 80 + P.rand() * (n > 150 ? 900 : 380), r = 2 + P.rand() * 4; const px = x + Math.cos(a) * v * eo(t, 0, 1.2), py = y + Math.sin(a) * v * eo(t, 0, 1.2) + 60 * t * t; g.fillStyle = `rgba(${col},${0.75 * (1 - t / 1.4)})`; g.beginPath(); g.arc(px, py, r, 0, 7); g.fill(); }
 };
+const cam = (g: G, s: number, cx: number, cy: number) => { g.translate(cx, cy); g.scale(s, s); g.translate(-cx, -cy); };
 
 /* ------------------------------------------------------------ the picture */
 const fade = (T: number, a: number, z: number, fi = 0.6, fo = 0.6) => Math.min(eo(T, a, fi), 1 - pr(T, z - fo, fo));
+const GRID_IDS = ['cat', 'dog', 'bird', 'frog', 'fish', 'fly', 'chicken', 'rhino', 'bat', 'hippo', 'rabbit', 'mouse', 'snail', 'turtle', 'butterfly', 'hedgehog', 'duck', 'pig'];
+const fitScale = (id: string, px: number) => { const R = record(id); return px / Math.max(R.maxX - R.minX, -R.minY); };
+
 const draw = (g: G, T: number) => {
   ensureDis();
   g.drawImage(board(), 0, 0);
-  // camera: a slow push per scene
-  // the whole picture sits a little higher so the bottom stays clear for the subtitles
-  g.save(); g.translate(0, -45);
+  g.save(); g.translate(0, -45);   // the picture sits a little high: the bottom is the subtitles'
 
-  // A · the cat under the lamp (0–5.6)
-  const oA = fade(T, 0, 5.7, 0.01, 0.6);
+  // A · the cat under the lamp (0–5.9): it is there from the first frame; on "被车撞了" it rises away as dust;
+  //     "很多人会难过一整天" plays over the empty pool of light
+  const oA = fade(T, 0, 5.9, 0.01, 0.5);
   if (oA > 0) {
-    const s = 1 + 0.025 * T; g.save(); g.translate(960, 600); g.scale(s, s); g.translate(-960, -600);
-    glow(g, 910, 230, 260, 0.35 * eo(T, 1.0, 1.5) * oA);
-    g.save(); g.globalAlpha = 0.22 * eo(T, 1.2, 1.6) * oA; const cone = g.createLinearGradient(0, 230, 0, 800); cone.addColorStop(0, 'rgba(255,206,140,.9)'); cone.addColorStop(1, 'rgba(255,206,140,0.15)'); g.fillStyle = cone; g.beginPath(); g.moveTo(880, 240); g.lineTo(940, 240); g.lineTo(1200, 800); g.lineTo(780, 800); g.closePath(); g.fill(); g.restore();
-    glow(g, 1000, 800, 330, 0.28 * eo(T, 1.4, 1.6) * oA);
-    chalkLine(g, wobbly(180, 802, 1740, 806, 60, 2, 1), eo(T, 0.1, 1.4), 5, oA);
-    chalkPuppet(g, 'lamp', 780, 800, 0.9, eo(T, 0.3, 1.8), oA);
-    // the cat dies: it rises away as chalk dust while "很多人会难过一整天" (4.0–)
-    { const f0 = T < CAT_DIS.t0 ? -1 : CAT_DIS.xmin + (T - CAT_DIS.t0) * 150;
-      g.save(); if (f0 > 0) { g.beginPath(); g.rect(f0, -200, 3000, 1600); g.clip(); }
-      chalkPuppet(g, 'cat', 1040, 800, 0.9, eo(T, 1.1, 2.0), oA, 0.15); g.restore();
-      if (T >= CAT_DIS.t0) crumble(g, CAT_DIS, T, 150, false, 2.2); }
+    g.save(); cam(g, 1 + 0.02 * T, 960, 600);
+    const dim = 1 - 0.25 * eo(T, 3.6, 1.5);
+    glow(g, 905, 230, 260, 0.38 * oA * dim);
+    g.save(); g.globalAlpha = 0.24 * oA * dim; const cone = g.createLinearGradient(0, 230, 0, 800); cone.addColorStop(0, 'rgba(255,206,140,.9)'); cone.addColorStop(1, 'rgba(255,206,140,0.15)'); g.fillStyle = cone; g.beginPath(); g.moveTo(880, 240); g.lineTo(940, 240); g.lineTo(1220, 800); g.lineTo(760, 800); g.closePath(); g.fill(); g.restore();
+    glow(g, 1010, 800, 340, 0.3 * oA * dim);
+    line(g, wobbly(180, 802, 1740, 806, 60, 2, 1), 1, 5, oA);
+    figure(g, 'lamp', 780, 800, 0.9, 1, oA);
+    g.save(); clipStanding(g, CAT_DIS, T); figure(g, 'cat', 1040, 800, 1.15, 1, oA); g.restore();
+    crumble(g, CAT_DIS, T, 2.4, oA);
     g.restore();
   }
-  // B · Sudan (5.6–16.8)
-  const oB = fade(T, 5.6, 16.8);
+  // B · Sudan (5.6–16.9): the savanna, the last male northern white rhino, his name; after the name he rises away,
+  //     and the world's small lights come on over the place where he stood
+  const oB = fade(T, 5.6, 16.9, 0.5, 0.5);
   if (oB > 0) {
-    const s = 1 + 0.012 * (T - 5.6); g.save(); g.translate(960, 640); g.scale(s, s); g.translate(-960, -640);
+    g.save(); cam(g, 1 + 0.012 * (T - 5.6), 960, 640);
     glow(g, 1500, 760, 520, 0.4 * eo(T, 5.8, 2.0) * oB);
-    chalkLine(g, wobbly(120, 760, 1800, 758, 70, 3, 2), eo(T, 5.7, 1.5), 4.5, oB);
-    for (const [x, sc, t0] of [[340, 1, 6.2], [1640, 0.8, 6.6]] as const) {
-      chalkLine(g, wobbly(x, 760, x + 6 * sc, 560 * 1 + (1 - sc) * 120, 10, 2, x), eo(T, t0, 0.8), 6, oB);
-      chalkLine(g, [...P.ell(x, 560 + (1 - sc) * 120, 170 * sc, 34 * sc, Math.PI, Math.PI * 2, 30)], eo(T, t0 + 0.5, 0.9), 5, oB);
-      chalkLine(g, wobbly(x - 170 * sc, 560 + (1 - sc) * 120, x + 170 * sc, 562 + (1 - sc) * 120, 20, 3, x + 1), eo(T, t0 + 0.9, 0.7), 4, oB);
+    line(g, wobbly(120, 800, 1800, 798, 70, 3, 2), eo(T, 5.7, 1.2), 4.5, oB);
+    for (const [x, sc, t0] of [[300, 1, 6.0], [1680, 0.8, 6.3]] as const) {
+      const ty = 560 + (1 - sc) * 120;
+      line(g, wobbly(x, 800, x + 6 * sc, ty, 10, 2, x), eo(T, t0, 0.7), 6, oB, '200,170,120');
+      g.save(); g.globalAlpha = oB * eo(T, t0 + 0.4, 0.6); g.fillStyle = 'rgba(120,160,110,1)'; g.beginPath(); P.ell(x, ty, 170 * sc, 34 * sc, Math.PI, Math.PI * 2, 30).forEach(([a, b], i) => (i ? g.lineTo(a, b) : g.moveTo(a, b))); g.closePath(); g.fill(); g.restore();
+      line(g, [...P.ell(x, ty, 170 * sc, 34 * sc, Math.PI, Math.PI * 2, 30), [x - 170 * sc, ty]], eo(T, t0 + 0.4, 0.8), 4, oB, '200,230,190');
     }
-    // Sudan dies: while the world's small lights come on, he rises away as chalk dust (14.0–)
-    const f1 = T < RHINO_DIS.t0 ? -1 : RHINO_DIS.xmin + (T - RHINO_DIS.t0) * 280;
-    g.save(); if (f1 > 0) { g.beginPath(); g.rect(f1, -200, 3000, 1600); g.clip(); }
-    chalkPuppet(g, 'rhino', 940, 800, 1.05, eo(T, 7.9, 2.8), oB, 0.1);
-    // its name, written in chalk
-    const nm = chalkText('Sudan', 90, `rgb(${CHALK})`, '"PatrickHand"');
-    const kn = eo(T, 11.5, 0.9);
-    if (kn > 0) { g.save(); g.globalAlpha = oB; g.beginPath(); g.rect(0, 0, 760 + 400 * kn, 1080); g.clip(); g.drawImage(nm, -40, 640); g.restore(); }
+    g.save(); clipStanding(g, RHINO_DIS, T);
+    figure(g, 'rhino', 940, 800, 1.2, eo(T, 6.3, 2.0), oB, 0.05);
+    const kn = eo(T, L(4) + 0.15, 0.9);
+    if (kn > 0) { g.save(); g.globalAlpha = oB; g.beginPath(); g.rect(0, 0, 1180 + 220 * kn, 1080); g.clip(); g.drawImage(text('苏丹', 76, '#f4efe4', `700 ${SANS}`, 10), 1290 - 960, 360 - 200); g.restore(); line(g, [[1250, 410], [1150, 470]], kn, 4, oB * 0.8); }
     g.restore();
-    if (T >= RHINO_DIS.t0) crumble(g, RHINO_DIS, T, 280, false, 2.4);
-    // the world's attention: small warm lights blooming
-    if (T > 13.6) { P.reseed(7); for (let i = 0; i < 70; i++) { const x = 80 + P.rand() * 1760, y = 60 + P.rand() * 540, t0 = 13.7 + P.rand() * 2.4; const a = eo(T, t0, 0.6) * (0.55 + 0.45 * Math.sin(T * 3 + i)) * oB; glow(g, x, y, 14 + P.rand() * 18, 0.8 * a); } }
+    crumble(g, RHINO_DIS, T, 2.6, oB);
+    if (T > 14.2) { P.reseed(7); for (let i = 0; i < 80; i++) { const x = 80 + P.rand() * 1760, y = 60 + P.rand() * 560, t0 = 14.3 + P.rand() * 2.0; const a = eo(T, t0, 0.6) * (0.55 + 0.45 * Math.sin(T * 3 + i)) * oB; glow(g, x, y, 16 + P.rand() * 18, 0.85 * a); } }
     g.restore();
   }
-  // C · the fly on the sill (16.8–22.5)
+  // C · the fly on the sill (16.8–22.5), unchanged: a soft shadow passes, the fly rises away, the window stays empty
   const oC = fade(T, 16.8, 22.5);
   if (oC > 0) {
     glow(g, 960, 470, 420, 0.13 * oC, '170,195,240');
-    chalkPuppet(g, 'window', 960, 830, 0.82, eo(T, 16.8, 1.4), oC);
-    // the swat, kept quiet: a soft shadow passes over and the fly is simply rubbed out, leaving a faint smudge
+    figure(g, 'window', 960, 830, 0.82, eo(T, 16.8, 1.4), oC);
     const sh = Math.min(eo(T, 19.75, 0.2), 1 - pr(T, 20.05, 0.35));
     if (sh > 0) { const gr = g.createRadialGradient(1100, 790, 0, 1100, 790, 200); gr.addColorStop(0, `rgba(4,6,10,${0.4 * sh})`); gr.addColorStop(1, 'rgba(4,6,10,0)'); g.fillStyle = gr; g.fillRect(900, 590, 400, 400); }
-    const front = T < 20.0 ? -1 : FLY_DIS.xmin + (T - 20.0) * 260;
-    g.save(); if (front > 0) { g.beginPath(); g.rect(front, -200, 3000, 1600); g.clip(); }
-    chalkPuppet(g, 'fly', 1100, 820, 0.62, eo(T, 17.2, 1.0), oC);
-    g.restore();
-    if (T >= 20.0) crumble(g, FLY_DIS, T, 260, false, 2.0);
+    g.save(); clipStanding(g, FLY_DIS, T); figure(g, 'fly', 1100, 820, 0.62, eo(T, 17.2, 1.0), oC); g.restore();
+    crumble(g, FLY_DIS, T, 2.0, oC);
   }
-  // D · fly, cat, rhino, each with a chalk heart that fills with warm light: how much we ache for it (22.5–34),
-  //     then all three crumble into chalk dust, left to right at the same speed (34–40)
+  // D · fly, cat, rhino, each with a heart that fills with warm light (22.5–35), then all three crumble left to right (35–42)
   const oD = fade(T, 22.5, 47.6, 0.6, 1.0);
   if (oD > 0) {
     const fillK = eo(T, 28.4, 2.4);
-    chalkLine(g, wobbly(200, 792, 1720, 795, 60, 2, 4), eo(T, 22.6, 1.2), 4, oD * 0.8);
+    line(g, wobbly(200, 796, 1720, 799, 60, 2, 4), eo(T, 22.6, 1.2), 4, oD * 0.8);
     for (const d of DIS) {
-      const front = T < d.t0 ? -1 : d.xmin + (T - d.t0) * DIS_SPEED;
-      const hk = d.hk * fillK, remain = front < 0 ? 1 : clamp((d.hx + d.hs * 0.5 - front) / d.hs);
+      const f = front(d, T), hk = d.hk * fillK, remain = f < -1e8 ? 1 : clamp((d.hx + d.hs * 0.5 - f) / d.hs);
       if (hk > 0.3) glow(g, d.hx, d.hy, d.hs * 1.4 * hk, 0.32 * hk * oD * remain);
-      g.save(); if (front > 0) { g.beginPath(); g.rect(front, -200, 3000, 1600); g.clip(); }
-      chalkPuppet(g, d.id, d.x, d.y, d.s, eo(T, d.tin, d.din), oD, d.warm * fillK);
-      chalkHeart(g, d.hx, d.hy, d.hs, hk, eo(T, d.th, 0.9), oD, false);
+      g.save(); clipStanding(g, d, T);
+      figure(g, d.id, d.x, d.y, d.s, eo(T, d.tin, d.din), oD, d.warm * fillK);
+      heart(g, d.hx, d.hy, d.hs, hk, eo(T, d.th, 0.8), oD, false);
       g.restore();
-      if (T >= d.t0 && T < TITLE - 0.02) crumble(g, d, T);
+      if (T < TITLE - 0.02) crumble(g, d, T);
     }
   }
 
-  // ================================================================ the middle (47–163)
-  // M1 · the survey (47–63): a researcher asks; the answer is a line of hearts that empty as life gets further from us
-  const oM1 = fade(T, 47.0, 63.0, 0.6, 0.7);
+  // ================================================================ the middle
+  // M1 · the survey (46.6–63.8): a researcher asks; 52 kinds of life; the answer is a line of hearts that empty as life gets further from us
+  const oM1 = fade(T, 46.6, L(20) - 0.1, 0.6, 0.6);
   if (oM1 > 0) {
-    const oR = fade(T, 47.0, 53.2, 0.6, 0.6);
-    person(g, 'researcher', 300, 830, 0.78, eo(T, 47.1, 1.6), oR, '研究者 · 法国');
-    bubble(g, 1060, 330, 800, 230, -1, eo(T, 47.6, 0.8), oR, ["Si vous ne pouviez en", "sauver qu'un, lequel ?"], true, 56);
-    const line: [string, number, number, number][] = [['we', 330, 0.46, 1], ['dog', 600, 0.46, 0.8], ['bird', 860, 0.55, 0.6], ['frog', 1110, 0.55, 0.42], ['fish', 1370, 0.55, 0.26], ['fly', 1620, 0.62, 0.08]];
-    const oL = eo(T, 53.0, 0.8) * oM1;
+    g.save(); cam(g, 1 + 0.02 * pr(T, 46.6, 17), 960, 600);
+    const oR = fade(T, 46.6, L(16) - 0.1, 0.6, 0.6);
+    person(g, 'researcher', 300, 830, 0.85, eo(T, 46.7, 1.4), oR, '研究者 · 法国');
+    bubble(g, 1060, 300, 760, 210, -1, eo(T, 47.0, 0.7), oR * (1 - pr(T, L(15) - 0.2, 0.4)), ["Si vous ne pouviez en", "sauver qu'un, lequel ?"], true, 50);
+    // 52 kinds of life
+    for (let i = 0; i < 52; i++) {
+      const id = GRID_IDS[(i * 7) % GRID_IDS.length], col = i % 13, row = Math.floor(i / 13);
+      const x = 700 + col * 90 + (row % 2) * 30, y = 330 + row * 118, a = eo(T, L(15) + 0.1 + i * 0.018, 0.4) * oR;
+      if (a > 0) figure(g, id, x, y + 40, fitScale(id, 74), 1, a);
+    }
+    const row: [string, number, number, number][] = [['we', 330, 0.5, 1], ['dog', 600, 0.52, 0.8], ['bird', 860, 0.62, 0.6], ['frog', 1110, 0.62, 0.42], ['fish', 1370, 0.62, 0.26], ['fly', 1620, 0.7, 0.08]];
+    const oL = eo(T, L(16), 0.8) * oM1;
     if (oL > 0) {
-      chalkLine(g, wobbly(200, 832, 1760, 834, 60, 2, 11), eo(T, 53.0, 1.2), 4, oL);
-      for (let i = 0; i <= 26; i++) chalkLine(g, [[220 + i * 58, 834], [220 + i * 58, i % 5 ? 852 : 866]], eo(T, 53.2 + i * 0.03, 0.3), 3, oL * 0.8);
-      line.forEach(([id, x, sc, k], i) => {
-        chalkPuppet(g, id, x, 825, sc, eo(T, 53.3 + i * 0.25, 1.2), oL, 0.7 * k * eo(T, 55.4, 1.5));
-        chalkHeart(g, x, 470, 90, k * eo(T, 55.4 + i * 0.15, 1.6), eo(T, 54.4 + i * 0.2, 0.7), oL);
+      line(g, wobbly(200, 832, 1760, 834, 60, 2, 11), eo(T, L(16), 1.2), 4, oL);
+      for (let i = 0; i <= 26; i++) line(g, [[220 + i * 58, 834], [220 + i * 58, i % 5 ? 852 : 866]], eo(T, L(16) + 0.2 + i * 0.03, 0.3), 3, oL * 0.8);
+      row.forEach(([id, x, sc, k], i) => {
+        figure(g, id, x, 825, sc, eo(T, L(16) + 0.3 + i * 0.25, 1.0), oL, 0.7 * k * eo(T, L(17), 1.5));
+        heart(g, x, 450, 100, k * eo(T, L(17) + i * 0.15, 1.6), eo(T, L(16) + 1.4 + i * 0.2, 0.7), oL);
       });
+      const kl = eo(T, L(19) + 0.3, 0.6) * oL;
+      if (kl > 0) { g.save(); g.globalAlpha = kl; g.drawImage(text('像我们', 46, `rgb(${WARM})`, `700 ${SANS}`, 9), 330 - 960, 910 - 200); g.drawImage(text('不像我们', 46, `rgb(${CHALK})`, `700 ${SANS}`, 9), 1620 - 960, 910 - 200); g.restore(); line(g, [[480, 910], [1480, 910]], eo(T, L(19) + 0.3, 0.8), 3, kl * 0.7); }
     }
+    g.restore();
   }
-  // M2 · 庄子 and 惠子 on the bridge (63–71)
-  const oM2 = fade(T, 63.0, 71.2, 0.6, 0.6);
+  // M2 · 庄子 and 惠子 on the bridge
+  const S2 = L(20) - 0.3, oM2 = fade(T, S2, L(23) - 0.05, 0.6, 0.6);
   if (oM2 > 0) {
-    chalkLine(g, P.bez([140, 860], [600, 720], [1320, 720], [1780, 860], 50), eo(T, 63.0, 1.4), 5, oM2);
-    for (let i = -7; i <= 7; i++) { const x = 960 + i * 110, y = 860 - 140 * (1 - (i / 8.6) ** 2); chalkLine(g, [[x, y], [x, y - 60]], eo(T, 63.3 + (i + 7) * 0.04, 0.4), 3.5, oM2); }
-    for (let i = 0; i < 5; i++) chalkLine(g, wobbly(260 + i * 300, 930 + (i % 2) * 18, 420 + i * 300, 930 + (i % 2) * 18, 12, 4, i), eo(T, 63.8 + i * 0.15, 0.6), 3, oM2 * 0.6, '170,200,230');
-    const FISH_SWIM: [number, number, number, number, boolean][] = [[520, 905, 0.36, 46, false], [1010, 930, 0.32, -38, true], [1340, 900, 0.3, 52, false], [760, 945, 0.28, -30, true]];
-    FISH_SWIM.forEach(([x0, y0, sc, v, fl], i) => {
-      const t = T - 63.0, x = x0 + v * t, y = y0 + 6 * Math.sin(t * 1.7 + i * 2);
-      chalkPuppet(g, 'fish', x, y, sc, eo(T, 63.6 + i * 0.25, 1.0), oM2 * 0.85, 0.15, fl);
-    });
-    // a leap on 鱼真快乐
-    const lj = pr(T, 66.0, 1.1);
+    g.save(); cam(g, 1 + 0.025 * pr(T, S2, 10), 960, 640);
+    line(g, P.bez([140, 860], [600, 720], [1320, 720], [1780, 860], 50), eo(T, S2, 1.2), 5, oM2, '210,190,160');
+    for (let i = -7; i <= 7; i++) { const x = 960 + i * 110, y = 860 - 140 * (1 - (i / 8.6) ** 2); line(g, [[x, y], [x, y - 60]], eo(T, S2 + 0.3 + (i + 7) * 0.04, 0.4), 3.5, oM2, '210,190,160'); }
+    for (let i = 0; i < 5; i++) line(g, wobbly(260 + i * 300, 940 + (i % 2) * 18, 420 + i * 300, 940 + (i % 2) * 18, 12, 4, i), eo(T, S2 + 0.8 + i * 0.15, 0.6), 3, oM2 * 0.7, '150,190,230');
+    const FISH_SWIM: [number, number, number, number, boolean][] = [[520, 912, 0.4, 46, false], [1010, 935, 0.36, -38, true], [1340, 905, 0.34, 52, false], [760, 950, 0.32, -30, true]];
+    FISH_SWIM.forEach(([x0, y0, sc, v, fl], i) => { const t = T - S2, x = x0 + v * t, y = y0 + 6 * Math.sin(t * 1.7 + i * 2); figure(g, 'fish', x, y, sc, eo(T, S2 + 0.6 + i * 0.25, 1.0), oM2 * 0.95, 0, fl); });
+    const lj = pr(T, L(21) + 0.4, 1.3);
     if (lj > 0 && lj < 1) {
-      const lx = lerp(880, 1100, lj), ly = 905 - 150 * Math.sin(lj * Math.PI);
-      g.save(); g.translate(lx, ly); g.rotate(lerp(-0.7, 0.7, lj)); chalkPuppet(g, 'fish', 0, 0, 0.36, 1, oM2, 0.3); g.restore();
-      for (const [px, t0] of [[880, 66.0], [1100, 67.05]] as const) { const k = pr(T, t0, 0.9); if (k > 0 && k < 1) chalkLine(g, P.ell(px, 925, 30 + 70 * k, 8 + 14 * k, 0, Math.PI * 2, 40), 1, 3, oM2 * (1 - k), '170,200,230'); }
+      const lx = lerp(860, 1120, lj), ly = 910 - 230 * Math.sin(lj * Math.PI);
+      g.save(); g.translate(lx, ly); g.rotate(lerp(-0.8, 0.8, lj)); figure(g, 'fish', 0, 0, 0.44, 1, oM2, 0.3); g.restore();
+      for (const [px, t0] of [[860, L(21) + 0.4], [1120, L(21) + 1.6]] as const) { const k = pr(T, t0, 0.9); if (k > 0 && k < 1) line(g, P.ell(px, 930, 30 + 80 * k, 8 + 16 * k, 0, Math.PI * 2, 40), 1, 3, oM2 * (1 - k), '170,200,230'); }
     }
-    person(g, 'zhuang', 340, 790, 0.72, eo(T, 63.2, 1.6), oM2, '庄子');
-    person(g, 'hui', 1580, 790, 0.72, eo(T, 63.5, 1.6), oM2, '惠子');
-    bubble(g, 760, 330, 600, 230, -1, eo(T, 65.85, 0.7), oM2, ['儵鱼出游从容，', '是鱼之乐也。'], false, 60);
-    bubble(g, 1180, 520, 560, 210, 1, eo(T, 68.07, 0.7), oM2, ['子非鱼，', '安知鱼之乐？'], false, 64);
+    person(g, 'zhuang', 330, 790, 0.8, eo(T, S2 + 0.2, 1.4), oM2, '庄子');
+    person(g, 'hui', 1590, 790, 0.8, eo(T, S2 + 0.5, 1.4), oM2, '惠子');
+    bubble(g, 760, 300, 600, 220, -1, eo(T, L(21), 0.6), oM2, ['儵鱼出游从容，', '是鱼之乐也。'], false, 60);
+    bubble(g, 1190, 500, 560, 210, 1, eo(T, L(22), 0.6), oM2, ['子非鱼，', '安知鱼之乐？'], false, 64);
+    g.restore();
   }
-  // M3 · Nagel and the bat; a closed circle we cannot step into (71–82)
-  const oM3 = fade(T, 71.1, 82.2, 0.6, 0.8);
+  // M3 · Nagel and the bat: a closed circle we cannot step into
+  const S3 = L(23) - 0.15, oM3 = fade(T, S3, L(26) + 0.7, 0.6, 0.7);
   if (oM3 > 0) {
-    person(g, 'nagel', 320, 830, 0.78, eo(T, 71.2, 1.6), oM3, '内格尔 · Nagel');
-    bubble(g, 900, 300, 660, 220, -1, eo(T, 71.5, 0.7), oM3, ['What is it like', 'to be a bat?'], true, 66);
-    const by = 600 + 10 * Math.sin(T * 2.2);
-    chalkPuppet(g, 'bat', 1360, by, 1.0, eo(T, 72.2, 1.6), oM3);
-    chalkLine(g, P.ell(1360, by - 120, 250, 210, -Math.PI / 2, Math.PI * 1.5, 90), eo(T, 75.2, 1.4), 5, oM3, WARM);
+    g.save(); cam(g, 1 + 0.05 * eio(T, S3, 10), 1250, 560);
+    person(g, 'nagel', 320, 830, 0.85, eo(T, S3 + 0.1, 1.4), oM3, '内格尔 · 1974');
+    bubble(g, 860, 280, 600, 200, -1, eo(T, S3 + 0.4, 0.6), oM3, ['What is it like', 'to be a bat?'], true, 58);
+    const by = 640 + 12 * Math.sin(T * 2.2), fl = 1 + 0.07 * Math.sin(T * 7);
+    g.save(); g.translate(1360, by); g.scale(fl, 1); g.translate(-1360, -by); figure(g, 'bat', 1360, by, 1.15, eo(T, S3 + 0.8, 1.2), oM3); g.restore();
+    line(g, P.ell(1360, by - 130, 270, 220, -Math.PI / 2, Math.PI * 1.5, 90), eo(T, L(24) + 0.2, 1.3), 6, oM3, WARM);
+    const qk = eo(T, L(25) + 0.4, 0.5) * oM3;
+    if (qk > 0) { g.save(); g.globalAlpha = qk; g.drawImage(text('?', 110, `rgb(${WARM})`, `700 ${SANS}`, 10), 1560 - 960, by - 330 - 200); g.restore(); }
+    g.restore();
   }
-  // M4 · where to draw the line: a row of lives; each philosopher draws the boundary somewhere else (81–122.6)
-  const ROW: [string, number, number][] = [['we', 640, 0.44], ['dog', 850, 0.44], ['chicken', 1060, 0.44], ['fish', 1270, 0.5], ['fly', 1460, 0.56], ['flower', 1650, 1]];
-  const rowLife = (oR: number, bx: number, allWarm: number, t0: number) => {
-    chalkLine(g, wobbly(480, 832, 1780, 834, 50, 2, 21), eo(T, t0, 1.0), 4, oR);
+  // M4 · where to draw the line: a row of lives; each thinker draws the boundary somewhere else
+  const ROW: [string, number, number][] = [['we', 585, 0.62], ['dog', 880, 0.64], ['chicken', 1110, 0.62], ['fish', 1330, 0.74], ['fly', 1525, 0.8], ['flower', 1710, 1.3]];
+  const rowLife = (oR: number, bx: number, allWarm: number, t0: number, hearts = 0, harm = 0) => {
+    line(g, wobbly(450, 832, 1840, 834, 50, 2, 21), eo(T, t0, 1.0), 4, oR);
     ROW.forEach(([id, x, sc], i) => {
       const inside = Math.max(allWarm, clamp((bx - x) / 40 + 0.5));
-      const o = oR * (0.4 + 0.6 * inside), p = eo(T, t0 + 0.2 + i * 0.25, 1.2);
-      if (id === 'flower') flower(g, x, 830, p, o, 0.8 * inside); else chalkPuppet(g, id, x, 825, sc, p, o, 0.8 * inside);
+      const o = oR * (0.35 + 0.65 * inside), p = eo(T, t0 + 0.2 + i * 0.2, 1.0);
+      if (id === 'flower') flower(g, x, 830, 1.15, p, o, 0.8 * inside); else figure(g, id, x, 825, sc, p, o, 0.8 * inside);
+      if (hearts > 0) { const hurt = (id === 'fish' || id === 'flower') ? harm : 0; heart(g, x, 440, 100, hearts * 0.7 * (1 - 0.55 * hurt), hearts, oR, false); }
     });
   };
-  const oM4 = fade(T, 81.1, 122.6, 0.7, 0.6);
+  const S4 = L(26) + 0.05, E4 = 125.55, oM4 = fade(T, S4, E4, 0.6, 0.5);
   if (oM4 > 0) {
-    // the boundary: Kant after us; Bentham and Singer after the fish
-    const bx = T < 97.6 ? 745 : lerp(745, 1365, eio(T, 97.6, 1.4));
-    const showB = T > 84.4 ? 1 : 0;
-    rowLife(oM4, showB ? bx : -999, 0, 81.2);
-    if (showB) chalkLine(g, wobbly(bx, 380, bx, 880, 30, 3, 5).map(([a, b]) => [b * 0 + a + 3 * Math.sin(b / 40), b] as Pt), eo(T, 84.5, 0.9), 6, oM4, WARM);
-    const oK = fade(T, 83.8, 97.0, 0.6, 0.5), oB = fade(T, 97.0, 105.3, 0.5, 0.5), oS = fade(T, 105.3, 122.6, 0.5, 0.6);
-    person(g, 'kant', 250, 830, 0.72, eo(T, 83.9, 1.4), oK, '康德 · Kant');
-    bubble(g, 900, 300, 940, 230, -1, eo(T, 84.2, 0.7), oK * (1 - pr(T, 90.9, 0.4)), ['Der Mensch existiert als', 'Zweck an sich selbst.'], true, 58);
-    bubble(g, 900, 300, 980, 230, -1, eo(T, 91.3, 0.7), oK, ['Wer gegen Tiere grausam ist,', 'wird auch hart gegen Menschen.'], true, 54);
-    person(g, 'bentham', 250, 830, 0.72, eo(T, 97.1, 1.4), oB, '边沁 · Bentham');
-    bubble(g, 960, 300, 1180, 230, -1, eo(T, 99.4, 0.7), oB, ['The question is not, Can they reason?', 'nor, Can they talk? but, Can they suffer?'], true, 46);
-    person(g, 'singer', 250, 830, 0.72, eo(T, 105.4, 1.4), oS, '辛格 · Singer');
-    bubble(g, 860, 300, 720, 190, -1, eo(T, 105.7, 0.7), oS * (1 - pr(T, 111.3, 0.4)), ['All animals are equal.'], true, 62);
-    bubble(g, 860, 300, 560, 190, -1, eo(T, 117.6, 0.7), oS, ['Speciesism.'], true, 70);
-    // one chicken's pain, one dog's pain: two equal hearts
-    if (T > 111.6) { const kk = eo(T, 112.0, 1.4); chalkHeart(g, 850, 600, 110, 0.75 * kk, eo(T, 111.7, 0.6), oS); chalkHeart(g, 1060, 600, 110, 0.75 * kk, eo(T, 111.9, 0.6), oS); }
+    const tB = L(30), tS = L(33), tW = L(39);
+    // the camera: wide on Kant, a little in on Bentham, then Singer pushes toward the two hearts
+    const s4 = 1 + 0.035 * eio(T, tB - 0.2, 1.2) - 0.035 * eio(T, tS - 0.2, 1.0) + 0.05 * eio(T, L(35), 3.0) - 0.05 * eio(T, tW - 0.3, 1.2);
+    g.save(); cam(g, s4, 1000, 620);
+    const bx = T < tB + 0.5 ? 690 : T < tW + 0.4 ? lerp(690, 1430, eio(T, tB + 0.5, 1.4)) : lerp(1430, 2300, eio(T, tW + 0.4, 1.8));
+    const allWarm = eo(T, tW + 0.9, 1.4);
+    rowLife(oM4, T > L(27) + 0.2 ? bx : -999, allWarm, S4);
+    if (T > L(27) + 0.2) line(g, wobbly(bx, 400, bx, 880, 30, 3, 5).map(([a, b]) => [a + 3 * Math.sin(b / 40), b] as Pt), eo(T, L(27) + 0.3, 0.8), 7, oM4 * (1 - pr(T, tW + 1.6, 0.6)), WARM);
+    const oK = fade(T, L(27) - 0.4, tB + 0.1, 0.5, 0.4), oBn = fade(T, tB - 0.1, tS + 0.1, 0.4, 0.4), oS = fade(T, tS - 0.1, tW + 0.1, 0.4, 0.4), oW = fade(T, tW - 0.1, E4, 0.4, 0.4);
+    person(g, 'kant', 250, 830, 0.8, eo(T, L(27) - 0.3, 1.2), oK, '康德 · Kant');
+    bubble(g, 880, 270, 860, 200, -1, eo(T, L(27) + 0.3, 0.6), oK, ['Der Mensch existiert als', 'Zweck an sich selbst.'], true, 52);
+    person(g, 'bentham', 250, 830, 0.8, eo(T, tB, 1.2), oBn, '边沁 · Bentham');
+    bubble(g, 940, 270, 1060, 200, -1, eo(T, L(31) + 0.1, 0.6), oBn, ['The question is not, Can they reason?', 'nor, Can they talk? but, Can they suffer?'], true, 44);
+    person(g, 'singer', 250, 830, 0.8, eo(T, tS, 1.2), oS, '辛格 · 1975');
+    bubble(g, 830, 270, 640, 170, -1, eo(T, tS + 0.3, 0.6), oS * (1 - pr(T, L(35) - 0.3, 0.4)), ['All animals are equal.'], true, 56);
+    bubble(g, 830, 270, 500, 170, -1, eo(T, L(37) + 0.2, 0.6), oS, ['Speciesism.'], true, 62);
+    if (T > L(35)) { const kk = eo(T, L(35) + 0.3, 1.4), oh = oS * (1 - pr(T, L(37) + 3, 0.6)); heart(g, 880, 520, 130, 0.75 * kk, eo(T, L(35) + 0.1, 0.5), oh); heart(g, 1110, 520, 130, 0.75 * kk, eo(T, L(35) + 0.25, 0.5), oh); }
+    person(g, 'schweitzer', 250, 830, 0.8, eo(T, tW, 1.2), oW, '史怀哲 · Schweitzer', allWarm * 0.5);
+    g.restore();
   }
-  // M5 · Schweitzer on the river (122.6–137.3)
-  const oM5 = fade(T, 122.6, 137.4, 0.7, 0.7);
+  // M5 · Schweitzer on the river, 1915
+  const S5 = 125.5, E5 = L(44) - 0.15, oM5 = fade(T, S5, E5, 0.5, 0.5);
   if (oM5 > 0) {
+    g.save(); cam(g, 1 + 0.03 * pr(T, S5, E5 - S5), 900, 700);
     glow(g, 1500, 640, 520, 0.28 * oM5);
-    chalkLine(g, wobbly(100, 700, 1820, 700, 60, 2, 31), eo(T, 122.7, 1.2), 3.5, oM5 * 0.7);
-    for (let i = 0; i < 7; i++) chalkLine(g, wobbly(150 + i * 240, 900 + (i % 3) * 30, 330 + i * 240, 900 + (i % 3) * 30, 12, 4, i + 3), eo(T, 123.0 + i * 0.1, 0.6), 3, oM5 * 0.55, '170,200,230');
-    const dx = 120 * pr(T, 122.7, 14.7);
-    chalkPuppet(g, 'boat', 900 + dx, 900, 0.85, eo(T, 122.8, 1.6), oM5);
-    person(g, 'schweitzer', 720 + dx, 800, 0.6, eo(T, 123.0, 1.6), oM5, '');
-    nameTag(g, '史怀哲 · Schweitzer', 720 + dx, 952, oM5 * eo(T, 124.0, 0.6));
-    chalkPuppet(g, 'hippo', 300, 900, 0.7, eo(T, 125.8, 1.4), oM5); chalkPuppet(g, 'hippo', 1640, 910, 0.6, eo(T, 126.3, 1.4), oM5);
-    bubble(g, 1240, 330, 680, 190, -1, eo(T, 129.2, 0.7), oM5 * (1 - pr(T, 131.6, 0.3)), ['Ehrfurcht vor dem Leben.'], true, 56);
-    bubble(g, 1180, 330, 1000, 230, -1, eo(T, 131.9, 0.7), oM5, ['Ich bin Leben, das leben will,', 'inmitten von Leben, das leben will.'], true, 52);
+    line(g, wobbly(100, 700, 1820, 700, 60, 2, 31), eo(T, S5, 1.0), 3.5, oM5 * 0.6, '200,200,210');
+    for (let i = 0; i < 7; i++) line(g, wobbly(150 + i * 240, 960 + (i % 3) * 22, 330 + i * 240, 960 + (i % 3) * 22, 12, 4, i + 3), eo(T, S5 + 0.3 + i * 0.1, 0.6), 3, oM5 * 0.6, '150,190,230');
+    const dx = 320 * pr(T, S5, E5 - S5);
+    for (const [hx, hs, t0] of [[330, 0.82, L(40) + 0.5], [1660, 0.72, L(40) + 1.0]] as const) {
+      figure(g, 'hippo', hx, 905, hs, eo(T, t0, 1.0), oM5, 0, hx > 1000);
+      for (let k = 0; k < 2; k++) line(g, P.ell(hx, 908, 230 * hs + k * 40, 12 + k * 6, 0, Math.PI, 30), eo(T, t0 + 0.3, 0.6), 3, oM5 * (0.7 - k * 0.3), '150,190,230');
+    }
+    figure(g, 'boat', 880 + dx, 905, 0.82, eo(T, S5 + 0.1, 1.2), oM5);
+    person(g, 'schweitzer', 720 + dx, 805, 0.62, eo(T, S5 + 0.3, 1.2), oM5, '');
+    nameTag(g, '史怀哲 · 1915', 720 + dx, 470, oM5 * eo(T, S5 + 1.0, 0.6));
+    bubble(g, 1260, 290, 640, 170, -1, eo(T, L(41) + 0.3, 0.6), oM5 * (1 - pr(T, L(42) - 0.1, 0.3)), ['Ehrfurcht vor dem Leben.'], true, 50);
+    bubble(g, 1220, 290, 940, 200, -1, eo(T, L(42) + 0.3, 0.6), oM5, ['Ich bin Leben, das leben will,', 'inmitten von Leben, das leben will.'], true, 46);
+    g.restore();
   }
-  // M6 · no ranking: the row again, the boundary gone, every life warm (137.3–146.2)
-  const oM6 = fade(T, 137.3, 146.2, 0.7, 0.6);
+  // M6 · no ranking: the row again, every life warm, the same heart over each; "免不了伤害" dims two, "但不该毫无必要" lights them again
+  const S6 = L(44) - 0.3, oM6 = fade(T, S6, L(47) - 0.1, 0.5, 0.5);
   if (oM6 > 0) {
-    rowLife(oM6, 9999, eo(T, 137.8, 1.6), 137.3);
-    person(g, 'schweitzer', 250, 830, 0.72, eo(T, 137.4, 1.2), oM6, '史怀哲 · Schweitzer');
+    g.save(); cam(g, 1 + 0.03 * pr(T, S6, 8), 1000, 600);
+    const harm = eo(T, L(45) + 0.3, 0.6) * (1 - eo(T, L(46) + 0.3, 0.8));
+    rowLife(oM6, 9999, 1, S6, eo(T, S6 + 0.6, 0.8), harm);
+    person(g, 'schweitzer', 250, 830, 0.8, 1, oM6, '史怀哲 · Schweitzer', 0.5);
+    g.restore();
   }
-  // M7 · Lecky: circles of kindness widening (146.3–163.2); then (159.6–163.2) the rings close back in on us and slide
-  //      to the centre, ending as exactly the small circle the ending starts from
-  const oM7 = fade(T, 146.2, 163.25, 0.6, 0.05);
+  // M7 · Lecky: kindness as a circle that widens (family → class → nation → humanity → animals); then the rings close back in on us
+  //      and slide to the centre, ending as exactly the small circle the ending starts from
+  const S7 = L(47) - 0.2, HAND = L(53), oM7 = fade(T, S7, HAND + 0.05, 0.5, 0.05);
   if (oM7 > 0) {
-    const oLk = fade(T, 146.2, 157.6, 0.5, 0.6);
-    person(g, 'lecky', 250, 830, 0.72, eo(T, 146.3, 1.4), oLk, '莱基 · Lecky');
-    bubble(g, 900, 300, 920, 230, -1, eo(T, 146.6, 0.7), oLk * (1 - pr(T, 152.9, 0.4)), ['…soon the circle expanding…', 'and finally, the animal world.'], true, 52);
-    const k = eio(T, 159.6, 3.6), cx = lerp(1180, 960, k), cy = 700, ryk = lerp(0.5, 0.55, k);
-    const rings: [number, number][] = [[150, 148.9], [300, 151.5], [460, 154.2]];
+    const oLk = fade(T, S7, L(50) + 1.4, 0.5, 0.5);
+    person(g, 'lecky', 250, 830, 0.8, eo(T, S7 + 0.1, 1.2), oLk, '莱基 · 1869');
+    bubble(g, 880, 270, 860, 200, -1, eo(T, S7 + 0.4, 0.6), oLk * (1 - pr(T, L(49) - 0.2, 0.4)), ['…soon the circle expanding…', 'and finally, the animal world.'], true, 46);
+    const k = eio(T, L(51) + 0.1, 4.0), cx = lerp(1180, 960, k), cy = 700, ryk = lerp(0.5, 0.55, k);
+    const rings: [number, number][] = [[150, L(48) + 0.4], [240, L(49) + 0.2], [320, L(49) + 0.9], [400, L(49) + 1.6], [490, L(50) + 0.3]];
     rings.forEach(([r0, t0], i) => {
-      const r = lerp(r0, 190, k), oi = i === 0 ? 1 : 1 - clamp((k - 0.55) / 0.45);
-      glow(g, cx, cy + 40 * k, lerp(r0 * 1.1, 190 * 1.15, k), lerp(0.12, i === 0 ? 0.38 : 0, k) * eo(T, t0, 1.0) * oM7 * oi);
-      chalkLine(g, P.ell(cx, cy, r, r * ryk, -Math.PI / 2, Math.PI * 1.5, 100), eo(T, t0, 1.2), lerp(4.5, 6, k), oM7 * oi * (1 - 0.3 * i / 3 * (1 - k)), WARM);
+      const r = lerp(r0, 190, k), oi = i === 0 ? 1 : 1 - clamp((k - 0.5) / 0.45);
+      glow(g, cx, cy + 40 * k, lerp(r0 * 1.1, 190 * 1.15, k), lerp(0.1, i === 0 ? 0.38 : 0, k) * eo(T, t0, 1.0) * oM7 * oi);
+      line(g, P.ell(cx, cy, r, r * ryk, -Math.PI / 2, Math.PI * 1.5, 100), eo(T, t0, 1.0), lerp(4.5, 6, k), oM7 * oi * (i === 4 ? 1 : 0.85), WARM);
     });
-    const fadeOthers = 1 - clamp(k * 1.6);
-    chalkPuppet(g, 'we', lerp(1140, 960, k), lerp(760, 820, k), lerp(0.36, 0.6, k), eo(T, 148.9, 1.0), oM7, 0.6);
-    chalkPuppet(g, 'we', cx + 40, 760, 0.3, eo(T, 149.2, 1.0), oM7 * fadeOthers, 0.6);
-    chalkPuppet(g, 'researcher', cx - 200, 770, 0.3, eo(T, 151.6, 1.0), oM7 * fadeOthers, 0.4); chalkPuppet(g, 'singer', cx + 210, 770, 0.3, eo(T, 151.8, 1.0), oM7 * fadeOthers, 0.4); chalkPuppet(g, 'nagel', cx + 120, 640, 0.26, eo(T, 152.0, 1.0), oM7 * fadeOthers, 0.4);
-    chalkPuppet(g, 'dog', cx - 390, 790, 0.34, eo(T, 154.4, 1.0), oM7 * fadeOthers, 0.3); chalkPuppet(g, 'cat', cx + 380, 790, 0.36, eo(T, 154.6, 1.0), oM7 * fadeOthers, 0.3); chalkPuppet(g, 'bird', cx + 300, 560, 0.4, eo(T, 154.8, 1.0), oM7 * fadeOthers, 0.3);
-    chalkLine(g, wobbly(160, 822, 1760, 826, 60, 2, 8), eo(T, 160.4, 1.6), 4, 0.6 * oM7);
+    const fo = 1 - clamp(k * 1.6);
+    figure(g, 'we', lerp(1140, 960, k), lerp(770, 820, k), lerp(0.4, 0.6, k), eo(T, L(48) + 0.5, 0.8), oM7, 0.6);
+    figure(g, 'p_long', cx + 50, 770, 0.36, eo(T, L(48) + 0.8, 0.8), oM7 * fo, 0.6);
+    figure(g, 'p_cap', cx - 200, 790, 0.34, eo(T, L(49) + 0.3, 0.8), oM7 * fo, 0.4);
+    figure(g, 'p_side', cx + 240, 790, 0.34, eo(T, L(49) + 1.0, 0.8), oM7 * fo, 0.4);
+    figure(g, 'p_long', cx - 320, 800, 0.3, eo(T, L(49) + 1.7, 0.8), oM7 * fo, 0.3, true);
+    figure(g, 'p_cap', cx + 340, 600, 0.26, eo(T, L(49) + 1.7, 0.8), oM7 * fo, 0.3);
+    figure(g, 'dog', cx - 420, 820, 0.36, eo(T, L(50) + 0.4, 0.8), oM7 * fo, 0.3); figure(g, 'cat', cx + 430, 820, 0.38, eo(T, L(50) + 0.55, 0.8), oM7 * fo, 0.3); figure(g, 'bird', cx + 360, 520, 0.44, eo(T, L(50) + 0.7, 0.8), oM7 * fo, 0.3);
+    line(g, wobbly(160, 822, 1760, 826, 60, 2, 8), eo(T, L(52), 1.4), 4, 0.6 * oM7);
   }
-  // E · the ending (163.2–182.6): us in a small circle; everyone else outside, dim and cold. On the drop (168.40) the
-  //     circle blasts open, every life lights up and gets a full heart.
-  const oE = fade(T, 163.2, END + 2.5, 0.01, 1.2);
+  // E · the ending: us in a small circle, everyone else outside, dim and cold. On the drop the circle blasts open, every life lights
+  //     up and gets a full heart; then, line by line, more small lives arrive, each lit as it comes, and the camera pulls back on 庄子.
+  const oE = fade(T, HAND, END + 2.5, 0.01, 1.2);
   if (oE > 0) {
-    const DROP = 168.40, td = T - DROP;
-    const r = T < 167.2 ? 190 : T < DROP ? lerp(190, 225, eio(T, 167.2, DROP - 167.2)) : lerp(225, 1700, eo(T, DROP, 0.75)), cx = 960, cy = 700, ry = 0.55;
-    const warmAll = eo(T, 177.3, 3.0), punch = td > 0 ? Math.exp(-td / 0.45) : 0;
-    g.save(); g.translate(960, 640); g.scale(1 + 0.045 * punch, 1 + 0.045 * punch); g.translate(-960, -640);
-    glow(g, cx, cy + 40, r * 1.15, (0.38 + 0.12 * eo(T, DROP, 0.6)) * oE);
-    if (td > 0) glow(g, cx, cy, 1500, 0.6 * Math.exp(-td / 0.6) * oE);
-    chalkLine(g, wobbly(160, 822, 1760, 826, 60, 2, 8), 1, 4, oE * 0.6);
-    chalkLine(g, P.ell(cx, cy, r, r * ry, -Math.PI / 2, Math.PI * 1.5, 140), 1, 6, oE, WARM);
-    if (td > 0 && td < 1.0) chalkLine(g, P.ell(cx, cy, r * 1.2 + 200 * td, (r * 1.2 + 200 * td) * ry, 0, Math.PI * 2, 140), 1, 10 * (1 - td), oE * (1 - td), WARM);
-    chalkPuppet(g, 'we', 960, 820, 0.6, 1, oE, 0.6 + 0.4 * Math.max(warmAll, eo(T, DROP, 0.4)));
-    const crowd: [string, number, number, number, number, number][] = [['cat', 640, 820, 0.55, 163.4, 125], ['dog', 1290, 820, 0.5, 163.6, 105], ['rhino', 1620, 830, 0.5, 163.8, 125], ['chicken', 330, 830, 0.5, 164.0, 125], ['fly', 470, 560, 0.55, 164.2, 50], ['bird', 1470, 540, 0.55, 164.4, 60], ['frog', 790, 580, 0.5, 164.6, 60], ['fish', 1150, 540, 0.5, 164.8, 50]];
-    crowd.forEach(([id, x, y, s, t0, hgt], i) => {
+    const td = T - DROP, warmAll = eo(T, L(59), 2.5), punch = td > 0 ? Math.exp(-td / 0.45) : 0;
+    const r = T < 167.0 ? 190 : T < DROP ? lerp(190, 225, eio(T, 167.0, DROP - 167.0)) : lerp(225, 1700, eo(T, DROP, 0.75)), cx = 960, cy = 700, ry = 0.55;
+    const pull = eio(T, L(58), 3.6), sE = (1 + 0.045 * punch) * lerp(1, 0.82, pull);
+    g.save(); cam(g, sE, 960, 600);
+    // warmth: a small pool in the circle before the drop; after it, a broad warm floor behind everyone, the board stays dark
+    if (td < 0) glow(g, cx, cy + 40, r * 1.15, 0.4 * oE);
+    else { glow(g, 960, 760, lerp(300, 1250, eo(T, DROP, 0.9)), 0.32 * oE); glow(g, 960, 760, 600, 0.12 * oE * warmAll); }
+    if (td > 0) glow(g, cx, cy, 1500, 0.55 * Math.exp(-td / 0.5) * oE);
+    line(g, wobbly(-300, 822, 2220, 826, 90, 2, 8), 1, 4, oE * 0.6);
+    if (r < 1600) line(g, P.ell(cx, cy, r, r * ry, -Math.PI / 2, Math.PI * 1.5, 140), 1, 6, oE * (td > 0 ? 1 - clamp(td / 0.7) : 1), WARM);
+    if (td > 0 && td < 1.0) line(g, P.ell(cx, cy, r * 1.2 + 200 * td, (r * 1.2 + 200 * td) * ry, 0, Math.PI * 2, 140), 1, 10 * (1 - td), oE * (1 - td), WARM);
+    const beat = (i: number) => (T > L(59) ? 0.06 * Math.sin((T - L(59)) * 5.2 + i * 0.4) : 0);
+    // who is there from the start (outside the circle until the drop) and who arrives after it
+    type Who = [string, number, number, number, number, number?];   // id, x, y, s, t0 (draw on), heart size
+    const crowd: Who[] = [['chicken', 330, 835, 0.55, HAND + 0.3], ['cat', 640, 830, 0.6, HAND + 0.4], ['dog', 1290, 830, 0.56, HAND + 0.5], ['rhino', 1640, 838, 0.52, HAND + 0.6],
+      ['fly', 470, 560, 0.62, HAND + 0.7], ['frog', 790, 590, 0.56, HAND + 0.8], ['fish', 1150, 550, 0.56, HAND + 0.9], ['bird', 1480, 540, 0.6, HAND + 1.0]];
+    const late: Who[] = [
+      ['rabbit', 150, 832, 0.5, L(55) + 0.3], ['mouse', 820, 912, 0.5, L(55) + 0.6], ['butterfly', 1660, 330, 0.5, L(55) + 0.9],
+      ['snail', 560, 914, 0.5, L(56) + 0.3], ['turtle', 1120, 914, 0.5, L(56) + 0.6], ['hedgehog', 250, 914, 0.5, L(56) + 0.9],
+      ['duck', 1430, 910, 0.5, L(57) + 0.3], ['butterfly', 320, 350, 0.42, L(57) + 0.6], ['bat', 1240, 300, 0.48, L(57) + 0.9],
+      ['pig', -60, 838, 0.5, L(58) + 0.6], ['rabbit', 1990, 836, 0.46, L(58) + 0.9], ['bird', 2060, 520, 0.55, L(58) + 1.2], ['snail', -150, 914, 0.45, L(58) + 1.4], ['mouse', 2090, 914, 0.45, L(58) + 1.6], ['duck', 1870, 912, 0.42, L(58) + 1.8],
+    ];
+    const heartFor = (id: string, x: number, y: number, s: number, k: number, size: number, i: number, extra = 0) => {
+      const hs = size * (1 + beat(i) + extra), hy = topOf(id, y, s) - 30 - size * 0.45;
+      heart(g, x, hy, hs, k, k, oE);
+    };
+    crowd.forEach(([id, x, y, s, t0], i) => {
       const d = Math.hypot((x - cx) / r, (y - 80 - cy) / (r * ry)), inside = clamp((1.1 - d) / 0.2);
-      const warm = Math.max(inside * 0.85, warmAll * 0.9);
-      chalkPuppet(g, id, x, y, s, eo(T, t0, 1.8), oE * (0.3 + 0.7 * inside), warm);
-      // on the drop: a full heart over every one of them, the fly's as full as the rhino's
-      if (td > 0) { const k = eo(T, DROP + 0.05 + i * 0.03, 0.35), hs = 78 * (0.6 + 0.4 * k + 0.25 * Math.exp(-Math.max(0, td - i * 0.03) / 0.18)); chalkHeart(g, x, y - (hgt + 280) * s - 40, hs, k, k, oE); }
+      const sudan = id === 'rhino' ? eo(T, L(55) + 0.1, 0.6) : 0;
+      if (sudan > 0) glow(g, x - 40, y - 120, 300, 0.3 * sudan * oE);
+      figure(g, id, x, y, s, eo(T, t0, 1.2), oE * (0.3 + 0.7 * inside), Math.max(inside * 0.85, warmAll * 0.9, sudan));
+      if (td > 0) {
+        const k = eo(T, DROP + 0.05 + i * 0.03, 0.35), pop = 0.3 * Math.exp(-Math.max(0, td - i * 0.03) / 0.18);
+        const flyPulse = id === 'fly' ? 0.55 * Math.exp(-Math.max(0, T - L(56) - 0.3) / 0.6) * (T > L(56) + 0.3 ? 1 : 0) : 0;
+        const seen = T > L(57) + 0.5 ? 0.18 * Math.exp(-(T - L(57) - 0.5) / 0.5) : 0;
+        heartFor(id, x, y, s, k, 74, i, pop + flyPulse + seen + (id === 'fly' ? 0.25 * eo(T, L(56) + 0.3, 0.6) : 0));
+      }
     });
-    if (td > 0) { const k = eo(T, DROP + 0.02, 0.35); chalkHeart(g, 960, 820 - 450 * 0.6 - 70, 84 * (0.6 + 0.4 * k), k, k, oE); }
+    late.forEach(([id, x, y, s, t0], i) => {
+      const p = eo(T, t0, 1.0); if (p <= 0) return;
+      figure(g, id, x, y, s, p, oE, Math.max(0.75, warmAll * 0.9));
+      const k = eo(T, t0 + 0.4, 0.5), seen = T > L(57) + 0.5 && t0 < L(57) + 0.5 ? 0.18 * Math.exp(-(T - L(57) - 0.5) / 0.5) : 0;
+      heartFor(id, x, y, s, k, 60, i + 9, seen);
+    });
+    const weSoft = eo(T, DROP + 0.2, 0.6);
+    figure(g, 'we', 960, 820, 0.62, 1, oE * (1 - weSoft), 0.6 + 0.4 * eo(T, DROP, 0.4));
+    figure(g, 'we_soft', 960, 820, 0.62, 1, oE * weSoft, 1);
+    if (td > 0) { const k = eo(T, DROP + 0.02, 0.35); heartFor('we', 960, 820, 0.62, k, 80, 30); }
     if (td > 0) dust(g, cx, cy, td, 180, WARM);
     g.restore();
   }
   g.restore();
-  // the title on the hit: every grain of the three lives' dust flies into the letters, which stand on their ground line
+  // the title on the hit: every grain of the three lives' dust flies into the letters
   if (T >= TITLE - 0.02 && T < 47.6) {
-    const o = 1 - pr(T, 46.6, 0.9), t = T - TITLE + 0.02;
+    const o = 1 - pr(T, 46.4, 0.9), t = T - TITLE + 0.02;
     g.save(); g.translate(0, -45);
-    glow(g, 960, 640, 820, 0.5 * Math.exp(-t / 0.5) * o);
+    glow(g, 960, 600, 820, 0.5 * Math.exp(-t / 0.5) * o);
     const tl = titleLayer();
-    g.save(); g.globalAlpha = o * eo(t, 0.14, 0.34); g.drawImage(tl.chalk, 0, 0); g.restore();
+    g.save(); g.globalAlpha = o * eo(t, 0.14, 0.34); g.drawImage(tl.img, 0, 0); g.restore();
     if (t < 0.75) {
       const k = 1 - Math.pow(1 - clamp(t / 0.3), 3), a = 0.95 * (1 - pr(t, 0.3, 0.4));
       for (const s0 of tl.snap) {
-        const q = dustAt(DIS[s0.d], s0.i, TITLE - 0.02);
+        const d = DIS[s0.d], q = dustAt(d, s0.i, TITLE - 0.02);
         const x = lerp(q.px, s0.tx, k), y = lerp(q.py, s0.ty, k);
-        g.fillStyle = `rgba(${WARM},${a})`; g.fillRect(x - 1.8, y - 1.8, 3.6, 3.6);
+        g.fillStyle = `rgba(${mix(d.cols[d.pts[s0.i][2]], WARM, 0.5 + 0.5 * k)},${a})`; g.beginPath(); g.arc(x, y, 2.4, 0, 7); g.fill();
       }
     }
     g.restore();
   }
-  // end card
+  // the corner mark, quietly, between the title and the end card
+  const oMark = Math.min(eo(T, 47.6, 0.8), 1 - pr(T, END - 0.6, 0.5));
+  if (oMark > 0) { g.save(); g.globalAlpha = 0.5 * oMark; g.font = `500 26px ${SANS}`; g.textAlign = 'right'; g.textBaseline = 'middle'; g.fillStyle = '#f3ede2'; g.fillText(`◆ ${JUNO.mark}`, 1876, 52); g.restore(); }
+  // end card, on the track's own closing bars
   if (T >= END) {
-    const o = eo(T, END, 0.8);
-    g.fillStyle = `rgba(10,12,18,${0.62 * o})`; g.fillRect(0, 0, 1920, 1080);
-    const tt = chalkText('生命平等吗？', 130, JUNO.colors.gold, '"Ma Shan Zheng"');
-    g.save(); g.globalAlpha = o * eo(T, END + 0.3, 0.6); g.drawImage(tt, 0, 160); g.restore();
-    const q = chalkText('你的圈，画到了哪里？评论区说说', 58, `rgb(${CHALK})`, '"Ma Shan Zheng"');
-    g.save(); g.globalAlpha = o * eo(T, END + 0.9, 0.6); g.drawImage(q, 0, 330); g.restore();
-    // the follow line inside a chalk ring drawn on
-    chalkLine(g, [...P.ell(960, 690, 300, 46, Math.PI, Math.PI * 3, 90)], eo(T, END + 1.3, 1.0), 3.5, o, WARM);
-    const fl = chalkText(JUNO.follow, 34, JUNO.colors.gold, '"Noto Sans CJK SC"');
-    g.save(); g.globalAlpha = o * eo(T, END + 1.6, 0.5); g.drawImage(fl, 0, 490); g.restore();
-    const src = chalkText('资料：Miralles 等 2019 · 《庄子》· Nagel 1974 · Kant · Bentham 1789 · Singer 1975 · Schweitzer · Lecky 1869 · CBC 2018', 22, `rgba(${CHALK},.8)`, '"Noto Sans CJK SC"');
-    g.save(); g.globalAlpha = o * eo(T, END + 2.0, 0.5); g.drawImage(src, 0, 610); g.restore();
-    const mu = chalkText('音乐：Cry For Me (feat. 愛海) · MICHITA', 22, `rgba(${CHALK},.8)`, '"Noto Sans CJK SC"');
-    g.save(); g.globalAlpha = o * eo(T, END + 2.2, 0.5); g.drawImage(mu, 0, 646); g.restore();
+    const o = eo(T, END, 0.45);
+    g.fillStyle = `rgba(10,12,18,${0.8 * o})`; g.fillRect(0, 0, 1920, 1080);
+    const tt = text('生命平等吗？', 140, JUNO.colors.gold, '"Ma Shan Zheng"');
+    g.save(); g.globalAlpha = o * eo(T, END + 0.25, 0.6); g.drawImage(tt, 0, 120); g.restore();
+    g.save(); g.globalAlpha = o * eo(T, END + 0.8, 0.6); g.drawImage(text('苍蝇，在你的圈里吗？评论区说说', 60, '#f4efe4', `700 ${SANS}`), 0, 300); g.restore();
+    line(g, [...P.ell(960, 662, 330, 54, Math.PI, Math.PI * 3, 90)], eo(T, END + 1.2, 0.9), 3.5, o, WARM);
+    g.save(); g.globalAlpha = o * eo(T, END + 1.5, 0.5); g.drawImage(text(JUNO.follow, 46, JUNO.colors.gold, `700 ${SANS}`), 0, 462); g.restore();
+    g.save(); g.globalAlpha = o * eo(T, END + 1.9, 0.5);
+    g.drawImage(text('资料：Miralles 等 2019 ·《庄子》· Nagel 1974 · Kant · Bentham 1789 · Singer 1975 · Schweitzer · Lecky 1869', 28, 'rgba(242,236,222,.75)', `400 ${SANS}`), 0, 590);
+    g.drawImage(text('音乐：Cry For Me (feat. 愛海) · MICHITA', 28, 'rgba(242,236,222,.75)', `400 ${SANS}`), 0, 636);
+    g.restore();
   }
 };
 
@@ -538,12 +622,11 @@ export const Chalk: React.FC = () => {
   const [h] = useState(() => delayRender('fonts', { timeoutInMilliseconds: 60000 }));
   const [ok, setOk] = useState(false);
   useEffect(() => {
-    const zh = Array.from(new Set(LINES.map((l) => l[2]).join('') + '生命平等吗？你的圈，画到了哪里评论区说说关注一起看懂世界资料等庄子音乐VIBE知识大赏—·')).join('');
-    Promise.all(['40px "Ma Shan Zheng"', '40px "PatrickHand"', '700 40px "Noto Sans CJK SC"', '400 40px "Noto Sans CJK SC"'].map((x) => document.fonts.load(x, zh + 'SudanABCabc').catch(() => null))).then(() => { setOk(true); continueRender(h); });
+    const zh = Array.from(new Set(LINES.map((l) => l[2]).join('') + '生命平等吗？你的圈，画到了哪里评论区说说苍蝇在关注一起看懂世界资料等庄子音乐VIBE知识大赏—·◆研究者法国像我们不像惠子内格尔康德边沁辛格史怀哲莱基苏丹')).join('');
+    Promise.all(['40px "Ma Shan Zheng"', '40px "PatrickHand"', '700 40px "Noto Sans CJK SC"', '500 40px "Noto Sans CJK SC"', '400 40px "Noto Sans CJK SC"', '900 40px "Noto Sans CJK SC"'].map((x) => document.fonts.load(x, zh + 'SudanABCabc?0123456789').catch(() => null))).then(() => { setOk(true); continueRender(h); });
   }, [h]);
-  const titleOn = T >= TITLE - 0.3 && T < 47.0, endOn = T >= END;
   return (
-    <AbsoluteFill style={{ background: '#11151d' }}>
+    <AbsoluteFill style={{ background: '#121620' }}>
       <FontFaces />
       <style>{`@font-face { font-family: "PatrickHand"; src: url(${staticFile('fonts/patrick-hand-latin-400-normal.woff2')}) format("woff2"); }`}</style>
       {ok && <>
@@ -560,6 +643,26 @@ export const Chalk: React.FC = () => {
           );
         })}
       </>}
+    </AbsoluteFill>
+  );
+};
+
+/* ------------------------------------------------------------ model sheet: every character in the clear look */
+export const SHEET_IDS = ['cat', 'rhino', 'fly', 'dog', 'chicken', 'bird', 'frog', 'fish', 'bat', 'hippo', 'rabbit', 'mouse', 'snail', 'turtle', 'butterfly', 'hedgehog', 'duck', 'pig',
+  'researcher', 'zhuang', 'hui', 'nagel', 'kant', 'bentham', 'singer', 'schweitzer', 'lecky', 'we', 'we_soft', 'p_long', 'p_cap', 'p_side', 'lamp', 'boat'];
+export const ChalkSheet: React.FC = () => {
+  const [h] = useState(() => delayRender('fonts', { timeoutInMilliseconds: 60000 }));
+  const [ok, setOk] = useState(false);
+  useEffect(() => { Promise.all(['700 40px "Noto Sans CJK SC"'].map((x) => document.fonts.load(x, '研究者法国').catch(() => null))).then(() => { setOk(true); continueRender(h); }); }, [h]);
+  return (
+    <AbsoluteFill style={{ background: '#121620' }}>
+      {ok && <Canvas dep={0} draw={(g) => {
+        g.drawImage(board(), 0, 0);
+        const animals = SHEET_IDS.slice(0, 18), people = SHEET_IDS.slice(18);
+        animals.forEach((id, i) => { const c = i % 9, r = Math.floor(i / 9); const x = 110 + c * 212, y = 250 + r * 230; figure(g, id, x, y, fitScale(id, 170), 1, 1); g.drawImage(text(id, 22, '#9aa', `700 ${SANS}`), x - 960, y + 22 - 200); });
+        people.forEach((id, i) => { const x = 70 + i * 118, y = 1000; const s = id === 'lamp' ? 0.42 : id === 'boat' ? 0.13 : 0.55; figure(g, id, x, y - (id === 'boat' ? 0 : 0), s, 1, 1, id === 'we_soft' ? 0.8 : 0); g.drawImage(text(id, 18, '#9aa', `700 ${SANS}`), x - 960, y + 20 - 200); });
+        heart(g, 1820, 420, 120, 0.7, 1, 1);
+      }} />}
     </AbsoluteFill>
   );
 };

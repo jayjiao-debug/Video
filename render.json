@@ -1,9 +1,9 @@
 {
-  "id": "chalk_head-1792193687",
+  "id": "v8-1792198011",
   "composition": "Chalk",
   "start": 0,
-  "end": 689,
-  "chunks": 10,
-  "output": "chalk_head",
-  "flags": ""
+  "end": 5825,
+  "chunks": 30,
+  "output": "v8",
+  "flags": "--image-format=png --crf=14"
 }
