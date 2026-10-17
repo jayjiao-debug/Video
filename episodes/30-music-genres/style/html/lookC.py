@@ -202,9 +202,9 @@ def pop(x, y, ch, size, col):
 
 
 def hook():
-    tops, h = [250, 388, 500, 612], 100
+    tops, h = [256, 392, 500, 608], 108
     s = [defs(), world()]
-    s.append(sticky(640, 30, 430, 128, '摇滚', -3, sub='曲风'))
+    s.append(sticky(640, 14, 430, 112, '摇滚', -2, sub='曲风'))
     # stopwatch doodle
     x, y, r = 1240, 96, 50
     s.append(f'<g filter="url(#rough)"><circle cx="{x}" cy="{y}" r="{r}" fill="none" stroke="{INK}" stroke-width="4"/>'
@@ -212,7 +212,7 @@ def hook():
              f'<path d="M{x},{y} L{x},{y-r} A{r},{r} 0 0,1 {x+r},{y} Z" fill="#FF7DB8" opacity=".75" style="mix-blend-mode:multiply"/>'
              f'<path d="M{x},{y} L{x+r-8},{y}" stroke="{RED}" stroke-width="5" stroke-linecap="round"/></g>')
     s.append(f'<text x="{x+70}" y="{y+18}" font-size="52" font-weight="900" fill="{INK}">0.25秒</text>')
-    s.append(beat_numbers(198, 1))
+    s.append(beat_numbers(208, 1))
     s.append(grid(ROCK, tops, h, 4, names=False))
     s.append(pop(cx(4) + P / 2, tops[2] + h / 2 + 6, '打', 128, MK['da']))
     s.append(pop(cx(4) + P / 2 + 8, tops[1] + h / 2 - 18, '次', 92, MK['ci']))
@@ -221,11 +221,11 @@ def hook():
 
 
 def key():
-    tops, h = [262, 368, 456, 544], 82
+    tops, h = [266, 372, 456, 540], 84
     states = {('dong', 0): 'empty', ('sig', 4): 'ghost', ('sig', 12): 'ghost'}
     s = [defs(), world()]
-    s.append(sticky(700, 30, 520, 128, '雷鬼', -2.5, sub='曲风'))
-    s.append(beat_numbers(214, 0))
+    s.append(sticky(700, 14, 520, 112, '雷鬼', -1.5, sub='曲风'))
+    s.append(beat_numbers(218, 0))
     s.append(grid(REGGAE, tops, h, 0, states=states, label_sig='吉他嚓'))
     # the empty first beat: red dashed ring + 空
     x, y = cx(0) + P / 2, tops[3] + h / 2
