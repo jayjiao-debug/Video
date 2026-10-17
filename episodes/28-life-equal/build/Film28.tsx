@@ -1,5 +1,7 @@
 import React from 'react';
-import {AbsoluteFill, Composition, registerRoot, useCurrentFrame} from 'remotion';
+import {AbsoluteFill, Composition, registerRoot, useCurrentFrame, Sequence} from 'remotion';
+import {EndCard} from '../brand/Brand';
+import {Rest} from './Rest28';
 import {Sub} from '../ep27/kit27';
 import {JUNO} from '../brand/identity';
 import lines from './lines28.json';
@@ -10,7 +12,8 @@ import {W, H, FPS, SANS, SERIF, P, PaperDefs, Fly, Human, Ape, Dog, Cat, Chicken
    and drifts away (the "snap"), leaving its little stage empty. Pull back: the three come back as they were, each with
    a heart showing how much we care. "是我们太冷血了吗？" → all three turn to dust together. Cards → the title slams on
    the 42.47 drop while the cards fly into a ruler, which gets hearts too. */
-export const FILM_END = 53.0;
+export const FILM_END = 187.0;
+const END_AT = 181.0, FIN = 165.8;
 const cl = (x: number) => Math.max(0, Math.min(1, x));
 const ease = (x: number) => { const k = cl(x); return k < 0.5 ? 4 * k * k * k : 1 - Math.pow(-2 * k + 2, 3) / 2; };
 const r = (t: number, a: number, b: number) => ease((t - a) / (b - a));
@@ -22,20 +25,28 @@ const DROP = 42.47;
 /* camera moves [start, end, cx, cy, scale]; holds drift slowly */
 const MOVES: [number, number, number, number, number][] = [
 	[0, 0, 720, 600, 1.0],
-	[4.6, 7.6, 2200, 590, 1.0],
-	[16.0, 18.9, 3720, 540, 1.05],
-	[22.4, 24.8, 2190, 470, 0.42],
+	[4.4, 7.9, 2200, 590, 1.0],
+	[15.7, 19.1, 3720, 545, 1.0],
+	[22.4, 24.8, 2190, 470, 0.39],
+	[165.0, 165.05, 2200, 590, 1.0],
+	[169.4, 172.2, 3720, 560, 1.0],
+	[175.4, 178.8, 2190, 470, 0.39],
 ];
+/* one continuous, slow push-in for the whole opening (never resets, never pulls out between scenes) */
+const drift = (t: number) => (t < 22.4 ? 1 + 0.0035 * t : 1.0784 + 0.0015 * Math.min(t - 22.4, 12));
 const camAt = (t: number) => {
 	let [cx, cy, s] = [MOVES[0][2], MOVES[0][3], MOVES[0][4]];
-	let since = 0;
 	for (const [a, b, x, y, z] of MOVES) {
-		if (t >= b) { [cx, cy, s] = [x, y, z]; since = b; }
-		else if (t > a) { const u = cl((t - a) / (b - a)); const k = u * u * u * (u * (u * 6 - 15) + 10); const arc = Math.sin(Math.PI * k) * (z > 0.9 ? 1 : 0.4); return {cx: mix(cx, x, k), cy: mix(cy, y, k) - 70 * arc, s: mix(s, z, k) * (1 - 0.14 * arc)}; }
+		if (t >= b) { [cx, cy, s] = [x, y, z]; }
+		else if (t > a) {
+			// the camera rides with the stream of light: soft start, soft landing, a gentle rise in the middle, no zoom-out
+			const u = cl((t - a) / (b - a)), k = u * u * u * (u * (u * 6 - 15) + 10);
+			const rise = z > 0.9 ? Math.sin(Math.PI * k) * 45 : 0;
+			return {cx: mix(cx, x, k), cy: mix(cy, y, k) - rise, s: mix(s, z, k) * drift(t)};
+		}
 	}
-	return {cx, cy, s: s * (1 + Math.min(t - since, 12) * (s < 0.6 ? 0.002 : 0.004))};
+	return {cx, cy, s: s * drift(t)};
 };
-
 
 /* ---------- passing away: the body itself thins out and breaks up (noise erosion + drift), and gives off warm
    motes of light that rise and fade. No masks, no dark chunks. `blobs` = ellipses [cx, cy, rx, ry] covering the body,
@@ -335,6 +346,25 @@ const Spirits: React.FC<{t: number}> = ({t}) => {
 	);
 };
 
+
+/* the finale: the three are back under their lamps. "是因为我们看见了它" → the fly's lamp comes up and its heart fills;
+   "万物与我为一" → one light over all three, every heart full */
+const Finale: React.FC<{t: number}> = ({t}) => {
+	const seen = r(t, 173.1, 174.8), one = r(t, 177.9, 180.0);
+	return (
+		<g>
+			<ellipse cx={2190} cy={620} rx={2600} ry={900} fill="url(#pool28)" opacity={0.85 * one} />
+			{shadow(680, 748, 80, 0.3)}<CatP x={680} y={748} s={1.5} k={0} head={0} sway={0} tail={Math.sin(t * 2)} shadowOn />
+			{shadow(2190, 748, 300, 0.35)}<RhinoK x={2170} y={750} s={1.9} down={0} headDown={0} breathe={Math.sin(t * 2.4)} shadowOn />
+			<Fly x={3780} y={706} s={2.2} />
+			<Heart id="fr" x={2210} y={360} size={300} level={1} pop={lin(t, 167.9, 168.3)} />
+			<Heart id="fc" x={680} y={470} size={240} level={mix(0.55, 1, one)} pop={lin(t, 168.1, 168.5)} />
+			<Heart id="ff" x={3780} y={540} size={mix(120, 240, seen)} level={mix(0.08, 1, seen)} pop={lin(t, 170.3, 170.7)} />
+			{t > 177.5 && <g opacity={one}><Motes x={2190} y={560} rx={2100} ry={420} t={t} n={90} seed={61} o={1.2} /></g>}
+		</g>
+	);
+};
+
 export const Film28: React.FC = () => {
 	const t = useCurrentFrame() / FPS;
 	const cam = camAt(t);
@@ -342,8 +372,10 @@ export const Film28: React.FC = () => {
 	const j = t >= DROP ? Math.exp(-(t - DROP) * 9) : 0;
 	const shakeX = Math.sin((t - DROP) * 70) * 14 * j, shakeY = Math.cos((t - DROP) * 55) * 9 * j;
 	const world = `translate(${960 - cam.cx * cam.s} ${540 - cam.cy * cam.s}) scale(${cam.s})`;
-	const cardsOn = t >= 32.9;
-	const worldO = 1 - r(t, 32.9, 34.0);
+	const cardsOn = t >= 32.9 && t < 54.2;
+	const fin = t >= FIN;
+	const finK = r(t, FIN, FIN + 1.8);
+	const worldO = t < 160 ? 1 - r(t, 32.9, 34.0) : finK * (1 - 0.8 * r(t, END_AT, END_AT + 0.8));
 	const sudanGrow = r(t, 13.7, 16.5);
 	const flyLamp = t < 22.4 ? mix(0.05, 0.32, r(t, 17.6, 18.9)) : mix(0.28, 0.42, r(t, 22.4, 24.8));
 	const flyIn = r(t, 17.0, 18.3);
@@ -371,7 +403,7 @@ export const Film28: React.FC = () => {
 				<g transform={`translate(${shakeX} ${shakeY})`}>
 				<g transform={world} opacity={worldO}>
 					{/* A · roadside */}
-					<Pool x={mix(690, 680, r(t, 22.4, 24.8))} y={720} rx={mix(520, 400, r(t, 22.4, 24.8))} ry={mix(300, 220, r(t, 22.4, 24.8))} k={t < 22.4 ? mix(1, 0.4, r(t, 5.4, 7.6)) : mix(0.4, 0.85, r(t, 22.4, 24.8))} />
+					<Pool x={mix(690, 680, r(t, 22.4, 24.8))} y={720} rx={mix(520, 400, r(t, 22.4, 24.8))} ry={mix(300, 220, r(t, 22.4, 24.8))} k={fin ? mix(0.55, 1, r(t, 175.8, 177.6)) : t < 22.4 ? mix(1, 0.4, r(t, 5.4, 7.6)) : mix(0.4, 0.85, r(t, 22.4, 24.8))} />
 					<rect x={-100} y={760} width={1700} height={300} fill="url(#road)" opacity={0.8} />
 					<rect x={0} y={748} width={1500} height={16} fill="#8d8378" opacity={0.8} />
 					{[0, 1, 2, 3].map((i) => <rect key={i} x={60 + i * 380} y={900} width={190} height={12} fill={P.cream} opacity={0.32} />)}
@@ -390,7 +422,7 @@ export const Film28: React.FC = () => {
 					<Motes x={760} y={600} rx={420} ry={200} t={t} seed={5} />
 
 					{/* B · Sudan */}
-					<Pool x={2200} y={650} rx={mix(620, 780, sudanGrow)} ry={mix(400, 480, sudanGrow)} k={mix(0.12, 0.92, r(t, 6.2, 7.8)) * (t > 16 && t < 22.4 ? mix(1, 0.5, r(t, 16.6, 18.6)) : 1) + 0.08 * sudanGrow} />
+					<Pool x={2200} y={650} rx={mix(620, 780, sudanGrow)} ry={mix(400, 480, sudanGrow)} k={fin ? 1 : mix(0.12, 0.92, r(t, 6.2, 7.8)) * (t > 16 && t < 22.4 ? mix(1, 0.5, r(t, 16.6, 18.6)) : 1) + 0.08 * sudanGrow} />
 					<rect x={1450} y={748} width={1500} height={250} fill="url(#earth)" />
 					<Acacia x={2720} y={750} s={1.1} />
 					{solo && <>
@@ -403,7 +435,7 @@ export const Film28: React.FC = () => {
 					<Motes x={2200} y={560} rx={560} ry={300} t={t} n={30} seed={11} o={mix(0.8, 1.2, sudanGrow)} />
 
 					{/* C · windowsill */}
-					<Pool x={3720} y={700} rx={mix(260, 200, r(t, 20.6, 22))} ry={120} k={flyLamp} />
+					<Pool x={3720} y={fin ? 640 : 700} rx={fin ? mix(240, 520, r(t, 173.1, 174.8)) : mix(260, 200, r(t, 20.6, 22))} ry={fin ? mix(120, 320, r(t, 173.1, 174.8)) : 120} k={fin ? mix(0.3, 1, r(t, 173.1, 174.8)) : flyLamp} />
 					<g opacity={0.92}>
 						<rect x={3220} y={150} width={1000} height={500} fill="#3c4a66" />
 						{[0, 1].map((i) => <rect key={i} x={3220 + (i + 1) * 333 - 7} y={150} width={14} height={500} fill={P.cut} />)}
@@ -418,9 +450,10 @@ export const Film28: React.FC = () => {
 					{t > 19.4 && t < 21.2 && <Hand x={3800} y={mix(-500, 640, slap) - unslap * 900} o={0.6 * (1 - unslap)} />}
 
 					{/* the three, as they were, with their hearts */}
-					{!solo && <Spirits t={t} />}
-					{t > 4.2 && t < 9 && <Trail t={t} t0={4.3} from={[760, 640]} via={[1450, 260]} to={[2230, 400]} seed={17} />}
-					{t > 15.6 && t < 20 && <Trail t={t} t0={15.8} from={[2300, 600]} via={[3000, 220]} to={[3760, 660]} seed={23} />}
+					{!solo && t < 40 && <Spirits t={t} />}
+					{fin && <Finale t={t} />}
+					{t > 4.1 && t < 9.6 && <Trail t={t} t0={4.1} from={[760, 640]} via={[1480, 330]} to={[2230, 420]} seed={17} travel={3.0} />}
+					{t > 15.4 && t < 20.8 && <Trail t={t} t0={15.4} from={[2300, 600]} via={[3000, 300]} to={[3760, 640]} seed={23} travel={3.0} />}
 				</g>
 
 
@@ -434,17 +467,20 @@ export const Film28: React.FC = () => {
 					}
 					return <g>{out}</g>;
 				})()}
+				<g transform={`translate(0 ${760 * r(t, 52.4, 53.8)})`}>
 				{/* the 52 cards and the ruler (screen space) */}
 				{cardsOn && <Pool x={mix(960, 420, r(t, DROP, DROP + 1.1))} y={mix(470, 680, r(t, DROP, DROP + 1.1))} rx={mix(1000, 900, r(t, DROP, DROP + 1.1))} ry={520} k={r(t, 32.9, 33.8)} />}
 				{cardsOn && <Ruler t={t} />}
 				{cardsOn && <Cards t={t} />}
 				{t > 33.2 && t < DROP && <g opacity={r(t, 33.6, 34.1) * (1 - r(t, LIFT, LIFT + 0.4))}><Tag x={960} y={120} size={44} rot={-1}>52种生物 · 3500多人</Tag></g>}
 				{t > LIFT && t < 39.4 && <g opacity={r(t, LIFT + 0.6, LIFT + 1.0) * (1 - r(t, 39.0, 39.3))}><text x={960} y={375} textAnchor="middle" style={{fontFamily: SERIF, fontWeight: 700, fontSize: 120}} fill={P.ink}>？</text></g>}
-				{t > 47.6 && <g opacity={r(t, 47.9, 48.5)}>
+				{t > 47.6 && t < 54.2 && <g opacity={r(t, 47.9, 48.5)}>
 					<Lab x={200} y={850} size={52}>像我们</Lab>
 					<Lab x={1700} y={850} size={52} col={P.cream} o={0.9}>不像我们</Lab>
 					<path d="M 340 832 L 1520 832" stroke={P.ink} strokeWidth={7} strokeLinecap="round" strokeDasharray="2 18" opacity={0.4} />
 				</g>}
+				</g>
+				<Rest t={t} />
 				</g>
 
 				<rect width={W} height={H} filter="url(#fiber)" opacity={0.55} style={{mixBlendMode: 'multiply'}} />
@@ -464,8 +500,10 @@ export const Film28: React.FC = () => {
 					</svg>
 				</>
 			)}
-			{s && <div style={{opacity: s.o}}><Sub t={s.txt} /></div>}
-			<div style={{position: 'absolute', top: 40, right: 56, opacity: 0.6, fontFamily: SANS, fontWeight: 500, fontSize: 20, letterSpacing: '0.3em', color: P.cream}}>{JUNO.mark}</div>
+			{s && t < END_AT && <div style={{opacity: s.o}}><Sub t={s.txt} /></div>}
+			{t > 178.0 && t < END_AT && <div style={{position: 'absolute', right: 150, bottom: 190, fontFamily: SERIF, fontWeight: 700, fontSize: 46, color: P.cream, opacity: r(t, 178.3, 178.9) * (1 - r(t, 180.5, 181.0))}}>——《庄子·齐物论》</div>}
+			<Sequence from={Math.round(END_AT * FPS)}><EndCard v={{id: 'ep28', src: '', title: '生命平等吗？', kicker: '', tagline: '', taglineEn: '', motif: 'heart', card: [0, 0], extend: 0, question: '你的圈，画到了哪里？评论区说说', sources: '来源：Miralles 等 2019《科学报告》；边沁、康德、辛格、史怀哲、莱基原著；《庄子》', duration: 0} as any} cfg={{videos: []} as any} dur={Math.round((FILM_END - END_AT) * FPS)} /></Sequence>
+			<div style={{position: 'absolute', top: 40, right: 56, opacity: t < END_AT ? 0.6 : 0, fontFamily: SANS, fontWeight: 500, fontSize: 20, letterSpacing: '0.3em', color: P.cream}}>{JUNO.mark}</div>
 		</AbsoluteFill>
 	);
 };
