@@ -13,7 +13,7 @@ import {W, H, FPS, SANS, SERIF, P, PaperDefs, Fly, Human, Ape, Dog, Cat, Chicken
    a heart showing how much we care. "是我们太冷血了吗？" → all three turn to dust together. Cards → the title slams on
    the 42.47 drop while the cards fly into a ruler, which gets hearts too. */
 export const FILM_END = 187.0;
-const END_AT = 181.0, FIN = 165.8;
+const END_AT = 181.0, FIN = 1e9;   // v2: the finale is the great field in Rest28
 const cl = (x: number) => Math.max(0, Math.min(1, x));
 const ease = (x: number) => { const k = cl(x); return k < 0.5 ? 4 * k * k * k : 1 - Math.pow(-2 * k + 2, 3) / 2; };
 const r = (t: number, a: number, b: number) => ease((t - a) / (b - a));
@@ -308,6 +308,7 @@ const Ruler: React.FC<{t: number}> = ({t}) => {
 			<g filter="url(#cutShadow)"><rect x={110} y={RY + 6} width={1720} height={64} rx={6} fill={P.cream} /></g>
 			{Array.from({length: 69}, (_, i) => <line key={i} x1={130 + i * 24.8} x2={130 + i * 24.8} y1={RY + 8} y2={RY + (i % 5 ? 24 : 40)} stroke={P.ink} strokeWidth={i % 5 ? 2 : 3} opacity={0.6} />)}
 			{TYPES.map(([C], i) => {
+				if (i === 6 && t > 51.9) return null;
 				const x = slotX(i), land = r(t, DROP + 0.45 + i * 0.05, DROP + 0.8 + i * 0.05);
 				const dim = cl((x - lit) / 380);
 				return (
@@ -364,6 +365,18 @@ const Finale: React.FC<{t: number}> = ({t}) => {
 		</g>
 	);
 };
+
+
+/** ep28 subtitle: no box. White 思源黑体 with a soft dark edge and a feathered, borderless shade behind it,
+    so it reads on the lamp light and the sunset without cutting a black slab out of the picture. */
+const Sub28: React.FC<{t: string}> = ({t}) => (
+	<div style={{position: 'absolute', left: 0, right: 0, bottom: 58, display: 'flex', justifyContent: 'center'}}>
+		<div style={{position: 'relative', padding: '26px 120px'}}>
+			<div style={{position: 'absolute', inset: 0, background: 'radial-gradient(ellipse 50% 50% at 50% 50%, rgba(14,10,18,0.5) 0%, rgba(14,10,18,0.32) 42%, rgba(14,10,18,0) 100%)', filter: 'blur(6px)'}} />
+			<div style={{position: 'relative', fontFamily: SANS, fontWeight: 900, fontSize: 64, color: '#fffaf0', letterSpacing: '0.03em', WebkitTextStroke: '7px rgba(22,14,20,0.62)', paintOrder: 'stroke fill', textShadow: '0 2px 10px rgba(10,6,12,0.75), 0 0 28px rgba(10,6,12,0.45)'}}>{t}</div>
+		</div>
+	</div>
+);
 
 export const Film28: React.FC = () => {
 	const t = useCurrentFrame() / FPS;
@@ -467,7 +480,7 @@ export const Film28: React.FC = () => {
 					}
 					return <g>{out}</g>;
 				})()}
-				<g transform={`translate(0 ${760 * r(t, 52.4, 53.8)})`}>
+				<g opacity={1 - r(t, 52.5, 53.3)} transform={`translate(0 ${50 * r(t, 52.2, 53.4)})`}>
 				{/* the 52 cards and the ruler (screen space) */}
 				{cardsOn && <Pool x={mix(960, 420, r(t, DROP, DROP + 1.1))} y={mix(470, 680, r(t, DROP, DROP + 1.1))} rx={mix(1000, 900, r(t, DROP, DROP + 1.1))} ry={520} k={r(t, 32.9, 33.8)} />}
 				{cardsOn && <Ruler t={t} />}
@@ -500,7 +513,7 @@ export const Film28: React.FC = () => {
 					</svg>
 				</>
 			)}
-			{s && t < END_AT && <div style={{opacity: s.o}}><Sub t={s.txt} /></div>}
+			{s && t < END_AT && <div style={{opacity: s.o}}><Sub28 t={s.txt} /></div>}
 			{t > 178.0 && t < END_AT && <div style={{position: 'absolute', right: 150, bottom: 190, fontFamily: SERIF, fontWeight: 700, fontSize: 46, color: P.cream, opacity: r(t, 178.3, 178.9) * (1 - r(t, 180.5, 181.0))}}>——《庄子·齐物论》</div>}
 			<Sequence from={Math.round(END_AT * FPS)}><EndCard v={{id: 'ep28', src: '', title: '生命平等吗？', kicker: '', tagline: '', taglineEn: '', motif: 'heart', card: [0, 0], extend: 0, question: '你的圈，画到了哪里？评论区说说', sources: '来源：Miralles 等 2019《科学报告》；边沁、康德、辛格、史怀哲、莱基原著；《庄子》', duration: 0} as any} cfg={{videos: []} as any} dur={Math.round((FILM_END - END_AT) * FPS)} /></Sequence>
 			<div style={{position: 'absolute', top: 40, right: 56, opacity: t < END_AT ? 0.6 : 0, fontFamily: SANS, fontWeight: 500, fontSize: 20, letterSpacing: '0.3em', color: P.cream}}>{JUNO.mark}</div>
