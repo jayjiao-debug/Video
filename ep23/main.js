@@ -138,13 +138,13 @@ window.renderAt=function(T){HT='';
    lab(1810,560,'LPL 夺冠',''+Math.round(D.reg.LPL),'%',{col:REGC.LPL,o,s:back(T,B(20)+BEAT),align:'right'});
    if(dimOthers>0){lab(1810,330,'其中 BLG',''+D.champ.BLG.toFixed(1),'%',{col:'#fff',o:dimOthers*o,s:back(T,B(22)+BEAT),align:'right',size:96});}}}
  // console drop hits
- {const st=P.state5(T);const o=vis(T,B(40),B(44),.25);if(o>0){const big=T<B(42)?34.9:45.7;lab(960,170,T<B(42)?'最顺的路 · LPL 夺冠':'GEN、HLE 四强前出局 · LPL 夺冠',''+Math.round(big),'%',{col:REGC.LPL,o,s:back(T,T<B(42)?B(40):B(42),.4),align:'center',size:210});}}
+ {const st=P.state5(T);const o=vis(T,B(40),B(44),.25);if(o>0){const big=T<B(42)?34.9:45.7;lab(620,T<B(42)?250:220,T<B(42)?'最顺的路 · LPL 夺冠':'GEN、HLE 四强前出局 · LPL 夺冠',''+Math.round(big),'%',{col:REGC.LPL,o,s:back(T,T<B(42)?B(40):B(42),.4),align:'center',size:220});}}
  // gates: running product
  {const o=vis(T,B(52)+.4,B(56)+.3,.3);if(o>0){const pass=GATE_T;
    const n=pass.filter(t=>T>=t).length;const vals=['60%','× 60%','× 60%'];let s='';for(let i=0;i<3;i++){const on=i<n||(i===0&&T>=B(52)+.6);s+=`<span style="opacity:${on?1:.25};margin:0 10px">${vals[i]}</span>`;}
    HT+=`<div class="lab" style="left:960px;top:150px;transform:translate(-50%,0);opacity:${o}"><span class="n" style="font-size:96px">${s}</span></div>`;
    if(T>=pass[2]+.3)lab(960,330,'连赢三个 BO5','≈22','%',{col:REGC.LPL,o,s:back(T,pass[2]+.3,.4),align:'center',size:200});
-   gates.forEach((g,i)=>{const [x,y,z]=pj(g.p.clone().add(new THREE.Vector3(0,2.0,0)));const nx=pass.findIndex(t=>T<t+.1);if(z<1&&i===nx)HT+=`<div class="chip" style="left:${x}px;top:${y}px;font-size:56px;color:${i===2?REGC.LPL:GOLD};opacity:${o}">${['八强','半决赛','决赛'][i]} · 60%</div>`;});}}
+   gates.forEach((g,i)=>{const [x,y,z]=pj(g.p.clone().add(new THREE.Vector3(0,0.9,0)));const nx=pass.findIndex(t=>T<t+.1);if(z<1&&i===nx)HT+=`<div class="chip" style="left:${x}px;top:${y}px;font-size:56px;color:${i===2?REGC.LPL:GOLD};opacity:${o}">${['八强','半决赛','决赛'][i]} · 60%</div>`;});}}
  // title plaque on the bar-8 hit
  {const o=vis(T,B(8),B(10)+.15,.12);if(o>0){const s=back(T,B(8),.45);HT+=`<div class="plaque" style="opacity:${o};transform:translate(-50%,0) scale(${.86+.14*s})"><div class="box"><div class="t"><b>五分之一</b></div><div class="d">LPL 夺冠概率 ≈ ${Math.round(D.reg.LPL)}% · 十万次模拟</div></div></div>`;}}
  $('hud').innerHTML=HT;

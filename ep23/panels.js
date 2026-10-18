@@ -68,8 +68,8 @@ export function draw1(c,T){bg(c);
   c.strokeStyle=GOLD;c.lineWidth=10;c.lineCap='round';c.beginPath();for(let d=-400;d<=-400+800*prog;d+=8){const p=1/(1+Math.pow(10,-d/400));d===-400?c.moveTo(px(d),py(p)):c.lineTo(px(d),py(p));}c.stroke();
   const mk=(t0,a,b)=>{const o=back(T,t0,.3);if(o<=0)return;const d=D.rating[a]-D.rating[b];const p=1/(1+Math.pow(10,-d/400));const x=px(d),y=py(p);
    c.fillStyle='#fff';c.beginPath();c.arc(x,y,16*o,0,7);c.fill();c.save();c.translate(x,y);c.scale(o,o);
-   rr(c,-250,-170,500,120,20);c.fillStyle='rgba(20,8,32,.85)';c.fill();c.strokeStyle=REGC[D.region[b]];c.lineWidth=4;c.stroke();
-   T_(c,`${a} 对 ${b}`,-225,-97,46,'#fff');T_(c,Math.round(p*100)+'%',225,-92,64,GOLD,'right',IN);c.restore();};
+   const oy=b==='T1'?230:0;rr(c,-250,-170+oy,500,120,20);c.fillStyle='rgba(20,8,32,.85)';c.fill();c.strokeStyle=REGC[D.region[b]];c.lineWidth=4;c.stroke();
+   T_(c,`${a} 对 ${b}`,-225,-97+oy,46,'#fff');T_(c,Math.round(p*100)+'%',225,-92+oy,64,GOLD,'right',IN);c.restore();};
   mk(B(13)-.0+BEAT*0,'BLG','T1');mk(B(13)+BEAT*2,'BLG','KC');c.globalAlpha=1;}
 }
 // ---------- P2: one simulated Swiss stage, then the best-of-five knockout
@@ -151,7 +151,7 @@ export function draw5(c,T){bg(c,'#2c1145','#170926');const st=state5(T);
  T_(c,'如果……会怎样？',90,130,80,'#fff');T_(c,'改一个条件，看夺冠概率怎么变',700,126,44,'rgba(255,255,255,.75)');
  const rows=[['A','第一轮对手（BLG）',C5.rowA.map(x=>x[0]),B(34)],['B','BLG 瑞士轮战绩',C5.rowB.map(x=>x[0]),B(36)],['C','BLG 半区里的 LCK 队',C5.rowC.map(x=>x[0]),B(38)]];
  rows.forEach(([k,lab,opts,t0],i)=>{const y=270+i*230;const on=st.hl&&st.hl.includes(k);const a=T>=t0-.3||st.hl==='BC'?1:.45;
-  c.globalAlpha=a*(st.hl==='D'?.35:1);T_(c,lab,90,y,52,on?GOLD:'#fff');
+  c.globalAlpha=a*(st.hl==='D'?.2:st.hl==='BC'?(k==='A'?.15:.5):1);T_(c,lab,90,y,52,on?GOLD:'#fff');
   opts.forEach((o,j)=>{const x=90+j*220,yy=y+30,w=190,h=110;const s=st.sel[k]===o;rr(c,x,yy,w,h,22);c.fillStyle=s?'rgba(255,69,96,.85)':'rgba(255,255,255,.08)';c.fill();c.strokeStyle=s?'#fff':'rgba(255,255,255,.3)';c.lineWidth=s?5:3;c.stroke();
    T_(c,o,x+w/2,yy+76,56,'#fff','center',IN);});c.globalAlpha=1;});
  // row D
