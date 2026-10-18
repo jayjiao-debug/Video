@@ -1,35 +1,25 @@
 import React from 'react';
 import {AbsoluteFill, Composition, Img, registerRoot, staticFile} from 'remotion';
-import {JUNO} from '../brand/identity';
 
-/* ep29 《为什么好听？》 covers: the film's own binaural frame (0:54 — left ear 363 Hz, right ear 369 Hz),
-   hook = the 6 Hz wobble lives in neither ear, only in the brain. */
-const SANS = '"Noto Sans CJK SC", sans-serif', SERIF = '"Noto Serif CJK SC", serif';
-const gold: React.CSSProperties = {background: 'linear-gradient(180deg, #fff3d2 0%, #f1c56d 55%, #c8913a 100%)', WebkitBackgroundClip: 'text', backgroundClip: 'text', color: 'transparent', filter: 'drop-shadow(0 6px 22px rgba(4,6,14,0.85))'};
-const Hook: React.FC<{size: number; top: number}> = ({size, top}) => (
-	<div style={{position: 'absolute', top, width: '100%', textAlign: 'center', fontFamily: SERIF, fontWeight: 900, fontSize: size, lineHeight: 1.18, letterSpacing: '0.04em', whiteSpace: 'nowrap'}}>
-		<div style={gold}>耳朵里没有的声音</div>
-		<div style={gold}>大脑却听见了</div>
-	</div>
-);
-const Foot: React.FC<{top: number; s: number}> = ({top, s}) => (
-	<div style={{position: 'absolute', top, width: '100%', textAlign: 'center'}}>
-		<div style={{fontFamily: SERIF, fontWeight: 700, fontSize: 64 * s, color: '#f3ede2', letterSpacing: '0.06em', whiteSpace: 'nowrap'}}>《为什么好听<span style={{marginRight: '-0.5em'}}>？</span>》</div>
-		<div style={{fontFamily: SANS, fontWeight: 700, fontSize: 30 * s, letterSpacing: '0.42em', color: JUNO.colors.gold, opacity: 0.85, marginTop: 14 * s}}>{JUNO.series}</div>
-	</div>
-);
+/* ep29 《为什么好听？》 covers (owner: "too much text, not strong visual"): the film's own title-drop frame at 1:24.7 —
+   the particle title bursting inside the neon sound rings — and nothing else. Its own VIBE知识大赏 line is the series mark. */
+const HERO = 'cover29_hero.png';
 const Cover: React.FC<{layout: 'wide' | 'tall'}> = ({layout}) => {
-	const wide = layout === 'wide';
-	const W = wide ? 1440 : 1080;
-	const s = wide ? W / 1920 : 0.62, artY = wide ? 215 : 340, artX = (W - 1920 * s) / 2;
+	if (layout === 'wide') {
+		return (
+			<AbsoluteFill style={{background: '#05060d', overflow: 'hidden'}}>
+				<Img src={staticFile(HERO)} style={{position: 'absolute', left: -240, top: 0, width: 1920, height: 1080}} />
+				<AbsoluteFill style={{background: 'radial-gradient(ellipse at 50% 42%, rgba(0,0,0,0) 62%, rgba(3,4,10,0.45) 100%)'}} />
+			</AbsoluteFill>
+		);
+	}
+	const s = 0.75, top = 330;                                     // the title spans ~67…1012 px: inside the 6 % margins
+	const fade = 'linear-gradient(180deg, transparent 0%, #000 14%, #000 86%, transparent 100%)';
 	return (
-		<AbsoluteFill style={{background: '#070a18', overflow: 'hidden'}}>
-			<Img src={staticFile('cover29_bg.png')} style={{position: 'absolute', left: artX, top: artY, width: 1920 * s, height: 1080 * s}} />
-			<div style={{position: 'absolute', left: artX + 1460 * s, top: artY, width: 460 * s, height: 90 * s, background: '#070a18', filter: 'blur(6px)'}} />
-			<AbsoluteFill style={{background: `linear-gradient(180deg, #070a18 ${(artY / (wide ? 1080 : 1440)) * 100 - 2}%, rgba(7,10,24,0) ${(artY / (wide ? 1080 : 1440)) * 100 + 6}%, rgba(7,10,24,0) ${wide ? 78 : 58}%, #070a18 ${wide ? 92 : 69.5}%)`}} />
-			<AbsoluteFill style={{background: 'radial-gradient(ellipse at 50% 50%, rgba(0,0,0,0) 55%, rgba(3,4,10,0.65) 100%)'}} />
-			<Hook size={wide ? 118 : 104} top={wide ? 56 : 110} />
-			<Foot top={wide ? 868 : 1000} s={1} />
+		<AbsoluteFill style={{background: '#05060d', overflow: 'hidden'}}>
+			<Img src={staticFile(HERO)} style={{position: 'absolute', left: (1080 - 2560) / 2, top: 0, width: 2560, height: 1440, filter: 'blur(28px) brightness(0.5) saturate(1.2)'}} />
+			<Img src={staticFile(HERO)} style={{position: 'absolute', left: (1080 - 1920 * s) / 2, top, width: 1920 * s, height: 1080 * s, WebkitMaskImage: fade, maskImage: fade}} />
+			<AbsoluteFill style={{background: 'radial-gradient(ellipse at 50% 45%, rgba(0,0,0,0) 55%, rgba(3,4,10,0.55) 100%)'}} />
 		</AbsoluteFill>
 	);
 };
