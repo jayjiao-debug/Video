@@ -32,3 +32,12 @@
 - 发送版：`out/为什么好听_最终版_发送版.mp4`（聊天里可直接看）
 - 上传版：`out/为什么好听_最终版_上传版.mp4`（12 Mbps，−14 LUFS，峰值 ≤ −1.5 dBTP），通过 GitHub 链接下载
 - 各轮审片记录：`review/qa/REVIEW.md`、`REVIEW_r2.md`、`review/music_review.md`、`music_review_r2.md`、`review/coldread_gate4.md`、`notes_gate4_r1.md`
+
+---
+
+# v6（2026-10-18，按 owner 8 条修改 + 若如初见人声）
+
+- 配乐：`music/process_v4.py` → `soundtrack_v5_raw.wav`（若如初见人声用 UVR MDX-Net Voc_FT 分离，`music/sep_vocals.py`；调到与原曲同音准 −34 音分）。
+- 音乐专家复审（`review/music_review_v5.md`）：若如初见的爆发点原本晚 3 个八分音符 → 修正；片名鼓点被上扫气声盖住 → 最后一拍抽空低音、压低 4.5 dB，鼓点 +8 dB；尾声开头变亮 → 只会越来越暗、越来越薄；开场人声提高。
+- 质检（`review/qa/REVIEW_v5.md`）：结尾 2.6 秒空画面 + 片尾卡太赶 → 片尾卡提前到 2:44，有 7 秒；10 处转场新旧画面叠在一起 → 改为先出后进（≤0.2 秒）；手机外放两个鼓点不够响 → 中频补强；文字碰撞、标签字号、开场第 0 帧缺字、第一句字幕时长等全部修复。
+- 高清原片：GitHub Actions artifact（deliver-sound，md5 通过）。

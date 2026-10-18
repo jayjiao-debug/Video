@@ -17,7 +17,7 @@ const T = TM as any;
 const END = T.end[0] as number, P = T.P[0] as number;            // v5: the film clock is the song's clock; the remix card sits at −P…0
 const RB = 6.9542 / 4;                                             // 若如初见 bar (138 bpm)
 const W5 = T.W[0] as number, RDROP = T.rdrop[0] as number, SPL = T.splice[0] as number;
-const OUTRO = END - 5.2;                                           // v5: 1.3 s of the song breaking apart before the card
+const OUTRO = SPL + 4.5 * RB + 2.75;                                // QA v5: card while the outro still sounds (~7 s)                                           // v5: 1.3 s of the song breaking apart before the card
 const BEAT = 0.510839, BAR = 4 * BEAT;
 const OB = (k: number) => T.bars[String(k)] as number;
 const g = (k: string, i = 0) => T[k][i] as number;
@@ -66,6 +66,7 @@ const Defs = () => (
 		<filter id="glow" x="-50%" y="-50%" width="200%" height="200%"><feGaussianBlur stdDeviation="6" result="b" /><feMerge><feMergeNode in="b" /><feMergeNode in="SourceGraphic" /></feMerge></filter>
 		<filter id="glow2" x="-50%" y="-50%" width="200%" height="200%"><feGaussianBlur stdDeviation="16" result="b" /><feMerge><feMergeNode in="b" /><feMergeNode in="SourceGraphic" /></feMerge></filter>
 		<filter id="soft" x="-50%" y="-50%" width="200%" height="200%"><feGaussianBlur stdDeviation="30" /></filter>
+		<radialGradient id="wash" cx="0.5" cy="0.48" r="0.7"><stop offset="0" stopColor="#6f8fd6" stopOpacity="0.45" /><stop offset="0.45" stopColor="#3d5aa0" stopOpacity="0.18" /><stop offset="1" stopColor="#3d5aa0" stopOpacity="0" /></radialGradient>
 		<radialGradient id="vig"><stop offset="0.55" stopColor="#000" stopOpacity="0" /><stop offset="1" stopColor="#000" stopOpacity="0.6" /></radialGradient>
 	</defs>
 );
@@ -89,8 +90,8 @@ const Head: React.FC<{x: number; y: number; s?: number; l?: string; r?: string; 
 		{core > 0 && <ellipse cx={0} cy={0} rx={70} ry={86} fill={C.gold} opacity={0.35 * core} filter="url(#soft)" />}
 		<ellipse cx={-96} cy={0} rx={16 + 6 * lo} ry={30 + 8 * lo} fill={l} opacity={0.2 + 0.8 * lo} filter="url(#glow)" />
 		<ellipse cx={96} cy={0} rx={16 + 6 * ro} ry={30 + 8 * ro} fill={rc} opacity={0.2 + 0.8 * ro} filter="url(#glow)" />
-		<text x={-150} y={14} textAnchor="middle" style={{fontFamily: SANS, fontWeight: 800, fontSize: 40}} fill={l}>L</text>
-		<text x={150} y={14} textAnchor="middle" style={{fontFamily: SANS, fontWeight: 800, fontSize: 40}} fill={rc}>R</text>
+		<text x={-150} y={14} textAnchor="middle" style={{fontFamily: SANS, fontWeight: 800, fontSize: Math.max(40, 40 / s)}} fill={l}>L</text>
+		<text x={150} y={14} textAnchor="middle" style={{fontFamily: SANS, fontWeight: 800, fontSize: Math.max(40, 40 / s)}} fill={rc}>R</text>
 	</g>
 );
 const Phones: React.FC<{x: number; y: number; s?: number; c?: string}> = ({x, y, s = 1, c = C.gold}) => (
@@ -137,13 +138,13 @@ const Air: React.FC<{t: number}> = ({t}) => {
 const EDGES = (spectra as any).edges as number[];
 const SX0 = 160, SX1 = 1760, SY = 720;
 const fx = (f: number) => SX0 + ((Math.log(f) - Math.log(EDGES[0])) / (Math.log(EDGES[48]) - Math.log(EDGES[0]))) * (SX1 - SX0);
-const Spectrum: React.FC<{t: number; cut?: number; cutO?: number; ghost?: number; fc?: number}> = ({t, cut, cutO = 1, ghost = 0, fc}) => {
+const Spectrum: React.FC<{t: number; cut?: number; cutO?: number; ghost?: number; fc?: number; mask?: (f: number) => number}> = ({t, cut, cutO = 1, ghost = 0, fc, mask}) => {
 	const data = LV.spec[fi(t)], normal = (spectra as any).normal as number[];
 	const bw = (SX1 - SX0) / 48, norm = (db: number) => cl((db + 15) / 75);
 	return (
 		<g>
 			{data.map((db, i) => {
-				const f = Math.sqrt(EDGES[i] * EDGES[i + 1]), h = 380 * norm(db), hn = 380 * norm(normal[i]);
+				const f = Math.sqrt(EDGES[i] * EDGES[i + 1]), h = 380 * norm(db) * (mask ? mask(f) : 1), hn = 380 * norm(normal[i]);
 				const col = f < 250 ? C.cyan : f > 2500 ? C.mag : '#9fb3ff';
 				return (
 					<g key={i}>
@@ -179,13 +180,13 @@ const S0Card: React.FC<{t: number}> = ({t}) => {
 		<g>
 			<ellipse cx={960} cy={560} rx={430 * sx} ry={170 * sy + 0.5} fill="none" stroke={C.gold} strokeWidth={3} strokeDasharray="6 12" opacity={0.5} />
 			{back && trail}
-			<g opacity={1 - ex}><Head x={960} y={560} s={1.05} lo={earLv(LV.L[i])} ro={earLv(LV.R[i])} /></g>
+			<g opacity={1 - r(t, -0.6, -0.25)} transform={`translate(960 560) scale(${1 - 0.5 * r(t, -0.6, -0.25)}) translate(-960 -560)`}><Head x={960} y={560} s={1.05} lo={earLv(LV.L[i])} ro={earLv(LV.R[i])} /></g>
 			{!back && trail}
 			<Lab x={ox} y={oy - 36} t="人声" s={44} c={C.gold} o={1 - ex} />
-			<g opacity={1 - r(t, -0.75, -0.3)}>
+			<g opacity={1 - r(t, -0.45, -0.2)}>
 				<Phones x={531} y={172} s={2.8} />
 				<Lab x={626} y={205} t="戴上耳机，效果最佳" s={92} c={C.gold} w={900} a="start" />
-				<Lab x={960} y={890} t="听：歌声正绕着你的头转" s={52} o={r(t, -P + 0.5, -P + 0.9)} />
+				<Lab x={960} y={890} t="听：歌声正绕着你的头转" s={52} />
 				<Lab x={70} y={1030} t="♪ 若如初见（remix）" s={40} c={C.dim} a="start" w={500} />
 			</g>
 		</g>
@@ -279,11 +280,11 @@ const SRC = [
 	{a: -30, d: 520, n: '', c: C.blue, mid: false}, {a: 30, d: 520, n: '', c: C.blue, mid: false},
 	{a: 0, d: 470, n: '主旋律', c: C.gold, mid: true}, {a: 0, d: 250, n: '鼓·贝斯', c: C.cyan, mid: true},
 ];
-const Stage: React.FC<{t: number; gone: number; back?: number; harm?: number; verb?: number}> = ({t, gone, back = 0, harm = 0, verb = 0}) => {
+const Stage: React.FC<{t: number; gone: number; back?: number; harm?: number; verb?: number; headO?: number}> = ({t, gone, back = 0, harm = 0, verb = 0, headO = 1}) => {
 	const lw = lowAt(t), R = rng(5);
 	return (
 		<g transform="translate(960 790) scale(1.14) translate(-960 -790)">
-			{gone > 0.05 && <g opacity={sm(cl((gone - 0.4) / 0.6))}><circle cx={960} cy={310} r={64} fill="none" stroke={C.gold} strokeWidth={4} strokeDasharray="12 10" /><circle cx={960} cy={530} r={56} fill="none" stroke={C.cyan} strokeWidth={4} strokeDasharray="12 10" /><Lab x={960} y={430} t="这里空了" s={56} c={C.gold} /></g>}
+			{gone > 0.05 && <g opacity={sm(cl((gone - 0.82) / 0.18))}><circle cx={960} cy={310} r={64} fill="none" stroke={C.gold} strokeWidth={4} strokeDasharray="12 10" /><circle cx={960} cy={530} r={56} fill="none" stroke={C.cyan} strokeWidth={4} strokeDasharray="12 10" /><Lab x={960} y={430} t="这里空了" s={56} c={C.gold} /></g>}
 			<path d="M 470 780 A 520 520 0 0 1 1450 780" fill="none" stroke={C.dim} strokeWidth={2} strokeDasharray="4 14" />
 			{SRC.map((s, i) => {
 				const a = (s.a * Math.PI) / 180, x = 960 + Math.sin(a) * s.d, y = 780 - Math.cos(a) * s.d;
@@ -295,24 +296,24 @@ const Stage: React.FC<{t: number; gone: number; back?: number; harm?: number; ve
 						{bits}
 						<circle cx={x} cy={y} r={rad} fill={s.c} opacity={0.85 * o} filter="url(#glow2)" />
 						{back > 0 && s.mid && <circle cx={x} cy={y} r={rad + 220 * back} fill="none" stroke={s.c} strokeWidth={6} opacity={(1 - back) * 0.8} />}
-						{back > 0 && s.n === '主旋律' && <Lab x={x + rad + 30} y={y + 18} t="≈ 363 Hz" s={56} c={C.gold} a="start" o={win(t, 42.3, 44.9, 0.25, 0.3)} />}
+						{back > 0 && s.n === '主旋律' && <Lab x={x} y={y - rad - 92} t="≈ 363 Hz" s={56} c={C.gold} o={win(t, 42.3, 44.9, 0.25, 0.3)} />}
 						{s.n && <Lab x={x} y={y - rad - 22} t={s.n} s={52} c={s.c} o={s.mid ? o : 1} />}
 							{s.n === '和声' && harm > 0.01 && (() => { const ph = beatPh(t), lv = earLv(LV.L[fi(t)]); return (
 								<g opacity={harm}>
 									{[[-86, 16], [0, 60], [86, 16]].map(([dx, dy], j) => { const on = 1 - cl(((((ph * 4 - j) % 4) + 4) % 4) / 1.2); return (
 										<g key={j}><line x1={x} y1={y} x2={x + dx * harm} y2={y + dy * harm} stroke={s.c} strokeWidth={3} opacity={0.5} />
 										<circle cx={x + dx * harm} cy={y + dy * harm} r={19 * (1 + 0.35 * on + 0.3 * lv)} fill={s.c} opacity={0.55 + 0.45 * on} filter="url(#glow)" /></g>); })}
-									<Lab x={x} y={y + 132} t="几个音一起响" s={40} c={s.c} w={700} />
+									<Lab x={x} y={y + 136} t="几个音一起响" s={46} c={s.c} w={800} />
 								</g>); })()}
 							{s.n === '混响' && verb > 0.01 && (() => { const lv = earLv(LV.R[fi(t)]); return (
 								<g>
 									{[0, 1, 2, 3, 4].map((j) => { const q = (((t * 0.7 + j / 5) % 1) + 1) % 1; return <ellipse key={j} cx={x} cy={y} rx={30 + 330 * q} ry={(30 + 330 * q) * 0.8} fill="none" stroke={s.c} strokeWidth={4 - 2 * q} opacity={(1 - q) * 0.75 * verb * (0.5 + 0.5 * lv)} filter="url(#glow)" />; })}
-									<Lab x={x} y={y + 110} t="房间的回声" s={40} c={s.c} w={700} o={cl(verb * 1.6)} />
+									<Lab x={x} y={y + 116} t="房间的回声" s={46} c={s.c} w={800} o={cl(verb * 1.6)} />
 								</g>); })()}
 					</g>
 				);
 			})}
-			<Head x={960} y={800} s={0.55} lo={earLv(LV.L[fi(t)])} ro={earLv(LV.R[fi(t)])} />
+			<g opacity={headO}><Head x={960} y={800} s={0.55} lo={earLv(LV.L[fi(t)])} ro={earLv(LV.R[fi(t)])} /></g>
 		</g>
 	);
 };
@@ -320,8 +321,8 @@ const S5Stage: React.FC<{t: number}> = ({t}) => {
 	const [cA, cB] = T.cancel;
 	const gone = r(t, cA, cA + 0.6) * (1 - lin(t, cB, cB + 0.05));
 	const back = t > cB ? lin(t, cB, cB + 1.0) : 0;
-	const harm = win(t, cA + 0.4, cB + 0.05, 0.5, 0.15);
-	const verb = r(t, g('verb') - BEAT, g('verb') + BAR * 0.6) * (1 - lin(t, cB, cB + 0.08)) + 0.25 * harm;
+	const harm = win(t, cA + 0.4, cB + 0.3, 0.5, 0.35);
+	const verb = r(t, g('verb') - BEAT, g('verb') + BAR * 0.6) * (1 - r(t, cB, cB + 0.35)) + 0.25 * harm;
 	return (
 		<g>
 			<Stage t={t} gone={gone} back={back} harm={harm} verb={verb} />
@@ -517,7 +518,7 @@ const S12Harm: React.FC<{t: number}> = ({t}) => {
 	const wl2 = t < fA - 0.2 ? 120 : t < cA ? mix(120, 160, r(t, fA - 0.2, fA + 0.2)) : t < 108.2 ? mix(160, 226.5, r(t, cA, cA + 0.3)) : mix(226.5, 160, r(t, 108.2, 108.8));
 	const clash = t >= cA && t < 108.8 ? r(t, cA, cA + 0.3) * (1 - r(t, 108.2, 108.8)) : 0;
 	const s = 60 * t, w1 = r(t, 86.6, 87.4), w2 = r(t, 88.95, 89.6);
-	const kS = Math.floor((t - rA) / (2 * BEAT) + 1e-6), hit = t >= rA - 0.05 ? Math.exp(-(t - (rA + kS * 2 * BEAT)) / 1.1) : 0, amp = 0.5 + 0.5 * hit;   // v5: notes struck on 1 and 3
+	const kS = Math.floor((t - rA) / (2 * BEAT) + 1e-6), hit = t >= rA - 0.05 ? Math.exp(-(t - (rA + kS * 2 * BEAT)) / 1.1) : 0, amp = t < rA ? 1 : 0.5 + 0.5 * hit;   // v5: notes struck on 1 and 3
 	const L = wl2 < 140 ? 240 : 480, aligned = 1 - clash;
 	const lines: React.ReactNode[] = [];
 	for (let x = 140 + (((s % L) + L) % L); x <= 1100; x += L) lines.push(<line key={x} x1={x} x2={x} y1={240} y2={650} stroke={C.gold} strokeWidth={4} strokeDasharray="10 10" opacity={0.85 * aligned * w2} />);
@@ -566,14 +567,15 @@ const S13Sad: React.FC<{t: number}> = ({t}) => {
 		<g>
 			{rainO > 0 && RAIN.map((p, j) => { const y = ((p.y + rt * p.v) % (H + 80)) - 40; return <line key={j} x1={p.x} y1={y} x2={p.x - 4} y2={y + p.l} stroke={C.blue} strokeWidth={1.6} opacity={p.o * (1 - 0.3 * slowK) * rainO} />; })}
 			{chills > 0 && MOTES.map((p, j) => { const y = H - (((H - p.y) + (t - W5) * p.v) % H); return <circle key={j} cx={p.x + Math.sin(t + p.ph) * 10} cy={y} r={p.r} fill={C.gold} opacity={chills * 0.7 * (1 - inK)} />; })}
-			<ellipse cx={960} cy={520} rx={500 + 700 * r(t, W5 - 0.6, W5 + 2.6)} ry={300 + 400 * r(t, W5 - 0.6, W5 + 2.6)} fill={C.blue} opacity={0.22 * wash} filter="url(#soft)" />
+			<rect width={W} height={H} fill="url(#wash)" opacity={0.55 * wash} />
 			{trail}
 			{vtrail}
 			<Lab x={vx} y={vy - 38} t="人声" s={44} c={C.gold} o={vk} />
 			<g transform={`translate(960 520) scale(${1 - 0.18 * inK}) translate(-960 -520)`}>
 				<Head x={960} y={520} s={1.15} l={C.blue} r={C.blue} lo={earLv(LV.L[i])} ro={earLv(LV.R[i])} core={0.55 + 0.45 * inK} />
 			</g>
-			<Labs t={t} y={200} items={[[rA, 116.6, '慢放：更慢、更低', C.blue], [116.66, slA, '又慢又低 → 常被听成悲伤', C.blue], [slA, OB(61) - 0.1, '再降 2 个半音 · 更慢', C.blue], [OB(61), 128.6, '难过时，说话也变慢、变低', C.blue], [W5 + 1.0, RDROP - 0.4, '慢慢绕着你转 → 更容易起鸡皮疙瘩', C.gold]]} />
+			<Labs t={t} y={200} items={[[rA, 116.6, '慢放：更慢、更低', C.blue], [116.66, OB(61) - 0.1, '又慢又低 → 常被听成悲伤', C.blue], [OB(61), 128.6, '难过时，说话也变慢、变低', C.blue], [W5 + 1.0, RDROP - 0.4, '慢慢绕着你转 → 更容易起鸡皮疙瘩', C.gold]]} />
+			<Labs t={t} y={330} s={44} items={[[slA, OB(61) - 0.1, '（现在：再降 2 个半音 · 更慢）', C.blue]]} />
 			<Labs t={t} y={270} s={40} items={[[116.66, 128.6, '研究：Juslin & Laukka 2003', C.dim], [W5 + 1.0, RDROP - 0.4, '研究：Honda 等 2020', C.dim]]} />
 			<Lab x={70} y={1030} t="♪ 若如初见（remix）" s={40} c={C.dim} a="start" w={500} o={win(t, W5 + 0.8, RDROP + 1.5, 0.6, 0.6)} />
 		</g>
@@ -581,15 +583,15 @@ const S13Sad: React.FC<{t: number}> = ({t}) => {
 };
 // 14 · recap: one bar each (bass, treble, no middle, left-right, around you)
 const S14Recap: React.FC<{t: number}> = ({t}) => {
-	const R = T.recap as number[]; const seg = (j: number) => (j === 0 ? win(t, R[0] - 0.25, R[2] + 0.15, 0.3, 0.3) : j === 2 ? win(t, R[2] - 0.15, R[3] + 0.15, 0.25, 0.3) : win(t, R[j] - 0.3, R[j + 1] + 0.15, 0.25, 0.3));
+	const R = T.recap as number[]; const seg = (j: number) => (j === 0 ? win(t, R[0] - 0.18, R[2] - 0.02, 0.12, 0.15) : j === 2 ? win(t, R[2] - 0.04, R[3] + 0.15, 0.12, 0.3) : win(t, R[j] - 0.3, R[j + 1] + 0.15, 0.25, 0.3));
 	const push = (j: number, node: React.ReactNode) => { const k = seg(j); if (k <= 0.001) return null; const s = mix(0.94, 1, sm(lin(t, R[j], R[j] + 0.4))); return <g key={j} opacity={k} transform={`translate(960 480) scale(${s}) translate(-960 -480)`}>{node}</g>; };
 	const i = fi(t), th = t > R[4] ? thRecap(t) : 0, [cx, cy] = [960 + Math.sin(th) * 380, 470 - Math.cos(th) * 150];
-	const dropK = win(t, RDROP - 0.05, R[0] + 0.1, 0.05, 0.3);
+	const dropK = win(t, RDROP - 0.02, R[0] - 0.1, 0.03, 0.15);
 	return (
 		<g>
 				{dropK > 0.001 && <g opacity={dropK}><Burst t={t} at={RDROP} /><Head x={960} y={470} s={1.0} lo={earLv(LV.L[i])} ro={earLv(LV.R[i])} core={1 - r(t, RDROP, RDROP + 1.2)} /></g>}
-				{push(0, <><Spectrum t={t} cut={t < R[1] ? 220 : 3000} /><Lab x={960} y={150} t="220 Hz 以下" c={C.cyan} o={win(t, R[0] - 0.1, R[1], 0.2, 0.15)} /><Lab x={960} y={150} t="3000 Hz 以上" c={C.mag} o={win(t, R[1], R[2], 0.15, 0.2)} /></>)}
-			{push(2, <><Stage t={t} gone={1} /><Lab x={960} y={100} t="左 − 右：中间没了" /></>)}
+				{push(0, <><Spectrum t={t} cut={t < R[1] ? 220 : 3000} mask={(f) => (t < R[1] ? (f > 300 ? 1 - 0.97 * r(t, R[0], R[0] + 0.1) : 1) : f < 2500 ? 1 - 0.97 * r(t, R[1], R[1] + 0.1) : 1)} /><Lab x={960} y={150} t="220 Hz 以下" c={C.cyan} o={win(t, R[0] - 0.1, R[1], 0.2, 0.15)} /><Lab x={960} y={150} t="3000 Hz 以上" c={C.mag} o={win(t, R[1], R[2], 0.15, 0.2)} /></>)}
+			{push(2, <><Stage t={t} gone={1} headO={1 - r(t, R[3] - 0.45, R[3] - 0.3)} /><Lab x={960} y={100} t="左 − 右：中间没了" /></>)}
 			{seg(3) + win(t, R[4] - 0.1, R[6] + 0.2, 0.25, 0.3) > 0.001 && (() => { const up = sm(lin(t, R[3] - 0.15, R[3] + 0.3)), hx = 960, hy = mix(790, 470, up), hs = mix(0.63, 1.0, up); const o3 = seg(3), o4 = win(t, R[4] - 0.1, R[6] + 0.2, 0.25, 0.3); return (
 				<g>
 					<g opacity={o3}><Rings t={t} div={2} x={hx} y={hy} s={hs} /></g>
@@ -638,10 +640,10 @@ const Sub: React.FC<{t: string}> = ({t}) => (
 );
 type Sc = [React.FC<{t: number}>, number, number, number, number];
 const SCENES: Sc[] = [
-	[S0Card, -P - 0.1, 0.6, 0, 0.35], [S1Wave, -0.3, 9.65, 0.45, 0.25], [S2Ping, 9.25, 15.85, 0.35, 0.3], [S3Pump, 15.35, 25.1, 0.4, 0.3], [S4Spec, 24.45, 38.35, 0.15, 0.45],
-	[S5Stage, 37.95, 45.3, 0.45, 0.35], [S5Ratio, 44.9, 48.5, 0.01, 0.01], [S6Bin, 48.0, 60.35, 0.4, 0.4], [S7Age, 60.0, 64.8, 0.4, 0.3],
-	[S8Gotcha, 64.5, 70.5, 0.0, 0.3], [S9Prec, 70.15, 75.4, 0.35, 0.45], [S10Combo, 75.0, DROP + 0.9, 0.5, 0.75], [S11Drop, DROP, 87.6, 0, 0.8],
-	[S12Harm, 86.5, 113.8, 0.01, 0.5], [S13Sad, 113.45, RDROP + 0.25, 0.55, 0.3], [S14Recap, RDROP - 0.05, SPL + 0.45, 0.01, 0.4], [S15Fin, SPL - 0.3, END, 0.6, 0],
+	[S0Card, -P - 0.1, 0.6, 0, 0.35], [S1Wave, -0.3, 9.65, 0.45, 0.25], [S2Ping, 9.25, 15.85, 0.35, 0.3], [S3Pump, 15.35, 25.1, 0.4, 0.3], [S4Spec, 24.45, 38.12, 0.15, 0.2],
+	[S5Stage, 38.08, 45.3, 0.2, 0.35], [S5Ratio, 44.9, 48.5, 0.01, 0.01], [S6Bin, 48.42, 60.25, 0.2, 0.2], [S7Age, 60.22, 64.8, 0.2, 0.3],
+	[S8Gotcha, 64.5, 70.5, 0.0, 0.3], [S9Prec, 70.15, 75.2, 0.35, 0.2], [S10Combo, 75.16, DROP + 0.9, 0.25, 0.75], [S11Drop, DROP, 87.6, 0, 0.8],
+	[S12Harm, 86.5, 113.58, 0.01, 0.25], [S13Sad, 113.55, RDROP, 0.3, 0.12], [S14Recap, RDROP - 0.05, SPL + 0.45, 0.01, 0.4], [S15Fin, SPL - 0.3, END, 0.6, 0],
 ];
 export const Film29: React.FC = () => {
 	const t = useCurrentFrame() / FPS - P;

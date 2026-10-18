@@ -25,7 +25,7 @@ usage (run inside music/):  python3 ../review/music/process_v3_proposed.py out.w
 """
 import json, sys, os, subprocess
 import numpy as np, soundfile as sf, librosa
-from scipy.signal import resample_poly, butter, sosfilt, hilbert
+from scipy.signal import resample_poly, butter, sosfilt, sosfiltfilt, hilbert
 from scipy.ndimage import minimum_filter1d, uniform_filter1d
 import pyloudnorm as pyln
 
@@ -111,12 +111,15 @@ def gains(tf):
         k = float(cosr((tf - a) / (b - a)))
         fc = np.exp(np.log(800) + (np.log(20000) - np.log(800)) * k ** 1.7)   # FIX 7: start at 800 Hz, not 500
         g *= lpg(fc) ** 0.75 * (0.55 + 0.45 * k) if tf < b else 1
+    if OB(38) < tf < OB(40):                                       # QA v5: phones — the last two bars give up 3 dB of mids
+        k = float(cosr((tf - OB(38)) / BAR)); g *= 1 - k * 0.3 * ((F > 300) & (F < 4000))
     if OB(40) - BEAT < tf < OB(40):                                # music review v5: empty the bass over the last beat (zero-phase)
         kb = float(cosr((tf - (OB(40) - BEAT)) / (0.6 * BEAT))); g *= (1 - kb) + kb * hpg(200)
     a, b = E['slow']                                              # music review v5: +2 dB presence in the sad part (phones)
     k = w(a, b + 0.5, fi=BAR, fo=0.6); g *= 1 + k * 0.26 * ((F > 300) & (F < 3000))
     k = w(*E['bright'], fi=0.05, fo=BAR)                          # the drop: a brighter top (+3 dB above 5 kHz)
     g *= 1 + k * 0.41 * (F > 5000) * np.clip((F - 5000) / 3000, 0, 1)
+    g *= 1 + k * 0.33 * ((F > 300) & (F < 4000))                 # QA v5: the title must also slam on a phone
     return g
 Y = np.stack([librosa.stft(y[c], n_fft=NFFT, hop_length=HOP) for c in range(2)])
 tfr = librosa.frames_to_time(np.arange(Y.shape[2]), sr=SR, hop_length=HOP)
@@ -397,7 +400,7 @@ seg *= ramp(n1, 0, int(0.9 * SR))                                 # rises out of
 i_d = int(ud * SR); hit = seg[:, i_d:i_d + int(1.2 * SR)]
 wet = reverb(hit, 1.1, 77, hit.shape[1])[:, ::-1]
 L1 = int(2 * 0.4346 * SR); wet = wet[:, -L1:] * np.linspace(0, 1, L1) ** 2
-wet *= 10 ** (-7 / 20) * np.sqrt((seg[:, i_d - L1:i_d] ** 2).mean()) / max(np.sqrt((wet ** 2).mean()), 1e-9)
+wet *= 10 ** (-13 / 20) * np.sqrt((seg[:, i_d - L1:i_d] ** 2).mean()) / max(np.sqrt((wet ** 2).mean()), 1e-9)
 seg[:, i_d - L1 - int(0.012 * SR):i_d - int(0.012 * SR)] += wet
 # recap
 def wl(a, b, fi=0.03, fo=0.03): return (np.clip((u - a) / fi, 0, 1) * np.clip((b - u) / fo, 0, 1))[None].astype(np.float32)
@@ -410,6 +413,10 @@ sdr = 0.5 * (seg[0] - seg[1]); k = wl(rc[2], rc[3]); seg = seg * (1 - k) + np.st
 k = wl(rc[3], rc[4]); m_ = seg.mean(0); sw = np.sign(np.sin(np.pi * (u - rc[3]) / (0.4346 / 2))); sw = np.convolve(sw, np.ones(300) / 300, 'same')
 seg = seg * (1 - k) + np.stack([m_ * (1 - 0.85 * np.clip(sw, 0, 1)), m_ * (1 - 0.85 * np.clip(-sw, 0, 1))]) * 1.15 * k
 k = wl(rc[4], rc[6], 0.05, 0.4)[0]; seg = rot2(seg.mean(0), 2 * np.pi * (u - rc[4]) / (2 * RB), k * 0.95) * k + seg * (1 - k)
+# QA v5: the remix is bass-heavy — on a phone its drop sat under the film average; +3.5 dB presence from the drop on
+pres = sosfiltfilt(butter(2, [300, 4000], 'band', fs=SR, output='sos'), seg, axis=1).astype(np.float32)
+seg += pres * (0.25 + 0.3 * np.clip(1 - (u - ud) / (1.5 * RB), 0, 1)) * np.clip((u - ud + 0.01) / 0.02, 0, 1)[None].astype(np.float32)
+seg[:, :i_d] -= pres[:, :i_d] * 0.25 * np.clip((u[:i_d] - (ud - RB)) / RB, 0, 1)[None].astype(np.float32)   # and a dip in the last breakdown bar
 seg *= ramp(n1, n1 - int(0.03 * SR), n1, up=False)
 put(seg, Wo)
 E['breakdown'] = (Wo, Wo + ud); E['rdrop'] = (Wo + ud,); E['rinhale'] = (Wo + ud - L1 / SR, Wo + ud)
@@ -455,7 +462,7 @@ y = out[:, :int(END_T * SR)]
 # ------------------------------------------------------------ loudness: −14 LUFS, true-peak limiter at −2.1 dBTP
 y = y * 10 ** ((-13.8 - pyln.Meter(SR).integrated_loudness(y.T)) / 20)
 pk = np.abs(resample_poly(y, 4, 1, axis=1)).max(0).reshape(-1, 4).max(1)[:y.shape[1]]
-g = np.minimum(1.0, 10 ** (-2.1 / 20) / np.maximum(pk, 1e-9))
+g = np.minimum(1.0, 10 ** (-2.6 / 20) / np.maximum(pk, 1e-9))
 LA = int(0.004 * SR); g = minimum_filter1d(g, 2 * LA + 1)
 gd = g[::44].copy(); rel = np.exp(-1 / 80.0)
 for i in range(1, len(gd)): gd[i] = min(gd[i], rel * gd[i - 1] + (1 - rel) * gd[i])
