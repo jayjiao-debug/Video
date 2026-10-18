@@ -2,26 +2,26 @@
 import React, { useEffect, useLayoutEffect, useRef, useState } from 'react';
 import { AbsoluteFill, continueRender, delayRender, useCurrentFrame } from 'remotion';
 
-const W = 1920, H = 1080;
-type G = CanvasRenderingContext2D;
+export const W = 1920, H = 1080;
+export type G = CanvasRenderingContext2D;
 let seed = 1; const rnd = () => { seed = (seed * 16807) % 2147483647; return (seed - 1) / 2147483646; };
 const gauss = () => { const u = Math.max(1e-9, rnd()), v = rnd(); return Math.sqrt(-2 * Math.log(u)) * Math.cos(2 * Math.PI * v); };
-const SERIF = '"Noto Serif CJK SC"', SANS = '"Noto Sans CJK SC"';
-const GOLD = '#f1c56d';
+export const SERIF = '"Noto Serif CJK SC"', SANS = '"Noto Sans CJK SC"';
+export const GOLD = '#f1c56d';
 type TO = { w?: number; f?: string; a?: CanvasTextAlign; glow?: string; alpha?: number };
-const txt = (g: G, s: string, x: number, y: number, size: number, col: string, o: TO = {}) => {
+export const txt = (g: G, s: string, x: number, y: number, size: number, col: string, o: TO = {}) => {
   g.save(); g.globalAlpha = o.alpha ?? 1; g.font = `${o.w ?? 900} ${size}px ${o.f ?? SANS}`; g.textAlign = o.a ?? 'center'; g.fillStyle = col;
   if (o.glow) { g.shadowColor = o.glow; g.shadowBlur = 26; } g.fillText(s, x, y); g.restore();
 };
-const sub = (g: G, s: string) => { if (!s) return; g.save(); g.font = `900 74px ${SANS}`; g.textAlign = 'center'; g.lineJoin = 'round'; g.lineWidth = 12; g.strokeStyle = '#000'; g.strokeText(s, W / 2, H - 64); g.fillStyle = '#fbf7ee'; g.fillText(s, W / 2, H - 64); g.restore(); };
-const mark = (g: G) => txt(g, '◆ Juno · VIBE知识大赏', W - 56, 64, 22, 'rgba(243,237,226,.42)', { w: 500, a: 'right' });
-const glow = (g: G, x: number, y: number, r: number, col: string, a: number) => { const b = g.createRadialGradient(x, y, 0, x, y, r); b.addColorStop(0, `rgba(${col},${a})`); b.addColorStop(0.4, `rgba(${col},${a * 0.35})`); b.addColorStop(1, `rgba(${col},0)`); g.fillStyle = b; g.fillRect(x - r, y - r, 2 * r, 2 * r); };
-const rrect = (g: G, x: number, y: number, w: number, h: number, r: number) => { g.beginPath(); g.roundRect(x, y, w, h, r); };
+export const sub = (g: G, s: string) => { if (!s) return; g.save(); g.font = `900 74px ${SANS}`; g.textAlign = 'center'; g.lineJoin = 'round'; g.lineWidth = 12; g.strokeStyle = '#000'; g.strokeText(s, W / 2, H - 64); g.fillStyle = '#fbf7ee'; g.fillText(s, W / 2, H - 64); g.restore(); };
+export const mark = (g: G) => txt(g, '◆ Juno · VIBE知识大赏', W - 56, 64, 22, 'rgba(243,237,226,.42)', { w: 500, a: 'right' });
+export const glow = (g: G, x: number, y: number, r: number, col: string, a: number) => { const b = g.createRadialGradient(x, y, 0, x, y, r); b.addColorStop(0, `rgba(${col},${a})`); b.addColorStop(0.4, `rgba(${col},${a * 0.35})`); b.addColorStop(1, `rgba(${col},0)`); g.fillStyle = b; g.fillRect(x - r, y - r, 2 * r, 2 * r); };
+export const rrect = (g: G, x: number, y: number, w: number, h: number, r: number) => { g.beginPath(); g.roundRect(x, y, w, h, r); };
 
 /* ---------------------------------------------------------------- shared: line-art portrait */
 type Face = { hair: 'short' | 'long' | 'bun'; jaw: number; eye: number; smile: number };
-const FACES: Record<string, Face> = { ideal: { hair: 'long', jaw: 0.2, eye: 0.15, smile: 0.035 }, plain: { hair: 'short', jaw: 0.27, eye: 0.13, smile: 0.012 }, man: { hair: 'short', jaw: 0.29, eye: 0.14, smile: 0.02 } };
-const face = (g: G, cx: number, cy: number, s: number, p: Face, col: string, o: { lw?: number; glowCol?: string; alpha?: number; fill?: string } = {}) => {
+export const FACES: Record<string, Face> = { ideal: { hair: 'long', jaw: 0.2, eye: 0.15, smile: 0.035 }, plain: { hair: 'short', jaw: 0.27, eye: 0.13, smile: 0.012 }, man: { hair: 'short', jaw: 0.29, eye: 0.14, smile: 0.02 } };
+export const face = (g: G, cx: number, cy: number, s: number, p: Face, col: string, o: { lw?: number; glowCol?: string; alpha?: number; fill?: string } = {}) => {
   g.save(); g.translate(cx, cy); g.scale(s, s); g.globalAlpha = o.alpha ?? 1; g.strokeStyle = col; g.lineCap = 'round'; g.lineJoin = 'round';
   const lw = (o.lw ?? 3) / s;
   const strokes: (() => void)[] = [];
@@ -52,9 +52,9 @@ const face = (g: G, cx: number, cy: number, s: number, p: Face, col: string, o: 
 };
 
 /* ---------------------------------------------------------------- shared: data */
-const cloud = (n: number, r: number, s0: number) => { seed = s0; const pts: [number, number][] = []; for (let i = 0; i < n; i++) { const a = gauss(), b = gauss(); pts.push([a, r * a + Math.sqrt(1 - r * r) * b]); } return pts; };
+export const cloud = (n: number, r: number, s0: number) => { seed = s0; const pts: [number, number][] = []; for (let i = 0; i < n; i++) { const a = gauss(), b = gauss(); pts.push([a, r * a + Math.sqrt(1 - r * r) * b]); } return pts; };
 type PlotStyle = { axis: string; dot: string; hot?: string; label: string; font?: string };
-const scatter = (g: G, x0: number, y0: number, w: number, h: number, pts: [number, number][], st: PlotStyle, o: { r?: number; hotX?: number; dotR?: number; star?: boolean } = {}) => {
+export const scatter = (g: G, x0: number, y0: number, w: number, h: number, pts: [number, number][], st: PlotStyle, o: { r?: number; hotX?: number; dotR?: number; star?: boolean } = {}) => {
   g.save(); g.strokeStyle = st.axis; g.lineWidth = 3; g.beginPath(); g.moveTo(x0, y0); g.lineTo(x0, y0 + h); g.lineTo(x0 + w, y0 + h); g.stroke();
   txt(g, '声音好听 →', x0 + w, y0 + h + 52, 30, st.label, { w: 700, a: 'right', f: st.font }); g.save(); g.translate(x0 - 30, y0); g.rotate(-Math.PI / 2); txt(g, '← 长得好看', 0, 0, 30, st.label, { w: 700, a: 'right', f: st.font }); g.restore();
   const X = (v: number) => x0 + w / 2 + v * (w / 6.4), Y = (v: number) => y0 + h / 2 - v * (h / 6.4);
@@ -65,19 +65,22 @@ const scatter = (g: G, x0: number, y0: number, w: number, h: number, pts: [numbe
   if (o.r !== undefined) { g.strokeStyle = st.hot ?? GOLD; g.lineWidth = 4; g.setLineDash([14, 10]); g.beginPath(); g.moveTo(X(-3), Y(-3 * o.r)); g.lineTo(X(3), Y(3 * o.r)); g.stroke(); g.setLineDash([]); }
   g.restore(); return { X, Y };
 };
-const quiz = (g: G, x: number, y: number, card: (k: string, v: string, i: number, y: number) => void) => [['A', '越好听越丑'], ['B', '越好听越好看'], ['C', '没什么关系']].forEach(([k, v], i) => card(k, v, i, y + i * 150));
-const wave = (g: G, x0: number, y: number, w: number, amp: number, col: string, s0 = 2, n = 64, bw = 0.55) => { seed = s0; const step = w / n; g.fillStyle = col; for (let i = 0; i < n; i++) { const e = Math.sin((i / n) * Math.PI) ** 0.6, a = amp * e * (0.25 + 0.75 * rnd()); rrect(g, x0 + i * step, y - a, step * bw, 2 * a, step * 0.3); g.fill(); } };
+export const quiz = (g: G, x: number, y: number, card: (k: string, v: string, i: number, y: number) => void) => [['A', '越好听越丑'], ['B', '越好听越好看'], ['C', '没什么关系']].forEach(([k, v], i) => card(k, v, i, y + i * 150));
+export const wave = (g: G, x0: number, y: number, w: number, amp: number, col: string, s0 = 2, n = 64, bw = 0.55) => { seed = s0; const step = w / n; g.fillStyle = col; for (let i = 0; i < n; i++) { const e = Math.sin((i / n) * Math.PI) ** 0.6, a = amp * e * (0.25 + 0.75 * rnd()); rrect(g, x0 + i * step, y - a, step * bw, 2 * a, step * 0.3); g.fill(); } };
 
 /* ================================================================ Look A · 深夜电台 (radio booth, warm practical light) */
-const booth = (g: G, onAir = true) => {
+export const booth = (g: G, onAir: boolean | number = true) => {
+  const oa = typeof onAir === 'number' ? onAir : onAir ? 1 : 0;
   const b = g.createRadialGradient(W * 0.3, H * 0.4, 50, W * 0.4, H * 0.5, 1500); b.addColorStop(0, '#2a1d16'); b.addColorStop(1, '#07050a'); g.fillStyle = b; g.fillRect(0, 0, W, H);
   // acoustic foam wall
   for (let r = 0; r < 9; r++) for (let c = 0; c < 16; c++) { const x = c * 124, y = r * 110, v = (r + c) % 2; const gr = g.createLinearGradient(x, y, v ? x + 124 : x, v ? y : y + 110); gr.addColorStop(0, 'rgba(255,220,180,.035)'); gr.addColorStop(1, 'rgba(0,0,0,.18)'); g.fillStyle = gr; g.fillRect(x + 3, y + 3, 118, 104); }
-  if (onAir) { glow(g, 1560, 120, 260, '255,70,60', 0.35); g.fillStyle = '#2a0d0c'; rrect(g, 1440, 80, 240, 84, 12); g.fill(); g.strokeStyle = '#ff5a4a'; g.lineWidth = 3; g.stroke(); txt(g, 'ON AIR', 1560, 138, 46, '#ff6a5a', { glow: 'rgba(255,90,74,.9)' }); }
+  g.fillStyle = '#2a0d0c'; rrect(g, 1440, 80, 240, 84, 12); g.fill(); g.strokeStyle = oa > 0.05 ? '#ff5a4a' : '#4a2420'; g.lineWidth = 3; g.stroke();
+  if (oa > 0.01) glow(g, 1560, 120, 260, '255,70,60', 0.35 * oa);
+  txt(g, 'ON AIR', 1560, 138, 46, oa > 0.05 ? `rgba(255,106,90,${0.3 + 0.7 * oa})` : '#5a2a24', oa > 0.05 ? { glow: 'rgba(255,90,74,.9)' } : {});
   // desk
   const d = g.createLinearGradient(0, 860, 0, H); d.addColorStop(0, '#3a271b'); d.addColorStop(1, '#120b07'); g.fillStyle = d; g.fillRect(0, 860, W, 220); g.fillStyle = 'rgba(255,190,120,.18)'; g.fillRect(0, 860, W, 3);
 };
-const mic = (g: G, x: number, y: number, s: number, lit = 1) => {
+export const mic = (g: G, x: number, y: number, s: number, lit = 1) => {
   g.save(); g.translate(x, y); g.scale(s, s);
   g.strokeStyle = '#1b1512'; g.lineWidth = 14; g.beginPath(); g.moveTo(0, 330); g.lineTo(0, 520); g.moveTo(0, 520); g.lineTo(-260, 760); g.stroke();
   g.strokeStyle = '#5a4a3c'; g.lineWidth = 6; g.beginPath(); g.ellipse(0, 170, 150, 46, 0, 0, 7); g.stroke();
@@ -87,9 +90,9 @@ const mic = (g: G, x: number, y: number, s: number, lit = 1) => {
   g.fillStyle = '#0d0b0a'; g.fillRect(-92, 96, 184, 12);
   g.restore(); glow(g, x + 80 * s, y + 40 * s, 220 * s, '255,180,100', 0.25 * lit);
 };
-const AMB = '#ffb46a';
-const stA: PlotStyle = { axis: 'rgba(255,220,180,.45)', dot: 'rgba(255,222,190,.75)', hot: GOLD, label: 'rgba(255,230,200,.7)' };
-const glass = (g: G, x: number, y: number, w: number, h: number) => { g.save(); g.fillStyle = 'rgba(12,9,8,.72)'; rrect(g, x, y, w, h, 24); g.fill(); g.strokeStyle = 'rgba(255,200,140,.22)'; g.lineWidth = 2; g.stroke(); g.restore(); };
+export const AMB = '#ffb46a';
+export const stA: PlotStyle = { axis: 'rgba(255,220,180,.45)', dot: 'rgba(255,222,190,.75)', hot: GOLD, label: 'rgba(255,230,200,.7)' };
+export const glass = (g: G, x: number, y: number, w: number, h: number) => { g.save(); g.fillStyle = 'rgba(12,9,8,.72)'; rrect(g, x, y, w, h, 24); g.fill(); g.strokeStyle = 'rgba(255,200,140,.22)'; g.lineWidth = 2; g.stroke(); g.restore(); };
 const hookA = (g: G) => {
   booth(g); mic(g, 520, 260, 1.1);
   for (let k = 0; k < 4; k++) { g.strokeStyle = `rgba(255,180,106,${0.55 - k * 0.12})`; g.lineWidth = 4; g.beginPath(); g.arc(640, 300, 180 + k * 70, -0.7, 0.7); g.stroke(); }
@@ -157,7 +160,7 @@ const dataC = (g: G) => {
 
 
 /** a face made of sound: horizontal level bars whose lengths trace a head-and-shoulders outline */
-const voiceFace = (g: G, cx: number, cy: number, s: number) => {
+export const voiceFace = (g: G, cx: number, cy: number, s: number) => {
   const half = (y: number) => y < -0.56 ? 0 : y < 0.05 ? 0.37 * Math.sqrt(Math.max(0, 1 - ((y + 0.05) / 0.51) ** 2)) + 0.0 : y < 0.56 ? 0.37 - (0.37 - 0.0) * ((y - 0.05) / 0.51) ** 1.6 * 0.75 : y < 0.8 ? 0.15 : Math.min(0.78, 0.15 + (y - 0.8) * 2.2);
   seed = 13; g.save(); g.shadowColor = GOLD; g.shadowBlur = 14;
   for (let y = -0.58; y < 1.15; y += 0.034) { const hw = half(y); if (hw <= 0) continue; const j = 0.9 + 0.2 * rnd(); g.fillStyle = `rgba(241,197,109,${0.55 + 0.4 * rnd()})`; rrect(g, cx - hw * s * j, cy + y * s, 2 * hw * s * j, 0.018 * s, 4); g.fill(); }
@@ -165,7 +168,7 @@ const voiceFace = (g: G, cx: number, cy: number, s: number) => {
 };
 /* ================================================================ Storyboard (look A) */
 const S = (line: string, draw: (g: G) => void) => (g: G) => { draw(g); mark(g); sub(g, line); };
-const titleCard = (g: G, a: string, b: string) => { booth(g, false); g.fillStyle = 'rgba(0,0,0,.45)'; g.fillRect(0, 0, W, H); glow(g, W / 2, H / 2, 800, '241,197,109', 0.18); txt(g, a, W / 2, 480, 96, GOLD, { f: SERIF, glow: 'rgba(241,197,109,.6)' }); txt(g, b, W / 2, 620, 110, GOLD, { f: SERIF, glow: 'rgba(241,197,109,.6)' }); };
+export const titleCard = (g: G, a: string, b: string) => { booth(g, false); g.fillStyle = 'rgba(0,0,0,.45)'; g.fillRect(0, 0, W, H); glow(g, W / 2, H / 2, 800, '241,197,109', 0.18); txt(g, a, W / 2, 480, 96, GOLD, { f: SERIF, glow: 'rgba(241,197,109,.6)' }); txt(g, b, W / 2, 620, 110, GOLD, { f: SERIF, glow: 'rgba(241,197,109,.6)' }); };
 const BOARD: { t: string; d: string; draw: (g: G) => void }[] = [
   { t: '01 · 0:00 开场', d: '暗房间，ON AIR 亮起，麦克风被暖光勾边，声波从麦克风扩散；右边一张照片卡背对镜头。镜头缓慢推近麦克风。', draw: S('有人一开口，你就想看他的脸', (g) => hookA(g)) },
   { t: '02 · 0:03 翻牌', d: '照片卡翻过来：一张普通、温和的线稿脸（不丑化）。声波弱下去，ON AIR 闪一下。', draw: S('看到之后：哦……', (g) => { booth(g); mic(g, 300, 330, 0.75, 0.5); g.save(); g.translate(1100, 470); g.fillStyle = '#efe6d8'; rrect(g, -210, -270, 420, 540, 22); g.fill(); face(g, 0, -40, 340, FACES.plain, '#3b3029', { lw: 3 }); g.restore(); }) },
