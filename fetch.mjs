@@ -13,11 +13,27 @@ const getJSON = async (url, headers = {}) => {
   if (!r.ok) throw new Error(`${r.status} ${url}`);
   return r.json();
 };
-const download = async (url, file, headers = {}) => {
-  const r = await fetch(url, { headers: { 'User-Agent': 'juno-asset-farm', ...headers } });
-  if (!r.ok) throw new Error(`${r.status} ${url}`);
+const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
+const deadHosts = new Set();
+// opts: {method, body, contentType, retryOn (substring in body meaning "rate limited"), retries, backoff (s)}
+const download = async (url, file, headers = {}, opts = {}) => {
+  const host = new URL(url).host;
+  if (deadHosts.has(host)) throw new Error(`skipped (host ${host} rate-limited earlier) ${url}`);
+  let buf;
+  for (let a = 0; ; a++) {
+    const init = { method: opts.method || 'GET', headers: { 'User-Agent': opts.ua || 'juno-asset-farm', ...headers } };
+    if (opts.body) { init.body = opts.body; init.headers['Content-Type'] = opts.contentType || 'application/x-www-form-urlencoded'; }
+    const r = await fetch(url, init);
+    buf = Buffer.from(await r.arrayBuffer());
+    const limited = r.status === 429 || (opts.retryOn && buf.toString('utf8', 0, 4000).includes(opts.retryOn));
+    if (!limited && !r.ok) throw new Error(`${r.status} ${url}`);
+    if (!limited) break;
+    if (a >= (opts.retries ?? 0)) { deadHosts.add(host); throw new Error(`rate-limited after ${a + 1} tries ${url}`); }
+    log(`  rate-limited, waiting ${(opts.backoff || 30) * (a + 1)} s`);
+    await sleep((opts.backoff || 30) * 1000 * (a + 1));
+  }
   fs.mkdirSync(path.dirname(file), { recursive: true });
-  fs.writeFileSync(file, Buffer.from(await r.arrayBuffer()));
+  fs.writeFileSync(file, buf);
   log('  saved', file, (fs.statSync(file).size / 1e6).toFixed(1), 'MB');
 };
 const slug = (s) => String(s).toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '').slice(0, 48);
@@ -85,8 +101,9 @@ for (const it of req.items) {
       credits.push({ source: 'Sketchfab', uid: it.uid, name: meta.name, author: meta.user?.displayName || meta.user?.username,
         authorUrl: meta.user?.profileUrl, license: meta.license?.label, url: meta.viewerUrl });
     } else if (it.type === 'url') {
+      if (it.delay) await sleep(it.delay * 1000);
       log(`url ${it.url}`);
-      await download(it.url, `${OUT}/files/${it.name || path.basename(new URL(it.url).pathname)}`);
+      await download(it.url, `${OUT}/files/${it.name || path.basename(new URL(it.url).pathname)}`, {}, it);
       credits.push({ source: it.url, license: it.license || 'unknown' });
     }
   } catch (e) {
