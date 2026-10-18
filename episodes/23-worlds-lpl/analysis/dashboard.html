@@ -1,0 +1,589 @@
+<style>
+.wl { --lpl: var(--cds-chart-status-critical); font-family: var(--font-anthropic-sans); display: grid; gap: var(--cds-gap-lg); }
+.wl .hd h1 { font-family: var(--font-anthropic-serif); font-weight: 400; font-size: var(--cds-font-size-title); margin: 0; text-wrap: balance; }
+.wl .hd p { margin: var(--cds-gap-xs) 0 0; color: var(--color-fg-muted); max-width: 70ch; }
+.wl .tiles { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 11rem), 1fr)); gap: var(--cds-gap-md); }
+.wl .tile { background: var(--color-panel); border: 1px solid var(--color-border-line); border-radius: var(--cds-radius); padding: var(--cds-pad-md); display: grid; gap: var(--cds-gap-xs); align-content: start; }
+.wl .tile .k { font-size: var(--cds-font-size-caption); color: var(--color-fg-muted); }
+.wl .tile .v { font-family: var(--font-anthropic-serif); font-weight: 400; font-size: var(--cds-font-size-title); font-variant-numeric: tabular-nums; }
+.wl .tile .n { font-size: var(--cds-font-size-caption); color: var(--color-fg-muted); }
+.wl .tabs { display: flex; flex-wrap: wrap; gap: var(--cds-gap-xs); border-bottom: 1px solid var(--color-border-line); }
+.wl .tabs button { font: inherit; background: none; border: 0; border-bottom: 2px solid transparent; padding: var(--cds-pad-xs) var(--cds-pad-sm); color: var(--color-fg-muted); cursor: pointer; }
+.wl .tabs button[aria-selected="true"] { color: var(--color-fg); border-bottom-color: var(--color-fg); }
+.wl .tabs button:focus-visible { outline: 2px solid var(--color-fg); outline-offset: 2px; }
+.wl .page { display: grid; gap: var(--cds-gap-md); }
+.wl .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 24rem), 1fr)); gap: var(--cds-gap-md); }
+.wl .card { background: var(--color-panel); border: 1px solid var(--color-border-line); border-radius: var(--cds-radius); padding: var(--cds-pad-lg); min-width: 0; display: grid; gap: var(--cds-gap-sm); align-content: start; }
+.wl .card h2 { font-size: var(--cds-font-size-heading); font-weight: var(--cds-font-weight-medium); margin: 0; }
+.wl .card .note { margin: 0; color: var(--color-fg-muted); font-size: var(--cds-font-size-caption); max-width: 75ch; }
+.wl .chart { position: relative; min-height: 14rem; }
+.wl .scroll { overflow-x: auto; }
+.wl .tall { max-height: 32rem; overflow: auto; }
+.wl table { border-collapse: collapse; width: 100%; font-size: var(--cds-font-size-caption); font-variant-numeric: tabular-nums; }
+.wl th, .wl td { text-align: left; padding: 0.35rem 0.5rem; border-bottom: 1px solid var(--color-border-line); white-space: nowrap; }
+.wl th { color: var(--color-fg-muted); font-weight: var(--cds-font-weight-medium); position: sticky; top: 0; background: var(--color-panel); }
+.wl td.num, .wl th.num { text-align: right; }
+.wl tr.lpl td:first-child { box-shadow: inset 3px 0 0 var(--lpl); }
+.wl .bar { display: inline-block; height: 0.5rem; border-radius: 4px; background: var(--cds-chart-muted); vertical-align: middle; margin-left: 0.4rem; }
+.wl tr.lpl .bar { background: var(--lpl); }
+.wl .mx td, .wl .mx th { text-align: center; padding: 0.3rem 0.35rem; }
+.wl .mx td.self { color: var(--color-fg-muted); }
+.wl .mx td.up { color: var(--color-ok); }
+.wl .mx td.down { color: var(--color-bad); }
+.wl .mx th.rowh { text-align: left; position: sticky; left: 0; }
+.wl .ctl { display: flex; flex-wrap: wrap; gap: var(--cds-gap-sm); align-items: center; font-size: var(--cds-font-size-caption); color: var(--color-fg-muted); }
+.wl select { font: inherit; padding: 0.25rem 0.4rem; border-radius: var(--cds-radius); border: 1px solid var(--color-border-line); background: var(--color-bg); color: var(--color-fg); }
+.wl .players { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 15rem), 1fr)); gap: var(--cds-gap-md); }
+.wl .pill { display: inline-block; font-size: var(--cds-font-size-caption); padding: 0 0.4rem; border-radius: 999px; border: 1px solid var(--color-border-line); color: var(--color-fg-muted); }
+.wl .pill.buff { color: var(--color-ok); }
+.wl .pill.nerf { color: var(--color-bad); }
+.wl .tip { position: absolute; pointer-events: none; background: var(--cds-surface-popover); border: 1px solid var(--cds-border); border-radius: var(--cds-radius); box-shadow: var(--cds-shadow-popover); padding: var(--cds-pad-xs) var(--cds-pad-sm); font-size: var(--cds-font-size-caption); white-space: nowrap; z-index: 2; }
+.wl .tip .t { color: var(--cds-text-secondary); }
+.wl .legend { display: flex; flex-wrap: wrap; gap: var(--cds-gap-sm); font-size: var(--cds-font-size-caption); color: var(--color-fg-muted); }
+.wl .legend i { display: inline-block; width: 0.7rem; height: 0.7rem; border-radius: 2px; margin-right: 0.3rem; vertical-align: -1px; }
+.wl .prose { display: grid; gap: var(--cds-gap-sm); max-width: 75ch; }
+.wl .prose p, .wl .prose li { margin: 0; line-height: 1.5; }
+.wl .prose ul { margin: 0; padding-left: 1.2rem; display: grid; gap: var(--cds-gap-xs); }
+.wl [data-dash-source-state=empty] { color: transparent; }
+.wl [data-dash-source-state=refreshing] { opacity: .5; transition: opacity var(--cds-dur-slow); }
+.wl .fail { display: flex; align-items: center; justify-content: center; gap: 0.4rem; min-height: 6rem; color: var(--color-fg-muted); font-size: var(--cds-font-size-caption); }
+.wl .fail::before { content: ""; width: 0.375rem; height: 0.375rem; border-radius: 50%; background: var(--color-bad); }
+.wl svg text { fill: var(--color-fg-muted); font-size: 11px; font-family: var(--font-anthropic-sans); }
+.wl svg text.lab { fill: var(--color-fg); }
+</style>
+
+<div class="wl">
+  <header class="hd" id="top">
+    <h1>Worlds 2026: can the LPL win it?</h1>
+    <p id="takeaway">Across four rating models the LPL wins the title in
+      <b class="dash-skeleton" data-source="lpl_range" data-field="low">—</b>–<b class="dash-skeleton" data-source="lpl_range" data-field="high">—</b>% of simulated tournaments.
+      Bilibili Gaming carries most of that chance, and the reigning champion T1 is
+      <b class="dash-skeleton" data-source="t1_vs_lpl" data-field="t1_wins">—</b>–<b class="dash-skeleton" data-source="t1_vs_lpl" data-field="lpl_wins">—</b>
+      against LPL teams in Worlds best-of-fives.</p>
+  </header>
+
+  <section class="tiles" id="headline">
+    <div class="tile"><span class="k">LPL title chance, blended model</span><span class="v"><span class="dash-skeleton" data-source="sim_region" data-field="LPL" data-where="model_id=BL">—</span>%</span><span class="n">Riot ranking and 2026 results averaged</span></div>
+    <div class="tile"><span class="k">LCK title chance, blended model</span><span class="v"><span class="dash-skeleton" data-source="sim_region" data-field="LCK" data-where="model_id=BL">—</span>%</span><span class="n">Four LCK teams, three of the top four ratings</span></div>
+    <div class="tile"><span class="k">Bilibili Gaming title chance</span><span class="v"><span class="dash-skeleton" data-source="sim_teams" data-field="win_BL" data-where="team=BLG">—</span>%</span><span class="n">The LPL's highest-rated team</span></div>
+    <div class="tile"><span class="k">LPL vs LCK best-of-fives, 2026</span><span class="v"><span class="dash-skeleton" data-source="bo5_2026" data-field="lpl_wins">—</span>–<span class="dash-skeleton" data-source="bo5_2026" data-field="lck_wins">—</span></span><span class="n">First Stand, MSI and EWC</span></div>
+    <div class="tile"><span class="k">LPL vs LCK best-of-fives, 2025</span><span class="v"><span class="dash-skeleton" data-source="bo5_2025" data-field="lpl_wins">—</span>–<span class="dash-skeleton" data-source="bo5_2025" data-field="lck_wins">—</span></span><span class="n">Every international event that year</span></div>
+  </section>
+
+  <nav class="tabs" role="tablist" aria-label="Sections">
+    <button role="tab" id="tab-odds" data-page="odds" aria-selected="true">Title odds</button>
+    <button role="tab" id="tab-form" data-page="form" aria-selected="false">2026 form</button>
+    <button role="tab" id="tab-h2h" data-page="h2h" aria-selected="false">Head to head</button>
+    <button role="tab" id="tab-meta" data-page="meta" aria-selected="false">Meta and bans</button>
+    <button role="tab" id="tab-pools" data-page="pools" aria-selected="false">Champion pools</button>
+    <button role="tab" id="tab-method" data-page="method" aria-selected="false">Method and sources</button>
+  </nav>
+
+  <!-- ODDS -->
+  <section class="page" id="odds">
+    <div class="card" id="card-region">
+      <h2>Title chance by region, four models</h2>
+      <p class="note">Each bar is the share of simulated tournaments a region's team lifts the trophy. Models differ in how they rate teams; the method tab explains each.</p>
+      <div class="legend" id="region-legend"></div>
+      <div class="chart" id="chart-region" data-source="sim_region"></div>
+    </div>
+    <div class="card" id="card-teams">
+      <h2>Every team's path, blended model</h2>
+      <p class="note">Chance to reach each stage. Pot is the Round 1 seeding pot: pot 1 plays pot 4 and pot 2 plays pot 3, never against its own region. LPL rows are marked on the left edge.</p>
+      <div class="scroll">
+        <table id="tbl-teams" data-source="sim_teams" data-row-key="team">
+          <thead><tr>
+            <th data-field="team">Team</th><th data-field="name">Name</th><th data-field="region">Region</th><th class="num" data-field="pot">Pot</th>
+            <th class="num" data-field="gpr">Riot rating</th><th class="num" data-field="form_rating">Form rating</th>
+            <th class="num" data-field="qf_BL">Quarters %</th><th class="num" data-field="sf_BL">Semis %</th><th class="num" data-field="f_BL">Final %</th><th data-field="win_BL">Title %</th>
+            <th class="num" data-field="win_GPR">Title %, Riot only</th><th class="num" data-field="win_BT">Title %, results only</th>
+          </tr></thead>
+          <tbody></tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+
+  <!-- FORM -->
+  <section class="page" id="form" hidden>
+    <div class="card" id="card-scatter">
+      <h2>Early lead against win rate, 2026 season</h2>
+      <p class="note">Gold lead at 15 minutes (team average) against share of games won, all 2026 events. LPL teams in the accent color. Teams up and to the right win early and convert.</p>
+      <div class="chart" id="chart-scatter" data-source="form"></div>
+    </div>
+    <div class="card" id="card-form">
+      <h2>Records and team style</h2>
+      <p class="note">Summer means patches 26.13 and later; late means 26.16 to 26.20, the patches closest to the Worlds patch; big matches are playoffs, regional finals and international games since 26.13.</p>
+      <div class="scroll tall">
+        <table id="tbl-form" data-source="form" data-row-key="team">
+          <thead><tr>
+            <th data-field="team">Team</th><th data-field="region">Region</th><th class="num" data-field="games">Games</th><th class="num" data-field="wins">W</th><th class="num" data-field="losses">L</th>
+            <th class="num" data-field="wr">Win %</th><th class="num" data-field="wr_summer">Summer %</th><th class="num" data-field="wr_late">Late %</th><th class="num" data-field="wr_big">Big matches %</th>
+            <th class="num" data-field="gd15">Gold at 15</th><th class="num" data-field="dragon_pct">Dragons %</th><th class="num" data-field="herald_pct">Herald %</th><th class="num" data-field="nashor_pct">Baron %</th><th data-field="duration">Avg length</th>
+          </tr></thead>
+          <tbody></tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+
+  <!-- H2H -->
+  <section class="page" id="h2h" hidden>
+    <div class="grid">
+      <div class="card" id="card-bo5year">
+        <h2>LPL against LCK in best-of-fives, by year</h2>
+        <p class="note">Worlds, MSI, First Stand and EWC series between an LPL and an LCK team. Above the line: LPL wins. Below: LCK wins.</p>
+        <div class="chart" id="chart-bo5" data-source="bo5_by_year"></div>
+      </div>
+      <div class="card" id="card-lplvs">
+        <h2>LPL against each region at international events</h2>
+        <p class="note">Series and games won and lost by LPL teams, all formats.</p>
+        <div class="scroll">
+          <table id="tbl-lplvs" data-source="lpl_vs" data-row-key="key">
+            <thead><tr><th data-field="key">Year and opponent</th><th class="num" data-field="series_w">Series W</th><th class="num" data-field="series_l">Series L</th><th class="num" data-field="games_w">Games W</th><th class="num" data-field="games_l">Games L</th></tr></thead>
+            <tbody></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+    <div class="card" id="card-matrix">
+      <h2>Game record between Worlds teams, 2026</h2>
+      <p class="note">Every 2026 game, domestic and international. Read across: the row team's wins and losses against the column team. A dot means they have not met this year.</p>
+      <div class="scroll"><table class="mx" id="tbl-mx"></table></div>
+    </div>
+    <div class="grid">
+      <div class="card" id="card-bo5list">
+        <h2>Every LPL vs LCK best-of-five since 2017</h2>
+        <p class="note">Leaguepedia for 2017 to MSI 2024, gol.gg from Worlds 2024 on.</p>
+        <div class="scroll tall">
+          <table id="tbl-bo5" data-source="bo5" data-row-key="id">
+            <thead><tr><th data-field="id">Series</th><th data-field="event">Event</th><th class="num" data-field="lpl_score">LPL</th><th class="num" data-field="lck_score">LCK</th></tr></thead>
+            <tbody></tbody>
+          </table>
+        </div>
+      </div>
+      <div class="card" id="card-intl">
+        <h2>International series, 2025 and 2026</h2>
+        <div class="ctl"><label for="sel-event">Event</label><select id="sel-event"></select></div>
+        <div class="scroll tall">
+          <table id="tbl-intl" data-source="intl" data-row-key="id">
+            <thead><tr><th data-field="id">Series</th><th data-field="stage">Stage</th><th class="num" data-field="score1">Score</th><th class="num" data-field="score2"></th><th data-field="best_of">Format</th></tr></thead>
+            <tbody></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- META -->
+  <section class="page" id="meta" hidden>
+    <div class="card" id="card-meta">
+      <h2>Most contested champions</h2>
+      <p class="note">Presence is the share of games where a champion was picked or banned. Bans are the dark part of each bar, picks the light part; the number at the end is its win rate when picked. Worlds is played on patch 26.20, the first patch of the play-in.</p>
+      <div class="ctl"><label for="sel-scope">Events</label><select id="sel-scope"></select></div>
+      <div class="legend"><span><i style="background: var(--cds-chart-muted)"></i>Picked</span><span><i id="leg-ban"></i>Banned</span></div>
+      <div class="chart" id="chart-meta" data-source="meta"></div>
+    </div>
+    <div class="grid">
+      <div class="card" id="card-patch">
+        <h2>What patch 26.20 changed</h2>
+        <p class="note">From Riot's 26.20 notes, the Worlds patch.</p>
+        <div class="prose">
+          <p><b>Buffed:</b> Lillia, Lucian, Vayne, Neeko, Diana, Kennen, Kindred, Mordekaiser, Smolder, Tahm Kench, Swain.</p>
+          <p><b>Nerfed:</b> Ashe, Yunara, K'Sante, Ambessa, Cassiopeia. Hextech Rocketbelt reworked; Hexplate weaker on ranged champions.</p>
+          <p><b>Pulled before release:</b> the planned Varus and Sylas changes.</p>
+          <p>Nocturne stayed near-permanently banned through the play-in; K'Sante went winless there after the nerf, while Vi, Olaf and Seraphine went unbeaten when picked.</p>
+        </div>
+      </div>
+      <div class="card" id="card-metatbl">
+        <h2>Pick and ban table</h2>
+        <div class="scroll tall">
+          <table id="tbl-meta" data-source="meta" data-row-key="key">
+            <thead><tr><th data-field="champion">Champion</th><th class="num" data-field="presence">Presence %</th><th class="num" data-field="ban_rate">Ban %</th><th class="num" data-field="picks">Picks</th><th class="num" data-field="bans">Bans</th><th class="num" data-field="win_rate">Win %</th></tr></thead>
+            <tbody></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- POOLS -->
+  <section class="page" id="pools" hidden>
+    <div class="ctl"><label for="sel-team">Team</label><select id="sel-team"></select></div>
+    <div class="players" id="players" data-source="pools"></div>
+    <div class="grid">
+      <div class="card" id="card-bans">
+        <h2>Bans around this team</h2>
+        <p class="note">Share of the team's 2026 games in which each champion was banned, by them and by their opponents. Opponents' bans show what rivals fear from this team.</p>
+        <div class="scroll">
+          <table id="tbl-bans" data-source="team_bans" data-row-key="key">
+            <thead><tr><th data-field="side">Who bans</th><th data-field="champion">Champion</th><th class="num" data-field="share">Games %</th></tr></thead>
+            <tbody></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- METHOD -->
+  <section class="page" id="method" hidden>
+    <div class="card" id="card-method">
+      <h2>How the odds are worked out</h2>
+      <div class="prose">
+        <p>The bracket is played out <b class="dash-skeleton" data-source="sim_region" data-field="runs" data-where="model_id=BL">—</b> times per model with the real Worlds 2026 format: a Swiss stage (three wins to advance, three losses out; deciding matches best-of-three, the rest best-of-one), then best-of-five quarterfinals, semifinals and final. Round 1 pairs pot 1 with pot 4 and pot 2 with pot 3 and keeps regions apart; later rounds pair equal records without rematches. Karmine Corp holds the play-in spot after beating MVK in the play-in final.</p>
+        <p>Each game is won with the Elo chance from the two ratings. Before every simulated tournament each rating gets a random shift of about <b class="dash-skeleton" data-source="sim_region" data-field="rating_noise" data-where="model_id=BL">—</b> points, so form swings are part of the result.</p>
+        <ul>
+          <li><b>Riot power ranking</b>: Riot's Global Power Rankings snapshot of 18 October 2026, an Elo built from results with extra weight on playoffs and international games.</li>
+          <li><b>2026 results, raw</b>: a rating fitted to every 2026 game of the Worlds teams (a Bradley-Terry model), weighting recent patches more heavily and international games one and a half times. It spreads teams wider than Riot does because domestic leagues are only linked by a few international games.</li>
+          <li><b>2026 results, ranking spread</b>: the same order, squeezed to the spread of Riot's ranking.</li>
+          <li><b>Blend</b>: the average of the Riot ranking and the raw results rating, the headline model.</li>
+        </ul>
+        <p>Not modelled: the Round 1 draw (still to be made), draft and Fearless rules, travel and stage nerves. All four models agree on the shape: the LPL sits around one title in five, almost all of it through Bilibili Gaming.</p>
+      </div>
+    </div>
+    <div class="card" id="card-sources">
+      <h2>Sources</h2>
+      <div class="prose">
+        <ul>
+          <li>Games of Legends (gol.gg): 2026 team pages, team match logs, tournament match lists, champion and team stats for every 2025 and 2026 international event and the major league playoffs. Pulled 18 October 2026.</li>
+          <li>Leaguepedia (lol.fandom.com) MatchSchedule: every MSI and Worlds series from 2017 to MSI 2024. Its game-by-game tables refused requests for rate limits, so gol.gg covers 2024 onward.</li>
+          <li>LoL Esports Global Power Rankings, lolesports.com, 18 October 2026.</li>
+          <li>Riot patch 26.20 notes, for buffs and nerfs.</li>
+        </ul>
+        <p>gol.gg labels patches 16.x; that is Riot's 26.x numbering. gol.gg also flags that some per-game detail stats may be incomplete after a Riot match-history bug in April, so treat early-game numbers as approximate.</p>
+      </div>
+    </div>
+  </section>
+</div>
+
+<script>
+(function () {
+  const pct = (v) => (v == null || isNaN(v)) ? '—' : (+v).toFixed(1);
+  window.WL = { pct };
+
+  dash.calc('lpl_range', {
+    title: 'LPL title chance, lowest and highest model',
+    description: 'The smallest and largest LPL title chance across the four rating models.',
+    inputs: ['sim_region'],
+    fn: (sim_region) => [{ low: Math.min(...sim_region.map((r) => +r.LPL)), high: Math.max(...sim_region.map((r) => +r.LPL)) }],
+  });
+  dash.calc('t1_vs_lpl', {
+    title: 'T1 vs LPL, Worlds best-of-fives',
+    description: 'Worlds best-of-five series between T1 (or SK Telecom T1) and an LPL team, counted by winner.',
+    inputs: ['bo5'],
+    fn: (bo5) => {
+      const s = bo5.filter((r) => r.event.startsWith('Worlds') && (r.lck_team === 'T1' || r.lck_team === 'SK Telecom T1'));
+      return [{ t1_wins: s.filter((r) => +r.lpl_won === 0).length, lpl_wins: s.filter((r) => +r.lpl_won === 1).length }];
+    },
+  });
+  dash.calc('bo5_2026', {
+    title: 'LPL vs LCK best-of-fives, 2026',
+    description: 'LPL vs LCK best-of-five series in 2026, counted by winner.',
+    inputs: ['bo5'],
+    fn: (bo5) => { const s = bo5.filter((r) => +r.year === 2026); return [{ lpl_wins: s.filter((r) => +r.lpl_won === 1).length, lck_wins: s.filter((r) => +r.lpl_won === 0).length }]; },
+  });
+  dash.calc('bo5_2025', {
+    title: 'LPL vs LCK best-of-fives, 2025',
+    description: 'LPL vs LCK best-of-five series in 2025, counted by winner.',
+    inputs: ['bo5'],
+    fn: (bo5) => { const s = bo5.filter((r) => +r.year === 2025); return [{ lpl_wins: s.filter((r) => +r.lpl_won === 1).length, lck_wins: s.filter((r) => +r.lpl_won === 0).length }]; },
+  });
+  dash.calc('bo5_by_year', {
+    title: 'LPL vs LCK best-of-fives by year',
+    description: 'Best-of-five series won by each side, per year.',
+    inputs: ['bo5'],
+    fn: (bo5) => {
+      const years = [...new Set(bo5.map((r) => +r.year))].sort();
+      return years.map((y) => { const s = bo5.filter((r) => +r.year === y); return { year: y, lpl_wins: s.filter((r) => +r.lpl_won === 1).length, lck_wins: s.filter((r) => +r.lpl_won === 0).length }; });
+    },
+  });
+  dash.calc('lpl_vs', {
+    title: 'LPL record against each region',
+    description: 'Series and games won and lost by LPL teams against each other region at international events, per year.',
+    inputs: ['intl'],
+    fn: (intl) => {
+      const out = [];
+      for (const y of [2026, 2025]) for (const opp of ['LCK', 'LEC', 'LCS', 'LCP', 'CBLOL']) {
+        const r = { key: y + ' vs ' + opp, series_w: 0, series_l: 0, games_w: 0, games_l: 0 };
+        for (const s of intl) {
+          if (+s.year !== y) continue;
+          let a, b;
+          if (s.region1 === 'LPL' && s.region2 === opp) { a = +s.score1; b = +s.score2; }
+          else if (s.region2 === 'LPL' && s.region1 === opp) { a = +s.score2; b = +s.score1; }
+          else continue;
+          if (a > b) r.series_w++; else r.series_l++;
+          r.games_w += a; r.games_l += b;
+        }
+        if (r.series_w + r.series_l) out.push(r);
+      }
+      return out;
+    },
+  });
+  dash.calc('h2h_cells', {
+    title: 'Head-to-head game record',
+    description: 'Each pair of Worlds teams: the first team’s wins and losses against the second in 2026, written W–L.',
+    inputs: ['h2h'],
+    fn: (h2h) => h2h.map((r) => ({ pair: r.pair, record: r.wins + '–' + r.losses, net: +r.wins - +r.losses })),
+  });
+})();
+</script>
+
+<script>
+(function () {
+  const { pct } = window.WL;
+  let page = 'odds';
+  const tabs = [...document.querySelectorAll('.wl .tabs button')];
+  const show = (id) => {
+    page = id;
+    tabs.forEach((b) => b.setAttribute('aria-selected', String(b.dataset.page === id)));
+    document.querySelectorAll('.wl .page').forEach((s) => { s.hidden = s.id !== id; });
+    dash.setLink(id);
+    draw();
+  };
+  tabs.forEach((b) => b.addEventListener('click', () => show(b.dataset.page)));
+  window.WL.show = show;
+
+  const tip = (box) => { let t = box.querySelector('.tip'); if (!t) { t = document.createElement('div'); t.className = 'tip'; t.hidden = true; box.appendChild(t); } return t; };
+  const place = (box, t, ev) => {
+    const r = box.getBoundingClientRect(); let x = ev.clientX - r.left + 12, y = ev.clientY - r.top + 12;
+    t.hidden = false; const w = t.offsetWidth, h = t.offsetHeight;
+    if (x + w > r.width) x = Math.max(0, ev.clientX - r.left - w - 12);
+    if (y + h > r.height) y = Math.max(0, ev.clientY - r.top - h - 12);
+    t.style.left = x + 'px'; t.style.top = y + 'px';
+  };
+  const fail = (el) => { el.replaceChildren(); const d = document.createElement('div'); d.className = 'fail'; d.textContent = 'Failed to load'; el.appendChild(d); };
+  const unskel = (root) => root.querySelectorAll('.dash-skeleton').forEach((e) => { const s = dash.data(e.dataset.source).status; if (s === 'ok' || s === 'error') e.classList.remove('dash-skeleton'); });
+  const text = (sel, id, field, where, fmt) => {
+    document.querySelectorAll(sel).forEach((el) => {
+      const d = dash.data(el.dataset.source);
+      if (d.status !== 'ok') { el.textContent = '—'; return; }
+      let row = d.data[0];
+      if (el.dataset.where) { const [k, v] = el.dataset.where.split('='); row = d.data.find((r) => String(r[k]) === v); }
+      const v = row ? row[el.dataset.field] : null;
+      el.textContent = v == null ? '—' : (typeof v === 'number' && !Number.isInteger(v) ? pct(v) : (Number(v) >= 1000 ? d3.format(',')(+v) : String(v)));
+    });
+  };
+
+  function fillTable(tbl, rows, cols, opts = {}) {
+    const tb = tbl.tBodies[0]; tb.replaceChildren();
+    for (const r of rows) {
+      const tr = document.createElement('tr');
+      if (opts.key) tr.dataset.key = opts.key(r);
+      if (opts.cls) tr.className = opts.cls(r);
+      for (const c of cols) {
+        const td = document.createElement('td');
+        const v = r[c.f];
+        if (c.num) td.className = 'num';
+        td.textContent = c.fmt ? c.fmt(v, r) : (v == null || v === '' ? '—' : String(v));
+        if (c.bar) { const b = document.createElement('span'); b.className = 'bar'; b.style.width = Math.max(1, c.bar(v)) + 'px'; td.appendChild(b); }
+        tr.appendChild(td);
+      }
+      tb.appendChild(tr);
+    }
+  }
+
+  function drawRegion() {
+    const el = document.getElementById('chart-region'); const d = dash.data('sim_region');
+    const leg = document.getElementById('region-legend');
+    if (d.status === 'error') return fail(el);
+    if (d.status !== 'ok') { el.replaceChildren(); return; }
+    const models = d.data.map((r) => r.model); const regs = ['LPL', 'LCK', 'LEC', 'LCS'];
+    const cols = models.map((m, i) => dash.colors[i]);
+    leg.replaceChildren(...models.map((m, i) => { const s = document.createElement('span'); const k = document.createElement('i'); k.style.background = cols[i]; s.append(k, m); return s; }));
+    const W = el.clientWidth || 600, H = 260, m = { t: 8, r: 48, b: 8, l: 44 };
+    const y0 = d3.scaleBand(regs, [m.t, H - m.b]).paddingInner(0.25);
+    const y1 = d3.scaleBand(models, [0, y0.bandwidth()]).padding(0.12);
+    const max = d3.max(d.data, (r) => d3.max(regs, (g) => +r[g]));
+    const x = d3.scaleLinear([0, max], [m.l, W - m.r]);
+    const svg = d3.create('svg').attr('width', '100%').attr('viewBox', `0 0 ${W} ${H}`);
+    svg.append('g').selectAll('line').data(x.ticks(5)).join('line').attr('x1', x).attr('x2', x).attr('y1', m.t).attr('y2', H - m.b).attr('stroke', 'var(--cds-chart-grid)');
+    const t = tip(el);
+    for (const g of regs) {
+      svg.append('text').attr('class', 'lab').attr('x', 0).attr('y', y0(g) + y0.bandwidth() / 2).attr('dy', '0.35em').text(g);
+      d.data.forEach((r, i) => {
+        const yy = y0(g) + y1(r.model);
+        svg.append('rect').attr('x', x(0)).attr('y', yy).attr('width', Math.max(1, x(+r[g]) - x(0))).attr('height', y1.bandwidth()).attr('rx', 3).attr('fill', cols[i])
+          .attr('opacity', g === 'LPL' ? 1 : 0.55)
+          .on('mousemove', (ev) => { t.replaceChildren(); const a = document.createElement('div'); a.className = 't'; a.textContent = g + ' · ' + r.model; const b = document.createElement('div'); b.textContent = pct(+r[g]) + '% title chance'; t.append(a, b); place(el, t, ev); })
+          .on('mouseleave', () => { t.hidden = true; });
+        svg.append('text').attr('x', x(+r[g]) + 4).attr('y', yy + y1.bandwidth() / 2).attr('dy', '0.35em').text(pct(+r[g]) + '%');
+      });
+    }
+    el.replaceChildren(svg.node(), t);
+  }
+
+  function drawTeams() {
+    const tbl = document.getElementById('tbl-teams'); const d = dash.data('sim_teams');
+    if (d.status !== 'ok') { tbl.tBodies[0].replaceChildren(); return; }
+    const rows = [...d.data].sort((a, b) => +b.win_BL - +a.win_BL);
+    const max = d3.max(rows, (r) => +r.win_BL);
+    fillTable(tbl, rows, [
+      { f: 'team' }, { f: 'name' }, { f: 'region' }, { f: 'pot', num: 1 }, { f: 'gpr', num: 1 }, { f: 'form_rating', num: 1 },
+      { f: 'qf_BL', num: 1, fmt: pct }, { f: 'sf_BL', num: 1, fmt: pct }, { f: 'f_BL', num: 1, fmt: pct },
+      { f: 'win_BL', fmt: pct, bar: (v) => 90 * (+v) / max }, { f: 'win_GPR', num: 1, fmt: pct }, { f: 'win_BT', num: 1, fmt: pct },
+    ], { cls: (r) => r.region === 'LPL' ? 'lpl' : '' });
+  }
+
+  function drawScatter() {
+    const el = document.getElementById('chart-scatter'); const d = dash.data('form');
+    if (d.status === 'error') return fail(el);
+    if (d.status !== 'ok') { el.replaceChildren(); return; }
+    const W = el.clientWidth || 600, H = 320, m = { t: 12, r: 16, b: 34, l: 44 };
+    const x = d3.scaleLinear(d3.extent(d.data, (r) => +r.gd15), [m.l, W - m.r]).nice();
+    const y = d3.scaleLinear(d3.extent(d.data, (r) => +r.wr), [H - m.b, m.t]).nice();
+    const svg = d3.create('svg').attr('width', '100%').attr('viewBox', `0 0 ${W} ${H}`);
+    svg.append('g').selectAll('line').data(y.ticks(5)).join('line').attr('x1', m.l).attr('x2', W - m.r).attr('y1', y).attr('y2', y).attr('stroke', 'var(--cds-chart-grid)');
+    svg.append('g').attr('transform', `translate(0,${H - m.b})`).call(d3.axisBottom(x).ticks(Math.max(3, Math.floor(W / 110))).tickFormat(d3.format('+,'))).attr('font-size', null).attr('font-family', null).call((g) => g.select('.domain').attr('stroke', 'var(--cds-chart-axis)')).call((g) => g.selectAll('.tick line').attr('stroke', 'var(--cds-chart-axis)'));
+    svg.append('g').attr('transform', `translate(${m.l},0)`).call(d3.axisLeft(y).ticks(5).tickFormat((v) => v + '%')).attr('font-size', null).attr('font-family', null).call((g) => g.select('.domain').remove()).call((g) => g.selectAll('.tick line').remove());
+    svg.append('text').attr('x', W - m.r).attr('y', H - 4).attr('text-anchor', 'end').text('Gold lead at 15 min');
+    const t = tip(el);
+    const g = svg.append('g').selectAll('g').data(d.data).join('g').attr('transform', (r) => `translate(${x(+r.gd15)},${y(+r.wr)})`);
+    g.append('circle').attr('r', 5).attr('fill', (r) => r.region === 'LPL' ? 'var(--cds-chart-status-critical)' : 'var(--cds-chart-muted)')
+      .on('mousemove', (ev, r) => { t.replaceChildren(); const a = document.createElement('div'); a.className = 't'; a.textContent = r.team + ' · ' + r.region; const b = document.createElement('div'); b.textContent = pct(+r.wr) + '% wins · ' + d3.format('+,')(+r.gd15) + ' gold at 15'; t.append(a, b); place(el, t, ev); })
+      .on('mouseleave', () => { t.hidden = true; });
+    g.append('text').attr('class', (r) => r.region === 'LPL' ? 'lab' : '').attr('x', 7).attr('dy', '0.35em').text((r) => r.team);
+    el.replaceChildren(svg.node(), t);
+  }
+
+  function drawForm() {
+    const tbl = document.getElementById('tbl-form'); const d = dash.data('form');
+    if (d.status !== 'ok') { tbl.tBodies[0].replaceChildren(); return; }
+    const rows = [...d.data].sort((a, b) => +b.wr_big - +a.wr_big);
+    fillTable(tbl, rows, [
+      { f: 'team' }, { f: 'region' }, { f: 'games', num: 1 }, { f: 'wins', num: 1 }, { f: 'losses', num: 1 },
+      { f: 'wr', num: 1, fmt: pct }, { f: 'wr_summer', num: 1, fmt: pct }, { f: 'wr_late', num: 1, fmt: pct }, { f: 'wr_big', num: 1, fmt: pct },
+      { f: 'gd15', num: 1, fmt: (v) => d3.format('+,')(+v) }, { f: 'dragon_pct', num: 1, fmt: pct }, { f: 'herald_pct', num: 1, fmt: pct }, { f: 'nashor_pct', num: 1, fmt: pct }, { f: 'duration' },
+    ], { cls: (r) => r.region === 'LPL' ? 'lpl' : '' });
+  }
+
+  function drawBo5() {
+    const el = document.getElementById('chart-bo5'); const d = dash.data('bo5_by_year');
+    if (dash.data('bo5').status === 'error') return fail(el);
+    if (d.status !== 'ok') { el.replaceChildren(); return; }
+    const W = el.clientWidth || 500, H = 240, m = { t: 16, r: 8, b: 24, l: 8 };
+    const x = d3.scaleBand(d.data.map((r) => r.year), [m.l, W - m.r]).padding(0.3);
+    const mx = d3.max(d.data, (r) => Math.max(r.lpl_wins, r.lck_wins));
+    const y = d3.scaleLinear([-mx, mx], [H - m.b, m.t]);
+    const svg = d3.create('svg').attr('width', '100%').attr('viewBox', `0 0 ${W} ${H}`);
+    const bw = Math.min(32, x.bandwidth());
+    const t = tip(el);
+    const g = svg.append('g').selectAll('g').data(d.data).join('g').attr('transform', (r) => `translate(${x(r.year) + (x.bandwidth() - bw) / 2},0)`);
+    const hover = (ev, r) => { t.replaceChildren(); const a = document.createElement('div'); a.className = 't'; a.textContent = String(r.year); const b = document.createElement('div'); b.textContent = 'LPL ' + r.lpl_wins + ' – ' + r.lck_wins + ' LCK'; t.append(a, b); place(el, t, ev); };
+    g.append('rect').attr('y', (r) => y(r.lpl_wins)).attr('height', (r) => y(0) - y(r.lpl_wins)).attr('width', bw).attr('rx', 3).attr('fill', 'var(--cds-chart-status-critical)').on('mousemove', hover).on('mouseleave', () => { t.hidden = true; });
+    g.append('rect').attr('y', y(0)).attr('height', (r) => y(-r.lck_wins) - y(0)).attr('width', bw).attr('rx', 3).attr('fill', 'var(--cds-chart-muted)').on('mousemove', hover).on('mouseleave', () => { t.hidden = true; });
+    g.append('text').attr('x', bw / 2).attr('y', (r) => y(r.lpl_wins) - 3).attr('text-anchor', 'middle').text((r) => r.lpl_wins || '');
+    g.append('text').attr('x', bw / 2).attr('y', (r) => y(-r.lck_wins) + 11).attr('text-anchor', 'middle').text((r) => r.lck_wins || '');
+    svg.append('line').attr('x1', m.l).attr('x2', W - m.r).attr('y1', y(0)).attr('y2', y(0)).attr('stroke', 'var(--cds-chart-axis)');
+    const every = x.bandwidth() < 26 ? 2 : 1;
+    svg.append('g').selectAll('text').data(d.data.filter((r, i) => i % every === 0)).join('text').attr('x', (r) => x(r.year) + x.bandwidth() / 2).attr('y', H - 6).attr('text-anchor', 'middle').text((r) => "'" + String(r.year).slice(2));
+    el.replaceChildren(svg.node(), t);
+  }
+
+  function drawH2H() {
+    drawBo5();
+    const lv = dash.data('lpl_vs');
+    if (lv.status === 'ok') fillTable(document.getElementById('tbl-lplvs'), lv.data, [{ f: 'key' }, { f: 'series_w', num: 1 }, { f: 'series_l', num: 1 }, { f: 'games_w', num: 1 }, { f: 'games_l', num: 1 }]);
+    const mxEl = document.getElementById('tbl-mx'); const c = dash.data('h2h_cells');
+    if (dash.data('h2h').status === 'error') { mxEl.replaceChildren(); }
+    else if (c.status === 'ok') {
+      const T = ['GEN', 'HLE', 'T1', 'DK', 'BLG', 'AL', 'TES', 'IG', 'G2', 'KC', 'TLAW', 'LYON', 'TSW'];
+      const LPL = new Set(['BLG', 'AL', 'TES', 'IG']);
+      const by = new Map(c.data.map((r) => [r.pair, r]));
+      mxEl.replaceChildren();
+      const hr = document.createElement('tr'); const h0 = document.createElement('th'); h0.className = 'rowh'; hr.appendChild(h0);
+      T.forEach((b) => { const th = document.createElement('th'); th.textContent = b; hr.appendChild(th); });
+      const th = document.createElement('thead'); th.appendChild(hr); mxEl.appendChild(th);
+      const tb = document.createElement('tbody');
+      for (const a of T) {
+        const tr = document.createElement('tr'); if (LPL.has(a)) tr.className = 'lpl';
+        const rh = document.createElement('th'); rh.className = 'rowh'; rh.textContent = a; tr.appendChild(rh);
+        for (const b of T) {
+          const td = document.createElement('td');
+          const r = by.get(a + '-' + b);
+          if (a === b) { td.className = 'self'; td.textContent = '·'; }
+          else if (!r) { td.className = 'self'; td.textContent = '·'; }
+          else { td.textContent = r.record; td.className = r.net > 0 ? 'up' : r.net < 0 ? 'down' : ''; td.dataset.source = 'h2h_cells'; td.dataset.field = 'record'; td.dataset.where = 'pair=' + encodeURIComponent(a + '-' + b); }
+          tr.appendChild(td);
+        }
+        tb.appendChild(tr);
+      }
+      mxEl.appendChild(tb);
+    }
+    const bo = dash.data('bo5');
+    if (bo.status === 'ok') fillTable(document.getElementById('tbl-bo5'), [...bo.data].reverse(), [{ f: 'id' }, { f: 'event' }, { f: 'lpl_score', num: 1 }, { f: 'lck_score', num: 1 }], { cls: (r) => +r.lpl_won ? 'lpl' : '' });
+    const it = dash.data('intl'); const sel = document.getElementById('sel-event');
+    if (it.status === 'ok') {
+      const evs = [...new Set(it.data.map((r) => r.event))];
+      if (sel.options.length !== evs.length) { const cur = sel.value; sel.replaceChildren(...evs.slice().reverse().map((e) => new Option(e))); sel.value = evs.includes(cur) ? cur : 'MSI 2026'; }
+      const rows = it.data.filter((r) => r.event === sel.value).reverse();
+      fillTable(document.getElementById('tbl-intl'), rows, [{ f: 'id' }, { f: 'stage' }, { f: 'score1', num: 1 }, { f: 'score2', num: 1 }, { f: 'best_of' }], { cls: (r) => (r.region1 === 'LPL' || r.region2 === 'LPL') ? 'lpl' : '' });
+    }
+  }
+  document.getElementById('sel-event').addEventListener('change', () => drawH2H());
+
+  function drawMeta() {
+    const el = document.getElementById('chart-meta'); const d = dash.data('meta'); const sel = document.getElementById('sel-scope');
+    document.getElementById('leg-ban').style.background = dash.colors[0];
+    if (d.status === 'error') return fail(el);
+    if (d.status !== 'ok') { el.replaceChildren(); return; }
+    const scopes = [...new Set(d.data.map((r) => r.scope))];
+    if (sel.options.length !== scopes.length) { sel.replaceChildren(...scopes.map((s) => new Option(s))); sel.value = scopes[0]; }
+    const rows = d.data.filter((r) => r.scope === sel.value).sort((a, b) => a.rank - b.rank);
+    const top = rows.slice(0, 20);
+    const W = el.clientWidth || 600, rowH = 20, m = { t: 4, r: 74, b: 4, l: 86 }, H = m.t + m.b + rowH * top.length;
+    const y = d3.scaleBand(top.map((r) => r.champion), [m.t, H - m.b]).padding(0.22);
+    const x = d3.scaleLinear([0, 100], [m.l, W - m.r]);
+    const svg = d3.create('svg').attr('width', '100%').attr('viewBox', `0 0 ${W} ${H}`);
+    svg.append('g').selectAll('line').data([25, 50, 75, 100]).join('line').attr('x1', x).attr('x2', x).attr('y1', m.t).attr('y2', H - m.b).attr('stroke', 'var(--cds-chart-grid)');
+    const t = tip(el);
+    const g = svg.append('g').selectAll('g').data(top).join('g').attr('transform', (r) => `translate(0,${y(r.champion)})`);
+    const hover = (ev, r) => { t.replaceChildren(); const a = document.createElement('div'); a.className = 't'; a.textContent = r.champion; const b = document.createElement('div'); b.textContent = pct(+r.presence) + '% presence · ' + r.bans + ' bans · ' + r.picks + ' picks' + (r.win_rate == null ? '' : ' · ' + pct(+r.win_rate) + '% wins'); t.append(a, b); place(el, t, ev); };
+    g.append('text').attr('class', 'lab').attr('x', m.l - 6).attr('y', y.bandwidth() / 2).attr('dy', '0.35em').attr('text-anchor', 'end').text((r) => r.champion);
+    g.append('rect').attr('x', x(0)).attr('width', (r) => Math.max(1, x(+r.ban_rate) - x(0))).attr('height', y.bandwidth()).attr('rx', 3).attr('fill', dash.colors[0]).on('mousemove', hover).on('mouseleave', () => { t.hidden = true; });
+    g.append('rect').attr('x', (r) => x(+r.ban_rate)).attr('width', (r) => Math.max(0, x(+r.presence) - x(+r.ban_rate))).attr('height', y.bandwidth()).attr('rx', 3).attr('fill', 'var(--cds-chart-muted)').on('mousemove', hover).on('mouseleave', () => { t.hidden = true; });
+    g.append('text').attr('x', (r) => x(+r.presence) + 5).attr('y', y.bandwidth() / 2).attr('dy', '0.35em').text((r) => pct(+r.presence) + '%' + (r.win_rate == null ? '' : ' · ' + Math.round(+r.win_rate) + 'w'));
+    el.style.minHeight = H + 'px';
+    el.replaceChildren(svg.node(), t);
+    fillTable(document.getElementById('tbl-meta'), rows, [{ f: 'champion' }, { f: 'presence', num: 1, fmt: pct }, { f: 'ban_rate', num: 1, fmt: pct }, { f: 'picks', num: 1 }, { f: 'bans', num: 1 }, { f: 'win_rate', num: 1, fmt: pct }], { key: (r) => r.key });
+  }
+  document.getElementById('sel-scope').addEventListener('change', () => drawMeta());
+
+  function drawPools() {
+    const box = document.getElementById('players'); const d = dash.data('pools'); const sel = document.getElementById('sel-team');
+    if (d.status === 'error') return fail(box);
+    if (d.status !== 'ok') { box.replaceChildren(); return; }
+    const teams = [...new Set(d.data.map((r) => r.team))];
+    if (sel.options.length !== teams.length) { sel.replaceChildren(...teams.map((s) => new Option(s))); sel.value = 'BLG'; }
+    const rows = d.data.filter((r) => r.team === sel.value);
+    const players = [...new Set(rows.map((r) => r.player))];
+    box.replaceChildren(...players.map((p) => {
+      const pr = rows.filter((r) => r.player === p);
+      const card = document.createElement('div'); card.className = 'card';
+      const h = document.createElement('h2'); h.textContent = p; const n = document.createElement('p'); n.className = 'note'; n.textContent = pr[0].role + ' · most played 2026 champions';
+      const tbl = document.createElement('table'); tbl.dataset.source = 'pools'; tbl.dataset.rowKey = 'key';
+      const th = document.createElement('thead'); const tr = document.createElement('tr');
+      [['champion', 'Champion', 0], ['games', 'Games', 1], ['win_rate', 'Win %', 1], ['patch_note', '26.20', 0]].forEach(([f, l, num]) => { const e = document.createElement('th'); e.dataset.field = f; e.textContent = l; if (num) e.className = 'num'; tr.appendChild(e); });
+      th.appendChild(tr); tbl.appendChild(th); tbl.appendChild(document.createElement('tbody'));
+      fillTable(tbl, pr, [{ f: 'champion' }, { f: 'games', num: 1 }, { f: 'win_rate', num: 1, fmt: (v) => Math.round(+v) + '' }, { f: 'patch_note' }], { key: (r) => r.key });
+      tbl.querySelectorAll('tbody tr').forEach((row, i) => { const c = row.lastChild; const v = pr[i].patch_note; c.replaceChildren(); if (v) { const s = document.createElement('span'); s.className = 'pill ' + (v.startsWith('buff') ? 'buff' : 'nerf'); s.textContent = v; c.appendChild(s); } });
+      card.append(h, n, tbl); return card;
+    }));
+    const b = dash.data('team_bans');
+    if (b.status === 'ok') fillTable(document.getElementById('tbl-bans'), b.data.filter((r) => r.team === sel.value), [{ f: 'side' }, { f: 'champion' }, { f: 'share', num: 1, fmt: (v) => Math.round(+v) + '' }], { key: (r) => r.key });
+  }
+  document.getElementById('sel-team').addEventListener('change', () => drawPools());
+
+  function draw() {
+    text('#takeaway [data-source], #headline [data-source], #method [data-source]');
+    unskel(document.querySelector('.wl'));
+    if (page === 'odds') { drawRegion(); drawTeams(); }
+    if (page === 'form') { drawScatter(); drawForm(); }
+    if (page === 'h2h') drawH2H();
+    if (page === 'meta') drawMeta();
+    if (page === 'pools') drawPools();
+  }
+  dash.onData(draw);
+  const named = document.getElementById(location.hash.slice(1));
+  if (named && named.classList.contains('page')) show(named.id);
+})();
+</script>

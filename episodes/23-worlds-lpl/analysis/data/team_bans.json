@@ -1,0 +1,1538 @@
+[
+{
+"key": "GEN|Banned by them|Orianna",
+"team": "GEN",
+"side": "Banned by them",
+"champion": "Orianna",
+"share": 38.0,
+"rank": 1
+},
+{
+"key": "GEN|Banned by them|Karma",
+"team": "GEN",
+"side": "Banned by them",
+"champion": "Karma",
+"share": 25.0,
+"rank": 2
+},
+{
+"key": "GEN|Banned by them|Bard",
+"team": "GEN",
+"side": "Banned by them",
+"champion": "Bard",
+"share": 22.0,
+"rank": 3
+},
+{
+"key": "GEN|Banned by them|Poppy",
+"team": "GEN",
+"side": "Banned by them",
+"champion": "Poppy",
+"share": 21.0,
+"rank": 4
+},
+{
+"key": "GEN|Banned by them|Jayce",
+"team": "GEN",
+"side": "Banned by them",
+"champion": "Jayce",
+"share": 20.0,
+"rank": 5
+},
+{
+"key": "GEN|Banned by them|Rumble",
+"team": "GEN",
+"side": "Banned by them",
+"champion": "Rumble",
+"share": 19.0,
+"rank": 6
+},
+{
+"key": "GEN|Banned against them|Orianna",
+"team": "GEN",
+"side": "Banned against them",
+"champion": "Orianna",
+"share": 33.0,
+"rank": 1
+},
+{
+"key": "GEN|Banned against them|Varus",
+"team": "GEN",
+"side": "Banned against them",
+"champion": "Varus",
+"share": 31.0,
+"rank": 2
+},
+{
+"key": "GEN|Banned against them|Ezreal",
+"team": "GEN",
+"side": "Banned against them",
+"champion": "Ezreal",
+"share": 22.0,
+"rank": 3
+},
+{
+"key": "GEN|Banned against them|Jayce",
+"team": "GEN",
+"side": "Banned against them",
+"champion": "Jayce",
+"share": 21.0,
+"rank": 4
+},
+{
+"key": "GEN|Banned against them|Poppy",
+"team": "GEN",
+"side": "Banned against them",
+"champion": "Poppy",
+"share": 20.0,
+"rank": 5
+},
+{
+"key": "GEN|Banned against them|Nautilus",
+"team": "GEN",
+"side": "Banned against them",
+"champion": "Nautilus",
+"share": 20.0,
+"rank": 6
+},
+{
+"key": "HLE|Banned by them|Ezreal",
+"team": "HLE",
+"side": "Banned by them",
+"champion": "Ezreal",
+"share": 33.0,
+"rank": 1
+},
+{
+"key": "HLE|Banned by them|Bard",
+"team": "HLE",
+"side": "Banned by them",
+"champion": "Bard",
+"share": 31.0,
+"rank": 2
+},
+{
+"key": "HLE|Banned by them|Orianna",
+"team": "HLE",
+"side": "Banned by them",
+"champion": "Orianna",
+"share": 27.0,
+"rank": 3
+},
+{
+"key": "HLE|Banned by them|Poppy",
+"team": "HLE",
+"side": "Banned by them",
+"champion": "Poppy",
+"share": 27.0,
+"rank": 4
+},
+{
+"key": "HLE|Banned by them|Rumble",
+"team": "HLE",
+"side": "Banned by them",
+"champion": "Rumble",
+"share": 21.0,
+"rank": 5
+},
+{
+"key": "HLE|Banned by them|Varus",
+"team": "HLE",
+"side": "Banned by them",
+"champion": "Varus",
+"share": 20.0,
+"rank": 6
+},
+{
+"key": "HLE|Banned against them|Jayce",
+"team": "HLE",
+"side": "Banned against them",
+"champion": "Jayce",
+"share": 33.0,
+"rank": 1
+},
+{
+"key": "HLE|Banned against them|Orianna",
+"team": "HLE",
+"side": "Banned against them",
+"champion": "Orianna",
+"share": 27.0,
+"rank": 2
+},
+{
+"key": "HLE|Banned against them|Varus",
+"team": "HLE",
+"side": "Banned against them",
+"champion": "Varus",
+"share": 24.0,
+"rank": 3
+},
+{
+"key": "HLE|Banned against them|Rumble",
+"team": "HLE",
+"side": "Banned against them",
+"champion": "Rumble",
+"share": 20.0,
+"rank": 4
+},
+{
+"key": "HLE|Banned against them|Vi",
+"team": "HLE",
+"side": "Banned against them",
+"champion": "Vi",
+"share": 20.0,
+"rank": 5
+},
+{
+"key": "HLE|Banned against them|Cassiopeia",
+"team": "HLE",
+"side": "Banned against them",
+"champion": "Cassiopeia",
+"share": 15.0,
+"rank": 6
+},
+{
+"key": "BLG|Banned by them|Orianna",
+"team": "BLG",
+"side": "Banned by them",
+"champion": "Orianna",
+"share": 33.0,
+"rank": 1
+},
+{
+"key": "BLG|Banned by them|Rumble",
+"team": "BLG",
+"side": "Banned by them",
+"champion": "Rumble",
+"share": 27.0,
+"rank": 2
+},
+{
+"key": "BLG|Banned by them|Varus",
+"team": "BLG",
+"side": "Banned by them",
+"champion": "Varus",
+"share": 27.0,
+"rank": 3
+},
+{
+"key": "BLG|Banned by them|Lucian",
+"team": "BLG",
+"side": "Banned by them",
+"champion": "Lucian",
+"share": 24.0,
+"rank": 4
+},
+{
+"key": "BLG|Banned by them|Nocturne",
+"team": "BLG",
+"side": "Banned by them",
+"champion": "Nocturne",
+"share": 21.0,
+"rank": 5
+},
+{
+"key": "BLG|Banned by them|Vi",
+"team": "BLG",
+"side": "Banned by them",
+"champion": "Vi",
+"share": 21.0,
+"rank": 6
+},
+{
+"key": "BLG|Banned against them|Orianna",
+"team": "BLG",
+"side": "Banned against them",
+"champion": "Orianna",
+"share": 42.0,
+"rank": 1
+},
+{
+"key": "BLG|Banned against them|Poppy",
+"team": "BLG",
+"side": "Banned against them",
+"champion": "Poppy",
+"share": 21.0,
+"rank": 2
+},
+{
+"key": "BLG|Banned against them|Jarvan IV",
+"team": "BLG",
+"side": "Banned against them",
+"champion": "Jarvan IV",
+"share": 19.0,
+"rank": 3
+},
+{
+"key": "BLG|Banned against them|Bard",
+"team": "BLG",
+"side": "Banned against them",
+"champion": "Bard",
+"share": 18.0,
+"rank": 4
+},
+{
+"key": "BLG|Banned against them|Varus",
+"team": "BLG",
+"side": "Banned against them",
+"champion": "Varus",
+"share": 16.0,
+"rank": 5
+},
+{
+"key": "BLG|Banned against them|Nocturne",
+"team": "BLG",
+"side": "Banned against them",
+"champion": "Nocturne",
+"share": 16.0,
+"rank": 6
+},
+{
+"key": "G2|Banned by them|Orianna",
+"team": "G2",
+"side": "Banned by them",
+"champion": "Orianna",
+"share": 37.0,
+"rank": 1
+},
+{
+"key": "G2|Banned by them|Rumble",
+"team": "G2",
+"side": "Banned by them",
+"champion": "Rumble",
+"share": 34.0,
+"rank": 2
+},
+{
+"key": "G2|Banned by them|Varus",
+"team": "G2",
+"side": "Banned by them",
+"champion": "Varus",
+"share": 27.0,
+"rank": 3
+},
+{
+"key": "G2|Banned by them|Nocturne",
+"team": "G2",
+"side": "Banned by them",
+"champion": "Nocturne",
+"share": 23.0,
+"rank": 4
+},
+{
+"key": "G2|Banned by them|Jayce",
+"team": "G2",
+"side": "Banned by them",
+"champion": "Jayce",
+"share": 21.0,
+"rank": 5
+},
+{
+"key": "G2|Banned by them|Akali",
+"team": "G2",
+"side": "Banned by them",
+"champion": "Akali",
+"share": 19.0,
+"rank": 6
+},
+{
+"key": "G2|Banned against them|Orianna",
+"team": "G2",
+"side": "Banned against them",
+"champion": "Orianna",
+"share": 26.0,
+"rank": 1
+},
+{
+"key": "G2|Banned against them|Jarvan IV",
+"team": "G2",
+"side": "Banned against them",
+"champion": "Jarvan IV",
+"share": 24.0,
+"rank": 2
+},
+{
+"key": "G2|Banned against them|Varus",
+"team": "G2",
+"side": "Banned against them",
+"champion": "Varus",
+"share": 21.0,
+"rank": 3
+},
+{
+"key": "G2|Banned against them|Nautilus",
+"team": "G2",
+"side": "Banned against them",
+"champion": "Nautilus",
+"share": 21.0,
+"rank": 4
+},
+{
+"key": "G2|Banned against them|Poppy",
+"team": "G2",
+"side": "Banned against them",
+"champion": "Poppy",
+"share": 20.0,
+"rank": 5
+},
+{
+"key": "G2|Banned against them|Vi",
+"team": "G2",
+"side": "Banned against them",
+"champion": "Vi",
+"share": 18.0,
+"rank": 6
+},
+{
+"key": "T1|Banned by them|Orianna",
+"team": "T1",
+"side": "Banned by them",
+"champion": "Orianna",
+"share": 30.0,
+"rank": 1
+},
+{
+"key": "T1|Banned by them|Varus",
+"team": "T1",
+"side": "Banned by them",
+"champion": "Varus",
+"share": 29.0,
+"rank": 2
+},
+{
+"key": "T1|Banned by them|Akali",
+"team": "T1",
+"side": "Banned by them",
+"champion": "Akali",
+"share": 20.0,
+"rank": 3
+},
+{
+"key": "T1|Banned by them|Nautilus",
+"team": "T1",
+"side": "Banned by them",
+"champion": "Nautilus",
+"share": 20.0,
+"rank": 4
+},
+{
+"key": "T1|Banned by them|Vi",
+"team": "T1",
+"side": "Banned by them",
+"champion": "Vi",
+"share": 20.0,
+"rank": 5
+},
+{
+"key": "T1|Banned by them|Rumble",
+"team": "T1",
+"side": "Banned by them",
+"champion": "Rumble",
+"share": 18.0,
+"rank": 6
+},
+{
+"key": "T1|Banned against them|Bard",
+"team": "T1",
+"side": "Banned against them",
+"champion": "Bard",
+"share": 64.0,
+"rank": 1
+},
+{
+"key": "T1|Banned against them|Nocturne",
+"team": "T1",
+"side": "Banned against them",
+"champion": "Nocturne",
+"share": 32.0,
+"rank": 2
+},
+{
+"key": "T1|Banned against them|Orianna",
+"team": "T1",
+"side": "Banned against them",
+"champion": "Orianna",
+"share": 30.0,
+"rank": 3
+},
+{
+"key": "T1|Banned against them|Poppy",
+"team": "T1",
+"side": "Banned against them",
+"champion": "Poppy",
+"share": 19.0,
+"rank": 4
+},
+{
+"key": "T1|Banned against them|Caitlyn",
+"team": "T1",
+"side": "Banned against them",
+"champion": "Caitlyn",
+"share": 18.0,
+"rank": 5
+},
+{
+"key": "T1|Banned against them|Lucian",
+"team": "T1",
+"side": "Banned against them",
+"champion": "Lucian",
+"share": 15.0,
+"rank": 6
+},
+{
+"key": "LYON|Banned by them|Vi",
+"team": "LYON",
+"side": "Banned by them",
+"champion": "Vi",
+"share": 34.0,
+"rank": 1
+},
+{
+"key": "LYON|Banned by them|Pantheon",
+"team": "LYON",
+"side": "Banned by them",
+"champion": "Pantheon",
+"share": 20.0,
+"rank": 2
+},
+{
+"key": "LYON|Banned by them|Seraphine",
+"team": "LYON",
+"side": "Banned by them",
+"champion": "Seraphine",
+"share": 20.0,
+"rank": 3
+},
+{
+"key": "LYON|Banned by them|Nocturne",
+"team": "LYON",
+"side": "Banned by them",
+"champion": "Nocturne",
+"share": 17.0,
+"rank": 4
+},
+{
+"key": "LYON|Banned by them|Karma",
+"team": "LYON",
+"side": "Banned by them",
+"champion": "Karma",
+"share": 16.0,
+"rank": 5
+},
+{
+"key": "LYON|Banned by them|Orianna",
+"team": "LYON",
+"side": "Banned by them",
+"champion": "Orianna",
+"share": 16.0,
+"rank": 6
+},
+{
+"key": "LYON|Banned against them|Varus",
+"team": "LYON",
+"side": "Banned against them",
+"champion": "Varus",
+"share": 34.0,
+"rank": 1
+},
+{
+"key": "LYON|Banned against them|Nocturne",
+"team": "LYON",
+"side": "Banned against them",
+"champion": "Nocturne",
+"share": 33.0,
+"rank": 2
+},
+{
+"key": "LYON|Banned against them|Akali",
+"team": "LYON",
+"side": "Banned against them",
+"champion": "Akali",
+"share": 30.0,
+"rank": 3
+},
+{
+"key": "LYON|Banned against them|Cassiopeia",
+"team": "LYON",
+"side": "Banned against them",
+"champion": "Cassiopeia",
+"share": 20.0,
+"rank": 4
+},
+{
+"key": "LYON|Banned against them|Pantheon",
+"team": "LYON",
+"side": "Banned against them",
+"champion": "Pantheon",
+"share": 19.0,
+"rank": 5
+},
+{
+"key": "LYON|Banned against them|Karma",
+"team": "LYON",
+"side": "Banned against them",
+"champion": "Karma",
+"share": 16.0,
+"rank": 6
+},
+{
+"key": "DK|Banned by them|Nocturne",
+"team": "DK",
+"side": "Banned by them",
+"champion": "Nocturne",
+"share": 57.0,
+"rank": 1
+},
+{
+"key": "DK|Banned by them|Orianna",
+"team": "DK",
+"side": "Banned by them",
+"champion": "Orianna",
+"share": 26.0,
+"rank": 2
+},
+{
+"key": "DK|Banned by them|Varus",
+"team": "DK",
+"side": "Banned by them",
+"champion": "Varus",
+"share": 25.0,
+"rank": 3
+},
+{
+"key": "DK|Banned by them|Bard",
+"team": "DK",
+"side": "Banned by them",
+"champion": "Bard",
+"share": 22.0,
+"rank": 4
+},
+{
+"key": "DK|Banned by them|Azir",
+"team": "DK",
+"side": "Banned by them",
+"champion": "Azir",
+"share": 20.0,
+"rank": 5
+},
+{
+"key": "DK|Banned by them|Nautilus",
+"team": "DK",
+"side": "Banned by them",
+"champion": "Nautilus",
+"share": 19.0,
+"rank": 6
+},
+{
+"key": "DK|Banned against them|Orianna",
+"team": "DK",
+"side": "Banned against them",
+"champion": "Orianna",
+"share": 26.0,
+"rank": 1
+},
+{
+"key": "DK|Banned against them|Vi",
+"team": "DK",
+"side": "Banned against them",
+"champion": "Vi",
+"share": 26.0,
+"rank": 2
+},
+{
+"key": "DK|Banned against them|Rumble",
+"team": "DK",
+"side": "Banned against them",
+"champion": "Rumble",
+"share": 24.0,
+"rank": 3
+},
+{
+"key": "DK|Banned against them|Karma",
+"team": "DK",
+"side": "Banned against them",
+"champion": "Karma",
+"share": 21.0,
+"rank": 4
+},
+{
+"key": "DK|Banned against them|Varus",
+"team": "DK",
+"side": "Banned against them",
+"champion": "Varus",
+"share": 21.0,
+"rank": 5
+},
+{
+"key": "DK|Banned against them|Cassiopeia",
+"team": "DK",
+"side": "Banned against them",
+"champion": "Cassiopeia",
+"share": 21.0,
+"rank": 6
+},
+{
+"key": "AL|Banned by them|Vi",
+"team": "AL",
+"side": "Banned by them",
+"champion": "Vi",
+"share": 31.0,
+"rank": 1
+},
+{
+"key": "AL|Banned by them|Orianna",
+"team": "AL",
+"side": "Banned by them",
+"champion": "Orianna",
+"share": 23.0,
+"rank": 2
+},
+{
+"key": "AL|Banned by them|Jarvan IV",
+"team": "AL",
+"side": "Banned by them",
+"champion": "Jarvan IV",
+"share": 21.0,
+"rank": 3
+},
+{
+"key": "AL|Banned by them|Nocturne",
+"team": "AL",
+"side": "Banned by them",
+"champion": "Nocturne",
+"share": 20.0,
+"rank": 4
+},
+{
+"key": "AL|Banned by them|Rumble",
+"team": "AL",
+"side": "Banned by them",
+"champion": "Rumble",
+"share": 18.0,
+"rank": 5
+},
+{
+"key": "AL|Banned by them|Karma",
+"team": "AL",
+"side": "Banned by them",
+"champion": "Karma",
+"share": 17.0,
+"rank": 6
+},
+{
+"key": "AL|Banned against them|Orianna",
+"team": "AL",
+"side": "Banned against them",
+"champion": "Orianna",
+"share": 32.0,
+"rank": 1
+},
+{
+"key": "AL|Banned against them|Jarvan IV",
+"team": "AL",
+"side": "Banned against them",
+"champion": "Jarvan IV",
+"share": 27.0,
+"rank": 2
+},
+{
+"key": "AL|Banned against them|Varus",
+"team": "AL",
+"side": "Banned against them",
+"champion": "Varus",
+"share": 26.0,
+"rank": 3
+},
+{
+"key": "AL|Banned against them|Poppy",
+"team": "AL",
+"side": "Banned against them",
+"champion": "Poppy",
+"share": 25.0,
+"rank": 4
+},
+{
+"key": "AL|Banned against them|Cassiopeia",
+"team": "AL",
+"side": "Banned against them",
+"champion": "Cassiopeia",
+"share": 21.0,
+"rank": 5
+},
+{
+"key": "AL|Banned against them|Vi",
+"team": "AL",
+"side": "Banned against them",
+"champion": "Vi",
+"share": 19.0,
+"rank": 6
+},
+{
+"key": "KC|Banned by them|Nocturne",
+"team": "KC",
+"side": "Banned by them",
+"champion": "Nocturne",
+"share": 34.0,
+"rank": 1
+},
+{
+"key": "KC|Banned by them|Nautilus",
+"team": "KC",
+"side": "Banned by them",
+"champion": "Nautilus",
+"share": 30.0,
+"rank": 2
+},
+{
+"key": "KC|Banned by them|Vi",
+"team": "KC",
+"side": "Banned by them",
+"champion": "Vi",
+"share": 28.0,
+"rank": 3
+},
+{
+"key": "KC|Banned by them|Varus",
+"team": "KC",
+"side": "Banned by them",
+"champion": "Varus",
+"share": 24.0,
+"rank": 4
+},
+{
+"key": "KC|Banned by them|Orianna",
+"team": "KC",
+"side": "Banned by them",
+"champion": "Orianna",
+"share": 24.0,
+"rank": 5
+},
+{
+"key": "KC|Banned by them|Akali",
+"team": "KC",
+"side": "Banned by them",
+"champion": "Akali",
+"share": 23.0,
+"rank": 6
+},
+{
+"key": "KC|Banned against them|Orianna",
+"team": "KC",
+"side": "Banned against them",
+"champion": "Orianna",
+"share": 29.0,
+"rank": 1
+},
+{
+"key": "KC|Banned against them|Jayce",
+"team": "KC",
+"side": "Banned against them",
+"champion": "Jayce",
+"share": 28.0,
+"rank": 2
+},
+{
+"key": "KC|Banned against them|Rumble",
+"team": "KC",
+"side": "Banned against them",
+"champion": "Rumble",
+"share": 24.0,
+"rank": 3
+},
+{
+"key": "KC|Banned against them|Jarvan IV",
+"team": "KC",
+"side": "Banned against them",
+"champion": "Jarvan IV",
+"share": 17.0,
+"rank": 4
+},
+{
+"key": "KC|Banned against them|Varus",
+"team": "KC",
+"side": "Banned against them",
+"champion": "Varus",
+"share": 17.0,
+"rank": 5
+},
+{
+"key": "KC|Banned against them|Vayne",
+"team": "KC",
+"side": "Banned against them",
+"champion": "Vayne",
+"share": 16.0,
+"rank": 6
+},
+{
+"key": "TSW|Banned by them|Rumble",
+"team": "TSW",
+"side": "Banned by them",
+"champion": "Rumble",
+"share": 44.0,
+"rank": 1
+},
+{
+"key": "TSW|Banned by them|Nocturne",
+"team": "TSW",
+"side": "Banned by them",
+"champion": "Nocturne",
+"share": 31.0,
+"rank": 2
+},
+{
+"key": "TSW|Banned by them|Varus",
+"team": "TSW",
+"side": "Banned by them",
+"champion": "Varus",
+"share": 29.0,
+"rank": 3
+},
+{
+"key": "TSW|Banned by them|Pantheon",
+"team": "TSW",
+"side": "Banned by them",
+"champion": "Pantheon",
+"share": 26.0,
+"rank": 4
+},
+{
+"key": "TSW|Banned by them|Cassiopeia",
+"team": "TSW",
+"side": "Banned by them",
+"champion": "Cassiopeia",
+"share": 25.0,
+"rank": 5
+},
+{
+"key": "TSW|Banned by them|Orianna",
+"team": "TSW",
+"side": "Banned by them",
+"champion": "Orianna",
+"share": 18.0,
+"rank": 6
+},
+{
+"key": "TSW|Banned against them|Akali",
+"team": "TSW",
+"side": "Banned against them",
+"champion": "Akali",
+"share": 36.0,
+"rank": 1
+},
+{
+"key": "TSW|Banned against them|Orianna",
+"team": "TSW",
+"side": "Banned against them",
+"champion": "Orianna",
+"share": 24.0,
+"rank": 2
+},
+{
+"key": "TSW|Banned against them|Varus",
+"team": "TSW",
+"side": "Banned against them",
+"champion": "Varus",
+"share": 23.0,
+"rank": 3
+},
+{
+"key": "TSW|Banned against them|Nocturne",
+"team": "TSW",
+"side": "Banned against them",
+"champion": "Nocturne",
+"share": 20.0,
+"rank": 4
+},
+{
+"key": "TSW|Banned against them|Nautilus",
+"team": "TSW",
+"side": "Banned against them",
+"champion": "Nautilus",
+"share": 19.0,
+"rank": 5
+},
+{
+"key": "TSW|Banned against them|Ezreal",
+"team": "TSW",
+"side": "Banned against them",
+"champion": "Ezreal",
+"share": 18.0,
+"rank": 6
+},
+{
+"key": "TLAW|Banned by them|Cassiopeia",
+"team": "TLAW",
+"side": "Banned by them",
+"champion": "Cassiopeia",
+"share": 42.0,
+"rank": 1
+},
+{
+"key": "TLAW|Banned by them|Orianna",
+"team": "TLAW",
+"side": "Banned by them",
+"champion": "Orianna",
+"share": 34.0,
+"rank": 2
+},
+{
+"key": "TLAW|Banned by them|Varus",
+"team": "TLAW",
+"side": "Banned by them",
+"champion": "Varus",
+"share": 26.0,
+"rank": 3
+},
+{
+"key": "TLAW|Banned by them|Nocturne",
+"team": "TLAW",
+"side": "Banned by them",
+"champion": "Nocturne",
+"share": 23.0,
+"rank": 4
+},
+{
+"key": "TLAW|Banned by them|Jayce",
+"team": "TLAW",
+"side": "Banned by them",
+"champion": "Jayce",
+"share": 22.0,
+"rank": 5
+},
+{
+"key": "TLAW|Banned by them|Vi",
+"team": "TLAW",
+"side": "Banned by them",
+"champion": "Vi",
+"share": 21.0,
+"rank": 6
+},
+{
+"key": "TLAW|Banned against them|Lee Sin",
+"team": "TLAW",
+"side": "Banned against them",
+"champion": "Lee Sin",
+"share": 29.0,
+"rank": 1
+},
+{
+"key": "TLAW|Banned against them|Nocturne",
+"team": "TLAW",
+"side": "Banned against them",
+"champion": "Nocturne",
+"share": 25.0,
+"rank": 2
+},
+{
+"key": "TLAW|Banned against them|Karma",
+"team": "TLAW",
+"side": "Banned against them",
+"champion": "Karma",
+"share": 22.0,
+"rank": 3
+},
+{
+"key": "TLAW|Banned against them|Akali",
+"team": "TLAW",
+"side": "Banned against them",
+"champion": "Akali",
+"share": 19.0,
+"rank": 4
+},
+{
+"key": "TLAW|Banned against them|Jayce",
+"team": "TLAW",
+"side": "Banned against them",
+"champion": "Jayce",
+"share": 17.0,
+"rank": 5
+},
+{
+"key": "TLAW|Banned against them|Orianna",
+"team": "TLAW",
+"side": "Banned against them",
+"champion": "Orianna",
+"share": 16.0,
+"rank": 6
+},
+{
+"key": "TES|Banned by them|Orianna",
+"team": "TES",
+"side": "Banned by them",
+"champion": "Orianna",
+"share": 27.0,
+"rank": 1
+},
+{
+"key": "TES|Banned by them|Bard",
+"team": "TES",
+"side": "Banned by them",
+"champion": "Bard",
+"share": 22.0,
+"rank": 2
+},
+{
+"key": "TES|Banned by them|Naafiri",
+"team": "TES",
+"side": "Banned by them",
+"champion": "Naafiri",
+"share": 22.0,
+"rank": 3
+},
+{
+"key": "TES|Banned by them|Neeko",
+"team": "TES",
+"side": "Banned by them",
+"champion": "Neeko",
+"share": 22.0,
+"rank": 4
+},
+{
+"key": "TES|Banned by them|Jayce",
+"team": "TES",
+"side": "Banned by them",
+"champion": "Jayce",
+"share": 21.0,
+"rank": 5
+},
+{
+"key": "TES|Banned by them|Poppy",
+"team": "TES",
+"side": "Banned by them",
+"champion": "Poppy",
+"share": 21.0,
+"rank": 6
+},
+{
+"key": "TES|Banned against them|Orianna",
+"team": "TES",
+"side": "Banned against them",
+"champion": "Orianna",
+"share": 31.0,
+"rank": 1
+},
+{
+"key": "TES|Banned against them|Akali",
+"team": "TES",
+"side": "Banned against them",
+"champion": "Akali",
+"share": 26.0,
+"rank": 2
+},
+{
+"key": "TES|Banned against them|Vi",
+"team": "TES",
+"side": "Banned against them",
+"champion": "Vi",
+"share": 26.0,
+"rank": 3
+},
+{
+"key": "TES|Banned against them|Cassiopeia",
+"team": "TES",
+"side": "Banned against them",
+"champion": "Cassiopeia",
+"share": 25.0,
+"rank": 4
+},
+{
+"key": "TES|Banned against them|Jarvan IV",
+"team": "TES",
+"side": "Banned against them",
+"champion": "Jarvan IV",
+"share": 19.0,
+"rank": 5
+},
+{
+"key": "TES|Banned against them|Karma",
+"team": "TES",
+"side": "Banned against them",
+"champion": "Karma",
+"share": 17.0,
+"rank": 6
+},
+{
+"key": "IG|Banned by them|Vi",
+"team": "IG",
+"side": "Banned by them",
+"champion": "Vi",
+"share": 33.0,
+"rank": 1
+},
+{
+"key": "IG|Banned by them|Orianna",
+"team": "IG",
+"side": "Banned by them",
+"champion": "Orianna",
+"share": 27.0,
+"rank": 2
+},
+{
+"key": "IG|Banned by them|Varus",
+"team": "IG",
+"side": "Banned by them",
+"champion": "Varus",
+"share": 26.0,
+"rank": 3
+},
+{
+"key": "IG|Banned by them|Jarvan IV",
+"team": "IG",
+"side": "Banned by them",
+"champion": "Jarvan IV",
+"share": 23.0,
+"rank": 4
+},
+{
+"key": "IG|Banned by them|Jayce",
+"team": "IG",
+"side": "Banned by them",
+"champion": "Jayce",
+"share": 21.0,
+"rank": 5
+},
+{
+"key": "IG|Banned by them|Nocturne",
+"team": "IG",
+"side": "Banned by them",
+"champion": "Nocturne",
+"share": 19.0,
+"rank": 6
+},
+{
+"key": "IG|Banned against them|Orianna",
+"team": "IG",
+"side": "Banned against them",
+"champion": "Orianna",
+"share": 31.0,
+"rank": 1
+},
+{
+"key": "IG|Banned against them|Nocturne",
+"team": "IG",
+"side": "Banned against them",
+"champion": "Nocturne",
+"share": 27.0,
+"rank": 2
+},
+{
+"key": "IG|Banned against them|Jarvan IV",
+"team": "IG",
+"side": "Banned against them",
+"champion": "Jarvan IV",
+"share": 25.0,
+"rank": 3
+},
+{
+"key": "IG|Banned against them|Cassiopeia",
+"team": "IG",
+"side": "Banned against them",
+"champion": "Cassiopeia",
+"share": 19.0,
+"rank": 4
+},
+{
+"key": "IG|Banned against them|Varus",
+"team": "IG",
+"side": "Banned against them",
+"champion": "Varus",
+"share": 19.0,
+"rank": 5
+},
+{
+"key": "IG|Banned against them|Karma",
+"team": "IG",
+"side": "Banned against them",
+"champion": "Karma",
+"share": 14.0,
+"rank": 6
+},
+{
+"key": "MKOI|Banned by them|Orianna",
+"team": "MKOI",
+"side": "Banned by them",
+"champion": "Orianna",
+"share": 25.0,
+"rank": 1
+},
+{
+"key": "MKOI|Banned by them|Jarvan IV",
+"team": "MKOI",
+"side": "Banned by them",
+"champion": "Jarvan IV",
+"share": 22.0,
+"rank": 2
+},
+{
+"key": "MKOI|Banned by them|Jayce",
+"team": "MKOI",
+"side": "Banned by them",
+"champion": "Jayce",
+"share": 20.0,
+"rank": 3
+},
+{
+"key": "MKOI|Banned by them|Nocturne",
+"team": "MKOI",
+"side": "Banned by them",
+"champion": "Nocturne",
+"share": 17.0,
+"rank": 4
+},
+{
+"key": "MKOI|Banned by them|Bard",
+"team": "MKOI",
+"side": "Banned by them",
+"champion": "Bard",
+"share": 17.0,
+"rank": 5
+},
+{
+"key": "MKOI|Banned by them|Nautilus",
+"team": "MKOI",
+"side": "Banned by them",
+"champion": "Nautilus",
+"share": 16.0,
+"rank": 6
+},
+{
+"key": "MKOI|Banned against them|Orianna",
+"team": "MKOI",
+"side": "Banned against them",
+"champion": "Orianna",
+"share": 28.0,
+"rank": 1
+},
+{
+"key": "MKOI|Banned against them|Akali",
+"team": "MKOI",
+"side": "Banned against them",
+"champion": "Akali",
+"share": 28.0,
+"rank": 2
+},
+{
+"key": "MKOI|Banned against them|Nautilus",
+"team": "MKOI",
+"side": "Banned against them",
+"champion": "Nautilus",
+"share": 28.0,
+"rank": 3
+},
+{
+"key": "MKOI|Banned against them|Nocturne",
+"team": "MKOI",
+"side": "Banned against them",
+"champion": "Nocturne",
+"share": 25.0,
+"rank": 4
+},
+{
+"key": "MKOI|Banned against them|Varus",
+"team": "MKOI",
+"side": "Banned against them",
+"champion": "Varus",
+"share": 25.0,
+"rank": 5
+},
+{
+"key": "MKOI|Banned against them|Vi",
+"team": "MKOI",
+"side": "Banned against them",
+"champion": "Vi",
+"share": 24.0,
+"rank": 6
+},
+{
+"key": "CFO|Banned by them|Nocturne",
+"team": "CFO",
+"side": "Banned by them",
+"champion": "Nocturne",
+"share": 29.0,
+"rank": 1
+},
+{
+"key": "CFO|Banned by them|Ezreal",
+"team": "CFO",
+"side": "Banned by them",
+"champion": "Ezreal",
+"share": 18.0,
+"rank": 2
+},
+{
+"key": "CFO|Banned by them|Akali",
+"team": "CFO",
+"side": "Banned by them",
+"champion": "Akali",
+"share": 17.0,
+"rank": 3
+},
+{
+"key": "CFO|Banned by them|Jarvan IV",
+"team": "CFO",
+"side": "Banned by them",
+"champion": "Jarvan IV",
+"share": 17.0,
+"rank": 4
+},
+{
+"key": "CFO|Banned by them|Lee Sin",
+"team": "CFO",
+"side": "Banned by them",
+"champion": "Lee Sin",
+"share": 17.0,
+"rank": 5
+},
+{
+"key": "CFO|Banned by them|Varus",
+"team": "CFO",
+"side": "Banned by them",
+"champion": "Varus",
+"share": 17.0,
+"rank": 6
+},
+{
+"key": "CFO|Banned against them|Lucian",
+"team": "CFO",
+"side": "Banned against them",
+"champion": "Lucian",
+"share": 28.0,
+"rank": 1
+},
+{
+"key": "CFO|Banned against them|Ezreal",
+"team": "CFO",
+"side": "Banned against them",
+"champion": "Ezreal",
+"share": 23.0,
+"rank": 2
+},
+{
+"key": "CFO|Banned against them|Cassiopeia",
+"team": "CFO",
+"side": "Banned against them",
+"champion": "Cassiopeia",
+"share": 21.0,
+"rank": 3
+},
+{
+"key": "CFO|Banned against them|Orianna",
+"team": "CFO",
+"side": "Banned against them",
+"champion": "Orianna",
+"share": 20.0,
+"rank": 4
+},
+{
+"key": "CFO|Banned against them|Pantheon",
+"team": "CFO",
+"side": "Banned against them",
+"champion": "Pantheon",
+"share": 20.0,
+"rank": 5
+},
+{
+"key": "CFO|Banned against them|Nocturne",
+"team": "CFO",
+"side": "Banned against them",
+"champion": "Nocturne",
+"share": 20.0,
+"rank": 6
+},
+{
+"key": "LOS|Banned by them|Akali",
+"team": "LOS",
+"side": "Banned by them",
+"champion": "Akali",
+"share": 30.0,
+"rank": 1
+},
+{
+"key": "LOS|Banned by them|Jarvan IV",
+"team": "LOS",
+"side": "Banned by them",
+"champion": "Jarvan IV",
+"share": 24.0,
+"rank": 2
+},
+{
+"key": "LOS|Banned by them|Olaf",
+"team": "LOS",
+"side": "Banned by them",
+"champion": "Olaf",
+"share": 23.0,
+"rank": 3
+},
+{
+"key": "LOS|Banned by them|Cassiopeia",
+"team": "LOS",
+"side": "Banned by them",
+"champion": "Cassiopeia",
+"share": 22.0,
+"rank": 4
+},
+{
+"key": "LOS|Banned by them|Karma",
+"team": "LOS",
+"side": "Banned by them",
+"champion": "Karma",
+"share": 18.0,
+"rank": 5
+},
+{
+"key": "LOS|Banned by them|Seraphine",
+"team": "LOS",
+"side": "Banned by them",
+"champion": "Seraphine",
+"share": 18.0,
+"rank": 6
+},
+{
+"key": "LOS|Banned against them|Orianna",
+"team": "LOS",
+"side": "Banned against them",
+"champion": "Orianna",
+"share": 37.0,
+"rank": 1
+},
+{
+"key": "LOS|Banned against them|Varus",
+"team": "LOS",
+"side": "Banned against them",
+"champion": "Varus",
+"share": 33.0,
+"rank": 2
+},
+{
+"key": "LOS|Banned against them|Nocturne",
+"team": "LOS",
+"side": "Banned against them",
+"champion": "Nocturne",
+"share": 31.0,
+"rank": 3
+},
+{
+"key": "LOS|Banned against them|Vayne",
+"team": "LOS",
+"side": "Banned against them",
+"champion": "Vayne",
+"share": 28.0,
+"rank": 4
+},
+{
+"key": "LOS|Banned against them|Jayce",
+"team": "LOS",
+"side": "Banned against them",
+"champion": "Jayce",
+"share": 18.0,
+"rank": 5
+},
+{
+"key": "LOS|Banned against them|Cassiopeia",
+"team": "LOS",
+"side": "Banned against them",
+"champion": "Cassiopeia",
+"share": 18.0,
+"rank": 6
+}
+]

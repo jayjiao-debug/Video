@@ -1,0 +1,688 @@
+[
+{
+"pair": "AL-BLG",
+"team": "AL",
+"opp": "BLG",
+"wins": 8,
+"losses": 18
+},
+{
+"pair": "AL-DK",
+"team": "AL",
+"opp": "DK",
+"wins": 1,
+"losses": 0
+},
+{
+"pair": "AL-G2",
+"team": "AL",
+"opp": "G2",
+"wins": 1,
+"losses": 0
+},
+{
+"pair": "AL-IG",
+"team": "AL",
+"opp": "IG",
+"wins": 14,
+"losses": 4
+},
+{
+"pair": "AL-KC",
+"team": "AL",
+"opp": "KC",
+"wins": 0,
+"losses": 2
+},
+{
+"pair": "AL-TES",
+"team": "AL",
+"opp": "TES",
+"wins": 9,
+"losses": 5
+},
+{
+"pair": "BLG-AL",
+"team": "BLG",
+"opp": "AL",
+"wins": 18,
+"losses": 8
+},
+{
+"pair": "BLG-DK",
+"team": "BLG",
+"opp": "DK",
+"wins": 1,
+"losses": 2
+},
+{
+"pair": "BLG-G2",
+"team": "BLG",
+"opp": "G2",
+"wins": 6,
+"losses": 1
+},
+{
+"pair": "BLG-HLE",
+"team": "BLG",
+"opp": "HLE",
+"wins": 5,
+"losses": 4
+},
+{
+"pair": "BLG-IG",
+"team": "BLG",
+"opp": "IG",
+"wins": 8,
+"losses": 2
+},
+{
+"pair": "BLG-LYON",
+"team": "BLG",
+"opp": "LYON",
+"wins": 3,
+"losses": 0
+},
+{
+"pair": "BLG-MKOI",
+"team": "BLG",
+"opp": "MKOI",
+"wins": 1,
+"losses": 0
+},
+{
+"pair": "BLG-T1",
+"team": "BLG",
+"opp": "T1",
+"wins": 4,
+"losses": 2
+},
+{
+"pair": "BLG-TES",
+"team": "BLG",
+"opp": "TES",
+"wins": 10,
+"losses": 6
+},
+{
+"pair": "CFO-MVK",
+"team": "CFO",
+"opp": "MVK",
+"wins": 13,
+"losses": 9
+},
+{
+"pair": "CFO-TSW",
+"team": "CFO",
+"opp": "TSW",
+"wins": 4,
+"losses": 15
+},
+{
+"pair": "DK-AL",
+"team": "DK",
+"opp": "AL",
+"wins": 0,
+"losses": 1
+},
+{
+"pair": "DK-BLG",
+"team": "DK",
+"opp": "BLG",
+"wins": 2,
+"losses": 1
+},
+{
+"pair": "DK-G2",
+"team": "DK",
+"opp": "G2",
+"wins": 2,
+"losses": 0
+},
+{
+"pair": "DK-GEN",
+"team": "DK",
+"opp": "GEN",
+"wins": 9,
+"losses": 10
+},
+{
+"pair": "DK-HLE",
+"team": "DK",
+"opp": "HLE",
+"wins": 6,
+"losses": 15
+},
+{
+"pair": "DK-KC",
+"team": "DK",
+"opp": "KC",
+"wins": 3,
+"losses": 0
+},
+{
+"pair": "DK-T1",
+"team": "DK",
+"opp": "T1",
+"wins": 11,
+"losses": 21
+},
+{
+"pair": "G2-AL",
+"team": "G2",
+"opp": "AL",
+"wins": 0,
+"losses": 1
+},
+{
+"pair": "G2-BLG",
+"team": "G2",
+"opp": "BLG",
+"wins": 1,
+"losses": 6
+},
+{
+"pair": "G2-DK",
+"team": "G2",
+"opp": "DK",
+"wins": 0,
+"losses": 2
+},
+{
+"pair": "G2-GEN",
+"team": "G2",
+"opp": "GEN",
+"wins": 3,
+"losses": 0
+},
+{
+"pair": "G2-HLE",
+"team": "G2",
+"opp": "HLE",
+"wins": 0,
+"losses": 3
+},
+{
+"pair": "G2-KC",
+"team": "G2",
+"opp": "KC",
+"wins": 20,
+"losses": 9
+},
+{
+"pair": "G2-LYON",
+"team": "G2",
+"opp": "LYON",
+"wins": 0,
+"losses": 3
+},
+{
+"pair": "G2-MKOI",
+"team": "G2",
+"opp": "MKOI",
+"wins": 12,
+"losses": 6
+},
+{
+"pair": "G2-T1",
+"team": "G2",
+"opp": "T1",
+"wins": 3,
+"losses": 1
+},
+{
+"pair": "G2-TES",
+"team": "G2",
+"opp": "TES",
+"wins": 3,
+"losses": 2
+},
+{
+"pair": "G2-TSW",
+"team": "G2",
+"opp": "TSW",
+"wins": 3,
+"losses": 0
+},
+{
+"pair": "GEN-DK",
+"team": "GEN",
+"opp": "DK",
+"wins": 10,
+"losses": 9
+},
+{
+"pair": "GEN-G2",
+"team": "GEN",
+"opp": "G2",
+"wins": 0,
+"losses": 3
+},
+{
+"pair": "GEN-HLE",
+"team": "GEN",
+"opp": "HLE",
+"wins": 16,
+"losses": 12
+},
+{
+"pair": "GEN-KC",
+"team": "GEN",
+"opp": "KC",
+"wins": 1,
+"losses": 0
+},
+{
+"pair": "GEN-LYON",
+"team": "GEN",
+"opp": "LYON",
+"wins": 3,
+"losses": 0
+},
+{
+"pair": "GEN-T1",
+"team": "GEN",
+"opp": "T1",
+"wins": 9,
+"losses": 9
+},
+{
+"pair": "HLE-BLG",
+"team": "HLE",
+"opp": "BLG",
+"wins": 4,
+"losses": 5
+},
+{
+"pair": "HLE-DK",
+"team": "HLE",
+"opp": "DK",
+"wins": 15,
+"losses": 6
+},
+{
+"pair": "HLE-G2",
+"team": "HLE",
+"opp": "G2",
+"wins": 3,
+"losses": 0
+},
+{
+"pair": "HLE-GEN",
+"team": "HLE",
+"opp": "GEN",
+"wins": 12,
+"losses": 16
+},
+{
+"pair": "HLE-LOS",
+"team": "HLE",
+"opp": "LOS",
+"wins": 1,
+"losses": 0
+},
+{
+"pair": "HLE-LYON",
+"team": "HLE",
+"opp": "LYON",
+"wins": 3,
+"losses": 2
+},
+{
+"pair": "HLE-T1",
+"team": "HLE",
+"opp": "T1",
+"wins": 21,
+"losses": 18
+},
+{
+"pair": "HLE-TSW",
+"team": "HLE",
+"opp": "TSW",
+"wins": 3,
+"losses": 0
+},
+{
+"pair": "IG-AL",
+"team": "IG",
+"opp": "AL",
+"wins": 4,
+"losses": 14
+},
+{
+"pair": "IG-BLG",
+"team": "IG",
+"opp": "BLG",
+"wins": 2,
+"losses": 8
+},
+{
+"pair": "IG-TES",
+"team": "IG",
+"opp": "TES",
+"wins": 8,
+"losses": 10
+},
+{
+"pair": "KC-AL",
+"team": "KC",
+"opp": "AL",
+"wins": 2,
+"losses": 0
+},
+{
+"pair": "KC-DK",
+"team": "KC",
+"opp": "DK",
+"wins": 0,
+"losses": 3
+},
+{
+"pair": "KC-G2",
+"team": "KC",
+"opp": "G2",
+"wins": 9,
+"losses": 20
+},
+{
+"pair": "KC-GEN",
+"team": "KC",
+"opp": "GEN",
+"wins": 0,
+"losses": 1
+},
+{
+"pair": "KC-MKOI",
+"team": "KC",
+"opp": "MKOI",
+"wins": 15,
+"losses": 8
+},
+{
+"pair": "KC-MVK",
+"team": "KC",
+"opp": "MVK",
+"wins": 6,
+"losses": 0
+},
+{
+"pair": "KC-T1",
+"team": "KC",
+"opp": "T1",
+"wins": 2,
+"losses": 4
+},
+{
+"pair": "KC-TLAW",
+"team": "KC",
+"opp": "TLAW",
+"wins": 0,
+"losses": 3
+},
+{
+"pair": "KC-TSW",
+"team": "KC",
+"opp": "TSW",
+"wins": 2,
+"losses": 1
+},
+{
+"pair": "LOS-HLE",
+"team": "LOS",
+"opp": "HLE",
+"wins": 0,
+"losses": 1
+},
+{
+"pair": "LOS-LYON",
+"team": "LOS",
+"opp": "LYON",
+"wins": 2,
+"losses": 0
+},
+{
+"pair": "LYON-BLG",
+"team": "LYON",
+"opp": "BLG",
+"wins": 0,
+"losses": 3
+},
+{
+"pair": "LYON-G2",
+"team": "LYON",
+"opp": "G2",
+"wins": 3,
+"losses": 0
+},
+{
+"pair": "LYON-GEN",
+"team": "LYON",
+"opp": "GEN",
+"wins": 0,
+"losses": 3
+},
+{
+"pair": "LYON-HLE",
+"team": "LYON",
+"opp": "HLE",
+"wins": 2,
+"losses": 3
+},
+{
+"pair": "LYON-LOS",
+"team": "LYON",
+"opp": "LOS",
+"wins": 0,
+"losses": 2
+},
+{
+"pair": "LYON-TLAW",
+"team": "LYON",
+"opp": "TLAW",
+"wins": 14,
+"losses": 9
+},
+{
+"pair": "LYON-TSW",
+"team": "LYON",
+"opp": "TSW",
+"wins": 3,
+"losses": 0
+},
+{
+"pair": "MKOI-BLG",
+"team": "MKOI",
+"opp": "BLG",
+"wins": 0,
+"losses": 1
+},
+{
+"pair": "MKOI-G2",
+"team": "MKOI",
+"opp": "G2",
+"wins": 6,
+"losses": 12
+},
+{
+"pair": "MKOI-KC",
+"team": "MKOI",
+"opp": "KC",
+"wins": 8,
+"losses": 15
+},
+{
+"pair": "MVK-CFO",
+"team": "MVK",
+"opp": "CFO",
+"wins": 9,
+"losses": 13
+},
+{
+"pair": "MVK-KC",
+"team": "MVK",
+"opp": "KC",
+"wins": 0,
+"losses": 6
+},
+{
+"pair": "MVK-TSW",
+"team": "MVK",
+"opp": "TSW",
+"wins": 0,
+"losses": 9
+},
+{
+"pair": "T1-BLG",
+"team": "T1",
+"opp": "BLG",
+"wins": 2,
+"losses": 4
+},
+{
+"pair": "T1-DK",
+"team": "T1",
+"opp": "DK",
+"wins": 21,
+"losses": 11
+},
+{
+"pair": "T1-G2",
+"team": "T1",
+"opp": "G2",
+"wins": 1,
+"losses": 3
+},
+{
+"pair": "T1-GEN",
+"team": "T1",
+"opp": "GEN",
+"wins": 9,
+"losses": 9
+},
+{
+"pair": "T1-HLE",
+"team": "T1",
+"opp": "HLE",
+"wins": 18,
+"losses": 21
+},
+{
+"pair": "T1-KC",
+"team": "T1",
+"opp": "KC",
+"wins": 4,
+"losses": 2
+},
+{
+"pair": "T1-TLAW",
+"team": "T1",
+"opp": "TLAW",
+"wins": 7,
+"losses": 0
+},
+{
+"pair": "TES-AL",
+"team": "TES",
+"opp": "AL",
+"wins": 5,
+"losses": 9
+},
+{
+"pair": "TES-BLG",
+"team": "TES",
+"opp": "BLG",
+"wins": 6,
+"losses": 10
+},
+{
+"pair": "TES-G2",
+"team": "TES",
+"opp": "G2",
+"wins": 2,
+"losses": 3
+},
+{
+"pair": "TES-IG",
+"team": "TES",
+"opp": "IG",
+"wins": 10,
+"losses": 8
+},
+{
+"pair": "TES-TSW",
+"team": "TES",
+"opp": "TSW",
+"wins": 1,
+"losses": 3
+},
+{
+"pair": "TLAW-KC",
+"team": "TLAW",
+"opp": "KC",
+"wins": 3,
+"losses": 0
+},
+{
+"pair": "TLAW-LYON",
+"team": "TLAW",
+"opp": "LYON",
+"wins": 9,
+"losses": 14
+},
+{
+"pair": "TLAW-T1",
+"team": "TLAW",
+"opp": "T1",
+"wins": 0,
+"losses": 7
+},
+{
+"pair": "TSW-CFO",
+"team": "TSW",
+"opp": "CFO",
+"wins": 15,
+"losses": 4
+},
+{
+"pair": "TSW-G2",
+"team": "TSW",
+"opp": "G2",
+"wins": 0,
+"losses": 3
+},
+{
+"pair": "TSW-HLE",
+"team": "TSW",
+"opp": "HLE",
+"wins": 0,
+"losses": 3
+},
+{
+"pair": "TSW-KC",
+"team": "TSW",
+"opp": "KC",
+"wins": 1,
+"losses": 2
+},
+{
+"pair": "TSW-LYON",
+"team": "TSW",
+"opp": "LYON",
+"wins": 0,
+"losses": 3
+},
+{
+"pair": "TSW-MVK",
+"team": "TSW",
+"opp": "MVK",
+"wins": 9,
+"losses": 0
+},
+{
+"pair": "TSW-TES",
+"team": "TSW",
+"opp": "TES",
+"wins": 3,
+"losses": 1
+}
+]
