@@ -1,0 +1,62 @@
+[
+  {
+    "source": "https://gol.gg/tournament/ajax.trlist.php",
+    "license": "gol.gg"
+  },
+  {
+    "source": "https://gol.gg/tournament/ajax.trlist.php",
+    "license": "gol.gg"
+  },
+  {
+    "source": "https://gol.gg/tournament/list/",
+    "license": "gol.gg stats page"
+  },
+  {
+    "source": "https://gol.gg/teams/list/season-S16/split-ALL/tournament-ALL/",
+    "license": "gol.gg stats page"
+  },
+  {
+    "source": "https://gol.gg/teams/list/season-S16/split-Summer/tournament-ALL/",
+    "license": "gol.gg stats page"
+  },
+  {
+    "source": "https://gol.gg/champion/list/season-S16/split-ALL/tournament-ALL/",
+    "license": "gol.gg stats page"
+  },
+  {
+    "source": "https://gol.gg/champion/list/season-S16/split-Summer/tournament-ALL/",
+    "license": "gol.gg stats page"
+  },
+  {
+    "source": "https://gol.gg/players/list/season-S16/split-ALL/tournament-ALL/",
+    "license": "gol.gg stats page"
+  },
+  {
+    "source": "https://gol.gg/players/list/season-S16/split-Summer/tournament-ALL/",
+    "license": "gol.gg stats page"
+  },
+  {
+    "source": "https://gol.gg/tournament/tournament-matchlist/Worlds%202026%20Play-In/",
+    "license": "gol.gg stats page"
+  },
+  {
+    "source": "https://gol.gg/tournament/tournament-stats/Worlds%202026%20Play-In/",
+    "license": "gol.gg stats page"
+  },
+  {
+    "source": "https://gol.gg/tournament/tournament-picksandbans/Worlds%202026%20Play-In/",
+    "license": "gol.gg stats page"
+  },
+  {
+    "source": "https://gol.gg/tournament/tournament-ranking/Worlds%202026%20Play-In/",
+    "license": "gol.gg stats page"
+  },
+  {
+    "source": "https://lol.fandom.com/api.php?action=cargoquery&format=json&tables=MatchSchedule%3DMS&fields=MS.OverviewPage%3DPage%2CMS.Team1%2CMS.Team2%2CMS.Winner%2CMS.Team1Score%2CMS.Team2Score%2CMS.BestOf%2CMS.DateTime_UTC%3DDate%2CMS.Round&where=%28MS.OverviewPage+LIKE+%22%25Season+World+Championship%25%22+OR+MS.OverviewPage+LIKE+%22%25Mid-Season+Invitational%25%22%29+AND+MS.DateTime_UTC+%3E%3D+%222017-01-01%22&limit=500&offset=0&order_by=MS.DateTime_UTC",
+    "license": "Leaguepedia CC BY-SA"
+  },
+  {
+    "source": "https://lol.fandom.com/api.php?action=cargoquery&format=json&tables=MatchSchedule%3DMS&fields=MS.OverviewPage%3DPage%2CMS.Team1%2CMS.Team2%2CMS.Winner%2CMS.Team1Score%2CMS.Team2Score%2CMS.BestOf%2CMS.DateTime_UTC%3DDate%2CMS.Round&where=%28MS.OverviewPage+LIKE+%22%25Season+World+Championship%25%22+OR+MS.OverviewPage+LIKE+%22%25Mid-Season+Invitational%25%22%29+AND+MS.DateTime_UTC+%3E%3D+%222017-01-01%22&limit=500&offset=500&order_by=MS.DateTime_UTC",
+    "license": "Leaguepedia CC BY-SA"
+  }
+]
