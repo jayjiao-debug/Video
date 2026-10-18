@@ -14,8 +14,9 @@ import TT from './title29.json';
    a per-frame analysis of the finished soundtrack, so what you see is what you hear. */
 const FPS = 30, W = 1920, H = 1080;
 const T = TM as any;
-const END = T.end[0] as number, P = T.P[0] as number;            // v5: the film clock is the song's clock; the remix card sits at −P…0
-const RB = 6.9542 / 4;                                             // 若如初见 bar (138 bpm)
+const END = T.end[0] as number, P = T.P[0] as number;            // the film clock is the song's clock; the card sits at −P…0
+const RB = T.RB[0] as number;                                      // v7: the song's bar after W (recap, finale)
+const RBC = 6.9542 / 4;                                            // card orbit: one turn per 2·RBC (same formula as the audio)
 const W5 = T.W[0] as number, RDROP = T.rdrop[0] as number, SPL = T.splice[0] as number;
 const OUTRO = SPL + 4.5 * RB + 2.75;                                // QA v5: card while the outro still sounds (~7 s)                                           // v5: 1.3 s of the song breaking apart before the card
 const BEAT = 0.510839, BAR = 4 * BEAT;
@@ -53,7 +54,6 @@ const thBuild = (t: number) => { const [a, b] = T.rot_build; return 2 * Math.PI 
 const amBuild = (t: number) => { const [a, b] = T.rot_build; return cosr((t - a) / (BAR * 0.5)) * (1 - cosr((t - (b - 0.5 - 0.2)) / 0.2)); };
 const thSlow = (t: number) => 2 * Math.PI * (t - g('rot_slow')) / (4 * BAR);
 const thRecap = (t: number) => 2 * Math.PI * (t - (T.recap as number[])[4]) / (2 * RB);
-const thV = (t: number) => 2 * Math.PI * (t - W5) / (4 * RB);
 const ageFc = (t: number) => { const [a, b, c] = T.age; const k = cosr((t - a) / (b - a)) * (1 - cosr((t - c + 0.25) / 0.25)); return Math.exp(Math.log(18000) + (Math.log(2500) - Math.log(18000)) * k); };
 const openK = (t: number) => cosr((t - g('open')) / (g('open', 1) - g('open')));
 // the film's own clock: it holds still in the 0.42 s of silence before the drop
@@ -167,9 +167,9 @@ const Spectrum: React.FC<{t: number; cut?: number; cutO?: number; ghost?: number
 };
 
 // ================================================================== scenes (each takes the film time t)
-// 0 · the card: 若如初见 opens, its voice circling the head (the audio rotates the vocal one turn per two bars)
+// 0 · the card: the song's own intro circling the head (the audio rotates it one turn per 2·RBC), looping into bar 0
 const S0Card: React.FC<{t: number}> = ({t}) => {
-	const to = t + P, th = (2 * Math.PI * Math.max(0, to - 0.15)) / (2 * RB), i = fi(t);
+	const to = t + P, th = (2 * Math.PI * Math.max(0, to - 0.15)) / (2 * RBC), i = fi(t);
 	const ex = sm(lin(t, -0.4, 0.5));                                  // exit: the orbit flattens into the first wave
 	const sx = mix(1, 2.05, ex), sy = 1 - ex;
 	const pos = (a: number) => [960 + Math.sin(a) * 430 * sx, 560 - Math.cos(a) * 170 * sy];
@@ -182,12 +182,11 @@ const S0Card: React.FC<{t: number}> = ({t}) => {
 			{back && trail}
 			<g opacity={1 - r(t, -0.6, -0.25)} transform={`translate(960 560) scale(${1 - 0.5 * r(t, -0.6, -0.25)}) translate(-960 -560)`}><Head x={960} y={560} s={1.05} lo={earLv(LV.L[i])} ro={earLv(LV.R[i])} /></g>
 			{!back && trail}
-			<Lab x={ox} y={oy - 36} t="人声" s={44} c={C.gold} o={1 - ex} />
+			<Lab x={ox} y={oy - 36} t="音乐" s={44} c={C.gold} o={1 - ex} />
 			<g opacity={1 - r(t, -0.45, -0.2)}>
 				<Phones x={531} y={172} s={2.8} />
 				<Lab x={626} y={205} t="戴上耳机，效果最佳" s={92} c={C.gold} w={900} a="start" />
-				<Lab x={960} y={890} t="听：歌声正绕着你的头转" s={52} />
-				<Lab x={70} y={1030} t="♪ 若如初见（remix）" s={40} c={C.dim} a="start" w={500} />
+				<Lab x={960} y={890} t="听：音乐正绕着你的头转" s={52} />
 			</g>
 		</g>
 	);
@@ -550,15 +549,10 @@ const S13Sad: React.FC<{t: number}> = ({t}) => {
 	const [rA, rB] = T.rot_slow, [slA, slB] = T.slow;
 	const slowK = win(t, slA, slB + 1.2, 0.6, 0.8);
 	const rt = (t - rA) - 0.4 * Math.max(0, Math.min(t, slB) - slA);           // rain clock slows during the slow-down
-	const am = cosr((t - rA) / BAR) * (1 - r(t, W5 - 0.4, W5 + 0.9));            // the song's orbit melts into the wash
+	const am = cosr((t - rA) / BAR) * (1 - r(t, RDROP - BAR - 0.2, RDROP - 0.2));  // v7: the song keeps circling, front for the drop
 	const pos = (th: number) => [960 + Math.sin(th) * 420, 520 - Math.cos(th) * 170];
 	const trail: React.ReactNode[] = [];
 	for (let j = 0; j < 80; j++) { const tt = Math.max(rA, t - j * 0.045); const [x, y] = pos(thSlow(tt)); trail.push(<circle key={j} cx={x} cy={y} r={15 - j * 0.15} fill={C.blue} opacity={(1 - j / 80) * am} filter={j < 2 ? 'url(#glow2)' : undefined} />); }
-	// the remix voice: one slow turn across the breakdown, front on the drop (same formula as the audio)
-	const vk = r(t, W5 + 0.3, W5 + 1.3) * (1 - r(t, RDROP - 0.35, RDROP + 0.1));
-	const vtrail: React.ReactNode[] = [];
-	for (let j = 0; j < 70; j++) { const tt = Math.max(W5, t - j * 0.04); const [x, y] = pos(thV(tt)); vtrail.push(<circle key={j} cx={x} cy={y} r={16 - j * 0.18} fill={C.gold} opacity={(1 - j / 70) * vk} filter={j < 2 ? 'url(#glow2)' : undefined} />); }
-	const [vx, vy] = pos(thV(t));
 	const wash = win(t, W5 - 0.6, W5 + 2.6, 0.8, 1.6), rainO = 1 - r(t, W5 - 0.2, W5 + 1.6);
 	const chills = r(t, W5 + 1.0, W5 + 2.0);
 	const inK = r(t, g('rinhale'), RDROP);
@@ -569,15 +563,12 @@ const S13Sad: React.FC<{t: number}> = ({t}) => {
 			{chills > 0 && MOTES.map((p, j) => { const y = H - (((H - p.y) + (t - W5) * p.v) % H); return <circle key={j} cx={p.x + Math.sin(t + p.ph) * 10} cy={y} r={p.r} fill={C.gold} opacity={chills * 0.7 * (1 - inK)} />; })}
 			<rect width={W} height={H} fill="url(#wash)" opacity={0.55 * wash} />
 			{trail}
-			{vtrail}
-			<Lab x={vx} y={vy - 38} t="人声" s={44} c={C.gold} o={vk} />
 			<g transform={`translate(960 520) scale(${1 - 0.18 * inK}) translate(-960 -520)`}>
 				<Head x={960} y={520} s={1.15} l={C.blue} r={C.blue} lo={earLv(LV.L[i])} ro={earLv(LV.R[i])} core={0.55 + 0.45 * inK} />
 			</g>
 			<Labs t={t} y={200} items={[[rA, 116.6, '慢放：更慢、更低', C.blue], [116.66, OB(61) - 0.1, '又慢又低 → 常被听成悲伤', C.blue], [OB(61), 128.6, '难过时，说话也变慢、变低', C.blue], [W5 + 1.0, RDROP - 0.4, '慢慢绕着你转 → 更容易起鸡皮疙瘩', C.gold]]} />
 			<Labs t={t} y={330} s={44} items={[[slA, OB(61) - 0.1, '（现在：再降 2 个半音 · 更慢）', C.blue]]} />
 			<Labs t={t} y={270} s={40} items={[[116.66, 128.6, '研究：Juslin & Laukka 2003', C.dim], [W5 + 1.0, RDROP - 0.4, '研究：Honda 等 2020', C.dim]]} />
-			<Lab x={70} y={1030} t="♪ 若如初见（remix）" s={40} c={C.dim} a="start" w={500} o={win(t, W5 + 0.8, RDROP + 1.5, 0.6, 0.6)} />
 		</g>
 	);
 };
