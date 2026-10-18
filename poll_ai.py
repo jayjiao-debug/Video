@@ -5,7 +5,7 @@ img = (modal.Image.debian_slim(python_version="3.11")
        .env({"HF_HUB_ENABLE_HF_TRANSFER": "1", "HF_HOME": "/cache/hf"}))
 app = modal.App("juno-aipoll")
 vol = modal.Volume.from_name("juno-hf-cache", create_if_missing=True)
-PROMPT = pathlib.Path("aipoll/prompt.txt").read_text()
+PROMPT = '英雄联盟2026全球总决赛（S16）即将开始瑞士轮。以下是截至2026年10月18日的公开信息：\n\n参赛16队（赛区）：GEN、HLE、T1、DK（LCK）；AL、BLG、TES、IG（LPL）；G2、MKOI、KC（LEC）；TL、LYON（LCS）；TSW、CFO（LCP）；LOS（CBLOL）。KC 刚以 3-0 赢得入围赛决赛。\n\n拳头官方全球战力排名（2026-10-18）：HLE 1540，GEN 1519，BLG 1513，G2 1478，T1 1471，LYON 1424，DK 1409，AL 1409，KC 1396，TSW 1370，TL 1369，TES 1364，IG 1348，MKOI 1320，CFO 1316，LOS 1183。\n\n2026年主要结果：First Stand 冠军 BLG（决赛3-1 G2）；MSI 冠军 HLE（决赛3-2 BLG）；电竞世界杯冠军 DK（决赛3-0 KC）；LCK 夏季决赛 GEN 3-1 HLE；LPL 总决赛 AL 3-1 BLG；LEC 冠军 G2；LCS 冠军 TL。T1 是2023、2024、2025三届世界赛冠军。\n\n问题：你认为最有可能夺得2026全球总决赛冠军的前三支队伍是谁（按可能性排序）？\n只输出一行JSON，不要输出其它内容，格式：{"top3":["队伍缩写","队伍缩写","队伍缩写"],"reason":"不超过40字的中文理由"}\n'
 MODELS = [
   ("deepseek-ai/DeepSeek-R1-Distill-Qwen-14B", "DeepSeek", {}),
   ("openai/gpt-oss-20b", "OpenAI", {}),
