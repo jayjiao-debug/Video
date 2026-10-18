@@ -107,6 +107,7 @@ export const Monogram: React.FC<{draw?: number; size?: number; wordmark?: string
 
 /** One small line drawing per episode, drawn on with `p` 0..1. */
 export const Motif: React.FC<{kind: VideoCfg['motif']; p: number; f: number}> = ({kind, p, f}) => {
+	if ((kind as string) === 'none') return null;   // the film draws its own motif (ep30: the pad machine)
 	if (kind === 'cards') {
 		// eleven cards on a red thread; the fifth one is the answer
 		return (
@@ -394,8 +395,9 @@ export const TitleCard: React.FC<{v: VideoCfg; cfg: BrandCfg; dur: number}> = ({
 	);
 };
 
-export const EndCard: React.FC<{v: VideoCfg; cfg: BrandCfg; dur: number}> = ({v, cfg, dur}) => {
-	const f = useCurrentFrame();
+export const EndCard: React.FC<{v: VideoCfg; cfg: BrandCfg; dur: number; speed?: number}> = ({v, cfg, dur: dur0, speed = 1}) => {
+	// speed > 1 plays the whole card faster (ep29: 2.5, the owner wants a ~2 s outro); default 1 = unchanged
+	const f = useCurrentFrame() * speed, dur = dur0 * speed;
 	const bgIn = prog(f, 0, 24, ease.inOut);
 	const black = prog(f, dur - 18, 18, ease.in);
 	return (

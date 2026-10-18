@@ -276,8 +276,9 @@ const S4Spec: React.FC<{t: number}> = ({t}) => {
 };
 // 5 · the stereo stage: subtract the channels and the middle vanishes; then the 8× ratio
 const SRC = [
-	{a: -30, d: 520, n: '', c: C.blue, mid: false}, {a: 30, d: 520, n: '', c: C.blue, mid: false},
-	{a: 0, d: 470, n: '主旋律', c: C.gold, mid: true}, {a: 0, d: 250, n: '鼓·贝斯', c: C.cyan, mid: true},
+	{a: -62, d: 470, n: '和声', c: C.mag, mid: false, quiet: true}, {a: 62, d: 470, n: '混响', c: C.mag, mid: false, quiet: true},   // v9: back, but still and dim
+	{a: -30, d: 520, n: '', c: C.blue, mid: false, quiet: false}, {a: 30, d: 520, n: '', c: C.blue, mid: false, quiet: false},
+	{a: 0, d: 470, n: '主旋律', c: C.gold, mid: true, quiet: false}, {a: 0, d: 250, n: '鼓·贝斯', c: C.cyan, mid: true, quiet: false},
 ];
 const Stage: React.FC<{t: number; gone: number; back?: number; harm?: number; verb?: number; headO?: number}> = ({t, gone, back = 0, harm = 0, verb = 0, headO = 1}) => {
 	const lw = lowAt(t), R = rng(5);
@@ -288,27 +289,15 @@ const Stage: React.FC<{t: number; gone: number; back?: number; harm?: number; ve
 			{SRC.map((s, i) => {
 				const a = (s.a * Math.PI) / 180, x = 960 + Math.sin(a) * s.d, y = 780 - Math.cos(a) * s.d;
 				const side = s.a < 0 ? earLv(LV.L[fi(t)]) : s.a > 0 ? earLv(LV.R[fi(t)]) : 0;
-				const o = s.mid ? 1 - gone : 1, rad = (s.mid ? (s.n === '主旋律' ? 46 : 38) : 26) * (1 + 0.12 * lw + 0.3 * side * (s.mid ? 0 : 1));
+				const o = s.mid ? 1 - gone : 1, rad = (s.mid ? (s.n === '主旋律' ? 46 : 38) : 26) * (1 + 0.12 * lw + (s.quiet ? 0 : 0.3) * side * (s.mid ? 0 : 1));
 				const bits = s.mid && gone > 0.01 ? Array.from({length: 26}, (_, j) => { const b = R() * 6.28 + t * 0.15, d = 20 + gone * (90 + R() * 160 + (t % 6) * 0); return <circle key={j} cx={x + Math.cos(b) * d} cy={y + Math.sin(b) * d} r={2.5} fill={s.c} opacity={(1 - gone) * 0.9 + 0.1} />; }) : null;
 				return (
 					<g key={i}>
 						{bits}
-						<circle cx={x} cy={y} r={rad} fill={s.c} opacity={0.85 * o} filter="url(#glow2)" />
+						<circle cx={x} cy={y} r={rad} fill={s.c} opacity={(s.quiet ? 0.5 : 0.85) * o} filter={s.quiet ? undefined : "url(#glow2)"} />
 						{back > 0 && s.mid && <circle cx={x} cy={y} r={rad + 220 * back} fill="none" stroke={s.c} strokeWidth={6} opacity={(1 - back) * 0.8} />}
 						{back > 0 && s.n === '主旋律' && <Lab x={x} y={y - rad - 92} t="≈ 363 Hz" s={56} c={C.gold} o={win(t, 42.3, 44.9, 0.25, 0.3)} />}
-						{s.n && <Lab x={x} y={y - rad - 22} t={s.n} s={52} c={s.c} o={s.mid ? o : 1} />}
-							{s.n === '和声' && harm > 0.01 && (() => { const ph = beatPh(t), lv = earLv(LV.L[fi(t)]); return (
-								<g opacity={harm}>
-									{[[-86, 16], [0, 60], [86, 16]].map(([dx, dy], j) => { const on = 1 - cl(((((ph * 4 - j) % 4) + 4) % 4) / 1.2); return (
-										<g key={j}><line x1={x} y1={y} x2={x + dx * harm} y2={y + dy * harm} stroke={s.c} strokeWidth={3} opacity={0.5} />
-										<circle cx={x + dx * harm} cy={y + dy * harm} r={19 * (1 + 0.35 * on + 0.3 * lv)} fill={s.c} opacity={0.55 + 0.45 * on} filter="url(#glow)" /></g>); })}
-									<Lab x={x} y={y + 136} t="几个音一起响" s={46} c={s.c} w={800} />
-								</g>); })()}
-							{s.n === '混响' && verb > 0.01 && (() => { const lv = earLv(LV.R[fi(t)]); return (
-								<g>
-									{[0, 1, 2, 3, 4].map((j) => { const q = (((t * 0.7 + j / 5) % 1) + 1) % 1; return <ellipse key={j} cx={x} cy={y} rx={30 + 330 * q} ry={(30 + 330 * q) * 0.8} fill="none" stroke={s.c} strokeWidth={4 - 2 * q} opacity={(1 - q) * 0.75 * verb * (0.5 + 0.5 * lv)} filter="url(#glow)" />; })}
-									<Lab x={x} y={y + 116} t="房间的回声" s={46} c={s.c} w={800} o={cl(verb * 1.6)} />
-								</g>); })()}
+						{s.n && <Lab x={x} y={y - rad - 22} t={s.n} s={s.quiet ? 44 : 52} c={s.c} o={s.mid ? o : s.quiet ? 0.6 : 1} />}
 					</g>
 				);
 			})}
@@ -634,7 +623,7 @@ const SCENES: Sc[] = [
 	[S0Card, -P - 0.1, 0.6, 0, 0.35], [S1Wave, -0.3, 9.65, 0.45, 0.25], [S2Ping, 9.25, 15.85, 0.35, 0.3], [S3Pump, 15.35, 25.1, 0.4, 0.3], [S4Spec, 24.45, 38.12, 0.15, 0.2],
 	[S5Stage, 38.08, 45.3, 0.2, 0.35], [S5Ratio, 44.9, 48.5, 0.01, 0.01], [S6Bin, 48.42, 60.25, 0.2, 0.2], [S7Age, 60.22, 64.8, 0.2, 0.3],
 	[S8Gotcha, 64.5, 70.5, 0.0, 0.3], [S9Prec, 70.15, 75.2, 0.35, 0.2], [S10Combo, 75.16, DROP + 0.9, 0.25, 0.75], [S11Drop, DROP, 87.6, 0, 0.8],
-	[S12Harm, 86.5, 113.58, 0.01, 0.25], [S13Sad, 113.55, OUTRO + 1.3, 0.3, 1.1],
+	[S12Harm, 86.5, 113.58, 0.01, 0.25], [S13Sad, 113.55, OUTRO + 0.5, 0.3, 0.45],
 ];
 export const Film29: React.FC = () => {
 	const t = useCurrentFrame() / FPS - P;
@@ -656,7 +645,7 @@ export const Film29: React.FC = () => {
 				<rect width={W} height={H} fill="url(#vig)" />
 			</svg>
 			{s && t < OUTRO && <div style={{opacity: s.o}}><Sub t={s.txt} /></div>}
-			<Sequence from={Math.round((OUTRO + P) * FPS)}><EndCard v={{id: 'ep29', src: '', title: '为什么好听？', kicker: '', tagline: '', taglineEn: '', motif: 'wave', card: [0, 0], extend: 0, question: '你单曲循环最多的是哪首歌？评论区说说', sources: '来源：NIDCD；SFU Sonic Studio Handbook；Oster 1973；Litovsky 等 1999；Juslin & Laukka 2003；Honda 等 2020；本曲频谱实测', duration: 0} as any} cfg={{videos: []} as any} dur={Math.round((END - OUTRO) * FPS)} /></Sequence>
+			<Sequence from={Math.round((OUTRO + P) * FPS)}><EndCard speed={2.5} v={{id: 'ep29', src: '', title: '为什么好听？', kicker: '', tagline: '', taglineEn: '', motif: 'wave', card: [0, 0], extend: 0, question: '你单曲循环最多的是哪首歌？评论区说说', sources: '来源：NIDCD；SFU Sonic Studio Handbook；Oster 1973；Litovsky 等 1999；Juslin & Laukka 2003；Honda 等 2020；本曲频谱实测', duration: 0} as any} cfg={{videos: []} as any} dur={Math.round((END - OUTRO) * FPS)} /></Sequence>
 			<div style={{position: 'absolute', top: 40, right: 56, opacity: t < OUTRO ? 0.55 : 0, fontFamily: SANS, fontWeight: 500, fontSize: 20, letterSpacing: '0.3em', color: C.ink}}>{JUNO.mark}</div>
 		</AbsoluteFill>
 	);
