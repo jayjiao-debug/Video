@@ -148,7 +148,7 @@ export function state5(T){const P=D.paths;const r1=Object.fromEntries(P.r1.filte
  if(T>=B(42)){sel.D=true;lpl=45.7;blg=35.7;hl='D';}
  return {blg,lpl,sel,hl};}
 export function draw5(c,T){bg(c,'#2c1145','#170926');const st=state5(T);
- T_(c,'如果……会怎样？',90,130,80,'#fff');T_(c,'改一个条件，看夺冠概率怎么变',700,126,44,'rgba(255,255,255,.75)');
+ T_(c,'如果……会怎样？',90,130,80,'#fff');const capT=st.hl==='BC'?'最顺的路：3:0 出线 + 半区不碰 LCK':st.hl==='D'?'另一种可能：GEN、HLE 都没进四强':'改一个条件，看夺冠概率怎么变';T_(c,capT,700,126,st.hl==='BC'||st.hl==='D'?52:44,st.hl==='BC'||st.hl==='D'?GOLD:'rgba(255,255,255,.75)');
  const rows=[['A','第一轮对手（BLG）',C5.rowA.map(x=>x[0]),B(34)],['B','BLG 瑞士轮战绩',C5.rowB.map(x=>x[0]),B(36)],['C','BLG 半区里的 LCK 队',C5.rowC.map(x=>x[0]),B(38)]];
  rows.forEach(([k,lab,opts,t0],i)=>{const y=270+i*230;const on=st.hl&&st.hl.includes(k);const a=T>=t0-.3||st.hl==='BC'?1:.45;
   c.globalAlpha=a*(st.hl==='D'?.2:st.hl==='BC'?(k==='A'?.15:.5):1);T_(c,lab,90,y,52,on?GOLD:'#fff');
@@ -162,7 +162,11 @@ export function draw5(c,T){bg(c,'#2c1145','#170926');const st=state5(T);
   const h=420*cl(v/50);c.fillStyle=col;rr(c,x+40,850-0,340,-0,10);c.fillStyle='rgba(255,255,255,.12)';rr(c,x+40,720,340,40,20);c.fill();c.fillStyle=col;rr(c,x+40,720,Math.max(20,340*cl(v/50)),40,20);c.fill();
   T_(c,'0',x+40,808,30,'rgba(255,255,255,.6)','left',IN);T_(c,'50%',x+380,808,30,'rgba(255,255,255,.6)','right',IN);};
  const big=st.hl==='BC'||st.hl==='D';
- g(1150,'BLG 夺冠',st.blg,'#ff7a8c',st.hl==='B'||st.hl==='C');g(1600,'LPL 夺冠',st.lpl,REGC.LPL,big||st.hl==='A'||!st.hl);
+ g(1150,'BLG 夺冠',st.blg,'#ff7a8c',st.hl==='B'||st.hl==='C');
+ {const t0=st.hl==='D'?B(42):B(40);const sc=big?.9+.1*back(T,t0,.45):1;c.save();c.translate(1810,560);c.scale(sc,sc);c.translate(-1810,-560);
+  if(big){c.shadowColor=REGC.LPL;c.shadowBlur=60;rr(c,1600,240,420,640,40);c.fillStyle='rgba(255,69,96,.28)';c.fill();c.shadowBlur=0;}
+  g(1600,'LPL 夺冠',st.lpl,REGC.LPL,big||st.hl==='A'||!st.hl);c.restore();
+  for(const tt of [B(40),B(42)]){const u=T-tt;if(u>0&&u<.9){c.strokeStyle=`rgba(255,69,96,${1-u/.9})`;c.lineWidth=16*(1-u/.9)+2;c.beginPath();c.arc(1810,560,260+u*900,0,7);c.stroke();}}}
  // cursor
  const clicks=[...C5.rowA.map((x,j)=>[x[1],90+j*220+150,300+76]),...C5.rowB.map((x,j)=>[x[1],90+j*220+150,530+76]),...C5.rowC.map((x,j)=>[x[1],90+j*220+150,760+76])];
  let cx=1000,cy=980,last=-9;for(let i=0;i<clicks.length;i++){const [t,x,y]=clicks[i];const pt=i?clicks[i-1]:[B(33.5),1000,980];const f=sm(t-.32,t-.04,T);if(T>=t-.32){cx=lerp(pt[1],x,eio(f));cy=lerp(pt[2],y,eio(f));}if(T>=t)last=t;}

@@ -139,7 +139,7 @@ window.renderAt=function(T){HT='';
    lab(1810,560,'LPL 夺冠',''+Math.round(D.reg.LPL),'%',{col:REGC.LPL,o,s:back(T,B(20)+BEAT),align:'right'});
    if(dimOthers>0){lab(1810,330,'其中 BLG',''+D.champ.BLG.toFixed(1),'%',{col:'#fff',o:dimOthers*o,s:back(T,B(22)+BEAT),align:'right',size:96});}}}
  // console drop hits
- {const st=P.state5(T);const o=vis(T,B(40),B(44),.25);if(o>0){const big=T<B(42)?34.9:45.7;lab(620,T<B(42)?250:220,T<B(42)?'最顺的路 · LPL 夺冠':'GEN、HLE 四强前出局 · LPL 夺冠',''+Math.round(big),'%',{col:REGC.LPL,o,s:back(T,T<B(42)?B(40):B(42),.4),align:'center',size:220});}}
+ {const st=P.state5(T);const o=0;if(o>0){const big=T<B(42)?34.9:45.7;lab(620,T<B(42)?250:220,T<B(42)?'最顺的路 · LPL 夺冠':'GEN、HLE 四强前出局 · LPL 夺冠',''+Math.round(big),'%',{col:REGC.LPL,o,s:back(T,T<B(42)?B(40):B(42),.4),align:'center',size:220});}}
  // gates: running product
  {const o=vis(T,B(52)+.4,B(56)+.3,.3);if(o>0){const pass=GATE_T;
    const n=pass.filter(t=>T>=t).length;const vals=['60%','× 60%','× 60%'];let s='';for(let i=0;i<3;i++){const on=i<n||(i===0&&T>=B(52)+.6);s+=`<span style="opacity:${on?1:.25};margin:0 10px">${vals[i]}</span>`;}
