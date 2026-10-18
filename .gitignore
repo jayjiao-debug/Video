@@ -38,3 +38,6 @@ episodes/*/review/**/frames/
 episodes/*/review/**/*.jpg
 episodes/*/review/**/*.png
 episodes/*/review/**/*.npy
+
+# ep29 rendered videos and covers stay local (public repo; HD master goes out via deliver-sound)
+episodes/29-sound/out/
