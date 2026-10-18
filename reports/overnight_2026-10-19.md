@@ -42,5 +42,5 @@ paths, a poll of other AIs for their top 3, lots of visualisation and simulation
 - OK on the cut (then I make the Douyin publish package).
 - Optional: real ChatGPT / Gemini / Grok answers to swap into the AI section.
 - Git: everything is committed; backed up on branch `claude/ep23-overnight` (your working branch is 60 behind origin, so I did not merge
-  or force-push). CLAUDE.md is still untracked.
+  or force-push). CLAUDE.md is now committed on that branch too.
 - Re-run after the Round 1 draw is published if you want the exact draw in the film.
