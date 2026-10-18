@@ -64,13 +64,13 @@ export function draw1(c,T){bg(c);
   T_(c,'单局胜率',cx,cy-40,56,'#fff');T_(c,'分差',cx+cw,cy+ch+70,44,'rgba(255,255,255,.75)','right');
   c.strokeStyle='rgba(255,255,255,.22)';c.lineWidth=3;for(let k=0;k<=4;k++){const y=cy+ch*k/4;c.beginPath();c.moveTo(cx,y);c.lineTo(cx+cw,y);c.stroke();}
   T_(c,'100%',cx-14,cy+14,34,'rgba(255,255,255,.7)','right',IN);T_(c,'50%',cx-14,cy+ch/2+12,34,'rgba(255,255,255,.7)','right',IN);T_(c,'0',cx-14,cy+ch+12,34,'rgba(255,255,255,.7)','right',IN);
-  const px=d=>cx+cw*(d+400)/800,py=p=>cy+ch*(1-p);const prog=eo(cl((T-24.9)/1.2));
+  const px=d=>cx+cw*(d+400)/800,py=p=>cy+ch*(1-p);const prog=eo(cl((T-24.85)/1.0));
   c.strokeStyle=GOLD;c.lineWidth=10;c.lineCap='round';c.beginPath();for(let d=-400;d<=-400+800*prog;d+=8){const p=1/(1+Math.pow(10,-d/400));d===-400?c.moveTo(px(d),py(p)):c.lineTo(px(d),py(p));}c.stroke();
   const mk=(t0,a,b)=>{const o=back(T,t0,.3);if(o<=0)return;const d=D.rating[a]-D.rating[b];const p=1/(1+Math.pow(10,-d/400));const x=px(d),y=py(p);
    c.fillStyle='#fff';c.beginPath();c.arc(x,y,16*o,0,7);c.fill();c.save();c.translate(x,y);c.scale(o,o);
    const oy=b==='T1'?230:0;rr(c,-250,-170+oy,500,120,20);c.fillStyle='rgba(20,8,32,.85)';c.fill();c.strokeStyle=REGC[D.region[b]];c.lineWidth=4;c.stroke();
    T_(c,`${a} 对 ${b}`,-225,-97+oy,46,'#fff');T_(c,Math.round(p*100)+'%',225,-92+oy,64,GOLD,'right',IN);c.restore();};
-  mk(B(13)-.0+BEAT*0,'BLG','T1');mk(B(13)+BEAT*2,'BLG','KC');c.globalAlpha=1;}
+  mk(B(12)+BEAT*3,'BLG','T1');mk(B(12)+BEAT*5,'BLG','KC');c.globalAlpha=1;}
 }
 // ---------- P2: one simulated Swiss stage, then the best-of-five knockout
 export function draw2(c,T){bg(c,'#24123d','#150a26');const S=D.swiss;
