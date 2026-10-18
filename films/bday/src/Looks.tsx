@@ -10,11 +10,16 @@ const txt = (g: G, s: string, x: number, y: number, size: number, col: string, o
   g.save(); g.font = `${o.w ?? 900} ${size}px ${o.f ?? SANS}`; g.textAlign = o.a ?? 'center'; g.textBaseline = 'alphabetic'; g.fillStyle = col;
   if (o.sh) { g.shadowColor = 'rgba(0,0,0,.6)'; g.shadowBlur = o.sh; } g.fillText(s, x, y); g.restore();
 };
+let NIGHT = false;
 const sub = (g: G, s: string, dark = true) => {
+  if (NIGHT) { PEND.push(() => { NIGHT = false; sub(g, s, true); NIGHT = true; }); return; }
   g.save(); g.font = `900 74px ${SANS}`; g.textAlign = 'center'; g.lineJoin = 'round';
   g.lineWidth = 12; g.strokeStyle = dark ? '#000' : 'rgba(40,20,10,.95)'; g.strokeText(s, W / 2, H - 64); g.fillStyle = '#fbf7ee'; g.fillText(s, W / 2, H - 64); g.restore();
 };
-const mark = (g: G, col: string) => txt(g, '◆ Juno · VIBE知识大赏', W - 56, 64, 22, col, { w: 500, a: 'right' });
+const PEND: (() => void)[] = [];
+const late = (f: () => void) => { if (NIGHT) PEND.push(f); else f(); };
+const bgInk = () => NIGHT ? '#efe2c6' : INK, bgRed = () => NIGHT ? '#ff8f74' : RED, bgBlue = () => NIGHT ? '#a7c8ea' : BLUE;
+const mark = (g: G, col: string) => NIGHT ? void PEND.push(() => txt(g, '◆ Juno · VIBE知识大赏', W - 56, 64, 22, 'rgba(243,237,226,.45)', { w: 500, a: 'right' })) : txt(g, '◆ Juno · VIBE知识大赏', W - 56, 64, 22, col, { w: 500, a: 'right' });
 const glow = (g: G, x: number, y: number, r: number, col: string, a: number) => { const b = g.createRadialGradient(x, y, 0, x, y, r); b.addColorStop(0, `rgba(${col},${a})`); b.addColorStop(0.4, `rgba(${col},${a * 0.35})`); b.addColorStop(1, `rgba(${col},0)`); g.fillStyle = b; g.fillRect(x - r, y - r, 2 * r, 2 * r); };
 const rrect = (g: G, x: number, y: number, w: number, h: number, r: number) => { g.beginPath(); g.roundRect(x, y, w, h, r); };
 /** a hand-drawn brush ring */
@@ -56,14 +61,14 @@ const hookA = (g: G) => {
   const [ax, ay] = at(18), [bx, by] = at(25);
   brush(g, ax, ay, 66, 62, RED, 9, 4); brush(g, bx, by, 66, 62, BLUE, 9, 9);
   g.save(); g.strokeStyle = 'rgba(43,33,24,.75)'; g.lineWidth = 4; g.setLineDash([10, 10]); g.beginPath(); g.moveTo(ax - 75, ay + 10); g.quadraticCurveTo(ax - 170, (ay + by) / 2, bx - 75, by + 4); g.stroke(); g.restore();
-  txt(g, '差 7 天', ax - 250, (ay + by) / 2 + 30, 40, INK, { f: SERIF });
+  late(() => txt(g, '差 7 天', ax - 250, (ay + by) / 2 + 30, 40, bgInk(), { f: SERIF }));
   const tag = (x: number, y: number, s: string, col: string) => { g.save(); g.translate(x, y); g.rotate(-0.04); g.fillStyle = col; rrect(g, 0, 0, 250, 64, 8); g.fill(); txt(g, s, 125, 44, 32, '#fff6e6', { w: 900 }); g.restore(); };
   tag(110, ay - 60, '公历生日', RED); tag(110, by + 20, '农历 九月十六', BLUE);
   // quiz cards
   const q: [string, string][] = [['A', '12 年'], ['B', '19 年'], ['C', '60 年']];
   q.forEach(([k, v], i) => { const x = 1350, y = 250 + i * 190; g.save(); g.translate(x, y); g.rotate((i - 1) * 0.025); g.shadowColor = 'rgba(70,40,10,.3)'; g.shadowBlur = 24; g.shadowOffsetY = 10; g.fillStyle = '#fbf5e6'; rrect(g, 0, 0, 460, 150, 10); g.fill(); g.shadowColor = 'transparent';
     g.strokeStyle = RED; g.lineWidth = 4; rrect(g, 12, 12, 436, 126, 6); g.stroke(); g.fillStyle = RED; g.beginPath(); g.arc(85, 75, 46, 0, 7); g.fill(); txt(g, k, 85, 96, 58, '#fff3dc', { f: SERIF }); txt(g, v, 290, 102, 76, INK, { f: SERIF }); g.restore(); });
-  txt(g, '多少年后重合？', 1580, 200, 48, INK, { f: SERIF });
+  late(() => txt(g, '多少年后重合？', 1580, 200, 48, bgInk(), { f: SERIF }));
   mark(g, 'rgba(60,40,20,.55)'); sub(g, '猜猜：多少年后它们会重合？', false);
 };
 const volvelle = (g: G, cx: number, cy: number, R: number, dark: boolean) => {
@@ -95,7 +100,7 @@ const counters = (g: G, x: number, y: number, ink: string, sunC: string, moonC: 
   txt(g, '只差 ≈ 2 小时', x, y + 370, 52, sunC, { f, a: 'left' });
   txt(g, '19 × 12 + 7 = 235', x, y + 440, 34, ink, { f, a: 'left', w: 500 });
 };
-const keyA = (g: G) => { paperBg(g); volvelle(g, 660, 500, 400, false); counters(g, 1200, 300, INK, RED, BLUE, SERIF); mark(g, 'rgba(60,40,20,.55)'); sub(g, '所以是19年，补7个闰月', false); };
+const keyA = (g: G) => { paperBg(g); volvelle(g, 660, 500, 400, false); late(() => counters(g, 1200, 300, bgInk(), bgRed(), bgBlue(), SERIF)); mark(g, 'rgba(60,40,20,.55)'); sub(g, '所以是19年，补7个闰月', false); };
 
 /* ================================================================ Look B · 天文仪 (night brass) */
 const nightBg = (g: G) => {
@@ -163,16 +168,44 @@ const keyC = (g: G) => {
   mark(g, 'rgba(28,28,30,.45)'); sub(g, '所以是19年，补7个闰月');
 };
 
+
+/* ================================================================ Look A-night · 台灯下的老日历 */
+const lamp = (g: G, lx: number, ly: number) => {
+  g.save(); g.globalCompositeOperation = 'multiply';
+  const m = g.createRadialGradient(lx, ly, 60, lx, ly, 1250); m.addColorStop(0, '#d2c2a8'); m.addColorStop(0.4, '#6e5c49'); m.addColorStop(1, '#0d0907');
+  g.fillStyle = m; g.fillRect(0, 0, W, H); g.restore();
+  g.save(); g.globalCompositeOperation = 'lighter'; const w = g.createRadialGradient(lx, ly, 0, lx, ly, 700); w.addColorStop(0, 'rgba(255,170,80,.10)'); w.addColorStop(1, 'rgba(255,170,80,0)'); g.fillStyle = w; g.fillRect(0, 0, W, H); g.restore();
+};
+const night = (f: (g: G) => void, lx: number, ly: number) => (g: G) => { NIGHT = true; PEND.length = 0; f(g); lamp(g, lx, ly); const ps = PEND.slice(); PEND.length = 0; ps.forEach((p) => p()); NIGHT = false; };
+const chartA = (g: G) => {
+  paperBg(g);
+  const x0 = 260, y0 = 80, w = 1080, h = 860;
+  g.save(); g.shadowColor = 'rgba(70,40,10,.35)'; g.shadowBlur = 40; g.shadowOffsetY = 18; g.fillStyle = '#fbf5e6'; g.fillRect(x0, y0, w, h); g.restore();
+  txt(g, '农历生日，每年落在哪一天', x0 + 50, y0 + 80, 44, INK, { f: SERIF, a: 'left' });
+  const top = y0 + 140, rowH = 34, sx = (d: number) => x0 + 560 + d * 19;
+  g.strokeStyle = 'rgba(184,38,28,.35)'; g.lineWidth = 3; g.beginPath(); g.moveTo(sx(0), top - 14); g.lineTo(sx(0), top + 19 * rowH + 14); g.stroke();
+  GAP.forEach((d, k) => { const y = top + k * rowH; txt(g, `${k}岁`, x0 + 110, y + 10, 24, 'rgba(43,33,24,.55)', { a: 'right', w: 500 });
+    g.fillStyle = 'rgba(43,33,24,.12)'; g.fillRect(x0 + 130, y, w - 180, 2);
+    g.fillStyle = RED; g.beginPath(); g.arc(sx(0), y + 1, 9, 0, 7); g.fill();
+    g.fillStyle = k === 19 ? RED : BLUE; g.beginPath(); g.arc(sx(d), y + 1, 11, 0, 7); g.fill(); });
+  brush(g, sx(0), top + 19 * rowH, 40, 26, RED, 6, 11);
+  txt(g, '19 岁：又是同一天', sx(0) + 70, top + 19 * rowH + 12, 32, RED, { f: SERIF, a: 'left' });
+  txt(g, '● 公历生日', x0 + 150, y0 + h - 30, 26, RED, { a: 'left', w: 700 }); txt(g, '● 农历生日', x0 + 350, y0 + h - 30, 26, BLUE, { a: 'left', w: 700 });
+  late(() => { txt(g, '每年往前跑 11 天', 1420, 360, 46, bgInk(), { f: SERIF, a: 'left' }); txt(g, '跑够一个月', 1420, 450, 46, bgInk(), { f: SERIF, a: 'left' }); txt(g, '就补一个闰月', 1420, 520, 46, bgRed(), { f: SERIF, a: 'left' }); });
+  mark(g, 'rgba(60,40,20,.55)'); sub(g, '所以农历生日每年往前跑', false);
+};
+
 export const LOOKS: { t: string; draw: (g: G) => void }[] = [
   { t: 'A 老日历 · 开头', draw: hookA }, { t: 'A 老日历 · 19年对齐', draw: keyA },
   { t: 'B 天文仪 · 开头', draw: hookB }, { t: 'B 天文仪 · 19年对齐', draw: keyB },
   { t: 'C 手机日历 · 开头', draw: hookC }, { t: 'C 手机日历 · 19年对齐', draw: keyC },
+  { t: 'A夜 开头', draw: night(hookA, 820, 330) }, { t: 'A夜 往前跑', draw: night(chartA, 760, 380) }, { t: 'A夜 19年对齐', draw: night(keyA, 700, 420) },
 ];
 
 export const Looks: React.FC = () => {
   const f = useCurrentFrame(); const ref = useRef<HTMLCanvasElement>(null);
   const [h] = useState(() => delayRender('fonts')); const [ok, setOk] = useState(false);
-  useEffect(() => { const s = '你有两个生日公历农历猜多少年后它们会重合所以是补个闰月差天九月十六丙午年十月日一二三四五六太阳圈月亮只小时同一天岁每落在哪又马初廿寒露霜降八七十AB C☉☾◆·×=≈Juno VIBE知识大赏0123456789';
+  useEffect(() => { const s = '你有两个生日公历农历猜多少年后它们会重合所以是补个闰月差天九月十六丙午年十月日一二三四五六太阳圈月亮只小时同一天岁每落在哪又马往前跑够就一个初廿寒露霜降八七十AB C☉☾◆·×=≈Juno VIBE知识大赏0123456789';
     Promise.all([`900 74px ${SANS}`, `700 40px ${SANS}`, `500 40px ${SANS}`, `900 80px ${SERIF}`, `700 40px ${SERIF}`].map((x) => document.fonts.load(x, s).catch(() => null))).then(() => { setOk(true); continueRender(h); }); }, [h]);
   useLayoutEffect(() => { if (!ok || !ref.current) return; const g = ref.current.getContext('2d')!; g.clearRect(0, 0, W, H); LOOKS[f].draw(g); }, [f, ok]);
   return <AbsoluteFill style={{ background: '#000' }}><canvas ref={ref} width={W} height={H} /></AbsoluteFill>;
