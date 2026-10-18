@@ -64,13 +64,13 @@ export function draw1(c,T){bg(c);
   T_(c,'单局胜率',cx,cy-40,56,'#fff');T_(c,'分差',cx+cw,cy+ch+70,44,'rgba(255,255,255,.75)','right');
   c.strokeStyle='rgba(255,255,255,.22)';c.lineWidth=3;for(let k=0;k<=4;k++){const y=cy+ch*k/4;c.beginPath();c.moveTo(cx,y);c.lineTo(cx+cw,y);c.stroke();}
   T_(c,'100%',cx-14,cy+14,34,'rgba(255,255,255,.7)','right',IN);T_(c,'50%',cx-14,cy+ch/2+12,34,'rgba(255,255,255,.7)','right',IN);T_(c,'0',cx-14,cy+ch+12,34,'rgba(255,255,255,.7)','right',IN);
-  const px=d=>cx+cw*(d+400)/800,py=p=>cy+ch*(1-p);const prog=eo(cl((T-24.9)/1.2));
+  const px=d=>cx+cw*(d+400)/800,py=p=>cy+ch*(1-p);const prog=eo(cl((T-24.85)/1.0));
   c.strokeStyle=GOLD;c.lineWidth=10;c.lineCap='round';c.beginPath();for(let d=-400;d<=-400+800*prog;d+=8){const p=1/(1+Math.pow(10,-d/400));d===-400?c.moveTo(px(d),py(p)):c.lineTo(px(d),py(p));}c.stroke();
   const mk=(t0,a,b)=>{const o=back(T,t0,.3);if(o<=0)return;const d=D.rating[a]-D.rating[b];const p=1/(1+Math.pow(10,-d/400));const x=px(d),y=py(p);
    c.fillStyle='#fff';c.beginPath();c.arc(x,y,16*o,0,7);c.fill();c.save();c.translate(x,y);c.scale(o,o);
-   rr(c,-250,-170,500,120,20);c.fillStyle='rgba(20,8,32,.85)';c.fill();c.strokeStyle=REGC[D.region[b]];c.lineWidth=4;c.stroke();
-   T_(c,`${a} 对 ${b}`,-225,-97,46,'#fff');T_(c,Math.round(p*100)+'%',225,-92,64,GOLD,'right',IN);c.restore();};
-  mk(B(13)-.0+BEAT*0,'BLG','T1');mk(B(13)+BEAT*2,'BLG','KC');c.globalAlpha=1;}
+   const oy=b==='T1'?230:0;rr(c,-250,-170+oy,500,120,20);c.fillStyle='rgba(20,8,32,.85)';c.fill();c.strokeStyle=REGC[D.region[b]];c.lineWidth=4;c.stroke();
+   T_(c,`${a} 对 ${b}`,-225,-97+oy,46,'#fff');T_(c,Math.round(p*100)+'%',225,-92+oy,64,GOLD,'right',IN);c.restore();};
+  mk(B(12)+BEAT*3,'BLG','T1');mk(B(12)+BEAT*5,'BLG','KC');c.globalAlpha=1;}
 }
 // ---------- P2: one simulated Swiss stage, then the best-of-five knockout
 export function draw2(c,T){bg(c,'#24123d','#150a26');const S=D.swiss;
@@ -148,10 +148,10 @@ export function state5(T){const P=D.paths;const r1=Object.fromEntries(P.r1.filte
  if(T>=B(42)){sel.D=true;lpl=45.7;blg=35.7;hl='D';}
  return {blg,lpl,sel,hl};}
 export function draw5(c,T){bg(c,'#2c1145','#170926');const st=state5(T);
- T_(c,'如果……会怎样？',90,130,80,'#fff');T_(c,'改一个条件，看夺冠概率怎么变',700,126,44,'rgba(255,255,255,.75)');
+ T_(c,'如果……会怎样？',90,130,80,'#fff');const capT=st.hl==='BC'?'最顺的路：3:0 出线 + 半区不碰 LCK':st.hl==='D'?'另一种可能：GEN、HLE 都没进四强':'改一个条件，看夺冠概率怎么变';T_(c,capT,700,126,st.hl==='BC'||st.hl==='D'?52:44,st.hl==='BC'||st.hl==='D'?GOLD:'rgba(255,255,255,.75)');
  const rows=[['A','第一轮对手（BLG）',C5.rowA.map(x=>x[0]),B(34)],['B','BLG 瑞士轮战绩',C5.rowB.map(x=>x[0]),B(36)],['C','BLG 半区里的 LCK 队',C5.rowC.map(x=>x[0]),B(38)]];
  rows.forEach(([k,lab,opts,t0],i)=>{const y=270+i*230;const on=st.hl&&st.hl.includes(k);const a=T>=t0-.3||st.hl==='BC'?1:.45;
-  c.globalAlpha=a*(st.hl==='D'?.35:1);T_(c,lab,90,y,52,on?GOLD:'#fff');
+  c.globalAlpha=a*(st.hl==='D'?.2:st.hl==='BC'?(k==='A'?.15:.5):1);T_(c,lab,90,y,52,on?GOLD:'#fff');
   opts.forEach((o,j)=>{const x=90+j*220,yy=y+30,w=190,h=110;const s=st.sel[k]===o;rr(c,x,yy,w,h,22);c.fillStyle=s?'rgba(255,69,96,.85)':'rgba(255,255,255,.08)';c.fill();c.strokeStyle=s?'#fff':'rgba(255,255,255,.3)';c.lineWidth=s?5:3;c.stroke();
    T_(c,o,x+w/2,yy+76,56,'#fff','center',IN);});c.globalAlpha=1;});
  // row D
@@ -162,7 +162,11 @@ export function draw5(c,T){bg(c,'#2c1145','#170926');const st=state5(T);
   const h=420*cl(v/50);c.fillStyle=col;rr(c,x+40,850-0,340,-0,10);c.fillStyle='rgba(255,255,255,.12)';rr(c,x+40,720,340,40,20);c.fill();c.fillStyle=col;rr(c,x+40,720,Math.max(20,340*cl(v/50)),40,20);c.fill();
   T_(c,'0',x+40,808,30,'rgba(255,255,255,.6)','left',IN);T_(c,'50%',x+380,808,30,'rgba(255,255,255,.6)','right',IN);};
  const big=st.hl==='BC'||st.hl==='D';
- g(1150,'BLG 夺冠',st.blg,'#ff7a8c',st.hl==='B'||st.hl==='C');g(1600,'LPL 夺冠',st.lpl,REGC.LPL,big||st.hl==='A'||!st.hl);
+ g(1150,'BLG 夺冠',st.blg,'#ff7a8c',st.hl==='B'||st.hl==='C');
+ {const t0=st.hl==='D'?B(42):B(40);const sc=big?.9+.1*back(T,t0,.45):1;c.save();c.translate(1810,560);c.scale(sc,sc);c.translate(-1810,-560);
+  if(big){c.shadowColor=REGC.LPL;c.shadowBlur=60;rr(c,1600,240,420,640,40);c.fillStyle='rgba(255,69,96,.28)';c.fill();c.shadowBlur=0;}
+  g(1600,'LPL 夺冠',st.lpl,REGC.LPL,big||st.hl==='A'||!st.hl);c.restore();
+  for(const tt of [B(40),B(42)]){const u=T-tt;if(u>0&&u<.9){c.strokeStyle=`rgba(255,69,96,${1-u/.9})`;c.lineWidth=16*(1-u/.9)+2;c.beginPath();c.arc(1810,560,260+u*900,0,7);c.stroke();}}}
  // cursor
  const clicks=[...C5.rowA.map((x,j)=>[x[1],90+j*220+150,300+76]),...C5.rowB.map((x,j)=>[x[1],90+j*220+150,530+76]),...C5.rowC.map((x,j)=>[x[1],90+j*220+150,760+76])];
  let cx=1000,cy=980,last=-9;for(let i=0;i<clicks.length;i++){const [t,x,y]=clicks[i];const pt=i?clicks[i-1]:[B(33.5),1000,980];const f=sm(t-.32,t-.04,T);if(T>=t-.32){cx=lerp(pt[1],x,eio(f));cy=lerp(pt[2],y,eio(f));}if(T>=t)last=t;}

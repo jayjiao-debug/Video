@@ -38,11 +38,14 @@ the simulator (hook), 16 glass tubes filling with 100,000 simulated champions, a
 | 85.43 | GEN和HLE都没进四强：[46%] | LPL 45.7% | |
 | 89.48 | 我们还问了[6个AI]：谁会夺冠？ | six AI terminals | aipoll (Modal) |
 | 93.53 | 给它们同一份赛季资料 | answers type in | aipoll/prompt.txt |
-| 97.58 | (AI result 1) | first-place tally | |
-| 101.63 | (AI result 2) | | |
+| 97.58 | 最受AI看好：[HLE]，33票拿下[19票] | first-place tally HLE 19 · T1 12 · BLG 2 | aipoll/poll_results.json (33 valid answers of 36) |
+| 101.63 | LPL当第一只有[2票]，都给了BLG | | same |
 | 105.68 | 为什么只有五分之一？ | camera heads for the gates | |
 | 109.73 | 连赢三个BO5，每个六成：[22%] | flies through three gates on beats; 60%×60%×60% ≈ 22% | 0.6³ = 21.6% |
 | 113.78 | 模型不会打比赛，选手会 | 16 team chips ring | |
 | 117.83 | 10月24日凌晨，瑞士轮开打 | | Swiss starts Oct 24 01:00 Beijing (IT之家) |
 | 121.88 | 你觉得谁会夺冠？评论区见 | | |
 | 125.4 | END CARD 五分之一 · 你觉得今年谁会捧杯？ | | |
+
+## Build log
+Rendered on Modal T4 ×14 (≈105 ms/frame, 2–4 min). v1 had camera 'wipes' past screens (luma jumps to 43/frame) → stations spread to (40k, −26k), turns start 0.5 s before the bar. v5/v6 scan: 0 flicker, 0 black/white frames, no jumps >18. Mean luma 58. Collision check: camera ≥6.5 from any screen, ≥11 from tubes, ≥3.3 from gate rings. Mix: s130f untouched (0 difference wherever SFX are silent), 3 pings + 10 console clicks + 3 gate whooshes, −9.9 LUFS. Send version 26.4 MB, 2-pass 1450k.

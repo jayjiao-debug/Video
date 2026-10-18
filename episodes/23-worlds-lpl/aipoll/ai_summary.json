@@ -1,0 +1,121 @@
+{
+ "samples": 6,
+ "total": 33,
+ "models": [
+  {
+   "label": "OpenAI gpt-oss",
+   "lab": "OpenAI",
+   "model": "openai/gpt-oss-20b",
+   "top3": [
+    "HLE",
+    "GEN",
+    "T1"
+   ],
+   "share": 2,
+   "valid": 4,
+   "first": {
+    "HLE": 2,
+    "T1": 1,
+    "BLG": 1
+   },
+   "reason": "全球排名最高，近期大赛夺冠，实力与经验兼备"
+  },
+  {
+   "label": "智谱 GLM-4",
+   "lab": "Zhipu GLM",
+   "model": "zai-org/GLM-4-9B-0414",
+   "top3": [
+    "T1",
+    "BLG",
+    "HLE"
+   ],
+   "share": 6,
+   "valid": 6,
+   "first": {
+    "T1": 6
+   },
+   "reason": "T1三连冠经验，HLEMSI冠军状态，DK世界杯冠军"
+  },
+  {
+   "label": "微软 Phi-4",
+   "lab": "Microsoft",
+   "model": "microsoft/phi-4",
+   "top3": [
+    "HLE",
+    "GEN",
+    "G2"
+   ],
+   "share": 6,
+   "valid": 6,
+   "first": {
+    "HLE": 6
+   },
+   "reason": "HLE MSI冠军，GEN LCK夏季决赛冠军，G2 LEC冠军，表现稳定优异。"
+  },
+  {
+   "label": "DeepSeek-R1 蒸馏版",
+   "lab": "DeepSeek",
+   "model": "deepseek-ai/DeepSeek-R1-Distill-Qwen-14B",
+   "top3": [
+    "HLE",
+    "BLG",
+    "T1"
+   ],
+   "share": 4,
+   "valid": 6,
+   "first": {
+    "HLE": 4,
+    "BLG": 1,
+    "T1": 1
+   },
+   "reason": "HLE MSI冠军，BLG First Stand冠军，T1三连冠底蕴"
+  },
+  {
+   "label": "通义千问 Qwen3",
+   "lab": "Alibaba Qwen",
+   "model": "Qwen/Qwen3-14B",
+   "top3": [
+    "HLE",
+    "GEN",
+    "BLG"
+   ],
+   "share": 6,
+   "valid": 6,
+   "first": {
+    "HLE": 6
+   },
+   "reason": "HLE MSI冠军状态佳，GEN LCK夏季赛夺冠，BLG联赛与First Stand表现强势。"
+  },
+  {
+   "label": "Mistral Small",
+   "lab": "Mistral",
+   "model": "mistralai/Mistral-Small-24B-Instruct-2501",
+   "top3": [
+    "T1",
+    "HLE",
+    "GEN"
+   ],
+   "share": 4,
+   "valid": 5,
+   "first": {
+    "HLE": 1,
+    "T1": 4
+   },
+   "reason": "HLE和T1在2023-2025年表现出色，GEN在2026年LCK表现最佳。"
+  }
+ ],
+ "tally": [
+  [
+   "HLE",
+   19
+  ],
+  [
+   "T1",
+   12
+  ],
+  [
+   "BLG",
+   2
+  ]
+ ]
+}

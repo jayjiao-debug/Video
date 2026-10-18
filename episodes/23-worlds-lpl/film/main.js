@@ -28,16 +28,16 @@ const key=new THREE.DirectionalLight('#ffd2c0',1.4);key.position.set(-40,80,60);
 // ---- floor: glossy stage
 const floor=new THREE.Mesh(new THREE.PlaneGeometry(3000,3000),new THREE.MeshStandardMaterial({color:'#3a2150',roughness:.28,metalness:.55}));floor.rotation.x=-Math.PI/2;S.add(floor);
 // floor light grid (thin emissive lines along the route)
-const ST=[];for(let k=0;k<10;k++)ST.push(new THREE.Vector3(26*k,5.3,-30*k));
-const dir=new THREE.Vector3(26,0,-30).normalize();const side=new THREE.Vector3(-dir.z,0,dir.x);// right-hand side
+const ST=[];for(let k=0;k<10;k++)ST.push(new THREE.Vector3(40*k,5.3,-26*k));
+const dir=new THREE.Vector3(40,0,-26).normalize();const side=new THREE.Vector3(-dir.z,0,dir.x);// right-hand side
 {const g=new THREE.Group();const mat=new THREE.MeshBasicMaterial({color:'#ff6a8a',transparent:true,opacity:.55,fog:true});const mat2=new THREE.MeshBasicMaterial({color:'#6fb0ff',transparent:true,opacity:.55});
- for(const s of [-1,1]){const m=new THREE.Mesh(new THREE.PlaneGeometry(.35,420),s<0?mat:mat2);m.rotation.x=-Math.PI/2;m.rotation.z=-Math.atan2(dir.x,-dir.z);const c=new THREE.Vector3(26*4,0.02,-30*4).addScaledVector(side,s*21);m.position.copy(c);m.position.y=.02;g.add(m);}
+ for(const s of [-1,1]){const m=new THREE.Mesh(new THREE.PlaneGeometry(.35,420),s<0?mat:mat2);m.rotation.x=-Math.PI/2;m.rotation.z=-Math.atan2(dir.x,-dir.z);const c=new THREE.Vector3(40*4,0.02,-26*4).addScaledVector(side,s*24);m.position.copy(c);m.position.y=.02;g.add(m);}
  S.add(g);}
 // light pillars along both sides of the route
 {const geo=new THREE.BoxGeometry(.9,14,.9);const n=70;const red=new THREE.InstancedMesh(geo,new THREE.MeshBasicMaterial({color:new THREE.Color('#ff4560').multiplyScalar(2.2)}),n);const blue=new THREE.InstancedMesh(geo,new THREE.MeshBasicMaterial({color:new THREE.Color('#4f9dff').multiplyScalar(2.2)}),n);
  const m=new THREE.Matrix4();for(let i=0;i<n;i++){const t=-40+i*7;const c=new THREE.Vector3().addScaledVector(dir,t);const hh=.6+.4*H(i,1);
-  m.compose(c.clone().addScaledVector(side,-30).setY(7*hh),new THREE.Quaternion(),new THREE.Vector3(1,hh,1));red.setMatrixAt(i,m);
-  m.compose(c.clone().addScaledVector(side,30).setY(7*hh),new THREE.Quaternion(),new THREE.Vector3(1,hh,1));blue.setMatrixAt(i,m);}
+  m.compose(c.clone().addScaledVector(side,-34).setY(7*hh),new THREE.Quaternion(),new THREE.Vector3(1,hh,1));red.setMatrixAt(i,m);
+  m.compose(c.clone().addScaledVector(side,34).setY(7*hh),new THREE.Quaternion(),new THREE.Vector3(1,hh,1));blue.setMatrixAt(i,m);}
  S.add(red,blue);}
 // ---- panels
 const panels=[];
@@ -71,18 +71,19 @@ const gates=[];{const a=ST[6].clone().add(new THREE.Vector3(0,0,13)),b=ST[8].clo
   S.add(g);gates.push({g,p:p.clone().setY(5.5)});}}
 // ---- camera: one travel direction (forward-right), hold at each station with a slow push-in
 const VIEW=(k,d)=>ST[k].clone().add(new THREE.Vector3(0,.25,d));
-const HOLD=[[0,0,B(10),19,13.6],[1,B(10)+1.4,B(14),15.2,13.4],[2,B(14)+1.4,B(18),15.2,13.4],[3,B(18)+1.5,B(24),23.0,21.0],[4,B(24)+1.4,B(32),15.2,13.2],[5,B(32)+1.4,B(44),15.2,12.8],[6,B(44)+1.4,B(52),15.2,13.2],[8,B(56)+.3,131,15.4,13.4]];
+const HOLD=[[0,0,B(10)-.3,19,13.6],[1,B(10)+1.9,B(14)-.3,15.2,13.4],[2,B(14)+1.9,B(18)-.3,15.2,13.4],[3,B(18)+2.0,B(24)-.3,23.0,21.0],[4,B(24)+1.9,B(32)-.3,15.2,13.2],[5,B(32)+1.9,B(44)-.3,15.2,12.8],[6,B(44)+1.9,B(52)-.3,15.2,13.2],[8,B(56)+.3,131,15.4,13.4]];
 function bez(a,b,c,d,t){const u=1-t;return a.clone().multiplyScalar(u*u*u).addScaledVector(b,3*u*u*t).addScaledVector(c,3*u*t*t).addScaledVector(d,t*t*t);}
 function camAt(T){let pos,look;
  for(let i=0;i<HOLD.length;i++){const [k,ta,tb,d0,d1]=HOLD[i];const n=HOLD[i+1];
-  if(T>=ta&&T<=tb||(i===0&&T<ta)){const f=cl((T-ta)/(tb-ta));pos=VIEW(k,lerp(d0,d1,f));pos.x+=.4*Math.sin(f*Math.PI)*.5;look=ST[k].clone().add(new THREE.Vector3(0,-.15,0));if(k===3)look.y=2.5;if(k===3)pos.y=4.2;break;}
+  if(T>=ta&&T<=tb||(i===0&&T<ta)){const f=cl((T-ta)/(tb-ta));pos=VIEW(k,lerp(d0,d1,f));pos.x+=.4*Math.sin(f*Math.PI)*.5;look=ST[k].clone().add(new THREE.Vector3(0,-.15,0));if(k===3)look.y=2.5;if(k===3)pos.y=4.2;
+   if(n&&k!==6){const l3=ST[n[0]].clone();l3.y-=.15;if(n[0]===3)l3.y=2.5;look.lerp(l3,.62*sm(tb-.5,tb+1.4,T));}break;}
   if(n&&T>tb&&T<n[1]){const [k2,ta2,,d02]=n;const f=eio((T-tb)/(ta2-tb));const p0=VIEW(k,d1),p3=VIEW(k2,d02);if(k===3)p0.y=4.2;if(k2===3)p3.y=4.2;
-   const span=k2-k;const p1=p0.clone().add(new THREE.Vector3(10*span,0,-3*span)),p2=p3.clone().add(new THREE.Vector3(-5*span,0,9*span));
+   const span=k2-k;const p1=p0.clone().add(new THREE.Vector3(12*span,0,-4*span)),p2=p3.clone().add(new THREE.Vector3(-10*span,0,8*span));
    if(k===6){// gate run: straight through the gate centres, each gate passed on a beat
     const g=gates.map(x=>x.p);const fg=GF(T);pos=pathThrough([p0,...g,p3],fg);}else pos=bez(p0,p1,p2,p3,f);
-   const l0=ST[k].clone(),l3=ST[k2].clone();if(k===3)l0.y=2.5;if(k2===3)l3.y=2.5;
-   if(k===6){const fg=GF(T);const ahead=pathThrough([p0,...gates.map(x=>x.p),p3],Math.min(1,fg+.08));look=ahead.clone().add(new THREE.Vector3(0,-.2,0)).lerp(l3,sm(.75,1,f));}
-   else look=l0.clone().lerp(l3,sm(.15,.85,f));break;}}
+   const l0=ST[k].clone(),l3=ST[k2].clone();l0.y-=.15;l3.y-=.15;if(k===3)l0.y=2.5;if(k2===3)l3.y=2.5;
+   if(k===6){const fg=GF(T);const ahead=pathThrough([p0,...gates.map(x=>x.p),p3],Math.min(1,fg+.08)).add(new THREE.Vector3(0,-.2,0));look=l0.clone().lerp(ahead,sm(0,.12,(T-tb)/(ta2-tb))).lerp(l3,sm(.8,1,(T-tb)/(ta2-tb)));}
+   else look=l0.clone().lerp(l3,.62*sm(tb-.5,tb+1.4,T)+.38*sm(.3,.95,f));break;}}
  return {p:pos,l:look};}
 function pathThrough(pts,f){// piecewise linear with smoothed corners, parameter by length
  const L=[0];for(let i=1;i<pts.length;i++)L.push(L[i-1]+pts[i].distanceTo(pts[i-1]));const s=f*L[L.length-1];let i=1;while(i<pts.length-1&&L[i]<s)i++;const u=(s-L[i-1])/(L[i]-L[i-1]);return pts[i-1].clone().lerp(pts[i],u);}
@@ -138,13 +139,13 @@ window.renderAt=function(T){HT='';
    lab(1810,560,'LPL 夺冠',''+Math.round(D.reg.LPL),'%',{col:REGC.LPL,o,s:back(T,B(20)+BEAT),align:'right'});
    if(dimOthers>0){lab(1810,330,'其中 BLG',''+D.champ.BLG.toFixed(1),'%',{col:'#fff',o:dimOthers*o,s:back(T,B(22)+BEAT),align:'right',size:96});}}}
  // console drop hits
- {const st=P.state5(T);const o=vis(T,B(40),B(44),.25);if(o>0){const big=T<B(42)?34.9:45.7;lab(960,170,T<B(42)?'最顺的路 · LPL 夺冠':'GEN、HLE 四强前出局 · LPL 夺冠',''+Math.round(big),'%',{col:REGC.LPL,o,s:back(T,T<B(42)?B(40):B(42),.4),align:'center',size:210});}}
+ {const st=P.state5(T);const o=0;if(o>0){const big=T<B(42)?34.9:45.7;lab(620,T<B(42)?250:220,T<B(42)?'最顺的路 · LPL 夺冠':'GEN、HLE 四强前出局 · LPL 夺冠',''+Math.round(big),'%',{col:REGC.LPL,o,s:back(T,T<B(42)?B(40):B(42),.4),align:'center',size:220});}}
  // gates: running product
  {const o=vis(T,B(52)+.4,B(56)+.3,.3);if(o>0){const pass=GATE_T;
    const n=pass.filter(t=>T>=t).length;const vals=['60%','× 60%','× 60%'];let s='';for(let i=0;i<3;i++){const on=i<n||(i===0&&T>=B(52)+.6);s+=`<span style="opacity:${on?1:.25};margin:0 10px">${vals[i]}</span>`;}
    HT+=`<div class="lab" style="left:960px;top:150px;transform:translate(-50%,0);opacity:${o}"><span class="n" style="font-size:96px">${s}</span></div>`;
    if(T>=pass[2]+.3)lab(960,330,'连赢三个 BO5','≈22','%',{col:REGC.LPL,o,s:back(T,pass[2]+.3,.4),align:'center',size:200});
-   gates.forEach((g,i)=>{const [x,y,z]=pj(g.p.clone().add(new THREE.Vector3(0,2.0,0)));const nx=pass.findIndex(t=>T<t+.1);if(z<1&&i===nx)HT+=`<div class="chip" style="left:${x}px;top:${y}px;font-size:56px;color:${i===2?REGC.LPL:GOLD};opacity:${o}">${['八强','半决赛','决赛'][i]} · 60%</div>`;});}}
+   gates.forEach((g,i)=>{const [x,y,z]=pj(g.p.clone().add(new THREE.Vector3(0,0.9,0)));const nx=pass.findIndex(t=>T<t+.1);if(z<1&&i===nx)HT+=`<div class="chip" style="left:${x}px;top:${y}px;font-size:56px;color:${i===2?REGC.LPL:GOLD};opacity:${o}">${['八强','半决赛','决赛'][i]} · 60%</div>`;});}}
  // title plaque on the bar-8 hit
  {const o=vis(T,B(8),B(10)+.15,.12);if(o>0){const s=back(T,B(8),.45);HT+=`<div class="plaque" style="opacity:${o};transform:translate(-50%,0) scale(${.86+.14*s})"><div class="box"><div class="t"><b>五分之一</b></div><div class="d">LPL 夺冠概率 ≈ ${Math.round(D.reg.LPL)}% · 十万次模拟</div></div></div>`;}}
  $('hud').innerHTML=HT;
