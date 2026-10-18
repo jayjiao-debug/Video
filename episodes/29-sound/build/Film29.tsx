@@ -7,6 +7,7 @@ import lines from './lines29.json';
 import live from './live29.json';
 import spectra from './spectra29.json';
 import TT from './title29.json';
+import MP from './map29.json';
 
 /* ep29 《为什么好听？》 — look "空气粒子场": deep navy space full of glowing air particles; every principle is
    particles moving. Cyan = left ear / low, magenta = right ear / high, gold = the answer.
@@ -46,7 +47,9 @@ const lerpC = (a: string, b: string, k: number) => { const A = hex(a), B = hex(b
 
 // ------------------------------------------------------------------ live data from the soundtrack
 const LV = live as {spec: number[][]; L: number[]; R: number[]; low: number[]};
-const fi = (t: number) => cl(Math.round((t + P) * FPS), 0, LV.L.length - 1);
+// v10: scenes run on their own (old) clocks, but the live data always follows the frame being rendered
+let NOWF = 0;
+const fi = (_t: number) => cl(NOWF, 0, LV.L.length - 1);
 const earLv = (db: number) => cl((db + 44) / 30);
 const lowAt = (t: number) => LV.low[fi(t)];
 
@@ -429,7 +432,7 @@ const S10Combo: React.FC<{t: number}> = ({t}) => {
 			<circle cx={960} cy={470} r={60 + 140 * inK} fill={C.gold} opacity={0.5 * inK * (1 - burst)} filter="url(#soft)" />
 			{rings}
 			<g opacity={headO}>{trail}<Head x={960} y={470} s={0.8} lo={earLv(LV.L[i])} ro={earLv(LV.R[i])} /></g>
-			{[[75.3, '① 永远在上升的音阶', 380], [76.2, '② ＋ 360° 绕头转', 960], [77.4, '③ ＋ 越来越亮、越响', 1540]].map(([a, txt, x], j) => (
+			{[[75.3, '永远在上升的音阶', 380], [76.2, '＋ 360° 绕头转', 960], [77.4, '＋ 越来越亮、越响', 1540]].map(([a, txt, x], j) => (
 				<Lab key={j} x={x as number} y={160} t={txt as string} s={52} c={j === 2 ? C.gold : C.ink} o={r(t, a as number, (a as number) + 0.3) * (1 - r(t, DROP - 0.55, DROP - 0.1))} />
 			))}
 			<Lab x={300} y={330} t="↑ 高处慢慢淡出" s={52} c={C.dim} o={win(t, 75.6, 79.6, 0.4, 0.4)} />
@@ -458,7 +461,8 @@ const Burst: React.FC<{t: number; at: number}> = ({t, at}) => {
    cyan, centre gold, right half magenta — the two ears and the answer), breathe with the kick, ride a gold sound
    wave, and blow back into the air when the title leaves. */
 const TP = (TT as any).pts as number[][];
-const TPX = (() => { const R = rng(41); return TP.map(([x, y]) => { const f = cl((x - 336) / 1248); return {x, y, a: R() * 6.283, d: 760 + R() * 520, s: 2.4 + R() * 1.4, ph: R() * 6.28, c: f < 0.5 ? lerpC(C.cyan, C.gold, f * 2) : lerpC(C.gold, C.mag, (f - 0.5) * 2), ox: (x - 960) / 700, oy: (y - 440) / 300 - 0.6}; }); })();
+const TPX0 = Math.min(...TP.map((q) => q[0])), TPX1 = Math.max(...TP.map((q) => q[0]));
+const TPX = (() => { const R = rng(41); return TP.map(([x, y]) => { const f = cl((x - TPX0) / (TPX1 - TPX0)); return {x, y, a: R() * 6.283, d: 760 + R() * 520, s: 2.4 + R() * 1.4, ph: R() * 6.28, c: f < 0.5 ? lerpC(C.cyan, C.gold, f * 2) : lerpC(C.gold, C.mag, (f - 0.5) * 2), ox: (x - 960) / 700, oy: (y - 440) / 300 - 0.6}; }); })();
 const PTitle: React.FC<{t: number}> = ({t}) => {
 	const u = t - DROP;
 	if (u < 0 || t > 87.6) return null;
@@ -625,30 +629,68 @@ const SCENES: Sc[] = [
 	[S8Gotcha, 64.5, 70.5, 0.0, 0.3], [S9Prec, 70.15, 75.2, 0.35, 0.2], [S10Combo, 75.16, DROP + 0.9, 0.25, 0.75], [S11Drop, DROP, 87.6, 0, 0.8],
 	[S12Harm, 86.5, 113.58, 0.01, 0.25], [S13Sad, 113.55, OUTRO + 0.5, 0.3, 0.45],
 ];
-export const Film29: React.FC = () => {
-	const t = useCurrentFrame() / FPS - P;
-	const s = subAt(t);
-	const dz = t >= RDROP ? RDROP : DROP, j = t >= DROP ? Math.exp(-(t - dz) * 9) * (dz === RDROP ? 0.7 : 1) : 0;
-	const shake = `translate(${Math.sin((t - dz) * 70) * 10 * j} ${Math.cos((t - dz) * 55) * 7 * j})`;
-	const outro = 1 - 0.35 * r(t, OUTRO + 0.3, OUTRO + 1.4);
+// ================================================================== v10 《上头》: the film in its new order
+// question → 一 声音是什么 → 二 大脑在造声音 → 三 大脑爱听什么 (① 比例 ② 像人的声音 ③ 等待) → the drop → the answer.
+// Each scene keeps its own clock: ID (unchanged part), SH (shifted 8.17 s earlier), BLD (the old build, played on the
+// new build and drop), FIN (the sphere finale under the closing lines).
+const M = MP as any;
+const END2 = M.END as number, OUTRO2 = M.OUTRO as number, CH = M.ODROP - M.D1;   // CH: the chorus comes in (new bar 36)
+const oldT = (tn: number) => tn < M.B32 ? tn : tn < M.W2 ? tn + M.D1 : tn < M.D2 ? M.OB36 + ((tn - M.W2) * (M.ODROP - M.OB36)) / (M.D2 - M.W2) : M.ODROP + (tn - M.D2);
+const ID = (tn: number) => tn, SH = (tn: number) => tn + M.D1, FIN = (tn: number) => SPL + 4.5 * RB - 2.6 + (tn - M.FIN0);
+// 三 · the three things the brain loves (appear on the beat; ① lights up when the chorus comes in)
+const TOC: [string, string, number, number][] = [['① 简单的比例', C.cyan, 66.0, 470], ['② 像人的声音', C.blue, 67.4, 960], ['③ 等待', C.gold, 68.8, 1450]];
+const S3Toc: React.FC<{t: number}> = ({t}) => {
+	const pulse = t > CH ? Math.exp(-(t - CH) * 2.2) : 0, focus = r(t, CH, CH + 0.6), i = fi(t);
+	const R = t > CH ? 150 + 1000 * (1 - Math.exp(-(t - CH) * 1.4)) : 0;
 	return (
-		<AbsoluteFill style={{background: `radial-gradient(ellipse at 50% 45%, ${bgAt(t)} 0%, #060914 75%)`}}>
+		<g>
+			{t > CH && <ellipse cx={960} cy={560} rx={R} ry={R * 0.62} fill="none" stroke={C.gold} strokeWidth={14} opacity={0.55 * pulse} filter="url(#glow2)" />}
+			<Head x={960} y={560} s={1.05} lo={earLv(LV.L[i])} ro={earLv(LV.R[i])} core={0.35 + 0.65 * Math.max(pulse, r(t, 63.0, 64.5) * 0.5)} />
+			{TOC.map(([txt, c, at, x], j) => {
+				const o = r(t, at, at + 0.35) * (j === 0 ? 1 : 1 - 0.6 * focus), sc = (0.85 + 0.15 * sm(lin(t, at, at + 0.35))) * (j === 0 ? 1 + 0.2 * focus : 1);
+				return <g key={j} opacity={o} transform={`translate(${x} 270) scale(${sc}) translate(${-x} -270)`}><Lab x={x} y={270} t={txt} s={64} c={c} w={700} /></g>;
+			})}
+		</g>
+	);
+};
+const CHAPS: [number, number, string][] = [[0.3, 33.97, '一 · 声音是什么'], [34.07, 62.9, '二 · 大脑在造声音'], [62.95, CH - 0.05, '三 · 大脑爱听什么'], [CH, 102.92, '三 · ① 简单的比例'], [102.97, M.W2 - 0.05, '三 · ② 像人的声音'], [M.W2, M.D2 - 0.4, '三 · ③ 等待']];
+const Chap: React.FC<{t: number}> = ({t}) => (
+	<g>{CHAPS.map(([a, b, txt], j) => { const o = win(t, a, b, 0.3, 0.3); return o > 0.001 ? <text key={j} x={56} y={78} opacity={0.9 * o} style={{fontFamily: SANS, fontWeight: 700, fontSize: 40, letterSpacing: '0.08em'}} fill={C.gold}>{txt}</text> : null; })}</g>
+);
+type Sc2 = [React.FC<{t: number}>, number, number, number, number, (tn: number) => number];
+const SCENES2: Sc2[] = [
+	[S0Card, -P - 0.1, 0.6, 0, 0.35, ID], [S1Wave, -0.3, 9.65, 0.45, 0.25, ID], [S2Ping, 9.25, 15.85, 0.35, 0.3, ID], [S3Pump, 15.35, 25.1, 0.4, 0.3, ID], [S4Spec, 24.45, 38.12, 0.15, 0.2, ID],
+	[S5Stage, 38.08, 45.3, 0.2, 0.35, ID], [S5Ratio, 44.9, 48.5, 0.01, 0.01, ID], [S6Bin, 48.42, 63.3, 0.2, 0.45, ID],
+	[S3Toc, 62.9, 79.4, 0.45, 0.7, ID],
+	[S12Harm, 78.33, 105.41, 0.01, 0.25, SH], [S13Sad, 105.38, M.W2 + 0.6, 0.3, 0.6, SH],
+	[S10Combo, M.W2 - 0.1, M.D2 + 0.9, 0.5, 0.75, oldT], [S11Drop, M.D2, M.D2 + 4.6, 0, 0.8, oldT],
+	[S15Fin, M.FIN0 - 0.1, OUTRO2 + 0.9, 0.9, 0.5, FIN],
+];
+export const Film29: React.FC = () => {
+	const frame = useCurrentFrame(); NOWF = frame;
+	const tn = frame / FPS - P, to = oldT(tn);
+	const s = subAt(tn);
+	const j = to >= DROP ? Math.exp(-(to - DROP) * 9) : 0;
+	const shake = `translate(${Math.sin((to - DROP) * 70) * 10 * j} ${Math.cos((to - DROP) * 55) * 7 * j})`;
+	const outro = 1 - 0.35 * r(tn, OUTRO2 + 0.3, OUTRO2 + 1.4);
+	return (
+		<AbsoluteFill style={{background: `radial-gradient(ellipse at 50% 45%, ${bgAt(to)} 0%, #060914 75%)`}}>
 			<svg width={W} height={H} style={{position: 'absolute', inset: 0}}>
 				<Defs />
 				<g transform={shake} opacity={outro}>
-					<Air t={t} />
-					{SCENES.map(([S, a, b, fin, fout], i) => { if (t < a || t > b) return null; const o = win(t, a, b, fin, fout); return o > 0.001 ? <g key={i} opacity={o}><S t={t} /></g> : null; })}
-					<PTitle t={t} />
+					<Air t={to} />
+					{SCENES2.map(([S, a, b, fin, fout, mp], i) => { if (tn < a || tn > b) return null; const o = win(tn, a, b, fin, fout); return o > 0.001 ? <g key={i} opacity={o}><S t={mp(tn)} /></g> : null; })}
+					{tn >= M.D2 && tn < M.FIN0 + 0.5 && <g opacity={1 - r(tn, M.FIN0 - 0.35, M.FIN0 + 0.35)}><PTitle t={Math.min(to, 84.95)} /></g>}
 				</g>
-				
-				<Pill t="接下来几段，一定要戴耳机" o={win(t, 45.35, 48.3, 0.35, 0.35)} />
+				<Pill t="接下来几段，一定要戴耳机" o={win(tn, 45.35, 48.3, 0.35, 0.35)} />
 				<rect width={W} height={H} fill="url(#vig)" />
+				<Chap t={tn} />
 			</svg>
-			{s && t < OUTRO && <div style={{opacity: s.o}}><Sub t={s.txt} /></div>}
-			<Sequence from={Math.round((OUTRO + P) * FPS)}><EndCard speed={2.5} v={{id: 'ep29', src: '', title: '为什么好听？', kicker: '', tagline: '', taglineEn: '', motif: 'wave', card: [0, 0], extend: 0, question: '你单曲循环最多的是哪首歌？评论区说说', sources: '来源：NIDCD；SFU Sonic Studio Handbook；Oster 1973；Litovsky 等 1999；Juslin & Laukka 2003；Honda 等 2020；本曲频谱实测', duration: 0} as any} cfg={{videos: []} as any} dur={Math.round((END - OUTRO) * FPS)} /></Sequence>
-			<div style={{position: 'absolute', top: 40, right: 56, opacity: t < OUTRO ? 0.55 : 0, fontFamily: SANS, fontWeight: 500, fontSize: 20, letterSpacing: '0.3em', color: C.ink}}>{JUNO.mark}</div>
+			{s && tn < OUTRO2 && <div style={{opacity: s.o}}><Sub t={s.txt} /></div>}
+			<Sequence from={Math.round((OUTRO2 + P) * FPS)}><EndCard speed={2.5} v={{id: 'ep29', src: '', title: '上头', kicker: '', tagline: '', taglineEn: '', motif: 'wave', card: [0, 0], extend: 0, question: '你单曲循环最多的是哪首歌？评论区说说', sources: '来源：NIDCD；SFU Sonic Studio Handbook；Oster 1973；Juslin & Laukka 2003；Honda 等 2020；Salimpoor 等 2011；本曲频谱实测', duration: 0} as any} cfg={{videos: []} as any} dur={Math.round((END2 - OUTRO2) * FPS)} /></Sequence>
+			<div style={{position: 'absolute', top: 40, right: 56, opacity: tn < OUTRO2 ? 0.55 : 0, fontFamily: SANS, fontWeight: 500, fontSize: 20, letterSpacing: '0.3em', color: C.ink}}>{JUNO.mark}</div>
 		</AbsoluteFill>
 	);
 };
-const Root: React.FC = () => <Composition id="FILM29" component={Film29} durationInFrames={Math.round((END + P) * FPS)} fps={FPS} width={W} height={H} />;
+const Root: React.FC = () => <Composition id="FILM29" component={Film29} durationInFrames={Math.round((END2 + P) * FPS)} fps={FPS} width={W} height={H} />;
 registerRoot(Root);

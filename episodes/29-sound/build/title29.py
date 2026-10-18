@@ -2,8 +2,8 @@
 The ink box is centred (not the advance box), so the trailing full-width ？ sits optically centred."""
 import json, numpy as np
 from PIL import Image, ImageDraw, ImageFont
-F = ImageFont.truetype('/usr/share/fonts/opentype/noto/NotoSansCJK-Black.ttc', 230, index=2)
-im = Image.new('L', (2200, 400), 0); d = ImageDraw.Draw(im); d.text((40, 40), '为什么好听？', font=F, fill=255)
+F = ImageFont.truetype('/usr/share/fonts/opentype/noto/NotoSansCJK-Black.ttc', 300, index=2)
+im = Image.new('L', (1400, 500), 0); d = ImageDraw.Draw(im); d.text((40, 40), '上头', font=F, fill=255)
 a = np.array(im) > 128
 ys, xs = np.nonzero(a); x0, x1, y0, y1 = xs.min(), xs.max(), ys.min(), ys.max()
 cx, cy = (x0 + x1) / 2, (y0 + y1) / 2

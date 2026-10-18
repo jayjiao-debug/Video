@@ -1,7 +1,7 @@
 import React from 'react';
 import {AbsoluteFill, Composition, Img, registerRoot, staticFile} from 'remotion';
 
-/* ep29 《为什么好听？》 covers (owner: "too much text, not strong visual"): the film's own title-drop frame at 1:24.7 —
+/* ep29 《为什么好听？》 covers (owner: "too much text, not strong visual"): the film's own title-drop frame at 2:15.1 (v10 《上头》) —
    the particle title bursting inside the neon sound rings — and nothing else. Its own VIBE知识大赏 line is the series mark. */
 const HERO = 'cover29_hero.png';
 const Cover: React.FC<{layout: 'wide' | 'tall'}> = ({layout}) => {
@@ -13,7 +13,7 @@ const Cover: React.FC<{layout: 'wide' | 'tall'}> = ({layout}) => {
 			</AbsoluteFill>
 		);
 	}
-	const s = 0.75, top = 330;                                     // the title spans ~67…1012 px: inside the 6 % margins
+	const s = 1.0, top = 190;                                      // 《上头》: the title (578 px) fits at full size
 	const fade = 'linear-gradient(180deg, transparent 0%, #000 14%, #000 86%, transparent 100%)';
 	return (
 		<AbsoluteFill style={{background: '#05060d', overflow: 'hidden'}}>
