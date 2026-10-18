@@ -75,14 +75,15 @@ const HOLD=[[0,0,B(10)-.3,19,13.6],[1,B(10)+1.9,B(14)-.3,15.2,13.4],[2,B(14)+1.9
 function bez(a,b,c,d,t){const u=1-t;return a.clone().multiplyScalar(u*u*u).addScaledVector(b,3*u*u*t).addScaledVector(c,3*u*t*t).addScaledVector(d,t*t*t);}
 function camAt(T){let pos,look;
  for(let i=0;i<HOLD.length;i++){const [k,ta,tb,d0,d1]=HOLD[i];const n=HOLD[i+1];
-  if(T>=ta&&T<=tb||(i===0&&T<ta)){const f=cl((T-ta)/(tb-ta));pos=VIEW(k,lerp(d0,d1,f));pos.x+=.4*Math.sin(f*Math.PI)*.5;look=ST[k].clone().add(new THREE.Vector3(0,-.15,0));if(k===3)look.y=2.5;if(k===3)pos.y=4.2;break;}
+  if(T>=ta&&T<=tb||(i===0&&T<ta)){const f=cl((T-ta)/(tb-ta));pos=VIEW(k,lerp(d0,d1,f));pos.x+=.4*Math.sin(f*Math.PI)*.5;look=ST[k].clone().add(new THREE.Vector3(0,-.15,0));if(k===3)look.y=2.5;if(k===3)pos.y=4.2;
+   if(n&&k!==6){const l3=ST[n[0]].clone();l3.y-=.15;if(n[0]===3)l3.y=2.5;look.lerp(l3,.62*sm(tb-.9,tb+1.3,T));}break;}
   if(n&&T>tb&&T<n[1]){const [k2,ta2,,d02]=n;const f=eio((T-tb)/(ta2-tb));const p0=VIEW(k,d1),p3=VIEW(k2,d02);if(k===3)p0.y=4.2;if(k2===3)p3.y=4.2;
    const span=k2-k;const p1=p0.clone().add(new THREE.Vector3(12*span,0,-4*span)),p2=p3.clone().add(new THREE.Vector3(-10*span,0,8*span));
    if(k===6){// gate run: straight through the gate centres, each gate passed on a beat
     const g=gates.map(x=>x.p);const fg=GF(T);pos=pathThrough([p0,...g,p3],fg);}else pos=bez(p0,p1,p2,p3,f);
-   const l0=ST[k].clone(),l3=ST[k2].clone();if(k===3)l0.y=2.5;if(k2===3)l3.y=2.5;
+   const l0=ST[k].clone(),l3=ST[k2].clone();l0.y-=.15;l3.y-=.15;if(k===3)l0.y=2.5;if(k2===3)l3.y=2.5;
    if(k===6){const fg=GF(T);const ahead=pathThrough([p0,...gates.map(x=>x.p),p3],Math.min(1,fg+.08)).add(new THREE.Vector3(0,-.2,0));look=l0.clone().lerp(ahead,sm(0,.12,(T-tb)/(ta2-tb))).lerp(l3,sm(.8,1,(T-tb)/(ta2-tb)));}
-   else look=l0.clone().lerp(l3,sm(.05,.7,f));break;}}
+   else look=l0.clone().lerp(l3,.62*sm(tb-.9,tb+1.3,T)+.38*sm(.3,.95,f));break;}}
  return {p:pos,l:look};}
 function pathThrough(pts,f){// piecewise linear with smoothed corners, parameter by length
  const L=[0];for(let i=1;i<pts.length;i++)L.push(L[i-1]+pts[i].distanceTo(pts[i-1]));const s=f*L[L.length-1];let i=1;while(i<pts.length-1&&L[i]<s)i++;const u=(s-L[i-1])/(L[i]-L[i-1]);return pts[i-1].clone().lerp(pts[i],u);}
