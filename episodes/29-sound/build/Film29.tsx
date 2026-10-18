@@ -17,8 +17,9 @@ const T = TM as any;
 const END = T.end[0] as number, P = T.P[0] as number;            // the film clock is the song's clock; the card sits at −P…0
 const RB = T.RB[0] as number;                                      // v7: the song's bar after W (recap, finale)
 const RBC = 6.9542 / 4;                                            // card orbit: one turn per 2·RBC (same formula as the audio)
-const W5 = T.W[0] as number, RDROP = T.rdrop[0] as number, SPL = T.splice[0] as number;
-const OUTRO = SPL + 4.5 * RB + 2.75;                                // QA v5: card while the outro still sounds (~7 s)                                           // v5: 1.3 s of the song breaking apart before the card
+const W5 = T.W[0] as number;
+const RDROP = END + 60, SPL = END + 60;                           // v8: the film ends after 慢慢绕着你转 (no recap / finale)
+const OUTRO = T.outro[0] as number;                                // v8: end card right after the last line;                                // QA v5: card while the outro still sounds (~7 s)                                           // v5: 1.3 s of the song breaking apart before the card
 const BEAT = 0.510839, BAR = 4 * BEAT;
 const OB = (k: number) => T.bars[String(k)] as number;
 const g = (k: string, i = 0) => T[k][i] as number;
@@ -275,7 +276,6 @@ const S4Spec: React.FC<{t: number}> = ({t}) => {
 };
 // 5 · the stereo stage: subtract the channels and the middle vanishes; then the 8× ratio
 const SRC = [
-	{a: -62, d: 470, n: '和声', c: C.mag, mid: false}, {a: 62, d: 470, n: '混响', c: C.mag, mid: false},
 	{a: -30, d: 520, n: '', c: C.blue, mid: false}, {a: 30, d: 520, n: '', c: C.blue, mid: false},
 	{a: 0, d: 470, n: '主旋律', c: C.gold, mid: true}, {a: 0, d: 250, n: '鼓·贝斯', c: C.cyan, mid: true},
 ];
@@ -549,13 +549,13 @@ const S13Sad: React.FC<{t: number}> = ({t}) => {
 	const [rA, rB] = T.rot_slow, [slA, slB] = T.slow;
 	const slowK = win(t, slA, slB + 1.2, 0.6, 0.8);
 	const rt = (t - rA) - 0.4 * Math.max(0, Math.min(t, slB) - slA);           // rain clock slows during the slow-down
-	const am = cosr((t - rA) / BAR) * (1 - r(t, RDROP - BAR - 0.2, RDROP - 0.2));  // v7: the song keeps circling, front for the drop
+	const am = cosr((t - rA) / BAR) * (1 - r(t, rB - BAR, rB));                  // v8: the circling settles under the end card
 	const pos = (th: number) => [960 + Math.sin(th) * 420, 520 - Math.cos(th) * 170];
 	const trail: React.ReactNode[] = [];
 	for (let j = 0; j < 80; j++) { const tt = Math.max(rA, t - j * 0.045); const [x, y] = pos(thSlow(tt)); trail.push(<circle key={j} cx={x} cy={y} r={15 - j * 0.15} fill={C.blue} opacity={(1 - j / 80) * am} filter={j < 2 ? 'url(#glow2)' : undefined} />); }
 	const wash = win(t, W5 - 0.6, W5 + 2.6, 0.8, 1.6), rainO = 1 - r(t, W5 - 0.2, W5 + 1.6);
 	const chills = r(t, W5 + 1.0, W5 + 2.0);
-	const inK = r(t, g('rinhale'), RDROP);
+	const inK = 0;
 	const i = fi(t);
 	return (
 		<g>
@@ -566,9 +566,9 @@ const S13Sad: React.FC<{t: number}> = ({t}) => {
 			<g transform={`translate(960 520) scale(${1 - 0.18 * inK}) translate(-960 -520)`}>
 				<Head x={960} y={520} s={1.15} l={C.blue} r={C.blue} lo={earLv(LV.L[i])} ro={earLv(LV.R[i])} core={0.55 + 0.45 * inK} />
 			</g>
-			<Labs t={t} y={200} items={[[rA, 116.6, '慢放：更慢、更低', C.blue], [116.66, OB(61) - 0.1, '又慢又低 → 常被听成悲伤', C.blue], [OB(61), 128.6, '难过时，说话也变慢、变低', C.blue], [W5 + 1.0, RDROP - 0.4, '慢慢绕着你转 → 更容易起鸡皮疙瘩', C.gold]]} />
+			<Labs t={t} y={200} items={[[rA, 116.6, '慢放：更慢、更低', C.blue], [116.66, OB(61) - 0.1, '又慢又低 → 常被听成悲伤', C.blue], [OB(61), 128.6, '难过时，说话也变慢、变低', C.blue], [W5 + 1.0, OUTRO, '慢慢绕着你转 → 更容易起鸡皮疙瘩', C.gold]]} />
 			<Labs t={t} y={330} s={44} items={[[slA, OB(61) - 0.1, '（现在：再降 2 个半音 · 更慢）', C.blue]]} />
-			<Labs t={t} y={270} s={40} items={[[116.66, 128.6, '研究：Juslin & Laukka 2003', C.dim], [W5 + 1.0, RDROP - 0.4, '研究：Honda 等 2020', C.dim]]} />
+			<Labs t={t} y={270} s={40} items={[[116.66, 128.6, '研究：Juslin & Laukka 2003', C.dim], [W5 + 1.0, OUTRO, '研究：Honda 等 2020', C.dim]]} />
 		</g>
 	);
 };
@@ -634,7 +634,7 @@ const SCENES: Sc[] = [
 	[S0Card, -P - 0.1, 0.6, 0, 0.35], [S1Wave, -0.3, 9.65, 0.45, 0.25], [S2Ping, 9.25, 15.85, 0.35, 0.3], [S3Pump, 15.35, 25.1, 0.4, 0.3], [S4Spec, 24.45, 38.12, 0.15, 0.2],
 	[S5Stage, 38.08, 45.3, 0.2, 0.35], [S5Ratio, 44.9, 48.5, 0.01, 0.01], [S6Bin, 48.42, 60.25, 0.2, 0.2], [S7Age, 60.22, 64.8, 0.2, 0.3],
 	[S8Gotcha, 64.5, 70.5, 0.0, 0.3], [S9Prec, 70.15, 75.2, 0.35, 0.2], [S10Combo, 75.16, DROP + 0.9, 0.25, 0.75], [S11Drop, DROP, 87.6, 0, 0.8],
-	[S12Harm, 86.5, 113.58, 0.01, 0.25], [S13Sad, 113.55, RDROP, 0.3, 0.12], [S14Recap, RDROP - 0.05, SPL + 0.45, 0.01, 0.4], [S15Fin, SPL - 0.3, END, 0.6, 0],
+	[S12Harm, 86.5, 113.58, 0.01, 0.25], [S13Sad, 113.55, OUTRO + 1.3, 0.3, 1.1],
 ];
 export const Film29: React.FC = () => {
 	const t = useCurrentFrame() / FPS - P;
