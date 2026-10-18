@@ -1,0 +1,193 @@
+url https://gol.gg/teams/list/season-S16/split-ALL/tournament-LPL%202026%20Split%203/
+  saved out/files/t_LPL_2026_Split_3.html 0.7 MB
+url https://gol.gg/champion/list/season-S16/split-ALL/tournament-LPL%202026%20Split%203/
+  saved out/files/c_LPL_2026_Split_3.html 0.7 MB
+url https://gol.gg/tournament/tournament-matchlist/LPL%202026%20Split%203/
+  saved out/files/m_LPL_2026_Split_3.html 0.6 MB
+url https://gol.gg/teams/list/season-S16/split-ALL/tournament-LPL%202026%20Grand%20Finals/
+  saved out/files/t_LPL_2026_Grand_Finals.html 0.7 MB
+url https://gol.gg/champion/list/season-S16/split-ALL/tournament-LPL%202026%20Grand%20Finals/
+  saved out/files/c_LPL_2026_Grand_Finals.html 0.7 MB
+url https://gol.gg/tournament/tournament-matchlist/LPL%202026%20Grand%20Finals/
+  saved out/files/m_LPL_2026_Grand_Finals.html 0.6 MB
+url https://gol.gg/teams/list/season-S16/split-ALL/tournament-LPL%202026%20Regional%20Finals/
+  saved out/files/t_LPL_2026_Regional_Finals.html 0.7 MB
+url https://gol.gg/champion/list/season-S16/split-ALL/tournament-LPL%202026%20Regional%20Finals/
+  saved out/files/c_LPL_2026_Regional_Finals.html 0.7 MB
+url https://gol.gg/tournament/tournament-matchlist/LPL%202026%20Regional%20Finals/
+  saved out/files/m_LPL_2026_Regional_Finals.html 0.6 MB
+url https://gol.gg/teams/list/season-S16/split-ALL/tournament-LPL%202026%20Split%202%20Playoffs/
+  saved out/files/t_LPL_2026_Split_2_Playoffs.html 0.7 MB
+url https://gol.gg/champion/list/season-S16/split-ALL/tournament-LPL%202026%20Split%202%20Playoffs/
+  saved out/files/c_LPL_2026_Split_2_Playoffs.html 0.7 MB
+url https://gol.gg/tournament/tournament-matchlist/LPL%202026%20Split%202%20Playoffs/
+  saved out/files/m_LPL_2026_Split_2_Playoffs.html 0.6 MB
+url https://gol.gg/teams/list/season-S16/split-ALL/tournament-LCK%202026%20Rounds%203-4/
+  saved out/files/t_LCK_2026_Rounds_3-4.html 0.7 MB
+url https://gol.gg/champion/list/season-S16/split-ALL/tournament-LCK%202026%20Rounds%203-4/
+  saved out/files/c_LCK_2026_Rounds_3-4.html 0.7 MB
+url https://gol.gg/tournament/tournament-matchlist/LCK%202026%20Rounds%203-4/
+  saved out/files/m_LCK_2026_Rounds_3-4.html 0.6 MB
+url https://gol.gg/teams/list/season-S16/split-ALL/tournament-LCK%202026%20Season%20Playoffs/
+  saved out/files/t_LCK_2026_Season_Playoffs.html 0.7 MB
+url https://gol.gg/champion/list/season-S16/split-ALL/tournament-LCK%202026%20Season%20Playoffs/
+  saved out/files/c_LCK_2026_Season_Playoffs.html 0.7 MB
+url https://gol.gg/tournament/tournament-matchlist/LCK%202026%20Season%20Playoffs/
+  saved out/files/m_LCK_2026_Season_Playoffs.html 0.6 MB
+url https://gol.gg/teams/list/season-S16/split-ALL/tournament-LCK%202026%20Road%20to%20MSI/
+  saved out/files/t_LCK_2026_Road_to_MSI.html 0.7 MB
+url https://gol.gg/champion/list/season-S16/split-ALL/tournament-LCK%202026%20Road%20to%20MSI/
+  saved out/files/c_LCK_2026_Road_to_MSI.html 0.7 MB
+url https://gol.gg/tournament/tournament-matchlist/LCK%202026%20Road%20to%20MSI/
+  saved out/files/m_LCK_2026_Road_to_MSI.html 0.6 MB
+url https://gol.gg/teams/list/season-S16/split-ALL/tournament-LEC%202026%20Summer%20Season/
+  saved out/files/t_LEC_2026_Summer_Season.html 0.7 MB
+url https://gol.gg/champion/list/season-S16/split-ALL/tournament-LEC%202026%20Summer%20Season/
+  saved out/files/c_LEC_2026_Summer_Season.html 0.7 MB
+url https://gol.gg/tournament/tournament-matchlist/LEC%202026%20Summer%20Season/
+  saved out/files/m_LEC_2026_Summer_Season.html 0.6 MB
+url https://gol.gg/teams/list/season-S16/split-ALL/tournament-LEC%202026%20Summer%20Playoffs/
+  saved out/files/t_LEC_2026_Summer_Playoffs.html 0.7 MB
+url https://gol.gg/champion/list/season-S16/split-ALL/tournament-LEC%202026%20Summer%20Playoffs/
+  saved out/files/c_LEC_2026_Summer_Playoffs.html 0.7 MB
+url https://gol.gg/tournament/tournament-matchlist/LEC%202026%20Summer%20Playoffs/
+  saved out/files/m_LEC_2026_Summer_Playoffs.html 0.6 MB
+url https://gol.gg/teams/list/season-S16/split-ALL/tournament-LCS%202026%20Summer/
+  saved out/files/t_LCS_2026_Summer.html 0.7 MB
+url https://gol.gg/champion/list/season-S16/split-ALL/tournament-LCS%202026%20Summer/
+  saved out/files/c_LCS_2026_Summer.html 0.7 MB
+url https://gol.gg/tournament/tournament-matchlist/LCS%202026%20Summer/
+  saved out/files/m_LCS_2026_Summer.html 0.6 MB
+url https://gol.gg/teams/list/season-S16/split-ALL/tournament-LCS%202026%20Summer%20Playoffs/
+  saved out/files/t_LCS_2026_Summer_Playoffs.html 0.7 MB
+url https://gol.gg/champion/list/season-S16/split-ALL/tournament-LCS%202026%20Summer%20Playoffs/
+  saved out/files/c_LCS_2026_Summer_Playoffs.html 0.7 MB
+url https://gol.gg/tournament/tournament-matchlist/LCS%202026%20Summer%20Playoffs/
+  saved out/files/m_LCS_2026_Summer_Playoffs.html 0.6 MB
+url https://gol.gg/teams/list/season-S16/split-ALL/tournament-LCP%202026%20Split%203/
+  saved out/files/t_LCP_2026_Split_3.html 0.7 MB
+url https://gol.gg/champion/list/season-S16/split-ALL/tournament-LCP%202026%20Split%203/
+  saved out/files/c_LCP_2026_Split_3.html 0.7 MB
+url https://gol.gg/tournament/tournament-matchlist/LCP%202026%20Split%203/
+  saved out/files/m_LCP_2026_Split_3.html 0.6 MB
+url https://gol.gg/teams/list/season-S16/split-ALL/tournament-CBLOL%202026%20Split%202%20Playoffs/
+  saved out/files/t_CBLOL_2026_Split_2_Playoffs.html 0.7 MB
+url https://gol.gg/champion/list/season-S16/split-ALL/tournament-CBLOL%202026%20Split%202%20Playoffs/
+  saved out/files/c_CBLOL_2026_Split_2_Playoffs.html 0.7 MB
+url https://gol.gg/tournament/tournament-matchlist/CBLOL%202026%20Split%202%20Playoffs/
+  saved out/files/m_CBLOL_2026_Split_2_Playoffs.html 0.6 MB
+url https://gol.gg/teams/list/season-S16/split-ALL/tournament-MSI%202026/
+  saved out/files/t_MSI_2026.html 0.7 MB
+url https://gol.gg/champion/list/season-S16/split-ALL/tournament-MSI%202026/
+  saved out/files/c_MSI_2026.html 0.7 MB
+url https://gol.gg/tournament/tournament-matchlist/MSI%202026/
+  saved out/files/m_MSI_2026.html 0.6 MB
+url https://gol.gg/teams/list/season-S16/split-ALL/tournament-2026%20First%20Stand/
+  saved out/files/t_2026_First_Stand.html 0.7 MB
+url https://gol.gg/champion/list/season-S16/split-ALL/tournament-2026%20First%20Stand/
+  saved out/files/c_2026_First_Stand.html 0.7 MB
+url https://gol.gg/tournament/tournament-matchlist/2026%20First%20Stand/
+  saved out/files/m_2026_First_Stand.html 0.6 MB
+url https://gol.gg/teams/list/season-S16/split-ALL/tournament-Esports%20World%20Cup%202026/
+  saved out/files/t_Esports_World_Cup_2026.html 0.7 MB
+url https://gol.gg/champion/list/season-S16/split-ALL/tournament-Esports%20World%20Cup%202026/
+  saved out/files/c_Esports_World_Cup_2026.html 0.7 MB
+url https://gol.gg/tournament/tournament-matchlist/Esports%20World%20Cup%202026/
+  saved out/files/m_Esports_World_Cup_2026.html 0.6 MB
+url https://gol.gg/teams/list/season-S16/split-ALL/tournament-Demacia%20Cup%20Global%20Invitational%202026/
+  saved out/files/t_Demacia_Cup_Global_Invitational_2026.html 0.7 MB
+url https://gol.gg/champion/list/season-S16/split-ALL/tournament-Demacia%20Cup%20Global%20Invitational%202026/
+  saved out/files/c_Demacia_Cup_Global_Invitational_2026.html 0.7 MB
+url https://gol.gg/tournament/tournament-matchlist/Demacia%20Cup%20Global%20Invitational%202026/
+  saved out/files/m_Demacia_Cup_Global_Invitational_2026.html 0.6 MB
+url https://gol.gg/teams/list/season-S16/split-ALL/tournament-Worlds%202026%20Play-In/
+  saved out/files/t_Worlds_2026_Play-In.html 0.7 MB
+url https://gol.gg/champion/list/season-S16/split-ALL/tournament-Worlds%202026%20Play-In/
+  saved out/files/c_Worlds_2026_Play-In.html 0.7 MB
+url https://gol.gg/tournament/tournament-matchlist/Worlds%202026%20Play-In/
+  saved out/files/m_Worlds_2026_Play-In.html 0.6 MB
+url https://gol.gg/tournament/tournament-matchlist/Worlds%202025%20Main%20Event/
+  saved out/files/m_Worlds_2025_Main_Event.html 0.6 MB
+url https://gol.gg/champion/list/season-S15/split-ALL/tournament-Worlds%202025%20Main%20Event/
+  saved out/files/c_Worlds_2025_Main_Event.html 0.7 MB
+url https://gol.gg/tournament/tournament-matchlist/2025%20Mid-Season%20Invitational/
+  saved out/files/m_2025_Mid-Season_Invitational.html 0.6 MB
+url https://gol.gg/champion/list/season-S15/split-ALL/tournament-2025%20Mid-Season%20Invitational/
+  saved out/files/c_2025_Mid-Season_Invitational.html 0.7 MB
+url https://gol.gg/tournament/tournament-matchlist/Esports%20World%20Cup%202025/
+  saved out/files/m_Esports_World_Cup_2025.html 0.6 MB
+url https://gol.gg/champion/list/season-S15/split-ALL/tournament-Esports%20World%20Cup%202025/
+  saved out/files/c_Esports_World_Cup_2025.html 0.7 MB
+url https://gol.gg/tournament/tournament-matchlist/First%20Stand%202025/
+  saved out/files/m_First_Stand_2025.html 0.6 MB
+url https://gol.gg/champion/list/season-S15/split-ALL/tournament-First%20Stand%202025/
+  saved out/files/c_First_Stand_2025.html 0.7 MB
+url https://gol.gg/teams/team-stats/2804/split-ALL/tournament-ALL/
+  saved out/files/team_GEN.html 0.7 MB
+url https://gol.gg/teams/team-matchlist/2804/split-ALL/tournament-ALL/
+  saved out/files/tml_GEN.html 0.7 MB
+url https://gol.gg/teams/team-stats/2848/split-ALL/tournament-ALL/
+  saved out/files/team_AL.html 0.6 MB
+url https://gol.gg/teams/team-matchlist/2848/split-ALL/tournament-ALL/
+  saved out/files/tml_AL.html 0.7 MB
+url https://gol.gg/teams/team-stats/2813/split-ALL/tournament-ALL/
+  saved out/files/team_TL.html 0.6 MB
+url https://gol.gg/teams/team-matchlist/2813/split-ALL/tournament-ALL/
+  saved out/files/tml_TL.html 0.7 MB
+url https://gol.gg/teams/team-stats/2897/split-ALL/tournament-ALL/
+  saved out/files/team_G2.html 0.6 MB
+url https://gol.gg/teams/team-matchlist/2897/split-ALL/tournament-ALL/
+  saved out/files/tml_G2.html 0.7 MB
+url https://gol.gg/teams/team-stats/2895/split-ALL/tournament-ALL/
+  saved out/files/team_LOS.html 0.6 MB
+url https://gol.gg/teams/team-matchlist/2895/split-ALL/tournament-ALL/
+  saved out/files/tml_LOS.html 0.7 MB
+url https://gol.gg/teams/team-stats/2887/split-ALL/tournament-ALL/
+  saved out/files/team_TSW.html 0.6 MB
+url https://gol.gg/teams/team-matchlist/2887/split-ALL/tournament-ALL/
+  saved out/files/tml_TSW.html 0.7 MB
+url https://gol.gg/teams/team-stats/2805/split-ALL/tournament-ALL/
+  saved out/files/team_HLE.html 0.7 MB
+url https://gol.gg/teams/team-matchlist/2805/split-ALL/tournament-ALL/
+  saved out/files/tml_HLE.html 0.7 MB
+url https://gol.gg/teams/team-stats/2849/split-ALL/tournament-ALL/
+  saved out/files/team_BLG.html 0.6 MB
+url https://gol.gg/teams/team-matchlist/2849/split-ALL/tournament-ALL/
+  saved out/files/tml_BLG.html 0.7 MB
+url https://gol.gg/teams/team-stats/2954/split-ALL/tournament-ALL/
+  saved out/files/team_LYON.html 0.6 MB
+url https://gol.gg/teams/team-matchlist/2954/split-ALL/tournament-ALL/
+  saved out/files/tml_LYON.html 0.7 MB
+url https://gol.gg/teams/team-stats/2900/split-ALL/tournament-ALL/
+  saved out/files/team_MKOI.html 0.6 MB
+url https://gol.gg/teams/team-matchlist/2900/split-ALL/tournament-ALL/
+  saved out/files/tml_MKOI.html 0.7 MB
+url https://gol.gg/teams/team-stats/2809/split-ALL/tournament-ALL/
+  saved out/files/team_T1.html 0.7 MB
+url https://gol.gg/teams/team-matchlist/2809/split-ALL/tournament-ALL/
+  saved out/files/tml_T1.html 0.7 MB
+url https://gol.gg/teams/team-stats/2852/split-ALL/tournament-ALL/
+  saved out/files/team_TES.html 0.7 MB
+url https://gol.gg/teams/team-matchlist/2852/split-ALL/tournament-ALL/
+  saved out/files/tml_TES.html 0.7 MB
+url https://gol.gg/teams/team-stats/2880/split-ALL/tournament-ALL/
+  saved out/files/team_CFO.html 0.6 MB
+url https://gol.gg/teams/team-matchlist/2880/split-ALL/tournament-ALL/
+  saved out/files/tml_CFO.html 0.7 MB
+url https://gol.gg/teams/team-stats/2850/split-ALL/tournament-ALL/
+  saved out/files/team_IG.html 0.7 MB
+url https://gol.gg/teams/team-matchlist/2850/split-ALL/tournament-ALL/
+  saved out/files/tml_IG.html 0.7 MB
+url https://gol.gg/teams/team-stats/2802/split-ALL/tournament-ALL/
+  saved out/files/team_DK.html 0.7 MB
+url https://gol.gg/teams/team-matchlist/2802/split-ALL/tournament-ALL/
+  saved out/files/tml_DK.html 0.7 MB
+url https://gol.gg/teams/team-stats/2899/split-ALL/tournament-ALL/
+  saved out/files/team_KC.html 0.6 MB
+url https://gol.gg/teams/team-matchlist/2899/split-ALL/tournament-ALL/
+  saved out/files/tml_KC.html 0.7 MB
+url https://gol.gg/teams/team-stats/2886/split-ALL/tournament-ALL/
+  saved out/files/team_MVK.html 0.7 MB
+url https://gol.gg/teams/team-matchlist/2886/split-ALL/tournament-ALL/
+  saved out/files/tml_MVK.html 0.7 MB
+done
