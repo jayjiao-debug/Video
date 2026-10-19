@@ -42,6 +42,9 @@
 | R10 | Crunches don't burn belly fat | ✓ | Vispute et al. 2012, *JSCR*: 24 sedentary adults, 7 ab exercises 2×10, 5 days/week for 6 weeks: no change in abdominal fat (only endurance improved) [14] |
 | R11 | Sleep decides what you lose | ✓ (small study) | Nedeltcheva et al. 2010, *Ann Intern Med*: 10 overweight adults, 2 × 14 days of the same diet, 8.5 h vs 5.5 h in bed. Weight loss was the same (~3 kg), but fat lost was 1.4 vs 0.6 kg (−55%) and fat-free mass lost 1.5 vs 2.4 kg (+60%) [15] |
 | R12 | Beginners (and even trained people) can lose fat and gain muscle at once | ✓ | Body-recomposition review, *Strength Cond J* 2020; 42(5): 7–21 [16] |
+| R13 | Muscle is about 38% of body mass in men, 31% in women | ✓ | Janssen et al. 2000, *J Appl Physiol* (MRI, 468 adults aged 18–88): 38.4% men / 30.6% women; relative mass declines from the 3rd decade, absolute loss noticeable by the end of the 5th [17] |
+| R14 | One workout raises muscle protein synthesis for about 1–1.5 days | ✓ | MacDougall et al. 1995 (6 men, arm curls): +50% at 4 h and +109% at 24 h (cited from earlier work), back within 14% of control by 36 h [18] |
+| R15 | Early soreness and damage ≠ growth | ✓ | Damas et al. 2016, *J Physiol* (10 men, 10 weeks): early synthesis goes to repairing damage; fibre size grew only by week 10; synthesis correlated with growth (r ≈ 0.9) only once damage had faded (weeks 3 and 10) [19] |
 | R7 | 孙's "start young" | ✓ | Follows from R1: muscle built before the decline is the "deposit". |
 
 ## Script corrections needed (script.md v1)
@@ -67,3 +70,6 @@
 [14] https://nutrition-evidence.com/article/161088/the-effect-of-abdominal-exercise-on-abdominal-fat
 [15] https://pmc.ncbi.nlm.nih.gov/articles/PMC2951287/
 [16] https://lida.sport-iat.de/ta/Record/4066252?lng=en
+[17] https://bioblast.at/index.php/Janssen_2000_J_Appl_Physiol
+[18] https://experts.mcmaster.ca/scholarly-works/239498
+[19] https://experts.mcmaster.ca/scholarly-works/61717
