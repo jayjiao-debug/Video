@@ -31,7 +31,7 @@ const beatHit = (t: number, k0: number, k1: number) => { if (t < bt(k0) || t > b
 const Lab: React.FC<{x: number; y: number; t: string; s?: number; c?: string; a?: 'start' | 'middle' | 'end'; o?: number; w?: number; ls?: number}> = ({x, y, t, s = 52, c = C.ink, a = 'middle', o = 1, w = 800, ls = 0.02}) =>
 	o > 0.001 ? <text x={x} y={y} textAnchor={a} opacity={o} style={{fontFamily: SANS, fontWeight: w, fontSize: s, letterSpacing: `${ls}em`}} fill={c}>{t}</text> : null;
 
-// ------------------------------------------------------------------ the face (identity-free, friendly)
+// ------------------------------------------------------------------ the face: the Face ID glyph as a raised dot relief (owner pick, round 3 — not a human face)
 const PTS = (FACE as any).pts as number[][];
 type Pr = {x: number; y: number; z: number; d: number; tag: number};
 const project = (cx: number, cy: number, s: number, th: number, flat = 0): Pr[] => {
@@ -223,10 +223,7 @@ const S3D: React.FC<{t: number}> = ({t}) => {
 				<Lab x={1380} y={200} t="没有深度 → 拒绝" s={52} c={C.red} o={deny * (1 - eyes)} />
 			</g>
 			<g opacity={eyes * (1 - r(t, 60.3, 60.6))}>
-				{[-0.29, 0.29].map((e) => { const ex = faceX + e * 290, ey = 490 - 0.21 * 290, h = 11 * ease(t, 57.9, 0.35); return <g key={e}>
-					<circle cx={ex} cy={ey} r={38} fill="none" stroke={C.yl} strokeWidth={3} />
-					<path d={`M${ex - 24} ${ey} Q${ex} ${ey - 2 * h} ${ex + 24} ${ey} Q${ex} ${ey + 1.4 * h} ${ex - 24} ${ey} Z`} fill="#06102a" stroke="#e6fdff" strokeWidth={2} />
-					<circle cx={ex} cy={ey - 0.2 * h} r={0.7 * h} fill={C.cy} /></g>; })}
+				{[-0.25, 0.25].map((e) => <circle key={e} cx={faceX + e * 290} cy={490 - 0.21 * 290} r={44} fill="none" stroke={C.yl} strokeWidth={3} />)}
 				<Lab x={1380} y={200} t="睁眼 · 看着它" s={52} c={C.yl} />
 			</g>
 			<g opacity={r(t, 60.3, 60.5)}>
