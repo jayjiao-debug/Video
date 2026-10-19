@@ -1,0 +1,1 @@
+Douyin covers (4:3 1440x1080, 3:4 1080x1440). Background: official WORLDS 26 logo image supplied by the owner (worlds26.webp, Riot Games; not committed). Put it next to cover.html, symlink node_modules, run: node shot.mjs
