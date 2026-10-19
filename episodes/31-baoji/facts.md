@@ -37,6 +37,11 @@
 | R4 | 薄肌 is the natural, achievable level; 厚肌 has a ceiling | ✓ | Kouri et al. 1995 (157 men): no drug-free lifter exceeded FFMI 25 [11]. |
 | R5 | 薄肌 → confidence / control | ~ partly | Exercise does improve mood and self-efficacy (a large literature; check a specific meta-analysis before putting this on screen). But "control" is a feeling, not a measured outcome of 薄肌 in particular. |
 | R6 | 薄肌 → success, wealth, women | ✗ no evidence | No study supports the causal chain. Critics' point: it reverses cause and effect, since successful people can afford time and trainers [6]. Any "positive habit" can be dressed up the same way (the critic's own parody: 「薄书理论」). |
+| R8 | Volume: every muscle about 10+ hard sets a week | ✓ | Schoenfeld, Ogborn & Krieger 2017, *J Sports Sci* (meta-regression): growth rises roughly linearly with weekly sets; 10+ beat 5–9, which beat <5 [12] |
+| R9 | Light weights work if taken near failure | ✓ | Schoenfeld et al. 2017 meta-analysis (summarised in Grgic & Schoenfeld 2018): low load (≤60% 1RM) to failure gives similar whole-muscle growth to high load; not to failure, high load is better [13] |
+| R10 | Crunches don't burn belly fat | ✓ | Vispute et al. 2012, *JSCR*: 24 sedentary adults, 7 ab exercises 2×10, 5 days/week for 6 weeks: no change in abdominal fat (only endurance improved) [14] |
+| R11 | Sleep decides what you lose | ✓ (small study) | Nedeltcheva et al. 2010, *Ann Intern Med*: 10 overweight adults, 2 × 14 days of the same diet, 8.5 h vs 5.5 h in bed. Weight loss was the same (~3 kg), but fat lost was 1.4 vs 0.6 kg (−55%) and fat-free mass lost 1.5 vs 2.4 kg (+60%) [15] |
+| R12 | Beginners (and even trained people) can lose fat and gain muscle at once | ✓ | Body-recomposition review, *Strength Cond J* 2020; 42(5): 7–21 [16] |
 | R7 | 孙's "start young" | ✓ | Follows from R1: muscle built before the decline is the "deposit". |
 
 ## Script corrections needed (script.md v1)
@@ -57,3 +62,8 @@
 [9] https://blogs.nejm.org/cardioexchange/2015/05/13/get-a-grip-global-study-finds-grip-strength-is-a-simple-and-powerful-predictor-of-death
 [10] https://www.nutraingredients.com/Article/2018/02/13/Claims-protein-supplementation-adds-whey-more-muscle-disputed (paper: doi 10.1136/bjsports-2017-097608)
 [11] https://bodyrecomposition.com/?p=14620 (Kouri et al. 1995, Clin J Sport Med)
+[12] https://www.strongerbyscience.com/?p=56687
+[13] https://www.frontiersin.org/journals/physiology/articles/10.3389/fphys.2018.00402/pdf
+[14] https://nutrition-evidence.com/article/161088/the-effect-of-abdominal-exercise-on-abdominal-fat
+[15] https://pmc.ncbi.nlm.nih.gov/articles/PMC2951287/
+[16] https://lida.sport-iat.de/ta/Record/4066252?lng=en
