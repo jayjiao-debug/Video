@@ -8,20 +8,21 @@ def smile(x, y, cy, curve, wdt, thick, a):
     yc = cy + curve * x ** 2
     return a * np.exp(-((y - yc) / thick) ** 2) * np.exp(-(x / wdt) ** 6)
 def height(x, y):
-    # a friendly, round head: rounder outline, full cheeks, small nose, a gentle smile
-    w = 0.88 + 0.04 * np.clip(y, -1, 1)
-    r = (x / w) ** 2 + (y / 1.12) ** 2
+    # a calm, identity-free sculpted face: oval head, eyes closed, a soft neutral mouth (premium, not cartoon, not staring)
+    w = 0.80 + 0.06 * np.clip(y, -1, 1)
+    r = (x / w) ** 2 + (y / 1.15) ** 2
     base = np.sqrt(np.clip(1 - r, 0, 1)) * 0.50
     z = base.copy()
-    z += g(x, y, 0, -0.05, 0.075, 0.22, 0.10)                         # a short, soft nose bridge
-    z += g(x, y, 0, -0.14, 0.11, 0.09, 0.16)                          # a round nose tip
-    z -= g(x, y, -0.31, 0.24, 0.12, 0.10, 0.10) + g(x, y, 0.31, 0.24, 0.12, 0.10, 0.10)   # shallow eye hollows
-    z += g(x, y, -0.31, 0.24, 0.075, 0.07, 0.09) + g(x, y, 0.31, 0.24, 0.075, 0.07, 0.09) # round eyes
-    z += g(x, y, -0.31, 0.43, 0.15, 0.035, 0.04) + g(x, y, 0.31, 0.43, 0.15, 0.035, 0.04) # soft brows
-    z += g(x, y, -0.45, -0.22, 0.20, 0.18, 0.11) + g(x, y, 0.45, -0.22, 0.20, 0.18, 0.11) # apple cheeks
-    z += smile(x, y, -0.50, 0.55, 0.30, 0.045, 0.06)                  # smiling lips
-    z -= smile(x, y, -0.52, 0.55, 0.28, 0.018, 0.035)                 # the smile line
-    z += g(x, y, 0, -0.86, 0.22, 0.10, 0.05)                          # chin
+    z += g(x, y, 0, 0.02, 0.06, 0.30, 0.09)                           # a slim nose bridge
+    z += g(x, y, 0, -0.17, 0.09, 0.08, 0.12)                          # nose tip
+    z -= g(x, y, -0.29, 0.22, 0.13, 0.09, 0.07) + g(x, y, 0.29, 0.22, 0.13, 0.09, 0.07)   # soft eye sockets
+    z += g(x, y, -0.29, 0.21, 0.09, 0.055, 0.045) + g(x, y, 0.29, 0.21, 0.09, 0.055, 0.045) # closed lids
+    z -= smile(x - 0.29, y, 0.185, -0.9, 0.09, 0.010, 0.018) + smile(x + 0.29, y, 0.185, -0.9, 0.09, 0.010, 0.018)  # lid creases
+    z += g(x, y, -0.30, 0.40, 0.15, 0.04, 0.035) + g(x, y, 0.30, 0.40, 0.15, 0.04, 0.035) # brow ridge
+    z += g(x, y, -0.40, -0.20, 0.18, 0.16, 0.05) + g(x, y, 0.40, -0.20, 0.18, 0.16, 0.05) # cheekbones
+    z += smile(x, y, -0.48, 0.18, 0.20, 0.050, 0.045)                 # lips
+    z -= smile(x, y, -0.475, 0.18, 0.19, 0.012, 0.022)                # the mouth line, a hint of a smile
+    z += g(x, y, 0, -0.84, 0.20, 0.10, 0.05)                          # chin
     return np.where(r < 1, z, np.nan)
 if __name__ == '__main__':
     # a structured-light dot grid (hexagonal, like a dot projector), kept where it lands on the face
