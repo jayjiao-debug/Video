@@ -1,46 +1,26 @@
-# 《你能出生的概率》 script v2 (~90 s) — reverse opening
+# 《你能出生的概率》 · v3 final build (1:54)
 
-v2 change (owner, 2026-10-19): open in reverse. Start from ONE ancestor ~1000 years ago and branch DOWN
-toward you; branches die out along the way; the one line that never broke reaches you. Then the probability title.
-v1's upward 2^40 tree becomes the second act. The ending lights every line that reaches you, not just one.
+Owner 2026-10-19 23:02: "go back to this" (look B 族谱水墨 frames) → final video while he sleeps.
+Reading taken: look B; the original upward structure (v1) rather than the reverse opening; title 《你能出生的概率》;
+the probability answered with one labelled single-line calculation; BGM reused from the last episode (87bf49c8…Slowed.mp3,
+117.94 bpm) because no new track was sent. Code: src/Film.tsx (composition `Film`). Lines and times live in `LINES` there.
 
-Title: 《你能出生的概率》 — the number on the card is the owner's choice (see "The number" below).
+| time | picture | line |
+|---|---|---|
+| 0:00 | red 你 seal stamps; the full genealogy is a faint ghost above; ink lines grow up with name plates | 你有2个父母 / 4个祖父母，8个曾祖父母 / 每往上一代，翻一倍 |
+| 0:08 | tree runs up into mist, 第40代 at the top | 猜猜：往上40代，你有多少个祖先位置？ |
+| 0:12 | three option plaques stamp on the beat | A、B、C，先在心里选一个 |
+| 0:16.6 | **title on the hit**: the tree shrinks into the motif; 《你能出生的概率》 stamped one character per half-beat, gold pours on 0:19.2 | — |
+| 0:20.7 | motif grows back into the full tree; year ruler 今天…北宋 | 按25年一代，往上40代 / 大约是1000年前，北宋 |
+| 0:26.6 | counter plaque rolls to 1,099,511,627,776 | 第20代…100万 / 答案是C：约1.1万亿个位置 |
+| 0:33 | ink circles: 1170亿 (everyone ever born), 3亿 (world in 1000 AD), pull back to 1.1万亿 slots | …1170亿人 / …3亿人 / 位置，比人还多 / 这些位置，是谁填满的？ |
+| 0:45.8 | the tree folds: one knot gathers ×381 slots | 答案是：很多位置，是同一个人 … 整张家谱，缠成了一张网 |
+| 1:05.5 | other people's trees (他/她) land on the same knots; shared knots gold, the rest go out red; the Yangtze with paddies | 2004年，一篇《自然》论文算过 … 作者写道：我们共享着，在长江边种稻子的祖先 |
+| 1:22.2 | **drop**: the vermilion line ignites from 你 to the top | 而通向你的那条线，一次都没断 |
+| 1:25.6 | dashed sibling twigs fade at each generation; one ancestor flickers and the line breaks, 你 becomes a dashed outline | 历史上，大约一半… / 每一代… / 只要有一个人早走一步，就没有你 |
+| 1:35.8 | ½ at each generation; ½×½×… counter; slam on 1:41.6 | 只算这一条线… / 每一代都活到成年的概率是…… / 概率约1.1万亿分之一 |
+| 1:45.6 | every line behind 你 turns red | 身后每一条线，都没断过 |
+| 1:48.2 | end card on the hit: J ring, title, motif, question, follow pill, sources | 你知道的，最远的祖先是谁？评论区见 |
 
-## Cold open — down the line (0:00 – ~0:14)
-1. 1000年前，长江边，有一个人 — one warm point at the top of a dark frame; ruler at the side reads 北宋
-2. 他有了孩子，孩子又有了孩子 — the point branches downward, generation by generation; the ruler slides toward 今天
-3. 那时候，大约一半的孩子活不到长大 — at each fork about half the branches flicker and go dark
-4. 只要这条线上，有一个人早走一步 — camera follows the one surviving line down; dead branches fall away on both sides
-5. 就没有你 — the line touches the bottom: a gold point labelled 你
-→ TITLE on the music hit: 你能出生的概率 = ?
-
-## The number (~0:14 – 0:24)
-6. 只算这一条线：往上40代，每一代都活到成年 — 40 small forks stacked, each "½"
-7. ½ 乘40次 — the halves multiply, a counter shrinks
-8. 约 1.1万亿分之一 — footnote on screen: 只算一条直系，只算活到成年
-9. 可这，还只是一条线 — camera pulls back: the line is one thread among many
-
-## Climb — flip to the upward tree (v1 lines 1–9, compressed)
-10. 你有2个父母，4个祖父母，8个曾祖父母 — the frame flips: tree grows UP from 你
-11. 往上40代：约1.1万亿个祖先位置 — counter rolls; note "巧了，又是这个数"
-12. 可从古到今，地球上一共只出生过约1170亿人
-13. 1000年前，全世界只有约3亿人 — 位置，比人还多
-
-## Twist (v1 10–15)
-14. 答案是：很多位置，是同一个人 — branches bend into knots
-15. 同一个祖先，在你家谱里出现了很多次
-16. 耶鲁大学2004年的模型说：几千年前活着的人
-17. 要么是今天所有人的祖先，要么一个后代都没留下
-18. 开头那个长江边的人，很可能也是看视频的每个人的祖先 — the opening point reappears at the top of the net
-
-## Ending
-19. 这张网上，所有通向你的线，没有一条断过 — net dims; then EVERY path that reaches you lights gold, thousands converging
-20. 熬过了饥荒、战乱、瘟疫
-21. 评论区：你知道的，最远的祖先是谁？
-END CARD: 发给那个觉得自己很普通的人
-
-## Facts note
-- ½ per generation = "about half of children died before adulthood" (Our World in Data, pre-modern average). It is an illustrative
-  single-line calculation, labelled as such on screen. (½)^40 = 1 / 1,099,511,627,776.
-- B11 updated: no claim of "the" probability of you; only this labelled one-line calculation. The viral
-  "1 / 10^2,685,000" figure is not used.
+Plaque footnote under the number: 只算一条直系 · 每代按"一半活到成年"计 · 不是你出生的全部概率.
+Facts: facts.md (B1–B11). The reverse-opening test (src/Reverse.tsx) is kept as an alternative cold open.
