@@ -1,3 +1,1 @@
-import { registerRoot } from 'remotion';
-import { Root } from './Root';
-registerRoot(Root);
+import './ep35/Puppet35';
