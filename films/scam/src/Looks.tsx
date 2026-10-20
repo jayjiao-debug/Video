@@ -5,9 +5,9 @@ import { G, W, H, GOLD, INK, RED, SERIF, SANS, txt, mono, subtitle, mark, grain,
 import { livingRoom, phone, callScreen, transfer, caseFile } from './sets';
 
 export const STEPS = ['说验证码', '点“是我本人”', '开屏幕共享', '下载App', '转账', '刷脸'];
-export const stepCards = (g: G, y: number, a = 1, hi = -1) => {
+export const stepCards = (g: G, y: number, a = 1, hi = -1, n = 6) => {
   const cw = 270, gap = 22, x0 = 960 - (STEPS.length * cw + (STEPS.length - 1) * gap) / 2;
-  STEPS.forEach((s, i) => { const x = x0 + i * (cw + gap); g.save(); g.globalAlpha = a; g.fillStyle = i === hi ? 'rgba(120,20,14,.92)' : 'rgba(12,10,9,.88)'; rr(g, x, y, cw, 150, 16); g.fill(); g.strokeStyle = i === hi ? RED : 'rgba(243,237,226,.35)'; g.lineWidth = 2; rr(g, x + 6, y + 6, cw - 12, 138, 12); g.stroke(); g.restore();
+  STEPS.forEach((s, i) => { if (i >= n) return; const x = x0 + i * (cw + gap); g.save(); g.globalAlpha = a; g.fillStyle = i === hi ? 'rgba(120,20,14,.92)' : 'rgba(12,10,9,.88)'; rr(g, x, y, cw, 150, 16); g.fill(); g.strokeStyle = i === hi ? RED : 'rgba(243,237,226,.35)'; g.lineWidth = 2; rr(g, x + 6, y + 6, cw - 12, 138, 12); g.stroke(); g.restore();
     mono(g, String(i + 1), x + 34, y + 52, 30, 'rgba(243,237,226,.5)', { f: SERIF, alpha: a }); txt(g, s, x + cw / 2, y + 102, s.length > 5 ? 30 : 36, INK, { w: 700, alpha: a }); });
 };
 const dark = (g: G) => { const b = g.createRadialGradient(960, 540, 100, 960, 540, 1100); b.addColorStop(0, '#2a2119'); b.addColorStop(1, '#0a0806'); g.fillStyle = b; g.fillRect(0, 0, W, H); setSeed(2); for (let i = 0; i < 26; i++) glow(g, rnd() * W, rnd() * H, 40 + rnd() * 90, rnd() < 0.5 ? '255,190,120' : '255,220,170', 0.05 + rnd() * 0.06); };

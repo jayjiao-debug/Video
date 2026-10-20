@@ -110,7 +110,7 @@ export const livingRoom = (g: G, s: Room) => {
 };
 
 /* ================================================================ C · the case file */
-export const caseFile = (g: G, o: { stamp?: number } = {}) => {
+export const caseFile = (g: G, o: { stamp?: number; ev?: [string, string]; stampText?: string } = {}) => {
   const d = g.createLinearGradient(0, 0, W, H); d.addColorStop(0, '#2a1d14'); d.addColorStop(1, '#170f0a'); g.fillStyle = d; g.fillRect(0, 0, W, H);
   setSeed(8); for (let i = 0; i < 40; i++) { g.strokeStyle = `rgba(0,0,0,${0.1 + rnd() * 0.15})`; g.lineWidth = 2; g.beginPath(); const y = rnd() * H; g.moveTo(0, y); g.bezierCurveTo(600, y + 20, 1300, y - 20, W, y + 10); g.stroke(); }
   /* folder */
@@ -120,9 +120,9 @@ export const caseFile = (g: G, o: { stamp?: number } = {}) => {
   txt(g, '案 件 卷 宗', -260, -300, 44, '#2b2620', { f: SERIF, w: 700 });
   g.fillStyle = 'rgba(40,36,30,.5)'; for (let k = 0; k < 11; k++) { setSeed(60 + k); g.fillRect(-580, -220 + k * 46, 520 + rnd() * 120, 8); }
   /* evidence: a printed phone screenshot pinned */
-  g.save(); g.translate(330, -40); g.rotate(0.06); g.fillStyle = '#fafafa'; g.fillRect(-170, -300, 340, 560); g.fillStyle = '#1f2a3a'; g.fillRect(-150, -280, 300, 480); txt(g, '“平台客服”', 0, -120, 34, '#fff', { w: 700 }); txt(g, '屏幕共享 · 已开启', 0, -60, 24, '#ff7a6e', { w: 700 }); g.fillStyle = '#d0d0d0'; g.beginPath(); g.arc(0, -330, 14, 0, 7); g.fill(); g.restore();
+  g.save(); g.translate(330, -40); g.rotate(0.06); g.fillStyle = '#fafafa'; g.fillRect(-170, -300, 340, 560); g.fillStyle = '#1f2a3a'; g.fillRect(-150, -280, 300, 480); txt(g, (o.ev ?? ['“平台客服”', ''])[0], 0, -120, 34, '#fff', { w: 700 }); txt(g, (o.ev ?? ['', '屏幕共享 · 已开启'])[1], 0, -60, 24, '#ff7a6e', { w: 700 }); g.fillStyle = '#d0d0d0'; g.beginPath(); g.arc(0, -330, 14, 0, 7); g.fill(); g.restore();
   /* the red stamp */
-  const st = o.stamp ?? 1; if (st > 0) { g.save(); g.translate(-280, 260); g.rotate(-0.18); g.scale(1 + 0.4 * (1 - st), 1 + 0.4 * (1 - st)); g.globalAlpha = st; g.strokeStyle = '#c0281c'; g.lineWidth = 8; rr(g, -230, -60, 460, 120, 10); g.stroke(); txt(g, '电信网络诈骗', 0, 22, 62, '#c0281c', { f: SERIF, w: 700 }); g.restore(); }
+  const st = o.stamp ?? 1; if (st > 0) { g.save(); g.translate(-280, 260); g.rotate(-0.18); g.scale(1 + 0.4 * (1 - st), 1 + 0.4 * (1 - st)); g.globalAlpha = st; g.strokeStyle = '#c0281c'; g.lineWidth = 8; rr(g, -230, -60, 460, 120, 10); g.stroke(); txt(g, o.stampText ?? '电信网络诈骗', 0, 22, 62, '#c0281c', { f: SERIF, w: 700 }); g.restore(); }
   g.restore();
 };
 export { GOLD, INK, RED, SANS, clamp };
