@@ -242,7 +242,9 @@ const Mark: React.FC = () => (
 const Sub: React.FC<{t: string}> = ({t}) => (
 	<>
 		<AbsoluteFill style={{background: 'linear-gradient(180deg, rgba(0,0,0,0) 72%, rgba(0,0,0,0.45) 90%, rgba(0,0,0,0.6) 100%)'}} />
-		<div style={{position: 'absolute', left: 0, right: 0, top: 930, textAlign: 'center', fontFamily: SERIF, fontWeight: 600, fontSize: 52, color: INK, letterSpacing: '0.08em', textShadow: '0 2px 14px rgba(0,0,0,0.9)'}}>{t}</div>
+		<div style={{position: 'absolute', left: 0, right: 0, top: 930, textAlign: 'center', fontFamily: SERIF, fontWeight: 600, fontSize: 52, color: INK, letterSpacing: '0.08em', textShadow: '0 2px 14px rgba(0,0,0,0.9)'}}>
+			{t.split(/(\[[^\]]+\])/).filter(Boolean).map((x, i) => (x[0] === '[' ? <span key={i} style={{color: '#f1c56d', textShadow: '0 0 18px rgba(241,197,109,0.45), 0 2px 14px rgba(0,0,0,0.9)'}}>{x.slice(1, -1)}</span> : <span key={i}>{x}</span>))}
+		</div>
 	</>
 );
 const Grade: React.FC = () => {
@@ -498,17 +500,17 @@ const tipOf = (pose: Pose, near = true): Pt => {
 const headTop = (pose: Pose): Pt => rotP(rotP([4, -515], pose.head ?? 0, [0, -406]), pose.lean ?? 0, [0, -232]);
 const W2 = (x: number, y: number, k: number, p: Pt): Pt => [x + p[0] * k, y + p[1] * k];
 /** the puppet with both rims, at (x, y) feet, scale k */
-const Man: React.FC<{x: number; y: number; k: number; pose: Pose; warm?: boolean}> = ({x, y, k, pose, warm = true}) => (
+const Man: React.FC<{x: number; y: number; k: number; pose: Pose; warm?: boolean; flip?: boolean}> = ({x, y, k, pose, warm = true, flip}) => (
 	<g>
 		<ellipse cx={x + 8} cy={y + 4} rx={85 * k} ry={12 * k} fill="#000" opacity={0.55} filter="url(#b3)" />
-		<g filter="url(#rimC)"><g transform={`translate(${x},${y}) scale(${k})`} filter={warm ? 'url(#rimR)' : undefined}><Mannequin pose={pose} /></g></g>
+		<g filter="url(#rimC)"><g transform={`translate(${x},${y}) scale(${flip ? -k : k},${k})`} filter={warm ? 'url(#rimR)' : undefined}><Mannequin pose={pose} /></g></g>
 	</g>
 );
 const Str: React.FC<{a: Pt; b: Pt; sag?: number; o?: number}> = ({a, b, sag = 0, o = 0.5}) => (
 	<path d={`M${a[0]},${a[1]} Q${(a[0] + b[0]) / 2 + sag},${(a[1] + b[1]) / 2} ${b[0]},${b[1]}`} stroke="#e8e2d6" strokeWidth={1.3} fill="none" opacity={o} />
 );
-const Rock: React.FC<{c: Pt; r: number; rim?: string; blur?: boolean}> = ({c, r, rim = '#e0a874', blur}) => (
-	<g filter={blur ? 'url(#b3)' : undefined}>
+const Rock: React.FC<{c: Pt; r: number; rim?: string; blur?: boolean; rot?: number}> = ({c, r, rim = '#e0a874', blur, rot = 0}) => (
+	<g filter={blur ? 'url(#b3)' : undefined} transform={`rotate(${rot}, ${c[0]}, ${c[1]})`}>
 		<ellipse cx={c[0]} cy={c[1] + r * 0.95} rx={r * 1.05} ry={r * 0.16} fill="#000" opacity={0.55} filter="url(#b6)" />
 		<path d={`M${c[0] - r},${c[1] + r * 0.1} C${c[0] - r * 1.02},${c[1] - r * 0.7} ${c[0] - r * 0.4},${c[1] - r * 1.02} ${c[0] + r * 0.15},${c[1] - r * 0.98} C${c[0] + r * 0.8},${c[1] - r * 0.92} ${c[0] + r * 1.05},${c[1] - r * 0.3} ${c[0] + r * 0.98},${c[1] + r * 0.25} C${c[0] + r * 0.9},${c[1] + r * 0.8} ${c[0] + r * 0.3},${c[1] + r * 1.0} ${c[0] - r * 0.3},${c[1] + r * 0.96} C${c[0] - r * 0.8},${c[1] + r * 0.9} ${c[0] - r * 0.98},${c[1] + r * 0.55} ${c[0] - r},${c[1] + r * 0.1} Z`} fill="#45403b" filter="url(#clay)" />
 		<path d={`M${c[0] + r * 0.15},${c[1] - r * 0.98} C${c[0] + r * 0.8},${c[1] - r * 0.92} ${c[0] + r * 1.05},${c[1] - r * 0.3} ${c[0] + r * 0.98},${c[1] + r * 0.25}`} stroke={rim} strokeWidth={3} fill="none" opacity={0.45} />
@@ -542,15 +544,13 @@ const NIGHT = ['#06080c', '#121620', '#262533', '#3e3236'];
 /** a giant dark hand reaching down from the dark, fingers curled over a bar at y≈100 (local) */
 const GodHand: React.FC<{x: number; y: number; s?: number; flip?: boolean; rot?: number}> = ({x, y, s = 1, flip, rot = 0}) => (
 	<g transform={`translate(${x},${y}) rotate(${rot}) scale(${flip ? -s : s},${s})`} filter="url(#rimC)">
-		<path d="M-74,-520 L74,-520 L64,-70 L-64,-70 Z" fill="#0d0c0b" />
-		<path d="M-66,-84 C-76,-20 -66,36 -44,58 L56,58 C76,24 76,-30 64,-84 Z" fill="#221e1b" filter="url(#charG)" />
-		{[-38, -13, 12, 36].map((fx, i) => (
-			<g key={i}>
-				<line x1={fx} y1={46} x2={fx + 4} y2={98} stroke="#221e1b" strokeWidth={22 - i} strokeLinecap="round" />
-				<line x1={fx + 4} y1={98} x2={fx - 10} y2={122} stroke="#1c1916" strokeWidth={19 - i} strokeLinecap="round" />
-			</g>
+		<path d="M-58,-560 C-62,-300 -66,-160 -60,-70 L58,-70 C62,-160 60,-300 54,-560 Z" fill="#0c0b0a" />
+		<path d="M-60,-80 C-72,-40 -70,10 -56,40 C-30,62 30,64 56,44 C70,14 70,-40 58,-80 Z" fill="#151311" />
+		{[[-40, 112, 17], [-14, 124, 18], [12, 120, 17], [36, 104, 15]].map(([fx, len, w], i) => (
+			<path key={i} d={`M${fx - w / 2},40 C${fx - w / 2 - 2},${len * 0.6} ${fx - w / 2 + 1},${len - 10} ${fx},${len} C${fx + w / 2 - 1},${len - 10} ${fx + w / 2 + 2},${len * 0.6} ${fx + w / 2},40 Z`} fill={i % 2 ? '#141210' : '#171513'} />
 		))}
-		<line x1={-60} y1={-10} x2={-46} y2={86} stroke="#1c1916" strokeWidth={24} strokeLinecap="round" />
+		{[[-40, 70], [-14, 76], [12, 74], [36, 66]].map(([fx, ky], i) => <path key={i} d={`M${fx - 7},${ky} q7,-4 14,0`} stroke="#2a2622" strokeWidth={1.5} fill="none" opacity={0.6} />)}
+		<path d="M-58,-20 C-80,10 -76,60 -56,92 C-48,100 -40,96 -42,84 C-50,56 -48,24 -40,0 Z" fill="#131110" />
 	</g>
 );
 const CrossBar: React.FC<{x: number; y: number; rot?: number}> = ({x, y, rot = 0}) => (
@@ -565,30 +565,30 @@ const CrossBar: React.FC<{x: number; y: number; rot?: number}> = ({x, y, rot = 0
 const barPt = (x: number, y: number, rot: number, p: Pt): Pt => { const r = rotP(p, rot, [0, 0]); return [x + r[0], y + r[1]]; };
 const PUSH: Pose = {lean: 30, head: 12, armN: [56, 8], armF: [50, 14], legN: [22, -30], legF: [-30, 4]};
 
-const Frame: React.FC<{header?: string; sub?: string; children: React.ReactNode; bg?: string}> = ({header, sub, children, bg = '#07080b'}) => (
+const Frame: React.FC<{header?: string; sub?: string; subO?: number; children: React.ReactNode; bg?: string}> = ({header, sub, subO = 1, children, bg = '#07080b'}) => (
 	<AbsoluteFill style={{background: bg}}>
 		<svg width={W} height={H} style={{position: 'absolute', inset: 0}}><Defs />{children}</svg>
 		<Grade />
 		{header && <Header t={header} />}
 		<Mark />
-		{sub && <Sub t={sub} />}
+		{sub && <div style={{opacity: subO}}><Sub t={sub} /></div>}
 	</AbsoluteFill>
 );
 
 // ---- 2 · title: the road has become a hill; the title hangs on strings like a stage sign
-const S2: React.FC = () => {
+const S2: React.FC<{plankY?: number; lookUp?: number; sub?: string; subO?: number; t?: number}> = ({plankY = 300, lookUp = 0, sub, subO = 1, t = 0}) => {
 	const ys = (x: number) => 900 - 0.34 * x;
-	const pose: Pose = {head: -16, lean: -2, armN: [-6, 6], armF: [6, 6]};
+	const pose: Pose = {head: 4 - 22 * lookUp, lean: -2 + 1.2 * Math.sin(t * 2), armN: [-6, 6], armF: [6, 6]};
 	const mx = 540, my = ys(mx) + 10, k = 0.78;
 	return (
-		<Frame>
-			<Land sky={NIGHT} a={900} b={-0.34} sun={[1700, 560, 0.35]} />
+		<Frame sub={sub} subO={subO}>
+			<Land sky={NIGHT} a={900} b={-0.34} sun={[1700, 560, 0.35]} t={t} />
 			<Rock c={[760, ys(760) - 128]} r={135} />
 			<Man x={mx} y={my} k={k} pose={pose} />
-			{strAnchors(pose).map((p, i) => { const w = W2(mx, my, k, p); return <Str key={i} a={w} b={[w[0] + (i - 1) * 4, -10]} />; })}
-			<g transform="translate(1340,300) rotate(-2) scale(0.9)">
-				<line x1={-380} y1={-60} x2={-360} y2={-300} stroke="#e8e2d6" strokeWidth={1.4} opacity={0.6} />
-				<line x1={380} y1={-60} x2={360} y2={-300} stroke="#e8e2d6" strokeWidth={1.4} opacity={0.6} />
+			{attachPts(pose).map(({p, to}, i) => { const a = W2(mx, my, k, p); return <g key={i}><RealString a={a} b={[mx + 20 + to * 50, -300 + Math.abs(to) * 8]} id={`s2s${i}`} w={i === 4 || i === 6 ? 1.05 : 0.85} /><Eyelet p={a} k={k * 0.9} /></g>; })}
+			<g transform={`translate(1340,${plankY}) rotate(-2) scale(0.9)`}>
+				<RealString a={[-380, -60]} b={[-350, -1500]} id="pl1" band={[0.05, 0.25]} w={1.3} />
+				<RealString a={[380, -60]} b={[350, -1500]} id="pl2" band={[0.05, 0.25]} w={1.3} />
 				<rect x={-430} y={-70} width={860} height={150} rx={10} fill="#000" opacity={0.5} filter="url(#b6)" transform="translate(10,16)" />
 				<rect x={-430} y={-70} width={860} height={150} rx={10} fill="url(#m-walnut)" filter="url(#grainL)" />
 				<rect x={-414} y={-56} width={828} height={122} rx={6} fill="none" stroke="#1a110a" strokeWidth={3} opacity={0.7} />
@@ -613,7 +613,7 @@ const S3: React.FC = () => {
 			<Land sky={NIGHT} a={880} b={-0.32} sun={[300, 600, 0.22]} />
 			<Rock c={[cx, cy]} r={r} />
 			<Man x={mx} y={my} k={k} pose={PUSH} warm={false} />
-			{[headTop(PUSH), tipOf(PUSH, true), tipOf(PUSH, false)].map((p, i) => <Str key={i} a={W2(mx, my, k, p)} b={barPt(bx, by, rot, [[0, 150], [124, 0], [-124, 0]][i] as Pt)} o={0.6} />)}
+			{attachPts(PUSH).map(({p, to}, i) => { const a = W2(mx, my, k, p); const slot: Pt = [[-1, -2, -4, -3].includes(to) ? -124 + 40 * (Math.abs(to) - 1) : 124 - 40 * (Math.abs(to) - 1), [1, -1].includes(to) ? 150 : 0]; return <g key={i}><RealString a={a} b={barPt(bx, by, rot, slot)} id={`s3s${i}`} band={[0.3, 0.75]} w={i === 4 || i === 6 ? 1.05 : 0.85} /><Eyelet p={a} k={k * 0.9} /></g>; })}
 			<CrossBar x={bx} y={by} rot={rot} />
 			<GodHand x={bx - 26} y={by - 84} s={0.75} rot={6} />
 			<GodHand x={bx + 84} y={by - 76} s={0.66} rot={-10} flip />
@@ -678,7 +678,7 @@ const S4: React.FC = () => {
 
 // ---- 5 · 1942: an attic in France, rain and searchlights; the manuscript; a small charred figure and a pebble on the desk
 const S5: React.FC = () => (
-	<Frame header="1942 · 法国" sub="1942年，二战正酣，28岁的加缪写下了《西西弗斯神话》" bg="#08090b">
+	<Frame header="1942 · 法国" bg="#08090b">
 		<rect width={W} height={H} fill="#141210" filter="url(#paper)" />
 		{Array.from({length: 16}, (_, i) => <rect key={i} x={i * 124} y={0} width={120} height={760} fill={i % 2 ? '#17140f' : '#1b1712'} filter="url(#paper)" />)}
 		<path d="M0,0 L1920,0 L1920,90 L0,190 Z" fill="#0b0a08" />
@@ -867,9 +867,9 @@ const RealString: React.FC<{a: Pt; b: Pt; id: string; band?: [number, number]; w
 const Eyelet: React.FC<{p: Pt; k: number}> = ({p, k}) => (
 	<g><circle cx={p[0]} cy={p[1] - 1.6 * k} r={2.3 * k} fill="none" stroke="#6e5c40" strokeWidth={1.1 * k} /><path d={`M${p[0] - 1.6 * k},${p[1] - 2.6 * k} a${2.3 * k},${2.3 * k} 0 0 1 ${2.6 * k},${-1.2 * k}`} stroke="#d9c79c" strokeWidth={0.8 * k} fill="none" opacity={0.8} /><circle cx={p[0]} cy={p[1] - 3.9 * k} r={0.9 * k} fill="#e8e2d6" opacity={0.7} /></g>
 );
-const S1b: React.FC<{t: number}> = ({t}) => {
-	const pose: Pose = {lean: 5, head: 20, armN: [-3, 4], armF: [5, 8], legN: [2, 0], legF: [-3, 0], case: true};
-	const mx = 700, my = 930, k = 1.22;
+const S1b: React.FC<{t: number; spin?: number; flick?: number; trainShift?: number; headLift?: number; sub?: string; subO?: number}> = ({t, spin = 0, flick = 1, trainShift = 0, headLift = 0, sub = '早上挤地铁，上班，加班，回家', subO = 1}) => {
+	const pose: Pose = {lean: 5, head: 20 - headLift, armN: [-3, 4], armF: [5, 8], legN: [2, 0], legF: [-3, 0], case: true};
+	const mx = 700, my = 930 - 1.6 * Math.sin(t * 2.2), k = 1.22;
 	const sway = Math.sin(t * 1.3) * 0.6;
 	// the control bar hangs out of frame above: string ends spread along it (with a little perspective)
 	const barC: Pt = [mx + 30 + sway * 4, -320];
@@ -900,8 +900,8 @@ const S1b: React.FC<{t: number}> = ({t}) => {
 						<circle r={74} fill="#191a1c" /><circle r={64} fill="#efe2c4" />
 						<circle r={64} fill="url(#warmGlow)" opacity={0.5} />
 						{Array.from({length: 12}, (_, i) => { const a = (i / 12) * 2 * Math.PI; return <line key={i} x1={54 * Math.sin(a)} y1={-54 * Math.cos(a)} x2={60 * Math.sin(a)} y2={-60 * Math.cos(a)} stroke="#2a2420" strokeWidth={3} />; })}
-						<line x1={0} y1={0} x2={0} y2={46} stroke="#1b1a18" strokeWidth={5} strokeLinecap="round" />
-						<line x1={0} y1={0} x2={-24} y2={24} stroke="#1b1a18" strokeWidth={6} strokeLinecap="round" />
+						<g transform={`rotate(${spin * 360})`}><line x1={0} y1={0} x2={0} y2={46} stroke="#1b1a18" strokeWidth={5} strokeLinecap="round" /></g>
+						<g transform={`rotate(${spin * 30})`}><line x1={0} y1={0} x2={-24} y2={24} stroke="#1b1a18" strokeWidth={6} strokeLinecap="round" /></g>
 						<circle r={4} fill="#a8322b" />
 					</g>
 				); })()}
@@ -912,7 +912,7 @@ const S1b: React.FC<{t: number}> = ({t}) => {
 				); })()}
 				{/* ceiling: fluorescent tubes receding, with bloom */}
 				{[0.2, 0.42, 0.58, 0.7, 0.78].map((d, i) => { const a = towards([560, -20], d), b = towards([980, -20], d), w = 26 * (1 - d); return (
-					<g key={i}><line x1={a[0]} y1={a[1]} x2={b[0]} y2={b[1]} stroke="#eef5ff" strokeWidth={Math.max(2, w * 0.5)} opacity={0.95} />
+					<g key={i} opacity={i % 2 ? flick : 1}><line x1={a[0]} y1={a[1]} x2={b[0]} y2={b[1]} stroke="#eef5ff" strokeWidth={Math.max(2, w * 0.5)} opacity={0.95} />
 						<line x1={a[0]} y1={a[1]} x2={b[0]} y2={b[1]} stroke="#cfe0f5" strokeWidth={w * 3} opacity={0.35} filter="url(#b12)" />
 						<ellipse cx={(a[0] + b[0]) / 2} cy={a[1]} rx={(b[0] - a[0]) * 1.4} ry={6 * (1 - d) + 2} fill="#cfe0f5" opacity={0.25} filter="url(#b6)" /></g>
 				); })}
@@ -929,7 +929,8 @@ const S1b: React.FC<{t: number}> = ({t}) => {
 				<g filter="url(#b1.5)">
 					<path d={quad(tt, towards(tt, 0.86), towards(tb, 0.86), tb)} fill="#2a3138" />
 					<path d={quad(tt, towards(tt, 0.86), towards([tt[0], tt[1] + 60], 0.86), [tt[0], tt[1] + 60])} fill="#1d2228" />
-					{[[0.02, 0.1], [0.14, 0.22], [0.28, 0.34], [0.39, 0.44], [0.48, 0.52], [0.56, 0.59], [0.62, 0.65]].map(([d0, d1], i) => {
+					{[[0.02, 0.1], [0.14, 0.22], [0.28, 0.34], [0.39, 0.44], [0.48, 0.52], [0.56, 0.59], [0.62, 0.65]].map(([e0, e1], i) => {
+						const d0 = (e0 + trainShift) % 0.7, d1 = d0 + (e1 - e0) * (1 - d0 * 0.6); if (d1 > 0.86) return null;
 						const top = (d: number) => towards([tt[0], tt[1] + 170], d), bot = (d: number) => towards([tt[0], tt[1] + 470], d);
 						return <path key={i} d={quad(top(d0), top(d1), bot(d1), bot(d0))} fill="url(#winG)" />;
 					})}
@@ -956,11 +957,508 @@ const S1b: React.FC<{t: number}> = ({t}) => {
 			<AbsoluteFill style={{background: 'linear-gradient(180deg, rgba(20,40,60,0.18), rgba(0,0,0,0) 40%, rgba(10,20,30,0.2))', mixBlendMode: 'multiply'}} />
 			<Grade />
 			<Mark />
-			<Sub t="早上挤地铁，上班，加班，回家" />
+			{sub && <div style={{opacity: subO}}><Sub t={sub} /></div>}
 		</AbsoluteFill>
 	);
 };
 /** close-up crop of the strings for review */
+
+const DROP = 12.978;
+const cl01 = (x: number) => Math.max(0, Math.min(1, x));
+const ease = (u: number) => (u < 0.5 ? 4 * u * u * u : 1 - Math.pow(-2 * u + 2, 3) / 2);
+const fadeIO = (t: number, a: number, b: number, d = 0.25) => cl01((t - a) / d) * cl01((b - t) / d);
+const Sample35: React.FC = () => {
+	useFonts();
+	const tc = useCurrentFrame() / FPS;
+	const t = Math.floor(tc * 12) / 12;                                         // stop-motion: everything steps at 12 fps
+	const spinU = ease(cl01((t - 3.9) / 1.7));
+	const flick = t > 3.9 && t < 5.7 ? 0.45 + 0.55 * ((Math.floor(t * 12) * 7919) % 5 > 1 ? 1 : 0) : 1;
+	const s1 = (
+		<S1b t={t} spin={6 * spinU} flick={flick} trainShift={0.42 * spinU} headLift={20 * Math.sin(Math.PI * cl01((t - 3.9) / 2.0))}
+			sub={t < 3.6 ? '早上挤地铁，上班，加班，回家' : '第二天，再来一遍'} subO={t < 3.6 ? fadeIO(tc, 0.5, 3.55) : fadeIO(tc, 3.7, 6.3)} />
+	);
+	// the plank: held above frame, released in the music's silence, lands on the drop, settles with a damped bounce
+	const fall = cl01((t - (DROP - 0.6)) / 0.6);
+	const u = t - DROP;
+	const plankY = t < DROP - 0.6 ? -320 : t < DROP ? -320 + 620 * fall * fall : 300 - 28 * Math.exp(-5 * u) * Math.cos(16 * u);
+	const s2 = (
+		<S2 t={t} plankY={plankY} lookUp={cl01((t - (DROP + 0.25)) / 0.8)}
+			sub={t < 9.7 ? '有个人，这样过了永远' : t < 12.3 ? '可有位哲学家说：他是幸福的' : undefined}
+			subO={t < 9.7 ? fadeIO(tc, 7.0, 9.65) : fadeIO(tc, 9.8, 12.25)} />
+	);
+	const x = cl01((tc - 6.4) / 0.6);
+	const end = cl01((16.5 - tc) / 0.6);
+	return (
+		<AbsoluteFill style={{background: '#000'}}>
+			<AbsoluteFill style={{opacity: (1 - x) * end}}>{s1}</AbsoluteFill>
+			{x > 0 && <AbsoluteFill style={{opacity: x * end}}>{s2}</AbsoluteFill>}
+		</AbsoluteFill>
+	);
+};
+
+// ================================================================== the film (script v1) · music: placeholder track from 29.5 s, its drop (42.478 s) = the title
+const F_DROP = 12.978;
+const lerp = (a: number, b: number, u: number) => a + (b - a) * u;
+const walkPose = (ph: number, head = 0, lean = 2): Pose => ({
+	lean, head,
+	legN: [22 * Math.sin(ph), -10 - 16 * Math.max(0, Math.cos(ph))], legF: [-22 * Math.sin(ph), -10 - 16 * Math.max(0, -Math.cos(ph))],
+	armN: [-12 * Math.sin(ph), 8], armF: [12 * Math.sin(ph), 8],
+});
+const STAND: Pose = {lean: 2, head: 8, armN: [-3, 5], armF: [4, 6], legN: [3, 0], legF: [-3, 0]};
+
+// ---- subtitle lines: [text, scene-section]; times are laid out below on the reading budget
+type Sec = 'plat' | 'hill' | 'myth' | 'roll' | 'down' | 'gods' | 'lab' | 'dusk' | 'attic' | 'walk' | 'phone' | 'rocks' | 'plat2' | 'dawn';
+const SCRIPT: [string, Sec][] = [
+	['早上挤地铁，上班，加班，回家', 'plat'], ['第二天，再来一遍', 'plat'],
+	['有个人，这样过了永远', 'hill'], ['可有位哲学家说：他是幸福的', 'hill'],
+	['希腊神话里，西西弗斯得罪了众神', 'myth'], ['惩罚是：把一块巨石，推上山顶', 'myth'],
+	['石头一到山顶，就滚下来', 'roll'], ['他只能走下山，重新再推。永远', 'down'],
+	['众神觉得：没有比[“无用又无望的劳动”]更可怕的惩罚', 'gods'],
+	['他们说对了吗？2008年，有人在实验室里，造了一个西西弗斯', 'lab'], ['让人拼积木小人：第一个给2美元，之后每个少一点', 'lab'],
+	['一组，拼好的就摆在桌上', 'lab'], ['另一组，刚拼好，就当着你的面拆掉', 'lab'], ['同样的活，同样的钱', 'lab'],
+	['被拆的那组，平均少拼了三个多：10.6个，对7.2个', 'lab'], ['让人放弃的，不是累，是[“没意义”]', 'lab'],
+	['那西西弗斯，凭什么幸福？', 'dusk'],
+	['1942年，二战正酣，28岁的加缪写下了《西西弗斯神话》', 'attic'], ['他承认：世界不会给我们一个现成的意义', 'attic'],
+	['但他最在意的，是西西弗斯下山的那段路', 'walk'], ['那一刻他清醒地知道：石头还会滚下来', 'walk'],
+	['他不再等山顶，山顶也就惩罚不了他', 'walk'], ['[“登上山顶的奋斗本身，就足以充实一颗人心”]', 'walk'],
+	['后来，心理学给了相似的答案', 'phone'], ['2010年，哈佛的研究者用手机，随机打断2250个人', 'phone'],
+	['问：你在做什么？心在这件事上吗？开心吗？', 'phone'], ['人们有46.9%的时间，心不在焉', 'phone'],
+	['而心不在焉的时候，明显更不开心', 'phone'], ['影响快乐的，常常不是你在做什么，而是心在不在这儿', 'phone'],
+	['1997年，研究者问了一群上班族：你怎么看自己的工作？', 'rocks'],
+	['有人说：只是份工作；有人说：是我的事业；有人说：是我的使命', 'rocks'],
+	['差不多各占三分之一——就连做同一份工作的人里，也一样', 'rocks'], ['觉得是使命的人，对工作、对生活都更满意', 'rocks'],
+	['同一块石头，不同的人，推出了不同的人生', 'rocks'],
+	['我们每个人，都在推自己的石头', 'plat2'], ['石头不会消失，山顶也许永远到不了', 'dawn'],
+	['但怎么推、为什么推，是你自己的', 'dawn'], ['所以，我们必须想象：西西弗斯是[幸福的]', 'dawn'],
+];
+const readDur = (s: string) => Math.max(2.0, s.replace(/[\[\]“”，：；。？——、《》]/g, '').length / 5.6 + 0.3);
+type Line = {a: number; b: number; text: string; sec: Sec};
+const LINES: Line[] = (() => {
+	const fixed: Record<number, number> = {0: 0.5, 1: 3.7, 2: 7.0, 3: 9.8, 4: F_DROP + 5.2};
+	const out: Line[] = [];
+	let t = 0;
+	SCRIPT.forEach(([text, sec], i) => {
+		const prev = out[i - 1];
+		let a = fixed[i] ?? t;
+		if (!(i in fixed) && prev && prev.sec !== sec) a += 0.35;               // breathe at a section change
+		const b = i === 0 ? 3.55 : i === 1 ? 6.3 : i === 2 ? 9.65 : i === 3 ? 12.25 : a + readDur(text);
+		out.push({a, b, text, sec});
+		t = b + 0.15;
+	});
+	return out;
+})();
+const secSpan = (sec: Sec): [number, number] => {
+	const ls = LINES.filter((l) => l.sec === sec);
+	return [ls[0].a, ls[ls.length - 1].b];
+};
+const CARD = LINES[LINES.length - 1].b + 0.6;
+const FILM_END = CARD + 2.6;
+/** section windows for the picture: each runs from its first line (minus a lead) to the next section's start */
+const SECS: {sec: Sec; a: number; b: number}[] = (() => {
+	const order: Sec[] = [];
+	LINES.forEach((l) => { if (!order.includes(l.sec)) order.push(l.sec); });
+	return order.map((sec, i) => {
+		const [a] = secSpan(sec);
+		const next = order[i + 1] ? secSpan(order[i + 1])[0] - 0.35 : CARD;
+		return {sec, a: sec === 'plat' ? 0 : sec === 'hill' ? 6.4 : a - 0.35, b: sec === 'hill' ? F_DROP + 5.0 : next};
+	});
+})();
+
+// ---- shared bits
+const Title: React.FC<{plankY: number; t: number}> = ({plankY, t}) => <S2 t={t} plankY={plankY} lookUp={cl01((t - (F_DROP + 0.25)) / 0.8)} />;
+
+// myth: he pushes the rock uphill under the gods' bar (pushes come in heaves)
+const MythPush: React.FC<{u: number; T: number}> = ({u, T}) => {
+	const ys = (x: number) => 880 - 0.32 * x;
+	const k = 0.82, r = 150;
+	const heave = Math.max(0, Math.sin(u * 2.1)) ** 2;
+	const cx = 980 + 9 * u + 6 * heave;
+	const cy = ys(cx) - r * 0.92;
+	const pose: Pose = {...PUSH, lean: 30 + 4 * heave, legN: [22 + 6 * heave, -30], legF: [-30 - 4 * heave, 4]};
+	const tip = tipOf(pose, true);
+	const mx = cx - r * 0.98 - tip[0] * k, my = ys(mx) + 12;
+	const bx = 520 + 9 * u, by = 250 + 6 * Math.sin(u * 2.1), rot = 8 + 3 * Math.sin(u * 2.1 + 1);
+	return (
+		<Frame header="古希腊 · 神话">
+			<Land sky={NIGHT} a={880} b={-0.32} sun={[300, 600, 0.22]} t={T} />
+			<Rock c={[cx, cy]} r={r} rot={u * 9} />
+			<Man x={mx} y={my} k={k} pose={pose} warm={false} />
+			{attachPts(pose).map(({p, to}, i) => { const a = W2(mx, my, k, p); const slot: Pt = [[-1, -2, -4, -3].includes(to) ? -124 + 40 * (Math.abs(to) - 1) : 124 - 40 * (Math.abs(to) - 1), [1, -1].includes(to) ? 150 : 0]; return <g key={i}><RealString a={a} b={barPt(bx, by, rot, slot)} id={`m${i}`} band={[0.3, 0.75]} w={i === 4 || i === 6 ? 1.05 : 0.85} /><Eyelet p={a} k={k * 0.9} /></g>; })}
+			<CrossBar x={bx} y={by} rot={rot} />
+			<GodHand x={bx - 26} y={by - 84} s={0.75} rot={6} />
+			<GodHand x={bx + 84} y={by - 76} s={0.66} rot={-10} flip />
+		</Frame>
+	);
+};
+// near the top the rock gets away from him and rolls back down past him
+const Roll: React.FC<{u: number; T: number; dur: number}> = ({u, T, dur}) => {
+	const ys = (x: number) => 980 - 0.42 * x;
+	const r = 120, k = 0.72;
+	const q = cl01(u / dur);
+	const roll = q < 0.25 ? 0 : ((q - 0.25) / 0.75) ** 2;
+	const cx = lerp(1460, -260, roll), cy = ys(cx) - r * 0.92;
+	const push: Pose = {...PUSH, lean: 26};
+	const mx = 1460 - r * 0.98 - tipOf(push, true)[0] * k, my = ys(mx) + 10;
+	const pose: Pose = q < 0.25 ? push : {lean: 4, head: 34, armN: [-2, 10], armF: [6, 10], legN: [6, 0], legF: [-6, 0]};
+	return (
+		<Frame header="古希腊 · 神话">
+			<Land sky={NIGHT} a={980} b={-0.42} sun={[300, 640, 0.18]} t={T} />
+			<Rock c={[cx, cy]} r={r} rot={-roll * 900} />
+			<Man x={mx} y={my} k={k} pose={pose} warm={false} flip={q >= 0.25} />
+			{attachPts(pose).map(({p}, i) => { const a = W2(mx, my, k, [q >= 0.25 ? -p[0] : p[0], p[1]]); return <g key={i}><RealString a={a} b={[mx + (i - 3.5) * 40, -300]} id={`r${i}`} w={0.85} /><Eyelet p={a} k={k * 0.9} /></g>; })}
+		</Frame>
+	);
+};
+// he walks back down after it
+const Down: React.FC<{u: number; T: number}> = ({u, T}) => {
+	const ys = (x: number) => 980 - 0.42 * x;
+	const k = 0.72, mx = 1250 - 70 * u, my = ys(mx) + 10;
+	const pose = walkPose(u * 6.5, 20, 6);
+	return (
+		<Frame header="古希腊 · 神话">
+			<Land sky={NIGHT} a={980} b={-0.42} sun={[300, 640, 0.18]} t={T} />
+			<Rock c={[180, ys(180) - 110]} r={120} blur />
+			<Man x={mx} y={my} k={k} pose={pose} warm={false} flip />
+			{attachPts(pose).map(({p}, i) => { const a = W2(mx, my, k, [-p[0], p[1]]); return <g key={i}><RealString a={a} b={[mx + (i - 3.5) * 40, -300]} id={`d${i}`} w={0.85} /><Eyelet p={a} k={k * 0.9} /></g>; })}
+		</Frame>
+	);
+};
+// the gods' hands, close: the bar, strings running down into the dark
+const Gods: React.FC<{u: number}> = ({u}) => {
+	const bx = 960, by = 330 + 8 * Math.sin(u * 1.6), rot = 4 * Math.sin(u * 1.2);
+	return (
+		<Frame bg="#030304">
+			<rect width={W} height={H} fill="#050506" />
+			<ellipse cx={960} cy={360} rx={760} ry={420} fill="url(#warmGlow)" opacity={0.12} />
+			{[-124, -84, -44, 44, 84, 124].map((sx, i) => { const a = barPt(bx, by, rot, [sx, i % 2 ? 0 : 0]); return <RealString key={i} a={[a[0] + (i - 2.5) * 70, 1100]} b={a} id={`g${i}`} band={[0.55, 0.9]} w={1.1} />; })}
+			<g transform={`translate(${bx},${by}) scale(1.8) translate(${-bx},${-by})`}>
+				<CrossBar x={bx} y={by} rot={rot} />
+				<GodHand x={bx - 26} y={by - 84} s={0.75} rot={6} />
+				<GodHand x={bx + 84} y={by - 76} s={0.66} rot={-10} flip />
+			</g>
+		</Frame>
+	);
+};
+// the lab: kept vs taken apart; price tags; the tallies count up
+const Lab: React.FC<{T: number}> = ({T}) => {
+	const [a0] = secSpan('lab');
+	const L = (i: number) => LINES.filter((l) => l.sec === 'lab')[i];
+	const pose: Pose = {head: 22, lean: 12 + 3 * Math.sin(T * 3), armN: [40 + 6 * Math.sin(T * 6), 40], armF: [36 + 6 * Math.sin(T * 6 + 1), 44]};
+	const kept = Math.min(6, 1 + Math.floor(Math.max(0, T - L(2).a) / 1.2));
+	const tall = cl01((T - L(5).a) / 2.6);
+	const cyc = Math.max(0, T - L(3).a) % 2.4, grab = T > L(3).a ? cl01(cyc / 0.8) : 0;
+	const price = Math.max(0, Math.floor((T - L(1).a - 1.0) / 0.8) + 1);
+	return (
+		<Frame header="2008 · 美国" bg="#0b0b0d">
+			<rect width={W} height={H} fill="#121316" filter="url(#paper)" />
+			{Array.from({length: 13}, (_, i) => <rect key={i} x={i * 150} y={0} width={4} height={700} fill="#0c0d0f" />)}
+			<g transform="translate(1340,170) scale(0.86)" opacity={cl01((T - L(4).a) / 0.4) * 0.92 + 0.08}>
+				<rect x={-14} y={-14} width={588} height={348} fill="#2a1d14" filter="url(#wood)" />
+				<rect width={560} height={320} fill="#1b211e" filter="url(#paper)" />
+				{([['摆着', 10.6, 60], ['被拆', 7.2, 200]] as const).map(([lab, v, y]) => {
+					const shown = Math.floor(v * tall);
+					return (
+						<g key={lab} transform={`translate(40,${y})`}>
+							<text x={0} y={40} style={{fontFamily: SERIF, fontWeight: 700, fontSize: 40}} fill="#e8e4da" opacity={0.85}>{lab}</text>
+							{Array.from({length: shown}, (_, i) => (i % 5 === 4
+								? <line key={i} x1={110 + Math.floor(i / 5) * 90 - 8} y1={30} x2={110 + Math.floor(i / 5) * 90 + 64} y2={4} stroke="#e8e4da" strokeWidth={4} opacity={0.8} strokeLinecap="round" />
+								: <line key={i} x1={110 + Math.floor(i / 5) * 90 + (i % 5) * 14} y1={-2} x2={110 + Math.floor(i / 5) * 90 + (i % 5) * 14 + 3} y2={44} stroke="#e8e4da" strokeWidth={4} opacity={0.8} strokeLinecap="round" />))}
+							{tall >= 1 && <text x={500} y={42} textAnchor="end" style={{fontFamily: '"Cormorant", serif', fontWeight: 700, fontSize: 60}} fill={lab === '被拆' ? '#ff8a70' : '#f1d7a0'}>{v.toFixed(1)}</text>}
+						</g>
+					);
+				})}
+			</g>
+			<g transform="translate(300,690)">
+				<ellipse cx={120} cy={-60} rx={520} ry={330} fill="url(#warmGlow)" opacity={0.55} />
+				<line x1={0} y1={0} x2={30} y2={-200} stroke="#2a2724" strokeWidth={8} /><line x1={30} y1={-200} x2={130} y2={-230} stroke="#2a2724" strokeWidth={8} />
+				<path d="M100,-250 L190,-200 L150,-170 L80,-220 Z" fill="#1d1b19" /><ellipse cx={150} cy={-188} rx={28} ry={8} fill="#ffd590" transform="rotate(30,150,-188)" />
+			</g>
+			<Man x={700} y={860} k={0.95} pose={pose} />
+			{attachPts(pose).map(({p, to}, i) => { const a = W2(700, 860, 0.95, p); return <g key={i}><RealString a={a} b={[720 + to * 46, -300]} id={`l${i}`} w={0.85} /><Eyelet p={a} k={0.85} /></g>; })}
+			<rect y={690} width={W} height={34} fill="url(#m-walnut)" filter="url(#grainL)" />
+			<rect y={724} width={W} height={360} fill="#0c0a09" />
+			{Array.from({length: kept}, (_, i) => <Bot key={i} x={110 + i * 62} y={690} c={BOTC[i % 5]} s={0.9} />)}
+			<Bot x={880} y={690} c={BOTC[2]} s={0.9} />
+			{/* price tag: $2.00, $1.89, … */}
+			{T > L(1).a && T < L(2).b && (
+				<g transform="translate(960,560) rotate(-4)" opacity={cl01((T - L(1).a) / 0.3)}>
+					<rect x={-70} y={-34} width={140} height={60} rx={6} fill="#e9dfc8" filter="url(#paper)" />
+					<circle cx={-52} cy={-4} r={6} fill="#0b0b0d" />
+					<text x={10} y={10} textAnchor="middle" style={{fontFamily: '"Cormorant", serif', fontWeight: 700, fontSize: 40}} fill="#2a2420">${Math.max(0.02, 2 - 0.11 * Math.min(price, 18)).toFixed(2)}</text>
+				</g>
+			)}
+			{T > L(3).a && (
+				<g>
+					<GodHand x={1150 - 20 * (1 - grab)} y={440 - 160 * (1 - grab)} s={0.62} rot={-14} />
+					<g transform={`translate(${lerp(890, 1140, grab)},${lerp(690, 568, grab)}) rotate(${-10 * grab})`}><Bot x={0} y={0} c={BOTC[0]} s={0.9} /></g>
+					{grab >= 1 && [[1080, 640, 10], [1115, 668, -20], [1190, 676, 35], [1220, 650, -8]].map(([x, y, r], i) => (
+						<rect key={i} x={x} y={y + Math.min(40, (cyc - 0.8) * 120)} width={12} height={22} fill="#7a3b2a" transform={`rotate(${r}, ${x}, ${y})`} />
+					))}
+				</g>
+			)}
+		</Frame>
+	);
+};
+// dusk at the foot: he stands by the rock
+const Dusk: React.FC<{T: number}> = ({T}) => {
+	const ground = 860, k = 0.95, mx = 760;
+	const pose: Pose = {head: 14, lean: 2, armN: [52, 6], armF: [4, 8], legN: [6, 0], legF: [-6, 0]};
+	const tip = W2(mx, ground, k, tipOf(pose, true));
+	const r = (ground - tip[1]) / 1.62, c: Pt = [tip[0] + r * 0.62, tip[1] + r * 0.62];
+	return (
+		<Frame>
+			<Land sky={NIGHT} a={ground + 10} b={0} sun={[1380, 650, 0.3]} clay="#2f2a26" t={T} />
+			<Rock c={c} r={r} />
+			<Man x={mx} y={ground} k={k} pose={pose} />
+			{attachPts(pose).map(({p, to}, i) => { const a = W2(mx, ground, k, p); return <g key={i}><RealString a={a} b={[mx + 20 + to * 50, -300]} id={`k${i}`} w={0.85} /><Eyelet p={a} k={0.85} /></g>; })}
+		</Frame>
+	);
+};
+// the attic in 1942: rain falls, the flame breathes, the searchlights sweep
+const Attic: React.FC<{T: number}> = ({T}) => (
+	<g>
+		<S5 />
+		<svg width={W} height={H} style={{position: 'absolute', inset: 0}}>
+			<g transform="translate(1290,170)">
+				{Array.from({length: 30}, (_, i) => { const y = ((i * 97 + T * 600) % 420); return <line key={i} x1={(i * 53) % 430} y1={y} x2={(i * 53) % 430 - 5} y2={y + 30} stroke="#cfdcf0" strokeWidth={1.2} opacity={0.35} />; })}
+			</g>
+			<ellipse cx={560} cy={700} rx={60 + 6 * Math.sin(T * 9)} ry={46} fill="#ffd27a" opacity={0.08 + 0.04 * Math.sin(T * 13)} filter="url(#b12)" />
+		</svg>
+	</g>
+);
+// the walk down: strings held → the bar slips and tumbles away (release r: 0 → 1)
+const Walk: React.FC<{T: number; r: number}> = ({T, r}) => {
+	const slopeY2 = (x: number) => 360 + 0.3 * x;
+	const k = 0.98, px = 820 + 14 * (T - secSpan('walk')[0]), py = slopeY2(px) + 14;
+	const pose = walkPose(T * 5.2, -18 + 6 * Math.sin(T * 0.7), -3);
+	const an = attachPts(pose).map(({p}) => W2(px, py, k, p));
+	const bar: Pt = [lerp(px + 30, px - 520, r), lerp(60, 1300, r * r)], brot = 360 * r * 1.3;
+	const held = r < 0.06;
+	return (
+		<AbsoluteFill style={{background: '#1b2029'}}>
+			<svg width={W} height={H} style={{position: 'absolute', inset: 0}}>
+				<Defs />
+				<Land sky={['#07090e', '#1a1f2a', '#4a3f42', '#8a5f42']} a={360} b={0.3} sun={[1560, 652, 0.6 + 0.3 * r]} clay="#3e3731" t={T} />
+				<Man x={px} y={py} k={k} pose={pose} />
+				{held
+					? attachPts(pose).map(({to}, i) => <g key={i}><RealString a={an[i]} b={[bar[0] + to * 46, bar[1] - 60]} id={`w${i}`} w={0.85} /><Eyelet p={an[i]} k={k * 0.9} /></g>)
+					: an.map((a, i) => <g key={i}><Eyelet p={a} k={k * 0.9} /><path d={`M${a[0]},${a[1]} c${(i % 2 ? 6 : -6)},-${30 + i * 6} ${(i % 3) * 5 - 5},-${50 + i * 5} ${(i % 2 ? 2 : -3)},-${70 + i * 9}`} stroke="#e8e2d6" strokeWidth={1} fill="none" opacity={0.45 * (1 - cl01((r - 0.2) / 0.6))} /></g>)}
+				{r > 0.03 && r < 1 && (
+					<MatCtx.Provider value={MATS.beech}><g transform={`translate(${bar[0]},${bar[1]}) rotate(${brot})`}>
+						{[[0, -150], [-118, 0], [118, 0], [0, 150]].map(([x, y], i) => (
+							<path key={i} d={`M${x},${y} c${10 + i * 6},70 ${-30 - i * 4},120 ${4 + i * 3},${190 + i * 25}`} stroke="#efe8da" strokeWidth={1.2} fill="none" opacity={0.5} transform={`rotate(${-brot}, ${x}, ${y})`} />
+						))}
+						<Cap p={[-124, 0]} q={[124, 0]} w1={16} w2={16} /><Cap p={[0, -156]} q={[0, 156]} w1={16} w2={16} /><Ball p={[0, 0]} r={11} />
+					</g></MatCtx.Provider>
+				)}
+				<g filter="url(#b3)"><ellipse cx={1760} cy={1010} rx={300} ry={260} fill="#34302c" filter="url(#clay)" /></g>
+			</svg>
+			<Grade />
+			<Header t="1942 · 加缪 ·《西西弗斯神话》" />
+			<Mark />
+		</AbsoluteFill>
+	);
+};
+// the phone: the clock fills to 46.9 %; thoughts drift off, then come back with a small warm light
+const Phone: React.FC<{T: number}> = ({T}) => {
+	const L = (i: number) => LINES.filter((l) => l.sec === 'phone')[i];
+	const pose: Pose = {head: 6, lean: 4, armN: [62, 38], armF: [58, 40], legN: [86, -86], legF: [82, -82]};
+	const fx = 620, floor = 900, k = 0.95, fy = floor + 103 * k;
+	const ht = W2(fx, fy, k, headTop(pose));
+	const pie = 0.469 * cl01((T - L(3).a) / 1.8);
+	const pa = 2 * Math.PI * pie;
+	const away = cl01((T - L(3).a) / 3) * (1 - cl01((T - L(5).a) / 2));
+	const buzz = T > L(1).a && T < L(2).b && Math.floor(T * 6) % 3 !== 0;
+	const glow = cl01((T - L(5).a - 1.5) / 1);
+	return (
+		<Frame header="2010 · 哈佛" bg="#0a0b0e">
+			<rect width={W} height={H} fill="#111317" filter="url(#paper)" />
+			<rect y={floor} width={W} height={180} fill="#0b0b0c" />
+			<g transform="translate(1440,300)" opacity={0.45 + 0.55 * cl01((T - L(3).a + 0.3) / 0.4)}>
+				<circle r={150} fill="#d9d1c0" opacity={0.9} filter="url(#paper)" />
+				{pie > 0.001 && <path d={`M0,0 L0,-150 A150,150 0 ${pie > 0.5 ? 1 : 0} 1 ${150 * Math.sin(pa)},${-150 * Math.cos(pa)} Z`} fill="#8a3a2e" opacity={0.75} />}
+				<circle r={150} fill="none" stroke="#2a2420" strokeWidth={10} />
+				{Array.from({length: 12}, (_, i) => { const a = (i / 12) * 2 * Math.PI; return <line key={i} x1={130 * Math.sin(a)} y1={-130 * Math.cos(a)} x2={142 * Math.sin(a)} y2={-142 * Math.cos(a)} stroke="#2a2420" strokeWidth={4} />; })}
+				{pie > 0.001 && <text x={0} y={230} textAnchor="middle" style={{fontFamily: '"Cormorant", serif', fontWeight: 700, fontSize: 64}} fill="#ff8a70">{(pie * 100).toFixed(1)}%</text>}
+			</g>
+			<rect x={760} y={700} width={560} height={22} fill="url(#m-walnut)" filter="url(#grainL)" />
+			{[780, 1290].map((x) => <rect key={x} x={x} y={722} width={14} height={178} fill="#1a120c" />)}
+			<g transform={`translate(${1000 + (buzz ? 3 : 0)},690)`}>
+				<rect x={-34} y={-12} width={68} height={12} rx={4} fill="#0e0f12" />
+				<rect x={-30} y={-11} width={60} height={9} rx={3} fill="#9fb6d8" opacity={buzz ? 0.9 : 0.35} />
+				<ellipse cx={0} cy={-6} rx={140} ry={70} fill="url(#coldGlow)" opacity={buzz ? 0.8 : 0.25} />
+				{buzz && [0, 1, 2].map((i) => <g key={i}><path d={`M${-50 - i * 16},${-20 - i * 10} q-8,10 0,20`} stroke="#cfdcf0" strokeWidth={2} fill="none" opacity={0.6} /><path d={`M${50 + i * 16},${-20 - i * 10} q8,10 0,20`} stroke="#cfdcf0" strokeWidth={2} fill="none" opacity={0.6} /></g>)}
+			</g>
+			<rect x={fx - 70} y={floor - 140} width={150} height={16} fill="#1c140e" />
+			<rect x={fx - 70} y={floor - 330} width={16} height={330} fill="#1c140e" />
+			<rect x={fx + 64} y={floor - 124} width={12} height={124} fill="#1c140e" />
+			<Man x={fx} y={fy} k={k} pose={pose} />
+			{glow > 0 && <circle cx={fx + 4} cy={fy - 360 * k} r={60} fill="url(#warmGlow)" opacity={glow} />}
+			{away > 0.02 && [[60, 40, 16], [130, 110, 26], [250, 200, 70]].map(([dx, dy, r], i) => {
+				const x = ht[0] - dx * (0.4 + away), y = ht[1] - dy * (0.4 + away);
+				return (
+					<g key={i} opacity={Math.min(1, away * 1.5) * 0.9}>
+						{i < 2 ? <circle cx={x} cy={y} r={r} fill="#3a3f4a" filter="url(#felt)" /> : (
+							<g>{[[-60, 0, 60], [0, -26, 74], [60, -2, 56], [0, 18, 80]].map(([ex, ey, rr], j) => <ellipse key={j} cx={x + ex} cy={y + ey} rx={rr} ry={rr * 0.6} fill="#3a3f4a" filter="url(#felt)" />)}
+								<path d={`M${x - 70},${y + 20} L${x - 30},${y - 20} L${x + 5},${y + 8} L${x + 40},${y - 30} L${x + 80},${y + 20} Z`} fill="#565d6b" opacity={0.8} />
+								<circle cx={x + 50} cy={y - 40} r={10} fill="#d9c9a8" opacity={0.6} /></g>
+						)}
+					</g>
+				);
+			})}
+		</Frame>
+	);
+};
+// three rocks: the tags arrive one by one; the third candle lights
+const Rocks: React.FC<{T: number}> = ({T}) => {
+	const L = (i: number) => LINES.filter((l) => l.sec === 'rocks')[i];
+	const ys = (x: number) => 900 - 0.12 * x;
+	const k = 0.56, r = 96;
+	const lanes = [[260, '只是份工作'], [860, '是我的事业'], [1460, '是我的使命']] as const;
+	const tagAt = (i: number) => L(1).a + i * ((L(1).b - L(1).a) / 3);
+	const lit = cl01((T - L(3).a) / 0.8);
+	return (
+		<Frame header="1997 · 美国">
+			<Land sky={NIGHT} a={900} b={-0.12} sun={[1700, 640, 0.25]} t={T} />
+			{lanes.map(([x0, tag], i) => {
+				const heave = Math.max(0, Math.sin(T * 2.1 + i * 1.3)) ** 2;
+				const cx = x0 + 150 + 4 * (T - L(0).a) + 4 * heave, cy = ys(cx) - r * 0.92;
+				const pose: Pose = {...PUSH, lean: 30 + 4 * heave};
+				const tip = tipOf(pose, true);
+				const mx = cx - r * 0.98 - tip[0] * k, my = ys(mx) + 8;
+				const warm = i === 2 ? lit : 0;
+				const to = cl01((T - tagAt(i)) / 0.4);
+				return (
+					<g key={tag}>
+						{warm > 0 && <ellipse cx={cx} cy={cy - 60} rx={340} ry={260} fill="url(#warmGlow)" opacity={0.75 * warm} />}
+						<Rock c={[cx, cy]} r={r} rim={i === 2 && warm > 0.5 ? '#ffc58a' : '#7f8aa0'} rot={(T - L(0).a) * 3} />
+						<Man x={mx} y={my} k={k} pose={pose} warm={i === 2 && warm > 0.5} />
+						{to > 0 && (
+							<g transform={`translate(${cx + 30},${cy - r - 4 - 30 * (1 - to)}) rotate(${-6 + i * 5})`} opacity={to}>
+								<line x1={0} y1={0} x2={10} y2={40} stroke="#d9cfb8" strokeWidth={1.5} opacity={0.7} />
+								<rect x={-6} y={40} width={150} height={52} rx={4} fill="#d9cfb8" filter="url(#paper)" opacity={i === 2 && warm > 0.5 ? 1 : 0.75} />
+								<text x={69} y={76} textAnchor="middle" style={{fontFamily: SERIF, fontWeight: 700, fontSize: 26}} fill="#2a2420">{tag}</text>
+							</g>
+						)}
+						{i === 2 && warm > 0 && (
+							<g transform={`translate(${cx - 30},${cy - r + 6})`}>
+								<rect x={-8} y={-30} width={16} height={30} fill="#e9dfc8" />
+								<path d={`M0,${-58 - 3 * Math.sin(T * 11)} C-8,-44 -6,-36 0,-32 C6,-36 8,-44 0,${-58 - 3 * Math.sin(T * 11)} Z`} fill="#ffd27a" opacity={warm} />
+								<circle cx={0} cy={-44} r={22} fill="url(#warmGlow)" opacity={warm} />
+							</g>
+						)}
+					</g>
+				);
+			})}
+		</Frame>
+	);
+};
+// dawn: the sun comes up; a hand on the rock; no strings
+const Dawn: React.FC<{T: number}> = ({T}) => {
+	const [a, b] = secSpan('dawn');
+	const q = cl01((T - a) / (b - a + 2));
+	const ground = 860, k = 0.95, mx = 760;
+	const pose: Pose = {head: -10 - 4 * q, lean: 0, armN: [52, 6], armF: [4, 8], legN: [6, 0], legF: [-6, 0]};
+	const tip = W2(mx, ground, k, tipOf(pose, true));
+	const r = (ground - tip[1]) / 1.62, c: Pt = [tip[0] + r * 0.62, tip[1] + r * 0.62];
+	const sky = [lerp(0x0b, 0x14, q), lerp(0x0e, 0x1e, q), lerp(0x15, 0x30, q)].map((v) => Math.round(v).toString(16).padStart(2, '0')).join('');
+	return (
+		<Frame>
+			<Land sky={[`#${sky}`, '#25263a', '#6a4a4a', q > 0.5 ? '#d89a62' : '#c88a5a']} a={ground + 10} b={0} sun={[1380, 700 - 90 * q, 0.6 + 0.4 * q]} clay="#3a322b" t={T} />
+			<path d="M0,620 L300,520 L520,560 L700,470 L900,600 L1200,660 L1920,640 L1920,1080 L0,1080 Z" fill="#1d1a1c" opacity={0.6} filter="url(#paper)" />
+			<Rock c={c} r={r} rim="#ffc58a" />
+			<Man x={mx} y={ground} k={k} pose={pose} />
+		</Frame>
+	);
+};
+const EndCard: React.FC<{u: number}> = ({u}) => (
+	<AbsoluteFill style={{background: '#050506', justifyContent: 'center', alignItems: 'center', flexDirection: 'column'}}>
+		<div style={{fontFamily: SERIF, fontWeight: 700, fontSize: 72, color: INK, letterSpacing: '0.1em', opacity: cl01(u / 0.4)}}>你现在推的石头是什么？</div>
+		<div style={{fontFamily: SERIF, fontSize: 36, color: 'rgba(236,230,218,0.6)', letterSpacing: '0.3em', marginTop: 34, opacity: cl01((u - 0.3) / 0.4)}}>评论区说说</div>
+		<div style={{position: 'absolute', bottom: 70, fontFamily: SERIF, fontSize: 26, color: 'rgba(236,230,218,0.4)', letterSpacing: '0.3em'}}>《推石头的人，是幸福的》 · ◆ Juno · VIBE知识大赏</div>
+	</AbsoluteFill>
+);
+
+const Section: React.FC<{sec: Sec; T: number; t: number}> = ({sec, T, t}) => {
+	const [a0] = secSpan(sec);
+	const u = t - a0;
+	switch (sec) {
+		case 'plat': {
+			const spinU = ease(cl01((t - 3.9) / 1.7));
+			const flick = t > 3.9 && t < 5.7 ? 0.45 + 0.55 * ((Math.floor(t * 12) * 7919) % 5 > 1 ? 1 : 0) : 1;
+			return <S1b t={t} spin={6 * spinU} flick={flick} trainShift={0.42 * spinU} headLift={20 * Math.sin(Math.PI * cl01((t - 3.9) / 2.0))} sub="" />;
+		}
+		case 'hill': {
+			const fall = cl01((t - (F_DROP - 0.6)) / 0.6), v = t - F_DROP;
+			const plankY = t < F_DROP - 0.6 ? -320 : t < F_DROP ? -320 + 620 * fall * fall : 300 - 28 * Math.exp(-5 * v) * Math.cos(16 * v);
+			return <Title t={t} plankY={plankY} />;
+		}
+		case 'myth': return <MythPush u={u} T={t} />;
+		case 'roll': return <Roll u={u} T={t} dur={secSpan('roll')[1] - a0} />;
+		case 'down': return <Down u={u} T={t} />;
+		case 'gods': return <Gods u={u} />;
+		case 'lab': return <Lab T={t} />;
+		case 'dusk': return <Dusk T={t} />;
+		case 'attic': return <Attic T={t} />;
+		case 'walk': {
+			const rl = LINES.filter((l) => l.sec === 'walk')[2];
+			return <Walk T={t} r={cl01((t - rl.a - 0.4) / 2.2)} />;
+		}
+		case 'phone': return <Phone T={t} />;
+		case 'rocks': return <Rocks T={t} />;
+		case 'plat2': return <S1b t={t} spin={0} headLift={16} sub="" />;
+		case 'dawn': return <Dawn T={t} />;
+	}
+	return null;
+};
+const Film35: React.FC = () => {
+	useFonts();
+	const T = useCurrentFrame() / FPS;
+	const t = Math.floor(T * 12) / 12;                                          // stop motion: the picture steps at 12 fps
+	const XF = 0.5;
+	const active = SECS.filter((s) => T >= s.a - XF && T < s.b + XF);
+	const line = LINES.find((l) => T >= l.a && T < l.b);
+	const subO = line ? cl01((T - line.a) / 0.2) * cl01((line.b - T) / 0.2) : 0;
+	return (
+		<AbsoluteFill style={{background: '#000'}}>
+			{T < CARD + 0.4 && active.map((s) => {
+				const o = cl01((T - (s.a - XF)) / XF) * (s.b + XF - T < XF ? cl01((s.b + XF - T) / XF) : 1);
+				const first = s.sec === 'plat';
+				return <AbsoluteFill key={s.sec} style={{opacity: first ? (s.b + XF - T < XF ? cl01((s.b + XF - T) / XF) : 1) : o}}><Section sec={s.sec} T={T} t={t} /></AbsoluteFill>;
+			})}
+			{line && <AbsoluteFill style={{opacity: subO}}><Sub t={line.text} /></AbsoluteFill>}
+			{T >= CARD && <AbsoluteFill style={{opacity: cl01((T - CARD) / 0.4)}}><EndCard u={T - CARD} /></AbsoluteFill>}
+		</AbsoluteFill>
+	);
+};
+export const FILM35_FRAMES = Math.round(FILM_END * FPS);
+export const FILM35_INFO = {LINES, SECS, CARD, FILM_END};
+
+// ---- cover scene (no text; titles are set in PIL): he pushes uphill under the gods' bar, framed centre so both crops keep him
+const CoverScene: React.FC = () => {
+	const ys = (x: number) => 900 - 0.3 * x;
+	const k = 0.95, r = 165, cx = 1110;
+	const cy = ys(cx) - r * 0.92;
+	const pose: Pose = {...PUSH, lean: 32};
+	const tip = tipOf(pose, true);
+	const mx = cx - r * 0.98 - tip[0] * k, my = ys(mx) + 12;
+	const bx = 600, by = 170, rot = 12;
+	return (
+		<AbsoluteFill style={{background: '#000'}}>
+			<svg width={W} height={H} style={{position: 'absolute', inset: 0}}>
+				<Defs />
+				<Land sky={NIGHT} a={900} b={-0.3} sun={[1500, 560, 0.55]} />
+				<Rock c={[cx, cy]} r={r} rim="#ffc58a" />
+				<Man x={mx} y={my} k={k} pose={pose} />
+				{attachPts(pose).map(({p, to}, i) => { const a = W2(mx, my, k, p); const slot: Pt = [[-1, -2, -4, -3].includes(to) ? -124 + 40 * (Math.abs(to) - 1) : 124 - 40 * (Math.abs(to) - 1), [1, -1].includes(to) ? 150 : 0]; return <g key={i}><RealString a={a} b={barPt(bx, by, rot, slot)} id={`c${i}`} band={[0.3, 0.75]} w={i === 4 || i === 6 ? 1.15 : 0.95} /><Eyelet p={a} k={k * 0.9} /></g>; })}
+				<CrossBar x={bx} y={by} rot={rot} />
+				<GodHand x={bx - 26} y={by - 84} s={0.75} rot={6} />
+				<GodHand x={bx + 84} y={by - 76} s={0.66} rot={-10} flip />
+			</svg>
+			<Grade />
+		</AbsoluteFill>
+	);
+};
 
 const Puppet35: React.FC = () => {
 	useFonts();
@@ -969,4 +1467,11 @@ const Puppet35: React.FC = () => {
 	const list = [<S1b t={u} />, <S2 />, <S3 />, <S4 />, <S5 />, <S6 t={u} mat={MATS.char} />, <S7 />, <S8 />, <S9 />, <Sheet />];
 	return list[i];
 };
-registerRoot(() => <Composition id="PUP35" component={Puppet35} durationInFrames={SEG * 10 * FPS} fps={FPS} width={W} height={H} />);
+registerRoot(() => (
+	<>
+		<Composition id="PUP35" component={Puppet35} durationInFrames={SEG * 10 * FPS} fps={FPS} width={W} height={H} />
+		<Composition id="SAMPLE35" component={Sample35} durationInFrames={Math.round(16.5 * FPS)} fps={FPS} width={W} height={H} />
+		<Composition id="COVER35" component={() => { useFonts(); return <CoverScene />; }} durationInFrames={1} fps={FPS} width={W} height={H} />
+		<Composition id="FILM35" component={Film35} durationInFrames={FILM35_FRAMES} fps={FPS} width={W} height={H} />
+	</>
+));
