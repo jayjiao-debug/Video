@@ -1,0 +1,328 @@
+<!doctype html>
+<html><head><meta charset="utf-8"><title>ep33 key frames</title>
+<style>
+  html,body{margin:0;width:1920px;height:1080px;overflow:hidden;background:#15110f}
+  #wrap{position:relative;width:1920px;height:1080px}
+  canvas{position:absolute;inset:0;display:block}
+  #ov{position:absolute;inset:0;pointer-events:none;font-family:'Noto Sans CJK SC','Noto Sans CJK JP',sans-serif}
+  .sub{position:absolute;left:0;right:0;bottom:0;height:150px;display:flex;align-items:center;justify-content:center;
+       background:linear-gradient(to top,rgba(12,9,8,.82),rgba(12,9,8,.55) 70%,rgba(12,9,8,0));}
+  .sub span{font-family:'Noto Serif CJK SC',serif;font-weight:700;font-size:56px;color:#fbf6ec;letter-spacing:.04em;
+       text-shadow:0 2px 10px rgba(0,0,0,.6)}
+  .sub b{color:#f6cf78;text-shadow:0 0 18px rgba(246,207,120,.55),0 2px 10px rgba(0,0,0,.6)}
+  .corner{position:absolute;right:42px;top:30px;font-size:20px;color:rgba(251,246,236,.5);letter-spacing:.2em}
+  .tag{position:absolute;transform:translate(-50%,-50%);font-weight:900;color:#fbf6ec;background:rgba(18,14,12,.78);
+       border-radius:14px;padding:10px 26px;white-space:nowrap;box-shadow:0 8px 30px rgba(0,0,0,.35)}
+  .num{font-size:150px;line-height:1;padding:18px 40px 22px}
+  .lab{font-size:44px;font-weight:700;color:rgba(251,246,236,.85);display:block;margin-top:6px;text-align:center}
+</style>
+<script type="importmap">{"imports":{"three":"./node_modules/three/build/three.module.js","three/addons/":"./node_modules/three/examples/jsm/"}}</script>
+</head><body><div id="wrap"><div id="ov"></div></div>
+<script type="module">
+import * as THREE from 'three';
+import {RoundedBoxGeometry} from 'three/addons/geometries/RoundedBoxGeometry.js';
+import {RoomEnvironment} from 'three/addons/environments/RoomEnvironment.js';
+
+// ---------------------------------------------------------------- palette (look: 微缩剖面屋 · "The Doll's-House Cut")
+const P = {
+  bg: '#15110f', plaster: '#ece4d6', plasterDark: '#d9cdb9', oak: '#c3925f', tile: '#e7e0d3', slab: '#3a2a20',
+  door: '#1f4e52', sofa: '#8a9a7b', rug: '#b5523b', counter: '#f3efe7', cabinet: '#2f5d61', pawn: '#22324a',
+  amber: '#ffb547', coral: '#ff5a4e', ink: '#1c1612',
+};
+const F = new URLSearchParams(location.search).get('f') || 'hook';
+
+const renderer = new THREE.WebGLRenderer({antialias: true, preserveDrawingBuffer: true});
+renderer.setPixelRatio(1); renderer.setSize(1920, 1080);
+renderer.shadowMap.enabled = true; renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+renderer.toneMapping = THREE.ACESFilmicToneMapping; renderer.toneMappingExposure = 1.0;
+renderer.outputColorSpace = THREE.SRGBColorSpace;
+document.getElementById('wrap').prepend(renderer.domElement);
+
+const scene = new THREE.Scene();
+const pmrem = new THREE.PMREMGenerator(renderer);
+scene.environment = pmrem.fromScene(new RoomEnvironment(), 0.04).texture;
+scene.environmentIntensity = 0.35;
+
+// ---------------------------------------------------------------- helpers
+const M = (c, o = {}) => new THREE.MeshStandardMaterial({color: c, roughness: 0.85, metalness: 0, ...o});
+function box(w, h, d, mat, x, y, z, r = 0.02, parent = scene) {
+  const g = r > 0 ? new RoundedBoxGeometry(w, h, d, 3, Math.min(r, w / 2, h / 2, d / 2)) : new THREE.BoxGeometry(w, h, d);
+  const m = new THREE.Mesh(g, mat); m.position.set(x, y, z); m.castShadow = m.receiveShadow = true; parent.add(m); return m;
+}
+function canvasTex(draw, w = 512, h = 512, rx = 1, ry = 1) {
+  const c = document.createElement('canvas'); c.width = w; c.height = h; draw(c.getContext('2d'), w, h);
+  const t = new THREE.CanvasTexture(c); t.wrapS = t.wrapT = THREE.RepeatWrapping; t.repeat.set(rx, ry);
+  t.colorSpace = THREE.SRGBColorSpace; t.anisotropy = 8; return t;
+}
+let seed = 7; const rnd = () => (seed = (seed * 16807) % 2147483647) / 2147483647;
+const oakTex = canvasTex((g, w, h) => {
+  g.fillStyle = P.oak; g.fillRect(0, 0, w, h);
+  for (let i = 0; i < 8; i++) { const y = i * h / 8; g.fillStyle = `rgba(80,45,20,${0.05 + rnd() * 0.08})`; g.fillRect(0, y, w, h / 8);
+    g.fillStyle = 'rgba(60,35,15,.35)'; g.fillRect(0, y, w, 2); const off = rnd() * w; g.fillRect(off, y, 2, h / 8); }
+  for (let i = 0; i < 400; i++) { g.fillStyle = `rgba(90,50,20,${rnd() * 0.06})`; g.fillRect(rnd() * w, rnd() * h, 40 + rnd() * 120, 1); }
+}, 512, 512, 3, 2.5);
+const tileTex = canvasTex((g, w, h) => {
+  g.fillStyle = P.tile; g.fillRect(0, 0, w, h); g.strokeStyle = 'rgba(120,105,85,.35)'; g.lineWidth = 3;
+  for (let i = 0; i <= 4; i++) { g.beginPath(); g.moveTo(i * w / 4, 0); g.lineTo(i * w / 4, h); g.stroke(); g.beginPath(); g.moveTo(0, i * h / 4); g.lineTo(w, i * h / 4); g.stroke(); }
+}, 256, 256, 2.5, 2.5);
+
+// ---------------------------------------------------------------- the flat: living room (x 0..6) | kitchen (x 6..11), front (z = 5) cut open
+const H = 2.6, T = 0.15, DOOR = {z0: 2.0, z1: 3.0, h: 2.1};
+const living = new THREE.Group(), kitchen = new THREE.Group();
+scene.add(living, kitchen);
+const plaster = M(P.plaster), plasterD = M(P.plasterDark), doorM = M(P.door, {roughness: 0.6});
+
+// slabs (the miniature's base, so it reads as a cut model)
+box(6.0, 0.35, 5.15, M(P.slab), 3.0, -0.175, 2.5, 0.02, living);
+box(5.15, 0.35, 5.15, M(P.slab), 8.575, -0.175, 2.5, 0.02, kitchen);
+const lf = new THREE.Mesh(new THREE.PlaneGeometry(6, 5), M('#ffffff', {map: oakTex, roughness: 0.7}));
+lf.rotation.x = -Math.PI / 2; lf.position.set(3, 0.002, 2.5); lf.receiveShadow = true; living.add(lf);
+const kf = new THREE.Mesh(new THREE.PlaneGeometry(5, 5), M('#ffffff', {map: tileTex, roughness: 0.55}));
+kf.rotation.x = -Math.PI / 2; kf.position.set(8.5, 0.002, 2.5); kf.receiveShadow = true; kitchen.add(kf);
+
+// walls: back, left, right; partition with a doorway (belongs to the kitchen so the living room can "turn like a page")
+box(6.0, H, T, plaster, 3.0, H / 2, -T / 2, 0, living);
+box(T, H, 5.0, plasterD, -T / 2, H / 2, 2.5, 0, living);
+box(5.0, H, T, plaster, 8.5, H / 2, -T / 2, 0, kitchen);
+box(T, H, 5.0, plasterD, 11 + T / 2, H / 2, 2.5, 0, kitchen);
+box(T, H, DOOR.z0, plasterD, 6, H / 2, DOOR.z0 / 2, 0, kitchen);
+box(T, H, 5 - DOOR.z1, plasterD, 6, H / 2, (5 + DOOR.z1) / 2, 0, kitchen);
+box(T, H - DOOR.h, DOOR.z1 - DOOR.z0, plasterD, 6, (H + DOOR.h) / 2, (DOOR.z0 + DOOR.z1) / 2, 0, kitchen);
+// the door casing (the film's motif: a frame = the edge of a page)
+const doorFrame = new THREE.Group(); kitchen.add(doorFrame);
+for (const s of [-1, 1]) {
+  box(0.3, DOOR.h + 0.08, 0.09, doorM, 6, (DOOR.h + 0.08) / 2, s < 0 ? DOOR.z0 - 0.045 : DOOR.z1 + 0.045, 0.015, doorFrame).scale.set(1, 1, 1);
+}
+box(0.26, 0.09, DOOR.z1 - DOOR.z0 + 0.18, doorM, 6, DOOR.h + 0.045, (DOOR.z0 + DOOR.z1) / 2, 0.015, doorFrame);
+const leafPivot = new THREE.Group(); leafPivot.position.set(6.1, 0, DOOR.z1 - 0.98); kitchen.add(leafPivot);
+const leaf = box(0.05, DOOR.h - 0.04, 0.96, M(P.door, {roughness: 0.55}), 0, (DOOR.h - 0.04) / 2, 0.48, 0.015, leafPivot);
+box(0.04, 0.04, 0.16, M('#c9a46a', {metalness: 0.7, roughness: 0.3}), 0.06, 1.0, 0.85, 0.01, leafPivot);
+leafPivot.position.z = DOOR.z1 - 0.02; leafPivot.rotation.y = 1.4; leaf.position.z = 0.48;
+// skirting boards
+box(6, 0.1, 0.03, plasterD, 3, 0.05, 0.015, 0, living); box(5, 0.1, 0.03, plasterD, 8.5, 0.05, 0.015, 0, kitchen);
+
+// living room: window (light source), sofa, rug, lamp, two "experiment" tables
+const skyTex = canvasTex((g, w, h) => { const l = g.createLinearGradient(0, 0, 0, h); l.addColorStop(0, '#9cc3d6'); l.addColorStop(0.7, '#f4dcb2'); l.addColorStop(1, '#ffd79a'); g.fillStyle = l; g.fillRect(0, 0, w, h); }, 64, 128);
+skyTex.wrapS = skyTex.wrapT = THREE.ClampToEdgeWrapping; skyTex.repeat.set(1, 1);
+const win = new THREE.Mesh(new THREE.PlaneGeometry(1.6, 1.2), new THREE.MeshBasicMaterial({map: skyTex, toneMapped: false})); win.position.set(1.6, 1.55, 0.012); living.add(win);
+box(0.05, 1.2, 0.05, doorM, 1.6, 1.55, 0.03, 0.01, living); box(1.6, 0.05, 0.05, doorM, 1.6, 1.55, 0.03, 0.01, living);
+box(0.06, 1.3, 0.06, doorM, 0.8, 1.55, 0.04, 0.01, living); box(0.06, 1.3, 0.06, doorM, 2.4, 1.55, 0.04, 0.01, living);
+box(1.72, 0.06, 0.06, doorM, 1.6, 2.18, 0.04, 0.01, living); box(1.72, 0.06, 0.06, doorM, 1.6, 0.92, 0.04, 0.01, living);
+box(0.9, 0.42, 2.2, M(P.sofa), 0.5, 0.21, 3.3, 0.08, living); box(0.25, 0.75, 2.2, M(P.sofa), 0.15, 0.4, 3.3, 0.08, living);
+const rug = box(2.4, 0.02, 1.8, M(P.rug, {roughness: 1}), 2.3, 0.012, 3.3, 0.01, living); rug.castShadow = false;
+function table(x, z, parent, w = 1.0, d = 0.7, top = '#efe7da') {
+  box(w, 0.06, d, M(top, {roughness: 0.5}), x, 0.75, z, 0.02, parent);
+  for (const [dx, dz] of [[-1, -1], [1, -1], [-1, 1], [1, 1]]) box(0.05, 0.72, 0.05, M('#3b2c22'), x + dx * (w / 2 - 0.08), 0.36, z + dz * (d / 2 - 0.08), 0.01, parent);
+}
+const TA = {x: 3.6, z: 1.2}, TC = {x: 1.6, z: 4.2}, TK = {x: 8.7, z: 3.3};
+table(TA.x, TA.z, living); table(TC.x, TC.z, living);
+// lamp
+const lampPole = box(0.08, 1.5, 0.08, M('#2b2420'), 5.4, 0.75, 0.4, 0.01, living);
+const shade = box(0.45, 0.3, 0.45, M('#f6e7c8', {emissive: '#ffd08a', emissiveIntensity: 0.6}), 5.4, 1.6, 0.4, 0.06, living);
+
+// kitchen: counter with cabinets, fridge, shelf, round table
+box(3.6, 0.9, 0.7, M(P.cabinet, {roughness: 0.6}), 8.1, 0.45, 0.35, 0.02, kitchen);
+box(3.7, 0.05, 0.75, M(P.counter, {roughness: 0.35}), 8.1, 0.925, 0.375, 0.01, kitchen);
+box(0.8, 2.0, 0.75, M('#e9e6e0', {roughness: 0.4}), 10.5, 1.0, 0.4, 0.05, kitchen);
+box(2.4, 0.05, 0.3, M('#3b2c22'), 8.1, 1.75, 0.16, 0.01, kitchen);
+box(0.6, 0.04, 0.6, M('#d8d2c8', {roughness: 0.3, metalness: 0.4}), 7.2, 0.96, 0.35, 0.01, kitchen); // sink
+const ktop = new THREE.Mesh(new THREE.CylinderGeometry(0.6, 0.6, 0.05, 48), M('#efe7da', {roughness: 0.5}));
+ktop.position.set(TK.x, 0.75, TK.z); ktop.castShadow = ktop.receiveShadow = true; kitchen.add(ktop);
+const kleg = new THREE.Mesh(new THREE.CylinderGeometry(0.05, 0.05, 0.73, 16), M('#3b2c22')); kleg.position.set(TK.x, 0.365, TK.z); kleg.castShadow = true; kitchen.add(kleg);
+const kfoot = new THREE.Mesh(new THREE.CylinderGeometry(0.3, 0.3, 0.03, 32), M('#3b2c22')); kfoot.position.set(TK.x, 0.015, TK.z); kitchen.add(kfoot);
+// mugs on the shelf (the thing you came for lives here)
+const mugs = [];
+for (const [x, c] of [[7.3, '#d9d0c0'], [7.75, '#9fb3a8'], [8.65, '#d9d0c0']]) {
+  const mug = new THREE.Mesh(new THREE.CylinderGeometry(0.08, 0.07, 0.17, 24), M(c, {roughness: 0.4}));
+  mug.position.set(x, 1.86, 0.16); mug.castShadow = true; kitchen.add(mug); mugs.push(mug);
+}
+
+// ---------------------------------------------------------------- props: pawn, blocks, glow
+function pawn(x, z, parent = scene, color = P.pawn) {
+  const g = new THREE.Group(); const m = M(color, {roughness: 0.45});
+  const base = new THREE.Mesh(new THREE.CylinderGeometry(0.23, 0.26, 0.07, 32), m); base.position.y = 0.035;
+  const body = new THREE.Mesh(new THREE.CylinderGeometry(0.11, 0.2, 0.75, 32), m); body.position.y = 0.44;
+  const neck = new THREE.Mesh(new THREE.CylinderGeometry(0.16, 0.16, 0.04, 32), m); neck.position.y = 0.83;
+  const head = new THREE.Mesh(new THREE.SphereGeometry(0.16, 32, 16), m); head.position.y = 1.0;
+  for (const p of [base, body, neck, head]) { p.castShadow = p.receiveShadow = true; g.add(p); }
+  g.position.set(x, 0, z); parent.add(g); return g;
+}
+const BS = 0.24;
+function block(color, x, y, z, parent = scene, glow = 0) {
+  const b = box(BS, BS, BS, M(color, {roughness: 0.35, emissive: glow ? color : '#000', emissiveIntensity: glow}), x, y + BS / 2, z, 0.03, parent);
+  if (glow) { const l = new THREE.PointLight(color, glow * 1.6, 2.2, 2); l.position.set(x, y + BS / 2 + 0.05, z); parent.add(l); }
+  return b;
+}
+function ghost(x, y, z, parent = scene, color = P.amber) {
+  const g = new THREE.Group();
+  const geo = new THREE.BoxGeometry(BS, BS, BS);
+  const fill = new THREE.Mesh(geo, new THREE.MeshBasicMaterial({color, transparent: true, opacity: 0.12, depthWrite: false}));
+  const edge = new THREE.LineSegments(new THREE.EdgesGeometry(geo), new THREE.LineDashedMaterial({color, dashSize: 0.03, gapSize: 0.025, transparent: true, opacity: 0.9}));
+  edge.computeLineDistances(); g.add(fill, edge); g.position.set(x, y + BS / 2, z); parent.add(g); return g;
+}
+// a floor path (flat ribbon of dashes)
+function path(points, color, parent = scene, w = 0.07) {
+  const curve = new THREE.CatmullRomCurve3(points.map(p => new THREE.Vector3(p[0], 0.03, p[1])), false, 'centripetal');
+  const n = Math.floor(curve.getLength() / 0.16); const mat = new THREE.MeshBasicMaterial({color});
+  for (let i = 0; i < n; i++) {
+    const t0 = i / n, t1 = (i + 0.55) / n; const a = curve.getPointAt(t0), b = curve.getPointAt(t1);
+    const len = a.distanceTo(b); const d = new THREE.Mesh(new THREE.PlaneGeometry(len, w), mat);
+    d.rotation.x = -Math.PI / 2; d.position.copy(a.clone().add(b).multiplyScalar(0.5));
+    d.rotation.z = -Math.atan2(b.z - a.z, b.x - a.x); parent.add(d);
+  }
+  return curve;
+}
+
+// ---------------------------------------------------------------- lights
+const hemi = new THREE.HemisphereLight('#fff1dc', '#3a2c26', 0.55); scene.add(hemi);
+function keyLamp(pos, target, intensity = 900, angle = 0.55) {
+  const s = new THREE.SpotLight('#ffe0b0', intensity, 0, angle, 0.65, 2);
+  s.position.copy(pos); s.target.position.copy(target); s.castShadow = true;
+  s.shadow.mapSize.set(2048, 2048); s.shadow.bias = -0.0004; s.shadow.radius = 6; s.shadow.camera.near = 1; s.shadow.camera.far = 40;
+  scene.add(s, s.target); return s;
+}
+function windowLight() {
+  const d = new THREE.DirectionalLight('#ffe7c2', 1.2); d.position.set(1.6, 6, -6); d.target.position.set(3, 0, 3);
+  d.castShadow = true; d.shadow.mapSize.set(2048, 2048); d.shadow.camera.left = -8; d.shadow.camera.right = 8; d.shadow.camera.top = 8; d.shadow.camera.bottom = -8; d.shadow.bias = -0.0005;
+  scene.add(d, d.target); return d;
+}
+
+// ---------------------------------------------------------------- overlays
+const ov = document.getElementById('ov');
+function sub(html) { ov.insertAdjacentHTML('beforeend', `<div class="sub"><span>${html}</span></div>`); }
+function corner() { ov.insertAdjacentHTML('beforeend', `<div class="corner">Juno · VIBE知识大赏</div>`); }
+let camera;
+function toScreen(x, y, z) { const v = new THREE.Vector3(x, y, z).project(camera); return [(v.x + 1) / 2 * 1920, (1 - v.y) / 2 * 1080]; }
+function tag(x, y, z, html, cls = '', style = '') { const [sx, sy] = toScreen(x, y, z); ov.insertAdjacentHTML('beforeend', `<div class="tag ${cls}" style="left:${sx}px;top:${sy}px;${style}">${html}</div>`); }
+function cam(pos, look, fov = 32) { camera = new THREE.PerspectiveCamera(fov, 1920 / 1080, 0.05, 200); camera.position.set(...pos); camera.lookAt(...look); camera.updateMatrixWorld(true); }
+function ceiling() {
+  const c = box(11.3, 0.12, 5.2, M('#efe8dc'), 5.5, H + 0.06, 2.5, 0); c.castShadow = true;
+  const front = box(11.3, H, T, plaster, 5.5, H / 2, 5 + T / 2, 0); // close the cut for first-person shots
+}
+function bgGradient(inner = '#3a2b22', outer = '#110d0b') {
+  const t = canvasTex((g, w, h) => { const r = g.createRadialGradient(w / 2, h * 0.42, 40, w / 2, h / 2, w * 0.7); r.addColorStop(0, inner); r.addColorStop(1, outer); g.fillStyle = r; g.fillRect(0, 0, w, h); }, 1024, 576);
+  t.wrapS = t.wrapT = THREE.ClampToEdgeWrapping; t.repeat.set(1, 1); scene.background = t;
+}
+const DIORAMA_CAM = [[2.2, 10.5, 15.5], [5.3, 0.5, 2.2], 31];
+
+// ---------------------------------------------------------------- frames
+const frames = {
+  // 0.0  你走进厨房，停住了  — first person, just through the door, the thing you came for has gone blank
+  hook() {
+    lampPole.visible = shade.visible = false;
+    ceiling(); scene.background = new THREE.Color('#120e0c'); hemi.intensity = 0.12; renderer.toneMappingExposure = 0.95;
+    scene.environmentIntensity = 0.15;
+    const pend = new THREE.PointLight('#ffcf8f', 11, 7, 1.7); pend.position.set(8.3, 2.3, 1.5); pend.castShadow = true; pend.shadow.mapSize.set(2048, 2048); pend.shadow.bias = -0.001; scene.add(pend);
+    const bulb = new THREE.Mesh(new THREE.SphereGeometry(0.08, 24, 12), new THREE.MeshBasicMaterial({color: '#fff1d0', toneMapped: false})); bulb.position.set(8.3, 2.32, 1.5); scene.add(bulb);
+    const shadeO = new THREE.Mesh(new THREE.ConeGeometry(0.3, 0.24, 40, 1, true), M(P.cabinet, {side: THREE.FrontSide, roughness: 0.5})); shadeO.position.set(8.3, 2.42, 1.5); scene.add(shadeO);
+    const shadeI = new THREE.Mesh(new THREE.ConeGeometry(0.295, 0.235, 40, 1, true), new THREE.MeshBasicMaterial({color: '#ffe6bd', side: THREE.BackSide, toneMapped: false})); shadeI.position.copy(shadeO.position); scene.add(shadeI);
+    box(0.012, 0.2, 0.012, M('#222'), 8.3, 2.5, 1.5, 0).castShadow = false;
+    const behind = new THREE.PointLight('#8aa0c8', 1.2, 6, 2); behind.position.set(2.5, 2.0, 3.5); scene.add(behind); // cool dim living room behind you
+    // the thing you came for: a mug-shaped gap on the shelf
+    const gm = new THREE.Group(); gm.position.set(8.2, 1.865, 0.16); kitchen.add(gm);
+    gm.add(new THREE.Mesh(new THREE.CylinderGeometry(0.08, 0.07, 0.17, 32, 1, true), new THREE.MeshBasicMaterial({color: P.amber, transparent: true, opacity: 0.22, depthWrite: false, side: THREE.DoubleSide, toneMapped: false})));
+    for (const y of [-0.085, 0.085]) { const r = new THREE.Mesh(new THREE.TorusGeometry(y > 0 ? 0.08 : 0.07, 0.004, 8, 48), new THREE.MeshBasicMaterial({color: P.amber, toneMapped: false})); r.rotation.x = Math.PI / 2; r.position.y = y; gm.add(r); }
+    const gl = new THREE.PointLight(P.amber, 0.6, 0.8, 2); gl.position.set(8.2, 1.9, 0.3); scene.add(gl);
+    cam([4.3, 1.6, 4.4], [8.2, 1.5, 0.45], 50);
+    tag(8.2, 2.18, 0.16, '?', '', `font-size:92px;background:none;box-shadow:none;color:${P.amber};text-shadow:0 0 30px rgba(255,181,71,.7);padding:0`);
+    ov.insertAdjacentHTML('beforeend', '<div style="position:absolute;inset:0;background:radial-gradient(ellipse at 55% 45%,rgba(0,0,0,0) 45%,rgba(0,0,0,.55) 100%)"></div>');
+    corner(); sub('你走进厨房，停住了');
+  },
+  // 10.0  title on the drop — the camera has risen through the ceiling: the flat is a cut-away miniature
+  title() {
+    bgGradient(); keyLamp(new THREE.Vector3(-2, 14, 10), new THREE.Vector3(5.5, 0, 2.5), 1500, 0.62); windowLight().intensity = 0.5;
+    pawn(4.6, 2.5); block(P.amber, 0, 0, 0).position.set(4.9, 0.95, 2.5); // carried block
+    block('#7fa59c', TA.x - 0.25, 0.78, TA.z); block('#e9dcc4', TA.x + 0.2, 0.78, TA.z + 0.1); block(P.coral, TK.x, 0.78, TK.z);
+    cam([2.4, 9.0, 14.8], [5.4, 1.0, 2.3], 34);
+    ov.insertAdjacentHTML('beforeend', `<div style="position:absolute;left:50%;top:76px;transform:translateX(-50%);display:flex;flex-direction:column;align-items:center">
+      <div style="border:16px solid ${P.door};border-bottom:none;border-radius:6px 6px 0 0;padding:26px 64px 18px;background:rgba(21,17,15,.72);box-shadow:0 20px 60px rgba(0,0,0,.5)">
+        <div style="font-family:'Noto Serif CJK SC',serif;font-weight:900;font-size:150px;line-height:1.05;color:#fbf6ec;letter-spacing:.06em">进门<span style="color:${P.amber};text-shadow:0 0 40px rgba(255,181,71,.6)">就忘</span></div>
+      </div></div>`);
+    corner();
+  },
+  // 20.0  有时，路上要穿过一扇门 / 有时，同样远，没有门 — the experiment, played on the miniature
+  setup() {
+    bgGradient(); keyLamp(new THREE.Vector3(-2, 14, 10), new THREE.Vector3(5.5, 0, 2.5), 1500, 0.62); windowLight().intensity = 0.5;
+    const pa = pawn(TA.x + 0.2, TA.z + 0.85); block(P.amber, 0, 0, 0).position.set(TA.x + 0.2, 1.38, TA.z + 0.85);
+    block('#7fa59c', TA.x - 0.3, 0.78, TA.z); block('#e9dcc4', TC.x, 0.78, TC.z); block(P.coral, TK.x, 0.78, TK.z);
+    path([[TA.x + 0.2, TA.z + 0.85], [5.0, 2.5], [6.0, 2.5], [7.2, 2.9], [TK.x - 0.65, TK.z]], P.amber);
+    path([[TA.x + 0.2, TA.z + 0.85], [4.6, 3.4], [3.6, 4.4], [2.4, 4.6], [TC.x + 0.55, TC.z]], '#9fd3c7');
+    cam(...DIORAMA_CAM);
+    tag(7.1, 0.05, 3.9, '穿过门', '', `font-size:40px;color:${P.amber}`);
+    tag(3.5, 0.05, 5.0, '没有门', '', 'font-size:40px;color:#9fd3c7');
+    tag(5.6, 2.9, 0, '两条路 · 一样长', '', 'font-size:40px;font-weight:700');
+    corner(); sub('有时，路上要穿过一扇门');
+  },
+  // 32.6  穿过一扇门：错22% — the number lands on each room
+  number() {
+    bgGradient(); keyLamp(new THREE.Vector3(-2, 14, 10), new THREE.Vector3(5.5, 0, 2.5), 1300, 0.62); windowLight().intensity = 0.45;
+    pawn(TK.x - 0.75, TK.z + 0.3); ghost(TK.x - 0.75, 1.26, TK.z + 0.3, scene, P.coral);
+    pawn(TC.x + 0.7, TC.z - 0.2); block(P.amber, 0, 0, 0).position.set(TC.x + 0.7, 1.38, TC.z - 0.2);
+    cam(...DIORAMA_CAM);
+    tag(2.9, 3.2, 1.6, `7%<span class="lab">没穿过门 · 答错</span>`, 'num', 'color:#9fd3c7');
+    tag(8.6, 3.2, 1.6, `22%<span class="lab">穿过一扇门 · 答错</span>`, 'num', `color:${P.coral}`);
+    corner(); sub('穿过一扇门：错<b>22%</b>');
+  },
+  // 56.6  跨过去，上一段就收起来了 — the living room lifts and turns like a page; the block stays on the old page
+  page() {
+    bgGradient('#30241d'); keyLamp(new THREE.Vector3(-1, 15, 11), new THREE.Vector3(6, 0, 2.5), 1500, 0.66); windowLight().intensity = 0.4;
+    block(P.amber, TA.x, 0.78, TA.z, living, 2.4);
+    pawn(7.1, 2.6, kitchen);
+    // hinge = the door wall's foot line (x = 6, y = 0): the old room lifts up and folds over like a page
+    living.position.set(6, 0, 0); living.children.forEach(c => c.position.x -= 6); living.rotation.z = -1.2;
+    cam([8.5, 6.5, 19.5], [5.2, 2.6, 2.4], 38);
+    tag(3.6, 6.2, 2.5, '上一段', '', 'font-size:44px;color:#fbf6ec');
+    tag(9.0, 3.3, 2.5, '这一段', '', 'font-size:44px;color:#fbf6ec');
+    corner(); sub('跨过去，上一段就<b>收起来了</b>');
+  },
+  // 64.6  实验里：回去，也没用 — walking back through the door: still blank
+  back() {
+    bgGradient(); keyLamp(new THREE.Vector3(-2, 14, 10), new THREE.Vector3(5.5, 0, 2.5), 1400, 0.62); windowLight().intensity = 0.5;
+    pawn(TA.x + 0.25, TA.z + 0.9); ghost(TA.x + 0.25, 1.26, TA.z + 0.9);
+    block('#7fa59c', TA.x - 0.3, 0.78, TA.z); block(P.coral, TK.x, 0.78, TK.z);
+    path([[TK.x - 0.65, TK.z], [7.2, 2.6], [6.0, 2.5], [5.0, 2.3], [TA.x + 0.25, TA.z + 0.9]], P.amber);
+    cam(...DIORAMA_CAM);
+    tag(TA.x + 0.25, 1.75, TA.z + 0.9, '?', '', `font-size:110px;background:none;box-shadow:none;color:${P.amber};text-shadow:0 0 30px rgba(255,181,71,.7);padding:0`);
+    corner(); sub('实验里：<b>回去，也没用</b>');
+  },
+  // 77.6  门后，就更容易记错 — counting backwards fills the air; the wrong block lights up
+  busy() {
+    bgGradient('#2b1f1b'); keyLamp(new THREE.Vector3(-2, 14, 10), new THREE.Vector3(7, 0, 2.5), 1100, 0.6); windowLight().intensity = 0.35;
+    pawn(TK.x - 0.75, TK.z + 0.1);
+    block(P.coral, TK.x + 0.05, 0.78, TK.z - 0.05, scene, 1.6); block(P.amber, TA.x, 0.78, TA.z, scene, 0.4);
+    cam([7.4, 7.5, 12.5], [7.4, 0.9, 2.2], 34);
+    const nums = ['100', '97', '94', '91', '88', '85', '82', '79', '76', '73', '70', '67'];
+    nums.forEach((n, i) => { const a = i * 0.62, r = 1.9 + (i % 3) * 0.55; tag(TK.x - 0.6 + Math.cos(a) * r, 1.6 + Math.sin(i * 1.7) * 0.7, TK.z - 0.4 + Math.sin(a) * r * 0.6, n, '',
+      `font-size:${48 + (i % 4) * 14}px;font-weight:900;background:none;box-shadow:none;color:rgba(251,246,236,${0.35 + (i % 3) * 0.2});padding:0`); });
+    tag(TK.x + 0.05, 1.5, TK.z - 0.05, '是这个？', '', `font-size:40px;color:${P.coral}`);
+    corner(); sub('门后，就更容易<b>记错</b>');
+  },
+  // 86.4  下次忘了，别怪自己 — back in first person; the mug is found on the shelf
+  end() {
+    ceiling(); scene.background = new THREE.Color('#1d1612'); hemi.intensity = 0.45;
+    const pend = new THREE.PointLight('#ffd49a', 9, 7, 1.7); pend.position.set(8.4, 2.35, 1.6); pend.castShadow = true; pend.shadow.mapSize.set(2048, 2048); pend.shadow.bias = -0.001; scene.add(pend);
+    const bulb = new THREE.Mesh(new THREE.SphereGeometry(0.09, 24, 12), new THREE.MeshBasicMaterial({color: '#fff1d0', toneMapped: false})); bulb.position.copy(pend.position); scene.add(bulb);
+    const shadeO = new THREE.Mesh(new THREE.ConeGeometry(0.3, 0.24, 40, 1, true), M(P.cabinet, {roughness: 0.5})); shadeO.position.set(8.4, 2.44, 1.6); scene.add(shadeO);
+    const shadeI = new THREE.Mesh(new THREE.ConeGeometry(0.295, 0.235, 40, 1, true), new THREE.MeshBasicMaterial({color: '#ffe6bd', side: THREE.BackSide, toneMapped: false})); shadeI.position.copy(shadeO.position); scene.add(shadeI);
+    const found = new THREE.Mesh(new THREE.CylinderGeometry(0.08, 0.07, 0.17, 32), M(P.amber, {emissive: '#ff9a1f', emissiveIntensity: 1.1, roughness: 0.35})); found.position.set(8.2, 1.86, 0.16); found.castShadow = true; kitchen.add(found); renderer.toneMappingExposure = 0.8; scene.environmentIntensity = 0.15; hemi.intensity = 0.15; lampPole.visible = shade.visible = false;
+    const gl = new THREE.PointLight(P.amber, 2.2, 1.6, 2); gl.position.set(8.2, 1.95, 0.35); scene.add(gl);
+    cam([7.6, 1.55, 3.7], [8.0, 1.6, 0.2], 48);
+    ov.insertAdjacentHTML('beforeend', '<div style="position:absolute;inset:0;background:radial-gradient(ellipse at 50% 45%,rgba(0,0,0,0) 45%,rgba(0,0,0,.5) 100%)"></div>');
+    corner(); sub('下次忘了，<b>别怪自己</b>');
+  },
+  // end card in the episode's look (the real build reuses the shared Juno EndCard)
+  card() {
+    bgGradient('#2a1f19', '#0e0b09'); keyLamp(new THREE.Vector3(-2, 14, 10), new THREE.Vector3(5.5, 0, 2.5), 700, 0.62);
+    cam([5.6, 13, 18], [5.6, 0.4, 2.1], 30);
+    ov.insertAdjacentHTML('beforeend', `<div style="position:absolute;inset:0;background:rgba(14,11,9,.72);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:26px">
+      <div style="width:120px;height:120px;border-radius:50%;border:3px solid #f6cf78;display:flex;align-items:center;justify-content:center;font-family:'Noto Serif CJK SC',serif;font-size:72px;font-weight:900;color:#f6cf78">J</div>
+      <div style="font-family:'Noto Serif CJK SC',serif;font-weight:900;font-size:96px;color:#f6cf78;letter-spacing:.08em">进门就忘</div>
+      <div style="font-family:'Noto Serif CJK SC',serif;font-weight:700;font-size:52px;color:#fbf6ec;letter-spacing:.06em;white-space:nowrap">你今天在门口忘过什么<span style="margin-right:-.5em">？</span></div>
+      <div style="margin-top:14px;border:2px solid #f6cf78;border-radius:40px;padding:12px 40px;font-size:30px;letter-spacing:.2em;color:#f6cf78">关注 Juno · 一起看懂世界</div>
+      <div style="position:absolute;bottom:40px;font-size:20px;color:rgba(251,246,236,.4);letter-spacing:.04em">Radvansky &amp; Copeland 2006 · Radvansky et al. 2011 · McFadyen et al. 2021</div></div>`);
+  },
+};
+frames[F]();
+renderer.render(scene, camera);
+window.READY = true;
+</script></body></html>

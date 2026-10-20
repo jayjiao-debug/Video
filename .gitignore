@@ -46,3 +46,5 @@ episodes/32-face/style/
 episodes/*/out/
 episodes/31-baoji/style/
 episodes/31-baoji/audio/
+episodes/33-doorway/style/
+episodes/*/build/node_modules/
