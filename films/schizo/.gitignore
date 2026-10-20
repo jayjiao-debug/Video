@@ -1,0 +1,7 @@
+node_modules
+out/
+public/bgm*
+public/c/
+public/aw/
+public/mix*
+public/sfx*
