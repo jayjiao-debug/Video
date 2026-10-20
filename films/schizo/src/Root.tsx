@@ -1,4 +1,6 @@
 import React from 'react';
+import { Puppet2DSheet } from './Puppet2DSheet';
+import { Puppet2DTest, P2D_LEN } from './Puppet2DTest';
 import { Composition } from 'remotion';
 import { Looks, LOOKS } from './Looks';
 import { PuppetSheet } from './PuppetSheet';
@@ -10,4 +12,6 @@ export const Root: React.FC = () => (<>
   {/* QA views of the same take: front close and side close */}
   <Composition id="PuppetQAFront" component={PuppetTest} defaultProps={{ dbg: [0.25, 1.05, 0.6, -0.1, 0.85, -1.2, 32] }} durationInFrames={TEST_FRAMES} fps={30} width={1920} height={1080} />
   <Composition id="PuppetQASide" component={PuppetTest} defaultProps={{ dbg: [1.6, 1.05, -0.9, -0.15, 0.85, -1.25, 32] }} durationInFrames={TEST_FRAMES} fps={30} width={1920} height={1080} />
+  <Composition id="Puppet2DTest" component={Puppet2DTest} durationInFrames={P2D_LEN} fps={30} width={1920} height={1080} />
+  <Composition id="Puppet2DSheet" component={Puppet2DSheet} durationInFrames={1} fps={30} width={1920} height={1080} />
 </>);
