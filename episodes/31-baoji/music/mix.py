@@ -44,7 +44,10 @@ i0 = int((ts0 - t_in) * SR); n = int(ts_len * SR); u = np.arange(n) / n
 pos = i0 + np.cumsum((1 - u) ** 1.6); seg = np.stack([np.interp(pos, np.arange(len(music)), music[:, c]) for c in (0, 1)], 1)
 seg *= np.linspace(1, 0, n)[:, None] ** 0.5; music = np.concatenate([music[:i0], seg.astype('float32')])
 music = fade(music, 0.004, 0.0)
-put(music, t_in, dia_level - rms_db(music[: int(20 * SR)]) - 4.0)      # music sits ~4 dB under the dialogue level
+# a swell into the drum: the 2.4 s of track just before the drum entry, rising from silence under 「今天我们就说说…」
+pre = load(BGM, t_src - 2.4, 2.4); pre *= (np.linspace(0, 1, len(pre)) ** 2.2 * 10 ** (-4 / 20))[:, None]
+mg = dia_level - rms_db(music[: int(20 * SR)]) - 4.0                    # music sits ~4 dB under the dialogue level
+put(pre, t_in - 2.4, mg); put(music, t_in, mg)
 os.makedirs('audio', exist_ok=True); sf.write('audio/premix.wav', mix, SR, subtype='FLOAT')
 m = subprocess.run(['ffmpeg', '-hide_banner', '-i', 'audio/premix.wav', '-af', 'loudnorm=I=-14:TP=-1.5:LRA=11:print_format=json', '-f', 'null', '-'], capture_output=True, text=True).stderr
 js = json.loads(m[m.rindex('{'):m.rindex('}') + 1])
