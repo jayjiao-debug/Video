@@ -86,6 +86,12 @@ dtmf(92.8, 697, 1209); dtmf(93.1, 697, 1209); dtmf(93.4, 941, 1336)
 vibrate(94.5, 5.3); ringtone(94.55, 5.3, 784)
 click(100.0)
 crackle(103.1, 0.6)
+# title: glitch ticks on each stamp, the voice slip, the hang-up and the screen collapsing
+for dt in [0, 0.509, 0.763, 1.018]: crackle(16.613 + dt, 0.08)
+crackle(18.648, 0.15)
+click(20.0, 0.2); busy(20.05, 1); blip_down(20.2)
+# end card: a soft two-note chime as the family message arrives
+add(112.65, tone(1318.5, 0.25, 0.005, 0.2), 0.06); add(112.8, tone(1760, 0.35, 0.005, 0.3), 0.06)
 
 out = np.clip(out, -1, 1)
 st = np.stack([out, out], 1)
