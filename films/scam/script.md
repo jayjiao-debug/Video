@@ -1,49 +1,47 @@
-# 反诈（老人版） script v2 (~1:50) · title 《最后一步》
+# 反诈 script v3 (~1:50) · title 《妈，是我》
 
-Owner 2026-10-20: landscape channel format (1920×1080, subtitles + BGM); open on a domestic case, not the owner's family.
-Audience: parents and grandparents, forwarded by their children. One rule they can remember, not a catalogue.
-The rule: **电话里让你"动手"的，都挂掉。** (说验证码 / 点"是我本人" / 开屏幕共享 / 下载App / 转账 / 刷脸)
-Title 《最后一步》 · tagline: 骗子的开场白千变万化，最后一步只有几种 · kicker: ANTI-FRAUD · MINISTRY OF PUBLIC SECURITY · MMXXV
+Owner 2026-10-20: landscape channel format; open on a domestic case; the audience is young people, so the story is told
+from their side (the scam that targets *their* parents, using *their* voice); never reference other videos.
+The rule the parents keep: **电话里让你"动手"的，先挂掉，再打给我。**
+Title 《妈，是我》 · tagline: 骗子的开场白千变万化，最后一步只有几种 · kicker: ANTI-FRAUD · MINISTRY OF PUBLIC SECURITY · MMXXV
+End question: 你家有暗号吗？评论区见
 
-## Hook — a real case (光明网 2026-08-19) (0:00–~0:16)
-1. 一位70岁的老人，接到一个“客服”电话
-2. 对方说：您的账户有异常，要配合处理
-3. 先下载一个软件，再打开“屏幕共享”
-4. 他两张银行卡里，有1421万
-5. 民警找到他时，骗子正在远程输入转账验证码
-→ TITLE 《最后一步》 on the hit
+## Hook (0:00–~0:16)
+1. 如果明天，你妈接到一个电话 — her living room at dusk, the phone rings on the table
+2. 是你的声音 — on the phone: a call in progress, a voice waveform
+3. “妈，我出事了，先别告诉爸”
+4. “你快转两万给我，急用”
+5. 她会转吗？
+→ TITLE 《妈，是我》 on the hit
 
-## After the title: how it ended
-6. 民警联系上他老伴：马上挂断，关机
-7. 6分钟后民警赶到，卸掉软件。一分钱没少
+## It already happens (F7)
+6. 北京一位奶奶，接到了“孙子”的电话
+7. 声音一模一样：说刮了别人的车，要一万块
+8. 她转了。孙子回到家，她才知道那是AI合成的
+9. 你发过的语音、拍过的视频，都可能被拿来模仿你
 
-## The Chinese versions — different openings (~0:20–0:45)
-7. 骗子的开场白，常见的有这些：
-8. “您的快递丢了，给您三倍理赔”
-9. “您的医保卡异常，不处理就停用”
-10. “您开通了百万保障，不取消每月扣2000”
-11. “您被误开了直播会员，我帮您退掉”
-12. “奶奶，我把别人车刮了，快打一万块给我” — AI 合成的孙子声音
-13. 开场白不一样，最后一步，都一样
+## Other openings (F3)
+10. 骗子还会这样开场：
+11. “您的快递丢了，给您三倍理赔”
+12. “您的医保卡异常，不处理就停用”
+13. “您开通了百万保障，不取消每月扣两千”
+14. 开场白不一样，[最后一步]都一样
 
-## The last step (~0:45–1:05)
-14. 让你说出验证码
-15. 让你点“是我本人”
-16. 让你下载一个App，打开“屏幕共享”
-17. 让你转账，或者刷脸
-18. 那位70岁的老人，就差这一步
+## The last step (F4–F6)
+15. 让你说出验证码 / 16. 让你点“是我本人” / 17. 让你下载App，打开“屏幕共享” / 18. 让你转账，或者刷脸
+19. 有位70岁的老人开了屏幕共享，骗子已经在远程输他的转账验证码 (F5: 民警6分钟赶到，1421万一分没少)
 20. 警察说：让你下载软件、开屏幕共享的，[100%]是诈骗
 
-## What to do (~1:05–1:35)
-21. 所以只记一句话：电话里让你[动手]的，都挂掉
-22. 挂了以后，自己打给孩子，或者打App里的官方电话
-23. 不要回拨对方给你的号码
-24. 已经开了屏幕共享？关机，拔卡，用家人手机报警
-25. 接到 96110 打来的电话，一定要接：那是警察在提醒你
-26. 和家里人约一个暗号：声音再像，答不上来就是假的
+## What you do tonight
+21. 所以今晚，教爸妈一句话
+22. 电话里让你[动手]的，先挂掉，再打给我
+23. 不要回拨对方给的号码
+24. 已经开了屏幕共享？关机，拔卡，用别的手机报警
+25. 96110 打来的电话一定要接：那是警察在提醒
+26. 再和爸妈约一个暗号：声音再像，答不上来就是假的
 
 ## Ending
-27. 那天，警察来得及。下一次，不一定
-28. 把这个视频，转给你爸妈
-END CARD: 你家老人接到过哪种电话？评论区见
+27. 骗子用的是你的声音。能拆穿他的，也只有你
+28. 把这个视频，发给你爸妈
+END CARD: 你家有暗号吗？评论区见 · 关注 Juno · 一起看懂世界
 Sources: 公安部发布会 2026-06 · 国家反诈中心民警（澎湃）· 光明网 2026-08 · 新浪/北京朝阳反诈中心 2026-08 · 96110（人民政协网）

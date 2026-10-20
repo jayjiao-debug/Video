@@ -13,17 +13,27 @@ export const phone = (g: G, cx: number, cy: number, sc: number, screen: Screen, 
   g.restore();
 };
 /* incoming call */
-export const callScreen = (k = 0): Screen => (g, w, h) => {
+export const callScreen = (k = 0, name = '“平台客服”', sub = '未知号码'): Screen => (g, w, h) => {
   const b = g.createLinearGradient(0, 0, 0, h); b.addColorStop(0, '#1f2a3a'); b.addColorStop(1, '#0c1018'); g.fillStyle = b; g.fillRect(0, 0, w, h);
   txt(g, '来电', w / 2, 120, 30, 'rgba(255,255,255,.6)', { w: 500 });
   g.fillStyle = 'rgba(255,255,255,.12)'; g.beginPath(); g.arc(w / 2, 300, 90 + 10 * Math.sin(k * 6), 0, 7); g.fill(); g.fillStyle = '#5a6578'; g.beginPath(); g.arc(w / 2, 300, 80, 0, 7); g.fill();
   /* a headset glyph instead of a face */
   g.strokeStyle = '#dfe6f1'; g.lineWidth = 9; g.beginPath(); g.arc(w / 2, 304, 38, Math.PI, 0); g.stroke(); g.fillStyle = '#dfe6f1'; rr(g, w / 2 - 48, 296, 18, 34, 6); g.fill(); rr(g, w / 2 + 30, 296, 18, 34, 6); g.fill();
-  txt(g, '“平台客服”', w / 2, 470, 52, '#fff', { w: 700 }); txt(g, '未知号码', w / 2, 530, 30, 'rgba(255,255,255,.55)', { w: 500 });
+  txt(g, name, w / 2, 470, 52, '#fff', { w: 700 }); txt(g, sub, w / 2, 530, 30, 'rgba(255,255,255,.55)', { w: 500 });
   const by = h - 170; g.fillStyle = '#e5453a'; g.beginPath(); g.arc(w / 2 - 120, by, 56, 0, 7); g.fill(); g.fillStyle = '#34c759'; g.beginPath(); g.arc(w / 2 + 120, by, 56, 0, 7); g.fill();
   txt(g, '挂断', w / 2 - 120, by + 100, 28, 'rgba(255,255,255,.75)', { w: 500 }); txt(g, '接听', w / 2 + 120, by + 100, 28, 'rgba(255,255,255,.75)', { w: 500 });
   g.save(); g.strokeStyle = '#fff'; g.lineWidth = 8; g.lineCap = 'round'; g.translate(w / 2 - 120, by); g.rotate(2.3); g.beginPath(); g.arc(0, 0, 22, -0.9, 0.9); g.stroke(); g.restore();
   g.save(); g.strokeStyle = '#fff'; g.lineWidth = 8; g.lineCap = 'round'; g.translate(w / 2 + 120, by); g.rotate(0.8); g.beginPath(); g.arc(0, 0, 22, -0.9, 0.9); g.stroke(); g.restore();
+};
+/* a call in progress: an unknown number, and a voice that sounds like you */
+export const inCall = (t: number, talk: number): Screen => (g, w, h) => {
+  const b = g.createLinearGradient(0, 0, 0, h); b.addColorStop(0, '#1f2a3a'); b.addColorStop(1, '#0c1018'); g.fillStyle = b; g.fillRect(0, 0, w, h);
+  txt(g, '未知号码', w / 2, 200, 50, '#fff', { w: 700 }); mono(g, `00:${String(Math.floor(t) % 60).padStart(2, '0')}`, w / 2, 260, 32, 'rgba(255,255,255,.6)');
+  /* waveform: the voice */
+  g.strokeStyle = '#9cc3ff'; g.lineWidth = 6; g.lineCap = 'round';
+  for (let i = 0; i < 26; i++) { const x = 50 + i * ((w - 100) / 25); const a = talk * (0.25 + 0.75 * Math.abs(Math.sin(i * 1.7 + t * 9) * Math.sin(i * 0.6 + t * 4.3))); const hh = 8 + a * 150; g.beginPath(); g.moveTo(x, 480 - hh / 2); g.lineTo(x, 480 + hh / 2); g.stroke(); }
+  const by = h - 170; g.fillStyle = '#e5453a'; g.beginPath(); g.arc(w / 2, by, 56, 0, 7); g.fill(); txt(g, '挂断', w / 2, by + 100, 28, 'rgba(255,255,255,.75)', { w: 500 });
+  g.save(); g.strokeStyle = '#fff'; g.lineWidth = 8; g.lineCap = 'round'; g.translate(w / 2, by); g.rotate(2.3); g.beginPath(); g.arc(0, 0, 22, -0.9, 0.9); g.stroke(); g.restore();
 };
 /* the permission prompt */
 export const shareAsk = (pick = 0): Screen => (g, w, h) => {
