@@ -5,3 +5,4 @@ public/c/
 public/aw/
 public/mix*
 public/sfx*
+mocap/*.bvh
