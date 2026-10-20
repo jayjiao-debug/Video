@@ -52,19 +52,19 @@ const Defs: React.FC = () => (
 		</filter>
 		{/* warm rim on the right-hand edges (sun / lamp on the right) */}
 		<filter id="rimR" x="-10%" y="-10%" width="120%" height="120%">
-			<feMorphology in="SourceAlpha" operator="erode" radius="2" result="e" />
-			<feOffset in="e" dx="-5" dy="2" result="o" />
+			<feMorphology in="SourceAlpha" operator="erode" radius="1" result="e" />
+			<feOffset in="e" dx="-2.4" dy="1" result="o" />
 			<feComposite in="SourceAlpha" in2="o" operator="out" result="edge" />
-			<feFlood floodColor="#ffc58a" floodOpacity="0.9" />
+			<feFlood floodColor="#ffc58a" floodOpacity="0.75" />
 			<feComposite in2="edge" operator="in" result="rim" />
 			<feGaussianBlur in="rim" stdDeviation="1" result="rb" />
 			<feMerge><feMergeNode in="SourceGraphic" /><feMergeNode in="rb" /></feMerge>
 		</filter>
 		<filter id="rimC" x="-10%" y="-10%" width="120%" height="120%">
-			<feMorphology in="SourceAlpha" operator="erode" radius="1.5" result="e" />
-			<feOffset in="e" dx="4" dy="3" result="o" />
+			<feMorphology in="SourceAlpha" operator="erode" radius="0.8" result="e" />
+			<feOffset in="e" dx="1.6" dy="1.6" result="o" />
 			<feComposite in="SourceAlpha" in2="o" operator="out" result="edge" />
-			<feFlood floodColor="#bcd0ec" floodOpacity="0.7" />
+			<feFlood floodColor="#bcd0ec" floodOpacity="0.45" />
 			<feComposite in2="edge" operator="in" result="rim" />
 			<feGaussianBlur in="rim" stdDeviation="0.8" result="rb" />
 			<feMerge><feMergeNode in="SourceGraphic" /><feMergeNode in="rb" /></feMerge>
@@ -90,6 +90,24 @@ const Defs: React.FC = () => (
 		<radialGradient id="ballG2" cx="0.36" cy="0.3" r="0.85">
 			<stop offset="0" stopColor="#f0d9b2" /><stop offset="0.55" stopColor="#d1ab7d" /><stop offset="1" stopColor="#94704b" />
 		</radialGradient>
+		{([['m-walnut', '#7d563a', '#4a301f', '#22150c'], ['m-char', '#3c3a37', '#1d1c1a', '#0a0a0a'], ['m-ink', '#454a55', '#16181c', '#040506'], ['m-stone', '#a8a39a', '#78736b', '#46423e'], ['m-ebony', '#3d2d23', '#1a120d', '#060403']] as const).map(([id, a, b, c]) => (
+			<linearGradient key={id} id={id} x1="0" y1="0" x2="1" y2="0.3"><stop offset="0" stopColor={a} /><stop offset="0.5" stopColor={b} /><stop offset="1" stopColor={c} /></linearGradient>
+		))}
+		{([['mb-walnut', '#94694a', '#4a301f', '#1a110a'], ['mb-char', '#56534f', '#1c1b1a', '#060606'], ['mb-ink', '#7b8394', '#1b1e24', '#030304'], ['mb-stone', '#bdb7ad', '#7b766f', '#46423e'], ['mb-ebony', '#4e3a2d', '#1a120d', '#050302'], ['mb-brass', '#f6d58c', '#c8913a', '#5e3f16']] as const).map(([id, a, b, c]) => (
+			<radialGradient key={id} id={id} cx="0.35" cy="0.3" r="0.85"><stop offset="0" stopColor={a} /><stop offset="0.55" stopColor={b} /><stop offset="1" stopColor={c} /></radialGradient>
+		))}
+		<filter id="grainL" x="0" y="0" width="100%" height="100%">
+			<feTurbulence type="fractalNoise" baseFrequency="0.04 0.5" numOctaves="2" seed="7" result="n" />
+			<feColorMatrix in="n" type="matrix" values="0 0 0 0 0.62  0 0 0 0 0.45  0 0 0 0 0.3  0 0 0 -2.2 1.02" result="g" />
+			<feComposite in="g" in2="SourceGraphic" operator="in" result="gc" />
+			<feMerge><feMergeNode in="SourceGraphic" /><feMergeNode in="gc" /></feMerge>
+		</filter>
+		<filter id="charG" x="0" y="0" width="100%" height="100%">
+			<feTurbulence type="turbulence" baseFrequency="0.09 0.05" numOctaves="2" seed="13" result="n" />
+			<feColorMatrix in="n" type="matrix" values="0 0 0 0 0.62  0 0 0 0 0.6  0 0 0 0 0.56  0 0 0 2.6 -1.55" result="g" />
+			<feComposite in="g" in2="SourceGraphic" operator="in" result="gc" />
+			<feMerge><feMergeNode in="SourceGraphic" /><feMergeNode in="gc" /></feMerge>
+		</filter>
 		<radialGradient id="warmGlow">
 			<stop offset="0" stopColor="#ffd9a0" stopOpacity="0.9" />
 			<stop offset="0.3" stopColor="#ffb45e" stopOpacity="0.35" />
@@ -107,23 +125,49 @@ const Defs: React.FC = () => (
 type Pose = {lean?: number; head?: number; armN?: [number, number]; armF?: [number, number]; legN?: [number, number]; legF?: [number, number]; case?: boolean};
 const limb = (x: number, y: number, a: number, l: number): [number, number] => { const d = dirv(a, l); return [x + d[0], y + d[1]]; };
 type Pt = [number, number];
+type Mat = {name: string; note: string; limb: string; ball: string; head: string; grain?: string; hi: string; hiO: number; lo: string; edge: string; extra?: 'kintsugi' | 'cracks'};
+const MATS: Record<string, Mat> = {
+	beech: {name: '原木', note: '', limb: 'beech', ball: 'ballG', head: 'ballG2', grain: 'woodfine', hi: '#f6e4c4', hiO: 0.55, lo: '#7a5a3c', edge: '#6e4f34'},
+	walnut: {name: 'A · 黑胡桃木', note: '温暖、沉、像旧家具', limb: 'm-walnut', ball: 'mb-walnut', head: 'mb-walnut', grain: 'grainL', hi: '#c99a6a', hiO: 0.4, lo: '#0d0805', edge: '#0d0805'},
+	char: {name: 'B · 炭烧木', note: '烧过的木头，疲惫、粗粝', limb: 'm-char', ball: 'mb-char', head: 'mb-char', grain: 'charG', hi: '#9c978f', hiO: 0.3, lo: '#000', edge: '#000'},
+	kintsugi: {name: 'C · 黑瓷 · 金缮', note: '碎过，又用金粘好', limb: 'm-ink', ball: 'mb-ink', head: 'mb-ink', hi: '#d2dae8', hiO: 0.6, lo: '#000', edge: '#000', extra: 'kintsugi'},
+	plaster: {name: 'D · 风化石膏', note: '和那块石头同一种材料', limb: 'm-stone', ball: 'mb-stone', head: 'mb-stone', grain: 'clay', hi: '#e2dcd2', hiO: 0.3, lo: '#2a2725', edge: '#2a2725', extra: 'cracks'},
+	ebony: {name: 'E · 乌木 · 黄铜关节', note: '最暗，关节一点金', limb: 'm-ebony', ball: 'mb-brass', head: 'mb-ebony', grain: 'grainL', hi: '#a88462', hiO: 0.28, lo: '#000', edge: '#3a2810'},
+};
+const MatCtx = React.createContext<Mat>(MATS.beech);
+const useMat = () => React.useContext(MatCtx);
 const Cap: React.FC<{p: Pt; q: Pt; w1: number; w2: number}> = ({p, q, w1, w2}) => {
 	const dx = q[0] - p[0], dy = q[1] - p[1], L = Math.hypot(dx, dy) || 1, nx = -dy / L, ny = dx / L;
 	const pts = [[p[0] + nx * w1 / 2, p[1] + ny * w1 / 2], [q[0] + nx * w2 / 2, q[1] + ny * w2 / 2], [q[0] - nx * w2 / 2, q[1] - ny * w2 / 2], [p[0] - nx * w1 / 2, p[1] - ny * w1 / 2]];
 	const s = nx < 0 ? 1 : -1;                                                            // highlight on the left (key light side)
+	const m = useMat(), F = `url(#${m.limb})`;
 	return (
-		<g filter="url(#woodfine)">
-			<polygon points={pts.map((v) => v.join(',')).join(' ')} fill="url(#beech)" />
-			<circle cx={p[0]} cy={p[1]} r={w1 / 2} fill="url(#beech)" /><circle cx={q[0]} cy={q[1]} r={w2 / 2} fill="url(#beech)" />
-			<line x1={p[0] + s * nx * w1 * 0.22} y1={p[1] + s * ny * w1 * 0.22} x2={q[0] + s * nx * w2 * 0.22} y2={q[1] + s * ny * w2 * 0.22} stroke="#f6e4c4" strokeWidth={Math.min(w1, w2) * 0.16} strokeLinecap="round" opacity={0.55} />
-			<line x1={p[0] - s * nx * w1 * 0.38} y1={p[1] - s * ny * w1 * 0.38} x2={q[0] - s * nx * w2 * 0.38} y2={q[1] - s * ny * w2 * 0.38} stroke="#7a5a3c" strokeWidth={Math.min(w1, w2) * 0.12} strokeLinecap="round" opacity={0.35} />
+		<g filter={m.grain ? `url(#${m.grain})` : undefined}>
+			<polygon points={pts.map((v) => v.join(',')).join(' ')} fill={F} />
+			<circle cx={p[0]} cy={p[1]} r={w1 / 2} fill={F} /><circle cx={q[0]} cy={q[1]} r={w2 / 2} fill={F} />
+			<line x1={p[0] + s * nx * w1 * 0.22} y1={p[1] + s * ny * w1 * 0.22} x2={q[0] + s * nx * w2 * 0.22} y2={q[1] + s * ny * w2 * 0.22} stroke={m.hi} strokeWidth={Math.min(w1, w2) * 0.16} strokeLinecap="round" opacity={m.hiO} />
+			<line x1={p[0] - s * nx * w1 * 0.38} y1={p[1] - s * ny * w1 * 0.38} x2={q[0] - s * nx * w2 * 0.38} y2={q[1] - s * ny * w2 * 0.38} stroke={m.lo} strokeWidth={Math.min(w1, w2) * 0.12} strokeLinecap="round" opacity={0.35} />
 		</g>
 	);
 };
-const Ball: React.FC<{p: Pt; r: number}> = ({p, r}) => (
-	<g><circle cx={p[0]} cy={p[1]} r={r} fill="url(#ballG)" /><circle cx={p[0]} cy={p[1]} r={r} fill="none" stroke="#6e4f34" strokeWidth={1} opacity={0.5} /></g>
-);
+const Ball: React.FC<{p: Pt; r: number}> = ({p, r}) => {
+	const m = useMat();
+	return <g><circle cx={p[0]} cy={p[1]} r={r} fill={`url(#${m.ball})`} /><circle cx={p[0]} cy={p[1]} r={r} fill="none" stroke={m.edge} strokeWidth={1} opacity={0.5} /></g>;
+};
+/** gold seams (kintsugi) or dry cracks (plaster), drawn on top of a part */
+const Seams: React.FC<{d: string[]}> = ({d}) => {
+	const m = useMat();
+	if (!m.extra) return null;
+	const gold = m.extra === 'kintsugi';
+	return (
+		<g>
+			{gold && d.map((x, i) => <path key={'g' + i} d={x} stroke="#ffcf73" strokeWidth={6} fill="none" opacity={0.35} filter="url(#b3)" />)}
+			{d.map((x, i) => <path key={i} d={x} stroke={gold ? '#e8bb5e' : '#2e2a27'} strokeWidth={gold ? 2.4 : 1.6} fill="none" strokeLinejoin="round" strokeLinecap="round" />)}
+		</g>
+	);
+};
 const Mannequin: React.FC<{pose: Pose}> = ({pose}) => {
+	const m = useMat(), LF = `url(#${m.limb})`, GF = m.grain ? `url(#${m.grain})` : undefined;
 	const {lean = 0, head = 0, armN = [-4, 4], armF = [4, 6], legN = [3, 0], legF = [-3, 0]} = pose;
 	const leg = (hx: number, [th, sh]: [number, number]) => {
 		const hip: Pt = [hx, -232], knee = limb(hip[0], hip[1], th, 106), ank = limb(knee[0], knee[1], th + sh, 98);
@@ -137,7 +181,7 @@ const Mannequin: React.FC<{pose: Pose}> = ({pose}) => {
 		<g>
 			<Cap p={l.hip} q={l.knee} w1={30} w2={22} /><Cap p={l.knee} q={l.ank} w1={22} w2={15} />
 			<Ball p={l.knee} r={12} />
-			<path d={`M${l.ank[0] - 12},${l.ank[1] - 2} L${l.ank[0] + 10},${l.ank[1] - 4} L${l.ank[0] + 42},${l.ank[1] + 15} L${l.ank[0] + 42},${l.ank[1] + 22} L${l.ank[0] - 14},${l.ank[1] + 22} Z`} fill="url(#beech)" filter="url(#woodfine)" />
+			<path d={`M${l.ank[0] - 12},${l.ank[1] - 2} L${l.ank[0] + 10},${l.ank[1] - 4} L${l.ank[0] + 42},${l.ank[1] + 15} L${l.ank[0] + 42},${l.ank[1] + 22} L${l.ank[0] - 14},${l.ank[1] + 22} Z`} fill={LF} filter={GF} />
 			<Ball p={l.ank} r={8} />
 		</g>
 	);
@@ -157,16 +201,19 @@ const Mannequin: React.FC<{pose: Pose}> = ({pose}) => {
 			<g transform={`rotate(${lean}, 0, -232)`}>
 				<g style={{filter: 'brightness(0.72)'}}><Arm a={aF} /></g>
 				{/* pelvis, waist ball, ribcage */}
-				<path d="M-40,-282 Q0,-292 40,-282 C44,-258 36,-234 22,-220 L0,-212 L-22,-220 C-36,-234 -44,-258 -40,-282 Z" fill="url(#beech)" filter="url(#woodfine)" />
+				<path d="M-40,-282 Q0,-292 40,-282 C44,-258 36,-234 22,-220 L0,-212 L-22,-220 C-36,-234 -44,-258 -40,-282 Z" fill={LF} filter={GF} />
 				<Ball p={[-20, -232]} r={13} /><Ball p={[18, -232]} r={13} />
-				<ellipse cx={0} cy={-292} rx={25} ry={16} fill="url(#ballG)" />
-				<path d="M-46,-400 C-54,-368 -44,-322 -30,-306 Q0,-296 30,-306 C44,-322 54,-368 46,-400 Q0,-414 -46,-400 Z" fill="url(#beech)" filter="url(#woodfine)" />
+				<ellipse cx={0} cy={-292} rx={25} ry={16} fill={`url(#${m.ball})`} />
+				<path d="M-46,-400 C-54,-368 -44,-322 -30,-306 Q0,-296 30,-306 C44,-322 54,-368 46,-400 Q0,-414 -46,-400 Z" fill={LF} filter={GF} />
+				<Seams d={['M-26,-398 L-16,-378 L-22,-360 L-6,-340 L-12,-322 L-4,-306', 'M-16,-378 L4,-372 L12,-356', 'M30,-300 L22,-276 L28,-258']} />
 				<path d="M-30,-306 Q0,-296 30,-306" stroke="#7a5a3c" strokeWidth={1.5} fill="none" opacity={0.5} />
 				<Ball p={[-44, -394]} r={14} />
 				<g transform={`rotate(${head}, 0, -406)`}>
 					<Cap p={[0, -404]} q={[0, -436]} w1={16} w2={14} />
-					<ellipse cx={4} cy={-474} rx={31} ry={41} fill="url(#ballG2)" transform="rotate(10, 4, -474)" filter="url(#woodfine)" />
-					<ellipse cx={4} cy={-474} rx={31} ry={41} fill="none" stroke="#6e4f34" strokeWidth={1} opacity={0.45} transform="rotate(10, 4, -474)" />
+					<ellipse cx={4} cy={-474} rx={31} ry={41} fill={`url(#${m.head})`} transform="rotate(10, 4, -474)" filter={GF} />
+					<ellipse cx={4} cy={-474} rx={31} ry={41} fill="none" stroke={m.edge} strokeWidth={1} opacity={0.45} transform="rotate(10, 4, -474)" />
+					<ellipse cx={-6} cy={-494} rx={9} ry={14} fill="#fff" opacity={m.extra === 'kintsugi' ? 0.16 : 0} transform="rotate(10, 4, -474)" />
+					<Seams d={['M-10,-512 L-2,-494 L-12,-478 L4,-462 L-2,-446', 'M-2,-494 L18,-488']} />
 				</g>
 				<Arm a={aN} holds={pose.case} />
 				<Ball p={[46, -394]} r={14} />
@@ -336,43 +383,44 @@ const S1: React.FC<{t: number}> = ({t}) => (
 
 // ------------------------------------------------------------------ scene 6 · the walk down; the strings let go
 const slopeY = (x: number) => 360 + 0.3 * x;
-const S6: React.FC<{t: number}> = ({t}) => {
+const S6: React.FC<{t: number; mat: Mat}> = ({t, mat}) => {
 	const pose: Pose = {lean: -3, head: -18, armN: [-16, 8], armF: [12, 6], legN: [24, -4], legF: [-18, -14]};
-	const px = 880, k = 0.95, py = slopeY(px) + 14;
+	const px = 900, k = 1.12, py = slopeY(px) + 14;
 	const an = strAnchors(pose).map(([x, y]) => [px + x * k, py + y * k] as [number, number]);
 	return (
 		<AbsoluteFill style={{background: '#1b2029'}}>
 			<svg width={W} height={H} style={{position: 'absolute', inset: 0}}>
 				<Defs />
 				<linearGradient id="dusk" x1="0" y1="0" x2="0" y2="1">
-					<stop offset="0" stopColor="#1f2633" /><stop offset="0.55" stopColor="#4b5262" /><stop offset="0.8" stopColor="#9a8577" /><stop offset="1" stopColor="#c99a72" />
+					<stop offset="0" stopColor="#07090e" /><stop offset="0.5" stopColor="#1a1f2a" /><stop offset="0.78" stopColor="#4a3f42" /><stop offset="1" stopColor="#8a5f42" />
 				</linearGradient>
 				<rect width={W} height={H} fill="url(#dusk)" filter="url(#paper)" />
-				<circle cx={1560} cy={640} r={520} fill="url(#warmGlow)" opacity={0.85} />
-				<circle cx={1560} cy={650} r={46} fill="#ffe2b0" opacity={0.85} filter="url(#b3)" />
+				<circle cx={1560} cy={640} r={460} fill="url(#warmGlow)" opacity={0.6} />
+				<circle cx={1560} cy={652} r={34} fill="#ffd49a" opacity={0.75} filter="url(#b3)" />
 				{/* felt clouds */}
 				<g filter="url(#b3)">
 					{[[300, 180, 1], [700, 120, 0.8], [1250, 220, 1.1], [1640, 150, 0.9]].map(([x, y, s], i) => (
 						<g key={i} transform={`translate(${x + t * 6},${y}) scale(${s})`} opacity={0.75}>
-							{[[-80, 0, 70], [-10, -24, 86], [70, -4, 64], [0, 16, 90]].map(([dx, dy, r], j) => <ellipse key={j} cx={dx} cy={dy} rx={r} ry={r * 0.55} fill={i % 2 ? '#6c7384' : '#7c8394'} filter="url(#felt)" />)}
+							{[[-80, 0, 70], [-10, -24, 86], [70, -4, 64], [0, 16, 90]].map(([dx, dy, r], j) => <ellipse key={j} cx={dx} cy={dy} rx={r} ry={r * 0.55} fill={i % 2 ? '#2a2f3a' : '#323844'} filter="url(#felt)" />)}
 							<ellipse cx={30} cy={34} rx={140} ry={16} fill="#d6a983" opacity={0.35} />
 						</g>
 					))}
 				</g>
 				{/* cardboard ranges */}
-				<path d="M0,640 L140,560 L260,600 L420,520 L560,590 L760,540 L900,610 L1100,560 L1300,620 L1480,580 L1700,640 L1920,600 L1920,1080 L0,1080 Z" fill="#454b59" filter="url(#b1.5)" />
-				<path d="M0,700 L200,650 L380,690 L600,640 L820,700 L1040,660 L1280,710 L1520,680 L1760,720 L1920,700 L1920,1080 L0,1080 Z" fill="#363a45" filter="url(#paper)" />
+				<path d="M0,640 L140,560 L260,600 L420,520 L560,590 L760,540 L900,610 L1100,560 L1300,620 L1480,580 L1700,640 L1920,600 L1920,1080 L0,1080 Z" fill="#1d212a" filter="url(#b1.5)" />
+				<path d="M0,700 L200,650 L380,690 L600,640 L820,700 L1040,660 L1280,710 L1520,680 L1760,720 L1920,700 L1920,1080 L0,1080 Z" fill="#15181f" filter="url(#paper)" />
 				{/* the clay hill, lit from the low sun on the right */}
-				<path d={`M-40,${slopeY(-40)} ${Array.from({length: 23}, (_, i) => { const x = -40 + i * 92; return `L${x},${slopeY(x) - 8 * Math.sin(i * 1.7) - 6}`; }).join(' ')} L1980,1080 L-40,1080 Z`} fill="#7d6e60" filter="url(#clay)" />
-				<path d={`M-40,${slopeY(-40)} ${Array.from({length: 23}, (_, i) => { const x = -40 + i * 92; return `L${x},${slopeY(x) - 8 * Math.sin(i * 1.7) - 6}`; }).join(' ')}`} stroke="#e7b98a" strokeWidth={3} fill="none" opacity={0.55} />
+				<path d={`M-40,${slopeY(-40)} ${Array.from({length: 23}, (_, i) => { const x = -40 + i * 92; return `L${x},${slopeY(x) - 8 * Math.sin(i * 1.7) - 6}`; }).join(' ')} L1980,1080 L-40,1080 Z`} fill="#3e3731" filter="url(#clay)" />
+				<path d={`M-40,${slopeY(-40)} ${Array.from({length: 23}, (_, i) => { const x = -40 + i * 92; return `L${x},${slopeY(x) - 8 * Math.sin(i * 1.7) - 6}`; }).join(' ')}`} stroke="#e7a874" strokeWidth={2.5} fill="none" opacity={0.5} />
 				{/* felt tufts */}
 				{Array.from({length: 16}, (_, i) => { const x = 40 + i * 120 + (i % 3) * 20; const y = slopeY(x) + 30 + (i % 4) * 26; return <path key={i} d={`M${x},${y} l-8,-24 l8,10 l4,-28 l5,26 l8,-18 l-2,34 Z`} fill={i % 2 ? '#56604a' : '#4a5340'} filter="url(#felt)" />; })}
 				{/* footprints going down */}
 				{[500, 610, 720].map((x, i) => <ellipse key={x} cx={x} cy={slopeY(x) + 22 + (i % 2) * 8} rx={14} ry={5} fill="#4e443a" opacity={0.5} />)}
 				{/* the puppet */}
 				<ellipse cx={px + 10} cy={py + 6} rx={80} ry={12} fill="#2a221c" opacity={0.5} filter="url(#b3)" />
-				<g transform={`translate(${px},${py}) scale(${k})`} filter="url(#rimR)">
-					<Mannequin pose={pose} />
+				<g filter="url(#rimC)"><g transform={`translate(${px},${py}) scale(${k})`} filter="url(#rimR)">
+					<MatCtx.Provider value={mat}><Mannequin pose={pose} /></MatCtx.Provider>
+				</g>
 				</g>
 				{/* the control bar has slipped from the gods' hands: it tumbles away, the hand strings dangle free; only a slack head string remains */}
 				<g transform="translate(560,150) rotate(34)">
@@ -386,7 +434,7 @@ const S6: React.FC<{t: number}> = ({t}) => {
 				<path d={`M${an[0][0]},${an[0][1]} C${an[0][0] - 30},${an[0][1] + 120} ${700},${300} ${560 + 150 * Math.sin(rad(34))},${150 - 150 * Math.cos(rad(34))}`} stroke="#efe8da" strokeWidth={1.4} fill="none" opacity={0.55} />
 				{/* the rock waits at the foot of the hill (foreground, out of focus) */}
 				<g filter="url(#b3)">
-					<ellipse cx={1760} cy={1010} rx={300} ry={260} fill="#6a6058" filter="url(#clay)" />
+					<ellipse cx={1760} cy={1010} rx={300} ry={260} fill="#34302c" filter="url(#clay)" />
 				</g>
 				<ellipse cx={1760} cy={1010} rx={300} ry={260} fill="none" stroke="#e7b98a" strokeWidth={4} opacity={0.18} filter="url(#b6)" />
 			</svg>
@@ -398,10 +446,52 @@ const S6: React.FC<{t: number}> = ({t}) => {
 	);
 };
 
+
+// ------------------------------------------------------------------ design sheet: five dark materials under five spotlights
+const LINE: [string, Pose][] = [
+	['walnut', {head: 24, lean: 4, armN: [-2, 4], armF: [4, 6]}],
+	['char', {head: 14, lean: 2, armN: [16, 118], armF: [2, 8]}],
+	['kintsugi', {head: -22, lean: -3, armN: [-8, 6], armF: [6, 4]}],
+	['plaster', {head: 32, lean: 12, armN: [16, 6], armF: [18, 8], legN: [6, 4], legF: [-2, 6]}],
+	['ebony', {head: 8, lean: 0, armN: [-10, -8], armF: [-6, -6]}],
+];
+const Sheet: React.FC = () => (
+	<AbsoluteFill style={{background: '#08090c'}}>
+		<svg width={W} height={H} style={{position: 'absolute', inset: 0}}>
+			<Defs />
+			<rect width={W} height={H} fill="#0a0b0f" filter="url(#paper)" />
+			<rect y={790} width={W} height={290} fill="#111216" />
+			{LINE.map(([id, pose], i) => {
+				const x = 230 + i * 365;
+				return (
+					<g key={id}>
+						<polygon points={`${x - 40},0 ${x + 40},0 ${x + 190},800 ${x - 190},800`} fill="#e9dcc4" opacity={0.06} filter="url(#b6)" />
+						<ellipse cx={x} cy={800} rx={190} ry={34} fill="#e9dcc4" opacity={0.08} />
+						<ellipse cx={x + 6} cy={802} rx={70} ry={11} fill="#000" opacity={0.7} filter="url(#b3)" />
+						<g filter="url(#rimC)"><g transform={`translate(${x},${796}) scale(1.12)`} filter="url(#rimR)">
+							<MatCtx.Provider value={MATS[id]}><Mannequin pose={pose} /></MatCtx.Provider>
+						</g></g>
+					</g>
+				);
+			})}
+		</svg>
+		{LINE.map(([id], i) => (
+			<div key={id} style={{position: 'absolute', left: 230 + i * 365 - 170, width: 340, top: 860, textAlign: 'center', fontFamily: SERIF}}>
+				<div style={{fontSize: 34, fontWeight: 700, color: INK, letterSpacing: '0.06em'}}>{MATS[id].name}</div>
+				<div style={{fontSize: 22, color: 'rgba(236,230,218,0.55)', marginTop: 10, letterSpacing: '0.06em'}}>{MATS[id].note}</div>
+			</div>
+		))}
+		<Grade />
+		<Header t="人偶 · 五种深色材质" />
+	</AbsoluteFill>
+);
+
 const Puppet35: React.FC = () => {
 	useFonts();
 	const t = useCurrentFrame() / FPS;
-	const i = Math.min(1, Math.floor(t / SEG)), u = t - i * SEG;
-	return i === 0 ? <S1 t={u} /> : <S6 t={u} />;
+	const i = Math.min(6, Math.floor(t / SEG)), u = t - i * SEG;
+	if (i === 0) return <S1 t={u} />;
+	if (i === 1) return <Sheet />;
+	return <S6 t={u} mat={MATS[LINE[i - 2][0]]} />;
 };
-registerRoot(() => <Composition id="PUP35" component={Puppet35} durationInFrames={SEG * 2 * FPS} fps={FPS} width={W} height={H} />);
+registerRoot(() => <Composition id="PUP35" component={Puppet35} durationInFrames={SEG * 7 * FPS} fps={FPS} width={W} height={H} />);
