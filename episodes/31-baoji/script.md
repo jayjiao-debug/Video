@@ -1,71 +1,53 @@
-# Script: 薄肌说明书 — v9 (owner: "go into more detail, video around 2 minutes")
+# Script: 薄肌说明书 — v10 (owner notes on v1: the outro should follow the script; assets must not zoom; subtitles showing at the start; the voice lines don't match → not coherent)
 
-**Idea:** intro v4 → **到底怎么才能练成薄肌**: a detailed how-to in five steps (练 · 吃 · 睡 · 有氧 · 什么时候开始), each with numbers you can act on. Three 薄肌圣经 lines in the original podcast voice are worked in: one confirmed (热量缺口), one corrected (70岁来不及), and the viral one debunked at the end (财富自由).
-**Takeaway:** 一周每个部位10组、分两次练；蛋白质1.6克每公斤、分四顿吃；慢慢减；睡够；什么时候开始都不晚。
-**Length:** ~2:05 · subtitles + three short original-voice quotes · intro v4 kept as is.
+**Spine:** 孙宇晨 described his own 薄肌 plan on the podcast (03:03–04:53). The film scores that plan step by step against the papers. **Every step opens with his own line**, then the evidence: 练 · 吃 · 减 · 睡 · 开始. The outro is the manual in five lines.
+**Takeaway:** 薄肌没有玄学，就这五行：每个部位每周10组隔天练；每次多一点，练到接近力竭；蛋白质每公斤1.6克分4顿；每天缺几百卡慢慢减；睡够，什么时候开始都不晚。
+**Length:** 2:08.4 (card at 126.4).
 
-## Music (classic slowed BGM, 164.5 s; BAR 2.025 s, B0 0.416 s)
-- 0:00–0:17: **no BGM** (intro v4 + line 1).
-- **0:17.0: BGM hard-cuts in at the track's 16.616 s drum entry**; the title lands on it. From there the film runs on the track: 17.0 + 147.9 s of music remaining covers the whole ~2:05.
-- The BGM ducks ~10 dB under each original-voice quote. Step changes on downbeats. Tape-stop under the last line. ~2 s end card.
+**Fixes from v1:**
+- The camera only glides between stations. There is no breathing push-in and nothing scales in.
+- The intro shows only the source picture band (a wide letterbox), so the burned-in subtitles never appear.
+- The 有氧 step, the 「财富自由」 ending and 「酸痛」 are cut (none of them were part of his plan). The outro is the checklist.
 
-## Original-voice quotes (full-podcast timecodes)
-| id | Quote | In → out (s) |
-|---|---|---|
-| Q5 | 「没有想过这个主动健康管理，没有想过这个热量缺口」 | 10281.0 → 10285.2 (cut after 热量缺口; the 农民工 context is not used) |
-| Q2 | 「你七十岁再练来不及了呀」 | ≈ 6755.6 → 6757.7 |
-| Q4 | 「可以理解为，薄肌是财富自由的第一步」 | 10195.0 → 10197.4 |
+## Original-voice quotes (podcast timecodes; QA–QF = 孙宇晨 describing his routine, verified with ASR)
+| id | Line | Podcast in → out | Film |
+|---|---|---|---|
+| QA | 「训练日和非训练日，是刚好一天交叉一次的」 | 183.10 → 187.40 | 35.5 |
+| QB | 「加一点，对吧？再加一点啊，加一点」 | 290.76 → 293.26 | 49.6 |
+| QC | 「现在定的140吧，150克蛋白质」 | 234.35 → 237.80 | 59.7 |
+| QD | 「600卡以内，就说是燃烧脂肪」 | 229.55 → 233.50 | 73.9 |
+| QE | 「同时增肌减脂」 | 242.92 → 244.40 | 86.0 |
+| QF | 「就是抓一下这个睡眠的指标」 | 211.58 → 215.16 | 94.1 |
+| Q2 | 「你七十岁再练来不及了呀」 (speaker not attributed) | 6755.74 → 6757.52 | 108.0 |
 
 ## Lines
-| # | Time | Line / sound | Picture | Fact |
-|---|---|---|---|---|
-| — | 0:00–0:14.5 | **Intro v4** (30 clips speeding up and getting squeaky → 「薄肌圣经」 slowed) | original footage; a big 「薄肌」 pops on every cut | owner clips |
-| 1 | 0:14.8 | 今天我们就说说：到底怎么才能练成薄肌 | black → a blank manual page; no BGM | — |
-| — | 0:17.0 | **《薄肌说明书》** | **BGM in on the drum hit**; the title stamps onto the cover | — |
-| 2 | 0:19.2 | 先翻译：薄肌＝体脂低，肌肉刚好 | the 薄肌 grid (体脂率 × 肌肉量) | T1 |
-| 3 | 0:22.2 | 好消息：不用药，普通人也练得到 | ceiling at FFMI 25 (「药」 above); the dot sits below it | R4 |
-| 4 | 0:25.0 | 只做两件事：长一点肌肉，降一点体脂 | the mannequin: muscle ↑, fat ↓ | — |
-| 5 | 0:28.4 | **步骤一 · 练** | step box 1 | — |
-| 6 | 0:30.0 | 每个部位，一周练够10组 | 10 blocks stack per muscle | R8 |
-| 7 | 0:32.8 | 而且最好分两天练，别一次练完 | 10 blocks split 5 + 5 across a week calendar | R18 |
-| 8 | 0:35.8 | 因为练完之后，肌肉合成只升高一天多 | a curve rises after training… | R14 |
-| 9 | 0:38.8 | 36小时左右就回落了 | …and falls back by 36 h; a second session lifts it again | R14 |
-| 10 | 0:41.6 | 重量不用很重，练到接近力竭就行 | a light dumbbell; a bar fills to 「力竭」 | R9 |
-| 11 | 0:44.6 | 每次，比上次多一点点 | a staircase, one step at a time | S5 |
-| 12 | 0:47.2 | 还有：酸痛不等于有效 | ⚠ triangle | R15 |
-| 13 | 0:49.6 | 刚开始练，身体忙着修补损伤 | repair crews on a fibre | R15 |
-| 14 | 0:52.4 | 真正变粗，要等几周以后 | the fibre widens at "week 10" | R15 |
-| 15 | 0:55.2 | **步骤二 · 吃** | step box 2 | — |
-| 16 | 0:56.8 | 蛋白质：每公斤体重1.6克，再多也不多长 | a gauge caps at 1.6 | R3 |
-| 17 | 1:00.0 | 70公斤的人，一天约110克 | 70 kg → 110 g | R3 (arithmetic) |
-| 18 | 1:02.8 | 最好分成4顿，每顿约28克 | the 110 g splits into four plates | R19 |
-| — | 1:05.8 | 🔊 Q5 「没有想过这个主动健康管理，没有想过这个热量缺口」 | caption 「播客原声」; the BGM ducks | — |
-| 19 | 1:10.2 | 这句说对了：腹肌不是"卷"出来的 | a crunch icon ✗ | R10 |
-| 20 | 1:12.8 | 连卷6周腹，肚子上的脂肪一点没少 | a calendar fills; the belly-fat gauge doesn't move | R10 |
-| 21 | 1:15.8 | 腹肌，是靠热量缺口"降"出来的 | the fat layer lowers; lines appear | R10 |
-| 22 | 1:18.6 | 但要慢慢减 | a slow arrow vs a fast arrow | R20 |
-| 23 | 1:20.6 | 每周减体重0.7%的那组，瘦体重还涨了2% | the slow group's lean bar rises +2% | R20 |
-| 24 | 1:24.2 | 减得快一倍的那组，基本没涨 | the fast group's lean bar stays flat | R20 |
-| 25 | 1:27.4 | **步骤三 · 睡** | step box 3 | — |
-| 26 | 1:29.0 | 同样节食，每晚少睡3小时 | two identical plates; 8.5 h vs 5.5 h | R11 |
-| 27 | 1:31.8 | 脂肪少减一半，瘦肉多掉六成 | two bars swap | R11 |
-| 28 | 1:34.8 | **步骤四 · 有氧会掉肌肉吗？** | step box 4 | — |
-| 29 | 1:36.8 | 43项研究的结论：不会 | a 43-tile grid turns green | R21 |
-| 30 | 1:39.4 | 力量和肌肉照样长，只是爆发力会受点影响 | two bars rise; a small "爆发力" bar dips | R21 |
-| 31 | 1:42.8 | **步骤五 · 什么时候开始？** | step box 5 | — |
-| — | 1:44.6 | 🔊 Q2 「你七十岁再练来不及了呀」 | caption 「播客原声」 | — |
-| 32 | 1:47.0 | 其实，90岁都来得及 | red pen strikes the quote | R16 |
-| 33 | 1:49.2 | 10位约90岁的老人练了8周，力量涨了174% | ten figures; a bar shoots +174% | R16 |
-| 34 | 1:52.6 | 只是越早开始，存得越多 | the 30 → 80 muscle curve, held level by early deposits | R1 |
-| — | 1:55.2 | 🔊 Q4 「可以理解为，薄肌是财富自由的第一步」 | gilded verse, caption 「播客原声」 | T5 |
-| 35 | 1:58.0 | 这句，查不到任何论文 | an empty footnote: 「无」 | R6 |
-| 36 | 2:00.2 | 薄肌不是财富自由的第一步 | the verse struck out | — |
-| 37 | 2:02.4 | 是老了还能自由的第一步 | the mannequin, older, still standing tall; tape-stop | R1 R16 |
-| — | 2:05.0–2:07.0 | end card: **你今天练了吗？评论区报个体脂** | ~2 s | — |
+| Time | Line | Picture |
+|---|---|---|
+| 0–14.5 | intro v4 montage (letterboxed) → 「薄肌圣经」 slowed | original footage, 「薄肌」 on every cut |
+| 14.8 | 今天我们就说说：到底怎么才能练成薄肌 | centred serif, the music swells in |
+| 17.0 | **《薄肌说明书》** | cover on the drum hit |
+| 19.1 / 22.0 / 25.1 | 先翻译：薄肌＝体脂低，肌肉刚好 / 好消息：不用药，普通人也练得到 / 只做两件事：长一点肌肉，降一点体脂 | grid + ceiling; torso scan |
+| 29.3 / 32.4 | 孙宇晨刚开始练，播客里讲了他的方案 / 我们拿论文，逐条打分 | 「孙宇晨的薄肌方案」 card: 练 · 吃 · 减 · 睡 |
+| 35.5 | 🔊 QA | **01 练** |
+| 40.0 / 43.3 / 46.7 | 论文说：每个部位每周10组，分两天练更好 / 练完后肌肉合成升高一天多，36小时左右回落 / 所以隔天练，正好接上 ✓ | calendar 5+5, synthesis curve, ✓ |
+| 49.6 | 🔊 QB | |
+| 52.3 / 55.4 | 这叫渐进超负荷：每次比上次多一点 ✓ / 重量不用很重，练到接近力竭就行 | staircase; dumbbell + effort bar |
+| 59.7 | 🔊 QC | **02 吃** |
+| 63.3 / 66.5 / 69.5 | 论文说：每公斤体重1.6克就够，再多也不多长 / 150克，够一个约94公斤的人 ✓ / 最好分成4顿，每顿30多克 | plateau curve; 150÷1.6 ≈ 94 kg; four plates of 37 g |
+| 73.9 | 🔊 QD | **03 减** |
+| 78.0 / 81.7 | 每天缺600卡，一周大约减半公斤 / 正好是"慢慢减"：研究里这样减的那组，瘦体重还涨了2% ✓ | deficit maths; slow vs fast bars |
+| 86.0 | 🔊 QE | torso scan, fat dropping |
+| 87.7 / 89.9 | 新手确实做得到 ✓ / 腹肌就是这样"降"出来的，不是卷出来的 | |
+| 94.1 | 🔊 QF | **04 睡** |
+| 97.9 / 101.1 / 104.5 | 同样节食，每晚少睡3小时 / 脂肪少减一半，瘦肉多掉六成 / 睡眠，确实值得盯 ✓ | sleep bars |
+| 106.2 | 最后：什么时候开始？ | **05 开始** |
+| 108.0 | 🔊 Q2 | |
+| 110.2 / 112.5 / 116.3 | 这句不对：90岁都来得及 / 10位约90岁的老人练了8周，力量涨了174% / 只是越早开始，存得越多 | elders, +174%; the 30→80 curve |
+| 120.4 / 122.5 | 所以，薄肌没有玄学 / 就这五行，收好这本说明书 | **outro: the manual in five lines, each ✓** |
+| 126.4–128.4 | end card: 你今天练了吗？评论区报个体脂 | |
 
 ## Notes
-- Quotes are captioned 「播客原声」 and never attributed to a named person.
-- Line 23 (R20): elite athletes (n = 30). The slow group lost 0.7% of body weight a week and lean mass rose 2.0% (significant); the fast group lost 1.4% a week and lean mass changed +1.1%, not significant. Hence 「基本没涨」, not 「掉了」.
-- Line 29 (R21): Schumann et al. 2022, 43 studies: concurrent training does not compromise hypertrophy or maximal strength; explosive strength may be blunted, especially in the same session.
-- Lines 17–18 are simple arithmetic on R3 / R19 (70 × 1.6 = 112 ≈ 110 g; 0.4 g/kg × 70 = 28 g).
-- Rights: intro clips plus three quotes ≈ 25 s of a 4.5 h podcast, credited in the end-card source line. The owner's call.
+- The 600 kcal deficit is ≈ 0.55 kg of fat a week (1 kg of fat ≈ 7,700 kcal, a rule-of-thumb figure shown on screen as 约数). For a ~90 kg person that is ≈ 0.6%/week, close to the slow group (0.7%/week) in Garthe 2011.
+- 150 g ÷ 1.6 g/kg ≈ 94 kg; 0.4 g/kg × 94 ≈ 37 g a meal (Schoenfeld & Aragon 2018).
+- 「新手确实做得到」: body recomposition (Barakat et al. 2020, Strength Cond J 42(5):7–21).
+- QA–QF are attributed to 孙宇晨: in this passage he describes his own first days of training and says he read 邵艾伦's 「薄肌教程」. Q2's speaker is not attributed.

@@ -5,7 +5,7 @@ quotes    : three original-voice lines from the podcast, the BGM ducks ~10 dB un
 end       : tape-stop over the last 1.6 s (under the end card); total 127.0 s; −14 LUFS / −1.5 dBTP (ffmpeg loudnorm, 2-pass)
 Writes audio/soundtrack.wav and music/timing.json."""
 import json, subprocess, numpy as np, soundfile as sf, os
-SR = 48000; TOTAL = 127.0
+SR = 48000; TOTAL = 128.4
 INTRO = os.environ['INTRO']; BGM = os.environ['BGM']; POD = os.environ['POD']
 def load(path, t0=None, dur=None):
     cmd = ['ffmpeg', '-v', 'error']
@@ -26,7 +26,9 @@ def put(x, at, gain_db=0.0):
 intro = load(INTRO); put(intro, 0.0)
 dia_level = rms_db(intro[intro.std(axis=1) > 0] if len(intro) else intro)
 # quotes (podcast timecodes from SenseVoice token times; cut in the gaps between words)
-Q = {'Q5': (10281.02, 10284.68, 65.6), 'Q2': (6755.74, 6757.52, 106.1), 'Q4': (10195.03, 10197.02, 116.3)}
+# v10: 孙宇晨 describing his routine (podcast 03:03–04:53) opens each step; Q2 opens 「什么时候开始」
+Q = {'QA': (183.10, 187.40, 35.5), 'QB': (290.76, 293.26, 49.6), 'QC': (234.35, 237.80, 59.7), 'QD': (229.55, 233.50, 73.9),
+     'QE': (242.92, 244.40, 86.0), 'QF': (211.58, 215.16, 94.1), 'Q2': (6755.74, 6757.52, 108.0)}
 qwin = []
 for k, (a, b, at) in Q.items():
     x = fade(load(POD, a, b - a), 0.012, 0.03); put(x, at, -18 - rms_db(x)); qwin.append((at, at + (b - a)))
