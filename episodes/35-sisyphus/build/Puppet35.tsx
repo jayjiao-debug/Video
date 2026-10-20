@@ -134,7 +134,7 @@ const MATS: Record<string, Mat> = {
 	plaster: {name: 'D · 风化石膏', note: '和那块石头同一种材料', limb: 'm-stone', ball: 'mb-stone', head: 'mb-stone', grain: 'clay', hi: '#e2dcd2', hiO: 0.3, lo: '#2a2725', edge: '#2a2725', extra: 'cracks'},
 	ebony: {name: 'E · 乌木 · 黄铜关节', note: '最暗，关节一点金', limb: 'm-ebony', ball: 'mb-brass', head: 'mb-ebony', grain: 'grainL', hi: '#a88462', hiO: 0.28, lo: '#000', edge: '#3a2810'},
 };
-const MatCtx = React.createContext<Mat>(MATS.beech);
+const MatCtx = React.createContext<Mat>(MATS.char);
 const useMat = () => React.useContext(MatCtx);
 const Cap: React.FC<{p: Pt; q: Pt; w1: number; w2: number}> = ({p, q, w1, w2}) => {
 	const dx = q[0] - p[0], dy = q[1] - p[1], L = Math.hypot(dx, dy) || 1, nx = -dy / L, ny = dx / L;
@@ -321,7 +321,7 @@ const Turntable: React.FC<{t: number}> = ({t}) => {
 		<g>
 			{/* table side band and top */}
 			<path d={`M${CX - RX},${CY} A${RX},${RY} 0 0 0 ${CX + RX},${CY} L${CX + RX},${CY + 54} A${RX},${RY} 0 0 1 ${CX - RX},${CY + 54} Z`} fill="#3a2a1e" filter="url(#wood)" />
-			<ellipse cx={CX} cy={CY} rx={RX} ry={RY} fill="#6b4e36" filter="url(#wood)" />
+			<ellipse cx={CX} cy={CY} rx={RX} ry={RY} fill="#3e2c1f" filter="url(#wood)" />
 			<ellipse cx={CX} cy={CY} rx={RX} ry={RY} fill="none" stroke="#2a1e15" strokeWidth={3} opacity={0.6} />
 			<ellipse cx={CX} cy={CY} rx={RX * 0.94} ry={RY * 0.94} fill="none" stroke="#c9a77e" strokeWidth={1.5} opacity={0.25} />
 			{/* clock ticks on the front rim */}
@@ -385,7 +385,7 @@ const S1: React.FC<{t: number}> = ({t}) => (
 const slopeY = (x: number) => 360 + 0.3 * x;
 const S6: React.FC<{t: number; mat: Mat}> = ({t, mat}) => {
 	const pose: Pose = {lean: -3, head: -18, armN: [-16, 8], armF: [12, 6], legN: [24, -4], legF: [-18, -14]};
-	const px = 900, k = 1.12, py = slopeY(px) + 14;
+	const px = 1000, k = 0.98, py = slopeY(px) + 14;
 	const an = strAnchors(pose).map(([x, y]) => [px + x * k, py + y * k] as [number, number]);
 	return (
 		<AbsoluteFill style={{background: '#1b2029'}}>
@@ -423,14 +423,14 @@ const S6: React.FC<{t: number; mat: Mat}> = ({t, mat}) => {
 				</g>
 				</g>
 				{/* the control bar has slipped from the gods' hands: it tumbles away, the hand strings dangle free; only a slack head string remains */}
-				<g transform="translate(560,150) rotate(34)">
+				<MatCtx.Provider value={MATS.beech}><g transform="translate(560,150) rotate(34)">
 					{[[0, -150], [-118, 0], [118, 0], [0, 150]].map(([x, y], i) => (
 						<path key={i} d={`M${x},${y} c${10 + i * 6},70 ${-30 - i * 4},120 ${4 + i * 3},${190 + i * 25} s${-20 + i * 8},60 ${6 - i * 4},${80 + i * 12}`} stroke="#efe8da" strokeWidth={1.3} fill="none" opacity={0.5} transform={`rotate(-34, ${x}, ${y})`} />
 					))}
 					<Cap p={[-124, 0]} q={[124, 0]} w1={16} w2={16} />
 					<Cap p={[0, -156]} q={[0, 156]} w1={16} w2={16} />
 					<Ball p={[0, 0]} r={11} />
-				</g>
+				</g></MatCtx.Provider>
 				<path d={`M${an[0][0]},${an[0][1]} C${an[0][0] - 30},${an[0][1] + 120} ${700},${300} ${560 + 150 * Math.sin(rad(34))},${150 - 150 * Math.cos(rad(34))}`} stroke="#efe8da" strokeWidth={1.4} fill="none" opacity={0.55} />
 				{/* the rock waits at the foot of the hill (foreground, out of focus) */}
 				<g filter="url(#b3)">
@@ -486,12 +486,348 @@ const Sheet: React.FC = () => (
 	</AbsoluteFill>
 );
 
+// ================================================================== key scenes 2–9 (material B · 炭烧木)
+const rotP = (p: Pt, deg: number, c: Pt): Pt => { const a = rad(deg), dx = p[0] - c[0], dy = p[1] - c[1]; return [c[0] + dx * Math.cos(a) - dy * Math.sin(a), c[1] + dx * Math.sin(a) + dy * Math.cos(a)]; };
+/** a hand tip (or the head top) in puppet space, after the torso lean */
+const tipOf = (pose: Pose, near = true): Pt => {
+	const {lean = 0, armN = [-4, 4], armF = [4, 6]} = pose;
+	const [ua, fa] = near ? armN : armF, sx = near ? 46 : -44;
+	const el = limb(sx, -394, ua, 84), wr = limb(el[0], el[1], ua + fa, 76), tip = limb(wr[0], wr[1], ua + fa + 4, 30);
+	return rotP(tip, lean, [0, -232]);
+};
+const headTop = (pose: Pose): Pt => rotP(rotP([4, -515], pose.head ?? 0, [0, -406]), pose.lean ?? 0, [0, -232]);
+const W2 = (x: number, y: number, k: number, p: Pt): Pt => [x + p[0] * k, y + p[1] * k];
+/** the puppet with both rims, at (x, y) feet, scale k */
+const Man: React.FC<{x: number; y: number; k: number; pose: Pose; warm?: boolean}> = ({x, y, k, pose, warm = true}) => (
+	<g>
+		<ellipse cx={x + 8} cy={y + 4} rx={85 * k} ry={12 * k} fill="#000" opacity={0.55} filter="url(#b3)" />
+		<g filter="url(#rimC)"><g transform={`translate(${x},${y}) scale(${k})`} filter={warm ? 'url(#rimR)' : undefined}><Mannequin pose={pose} /></g></g>
+	</g>
+);
+const Str: React.FC<{a: Pt; b: Pt; sag?: number; o?: number}> = ({a, b, sag = 0, o = 0.5}) => (
+	<path d={`M${a[0]},${a[1]} Q${(a[0] + b[0]) / 2 + sag},${(a[1] + b[1]) / 2} ${b[0]},${b[1]}`} stroke="#e8e2d6" strokeWidth={1.3} fill="none" opacity={o} />
+);
+const Rock: React.FC<{c: Pt; r: number; rim?: string; blur?: boolean}> = ({c, r, rim = '#e0a874', blur}) => (
+	<g filter={blur ? 'url(#b3)' : undefined}>
+		<ellipse cx={c[0]} cy={c[1] + r * 0.95} rx={r * 1.05} ry={r * 0.16} fill="#000" opacity={0.55} filter="url(#b6)" />
+		<path d={`M${c[0] - r},${c[1] + r * 0.1} C${c[0] - r * 1.02},${c[1] - r * 0.7} ${c[0] - r * 0.4},${c[1] - r * 1.02} ${c[0] + r * 0.15},${c[1] - r * 0.98} C${c[0] + r * 0.8},${c[1] - r * 0.92} ${c[0] + r * 1.05},${c[1] - r * 0.3} ${c[0] + r * 0.98},${c[1] + r * 0.25} C${c[0] + r * 0.9},${c[1] + r * 0.8} ${c[0] + r * 0.3},${c[1] + r * 1.0} ${c[0] - r * 0.3},${c[1] + r * 0.96} C${c[0] - r * 0.8},${c[1] + r * 0.9} ${c[0] - r * 0.98},${c[1] + r * 0.55} ${c[0] - r},${c[1] + r * 0.1} Z`} fill="#45403b" filter="url(#clay)" />
+		<path d={`M${c[0] + r * 0.15},${c[1] - r * 0.98} C${c[0] + r * 0.8},${c[1] - r * 0.92} ${c[0] + r * 1.05},${c[1] - r * 0.3} ${c[0] + r * 0.98},${c[1] + r * 0.25}`} stroke={rim} strokeWidth={3} fill="none" opacity={0.45} />
+	</g>
+);
+/** night ground: sky, felt clouds, two cardboard ranges, a clay slope y = a + b·x, tufts */
+const Land: React.FC<{sky: string[]; sun?: [number, number, number]; a: number; b: number; clay?: string; t?: number}> = ({sky, sun, a, b, clay = '#2f2a26', t = 0}) => {
+	const ys = (x: number) => a + b * x;
+	const edge = Array.from({length: 23}, (_, i) => { const x = -40 + i * 92; return `L${x},${ys(x) - 7 * Math.sin(i * 1.7) - 5}`; }).join(' ');
+	return (
+		<g>
+			<linearGradient id="skyL" x1="0" y1="0" x2="0" y2="1">{sky.map((c, i) => <stop key={i} offset={i / (sky.length - 1)} stopColor={c} />)}</linearGradient>
+			<rect width={W} height={H} fill="url(#skyL)" filter="url(#paper)" />
+			{sun && <><circle cx={sun[0]} cy={sun[1]} r={460} fill="url(#warmGlow)" opacity={sun[2]} /><circle cx={sun[0]} cy={sun[1]} r={34} fill="#ffd49a" opacity={sun[2]} filter="url(#b3)" /></>}
+			<g filter="url(#b3)">
+				{[[300, 170, 1], [760, 110, 0.8], [1250, 200, 1.1], [1660, 140, 0.9]].map(([x, y, s], i) => (
+					<g key={i} transform={`translate(${x + t * 6},${y}) scale(${s})`} opacity={0.8}>
+						{[[-80, 0, 70], [-10, -24, 86], [70, -4, 64], [0, 16, 90]].map(([dx, dy, r], j) => <ellipse key={j} cx={dx} cy={dy} rx={r} ry={r * 0.55} fill={i % 2 ? '#22262f' : '#2a2f39'} filter="url(#felt)" />)}
+					</g>
+				))}
+			</g>
+			<path d="M0,640 L140,560 L260,600 L420,520 L560,590 L760,540 L900,610 L1100,560 L1300,620 L1480,580 L1700,640 L1920,600 L1920,1080 L0,1080 Z" fill="#1a1d25" filter="url(#b1.5)" />
+			<path d="M0,700 L200,650 L380,690 L600,640 L820,700 L1040,660 L1280,710 L1520,680 L1760,720 L1920,700 L1920,1080 L0,1080 Z" fill="#13161c" filter="url(#paper)" />
+			<path d={`M-40,${ys(-40)} ${edge} L1980,1080 L-40,1080 Z`} fill={clay} filter="url(#clay)" />
+			<path d={`M-40,${ys(-40)} ${edge}`} stroke="#c99a74" strokeWidth={2} fill="none" opacity={0.35} />
+			{Array.from({length: 14}, (_, i) => { const x = 60 + i * 140 + (i % 3) * 20; const y = ys(x) + 40 + (i % 4) * 30; return <path key={i} d={`M${x},${y} l-8,-22 l8,9 l4,-26 l5,24 l8,-16 l-2,31 Z`} fill="#2e3529" filter="url(#felt)" />; })}
+		</g>
+	);
+};
+const NIGHT = ['#06080c', '#121620', '#262533', '#3e3236'];
+/** a giant dark hand reaching down from the dark, fingers curled over a bar at y≈100 (local) */
+const GodHand: React.FC<{x: number; y: number; s?: number; flip?: boolean; rot?: number}> = ({x, y, s = 1, flip, rot = 0}) => (
+	<g transform={`translate(${x},${y}) rotate(${rot}) scale(${flip ? -s : s},${s})`} filter="url(#rimC)">
+		<path d="M-74,-520 L74,-520 L64,-70 L-64,-70 Z" fill="#0d0c0b" />
+		<path d="M-66,-84 C-76,-20 -66,36 -44,58 L56,58 C76,24 76,-30 64,-84 Z" fill="#221e1b" filter="url(#charG)" />
+		{[-38, -13, 12, 36].map((fx, i) => (
+			<g key={i}>
+				<line x1={fx} y1={46} x2={fx + 4} y2={98} stroke="#221e1b" strokeWidth={22 - i} strokeLinecap="round" />
+				<line x1={fx + 4} y1={98} x2={fx - 10} y2={122} stroke="#1c1916" strokeWidth={19 - i} strokeLinecap="round" />
+			</g>
+		))}
+		<line x1={-60} y1={-10} x2={-46} y2={86} stroke="#1c1916" strokeWidth={24} strokeLinecap="round" />
+	</g>
+);
+const CrossBar: React.FC<{x: number; y: number; rot?: number}> = ({x, y, rot = 0}) => (
+	<MatCtx.Provider value={MATS.beech}>
+		<g transform={`translate(${x},${y}) rotate(${rot})`}>
+			<Cap p={[-124, 0]} q={[124, 0]} w1={16} w2={16} />
+			<Cap p={[0, -60]} q={[0, 150]} w1={16} w2={16} />
+			<Ball p={[0, 0]} r={11} />
+		</g>
+	</MatCtx.Provider>
+);
+const barPt = (x: number, y: number, rot: number, p: Pt): Pt => { const r = rotP(p, rot, [0, 0]); return [x + r[0], y + r[1]]; };
+const PUSH: Pose = {lean: 30, head: 12, armN: [56, 8], armF: [50, 14], legN: [22, -30], legF: [-30, 4]};
+
+const Frame: React.FC<{header?: string; sub?: string; children: React.ReactNode; bg?: string}> = ({header, sub, children, bg = '#07080b'}) => (
+	<AbsoluteFill style={{background: bg}}>
+		<svg width={W} height={H} style={{position: 'absolute', inset: 0}}><Defs />{children}</svg>
+		<Grade />
+		{header && <Header t={header} />}
+		<Mark />
+		{sub && <Sub t={sub} />}
+	</AbsoluteFill>
+);
+
+// ---- 2 · title: the road has become a hill; the title hangs on strings like a stage sign
+const S2: React.FC = () => {
+	const ys = (x: number) => 900 - 0.34 * x;
+	const pose: Pose = {head: -16, lean: -2, armN: [-6, 6], armF: [6, 6]};
+	const mx = 540, my = ys(mx) + 10, k = 0.78;
+	return (
+		<Frame>
+			<Land sky={NIGHT} a={900} b={-0.34} sun={[1700, 560, 0.35]} />
+			<Rock c={[760, ys(760) - 128]} r={135} />
+			<Man x={mx} y={my} k={k} pose={pose} />
+			{strAnchors(pose).map((p, i) => { const w = W2(mx, my, k, p); return <Str key={i} a={w} b={[w[0] + (i - 1) * 4, -10]} />; })}
+			<g transform="translate(1340,300) rotate(-2) scale(0.9)">
+				<line x1={-380} y1={-60} x2={-360} y2={-300} stroke="#e8e2d6" strokeWidth={1.4} opacity={0.6} />
+				<line x1={380} y1={-60} x2={360} y2={-300} stroke="#e8e2d6" strokeWidth={1.4} opacity={0.6} />
+				<rect x={-430} y={-70} width={860} height={150} rx={10} fill="#000" opacity={0.5} filter="url(#b6)" transform="translate(10,16)" />
+				<rect x={-430} y={-70} width={860} height={150} rx={10} fill="url(#m-walnut)" filter="url(#grainL)" />
+				<rect x={-414} y={-56} width={828} height={122} rx={6} fill="none" stroke="#1a110a" strokeWidth={3} opacity={0.7} />
+				{[[-404, -46], [404, -46], [-404, 56], [404, 56]].map(([x, y], i) => <circle key={i} cx={x} cy={y} r={6} fill="url(#mb-brass)" />)}
+				<text y={36} textAnchor="middle" style={{fontFamily: SERIF, fontWeight: 900, fontSize: 84, letterSpacing: '0.08em'}} fill="#120b06" opacity={0.8} transform="translate(0,2)">推石头的人，是幸福的</text>
+				<text y={36} textAnchor="middle" style={{fontFamily: SERIF, fontWeight: 900, fontSize: 84, letterSpacing: '0.08em'}} fill="#e9d9bd">推石头的人，是幸福的</text>
+			</g>
+		</Frame>
+	);
+};
+
+// ---- 3 · the myth: the gods' hands work the bar; he pushes uphill
+const S3: React.FC = () => {
+	const ys = (x: number) => 880 - 0.32 * x;
+	const k = 0.82, r = 150, cx = 1080;
+	const cy = ys(cx) - r * 0.92;
+	const tip = tipOf(PUSH, true);
+	const mx = cx - r * 0.98 - tip[0] * k, my = ys(mx) + 12;
+	const bx = 560, by = 250, rot = 8;
+	return (
+		<Frame header="古希腊 · 神话" sub="惩罚是：把一块巨石，推上山顶">
+			<Land sky={NIGHT} a={880} b={-0.32} sun={[300, 600, 0.22]} />
+			<Rock c={[cx, cy]} r={r} />
+			<Man x={mx} y={my} k={k} pose={PUSH} warm={false} />
+			{[headTop(PUSH), tipOf(PUSH, true), tipOf(PUSH, false)].map((p, i) => <Str key={i} a={W2(mx, my, k, p)} b={barPt(bx, by, rot, [[0, 150], [124, 0], [-124, 0]][i] as Pt)} o={0.6} />)}
+			<CrossBar x={bx} y={by} rot={rot} />
+			<GodHand x={bx - 26} y={by - 84} s={0.75} rot={6} />
+			<GodHand x={bx + 84} y={by - 76} s={0.66} rot={-10} flip />
+		</Frame>
+	);
+};
+
+// ---- 4 · 2008: the Sisyphus condition — built figures kept vs taken apart
+const Bot: React.FC<{x: number; y: number; c: string; s?: number}> = ({x, y, c, s = 1}) => (
+	<g transform={`translate(${x},${y}) scale(${s})`}>
+		<rect x={-14} y={-26} width={10} height={26} fill={c} /><rect x={4} y={-26} width={10} height={26} fill={c} />
+		<rect x={-20} y={-70} width={40} height={46} rx={3} fill={c} /><rect x={-28} y={-66} width={8} height={30} fill={c} /><rect x={20} y={-66} width={8} height={30} fill={c} />
+		<rect x={-12} y={-94} width={24} height={22} rx={3} fill={c} /><rect x={-6} y={-86} width={12} height={4} fill="#000" opacity={0.4} />
+		<rect x={-20} y={-70} width={40} height={6} fill="#fff" opacity={0.12} />
+	</g>
+);
+const BOTC = ['#7a3b2a', '#8a6a2a', '#3d4a5a', '#4a5a3a', '#6a3a4a'];
+const S4: React.FC = () => {
+	const pose: Pose = {head: 22, lean: 12, armN: [40, 40], armF: [36, 44]};
+	return (
+		<Frame header="2008 · 美国" sub="被拆的那组，平均少拼了三个多：10.6个，对7.2个" bg="#0b0b0d">
+			<rect width={W} height={H} fill="#121316" filter="url(#paper)" />
+			{Array.from({length: 13}, (_, i) => <rect key={i} x={i * 150} y={0} width={4} height={700} fill="#0c0d0f" />)}
+			{/* chalkboard */}
+			<g transform="translate(1340,170) scale(0.86)">
+				<rect x={-14} y={-14} width={588} height={348} fill="#2a1d14" filter="url(#wood)" />
+				<rect width={560} height={320} fill="#1b211e" filter="url(#paper)" />
+				{[['摆着', 10.6, 60], ['被拆', 7.2, 200]].map(([lab, v, y]) => (
+					<g key={lab as string} transform={`translate(40,${y})`}>
+						<text x={0} y={40} style={{fontFamily: SERIF, fontWeight: 700, fontSize: 40}} fill="#e8e4da" opacity={0.85}>{lab}</text>
+						{Array.from({length: Math.floor(v as number)}, (_, i) => (i % 5 === 4
+							? <line key={i} x1={110 + Math.floor(i / 5) * 90 - 8} y1={30} x2={110 + Math.floor(i / 5) * 90 + 64} y2={4} stroke="#e8e4da" strokeWidth={4} opacity={0.8} strokeLinecap="round" />
+							: <line key={i} x1={110 + Math.floor(i / 5) * 90 + (i % 5) * 14} y1={-2} x2={110 + Math.floor(i / 5) * 90 + (i % 5) * 14 + 3} y2={44} stroke="#e8e4da" strokeWidth={4} opacity={0.8} strokeLinecap="round" />))}
+						<text x={500} y={42} textAnchor="end" style={{fontFamily: '"Cormorant", serif', fontWeight: 700, fontSize: 60}} fill={lab === '被拆' ? '#ff8a70' : '#f1d7a0'}>{(v as number).toFixed(1)}</text>
+					</g>
+				))}
+			</g>
+			{/* lamp */}
+			<g transform="translate(300,690)">
+				<ellipse cx={120} cy={-60} rx={520} ry={330} fill="url(#warmGlow)" opacity={0.55} />
+				<line x1={0} y1={0} x2={30} y2={-200} stroke="#2a2724" strokeWidth={8} /><line x1={30} y1={-200} x2={130} y2={-230} stroke="#2a2724" strokeWidth={8} />
+				<path d="M100,-250 L190,-200 L150,-170 L80,-220 Z" fill="#1d1b19" /><ellipse cx={150} cy={-188} rx={28} ry={8} fill="#ffd590" transform="rotate(30,150,-188)" />
+			</g>
+			<Man x={700} y={860} k={0.95} pose={pose} />
+			{strAnchors(pose).map((p, i) => { const w = W2(700, 860, 0.95, rotP(p, i ? pose.lean ?? 0 : 0, [0, -232])); return <Str key={i} a={w} b={[w[0], -10]} o={0.4} />; })}
+			{/* workbench */}
+			<rect y={690} width={W} height={34} fill="url(#m-walnut)" filter="url(#grainL)" />
+			<rect y={724} width={W} height={360} fill="#0c0a09" />
+			{/* kept: a row of finished figures (left) */}
+			{[0, 1, 2, 3, 4].map((i) => <Bot key={i} x={120 + i * 64} y={690} c={BOTC[i]} s={0.9} />)}
+			{/* in progress, at his hands */}
+			<Bot x={880} y={690} c={BOTC[2]} s={0.9} />
+			{/* taken apart: a dark hand from the right lifts a figure away; its pieces fall */}
+			<GodHand x={1150} y={440} s={0.62} rot={-14} />
+			<g transform="translate(1140,568) rotate(-10)"><Bot x={0} y={0} c={BOTC[0]} s={0.9} /></g>
+			{[[1080, 640, 10, '#7a3b2a'], [1115, 668, -20, '#7a3b2a'], [1190, 676, 35, '#7a3b2a'], [1220, 650, -8, '#7a3b2a']].map(([x, y, r, c], i) => (
+				<rect key={i} x={x as number} y={y as number} width={12} height={22} fill={c as string} transform={`rotate(${r}, ${x}, ${y})`} />
+			))}
+		</Frame>
+	);
+};
+
+// ---- 5 · 1942: an attic in France, rain and searchlights; the manuscript; a small charred figure and a pebble on the desk
+const S5: React.FC = () => (
+	<Frame header="1942 · 法国" sub="1942年，二战正酣，28岁的加缪写下了《西西弗斯神话》" bg="#08090b">
+		<rect width={W} height={H} fill="#141210" filter="url(#paper)" />
+		{Array.from({length: 16}, (_, i) => <rect key={i} x={i * 124} y={0} width={120} height={760} fill={i % 2 ? '#17140f' : '#1b1712'} filter="url(#paper)" />)}
+		<path d="M0,0 L1920,0 L1920,90 L0,190 Z" fill="#0b0a08" />
+		{/* window: rain and two searchlights */}
+		<g transform="translate(1290,170)">
+			<rect width={430} height={420} fill="#0d1320" />
+			{[0, 1].map((i) => <polygon key={i} points={`${120 + i * 200},420 ${140 + i * 200},420 ${60 + i * 330},-10 ${10 + i * 330},-10`} fill="#cfdcf0" opacity={0.12} />)}
+			{Array.from({length: 46}, (_, i) => <line key={i} x1={(i * 53) % 430} y1={(i * 97) % 380} x2={(i * 53) % 430 - 4} y2={(i * 97) % 380 + 26} stroke="#9fb6d8" strokeWidth={1.2} opacity={0.35} />)}
+			<path d="M0,330 L60,300 L120,320 L180,280 L260,310 L330,270 L430,300 L430,420 L0,420 Z" fill="#06080d" />
+			<rect x={207} width={16} height={420} fill="#1b1712" /><rect y={202} width={430} height={16} fill="#1b1712" />
+			<rect x={-18} y={-18} width={466} height={456} fill="none" stroke="#221c15" strokeWidth={20} />
+		</g>
+		{/* desk */}
+		<rect y={760} width={W} height={40} fill="url(#m-walnut)" filter="url(#grainL)" />
+		<rect y={800} width={W} height={300} fill="#0a0806" />
+		<g transform="translate(560,760)">
+			<ellipse cx={0} cy={-120} rx={520} ry={360} fill="url(#warmGlow)" opacity={0.75} />
+			<ellipse cx={0} cy={-4} rx={60} ry={12} fill="url(#mb-brass)" />
+			<path d="M-34,-10 C-46,-60 -30,-100 0,-104 C30,-100 46,-60 34,-10 Z" fill="#d9c9a8" opacity={0.35} />
+			<path d="M-6,-50 C-12,-70 -2,-86 0,-96 C4,-84 12,-70 6,-50 Z" fill="#ffd27a" />
+			<rect x={-24} y={-118} width={48} height={14} rx={4} fill="url(#mb-brass)" />
+		</g>
+		{/* typewriter with the page */}
+		<g transform="translate(960,760)">
+			<rect x={-200} y={-120} width={400} height={120} rx={20} fill="#151515" />
+			<rect x={-220} y={-150} width={440} height={36} rx={16} fill="#1f1f1f" />
+			{Array.from({length: 20}, (_, i) => <circle key={i} cx={-160 + (i % 10) * 36} cy={-70 + Math.floor(i / 10) * 30} r={10} fill="#2c2c2c" />)}
+			<g transform="rotate(-2)">
+				<rect x={-130} y={-420} width={260} height={290} fill="#e9e0cc" filter="url(#paper)" />
+				<text x={0} y={-370} textAnchor="middle" style={{fontFamily: '"DejaVu Sans Mono", monospace', fontSize: 17, letterSpacing: '0.08em'}} fill="#2a2420">LE MYTHE DE SISYPHE</text>
+				{Array.from({length: 8}, (_, i) => <rect key={i} x={-100} y={-330 + i * 22} width={150 + ((i * 37) % 50)} height={4} fill="#2a2420" opacity={0.45} />)}
+				<text x={0} y={-150} textAnchor="middle" style={{fontFamily: '"DejaVu Sans Mono", monospace', fontSize: 14}} fill="#2a2420" opacity={0.6}>— 1942 —</text>
+			</g>
+		</g>
+		{/* the small charred figure and a pebble */}
+		<g transform="translate(1340,760) scale(0.3)"><g filter="url(#rimR)"><Mannequin pose={{head: 18, lean: 6, armN: [-2, 4], armF: [4, 6]}} /></g></g>
+		<ellipse cx={1420} cy={748} rx={24} ry={14} fill="#4a4540" filter="url(#clay)" />
+	</Frame>
+);
+
+// ---- 7 · 2010: a phone buzzes; half the time the mind drifts away
+const S7: React.FC = () => {
+	const pose: Pose = {head: 6, lean: 4, armN: [62, 38], armF: [58, 40], legN: [86, -86], legF: [82, -82]};
+	const fx = 620, floor = 900, k = 0.95, fy = floor + 103 * k;
+	const ht = W2(fx, fy, k, headTop(pose));
+	const pie = 0.469;
+	const pa = 2 * Math.PI * pie;
+	return (
+		<Frame header="2010 · 哈佛" sub="人们有46.9%的时间，心不在焉" bg="#0a0b0e">
+			<rect width={W} height={H} fill="#111317" filter="url(#paper)" />
+			<rect y={floor} width={W} height={180} fill="#0b0b0c" />
+			{/* wall clock: 46.9 % of the face shaded */}
+			<g transform="translate(1440,300)">
+				<circle r={150} fill="#d9d1c0" opacity={0.9} filter="url(#paper)" />
+				<path d={`M0,0 L0,-150 A150,150 0 0 1 ${150 * Math.sin(pa)},${-150 * Math.cos(pa)} Z`} fill="#8a3a2e" opacity={0.75} />
+				<circle r={150} fill="none" stroke="#2a2420" strokeWidth={10} />
+				{Array.from({length: 12}, (_, i) => { const a = (i / 12) * 2 * Math.PI; return <line key={i} x1={130 * Math.sin(a)} y1={-130 * Math.cos(a)} x2={142 * Math.sin(a)} y2={-142 * Math.cos(a)} stroke="#2a2420" strokeWidth={4} />; })}
+				<text x={0} y={230} textAnchor="middle" style={{fontFamily: '"Cormorant", serif', fontWeight: 700, fontSize: 64}} fill="#ff8a70">46.9%</text>
+			</g>
+			{/* desk with a buzzing phone, chair */}
+			<rect x={760} y={700} width={560} height={22} fill="url(#m-walnut)" filter="url(#grainL)" />
+			{[780, 1290].map((x) => <rect key={x} x={x} y={722} width={14} height={178} fill="#1a120c" />)}
+			<g transform="translate(1000,690)">
+				<rect x={-34} y={-12} width={68} height={12} rx={4} fill="#0e0f12" />
+				<rect x={-30} y={-11} width={60} height={9} rx={3} fill="#9fb6d8" opacity={0.7} />
+				<ellipse cx={0} cy={-6} rx={140} ry={70} fill="url(#coldGlow)" opacity={0.7} />
+				{[0, 1, 2].map((i) => <path key={i} d={`M${-50 - i * 16},${-20 - i * 10} q-8,10 0,20`} stroke="#cfdcf0" strokeWidth={2} fill="none" opacity={0.6} transform={`scale(1,1)`} />)}
+				{[0, 1, 2].map((i) => <path key={'r' + i} d={`M${50 + i * 16},${-20 - i * 10} q8,10 0,20`} stroke="#cfdcf0" strokeWidth={2} fill="none" opacity={0.6} />)}
+			</g>
+			<rect x={fx - 70} y={floor - 130 - 10} width={150} height={16} fill="#1c140e" />
+			<rect x={fx - 70} y={floor - 330} width={16} height={330} fill="#1c140e" />
+			<rect x={fx + 64} y={floor - 124} width={12} height={124} fill="#1c140e" />
+			<Man x={fx} y={fy} k={k} pose={pose} />
+			{/* thoughts drift away: felt clouds trailing from the head */}
+			{[[ht[0] - 60, ht[1] - 40, 16], [ht[0] - 130, ht[1] - 110, 26], [ht[0] - 250, ht[1] - 200, 70]].map(([x, y, r], i) => (
+				<g key={i} opacity={0.9}>
+					{i < 2 ? <circle cx={x} cy={y} r={r} fill="#3a3f4a" filter="url(#felt)" /> : (
+						<g>{[[-60, 0, 60], [0, -26, 74], [60, -2, 56], [0, 18, 80]].map(([dx, dy, rr], j) => <ellipse key={j} cx={x + dx} cy={y + dy} rx={rr} ry={rr * 0.6} fill="#3a3f4a" filter="url(#felt)" />)}
+							{/* inside the thought: somewhere else */}
+							<path d={`M${x - 70},${y + 20} L${x - 30},${y - 20} L${x + 5},${y + 8} L${x + 40},${y - 30} L${x + 80},${y + 20} Z`} fill="#565d6b" opacity={0.8} />
+							<circle cx={x + 50} cy={y - 40} r={10} fill="#d9c9a8" opacity={0.6} />
+						</g>
+					)}
+				</g>
+			))}
+		</Frame>
+	);
+};
+
+// ---- 8 · same rock, three stories: 工作 · 事业 · 使命 (only the third is lit)
+const S8: React.FC = () => {
+	const ys = (x: number) => 900 - 0.12 * x;
+	const k = 0.56, r = 96;
+	const lanes = [[260, '只是份工作'], [860, '是我的事业'], [1460, '是我的使命']] as const;
+	return (
+		<Frame header="1997 · 美国" sub="同一块石头，不同的人，推出了不同的人生">
+			<Land sky={NIGHT} a={900} b={-0.12} sun={[1700, 640, 0.25]} />
+			{lanes.map(([x0, tag], i) => {
+				const cx = x0 + 150, cy = ys(cx) - r * 0.92;
+				const tip = tipOf(PUSH, true);
+				const mx = cx - r * 0.98 - tip[0] * k, my = ys(mx) + 8;
+				const lit = i === 2;
+				return (
+					<g key={tag}>
+						{lit && <ellipse cx={cx} cy={cy - 60} rx={340} ry={260} fill="url(#warmGlow)" opacity={0.75} />}
+						<Rock c={[cx, cy]} r={r} rim={lit ? '#ffc58a' : '#7f8aa0'} />
+						<Man x={mx} y={my} k={k} pose={PUSH} warm={lit} />
+						{/* a paper tag tied to the rock */}
+						<g transform={`translate(${cx + 30},${cy - r - 4}) rotate(${-6 + i * 5})`}>
+							<line x1={0} y1={0} x2={10} y2={40} stroke="#d9cfb8" strokeWidth={1.5} opacity={0.7} />
+							<rect x={-6} y={40} width={150} height={52} rx={4} fill="#d9cfb8" filter="url(#paper)" opacity={lit ? 1 : 0.7} />
+							<text x={69} y={76} textAnchor="middle" style={{fontFamily: SERIF, fontWeight: 700, fontSize: 26}} fill="#2a2420">{tag}</text>
+						</g>
+						{lit && (
+							<g transform={`translate(${cx - 30},${cy - r + 6})`}>
+								<rect x={-8} y={-30} width={16} height={30} fill="#e9dfc8" />
+								<path d="M0,-58 C-8,-44 -6,-36 0,-32 C6,-36 8,-44 0,-58 Z" fill="#ffd27a" />
+								<circle cx={0} cy={-44} r={22} fill="url(#warmGlow)" />
+							</g>
+						)}
+					</g>
+				);
+			})}
+		</Frame>
+	);
+};
+
+// ---- 9 · dawn at the foot of the hill: no strings; a hand on the rock
+const S9: React.FC = () => {
+	const ground = 860, k = 0.95;
+	const pose: Pose = {head: -10, lean: 0, armN: [52, 6], armF: [4, 8], legN: [6, 0], legF: [-6, 0]};
+	const mx = 760, my = ground;
+	const tip = W2(mx, my, k, tipOf(pose, true));
+	const r = (ground - tip[1]) / 1.62, c: Pt = [tip[0] + r * 0.62, tip[1] + r * 0.62];
+	return (
+		<Frame sub="所以，我们必须想象：西西弗斯是幸福的">
+			<Land sky={['#0b0e15', '#25263a', '#6a4a4a', '#c88a5a']} a={ground + 10} b={0} sun={[1380, 650, 1]} clay="#3a322b" />
+			<path d="M0,620 L300,520 L520,560 L700,470 L900,600 L1200,660 L1920,640 L1920,1080 L0,1080 Z" fill="#1d1a1c" opacity={0.6} filter="url(#paper)" />
+			<Rock c={c} r={r} rim="#ffc58a" />
+			<Man x={mx} y={my} k={k} pose={pose} />
+		</Frame>
+	);
+};
+
 const Puppet35: React.FC = () => {
 	useFonts();
 	const t = useCurrentFrame() / FPS;
-	const i = Math.min(6, Math.floor(t / SEG)), u = t - i * SEG;
-	if (i === 0) return <S1 t={u} />;
-	if (i === 1) return <Sheet />;
-	return <S6 t={u} mat={MATS[LINE[i - 2][0]]} />;
+	const i = Math.min(9, Math.floor(t / SEG)), u = t - i * SEG;
+	const list = [<S1 t={u} />, <S2 />, <S3 />, <S4 />, <S5 />, <S6 t={u} mat={MATS.char} />, <S7 />, <S8 />, <S9 />, <Sheet />];
+	return list[i];
 };
-registerRoot(() => <Composition id="PUP35" component={Puppet35} durationInFrames={SEG * 7 * FPS} fps={FPS} width={W} height={H} />);
+registerRoot(() => <Composition id="PUP35" component={Puppet35} durationInFrames={SEG * 10 * FPS} fps={FPS} width={W} height={H} />);
