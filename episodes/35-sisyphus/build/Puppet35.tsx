@@ -64,7 +64,7 @@ const Defs: React.FC = () => (
 			<feMorphology in="SourceAlpha" operator="erode" radius="0.8" result="e" />
 			<feOffset in="e" dx="1.6" dy="1.6" result="o" />
 			<feComposite in="SourceAlpha" in2="o" operator="out" result="edge" />
-			<feFlood floodColor="#bcd0ec" floodOpacity="0.45" />
+			<feFlood floodColor="#bcd0ec" floodOpacity="0.26" />
 			<feComposite in2="edge" operator="in" result="rim" />
 			<feGaussianBlur in="rim" stdDeviation="0.8" result="rb" />
 			<feMerge><feMergeNode in="SourceGraphic" /><feMergeNode in="rb" /></feMerge>
@@ -104,7 +104,7 @@ const Defs: React.FC = () => (
 		</filter>
 		<filter id="charG" x="0" y="0" width="100%" height="100%">
 			<feTurbulence type="turbulence" baseFrequency="0.09 0.05" numOctaves="2" seed="13" result="n" />
-			<feColorMatrix in="n" type="matrix" values="0 0 0 0 0.62  0 0 0 0 0.6  0 0 0 0 0.56  0 0 0 2.6 -1.55" result="g" />
+			<feColorMatrix in="n" type="matrix" values="0 0 0 0 0.26  0 0 0 0 0.25  0 0 0 0 0.23  0 0 0 2.0 -1.3" result="g" />
 			<feComposite in="g" in2="SourceGraphic" operator="in" result="gc" />
 			<feMerge><feMergeNode in="SourceGraphic" /><feMergeNode in="gc" /></feMerge>
 		</filter>
@@ -823,11 +823,150 @@ const S9: React.FC = () => {
 	);
 };
 
+// ================================================================== scene 1 v2 · the platform at 07:30 (cinematic close shot, real strings)
+const VP: Pt = [1260, 520];
+const towards = (p: Pt, d: number): Pt => [p[0] + (VP[0] - p[0]) * d, p[1] + (VP[1] - p[1]) * d];
+const quad = (a: Pt, b: Pt, c: Pt, e: Pt) => `M${a[0]},${a[1]} L${b[0]},${b[1]} L${c[0]},${c[1]} L${e[0]},${e[1]} Z`;
+/** depth parameter for an even world spacing: k-th unit of n along a receding plane */
+const dz = (u: number) => 1 - 1 / (1 + u * 0.55);
+/** all string attachment points of a marionette, in puppet space (after head tilt and lean) */
+const attachPts = (pose: Pose): {p: Pt; to: number}[] => {
+	const {lean = 0, head = 0, armN = [-4, 4], armF = [4, 6], legN = [3, 0], legF = [-3, 0]} = pose;
+	const L = (p: Pt) => rotP(p, lean, [0, -232]);
+	const H = (p: Pt) => L(rotP(p, head, [0, -406]));
+	const wrist = (sx: number, [ua, fa]: [number, number]) => { const e = limb(sx, -394, ua, 84); return L(limb(e[0], e[1], ua + fa, 76)); };
+	const knee = (hx: number, [th]: [number, number]) => limb(hx, -232, th, 106);
+	return [
+		{p: H([-24, -500]), to: -1}, {p: H([32, -496]), to: 1},          // head (two, at the temples)
+		{p: L([-44, -404]), to: -2}, {p: L([46, -404]), to: 2},           // shoulders
+		{p: wrist(46, armN), to: 4}, {p: wrist(-44, armF), to: -4},        // hands
+		{p: knee(18, legN), to: 3}, {p: knee(-14, legF), to: -3},         // knees
+	];
+};
+/** a nylon marionette string: near-invisible in shadow, catching the top light in a band, glints, fading into the dark above */
+const RealString: React.FC<{a: Pt; b: Pt; id: string; band?: [number, number]; w?: number}> = ({a, b, id, band = [0.2, 0.55], w = 1.25}) => {
+	const L = Math.hypot(b[0] - a[0], b[1] - a[1]);
+	const glints = [0.12, 0.31, 0.47].map((u, i) => u + ((id.charCodeAt(id.length - 1) * (i + 3)) % 7) * 0.012);
+	const at = (u: number): Pt => [a[0] + (b[0] - a[0]) * u, a[1] + (b[1] - a[1]) * u];
+	return (
+		<g>
+			<linearGradient id={id} gradientUnits="userSpaceOnUse" x1={a[0]} y1={a[1]} x2={b[0]} y2={b[1]}>
+				<stop offset="0" stopColor="#dfe7f0" stopOpacity="0.28" />
+				<stop offset={band[0]} stopColor="#eef4fb" stopOpacity="0.85" />
+				<stop offset={band[1]} stopColor="#dfe7f0" stopOpacity="0.5" />
+				<stop offset="0.82" stopColor="#c9d4e2" stopOpacity="0.12" />
+				<stop offset="1" stopColor="#c9d4e2" stopOpacity="0" />
+			</linearGradient>
+			<line x1={a[0]} y1={a[1]} x2={b[0]} y2={b[1]} stroke={`url(#${id})`} strokeWidth={w * 3.2} opacity={0.18} filter="url(#b1.5)" />
+			<line x1={a[0]} y1={a[1]} x2={b[0]} y2={b[1]} stroke={`url(#${id})`} strokeWidth={w} />
+			{glints.map((u, i) => { const p = at(u), q = at(u + 14 / L); return <line key={i} x1={p[0]} y1={p[1]} x2={q[0]} y2={q[1]} stroke="#ffffff" strokeWidth={w * 1.5} opacity={0.75 - i * 0.18} strokeLinecap="round" />; })}
+		</g>
+	);
+};
+/** a small brass screw-eye at the attachment, with the knot */
+const Eyelet: React.FC<{p: Pt; k: number}> = ({p, k}) => (
+	<g><circle cx={p[0]} cy={p[1] - 1.6 * k} r={2.3 * k} fill="none" stroke="#6e5c40" strokeWidth={1.1 * k} /><path d={`M${p[0] - 1.6 * k},${p[1] - 2.6 * k} a${2.3 * k},${2.3 * k} 0 0 1 ${2.6 * k},${-1.2 * k}`} stroke="#d9c79c" strokeWidth={0.8 * k} fill="none" opacity={0.8} /><circle cx={p[0]} cy={p[1] - 3.9 * k} r={0.9 * k} fill="#e8e2d6" opacity={0.7} /></g>
+);
+const S1b: React.FC<{t: number}> = ({t}) => {
+	const pose: Pose = {lean: 5, head: 20, armN: [-3, 4], armF: [5, 8], legN: [2, 0], legF: [-3, 0], case: true};
+	const mx = 700, my = 930, k = 1.22;
+	const sway = Math.sin(t * 1.3) * 0.6;
+	// the control bar hangs out of frame above: string ends spread along it (with a little perspective)
+	const barC: Pt = [mx + 30 + sway * 4, -320];
+	const barEnd = (slot: number): Pt => [barC[0] + slot * 62, barC[1] + Math.abs(slot) * 10];
+	const trainX = 1640;
+	const tb: Pt = [trainX, 1010], tt: Pt = [trainX, 230];
+	return (
+		<AbsoluteFill style={{background: '#050607'}}>
+			<svg width={W} height={H} style={{position: 'absolute', inset: 0}}>
+				<Defs />
+				<radialGradient id="tile" cx="0.5" cy="0.5" r="0.7"><stop offset="0" stopColor="#3a4048" /><stop offset="1" stopColor="#1d2126" /></radialGradient>
+				<linearGradient id="floorG" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stopColor="#15181c" /><stop offset="1" stopColor="#24282d" /></linearGradient>
+				<linearGradient id="winG" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stopColor="#dfe9f5" stopOpacity="0.95" /><stop offset="1" stopColor="#9fb6d0" stopOpacity="0.75" /></linearGradient>
+				{/* tunnel at the vanishing point */}
+				<rect width={W} height={H} fill="#06070a" />
+				<ellipse cx={VP[0]} cy={VP[1] - 10} rx={120} ry={140} fill="#0c0f14" />
+				{[[VP[0] - 30, VP[1] - 40, '#ffb45e'], [VP[0] + 20, VP[1] - 60, '#9fb6d8'], [VP[0] + 4, VP[1] + 10, '#ff6a50']].map(([x, y, c], i) => <circle key={i} cx={x as number} cy={y as number} r={6} fill={c as string} filter="url(#b3)" opacity={0.8} />)}
+				{/* left wall: dim subway tiles receding */}
+				<path d={quad([-10, -60], towards([-10, -60], 0.9), towards([-10, 820], 0.9), [-10, 820])} fill="url(#tile)" />
+				{Array.from({length: 24}, (_, i) => { const y = -60 + i * 38; const e = towards([-10, y], 0.9); return <line key={'h' + i} x1={-10} y1={y} x2={e[0]} y2={e[1]} stroke="#0e1013" strokeWidth={2} opacity={0.8} />; })}
+				{Array.from({length: 40}, (_, j) => { const d = dz(j * 0.6); if (d > 0.9) return null; const a = towards([-10, -60], d), b = towards([-10, 820], d); return <line key={'v' + j} x1={a[0]} y1={a[1]} x2={b[0]} y2={b[1]} stroke="#0e1013" strokeWidth={2.5 * (1 - d)} opacity={0.8} />; })}
+				<path d={quad([-10, 560], towards([-10, 560], 0.9), towards([-10, 610], 0.9), [-10, 610])} fill="#2c4a6a" opacity={0.55} />
+				{/* station clock (the one warm light): 07:30 */}
+				{(() => { const c = towards([-10, 240], 0.28); return (
+					<g transform={`translate(${c[0] + 40},${c[1]})`}>
+						<line x1={0} y1={-140} x2={0} y2={-74} stroke="#1b1d20" strokeWidth={8} />
+						<circle r={110} fill="url(#warmGlow)" opacity={0.6} />
+						<circle r={74} fill="#191a1c" /><circle r={64} fill="#efe2c4" />
+						<circle r={64} fill="url(#warmGlow)" opacity={0.5} />
+						{Array.from({length: 12}, (_, i) => { const a = (i / 12) * 2 * Math.PI; return <line key={i} x1={54 * Math.sin(a)} y1={-54 * Math.cos(a)} x2={60 * Math.sin(a)} y2={-60 * Math.cos(a)} stroke="#2a2420" strokeWidth={3} />; })}
+						<line x1={0} y1={0} x2={0} y2={46} stroke="#1b1a18" strokeWidth={5} strokeLinecap="round" />
+						<line x1={0} y1={0} x2={-24} y2={24} stroke="#1b1a18" strokeWidth={6} strokeLinecap="round" />
+						<circle r={4} fill="#a8322b" />
+					</g>
+				); })()}
+				{/* station name sign: 每一天 */}
+				{(() => { const a = towards([-10, 440], 0.12), b = towards([-10, 440], 0.34), c = towards([-10, 520], 0.34), e = towards([-10, 520], 0.12); return (
+					<g><path d={quad(a, b, c, e)} fill="#203a58" /><path d={quad(a, b, c, e)} fill="none" stroke="#c9d4e2" strokeWidth={2} opacity={0.4} />
+						<text x={(a[0] + b[0]) / 2} y={(a[1] + c[1]) / 2 + 14} textAnchor="middle" style={{fontFamily: SERIF, fontWeight: 700, fontSize: 40, letterSpacing: '0.3em'}} fill="#e8eef6" opacity={0.9} transform={`skewY(${Math.atan2(b[1] - a[1], b[0] - a[0]) * 57.3})`} transform-origin={`${(a[0] + b[0]) / 2} ${(a[1] + c[1]) / 2}`}>每一天</text></g>
+				); })()}
+				{/* ceiling: fluorescent tubes receding, with bloom */}
+				{[0.2, 0.42, 0.58, 0.7, 0.78].map((d, i) => { const a = towards([560, -20], d), b = towards([980, -20], d), w = 26 * (1 - d); return (
+					<g key={i}><line x1={a[0]} y1={a[1]} x2={b[0]} y2={b[1]} stroke="#eef5ff" strokeWidth={Math.max(2, w * 0.5)} opacity={0.95} />
+						<line x1={a[0]} y1={a[1]} x2={b[0]} y2={b[1]} stroke="#cfe0f5" strokeWidth={w * 3} opacity={0.35} filter="url(#b12)" />
+						<ellipse cx={(a[0] + b[0]) / 2} cy={a[1]} rx={(b[0] - a[0]) * 1.4} ry={6 * (1 - d) + 2} fill="#cfe0f5" opacity={0.25} filter="url(#b6)" /></g>
+				); })}
+				{/* platform floor */}
+				<path d={`M-10,820 L${VP[0]},${VP[1]} L${tb[0]},${tb[1]} L${tb[0]},1090 L-10,1090 Z`} fill="url(#floorG)" />
+				{Array.from({length: 18}, (_, j) => { const d = dz(j * 0.5); if (d > 0.88) return null; const a = towards([-10, 820], d), b = towards(tb, d); return <line key={'f' + j} x1={a[0]} y1={a[1]} x2={b[0]} y2={b[1]} stroke="#0d0f12" strokeWidth={2 * (1 - d) + 0.5} opacity={0.7} />; })}
+				{Array.from({length: 12}, (_, i) => { const x = -10 + (tb[0] + 10) * (i / 11); const y = 820 + (1010 - 820) * (i / 11); const p: Pt = [x, Math.max(y, 820) + (1090 - Math.max(y, 820)) * 0.0]; const e = towards(p, 0.88); return <line key={'r' + i} x1={x} y1={1090} x2={e[0]} y2={e[1]} stroke="#0d0f12" strokeWidth={1.5} opacity={0.35} />; })}
+				{/* wet-floor reflections of the tubes */}
+				{[0.3, 0.5, 0.64].map((d, i) => { const a = towards([770, 1000], d); return <ellipse key={i} cx={a[0]} cy={a[1]} rx={40 * (1 - d) + 10} ry={120 * (1 - d) + 20} fill="#cfe0f5" opacity={0.12} filter="url(#b12)" />; })}
+				{/* platform edge: tactile strip + yellow line */}
+				<path d={quad(towards(tb, 0), towards(tb, 0.88), towards([tb[0] - 120, tb[1] + 6], 0.88), [tb[0] - 120, tb[1] + 6])} fill="#3a3527" opacity={0.9} />
+				<path d={quad(towards([tb[0] - 150, tb[1] + 8], 0), towards([tb[0] - 150, tb[1] + 8], 0.88), towards([tb[0] - 128, tb[1] + 7], 0.88), [tb[0] - 128, tb[1] + 7])} fill="#c8a640" opacity={0.85} />
+				{/* the train beside the platform: lit windows, a little motion blur */}
+				<g filter="url(#b1.5)">
+					<path d={quad(tt, towards(tt, 0.86), towards(tb, 0.86), tb)} fill="#2a3138" />
+					<path d={quad(tt, towards(tt, 0.86), towards([tt[0], tt[1] + 60], 0.86), [tt[0], tt[1] + 60])} fill="#1d2228" />
+					{[[0.02, 0.1], [0.14, 0.22], [0.28, 0.34], [0.39, 0.44], [0.48, 0.52], [0.56, 0.59], [0.62, 0.65]].map(([d0, d1], i) => {
+						const top = (d: number) => towards([tt[0], tt[1] + 170], d), bot = (d: number) => towards([tt[0], tt[1] + 470], d);
+						return <path key={i} d={quad(top(d0), top(d1), bot(d1), bot(d0))} fill="url(#winG)" />;
+					})}
+					<path d={quad(towards([tt[0], 740], 0), towards([tt[0], 740], 0.86), towards([tt[0], 756], 0.86), [tt[0], 756])} fill="#b8963f" opacity={0.8} />
+				</g>
+				<path d={quad(tt, towards(tt, 0.86), towards(tb, 0.86), tb)} fill="#9fb6d8" opacity={0.06} filter="url(#b12)" />
+				{/* top light on the puppet */}
+				<polygon points={`${mx - 70},-20 ${mx + 130},-20 ${mx + 330},${my + 10} ${mx - 300},${my + 10}`} fill="#dfe8f5" opacity={0.07} filter="url(#b12)" />
+				<ellipse cx={mx + 20} cy={my + 8} rx={300} ry={46} fill="#dfe8f5" opacity={0.1} filter="url(#b6)" />
+				{/* reflection of the puppet in the wet floor */}
+				<g opacity={0.12} filter="url(#b3)"><g transform={`translate(${mx},${my + 4}) scale(${k},${-k * 0.9})`}><Mannequin pose={pose} /></g></g>
+				<ellipse cx={mx + 10} cy={my + 4} rx={92} ry={13} fill="#000" opacity={0.75} filter="url(#b3)" />
+				<g filter="url(#rimC)"><g transform={`translate(${mx},${my}) scale(${k})`}><Mannequin pose={pose} /></g></g>
+				{/* the strings: eight lines converging up to a control bar out of frame */}
+				{attachPts(pose).map(({p, to}, i) => {
+					const a = W2(mx, my, k, p);
+					return <g key={i}><RealString a={a} b={barEnd(to)} id={`st${i}`} band={[0.25 + (i % 3) * 0.05, 0.55]} w={i === 4 || i === 6 ? 1.15 : 0.9} /><Eyelet p={a} k={k * 0.9} /></g>;
+				})}
+				{/* dust in the light */}
+				{Array.from({length: 36}, (_, i) => <circle key={i} cx={mx - 200 + ((i * 137) % 460)} cy={60 + ((i * 211) % 780)} r={0.8 + (i % 3) * 0.6} fill="#eef4fb" opacity={0.18 + (i % 4) * 0.06} />)}
+				{/* foreground: the platform edge, out of focus */}
+				<path d="M-20,1040 L1960,1000 L1960,1100 L-20,1100 Z" fill="#0b0c0e" filter="url(#b6)" opacity={0.9} />
+			</svg>
+			<AbsoluteFill style={{background: 'linear-gradient(180deg, rgba(20,40,60,0.18), rgba(0,0,0,0) 40%, rgba(10,20,30,0.2))', mixBlendMode: 'multiply'}} />
+			<Grade />
+			<Mark />
+			<Sub t="早上挤地铁，上班，加班，回家" />
+		</AbsoluteFill>
+	);
+};
+/** close-up crop of the strings for review */
+
 const Puppet35: React.FC = () => {
 	useFonts();
 	const t = useCurrentFrame() / FPS;
 	const i = Math.min(9, Math.floor(t / SEG)), u = t - i * SEG;
-	const list = [<S1 t={u} />, <S2 />, <S3 />, <S4 />, <S5 />, <S6 t={u} mat={MATS.char} />, <S7 />, <S8 />, <S9 />, <Sheet />];
+	const list = [<S1b t={u} />, <S2 />, <S3 />, <S4 />, <S5 />, <S6 t={u} mat={MATS.char} />, <S7 />, <S8 />, <S9 />, <Sheet />];
 	return list[i];
 };
 registerRoot(() => <Composition id="PUP35" component={Puppet35} durationInFrames={SEG * 10 * FPS} fps={FPS} width={W} height={H} />);
