@@ -7,7 +7,7 @@ import { G, W, H, GOLD, INK, RED, SERIF, SANS, txt, mono, subtitle, mark, grain,
 const silhouette = (g: G, x: number, y: number, s: number, col: string) => { g.save(); g.translate(x, y); g.scale(s, s); g.fillStyle = col;
   g.beginPath(); g.ellipse(0, -150, 72, 92, 0, 0, 7); g.fill(); g.fillRect(-28, -70, 56, 60);
   g.beginPath(); g.moveTo(-200, 160); g.bezierCurveTo(-190, 20, -110, -20, 0, -20); g.bezierCurveTo(110, -20, 190, 20, 200, 160); g.closePath(); g.fill(); g.restore(); };
-export const mirror = (g: G, o: { split: number; crack?: number }) => {
+export const mirror = (g: G, o: { split: number; crack?: number; dawn?: number }) => {
   /* tiled wall, warm sconce */
   g.fillStyle = '#1e2224'; g.fillRect(0, 0, W, H);
   for (let y = 0; y < H; y += 90) for (let x = (y / 90) % 2 ? -45 : 0; x < W; x += 90) { g.fillStyle = `rgba(255,255,255,${0.02 + ((x * 7 + y * 3) % 5) * 0.004})`; g.fillRect(x + 3, y + 3, 84, 84); }
@@ -30,7 +30,7 @@ export const mirror = (g: G, o: { split: number; crack?: number }) => {
   g.restore();
   g.strokeStyle = '#b48a4a'; g.lineWidth = 22; g.beginPath(); g.arc(cx, cy, R + 11, 0, 7); g.stroke(); g.strokeStyle = 'rgba(255,230,180,.4)'; g.lineWidth = 3; g.beginPath(); g.arc(cx, cy, R + 4, 0, 7); g.stroke();
   /* basin edge at the bottom */
-  g.fillStyle = '#d8d6d0'; rr(g, 420, 900, 1080, 200, 30); g.fill(); g.fillStyle = 'rgba(0,0,0,.25)'; g.fillRect(420, 900, 1080, 14);
+  { const bs = g.createLinearGradient(0, 905, 0, 1080); bs.addColorStop(0, '#3a3c3e'); bs.addColorStop(1, '#141516'); g.fillStyle = bs; rr(g, 420, 905, 1080, 200, 30); g.fill(); g.fillStyle = 'rgba(255,255,255,.08)'; g.fillRect(440, 908, 1040, 3); }
 };
 
 /* ================================================================ B · the orchestra that lost its beat */
@@ -81,7 +81,7 @@ export const radio = (g: G, o: { t: number; city?: number }) => {
   /* knobs */
   [x + 110, x + 270].forEach((kx) => { g.fillStyle = '#2a1c12'; g.beginPath(); g.arc(kx, y + 90, 46, 0, 7); g.fill(); g.fillStyle = '#c9a66b'; g.beginPath(); g.arc(kx, y + 90, 34, 0, 7); g.fill(); g.strokeStyle = '#2a1c12'; g.lineWidth = 5; g.beginPath(); g.moveTo(kx, y + 90); g.lineTo(kx + 24, y + 70); g.stroke(); });
 };
-const voiceWave = (g: G, x: number, y: number, w: number, t: number, kind: number, col: string) => { g.strokeStyle = col; g.lineWidth = 4; g.beginPath(); for (let i = 0; i <= 200; i++) { const px = x + (i / 200) * w; const u = i / 200; const a = kind === 0 ? (Math.sin(i * 1.3 + t * 9) * 0.6 + (rnd() - 0.5) * 0.9) * 70 : kind === 1 ? Math.sin(i * 0.25 + t * 3) * Math.sin(i * 0.05) * 60 : Math.sin(i * 0.18 + t * 2) * 40 * (0.6 + 0.4 * Math.sin(i * 0.03)); i ? g.lineTo(px, y + a * Math.sin(Math.PI * u)) : g.moveTo(px, y); } g.stroke(); };
+export const voiceWave = (g: G, x: number, y: number, w: number, t: number, kind: number, col: string) => { g.strokeStyle = col; g.lineWidth = 4; g.beginPath(); for (let i = 0; i <= 200; i++) { const px = x + (i / 200) * w; const u = i / 200; const a = kind === 0 ? (Math.sin(i * 1.3 + t * 9) * 0.6 + (rnd() - 0.5) * 0.9) * 70 : kind === 1 ? Math.sin(i * 0.25 + t * 3) * Math.sin(i * 0.05) * 60 : Math.sin(i * 0.18 + t * 2) * 40 * (0.6 + 0.4 * Math.sin(i * 0.03)); i ? g.lineTo(px, y + a * Math.sin(Math.PI * u)) : g.moveTo(px, y); } g.stroke(); };
 
 /* ================================================================ frames */
 const A1 = (g: G) => { mirror(g, { split: 1 }); grain(g); vignette(g, 0.6); mark(g); subtitle(g, '电影里，精神分裂是：身体里住着两个人'); };
