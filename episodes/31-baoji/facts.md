@@ -45,6 +45,8 @@
 | R13 | Muscle is about 38% of body mass in men, 31% in women | ✓ | Janssen et al. 2000, *J Appl Physiol* (MRI, 468 adults aged 18–88): 38.4% men / 30.6% women; relative mass declines from the 3rd decade, absolute loss noticeable by the end of the 5th [17] |
 | R14 | One workout raises muscle protein synthesis for about 1–1.5 days | ✓ | MacDougall et al. 1995 (6 men, arm curls): +50% at 4 h and +109% at 24 h (cited from earlier work), back within 14% of control by 36 h [18] |
 | R15 | Early soreness and damage ≠ growth | ✓ | Damas et al. 2016, *J Physiol* (10 men, 10 weeks): early synthesis goes to repairing damage; fibre size grew only by week 10; synthesis correlated with growth (r ≈ 0.9) only once damage had faded (weeks 3 and 10) [19] |
+| R16 | "70岁再练来不及" is wrong: even 90-year-olds gain | ✓ | Fiatarone et al. 1990, *JAMA*: 10 frail nursing-home residents aged 90 ± 1 (9 finished), 8 weeks of high-intensity resistance training: strength +174% ± 31%, mid-thigh muscle area +9.0%, tandem gait speed +48% [20] |
+| R17 | Women rate "toned", not the most muscular, as most attractive | ✓ | Frederick & Haselton 2007, *Pers Soc Psychol Bull* 33(8): 141 women, six male silhouettes; "toned" (two steps below "brawny") rated most sexually attractive; the most muscular seen as more volatile and less likely to commit [21] |
 | R7 | 孙's "start young" | ✓ | Follows from R1: muscle built before the decline is the "deposit". |
 
 ## Script corrections needed (script.md v1)
@@ -73,3 +75,5 @@
 [17] https://bioblast.at/index.php/Janssen_2000_J_Appl_Physiol
 [18] https://experts.mcmaster.ca/scholarly-works/239498
 [19] https://experts.mcmaster.ca/scholarly-works/61717
+[20] https://scholars.duke.edu/publication/1159008
+[21] https://pubmed.ncbi.nlm.nih.gov/17578932/ · https://phys.org/news103217413.html
