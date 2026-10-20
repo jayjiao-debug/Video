@@ -1434,6 +1434,32 @@ const Film35: React.FC = () => {
 export const FILM35_FRAMES = Math.round(FILM_END * FPS);
 export const FILM35_INFO = {LINES, SECS, CARD, FILM_END};
 
+// ---- cover scene (no text; titles are set in PIL): he pushes uphill under the gods' bar, framed centre so both crops keep him
+const CoverScene: React.FC = () => {
+	const ys = (x: number) => 900 - 0.3 * x;
+	const k = 0.95, r = 165, cx = 1110;
+	const cy = ys(cx) - r * 0.92;
+	const pose: Pose = {...PUSH, lean: 32};
+	const tip = tipOf(pose, true);
+	const mx = cx - r * 0.98 - tip[0] * k, my = ys(mx) + 12;
+	const bx = 820, by = 230, rot = 8;
+	return (
+		<AbsoluteFill style={{background: '#000'}}>
+			<svg width={W} height={H} style={{position: 'absolute', inset: 0}}>
+				<Defs />
+				<Land sky={NIGHT} a={900} b={-0.3} sun={[1500, 560, 0.55]} />
+				<Rock c={[cx, cy]} r={r} rim="#ffc58a" />
+				<Man x={mx} y={my} k={k} pose={pose} />
+				{attachPts(pose).map(({p, to}, i) => { const a = W2(mx, my, k, p); const slot: Pt = [[-1, -2, -4, -3].includes(to) ? -124 + 40 * (Math.abs(to) - 1) : 124 - 40 * (Math.abs(to) - 1), [1, -1].includes(to) ? 150 : 0]; return <g key={i}><RealString a={a} b={barPt(bx, by, rot, slot)} id={`c${i}`} band={[0.3, 0.75]} w={i === 4 || i === 6 ? 1.15 : 0.95} /><Eyelet p={a} k={k * 0.9} /></g>; })}
+				<CrossBar x={bx} y={by} rot={rot} />
+				<GodHand x={bx - 26} y={by - 84} s={0.75} rot={6} />
+				<GodHand x={bx + 84} y={by - 76} s={0.66} rot={-10} flip />
+			</svg>
+			<Grade />
+		</AbsoluteFill>
+	);
+};
+
 const Puppet35: React.FC = () => {
 	useFonts();
 	const t = useCurrentFrame() / FPS;
@@ -1445,6 +1471,7 @@ registerRoot(() => (
 	<>
 		<Composition id="PUP35" component={Puppet35} durationInFrames={SEG * 10 * FPS} fps={FPS} width={W} height={H} />
 		<Composition id="SAMPLE35" component={Sample35} durationInFrames={Math.round(16.5 * FPS)} fps={FPS} width={W} height={H} />
+		<Composition id="COVER35" component={() => { useFonts(); return <CoverScene />; }} durationInFrames={1} fps={FPS} width={W} height={H} />
 		<Composition id="FILM35" component={Film35} durationInFrames={FILM35_FRAMES} fps={FPS} width={W} height={H} />
 	</>
 ));
