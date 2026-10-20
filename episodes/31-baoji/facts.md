@@ -47,6 +47,10 @@
 | R15 | Early soreness and damage ≠ growth | ✓ | Damas et al. 2016, *J Physiol* (10 men, 10 weeks): early synthesis goes to repairing damage; fibre size grew only by week 10; synthesis correlated with growth (r ≈ 0.9) only once damage had faded (weeks 3 and 10) [19] |
 | R16 | "70岁再练来不及" is wrong: even 90-year-olds gain | ✓ | Fiatarone et al. 1990, *JAMA*: 10 frail nursing-home residents aged 90 ± 1 (9 finished), 8 weeks of high-intensity resistance training: strength +174% ± 31%, mid-thigh muscle area +9.0%, tandem gait speed +48% [20] |
 | R17 | Women rate "toned", not the most muscular, as most attractive | ✓ | Frederick & Haselton 2007, *Pers Soc Psychol Bull* 33(8): 141 women, six male silhouettes; "toned" (two steps below "brawny") rated most sexually attractive; the most muscular seen as more volatile and less likely to commit [21] |
+| R18 | Train each muscle twice a week, not once | ✓ | Schoenfeld, Ogborn & Krieger 2016, *Sports Med* (10 studies, volume equated): higher frequency ES 0.49 vs lower 0.30 (p = 0.002); "twice a week promote superior hypertrophic outcomes to once a week" [22] |
+| R19 | Split protein: ~0.4 g/kg per meal over ≥4 meals | ✓ | Schoenfeld & Aragon 2018, *JISSN*: ~0.4 g/kg/meal across at least four meals to reach ≥1.6 g/kg/day (up to 0.55 g/kg/meal at 2.2 g/kg/day) [23] |
+| R20 | Lose weight slowly to keep muscle | ✓ | Garthe et al. 2011 (*IJSNEM*; 2009 ECSS abstract): 30 elite athletes; slow 0.7%/wk → lean mass +2.0% (p<0.001); fast 1.4%/wk → +1.1% (n.s.) [24] |
+| R21 | Cardio doesn't block muscle growth | ✓ | Schumann et al. 2022, *Sports Med* 52:601–612 (43 studies): concurrent training "does not compromise muscle hypertrophy and maximal strength"; explosive strength may be attenuated, especially in the same session [25] |
 | R7 | 孙's "start young" | ✓ | Follows from R1: muscle built before the decline is the "deposit". |
 
 ## Script corrections needed (script.md v1)
@@ -77,3 +81,7 @@
 [19] https://experts.mcmaster.ca/scholarly-works/61717
 [20] https://scholars.duke.edu/publication/1159008
 [21] https://pubmed.ncbi.nlm.nih.gov/17578932/ · https://phys.org/news103217413.html
+[22] https://lida.sport-iat.de/ta/Record/4042947
+[23] https://doaj.org/article/4922eba27775405f945f3d34067cf0e3
+[24] https://lida.sport-iat.de/ta/Record/4017680
+[25] https://www.fisiologiadelejercicio.com/wp-content/uploads/2022/12/Compatibility-of-Concurrent-Aerobic-and-Strength-Training.pdf
