@@ -26,9 +26,9 @@ export const callScreen = (k = 0, name = '“平台客服”', sub = '未知号�
   g.save(); g.strokeStyle = '#fff'; g.lineWidth = 8; g.lineCap = 'round'; g.translate(w / 2 + 120, by); g.rotate(0.8); g.beginPath(); g.arc(0, 0, 22, -0.9, 0.9); g.stroke(); g.restore();
 };
 /* a call in progress: an unknown number, and a voice that sounds like you */
-export const inCall = (t: number, talk: number): Screen => (g, w, h) => {
+export const inCall = (t: number, talk: number, name = '未知号码'): Screen => (g, w, h) => {
   const b = g.createLinearGradient(0, 0, 0, h); b.addColorStop(0, '#1f2a3a'); b.addColorStop(1, '#0c1018'); g.fillStyle = b; g.fillRect(0, 0, w, h);
-  txt(g, '未知号码', w / 2, 200, 50, '#fff', { w: 700 }); mono(g, `00:${String(Math.floor(t) % 60).padStart(2, '0')}`, w / 2, 260, 32, 'rgba(255,255,255,.6)');
+  txt(g, name, w / 2, 200, 50, '#fff', { w: 700 }); mono(g, `00:${String(Math.floor(t) % 60).padStart(2, '0')}`, w / 2, 260, 32, 'rgba(255,255,255,.6)');
   /* waveform: the voice */
   g.strokeStyle = '#9cc3ff'; g.lineWidth = 6; g.lineCap = 'round';
   for (let i = 0; i < 26; i++) { const x = 50 + i * ((w - 100) / 25); const a = talk * (0.25 + 0.75 * Math.abs(Math.sin(i * 1.7 + t * 9) * Math.sin(i * 0.6 + t * 4.3))); const hh = 8 + a * 150; g.beginPath(); g.moveTo(x, 480 - hh / 2); g.lineTo(x, 480 + hh / 2); g.stroke(); }

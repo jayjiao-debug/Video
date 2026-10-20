@@ -60,3 +60,35 @@ export const safeWord = (fail: number, t: number): Screen => (g, w, h) => {
   hangBtn(g, w / 2, h - 170, '#e5453a', 2.3);
 };
 export { GOLD };
+
+/* incoming call, Chinese style: a 192 number with its region, and a "possible fraud" hint left out on purpose (most phones don't show it) */
+export const ring = (num: string, loc: string, k = 0): Screen => (g, w, h) => {
+  const b = g.createLinearGradient(0, 0, 0, h); b.addColorStop(0, '#2b3546'); b.addColorStop(1, '#0d1119'); g.fillStyle = b; g.fillRect(0, 0, w, h);
+  mono(g, num, w / 2, 250, 54, '#fff', { w: 700 }); txt(g, loc, w / 2, 310, 30, 'rgba(255,255,255,.6)', { w: 500 });
+  g.strokeStyle = `rgba(255,255,255,${0.25 * (1 - ((k * 1.2) % 1))})`; g.lineWidth = 3; g.beginPath(); g.arc(w / 2, 520, 80 + ((k * 1.2) % 1) * 60, 0, 7); g.stroke();
+  g.fillStyle = '#5a6578'; g.beginPath(); g.arc(w / 2, 520, 80, 0, 7); g.fill(); g.fillStyle = '#dfe6f1'; g.beginPath(); g.arc(w / 2, 500, 28, 0, 7); g.fill(); g.beginPath(); g.ellipse(w / 2, 568, 50, 30, 0, Math.PI, 0); g.fill();
+  const by = h - 170; hangBtn(g, w / 2 - 120, by, '#e5453a', 2.3); hangBtn(g, w / 2 + 120, by, '#34c759', 0.8);
+  txt(g, '拒绝', w / 2 - 120, by + 100, 28, 'rgba(255,255,255,.75)', { w: 500 }); txt(g, '接听', w / 2 + 120, by + 100, 28, 'rgba(255,255,255,.75)', { w: 500 });
+};
+/* lock screen with notifications stacking */
+export const lock = (notes: [string, string, string][], n: number, t: number): Screen => (g, w, h) => {
+  const b = g.createLinearGradient(0, 0, w, h); b.addColorStop(0, '#3a2f4a'); b.addColorStop(1, '#14182a'); g.fillStyle = b; g.fillRect(0, 0, w, h);
+  mono(g, '19:42', w / 2, 230, 120, '#fff', { w: 300 }); txt(g, '10月20日 星期二', w / 2, 290, 30, 'rgba(255,255,255,.8)', { w: 500 });
+  notes.forEach(([app, title, body], i) => { const k = Math.min(1, Math.max(0, n - i)); if (k <= 0) return; const y = 340 + i * 230 - 30 * (1 - k);
+    g.save(); g.globalAlpha = k; g.fillStyle = 'rgba(255,255,255,.92)'; rr(g, 18, y, w - 36, 210, 28); g.fill(); g.fillStyle = app === '电话' ? '#34c759' : '#3b82f6'; rr(g, 40, y + 22, 44, 44, 11); g.fill();
+    txt(g, app, 100, y + 56, 28, '#555', { w: 500, a: 'left' }); txt(g, '现在', w - 44, y + 56, 26, '#777', { w: 500, a: 'right' }); txt(g, title, 40, y + 112, 36, '#111', { w: 700, a: 'left' }); txt(g, body, 40, y + 168, 32, '#333', { w: 500, a: 'left' }); g.restore(); });
+};
+/* a generic chat transfer: the friend of "your son" asks, and the button glows */
+export const chatPay = (pulse: number): Screen => (g, w, h) => {
+  g.fillStyle = '#ededed'; g.fillRect(0, 0, w, h); g.fillStyle = '#f7f7f7'; g.fillRect(0, 0, w, 120); txt(g, '“儿子”', w / 2, 92, 32, '#111', { w: 700 });
+  g.fillStyle = '#fff'; rr(g, 100, 170, 300, 90, 12); g.fill(); txt(g, '妈，转到这个卡', 120, 225, 28, '#111', { w: 500, a: 'left' });
+  g.fillStyle = '#fff'; rr(g, 100, 280, 320, 90, 12); g.fill(); txt(g, '我同学的，急用', 120, 335, 28, '#111', { w: 500, a: 'left' });
+  g.fillStyle = '#c7c7c7'; g.beginPath(); g.arc(60, 215, 30, 0, 7); g.fill(); g.beginPath(); g.arc(60, 325, 30, 0, 7); g.fill();
+  g.fillStyle = '#fff'; rr(g, 30, 470, w - 60, 330, 22); g.fill(); txt(g, '转账', w / 2, 530, 30, '#333', { w: 700 }); mono(g, '¥ 20,000', w / 2, 640, 70, '#111', { w: 700 });
+  g.save(); g.shadowColor = `rgba(243,154,30,${0.8 * pulse})`; g.shadowBlur = 40 * pulse; g.fillStyle = '#f39a1e'; rr(g, 60, 690, w - 120, 84, 16); g.fill(); g.restore(); txt(g, '确认转账', w / 2, 745, 34, '#fff', { w: 700 });
+};
+/* the phone powering off */
+export const powerOff = (k: number): Screen => (g, w, h) => { g.fillStyle = '#000'; g.fillRect(0, 0, w, h); const a = 1 - k; g.save(); g.globalAlpha = a; g.strokeStyle = '#fff'; g.lineWidth = 10; g.lineCap = 'round'; g.beginPath(); g.arc(w / 2, h / 2, 70, -Math.PI / 2 + 0.6, -Math.PI / 2 - 0.6 + Math.PI * 2); g.stroke(); g.beginPath(); g.moveTo(w / 2, h / 2 - 90); g.lineTo(w / 2, h / 2 - 10); g.stroke(); g.restore(); txt(g, '正在关机…', w / 2, h / 2 + 160, 30, `rgba(255,255,255,${0.7 * a})`, { w: 500 }); };
+export const dial110 = (n: number): Screen => (g, w, h) => { g.fillStyle = '#0f1218'; g.fillRect(0, 0, w, h); mono(g, '110'.slice(0, n), w / 2, 260, 90, '#fff', { w: 300 });
+  const keys = ['1', '2', '3', '4', '5', '6', '7', '8', '9', '', '0', '']; keys.forEach((kk, i) => { if (!kk) return; const x = w / 2 + ((i % 3) - 1) * 130, y = 420 + Math.floor(i / 3) * 130; g.fillStyle = 'rgba(255,255,255,.12)'; g.beginPath(); g.arc(x, y, 52, 0, 7); g.fill(); mono(g, kk, x, y + 16, 46, '#fff', { w: 300 }); });
+  hangBtn(g, w / 2, h - 120, '#34c759', 0.8); };
