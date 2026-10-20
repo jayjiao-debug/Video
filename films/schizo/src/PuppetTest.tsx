@@ -19,7 +19,7 @@ const WIN = { z0: -1.3, z1: -0.1, y0: 0.86, y1: 2.26 };
 
 const rnd = (s: number) => () => { s = (s * 16807) % 2147483647; return (s - 1) / 2147483646; };
 
-const plasterTex = () => {
+export const plasterTex = () => {
   const c = document.createElement('canvas'); c.width = c.height = 512; const g = c.getContext('2d')!; const r = rnd(41);
   g.fillStyle = '#6d7880'; g.fillRect(0, 0, 512, 512);
   for (let i = 0; i < 60; i++) { const x = r() * 512, y = r() * 512, rr = 30 + r() * 120; const gr = g.createRadialGradient(x, y, 0, x, y, rr); const d = r() < 0.5;
@@ -28,7 +28,7 @@ const plasterTex = () => {
   for (let i = 0; i < 14; i++) { const x = r() * 512; const gr = g.createLinearGradient(0, 0, 0, 512); gr.addColorStop(0, 'rgba(30,34,38,0)'); gr.addColorStop(1, 'rgba(30,34,38,.06)'); g.fillStyle = gr; g.fillRect(x, 0, 6 + r() * 20, 512); }
   const t = new THREE.CanvasTexture(c); t.wrapS = t.wrapT = THREE.RepeatWrapping; t.colorSpace = THREE.SRGBColorSpace; return t;
 };
-const floorTex = () => {
+export const floorTex = () => {
   const c = document.createElement('canvas'); c.width = 1024; c.height = 1024; const g = c.getContext('2d')!; const r = rnd(77);
   const boards = 8, bw = 1024 / boards;
   for (let b = 0; b < boards; b++) {
@@ -50,7 +50,7 @@ const RUNS: Drop[] = Array.from({ length: 22 }, () => ({ x: R0(), y0: R0() * 1.4
 const BOKEH = Array.from({ length: 46 }, () => ({ x: R0(), y: 0.25 + R0() * 0.75, r: 6 + R0() * 26, warm: R0() < 0.55, a: 0.06 + R0() * 0.22 }));
 const dropY = (d: Drop, t: number) => ((d.y0 + d.v * t) % 1.4) - 0.2;
 
-const drawGlass = (g: CanvasRenderingContext2D, w: number, h: number, t: number) => {
+export const drawGlass = (g: CanvasRenderingContext2D, w: number, h: number, t: number) => {
   const bg = g.createLinearGradient(0, 0, 0, h); bg.addColorStop(0, '#0a131c'); bg.addColorStop(0.6, '#122230'); bg.addColorStop(1, '#1b2c38'); g.fillStyle = bg; g.fillRect(0, 0, w, h);
   for (const b of BOKEH) { const x = b.x * w, y = b.y * h; const gr = g.createRadialGradient(x, y, 0, x, y, b.r); const col = b.warm ? '255,190,120' : '150,190,230';
     gr.addColorStop(0, `rgba(${col},${b.a})`); gr.addColorStop(0.7, `rgba(${col},${b.a * 0.6})`); gr.addColorStop(1, `rgba(${col},0)`); g.fillStyle = gr; g.fillRect(x - b.r, y - b.r, 2 * b.r, 2 * b.r); }
@@ -63,7 +63,7 @@ const drawGlass = (g: CanvasRenderingContext2D, w: number, h: number, t: number)
     g.fillStyle = 'rgba(205,228,245,.55)'; g.beginPath(); g.ellipse(x, y, d.w * 1.5, d.w * 2, 0, 0, 7); g.fill(); g.fillStyle = 'rgba(255,255,255,.75)'; g.fillRect(x - d.w * 0.6, y - d.w, 1.5, 1.5); }
 };
 /* the light cookie: what the rain does to the light coming in (soft dark beads and streaks on a bright field) */
-const drawCookie = (g: CanvasRenderingContext2D, s: number, t: number) => {
+export const drawCookie = (g: CanvasRenderingContext2D, s: number, t: number) => {
   g.fillStyle = '#fff'; g.fillRect(0, 0, s, s);
   const bg = g.createRadialGradient(s / 2, s / 2, s * 0.2, s / 2, s / 2, s * 0.5); bg.addColorStop(0, 'rgba(0,0,0,0)'); bg.addColorStop(1, 'rgba(0,0,0,.5)'); g.fillStyle = bg; g.fillRect(0, 0, s, s);
   for (const b of BEADS) { g.fillStyle = 'rgba(40,50,60,.22)'; g.beginPath(); g.arc(b.x * s, b.y * s, b.r * 0.9, 0, 7); g.fill(); }
