@@ -1,0 +1,997 @@
+{
+ "01_00-00-48": {
+  "ok": true,
+  "start": 0.28,
+  "end": 0.72,
+  "start_range": [
+   0.2,
+   0.36
+  ],
+  "end_range": [
+   0.64,
+   0.78
+  ],
+  "heard": "搏击",
+  "orig": "也是搏击理论的"
+ },
+ "02_00-00-56": {
+  "ok": true,
+  "start": 0.34,
+  "end": 0.68,
+  "start_range": [
+   0.3,
+   0.36
+  ],
+  "end_range": [
+   0.62,
+   0.72
+  ],
+  "heard": "搏击",
+  "orig": "开始练搏击了吗"
+ },
+ "03_00-01-02": {
+  "ok": false,
+  "why": "never exactly 薄肌",
+  "text": "成为搏击版的"
+ },
+ "04_00-01-44": {
+  "ok": true,
+  "start": 0.14,
+  "end": 0.56,
+  "start_range": [
+   0.1,
+   0.18
+  ],
+  "end_range": [
+   0.48,
+   0.64
+  ],
+  "heard": "搏击",
+  "orig": "起搏击就"
+ },
+ "05_00-16-31": {
+  "ok": true,
+  "start": 0.12,
+  "end": 0.6,
+  "start_range": [
+   0.1,
+   0.12
+  ],
+  "end_range": [
+   0.58,
+   0.62
+  ],
+  "heard": "搏击",
+  "orig": "了搏击黄"
+ },
+ "06_00-19-24": {
+  "ok": true,
+  "start": 0.38,
+  "end": 0.82,
+  "start_range": [
+   0.36,
+   0.4
+  ],
+  "end_range": [
+   0.74,
+   0.88
+  ],
+  "heard": "搏击",
+  "orig": "开始练搏击对吧"
+ },
+ "07_00-38-18": {
+  "ok": true,
+  "start": 0.14,
+  "end": 0.58,
+  "start_range": [
+   0.12,
+   0.14
+  ],
+  "end_range": [
+   0.54,
+   0.6
+  ],
+  "heard": "搏击",
+  "orig": "包搏击斯"
+ },
+ "08_00-57-05": {
+  "ok": false,
+  "why": "never exactly 薄肌",
+  "text": "这个练搏机呢"
+ },
+ "09_00-57-31": {
+  "ok": true,
+  "start": 0.12,
+  "end": 0.5,
+  "start_range": [
+   0.12,
+   0.12
+  ],
+  "end_range": [
+   0.48,
+   0.5
+  ],
+  "heard": "搏击",
+  "orig": "和搏击的人"
+ },
+ "10_00-57-54": {
+  "ok": true,
+  "start": 0.04,
+  "end": 0.62,
+  "start_range": [
+   0.02,
+   0.04
+  ],
+  "end_range": [
+   0.56,
+   0.66
+  ],
+  "heard": "搏击",
+  "orig": "搏击就是"
+ },
+ "11_00-57-56": {
+  "ok": true,
+  "start": 0.06,
+  "end": 0.46,
+  "start_range": [
+   0.0,
+   0.1
+  ],
+  "end_range": [
+   0.46,
+   0.46
+  ],
+  "heard": "搏际",
+  "orig": "搏击就是"
+ },
+ "12_00-58-03": {
+  "ok": true,
+  "start": 0.18,
+  "end": 0.7,
+  "start_range": [
+   0.1,
+   0.24
+  ],
+  "end_range": [
+   0.58,
+   0.8
+  ],
+  "heard": "搏击",
+  "orig": "军搏击"
+ },
+ "13_00-58-06": {
+  "ok": false,
+  "why": "never exactly 薄肌",
+  "text": "没有搏击"
+ },
+ "14_00-58-14": {
+  "ok": false,
+  "why": "never exactly 薄肌",
+  "text": "求搏击的"
+ },
+ "16_00-58-27": {
+  "ok": true,
+  "start": 0.1,
+  "end": 0.46,
+  "start_range": [
+   0.1,
+   0.1
+  ],
+  "end_range": [
+   0.46,
+   0.46
+  ],
+  "heard": "搏击",
+  "orig": "没有搏击那"
+ },
+ "17_00-58-38": {
+  "ok": true,
+  "start": 0.12,
+  "end": 0.52,
+  "start_range": [
+   0.08,
+   0.16
+  ],
+  "end_range": [
+   0.4,
+   0.62
+  ],
+  "heard": "搏击",
+  "orig": "没有搏击"
+ },
+ "18_01-00-55": {
+  "ok": true,
+  "start": 0.3,
+  "end": 0.78,
+  "start_range": [
+   0.3,
+   0.3
+  ],
+  "end_range": [
+   0.7,
+   0.86
+  ],
+  "heard": "搏击",
+  "orig": "就练搏击然"
+ },
+ "19_01-01-03": {
+  "ok": true,
+  "start": 0.34,
+  "end": 0.84,
+  "start_range": [
+   0.26,
+   0.42
+  ],
+  "end_range": [
+   0.68,
+   0.98
+  ],
+  "heard": "搏击",
+  "orig": "而且搏击"
+ },
+ "20_01-01-11": {
+  "ok": true,
+  "start": 0.3,
+  "end": 0.74,
+  "start_range": [
+   0.22,
+   0.36
+  ],
+  "end_range": [
+   0.66,
+   0.8
+  ],
+  "heard": "搏击",
+  "orig": "还是搏击舰"
+ },
+ "21_01-01-19": {
+  "ok": false,
+  "why": "never exactly 薄肌",
+  "text": "把这个搏击理论"
+ },
+ "22_01-13-32": {
+  "ok": false,
+  "why": "never exactly 薄肌",
+  "text": "是搏击呀"
+ },
+ "23_01-17-42": {
+  "ok": false,
+  "why": "never exactly 薄肌",
+  "text": "过链搏击群"
+ },
+ "24_01-18-02": {
+  "ok": true,
+  "start": 0.14,
+  "end": 0.52,
+  "start_range": [
+   0.1,
+   0.16
+  ],
+  "end_range": [
+   0.44,
+   0.58
+  ],
+  "heard": "搏击",
+  "orig": "没有搏击理论的"
+ },
+ "25_01-18-07": {
+  "ok": true,
+  "start": 0.12,
+  "end": 0.52,
+  "start_range": [
+   0.1,
+   0.14
+  ],
+  "end_range": [
+   0.46,
+   0.58
+  ],
+  "heard": "搏击",
+  "orig": "那个搏击教"
+ },
+ "26_01-18-10": {
+  "ok": true,
+  "start": 0.12,
+  "end": 0.46,
+  "start_range": [
+   0.12,
+   0.12
+  ],
+  "end_range": [
+   0.46,
+   0.46
+  ],
+  "heard": "搏际",
+  "orig": "这个博际教授"
+ },
+ "27_01-18-15": {
+  "ok": true,
+  "start": 0.06,
+  "end": 0.5,
+  "start_range": [
+   0.0,
+   0.1
+  ],
+  "end_range": [
+   0.42,
+   0.56
+  ],
+  "heard": "搏击",
+  "orig": "搏击圣经"
+ },
+ "28_01-18-16": {
+  "ok": false,
+  "why": "never exactly 薄肌",
+  "text": "国际圣经对"
+ },
+ "29_01-18-44": {
+  "ok": true,
+  "start": 0.06,
+  "end": 0.54,
+  "start_range": [
+   0.02,
+   0.08
+  ],
+  "end_range": [
+   0.44,
+   0.64
+  ],
+  "heard": "搏击",
+  "orig": "搏击圣经的"
+ },
+ "30_01-18-46": {
+  "ok": true,
+  "start": 0.82,
+  "end": 1.5,
+  "start_range": [
+   0.8,
+   0.82
+  ],
+  "end_range": [
+   1.4,
+   1.58
+  ],
+  "heard": "搏击",
+  "orig": "就是搏搏击圣经的"
+ },
+ "31_01-18-52": {
+  "ok": true,
+  "start": 0.06,
+  "end": 0.54,
+  "start_range": [
+   0.0,
+   0.1
+  ],
+  "end_range": [
+   0.46,
+   0.62
+  ],
+  "heard": "搏击",
+  "orig": "搏击理论是"
+ },
+ "32_01-19-02": {
+  "ok": true,
+  "start": 0.1,
+  "end": 0.8,
+  "start_range": [
+   0.0,
+   0.18
+  ],
+  "end_range": [
+   0.68,
+   0.9
+  ],
+  "heard": "搏击",
+  "orig": "搏击问"
+ },
+ "33_01-20-04": {
+  "ok": true,
+  "start": 0.1,
+  "end": 0.5,
+  "start_range": [
+   0.08,
+   0.12
+  ],
+  "end_range": [
+   0.44,
+   0.54
+  ],
+  "heard": "搏击",
+  "orig": "搏击理论"
+ },
+ "34_01-20-06": {
+  "ok": true,
+  "start": 0.2,
+  "end": 0.64,
+  "start_range": [
+   0.12,
+   0.26
+  ],
+  "end_range": [
+   0.54,
+   0.74
+  ],
+  "heard": "搏击",
+  "orig": "一下搏击"
+ },
+ "35_01-20-08": {
+  "ok": true,
+  "start": 0.12,
+  "end": 0.52,
+  "start_range": [
+   0.12,
+   0.12
+  ],
+  "end_range": [
+   0.52,
+   0.52
+  ],
+  "heard": "搏击",
+  "orig": "说搏击吧"
+ },
+ "36_01-20-23": {
+  "ok": false,
+  "why": "never exactly 薄肌",
+  "text": "及搏击理论他"
+ },
+ "37_01-26-39": {
+  "ok": true,
+  "start": 0.06,
+  "end": 0.46,
+  "start_range": [
+   0.04,
+   0.06
+  ],
+  "end_range": [
+   0.4,
+   0.5
+  ],
+  "heard": "搏击",
+  "orig": "搏击理论"
+ },
+ "38_01-31-21": {
+  "ok": true,
+  "start": 0.02,
+  "end": 0.48,
+  "start_range": [
+   0.02,
+   0.02
+  ],
+  "end_range": [
+   0.42,
+   0.52
+  ],
+  "heard": "搏击",
+  "orig": "搏击理论一样"
+ },
+ "39_01-52-34": {
+  "ok": true,
+  "start": 0.32,
+  "end": 0.74,
+  "start_range": [
+   0.3,
+   0.34
+  ],
+  "end_range": [
+   0.66,
+   0.8
+  ],
+  "heard": "搏击",
+  "orig": "你练搏击不"
+ },
+ "40_01-55-25": {
+  "ok": true,
+  "start": 0.32,
+  "end": 0.78,
+  "start_range": [
+   0.3,
+   0.32
+  ],
+  "end_range": [
+   0.66,
+   0.88
+  ],
+  "heard": "搏击",
+  "orig": "训练搏击"
+ },
+ "41_02-03-24": {
+  "ok": false,
+  "why": "never exactly 薄肌",
+  "text": "是搏金"
+ },
+ "42_02-03-25": {
+  "ok": true,
+  "start": 0.38,
+  "end": 0.8,
+  "start_range": [
+   0.38,
+   0.38
+  ],
+  "end_range": [
+   0.78,
+   0.82
+  ],
+  "heard": "搏击",
+  "orig": "他是练铂机的"
+ },
+ "43_02-03-27": {
+  "ok": true,
+  "start": 0.6,
+  "end": 1.0,
+  "start_range": [
+   0.58,
+   0.6
+  ],
+  "end_range": [
+   0.94,
+   1.04
+  ],
+  "heard": "搏击",
+  "orig": "organ练搏肌的"
+ },
+ "44_02-03-51": {
+  "ok": false,
+  "why": "never exactly 薄肌",
+  "text": "搏击论"
+ },
+ "45_02-03-52": {
+  "ok": true,
+  "start": 0.3,
+  "end": 0.84,
+  "start_range": [
+   0.22,
+   0.36
+  ],
+  "end_range": [
+   0.64,
+   1.02
+  ],
+  "heard": "搏击",
+  "orig": "也是搏击"
+ },
+ "46_02-03-53": {
+  "ok": false,
+  "why": "never exactly 薄肌",
+  "text": "搏击乱了"
+ },
+ "47_02-03-58": {
+  "ok": true,
+  "start": 0.18,
+  "end": 0.72,
+  "start_range": [
+   0.18,
+   0.18
+  ],
+  "end_range": [
+   0.7,
+   0.74
+  ],
+  "heard": "搏击",
+  "orig": "其实搏击论啊"
+ },
+ "48_02-07-03": {
+  "ok": true,
+  "start": 0.06,
+  "end": 0.56,
+  "start_range": [
+   0.0,
+   0.1
+  ],
+  "end_range": [
+   0.46,
+   0.66
+  ],
+  "heard": "搏击",
+  "orig": "搏击"
+ },
+ "49_02-14-45": {
+  "ok": true,
+  "start": 0.12,
+  "end": 0.58,
+  "start_range": [
+   0.12,
+   0.12
+  ],
+  "end_range": [
+   0.52,
+   0.62
+  ],
+  "heard": "搏击",
+  "orig": "学博际划"
+ },
+ "52_02-16-01": {
+  "ok": true,
+  "start": 0.54,
+  "end": 1.16,
+  "start_range": [
+   0.42,
+   0.64
+  ],
+  "end_range": [
+   1.0,
+   1.3
+  ],
+  "heard": "搏击",
+  "orig": "早练搏击"
+ },
+ "54_02-21-32": {
+  "ok": true,
+  "start": 0.24,
+  "end": 0.72,
+  "start_range": [
+   0.22,
+   0.24
+  ],
+  "end_range": [
+   0.6,
+   0.82
+  ],
+  "heard": "搏击",
+  "orig": "没有练播机"
+ },
+ "55_02-34-12": {
+  "ok": true,
+  "start": 0.2,
+  "end": 0.78,
+  "start_range": [
+   0.14,
+   0.26
+  ],
+  "end_range": [
+   0.66,
+   0.88
+  ],
+  "heard": "搏击",
+  "orig": "搏击"
+ },
+ "56_02-40-23": {
+  "ok": true,
+  "start": 0.14,
+  "end": 0.6,
+  "start_range": [
+   0.12,
+   0.14
+  ],
+  "end_range": [
+   0.5,
+   0.7
+  ],
+  "heard": "搏击",
+  "orig": "挖博机"
+ },
+ "58_02-40-40": {
+  "ok": true,
+  "start": 0.08,
+  "end": 0.44,
+  "start_range": [
+   0.08,
+   0.08
+  ],
+  "end_range": [
+   0.42,
+   0.46
+  ],
+  "heard": "搏击",
+  "orig": "看了博金你"
+ },
+ "59_02-41-18": {
+  "ok": true,
+  "start": 0.22,
+  "end": 0.78,
+  "start_range": [
+   0.14,
+   0.28
+  ],
+  "end_range": [
+   0.68,
+   0.86
+  ],
+  "heard": "搏击",
+  "orig": "哇搏击这个"
+ },
+ "60_02-41-27": {
+  "ok": false,
+  "why": "never exactly 薄肌",
+  "text": "打搏击那个"
+ },
+ "61_02-41-42": {
+  "ok": true,
+  "start": 0.16,
+  "end": 0.56,
+  "start_range": [
+   0.14,
+   0.16
+  ],
+  "end_range": [
+   0.56,
+   0.56
+  ],
+  "heard": "搏击",
+  "orig": "把搏击理论"
+ },
+ "62_02-41-55": {
+  "ok": false,
+  "why": "never exactly 薄肌",
+  "text": "还在搏击轮上"
+ },
+ "63_02-49-55": {
+  "ok": true,
+  "start": 0.12,
+  "end": 0.54,
+  "start_range": [
+   0.06,
+   0.18
+  ],
+  "end_range": [
+   0.5,
+   0.56
+  ],
+  "heard": "搏击",
+  "orig": "为搏击是"
+ },
+ "65_02-50-04": {
+  "ok": true,
+  "start": 0.18,
+  "end": 0.6,
+  "start_range": [
+   0.1,
+   0.24
+  ],
+  "end_range": [
+   0.52,
+   0.68
+  ],
+  "heard": "搏击",
+  "orig": "下搏击"
+ },
+ "66_02-50-08": {
+  "ok": true,
+  "start": 0.18,
+  "end": 0.58,
+  "start_range": [
+   0.16,
+   0.18
+  ],
+  "end_range": [
+   0.58,
+   0.58
+  ],
+  "heard": "搏击",
+  "orig": "其实搏击也不"
+ },
+ "67_02-50-09": {
+  "ok": true,
+  "start": 0.24,
+  "end": 0.66,
+  "start_range": [
+   0.2,
+   0.28
+  ],
+  "end_range": [
+   0.64,
+   0.66
+  ],
+  "heard": "搏击",
+  "orig": "练搏肌你"
+ },
+ "68_02-50-16": {
+  "ok": true,
+  "start": 0.1,
+  "end": 0.54,
+  "start_range": [
+   0.1,
+   0.1
+  ],
+  "end_range": [
+   0.5,
+   0.58
+  ],
+  "heard": "搏击",
+  "orig": "看勃击圣经"
+ },
+ "69_02-50-24": {
+  "ok": true,
+  "start": 0.24,
+  "end": 0.84,
+  "start_range": [
+   0.16,
+   0.3
+  ],
+  "end_range": [
+   0.76,
+   0.92
+  ],
+  "heard": "搏击",
+  "orig": "其实搏击制"
+ },
+ "70_02-50-36": {
+  "ok": true,
+  "start": 0.16,
+  "end": 0.56,
+  "start_range": [
+   0.1,
+   0.2
+  ],
+  "end_range": [
+   0.5,
+   0.6
+  ],
+  "heard": "搏击",
+  "orig": "说搏击是一种"
+ },
+ "71_02-50-54": {
+  "ok": true,
+  "start": 0.06,
+  "end": 0.54,
+  "start_range": [
+   0.06,
+   0.06
+  ],
+  "end_range": [
+   0.48,
+   0.58
+  ],
+  "heard": "搏击",
+  "orig": "有搏击"
+ },
+ "72_02-50-57": {
+  "ok": true,
+  "start": 0.12,
+  "end": 0.58,
+  "start_range": [
+   0.08,
+   0.14
+  ],
+  "end_range": [
+   0.54,
+   0.62
+  ],
+  "heard": "搏击",
+  "orig": "我们的搏击"
+ },
+ "73_02-51-00": {
+  "ok": true,
+  "start": 0.1,
+  "end": 0.54,
+  "start_range": [
+   0.1,
+   0.1
+  ],
+  "end_range": [
+   0.52,
+   0.54
+  ],
+  "heard": "搏击",
+  "orig": "那个搏击是"
+ },
+ "74_02-51-06": {
+  "ok": true,
+  "start": 0.1,
+  "end": 0.56,
+  "start_range": [
+   0.1,
+   0.1
+  ],
+  "end_range": [
+   0.5,
+   0.6
+  ],
+  "heard": "搏击",
+  "orig": "会有搏击会"
+ },
+ "75_02-51-09": {
+  "ok": false,
+  "why": "never exactly 薄肌",
+  "text": "这个搏击值"
+ },
+ "76_02-51-13": {
+  "ok": true,
+  "start": 0.12,
+  "end": 0.62,
+  "start_range": [
+   0.08,
+   0.16
+  ],
+  "end_range": [
+   0.48,
+   0.74
+  ],
+  "heard": "搏击",
+  "orig": "来搏及"
+ },
+ "78_02-51-46": {
+  "ok": true,
+  "start": 0.18,
+  "end": 0.6,
+  "start_range": [
+   0.14,
+   0.22
+  ],
+  "end_range": [
+   0.52,
+   0.68
+  ],
+  "heard": "搏击",
+  "orig": "学博机华"
+ },
+ "79_02-52-04": {
+  "ok": true,
+  "start": 0.16,
+  "end": 0.62,
+  "start_range": [
+   0.12,
+   0.2
+  ],
+  "end_range": [
+   0.5,
+   0.74
+  ],
+  "heard": "搏击",
+  "orig": "没有搏击"
+ },
+ "80_02-52-10": {
+  "ok": false,
+  "why": "never exactly 薄肌",
+  "text": "搏击"
+ },
+ "81_03-00-47": {
+  "ok": true,
+  "start": 0.42,
+  "end": 1.06,
+  "start_range": [
+   0.24,
+   0.58
+  ],
+  "end_range": [
+   1.0,
+   1.1
+  ],
+  "heard": "搏击",
+  "orig": "这个搏击"
+ },
+ "82_03-00-53": {
+  "ok": false,
+  "why": "never exactly 薄肌",
+  "text": "看搏际肾经经"
+ },
+ "83_03-13-45": {
+  "ok": false,
+  "why": "never exactly 薄肌",
+  "text": "接铂金斯"
+ },
+ "84_04-17-18": {
+  "ok": true,
+  "start": 0.24,
+  "end": 0.8,
+  "start_range": [
+   0.06,
+   0.4
+  ],
+  "end_range": [
+   0.7,
+   0.9
+  ],
+  "heard": "搏击",
+  "orig": "搏击圣经"
+ },
+ "85_04-22-10": {
+  "ok": true,
+  "start": 0.52,
+  "end": 0.92,
+  "start_range": [
+   0.46,
+   0.58
+  ],
+  "end_range": [
+   0.86,
+   0.96
+  ],
+  "heard": "搏击",
+  "orig": "呃搏搏击版版本"
+ },
+ "86_04-22-13": {
+  "ok": false,
+  "why": "never exactly 薄肌",
+  "text": "啊国际版的"
+ }
+}
