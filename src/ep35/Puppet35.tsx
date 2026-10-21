@@ -1,5 +1,5 @@
 import React from 'react';
-import {AbsoluteFill, Composition, registerRoot, useCurrentFrame} from 'remotion';
+import {AbsoluteFill, Composition, registerRoot, spring, useCurrentFrame} from 'remotion';
 import {useFonts} from '../looks26/b/kit';
 
 /* ep35 《推石头的人，是幸福的》 — look "忧郁人偶": a hand-made marionette (wooden head and hands, felt coat, glass-bead eyes
@@ -122,7 +122,13 @@ const Defs: React.FC = () => (
 );
 
 // ------------------------------------------------------------------ the wooden drawing mannequin (no face; feet at y=0, ~515 tall; faces +x)
-type Pose = {lean?: number; head?: number; armN?: [number, number]; armF?: [number, number]; legN?: [number, number]; legF?: [number, number]; case?: boolean};
+type Pose = {lean?: number; head?: number; armN?: [number, number]; armF?: [number, number]; legN?: [number, number]; legF?: [number, number]; case?: boolean; ground?: boolean};
+/** keep the lower foot on the floor (walking/running): the hip drops when the legs spread — the natural bob */
+const groundShift = (pose: Pose) => {
+	if (!pose.ground) return 0;
+	const ank = ([th, sh]: [number, number]) => -232 + Math.cos(rad(th)) * 106 + Math.cos(rad(th + sh)) * 98;
+	return -28 - Math.max(ank(pose.legN ?? [3, 0]), ank(pose.legF ?? [-3, 0]));
+};
 const limb = (x: number, y: number, a: number, l: number): [number, number] => { const d = dirv(a, l); return [x + d[0], y + d[1]]; };
 type Pt = [number, number];
 type Mat = {name: string; note: string; limb: string; ball: string; head: string; grain?: string; hi: string; hiO: number; lo: string; edge: string; extra?: 'kintsugi' | 'cracks'};
@@ -196,7 +202,7 @@ const Mannequin: React.FC<{pose: Pose}> = ({pose}) => {
 	);
 	const lF = leg(-14, legF), lN = leg(18, legN), aF = arm(-44, armF), aN = arm(46, armN);
 	return (
-		<g>
+		<g transform={`translate(0,${groundShift(pose)})`}>
 			<g style={{filter: 'brightness(0.72)'}}><Leg l={lF} /></g>
 			<g transform={`rotate(${lean}, 0, -232)`}>
 				<g style={{filter: 'brightness(0.72)'}}><Arm a={aF} /></g>
@@ -836,12 +842,13 @@ const attachPts = (pose: Pose): {p: Pt; to: number}[] => {
 	const H = (p: Pt) => L(rotP(p, head, [0, -406]));
 	const wrist = (sx: number, [ua, fa]: [number, number]) => { const e = limb(sx, -394, ua, 84); return L(limb(e[0], e[1], ua + fa, 76)); };
 	const knee = (hx: number, [th]: [number, number]) => limb(hx, -232, th, 106);
-	return [
+	const gy = groundShift(pose);
+	return ([
 		{p: H([-24, -500]), to: -1}, {p: H([32, -496]), to: 1},          // head (two, at the temples)
 		{p: L([-44, -404]), to: -2}, {p: L([46, -404]), to: 2},           // shoulders
 		{p: wrist(46, armN), to: 4}, {p: wrist(-44, armF), to: -4},        // hands
 		{p: knee(18, legN), to: 3}, {p: knee(-14, legF), to: -3},         // knees
-	];
+	] as {p: Pt; to: number}[]).map(({p, to}) => ({p: [p[0], p[1] + gy] as Pt, to}));
 };
 /** a nylon marionette string: near-invisible in shadow, catching the top light in a band, glints, fading into the dark above */
 const RealString: React.FC<{a: Pt; b: Pt; id: string; band?: [number, number]; w?: number}> = ({a, b, id, band = [0.2, 0.55], w = 1.25}) => {
@@ -868,9 +875,12 @@ const Eyelet: React.FC<{p: Pt; k: number}> = ({p, k}) => (
 	<g><circle cx={p[0]} cy={p[1] - 1.6 * k} r={2.3 * k} fill="none" stroke="#6e5c40" strokeWidth={1.1 * k} /><path d={`M${p[0] - 1.6 * k},${p[1] - 2.6 * k} a${2.3 * k},${2.3 * k} 0 0 1 ${2.6 * k},${-1.2 * k}`} stroke="#d9c79c" strokeWidth={0.8 * k} fill="none" opacity={0.8} /><circle cx={p[0]} cy={p[1] - 3.9 * k} r={0.9 * k} fill="#e8e2d6" opacity={0.7} /></g>
 );
 const S1b: React.FC<{t: number; spin?: number; flick?: number; trainShift?: number; headLift?: number; sub?: string; subO?: number; crowd?: boolean}> = ({t, spin = 0, flick = 1, trainShift = 0, headLift = 0, sub = '早上挤地铁，上班，加班，回家', subO = 1, crowd}) => {
-	const pose: Pose = {lean: 5, head: 20 - headLift, armN: [-3, 4], armF: [5, 8], legN: [2, 0], legF: [-3, 0], case: true};
-	const mx = 700, my = 930 - 1.6 * Math.sin(t * 2.2), k = 1.22;
-	const sway = Math.sin(t * 1.3) * 0.6;
+	// a long breath out at ~2.2 s: the shoulders rise, then the whole body sinks a little lower than before
+	const sighU = cl01((t - 2.0) / 1.6), sigh = sighU <= 0 ? 0 : Math.sin(Math.PI * Math.min(1, sighU * 1.25)) * (sighU < 0.4 ? -0.6 : 1) + 0.6 * sighU;
+	const swing = 1.6 * Math.sin(t * 0.9) + 0.7 * Math.sin(t * 2.3 + 1);    // hanging from strings: never quite still
+	const pose: Pose = withBreath({lean: 5 + 3 * sigh + 0.4 * swing, head: 20 - headLift + 6 * sigh, armN: [-3 + 1.5 * Math.sin(t * 0.9 + 0.8), 4 + 3 * sigh], armF: [5 + 1.2 * Math.sin(t * 0.9 + 1.3), 8], legN: [2, 0], legF: [-3, 0], case: true}, t);
+	const mx = 700 + 3 * swing, my = 930 - 1.6 * Math.sin(t * 1.7) + 3 * sigh, k = 1.22;
+	const sway = swing * 0.6;
 	// the control bar hangs out of frame above: string ends spread along it (with a little perspective)
 	const barC: Pt = [mx + 30 + sway * 4, -320];
 	const barEnd = (slot: number): Pt => [barC[0] + slot * 62, barC[1] + Math.abs(slot) * 10];
@@ -942,7 +952,7 @@ const S1b: React.FC<{t: number; spin?: number; flick?: number; trainShift?: numb
 				<ellipse cx={mx + 20} cy={my + 8} rx={300} ry={46} fill="#dfe8f5" opacity={0.1} filter="url(#b6)" />
 				{crowd && [[300, 0.5], [520, 0.62], [180, 0.7], [420, 0.76], [620, 0.8]].map(([x0, d], i) => {
 					const p = towards([x0, 930], d), kk = 1.22 * (1 - d) * 1.05;
-					const cp: Pose = {lean: 6, head: 22 + 4 * Math.sin(t * 2 + i), armN: [-3, 4], armF: [5, 8], legN: [2, 0], legF: [-3, 0], case: i % 2 === 0};
+					const cp: Pose = withBreath({lean: 6 + 1.2 * Math.sin(t * (0.7 + i * 0.13) + i), head: 22 + 5 * Math.sin(t * (0.45 + i * 0.1) + i * 2), armN: [-3 + 2 * Math.sin(t * 0.8 + i), 4], armF: [5, 8], legN: [2, 0], legF: [-3, 0], case: i % 2 === 0}, t, i * 1.7);
 					return <g key={i} opacity={1 - d * 0.5} filter={d > 0.7 ? 'url(#b1.5)' : undefined}>
 						<g filter="url(#rimC)"><g transform={`translate(${p[0]},${p[1]}) scale(${kk})`}><Mannequin pose={cp} /></g></g>
 						{attachPts(cp).map(({p: q, to}, si) => { const a = W2(p[0], p[1], kk, q); return <line key={si} x1={a[0]} y1={a[1]} x2={p[0] + to * 40 * kk} y2={-10} stroke="#e8e8ee" strokeWidth={0.8} opacity={0.35} />; })}
@@ -1008,10 +1018,13 @@ const Sample35: React.FC = () => {
 const F_DROP = 12.978;
 const lerp = (a: number, b: number, u: number) => a + (b - a) * u;
 const walkPose = (ph: number, head = 0, lean = 2): Pose => ({
-	lean, head,
-	legN: [22 * Math.sin(ph), -10 - 16 * Math.max(0, Math.cos(ph))], legF: [-22 * Math.sin(ph), -10 - 16 * Math.max(0, -Math.cos(ph))],
-	armN: [-12 * Math.sin(ph), 8], armF: [12 * Math.sin(ph), 8],
+	lean: lean + 1.6 * Math.sin(2 * ph + 0.6), head: head - 2.2 * Math.sin(2 * ph + 0.3), ground: true,
+	legN: [24 * Math.sin(ph), -4 - 34 * Math.pow(Math.max(0, Math.cos(ph)), 1.6)], legF: [-24 * Math.sin(ph), -4 - 34 * Math.pow(Math.max(0, -Math.cos(ph)), 1.6)],
+	armN: [-17 * Math.sin(ph - 0.35), 8 + 14 * Math.max(0, -Math.sin(ph - 0.6))], armF: [17 * Math.sin(ph - 0.35), 8 + 14 * Math.max(0, Math.sin(ph - 0.6))],
 });
+/** a hanging puppet never stands quite still: breath, and a slow pendulum swing on its strings */
+const breathe = (t: number, seed = 0): Partial<Pose> => ({lean: 1.4 * Math.sin(t * 1.7 + seed) + 1.0 * Math.sin(t * 0.55 + seed * 2), head: 1.8 * Math.sin(t * 1.7 + seed - 0.7)});
+const withBreath = (p: Pose, t: number, seed = 0): Pose => { const b = breathe(t, seed); return {...p, lean: (p.lean ?? 0) + (b.lean ?? 0), head: (p.head ?? 0) + (b.head ?? 0)}; };
 const STAND: Pose = {lean: 2, head: 8, armN: [-3, 5], armF: [4, 6], legN: [3, 0], legF: [-3, 0]};
 
 // ---- subtitle lines: [text, scene-section]; times are laid out below on the reading budget
@@ -1920,8 +1933,8 @@ const Sign: React.FC<{x: number; y: number; q: string; k: number; lit: number}> 
 	</g>
 );
 /** one station vignette (local: base at y=0, x centred), with its own practical light */
-const Station: React.FC<{id: StationId; t: number; lit: number; i: number}> = ({id, t, lit, i}) => {
-	const P = (pose: Pose, x = 0, k = 0.78, flip = false) => (
+const Station: React.FC<{id: StationId; t: number; lit: number; i: number; swing?: number; stop?: number}> = ({id, t, lit, i, swing = 0, stop = -1}) => {
+	const P = (pose0: Pose, x = 0, k = 0.78, flip = false, pose = {...pose0, lean: (pose0.lean ?? 0) + swing}) => (
 		<g>
 			<ellipse cx={x + 6} cy={4} rx={80 * k} ry={10 * k} fill="#000" opacity={0.55} filter="url(#b3)" />
 			<g filter="url(#rimC)"><g transform={`translate(${x},0) scale(${flip ? -k : k},${k})`} filter="url(#rimR)"><Mannequin pose={pose} /></g></g>
@@ -1933,7 +1946,7 @@ const Station: React.FC<{id: StationId; t: number; lit: number; i: number}> = ({
 			<g>
 				<ellipse cx={0} cy={-6} rx={300} ry={60} fill="url(#coldGlow)" opacity={0.6 * lit} />
 				<g transform="translate(70,-10) scale(0.7)"><Train /></g>
-				{P({lean: 6, head: 22, armN: [-3, 4], armF: [5, 8], legN: [2, 0], legF: [-3, 0], case: true}, -70)}
+				{P(withBreath({lean: 6, head: 22, armN: [-3, 4], armF: [5, 8], legN: [2, 0], legF: [-3, 0], case: true}, t, i), -70)}
 			</g>
 		);
 		case 'cross': {
@@ -1960,7 +1973,7 @@ const Station: React.FC<{id: StationId; t: number; lit: number; i: number}> = ({
 				<ellipse cx={95} cy={-210} rx={150} ry={90} fill="url(#coldGlow)" opacity={0.5 * lit} />
 				<g transform="translate(200,-150)"><line x1={0} y1={0} x2={-16} y2={-80} stroke="#3b3a36" strokeWidth={5} /><path d="M-44,-76 Q-16,-108 14,-80 Z" fill="#2e4a3c" /><ellipse cx={-14} cy={-78} rx={22} ry={5} fill="#ffd590" opacity={lit} /></g>
 				<rect x={-150} y={-108} width={90} height={12} fill="#2a1d14" /><rect x={-150} y={-260} width={12} height={260} fill="#2a1d14" />
-				{P({lean: 30 + 2 * Math.sin(t * 3), head: 30, armN: [62, 30], armF: [58, 34], legN: [86, -86], legF: [82, -82]}, -100, 0.78)}
+				{P(withBreath({lean: 30 + 1.5 * Math.sin(t * 1.1), head: 30 + 4 * Math.sin(t * 0.6), armN: [62 + 3 * Math.sin(t * 9), 30 + 4 * Math.abs(Math.sin(t * 7))], armF: [58 + 3 * Math.sin(t * 9 + 2), 34 + 4 * Math.abs(Math.sin(t * 7 + 1))], legN: [86, -86], legF: [82, -82]}, t, i), -100, 0.78)}
 			</g>
 		);
 		case 'home': {
@@ -1979,13 +1992,18 @@ const Station: React.FC<{id: StationId; t: number; lit: number; i: number}> = ({
 			);
 		}
 		case 'run': {
-			const ph = t * 11 + i;
-			const p = walkPose(ph, 4, 16);
-			const pose: Pose = {...p, legN: [p.legN![0] * 1.6, p.legN![1] * 1.8], legF: [p.legF![0] * 1.6, p.legF![1] * 1.8], armN: [p.armN![0] * 2.4, 70], armF: [p.armF![0] * 2.4, 70]};
+			// stop ≥ 0: seconds since the music asked 然后呢 — the runner winds down, stands, and slowly looks up at its strings
+			const rt = stop < 0 ? t : t - stop + 0.32 * (1 - Math.exp(-stop / 0.32));
+			const amp = stop < 0 ? 1 : Math.exp(-stop / 0.45);
+			const look = stop < 0 ? 0 : spring({frame: Math.max(0, stop - 0.9) * FPS, fps: FPS, config: {damping: 14, stiffness: 40, mass: 1.4}});
+			const p = walkPose(rt * 11 + i, 4, 16);
+			const pose: Pose = withBreath({...p, ground: amp > 0.05, lean: (p.lean ?? 0) * amp + 4 * (1 - amp) - 6 * look, head: (p.head ?? 0) * amp + 18 * (1 - amp) * (1 - look) - 32 * look,
+				legN: [p.legN![0] * 1.6 * amp + 2 * (1 - amp), p.legN![1] * 1.8 * amp], legF: [p.legF![0] * 1.6 * amp - 3 * (1 - amp), p.legF![1] * 1.8 * amp],
+				armN: [p.armN![0] * 2.4 * amp - 3 * (1 - amp), 70 * amp + 6 * (1 - amp)], armF: [p.armF![0] * 2.4 * amp + 5 * (1 - amp), 70 * amp + 8 * (1 - amp)]}, t, i);
 			return (
 				<g>
 					<path d="M-200,-10 L200,-30 L210,0 L-190,20 Z" fill="#1d1f24" />
-					{Array.from({length: 9}, (_, k) => <rect key={k} x={-190 + ((k * 46 + t * 300) % 400)} y={-14 - k * 2} width={6} height={20} fill="#2c2f36" />)}
+					{Array.from({length: 9}, (_, k) => <rect key={k} x={-190 + ((k * 46 + rt * 300) % 400)} y={-14 - k * 2} width={6} height={20} fill="#2c2f36" />)}
 					<line x1={170} y1={-28} x2={150} y2={-260} stroke="#2a2d33" strokeWidth={10} /><rect x={110} y={-292} width={86} height={44} rx={6} fill="#14161a" />
 					<text x={153} y={-262} textAnchor="middle" style={{fontFamily: '"DejaVu Sans Mono", monospace', fontSize: 24}} fill="#ff6a50" opacity={lit}>{(12 + (t * 0.3) % 2).toFixed(1)}</text>
 					<ellipse cx={0} cy={-20} rx={260} ry={60} fill="#ff6a50" opacity={0.1 * lit} filter="url(#b6)" />
@@ -2000,13 +2018,14 @@ const Station: React.FC<{id: StationId; t: number; lit: number; i: number}> = ({
 				<rect x={-180} y={-112} width={360} height={46} rx={16} fill="#3b4558" filter="url(#felt)" />
 				<g transform="translate(110,-112)"><rect x={-26} y={-6} width={52} height={10} rx={4} fill="#0c0d10" /><rect x={-23} y={-5} width={46} height={7} rx={3} fill="#bcd2f0" opacity={lit} /></g>
 				<ellipse cx={110} cy={-150} rx={200} ry={110} fill="url(#coldGlow)" opacity={0.8 * lit} />
-				{P({lean: 28, head: 34, armN: [30, 40], armF: [26, 44], legN: [86, -86], legF: [82, -82]}, 30, 0.78)}
+				{(() => { const c = (t + i) % 3.4, nod = c < 2.6 ? Math.pow(c / 2.6, 2.2) : Math.exp(-(c - 2.6) * 9) * Math.cos((c - 2.6) * 20); // drifting off… and jerking awake
+					return P(withBreath({lean: 28 + 8 * nod, head: 34 + 26 * nod, armN: [30, 40 - 8 * nod], armF: [26, 44 - 8 * nod], legN: [86, -86], legF: [82, -82]}, t, i), 30, 0.78); })()}
 			</g>
 		);
 	}
 };
 /** the turntable seen low and close: stations ride the front arc; the disc clicks round one stop per beat */
-const Carousel: React.FC<{theta: number; t: number; dark?: number; spot?: number}> = ({theta, t, dark = 0, spot = 0}) => {
+const Carousel: React.FC<{theta: number; t: number; dark?: number; spot?: number; swing?: number; stop?: number}> = ({theta, t, dark = 0, spot = 0, swing = 0, stop = -1}) => {
 	const CX = 960, CY = 870, RX = 1150, RY = 150;
 	const items = STATIONS.map((s, i) => {
 		const phi = ((i * 60 - theta) % 360 + 540) % 360 - 180;            // −180..180, 0 = front centre
@@ -2041,13 +2060,12 @@ const Carousel: React.FC<{theta: number; t: number; dark?: number; spot?: number
 					const lit = (spot > 0 ? (Math.abs(x - CX) < 60 ? 1 : 1 - spot) : 1) * (1 - dark * (Math.abs(x - CX) < 60 ? 0.2 : 0.95));
 					return (
 						<g key={s.id} opacity={Math.min(1, (front + 0.2) * 2)} filter={front < 0.75 ? 'url(#b3)' : undefined}>
-							<g transform={`translate(${x},${y}) scale(${k})`}><Station id={s.id} t={t} lit={lit} i={i} /></g>
+							<g transform={`translate(${x},${y}) scale(${k})`}><Station id={s.id} t={t} lit={lit} i={i} swing={swing * (0.8 + 0.4 * ((i * 37) % 5) / 4)} stop={stop} /></g>
 							<Sign x={x - 240 * k} y={y - 330 * k} q={s.q} k={k * 0.9} lit={lit} />
 						</g>
 					);
 				})}
 				{/* motion blur streaks while the disc whips round */}
-				{spot === 0 && dark === 0 && t > bt(20) && t < bt(22) && <rect width={W} height={H} fill="#000" opacity={0.15} />}
 			</svg>
 			{dark > 0 && <AbsoluteFill style={{background: `radial-gradient(ellipse 380px 520px at 50% 62%, rgba(0,0,0,0) 0%, rgba(0,0,0,${0.85 * dark}) 70%)`}} />}
 			<Grade />
@@ -2055,32 +2073,54 @@ const Carousel: React.FC<{theta: number; t: number; dark?: number; spot?: number
 		</AbsoluteFill>
 	);
 };
-/** disc angle: one stop (60°) per tick, each tick a quick ease-out-back click */
+/** disc angle: glides one stop (60°) per move, the moves crowding closer (accelerating); then a whip that settles with a soft overshoot */
 const carouselTheta = (T: number) => {
 	const ticks = [5, 7, 9, 11, 13, 14, 15, 16, 17, 18, 19].map(bt);
-	let n = 0, frac = 0;
-	for (const tk of ticks) { if (T >= tk) { n++; frac = Math.min(1, (T - tk) / 0.16); } }
-	const back = (u: number) => 1 + 2.4 * Math.pow(u - 1, 3) + 1.4 * Math.pow(u - 1, 2);
-	let th = 60 * (n - 1 + (n > 0 ? back(frac) : 0));
-	if (T >= bt(20)) th += 60 * 6 * Math.pow(Math.min(1, (T - bt(20)) / (bt(22) - bt(20))), 1.6) * (1 - 0.0);   // whip a full turn
+	const sstep = (u: number) => { const v = cl01(u); return v * v * v * (v * (6 * v - 15) + 10); };
+	let th = -60;
+	ticks.forEach((tk, n) => { const d = (n + 1 < ticks.length ? ticks[n + 1] : bt(20)) - tk; th += 60 * sstep((T - tk + 0.12) / (d * 0.92)); });
+	const w0 = bt(20) - 0.05, w1 = bt(22) - 0.1;
+	if (T >= w0) {
+		const u = (T - w0) / (w1 - w0);
+		const settle = u < 1 ? 0.5 - 0.5 * Math.cos(Math.PI * Math.pow(u, 1.35)) : 1 + 0.035 * Math.exp(-(T - w1) * 3.2) * Math.sin((T - w1) * 9);
+		th += 360 * settle;
+	}
 	return th;
+};
+/** a string-hung figure on a turning disc lags and swings: a damped pendulum driven by the disc's angular acceleration */
+const discSwing = (T: number) => {
+	const dt = 1 / 60, w = 2 * Math.PI * 0.9, z = 0.22;
+	let x = 0, v = 0;
+	const om = (s: number) => (carouselTheta(s + dt) - carouselTheta(s - dt)) / (2 * dt);
+	for (let s = Math.max(bt(4.5), T - 3); s < T; s += dt) {
+		const acc = (om(s + dt) - om(s - dt)) / (2 * dt);
+		const a = -0.0045 * acc - 2 * z * w * v - w * w * x; v += a * dt; x += v * dt;
+	}
+	return Math.max(-14, Math.min(14, x));
 };
 const Open4: React.FC = () => {
 	useFonts();
 	const T = useCurrentFrame() / FPS;
-	const t = Math.floor(T * 12) / 12;
-	const sub = (a: number, b: number, s: string) => (T >= a && T < b ? <AbsoluteFill style={{opacity: Math.min(1, (T - a) / 0.15, (b - T) / 0.15)}}><Sub t={s} /></AbsoluteFill> : null);
-	let pic: React.ReactNode;
-	if (T < bt(5)) pic = <S1b t={t} crowd sub="" />;                                                   // 07:30 on the platform
-	else if (T < bt(22)) pic = <Carousel theta={carouselTheta(t)} t={t} />;
-	else if (T < bt(26)) pic = <Carousel theta={carouselTheta(bt(22))} t={t} dark={Math.min(1, (T - bt(22)) / 0.25)} spot={1} />;   // 然后呢？ lights out
-	else if (T < bt(29)) { const u = (T - bt(26)) / (bt(29) - bt(26)); pic = <S1b t={t} spin={6 * (1 - Math.pow(1 - u, 3))} headLift={10} sub="" />; }
+	const t = T;                                                                // continuous: 30 fps animation, no stepping
+	const sub = (a: number, b: number, s: string) => (T >= a && T < b ? <AbsoluteFill style={{opacity: Math.min(1, (T - a) / 0.2, (b - T) / 0.2)}}><Sub t={s} /></AbsoluteFill> : null);
+	const STOP = bt(22) - 0.1;
+	let pic: React.ReactNode, cam = {s: 1, x: 0, y: 0};
+	const drift = (k: number) => ({x: k * (5 * Math.sin(T * 0.37) + 3 * Math.sin(T * 0.83 + 1)), y: k * (4 * Math.sin(T * 0.29 + 2) + 2 * Math.sin(T * 0.71))});   // a hand-held breath
+	if (T < bt(5)) { const u = T / bt(5); pic = <S1b t={t} crowd sub="" headLift={6 * ease(cl01((T - 0.3) / 1.4))} />; cam = {s: 1.0 + 0.035 * ease(u), ...drift(1)}; }
+	else if (T < STOP) { pic = <Carousel theta={carouselTheta(T)} t={t} swing={discSwing(T)} />; cam = {s: 1.02, ...drift(0.8)}; }
+	else if (T < bt(26)) {                                                      // 然后呢？ — lights fall away; the runner stops and looks up
+		const s = T - STOP;
+		pic = <Carousel theta={carouselTheta(T)} t={t} swing={discSwing(T)} dark={ease(cl01(s / 0.8))} spot={1} stop={s} />;
+		cam = {s: 1.02 + 0.4 * ease(cl01(s / (bt(26) - STOP))), x: 0, y: 60 * ease(cl01(s / (bt(26) - STOP)))};
+	}
+	else if (T < bt(29)) { const u = (T - bt(26)) / (bt(29) - bt(26)); pic = <S1b t={t} spin={6 * ease(u)} headLift={10 - 18 * ease(cl01(u * 1.2))} flick={1} sub="" />; cam = {s: 1.08 - 0.04 * u, ...drift(1)}; }
 	else pic = <V2Hill t={t - bt(29)} header="" plankY={t < T_DRUM - 0.5 ? -320 : t < T_DRUM ? -320 + 620 * Math.pow((t - (T_DRUM - 0.5)) / 0.5, 2) : 300 - 26 * Math.exp(-5 * (t - T_DRUM)) * Math.cos(16 * (t - T_DRUM))} />;
+	if (T >= bt(29)) cam = {s: 1.04 - 0.03 * cl01((T - bt(29)) / 6), ...drift(0.6)};
 	return (
-		<AbsoluteFill style={{background: '#000'}}>
-			{pic}
+		<AbsoluteFill style={{background: '#000', overflow: 'hidden'}}>
+			<AbsoluteFill style={{transform: `translate(${cam.x}px,${cam.y}px) scale(${cam.s})`, transformOrigin: '50% 62%'}}>{pic}</AbsoluteFill>
 			{sub(0.5, bt(5) - 0.05, '为什么挤地铁？')}
-			{sub(bt(22) + 0.2, bt(26) - 0.05, '然后呢？')}
+			{sub(bt(22) + 0.4, bt(26) - 0.05, '然后呢？')}
 			{sub(bt(26) + 0.1, bt(29) - 0.05, '第二天，再来一遍')}
 			{sub(bt(29) + 0.15, T_DRUM - 0.1, '有个人，这样过了永远')}
 			{sub(T_DRUM + 0.9, T_DRUM + 3.6, '可有位哲学家说：他是幸福的')}
