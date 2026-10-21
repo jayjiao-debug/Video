@@ -580,6 +580,25 @@ const CrossBar: React.FC<{x: number; y: number; rot?: number}> = ({x, y, rot = 0
 );
 const barPt = (x: number, y: number, rot: number, p: Pt): Pt => { const r = rotP(p, rot, [0, 0]); return [x + r[0], y + r[1]]; };
 const PUSH: Pose = {lean: 30, head: 12, armN: [56, 8], armF: [50, 14], legN: [22, -30], legF: [-30, 4]};
+/** how a body really pushes a boulder uphill: torso ~45° into it, head up looking up the slope, arms bent with the hands at the
+ *  rock's widest point, back leg straight and driving; step (0..1) blends from a planted stance into alternating short steps */
+const pushPose2 = (ph: number, step = 1, heave = 0): Pose => {
+	const a = 0.5 + 0.5 * Math.sin(ph), b = 1 - a, mix = (st: number, cy: number) => st + (cy - st) * step;
+	return {lean: 44 + 2 * Math.sin(2 * ph) * step + 3 * heave, head: -18 + 3 * Math.sin(2 * ph + 1) * step - 2 * heave, ground: true,
+		armN: [36 + 3 * Math.sin(2 * ph) * step - 4 * heave, 30 + 6 * heave], armF: [30 + 3 * Math.sin(2 * ph + 0.5) * step - 4 * heave, 34 + 6 * heave],
+		legN: [mix(22, -36 + 56 * a), mix(-48, -46 * a)], legF: [mix(-38, -36 + 56 * b), mix(0, -46 * b)]};
+};
+/** put the pusher where his hands meet the rock's surface (flipped figure pushing to the left) */
+const placePusher = (rc: Pt, R: number, pose: Pose, k: number, ys: (x: number) => number, dy = 10) => {
+	const tip = tipOf(pose, true), gs = groundShift(pose);
+	const sh = rotP([46, -404], pose.lean ?? 0, [0, -232]), hd = rotP(rotP([4, -460], pose.head ?? 0, [0, -406]), pose.lean ?? 0, [0, -232]);
+	const at = (mx: number, p: Pt): Pt => [mx - p[0] * k, ys(mx) + dy + (p[1] + gs) * k];
+	const d = (p: Pt) => Math.hypot(p[0] - rc[0], p[1] - rc[1]);
+	let lo = rc[0] - 200, hi = rc[0] + 1200;
+	// hands on the surface, but shoulder and head stay outside the rock
+	for (let i = 0; i < 32; i++) { const m = (lo + hi) / 2, h = at(m, tip); if (d(h) < R * 0.95 || h[0] < rc[0] || d(at(m, sh)) < R * 1.02 || d(at(m, hd)) < R + 58 * k) lo = m; else hi = m; }
+	return (lo + hi) / 2;
+};
 
 const Frame: React.FC<{header?: string; sub?: string; subO?: number; children: React.ReactNode; bg?: string}> = ({header, sub, subO = 1, children, bg = '#07080b'}) => (
 	<AbsoluteFill style={{background: bg}}>
@@ -1585,10 +1604,9 @@ const V2Hill: React.FC<{t: number; header?: string; plankY?: number; beam?: numb
 	const heave = Math.max(0, Math.sin(t * 2.0)) ** 2;
 	const rx = 690 + 4 * heave, r = 200;
 	const rc: Pt = [rx, ys(rx) - r * 0.9];
-	const pose: Pose = {...PUSH, lean: 32 + 3 * heave, head: 14, legN: [24 + 5 * heave, -30], legF: [-32 - 4 * heave, 4]};
+	const pose: Pose = pushPose2(t * 1.2, 0, heave);
 	const k = 1.12;
-	const tip = tipOf(pose, true);
-	const mx = rc[0] + r * 0.98 + tip[0] * k, my = ys(mx) + 10;
+	const mx = placePusher(rc, r * 0.98, pose, k, ys), my = ys(mx) + 10;
 	const bar: Pt = [mx + 130 + 6 * Math.sin(t * 2.0), 220 + 4 * Math.sin(t * 2.0 + 0.6)], brot = -10 + 3 * Math.sin(t * 2.0 + 1);
 	const sun: Pt = [1250, 690];
 	return (
@@ -3151,9 +3169,9 @@ const SlopeWorld: React.FC<{T: number; cam: {x: number; y: number; s: number}; s
 					<Pebbles seed={8} n={420} x0={-1400} x1={7400} yAt={slopeY2} depth={[14, 300]} />
 					{Array.from({length: 60}, (_, i) => { const x = -1400 + i * 150 + (i % 3) * 40, y = slopeY2(x) - 4; return <path key={i} d={`M${x},${y} l-6,-26 l7,10 l3,-30 l5,27 l8,-20 l-3,39 Z`} fill="#2d3424" opacity={0.9} />; })}
 					{glow > 0 && man && <ellipse cx={man.x} cy={my - 260} rx={520} ry={420} fill="url(#warmGlow)" opacity={glow} />}
-					{man && <Man x={man.x} y={my} k={k} pose={man.pose} flip={man.flip} />}
 					{rc && <ellipse cx={rc[0] + 20} cy={slopeY2(rock!.x) + 6} rx={R * 1.25 * (1 - 0.003 * (rock!.lift ?? 0))} ry={R * 0.13} fill="#000" opacity={0.7 * (1 - 0.006 * (rock!.lift ?? 0))} filter="url(#b6)" />}
 					{rc && <g transform={`rotate(${rock!.rot},${rc[0]},${rc[1]})`}><BigRock c={rc} r={R} sun={[rc[0] - 600, rc[1] - 400]} rimCol={P.rim} noShadow /></g>}
+					{man && <Man x={man.x} y={my} k={k} pose={man.pose} flip={man.flip} />}
 					{dust > 0 && rc && Array.from({length: 40}, (_, i) => { const Rr = rnd2(i + 31); const a = Rr() * Math.PI; const d = dust * (60 + Rr() * 260); return <circle key={i} cx={rc[0] + Math.cos(a) * d * 1.4} cy={slopeY2(rock!.x) - Math.sin(a) * d * 0.5} r={6 + Rr() * 18 * (1 - dust * 0.5)} fill="#a88a70" opacity={(1 - dust) * 0.35} filter="url(#b6)" />; })}
 					{/* strings and the control bar */}
 					{man && bar.mode === 'held' && pts.map(({a, to}, i) => <g key={i}><RealString a={a} b={barPt(barW[0], barW[1], brot, [to < 0 ? -124 + 40 * (Math.abs(to) - 1) : 124 - 40 * (Math.abs(to) - 1), Math.abs(to) === 1 ? 150 : 0])} id={`sw${i}`} band={[0.15, 0.6]} w={(i === 4 || i === 6 ? 1.15 : 0.9) / Math.max(0.5, cam.s)} /><Eyelet p={a} k={k * 0.9} /></g>)}
@@ -3189,16 +3207,15 @@ const PUSH_T0 = bar35(12);
 const Push2: React.FC<{T: number}> = ({T}) => {
 	const dt = T - PUSH_T0;
 	const ph = dt * 3.4;
-	const pose = pushWalkPose(ph);
+	const pose = pushPose2(ph, 1);
 	const k = 1.0, R = 200;
-	const mx = 3400 - 62 * dt - 6 * Math.max(0, Math.sin(ph * 2));
-	const tip = tipOf(pose, true)[0] * k;
-	const rx = mx - (R * 0.98 + tip - 40);
-	const rot = (rx - (3400 - (R * 0.98 + tip - 40))) / R * 57.3;
+	const rx = 3150 - 62 * dt - 5 * Math.max(0, Math.sin(ph * 2));
+	const rot = (rx - 3150) / R * 57.3;
+	const mx = placePusher([rx, slopeY2(rx) - R * 0.92], R * 0.98, pose, k, slopeY2);
 	const cam = {x: mx - 200 + 8 * Math.sin(dt * 0.7), y: slopeY2(mx - 200) - 250, s: 1.12};
 	const toS = (p: Pt): Pt => [(p[0] - cam.x) * cam.s + W / 2, (p[1] - cam.y) * cam.s + H / 2];
 	// a puff of dust each time a foot pushes off
-	const steps = Array.from({length: 6}, (_, j) => { const n = Math.floor(ph / Math.PI) - j; const t0 = (n * Math.PI) / 3.4; const age = dt - t0; return {age, x: 3400 - 62 * t0 + 70}; }).filter((d) => d.age >= 0 && d.age < 1.2);
+	const steps = Array.from({length: 6}, (_, j) => { const n = Math.floor(ph / Math.PI) - j; const t0 = (n * Math.PI) / 3.4; const age = dt - t0; return {age, x: mx + 62 * (dt - t0) + 90}; }).filter((d) => d.age >= 0 && d.age < 1.2);
 	return (
 		<AbsoluteFill>
 			<SlopeWorld T={T} cam={cam} rock={{x: rx, rot}} man={{x: mx, pose, flip: true, k}} header="古希腊 · 神话" headerO={0} />
@@ -3240,10 +3257,10 @@ const Summit: React.FC<{T: number}> = ({T}) => {
 	const land = cl01((T - LAND) / 1.2);
 	const bounce = rolling && T < LAND ? Math.abs(Math.sin((T - ROLL0) * 9)) * 30 * cl01((T - ROLL0) / 0.6) : T >= LAND ? 60 * Math.exp(-(T - LAND) * 5) * Math.abs(Math.cos((T - LAND) * 14)) : 0;
 	// him: pushing at the crest; when it goes he stumbles, turns and watches; then walks down after it
-	const pushPose: Pose = {...PUSH, lean: 34 + 3 * Math.sin(T * 6), head: 10, legN: [26, -30], legF: [-34, 4]};
+	const pushPose: Pose = pushPose2(T * 3.4, T < ROLL0 - 0.6 ? 1 : 0, Math.max(0, Math.sin(T * 6)));
 	const walk0 = bar35(16.4);
 	let man: SlopeMan;
-	if (!rolling) man = {x: x + R * 0.98 + tipOf(pushPose, true)[0] - 44, pose: pushPose, flip: true};
+	if (!rolling) man = {x: placePusher([x, slopeY2(x) - R * 0.92], R * 0.98, pushPose, 1, slopeY2), pose: pushPose, flip: true};
 	else if (T < walk0) { const u = cl01((T - ROLL0) / 0.5); man = {x: 860, pose: {lean: 4 * (1 - u), head: 30 + 10 * u, armN: [10 - 8 * u, 20], armF: [14 - 8 * u, 18], legN: [6, 0], legF: [-8, 0]}, flip: false}; }
 	else { const wt = T - walk0; man = {x: 860 + 150 * wt, pose: walkPose(wt * 5.4, 24, 6), flip: false}; }
 	// camera: on the crest → whips down after the rock → lands with it → pulls back and looks up the slope at the small figure coming down
@@ -3548,7 +3565,10 @@ const WalkDown: React.FC<{T: number}> = ({T}) => {
 	const walking: Pose = walkPose(ph, lerp(14, -6, rel), lerp(2, -2, rel));
 	const push = cl01((T - ln2(23).a - 0.8) / 1.0);
 	const man: SlopeMan = atFoot
-		? {x: 5900 - 4 * push + 200 * 0.98 + Math.max(60, tipOf(push > 0 ? PUSH : {armN: [40, 10]}, true)[0]) * (0.6 + 0.4 * push), pose: push > 0 ? {...PUSH, lean: lerp(10, 30, push), head: lerp(-4, 10, push), legN: [lerp(4, 22, push), lerp(0, -30, push)], legF: [lerp(-4, -30, push), lerp(0, 4, push)], armN: [lerp(30, 56, push), lerp(10, 8, push)], armF: [lerp(24, 50, push), lerp(12, 14, push)]} : withBreath({lean: 6, head: -4, armN: [40, 10], armF: [10, 8], legN: [4, 0], legF: [-4, 0]}, T), flip: true}
+		? (() => { const p0: Pose = withBreath({lean: 8, head: -6, armN: [56, 18], armF: [20, 10], legN: [4, 0], legF: [-4, 0]}, T); const p1 = pushPose2(T * 3.0, 0, Math.max(0, Math.sin(T * 2.4)));
+			const pose: Pose = push > 0 ? {...p1, lean: lerp(8, p1.lean!, push), head: lerp(-6, p1.head!, push), armN: [lerp(56, p1.armN![0], push), lerp(18, p1.armN![1], push)], armF: [lerp(20, p1.armF![0], push), lerp(10, p1.armF![1], push)], legN: [lerp(4, p1.legN![0], push), lerp(0, p1.legN![1], push)], legF: [lerp(-4, p1.legF![0], push), lerp(0, p1.legF![1], push)]} : p0;
+			const rx = 5900 - 4 * push;
+			return {x: placePusher([rx, slopeY2(rx) - 200 * 0.92], 200 * 0.98, pose, 1, slopeY2), pose, flip: true}; })()
 		: {x, pose: walking, flip: false};
 	return (
 		<AbsoluteFill>
@@ -3756,12 +3776,12 @@ const Lanes: React.FC<{T: number}> = ({T}) => {
 			<svg width={W} height={H} style={{position: 'absolute', inset: 0}}>
 				<Defs />
 				{VIEWS.map((v, i) => {
-					const y0 = 60 + i * 340, ys = (x: number) => y0 + 316 - 0.07 * x;
+					const y0 = 60 + i * 340, ys = (x: number) => y0 + 250 + 0.07 * x;
 					const heave = Math.max(0, Math.sin(T * 2.1 + i * 1.3)) ** 2;
-					const cx = 760 + 18 * u + 5 * heave, r = 70, cy = ys(cx) - r * 0.92;
-					const pose: Pose = {...PUSH, lean: 30 + 4 * heave, head: i === 2 ? 2 : 14, legN: [22 + 6 * heave, -30], legF: [-30 - 4 * heave, 4]};
-					const k = 0.42, tip = tipOf(pose, true);
-					const mx = cx + r * 0.98 + tip[0] * k, my = ys(mx) + 8;
+					const cx = 900 - 18 * u - 5 * heave, r = 70, cy = ys(cx) - r * 0.92;
+					const pose: Pose = pushPose2(T * 3.0 + i, 1, heave);
+					const k = 0.42;
+					const mx = placePusher([cx, cy], r * 0.98, pose, k, ys, 8), my = ys(mx) + 8;
 					return (
 						<g key={i}>
 							<clipPath id={`ln${i}`}><rect x={0} y={y0} width={W} height={330} /></clipPath>
@@ -3770,7 +3790,7 @@ const Lanes: React.FC<{T: number}> = ({T}) => {
 								<circle cx={1700 - i * 60} cy={y0 + 230} r={360} fill={i === 2 ? 'url(#warmGlow)' : 'url(#coldGlow)'} opacity={[0.15, 0.3, 0.75][i]} />
 								<path d={`M0,${ys(0)} L${W},${ys(W)} L${W},${y0 + 340} L0,${y0 + 340} Z`} fill={['#23262c', '#202838', '#3a2e24'][i]} />
 								<path d={`M0,${ys(0)} L${W},${ys(W)}`} stroke={v.glow} strokeWidth={3} opacity={0.4} />
-								<g transform={`rotate(${-u * 6},${cx},${cy})`}><BigRock c={[cx, cy]} r={r} sun={[cx + 600, cy - 300]} ground={ys(cx)} rimCol={v.glow} seed={3 + i} /></g>
+								<g transform={`rotate(${-u * 15},${cx},${cy})`}><BigRock c={[cx, cy]} r={r} sun={[cx + 600, cy - 300]} ground={ys(cx)} rimCol={v.glow} seed={3 + i} /></g>
 								<Man x={mx} y={my} k={k} pose={pose} flip warm={i === 2} />
 								{i === 2 && <ellipse cx={mx - 60} cy={my - 140} rx={260} ry={170} fill="url(#warmGlow)" opacity={0.55} />}
 								<text x={70} y={y0 + 70} style={{fontFamily: SANS, fontWeight: 900, fontSize: 44}} fill={v.c} opacity={cl01((u - 0.1) / 0.3) * (1 - cl01((T - (bar35(68.5) - 0.6)) / 0.3))}>{v.s}</text>
