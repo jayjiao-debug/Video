@@ -258,11 +258,15 @@ const Sub: React.FC<{t: string}> = ({t}) => (
 				// optical centring: a trailing full-width ？！。，： carries ~½em of blank on its right, and letter-spacing adds 0.08em after the last glyph — pull both back
 				const segs = t.split(/(\[[^\]]+\])/).filter(Boolean);
 				return segs.map((x, i) => {
-					const hi = x[0] === '[', body = hi ? x.slice(1, -1) : x, last = i === segs.length - 1;
+					const hi = x[0] === '[', body0 = hi ? x.slice(1, -1) : x, last = i === segs.length - 1;
 					const st: React.CSSProperties = hi ? {color: '#f1c56d', textShadow: '0 0 18px rgba(241,197,109,0.45), 0 2px 14px rgba(0,0,0,0.9)'} : {};
-					if (!last) return <span key={i} style={st}>{body}</span>;
-					const end = body.slice(-1), punct = /[？！。，：；、]/.test(end);
-					return <span key={i} style={st}>{body.slice(0, -1)}<span style={{marginRight: punct ? '-0.58em' : '-0.08em'}}>{end}</span></span>;
+					// an opening “《「『（ at the very start carries a blank half-em on its left: pull it back too
+					const lead = i === 0 && /^[“《「『（]/.test(body0);
+					const body = lead ? body0.slice(1) : body0;
+					const head = lead ? <span style={{marginLeft: '-0.5em'}}>{body0[0]}</span> : null;
+					if (!last) return <span key={i} style={st}>{head}{body}</span>;
+					const end = body.slice(-1), punct = /[？！。，：；、”》」』）]/.test(end);   // closing quotes and brackets carry the same blank half-em
+					return <span key={i} style={st}>{head}{body.slice(0, -1)}<span style={{marginRight: punct ? '-0.58em' : '-0.08em'}}>{end}</span></span>;
 				});
 			})()}
 		</div>
@@ -3940,7 +3944,7 @@ const Film2: React.FC = () => {
 	else if (T < B(40)) { const d = X(B(39), B(40) - 0.1); pic = <AbsoluteFill>{zoomOn(<Paris T={T} />, PAGE_C, 4.2 + 4 * d, 1)}<AbsoluteFill style={{opacity: cl01(d * 3)}}><InkSketch d={d} bloom={cl01((T - (B(40) - 0.25)) / 0.25)} /></AbsoluteFill></AbsoluteFill>; }
 	// --- the walk down (the big drop at bar 40)
 	else if (T < B(48) - 0.6) { const bl = cl01(1 - (T - B(40)) / 0.7); pic = <AbsoluteFill><WalkDown T={T} />{bl > 0 && <AbsoluteFill style={{background: 'radial-gradient(circle at 78% 30%, rgba(255,236,190,1) 0%, rgba(255,214,150,0.8) 35%, rgba(255,200,120,0.5) 70%)', opacity: bl}} />}</AbsoluteFill>; }
-	else if (T < B(48) + 1.6) { const u = X(B(48) - 0.6, B(48) + 0.3); pic = u < 1 ? <AbsoluteFill style={{transform: `translateY(${easeIO5(u) * 700}px)`}}><WalkDown T={T} /><AbsoluteFill style={{background: '#070a14', opacity: easeIO5(u)}} /></AbsoluteFill> : <City T={T} />; if (u >= 1) pic = <City T={T} />; }
+	else if (T < B(48) + 1.6) { const u = X(B(48) - 0.6, B(48) + 0.3); pic = u < 1 ? <AbsoluteFill><City T={T} /><AbsoluteFill style={{transform: `translateY(${easeIO5(u) * 700}px)`, opacity: 1 - easeIO5(cl01((u - 0.2) / 0.8))}}><WalkDown T={T} /></AbsoluteFill></AbsoluteFill> : <City T={T} />; if (u >= 1) pic = <City T={T} />; }   // the night city rises under the falling dusk (no dip to black)
 	// --- 2010
 	else if (T < B(51.5) - 0.3) pic = <City T={T} />;
 	else if (T < B(51.5) + 0.2) { const e = Math.pow(X(B(51.5) - 0.3, B(51.5) + 0.2), 2.2); pic = <AbsoluteFill>{zoomOn(<City T={T} />, WIN_PICK, 1 + 40 * e, Math.min(1, e * 3))}<AbsoluteFill style={{opacity: cl01((e - 0.55) / 0.45)}}><Room2010 T={T} /></AbsoluteFill></AbsoluteFill>; }
@@ -4021,6 +4025,8 @@ registerRoot(() => (
 		<Composition id="FILM2" component={Film2} durationInFrames={Math.round(FILM2_END * FPS)} fps={FPS} width={W} height={H} />
 		<Composition id="OPEN4" component={Open4} durationInFrames={Math.round(20.5 * FPS)} fps={FPS} width={W} height={H} />
 		<Composition id="FILM35" component={Film35} durationInFrames={FILM35_FRAMES} fps={FPS} width={W} height={H} />
+		{/* QA: every subtitle alone on black (frame i = SUBS2[i]) for the ink-centring check */}
+		<Composition id="SUBTEST" component={() => { useFonts(); const f = useCurrentFrame(); return <AbsoluteFill style={{background: '#000'}}><Sub t={SUBS2[Math.min(f, SUBS2.length - 1)].text} /></AbsoluteFill>; }} durationInFrames={SUBS2.length} fps={FPS} width={W} height={H} />
 		<Composition id="STY022" component={Style022} durationInFrames={1} fps={FPS} width={W} height={H} defaultProps={{look: undefined as HillLook}} />
 	</>
 ));
