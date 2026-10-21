@@ -14,15 +14,39 @@ import { Reflector } from 'three/examples/jsm/objects/Reflector.js';
 import { floorTex, drawGlass, drawCookie } from './PuppetTest';
 import { chair, glowSprite } from './Set';
 import { W, H, GOLD, INK, SERIF, SANS, txt, subtitle, mark, grain, vignette, ramp, eio, eo, clamp, FONT_CHARS } from './lib';
+import { beam as mkBeam, canvasTex, buildHall, buildRadio, buildPlates, buildString, HALL, RAD, PLT, STR } from './Sets3D';
 
-export const CINE_LEN_S = 24.9, CINE_FRAMES = Math.round(CINE_LEN_S * 30);
+export const CINE_LEN_S = 122.4, CINE_FRAMES = Math.round(CINE_LEN_S * 30);
 const SPLIT = 4.6, WARM = 8.473, SLAM = 12.55, CREAK = 14.6, TITLE = 16.613, POUR = 18.648, STAGE = 20.683;
+const PROG = 25.12, ANNOT = 29.7, META = 33.40, META_T = [33.40, 34.16, 34.93, 35.69], DRIFT = 36.86, FINALE = 103.55, HIT2 = 105.64, CODA = 108.184, SUN = 111.745, END = 115.815;
 const LINES: [number, number, string][] = [
   [0.33, 3.54, '你可能也随口说过：“我精分了”'],
   [4.40, 7.76, '在电影里，精神分裂常常是这样：'],
   [8.47, 11.40, '一个身体里，住着{两个人}'],
   [12.54, 15.75, '可医生说的“分裂”，到底是什么？'],
   [20.68, 24.61, '“好几个人格”，是另一种病：分离性身份障碍'],
+  [25.12, 29.19, '1908年，瑞士医生布洛伊勒造了这个词'],
+  [29.70, 32.91, '他说的“分裂”，不是分成两个人'],
+  [33.42, 36.35, '而是看见、听见、思考、感受——'],
+  [36.86, 40.36, '这些本该一起动的部分，[不再合拍]'],
+  [40.87, 44.51, '全世界，大约每300人里就有1个'],
+  [45.02, 48.66, '它最常出现在十几岁末到二十几岁'],
+  [49.17, 51.96, '和你我，差不多的年纪'],
+  [52.53, 56.17, '最常见的，是听见别人听不到的声音'],
+  [56.74, 59.95, '对他来说，那声音和真的一样'],
+  [60.52, 64.88, '斯坦福的人类学家，问了三座城市的60位患者'],
+  [65.45, 68.95, '美国加州：声音大多刺耳，带着{威胁}'],
+  [69.51, 73.43, '印度金奈：过半的人听到家人，像长辈叮嘱'],
+  [73.99, 77.77, '加纳阿克拉：一半人说，大多是好的声音'],
+  [78.33, 81.68, '同一种病，为什么听到的不一样？'],
+  [82.24, 85.74, '研究者认为：声音，也有[文化]的口音'],
+  [86.44, 90.65, '名字也是一种声音。日本、韩国、台湾先后改了名'],
+  [91.29, 94.65, '三个新名字里，都有同一个字：[调]'],
+  [95.28, 98.78, '韩国的新名字，意思是“给琴弦调音”'],
+  [99.42, 102.92, '不是两个人，是一个人的弦，[走了调]'],
+  [103.55, 107.62, '世卫组织说：至少三分之一的人，能完全康复'],
+  [108.18, 111.55, '所以，下次别再随口说“我精分了”'],
+  [111.75, 115.75, '身体里没有两个人，只有一个人，在慢慢调弦'],
 ];
 const rng = (s: number) => () => { s = (s * 16807) % 2147483647; return (s - 1) / 2147483646; };
 
@@ -107,7 +131,7 @@ const WORD = [{ c: '精', x: FW * 0.25, t0: 0.55, t1: 1.6 }, { c: '分', x: FW *
 const DRIPS = (() => { const r = rng(7); return Array.from({ length: 9 }, (_, i) => ({ x: (i < 5 ? FW * 0.25 : FW * 0.75) + (r() - 0.5) * 220, y: FH * 0.52 + r() * 40, t0: 2.4 + r() * 3.5, v: 40 + r() * 70, len: 120 + r() * 260 })); })();
 let TINT: HTMLCanvasElement | null = null;
 const drawFog = (g: CanvasRenderingContext2D, t: number) => {
-  g.clearRect(0, 0, FW, FH); g.drawImage(fogBase(), 0, 0);
+  const dawn = t >= CODA; g.clearRect(0, 0, FW, FH); g.globalAlpha = dawn ? 1 - 0.8 * eio(ramp(t, CODA + 0.8, 3.6)) : 1; g.drawImage(fogBase(), 0, 0); g.globalAlpha = 1;
   g.save(); g.globalCompositeOperation = 'destination-out';
   for (const w of WORD) { const k = ramp(t, w.t0, w.t1 - w.t0); if (k <= 0) continue; g.save(); g.beginPath(); g.rect(w.x - 170, FH * 0.2, 340, 420 * eio(k) + 1); g.clip();
     g.font = `900 300px ${SANS}`; g.textAlign = 'center'; g.textBaseline = 'middle'; g.fillStyle = '#000'; g.strokeStyle = '#000'; g.lineWidth = 16; g.lineJoin = 'round'; g.lineCap = 'round';
@@ -115,12 +139,12 @@ const drawFog = (g: CanvasRenderingContext2D, t: number) => {
     /* the wiped glass is darker than the fog around it: tint the strokes so the word always reads */
     if (!TINT) { TINT = document.createElement('canvas'); TINT.width = FW; TINT.height = FH; } const q = TINT.getContext('2d')!; q.clearRect(0, 0, FW, FH);
     q.font = g.font; q.textAlign = 'center'; q.textBaseline = 'middle'; q.fillStyle = q.strokeStyle = '#05080c'; q.lineWidth = 16; q.lineJoin = 'round'; q.fillText(w.c, w.x, FH * 0.42); q.strokeText(w.c, w.x, FH * 0.42);
-    g.globalCompositeOperation = 'source-over'; g.globalAlpha = 0.62; g.drawImage(TINT, 0, 0); g.globalAlpha = 1;
+    g.globalCompositeOperation = 'source-over'; g.globalAlpha = 0.62 * (dawn ? 1 - eio(ramp(t, CODA + 0.8, 3.6)) : 1); g.drawImage(TINT, 0, 0); g.globalAlpha = 1;
     g.globalCompositeOperation = 'destination-out'; g.restore(); }
   for (const d of DRIPS) { if (t < d.t0) continue; const L = Math.min(d.len, (t - d.t0) * d.v * (1 / (1 + (t - d.t0) * 0.35))); g.lineWidth = 7; g.strokeStyle = 'rgba(0,0,0,.9)'; g.beginPath(); g.moveTo(d.x, d.y); g.lineTo(d.x + Math.sin(d.y * 0.1) * 3, d.y + L); g.stroke(); }
   g.restore();
   for (const d of DRIPS) { if (t < d.t0) continue; const L = Math.min(d.len, (t - d.t0) * d.v * (1 / (1 + (t - d.t0) * 0.35))); g.fillStyle = 'rgba(225,236,246,.6)'; g.beginPath(); g.ellipse(d.x + Math.sin(d.y * 0.1) * 3, d.y + L, 5, 7, 0, 0, 7); g.fill(); }
-  if (t >= SLAM) CRACK.edges.forEach((e, i) => { if (t < e.t) return; crackLine(g, e.a, e.b, eo(ramp(t, e.t, 0.06)), e.w, 300 + i); });
+  if (t >= SLAM && !dawn) CRACK.edges.forEach((e, i) => { if (t < e.t) return; crackLine(g, e.a, e.b, eo(ramp(t, e.t, 0.06)), e.w, 300 + i); });
 };
 
 /* the title, burnt into a canvas */
@@ -158,8 +182,23 @@ const BATH_KEYS: Key[] = [
 const X0 = 60; // the stage lives far away in the same scene
 const STAGE_KEYS: Key[] = [
   [STAGE, X0 + 3.4, 3.9, 5.6, X0, 0.55, -0.4, 31],
-  [CINE_LEN_S, X0 + 2.0, 2.15, 3.9, X0, 0.75, -0.4, 31],
+  [24.9, X0 + 2.0, 2.15, 3.9, X0, 0.75, -0.4, 31],
+  [27.5, X0 + 1.15, 2.55, 1.75, X0, 1.1, 0.74, 32],
+  [30.2, X0 + 0.3, 1.78, 0.3, X0, 1.12, 0.74, 30],
+  [33.38, X0 + 0.06, 1.52, 0.38, X0, 1.125, 0.745, 27],
 ];
+const META_KEYS: Key[] = [[META, X0, 1.2, 4.9, X0, 1.05, 1.6, 34], [DRIFT - 0.02, X0, 1.12, 4.0, X0, 1.06, 1.6, 33]];
+const DRIFT_KEYS: Key[] = [[DRIFT, X0 - 2.1, 1.02, 2.65, X0 - 1.2, 1.1, 1.6, 30], [HALL.t0, X0 + 1.5, 1.02, 2.6, X0 + 2.3, 1.1, 1.6, 30]];
+const FINALE_KEYS: Key[] = [[FINALE, X0, 2.5, 6.6, X0, 0.9, 0.8, 34], [CODA, X0, 1.6, 4.5, X0, 1.0, 1.0, 32]];
+const CODA_KEYS: Key[] = [[CODA, 0.05, 1.53, 1.25, 0, 1.53, 0, 34], [END, 0.34, 1.46, 2.7, 0, 1.5, 0, 37]];
+const MX = [-1.35, -0.45, 0.45, 1.35], MZ = 1.6, PARTS = ['看见', '听见', '思考', '感受'], MD = [0, 0.9, -0.7, 1.6];
+/* metronome swing: in step on the beat, drifting apart after DRIFT, back in step for the finale */
+const metro = (i: number, t: number) => {
+  const base = (Math.PI * (t - 0.334)) / 0.5087; const d1 = Math.pow(Math.max(0, Math.min(t, HALL.t0) - DRIFT), 1.4) * MD[i];
+  const d = t < FINALE ? d1 : Math.pow(HALL.t0 - DRIFT, 1.4) * MD[i] * (1 - eio(ramp(t, FINALE + 0.15, HIT2 - FINALE - 0.15)));
+  const amp = t < FINALE ? 0.36 * ramp(t, META_T[i], 0.3) : 0.36; return amp * Math.sin(base + d);
+};
+
 
 
 /* ------------------------------------------------------------------ the person in the mirror (only the mirror cameras can see them):
@@ -186,7 +225,10 @@ const person = (layer: number): Fig => {
   return { root, torso, head, key, rim };
 };
 /* ------------------------------------------------------------------ the world */
+type SetH = { g: THREE.Group; update: (t: number) => number[] };
 type Refs = {
+  prog: { g: CanvasRenderingContext2D; tex: THREE.CanvasTexture }; pends: THREE.Group[]; mspots: THREE.SpotLight[]; mbeams: THREE.ShaderMaterial[]; warmFill: THREE.HemisphereLight; moon: THREE.SpotLight; dawnFill: THREE.PointLight;
+  hall: SetH; radio: SetH; plates: SetH; str: SetH;
   innerG: THREE.Group; figs: Fig[]; refls: Reflector[]; fogMat: THREE.MeshBasicMaterial;
   bath: THREE.Group; stage: THREE.Group; doors: THREE.Group[]; overlays: THREE.Mesh[]; fog: CanvasRenderingContext2D; fogTex: THREE.CanvasTexture;
   glass: CanvasRenderingContext2D; glassTex: THREE.CanvasTexture; cookie: CanvasRenderingContext2D; cookieTex: THREE.CanvasTexture;
@@ -198,6 +240,21 @@ type Refs = {
 const M = (o: THREE.MeshStandardMaterialParameters) => new THREE.MeshStandardMaterial(o);
 const add = (parent: THREE.Object3D, geo: THREE.BufferGeometry, mat: THREE.Material, x: number, y: number, z: number, cast = true) => { const m = new THREE.Mesh(geo, mat); m.position.set(x, y, z); m.castShadow = cast; m.receiveShadow = true; parent.add(m); return m; };
 
+/* the concert programme on the music stand: Berlin, 24 April 1908 */
+const drawProg = (c: CanvasRenderingContext2D, t: number) => {
+  const W2 = 1024, H2 = 736; const r = rng(88); const bg = c.createRadialGradient(W2 / 2, H2 / 2, 100, W2 / 2, H2 / 2, 700); bg.addColorStop(0, '#efe4cc'); bg.addColorStop(1, '#cdb994'); c.fillStyle = bg; c.fillRect(0, 0, W2, H2);
+  for (let i = 0; i < 400; i++) { c.fillStyle = `rgba(120,90,50,${r() * 0.08})`; c.fillRect(r() * W2, r() * H2, 1 + r() * 3, 1 + r() * 3); }
+  c.strokeStyle = 'rgba(90,60,30,.7)'; c.lineWidth = 3; c.strokeRect(36, 36, W2 - 72, H2 - 72); c.lineWidth = 1; c.strokeRect(48, 48, W2 - 96, H2 - 96);
+  c.textAlign = 'center'; c.fillStyle = '#4a3622';
+  c.font = `600 30px ${SERIF}`; c.fillText('DEUTSCHER VEREIN FÜR PSYCHIATRIE', W2 / 2, 120);
+  c.font = `600 38px ${SERIF}`; c.fillText('BERLIN · 24. APRIL 1908', W2 / 2, 185);
+  c.strokeStyle = 'rgba(90,60,30,.6)'; c.beginPath(); c.moveTo(300, 222); c.lineTo(724, 222); c.stroke();
+  c.font = `italic 700 118px ${SERIF}`; c.fillStyle = '#7a2a1c'; c.fillText('Schizophrenie', W2 / 2, 360);
+  c.font = `600 34px ${SERIF}`; c.fillStyle = '#4a3622'; c.fillText('Prof. E. BLEULER · ZÜRICH', W2 / 2, 440);
+  const a = ramp(t, ANNOT, 0.6); if (a > 0) { c.save(); c.globalAlpha = a; c.translate(W2 / 2, 560); c.rotate(-0.03); c.font = `700 54px ${SANS}`; c.fillStyle = '#1f3a6e';
+    c.fillText('schizo 分裂  ·  phren 心智', 0, 0); c.strokeStyle = '#1f3a6e'; c.lineWidth = 4; c.beginPath(); c.moveTo(-330, 22); c.quadraticCurveTo(0, 34, 330, 18); c.stroke();
+    c.font = `600 40px ${SANS}`; c.fillText('≠ 两个人', 230, 100); c.restore(); }
+};
 const World: React.FC<{ t: number }> = ({ t }) => {
   const { scene, camera, gl } = useThree();
   const S = useMemo<Refs>(() => {
@@ -320,8 +377,27 @@ const World: React.FC<{ t: number }> = ({ t }) => {
     placeChair(0, 0.15);
     const stand = M({ color: '#1b1c1e', metalness: 0.7, roughness: 0.4 });
     add(stage, new THREE.CylinderGeometry(0.01, 0.01, 1.05, 10), stand, 0, 0.53, 0.75); add(stage, new THREE.CylinderGeometry(0.16, 0.16, 0.01, 3), stand, 0, 0.01, 0.75);
-    const desk = add(stage, new THREE.BoxGeometry(0.5, 0.34, 0.01), stand, 0, 1.12, 0.73); desk.rotation.x = -0.35;
-    const sheet = add(stage, new THREE.PlaneGeometry(0.42, 0.29), M({ color: '#e9e1cf', roughness: 0.9 }), 0, 1.125, 0.723, false); sheet.rotation.x = -0.35 + Math.PI; sheet.rotation.y = Math.PI;
+    const deskG = new THREE.Group(); deskG.position.set(0, 1.12, 0.73); deskG.rotation.x = 0.35; stage.add(deskG);
+    add(deskG, new THREE.BoxGeometry(0.56, 0.4, 0.01), stand, 0, 0, 0);
+    const prog = canvasTex(1024, 736);
+    const sheet = add(deskG, new THREE.PlaneGeometry(0.5, 0.36), M({ map: prog.tex, roughness: 0.9 }), 0, 0.005, -0.0065, false); sheet.rotation.y = Math.PI;
+    /* four plinths at the front of the stage, one metronome each, a brass plate naming the part of the mind; each gets its own spot */
+    const plinthM = M({ color: '#141210', roughness: 0.45 }), mwood = M({ color: '#4a2a17', roughness: 0.3 }), mbrass = M({ color: '#d0aa62', metalness: 1, roughness: 0.25 });
+    const pends: THREE.Group[] = [], mspots: THREE.SpotLight[] = [], mbeams: THREE.ShaderMaterial[] = [];
+    MX.forEach((x, i) => {
+      add(stage, new THREE.BoxGeometry(0.32, 1.0, 0.32), plinthM, x, 0.5, MZ);
+      const lab = canvasTex(512, 200); { const c = lab.g; const b = c.createLinearGradient(0, 0, 512, 200); b.addColorStop(0, '#8a6a34'); b.addColorStop(0.5, '#cfab66'); b.addColorStop(1, '#7a5c2c'); c.fillStyle = b; c.fillRect(0, 0, 512, 200);
+        c.strokeStyle = 'rgba(40,28,10,.6)'; c.lineWidth = 6; c.strokeRect(12, 12, 488, 176); c.font = `700 112px ${SERIF}`; c.textAlign = 'center'; c.fillStyle = 'rgba(255,238,200,.45)'; c.fillText(PARTS[i], 256, 144); c.fillStyle = 'rgba(38,26,10,.92)'; c.fillText(PARTS[i], 256, 141); }
+      add(stage, new THREE.PlaneGeometry(0.26, 0.1), M({ map: lab.tex, metalness: 0.85, roughness: 0.32 }), x, 0.8, MZ + 0.161, false);
+      add(stage, new THREE.CylinderGeometry(0.035, 0.09, 0.24, 4).rotateY(Math.PI / 4), mwood, x, 1.12, MZ);
+      add(stage, new THREE.BoxGeometry(0.03, 0.17, 0.004).rotateX(-0.16), M({ color: '#e7dcc4', roughness: 0.6 }), x, 1.1, MZ + 0.047, false);
+      const tilt = new THREE.Group(); tilt.position.set(x, 1.03, MZ + 0.068); tilt.rotation.x = -0.16; stage.add(tilt);
+      const pend = new THREE.Group(); tilt.add(pend); pends.push(pend);
+      add(pend, new THREE.BoxGeometry(0.005, 0.23, 0.004), mbrass, 0, 0.115, 0); add(pend, new THREE.BoxGeometry(0.03, 0.024, 0.014), mbrass, 0, 0.15, 0.002);
+      const sp = new THREE.SpotLight('#ffe0b0', 0, 0, 0.13, 0.45, 2); sp.position.set(x, 5.5, MZ + 0.9); sp.target.position.set(x, 1.0, MZ); stage.add(sp, sp.target); mspots.push(sp);
+      const bm = mkBeam('#ffd9a6', 4.5, 0.1, 0.05); bm.mesh.position.set(x, 3.25, MZ + 0.15); stage.add(bm.mesh); mbeams.push(bm.mat);
+    });
+    const warmFill = new THREE.HemisphereLight('#ffcf9a', '#1a120c', 0); stage.add(warmFill);
     stage.add(new THREE.HemisphereLight('#2a3440', '#080706', 0.07));
     const spot = new THREE.SpotLight('#ffe2b8', 0, 0, 0.17, 0.3, 2); spot.position.set(0, 7.5, 0.35); spot.target.position.set(0, 0, 0.35);
     spot.castShadow = true; spot.shadow.mapSize.set(1024, 1024); spot.shadow.bias = -0.0004; spot.shadow.radius = 3; spot.shadow.camera.near = 3; spot.shadow.camera.far = 9; stage.add(spot, spot.target);
@@ -336,29 +412,35 @@ const World: React.FC<{ t: number }> = ({ t }) => {
     const dg = new THREE.BufferGeometry(); dg.setAttribute('position', new THREE.BufferAttribute(dustBase.slice(), 3));
     const dust = new THREE.Points(dg, new THREE.PointsMaterial({ color: '#ffe0b0', size: 0.016, transparent: true, opacity: 0, blending: THREE.AdditiveBlending, depthWrite: false })); stage.add(dust);
     const figs = [person(1), person(2)]; for (const f of figs) bath.add(f.root, f.key, f.rim);
-    return { figs, refls, fogMat, innerG, bath, stage, doors, overlays, fog, fogTex, glass, glassTex, cookie, cookieTex, title, titleTex, titleMesh, titleGlow, titleLight, tube, tubeLight, tubeFill, warmShade, warmLight, warmGlow, shards, shardRoot, spot, beam, dust, dustBase, motes, moteBase, rim };
+    const dawnFill = new THREE.PointLight('#ffd2a8', 0, 4, 2); dawnFill.position.set(0.9, 1.9, 1.6); bath.add(dawnFill);
+    const hall = buildHall(), radio = buildRadio(gl), plates = buildPlates(gl), str = buildString(); scene.add(hall.g, radio.g, plates.g, str.g);
+    return { prog, pends, mspots, mbeams, warmFill, moon, dawnFill, hall, radio, plates, str, figs, refls, fogMat, innerG, bath, stage, doors, overlays, fog, fogTex, glass, glassTex, cookie, cookieTex, title, titleTex, titleMesh, titleGlow, titleLight, tube, tubeLight, tubeFill, warmShade, warmLight, warmGlow, shards, shardRoot, spot, beam, dust, dustBase, motes, moteBase, rim };
   }, [scene, gl]);
 
   const cam = camera as THREE.PerspectiveCamera;
-  const inStage = t >= STAGE;
-  S.bath.visible = !inStage; S.stage.visible = inStage;
-  scene.fog = inStage ? new THREE.FogExp2('#070606', 0.045) : new THREE.FogExp2('#0b1115', 0.06);
+  const seg = t < STAGE ? 'bath' : t < HALL.t0 ? 'stage' : t < RAD.t0 ? 'hall' : t < PLT.t0 ? 'radio' : t < STR.t0 ? 'plates' : t < FINALE ? 'string' : t < CODA ? 'stage' : 'bath';
+  const dawn = t >= CODA, finale = t >= FINALE;
+  S.bath.visible = seg === 'bath'; S.stage.visible = seg === 'stage'; S.hall.g.visible = seg === 'hall'; S.radio.g.visible = seg === 'radio'; S.plates.g.visible = seg === 'plates'; S.str.g.visible = seg === 'string';
+  const FOG: Record<string, [string, number]> = { bath: dawn ? ['#1c1813', 0.05] : ['#0b1115', 0.06], stage: ['#070606', 0.045], hall: ['#07070a', 0.03], radio: ['#0a0e12', 0.07], plates: ['#0a0806', 0.05], string: ['#070605', 0.2] };
+  scene.fog = new THREE.FogExp2(FOG[seg][0], FOG[seg][1]);
   let p: number[];
-  if (!inStage) {
+  if (seg === 'bath') {
     /* --- doors: drift open, hold, slam at the crack */
     const open = 0.5 * eio(ramp(t, SPLIT, 3.4));
     const slamK = ramp(t, SLAM - 0.3, 0.3); const bounce = t > SLAM ? 0.03 * Math.exp(-(t - SLAM) * 9) * Math.abs(Math.sin((t - SLAM) * 30)) : 0;
-    const a = t < SLAM - 0.3 ? open : t < SLAM ? open * (1 - slamK * slamK) : bounce;
+    const a = dawn ? 0 : t < SLAM - 0.3 ? open : t < SLAM ? open * (1 - slamK * slamK) : bounce;
     S.doors[0].rotation.y = -a; S.doors[1].rotation.y = a;
     /* --- fog, cracks, rain */
     drawFog(S.fog, t); S.fogTex.needsUpdate = true;
-    drawGlass(S.glass, 512, 512, t); S.glassTex.needsUpdate = true; drawCookie(S.cookie, 256, t); S.cookieTex.needsUpdate = true;
+    drawGlass(S.glass, 512, 512, t); if (dawn) { const gg = S.glass; const sky = gg.createLinearGradient(0, 0, 0, 512); sky.addColorStop(0, 'rgba(255,196,140,.8)'); sky.addColorStop(1, 'rgba(160,178,196,.7)'); gg.fillStyle = sky; gg.fillRect(0, 0, 512, 512); } S.glassTex.needsUpdate = true;
+    if (dawn) { S.cookie.fillStyle = '#fff'; S.cookie.fillRect(0, 0, 256, 256); } else drawCookie(S.cookie, 256, t); S.cookieTex.needsUpdate = true;
     /* --- lights: the tube hums and flickers; the warm lamp comes on at the hit; everything dies when the mirror bursts */
     const flick = (t > 2.3 && t < 2.5 && Math.sin(t * 90) > 0.2) || (t > 10.1 && t < 10.18) ? 0.35 : 1;
-    const burst = t >= TITLE; const pop = burst ? Math.max(0, 1 - (t - TITLE) / 0.1) : 0;
-    const tubeK = burst ? pop * 2.5 : flick * (t > SLAM && t < SLAM + 0.08 ? 1.8 : 1);
+    const burst = !dawn && t >= TITLE; const pop = burst ? Math.max(0, 1 - (t - TITLE) / 0.1) : 0;
+    const tubeK = dawn ? 0 : burst ? pop * 2.5 : flick * (t > SLAM && t < SLAM + 0.08 ? 1.8 : 1);
     S.tube.emissiveIntensity = 2.2 * tubeK; S.tubeLight.intensity = 9 * tubeK; S.tubeFill.intensity = 1.2 * tubeK;
     const warm = burst ? 0 : ramp(t, WARM, 0.08) * (1 - 0.3 * Math.max(0, Math.sin((t - WARM) * 40)) * Math.exp(-(t - WARM) * 8));
+    const sun = dawn ? 0.5 + 0.5 * eio(ramp(t, SUN, 0.9)) : 0; S.moon.color.set(dawn ? '#ffcf9e' : '#9db6cc'); S.moon.intensity = dawn ? 120 + 170 * eio(ramp(t, SUN, 0.9)) : 130; S.dawnFill.intensity = 2.5 * sun;
     S.warmShade.emissiveIntensity = 1.6 * warm; S.warmLight.intensity = 5.5 * warm; (S.warmGlow.material as THREE.SpriteMaterial).opacity = 0.5 * warm;
     /* --- shards */
     S.overlays.forEach((o) => { o.visible = !burst; }); S.doors.forEach((d) => { d.visible = !burst; }); S.innerG.visible = !burst;
@@ -374,25 +456,31 @@ const World: React.FC<{ t: number }> = ({ t }) => {
     for (let i = 0; i < mp.count; i++) { const b = i * 3; mp.setXYZ(i, S.moteBase[b] + Math.sin(t * 0.2 + i) * 0.05, S.moteBase[b + 1] + ((t * 0.02 + i * 0.137) % 0.3) - 0.15, S.moteBase[b + 2] + Math.cos(t * 0.15 + i * 1.7) * 0.05); }
     mp.needsUpdate = true;
     /* --- camera: slow push; a jolt at the slam; a recoil at the burst, then through the title */
-    if (t < TITLE) p = herm(BATH_KEYS, t);
+    if (dawn) p = herm(CODA_KEYS, t);
+    else if (t < TITLE) p = herm(BATH_KEYS, t);
     else { const s = t - TITLE; const back = 0.42 * eo(ramp(s, 0, 0.35)) - 0.12 * eio(ramp(s, 0.35, 3.0)); const thru = Math.pow(ramp(t, 19.95, 0.7), 2.4) * 1.25;
       p = [0, 1.55, 1.0 + back - thru, 0, 1.55, 0, 34 - 3 * eio(ramp(s, 0.35, 3.2))]; }
     const shake = (t > SLAM ? 0.012 * Math.exp(-(t - SLAM) * 6) : 0) + (t > TITLE ? 0.02 * Math.exp(-(t - TITLE) * 5) : 0);
     p[0] += Math.sin(t * 0.7) * 0.004 + Math.sin(t * 1.9 + 1) * 0.002 + shake * Math.sin(t * 61); p[1] += Math.sin(t * 0.9 + 2) * 0.003 + shake * Math.cos(t * 53);
-  } else {
-    const k = ramp(t, STAGE, 0.05) * (1 - 0.35 * Math.max(0, Math.sin((t - STAGE) * 37)) * Math.exp(-(t - STAGE) * 6));
-    S.spot.intensity = 700 * k; S.beam.uniforms.uI.value = k; S.rim.intensity = 0.5 * ramp(t, STAGE + 0.4, 1.5);
+  } else if (seg === 'stage') {
+    const k0 = ramp(t, STAGE, 0.05) * (1 - 0.35 * Math.max(0, Math.sin((t - STAGE) * 37)) * Math.exp(-(t - STAGE) * 6));
+    const k = finale ? 0.55 + 0.45 * eio(ramp(t, HIT2, 0.5)) : k0 * (1 - 0.82 * ramp(t, META, 0.4));
+    S.spot.intensity = 700 * k; S.beam.uniforms.uI.value = k; S.rim.intensity = finale ? 0.5 + 0.9 * ramp(t, HIT2, 0.8) : 0.5 * ramp(t, STAGE + 0.4, 1.5);
+    S.warmFill.intensity = finale ? 0.08 + 0.3 * eio(ramp(t, HIT2, 0.8)) : 0;
+    S.pends.forEach((pd, i) => { pd.rotation.z = metro(i, t); const on = finale ? 1 : ramp(t, META_T[i], 0.06) * (t >= META ? 1 : 0); S.mspots[i].intensity = 230 * on * (finale ? 1 + 0.3 * ramp(t, HIT2, 0.5) : 1); S.mbeams[i].uniforms.uI.value = 0.8 * on; });
+    if (t < META) { drawProg(S.prog.g, t); S.prog.tex.needsUpdate = true; }
     (S.dust.material as THREE.PointsMaterial).opacity = 0.75 * k;
     const dp = S.dust.geometry.attributes.position as THREE.BufferAttribute;
     for (let i = 0; i < dp.count; i++) { const b = i * 3; dp.setXYZ(i, S.dustBase[b] + Math.sin(t * 0.3 + i) * 0.04, S.dustBase[b + 1] + Math.sin(t * 0.2 + i * 0.7) * 0.08 + t * 0.01, S.dustBase[b + 2] + Math.cos(t * 0.25 + i * 1.3) * 0.04); }
     dp.needsUpdate = true;
-    p = herm(STAGE_KEYS, t);
+    p = finale ? herm(FINALE_KEYS, t) : t < META ? herm(STAGE_KEYS, t) : t < DRIFT ? herm(META_KEYS, t) : herm(DRIFT_KEYS, t);
     p[0] += Math.sin(t * 0.6) * 0.006; p[1] += Math.sin(t * 0.8 + 1) * 0.004;
-  }
+  } else p = (seg === 'hall' ? S.hall : seg === 'radio' ? S.radio : seg === 'plates' ? S.plates : S.str).update(t);
+
   cam.position.set(p[0], p[1], p[2]); cam.lookAt(p[3], p[4], p[5]); cam.fov = p[6]; cam.near = 0.03; cam.far = 60; cam.updateProjectionMatrix();
 
   /* the two people in the mirror: wherever each door's glass looks, put someone there (reflected into the room, seen only by that door) */
-  if (!inStage && t < TITLE) {
+  if (seg === 'bath' && (t < TITLE || dawn)) {
     S.bath.updateMatrixWorld(true); const doorA = S.doors[0].rotation.y; const k = clamp(Math.abs(doorA) / 0.5);
     const M0 = new THREE.Vector3(0, 1.55, 0.134); const vC = M0.clone().add(M0.clone().sub(cam.position).setY(0).normalize().multiplyScalar(1.3));
     const breathe = Math.sin((t / 4.2) * Math.PI * 2);
@@ -404,16 +492,17 @@ const World: React.FC<{ t: number }> = ({ t }) => {
       F.root.position.copy(X); F.root.rotation.y = Math.atan2(f.x, f.z);
       F.torso.scale.y = 1 + 0.006 * breathe; F.torso.position.y = 1.0 + 0.002 * breathe;
       const tilt = (i === 0 ? 1 : -1) * 0.07 * eio(ramp(t, WARM + 0.4, 2.2)) * (t < SLAM ? 1 : Math.max(0, 1 - (t - SLAM) * 3));
-      F.head.rotation.set(0.04 + Math.sin(t * 0.37 + i) * 0.01, (i === 0 ? 1 : -1) * 0.05 * eio(ramp(t, WARM + 0.4, 2.2)) * (t < SLAM ? 1 : 0), tilt);
+      F.head.rotation.set(0.04 + Math.sin(t * 0.37 + i) * 0.01, dawn ? 0 : (i === 0 ? 1 : -1) * 0.05 * eio(ramp(t, WARM + 0.4, 2.2)) * (t < SLAM ? 1 : 0), dawn ? 0 : tilt);
       const side = new THREE.Vector3(f.z, 0, -f.x); const warmK = i === 0 ? ramp(t, WARM, 0.08) * (t < SLAM ? 1 : 0) : 0;
       F.key.position.copy(X).addScaledVector(f, 0.75).addScaledVector(side, i === 0 ? -0.6 : 0.6).setY(1.85);
       F.key.color.set('#a8bccc').lerp(new THREE.Color('#ffae62'), warmK); F.key.intensity = 0.9 + 2.2 * warmK + (i === 1 && t > WARM && t < SLAM ? 0.5 : 0);
       F.rim.position.copy(X).addScaledVector(f, -0.35).addScaledVector(side, i === 0 ? 0.45 : -0.45).setY(1.95); F.rim.color.set(i === 0 && warmK > 0 ? '#ffc58a' : '#8fb0d0'); F.rim.intensity = 4;
+      if (dawn) { const sk = eio(ramp(t, SUN, 0.9)); F.key.color.set('#ffd2a8'); F.key.intensity = 1.2 + 1.2 * sk; F.rim.color.set('#ffc890'); F.rim.intensity = 3 + 2 * sk; }
     });
-    S.fogMat.opacity = 1 - 0.12 * eio(ramp(t, SPLIT, 4));
+    S.fogMat.opacity = dawn ? 1 : 1 - 0.12 * eio(ramp(t, SPLIT, 4));
   }
   /* glints: each shard flashes when it turns its face between the camera and a light (the title, the window) */
-  if (!inStage && t >= TITLE) { S.shardRoot.updateMatrixWorld(true); const wp = new THREE.Vector3(), n = new THREE.Vector3(), v = new THREE.Vector3(), r = new THREE.Vector3(), l = new THREE.Vector3();
+  if (seg === 'bath' && !dawn && t >= TITLE) { S.shardRoot.updateMatrixWorld(true); const wp = new THREE.Vector3(), n = new THREE.Vector3(), v = new THREE.Vector3(), r = new THREE.Vector3(), l = new THREE.Vector3();
     const TL = new THREE.Vector3(0, 1.55, 0.16), WIN = new THREE.Vector3(0.8, 0.45, 0.4).normalize(); const tk = ramp(t, TITLE, 0.3) * (0.5 + 0.5 * ramp(t, POUR, 0.6));
     for (const sh of S.shards) { sh.g.getWorldPosition(wp); n.set(0, 0, 1).applyQuaternion(sh.g.quaternion); v.copy(cam.position).sub(wp).normalize(); if (n.dot(v) < 0) n.negate();
       r.copy(v).negate().reflect(n); const g1 = Math.pow(Math.max(0, r.dot(l.copy(TL).sub(wp).normalize())), 30) * tk, g2 = Math.pow(Math.max(0, r.dot(WIN)), 30);
@@ -423,19 +512,38 @@ const World: React.FC<{ t: number }> = ({ t }) => {
 
 /* ------------------------------------------------------------------ 2D on top: letterbox, subtitles, tagline, mark, grain, fades */
 const BAR = 100;
+const endCard = (g: CanvasRenderingContext2D, T: number) => {
+  const k = ramp(T, END, 0.6); if (k <= 0) return;
+  g.save(); g.fillStyle = `rgba(6,7,10,${0.88 * k})`; g.fillRect(0, 0, W, H); g.restore();
+  const ring = eio(ramp(T, END + 0.1, 0.9)); g.save(); g.globalAlpha = k; g.strokeStyle = GOLD; g.lineWidth = 3; g.beginPath(); g.arc(960, 200, 46, -Math.PI / 2, -Math.PI / 2 + Math.PI * 2 * ring); g.stroke(); g.restore();
+  txt(g, 'J', 958, 224, 64, GOLD, { f: SERIF, alpha: k * ramp(T, END + 0.5, 0.4) }); txt(g, 'JUNO', 960, 276, 20, 'rgba(243,237,226,.7)', { w: 500, alpha: k * ramp(T, END + 0.6, 0.4) });
+  const ta = k * ramp(T, END + 0.4, 0.5); const gr = g.createLinearGradient(0, 330, 0, 410); gr.addColorStop(0, '#fff0c4'); gr.addColorStop(0.5, GOLD); gr.addColorStop(1, '#c8913a');
+  g.save(); g.globalAlpha = ta; g.font = `700 72px ${SERIF}`; g.textAlign = 'center'; g.fillStyle = gr; g.shadowColor = 'rgba(241,197,109,.4)'; g.shadowBlur = 20; g.fillText('《身体里住着两个人》', 960, 390); g.restore();
+  /* motif: four metronome rods back in step */
+  g.save(); g.globalAlpha = ta; g.strokeStyle = GOLD; g.lineWidth = 3; for (let i = 0; i < 4; i++) { const x = 870 + i * 60, a = 0.3 * Math.sin((Math.PI * (T - 0.334)) / 0.5087); g.beginPath(); g.moveTo(x, 490); g.lineTo(x + Math.sin(a) * 50, 490 - Math.cos(a) * 50); g.stroke(); g.fillStyle = GOLD; g.fillRect(x - 12, 490, 24, 4); } g.restore();
+  txt(g, '三个新名字，你觉得哪个最贴切？评论区见', 960, 580, 46, INK, { w: 700, alpha: k * ramp(T, END + 0.9, 0.5) });
+  txt(g, '如果你或身边的人正在经历，可以拨打 12356 全国心理援助热线（24小时）', 960, 645, 28, 'rgba(243,237,226,.75)', { w: 500, alpha: k * ramp(T, END + 1.1, 0.5) });
+  const pa = k * ramp(T, END + 1.3, 0.5); g.save(); g.globalAlpha = pa; g.strokeStyle = GOLD; g.lineWidth = 2; g.beginPath(); g.roundRect(960 - 260, 700, 520, 74, 37); g.stroke(); g.restore(); txt(g, '关注 Juno · 一起看懂世界', 960, 750, 34, GOLD, { w: 700, alpha: pa });
+  txt(g, '资料：Bleuler 1908（AJP 2008）· Luhrmann et al., Br J Psychiatry 2015 · Cho et al., Psychiatry Investig 2018 · 台湾卫福部 2014 · WHO', 960, 860, 21, 'rgba(243,237,226,.45)', { w: 400, alpha: k * ramp(T, END + 1.6, 0.5) });
+};
 const Overlay: React.FC<{ t: number }> = ({ t }) => {
   const ref = useRef<HTMLCanvasElement>(null);
   useLayoutEffect(() => { const g = ref.current!.getContext('2d')!; g.clearRect(0, 0, W, H);
     vignette(g, 0.55); grain(g, 11 + Math.floor(t * 30), 0.05);
     /* fades: in from black, a flash on the slam, white-gold flash on the burst, black as we go through the title */
-    const blk = Math.max(1 - ramp(t, 0, 0.6), t < STAGE ? ramp(t, 20.3, 0.33) : 0, ramp(t, CINE_LEN_S - 0.6, 0.6));
+    let blk = Math.max(1 - ramp(t, 0, 0.6), t < STAGE ? ramp(t, 20.3, 0.33) : 0, ramp(t, CINE_LEN_S - 0.6, 0.6));
+    for (const c of [HALL.t0, RAD.t0, STR.t0, FINALE, CODA]) blk = Math.max(blk, 1 - clamp(Math.abs(t - c) / 0.16));
+    if (t < PLT.t0) blk = Math.max(blk, ramp(t, PLT.t0 - 0.45, 0.43)); else blk = Math.max(blk, 1 - ramp(t, PLT.t0, 0.3));
+    if (t > RAD.drop && t < RAD.drop + 0.2) { g.fillStyle = `rgba(255,230,190,${0.45 * (1 - ramp(t, RAD.drop, 0.2))})`; g.fillRect(0, 0, W, H); }
+    if (t > STR.tune && t < STR.tune + 0.15) { g.fillStyle = `rgba(255,225,170,${0.22 * (1 - ramp(t, STR.tune, 0.15))})`; g.fillRect(0, 0, W, H); }
     if (blk > 0) { g.fillStyle = `rgba(0,0,0,${blk})`; g.fillRect(0, 0, W, H); }
     if (t > SLAM && t < SLAM + 0.15) { g.fillStyle = `rgba(220,235,255,${0.28 * (1 - ramp(t, SLAM, 0.15))})`; g.fillRect(0, 0, W, H); }
     if (t > TITLE && t < TITLE + 0.25) { g.fillStyle = `rgba(255,236,200,${0.55 * (1 - ramp(t, TITLE, 0.25))})`; g.fillRect(0, 0, W, H); }
     const ta = ramp(t, TITLE + 1.6, 0.5) * (1 - ramp(t, 19.85, 0.3));
     txt(g, '精神分裂，到底分裂了什么？', 960, 740, 42, INK, { w: 700, alpha: ta }); txt(g, '— VIBE知识大赏 —', 960, 800, 24, 'rgba(243,237,226,.55)', { w: 500, alpha: ta });
     g.fillStyle = '#000'; g.fillRect(0, 0, W, BAR); g.fillRect(0, H - BAR, W, BAR);
-    mark(g, t >= TITLE && t < STAGE + 0.5 ? 0 : 0.9 * ramp(t, 0.6, 0.5));
+    endCard(g, t);
+    mark(g, t >= TITLE && t < STAGE + 0.5 ? 0 : 0.9 * ramp(t, 0.6, 0.5) * (1 - ramp(t, END, 0.4)));
     const L = LINES.find(([a, b]) => t >= a && t < b); if (L) subtitle(g, L[2], ramp(t, L[0], 0.12) * (1 - ramp(t, L[1] - 0.1, 0.1)));
   }, [t]);
   return <canvas ref={ref} width={W} height={H} style={{ position: 'absolute', inset: 0 }} />;
@@ -444,15 +552,17 @@ const Overlay: React.FC<{ t: number }> = ({ t }) => {
 export const Cine: React.FC = () => {
   const f = useCurrentFrame(); const t = f / 30;
   const [h] = useState(() => delayRender('fonts')); const [ok, setOk] = useState(false);
-  useEffect(() => { const s = FONT_CHARS + LINES.map((l) => l[2]).join('') + TCH.join('') + '精分神裂到底了什么？SCHIZOPHRENIABLEULERMCMVI·—';
-    Promise.all([`700 68px ${SANS}`, `900 68px ${SANS}`, `900 300px ${SANS}`, `700 176px ${SERIF}`, `600 40px ${SERIF}`, `700 42px ${SANS}`, `500 22px ${SANS}`].map((x) => document.fonts.load(x, s).catch(() => null))).then(() => { setOk(true); continueRender(h); }); }, [h]);
+  useEffect(() => { const s = FONT_CHARS + LINES.map((l) => l[2]).join('') + TCH.join('') + '精分神裂到底了什么？SCHIZOPHRENIABLEULERMCMVI·—' + 'DEUTSCHERVEINFÜRPSYCHATBLNAPRIL1908SchizophrenieProf.EÜRICHschizophren分裂心智≠两个人看见听见思考感受' +
+      '加州美国金奈印度阿克拉加纳20人中无以正面为主11听到家10斯坦福Luhrmann3座城市60位患者55607080100120140160170' + '日本2002年統合失調症旧名精神分裂病韩国2011調絃病조현병台湾2014思覺失調症调' + '161718192021222324252627282930' +
+      'J JUNO三个新名字你觉得哪个最贴切评论区见如果或身边的正在经历可以拨打12356全国心理援助热线小时关注一起看懂世界资料BleulerAJPetalBrJPsychiatry2015ChoInvestig2018卫福部WHO（）';
+    Promise.all([`700 68px ${SANS}`, `900 68px ${SANS}`, `900 300px ${SANS}`, `700 176px ${SERIF}`, `600 40px ${SERIF}`, `700 42px ${SANS}`, `500 22px ${SANS}`, `italic 700 118px ${SERIF}`, `700 30px ${SANS}`, `500 36px ${SANS}`, `700 150px ${SERIF}`, `700 46px ${SANS}`, `700 72px ${SERIF}`].map((x) => document.fonts.load(x, s).catch(() => null))).then(() => { setOk(true); continueRender(h); }); }, [h]);
   if (!ok) return null;
   return (
     <AbsoluteFill style={{ background: '#000' }}>
       <ThreeCanvas width={W} height={H} shadows gl={{ antialias: true, toneMapping: THREE.ACESFilmicToneMapping, toneMappingExposure: 1.35, preserveDrawingBuffer: true }} camera={{ fov: 36, near: 0.03, far: 60 }}>
         <World t={t} />
       </ThreeCanvas>
-      <AbsoluteFill style={{ background: t < STAGE ? 'linear-gradient(180deg, rgba(40,70,85,.32), rgba(18,38,52,.32))' : 'linear-gradient(180deg, rgba(60,40,20,.22), rgba(20,14,10,.3))', mixBlendMode: 'soft-light' }} />
+      <AbsoluteFill style={{ background: (t < STAGE || (t >= RAD.t0 && t < PLT.t0)) ? 'linear-gradient(180deg, rgba(40,70,85,.32), rgba(18,38,52,.32))' : t >= CODA ? 'linear-gradient(180deg, rgba(90,60,35,.22), rgba(40,30,25,.25))' : 'linear-gradient(180deg, rgba(60,40,20,.22), rgba(20,14,10,.3))', mixBlendMode: 'soft-light' }} />
       <Overlay t={t} />
     </AbsoluteFill>
   );
