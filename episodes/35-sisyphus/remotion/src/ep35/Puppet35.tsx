@@ -3988,7 +3988,10 @@ const CoverTxt: React.FC<{s: string; style: React.CSSProperties}> = ({s, style})
 	// optical centring for full-width marks at either end (《…》, ？…)
 	const lead = /^[“《「『（]/.test(s), trail = /[？！。，：；、”》」』）]$/.test(s);
 	const body = s.slice(lead ? 1 : 0, trail ? -1 : undefined);
-	return <div style={style}>{lead && <span style={{marginLeft: '-0.5em'}}>{s[0]}</span>}{body}{trail && <span style={{marginRight: '-0.5em'}}>{s.slice(-1)}</span>}</div>;
+	// the letter-spacing after the last glyph is blank too: pull it back so the ink is centred
+	const ls = String(style.letterSpacing ?? '0em');
+	if (trail) return <div style={style}>{lead && <span style={{marginLeft: '-0.5em'}}>{s[0]}</span>}{body}<span style={{marginRight: `calc(-0.5em - ${ls})`}}>{s.slice(-1)}</span></div>;
+	return <div style={style}>{lead && <span style={{marginLeft: '-0.5em'}}>{s[0]}</span>}{body.slice(0, -1)}<span style={{marginRight: `-${ls}`}}>{body.slice(-1)}</span></div>;
 };
 const Cover35: React.FC<{layout: 'wide' | 'tall'}> = ({layout}) => {
 	useFonts();
@@ -4010,9 +4013,9 @@ const Cover35: React.FC<{layout: 'wide' | 'tall'}> = ({layout}) => {
 			{/* a soft dark sky band behind the words, borderless */}
 			<AbsoluteFill style={{background: `linear-gradient(180deg, rgba(4,14,20,0.82) 0%, rgba(4,14,20,0.55) ${wide ? 30 : 26}%, rgba(4,14,20,0) ${wide ? 50 : 44}%)`}} />
 			<div style={{position: 'absolute', left: 0, right: 0, top: wide ? 70 : 96, textAlign: 'center', fontFamily: SERIF, fontWeight: 700}}>
-				<CoverTxt s="最可怕的惩罚" style={{fontSize: wide ? 118 : 116, color: '#f3eee4', letterSpacing: '0.04em', lineHeight: 1.18, textShadow: ink}} />
-				<CoverTxt s="不是累，是没意义" style={{fontSize: wide ? 118 : 116, color: gold, letterSpacing: '0.04em', lineHeight: 1.18, textShadow: glow}} />
-				<CoverTxt s="《推石头的人，是幸福的》" style={{marginTop: wide ? 26 : 30, fontSize: wide ? 50 : 52, color: '#efe8da', letterSpacing: '0.12em', textShadow: ink}} />
+				{/* owner 2026-10-21: a hook line spoils the film — the cover carries only the title */}
+				<CoverTxt s="推石头的人" style={{fontSize: wide ? 150 : 148, color: '#f3eee4', letterSpacing: '0.08em', lineHeight: 1.16, textShadow: ink}} />
+				<CoverTxt s="是幸福的" style={{fontSize: wide ? 150 : 148, color: gold, letterSpacing: '0.08em', lineHeight: 1.16, textShadow: glow}} />
 			</div>
 			<div style={{position: 'absolute', top: 34, right: 42, fontFamily: SERIF, fontSize: 24, letterSpacing: '0.3em', color: 'rgba(236,230,218,0.7)'}}>◆ Juno · VIBE知识大赏</div>
 		</AbsoluteFill>
