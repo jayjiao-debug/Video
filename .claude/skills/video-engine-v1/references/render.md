@@ -28,6 +28,6 @@ script; results land on `modal-output` under `out/<id>/` (files > 90 MB split). 
 Modal; up to 10 GPU containers, ≥ ~30 frames each.
 
 ## Always
-- Quality bar is 1080p: no 4K supersampling, no many-subframe motion blur unless asked.
+- Quality bar is 1080p: no 4K supersampling, no film grain, no many-subframe motion blur unless asked.
 - Commit subset CJK fonts in the project (`fonts/`); the farm falls back to apt only with a 180 s timeout.
 - Long jobs run in the background and are polled; a foreground command is killed at 10 min.

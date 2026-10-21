@@ -87,6 +87,9 @@ Viewers decide in 2 s: films with 2s跳出 ≤ 29 % got pushed, ≥ 34.7 % did n
    the centre of attention is clear. (ep15)
 9. **Fill the frame for a phone.** A landscape film is ~¼ of a portrait phone screen: subjects big, page scenes
    ~80 % of the frame, bigger type beats a different background colour. Quality bar is 1080p, not 4K. (ep11, ep14)
+   **No film grain:** it's invisible at phone size and compression turns it into blotches. For a crafted feel
+   use static paper/canvas texture, soft contact shadows, glow on light sources and particles in the light.
+   (ep14, confirmed 2026-10-21)
 10. **Props carry the joke and the meaning at a glance** (an "embarrassing" T-shirt must look embarrassing).
     Abstract colour blocks read as nothing. Payoff visuals are designed images, never placeholder shapes. (ep14)
 11. **Inner states get a literal, concrete picture** (the mind as a see-through copy walking off toward labelled
