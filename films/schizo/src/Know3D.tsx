@@ -77,9 +77,9 @@ export const buildGears = (o: { t0: number; drift: number; t1: number; keys?: Ke
   const update = (t: number) => {
     /* in step: all at one speed, neighbours turning opposite ways; after the drift, they slip apart and each keeps its own time */
     const d = Math.max(0, t - o.drift); const sep = eio(ramp(t, o.drift, 1.6));
-    const speeds = [1, 1.6, 0.45, -0.7];
+    const speeds = [2.2, 3.4, 0.2, -2.4];
     gears.forEach((gg, i) => { const dir = i % 2 ? -1 : 1; const base = t * 1.6 * dir; const own = d * speeds[i] * 2.2 + (i === 2 ? Math.sin(d * 7) * 0.4 * sep : 0);
-      turns[i].rotation.z = base + own * sep; gg.position.set(pos[i][0] * (1 + 0.38 * sep), pos[i][1] * (1 + 0.38 * sep), 0.004 * Math.sin(d * 3 + i) * sep); });
+      turns[i].rotation.z = base + own * sep; gg.position.set(pos[i][0] * (1 + 0.6 * sep), pos[i][1] * (1 + 0.6 * sep), 0.004 * Math.sin(d * 3 + i) * sep); });
     (sparks.material as THREE.SpriteMaterial).opacity = sep * (0.3 + 0.3 * Math.abs(Math.sin(t * 17)));
     m.head.updateMatrixWorld(true);
     const side = [new THREE.Vector3(-0.17, 0.08, 0), new THREE.Vector3(0.17, 0.08, 0), new THREE.Vector3(0.17, -0.06, 0), new THREE.Vector3(-0.17, -0.06, 0)];
@@ -177,6 +177,8 @@ export const buildGlobe = (o: { t0: number; at: number[]; why: number; t1: numbe
     const board = new THREE.Mesh(new THREE.PlaneGeometry(0.62, 0.39), bmat); g.add(board);
     return { p, n, bm, halo, board, bmat, i };
   });
+  const cul = canvasTex(1200, 300); { const c = cul.g; c.textAlign = 'center'; c.textBaseline = 'middle'; c.font = `900 150px ${SANS}`; const gr = c.createLinearGradient(0, 60, 0, 240); gr.addColorStop(0, '#fff3cc'); gr.addColorStop(0.5, GOLD); gr.addColorStop(1, '#c08a34'); c.shadowColor = 'rgba(255,190,90,.9)'; c.shadowBlur = 30; c.fillStyle = gr; c.fillText('文化的“口音”', 600, 150); }
+  const culM = new THREE.MeshBasicMaterial({ map: cul.tex, transparent: true, toneMapped: false, opacity: 0, depthWrite: false }); const culP = new THREE.Mesh(new THREE.PlaneGeometry(1.1, 0.275), culM); culP.position.set(0, -0.2, 2.55); g.add(culP);
   const title = canvasTex(1600, 220); { const c = title.g; c.textAlign = 'center'; c.font = `700 96px ${SANS}`; c.fillStyle = '#f3ede2'; c.fillText('斯坦福 · 3 座城市 · 60 位患者', 800, 140); }
   const titleM = new THREE.MeshBasicMaterial({ map: title.tex, transparent: true, toneMapped: false, opacity: 0, depthWrite: false }); const titleP = new THREE.Mesh(new THREE.PlaneGeometry(1.6, 0.22), titleM); titleP.position.set(0, 1.28, 0); g.add(titleP);
   g.add(new THREE.HemisphereLight('#c4d4e6', '#0a0c10', 0.9));
@@ -191,12 +193,12 @@ export const buildGlobe = (o: { t0: number; at: number[]; why: number; t1: numbe
     const fly = (from: THREE.Vector3, to: THREE.Vector3, k: number) => { const kk = eio(k); const p = from.clone().lerp(to, kk); const len = from.length() * (1 - kk) + to.length() * kk; return p.normalize().multiplyScalar(len + Math.sin(kk * Math.PI) * 0.9); };
     if (t < o.at[0]) { const k = ramp(t, o.t0, o.at[0] - o.t0); pos = wide.clone().applyAxisAngle(new THREE.Vector3(0, 1, 0), 0.4 * k); }
     else if (seg >= 0) { const prev = seg === 0 ? wide.clone().applyAxisAngle(new THREE.Vector3(0, 1, 0), 0.4) : camFor(seg - 1); pos = fly(prev, camFor(seg), ramp(t, o.at[seg], 1.1)); look = boards[seg].p.clone().addScaledVector(sideOf(boards[seg].n), 0.22).addScaledVector(boards[seg].n, 0.15).lerp(new THREE.Vector3(), 1 - eio(ramp(t, o.at[seg], 1.1))); fov = 34 - 4 * eio(ramp(t, o.at[seg], 1.1)); }
-    else { const k = eio(ramp(t, o.why, 1.4)); pos = fly(camFor(2), new THREE.Vector3(0.0, 0.6, 4.8), k); look = boards[2].p.clone().addScaledVector(sideOf(boards[2].n), 0.22).multiplyScalar(1 - k); fov = 30 + 6 * k; }
+    else { const k = eio(ramp(t, o.why, 1.4)); pos = fly(camFor(2), new THREE.Vector3(0.0, 0.45, 4.9), k); look = boards[2].p.clone().addScaledVector(sideOf(boards[2].n), 0.22).multiplyScalar(1 - k); fov = 30 + 6 * k; }
     boards.forEach((b) => { const act = t >= o.at[b.i] + 0.6 && (t < (o.at[b.i + 1] ?? o.why) + 0.2 || t >= o.why); const a = act ? (t >= o.why ? 0.9 : ramp(t, o.at[b.i] + 0.6, 0.5)) : 0;
       b.bmat.opacity = clamp(a); b.bm.mat.uniforms.uI.value = 0.4 + 1.2 * (t >= o.at[b.i] ? 1 : 0); (b.halo.material as THREE.SpriteMaterial).opacity = (t >= o.at[b.i] ? 0.8 : 0.3) * (0.7 + 0.3 * Math.sin(t * 4 + b.i));
-      const bp = b.p.clone().addScaledVector(b.n, 0.2).addScaledVector(sideOf(b.n), 0.42).add(new THREE.Vector3(0, 0.08, 0)); b.board.position.copy(bp); b.board.lookAt(g.position.clone().add(pos)); b.board.position.add(new THREE.Vector3(0, 0.0, 0)); });
+      const bp = b.p.clone().addScaledVector(b.n, 0.2).addScaledVector(sideOf(b.n), 0.42).add(new THREE.Vector3(0, 0.08, 0)); if (t >= o.why) bp.lerp(new THREE.Vector3((b.i - 1) * 0.72, 0.28, 2.55), eio(ramp(t, o.why, 1.3))); b.board.position.copy(bp); b.board.lookAt(g.position.clone().add(pos)); b.board.position.add(new THREE.Vector3(0, 0.0, 0)); });
     titleM.opacity = ramp(t, o.t0 + 0.4, 0.5) * (1 - ramp(t, o.at[0] + 0.4, 0.4)) + ramp(t, o.why + 0.8, 0.5) * 0;
-    titleP.lookAt(g.position.clone().add(pos)); globe.rotation.y = 0; void cam;
+    titleP.lookAt(g.position.clone().add(pos)); culP.lookAt(g.position.clone().add(pos)); culM.opacity = ramp(t, o.why + 3.9, 0.3); culP.scale.setScalar(1 + 0.3 * (1 - eo(ramp(t, o.why + 3.9, 0.35)))); globe.rotation.y = 0; void cam;
     sun.position.copy(pos.clone().normalize().multiplyScalar(5).add(new THREE.Vector3(1.5, 2.0, 0)));
     return [pos.x + GLOBE_X, pos.y, pos.z, look.x + GLOBE_X, look.y, look.z, fov];
   };

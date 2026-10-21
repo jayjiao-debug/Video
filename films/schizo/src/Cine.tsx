@@ -14,7 +14,11 @@ import { Reflector } from 'three/examples/jsm/objects/Reflector.js';
 import { floorTex, drawGlass, drawCookie } from './PuppetTest';
 import { chair, glowSprite } from './Set';
 import { W, H, GOLD, INK, SERIF, SANS, txt, subtitle, mark, grain, vignette, ramp, eio, eo, clamp, FONT_CHARS } from './lib';
-import { beam as mkBeam, canvasTex, buildHall, buildRadio, buildPlates, buildString, HALL, RAD, PLT, STR } from './Sets3D';
+import { beam as mkBeam, canvasTex, buildPlates, buildString, HALL, PLT, STR } from './Sets3D';
+import { buildGears, buildCrowd, buildGlobe } from './Know3D';
+import { buildFolders, buildVoices, buildRecovery } from './Know4';
+/* v3 timeline: one plain picture per fact */
+const T3 = { fold: 20.683, prog: 25.12, gear: 33.42, drift: 36.86, crowd: 40.87, age: 45.02, voice: 52.53, real: 56.74, globe: 60.52, ca: 65.45, ch: 69.51, ac: 73.99, why: 78.33, drop: 82.239, plates: 86.44, str: 95.28, rec: 103.55, hit2: 105.64 };
 
 export const CINE_LEN_S = 122.4, CINE_FRAMES = Math.round(CINE_LEN_S * 30);
 const SPLIT = 4.6, WARM = 8.473, SLAM = 12.55, CREAK = 14.6, TITLE = 16.613, POUR = 18.648, STAGE = 20.683;
@@ -181,8 +185,7 @@ const BATH_KEYS: Key[] = [
 ];
 const X0 = 60; // the stage lives far away in the same scene
 const STAGE_KEYS: Key[] = [
-  [STAGE, X0 + 3.4, 3.9, 5.6, X0, 0.55, -0.4, 31],
-  [24.9, X0 + 2.0, 2.15, 3.9, X0, 0.75, -0.4, 31],
+  [25.12, X0 + 2.2, 2.4, 4.2, X0, 0.75, -0.2, 31],
   [27.5, X0 + 1.15, 2.55, 1.75, X0, 1.1, 0.74, 32],
   [30.2, X0 + 0.3, 1.78, 0.3, X0, 1.12, 0.74, 30],
   [33.38, X0 + 0.06, 1.52, 0.38, X0, 1.125, 0.745, 27],
@@ -225,10 +228,10 @@ const person = (layer: number): Fig => {
   return { root, torso, head, key, rim };
 };
 /* ------------------------------------------------------------------ the world */
-type SetH = { g: THREE.Group; update: (t: number) => number[] };
+type SetH = { g: THREE.Group; update: (t: number, cam?: any) => number[] };
 type Refs = {
   prog: { g: CanvasRenderingContext2D; tex: THREE.CanvasTexture }; pends: THREE.Group[]; mspots: THREE.SpotLight[]; mbeams: THREE.ShaderMaterial[]; warmFill: THREE.HemisphereLight; moon: THREE.SpotLight; dawnFill: THREE.PointLight;
-  hall: SetH; radio: SetH; plates: SetH; str: SetH;
+  fold: SetH; gears: SetH; crowd: SetH; voice: SetH; globe: SetH; rec: SetH; plates: SetH; str: SetH;
   innerG: THREE.Group; figs: Fig[]; refls: Reflector[]; fogMat: THREE.MeshBasicMaterial;
   bath: THREE.Group; stage: THREE.Group; doors: THREE.Group[]; overlays: THREE.Mesh[]; fog: CanvasRenderingContext2D; fogTex: THREE.CanvasTexture;
   glass: CanvasRenderingContext2D; glassTex: THREE.CanvasTexture; cookie: CanvasRenderingContext2D; cookieTex: THREE.CanvasTexture;
@@ -413,16 +416,18 @@ const World: React.FC<{ t: number }> = ({ t }) => {
     const dust = new THREE.Points(dg, new THREE.PointsMaterial({ color: '#ffe0b0', size: 0.016, transparent: true, opacity: 0, blending: THREE.AdditiveBlending, depthWrite: false })); stage.add(dust);
     const figs = [person(1), person(2)]; for (const f of figs) bath.add(f.root, f.key, f.rim);
     const dawnFill = new THREE.PointLight('#ffd2a8', 0, 4, 2); dawnFill.position.set(0.9, 1.9, 1.6); bath.add(dawnFill);
-    const hall = buildHall(), radio = buildRadio(gl), plates = buildPlates(gl), str = buildString(); scene.add(hall.g, radio.g, plates.g, str.g);
-    return { prog, pends, mspots, mbeams, warmFill, moon, dawnFill, hall, radio, plates, str, figs, refls, fogMat, innerG, bath, stage, doors, overlays, fog, fogTex, glass, glassTex, cookie, cookieTex, title, titleTex, titleMesh, titleGlow, titleLight, tube, tubeLight, tubeFill, warmShade, warmLight, warmGlow, shards, shardRoot, spot, beam, dust, dustBase, motes, moteBase, rim };
+    const fold = buildFolders({ t0: T3.fold, t1: T3.prog }), gears = buildGears({ t0: T3.gear, drift: T3.drift, t1: T3.crowd }), crowd = buildCrowd({ t0: T3.crowd, age: T3.age, t1: T3.voice }),
+      voice = buildVoices({ t0: T3.voice, real: T3.real, t1: T3.globe }), globe = buildGlobe({ t0: T3.globe, at: [T3.ca, T3.ch, T3.ac], why: T3.why, t1: T3.plates }), rec = buildRecovery({ t0: T3.rec, hit: T3.hit2, t1: CODA });
+    const plates = buildPlates(gl), str = buildString(); for (const x of [fold, gears, crowd, voice, globe, rec, plates, str]) scene.add(x.g);
+    return { prog, pends, mspots, mbeams, warmFill, moon, dawnFill, fold, gears, crowd, voice, globe, rec, plates, str, figs, refls, fogMat, innerG, bath, stage, doors, overlays, fog, fogTex, glass, glassTex, cookie, cookieTex, title, titleTex, titleMesh, titleGlow, titleLight, tube, tubeLight, tubeFill, warmShade, warmLight, warmGlow, shards, shardRoot, spot, beam, dust, dustBase, motes, moteBase, rim };
   }, [scene, gl]);
 
   const cam = camera as THREE.PerspectiveCamera;
-  const seg = t < STAGE ? 'bath' : t < HALL.t0 ? 'stage' : t < RAD.t0 ? 'hall' : t < PLT.t0 ? 'radio' : t < STR.t0 ? 'plates' : t < FINALE ? 'string' : t < CODA ? 'stage' : 'bath';
+  const seg = t < T3.fold ? 'bath' : t < T3.prog ? 'fold' : t < T3.gear ? 'stage' : t < T3.crowd ? 'gears' : t < T3.voice ? 'crowd' : t < T3.globe ? 'voice' : t < T3.plates ? 'globe' : t < T3.str ? 'plates' : t < T3.rec ? 'string' : t < CODA ? 'rec' : 'bath';
   const dawn = t >= CODA, finale = t >= FINALE;
-  S.bath.visible = seg === 'bath'; S.stage.visible = seg === 'stage'; S.hall.g.visible = seg === 'hall'; S.radio.g.visible = seg === 'radio'; S.plates.g.visible = seg === 'plates'; S.str.g.visible = seg === 'string';
-  const FOG: Record<string, [string, number]> = { bath: dawn ? ['#1c1813', 0.05] : ['#0b1115', 0.06], stage: ['#070606', 0.045], hall: ['#07070a', 0.03], radio: ['#0a0e12', 0.07], plates: ['#0a0806', 0.05], string: ['#070605', 0.2] };
-  scene.fog = new THREE.FogExp2(FOG[seg][0], FOG[seg][1]);
+  S.bath.visible = seg === 'bath'; S.stage.visible = seg === 'stage'; const SETS: Record<string, SetH> = { fold: S.fold, gears: S.gears, crowd: S.crowd, voice: S.voice, globe: S.globe, rec: S.rec, plates: S.plates, string: S.str }; for (const k in SETS) SETS[k].g.visible = seg === k;
+  const FOG: Record<string, [string, number]> = { bath: dawn ? ['#1c1813', 0.05] : ['#0b1115', 0.06], stage: ['#070606', 0.045], plates: ['#0a0806', 0.05], string: ['#070605', 0.2], fold: ['#0a0908', 0.05], gears: ['#0a0908', 0.08], crowd: ['#0a0908', 0.03], voice: ['#0a0908', 0.06], rec: ['#0a0908', 0.05] };
+  scene.fog = seg === 'globe' ? null : new THREE.FogExp2(FOG[seg][0], FOG[seg][1]);
   let p: number[];
   if (seg === 'bath') {
     /* --- doors: drift open, hold, slam at the crack */
@@ -475,7 +480,7 @@ const World: React.FC<{ t: number }> = ({ t }) => {
     dp.needsUpdate = true;
     p = finale ? herm(FINALE_KEYS, t) : t < META ? herm(STAGE_KEYS, t) : t < DRIFT ? herm(META_KEYS, t) : herm(DRIFT_KEYS, t);
     p[0] += Math.sin(t * 0.6) * 0.006; p[1] += Math.sin(t * 0.8 + 1) * 0.004;
-  } else p = (seg === 'hall' ? S.hall : seg === 'radio' ? S.radio : seg === 'plates' ? S.plates : S.str).update(t);
+  } else p = ({ fold: S.fold, gears: S.gears, crowd: S.crowd, voice: S.voice, globe: S.globe, rec: S.rec, plates: S.plates, string: S.str } as Record<string, SetH>)[seg].update(t, cam);
 
   cam.position.set(p[0], p[1], p[2]); cam.lookAt(p[3], p[4], p[5]); cam.fov = p[6]; cam.near = 0.03; cam.far = 60; cam.updateProjectionMatrix();
 
@@ -532,9 +537,8 @@ const Overlay: React.FC<{ t: number }> = ({ t }) => {
     vignette(g, 0.55); grain(g, 11 + Math.floor(t * 30), 0.05);
     /* fades: in from black, a flash on the slam, white-gold flash on the burst, black as we go through the title */
     let blk = Math.max(1 - ramp(t, 0, 0.6), t < STAGE ? ramp(t, 20.3, 0.33) : 0, ramp(t, CINE_LEN_S - 0.6, 0.6));
-    for (const c of [HALL.t0, RAD.t0, STR.t0, FINALE, CODA]) blk = Math.max(blk, 1 - clamp(Math.abs(t - c) / 0.16));
-    if (t < PLT.t0) blk = Math.max(blk, ramp(t, PLT.t0 - 0.45, 0.43)); else blk = Math.max(blk, 1 - ramp(t, PLT.t0, 0.3));
-    if (t > RAD.drop && t < RAD.drop + 0.2) { g.fillStyle = `rgba(255,230,190,${0.45 * (1 - ramp(t, RAD.drop, 0.2))})`; g.fillRect(0, 0, W, H); }
+    for (const c of [T3.prog, T3.gear, T3.crowd, T3.voice, T3.globe, T3.plates, T3.str, T3.rec, CODA]) blk = Math.max(blk, 1 - clamp(Math.abs(t - c) / 0.16));
+    if (t > T3.drop && t < T3.drop + 0.2) { g.fillStyle = `rgba(255,230,190,${0.35 * (1 - ramp(t, T3.drop, 0.2))})`; g.fillRect(0, 0, W, H); }
     if (t > STR.tune && t < STR.tune + 0.15) { g.fillStyle = `rgba(255,225,170,${0.22 * (1 - ramp(t, STR.tune, 0.15))})`; g.fillRect(0, 0, W, H); }
     if (blk > 0) { g.fillStyle = `rgba(0,0,0,${blk})`; g.fillRect(0, 0, W, H); }
     if (t > SLAM && t < SLAM + 0.15) { g.fillStyle = `rgba(220,235,255,${0.28 * (1 - ramp(t, SLAM, 0.15))})`; g.fillRect(0, 0, W, H); }
@@ -554,15 +558,15 @@ export const Cine: React.FC = () => {
   const [h] = useState(() => delayRender('fonts')); const [ok, setOk] = useState(false);
   useEffect(() => { const s = FONT_CHARS + LINES.map((l) => l[2]).join('') + TCH.join('') + '精分神裂到底了什么？SCHIZOPHRENIABLEULERMCMVI·—' + 'DEUTSCHERVEINFÜRPSYCHATBLNAPRIL1908SchizophrenieProf.EÜRICHschizophren分裂心智≠两个人看见听见思考感受' +
       '加州美国金奈印度阿克拉加纳20人中无以正面为主11听到家10斯坦福Luhrmann3座城市60位患者55607080100120140160170' + '日本2002年統合失調症旧名精神分裂病韩国2011調絃病조현병台湾2014思覺失調症调' + '161718192021222324252627282930' +
-      'J JUNO三个新名字你觉得哪个最贴切评论区见如果或身边的正在经历可以拨打12356全国心理援助热线小时关注一起看懂世界资料BleulerAJPetalBrJPsychiatry2015ChoInvestig2018卫福部WHO（）';
-    Promise.all([`700 68px ${SANS}`, `900 68px ${SANS}`, `900 300px ${SANS}`, `700 176px ${SERIF}`, `600 40px ${SERIF}`, `700 42px ${SANS}`, `500 22px ${SANS}`, `italic 700 118px ${SERIF}`, `700 30px ${SANS}`, `500 36px ${SANS}`, `700 150px ${SERIF}`, `700 46px ${SANS}`, `700 72px ${SERIF}`].map((x) => document.fonts.load(x, s).catch(() => null))).then(() => { setOk(true); continueRender(h); }); }, [h]);
+      '分离性身份障碍俗称多重人格另一种病DissociativeIdentityDisorderSchizophrenia好几个轮流出现一个人几种功能失调≠他听到了有在说话旁边的什么也没对来和真声音一样至少1/3能完全康复世界卫生组织WHO看见听见思考感受最常发病岁加州美国金奈印度阿克拉加纳大多刺耳带着威胁像家里长辈叮嘱是好以正面为主听到斯坦福座城市位患者准了✓走调旧名' + 'J JUNO三个新名字你觉得哪个最贴切评论区见如果或身边的正在经历可以拨打12356全国心理援助热线小时关注一起看懂世界资料BleulerAJPetalBrJPsychiatry2015ChoInvestig2018卫福部WHO（）';
+    Promise.all([`700 68px ${SANS}`, `900 68px ${SANS}`, `900 300px ${SANS}`, `700 176px ${SERIF}`, `600 40px ${SERIF}`, `700 42px ${SANS}`, `500 22px ${SANS}`, `italic 700 118px ${SERIF}`, `700 30px ${SANS}`, `500 36px ${SANS}`, `700 150px ${SERIF}`, `700 46px ${SANS}`, `700 72px ${SERIF}`, `900 96px ${SANS}`, `800 60px ${SANS}`, `900 120px ${SANS}`, `900 110px ${SANS}`, `900 92px ${SANS}`, `600 40px ${SANS}`, `900 84px ${SANS}`, `700 64px ${SANS}`, `700 300px ${SERIF}`, `900 66px ${SANS}`, `700 62px ${SANS}`].map((x) => document.fonts.load(x, s).catch(() => null))).then(() => { setOk(true); continueRender(h); }); }, [h]);
   if (!ok) return null;
   return (
     <AbsoluteFill style={{ background: '#000' }}>
       <ThreeCanvas width={W} height={H} shadows gl={{ antialias: true, toneMapping: THREE.ACESFilmicToneMapping, toneMappingExposure: 1.35, preserveDrawingBuffer: true }} camera={{ fov: 36, near: 0.03, far: 60 }}>
         <World t={t} />
       </ThreeCanvas>
-      <AbsoluteFill style={{ background: (t < STAGE || (t >= RAD.t0 && t < PLT.t0)) ? 'linear-gradient(180deg, rgba(40,70,85,.32), rgba(18,38,52,.32))' : t >= CODA ? 'linear-gradient(180deg, rgba(90,60,35,.22), rgba(40,30,25,.25))' : 'linear-gradient(180deg, rgba(60,40,20,.22), rgba(20,14,10,.3))', mixBlendMode: 'soft-light' }} />
+      <AbsoluteFill style={{ background: (t < STAGE || (t >= T3.voice && t < T3.plates)) ? 'linear-gradient(180deg, rgba(40,70,85,.32), rgba(18,38,52,.32))' : t >= CODA ? 'linear-gradient(180deg, rgba(90,60,35,.22), rgba(40,30,25,.25))' : 'linear-gradient(180deg, rgba(60,40,20,.22), rgba(20,14,10,.3))', mixBlendMode: 'soft-light' }} />
       <Overlay t={t} />
     </AbsoluteFill>
   );
