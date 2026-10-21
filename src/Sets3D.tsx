@@ -249,7 +249,9 @@ export const buildPlates = (gl: THREE.WebGLRenderer) => {
   const glyphTex = (ch: string, size: number) => { const { g: c, tex } = canvasTex(256, 256); c.font = `700 ${size}px ${SERIF}`; c.textAlign = 'center'; c.textBaseline = 'middle'; c.shadowColor = 'rgba(255,190,90,.95)'; c.shadowBlur = 26; const gr = c.createLinearGradient(0, 40, 0, 220); gr.addColorStop(0, '#fff3cc'); gr.addColorStop(0.5, '#f1c56d'); gr.addColorStop(1, '#c08a34'); c.fillStyle = gr; c.fillText(ch, 128, 132); c.shadowBlur = 0; c.fillText(ch, 128, 132); return tex; };
   NAMES.forEach((n, i) => {
     const { g: c, tex } = canvasTex(1024, 540); brassBg(c, 1024, 540, 10 + i);
-    engrave(c, n.top, 512, 110, `700 40px ${SANS}`); engrave(c, n.big, 512, 330, `700 150px ${SERIF}`); engrave(c, n.sub, 512, 452, `500 36px ${SANS}`);
+    engrave(c, n.top, 512, 110, `700 40px ${SANS}`); engrave(c, n.big, 512, 330, `700 150px ${SERIF}`); engrave(c, n.sub, 512, 452, `600 40px ${SANS}`);
+    /* the old name, struck out in red */
+    { c.font = `600 40px ${SANS}`; const k = n.sub.indexOf('旧名：') + 3; const full = c.measureText(n.sub).width; const x0 = 512 - full / 2 + c.measureText(n.sub.slice(0, k)).width; const x1 = 512 + full / 2; c.strokeStyle = '#c0281c'; c.lineWidth = 7; c.lineCap = 'round'; c.beginPath(); c.moveTo(x0 - 6, 438); c.lineTo(x1 + 6, 438); c.stroke(); }
     for (const [sx, sy] of [[60, 60], [964, 60], [60, 480], [964, 480]]) { const sg = c.createRadialGradient(sx - 4, sy - 4, 1, sx, sy, 16); sg.addColorStop(0, '#f0d8a0'); sg.addColorStop(1, '#5a4018'); c.fillStyle = sg; c.beginPath(); c.arc(sx, sy, 14, 0, 7); c.fill(); c.strokeStyle = 'rgba(40,26,8,.8)'; c.lineWidth = 3; c.beginPath(); c.moveTo(sx - 9, sy); c.lineTo(sx + 9, sy); c.stroke(); }
     /* where is 調 on this plate */
     c.font = `700 150px ${SERIF}`; const full = c.measureText(n.big).width; const pre = c.measureText(n.big.slice(0, n.ti)).width; const cw = c.measureText(n.big[n.ti]).width; const gx = 512 - full / 2 + pre + cw / 2, gy = 330 - 150 * 0.36;
@@ -316,11 +318,21 @@ export const buildString = () => {
   const key = new THREE.SpotLight('#ffd8a8', 26, 0, 0.6, 0.7, 2); key.position.set(-0.6, 1.4, 0.9); key.target.position.set(-0.3, 0, 0); key.castShadow = true; key.shadow.mapSize.set(2048, 2048); key.shadow.bias = -0.0003; key.shadow.camera.near = 0.5; key.shadow.camera.far = 3; g.add(key, key.target);
   const rim = new THREE.SpotLight('#9fb6d0', 10, 0, 0.6, 0.8, 2); rim.position.set(1.4, 0.5, -1.0); rim.target.position.set(-0.4, 0, 0); g.add(rim, rim.target);
   const gold = new THREE.PointLight('#ffc070', 0, 1.5, 2); gold.position.set(0, 0.12, 0.05); g.add(gold);
+  /* a clip-on tuner on the pegbox: the needle says how far out of tune the string is */
+  const tuner = new THREE.Group(); tuner.position.set(-0.93, 0.17, 0.07); tuner.rotation.set(-0.25, 0.75, 0); g.add(tuner);
+  add(tuner, new RoundedBoxGeometry(0.15, 0.1, 0.02, 3, 0.01), M({ color: '#121314', roughness: 0.4 }), 0, 0, 0);
+  add(g, new THREE.BoxGeometry(0.012, 0.12, 0.012), M({ color: '#121314', roughness: 0.4 }), -0.95, 0.09, 0.05);
+  const disp = canvasTex(600, 400); add(tuner, new THREE.PlaneGeometry(0.136, 0.09), new THREE.MeshBasicMaterial({ map: disp.tex, toneMapped: false }), 0, 0, 0.0105, false);
+  const drawTuner = (cents: number, ok: number) => { const c = disp.g; c.fillStyle = ok > 0.5 ? '#0d2a16' : '#2a0e0c'; c.fillRect(0, 0, 600, 400);
+    c.strokeStyle = 'rgba(255,255,255,.5)'; c.lineWidth = 4; for (let k = -5; k <= 5; k++) { const a = (k / 5) * 0.9 - Math.PI / 2; c.beginPath(); c.moveTo(300 + Math.cos(a) * 220, 330 + Math.sin(a) * 220); c.lineTo(300 + Math.cos(a) * (k ? 245 : 260), 330 + Math.sin(a) * (k ? 245 : 260)); c.stroke(); }
+    c.fillStyle = '#41d36b'; c.beginPath(); c.arc(300, 70, 14, 0, 7); c.fill();
+    const a = (Math.max(-50, Math.min(50, cents)) / 50) * 0.9 - Math.PI / 2; c.strokeStyle = ok > 0.5 ? '#41d36b' : '#ff5a3c'; c.lineWidth = 9; c.lineCap = 'round'; c.beginPath(); c.moveTo(300, 330); c.lineTo(300 + Math.cos(a) * 230, 330 + Math.sin(a) * 230); c.stroke();
+    c.textAlign = 'center'; c.font = `900 84px ${SANS}`; c.fillStyle = ok > 0.5 ? '#41d36b' : '#ff7a5a'; c.fillText(ok > 0.5 ? '准了 ✓' : '走调', 300, 390); disp.tex.needsUpdate = true; };
   const keys = at(STRING_X, [
     [STR.t0, 0.8, 0.17, 0.34, 0.0, 0.03, 0.0, 30],
     [98.0, 0.1, 0.15, 0.3, -0.5, 0.035, 0.0, 30],
-    [STR.turn, -0.45, 0.16, 0.3, -0.95, 0.04, 0.0, 30],
-    [STR.tune, -0.7, 0.2, 0.32, -1.04, 0.04, 0.02, 28],
+    [STR.turn, -0.5, 0.24, 0.42, -0.95, 0.1, 0.03, 32],
+    [STR.tune, -0.68, 0.26, 0.42, -1.0, 0.11, 0.04, 30],
     [STR.t1, 0.35, 0.3, 0.48, -0.2, 0.03, 0.0, 32],
   ]);
   const update = (t: number) => {
@@ -337,6 +349,7 @@ export const buildString = () => {
     ribM.color.set('#cfd8e6').lerp(new THREE.Color('#ffcf7a'), tuned); ribM.opacity = 0.55 + 0.35 * tuned;
     glowLine.position.set((X0 + X1) / 2, Y, SZ[1]); glowLine.scale.set(1.9, 0.12, 1); (glowLine.material as THREE.SpriteMaterial).opacity = 0.35 * tuned;
     gold.intensity = 0.8 * tuned;
+    drawTuner((1 - turn) * (-36 + 6 * Math.sin(t * 2.7)) + (1 - tuned) * turn * 3 * Math.sin(t * 9), tuned);
     return herm(keys, t);
   };
   return { g, update };
