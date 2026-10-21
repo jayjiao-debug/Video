@@ -1,8 +1,8 @@
 {
-  "id": "sisyphus_v1-1792528631",
-  "composition": "FILM35",
+  "id": "open_v3-1792572671",
+  "composition": "OPEN35",
   "start": 0,
-  "end": 4245,
-  "chunks": 20,
-  "output": "sisyphus_v1"
+  "end": 494,
+  "chunks": 12,
+  "output": "open_v3"
 }
