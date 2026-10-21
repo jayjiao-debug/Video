@@ -874,7 +874,7 @@ const RealString: React.FC<{a: Pt; b: Pt; id: string; band?: [number, number]; w
 const Eyelet: React.FC<{p: Pt; k: number}> = ({p, k}) => (
 	<g><circle cx={p[0]} cy={p[1] - 1.6 * k} r={2.3 * k} fill="none" stroke="#6e5c40" strokeWidth={1.1 * k} /><path d={`M${p[0] - 1.6 * k},${p[1] - 2.6 * k} a${2.3 * k},${2.3 * k} 0 0 1 ${2.6 * k},${-1.2 * k}`} stroke="#d9c79c" strokeWidth={0.8 * k} fill="none" opacity={0.8} /><circle cx={p[0]} cy={p[1] - 3.9 * k} r={0.9 * k} fill="#e8e2d6" opacity={0.7} /></g>
 );
-const S1b: React.FC<{t: number; spin?: number; flick?: number; trainShift?: number; headLift?: number; sub?: string; subO?: number; crowd?: boolean}> = ({t, spin = 0, flick = 1, trainShift = 0, headLift = 0, sub = '早上挤地铁，上班，加班，回家', subO = 1, crowd}) => {
+const S1b: React.FC<{t: number; spin?: number; flick?: number; trainShift?: number; headLift?: number; sub?: string; subO?: number; crowd?: boolean; bare?: boolean}> = ({t, spin = 0, flick = 1, trainShift = 0, headLift = 0, sub = '早上挤地铁，上班，加班，回家', subO = 1, crowd, bare}) => {
 	// a long breath out at ~2.2 s: the shoulders rise, then the whole body sinks a little lower than before
 	const sighU = cl01((t - 2.0) / 1.6), sigh = sighU <= 0 ? 0 : Math.sin(Math.PI * Math.min(1, sighU * 1.25)) * (sighU < 0.4 ? -0.6 : 1) + 0.6 * sighU;
 	const swing = 1.6 * Math.sin(t * 0.9) + 0.7 * Math.sin(t * 2.3 + 1);    // hanging from strings: never quite still
@@ -973,8 +973,7 @@ const S1b: React.FC<{t: number; spin?: number; flick?: number; trainShift?: numb
 				<path d="M-20,1040 L1960,1000 L1960,1100 L-20,1100 Z" fill="#0b0c0e" filter="url(#b6)" opacity={0.9} />
 			</svg>
 			<AbsoluteFill style={{background: 'linear-gradient(180deg, rgba(20,40,60,0.18), rgba(0,0,0,0) 40%, rgba(10,20,30,0.2))', mixBlendMode: 'multiply'}} />
-			<Grade />
-			<Mark />
+			{!bare && <><Grade /><Mark /></>}
 			{sub && <div style={{opacity: subO}}><Sub t={sub} /></div>}
 		</AbsoluteFill>
 	);
@@ -2128,6 +2127,565 @@ const Open4: React.FC = () => {
 	);
 };
 
+// ================================================================== CONCEPTS for the middle "why?" run: A music box · B loop line · C clock face
+/** a marionette with its strings rising out of frame */
+const Hung: React.FC<{x: number; y: number; k: number; pose: Pose; flip?: boolean; id: string; top?: number; spread?: number; warm?: boolean}> = ({x, y, k, pose, flip, id, top = -200, spread = 34, warm = true}) => (
+	<g>
+		<Man x={x} y={y} k={k} pose={pose} flip={flip} warm={warm} />
+		{attachPts(pose).map(({p, to}, i) => { const a = W2(x, y, k, [flip ? -p[0] : p[0], p[1]]); return <g key={i}><RealString a={a} b={[x + (flip ? -to : to) * spread * k, top]} id={`${id}${i}`} band={[0.1, 0.5]} w={i === 4 || i === 6 ? 1.1 : 0.85} /><Eyelet p={a} k={k * 0.9} /></g>; })}
+	</g>
+);
+
+// ---- A · inside a wound-up music box: a brass plate turning, the days as miniatures on it
+const MusicBox: React.FC<{theta: number; t: number; dark?: number; stop?: number; keyA?: number}> = ({theta, t, dark = 0, stop = -1, keyA = 0}) => {
+	const MX = 900, MY = 700, MRX = 560, MRY = 150;
+	const items = STATIONS.map((s, i) => {
+		const a = rad(((i * 60 - theta) % 360 + 540) % 360 - 180);
+		return {s, i, x: MX + MRX * 0.8 * Math.sin(a), y: MY + MRY * 0.8 * Math.cos(a), k: 0.42 + 0.5 * (0.5 + 0.5 * Math.cos(a)), front: Math.cos(a)};
+	}).sort((p, q) => p.front - q.front);
+	const L = 1 - dark * 0.92;
+	const lidO: Pt[] = [[300, 440], [1620, 440], [1560, -70], [360, -70]];
+	const mir: Pt[] = [[470, 380], [1450, 380], [1420, 30], [500, 30]];
+	const poly = (ps: Pt[]) => ps.map((p) => p.join(',')).join(' ');
+	const frontSt = items[items.length - 1];
+	return (
+		<AbsoluteFill style={{background: '#0a0706'}}>
+			<svg width={W} height={H} style={{position: 'absolute', inset: 0}}>
+				<Defs />
+				<radialGradient id="brassG" cx="0.4" cy="0.35" r="0.75"><stop offset="0" stopColor="#f0d58e" /><stop offset="0.45" stopColor="#b48d45" /><stop offset="1" stopColor="#5b4420" /></radialGradient>
+				<linearGradient id="cylG" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stopColor="#6b5226" /><stop offset="0.35" stopColor="#f2d999" /><stop offset="0.6" stopColor="#a8823d" /><stop offset="1" stopColor="#3e2d14" /></linearGradient>
+				<linearGradient id="mirG" x1="0" y1="0" x2="0.3" y2="1"><stop offset="0" stopColor="#3a3833" /><stop offset="0.5" stopColor="#24221f" /><stop offset="1" stopColor="#151413" /></linearGradient>
+				<radialGradient id="velG" cx="0.45" cy="0.8" r="0.8"><stop offset="0" stopColor="#7a1a22" /><stop offset="0.6" stopColor="#4a0d14" /><stop offset="1" stopColor="#22050a" /></radialGradient>
+				<clipPath id="mirClip"><polygon points={poly(mir)} /></clipPath>
+				<g transform="translate(900,600) scale(1.3) translate(-900,-600)">
+				{/* the room behind, far out of focus: a lamp and a window */}
+				<g filter="url(#b12)" opacity={L}>
+					<circle cx={180} cy={150} r={260} fill="url(#warmGlow)" opacity={0.7} />
+					<rect x={1660} y={40} width={240} height={360} fill="#1b2638" />
+					{[[90, 380, 30], [1760, 520, 18], [1840, 300, 24]].map(([x, y, r], i) => <circle key={i} cx={x} cy={y} r={r} fill="#ffcf8a" opacity={0.25} />)}
+				</g>
+				{/* the lid, standing open: walnut frame, velvet, an old mirror */}
+				<polygon points={poly(lidO)} fill="url(#m-walnut)" filter="url(#wood)" opacity={0.95} />
+				<polygon points={poly([[350, 420], [1570, 420], [1515, -40], [405, -40]])} fill="#3c0a10" filter="url(#felt)" />
+				<polygon points={poly(mir)} fill="url(#mirG)" />
+				<g clipPath="url(#mirClip)" opacity={0.55 * L} filter="url(#b3)">
+					{/* the mirror catches the lamp and the turning figures, dim and soft */}
+					<ellipse cx={700} cy={120} rx={260} ry={120} fill="url(#warmGlow)" />
+					<g transform={`translate(${frontSt.x - 40},${360}) scale(${frontSt.k * 0.8})`}><Station id={frontSt.s.id} t={t} lit={L} i={frontSt.i} stop={stop} /></g>
+				</g>
+				<polygon points={poly(mir)} fill="none" stroke="#c9a65e" strokeWidth={5} opacity={0.6} />
+				<path d="M560,60 L760,360 M640,60 L800,300" stroke="#fff" strokeWidth={14} opacity={0.035} />
+				{/* the box: rim, velvet well */}
+				<polygon points="300,440 1620,440 1840,945 80,945" fill="#2a1a10" />
+				<polygon points="330,452 1590,452 1800,930 120,930" fill="url(#m-walnut)" filter="url(#wood)" />
+				<polygon points="368,470 1552,470 1752,912 168,912" fill="url(#velG)" />
+				<polygon points="368,470 1552,470 1752,912 168,912" fill="#5a0f17" filter="url(#felt)" opacity={0.55} />
+				<polygon points="368,470 1552,470 1532,520 388,520" fill="#000" opacity={0.35} />
+				{/* the mechanism at the back: pinned cylinder and steel comb */}
+				<g opacity={0.35 + 0.65 * L}>
+					<rect x={1180} y={478} width={330} height={66} rx={30} fill="url(#cylG)" />
+					{Array.from({length: 60}, (_, j) => { const col = j % 15, row = Math.floor(j / 15); const ph = ((row * 0.27 + col * 0.13 + theta / 90) % 1); const y = 482 + ph * 58; return <circle key={j} cx={1200 + col * 21} cy={y} r={2.2} fill="#fff4cf" opacity={Math.sin(ph * Math.PI) * 0.9} />; })}
+					<rect x={1166} y={490} width={18} height={42} rx={4} fill="#4a3618" /><rect x={1506} y={490} width={18} height={42} rx={4} fill="#4a3618" />
+					<rect x={1190} y={548} width={310} height={14} fill="#8a8f96" />
+					{Array.from({length: 24}, (_, j) => <rect key={j} x={1194 + j * 12.6} y={530} width={7} height={22 - (j % 6)} fill="#b9c0c8" />)}
+				</g>
+				{/* the brass plate */}
+				<ellipse cx={MX} cy={MY + 22} rx={MRX + 10} ry={MRY + 12} fill="#3b2a12" />
+				<ellipse cx={MX} cy={MY} rx={MRX} ry={MRY} fill="url(#brassG)" />
+				{[0.25, 0.45, 0.65, 0.85, 0.97].map((q) => <ellipse key={q} cx={MX} cy={MY} rx={MRX * q} ry={MRY * q} fill="none" stroke="#3b2a12" strokeWidth={1.2} opacity={0.35} />)}
+				{Array.from({length: 48}, (_, j) => { const a = rad(j * 7.5 - theta); if (Math.cos(a) < 0) return null; return <line key={j} x1={MX + MRX * 0.98 * Math.sin(a)} y1={MY + MRY * 0.98 * Math.cos(a)} x2={MX + MRX * 0.93 * Math.sin(a)} y2={MY + MRY * 0.93 * Math.cos(a)} stroke="#3b2a12" strokeWidth={2} opacity={0.4} />; })}
+				<ellipse cx={MX - 140} cy={MY - 40} rx={260} ry={46} fill="#fff1c8" opacity={0.25 * L} filter="url(#b6)" />
+				{/* figures on the plate */}
+				{items.map(({s, i, x, y, k, front}) => {
+					if (front < -0.25) return null;
+					const lit = (dark > 0 ? (front > 0.97 ? 1 : 1 - dark) : 1);
+					return (
+						<g key={s.id} opacity={Math.min(1, (front + 0.25) * 2.2)} filter={front < 0.6 ? 'url(#b1.5)' : undefined}>
+							<g transform={`translate(${x},${y}) scale(${k})`}><Station id={s.id} t={t} lit={lit} i={i} stop={stop} /></g>
+							<Sign x={x - 230 * k} y={y - 330 * k} q={s.q} k={k * 0.62} lit={lit} />
+						</g>
+					);
+				})}
+				<g transform={`translate(${MX},${MY})`}><ellipse cx={0} cy={4} rx={26} ry={9} fill="#2a1d0c" /><rect x={-9} y={-30} width={18} height={34} fill="url(#cylG)" /><ellipse cx={0} cy={-30} rx={9} ry={3.5} fill="#f2d999" /></g>
+				{/* front face of the box, keyhole and the wind-up key */}
+				<polygon points="80,945 1840,945 1840,1100 80,1100" fill="url(#m-walnut)" filter="url(#wood)" />
+				<rect x={80} y={945} width={1760} height={8} fill="#c9a65e" opacity={0.45} />
+				<g transform="translate(960,1015)"><ellipse rx={30} ry={38} fill="#b48d45" /><path d="M0,-14 a8,8 0 1 1 0.1,0 L6,16 L-6,16 Z" fill="#1a0f06" /></g>
+				<g transform={`translate(1700,1010) rotate(${keyA})`}>
+					<rect x={-8} y={-8} width={16} height={16} fill="#5b4420" />
+					<path d="M0,0 C-30,-60 -70,-70 -78,-30 C-82,0 -40,10 0,0 C40,-10 82,0 78,30 C70,70 30,60 0,0 Z" fill="url(#brassG)" stroke="#3b2a12" strokeWidth={3} />
+				</g>
+				{/* the lamp's light falling across, dimmed when the spring runs down */}
+				<polygon points="0,0 700,0 1500,1080 0,1080" fill="#ffd9a0" opacity={0.05 * L} filter="url(#b12)" />
+				</g>
+			</svg>
+			{dark > 0 && <AbsoluteFill style={{background: `radial-gradient(ellipse 360px 480px at 47% 58%, rgba(0,0,0,0) 0%, rgba(0,0,0,${0.8 * dark}) 75%)`}} />}
+			<Grade />
+			<Mark />
+		</AbsoluteFill>
+	);
+};
+
+// ---- B · a loop-line carriage: every stop is a "why", there is no terminus
+const LOOP = ['挤地铁', '上班', '加班', '还房贷', '拼命', '熬夜'];
+const LoopTrain: React.FC<{t: number; at?: number; dark?: number; chase?: number}> = ({t, at = 2, dark = 0, chase = -1}) => {
+	const L = 1 - dark * 0.85;
+	const mx = 1180, seatY = 800, k = 1.05;
+	const pose: Pose = withBreath(dark > 0 ? {lean: -4, head: -30, armN: [34, 50], armF: [30, 54], legN: [86, -86], legF: [82, -82], case: true} : {lean: 10, head: 26, armN: [34, 50], armF: [30, 54], legN: [86, -86], legF: [82, -82], case: true}, t);
+	return (
+		<AbsoluteFill style={{background: '#05070a'}}>
+			<svg width={W} height={H} style={{position: 'absolute', inset: 0}}>
+				<Defs />
+				<linearGradient id="carW" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stopColor="#9aa8a4" /><stop offset="1" stopColor="#5b6764" /></linearGradient>
+				<clipPath id="winClip"><rect x={330} y={250} width={1060} height={400} rx={60} /></clipPath>
+				{/* carriage wall */}
+				<rect width={W} height={H} fill="url(#carW)" opacity={L} />
+				<rect width={W} height={H} fill="#000" opacity={1 - L} />
+				<rect y={0} width={W} height={30} fill="#f4fbff" opacity={0.9 * L} /><rect y={0} width={W} height={140} fill="#e9f3f8" opacity={0.2 * L} filter="url(#b12)" />
+				{[[60, 230], [1500, 230]].map(([x], i) => <rect key={i} x={x} y={250} width={260} height={400} rx={30} fill="#7d8a87" opacity={0.6 * L} />)}
+				{/* the window: the platform of this stop — or the tunnel */}
+				<g clipPath="url(#winClip)">
+					<rect x={330} y={250} width={1060} height={400} fill="#0b0e12" />
+					{chase < 0 ? (
+						<g>
+							<rect x={330} y={250} width={1060} height={400} fill="#1d2228" />
+							{Array.from({length: 14}, (_, i) => <line key={i} x1={330 + i * 80} y1={250} x2={330 + i * 80} y2={650} stroke="#13171b" strokeWidth={3} />)}
+							<rect x={330} y={420} width={1060} height={30} fill="#2c4a6a" opacity={0.6} />
+							<g transform="translate(560,330)"><rect x={-130} y={-40} width={260} height={80} fill="#203a58" /><text y={18} textAnchor="middle" style={{fontFamily: SERIF, fontWeight: 900, fontSize: 52, letterSpacing: '0.2em'}} fill="#e8eef6">{LOOP[at]}站</text></g>
+							<g transform="translate(760,640) scale(0.62)"><Station id={STATIONS[at].id} t={t} lit={1} i={at} /></g>
+							<rect x={330} y={250} width={1060} height={400} fill="#9fb6d8" opacity={0.08} />
+						</g>
+					) : (
+						<g>
+							{Array.from({length: 7}, (_, i) => { const x = 330 + ((i * 170 - t * 2400) % 1200 + 1200) % 1200; return <rect key={i} x={x} y={300 + (i % 3) * 90} width={260} height={4} fill="#ffcf8a" opacity={0.5} filter="url(#b3)" />; })}
+						</g>
+					)}
+					{/* faint reflection of the carriage and the puppet in the glass */}
+					<g opacity={0.12}><Man x={mx - 40} y={seatY + 232 * k - 60} k={k * 0.95} pose={pose} warm={false} /></g>
+				</g>
+				<rect x={330} y={250} width={1060} height={400} rx={60} fill="none" stroke="#c9d2cf" strokeWidth={18} opacity={0.85 * L + 0.1} />
+				{/* the line map above the window: a closed loop */}
+				<g transform="translate(860,140)" opacity={0.3 + 0.7 * L}>
+					<rect x={-420} y={-90} width={840} height={180} rx={28} fill="#e8ece8" />
+					<text x={-390} y={-50} style={{fontFamily: SERIF, fontWeight: 900, fontSize: 26}} fill="#24303a">环线 · 每一天</text>
+					<ellipse cx={30} cy={14} rx={300} ry={44} fill="none" stroke="#2f7fc0" strokeWidth={9} />
+					{LOOP.map((n, i) => {
+						const a = rad(-90 + i * 60 + 30), x = 30 + 300 * Math.cos(a), y = 14 + 44 * Math.sin(a);
+						const on = chase >= 0 ? Math.max(0, 1 - Math.abs(((chase * 6 - i) % 6 + 6) % 6 - 0) ) : i === at ? 1 : 0;
+						return <g key={n}>
+							<circle cx={x} cy={y} r={12} fill={on > 0.05 ? '#ff4a3d' : '#fff'} stroke="#2f7fc0" strokeWidth={4} />
+							{on > 0.05 && <circle cx={x} cy={y} r={30} fill="#ff4a3d" opacity={0.35 * on} filter="url(#b6)" />}
+							<text x={x} y={y + (Math.sin(a) > 0 ? 44 : -22)} textAnchor="middle" style={{fontFamily: SERIF, fontWeight: 700, fontSize: 22}} fill="#24303a">{n}</text>
+						</g>;
+					})}
+				</g>
+				{/* bench and floor */}
+				<rect x={120} y={seatY - 10} width={1700} height={70} rx={20} fill="#3d5a63" opacity={0.4 + 0.6 * L} />
+				<rect x={120} y={seatY + 50} width={1700} height={240} fill="#2a3337" opacity={0.4 + 0.6 * L} />
+				<rect x={0} y={seatY + 60} width={W} height={20} fill="#000" opacity={0.3} />
+				{[90, 1850].map((x) => <rect key={x} x={x - 14} y={0} width={28} height={H} fill="#cfd8d6" opacity={0.6 * L + 0.15} />)}
+				<Hung x={mx} y={seatY + 232 * k - 6} k={k} pose={pose} id="lt" top={-60} />
+				{dark > 0 && <ellipse cx={860} cy={150} rx={520} ry={160} fill="#ff4a3d" opacity={0.06 * dark} filter="url(#b12)" />}
+			</svg>
+			<Grade />
+			<Mark />
+		</AbsoluteFill>
+	);
+};
+
+// ---- C · walking on the face of a great clock; the hour hand at his back
+const ClockFace: React.FC<{t: number; turned?: boolean}> = ({t, turned}) => {
+	const c: Pt = [960, 440], R = 430;
+	const hourA = turned ? 214 : 221;                                             // degrees clockwise from 12
+	const hand = (a: number, len: number, w: number) => { const v = rad(a); const tip: Pt = [c[0] + len * Math.sin(v), c[1] - len * Math.cos(v)]; const n: Pt = [Math.cos(v) * w, Math.sin(v) * w]; return `M${c[0] - n[0]},${c[1] - n[1]} L${tip[0]},${tip[1]} L${c[0] + n[0]},${c[1] + n[1]} Z`; };
+	const romans = ['XII', 'I', 'II', 'III', 'IV', 'V', 'VI', 'VII', 'VIII', 'IX', 'X', 'XI'];
+	const tags: Record<number, string> = {7: '挤地铁', 9: '上班', 1: '加班', 3: '还房贷', 5: '熬夜'};
+	const pose: Pose = turned ? withBreath({lean: -6, head: -34, armN: [-6, 6], armF: [4, 8], legN: [3, 0], legF: [-3, 0], case: true}, t) : {...walkPose(t * 5, 18, 14), case: true};
+	return (
+		<AbsoluteFill style={{background: '#0c0806'}}>
+			<svg width={W} height={H} style={{position: 'absolute', inset: 0}}>
+				<Defs />
+				<radialGradient id="brassG" cx="0.4" cy="0.35" r="0.75"><stop offset="0" stopColor="#f0d58e" /><stop offset="0.45" stopColor="#b48d45" /><stop offset="1" stopColor="#5b4420" /></radialGradient>
+				<radialGradient id="dialG" cx="0.45" cy="0.4" r="0.7"><stop offset="0" stopColor="#efe3c6" /><stop offset="0.7" stopColor="#d6c39b" /><stop offset="1" stopColor="#8e7652" /></radialGradient>
+				<rect width={W} height={H} fill="url(#m-walnut)" filter="url(#wood)" opacity={0.5} />
+				<circle cx={c[0]} cy={c[1]} r={R + 60} fill="#2a1a10" />
+				<circle cx={c[0]} cy={c[1]} r={R + 40} fill="url(#brassG)" />
+				<circle cx={c[0]} cy={c[1]} r={R} fill="url(#dialG)" filter="url(#paper)" />
+				{/* the open centre: gears turning in the dark */}
+				<circle cx={c[0]} cy={c[1]} r={180} fill="#140d07" />
+				{[[-60, -30, 115, 24, 1], [90, 50, 85, 18, -1.4], [30, -110, 55, 12, 2.2]].map(([dx, dy, r, n, sp], i) => (
+					<g key={i} transform={`translate(${c[0] + dx},${c[1] + dy}) rotate(${t * 12 * sp})`} opacity={0.9}>
+						<circle r={r} fill="none" stroke="#9c7a3a" strokeWidth={r * 0.18} />
+						{Array.from({length: n}, (_, j) => <rect key={j} x={-7} y={-r - 16} width={14} height={20} fill="#9c7a3a" transform={`rotate(${(j * 360) / n})`} />)}
+						{[0, 1, 2, 3].map((j) => <rect key={j} x={-5} y={-r} width={10} height={r} fill="#7a5c28" transform={`rotate(${j * 90})`} />)}
+					</g>
+				))}
+				<circle cx={c[0]} cy={c[1]} r={180} fill="none" stroke="#3a2a18" strokeWidth={10} />
+				<circle cx={c[0] - 60} cy={c[1] - 80} r={300} fill="url(#warmGlow)" opacity={0.25} />
+				{romans.map((r, i) => { const a = rad(i * 30); return <text key={r} x={c[0] + 350 * Math.sin(a)} y={c[1] - 350 * Math.cos(a) + 24} textAnchor="middle" style={{fontFamily: '"Cormorant", serif', fontWeight: 700, fontSize: 62}} fill="#2a2018" opacity={0.85}>{r}</text>; })}
+				{Array.from({length: 60}, (_, i) => { const a = rad(i * 6); return <line key={i} x1={c[0] + 415 * Math.sin(a)} y1={c[1] - 415 * Math.cos(a)} x2={c[0] + (i % 5 ? 402 : 390) * Math.sin(a)} y2={c[1] - (i % 5 ? 402 : 390) * Math.cos(a)} stroke="#2a2018" strokeWidth={i % 5 ? 2 : 5} />; })}
+				{Object.entries(tags).map(([h, s]) => { const a = rad(Number(h) * 30); return <text key={h} x={c[0] + 268 * Math.sin(a)} y={c[1] - 268 * Math.cos(a) + 10} textAnchor="middle" style={{fontFamily: SERIF, fontWeight: 700, fontSize: 30}} fill="#7a1e1a" opacity={0.75}>{s}</text>; })}
+				{/* hands */}
+				<path d={hand(hourA + 150, 380, 10)} fill="#1a120c" opacity={0.85} />
+				<path d={hand(hourA, 300, 22)} fill="url(#brassG)" stroke="#3b2a12" strokeWidth={3} />
+				<circle cx={c[0]} cy={c[1]} r={26} fill="url(#brassG)" />
+				{/* a ledge in front of the dial: he walks along it */}
+				<rect x={0} y={940} width={W} height={140} fill="url(#m-walnut)" filter="url(#wood)" />
+				<rect x={0} y={936} width={W} height={10} fill="#c9a65e" opacity={0.35} />
+				<ellipse cx={640} cy={300} rx={500} ry={300} fill="#ffd9a0" opacity={0.06} filter="url(#b12)" />
+				<Hung x={turned ? 790 : 800} y={944} k={1.0} pose={pose} flip={turned} id="cf" top={-60} />
+				{Array.from({length: 30}, (_, i) => { const R2 = rnd2(i + 9); return <circle key={i} cx={300 + R2() * 1300} cy={100 + R2() * 800} r={0.8 + R2() * 1.6} fill="#ffd9b0" opacity={0.2 + 0.3 * R2()} />; })}
+			</svg>
+			<Grade />
+			<Mark />
+		</AbsoluteFill>
+	);
+};
+const Concepts: React.FC = () => {
+	useFonts();
+	const f = useCurrentFrame();
+	const t = 1.3;
+	const list = [
+		<MusicBox theta={-14} t={t} keyA={30} />,
+		<MusicBox theta={240} t={t} dark={1} stop={2.4} keyA={0} />,
+		<LoopTrain t={t} at={2} />,
+		<LoopTrain t={t} dark={1} chase={t * 3.3} />,
+		<ClockFace t={t} />,
+		<ClockFace t={t} turned />,
+	];
+	const subs = ['为什么加班？', '然后呢？', '为什么加班？', '然后呢？', '为什么上班？', '然后呢？'];
+	return <AbsoluteFill>{list[f % 6]}<Sub t={subs[f % 6]} /></AbsoluteFill>;
+};
+
+// ================================================================== v6 · the music box: every day is a little lit display box on a turning brass plate
+const MBP = {cx: 700, cy: 650, rx: 330, ry: 90, r: 0.74};
+const DW = 300, DH = 169, DB = 34;                                           // display-box opening (16:9) and its base molding, at k = 1
+const MB_TICKS = [7, 9, 11, 13, 14, 15, 16, 17, 18, 19].map(bt);
+const MB_W0 = bt(20) - 0.05, MB_W1 = bt(22) - 0.1;
+/** plate angle: one display box (60°) per move — the moves crowd together; then a whip that runs the spring down onto the platform box */
+const mbTheta = (T: number) => {
+	const sstep = (u: number) => { const v = cl01(u); return v * v * v * (v * (6 * v - 15) + 10); };
+	let th = 0;
+	MB_TICKS.forEach((tk, n) => { const d = (n + 1 < MB_TICKS.length ? MB_TICKS[n + 1] : bt(20)) - tk; th += 60 * sstep((T - tk + 0.08) / (Math.min(d, 1.0) * 0.82)); });
+	if (T >= MB_W0) {
+		const u = (T - MB_W0) / (MB_W1 - MB_W0);
+		// spins up hard, then the spring gives out: a long slowing, the last teeth catching one by one
+		const e = u < 1 ? (u < 0.35 ? 0.5 * Math.pow(u / 0.35, 2) * 0.62 : 0.31 + 0.69 * (1 - Math.pow(1 - (u - 0.35) / 0.65, 2.6))) : 1;
+		const hitch = u > 0.7 && u < 1 ? -0.006 * Math.abs(Math.sin((u - 0.7) * 40)) : 0;
+		th += 480 * (e + hitch) + (u >= 1 ? 3 * Math.exp(-(T - MB_W1) * 4) * Math.sin((T - MB_W1) * 15) : 0);
+	}
+	return th;
+};
+const mbSwing = (T: number) => {
+	const dt = 1 / 60, w = 2 * Math.PI * 0.9, z = 0.22;
+	let x = 0, v = 0;
+	const om = (s: number) => (mbTheta(s + dt) - mbTheta(s - dt)) / (2 * dt);
+	for (let s = Math.max(bt(6.5), T - 3); s < T; s += dt) { const acc = (om(s + dt) - om(s - dt)) / (2 * dt); const a = -0.004 * acc - 2 * z * w * v - w * w * x; v += a * dt; x += v * dt; }
+	return Math.max(-12, Math.min(12, x));
+};
+const boxAt = (i: number, theta: number) => {
+	const a = rad(((i * 60 - theta) % 360 + 540) % 360 - 180);
+	const x = MBP.cx + MBP.rx * MBP.r * Math.sin(a), y = MBP.cy + MBP.ry * MBP.r * Math.cos(a);
+	return {x, y, k: 0.55 + 0.45 * (0.5 + 0.5 * Math.cos(a)), front: Math.cos(a)};
+};
+/** world point at the centre of a box's opening */
+const openingC = (b: {x: number; y: number; k: number}): Pt => [b.x, b.y - (DB + DH / 2) * b.k];
+
+/** the little world inside each display box (drawn full size, shown scaled down) */
+const DioScene: React.FC<{id: StationId; t: number; i: number; swing?: number; stop?: number}> = ({id, t, i, swing = 0, stop = -1}) => {
+	const R = rnd2(i * 7 + 3);
+	const win = (x0: number, y0: number, cols: number, rows: number, w: number, h: number, gx: number, gy: number, lit = 0.25, warm = '#ffcf8a') =>
+		Array.from({length: cols * rows}, (_, k) => { const on = R() < lit; return <rect key={k} x={x0 + (k % cols) * gx} y={y0 + Math.floor(k / cols) * gy} width={w} height={h} fill={on ? warm : '#1a1f2a'} opacity={on ? 0.85 : 1} />; });
+	let back: React.ReactNode = null;
+	switch (id) {
+		case 'cross': back = (<g>
+			<linearGradient id="dsk1" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stopColor="#0a1020" /><stop offset="1" stopColor="#24304a" /></linearGradient>
+			<rect width={W} height={H} fill="url(#dsk1)" />
+			{[[80, 380, 300], [420, 260, 240], [700, 420, 280], [1240, 300, 260], [1540, 200, 330]].map(([x, y, w], k) => <g key={k}><rect x={x} y={y} width={w} height={1000 - y} fill={k % 2 ? '#141a26' : '#10151f'} />{win(x + 24, y + 30, Math.floor((w - 30) / 46), Math.floor((900 - y) / 60), 22, 30, 46, 60, 0.3)}</g>)}
+			<rect y={960} width={W} height={120} fill="#15171c" />
+			{Array.from({length: 8}, (_, k) => <rect key={k} x={260 + k * 180} y={1000} width={110} height={60} fill="#d8d2c4" opacity={0.5} transform="skewX(-30)" />)}
+			<ellipse cx={1340} cy={1010} rx={400} ry={40} fill="#ff4a3d" opacity={0.15} filter="url(#b12)" />
+		</g>); break;
+		case 'desk': back = (<g>
+			<rect width={W} height={H} fill="#1b1f25" />
+			<rect x={980} y={120} width={820} height={520} fill="#0c1424" />
+			{win(1000, 150, 9, 6, 60, 50, 88, 78, 0.18, '#ffd59a')}
+			{Array.from({length: 22}, (_, k) => <rect key={k} x={980} y={120 + k * 24} width={820} height={9} fill="#3a4250" opacity={0.75} />)}
+			<rect x={300} y={40} width={700} height={22} fill="#eef5ff" opacity={0.85} /><ellipse cx={650} cy={60} rx={600} ry={140} fill="#cfe0f5" opacity={0.12} filter="url(#b12)" />
+			<rect x={60} y={560} width={260} height={440} fill="#262b33" /><rect x={1600} y={600} width={300} height={400} fill="#262b33" />
+			<rect y={1000} width={W} height={80} fill="#121418" />
+		</g>); break;
+		case 'home': back = (<g>
+			<linearGradient id="dsk3" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stopColor="#070b16" /><stop offset="1" stopColor="#1d2238" /></linearGradient>
+			<rect width={W} height={H} fill="url(#dsk3)" />
+			<circle cx={1580} cy={190} r={60} fill="#f1e6c8" /><circle cx={1580} cy={190} r={200} fill="url(#warmGlow)" opacity={0.35} />
+			{[[60, 520, 260], [1400, 460, 300]].map(([x, y, w], k) => <g key={k}><rect x={x} y={y} width={w} height={1000 - y} fill="#11151f" />{win(x + 20, y + 26, Math.floor((w - 20) / 44), Math.floor((960 - y) / 56), 22, 28, 44, 56, 0.2)}</g>)}
+			<rect y={1000} width={W} height={80} fill="#121418" />
+		</g>); break;
+		case 'run': back = (<g>
+			<linearGradient id="dsk4" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stopColor="#0d1322" /><stop offset="0.7" stopColor="#3a2c3a" /><stop offset="1" stopColor="#7a4a3c" /></linearGradient>
+			<rect width={W} height={H} fill="url(#dsk4)" />
+			{[260, 900, 1540].map((x, k) => <g key={k}><rect x={x} y={420} width={12} height={580} fill="#22252b" /><rect x={x - 50} y={410} width={70} height={14} fill="#22252b" /><circle cx={x - 40} cy={430} r={14} fill="#ffcf8a" /><circle cx={x - 40} cy={480} r={160} fill="url(#warmGlow)" opacity={0.45} /></g>)}
+			<rect y={980} width={W} height={100} fill="#1a1c21" />
+		</g>); break;
+		case 'night': back = (<g>
+			<rect width={W} height={H} fill="#151a24" />
+			<rect x={1180} y={140} width={460} height={520} fill="#0a1222" /><rect x={1180} y={140} width={460} height={520} fill="none" stroke="#2b3240" strokeWidth={18} />
+			<line x1={1410} y1={140} x2={1410} y2={660} stroke="#2b3240" strokeWidth={12} /><circle cx={1520} cy={260} r={40} fill="#e9e3d0" opacity={0.9} />
+			<polygon points="1180,660 1640,660 1300,1000 600,1000" fill="#9fb6d8" opacity={0.06} />
+			<path d="M1120,120 Q1160,420 1130,700 L1180,700 L1180,120 Z M1700,120 Q1660,420 1690,700 L1640,700 L1640,120 Z" fill="#3a2a3a" />
+			<rect x={240} y={260} width={200} height={260} fill="#2a2f3a" /><rect x={256} y={276} width={168} height={228} fill="#4a3a30" opacity={0.6} />
+			<rect y={1000} width={W} height={80} fill="#121418" />
+		</g>); break;
+	}
+	return (
+		<AbsoluteFill style={{background: '#090b10'}}>
+			<svg width={W} height={H} style={{position: 'absolute', inset: 0}}>
+				<Defs />
+				{back}
+				<g transform="translate(960,1000) scale(2.0)"><Station id={id} t={t} lit={1} i={i} swing={swing} stop={stop} /></g>
+			</svg>
+		</AbsoluteFill>
+	);
+};
+
+/** one display box on the plate: walnut case, brass plaque, a lit room inside */
+const DisplayBox: React.FC<{b: {x: number; y: number; k: number; front: number}; id: StationId; q: string; i: number; t: number; lit: number; blur: number; swing: number; stop: number; headLift: number}> = ({b, id, q, i, t, lit, blur, swing, stop, headLift}) => {
+	const {x, y, k} = b;
+	const L = x - (DW / 2) * k, Tp = y - (DB + DH) * k;
+	const fw = 13, dx = 16, dy = 20;                                          // frame width, top/side depth
+	const ow = DW + 2 * fw, oh = DH + fw + DB;
+	return (
+		<>
+			<svg width={W} height={H} style={{position: 'absolute', inset: 0, overflow: 'visible'}}>
+				<g transform={`translate(${x},${y}) scale(${k})`}>
+					<ellipse cx={8} cy={2} rx={ow * 0.56} ry={16} fill="#000" opacity={0.55} filter="url(#b6)" />
+					{/* top and right side of the case */}
+					<polygon points={`${-ow / 2},${-oh} ${ow / 2},${-oh} ${ow / 2 + dx},${-oh - dy} ${-ow / 2 + dx},${-oh - dy}`} fill="#6b4a30" />
+					<polygon points={`${-ow / 2},${-oh} ${ow / 2},${-oh} ${ow / 2 + dx},${-oh - dy} ${-ow / 2 + dx},${-oh - dy}`} fill="url(#m-walnut)" filter="url(#wood)" opacity={0.6} />
+					<line x1={-ow / 2} y1={-oh} x2={ow / 2} y2={-oh} stroke="#e4c27e" strokeWidth={1.4} opacity={0.6} />
+					<polygon points={`${ow / 2},${-oh} ${ow / 2 + dx},${-oh - dy} ${ow / 2 + dx},${-dy} ${ow / 2},0`} fill="#24160d" />
+				</g>
+			</svg>
+			{/* the room inside */}
+			<div style={{position: 'absolute', left: L, top: Tp, width: DW * k, height: DH * k, overflow: 'hidden', background: '#000', filter: blur > 0.2 ? `blur(${blur}px)` : undefined}}>
+				<div style={{position: 'absolute', left: 0, top: 0, width: W, height: H, transform: `scale(${(DW * k) / W})`, transformOrigin: '0 0'}}>
+					{id === 'metro' ? <S1b t={t} crowd sub="" headLift={headLift} bare /> : <DioScene id={id} t={t} i={i} swing={swing} stop={stop} />}
+				</div>
+				<div style={{position: 'absolute', inset: 0, boxShadow: `inset 0 0 ${18 * k}px ${6 * k}px rgba(0,0,0,0.85)`, background: `rgba(4,3,2,${(1 - lit) * 0.92})`}} />
+			</div>
+			<svg width={W} height={H} style={{position: 'absolute', inset: 0, overflow: 'visible'}}>
+				<g transform={`translate(${x},${y}) scale(${k})`}>
+					{/* frame with a hole, moulding lines, glass sheen, plaque */}
+					<path fillRule="evenodd" d={`M${-ow / 2},${-oh} H${ow / 2} V0 H${-ow / 2} Z M${-DW / 2},${-DB - DH} V${-DB} H${DW / 2} V${-DB - DH} Z`} fill="#4a301f" />
+					<path fillRule="evenodd" d={`M${-ow / 2},${-oh} H${ow / 2} V0 H${-ow / 2} Z M${-DW / 2},${-DB - DH} V${-DB} H${DW / 2} V${-DB - DH} Z`} fill="url(#m-walnut)" filter="url(#wood)" opacity={0.75} />
+					<rect x={-DW / 2 - 4} y={-DB - DH - 4} width={DW + 8} height={DH + 8} fill="none" stroke="#d7b46a" strokeWidth={2} opacity={0.7} />
+					<rect x={-ow / 2 + 3} y={-oh + 3} width={ow - 6} height={oh - 6} fill="none" stroke="#000" strokeWidth={2} opacity={0.35} />
+					<line x1={-ow / 2} y1={-DB + 6} x2={ow / 2} y2={-DB + 6} stroke="#000" strokeWidth={1.5} opacity={0.4} />
+					<polygon points={`${-DW / 2},${-DB - DH} ${-DW / 2 + 70},${-DB - DH} ${-DW / 2 + 10},${-DB} ${-DW / 2},${-DB}`} fill="#fff" opacity={0.05} />
+					<polygon points={`${-DW / 2 + 110},${-DB - DH} ${-DW / 2 + 130},${-DB - DH} ${-DW / 2 + 60},${-DB} ${-DW / 2 + 40},${-DB}`} fill="#fff" opacity={0.04} />
+					<g transform={`translate(0,${-DB / 2 + 2})`}>
+						<rect x={-82} y={-12} width={164} height={24} rx={3} fill="#a8823d" />
+						<rect x={-82} y={-12} width={164} height={24} rx={3} fill="url(#brassP)" />
+						<rect x={-79} y={-9} width={158} height={18} rx={2} fill="none" stroke="#5b4420" strokeWidth={1} opacity={0.7} />
+						{[-74, 74].map((sx) => <circle key={sx} cx={sx} cy={0} r={2.2} fill="#5b4420" />)}
+						<text y={6.5} textAnchor="middle" style={{fontFamily: SERIF, fontWeight: 900, fontSize: 17, letterSpacing: '0.08em'}} fill="#2a1a08">{q}</text>
+					</g>
+				</g>
+			</svg>
+		</>
+	);
+};
+
+/** the music box itself, in world coordinates; the display boxes ride its plate */
+const MusicBox6: React.FC<{T: number; theta: number; dark: number; spot: number; headLift: number; stop: number; blur: number; swing: number}> = ({T, theta, dark, spot, headLift, stop, blur, swing}) => {
+	const L = 1 - 0.9 * dark;
+	const boxes = STATIONS.map((s, i) => ({s, i, b: boxAt(i, theta)})).sort((p, q) => p.b.front - q.b.front);
+	const keyA = -theta * 0.9;
+	const lid = {bl: [430, 470] as Pt, br: [1370, 470] as Pt, tl: [462, -70] as Pt, tr: [1338, -70] as Pt};
+	const arch = (x0: number, x1: number, yb: number, yt: number) => `M${x0},${yb} L${x0},${yt + (x1 - x0) * 0.32} Q${x0},${yt} ${(x0 + x1) / 2},${yt} Q${x1},${yt} ${x1},${yt + (x1 - x0) * 0.32} L${x1},${yb} Z`;
+	return (
+		<div style={{position: 'absolute', left: 0, top: 0, width: W, height: H}}>
+			<svg width={W} height={H} style={{position: 'absolute', inset: 0, overflow: 'visible'}}>
+				<Defs />
+				<linearGradient id="brassP" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stopColor="#f6e2a6" /><stop offset="0.45" stopColor="#c9a052" /><stop offset="1" stopColor="#6e5226" /></linearGradient>
+				<radialGradient id="brassD" cx="0.38" cy="0.3" r="0.8"><stop offset="0" stopColor="#fbe8b0" /><stop offset="0.35" stopColor="#d2ab5c" /><stop offset="0.75" stopColor="#8a6a30" /><stop offset="1" stopColor="#4a3618" /></radialGradient>
+				<linearGradient id="cylP" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stopColor="#5b4420" /><stop offset="0.3" stopColor="#f6e2a6" /><stop offset="0.55" stopColor="#b48d45" /><stop offset="1" stopColor="#3a2a12" /></linearGradient>
+				<linearGradient id="steelP" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stopColor="#eef1f4" /><stop offset="1" stopColor="#6c737c" /></linearGradient>
+				<linearGradient id="velW" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stopColor="#2a0609" /><stop offset="1" stopColor="#5e1119" /></linearGradient>
+				<radialGradient id="velD" cx="0.4" cy="0.7" r="0.8"><stop offset="0" stopColor="#8a1e28" /><stop offset="0.55" stopColor="#5a0f18" /><stop offset="1" stopColor="#26050a" /></radialGradient>
+				<linearGradient id="mirP" x1="0" y1="0" x2="0.4" y2="1"><stop offset="0" stopColor="#4a4740" /><stop offset="0.45" stopColor="#25231f" /><stop offset="1" stopColor="#141310" /></linearGradient>
+				<linearGradient id="tableP" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stopColor="#1e140d" /><stop offset="1" stopColor="#0b0705" /></linearGradient>
+				{/* the room: dark, a lamp far left, a cold window far right */}
+				<rect x={-1400} y={-900} width={4700} height={2900} fill="#0b0807" />
+				<g filter="url(#b12)" opacity={L}>
+					<circle cx={-120} cy={60} r={520} fill="url(#warmGlow)" opacity={0.8} />
+					<rect x={1700} y={-200} width={420} height={640} fill="#18233a" />
+					{[[-60, 420, 34], [1880, 520, 22], [2000, 260, 30], [120, 700, 18]].map(([x, y, r], i) => <circle key={i} cx={x} cy={y} r={r} fill="#ffcf8a" opacity={0.22} />)}
+				</g>
+				{/* the table */}
+				<polygon points="-1400,930 3300,930 3300,2000 -1400,2000" fill="url(#tableP)" />
+				<polygon points="-1400,930 3300,930 3300,2000 -1400,2000" fill="url(#m-walnut)" filter="url(#wood)" opacity={0.25} />
+				<ellipse cx={300} cy={1000} rx={700} ry={60} fill="#ffd9a0" opacity={0.08 * L} filter="url(#b12)" />
+				{/* the lid, standing open behind */}
+				<polygon points={`${lid.bl.join(',')} ${lid.br.join(',')} ${lid.tr.join(',')} ${lid.tl.join(',')}`} fill="#3d2616" />
+				<polygon points={`${lid.bl.join(',')} ${lid.br.join(',')} ${lid.tr.join(',')} ${lid.tl.join(',')}`} fill="url(#m-walnut)" filter="url(#wood)" opacity={0.8} />
+				<polygon points={`${lid.tl[0]},${lid.tl[1]} ${lid.tr[0]},${lid.tr[1]} ${lid.tr[0] + 14},${lid.tr[1] - 22} ${lid.tl[0] + 14},${lid.tl[1] - 22}`} fill="#5a3a22" />
+				<polygon points="470,455 1330,455 1302,-36 498,-36" fill="url(#velW)" />
+				<polygon points="470,455 1330,455 1302,-36 498,-36" fill="#5a0f18" filter="url(#felt)" opacity={0.5} />
+				<polygon points="470,455 1330,455 1302,-36 498,-36" fill="none" stroke="#d7b46a" strokeWidth={3} opacity={0.55} />
+				<polygon points="486,442 1314,442 1288,-22 512,-22" fill="none" stroke="#d7b46a" strokeWidth={1.2} opacity={0.4} />
+				{[[498, -36], [1302, -36], [470, 455], [1330, 455]].map(([cx, cy], i) => <path key={i} d={`M${cx - 14},${cy} Q${cx},${cy - 14} ${cx + 14},${cy} Q${cx},${cy + 14} ${cx - 14},${cy} Z`} fill="#d7b46a" opacity={0.55} />)}
+				{/* arched mirror in a gilt frame */}
+				<path d={arch(600, 1200, 420, 30)} fill="#6e5226" />
+				<path d={arch(612, 1188, 410, 42)} fill="url(#brassP)" />
+				<path d={arch(626, 1174, 398, 56)} fill="url(#mirP)" />
+				<g opacity={0.5 * L}><ellipse cx={760} cy={170} rx={180} ry={90} fill="url(#warmGlow)" filter="url(#b6)" />
+					{[0, 1, 2].map((j) => <rect key={j} x={680 + j * 170} y={260} width={120} height={80} rx={6} fill="#ffcf8a" opacity={0.12} filter="url(#b6)" />)}</g>
+				<path d="M700,70 L880,398 M780,62 L930,330" stroke="#fff" strokeWidth={16} opacity={0.04} />
+				<path d={arch(626, 1174, 398, 56)} fill="none" stroke="#2a1d0c" strokeWidth={2} />
+				{/* hinges */}
+				{[560, 1240].map((hx) => <g key={hx}><rect x={hx - 30} y={456} width={60} height={20} rx={4} fill="url(#brassP)" /><line x1={hx - 30} y1={466} x2={hx + 30} y2={466} stroke="#5b4420" strokeWidth={2} /></g>)}
+				{/* the box: rim, inner velvet walls, deck */}
+				<polygon points="430,470 1370,470 1530,800 270,800" fill="#2e1d11" />
+				<polygon points="430,470 1370,470 1530,800 270,800" fill="url(#m-walnut)" filter="url(#wood)" />
+				<polygon points="452,482 1348,482 1500,786 300,786" fill="url(#velW)" />
+				<polygon points="470,520 1330,520 1470,770 330,770" fill="url(#velD)" />
+				<polygon points="470,520 1330,520 1470,770 330,770" fill="#6a1420" filter="url(#felt)" opacity={0.45} />
+				{/* velvet pleats on the inner walls */}
+				{Array.from({length: 20}, (_, j) => { const u = j / 19; const x0 = 452 + (1348 - 452) * u, x1 = 470 + (1330 - 470) * u; return <line key={j} x1={x0} y1={484} x2={x1} y2={520} stroke="#000" strokeWidth={6} opacity={0.18} />; })}
+				<line x1={430} y1={470} x2={1370} y2={470} stroke="#e4c27e" strokeWidth={2.5} opacity={0.5} />
+				<line x1={270} y1={800} x2={1530} y2={800} stroke="#e4c27e" strokeWidth={3} opacity={0.6} />
+				{/* the movement, under glass on the right: spring barrel, pinned cylinder, steel comb, the little fly-fan */}
+				<polygon points="1050,540 1316,540 1420,756 1080,756" fill="#120a06" />
+				<polygon points="1050,540 1316,540 1420,756 1080,756" fill="none" stroke="#d7b46a" strokeWidth={3} opacity={0.6} />
+				<g opacity={0.35 + 0.65 * L}>
+					<ellipse cx={1130} cy={600} rx={56} ry={30} fill="#3a2a12" /><ellipse cx={1130} cy={594} rx={56} ry={30} fill="url(#brassD)" />
+					<path d={Array.from({length: 40}, (_, j) => { const a = j * 0.45 + keyA * 0.02, r = 6 + j * 1.1; return `${j ? 'L' : 'M'}${1130 + r * Math.cos(a)},${594 + r * 0.53 * Math.sin(a)}`; }).join(' ')} fill="none" stroke="#4a3618" strokeWidth={1.4} opacity={0.7} />
+					<rect x={1100} y={650} width={290} height={54} rx={26} fill="url(#cylP)" />
+					{Array.from({length: 84}, (_, j) => { const col = j % 21, row = Math.floor(j / 21); const ph = (row * 0.27 + col * 0.137 + theta / 70) % 1; return <circle key={j} cx={1114 + col * 13.2} cy={652 + ph * 50} r={1.8} fill="#fff6d8" opacity={Math.sin(ph * Math.PI) * 0.95} />; })}
+					<rect x={1086} y={656} width={16} height={40} rx={3} fill="#4a3618" /><rect x={1388} y={656} width={16} height={40} rx={3} fill="#4a3618" />
+					<rect x={1098} y={716} width={300} height={20} fill="url(#steelP)" />
+					{Array.from({length: 30}, (_, j) => <rect key={j} x={1102 + j * 9.8} y={700 - (j % 7) * 0.8} width={6} height={20 + (j % 7) * 0.8} fill="url(#steelP)" />)}
+					{[1140, 1260, 1370].map((sx) => <circle key={sx} cx={sx} cy={726} r={3.4} fill="#4a4f56" />)}
+					<g transform={`translate(1290,598)`}>
+						<rect x={-2} y={-24} width={4} height={30} fill="#8a8f96" />
+						<ellipse cx={0} cy={-22} rx={30 * Math.abs(Math.cos(rad(theta * 9)))} ry={12} fill="#c9ced4" opacity={0.85} />
+						<ellipse cx={0} cy={-22} rx={30} ry={12} fill="#c9ced4" opacity={0.12} />
+					</g>
+				</g>
+				<polygon points="1050,540 1316,540 1420,756 1080,756" fill="#cfe0f5" opacity={0.05} />
+				<polygon points="1090,540 1150,540 1220,756 1160,756" fill="#fff" opacity={0.06} />
+				{/* the brass plate */}
+				<ellipse cx={MBP.cx + 4} cy={MBP.cy + 30} rx={MBP.rx + 14} ry={MBP.ry + 18} fill="#000" opacity={0.6} filter="url(#b6)" />
+				<ellipse cx={MBP.cx} cy={MBP.cy + 16} rx={MBP.rx} ry={MBP.ry} fill="#4a3618" />
+				<ellipse cx={MBP.cx} cy={MBP.cy} rx={MBP.rx} ry={MBP.ry} fill="url(#brassD)" />
+				{[0.2, 0.36, 0.52, 0.68, 0.84].map((q) => <ellipse key={q} cx={MBP.cx} cy={MBP.cy} rx={MBP.rx * q} ry={MBP.ry * q} fill="none" stroke="#5b4420" strokeWidth={1} opacity={0.35} />)}
+				<ellipse cx={MBP.cx} cy={MBP.cy} rx={MBP.rx * 0.94} ry={MBP.ry * 0.94} fill="none" stroke="#f6e2a6" strokeWidth={1.5} opacity={0.5} />
+				{Array.from({length: 72}, (_, j) => { const a = rad(j * 5 - theta); if (Math.cos(a) < -0.2) return null; return <line key={j} x1={MBP.cx + MBP.rx * 0.985 * Math.sin(a)} y1={MBP.cy + MBP.ry * 0.985 * Math.cos(a)} x2={MBP.cx + MBP.rx * (j % 6 ? 0.955 : 0.93) * Math.sin(a)} y2={MBP.cy + MBP.ry * (j % 6 ? 0.955 : 0.93) * Math.cos(a)} stroke="#4a3618" strokeWidth={j % 6 ? 1.2 : 2.4} opacity={0.6} />; })}
+				<ellipse cx={MBP.cx - 90} cy={MBP.cy - 30} rx={170} ry={26} fill="#fff4d0" opacity={0.3 * L} filter="url(#b6)" />
+				<g transform={`translate(${MBP.cx},${MBP.cy})`}><ellipse cx={0} cy={4} rx={24} ry={8} fill="#3a2a12" /><rect x={-7} y={-40} width={14} height={44} fill="url(#cylP)" /><circle cx={0} cy={-46} r={10} fill="url(#brassD)" /></g>
+			</svg>
+			{/* the display boxes, back to front */}
+			{boxes.map(({s, i, b}) => {
+				if (b.front < -0.35) return null;
+				const isFront = b.front > 0.97;
+				const lit = (spot > 0 && !isFront ? 1 - spot * 0.85 : 1) * (isFront ? 1 : L);
+				return <div key={s.id} style={{position: 'absolute', inset: 0, opacity: cl01((b.front + 0.35) * 2.5)}}>
+					<DisplayBox b={b} id={s.id} q={s.q} i={i} t={T} lit={lit} blur={blur * (0.6 + 0.4 * b.front)} swing={swing} stop={s.id === 'run' ? -1 : stop} headLift={headLift} />
+				</div>;
+			})}
+			<svg width={W} height={H} style={{position: 'absolute', inset: 0, overflow: 'visible'}}>
+				{/* front face: inlay, brass corners, escutcheon, the wind-up key */}
+				<polygon points="270,800 1530,800 1530,1010 270,1010" fill="#2e1d11" />
+				<polygon points="270,800 1530,800 1530,1010 270,1010" fill="url(#m-walnut)" filter="url(#wood)" />
+				<rect x={300} y={826} width={1200} height={158} fill="none" stroke="#d7b46a" strokeWidth={2} opacity={0.5} />
+				<rect x={312} y={838} width={1176} height={134} fill="none" stroke="#d7b46a" strokeWidth={1} opacity={0.3} />
+				{[[270, 800, 1], [1530, 800, -1], [270, 1010, 1], [1530, 1010, -1]].map(([cx, cy, sx], i) => <path key={i} d={`M${cx},${cy} l${sx * 46},0 l${-sx * 46},${cy > 900 ? -46 : 46} Z`} fill="url(#brassP)" opacity={0.95} />)}
+				<g transform="translate(900,905)">
+					<path d="M0,-50 C34,-50 40,-20 30,0 C40,20 34,50 0,50 C-34,50 -40,20 -30,0 C-40,-20 -34,-50 0,-50 Z" fill="url(#brassP)" stroke="#5b4420" strokeWidth={2} />
+					<circle cx={0} cy={-10} r={9} fill="#120a04" /><path d="M-5,-4 L5,-4 L8,22 L-8,22 Z" fill="#120a04" />
+				</g>
+				{[[320, 1012], [1480, 1012]].map(([fx, fy], i) => <ellipse key={i} cx={fx} cy={fy + 6} rx={36} ry={10} fill="url(#brassP)" />)}
+				<g opacity={0.12}><polygon points="270,1016 1530,1016 1530,1110 270,1110" fill="url(#m-walnut)" filter="url(#b6)" /></g>
+				<g transform="translate(1440,905)">
+					<circle r={22} fill="#3a2a12" /><circle r={16} fill="url(#brassD)" />
+					<g transform={`rotate(${keyA})`}>
+						<rect x={-6} y={-26} width={12} height={26} fill="url(#cylP)" />
+						<path d="M0,-24 C-36,-40 -78,-72 -74,-108 C-70,-132 -30,-128 -8,-96 C-2,-86 0,-60 0,-24 C0,-60 2,-86 8,-96 C30,-128 70,-132 74,-108 C78,-72 36,-40 0,-24 Z" fill="url(#brassP)" stroke="#5b4420" strokeWidth={2.5} />
+						<path d="M-40,-96 C-36,-110 -22,-112 -16,-100 M40,-96 C36,-110 22,-112 16,-100" stroke="#fff4d0" strokeWidth={3} fill="none" opacity={0.5} />
+					</g>
+				</g>
+				{/* lamp light raking across from the left */}
+				<polygon points="-600,-400 500,-400 1700,1100 -600,1100" fill="#ffd9a0" opacity={0.04 * L} filter="url(#b12)" />
+			</svg>
+		</div>
+	);
+};
+
+/** camera over the music-box world */
+type Cam = {s: number; c: Pt; shake?: number};
+const S_IN = W / DW;                                                          // a display box's opening filling the screen
+const camLerp = (a: Cam, b: Cam, e: number): Cam => ({s: Math.exp(Math.log(a.s) + (Math.log(b.s) - Math.log(a.s)) * e), c: [a.c[0] + (b.c[0] - a.c[0]) * e, a.c[1] + (b.c[1] - a.c[1]) * e]});
+/** a zoom through scale keeps the target fixed in screen space at high scale: blend centres by how far in we are */
+const camZoom = (from: Cam, to: Cam, e: number): Cam => {
+	const s = Math.exp(Math.log(from.s) + (Math.log(to.s) - Math.log(from.s)) * e);
+	const w = (1 / s - 1 / from.s) / (1 / to.s - 1 / from.s || 1);
+	return {s, c: [from.c[0] + (to.c[0] - from.c[0]) * w, from.c[1] + (to.c[1] - from.c[1]) * w]};
+};
+const easeIO5 = (u: number) => { const v = cl01(u); return v < 0.5 ? 16 * v ** 5 : 1 - Math.pow(-2 * v + 2, 5) / 2; };
+
+const Open6: React.FC = () => {
+	useFonts();
+	const T = useCurrentFrame() / FPS;
+	const sub = (a: number, b: number, s: string) => (T >= a && T < b ? <AbsoluteFill style={{opacity: Math.min(1, (T - a) / 0.2, (b - T) / 0.2)}}><Sub t={s} /></AbsoluteFill> : null);
+	const front0 = openingC(boxAt(0, 0));
+	const MID: Cam = {s: 2.15, c: [700, 596]};
+	const WIDE: Cam = {s: 1.0, c: [900, 520]};
+	const IN: Cam = {s: S_IN, c: front0};
+	const PULL0 = bt(5), PULL1 = bt(7) - 0.05, DIVE0 = bt(25) + 0.1, DIVE1 = bt(26);
+	const theta = mbTheta(T);
+	const om = Math.abs(mbTheta(T + 1 / 60) - mbTheta(T - 1 / 60)) * 30;      // deg/s
+	let pic: React.ReactNode = null, cam: Cam = WIDE, worldBlur = 0;
+	const lift = T < bt(22) ? 6 : 6 + 30 * easeIO5((T - bt(22.6)) / 1.6);       // 然后呢: the little commuter slowly looks up
+	if (T < PULL0) pic = <S1b t={T} crowd sub="" headLift={6 * ease(cl01((T - 0.3) / 1.4))} />;
+	else if (T < DIVE1) {
+		if (T < PULL1) { const e = easeIO5((T - PULL0) / (PULL1 - PULL0)); cam = camZoom(IN, MID, e); worldBlur = 3 * Math.sin(Math.PI * e); }
+		else if (T < bt(19)) { const u = (T - PULL1) / (bt(19) - PULL1); const beat = MB_TICKS.reduce((m, tk) => (T >= tk ? T - tk : m), 9); const push = 0.06 * Math.exp(-beat * 3) * (1 - Math.exp(-beat * 30)); cam = {s: MID.s * (1 - 0.28 * ease(u)) * (1 + push), c: [MID.c[0] + 60 * ease(u), MID.c[1] - 20 * ease(u)]}; }
+		else if (T < bt(22)) { const u = (T - bt(19)) / (bt(22) - bt(19)); const a: Cam = {s: MID.s * 0.72, c: [760, 576]}; cam = camLerp(a, WIDE, easeIO5(u * 1.1)); cam.shake = Math.min(1, om / 500) * 6; }
+		else if (T < DIVE0) { const u = (T - bt(22)) / (DIVE0 - bt(22)); cam = camLerp(WIDE, {s: 2.6, c: front0}, easeIO5(u)); }
+		else { const e = Math.pow(cl01((T - DIVE0) / (DIVE1 - DIVE0)), 2.4); cam = camZoom({s: 2.6, c: front0}, IN, e); worldBlur = 4 * e * (1 - e) * 4; }
+		const dark = T < bt(22) ? 0 : easeIO5((T - bt(22)) / 0.9);
+		const blur = Math.min(5, om / 140);
+		const sh = cam.shake ?? 0;
+		const tx = W / 2 - cam.s * cam.c[0] + sh * Math.sin(T * 47), ty = H / 2 - cam.s * cam.c[1] + sh * Math.cos(T * 39);
+		pic = (
+			<AbsoluteFill style={{background: '#0b0807', overflow: 'hidden'}}>
+				<div style={{position: 'absolute', left: 0, top: 0, width: W, height: H, transform: `translate(${tx}px,${ty}px) scale(${cam.s})`, transformOrigin: '0 0', filter: worldBlur > 0.3 ? `blur(${worldBlur}px)` : undefined}}>
+					<MusicBox6 T={T} theta={theta} dark={dark} spot={dark} headLift={lift} stop={-1} blur={blur} swing={mbSwing(T)} />
+				</div>
+				{dark > 0 && <AbsoluteFill style={{background: `radial-gradient(ellipse 34% 42% at 50% 50%, rgba(0,0,0,0) 0%, rgba(0,0,0,${0.7 * dark}) 100%)`}} />}
+				<Grade />
+				<Mark />
+			</AbsoluteFill>
+		);
+	}
+	else if (T < bt(29)) { const u = (T - bt(26)) / (bt(29) - bt(26)); pic = <S1b t={T} crowd spin={6 * ease(u)} headLift={36 - 46 * easeIO5(cl01((u - 0.1) * 1.6))} sub="" />; }
+	else pic = <V2Hill t={T - bt(29)} header="" plankY={T < T_DRUM - 0.5 ? -320 : T < T_DRUM ? -320 + 620 * Math.pow((T - (T_DRUM - 0.5)) / 0.5, 2) : 300 - 26 * Math.exp(-5 * (T - T_DRUM)) * Math.cos(16 * (T - T_DRUM))} />;
+	// a jolt on the strings just before the cut to the hill
+	return (
+		<AbsoluteFill style={{background: '#000', overflow: 'hidden'}}>
+			{pic}
+			{T >= bt(29) - 0.12 && T < bt(29) + 0.05 && <AbsoluteFill style={{background: '#000'}} />}
+			{sub(0.5, bt(5) - 0.05, '为什么挤地铁？')}
+			{sub(bt(22) + 0.6, bt(25) + 0.05, '然后呢？')}
+			{sub(bt(26) + 0.15, bt(29) - 0.15, '第二天，再来一遍')}
+			{sub(bt(29) + 0.15, T_DRUM - 0.1, '有个人，这样过了永远')}
+			{sub(T_DRUM + 0.9, T_DRUM + 3.6, '可有位哲学家说：他是幸福的')}
+		</AbsoluteFill>
+	);
+};
+
 const Puppet35: React.FC = () => {
 	useFonts();
 	const t = useCurrentFrame() / FPS;
@@ -2142,6 +2700,8 @@ registerRoot(() => (
 		<Composition id="COVER35" component={() => { useFonts(); return <CoverScene />; }} durationInFrames={1} fps={FPS} width={W} height={H} />
 		<Composition id="STY35" component={Style2} durationInFrames={12 * FPS} fps={FPS} width={W} height={H} />
 		<Composition id="OPEN35" component={Open35} durationInFrames={Math.round(16.5 * FPS)} fps={FPS} width={W} height={H} />
+		<Composition id="CONCEPTS" component={Concepts} durationInFrames={6} fps={FPS} width={W} height={H} />
+		<Composition id="OPEN6" component={Open6} durationInFrames={Math.round(20.5 * FPS)} fps={FPS} width={W} height={H} />
 		<Composition id="OPEN4" component={Open4} durationInFrames={Math.round(20.5 * FPS)} fps={FPS} width={W} height={H} />
 		<Composition id="FILM35" component={Film35} durationInFrames={FILM35_FRAMES} fps={FPS} width={W} height={H} />
 	</>

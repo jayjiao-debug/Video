@@ -1,8 +1,8 @@
 {
-  "id": "open_v5-1792577126",
-  "composition": "OPEN4",
+  "id": "open_v6-1792579103",
+  "composition": "OPEN6",
   "start": 0,
   "end": 614,
-  "chunks": 6,
-  "output": "open_v5"
+  "chunks": 8,
+  "output": "open_v6"
 }
