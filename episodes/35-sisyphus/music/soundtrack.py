@@ -1,5 +1,5 @@
-"""ep35 cold open: TV sound design (dial clicks, static bursts, CRT hum, power off/on) mixed under the owner's BGM.
-usage: python3 open_sfx.py <bgm.mp3> <out.wav> [duration]
+"""ep35 soundtrack: the owner's BGM (untouched) + the cold open's TV sounds (dial clicks, static bursts, switch off/on).
+usage: python3 soundtrack.py <bgm.mp3> <out.wav> [duration]
 Times follow the picture (Open8): bt(k) = 0.416 + 0.50625 k."""
 import subprocess, sys, numpy as np, wave
 SR = 44100

@@ -1,0 +1,6 @@
+node_modules/
+out/
+public/bgm*.mp3
+*.mp4
+*.wav
+checks/pushIK.mjs
