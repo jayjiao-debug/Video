@@ -1551,7 +1551,7 @@ const LoneBar: React.FC<{x: number; y: number; rot: number}> = ({x, y, rot}) => 
 const flipPts = (pose: Pose, flip: boolean) => attachPts(pose).map(({p, to}) => ({p: (flip ? [-p[0], p[1]] : p) as Pt, to: flip ? -to : to}));
 
 // ---- V2 · the hill at dusk: he pushes the boulder up to the left; the bar hangs in the dark above, nobody holding it
-const V2Hill: React.FC<{t: number; header?: string; plankY?: number}> = ({t, header = '古希腊 · 神话', plankY}) => {
+const V2Hill: React.FC<{t: number; header?: string; plankY?: number; beam?: number}> = ({t, header = '古希腊 · 神话', plankY, beam = 0}) => {
 	const pan = -18 * t;                                                         // slow truck right → parallax
 	const ys = (x: number) => 420 + 0.34 * x + 0.00011 * (x - 900) * (x - 900);
 	const heave = Math.max(0, Math.sin(t * 2.0)) ** 2;
@@ -1590,7 +1590,18 @@ const V2Hill: React.FC<{t: number; header?: string; plankY?: number}> = ({t, hea
 				<Pebbles seed={8} n={140} x0={-80} x1={2100} yAt={ys} depth={[14, 260]} />
 				{Array.from({length: 18}, (_, i) => { const x = 40 + i * 118 + (i % 3) * 30, y = ys(x) - 4; return <path key={i} d={`M${x},${y} l-6,-26 l7,10 l3,-30 l5,27 l8,-20 l-3,39 Z`} fill="#2d3424" opacity={0.9} />; })}
 				<BigRock c={rc} r={r} sun={sun} ground={ys(rc[0])} />
+				{beam > 0 && <g>
+					{/* a shaft of light from above: everything else sinks back, the puppet stands in it */}
+					<rect x={-400} y={-200} width={W + 800} height={H + 400} fill="#05060c" opacity={0.5 * beam} />
+					<linearGradient id="beamG" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stopColor="#fff6dc" stopOpacity="0" /><stop offset="0.35" stopColor="#fff2d0" stopOpacity="0.35" /><stop offset="1" stopColor="#ffe9bf" stopOpacity="0.7" /></linearGradient>
+					<polygon points={`${mx - 300},-120 ${mx - 160},-120 ${mx + 190},${my + 30} ${mx - 170},${my + 30}`} fill="url(#beamG)" opacity={beam} filter="url(#b12)" />
+					<polygon points={`${mx - 255},-120 ${mx - 205},-120 ${mx + 70},${my + 20} ${mx - 60},${my + 20}`} fill="url(#beamG)" opacity={0.8 * beam} filter="url(#b6)" />
+					<ellipse cx={mx + 10} cy={my + 8} rx={230} ry={36} fill="#fff1cc" opacity={0.55 * beam} filter="url(#b6)" />
+					<ellipse cx={mx} cy={my - 250} rx={170} ry={300} fill="url(#warmGlow)" opacity={0.75 * beam} />
+					{Array.from({length: 46}, (_, q) => { const R = rnd2(q + 77); const v = R(); const y = -100 + ((R() * (my + 100) + t * 18 * (0.3 + R())) % (my + 100)); const x = mx - 255 + (y + 120) / (my + 140) * 120 + (R() - 0.5) * (60 + 260 * (y + 120) / (my + 140)); return <circle key={q} cx={x} cy={y} r={0.8 + v * 1.8} fill="#fff6e0" opacity={(0.25 + 0.5 * R()) * beam} />; })}
+				</g>}
 				<Man x={mx} y={my} k={k} pose={pose} flip />
+				{beam > 0 && <g style={{mixBlendMode: 'screen', filter: 'brightness(2.4)'}} opacity={0.5 * beam}><g transform={`translate(${mx},${my}) scale(${-k},${k})`} filter="url(#b1.5)"><Mannequin pose={pose} /></g></g>}
 				{flipPts(pose, true).map(({p, to}, i) => { const a = W2(mx, my, k, p); const slot: Pt = [to < 0 ? -124 + 40 * (Math.abs(to) - 1) : 124 - 40 * (Math.abs(to) - 1), Math.abs(to) === 1 ? 150 : 0]; return <g key={i}><RealString a={a} b={barPt(bar[0], bar[1], brot, slot)} id={`vh${i}`} band={[0.15, 0.6]} w={i === 4 || i === 6 ? 1.15 : 0.9} /><Eyelet p={a} k={k * 0.9} /></g>; })}
 				<LoneBar x={bar[0]} y={bar[1]} rot={brot} />
 				{/* dust kicked up and floating in the backlight */}
@@ -2686,6 +2697,233 @@ const Open6: React.FC = () => {
 	);
 };
 
+// ================================================================== v7 · an old CRT television: every "why" is a channel; flipping faster and faster
+const TVS = {x: 640, y: 300, w: 540, h: 405};                               // the screen (4:3), world coordinates
+const TV_C: Pt = [TVS.x + TVS.w / 2, TVS.y + TVS.h / 2];
+const CH_ORDER = [1, 2, 3, 4, 5, 0, 1, 2, 3, 4, 5, 0, 1, 2, 3, 4, 0];       // index into STATIONS
+const TV_FLIPS = [7, 9, 11, 13, 14, 15, 16, 17, 18, 19, 19.5, 20, 20.5, 21, 21.25, 21.5, 21.75].map(bt);
+const TV_OFF = bt(22);
+/** which channel is on and how long since the last flip */
+const tvChannel = (T: number) => { let n = 0, since = 99; TV_FLIPS.forEach((tf, k) => { if (T >= tf) { n = k + 1; since = T - tf; } }); return {ch: n === 0 ? 0 : CH_ORDER[n - 1], n, since}; };
+const CH_GLOW: Record<StationId, string> = {metro: '#9fc0e8', cross: '#d0605a', desk: '#c9d8ee', home: '#e8b878', run: '#e89a6a', night: '#8fa8d8'};
+
+/** analogue snow: per-frame noise */
+const Snow: React.FC<{w: number; h: number; seed: number; o?: number; id: string}> = ({w, h, seed, o = 1, id}) => (
+	<svg width={w} height={h} style={{position: 'absolute', inset: 0, opacity: o}}>
+		<filter id={id} x="0" y="0" width="100%" height="100%">
+			<feTurbulence type="fractalNoise" baseFrequency="0.9 0.55" numOctaves={1} seed={seed} result="n" />
+			<feColorMatrix in="n" type="matrix" values="0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  1.8 1.8 1.8 0 -2.1" result="a" />
+			<feFlood floodColor="#e6ecf2" /><feComposite in2="a" operator="in" />
+		</filter>
+		<rect width={w} height={h} fill="#0b0d10" />
+		<rect width={w} height={h} filter={`url(#${id})`} />
+		{Array.from({length: 5}, (_, k) => { const R = rnd2(seed * 13 + k); return <rect key={k} y={R() * h} width={w} height={2 + R() * h * 0.04} fill="#fff" opacity={0.08 + 0.12 * R()} />; })}
+	</svg>
+);
+
+/** what's on the screen: a channel's picture (full 1920×1080 scene, fitted), rolling/tearing after a flip */
+const ScreenContent: React.FC<{T: number; ch: number; fit: number; headLift: number}> = ({T, ch, fit, headLift}) => {
+	const id = STATIONS[ch].id;
+	const scW = TVS.w / W, scH = TVS.h / H, sc = scW + (scH - scW) * fit;
+	const ox = (TVS.w - W * sc) / 2, oy = (TVS.h - H * sc) / 2;
+	return (
+		<div style={{position: 'absolute', left: ox, top: oy, width: W, height: H, transform: `scale(${sc})`, transformOrigin: '0 0'}}>
+			{id === 'metro' ? <S1b t={T} crowd sub="" headLift={headLift} bare /> : <DioScene id={id} t={T} i={ch} />}
+		</div>
+	);
+};
+
+/** the set, the stand and the room — in world coordinates */
+const TVRoom: React.FC<{T: number; ch: number; since: number; nFlip: number; fit: number; headLift: number; power: number; staticAll: number; glowO: number; scanO: number}> = ({T, ch, since, nFlip, fit, headLift, power, staticAll, glowO, scanO}) => {
+	const f = useCurrentFrame();
+	const glow = staticAll > 0.5 ? '#c8d2dc' : CH_GLOW[STATIONS[ch].id];
+	const flick = 0.85 + 0.15 * Math.sin(T * 37) * Math.sin(T * 23);
+	// flip transient: snow, a roll, tear bands, a flash
+	const fs = since < 0.12 ? 1 : since < 0.34 ? 1 - (since - 0.12) / 0.22 : 0;
+	const roll = since < 0.38 ? (1 - easeIO5(since / 0.38)) * TVS.h * 0.55 : 0;
+	const tear = since < 0.3 ? (1 - since / 0.3) : 0;
+	// power-off collapse: picture squeezes to a bright line, then to a dot, then the dot fades
+	const offU = power < 1 ? 1 - power : 0;
+	const sy = offU <= 0 ? 1 : Math.max(0.006, 1 - offU / 0.25), sx = offU <= 0.25 ? 1 : Math.max(0.012, 1 - (offU - 0.25) / 0.15);
+	const dotO = offU < 0.4 ? 1 : Math.max(0, 1 - (offU - 0.4) / 0.6);
+	const lightO = (power >= 1 ? 1 : offU < 0.25 ? 1 : Math.max(0, dotO * 0.35)) * glowO;
+	const dialA = nFlip * 30 + (since < 0.18 ? -8 * (1 - since / 0.18) : 0);
+	return (
+		<div style={{position: 'absolute', left: 0, top: 0, width: W, height: H}}>
+			<svg width={W} height={H} style={{position: 'absolute', inset: 0, overflow: 'visible'}}>
+				<Defs />
+				<linearGradient id="tvChrome" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stopColor="#f2f4f6" /><stop offset="0.5" stopColor="#8d949c" /><stop offset="1" stopColor="#3c4148" /></linearGradient>
+				<radialGradient id="tvKnob" cx="0.35" cy="0.3" r="0.8"><stop offset="0" stopColor="#5a5a58" /><stop offset="0.6" stopColor="#262624" /><stop offset="1" stopColor="#0c0c0b" /></radialGradient>
+				<radialGradient id="tvGlowR" cx="0.5" cy="0.5" r="0.5"><stop offset="0" stopColor={glow} stopOpacity="0.55" /><stop offset="0.5" stopColor={glow} stopOpacity="0.14" /><stop offset="1" stopColor={glow} stopOpacity="0" /></radialGradient>
+				<pattern id="damask" width="90" height="120" patternUnits="userSpaceOnUse"><rect width="90" height="120" fill="#141a1a" /><path d="M45,10 C60,30 60,50 45,60 C30,50 30,30 45,10 Z M45,70 C55,85 55,100 45,110 C35,100 35,85 45,70 Z M0,60 C10,70 10,80 0,90 M90,60 C80,70 80,80 90,90" fill="#1b2322" /></pattern>
+				{/* the room: patterned wallpaper, a skirting board, a wooden floor; a curtained window at left */}
+				<rect x={-1400} y={-900} width={4700} height={1880} fill="url(#damask)" />
+				<rect x={-1400} y={-900} width={4700} height={1880} fill="#000" opacity={0.55} />
+				<g transform="translate(-60,-120)">
+					<rect x={0} y={0} width={360} height={560} fill="#0d1526" /><rect x={0} y={0} width={360} height={560} fill="none" stroke="#2a221c" strokeWidth={22} />
+					<line x1={180} y1={0} x2={180} y2={560} stroke="#2a221c" strokeWidth={14} /><line x1={0} y1={280} x2={360} y2={280} stroke="#2a221c" strokeWidth={14} />
+					<circle cx={280} cy={110} r={26} fill="#dfe6f0" opacity={0.6} filter="url(#b3)" />
+					<path d="M-40,-30 Q10,260 -20,600 L70,600 Q40,260 90,-30 Z M300,-30 Q350,260 320,600 L410,600 Q380,260 430,-30 Z" fill="#3a1e22" />
+					<polygon points="0,560 360,560 700,1000 120,1000" fill="#9fb6d8" opacity={0.05} filter="url(#b12)" />
+				</g>
+				<rect x={-1400} y={960} width={4700} height={22} fill="#20160f" />
+				<polygon points="-1400,982 3300,982 3300,2000 -1400,2000" fill="#1a110b" />
+				<polygon points="-1400,982 3300,982 3300,2000 -1400,2000" fill="url(#m-walnut)" filter="url(#wood)" opacity={0.35} />
+				{/* TV light on the wall and floor */}
+				<ellipse cx={TV_C[0]} cy={TV_C[1] - 40} rx={900} ry={620} fill="url(#tvGlowR)" opacity={0.9 * lightO * flick} />
+				<ellipse cx={TV_C[0] - 40} cy={1060} rx={700} ry={120} fill={glow} opacity={0.12 * lightO * flick} filter="url(#b12)" />
+				{/* the stand */}
+				<rect x={520} y={812} width={940} height={40} rx={6} fill="url(#m-walnut)" filter="url(#wood)" />
+				<rect x={520} y={812} width={940} height={6} fill="#c9a067" opacity={0.4} />
+				{[[560, 1], [1420, -1]].map(([lx, d], i) => <polygon key={i} points={`${lx - 14},852 ${lx + 14},852 ${lx + 8 + d * 18},988 ${lx - 4 + d * 18},988`} fill="#2a1a10" />)}
+				<rect x={540} y={852} width={900} height={12} fill="#000" opacity={0.4} />
+				{/* the cabinet: walnut veneer, a rounded box with a visible right side */}
+				<polygon points="1440,236 1478,212 1478,796 1440,812" fill="#24160d" />
+				<polygon points="562,236 1440,236 1478,212 600,212" fill="#6b4a30" />
+				<polygon points="562,236 1440,236 1478,212 600,212" fill="url(#m-walnut)" filter="url(#wood)" opacity={0.6} />
+				<rect x={548} y={230} width={900} height={584} rx={30} fill="#3d2616" />
+				<rect x={548} y={230} width={900} height={584} rx={30} fill="url(#m-walnut)" filter="url(#wood)" opacity={0.85} />
+				<rect x={556} y={238} width={884} height={568} rx={26} fill="none" stroke="#c9a067" strokeWidth={1.5} opacity={0.35} />
+				{/* screen bezel: dark plastic with a chrome ring */}
+				<rect x={600} y={262} width={620} height={482} rx={40} fill="#17181a" />
+				<rect x={TVS.x - 16} y={TVS.y - 16} width={TVS.w + 32} height={TVS.h + 32} rx={44} fill="url(#tvChrome)" opacity={0.9} />
+				<rect x={TVS.x - 8} y={TVS.y - 8} width={TVS.w + 16} height={TVS.h + 16} rx={38} fill="#060708" />
+				{/* control panel: channel dial, volume, power, speaker */}
+				<rect x={1246} y={262} width={170} height={482} rx={14} fill="#1f1d1a" />
+				<g transform="translate(1331,350)">
+					<circle r={58} fill="#0d0d0c" />
+					{Array.from({length: 12}, (_, k) => { const a = rad(k * 30); return <text key={k} x={48 * Math.sin(a)} y={-48 * Math.cos(a) + 5} textAnchor="middle" style={{fontFamily: '"DejaVu Sans", sans-serif', fontSize: 12, fontWeight: 700}} fill="#cfc6b4" opacity={0.8}>{k + 1}</text>; })}
+					<g transform={`rotate(${dialA})`}>
+						<circle r={36} fill="url(#tvKnob)" /><rect x={-7} y={-36} width={14} height={72} rx={5} fill="#3a3a38" /><rect x={-2} y={-34} width={4} height={12} fill="#e8e0cc" />
+					</g>
+				</g>
+				<g transform="translate(1331,470)"><circle r={26} fill="url(#tvKnob)" /><rect x={-1.5} y={-24} width={3} height={10} fill="#e8e0cc" transform="rotate(-40)" /></g>
+				<g transform="translate(1290,530)"><rect x={-12} y={-8} width={24} height={16} rx={3} fill="#b9b2a2" /><circle cx={40} cy={0} r={5} fill={power >= 1 ? '#ff4a3d' : '#3a1210'} /></g>
+				{Array.from({length: 11}, (_, k) => <rect key={k} x={1262} y={566 + k * 15} width={138} height={7} rx={3} fill="#0c0b0a" />)}
+				<rect x={1282} y={752} width={100} height={22} rx={3} fill="url(#brassP)" opacity={0.85} />
+				<text x={1332} y={768} textAnchor="middle" style={{fontFamily: SERIF, fontWeight: 900, fontSize: 15, letterSpacing: '0.3em'}} fill="#3a2a10">JUNO</text>
+				{/* rabbit-ear antenna */}
+				<g transform="translate(1000,214)">
+					<ellipse cx={0} cy={0} rx={70} ry={16} fill="#1a1a1a" /><ellipse cx={0} cy={-6} rx={56} ry={12} fill="url(#tvChrome)" opacity={0.6} />
+					<line x1={-10} y1={-8} x2={-260} y2={-430} stroke="url(#tvChrome)" strokeWidth={5} /><circle cx={-260} cy={-430} r={6} fill="#c9ced4" />
+					<line x1={10} y1={-8} x2={190} y2={-460} stroke="url(#tvChrome)" strokeWidth={5} /><circle cx={190} cy={-460} r={6} fill="#c9ced4" />
+				</g>
+			</svg>
+			{/* the picture tube */}
+			<div style={{position: 'absolute', left: TVS.x, top: TVS.y, width: TVS.w, height: TVS.h, borderRadius: '34px / 40px', overflow: 'hidden', background: '#050607'}}>
+				<div style={{position: 'absolute', inset: 0, transform: `scale(${sx},${sy})`, filter: offU > 0 ? `brightness(${1 + 3 * Math.min(1, offU * 4)})` : since < 0.25 ? `brightness(${1 + 0.6 * (1 - since / 0.25)})` : undefined}}>
+					{staticAll < 1 && offU < 0.42 && <div style={{position: 'absolute', inset: 0, transform: `translateY(${roll}px)`}}>
+						<ScreenContent T={T} ch={ch} fit={fit} headLift={headLift} />
+						{roll > 1 && <div style={{position: 'absolute', left: 0, right: 0, top: -TVS.h * 0.08, height: TVS.h * 0.08, background: '#000'}} />}
+					</div>}
+					{tear > 0 && [0.22, 0.51, 0.77].map((y, k) => <div key={k} style={{position: 'absolute', left: 0, right: 0, top: `${y * 100}%`, height: 10 + k * 6, backdropFilter: `blur(${2 * tear}px)`, transform: `translateX(${(k % 2 ? -1 : 1) * 40 * tear}px)`, background: `rgba(255,255,255,${0.12 * tear})`}} />)}
+					{(fs > 0 || staticAll > 0) && <Snow w={TVS.w} h={TVS.h} seed={f % 97} o={Math.max(fs, staticAll)} id="snowTV" />}
+				</div>
+				{offU > 0.25 && <div style={{position: 'absolute', left: '50%', top: '50%', width: 14, height: 14, marginLeft: -7, marginTop: -7, borderRadius: 7, background: '#f2f6ff', boxShadow: '0 0 24px 10px rgba(220,235,255,0.7)', opacity: dotO}} />}
+				{/* scanlines, curvature shading, glass glare */}
+				<div style={{position: 'absolute', inset: 0, opacity: scanO, background: 'repeating-linear-gradient(0deg, rgba(0,0,0,0.28) 0px, rgba(0,0,0,0.28) 1px, rgba(0,0,0,0) 1px, rgba(0,0,0,0) 3px)'}} />
+				<div style={{position: 'absolute', inset: 0, opacity: 0.4 + 0.6 * scanO, background: 'radial-gradient(ellipse 75% 70% at 50% 50%, rgba(0,0,0,0) 55%, rgba(0,0,0,0.75) 100%)'}} />
+				<div style={{position: 'absolute', inset: 0, opacity: 0.3 + 0.7 * scanO, background: 'radial-gradient(ellipse 40% 26% at 30% 18%, rgba(255,255,255,0.16) 0%, rgba(255,255,255,0) 100%)'}} />
+				{since < 1.1 && nFlip > 0 && power >= 1 && staticAll < 0.5 && <div style={{position: 'absolute', right: 30, top: 22, fontFamily: '"DejaVu Sans Mono", monospace', fontWeight: 700, fontSize: 30, color: '#7dff8a', textShadow: '0 0 8px rgba(125,255,138,0.8)', opacity: Math.min(1, (1.1 - since) / 0.3)}}>CH {String(ch + 1).padStart(2, '0')}</div>}
+			</div>
+			{/* foreground: the dark back of an empty armchair, out of focus */}
+			<svg width={W} height={H} style={{position: 'absolute', inset: 0, overflow: 'visible'}}>
+				<g filter="url(#b12)"><path d="M-200,1200 L-200,860 Q-180,760 -40,760 L220,760 Q330,770 340,880 L360,1200 Z" fill="#0c0807" /><path d="M-40,760 Q100,720 220,760" stroke={glow} strokeWidth={6} opacity={0.18 * lightO} fill="none" /></g>
+			</svg>
+		</div>
+	);
+};
+
+const Open7: React.FC = () => {
+	useFonts();
+	const T = useCurrentFrame() / FPS;
+	const f = useCurrentFrame();
+	const sub = (a: number, b: number, s: string) => (T >= a && T < b ? <AbsoluteFill style={{opacity: Math.min(1, (T - a) / 0.15, (b - T) / 0.15)}}><Sub t={s} /></AbsoluteFill> : null);
+	const S_TV = W / TVS.w;                                                     // screen width fills the frame
+	const IN: Cam = {s: S_TV, c: TV_C};
+	const MID: Cam = {s: 1.75, c: [TV_C[0] + 60, TV_C[1] + 10]};
+	const WIDE: Cam = {s: 1.12, c: [960, 560]};
+	const PULL0 = bt(5), PULL1 = bt(7) - 0.04, DIVE0 = bt(24.5), DIVE1 = bt(25);
+	const ST0 = bt(28.5), ST1 = bt(29.6);                                         // signal lost: static, then the hill comes through it
+	const {ch, n, since} = tvChannel(T);
+	let pic: React.ReactNode = null;
+	const room = (cam: Cam, props: Partial<React.ComponentProps<typeof TVRoom>>, blurW = 0) => {
+		const sh = cam.shake ?? 0;
+		const tx = W / 2 - cam.s * cam.c[0] + sh * Math.sin(T * 53), ty = H / 2 - cam.s * cam.c[1] + sh * Math.cos(T * 41);
+		return (
+			<AbsoluteFill style={{background: '#070606', overflow: 'hidden'}}>
+				<div style={{position: 'absolute', left: 0, top: 0, width: W, height: H, transform: `translate(${tx}px,${ty}px) scale(${cam.s})`, transformOrigin: '0 0', filter: blurW > 0.3 ? `blur(${blurW}px)` : undefined}}>
+					<TVRoom T={T} ch={ch} since={since} nFlip={n} fit={1} headLift={6} power={1} staticAll={0} glowO={1} scanO={1} {...props} />
+				</div>
+				<Grade />
+				<Mark />
+			</AbsoluteFill>
+		);
+	};
+	if (T < PULL0) pic = <S1b t={T} crowd sub="" headLift={6 * ease(cl01((T - 0.3) / 1.4))} />;
+	else if (T < PULL1) {                                                       // pull back: the platform is a picture on an old set
+		const e = easeIO5((T - PULL0) / (PULL1 - PULL0));
+		pic = room(camZoom(IN, MID, e), {fit: e, scanO: e, glowO: e}, 2.5 * Math.sin(Math.PI * e));
+	}
+	else if (T < TV_OFF) {                                                      // flipping: closer and shakier as it speeds up
+		const u = cl01((T - bt(7)) / (TV_OFF - bt(7)));
+		const kick = since < 0.25 ? 0.035 * (1 - since / 0.25) : 0;
+		const fast = T > bt(19) ? cl01((T - bt(19)) / (TV_OFF - bt(19))) : 0;
+		pic = room({s: MID.s * (1 + 0.32 * Math.pow(u, 2)) * (1 + kick), c: [MID.c[0] - 50 * u, MID.c[1]], shake: 5 * fast}, {});
+	}
+	else if (T < DIVE0) {                                                       // 然后呢？ — the set switches off; the room goes dark; the dot lingers
+		const offU = cl01((T - TV_OFF) / 1.6);
+		const u = easeIO5((T - TV_OFF) / (DIVE0 - TV_OFF));
+		pic = room(camLerp(MID, WIDE, u), {power: 1 - offU});
+	}
+	else if (T < DIVE1) {                                                       // back in, through the dark glass
+		const e = Math.pow(cl01((T - DIVE0) / (DIVE1 - DIVE0)), 2.2);
+		pic = room(camZoom(WIDE, IN, e), {power: 0, ch: 0}, 3 * e * (1 - e) * 4);
+	}
+	else if (T < ST0) {                                                         // power on: 第二天，再来一遍
+		const u = (T - DIVE1) / (ST0 - DIVE1), on = cl01((T - DIVE1) / 0.28);
+		const sy = on < 0.5 ? 0.006 : 0.006 + (1 - 0.006) * easeIO5((on - 0.5) / 0.5), sx = on < 0.5 ? 0.02 + 0.98 * (on / 0.5) : 1;
+		pic = <AbsoluteFill style={{background: '#000'}}>
+			<AbsoluteFill style={{transform: `scale(${sx},${sy})`, filter: on < 1 ? `brightness(${1 + 3 * (1 - on)})` : undefined}}><S1b t={T} crowd spin={6 * ease(u)} headLift={34 - 44 * easeIO5(cl01((u - 0.05) * 1.7))} sub="" /></AbsoluteFill>
+		</AbsoluteFill>;
+		if (T > ST0 - 0.16) pic = <AbsoluteFill style={{transform: `translateY(${(T - (ST0 - 0.16)) * 3000}px)`, filter: 'contrast(1.6)'}}>{pic}</AbsoluteFill>;   // the picture slips…
+	}
+	else if (T < ST1) {                                                         // …signal lost: the old set full of snow, the camera pushed into it
+		const u = (T - ST0) / (ST1 - ST0);
+		if (u < 0.55) pic = room(camZoom({s: 1.5, c: TV_C}, IN, easeIO5(u / 0.55)), {staticAll: 1, glowO: 1});
+		else pic = <AbsoluteFill style={{background: '#0b0d10'}}><Snow w={W} h={H} seed={f % 97} id="snowF" /><Grade /></AbsoluteFill>;
+		if (u > 0.7) {                                                          // the hill comes through the snow, in bands
+			const v = (u - 0.7) / 0.3;
+			pic = <AbsoluteFill>
+				<V2Hill t={T - ST0} header="" plankY={-400} />
+				<AbsoluteFill style={{opacity: 1 - easeIO5(v), WebkitMaskImage: `repeating-linear-gradient(0deg, #000 0px, #000 ${6 + 40 * (1 - v)}px, transparent ${6 + 40 * (1 - v)}px, transparent ${8 + 60 * v}px)`}}><Snow w={W} h={H} seed={f % 97} id="snowF2" /></AbsoluteFill>
+			</AbsoluteFill>;
+		}
+	}
+	else {                                                                     // the hill; on the drum a shaft of light finds him
+		const tb = T - T_DRUM;
+		const beam = tb < 0 ? 0 : Math.min(1, tb / 0.06) * (0.92 + 0.08 * Math.exp(-tb * 3) * Math.cos(tb * 40));
+		const PL = bt(34);
+		pic = <V2Hill t={T - ST0} header="" beam={beam} plankY={T < PL - 0.5 ? -400 : T < PL ? -400 + 700 * Math.pow((T - (PL - 0.5)) / 0.5, 2) : 300 - 26 * Math.exp(-5 * (T - PL)) * Math.cos(16 * (T - PL))} />;
+		if (tb >= 0 && tb < 0.12) pic = <AbsoluteFill>{pic}<AbsoluteFill style={{background: '#fff6e0', opacity: 0.35 * (1 - tb / 0.12)}} /></AbsoluteFill>;
+	}
+	return (
+		<AbsoluteFill style={{background: '#000', overflow: 'hidden'}}>
+			{pic}
+			{sub(0.5, bt(5) - 0.05, '为什么挤地铁？')}
+			{sub(bt(7) + 0.05, bt(9) - 0.08, '为什么上班？')}
+			{sub(bt(9) + 0.05, bt(11) - 0.08, '为什么加班？')}
+			{sub(bt(11) + 0.05, bt(13) - 0.08, '为什么还房贷？')}
+			{sub(bt(13) + 0.05, bt(14) - 0.05, '为什么拼命？')}
+			{sub(bt(14) + 0.05, bt(15) - 0.05, '为什么熬夜？')}
+			{sub(TV_OFF + 0.25, DIVE0, '然后呢？')}
+			{sub(DIVE1 + 0.3, ST0 - 0.12, '第二天，再来一遍')}
+			{sub(ST1 - 0.05, T_DRUM - 0.08, '有个人，这样过了永远')}
+			{sub(T_DRUM + 0.9, T_DRUM + 3.6, '可有位哲学家说：他是幸福的')}
+		</AbsoluteFill>
+	);
+};
+
 const Puppet35: React.FC = () => {
 	useFonts();
 	const t = useCurrentFrame() / FPS;
@@ -2702,6 +2940,7 @@ registerRoot(() => (
 		<Composition id="OPEN35" component={Open35} durationInFrames={Math.round(16.5 * FPS)} fps={FPS} width={W} height={H} />
 		<Composition id="CONCEPTS" component={Concepts} durationInFrames={6} fps={FPS} width={W} height={H} />
 		<Composition id="OPEN6" component={Open6} durationInFrames={Math.round(20.5 * FPS)} fps={FPS} width={W} height={H} />
+		<Composition id="OPEN7" component={Open7} durationInFrames={Math.round(20.5 * FPS)} fps={FPS} width={W} height={H} />
 		<Composition id="OPEN4" component={Open4} durationInFrames={Math.round(20.5 * FPS)} fps={FPS} width={W} height={H} />
 		<Composition id="FILM35" component={Film35} durationInFrames={FILM35_FRAMES} fps={FPS} width={W} height={H} />
 	</>
