@@ -26,8 +26,8 @@ export const buildFolders = (o: { t0: number; t1: number }) => {
     c.textAlign = 'center'; c.fillStyle = '#2a1d0c'; c.font = `900 96px ${SANS}`; c.fillText(title, 512, 290); c.font = `600 54px ${SANS}`; c.fillStyle = '#5a4020'; c.fillText(sub, 512, 380); c.font = `600 44px ${SANS}`; c.fillText(en, 512, 480);
     /* what it means, in pictures: several different people, or one person */
     for (let k = 0; k < people; k++) { const px = 512 + (k - (people - 1) / 2) * 190; const cc = people > 1 ? ['#5b7fb8', '#b8665b', '#6aa080'][k] : col; c.fillStyle = cc; c.beginPath(); c.arc(px, 760, 62, 0, 7); c.fill(); c.beginPath(); c.roundRect(px - 80, 840, 160, 240, 60); c.fill(); }
-    c.font = `800 60px ${SANS}`; c.fillStyle = '#2a1d0c'; c.fillText(people > 1 ? '好几个“人”轮流出现' : '一个人，几种功能失调', 512, 1200);
-    const tm = M({ map: tex, roughness: 0.85 });
+    c.font = `800 60px ${SANS}`; c.fillStyle = '#2a1d0c'; c.fillText(people > 1 ? '一个人，几个身份轮流出现' : '症状完全不同的另一种病', 512, 1200);
+    const tm = M({ map: tex, roughness: 0.85, color: people > 1 ? '#ffffff' : '#a39684' });
     const body = add(f, new THREE.BoxGeometry(0.62, 0.012, 0.79), [M({ color: '#c8a46a' }), M({ color: '#c8a46a' }), tm, M({ color: '#b8945a' }), M({ color: '#c8a46a' }), M({ color: '#c8a46a' })] as unknown as THREE.Material, 0, 0, 0);
     body.geometry.rotateY(0); void body;
     const tab = add(f, new THREE.BoxGeometry(0.2, 0.012, 0.06), M({ color: col, roughness: 0.7 }), -0.12, 0, -0.42);  void tab;

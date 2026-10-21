@@ -41,8 +41,9 @@ const gearGeo = (r: number, teeth: number, h: number, depth: number) => {
   const g = new THREE.ExtrudeGeometry(s, { depth, bevelEnabled: true, bevelThickness: depth * 0.15, bevelSize: depth * 0.15, bevelSegments: 2, curveSegments: 4 }); g.translate(0, 0, -depth / 2); return g;
 };
 export const GEAR_PARTS = [{ s: '看见', c: '#7fb2ff' }, { s: '听见', c: '#6fd6c2' }, { s: '思考', c: '#f2c46d' }, { s: '感受', c: '#f29a8a' }];
-export const buildGears = (o: { t0: number; drift: number; t1: number; keys?: Key[] }) => {
-  const g = new THREE.Group(); g.position.x = GEAR_X;
+export const buildGears = (o: { t0: number; drift: number; t1: number; keys?: Key[]; X?: number; parts?: { s: string; c: string }[]; merge?: number }) => {
+  const GX = o.X ?? GEAR_X; const PARTS = o.parts ?? GEAR_PARTS;
+  const g = new THREE.Group(); g.position.x = GX;
   const ft = floorTex(); ft.repeat.set(3, 3);
   add(g, new THREE.PlaneGeometry(12, 12).rotateX(-Math.PI / 2), M({ map: ft, color: '#3b3129', roughness: 0.6 }), 0, 0, 0, false);
   const glass = new THREE.MeshPhysicalMaterial({ color: '#dfe8f0', roughness: 0.05, transparent: true, opacity: 0.16, clearcoat: 1, depthWrite: false, side: THREE.DoubleSide });
@@ -58,25 +59,25 @@ export const buildGears = (o: { t0: number; drift: number; t1: number; keys?: Ke
   const brain = new THREE.Group(); brain.position.set(0, 0.105, 0.0); brain.rotation.y = -0.5 + 0.38; m.head.add(brain);
   const R = 0.026, TEETH = 12, H = 0.006; const pitch = 2 * R + H * 1.05; const pos: [number, number][] = [[-pitch / 2, pitch / 2], [pitch / 2, pitch / 2], [pitch / 2, -pitch / 2], [-pitch / 2, -pitch / 2]];
   const turns: THREE.Mesh[] = [];
-  const gears = GEAR_PARTS.map((p, i) => { const gg = new THREE.Group(); gg.position.set(pos[i][0], pos[i][1], 0); brain.add(gg);
+  const gears = PARTS.map((p, i) => { const gg = new THREE.Group(); gg.position.set(pos[i][0], pos[i][1], 0); brain.add(gg);
     const mesh = new THREE.Mesh(gearGeo(R, TEETH, H, 0.012), M({ color: p.c, metalness: 0.75, roughness: 0.3, emissive: p.c, emissiveIntensity: 0.25 })); gg.add(mesh); turns.push(mesh);
     const lab = canvasTex(256, 256); const c = lab.g; c.fillStyle = 'rgba(12,12,14,.92)'; c.beginPath(); c.arc(128, 128, 120, 0, 7); c.fill(); c.font = `900 92px ${SANS}`; c.textAlign = 'center'; c.textBaseline = 'middle'; c.fillStyle = '#fff'; c.fillText(p.s, 128, 134);
     const face = new THREE.Mesh(new THREE.CircleGeometry(R * 0.86, 40), new THREE.MeshBasicMaterial({ map: lab.tex, toneMapped: false })); face.position.z = 0.0082; gg.add(face);
     return gg; });
   /* callouts outside the head: the same four words, big, with leader lines, so nobody has to squint */
-  const callouts = GEAR_PARTS.map((p) => { const lab = canvasTex(512, 160); const c = lab.g; c.font = `900 110px ${SANS}`; c.textAlign = 'left'; c.textBaseline = 'middle'; c.fillStyle = p.c; c.fillText(p.s, 10, 86);
+  const callouts = PARTS.map((p) => { const lab = canvasTex(512, 160); const c = lab.g; c.font = `900 110px ${SANS}`; c.textAlign = 'left'; c.textBaseline = 'middle'; c.fillStyle = p.c; c.fillText(p.s, 10, 86);
     const pl = new THREE.Mesh(new THREE.PlaneGeometry(0.16, 0.05), new THREE.MeshBasicMaterial({ map: lab.tex, transparent: true, toneMapped: false, depthWrite: false })); g.add(pl); return pl; });
-  const lines = GEAR_PARTS.map((p) => { const geo = new THREE.BufferGeometry().setFromPoints([new THREE.Vector3(), new THREE.Vector3()]); const l = new THREE.Line(geo, new THREE.LineBasicMaterial({ color: p.c, transparent: true, opacity: 0.8 })); g.add(l); return l; });
+  const lines = PARTS.map((p) => { const geo = new THREE.BufferGeometry().setFromPoints([new THREE.Vector3(), new THREE.Vector3()]); const l = new THREE.Line(geo, new THREE.LineBasicMaterial({ color: p.c, transparent: true, opacity: 0.8 })); g.add(l); return l; });
   const sparks = glowSprite('#ff6a4a', 0.08, 0); brain.add(sparks);
   g.add(new THREE.HemisphereLight('#7d8ea0', '#120e0b', 0.35));
   const key = new THREE.SpotLight('#ffe0bc', 60, 0, 0.5, 0.6, 2); key.position.set(1.2, 2.8, 2.0); key.target.position.set(0, 1.5, 0); key.castShadow = true; key.shadow.mapSize.set(1024, 1024); key.shadow.bias = -0.0005; g.add(key, key.target);
   const rim = new THREE.SpotLight('#8fb2d6', 40, 0, 0.6, 0.7, 2); rim.position.set(-1.5, 2.4, -1.6); rim.target.position.set(0, 1.5, 0); g.add(rim, rim.target);
   const inner = new THREE.PointLight('#ffd9a0', 0.6, 0.6, 2); inner.position.set(0, 0.11, 0.05); m.head.add(inner);
-  const keys = (o.keys ?? [[o.t0, 1.05, 1.82, 1.15, 0.0, 1.62, 0.0, 32], [o.drift, 0.68, 1.74, 0.72, 0.0, 1.67, 0.0, 30], [o.t1, 0.6, 1.72, 0.64, 0.0, 1.68, 0.0, 28]]).map(([t, a, b, c, d, e, f, fov]) => [t, a + GEAR_X, b, c, d + GEAR_X, e, f, fov]);
+  const keys = (o.keys ?? [[o.t0, 1.05, 1.82, 1.15, 0.0, 1.62, 0.0, 32], [o.drift, 0.68, 1.74, 0.72, 0.0, 1.67, 0.0, 30], [o.t1, 0.6, 1.72, 0.64, 0.0, 1.68, 0.0, 28]]).map(([t, a, b, c, d, e, f, fov]) => [t, a + GX, b, c, d + GX, e, f, fov]);
   const w = new THREE.Vector3();
   const update = (t: number) => {
     /* in step: all at one speed, neighbours turning opposite ways; after the drift, they slip apart and each keeps its own time */
-    const d = Math.max(0, t - o.drift); const sep = eio(ramp(t, o.drift, 1.6));
+    const d = Math.max(0, t - o.drift); const sep = o.merge !== undefined ? 1 - eio(ramp(t, o.merge, 1.8)) : eio(ramp(t, o.drift, 1.6));
     const speeds = [2.2, 3.4, 0.2, -2.4];
     gears.forEach((gg, i) => { const dir = i % 2 ? -1 : 1; const base = t * 1.6 * dir; const own = d * speeds[i] * 2.2 + (i === 2 ? Math.sin(d * 7) * 0.4 * sep : 0);
       turns[i].rotation.z = base + own * sep; gg.position.set(pos[i][0] * (1 + 0.6 * sep), pos[i][1] * (1 + 0.6 * sep), 0.004 * Math.sin(d * 3 + i) * sep); });
@@ -94,11 +95,12 @@ export const buildGears = (o: { t0: number; drift: number; t1: number; keys?: Ke
 
 /* ================================================================== CROWD: 300 people, one of them lit; then the life ruler */
 export const CROWD_X = 460;
-export const buildCrowd = (o: { t0: number; age: number; t1: number; keys?: Key[] }) => {
+export const buildCrowd = (o: { t0: number; age: number; t1: number; keys?: Key[]; lit?: number[]; signText?: string; band?: [number, number, string] }) => {
+  const BAND = o.band ?? [15, 25, '最常发病'];
   const g = new THREE.Group(); g.position.x = CROWD_X;
   add(g, new THREE.PlaneGeometry(40, 40).rotateX(-Math.PI / 2), M({ color: '#1d1a17', roughness: 0.7 }), 0, 0, 0, false);
   /* one instanced, simplified mannequin per person: body capsule + head egg */
-  const COLS = 20, ROWS = 15, DX = 0.62, DZ = 0.62; const N = COLS * ROWS; const LIT = 7 * COLS + 13;
+  const COLS = 20, ROWS = 15, DX = 0.62, DZ = 0.62; const N = COLS * ROWS; const LITS = o.lit ?? [7 * COLS + 13]; const LIT = LITS[0];
   const body = new THREE.CapsuleGeometry(0.15, 1.05, 6, 14); body.translate(0, 0.68, 0); body.scale(1, 1, 0.65);
   const headG = new THREE.SphereGeometry(0.1, 20, 14); headG.scale(0.76, 1.14, 0.88); headG.translate(0, 1.52, 0);
   const shell = new THREE.MeshPhysicalMaterial({ color: '#e2dccf', roughness: 0.35, clearcoat: 0.6 });
@@ -107,28 +109,29 @@ export const buildCrowd = (o: { t0: number; age: number; t1: number; keys?: Key[
   for (let i = 0; i < N; i++) { const cx = i % COLS, rz = Math.floor(i / COLS); P.position.set((cx - (COLS - 1) / 2) * DX + (r() - 0.5) * 0.12, 0, (rz - (ROWS - 1) / 2) * DZ + (r() - 0.5) * 0.12); P.rotation.set(0, (r() - 0.5) * 0.5, 0); P.scale.setScalar(0.92 + r() * 0.14); P.updateMatrix();
     bodies.setMatrixAt(i, P.matrix); heads.setMatrixAt(i, P.matrix); bodies.setColorAt(i, new THREE.Color(1, 1, 1)); heads.setColorAt(i, new THREE.Color(1, 1, 1)); posL.push(P.position.clone()); }
   const lit = posL[LIT];
-  const sign = canvasTex(1024, 400); { const c = sign.g; c.font = `700 300px ${SERIF}`; c.textAlign = 'center'; c.textBaseline = 'middle'; const gr = c.createLinearGradient(0, 60, 0, 340); gr.addColorStop(0, '#fff3cc'); gr.addColorStop(0.5, GOLD); gr.addColorStop(1, '#c08a34'); c.shadowColor = 'rgba(255,190,90,.9)'; c.shadowBlur = 30; c.fillStyle = gr; c.fillText('1 / 300', 512, 210); }
+  const sign = canvasTex(1024, 400); { const c = sign.g; c.font = `700 300px ${SERIF}`; c.textAlign = 'center'; c.textBaseline = 'middle'; const gr = c.createLinearGradient(0, 60, 0, 340); gr.addColorStop(0, '#fff3cc'); gr.addColorStop(0.5, GOLD); gr.addColorStop(1, '#c08a34'); c.shadowColor = 'rgba(255,190,90,.9)'; c.shadowBlur = 30; c.fillStyle = gr; c.font = `700 ${(o.signText ?? '1 / 300').length > 8 ? 150 : 300}px ${SERIF}`; c.fillText(o.signText ?? '1 / 300', 512, 210); }
   const signM = new THREE.MeshBasicMaterial({ map: sign.tex, transparent: true, toneMapped: false, depthWrite: false, opacity: 0 }); const signP = new THREE.Mesh(new THREE.PlaneGeometry(4.2, 1.64), signM); signP.position.set(0, 3.0, -2.9); g.add(signP);
   /* the life ruler on the floor in front of the crowd: 0 … 80, with 15–25 lighting up */
   const ruler = canvasTex(2048, 300); const RW = 9.0, RH = 1.32; const rulerM = new THREE.MeshBasicMaterial({ map: ruler.tex, transparent: true, toneMapped: false, opacity: 0 });
   const rp = new THREE.Mesh(new THREE.PlaneGeometry(RW, RH), rulerM); rp.rotation.x = -Math.PI / 2 + 0.0; rp.position.set(0, 0.01, 5.6); g.add(rp);
   const drawRuler = (band: number) => { const c = ruler.g, W2 = 2048, H2 = 300; c.clearRect(0, 0, W2, H2); const x = (a: number) => 80 + (a / 80) * (W2 - 160);
     c.fillStyle = 'rgba(20,18,16,.75)'; c.fillRect(0, 0, W2, H2);
-    if (band > 0) { c.fillStyle = `rgba(241,197,109,${0.75 * band})`; c.fillRect(x(15), 40, (x(25) - x(15)) * band, 120); }
+    if (band > 0) { c.fillStyle = `rgba(241,197,109,${0.75 * band})`; c.fillRect(x(BAND[0]), 40, (x(BAND[1]) - x(BAND[0])) * band, 120); }
     c.strokeStyle = '#e9e1d2'; c.lineWidth = 6; c.beginPath(); c.moveTo(x(0), 160); c.lineTo(x(80), 160); c.stroke();
     c.font = `700 64px ${SANS}`; c.textAlign = 'center'; c.fillStyle = '#e9e1d2'; for (let a = 0; a <= 80; a += 10) { c.fillRect(x(a) - 3, 120, 6, 40); c.fillText(String(a), x(a), 240); }
     for (let a = 0; a <= 80; a += 5) c.fillRect(x(a) - 2, 140, 4, 20);
-    if (band > 0) { c.globalAlpha = band; c.font = `900 70px ${SANS}`; c.fillStyle = '#1b1208'; c.fillText('最常发病', (x(15) + x(25)) / 2, 125); c.globalAlpha = 1; }
+    if (band > 0) { c.globalAlpha = band; c.font = `900 70px ${SANS}`; if (BAND[1] - BAND[0] < 8) { c.textAlign = 'left'; c.fillStyle = '#f1c56d'; c.fillText(BAND[2] + '（' + BAND[0] + '–' + BAND[1] + ' 岁）', x(BAND[1]) + 24, 110); c.textAlign = 'center'; } else { c.fillStyle = '#1b1208'; c.fillText(BAND[2], (x(BAND[0]) + x(BAND[1])) / 2, 125); } c.globalAlpha = 1; }
     c.font = `700 52px ${SANS}`; c.textAlign = 'left'; c.fillStyle = '#bfb6a6'; c.fillText('岁', x(80) + 20, 240); ruler.tex.needsUpdate = true; };
   g.add(new THREE.HemisphereLight('#a0b0c4', '#141110', 0.8));
   const wash = new THREE.DirectionalLight('#c9d4e2', 1.3); wash.position.set(-6, 10, 6); wash.target.position.set(0, 0, 0); wash.castShadow = true; wash.shadow.mapSize.set(2048, 2048); Object.assign(wash.shadow.camera, { left: -8, right: 8, top: 8, bottom: -8, near: 1, far: 30 }); g.add(wash, wash.target);
   const spot = new THREE.SpotLight('#ffd7a0', 0, 0, 0.09, 0.3, 2); spot.position.copy(lit).add(new THREE.Vector3(0, 9, 0)); spot.target.position.copy(lit); spot.castShadow = true; spot.shadow.mapSize.set(1024, 1024); g.add(spot, spot.target);
   const bm = beam('#ffd9a6', 8, 0.09, 0.05); bm.mesh.position.copy(lit).add(new THREE.Vector3(0, 4.6, 0)); g.add(bm.mesh);
+  const extra = LITS.slice(1).map((li) => { const p = posL[li]; const sp = new THREE.SpotLight('#ffd7a0', 0, 0, 0.09, 0.3, 2); sp.position.copy(p).add(new THREE.Vector3(0, 9, 0)); sp.target.position.copy(p); g.add(sp, sp.target); const b = beam('#ffd9a6', 8, 0.09, 0.05); b.mesh.position.copy(p).add(new THREE.Vector3(0, 4.6, 0)); g.add(b.mesh); return { sp, b }; });
   const keys = (o.keys ?? [[o.t0, 0.0, 9.0, 11.0, 0, 0.9, -0.6, 40], [o.age - 0.1, 0.4, 7.8, 9.4, 0.2, 1.0, -0.8, 38], [o.age + 0.6, 0.0, 6.6, 12.0, 0, 0.0, 4.3, 40], [o.t1, 0.0, 6.2, 11.4, 0, 0.0, 4.5, 38]]).map(([t, a, b, c, d, e, f, fov]) => [t, a + CROWD_X, b, c, d + CROWD_X, e, f, fov]);
   const update = (t: number) => {
-    const k = ramp(t, o.t0 + 0.8, 0.1); spot.intensity = 600 * k; bm.mat.uniforms.uI.value = k; wash.intensity = 1.6 * (1 - 0.45 * k);
+    const k = ramp(t, o.t0 + 0.8, 0.1); spot.intensity = 600 * k; bm.mat.uniforms.uI.value = k; extra.forEach((e, i) => { const kk = ramp(t, o.t0 + 1.0 + i * 0.25, 0.1); e.sp.intensity = 600 * kk; e.b.mat.uniforms.uI.value = kk; }); wash.intensity = 1.6 * (1 - 0.45 * k);
     const gold = new THREE.Color('#ffd27a').multiplyScalar(1.4); const dim = new THREE.Color(1, 1, 1).multiplyScalar(1 - 0.2 * k);
-    for (let i = 0; i < N; i++) { const c = i === LIT ? new THREE.Color(1, 1, 1).lerp(gold, k) : dim; bodies.setColorAt(i, c); heads.setColorAt(i, c); }
+    for (let i = 0; i < N; i++) { const c = LITS.includes(i) ? new THREE.Color(1, 1, 1).lerp(gold, k) : dim; bodies.setColorAt(i, c); heads.setColorAt(i, c); }
     bodies.instanceColor!.needsUpdate = true; heads.instanceColor!.needsUpdate = true;
     signM.opacity = ramp(t, o.t0 + 1.0, 0.5) * (1 - ramp(t, o.age - 0.3, 0.3));
     const rv = ramp(t, o.age - 0.2, 0.5); rulerM.opacity = rv; drawRuler(eio(ramp(t, o.age + 0.8, 1.0)));

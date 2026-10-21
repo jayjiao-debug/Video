@@ -16,7 +16,10 @@ import { chair, glowSprite } from './Set';
 import { W, H, GOLD, INK, SERIF, SANS, txt, subtitle, mark, grain, vignette, ramp, eio, eo, clamp, FONT_CHARS } from './lib';
 import { beam as mkBeam, canvasTex, buildPlates, buildString, HALL, PLT, STR } from './Sets3D';
 import { buildGears, buildCrowd, buildGlobe } from './Know3D';
-import { buildFolders, buildVoices, buildRecovery } from './Know4';
+import { buildFolders } from './Know4';
+import { buildChild, buildBooths, buildScreenOffice, buildTherapy, buildMerge } from './Know5';
+const DID_PARTS = [{ s: '记忆', c: '#7fb2ff' }, { s: '情绪', c: '#f29a8a' }, { s: '身份', c: '#f2c46d' }, { s: '意识', c: '#6fd6c2' }];
+const T4 = { child: 52.53, hurt: 56.74, gate: 60.52, booth: 65.45, frost: 69.51, dark: 73.99, clock: 78.33, screen: 82.239, office: 86.44, alone: 91.29, ther: 95.28, gears2: 99.42, merge: 103.55 };
 /* v3 timeline: one plain picture per fact */
 const T3 = { fold: 20.683, prog: 25.12, gear: 33.42, drift: 36.86, crowd: 40.87, age: 45.02, voice: 52.53, real: 56.74, globe: 60.52, ca: 65.45, ch: 69.51, ac: 73.99, why: 78.33, drop: 82.239, plates: 86.44, str: 95.28, rec: 103.55, hit2: 105.64 };
 
@@ -25,32 +28,32 @@ const SPLIT = 4.6, WARM = 8.473, SLAM = 12.55, CREAK = 14.6, TITLE = 16.613, POU
 const PROG = 25.12, ANNOT = 29.7, META = 33.40, META_T = [33.40, 34.16, 34.93, 35.69], DRIFT = 36.86, FINALE = 103.55, HIT2 = 105.64, CODA = 108.184, SUN = 111.745, END = 115.815;
 const LINES: [number, number, string][] = [
   [0.33, 3.54, '你可能也随口说过：“我精分了”'],
-  [4.40, 7.76, '在电影里，精神分裂常常是这样：'],
+  [4.40, 7.76, '但你想说的，其实是这个：'],
   [8.47, 11.40, '一个身体里，住着{两个人}'],
-  [12.54, 15.75, '可医生说的“分裂”，到底是什么？'],
-  [20.68, 24.61, '“好几个人格”，是另一种病：分离性身份障碍'],
-  [25.12, 29.19, '1908年，瑞士医生布洛伊勒造了这个词'],
-  [29.70, 32.91, '他说的“分裂”，不是分成两个人'],
-  [33.42, 36.35, '而是看见、听见、思考、感受——'],
-  [36.86, 40.36, '这些本该一起动的部分，[不再合拍]'],
-  [40.87, 44.51, '全世界，大约每300人里就有1个'],
-  [45.02, 48.66, '它最常出现在十几岁末到二十几岁'],
-  [49.17, 51.96, '和你我，差不多的年纪'],
-  [52.53, 56.17, '最常见的，是听见别人听不到的声音'],
-  [56.74, 59.95, '对他来说，那声音和真的一样'],
-  [60.52, 64.88, '斯坦福的人类学家，问了三座城市的60位患者'],
-  [65.45, 68.95, '美国加州：声音大多刺耳，带着{威胁}'],
-  [69.51, 73.43, '印度金奈：过半的人听到家人，像长辈叮嘱'],
-  [73.99, 77.77, '加纳阿克拉：一半人说，大多是好的声音'],
-  [78.33, 81.68, '同一种病，为什么听到的不一样？'],
-  [82.24, 85.74, '研究者认为：声音，也有[文化]的口音'],
-  [86.44, 90.65, '名字也是一种声音。日本、韩国、台湾先后改了名'],
-  [91.29, 94.65, '三个新名字里，都有同一个字：[调]'],
-  [95.28, 98.78, '韩国的新名字，意思是“给琴弦调音”'],
-  [99.42, 102.92, '不是两个人，是一个人的弦，[走了调]'],
-  [103.55, 107.62, '世卫组织说：至少三分之一的人，能完全康复'],
+  [12.54, 15.75, '这不叫“精分”，它有自己的名字——'],
+  [20.68, 24.61, '医学上叫[分离性身份障碍]，和精神分裂是两种病'],
+  [25.12, 29.19, '1994年，“多重人格”这个旧名被改掉了'],
+  [29.70, 32.91, '因为它不是多出了几个人'],
+  [33.42, 36.35, '而是一个人的记忆、情绪、身份——'],
+  [36.86, 40.36, '没能拼成一个完整的[自己]'],
+  [40.87, 44.51, '据估计，大约每100人里有1到1.5个'],
+  [45.02, 48.66, '迹象常在5到10岁就出现'],
+  [49.17, 51.96, '那时，他还只是个孩子'],
+  [52.53, 56.17, '超过七成患者，童年经历过严重的伤害'],
+  [56.74, 59.95, '太痛的经历，大脑会把它“隔开”'],
+  [60.52, 64.88, '这叫[解离]：像拉下一道闸，让痛进不来'],
+  [65.45, 68.95, '一种主流解释是：被隔开的部分，慢慢有了自己的样子'],
+  [69.51, 73.43, '于是出现了不同的“身份”，彼此记忆不相通'],
+  [73.99, 77.77, '有的身份，甚至不知道别的身份存在'],
+  [78.33, 81.68, '所以，他会发现时间“丢了”一段'],
+  [82.24, 85.74, '电影里的一秒变身、行凶，并不是它常见的样子'],
+  [86.44, 90.65, '多数时候切换很隐蔽，旁人很难察觉'],
+  [91.29, 94.65, '他们更容易伤害的，是自己'],
+  [95.28, 98.78, '好消息是：它可以治疗'],
+  [99.42, 102.92, '长期心理治疗，目标是让这些部分重新合作'],
+  [103.55, 107.62, '甚至重新拼回一个完整的自己'],
   [108.18, 111.55, '所以，下次别再随口说“我精分了”'],
-  [111.75, 115.75, '身体里没有两个人，只有一个人，在慢慢调弦'],
+  [111.75, 115.75, '身体里没有两个人，只有一个人，在努力拼回自己'],
 ];
 const rng = (s: number) => () => { s = (s * 16807) % 2147483647; return (s - 1) / 2147483646; };
 
@@ -158,7 +161,7 @@ const drawTitle = (g: CanvasRenderingContext2D, t: number) => {
   g.clearRect(0, 0, TW, TH); if (t < TITLE) return;
   const size = 176, cw = 190, x0 = TW / 2 - (TCH.length * cw) / 2 + cw / 2, pour = ramp(t, POUR, 0.6);
   g.textAlign = 'center'; g.textBaseline = 'alphabetic';
-  g.font = `600 40px ${SERIF}`; g.fillStyle = `rgba(243,237,226,${0.55 * ramp(t, TITLE + 0.2, 0.4)})`; g.fillText('S C H I Z O P H R E N I A  ·  B L E U L E R  ·  M C M V I I I', TW / 2, 130);
+  g.font = `600 40px ${SERIF}`; g.fillStyle = `rgba(243,237,226,${0.55 * ramp(t, TITLE + 0.2, 0.4)})`; g.fillText('D I S S O C I A T I V E   I D E N T I T Y   D I S O R D E R', TW / 2, 130);
   TCH.forEach((c, i) => { const t0 = TITLE + TAT[i]; if (t < t0) return; const k = eo(ramp(t, t0, 0.22)); const sc = 1 + 0.35 * (1 - k); const off = (1 - k) * 34;
     g.save(); g.translate(x0 + i * cw, 360); g.scale(sc, sc); g.font = `700 ${size}px ${SERIF}`;
     if (off > 0.5) { g.globalCompositeOperation = 'lighter'; g.fillStyle = 'rgba(255,150,80,.85)'; g.fillText(c, -off, 0); g.fillStyle = 'rgba(100,165,255,.85)'; g.fillText(c, off, 0); g.globalCompositeOperation = 'source-over'; }
@@ -231,7 +234,7 @@ const person = (layer: number): Fig => {
 type SetH = { g: THREE.Group; update: (t: number, cam?: any) => number[] };
 type Refs = {
   prog: { g: CanvasRenderingContext2D; tex: THREE.CanvasTexture }; pends: THREE.Group[]; mspots: THREE.SpotLight[]; mbeams: THREE.ShaderMaterial[]; warmFill: THREE.HemisphereLight; moon: THREE.SpotLight; dawnFill: THREE.PointLight;
-  fold: SetH; gears: SetH; crowd: SetH; voice: SetH; globe: SetH; rec: SetH; plates: SetH; str: SetH;
+  fold: SetH; gears: SetH; crowd: SetH; child: SetH; booths: SetH; screen: SetH; ther: SetH; gears2: SetH; merge: SetH;
   innerG: THREE.Group; figs: Fig[]; refls: Reflector[]; fogMat: THREE.MeshBasicMaterial;
   bath: THREE.Group; stage: THREE.Group; doors: THREE.Group[]; overlays: THREE.Mesh[]; fog: CanvasRenderingContext2D; fogTex: THREE.CanvasTexture;
   glass: CanvasRenderingContext2D; glassTex: THREE.CanvasTexture; cookie: CanvasRenderingContext2D; cookieTex: THREE.CanvasTexture;
@@ -249,14 +252,15 @@ const drawProg = (c: CanvasRenderingContext2D, t: number) => {
   for (let i = 0; i < 400; i++) { c.fillStyle = `rgba(120,90,50,${r() * 0.08})`; c.fillRect(r() * W2, r() * H2, 1 + r() * 3, 1 + r() * 3); }
   c.strokeStyle = 'rgba(90,60,30,.7)'; c.lineWidth = 3; c.strokeRect(36, 36, W2 - 72, H2 - 72); c.lineWidth = 1; c.strokeRect(48, 48, W2 - 96, H2 - 96);
   c.textAlign = 'center'; c.fillStyle = '#4a3622';
-  c.font = `600 30px ${SERIF}`; c.fillText('DEUTSCHER VEREIN FÜR PSYCHIATRIE', W2 / 2, 120);
-  c.font = `600 38px ${SERIF}`; c.fillText('BERLIN · 24. APRIL 1908', W2 / 2, 185);
-  c.strokeStyle = 'rgba(90,60,30,.6)'; c.beginPath(); c.moveTo(300, 222); c.lineTo(724, 222); c.stroke();
-  c.font = `italic 700 118px ${SERIF}`; c.fillStyle = '#7a2a1c'; c.fillText('Schizophrenie', W2 / 2, 360);
-  c.font = `600 34px ${SERIF}`; c.fillStyle = '#4a3622'; c.fillText('Prof. E. BLEULER · ZÜRICH', W2 / 2, 440);
-  const a = ramp(t, ANNOT, 0.6); if (a > 0) { c.save(); c.globalAlpha = a; c.translate(W2 / 2, 560); c.rotate(-0.03); c.font = `700 54px ${SANS}`; c.fillStyle = '#1f3a6e';
-    c.fillText('schizo 分裂  ·  phren 心智', 0, 0); c.strokeStyle = '#1f3a6e'; c.lineWidth = 4; c.beginPath(); c.moveTo(-330, 22); c.quadraticCurveTo(0, 34, 330, 18); c.stroke();
-    c.font = `600 40px ${SANS}`; c.fillText('≠ 两个人', 230, 100); c.restore(); }
+  c.font = `600 30px ${SERIF}`; c.fillText('DIAGNOSTIC AND STATISTICAL MANUAL', W2 / 2, 112);
+  c.font = `700 52px ${SERIF}`; c.fillText('DSM-IV · 1994', W2 / 2, 180);
+  c.strokeStyle = 'rgba(90,60,30,.6)'; c.beginPath(); c.moveTo(300, 210); c.lineTo(724, 210); c.stroke();
+  /* the old name, struck out; the new one under it */
+  c.font = `600 44px ${SERIF}`; c.fillStyle = '#6a5a48'; c.fillText('Multiple Personality Disorder', W2 / 2, 285); c.font = `700 40px ${SANS}`; c.fillText('多重人格障碍', W2 / 2, 340);
+  const strike = ramp(t, 26.0, 0.5); if (strike > 0) { c.strokeStyle = '#c0281c'; c.lineWidth = 8; c.lineCap = 'round'; c.beginPath(); c.moveTo(220, 300); c.lineTo(220 + 584 * strike, 290); c.stroke(); }
+  const nw = ramp(t, 26.6, 0.5); c.globalAlpha = nw; c.font = `italic 700 50px ${SERIF}`; c.fillStyle = '#7a2a1c'; c.fillText('Dissociative Identity Disorder', W2 / 2, 430); c.font = `900 58px ${SANS}`; c.fillText('分离性身份障碍', W2 / 2, 500); c.globalAlpha = 1;
+  const a = ramp(t, ANNOT, 0.6); if (a > 0) { c.save(); c.globalAlpha = a; c.translate(W2 / 2, 610); c.rotate(-0.03); c.font = `700 54px ${SANS}`; c.fillStyle = '#1f3a6e';
+    c.fillText('不是“多出几个人”', 0, 0); c.strokeStyle = '#1f3a6e'; c.lineWidth = 4; c.beginPath(); c.moveTo(-250, 22); c.quadraticCurveTo(0, 34, 250, 18); c.stroke(); c.restore(); }
 };
 const World: React.FC<{ t: number }> = ({ t }) => {
   const { scene, camera, gl } = useThree();
@@ -416,18 +420,21 @@ const World: React.FC<{ t: number }> = ({ t }) => {
     const dust = new THREE.Points(dg, new THREE.PointsMaterial({ color: '#ffe0b0', size: 0.016, transparent: true, opacity: 0, blending: THREE.AdditiveBlending, depthWrite: false })); stage.add(dust);
     const figs = [person(1), person(2)]; for (const f of figs) bath.add(f.root, f.key, f.rim);
     const dawnFill = new THREE.PointLight('#ffd2a8', 0, 4, 2); dawnFill.position.set(0.9, 1.9, 1.6); bath.add(dawnFill);
-    const fold = buildFolders({ t0: T3.fold, t1: T3.prog }), gears = buildGears({ t0: T3.gear, drift: T3.drift, t1: T3.crowd }), crowd = buildCrowd({ t0: T3.crowd, age: T3.age, t1: T3.voice }),
-      voice = buildVoices({ t0: T3.voice, real: T3.real, t1: T3.globe }), globe = buildGlobe({ t0: T3.globe, at: [T3.ca, T3.ch, T3.ac], why: T3.why, t1: T3.plates }), rec = buildRecovery({ t0: T3.rec, hit: T3.hit2, t1: CODA });
-    const plates = buildPlates(gl), str = buildString(); for (const x of [fold, gears, crowd, voice, globe, rec, plates, str]) scene.add(x.g);
-    return { prog, pends, mspots, mbeams, warmFill, moon, dawnFill, fold, gears, crowd, voice, globe, rec, plates, str, figs, refls, fogMat, innerG, bath, stage, doors, overlays, fog, fogTex, glass, glassTex, cookie, cookieTex, title, titleTex, titleMesh, titleGlow, titleLight, tube, tubeLight, tubeFill, warmShade, warmLight, warmGlow, shards, shardRoot, spot, beam, dust, dustBase, motes, moteBase, rim };
+    const fold = buildFolders({ t0: T3.fold, t1: T3.prog }), gears = buildGears({ t0: T3.gear, drift: T3.drift, t1: T3.crowd, parts: DID_PARTS }),
+      crowd = buildCrowd({ t0: T3.crowd, age: T3.age, t1: T4.child, lit: [7 * 20 + 13, 3 * 20 + 5, 11 * 20 + 16, 5 * 20 + 2], signText: '约 1% – 1.5%', band: [5, 10, '迹象常出现'] }),
+      child = buildChild({ t0: T4.child, hurt: T4.hurt, gate: T4.gate, t1: T4.booth }), booths = buildBooths({ t0: T4.booth, frost: T4.frost, dark: T4.dark, clock: T4.clock, t1: T4.screen }),
+      screen = buildScreenOffice({ t0: T4.screen, drop: T4.screen, office: T4.office, alone: T4.alone, t1: T4.ther }), ther = buildTherapy({ t0: T4.ther, t1: T4.gears2 }),
+      gears2 = buildGears({ t0: T4.gears2, drift: 80, t1: T4.merge, parts: DID_PARTS, X: 1180, merge: T4.gears2 + 0.4 }), merge = buildMerge({ t0: T4.merge, hit: T3.hit2, t1: CODA });
+    for (const x of [fold, gears, crowd, child, booths, screen, ther, gears2, merge]) scene.add(x.g);
+    return { prog, pends, mspots, mbeams, warmFill, moon, dawnFill, fold, gears, crowd, child, booths, screen, ther, gears2, merge, figs, refls, fogMat, innerG, bath, stage, doors, overlays, fog, fogTex, glass, glassTex, cookie, cookieTex, title, titleTex, titleMesh, titleGlow, titleLight, tube, tubeLight, tubeFill, warmShade, warmLight, warmGlow, shards, shardRoot, spot, beam, dust, dustBase, motes, moteBase, rim };
   }, [scene, gl]);
 
   const cam = camera as THREE.PerspectiveCamera;
-  const seg = t < T3.fold ? 'bath' : t < T3.prog ? 'fold' : t < T3.gear ? 'stage' : t < T3.crowd ? 'gears' : t < T3.voice ? 'crowd' : t < T3.globe ? 'voice' : t < T3.plates ? 'globe' : t < T3.str ? 'plates' : t < T3.rec ? 'string' : t < CODA ? 'rec' : 'bath';
+  const seg = t < T3.fold ? 'bath' : t < T3.prog ? 'fold' : t < T3.gear ? 'stage' : t < T3.crowd ? 'gears' : t < T4.child ? 'crowd' : t < T4.booth ? 'child' : t < T4.screen ? 'booths' : t < T4.ther ? 'screen' : t < T4.gears2 ? 'ther' : t < T4.merge ? 'gears2' : t < CODA ? 'merge' : 'bath';
   const dawn = t >= CODA, finale = t >= FINALE;
-  S.bath.visible = seg === 'bath'; S.stage.visible = seg === 'stage'; const SETS: Record<string, SetH> = { fold: S.fold, gears: S.gears, crowd: S.crowd, voice: S.voice, globe: S.globe, rec: S.rec, plates: S.plates, string: S.str }; for (const k in SETS) SETS[k].g.visible = seg === k;
-  const FOG: Record<string, [string, number]> = { bath: dawn ? ['#1c1813', 0.05] : ['#0b1115', 0.06], stage: ['#070606', 0.045], plates: ['#0a0806', 0.05], string: ['#070605', 0.2], fold: ['#0a0908', 0.05], gears: ['#0a0908', 0.08], crowd: ['#0a0908', 0.03], voice: ['#0a0908', 0.06], rec: ['#0a0908', 0.05] };
-  scene.fog = seg === 'globe' ? null : new THREE.FogExp2(FOG[seg][0], FOG[seg][1]);
+  S.bath.visible = seg === 'bath'; S.stage.visible = seg === 'stage'; const SETS: Record<string, SetH> = { fold: S.fold, gears: S.gears, crowd: S.crowd, child: S.child, booths: S.booths, screen: S.screen, ther: S.ther, gears2: S.gears2, merge: S.merge }; for (const k in SETS) SETS[k].g.visible = seg === k;
+  const FOG: Record<string, [string, number]> = { bath: dawn ? ['#1c1813', 0.05] : ['#0b1115', 0.06], stage: ['#070606', 0.045], fold: ['#0a0908', 0.05], gears: ['#0a0908', 0.08], crowd: ['#0a0908', 0.03], child: ['#0a0808', 0.05], booths: ['#0a0a0c', 0.04], screen: ['#0a0808', 0.04], ther: ['#1a120c', 0.04], gears2: ['#0a0908', 0.08], merge: ['#0a0908', 0.05] };
+  scene.fog = new THREE.FogExp2(FOG[seg][0], FOG[seg][1]);
   let p: number[];
   if (seg === 'bath') {
     /* --- doors: drift open, hold, slam at the crack */
@@ -480,7 +487,7 @@ const World: React.FC<{ t: number }> = ({ t }) => {
     dp.needsUpdate = true;
     p = finale ? herm(FINALE_KEYS, t) : t < META ? herm(STAGE_KEYS, t) : t < DRIFT ? herm(META_KEYS, t) : herm(DRIFT_KEYS, t);
     p[0] += Math.sin(t * 0.6) * 0.006; p[1] += Math.sin(t * 0.8 + 1) * 0.004;
-  } else p = ({ fold: S.fold, gears: S.gears, crowd: S.crowd, voice: S.voice, globe: S.globe, rec: S.rec, plates: S.plates, string: S.str } as Record<string, SetH>)[seg].update(t, cam);
+  } else p = ({ fold: S.fold, gears: S.gears, crowd: S.crowd, child: S.child, booths: S.booths, screen: S.screen, ther: S.ther, gears2: S.gears2, merge: S.merge } as Record<string, SetH>)[seg].update(t, cam);
 
   cam.position.set(p[0], p[1], p[2]); cam.lookAt(p[3], p[4], p[5]); cam.fov = p[6]; cam.near = 0.03; cam.far = 60; cam.updateProjectionMatrix();
 
@@ -526,10 +533,10 @@ const endCard = (g: CanvasRenderingContext2D, T: number) => {
   g.save(); g.globalAlpha = ta; g.font = `700 72px ${SERIF}`; g.textAlign = 'center'; g.fillStyle = gr; g.shadowColor = 'rgba(241,197,109,.4)'; g.shadowBlur = 20; g.fillText('《身体里住着两个人》', 960, 390); g.restore();
   /* motif: four metronome rods back in step */
   g.save(); g.globalAlpha = ta; g.strokeStyle = GOLD; g.lineWidth = 3; for (let i = 0; i < 4; i++) { const x = 870 + i * 60, a = 0.3 * Math.sin((Math.PI * (T - 0.334)) / 0.5087); g.beginPath(); g.moveTo(x, 490); g.lineTo(x + Math.sin(a) * 50, 490 - Math.cos(a) * 50); g.stroke(); g.fillStyle = GOLD; g.fillRect(x - 12, 490, 24, 4); } g.restore();
-  txt(g, '三个新名字，你觉得哪个最贴切？评论区见', 960, 580, 46, INK, { w: 700, alpha: k * ramp(T, END + 0.9, 0.5) });
+  txt(g, '你以前以为的多重人格，是什么样？评论区见', 960, 580, 46, INK, { w: 700, alpha: k * ramp(T, END + 0.9, 0.5) });
   txt(g, '如果你或身边的人正在经历，可以拨打 12356 全国心理援助热线（24小时）', 960, 645, 28, 'rgba(243,237,226,.75)', { w: 500, alpha: k * ramp(T, END + 1.1, 0.5) });
   const pa = k * ramp(T, END + 1.3, 0.5); g.save(); g.globalAlpha = pa; g.strokeStyle = GOLD; g.lineWidth = 2; g.beginPath(); g.roundRect(960 - 260, 700, 520, 74, 37); g.stroke(); g.restore(); txt(g, '关注 Juno · 一起看懂世界', 960, 750, 34, GOLD, { w: 700, alpha: pa });
-  txt(g, '资料：Bleuler 1908（AJP 2008）· Luhrmann et al., Br J Psychiatry 2015 · Cho et al., Psychiatry Investig 2018 · 台湾卫福部 2014 · WHO', 960, 860, 21, 'rgba(243,237,226,.45)', { w: 400, alpha: k * ramp(T, END + 1.6, 0.5) });
+  txt(g, '资料：MSD Manual · Cleveland Clinic · NHS · Psychology Today · DSM-IV (1994)', 960, 860, 21, 'rgba(243,237,226,.45)', { w: 400, alpha: k * ramp(T, END + 1.6, 0.5) });
 };
 const Overlay: React.FC<{ t: number }> = ({ t }) => {
   const ref = useRef<HTMLCanvasElement>(null);
@@ -537,14 +544,14 @@ const Overlay: React.FC<{ t: number }> = ({ t }) => {
     vignette(g, 0.55); grain(g, 11 + Math.floor(t * 30), 0.05);
     /* fades: in from black, a flash on the slam, white-gold flash on the burst, black as we go through the title */
     let blk = Math.max(1 - ramp(t, 0, 0.6), t < STAGE ? ramp(t, 20.3, 0.33) : 0, ramp(t, CINE_LEN_S - 0.6, 0.6));
-    for (const c of [T3.prog, T3.gear, T3.crowd, T3.voice, T3.globe, T3.plates, T3.str, T3.rec, CODA]) blk = Math.max(blk, 1 - clamp(Math.abs(t - c) / 0.16));
-    if (t > T3.drop && t < T3.drop + 0.2) { g.fillStyle = `rgba(255,230,190,${0.35 * (1 - ramp(t, T3.drop, 0.2))})`; g.fillRect(0, 0, W, H); }
+    for (const c of [T3.prog, T3.gear, T3.crowd, T4.child, T4.booth, T4.screen, T4.office, T4.ther, T4.gears2, T4.merge, CODA]) blk = Math.max(blk, 1 - clamp(Math.abs(t - c) / 0.16));
+    if (t > T4.screen && t < T4.screen + 0.2) { g.fillStyle = `rgba(255,60,40,${0.3 * (1 - ramp(t, T4.screen, 0.2))})`; g.fillRect(0, 0, W, H); }
     if (t > STR.tune && t < STR.tune + 0.15) { g.fillStyle = `rgba(255,225,170,${0.22 * (1 - ramp(t, STR.tune, 0.15))})`; g.fillRect(0, 0, W, H); }
     if (blk > 0) { g.fillStyle = `rgba(0,0,0,${blk})`; g.fillRect(0, 0, W, H); }
     if (t > SLAM && t < SLAM + 0.15) { g.fillStyle = `rgba(220,235,255,${0.28 * (1 - ramp(t, SLAM, 0.15))})`; g.fillRect(0, 0, W, H); }
     if (t > TITLE && t < TITLE + 0.25) { g.fillStyle = `rgba(255,236,200,${0.55 * (1 - ramp(t, TITLE, 0.25))})`; g.fillRect(0, 0, W, H); }
     const ta = ramp(t, TITLE + 1.6, 0.5) * (1 - ramp(t, 19.85, 0.3));
-    txt(g, '精神分裂，到底分裂了什么？', 960, 740, 42, INK, { w: 700, alpha: ta }); txt(g, '— VIBE知识大赏 —', 960, 800, 24, 'rgba(243,237,226,.55)', { w: 500, alpha: ta });
+    txt(g, '多重人格，到底是怎么回事？', 960, 740, 42, INK, { w: 700, alpha: ta }); txt(g, '— VIBE知识大赏 —', 960, 800, 24, 'rgba(243,237,226,.55)', { w: 500, alpha: ta });
     g.fillStyle = '#000'; g.fillRect(0, 0, W, BAR); g.fillRect(0, H - BAR, W, BAR);
     endCard(g, t);
     mark(g, t >= TITLE && t < STAGE + 0.5 ? 0 : 0.9 * ramp(t, 0.6, 0.5) * (1 - ramp(t, END, 0.4)));
@@ -558,7 +565,7 @@ export const Cine: React.FC = () => {
   const [h] = useState(() => delayRender('fonts')); const [ok, setOk] = useState(false);
   useEffect(() => { const s = FONT_CHARS + LINES.map((l) => l[2]).join('') + TCH.join('') + '精分神裂到底了什么？SCHIZOPHRENIABLEULERMCMVI·—' + 'DEUTSCHERVEINFÜRPSYCHATBLNAPRIL1908SchizophrenieProf.EÜRICHschizophren分裂心智≠两个人看见听见思考感受' +
       '加州美国金奈印度阿克拉加纳20人中无以正面为主11听到家10斯坦福Luhrmann3座城市60位患者55607080100120140160170' + '日本2002年統合失調症旧名精神分裂病韩国2011調絃病조현병台湾2014思覺失調症调' + '161718192021222324252627282930' +
-      '分离性身份障碍俗称多重人格另一种病DissociativeIdentityDisorderSchizophrenia好几个轮流出现一个人几种功能失调≠他听到了有在说话旁边的什么也没对来和真声音一样至少1/3能完全康复世界卫生组织WHO看见听见思考感受最常发病岁加州美国金奈印度阿克拉加纳大多刺耳带着威胁像家里长辈叮嘱是好以正面为主听到斯坦福座城市位患者准了✓走调旧名' + 'J JUNO三个新名字你觉得哪个最贴切评论区见如果或身边的正在经历可以拨打12356全国心理援助热线小时关注一起看懂世界资料BleulerAJPetalBrJPsychiatry2015ChoInvestig2018卫福部WHO（）';
+      '分离性身份障碍俗称多重人格另一种病DissociativeIdentityDisorderSchizophrenia好几个轮流出现一个人几种功能失调≠他听到了有在说话旁边的什么也没对来和真声音一样至少1/3能完全康复世界卫生组织WHO看见听见思考感受最常发病岁加州美国金奈印度阿克拉加纳大多刺耳带着威胁像家里长辈叮嘱是好以正面为主听到斯坦福座城市位患者准了✓走调旧名' + '但你想说的其实是这个这不叫有自己名字医学上叫和是两种病年旧名被改掉了因为它不多出几个而一记忆情绪身份没能拼成完整的己据估计大约每里到迹象常在岁就出现那时他还只孩子超过七成患者童年经历严重伤害太痛大脑会把隔开解离像拉下道闸让进来主流解释慢慢样于不同彼此相通甚至知道别存所以发现间丢段电影秒变身行凶并见多数候切换很隐蔽旁难察觉们更容易好消息可治疗长期心理标重新合作努力DIAGNOSTICANDSTATISTICALMANUALDSM-IVMultiplePersonalityDisorderDissociativeIdentity障碍多重人格本期识约%–ABCD？悄悄同事没意以前什么样MSDManualClevelandClinicNHSPsychologyToday' + 'J JUNO三个新名字你觉得哪个最贴切评论区见如果或身边的正在经历可以拨打12356全国心理援助热线小时关注一起看懂世界资料BleulerAJPetalBrJPsychiatry2015ChoInvestig2018卫福部WHO（）';
     Promise.all([`700 68px ${SANS}`, `900 68px ${SANS}`, `900 300px ${SANS}`, `700 176px ${SERIF}`, `600 40px ${SERIF}`, `700 42px ${SANS}`, `500 22px ${SANS}`, `italic 700 118px ${SERIF}`, `700 30px ${SANS}`, `500 36px ${SANS}`, `700 150px ${SERIF}`, `700 46px ${SANS}`, `700 72px ${SERIF}`, `900 96px ${SANS}`, `800 60px ${SANS}`, `900 120px ${SANS}`, `900 110px ${SANS}`, `900 92px ${SANS}`, `600 40px ${SANS}`, `900 84px ${SANS}`, `700 64px ${SANS}`, `700 300px ${SERIF}`, `900 66px ${SANS}`, `700 62px ${SANS}`].map((x) => document.fonts.load(x, s).catch(() => null))).then(() => { setOk(true); continueRender(h); }); }, [h]);
   if (!ok) return null;
   return (
@@ -566,7 +573,7 @@ export const Cine: React.FC = () => {
       <ThreeCanvas width={W} height={H} shadows gl={{ antialias: true, toneMapping: THREE.ACESFilmicToneMapping, toneMappingExposure: 1.35, preserveDrawingBuffer: true }} camera={{ fov: 36, near: 0.03, far: 60 }}>
         <World t={t} />
       </ThreeCanvas>
-      <AbsoluteFill style={{ background: (t < STAGE || (t >= T3.voice && t < T3.plates)) ? 'linear-gradient(180deg, rgba(40,70,85,.32), rgba(18,38,52,.32))' : t >= CODA ? 'linear-gradient(180deg, rgba(90,60,35,.22), rgba(40,30,25,.25))' : 'linear-gradient(180deg, rgba(60,40,20,.22), rgba(20,14,10,.3))', mixBlendMode: 'soft-light' }} />
+      <AbsoluteFill style={{ background: (t < STAGE || (t >= T4.booth && t < T4.screen)) ? 'linear-gradient(180deg, rgba(40,70,85,.32), rgba(18,38,52,.32))' : t >= CODA ? 'linear-gradient(180deg, rgba(90,60,35,.22), rgba(40,30,25,.25))' : 'linear-gradient(180deg, rgba(60,40,20,.22), rgba(20,14,10,.3))', mixBlendMode: 'soft-light' }} />
       <Overlay t={t} />
     </AbsoluteFill>
   );
