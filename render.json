@@ -1,8 +1,8 @@
 {
-  "id": "open_v9-1792587293",
-  "composition": "OPEN8",
+  "id": "film_v2-1792591845",
+  "composition": "FILM2",
   "start": 0,
-  "end": 614,
-  "chunks": 9,
-  "output": "open_v9"
+  "end": 4931,
+  "chunks": 20,
+  "output": "film_v2"
 }
