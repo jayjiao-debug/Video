@@ -38,8 +38,8 @@ def thunk(level=1.0):
 def main():
     bgm_path, out = sys.argv[1], sys.argv[2]
     dur = float(sys.argv[3]) if len(sys.argv) > 3 else 20.5
-    raw = subprocess.run(['ffmpeg', '-v', 'error', '-i', bgm_path, '-t', str(dur), '-f', 's16le', '-ac', '2', '-ar', str(SR), '-'], capture_output=True, check=True).stdout
-    bgm = np.frombuffer(raw, np.int16).reshape(-1, 2).astype(np.float64) / 32768
+    raw = subprocess.run(['ffmpeg', '-v', 'error', '-i', bgm_path, '-t', str(dur), '-f', 'f32le', '-ac', '2', '-ar', str(SR), '-'], capture_output=True, check=True).stdout
+    bgm = np.frombuffer(raw, np.float32).reshape(-1, 2).astype(np.float64)
     N = int(dur * SR); bgm = np.pad(bgm, ((0, max(0, N - len(bgm))), (0, 0)))[:N]
     fx = np.zeros(N)
     def put(sig, t0, g=1.0):
@@ -67,23 +67,19 @@ def main():
     # switch-on (第二天): a click, a rising zap of static, the hum swelling then cut as we are back on the platform
     put(click(1.0, 1500, 0.025), DIVE1 - 0.02, 0.6)
     s = static(0.32); put(s * np.linspace(0.2, 1, len(s)) * np.exp(-np.maximum(0, np.arange(len(s)) / SR - 0.2) / 0.05), DIVE1, 0.38)
-    # the channel change dips the music a little (like the set's own sound cutting out), then it comes straight back
-    # (owner rule: the BGM is never processed — no ducking; the effects give way instead where the song is already near full scale)
-    # mix: a little stereo width on the static, keep the music on top
-    L = bgm[:, 0] + fx * 0.95; R = bgm[:, 1] + np.concatenate([np.zeros(40), fx[:-40]]) * 0.95
-    mix = np.stack([L, R], 1)
-    fade = np.clip((dur - 0.05 - t) / 0.9, 0, 1)[:, None]; mix *= fade
-    room = np.clip(0.985 - np.abs(bgm).max(1), 0.0, None)                     # headroom left by the song, per sample
-    room = -onepole_lp(-room, 200) if False else room
-    over = np.abs(mix).max(1) > 0.985
-    if over.any():                                                              # pull only the effects back where song + effects would clip
-        g = np.ones(N); fxa = np.maximum(np.abs(fx), 1e-9)
-        g[over] = np.clip(room[over] / fxa[over], 0, 1)
-        g = np.minimum.accumulate(g[::-1])[::-1] if False else g
-        mix = bgm + np.stack([fx * g, np.concatenate([np.zeros(40), (fx * g)[:-40]])], 1) * 0.95
+    # the BGM is never processed (owner rule): no ducking, no gain, no limiting — where the song is already near full scale,
+    # the effects step back instead (a smoothed per-sample gain on the effects only)
+    fxR = np.concatenate([np.zeros(40), fx[:-40]])
+    room = np.clip(0.985 - np.abs(bgm).max(1), 0.0, None)
+    need = np.maximum(np.abs(fx), np.abs(fxR)) * 0.95
+    g = np.clip(room / np.maximum(need, 1e-9), 0, 1)
+    w = int(0.004 * SR); from scipy.ndimage import minimum_filter1d
+    g = minimum_filter1d(g, 2 * w + 1); g = onepole_lp(g, 120)
+    mix = bgm + np.stack([fx * g, fxR * g], 1) * 0.95
+    fade = np.clip((dur - 0.05 - t) / 0.9, 0, 1)[:, None]; mix *= fade         # the one allowed edit: fade over the last bar
     peak = np.abs(mix).max()
-    with wave.open(out, 'wb') as w:
-        w.setnchannels(2); w.setsampwidth(2); w.setframerate(SR); w.writeframes((mix * 32767).astype(np.int16).tobytes())
+    from scipy.io import wavfile
+    wavfile.write(out, SR, mix.astype(np.float32))                            # float: the song's own overs pass through untouched
     rms = lambda a, b, x: np.sqrt(np.mean(x[int(a * SR):int(b * SR)] ** 2))
     print('wrote', out, 'peak', round(peak, 3), '| music rms in flips', round(rms(FLIPS[0], FLIPS[0] + 0.3, bgm[:, 0]), 3), '| static rms', round(rms(FLIPS[0], FLIPS[0] + 0.12, fx), 3))
 if __name__ == '__main__': main()
