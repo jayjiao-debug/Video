@@ -13,3 +13,4 @@
 - **Motion:** stop-motion stepping at 12 fps for everything (puppet, strings, props); cross-dissolves 0.5 s between sections (no black flashes); no zooms.
 - **Covers:** hook 「每天重复的你，幸福吗？」 + title, cover scene = him pushing under the gods' bar.
 | 2026-10-20 23:00 | v1 picture back (4246 frames, farm wall-clock 22.1 min); music muxed; master 48.6 MB, 发送版 27.3 MB | producer | QA: −14.0 LUFS, peak −4.1 dBFS; no black frames except the dark end card; every line on screen | HD: GitHub artifact 12299355183 (run 39498378755), md5 verified |
+| 2026-10-21 20:20 | redesign after the 0:22 style test (owner: "definitely better … redesign the scenes"): mountain = bold teal→orange sky, sun behind him, rim light, lowered horizon, lens-near foreground; Paris lamp key light; 2010 mind glows while the room darkens; 1997 the named three lit; film grain removed everywhere. Keyframes sent; push check ALL PASS | producer | waiting for owner OK | BGM not attached yet |
