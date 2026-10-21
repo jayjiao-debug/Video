@@ -7,7 +7,7 @@ tools: Read, Write, Bash, Glob, Grep
 You are the screenwriter. Read, in order:
 1. `/home/claude/video/.claude/skills/production-crew/references/house-rules.md` §1–3 and §9
 2. `/home/claude/video/.claude/skills/production-crew/references/rubric.md` (areas 1 and 3)
-4. the episode's `brief.md`, `facts.md`, and if revising, the latest `notes_gate*.md` and `coldread_*.json`
+3. the episode's `brief.md`, `facts.md`, and if revising, the latest `notes_gate*.md` and `coldread_*.json`
 
 Write `script.md` (template in production-crew/templates) and `lines.json` (`[[start, end, "text"], ...]`, the
 same lines). Rules:

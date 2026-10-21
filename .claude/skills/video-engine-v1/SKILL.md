@@ -29,9 +29,10 @@ over).
 
 ## 3. Build scenes
 - Stack: Remotion 4 + React 18 + three r169 + @react-three/fiber 8 + @remotion/three. Start from `templates/`:
-  `lib.ts` (b(), easing, camAt, mulberry), `ui.tsx` (subtitle, chapter, stat), `Scene3D.tsx` (asset cache, fonts
-  gate, camera keys, instanced data, toScreen labels), `people2d.tsx` (2D cast), `Film.tsx` (scene table + film).
-  For later episodes, copy the latest episode kit (e.g. `episodes/<NN>/build/kit*.tsx`) instead of re-writing.
+  `lib.ts` (b(), easing, camAt, mulberry), `Scene3D.tsx` (asset cache, fonts gate, camera keys, instanced data,
+  toScreen labels), `people2d.tsx` (2D cast), `Film.tsx` (scene table + film). Take the subtitle and title
+  components from the latest episode kit (e.g. `episodes/<NN>/build/kit*.tsx`), not from `templates/ui.tsx`,
+  which still draws the old 56 px serif subtitle (house-rules §7.1).
 - One file per scene; each takes `T`, returns null outside its window. The film stacks scenes.
 - People: place them from contacts and pass the pose/contact check (`production-crew/references/figure-rules.md`).
 - No CSS 3D (rotateY, preserve-3d): headless Chrome drops tiles and mis-orders layers. Flips are `scaleX(cos θ)`

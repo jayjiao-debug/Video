@@ -2,7 +2,8 @@
 
 ## What the owner gets each review round
 1. **Send version** `<标题>_<tag>_发送版.mp4` under 30 MB (chat upload limit): two-pass x264 1600k + AAC 160k
-   (finish.py). Music at −14 LUFS (two-pass loudnorm), 1 s fade-out at the end.
+   (finish.py). finish.py currently loudnorms the music to −14 LUFS with a 1 s fade-out, which conflicts with
+   house-rules §8.1; see `.claude/AUDIT.md`, question 1.
 2. **Scene clips** `<标题>_<tag>_分场景/S1_…mp4` (with music) so feedback can name a scene and a time.
 3. **Master** `<标题>_<tag>.mp4` (once the cut is final): the file the owner uploads to Douyin. Too big for
    chat, so it goes through a GitHub Actions artifact (github-hd-delivery skill). Never commit video or music to

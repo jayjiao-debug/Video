@@ -17,17 +17,17 @@ what you are checking against. (`references/owner-notes.md` is the raw log of th
 ## Inputs
 
 Ask the maker for (or find in the episode folder `episodes/<NN-slug>/` of this repo):
-- the film: the **master** `out/<片名>_vN.mp4` (not the 发送版)
-- the subtitle lines as JSON `[[start, end, text], ...]`. From the engine repo:
-  `npx tsx <skill>/scripts/dump_lines.ts src/vX/FilmX.tsx <EXPORT_NAME> > review/<ep>_lines.json`
-- the script with its facts table (`vX/剧本_*.md`)
-- the episode source folder (`src/vX`) for the brand/source greps
+- the film: the **master** in the episode's `out/` (not the 发送版)
+- the subtitle lines: the episode's `lines.json` (`[[start, end, text], ...]`). If the lines only exist in code,
+  dump them: `npx tsx <skill>/scripts/dump_lines.ts <film.tsx> <EXPORT_NAME> > review/<ep>_lines.json`
+- the script and its facts table: the episode's `script.md` and `facts.md`
+- the episode build folder (`build/`) for the brand/source greps
 
 ## 1. Automatic checks
 
 ```
 python3 <skill>/scripts/review.py --video out/<film>.mp4 --out review/<ep>_vN \
-    --lines review/<ep>_lines.json --script vX/剧本_*.md --src src/vX --every 5
+    --lines lines.json --script facts.md --src build --every 5
 ```
 This writes `review/<ep>_vN/auto_checks.md` (technical, pace, sources, brand) and contact sheets
 `sheet_NN.png` (frames every 5 s, the middle of every subtitle, both sides of every hard cut, every glitch;
@@ -44,7 +44,7 @@ Open every `sheet_NN.png` with Read (they are 1920 px wide; look closely). For e
 - **Renders whole?** missing or clipped objects, half-drawn props (SVG filter regions clip!), z-fighting/flicker,
   objects through walls or the camera (穿模), wrong orientation, stray debug text, blank 3D.
 - **Readable?** subtitle over the key visual, labels over subtitles or over each other, text on a bright
-  background without a band, text < 18 px, numbers that matter < 60 px, two things to follow at once.
+  background without a band, text below the house-rules §7 sizes, two things to follow at once.
 - **Bodies and contact:** for every person, say in one line what body parts touch what; anything other than the
   declared contacts is a MAJOR (figure-rules.md). Odd hands or faces, characters that read wrong (sitting looks
   standing).

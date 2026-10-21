@@ -1,6 +1,6 @@
 ---
 name: "edit-rhythm"
-description: "Edit rhythm for Juno / explainer videos: what lands on the music (卡点) and what must not, continuous actions on their own clock, the beat-lock check. Use when timing hits, cuts or effects to music, or when something follows the beat too much (突兀)."
+description: "Edit rhythm for Juno / VIBE知识大赏 films: what lands on the music (卡点) and what must not, continuous actions on their own clock, the beat-lock check. Use when timing hits, cuts or effects to music, or when something follows the beat too much (突兀)."
 ---
 
 # Edit rhythm
@@ -27,8 +27,8 @@ Rank every moment. Only tiers 1 and 2 land on the music.
 
 | tier | what | lands on |
 |---|---|---|
-| 1 structural | cold-open freeze, title stamps, scene cuts, the break, the drop | the strongest accents (`hits` ≥ 0.6) and section markers |
-| 2 story punch | a reveal, a stamp, a slam of the key number, a flash, a door bangs open | the beat nearest the line that names it |
+| 1 structural | title slam, scene cuts, the break, the drop | the strongest accents (`hits` ≥ 0.6) and section markers |
+| 2 story punch | a reveal, a stamp, a slam of the key number, a door bangs open (no white flashes) | the beat nearest the line that names it |
 | 3 everything else | printing, writing, dealing cards, counting, pouring, flicking pages, walking, lights | **its own physical clock, not the beat grid** |
 
 - **No metronome.** Never four or more consecutive beats each carrying a visual
@@ -50,8 +50,8 @@ Quantising a repeated action to the beat is the most common mistake. Rules:
   beat period (e.g. 17 frames against a 15.25-frame beat), with an occasional
   longer pause (paper feed).
 - **People** (writing, dealing, counting): start slow, speed up as they get into
-  it, small irregularity (±15 %), never metronomic. Example from 《第一位数字》:
-  `t += 6 + 14·0.84^i + jitter` for dealing cards; writing weights `1.35 − 0.07·i`.
+  it, small irregularity (±15 %), never metronomic (e.g. each interval a little shorter than the last, plus
+  jitter).
 - **Sweeps** (tabs lighting 1→9, a finger along a row): one quick gesture
   (4–6 frames per item), started on the line; don't spread it over nine beats.
 - Highlights that accompany a sequence (red circles on cheque digits) arrive
@@ -77,9 +77,7 @@ python stillness.py out/<film>.mp4 0.2              # dead air
 ```
 
 `beatlock` masks the subtitle band, finds sudden picture changes (not camera
-moves), and counts a beat as hit when a change lands within ±1 frame. Before the
-fix, 《第一位数字》 showed `reveal 23/23 (100 %)` (bars and light pulsing on every
-beat) and a 17-beat run in `cheques` (printing on the beat). Fix any metronome run
+moves), and counts a beat as hit when a change lands within ±1 frame. Fix any metronome run
 outside the title, and any scene above ~35 % unless it is a short burst on the
 drop. Then watch the flagged stretch with sound.
 
@@ -93,7 +91,7 @@ Public datasets describe film editing in general, not this genre:
 
 The real reference is the owner's series (Vibe知识大赏). When the owner shares
 reference episodes, measure each one and append a row to
-`references/edit-stats.json` in the production-crew skill:
+`references/edit-stats.json` in the production-crew skill (create it with the first row):
 - cuts per minute per music section (ffmpeg `scdet`);
 - the share of cuts on an accent;
 - `beatlock` hit share and the longest metronome run;

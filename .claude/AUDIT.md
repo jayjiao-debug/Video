@@ -72,7 +72,7 @@ in `plugin-updates/`; re-install from there:
 | juno-crew-workflow | a second copy of the workflow with its own numbers (100–130 s, grain, ep11 music recipe) | replace with the short pointer in `plugin-updates/` |
 | video-engine-v1 | a second copy of the engine skill (≈2:10, no SFX, slow cold open) | uninstall; the repo copy loads when the repo is attached |
 | pacing | points at the explainer pipeline; tells agents to cut music bars | replace |
-| edit-rhythm | good rules; points at code on another branch | replace (paths fixed) |
+| edit-rhythm | good rules; its checks only exist on another branch; listed a cold-open freeze and flashes as hits | replace (says where the checks are; hit list matches house-rules) |
 | overnight-batch | read owner-notes rows | replace (reads house-rules) |
 | douyin-publish | explainer cover paths, a `juno-brand` skill that doesn't exist, gradient gold | replace |
 | github-hd-delivery | fine | keep |

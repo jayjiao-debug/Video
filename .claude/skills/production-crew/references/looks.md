@@ -1,7 +1,8 @@
 # Looks used so far, and how they did
 
 One row per published episode. Fill the numbers from the Douyin creator data after ~48 h.
-Read this before proposing looks: don't repeat the last episode's main look, and note what has worked.
+Read this before proposing looks: don't repeat the last 3 episodes' look, metaphor or opening device, and note
+what has worked.
 
 Observation (2026-10-05, from the opening contact sheet of 7 films): **every film so far uses the same family**,
 a dark navy night with warm gold light and small glowing elements. The look has never been varied, so the data

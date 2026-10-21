@@ -87,14 +87,9 @@ wide 1440×1080 and tall 1080×1440. Export PNG (and a high-quality JPG copy if 
 - A short title such as 生命平等吗？ stays on **one line**. Never let it wrap so that
   one or two characters (e.g. 吗？) fall onto a line of their own: set `whiteSpace: 'nowrap'`
   and size the font to fit, or break deliberately where the owner asks.
-- **Full-width punctuation at the end of a centred line (？！。，：) carries about half an em of
-  empty space on its right**, so a title ending in ？ sits visibly left of centre and looks
-  uneven. Pull that space back, e.g. `生命平等吗<span style={{marginRight: '-0.5em'}}>？</span>`
-  (or shift the line right by ~0.25em), then measure the rendered ink span in the PNG and
-  confirm its centre is within a few pixels of the frame centre. The same applies to title
-  cards, end cards and any centred heading in the film.
-- Brand rules from `production-crew/references/house-rules.md` §10 apply (never "Juno 出品", corner mark, no
-  white flash).
+- Full-width punctuation ending a centred line is pulled back and the ink centre measured on the PNG
+  (house-rules §7.4).
+- Brand rules from `production-crew/references/house-rules.md` §10 apply (never "Juno 出品", corner mark).
 
 Send both images with SendUserFile (`display: 'render'`).
 

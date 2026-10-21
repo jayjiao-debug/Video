@@ -66,7 +66,8 @@ Viewers decide in 2 s: films with 2s跳出 ≤ 29 % got pushed, ≥ 34.7 % did n
 ## 4. Look and visual design (A)
 
 1. **Reuse the engine, never the look.** Every episode gets 2–3 looks from different worlds (not just different
-   colours), at least one bold, none repeating the last episode; the owner picks. Log it in `looks.md`. (ep11)
+   colours), at least one bold, none repeating the last 3 episodes (§1.4); the owner picks. Log it in
+   `looks.md`. (ep11, ep13)
 2. **The world belongs to the subject.** Serious/prestige topics get no flat cartoon figures; engineering topics
    suit technical drawings; phone stories suit real app screens. (ep26, ep27, ep14)
 3. **Cheap = flat clip-art** (colour blocks, simple houses, cartoon figures), fixed frames, crossfade-only
