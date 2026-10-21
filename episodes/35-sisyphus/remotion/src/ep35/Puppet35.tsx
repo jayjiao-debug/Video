@@ -258,11 +258,15 @@ const Sub: React.FC<{t: string}> = ({t}) => (
 				// optical centring: a trailing full-width ？！。，： carries ~½em of blank on its right, and letter-spacing adds 0.08em after the last glyph — pull both back
 				const segs = t.split(/(\[[^\]]+\])/).filter(Boolean);
 				return segs.map((x, i) => {
-					const hi = x[0] === '[', body = hi ? x.slice(1, -1) : x, last = i === segs.length - 1;
+					const hi = x[0] === '[', body0 = hi ? x.slice(1, -1) : x, last = i === segs.length - 1;
 					const st: React.CSSProperties = hi ? {color: '#f1c56d', textShadow: '0 0 18px rgba(241,197,109,0.45), 0 2px 14px rgba(0,0,0,0.9)'} : {};
-					if (!last) return <span key={i} style={st}>{body}</span>;
+					// an opening “《「『（ at the very start carries a blank half-em on its left: pull it back too
+					const lead = i === 0 && /^[“《「『（]/.test(body0);
+					const body = lead ? body0.slice(1) : body0;
+					const head = lead ? <span style={{marginLeft: '-0.5em'}}>{body0[0]}</span> : null;
+					if (!last) return <span key={i} style={st}>{head}{body}</span>;
 					const end = body.slice(-1), punct = /[？！。，：；、”》」』）]/.test(end);   // closing quotes and brackets carry the same blank half-em
-					return <span key={i} style={st}>{body.slice(0, -1)}<span style={{marginRight: punct ? '-0.58em' : '-0.08em'}}>{end}</span></span>;
+					return <span key={i} style={st}>{head}{body.slice(0, -1)}<span style={{marginRight: punct ? '-0.58em' : '-0.08em'}}>{end}</span></span>;
 				});
 			})()}
 		</div>
