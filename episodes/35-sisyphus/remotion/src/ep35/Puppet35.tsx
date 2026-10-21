@@ -901,7 +901,16 @@ const RealString: React.FC<{a: Pt; b: Pt; id: string; band?: [number, number]; w
 const Eyelet: React.FC<{p: Pt; k: number}> = ({p, k}) => (
 	<g><circle cx={p[0]} cy={p[1] - 1.6 * k} r={2.3 * k} fill="none" stroke="#6e5c40" strokeWidth={1.1 * k} /><path d={`M${p[0] - 1.6 * k},${p[1] - 2.6 * k} a${2.3 * k},${2.3 * k} 0 0 1 ${2.6 * k},${-1.2 * k}`} stroke="#d9c79c" strokeWidth={0.8 * k} fill="none" opacity={0.8} /><circle cx={p[0]} cy={p[1] - 3.9 * k} r={0.9 * k} fill="#e8e2d6" opacity={0.7} /></g>
 );
-const S1b: React.FC<{t: number; spin?: number; flick?: number; trainShift?: number; headLift?: number; sub?: string; subO?: number; crowd?: boolean; bare?: boolean; free?: number; warm?: number}> = ({t, spin = 0, flick = 1, trainShift = 0, headLift = 0, sub = '早上挤地铁，上班，加班，回家', subO = 1, crowd, bare, free = 0, warm = 0}) => {
+/** a figure's shadow on the floor, cast toward the camera, shaped as someone pushing a boulder (line 35: 每个人，都在推自己的石头) */
+const RockShadow: React.FC<{x: number; y: number; k: number; t: number; o: number; seed?: number}> = ({x, y, k, t, o, seed = 0}) => o <= 0 ? null : (
+	<g opacity={0.82 * o} style={{filter: 'brightness(0) blur(1.2px)'}}>
+		<g transform={`translate(${x},${y}) scale(${k * 1.35},${-k * 0.5}) skewX(-38)`}>
+			<Mannequin pose={pushWalkPose(t * 2.2 + seed)} />
+			<circle cx={250} cy={-300} r={175} fill="#000" />
+		</g>
+	</g>
+);
+const S1b: React.FC<{t: number; spin?: number; flick?: number; trainShift?: number; headLift?: number; sub?: string; subO?: number; crowd?: boolean; bare?: boolean; free?: number; warm?: number; shadows?: number}> = ({t, spin = 0, flick = 1, trainShift = 0, headLift = 0, sub = '早上挤地铁，上班，加班，回家', subO = 1, crowd, bare, free = 0, warm = 0, shadows = 0}) => {
 	// a long breath out at ~2.2 s: the shoulders rise, then the whole body sinks a little lower than before
 	const sighU = cl01((t - 2.0) / 1.6), sigh = sighU <= 0 ? 0 : Math.sin(Math.PI * Math.min(1, sighU * 1.25)) * (sighU < 0.4 ? -0.6 : 1) + 0.6 * sighU;
 	const swing = 1.6 * Math.sin(t * 0.9) + 0.7 * Math.sin(t * 2.3 + 1);    // hanging from strings: never quite still
@@ -996,6 +1005,7 @@ const S1b: React.FC<{t: number; spin?: number; flick?: number; trainShift?: numb
 					const p = towards([x0, 930], d), kk = 1.22 * (1 - d) * 1.05;
 					const cp: Pose = withBreath({lean: 6 + 1.2 * Math.sin(t * (0.7 + i * 0.13) + i), head: 22 + 5 * Math.sin(t * (0.45 + i * 0.1) + i * 2), armN: [-3 + 2 * Math.sin(t * 0.8 + i), 4], armF: [5, 8], legN: [2, 0], legF: [-3, 0], case: i % 2 === 0}, t, i * 1.7);
 					return <g key={i} opacity={1 - d * 0.5} filter={d > 0.7 ? 'url(#b1.5)' : undefined}>
+						<RockShadow x={p[0]} y={p[1] + 2} k={kk} t={t} o={cl01((shadows - 0.1 * i) / 0.5)} seed={i * 1.3} />
 						<g filter="url(#rimC)"><g transform={`translate(${p[0]},${p[1]}) scale(${kk})`}><Mannequin pose={cp} /></g></g>
 						{attachPts(cp).map(({p: q, to}, si) => { const a = W2(p[0], p[1], kk, q); return <line key={si} x1={a[0]} y1={a[1]} x2={p[0] + to * 40 * kk} y2={-10} stroke="#e8e8ee" strokeWidth={0.8} opacity={0.35} />; })}
 					</g>;
@@ -1003,6 +1013,7 @@ const S1b: React.FC<{t: number; spin?: number; flick?: number; trainShift?: numb
 				{/* reflection of the puppet in the wet floor */}
 				<g opacity={0.12} filter="url(#b3)"><g transform={`translate(${mx},${my + 4}) scale(${k},${-k * 0.9})`}><Mannequin pose={pose} /></g></g>
 				<ellipse cx={mx + 10} cy={my + 4} rx={92} ry={13} fill="#000" opacity={0.75} filter="url(#b3)" />
+				<RockShadow x={mx} y={my + 4} k={k} t={t} o={shadows} />
 				<g filter="url(#rimC)"><g transform={`translate(${mx},${my}) scale(${k})`}><Mannequin pose={pose} /></g></g>
 				{/* the strings: eight lines converging up to a control bar out of frame */}
 				{attachPts(pose).map(({p, to}, i) => {
@@ -3390,6 +3401,8 @@ const Gods2: React.FC<{T: number}> = ({T}) => {
 // ---------------------------------------------------------------- 10–16 · the lab: two benches, the same work; one keeps what it builds, one watches it taken apart by strings
 const LAB_CYC = 2.025;                                                       // one little figure per bar
 const LAB_A0 = bar35(21), LAB_B0 = bar35(21.5);
+const PRICE_T0 = () => SUBS2.find((s) => s.text.startsWith('第一个2美元'))!.a;    // when the subtitle names the first price
+const priceN = (n: number) => Math.max(0, n - Math.max(0, Math.floor((PRICE_T0() - LAB_A0) / LAB_CYC)));
 const labCam = (T: number) => {
 	const k = (a: number, b: number, from: {x: number; y: number; s: number}, to: {x: number; y: number; s: number}) => { const e = easeIO5(cl01((T - a) / (b - a))); return {x: lerp(from.x, to.x, e), y: lerp(from.y, to.y, e), s: Math.exp(lerp(Math.log(from.s), Math.log(to.s), e))}; };
 	const A1 = {x: 820, y: 560, s: 1.3}, A2 = {x: 960, y: 560, s: 0.98}, B1 = {x: 2420, y: 560, s: 1.15}, BOTH = {x: 1620, y: 520, s: 0.6}, BIN = {x: 2300, y: 640, s: 1.35};
@@ -3488,7 +3501,7 @@ const Lab2: React.FC<{T: number}> = ({T}) => {
 								{/* finished: bench A keeps them in a growing row */}
 								{b.keep && Array.from({length: Math.min(n, 12)}, (_, i) => <Bot key={i} x={b.row0 + i * 52} y={benchY} c={BOTC[i % 5]} s={0.8} />)}
 								{/* the price tag above the build spot */}
-								{T > ln2(11).a - 0.2 && <PriceTag x={b.build + 10} y={benchY - 330} n={n} o={cl01((T - ln2(11).a + 0.2) / 0.3) * (1 - quit * (bi === 1 ? 1 : 0))} />}
+								{T > ln2(11).a - 0.2 && <PriceTag x={b.build + 10} y={benchY - 330} n={priceN(n)} o={cl01((T - ln2(11).a + 0.2) / 0.3) * (1 - quit * (bi === 1 ? 1 : 0))} />}
 								{/* the worker */}
 								<Man x={b.puppet} y={py} k={0.95} pose={pose} />
 								{flipPts(pose, false).map(({p, to}, i) => { const a = W2(b.puppet, py, 0.95, p); return <g key={i}><RealString a={a} b={[b.puppet + 30 + to * 44, -900]} id={`lw${bi}${i}`} w={0.9} /><Eyelet p={a} k={0.85} /></g>; })}
@@ -3525,7 +3538,9 @@ const Dusk2: React.FC<{T: number}> = ({T}) => {
 
 
 // ---------------------------------------------------------------- 18–19 · Paris, 1942: a room at night, the typewriter writing the title; into the page
-const TYPED = ['LE MYTHE DE SISYPHE', 'Albert Camus', '', 'Il faut imaginer Sisyphe', 'heureux.'];
+// the typed page carries line 19's idea in Camus's own words ("this world in itself is not reasonable");
+// "Il faut imaginer Sisyphe heureux" is kept for the film's last line
+const TYPED = ['LE MYTHE DE SISYPHE', 'Albert Camus', '', 'Ce monde en lui-même', "n'est pas raisonnable."];
 const Paris: React.FC<{T: number}> = ({T}) => {
 	const u = T - ln2(18).a;
 	const chars = Math.floor(cl01((u - 0.6) / 7.5) * 80);
@@ -3939,11 +3954,11 @@ const Film2: React.FC = () => {
 	else if (T < B(74) - 0.5) {
 		const wipe = X(B(68.5) - 0.2, B(68.5) + 0.35);
 		const free = cl01((T - B(72) - 0.1) / 2.6);
-		const plat = <S1b t={T} crowd sub="" headLift={lerp(-6, 30, easeIO5(X(B(70), B(72))))} warm={0.35 + 0.65 * easeIO5(X(B(72), B(73.5)))} free={free} />;
+		const plat = <S1b t={T} crowd sub="" headLift={lerp(-6, 30, easeIO5(X(B(70), B(72))))} warm={0.35 + 0.65 * easeIO5(X(B(72), B(73.5)))} free={free} shadows={easeIO5(X(B(68.5) + 0.2, B(68.5) + 1.6))} />;
 		pic = wipe < 1 ? <AbsoluteFill><Lanes T={T} /><AbsoluteFill style={{clipPath: `inset(0 0 0 ${(1 - easeIO5(wipe)) * 100}%)`}}>{plat}</AbsoluteFill>
 			<AbsoluteFill style={{left: `${(1 - easeIO5(wipe)) * 100 - 30}%`, width: '34%', background: 'linear-gradient(90deg, rgba(30,36,44,0) 0%, #2a3138 20%, #3a4450 50%, #2a3138 80%, rgba(30,36,44,0) 100%)', filter: 'blur(6px)'}} /></AbsoluteFill> : plat;
 	}
-	else if (T < B(74) + 0.6) { const e = X(B(74) - 0.5, B(74) + 0.6); pic = <AbsoluteFill>{e < 0.5 ? <S1b t={T} crowd sub="" headLift={30} warm={1} free={1} /> : <Dawn2 T={T} />}<AbsoluteFill style={{background: '#fff3dc', opacity: Math.sin(Math.PI * e)}} /></AbsoluteFill>; }
+	else if (T < B(74) + 0.6) { const e = X(B(74) - 0.5, B(74) + 0.6); pic = <AbsoluteFill>{e < 0.5 ? <S1b t={T} crowd sub="" headLift={30} warm={1} free={1} shadows={1} /> : <Dawn2 T={T} />}<AbsoluteFill style={{background: '#fff3dc', opacity: Math.sin(Math.PI * e)}} /></AbsoluteFill>; }
 	else if (T < CARD2) pic = <Dawn2 T={T} />;
 	else { const e = cl01((T - CARD2) / 0.8); pic = <AbsoluteFill>{e < 1 && <AbsoluteFill style={{opacity: 1 - e}}><Dawn2 T={T} /></AbsoluteFill>}<AbsoluteFill style={{opacity: e}}><EndCard2 u={T - CARD2} /></AbsoluteFill>{T > FILM2_END - 2.0 && <AbsoluteFill style={{background: '#000', opacity: cl01((T - (FILM2_END - 2.0)) / 2.0)}} />}</AbsoluteFill>; }
 	const line = SUBS2.find((l) => T >= l.a && T < l.b);
