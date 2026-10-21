@@ -1621,7 +1621,7 @@ const HILL_SKY: Record<string, string[]> = {
 	B: ['#101634', '#262c52', '#5a4866', '#b56d55', '#efa46a'],
 	C: ['#06222e', '#10414f', '#5c2f55', '#e0583e', '#ffb34f'],
 };
-const V2Hill: React.FC<{t: number; header?: string; plankY?: number; beam?: number; look?: HillLook}> = ({t, header = '古希腊 · 神话', plankY, beam = 0, look = 'BC'}) => {
+const V2Hill: React.FC<{t: number; header?: string; plankY?: number; beam?: number; look?: HillLook; noMark?: boolean}> = ({t, header = '古希腊 · 神话', plankY, beam = 0, look = 'BC', noMark}) => {
 	const isA = look === 'A', isB = look === 'B' || look === 'BC', isC = look === 'C' || look === 'BC', isOld = look === 'old';
 	const pan = -18 * t;                                                         // slow truck right → parallax
 	const ys = (x: number) => 420 + 0.34 * x + 0.00011 * (x - 900) * (x - 900);
@@ -1642,7 +1642,7 @@ const V2Hill: React.FC<{t: number; header?: string; plankY?: number; beam?: numb
 	const ridgeFar = isC ? '#3b2a4e' : isB ? '#6a5a78' : isA ? '#1d1828' : '#3a2f45';
 	const ridgeNear = isC ? '#24192f' : isB ? '#43394f' : isA ? '#141019' : '#2a2333';
 	return (
-		<Frame header={header || undefined} grain={isOld} mark={look !== 'B'}>
+		<Frame header={header || undefined} grain={isOld} mark={look !== 'B' && !noMark}>
 			<linearGradient id="hsky" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stopColor={sky[0]} /><stop offset="0.38" stopColor={sky[1]} /><stop offset="0.6" stopColor={sky[2]} /><stop offset="0.72" stopColor={sky[3]} /><stop offset="0.8" stopColor={sky[4]} /></linearGradient>
 			<rect width={W} height={H} fill="url(#hsky)" />
 			<Stars n={90} t={t} maxY={380} />
@@ -3982,6 +3982,43 @@ const Puppet35: React.FC = () => {
 	const list = [<S1b t={u} />, <S2 />, <S3 />, <S4 />, <S5 />, <S6 t={u} mat={MATS.char} />, <S7 />, <S8 />, <S9 />, <Sheet />];
 	return list[i];
 };
+// ---- Douyin covers (2026-10-21): the approved hill look, a two-line hook, the title, the series line.
+//      wide 1440×1080 (4:3) · tall 1080×1440 (3:4: the lower ~18 % stays free for Douyin's buttons)
+const CoverTxt: React.FC<{s: string; style: React.CSSProperties}> = ({s, style}) => {
+	// optical centring for full-width marks at either end (《…》, ？…)
+	const lead = /^[“《「『（]/.test(s), trail = /[？！。，：；、”》」』）]$/.test(s);
+	const body = s.slice(lead ? 1 : 0, trail ? -1 : undefined);
+	return <div style={style}>{lead && <span style={{marginLeft: '-0.5em'}}>{s[0]}</span>}{body}{trail && <span style={{marginRight: '-0.5em'}}>{s.slice(-1)}</span>}</div>;
+};
+const Cover35: React.FC<{layout: 'wide' | 'tall'}> = ({layout}) => {
+	useFonts();
+	const wide = layout === 'wide';
+	const CW = wide ? 1440 : 1080, CH = wide ? 1080 : 1440;
+	const T = 22.0;
+	// the scene (1920×1080) scaled and placed so the rock, the pusher and the sun fill the cover
+	const s = wide ? 0.95 : 1.12, ox = wide ? -160 : -370, oy = wide ? 150 : 150;   // tall: feet end above the lower 18 % (Douyin's buttons)
+	const gold = '#f4cd7e';
+	const glow = '0 0 26px rgba(244,205,126,0.55), 0 4px 22px rgba(0,0,0,0.85)';
+	const ink = '0 4px 22px rgba(0,0,0,0.9)';
+	return (
+		<AbsoluteFill style={{background: '#06222e', overflow: 'hidden'}}>
+			<div style={{position: 'absolute', left: ox, top: oy, width: W, height: H, transform: `scale(${s})`, transformOrigin: '0 0'}}>
+				<V2Hill t={T - bt(29.5) + 0.4} header="" beam={0} noMark />
+			</div>
+			{/* the ground continues below the scene's frame (tall cover) */}
+			{!wide && <div style={{position: 'absolute', left: 0, right: 0, top: oy + H * s - 60, bottom: 0, background: 'linear-gradient(180deg, rgba(20,16,13,0) 0px, #14100d 60px)'}} />}
+			{/* a soft dark sky band behind the words, borderless */}
+			<AbsoluteFill style={{background: `linear-gradient(180deg, rgba(4,14,20,0.82) 0%, rgba(4,14,20,0.55) ${wide ? 30 : 26}%, rgba(4,14,20,0) ${wide ? 50 : 44}%)`}} />
+			<div style={{position: 'absolute', left: 0, right: 0, top: wide ? 70 : 96, textAlign: 'center', fontFamily: SERIF, fontWeight: 700}}>
+				<CoverTxt s="最可怕的惩罚" style={{fontSize: wide ? 118 : 116, color: '#f3eee4', letterSpacing: '0.04em', lineHeight: 1.18, textShadow: ink}} />
+				<CoverTxt s="不是累，是没意义" style={{fontSize: wide ? 118 : 116, color: gold, letterSpacing: '0.04em', lineHeight: 1.18, textShadow: glow}} />
+				<CoverTxt s="《推石头的人，是幸福的》" style={{marginTop: wide ? 26 : 30, fontSize: wide ? 50 : 52, color: '#efe8da', letterSpacing: '0.12em', textShadow: ink}} />
+			</div>
+			<div style={{position: 'absolute', top: 34, right: 42, fontFamily: SERIF, fontSize: 24, letterSpacing: '0.3em', color: 'rgba(236,230,218,0.7)'}}>◆ Juno · VIBE知识大赏</div>
+		</AbsoluteFill>
+	);
+};
+
 // ---- style test for the 0:22 shot (2026-10-21): the same moment in three looks, for the owner to pick a direction
 const Style022: React.FC<{look?: HillLook}> = ({look}) => {
 	useFonts();
@@ -4025,6 +4062,8 @@ registerRoot(() => (
 		<Composition id="FILM2" component={Film2} durationInFrames={Math.round(FILM2_END * FPS)} fps={FPS} width={W} height={H} />
 		<Composition id="OPEN4" component={Open4} durationInFrames={Math.round(20.5 * FPS)} fps={FPS} width={W} height={H} />
 		<Composition id="FILM35" component={Film35} durationInFrames={FILM35_FRAMES} fps={FPS} width={W} height={H} />
+		<Composition id="COVERW" component={() => <Cover35 layout="wide" />} durationInFrames={1} fps={FPS} width={1440} height={1080} />
+		<Composition id="COVERT" component={() => <Cover35 layout="tall" />} durationInFrames={1} fps={FPS} width={1080} height={1440} />
 		{/* QA: every subtitle alone on black (frame i = SUBS2[i]) for the ink-centring check */}
 		<Composition id="SUBTEST" component={() => { useFonts(); const f = useCurrentFrame(); return <AbsoluteFill style={{background: '#000'}}><Sub t={SUBS2[Math.min(f, SUBS2.length - 1)].text} /></AbsoluteFill>; }} durationInFrames={SUBS2.length} fps={FPS} width={W} height={H} />
 		<Composition id="STY022" component={Style022} durationInFrames={1} fps={FPS} width={W} height={H} defaultProps={{look: undefined as HillLook}} />
