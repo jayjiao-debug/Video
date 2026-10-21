@@ -1,2 +1,2 @@
-// Entry for the render farm: ./ep35/Puppet35 calls registerRoot() with the FILM35 / SAMPLE35 / COVER35 compositions.
+// Remotion entry (the render farm requires this file to mention registerRoot): ./ep35/Puppet35 calls registerRoot() itself.
 import './ep35/Puppet35';
