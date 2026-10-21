@@ -1,65 +1,61 @@
-# Figure rules: body logic for the 2D cast
+# Figure rules: body logic for the cast
 
-Why this file exists: the owner kept catching the same kind of mistake in the 2D cast — a body that no
-real body could make (pond episode, 2026-10-11): legs starting at the chest, a man "sitting" in the air
-off the end of a jetty, hands floating in front of the stomach, legs disappearing under a coat. His words:
-"I don't want to keep pointing out the same logical issue … can you do some key pivots or rules to mitigate
-occurrences of such cases". These rules are checked by code, not by eye, before any frame with a person
-goes to the owner.
+Why: the owner kept catching bodies no real body could make — legs from the chest, sitting in the air, hands
+floating at the stomach (pond, 2026-10-11), a "pusher" leaning his head on the boulder with his arms hanging
+(ep35). His words: "I don't want to keep pointing out the same logical issue". So bodies are **checked by code,
+not by eye**, before any frame with a person goes to the owner.
+
+> **Code location (fix first):** the pond-episode rig (`<Person>`, `seatOn`, `ikArm`, `Figure.tsx`) and
+> `pose_check.mjs` are imported by `episodes/2x-*/build/kf/*.tsx` as `../art/poseCheck` but are **not committed
+> to this repo**. The ep35 contact solver is: `episodes/35-sisyphus/build/pushIK.ts` + `checks/push_check.mjs`.
+> Move both into one shared engine folder before the next episode with people, and update the paths here.
 
 ## The pivot: every figure states what its body is doing
 
-Never drop a `<Figure>` into a scene with a bare `translate/scale`. Place it with `<Person>`
-(`explainer/src/art/poseCheck.tsx`) and say:
+Never drop a figure into a scene with a bare `translate/scale`. Place it with `<Person>` and declare:
 
-- **intent**: `stand`, `walk`, `sit`, `crouch` or `portrait` (a cropped picture; not checked).
-- **env**: what the body touches. `ground` (y of the floor line), `seat` and `surfaces` (solid boxes such as a
-  deck, table or floor: `{x0, x1, y, depth}`), `contacts` (where each hand must be: on a thigh, on the deck,
-  holding the pole end), `onBody` (hands that are allowed to touch the body, e.g. hand on chest).
+- **intent**: `stand`, `walk`, `sit`, `crouch`, `push`, `hold` or `portrait` (a cropped picture; not checked).
+- **env**: what the body touches — `ground` (the floor or slope line), `seat`/`surfaces` (solid boxes), `contacts`
+  (where each hand or foot must be), `onBody` (hands allowed to touch the body).
 
-Positions come *from* the body, not the other way round:
+**Positions come from contacts, never from joint angles typed by eye.** Compute the contact targets (a point on a
+seat, the outline of a rock, a handle, the slope line), solve each limb with two-bone IK from shoulder or hip to its
+target, then place hips, spine and head from the limb solutions. Animate by moving the targets (the object
+advances, a foot steps), not by rotating limbs.
 
-- Seated figures are placed with `seatOn(x, surfaceY, scale)`, so the seat rests on the surface.
-- Hands are aimed with `ikArm` at points computed from the body (`jointsAt(pose)`: a knee, a thigh) or from
-  the prop. Props hang from `handAt(...)`. Never use a hand-typed screen coordinate for a hand.
-
-## The rules (R1–R8)
+## The rules
 
 | Rule | What must be true | The mistake it prevents |
 |---|---|---|
-| R1 legs-at-hip | Legs start at the hip. `lift` is only a walk bounce (≤ 10). | legs coming out of the chest |
-| R2 joint-range | No joint asked past a human limit (the rig clamps silently; the check flags the request). | elbows or knees bent backwards, a snapped neck |
-| R3 support | Standing: feet on the ground line. Walking: one foot down. Sitting: the seat on a declared surface and the hip over it. | sitting in the air, floating, sinking into the floor |
-| R4 no-pass-through | Feet, knees and hands never inside a solid surface. | legs through the deck, hands through a table |
-| R5 hand-purpose | Every hand is holding, touching or gesturing as declared. A free hand is never inside the torso. | hands floating at the stomach or chest, a white cuff in the middle of the chest |
-| R6 reachable | A hand target is within arm's length (`reachable()`); otherwise the arm is stretched and the hand falls short. | a hand that never reaches the prop |
-| R7 balance | A standing body's chest stays over its feet. | a person who would fall over |
-| R8 contact-hold | A held prop's handle is at the hand, every frame. | a pole or net floating next to the hand |
-
-Layering rules built into the rig (`Figure.tsx`), so they cannot be forgotten:
-
-- **Seated** (both thighs forward past 45°): the coat ends at the lap and the thighs are drawn on top of
-  it, so the lap and resting hands are visible.
-- **Standing**: the coat covers the top of the legs as before.
-- `POSES.sit` has `lift: 0`. Seated people sit on something; the legs never start higher up the body.
+| R1 legs-at-hip | Legs start at the hip; `lift` is only a walk bounce. | legs coming out of the chest |
+| R2 joint-range | No joint past a human limit; elbows and knees keep one bend direction through a move. | bent-back elbows, IK flips |
+| R3 support | Standing: feet on the ground line, soles along its slope. Walking: one foot down. Sitting: seat on a declared surface, hip over it. | floating, sitting in the air, sinking |
+| R4 no-pass-through | No body part inside a solid surface or prop. | legs through the deck, a head inside a rock |
+| R5 hand-purpose | Every hand is holding, touching or gesturing as declared; a free hand is never inside the torso. | hands floating at the chest |
+| R6 reachable | Every target is within limb length; otherwise move the body or the target. | a hand that never reaches the prop |
+| R7 balance | A standing body's chest stays over its support, unless it is pushing against something. | a person who would fall over |
+| R8 contact-hold | A declared contact stays on its surface every frame (held prop at the hand, planted foot fixed). | floating poles, sliding feet |
+| R9 contact-only | Only the declared contact parts touch the object; everything else keeps a clear gap. | head leaning on the rock instead of hands pushing |
 
 ## The gate
 
-1. **While building a shot:** render it with `inputProps {poseDebug: true}`. The skeleton is drawn in green and
-   blue, seats and ground in yellow, and every broken rule in red with its name.
-2. **Before stills go to the owner:**
-   `node scripts/pose_check.mjs <entry> <Composition> <from-to,…> [step]`
-   It renders every Nth frame of the shots with people and lists each violation with its frame range. It
-   must print `POSE CHECK: PASS`. A FAIL blocks the stills, the same as a failed loudness check blocks the
-   upload.
-3. **Still look at it.** Check one full-size still per pose. The code checks the body, not taste.
+1. **While building a shot:** render with the pose debug overlay (skeleton, surfaces, broken rules in red).
+2. **Before stills go to the owner:** run the pose/contact check over every frame with a person. It prints the
+   worst frame per rule and must PASS (e.g. hands ≤ 4 px from their surface, head ≥ 15 px from the object,
+   planted feet ≤ 3 px). A FAIL blocks the stills, like a failed loudness check blocks the upload.
+3. **Then look:** one full-size still per pose, and answer in one line "what body parts touch what?" The code
+   checks the body, not taste.
 
-## Quick reference for common poses
+## Common poses
 
-- **Sitting on an edge** (jetty, wall, bench): `EDGE_SIT` (thighs about 80° forward, shins hanging).
-  Use `seatOn(edgeX - 80, surfaceY, s)`, so the knees end just past the edge. Rest the far hand on the
-  surface beside the hip, or both hands on the thighs (two-thirds of the way to the knee, just above the thigh).
-- **Reaching down over an edge:** aim the hand just past and above the near knee, and lean the torso
-  10–16° forward. Further than that is out of reach (R6): move the body or the target, not the arm length.
-- **Standing with a long tool** (net, pole): both hands on the tool, the near hand lower. Lean at most 16°.
-  Both feet stay on the ground line.
+- **Pushing** (a boulder, a cart, a door): palms flat on the object's outline at about shoulder height, arms
+  nearly straight, back fairly straight at ~45° into the object, head in line with the spine and clear of the
+  object, back leg driving, front knee bent, feet stepping in short alternating steps on the ground line. The
+  pusher is drawn in front of the object.
+- **Sitting on an edge** (jetty, wall, bench): thighs ~80° forward, shins hanging, knees just past the edge; far
+  hand on the surface beside the hip, or both hands on the thighs.
+- **Reaching down over an edge:** hand just past and above the near knee, torso leaned 10–16°; further is out of
+  reach (R6): move the body or the target.
+- **Holding a long tool** (net, pole): both hands on the tool, near hand lower, lean ≤ 16°, both feet down.
+
+Seated figures: the coat ends at the lap and the thighs are drawn over it, so lap and hands are visible.

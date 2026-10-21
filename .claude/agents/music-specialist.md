@@ -9,8 +9,8 @@ soundtrack; judge it with fresh ears. You cannot listen, so you MEASURE: load au
 (pip install --break-system-packages if missing), make spectrograms/loudness curves as PNGs and Read them.
 
 Read first:
-1. ALL rows of `/home/claude/video/.claude/skills/video-reviewer/references/owner-notes.md` (owner's standing taste)
-2. `/home/claude/video/.claude/skills/edit-rhythm/SKILL.md` if it exists (what lands on the music and what must not)
+1. `/home/claude/video/.claude/skills/production-crew/references/house-rules.md` §8 (music, rhythm, sound)
+2. the edit-rhythm skill, if this session lists it (what lands on the music and what must not)
 3. the episode's soundtrack code, timing JSON, subtitle lines and film source you are given
 
 Check, with numbers and timestamps:
@@ -18,7 +18,8 @@ Check, with numbers and timestamps:
   build → release shape? Is the biggest musical moment where the biggest image is? Any sag where attention drops?
 - **Transitions between effects:** clicks, abrupt level jumps (> 3 dB in < 50 ms that are not on a beat), phasey or
   hollow moments, effects that end off the bar grid, tails cut short, dead air.
-- **Mix:** true peak, LUFS (target −14, TP ≤ −1.5), low-end mud, harshness 2–5 kHz, added sine tones in tune with the
+- **Mix:** the owner's track itself is never processed (house-rules §8.1); measure the full mix's true peak and
+  LUFS, low-end mud, harshness 2–5 kHz, added sine tones in tune with the
   track (measure the track's pitch), masking of demo tones, mono compatibility of the stereo tricks.
 - **Demos work as demos:** is each effect audible enough on phone earbuds to be noticed (e.g. L/R level difference,
   low-pass/high-pass depth, binaural frequencies, the clash's beat rate), and still musical (on key, on the grid)?

@@ -8,9 +8,9 @@ When comparing two versions, say which is better per area and why — comparison
   ("只有我过得不好"); a later scene repeats an earlier point ("后面的内容好无聊").
 - **3** — clear and correct, but slow: lines sit after they are read (《换不换》 v1: 1:38, ~22 % waiting), the
   surprise arrives late, the ending restates rather than lands.
-- **5** — the paradox is posed with a concrete number in the first ~8 s (《越修越堵》: 65 → 80 by 0:05, "没有事故，
-  也没人开错路" removes the easy explanation); every beat adds something new; one clear takeaway; the end-card
-  question invites comments.
+- **5** — the contradiction is on the picture by ~3 s (《越修越堵》: 65 → 80 by 0:05, "没有事故，也没人开错路"
+  removes the easy explanation); every beat adds something new; one clear takeaway; the end-card question
+  invites comments and sharing.
 
 ## 2. Visual design (look, composition, readability)
 - **1** — something looks broken or wrong: odd hands (ep6), half-rendered scissors (《越修越堵》 v2), the moon
@@ -41,11 +41,13 @@ When comparing two versions, say which is better per area and why — comparison
 - **5** — purposeful motion every few seconds that carries the story (《越修越堵》 low flight along the highway
   into the reveal; 《换不换》 v3 stamp slam), eased and physical.
 
-## 6. Sound
-- **1** — silence at the start, clipping, music fighting the picture.
-- **3** — music only, at the right level (all episodes so far).
-- **5** — music plus designed sound: whooshes on moves, impacts on hits, ticks on counters, ambience that places
-  the scene; nothing distracting.
+## 6. Music and sound
+- **1** — silence at the start, clipping, a long quiet stretch that sounds broken, cuts or loops audible in the
+  track, music fighting the picture, a pile of sound effects.
+- **3** — the track plays clean, but the title and payoff miss its drops, or hits land on every beat.
+- **5** — the title lands on the hardest drop, the payoff on the big drop, cuts on bars, the music carries the
+  emotion; any sound effects are the minimal set the film's world needs (house-rules §8) and never above the
+  music.
 
 ## Overall
 Not an average. Ask: would the owner post this today without a note? 5 = yes, proudly; 3 = with 1–2 notes;

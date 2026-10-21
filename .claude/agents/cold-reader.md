@@ -17,6 +17,7 @@ Answer honestly, as a viewer, not as an editor. Write `coldread_<label>.json`:
   "surprise_that_stuck": "...",
   "title_I_would_click": "which + why", "title_that_misleads": "if any",
   "what_I_would_comment": "...",
+  "who_I_would_send_this_to": "a specific person, or nobody + why",
   "for_frames_only": [{"frame": "...", "what_this_says_in_5s": "..."}]
 }
 Then a 3-line plain summary. Be specific; "fine" is not an answer.

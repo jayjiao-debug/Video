@@ -10,7 +10,7 @@
 ## Beat sheet
 | Beat | Time | Purpose | What the viewer learns / feels |
 |---|---|---|---|
-| Hook | 0–8 s | pose the paradox with a number | |
+| Opening | 0–3 s | frame 0 = the viewer's situation on the picture; the contradiction lands by ~3 s | |
 
 ## Lines
 | # | Start | End | Line (≤ 16 字) | Chars | Needs (0.5+n/7+0.6) | Picture (what is on screen) | Fact # |

@@ -10,12 +10,13 @@ them with a timestamp and a frame, and propose the fix**. The maker decides what
 re-review. Be specific and honest; a review that says "looks great" without having looked at every sheet is
 worthless. Do not soften a real problem, and do not invent one to look thorough.
 
-Scripts live in `scripts/` next to this file (call them by absolute path). The owner's past notes are in
-`references/owner-notes.md`: read it first, every time — it is the taste you are checking against.
+Scripts live in `scripts/` next to this file (call them by absolute path). The owner's taste is
+`/home/claude/video/.claude/skills/production-crew/references/house-rules.md`: read it first, every time — it is
+what you are checking against. (`references/owner-notes.md` is the raw log of the owner's words behind it.)
 
 ## Inputs
 
-Ask the maker for (or find in the engine repo, usually `/home/claude/diji`):
+Ask the maker for (or find in the episode folder `episodes/<NN-slug>/` of this repo):
 - the film: the **master** `out/<片名>_vN.mp4` (not the 发送版)
 - the subtitle lines as JSON `[[start, end, text], ...]`. From the engine repo:
   `npx tsx <skill>/scripts/dump_lines.ts src/vX/FilmX.tsx <EXPORT_NAME> > review/<ep>_lines.json`
@@ -44,8 +45,11 @@ Open every `sheet_NN.png` with Read (they are 1920 px wide; look closely). For e
   objects through walls or the camera (穿模), wrong orientation, stray debug text, blank 3D.
 - **Readable?** subtitle over the key visual, labels over subtitles or over each other, text on a bright
   background without a band, text < 18 px, numbers that matter < 60 px, two things to follow at once.
-- **Anatomy / look:** hands, faces, poses that look odd (owner hates this); characters that read wrong
-  (sitting looks standing); muddy or washed-out lighting; banding; over-bloom that kills texture.
+- **Bodies and contact:** for every person, say in one line what body parts touch what; anything other than the
+  declared contacts is a MAJOR (figure-rules.md). Odd hands or faces, characters that read wrong (sitting looks
+  standing).
+- **Light:** is the hero the brightest readable thing; muddy, too dark (mean luminance) or washed-out frames;
+  banding; over-bloom.
 - **Transitions:** compare `cut-before` / `cut-after` pairs: is the move motivated, or a jump between unrelated
   pictures? Look for jarring colour/brightness jumps.
 - **First frame** (t 0): striking on its own as a Douyin cover/first impression? Not dark or empty.
@@ -65,10 +69,10 @@ Read the lines JSON top to bottom without looking at the code:
 - Ending: does it land on one clear takeaway, and does the end-card question invite comments?
 - Pace: from pace.py, plus your judgement on long gaps with no line.
 
-## 4. Check against the owner's notes
+## 4. Check against the house rules
 
-Go down `references/owner-notes.md` row by row: would the owner say any of these about this cut? Each "yes" is a
-finding with its row quoted.
+Go down `house-rules.md` section by section: would the owner say any of these about this cut? Each "yes" is a
+finding with the rule number quoted (e.g. "house-rules §6.4").
 
 ## 5. Report
 
@@ -101,5 +105,5 @@ gone, which remain, anything new. Never mark a finding fixed without looking at 
 
 ## Keep learning
 
-When the owner gives new feedback on any cut, the maker adds a row to `references/owner-notes.md` (quote the
-owner). That file is how this reviewer gets better.
+When the owner gives new feedback on any cut, the maker adds the owner's words to `references/owner-notes.md`
+and updates the matching rule in `house-rules.md`. That is how this reviewer gets better.

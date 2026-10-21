@@ -1,8 +1,10 @@
-# What the owner has rejected or asked for (keep adding)
+# Owner notes: the raw log (keep adding)
 
-Every note the owner gives on a cut becomes a check here, tagged with the crew role that owns it
-(screenwriter · art-director · animator · editor · researcher · producer). Every role reads its rows before
-working; the director and reviewer check every row. Newest at the bottom; quote the owner's words.
+The owner's own words on every cut, newest at the bottom, each with what it meant at the time. This is the
+**history**; agents work from the distilled rules in
+`.claude/skills/production-crew/references/house-rules.md`. When you add a row here, also edit the matching rule
+there (sharpen or replace it; add a new rule only if none covers it). Episode-specific details (bar grids, keys,
+pixel values) stay in this log and the episode's `crew_log.md`, not in the house rules.
 
 | Owner said | What it means | Owner role |
 |---|---|---|
