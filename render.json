@@ -1,1 +1,1 @@
-{ "id": "cine-3", "composition": "Cine", "start": 0, "end": 746, "chunks": 30, "output": "schizo_cine", "flags": "--crf=16" }
+{ "id": "full-1", "composition": "Cine", "start": 0, "end": 3671, "chunks": 40, "output": "schizo_v2", "flags": "--crf=16" }
