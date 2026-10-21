@@ -97,7 +97,7 @@ const crackLine = (g: CanvasRenderingContext2D, a: Pt, b: Pt, k: number, w: numb
 let FOGBASE: HTMLCanvasElement | null = null;
 const fogBase = () => {
   if (FOGBASE) return FOGBASE; const c = document.createElement('canvas'); c.width = FW; c.height = FH; const g = c.getContext('2d')!; const r = rng(55);
-  const gr = g.createRadialGradient(FW / 2, FH * 0.55, 100, FW / 2, FH * 0.55, 700); gr.addColorStop(0, 'rgba(208,216,222,.5)'); gr.addColorStop(1, 'rgba(200,208,214,.4)'); g.fillStyle = gr; g.fillRect(0, 0, FW, FH);
+  const gr = g.createRadialGradient(FW / 2, FH * 0.55, 100, FW / 2, FH * 0.55, 700); gr.addColorStop(0, 'rgba(208,216,222,.58)'); gr.addColorStop(1, 'rgba(200,208,214,.48)'); g.fillStyle = gr; g.fillRect(0, 0, FW, FH);
   for (let i = 0; i < 90; i++) { const x = r() * FW, y = r() * FH, rr = 40 + r() * 160; const b = g.createRadialGradient(x, y, 0, x, y, rr); b.addColorStop(0, `rgba(225,232,238,${r() * 0.12})`); b.addColorStop(1, 'rgba(225,232,238,0)'); g.fillStyle = b; g.fillRect(x - rr, y - rr, 2 * rr, 2 * rr); }
   g.globalCompositeOperation = 'destination-out'; for (let i = 0; i < 260; i++) { g.fillStyle = `rgba(0,0,0,${0.15 + r() * 0.3})`; g.beginPath(); g.arc(r() * FW, FH * (0.55 + r() * 0.45), 1 + r() * 4, 0, 7); g.fill(); }
   g.globalCompositeOperation = 'source-over'; for (let i = 0; i < 1600; i++) { g.fillStyle = `rgba(240,246,250,${r() * 0.22})`; g.beginPath(); g.arc(r() * FW, r() * FH, 0.6 + r() * 1.8, 0, 7); g.fill(); }
@@ -155,9 +155,31 @@ const STAGE_KEYS: Key[] = [
   [CINE_LEN_S, X0 + 2.0, 2.15, 3.9, X0, 0.75, -0.4, 31],
 ];
 
+
+/* ------------------------------------------------------------------ the person in the mirror (only the mirror cameras can see them):
+   a figure in dark clothes, standing still, breathing. Built facing +Z, origin on the floor. */
+type Fig = { root: THREE.Group; torso: THREE.Group; head: THREE.Group; key: THREE.PointLight; rim: THREE.PointLight };
+const person = (layer: number): Fig => {
+  const root = new THREE.Group(); const cloth = M({ color: '#0b0c0e', roughness: 0.9 }), skin = M({ color: '#3a2c25', roughness: 0.6 }), hair = M({ color: '#0d0d0f', roughness: 0.7 });
+  const torso = new THREE.Group(); torso.position.y = 1.0; root.add(torso);
+  const prof = [[0.0, -0.1], [0.15, -0.1], [0.155, 0.0], [0.165, 0.18], [0.185, 0.32], [0.205, 0.41], [0.19, 0.46], [0.13, 0.49], [0.06, 0.505], [0.0, 0.51]].map(([r, y]) => new THREE.Vector2(r, y));
+  const tg = new THREE.LatheGeometry(prof, 40); tg.scale(1, 1, 0.58); const tm = new THREE.Mesh(tg, cloth); torso.add(tm);
+  for (const sx of [-1, 1]) { const sh = new THREE.Mesh(new THREE.SphereGeometry(0.06, 20, 14), cloth); sh.position.set(sx * 0.178, 0.415, 0); torso.add(sh);
+    const arm = new THREE.Mesh(new THREE.CapsuleGeometry(0.047, 0.5, 6, 14), cloth); arm.position.set(sx * 0.215, 0.17, 0.0); arm.rotation.z = sx * 0.07; torso.add(arm);
+    const hand = new THREE.Mesh(new THREE.SphereGeometry(0.042, 14, 10), skin); hand.scale.set(0.8, 1.3, 0.6); hand.position.set(sx * 0.235, -0.13, 0.0); torso.add(hand); }
+  const collar = new THREE.Mesh(new THREE.TorusGeometry(0.066, 0.026, 10, 24), cloth); collar.rotation.x = Math.PI / 2; collar.position.y = 0.5; torso.add(collar);
+  const neck = new THREE.Mesh(new THREE.CylinderGeometry(0.048, 0.056, 0.09, 16), skin); neck.position.y = 0.535; torso.add(neck);
+  const head = new THREE.Group(); head.position.y = 0.575; torso.add(head);
+  const hd = new THREE.Mesh(new THREE.SphereGeometry(0.1, 32, 24), skin); hd.scale.set(0.8, 1.12, 0.92); hd.position.y = 0.09; head.add(hd);
+  const nose = new THREE.Mesh(new THREE.ConeGeometry(0.01, 0.022, 10), skin); nose.rotation.x = Math.PI / 2; nose.position.set(0, 0.085, 0.092); head.add(nose);
+  const hr = new THREE.Mesh(new THREE.SphereGeometry(0.106, 32, 20, 0, Math.PI * 2, 0, Math.PI * 0.55), hair); hr.scale.set(0.86, 1.08, 1.0); hr.position.set(0, 0.112, -0.008); hr.rotation.x = -0.25; head.add(hr);
+  root.traverse((o) => o.layers.set(layer));
+  const key = new THREE.PointLight('#a8bccc', 0, 3, 2); key.layers.set(layer); const rim = new THREE.PointLight('#8fb0d0', 0, 3, 2); rim.layers.set(layer);
+  return { root, torso, head, key, rim };
+};
 /* ------------------------------------------------------------------ the world */
 type Refs = {
-  innerG: THREE.Group;
+  innerG: THREE.Group; figs: Fig[]; refls: Reflector[]; fogMat: THREE.MeshBasicMaterial;
   bath: THREE.Group; stage: THREE.Group; doors: THREE.Group[]; overlays: THREE.Mesh[]; fog: CanvasRenderingContext2D; fogTex: THREE.CanvasTexture;
   glass: CanvasRenderingContext2D; glassTex: THREE.CanvasTexture; cookie: CanvasRenderingContext2D; cookieTex: THREE.CanvasTexture;
   title: CanvasRenderingContext2D; titleTex: THREE.CanvasTexture; titleMesh: THREE.Mesh; titleGlow: THREE.Sprite; titleLight: THREE.PointLight;
@@ -224,12 +246,12 @@ const World: React.FC<{ t: number }> = ({ t }) => {
     const fogC = document.createElement('canvas'); fogC.width = FW; fogC.height = FH; const fog = fogC.getContext('2d')!; const fogTex = new THREE.CanvasTexture(fogC); fogTex.colorSpace = THREE.SRGBColorSpace;
     const fogMat = new THREE.MeshBasicMaterial({ map: fogTex, transparent: true, depthWrite: false, fog: false, color: '#9aa4aa' });
     const shardFog = new THREE.MeshBasicMaterial({ map: fogTex, transparent: true, depthWrite: false, fog: false, color: '#c9d2d8', opacity: 0.8 });
-    const doors: THREE.Group[] = [], overlays: THREE.Mesh[] = [];
+    const doors: THREE.Group[] = [], overlays: THREE.Mesh[] = [], refls: Reflector[] = [];
     for (const side of [-1, 1]) {
       const hinge = new THREE.Group(); hinge.position.set(side * 0.44, 0, 0.125); cab.add(hinge); doors.push(hinge);
       const d = new THREE.Group(); d.position.x = -side * 0.22; hinge.add(d);
       for (const sy of [-1, 1]) add(d, new THREE.BoxGeometry(0.44, 0.03, 0.02), cabM, 0, sy * 0.375, 0.002); for (const sx of [-1, 1]) add(d, new THREE.BoxGeometry(0.012, 0.78, 0.02), cabM, sx * 0.214, 0, 0.002);
-      const refl = new Reflector(new THREE.PlaneGeometry(0.42, MH), { textureWidth: 900, textureHeight: 1540, color: 0x9aa3aa, clipBias: 0.003 }); refl.position.z = 0.0085; d.add(refl);
+      const refl = new Reflector(new THREE.PlaneGeometry(0.42, MH), { textureWidth: 900, textureHeight: 1540, color: 0x9aa3aa, clipBias: 0.003 }); refl.position.z = 0.0085; d.add(refl); refls.push(refl); refl.camera.layers.enable(side < 0 ? 1 : 2);
       const og = new THREE.PlaneGeometry(0.42, MH); const uv = og.attributes.uv as THREE.BufferAttribute; for (let i = 0; i < uv.count; i++) uv.setX(i, side < 0 ? uv.getX(i) * 0.5 : 0.5 + uv.getX(i) * 0.5);
       const ov = new THREE.Mesh(og, fogMat); ov.position.z = 0.0098; d.add(ov); overlays.push(ov);
     }
@@ -305,7 +327,8 @@ const World: React.FC<{ t: number }> = ({ t }) => {
     for (let i = 0; i < ND; i++) { const h = rd() * 7.2, rad = Math.sqrt(rd()) * (0.1 + (7.5 - h) * Math.tan(0.17) * 0.95), a = rd() * 7; dustBase[i * 3] = Math.cos(a) * rad; dustBase[i * 3 + 1] = h; dustBase[i * 3 + 2] = 0.35 + Math.sin(a) * rad; }
     const dg = new THREE.BufferGeometry(); dg.setAttribute('position', new THREE.BufferAttribute(dustBase.slice(), 3));
     const dust = new THREE.Points(dg, new THREE.PointsMaterial({ color: '#ffe0b0', size: 0.016, transparent: true, opacity: 0, blending: THREE.AdditiveBlending, depthWrite: false })); stage.add(dust);
-    return { innerG, bath, stage, doors, overlays, fog, fogTex, glass, glassTex, cookie, cookieTex, title, titleTex, titleMesh, titleGlow, titleLight, tube, tubeLight, tubeFill, warmShade, warmLight, warmGlow, shards, shardRoot, spot, beam, dust, dustBase, motes, moteBase, rim };
+    const figs = [person(1), person(2)]; for (const f of figs) bath.add(f.root, f.key, f.rim);
+    return { figs, refls, fogMat, innerG, bath, stage, doors, overlays, fog, fogTex, glass, glassTex, cookie, cookieTex, title, titleTex, titleMesh, titleGlow, titleLight, tube, tubeLight, tubeFill, warmShade, warmLight, warmGlow, shards, shardRoot, spot, beam, dust, dustBase, motes, moteBase, rim };
   }, [scene, gl]);
 
   const cam = camera as THREE.PerspectiveCamera;
@@ -359,6 +382,28 @@ const World: React.FC<{ t: number }> = ({ t }) => {
     p[0] += Math.sin(t * 0.6) * 0.006; p[1] += Math.sin(t * 0.8 + 1) * 0.004;
   }
   cam.position.set(p[0], p[1], p[2]); cam.lookAt(p[3], p[4], p[5]); cam.fov = p[6]; cam.near = 0.03; cam.far = 60; cam.updateProjectionMatrix();
+
+  /* the two people in the mirror: wherever each door's glass looks, put someone there (reflected into the room, seen only by that door) */
+  if (!inStage && t < TITLE) {
+    S.bath.updateMatrixWorld(true); const doorA = S.doors[0].rotation.y; const k = clamp(Math.abs(doorA) / 0.5);
+    const M0 = new THREE.Vector3(0, 1.55, 0.134); const vC = M0.clone().add(M0.clone().sub(cam.position).setY(0).normalize().multiplyScalar(1.3));
+    const breathe = Math.sin((t / 4.2) * Math.PI * 2);
+    S.figs.forEach((F, i) => {
+      const R = S.refls[i]; const C = new THREE.Vector3().setFromMatrixPosition(R.matrixWorld); const n = new THREE.Vector3(0, 0, 1).transformDirection(R.matrixWorld);
+      const vO = C.clone().add(C.clone().sub(cam.position).setY(0).normalize().multiplyScalar(0.85)); const V = vC.clone().lerp(vO, k); V.y = 0;
+      const X = V.clone().sub(n.clone().multiplyScalar(2 * V.clone().sub(C).dot(n)));
+      const fv = cam.position.clone().sub(V).setY(0).normalize(); const f = fv.clone().sub(n.clone().multiplyScalar(2 * fv.dot(n)));
+      F.root.position.copy(X); F.root.rotation.y = Math.atan2(f.x, f.z);
+      F.torso.scale.y = 1 + 0.006 * breathe; F.torso.position.y = 1.0 + 0.002 * breathe;
+      const tilt = (i === 0 ? 1 : -1) * 0.07 * eio(ramp(t, WARM + 0.4, 2.2)) * (t < SLAM ? 1 : Math.max(0, 1 - (t - SLAM) * 3));
+      F.head.rotation.set(0.04 + Math.sin(t * 0.37 + i) * 0.01, (i === 0 ? 1 : -1) * 0.05 * eio(ramp(t, WARM + 0.4, 2.2)) * (t < SLAM ? 1 : 0), tilt);
+      const side = new THREE.Vector3(f.z, 0, -f.x); const warmK = i === 0 ? ramp(t, WARM, 0.08) * (t < SLAM ? 1 : 0) : 0;
+      F.key.position.copy(X).addScaledVector(f, 0.75).addScaledVector(side, i === 0 ? -0.6 : 0.6).setY(1.85);
+      F.key.color.set('#a8bccc').lerp(new THREE.Color('#ffae62'), warmK); F.key.intensity = 0.6 + 3 * warmK + (i === 1 && t > WARM && t < SLAM ? 0.8 : 0);
+      F.rim.position.copy(X).addScaledVector(f, -0.35).addScaledVector(side, i === 0 ? 0.45 : -0.45).setY(1.95); F.rim.color.set(i === 0 && warmK > 0 ? '#ffc58a' : '#8fb0d0'); F.rim.intensity = 14;
+    });
+    S.fogMat.opacity = 1 - 0.3 * eio(ramp(t, SPLIT, 4));
+  }
   /* glints: each shard flashes when it turns its face between the camera and a light (the title, the window) */
   if (!inStage && t >= TITLE) { S.shardRoot.updateMatrixWorld(true); const wp = new THREE.Vector3(), n = new THREE.Vector3(), v = new THREE.Vector3(), r = new THREE.Vector3(), l = new THREE.Vector3();
     const TL = new THREE.Vector3(0, 1.55, 0.16), WIN = new THREE.Vector3(0.8, 0.45, 0.4).normalize(); const tk = ramp(t, TITLE, 0.3) * (0.5 + 0.5 * ramp(t, POUR, 0.6));
