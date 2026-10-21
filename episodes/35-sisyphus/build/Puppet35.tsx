@@ -1,6 +1,7 @@
 import React from 'react';
 import {AbsoluteFill, Composition, registerRoot, spring, useCurrentFrame} from 'remotion';
 import {useFonts} from '../looks26/b/kit';
+import {solvePush, rockOutline, restingCY, stepFeet2} from './pushIK';
 
 /* ep35 《推石头的人，是幸福的》 — look "忧郁人偶": a hand-made marionette (wooden head and hands, felt coat, glass-bead eyes
    under heavy lids) in a miniature diorama; cold blue-grey light, one warm practical per shot; strings from above.
@@ -122,7 +123,9 @@ const Defs: React.FC = () => (
 );
 
 // ------------------------------------------------------------------ the wooden drawing mannequin (no face; feet at y=0, ~515 tall; faces +x)
-type Pose = {lean?: number; head?: number; armN?: [number, number]; armF?: [number, number]; legN?: [number, number]; legF?: [number, number]; case?: boolean; ground?: boolean};
+type Pose = {lean?: number; head?: number; armN?: [number, number]; armF?: [number, number]; legN?: [number, number]; legF?: [number, number]; case?: boolean; ground?: boolean;
+	/** IK extras (opt-in): foot tilt (°), shoulder x (profile), hand angle in the torso frame (flat palm) */
+	footN?: number; footF?: number; shN?: number; shF?: number; handN?: number; handF?: number};
 /** keep the lower foot on the floor (walking/running): the hip drops when the legs spread — the natural bob */
 const groundShift = (pose: Pose) => {
 	if (!pose.ground) return 0;
@@ -175,19 +178,20 @@ const Seams: React.FC<{d: string[]}> = ({d}) => {
 const Mannequin: React.FC<{pose: Pose}> = ({pose}) => {
 	const m = useMat(), LF = `url(#${m.limb})`, GF = m.grain ? `url(#${m.grain})` : undefined;
 	const {lean = 0, head = 0, armN = [-4, 4], armF = [4, 6], legN = [3, 0], legF = [-3, 0]} = pose;
-	const leg = (hx: number, [th, sh]: [number, number]) => {
+	const leg = (hx: number, [th, sh]: [number, number], foot = 0) => {
 		const hip: Pt = [hx, -232], knee = limb(hip[0], hip[1], th, 106), ank = limb(knee[0], knee[1], th + sh, 98);
-		return {hip, knee, ank};
+		return {hip, knee, ank, foot};
 	};
-	const arm = (sx: number, [ua, fa]: [number, number]) => {
-		const s: Pt = [sx, -394], el = limb(s[0], s[1], ua, 84), wr = limb(el[0], el[1], ua + fa, 76), tip = limb(wr[0], wr[1], ua + fa + 4, 34), th = limb(wr[0], wr[1], ua + fa - 26, 18);
+	const arm = (sx: number, [ua, fa]: [number, number], hand?: number) => {
+		const ha = hand ?? ua + fa + 4;
+		const s: Pt = [sx, -394], el = limb(s[0], s[1], ua, 84), wr = limb(el[0], el[1], ua + fa, 76), tip = limb(wr[0], wr[1], ha, 34), th = limb(wr[0], wr[1], ha - 30, 18);
 		return {s, el, wr, tip, th};
 	};
 	const Leg: React.FC<{l: ReturnType<typeof leg>}> = ({l}) => (
 		<g>
 			<Cap p={l.hip} q={l.knee} w1={30} w2={22} /><Cap p={l.knee} q={l.ank} w1={22} w2={15} />
 			<Ball p={l.knee} r={12} />
-			<path d={`M${l.ank[0] - 12},${l.ank[1] - 2} L${l.ank[0] + 10},${l.ank[1] - 4} L${l.ank[0] + 42},${l.ank[1] + 15} L${l.ank[0] + 42},${l.ank[1] + 22} L${l.ank[0] - 14},${l.ank[1] + 22} Z`} fill={LF} filter={GF} />
+			<path d={`M${l.ank[0] - 12},${l.ank[1] - 2} L${l.ank[0] + 10},${l.ank[1] - 4} L${l.ank[0] + 42},${l.ank[1] + 15} L${l.ank[0] + 42},${l.ank[1] + 22} L${l.ank[0] - 14},${l.ank[1] + 22} Z`} fill={LF} filter={GF} transform={l.foot ? `rotate(${l.foot},${l.ank[0]},${l.ank[1]})` : undefined} />
 			<Ball p={l.ank} r={8} />
 		</g>
 	);
@@ -200,7 +204,8 @@ const Mannequin: React.FC<{pose: Pose}> = ({pose}) => {
 			<Ball p={a.wr} r={7} />
 		</g>
 	);
-	const lF = leg(-14, legF), lN = leg(18, legN), aF = arm(-44, armF), aN = arm(46, armN);
+	const shN = pose.shN ?? 46, shF = pose.shF ?? -44;
+	const lF = leg(-14, legF, pose.footF ?? 0), lN = leg(18, legN, pose.footN ?? 0), aF = arm(shF, armF, pose.handF), aN = arm(shN, armN, pose.handN);
 	return (
 		<g transform={`translate(0,${groundShift(pose)})`}>
 			<g style={{filter: 'brightness(0.72)'}}><Leg l={lF} /></g>
@@ -213,7 +218,7 @@ const Mannequin: React.FC<{pose: Pose}> = ({pose}) => {
 				<path d="M-46,-400 C-54,-368 -44,-322 -30,-306 Q0,-296 30,-306 C44,-322 54,-368 46,-400 Q0,-414 -46,-400 Z" fill={LF} filter={GF} />
 				<Seams d={['M-26,-398 L-16,-378 L-22,-360 L-6,-340 L-12,-322 L-4,-306', 'M-16,-378 L4,-372 L12,-356', 'M30,-300 L22,-276 L28,-258']} />
 				<path d="M-30,-306 Q0,-296 30,-306" stroke="#7a5a3c" strokeWidth={1.5} fill="none" opacity={0.5} />
-				<Ball p={[-44, -394]} r={14} />
+				<Ball p={[shF, -394]} r={14} />
 				<g transform={`rotate(${head}, 0, -406)`}>
 					<Cap p={[0, -404]} q={[0, -436]} w1={16} w2={14} />
 					<ellipse cx={4} cy={-474} rx={31} ry={41} fill={`url(#${m.head})`} transform="rotate(10, 4, -474)" filter={GF} />
@@ -222,7 +227,7 @@ const Mannequin: React.FC<{pose: Pose}> = ({pose}) => {
 					<Seams d={['M-10,-512 L-2,-494 L-12,-478 L4,-462 L-2,-446', 'M-2,-494 L18,-488']} />
 				</g>
 				<Arm a={aN} holds={pose.case} />
-				<Ball p={[46, -394]} r={14} />
+				<Ball p={[shN, -394]} r={14} />
 			</g>
 			<Leg l={lN} />
 		</g>
@@ -516,9 +521,9 @@ const tipOf = (pose: Pose, near = true): Pt => {
 const headTop = (pose: Pose): Pt => rotP(rotP([4, -515], pose.head ?? 0, [0, -406]), pose.lean ?? 0, [0, -232]);
 const W2 = (x: number, y: number, k: number, p: Pt): Pt => [x + p[0] * k, y + p[1] * k];
 /** the puppet with both rims, at (x, y) feet, scale k */
-const Man: React.FC<{x: number; y: number; k: number; pose: Pose; warm?: boolean; flip?: boolean}> = ({x, y, k, pose, warm = true, flip}) => (
+const Man: React.FC<{x: number; y: number; k: number; pose: Pose; warm?: boolean; flip?: boolean; shadow?: Pt; shadowRot?: number}> = ({x, y, k, pose, warm = true, flip, shadow, shadowRot = 0}) => (
 	<g>
-		<ellipse cx={x + 8} cy={y + 4} rx={85 * k} ry={12 * k} fill="#000" opacity={0.55} filter="url(#b3)" />
+		<ellipse cx={(shadow ?? [x, y])[0] + 8} cy={(shadow ?? [x, y])[1] + 4} rx={85 * k} ry={12 * k} fill="#000" opacity={0.55} filter="url(#b3)" transform={shadowRot ? `rotate(${shadowRot},${(shadow ?? [x, y])[0]},${(shadow ?? [x, y])[1]})` : undefined} />
 		<g filter="url(#rimC)"><g transform={`translate(${x},${y}) scale(${flip ? -k : k},${k})`} filter={warm ? 'url(#rimR)' : undefined}><Mannequin pose={pose} /></g></g>
 	</g>
 );
@@ -870,12 +875,13 @@ const attachPts = (pose: Pose): {p: Pt; to: number}[] => {
 	const L = (p: Pt) => rotP(p, lean, [0, -232]);
 	const H = (p: Pt) => L(rotP(p, head, [0, -406]));
 	const wrist = (sx: number, [ua, fa]: [number, number]) => { const e = limb(sx, -394, ua, 84); return L(limb(e[0], e[1], ua + fa, 76)); };
+	const shN = pose.shN ?? 46, shF = pose.shF ?? -44;
 	const knee = (hx: number, [th]: [number, number]) => limb(hx, -232, th, 106);
 	const gy = groundShift(pose);
 	return ([
 		{p: H([-24, -500]), to: -1}, {p: H([32, -496]), to: 1},          // head (two, at the temples)
-		{p: L([-44, -404]), to: -2}, {p: L([46, -404]), to: 2},           // shoulders
-		{p: wrist(46, armN), to: 4}, {p: wrist(-44, armF), to: -4},        // hands
+		{p: L([shF, -404]), to: -2}, {p: L([shN, -404]), to: 2},         // shoulders
+		{p: wrist(shN, armN), to: 4}, {p: wrist(shF, armF), to: -4},      // hands
 		{p: knee(18, legN), to: 3}, {p: knee(-14, legF), to: -3},         // knees
 	] as {p: Pt; to: number}[]).map(({p, to}) => ({p: [p[0], p[1] + gy] as Pt, to}));
 };
@@ -1603,10 +1609,14 @@ const V2Hill: React.FC<{t: number; header?: string; plankY?: number; beam?: numb
 	const ys = (x: number) => 420 + 0.34 * x + 0.00011 * (x - 900) * (x - 900);
 	const heave = Math.max(0, Math.sin(t * 2.0)) ** 2;
 	const rx = 690 + 4 * heave, r = 200;
-	const rc: Pt = [rx, ys(rx) - r * 0.9];
-	const pose: Pose = pushPose2(t * 1.2, 0, heave);
+	const rc: Pt = [rx, restingCY(rx, r, ys)];                                  // the boulder rests on the slope line
 	const k = 1.12;
-	const mx = placePusher(rc, r * 0.98, pose, k, ys), my = ys(mx) + 10;
+	// solved from contacts: palms on the rock at shoulder height, soles on the slope (planted once, held in the world)
+	const ref = solvePush({rock: rockOutline([690, restingCY(690, r, ys)], r), ys, k, feet: {n: 40, f: -103}});
+	const sol = solvePush({rock: rockOutline(rc, r), ys, k, lean: 45 + 2 * heave, feet: {n: 0, f: 0}, worldFeet: ref.feetW});
+	const pose: Pose = sol.pose;
+	const mx = sol.o[0], oy = sol.o[1], my = ys(mx) + 10;
+	const slopeDeg = Math.atan((ys(mx + 1) - ys(mx - 1)) / 2) * 57.2958;
 	const bar: Pt = [mx + 130 + 6 * Math.sin(t * 2.0), 220 + 4 * Math.sin(t * 2.0 + 0.6)], brot = -10 + 3 * Math.sin(t * 2.0 + 1);
 	const sun: Pt = [1250, 690];
 	return (
@@ -1640,15 +1650,15 @@ const V2Hill: React.FC<{t: number; header?: string; plankY?: number; beam?: numb
 					{/* a shaft of light from above: everything else sinks back, the puppet stands in it */}
 					<rect x={-400} y={-200} width={W + 800} height={H + 400} fill="#05060c" opacity={0.5 * beam} />
 					<linearGradient id="beamG" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stopColor="#fff6dc" stopOpacity="0" /><stop offset="0.35" stopColor="#fff2d0" stopOpacity="0.35" /><stop offset="1" stopColor="#ffe9bf" stopOpacity="0.7" /></linearGradient>
-					<polygon points={`${mx - 300},-120 ${mx - 160},-120 ${mx + 190},${my + 30} ${mx - 170},${my + 30}`} fill="url(#beamG)" opacity={beam} filter="url(#b12)" />
-					<polygon points={`${mx - 255},-120 ${mx - 205},-120 ${mx + 70},${my + 20} ${mx - 60},${my + 20}`} fill="url(#beamG)" opacity={0.8 * beam} filter="url(#b6)" />
-					<ellipse cx={mx + 10} cy={my + 8} rx={230} ry={36} fill="#fff1cc" opacity={0.55 * beam} filter="url(#b6)" />
+					<polygon points={`${mx - 300},-120 ${mx - 160},-120 ${mx + 190},${ys(mx + 190) + 14} ${mx - 170},${ys(mx - 170) + 14}`} fill="url(#beamG)" opacity={beam} filter="url(#b12)" />
+					<polygon points={`${mx - 255},-120 ${mx - 205},-120 ${mx + 70},${ys(mx + 70) + 8} ${mx - 60},${ys(mx - 60) + 8}`} fill="url(#beamG)" opacity={0.8 * beam} filter="url(#b6)" />
+					<ellipse cx={mx} cy={ys(mx) + 2} rx={230} ry={36} fill="#fff1cc" opacity={0.55 * beam} filter="url(#b6)" transform={`rotate(${slopeDeg},${mx},${ys(mx) + 2})`} />
 					<ellipse cx={mx} cy={my - 250} rx={170} ry={300} fill="url(#warmGlow)" opacity={0.75 * beam} />
 					{Array.from({length: 46}, (_, q) => { const R = rnd2(q + 77); const v = R(); const y = -100 + ((R() * (my + 100) + t * 18 * (0.3 + R())) % (my + 100)); const x = mx - 255 + (y + 120) / (my + 140) * 120 + (R() - 0.5) * (60 + 260 * (y + 120) / (my + 140)); return <circle key={q} cx={x} cy={y} r={0.8 + v * 1.8} fill="#fff6e0" opacity={(0.25 + 0.5 * R()) * beam} />; })}
 				</g>}
-				<Man x={mx} y={my} k={k} pose={pose} flip />
-				{beam > 0 && <g style={{mixBlendMode: 'screen', filter: 'brightness(2.4)'}} opacity={0.5 * beam}><g transform={`translate(${mx},${my}) scale(${-k},${k})`} filter="url(#b1.5)"><Mannequin pose={pose} /></g></g>}
-				{flipPts(pose, true).map(({p, to}, i) => { const a = W2(mx, my, k, p); const slot: Pt = [to < 0 ? -124 + 40 * (Math.abs(to) - 1) : 124 - 40 * (Math.abs(to) - 1), Math.abs(to) === 1 ? 150 : 0]; return <g key={i}><RealString a={a} b={barPt(bar[0], bar[1], brot, slot)} id={`vh${i}`} band={[0.15, 0.6]} w={i === 4 || i === 6 ? 1.15 : 0.9} /><Eyelet p={a} k={k * 0.9} /></g>; })}
+				<Man x={mx} y={oy} k={k} pose={pose} flip shadow={[mx, ys(mx)]} shadowRot={slopeDeg} />
+				{beam > 0 && <g style={{mixBlendMode: 'screen', filter: 'brightness(2.4)'}} opacity={0.5 * beam}><g transform={`translate(${mx},${oy}) scale(${-k},${k})`} filter="url(#b1.5)"><Mannequin pose={pose} /></g></g>}
+				{flipPts(pose, true).map(({p, to}, i) => { const a = W2(mx, oy, k, p); const slot: Pt = [to < 0 ? -124 + 40 * (Math.abs(to) - 1) : 124 - 40 * (Math.abs(to) - 1), Math.abs(to) === 1 ? 150 : 0]; return <g key={i}><RealString a={a} b={barPt(bar[0], bar[1], brot, slot)} id={`vh${i}`} band={[0.15, 0.6]} w={i === 4 || i === 6 ? 1.15 : 0.9} /><Eyelet p={a} k={k * 0.9} /></g>; })}
 				<LoneBar x={bar[0]} y={bar[1]} rot={brot} />
 				{/* dust kicked up and floating in the backlight */}
 				{Array.from({length: 40}, (_, i) => { const R = rnd2(i + 3); const x = mx - 300 + R() * 600 + 10 * Math.sin(t + i), y = my - 40 - R() * 300 - (t * 6 * R()) % 60; return <circle key={i} cx={x} cy={y} r={0.8 + R() * 1.6} fill="#ffd9b0" opacity={0.25 + 0.3 * R()} />; })}
@@ -3127,19 +3137,21 @@ const SKY35: Record<SlopeSky, {stops: string[]; sun: string; sunO: number; clay:
 	gold: {stops: ['#14182e', '#3a3050', '#9a5a4a', '#e8a060', '#ffd9a0'], sun: '#ffd9a0', sunO: 1.0, clay: '#3a2e24', rim: '#ffd29a'},
 	dawn: {stops: ['#1a2236', '#3a4a66', '#8a8090', '#e8b890', '#fff0d8'], sun: '#fff2d8', sunO: 1.0, clay: '#3e352c', rim: '#ffe2b8'},
 };
-type SlopeMan = {x: number; pose: Pose; flip?: boolean; k?: number; dy?: number};
+type SlopeMan = {x: number; pose: Pose; flip?: boolean; k?: number; dy?: number; o?: Pt};
 type SlopeBar = {mode: 'held'; dx?: number; dy?: number; rot?: number} | {mode: 'free'; r: number} | {mode: 'none'};
-const SlopeWorld: React.FC<{T: number; cam: {x: number; y: number; s: number}; sky?: SlopeSky; rock?: {x: number; rot: number; lift?: number}; man?: SlopeMan; bar?: SlopeBar; dust?: number; sunX?: number; glow?: number; header?: string; headerO?: number}> = ({T, cam, sky = 'dusk', rock, man, bar = {mode: 'held'}, dust = 0, sunX = 1400, glow = 0, header, headerO = 1}) => {
+const SlopeWorld: React.FC<{T: number; cam: {x: number; y: number; s: number}; sky?: SlopeSky; rock?: {x: number; rot: number; lift?: number; cy?: number}; man?: SlopeMan; bar?: SlopeBar; dust?: number; sunX?: number; glow?: number; header?: string; headerO?: number}> = ({T, cam, sky = 'dusk', rock, man, bar = {mode: 'held'}, dust = 0, sunX = 1400, glow = 0, header, headerO = 1}) => {
 	const P = SKY35[sky];
 	const toS = (p: Pt): Pt => [(p[0] - cam.x) * cam.s + W / 2, (p[1] - cam.y) * cam.s + H / 2];
 	const tiltY = -(cam.y - 1300) * cam.s;                                     // how far the camera has tilted, in screen px
 	const sun: Pt = [sunX - (cam.x - 2500) * 0.04, 760 + tiltY * 0.25];
 	const R = 200;
-	const rc: Pt | null = rock ? [rock.x, slopeY2(rock.x) - R * 0.92 - (rock.lift ?? 0)] : null;
+	const rc: Pt | null = rock ? [rock.x, rock.cy ?? slopeY2(rock.x) - R * 0.92 - (rock.lift ?? 0)] : null;
 	const k = man?.k ?? 1.0;
-	const my = man ? slopeY2(man.x) + 10 + (man.dy ?? 0) : 0;
-	const pts = man ? flipPts(man.pose, !!man.flip).map(({p, to}) => ({a: W2(man.x, my, k, p), to})) : [];
-	const barW: Pt = man ? [man.x + (man.flip ? -1 : 1) * 40 + (bar.mode === 'held' ? bar.dx ?? 0 : 0) + 8 * Math.sin(T * 1.3), my - 1180 + (bar.mode === 'held' ? bar.dy ?? 0 : 0) + 6 * Math.sin(T * 1.7)] : [0, 0];
+	const mxx = man ? man.o?.[0] ?? man.x : 0;
+	const myBar = man ? slopeY2(mxx) + 10 + (man.dy ?? 0) : 0;                     // the bar keeps its old height above the ground
+	const my = man ? man.o?.[1] ?? myBar : 0;
+	const pts = man ? flipPts(man.pose, !!man.flip).map(({p, to}) => ({a: W2(mxx, my, k, p), to})) : [];
+	const barW: Pt = man ? [mxx + (man.flip ? -1 : 1) * 40 + (bar.mode === 'held' ? bar.dx ?? 0 : 0) + 8 * Math.sin(T * 1.3), myBar - 1180 + (bar.mode === 'held' ? bar.dy ?? 0 : 0) + 6 * Math.sin(T * 1.7)] : [0, 0];
 	const brot = bar.mode === 'held' ? (bar.rot ?? -6) + 3 * Math.sin(T * 1.1) : 0;
 	const ridge = (y: number, amp: number, seed: number, fill: string, par: number, blur?: string, op = 1) => {
 		const off = -((cam.x * par) % 1920 + 1920) % 1920;
@@ -3171,7 +3183,7 @@ const SlopeWorld: React.FC<{T: number; cam: {x: number; y: number; s: number}; s
 					{glow > 0 && man && <ellipse cx={man.x} cy={my - 260} rx={520} ry={420} fill="url(#warmGlow)" opacity={glow} />}
 					{rc && <ellipse cx={rc[0] + 20} cy={slopeY2(rock!.x) + 6} rx={R * 1.25 * (1 - 0.003 * (rock!.lift ?? 0))} ry={R * 0.13} fill="#000" opacity={0.7 * (1 - 0.006 * (rock!.lift ?? 0))} filter="url(#b6)" />}
 					{rc && <g transform={`rotate(${rock!.rot},${rc[0]},${rc[1]})`}><BigRock c={rc} r={R} sun={[rc[0] - 600, rc[1] - 400]} rimCol={P.rim} noShadow /></g>}
-					{man && <Man x={man.x} y={my} k={k} pose={man.pose} flip={man.flip} />}
+					{man && <Man x={mxx} y={my} k={k} pose={man.pose} flip={man.flip} shadow={man.o ? [mxx, slopeY2(mxx)] : undefined} shadowRot={man.o ? Math.atan((slopeY2(mxx + 1) - slopeY2(mxx - 1)) / 2) * 57.2958 : 0} />}
 					{dust > 0 && rc && Array.from({length: 40}, (_, i) => { const Rr = rnd2(i + 31); const a = Rr() * Math.PI; const d = dust * (60 + Rr() * 260); return <circle key={i} cx={rc[0] + Math.cos(a) * d * 1.4} cy={slopeY2(rock!.x) - Math.sin(a) * d * 0.5} r={6 + Rr() * 18 * (1 - dust * 0.5)} fill="#a88a70" opacity={(1 - dust) * 0.35} filter="url(#b6)" />; })}
 					{/* strings and the control bar */}
 					{man && bar.mode === 'held' && pts.map(({a, to}, i) => <g key={i}><RealString a={a} b={barPt(barW[0], barW[1], brot, [to < 0 ? -124 + 40 * (Math.abs(to) - 1) : 124 - 40 * (Math.abs(to) - 1), Math.abs(to) === 1 ? 150 : 0])} id={`sw${i}`} band={[0.15, 0.6]} w={(i === 4 || i === 6 ? 1.15 : 0.9) / Math.max(0.5, cam.s)} /><Eyelet p={a} k={k * 0.9} /></g>)}
@@ -3207,26 +3219,35 @@ const PUSH_T0 = bar35(12);
 const Push2: React.FC<{T: number}> = ({T}) => {
 	const dt = T - PUSH_T0;
 	const ph = dt * 3.4;
-	const pose = pushPose2(ph, 1);
 	const k = 1.0, R = 200;
 	const rx = 3150 - 62 * dt - 5 * Math.max(0, Math.sin(ph * 2));
 	const rot = (rx - 3150) / R * 57.3;
-	const mx = placePusher([rx, slopeY2(rx) - R * 0.92], R * 0.98, pose, k, slopeY2);
-	const cam = {x: mx - 200 + 8 * Math.sin(dt * 0.7), y: slopeY2(mx - 200) - 250, s: 1.12};
+	const rcy = restingCY(rx, R, slopeY2, 3, rot);
+	const rock = rockOutline([rx, rcy], R, 3, rot);
+	// body travel since the shot began → where each foot is in its step (targets move, limbs are solved)
+	const o0 = solvePush({rock: rockOutline([3150, restingCY(3150, R, slopeY2, 3, 0)], R, 3, 0), ys: slopeY2, k, feet: {n: 0, f: 0}}).o[0];
+	const travel = (o0 - solvePush({rock, ys: slopeY2, k, feet: {n: 0, f: 0}}).o[0]) / k;
+	const st = stepFeet2(travel, 40, -86, -104, 0.15, 0.43, 0.753);
+	const sol = solvePush({rock, ys: slopeY2, k, feet: {n: st.n.x, f: st.f.x, liftN: st.n.lift, liftF: st.f.lift}});
+	const pose: Pose = sol.pose, mx = sol.o[0];
+	// camera exactly as before (it followed the old placement)
+	const oldMx = placePusher([rx, slopeY2(rx) - R * 0.92], R * 0.98, pushPose2(ph, 1), k, slopeY2);
+	const cam = {x: oldMx - 200 + 8 * Math.sin(dt * 0.7), y: slopeY2(oldMx - 200) - 250, s: 1.12};
 	const toS = (p: Pt): Pt => [(p[0] - cam.x) * cam.s + W / 2, (p[1] - cam.y) * cam.s + H / 2];
-	// a puff of dust each time a foot pushes off
-	const steps = Array.from({length: 6}, (_, j) => { const n = Math.floor(ph / Math.PI) - j; const t0 = (n * Math.PI) / 3.4; const age = dt - t0; return {age, x: mx + 62 * (dt - t0) + 90}; }).filter((d) => d.age >= 0 && d.age < 1.2);
+	// a puff of dust where each foot lands
+	const puffs = [{S: 126 / 0.85, off: 0.43, w: sol.feetW.n}, {S: 144 / 0.85, off: 0.753, w: sol.feetW.f}].map(({S, off, w}) => { const u = travel / S + off, f = u - Math.floor(u); return {age: (f * S) / 62, w}; }).filter((d) => d.age < 1.2);
 	return (
 		<AbsoluteFill>
-			<SlopeWorld T={T} cam={cam} rock={{x: rx, rot}} man={{x: mx, pose, flip: true, k}} header="古希腊 · 神话" headerO={0} />
+			<SlopeWorld T={T} cam={cam} rock={{x: rx, rot, cy: rcy}} man={{x: mx, o: sol.o, pose, flip: true, k}} header="古希腊 · 神话" headerO={0} />
 			<svg width={W} height={H} style={{position: 'absolute', inset: 0}}>
 				<Defs />
-				{steps.map((d, j) => { const p = toS([d.x, slopeY2(d.x) + 4]); return Array.from({length: 5}, (_, q) => <circle key={`${j}-${q}`} cx={p[0] + (q - 2) * 14 * (1 + d.age * 2) + d.age * 40} cy={p[1] - d.age * 30 - q * 4} r={(8 + q * 3) * (1 + d.age * 1.5)} fill="#b8987c" opacity={0.28 * (1 - d.age / 1.2)} filter="url(#b6)" />); })}
+				{puffs.map((d, j) => { const p = toS([d.w[0], slopeY2(d.w[0]) + 2]); return Array.from({length: 5}, (_, q) => <circle key={`${j}-${q}`} cx={p[0] + (q - 2) * 14 * (1 + d.age * 2) + d.age * 40} cy={p[1] - d.age * 30 - q * 4} r={(8 + q * 3) * (1 + d.age * 1.5)} fill="#b8987c" opacity={0.28 * (1 - d.age / 1.2)} filter="url(#b6)" />); })}
 				{Array.from({length: 14}, (_, q) => { const Rr = rnd2(q * 7919 + 31); Rr(); const age = (dt * 0.9 + Rr()) % 1; const c = toS([rx + 120 + Rr() * 60, slopeY2(rx + 150) - 6]); return <circle key={q} cx={c[0] + age * 120} cy={c[1] + age * age * 40} r={2 + Rr() * 3} fill="#5a4a3c" opacity={0.7 * (1 - age)} />; })}
 			</svg>
 		</AbsoluteFill>
 	);
 };
+
 const Myth1: React.FC<{T: number}> = ({T}) => {
 	const fade = cl01((T - ln2(5).a) / 1.4);
 	const close = T >= ln2(6).a;
@@ -3260,7 +3281,14 @@ const Summit: React.FC<{T: number}> = ({T}) => {
 	const pushPose: Pose = pushPose2(T * 3.4, T < ROLL0 - 0.6 ? 1 : 0, Math.max(0, Math.sin(T * 6)));
 	const walk0 = bar35(16.4);
 	let man: SlopeMan;
-	if (!rolling) man = {x: placePusher([x, slopeY2(x) - R * 0.92], R * 0.98, pushPose, 1, slopeY2), pose: pushPose, flip: true};
+	if (!rolling) {
+		const rk = rockOutline([x, restingCY(x, R, slopeY2, 3, rot)], R, 3, rot);
+		const o0 = solvePush({rock: rockOutline([560, restingCY(560, R, slopeY2, 3, 0)], R, 3, 0), ys: slopeY2, k: 1, feet: {n: 0, f: 0}}).o[0];
+		const travel = o0 - solvePush({rock: rk, ys: slopeY2, k: 1, feet: {n: 0, f: 0}}).o[0];
+		const st = stepFeet2(travel, 40, -86, -104, 0.15, 0.70, 0.0);
+		const sol = solvePush({rock: rk, ys: slopeY2, k: 1, lean: 45 + 2 * Math.max(0, Math.sin(T * 6)), feet: {n: st.n.x, f: st.f.x, liftN: st.n.lift, liftF: st.f.lift}});
+		man = {x: sol.o[0], o: sol.o, pose: sol.pose, flip: true};
+	}
 	else if (T < walk0) { const u = cl01((T - ROLL0) / 0.5); man = {x: 860, pose: {lean: 4 * (1 - u), head: 30 + 10 * u, armN: [10 - 8 * u, 20], armF: [14 - 8 * u, 18], legN: [6, 0], legF: [-8, 0]}, flip: false}; }
 	else { const wt = T - walk0; man = {x: 860 + 150 * wt, pose: walkPose(wt * 5.4, 24, 6), flip: false}; }
 	// camera: on the crest → whips down after the rock → lands with it → pulls back and looks up the slope at the small figure coming down
@@ -3270,7 +3298,7 @@ const Summit: React.FC<{T: number}> = ({T}) => {
 	const shake = T > LAND && T < LAND + 0.4 ? 12 * (1 - (T - LAND) / 0.4) : 0;
 	return (
 		<AbsoluteFill style={{transform: `translate(${shake * Math.sin(T * 90)}px,${shake * Math.cos(T * 70)}px)`}}>
-			<SlopeWorld T={T} cam={cam} rock={{x: Math.min(x, 5600), rot, lift: bounce}} man={man} dust={T >= LAND ? land : 0} header="古希腊 · 神话" />
+			<SlopeWorld T={T} cam={cam} rock={{x: Math.min(x, 5600), rot, lift: bounce, cy: rolling ? undefined : restingCY(x, R, slopeY2, 3, rot)}} man={man} dust={T >= LAND ? land : 0} header="古希腊 · 神话" />
 			{rolling && T < LAND && <AbsoluteFill style={{background: 'linear-gradient(90deg, rgba(0,0,0,0.25), rgba(0,0,0,0) 30%, rgba(0,0,0,0) 70%, rgba(0,0,0,0.25))'}} />}
 		</AbsoluteFill>
 	);
