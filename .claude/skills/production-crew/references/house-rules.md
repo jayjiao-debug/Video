@@ -104,6 +104,24 @@ Viewers decide in 2 s: films with 2s跳出 ≤ 29 % got pushed, ≥ 34.7 % did n
 16. **Feelings and values get a visible, comparable object** (a heart whose size = how much we care), reused on
     later charts. (ep28)
 
+17. **Design the hero frame first:** before any other frame, the single most striking image of the film, the
+    one people would screenshot. Every other frame matches its light, palette and finish. (2026-10-21)
+18. **References, not adjectives.** Every look starts from 3–6 reference frames (films, illustrators, our own best
+    stills) in `style/refs/`, and its style frames are compared side by side with them. The series board of
+    frames the owner loves or rejected, each with a one-line why, is `references/taste/`. (2026-10-21)
+19. **Squint test:** in greyscale, the subject is the brightest or highest-contrast area and everything else
+    falls back; no frame where subject and background sit in the same mid-tone. Checked by
+    `video-reviewer/scripts/look_check.py`. (2026-10-21)
+20. **Composition:** one strong shape per shot; the subject on a third, big in frame; choose the camera height
+    that tells the story (low when something looms over the subject). (2026-10-21)
+21. **Depth in layers:** at least foreground, action and background in every scene, with atmospheric perspective
+    (lighter, cooler, softer with distance), and a slow camera drift so the layers move at different speeds.
+    The storyboard names the layers per scene. (2026-10-21)
+22. **Palette with a job:** 2–3 main colours plus one accent reserved for what matters; plan whether the palette
+    turns at the story's turning point (e.g. cold while struggling, warm at the reveal). (2026-10-21)
+23. **Finish layer, no grain:** soft contact shadows under everything that touches something, glow on light
+    sources, particles in the light, static paper/canvas texture on large flat areas. (2026-10-21)
+
 ## 5. People, bodies and contact (A, N)
 
 Code checks the body before the owner sees a person: `references/figure-rules.md`.
@@ -138,6 +156,8 @@ Code checks the body before the owner sees a person: `references/figure-rules.md
 7. **Counters match the picture** (no 0→100 count over one visible fish). (pond)
 8. **No dead stop before a drop:** keep music and motion running into the hit. (ep29)
 9. **When an earlier scene changes, re-check that the next scene still follows from it.** (ep14)
+10. **One transformation per film:** at least one moment where an image becomes the next idea (the boulder rolls
+    down and becomes a clock face), timed to a drop. Let the hero moment breathe for a beat. (2026-10-21)
 
 ## 7. Text on screen and readability (A, N)
 

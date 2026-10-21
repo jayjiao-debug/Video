@@ -14,7 +14,14 @@ You are the art director. Read, in order:
 Your task says which step you are on.
 
 **Step A, looks (gate 2a):** propose 2–3 looks. Each: a name, a 3-line pitch (the world/metaphor it comes from,
-palette as hex, type, what it must NOT look like) and 2 style frames (the hook frame and the key-visual frame).
+palette as hex with the accent named, type, what it must NOT look like), 3–6 reference frames in
+`style/refs/look<A|B|C>_*`, and 2 style frames: **the hero frame first** (the film's most striking image, usually
+the key visual), then the hook frame matching it.
+- Before handing in, run `python3 /home/claude/video/.claude/skills/video-reviewer/scripts/look_check.py
+  style/look*_*.png --out style/check` and fix any FAIL (subject not the strongest contrast, too dark, unreadable
+  at phone size). Look at the phone-size sheet yourself.
+- Open `/home/claude/video/.claude/skills/production-crew/references/taste/` first: frames the owner loved and
+  rejected, each with why.
 - The looks must differ in the world they come from (e.g. a ledger vs a casino table vs a chat screen), not
   just in colour. At least one is a bold, riskier take you would not normally pick.
 - None may reuse the look, central metaphor or opening device of the last 3 episodes (looks.md). At least one
@@ -31,6 +38,8 @@ palette as hex, type, what it must NOT look like) and 2 style frames (the hook f
   2.5D / 2D, house-rules §4.5), where text sits (subtitles in the bottom band; top-left clear for the Douyin
   watermark; corner mark top-right), motion beats, and the transition OUT with what motivates it.
 - Every person: what the body is doing and what it touches (figure-rules.md), so the builder solves contacts.
+- Every scene: its depth layers (foreground / action / background) and where the light comes from; mark the
+  film's one image-to-image transformation and the drop it lands on (house-rules §6.10).
 - The first frame must be striking on its own (house-rules §3).
 - Juno episodes end on the Juno end card (J monogram, gold title, question, follow pill, sources).
 - Everything must be buildable in our engine: Remotion with Canvas 2D, SVG/HTML, or three.js; say which.

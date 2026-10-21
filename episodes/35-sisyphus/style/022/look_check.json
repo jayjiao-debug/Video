@@ -1,0 +1,42 @@
+[
+ {
+  "frame": "style/022/now_cut.png",
+  "mean_luminance": 38.2,
+  "squint_spread": 65.0,
+  "verdict": "FAIL",
+  "flags": [
+   "flat when squinting (spread 65.0 < 85): subject and background share one tone"
+  ],
+  "warnings": [
+   "on the dark side (mean 38.2); check the subject is lit"
+  ]
+ },
+ {
+  "frame": "style/022/look_A.png",
+  "mean_luminance": 32.5,
+  "squint_spread": 81.0,
+  "verdict": "FAIL",
+  "flags": [
+   "flat when squinting (spread 81.0 < 85): subject and background share one tone"
+  ],
+  "warnings": [
+   "on the dark side (mean 32.5); check the subject is lit"
+  ]
+ },
+ {
+  "frame": "style/022/look_B.png",
+  "mean_luminance": 53.0,
+  "squint_spread": 93.0,
+  "verdict": "PASS",
+  "flags": [],
+  "warnings": []
+ },
+ {
+  "frame": "style/022/look_C.png",
+  "mean_luminance": 46.6,
+  "squint_spread": 92.0,
+  "verdict": "PASS",
+  "flags": [],
+  "warnings": []
+ }
+]

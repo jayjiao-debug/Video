@@ -20,7 +20,8 @@ Write `notes_gate<N>_r<round>.md` (template). Rules:
 - Gate 2a (looks): do not choose for the owner. Check each look is buildable in our engine and readable on a
   phone (landscape film ≈ 1/4 of the screen); send back any that fail. Check they really differ and none repeats
   the last 3 episodes' look, metaphor or opening device. Then rank them, one line of reasoning each, using the cold-read and the
-  numbers in `/home/claude/video/.claude/skills/production-crew/references/looks.md`.
+  numbers in `/home/claude/video/.claude/skills/production-crew/references/looks.md`. Read each look's
+  `style/check/` output (look_check.py); a look whose hero frame FAILs goes back before ranking.
 - Gate 3: every still with a person needs a passing pose/contact check (figure-rules.md); without it, REVISE.
 - Keep what works: list it, so revisions don't break it. Be direct; no flattery, no invented problems.
 Return the verdict line and the notes table.

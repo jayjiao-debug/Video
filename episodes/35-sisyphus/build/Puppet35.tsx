@@ -605,12 +605,12 @@ const placePusher = (rc: Pt, R: number, pose: Pose, k: number, ys: (x: number) =
 	return (lo + hi) / 2;
 };
 
-const Frame: React.FC<{header?: string; sub?: string; subO?: number; children: React.ReactNode; bg?: string}> = ({header, sub, subO = 1, children, bg = '#07080b'}) => (
+const Frame: React.FC<{header?: string; sub?: string; subO?: number; children: React.ReactNode; bg?: string; grain?: boolean; mark?: boolean}> = ({header, sub, subO = 1, children, bg = '#07080b', grain = true, mark = true}) => (
 	<AbsoluteFill style={{background: bg}}>
 		<svg width={W} height={H} style={{position: 'absolute', inset: 0}}><Defs />{children}</svg>
-		<Grade />
+		{grain ? <Grade /> : <AbsoluteFill style={{background: 'radial-gradient(ellipse at 50% 45%, rgba(0,0,0,0) 48%, rgba(5,7,12,0.78) 100%)'}} />}
 		{header && <Header t={header} />}
-		<Mark />
+		{mark && <Mark />}
 		{sub && <div style={{opacity: subO}}><Sub t={sub} /></div>}
 	</AbsoluteFill>
 );
@@ -1604,7 +1604,16 @@ const LoneBar: React.FC<{x: number; y: number; rot: number}> = ({x, y, rot}) => 
 const flipPts = (pose: Pose, flip: boolean) => attachPts(pose).map(({p, to}) => ({p: (flip ? [-p[0], p[1]] : p) as Pt, to: flip ? -to : to}));
 
 // ---- V2 · the hill at dusk: he pushes the boulder up to the left; the bar hangs in the dark above, nobody holding it
-const V2Hill: React.FC<{t: number; header?: string; plankY?: number; beam?: number}> = ({t, header = '古希腊 · 神话', plankY, beam = 0}) => {
+/** look (style test 2026-10-21, house-rules §4.17–23): A = key + rim light, B = low camera + depth layers, C = bold palette.
+    Undefined = the cut as approved. Style looks drop the film grain (house-rules §4.9). */
+type HillLook = 'A' | 'B' | 'C' | undefined;
+const HILL_SKY: Record<string, string[]> = {
+	base: ['#0b1024', '#1c2244', '#4a3a58', '#a35e4c', '#e2945e'],
+	A: ['#05070f', '#0d1126', '#2a2236', '#7a4436', '#e2945e'],
+	B: ['#101634', '#262c52', '#5a4866', '#b56d55', '#efa46a'],
+	C: ['#06222e', '#10414f', '#5c2f55', '#e0583e', '#ffb34f'],
+};
+const V2Hill: React.FC<{t: number; header?: string; plankY?: number; beam?: number; look?: HillLook}> = ({t, header = '古希腊 · 神话', plankY, beam = 0, look}) => {
 	const pan = -18 * t;                                                         // slow truck right → parallax
 	const ys = (x: number) => 420 + 0.34 * x + 0.00011 * (x - 900) * (x - 900);
 	const heave = Math.max(0, Math.sin(t * 2.0)) ** 2;
@@ -1618,13 +1627,20 @@ const V2Hill: React.FC<{t: number; header?: string; plankY?: number; beam?: numb
 	const mx = sol.o[0], oy = sol.o[1], my = ys(mx) + 10;
 	const slopeDeg = Math.atan((ys(mx + 1) - ys(mx - 1)) / 2) * 57.2958;
 	const bar: Pt = [mx + 130 + 6 * Math.sin(t * 2.0), 220 + 4 * Math.sin(t * 2.0 + 0.6)], brot = -10 + 3 * Math.sin(t * 2.0 + 1);
-	const sun: Pt = [1250, 690];
+	// A puts the low sun right behind his back so it rims him and the rock's edge; C makes the sky the brightest thing (he reads as a silhouette)
+	const sun: Pt = look === 'A' ? [mx + 170, oy - 300 * k] : look === 'C' ? [mx + 330, 700] : [1250, 690];
+	const sky = HILL_SKY[look ?? 'base'];
+	const ridgeFar = look === 'B' ? '#6a5a78' : look === 'C' ? '#3b2a4e' : look === 'A' ? '#1d1828' : '#3a2f45';
+	const ridgeNear = look === 'B' ? '#43394f' : look === 'C' ? '#24192f' : look === 'A' ? '#141019' : '#2a2333';
 	return (
-		<Frame header={header || undefined}>
-			<linearGradient id="hsky" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stopColor="#0b1024" /><stop offset="0.38" stopColor="#1c2244" /><stop offset="0.6" stopColor="#4a3a58" /><stop offset="0.72" stopColor="#a35e4c" /><stop offset="0.8" stopColor="#e2945e" /></linearGradient>
+		<Frame header={header || undefined} grain={!look} mark={look !== 'B'}>
+			<linearGradient id="hsky" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stopColor={sky[0]} /><stop offset="0.38" stopColor={sky[1]} /><stop offset="0.6" stopColor={sky[2]} /><stop offset="0.72" stopColor={sky[3]} /><stop offset="0.8" stopColor={sky[4]} /></linearGradient>
 			<rect width={W} height={H} fill="url(#hsky)" />
 			<Stars n={90} t={t} maxY={380} />
-			<circle cx={sun[0]} cy={sun[1]} r={520} fill="url(#warmGlow)" opacity={0.7} />
+			<circle cx={sun[0]} cy={sun[1]} r={look === 'A' ? 640 : look === 'C' ? 760 : 520} fill="url(#warmGlow)" opacity={look === 'C' || look === 'A' ? 1 : 0.7} />
+			{look === 'A' && <ellipse cx={sun[0]} cy={sun[1] + 40} rx={260} ry={200} fill="#ffcf96" opacity={0.6} filter="url(#b12)" />}
+			{look === 'C' && <circle cx={sun[0]} cy={sun[1]} r={300} fill="#ffd590" opacity={0.55} filter="url(#b12)" />}
+			{look === 'B' && <g transform={`translate(${pan * 0.08},90)`}><Ridge y={720} amp={190} seed={9} fill="#8a7a96" blur="url(#b6)" op={0.55} /></g>}
 			<g transform={`translate(${pan * 0.15},0)`}>
 				{[[420, 230, 1.1, 0], [1500, 190, 0.9, 1], [980, 300, 0.8, 0]].map(([x, y, s, dk], i) => (
 					<g key={i} transform={`translate(${x + t * 4},${y}) scale(${s})`} filter="url(#b3)">
@@ -1633,8 +1649,8 @@ const V2Hill: React.FC<{t: number; header?: string; plankY?: number; beam?: numb
 					</g>
 				))}
 			</g>
-			<g transform={`translate(${pan * 0.25},0)`}><Ridge y={760} amp={150} seed={2} fill="#3a2f45" blur="url(#b3)" op={0.85} /></g>
-			<g transform={`translate(${pan * 0.4},0)`}><Ridge y={800} amp={110} seed={5} fill="#2a2333" blur="url(#b1.5)" /></g>
+			<g transform={`translate(${pan * 0.25},${look === 'B' ? 110 : 0})`}><Ridge y={760} amp={150} seed={2} fill={ridgeFar} blur="url(#b3)" op={0.85} /></g>
+			<g transform={`translate(${pan * 0.4},${look === 'B' ? 120 : 0})`}><Ridge y={800} amp={110} seed={5} fill={ridgeNear} blur="url(#b1.5)" /></g>
 			<rect y={700} width={W} height={160} fill="#e2945e" opacity={0.12} filter="url(#b12)" />
 			{/* god rays from the low sun */}
 			{[-0.5, -0.2, 0.15, 0.45].map((a, i) => <polygon key={i} points={`${sun[0]},${sun[1]} ${sun[0] - 1400 * Math.cos(a + 0.05)},${sun[1] - 900 * Math.sin(Math.abs(a) + 0.3)} ${sun[0] - 1400 * Math.cos(a - 0.05)},${sun[1] - 900 * Math.sin(Math.abs(a) + 0.25)}`} fill="#ffd2a0" opacity={0.035} filter="url(#b12)" />)}
@@ -1645,7 +1661,9 @@ const V2Hill: React.FC<{t: number; header?: string; plankY?: number; beam?: numb
 				<path d={`M-80,${ys(-80)} ${Array.from({length: 26}, (_, i) => { const x = -80 + i * 90; return `L${x},${ys(x) - 6 * Math.sin(i * 1.9)}`; }).join(' ')}`} stroke="#ffb27a" strokeWidth={4} fill="none" opacity={0.6} filter="url(#b1.5)" />
 				<Pebbles seed={8} n={140} x0={-80} x1={2100} yAt={ys} depth={[14, 260]} />
 				{Array.from({length: 18}, (_, i) => { const x = 40 + i * 118 + (i % 3) * 30, y = ys(x) - 4; return <path key={i} d={`M${x},${y} l-6,-26 l7,10 l3,-30 l5,27 l8,-20 l-3,39 Z`} fill="#2d3424" opacity={0.9} />; })}
-				<BigRock c={rc} r={r} sun={sun} ground={ys(rc[0])} />
+				<BigRock c={rc} r={r} sun={sun} ground={ys(rc[0])} rimCol={look === 'A' ? '#ffd7a8' : look === 'C' ? '#ffb070' : undefined} />
+				{look === 'A' && <rect x={-400} y={-200} width={W + 800} height={H + 400} fill="#04050a" opacity={0.25} mask="url(#keyMask)" />}
+				{look === 'A' && <mask id="keyMask"><rect x={-400} y={-200} width={W + 800} height={H + 400} fill="white" /><ellipse cx={mx - 120} cy={oy - 230 * k} rx={520} ry={360} fill="black" filter="url(#b12)" /></mask>}
 				{beam > 0 && <g>
 					{/* a shaft of light from above: everything else sinks back, the puppet stands in it */}
 					<rect x={-400} y={-200} width={W + 800} height={H + 400} fill="#05060c" opacity={0.5 * beam} />
@@ -1657,6 +1675,8 @@ const V2Hill: React.FC<{t: number; header?: string; plankY?: number; beam?: numb
 					{Array.from({length: 46}, (_, q) => { const R = rnd2(q + 77); const v = R(); const y = -100 + ((R() * (my + 100) + t * 18 * (0.3 + R())) % (my + 100)); const x = mx - 255 + (y + 120) / (my + 140) * 120 + (R() - 0.5) * (60 + 260 * (y + 120) / (my + 140)); return <circle key={q} cx={x} cy={y} r={0.8 + v * 1.8} fill="#fff6e0" opacity={(0.25 + 0.5 * R()) * beam} />; })}
 				</g>}
 				<Man x={mx} y={oy} k={k} pose={pose} flip shadow={[mx, ys(mx)]} shadowRot={slopeDeg} />
+				{(look === 'A' || look === 'C') && <g style={{mixBlendMode: 'screen', filter: 'brightness(2.6) sepia(0.6) saturate(2.2)'}} opacity={look === 'A' ? 0.75 : 0.5}><g transform={`translate(${mx + 5},${oy - 4}) scale(${-k},${k})`} filter="url(#b3)"><Mannequin pose={pose} /></g></g>}
+				{(look === 'A' || look === 'C') && <g transform={`translate(${mx},${oy}) scale(${-k},${k})`} opacity={0.9}><Mannequin pose={pose} /></g>}
 				{beam > 0 && <g style={{mixBlendMode: 'screen', filter: 'brightness(2.4)'}} opacity={0.5 * beam}><g transform={`translate(${mx},${oy}) scale(${-k},${k})`} filter="url(#b1.5)"><Mannequin pose={pose} /></g></g>}
 				{flipPts(pose, true).map(({p, to}, i) => { const a = W2(mx, oy, k, p); const slot: Pt = [to < 0 ? -124 + 40 * (Math.abs(to) - 1) : 124 - 40 * (Math.abs(to) - 1), Math.abs(to) === 1 ? 150 : 0]; return <g key={i}><RealString a={a} b={barPt(bar[0], bar[1], brot, slot)} id={`vh${i}`} band={[0.15, 0.6]} w={i === 4 || i === 6 ? 1.15 : 0.9} /><Eyelet p={a} k={k * 0.9} /></g>; })}
 				<LoneBar x={bar[0]} y={bar[1]} rot={brot} />
@@ -3920,6 +3940,35 @@ const Puppet35: React.FC = () => {
 	const list = [<S1b t={u} />, <S2 />, <S3 />, <S4 />, <S5 />, <S6 t={u} mat={MATS.char} />, <S7 />, <S8 />, <S9 />, <Sheet />];
 	return list[i];
 };
+// ---- style test for the 0:22 shot (2026-10-21): the same moment in three looks, for the owner to pick a direction
+const Style022: React.FC<{look?: HillLook}> = ({look}) => {
+	useFonts();
+	const T = 22.0;
+	const fade = cl01((T - ln2(5).a) / 1.4);
+	const e = easeIO5(cl01((T - ln2(5).a) / 7));
+	const hill = <V2Hill t={T - bt(29.5) + 0.4} header="" beam={1 - fade} look={look} />;
+	// B: a lower, closer camera: the rock and the man fill the frame on the left third and loom against the sky
+	const shot = look === 'B'
+		? <AbsoluteFill style={{transform: 'translate(-40px,-67px) scale(1.22)', transformOrigin: '820px 520px'}}>{hill}</AbsoluteFill>
+		: zoomOn(hill, [980, 560], 1 + 0.18 * e, 0.4 * e);
+	return (
+		<AbsoluteFill style={{background: '#000', overflow: 'hidden'}}>
+			{shot}
+			{look === 'B' && <svg width={W} height={H} style={{position: 'absolute', inset: 0}}>
+				<Defs />
+				{/* a near foreground close to the lens, out of focus: a stone bottom-right, grass bottom-left (clear of the subtitle) */}
+				<g filter="url(#b12)">
+					<path d="M1500,1100 C1530,960 1640,900 1790,920 C1880,935 1940,990 1960,1100 Z" fill="#0d0a08" />
+					{Array.from({length: 8}, (_, i) => { const x = -10 + i * 38; return <path key={i} d={`M${x},1100 C${x - 8},${990 - (i % 3) * 40} ${x + 18},${940 - (i % 4) * 30} ${x + 30 + (i % 2) * 8},${900 - (i % 3) * 50}`} stroke="#10140c" strokeWidth={16} fill="none" strokeLinecap="round" />; })}
+				</g>
+			</svg>}
+			{look === 'B' && <Mark />}
+			<Head2 t="古希腊 · 神话" o={1} />
+			<Sub t="希腊神话里，西西弗斯得罪了众神" />
+		</AbsoluteFill>
+	);
+};
+
 registerRoot(() => (
 	<>
 		<Composition id="PUP35" component={Puppet35} durationInFrames={SEG * 10 * FPS} fps={FPS} width={W} height={H} />
@@ -3934,5 +3983,6 @@ registerRoot(() => (
 		<Composition id="FILM2" component={Film2} durationInFrames={Math.round(FILM2_END * FPS)} fps={FPS} width={W} height={H} />
 		<Composition id="OPEN4" component={Open4} durationInFrames={Math.round(20.5 * FPS)} fps={FPS} width={W} height={H} />
 		<Composition id="FILM35" component={Film35} durationInFrames={FILM35_FRAMES} fps={FPS} width={W} height={H} />
+		<Composition id="STY022" component={Style022} durationInFrames={1} fps={FPS} width={W} height={H} defaultProps={{look: undefined as HillLook}} />
 	</>
 ));

@@ -35,6 +35,10 @@ each frame labelled with its time and the subtitle on screen). Single scripts ca
 `probe.py` (format, bitrate, loudness, silence, black, glitches, cuts, frozen picture), `pace.py`, `facts.py`,
 `frames.py --at 12.5,40` (extra frames you want to see).
 
+Then run the look check on the contact sheets' frames (or on stills):
+`python3 <skill>/scripts/look_check.py <frames…> --out review/<ep>_vN/look` — brightness, greyscale value
+structure, subject contrast (when a subject box is given), and a phone-size sheet. Open `look_sheet.png`.
+
 Automatic flags are leads, not verdicts: a "frozen" stretch over the title card is fine; over a talking line it
 is dead air. Confirm each one on the frames before it goes in the report.
 

@@ -58,6 +58,8 @@ detail).
   `claude/hopeful-curie-hm3mlq`. A reading-pace check does exist here: `video-reviewer/scripts/pace.py`.
 - The ？-centring rule should live in one shared subtitle component; today each episode kit has its own.
 - Motion checks (planted contacts, speed jumps, onion-skin sheets) are not built yet.
+- The ep35 `Grade` (and likely earlier kits) still draws animated film grain, against house-rules §4.9. The
+  style-test looks turn it off; the shared engine `Grade` should drop it.
 - `video-engine-v1/templates/ui.tsx` still draws 56 px serif subtitles, and `cloud_render.py` defaults
   `VE_PROJECT` to `/home/claude/diji`. Copy the latest episode kit instead of the template, and always set
   `VE_PROJECT`.
@@ -83,3 +85,14 @@ Nothing the owner said was deleted: every quote stays in `owner-notes.md`. What 
 episode-specific numbers (bar grids, keys, entry points, pixel offsets, the ep11 music recipe, Modal benchmark
 dates), duplicated sections (sources rules ×4, engine-vs-look ×3, the workflow ×3), and rules overruled by a later
 owner note (listed in the table above).
+
+## Added 2026-10-21 (visual quality)
+
+- house-rules §4.17–23: hero frame first, references not adjectives, squint test, composition, depth layers,
+  palette with a job, finish layer without grain; §6.10 one image-to-image transformation per film.
+- `video-reviewer/scripts/look_check.py`: brightness, squint spread (calibrated on ep35: 0:19 = 114 reads,
+  0:22 = 65 flat), subject numbers, greyscale + 3-tone views and a phone-size sheet. Wired into the art director
+  (before handing in looks), the director (gate 2a) and the reviewer.
+- `references/taste/`: the taste board, started with the ep35 push before/after.
+- Storyboard template: layers, light and camera height per scene.
+- Style test of the ep35 0:22 shot: `episodes/35-sisyphus/style/022/`.
