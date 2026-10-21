@@ -249,7 +249,17 @@ const Sub: React.FC<{t: string}> = ({t}) => (
 	<>
 		<AbsoluteFill style={{background: 'linear-gradient(180deg, rgba(0,0,0,0) 72%, rgba(0,0,0,0.45) 90%, rgba(0,0,0,0.6) 100%)'}} />
 		<div style={{position: 'absolute', left: 0, right: 0, top: 930, textAlign: 'center', fontFamily: SERIF, fontWeight: 600, fontSize: 52, color: INK, letterSpacing: '0.08em', textShadow: '0 2px 14px rgba(0,0,0,0.9)'}}>
-			{t.split(/(\[[^\]]+\])/).filter(Boolean).map((x, i) => (x[0] === '[' ? <span key={i} style={{color: '#f1c56d', textShadow: '0 0 18px rgba(241,197,109,0.45), 0 2px 14px rgba(0,0,0,0.9)'}}>{x.slice(1, -1)}</span> : <span key={i}>{x}</span>))}
+			{(() => {
+				// optical centring: a trailing full-width ？！。，： carries ~½em of blank on its right, and letter-spacing adds 0.08em after the last glyph — pull both back
+				const segs = t.split(/(\[[^\]]+\])/).filter(Boolean);
+				return segs.map((x, i) => {
+					const hi = x[0] === '[', body = hi ? x.slice(1, -1) : x, last = i === segs.length - 1;
+					const st: React.CSSProperties = hi ? {color: '#f1c56d', textShadow: '0 0 18px rgba(241,197,109,0.45), 0 2px 14px rgba(0,0,0,0.9)'} : {};
+					if (!last) return <span key={i} style={st}>{body}</span>;
+					const end = body.slice(-1), punct = /[？！。，：；、]/.test(end);
+					return <span key={i} style={st}>{body.slice(0, -1)}<span style={{marginRight: punct ? '-0.58em' : '-0.08em'}}>{end}</span></span>;
+				});
+			})()}
 		</div>
 	</>
 );
