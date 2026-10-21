@@ -3101,21 +3101,31 @@ const Open8: React.FC = () => {
 const bar35 = (k: number) => 0.416 + 2.025 * k;
 const SCRIPT2: [number, string][] = [
 	[10, '希腊神话里，西西弗斯得罪了众神'], [12, '惩罚是：把一块巨石，推上山顶'], [14, '石头一到山顶，就滚下来'], [16, '他只能走下山，重新再推。永远'],
-	[18, '众神觉得：没有比[“无用又无望的劳动”]更可怕的惩罚'], [20, '他们说对了吗？2008年，有人在实验室里，造了一个西西弗斯'],
-	[22.5, '让人拼积木小人：第一个给2美元，之后每个少一点'], [25, '一组，拼好的就摆在桌上'], [27, '另一组，刚拼好，就当着你的面拆掉'], [29, '同样的活，同样的钱'],
-	[30, '被拆的那组，平均少拼了三个多：10.6个，对7.2个'], [32, '让人放弃的，不是累，是[“没意义”]'], [34, '那西西弗斯，凭什么幸福？'],
-	[35.5, '1942年，二战正酣，28岁的加缪写下了《西西弗斯神话》'], [38, '他承认：世界不会给我们一个现成的意义'], [40, '但他最在意的，是西西弗斯下山的那段路'],
-	[42, '那一刻他清醒地知道：石头还会滚下来'], [44, '他不再等山顶，山顶也就惩罚不了他'], [46, '[“登上山顶的奋斗本身，就足以充实一颗人心”]'],
-	[48, '后来，心理学给了相似的答案'], [49.5, '2010年，哈佛的研究者用手机，随机打断2250个人'], [51.5, '问：你在做什么？心在这件事上吗？开心吗？'],
-	[53.5, '人们有46.9%的时间，心不在焉'], [55, '而心不在焉的时候，明显更不开心'], [56.5, '影响快乐的，常常不是你在做什么，而是心在不在这儿'],
-	[59, '1997年，研究者问了一群上班族：你怎么看自己的工作？'], [61, '有人说：只是份工作；有人说：是我的事业；有人说：是我的使命'],
-	[63.5, '差不多各占三分之一——就连做同一份工作的人里，也一样'], [65.5, '觉得是使命的人，对工作、对生活都更满意'], [67, '同一块石头，不同的人，推出了不同的人生'],
-	[68.5, '我们每个人，都在推自己的石头'], [70, '石头不会消失，山顶也许永远到不了'], [72, '但怎么推、为什么推，是你自己的'], [74, '所以，我们必须想象：西西弗斯是[幸福的]'],
+	[18, '众神说：最可怕的，是[“无用又无望的劳动”]'], [20, '他们说对了吗？｜有人用实验，造了一个西西弗斯'],
+	[22.5, '拼积木小人，按个给钱｜第一个2美元，之后递减'], [25, '一组，拼好的就摆在桌上'], [27, '另一组，刚拼好，就当着你的面拆掉'], [29, '同样的活，同样的钱'],
+	[30.5, '被拆的那组，少拼了三个多'], [32, '让人放弃的，不是累，是[“没意义”]'], [34, '那西西弗斯，凭什么幸福？'],
+	[35.5, '二战正酣，28岁的加缪｜写下了《西西弗斯神话》'], [38, '他承认：世界不会给我们现成的意义'], [40, '但他最在意的，是下山的那段路'],
+	[42, '那一刻他清醒地知道：石头还会滚下来'], [44, '他不再等山顶，山顶也就惩罚不了他'], [46, '[“攀登本身，就足以充实一颗人心”]'],
+	[48, '后来，心理学给了相似的答案'], [49.5, '哈佛的研究者用手机，随机打断2250人'], [51.5, '问：你在做什么？心在这件事上吗？开心吗？'],
+	[53.5, '人们有46.9%的时间，心不在焉'], [55, '走神时，人明显更不开心'], [56.5, '快乐常常不看你在做什么｜而看心在不在这儿'],
+	[59, '研究者问一群上班族：你怎么看工作？'], [61, '回答分成三种：工作、事业、使命'],
+	[63.5, '差不多各占三分之一，同岗位也一样'], [65.5, '觉得是使命的人，活得更满意'], [67, '同一块石头，推出不同的人生'],
+	[68.5, '每个人，都在推自己的石头'], [70, '石头不会消失，山顶也许永远到不了'], [72, '但怎么推、为什么推，是你自己的'], [74, '所以，我们必须想象：西西弗斯是[幸福的]'],
 ];
 const CARD2 = bar35(76.5);
 const FILM2_END = 164.4;
 const LINES2 = SCRIPT2.map(([k, text], i) => ({a: bar35(k) + 0.06, b: (i + 1 < SCRIPT2.length ? bar35(SCRIPT2[i + 1][0]) : CARD2) - 0.14, text}));
 const ln2 = (i: number) => LINES2[i - 5];                                    // script line number → its window
+/** what is on screen: a line written 'A｜B' becomes two subtitles inside its window, each given its reading time
+    (0.5 s to notice + chars/7 + 0.6 s to look; owner 2026-10-21: no line too long, none too fast) */
+const readNeed = (s: string) => 0.5 + s.replace(/[\[\]“”]/g, '').match(/[\u4e00-\u9fff]|\d+(?:\.\d+)?%?|[A-Za-z]+/g)!.length / 7 + 0.6;
+const SUBS2 = LINES2.flatMap((l) => {
+	const parts = l.text.split('｜');
+	if (parts.length === 1) return [l];
+	const need = parts.map(readNeed), tot = need.reduce((x, y) => x + y, 0);
+	let a = l.a;
+	return parts.map((text, i) => { const d = (l.b - l.a) * need[i] / tot; const s = {a, b: a + d - (i < parts.length - 1 ? 0.1 : 0), text}; a += d; return s; });
+});
 const SANS = '"Noto Sans CJK SC", "Noto Sans SC", sans-serif';
 
 /** zoom/pan a full-frame picture: point p of the picture is brought toward the centre by k (0..1) at scale z */
@@ -3936,7 +3946,7 @@ const Film2: React.FC = () => {
 	else if (T < B(74) + 0.6) { const e = X(B(74) - 0.5, B(74) + 0.6); pic = <AbsoluteFill>{e < 0.5 ? <S1b t={T} crowd sub="" headLift={30} warm={1} free={1} /> : <Dawn2 T={T} />}<AbsoluteFill style={{background: '#fff3dc', opacity: Math.sin(Math.PI * e)}} /></AbsoluteFill>; }
 	else if (T < CARD2) pic = <Dawn2 T={T} />;
 	else { const e = cl01((T - CARD2) / 0.8); pic = <AbsoluteFill>{e < 1 && <AbsoluteFill style={{opacity: 1 - e}}><Dawn2 T={T} /></AbsoluteFill>}<AbsoluteFill style={{opacity: e}}><EndCard2 u={T - CARD2} /></AbsoluteFill>{T > FILM2_END - 2.0 && <AbsoluteFill style={{background: '#000', opacity: cl01((T - (FILM2_END - 2.0)) / 2.0)}} />}</AbsoluteFill>; }
-	const line = LINES2.find((l) => T >= l.a && T < l.b);
+	const line = SUBS2.find((l) => T >= l.a && T < l.b);
 	const subO = line ? Math.min(cl01((T - line.a) / 0.18), cl01((line.b - T) / 0.18)) : 0;
 	return (
 		<AbsoluteFill style={{background: '#000', overflow: 'hidden'}}>
