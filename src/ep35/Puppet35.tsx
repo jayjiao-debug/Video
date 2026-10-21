@@ -947,6 +947,21 @@ const S1b: React.FC<{t: number; spin?: number; flick?: number; trainShift?: numb
 					<path d={quad(towards([tt[0], 740], 0), towards([tt[0], 740], 0.86), towards([tt[0], 756], 0.86), [tt[0], 756])} fill="#b8963f" opacity={0.8} />
 				</g>
 				<path d={quad(tt, towards(tt, 0.86), towards(tb, 0.86), tb)} fill="#9fb6d8" opacity={0.06} filter="url(#b12)" />
+				{/* the nearest carriage, running past the frame edge: big, soft, its windows spilling cold light */}
+				<g filter="url(#b3)">
+					<path d={quad(towards(tt, -0.95), tt, tb, towards(tb, -0.95))} fill="#262d34" />
+					<path d={quad(towards(tt, -0.95), tt, towards([tt[0], tt[1] + 60], 0), towards([tt[0], tt[1] + 60], -0.95))} fill="#1a1f25" />
+					{[[-0.9, -0.66], [-0.52, -0.33], [-0.22, -0.07]].map(([e0, e1], i) => {
+						const sh = (trainShift * 1.6) % 0.4; const d0 = e0 + sh, d1 = e1 + sh; if (d0 > 0) return null;
+						const top = (d: number) => towards([tt[0], tt[1] + 170], Math.min(0, d)), bot = (d: number) => towards([tt[0], tt[1] + 470], Math.min(0, d));
+						return <g key={i}><path d={quad(top(d0), top(d1), bot(d1), bot(d0))} fill="url(#winG)" opacity={0.92} />
+							<path d={quad(top(d0 + (d1 - d0) * 0.48), top(d0 + (d1 - d0) * 0.52), bot(d0 + (d1 - d0) * 0.52), bot(d0 + (d1 - d0) * 0.48))} fill="#2a3138" /></g>;
+					})}
+					<path d={quad(towards([tt[0], 740], -0.95), towards([tt[0], 740], 0), towards([tt[0], 760], 0), towards([tt[0], 760], -0.95))} fill="#b8963f" opacity={0.8} />
+					<path d={quad(towards([tt[0], 760], -0.95), towards([tt[0], 760], 0), tb, towards(tb, -0.95))} fill="#1d2329" />
+				</g>
+				<path d={quad(towards(tt, -0.95), tt, tb, towards(tb, -0.95))} fill="#cfe0f5" opacity={0.08} filter="url(#b12)" />
+				<ellipse cx={1560} cy={900} rx={260} ry={420} fill="#cfe0f5" opacity={0.06} filter="url(#b12)" />
 				{/* top light on the puppet */}
 				<polygon points={`${mx - 70},-20 ${mx + 130},-20 ${mx + 330},${my + 10} ${mx - 300},${my + 10}`} fill="#dfe8f5" opacity={0.07} filter="url(#b12)" />
 				<ellipse cx={mx + 20} cy={my + 8} rx={300} ry={46} fill="#dfe8f5" opacity={0.1} filter="url(#b6)" />
@@ -2924,6 +2939,109 @@ const Open7: React.FC = () => {
 	);
 };
 
+// ================================================================== v8 · channel flips → 然后呢 → 第二天 → the clock face becomes the rock → a shaft of light → the title in the sky
+const CLOCK_C: Pt = [385.6, 318.4];                                          // the platform clock, screen coordinates in S1b
+const ROCK_C: Pt = [690, 480];                                               // the boulder's centre in V2Hill at the start
+/** the title, set in the night sky, each character surfacing out of soft focus as the light finds it */
+const SkyTitle: React.FC<{T: number; t0: number}> = ({T, t0}) => {
+	const lines = [{s: '推石头的人，', c: '#efe4cc', y: 108, size: 78}, {s: '是幸福的', c: '#f4cd7e', y: 200, size: 96}];
+	let n = 0;
+	return (
+		<AbsoluteFill style={{pointerEvents: 'none'}}>
+			<div style={{position: 'absolute', left: 146, top: 62, fontFamily: SERIF, fontSize: 22, letterSpacing: '0.4em', color: 'rgba(239,228,204,0.7)', opacity: cl01((T - t0 - 0.9) / 0.6)}}>加缪《西西弗神话》</div>
+			{lines.map((ln, li) => (
+				<div key={li} style={{position: 'absolute', left: 140, top: ln.y, fontFamily: SERIF, fontWeight: 900, fontSize: ln.size, letterSpacing: '0.12em', whiteSpace: 'nowrap'}}>
+					{[...ln.s].map((ch, k) => {
+						const u = cl01((T - t0 - (n++) * 0.07) / 0.55), e = 1 - Math.pow(1 - u, 3);
+						return <span key={k} style={{display: 'inline-block', color: ln.c, opacity: e, filter: `blur(${(1 - e) * 10}px)`, transform: `translateY(${(1 - e) * 18}px)`, textShadow: li ? '0 0 28px rgba(244,205,126,0.55), 0 4px 18px rgba(0,0,0,0.8)' : '0 4px 18px rgba(0,0,0,0.8)'}}>{ch}</span>;
+					})}
+				</div>
+			))}
+			<div style={{position: 'absolute', left: 146, top: 322, height: 2, width: 420 * (1 - Math.pow(1 - cl01((T - t0 - 0.7) / 0.8), 3)), background: 'linear-gradient(90deg, rgba(244,205,126,0.8), rgba(244,205,126,0))'}} />
+		</AbsoluteFill>
+	);
+};
+
+const Open8: React.FC = () => {
+	useFonts();
+	const T = useCurrentFrame() / FPS;
+	const sub = (a: number, b: number, s: string) => (T >= a && T < b ? <AbsoluteFill style={{opacity: Math.min(1, (T - a) / 0.15, (b - T) / 0.15)}}><Sub t={s} /></AbsoluteFill> : null);
+	const S_TV = W / TVS.w;
+	const IN: Cam = {s: S_TV, c: TV_C};
+	const MID: Cam = {s: 1.75, c: [TV_C[0] + 60, TV_C[1] + 10]};
+	const WIDE: Cam = {s: 1.12, c: [960, 560]};
+	const PULL0 = bt(5), PULL1 = bt(7) - 0.04, DIVE0 = bt(24.5), DIVE1 = bt(25);
+	const MC0 = bt(28), MC1 = bt(29.5), MC2 = bt(31.2);                         // push into the clock … swap … pull out from the rock
+	const TITLE = bt(36);
+	const {ch, n, since} = tvChannel(T);
+	let pic: React.ReactNode = null;
+	const room = (cam: Cam, props: Partial<React.ComponentProps<typeof TVRoom>>, blurW = 0) => {
+		const sh = cam.shake ?? 0;
+		const tx = W / 2 - cam.s * cam.c[0] + sh * Math.sin(T * 53), ty = H / 2 - cam.s * cam.c[1] + sh * Math.cos(T * 41);
+		return (
+			<AbsoluteFill style={{background: '#070606', overflow: 'hidden'}}>
+				<div style={{position: 'absolute', left: 0, top: 0, width: W, height: H, transform: `translate(${tx}px,${ty}px) scale(${cam.s})`, transformOrigin: '0 0', filter: blurW > 0.3 ? `blur(${blurW}px)` : undefined}}>
+					<TVRoom T={T} ch={ch} since={since} nFlip={n} fit={1} headLift={6} power={1} staticAll={0} glowO={1} scanO={1} {...props} />
+				</div>
+				<Grade />
+				<Mark />
+			</AbsoluteFill>
+		);
+	};
+	/** zoom a full-frame scene about a point, bringing that point to the centre */
+	const zoomAt = (node: React.ReactNode, p: Pt, z: number, k: number, blurPx = 0) => (
+		<AbsoluteFill style={{transform: `translate(${(W / 2 - p[0]) * k}px,${(H / 2 - p[1]) * k}px) scale(${z})`, transformOrigin: `${p[0]}px ${p[1]}px`, filter: blurPx > 0.3 ? `blur(${blurPx}px)` : undefined}}>{node}</AbsoluteFill>
+	);
+	const hillPlank = undefined;
+	const hill = (beam = 0) => <V2Hill t={T - MC1 + 0.4} header="" beam={beam} plankY={hillPlank} />;
+	if (T < PULL0) pic = <S1b t={T} crowd sub="" headLift={6 * ease(cl01((T - 0.3) / 1.4))} />;
+	else if (T < PULL1) { const e = easeIO5((T - PULL0) / (PULL1 - PULL0)); pic = room(camZoom(IN, MID, e), {fit: e, scanO: e, glowO: e}, 2.5 * Math.sin(Math.PI * e)); }
+	else if (T < TV_OFF) {
+		const u = cl01((T - bt(7)) / (TV_OFF - bt(7)));
+		const kick = since < 0.25 ? 0.035 * (1 - since / 0.25) : 0;
+		const fast = T > bt(19) ? cl01((T - bt(19)) / (TV_OFF - bt(19))) : 0;
+		pic = room({s: MID.s * (1 + 0.32 * Math.pow(u, 2)) * (1 + kick), c: [MID.c[0] - 50 * u, MID.c[1]], shake: 5 * fast}, {});
+	}
+	else if (T < DIVE0) { const offU = cl01((T - TV_OFF) / 1.6); const u = easeIO5((T - TV_OFF) / (DIVE0 - TV_OFF)); pic = room(camLerp(MID, WIDE, u), {power: 1 - offU}); }
+	else if (T < DIVE1) { const e = Math.pow(cl01((T - DIVE0) / (DIVE1 - DIVE0)), 2.2); pic = room(camZoom(WIDE, IN, e), {power: 0, ch: 0}, 3 * e * (1 - e) * 4); }
+	else if (T < MC1 + 0.14) {
+		// 第二天: the set comes back on, the clock starts to spin; then the camera is drawn into the clock face as the hands race
+		const u = (T - DIVE1) / (MC0 - DIVE1), on = cl01((T - DIVE1) / 0.28);
+		const m = cl01((T - MC0) / (MC1 - MC0)), me = Math.pow(m, 2.6);
+		const spin = 3 * ease(cl01(u)) + 14 * Math.pow(m, 2.2);
+		const sy = on < 0.5 ? 0.006 : 0.006 + (1 - 0.006) * easeIO5((on - 0.5) / 0.5), sx = on < 0.5 ? 0.02 + 0.98 * (on / 0.5) : 1;
+		const plat = <AbsoluteFill style={{background: '#000'}}><AbsoluteFill style={{transform: `scale(${sx},${sy})`, filter: on < 1 ? `brightness(${1 + 3 * (1 - on)})` : undefined}}><S1b t={T} crowd spin={spin} flick={m > 0.3 ? 0.4 + 0.6 * ((Math.floor(T * 30) * 7919) % 3 > 0 ? 1 : 0) : 1} headLift={34 - 44 * easeIO5(cl01((u - 0.05) * 1.7))} sub="" /></AbsoluteFill></AbsoluteFill>;
+		pic = m > 0 ? zoomAt(plat, CLOCK_C, 1 + 8.5 * me, me, 6 * me * (1 - me) * 3) : plat;
+		if (T > MC1 - 0.14) {                                                  // the clock face and the boulder, one round shape dissolving into the other
+			const x = cl01((T - (MC1 - 0.14)) / 0.28);
+			pic = <AbsoluteFill>{pic}<AbsoluteFill style={{opacity: x}}>{zoomAt(hill(), ROCK_C, 3.0, 1, 4 * (1 - x))}</AbsoluteFill></AbsoluteFill>;
+		}
+	}
+	else {
+		const tb = T - T_DRUM;
+		const beam = tb < 0 ? 0 : Math.min(1, tb / 0.06) * (0.92 + 0.08 * Math.exp(-tb * 3) * Math.cos(tb * 40));
+		const o = cl01((T - (MC1 + 0.14)) / (MC2 - MC1 - 0.14)), oe = 1 - Math.pow(1 - o, 3);
+		pic = o < 1 ? zoomAt(hill(beam), ROCK_C, 3.0 - 2.0 * oe, 1 - oe) : hill(beam);
+		if (tb >= 0 && tb < 0.12) pic = <AbsoluteFill>{pic}<AbsoluteFill style={{background: '#fff6e0', opacity: 0.35 * (1 - tb / 0.12)}} /></AbsoluteFill>;
+	}
+	return (
+		<AbsoluteFill style={{background: '#000', overflow: 'hidden'}}>
+			{pic}
+			{T >= TITLE && <SkyTitle T={T} t0={TITLE} />}
+			{sub(0.5, bt(5) - 0.05, '为什么挤地铁？')}
+			{sub(bt(7) + 0.05, bt(9) - 0.08, '为什么上班？')}
+			{sub(bt(9) + 0.05, bt(11) - 0.08, '为什么加班？')}
+			{sub(bt(11) + 0.05, bt(13) - 0.08, '为什么还房贷？')}
+			{sub(bt(13) + 0.05, bt(14) - 0.05, '为什么拼命？')}
+			{sub(bt(14) + 0.05, bt(15) - 0.05, '为什么熬夜？')}
+			{sub(TV_OFF + 0.25, DIVE0, '然后呢？')}
+			{sub(DIVE1 + 0.3, MC0 + 0.25, '第二天，再来一遍')}
+			{sub(MC0 + 0.35, T_DRUM - 0.08, '有个人，这样过了永远')}
+			{sub(T_DRUM + 0.45, TITLE - 0.1, '可有位哲学家说：他是幸福的')}
+		</AbsoluteFill>
+	);
+};
+
 const Puppet35: React.FC = () => {
 	useFonts();
 	const t = useCurrentFrame() / FPS;
@@ -2941,6 +3059,7 @@ registerRoot(() => (
 		<Composition id="CONCEPTS" component={Concepts} durationInFrames={6} fps={FPS} width={W} height={H} />
 		<Composition id="OPEN6" component={Open6} durationInFrames={Math.round(20.5 * FPS)} fps={FPS} width={W} height={H} />
 		<Composition id="OPEN7" component={Open7} durationInFrames={Math.round(20.5 * FPS)} fps={FPS} width={W} height={H} />
+		<Composition id="OPEN8" component={Open8} durationInFrames={Math.round(20.5 * FPS)} fps={FPS} width={W} height={H} />
 		<Composition id="OPEN4" component={Open4} durationInFrames={Math.round(20.5 * FPS)} fps={FPS} width={W} height={H} />
 		<Composition id="FILM35" component={Film35} durationInFrames={FILM35_FRAMES} fps={FPS} width={W} height={H} />
 	</>
