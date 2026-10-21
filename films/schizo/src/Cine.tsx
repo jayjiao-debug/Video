@@ -105,12 +105,18 @@ const fogBase = () => {
 };
 const WORD = [{ c: '精', x: FW * 0.25, t0: 0.55, t1: 1.6 }, { c: '分', x: FW * 0.75, t0: 1.7, t1: 2.55 }];
 const DRIPS = (() => { const r = rng(7); return Array.from({ length: 9 }, (_, i) => ({ x: (i < 5 ? FW * 0.25 : FW * 0.75) + (r() - 0.5) * 220, y: FH * 0.52 + r() * 40, t0: 2.4 + r() * 3.5, v: 40 + r() * 70, len: 120 + r() * 260 })); })();
+let TINT: HTMLCanvasElement | null = null;
 const drawFog = (g: CanvasRenderingContext2D, t: number) => {
   g.clearRect(0, 0, FW, FH); g.drawImage(fogBase(), 0, 0);
   g.save(); g.globalCompositeOperation = 'destination-out';
   for (const w of WORD) { const k = ramp(t, w.t0, w.t1 - w.t0); if (k <= 0) continue; g.save(); g.beginPath(); g.rect(w.x - 170, FH * 0.2, 340, 420 * eio(k) + 1); g.clip();
     g.font = `900 300px ${SANS}`; g.textAlign = 'center'; g.textBaseline = 'middle'; g.fillStyle = '#000'; g.strokeStyle = '#000'; g.lineWidth = 16; g.lineJoin = 'round'; g.lineCap = 'round';
-    g.fillText(w.c, w.x, FH * 0.42); g.strokeText(w.c, w.x, FH * 0.42); g.restore(); }
+    g.fillText(w.c, w.x, FH * 0.42); g.strokeText(w.c, w.x, FH * 0.42);
+    /* the wiped glass is darker than the fog around it: tint the strokes so the word always reads */
+    if (!TINT) { TINT = document.createElement('canvas'); TINT.width = FW; TINT.height = FH; } const q = TINT.getContext('2d')!; q.clearRect(0, 0, FW, FH);
+    q.font = g.font; q.textAlign = 'center'; q.textBaseline = 'middle'; q.fillStyle = q.strokeStyle = '#05080c'; q.lineWidth = 16; q.lineJoin = 'round'; q.fillText(w.c, w.x, FH * 0.42); q.strokeText(w.c, w.x, FH * 0.42);
+    g.globalCompositeOperation = 'source-over'; g.globalAlpha = 0.62; g.drawImage(TINT, 0, 0); g.globalAlpha = 1;
+    g.globalCompositeOperation = 'destination-out'; g.restore(); }
   for (const d of DRIPS) { if (t < d.t0) continue; const L = Math.min(d.len, (t - d.t0) * d.v * (1 / (1 + (t - d.t0) * 0.35))); g.lineWidth = 7; g.strokeStyle = 'rgba(0,0,0,.9)'; g.beginPath(); g.moveTo(d.x, d.y); g.lineTo(d.x + Math.sin(d.y * 0.1) * 3, d.y + L); g.stroke(); }
   g.restore();
   for (const d of DRIPS) { if (t < d.t0) continue; const L = Math.min(d.len, (t - d.t0) * d.v * (1 / (1 + (t - d.t0) * 0.35))); g.fillStyle = 'rgba(225,236,246,.6)'; g.beginPath(); g.ellipse(d.x + Math.sin(d.y * 0.1) * 3, d.y + L, 5, 7, 0, 0, 7); g.fill(); }
@@ -160,19 +166,21 @@ const STAGE_KEYS: Key[] = [
    a figure in dark clothes, standing still, breathing. Built facing +Z, origin on the floor. */
 type Fig = { root: THREE.Group; torso: THREE.Group; head: THREE.Group; key: THREE.PointLight; rim: THREE.PointLight };
 const person = (layer: number): Fig => {
-  const root = new THREE.Group(); const cloth = M({ color: '#0b0c0e', roughness: 0.9 }), skin = M({ color: '#3a2c25', roughness: 0.6 }), hair = M({ color: '#0d0d0f', roughness: 0.7 });
+  /* a shop-window mannequin: one glossy ivory shell, egg head, no face, ball shoulders, a seam at the neck */
+  const root = new THREE.Group(); const shell = new THREE.MeshPhysicalMaterial({ color: '#cdc7bd', roughness: 0.3, clearcoat: 0.7, clearcoatRoughness: 0.15 });
+  const seam = M({ color: '#6d6861', roughness: 0.5 });
   const torso = new THREE.Group(); torso.position.y = 1.0; root.add(torso);
-  const prof = [[0.0, -0.1], [0.15, -0.1], [0.155, 0.0], [0.165, 0.18], [0.185, 0.32], [0.205, 0.41], [0.19, 0.46], [0.13, 0.49], [0.06, 0.505], [0.0, 0.51]].map(([r, y]) => new THREE.Vector2(r, y));
-  const tg = new THREE.LatheGeometry(prof, 40); tg.scale(1, 1, 0.58); const tm = new THREE.Mesh(tg, cloth); torso.add(tm);
-  for (const sx of [-1, 1]) { const sh = new THREE.Mesh(new THREE.SphereGeometry(0.06, 20, 14), cloth); sh.position.set(sx * 0.178, 0.415, 0); torso.add(sh);
-    const arm = new THREE.Mesh(new THREE.CapsuleGeometry(0.047, 0.5, 6, 14), cloth); arm.position.set(sx * 0.215, 0.17, 0.0); arm.rotation.z = sx * 0.07; torso.add(arm);
-    const hand = new THREE.Mesh(new THREE.SphereGeometry(0.042, 14, 10), skin); hand.scale.set(0.8, 1.3, 0.6); hand.position.set(sx * 0.235, -0.13, 0.0); torso.add(hand); }
-  const collar = new THREE.Mesh(new THREE.TorusGeometry(0.066, 0.026, 10, 24), cloth); collar.rotation.x = Math.PI / 2; collar.position.y = 0.5; torso.add(collar);
-  const neck = new THREE.Mesh(new THREE.CylinderGeometry(0.048, 0.056, 0.09, 16), skin); neck.position.y = 0.535; torso.add(neck);
-  const head = new THREE.Group(); head.position.y = 0.575; torso.add(head);
-  const hd = new THREE.Mesh(new THREE.SphereGeometry(0.1, 32, 24), skin); hd.scale.set(0.8, 1.12, 0.92); hd.position.y = 0.09; head.add(hd);
-  const nose = new THREE.Mesh(new THREE.ConeGeometry(0.01, 0.022, 10), skin); nose.rotation.x = Math.PI / 2; nose.position.set(0, 0.085, 0.092); head.add(nose);
-  const hr = new THREE.Mesh(new THREE.SphereGeometry(0.106, 32, 20, 0, Math.PI * 2, 0, Math.PI * 0.55), hair); hr.scale.set(0.86, 1.08, 1.0); hr.position.set(0, 0.112, -0.008); hr.rotation.x = -0.25; head.add(hr);
+  const prof = [[0.0, -0.12], [0.13, -0.12], [0.135, -0.02], [0.125, 0.08], [0.145, 0.2], [0.17, 0.3], [0.178, 0.38], [0.165, 0.43], [0.12, 0.465], [0.055, 0.485], [0.0, 0.49]].map(([r, y]) => new THREE.Vector2(r, y));
+  const tg = new THREE.LatheGeometry(prof, 48); tg.scale(1, 1, 0.6); torso.add(new THREE.Mesh(tg, shell));
+  for (const sx of [-1, 1]) { const sh = new THREE.Mesh(new THREE.SphereGeometry(0.058, 24, 16), shell); sh.position.set(sx * 0.17, 0.405, 0); torso.add(sh);
+    const ring = new THREE.Mesh(new THREE.TorusGeometry(0.046, 0.004, 8, 24), seam); ring.rotation.y = Math.PI / 2; ring.position.set(sx * 0.2, 0.39, 0); torso.add(ring);
+    const arm = new THREE.Mesh(new THREE.CapsuleGeometry(0.036, 0.26, 8, 16), shell); arm.position.set(sx * 0.205, 0.23, 0.0); arm.rotation.z = sx * 0.06; torso.add(arm);
+    const elbow = new THREE.Mesh(new THREE.SphereGeometry(0.034, 16, 12), shell); elbow.position.set(sx * 0.216, 0.06, 0.005); torso.add(elbow);
+    const fore = new THREE.Mesh(new THREE.CapsuleGeometry(0.03, 0.22, 8, 16), shell); fore.position.set(sx * 0.222, -0.08, 0.02); fore.rotation.x = -0.12; torso.add(fore); }
+  const neck = new THREE.Mesh(new THREE.CylinderGeometry(0.036, 0.046, 0.1, 24), shell); neck.position.y = 0.52; torso.add(neck);
+  const nseam = new THREE.Mesh(new THREE.TorusGeometry(0.037, 0.003, 8, 28), seam); nseam.rotation.x = Math.PI / 2; nseam.position.y = 0.55; torso.add(nseam);
+  const head = new THREE.Group(); head.position.y = 0.565; torso.add(head);
+  const hd = new THREE.Mesh(new THREE.SphereGeometry(0.1, 40, 30), shell); hd.scale.set(0.76, 1.14, 0.88); hd.position.set(0, 0.1, 0.004); head.add(hd);
   root.traverse((o) => o.layers.set(layer));
   const key = new THREE.PointLight('#a8bccc', 0, 3, 2); key.layers.set(layer); const rim = new THREE.PointLight('#8fb0d0', 0, 3, 2); rim.layers.set(layer);
   return { root, torso, head, key, rim };
@@ -399,10 +407,10 @@ const World: React.FC<{ t: number }> = ({ t }) => {
       F.head.rotation.set(0.04 + Math.sin(t * 0.37 + i) * 0.01, (i === 0 ? 1 : -1) * 0.05 * eio(ramp(t, WARM + 0.4, 2.2)) * (t < SLAM ? 1 : 0), tilt);
       const side = new THREE.Vector3(f.z, 0, -f.x); const warmK = i === 0 ? ramp(t, WARM, 0.08) * (t < SLAM ? 1 : 0) : 0;
       F.key.position.copy(X).addScaledVector(f, 0.75).addScaledVector(side, i === 0 ? -0.6 : 0.6).setY(1.85);
-      F.key.color.set('#a8bccc').lerp(new THREE.Color('#ffae62'), warmK); F.key.intensity = 0.6 + 3 * warmK + (i === 1 && t > WARM && t < SLAM ? 0.8 : 0);
-      F.rim.position.copy(X).addScaledVector(f, -0.35).addScaledVector(side, i === 0 ? 0.45 : -0.45).setY(1.95); F.rim.color.set(i === 0 && warmK > 0 ? '#ffc58a' : '#8fb0d0'); F.rim.intensity = 14;
+      F.key.color.set('#a8bccc').lerp(new THREE.Color('#ffae62'), warmK); F.key.intensity = 0.9 + 2.2 * warmK + (i === 1 && t > WARM && t < SLAM ? 0.5 : 0);
+      F.rim.position.copy(X).addScaledVector(f, -0.35).addScaledVector(side, i === 0 ? 0.45 : -0.45).setY(1.95); F.rim.color.set(i === 0 && warmK > 0 ? '#ffc58a' : '#8fb0d0'); F.rim.intensity = 4;
     });
-    S.fogMat.opacity = 1 - 0.3 * eio(ramp(t, SPLIT, 4));
+    S.fogMat.opacity = 1 - 0.12 * eio(ramp(t, SPLIT, 4));
   }
   /* glints: each shard flashes when it turns its face between the camera and a light (the title, the window) */
   if (!inStage && t >= TITLE) { S.shardRoot.updateMatrixWorld(true); const wp = new THREE.Vector3(), n = new THREE.Vector3(), v = new THREE.Vector3(), r = new THREE.Vector3(), l = new THREE.Vector3();
