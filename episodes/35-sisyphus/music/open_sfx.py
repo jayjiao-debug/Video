@@ -49,7 +49,7 @@ def main():
     t = np.arange(N) / SR
     on = np.clip((t - PULL0) / 0.6, 0, 1) * np.clip((OFF + 0.35 - t) / 0.3, 0, 1)
     hum = 0.022 * (np.sin(2 * np.pi * 60 * t) + 0.5 * np.sin(2 * np.pi * 120 * t) + 0.25 * np.sin(2 * np.pi * 180 * t)) + 0.006 * np.sin(2 * np.pi * 7800 * t)
-    fx += hum * on
+    # (owner, v9: no hum under the TV — removed)
     # the platform turns out to be a picture: a soft crackle as the glass appears
     s = static(0.7); put(s * np.linspace(0, 1, len(s)) ** 0.5 * np.exp(-np.arange(len(s)) / SR / 0.25), PULL0, 0.18)
     # each flip: the dial's detent, then a burst of snow that matches the picture (full 0.12 s, fading by 0.34 s)
@@ -68,15 +68,20 @@ def main():
     put(click(1.0, 1500, 0.025), DIVE1 - 0.02, 0.6)
     s = static(0.32); put(s * np.linspace(0.2, 1, len(s)) * np.exp(-np.maximum(0, np.arange(len(s)) / SR - 0.2) / 0.05), DIVE1, 0.38)
     # the channel change dips the music a little (like the set's own sound cutting out), then it comes straight back
-    lvl = onepole_lp(np.abs(fx), 30)
-    duck = 1 - 0.38 * np.clip(lvl / (lvl.max() * 0.5 + 1e-9), 0, 1)
-    bgm = bgm * duck[:, None]
+    # (owner rule: the BGM is never processed — no ducking; the effects give way instead where the song is already near full scale)
     # mix: a little stereo width on the static, keep the music on top
     L = bgm[:, 0] + fx * 0.95; R = bgm[:, 1] + np.concatenate([np.zeros(40), fx[:-40]]) * 0.95
     mix = np.stack([L, R], 1)
     fade = np.clip((dur - 0.05 - t) / 0.9, 0, 1)[:, None]; mix *= fade
+    room = np.clip(0.985 - np.abs(bgm).max(1), 0.0, None)                     # headroom left by the song, per sample
+    room = -onepole_lp(-room, 200) if False else room
+    over = np.abs(mix).max(1) > 0.985
+    if over.any():                                                              # pull only the effects back where song + effects would clip
+        g = np.ones(N); fxa = np.maximum(np.abs(fx), 1e-9)
+        g[over] = np.clip(room[over] / fxa[over], 0, 1)
+        g = np.minimum.accumulate(g[::-1])[::-1] if False else g
+        mix = bgm + np.stack([fx * g, np.concatenate([np.zeros(40), (fx * g)[:-40]])], 1) * 0.95
     peak = np.abs(mix).max()
-    mix *= min(1.0, 0.97 / peak)
     with wave.open(out, 'wb') as w:
         w.setnchannels(2); w.setsampwidth(2); w.setframerate(SR); w.writeframes((mix * 32767).astype(np.int16).tobytes())
     rms = lambda a, b, x: np.sqrt(np.mean(x[int(a * SR):int(b * SR)] ** 2))
