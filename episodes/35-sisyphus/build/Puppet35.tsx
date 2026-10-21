@@ -1899,6 +1899,195 @@ const Open35: React.FC = () => {
 	);
 };
 
+// ================================================================== cold open v4 · "the commuter turntable" (our own idea, dark but in colour)
+// BGM: the slowed classic (ep31/32). Beats: b(k) = 0.416 + 0.50625·k; the drum enters at 16.616 (= b(32)) → the title.
+const bt = (k: number) => 0.416 + 0.50625 * k;
+const T_DRUM = 16.616;
+type StationId = 'metro' | 'cross' | 'desk' | 'home' | 'run' | 'night';
+const STATIONS: {id: StationId; q: string}[] = [
+	{id: 'metro', q: '为什么挤地铁？'}, {id: 'cross', q: '为什么上班？'}, {id: 'desk', q: '为什么加班？'},
+	{id: 'home', q: '为什么还房贷？'}, {id: 'run', q: '为什么拼命？'}, {id: 'night', q: '为什么熬夜？'},
+];
+/** a small lit sign on a post */
+const Sign: React.FC<{x: number; y: number; q: string; k: number; lit: number}> = ({x, y, q, k, lit}) => (
+	<g transform={`translate(${x},${y}) scale(${k})`}>
+		<rect x={-4} y={0} width={8} height={170} fill="#1a120c" />
+		<rect x={-178} y={-78} width={356} height={82} rx={8} fill="#000" opacity={0.5} filter="url(#b6)" transform="translate(6,10)" />
+		<rect x={-178} y={-78} width={356} height={82} rx={8} fill="url(#m-walnut)" />
+		<rect x={-170} y={-70} width={340} height={66} rx={5} fill="none" stroke="#120a05" strokeWidth={2} opacity={0.7} />
+		<ellipse cx={0} cy={-38} rx={220} ry={70} fill="url(#warmGlow)" opacity={0.35 * lit} />
+		<text y={-22} textAnchor="middle" style={{fontFamily: SERIF, fontWeight: 900, fontSize: 44, letterSpacing: '0.06em'}} fill="#f3e6c8" opacity={0.55 + 0.45 * lit}>{q}</text>
+	</g>
+);
+/** one station vignette (local: base at y=0, x centred), with its own practical light */
+const Station: React.FC<{id: StationId; t: number; lit: number; i: number}> = ({id, t, lit, i}) => {
+	const P = (pose: Pose, x = 0, k = 0.78, flip = false) => (
+		<g>
+			<ellipse cx={x + 6} cy={4} rx={80 * k} ry={10 * k} fill="#000" opacity={0.55} filter="url(#b3)" />
+			<g filter="url(#rimC)"><g transform={`translate(${x},0) scale(${flip ? -k : k},${k})`} filter="url(#rimR)"><Mannequin pose={pose} /></g></g>
+			{attachPts(pose).map(({p, to}, si) => { const a = W2(x, 0, k, [flip ? -p[0] : p[0], p[1]]); return <line key={si} x1={a[0]} y1={a[1]} x2={x + to * 26} y2={-1400} stroke="#e8e2d6" strokeWidth={0.9} opacity={0.4} />; })}
+		</g>
+	);
+	switch (id) {
+		case 'metro': return (
+			<g>
+				<ellipse cx={0} cy={-6} rx={300} ry={60} fill="url(#coldGlow)" opacity={0.6 * lit} />
+				<g transform="translate(70,-10) scale(0.7)"><Train /></g>
+				{P({lean: 6, head: 22, armN: [-3, 4], armF: [5, 8], legN: [2, 0], legF: [-3, 0], case: true}, -70)}
+			</g>
+		);
+		case 'cross': {
+			const ph = t * 6.5 + i;
+			return (
+				<g>
+					{Array.from({length: 6}, (_, k) => <rect key={k} x={-250 + k * 84} y={-14} width={50} height={14} fill="#d8d2c4" opacity={0.55} transform="skewX(-30)" />)}
+					<g transform="translate(190,0)">
+						<rect x={-5} y={-300} width={10} height={300} fill="#22252b" />
+						<rect x={-26} y={-330} width={52} height={70} rx={6} fill="#14161a" />
+						<circle cx={0} cy={-308} r={14} fill="#ff4a3d" opacity={0.95 * lit} /><circle cx={0} cy={-308} r={60} fill="#ff4a3d" opacity={0.18 * lit} filter="url(#b6)" />
+					</g>
+					<ellipse cx={60} cy={-6} rx={260} ry={50} fill="#ff4a3d" opacity={0.12 * lit} filter="url(#b6)" />
+					{P({...walkPose(ph, 16, 6), case: true}, -40)}
+				</g>
+			);
+		}
+		case 'desk': return (
+			<g>
+				<ellipse cx={20} cy={-180} rx={260} ry={200} fill="url(#warmGlow)" opacity={0.6 * lit} />
+				<rect x={-60} y={-150} width={300} height={14} fill="#5a3e2a" filter="url(#wood)" />
+				{[-50, 226].map((x) => <rect key={x} x={x} y={-136} width={10} height={136} fill="#2a1d14" />)}
+				<rect x={30} y={-250} width={130} height={86} rx={6} fill="#1a1d22" /><rect x={38} y={-242} width={114} height={70} fill="#7fa2d6" opacity={0.85 * lit} />
+				<ellipse cx={95} cy={-210} rx={150} ry={90} fill="url(#coldGlow)" opacity={0.5 * lit} />
+				<g transform="translate(200,-150)"><line x1={0} y1={0} x2={-16} y2={-80} stroke="#3b3a36" strokeWidth={5} /><path d="M-44,-76 Q-16,-108 14,-80 Z" fill="#2e4a3c" /><ellipse cx={-14} cy={-78} rx={22} ry={5} fill="#ffd590" opacity={lit} /></g>
+				<rect x={-150} y={-108} width={90} height={12} fill="#2a1d14" /><rect x={-150} y={-260} width={12} height={260} fill="#2a1d14" />
+				{P({lean: 30 + 2 * Math.sin(t * 3), head: 30, armN: [62, 30], armF: [58, 34], legN: [86, -86], legF: [82, -82]}, -100, 0.78)}
+			</g>
+		);
+		case 'home': {
+			const ph = t * 4 + i;
+			const pose: Pose = {...walkPose(ph, 26, 30), armN: [20, 30], armF: [16, 34]};
+			return (
+				<g>
+					<g transform="translate(120,0)">
+						<rect x={-120} y={-420} width={240} height={420} fill="#15171d" />
+						{Array.from({length: 24}, (_, k) => <rect key={k} x={-100 + (k % 4) * 52} y={-400 + Math.floor(k / 4) * 64} width={30} height={36} fill={k === 9 ? '#ffcf8a' : '#232733'} opacity={k === 9 ? lit : 1} />)}
+						<ellipse cx={-48} cy={-224} rx={70} ry={50} fill="url(#warmGlow)" opacity={0.5 * lit} />
+					</g>
+					{P(pose, -120)}
+					<HouseOn x={-120} y={0} k={0.78} lean={pose.lean ?? 0} />
+				</g>
+			);
+		}
+		case 'run': {
+			const ph = t * 11 + i;
+			const p = walkPose(ph, 4, 16);
+			const pose: Pose = {...p, legN: [p.legN![0] * 1.6, p.legN![1] * 1.8], legF: [p.legF![0] * 1.6, p.legF![1] * 1.8], armN: [p.armN![0] * 2.4, 70], armF: [p.armF![0] * 2.4, 70]};
+			return (
+				<g>
+					<path d="M-200,-10 L200,-30 L210,0 L-190,20 Z" fill="#1d1f24" />
+					{Array.from({length: 9}, (_, k) => <rect key={k} x={-190 + ((k * 46 + t * 300) % 400)} y={-14 - k * 2} width={6} height={20} fill="#2c2f36" />)}
+					<line x1={170} y1={-28} x2={150} y2={-260} stroke="#2a2d33" strokeWidth={10} /><rect x={110} y={-292} width={86} height={44} rx={6} fill="#14161a" />
+					<text x={153} y={-262} textAnchor="middle" style={{fontFamily: '"DejaVu Sans Mono", monospace', fontSize: 24}} fill="#ff6a50" opacity={lit}>{(12 + (t * 0.3) % 2).toFixed(1)}</text>
+					<ellipse cx={0} cy={-20} rx={260} ry={60} fill="#ff6a50" opacity={0.1 * lit} filter="url(#b6)" />
+					{P(pose, -20, 0.78)}
+				</g>
+			);
+		}
+		case 'night': return (
+			<g>
+				<rect x={-200} y={-70} width={400} height={50} rx={8} fill="#3a2c22" />
+				<rect x={-200} y={-150} width={22} height={150} rx={6} fill="#2a1f18" />
+				<rect x={-180} y={-112} width={360} height={46} rx={16} fill="#3b4558" filter="url(#felt)" />
+				<g transform="translate(110,-112)"><rect x={-26} y={-6} width={52} height={10} rx={4} fill="#0c0d10" /><rect x={-23} y={-5} width={46} height={7} rx={3} fill="#bcd2f0" opacity={lit} /></g>
+				<ellipse cx={110} cy={-150} rx={200} ry={110} fill="url(#coldGlow)" opacity={0.8 * lit} />
+				{P({lean: 28, head: 34, armN: [30, 40], armF: [26, 44], legN: [86, -86], legF: [82, -82]}, 30, 0.78)}
+			</g>
+		);
+	}
+};
+/** the turntable seen low and close: stations ride the front arc; the disc clicks round one stop per beat */
+const Carousel: React.FC<{theta: number; t: number; dark?: number; spot?: number}> = ({theta, t, dark = 0, spot = 0}) => {
+	const CX = 960, CY = 870, RX = 1150, RY = 150;
+	const items = STATIONS.map((s, i) => {
+		const phi = ((i * 60 - theta) % 360 + 540) % 360 - 180;            // −180..180, 0 = front centre
+		const a = rad(phi);
+		return {s, i, phi, x: CX + RX * Math.sin(a), y: CY + RY * Math.cos(a), k: 0.5 + 0.5 * Math.cos(a), front: Math.cos(a)};
+	}).sort((p, q) => p.front - q.front);
+	return (
+		<AbsoluteFill style={{background: '#06080c'}}>
+			<svg width={W} height={H} style={{position: 'absolute', inset: 0}}>
+				<Defs />
+				{/* the room: a tall window with cold night light, a warm bulb above the disc */}
+				<rect width={W} height={H} fill="#0a0e15" />
+				<g transform="translate(1340,60)" opacity={0.7}>
+					<rect width={420} height={520} fill="#121a2a" />
+					{Array.from({length: 12}, (_, k) => <rect key={k} y={k * 44} width={420} height={18} fill="#1c2840" />)}
+					<polygon points="0,520 420,520 260,1080 -420,1080" fill="#9fb6d8" opacity={0.05} filter="url(#b12)" />
+				</g>
+				<g transform="translate(960,0)">
+					<line x1={0} y1={0} x2={0} y2={150} stroke="#1a1a1c" strokeWidth={3} />
+					<circle cx={0} cy={168} r={20} fill="#ffd69a" opacity={1 - dark * 0.9} />
+					<circle cx={0} cy={168} r={520} fill="url(#warmGlow)" opacity={0.45 * (1 - dark)} />
+				</g>
+				{/* the disc */}
+				<radialGradient id="discG" cx="0.5" cy="0.35" r="0.7"><stop offset="0" stopColor="#5a4030" /><stop offset="0.6" stopColor="#2e2118" /><stop offset="1" stopColor="#140e0a" /></radialGradient>
+				<ellipse cx={CX} cy={CY + 26} rx={RX + 160} ry={RY + 60} fill="#120c08" />
+				<ellipse cx={CX} cy={CY} rx={RX + 160} ry={RY + 60} fill="url(#discG)" />
+				{[0.35, 0.55, 0.75, 0.92].map((q) => <ellipse key={q} cx={CX} cy={CY} rx={(RX + 160) * q} ry={(RY + 60) * q} fill="none" stroke="#000" strokeWidth={1.5} opacity={0.25} />)}
+				<ellipse cx={CX} cy={CY - 20} rx={700} ry={130} fill="url(#warmGlow)" opacity={0.35 * (1 - dark)} />
+				{Array.from({length: 72}, (_, k) => { const a = rad(k * 5 - theta); if (Math.cos(a) < 0.1) return null; const r1 = 1.0, r2 = k % 6 === 0 ? 0.955 : 0.975; return <line key={k} x1={CX + (RX + 150) * r1 * Math.sin(a)} y1={CY + (RY + 55) * r1 * Math.cos(a)} x2={CX + (RX + 150) * r2 * Math.sin(a)} y2={CY + (RY + 55) * r2 * Math.cos(a)} stroke="#e8d2a8" strokeWidth={k % 6 === 0 ? 3 : 1.5} opacity={0.5} />; })}
+				{items.map(({s, i, x, y, k, front}) => {
+					if (front < -0.2) return null;
+					const lit = (spot > 0 ? (Math.abs(x - CX) < 60 ? 1 : 1 - spot) : 1) * (1 - dark * (Math.abs(x - CX) < 60 ? 0.2 : 0.95));
+					return (
+						<g key={s.id} opacity={Math.min(1, (front + 0.2) * 2)} filter={front < 0.75 ? 'url(#b3)' : undefined}>
+							<g transform={`translate(${x},${y}) scale(${k})`}><Station id={s.id} t={t} lit={lit} i={i} /></g>
+							<Sign x={x - 240 * k} y={y - 330 * k} q={s.q} k={k * 0.9} lit={lit} />
+						</g>
+					);
+				})}
+				{/* motion blur streaks while the disc whips round */}
+				{spot === 0 && dark === 0 && t > bt(20) && t < bt(22) && <rect width={W} height={H} fill="#000" opacity={0.15} />}
+			</svg>
+			{dark > 0 && <AbsoluteFill style={{background: `radial-gradient(ellipse 380px 520px at 50% 62%, rgba(0,0,0,0) 0%, rgba(0,0,0,${0.85 * dark}) 70%)`}} />}
+			<Grade />
+			<Mark />
+		</AbsoluteFill>
+	);
+};
+/** disc angle: one stop (60°) per tick, each tick a quick ease-out-back click */
+const carouselTheta = (T: number) => {
+	const ticks = [5, 7, 9, 11, 13, 14, 15, 16, 17, 18, 19].map(bt);
+	let n = 0, frac = 0;
+	for (const tk of ticks) { if (T >= tk) { n++; frac = Math.min(1, (T - tk) / 0.16); } }
+	const back = (u: number) => 1 + 2.4 * Math.pow(u - 1, 3) + 1.4 * Math.pow(u - 1, 2);
+	let th = 60 * (n - 1 + (n > 0 ? back(frac) : 0));
+	if (T >= bt(20)) th += 60 * 6 * Math.pow(Math.min(1, (T - bt(20)) / (bt(22) - bt(20))), 1.6) * (1 - 0.0);   // whip a full turn
+	return th;
+};
+const Open4: React.FC = () => {
+	useFonts();
+	const T = useCurrentFrame() / FPS;
+	const t = Math.floor(T * 12) / 12;
+	const sub = (a: number, b: number, s: string) => (T >= a && T < b ? <AbsoluteFill style={{opacity: Math.min(1, (T - a) / 0.15, (b - T) / 0.15)}}><Sub t={s} /></AbsoluteFill> : null);
+	let pic: React.ReactNode;
+	if (T < bt(5)) pic = <S1b t={t} crowd sub="" />;                                                   // 07:30 on the platform
+	else if (T < bt(22)) pic = <Carousel theta={carouselTheta(t)} t={t} />;
+	else if (T < bt(26)) pic = <Carousel theta={carouselTheta(bt(22))} t={t} dark={Math.min(1, (T - bt(22)) / 0.25)} spot={1} />;   // 然后呢？ lights out
+	else if (T < bt(29)) { const u = (T - bt(26)) / (bt(29) - bt(26)); pic = <S1b t={t} spin={6 * (1 - Math.pow(1 - u, 3))} headLift={10} sub="" />; }
+	else pic = <V2Hill t={t - bt(29)} header="" plankY={t < T_DRUM - 0.5 ? -320 : t < T_DRUM ? -320 + 620 * Math.pow((t - (T_DRUM - 0.5)) / 0.5, 2) : 300 - 26 * Math.exp(-5 * (t - T_DRUM)) * Math.cos(16 * (t - T_DRUM))} />;
+	return (
+		<AbsoluteFill style={{background: '#000'}}>
+			{pic}
+			{sub(0.5, bt(5) - 0.05, '为什么挤地铁？')}
+			{sub(bt(22) + 0.2, bt(26) - 0.05, '然后呢？')}
+			{sub(bt(26) + 0.1, bt(29) - 0.05, '第二天，再来一遍')}
+			{sub(bt(29) + 0.15, T_DRUM - 0.1, '有个人，这样过了永远')}
+			{sub(T_DRUM + 0.9, T_DRUM + 3.6, '可有位哲学家说：他是幸福的')}
+		</AbsoluteFill>
+	);
+};
+
 const Puppet35: React.FC = () => {
 	useFonts();
 	const t = useCurrentFrame() / FPS;
@@ -1913,6 +2102,7 @@ registerRoot(() => (
 		<Composition id="COVER35" component={() => { useFonts(); return <CoverScene />; }} durationInFrames={1} fps={FPS} width={W} height={H} />
 		<Composition id="STY35" component={Style2} durationInFrames={12 * FPS} fps={FPS} width={W} height={H} />
 		<Composition id="OPEN35" component={Open35} durationInFrames={Math.round(16.5 * FPS)} fps={FPS} width={W} height={H} />
+		<Composition id="OPEN4" component={Open4} durationInFrames={Math.round(20.5 * FPS)} fps={FPS} width={W} height={H} />
 		<Composition id="FILM35" component={Film35} durationInFrames={FILM35_FRAMES} fps={FPS} width={W} height={H} />
 	</>
 ));
