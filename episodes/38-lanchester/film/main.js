@@ -33280,7 +33280,8 @@ var camKeys = (keys, t) => {
   const pos = a.pos.map((v, k) => v + (b.pos[k] - v) * u), look = a.look.map((v, k) => v + (b.look[k] - v) * u), fov2 = (a.fov ?? 36) + ((b.fov ?? 36) - (a.fov ?? 36)) * u, roll = (a.roll ?? 0) + ((b.roll ?? 0) - (a.roll ?? 0)) * u;
   camera.position.set(pos[0], pos[1], pos[2]);
   const dy = look[1] - pos[1], dl = Math.hypot(look[0] - pos[0], dy, look[2] - pos[2]);
-  if (dy / dl < -0.97) camera.up.set(0, 0, -1);
+  if (a.upZ) camera.up.set(0, 0, 1);
+  else if (dy / dl < -0.97) camera.up.set(0, 0, -1);
   else camera.up.set(Math.sin(roll), Math.cos(roll), 0);
   camera.lookAt(look[0], look[1], look[2]);
   camera.fov = fov2;
@@ -34041,12 +34042,12 @@ var TIMELINE = [
     camOrbit([-25, 0, 0], 112, 52, -2.06 + u * 0.06, 38, 0);
     c.army.set(meleeBodies(SM.end + 1, 10), cp());
     const R = rnd(4);
-    c.smoke.set(Array.from({ length: 260 }, () => [(R() - 0.5) * 200, 4 + R() * 26, (R() - 0.5) * 140, 24 + R() * 30, 0.9, 0.86, 0.8, 0.26 * (1 - clamp01((u - 2.6) / 1.1))]));
+    c.smoke.set(Array.from({ length: 260 }, () => [(R() - 0.5) * 200, 4 + R() * 26, (R() - 0.5) * 140, 24 + R() * 30, 0.5, 0.47, 0.44, 0.3 * (1 - clamp01((u - 2.6) / 1.1))]));
     c.flash.set([]);
     c.tracers.set([]);
     const kk = clamp01(u / 0.45), blur = (1 - kk) * 18;
     html(c.hud, `<div style="position:absolute;left:0;right:0;top:${H / 2 - 100}px;text-align:center;font-weight:900;font-size:124px;letter-spacing:.06em;color:#fff6dd;opacity:${env(u, 0, 3.75, 0.25, 0.5)};filter:blur(${blur}px);transform:scale(${1.12 - 0.12 * kk});text-shadow:0 0 10px ${GOLD},0 0 40px rgba(246,207,120,.6),0 4px 30px rgba(0,0,0,.6)">\u4E3A\u4EC0\u4E48\u8981<span style="color:${GOLD}">\u201C\u96C6\u4E2D\u4F18\u52BF\u5175\u529B\u201D</span></div>`);
-    landDraw(c, { bloom: 0.65, exposure: 0.66 + 0.5 * clamp01((u - 3.2) / 0.55) });
+    landDraw(c, { bloom: 0.65, vig: 0.55, exposure: 0.6 + 0.5 * clamp01((u - 3.35) / 0.4) });
   } },
   // 07 — guns: from the sun flare, the columns fan out into lines; first volley on bar 22; the battle at full speed → 866 again
   { a: T.guns, b: T.why, draw: (c, u) => {
@@ -34057,7 +34058,7 @@ var TIMELINE = [
       const t = to[i];
       return { ...t, x: lerp2(f.x, t.x, fan), z: lerp2(f.z, t.z, fan), pose: fan > 0.02 && fan < 0.98 ? "march" : fan >= 0.98 ? "aim" : "rest" };
     }) : to;
-    camKeys([{ t: 0, pos: [-130, 70, -90], look: [-40, 0, 0], fov: 40 }, { t: 6.5, pos: [-170, 26, -170], look: [-20, 0, 0], fov: 40 }, { t: 9.5, pos: [-62, 3.2, -40], look: [45, 1.5, 20], fov: 38 }, { t: 14, pos: [-160, 50, -200], look: [20, 0, 20], fov: 38 }, { t: 18.75, pos: [-200, 75, -360], look: [0, 0, 0], fov: 38 }], u);
+    camKeys([{ t: 0, pos: [-130, 70, -90], look: [-40, 0, 0], fov: 40 }, { t: 3.5, pos: [-110, 20, -100], look: [-25, 0, 0], fov: 40 }, { t: 6.5, pos: [-120, 14, -120], look: [-20, 0, 0], fov: 40 }, { t: 9.5, pos: [-62, 3.2, -40], look: [45, 1.5, 20], fov: 38 }, { t: 14, pos: [-160, 50, -200], look: [20, 0, 20], fov: 38 }, { t: 18.75, pos: [-200, 75, -360], look: [0, 0, 0], fov: 38 }], u);
     c.army.set(bodies, cp());
     if (u >= 7.5) {
       const { sm, fl } = simSmoke(SA, st);
@@ -34132,7 +34133,7 @@ var TIMELINE = [
       const p = toScreen([(B.x + B2.x) / 2, 2.6, (B.z + B2.z) / 2]);
       tag(c.hud, p.x, p.y - 60, "\xBD", env(u, 8.6, 11.1), 84, "#fff", BLUE);
     } else {
-      const pb = toScreen([-20, 2, -30]), pr = toScreen([20, 2, 30]);
+      const pb = { x: 520, y: 420 }, pr = { x: 1400, y: 420 };
       const m = clamp01((u - 13.4) / 0.6);
       tag(c.hud, lerp2(pb.x, W / 2, m), lerp2(pb.y, 520, m), "\u706B\u529B \xD72", env(u, 11.3, 99) * (1 - m), 72, "#fff", BLUE);
       tag(c.hud, lerp2(pr.x, W / 2, m), lerp2(pr.y, 520, m), "\u6328\u6253 \xF72", env(u, 11.8, 99) * (1 - m), 72, "#fff", RED);
@@ -34206,8 +34207,8 @@ var TIMELINE = [
   { a: T.divide, b: T.half, draw: (c, u) => {
     clearLand(c);
     if (u < 3.75) {
-      const st = 0.2 + 112 * Math.pow(u / 3.75, 1.8);
-      camKeys([{ t: 0, pos: [-140, 1e3, -1], look: [-140, 0, 0], fov: 40 }, { t: 1.4, pos: [-220, 140, -380], look: [0, 0, 0], fov: 40 }, { t: 3.75, pos: [-240, 160, -400], look: [0, 0, 0], fov: 40 }], u);
+      const st = 0.2 + 38 * Math.pow(u / 3.75, 1.5);
+      camKeys([{ t: 0, pos: [-140, 1e3, -1], look: [-140, 0, 0], fov: 40 }, { t: 1.4, pos: [-170, 60, -260], look: [0, 0, 0], fov: 40 }, { t: 3.75, pos: [-180, 70, -270], look: [0, 0, 0], fov: 40 }], u);
       battle(c, SL, st, {});
       c.army.set(simBodies(SL, st, "aim", 0, 0, 30), cp());
       const [b2, r2] = aliveAt(SL, st);
@@ -34218,7 +34219,7 @@ var TIMELINE = [
     }
     const v = u - 3.75;
     const w1 = 2.55, mar = 0.6;
-    camKeys([{ t: 3.75, pos: [-260, 150, -420], look: [40, 0, 0], fov: 40 }, { t: 9.4, pos: [-200, 120, -360], look: [40, 0, 0], fov: 40 }], u);
+    camKeys([{ t: 3.75, pos: [-170, 45, -230], look: [80, 0, 0], fov: 40 }, { t: 9.4, pos: [-150, 50, -210], look: [60, 0, 0], fov: 40 }], u);
     let bodies, st1 = 0.2 + Math.min(v, w1) * (SA2.end / w1), st2 = (v - w1 - mar) * ((SR2.end + 0.2) / (9.4 - 3.75 - w1 - mar)) + 0.2;
     const wave2At = (m) => simBodies(SR2, Math.max(-1, st2), "aim", 0, 0, 5).map((x, i) => SR2.units[i].side === 1 ? { ...x, x: x.x + (1 - m) * 260, pose: m < 1 ? "march" : x.pose } : x);
     const fallen1 = simBodies(SA2, SA2.end + 3).filter((x) => x.side === 1);
@@ -34247,7 +34248,7 @@ var TIMELINE = [
   { a: T.half, b: T.sunzi, draw: (c, u) => {
     clearLand(c);
     const big = 1e3 * LEN, hs = 500 * LEN, k = ease2((u - 0.9) / 1.2);
-    camKeys([{ t: 0, pos: [-200, 120, -360], look: [40, 0, 0], fov: 40 }, { t: 1, pos: [0, 820, 0], look: [0, 0, 0.01], fov: 40 }], u);
+    camKeys([{ t: 0, pos: [-150, 50, -210], look: [60, 0, 0], fov: 40 }, { t: 1, pos: [0, 820, -1], look: [0, 0, 0], fov: 40, upZ: true }], u);
     c.army.set(simBodies(SR2, 99), cp());
     c.smoke.set([]);
     c.flash.set([]);
@@ -34266,7 +34267,7 @@ var TIMELINE = [
     clearLand(c);
     const d = T.sea - T.sunzi;
     const big = 1e3 * LEN;
-    camKeys([{ t: 0, pos: [0, 820, 0], look: [0, 0, 0.01], fov: 40 }, { t: 2.2, pos: [0, 640, -120], look: [0, 0, 120], fov: 40 }, { t: d, pos: [0, 520, -300], look: [0, 900, 3e3], fov: 42 }], u);
+    camKeys([{ t: 0, pos: [0, 820, -1], look: [0, 0, 0], fov: 40, upZ: true }, { t: 2.2, pos: [0, 640, -120], look: [0, 0, 120], fov: 40, upZ: true }, { t: d, pos: [0, 520, -300], look: [0, 900, 3e3], fov: 42 }], u);
     c.army.set(simBodies(SR2, 99), cp());
     c.smoke.set([]);
     c.flash.set([]);
@@ -34322,11 +34323,7 @@ var TIMELINE = [
     const d = T.quiet - T.chart;
     const tt = T.chart - T.sea + u;
     const adv = 1500 + 90 * (T.climax - T.sea) + 3.4 * 60 + 8 * 60 + u * 40;
-    camKeys([{ t: 0, pos: [-800, 900, -1400], look: [0, 0, 0], fov: 42 }, { t: 1.6, pos: [-260, 1600, 500], look: [-260, 0, 500.01], fov: 45 }], u);
-    if (u > 1.6) {
-      camera.up.set(1, 0, 0);
-      camera.lookAt(-260, 0, 500.01);
-    }
+    camKeys([{ t: 0, pos: [-900, 650, -1500], look: [0, 0, 0], fov: 44 }, { t: 7.5, pos: [-1700, 900, -300], look: [0, 0, 500], fov: 44 }, { t: 15, pos: [-1900, 1100, 200], look: [100, 0, 900], fov: 44 }], u);
     const van = ease2((u - 1.8) / 5) * 900;
     seaMarks(c, env(u, 1.8, 99) * 0.45, 0, false);
     setFleet(c.sea.combined, LINE(tt, van), u);
@@ -34341,7 +34338,7 @@ var TIMELINE = [
     sub(c.hud, "\u654C\u4EBA\u7684\u524D\u961F\uFF0C[\u8D76\u4E0D\u56DE\u6765]", u, 0.3, 3.7);
     tag(c.hud, W / 2, 132, "\u5170\u5F7B\u65AF\u7279\u4E13\u95E8\u7B97\u8FC7\u8FD9\u4E00\u4ED7 \xB7 1916", env(u, 3.9, 7.3) * 0.85, 40, "#fff");
     sub(c.hud, "\u82F1\u56FD\uFF0C\u4E00\u8258\u8239\u90FD[\u6CA1\u4E22]", u, 7.5, 10.9);
-    seaDraw(c, tt, { sepia: sep * 0.35, bloom: 0.3, vig: 0.5, exposure: 0.55 });
+    seaDraw(c, tt, { bloom: 0.4, vig: 0.46, exposure: 0.5 });
   } },
   // 16 — quiet: one ship drifting at sunset, no text; a bank of smoke crosses the lens and carries the cut to the field
   { a: T.quiet, b: T.limit, draw: (c, u) => {
@@ -34421,6 +34418,7 @@ var sunziText = (scene) => {
   tex2.colorSpace = SRGBColorSpace;
   const m = new Mesh(new PlaneGeometry(760, 190), new MeshBasicMaterial({ map: tex2, transparent: true, blending: AdditiveBlending, depthWrite: false, toneMapped: false }));
   m.rotation.x = -Math.PI / 2;
+  m.rotation.z = Math.PI;
   m.position.set(0, 0.3, 170);
   m.visible = false;
   scene.add(m);

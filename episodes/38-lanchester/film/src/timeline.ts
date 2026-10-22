@@ -150,17 +150,17 @@ export const TIMELINE: Shot[] = [
 	// 06 — TITLE on the hardest drop: letters condense out of the battle smoke
 	{a: T.title, b: T.guns, draw: (c, u) => {
 		clearLand(c); camOrbit([-25, 0, 0], 112, 52, -2.06 + u * 0.06, 38, 0);
-		c.army.set(meleeBodies(SM.end + 1, 10), cp()); const R = rnd(4); c.smoke.set(Array.from({length: 260}, () => [(R() - 0.5) * 200, 4 + R() * 26, (R() - 0.5) * 140, 24 + R() * 30, 0.9, 0.86, 0.8, 0.26 * (1 - clamp01((u - 2.6) / 1.1))])); c.flash.set([]); c.tracers.set([]);
+		c.army.set(meleeBodies(SM.end + 1, 10), cp()); const R = rnd(4); c.smoke.set(Array.from({length: 260}, () => [(R() - 0.5) * 200, 4 + R() * 26, (R() - 0.5) * 140, 24 + R() * 30, 0.5, 0.47, 0.44, 0.3 * (1 - clamp01((u - 2.6) / 1.1))])); c.flash.set([]); c.tracers.set([]);
 		const kk = clamp01(u / 0.45), blur = (1 - kk) * 18;
 		html(c.hud, `<div style="position:absolute;left:0;right:0;top:${H / 2 - 100}px;text-align:center;font-weight:900;font-size:124px;letter-spacing:.06em;color:#fff6dd;opacity:${env(u, 0, 3.75, 0.25, 0.5)};filter:blur(${blur}px);transform:scale(${1.12 - 0.12 * kk});text-shadow:0 0 10px ${GOLD},0 0 40px rgba(246,207,120,.6),0 4px 30px rgba(0,0,0,.6)">为什么要<span style="color:${GOLD}">“集中优势兵力”</span></div>`);
-		landDraw(c, {bloom: 0.65, exposure: 0.66 + 0.5 * clamp01((u - 3.2) / 0.55)});
+		landDraw(c, {bloom: 0.65, vig: 0.55, exposure: 0.6 + 0.5 * clamp01((u - 3.35) / 0.4)});
 	}},
 	// 07 — guns: from the sun flare, the columns fan out into lines; first volley on bar 22; the battle at full speed → 866 again
 	{a: T.guns, b: T.why, draw: (c, u) => {
 		clearLand(c); const fan = ease((u - 0.4) / 5.8), st = u < 7.5 ? -1 : 0.2 + (u - 7.5);
 		const from = simBodies(SM, 0, 'rest'), to = simBodies(SA, Math.max(-1, st));
 		const bodies = u < 7.5 ? from.map((f, i) => { const t = to[i]; return {...t, x: lerp(f.x, t.x, fan), z: lerp(f.z, t.z, fan), pose: (fan > 0.02 && fan < 0.98 ? 'march' : fan >= 0.98 ? 'aim' : 'rest') as any}; }) : to;
-		camKeys([{t: 0, pos: [-130, 70, -90], look: [-40, 0, 0], fov: 40}, {t: 6.5, pos: [-170, 26, -170], look: [-20, 0, 0], fov: 40}, {t: 9.5, pos: [-62, 3.2, -40], look: [45, 1.5, 20], fov: 38}, {t: 14, pos: [-160, 50, -200], look: [20, 0, 20], fov: 38}, {t: 18.75, pos: [-200, 75, -360], look: [0, 0, 0], fov: 38}], u);
+		camKeys([{t: 0, pos: [-130, 70, -90], look: [-40, 0, 0], fov: 40}, {t: 3.5, pos: [-110, 20, -100], look: [-25, 0, 0], fov: 40}, {t: 6.5, pos: [-120, 14, -120], look: [-20, 0, 0], fov: 40}, {t: 9.5, pos: [-62, 3.2, -40], look: [45, 1.5, 20], fov: 38}, {t: 14, pos: [-160, 50, -200], look: [20, 0, 20], fov: 38}, {t: 18.75, pos: [-200, 75, -360], look: [0, 0, 0], fov: 38}], u);
 		c.army.set(bodies, cp());
 		if (u >= 7.5) { const {sm, fl} = simSmoke(SA, st); c.smoke.set(sm); c.flash.set(fl); c.tracers.set(simTracers(SA, st)); } else { c.smoke.set([]); c.flash.set([]); c.tracers.set([]); }
 		const [b, r] = aliveAt(SA, Math.max(0, st)); counters(c.hud, b, r);
@@ -194,7 +194,7 @@ export const TIMELINE: Shot[] = [
 		if (u < 5.6) { // count the two balls at their tips
 			firstVolley.filter((s) => s.to === redStar[0]).forEach((s, k) => { const a = SA.units[s.from], dir = a.side ? -1 : 1; const x1 = a.x + dir * 1.3; const p = toScreen([x1 + (R.x - x1) * 0.93, 1.35, a.z + (R.z - a.z) * 0.93]); tag(c.hud, p.x, p.y - 34, `${k + 1}`, env(u, 3.2 + k * 0.45, 5.5), 64, '#fff', RED); });
 		} else if (u < 11.25) { const p = toScreen([(B.x + B2.x) / 2, 2.6, (B.z + B2.z) / 2]); tag(c.hud, p.x, p.y - 60, '½', env(u, 8.6, 11.1), 84, '#fff', BLUE); }
-		else { const pb = toScreen([-20, 2, -30]), pr = toScreen([20, 2, 30]);
+		else { const pb = {x: 520, y: 420}, pr = {x: 1400, y: 420};
 			const m = clamp01((u - 13.4) / 0.6); tag(c.hud, lerp(pb.x, W / 2, m), lerp(pb.y, 520, m), '火力 ×2', env(u, 11.3, 99) * (1 - m), 72, '#fff', BLUE); tag(c.hud, lerp(pr.x, W / 2, m), lerp(pr.y, 520, m), '挨打 ÷2', env(u, 11.8, 99) * (1 - m), 72, '#fff', RED);
 			if (u > 13.9) slam(c.hud, W / 2, 520, '战斗力 ×4', u, 13.9, 99, 120, GOLD, '#fff6dd'); }
 		sub(c.hud, '你开的枪，是他的[两倍]', u, 0.05, 3.4); sub(c.hud, '他的子弹，要分给[两倍]的人', u, 5.6, 9.0); sub(c.hud, '人多一倍，强了[不止一倍]', u, 11.3, 14.8);
@@ -242,11 +242,11 @@ export const TIMELINE: Shot[] = [
 	// 12 — divide: 1000 v 1000 (both bled white); then the same 1000 against two waves of 500 → 866 → 707
 	{a: T.divide, b: T.half, draw: (c, u) => {
 		clearLand(c);
-		if (u < 3.75) { const st = 0.2 + 112 * Math.pow(u / 3.75, 1.8); camKeys([{t: 0, pos: [-140, 1000, -1], look: [-140, 0, 0], fov: 40}, {t: 1.4, pos: [-220, 140, -380], look: [0, 0, 0], fov: 40}, {t: 3.75, pos: [-240, 160, -400], look: [0, 0, 0], fov: 40}], u);
+		if (u < 3.75) { const st = 0.2 + 38 * Math.pow(u / 3.75, 1.5); camKeys([{t: 0, pos: [-140, 1000, -1], look: [-140, 0, 0], fov: 40}, {t: 1.4, pos: [-170, 60, -260], look: [0, 0, 0], fov: 40}, {t: 3.75, pos: [-180, 70, -270], look: [0, 0, 0], fov: 40}], u);
 			battle(c, SL, st, {}); c.army.set(simBodies(SL, st, 'aim', 0, 0, 30), cp()); const [b, r] = aliveAt(SL, st); counters(c.hud, b, r);
 			sub(c.hud, '两边一样多？[两败俱伤]', u, 0.05, 3.4); landDraw(c); return; }
 		const v = u - 3.75; const w1 = 2.55, mar = 0.6; // wave 1 (4.4×), march, wave 2 (5×)
-		camKeys([{t: 3.75, pos: [-260, 150, -420], look: [40, 0, 0], fov: 40}, {t: 9.4, pos: [-200, 120, -360], look: [40, 0, 0], fov: 40}], u);
+		camKeys([{t: 3.75, pos: [-170, 45, -230], look: [80, 0, 0], fov: 40}, {t: 9.4, pos: [-150, 50, -210], look: [60, 0, 0], fov: 40}], u);
 		let bodies: Body[], st1 = 0.2 + Math.min(v, w1) * (SA2.end / w1), st2 = (v - w1 - mar) * ((SR2.end + 0.2) / (9.4 - 3.75 - w1 - mar)) + 0.2;
 		const wave2At = (m: number) => simBodies(SR2, Math.max(-1, st2), 'aim', 0, 0, 5).map((x, i) => (SR2.units[i].side === 1 ? {...x, x: x.x + (1 - m) * 260, pose: (m < 1 ? 'march' : x.pose) as any} : x));
 		const fallen1 = simBodies(SA2, SA2.end + 3).filter((x) => x.side === 1);
@@ -261,7 +261,7 @@ export const TIMELINE: Shot[] = [
 	// 13 — ★4: two half-armies are half the strength (overhead)
 	{a: T.half, b: T.sunzi, draw: (c, u) => {
 		clearLand(c); const big = 1000 * LEN, hs = 500 * LEN, k = ease((u - 0.9) / 1.2);
-		camKeys([{t: 0, pos: [-200, 120, -360], look: [40, 0, 0], fov: 40}, {t: 1.0, pos: [0, 820, 0], look: [0, 0, 0.01], fov: 40}], u);
+		camKeys([{t: 0, pos: [-150, 50, -210], look: [60, 0, 0], fov: 40}, {t: 1.0, pos: [0, 820, -1], look: [0, 0, 0], fov: 40, upZ: true}], u);
 		c.army.set(simBodies(SR2, 99), cp()); c.smoke.set([]); c.flash.set([]); c.tracers.set([]);
 		c.squares.set([{x: -big / 2, z: -big / 2, w: big, d: big, color: '#ff8a7a', a: env(u, 0.8, 99) * 0.45, edge: 1},
 			{x: lerp(-big / 2 - 320, -big / 2, k), z: -big / 2, w: hs, d: hs, color: '#ff5a47', a: env(u, 0.8, 99)},
@@ -273,7 +273,7 @@ export const TIMELINE: Shot[] = [
 	// 14 — 孙子: "以十攻其一" in gold brush strokes across the empty half; then the camera rises into the sky (bridge to the sea)
 	{a: T.sunzi, b: T.sea, draw: (c, u) => {
 		clearLand(c); const d = T.sea - T.sunzi; const big = 1000 * LEN;
-		camKeys([{t: 0, pos: [0, 820, 0], look: [0, 0, 0.01], fov: 40}, {t: 2.2, pos: [0, 640, -120], look: [0, 0, 120], fov: 40}, {t: d, pos: [0, 520, -300], look: [0, 900, 3000], fov: 42}], u);
+		camKeys([{t: 0, pos: [0, 820, -1], look: [0, 0, 0], fov: 40, upZ: true}, {t: 2.2, pos: [0, 640, -120], look: [0, 0, 120], fov: 40, upZ: true}, {t: d, pos: [0, 520, -300], look: [0, 900, 3000], fov: 42}], u);
 		c.army.set(simBodies(SR2, 99), cp()); c.smoke.set([]); c.flash.set([]); c.tracers.set([]);
 		c.squares.set([{x: -big / 2, z: -big / 2, w: big, d: big, color: '#ff8a7a', a: 0.45 * (1 - clamp01((u - 2.4) / 0.8)), edge: 1}]);
 		c.text.visible = true; c.text.position.set(0, 0.3, big / 4); c.text.userData.reveal(clamp01((u - 0.05) / 1.8));
@@ -309,7 +309,7 @@ export const TIMELINE: Shot[] = [
 	// 15c — chart: the line in three pieces, the van sails away
 	{a: T.chart, b: T.quiet, draw: (c, u) => {
 		const d = T.quiet - T.chart; const tt = T.chart - T.sea + u; const adv = 1500 + 90 * (T.climax - T.sea) + 3.4 * 60 + 8 * 60 + u * 40;
-		camKeys([{t: 0, pos: [-800, 900, -1400], look: [0, 0, 0], fov: 42}, {t: 1.6, pos: [-260, 1600, 500], look: [-260, 0, 500.01], fov: 45}], u); if (u > 1.6) { camera.up.set(1, 0, 0); camera.lookAt(-260, 0, 500.01); }
+		camKeys([{t: 0, pos: [-900, 650, -1500], look: [0, 0, 0], fov: 44}, {t: 7.5, pos: [-1700, 900, -300], look: [0, 0, 500], fov: 44}, {t: 15, pos: [-1900, 1100, 200], look: [100, 0, 900], fov: 44}], u);
 		const van = ease((u - 1.8) / 5) * 900; seaMarks(c, env(u, 1.8, 99) * 0.45, 0, false); setFleet(c.sea.combined, LINE(tt, van), u); setFleet(c.sea.british, COLS(adv), u);
 		c.seaSmoke.set([]); c.seaFlash.set([]);
 		const sep = clamp01((u - 1.6) / 0.8); const p = (x: number, z: number) => toScreen([x, 0, z]);
@@ -317,7 +317,7 @@ export const TIMELINE: Shot[] = [
 		tag(c.hud, v.x + 140, v.y, '前队', env(u, 1.0, 99) * (1 - clamp01((u - 7.5) / 1.2) * 0.6), 48, '#fff', RED, 'l');
 		html(c.hud, `<div class="lbl" style="left:0;right:0;top:860px;text-align:center;font-size:58px;opacity:${env(u, 7.5, 99)}"><span style="text-shadow:0 0 8px ${BLUE},0 0 24px ${BLUE}">英国 损失 0 艘</span> &nbsp;·&nbsp; <span style="text-shadow:0 0 8px ${RED},0 0 24px ${RED}">对方 损失一半以上</span></div>`);
 		sub(c.hud, '敌人的前队，[赶不回来]', u, 0.3, 3.7); tag(c.hud, W / 2, 132, '兰彻斯特专门算过这一仗 · 1916', env(u, 3.9, 7.3) * 0.85, 40, '#fff'); sub(c.hud, '英国，一艘船都[没丢]', u, 7.5, 10.9);
-		seaDraw(c, tt, {sepia: sep * 0.35, bloom: 0.3, vig: 0.5, exposure: 0.55});
+		seaDraw(c, tt, {bloom: 0.4, vig: 0.46, exposure: 0.5});
 	}},
 	// 16 — quiet: one ship drifting at sunset, no text; a bank of smoke crosses the lens and carries the cut to the field
 	{a: T.quiet, b: T.limit, draw: (c, u) => {

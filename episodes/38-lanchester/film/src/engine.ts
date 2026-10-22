@@ -41,13 +41,13 @@ export const setGrade = (o: {vig?: number; warm?: number; fade?: number; bloom?:
 export const draw = (scene: THREE.Scene) => { renderPass.scene = scene; composer.render(); };
 
 // ================================================================ camera keys
-export type Key = {t: number; pos: number[]; look: number[]; fov?: number; roll?: number};
+export type Key = {t: number; pos: number[]; look: number[]; fov?: number; roll?: number; upZ?: boolean};
 const ease = (u: number) => { const v = Math.max(0, Math.min(1, u)); return v * v * v * (v * (v * 6 - 15) + 10); };
 export const camKeys = (keys: Key[], t: number) => {
 	let i = 0; while (i < keys.length - 2 && t > keys[i + 1].t) i++;
 	const a = keys[i], b = keys[Math.min(i + 1, keys.length - 1)], u = b.t === a.t ? 0 : ease((t - a.t) / (b.t - a.t));
 	const pos = a.pos.map((v, k) => v + (b.pos[k] - v) * u), look = a.look.map((v, k) => v + (b.look[k] - v) * u), fov = (a.fov ?? 36) + ((b.fov ?? 36) - (a.fov ?? 36)) * u, roll = (a.roll ?? 0) + ((b.roll ?? 0) - (a.roll ?? 0)) * u;
-	camera.position.set(pos[0], pos[1], pos[2]); const dy = look[1] - pos[1], dl = Math.hypot(look[0] - pos[0], dy, look[2] - pos[2]); if (dy / dl < -0.97) camera.up.set(0, 0, -1); else camera.up.set(Math.sin(roll), Math.cos(roll), 0); camera.lookAt(look[0], look[1], look[2]); camera.fov = fov; camera.updateProjectionMatrix();
+	camera.position.set(pos[0], pos[1], pos[2]); const dy = look[1] - pos[1], dl = Math.hypot(look[0] - pos[0], dy, look[2] - pos[2]); if (a.upZ) camera.up.set(0, 0, 1); else if (dy / dl < -0.97) camera.up.set(0, 0, -1); else camera.up.set(Math.sin(roll), Math.cos(roll), 0); camera.lookAt(look[0], look[1], look[2]); camera.fov = fov; camera.updateProjectionMatrix();
 	return {pos, look};
 };
 /** orbit around a point (bullet time) */
