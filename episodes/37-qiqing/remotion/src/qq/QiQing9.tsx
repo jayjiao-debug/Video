@@ -767,7 +767,7 @@ const VoiceScene: React.FC<{T: number; v: Voice; i: number}> = ({T, v, i}) => {
 	const open = v.kind === 'ai' ? 0 : on ? 1 : 0;
 	const orn = (k: number) => hit >= 0 ? out3(cl01(hit / 0.1)) : 0;                       // pins, earrings, small things: with the figure
 	const late = (k: number) => out3(cl01((hit - BEAT * (0.5 + 0.5 * k)) / 0.22));   // the big moves keep their beat
-	const nameU = on ? cl01(hit / 0.3) : 0, tag = fade(t, rv + 0.12, 0.25), say = fade(t, rv + 4 * BEAT, 0.3);
+	const nameU = on ? cl01(hit / 0.3) : 0, tag = fade(t, rv + 0.12, 0.25), say = fade(t, rv + 2 * BEAT, 0.3);
 	const leave = fade(t, CYC - 0.22, 0.22);
 	const shake = v.kind === 'ju' || v.kind === 'nu' ? (hit > 0.6 ? 3 * Math.sin(T * 41) * Math.sin(T * 7.3) * (1 - cl01((hit - 0.6) / 2.5)) : 0) : 0;
 	const beatPulse = Math.max(0, 1 - ((((T - PH) % BEAT) + BEAT) % BEAT) / 0.16);
@@ -803,7 +803,7 @@ const VoiceScene: React.FC<{T: number; v: Voice; i: number}> = ({T, v, i}) => {
 				{lit > 0 && bolts.slice(0, 1).map(([a, b], k) => <Bolt key={k} a={a} b={b} seed={k + v.n * 10} T={T} col={v.col} o={lit * (0.25 + 0.3 * Math.sin(T * 3 + k)) * (v.kind === 'ai' ? 0.5 : 1)} />)}
 				{on && hit < 0.6 && <Bolt a={[120, 760]} b={[560, 380]} seed={v.n * 3 + 1} T={T} col={v.col} o={1 - hit / 0.6} />}
 				{/* left: the moment and the line (blurs away sideways just before the beat) */}
-				<BlurText id={`c${v.n}`} x={150} y={470} text={v.when} size={36} weight={600} col="#d4cde2" spacing="0.12em" u={cap} out={outQ} />
+				<BlurText id={`c${v.n}`} x={150} y={470} text={v.when} size={42} weight={600} col="#d4cde2" spacing="0.12em" u={cap} out={outQ} />
 				<BlurText id={`q${v.n}`} x={130} y={590} text={v.line} size={92} u={quote} out={outQ} />
 				{/* left: the name lands with the figure */}
 				{on && <g>
@@ -843,7 +843,8 @@ const Intro: React.FC<{T: number}> = ({T}) => (
 		<Defs v={{col: '#b9b0ff', hot: '#ece8ff', deep: '#141026'}} />
 		<g opacity={1 - fade(T, V0 - 0.3, 0.3)}>
 			<rect width={W} height={H} fill="url(#bgG)" />
-			<BlurText id="i1" x={960} y={330} text="两千年前，《礼记》写道：" size={40} weight={600} col="#cfc8de" spacing="0.14em" anchor="middle" u={fade(T, 0.05, 0.4)} />
+			<ellipse cx={960 + 260 * Math.sin(T * 0.9)} cy={420} rx={520} ry={160} fill="#8a7cff" opacity={0.13} filter="url(#gL)" />
+			<BlurText id="i1" x={960} y={330} text="两千年前，《礼记》写道：" size={40} weight={600} col="#cfc8de" spacing="0.14em" anchor="middle" u={1} />
 			<BlurText id="i2" x={960} y={450} text="人心里，天生住着七个声音。" size={84} anchor="middle" u={fade(T, bt(0) + 2 * BEAT, 0.4)} />
 			{/* the seven pop in on the half beats of bar 1 */}
 			{SEVEN.map((s, i) => { const at = bt(1) + i * BEAT / 2, o = cl01((T - at) / 0.1); return <g key={s.ch}>
@@ -855,21 +856,21 @@ const Intro: React.FC<{T: number}> = ({T}) => (
 );
 const Outro: React.FC<{T: number}> = ({T}) => {
 	// bar 25 the question, the seven on the half beats; bar 26 (the break) they hold; bar 27 the title slams with the kick
-	const tq = Math.round(bt(27) * FPS - 0.2) / FPS - OUT, t = T - OUT, q = fade(t, 0.05, 0.35), qOut = fade(t, tq - 0.2, 0.18), title = t >= tq ? cl01((t - tq) / 0.12) : 0, hit = t - tq;
+	const tq = Math.round(bt(27) * FPS - 0.2) / FPS - OUT, t = T - OUT, q = fade(t, 0.05, 0.35), qOut = fade(t, tq - 0.2, 0.18), title = t >= tq ? 1 : 0, slam = t >= tq ? out3(cl01((t - tq) / 0.25)) : 0, hit = t - tq;
 	return (
 		<svg width={W} height={H}>
 			<Defs v={{col: GOLD, hot: '#fff2c8', deep: '#1c1408'}} />
 			<rect width={W} height={H} fill="url(#bgG)" />
 			<g opacity={1 - qOut}>
-				<BlurText id="o1" x={960} y={430} text="你心里，哪个声音最大？" size={80} anchor="middle" u={q} />
+				<BlurText id="o1" x={984} y={430} text="你心里，哪个声音最大？" size={80} anchor="middle" u={q} />
 				{SEVEN.map((s, i) => { const o = cl01((t - BEAT - i * BEAT * 0.5) / 0.1), gl = Math.max(0, 1 - Math.abs(((t - BAR - i * BEAT * 0.5 + 4 * BAR) % (BEAT * 3.5)) - 0) / 0.3); return <Icon key={s.ch} x={960 + (i - 3) * ICON_DX} y={620} ch={s.ch} col={s.col} o={o} s={lerp(1.6, 1, outBack(o)) * (1 + 0.06 * gl * cl01(t - BAR))} />; })}
 			</g>
-			{title > 0 && <g opacity={title * (1 - fade(t, tq + 2 * BAR, 0.5))} transform={`translate(960,540) scale(${lerp(1.35, 1, out3(title))}) translate(-960,-540)`}>
+			{title > 0 && <g opacity={title * (1 - fade(t, tq + 2 * BAR, 0.5))} transform={`translate(960,540) scale(${lerp(1.18, 1, slam)}) translate(-960,-540)`}>
 				<g transform={`translate(960,520) rotate(${T * 10})`}>{SEVEN.map((s, i) => { const a = i / 7 * Math.PI * 2; return <g key={s.ch} transform={`translate(${Math.cos(a) * 330},${Math.sin(a) * 330}) rotate(${-T * 10})`}><circle r={30} fill="#0b0912" stroke={s.col} strokeWidth={3} /><text y={12} textAnchor="middle" style={{fontFamily: SERIF, fontWeight: 900, fontSize: 34}} fill="#fff">{s.ch}</text></g>; })}<circle r={330} fill="none" stroke="url(#goldG)" strokeWidth={2} opacity={0.6} /></g>
 				<text x={960} y={590} textAnchor="middle" style={{fontFamily: SERIF, fontWeight: 900, fontSize: 230, letterSpacing: '0.12em'}} fill="#fff2d0" opacity={0.7} filter="url(#gL)">七情</text>
 				<text x={960} y={590} textAnchor="middle" style={{fontFamily: SERIF, fontWeight: 900, fontSize: 230, letterSpacing: '0.12em'}} fill="url(#goldG)">七情</text>
 				<text x={960} y={690} textAnchor="middle" style={{fontFamily: SERIF, fontWeight: 600, fontSize: 34, letterSpacing: '0.9em'}} fill={GOLD}>喜怒哀惧爱恶欲</text>
-				<ellipse cx={lerp(400, 1520, ease(title))} cy={520} rx={600} ry={9} fill="#fff" opacity={0.8 * Math.sin(Math.PI * title)} filter="url(#gS)" />
+				<ellipse cx={lerp(400, 1520, ease(slam))} cy={520} rx={600} ry={9} fill="#fff" opacity={0.8 * Math.sin(Math.PI * slam)} filter="url(#gS)" />
 			</g>}
 			<Rings hit={hit} x={960} y={540} col={GOLD} />
 			<Lift hit={hit} />
