@@ -1,0 +1,243 @@
+[
+ {
+  "t": 0.0,
+  "end": 4.1152,
+  "text": "公元6世纪，教皇格里高利一世写下：",
+  "kind": "intro"
+ },
+ {
+  "t": 1.0738,
+  "end": 4.1152,
+  "text": "人心里，藏着七宗罪。",
+  "kind": "intro"
+ },
+ {
+  "t": 4.12,
+  "end": 6.14,
+  "text": "它在你明知错了却不肯道歉时说",
+  "kind": "moment"
+ },
+ {
+  "t": 4.37,
+  "end": 6.14,
+  "text": "“凭什么我先低头?”",
+  "kind": "quote"
+ },
+ {
+  "t": 6.14,
+  "end": 10.2,
+  "text": "七宗罪之一，它叫 傲慢",
+  "kind": "name",
+  "picture": "meme: 美团袋鼠"
+ },
+ {
+  "t": 7.16,
+  "end": 10.2,
+  "text": "你的胆子真是肥嘟嘟的啊",
+  "kind": "meme-quip bubble"
+ },
+ {
+  "t": 7.16,
+  "end": 10.2,
+  "text": "不肯低头，是怕被看见不够好。",
+  "kind": "closing line"
+ },
+ {
+  "t": 10.2,
+  "end": 12.23,
+  "text": "它在你刷到朋友晒升职时说",
+  "kind": "moment"
+ },
+ {
+  "t": 10.45,
+  "end": 12.23,
+  "text": "“凭什么不是我?”",
+  "kind": "quote"
+ },
+ {
+  "t": 12.23,
+  "end": 16.28,
+  "text": "七宗罪之二，它叫 嫉妒",
+  "kind": "name",
+  "picture": "meme: 奶蛙"
+ },
+ {
+  "t": 13.24,
+  "end": 16.28,
+  "text": "凭什么不是我?",
+  "kind": "meme-quip bubble"
+ },
+ {
+  "t": 13.24,
+  "end": 16.28,
+  "text": "嫉妒，是你也想要。",
+  "kind": "closing line"
+ },
+ {
+  "t": 16.28,
+  "end": 18.31,
+  "text": "它在你被人插队时说",
+  "kind": "moment"
+ },
+ {
+  "t": 16.53,
+  "end": 18.31,
+  "text": "“你再说一遍?”",
+  "kind": "quote"
+ },
+ {
+  "t": 18.31,
+  "end": 22.36,
+  "text": "七宗罪之三，它叫 暴怒",
+  "kind": "name",
+  "picture": "meme: 刀盾狗"
+ },
+ {
+  "t": 19.32,
+  "end": 22.36,
+  "text": "你再说一遍?",
+  "kind": "meme-quip bubble"
+ },
+ {
+  "t": 19.32,
+  "end": 22.36,
+  "text": "怒火，最先烧的是自己。",
+  "kind": "closing line"
+ },
+ {
+  "t": 22.36,
+  "end": 24.39,
+  "text": "它在你deadline前一天说",
+  "kind": "moment"
+ },
+ {
+  "t": 22.62,
+  "end": 24.39,
+  "text": "“明天再说。”",
+  "kind": "quote"
+ },
+ {
+  "t": 24.39,
+  "end": 28.45,
+  "text": "七宗罪之四，它叫 懒惰",
+  "kind": "name",
+  "picture": "meme: 牛来"
+ },
+ {
+  "t": 25.41,
+  "end": 28.45,
+  "text": "摆烂中……",
+  "kind": "meme-quip bubble"
+ },
+ {
+  "t": 25.41,
+  "end": 28.45,
+  "text": "懒，有时是累到不想面对。",
+  "kind": "closing line"
+ },
+ {
+  "t": 28.45,
+  "end": 30.47,
+  "text": "它在你存款又多了一点时说",
+  "kind": "moment"
+ },
+ {
+  "t": 28.7,
+  "end": 30.47,
+  "text": "“还不够。”",
+  "kind": "quote"
+ },
+ {
+  "t": 30.47,
+  "end": 34.53,
+  "text": "七宗罪之五，它叫 贪婪",
+  "kind": "name",
+  "picture": "meme: 三角洲鼠鼠"
+ },
+ {
+  "t": 31.49,
+  "end": 34.53,
+  "text": "再摸一个包就撤。",
+  "kind": "meme-quip bubble"
+ },
+ {
+  "t": 31.49,
+  "end": 34.53,
+  "text": "想要更多，是怕失去。",
+  "kind": "closing line"
+ },
+ {
+  "t": 34.53,
+  "end": 36.56,
+  "text": "它在你凌晨一点打开外卖时说",
+  "kind": "moment"
+ },
+ {
+  "t": 34.78,
+  "end": 36.56,
+  "text": "“就吃一点。”",
+  "kind": "quote"
+ },
+ {
+  "t": 36.56,
+  "end": 40.61,
+  "text": "七宗罪之六，它叫 暴食",
+  "kind": "name",
+  "picture": "meme: 哈基米"
+ },
+ {
+  "t": 37.57,
+  "end": 40.61,
+  "text": "曼波~就吃一点。",
+  "kind": "meme-quip bubble"
+ },
+ {
+  "t": 37.57,
+  "end": 40.61,
+  "text": "填不满的，往往不是胃。",
+  "kind": "closing line"
+ },
+ {
+  "t": 40.61,
+  "end": 42.64,
+  "text": "它在你一遍遍刷他的照片时说",
+  "kind": "moment"
+ },
+ {
+  "t": 40.87,
+  "end": 42.64,
+  "text": "“再看一眼。”",
+  "kind": "quote"
+ },
+ {
+  "t": 42.64,
+  "end": 46.69,
+  "text": "七宗罪之七，它叫 色欲",
+  "kind": "name",
+  "picture": "meme: 草地牛"
+ },
+ {
+  "t": 43.65,
+  "end": 46.69,
+  "text": "再看一眼。",
+  "kind": "meme-quip bubble"
+ },
+ {
+  "t": 43.65,
+  "end": 46.69,
+  "text": "渴望，是想被看见。",
+  "kind": "closing line"
+ },
+ {
+  "t": 48.72,
+  "end": 54.81,
+  "text": "你心里，哪一宗罪最大声？",
+  "kind": "outro"
+ },
+ {
+  "t": 54.81,
+  "end": 59.46,
+  "text": "七宗罪 SEVEN DEADLY SINS / 它们不是七个怪物，是七个被放大的你。",
+  "kind": "title"
+ }
+]

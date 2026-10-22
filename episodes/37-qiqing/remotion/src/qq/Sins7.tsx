@@ -791,7 +791,7 @@ const FigMeme: React.FC<FigProps> = ({T, v, orn, late, t = 0}) => {
 				<path d={card} fill="none" stroke={v.col} strokeWidth={4} strokeDasharray="18 12" />
 				<text x={0} y={-10} textAnchor="middle" style={{fontFamily: SERIF, fontWeight: 900, fontSize: 70}} fill={v.hot}>{m.name}</text></>}
 			{k === 'ang' && c > 0 && <g stroke="#fff" strokeWidth={4} fill="none" opacity={0.9}>
-				<path d={`M-40,${top} L-10,${top + 200 * c} L-60,${top + 380 * c} L-20,${top + 520 * c}`} /><path d={`M-10,${top + 200 * c} L${80 * c},${top + 260 * c} L${150 * c},${top + 240 * c}`} /></g>}
+				<path d={`M-40,${top} L-10,${top + 0.35 * ih * c} L-60,${top + 0.65 * ih * c} L-20,${top + 0.92 * ih * c}`} /><path d={`M-10,${top + 0.35 * ih * c} L${80 * c},${top + 0.45 * ih * c} L${150 * c},${top + 0.42 * ih * c}`} /></g>}
 		</g>
 		{k === 'pri' && <g transform={`translate(${x0 + 0.5 * iw + dx},${top + 0.17 * ih + dy - 300 * (1 - out3(c))}) rotate(${head * 0.6 - 6})`} opacity={c > 0 ? 1 : 0}>
 			<path d="M-90,0 L-90,-54 L-58,-22 L-30,-76 L0,-34 L30,-76 L58,-22 L90,-54 L90,0 Z" fill="url(#goldG)" stroke="#7a5a20" strokeWidth={2} />
@@ -1366,10 +1366,10 @@ const Outro: React.FC<{T: number}> = ({T}) => {
 
 /** layouts for the meme scenes: 'alt' text and picture swap sides every scene; 'poster' the picture in the middle with the two
     characters of the name either side; 'vertical' the name stacked vertically on the left like a scroll */
-const LAYOUT = 'poster' as 'alt' | 'poster' | 'vertical';
+const LAYOUT = 'alt' as 'alt' | 'poster' | 'vertical';
 const MemeScene: React.FC<{T: number; v: Voice; i: number}> = ({T, v, i}) => {
 	const t0 = Q0[i], t = T - t0, rv = Math.round(REV[i] * FPS - 0.2) / FPS - t0, CYC = (i < VOICES.length - 1 ? Q0[i + 1] : OUT) - t0, hit = t - rv, on = hit >= 0;
-	const mirror = LAYOUT === 'alt' && v.n % 2 === 0;
+	const mirror = false;                                             // the owner wants text left, picture right, every time
 	const cx = LAYOUT === 'poster' ? 960 : LAYOUT === 'vertical' ? 1230 : mirror ? 560 : 1360, cy = LAYOUT === 'poster' ? 430 : 470, sc = LAYOUT === 'poster' ? 0.86 : 0.95;
 	const cap = fade(t, 0.04, 0.3), quote = fade(t, BEAT * 0.5, 0.35), outQ = fade(t, rv - 0.2, 0.18);
 	const orn = (k: number) => on ? out3(cl01(hit / 0.1)) : 0, late = (k: number) => out3(cl01((hit - BEAT * (0.5 + 0.5 * k)) / 0.22));
