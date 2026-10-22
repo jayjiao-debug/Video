@@ -942,4 +942,41 @@ export const QiQing9: React.FC = () => {
 	</AbsoluteFill>;
 };
 
-registerRoot(() => <Composition id="QQ9" component={QiQing9} durationInFrames={Math.round(QQ9_END * FPS)} fps={FPS} width={W} height={H} />);
+
+// ---------------------------------------------------------------- Douyin covers (4:3 1440×1080, 3:4 1080×1440): 怒 as the hero, the title alone
+const CoverQQ: React.FC<{layout: 'wide' | 'tall'}> = ({layout}) => {
+	const wide = layout === 'wide', CW = wide ? 1440 : 1080, CH = wide ? 1080 : 1440, v = VOICES[1], T = 3.1;
+	const fx = wide ? 1010 : 540, fy = wide ? 500 : 480, fs = wide ? 1.3 : 1.2;
+	const tx = wide ? 380 : 540, ty = wide ? 560 : 985, ts = wide ? 250 : 250;
+	const one = () => 1;
+	return <AbsoluteFill style={{background: '#030205'}}>
+		<svg width={CW} height={CH}>
+			<Defs v={v} />
+			<rect width={CW} height={CH} fill="url(#bgG)" />
+			{Array.from({length: 60}, (_, k) => <circle key={k} cx={rnd(k) * CW} cy={rnd(k, 1) * CH} r={0.8 + 1.6 * rnd(k, 2)} fill="#eef" opacity={0.15 + 0.4 * rnd(k, 3)} />)}
+			<g transform={`translate(${fx},${fy})`}>
+				<Halo T={T} v={v} s={wide ? 1 : 1.05} t={10} rv={0} lit={1} />
+				<BackMotes T={T} v={v} hit={3} />
+				<g transform={`translate(0,${60 * fs / 1.55}) scale(${fs})`}><FigNu T={T} v={v} draw={1} open={1} orn={one} late={one} t={10} /></g>
+			</g>
+			<rect width={CW} height={CH} fill="url(#vigG)" />
+			<radialGradient id="vigG" cx="0.5" cy="0.5" r="0.75"><stop offset="0.6" stopColor="#000" stopOpacity="0" /><stop offset="1" stopColor="#000" stopOpacity="0.7" /></radialGradient>
+			{!wide && <rect x={0} y={CH * 0.5} width={CW} height={CH * 0.5} fill="url(#fadeG)" />}
+			<linearGradient id="fadeG" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stopColor="#030205" stopOpacity="0" /><stop offset="0.45" stopColor="#030205" stopOpacity="0.85" /><stop offset="1" stopColor="#030205" stopOpacity="0.95" /></linearGradient>
+			<rect x={0} y={0} width={CW} height={170} fill="url(#topG)" />
+			<linearGradient id="topG" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stopColor="#030205" stopOpacity="0.9" /><stop offset="1" stopColor="#030205" stopOpacity="0" /></linearGradient>
+			{/* the title, big, gold, with the seven under it */}
+			<text x={tx} y={ty} textAnchor="middle" style={{fontFamily: SERIF, fontWeight: 900, fontSize: ts, letterSpacing: '0.08em'}} fill="#fff2d0" opacity={0.65} filter="url(#gL)">七情</text>
+			<text x={tx} y={ty} textAnchor="middle" style={{fontFamily: SERIF, fontWeight: 900, fontSize: ts, letterSpacing: '0.08em'}} fill="url(#goldG)">七情</text>
+			{SEVEN.map((c, i) => <Icon key={c.ch} x={tx + (i - 3) * (wide ? 86 : 104)} y={ty + (wide ? 110 : 95)} ch={c.ch} col={c.col} o={1} s={wide ? 0.62 : 0.75} />)}
+			<text x={tx} y={ty + (wide ? 220 : 192)} textAnchor="middle" style={{fontFamily: SERIF, fontWeight: 600, fontSize: wide ? 34 : 36, letterSpacing: '0.3em'}} fill="#efe6d2">你心里，哪个声音最大</text>
+			<text x={wide ? 60 : CW / 2} y={wide ? 90 : 110} textAnchor={wide ? 'start' : 'middle'} style={{fontFamily: SERIF, fontWeight: 600, fontSize: 30, letterSpacing: '0.3em', paintOrder: 'stroke'}} stroke="#030205" strokeWidth={8} strokeLinejoin="round" fill={GOLD}>VIBE知识大赏 · Juno</text>
+		</svg>
+	</AbsoluteFill>;
+};
+
+registerRoot(() => <>
+	<Composition id="QQ9" component={QiQing9} durationInFrames={Math.round(QQ9_END * FPS)} fps={FPS} width={W} height={H} />
+	<Composition id="CoverWide" component={() => <CoverQQ layout="wide" />} durationInFrames={1} fps={FPS} width={1440} height={1080} />
+	<Composition id="CoverTall" component={() => <CoverQQ layout="tall" />} durationInFrames={1} fps={FPS} width={1080} height={1440} />
+</>);
