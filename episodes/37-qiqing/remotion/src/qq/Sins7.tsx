@@ -40,7 +40,7 @@ const VOICES: Voice[] = [
 	{n: 1, ch: '傲慢', py: 'Superbia', kind: 'pri', col: '#b47bff', hot: '#ecdcff', deep: '#1a0a2c', when: '它在你明知错了却不肯道歉时说', line: '“凭什么我先低头?”', key: '不够好', say: '不肯低头，是怕被看见不够好。'},
 	{n: 2, ch: '嫉妒', py: 'Invidia', kind: 'env', col: '#6fe08a', hot: '#dcffe4', deep: '#062014', when: '它在你刷到朋友晒升职时说', line: '“凭什么不是我?”', key: '也想要', say: '嫉妒，是你也想要。'},
 	{n: 3, ch: '暴怒', py: 'Ira', kind: 'ang', col: '#ff3b3b', hot: '#ffd0d0', deep: '#2a0606', when: '它在你被人插队时说', line: '“你再说一遍?”', key: '自己', say: '怒火，最先烧的是自己。'},
-	{n: 4, ch: '懒惰', py: 'Acedia', kind: 'slo', col: '#8fd0e8', hot: '#e6f8ff', deep: '#0a1c26', when: '它在闹钟响第五遍时说', line: '“再躺五分钟。”', key: '累到不想面对', say: '懒，有时是累到不想面对。'},
+	{n: 4, ch: '懒惰', py: 'Acedia', kind: 'slo', col: '#8fd0e8', hot: '#e6f8ff', deep: '#0a1c26', when: '它在你deadline前一天说', line: '“明天再说。”', key: '累到不想面对', say: '懒，有时是累到不想面对。'},
 	{n: 5, ch: '贪婪', py: 'Avaritia', kind: 'gre', col: '#f2c14e', hot: '#fff2c8', deep: '#241a04', when: '它在你存款又多了一点时说', line: '“还不够。”', key: '失去', say: '想要更多，是怕失去。'},
 	{n: 6, ch: '暴食', py: 'Gula', kind: 'glu', col: '#ff9a3a', hot: '#ffe2c4', deep: '#2a1204', when: '它在你凌晨一点打开外卖时说', line: '“就吃一点。”', key: '不是胃', say: '填不满的，往往不是胃。'},
 	{n: 7, ch: '色欲', py: 'Luxuria', kind: 'lus', col: '#ff5c8a', hot: '#ffd6e2', deep: '#2a0614', when: '它在你一遍遍刷他的照片时说', line: '“再看一眼。”', key: '被看见', say: '渴望，是想被看见。'},
@@ -741,42 +741,97 @@ const FigGrePhoto: React.FC<FigProps> = ({T, v, orn, late}) => {
 		{c > 0 && Array.from({length: 26}, (_, i) => { const side = i % 2 ? 1 : -1, x = side * (165 + rnd(i, 91) * 110), d = cl01((c - rnd(i, 92) * 0.5) / 0.5), y = lerp(-520, 330 - 18 * Math.floor(rnd(i, 93) * 4), out3(d)); return <g key={i} transform={`translate(${x},${y}) scale(${Math.cos(T * 6 + i)},1)`} opacity={d > 0 ? 1 : 0}><circle r={16} fill="url(#goldG)" stroke="#7a5a20" strokeWidth={1} /><rect x={-5} y={-5} width={10} height={10} fill="#1a1404" /></g>; })}
 	</g>;
 };
-/** meme layout preview: a placeholder card where the meme picture goes, plus each sin's live element and meme line */
+/** the meme version: each meme is a cut-out "puppet" — the whole picture breathes and bounces on the beat, and a soft-masked
+    copy of its head sways on its own pivot (a cheap Live2D) — plus each sin's live element and its meme line */
 const MEME_MODE = true;
-const MEME: Record<string, {name: string; quip: string}> = {
-	pri: {name: '美团袋鼠', quip: '你的胆子真是肥嘟嘟的啊'}, env: {name: '奶蛙', quip: '凭什么不是我?'}, ang: {name: '刀盾狗', quip: '你再说一遍?'},
-	slo: {name: '背手负鼠', quip: '再躺五分钟。'}, gre: {name: '三角洲鼠鼠', quip: '再摸一个包就撤。'}, glu: {name: '哈基米', quip: '曼波~就吃一点。'}, lus: {name: '草地牛', quip: '再看一眼。'},
+type Rig = {hx: number; hy: number; hr: number; px: number; py: number; move: 'hop' | 'think' | 'rage' | 'idle' | 'loot' | 'chew' | 'dream'};
+const MEME: Record<string, {name: string; quip: string; rig: Rig}> = {
+	pri: {name: '美团袋鼠', quip: '你的胆子真是肥嘟嘟的啊', rig: {hx: 0.47, hy: 0.3, hr: 0.3, px: 0.5, py: 0.52, move: 'hop'}},
+	env: {name: '奶蛙', quip: '凭什么不是我?', rig: {hx: 0.42, hy: 0.24, hr: 0.3, px: 0.45, py: 0.45, move: 'think'}},
+	ang: {name: '刀盾狗', quip: '你再说一遍?', rig: {hx: 0.55, hy: 0.32, hr: 0.2, px: 0.55, py: 0.55, move: 'rage'}},
+	slo: {name: '牛来', quip: '摆烂中……', rig: {hx: 0.5, hy: 0.2, hr: 0.36, px: 0.5, py: 0.38, move: 'idle'}},
+	gre: {name: '三角洲鼠鼠', quip: '再摸一个包就撤。', rig: {hx: 0.5, hy: 0.32, hr: 0.36, px: 0.5, py: 0.62, move: 'loot'}},
+	glu: {name: '哈基米', quip: '曼波~就吃一点。', rig: {hx: 0.5, hy: 0.26, hr: 0.3, px: 0.5, py: 0.5, move: 'chew'}},
+	lus: {name: '草地牛', quip: '再看一眼。', rig: {hx: 0.7, hy: 0.55, hr: 0.25, px: 0.6, py: 0.72, move: 'dream'}},
 };
-const FigMeme: React.FC<FigProps> = ({T, v, orn, late}) => {
-	const c = late(3), m = MEME[v.kind], k = v.kind;
-	const rot = k === 'slo' ? 84 * outBack(cl01(c / 0.7)) : 0, card = 'M-230,-300 H230 Q260,-300 260,-270 V310 Q260,340 230,340 H-230 Q-260,340 -260,310 V-270 Q-260,-300 -230,-300 Z';
+const DAYS = ['周一', '周二', '周三', '周四', '周五', '周六', '周日'];
+const FigMeme: React.FC<FigProps> = ({T, v, orn, late, t = 0}) => {
+	const c = late(3), m = MEME[v.kind], k = v.kind, r = m.rig, on = orn(0);
 	const pop = outBack(cl01(c / 0.6));
-	const img = MEME_IMG[k], fitR = img ? Math.min(600 / img.w, (k === 'slo' ? 540 : 640) / img.h) : 1, iw = img ? img.w * fitR : 520, ih = img ? img.h * fitR : 640, top = 340 - ih;
+	const img = MEME_IMG[k], fitR = img ? Math.min(600 / img.w, 640 / img.h) : 1, iw = img ? img.w * fitR : 520, ih = img ? img.h * fitR : 640, top = 340 - ih, x0 = -iw / 2;
+	// the beat: phase within the beat, and a quick pulse on each downbeat
+	const bp = ((((T - PH) % BEAT) + BEAT) % BEAT) / BEAT, pulse = Math.max(0, 1 - bp / 0.18);
+	let dx = 0, dy = 0, rotAll = 0, sx = 1 + 0.025 * pulse, sy = 1 - 0.04 * pulse, head = 0, hdy = 0;
+	const br = Math.sin(T * 2.4);                                       // breathing
+	sx += 0.012 * br; sy -= 0.016 * br;
+	switch (r.move) {
+		case 'hop': { const h = Math.sin(Math.PI * bp); dy = -26 * h; sy += 0.07 * (1 - h) * pulse - 0.04 * h; sx -= 0.03 * h; head = 6 * Math.sin(2 * Math.PI * bp - 0.8); break; }
+		case 'think': head = -6 + 5 * Math.sin(T * 1.7); hdy = 3 * Math.sin(T * 1.7); break;
+		case 'rage': rotAll = 2.2 * Math.sin(T * 37) * (0.6 + 0.4 * pulse); head = 4 * Math.sin(T * 23); dx = 4 * Math.sin(T * 29); break;
+		case 'idle': head = 3 * Math.sin(T * 0.9) - 2; sx = 1 + 0.01 * br; sy = 1 - 0.018 * br; break;
+		case 'loot': dx = 14 * Math.sin(Math.PI * 2 * (T - PH) / (2 * BEAT)); rotAll = 2.5 * Math.sin(Math.PI * 2 * (T - PH) / (2 * BEAT)); head = 5 * Math.sin(Math.PI * 2 * (T - PH) / BEAT); break;
+		case 'chew': head = 4 * Math.abs(Math.sin(Math.PI * 2 * (T - PH) / BEAT)); hdy = 6 * Math.abs(Math.sin(Math.PI * 2 * (T - PH) / BEAT)); break;
+		case 'dream': rotAll = 1.6 * Math.sin(T * 1.3); head = 5 * Math.sin(T * 1.3 + 0.9) - 3; break;
+	}
+	if (!on) { sx = 1; sy = 1; }
+	const pvx = x0 + r.px * iw, pvy = top + r.py * ih, hx = x0 + r.hx * iw, hy = top + r.hy * ih, hr = r.hr * iw;
+	const card = 'M-230,-300 H230 Q260,-300 260,-270 V310 Q260,340 230,340 H-230 Q-260,340 -260,310 V-270 Q-260,-300 -230,-300 Z';
 	return <g>
-		<defs><filter id="memeRim" x="-20%" y="-20%" width="140%" height="140%"><feMorphology in="SourceAlpha" operator="dilate" radius={4} result="d" /><feFlood floodColor={v.col} /><feComposite in2="d" operator="in" result="c" /><feGaussianBlur in="c" stdDeviation={10} result="g" /><feMerge><feMergeNode in="g" /><feMergeNode in="g" /><feMergeNode in="SourceGraphic" /></feMerge></filter></defs>
-		<g transform={`translate(${k === 'slo' ? -60 : 0},${k === 'slo' ? -330 * out3(cl01(c / 0.7)) : 0}) rotate(${rot},${k === 'slo' ? -120 : 0},${k === 'slo' ? 330 : 200})`}>
-			{img ? <image href={img.src} x={-iw / 2} y={top} width={iw} height={ih} filter="url(#memeRim)" /> : <>
-			<path d={card} fill={v.deep} opacity={0.85} />
-			<path d={card} fill="none" stroke={v.col} strokeWidth={4} strokeDasharray="18 12" />
-			<text x={0} y={-10} textAnchor="middle" style={{fontFamily: SERIF, fontWeight: 900, fontSize: 70}} fill={v.hot}>{m.name}</text>
-			<text x={0} y={60} textAnchor="middle" style={{fontFamily: SERIF, fontSize: 32}} fill={v.hot} opacity={0.6}>梗图（抠图后）放这里</text></>}
+		<defs>
+			<filter id="memeRim" x="-20%" y="-20%" width="140%" height="140%"><feMorphology in="SourceAlpha" operator="dilate" radius={4} result="d" /><feFlood floodColor={v.col} /><feComposite in2="d" operator="in" result="c" /><feGaussianBlur in="c" stdDeviation={10} result="g" /><feMerge><feMergeNode in="g" /><feMergeNode in="g" /><feMergeNode in="SourceGraphic" /></feMerge></filter>
+			<radialGradient id="headG"><stop offset="0.62" stopColor="#fff" /><stop offset="1" stopColor="#000" /></radialGradient>
+			<mask id="headM" maskUnits="userSpaceOnUse" x={-2000} y={-2000} width={4000} height={4000}><circle cx={hx} cy={hy} r={hr} fill="url(#headG)" /></mask>
+		</defs>
+		{/* the puppet */}
+		<g transform={`translate(${dx},${dy}) rotate(${rotAll},0,340) translate(0,340) scale(${sx},${sy}) translate(0,-340)`}>
+			{img ? <g filter="url(#memeRim)">
+				<image href={img.src} x={x0} y={top} width={iw} height={ih} />
+				<g transform={`translate(0,${hdy}) rotate(${head},${pvx},${pvy})`}><image href={img.src} x={x0} y={top} width={iw} height={ih} mask="url(#headM)" /></g>
+			</g> : <>
+				<path d={card} fill={v.deep} opacity={0.85} />
+				<path d={card} fill="none" stroke={v.col} strokeWidth={4} strokeDasharray="18 12" />
+				<text x={0} y={-10} textAnchor="middle" style={{fontFamily: SERIF, fontWeight: 900, fontSize: 70}} fill={v.hot}>{m.name}</text></>}
 			{k === 'ang' && c > 0 && <g stroke="#fff" strokeWidth={4} fill="none" opacity={0.9}>
-				<path d={`M-40,-300 L-10,${-300 + 200 * c} L-60,${-300 + 380 * c} L-20,${-300 + 560 * c}`} /><path d={`M-10,${-300 + 200 * c} L${80 * c},${-300 + 260 * c} L${150 * c},${-300 + 240 * c}`} /></g>}
+				<path d={`M-40,${top} L-10,${top + 200 * c} L-60,${top + 380 * c} L-20,${top + 520 * c}`} /><path d={`M-10,${top + 200 * c} L${80 * c},${top + 260 * c} L${150 * c},${top + 240 * c}`} /></g>}
 		</g>
-		{k === 'pri' && <g transform={`translate(${img ? -iw * 0.12 : 0},${top + 10 - 300 * (1 - out3(c))})`} opacity={c > 0 ? 1 : 0}>
-			<path d="M-110,0 L-110,-64 L-70,-26 L-36,-92 L0,-40 L36,-92 L70,-26 L110,-64 L110,0 Z" fill="url(#goldG)" stroke="#7a5a20" strokeWidth={2} />
-			{[-70, 0, 70].map((x) => <circle key={x} cx={x} cy={-16} r={10} fill={v.col} stroke="#fff" strokeWidth={1.4} />)}</g>}
-		{k === 'env' && c > 0 && Array.from({length: 14}, (_, i) => { const side = i % 2 ? 1 : -1, ph = (T * 0.8 + rnd(i, 5)) % 1, x = side * (270 + 30 * Math.sin(T * 3 + i)), y = 300 - ph * 640; return <path key={i} transform={`translate(${x},${y}) scale(${c * (1 - ph) * 1.4})`} d="M0,-40 C18,-14 22,8 0,28 C-22,8 -18,-14 0,-40 Z" fill={v.col} opacity={0.75} filter="url(#gM)" />; })}
-		{k === 'slo' && c > 0 && [0, 1, 2].map((i) => { const ph = (T * 0.4 + i / 3) % 1; return <text key={i} x={120 + i * 40 + ph * 80} y={-60 - ph * 240} style={{fontFamily: SERIF, fontWeight: 900, fontSize: 50 + i * 16}} fill={v.hot} opacity={c * Math.sin(Math.PI * ph)}>z</text>; })}
-		{k === 'gre' && c > 0 && Array.from({length: 26}, (_, i) => { const side = i % 2 ? 1 : -1, x = side * (300 + rnd(i, 91) * 70), d = cl01((c - rnd(i, 92) * 0.5) / 0.5), y = lerp(-560, 320 - 22 * Math.floor(rnd(i, 93) * 5), out3(d)); return <g key={i} transform={`translate(${x},${y}) scale(${Math.cos(T * 6 + i)},1)`} opacity={d > 0 ? 1 : 0}><circle r={18} fill="url(#goldG)" stroke="#7a5a20" strokeWidth={1} /><rect x={-5} y={-5} width={10} height={10} fill="#1a1404" /></g>; })}
-		{k === 'glu' && Array.from({length: 5}, (_, i) => { const d = cl01((c - i * 0.14) / 0.3), y = lerp(-500, 320 - i * 70, out3(d)); return <g key={i} transform={`translate(${380},${y}) rotate(${(i % 2 ? 4 : -4)})`} opacity={d > 0 ? 1 : 0}><rect x={-70} y={-30} width={140} height={60} rx={8} fill="#fff4e6" stroke={v.col} strokeWidth={3} /><rect x={-70} y={-30} width={140} height={14} rx={6} fill={v.col} /></g>; })}
+		{k === 'pri' && <g transform={`translate(${x0 + 0.5 * iw + dx},${top + 0.17 * ih + dy - 300 * (1 - out3(c))}) rotate(${head * 0.6 - 6})`} opacity={c > 0 ? 1 : 0}>
+			<path d="M-90,0 L-90,-54 L-58,-22 L-30,-76 L0,-34 L30,-76 L58,-22 L90,-54 L90,0 Z" fill="url(#goldG)" stroke="#7a5a20" strokeWidth={2} />
+			{[-58, 0, 58].map((x) => <circle key={x} cx={x} cy={-14} r={9} fill={v.col} stroke="#fff" strokeWidth={1.4} />)}</g>}
+		{k === 'env' && c > 0 && Array.from({length: 14}, (_, i) => { const side = i % 2 ? 1 : -1, ph = (T * 0.8 + rnd(i, 5)) % 1, x = side * (330 + 30 * Math.sin(T * 3 + i)), y = 300 - ph * 640; return <path key={i} transform={`translate(${x},${y}) scale(${c * (1 - ph) * 1.4})`} d="M0,-40 C18,-14 22,8 0,28 C-22,8 -18,-14 0,-40 Z" fill={v.col} opacity={0.75} filter="url(#gM)" />; })}
+		{/* 懒惰: a tear-off calendar beside it flips through the week on the half beats; it does not move */}
+		{k === 'slo' && on > 0 && (() => { const f = Math.max(0, (t - 2 * BEAT) / (BEAT / 2)), day = Math.min(7, Math.floor(f)), flip = f - Math.floor(f), last = day >= 7;
+			return <g transform="translate(-330,40)">
+				<rect x={-95} y={-120} width={190} height={230} rx={14} fill="#f4f8ff" stroke={v.col} strokeWidth={4} />
+				<rect x={-95} y={-120} width={190} height={56} rx={14} fill={v.col} /><circle cx={-40} cy={-120} r={8} fill={v.deep} /><circle cx={40} cy={-120} r={8} fill={v.deep} />
+				<text x={0} y={30} textAnchor="middle" style={{fontFamily: SERIF, fontWeight: 900, fontSize: last ? 50 : 70}} fill={v.deep}>{last ? '明天' : DAYS[day]}</text>
+				<text x={0} y={-80} textAnchor="middle" style={{fontFamily: SERIF, fontWeight: 700, fontSize: 26}} fill="#fff">TO DO</text>
+				{c > 0 && !last && flip < 0.5 && <g transform={`translate(0,-64) scale(1,${1 - 2 * flip})`}><rect x={-95} y={0} width={190} height={174} fill="#e6eefc" stroke={v.col} strokeWidth={2} /></g>}
+			</g>; })()}
+		{k === 'gre' && c > 0 && Array.from({length: 26}, (_, i) => { const side = i % 2 ? 1 : -1, x = side * (330 + rnd(i, 91) * 70), d = cl01((c - rnd(i, 92) * 0.5) / 0.5), y = lerp(-560, 320 - 22 * Math.floor(rnd(i, 93) * 5), out3(d)); return <g key={i} transform={`translate(${x},${y}) scale(${Math.cos(T * 6 + i)},1)`} opacity={d > 0 ? 1 : 0}><circle r={18} fill="url(#goldG)" stroke="#7a5a20" strokeWidth={1} /><rect x={-5} y={-5} width={10} height={10} fill="#1a1404" /></g>; })}
+		{k === 'glu' && Array.from({length: 5}, (_, i) => { const d = cl01((c - i * 0.14) / 0.3), y = lerp(-500, 320 - i * 70, out3(d)); return <g key={i} transform={`translate(${390},${y}) rotate(${(i % 2 ? 4 : -4)})`} opacity={d > 0 ? 1 : 0}><rect x={-70} y={-30} width={140} height={60} rx={8} fill="#fff4e6" stroke={v.col} strokeWidth={3} /><rect x={-70} y={-30} width={140} height={14} rx={6} fill={v.col} /></g>; })}
 		{k === 'lus' && c > 0 && Array.from({length: 10}, (_, i) => { const ph = (T * 0.5 + rnd(i, 7)) % 1, x = (rnd(i, 8) - 0.5) * 640, y = 300 - ph * 700; return <path key={i} transform={`translate(${x},${y}) scale(${c * (0.8 + rnd(i, 9)) * Math.sin(Math.PI * ph)})`} d="M0,12 C-30,-10 -20,-36 0,-22 C20,-36 30,-10 0,12 Z" fill={v.col} />; })}
 		{/* the meme line pops in on the beat */}
-		<g transform={`translate(${k === 'slo' ? 60 : 80},${k === 'slo' ? -230 : Math.max(-440, top - (k === 'pri' ? 150 : 70))}) scale(${pop})`} opacity={c > 0 ? 1 : 0}>
+		<g transform={`translate(80,${Math.max(-440, top - (k === 'pri' ? 160 : 70))}) scale(${pop})`} opacity={c > 0 ? 1 : 0}>
 			{(() => { const wd = m.quip.length * 46 + 70; return <><rect x={-wd / 2} y={-50} width={wd} height={100} rx={50} fill="#fff" /><path d="M-30,46 L-60,90 L0,48 Z" fill="#fff" /><text x={0} y={16} textAnchor="middle" style={{fontFamily: SERIF, fontWeight: 900, fontSize: 46}} fill={v.deep}>{m.quip}</text></>; })()}
 		</g>
 	</g>;
 };
+/** the meme scenes' backdrop: a bold sticker disc in the sin's colour, halftone dots, slow comic rays behind */
+const MemeDisc: React.FC<{T: number; v: Voice; u: number}> = ({T, v, u}) => <g transform={`scale(${lerp(0.82, 1, outBack(u))})`} opacity={cl01(u * 3)}>
+	<defs>
+		<radialGradient id="discG" cx="0.42" cy="0.36" r="0.75"><stop offset="0" stopColor={v.col} stopOpacity="0.95" /><stop offset="0.65" stopColor={v.col} stopOpacity="0.55" /><stop offset="1" stopColor={v.deep} /></radialGradient>
+		<pattern id="dotP" width={22} height={22} patternUnits="userSpaceOnUse" patternTransform="rotate(30)"><circle cx={11} cy={11} r={4} fill="#fff" /></pattern>
+		<radialGradient id="dotFade" cx="0.7" cy="0.75" r="0.7"><stop offset="0" stopColor="#fff" stopOpacity="0.5" /><stop offset="1" stopColor="#fff" stopOpacity="0" /></radialGradient>
+		<mask id="dotM"><circle r={380} fill="url(#dotFade)" /></mask>
+	</defs>
+	<radialGradient id="rayFade" gradientUnits="userSpaceOnUse" cx={0} cy={0} r={760}><stop offset="0.45" stopColor="#fff" /><stop offset="1" stopColor="#000" /></radialGradient>
+	<mask id="rayM" maskUnits="userSpaceOnUse" x={-900} y={-900} width={1800} height={1800}><circle r={900} fill="url(#rayFade)" /></mask>
+	<g mask="url(#rayM)"><g transform={`rotate(${T * 6})`} opacity={0.2}>{Array.from({length: 16}, (_, i) => <path key={i} transform={`rotate(${i * 22.5})`} d="M0,0 L-60,-760 L60,-760 Z" fill={v.col} />)}</g></g>
+	<circle r={380} fill="url(#discG)" />
+	<circle r={380} fill="url(#dotP)" mask="url(#dotM)" opacity={0.35} />
+	<circle r={380} fill="none" stroke="#fff" strokeWidth={10} opacity={0.9} />
+	<circle r={398} fill="none" stroke={v.col} strokeWidth={4} opacity={0.8} />
+</g>;
 /** 暴食: a crown of vine leaves and grapes, half-lidded and hungry; the cup beside her fills and spills over */
 const FigGlu: React.FC<FigProps> = ({T, v, draw, open, orn, late}) => {
 	const f = late(3), cap = 'M-134,-20 C-148,-170 -76,-234 0,-234 C76,-234 148,-170 134,-20 C126,-96 86,-132 0,-136 C-86,-132 -126,-96 -134,-20 Z';
@@ -1110,6 +1165,20 @@ const PLACE: Record<Kind, {dx: number; dy: number; s: number; flip?: boolean}> =
 	den: {dx: 40, dy: 60, s: 1.4}, ang: {dx: 0, dy: 60, s: 1.5}, bar: {dx: 0, dy: 40, s: 1.5}, dep: {dx: 60, dy: 70, s: 1.4, flip: true}, acc: {dx: 0, dy: 40, s: 1.5},
 	pri: {dx: 0, dy: 90, s: 1.35}, env: {dx: -30, dy: 50, s: 1.45}, slo: {dx: 20, dy: 140, s: 1.3}, gre: {dx: 0, dy: 60, s: 1.45}, glu: {dx: -60, dy: 60, s: 1.45}, lus: {dx: -20, dy: 60, s: 1.45},
 };
+/** iris transitions: a scene closes by its disc swelling to fill the screen in the next colour; the next opens from the centre */
+const IRIS = 0.32;
+const IrisClose: React.FC<{o: number; x: number; y: number; col: string; deep: string; id: string}> = ({o, x, y, col, deep, id}) => o <= 0 ? null : <g>
+	<radialGradient id={id} gradientUnits="userSpaceOnUse" cx={x} cy={y} r={1400}><stop offset="0" stopColor={col} /><stop offset="0.5" stopColor={deep} /><stop offset="1" stopColor="#050308" /></radialGradient>
+	<circle cx={x} cy={y} r={lerp(380, 2300, ease(o))} fill={`url(#${id})`} />
+	<circle cx={x} cy={y} r={lerp(380, 2300, ease(o))} fill="none" stroke="#fff" strokeWidth={10} opacity={0.8 * (1 - cl01(o))} />
+</g>;
+const IrisOpen: React.FC<{o: number; x: number; y: number; col: string; deep: string; id: string}> = ({o, x, y, col, deep, id}) => o >= 1 ? null : <g>
+	<radialGradient id={id} gradientUnits="userSpaceOnUse" cx={x} cy={y} r={1400}><stop offset="0" stopColor={col} /><stop offset="0.5" stopColor={deep} /><stop offset="1" stopColor="#050308" /></radialGradient>
+	<mask id={id + 'm'} maskUnits="userSpaceOnUse" x={0} y={0} width={W} height={H}><rect width={W} height={H} fill="#fff" /><circle cx={x} cy={y} r={lerp(0, 2300, ease(o))} fill="#000" /></mask>
+	<rect width={W} height={H} fill={`url(#${id})`} mask={`url(#${id}m)`} />
+	<circle cx={x} cy={y} r={lerp(0, 2300, ease(o))} fill="none" stroke="#fff" strokeWidth={10} opacity={0.8 * (1 - cl01(o))} />
+</g>;
+const GOLD_V = {col: '#f2c14e', deep: '#3a2a08'};
 const VoiceScene: React.FC<{T: number; v: Voice; i: number}> = ({T, v, i}) => {
 	// the reveal is snapped to the frame that holds the downbeat (never a frame late)
 	const t0 = Q0[i], t = T - t0, rv = Math.round(REV[i] * FPS - 0.2) / FPS - t0, CYC = (i < VOICES.length - 1 ? Q0[i + 1] : OUT) - t0, hit = t - rv;
@@ -1124,7 +1193,7 @@ const VoiceScene: React.FC<{T: number; v: Voice; i: number}> = ({T, v, i}) => {
 	const orn = (k: number) => hit >= 0 ? out3(cl01(hit / 0.1)) : 0;                       // pins, earrings, small things: with the figure
 	const late = (k: number) => out3(cl01((hit - BEAT * (0.5 + 0.5 * k)) / 0.22));   // the big moves keep their beat
 	const nameU = on ? cl01(hit / 0.3) : 0, tag = fade(t, rv + 0.12, 0.25), say = fade(t, rv + 2 * BEAT, 0.3);
-	const leave = fade(t, CYC - 0.22, 0.22);
+	const leave = MEME_MODE ? 0 : fade(t, CYC - 0.22, 0.22);
 	const shake = v.kind === 'ju' || v.kind === 'nu' || v.kind === 'ang' ? (hit > 0.6 ? 3 * Math.sin(T * 41) * Math.sin(T * 7.3) * (1 - cl01((hit - 0.6) / 2.5)) : 0) : 0;
 	const beatPulse = Math.max(0, 1 - ((((T - PH) % BEAT) + BEAT) % BEAT) / 0.16);
 	const push = (1 + 0.05 * ease(t / CYC)) * (1 + 0.012 * beatPulse * lit);
@@ -1143,15 +1212,16 @@ const VoiceScene: React.FC<{T: number; v: Voice; i: number}> = ({T, v, i}) => {
 				{Array.from({length: 50}, (_, k) => <circle key={k} cx={rnd(k) * W} cy={rnd(k, 1) * H} r={0.8 + 1.4 * rnd(k, 2)} fill="#eef" opacity={0.15 + 0.35 * Math.sin(T * 1.2 + k * 2.1) ** 2} />)}
 				<circle cx={520} cy={560} r={620} fill="none" stroke={v.hot} strokeWidth={2.2} opacity={0.25 + 0.4 * lit} />
 				<g transform={`translate(${cx},${cy}) scale(${push})`}>
+					{MEME_MODE && MEME[v.kind] ? <g transform="translate(0,40)"><MemeDisc T={T} v={v} u={on ? cl01(hit / 0.35) : 0} /></g> : <>
 					<Halo T={T} v={v} s={lerp(0.9, 1, out3(t / 0.3)) * (on ? 1 + 0.035 * Math.max(0, 1 - hit / 0.2) : 1)} t={t} rv={rv} lit={lit} />
-					<BackMotes T={T} v={look(v)} hit={hit} />
+					<BackMotes T={T} v={look(v)} hit={hit} /></>}
 					{orb > 0 && <g opacity={orb}>
 						<circle r={248} fill="url(#orbG)" />
 						<g opacity={icon}><OrbMoment T={T} v={v} /></g>
 						<OrbEyes v={v} u={eyes} T={T} />
 					</g>}
 					{on && <g transform={figT}>
-						<Fig T={T} v={v} draw={1} open={open} orn={orn} late={late} t={t} />
+						<Fig T={T} v={v} draw={1} open={open} orn={orn} late={late} t={MEME_MODE && MEME[v.kind] ? hit : t} />
 						<AccFront T={T} v={v} u={orn(1)} />
 					</g>}
 				</g>
@@ -1198,7 +1268,11 @@ const VoiceScene: React.FC<{T: number; v: Voice; i: number}> = ({T, v, i}) => {
 				<BlurText id={`y${v.n}`} x={150} y={770} text={v.say} size={48} weight={800} col="#ffffff" spacing="0.05em" u={say} hl={v.key} hlCol={v.col} />
 			</g>
 			<Lift hit={hit} x={nameX} y={525} />
-			{(() => { const o = cl01((t - (CYC - BEAT)) / BEAT); if (o <= 0) return null;
+			{MEME_MODE && <>
+				<IrisOpen o={t / 0.4} x={cx} y={cy + 40} col={v.col} deep={v.deep} id={`io${v.n}`} />
+				{(() => { const nx = i < VOICES.length - 1 ? VOICES[i + 1] : GOLD_V; return <IrisClose o={(t - (CYC - IRIS)) / IRIS} x={cx} y={cy + 40} col={nx.col} deep={nx.deep} id={`ic${v.n}`} />; })()}
+			</>}
+			{!MEME_MODE && (() => { const o = cl01((t - (CYC - BEAT)) / BEAT); if (o <= 0) return null;
 				switch (v.kind) {
 					case 'den': return <g>{Array.from({length: 14}, (_, i) => { const a = i / 14 * Math.PI * 2 + rnd(i, 81) * 0.3; const pts: P[] = [[cx, cy]]; for (let k = 1; k < 8; k++) { const p = pts[k - 1], aa = a + (rnd(i * 9 + k, 82) - 0.5) * 0.7; pts.push([p[0] + Math.cos(aa) * 170, p[1] + Math.sin(aa) * 170]); } const d = 'M' + pts.map((p) => p.map((q) => q.toFixed(1)).join(',')).join(' L'); return <path key={i} d={d} stroke="#eef6ff" strokeWidth={2.4} fill="none" strokeDasharray={1300} strokeDashoffset={1300 * (1 - out3(o * 1.3))} opacity={1 - ease(cl01((o - 0.75) / 0.25))} />; })}</g>;
 					case 'ang': return <g>{Array.from({length: 70}, (_, i) => { const x = rnd(i, 83) * W, y = lerp(-40, H * 1.1, ease(cl01(o * 1.2 - rnd(i, 84) * 0.25))); return <circle key={i} cx={x + 20 * Math.sin(T * 3 + i)} cy={y} r={2 + 3 * rnd(i, 85)} fill={i % 3 ? GOLD : '#ffb070'} opacity={0.9 * (1 - ease(cl01((o - 0.8) / 0.2)))} />; })}<rect width={W} height={H} fill="#ff3b4a" opacity={0.18 * (1 - o)} /></g>;
@@ -1230,6 +1304,7 @@ const Intro: React.FC<{T: number}> = ({T}) => (
 				{T >= at && T < at + 0.4 && <circle cx={960 + (i - (SEVEN.length - 1) / 2) * ICON_DX} cy={650} r={60 + 90 * out3((T - at) / 0.4)} fill="none" stroke={s.col} strokeWidth={5 * (1 - (T - at) / 0.4)} opacity={1 - (T - at) / 0.4} />}
 			</g>; })}
 		</g>
+		{MEME_MODE && <IrisClose o={(T - (V0 - IRIS)) / IRIS} x={1400} y={540} col={VOICES[0].col} deep={VOICES[0].deep} id="icIntro" />}
 	</svg>
 );
 const Outro: React.FC<{T: number}> = ({T}) => {
@@ -1239,20 +1314,25 @@ const Outro: React.FC<{T: number}> = ({T}) => {
 		<svg width={W} height={H}>
 			<Defs v={{col: GOLD, hot: '#fff2c8', deep: '#1c1408'}} />
 			<rect width={W} height={H} fill="url(#bgG)" />
-			<g opacity={1 - qOut}>
-				<BlurText id="o1" x={984} y={430} text="你心里，哪一宗罪最大声？" size={80} anchor="middle" u={q} />
-				{SEVEN.map((s, i) => { const o = cl01((t - BEAT - i * BEAT * 0.5) / 0.1), gl = Math.max(0, 1 - Math.abs(((t - BAR - i * BEAT * 0.5 + 4 * BAR) % (BEAT * 3.5)) - 0) / 0.3); return <Icon key={s.ch} x={960 + (i - (SEVEN.length - 1) / 2) * ICON_DX} y={620} ch={s.ch} col={s.col} o={o} s={lerp(1.6, 1, outBack(o)) * (1 + 0.06 * gl * cl01(t - BAR))} />; })}
+			{/* the big circle holds the whole ending */}
+			<g transform={`translate(960,540) scale(${lerp(0.9, 1, out3(t / 0.5)) * (1 + 0.03 * Math.max(0, 1 - hit / 0.25) * (hit > 0 ? 1 : 0))})`}>
+				<circle r={470} fill="#0c0a12" stroke="url(#goldG)" strokeWidth={3} />
+				<circle r={490} fill="none" stroke={GOLD} strokeWidth={1.2} opacity={0.5} />
+				<g transform={`rotate(${title > 0 ? (t - tq) * 12 : 0})`}>{SEVEN.map((s, i) => { const a = -Math.PI / 2 + i / SEVEN.length * Math.PI * 2, o = cl01((t - BEAT - i * BEAT * 0.5) / 0.1); return <g key={s.ch} transform={`translate(${Math.cos(a) * 470},${Math.sin(a) * 470}) rotate(${title > 0 ? -(t - tq) * 12 : 0})`}><Icon x={0} y={0} ch={s.ch} col={s.col} o={o} s={lerp(1.6, 0.9, outBack(o))} /></g>; })}</g>
 			</g>
-			{title > 0 && <g opacity={title * (1 - fade(t, tq + 2 * BAR, 0.5))} transform={`translate(960,540) scale(${lerp(1.18, 1, slam)}) translate(-960,-540)`}>
-				<g transform={`translate(960,520) rotate(${T * 10})`}>{SEVEN.map((s, i) => { const a = i / SEVEN.length * Math.PI * 2; return <g key={s.ch} transform={`translate(${Math.cos(a) * 560},${Math.sin(a) * 300}) rotate(${-T * 10})`}><circle r={30} fill="#0b0912" stroke={s.col} strokeWidth={3} /><text y={12} textAnchor="middle" style={{fontFamily: SERIF, fontWeight: 900, fontSize: 34}} fill="#fff">{s.ch}</text></g>; })}<circle r={330} fill="none" stroke="url(#goldG)" strokeWidth={2} opacity={0.6} /></g>
-				<text x={960} y={590} textAnchor="middle" style={{fontFamily: SERIF, fontWeight: 900, fontSize: 230, letterSpacing: '0.12em'}} fill="#fff2d0" opacity={0.7} filter="url(#gL)">七宗罪</text>
-				<text x={960} y={590} textAnchor="middle" style={{fontFamily: SERIF, fontWeight: 900, fontSize: 230, letterSpacing: '0.12em'}} fill="url(#goldG)">七宗罪</text>
-				<text x={960} y={690} textAnchor="middle" style={{fontFamily: SERIF, fontWeight: 600, fontSize: 34, letterSpacing: '0.9em'}} fill={GOLD}>SEVEN DEADLY SINS</text>
-				<text x={960} y={760} textAnchor="middle" style={{fontFamily: SERIF, fontWeight: 600, fontSize: 32, letterSpacing: '0.2em'}} fill="#efe6d2">它们不是七个怪物，是七个被放大的你。</text>
-				<ellipse cx={lerp(400, 1520, ease(slam))} cy={520} rx={600} ry={9} fill="#fff" opacity={0.8 * Math.sin(Math.PI * slam)} filter="url(#gS)" />
+			<g opacity={1 - qOut}>
+				<BlurText id="o1" x={984} y={560} text="你心里，哪一宗罪最大声？" size={62} anchor="middle" u={q} />
+			</g>
+			{title > 0 && <g opacity={title} transform={`translate(960,540) scale(${lerp(1.18, 1, slam)}) translate(-960,-540)`}>
+				<text x={960} y={560} textAnchor="middle" style={{fontFamily: SERIF, fontWeight: 900, fontSize: 190, letterSpacing: '0.1em'}} fill="#fff2d0" opacity={0.7} filter="url(#gL)">七宗罪</text>
+				<text x={960} y={560} textAnchor="middle" style={{fontFamily: SERIF, fontWeight: 900, fontSize: 190, letterSpacing: '0.1em'}} fill="url(#goldG)">七宗罪</text>
+				<text x={960} y={650} textAnchor="middle" style={{fontFamily: SERIF, fontWeight: 600, fontSize: 28, letterSpacing: '0.7em'}} fill={GOLD}>SEVEN DEADLY SINS</text>
+				<text x={960} y={720} textAnchor="middle" style={{fontFamily: SERIF, fontWeight: 600, fontSize: 28, letterSpacing: '0.12em'}} fill="#efe6d2">它们不是七个怪物，是七个被放大的你。</text>
+				<ellipse cx={lerp(560, 1360, ease(slam))} cy={500} rx={420} ry={8} fill="#fff" opacity={0.8 * Math.sin(Math.PI * slam)} filter="url(#gS)" />
 			</g>}
 			<Rings hit={hit} x={960} y={540} col={GOLD} />
 			<Lift hit={hit} />
+			{MEME_MODE && <IrisOpen o={t / 0.4} x={960} y={540} col={GOLD_V.col} deep={GOLD_V.deep} id="ioOut" />}
 		</svg>
 	);
 };
