@@ -19,7 +19,7 @@
 | 11 | 一、刀和枪 |  | 剩500，正好是直觉的答案 | counter: 500 ✓ (old times) |  |
 | 12 | 一、刀和枪 |  | 可有了枪，事情变了 | swords → rifles | L2 |
 | 13 | 一、刀和枪 |  | 每个人，都能朝任何一个敌人开枪 | fire lines fan out from every dot | L2 |
-| 14 | 二、一轮一轮算 |  | 我们一轮一轮算：每10个人，一轮打倒1个敌人 | 10 blue dots → 1 red dot falls (示意) | L4 |
+| 14 | 二、一轮一轮算 |  | 一轮轮算：每10人，一轮打倒1个敌人 | 10 blue dots → 1 red dot falls (示意) | L4 |
 | 15 | 二、一轮一轮算 |  | 第一轮：1000人打倒对面100个 | 100 red dots fall | L4 |
 | 16 | 二、一轮一轮算 |  | 对面500人，只打倒你50个 | 50 blue dots fall | L4 |
 | 17 | 二、一轮一轮算 |  | 于是，950比400 | table row 1 | L4 |
@@ -44,7 +44,7 @@
 | 36 | 三、为什么是平方 |  | 英国舰队司令写信给他 | letter, 1916 | L7 |
 | 37 | 三、为什么是平方 |  | "你的平方律，在大舰队里出名了" |  | L7 |
 | 38 | 四、各个击破 |  | 平方还意味着：想以一敌二，你得强4倍 | 1 ship vs 2 ships; a ×4 gauge | L6 |
-| 39 | 四、各个击破 |  | 两边一样多？1000对1000，同归于尽 | two equal squares cancel to nothing | L5 |
+| 39 | 四、各个击破 |  | 两边一样多？最后同归于尽 | two equal squares cancel to nothing | L5 |
 | 40 | 四、各个击破 |  | 可如果，你能把敌人分成两半 | the red army splits; the halves drift apart | L5 |
 | 41 | 四、各个击破 |  | 先用1000人，打其中500个 | fight 1 → 866 left | L5 |
 | 42 | 四、各个击破 |  | 剩下866人，再打另外500个 | fight 2 | L5 |
