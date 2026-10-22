@@ -1,6 +1,7 @@
 import React from 'react';
 import {AbsoluteFill, Composition, registerRoot, useCurrentFrame} from 'remotion';
 import {PHOTO_GRE} from './photo_gre';
+import {MEME_IMG} from './memes';
 
 /* 《七宗罪》 — the 七情 template with the seven deadly sins (Britannica: first enumerated in the 6th century by
    St. Gregory the Great, later elaborated by Thomas Aquinas). One live element per sin, starting on the beat after
@@ -748,27 +749,30 @@ const MEME: Record<string, {name: string; quip: string}> = {
 };
 const FigMeme: React.FC<FigProps> = ({T, v, orn, late}) => {
 	const c = late(3), m = MEME[v.kind], k = v.kind;
-	const rot = k === 'slo' ? -78 * out3(c) : 0, card = 'M-230,-300 H230 Q260,-300 260,-270 V310 Q260,340 230,340 H-230 Q-260,340 -260,310 V-270 Q-260,-300 -230,-300 Z';
+	const rot = k === 'slo' ? 84 * outBack(cl01(c / 0.7)) : 0, card = 'M-230,-300 H230 Q260,-300 260,-270 V310 Q260,340 230,340 H-230 Q-260,340 -260,310 V-270 Q-260,-300 -230,-300 Z';
 	const pop = outBack(cl01(c / 0.6));
+	const img = MEME_IMG[k], fitR = img ? Math.min(600 / img.w, (k === 'slo' ? 540 : 640) / img.h) : 1, iw = img ? img.w * fitR : 520, ih = img ? img.h * fitR : 640, top = 340 - ih;
 	return <g>
-		<g transform={`rotate(${rot},0,200)`}>
+		<defs><filter id="memeRim" x="-20%" y="-20%" width="140%" height="140%"><feMorphology in="SourceAlpha" operator="dilate" radius={4} result="d" /><feFlood floodColor={v.col} /><feComposite in2="d" operator="in" result="c" /><feGaussianBlur in="c" stdDeviation={10} result="g" /><feMerge><feMergeNode in="g" /><feMergeNode in="g" /><feMergeNode in="SourceGraphic" /></feMerge></filter></defs>
+		<g transform={`translate(${k === 'slo' ? -60 : 0},${k === 'slo' ? -330 * out3(cl01(c / 0.7)) : 0}) rotate(${rot},${k === 'slo' ? -120 : 0},${k === 'slo' ? 330 : 200})`}>
+			{img ? <image href={img.src} x={-iw / 2} y={top} width={iw} height={ih} filter="url(#memeRim)" /> : <>
 			<path d={card} fill={v.deep} opacity={0.85} />
 			<path d={card} fill="none" stroke={v.col} strokeWidth={4} strokeDasharray="18 12" />
 			<text x={0} y={-10} textAnchor="middle" style={{fontFamily: SERIF, fontWeight: 900, fontSize: 70}} fill={v.hot}>{m.name}</text>
-			<text x={0} y={60} textAnchor="middle" style={{fontFamily: SERIF, fontSize: 32}} fill={v.hot} opacity={0.6}>梗图（抠图后）放这里</text>
+			<text x={0} y={60} textAnchor="middle" style={{fontFamily: SERIF, fontSize: 32}} fill={v.hot} opacity={0.6}>梗图（抠图后）放这里</text></>}
 			{k === 'ang' && c > 0 && <g stroke="#fff" strokeWidth={4} fill="none" opacity={0.9}>
 				<path d={`M-40,-300 L-10,${-300 + 200 * c} L-60,${-300 + 380 * c} L-20,${-300 + 560 * c}`} /><path d={`M-10,${-300 + 200 * c} L${80 * c},${-300 + 260 * c} L${150 * c},${-300 + 240 * c}`} /></g>}
 		</g>
-		{k === 'pri' && <g transform={`translate(0,${-300 - 300 * (1 - out3(c))})`} opacity={c > 0 ? 1 : 0}>
+		{k === 'pri' && <g transform={`translate(${img ? -iw * 0.12 : 0},${top + 10 - 300 * (1 - out3(c))})`} opacity={c > 0 ? 1 : 0}>
 			<path d="M-110,0 L-110,-64 L-70,-26 L-36,-92 L0,-40 L36,-92 L70,-26 L110,-64 L110,0 Z" fill="url(#goldG)" stroke="#7a5a20" strokeWidth={2} />
 			{[-70, 0, 70].map((x) => <circle key={x} cx={x} cy={-16} r={10} fill={v.col} stroke="#fff" strokeWidth={1.4} />)}</g>}
 		{k === 'env' && c > 0 && Array.from({length: 14}, (_, i) => { const side = i % 2 ? 1 : -1, ph = (T * 0.8 + rnd(i, 5)) % 1, x = side * (270 + 30 * Math.sin(T * 3 + i)), y = 300 - ph * 640; return <path key={i} transform={`translate(${x},${y}) scale(${c * (1 - ph) * 1.4})`} d="M0,-40 C18,-14 22,8 0,28 C-22,8 -18,-14 0,-40 Z" fill={v.col} opacity={0.75} filter="url(#gM)" />; })}
 		{k === 'slo' && c > 0 && [0, 1, 2].map((i) => { const ph = (T * 0.4 + i / 3) % 1; return <text key={i} x={120 + i * 40 + ph * 80} y={-60 - ph * 240} style={{fontFamily: SERIF, fontWeight: 900, fontSize: 50 + i * 16}} fill={v.hot} opacity={c * Math.sin(Math.PI * ph)}>z</text>; })}
 		{k === 'gre' && c > 0 && Array.from({length: 26}, (_, i) => { const side = i % 2 ? 1 : -1, x = side * (300 + rnd(i, 91) * 70), d = cl01((c - rnd(i, 92) * 0.5) / 0.5), y = lerp(-560, 320 - 22 * Math.floor(rnd(i, 93) * 5), out3(d)); return <g key={i} transform={`translate(${x},${y}) scale(${Math.cos(T * 6 + i)},1)`} opacity={d > 0 ? 1 : 0}><circle r={18} fill="url(#goldG)" stroke="#7a5a20" strokeWidth={1} /><rect x={-5} y={-5} width={10} height={10} fill="#1a1404" /></g>; })}
-		{k === 'glu' && Array.from({length: 5}, (_, i) => { const d = cl01((c - i * 0.14) / 0.3), y = lerp(-500, 320 - i * 70, out3(d)); return <g key={i} transform={`translate(${-330},${y}) rotate(${(i % 2 ? 4 : -4)})`} opacity={d > 0 ? 1 : 0}><rect x={-70} y={-30} width={140} height={60} rx={8} fill="#fff4e6" stroke={v.col} strokeWidth={3} /><rect x={-70} y={-30} width={140} height={14} rx={6} fill={v.col} /></g>; })}
+		{k === 'glu' && Array.from({length: 5}, (_, i) => { const d = cl01((c - i * 0.14) / 0.3), y = lerp(-500, 320 - i * 70, out3(d)); return <g key={i} transform={`translate(${380},${y}) rotate(${(i % 2 ? 4 : -4)})`} opacity={d > 0 ? 1 : 0}><rect x={-70} y={-30} width={140} height={60} rx={8} fill="#fff4e6" stroke={v.col} strokeWidth={3} /><rect x={-70} y={-30} width={140} height={14} rx={6} fill={v.col} /></g>; })}
 		{k === 'lus' && c > 0 && Array.from({length: 10}, (_, i) => { const ph = (T * 0.5 + rnd(i, 7)) % 1, x = (rnd(i, 8) - 0.5) * 640, y = 300 - ph * 700; return <path key={i} transform={`translate(${x},${y}) scale(${c * (0.8 + rnd(i, 9)) * Math.sin(Math.PI * ph)})`} d="M0,12 C-30,-10 -20,-36 0,-22 C20,-36 30,-10 0,12 Z" fill={v.col} />; })}
 		{/* the meme line pops in on the beat */}
-		<g transform={`translate(${k === 'slo' ? 40 : 60},${k === 'slo' ? -250 : k === 'pri' ? -470 : -380}) scale(${pop})`} opacity={c > 0 ? 1 : 0}>
+		<g transform={`translate(${k === 'slo' ? 60 : 80},${k === 'slo' ? -230 : Math.max(-440, top - (k === 'pri' ? 150 : 70))}) scale(${pop})`} opacity={c > 0 ? 1 : 0}>
 			{(() => { const wd = m.quip.length * 46 + 70; return <><rect x={-wd / 2} y={-50} width={wd} height={100} rx={50} fill="#fff" /><path d="M-30,46 L-60,90 L0,48 Z" fill="#fff" /><text x={0} y={16} textAnchor="middle" style={{fontFamily: SERIF, fontWeight: 900, fontSize: 46}} fill={v.deep}>{m.quip}</text></>; })()}
 		</g>
 	</g>;
