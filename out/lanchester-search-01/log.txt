@@ -1,0 +1,62 @@
+token present: yes
+sketchfab search "napoleonic soldier"
+  saved out/search/napoleonic-soldier/01_57a57a99ce1f4e45adee5ae37a91f51b.jpg 0.0 MB
+  saved out/search/napoleonic-soldier/02_85a1a8205b2c447fb8d0419978f17b75.jpg 0.0 MB
+  saved out/search/napoleonic-soldier/03_771050587ce248498178aee2c2f88f36.jpg 0.0 MB
+  saved out/search/napoleonic-soldier/04_64c0459243d74244a1a972c9e141db85.jpg 0.0 MB
+  saved out/search/napoleonic-soldier/05_aa5a353357974d2dbd4b18d34ec9a7bc.jpg 0.0 MB
+  saved out/search/napoleonic-soldier/06_7b5f04b92dc141c28facce307f7dcf4a.jpg 0.0 MB
+  saved out/search/napoleonic-soldier/07_fad522b663db4f2ab47748aa7f71a235.jpg 0.0 MB
+  saved out/search/napoleonic-soldier/08_6ae73c4f4b1e4c4189f7b5c82ed88d3f.jpg 0.0 MB
+  saved out/search/napoleonic-soldier/09_71fbbfb07f214e80a9c196fce49f69b2.jpg 0.0 MB
+  saved out/search/napoleonic-soldier/10_71be40b8d16642ebb98ff08dabcd64b8.jpg 0.0 MB
+  saved out/search/napoleonic-soldier/11_c6d32b3f4cfa48409b9004a127e23fb5.jpg 0.0 MB
+  saved out/search/napoleonic-soldier/12_3b3f95d70d0e4909801bf3811cdc5339.jpg 0.0 MB
+  saved out/search/napoleonic-soldier/13_4822bc87be484025a694f31403d4501a.jpg 0.0 MB
+  saved out/search/napoleonic-soldier/14_5bc936377b4b40c494791355bdd57424.jpg 0.0 MB
+  saved out/search/napoleonic-soldier/15_bf6f8a2888674388b0f63cea55d534c5.jpg 0.0 MB
+  saved out/search/napoleonic-soldier/16_6e85f05b51944ab28b4f61ec19565e3b.jpg 0.0 MB
+sketchfab search "redcoat musket soldier"
+  saved out/search/redcoat-musket-soldier/01_85a1a8205b2c447fb8d0419978f17b75.jpg 0.0 MB
+  saved out/search/redcoat-musket-soldier/02_64c0459243d74244a1a972c9e141db85.jpg 0.0 MB
+sketchfab search "line infantry 1800 rigged"
+  FAILED: ENOENT: no such file or directory, open 'out/search/line-infantry-1800-rigged/results.json'
+sketchfab search "ship of the line"
+  saved out/search/ship-of-the-line/01_400abf08c94e4b4e809fca0aa51a5e00.jpg 0.0 MB
+  saved out/search/ship-of-the-line/02_ebd578d1f83d4f17aa980bd1d1c9f6b6.jpg 0.0 MB
+  saved out/search/ship-of-the-line/03_1f320f9e96cd4a9d961d7b1553a2feed.jpg 0.0 MB
+  saved out/search/ship-of-the-line/04_cb2b17c7a84747449ebe68326beb9fca.jpg 0.0 MB
+  saved out/search/ship-of-the-line/05_3afea352a40045b0a638c9900f669ed4.jpg 0.0 MB
+  saved out/search/ship-of-the-line/06_ba59dedc523841b99d19fc17493d601f.jpg 0.0 MB
+  saved out/search/ship-of-the-line/07_99001c7b6c084c348398c23e995f633d.jpg 0.0 MB
+  saved out/search/ship-of-the-line/08_a38a0e6035014e56863abdd4d65a82be.jpg 0.0 MB
+  saved out/search/ship-of-the-line/09_164572002cf047df8d2231774133cf2e.jpg 0.0 MB
+  saved out/search/ship-of-the-line/10_ad0b26ce581c4af7ae687b195e0e11b4.jpg 0.0 MB
+  saved out/search/ship-of-the-line/11_c0157edfb3d84d6aa5b0e11f1e297555.jpg 0.0 MB
+  saved out/search/ship-of-the-line/12_26d0f09e4ae64c41ad0119caa30d8058.jpg 0.0 MB
+  saved out/search/ship-of-the-line/13_4765aaf3b4104688bc892c42cc8d1242.jpg 0.0 MB
+  saved out/search/ship-of-the-line/14_f44725d26b644ab1a9b3c953491b9524.jpg 0.0 MB
+  saved out/search/ship-of-the-line/15_26d75b863a9d411988584e9e52d636c7.jpg 0.0 MB
+  saved out/search/ship-of-the-line/16_98f1decbda5c48aea22a11c7ddd62a7b.jpg 0.0 MB
+  saved out/search/ship-of-the-line/17_828d7e00d6c344d1a54b083734f63b68.jpg 0.0 MB
+  saved out/search/ship-of-the-line/18_4b2cb678bf984c018dfa1936bd156c8d.jpg 0.0 MB
+  saved out/search/ship-of-the-line/19_d9c8618109154b21bbbf099e074d0b0c.jpg 0.0 MB
+  saved out/search/ship-of-the-line/20_b696ae356b6d4b4d8f83d26dd5c33ae7.jpg 0.0 MB
+  saved out/search/ship-of-the-line/21_b584d0bf6edd433193f2651b6c71a3c8.jpg 0.0 MB
+  saved out/search/ship-of-the-line/22_e2e565d1292845ec81e97f064ac55f8f.jpg 0.0 MB
+  saved out/search/ship-of-the-line/23_c83cadef48524b70a5917369413f7d7e.jpg 0.0 MB
+  saved out/search/ship-of-the-line/24_d5afec9203a34f8f8220a80876c2826d.jpg 0.0 MB
+sketchfab search "HMS Victory"
+  saved out/search/hms-victory/01_01595c3b0e2f42a297084977a10df1e2.jpg 0.0 MB
+  saved out/search/hms-victory/02_88af3f36713b4878839fd7ef4464801a.jpg 0.0 MB
+  saved out/search/hms-victory/03_2756110a8ba54efe9c4435ef36af57d9.jpg 0.0 MB
+  saved out/search/hms-victory/04_69b3ba83bbeb4da092df5e0c69520233.jpg 0.0 MB
+  saved out/search/hms-victory/05_9bc20bdfb4394d748cd2f60056b54507.jpg 0.0 MB
+  saved out/search/hms-victory/06_20112472de3946bc8263ccd1a9b91611.jpg 0.0 MB
+url https://api.polyhaven.com/assets?t=hdris&c=sunrise-sunset
+  saved out/files/ph_hdris_sunset.json 0.2 MB
+url https://api.polyhaven.com/assets?t=textures&c=terrain
+  saved out/files/ph_textures_terrain.json 0.1 MB
+url https://api.polyhaven.com/assets?t=models&c=nature
+  saved out/files/ph_models_nature.json 0.1 MB
+done

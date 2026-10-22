@@ -1,0 +1,14 @@
+[
+  {
+    "source": "https://api.polyhaven.com/assets?t=hdris&c=sunrise-sunset",
+    "license": "list"
+  },
+  {
+    "source": "https://api.polyhaven.com/assets?t=textures&c=terrain",
+    "license": "list"
+  },
+  {
+    "source": "https://api.polyhaven.com/assets?t=models&c=nature",
+    "license": "list"
+  }
+]
