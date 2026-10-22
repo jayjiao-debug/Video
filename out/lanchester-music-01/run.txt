@@ -1,0 +1,23 @@
+url https://incompetech.com/music/royalty-free/pieces.json
+  saved out/files/incompetech_pieces.json 0.9 MB
+url https://incompetech.com/music/royalty-free/mp3-royaltyfree/Five%20Armies.mp3
+  saved out/files/Five_Armies.mp3 6.2 MB
+url https://incompetech.com/music/royalty-free/mp3-royaltyfree/Heroic%20Age.mp3
+  saved out/files/Heroic_Age.mp3 3.9 MB
+url https://incompetech.com/music/royalty-free/mp3-royaltyfree/Volatile%20Reaction.mp3
+  saved out/files/Volatile_Reaction.mp3 5.3 MB
+url https://incompetech.com/music/royalty-free/mp3-royaltyfree/Crusade.mp3
+  saved out/files/Crusade.mp3 8.0 MB
+url https://incompetech.com/music/royalty-free/mp3-royaltyfree/Clash%20Defiant.mp3
+  saved out/files/Clash_Defiant.mp3 12.0 MB
+url https://incompetech.com/music/royalty-free/mp3-royaltyfree/Rite%20of%20Passage.mp3
+  saved out/files/Rite_of_Passage.mp3 11.3 MB
+url https://incompetech.com/music/royalty-free/mp3-royaltyfree/Prelude%20and%20Action.mp3
+  saved out/files/Prelude_and_Action.mp3 4.0 MB
+url https://incompetech.com/music/royalty-free/mp3-royaltyfree/Strength%20of%20the%20Titans.mp3
+  saved out/files/Strength_of_the_Titans.mp3 2.6 MB
+url https://incompetech.com/music/royalty-free/mp3-royaltyfree/The%20Descent.mp3
+  saved out/files/The_Descent.mp3 7.7 MB
+url https://incompetech.com/music/royalty-free/mp3-royaltyfree/Achilles.mp3
+  saved out/files/Achilles.mp3 2.5 MB
+done
