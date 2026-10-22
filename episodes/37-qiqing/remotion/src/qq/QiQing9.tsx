@@ -393,7 +393,7 @@ const FigLove: React.FC<FigProps> = ({T, v, draw, open, orn, late}) => {
 			<ellipse cx={0} cy={-238} rx={98} ry={58} fill="url(#sheenG)" />
 			<Neon d="M-98,-238 A98,58 0 1,1 98,-238 A98,58 0 1,1 -98,-238" v={v} draw={draw} w={2} L={1000} glow={0.35} />
 		</g>
-		<FrontFace T={T} v={v} draw={draw} open={open * (1 - blink)} eye="calm" brow="calm" mouth="closed" look={0.05 + 0.08 * Math.sin(T * 0.7)} />
+		<FrontFace T={T} v={v} draw={draw} open={open} eye="calm" brow="calm" mouth="closed" look={0.05 + 0.08 * Math.sin(T * 0.7)} />
 		{[1, -1].map((sx) => <ellipse key={sx} cx={sx * 68} cy={34} rx={24} ry={9} fill={v.col} opacity={0.14 * open} filter="url(#gS)" />)}
 		<g opacity={orn(0)} transform="translate(0,-112)"><path d="M0,-14 C5,-5 5,5 0,12 C-5,5 -5,-5 0,-14 Z" fill={v.col} /><circle r={14} fill={v.col} opacity={0.35} filter="url(#gS)" /></g>
 		{/* the hair over the crown, two soft strands by the cheeks */}
@@ -516,8 +516,6 @@ const Halo: React.FC<{T: number; v: Voice; s: number; t: number; rv: number; lit
 		<rect x={-150} y={-150} width={300} height={300} fill="#0a0612" stroke="url(#goldG)" strokeWidth={8} />
 		{Array.from({length: 8}, (_, i) => <path key={i} transform={`rotate(${i * 45 + 22.5}) translate(0,${-(r1 + 12)})`} d="M0,-9 L5,0 L0,9 L-5,0 Z" fill="url(#goldG)" />)}
 		</g>
-		{/* the inscription in the two bands either side of the face: 七情 | 之欲 */}
-		{([['七', -1, -1], ['情', -1, 1], ['之', 1, -1], ['欲', 1, 1]] as const).map(([c, x, y]) => <text key={c} x={x * 248} y={y * 44 + 20} textAnchor="middle" style={{fontFamily: SERIF, fontWeight: 900, fontSize: 58}} fill="#fff2c8" opacity={0.92}>{c}</text>)}
 	</g>;
 	return <g transform={`scale(${s})`}>
 		<circle r={560} fill="url(#auraG)" />
