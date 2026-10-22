@@ -1,0 +1,94 @@
+{
+  "would_keep_watching_after_3s": true,
+  "why": "At 2s I see '七宗' typing out and a row of 7 colored circles with '?' silhouettes. By 3s the full line '七宗罪，你每天都在犯。' is up, and it is calling me out, so I want to know which one is me. The silhouettes look like memes I know (one has horns, one has bunny-ish ears), which is enough to make me stay for a few more seconds. Downsides: the 6世纪教皇格里高利一世 caption is tiny and adds nothing. The frame is a wide landscape strip, so on my phone it sits small between black bars and every piece of text shrinks. At 5s I'm already in scene 1 (对方等你道歉), so the opening wastes no time.",
+  "two_second_read": "Dark screen, typewriter '七宗', 7 colored '?' badges. It reads like a mystery lineup of meme characters. That's a mild hook, not a strong one.",
+  "five_second_read": "Got the accusation hook plus the first scenario '对方等你道歉 / 我？先低头？' with a kangaroo-shaped silhouette. I'm guessing 美团袋鼠, so I stay.",
+  "first_moment_I_got_curious": "~4.2s (line #4 '我？先低头？' over the kangaroo silhouette). I had the guess '美团袋鼠?' and wanted to see if I was right. The real lean-in moment was 16.4s, when the sword and shield silhouette made 刀盾狗 obvious before the reveal.",
+  "per_scene": [
+    {
+      "scene": "1 傲慢 / 美团袋鼠 (4-10s)",
+      "silhouette_made_me_guess": "Yes. The long ears and the tail sitting up read as kangaroo, and with Meituan's yellow mascot being everywhere I guessed it in about 1s.",
+      "meme_fits_sin": "Medium. The crown helps sell 傲慢. But 美团袋鼠 is famous for being cute and hardworking, not arrogant, so the link comes only from the crown and the quip.",
+      "quip_funny": "Kind of. '你的胆子真是肥嘟嘟的啊' is cute, but I'm not sure it's actually the kangaroo's catchphrase, so I don't get the 'that's its line!' payoff. It reads as a generic cute-scolding line. It also takes a second to work out who it's aimed at (the person waiting for my apology?).",
+      "closing_line": "'嘴硬，是心虚。' Short, and a small 原来如此. It moves from 傲慢 to 嘴硬, which is a slightly different thing, but the line is acceptable."
+    },
+    {
+      "scene": "2 嫉妒 / 奶蛙 (10-16s)",
+      "silhouette_made_me_guess": "Barely. It's a lumpy blob with a hand on its chin, and I couldn't tell it was 奶蛙 until the reveal.",
+      "meme_fits_sin": "Good. The thinking-frog pose plus the lemon (柠檬精) is instantly 酸 and makes sense.",
+      "quip_funny": "Yes, one of the best. The '恭喜恭喜！' to '运气好而已。' flip is the most relatable two-beat in the video. I've done exactly that.",
+      "closing_line": "'酸谁，就是想成为谁。' This is the strongest closing line, a real 原来如此 and not preachy."
+    },
+    {
+      "scene": "3 暴怒 / 刀盾狗 (16-22s)",
+      "silhouette_made_me_guess": "Instantly. The sword and shield give it away, and that's fun because I 'win' the guess.",
+      "meme_fits_sin": "Perfect. The dog is literally screaming with weapons.",
+      "quip_funny": "Yes. '我很冷静！' while it screams, with the frame cracking, is a classic contradiction gag and it lands.",
+      "closing_line": "'怒火，最先烧的是自己。' Preachy. It sounds like a 朋友圈鸡汤 card. A joke in its place would have been better."
+    },
+    {
+      "scene": "4 懒惰 / 牛来 (22-28s)",
+      "silhouette_made_me_guess": "Mostly. The horns plus the chubby standing body made me think 牛来.",
+      "meme_fits_sin": "Fine. The blank 牛来 face is very 'not mentally present'.",
+      "quip_funny": "Mild smile. '牛来了，魂没来。' is a decent pun. The TODO calendar going 周一 to 周二 to 周日 is the funnier part, a visual gag I'd notice on rewatch.",
+      "closing_line": "'懒，有时是累到不想面对。' Gentle and kind of comforting rather than preachy. Some people will feel seen. It's a soft 原来如此."
+    },
+    {
+      "scene": "5 贪婪 / 三角洲鼠鼠 (28-34s)",
+      "silhouette_made_me_guess": "Yes, but partly because the 'silhouette' isn't a clean silhouette. You can see the helmet and headset texture through it, so it looks like a dark-filtered photo rather than a shadow. It's inconsistent with scenes 1-4.",
+      "meme_fits_sin": "The best fit in the video. 鼠鼠 never leaves the raid because it wants one more loot box. That IS 贪婪.",
+      "quip_funny": "Yes for anyone who plays. '再摸一个包就撤。' is exactly what everyone says right before dying. The bags piling up around it are a nice touch.",
+      "closing_line": "'想要更多，是怕失去。' This is a 原来如此. It flips greed into fear in a way I hadn't thought of."
+    },
+    {
+      "scene": "6 暴食 / 哈基米 (34-40s)",
+      "silhouette_made_me_guess": "Yes, but it leaks. At 35.1s the orange fur and cat ear show at the top right of the blob, so the silhouette spoils itself. The tray shape plus chopsticks also gives away 'cat eating'.",
+      "meme_fits_sin": "Good. The 哈基米 cat with a 食堂 tray, plus 外卖 boxes stacking up.",
+      "quip_funny": "Yes. '曼波~再来亿口。' I can hear the 曼波 voice in my head. '凌晨1点 / 就吃一口' sets it up well because it hits me personally (it's literally when I'm scrolling).",
+      "closing_line": "'填不满的，往往不是胃。' A bit 鸡汤, about emotional eating. It's borderline preachy but short enough to pass."
+    },
+    {
+      "scene": "7 色欲 / 草地牛 (40-46s)",
+      "silhouette_made_me_guess": "No. A lying-down blob could be any animal. I only got it at the reveal.",
+      "meme_fits_sin": "The weakest. 草地牛 is a grumpy cow lying on grass, which has nothing to do with lust. The floating hearts are what's doing the work. And 'stalking ta's 主页' is more 放不下 / 暗恋 than 色欲, so 色欲 feels slightly off as a label.",
+      "quip_funny": "The quip itself is great, very relatable: '千万别手滑点赞。' is a real fear. It just isn't connected to the cow.",
+      "closing_line": "'你馋的，是想象里的ta。' A half 原来如此. '馋' connects it to 色欲 nicely, but it still has a little lecture tone."
+    }
+  ],
+  "where_I_would_swipe_away": [
+    "~22-25s (start of 懒惰): by the 4th repeat of the same template (context, silhouette, blurred title, quip, moral) the rhythm is predictable. Each scene is the same 6 seconds. If 牛来 doesn't hook me I swipe here. I stayed only because I wanted to see whether 三角洲鼠鼠 or 哈基米 would show up.",
+    "46.7-48.7s: two seconds with no new text after 色欲. It feels like the video ended, which is a natural swipe point.",
+    "49-59s outro: about 11 seconds of the circle of icons rotating with one question. I would swipe around 52s once I've read '你心里，哪一宗罪最大声？'. The '七个梗，七个放大版的你' card at 56.8s is a nice line, but most people won't wait for it."
+  ],
+  "lines_I_did_not_understand": [
+    "#6 '你的胆子真是肥嘟嘟的啊': is this a known 美团袋鼠 line? If it is, I didn't recognize it. And who is it aimed at: the person waiting for my apology, or me?",
+    "#2 '6世纪由教皇格里高利一世列出': I understand it, but I don't care and couldn't read it at that size on a phone.",
+    "Latin subtitles (Superbia, Invidia, Ira, Acedia, Avaritia, Gula, Luxuria): decorative only. Fine, I just ignore them.",
+    "#20 '牛来了，魂没来。': only funny if you know the 牛来 meme. Without it it's a bit cryptic."
+  ],
+  "best_moment": "16.4-20s 刀盾狗: I guess it from the silhouette, the '你再说一遍？' setup leads into the '我很冷静！' scream, and the frame cracks. A close second is 嫉妒's '恭喜恭喜！' to '运气好而已。'",
+  "takeaway_in_my_words": "Every 'sin' is just a normal daily habit of mine, and underneath most of them is fear or insecurity: 嘴硬 is 心虚, 酸 is wanting to be them, greed is fear of losing.",
+  "surprise_that_stuck": "'想要更多，是怕失去。' together with the 三角洲鼠鼠 '再摸一个包就撤'. I'd never thought of my greedy looting as fear. Also '酸谁，就是想成为谁。'",
+  "title_I_would_click": "'刀盾狗是暴怒，三角洲鼠鼠是贪婪，你是哪个？' Naming two memes I know plus a 'which one are you' question makes me click and comment. Second choice: '七宗罪，你每天都在犯' (the opening line), which is accusatory and works as a title.",
+  "title_that_misleads": "Anything like '一分钟看懂七宗罪的历史/起源' would mislead. The video has no history beyond one tiny caption. It's a meme personality test, not a knowledge video.",
+  "what_I_would_comment": "'凌晨1点刷到暴食，被点名了' or '鼠鼠我啊，再摸一个包就撤，然后被打死了'. The outro question works, and I'd answer it: '贪婪，每把都是'.",
+  "would_share": "Maybe. I'd send it to a friend who plays 三角洲 with '这不就是你', or to a group chat for the 嫉妒 one. It's not funny enough to share for itself; it gets shared as a 'you are this one' tag.",
+  "for_frames_only": [
+    {"frame": "intro 0.0-3.8s", "what_this_says_in_5s": "Seven deadly sins, seven mystery meme characters, and you commit all of them. The hook is clear, but the text is small in the landscape frame."},
+    {"frame": "scene1 5.1-8.7s", "what_this_says_in_5s": "Refusing to apologize first = 傲慢. 美团袋鼠 with a crown. The visual reads; the quip is fuzzy."},
+    {"frame": "scene2 10.7-14.8s", "what_this_says_in_5s": "Congratulating a friend while thinking '运气好而已' = 嫉妒. The frog with the lemon is instantly readable."},
+    {"frame": "scene3 16.8-21.0s", "what_this_says_in_5s": "Screaming '我很冷静！' = 暴怒. The clearest frame in the video, with good cracks."},
+    {"frame": "scene4 22.9-27.0s", "what_this_says_in_5s": "'明天再说' the night before a deadline = 懒惰. The 周一 to 周日 calendar is a nice gag but easy to miss."},
+    {"frame": "scene5 29.0-33.1s", "what_this_says_in_5s": "Bag already full but still looting = 贪婪. Perfect for gamers. The silhouette isn't really a silhouette (texture shows)."},
+    {"frame": "scene6 35.1-39.2s", "what_this_says_in_5s": "Eating at 1am, takeout boxes stacking = 暴食. Funny, but the silhouette leaks the cat's ear and fur."},
+    {"frame": "scene7 41.2-45.2s", "what_this_says_in_5s": "Checking ta's homepage again = 色欲. The quip is relatable, but the 草地牛 has no visible link to lust beyond the hearts."},
+    {"frame": "outro 49.3-56.8s", "what_this_says_in_5s": "Which sin is loudest in you? Seven memes, seven magnified versions of you. It's a good comment prompt but stays on screen too long."}
+  ],
+  "blunt_fixes_from_a_viewer": [
+    "Cut the outro to about 5s and kill the 46.7-48.7 gap.",
+    "Swap the 傲慢 quip for a line people actually associate with 美团袋鼠, or make it obviously about not lowering my head.",
+    "Make 鼠鼠 and 哈基米 true solid silhouettes like the others.",
+    "Replace the 暴怒 moral (鸡汤) with something sharper, or let '我很冷静！' be the ending.",
+    "Vary the rhythm around scene 4 (e.g., a speed-up or a fake-out) so the template doesn't get stale."
+  ]
+}

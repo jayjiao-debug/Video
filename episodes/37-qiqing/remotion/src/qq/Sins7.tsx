@@ -845,7 +845,7 @@ const MemeSil: React.FC<{T: number; v: Voice; u: number; quoteU: number}> = ({T,
 	const {img, iw, ih, top, x0} = memeBox(v.kind);
 	const bp = ((((T - PH) % BEAT) + BEAT) % BEAT) / BEAT, pulse = kickOn(T) ? Math.max(0, 1 - bp / 0.2) : 0;
 	return <g opacity={u}>
-		<filter id="silF" x="-20%" y="-20%" width="140%" height="140%"><feColorMatrix type="matrix" values="0 0 0 0 0.03  0 0 0 0 0.02  0 0 0 0 0.06  0 0 0 1 0" result="b" /><feMorphology in="SourceAlpha" operator="dilate" radius={5} result="d" /><feFlood floodColor={v.hot} /><feComposite in2="d" operator="in" result="c" /><feGaussianBlur in="c" stdDeviation={6} result="g" /><feMerge><feMergeNode in="g" /><feMergeNode in="b" /></feMerge></filter>
+		<filter id="silF" x="-20%" y="-20%" width="140%" height="140%"><feColorMatrix type="matrix" values="0 0 0 0 0.03  0 0 0 0 0.02  0 0 0 0 0.06  0 0 0 6 -1.2" result="b" /><feMorphology in="SourceAlpha" operator="dilate" radius={5} result="d" /><feFlood floodColor={v.hot} /><feComposite in2="d" operator="in" result="c" /><feGaussianBlur in="c" stdDeviation={6} result="g" /><feMerge><feMergeNode in="g" /><feMergeNode in="b" /></feMerge></filter>
 		<g transform={`translate(0,340) scale(${1 + 0.02 * pulse},${1 - 0.03 * pulse}) translate(0,-340)`}><g clipPath="url(#silClip)"><image href={img.src} x={x0} y={top} width={iw} height={ih} filter="url(#silF)" /></g><clipPath id="silClip"><circle cx={0} cy={-30} r={384} /><rect x={-1200} y={-1500} width={2400} height={1470} /></clipPath></g>
 		<text x={0} y={top + ih * 0.55 + 70} textAnchor="middle" style={{fontFamily: SERIF, fontWeight: 900, fontSize: 200 * (1 + 0.08 * pulse)}} fill={v.hot} filter="url(#gS)">?</text>
 		<text x={0} y={top + ih * 0.55 + 70} textAnchor="middle" style={{fontFamily: SERIF, fontWeight: 900, fontSize: 200 * (1 + 0.08 * pulse)}} fill="#fff">?</text>
@@ -1351,7 +1351,7 @@ const Sticker: React.FC<{v: Voice; x: number; y: number; r: number; sil: number;
 		<circle r={r} fill="none" stroke={v.col} strokeWidth={6} /><circle r={r + 7} fill="none" stroke="#fff" strokeWidth={2} opacity={0.6} />
 	</g>;
 };
-const StickerDefs = () => <filter id="stSil"><feColorMatrix type="matrix" values="0 0 0 0 0.04  0 0 0 0 0.03  0 0 0 0 0.08  0 0 0 1 0" /></filter>;
+const StickerDefs = () => <filter id="stSil"><feColorMatrix type="matrix" values="0 0 0 0 0.04  0 0 0 0 0.03  0 0 0 0 0.08  0 0 0 6 -1.2" /></filter>;
 const INTRO = {line1: '七宗罪，你每天都在犯。', caption: '6世纪由教皇格里高利一世列出'};
 const OUTRO = {question: '你心里，哪一宗罪最大声？', thesis: '七个梗，七个放大版的你。'};
 const V0 = Q0[0];
