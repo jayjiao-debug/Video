@@ -54,9 +54,9 @@ const SQ = 0.4; const BX = -470, BZ = -230; // blue square corner
 const lineBodies = (n: number, x0: number, z0: number, side: 0 | 1, sp = SQ): Body[] => Array.from({length: n}, (_, i) => ({x: x0 + i * sp + sp / 2, z: z0 - 1.2, ry: 0, side, pose: 'rest', fall: 0}));
 
 // ---------------------------------------------------------------- the sea: the Combined line (33, van to the north) and two British columns
-const LINE = (t: number, vanAway: number) => Array.from({length: 33}, (_, i) => { const u = i / 32; const van = i >= 20; return {x: 40 * Math.sin(u * 3.0) + u * 70 + (van ? vanAway * 0.25 : 0), z: -1600 + u * 3200 + (van ? vanAway : 0) + t * 1.2, heading: -Math.PI / 2}; });
+const LINE = (t: number, vanAway: number) => Array.from({length: 33}, (_, i) => { const u = i / 32; const van = i >= 25; return {x: 40 * Math.sin(u * 3.0) + u * 70 + (van ? vanAway * 0.25 : 0), z: -1600 + u * 3200 + (van ? vanAway : 0) + t * 1.2, heading: -Math.PI / 2}; });
 const COLS = (adv: number) => [
-	...Array.from({length: 12}, (_, k) => ({x: -2600 + adv - k * 130, z: 460 + k * 6, heading: 0})),   // Nelson (weather column) → cuts ahead of the centre
+	...Array.from({length: 12}, (_, k) => ({x: -2600 + adv - k * 130, z: 650 + k * 6, heading: 0})),   // Nelson (weather column) → cuts ahead of the centre
 	...Array.from({length: 15}, (_, k) => ({x: -2450 + adv - k * 125, z: -420 + k * 5, heading: 0})),  // Collingwood (lee column) → cuts the rear
 ];
 let MARKS: {tracks: THREE.Mesh[]; hot: THREE.Mesh; van: THREE.Mesh} | null = null;
@@ -64,8 +64,8 @@ const flat = (scene: THREE.Scene, color: string) => { const m = new THREE.Mesh(n
 const seaMarks = (c: Ctx, o: number, adv: number, tracks = true) => {
 	if (!MARKS) MARKS = {tracks: [flat(c.sea.scene, '#ffcf6a'), flat(c.sea.scene, '#ffcf6a')], hot: flat(c.sea.scene, '#ffcf6a'), van: flat(c.sea.scene, '#9a9a9a')};
 	const set = (m: THREE.Mesh, x0: number, z0: number, x1: number, z1: number, wd: number, a: number) => { m.position.set((x0 + x1) / 2, 0.6, (z0 + z1) / 2); m.scale.set(Math.hypot(x1 - x0, z1 - z0), wd, 1); m.rotation.z = -Math.atan2(z1 - z0, x1 - x0); (m.material as THREE.MeshBasicMaterial).opacity = a; m.visible = a > 0.01; };
-	set(MARKS.tracks[0], -2600 + adv, 460, 30, 470, 22, tracks ? o : 0); set(MARKS.tracks[1], -2450 + adv, -420, 20, -420, 22, tracks ? o : 0);
-	set(MARKS.hot, 170, -1650, 170, 520, 60, o * 0.85); set(MARKS.van, 250, 560, 250, 1650, 60, o * 0.7);
+	set(MARKS.tracks[0], -2600 + adv, 650, 30, 660, 22, tracks ? o : 0); set(MARKS.tracks[1], -2450 + adv, -420, 20, -420, 22, tracks ? o : 0);
+	set(MARKS.hot, 170, -1650, 170, 820, 60, o * 0.85); set(MARKS.van, 250, 880, 250, 1650, 60, o * 0.7);
 };
 const seaDraw = (c: Ctx, t: number, g: any = {}) => { (c.sea.water.material as any).uniforms.time.value = t * 0.6; setGrade({vig: 0.4, warm: 0.04, bloom: 0.45, exposure: 0.5, ...g}); draw(c.sea.scene); };
 const broadsides = (ships: {x: number; z: number; heading: number}[], t: number, rate: number, seed: number) => {
@@ -87,7 +87,7 @@ export const T = {
 const guessBar = (c: Ctx, b: number, o: number) => { if (o <= 0) return; const x0 = 92, w = 420, y = 196, px = x0 + (b / 1000) * w;
 	html(c.hud, `<div style="position:absolute;left:${x0}px;top:${y}px;width:${w}px;height:4px;background:rgba(255,255,255,.35);opacity:${o}"></div>
 	<div style="position:absolute;left:${x0 + w / 2 - 2}px;top:${y - 12}px;width:4px;height:28px;background:#d8d8d8;opacity:${o}"></div>
-	<div class="lbl" style="left:${x0 + w / 2}px;top:${y + 34}px;transform:translateX(-50%);font-size:32px;color:#d8d8d8;opacity:${o}">直觉：500？</div>
+	<div class="lbl" style="left:${x0 + w / 2}px;top:${y + 34}px;transform:translateX(-50%);font-size:40px;color:#d8d8d8;opacity:${o}">直觉：500？</div>
 	<div style="position:absolute;left:${px - 9}px;top:${y - 7}px;width:18px;height:18px;border-radius:9px;background:#8fb6ff;box-shadow:0 0 12px ${BLUE};opacity:${o}"></div>`); };
 /** a hook battle: 0 → 11.23 s of sim in 15 s, slowing for the end */
 const hookST = (u: number) => (u < 12 ? 0.2 + (u - 0.045) * 0.8207 : 0.2 + 11.955 * 0.8207 + (u - 12) * 0.4);
@@ -173,7 +173,7 @@ export const TIMELINE: Shot[] = [
 		clearLand(c); const d = T.bullet - T.why; const v = clamp01((u - 1.2) / (d - 1.2)); const st = u < 1.2 ? -0.4 : 0.2 + 0.22 * (1 - (1 - v) * (1 - v));
 		camKeys([{t: 0, pos: [-96, 2.2, -14], look: [45, 2, 0], fov: 40}, {t: 3.5, pos: [-88, 9, -26], look: [20, 1, 0], fov: 38}, {t: d, pos: [-60, 26, -64], look: [0, 1, 0], fov: 38}], u);
 		battle(c, SA, st); counters(c.hud, 1000, 500);
-		sub(c.hud, '为什么差这么多？', u, 0.3, 3.4);
+		sub(c.hud, '差距，从[第一枪]就开始了', u, 0.3, 3.4);
 		landDraw(c, {bloom: 0.65, exposure: 0.66 + 1.4 * (1 - clamp01(u / 0.35))});
 	}},
 	// 09 — bullet time on the first volley: count the balls
@@ -235,7 +235,7 @@ export const TIMELINE: Shot[] = [
 		if (tape > 0) { const fs = 866 * LEN; const pt = P(-45 - fs / 2, -fs / 2 - 60);
 			if (u < 11.25) tag(c.hud, pt.x, pt.y, `${Math.round(866 * tape)}`, env(u, 9.9, 99), 64, '#fff', GOLD); else slam(c.hud, pt.x, pt.y, '866', u, 11.25, 99, 110, BLUE);
 			html(c.hud, `<div style="position:absolute;left:0;right:0;top:92px;text-align:center;font-weight:900;font-size:76px;color:#fff;opacity:${env(u, 11.6, 99)};text-shadow:0 0 6px ${GOLD},0 0 26px rgba(246,207,120,.6),0 2px 10px rgba(0,0,0,.65)">1000² − 500² ≈ 866²</div>`);
-			tag(c.hud, W / 2, 196, '英国工程师 兰彻斯特 · 1914', env(u, 12.2, 99) * 0.9, 34, '#fff'); }
+			tag(c.hud, W / 2, 196, '英国工程师 兰彻斯特 · 1914', env(u, 12.2, 99) * 0.9, 40, '#fff'); }
 		sub(c.hud, '战斗力，看人数的[平方]', u, 0.05, 3.4); sub(c.hud, '每一刻，两边掉的面积[一样多]', u, 3.8, 7.3); sub(c.hud, '开头的866，就是[这么来的]', u, 11.3, 14.8);
 		landDraw(c, {bloom: 0.6});
 	}},
@@ -255,7 +255,7 @@ export const TIMELINE: Shot[] = [
 		c.army.set(bodies, cp());
 		const b = v < w1 ? aliveAt(SA2, st1)[0] : aliveAt(SR2, Math.max(0, st2))[0], r = v < w1 ? aliveAt(SA2, st1)[1] + 500 : aliveAt(SR2, Math.max(0, st2))[1];
 		counters(c.hud, b, r, 1, ['', '两拨，各 500']);
-		sub(c.hud, '要是对面分[两拨]来呢？', u, 3.8, 7.2); tag(c.hud, W / 2, 232, '打团最忌：<span style="color:#ffd27a">一拨一拨上</span>', env(u, 7.0, 9.3), 52, '#fff', GOLD);
+		sub(c.hud, '要是对面分[两拨]来呢？', u, 3.8, 6.3); tag(c.hud, W / 2, 232, '打团最忌：<span style="color:#ffd27a">一拨一拨上</span>', env(u, 6.4, 9.3), 52, '#fff', GOLD);
 		landDraw(c);
 	}},
 	// 13 — ★4: two half-armies are half the strength (overhead)
@@ -288,18 +288,18 @@ export const TIMELINE: Shot[] = [
 		setFleet(c.sea.combined, LINE(u, 0), u); setFleet(c.sea.british, COLS(adv), u);
 		const {sm, fl} = broadsides(LINE(u, 0).slice(0, 18), u, 1, 3); c.seaSmoke.set(u > 4 ? sm : []); c.seaFlash.set(u > 4 ? fl : []);
 		seaMarks(c, env(u, 3.75, d - 1.6, 0.5, 0.6), adv);
-		tag(c.hud, W / 2, 80, '1805 · 特拉法加', env(u, 0.5, d - 0.5), 40, '#fff'); tag(c.hud, W / 2, 132, '兰彻斯特专门算过这一仗 · 1916', env(u, 1.2, 3.7) * 0.85, 30, '#fff');
+		tag(c.hud, W / 2, 80, '1805 · 特拉法加', env(u, 0.5, d - 0.5), 40, '#fff');
 		counters(c.hud, 27, 33, env(u, 0.8, d - 0.3), ['英国', '法西联合']);
-		if (u > 4.2 && u < d - 1.6) { const ph = toScreen([150, 0, -600]), pv = toScreen([230, 0, 1100]); tag(c.hud, ph.x + 70, ph.y, '两列，打同一段', env(u, 4.4, d - 1.7), 52, '#fff', GOLD, 'l'); tag(c.hud, pv.x + 70, pv.y, '前队：没人跟它打', env(u, 5.0, d - 1.7), 52, '#eee', undefined, 'l'); }
+		if (u > 4.2 && u < d - 1.6) { const ph = toScreen([150, 0, -600]), pv = toScreen([230, 0, 1100]); tag(c.hud, pv.x + 70, pv.y, '前队：先不理它', env(u, 5.0, d - 1.7), 52, '#eee', undefined, 'l'); }
 		sub(c.hud, '英国船少，硬拼[该输]', u, 0.05, 3.4); sub(c.hud, '两列，全压向[同一段]', u, 3.8, 7.2);
 		seaDraw(c, u, {exposure: 0.5 + 0.7 * (1 - clamp01(u / 0.8))});
 	}},
 	// 15b — CLIMAX (15 s): the lead ship cuts the line on the downbeat; slow motion past the stern; the second column breaks through at u = 7.5; crane up on the loudest bar
 	{a: T.climax, b: T.chart, draw: (c, u) => {
 		const d = T.chart - T.climax; const tm = u < 1.2 ? u : u < 3.0 ? 1.2 + (u - 1.2) * 0.25 : 1.65 + (u - 3.0); // slow motion as the bow passes the stern
-		const adv0 = 1500 + 90 * (T.climax - T.sea), adv = adv0 + tm * 55; const lead = {x: adv - 2450, z: -420}, nel = {x: adv - 2600, z: 460};
+		const adv0 = 1500 + 90 * (T.climax - T.sea), adv = adv0 + tm * 55; const lead = {x: adv - 2450, z: -420}, nel = {x: adv - 2600, z: 650};
 		if (u < 7.5) camKeys([{t: 0, pos: [lead.x - 20, 7, -472], look: [lead.x + 260, 9, -430], fov: 40}, {t: 3.0, pos: [lead.x - 30, 5.5, -500], look: [lead.x + 70, 10, -420], fov: 42}, {t: 7.5, pos: [lead.x - 120, 26, -560], look: [lead.x + 60, 6, -380], fov: 42}], u);
-		else camKeys([{t: 7.5, pos: [nel.x - 90, 14, 400], look: [nel.x + 120, 10, 470], fov: 40}, {t: 9.4, pos: [nel.x - 160, 60, 300], look: [nel.x + 60, 4, 380], fov: 42}, {t: d, pos: [-900, 650, -1500], look: [0, 0, 0], fov: 44}], u);
+		else camKeys([{t: 7.5, pos: [nel.x - 90, 14, 590], look: [nel.x + 120, 10, 660], fov: 40}, {t: 9.4, pos: [nel.x - 160, 60, 490], look: [nel.x + 60, 4, 570], fov: 42}, {t: d, pos: [-900, 650, -1500], look: [0, 0, 0], fov: 44}], u);
 		const line = LINE(T.climax - T.sea + u, 0); setFleet(c.sea.combined, line, u); setFleet(c.sea.british, COLS(adv), u);
 		const near = line.filter((q) => Math.abs(q.z - lead.z) < 420 || (u > 7.0 && Math.abs(q.z - nel.z) < 420));
 		const a = broadsides(near, tm, 0.55, 7), b = broadsides(COLS(adv).slice(12, 18), tm, 0.55, 9), e = broadsides(COLS(adv).slice(0, 6).filter(() => u > 7.0), tm + 1.3, 0.6, 11);
@@ -313,10 +313,10 @@ export const TIMELINE: Shot[] = [
 		const van = ease((u - 1.8) / 5) * 900; seaMarks(c, env(u, 1.8, 99) * 0.8, 0, false); setFleet(c.sea.combined, LINE(tt, van), u); setFleet(c.sea.british, COLS(adv), u);
 		c.seaSmoke.set([]); c.seaFlash.set([]);
 		const sep = clamp01((u - 1.6) / 0.8); const p = (x: number, z: number) => toScreen([x, 0, z]);
-		const v = p(150, 1100 + van), m = p(90, 160), r = p(40, -800);
+		const v = p(150, 1250 + van), m = p(90, 160), r = p(40, -800);
 		tag(c.hud, v.x + 140, v.y, '前队', env(u, 1.0, 99) * (1 - clamp01((u - 7.5) / 1.2) * 0.6), 48, '#fff', RED, 'l');
 		html(c.hud, `<div class="lbl" style="left:0;right:0;top:860px;text-align:center;font-size:58px;opacity:${env(u, 7.5, 99)}"><span style="text-shadow:0 0 8px ${BLUE},0 0 24px ${BLUE}">英国 损失 0 艘</span> &nbsp;·&nbsp; <span style="text-shadow:0 0 8px ${RED},0 0 24px ${RED}">对方 损失一半以上</span></div>`);
-		sub(c.hud, '敌人的前队，[赶不回来]', u, 0.3, 3.7); sub(c.hud, '英国，一艘船都[没丢]', u, 7.5, 10.9);
+		sub(c.hud, '敌人的前队，[赶不回来]', u, 0.3, 3.7); tag(c.hud, W / 2, 132, '兰彻斯特专门算过这一仗 · 1916', env(u, 3.9, 7.3) * 0.85, 40, '#fff'); sub(c.hud, '英国，一艘船都[没丢]', u, 7.5, 10.9);
 		seaDraw(c, tt, {sepia: sep * 0.55, bloom: 0.3, vig: 0.5, exposure: 0.55});
 	}},
 	// 16 — quiet: one ship drifting at sunset, no text; a bank of smoke crosses the lens and carries the cut to the field
