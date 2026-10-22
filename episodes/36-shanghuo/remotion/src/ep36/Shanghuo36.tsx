@@ -238,6 +238,31 @@ const Phone: React.FC<{x: number; y: number; s?: number; rot?: number; children?
 	</g>
 );
 
+// ---------------------------------------------------------------- shared geometry (so transitions can carry objects between scenes)
+const BODY0 = {x: 800, y: 650, s: 1.34};
+const BM = BP(BODY0.x, BODY0.y, BODY0.s, BUST.mouth), BT = BP(BODY0.x, BODY0.y, BODY0.s, BUST.throat), BC = BP(BODY0.x, BODY0.y, BODY0.s, BUST.cheek);
+const BHEAD: Pt = [BODY0.x, BODY0.y - 212 * BODY0.s];
+/** title line 2, one glyph per cell (so the 火 can fly out of it) */
+const T2 = '到底是什么火？', T2F = 196, T2STEP = T2F * 1.04, T1 = '上火，', T1F = 230, T1STEP = T1F * 1.06;
+const titleSc = (T: number) => lerp(1.18, 1, ease(cl01((T - ln(4).b) / 0.14))) + 0.03 * ease((T - ln(4).b) / 3);
+/** where the title's 火 sits (baseline, font size) */
+const titleFire = (T: number) => { const sc = titleSc(T); return {x: 960 + 2 * T2STEP * sc, y: 520 + (700 - 520) * sc, f: T2F * sc}; };
+/** the 五行 ring */
+const WX = {cx: 960, cy: 470, R: 300};
+const tilePos = (i: number): Pt => { const a = -Math.PI / 2 + i * 2 * Math.PI / 5; return [WX.cx + WX.R * Math.cos(a), WX.cy + WX.R * Math.sin(a)]; };
+/** the bamboo slips: five slips, the text on the middle one */
+const SLIP = {x0: 640, w: 120, gap: 10, y0: 140, h: 660, fx: 960, f: 104, base: [300, 430, 560, 690]};
+/** a glyph drawn by its baseline centre (all flying glyphs use this, so start and end match their scenes) */
+const Glyph: React.FC<{ch: string; x: number; y: number; f: number; col: string; o?: number; font?: string; glow?: boolean}> = ({ch, x, y, f, col, o = 1, font = KAI, glow}) => (
+	<g opacity={o}>
+		{glow && <text x={x} y={y} textAnchor="middle" style={{fontFamily: font, fontWeight: 700, fontSize: f}} fill="#ffb07a" filter="url(#glow)" opacity={0.5}>{ch}</text>}
+		<text x={x} y={y} textAnchor="middle" style={{fontFamily: font, fontWeight: 700, fontSize: f}} fill={col} filter="url(#brush)">{ch}</text>
+	</g>
+);
+const mixHex = (a: string, b: string, u: number) => { const pa = [1, 3, 5].map((i) => parseInt(a.slice(i, i + 2), 16)), pb = [1, 3, 5].map((i) => parseInt(b.slice(i, i + 2), 16)); return '#' + pa.map((v, i) => Math.round(lerp(v, pb[i], cl01(u))).toString(16).padStart(2, '0')).join(''); };
+/** a point along an arc between two points (lift = how far the path bows up) */
+const arc = (a: Pt, b: Pt, u: number, lift = 160): Pt => [lerp(a[0], b[0], u), lerp(a[1], b[1], u) - lift * Math.sin(Math.PI * u)];
+
 // ---------------------------------------------------------------- scenes
 // 1–2 · frame 0: one object filling the frame — the 鸳鸯锅 from above, already boiling; the phone at its edge reads 03:00.
 //        line 2: mum's message lands big and the 火 seal slams with an ink splash
@@ -269,7 +294,7 @@ const Open: React.FC<{T: number}> = ({T}) => {
 				<text x={44} y={136} style={{fontFamily: '"Noto Sans CJK SC", sans-serif', fontWeight: 900, fontSize: 64}} fill={C.ink}>你这是上火了</text>
 			</g>}
 			<Splash x={1260} y={300} r={210} u={slam} seed={3} />
-			{slam > 0 && <Seal x={1260} y={300} s={lerp(3.2, 1.9, ease(slam))} ch="火" o={1} rot={-10} />}
+			{slam > 0 && T < ln(3).a && <Seal x={1260} y={300} s={lerp(3.2, 1.9, ease(slam))} ch="火" o={1} rot={-10} />}
 		</svg>
 	);
 };
@@ -281,7 +306,7 @@ const BodyScene: React.FC<{T: number; mode: 'dots' | 'fire' | 'modern' | 'both'}
 	const zoom = mode === 'fire' ? fadeIn(T, ln(11).a - 0.3, 1.6) : 0;
 	const x = lerp(800, 1080, zoom), y = lerp(650, 980, zoom), s = lerp(1.34, 2.0, zoom);
 	const m = BP(x, y, s, BUST.mouth), th = BP(x, y, s, BUST.throat), ch = BP(x, y, s, BUST.cheek), chest = BP(x, y, s, BUST.chest);
-	const d3 = (i: number) => mode === 'dots' ? fadeIn(T, ln(3).a + 0.2 + i * 0.6, 0.35) : 1;
+	const d3 = (i: number) => mode === 'dots' ? fadeIn(T, ln(3).a + 0.42 + i * 0.6, i === 0 ? 0.08 : 0.35) : 1;
 	const link = mode === 'dots' ? fadeIn(T, ln(4).a + 0.2, 1.2) : 0;
 	const fl = mode === 'fire' ? fadeIn(T, ln(9).a + 0.3, 0.8) : mode === 'both' ? 1 : 0;
 	const book = mode === 'fire' ? cl01(fadeIn(T, ln(10).a, 0.4) - fadeIn(T, ln(11).a - 0.2, 0.4)) : 0;
@@ -340,7 +365,7 @@ const BodyScene: React.FC<{T: number; mode: 'dots' | 'fire' | 'modern' | 'both'}
 const TitleCard: React.FC<{T: number}> = ({T}) => {
 	const t0 = ln(4).b, slam = cl01((T - t0) / 0.14);
 	const jolt = slam < 1 ? 0 : 8 * Math.exp(-(T - t0 - 0.14) * 9) * Math.sin((T - t0) * 42);
-	const sc = lerp(1.18, 1, ease(slam)) + 0.03 * ease((T - t0) / 3);
+	const sc = titleSc(T), gone = T >= ln(5).a;
 	return (
 		<svg width={W} height={H}>
 			<Defs />
@@ -348,10 +373,10 @@ const TitleCard: React.FC<{T: number}> = ({T}) => {
 			<ellipse cx={1290} cy={610} rx={300} ry={240} fill="#c8321e" opacity={0.22 * slam} filter="url(#glow)" />
 			<Splash x={1180} y={600} r={330} u={slam} seed={7} col="#3a1a10" />
 			<g transform={`translate(${960 + jolt},520) scale(${sc}) translate(-960,-520)`} opacity={slam}>
-				<text x={960} y={420} textAnchor="middle" style={{fontFamily: KAI, fontWeight: 700, fontSize: 230, letterSpacing: '0.06em'}} fill={C.white} filter="url(#brush)">上火，</text>
-				<text x={960} y={700} textAnchor="middle" style={{fontFamily: KAI, fontWeight: 700, fontSize: 196, letterSpacing: '0.04em'}} fill={C.white} filter="url(#brush)">到底是什么<tspan fill="#ff6a3a">火</tspan>？</text>
+				{[...T1].map((c, i) => <text key={'a' + i} x={960 + (i - 1) * T1STEP} y={420} textAnchor="middle" style={{fontFamily: KAI, fontWeight: 700, fontSize: T1F}} fill={C.white} filter="url(#brush)">{c}</text>)}
+				{[...T2].map((c, i) => (i === 5 && gone) ? null : <text key={'b' + i} x={960 + (i - 3) * T2STEP} y={700} textAnchor="middle" style={{fontFamily: KAI, fontWeight: 700, fontSize: T2F}} fill={i === 5 ? '#ff6a3a' : C.white} filter="url(#brush)">{c}</text>)}
 			</g>
-			<ellipse cx={1290} cy={630} rx={160} ry={150} fill="url(#fireGlowG)" opacity={slam} />
+			{!gone && <ellipse cx={1290} cy={630} rx={160} ry={150} fill="url(#fireGlowG)" opacity={slam} />}
 			<Seal x={1640} y={250} s={lerp(2.4, 1.15, ease(cl01((T - t0 - 0.12) / 0.16)))} ch="火" o={cl01((T - t0 - 0.12) / 0.1)} rot={-12} />
 			<text x={960} y={850} textAnchor="middle" style={{fontFamily: SERIF, fontSize: 30, letterSpacing: '0.5em'}} fill="rgba(236,226,206,0.6)" opacity={fadeIn(T, t0 + 0.6, 0.6)}>VIBE 知 识 大 赏</text>
 		</svg>
@@ -361,41 +386,62 @@ const TitleCard: React.FC<{T: number}> = ({T}) => {
 // 5–7 · 五行 as a ring of five changing tiles; 火 grows; 8 · bamboo slips: 火曰炎上
 const WuxingScene: React.FC<{T: number}> = ({T}) => {
 	const names = ['木', '火', '土', '金', '水'];
-	const cx = 960, cy = 470, R = 300;
+	const {cx, cy, R} = WX;
 	const big = fadeIn(T, ln(7).a, 0.7);
-	const slips = fadeIn(T, ln(8).a, 0.6);
-	const ring = 1 - slips;
+	const t8 = ln(8).a, iris = ease((T - t8) / 0.55);
+	const fly = ease((T - t8 - 0.05) / 0.45);
+	const wr = (i: number) => fadeIn(T, t8 + 0.5 + i * 0.28, 0.22);   // 曰 炎 上 brush in after 火 lands
+	const tp = tilePos(1);
 	return (
 		<svg width={W} height={H}>
 			<Defs />
+			<clipPath id="slipIris"><circle cx={tp[0]} cy={tp[1]} r={2300 * iris} /></clipPath>
 			<Paper />
-			{ring > 0.01 && <g opacity={ring}>
+			<g>
 				<circle cx={cx} cy={cy} r={R} fill="none" stroke={C.inkMid} strokeWidth={3} strokeDasharray="4 14" filter="url(#brush)" />
 				{names.map((n, i) => {
-					const a = -Math.PI / 2 + i * 2 * Math.PI / 5, x = cx + R * Math.cos(a), y = cy + R * Math.sin(a);
-					const o = fadeIn(T, ln(5).a + 0.4 + i * 0.32, 0.4);
-					const isFire = n === '火', sc = isFire ? 1 + 0.5 * big : 1 - 0.15 * big;
+					const [x, y] = tilePos(i);
+					const isFire = n === '火';
+					const o = isFire ? fadeIn(T, ln(5).a + 0.66, 0.1) : fadeIn(T, ln(5).a + 0.4 + i * 0.32, 0.4);
+					const pop = isFire ? 1 + 0.25 * Math.sin(Math.PI * cl01((T - ln(5).a - 0.66) / 0.3)) : 1;
+					const sc = (isFire ? 1 + 0.5 * big : 1 - 0.15 * big) * pop;
 					return <g key={n} transform={`translate(${x},${y}) scale(${sc})`} opacity={o * (isFire ? 1 : 1 - 0.45 * big)}>
 						<circle r={92} fill={isFire && big > 0 ? '#f3d3b8' : C.white} stroke={isFire ? C.fire : C.ink} strokeWidth={6} filter="url(#brush)" />
-						<text x={0} y={34} textAnchor="middle" style={{fontFamily: KAI, fontWeight: 700, fontSize: 100}} fill={isFire ? C.fire : C.ink}>{n}</text>
+						{!(isFire && T >= t8) && <text x={0} y={34} textAnchor="middle" style={{fontFamily: KAI, fontWeight: 700, fontSize: 100}} fill={isFire ? C.fire : C.ink}>{n}</text>}
 						{isFire && big > 0 && <Flame x={0} y={-80} h={150 * big} t={T} />}
 					</g>;
 				})}
-				{/* line 6: each phase is a change — small motion glyphs */}
+				{/* line 6: each phase is a change */}
 				<text x={cx} y={cy + 20} textAnchor="middle" style={{fontFamily: KAI, fontWeight: 700, fontSize: 64}} fill={C.inkMid} opacity={fadeIn(T, ln(6).a + 0.3, 0.6) * (1 - big)}>生 · 变 · 化</text>
 				{big > 0 && <g opacity={big}>
 					{['热', '红', '往上烧'].map((w, i) => <text key={w} x={cx + 470} y={cy - 150 + i * 120} style={{fontFamily: KAI, fontWeight: 700, fontSize: 76}} fill={i === 1 ? C.fire : C.ink} opacity={fadeIn(T, ln(7).a + 0.4 + i * 0.35, 0.3)}>{w}</text>)}
 				</g>}
+			</g>
+			{/* line 8: ink night opens out of the 火 tile; the 火 itself flies onto the middle slip and the rest is brushed in */}
+			{iris > 0 && <g clipPath="url(#slipIris)">
+				<InkNight glow={[960, 420]} />
+				{[0, 1, 2, 3, 4].map((i) => <g key={i}>
+					<rect x={SLIP.x0 + i * (SLIP.w + SLIP.gap)} y={SLIP.y0} width={SLIP.w} height={SLIP.h} rx={8} fill={i % 2 ? '#d9b97c' : '#cfae70'} filter="url(#paperTex)" />
+					<rect x={SLIP.x0 + i * (SLIP.w + SLIP.gap)} y={SLIP.y0} width={SLIP.w} height={SLIP.h} rx={8} fill="none" stroke="#8a6a3e" strokeWidth={2} />
+					<line x1={SLIP.x0 + i * (SLIP.w + SLIP.gap) + 18} y1={SLIP.y0 + 8} x2={SLIP.x0 + i * (SLIP.w + SLIP.gap) + 18} y2={SLIP.y0 + SLIP.h - 8} stroke="#b8975e" strokeWidth={2} opacity={0.5} />
+				</g>)}
+				{/* the two binding cords, above and below the text */}
+				{[176, 764].map((y) => <g key={y}><rect x={SLIP.x0 - 14} y={y - 4} width={5 * SLIP.w + 4 * SLIP.gap + 28} height={8} rx={4} fill="#6a4a26" />{[0, 1, 2, 3, 4, 5].map((k) => <circle key={k} cx={SLIP.x0 - 5 + k * (SLIP.w + SLIP.gap)} cy={y} r={7} fill="#5a3c1e" />)}</g>)}
+				<text x={570} y={470} textAnchor="middle" style={{fontFamily: KAI, fontWeight: 700, fontSize: 40, writingMode: 'vertical-rl'}} fill="rgba(236,226,206,0.7)">《尚书 · 洪范》</text>
+				{T >= t8 + 0.5 && <ellipse cx={SLIP.fx} cy={590} rx={170} ry={230} fill="#e8582c" opacity={0.42 * wr(1) * (0.85 + 0.15 * Math.sin(T * 7))} filter="url(#glow)" />}
+				{['曰', '炎', '上'].map((c, i) => { const u = wr(i); return u > 0 && <Glyph key={c} ch={c} x={SLIP.fx} y={SLIP.base[i + 1]} f={SLIP.f * lerp(1.25, 1, u)} col={i >= 1 ? C.fire : C.ink} o={u} />; })}
+				{T >= t8 + 0.5 && <Glyph ch="火" x={SLIP.fx} y={SLIP.base[0]} f={SLIP.f} col={C.ink} />}
+				{/* heat leaving 炎上: sparks rise off the two red characters, up the slip and out of the top */}
+				{Array.from({length: 34}, (_, i) => {
+					const R0 = (k: number) => { const v = Math.sin(i * 37.7 + k * 11.3) * 43758.5453; return v - Math.floor(v); };
+					const t0 = t8 + 1.0 + R0(1) * 1.4, ph = (T - t0) / (1.1 + R0(2) * 0.6);
+					if (ph <= 0 || ph >= 1) return null;
+					const y0 = SLIP.base[2 + (i % 2)] - 60, x = SLIP.fx + (R0(3) - 0.5) * 90 + 16 * Math.sin(ph * 7 + i);
+					return <circle key={i} cx={x} cy={y0 - ph * (y0 - 60)} r={5 + 7 * R0(4)} fill={i % 3 ? '#ffb07a' : '#ffe2bd'} opacity={Math.sin(Math.PI * ph)} filter={i % 4 ? undefined : 'url(#soft)'} />;
+				})}
 			</g>}
-			{slips > 0 && <g opacity={slips}>
-				<InkNight glow={[1006, 300]} />
-				{[0, 1, 2, 3, 4, 5, 6].map((i) => <rect key={i} x={640 + i * 92} y={140} width={78} height={640} rx={6} fill={i % 2 ? '#d9b97c' : '#cfae70'} stroke={C.inkMid} strokeWidth={2} filter="url(#paperTex)" />)}
-				{[0, 1, 2, 3, 4, 5, 6].map((i) => <rect key={'b' + i} x={636} y={200 + i * 0} width={652} height={6} fill="#6a4a26" opacity={i === 0 ? 0.6 : 0} />)}
-				<rect x={636} y={700} width={652} height={6} fill="#6a4a26" opacity={0.6} />
-				{['火', '曰', '炎', '上'].map((c, i) => <text key={c} x={1006} y={260 + i * 130} textAnchor="middle" style={{fontFamily: KAI, fontWeight: 700, fontSize: 112}} fill={i >= 2 ? C.fire : C.ink} filter="url(#brush)">{c}</text>)}
-				<Flame x={1006} y={150} h={140 * fadeIn(T, ln(8).a + 0.6, 1.0)} t={T} />
-				<text x={560} y={480} textAnchor="middle" style={{fontFamily: KAI, fontWeight: 700, fontSize: 40, writingMode: 'vertical-rl'}} fill="rgba(236,226,206,0.7)">《尚书 · 洪范》</text>
-			</g>}
+			{/* the 火 flying from the tile to the slip */}
+			{T >= t8 && T < t8 + 0.5 && (() => { const s = 1 + 0.5 * big, a0: Pt = [tp[0], tp[1] + 34 * s], b0: Pt = [SLIP.fx, SLIP.base[0]]; const q = arc(a0, b0, fly, 120); return <Glyph ch="火" x={q[0]} y={q[1]} f={lerp(100 * s, SLIP.f, fly)} col={mixHex(C.fire, C.ink, fly)} />; })()}
 		</svg>
 	);
 };
@@ -408,54 +454,70 @@ const YinYangScene: React.FC<{T: number}> = ({T}) => {
 	const clock = cl01(fadeIn(T, ln(16).a, 0.6) - fadeIn(T, ln(17).a, 0.5));
 	const chili = fadeIn(T, ln(17).a, 0.6);
 	const intro = 1 - Math.max(world, beam, clock, chili);
+	// zoom into the point of the S where it runs vertical: white to the left, dark to the right = the next shot
+	const zu = ease((T - (ln(13).a - 0.45)) / 0.6), zk = Math.pow(12, zu), zp: Pt = [960 + 150, 470 - 150];
+	const zoomT = `translate(${lerp(zp[0], 960, zu)},${lerp(zp[1], 540, zu)}) scale(${zk}) translate(${-zp[0]},${-zp[1]})`;
+	const doors = ease((T - ln(14).a) / 0.6), dropU = ease((T - ln(14).a - 0.05) / 0.5), landed = T >= ln(14).a + 0.55;
+	const spin1 = ease((T - ln(16).a) / 0.6), spin2 = ease((T - ln(17).a) / 0.6);
 	const tilt2 = 14 + 8 * fadeIn(T, ln(17).a + 0.6, 0.6);
 	return (
 		<svg width={W} height={H}>
 			<Defs />
 			<Paper />
-			{intro > 0.01 && <g opacity={intro}>
+			{intro > 0.01 && <g opacity={T < ln(13).a ? 1 : intro} transform={zoomT}>
 				<InkNight o={1 - ease((T - ln(12).a - 0.4) / 1.3)} glow={[960, 470]} />
-				<Yuanyang x={lerp(940, 960, ease((T - ln(12).a) / 1.6))} y={lerp(540, 470, ease((T - ln(12).a) / 1.6))} r={lerp(390, 300, ease((T - ln(12).a) / 1.6))} t={T} morph={ease((T - ln(12).a - 0.3) / 1.4)} rot={-24 + 40 * ease((T - ln(12).a) / 2.4)} />
+				<Yuanyang x={lerp(940, 960, ease((T - ln(12).a) / 1.6))} y={lerp(540, 470, ease((T - ln(12).a) / 1.6))} r={lerp(390, 300, ease((T - ln(12).a) / 1.6))} t={T} morph={ease((T - ln(12).a - 0.3) / 1.4)} rot={-24 + 24 * ease((T - ln(12).a) / 2.2)} />
 			</g>}
-			{world > 0.01 && <g opacity={world}>
-				{/* the bright, warm, moving side | the dark, cool, still side */}
-				<rect x={0} y={0} width={960} height={H} fill="#f6ecd6" opacity={0.85} />
-				<rect x={960} y={0} width={960} height={H} fill="#2a2621" opacity={0.92} />
-				<circle cx={420} cy={250} r={90} fill="#f2b766" opacity={0.85} filter="url(#soft)" />
-				<circle cx={1480} cy={250} r={70} fill="#d8d2c4" opacity={0.85} /><circle cx={1508} cy={236} r={66} fill="#2a2621" />
-				<path d="M120,820 C300,700 600,690 900,760 L900,1080 L120,1080 Z" fill={C.paperDeep} filter="url(#brush)" />
-				<path d="M1020,760 C1300,690 1600,700 1800,820 L1800,1080 L1020,1080 Z" fill="#3a342c" filter="url(#brush)" />
-				<text x={480} y={560} textAnchor="middle" style={{fontFamily: KAI, fontWeight: 700, fontSize: 150}} fill={C.fire}>阳</text>
-				<text x={1440} y={560} textAnchor="middle" style={{fontFamily: KAI, fontWeight: 700, fontSize: 150}} fill={C.white}>阴</text>
-				<text x={480} y={680} textAnchor="middle" style={{fontFamily: KAI, fontWeight: 700, fontSize: 56}} fill={C.ink}>亮 · 热 · 动</text>
-				<text x={1440} y={680} textAnchor="middle" style={{fontFamily: KAI, fontWeight: 700, fontSize: 56}} fill="#d8d2c4">暗 · 冷 · 静</text>
+			{(world > 0.01 || (T >= ln(14).a && doors < 1)) && <g opacity={T < ln(14).a ? world : 1}>
+				{/* the bright, warm, moving side | the dark, cool, still side; at line 14 they part like two doors */}
+				<g transform={`translate(${-960 * doors},0)`}>
+					<rect x={0} y={0} width={960} height={H} fill="#f6ecd6" />
+					<circle cx={420} cy={250} r={90} fill="#f2b766" opacity={0.85} filter="url(#soft)" />
+					<path d="M120,820 C300,700 600,690 900,760 L900,1080 L120,1080 Z" fill={C.paperDeep} filter="url(#brush)" />
+					<text x={480} y={680} textAnchor="middle" style={{fontFamily: KAI, fontWeight: 700, fontSize: 56}} fill={C.ink}>亮 · 热 · 动</text>
+				</g>
+				<g transform={`translate(${960 * doors},0)`}>
+					<rect x={960} y={0} width={960} height={H} fill="#262220" />
+					<circle cx={1480} cy={250} r={70} fill="#d8d2c4" opacity={0.85} /><circle cx={1508} cy={236} r={66} fill="#262220" />
+					<path d="M1020,760 C1300,690 1600,700 1800,820 L1800,1080 L1020,1080 Z" fill="#3a342c" filter="url(#brush)" />
+					<text x={1440} y={680} textAnchor="middle" style={{fontFamily: KAI, fontWeight: 700, fontSize: 56}} fill="#d8d2c4">暗 · 冷 · 静</text>
+				</g>
+				{T < ln(14).a && <>
+					<text x={480} y={560} textAnchor="middle" style={{fontFamily: KAI, fontWeight: 700, fontSize: 150}} fill={C.fire}>阳</text>
+					<text x={1440} y={560} textAnchor="middle" style={{fontFamily: KAI, fontWeight: 700, fontSize: 150}} fill={C.white}>阴</text>
+				</>}
 			</g>}
-			{beam > 0.01 && <g opacity={beam}>
+			{beam > 0.01 && <g opacity={T < ln(16).a ? beam : 1 - spin1} transform={`rotate(${-120 * spin1},960,560) translate(960,560) scale(${1 - 0.5 * spin1}) translate(-960,-560)`}>
 				<text x={960} y={200} textAnchor="middle" style={{fontFamily: KAI, fontWeight: 700, fontSize: 92, letterSpacing: '0.12em'}} fill={C.ink} opacity={1 - fadeIn(T, ln(15).a, 0.4) * 0.6}>阴平阳秘</text>
 				<g transform={`translate(960,560)`}>
 					<path d="M-30,250 L0,0 L30,250 Z" fill={C.ink} filter="url(#brush)" />
 					<g transform={`rotate(${-tilt})`}>
 						<rect x={-460} y={-10} width={920} height={20} rx={8} fill={C.ink} filter="url(#brush)" />
 						<line x1={-420} y1={0} x2={-420} y2={110} stroke={C.ink} strokeWidth={4} /><line x1={420} y1={0} x2={420} y2={110} stroke={C.ink} strokeWidth={4} />
-						<g transform={`translate(-420,110) rotate(${tilt})`}><circle r={84 + 6 * tilt / 14} fill="#f3d3b8" stroke={C.fire} strokeWidth={6} filter="url(#brush)" /><text y={30} textAnchor="middle" style={{fontFamily: KAI, fontWeight: 700, fontSize: 80}} fill={C.fire}>阳</text></g>
-						<g transform={`translate(420,110) rotate(${tilt})`}><circle r={84 - 8 * tilt / 14} fill="#2a2621" stroke={C.ink} strokeWidth={6} filter="url(#brush)" /><text y={30} textAnchor="middle" style={{fontFamily: KAI, fontWeight: 700, fontSize: 80}} fill={C.white}>阴</text></g>
+						<g transform={`translate(-420,110) rotate(${tilt})`}><circle r={84 + 6 * tilt / 14} fill="#f3d3b8" stroke={C.fire} strokeWidth={6} filter="url(#brush)" />{landed && <text y={30} textAnchor="middle" style={{fontFamily: KAI, fontWeight: 700, fontSize: 80}} fill={C.fire}>阳</text>}</g>
+							<g transform={`translate(420,110) rotate(${tilt})`}><circle r={84 - 8 * tilt / 14} fill="#2a2621" stroke={C.ink} strokeWidth={6} filter="url(#brush)" />{landed && <text y={30} textAnchor="middle" style={{fontFamily: KAI, fontWeight: 700, fontSize: 80}} fill={C.white}>阴</text>}</g>
 					</g>
 				</g>
 			</g>}
-			{clock > 0.01 && <g opacity={clock}>
+			{/* the big 阳 and 阴 drop into the pans */}
+			{T >= ln(14).a && !landed && <>
+				{(() => { const q = arc([480, 560], [540, 700], dropU, 90); return <Glyph ch="阳" x={q[0]} y={q[1]} f={lerp(150, 80, dropU)} col={C.fire} />; })()}
+				{(() => { const q = arc([1440, 560], [1380, 700], dropU, 90); return <Glyph ch="阴" x={q[0]} y={q[1]} f={lerp(150, 80, dropU)} col={C.white} />; })()}
+			</>}
+			{clock > 0.01 && <g opacity={T < ln(17).a ? clock : 1 - spin2} transform={`rotate(${T < ln(17).a ? 120 * (1 - spin1) : -120 * spin2},960,480) translate(960,480) scale(${T < ln(17).a ? 0.5 + 0.5 * spin1 : 1 - 0.5 * spin2}) translate(-960,-480)`}>
 				{/* the taiji as a clock: the dark half is night; at 03:00 a phone is still lit inside it */}
 				<Taiji x={960} y={480} r={330} rot={0} />
 				{Array.from({length: 12}, (_, i) => { const a = i / 12 * 2 * Math.PI - Math.PI / 2; return <text key={i} x={960 + 395 * Math.cos(a)} y={480 + 395 * Math.sin(a) + 14} textAnchor="middle" style={{fontFamily: SERIF, fontSize: 34}} fill={C.inkMid}>{i === 0 ? 12 : i}</text>; })}
 				<line x1={960} y1={480} x2={960 + 250 * Math.cos(-Math.PI / 2 + 3 / 12 * 2 * Math.PI)} y2={480 + 250 * Math.sin(-Math.PI / 2 + 3 / 12 * 2 * Math.PI)} stroke={C.fire} strokeWidth={10} strokeLinecap="round" />
 				<line x1={960} y1={480} x2={960} y2={190} stroke={C.fire} strokeWidth={6} strokeLinecap="round" />
-				<g transform="translate(1080,500) rotate(-8) scale(0.34)">
+				<g transform="translate(1012,598) rotate(-8) scale(0.3)">
 					<ellipse cx={130} cy={250} rx={300} ry={360} fill="#cfe2ff" opacity={0.55} filter="url(#glow)" />
 					<rect x={0} y={0} width={260} height={520} rx={28} fill="#e8f0ff" stroke={C.white} strokeWidth={10} />
 				</g>
 				<text x={1440} y={330} style={{fontFamily: KAI, fontWeight: 700, fontSize: 64}} fill={C.ink}>夜 · 属阴</text>
 				<text x={1440} y={420} style={{fontFamily: KAI, fontWeight: 700, fontSize: 64}} fill={C.fire}>熬夜 · 在动</text>
 			</g>}
-			{chili > 0.01 && <g opacity={chili}>
+			{chili > 0.01 && <g opacity={chili} transform={`rotate(${120 * (1 - spin2)},960,560) translate(960,560) scale(${0.5 + 0.5 * spin2}) translate(-960,-560)`}>
 				<g transform={`translate(960,560)`}>
 					<path d="M-30,250 L0,0 L30,250 Z" fill={C.ink} filter="url(#brush)" />
 					<g transform={`rotate(${-tilt2})`}>
@@ -463,7 +525,7 @@ const YinYangScene: React.FC<{T: number}> = ({T}) => {
 						<line x1={-420} y1={0} x2={-420} y2={110} stroke={C.ink} strokeWidth={4} /><line x1={420} y1={0} x2={420} y2={110} stroke={C.ink} strokeWidth={4} />
 						<g transform={`translate(-420,110) rotate(${tilt2})`}><circle r={96} fill="#f3d3b8" stroke={C.fire} strokeWidth={6} filter="url(#brush)" /><text y={30} textAnchor="middle" style={{fontFamily: KAI, fontWeight: 700, fontSize: 80}} fill={C.fire}>阳</text>
 							{/* the chilli lands on the bright side */}
-							<g transform={`translate(0,${-170 - 220 * (1 - ease(chili * 1.6))}) rotate(30)`}><path d="M-60,0 C-40,-30 40,-30 70,-6 C40,14 -20,24 -60,0 Z" fill={C.fire} filter="url(#brush)" /><path d="M-60,0 C-80,-10 -90,-30 -78,-40" stroke="#3d5a2a" strokeWidth={8} fill="none" /></g>
+							<g transform={`translate(0,${-104 - 260 * (1 - ease(cl01((T - ln(17).a - 0.5) / 0.45)))}) rotate(${-tilt2 + 8})`}><path d="M-60,0 C-40,-30 40,-30 70,-6 C40,14 -20,24 -60,0 Z" fill={C.fire} filter="url(#brush)" /><path d="M-60,0 C-80,-10 -90,-30 -78,-40" stroke="#3d5a2a" strokeWidth={8} fill="none" /></g>
 						</g>
 						<g transform={`translate(420,110) rotate(${tilt2})`}><circle r={70} fill="#2a2621" stroke={C.ink} strokeWidth={6} filter="url(#brush)" /><text y={30} textAnchor="middle" style={{fontFamily: KAI, fontWeight: 700, fontSize: 80}} fill={C.white}>阴</text></g>
 					</g>
@@ -473,6 +535,7 @@ const YinYangScene: React.FC<{T: number}> = ({T}) => {
 	);
 };
 
+const LABEL24 = '免疫细胞・一个炎症基因的活跃度';   // 15 cells of 46 px, centred on 炎 at x = 1320
 // 18–24 · "不是瞎猜": clean cobalt diagrams on cooler paper (no fire colours on biology)
 const ModernScene: React.FC<{T: number}> = ({T}) => {
 	const gate = fadeIn(T, ln(19).a + 0.3, 0.6);
@@ -480,7 +543,7 @@ const ModernScene: React.FC<{T: number}> = ({T}) => {
 	const same = fadeIn(T, ln(21).a, 0.6);
 	const nobel = fadeIn(T, ln(22).a + 0.2, 0.4);
 	const bars = fadeIn(T, ln(23).a, 0.6), grow = fadeIn(T, ln(24).a + 0.2, 1.0);
-	const nerveO = 1 - bars;
+	const slide = ease((T - ln(23).a) / 0.6);
 	const SANS = '"Noto Sans CJK SC", sans-serif';
 	return (
 		<svg width={W} height={H}>
@@ -489,7 +552,7 @@ const ModernScene: React.FC<{T: number}> = ({T}) => {
 			{/* grid of a lab notebook */}
 			<g opacity={0.5}>{Array.from({length: 40}, (_, i) => <line key={i} x1={i * 50} y1={0} x2={i * 50} y2={H} stroke={C.cobalt} strokeWidth={0.6} opacity={0.18} />)}{Array.from({length: 22}, (_, i) => <line key={'h' + i} x1={0} y1={i * 50} x2={W} y2={i * 50} stroke={C.cobalt} strokeWidth={0.6} opacity={0.18} />)}</g>
 			<text x={120} y={150} style={{fontFamily: SANS, fontWeight: 700, fontSize: 40, letterSpacing: '0.1em'}} fill={C.cobalt} opacity={fadeIn(T, ln(18).a + 0.4, 0.5)}>古人说的“热”，测一测</text>
-			{nerveO > 0.01 && <g opacity={nerveO} transform="translate(960,560) scale(1.15) translate(-810,-530)">
+			{slide < 1 && <g transform={`translate(${-1920 * slide},0) translate(960,560) scale(1.15) translate(-810,-530)`}>
 				{/* a nerve ending with a gate (an ion channel) in the membrane */}
 				<path d="M120,620 C380,600 520,560 700,560 C860,560 900,600 1000,620" stroke={C.cobalt} strokeWidth={18} strokeLinecap="round" fill="none" />
 				<path d="M120,620 C380,600 520,560 700,560 C860,560 900,600 1000,620" stroke="#e4dccb" strokeWidth={8} strokeLinecap="round" fill="none" />
@@ -509,7 +572,7 @@ const ModernScene: React.FC<{T: number}> = ({T}) => {
 					<text x={80} y={100} textAnchor="middle" style={{fontFamily: SANS, fontWeight: 900, fontSize: 44}} fill={C.cobalt}>辣椒素</text>
 				</g>
 				{/* the thermometer at 43 °C opens the same gate */}
-				{therm > 0.01 && <g transform="translate(1420,330)" opacity={therm}>
+				{therm > 0.01 && <g transform="translate(1380,330)" opacity={therm}>
 					<rect x={-22} y={-160} width={44} height={330} rx={22} fill="none" stroke={C.cobalt} strokeWidth={6} />
 					<rect x={-10} y={lerp(140, -60, therm)} width={20} height={lerp(20, 220, therm)} rx={10} fill={C.cobalt} />
 					<circle cx={0} cy={180} r={36} fill={C.cobalt} />
@@ -522,13 +585,13 @@ const ModernScene: React.FC<{T: number}> = ({T}) => {
 					<text x={240} y={445} textAnchor="middle" style={{fontFamily: SANS, fontWeight: 900, fontSize: 84}} fill={C.cobalt}>烫</text>
 					<text x={240} y={280} textAnchor="middle" style={{fontFamily: SANS, fontWeight: 700, fontSize: 38}} fill={C.grey}>大脑收到</text>
 				</g>}
-				{nobel > 0.01 && <g transform={`translate(1650,780) rotate(-8) scale(${lerp(1.4, 1, ease(nobel))})`} opacity={nobel}>
+				{nobel > 0.01 && <g transform={`translate(1430,760) rotate(-8) scale(${lerp(1.4, 1, ease(nobel))})`} opacity={nobel}>
 					<circle r={92} fill="#c9a24e" /><circle r={78} fill="none" stroke="#8a6a26" strokeWidth={3} />
 					<text y={-8} textAnchor="middle" style={{fontFamily: SANS, fontWeight: 900, fontSize: 30}} fill="#3e2d0e">诺贝尔奖</text>
 					<text y={34} textAnchor="middle" style={{fontFamily: SANS, fontWeight: 700, fontSize: 30}} fill="#3e2d0e">2021</text>
 				</g>}
 			</g>}
-			{bars > 0.01 && <g opacity={bars}>
+			{T >= ln(23).a && <g transform={`translate(${1920 * (1 - slide)},0)`}>
 				{/* a short night → one inflammation gene in immune cells, ×3+ */}
 				<g transform="translate(260,250)">
 					{['23:00', '03:00', '07:00'].map((s, i) => <text key={s} x={i * 200} y={0} style={{fontFamily: SANS, fontWeight: 700, fontSize: 44}} fill={i === 1 ? C.cobalt : C.grey}>{s}</text>)}
@@ -544,7 +607,7 @@ const ModernScene: React.FC<{T: number}> = ({T}) => {
 					<text x={490} y={64} textAnchor="middle" style={{fontFamily: SANS, fontWeight: 700, fontSize: 42}} fill={C.ink}>少睡半夜</text>
 					<text x={150} y={-130} textAnchor="middle" style={{fontFamily: SANS, fontWeight: 900, fontSize: 56}} fill={C.grey}>×1</text>
 					<text x={490} y={-130 - 260 * grow} textAnchor="middle" style={{fontFamily: SANS, fontWeight: 900, fontSize: 84}} fill={C.cobalt} opacity={ease((grow - 0.7) / 0.3)}>3倍多</text>
-					<text x={320} y={-520} textAnchor="middle" style={{fontFamily: SANS, fontWeight: 900, fontSize: 46}} fill={C.cobalt}>免疫细胞 · 一个炎症基因的活跃度</text>
+					{[...LABEL24].map((c, i) => (i === 7 && T >= ln(25).a) ? null : <text key={i} x={320 + (i - 7) * 46} y={-520} textAnchor="middle" style={{fontFamily: SANS, fontWeight: 900, fontSize: 46}} fill={i === 7 || i === 8 ? mixHex(C.cobalt, C.fire, fadeIn(T, ln(24).a + 0.3, 0.5)) : C.cobalt}>{c}</text>)}
 				</g>
 				<text x={260} y={960} style={{fontFamily: SANS, fontSize: 24}} fill={C.grey}>Irwin et al. 2006 · 30人</text>
 			</g>}
@@ -554,6 +617,11 @@ const ModernScene: React.FC<{T: number}> = ({T}) => {
 
 // 25–27 · 炎: the word under the bars → the character fills the frame → 说文 → two 火 stacked, the top one rising
 // 28–31 · Celsus: rubor · tumor · calor · dolor; inflammation ← flamma; 炎 and flamma become one flame (the hero frame)
+const yanGeom = (T: number) => {
+	const push = fadeIn(T, ln(25).a, 1.2), shuo = cl01(fadeIn(T, ln(26).a, 0.5) - fadeIn(T, ln(28).a - 0.2, 0.5)), split = fadeIn(T, ln(27).a, 1.4), rome = fadeIn(T, ln(28).a, 0.7);
+	return {x: lerp(lerp(960, 760, shuo + split), 560, rome), s: lerp(lerp(0.7, 1.15, push), 0.8, rome) * lerp(1, 0.86, split * (1 - rome))};
+};
+const YAN_IN = 0.75;   // seconds for the 炎 to fly out of the label and land
 const YanScene: React.FC<{T: number}> = ({T}) => {
 	const push = fadeIn(T, ln(25).a, 1.2);
 	const shuo = cl01(fadeIn(T, ln(26).a, 0.5) - fadeIn(T, ln(28).a - 0.2, 0.5));
@@ -569,7 +637,7 @@ const YanScene: React.FC<{T: number}> = ({T}) => {
 			<Defs />
 			<InkNight glow={[760, 520]} />
 			{/* the character 炎: two 火 stacked; at line 27 they separate and the top one rises */}
-			<g transform={`translate(${lerp(yanX, 960, merge)},${lerp(560, 470, merge)}) scale(${lerp(yanS, 0.55, merge)})`} opacity={1 - ease(merge * 1.4)}>
+			<g transform={`translate(${lerp(yanX, 960, merge)},${lerp(560, 470, merge)}) scale(${lerp(yanS, 0.55, merge)})`} opacity={(1 - ease(merge * 1.4)) * (T >= ln(25).a + YAN_IN - 0.02 ? 1 : 0)}>
 				<ellipse cx={0} cy={0} rx={420} ry={420} fill={C.fireGlow} filter="url(#glow)" opacity={0.6} />
 				{/* the real character first (lines 25–26), then it comes apart into its two 火 (line 27) */}
 				<text x={0} y={250} textAnchor="middle" style={{fontFamily: KAI, fontWeight: 700, fontSize: 760}} fill={C.fire} filter="url(#brush)" opacity={1 - ease(split * 2.5)}>炎</text>
@@ -604,7 +672,7 @@ const YanScene: React.FC<{T: number}> = ({T}) => {
 			</g>}
 			{/* the hero frame: east and west, one flame */}
 			{merge > 0.01 && <g opacity={merge}>
-				<Flame x={960} y={860} h={lerp(120, 720, ease(merge))} t={T} />
+				{T < ln(32).a && <Flame x={960} y={860} h={lerp(120, 720, ease(merge))} t={T} />}
 				<text x={480} y={780} textAnchor="middle" style={{fontFamily: KAI, fontWeight: 700, fontSize: 260}} fill={C.white} opacity={ease((merge - 0.3) / 0.5)} filter="url(#brush)">炎</text>
 				<text x={1440} y={760} textAnchor="middle" style={{fontFamily: LATIN, fontWeight: 700, fontStyle: 'italic', fontSize: 210}} fill={C.white} opacity={ease((merge - 0.3) / 0.5)}>flamma</text>
 				<text x={480} y={470} textAnchor="middle" style={{fontFamily: KAI, fontWeight: 700, fontSize: 60}} fill="rgba(236,226,206,0.7)" opacity={ease((merge - 0.5) / 0.5)}>东方</text>
@@ -616,19 +684,20 @@ const YanScene: React.FC<{T: number}> = ({T}) => {
 
 // 33 · the sleep study grid (modern, cobalt)
 const StudyScene: React.FC<{T: number}> = ({T}) => {
-	const o = fadeIn(T, ln(33).a, 0.5);
 	const SANS = '"Noto Sans CJK SC", sans-serif';
 	return (
 		<svg width={W} height={H}>
 			<Defs />
 			<Paper tone={1} />
-			<g opacity={o} transform="translate(360,200)">
-				{Array.from({length: 72}, (_, i) => <rect key={i} x={(i % 12) * 70} y={Math.floor(i / 12) * 70} width={56} height={56} rx={6} fill={C.cobalt} opacity={0.15 + 0.6 * fadeIn(T, ln(33).a + 0.1 + i * 0.012, 0.2)} />)}
-				<text x={0} y={-40} style={{fontFamily: SANS, fontWeight: 700, fontSize: 40}} fill={C.cobalt}>72 项研究 · 5万多人</text>
+			<g transform="translate(360,200)">
+				{Array.from({length: 72}, (_, i) => { const u = ease((T - ln(33).a - 0.006 * i) / 0.55), src = i % 2 ? BC : BM; const gx = (i % 12) * 70, gy = Math.floor(i / 12) * 70; const x = lerp(src[0] - 360, gx, u), y = lerp(src[1] - 200, gy, u) - 120 * Math.sin(Math.PI * u); return <rect key={i} x={x} y={y} width={lerp(14, 56, u)} height={lerp(14, 56, u)} rx={lerp(7, 6, u)} fill={C.cobalt} opacity={u < 1 ? 0.85 : 0.15 + 0.6 * fadeIn(T, ln(33).a + 0.5 + i * 0.012, 0.2)} />; })}
+				<g opacity={fadeIn(T, ln(33).a + 0.5, 0.4)}><text x={0} y={-40} style={{fontFamily: SANS, fontWeight: 700, fontSize: 40}} fill={C.cobalt}>72 项研究 · 5万多人</text></g>
+				<g opacity={fadeIn(T, ln(33).a + 0.7, 0.4)}>
 				<path d="M920,380 L1040,140" stroke={C.cobalt} strokeWidth={16} strokeLinecap="round" />
 				<path d="M990,150 L1044,130 L1050,190" stroke={C.cobalt} strokeWidth={16} fill="none" strokeLinecap="round" />
 				<text x={900} y={470} style={{fontFamily: SANS, fontWeight: 700, fontSize: 40}} fill={C.cobalt}>炎症指标</text>
 				<text x={0} y={510} style={{fontFamily: SANS, fontSize: 30}} fill={C.grey}>相关，不是因果 · Irwin et al. 2016</text>
+				</g>
 			</g>
 		</svg>
 	);
@@ -639,9 +708,10 @@ const BackScene: React.FC<{T: number}> = ({T}) => {
 	const chart = cl01(fadeIn(T, ln(37).a, 0.6) - fadeIn(T, ln(39).a, 0.5));
 	const align = fadeIn(T, ln(38).a, 1.2);
 	const grid = fadeIn(T, ln(39).a, 0.5), stamp = cl01((T - ln(39).a - 1.2) / 0.2);
-	const phone = 1 - Math.max(chart, grid);
+	const phone = T < ln(36).a ? 1 : 0;
+	const chartO = 1 - fadeIn(T, ln(39).a + 0.9, 0.5);
 	const SANS = '"Noto Sans CJK SC", sans-serif';
-	const bubble = (who: string, text: string, x: number, y: number, o: number) => <g transform={`translate(${x},${y})`} opacity={o}>
+		const bubble = (who: string, text: string, x: number, y: number, o: number) => <g transform={`translate(${lerp(BM[0], x, ease(o))},${lerp(BM[1], y, ease(o))}) scale(${lerp(0.08, 1, ease(o))})`} opacity={Math.min(1, o * 3)}>
 		<rect x={0} y={0} width={600} height={160} rx={36} fill={C.white} stroke={C.ink} strokeWidth={4} filter="url(#brush)" />
 		<text x={40} y={62} style={{fontFamily: SANS, fontWeight: 700, fontSize: 40}} fill={C.inkMid}>{who}</text>
 		<text x={40} y={126} style={{fontFamily: SANS, fontWeight: 700, fontSize: 56}} fill={C.ink}>{text}</text>
@@ -658,22 +728,34 @@ const BackScene: React.FC<{T: number}> = ({T}) => {
 					<text x={38} y={246} style={{fontFamily: SANS, fontWeight: 700, fontSize: 22}} fill="#1a2030">妈</text>
 					<text x={38} y={282} style={{fontFamily: SANS, fontSize: 26}} fill="#1a2030">你这是上火了</text>
 				</Phone>
-				<g opacity={fadeIn(T, ln(35).a, 0.6)}><Flame x={1360} y={560} h={220} t={T} ink /></g>
-				<text x={1480} y={470} style={{fontFamily: KAI, fontWeight: 700, fontSize: 64}} fill={C.ink} opacity={fadeIn(T, ln(35).a + 0.3, 0.6)}>老祖宗的眼光</text>
+					{/* the old book from 0:28 comes back beside mum's message: her words carry its way of seeing */}
+					<g transform={`translate(${lerp(1500, 1260, fadeIn(T, ln(35).a, 0.6))},250) scale(0.78) rotate(4)`} opacity={fadeIn(T, ln(35).a, 0.5)}>
+						<rect x={0} y={0} width={470} height={560} fill="#efe4c9" filter="url(#paperTex)" />
+						<rect x={0} y={0} width={470} height={560} fill="none" stroke={C.inkMid} strokeWidth={4} filter="url(#brush)" />
+						<text x={420} y={60} style={{fontFamily: KAI, fontWeight: 700, fontSize: 30, writingMode: 'vertical-rl'}} fill={C.inkMid}>《证治准绳》</text>
+						{['心火炎上', '熏蒸于口', '则口舌生疮'].map((s2, i) => <text key={i} x={330 - i * 110} y={70} style={{fontFamily: KAI, fontWeight: 700, fontSize: 66, writingMode: 'vertical-rl', letterSpacing: '0.08em'}} fill={i === 0 ? C.fire : C.ink}>{s2}</text>)}
+					</g>
+					<text x={1443} y={200} textAnchor="middle" style={{fontFamily: KAI, fontWeight: 700, fontSize: 60}} fill={C.ink} opacity={fadeIn(T, ln(35).a + 0.4, 0.6)}>老祖宗的眼光</text>
+					{/* mum's 上火 and the book's 心火炎上: one dotted thread */}
+					<path d="M1080,500 C1150,470 1190,420 1260,330" stroke={C.fire} strokeWidth={4} strokeDasharray="8 10" fill="none" opacity={fadeIn(T, ln(35).a + 0.6, 0.6) * 0.8} />
 			</g>}
-			{chart > 0.01 && <g opacity={chart}>
-				{/* an old hand-drawn body chart (ink) and the modern diagram aligning over it */}
-				<Bust x={960} y={700} s={1.0} wash={0.6} />
-				{[[0, -168], [0, -92], [58, -214]].map(([px, py], i) => <Flame key={i} x={960 + px} y={700 + py + 14} h={64} t={T + i} />)}
-				<g opacity={align}>
-					{[[0, -168], [58, -214]].map(([px, py], i) => <g key={i}><circle cx={960 + px + lerp(160, 0, align)} cy={700 + py} r={28} fill="none" stroke={C.cobalt} strokeWidth={5} /><text x={960 + px + 60 + lerp(160, 0, align)} y={700 + py - 30} style={{fontFamily: SANS, fontWeight: 700, fontSize: 34}} fill={C.cobalt}>炎症</text></g>)}
-				</g>
-				<text x={300} y={260} style={{fontFamily: KAI, fontWeight: 700, fontSize: 56}} fill={C.inkMid} opacity={1 - align}>只能看 · 只能摸</text>
-			</g>}
+				{T >= ln(37).a && chartO > 0.01 && <g opacity={chartO}>
+					{/* the same body as before: what the ancients could see (flames), then the modern diagram sliding over it */}
+					<Bust x={BODY0.x} y={BODY0.y} s={BODY0.s} />
+					{[BM, BT, BC].map((p2, i) => <Flame key={i} x={p2[0]} y={p2[1] + 14} h={70 + 10 * i} t={T + i} />)}
+					<g transform={`translate(${lerp(260, 0, align)},0)`} opacity={align}>
+						<Dot p={BM} label="炎症" o={1} side={-1} modern />
+						<Dot p={BC} label="炎症" o={1} side={1} modern />
+					</g>
+					<g opacity={fadeIn(T, ln(37).a + 0.3, 0.5) * (1 - align)}>
+						<text x={1250} y={420} style={{fontFamily: KAI, fontWeight: 700, fontSize: 64}} fill={C.inkMid}>只能看</text>
+						<text x={1250} y={520} style={{fontFamily: KAI, fontWeight: 700, fontSize: 64}} fill={C.inkMid}>只能摸</text>
+					</g>
+				</g>}
 			{grid > 0.01 && <g opacity={grid}>
-				{bubble('妈', '你这是上火了', 200, 170, fadeIn(T, ln(39).a + 0.1, 0.3))}
-				{bubble('爸', '少吃点辣的', 1110, 290, fadeIn(T, ln(39).a + 0.35, 0.3))}
-				{bubble('奶奶', '早点睡，别熬夜', 520, 500, fadeIn(T, ln(39).a + 0.6, 0.3))}
+				{bubble('妈', '你这是上火了', 200, 170, cl01((T - ln(39).a - 0.1) / 0.45))}
+				{bubble('爸', '少吃点辣的', 1110, 290, cl01((T - ln(39).a - 0.35) / 0.45))}
+				{bubble('奶奶', '早点睡，别熬夜', 520, 500, cl01((T - ln(39).a - 0.6) / 0.45))}
 				{stamp > 0 && <g transform={`translate(1540,700) rotate(-12) scale(${lerp(1.6, 1, ease(stamp))})`} opacity={stamp}>
 					<rect x={-150} y={-70} width={300} height={140} rx={14} fill="none" stroke={C.fire} strokeWidth={10} filter="url(#brush)" />
 					<text x={0} y={34} textAnchor="middle" style={{fontFamily: KAI, fontWeight: 700, fontSize: 96}} fill={C.fire} filter="url(#brush)">验证</text>
@@ -720,14 +802,131 @@ const sceneAt = (T: number): React.ReactNode => {
 	if (T < ln(39).b) return <BackScene T={T} />;
 	return <EndCard T={T} />;
 };
+
+// ---------------------------------------------------------------- transitions: every cut carries something across
+const Layer: React.FC<{children: React.ReactNode; style?: React.CSSProperties}> = ({children, style}) => <AbsoluteFill style={style}>{children}</AbsoluteFill>;
+/** the next scene opens inside a growing circle; its edge is a ring of wet ink */
+const Iris: React.FC<{A: React.ReactNode; B: React.ReactNode; c: Pt; r: number; col?: string; seed?: number}> = ({A, B, c, r, col = C.ink, seed = 1}) => {
+	const R0 = (i: number) => { const v = Math.sin(seed * 51.3 + i * 12.9898) * 43758.5453; return v - Math.floor(v); };
+	return <>
+		<Layer>{A}</Layer>
+		<Layer style={{clipPath: `circle(${Math.max(0, r)}px at ${c[0]}px ${c[1]}px)`}}>{B}</Layer>
+		{r > 1 && r < 2300 && <Layer><svg width={W} height={H}><Defs />
+			<circle cx={c[0]} cy={c[1]} r={r} fill="none" stroke={col} strokeWidth={10 + Math.min(30, r * 0.05)} filter="url(#brushHeavy)" opacity={0.9} />
+			{Array.from({length: 18}, (_, i) => { const a = R0(i) * Math.PI * 2, rr = r + (R0(i + 30) - 0.3) * 40; return <circle key={i} cx={c[0] + Math.cos(a) * rr} cy={c[1] + Math.sin(a) * rr} r={4 + 16 * R0(i + 60)} fill={col} filter="url(#brushHeavy)" opacity={0.85} />; })}
+		</svg></Layer>}
+	</>;
+};
+const Over: React.FC<{children: React.ReactNode}> = ({children}) => <Layer><svg width={W} height={H}><Defs />{children}</svg></Layer>;
+const scaleAt = (p: Pt, k: number, extra = ''): React.CSSProperties => ({transformOrigin: `${p[0]}px ${p[1]}px`, transform: `${extra} scale(${k})`});
+
+type Tr = {a: number; b: number; draw: (T: number, u: number) => React.ReactNode};
+const TRANS: Tr[] = [
+	// 1 · the 火 seal flies off the hotpot and lands on the mouth as the first symptom; paper opens around it
+	{a: ln(3).a, b: ln(3).a + 0.75, draw: (T, u) => {
+		const f = ease(u / 0.55), q = arc([1260, 300], BM, f, 140);
+		return <>
+			<Iris A={<Open T={T} />} B={<BodyScene T={T} mode="dots" />} c={BM} r={2300 * ease((u - 0.35) / 0.65)} col={C.paperDeep} seed={2} />
+			{u < 0.62 && <Over><Seal x={q[0]} y={q[1]} s={lerp(1.9, 0.14, f)} ch="火" rot={lerp(-10, 0, f)} /></Over>}
+		</>;
+	}},
+	// 2 · an ink drop falls on the head and floods the frame: the title lands on the drop (ln 4 end)
+	{a: ln(4).b - 0.42, b: ln(4).b + 0.02, draw: (T, u) => {
+		const fall = cl01(u / 0.4), y = lerp(-80, BHEAD[1], fall * fall);
+		return <>
+			<Iris A={<BodyScene T={T} mode="dots" />} B={<TitleCard T={T} />} c={BHEAD} r={2300 * Math.pow(cl01((u - 0.4) / 0.6), 1.6)} col="#120e0b" seed={4} />
+			{u < 0.42 && <Over><path d={`M${BHEAD[0]},${y - 60} C${BHEAD[0] + 22},${y - 20} ${BHEAD[0] + 26},${y + 10} ${BHEAD[0]},${y + 22} C${BHEAD[0] - 26},${y + 10} ${BHEAD[0] - 22},${y - 20} ${BHEAD[0]},${y - 60} Z`} fill="#120e0b" /></Over>}
+		</>;
+	}},
+	// 3 · the title's red 火 drops into the 五行 ring as its 火; paper opens from it
+	{a: ln(5).a, b: ln(5).a + 0.75, draw: (T, u) => {
+		const s0 = titleFire(ln(5).a), tp = tilePos(1), f = ease(u / 0.85), q = arc([s0.x, s0.y], [tp[0], tp[1] + 34], f, 60);
+		return <>
+			<Iris A={<TitleCard T={T} />} B={<WuxingScene T={T} />} c={q} r={2300 * ease(u)} col={C.paperDeep} seed={6} />
+			{u < 0.93 && <Over><Glyph ch="火" x={q[0]} y={q[1]} f={lerp(s0.f, 100, f)} col={mixHex('#ff6a3a', C.fire, f)} glow /></Over>}
+		</>;
+	}},
+	// 4 · the sparks rising off 炎上 fly out and land on the face: each one lights a symptom
+	{a: ln(9).a, b: ln(9).a + 0.7, draw: (T, u) => {
+		const src: Pt[] = [[SLIP.fx, SLIP.base[2] - 50], [SLIP.fx, SLIP.base[3] - 50], [SLIP.fx, SLIP.base[2] - 50]], dst = [BM, BT, BC];
+		return <>
+			<Iris A={<WuxingScene T={T} />} B={<BodyScene T={T} mode="fire" />} c={BHEAD} r={2300 * ease(u)} col={C.paperDeep} seed={8} />
+			<Over>{dst.map((d, i) => { const f = ease(cl01((u - i * 0.06) / 0.5)); if (f >= 1) return null; const q = arc(src[i], d, f, 200 + 60 * i), q0 = arc(src[i], d, Math.max(0, f - 0.12), 200 + 60 * i); return <g key={i}><line x1={q0[0]} y1={q0[1]} x2={q[0]} y2={q[1]} stroke="#ffb07a" strokeWidth={6} strokeLinecap="round" opacity={0.6} filter="url(#soft)" /><circle cx={q[0]} cy={q[1]} r={9} fill="#ffe2bd" /><circle cx={q[0]} cy={q[1]} r={26} fill="url(#fireGlowG)" /></g>; })}</Over>
+		</>;
+	}},
+	// 5 · dive into the flame in the head: through the red, out of the red broth of the hotpot
+	{a: ln(12).a - 0.3, b: ln(12).a + 0.35, draw: (T, u) => {
+		const pA: Pt = [1074, 600], pB: Pt = [1139, 557];
+		const inA = Math.pow(cl01(u / 0.46), 2), outB = ease(cl01((u - 0.46) / 0.54)), red = Math.max(0, 1 - Math.abs(u - 0.46) / 0.26);
+		return <>
+			{u < 0.46 ? <Layer style={{...scaleAt(pA, 1 + 9 * inA), filter: `blur(${10 * inA}px)`}}><BodyScene T={T} mode="fire" /></Layer>
+				: <Layer style={{...scaleAt(pB, lerp(4, 1, outB)), filter: `blur(${8 * (1 - outB)}px)`}}><YinYangScene T={T} /></Layer>}
+			<Layer style={{background: '#d0371c', opacity: 0.95 * Math.pow(red, 0.6)}}>{null}</Layer>
+		</>;
+	}},
+	// 6 · a magnifying glass over the chilli: inside the lens, the lab notebook
+	{a: ln(18).a, b: ln(18).a + 0.8, draw: (T, u) => {
+		const ch: Pt = [612, 707], f = ease(u), c: Pt = [lerp(ch[0], 960, f), lerp(ch[1], 540, f)], r = lerp(70, 1250, Math.pow(f, 1.4));
+		return <>
+			<Layer><YinYangScene T={T} /></Layer>
+			<Layer style={{clipPath: `circle(${r}px at ${c[0]}px ${c[1]}px)`}}><Layer style={scaleAt(c, lerp(1.4, 1, f))}><ModernScene T={T} /></Layer></Layer>
+			{r < 1150 && <Over><circle cx={c[0]} cy={c[1]} r={r + 9} fill="none" stroke={C.ink} strokeWidth={18} filter="url(#brush)" />
+				<line x1={c[0] + (r + 12) * 0.707} y1={c[1] + (r + 12) * 0.707} x2={c[0] + (r + 12) * 0.707 + 260} y2={c[1] + (r + 12) * 0.707 + 260} stroke={C.ink} strokeWidth={34} strokeLinecap="round" filter="url(#brush)" /></Over>}
+		</>;
+	}},
+	// 7 · the 炎 lifts out of 炎症基因, turns red and grows; ink night spreads from it
+	{a: ln(25).a, b: ln(25).a + YAN_IN, draw: (T, u) => {
+		const g = yanGeom(ln(25).a + YAN_IN), f = ease(u), q = arc([1320, 260], [g.x, 560 + 250 * g.s], f, 40);
+		return <>
+			<Iris A={<ModernScene T={T} />} B={<YanScene T={T} />} c={[q[0], q[1] - 0.38 * lerp(46, 760 * g.s, f)]} r={2300 * ease(cl01((u - 0.15) / 0.8))} col="#120e0b" seed={10} />
+			<Over><Glyph ch="炎" x={q[0]} y={q[1]} f={lerp(46, 760 * g.s, f)} col={mixHex(C.cobalt, C.fire, f * 2)} glow={f > 0.5} /></Over>
+		</>;
+	}},
+	// 8 · the hero flame shrinks back into the mouth; the body (and paper) open around it
+	{a: ln(32).a, b: ln(32).a + 0.7, draw: (T, u) => {
+		const f = ease(u / 0.8), x = lerp(960, BM[0], f), y = lerp(860, BM[1] + 14, f), h = lerp(720, 60, f);
+		return <>
+			<Iris A={<YanScene T={T} />} B={<BodyScene T={T} mode="modern" />} c={BM} r={2300 * ease(cl01((u - 0.3) / 0.7))} col={C.paperDeep} seed={12} />
+			{u < 0.95 && <Over><Flame x={x} y={y} h={h} t={T} o={1 - cl01((u - 0.8) / 0.15)} /></Over>}
+		</>;
+	}},
+	// 9 · the two dots multiply into the 72 studies (the cells fly out in StudyScene); the body fades under them
+	{a: ln(33).a, b: ln(33).a + 0.4, draw: (T, u) => <>
+		<Layer><StudyScene T={T} /></Layer>
+		<Layer style={{opacity: 1 - ease(u)}}><BodyScene T={T} mode="modern" /></Layer>
+	</>},
+	// 10 · whip pan to mum's phone
+	{a: ln(34).a - 0.12, b: ln(34).a + 0.3, draw: (T, u) => { const f = ease(u); return <>
+		<Layer style={{transform: `translateX(${-W * f}px)`, filter: `blur(${24 * Math.sin(Math.PI * f)}px)`}}><StudyScene T={T} /></Layer>
+		<Layer style={{transform: `translateX(${W * (1 - f)}px)`, filter: `blur(${24 * Math.sin(Math.PI * f)}px)`}}><BackScene T={Math.max(T, ln(34).a)} /></Layer>
+	</>; }},
+	// 11 · the phone flips over: on its back, the body chart
+	{a: ln(36).a - 0.25, b: ln(36).a + 0.25, draw: (T, u) => { const f = ease(u); return <>
+		<Layer style={{background: C.paper}}>{null}</Layer>
+		{f < 0.5 ? <Layer style={{transform: `perspective(2200px) rotateY(${180 * f}deg)`}}><BackScene T={Math.min(T, ln(36).a - 0.01)} /></Layer>
+			: <Layer style={{transform: `perspective(2200px) rotateY(${-180 * (1 - f)}deg)`}}><BodyScene T={T} mode="both" /></Layer>}
+	</>; }},
+	// 12 · same body, so the modern labels just fade off it
+	{a: ln(37).a, b: ln(37).a + 0.5, draw: (T, u) => <>
+		<Layer><BackScene T={T} /></Layer>
+		<Layer style={{opacity: 1 - ease(u)}}><BodyScene T={T} mode="both" /></Layer>
+	</>},
+	// 13 · to the end card: a slow ink-wash dissolve
+	{a: ln(39).b, b: ln(39).b + 0.7, draw: (T, u) => <>
+		<Layer><BackScene T={T} /></Layer>
+		<Layer style={{opacity: ease(u), ...scaleAt([960, 540], lerp(1.04, 1, ease(u)))}}><EndCard T={T} /></Layer>
+	</>},
+];
+const DARK: [number, number][] = [[0, ln(3).a + 0.4], [ln(4).b - 0.1, ln(5).a + 0.4], [ln(8).a + 0.2, ln(9).a + 0.4], [ln(11).a - 0.2, ln(12).a + 1.8], [ln(25).a + 0.3, ln(32).a + 0.4]];
 export const Film36: React.FC = () => {
 	useFonts(); useKai();
 	const T = useCurrentFrame() / FPS;
 	const line = LINES.find(([a, b]) => T >= a + 0.06 && T < b - 0.1);
-	const dark = false;
+	const dark = DARK.some(([a, b]) => T >= a && T < b);
+	const tr = TRANS.find((x) => T >= x.a && T < x.b);
 	return (
 		<AbsoluteFill style={{background: C.paper}}>
-			<AbsoluteFill>{sceneAt(T)}</AbsoluteFill>
+			<AbsoluteFill>{tr ? tr.draw(T, (T - tr.a) / (tr.b - tr.a)) : sceneAt(T)}</AbsoluteFill>
 			{T < ln(39).b && <Mark dark={dark} />}
 			{line && <Sub t={line[2]} />}
 		</AbsoluteFill>

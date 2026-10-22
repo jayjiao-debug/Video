@@ -15,7 +15,7 @@ if (mode === 'stills') {
 	console.log('stills done');
 } else {
 	let last = 0;
-	await renderMedia({serveUrl, composition, codec: 'h264', crf: 16, pixelFormat: 'yuv420p', muted: true, outputLocation: out, browserExecutable, concurrency: Number(process.env.CONC || 2), chromiumOptions: process.env.GL ? {gl: process.env.GL} : {},
+	await renderMedia({serveUrl, composition, codec: 'h264', crf: 16, pixelFormat: 'yuv420p', muted: true, outputLocation: out, scale: Number(process.env.VSCALE || 1), browserExecutable, concurrency: Number(process.env.CONC || 2), chromiumOptions: process.env.GL ? {gl: process.env.GL} : {},
 		frameRange: [Math.round(Number(a[0]) * 30), Math.round(Number(a[1]) * 30) - 1],
 		onProgress: ({progress}) => { if (progress - last > 0.2) { last = progress; console.log(`${Math.round(progress * 100)}%`); } }});
 	console.log('done', out);
