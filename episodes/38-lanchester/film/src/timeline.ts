@@ -93,7 +93,7 @@ const guessBar = (c: Ctx, b: number, o: number) => { if (o <= 0) return; const x
 const V0 = bar(4); const hookST = (u: number) => (u < V0 ? -0.5 : u < 14.0 ? 0.2 + (u - V0) * 1.555 : 0.2 + (14.0 - V0) * 1.555 + (u - 14.0) * 0.32);
 /** melee: duellists lunge at the contact line; a little dust where they meet */
 const meleeBodies = (st: number, k: number): Body[] => simBodies(SM, st, 'rest', 0, 0, k).map((b, i) => { const u = SM.units[i]; if (b.fall > 0 || Math.abs(u.x) > 4) return b;
-	const ph = Math.sin(st * 2.3 + u.fx * 40); return {...b, x: b.x + (u.side ? -1 : 1) * (0.35 + 0.35 * Math.max(0, ph)), lean: 0.22 * Math.max(0, ph)}; });
+	const ph = Math.sin(st * 2.3 + u.fx * 40); return {...b, pose: 'charge', x: b.x + (u.side ? -1 : 1) * (0.35 + 0.35 * Math.max(0, ph)), lean: 0.22 * Math.max(0, ph)}; });
 const meleeDust = (st: number) => { const R = rnd(Math.floor(st * 3) + 7), out: number[][] = []; for (let k = 0; k < 40; k++) out.push([(R() - 0.5) * 3, 0.5 + R() * 0.8, (R() - 0.5) * 40, 1.2 + R() * 1.5, 0.62, 0.55, 0.45, 0.22]); return out; };
 
 export const TIMELINE: Shot[] = [

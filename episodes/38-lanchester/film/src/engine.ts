@@ -55,31 +55,111 @@ export const camOrbit = (c: number[], r: number, h: number, ang: number, fov = 3
 export const toScreen = (v: number[]) => { const p = new THREE.Vector3(v[0], v[1], v[2]).project(camera); return {x: (p.x + 1) / 2 * W, y: (1 - p.y) / 2 * H, front: p.z < 1}; };
 
 // ================================================================ assets
-type Part = {geo: THREE.BufferGeometry; mat: THREE.Material; coat: boolean};
-type Poses = Record<'rest' | 'aim' | 'march', Part[]>;
+type Part = {geo: THREE.BufferGeometry; mat: THREE.Material; coat: boolean; gear?: boolean};
+export type PoseName = 'rest' | 'aim' | 'march' | 'charge';
+export const POSE_NAMES: PoseName[] = ['rest', 'aim', 'march', 'charge'];
+type Poses = Record<PoseName, Part[]>;
 export type Assets = {sky: THREE.DataTexture; env: THREE.Texture; ground: THREE.Texture[]; hi: Poses; lo: Poses; grass: Part[]; shipA: Part[]; shipB: Part[]; water: THREE.Texture};
-const POSES: Record<keyof Poses, Record<string, number[]>> = {
+/** starting bone rotations (added to the bind pose); the aim and charge arms are then solved onto the musket */
+const POSES: Record<PoseName, Record<string, number[]>> = {
 	rest: {upperarm_l: [0, 1.2, 0], upperarm_r: [0, 1.2, 0]},
-	aim: {upperarm_l: [0, 0.4, 1.25], upperarm_r: [0, 0.95, 0.55], lowerarm_r: [0, 0, 1.15], hand_r: [0, 1.5, 0.75]},
+	aim: {upperarm_l: [0, 0.6, 0.5], upperarm_r: [0, 0.5, 0.2]},
 	march: {upperarm_l: [0, 1.15, 0.25], upperarm_r: [0, 1.0, -0.3], thigh_l: [0, 0, 0.35], thigh_r: [0, 0, -0.3]},
+	charge: {upperarm_l: [0, 0.9, 0.5], upperarm_r: [0, 1.0, 0.2]},
 };
-const bake = (scene: THREE.Object3D, pose: Record<string, number[]> | null, size: number, along: 'y' | 'len', coatRe?: RegExp): Part[] => {
-	const o = skClone(scene);
+/** where the musket goes, in the soldier's frame after normalising (metres, facing +z, his right = −x):
+ *  butt = offset from his right shoulder joint, dir = barrel direction, rh/lh = where along it (0 butt → 1 muzzle) each hand grips */
+type Grip = {butt: number[]; dir: number[]; rh: number; lh?: number};
+const GRIPS: Partial<Record<PoseName, Grip>> = {
+	rest: {butt: [0.0, -1.3, 0.12], dir: [0.02, 1, 0.06], rh: 0.5}, // order arms: butt by the right foot, bayonet up
+	aim: {butt: [0.06, -0.04, 0.05], dir: [0.06, -0.025, 1], rh: 0.17, lh: 0.27},
+	march: {butt: [0.02, -0.62, 0.06], dir: [0.03, 1, -0.12], rh: 0.04}, // carried upright at the right side
+	charge: {butt: [0.03, -0.52, -0.08], dir: [0.1, 0.3, 1], rh: 0.05, lh: 0.38},
+};
+/** muzzle of the aimed musket in the soldier's frame (metres): read off the bake, used for flashes, smoke and tracers */
+export const MUZZLE = {fwd: 1.3, y: 1.45};
+type Norm = {c: THREE.Vector3; minY: number; sc: number; rotate: boolean};
+const V = () => new THREE.Vector3();
+/** the musket's butt-end and muzzle-end vertices (found once on its bind geometry by its long axis) */
+const musketEnds = (P: THREE.BufferAttribute) => {
+	const n = P.count, m = V(), v = V(); for (let k = 0; k < n; k++) m.add(v.fromBufferAttribute(P, k)); m.divideScalar(n);
+	const C = [0, 0, 0, 0, 0, 0, 0, 0, 0]; for (let k = 0; k < n; k++) { v.fromBufferAttribute(P, k).sub(m); const a = [v.x, v.y, v.z]; for (let i = 0; i < 3; i++) for (let j = 0; j < 3; j++) C[i * 3 + j] += a[i] * a[j]; }
+	let ax = V().set(1, 0.3, 0.2).normalize(); for (let it = 0; it < 60; it++) ax = V().set(C[0] * ax.x + C[1] * ax.y + C[2] * ax.z, C[3] * ax.x + C[4] * ax.y + C[5] * ax.z, C[6] * ax.x + C[7] * ax.y + C[8] * ax.z).normalize();
+	const t = Array.from({length: n}, (_, k) => v.fromBufferAttribute(P, k).sub(m).dot(ax)); const lo = Math.min(...t), hi = Math.max(...t), L = hi - lo;
+	const A: number[] = [], B: number[] = []; t.forEach((x, k) => { if (x < lo + 0.05 * L) A.push(k); if (x > hi - 0.05 * L) B.push(k); });
+	const spread = (S: number[]) => { const c = V(); S.forEach((k) => c.add(v.fromBufferAttribute(P, k))); c.divideScalar(S.length); let r = 0; S.forEach((k) => { const d = v.fromBufferAttribute(P, k).sub(c); r += d.sub(ax.clone().multiplyScalar(d.dot(ax))).length(); }); return r / S.length; };
+	return spread(A) > spread(B) ? {butt: A, muzzle: B} : {butt: B, muzzle: A};
+};
+/** butt point, unit axis, length and the "stock side" unit vector of a posed musket */
+const musketFrame = (P: THREE.BufferAttribute, e: {butt: number[]; muzzle: number[]}) => {
+	const v = V(), mean = (S: number[]) => { const c = V(); S.forEach((k) => c.add(v.fromBufferAttribute(P, k))); return c.divideScalar(S.length); };
+	const butt = mean(e.butt), muz = mean(e.muzzle), ax = muz.clone().sub(butt); const L = ax.length(); ax.normalize();
+	const cen = V(); for (let k = 0; k < P.count; k++) cen.add(v.fromBufferAttribute(P, k)); cen.divideScalar(P.count);
+	const d = cen.sub(butt); const u = d.sub(ax.clone().multiplyScalar(d.dot(ax))).normalize();
+	return {butt, muz, ax, L, u};
+};
+const basis = (a: THREE.Vector3, u: THREE.Vector3) => new THREE.Matrix4().makeBasis(a, u, a.clone().cross(u));
+/** two-bone CCD: turn the links so the effector reaches the target (world space) */
+const ccd = (eff: THREE.Object3D, links: THREE.Object3D[], target: THREE.Vector3, it = 40) => {
+	const ep = V(), lp = V(), q = new THREE.Quaternion(), wq = new THREE.Quaternion(), pq = new THREE.Quaternion();
+	for (let n = 0; n < it; n++) for (const L of links) {
+		L.updateMatrixWorld(true); eff.getWorldPosition(ep); L.getWorldPosition(lp);
+		const a = ep.clone().sub(lp).normalize(), b = target.clone().sub(lp).normalize(); q.setFromUnitVectors(a, b);
+		L.getWorldQuaternion(wq); L.parent!.getWorldQuaternion(pq); L.quaternion.copy(pq.invert().multiply(q.multiply(wq))); L.updateMatrixWorld(true);
+	}
+};
+const bayonetMat = new THREE.MeshStandardMaterial({color: '#dfe3e8', metalness: 0.9, roughness: 0.25});
+const skin = (m: any) => { const geo: THREE.BufferGeometry = m.geometry.clone(); const P = geo.attributes.position, v = V();
+	if (m.isSkinnedMesh) { m.skeleton.update(); for (let k = 0; k < P.count; k++) { v.fromBufferAttribute(P, k); m.applyBoneTransform(k, v); P.setXYZ(k, v.x, v.y, v.z); } geo.deleteAttribute('skinIndex'); geo.deleteAttribute('skinWeight'); }
+	geo.applyMatrix4(m.matrixWorld); return geo; };
+const bake = (scene: THREE.Object3D, poseName: PoseName | null, size: number, along: 'y' | 'len', coatRe?: RegExp, norm?: Norm): {parts: Part[]; norm: Norm} => {
+	const o = skClone(scene); const pose = poseName ? POSES[poseName] : null;
 	if (pose) o.traverse((b: any) => { if (!b.isBone) return; for (const [k, r] of Object.entries(pose)) if (b.name.startsWith(k + '_')) { b.rotation.x += r[0]; b.rotation.y += r[1]; b.rotation.z += r[2]; } });
 	o.updateMatrixWorld(true);
-	const parts: Part[] = [], bb = new THREE.Box3();
+	const bone = (pre: string) => { let f: THREE.Object3D | null = null; o.traverse((b: any) => { if (!f && b.isBone && b.name.startsWith(pre + '_')) f = b; }); return f as THREE.Object3D | null; };
+	let musketMesh: any = null; o.traverse((m: any) => { if (m.isMesh && /Musket/.test(m.name + ' ' + m.parent?.name + ' ' + (m.material?.name ?? ''))) musketMesh = m; });
+	const grip = poseName && norm ? GRIPS[poseName] : undefined;
+	let musketGeo: THREE.BufferGeometry | null = null;
+	if (musketMesh) {
+		musketGeo = skin(musketMesh); const ends = (musketMesh.userData.ends ||= musketEnds(skin(musketMesh).attributes.position as THREE.BufferAttribute));
+		if (grip && norm) {
+			const f = musketFrame(musketGeo.attributes.position as THREE.BufferAttribute, ends);
+			const sh = bone('upperarm_r')!.getWorldPosition(V());
+			const butt = sh.clone().add(V().fromArray(grip.butt).divideScalar(norm.sc)), dir = V().fromArray(grip.dir).normalize();
+			const down = V().set(0, -1, 0); const uT = down.sub(dir.clone().multiplyScalar(down.dot(dir))).normalize();
+			const R = basis(dir, uT).multiply(basis(f.ax, f.u).transpose()); const tr = butt.clone().sub(f.butt.clone().applyMatrix4(R));
+			musketGeo.applyMatrix4(new THREE.Matrix4().makeTranslation(tr.x, tr.y, tr.z).multiply(R));
+			const at = (k: number, off: number) => butt.clone().add(dir.clone().multiplyScalar(f.L * k)).add(uT.clone().multiplyScalar(off / norm.sc));
+			for (let pass = 0; pass < 2; pass++) { ccd(bone('hand_r')!, [bone('lowerarm_r')!, bone('upperarm_r')!], at(grip.rh, 0.035)); if (grip.lh !== undefined) ccd(bone('hand_l')!, [bone('lowerarm_l')!, bone('upperarm_l')!], at(grip.lh, 0.04)); }
+			o.updateMatrixWorld(true);
+		}
+	}
+	const parts: Part[] = [];
 	o.traverse((m: any) => {
-		if (!m.isMesh) return; const geo: THREE.BufferGeometry = m.geometry.clone(); const P = geo.attributes.position, v = new THREE.Vector3();
-		if (m.isSkinnedMesh) { m.skeleton.update(); for (let k = 0; k < P.count; k++) { v.fromBufferAttribute(P, k); m.applyBoneTransform(k, v); P.setXYZ(k, v.x, v.y, v.z); } geo.deleteAttribute('skinIndex'); geo.deleteAttribute('skinWeight'); }
-		geo.applyMatrix4(m.matrixWorld); geo.computeBoundingBox(); bb.union(geo.boundingBox!);
+		if (!m.isMesh) return; const isM = m === musketMesh; const geo = isM ? musketGeo! : skin(m);
 		const mat = Array.isArray(m.material) ? m.material[0] : m.material;
-		parts.push({geo, mat, coat: coatRe ? coatRe.test(m.name + ' ' + mat?.name + ' ' + m.parent?.name) : false});
+		parts.push({geo, mat, coat: coatRe ? coatRe.test(m.name + ' ' + mat?.name + ' ' + m.parent?.name) : false, gear: isM});
 	});
-	const sz = bb.getSize(new THREE.Vector3()), c = bb.getCenter(new THREE.Vector3());
-	const rotate = along === 'len' && sz.z > sz.x; // lay ships along x
-	const sc = along === 'y' ? size / sz.y : size / Math.max(sz.x, sz.z);
-	for (const p of parts) { p.geo.translate(-c.x, -bb.min.y, -c.z); if (rotate) p.geo.rotateY(Math.PI / 2); p.geo.scale(sc, sc, sc); p.geo.computeBoundingSphere(); if (!p.geo.attributes.normal) p.geo.computeVertexNormals(); }
-	return parts;
+	if (musketMesh && norm) { // a socket bayonet on the muzzle
+		const f = musketFrame(musketGeo!.attributes.position as THREE.BufferAttribute, musketMesh.userData.ends); const L = 0.43 / norm.sc;
+		const b = new THREE.CylinderGeometry(0.0025 / norm.sc, 0.011 / norm.sc, L, 5); b.translate(0, L / 2, 0); b.applyQuaternion(new THREE.Quaternion().setFromUnitVectors(V().set(0, 1, 0), f.ax));
+		const p = f.muz.clone().add(f.u.clone().multiplyScalar(0.018 / norm.sc)).sub(f.ax.clone().multiplyScalar(0.03 / norm.sc)); b.translate(p.x, p.y, p.z);
+		parts.push({geo: b, mat: bayonetMat, coat: false, gear: true});
+		if (poseName === 'aim' && size === 1.8) { const tip = f.muz.clone(); MUZZLE.fwd = (tip.z - norm.c.z) * norm.sc; MUZZLE.y = (tip.y - norm.minY) * norm.sc; }
+	}
+	if (!norm) {
+		const bb = new THREE.Box3(); for (const p of parts) if (!p.gear) { p.geo.computeBoundingBox(); bb.union(p.geo.boundingBox!); }
+		const sz = bb.getSize(V()), c = bb.getCenter(V()); const rotate = along === 'len' && sz.z > sz.x;
+		norm = {c, minY: bb.min.y, sc: along === 'y' ? size / sz.y : size / Math.max(sz.x, sz.z), rotate};
+	}
+	const n = norm;
+	for (const p of parts) { p.geo.translate(-n.c.x, -n.minY, -n.c.z); if (n.rotate) p.geo.rotateY(Math.PI / 2); p.geo.scale(n.sc, n.sc, n.sc); p.geo.computeBoundingSphere(); if (!p.geo.attributes.normal) p.geo.computeVertexNormals(); }
+	return {parts, norm: n};
+};
+/** all poses of the soldier, sharing one normalisation (the rest pose's) so feet never jump when the pose changes */
+export const soldierPoses = (sc: THREE.Object3D): Poses => {
+	const rest0 = bake(sc, 'rest', 1.8, 'y', /Jacket/); const N = rest0.norm;
+	return Object.fromEntries(POSE_NAMES.map((p) => [p, bake(sc, p, 1.8, 'y', /Jacket/, N).parts])) as Poses;
 };
 const tex = async (f: string, srgb = false, rep = 1) => { const t = await new THREE.TextureLoader().loadAsync(A(f)); t.wrapS = t.wrapT = THREE.RepeatWrapping; t.repeat.set(rep, rep); if (srgb) t.colorSpace = THREE.SRGBColorSpace; t.anisotropy = 8; return t; };
 export const loadAssets = async (): Promise<Assets> => {
@@ -91,9 +171,8 @@ export const loadAssets = async (): Promise<Assets> => {
 	]);
 	sky.mapping = THREE.EquirectangularReflectionMapping;
 	const pm = new THREE.PMREMGenerator(renderer); const env = pm.fromEquirectangular(sky).texture;
-	const pose = (sc: THREE.Object3D): Poses => ({rest: bake(sc, POSES.rest, 1.8, 'y', /Jacket/), aim: bake(sc, POSES.aim, 1.8, 'y', /Jacket/), march: bake(sc, POSES.march, 1.8, 'y', /Jacket/)});
-	const ship = (sc: THREE.Object3D) => { sc.traverse((o: any) => { if (o.isLine || o.isLineSegments) o.visible = false; }); return bake(sc, null, 58, 'len'); };
-	return {sky, env, ground: [gD, gN, gR], hi: pose(hi.scene), lo: pose(lo.scene), grass: bake(grass.scene, null, 0.55, 'y'), shipA: ship(sa.scene), shipB: ship(sb.scene), water};
+	const ship = (sc: THREE.Object3D) => { sc.traverse((o: any) => { if (o.isLine || o.isLineSegments) o.visible = false; }); return bake(sc, null, 58, 'len').parts; };
+	return {sky, env, ground: [gD, gN, gR], hi: soldierPoses(hi.scene), lo: soldierPoses(lo.scene), grass: bake(grass.scene, null, 0.55, 'y').parts, shipA: ship(sa.scene), shipB: ship(sb.scene), water};
 };
 
 // ================================================================ the land
@@ -128,7 +207,7 @@ export const makeLand = (a: Assets) => {
 
 // ================================================================ armies
 export const NEAR = 90;
-type Pose = keyof Poses;
+type Pose = PoseName;
 const blueCoat = (m: THREE.MeshStandardMaterial) => {
 	const c = m.clone(); const img: any = m.map?.image; if (!img) { c.color = new THREE.Color('#3355aa'); return c; }
 	const cv = document.createElement('canvas'); cv.width = img.width; cv.height = img.height; const g = cv.getContext('2d')!; g.drawImage(img, 0, 0);
@@ -142,7 +221,7 @@ export class Army {
 	o = new THREE.Object3D();
 	constructor(a: Assets, scene: THREE.Scene, cap: number) {
 		const mk = (parts: Part[], n: number, side: 0 | 1) => parts.map((p) => { const mat = side === 0 && p.coat ? blueCoat(p.mat as THREE.MeshStandardMaterial) : p.mat; const m = new THREE.InstancedMesh(p.geo, mat, n); m.castShadow = true; m.receiveShadow = true; m.frustumCulled = false; m.count = 0; scene.add(m); return m; });
-		for (const side of [0, 1] as const) for (const ps of ['rest', 'aim', 'march'] as const) { this.sets[`hi-${ps}-${side}`] = mk(a.hi[ps], NEAR, side); this.sets[`lo-${ps}-${side}`] = mk(a.lo[ps], cap, side); }
+		for (const side of [0, 1] as const) for (const ps of POSE_NAMES) { this.sets[`hi-${ps}-${side}`] = mk(a.hi[ps], NEAR, side); this.sets[`lo-${ps}-${side}`] = mk(a.lo[ps], cap, side); }
 	}
 	set(bodies: Body[], cam: THREE.Vector3) {
 		const near = new Set(bodies.map((b, i) => ({i, d: (b.x - cam.x) ** 2 + (b.z - cam.z) ** 2})).sort((p, q) => p.d - q.d).slice(0, NEAR).map((x) => x.i));
@@ -160,7 +239,8 @@ const fires = (sim: Sim) => { let f = fireIdx.get(sim); if (!f) { f = sim.units.
  *  `fallK` = sim seconds per real second, so a fall always takes ~0.45 real seconds */
 export const simBodies = (sim: Sim, t: number, pose: Pose = 'aim', dx = 0, dz = 0, fallK = 1): Body[] => { const F = fires(sim); return sim.units.map((u, i) => {
 	const fall = t < u.death ? 0 : Math.min(1, (t - u.death) / (0.45 * fallK));
-	let p: Pose = pose; if (pose === 'aim' && sim.kind === 'rifle') { p = t < sim.t0 - 0.6 ? 'rest' : 'rest'; for (const ft of F[i]) if (t > ft - 0.9 && t < ft + 0.5) { p = 'aim'; break; } if (t < sim.t0 + 0.6 && t > sim.t0 - 0.9) p = 'aim'; }
+	let p: Pose = pose; if (pose === 'aim' && sim.kind === 'rifle') { p = 'rest'; if (t > sim.t0 - 0.9 && fallK > 2.5) p = 'aim'; // time-lapsed fights: everyone is firing all the time
+		else { for (const ft of F[i]) if (t > ft - 0.9 * fallK && t < ft + 0.5 * fallK) { p = 'aim'; break; } if (t < sim.t0 + 0.6 && t > sim.t0 - 0.9) p = 'aim'; } }
 	return {x: u.x + dx, z: u.z + dz, ry: (u.side === 0 ? Math.PI / 2 : -Math.PI / 2) + (u.fx - 0.5) * 0.22, side: u.side, pose: p, fall, fallDir: u.fx < 0.25 ? -1 : 1, s: 0.95 + u.fx * 0.1};
 }); };
 
@@ -190,8 +270,8 @@ export const simSmoke = (sim: Sim, t: number, dx = 0, dz = 0) => {
 	for (const s of sim.shots) {
 		const age = t - s.t; if (age < 0 || age > 8) continue; const u = sim.units[s.from], dir = u.side ? -1 : 1;
 		const a = 0.14 * Math.exp(-age / 2.6) * Math.min(1, age * 7), sz = 0.9 + age * 1.05;
-		sm.push([u.x + dx + dir * (1.4 + age * 0.7) + age * 0.6, 1.5 + age * 0.75, u.z + dz + age * 0.8 + (u.fx - 0.5) * 1.5, sz, 0.9, 0.88, 0.84, a]);
-		if (age < 0.09) fl.push([u.x + dx + dir * 1.3, 1.45, u.z + dz, 0.9 + (1 - age / 0.09) * 0.8, 2.4, 1.6, 0.7, 1 - age / 0.09]);
+		sm.push([u.x + dx + dir * (MUZZLE.fwd + 0.1 + age * 0.7) + age * 0.6, MUZZLE.y + 0.05 + age * 0.75, u.z + dz + age * 0.8 + (u.fx - 0.5) * 1.5, sz, 0.9, 0.88, 0.84, a]);
+		if (age < 0.09) fl.push([u.x + dx + dir * MUZZLE.fwd, MUZZLE.y, u.z + dz, 0.9 + (1 - age / 0.09) * 0.8, 2.4, 1.6, 0.7, 1 - age / 0.09]);
 	}
 	return {sm, fl};
 };
@@ -211,7 +291,7 @@ export const FLIGHT = 0.28;
 export const simTracers = (sim: Sim, t: number, opts: {len?: number; bright?: number; dx?: number; dz?: number} = {}) => {
 	const out: number[][] = []; const len = opts.len ?? 0.06, br = (opts.bright ?? 1) * 0.45, dx = opts.dx ?? 0, dz = opts.dz ?? 0;
 	for (const s of sim.shots) { const age = t - s.t; if (age < 0 || age > FLIGHT || (!s.hit && s.from % 3)) continue; const a = sim.units[s.from], b = sim.units[s.to], dir = a.side ? -1 : 1;
-		const x1 = a.x + dir * 1.3 + dx, z1 = a.z + dz, y1 = 1.45; const tx = s.hit ? b.x + dx : b.x + dx + dir * 3, tz = b.z + dz + (s.hit ? 0 : (a.fx - 0.5) * 3), ty = s.hit ? 1.3 : 0.9;
+		const x1 = a.x + dir * MUZZLE.fwd + dx, z1 = a.z + dz, y1 = MUZZLE.y; const tx = s.hit ? b.x + dx : b.x + dx + dir * 3, tz = b.z + dz + (s.hit ? 0 : (a.fx - 0.5) * 3), ty = s.hit ? 1.3 : 0.9;
 		const f0 = Math.max(0, age / FLIGHT - len), f1 = age / FLIGHT; const c = a.side ? [3.2, 1.6, 1.1] : [1.4, 2.1, 3.4];
 		out.push([x1 + (tx - x1) * f0, y1 + (ty - y1) * f0, z1 + (tz - z1) * f0, x1 + (tx - x1) * f1, y1 + (ty - y1) * f1, z1 + (tz - z1) * f1, c[0] * br, c[1] * br, c[2] * br]); }
 	return out;
