@@ -1,0 +1,676 @@
+import React from 'react';
+import {AbsoluteFill, Composition, continueRender, delayRender, registerRoot, staticFile, useCurrentFrame} from 'remotion';
+import {useFonts} from '../looks26/b/kit';
+import LINES_RAW from './lines.json';
+
+/* ep36 《上火，到底是什么火？》 — look "宣纸水墨 → 现代图解".
+   The ancients' logic is drawn in ink on aged rice paper; vermilion (朱砂) is reserved for 火. When the film says
+   "古人说的热，不是瞎猜" the same paper carries clean cobalt diagrams (no fire colours on biology: house rule).
+   At the end both drawings sit on the same spot. Every frame is a pure function of T. No film grain (owner). */
+
+const W = 1920, H = 1080, FPS = 30;
+type Pt = [number, number];
+const LINES = LINES_RAW as [number, number, string][];
+export const FILM36_END = LINES[LINES.length - 1][1] + 4.2;
+const ln = (n: number) => ({a: LINES[n - 1][0], b: LINES[n - 1][1]});
+const cl01 = (x: number) => Math.max(0, Math.min(1, x));
+const ease = (u: number) => { const v = cl01(u); return v < 0.5 ? 4 * v * v * v : 1 - Math.pow(-2 * v + 2, 3) / 2; };
+const lerp = (a: number, b: number, u: number) => a + (b - a) * u;
+const fadeIn = (T: number, t0: number, d = 0.5) => ease((T - t0) / d);
+
+// ---------------------------------------------------------------- palette (one job per colour)
+const C = {
+	paper: '#e9dec6', paperDeep: '#d8c7a5', paperEdge: '#c4ad86',
+	ink: '#1d1915', inkMid: '#4a4036', inkWash: 'rgba(29,25,21,0.16)',
+	fire: '#c8321e', fireHi: '#ee6a3c', fireGlow: 'rgba(214,72,36,0.35)',   // 朱砂: only for 火 / 炎
+	cobalt: '#22507a', cobaltSoft: 'rgba(34,80,122,0.14)', grey: '#7b746a',  // modern diagrams
+	white: '#f7f1e6',
+};
+const SERIF = '"Noto Serif CJK SC", serif';
+const KAI = '"LXGW WenKai", "Noto Serif CJK SC", serif';
+const LATIN = 'Cormorant, "Noto Serif CJK SC", serif';
+
+// ---------------------------------------------------------------- fonts: WenKai (OFL) for brush-like ancient text
+const KAI_TEXT = '上火到底是什么火？木火土金水火曰炎上心炎上则口舌生疮阴阳平秘精神乃治炎火光上也说文解字尚书证治准绳黄帝内经红肿热痛溃疡喉咙痛长痘头脸妈爸奶奶验证老祖宗的眼光东西方炎症静动热冷亮暗古人逻辑熬夜吃辣你这是了多喝水少吃辣早点睡';
+let kaiState: 'idle' | 'loading' | 'done' = 'idle';
+const useKai = () => {
+	if (kaiState !== 'idle' || typeof document === 'undefined') return;
+	kaiState = 'loading';
+	const h = delayRender('wenkai');
+	const link = document.createElement('link');
+	link.rel = 'stylesheet';
+	link.href = staticFile('fonts/wenkai/wenkai-bold.css');
+	link.onload = () => {
+		document.fonts.load(`700 120px "LXGW WenKai"`, KAI_TEXT).then(() => { kaiState = 'done'; continueRender(h); }, () => continueRender(h));
+	};
+	link.onerror = () => continueRender(h);
+	document.head.appendChild(link);
+};
+
+// ---------------------------------------------------------------- shared SVG defs: paper, brush edge, washes
+const Defs: React.FC = () => (
+	<defs>
+		<filter id="paperTex" x="0" y="0" width="100%" height="100%">
+			<feTurbulence type="fractalNoise" baseFrequency="0.012 0.02" numOctaves="4" seed="3" result="n" />
+			<feColorMatrix in="n" type="matrix" values="0 0 0 0 0.45  0 0 0 0 0.36  0 0 0 0 0.22  0 0 0 -0.55 0.34" result="m" />
+			<feComposite in="m" in2="SourceGraphic" operator="in" result="mc" />
+			<feTurbulence type="fractalNoise" baseFrequency="0.9" numOctaves="1" seed="8" result="f" />
+			<feColorMatrix in="f" type="matrix" values="0 0 0 0 0.3  0 0 0 0 0.24  0 0 0 0 0.15  0 0 0 -1.4 0.5" result="fm" />
+			<feComposite in="fm" in2="SourceGraphic" operator="in" result="fc" />
+			<feMerge><feMergeNode in="SourceGraphic" /><feMergeNode in="mc" /><feMergeNode in="fc" /></feMerge>
+		</filter>
+		<filter id="brush" x="-10%" y="-10%" width="120%" height="120%">
+			<feTurbulence type="fractalNoise" baseFrequency="0.045" numOctaves="2" seed="5" result="n" />
+			<feDisplacementMap in="SourceGraphic" in2="n" scale="5" xChannelSelector="R" yChannelSelector="G" />
+		</filter>
+		<filter id="brushHeavy" x="-15%" y="-15%" width="130%" height="130%">
+			<feTurbulence type="fractalNoise" baseFrequency="0.03" numOctaves="3" seed="11" result="n" />
+			<feDisplacementMap in="SourceGraphic" in2="n" scale="11" xChannelSelector="R" yChannelSelector="G" />
+		</filter>
+		<filter id="wash" x="-30%" y="-30%" width="160%" height="160%"><feGaussianBlur stdDeviation="14" /></filter>
+		<filter id="soft" x="-30%" y="-30%" width="160%" height="160%"><feGaussianBlur stdDeviation="5" /></filter>
+		<filter id="glow" x="-60%" y="-60%" width="220%" height="220%"><feGaussianBlur stdDeviation="22" /></filter>
+		<radialGradient id="vign" cx="0.5" cy="0.45" r="0.75"><stop offset="0.55" stopColor="#000" stopOpacity="0" /><stop offset="1" stopColor="#3a2a18" stopOpacity="0.42" /></radialGradient>
+		<radialGradient id="fireGlowG"><stop offset="0" stopColor="#ff8a4a" stopOpacity="0.55" /><stop offset="1" stopColor="#ff8a4a" stopOpacity="0" /></radialGradient>
+		<linearGradient id="flameG" x1="0" y1="1" x2="0" y2="0"><stop offset="0" stopColor={C.fire} /><stop offset="0.7" stopColor={C.fireHi} /><stop offset="1" stopColor="#f6b07a" /></linearGradient>
+	</defs>
+);
+const Paper: React.FC<{tone?: number}> = ({tone = 0}) => (
+	<>
+		<rect width={W} height={H} fill={tone > 0 ? '#e4dccb' : C.paper} filter="url(#paperTex)" />
+		<rect width={W} height={H} fill="url(#vign)" />
+	</>
+);
+
+// ---------------------------------------------------------------- the subtitle (owner: serif, ink-centred) and the corner mark
+const Sub: React.FC<{t: string}> = ({t}) => {
+	const segs = t.split(/(\[[^\]]+\])/).filter(Boolean);
+	return (
+		<>
+			<AbsoluteFill style={{background: 'linear-gradient(180deg, rgba(0,0,0,0) 76%, rgba(28,20,14,0.42) 90%, rgba(28,20,14,0.55) 100%)'}} />
+			<div style={{position: 'absolute', left: 0, right: 0, top: 942, textAlign: 'center', fontFamily: SERIF, fontWeight: 600, fontSize: 52, color: C.white, letterSpacing: '0.06em', textShadow: '0 0 3px rgba(20,14,10,0.9), 0 2px 16px rgba(20,14,10,0.85)'}}>
+				{segs.map((x, i) => {
+					const hi = x[0] === '[', body0 = hi ? x.slice(1, -1) : x, last = i === segs.length - 1;
+					const st: React.CSSProperties = hi ? {color: '#ffc98f', textShadow: '0 0 3px rgba(20,14,10,0.9), 0 0 18px rgba(255,140,80,0.45), 0 2px 16px rgba(20,14,10,0.85)'} : {};
+					const lead = i === 0 && /^[“《「『（]/.test(body0);
+					const body = lead ? body0.slice(1) : body0;
+					const head = lead ? <span style={{marginLeft: '-0.5em'}}>{body0[0]}</span> : null;
+					if (!last) return <span key={i} style={st}>{head}{body}</span>;
+					const end = body.slice(-1), punct = /[？！。，：；、”》」』）]/.test(end);
+					return <span key={i} style={st}>{head}{body.slice(0, -1)}<span style={{marginRight: punct ? '-0.56em' : '-0.06em'}}>{end}</span></span>;
+				})}
+			</div>
+		</>
+	);
+};
+const Mark: React.FC<{dark?: boolean}> = ({dark}) => (
+	<div style={{position: 'absolute', top: 46, right: 60, fontFamily: SERIF, fontSize: 21, letterSpacing: '0.3em', color: dark ? 'rgba(236,230,218,0.55)' : 'rgba(40,30,22,0.55)'}}>◆ Juno · VIBE知识大赏</div>
+);
+
+// ---------------------------------------------------------------- drawing kit
+/** a brush flame, base at (0,0), height h, pointing up; lick animates with t */
+const Flame: React.FC<{x: number; y: number; h: number; t?: number; o?: number; ink?: boolean; rot?: number}> = ({x, y, h, t = 0, o = 1, ink, rot = 0}) => {
+	const w = h * 0.46, s = Math.sin(t * 5.3) * 0.08, s2 = Math.sin(t * 3.7 + 1) * 0.06;
+	const d = `M0,0 C${-w},${-h * 0.12} ${-w * 1.05},${-h * (0.5 + s)} ${-w * 0.2},${-h * 0.72} C${-w * 0.42},${-h * 0.86} ${w * (0.1 + s2)},${-h * 0.98} ${w * 0.06},${-h} C${w * 0.3},${-h * 0.8} ${w * 0.95},${-h * (0.55 - s)} ${w * 0.72},${-h * 0.25} C${w * 0.6},${-h * 0.06} ${w * 0.3},0 0,0 Z`;
+	const di = `M0,-${h * 0.04} C${-w * 0.45},-${h * 0.14} ${-w * 0.45},-${h * 0.42} ${-w * 0.05},-${h * 0.56} C${w * 0.05},-${h * 0.42} ${w * 0.5},-${h * 0.3} ${w * 0.28},-${h * 0.12} C${w * 0.18},-${h * 0.05} ${w * 0.08},-${h * 0.03} 0,-${h * 0.04} Z`;
+	return (
+		<g transform={`translate(${x},${y}) rotate(${rot})`} opacity={o}>
+			{!ink && <ellipse cx={0} cy={-h * 0.45} rx={h * 0.75} ry={h * 0.85} fill="url(#fireGlowG)" />}
+			<path d={d} fill={ink ? C.ink : 'url(#flameG)'} filter="url(#brush)" opacity={ink ? 0.85 : 1} />
+			{!ink && <path d={di} fill="#fbd6a8" opacity={0.75} filter="url(#brush)" />}
+		</g>
+	);
+};
+/** the faceless ink bust (front view): head, neck, shoulders; positions in bust space (origin at the collarbone centre) */
+const BUST = {mouth: [0, -168] as Pt, throat: [0, -92] as Pt, cheek: [58, -214] as Pt, chest: [0, 40] as Pt};
+const Bust: React.FC<{x: number; y: number; s?: number; o?: number; wash?: number}> = ({x, y, s = 1, o = 1, wash = 1}) => (
+	<g transform={`translate(${x},${y}) scale(${s})`} opacity={o}>
+		<ellipse cx={0} cy={-212} rx={112} ry={130} fill={C.inkWash} opacity={wash} filter="url(#wash)" />
+		<path d="M-300,260 C-300,120 -230,40 -120,22 C-70,14 -46,-20 -44,-70 L-44,-92 C-80,-112 -98,-160 -98,-214 C-98,-292 -54,-344 0,-344 C54,-344 98,-292 98,-214 C98,-160 80,-112 44,-92 L44,-70 C46,-20 70,14 120,22 C230,40 300,120 300,260"
+			fill="none" stroke={C.ink} strokeWidth={7} strokeLinecap="round" filter="url(#brushHeavy)" />
+		<path d="M-300,260 C-300,120 -230,40 -120,22 C-70,14 -46,-20 -44,-70 L-44,-92 C-80,-112 -98,-160 -98,-214 C-98,-292 -54,-344 0,-344 C54,-344 98,-292 98,-214 C98,-160 80,-112 44,-92 L44,-70 C46,-20 70,14 120,22 C230,40 300,120 300,260 Z"
+			fill={C.inkWash} opacity={0.6 * wash} />
+	</g>
+);
+const BP = (x: number, y: number, s: number, p: Pt): Pt => [x + p[0] * s, y + p[1] * s];
+/** a red symptom dot with a small label */
+const Dot: React.FC<{p: Pt; label: string; o: number; side?: 1 | -1; modern?: boolean}> = ({p, label, o, side = 1, modern}) => o <= 0 ? null : (
+	<g opacity={o}>
+		<circle cx={p[0]} cy={p[1]} r={34} fill={modern ? C.cobaltSoft : C.fireGlow} filter="url(#soft)" />
+		<circle cx={p[0]} cy={p[1]} r={11} fill={modern ? C.cobalt : C.fire} />
+		<circle cx={p[0]} cy={p[1]} r={18 + 8 * (1 - o)} fill="none" stroke={modern ? C.cobalt : C.fire} strokeWidth={2.5} opacity={0.7} />
+		<line x1={p[0] + side * 22} y1={p[1]} x2={p[0] + side * 150} y2={p[1]} stroke={modern ? C.cobalt : C.ink} strokeWidth={2.5} opacity={0.75} />
+		<text x={p[0] + side * 162} y={p[1] + 16} textAnchor={side > 0 ? 'start' : 'end'} style={{fontFamily: modern ? '"Noto Sans CJK SC", sans-serif' : KAI, fontWeight: 700, fontSize: 58}} fill={modern ? C.cobalt : C.ink}>{label}</text>
+	</g>
+);
+/** a red seal stamp with one character */
+const Seal: React.FC<{x: number; y: number; s: number; ch: string; o?: number; rot?: number}> = ({x, y, s, ch, o = 1, rot = -6}) => (
+	<g transform={`translate(${x},${y}) rotate(${rot}) scale(${s})`} opacity={o}>
+		<rect x={-60} y={-60} width={120} height={120} rx={10} fill={C.fire} filter="url(#brush)" />
+		<rect x={-50} y={-50} width={100} height={100} rx={6} fill="none" stroke={C.paper} strokeWidth={3} opacity={0.8} filter="url(#brush)" />
+		<text x={0} y={30} textAnchor="middle" style={{fontFamily: KAI, fontWeight: 700, fontSize: 84}} fill={C.paper}>{ch}</text>
+	</g>
+);
+/** taiji (yin-yang) circle, radius r; dark = yin */
+const Taiji: React.FC<{x: number; y: number; r: number; rot?: number; o?: number}> = ({x, y, r, rot = 0, o = 1}) => (
+	<g transform={`translate(${x},${y}) rotate(${rot})`} opacity={o}>
+		<circle r={r + 10} fill={C.inkWash} filter="url(#wash)" />
+		<circle r={r} fill={C.white} stroke={C.ink} strokeWidth={6} filter="url(#brush)" />
+		<path d={`M0,${-r} A${r},${r} 0 0,1 0,${r} A${r / 2},${r / 2} 0 0,1 0,0 A${r / 2},${r / 2} 0 0,0 0,${-r} Z`} fill={C.ink} filter="url(#brush)" />
+		<circle cx={0} cy={-r / 2} r={r * 0.13} fill={C.white} />
+		<circle cx={0} cy={r / 2} r={r * 0.13} fill={C.ink} />
+	</g>
+);
+/** a simple ink smartphone, screen content as children (screen box 0..w, 0..h) */
+const Phone: React.FC<{x: number; y: number; s?: number; rot?: number; children?: React.ReactNode; glow?: number}> = ({x, y, s = 1, rot = 0, children, glow = 0}) => (
+	<g transform={`translate(${x},${y}) rotate(${rot}) scale(${s})`}>
+		{glow > 0 && <ellipse cx={130} cy={250} rx={260} ry={320} fill="#cfe2ff" opacity={0.35 * glow} filter="url(#glow)" />}
+		<rect x={-14} y={-14} width={288} height={548} rx={40} fill={C.ink} filter="url(#brush)" />
+		<rect x={0} y={0} width={260} height={520} rx={28} fill="#14171c" />
+		<g clipPath="url(#phoneClip)">{children}</g>
+	</g>
+);
+
+// ---------------------------------------------------------------- scenes
+// 1–2 · frame 0: hotpot steaming, the phone at 03:00, a hand mirror with the ulcer; mum's message + the 火 stamp
+const Open: React.FC<{T: number}> = ({T}) => {
+	const msg = fadeIn(T, ln(2).a, 0.35), stamp = cl01((T - ln(2).a - 0.25) / 0.18);
+	const steam = (i: number) => { const ph = (T * 0.32 + i * 0.37) % 1; return {y: -ph * 240, o: Math.sin(Math.PI * ph), x: Math.sin(T * 1.1 + i * 2) * 30}; };
+	return (
+		<svg width={W} height={H}>
+			<Defs />
+			<clipPath id="phoneClip"><rect x={0} y={0} width={260} height={520} rx={28} /></clipPath>
+			<Paper />
+			{/* the table edge */}
+			<path d="M-40,760 C500,742 1400,748 1960,760 L1960,1100 L-40,1100 Z" fill={C.paperDeep} opacity={0.75} filter="url(#brush)" />
+			<path d="M-40,760 C500,742 1400,748 1960,760" stroke={C.ink} strokeWidth={5} fill="none" opacity={0.7} filter="url(#brushHeavy)" />
+			{/* the hotpot: 鸳鸯锅, ink pot, red broth half */}
+			<g transform="translate(600,720) scale(1.18)">
+				{Array.from({length: 7}, (_, i) => { const s = steam(i); return <path key={i} d={`M${-200 + i * 66 + s.x},${-90 + s.y} q${30 + 10 * Math.sin(i)},-50 0,-100 q-30,-50 0,-100`} stroke={C.white} strokeWidth={26} strokeLinecap="round" fill="none" opacity={s.o * 0.75} filter="url(#soft)" />; })}
+				<ellipse cx={0} cy={-40} rx={330} ry={78} fill={C.ink} filter="url(#brush)" />
+				<ellipse cx={0} cy={-46} rx={300} ry={62} fill="#2b2420" />
+				<path d="M-300,-46 A300,62 0 0,1 0,-108 L0,16 A300,62 0 0,1 -300,-46 Z" fill={C.fire} opacity={0.92} />
+				<path d="M0,-108 A300,62 0 0,1 300,-46 A300,62 0 0,1 0,16 Z" fill="#e8dcc0" opacity={0.85} />
+				<path d="M0,-108 Q-30,-46 0,16" stroke={C.ink} strokeWidth={8} fill="none" />
+				{[[-190, -60], [-120, -30], [-230, -30], [-90, -70]].map(([cx, cy], i) => <path key={i} d={`M${cx},${cy} q14,-10 26,4 q-8,14 -26,-4 Z`} fill="#7a1408" />)}
+				<path d="M-330,-40 C-330,60 -260,110 -150,120 L150,120 C260,110 330,60 330,-40" fill={C.ink} filter="url(#brush)" />
+				<rect x={-360} y={-56} width={34} height={22} rx={8} fill={C.ink} /><rect x={326} y={-56} width={34} height={22} rx={8} fill={C.ink} />
+			</g>
+			{/* the hand mirror: an ink mouth icon with the ulcer */}
+			<g transform="translate(1110,560) rotate(-6)">
+				<circle r={150} fill={C.white} stroke={C.ink} strokeWidth={10} filter="url(#brush)" />
+				<circle r={132} fill="#f1e7d4" />
+				<path d="M-80,-6 C-40,-40 40,-40 80,-6 C40,28 -40,28 -80,-6 Z" fill="#b44a3a" opacity={0.85} filter="url(#brush)" />
+				<path d="M-80,-6 C-40,8 40,8 80,-6" stroke={C.ink} strokeWidth={4} fill="none" />
+				<circle cx={24} cy={6} r={12} fill={C.white} stroke={C.fire} strokeWidth={5} />
+				<rect x={-18} y={150} width={36} height={170} rx={16} fill={C.ink} filter="url(#brush)" />
+			</g>
+			{/* the phone at 03:00, then mum's message */}
+			<Phone x={1430} y={250} s={0.92} rot={4} glow={0.6}>
+				<rect width={260} height={520} fill="#1a2030" />
+				<text x={130} y={150} textAnchor="middle" style={{fontFamily: '"Noto Sans CJK SC", sans-serif', fontWeight: 300, fontSize: 92}} fill="#eef3fb">03:00</text>
+				<text x={130} y={192} textAnchor="middle" style={{fontFamily: '"Noto Sans CJK SC", sans-serif', fontSize: 22}} fill="#aebbd0">星期四</text>
+				<g opacity={msg} transform={`translate(0,${(1 - msg) * 20})`}>
+					<rect x={18} y={300} width={224} height={92} rx={22} fill="#eef3fb" />
+					<text x={38} y={336} style={{fontFamily: '"Noto Sans CJK SC", sans-serif', fontWeight: 700, fontSize: 22}} fill="#1a2030">妈</text>
+					<text x={38} y={372} style={{fontFamily: '"Noto Sans CJK SC", sans-serif', fontSize: 26}} fill="#1a2030">你这是上火了</text>
+				</g>
+			</Phone>
+			{stamp > 0 && <Seal x={1180} y={360} s={lerp(1.7, 1.15, ease(stamp))} ch="火" o={stamp} rot={-8} />}
+		</svg>
+	);
+};
+
+// 3–4 · the body: the symptoms all sit on the head and face; then they link into an (unlit) diagram
+// 9–11 · the same body: flames on the dots, the old book, the flame climbing up
+// 32, 36 · the same body with modern labels
+const BodyScene: React.FC<{T: number; mode: 'dots' | 'fire' | 'modern' | 'both'}> = ({T, mode}) => {
+	const x = 800, y = 650, s = 1.34;
+	const m = BP(x, y, s, BUST.mouth), th = BP(x, y, s, BUST.throat), ch = BP(x, y, s, BUST.cheek), chest = BP(x, y, s, BUST.chest);
+	const d3 = (i: number) => mode === 'dots' ? fadeIn(T, ln(3).a + 0.2 + i * 0.6, 0.35) : 1;
+	const link = mode === 'dots' ? fadeIn(T, ln(4).a + 0.2, 1.2) : 0;
+	const fl = mode === 'fire' ? fadeIn(T, ln(9).a + 0.3, 0.8) : mode === 'both' ? 1 : 0;
+	const book = mode === 'fire' ? cl01(fadeIn(T, ln(10).a, 0.4) - fadeIn(T, ln(11).a - 0.2, 0.4)) : 0;
+	const climb = mode === 'fire' ? fadeIn(T, ln(11).a, 2.2) : 0;
+	const mod = mode === 'modern' ? fadeIn(T, ln(32).a + 0.2, 0.6) : mode === 'both' ? fadeIn(T, ln(36).a + 0.2, 0.9) : 0;
+	return (
+		<svg width={W} height={H}>
+			<Defs />
+			<Paper />
+			<Bust x={x} y={y} s={s} />
+			{/* links between the symptoms (line 4): the start of a diagram */}
+			{link > 0 && <g opacity={link} stroke={C.ink} strokeWidth={3} fill="none" strokeDasharray="10 12" filter="url(#brush)">
+				<path d={`M${m[0]},${m[1]} Q${m[0] + 200},${m[1] - 200} ${ch[0]},${ch[1]}`} />
+				<path d={`M${m[0]},${m[1]} L${th[0]},${th[1]}`} />
+				<circle cx={x} cy={y - 220 * s} r={320} strokeDasharray="6 16" opacity={0.6} />
+			</g>}
+			{/* the flame climbing from the chest to the mouth (line 11) */}
+			{climb > 0 && (() => {
+				const p = (u: number): Pt => [chest[0] + 20 * Math.sin(u * 6), lerp(chest[1], m[1], u)];
+				const tip = p(climb);
+				return <g>
+					<path d={`M${chest[0]},${chest[1]} ${Array.from({length: 24}, (_, i) => { const q = p(climb * (i + 1) / 24); return `L${q[0]},${q[1]}`; }).join(' ')}`} stroke={C.fire} strokeWidth={14} strokeLinecap="round" fill="none" opacity={0.55} filter="url(#soft)" />
+					<Flame x={tip[0]} y={tip[1] + 30} h={120} t={T} />
+					<text x={150} y={y - 300} style={{fontFamily: KAI, fontWeight: 700, fontSize: 210}} fill={C.ink} opacity={ease((climb - 0.4) / 0.4)} filter="url(#brush)">上</text>
+					<text x={150} y={y - 60} style={{fontFamily: KAI, fontWeight: 700, fontSize: 210}} fill={C.fire} opacity={ease((climb - 0.55) / 0.4)} filter="url(#brush)">火</text>
+					<path d={`M${260},${y - 40} L${260},${y - 520}`} stroke={C.fire} strokeWidth={10} opacity={ease((climb - 0.7) / 0.3)} markerEnd="" filter="url(#brush)" />
+					<path d={`M${230},${y - 480} L${260},${y - 530} L${290},${y - 480}`} stroke={C.fire} strokeWidth={10} fill="none" opacity={ease((climb - 0.7) / 0.3)} filter="url(#brush)" />
+				</g>;
+			})()}
+			{/* flames on the symptoms (line 9) — the ancients' reading */}
+			{fl > 0 && [m, th, ch].map((p, i) => <Flame key={i} x={p[0]} y={p[1] + 14} h={70 + 10 * i} t={T + i} o={fl * (mode === 'both' ? 0.8 : 1)} />)}
+			<Dot p={m} label="溃疡" o={d3(0) * (1 - mod)} side={-1} />
+			<Dot p={th} label="喉咙痛" o={d3(1) * (1 - mod)} side={-1} />
+			<Dot p={ch} label="长痘" o={d3(2) * (1 - mod)} side={1} />
+			{/* the modern reading (line 32 / 36) */}
+			{mod > 0 && <>
+				<Dot p={m} label="口腔溃疡 · 炎症" o={mod} side={-1} modern />
+				<Dot p={ch} label="痘痘 · 炎症" o={mod} side={1} modern />
+			</>}
+			{/* the old book (line 10): 《证治准绳》 */}
+			{book > 0 && <g transform={`translate(1290,${200 + 30 * (1 - book)})`} opacity={book}>
+				<rect x={0} y={0} width={470} height={560} fill="#efe4c9" filter="url(#paperTex)" />
+				<rect x={0} y={0} width={470} height={560} fill="none" stroke={C.inkMid} strokeWidth={4} filter="url(#brush)" />
+				<text x={420} y={60} style={{fontFamily: KAI, fontWeight: 700, fontSize: 30, writingMode: 'vertical-rl'}} fill={C.inkMid}>《证治准绳》</text>
+				{['心火炎上', '熏蒸于口', '则口舌生疮'].map((s2, i) => <text key={i} x={330 - i * 110} y={70} style={{fontFamily: KAI, fontWeight: 700, fontSize: 66, writingMode: 'vertical-rl', letterSpacing: '0.08em'}} fill={i === 0 ? C.fire : C.ink}>{s2}</text>)}
+			</g>}
+		</svg>
+	);
+};
+
+// title beat (on the hardest drop): the title brushed on paper, the 火 seal slams
+const TitleCard: React.FC<{T: number}> = ({T}) => {
+	const t0 = ln(4).b, u = cl01((T - t0) / 3.0), slam = cl01((T - t0 - 0.05) / 0.16);
+	const jolt = slam < 1 ? 0 : 6 * Math.exp(-(T - t0 - 0.21) * 9) * Math.sin((T - t0) * 40);
+	return (
+		<svg width={W} height={H}>
+			<Defs />
+			<Paper />
+			<ellipse cx={960} cy={500} rx={720} ry={300} fill={C.inkWash} filter="url(#wash)" opacity={0.8} />
+			<g transform={`translate(${jolt},0)`}>
+				<text x={960} y={430} textAnchor="middle" style={{fontFamily: KAI, fontWeight: 700, fontSize: 178, letterSpacing: '0.08em'}} fill={C.ink} filter="url(#brush)" opacity={slam}>上火，</text>
+				<text x={960} y={650} textAnchor="middle" style={{fontFamily: KAI, fontWeight: 700, fontSize: 150, letterSpacing: '0.06em'}} fill={C.ink} filter="url(#brush)" opacity={slam}>
+					到底是什么<tspan fill={C.fire}>火</tspan>？
+				</text>
+			</g>
+			<Seal x={1560} y={300} s={lerp(1.9, 1.0, ease(slam))} ch="火" o={slam} rot={-10} />
+			<text x={960} y={790} textAnchor="middle" style={{fontFamily: SERIF, fontSize: 30, letterSpacing: '0.5em'}} fill={C.inkMid} opacity={fadeIn(T, t0 + 0.6, 0.6) * (1 - u * 0)}>VIBE 知 识 大 赏</text>
+		</svg>
+	);
+};
+
+// 5–7 · 五行 as a ring of five changing tiles; 火 grows; 8 · bamboo slips: 火曰炎上
+const WuxingScene: React.FC<{T: number}> = ({T}) => {
+	const names = ['木', '火', '土', '金', '水'];
+	const cx = 960, cy = 470, R = 300;
+	const big = fadeIn(T, ln(7).a, 0.7);
+	const slips = fadeIn(T, ln(8).a, 0.6);
+	const ring = 1 - slips;
+	return (
+		<svg width={W} height={H}>
+			<Defs />
+			<Paper />
+			{ring > 0.01 && <g opacity={ring}>
+				<circle cx={cx} cy={cy} r={R} fill="none" stroke={C.inkMid} strokeWidth={3} strokeDasharray="4 14" filter="url(#brush)" />
+				{names.map((n, i) => {
+					const a = -Math.PI / 2 + i * 2 * Math.PI / 5, x = cx + R * Math.cos(a), y = cy + R * Math.sin(a);
+					const o = fadeIn(T, ln(5).a + 0.4 + i * 0.32, 0.4);
+					const isFire = n === '火', sc = isFire ? 1 + 0.5 * big : 1 - 0.15 * big;
+					return <g key={n} transform={`translate(${x},${y}) scale(${sc})`} opacity={o * (isFire ? 1 : 1 - 0.45 * big)}>
+						<circle r={92} fill={isFire && big > 0 ? '#f3d3b8' : C.white} stroke={isFire ? C.fire : C.ink} strokeWidth={6} filter="url(#brush)" />
+						<text x={0} y={34} textAnchor="middle" style={{fontFamily: KAI, fontWeight: 700, fontSize: 100}} fill={isFire ? C.fire : C.ink}>{n}</text>
+						{isFire && big > 0 && <Flame x={0} y={-80} h={150 * big} t={T} />}
+					</g>;
+				})}
+				{/* line 6: each phase is a change — small motion glyphs */}
+				<text x={cx} y={cy + 20} textAnchor="middle" style={{fontFamily: KAI, fontWeight: 700, fontSize: 64}} fill={C.inkMid} opacity={fadeIn(T, ln(6).a + 0.3, 0.6) * (1 - big)}>生 · 变 · 化</text>
+				{big > 0 && <g opacity={big}>
+					{['热', '红', '往上烧'].map((w, i) => <text key={w} x={cx + 470} y={cy - 150 + i * 120} style={{fontFamily: KAI, fontWeight: 700, fontSize: 76}} fill={i === 1 ? C.fire : C.ink} opacity={fadeIn(T, ln(7).a + 0.4 + i * 0.35, 0.3)}>{w}</text>)}
+				</g>}
+			</g>}
+			{slips > 0 && <g opacity={slips}>
+				{[0, 1, 2, 3, 4, 5, 6].map((i) => <rect key={i} x={640 + i * 92} y={140} width={78} height={640} rx={6} fill={i % 2 ? '#d9b97c' : '#cfae70'} stroke={C.inkMid} strokeWidth={2} filter="url(#paperTex)" />)}
+				{[0, 1, 2, 3, 4, 5, 6].map((i) => <rect key={'b' + i} x={636} y={200 + i * 0} width={652} height={6} fill="#6a4a26" opacity={i === 0 ? 0.6 : 0} />)}
+				<rect x={636} y={700} width={652} height={6} fill="#6a4a26" opacity={0.6} />
+				{['火', '曰', '炎', '上'].map((c, i) => <text key={c} x={1006} y={260 + i * 130} textAnchor="middle" style={{fontFamily: KAI, fontWeight: 700, fontSize: 112}} fill={i >= 2 ? C.fire : C.ink} filter="url(#brush)">{c}</text>)}
+				<Flame x={1006} y={150} h={180 * fadeIn(T, ln(8).a + 0.6, 1.0)} t={T} />
+				<text x={560} y={480} textAnchor="middle" style={{fontFamily: KAI, fontWeight: 700, fontSize: 40, writingMode: 'vertical-rl'}} fill={C.inkMid}>《尚书 · 洪范》</text>
+			</g>}
+		</svg>
+	);
+};
+
+// 12–17 · 阴阳: the circle, the light/dark world, the balance beam; 16: the taiji as a night clock; 17: chilli on the bright side
+const YinYangScene: React.FC<{T: number}> = ({T}) => {
+	const world = cl01(fadeIn(T, ln(13).a, 0.5) - fadeIn(T, ln(14).a, 0.5));
+	const beam = cl01(fadeIn(T, ln(14).a, 0.5) - fadeIn(T, ln(16).a, 0.5));
+	const tilt = fadeIn(T, ln(15).a + 0.2, 0.9) * 14;
+	const clock = cl01(fadeIn(T, ln(16).a, 0.6) - fadeIn(T, ln(17).a, 0.5));
+	const chili = fadeIn(T, ln(17).a, 0.6);
+	const intro = 1 - Math.max(world, beam, clock, chili);
+	const tilt2 = 14 + 8 * fadeIn(T, ln(17).a + 0.6, 0.6);
+	return (
+		<svg width={W} height={H}>
+			<Defs />
+			<Paper />
+			{intro > 0.01 && <g opacity={intro}><Taiji x={960} y={470} r={250} rot={T * 18} /></g>}
+			{world > 0.01 && <g opacity={world}>
+				{/* the bright, warm, moving side | the dark, cool, still side */}
+				<rect x={0} y={0} width={960} height={H} fill="#f6ecd6" opacity={0.85} />
+				<rect x={960} y={0} width={960} height={H} fill="#2a2621" opacity={0.92} />
+				<circle cx={420} cy={250} r={90} fill="#f2b766" opacity={0.85} filter="url(#soft)" />
+				<circle cx={1480} cy={250} r={70} fill="#d8d2c4" opacity={0.85} /><circle cx={1508} cy={236} r={66} fill="#2a2621" />
+				<path d="M120,820 C300,700 600,690 900,760 L900,1080 L120,1080 Z" fill={C.paperDeep} filter="url(#brush)" />
+				<path d="M1020,760 C1300,690 1600,700 1800,820 L1800,1080 L1020,1080 Z" fill="#3a342c" filter="url(#brush)" />
+				<text x={480} y={560} textAnchor="middle" style={{fontFamily: KAI, fontWeight: 700, fontSize: 150}} fill={C.fire}>阳</text>
+				<text x={1440} y={560} textAnchor="middle" style={{fontFamily: KAI, fontWeight: 700, fontSize: 150}} fill={C.white}>阴</text>
+				<text x={480} y={680} textAnchor="middle" style={{fontFamily: KAI, fontWeight: 700, fontSize: 56}} fill={C.ink}>亮 · 热 · 动</text>
+				<text x={1440} y={680} textAnchor="middle" style={{fontFamily: KAI, fontWeight: 700, fontSize: 56}} fill="#d8d2c4">暗 · 冷 · 静</text>
+			</g>}
+			{beam > 0.01 && <g opacity={beam}>
+				<text x={960} y={200} textAnchor="middle" style={{fontFamily: KAI, fontWeight: 700, fontSize: 92, letterSpacing: '0.12em'}} fill={C.ink} opacity={1 - fadeIn(T, ln(15).a, 0.4) * 0.6}>阴平阳秘</text>
+				<g transform={`translate(960,560)`}>
+					<path d="M-30,250 L0,0 L30,250 Z" fill={C.ink} filter="url(#brush)" />
+					<g transform={`rotate(${-tilt})`}>
+						<rect x={-460} y={-10} width={920} height={20} rx={8} fill={C.ink} filter="url(#brush)" />
+						<line x1={-420} y1={0} x2={-420} y2={110} stroke={C.ink} strokeWidth={4} /><line x1={420} y1={0} x2={420} y2={110} stroke={C.ink} strokeWidth={4} />
+						<g transform={`translate(-420,110) rotate(${tilt})`}><circle r={84 + 6 * tilt / 14} fill="#f3d3b8" stroke={C.fire} strokeWidth={6} filter="url(#brush)" /><text y={30} textAnchor="middle" style={{fontFamily: KAI, fontWeight: 700, fontSize: 80}} fill={C.fire}>阳</text></g>
+						<g transform={`translate(420,110) rotate(${tilt})`}><circle r={84 - 8 * tilt / 14} fill="#2a2621" stroke={C.ink} strokeWidth={6} filter="url(#brush)" /><text y={30} textAnchor="middle" style={{fontFamily: KAI, fontWeight: 700, fontSize: 80}} fill={C.white}>阴</text></g>
+					</g>
+				</g>
+			</g>}
+			{clock > 0.01 && <g opacity={clock}>
+				{/* the taiji as a clock: the dark half is night; at 03:00 a phone is still lit inside it */}
+				<Taiji x={960} y={480} r={330} rot={0} />
+				{Array.from({length: 12}, (_, i) => { const a = i / 12 * 2 * Math.PI - Math.PI / 2; return <text key={i} x={960 + 395 * Math.cos(a)} y={480 + 395 * Math.sin(a) + 14} textAnchor="middle" style={{fontFamily: SERIF, fontSize: 34}} fill={C.inkMid}>{i === 0 ? 12 : i}</text>; })}
+				<line x1={960} y1={480} x2={960 + 250 * Math.cos(-Math.PI / 2 + 3 / 12 * 2 * Math.PI)} y2={480 + 250 * Math.sin(-Math.PI / 2 + 3 / 12 * 2 * Math.PI)} stroke={C.fire} strokeWidth={10} strokeLinecap="round" />
+				<line x1={960} y1={480} x2={960} y2={190} stroke={C.fire} strokeWidth={6} strokeLinecap="round" />
+				<g transform="translate(1080,500) rotate(-8) scale(0.34)">
+					<ellipse cx={130} cy={250} rx={300} ry={360} fill="#cfe2ff" opacity={0.55} filter="url(#glow)" />
+					<rect x={0} y={0} width={260} height={520} rx={28} fill="#e8f0ff" stroke={C.white} strokeWidth={10} />
+				</g>
+				<text x={1440} y={330} style={{fontFamily: KAI, fontWeight: 700, fontSize: 64}} fill={C.ink}>夜 · 属阴</text>
+				<text x={1440} y={420} style={{fontFamily: KAI, fontWeight: 700, fontSize: 64}} fill={C.fire}>熬夜 · 在动</text>
+			</g>}
+			{chili > 0.01 && <g opacity={chili}>
+				<g transform={`translate(960,560)`}>
+					<path d="M-30,250 L0,0 L30,250 Z" fill={C.ink} filter="url(#brush)" />
+					<g transform={`rotate(${-tilt2})`}>
+						<rect x={-460} y={-10} width={920} height={20} rx={8} fill={C.ink} filter="url(#brush)" />
+						<line x1={-420} y1={0} x2={-420} y2={110} stroke={C.ink} strokeWidth={4} /><line x1={420} y1={0} x2={420} y2={110} stroke={C.ink} strokeWidth={4} />
+						<g transform={`translate(-420,110) rotate(${tilt2})`}><circle r={96} fill="#f3d3b8" stroke={C.fire} strokeWidth={6} filter="url(#brush)" /><text y={30} textAnchor="middle" style={{fontFamily: KAI, fontWeight: 700, fontSize: 80}} fill={C.fire}>阳</text>
+							{/* the chilli lands on the bright side */}
+							<g transform={`translate(0,${-170 - 220 * (1 - ease(chili * 1.6))}) rotate(30)`}><path d="M-60,0 C-40,-30 40,-30 70,-6 C40,14 -20,24 -60,0 Z" fill={C.fire} filter="url(#brush)" /><path d="M-60,0 C-80,-10 -90,-30 -78,-40" stroke="#3d5a2a" strokeWidth={8} fill="none" /></g>
+						</g>
+						<g transform={`translate(420,110) rotate(${tilt2})`}><circle r={70} fill="#2a2621" stroke={C.ink} strokeWidth={6} filter="url(#brush)" /><text y={30} textAnchor="middle" style={{fontFamily: KAI, fontWeight: 700, fontSize: 80}} fill={C.white}>阴</text></g>
+					</g>
+				</g>
+			</g>}
+		</svg>
+	);
+};
+
+// 18–24 · "不是瞎猜": clean cobalt diagrams on cooler paper (no fire colours on biology)
+const ModernScene: React.FC<{T: number}> = ({T}) => {
+	const gate = fadeIn(T, ln(19).a + 0.3, 0.6);
+	const therm = fadeIn(T, ln(20).a, 0.6);
+	const same = fadeIn(T, ln(21).a, 0.6);
+	const nobel = fadeIn(T, ln(22).a + 0.2, 0.4);
+	const bars = fadeIn(T, ln(23).a, 0.6), grow = fadeIn(T, ln(24).a + 0.2, 1.0);
+	const nerveO = 1 - bars;
+	const SANS = '"Noto Sans CJK SC", sans-serif';
+	return (
+		<svg width={W} height={H}>
+			<Defs />
+			<Paper tone={1} />
+			{/* grid of a lab notebook */}
+			<g opacity={0.5}>{Array.from({length: 40}, (_, i) => <line key={i} x1={i * 50} y1={0} x2={i * 50} y2={H} stroke={C.cobalt} strokeWidth={0.6} opacity={0.18} />)}{Array.from({length: 22}, (_, i) => <line key={'h' + i} x1={0} y1={i * 50} x2={W} y2={i * 50} stroke={C.cobalt} strokeWidth={0.6} opacity={0.18} />)}</g>
+			<text x={120} y={150} style={{fontFamily: SANS, fontWeight: 700, fontSize: 40, letterSpacing: '0.1em'}} fill={C.cobalt} opacity={fadeIn(T, ln(18).a + 0.4, 0.5)}>古人说的“热”，测一测</text>
+			{nerveO > 0.01 && <g opacity={nerveO} transform="translate(960,560) scale(1.15) translate(-810,-530)">
+				{/* a nerve ending with a gate (an ion channel) in the membrane */}
+				<path d="M120,620 C380,600 520,560 700,560 C860,560 900,600 1000,620" stroke={C.cobalt} strokeWidth={18} strokeLinecap="round" fill="none" />
+				<path d="M120,620 C380,600 520,560 700,560 C860,560 900,600 1000,620" stroke="#e4dccb" strokeWidth={8} strokeLinecap="round" fill="none" />
+				{/* the gate */}
+				<g transform="translate(1020,600)">
+					<rect x={-40} y={-90} width={34} height={180} rx={14} fill={C.cobalt} transform={`rotate(${-18 * gate})`} />
+					<rect x={6} y={-90} width={34} height={180} rx={14} fill={C.cobalt} transform={`rotate(${18 * gate})`} />
+					<text x={0} y={-130} textAnchor="middle" style={{fontFamily: SANS, fontWeight: 900, fontSize: 48}} fill={C.cobalt}>热开关</text>
+					<text x={0} y={150} textAnchor="middle" style={{fontFamily: SANS, fontSize: 24}} fill={C.grey}>TRPV1</text>
+					{/* signal to the brain */}
+					{[0, 1, 2].map((i) => { const ph = ((T * 1.2 + i / 3) % 1); return <circle key={i} cx={-60 - ph * 880} cy={lerp(0, -40, ph) + 0} r={9} fill={C.cobalt} opacity={gate * Math.sin(Math.PI * ph)} />; })}
+				</g>
+				{/* capsaicin (a ring + chain) arrives at the gate */}
+				<g transform={`translate(${lerp(1500, 1120, gate)},${lerp(330, 520, gate)})`} opacity={fadeIn(T, ln(19).a, 0.4)}>
+					<polygon points="0,-40 35,-20 35,20 0,40 -35,20 -35,-20" fill="none" stroke={C.cobalt} strokeWidth={6} />
+					<path d="M35,-20 L80,-42 L120,-20 L160,-42 L200,-20" stroke={C.cobalt} strokeWidth={6} fill="none" />
+					<text x={80} y={100} textAnchor="middle" style={{fontFamily: SANS, fontWeight: 900, fontSize: 44}} fill={C.cobalt}>辣椒素</text>
+				</g>
+				{/* the thermometer at 43 °C opens the same gate */}
+				{therm > 0.01 && <g transform="translate(1420,330)" opacity={therm}>
+					<rect x={-22} y={-160} width={44} height={330} rx={22} fill="none" stroke={C.cobalt} strokeWidth={6} />
+					<rect x={-10} y={lerp(140, -60, therm)} width={20} height={lerp(20, 220, therm)} rx={10} fill={C.cobalt} />
+					<circle cx={0} cy={180} r={36} fill={C.cobalt} />
+					<text x={50} y={lerp(150, -40, therm)} style={{fontFamily: SANS, fontWeight: 900, fontSize: 70}} fill={C.cobalt}>43°C</text>
+					<path d="M-30,200 C-200,300 -280,280 -360,270" stroke={C.cobalt} strokeWidth={4} strokeDasharray="10 10" fill="none" />
+				</g>}
+				{/* both reach the brain as the same signal: 烫 */}
+				{same > 0.01 && <g opacity={same}>
+					<circle cx={240} cy={420} r={120} fill={C.cobaltSoft} stroke={C.cobalt} strokeWidth={5} />
+					<text x={240} y={445} textAnchor="middle" style={{fontFamily: SANS, fontWeight: 900, fontSize: 84}} fill={C.cobalt}>烫</text>
+					<text x={240} y={280} textAnchor="middle" style={{fontFamily: SANS, fontWeight: 700, fontSize: 38}} fill={C.grey}>大脑收到</text>
+				</g>}
+				{nobel > 0.01 && <g transform={`translate(1650,780) rotate(-8) scale(${lerp(1.4, 1, ease(nobel))})`} opacity={nobel}>
+					<circle r={92} fill="#c9a24e" /><circle r={78} fill="none" stroke="#8a6a26" strokeWidth={3} />
+					<text y={-8} textAnchor="middle" style={{fontFamily: SANS, fontWeight: 900, fontSize: 30}} fill="#3e2d0e">诺贝尔奖</text>
+					<text y={34} textAnchor="middle" style={{fontFamily: SANS, fontWeight: 700, fontSize: 30}} fill="#3e2d0e">2021</text>
+				</g>}
+			</g>}
+			{bars > 0.01 && <g opacity={bars}>
+				{/* a short night → one inflammation gene in immune cells, ×3+ */}
+				<g transform="translate(260,250)">
+					{['23:00', '03:00', '07:00'].map((s, i) => <text key={s} x={i * 200} y={0} style={{fontFamily: SANS, fontWeight: 700, fontSize: 44}} fill={i === 1 ? C.cobalt : C.grey}>{s}</text>)}
+					<line x1={0} y1={30} x2={480} y2={30} stroke={C.grey} strokeWidth={3} />
+					<rect x={0} y={20} width={260} height={20} fill={C.cobalt} opacity={0.35} />
+					<text x={0} y={100} style={{fontFamily: SANS, fontSize: 32}} fill={C.grey}>少睡半夜</text>
+				</g>
+				<g transform="translate(1000,780)">
+					<line x1={-40} y1={0} x2={700} y2={0} stroke={C.ink} strokeWidth={4} />
+					<rect x={40} y={-110} width={220} height={110} fill={C.grey} opacity={0.7} />
+					<rect x={380} y={-110 - 260 * grow} width={220} height={110 + 260 * grow} fill={C.cobalt} />
+					<text x={150} y={64} textAnchor="middle" style={{fontFamily: SANS, fontWeight: 700, fontSize: 42}} fill={C.ink}>睡够的晚上</text>
+					<text x={490} y={64} textAnchor="middle" style={{fontFamily: SANS, fontWeight: 700, fontSize: 42}} fill={C.ink}>少睡半夜</text>
+					<text x={150} y={-130} textAnchor="middle" style={{fontFamily: SANS, fontWeight: 900, fontSize: 56}} fill={C.grey}>×1</text>
+					<text x={490} y={-130 - 260 * grow} textAnchor="middle" style={{fontFamily: SANS, fontWeight: 900, fontSize: 84}} fill={C.cobalt} opacity={ease((grow - 0.7) / 0.3)}>3倍多</text>
+					<text x={320} y={-520} textAnchor="middle" style={{fontFamily: SANS, fontWeight: 900, fontSize: 46}} fill={C.cobalt}>免疫细胞 · 一个炎症基因的活跃度</text>
+				</g>
+				<text x={260} y={960} style={{fontFamily: SANS, fontSize: 24}} fill={C.grey}>Irwin et al. 2006 · 30人</text>
+			</g>}
+		</svg>
+	);
+};
+
+// 25–27 · 炎: the word under the bars → the character fills the frame → 说文 → two 火 stacked, the top one rising
+// 28–31 · Celsus: rubor · tumor · calor · dolor; inflammation ← flamma; 炎 and flamma become one flame (the hero frame)
+const YanScene: React.FC<{T: number}> = ({T}) => {
+	const push = fadeIn(T, ln(25).a, 1.2);
+	const shuo = cl01(fadeIn(T, ln(26).a, 0.5) - fadeIn(T, ln(28).a - 0.2, 0.5));
+	const split = fadeIn(T, ln(27).a, 1.4);
+	const rome = fadeIn(T, ln(28).a, 0.7);
+	const words = (i: number) => fadeIn(T, ln(29).a + 0.3 + i * 0.45, 0.35);
+	const flam = fadeIn(T, ln(30).a, 0.6);
+	const merge = fadeIn(T, ln(31).a, 1.4);
+	const yanX = lerp(lerp(960, 760, shuo + split), 560, rome), yanS = lerp(lerp(0.7, 1.15, push), 0.8, rome) * lerp(1, 0.86, split * (1 - rome));
+	return (
+		<svg width={W} height={H}>
+			<Defs />
+			<Paper />
+			{/* the character 炎: two 火 stacked; at line 27 they separate and the top one rises */}
+			<g transform={`translate(${lerp(yanX, 960, merge)},${lerp(560, 470, merge)}) scale(${lerp(yanS, 0.55, merge)})`} opacity={1 - ease(merge * 1.4)}>
+				<ellipse cx={0} cy={0} rx={420} ry={420} fill={C.fireGlow} filter="url(#glow)" opacity={0.6} />
+				{/* the real character first (lines 25–26), then it comes apart into its two 火 (line 27) */}
+				<text x={0} y={190} textAnchor="middle" style={{fontFamily: KAI, fontWeight: 700, fontSize: 560}} fill={C.ink} filter="url(#brush)" opacity={1 - ease(split * 2.5)}>炎</text>
+				<g opacity={ease(split * 2.5)}>
+				<text x={0} y={-30 - 70 * split} textAnchor="middle" style={{fontFamily: KAI, fontWeight: 700, fontSize: 380}} fill={C.fire} filter="url(#brush)" transform={`scale(1,${lerp(0.5, 0.62, split)})`}>火</text>
+				<text x={0} y={310 + 20 * split} textAnchor="middle" style={{fontFamily: KAI, fontWeight: 700, fontSize: 380}} fill={C.ink} filter="url(#brush)" transform={`scale(1,${lerp(0.5, 0.62, split)})`}>火</text>
+				</g>
+			</g>
+			{/* 说文解字 page */}
+			{shuo > 0.01 && <g transform="translate(1290,170)" opacity={shuo}>
+				<rect x={0} y={0} width={440} height={620} fill="#efe4c9" filter="url(#paperTex)" />
+				<rect x={0} y={0} width={440} height={620} fill="none" stroke={C.inkMid} strokeWidth={4} filter="url(#brush)" />
+				<text x={390} y={60} style={{fontFamily: KAI, fontWeight: 700, fontSize: 32, writingMode: 'vertical-rl'}} fill={C.inkMid}>《说文解字》</text>
+				<text x={300} y={70} style={{fontFamily: KAI, fontWeight: 700, fontSize: 80, writingMode: 'vertical-rl'}} fill={C.fire}>炎</text>
+				<text x={200} y={70} style={{fontFamily: KAI, fontWeight: 700, fontSize: 70, writingMode: 'vertical-rl', letterSpacing: '0.06em'}} fill={C.ink}>火光上也</text>
+				<text x={100} y={70} style={{fontFamily: KAI, fontWeight: 700, fontSize: 70, writingMode: 'vertical-rl', letterSpacing: '0.06em'}} fill={C.ink}>从重火</text>
+			</g>}
+			{/* Rome: Celsus' scroll */}
+			{rome > 0.01 && <g transform={`translate(${lerp(1900, 1050, ease(rome))},170)`} opacity={rome * (1 - ease(merge * 1.6))}>
+				<rect x={0} y={0} width={720} height={600} fill="#efe6d0" filter="url(#paperTex)" />
+				<rect x={-18} y={-18} width={756} height={30} rx={14} fill="#8a6a46" /><rect x={-18} y={588} width={756} height={30} rx={14} fill="#8a6a46" />
+				<text x={360} y={80} textAnchor="middle" style={{fontFamily: LATIN, fontStyle: 'italic', fontWeight: 600, fontSize: 40}} fill={C.inkMid}>Celsus · 约公元前25年–公元50年</text>
+				{[['rubor', '红'], ['tumor', '肿'], ['calor', '热'], ['dolor', '痛']].map(([la, zh], i) => <g key={la} opacity={words(i)}>
+					<text x={140} y={190 + i * 96} style={{fontFamily: LATIN, fontWeight: 700, fontSize: 64}} fill={C.ink}>{la}</text>
+					<text x={460} y={190 + i * 96} style={{fontFamily: KAI, fontWeight: 700, fontSize: 70}} fill={C.fire}>{zh}</text>
+				</g>)}
+				{flam > 0.01 && <g opacity={flam}>
+					<rect x={40} y={500} width={640} height={2} fill={C.inkMid} opacity={0.4} />
+					<text x={360} y={570} textAnchor="middle" style={{fontFamily: LATIN, fontWeight: 700, fontSize: 60}} fill={C.ink}>in<tspan fill={C.fire}>flamma</tspan>tion</text>
+				</g>}
+			</g>}
+			{/* the hero frame: east and west, one flame */}
+			{merge > 0.01 && <g opacity={merge}>
+				<Flame x={960} y={800} h={lerp(120, 560, ease(merge))} t={T} />
+				<text x={520} y={760} textAnchor="middle" style={{fontFamily: KAI, fontWeight: 700, fontSize: 210}} fill={C.ink} opacity={ease((merge - 0.3) / 0.5)} filter="url(#brush)">炎</text>
+				<text x={1410} y={740} textAnchor="middle" style={{fontFamily: LATIN, fontWeight: 700, fontStyle: 'italic', fontSize: 170}} fill={C.ink} opacity={ease((merge - 0.3) / 0.5)}>flamma</text>
+				<text x={520} y={460} textAnchor="middle" style={{fontFamily: KAI, fontWeight: 700, fontSize: 56}} fill={C.inkMid} opacity={ease((merge - 0.5) / 0.5)}>东方</text>
+				<text x={1410} y={460} textAnchor="middle" style={{fontFamily: KAI, fontWeight: 700, fontSize: 56}} fill={C.inkMid} opacity={ease((merge - 0.5) / 0.5)}>西方</text>
+			</g>}
+		</svg>
+	);
+};
+
+// 33 · the sleep study grid (modern, cobalt)
+const StudyScene: React.FC<{T: number}> = ({T}) => {
+	const o = fadeIn(T, ln(33).a, 0.5);
+	const SANS = '"Noto Sans CJK SC", sans-serif';
+	return (
+		<svg width={W} height={H}>
+			<Defs />
+			<Paper tone={1} />
+			<g opacity={o} transform="translate(360,200)">
+				{Array.from({length: 72}, (_, i) => <rect key={i} x={(i % 12) * 70} y={Math.floor(i / 12) * 70} width={56} height={56} rx={6} fill={C.cobalt} opacity={0.15 + 0.6 * fadeIn(T, ln(33).a + 0.1 + i * 0.012, 0.2)} />)}
+				<text x={0} y={-40} style={{fontFamily: SANS, fontWeight: 700, fontSize: 40}} fill={C.cobalt}>72 项研究 · 5万多人</text>
+				<path d="M920,380 L1040,140" stroke={C.cobalt} strokeWidth={16} strokeLinecap="round" />
+				<path d="M990,150 L1044,130 L1050,190" stroke={C.cobalt} strokeWidth={16} fill="none" strokeLinecap="round" />
+				<text x={900} y={470} style={{fontFamily: SANS, fontWeight: 700, fontSize: 40}} fill={C.cobalt}>炎症指标</text>
+				<text x={0} y={510} style={{fontFamily: SANS, fontSize: 30}} fill={C.grey}>相关，不是因果 · Irwin et al. 2016</text>
+			</g>
+		</svg>
+	);
+};
+
+// 34–35, 37–39 · back to mum: the phone; the old body chart; the family grid with the 验证 stamp
+const BackScene: React.FC<{T: number}> = ({T}) => {
+	const chart = cl01(fadeIn(T, ln(37).a, 0.6) - fadeIn(T, ln(39).a, 0.5));
+	const align = fadeIn(T, ln(38).a, 1.2);
+	const grid = fadeIn(T, ln(39).a, 0.5), stamp = cl01((T - ln(39).a - 1.2) / 0.2);
+	const phone = 1 - Math.max(chart, grid);
+	const SANS = '"Noto Sans CJK SC", sans-serif';
+	const bubble = (who: string, text: string, x: number, y: number, o: number) => <g transform={`translate(${x},${y})`} opacity={o}>
+		<rect x={0} y={0} width={600} height={160} rx={36} fill={C.white} stroke={C.ink} strokeWidth={4} filter="url(#brush)" />
+		<text x={40} y={62} style={{fontFamily: SANS, fontWeight: 700, fontSize: 40}} fill={C.inkMid}>{who}</text>
+		<text x={40} y={126} style={{fontFamily: SANS, fontWeight: 700, fontSize: 56}} fill={C.ink}>{text}</text>
+	</g>;
+	return (
+		<svg width={W} height={H}>
+			<Defs />
+			<clipPath id="phoneClip"><rect x={0} y={0} width={260} height={520} rx={28} /></clipPath>
+			<Paper />
+			{phone > 0.01 && <g opacity={phone}>
+				<Phone x={820} y={230} s={1.05} glow={0.4}>
+					<rect width={260} height={520} fill="#1a2030" />
+					<rect x={18} y={210} width={224} height={92} rx={22} fill="#eef3fb" />
+					<text x={38} y={246} style={{fontFamily: SANS, fontWeight: 700, fontSize: 22}} fill="#1a2030">妈</text>
+					<text x={38} y={282} style={{fontFamily: SANS, fontSize: 26}} fill="#1a2030">你这是上火了</text>
+				</Phone>
+				<g opacity={fadeIn(T, ln(35).a, 0.6)}><Flame x={1360} y={560} h={220} t={T} ink /></g>
+				<text x={1480} y={470} style={{fontFamily: KAI, fontWeight: 700, fontSize: 64}} fill={C.ink} opacity={fadeIn(T, ln(35).a + 0.3, 0.6)}>老祖宗的眼光</text>
+			</g>}
+			{chart > 0.01 && <g opacity={chart}>
+				{/* an old hand-drawn body chart (ink) and the modern diagram aligning over it */}
+				<Bust x={960} y={700} s={1.0} wash={0.6} />
+				{[[0, -168], [0, -92], [58, -214]].map(([px, py], i) => <Flame key={i} x={960 + px} y={700 + py + 14} h={64} t={T + i} />)}
+				<g opacity={align}>
+					{[[0, -168], [58, -214]].map(([px, py], i) => <g key={i}><circle cx={960 + px + lerp(160, 0, align)} cy={700 + py} r={28} fill="none" stroke={C.cobalt} strokeWidth={5} /><text x={960 + px + 60 + lerp(160, 0, align)} y={700 + py - 30} style={{fontFamily: SANS, fontWeight: 700, fontSize: 34}} fill={C.cobalt}>炎症</text></g>)}
+				</g>
+				<text x={300} y={260} style={{fontFamily: KAI, fontWeight: 700, fontSize: 56}} fill={C.inkMid} opacity={1 - align}>只能看 · 只能摸</text>
+			</g>}
+			{grid > 0.01 && <g opacity={grid}>
+				{bubble('妈', '你这是上火了', 200, 170, fadeIn(T, ln(39).a + 0.1, 0.3))}
+				{bubble('爸', '少吃点辣的', 1110, 290, fadeIn(T, ln(39).a + 0.35, 0.3))}
+				{bubble('奶奶', '早点睡，别熬夜', 520, 500, fadeIn(T, ln(39).a + 0.6, 0.3))}
+				{stamp > 0 && <g transform={`translate(1540,700) rotate(-12) scale(${lerp(1.6, 1, ease(stamp))})`} opacity={stamp}>
+					<rect x={-150} y={-70} width={300} height={140} rx={14} fill="none" stroke={C.fire} strokeWidth={10} filter="url(#brush)" />
+					<text x={0} y={34} textAnchor="middle" style={{fontFamily: KAI, fontWeight: 700, fontSize: 96}} fill={C.fire} filter="url(#brush)">验证</text>
+				</g>}
+			</g>}
+		</svg>
+	);
+};
+
+// end card
+const EndCard: React.FC<{T: number}> = ({T}) => {
+	const u = T - ln(39).b;
+	return (
+		<svg width={W} height={H}>
+			<Defs />
+			<Paper />
+			<Seal x={960} y={250} s={1.2} ch="火" o={fadeIn(u, 0, 0.4)} rot={-6} />
+			<text x={960} y={470} textAnchor="middle" style={{fontFamily: KAI, fontWeight: 700, fontSize: 70}} fill={C.ink} opacity={fadeIn(u, 0.3, 0.5)}>你家里，谁最爱说“你上火了”？</text>
+			<text x={960} y={560} textAnchor="middle" style={{fontFamily: SERIF, fontSize: 34}} fill={C.inkMid} opacity={fadeIn(u, 0.6, 0.5)}>评论区说说 · 发给那个总说“你上火了”的人</text>
+			<g opacity={fadeIn(u, 0.9, 0.5)}>
+				<rect x={760} y={630} width={400} height={64} rx={32} fill={C.ink} />
+				<text x={960} y={673} textAnchor="middle" style={{fontFamily: SERIF, fontSize: 28, letterSpacing: '0.1em'}} fill={C.white}>关注 Juno · 一起看懂世界</text>
+			</g>
+			<text x={960} y={900} textAnchor="middle" style={{fontFamily: SERIF, fontSize: 20}} fill={C.inkMid} opacity={fadeIn(u, 1.0, 0.5)}>资料：《尚书》《说文解字》《证治准绳》 · Caterina et al. 1997 Nature · Irwin et al. 2006 · 诺贝尔奖 2021 · Cavaillon 2021</text>
+			<text x={960} y={940} textAnchor="middle" style={{fontFamily: SERIF, fontSize: 20}} fill={C.inkMid} opacity={fadeIn(u, 1.0, 0.5)}>内容由AI生成 · 本片不构成医疗建议</text>
+		</svg>
+	);
+};
+
+// ---------------------------------------------------------------- the film
+const sceneAt = (T: number): React.ReactNode => {
+	if (T < ln(3).a) return <Open T={T} />;
+	if (T < ln(4).b) return <BodyScene T={T} mode="dots" />;
+	if (T < ln(5).a) return <TitleCard T={T} />;
+	if (T < ln(9).a) return <WuxingScene T={T} />;
+	if (T < ln(12).a) return <BodyScene T={T} mode="fire" />;
+	if (T < ln(18).a) return <YinYangScene T={T} />;
+	if (T < ln(25).a) return <ModernScene T={T} />;
+	if (T < ln(32).a) return <YanScene T={T} />;
+	if (T < ln(33).a) return <BodyScene T={T} mode="modern" />;
+	if (T < ln(34).a) return <StudyScene T={T} />;
+	if (T < ln(36).a) return <BackScene T={T} />;
+	if (T < ln(37).a) return <BodyScene T={T} mode="both" />;
+	if (T < ln(39).b) return <BackScene T={T} />;
+	return <EndCard T={T} />;
+};
+export const Film36: React.FC = () => {
+	useFonts(); useKai();
+	const T = useCurrentFrame() / FPS;
+	const line = LINES.find(([a, b]) => T >= a + 0.06 && T < b - 0.1);
+	const dark = false;
+	return (
+		<AbsoluteFill style={{background: C.paper}}>
+			<AbsoluteFill>{sceneAt(T)}</AbsoluteFill>
+			{T < ln(39).b && <Mark dark={dark} />}
+			{line && <Sub t={line[2]} />}
+		</AbsoluteFill>
+	);
+};
+
+registerRoot(() => (
+	<>
+		<Composition id="FILM36" component={Film36} durationInFrames={Math.round(FILM36_END * FPS)} fps={FPS} width={W} height={H} />
+	</>
+));
