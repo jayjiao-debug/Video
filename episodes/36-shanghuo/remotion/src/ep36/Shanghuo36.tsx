@@ -11,7 +11,7 @@ import LINES_RAW from './lines.json';
 const W = 1920, H = 1080, FPS = 30;
 type Pt = [number, number];
 const LINES = LINES_RAW as [number, number, string][];
-export const FILM36_END = LINES[LINES.length - 1][1] + 4.2;
+export const FILM36_END = LINES[LINES.length - 1][1] + 6.0;   // end card holds to the music's tail (BGM 164.5 s, energy ends ~162 s)
 const ln = (n: number) => ({a: LINES[n - 1][0], b: LINES[n - 1][1]});
 const cl01 = (x: number) => Math.max(0, Math.min(1, x));
 const ease = (u: number) => { const v = cl01(u); return v < 0.5 ? 4 * v * v * v : 1 - Math.pow(-2 * v + 2, 3) / 2; };
@@ -362,23 +362,68 @@ const BodyScene: React.FC<{T: number; mode: 'dots' | 'fire' | 'modern' | 'both'}
 };
 
 // title beat (on the hardest drop): ink night, the title brushed huge in paper white, 火 glowing vermilion; splash + seal
+/** the title burns away from the bottom up (fire rises: 炎上); only the red 火 survives it */
+const BURN = {start: -1.75, end: -0.12};   // seconds relative to line 5
+const burnEdge = (x: number, T: number, Y: number) => Y + 34 * Math.sin(x * 0.011 + 1.3) + 22 * Math.sin(x * 0.029 + T * 1.9) + 9 * Math.sin(x * 0.083 - T * 3.1) + 4 * Math.sin(x * 0.21 + T * 5);
+const below = (T: number, Y: number, off: number) => {
+	const pts = Array.from({length: 97}, (_, i) => { const x = -40 + i * 21; return `L${x},${(burnEdge(x, T, Y) + off).toFixed(1)}`; }).join(' ');
+	return `M-40,1600 ${pts} L1980,1600 Z`;
+};
 const TitleCard: React.FC<{T: number}> = ({T}) => {
 	const t0 = ln(4).b, slam = cl01((T - t0) / 0.14);
 	const jolt = slam < 1 ? 0 : 8 * Math.exp(-(T - t0 - 0.14) * 9) * Math.sin((T - t0) * 42);
 	const sc = titleSc(T), gone = T >= ln(5).a;
+	const tb0 = ln(5).a + BURN.start, tb1 = ln(5).a + BURN.end, p = cl01((T - tb0) / (tb1 - tb0));
+	const Y = lerp(960, 120, Math.pow(p, 0.85)), burning = p > 0;
+	const band = 46;
+	const text = (fill: (i: number, line: number) => string, skipFire = true) => <>
+		{[...T1].map((c, i) => <text key={'a' + i} x={960 + (i - 1) * T1STEP} y={420} textAnchor="middle" style={{fontFamily: KAI, fontWeight: 700, fontSize: T1F}} fill={fill(i, 1)} filter="url(#brush)">{c}</text>)}
+		{[...T2].map((c, i) => (i === 5 && skipFire) ? null : <text key={'b' + i} x={960 + (i - 3) * T2STEP} y={700} textAnchor="middle" style={{fontFamily: KAI, fontWeight: 700, fontSize: T2F}} fill={fill(i, 2)} filter="url(#brush)">{c}</text>)}
+	</>;
+	const fx = 960 + 2 * T2STEP;
 	return (
 		<svg width={W} height={H}>
 			<Defs />
+			<defs>
+				<mask id="burnKeep" maskUnits="userSpaceOnUse" x={-100} y={-100} width={2200} height={1400}><rect x={-100} y={-100} width={2200} height={1400} fill="#fff" /><path d={below(T, Y, -band)} fill="#000" /></mask>
+				<mask id="burnChar" maskUnits="userSpaceOnUse" x={-100} y={-100} width={2200} height={1400}><path d={below(T, Y, -band)} fill="#fff" /><path d={below(T, Y, -10)} fill="#000" /></mask>
+				<mask id="burnEdge" maskUnits="userSpaceOnUse" x={-100} y={-100} width={2200} height={1400}><path d={below(T, Y, -22)} fill="#fff" /><path d={below(T, Y, 3)} fill="#000" /></mask>
+			</defs>
 			<InkNight glow={[1180, 640]} />
-			<ellipse cx={1290} cy={610} rx={300} ry={240} fill="#c8321e" opacity={0.22 * slam} filter="url(#glow)" />
-			<Splash x={1180} y={600} r={330} u={slam} seed={7} col="#3a1a10" />
+			<ellipse cx={1290} cy={610} rx={300} ry={240} fill="#c8321e" opacity={0.22 * slam * (1 - p)} filter="url(#glow)" />
+			<g mask={burning ? 'url(#burnKeep)' : undefined}><Splash x={1180} y={600} r={330} u={slam} seed={7} col="#3a1a10" /></g>
 			<g transform={`translate(${960 + jolt},520) scale(${sc}) translate(-960,-520)`} opacity={slam}>
-				{[...T1].map((c, i) => <text key={'a' + i} x={960 + (i - 1) * T1STEP} y={420} textAnchor="middle" style={{fontFamily: KAI, fontWeight: 700, fontSize: T1F}} fill={C.white} filter="url(#brush)">{c}</text>)}
-				{[...T2].map((c, i) => (i === 5 && gone) ? null : <text key={'b' + i} x={960 + (i - 3) * T2STEP} y={700} textAnchor="middle" style={{fontFamily: KAI, fontWeight: 700, fontSize: T2F}} fill={i === 5 ? '#ff6a3a' : C.white} filter="url(#brush)">{c}</text>)}
+				<g mask={burning ? 'url(#burnKeep)' : undefined}>{text(() => C.white)}</g>
+				{burning && <>
+					<g mask="url(#burnChar)">{text(() => '#6e2410')}</g>
+					<g mask="url(#burnChar)" opacity={0.5}>{text(() => '#c8441c')}</g>
+					<g mask="url(#burnEdge)" filter="url(#soft)">{text(() => '#ff6a1a')}</g>
+					<g mask="url(#burnEdge)" filter="url(#soft)">{text(() => '#ffa04a')}</g>
+					<g mask="url(#burnEdge)">{text(() => '#ffd27a')}</g>
+				</>}
+				{/* the red 火 never burns: it glows hotter while the rest goes */}
+				{!gone && <>
+					<text x={fx} y={700} textAnchor="middle" style={{fontFamily: KAI, fontWeight: 700, fontSize: T2F}} fill="#ffb07a" filter="url(#glow)" opacity={0.25 + 0.6 * p}>火</text>
+					<text x={fx} y={700} textAnchor="middle" style={{fontFamily: KAI, fontWeight: 700, fontSize: T2F}} fill={mixHex('#ff6a3a', '#ff9a4a', p)} filter="url(#brush)">火</text>
+				</>}
 			</g>
-			{!gone && <ellipse cx={1290} cy={630} rx={160} ry={150} fill="url(#fireGlowG)" opacity={slam} />}
-			<Seal x={1640} y={250} s={lerp(2.4, 1.15, ease(cl01((T - t0 - 0.12) / 0.16)))} ch="火" o={cl01((T - t0 - 0.12) / 0.1)} rot={-12} />
-			<text x={960} y={850} textAnchor="middle" style={{fontFamily: SERIF, fontSize: 30, letterSpacing: '0.5em'}} fill="rgba(236,226,206,0.6)" opacity={fadeIn(T, t0 + 0.6, 0.6)}>VIBE 知 识 大 赏</text>
+			{!gone && <ellipse cx={1290} cy={630} rx={160 + 80 * p} ry={150 + 80 * p} fill="url(#fireGlowG)" opacity={slam} />}
+			<g mask={burning ? 'url(#burnKeep)' : undefined}>
+				<Seal x={1640} y={250} s={lerp(2.4, 1.15, ease(cl01((T - t0 - 0.12) / 0.16)))} ch="火" o={cl01((T - t0 - 0.12) / 0.1)} rot={-12} />
+				<text x={960} y={850} textAnchor="middle" style={{fontFamily: SERIF, fontSize: 30, letterSpacing: '0.5em'}} fill="rgba(236,226,206,0.6)" opacity={fadeIn(T, t0 + 0.6, 0.6)}>VIBE 知 识 大 赏</text>
+			</g>
+			{/* embers peel off the burning edge and rise */}
+			{burning && Array.from({length: 70}, (_, i) => {
+				const R0 = (k: number) => { const v = Math.sin(i * 19.19 + k * 7.77) * 43758.5453; return v - Math.floor(v); };
+				const ts = tb0 + R0(1) * (tb1 - tb0 + 0.3), life = 0.7 + 0.8 * R0(2), u = (T - ts) / life;
+				if (u <= 0 || u >= 1) return null;
+				const x0 = 230 + R0(3) * 1460, Ys = lerp(960, 120, Math.pow(cl01((ts - tb0) / (tb1 - tb0)), 0.85)), y0 = burnEdge(x0, ts, Ys) - 10;
+				if (y0 > 760 || y0 < 140) return null;
+				const x = x0 + (R0(4) - 0.5) * 120 * u + 14 * Math.sin(u * 9 + i), y = y0 - (120 + 260 * R0(5)) * u;
+				return <circle key={i} cx={x} cy={y} r={(2 + 4 * R0(6)) * (1 - 0.6 * u)} fill={u < 0.4 ? '#ffe2a8' : '#ff8a3a'} opacity={(1 - u) * 0.95} />;
+			})}
+			{/* smoke */}
+			{burning && Array.from({length: 7}, (_, i) => { const u = cl01((T - tb0 - i * 0.18) / 1.6); if (u <= 0 || u >= 1) return null; const x = 400 + i * 190; return <ellipse key={i} cx={x + 30 * Math.sin(u * 4 + i)} cy={burnEdge(x, T, Y) - 80 - 260 * u} rx={110 + 90 * u} ry={50 + 40 * u} fill="#8a7a6a" opacity={0.16 * Math.sin(Math.PI * u)} filter="url(#glow)" />; })}
 		</svg>
 	);
 };
@@ -843,7 +888,7 @@ const TRANS: Tr[] = [
 		const s0 = titleFire(ln(5).a), tp = tilePos(1), f = ease(u / 0.85), q = arc([s0.x, s0.y], [tp[0], tp[1] + 34], f, 60);
 		return <>
 			<Iris A={<TitleCard T={T} />} B={<WuxingScene T={T} />} c={q} r={2300 * ease(u)} col={C.paperDeep} seed={6} />
-			{u < 0.93 && <Over><Glyph ch="火" x={q[0]} y={q[1]} f={lerp(s0.f, 100, f)} col={mixHex('#ff6a3a', C.fire, f)} glow /></Over>}
+			{u < 0.93 && <Over><Glyph ch="火" x={q[0]} y={q[1]} f={lerp(s0.f, 100, f)} col={mixHex('#ff9a4a', C.fire, f)} glow /></Over>}
 		</>;
 	}},
 	// 4 · the sparks rising off 炎上 fly out and land on the face: each one lights a symptom
