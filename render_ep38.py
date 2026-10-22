@@ -33,8 +33,22 @@ def chunk(args):
         subprocess.run(base + ["-c:v", "libx264", "-preset", "veryfast", "-crf", "16", "/tmp/c.mp4"], check=True)
     return pathlib.Path("/tmp/c.mp4").read_bytes(), log
 
+@app.function(image=img, gpu="T4", timeout=3600)
+def stills(ts):
+    subprocess.run("cp -r /app/src/* /app/ && cp /app/src/assets_extra/* /app/assets/ 2>/dev/null; true", shell=True, check=True)
+    r = subprocess.run(["node", "stills.mjs", "/tmp/s"] + [str(t) for t in ts], cwd="/app", capture_output=True, text=True)
+    subprocess.run("cd /tmp/s && tar cf /tmp/s.tar *.jpg", shell=True)
+    return pathlib.Path("/tmp/s.tar").read_bytes(), (r.stdout + r.stderr)[-3000:]
+
 @app.local_entrypoint()
 def main():
+    if "stills" in JOB:
+        out = pathlib.Path("out"); out.mkdir(exist_ok=True); ts = JOB["stills"]; n = 4
+        groups = [ts[i::n] for i in range(n)]
+        for k, (data, log) in enumerate(stills.map(groups)):
+            (out / f"s{k}.tar").write_bytes(data); print(k, log)
+        subprocess.run("cd out && mkdir -p stills && for f in s*.tar; do tar xf $f -C stills; done && rm s*.tar", shell=True, check=True)
+        print("DONE stills"); return
     out = pathlib.Path("out"); out.mkdir(exist_ok=True); lst = []
     n = Bn - A; parts = [(i, A + i * n // CHUNKS, A + (i + 1) * n // CHUNKS) for i in range(CHUNKS)]
     for (i, a, b), (data, log) in zip(parts, chunk.map(parts)):
