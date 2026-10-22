@@ -92,6 +92,17 @@ were read through Europe PMC, the publisher page or the authors' own institution
 
 ---
 
+## F. 阴阳、治未病、稳态、生物钟 (added 2026-10-22 by the producer, owner's new focus: 上火 · 五行 · 阴阳调和)
+
+| # | Claim as it will appear on screen | Exact figure / wording in the source | Source | Note |
+|---|---|---|---|---|
+| F1 | 阴阳：阳是亮、热、动；阴是暗、冷、静；二者互生，调和为好；甲骨文上已有阴、阳二字（三千多年前） | yin: "a closed door, darkness … the north side of a mountain"; yang: "height, brightness and the south side of a mountain"; "Yin in its highest form is freezing while yang in its highest form is boiling"; "yang is movement (dong) and yin is rest (jing)"; "Yang is generated [sheng] from yin and yin is generated from yang"; "The interaction of these two establishes he (harmony)"; "a process of harmonization ensuring a constant, dynamic balance of all things"; characters on oracle bones "at least as early as the 14th century B.C.E."; Huangdi neijing: "Yin should flow smoothly and yang should vivify steadily" | Wang RR (Loyola Marymount University). "Yinyang (Yin-yang)". *Internet Encyclopedia of Philosophy*. https://iep.utm.edu/yinyang/ | ✓. 14th c. BCE → "三千多年前" holds. |
+| F2 | 《黄帝内经》："阴平阳秘，精神乃治" | The phrase "阴平阳秘，精神乃治" is set as a study item (病因病机 6: its medical significance) in the official exam syllabus of the 第五批全国中医临床优秀人才研修项目; also quoted in 杨波、鞠亚波, 中国社会科学报 2024-05-24 | Syllabus PDF on zyj.beijing.gov.cn: https://zyj.beijing.gov.cn/zwgk/zfxxgkpt/fdzdgknr/zkly/202209/P020220928668652247638.pdf ; https://www.cssn.cn/skgz/bwyc/202405/t20240524_5754394.shtml | ✓ phrase. Chapter (commonly 《素问·生气通天论》) not verified from a primary text: say only 《黄帝内经》. |
+| F3 | 《黄帝内经》："圣人不治已病治未病" | "圣人不治已病治未病，不治已乱治未乱" attributed to 《素问·四气调神大论》 | 杨波、鞠亚波（副主任医师）, 中国社会科学报 via 中国社会科学网, 2024-05-24. https://www.cssn.cn/skgz/bwyc/202405/t20240524_5754394.shtml ; "治未病" also an item in the national syllabus (F2) | ✓ |
+| F4 | 《黄帝内经》："春夏养阳，秋冬养阴" | listed as 养生 item 4 in the national syllabus | Same syllabus PDF as F2 | ✓ phrase (optional, not used on screen). |
+| F5 | 1932年，美国生理学家坎农把身体保持内部平衡的能力叫作"稳态"（homeostasis） | Cannon's *The Wisdom of the Body* (1932), "für die er den Neologismus »Homöostase« prägte"; "Dieses dynamische Aufrechterhalten komplexer Gleichgewichte innerhalb enger Grenzen" (the dynamic maintenance of complex equilibria within narrow limits) | Borck C. "Die Weisheit der Homöostase und die Freiheit des Körpers". *Zeithistorische Forschungen / Studies in Contemporary History* 11 (2014): 472–477. https://doks.zeitgeschichte-digital.de/doks/files/1469/ZF_3_2014_472_477_Borck.pdf | ✓. Use 1932 (the book). Don't add examples like 体温/血糖 to the subtitle. |
+| F6 | 生物钟：让身体跟着昼夜调整，调节睡眠、体温、激素、代谢；长期与它错位，多种疾病风险升高（2017年诺贝尔奖） | "for their discoveries of molecular mechanisms controlling the circadian rhythm" (Hall, Rosbash, Young); "our inner clock adapts our physiology to the dramatically different phases of the day"; "The clock regulates critical functions such as behavior, hormone levels, sleep, body temperature and metabolism"; "chronic misalignment between our lifestyle and the rhythm dictated by our inner timekeeper is associated with increased risk for various diseases" | Nobel Assembly at Karolinska Institutet, press release 2017-10-02. https://www.nobelprizemedicine.org/wp-content/uploads/2017/10/pressm_eng_.pdf | ✓. "associated with", not "causes". |
+
 ## Story-worthy
 
 **The most surprising true facts**
