@@ -1,13 +1,15 @@
 {
-  "id": "lanchester-search-01",
+  "id": "lanchester-assets-01",
   "items": [
-    { "type": "sketchfab-search", "q": "napoleonic soldier", "count": 24 },
-    { "type": "sketchfab-search", "q": "redcoat musket soldier", "count": 24 },
-    { "type": "sketchfab-search", "q": "line infantry 1800 rigged", "count": 24 },
-    { "type": "sketchfab-search", "q": "ship of the line", "count": 24 },
-    { "type": "sketchfab-search", "q": "HMS Victory", "count": 16 },
-    { "type": "url", "url": "https://api.polyhaven.com/assets?t=hdris&c=sunrise-sunset", "name": "ph_hdris_sunset.json", "license": "list" },
-    { "type": "url", "url": "https://api.polyhaven.com/assets?t=textures&c=terrain", "name": "ph_textures_terrain.json", "license": "list" },
-    { "type": "url", "url": "https://api.polyhaven.com/assets?t=models&c=nature", "name": "ph_models_nature.json", "license": "list" }
+    { "type": "sketchfab", "uid": "771050587ce248498178aee2c2f88f36", "name": "infantry_rigged" },
+    { "type": "sketchfab", "uid": "85a1a8205b2c447fb8d0419978f17b75", "name": "infantry_waterloo" },
+    { "type": "sketchfab", "uid": "ba59dedc523841b99d19fc17493d601f", "name": "ship_bucentaure" },
+    { "type": "sketchfab", "uid": "b696ae356b6d4b4d8f83d26dd5c33ae7", "name": "ship_agamemnon" },
+    { "type": "polyhaven", "id": "kloppenheim_06_puresky", "res": "4k" },
+    { "type": "polyhaven", "id": "belfast_sunset_puresky", "res": "4k" },
+    { "type": "polyhaven", "id": "brown_mud_02", "res": "2k", "maps": ["Diffuse", "nor_gl", "Rough"] },
+    { "type": "polyhaven", "id": "aerial_grass_rock", "res": "2k", "maps": ["Diffuse", "nor_gl", "Rough"] },
+    { "type": "polyhaven", "id": "grass_medium_01", "res": "1k" },
+    { "type": "polyhaven", "id": "tree_small_02", "res": "1k" }
   ]
 }
