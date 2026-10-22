@@ -1,0 +1,17 @@
+outro question t=50.5: ink x 599-1287 centre 943.0; y 511-572 (h 62px)
+gold ring pixels row540: None None
+gold ring pixels col960: 52 995
+thesis t=57.0: ink x 846-1074 centre 960.0; y 597-699 (h 103px)
+title 七宗罪 (gold, thr150) t=57.0: ink x 700-1167 centre 933.5; y 380-518 (h 139px)
+row 523 warm pixels min/max 504 1415 n 5
+ left ring ~ 504 505  right ring ~ 1413 1415
+ ring centre ≈ 959.0 (inner edges) 959.5 (outer)
+s1_wo_xian_ditou t=5.0: bubble x 1260-1630 centre 1445.0; text ink x 1260-1630 centre 1445.0; offset +0.0px; text glyph height 110px
+s3_ni_zaishuo t=17.3: bubble x 1450-1630 centre 1540.0; text ink x 1450-1566 centre 1508.0; offset -32.0px; text glyph height 45px
+s2_yunqi t=14.76: bubble x 1400-1641 centre 1520.5; text ink x 1400-1641 centre 1520.5; offset +0.0px; text glyph height 80px
+s7_zuihou t=41.6: bubble x 1450-1710 centre 1580.0; text ink x 1450-1710 centre 1580.0; offset +0.0px; text glyph height 76px
+s4_niulai t=25.0: bubble x 1450-1684 centre 1567.0; text ink x 1450-1684 centre 1567.0; offset +0.0px; text glyph height 111px
+intro line 1 七宗罪，你每天都在犯。: ink x 391-1459 centre 925.0 (frame 960); glyph rows 244-352 h=109
+intro caption: ink x 678-1250 centre 964.0 (frame 960); glyph rows 398-434 h=37
+intro sticker labels (any bright): ink x 201-1715 centre 958.0 (frame 960); glyph rows 836-873 h=38
+frame 3.0 mean luma 25.3
