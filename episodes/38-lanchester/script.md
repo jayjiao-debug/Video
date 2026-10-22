@@ -1,3 +1,29 @@
+# Script v2 — show, don't tell (2026-10-22, after "show dont tell … instead of insainly long text")
+The picture explains; on-screen numbers carry the maths; subtitles only where the picture can't speak (13 lines). Keyframes: `board/Lan38.tsx` (LAN38, 9 frames).
+
+| Beat | Picture (what moves) | On screen | Subtitle |
+|---|---|---|---|
+| 1 | Two dot armies on a dark map table | 1000 · 500 | 打完，你还剩几个人？ |
+| 2 | Counter over blue: 500 appears, cracks; 866 slams in on the drop | 500 → **866** | — |
+| 3 | Title built from the dots | | 《为什么要"集中优势兵力"》 |
+| 4 | Swords: front ranks pair off and vanish together; 500 blue left | 拼刀：一换一 · 500 | 冷兵器时代，直觉是对的 |
+| 5 | Rifles: tracers from every dot; red thins fast, blue slowly; live table runs 1000/500 → 950/400 → 910/305 → 880/214, ratio 2:1 → 4:1 | table | 有了枪：越打越悬殊 |
+| 6 | 2× tracers out of blue; red's fire spread over 2× men | 火力×2 · 挨打÷2 · =强4倍 | — |
+| 7 | Each army slides into a square, side = its number; the 500 square tiles the 1000 square four times | 1000 · 500 · ×4 | 战斗力 = 人数的平方 |
+| 8 | The red square is cut out of the blue; the L folds into a new square; ruler reads 866 | 1000² − 500² = 866² | — |
+| 9 | Lanchester's page, 1914; Jellicoe's 1916 letter | 兰彻斯特 · 1914 | — |
+| 10 | 1000 vs 1000: equal squares cancel to nothing | 0 | 两边一样多？同归于尽 |
+| 11 | Red splits in two; blue eats one half (→866), then the other (→707) | 866 → **707** | 同样的兵，换个打法 |
+| 12 | Bamboo slips | 我专为一，敌分为十 | — |
+| 13 | Trafalgar chart: 27 vs 33 in parallel lines; the squares say Britain loses | 1805 · 27 · 33 | 按平方律，英国该输 |
+| 14 | Two columns cut the line; the van drifts away; local squares flip blue | 16 → 12 (Nelson's plan) | 拦腰切开，以多打少 |
+| 15 | Tally | 英 0 艘 · 敌 18+ 艘 | 纳尔逊中弹牺牲，英国一艘未失 |
+| 16 | Scattered small squares slide together into one big square | | 同一时刻、同一地点人多，才算 |
+| End | | | 你还在哪见过"以十攻其一"？ |
+
+---
+
+# (v1, superseded)
 # Script: 为什么要"集中优势兵力" — v1 (2026-10-22)
 
 **Spine:** a puzzle (1000 vs 500 → 866, not 500) → swords are one-for-one, guns let everyone shoot → round-by-round the gap snowballs → why: 2× shooters × ½ the fire each = 4× → strength = the square of the number, drawn as squares → split the enemy and 1000 vs 1000 becomes a win with 707 left (孙子) → Trafalgar.
