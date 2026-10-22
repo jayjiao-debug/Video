@@ -8,7 +8,7 @@ const hud = document.getElementById('hud')!, split = document.getElementById('sp
 const sunziText = (scene: THREE.Scene) => {
 	const cv = document.createElement('canvas'); cv.width = 4096; cv.height = 1024; const g = cv.getContext('2d')!; const tex = new THREE.CanvasTexture(cv); tex.colorSpace = THREE.SRGBColorSpace;
 	const m = new THREE.Mesh(new THREE.PlaneGeometry(760, 190), new THREE.MeshBasicMaterial({map: tex, transparent: true, blending: THREE.AdditiveBlending, depthWrite: false, toneMapped: false}));
-	m.rotation.x = -Math.PI / 2; m.rotation.z = Math.PI; m.position.set(0, 0.3, 170); m.visible = false; scene.add(m);
+	m.rotation.x = -Math.PI / 2; m.position.set(0, 0.3, 170); m.visible = false; scene.add(m);
 	const lines = ['我专为一，敌分为十，', '是以十攻其一也'];
 	let last = -1;
 	m.userData.reveal = (k: number) => {

@@ -228,7 +228,7 @@ export class GroundSquares {
 	set(list: {x: number; z: number; w: number; d: number; color: string; a: number; edge?: number}[]) {
 		this.items.forEach((it, i) => { const s = list[i]; it.m.visible = it.e.visible = !!s && s.a > 0.001; if (!s) return;
 			for (const o of [it.m, it.e]) { o.position.set(s.x + s.w / 2, 0.15 + i * 0.02, s.z + s.d / 2); o.scale.set(s.w, s.d, 1); }
-			(it.m.material as THREE.MeshBasicMaterial).color.set(s.color); (it.m.material as THREE.MeshBasicMaterial).opacity = 0.24 * s.a;
+			(it.m.material as THREE.MeshBasicMaterial).color.set(s.color); (it.m.material as THREE.MeshBasicMaterial).opacity = 0.15 * s.a;
 			(it.e.material as THREE.LineBasicMaterial).color.set(s.color); (it.e.material as THREE.LineBasicMaterial).opacity = (s.edge ?? 1) * s.a; });
 	}
 }

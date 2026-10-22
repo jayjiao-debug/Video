@@ -33698,7 +33698,7 @@ var GroundSquares = class {
         o.scale.set(s.w, s.d, 1);
       }
       it.m.material.color.set(s.color);
-      it.m.material.opacity = 0.24 * s.a;
+      it.m.material.opacity = 0.15 * s.a;
       it.e.material.color.set(s.color);
       it.e.material.opacity = (s.edge ?? 1) * s.a;
     });
@@ -34106,9 +34106,9 @@ var TIMELINE = [
       if (f <= 0 && !focus) return;
       const x1 = a.x + dir * 1.3, tx = s.hit ? b.x : b.x + dir * 6, tz = s.hit ? b.z : b.z + (a.fx - 0.5) * 3;
       const p = (q) => [x1 + (tx - x1) * q, 1.45 + ((s.hit ? 1.3 : 0.6) - 1.45) * q, a.z + (tz - a.z) * q];
-      const k = focus ? 2.4 : 0.8;
+      const k = focus ? 2.6 : 0.3;
       const col = a.side ? [3.2 * k, 1.6 * k, 1.1 * k] : [1.4 * k, 2.1 * k, 3.4 * k];
-      segs.push([...p(Math.max(0, f - (focus ? 0.05 : 0.1))), ...p(f), ...col]);
+      segs.push([...p(Math.max(0, f - (focus ? 0.05 : 0.04))), ...p(f), ...col]);
     });
     c.tracers.set(segs);
     const ring = (m, x, z, o, col) => {
@@ -34148,7 +34148,7 @@ var TIMELINE = [
     clearLand(c);
     const d = T.squares - T.x4;
     const st = FREEZE + u * 0.9;
-    camKeys([{ t: 0, pos: [-10, 44, -80], look: [0, 0, 0], fov: 40 }, { t: d, pos: [-140, 820, -1], look: [-140, 0, 0], fov: 40 }], u);
+    camKeys([{ t: 0, pos: [-10, 44, -80], look: [0, 0, 0], fov: 40 }, { t: d, pos: [-140, 1e3, -1], look: [-140, 0, 0], fov: 40 }], u);
     battle(c, SA, st);
     counters(c.hud, ...aliveAt(SA, st));
     slam(c.hud, W / 2, 520, "\u6218\u6597\u529B \xD74", u, -1, 1.2, 120, GOLD, "#fff6dd");
@@ -34157,7 +34157,7 @@ var TIMELINE = [
   // 11 — ★3: each firing line is the side of a square; red's square tiles blue's four times; replay: both squares lose the same area every moment; blue's loss = red's whole square; what's left is 866
   { a: T.squares, b: T.divide, draw: (c, u) => {
     clearLand(c);
-    camKeys([{ t: 0, pos: [-140, 820, -1], look: [-140, 0, 0], fov: 40 }], 0);
+    camKeys([{ t: 0, pos: [-140, 1e3, -1], look: [-140, 0, 0], fov: 40 }], 0);
     const bs = 1e3 * LEN, rs = 500 * LEN, grow = ease2(u / 1.4), tile = env(u, 1.875, 3.6, 0.2, 0.3);
     const rp = clamp01((u - 3.75) / 4.1), st = 0.2 + rp * 11.1;
     const [b, r] = aliveAt(SA, u < 3.75 ? 0 : st);
@@ -34191,9 +34191,9 @@ var TIMELINE = [
     }
     if (tape > 0) {
       const fs = 866 * LEN;
-      const pt = P(-45 - fs / 2, -fs / 2 - 60);
-      if (u < 11.25) tag(c.hud, pt.x, pt.y, `${Math.round(866 * tape)}`, env(u, 9.9, 99), 64, "#fff", GOLD);
-      else slam(c.hud, pt.x, pt.y, "866", u, 11.25, 99, 110, BLUE);
+      const pt = P(-45 - fs - 70, 0);
+      if (u < 11.25) tag(c.hud, pt.x - 40, pt.y, `${Math.round(866 * tape)}`, env(u, 9.9, 99), 64, "#fff", GOLD);
+      else slam(c.hud, pt.x - 60, pt.y, "866", u, 11.25, 99, 110, BLUE);
       html(c.hud, `<div style="position:absolute;left:0;right:0;top:92px;text-align:center;font-weight:900;font-size:76px;color:#fff;opacity:${env(u, 11.6, 99)};text-shadow:0 0 6px ${GOLD},0 0 26px rgba(246,207,120,.6),0 2px 10px rgba(0,0,0,.65)">1000\xB2 \u2212 500\xB2 \u2248 866\xB2</div>`);
       tag(c.hud, W / 2, 196, "\u82F1\u56FD\u5DE5\u7A0B\u5E08 \u5170\u5F7B\u65AF\u7279 \xB7 1914", env(u, 12.2, 99) * 0.9, 40, "#fff");
     }
@@ -34206,8 +34206,8 @@ var TIMELINE = [
   { a: T.divide, b: T.half, draw: (c, u) => {
     clearLand(c);
     if (u < 3.75) {
-      const st = 0.2 + u * 30;
-      camKeys([{ t: 0, pos: [-140, 820, -1], look: [-140, 0, 0], fov: 40 }, { t: 1.4, pos: [-220, 140, -380], look: [0, 0, 0], fov: 40 }, { t: 3.75, pos: [-240, 160, -400], look: [0, 0, 0], fov: 40 }], u);
+      const st = 0.2 + 112 * Math.pow(u / 3.75, 1.8);
+      camKeys([{ t: 0, pos: [-140, 1e3, -1], look: [-140, 0, 0], fov: 40 }, { t: 1.4, pos: [-220, 140, -380], look: [0, 0, 0], fov: 40 }, { t: 3.75, pos: [-240, 160, -400], look: [0, 0, 0], fov: 40 }], u);
       battle(c, SL, st, {});
       c.army.set(simBodies(SL, st, "aim", 0, 0, 30), cp());
       const [b2, r2] = aliveAt(SL, st);
@@ -34315,20 +34315,20 @@ var TIMELINE = [
     const a = broadsides(near, tm, 0.55, 7), b = broadsides(COLS(adv).slice(12, 18), tm, 0.55, 9), e = broadsides(COLS(adv).slice(0, 6).filter(() => u > 7), tm + 1.3, 0.6, 11);
     c.seaSmoke.set([...a.sm, ...b.sm, ...e.sm]);
     c.seaFlash.set([...a.fl, ...b.fl, ...e.fl]);
-    seaDraw(c, T.climax - T.sea + u, { bloom: 0.6, vig: 0.45, exposure: 0.46 });
+    seaDraw(c, T.climax - T.sea + u, { bloom: 0.5, vig: 0.48, exposure: 0.4 });
   } },
   // 15c — chart: the line in three pieces, the van sails away
   { a: T.chart, b: T.quiet, draw: (c, u) => {
     const d = T.quiet - T.chart;
     const tt = T.chart - T.sea + u;
     const adv = 1500 + 90 * (T.climax - T.sea) + 3.4 * 60 + 8 * 60 + u * 40;
-    camKeys([{ t: 0, pos: [-800, 900, -1400], look: [0, 0, 0], fov: 42 }, { t: 1.6, pos: [-350, 2700, 350], look: [-350, 0, 350.01], fov: 45 }], u);
+    camKeys([{ t: 0, pos: [-800, 900, -1400], look: [0, 0, 0], fov: 42 }, { t: 1.6, pos: [-260, 1600, 500], look: [-260, 0, 500.01], fov: 45 }], u);
     if (u > 1.6) {
       camera.up.set(1, 0, 0);
-      camera.lookAt(-350, 0, 350.01);
+      camera.lookAt(-260, 0, 500.01);
     }
     const van = ease2((u - 1.8) / 5) * 900;
-    seaMarks(c, env(u, 1.8, 99) * 0.8, 0, false);
+    seaMarks(c, env(u, 1.8, 99) * 0.45, 0, false);
     setFleet(c.sea.combined, LINE(tt, van), u);
     setFleet(c.sea.british, COLS(adv), u);
     c.seaSmoke.set([]);
@@ -34341,7 +34341,7 @@ var TIMELINE = [
     sub(c.hud, "\u654C\u4EBA\u7684\u524D\u961F\uFF0C[\u8D76\u4E0D\u56DE\u6765]", u, 0.3, 3.7);
     tag(c.hud, W / 2, 132, "\u5170\u5F7B\u65AF\u7279\u4E13\u95E8\u7B97\u8FC7\u8FD9\u4E00\u4ED7 \xB7 1916", env(u, 3.9, 7.3) * 0.85, 40, "#fff");
     sub(c.hud, "\u82F1\u56FD\uFF0C\u4E00\u8258\u8239\u90FD[\u6CA1\u4E22]", u, 7.5, 10.9);
-    seaDraw(c, tt, { sepia: sep * 0.55, bloom: 0.3, vig: 0.5, exposure: 0.55 });
+    seaDraw(c, tt, { sepia: sep * 0.35, bloom: 0.3, vig: 0.5, exposure: 0.55 });
   } },
   // 16 — quiet: one ship drifting at sunset, no text; a bank of smoke crosses the lens and carries the cut to the field
   { a: T.quiet, b: T.limit, draw: (c, u) => {
@@ -34376,7 +34376,7 @@ var TIMELINE = [
   { a: T.ending, b: T.card, draw: (c, u) => {
     clearLand(c);
     const d = T.card - T.ending;
-    camKeys([{ t: 0, pos: [-110, 16, -120], look: [0, 0, 0], fov: 40 }, { t: d, pos: [-150, 45, -170], look: [0, 0, 0], fov: 40 }], u);
+    camKeys([{ t: 0, pos: [-75, 9, -80], look: [0, 0, 0], fov: 40 }, { t: d, pos: [-110, 30, -120], look: [0, 0, 0], fov: 40 }], u);
     const R = rnd(5), m = ease2((u - 0.1) / 3.4);
     const bodies = [];
     const centres = Array.from({ length: 8 }, () => [(R() - 0.5) * 300, (R() - 0.5) * 240]);
@@ -34396,7 +34396,7 @@ var TIMELINE = [
   // 19 — end card
   { a: T.card, b: T.end, draw: (c, u) => {
     clearLand(c);
-    camKeys([{ t: 0, pos: [-150, 45, -170], look: [0, 0, 0], fov: 40 }], 0);
+    camKeys([{ t: 0, pos: [-110, 30, -120], look: [0, 0, 0], fov: 40 }], 0);
     c.army.set([], cp());
     landDraw(c, { exposure: 0.45, warm: 0.12, vig: 0.6, fade: 0.85 });
     const o = env(u, 0.2, 99, 0.6);
@@ -34421,7 +34421,6 @@ var sunziText = (scene) => {
   tex2.colorSpace = SRGBColorSpace;
   const m = new Mesh(new PlaneGeometry(760, 190), new MeshBasicMaterial({ map: tex2, transparent: true, blending: AdditiveBlending, depthWrite: false, toneMapped: false }));
   m.rotation.x = -Math.PI / 2;
-  m.rotation.z = Math.PI;
   m.position.set(0, 0.3, 170);
   m.visible = false;
   scene.add(m);

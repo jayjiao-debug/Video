@@ -186,7 +186,7 @@ export const TIMELINE: Shot[] = [
 		const segs: number[][] = []; firstVolley.forEach((s) => { const a = SA.units[s.from], b = SA.units[s.to], dir = a.side ? -1 : 1; let f = clamp01((FREEZE - s.t) / 0.28);
 			const focus = (s.to === redStar[0] || s.to === blueOne[0]); if (focus) f = 0.93; if (f <= 0 && !focus) return;
 			const x1 = a.x + dir * 1.3, tx = s.hit ? b.x : b.x + dir * 6, tz = s.hit ? b.z : b.z + (a.fx - 0.5) * 3; const p = (q: number) => [x1 + (tx - x1) * q, 1.45 + ((s.hit ? 1.3 : 0.6) - 1.45) * q, a.z + (tz - a.z) * q];
-			const k = focus ? 2.4 : 0.8; const col = a.side ? [3.2 * k, 1.6 * k, 1.1 * k] : [1.4 * k, 2.1 * k, 3.4 * k]; segs.push([...p(Math.max(0, f - (focus ? 0.05 : 0.1))), ...p(f), ...col]); });
+			const k = focus ? 2.6 : 0.3; const col = a.side ? [3.2 * k, 1.6 * k, 1.1 * k] : [1.4 * k, 2.1 * k, 3.4 * k]; segs.push([...p(Math.max(0, f - (focus ? 0.05 : 0.04))), ...p(f), ...col]); });
 		c.tracers.set(segs);
 		const ring = (m: THREE.Mesh, x: number, z: number, o: number, col: string) => { m.visible = o > 0; m.position.set(x, 0.12, z); (m.material as THREE.MeshBasicMaterial).color.set(col); (m.material as THREE.MeshBasicMaterial).opacity = o; };
 		ring(c.rings[0], R.x, R.z, env(u, 3.0, 11.0), '#ff6a5a'); ring(c.rings[1], B.x, B.z, env(u, 8.0, 11.2), '#6aa8ff'); ring(c.rings[2], B2.x, B2.z, env(u, 8.0, 11.2), '#6aa8ff');
@@ -203,14 +203,14 @@ export const TIMELINE: Shot[] = [
 	// 10 — time resumes; the camera climbs to straight down over the two lines
 	{a: T.x4, b: T.squares, draw: (c, u) => {
 		clearLand(c); const d = T.squares - T.x4; const st = FREEZE + u * 0.9;
-		camKeys([{t: 0, pos: [-10, 44, -80], look: [0, 0, 0], fov: 40}, {t: d, pos: [-140, 820, -1], look: [-140, 0, 0], fov: 40}], u);
+		camKeys([{t: 0, pos: [-10, 44, -80], look: [0, 0, 0], fov: 40}, {t: d, pos: [-140, 1000, -1], look: [-140, 0, 0], fov: 40}], u);
 		battle(c, SA, st); counters(c.hud, ...aliveAt(SA, st) as [number, number]);
 		slam(c.hud, W / 2, 520, '战斗力 ×4', u, -1, 1.2, 120, GOLD, '#fff6dd');
 		landDraw(c);
 	}},
 	// 11 — ★3: each firing line is the side of a square; red's square tiles blue's four times; replay: both squares lose the same area every moment; blue's loss = red's whole square; what's left is 866
 	{a: T.squares, b: T.divide, draw: (c, u) => {
-		clearLand(c); camKeys([{t: 0, pos: [-140, 820, -1], look: [-140, 0, 0], fov: 40}], 0);
+		clearLand(c); camKeys([{t: 0, pos: [-140, 1000, -1], look: [-140, 0, 0], fov: 40}], 0);
 		const bs = 1000 * LEN, rs = 500 * LEN, grow = ease(u / 1.4), tile = env(u, 1.875, 3.6, 0.2, 0.3);
 		const rp = clamp01((u - 3.75) / 4.1), st = 0.2 + rp * 11.1; const [b, r] = aliveAt(SA, u < 3.75 ? 0 : st);
 		const bl = b * LEN, rl = r * LEN; // live sides
@@ -232,8 +232,8 @@ export const TIMELINE: Shot[] = [
 		if (tile > 0) { const k = Math.min(4, 1 + Math.floor((u - 1.9) / 0.38)); const pc = P(-45 - bs / 2, 0); slam(c.hud, pc.x, pc.y, `×${k}`, u, 1.9 + (k - 1) * 0.38, 3.6, 150, GOLD, '#fff6dd'); }
 		if (u >= 3.75 && u < 8.2) counters(c.hud, b, r);
 		if (fold > 0.95) { const pf = P(47 + rs / 2, rs / 2 + 30 + rs / 2); tag(c.hud, pf.x, pf.y, '一样大', env(u, 9.6, 11.1), 64, '#fff', GOLD); }
-		if (tape > 0) { const fs = 866 * LEN; const pt = P(-45 - fs / 2, -fs / 2 - 60);
-			if (u < 11.25) tag(c.hud, pt.x, pt.y, `${Math.round(866 * tape)}`, env(u, 9.9, 99), 64, '#fff', GOLD); else slam(c.hud, pt.x, pt.y, '866', u, 11.25, 99, 110, BLUE);
+		if (tape > 0) { const fs = 866 * LEN; const pt = P(-45 - fs - 70, 0);
+			if (u < 11.25) tag(c.hud, pt.x - 40, pt.y, `${Math.round(866 * tape)}`, env(u, 9.9, 99), 64, '#fff', GOLD); else slam(c.hud, pt.x - 60, pt.y, '866', u, 11.25, 99, 110, BLUE);
 			html(c.hud, `<div style="position:absolute;left:0;right:0;top:92px;text-align:center;font-weight:900;font-size:76px;color:#fff;opacity:${env(u, 11.6, 99)};text-shadow:0 0 6px ${GOLD},0 0 26px rgba(246,207,120,.6),0 2px 10px rgba(0,0,0,.65)">1000² − 500² ≈ 866²</div>`);
 			tag(c.hud, W / 2, 196, '英国工程师 兰彻斯特 · 1914', env(u, 12.2, 99) * 0.9, 40, '#fff'); }
 		sub(c.hud, '战斗力，看人数的[平方]', u, 0.05, 3.4); sub(c.hud, '每一刻，两边掉的面积[一样多]', u, 3.8, 7.3); sub(c.hud, '开头的866，就是[这么来的]', u, 11.3, 14.8);
@@ -242,7 +242,7 @@ export const TIMELINE: Shot[] = [
 	// 12 — divide: 1000 v 1000 (both bled white); then the same 1000 against two waves of 500 → 866 → 707
 	{a: T.divide, b: T.half, draw: (c, u) => {
 		clearLand(c);
-		if (u < 3.75) { const st = 0.2 + u * 30; camKeys([{t: 0, pos: [-140, 820, -1], look: [-140, 0, 0], fov: 40}, {t: 1.4, pos: [-220, 140, -380], look: [0, 0, 0], fov: 40}, {t: 3.75, pos: [-240, 160, -400], look: [0, 0, 0], fov: 40}], u);
+		if (u < 3.75) { const st = 0.2 + 112 * Math.pow(u / 3.75, 1.8); camKeys([{t: 0, pos: [-140, 1000, -1], look: [-140, 0, 0], fov: 40}, {t: 1.4, pos: [-220, 140, -380], look: [0, 0, 0], fov: 40}, {t: 3.75, pos: [-240, 160, -400], look: [0, 0, 0], fov: 40}], u);
 			battle(c, SL, st, {}); c.army.set(simBodies(SL, st, 'aim', 0, 0, 30), cp()); const [b, r] = aliveAt(SL, st); counters(c.hud, b, r);
 			sub(c.hud, '两边一样多？[两败俱伤]', u, 0.05, 3.4); landDraw(c); return; }
 		const v = u - 3.75; const w1 = 2.55, mar = 0.6; // wave 1 (4.4×), march, wave 2 (5×)
@@ -304,20 +304,20 @@ export const TIMELINE: Shot[] = [
 		const near = line.filter((q) => Math.abs(q.z - lead.z) < 420 || (u > 7.0 && Math.abs(q.z - nel.z) < 420));
 		const a = broadsides(near, tm, 0.55, 7), b = broadsides(COLS(adv).slice(12, 18), tm, 0.55, 9), e = broadsides(COLS(adv).slice(0, 6).filter(() => u > 7.0), tm + 1.3, 0.6, 11);
 		c.seaSmoke.set([...a.sm, ...b.sm, ...e.sm]); c.seaFlash.set([...a.fl, ...b.fl, ...e.fl]);
-		seaDraw(c, T.climax - T.sea + u, {bloom: 0.6, vig: 0.45, exposure: 0.46});
+		seaDraw(c, T.climax - T.sea + u, {bloom: 0.5, vig: 0.48, exposure: 0.4});
 	}},
 	// 15c — chart: the line in three pieces, the van sails away
 	{a: T.chart, b: T.quiet, draw: (c, u) => {
 		const d = T.quiet - T.chart; const tt = T.chart - T.sea + u; const adv = 1500 + 90 * (T.climax - T.sea) + 3.4 * 60 + 8 * 60 + u * 40;
-		camKeys([{t: 0, pos: [-800, 900, -1400], look: [0, 0, 0], fov: 42}, {t: 1.6, pos: [-350, 2700, 350], look: [-350, 0, 350.01], fov: 45}], u); if (u > 1.6) { camera.up.set(1, 0, 0); camera.lookAt(-350, 0, 350.01); }
-		const van = ease((u - 1.8) / 5) * 900; seaMarks(c, env(u, 1.8, 99) * 0.8, 0, false); setFleet(c.sea.combined, LINE(tt, van), u); setFleet(c.sea.british, COLS(adv), u);
+		camKeys([{t: 0, pos: [-800, 900, -1400], look: [0, 0, 0], fov: 42}, {t: 1.6, pos: [-260, 1600, 500], look: [-260, 0, 500.01], fov: 45}], u); if (u > 1.6) { camera.up.set(1, 0, 0); camera.lookAt(-260, 0, 500.01); }
+		const van = ease((u - 1.8) / 5) * 900; seaMarks(c, env(u, 1.8, 99) * 0.45, 0, false); setFleet(c.sea.combined, LINE(tt, van), u); setFleet(c.sea.british, COLS(adv), u);
 		c.seaSmoke.set([]); c.seaFlash.set([]);
 		const sep = clamp01((u - 1.6) / 0.8); const p = (x: number, z: number) => toScreen([x, 0, z]);
 		const v = p(150, 1250 + van), m = p(90, 160), r = p(40, -800);
 		tag(c.hud, v.x + 140, v.y, '前队', env(u, 1.0, 99) * (1 - clamp01((u - 7.5) / 1.2) * 0.6), 48, '#fff', RED, 'l');
 		html(c.hud, `<div class="lbl" style="left:0;right:0;top:860px;text-align:center;font-size:58px;opacity:${env(u, 7.5, 99)}"><span style="text-shadow:0 0 8px ${BLUE},0 0 24px ${BLUE}">英国 损失 0 艘</span> &nbsp;·&nbsp; <span style="text-shadow:0 0 8px ${RED},0 0 24px ${RED}">对方 损失一半以上</span></div>`);
 		sub(c.hud, '敌人的前队，[赶不回来]', u, 0.3, 3.7); tag(c.hud, W / 2, 132, '兰彻斯特专门算过这一仗 · 1916', env(u, 3.9, 7.3) * 0.85, 40, '#fff'); sub(c.hud, '英国，一艘船都[没丢]', u, 7.5, 10.9);
-		seaDraw(c, tt, {sepia: sep * 0.55, bloom: 0.3, vig: 0.5, exposure: 0.55});
+		seaDraw(c, tt, {sepia: sep * 0.35, bloom: 0.3, vig: 0.5, exposure: 0.55});
 	}},
 	// 16 — quiet: one ship drifting at sunset, no text; a bank of smoke crosses the lens and carries the cut to the field
 	{a: T.quiet, b: T.limit, draw: (c, u) => {
@@ -339,7 +339,7 @@ export const TIMELINE: Shot[] = [
 	}},
 	// 18 — ending image: scattered companies gather into one block
 	{a: T.ending, b: T.card, draw: (c, u) => {
-		clearLand(c); const d = T.card - T.ending; camKeys([{t: 0, pos: [-110, 16, -120], look: [0, 0, 0], fov: 40}, {t: d, pos: [-150, 45, -170], look: [0, 0, 0], fov: 40}], u);
+		clearLand(c); const d = T.card - T.ending; camKeys([{t: 0, pos: [-75, 9, -80], look: [0, 0, 0], fov: 40}, {t: d, pos: [-110, 30, -120], look: [0, 0, 0], fov: 40}], u);
 		const R = rnd(5), m = ease((u - 0.1) / 3.4); const bodies: Body[] = [];
 		const centres = Array.from({length: 8}, () => [(R() - 0.5) * 300, (R() - 0.5) * 240]);
 		for (let i = 0; i < 800; i++) { const g = i % 8, k = Math.floor(i / 8); const cx = centres[g][0] + ((k % 10) - 4.5) * 1.6, cz = centres[g][1] + (Math.floor(k / 10) - 4.5) * 1.6; const fx = (i % 40 - 19.5) * 1.6, fz = (Math.floor(i / 40) - 9.5) * 1.6;
@@ -350,7 +350,7 @@ export const TIMELINE: Shot[] = [
 	}},
 	// 19 — end card
 	{a: T.card, b: T.end, draw: (c, u) => {
-		clearLand(c); camKeys([{t: 0, pos: [-150, 45, -170], look: [0, 0, 0], fov: 40}], 0); c.army.set([], cp());
+		clearLand(c); camKeys([{t: 0, pos: [-110, 30, -120], look: [0, 0, 0], fov: 40}], 0); c.army.set([], cp());
 		landDraw(c, {exposure: 0.45, warm: 0.12, vig: 0.6, fade: 0.85});
 		const o = env(u, 0.2, 99, 0.6);
 		html(c.hud, `<div style="position:absolute;inset:0;opacity:${o}">
