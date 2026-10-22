@@ -740,6 +740,39 @@ const FigGrePhoto: React.FC<FigProps> = ({T, v, orn, late}) => {
 		{c > 0 && Array.from({length: 26}, (_, i) => { const side = i % 2 ? 1 : -1, x = side * (165 + rnd(i, 91) * 110), d = cl01((c - rnd(i, 92) * 0.5) / 0.5), y = lerp(-520, 330 - 18 * Math.floor(rnd(i, 93) * 4), out3(d)); return <g key={i} transform={`translate(${x},${y}) scale(${Math.cos(T * 6 + i)},1)`} opacity={d > 0 ? 1 : 0}><circle r={16} fill="url(#goldG)" stroke="#7a5a20" strokeWidth={1} /><rect x={-5} y={-5} width={10} height={10} fill="#1a1404" /></g>; })}
 	</g>;
 };
+/** meme layout preview: a placeholder card where the meme picture goes, plus each sin's live element and meme line */
+const MEME_MODE = true;
+const MEME: Record<string, {name: string; quip: string}> = {
+	pri: {name: '美团袋鼠', quip: '你的胆子真是肥嘟嘟的啊'}, env: {name: '奶蛙', quip: '凭什么不是我?'}, ang: {name: '刀盾狗', quip: '你再说一遍?'},
+	slo: {name: '背手负鼠', quip: '再躺五分钟。'}, gre: {name: '三角洲鼠鼠', quip: '再摸一个包就撤。'}, glu: {name: '哈基米', quip: '曼波~就吃一点。'}, lus: {name: '草地牛', quip: '再看一眼。'},
+};
+const FigMeme: React.FC<FigProps> = ({T, v, orn, late}) => {
+	const c = late(3), m = MEME[v.kind], k = v.kind;
+	const rot = k === 'slo' ? -78 * out3(c) : 0, card = 'M-230,-300 H230 Q260,-300 260,-270 V310 Q260,340 230,340 H-230 Q-260,340 -260,310 V-270 Q-260,-300 -230,-300 Z';
+	const pop = outBack(cl01(c / 0.6));
+	return <g>
+		<g transform={`rotate(${rot},0,200)`}>
+			<path d={card} fill={v.deep} opacity={0.85} />
+			<path d={card} fill="none" stroke={v.col} strokeWidth={4} strokeDasharray="18 12" />
+			<text x={0} y={-10} textAnchor="middle" style={{fontFamily: SERIF, fontWeight: 900, fontSize: 70}} fill={v.hot}>{m.name}</text>
+			<text x={0} y={60} textAnchor="middle" style={{fontFamily: SERIF, fontSize: 32}} fill={v.hot} opacity={0.6}>梗图（抠图后）放这里</text>
+			{k === 'ang' && c > 0 && <g stroke="#fff" strokeWidth={4} fill="none" opacity={0.9}>
+				<path d={`M-40,-300 L-10,${-300 + 200 * c} L-60,${-300 + 380 * c} L-20,${-300 + 560 * c}`} /><path d={`M-10,${-300 + 200 * c} L${80 * c},${-300 + 260 * c} L${150 * c},${-300 + 240 * c}`} /></g>}
+		</g>
+		{k === 'pri' && <g transform={`translate(0,${-300 - 300 * (1 - out3(c))})`} opacity={c > 0 ? 1 : 0}>
+			<path d="M-110,0 L-110,-64 L-70,-26 L-36,-92 L0,-40 L36,-92 L70,-26 L110,-64 L110,0 Z" fill="url(#goldG)" stroke="#7a5a20" strokeWidth={2} />
+			{[-70, 0, 70].map((x) => <circle key={x} cx={x} cy={-16} r={10} fill={v.col} stroke="#fff" strokeWidth={1.4} />)}</g>}
+		{k === 'env' && c > 0 && Array.from({length: 14}, (_, i) => { const side = i % 2 ? 1 : -1, ph = (T * 0.8 + rnd(i, 5)) % 1, x = side * (270 + 30 * Math.sin(T * 3 + i)), y = 300 - ph * 640; return <path key={i} transform={`translate(${x},${y}) scale(${c * (1 - ph) * 1.4})`} d="M0,-40 C18,-14 22,8 0,28 C-22,8 -18,-14 0,-40 Z" fill={v.col} opacity={0.75} filter="url(#gM)" />; })}
+		{k === 'slo' && c > 0 && [0, 1, 2].map((i) => { const ph = (T * 0.4 + i / 3) % 1; return <text key={i} x={120 + i * 40 + ph * 80} y={-60 - ph * 240} style={{fontFamily: SERIF, fontWeight: 900, fontSize: 50 + i * 16}} fill={v.hot} opacity={c * Math.sin(Math.PI * ph)}>z</text>; })}
+		{k === 'gre' && c > 0 && Array.from({length: 26}, (_, i) => { const side = i % 2 ? 1 : -1, x = side * (300 + rnd(i, 91) * 70), d = cl01((c - rnd(i, 92) * 0.5) / 0.5), y = lerp(-560, 320 - 22 * Math.floor(rnd(i, 93) * 5), out3(d)); return <g key={i} transform={`translate(${x},${y}) scale(${Math.cos(T * 6 + i)},1)`} opacity={d > 0 ? 1 : 0}><circle r={18} fill="url(#goldG)" stroke="#7a5a20" strokeWidth={1} /><rect x={-5} y={-5} width={10} height={10} fill="#1a1404" /></g>; })}
+		{k === 'glu' && Array.from({length: 5}, (_, i) => { const d = cl01((c - i * 0.14) / 0.3), y = lerp(-500, 320 - i * 70, out3(d)); return <g key={i} transform={`translate(${-330},${y}) rotate(${(i % 2 ? 4 : -4)})`} opacity={d > 0 ? 1 : 0}><rect x={-70} y={-30} width={140} height={60} rx={8} fill="#fff4e6" stroke={v.col} strokeWidth={3} /><rect x={-70} y={-30} width={140} height={14} rx={6} fill={v.col} /></g>; })}
+		{k === 'lus' && c > 0 && Array.from({length: 10}, (_, i) => { const ph = (T * 0.5 + rnd(i, 7)) % 1, x = (rnd(i, 8) - 0.5) * 640, y = 300 - ph * 700; return <path key={i} transform={`translate(${x},${y}) scale(${c * (0.8 + rnd(i, 9)) * Math.sin(Math.PI * ph)})`} d="M0,12 C-30,-10 -20,-36 0,-22 C20,-36 30,-10 0,12 Z" fill={v.col} />; })}
+		{/* the meme line pops in on the beat */}
+		<g transform={`translate(${k === 'slo' ? 40 : 60},${k === 'slo' ? -250 : k === 'pri' ? -470 : -380}) scale(${pop})`} opacity={c > 0 ? 1 : 0}>
+			{(() => { const wd = m.quip.length * 46 + 70; return <><rect x={-wd / 2} y={-50} width={wd} height={100} rx={50} fill="#fff" /><path d="M-30,46 L-60,90 L0,48 Z" fill="#fff" /><text x={0} y={16} textAnchor="middle" style={{fontFamily: SERIF, fontWeight: 900, fontSize: 46}} fill={v.deep}>{m.quip}</text></>; })()}
+		</g>
+	</g>;
+};
 /** 暴食: a crown of vine leaves and grapes, half-lidded and hungry; the cup beside her fills and spills over */
 const FigGlu: React.FC<FigProps> = ({T, v, draw, open, orn, late}) => {
 	const f = late(3), cap = 'M-134,-20 C-148,-170 -76,-234 0,-234 C76,-234 148,-170 134,-20 C126,-96 86,-132 0,-136 C-86,-132 -126,-96 -134,-20 Z';
@@ -1076,7 +1109,7 @@ const PLACE: Record<Kind, {dx: number; dy: number; s: number; flip?: boolean}> =
 const VoiceScene: React.FC<{T: number; v: Voice; i: number}> = ({T, v, i}) => {
 	// the reveal is snapped to the frame that holds the downbeat (never a frame late)
 	const t0 = Q0[i], t = T - t0, rv = Math.round(REV[i] * FPS - 0.2) / FPS - t0, CYC = (i < VOICES.length - 1 ? Q0[i + 1] : OUT) - t0, hit = t - rv;
-	const cx = 1400, cy = 500, pl = PLACE[v.kind];
+	const cx = 1400, cy = 500, pl = MEME_MODE && MEME[v.kind] ? {dx: 0, dy: 70, s: 1.0} : PLACE[v.kind];
 	// the sample's beat map: the line on its downbeat; the voice's eyes glow in the orb for the last two beats; on the
 	// next downbeat the frame lifts for a frame, the figure is simply THERE and the name lands with it (motion blur,
 	// two thin rings); its piece unfurls behind it and particles open out; ornaments pop on the half beats
@@ -1092,7 +1125,7 @@ const VoiceScene: React.FC<{T: number; v: Voice; i: number}> = ({T, v, i}) => {
 	const beatPulse = Math.max(0, 1 - ((((T - PH) % BEAT) + BEAT) % BEAT) / 0.16);
 	const push = (1 + 0.05 * ease(t / CYC)) * (1 + 0.012 * beatPulse * lit);
 	const sweep = cl01((hit - 0.35) / 0.45);
-	const Fig = FIG[v.kind];
+	const Fig = MEME_MODE && MEME[v.kind] ? FigMeme : FIG[v.kind];
 	const figT = `translate(${pl.dx},${pl.dy}) scale(${pl.s * (on ? lerp(1.035, 1, out3(hit / 0.3)) : 1)}) ${pl.flip ? 'scale(-1,1)' : ''}`;
 	const bolts: [P, P][] = [[[cx - 340, cy - 120], [880, 140]], [[cx + 300, cy + 200], [1900, 460]], [[cx - 280, cy + 240], [1000, 900]]];
 	const nb = 46 * (1 - out3(nameU));
