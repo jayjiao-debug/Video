@@ -898,7 +898,6 @@ const Intro: React.FC<{T: number}> = ({T}) => (
 		<Defs v={{col: '#b9b0ff', hot: '#ece8ff', deep: '#141026'}} />
 		<g opacity={1 - fade(T, V0 - 0.3, 0.3)}>
 			<rect width={W} height={H} fill="url(#bgG)" />
-			<ellipse cx={960 + 260 * Math.sin(T * 0.9)} cy={420} rx={520} ry={160} fill="#8a7cff" opacity={0.13} filter="url(#gL)" />
 			<BlurText id="i1" x={960} y={330} text="两千年前，《礼记》写道：" size={40} weight={600} col="#cfc8de" spacing="0.14em" anchor="middle" u={1} />
 			<BlurText id="i2" x={960} y={450} text="人心里，天生住着七个声音。" size={84} anchor="middle" u={fade(T, bt(0) + 2 * BEAT, 0.4)} />
 			{/* the seven pop in on the half beats of bar 1 */}
@@ -939,7 +938,7 @@ export const QiQing9: React.FC = () => {
 	const node = T < V0 ? <Intro T={T} /> : T < OUT ? <VoiceScene T={T} v={VOICES[i]} i={i} /> : <Outro T={T} />;
 	return <AbsoluteFill style={{background: '#030205'}}>
 		{node}
-		<div style={{position: 'absolute', right: 56, bottom: 40, fontFamily: SERIF, fontSize: 20, letterSpacing: '0.3em', color: 'rgba(230,224,245,0.4)'}}>VIBE知识大赏 · 七情</div>
+		<div style={{position: 'absolute', right: 56, bottom: 40, fontFamily: SERIF, fontSize: 20, letterSpacing: '0.3em', color: 'rgba(236,230,218,0.55)'}}>Juno · 七情</div>
 	</AbsoluteFill>;
 };
 
