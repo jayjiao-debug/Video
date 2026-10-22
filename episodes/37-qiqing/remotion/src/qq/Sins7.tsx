@@ -1,5 +1,6 @@
 import React from 'react';
 import {AbsoluteFill, Composition, registerRoot, useCurrentFrame} from 'remotion';
+import {PHOTO_GRE} from './photo_gre';
 
 /* 《七宗罪》 — the 七情 template with the seven deadly sins (Britannica: first enumerated in the 6th century by
    St. Gregory the Great, later elaborated by Thomas Aquinas). One live element per sin, starting on the beat after
@@ -720,6 +721,25 @@ const FigGre: React.FC<FigProps> = ({T, v, draw, open, orn, late}) => {
 		{c > 0 && Array.from({length: 26}, (_, i) => { const side = i % 2 ? 1 : -1, x = side * (165 + rnd(i, 91) * 110), d = cl01((c * 1.0 + (Math.max(0, T) % 3) * 0 - rnd(i, 92) * 0.5) / 0.5), y = lerp(-520, 330 - 18 * Math.floor(rnd(i, 93) * 4), out3(d)); return <g key={i} transform={`translate(${x},${y}) scale(${Math.cos(T * 6 + i)},1)`} opacity={d > 0 ? 1 : 0}><circle r={16} fill="url(#goldG)" stroke="#7a5a20" strokeWidth={1} /><rect x={-5} y={-5} width={10} height={10} fill="#1a1404" /></g>; })}
 	</g>;
 };
+/** photo test: a cut-out internet-style photo in place of the drawn 贪婪 figure (a fictional AI face) */
+const PHOTO_TEST = true;
+const FigGrePhoto: React.FC<FigProps> = ({T, v, orn, late}) => {
+	const c = late(3), w = 560, h = 747, x0 = -280, y0 = -250, k = w / 864;
+	const glint = (x: number, y: number) => <g transform={`translate(${x0 + x * k},${y0 + y * k}) scale(${c * (0.8 + 0.2 * Math.sin(T * 9))})`}><path d="M0,-34 L7,-7 L34,0 L7,7 L0,34 L-7,7 L-34,0 L-7,-7 Z" fill="#fff" /><circle r={16} fill={GOLD} opacity={0.6} filter="url(#gM)" /></g>;
+	return <g>
+		<defs>
+			<filter id="rimF" x="-20%" y="-20%" width="140%" height="140%"><feMorphology in="SourceAlpha" operator="dilate" radius={5} result="d" /><feFlood floodColor={v.col} /><feComposite in2="d" operator="in" result="c" /><feGaussianBlur in="c" stdDeviation={9} result="g" /><feMerge><feMergeNode in="g" /><feMergeNode in="g" /><feMergeNode in="SourceGraphic" /></feMerge></filter>
+			<linearGradient id="phFade" x1="0" y1="0" x2="0" y2="1"><stop offset="0.72" stopColor="#fff" /><stop offset="1" stopColor="#000" /></linearGradient>
+			<mask id="phMask"><rect x={x0 - 40} y={y0 - 40} width={w + 80} height={h + 40} fill="url(#phFade)" /></mask>
+		</defs>
+		<g mask="url(#phMask)"><image href={PHOTO_GRE} x={x0} y={y0} width={w} height={h} filter="url(#rimF)" /></g>
+		{/* gold chain */}
+		{[0, 1].map((i) => <path key={i} d={`M${-70 - i * 26},${250 + i * 8} C-30,${300 + i * 30} 30,${300 + i * 30} ${70 + i * 26},${250 + i * 8}`} stroke="url(#goldG)" strokeWidth={5 - i * 1.5} fill="none" opacity={orn(0)} />)}
+		{/* on the beat, both lenses catch the gold */}
+		{c > 0 && <>{glint(330, 430)}{glint(530, 412)}</>}
+		{c > 0 && Array.from({length: 26}, (_, i) => { const side = i % 2 ? 1 : -1, x = side * (165 + rnd(i, 91) * 110), d = cl01((c - rnd(i, 92) * 0.5) / 0.5), y = lerp(-520, 330 - 18 * Math.floor(rnd(i, 93) * 4), out3(d)); return <g key={i} transform={`translate(${x},${y}) scale(${Math.cos(T * 6 + i)},1)`} opacity={d > 0 ? 1 : 0}><circle r={16} fill="url(#goldG)" stroke="#7a5a20" strokeWidth={1} /><rect x={-5} y={-5} width={10} height={10} fill="#1a1404" /></g>; })}
+	</g>;
+};
 /** 暴食: a crown of vine leaves and grapes, half-lidded and hungry; the cup beside her fills and spills over */
 const FigGlu: React.FC<FigProps> = ({T, v, draw, open, orn, late}) => {
 	const f = late(3), cap = 'M-134,-20 C-148,-170 -76,-234 0,-234 C76,-234 148,-170 134,-20 C126,-96 86,-132 0,-136 C-86,-132 -126,-96 -134,-20 Z';
@@ -1046,7 +1066,7 @@ const OrbEyes: React.FC<{v: Voice; u: number; T: number}> = ({v, u, T}) => u <= 
 </g>)}</g>;
 
 // ---------------------------------------------------------------- one voice
-const FIG: Record<Kind, React.FC<FigProps>> = {xi: FigXi, nu: FigNu, ai: FigAi, ju: FigJu, love: FigLove, wu: FigWu, yu: FigYu, den: FigDen, ang: FigAng, bar: FigBar, dep: FigDep, acc: FigAcc, pri: FigPri, env: FigEnv, slo: FigSlo, gre: FigGre, glu: FigGlu, lus: FigLus};
+const FIG: Record<Kind, React.FC<FigProps>> = {xi: FigXi, nu: FigNu, ai: FigAi, ju: FigJu, love: FigLove, wu: FigWu, yu: FigYu, den: FigDen, ang: FigAng, bar: FigBar, dep: FigDep, acc: FigAcc, pri: FigPri, env: FigEnv, slo: FigSlo, gre: PHOTO_TEST ? FigGrePhoto : FigGre, glu: FigGlu, lus: FigLus};
 const PLACE: Record<Kind, {dx: number; dy: number; s: number; flip?: boolean}> = {
 	xi: {dx: 0, dy: 40, s: 1.55}, nu: {dx: 0, dy: 60, s: 1.55}, ai: {dx: 60, dy: 60, s: 1.4, flip: true}, ju: {dx: 0, dy: 0, s: 1.75},
 	love: {dx: 10, dy: 40, s: 1.5}, wu: {dx: -40, dy: 10, s: 1.45}, yu: {dx: 0, dy: 30, s: 1.45},
