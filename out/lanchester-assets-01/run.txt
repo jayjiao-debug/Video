@@ -1,0 +1,146 @@
+sketchfab model 771050587ce248498178aee2c2f88f36
+  saved out/models/infantry_rigged.glb 14.2 MB
+npm warn deprecated glob@10.5.0: Old versions of glob are not supported, and contain widely publicized security vulnerabilities, which have been fixed in the current version. Please update. Support for old versions may be purchased (at exorbitant rates) by contacting i@izs.me
+[33m❯[39m dedup
+[32m✔[39m dedup                4ms
+[33m❯[39m instance
+[32m✔[39m instance             1ms
+[33m❯[39m palette
+[32m✔[39m palette              0ms
+[33m❯[39m flatten
+[32m✔[39m flatten              3ms
+[33m❯[39m join
+[32m✔[39m join                 1ms
+[33m❯[39m weld
+[32m✔[39m weld                 71ms
+[33m❯[39m simplify
+[32m✔[39m simplify             110ms
+[33m❯[39m resample
+[32m✔[39m resample             0ms
+[33m❯[39m prune
+[32m✔[39m prune                146ms
+[33m❯[39m sparse
+[32m✔[39m sparse               24ms
+[33m❯[39m textureCompress
+[32m✔[39m textureCompress      633ms
+
+info: infantry_rigged.glb (14.17 MB) → infantry_rigged.opt.glb (6.23 MB)
+  optimized 14.2 -> 6.2 MB
+sketchfab model 85a1a8205b2c447fb8d0419978f17b75
+  saved out/models/infantry_waterloo.glb 18.6 MB
+[33m❯[39m dedup
+[32m✔[39m dedup                10ms
+[33m❯[39m instance
+[32m✔[39m instance             1ms
+[33m❯[39m palette
+[32m✔[39m palette              1ms
+[33m❯[39m flatten
+[32m✔[39m flatten              3ms
+[33m❯[39m join
+[32m✔[39m join                 49ms
+[33m❯[39m weld
+[32m✔[39m weld                 79ms
+[33m❯[39m simplify
+[32m✔[39m simplify             144ms
+[33m❯[39m resample
+[32m✔[39m resample             0ms
+[33m❯[39m prune
+[32m✔[39m prune                122ms
+[33m❯[39m sparse
+[32m✔[39m sparse               36ms
+[33m❯[39m textureCompress
+[32m✔[39m textureCompress      797ms
+
+info: infantry_waterloo.glb (18.6 MB) → infantry_waterloo.opt.glb (6.86 MB)
+  optimized 18.6 -> 6.9 MB
+sketchfab model ba59dedc523841b99d19fc17493d601f
+  saved out/models/ship_bucentaure.glb 19.1 MB
+[33m❯[39m dedup
+[32m✔[39m dedup                21ms
+[33m❯[39m instance
+[32m✔[39m instance             2ms
+[33m❯[39m palette
+[32m✔[39m palette              1ms
+[33m❯[39m flatten
+[32m✔[39m flatten              15ms
+[33m❯[39m join
+[32m✔[39m join                 176ms
+[33m❯[39m weld
+[32m✔[39m weld                 104ms
+[33m❯[39m simplify
+[32m✔[39m simplify             148ms
+[33m❯[39m resample
+[32m✔[39m resample             0ms
+[33m❯[39m prune
+[32m✔[39m prune                74ms
+[33m❯[39m sparse
+[32m✔[39m sparse               55ms
+[33m❯[39m textureCompress
+[32m✔[39m textureCompress      632ms
+
+info: ship_bucentaure.glb (19.1 MB) → ship_bucentaure.opt.glb (13.47 MB)
+  optimized 19.1 -> 13.5 MB
+sketchfab model b696ae356b6d4b4d8f83d26dd5c33ae7
+  saved out/models/ship_agamemnon.glb 19.0 MB
+[33m❯[39m dedup
+[32m✔[39m dedup                23ms
+[33m❯[39m instance
+[32m✔[39m instance             1ms
+[33m❯[39m palette
+[32m✔[39m palette              1ms
+[33m❯[39m flatten
+[32m✔[39m flatten              12ms
+[33m❯[39m join
+[32m✔[39m join                 159ms
+[33m❯[39m weld
+[32m✔[39m weld                 91ms
+[33m❯[39m simplify
+[32m✔[39m simplify             112ms
+[33m❯[39m resample
+[32m✔[39m resample             0ms
+[33m❯[39m prune
+[32m✔[39m prune                105ms
+[33m❯[39m sparse
+[32m✔[39m sparse               37ms
+[33m❯[39m textureCompress
+[32m✔[39m textureCompress      885ms
+
+info: ship_agamemnon.glb (18.99 MB) → ship_agamemnon.opt.glb (12.54 MB)
+  optimized 19.0 -> 12.5 MB
+polyhaven kloppenheim_06_puresky
+  saved out/polyhaven/kloppenheim_06_puresky_4k.hdr 17.4 MB
+  saved out/polyhaven/kloppenheim_06_puresky_preview.jpg 19.0 MB
+polyhaven belfast_sunset_puresky
+  saved out/polyhaven/belfast_sunset_puresky_4k.hdr 17.4 MB
+  saved out/polyhaven/belfast_sunset_puresky_preview.jpg 16.2 MB
+polyhaven brown_mud_02
+  saved out/polyhaven/brown_mud_02/brown_mud_02.gltf 0.0 MB
+  saved out/polyhaven/brown_mud_02/brown_mud_02.bin 2.4 MB
+  saved out/polyhaven/brown_mud_02/textures/brown_mud_02_nor_gl_2k.jpg 4.2 MB
+  saved out/polyhaven/brown_mud_02/textures/brown_mud_02_diff_2k.jpg 2.2 MB
+  saved out/polyhaven/brown_mud_02/textures/brown_mud_02_rough_2k.jpg 1.7 MB
+polyhaven aerial_grass_rock
+  saved out/polyhaven/aerial_grass_rock/aerial_grass_rock.gltf 0.0 MB
+  saved out/polyhaven/aerial_grass_rock/textures/aerial_grass_rock_rough_2k.jpg 1.5 MB
+  saved out/polyhaven/aerial_grass_rock/textures/aerial_grass_rock_diff_2k.jpg 2.6 MB
+  saved out/polyhaven/aerial_grass_rock/aerial_grass_rock.bin 2.4 MB
+  saved out/polyhaven/aerial_grass_rock/textures/aerial_grass_rock_nor_gl_2k.jpg 3.8 MB
+polyhaven grass_medium_01
+  saved out/polyhaven/grass_medium_01/grass_medium_01.gltf 0.0 MB
+  saved out/polyhaven/grass_medium_01/textures/grass_medium_01_nor_gl_1k.jpg 1.0 MB
+  saved out/polyhaven/grass_medium_01/textures/grass_medium_01_diff_1k.jpg 0.4 MB
+  saved out/polyhaven/grass_medium_01/textures/grass_medium_01_arm_1k.jpg 0.7 MB
+  saved out/polyhaven/grass_medium_01/grass_medium_01.bin 1.0 MB
+polyhaven tree_small_02
+  saved out/polyhaven/tree_small_02/tree_small_02.gltf 0.0 MB
+  saved out/polyhaven/tree_small_02/textures/tree_small_02_branch_nor_gl_1k.jpg 0.6 MB
+  saved out/polyhaven/tree_small_02/textures/tree_small_02_branch_diff_1k.jpg 0.4 MB
+  saved out/polyhaven/tree_small_02/textures/tree_small_02_branch_arm_1k.jpg 0.4 MB
+  saved out/polyhaven/tree_small_02/textures/tree_small_02_leaves_nor_gl_1k.jpg 0.7 MB
+  saved out/polyhaven/tree_small_02/textures/tree_small_02_leaves_diff_1k.jpg 0.3 MB
+  saved out/polyhaven/tree_small_02/textures/tree_small_02_leaves_arm_1k.jpg 0.6 MB
+  saved out/polyhaven/tree_small_02/textures/tree_small_02_nor_gl_1k.jpg 1.2 MB
+  saved out/polyhaven/tree_small_02/textures/tree_small_02_diff_1k.jpg 0.9 MB
+  saved out/polyhaven/tree_small_02/textures/tree_small_02_arm_1k.jpg 0.7 MB
+  saved out/polyhaven/tree_small_02/tree_small_02.bin 95.1 MB
+done

@@ -1,0 +1,50 @@
+token present: yes
+sketchfab model 771050587ce248498178aee2c2f88f36
+  saved out/models/infantry_rigged.glb 14.2 MB
+  optimized 14.2 -> 6.2 MB
+sketchfab model 85a1a8205b2c447fb8d0419978f17b75
+  saved out/models/infantry_waterloo.glb 18.6 MB
+  optimized 18.6 -> 6.9 MB
+sketchfab model ba59dedc523841b99d19fc17493d601f
+  saved out/models/ship_bucentaure.glb 19.1 MB
+  optimized 19.1 -> 13.5 MB
+sketchfab model b696ae356b6d4b4d8f83d26dd5c33ae7
+  saved out/models/ship_agamemnon.glb 19.0 MB
+  optimized 19.0 -> 12.5 MB
+polyhaven kloppenheim_06_puresky
+  saved out/polyhaven/kloppenheim_06_puresky_4k.hdr 17.4 MB
+  saved out/polyhaven/kloppenheim_06_puresky_preview.jpg 19.0 MB
+polyhaven belfast_sunset_puresky
+  saved out/polyhaven/belfast_sunset_puresky_4k.hdr 17.4 MB
+  saved out/polyhaven/belfast_sunset_puresky_preview.jpg 16.2 MB
+polyhaven brown_mud_02
+  saved out/polyhaven/brown_mud_02/brown_mud_02.gltf 0.0 MB
+  saved out/polyhaven/brown_mud_02/brown_mud_02.bin 2.4 MB
+  saved out/polyhaven/brown_mud_02/textures/brown_mud_02_nor_gl_2k.jpg 4.2 MB
+  saved out/polyhaven/brown_mud_02/textures/brown_mud_02_diff_2k.jpg 2.2 MB
+  saved out/polyhaven/brown_mud_02/textures/brown_mud_02_rough_2k.jpg 1.7 MB
+polyhaven aerial_grass_rock
+  saved out/polyhaven/aerial_grass_rock/aerial_grass_rock.gltf 0.0 MB
+  saved out/polyhaven/aerial_grass_rock/textures/aerial_grass_rock_rough_2k.jpg 1.5 MB
+  saved out/polyhaven/aerial_grass_rock/textures/aerial_grass_rock_diff_2k.jpg 2.6 MB
+  saved out/polyhaven/aerial_grass_rock/aerial_grass_rock.bin 2.4 MB
+  saved out/polyhaven/aerial_grass_rock/textures/aerial_grass_rock_nor_gl_2k.jpg 3.8 MB
+polyhaven grass_medium_01
+  saved out/polyhaven/grass_medium_01/grass_medium_01.gltf 0.0 MB
+  saved out/polyhaven/grass_medium_01/textures/grass_medium_01_nor_gl_1k.jpg 1.0 MB
+  saved out/polyhaven/grass_medium_01/textures/grass_medium_01_diff_1k.jpg 0.4 MB
+  saved out/polyhaven/grass_medium_01/textures/grass_medium_01_arm_1k.jpg 0.7 MB
+  saved out/polyhaven/grass_medium_01/grass_medium_01.bin 1.0 MB
+polyhaven tree_small_02
+  saved out/polyhaven/tree_small_02/tree_small_02.gltf 0.0 MB
+  saved out/polyhaven/tree_small_02/textures/tree_small_02_branch_nor_gl_1k.jpg 0.6 MB
+  saved out/polyhaven/tree_small_02/textures/tree_small_02_branch_diff_1k.jpg 0.4 MB
+  saved out/polyhaven/tree_small_02/textures/tree_small_02_branch_arm_1k.jpg 0.4 MB
+  saved out/polyhaven/tree_small_02/textures/tree_small_02_leaves_nor_gl_1k.jpg 0.7 MB
+  saved out/polyhaven/tree_small_02/textures/tree_small_02_leaves_diff_1k.jpg 0.3 MB
+  saved out/polyhaven/tree_small_02/textures/tree_small_02_leaves_arm_1k.jpg 0.6 MB
+  saved out/polyhaven/tree_small_02/textures/tree_small_02_nor_gl_1k.jpg 1.2 MB
+  saved out/polyhaven/tree_small_02/textures/tree_small_02_diff_1k.jpg 0.9 MB
+  saved out/polyhaven/tree_small_02/textures/tree_small_02_arm_1k.jpg 0.7 MB
+  saved out/polyhaven/tree_small_02/tree_small_02.bin 95.1 MB
+done
