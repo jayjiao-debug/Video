@@ -8,3 +8,7 @@
 - **Owner picked the topic 2026-10-22** (from the "different ideas" list, #6).
 - **Share prompt:** 你花了多久，才真的放下？
 - **Visual seed (looks come after the script is approved):** a phone glowing in a dark room; every notification lights a region of a brain; "withdrawal" made physical.
+
+## Look (owner, 2026-10-22): A · 霓虹雨夜 — "lets stick to dark tonned and esthetic"
+One rainy night: the room (phone = key light) → through the wet window → the block across the street → the brain drawn as a night city whose districts light up. Plum #120a1c→#3a1f52, magenta #ff3d8b, teal #23d5c8, amber #ffb347, ice #9fe8ff; neon glow on numbers and the title; subtitles Noto Sans CJK Black 62 px with a soft dark edge. Ends at dawn (warm). Stills keep mean luminance ≥ 40/255 (board: 37–70).
+Storyboard frames: `board/Board36.tsx` (composition BOARD36, 14 frames); the three look tests: `board/Looks36.tsx`.

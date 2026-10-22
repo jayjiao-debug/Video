@@ -57,3 +57,13 @@
 - M1 is correlational → "越…越…".
 - P1: the placebo group was told the spray was a strong analgesic for emotional pain; it was saline.
 - "ta" keeps it gender-neutral.
+
+## Storyboard edits (2026-10-22) — subtitles cut to ≤ 16 字; the cut words are on screen as labels/headers
+- 6 → 2010年，有人想知道：被甩的人，脑子里发生了什么（header 「2010 · 美国」 carries the year）
+- 7 → 她找来15个刚被分手的人（label: 15 人 · 刚被分手 · 却还爱着对方）
+- 10 → 让他们躺进扫描仪，看对方的照片
+- 14 → 所以你会翻ta的动态、听你们的歌 / ……假装路过（two subtitles; the three acts are labels）
+- 17 → 又有研究者，找来40个刚被分手的人（header 「2011 · 美国」）
+- 20 → 两种痛，点亮了一部分相同的脑区（labels: 被烫 · 被分手）
+- 24 → 越常偷看前任主页，越难过，也越想念
+- 28 → 分开越久，这个区域就越安静（label: 和依恋有关的区域）
