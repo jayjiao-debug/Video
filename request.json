@@ -1,71 +1,53 @@
 {
- "id": "lanchester-music-01",
+ "id": "lanchester-music-02",
  "items": [
   {
    "type": "url",
-   "url": "https://incompetech.com/music/royalty-free/pieces.json",
-   "name": "incompetech_pieces.json",
-   "license": "metadata"
+   "url": "https://incompetech.com/music/royalty-free/mp3-royaltyfree/Rynos%20Theme.mp3",
+   "name": "Rynos_Theme.mp3",
+   "license": "CC BY 4.0 - \"Rynos Theme\" Kevin MacLeod (incompetech.com), Licensed under Creative Commons: By Attribution 4.0 License"
   },
   {
    "type": "url",
-   "url": "https://incompetech.com/music/royalty-free/mp3-royaltyfree/Five%20Armies.mp3",
-   "name": "Five_Armies.mp3",
-   "license": "CC BY 4.0 - \"Five Armies\" Kevin MacLeod (incompetech.com), Licensed under Creative Commons: By Attribution 4.0 License"
+   "url": "https://incompetech.com/music/royalty-free/mp3-royaltyfree/At%20Launch.mp3",
+   "name": "At_Launch.mp3",
+   "license": "CC BY 4.0 - \"At Launch\" Kevin MacLeod (incompetech.com), Licensed under Creative Commons: By Attribution 4.0 License"
   },
   {
    "type": "url",
-   "url": "https://incompetech.com/music/royalty-free/mp3-royaltyfree/Heroic%20Age.mp3",
-   "name": "Heroic_Age.mp3",
-   "license": "CC BY 4.0 - \"Heroic Age\" Kevin MacLeod (incompetech.com), Licensed under Creative Commons: By Attribution 4.0 License"
+   "url": "https://incompetech.com/music/royalty-free/mp3-royaltyfree/Nerves.mp3",
+   "name": "Nerves.mp3",
+   "license": "CC BY 4.0 - \"Nerves\" Kevin MacLeod (incompetech.com), Licensed under Creative Commons: By Attribution 4.0 License"
   },
   {
    "type": "url",
-   "url": "https://incompetech.com/music/royalty-free/mp3-royaltyfree/Volatile%20Reaction.mp3",
-   "name": "Volatile_Reaction.mp3",
-   "license": "CC BY 4.0 - \"Volatile Reaction\" Kevin MacLeod (incompetech.com), Licensed under Creative Commons: By Attribution 4.0 License"
+   "url": "https://incompetech.com/music/royalty-free/mp3-royaltyfree/Devastation%20and%20Revenge.mp3",
+   "name": "Devastation_and_Revenge.mp3",
+   "license": "CC BY 4.0 - \"Devastation and Revenge\" Kevin MacLeod (incompetech.com), Licensed under Creative Commons: By Attribution 4.0 License"
   },
   {
    "type": "url",
-   "url": "https://incompetech.com/music/royalty-free/mp3-royaltyfree/Crusade.mp3",
-   "name": "Crusade.mp3",
-   "license": "CC BY 4.0 - \"Crusade\" Kevin MacLeod (incompetech.com), Licensed under Creative Commons: By Attribution 4.0 License"
+   "url": "https://incompetech.com/music/royalty-free/mp3-royaltyfree/Death%20and%20Axes.mp3",
+   "name": "Death_and_Axes.mp3",
+   "license": "CC BY 4.0 - \"Death and Axes\" Kevin MacLeod (incompetech.com), Licensed under Creative Commons: By Attribution 4.0 License"
   },
   {
    "type": "url",
-   "url": "https://incompetech.com/music/royalty-free/mp3-royaltyfree/Clash%20Defiant.mp3",
-   "name": "Clash_Defiant.mp3",
-   "license": "CC BY 4.0 - \"Clash Defiant\" Kevin MacLeod (incompetech.com), Licensed under Creative Commons: By Attribution 4.0 License"
+   "url": "https://incompetech.com/music/royalty-free/mp3-royaltyfree/Full%20On.mp3",
+   "name": "Full_On.mp3",
+   "license": "CC BY 4.0 - \"Full On\" Kevin MacLeod (incompetech.com), Licensed under Creative Commons: By Attribution 4.0 License"
   },
   {
    "type": "url",
-   "url": "https://incompetech.com/music/royalty-free/mp3-royaltyfree/Rite%20of%20Passage.mp3",
-   "name": "Rite_of_Passage.mp3",
-   "license": "CC BY 4.0 - \"Rite of Passage\" Kevin MacLeod (incompetech.com), Licensed under Creative Commons: By Attribution 4.0 License"
+   "url": "https://incompetech.com/music/royalty-free/mp3-royaltyfree/Cortosis.mp3",
+   "name": "Cortosis.mp3",
+   "license": "CC BY 4.0 - \"Cortosis\" Kevin MacLeod (incompetech.com), Licensed under Creative Commons: By Attribution 4.0 License"
   },
   {
    "type": "url",
-   "url": "https://incompetech.com/music/royalty-free/mp3-royaltyfree/Prelude%20and%20Action.mp3",
-   "name": "Prelude_and_Action.mp3",
-   "license": "CC BY 4.0 - \"Prelude and Action\" Kevin MacLeod (incompetech.com), Licensed under Creative Commons: By Attribution 4.0 License"
-  },
-  {
-   "type": "url",
-   "url": "https://incompetech.com/music/royalty-free/mp3-royaltyfree/Strength%20of%20the%20Titans.mp3",
-   "name": "Strength_of_the_Titans.mp3",
-   "license": "CC BY 4.0 - \"Strength of the Titans\" Kevin MacLeod (incompetech.com), Licensed under Creative Commons: By Attribution 4.0 License"
-  },
-  {
-   "type": "url",
-   "url": "https://incompetech.com/music/royalty-free/mp3-royaltyfree/The%20Descent.mp3",
-   "name": "The_Descent.mp3",
-   "license": "CC BY 4.0 - \"The Descent\" Kevin MacLeod (incompetech.com), Licensed under Creative Commons: By Attribution 4.0 License"
-  },
-  {
-   "type": "url",
-   "url": "https://incompetech.com/music/royalty-free/mp3-royaltyfree/Achilles.mp3",
-   "name": "Achilles.mp3",
-   "license": "CC BY 4.0 - \"Achilles\" Kevin MacLeod (incompetech.com), Licensed under Creative Commons: By Attribution 4.0 License"
+   "url": "https://incompetech.com/music/royalty-free/mp3-royaltyfree/Black%20Vortex.mp3",
+   "name": "Black_Vortex.mp3",
+   "license": "CC BY 4.0 - \"Black Vortex\" Kevin MacLeod (incompetech.com), Licensed under Creative Commons: By Attribution 4.0 License"
   }
  ]
 }
