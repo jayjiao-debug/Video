@@ -1,0 +1,9 @@
+# ep38 crew log — night of 2026-10-22/23 (owner asleep: "use all the agents… ask a lot of questions and review… a thought-out masterpiece")
+
+Decisions taken in the owner's place (each can be reversed in the morning):
+- **Look:** real 3D (owner OK'd "可以试试看"): Poly Haven sky (kloppenheim_06_puresky) + aerial_grass_rock ground + grass, Sketchfab "Infantry – rigged" (Andywoodhead, CC BY) instanced ×1500 with baked poses, ships "1802 Bucentaure-class" + "HMS Agamemnon" (mixmamo.studio, CC BY). Rendered as a raw three.js page on Modal T4 (≈0.13 s/frame).
+- **Simulation:** every soldier is an agent (reload ~3 s, random living target, 14 % hit). Seeds chosen so the numbers land exactly: hook 1000 v 500 → 866 (seed 18); swords 1000 v 500 → 500 (seed 84); 1000 v 1000 → 0 : 7 (seed 123, so the line says 两败俱伤); split second wave 866 v 500 → 707 (seed 91).
+- **Temp music:** "Rynos Theme" — Kevin MacLeod (incompetech.com), CC BY 4.0 (music specialist measured 18 tracks; music.md). Picture snapped to its bars; the track is untouched except a fade over the last bar. Owner can swap his own BGM; the shot list is keyed to bar functions.
+- **Structure (director gate 1, REVISE → applied):** 866 lands at 0:15; title on the hardest drop (0:30); guns battle first, then "为什么？" → bullet-time count → ×4; squares drawn off the firing lines (side = line length), shrinking live (each moment both lose the same area); 1000 v 1000 then two waves (707); 孙子 written on the field; sky bridge to Trafalgar; plan drawn on the water (both columns into the same stretch, the van untouched); no 2D inserts; Nelson's death line cut; dial cut.
+- **Facts (researcher):** no 「一战前夕」 (articles Sept–Dec 1914); 13/5/15 not shown; tally = 英国损失0艘 / 对方损失一半以上; Lanchester tags 1914 (law) and 1916 (book).
+- Gates: gate1_director.md, gate1_coldread.md; facts.md "Changes".
