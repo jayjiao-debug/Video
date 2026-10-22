@@ -1,0 +1,236 @@
+[
+ {
+  "t": 0.0,
+  "end": 4.11,
+  "text": "七宗罪，你每天都在犯。",
+  "kind": "intro"
+ },
+ {
+  "t": 1.25,
+  "end": 4.11,
+  "text": "6世纪由教皇格里高利一世列出",
+  "kind": "caption"
+ },
+ {
+  "t": 4.12,
+  "end": 6.14,
+  "text": "对方等你道歉",
+  "kind": "context"
+ },
+ {
+  "t": 4.24,
+  "end": 6.14,
+  "text": "我？先低头？",
+  "kind": "bubble (silhouette)"
+ },
+ {
+  "t": 6.14,
+  "end": 10.2,
+  "text": "七宗罪 · 之一 傲慢 Superbia",
+  "kind": "name"
+ },
+ {
+  "t": 6.14,
+  "end": 10.2,
+  "text": "你的胆子真是肥嘟嘟的啊",
+  "kind": "bubble (meme quip)"
+ },
+ {
+  "t": 7.16,
+  "end": 10.2,
+  "text": "嘴硬，是心虚。",
+  "kind": "closing"
+ },
+ {
+  "t": 10.2,
+  "end": 12.23,
+  "text": "朋友考研上岸",
+  "kind": "context"
+ },
+ {
+  "t": 10.32,
+  "end": 12.23,
+  "text": "恭喜恭喜！",
+  "kind": "bubble (silhouette)"
+ },
+ {
+  "t": 12.23,
+  "end": 16.28,
+  "text": "七宗罪 · 之二 嫉妒 Invidia",
+  "kind": "name"
+ },
+ {
+  "t": 12.23,
+  "end": 16.28,
+  "text": "运气好而已。",
+  "kind": "bubble (meme quip)"
+ },
+ {
+  "t": 13.24,
+  "end": 16.28,
+  "text": "酸谁，就是想成为谁。",
+  "kind": "closing"
+ },
+ {
+  "t": 16.28,
+  "end": 18.31,
+  "text": "被人阴阳了",
+  "kind": "context"
+ },
+ {
+  "t": 16.41,
+  "end": 18.31,
+  "text": "你再说一遍？",
+  "kind": "bubble (silhouette)"
+ },
+ {
+  "t": 18.31,
+  "end": 22.36,
+  "text": "七宗罪 · 之三 暴怒 Ira",
+  "kind": "name"
+ },
+ {
+  "t": 18.31,
+  "end": 22.36,
+  "text": "我很冷静！",
+  "kind": "bubble (meme quip)"
+ },
+ {
+  "t": 19.32,
+  "end": 22.36,
+  "text": "怒火，最先烧的是自己。",
+  "kind": "closing"
+ },
+ {
+  "t": 22.36,
+  "end": 24.39,
+  "text": "deadline前一晚",
+  "kind": "context"
+ },
+ {
+  "t": 22.49,
+  "end": 24.39,
+  "text": "明天再说。",
+  "kind": "bubble (silhouette)"
+ },
+ {
+  "t": 24.39,
+  "end": 28.45,
+  "text": "七宗罪 · 之四 懒惰 Acedia",
+  "kind": "name"
+ },
+ {
+  "t": 24.39,
+  "end": 28.45,
+  "text": "牛来了，魂没来。",
+  "kind": "bubble (meme quip)"
+ },
+ {
+  "t": 25.41,
+  "end": 28.45,
+  "text": "懒，有时是累到不想面对。",
+  "kind": "closing"
+ },
+ {
+  "t": 28.45,
+  "end": 30.47,
+  "text": "背包都满了",
+  "kind": "context"
+ },
+ {
+  "t": 28.57,
+  "end": 30.47,
+  "text": "还能塞！",
+  "kind": "bubble (silhouette)"
+ },
+ {
+  "t": 30.47,
+  "end": 34.53,
+  "text": "七宗罪 · 之五 贪婪 Avaritia",
+  "kind": "name"
+ },
+ {
+  "t": 30.47,
+  "end": 34.53,
+  "text": "再摸一个包就撤。",
+  "kind": "bubble (meme quip)"
+ },
+ {
+  "t": 31.49,
+  "end": 34.53,
+  "text": "想要更多，是怕失去。",
+  "kind": "closing"
+ },
+ {
+  "t": 34.53,
+  "end": 36.56,
+  "text": "凌晨1点",
+  "kind": "context"
+ },
+ {
+  "t": 34.66,
+  "end": 36.56,
+  "text": "就吃一口。",
+  "kind": "bubble (silhouette)"
+ },
+ {
+  "t": 36.56,
+  "end": 40.61,
+  "text": "七宗罪 · 之六 暴食 Gula",
+  "kind": "name"
+ },
+ {
+  "t": 36.56,
+  "end": 40.61,
+  "text": "曼波~再来亿口。",
+  "kind": "bubble (meme quip)"
+ },
+ {
+  "t": 37.57,
+  "end": 40.61,
+  "text": "填不满的，往往不是胃。",
+  "kind": "closing"
+ },
+ {
+  "t": 40.61,
+  "end": 42.64,
+  "text": "又点开ta主页",
+  "kind": "context"
+ },
+ {
+  "t": 40.74,
+  "end": 42.64,
+  "text": "最后一眼。",
+  "kind": "bubble (silhouette)"
+ },
+ {
+  "t": 42.64,
+  "end": 46.69,
+  "text": "七宗罪 · 之七 色欲 Luxuria",
+  "kind": "name"
+ },
+ {
+  "t": 42.64,
+  "end": 46.69,
+  "text": "千万别手滑点赞。",
+  "kind": "bubble (meme quip)"
+ },
+ {
+  "t": 43.65,
+  "end": 46.69,
+  "text": "你馋的，是想象里的ta。",
+  "kind": "closing"
+ },
+ {
+  "t": 48.72,
+  "end": 54.81,
+  "text": "你心里，哪一宗罪最大声？",
+  "kind": "outro"
+ },
+ {
+  "t": 54.81,
+  "end": 59.46,
+  "text": "七宗罪 SEVEN DEADLY SINS / 七个梗，七个放大版的你。",
+  "kind": "title"
+ }
+]

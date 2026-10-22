@@ -1,0 +1,161 @@
+{
+ "film": "sins7",
+ "sr": 48000,
+ "duration": 59.46,
+ "music_gain_db": -7.29,
+ "grid": {
+  "beat": 0.5069,
+  "phase": 0.06,
+  "bar": 2.0276,
+  "kick_click_vs_grid_ms": "-14 at 0 s ... -10 at 59 s"
+ },
+ "cues": [
+  {
+   "t": 6.1288,
+   "type": "reveal_toll",
+   "gain_rel_music_LU": -10.0,
+   "sin": 1,
+   "grid": 6.1428,
+   "damp": 0.22,
+   "note": "damped F# bell (prime F#3) + F#2->F#1 sub, onset on the kick click",
+   "measured_rel_LU": -10.0
+  },
+  {
+   "t": 12.2121,
+   "type": "reveal_toll",
+   "gain_rel_music_LU": -12.0,
+   "sin": 2,
+   "grid": 12.2256,
+   "damp": 0.14,
+   "note": "damped F# bell (prime F#3) + F#2->F#1 sub, onset on the kick click",
+   "measured_rel_LU": -12.0
+  },
+  {
+   "t": 18.2954,
+   "type": "reveal_toll",
+   "gain_rel_music_LU": -11.5,
+   "sin": 3,
+   "grid": 18.3084,
+   "damp": 0.16,
+   "note": "damped F# bell (prime F#3) + F#2->F#1 sub, onset on the kick click",
+   "measured_rel_LU": -11.5
+  },
+  {
+   "t": 24.3787,
+   "type": "reveal_toll",
+   "gain_rel_music_LU": -11.0,
+   "sin": 4,
+   "grid": 24.3912,
+   "damp": 0.18,
+   "note": "damped F# bell (prime F#3) + F#2->F#1 sub, onset on the kick click",
+   "measured_rel_LU": -11.0
+  },
+  {
+   "t": 30.462,
+   "type": "reveal_toll",
+   "gain_rel_music_LU": -10.5,
+   "sin": 5,
+   "grid": 30.474,
+   "damp": 0.21,
+   "note": "damped F# bell (prime F#3) + F#2->F#1 sub, onset on the kick click",
+   "measured_rel_LU": -10.5
+  },
+  {
+   "t": 36.5453,
+   "type": "reveal_toll",
+   "gain_rel_music_LU": -10.5,
+   "sin": 6,
+   "grid": 36.5568,
+   "damp": 0.24,
+   "note": "damped F# bell (prime F#3) + F#2->F#1 sub, onset on the kick click",
+   "measured_rel_LU": -10.5
+  },
+  {
+   "t": 42.6286,
+   "type": "reveal_toll",
+   "gain_rel_music_LU": -10.0,
+   "sin": 7,
+   "grid": 42.6396,
+   "damp": 0.3,
+   "note": "damped F# bell (prime F#3) + F#2->F#1 sub, onset on the kick click",
+   "measured_rel_LU": -10.0
+  },
+  {
+   "t": 54.7952,
+   "type": "title_toll",
+   "gain_rel_music_LU": -4.0,
+   "grid": 54.8052,
+   "note": "the same bell ringing free + sub + short hall: the one impact; rings into the fade",
+   "measured_rel_LU": -4.0
+  }
+ ],
+ "track_pauses": [
+  {
+   "type": "track_pause",
+   "name": "P1 first drop",
+   "no_kick": [
+    5.62,
+    6.13
+   ],
+   "sub_hole": [
+    5.635,
+    5.885
+   ],
+   "pickup_stab": [
+    5.885,
+    6.129
+   ],
+   "kick_returns": 6.1288
+  },
+  {
+   "type": "track_pause",
+   "name": "P2 bar 10 break",
+   "sub_hole": [
+    20.09,
+    20.34
+   ],
+   "no_kick": [
+    20.33,
+    22.35
+   ],
+   "kick_returns": 22.3511
+  },
+  {
+   "type": "track_pause",
+   "name": "P3 bar 26 break before title",
+   "sub_hole": [
+    52.55,
+    52.8
+   ],
+   "no_kick": [
+    52.77,
+    54.79
+   ],
+   "offbeat_hit": 53.54,
+   "sub_holes_inside": [
+    [
+     53.29,
+     53.35
+    ],
+    [
+     53.83,
+     54.01
+    ],
+    [
+     54.31,
+     54.55
+    ]
+   ],
+   "kick_returns": 54.7952
+  }
+ ],
+ "fade": [
+  58.46,
+  59.46
+ ],
+ "verify": {
+  "I": -14.0,
+  "tp": -2.77,
+  "worst_ms": 12.08
+ }
+}

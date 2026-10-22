@@ -1,0 +1,298 @@
+{
+ "version": "v2 (screenwriter, gate-3 r1 revision)",
+ "grid": {
+  "beat": 0.5069,
+  "phase": 0.06,
+  "bar": 2.0276,
+  "note": "scene n: moment bar 3n-1, reveal on bar 3n downbeat, closing +2 beats, scene ends bar 3n+2"
+ },
+ "intro": {
+  "line1": "七宗罪，你每天都在犯。",
+  "caption": "6世纪由教皇格里高利一世列出",
+  "times": {
+   "line1": [
+    0.0,
+    4.12
+   ],
+   "caption": [
+    1.0,
+    4.12
+   ]
+  }
+ },
+ "scenes": [
+  {
+   "n": 1,
+   "ch": "傲慢",
+   "latin": "Superbia",
+   "meme": "美团袋鼠",
+   "context": "对方等你道歉",
+   "quote": "我？先低头？",
+   "name": "七宗罪之一",
+   "quip": "你的胆子真是肥嘟嘟的啊",
+   "closing": "嘴硬，是心虚。",
+   "key": "心虚",
+   "times": {
+    "context": [
+     4.12,
+     6.14
+    ],
+    "quote_bubble": [
+     4.37,
+     6.14
+    ],
+    "reveal": 6.14,
+    "name": [
+     6.14,
+     10.2
+    ],
+    "quip_bubble": [
+     6.14,
+     10.2
+    ],
+    "closing": [
+     7.15,
+     10.2
+    ]
+   }
+  },
+  {
+   "n": 2,
+   "ch": "嫉妒",
+   "latin": "Invidia",
+   "meme": "奶蛙",
+   "context": "朋友考研上岸",
+   "quote": "恭喜恭喜！",
+   "name": "七宗罪之二",
+   "quip": "运气好而已。",
+   "closing": "酸谁，就是想成为谁。",
+   "key": "成为",
+   "times": {
+    "context": [
+     10.2,
+     12.23
+    ],
+    "quote_bubble": [
+     10.45,
+     12.23
+    ],
+    "reveal": 12.23,
+    "name": [
+     12.23,
+     16.28
+    ],
+    "quip_bubble": [
+     12.23,
+     16.28
+    ],
+    "closing": [
+     13.24,
+     16.28
+    ]
+   }
+  },
+  {
+   "n": 3,
+   "ch": "暴怒",
+   "latin": "Ira",
+   "meme": "刀盾狗",
+   "context": "被人阴阳了",
+   "quote": "你再说一遍？",
+   "name": "七宗罪之三",
+   "quip": "我很冷静！",
+   "closing": "怒火，最先烧的是自己。",
+   "key": "自己",
+   "times": {
+    "context": [
+     16.28,
+     18.31
+    ],
+    "quote_bubble": [
+     16.53,
+     18.31
+    ],
+    "reveal": 18.31,
+    "name": [
+     18.31,
+     22.36
+    ],
+    "quip_bubble": [
+     18.31,
+     22.36
+    ],
+    "closing": [
+     19.32,
+     22.36
+    ]
+   }
+  },
+  {
+   "n": 4,
+   "ch": "懒惰",
+   "latin": "Acedia",
+   "meme": "牛来",
+   "context": "deadline前一晚",
+   "quote": "明天再说。",
+   "name": "七宗罪之四",
+   "quip": "牛来了，魂没来。",
+   "closing": "懒，有时是累到不想面对。",
+   "key": "累",
+   "times": {
+    "context": [
+     22.36,
+     24.39
+    ],
+    "quote_bubble": [
+     22.61,
+     24.39
+    ],
+    "reveal": 24.39,
+    "name": [
+     24.39,
+     28.45
+    ],
+    "quip_bubble": [
+     24.39,
+     28.45
+    ],
+    "closing": [
+     25.4,
+     28.45
+    ]
+   }
+  },
+  {
+   "n": 5,
+   "ch": "贪婪",
+   "latin": "Avaritia",
+   "meme": "三角洲鼠鼠",
+   "context": "背包都满了",
+   "quote": "还能塞！",
+   "name": "七宗罪之五",
+   "quip": "再摸一个包就撤。",
+   "closing": "想要更多，是怕失去。",
+   "key": "失去",
+   "times": {
+    "context": [
+     28.45,
+     30.47
+    ],
+    "quote_bubble": [
+     28.7,
+     30.47
+    ],
+    "reveal": 30.47,
+    "name": [
+     30.47,
+     34.53
+    ],
+    "quip_bubble": [
+     30.47,
+     34.53
+    ],
+    "closing": [
+     31.48,
+     34.53
+    ]
+   }
+  },
+  {
+   "n": 6,
+   "ch": "暴食",
+   "latin": "Gula",
+   "meme": "哈基米",
+   "context": "凌晨1点",
+   "quote": "就吃一口。",
+   "name": "七宗罪之六",
+   "quip": "曼波~再来亿口。",
+   "closing": "填不满的，往往不是胃。",
+   "key": "胃",
+   "times": {
+    "context": [
+     34.53,
+     36.56
+    ],
+    "quote_bubble": [
+     34.78,
+     36.56
+    ],
+    "reveal": 36.56,
+    "name": [
+     36.56,
+     40.61
+    ],
+    "quip_bubble": [
+     36.56,
+     40.61
+    ],
+    "closing": [
+     37.57,
+     40.61
+    ]
+   }
+  },
+  {
+   "n": 7,
+   "ch": "色欲",
+   "latin": "Luxuria",
+   "meme": "草地牛",
+   "context": "又点开ta主页",
+   "quote": "最后一眼。",
+   "name": "七宗罪之七",
+   "quip": "千万别手滑点赞。",
+   "closing": "你馋的，是想象里的ta。",
+   "key": "想象",
+   "times": {
+    "context": [
+     40.61,
+     42.64
+    ],
+    "quote_bubble": [
+     40.86,
+     42.64
+    ],
+    "reveal": 42.64,
+    "name": [
+     42.64,
+     46.69
+    ],
+    "quip_bubble": [
+     42.64,
+     46.69
+    ],
+    "closing": [
+     43.65,
+     46.69
+    ]
+   }
+  }
+ ],
+ "outro": {
+  "question": "你心里，哪一宗罪最大声？",
+  "thesis": "七个梗，七个放大版的你。",
+  "times": {
+   "question": [
+    48.72,
+    54.81
+   ],
+   "thesis": [
+    54.81,
+    59.46
+   ]
+  }
+ },
+ "titles": [
+  {
+   "title": "七宗罪，但全是热梗",
+   "why": "“X，但Y”一眼懂反差：严肃名词+热梗，冷读者首选；不夸大，片子就是这个"
+  },
+  {
+   "title": "刀盾狗是暴怒，你呢？",
+   "why": "用全片最易认的梗开路，后半句把问题甩给观众，直接带评论；与片尾问题同一方向"
+  },
+  {
+   "title": "七宗罪，你每天都在犯",
+   "why": "就是片子第一句，标题与开头互证；轻挑衅让人想反驳“我才没有”，片子用日常瞬间兑现"
+  }
+ ]
+}

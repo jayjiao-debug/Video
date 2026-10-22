@@ -754,78 +754,102 @@ const MEME: Record<string, {name: string; quip: string; rig: Rig}> = {
 	glu: {name: '哈基米', quip: '曼波~就吃一点。', rig: {hx: 0.5, hy: 0.26, hr: 0.3, px: 0.5, py: 0.5, move: 'chew'}},
 	lus: {name: '草地牛', quip: '再看一眼。', rig: {hx: 0.7, hy: 0.55, hr: 0.25, px: 0.6, py: 0.72, move: 'dream'}},
 };
+/** the track has no kick on beat 11 and through bars 10 and 26: nothing pulses there, so the pauses read as pauses */
+const kickOn = (T: number) => { const n = Math.floor((T - PH) / BEAT + 1e-6); return !(n === 11 || (n >= 40 && n <= 43) || (n >= 104 && n <= 107)); };
 const DAYS = ['周一', '周二', '周三', '周四', '周五', '周六', '周日'];
-const FigMeme: React.FC<FigProps> = ({T, v, orn, late, t = 0}) => {
-	const c = late(3), m = MEME[v.kind], k = v.kind, r = m.rig, on = orn(0);
-	const pop = outBack(cl01(c / 0.6));
-	const img = MEME_IMG[k], fitR = img ? Math.min(600 / img.w, 640 / img.h) : 1, iw = img ? img.w * fitR : 520, ih = img ? img.h * fitR : 640, top = 340 - ih, x0 = -iw / 2;
-	// the beat: phase within the beat, and a quick pulse on each downbeat
-	const bp = ((((T - PH) % BEAT) + BEAT) % BEAT) / BEAT, pulse = Math.max(0, 1 - bp / 0.18);
-	let dx = 0, dy = 0, rotAll = 0, sx = 1 + 0.025 * pulse, sy = 1 - 0.04 * pulse, head = 0, hdy = 0;
-	const br = Math.sin(T * 2.4);                                       // breathing
-	sx += 0.012 * br; sy -= 0.016 * br;
-	switch (r.move) {
-		case 'hop': { const h = Math.sin(Math.PI * bp); dy = -26 * h; sy += 0.07 * (1 - h) * pulse - 0.04 * h; sx -= 0.03 * h; head = 6 * Math.sin(2 * Math.PI * bp - 0.8); break; }
-		case 'think': head = -6 + 5 * Math.sin(T * 1.7); hdy = 3 * Math.sin(T * 1.7); break;
-		case 'rage': rotAll = 2.2 * Math.sin(T * 37) * (0.6 + 0.4 * pulse); head = 4 * Math.sin(T * 23); dx = 4 * Math.sin(T * 29); break;
-		case 'idle': head = 3 * Math.sin(T * 0.9) - 2; sx = 1 + 0.01 * br; sy = 1 - 0.018 * br; break;
-		case 'loot': dx = 14 * Math.sin(Math.PI * 2 * (T - PH) / (2 * BEAT)); rotAll = 2.5 * Math.sin(Math.PI * 2 * (T - PH) / (2 * BEAT)); head = 5 * Math.sin(Math.PI * 2 * (T - PH) / BEAT); break;
-		case 'chew': head = 4 * Math.abs(Math.sin(Math.PI * 2 * (T - PH) / BEAT)); hdy = 6 * Math.abs(Math.sin(Math.PI * 2 * (T - PH) / BEAT)); break;
-		case 'dream': rotAll = 1.6 * Math.sin(T * 1.3); head = 5 * Math.sin(T * 1.3 + 0.9) - 3; break;
-	}
-	if (!on) { sx = 1; sy = 1; }
-	const pvx = x0 + r.px * iw, pvy = top + r.py * ih, hx = x0 + r.hx * iw, hy = top + r.hy * ih, hr = r.hr * iw;
-	const card = 'M-230,-300 H230 Q260,-300 260,-270 V310 Q260,340 230,340 H-230 Q-260,340 -260,310 V-270 Q-260,-300 -230,-300 Z';
-	return <g>
-		<defs>
-			<filter id="memeRim" x="-20%" y="-20%" width="140%" height="140%"><feMorphology in="SourceAlpha" operator="dilate" radius={4} result="d" /><feFlood floodColor={v.col} /><feComposite in2="d" operator="in" result="c" /><feGaussianBlur in="c" stdDeviation={10} result="g" /><feMerge><feMergeNode in="g" /><feMergeNode in="g" /><feMergeNode in="SourceGraphic" /></feMerge></filter>
-			<radialGradient id="headG"><stop offset="0.62" stopColor="#fff" /><stop offset="1" stopColor="#000" /></radialGradient>
-			<mask id="headM" maskUnits="userSpaceOnUse" x={-2000} y={-2000} width={4000} height={4000}><circle cx={hx} cy={hy} r={hr} fill="url(#headG)" /></mask>
-		</defs>
-		{/* the puppet */}
-		<g transform={`translate(${dx},${dy}) rotate(${rotAll},0,340) translate(0,340) scale(${sx},${sy}) translate(0,-340)`}>
-			{img ? <g filter="url(#memeRim)">
-				<g transform={`translate(0,${340}) skewX(${-head * 0.9}) translate(0,${-340 + hdy * 0.5})`}><image href={img.src} x={x0} y={top} width={iw} height={ih} /></g>
-			</g> : <>
-				<path d={card} fill={v.deep} opacity={0.85} />
-				<path d={card} fill="none" stroke={v.col} strokeWidth={4} strokeDasharray="18 12" />
-				<text x={0} y={-10} textAnchor="middle" style={{fontFamily: SERIF, fontWeight: 900, fontSize: 70}} fill={v.hot}>{m.name}</text></>}
-			{k === 'ang' && c > 0 && <g stroke="#fff" strokeWidth={4} fill="none" opacity={0.9}>
-				<path d={`M-40,${top} L-10,${top + 0.35 * ih * c} L-60,${top + 0.65 * ih * c} L-20,${top + 0.92 * ih * c}`} /><path d={`M-10,${top + 0.35 * ih * c} L${80 * c},${top + 0.45 * ih * c} L${150 * c},${top + 0.42 * ih * c}`} /></g>}
-		</g>
-		{k === 'pri' && <g transform={`translate(${x0 + 0.5 * iw + dx},${top + 0.17 * ih + dy - 300 * (1 - out3(c))}) rotate(${head * 0.6 - 6})`} opacity={c > 0 ? 1 : 0}>
-			<path d="M-90,0 L-90,-54 L-58,-22 L-30,-76 L0,-34 L30,-76 L58,-22 L90,-54 L90,0 Z" fill="url(#goldG)" stroke="#7a5a20" strokeWidth={2} />
-			{[-58, 0, 58].map((x) => <circle key={x} cx={x} cy={-14} r={9} fill={v.col} stroke="#fff" strokeWidth={1.4} />)}</g>}
-		{k === 'env' && c > 0 && Array.from({length: 14}, (_, i) => { const side = i % 2 ? 1 : -1, ph = (T * 0.8 + rnd(i, 5)) % 1, x = side * (330 + 30 * Math.sin(T * 3 + i)), y = 300 - ph * 640; return <path key={i} transform={`translate(${x},${y}) scale(${c * (1 - ph) * 1.4})`} d="M0,-40 C18,-14 22,8 0,28 C-22,8 -18,-14 0,-40 Z" fill={v.col} opacity={0.75} filter="url(#gM)" />; })}
-		{/* 懒惰: a tear-off calendar beside it flips through the week on the half beats; it does not move */}
-		{k === 'slo' && on > 0 && (() => { const f = Math.max(0, (t - 2 * BEAT) / (BEAT / 2)), day = Math.min(7, Math.floor(f)), flip = f - Math.floor(f), last = day >= 7;
-			return <g transform="translate(-330,40)">
-				<rect x={-95} y={-120} width={190} height={230} rx={14} fill="#f4f8ff" stroke={v.col} strokeWidth={4} />
-				<rect x={-95} y={-120} width={190} height={56} rx={14} fill={v.col} /><circle cx={-40} cy={-120} r={8} fill={v.deep} /><circle cx={40} cy={-120} r={8} fill={v.deep} />
-				<text x={0} y={30} textAnchor="middle" style={{fontFamily: SERIF, fontWeight: 900, fontSize: last ? 50 : 70}} fill={v.deep}>{last ? '明天' : DAYS[day]}</text>
-				<text x={0} y={-80} textAnchor="middle" style={{fontFamily: SERIF, fontWeight: 700, fontSize: 26}} fill="#fff">TO DO</text>
-				{c > 0 && !last && flip < 0.5 && <g transform={`translate(0,-64) scale(1,${1 - 2 * flip})`}><rect x={-95} y={0} width={190} height={174} fill="#e6eefc" stroke={v.col} strokeWidth={2} /></g>}
-			</g>; })()}
-		{k === 'gre' && c > 0 && Array.from({length: 26}, (_, i) => { const side = i % 2 ? 1 : -1, x = side * (330 + rnd(i, 91) * 70), d = cl01((c - rnd(i, 92) * 0.5) / 0.5), y = lerp(-560, 320 - 22 * Math.floor(rnd(i, 93) * 5), out3(d)); return <g key={i} transform={`translate(${x},${y}) scale(${Math.cos(T * 6 + i)},1)`} opacity={d > 0 ? 1 : 0}><circle r={18} fill="url(#goldG)" stroke="#7a5a20" strokeWidth={1} /><rect x={-5} y={-5} width={10} height={10} fill="#1a1404" /></g>; })}
-		{k === 'glu' && Array.from({length: 5}, (_, i) => { const d = cl01((c - i * 0.14) / 0.3), y = lerp(-500, 320 - i * 70, out3(d)); return <g key={i} transform={`translate(${390},${y}) rotate(${(i % 2 ? 4 : -4)})`} opacity={d > 0 ? 1 : 0}><rect x={-70} y={-30} width={140} height={60} rx={8} fill="#fff4e6" stroke={v.col} strokeWidth={3} /><rect x={-70} y={-30} width={140} height={14} rx={6} fill={v.col} /></g>; })}
-		{k === 'lus' && c > 0 && Array.from({length: 10}, (_, i) => { const ph = (T * 0.5 + rnd(i, 7)) % 1, x = (rnd(i, 8) - 0.5) * 640, y = 300 - ph * 700; return <path key={i} transform={`translate(${x},${y}) scale(${c * (0.8 + rnd(i, 9)) * Math.sin(Math.PI * ph)})`} d="M0,12 C-30,-10 -20,-36 0,-22 C20,-36 30,-10 0,12 Z" fill={v.col} />; })}
-		{/* the meme line pops in on the beat */}
-		<g transform={`translate(80,${Math.max(-440, top - (k === 'pri' ? 160 : 70))}) scale(${pop})`} opacity={c > 0 ? 1 : 0}>
-			{(() => { const wd = m.quip.length * 46 + 70; return <><rect x={-wd / 2} y={-50} width={wd} height={100} rx={50} fill="#fff" /><path d="M-30,46 L-60,90 L0,48 Z" fill="#fff" /><text x={0} y={16} textAnchor="middle" style={{fontFamily: SERIF, fontWeight: 900, fontSize: 46}} fill={v.deep}>{m.quip}</text></>; })()}
-		</g>
+/** the words of each scene (screenwriter's lines; the moment context, the sin's own words in the silhouette's bubble,
+    the meme's quip after the reveal, the closing insight and its key word) */
+const SCRIPT: Record<string, {ctx: string; quote: string; quip: string; closing: string; key: string}> = {
+	pri: {ctx: '对方等你道歉', quote: '我？先低头？', quip: '你的胆子真是肥嘟嘟的啊', closing: '嘴硬，是心虚。', key: '心虚'},
+	env: {ctx: '朋友考研上岸', quote: '恭喜恭喜！', quip: '运气好而已。', closing: '酸谁，就是想成为谁。', key: '成为'},
+	ang: {ctx: '被人阴阳了', quote: '你再说一遍？', quip: '我很冷静！', closing: '怒火，最先烧的是自己。', key: '自己'},
+	slo: {ctx: 'deadline前一晚', quote: '明天再说。', quip: '牛来了，魂没来。', closing: '懒，有时是累到不想面对。', key: '累'},
+	gre: {ctx: '背包都满了', quote: '还能塞！', quip: '再摸一个包就撤。', closing: '想要更多，是怕失去。', key: '失去'},
+	glu: {ctx: '凌晨1点', quote: '就吃一口。', quip: '曼波~再来亿口。', closing: '填不满的，往往不是胃。', key: '胃'},
+	lus: {ctx: '又点开ta主页', quote: '最后一眼。', quip: '千万别手滑点赞。', closing: '你馋的，是想象里的ta。', key: '想象'},
+};
+/** a white speech bubble; the tail points down-left at the speaker */
+const Bubble: React.FC<{text: string; x: number; y: number; pop: number; col: string; size?: number}> = ({text, x, y, pop, col, size = 52}) => {
+	if (pop <= 0) return null;
+	const wd = [...text].reduce((a, c) => a + (/[\x00-\x7f]/.test(c) ? 0.56 : 1), 0) * size + 80;
+	return <g transform={`translate(${x},${y}) scale(${outBack(cl01(pop))})`}>
+		<rect x={-wd / 2} y={-size - 6} width={wd} height={size * 2 + 12} rx={size + 6} fill="#fff" />
+		<path d={`M-34,${size - 2} L-66,${size + 46} L4,${size + 2} Z`} fill="#fff" />
+		<text x={0} y={size * 0.36} textAnchor="middle" style={{fontFamily: SERIF, fontWeight: 900, fontSize: size}} fill={col}>{text}</text>
 	</g>;
 };
-/** before the reveal: the meme as a black silhouette with a coloured rim and a big question mark (who is it?) */
-const MemeSil: React.FC<{T: number; v: Voice; u: number; urge: number}> = ({T, v, u, urge}) => {
-	const img = MEME_IMG[v.kind]; if (!img) return null;
-	const fitR = Math.min(600 / img.w, 640 / img.h), iw = img.w * fitR, ih = img.h * fitR, top = 340 - ih;
-	const bp = ((((T - PH) % BEAT) + BEAT) % BEAT) / BEAT, pulse = Math.max(0, 1 - bp / 0.2);
-	const jit = urge * 6 * Math.sin(T * 40);
-	return <g opacity={u} transform={`translate(${jit},0)`}>
+/** where a meme sits in its disc (figure coordinates: the picture stands on y = 340) */
+const memeBox = (k: string) => { const img = MEME_IMG[k], r = Math.min(600 / img.w, 640 / img.h), iw = img.w * r, ih = img.h * r; return {img, iw, ih, top: 340 - ih, x0: -iw / 2}; };
+/** the figure freezes (e.g. 刀盾狗 mid-roar while the kick drops out in bar 10) */
+const memeClock = (k: string, T: number) => k === 'ang' && T >= bt(10) && T < bt(11) ? bt(10) : T;
+const FigMeme: React.FC<FigProps> = ({T: T0, v, orn, late, t = 0}) => {
+	const T = memeClock(v.kind, T0), c = late(3), m = MEME[v.kind], k = v.kind, r = m.rig, on = orn(0), sc = SCRIPT[k];
+	const {img, iw, ih, top, x0} = memeBox(k);
+	const bp = ((((T - PH) % BEAT) + BEAT) % BEAT) / BEAT, pulse = kickOn(T) ? Math.max(0, 1 - bp / 0.18) : 0;
+	let dx = 0, dy = 0, rotAll = 0, sx = 1 + 0.025 * pulse, sy = 1 - 0.04 * pulse, sway = 0;
+	const br = Math.sin(T * 2.4);
+	sx += 0.012 * br; sy -= 0.016 * br;
+	switch (r.move) {
+		case 'hop': { const h = Math.sin(Math.PI * bp); dy = -26 * h; sy += 0.07 * (1 - h) * pulse - 0.04 * h; sx -= 0.03 * h; sway = 6 * Math.sin(2 * Math.PI * bp - 0.8); break; }
+		case 'think': sway = -6 + 5 * Math.sin(T * 1.7); break;
+		case 'rage': rotAll = 2.2 * Math.sin(T * 37) * (0.6 + 0.4 * pulse); sway = 4 * Math.sin(T * 23); dx = 4 * Math.sin(T * 29); break;
+		case 'idle': sway = 3 * Math.sin(T * 0.9) - 2; sx = 1 + 0.01 * br; sy = 1 - 0.018 * br; break;
+		case 'loot': dx = 14 * Math.sin(Math.PI * 2 * (T - PH) / (2 * BEAT)); rotAll = 2.5 * Math.sin(Math.PI * 2 * (T - PH) / (2 * BEAT)); sway = 5 * Math.sin(Math.PI * 2 * (T - PH) / BEAT); break;
+		case 'chew': sway = 4 * Math.abs(Math.sin(Math.PI * 2 * (T - PH) / BEAT)); sy -= 0.03 * Math.abs(Math.sin(Math.PI * 2 * (T - PH) / BEAT)); break;
+		case 'dream': rotAll = 1.6 * Math.sin(T * 1.3); sway = 5 * Math.sin(T * 1.3 + 0.9) - 3; break;
+	}
+	if (!on) { sx = 1; sy = 1; }
+	const tl = t - 2 * BEAT;                                                        // time since the live element started
+	return <g>
+		<defs><clipPath id="discClip"><circle cx={0} cy={-30} r={384} /><rect x={-1200} y={-1500} width={2400} height={1470} /></clipPath><filter id="memeRim" x="-20%" y="-20%" width="140%" height="140%"><feMorphology in="SourceAlpha" operator="dilate" radius={4} result="d" /><feFlood floodColor={v.col} /><feComposite in2="d" operator="in" result="c" /><feGaussianBlur in="c" stdDeviation={10} result="g" /><feMerge><feMergeNode in="g" /><feMergeNode in="g" /><feMergeNode in="SourceGraphic" /></feMerge></filter></defs>
+		{/* 贪婪: loot bags drop in and pile up behind it, one per half beat */}
+		{k === 'gre' && tl > 0 && Array.from({length: 8}, (_, i) => { const side = i % 2 ? 1 : -1, row = Math.floor(i / 2), d = cl01((tl - i * BEAT / 2) / 0.22), x = side * (330 + (row % 2) * 50), y = lerp(-650, 290 - row * 95, out3(d)); return d <= 0 ? null : <g key={i} transform={`translate(${x},${y}) rotate(${side * (6 - row * 3)}) scale(1.6)`}>
+			<path d="M-44,-20 Q-44,-38 -26,-38 L26,-38 Q44,-38 44,-20 L48,24 Q48,34 38,34 L-38,34 Q-48,34 -48,24 Z" fill="#6d6a3c" stroke="#2b2a14" strokeWidth={3} />
+			<path d="M-18,-38 Q0,-62 18,-38" fill="none" stroke="#2b2a14" strokeWidth={5} /><line x1={-40} y1={-6} x2={40} y2={-6} stroke="#c9b86a" strokeWidth={3} strokeDasharray="6 4" /><rect x={-10} y={4} width={20} height={14} rx={3} fill="#c9b86a" />
+		</g>; })}
+		{/* the puppet: the whole picture breathes, bounces on the beat and sways like jelly from its feet */}
+		<g transform={`translate(${dx},${dy}) rotate(${rotAll},0,340) translate(0,340) scale(${sx},${sy}) skewX(${-sway * 0.9}) translate(0,-340)`}>
+			<g filter="url(#memeRim)"><image href={img.src} x={x0} y={top} width={iw} height={ih} clipPath="url(#discClip)" /></g>
+		</g>
+		{k === 'pri' && <g transform={`translate(${x0 + 0.5 * iw + dx},${top + 0.17 * ih + dy - 300 * (1 - out3(c))}) rotate(${sway * 0.6 - 6})`} opacity={c > 0 ? 1 : 0}>
+			<path d="M-90,0 L-90,-54 L-58,-22 L-30,-76 L0,-34 L30,-76 L58,-22 L90,-54 L90,0 Z" fill="url(#goldG)" stroke="#7a5a20" strokeWidth={2} />
+			{[-58, 0, 58].map((x) => <circle key={x} cx={x} cy={-14} r={9} fill={v.col} stroke="#fff" strokeWidth={1.4} />)}</g>}
+		{/* 嫉妒: a lemon (柠檬精) pops up beside it and drips */}
+		{k === 'env' && tl > 0 && <g transform={`translate(330,-90) rotate(${-18 + 6 * Math.sin(T * 3)}) scale(${1.8 * outBack(cl01(tl / 0.3)) * (1 + 0.06 * pulse)})`}>
+			<path d="M-70,0 C-70,-50 70,-50 70,0 C70,50 -70,50 -70,0 Z" fill="#ffe14a" stroke="#c9a400" strokeWidth={4} /><path d="M70,0 L92,-6 L92,6 Z" fill="#ffe14a" stroke="#c9a400" strokeWidth={3} /><path d="M-70,0 L-90,-5 L-90,5 Z" fill="#ffe14a" stroke="#c9a400" strokeWidth={3} />
+			<path d="M-10,-40 C10,-80 50,-80 60,-60 C30,-56 10,-50 -10,-40 Z" fill="#4caf50" stroke="#2e7d32" strokeWidth={3} />
+			<ellipse cx={-24} cy={-14} rx={18} ry={8} fill="#fff8c0" opacity={0.8} />
+			{[0, 1, 2].map((j) => { const ph = ((tl * 1.1 + j / 3) % 1); return <path key={j} transform={`translate(${-20 + j * 18},${40 + ph * 260}) scale(${1 - ph * 0.4})`} d="M0,-12 C6,-3 9,3 9,8 C9,14 -9,14 -9,8 C-9,3 -6,-3 0,-12 Z" fill={v.col} opacity={1 - ph} />; })}
+		</g>}
+		{/* 懒惰: a tear-off TO DO calendar flips through the week on the half beats and stops on 明天 (the biggest page) */}
+		{k === 'slo' && on > 0 && (() => { const f = Math.max(0, tl / (BEAT / 2)), day = Math.min(7, Math.floor(f)), flip = f - Math.floor(f), last = day >= 7, big = last ? 1 + 0.18 * outBack(cl01((f - 7) / 0.8)) : 1;
+			return <g transform={`translate(-335,60) scale(${big})`}>
+				<rect x={-100} y={-125} width={200} height={240} rx={14} fill="#f4f8ff" stroke={v.col} strokeWidth={5} />
+				<rect x={-100} y={-125} width={200} height={58} rx={14} fill={v.col} /><circle cx={-42} cy={-125} r={9} fill={v.deep} /><circle cx={42} cy={-125} r={9} fill={v.deep} />
+				<text x={0} y={-84} textAnchor="middle" style={{fontFamily: SERIF, fontWeight: 700, fontSize: 28}} fill="#fff">TO DO</text>
+				<text x={0} y={last ? 46 : 36} textAnchor="middle" style={{fontFamily: SERIF, fontWeight: 900, fontSize: last ? 84 : 62}} fill={last ? '#e0463c' : v.deep}>{last ? '明天' : DAYS[day]}</text>
+				{tl > 0 && !last && flip < 0.5 && <g transform={`translate(0,-67) scale(1,${1 - 2 * flip})`}><rect x={-100} y={0} width={200} height={182} fill="#e6eefc" stroke={v.col} strokeWidth={2} /></g>}
+			</g>; })()}
+		{/* 暴食: takeout boxes (white pails, red band, wire handle) stack up beside it */}
+		{k === 'glu' && tl > 0 && Array.from({length: 5}, (_, i) => { const d = cl01((tl - i * BEAT / 2) / 0.22), y = lerp(-600, 300 - i * 118, out3(d)); return d <= 0 ? null : <g key={i} transform={`translate(${410 + (i % 2 ? 10 : -10)},${y}) rotate(${(i % 2 ? 4 : -4)}) scale(1.45)`}>
+			<path d="M-56,-36 L56,-36 L44,40 L-44,40 Z" fill="#fbfbf7" stroke="#b9b2a4" strokeWidth={3} /><path d="M-56,-36 L56,-36 L53,-18 L-53,-18 Z" fill="#e0463c" /><path d="M-40,-36 Q0,-82 40,-36" fill="none" stroke="#8a8a8a" strokeWidth={3} />
+			<text x={0} y={22} textAnchor="middle" style={{fontFamily: SERIF, fontWeight: 900, fontSize: 26}} fill="#e0463c">外卖</text>
+		</g>; })}
+		{k === 'lus' && tl > 0 && Array.from({length: 10}, (_, i) => { const ph = (T * 0.5 + rnd(i, 7)) % 1, x = (rnd(i, 8) - 0.5) * 640, y = 300 - ph * 700; return <path key={i} transform={`translate(${x},${y}) scale(${cl01(tl / 0.3) * (0.8 + rnd(i, 9)) * Math.sin(Math.PI * ph)})`} d="M0,12 C-30,-10 -20,-36 0,-22 C20,-36 30,-10 0,12 Z" fill={v.col} />; })}
+		{/* the meme's own quip takes over the bubble on the reveal */}
+		<Bubble text={sc.quip} x={90} y={Math.max(-420, top - (k === 'pri' ? 150 : 80))} pop={on > 0 ? t / 0.25 : 0} col={v.deep} />
+	</g>;
+};
+/** before the reveal: the meme as a dark silhouette with a coloured rim and a "?", saying the sin's words */
+const MemeSil: React.FC<{T: number; v: Voice; u: number; quoteU: number}> = ({T, v, u, quoteU}) => {
+	const {img, iw, ih, top, x0} = memeBox(v.kind);
+	const bp = ((((T - PH) % BEAT) + BEAT) % BEAT) / BEAT, pulse = kickOn(T) ? Math.max(0, 1 - bp / 0.2) : 0;
+	return <g opacity={u}>
 		<filter id="silF" x="-20%" y="-20%" width="140%" height="140%"><feColorMatrix type="matrix" values="0 0 0 0 0.03  0 0 0 0 0.02  0 0 0 0 0.06  0 0 0 1 0" result="b" /><feMorphology in="SourceAlpha" operator="dilate" radius={5} result="d" /><feFlood floodColor={v.hot} /><feComposite in2="d" operator="in" result="c" /><feGaussianBlur in="c" stdDeviation={6} result="g" /><feMerge><feMergeNode in="g" /><feMergeNode in="b" /></feMerge></filter>
-		<g transform={`translate(0,340) scale(${1 + 0.02 * pulse},${1 - 0.03 * pulse}) translate(0,-340)`}><image href={img.src} x={-iw / 2} y={top} width={iw} height={ih} filter="url(#silF)" /></g>
-		<text x={0} y={top + ih * 0.5 + 70} textAnchor="middle" style={{fontFamily: SERIF, fontWeight: 900, fontSize: 200 * (1 + 0.08 * pulse + 0.1 * urge)}} fill={v.hot} opacity={0.95} filter="url(#gS)">?</text>
-		<text x={0} y={top + ih * 0.5 + 70} textAnchor="middle" style={{fontFamily: SERIF, fontWeight: 900, fontSize: 200 * (1 + 0.08 * pulse + 0.1 * urge)}} fill="#fff">?</text>
+		<g transform={`translate(0,340) scale(${1 + 0.02 * pulse},${1 - 0.03 * pulse}) translate(0,-340)`}><g clipPath="url(#silClip)"><image href={img.src} x={x0} y={top} width={iw} height={ih} filter="url(#silF)" /></g><clipPath id="silClip"><circle cx={0} cy={-30} r={384} /><rect x={-1200} y={-1500} width={2400} height={1470} /></clipPath></g>
+		<text x={0} y={top + ih * 0.55 + 70} textAnchor="middle" style={{fontFamily: SERIF, fontWeight: 900, fontSize: 200 * (1 + 0.08 * pulse)}} fill={v.hot} filter="url(#gS)">?</text>
+		<text x={0} y={top + ih * 0.55 + 70} textAnchor="middle" style={{fontFamily: SERIF, fontWeight: 900, fontSize: 200 * (1 + 0.08 * pulse)}} fill="#fff">?</text>
+		<Bubble text={SCRIPT[v.kind].quote} x={90} y={Math.max(-420, top - (v.kind === 'pri' ? 150 : 80))} pop={quoteU / 0.6} col={v.deep} />
 	</g>;
 };
 /** the meme scenes' backdrop: a bold sticker disc in the sin's colour, halftone dots, slow comic rays behind */
@@ -1179,10 +1203,10 @@ const PLACE: Record<Kind, {dx: number; dy: number; s: number; flip?: boolean}> =
 };
 /** iris transitions: a scene closes by its disc swelling to fill the screen in the next colour; the next opens from the centre */
 const IRIS = 0.32;
-const IrisClose: React.FC<{o: number; x: number; y: number; col: string; deep: string; id: string}> = ({o, x, y, col, deep, id}) => o <= 0 ? null : <g>
+const IrisClose: React.FC<{o: number; x: number; y: number; col: string; deep: string; id: string; r0?: number}> = ({o, x, y, col, deep, id, r0 = 380}) => o <= 0 ? null : <g>
 	<radialGradient id={id} gradientUnits="userSpaceOnUse" cx={x} cy={y} r={1400}><stop offset="0" stopColor={col} /><stop offset="0.5" stopColor={deep} /><stop offset="1" stopColor="#050308" /></radialGradient>
-	<circle cx={x} cy={y} r={lerp(380, 2300, ease(o))} fill={`url(#${id})`} />
-	<circle cx={x} cy={y} r={lerp(380, 2300, ease(o))} fill="none" stroke="#fff" strokeWidth={10} opacity={0.8 * (1 - cl01(o))} />
+	<circle cx={x} cy={y} r={lerp(r0, 2300, ease(o))} fill={`url(#${id})`} />
+	<circle cx={x} cy={y} r={lerp(r0, 2300, ease(o))} fill="none" stroke="#fff" strokeWidth={10} opacity={0.8 * (1 - cl01(o))} />
 </g>;
 const IrisOpen: React.FC<{o: number; x: number; y: number; col: string; deep: string; id: string}> = ({o, x, y, col, deep, id}) => o >= 1 ? null : <g>
 	<radialGradient id={id} gradientUnits="userSpaceOnUse" cx={x} cy={y} r={1400}><stop offset="0" stopColor={col} /><stop offset="0.5" stopColor={deep} /><stop offset="1" stopColor="#050308" /></radialGradient>
@@ -1315,51 +1339,68 @@ const Typer: React.FC<{x: number; y: number; text: string; size: number; t: numb
 		{shown > 0 && <rect x={cx + 4} y={y - size * 0.82} width={Math.max(3, size * 0.07)} height={size * 0.95} fill={col} opacity={cur * 0.9} />}
 	</g>;
 };
+/** a meme in a round sticker (dark disc, coloured rim); as a silhouette with a "?" or in colour */
+const Sticker: React.FC<{v: Voice; x: number; y: number; r: number; sil: number; s?: number; id: string}> = ({v, x, y, r, sil, s: sc = 1, id}) => {
+	const {img} = memeBox(v.kind), f = Math.min(1.7 * r / img.w, 1.7 * r / img.h), w = img.w * f, h = img.h * f;
+	return <g transform={`translate(${x},${y}) scale(${sc})`}>
+		<clipPath id={id}><circle r={r - 4} /></clipPath>
+		<circle r={r + 10} fill={v.col} opacity={0.35} filter="url(#gM)" />
+		<circle r={r} fill={v.deep} /><circle r={r} fill={v.col} opacity={0.35 * (1 - sil) + 0.6 * sil + 0.12} />
+		<g clipPath={`url(#${id})`}><image href={img.src} x={-w / 2} y={r * 0.92 - h} width={w} height={h} filter={sil > 0.5 ? 'url(#stSil)' : undefined} /></g>
+		{sil > 0.5 && <text y={r * 0.32} textAnchor="middle" style={{fontFamily: SERIF, fontWeight: 900, fontSize: r * 0.95}} fill="#fff">?</text>}
+		<circle r={r} fill="none" stroke={v.col} strokeWidth={6} /><circle r={r + 7} fill="none" stroke="#fff" strokeWidth={2} opacity={0.6} />
+	</g>;
+};
+const StickerDefs = () => <filter id="stSil"><feColorMatrix type="matrix" values="0 0 0 0 0.04  0 0 0 0 0.03  0 0 0 0 0.08  0 0 0 1 0" /></filter>;
+const INTRO = {line1: '七宗罪，你每天都在犯。', caption: '6世纪由教皇格里高利一世列出'};
+const OUTRO = {question: '你心里，哪一宗罪最大声？', thesis: '七个梗，七个放大版的你。'};
 const V0 = Q0[0];
-const ICON_DX = 190;
-const Intro: React.FC<{T: number}> = ({T}) => (
-	<svg width={W} height={H}>
+const ICON_DX = 240;
+/** frame 0: the big line is already typing and seven dark meme silhouettes wait in stickers; one pops per beat
+    (colour flash and a ring); at the end the picture dives into the first (purple) sticker */
+const Intro: React.FC<{T: number}> = ({T}) => {
+	const sx = (k: number) => 960 + (k - 3) * ICON_DX, sy = 720;
+	return <svg width={W} height={H}>
 		<Defs v={{col: '#b9b0ff', hot: '#ece8ff', deep: '#141026'}} />
-		<g opacity={1 - fade(T, V0 - 0.3, 0.3)}>
-			<rect width={W} height={H} fill="url(#bgG)" />
-			{T < bt(0) + 2 * BEAT ? <Typer x={960} y={330} text="公元6世纪，教皇格里高利一世写下：" size={40} t={T} cps={17} start={5} weight={600} col="#cfc8de" spacing={0.14} />
-				: <text x={960} y={330} textAnchor="middle" style={{fontFamily: SERIF, fontWeight: 600, fontSize: 40, letterSpacing: '0.14em'}} fill="#cfc8de">公元6世纪，教皇格里高利一世写下：</text>}
-			{T >= bt(0) + 2 * BEAT - 0.05 && <Typer x={960} y={450} text="人心里，藏着七宗罪。" size={84} t={T - (bt(0) + 2 * BEAT)} cps={13} start={0} />}
-			{/* the seven pop in on the half beats of bar 1 */}
-			{SEVEN.map((s, i) => { const at = bt(1) + i * BEAT / 2, o = cl01((T - at) / 0.1); return <g key={s.ch}>
-				<Icon x={960 + (i - (SEVEN.length - 1) / 2) * ICON_DX} y={650} ch={s.ch} col={s.col} o={o} s={lerp(1.7, 1, outBack(o))} />
-				{T >= at && T < at + 0.4 && <circle cx={960 + (i - (SEVEN.length - 1) / 2) * ICON_DX} cy={650} r={60 + 90 * out3((T - at) / 0.4)} fill="none" stroke={s.col} strokeWidth={5 * (1 - (T - at) / 0.4)} opacity={1 - (T - at) / 0.4} />}
+		<StickerDefs />
+		<rect width={W} height={H} fill="url(#bgG)" />
+		<Typer x={960} y={330} text={INTRO.line1} size={100} t={T} cps={8} start={2} />
+		{T > 1.25 && <Typer x={960} y={430} text={INTRO.caption} size={38} t={T - 1.25} cps={16} start={0} weight={600} col="#cfc8de" spacing={0.1} />}
+		{VOICES.map((v, k) => { const at = PH + (k + 1) * BEAT * 0.5 + 0.55, h = T - at, pop = h >= 0 && h < 0.35 ? Math.sin(Math.PI * h / 0.35) : 0;
+			return <g key={v.n}>
+				<Sticker v={v} x={sx(k)} y={sy} r={92} sil={1} s={1 + 0.16 * pop} id={`is${k}`} />
+				{h >= 0 && h < 0.45 && <circle cx={sx(k)} cy={sy} r={100 + 120 * out3(h / 0.45)} fill="none" stroke={v.col} strokeWidth={6 * (1 - h / 0.45)} opacity={1 - h / 0.45} />}
+				<text x={sx(k)} y={sy + 150} textAnchor="middle" style={{fontFamily: SERIF, fontWeight: 900, fontSize: 40}} fill={v.col} opacity={h >= 0 ? cl01(h / 0.15) : 0}>{v.ch}</text>
 			</g>; })}
-		</g>
-		{MEME_MODE && <IrisClose o={(T - (V0 - IRIS)) / IRIS} x={1400} y={540} col={VOICES[0].col} deep={VOICES[0].deep} id="icIntro" />}
-	</svg>
-);
+		<IrisClose o={(T - (V0 - IRIS)) / IRIS} x={sx(0)} y={sy} r0={92} col={VOICES[0].col} deep={VOICES[0].deep} id="icIntro" />
+	</svg>;
+};
+/** bar 24: the seven memes fly onto the gold ring, one per half beat (fast); bar 25: only the question (the stop);
+    bar 26 (the kick drops out): the ring drifts, then holds for the last half beat; bar 27: the title slams on the kick */
 const Outro: React.FC<{T: number}> = ({T}) => {
-	// bar 25 the question, the seven on the half beats; bar 26 (the break) they hold; bar 27 the title slams with the kick
-	const tq = Math.round(bt(27) * FPS - 0.2) / FPS - OUT, t = T - OUT, q = fade(t, 0.05, 0.35), qOut = fade(t, tq - 0.2, 0.18), title = t >= tq ? 1 : 0, slam = t >= tq ? out3(cl01((t - tq) / 0.25)) : 0, hit = t - tq;
+	const tq = Math.floor(bt(27) * FPS) / FPS - OUT, t = T - OUT, q = fade(t, 0.05, 0.35), qOut = fade(t, tq - 0.2, 0.18), title = t >= tq ? 1 : 0, slam = t >= tq ? out3(cl01((t - tq) / 0.25)) : 0, hit = t - tq;
+	const R = 455, drift = t < 2 * BAR ? 0 : t < tq - BEAT / 2 ? (t - 2 * BAR) * 7 : (tq - BEAT / 2 - 2 * BAR) * 7, spin = drift + (hit > 0 ? hit * 10 : 0);
+	const ringPunch = (hit > 0 ? 1 + 0.05 * Math.pow(1 - cl01(hit / 0.45), 3) : 1) * (1 + 0.035 * ease(cl01((T - 52.55) / (54.30 - 52.55)))) * (1 - 0.025 * (T >= 54.30 && hit < 0 ? Math.sin(Math.PI / 2 * cl01((T - 54.30) / (bt(27) - 54.30))) : 0));
+	const th = OUTRO.thesis.split('，');
 	return (
 		<svg width={W} height={H}>
 			<Defs v={{col: GOLD, hot: '#fff2c8', deep: '#1c1408'}} />
 			<rect width={W} height={H} fill="url(#bgG)" />
-			{/* the big circle holds the whole ending */}
-			<g transform={`translate(960,540) scale(${lerp(0.9, 1, out3(t / 0.5)) * (1 + 0.03 * Math.max(0, 1 - hit / 0.25) * (hit > 0 ? 1 : 0))})`}>
-				<circle r={470} fill="#0c0a12" stroke="url(#goldG)" strokeWidth={3} />
-				<circle r={490} fill="none" stroke={GOLD} strokeWidth={1.2} opacity={0.5} />
-				<g transform={`rotate(${title > 0 ? (t - tq) * 12 : 0})`}>{SEVEN.map((s, i) => { const a = -Math.PI / 2 + i / SEVEN.length * Math.PI * 2, o = cl01((t - BEAT - i * BEAT * 0.5) / 0.1); return <g key={s.ch} transform={`translate(${Math.cos(a) * 470},${Math.sin(a) * 470}) rotate(${title > 0 ? -(t - tq) * 12 : 0})`}><Icon x={0} y={0} ch={s.ch} col={s.col} o={o} s={lerp(1.6, 0.9, outBack(o))} /></g>; })}</g>
+			<g transform={`translate(960,540) scale(${lerp(0.92, 1, out3(t / 0.5)) * ringPunch})`}>
+				<circle r={R} fill="#0c0a12" stroke="url(#goldG)" strokeWidth={3} />
+				<circle r={R + 18} fill="none" stroke={GOLD} strokeWidth={1.2} opacity={0.5} />
+				<g transform={`rotate(${spin})`}>{VOICES.map((v, i) => { const a = -Math.PI / 2 + i / VOICES.length * Math.PI * 2, d = cl01((t - i * BEAT / 2) / 0.3), fx = Math.cos(a) * R * lerp(2.4, 1, out3(d)), fy = Math.sin(a) * R * lerp(2.4, 1, out3(d));
+					return d <= 0 ? null : <g key={v.n} transform={`translate(${fx},${fy}) rotate(${-spin})`}><Sticker v={v} x={0} y={0} r={66} sil={0} s={lerp(1.5, 1, outBack(d))} id={`os${i}`} /></g>; })}</g>
 			</g>
-			<g opacity={1 - qOut}>
-				<BlurText id="o1" x={984} y={560} text="你心里，哪一宗罪最大声？" size={62} anchor="middle" u={q} />
-			</g>
+			<g opacity={1 - qOut}><BlurText id="o1" x={960} y={560} text={OUTRO.question} size={58} anchor="middle" u={q} /></g>
 			{title > 0 && <g opacity={title} transform={`translate(960,540) scale(${lerp(1.18, 1, slam)}) translate(-960,-540)`}>
-				<text x={960} y={560} textAnchor="middle" style={{fontFamily: SERIF, fontWeight: 900, fontSize: 190, letterSpacing: '0.1em'}} fill="#fff2d0" opacity={0.7} filter="url(#gL)">七宗罪</text>
-				<text x={960} y={560} textAnchor="middle" style={{fontFamily: SERIF, fontWeight: 900, fontSize: 190, letterSpacing: '0.1em'}} fill="url(#goldG)">七宗罪</text>
-				<text x={960} y={650} textAnchor="middle" style={{fontFamily: SERIF, fontWeight: 600, fontSize: 28, letterSpacing: '0.7em'}} fill={GOLD}>SEVEN DEADLY SINS</text>
-				<text x={960} y={720} textAnchor="middle" style={{fontFamily: SERIF, fontWeight: 600, fontSize: 28, letterSpacing: '0.12em'}} fill="#efe6d2">它们不是七个怪物，是七个被放大的你。</text>
-				<ellipse cx={lerp(560, 1360, ease(slam))} cy={500} rx={420} ry={8} fill="#fff" opacity={0.8 * Math.sin(Math.PI * slam)} filter="url(#gS)" />
+				<text x={960} y={520} textAnchor="middle" style={{fontFamily: SERIF, fontWeight: 900, fontSize: 190, letterSpacing: '0.1em'}} fill="#fff2d0" opacity={0.7} filter="url(#gL)">七宗罪</text>
+				<text x={960} y={520} textAnchor="middle" style={{fontFamily: SERIF, fontWeight: 900, fontSize: 190, letterSpacing: '0.1em'}} fill="url(#goldG)">七宗罪</text>
+				<text x={960} y={598} textAnchor="middle" style={{fontFamily: SERIF, fontWeight: 600, fontSize: 28, letterSpacing: '0.7em'}} fill={GOLD}>SEVEN DEADLY SINS</text>
+				{th.map((l, k) => <text key={k} x={960} y={690 + k * 72} textAnchor="middle" style={{fontFamily: SERIF, fontWeight: 800, fontSize: 56, letterSpacing: '0.04em'}} fill="#fff" opacity={cl01((hit - 0.4 - k * 0.25) / 0.3)}>{l + (k < th.length - 1 ? '，' : '')}</text>)}
 			</g>}
-			<Rings hit={hit} x={960} y={540} col={GOLD} />
-			<Lift hit={hit} />
-			{MEME_MODE && <IrisOpen o={t / 0.4} x={960} y={540} col={GOLD_V.col} deep={GOLD_V.deep} id="ioOut" />}
+			<Rings hit={hit} x={960} y={520} col={GOLD} />
+			<IrisOpen o={t / 0.4} x={960} y={540} col={GOLD_V.col} deep={GOLD_V.deep} id="ioOut" />
 		</svg>
 	);
 };
@@ -1368,96 +1409,56 @@ const Outro: React.FC<{T: number}> = ({T}) => {
     characters of the name either side; 'vertical' the name stacked vertically on the left like a scroll */
 const LAYOUT = 'alt' as 'alt' | 'poster' | 'vertical';
 const MemeScene: React.FC<{T: number; v: Voice; i: number}> = ({T, v, i}) => {
-	const t0 = Q0[i], t = T - t0, rv = Math.round(REV[i] * FPS - 0.2) / FPS - t0, CYC = (i < VOICES.length - 1 ? Q0[i + 1] : OUT) - t0, hit = t - rv, on = hit >= 0;
-	const mirror = false;                                             // the owner wants text left, picture right, every time
-	const cx = LAYOUT === 'poster' ? 960 : LAYOUT === 'vertical' ? 1230 : mirror ? 560 : 1360, cy = LAYOUT === 'poster' ? 430 : 470, sc = LAYOUT === 'poster' ? 0.86 : 0.95;
-	const cap = fade(t, 0.04, 0.3), quote = fade(t, BEAT * 0.5, 0.35), outQ = fade(t, rv - 0.2, 0.18);
+	const t0 = Q0[i], t = T - t0, rv = Math.floor(REV[i] * FPS) / FPS - t0, CYC = (i < VOICES.length - 1 ? Q0[i + 1] : OUT) - t0, hit = t - rv, on = hit >= 0;
+	const sc = SCRIPT[v.kind], cx = 1360, cy = 470, base = 0.95;
+	const cap = fade(t, 0.04, 0.3), quoteU = cl01((t - BEAT * 0.25) / 0.3), outQ = fade(t, rv - 0.2, 0.18);
 	const orn = (k: number) => on ? out3(cl01(hit / 0.1)) : 0, late = (k: number) => out3(cl01((hit - BEAT * (0.5 + 0.5 * k)) / 0.22));
 	const nameU = on ? cl01(hit / 0.3) : 0, tag = fade(t, rv + 0.12, 0.25), say = fade(t, rv + 2 * BEAT, 0.3), sweep = cl01((hit - 0.35) / 0.45);
-	const beatPulse = Math.max(0, 1 - ((((T - PH) % BEAT) + BEAT) % BEAT) / 0.16), lit = on ? cl01(hit / 0.3) : 0;
-	const wind = !on && t > rv - BEAT ? Math.pow(cl01((t - (rv - BEAT)) / BEAT), 3) : 0;           // slow → fast gather into the hit
-	const punch = on ? 1 + 0.07 * Math.pow(1 - cl01(hit / 0.45), 3) : 1;                              // fast → slow out of it
-	const push = sc * (1 + 0.04 * ease(t / CYC)) * (1 + 0.012 * beatPulse * lit) * (1 + 0.05 * wind) * punch;
+	// 停顿 before the hit: a hold (the silhouette stops dead, the rays keep turning), then a fast gather into the downbeat.
+	// Scene 1 holds through the track's own low-end drop (5.58–6.09 s); the others hold ¼ beat and gather ¼ beat.
+	const holdA = i === 0 ? 5.58 - t0 : rv - BEAT / 2, gatherA = i === 0 ? 6.09 - t0 : rv - BEAT / 4;
+	const holding = !on && t >= holdA, gather = !on && t >= gatherA ? Math.pow(cl01((t - gatherA) / (rv - gatherA)), 3) : 0;
+	const Tsil = holding ? t0 + holdA : T;
+	const punch = on ? 1 + 0.07 * Math.pow(1 - cl01(hit / 0.45), 3) : 1;
+	const push = base * (1 + 0.04 * ease(t / CYC)) * (1 + 0.08 * gather) * punch;
 	const hitShake = on && hit < 0.16 ? 11 * (1 - hit / 0.16) * Math.sin(hit * 95) : 0;
-	const shake = hitShake + (v.kind === 'ang' && hit > 0.6 ? 3 * Math.sin(T * 41) * Math.sin(T * 7.3) * (1 - cl01((hit - 0.6) / 2.5)) : 0);
-	const nb = 46 * (1 - out3(nameU)), urge = t > rv - 2 * BEAT ? cl01((t - (rv - 2 * BEAT)) / (2 * BEAT)) : 0;
-	const discY = cy + 40 * sc;
-	const NameText: React.FC<{x: number; y: number; ch: string; fs: number; k: string; anchor?: 'start' | 'middle'}> = ({x, y, ch, fs, k, anchor = 'start'}) => <g>
-		<filter id={`nb${v.n}${k}`} x="-40%" y="-20%" width="180%" height="140%"><feGaussianBlur stdDeviation={`${nb.toFixed(2)} 0`} /></filter>
-		<text x={x} y={y} textAnchor={anchor} style={{fontFamily: SERIF, fontWeight: 900, fontSize: fs}} fill={v.col} opacity={0.75} filter="url(#gL)">{ch}</text>
-		<g filter={nb > 0.3 ? `url(#nb${v.n}${k})` : undefined}><text x={x} y={y} textAnchor={anchor} style={{fontFamily: SERIF, fontWeight: 900, fontSize: fs}} fill="url(#nameG)">{ch}</text></g>
-	</g>;
-	const EN = ['', 'PRIDE', 'ENVY', 'WRATH', 'SLOTH', 'GREED', 'GLUTTONY', 'LUST'][v.n];
-	let nameX = 0, nameY = 0, text: React.ReactNode = null;
-	if (LAYOUT === 'alt') {
-		const ox = mirror ? 1010 : 0, nameFs = 250, nameW = v.ch.length * nameFs; nameX = ox + 140 + nameW / 2; nameY = 525;
-		text = <g transform={`translate(${ox},0)`}>
-			<BlurText id={`c${v.n}`} x={150} y={470} text={v.when} size={42} weight={600} col="#d4cde2" spacing="0.12em" u={cap} out={outQ} />
-			<BlurText id={`q${v.n}`} x={130} y={590} text={v.line} size={88} u={quote} out={outQ} />
-			{on && <g>
-				<text x={150} y={330} style={{fontFamily: SERIF, fontWeight: 700, fontSize: 38, letterSpacing: '0.16em'}} fill="#efe9fb" opacity={cl01(hit / 0.12)}>{`七宗罪之${NUM[v.n]}，它叫`}</text>
-				<g transform={`translate(${-70 * (1 - out3(nameU))},0)`}><NameText x={140} y={640} ch={v.ch} fs={nameFs} k="a" /></g>
-				<g opacity={tag}><text x={170 + nameW} y={470} style={{fontFamily: SERIF, fontWeight: 600, fontSize: 48, fontStyle: 'italic'}} fill="#fff">{v.py}</text><rect x={152 + nameW} y={410} width={6} height={230} fill="url(#goldG)" /><text x={170 + nameW} y={540} style={{fontFamily: SERIF, fontWeight: 600, fontSize: 30, letterSpacing: '0.2em'}} fill={GOLD}>{EN}</text></g>
-			</g>}
-			<BlurText id={`y${v.n}`} x={150} y={770} text={v.say} size={48} weight={800} col="#ffffff" spacing="0.05em" u={say} hl={v.key} hlCol={v.col} />
-		</g>;
-	} else if (LAYOUT === 'poster') {
-		// the picture in the middle; one character of the name either side of it; lines along the bottom like subtitles
-		nameX = 960; nameY = 520;
-		const L = v.ch[0], R = v.ch.slice(1), fs = 300, sl = 140 * (1 - out3(nameU));
-		text = <g>
-			<BlurText id={`c${v.n}`} x={960} y={905} text={v.when} size={38} weight={600} col="#d4cde2" spacing="0.12em" anchor="middle" u={cap} out={outQ} />
-			<BlurText id={`q${v.n}`} x={960} y={1010} text={v.line} size={80} anchor="middle" u={quote} out={outQ} />
-			{on && <g>
-				<text x={300} y={290} textAnchor="middle" style={{fontFamily: SERIF, fontWeight: 700, fontSize: 34, letterSpacing: '0.3em'}} fill="#efe9fb" opacity={cl01(hit / 0.12)}>{`七宗罪之${NUM[v.n]}`}</text>
-				<g transform={`translate(${-sl},0)`}><NameText x={300} y={600} ch={L} fs={fs} k="l" anchor="middle" /></g>
-				<g transform={`translate(${sl},0)`}><NameText x={1620} y={600} ch={R} fs={fs} k="r" anchor="middle" /></g>
-				<g opacity={tag}>
-					<text x={300} y={690} textAnchor="middle" style={{fontFamily: SERIF, fontWeight: 600, fontSize: 44, fontStyle: 'italic'}} fill="#fff">{v.py}</text>
-					<text x={1620} y={690} textAnchor="middle" style={{fontFamily: SERIF, fontWeight: 600, fontSize: 30, letterSpacing: '0.3em'}} fill={GOLD}>{EN}</text>
-				</g>
-			</g>}
-			<BlurText id={`y${v.n}`} x={960} y={985} text={v.say} size={56} weight={800} col="#ffffff" spacing="0.05em" anchor="middle" u={say} hl={v.key} hlCol={v.col} />
-		</g>;
-	} else {
-		// the name stacked vertically on the left, its Latin running down beside it; the closing line along the bottom
-		nameX = 250; nameY = 470;
-		const fs = 230, sl = 90 * (1 - out3(nameU));
-		text = <g>
-			<BlurText id={`c${v.n}`} x={150} y={420} text={v.when} size={40} weight={600} col="#d4cde2" spacing="0.12em" u={cap} out={outQ} />
-			<BlurText id={`q${v.n}`} x={130} y={540} text={v.line} size={80} u={quote} out={outQ} />
-			{on && <g>
-				<text x={130} y={140} style={{fontFamily: SERIF, fontWeight: 700, fontSize: 34, letterSpacing: '0.2em'}} fill="#efe9fb" opacity={cl01(hit / 0.12)}>{`七宗罪之${NUM[v.n]}`}</text>
-				<g transform={`translate(0,${-sl})`}>{[...v.ch].map((c, k) => <NameText key={k} x={250} y={390 + k * 250} ch={c} fs={fs} k={'v' + k} anchor="middle" />)}</g>
-				<g opacity={tag} transform="translate(440,220) rotate(90)"><text x={0} y={0} style={{fontFamily: SERIF, fontWeight: 600, fontSize: 46, fontStyle: 'italic'}} fill="#fff">{v.py}</text><text x={v.py.length * 26 + 40} y={0} style={{fontFamily: SERIF, fontWeight: 600, fontSize: 28, letterSpacing: '0.3em'}} fill={GOLD}>{EN}</text></g>
-				<rect x={410} y={220} width={5} height={420} fill="url(#goldG)" opacity={tag} />
-			</g>}
-			<BlurText id={`y${v.n}`} x={130} y={900} text={v.say} size={56} weight={800} col="#ffffff" spacing="0.05em" u={say} hl={v.key} hlCol={v.col} />
-		</g>;
-	}
-	const ringX = LAYOUT === 'alt' ? (mirror ? 1400 : 520) : LAYOUT === 'poster' ? 960 : 520;
+	const rage = v.kind === 'ang' && hit > 0.6 && T < bt(10) ? 3 * Math.sin(T * 41) * Math.sin(T * 7.3) : 0;
+	const nb = 46 * (1 - out3(nameU));
+	const nameFs = 250, nameW = v.ch.length * nameFs, nameX = 140 + nameW / 2, nameY = 525, discY = cy + 40 * base;
+	// 暴怒: while the kick drops out (bar 10) the dog freezes mid-roar and the disc behind it cracks
+	const crackU = v.kind === 'ang' && T >= bt(10) ? out3(cl01((T - bt(10)) / 0.35)) : 0;
 	return (
 		<svg width={W} height={H}>
 			<Defs v={v} />
-			<g transform={`translate(${shake},${shake * 0.6})`}>
-				<rect width={W} height={H} fill="url(#bgG)" />
-				{Array.from({length: 50}, (_, k) => <circle key={k} cx={rnd(k) * W} cy={rnd(k, 1) * H} r={0.8 + 1.4 * rnd(k, 2)} fill="#eef" opacity={0.15 + 0.35 * Math.sin(T * 1.2 + k * 2.1) ** 2} />)}
-				{LAYOUT !== 'poster' && <circle cx={ringX} cy={560} r={620} fill="none" stroke={v.hot} strokeWidth={2.2} opacity={0.25 + 0.4 * lit} />}
-				<g transform={`translate(${cx},${cy}) scale(${push})`}>
-					<g transform="translate(0,40)"><MemeDisc T={T} v={v} u={on ? 1 : 0.9 * cl01(t / 0.35)} /></g>
-					{!on && <g transform="translate(0,70)"><MemeSil T={T} v={v} u={cl01(t / 0.35)} urge={urge} /></g>}
-					{on && <g transform={`translate(0,70) scale(${lerp(1.06, 1, out3(hit / 0.3))})`}><FigMeme T={T} v={v} draw={1} open={1} orn={orn} late={late} t={hit} /></g>}
+			<rect width={W} height={H} fill="url(#bgG)" />
+			{Array.from({length: 50}, (_, k) => <circle key={k} cx={rnd(k) * W} cy={rnd(k, 1) * H} r={0.8 + 1.4 * rnd(k, 2)} fill="#eef" opacity={0.15 + 0.35 * Math.sin(T * 1.2 + k * 2.1) ** 2} />)}
+			<circle cx={520} cy={560} r={620} fill="none" stroke={v.hot} strokeWidth={2.2} opacity={0.25 + 0.4 * (on ? cl01(hit / 0.3) : 0)} />
+			{/* the disc and the meme (the hit shake moves only these) */}
+			<g transform={`translate(${cx + hitShake + rage},${cy + hitShake * 0.6 + rage * 0.6}) scale(${push})`}>
+				<g transform="translate(0,40)"><MemeDisc T={T} v={v} u={on ? 1 : 0.9 * cl01(t / 0.35)} />
+					{crackU > 0 && <g stroke="#fff" fill="none" strokeLinecap="round">{Array.from({length: 7}, (_, k) => { const a = k / 7 * Math.PI * 2 + 0.4, pts: P[] = [[0, 0]]; for (let j = 1; j < 6; j++) { const aa = a + (rnd(k * 7 + j, 71) - 0.5) * 0.6; pts.push([Math.cos(aa) * 76 * j, Math.sin(aa) * 76 * j]); } const d = 'M' + pts.map((q) => q.map((z) => z.toFixed(1)).join(',')).join(' L'); return <g key={k}><path d={d} strokeWidth={9} stroke={v.deep} strokeDasharray={420} strokeDashoffset={420 * (1 - crackU)} /><path d={d} strokeWidth={3} strokeDasharray={420} strokeDashoffset={420 * (1 - crackU)} /></g>; })}</g>}
 				</g>
-				{text}
-				{on && <g>
-					{hit < 0.35 && <line x1={nameX} y1={nameY} x2={lerp(nameX, cx, out3(cl01(hit / 0.12)))} y2={lerp(nameY, discY, out3(cl01(hit / 0.12)))} stroke="#fff" strokeWidth={12} opacity={0.85 * (1 - hit / 0.35)} filter="url(#gS)" />}
-					<NameBurst hit={hit} x={nameX} y={nameY} col={v.col} />
-					<Rings hit={hit} x={nameX} y={nameY} col={v.col} />
-				</g>}
+				{!on && <g transform={`translate(0,70)`}><MemeSil T={Tsil} v={v} u={cl01(t / 0.35)} quoteU={quoteU} /></g>}
+				{on && <g transform={`translate(0,70) scale(${lerp(1.06, 1, out3(hit / 0.3))})`}><FigMeme T={T} v={v} draw={1} open={1} orn={orn} late={late} t={hit} /></g>}
 			</g>
-			<Lift hit={hit} x={nameX} y={nameY} />
+			{/* left column: before the reveal only the moment; after it 七宗罪·之X / the name / the closing line */}
+			<BlurText id={`c${v.n}`} x={150} y={560} text={sc.ctx} size={64} weight={800} col="#ece6f6" spacing="0.06em" u={cap} out={outQ} />
+			{on && <g>
+				<text x={150} y={330} style={{fontFamily: SERIF, fontWeight: 700, fontSize: 40, letterSpacing: '0.16em'}} fill="#efe9fb" opacity={cl01(hit / 0.12)}>{`七宗罪 · 之${NUM[v.n]}`}</text>
+				<filter id={`nb${v.n}`} x="-40%" y="-20%" width="180%" height="140%"><feGaussianBlur stdDeviation={`${nb.toFixed(2)} 0`} /></filter>
+				<clipPath id={`sw${v.n}`}><rect x={60 + 620 * sweep} y={340} width={110} height={360} transform="skewX(-18)" /></clipPath>
+				<g transform={`translate(${-70 * (1 - out3(nameU))},0)`}>
+					<text x={140} y={620} style={{fontFamily: SERIF, fontWeight: 900, fontSize: nameFs}} fill={v.col} opacity={0.75} filter="url(#gL)">{v.ch}</text>
+					<g filter={nb > 0.3 ? `url(#nb${v.n})` : undefined}><text x={140} y={620} style={{fontFamily: SERIF, fontWeight: 900, fontSize: nameFs}} fill="url(#nameG)">{v.ch}</text></g>
+					{sweep > 0 && sweep < 1 && <text x={140} y={620} style={{fontFamily: SERIF, fontWeight: 900, fontSize: nameFs}} fill="#fff" opacity={0.7} clipPath={`url(#sw${v.n})`}>{v.ch}</text>}
+				</g>
+				<g opacity={tag}><rect x={152 + nameW} y={420} width={6} height={200} fill="url(#goldG)" /><text x={175 + nameW} y={530} style={{fontFamily: SERIF, fontWeight: 600, fontSize: 52, fontStyle: 'italic'}} fill="#fff">{v.py}</text></g>
+				<NameBurst hit={hit} x={nameX} y={nameY} col={v.col} />
+				<Rings hit={hit} x={nameX} y={nameY} col={v.col} />
+			</g>}
+			<BlurText id={`y${v.n}`} x={150} y={790} text={sc.closing} size={58} weight={800} col="#ffffff" spacing="0.04em" u={say} hl={sc.key} hlCol={v.col} />
 			<IrisOpen o={t / 0.4} x={cx} y={discY} col={v.col} deep={v.deep} id={`io${v.n}`} />
-			{(() => { const nx = i < VOICES.length - 1 ? VOICES[i + 1] : GOLD_V, nxX = LAYOUT === 'alt' && i < VOICES.length - 1 ? (VOICES[i + 1].n % 2 === 0 ? 560 : 1360) : cx; return <IrisClose o={(t - (CYC - IRIS)) / IRIS} x={cx} y={discY} col={nx.col} deep={nx.deep} id={`ic${v.n}`} />; })()}
+			{(() => { const nx = i < VOICES.length - 1 ? VOICES[i + 1] : GOLD_V; return <IrisClose o={(t - (CYC - IRIS)) / IRIS} x={cx} y={discY} col={nx.col} deep={nx.deep} id={`ic${v.n}`} />; })()}
 		</svg>
 	);
 };
