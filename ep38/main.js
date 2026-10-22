@@ -33299,13 +33299,106 @@ var toScreen = (v) => {
   const p = new Vector3(v[0], v[1], v[2]).project(camera);
   return { x: (p.x + 1) / 2 * W, y: (1 - p.y) / 2 * H, front: p.z < 1 };
 };
+var POSE_NAMES = ["rest", "aim", "march", "charge"];
 var POSES = {
   rest: { upperarm_l: [0, 1.2, 0], upperarm_r: [0, 1.2, 0] },
-  aim: { upperarm_l: [0, 0.4, 1.25], upperarm_r: [0, 0.95, 0.55], lowerarm_r: [0, 0, 1.15], hand_r: [0, 1.5, 0.75] },
-  march: { upperarm_l: [0, 1.15, 0.25], upperarm_r: [0, 1, -0.3], thigh_l: [0, 0, 0.35], thigh_r: [0, 0, -0.3] }
+  aim: { upperarm_l: [0, 0.6, 0.5], upperarm_r: [0, 0.5, 0.2] },
+  march: { upperarm_l: [0, 1.15, 0.25], upperarm_r: [0, 1, -0.3], thigh_l: [0, 0, 0.35], thigh_r: [0, 0, -0.3] },
+  charge: { upperarm_l: [0, 0.9, 0.5], upperarm_r: [0, 1, 0.2] }
 };
-var bake = (scene, pose, size, along, coatRe) => {
+var GRIPS = {
+  rest: { butt: [0, -1.3, 0.12], dir: [0.02, 1, 0.06], rh: 0.5 },
+  // order arms: butt by the right foot, bayonet up
+  aim: { butt: [0.06, -0.04, 0.05], dir: [0.06, -0.025, 1], rh: 0.17, lh: 0.27 },
+  march: { butt: [0.02, -0.62, 0.06], dir: [0.03, 1, -0.12], rh: 0.04 },
+  // carried upright at the right side
+  charge: { butt: [0.03, -0.52, -0.08], dir: [0.1, 0.3, 1], rh: 0.05, lh: 0.38 }
+};
+var MUZZLE = { fwd: 1.3, y: 1.45 };
+var V = () => new Vector3();
+var musketEnds = (P) => {
+  const n = P.count, m = V(), v = V();
+  for (let k = 0; k < n; k++) m.add(v.fromBufferAttribute(P, k));
+  m.divideScalar(n);
+  const C = [0, 0, 0, 0, 0, 0, 0, 0, 0];
+  for (let k = 0; k < n; k++) {
+    v.fromBufferAttribute(P, k).sub(m);
+    const a = [v.x, v.y, v.z];
+    for (let i = 0; i < 3; i++) for (let j = 0; j < 3; j++) C[i * 3 + j] += a[i] * a[j];
+  }
+  let ax = V().set(1, 0.3, 0.2).normalize();
+  for (let it = 0; it < 60; it++) ax = V().set(C[0] * ax.x + C[1] * ax.y + C[2] * ax.z, C[3] * ax.x + C[4] * ax.y + C[5] * ax.z, C[6] * ax.x + C[7] * ax.y + C[8] * ax.z).normalize();
+  const t = Array.from({ length: n }, (_, k) => v.fromBufferAttribute(P, k).sub(m).dot(ax));
+  const lo = Math.min(...t), hi = Math.max(...t), L = hi - lo;
+  const A2 = [], B = [];
+  t.forEach((x, k) => {
+    if (x < lo + 0.05 * L) A2.push(k);
+    if (x > hi - 0.05 * L) B.push(k);
+  });
+  const spread = (S) => {
+    const c = V();
+    S.forEach((k) => c.add(v.fromBufferAttribute(P, k)));
+    c.divideScalar(S.length);
+    let r = 0;
+    S.forEach((k) => {
+      const d = v.fromBufferAttribute(P, k).sub(c);
+      r += d.sub(ax.clone().multiplyScalar(d.dot(ax))).length();
+    });
+    return r / S.length;
+  };
+  return spread(A2) > spread(B) ? { butt: A2, muzzle: B } : { butt: B, muzzle: A2 };
+};
+var musketFrame = (P, e) => {
+  const v = V(), mean = (S) => {
+    const c = V();
+    S.forEach((k) => c.add(v.fromBufferAttribute(P, k)));
+    return c.divideScalar(S.length);
+  };
+  const butt = mean(e.butt), muz = mean(e.muzzle), ax = muz.clone().sub(butt);
+  const L = ax.length();
+  ax.normalize();
+  const cen = V();
+  for (let k = 0; k < P.count; k++) cen.add(v.fromBufferAttribute(P, k));
+  cen.divideScalar(P.count);
+  const d = cen.sub(butt);
+  const u = d.sub(ax.clone().multiplyScalar(d.dot(ax))).normalize();
+  return { butt, muz, ax, L, u };
+};
+var basis = (a, u) => new Matrix4().makeBasis(a, u, a.clone().cross(u));
+var ccd = (eff, links, target, it = 40) => {
+  const ep = V(), lp = V(), q = new Quaternion(), wq = new Quaternion(), pq = new Quaternion();
+  for (let n = 0; n < it; n++) for (const L of links) {
+    L.updateMatrixWorld(true);
+    eff.getWorldPosition(ep);
+    L.getWorldPosition(lp);
+    const a = ep.clone().sub(lp).normalize(), b = target.clone().sub(lp).normalize();
+    q.setFromUnitVectors(a, b);
+    L.getWorldQuaternion(wq);
+    L.parent.getWorldQuaternion(pq);
+    L.quaternion.copy(pq.invert().multiply(q.multiply(wq)));
+    L.updateMatrixWorld(true);
+  }
+};
+var bayonetMat = new MeshStandardMaterial({ color: "#dfe3e8", metalness: 0.9, roughness: 0.25 });
+var skin = (m) => {
+  const geo = m.geometry.clone();
+  const P = geo.attributes.position, v = V();
+  if (m.isSkinnedMesh) {
+    m.skeleton.update();
+    for (let k = 0; k < P.count; k++) {
+      v.fromBufferAttribute(P, k);
+      m.applyBoneTransform(k, v);
+      P.setXYZ(k, v.x, v.y, v.z);
+    }
+    geo.deleteAttribute("skinIndex");
+    geo.deleteAttribute("skinWeight");
+  }
+  geo.applyMatrix4(m.matrixWorld);
+  return geo;
+};
+var bake = (scene, poseName, size, along, coatRe, norm) => {
   const o = clone(scene);
+  const pose = poseName ? POSES[poseName] : null;
   if (pose) o.traverse((b) => {
     if (!b.isBone) return;
     for (const [k, r] of Object.entries(pose)) if (b.name.startsWith(k + "_")) {
@@ -33315,38 +33408,86 @@ var bake = (scene, pose, size, along, coatRe) => {
     }
   });
   o.updateMatrixWorld(true);
-  const parts = [], bb = new Box3();
+  const bone = (pre) => {
+    let f = null;
+    o.traverse((b) => {
+      if (!f && b.isBone && b.name.startsWith(pre + "_")) f = b;
+    });
+    return f;
+  };
+  let musketMesh = null;
+  o.traverse((m) => {
+    if (m.isMesh && /Musket/.test(m.name + " " + m.parent?.name + " " + (m.material?.name ?? ""))) musketMesh = m;
+  });
+  const grip = poseName && norm ? GRIPS[poseName] : void 0;
+  let musketGeo = null;
+  if (musketMesh) {
+    musketGeo = skin(musketMesh);
+    const ends = musketMesh.userData.ends ||= musketEnds(skin(musketMesh).attributes.position);
+    if (grip && norm) {
+      const f = musketFrame(musketGeo.attributes.position, ends);
+      const sh2 = bone("upperarm_r").getWorldPosition(V());
+      const butt = sh2.clone().add(V().fromArray(grip.butt).divideScalar(norm.sc)), dir = V().fromArray(grip.dir).normalize();
+      const down = V().set(0, -1, 0);
+      const uT = down.sub(dir.clone().multiplyScalar(down.dot(dir))).normalize();
+      const R = basis(dir, uT).multiply(basis(f.ax, f.u).transpose());
+      const tr = butt.clone().sub(f.butt.clone().applyMatrix4(R));
+      musketGeo.applyMatrix4(new Matrix4().makeTranslation(tr.x, tr.y, tr.z).multiply(R));
+      const at = (k, off) => butt.clone().add(dir.clone().multiplyScalar(f.L * k)).add(uT.clone().multiplyScalar(off / norm.sc));
+      for (let pass = 0; pass < 2; pass++) {
+        ccd(bone("hand_r"), [bone("lowerarm_r"), bone("upperarm_r")], at(grip.rh, 0.035));
+        if (grip.lh !== void 0) ccd(bone("hand_l"), [bone("lowerarm_l"), bone("upperarm_l")], at(grip.lh, 0.04));
+      }
+      o.updateMatrixWorld(true);
+    }
+  }
+  const parts = [];
   o.traverse((m) => {
     if (!m.isMesh) return;
-    const geo = m.geometry.clone();
-    const P = geo.attributes.position, v = new Vector3();
-    if (m.isSkinnedMesh) {
-      m.skeleton.update();
-      for (let k = 0; k < P.count; k++) {
-        v.fromBufferAttribute(P, k);
-        m.applyBoneTransform(k, v);
-        P.setXYZ(k, v.x, v.y, v.z);
-      }
-      geo.deleteAttribute("skinIndex");
-      geo.deleteAttribute("skinWeight");
-    }
-    geo.applyMatrix4(m.matrixWorld);
-    geo.computeBoundingBox();
-    bb.union(geo.boundingBox);
+    const isM = m === musketMesh;
+    const geo = isM ? musketGeo : skin(m);
     const mat = Array.isArray(m.material) ? m.material[0] : m.material;
-    parts.push({ geo, mat, coat: coatRe ? coatRe.test(m.name + " " + mat?.name + " " + m.parent?.name) : false });
+    parts.push({ geo, mat, coat: coatRe ? coatRe.test(m.name + " " + mat?.name + " " + m.parent?.name) : false, gear: isM });
   });
-  const sz = bb.getSize(new Vector3()), c = bb.getCenter(new Vector3());
-  const rotate = along === "len" && sz.z > sz.x;
-  const sc = along === "y" ? size / sz.y : size / Math.max(sz.x, sz.z);
+  if (musketMesh && norm) {
+    const f = musketFrame(musketGeo.attributes.position, musketMesh.userData.ends);
+    const L = 0.43 / norm.sc;
+    const b = new CylinderGeometry(25e-4 / norm.sc, 0.011 / norm.sc, L, 5);
+    b.translate(0, L / 2, 0);
+    b.applyQuaternion(new Quaternion().setFromUnitVectors(V().set(0, 1, 0), f.ax));
+    const p = f.muz.clone().add(f.u.clone().multiplyScalar(0.018 / norm.sc)).sub(f.ax.clone().multiplyScalar(0.03 / norm.sc));
+    b.translate(p.x, p.y, p.z);
+    parts.push({ geo: b, mat: bayonetMat, coat: false, gear: true });
+    if (poseName === "aim" && size === 1.8) {
+      const tip = f.muz.clone();
+      MUZZLE.fwd = (tip.z - norm.c.z) * norm.sc;
+      MUZZLE.y = (tip.y - norm.minY) * norm.sc;
+    }
+  }
+  if (!norm) {
+    const bb = new Box3();
+    for (const p of parts) if (!p.gear) {
+      p.geo.computeBoundingBox();
+      bb.union(p.geo.boundingBox);
+    }
+    const sz = bb.getSize(V()), c = bb.getCenter(V());
+    const rotate = along === "len" && sz.z > sz.x;
+    norm = { c, minY: bb.min.y, sc: along === "y" ? size / sz.y : size / Math.max(sz.x, sz.z), rotate };
+  }
+  const n = norm;
   for (const p of parts) {
-    p.geo.translate(-c.x, -bb.min.y, -c.z);
-    if (rotate) p.geo.rotateY(Math.PI / 2);
-    p.geo.scale(sc, sc, sc);
+    p.geo.translate(-n.c.x, -n.minY, -n.c.z);
+    if (n.rotate) p.geo.rotateY(Math.PI / 2);
+    p.geo.scale(n.sc, n.sc, n.sc);
     p.geo.computeBoundingSphere();
     if (!p.geo.attributes.normal) p.geo.computeVertexNormals();
   }
-  return parts;
+  return { parts, norm: n };
+};
+var soldierPoses = (sc) => {
+  const rest0 = bake(sc, "rest", 1.8, "y", /Jacket/);
+  const N = rest0.norm;
+  return Object.fromEntries(POSE_NAMES.map((p) => [p, bake(sc, p, 1.8, "y", /Jacket/, N).parts]));
 };
 var tex = async (f, srgb = false, rep = 1) => {
   const t = await new TextureLoader().loadAsync(A(f));
@@ -33360,9 +33501,9 @@ var loadAssets = async () => {
   const gl = new GLTFLoader();
   const [sky, gD, gN, gR, hi, lo, grass, sa, sb, water] = await Promise.all([
     new RGBELoader().loadAsync(A("sky.hdr")),
-    tex("ground_diff.jpg", true, 180),
-    tex("ground_nor.jpg", false, 180),
-    tex("ground_rough.jpg", false, 180),
+    tex("ground_diff.jpg", true, 520),
+    tex("ground_nor.jpg", false, 520),
+    tex("ground_rough.jpg", false, 520),
     gl.loadAsync(A("soldier.glb")),
     gl.loadAsync(A("soldier_lo.glb")),
     gl.loadAsync(A("grass/grass.gltf")),
@@ -33373,14 +33514,13 @@ var loadAssets = async () => {
   sky.mapping = EquirectangularReflectionMapping;
   const pm = new PMREMGenerator(renderer);
   const env2 = pm.fromEquirectangular(sky).texture;
-  const pose = (sc) => ({ rest: bake(sc, POSES.rest, 1.8, "y", /Jacket/), aim: bake(sc, POSES.aim, 1.8, "y", /Jacket/), march: bake(sc, POSES.march, 1.8, "y", /Jacket/) });
   const ship = (sc) => {
     sc.traverse((o) => {
       if (o.isLine || o.isLineSegments) o.visible = false;
     });
-    return bake(sc, null, 58, "len");
+    return bake(sc, null, 58, "len").parts;
   };
-  return { sky, env: env2, ground: [gD, gN, gR], hi: pose(hi.scene), lo: pose(lo.scene), grass: bake(grass.scene, null, 0.55, "y"), shipA: ship(sa.scene), shipB: ship(sb.scene), water };
+  return { sky, env: env2, ground: [gD, gN, gR], hi: soldierPoses(hi.scene), lo: soldierPoses(lo.scene), grass: bake(grass.scene, null, 0.55, "y").parts, shipA: ship(sa.scene), shipB: ship(sb.scene), water };
 };
 var SUN_DIR = new Vector3(-0.62, 0.22, 0.75).normalize();
 var makeLand = (a) => {
@@ -33502,7 +33642,7 @@ var Army = class {
       scene.add(m);
       return m;
     });
-    for (const side of [0, 1]) for (const ps of ["rest", "aim", "march"]) {
+    for (const side of [0, 1]) for (const ps of POSE_NAMES) {
       this.sets[`hi-${ps}-${side}`] = mk(a.hi[ps], NEAR, side);
       this.sets[`lo-${ps}-${side}`] = mk(a.lo[ps], cap, side);
     }
@@ -33550,12 +33690,15 @@ var simBodies = (sim, t, pose = "aim", dx = 0, dz = 0, fallK = 1) => {
     const fall = t < u.death ? 0 : Math.min(1, (t - u.death) / (0.45 * fallK));
     let p = pose;
     if (pose === "aim" && sim.kind === "rifle") {
-      p = t < sim.t0 - 0.6 ? "rest" : "rest";
-      for (const ft of F[i]) if (t > ft - 0.9 && t < ft + 0.5) {
-        p = "aim";
-        break;
+      p = "rest";
+      if (t > sim.t0 - 0.9 && fallK > 2.5) p = "aim";
+      else {
+        for (const ft of F[i]) if (t > ft - 0.9 * fallK && t < ft + 0.5 * fallK) {
+          p = "aim";
+          break;
+        }
+        if (t < sim.t0 + 0.6 && t > sim.t0 - 0.9) p = "aim";
       }
-      if (t < sim.t0 + 0.6 && t > sim.t0 - 0.9) p = "aim";
     }
     return { x: u.x + dx, z: u.z + dz, ry: (u.side === 0 ? Math.PI / 2 : -Math.PI / 2) + (u.fx - 0.5) * 0.22, side: u.side, pose: p, fall, fallDir: u.fx < 0.25 ? -1 : 1, s: 0.95 + u.fx * 0.1 };
   });
@@ -33626,8 +33769,8 @@ var simSmoke = (sim, t, dx = 0, dz = 0) => {
     if (age < 0 || age > 8) continue;
     const u = sim.units[s.from], dir = u.side ? -1 : 1;
     const a = 0.14 * Math.exp(-age / 2.6) * Math.min(1, age * 7), sz = 0.9 + age * 1.05;
-    sm.push([u.x + dx + dir * (1.4 + age * 0.7) + age * 0.6, 1.5 + age * 0.75, u.z + dz + age * 0.8 + (u.fx - 0.5) * 1.5, sz, 0.9, 0.88, 0.84, a]);
-    if (age < 0.09) fl.push([u.x + dx + dir * 1.3, 1.45, u.z + dz, 0.9 + (1 - age / 0.09) * 0.8, 2.4, 1.6, 0.7, 1 - age / 0.09]);
+    sm.push([u.x + dx + dir * (MUZZLE.fwd + 0.1 + age * 0.7) + age * 0.6, MUZZLE.y + 0.05 + age * 0.75, u.z + dz + age * 0.8 + (u.fx - 0.5) * 1.5, sz, 0.9, 0.88, 0.84, a]);
+    if (age < 0.09) fl.push([u.x + dx + dir * MUZZLE.fwd, MUZZLE.y, u.z + dz, 0.9 + (1 - age / 0.09) * 0.8, 2.4, 1.6, 0.7, 1 - age / 0.09]);
   }
   return { sm, fl };
 };
@@ -33666,7 +33809,7 @@ var simTracers = (sim, t, opts = {}) => {
     const age = t - s.t;
     if (age < 0 || age > FLIGHT || !s.hit && s.from % 3) continue;
     const a = sim.units[s.from], b = sim.units[s.to], dir = a.side ? -1 : 1;
-    const x1 = a.x + dir * 1.3 + dx, z1 = a.z + dz, y1 = 1.45;
+    const x1 = a.x + dir * MUZZLE.fwd + dx, z1 = a.z + dz, y1 = MUZZLE.y;
     const tx = s.hit ? b.x + dx : b.x + dx + dir * 3, tz = b.z + dz + (s.hit ? 0 : (a.fx - 0.5) * 3), ty = s.hit ? 1.3 : 0.9;
     const f0 = Math.max(0, age / FLIGHT - len), f1 = age / FLIGHT;
     const c = a.side ? [3.2, 1.6, 1.1] : [1.4, 2.1, 3.4];
@@ -33775,6 +33918,10 @@ var slam = (hud2, x, y, text, t, a, b, size = 220, glow = BLUE, color = "#fff") 
   const u = t - a;
   const s = u < 0.12 ? 1.6 - 0.6 * (u / 0.12) : 1 + 0.05 * Math.exp(-(u - 0.12) * 9) * Math.sin((u - 0.12) * 40);
   hud2.insertAdjacentHTML("beforeend", `<div class="num" style="left:${x}px;top:${y}px;transform:translate(-50%,-50%) scale(${s});font-size:${size}px;color:${color};opacity:${o};text-shadow:${sh(glow)}">${text}</div>`);
+};
+var scrim = (hud2, x, y, w, h, o) => {
+  if (o <= 0) return;
+  hud2.insertAdjacentHTML("beforeend", `<div style="position:absolute;left:${x - w / 2}px;top:${y - h / 2}px;width:${w}px;height:${h}px;background:rgba(14,10,14,.58);filter:blur(34px);opacity:${o}"></div>`);
 };
 var html = (hud2, s) => hud2.insertAdjacentHTML("beforeend", s);
 
@@ -33899,15 +34046,15 @@ var seaDraw = (c, t, g = {}) => {
 var broadsides = (ships, t, rate, seed) => {
   const R = rnd(seed), sm = [], fl = [];
   ships.forEach((s, i) => {
-    for (let k = 0; k < 10; k++) {
+    for (let k = 0; k < 16; k++) {
       const ph = R() * 4;
       const age = (t + ph) % 4 / rate;
       if (age > 7) continue;
       const along = (R() - 0.5) * 46, side = R() < 0.5 ? -1 : 1;
       const hx = Math.cos(s.heading), hz = -Math.sin(s.heading);
       const px = s.x + hx * along + hz * side * 9, pz = s.z + hz * along - hx * side * 9;
-      sm.push([px + hz * side * age * 5 + age * 3, 5 + age * 2.5, pz - hx * side * age * 5, 9 + age * 9, 0.92, 0.9, 0.86, 0.5 * Math.exp(-age / 3) * Math.min(1, age * 6)]);
-      if (age < 0.12) fl.push([px, 5, pz, 10 + (1 - age / 0.12) * 10, 3, 2, 1, 1 - age / 0.12]);
+      sm.push([px + hz * side * (4 + age * 6) + age * 3, 5 + age * 2.2, pz - hx * side * (4 + age * 6), 10 + age * 10, 0.9, 0.88, 0.84, 0.85 * Math.exp(-age / 3.5) * Math.min(1, age * 8)]);
+      if (age < 0.16) fl.push([px + hz * side * 3, 5, pz - hx * side * 3, 18 + (1 - age / 0.16) * 22, 3.2, 2.1, 1, 1 - age / 0.16]);
     }
   });
   return { sm, fl };
@@ -33939,18 +34086,19 @@ var T = {
 };
 var guessBar = (c, b, o) => {
   if (o <= 0) return;
-  const x0 = 92, w = 420, y = 196, px = x0 + b / 1e3 * w;
+  const x0 = 92, w = 520, y = 200, px = x0 + b / 1e3 * w;
   html(c.hud, `<div style="position:absolute;left:${x0}px;top:${y}px;width:${w}px;height:4px;background:rgba(255,255,255,.35);opacity:${o}"></div>
 	<div style="position:absolute;left:${x0 + w / 2 - 2}px;top:${y - 12}px;width:4px;height:28px;background:#d8d8d8;opacity:${o}"></div>
-	<div class="lbl" style="left:${x0 + w / 2}px;top:${y + 34}px;transform:translateX(-50%);font-size:40px;color:#d8d8d8;opacity:${o}">\u76F4\u89C9\uFF1A500\uFF1F</div>
+	<div class="lbl" style="left:${x0 + w / 2}px;top:${y + 40}px;transform:translateX(-50%);font-size:48px;color:#e8e8e8;opacity:${o}">\u76F4\u89C9\uFF1A500\uFF1F</div>
 	<div style="position:absolute;left:${px - 9}px;top:${y - 7}px;width:18px;height:18px;border-radius:9px;background:#8fb6ff;box-shadow:0 0 12px ${BLUE};opacity:${o}"></div>`);
 };
-var hookST = (u) => u < 12 ? 0.2 + (u - 0.045) * 0.8207 : 0.2 + 11.955 * 0.8207 + (u - 12) * 0.4;
+var V0 = bar(4);
+var hookST = (u) => u < V0 ? -0.5 : u < 14 ? 0.2 + (u - V0) * 1.555 : 0.2 + (14 - V0) * 1.555 + (u - 14) * 0.32;
 var meleeBodies = (st, k) => simBodies(SM, st, "rest", 0, 0, k).map((b, i) => {
   const u = SM.units[i];
   if (b.fall > 0 || Math.abs(u.x) > 4) return b;
   const ph = Math.sin(st * 2.3 + u.fx * 40);
-  return { ...b, x: b.x + (u.side ? -1 : 1) * (0.35 + 0.35 * Math.max(0, ph)), lean: 0.22 * Math.max(0, ph) };
+  return { ...b, pose: "charge", x: b.x + (u.side ? -1 : 1) * (0.35 + 0.35 * Math.max(0, ph)), lean: 0.22 * Math.max(0, ph) };
 });
 var meleeDust = (st) => {
   const R = rnd(Math.floor(st * 3) + 7), out = [];
@@ -33963,18 +34111,18 @@ var TIMELINE = [
     clearLand(c);
     const st = hookST(u);
     camKeys([
-      { t: 0, pos: [-51, 1.9, -9], look: [45, 1.5, 4], fov: 38 },
-      { t: 3.8, pos: [-50, 2.4, -8], look: [45, 1.5, 2], fov: 36 },
-      { t: 7.5, pos: [-110, 24, -150], look: [0, 0, 0], fov: 40 },
+      { t: 0, pos: [-52, 1.9, -9], look: [45, 1.5, 4], fov: 40 },
+      { t: 7.5, pos: [-49.5, 2.1, -7], look: [45, 1.5, 2], fov: 36 },
+      { t: 9.5, pos: [-90, 16, -110], look: [0, 0, 0], fov: 40 },
       { t: 15.05, pos: [-200, 75, -360], look: [-10, 0, 0], fov: 38 }
     ], u);
     battle(c, SA, st);
-    const [b, r] = aliveAt(SA, st);
+    const [b, r] = aliveAt(SA, Math.max(0, st));
     counters(c.hud, b, r);
-    guessBar(c, b, env(u, 7.3, 99) * 0.95);
+    guessBar(c, b, env(u, 3.9, 99));
     sub(c.hud, "\u4F60\u67091000\u4EBA\uFF0C\u5BF9\u9762500\u4EBA", u, 0.1, 3.4);
     sub(c.hud, "\u6253\u5149\u5BF9\u9762\uFF0C\u4F60\u8FD8\u5269[\u51E0\u4E2A]\uFF1F", u, 3.8, 7.2);
-    curve(c, SA, st, env(u, 9, 99) * 0.85);
+    curve(c, SA, Math.max(0, st), env(u, 9.5, 99) * 0.85);
     landDraw(c);
   } },
   // 02 — 866 on the lift; the guess tick fades out
@@ -33993,17 +34141,18 @@ var TIMELINE = [
     clearLand(c);
     const d = T.swords - T.rewind, k = ease2(u / d);
     const st = lerp2(SA.end + 1.6, -0.6, k);
-    camKeys([{ t: 0, pos: [-170, 40, -230], look: [-60, 0, -40], fov: 34 }, { t: d, pos: [-150, 70, -230], look: [-20, 0, 0], fov: 38 }], u);
+    camKeys([{ t: 0, pos: [-170, 40, -230], look: [-60, 0, -40], fov: 34 }, { t: d, pos: [-62, 30, -70], look: [0, 0, 0], fov: 38 }], u);
     battle(c, SA, st, { tracers: false });
     const [b, r] = aliveAt(SA, Math.max(0, st));
     counters(c.hud, b, r, env(u, 0.1, 99));
     html(c.hud, `<div class="lbl" style="left:${W / 2 - 40}px;top:110px;font-size:64px;opacity:${0.8 * env(u, 0, d - 0.1)}">\u25C0\u25C0</div>`);
-    landDraw(c, { bloom: 0.5, warm: 0, vig: 0.5 });
+    landDraw(c, { bloom: 0.5, warm: 0, vig: 0.5, fade: clamp01((u - d + 0.35) / 0.35) * 0.7 });
   } },
   // 04 — bayonets: deep columns meet; men fight one on one along the contact strip; the back half waits
   { a: T.swords, b: T.s1, draw: (c, u) => {
     clearLand(c);
     const k = 10, st = 0.2 + u * k;
+    const fadeIn = 0.7 * (1 - clamp01(u / 0.3));
     camKeys([{ t: 0, pos: [-62, 30, -70], look: [0, 0, 0], fov: 38 }, { t: 3.75, pos: [-40, 40, -78], look: [-10, 0, 0], fov: 38 }, { t: 5.63, pos: [-130, 70, -90], look: [-40, 0, 0], fov: 40 }], u);
     c.army.set(meleeBodies(st, k), cp());
     c.smoke.set(meleeDust(st));
@@ -34015,7 +34164,7 @@ var TIMELINE = [
     sub(c.hud, "\u591A\u51FA\u7684\u4EBA\uFF0C\u53EA\u80FD[\u6392\u961F]", u, 3, 5.5);
     const q = toScreen([-48, 2, 0]);
     tag(c.hud, q.x, q.y - 60, "\u5728\u6392\u961F", env(u, 3.2, 99), 48, "#fff", BLUE);
-    landDraw(c);
+    landDraw(c, { fade: fadeIn });
   } },
   // 05 — ★1: your 500 belongs to the age of cold steel
   { a: T.s1, b: T.title, draw: (c, u) => {
@@ -34042,11 +34191,12 @@ var TIMELINE = [
     camOrbit([-25, 0, 0], 112, 52, -2.06 + u * 0.06, 38, 0);
     c.army.set(meleeBodies(SM.end + 1, 10), cp());
     const R = rnd(4);
-    c.smoke.set(Array.from({ length: 260 }, () => [(R() - 0.5) * 200, 4 + R() * 26, (R() - 0.5) * 140, 24 + R() * 30, 0.5, 0.47, 0.44, 0.3 * (1 - clamp01((u - 2.6) / 1.1))]));
+    c.smoke.set(Array.from({ length: 260 }, () => [(R() - 0.5) * 200, 4 + R() * 26, (R() - 0.5) * 140 - 40, 18 + R() * 22, 0.5, 0.47, 0.44, 0.3 * (1 - clamp01((u - 2.6) / 1.1))]));
     c.flash.set([]);
     c.tracers.set([]);
     const kk = clamp01(u / 0.45), blur = (1 - kk) * 18;
-    html(c.hud, `<div style="position:absolute;left:0;right:0;top:${H / 2 - 100}px;text-align:center;font-weight:900;font-size:124px;letter-spacing:.06em;color:#fff6dd;opacity:${env(u, 0, 3.75, 0.25, 0.5)};filter:blur(${blur}px);transform:scale(${1.12 - 0.12 * kk});text-shadow:0 0 10px ${GOLD},0 0 40px rgba(246,207,120,.6),0 4px 30px rgba(0,0,0,.6)">\u4E3A\u4EC0\u4E48\u8981<span style="color:${GOLD}">\u201C\u96C6\u4E2D\u4F18\u52BF\u5175\u529B\u201D</span></div>`);
+    scrim(c.hud, W / 2, H / 2 - 30, 1500, 300, env(u, 0, 3.75, 0.25, 0.5));
+    html(c.hud, `<div style="position:absolute;left:0;right:0;top:${H / 2 - 100}px;text-align:center;font-weight:900;font-size:124px;letter-spacing:.06em;color:#fff6dd;opacity:${env(u, 0, 3.75, 0.25, 0.5)};filter:blur(${blur}px);transform:scale(${1.12 - 0.12 * kk});text-shadow:0 0 10px ${GOLD},0 0 40px rgba(246,207,120,.6),0 4px 30px rgba(0,0,0,.6)">\u4E3A\u4EC0\u4E48\u8981<span style="color:${GOLD}">\u201C\u96C6\u4E2D\u4F18\u52BF\u5175\u529B<span style="margin-right:-0.56em">\u201D</span></span></div>`);
     landDraw(c, { bloom: 0.65, vig: 0.55, exposure: 0.6 + 0.5 * clamp01((u - 3.35) / 0.4) });
   } },
   // 07 — guns: from the sun flare, the columns fan out into lines; first volley on bar 22; the battle at full speed → 866 again
@@ -34095,19 +34245,19 @@ var TIMELINE = [
     const d = T.x4 - T.bullet;
     const R = SA.units[redStar[0]], B = SA.units[blueOne[0]], B2 = SA.units[bluePartner];
     if (u < 5.6) camKeys([{ t: 0, pos: [-60, 26, -64], look: [0, 1, 0], fov: 38 }, { t: 5.6, pos: [R.x - 14, 3.2, R.z - 9], look: [R.x, 1.4, R.z], fov: 36 }], u);
-    else if (u < 11.25) camKeys([{ t: 5.6, pos: [R.x - 14, 3.2, R.z - 9], look: [R.x, 1.4, R.z], fov: 36 }, { t: 11.25, pos: [B.x + 13, 3, B.z - 9], look: [B.x, 1.3, B.z], fov: 36 }], u);
-    else camKeys([{ t: 11.25, pos: [B.x + 13, 3, B.z - 9], look: [B.x, 1.3, B.z], fov: 36 }, { t: d, pos: [-10, 44, -80], look: [0, 0, 0], fov: 40 }], u);
+    else if (u < 11.25) camKeys([{ t: 5.6, pos: [R.x - 14, 3.2, R.z - 9], look: [R.x, 1.4, R.z], fov: 36 }, { t: 11.25, pos: [(B.x + B2.x) / 2 + 8, 2.6, (B.z + B2.z) / 2 - 7], look: [(B.x + B2.x) / 2, 1.2, (B.z + B2.z) / 2], fov: 38 }], u);
+    else camKeys([{ t: 11.25, pos: [(B.x + B2.x) / 2 + 8, 2.6, (B.z + B2.z) / 2 - 7], look: [(B.x + B2.x) / 2, 1.2, (B.z + B2.z) / 2], fov: 38 }, { t: d, pos: [-10, 44, -80], look: [0, 0, 0], fov: 40 }], u);
     battle(c, SA, FREEZE, { tracers: false });
     const segs = [];
     firstVolley.forEach((s) => {
       const a = SA.units[s.from], b = SA.units[s.to], dir = a.side ? -1 : 1;
       let f = clamp01((FREEZE - s.t) / 0.28);
       const focus = s.to === redStar[0] || s.to === blueOne[0];
-      if (focus) f = 0.93;
+      if (focus) f = 0.975;
       if (f <= 0 && !focus) return;
       const x1 = a.x + dir * 1.3, tx = s.hit ? b.x : b.x + dir * 6, tz = s.hit ? b.z : b.z + (a.fx - 0.5) * 3;
       const p = (q) => [x1 + (tx - x1) * q, 1.45 + ((s.hit ? 1.3 : 0.6) - 1.45) * q, a.z + (tz - a.z) * q];
-      const k = focus ? 2.6 : 0.3;
+      const k = focus ? 3 : 0.16;
       const col = a.side ? [3.2 * k, 1.6 * k, 1.1 * k] : [1.4 * k, 2.1 * k, 3.4 * k];
       segs.push([...p(Math.max(0, f - (focus ? 0.05 : 0.04))), ...p(f), ...col]);
     });
@@ -34126,12 +34276,12 @@ var TIMELINE = [
       firstVolley.filter((s) => s.to === redStar[0]).forEach((s, k) => {
         const a = SA.units[s.from], dir = a.side ? -1 : 1;
         const x1 = a.x + dir * 1.3;
-        const p = toScreen([x1 + (R.x - x1) * 0.93, 1.35, a.z + (R.z - a.z) * 0.93]);
-        tag(c.hud, p.x, p.y - 34, `${k + 1}`, env(u, 3.2 + k * 0.45, 5.5), 64, "#fff", RED);
+        const p = toScreen([x1 + (R.x - x1) * 0.975, 1.35, a.z + (R.z - a.z) * 0.975]);
+        tag(c.hud, p.x + (k ? 34 : -34), p.y - 40, `${k + 1}`, env(u, 3.2 + k * 0.45, 5.5), 64, "#fff", RED);
       });
     } else if (u < 11.25) {
-      const p = toScreen([(B.x + B2.x) / 2, 2.6, (B.z + B2.z) / 2]);
-      tag(c.hud, p.x, p.y - 60, "\xBD", env(u, 8.6, 11.1), 84, "#fff", BLUE);
+      const p = toScreen([(B.x + B2.x) / 2, 2.3, (B.z + B2.z) / 2]);
+      tag(c.hud, p.x, p.y - 30, "\u4E24\u4EBA\u624D\u6328 1 \u67AA", env(u, 8.6, 11.1), 56, "#fff", BLUE);
     } else {
       const pb = { x: 520, y: 420 }, pr = { x: 1400, y: 420 };
       const m = clamp01((u - 13.4) / 0.6);
@@ -34149,7 +34299,7 @@ var TIMELINE = [
     clearLand(c);
     const d = T.squares - T.x4;
     const st = FREEZE + u * 0.9;
-    camKeys([{ t: 0, pos: [-10, 44, -80], look: [0, 0, 0], fov: 40 }, { t: d, pos: [-140, 1e3, -1], look: [-140, 0, 0], fov: 40 }], u);
+    camKeys([{ t: 0, pos: [-10, 44, -80], look: [0, 0, 0], fov: 40 }, { t: d, pos: [-140, 640, -620], look: [-130, 0, -20], fov: 40 }], u);
     battle(c, SA, st);
     counters(c.hud, ...aliveAt(SA, st));
     slam(c.hud, W / 2, 520, "\u6218\u6597\u529B \xD74", u, -1, 1.2, 120, GOLD, "#fff6dd");
@@ -34158,8 +34308,8 @@ var TIMELINE = [
   // 11 — ★3: each firing line is the side of a square; red's square tiles blue's four times; replay: both squares lose the same area every moment; blue's loss = red's whole square; what's left is 866
   { a: T.squares, b: T.divide, draw: (c, u) => {
     clearLand(c);
-    camKeys([{ t: 0, pos: [-140, 1e3, -1], look: [-140, 0, 0], fov: 40 }], 0);
-    const bs = 1e3 * LEN, rs = 500 * LEN, grow = ease2(u / 1.4), tile = env(u, 1.875, 3.6, 0.2, 0.3);
+    camKeys([{ t: 0, pos: [-140, 640, -620], look: [-130, 0, -20], fov: 40 }], 0);
+    const bs = 1e3 * LEN, rs = 500 * LEN, grow = ease2(u / 1.4), tile = env(u, 1.6, 3.75, 0.2, 0.25);
     const rp = clamp01((u - 3.75) / 4.1), st = 0.2 + rp * 11.1;
     const [b, r] = aliveAt(SA, u < 3.75 ? 0 : st);
     const bl = b * LEN, rl = r * LEN;
@@ -34169,25 +34319,25 @@ var TIMELINE = [
     c.flash.set([]);
     c.tracers.set(u > 3.75 && u < 8 ? simTracers(SA, st) : []);
     const L = [];
-    L.push({ x: -45 - bs * grow, z: -bs / 2, w: bs * grow, d: bs, color: "#4a90ff", a: u < 3.75 ? 1 : 0.22, edge: 0.6 });
+    L.push({ x: -45 - bs * grow, z: -bs / 2, w: bs * grow, d: bs, color: "#4a90ff", a: u < 3.75 ? 1 : 0.22, edge: u < 3.75 ? 1 : 0.35 });
     if (u >= 3.75) L.push({ x: -45 - bl, z: -bl / 2, w: bl, d: bl, color: "#4a90ff", a: 1 });
     L.push({ x: 47, z: -rs / 2, w: rs * grow, d: rs, color: "#ff5a47", a: u < 3.75 ? 1 : 0.2, edge: 0.6 });
     if (u >= 3.75 && rl > 0.5) L.push({ x: 47, z: -rl / 2, w: rl, d: rl, color: "#ff5a47", a: 1 });
-    if (tile > 0) [[0, 0], [rs, 0], [0, rs], [rs, rs]].forEach(([ox, oz], k) => L.push({ x: -45 - bs + ox, z: -bs / 2 + oz, w: rs, d: rs, color: "#ffb0a4", a: tile * clamp01((u - 1.9 - k * 0.38) / 0.2), edge: 1 }));
-    if (fold > 0) L.push({ x: lerp2(-45 - bs, 47, fold), z: lerp2(-bs / 2, rs / 2 + 30, fold), w: rs, d: rs, color: "#8fb6ff", a: env(u, 8.2, 99) * 0.9, edge: 1 });
+    if (tile > 0) [[0, 0], [rs, 0], [0, rs], [rs, rs]].forEach(([ox, oz], k) => L.push({ x: -45 - bs + ox, z: -bs / 2 + oz, w: rs, d: rs, color: "#ffb0a4", a: tile * clamp01((u - 1.6 - k * 0.32) / 0.2), edge: 1 }));
+    if (fold > 0) L.push({ x: lerp2(-45 - bs, 47, fold), z: lerp2(-bs / 2, -rs / 2, fold), w: rs, d: rs, color: "#8fb6ff", a: env(u, 8.2, 99) * 0.9, edge: 1 });
     c.squares.set(L);
     const P = (x, z) => toScreen([x, 0, z]);
     const pb = P(-45 - bs / 2, -bs / 2 - 30), pr = P(47 + rs / 2, -rs / 2 - 30);
     tag(c.hud, pb.x, pb.y + 30, "\u8FB9\u957F = \u4E00\u6392\u4EBA\u7684\u957F\u5EA6", env(u, 0.4, 3.6), 44, "#fff", BLUE);
     tag(c.hud, pr.x, pr.y + 30, "500 \u4EBA", env(u, 0.4, 3.6), 44, "#fff", RED);
     if (tile > 0) {
-      const k = Math.min(4, 1 + Math.floor((u - 1.9) / 0.38));
+      const k = Math.max(1, Math.min(4, 1 + Math.floor((u - 1.6) / 0.32)));
       const pc = P(-45 - bs / 2, 0);
-      slam(c.hud, pc.x, pc.y, `\xD7${k}`, u, 1.9 + (k - 1) * 0.38, 3.6, 150, GOLD, "#fff6dd");
+      slam(c.hud, pc.x, pc.y, `\xD7${k}`, u, 1.6 + (k - 1) * 0.32, 3.75, 150, GOLD, "#fff6dd");
     }
     if (u >= 3.75 && u < 8.2) counters(c.hud, b, r);
     if (fold > 0.95) {
-      const pf = P(47 + rs / 2, rs / 2 + 30 + rs / 2);
+      const pf = P(47 + rs / 2, 0);
       tag(c.hud, pf.x, pf.y, "\u4E00\u6837\u5927", env(u, 9.6, 11.1), 64, "#fff", GOLD);
     }
     if (tape > 0) {
@@ -34196,7 +34346,7 @@ var TIMELINE = [
       if (u < 11.25) tag(c.hud, pt.x - 40, pt.y, `${Math.round(866 * tape)}`, env(u, 9.9, 99), 64, "#fff", GOLD);
       else slam(c.hud, pt.x - 60, pt.y, "866", u, 11.25, 99, 110, BLUE);
       html(c.hud, `<div style="position:absolute;left:0;right:0;top:92px;text-align:center;font-weight:900;font-size:76px;color:#fff;opacity:${env(u, 11.6, 99)};text-shadow:0 0 6px ${GOLD},0 0 26px rgba(246,207,120,.6),0 2px 10px rgba(0,0,0,.65)">1000\xB2 \u2212 500\xB2 \u2248 866\xB2</div>`);
-      tag(c.hud, W / 2, 196, "\u82F1\u56FD\u5DE5\u7A0B\u5E08 \u5170\u5F7B\u65AF\u7279 \xB7 1914", env(u, 12.2, 99) * 0.9, 40, "#fff");
+      tag(c.hud, W / 2, 236, "\u82F1\u56FD\u5DE5\u7A0B\u5E08 \u5170\u5F7B\u65AF\u7279 \xB7 1914", env(u, 12.2, 99) * 0.9, 40, "#fff");
     }
     sub(c.hud, "\u6218\u6597\u529B\uFF0C\u770B\u4EBA\u6570\u7684[\u5E73\u65B9]", u, 0.05, 3.4);
     sub(c.hud, "\u6BCF\u4E00\u523B\uFF0C\u4E24\u8FB9\u6389\u7684\u9762\u79EF[\u4E00\u6837\u591A]", u, 3.8, 7.3);
@@ -34208,7 +34358,7 @@ var TIMELINE = [
     clearLand(c);
     if (u < 3.75) {
       const st = 0.2 + 38 * Math.pow(u / 3.75, 1.5);
-      camKeys([{ t: 0, pos: [-140, 1e3, -1], look: [-140, 0, 0], fov: 40 }, { t: 1.4, pos: [-170, 60, -260], look: [0, 0, 0], fov: 40 }, { t: 3.75, pos: [-180, 70, -270], look: [0, 0, 0], fov: 40 }], u);
+      camKeys([{ t: 0, pos: [-140, 640, -620], look: [-130, 0, -20], fov: 40 }, { t: 1.4, pos: [-170, 60, -260], look: [0, 0, 0], fov: 40 }, { t: 3.75, pos: [-180, 70, -270], look: [0, 0, 0], fov: 40 }], u);
       battle(c, SL, st, {});
       c.army.set(simBodies(SL, st, "aim", 0, 0, 30), cp());
       const [b2, r2] = aliveAt(SL, st);
@@ -34219,7 +34369,7 @@ var TIMELINE = [
     }
     const v = u - 3.75;
     const w1 = 2.55, mar = 0.6;
-    camKeys([{ t: 3.75, pos: [-170, 45, -230], look: [80, 0, 0], fov: 40 }, { t: 9.4, pos: [-150, 50, -210], look: [60, 0, 0], fov: 40 }], u);
+    camKeys([{ t: 3.75, pos: [-180, 70, -270], look: [0, 0, 0], fov: 40 }, { t: 5, pos: [-120, 60, -330], look: [120, 0, 0], fov: 42 }, { t: 9.4, pos: [-110, 55, -300], look: [90, 0, 0], fov: 42 }], u);
     let bodies, st1 = 0.2 + Math.min(v, w1) * (SA2.end / w1), st2 = (v - w1 - mar) * ((SR2.end + 0.2) / (9.4 - 3.75 - w1 - mar)) + 0.2;
     const wave2At = (m) => simBodies(SR2, Math.max(-1, st2), "aim", 0, 0, 5).map((x, i) => SR2.units[i].side === 1 ? { ...x, x: x.x + (1 - m) * 260, pose: m < 1 ? "march" : x.pose } : x);
     const fallen1 = simBodies(SA2, SA2.end + 3).filter((x) => x.side === 1);
@@ -34294,8 +34444,8 @@ var TIMELINE = [
     tag(c.hud, W / 2, 80, "1805 \xB7 \u7279\u62C9\u6CD5\u52A0", env(u, 0.5, d - 0.5), 40, "#fff");
     counters(c.hud, 27, 33, env(u, 0.8, d - 0.3), ["\u82F1\u56FD", "\u6CD5\u897F\u8054\u5408"]);
     if (u > 4.2 && u < d - 1.6) {
-      const ph = toScreen([150, 0, -600]), pv = toScreen([230, 0, 1100]);
-      tag(c.hud, pv.x + 70, pv.y, "\u524D\u961F\uFF1A\u5148\u4E0D\u7406\u5B83", env(u, 5, d - 1.7), 52, "#eee", void 0, "l");
+      const pv = toScreen([260, 0, 1450]);
+      if (pv.front) tag(c.hud, Math.min(W - 260, pv.x + 40), pv.y - 50, "\u524D\u961F\uFF1A\u5148\u4E0D\u7406\u5B83", env(u, 5, d - 1.7), 52, "#eee");
     }
     sub(c.hud, "\u82F1\u56FD\u8239\u5C11\uFF0C\u786C\u62FC[\u8BE5\u8F93]", u, 0.05, 3.4);
     sub(c.hud, "\u4E24\u5217\uFF0C\u5168\u538B\u5411[\u540C\u4E00\u6BB5]", u, 3.8, 7.2);
@@ -34305,7 +34455,7 @@ var TIMELINE = [
   { a: T.climax, b: T.chart, draw: (c, u) => {
     const d = T.chart - T.climax;
     const tm = u < 1.2 ? u : u < 3 ? 1.2 + (u - 1.2) * 0.25 : 1.65 + (u - 3);
-    const adv0 = 1500 + 90 * (T.climax - T.sea), adv = adv0 + tm * 55;
+    const adv0 = 1500 + 95 * (T.climax - T.sea), adv = adv0 + tm * 55;
     const lead = { x: adv - 2450, z: -420 }, nel = { x: adv - 2600, z: 650 };
     if (u < 7.5) camKeys([{ t: 0, pos: [lead.x - 20, 7, -472], look: [lead.x + 260, 9, -430], fov: 40 }, { t: 3, pos: [lead.x - 30, 5.5, -500], look: [lead.x + 70, 10, -420], fov: 42 }, { t: 7.5, pos: [lead.x - 120, 26, -560], look: [lead.x + 60, 6, -380], fov: 42 }], u);
     else camKeys([{ t: 7.5, pos: [nel.x - 90, 14, 590], look: [nel.x + 120, 10, 660], fov: 40 }, { t: 9.4, pos: [nel.x - 160, 60, 490], look: [nel.x + 60, 4, 570], fov: 42 }, { t: d, pos: [-900, 650, -1500], look: [0, 0, 0], fov: 44 }], u);
@@ -34322,21 +34472,21 @@ var TIMELINE = [
   { a: T.chart, b: T.quiet, draw: (c, u) => {
     const d = T.quiet - T.chart;
     const tt = T.chart - T.sea + u;
-    const adv = 1500 + 90 * (T.climax - T.sea) + 3.4 * 60 + 8 * 60 + u * 40;
+    const adv = 1500 + 95 * (T.climax - T.sea) + 13.65 * 55 + u * 40;
     camKeys([{ t: 0, pos: [-900, 650, -1500], look: [0, 0, 0], fov: 44 }, { t: 7.5, pos: [-1700, 900, -300], look: [0, 0, 500], fov: 44 }, { t: 15, pos: [-1900, 1100, 200], look: [100, 0, 900], fov: 44 }], u);
     const van = ease2((u - 1.8) / 5) * 900;
-    seaMarks(c, env(u, 1.8, 99) * 0.45, 0, false);
+    seaMarks(c, 0, 0, false);
     setFleet(c.sea.combined, LINE(tt, van), u);
     setFleet(c.sea.british, COLS(adv), u);
     c.seaSmoke.set([]);
     c.seaFlash.set([]);
     const sep = clamp01((u - 1.6) / 0.8);
     const p = (x, z) => toScreen([x, 0, z]);
-    const v = p(150, 1250 + van), m = p(90, 160), r = p(40, -800);
-    tag(c.hud, v.x + 140, v.y, "\u524D\u961F", env(u, 1, 99) * (1 - clamp01((u - 7.5) / 1.2) * 0.6), 48, "#fff", RED, "l");
-    html(c.hud, `<div class="lbl" style="left:0;right:0;top:860px;text-align:center;font-size:58px;opacity:${env(u, 7.5, 99)}"><span style="text-shadow:0 0 8px ${BLUE},0 0 24px ${BLUE}">\u82F1\u56FD \u635F\u5931 0 \u8258</span> &nbsp;\xB7&nbsp; <span style="text-shadow:0 0 8px ${RED},0 0 24px ${RED}">\u5BF9\u65B9 \u635F\u5931\u4E00\u534A\u4EE5\u4E0A</span></div>`);
+    const v = p(150, 1350 + van);
+    if (v.front) tag(c.hud, Math.min(W - 160, v.x), Math.max(150, v.y - 60), "\u524D\u961F", env(u, 1, 99), 52, "#fff", RED);
+    html(c.hud, `<div class="lbl" style="left:0;right:0;top:200px;text-align:center;font-size:52px;opacity:${env(u, 11, 99)}"><span style="text-shadow:0 0 8px ${RED},0 0 24px ${RED}">\u5BF9\u65B9 33 \u8258\uFF1A\u4E00\u534A\u4EE5\u4E0A \u88AB\u4FD8\u6216\u88AB\u6BC1</span></div>`);
     sub(c.hud, "\u654C\u4EBA\u7684\u524D\u961F\uFF0C[\u8D76\u4E0D\u56DE\u6765]", u, 0.3, 3.7);
-    tag(c.hud, W / 2, 132, "\u5170\u5F7B\u65AF\u7279\u4E13\u95E8\u7B97\u8FC7\u8FD9\u4E00\u4ED7 \xB7 1916", env(u, 3.9, 7.3) * 0.85, 40, "#fff");
+    tag(c.hud, W / 2, 132, "\u5170\u5F7B\u65AF\u7279\u7528\u5E73\u65B9\u5F8B\u5206\u6790\u8FC7\u8FD9\u4E00\u4ED7 \xB7 1916", env(u, 3.9, 7.3) * 0.9, 40, "#fff");
     sub(c.hud, "\u82F1\u56FD\uFF0C\u4E00\u8258\u8239\u90FD[\u6CA1\u4E22]", u, 7.5, 10.9);
     seaDraw(c, tt, { bloom: 0.4, vig: 0.46, exposure: 0.5 });
   } },
@@ -34360,14 +34510,20 @@ var TIMELINE = [
     const d = T.ending - T.limit;
     camKeys([{ t: 0, pos: [-210, 60, -260], look: [0, 0, 0], fov: 40 }, { t: d, pos: [-190, 70, -240], look: [0, 0, 0], fov: 39 }], u);
     const st = 3 + u;
-    const bodies = simBodies(SL, st, "aim").map((b, i) => Math.abs(SL.units[i].z) > 120 ? { ...b, x: b.x + (SL.units[i].side ? 40 : -40), pose: "rest" } : b);
+    const RR = rnd(31);
+    const bodies = simBodies(SL, st, "aim").map((b, i) => {
+      const z = SL.units[i].z, j = RR();
+      const grp = Math.floor((z + 300) / 70);
+      const off = grp % 3 * 22 * (SL.units[i].side ? 1 : -1) + Math.sin(grp * 1.7) * 12;
+      return { ...b, x: b.x + off, z: b.z + (j - 0.5) * 3, pose: grp % 4 === 1 ? "rest" : b.pose };
+    });
     c.army.set(bodies, cp());
     const sm = simSmoke(SL, st);
     c.smoke.set(sm.sm);
     c.flash.set(sm.fl);
     c.tracers.set([]);
-    sub(c.hud, "\u771F\u5B9E\u7684\u4ED7\uFF0C\u6CA1\u8FD9\u4E48[\u5938\u5F20]", u, 0.05, 3.6);
-    landDraw(c, { exposure: 0.52, warm: 0.1, vig: 0.5, fade: 1 - clamp01(u / 0.4) });
+    sub(c.hud, "\u771F\u5B9E\u7684\u4ED7\uFF0C\u6CA1\u5E73\u65B9\u8FD9\u4E48[\u5938\u5F20]", u, 0.05, 3.6);
+    landDraw(c, { exposure: 0.52 + 1.2 * (1 - clamp01(u / 0.5)), warm: 0.1, vig: 0.5 });
   } },
   // 18 — ending image: scattered companies gather into one block
   { a: T.ending, b: T.card, draw: (c, u) => {
@@ -34398,9 +34554,11 @@ var TIMELINE = [
     landDraw(c, { exposure: 0.45, warm: 0.12, vig: 0.6, fade: 0.85 });
     const o = env(u, 0.2, 99, 0.6);
     html(c.hud, `<div style="position:absolute;inset:0;opacity:${o}">
-			<div style="position:absolute;left:0;right:0;top:300px;text-align:center;font-weight:900;font-size:76px;color:#fff;text-shadow:0 0 10px ${GOLD},0 0 34px rgba(246,207,120,.5)">\u4F60\u8FD8\u5728\u54EA\u89C1\u8FC7<span style="color:${GOLD}">\u300C\u96C6\u4E2D\u4F18\u52BF\u5175\u529B\u300D</span><span style="margin-right:-0.54em">\uFF1F</span></div>
-			<div style="position:absolute;left:0;right:0;top:430px;text-align:center;font-weight:700;font-size:40px;color:rgba(255,246,221,.85);letter-spacing:.2em">\u8BC4\u8BBA\u533A\u804A\u804A<span style="margin-right:-0.2em"></span></div>
-			<div style="position:absolute;left:50%;top:560px;transform:translateX(-50%);padding:14px 40px;border:2px solid rgba(246,207,120,.8);border-radius:40px;font-weight:700;font-size:36px;color:#fff6dd">\u5173\u6CE8 Juno \xB7 \u4E00\u8D77\u770B\u61C2\u4E16\u754C</div>
+			<div style="position:absolute;left:50%;top:120px;transform:translateX(-50%);width:96px;height:96px;border-radius:48px;border:3px solid ${GOLD};color:${GOLD};font-weight:900;font-size:58px;line-height:92px;text-align:center;font-family:'Noto Serif CJK SC',serif">J</div>
+			<div style="position:absolute;left:0;right:0;top:250px;text-align:center;font-weight:900;font-size:50px;color:${GOLD};letter-spacing:.08em">\u4E3A\u4EC0\u4E48\u8981\u201C\u96C6\u4E2D\u4F18\u52BF\u5175\u529B<span style="margin-right:-0.6em">\u201D</span></div>
+			<div style="position:absolute;left:0;right:0;top:350px;text-align:center;font-weight:900;font-size:76px;color:#fff;text-shadow:0 0 10px ${GOLD},0 0 34px rgba(246,207,120,.5)">\u4F60\u8FD8\u5728\u54EA\u89C1\u8FC7<span style="color:${GOLD}">\u300C\u96C6\u4E2D\u4F18\u52BF\u5175\u529B\u300D</span><span style="margin-right:-0.54em">\uFF1F</span></div>
+			<div style="position:absolute;left:0;right:0;top:470px;text-align:center;font-weight:700;font-size:40px;color:rgba(255,246,221,.85);letter-spacing:.2em">\u8BC4\u8BBA\u533A\u804A\u804A<span style="margin-right:-0.2em"></span></div>
+			<div style="position:absolute;left:50%;top:590px;transform:translateX(-50%);padding:14px 40px;border:2px solid rgba(246,207,120,.8);border-radius:40px;font-weight:700;font-size:36px;color:#fff6dd">\u5173\u6CE8 Juno \xB7 \u4E00\u8D77\u770B\u61C2\u4E16\u754C</div>
 			<div style="position:absolute;left:0;right:0;bottom:46px;text-align:center;font-size:22px;color:rgba(255,255,255,.55);line-height:1.6">F. W. Lanchester, Aircraft in Warfare (1916) \xB7 London Gazette, 6 Nov 1805 \xB7 Nelson's memorandum, 9 Oct 1805 \xB7 \u300A\u5B59\u5B50\xB7\u865A\u5B9E\u7BC7\u300B<br>\u6A21\u62DF\uFF1A\u6BCF\u540D\u58EB\u5175\u72EC\u7ACB\u88C5\u5F39\u3001\u968F\u673A\u7784\u51C6\u3001\u547D\u4E2D\u7387\u7EA614%\uFF1B866\u3001707 \u4E3A\u5E73\u65B9\u5F8B\u7684\u503C \xB7 \u7D20\u6750\uFF1APoly Haven (CC0)\uFF0CSketchfab\uFF1AAndywoodhead\u3001mixmamo.studio (CC BY)<br>\u97F3\u4E50\uFF1A\u201CRynos Theme\u201D Kevin MacLeod (incompetech.com)\uFF0CLicensed under Creative Commons: By Attribution 4.0</div>
 		</div>`);
   } }
