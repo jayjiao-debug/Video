@@ -19,3 +19,6 @@ What works (keep):
 - Clean, legible seven-icon row in intro and outro; calm backgrounds.
 
 Not checked / can't judge: the music choice itself (only sync and loudness measured); how the Douyin copyright match treats the track (pick the same track from Douyin's library when posting).
+
+## Re-review: 七情_终版 (2026-10-22 19:43) — verdict: READY
+Fixed since v9d (checked on the final file): #1 frame 0 now shows 两千年前，《礼记》写道 with a moving glow; #2 the 七情 title is on the hit frame (frame 1644); #3 closing lines enter 2 beats after each hit (~2.8 s on screen); #5 the outro question measures centred (480/480 at half scale); #6 scene caption 42 px. #4 (惧) kept as A by the owner's choice (19:36). Sync unchanged: 8 hits within ±11 ms of the kick; −13.9 LUFS; 22 MB.
