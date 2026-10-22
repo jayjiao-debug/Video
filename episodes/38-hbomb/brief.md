@@ -7,3 +7,5 @@
 - **Proof stories:** Palomares 1966 (the bomb), Scorpion 1968 (within 200 yards of the top cell), AF447 2011 (one week, at the centre).
 - **Length:** story-led, ≤ 3 min, inside the BGM; every subtitle ≤ 16 字.
 - **Share prompt:** 你丢的东西，最后都是在哪找到的？
+
+**Shelved 2026-10-22:** owner: "感觉没有解释maths concept or very intutive story" → replaced by 38-lanchester.
