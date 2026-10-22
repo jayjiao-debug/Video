@@ -85,7 +85,7 @@ const tex = async (f: string, srgb = false, rep = 1) => { const t = await new TH
 export const loadAssets = async (): Promise<Assets> => {
 	const gl = new GLTFLoader();
 	const [sky, gD, gN, gR, hi, lo, grass, sa, sb, water] = await Promise.all([
-		new RGBELoader().loadAsync(A('sky.hdr')), tex('ground_diff.jpg', true, 180), tex('ground_nor.jpg', false, 180), tex('ground_rough.jpg', false, 180),
+		new RGBELoader().loadAsync(A('sky.hdr')), tex('ground_diff.jpg', true, 520), tex('ground_nor.jpg', false, 520), tex('ground_rough.jpg', false, 520),
 		gl.loadAsync(A('soldier.glb')), gl.loadAsync(A('soldier_lo.glb')), gl.loadAsync(A('grass/grass.gltf')), gl.loadAsync(A('ship_bucentaure.glb')), gl.loadAsync(A('ship_agamemnon.glb')),
 		tex('waternormals.jpg', false, 1),
 	]);
