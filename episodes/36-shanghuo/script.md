@@ -1,81 +1,77 @@
-# Script: 上火，到底是什么火？  (v3, 2026-10-22)
+# Script: 上火，到底是什么火？  (v4, 2026-10-22)
 
-## Why v3
-Owner (2026-10-22): "我们太深入砒霜了，我更想讲的是老祖宗对医药的了解" → "上火，五行，阴阳调和这种概念".
-v3 makes the concepts the body of the film: 上火 → 阴阳 (and 阴阳调和) → 五行 (with the Greek four humours as an equal parallel)
-→ back to 上火 (the symptoms are real; chilli, the body clock, a short night, ulcers) → the ancestors' recorded observations
-(治未病, 青蒿, one line on 砒霜) → back to mum. The arsenic story went from 22 lines to 1; its verified rows (D) stay in facts.md.
-Kept from v2 (director's keep list): the opening, the title beat, TRPV1/Nobel, the short-night inflammation line, 五行 and the
-four humours given equal respect, neutral data colours on all biology (no fire imagery on biology), the 验证 ending, no remedy words.
-Honesty line (brief): 阴阳 and 五行 are presented as the ancients' model of the body; modern parallels are introduced as
-"说法不同，看见的现象很像", never as proof that the model is a physiological mechanism.
+## Why v4
+Owner (2026-10-22, on v3): "给我一种看完……原来如此，之前我的理解在这里合理了，你把我一直懂但是不了解的知识点讲透了"
+(v3 was a list of facts with no 啊哈). v4 explains ONE thing the viewer already knows but never understood — 上火 — all the
+way through, with four 原来如此 beats:
+1. 上火的"上" = 火往上烧 (火曰炎上; 古书"心火炎上……则口舌生疮") — that is why the symptoms sit on the head and face.
+2. 熬夜上火 = 在该静的"阴"里动; 吃辣 = 加了一把"阳" (阴阳; 上火 = 阳盛于阴).
+3. 古人说的"热"不是瞎猜: chilli opens the same nerve heat switch as 43 °C; a short night raises an inflammation gene.
+4. 炎 = 两个火，"火光上也"; Celsus wrote 红肿热痛 two thousand years ago; inflammation's root is "flame" — east and west both
+   saw it as fire. Back to mum: 很多时候，她看见的就是今天说的炎症.
+Dropped from v3 (to keep one thread): 稳态, 生物钟, the four humours, 治未病, 青蒿, 砒霜 (rows stay in facts.md).
+Honesty: 阴阳/五行 are shown as the ancients' logic ("在古人眼里"); modern findings are introduced as what they saw being real,
+never as proof of the model. No remedy, no 降火 advice. F11: never claim 上火 patients were measured with more inflammation.
 
-**Length:** lines end at 137.5 s (incl. holds) + ~4 s end card ≈ 2:21.5. Every line ≤ 16 字 and inside its reading time
-(pace.py: 0 TOO FAST, 0 % waiting). The only gap without a subtitle is the title beat after line 4 (3 s) — shift the whole
-block so it sits on the BGM's hardest drop.
+**Length:** lines end at 118.9 s (incl. holds) + ~4 s end card ≈ 2:02.9. All lines ≤ 16 字, inside their reading time
+(pace.py: 0 TOO FAST, 0 % waiting). The only gap is the title beat after line 4 (3 s) — put it on the BGM's hardest drop.
 
 ## Title options
-1. 《上火，到底是什么火？》 — asks without answering; the question every viewer half-asked. (Pick of director + screenwriter in v2.)
-2. 《阴阳调和》 — names the owner's theme; calm, a little textbook.
-3. 《老祖宗的身体地图》 — the film's metaphor; curious, gives nothing away.
+1. 《上火，到底是什么火？》 — the film answers exactly this; gives nothing away.
+2. 《上火的"上"是什么意思》 — the first aha as a question; very searchable.
+3. 《为什么叫"上火"》 — shortest; curious.
 
 ## Lines
 | # | Section | Start | End | Line (≤ 16 字) | 字 | Hold | Picture | Facts |
 |---|---|---|---|---|---|---|---|---|
-| 1 | 开场 | 0.0 | 3.0 | 吃完火锅又熬夜，嘴里冒出[溃疡] | 13 |  | Frame 0: hotpot steam → phone clock 03:00 → mirror, a tongue tip touches a small white ulcer | A1 B1 |
-| 2 | 开场 | 3.0 | 5.1 | 妈：“你这是[上火]了。” | 7 |  | Phone lights up: mum's chat bubble; a red 火 stamp lands on the mirror | A1 |
-| 3 | 开场 | 5.1 | 8.5 | 可中医研究者说：它至今[没有明确定义] | 16 |  | A blank index card 「上火 · 定义：＿＿」 slides under the stamp | A3 |
-| 4 | 开场 | 8.5 | 11.9 | 因为它背后，是老祖宗的一整套[世界观] | 16 |  | The 火 stamp turns into one tile of a large ink diagram: 阴阳 circle + five phases, unlit | C5 C6 |
-| 5 | 阴阳 | 14.9 | 17.8 | 在中医里，上火是[阳]压过了[阴] | 12 |  | A balance beam: a warm bright weight (阳) presses down a cool dark one (阴); the ulcer glows faintly on the 阳 side | A2 |
-| 6 | 阴阳 | 17.8 | 21.3 | 三千多年前的甲骨上，就有[阴]和[阳] | 14 | 0.4 | An oracle bone under a lamp; the two characters light up in the cracks | F1 |
-| 7 | 阴阳 | 21.3 | 23.9 | [阳]是亮、热、动；[阴]是暗、冷、静 | 10 |  | Split world: sunny slope / shaded slope; a figure walking on one side, resting on the other | F1 |
-| 8 | 阴阳 | 23.9 | 27.0 | 它们不是敌人：阳生于阴，阴生于阳 | 14 |  | Day flows into night and back; the two halves rotate into the taiji circle | F1 |
-| 9 | 阴阳 | 27.0 | 29.4 | 好的状态，是两者[调和] | 9 |  | The circle settles level; the balance beam from line 5 levels out | F1 |
-| 10 | 阴阳 | 29.4 | 32.8 | 《黄帝内经》说：[“阴平阳秘”]，精神乃治 | 13 | 0.4 | A bamboo-slip scroll unrolls; the four characters 阴平阳秘 in gold | F2 |
-| 11 | 阴阳 | 32.8 | 36.1 | 两千多年后，生理学家也看到了[平衡] | 15 |  | Match cut: the level beam becomes a 1930s lab balance on a desk | F5 C5 |
-| 12 | 阴阳 | 36.1 | 39.0 | 1932年，坎农把它叫作[“稳态”] | 10 | 0.3 | A book spine 「The Wisdom of the Body · 1932」; the word 稳态 / homeostasis stamped beside it | F5 |
-| 13 | 阴阳 | 39.0 | 42.4 | 身体会把内部状态，稳在很窄的范围里 | 16 |  | A body outline; a needle wobbles but stays inside a narrow green band (neutral data colours) | F5 |
-| 14 | 阴阳 | 42.4 | 45.1 | 说法不同，看见的现象很像 | 11 |  | Split screen: taiji circle | the narrow band; both settle at the same moment | — |
-| 15 | 五行 | 45.1 | 47.5 | 再看[五行]：木、火、土、金、水 | 9 |  | The five tiles from line 4 light one by one around a ring | C1 |
-| 16 | 五行 | 47.5 | 50.5 | 它们不是五种东西，是五种[变化] | 13 |  | Each tile animates as a process: growing, burning, settling, hardening, flowing | C6 |
-| 17 | 五行 | 50.5 | 53.5 | 木生火，火生土……一环[生]一环 | 11 | 0.3 | Arrows run clockwise around the ring (相生) | C4 |
-| 18 | 五行 | 53.5 | 56.5 | 水克火，金克木……一环[管]一环 | 11 | 0.3 | A star of arrows inside the ring (相克) | C4 |
-| 19 | 五行 | 56.5 | 59.6 | 古人用它，把季节、颜色、味道串起来 | 14 |  | Each tile pulls a thread to a season, a colour, a taste | C7 |
-| 20 | 五行 | 59.6 | 62.3 | [火]：红色、夏天、苦味，“炎上” | 9 | 0.3 | The 火 tile: red, a summer sun, a bitter herb; an ink flame rising (火曰炎上) | C7 C2 |
-| 21 | 五行 | 62.3 | 65.6 | 也是两千多年前，古希腊有[四体液]说 | 15 |  | Same lamp, same size: a Greek amphora-style card with four drops | C8 C9 |
-| 22 | 五行 | 65.6 | 68.7 | 他们也说：黄胆汁又热又干，对应[火] | 14 |  | The yellow-bile drop pulls a thread to fire and summer, mirroring the 火 tile | C10 |
-| 23 | 五行 | 68.7 | 71.7 | 东西方的古人，都在给世界[分类] | 13 |  | The ring and the four drops side by side, equal light, on two halves of one map | C1 C8 |
-| 24 | 上火是真的 | 71.7 | 74.6 | 上火时那些“热”，其实都是[真的] | 12 |  | Back to the mirror: the ulcer, a red throat, a pimple appear as three cards | A1 B6 B7 |
-| 25 | 上火是真的 | 74.6 | 77.6 | 吃辣嘴里“烧”：神经上有个[热开关] | 13 |  | The chilli-eater fans their mouth; inside, a nerve ending with a small gate (neutral colour, no flames) | B9 B10 |
-| 26 | 上火是真的 | 77.6 | 80.6 | 约43°C以上它打开，[辣椒素]也能 | 13 |  | A thermometer reaches 43°C → gate opens; then a capsaicin molecule opens the same gate | B10 B9 |
-| 27 | 上火是真的 | 80.6 | 83.9 | 这个发现，2021年拿了[诺贝尔奖] | 12 | 0.4 | A Nobel medal stamps beside the gate | B11 |
-| 28 | 上火是真的 | 83.9 | 86.5 | 熬夜：该[静]的夜里，还在[动] | 10 |  | The taiji circle as a clock: the dark half is night; a phone screen still bright inside it | F1 |
-| 29 | 上火是真的 | 86.5 | 89.6 | 现代科学发现：身体里有座[生物钟] | 14 |  | A clock face inside the body outline | F6 |
-| 30 | 上火是真的 | 89.6 | 92.6 | 它让体温、激素、睡眠，跟着[昼夜]走 | 13 |  | Three gauges (temperature, hormones, sleep) rise and fall with day/night | F6 |
-| 31 | 上火是真的 | 92.6 | 95.9 | 长期跟它对着干，多种疾病风险更高 | 15 |  | The gauges drift out of phase with the sky; a small caption: 相关，不是因果 | F6 |
-| 32 | 上火是真的 | 95.9 | 99.0 | 少睡半夜，第二天早上免疫细胞里 | 14 |  | Clock 23:00 → 03:00 → morning; zoom into a blood cell | B4 |
-| 33 | 上火是真的 | 99.0 | 102.7 | 有个炎症基因，活跃度是平时的[3倍多] | 16 | 0.3 | Two bars: ×1 (normal night) | ×3+ (short night), neutral data colours | B4 |
-| 34 | 上火是真的 | 102.7 | 105.6 | 溃疡：烫到、咬到、太累，都可能长 | 12 |  | The mirror ulcer with three tags: 烫 · 咬 · 累 | B1 |
-| 35 | 老祖宗的观察 | 105.6 | 108.7 | 而老祖宗最看重的，是[病还没来]时 | 14 |  | The ink map again, all tiles calm and level | F3 |
-| 36 | 老祖宗的观察 | 108.7 | 111.5 | “圣人不治已病，[治未病]” | 9 | 0.4 | Calligraphy writes 治未病; the brush lifts | F3 |
-| 37 | 老祖宗的观察 | 111.5 | 114.5 | 他们还把观察，一条条[记]了下来 | 13 |  | Pages of old herbals turn; notes in the margins | E2 D25 |
-| 38 | 老祖宗的观察 | 114.5 | 117.2 | 东晋葛洪：“青蒿一握……绞取汁” | 11 |  | A hand-drawn qinghao sprig; the line in the old book | E2 |
-| 39 | 老祖宗的观察 | 117.2 | 120.5 | 一千多年后，屠呦呦由此找到[青蒿素] | 15 |  | The same sprig crosses into a 1970s lab flask (name card only, no face) | E1 E2 |
-| 40 | 老祖宗的观察 | 120.5 | 123.8 | 她拿了诺贝尔奖，帮了[数百万]人 | 13 | 0.3 | A Nobel medal; a field of small lights for people helped | E1 |
-| 41 | 老祖宗的观察 | 123.8 | 127.2 | 民间偏方里的砒霜，如今治一种[白血病] | 16 |  | An old medicine jar becomes a hospital IV bag; band across the frame: 仅限这一种白血病 · 医用药品 · 切勿自行服用 | D20 D25 |
-| 42 | 回到你 | 127.2 | 130.2 | 妈没看错：溃疡是真的，“火”是比喻 | 13 |  | Back to the mirror; mum's bubble again; the 火 stamp fades to an ink sketch | A1 A6 |
-| 43 | 回到你 | 130.2 | 134.0 | 没有显微镜，老祖宗看见了[平衡]与[节律] | 16 | 0.4 | The ink map and the modern diagrams overlap and align | F1 F5 F6 |
-| 44 | 回到你 | 134.0 | 137.5 | 哪些老话该信，[验证]过才知道 | 12 | 0.6 | The phone grid (妈 / 爸 / 奶奶 bubbles) returns; a 验证 stamp lands softly. No remedy words on screen | — |
+| 1 | 开场 | 0.0 | 3.0 | 吃完火锅又熬夜，嘴里冒出[溃疡] | 13 |  | Frame 0: hotpot steam → phone clock 03:00 → mirror, the tongue finds a small white ulcer | A1 B1 |
+| 2 | 开场 | 3.0 | 5.1 | 妈：“你这是[上火]了。” | 7 |  | Mum's chat bubble lights the phone; a red 火 stamp lands on the mirror | A1 |
+| 3 | 开场 | 5.1 | 8.5 | 溃疡、喉咙痛、长痘……常长在[头脸]上 | 13 | 0.4 | A body outline; red dots appear: mouth, throat, cheek — all near the top. The viewer sees the pattern before anyone says it | A1 |
+| 4 | 开场 | 8.5 | 11.8 | 这个词，其实藏着一整套[古人的逻辑] | 15 |  | The dots link up into an ink diagram over the head, unlit | C5 C6 |
+| 5 | 火往上烧 | 14.8 | 17.5 | 古人把世间万物，分成[五行] | 11 |  | Five ink tiles drop into a ring around the body outline | C1 C3 |
+| 6 | 火往上烧 | 17.5 | 20.1 | 木、火、土、金、水，是五种[变化] | 10 |  | Each tile animates as a process: growing, burning, settling, hardening, flowing | C1 C6 |
+| 7 | 火往上烧 | 20.1 | 22.5 | [火]的样子：热、红、往上烧 | 9 |  | The 火 tile grows: a red flame licking upward | C2 C7 |
+| 8 | 火往上烧 | 22.5 | 25.0 | 《尚书》写：“火曰[炎上]” | 7 | 0.4 | Bamboo slips: 火曰炎上, the flame rises out of the characters | C2 |
+| 9 | 火往上烧 | 25.0 | 28.0 | 身上又红又热、往上冒的，就叫[火] | 13 |  | Back to the body outline: the red dots get a small ink flame each, all pointing up | A1 F10 |
+| 10 | 火往上烧 | 28.0 | 31.0 | 古书：“心火炎上……则口舌生疮” | 11 | 0.3 | A Ming book page (《证治准绳》): a flame climbs from the chest to the mouth and leaves a sore | F10 |
+| 11 | 火往上烧 | 31.0 | 34.8 | 原来在古人眼里，上火就是火[往上]烧 | 15 | 0.5 | AHA 1: the words 上 and 火 on the mirror swap into an arrow + flame climbing the body outline | F10 C2 |
+| 12 | 阴阳 | 34.8 | 37.7 | 熬夜和吃辣，要用[阴阳]来解释 | 12 |  | The taiji circle turns in, half dark, half bright | F1 A2 |
+| 13 | 阴阳 | 37.7 | 40.3 | [阳]是亮、热、动；[阴]是暗、冷、静 | 10 |  | Split world: sunny slope / shaded slope; a figure walking on one side, resting on the other | F1 |
+| 14 | 阴阳 | 40.3 | 43.5 | 《黄帝内经》：[阴平阳秘]，精神乃治 | 12 | 0.3 | A balance beam levels out; 阴平阳秘 in gold | F2 |
+| 15 | 阴阳 | 43.5 | 45.9 | 上火，就是[阳]压过了[阴] | 9 |  | The beam tips: the bright weight sinks, the dark one rises | A2 |
+| 16 | 阴阳 | 45.9 | 49.2 | 夜里属阴，该[静]；熬夜，是在阴里[动] | 13 | 0.3 | AHA 2: the taiji as a clock; at 03:00 inside the dark half, a phone screen still bright and moving | F1 |
+| 17 | 阴阳 | 49.2 | 52.3 | 辣椒入口，又烧又热，像加了一把[阳] | 14 |  | A chilli drops onto the bright side; the beam tips further | F1 B9 |
+| 18 | 不是瞎猜 | 52.3 | 55.4 | 有意思的是：古人说的“热”，不是瞎猜 | 14 |  | Cut from ink to a clean modern diagram style (neutral colours) | — |
+| 19 | 不是瞎猜 | 55.4 | 58.5 | 辣椒素打开的，是神经上的[热开关] | 14 |  | A nerve ending with a gate; a capsaicin molecule opens it (no flames) | B9 B10 |
+| 20 | 不是瞎猜 | 58.5 | 61.5 | 和43°C以上的烫，是[同一个]开关 | 13 |  | A thermometer reaches 43°C → the same gate opens | B10 |
+| 21 | 不是瞎猜 | 61.5 | 64.6 | 你的神经，真把辣当成了[烫] | 11 | 0.4 | AHA 3: the brain gets the same signal from both; the chilli-eater fans their mouth | B9 B11 |
+| 22 | 不是瞎猜 | 64.6 | 67.8 | 这个发现，2021年拿了[诺贝尔奖] | 12 | 0.3 | A Nobel medal stamps beside the gate | B11 |
+| 23 | 不是瞎猜 | 67.8 | 70.9 | 熬夜也一样：少睡半夜，第二天早上 | 14 |  | Clock 23:00 → 03:00 → morning; zoom into a blood cell | B4 |
+| 24 | 不是瞎猜 | 70.9 | 74.5 | 免疫细胞的[炎症基因]，活跃到3倍多 | 15 | 0.3 | Two bars: ×1 (normal night) | ×3+ (short night), neutral colours | B4 |
+| 25 | 炎 | 74.5 | 76.9 | 注意这个字：[炎] | 6 | 0.4 | The word 炎症 under the bars; the camera pushes into 炎 until it fills the frame | F8 |
+| 26 | 炎 | 76.9 | 79.3 | 《说文解字》：炎，[火光上也] | 9 |  | An old dictionary page; the definition 火光上也 in gold | F8 |
+| 27 | 炎 | 79.3 | 82.6 | 两个火叠起来，就是火[往上]烧 | 12 | 0.4 | 炎 splits into two 火 stacked; the upper one rises like a flame | F8 |
+| 28 | 炎 | 82.6 | 85.7 | 两千年前，罗马学者塞尔苏斯写下 | 14 |  | Same lamp, same scale: a Roman scroll unrolls beside the Chinese page | F7 |
+| 29 | 炎 | 85.7 | 88.7 | 炎症有四个标志：[红、肿、热、痛] | 11 | 0.3 | Four Latin words light up: rubor · tumor · calor · dolor → 红 肿 热 痛 | F7 |
+| 30 | 炎 | 88.7 | 91.0 | 英文inflammation，词根是[火焰] | 8 |  | The word inflammation; flamma glows inside it as a small flame | F9 |
+| 31 | 炎 | 91.0 | 94.4 | 东西方的古人，都觉得它像[火] | 12 | 0.5 | AHA 4: the Chinese 炎 and the Latin flamma slide together into one flame | F7 F8 F9 |
+| 32 | 炎 | 94.4 | 97.3 | 长痘、口腔溃疡，都和[炎症]有关 | 12 |  | Back to the body outline: the red dots get a clean modern label 炎症 | B7 B2 |
+| 33 | 炎 | 97.3 | 100.2 | 睡不好，和炎症指标升高[有关] | 12 |  | A large study grid (72 studies) with an arrow up; caption 相关，不是因果 | B5 |
+| 34 | 回到你 | 100.2 | 102.5 | 所以妈说你“上火”了 | 8 |  | Back to the mirror and mum's bubble | A1 |
+| 35 | 回到你 | 102.5 | 105.1 | 她用的，是老祖宗的眼光 | 10 |  | The ink flame from line 11 appears over the mirror ulcer | — |
+| 36 | 回到你 | 105.1 | 108.8 | 很多时候，她看见的就是今天说的[炎症] | 16 | 0.3 | The ink flame and the modern 炎症 label overlap on the same spot | F11 B7 B2 |
+| 37 | 回到你 | 108.8 | 111.9 | 老祖宗没有显微镜，只能看、只能摸 | 14 |  | An old hand-drawn body chart (no hands entering frame) | — |
+| 38 | 回到你 | 111.9 | 115.4 | 他们看到的“火”，两千年后被[看清]了 | 14 | 0.4 | The ink chart and the modern diagram align | F7 F8 |
+| 39 | 回到你 | 115.4 | 118.9 | 哪些老话该信，[验证]过才知道 | 12 | 0.6 | The phone grid (妈 / 爸 / 奶奶 bubbles); a 验证 stamp lands softly. No remedy words on screen | — |
 
 ## End card
-Question for comments: 老祖宗的哪句话，你一直信、但想验证一下？评论区说说
+Question for comments: 你家里，谁最爱说"你上火了"？评论区说说
 Send prompt: 发给那个总说"你上火了"的人
-Sources line: Caterina et al. 1997 Nature · Irwin et al. 2006 Arch Intern Med · Nobel 2015/2017/2021 · Cannon 1932 · IEP (阴阳、五行) · 《黄帝内经》
+Sources line: 《尚书》《说文解字》《证治准绳》 · Caterina et al. 1997 Nature · Irwin et al. 2006 · Nobel 2021 · Cavaillon 2021 (Celsus)
 Small print: 内容由AI生成 · 本片不构成医疗建议
 
 ## Notes
-- Line 41 (砒霜) always shows the band 仅限这一种白血病 · 医用药品 · 切勿自行服用 (D20; never a cure rate).
-- Line 31: caption 相关，不是因果 (F6 says "associated with").
-- Line 33: the 3× is one inflammation gene's activity in immune cells (B4), not blood levels.
-- Line 10 says only 《黄帝内经》 (chapter not verified, F2). Line 36 is 《素问·四气调神大论》 (F3) if a chapter tag is wanted.
-- Dropped on purpose: the arsenic story details (D rows), the student sleep/ulcer cohort (B3), the saliva study (A4).
+- Line 24: one inflammation gene's activity in immune cells (B4), not blood levels. Line 33: caption 相关，不是因果 (B5).
+- Line 28: 罗马学者 (Celsus was an encyclopedist; F7).
+- Line 32: RAS is "aphthous stomatitis" (B2 title); acne inflammation (B7).
+- Line 36 is hedged with 很多时候 (F11).
