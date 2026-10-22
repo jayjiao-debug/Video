@@ -319,7 +319,7 @@ const FigLove: React.FC<FigProps> = ({T, v, draw, open, orn}) => {
 	// one wavy lock as a filled ribbon: from the temple, over the shoulder, down to the chest
 	const lock = (s: number, x0: number, y0: number, len: number, drift: number, amp: number, w0: number, ph: number) => {
 		const n = 26, L: P[] = [], R: P[] = [];
-		for (let i = 0; i <= n; i++) { const u = i / n, y = y0 + len * u, x = s * (x0 + drift * u + amp * Math.sin(u * Math.PI * 2.4 + ph + T * 1.1) * Math.min(1, u * 3)), w = lerp(w0, 12, Math.pow(u, 1.4)); L.push([x - w / 2, y]); R.push([x + w / 2, y]); }
+		for (let i = 0; i <= n; i++) { const u = i / n, y = y0 + len * u, x = s * (x0 + drift * u + amp * Math.sin(u * Math.PI * 2.4 + ph + T * 1.1) * Math.min(1, u * 3)), w = u < 0.15 ? lerp(w0 * 0.25, w0, Math.sin(u / 0.15 * Math.PI / 2)) : lerp(w0, 12, Math.pow((u - 0.15) / 0.85, 1.4)); L.push([x - w / 2, y]); R.push([x + w / 2, y]); }
 		return 'M' + L.map((p) => p.map((q) => q.toFixed(1)).join(',')).join(' L') + ' L' + R.reverse().map((p) => p.map((q) => q.toFixed(1)).join(',')).join(' L') + ' Z';
 	};
 	const back = 'M-142,-40 C-162,-184 -80,-238 0,-238 C80,-238 162,-184 142,-40 C176,60 230,150 246,280 C180,318 112,300 84,250 L-84,250 C-112,300 -180,318 -246,280 C-230,150 -176,60 -142,-40 Z';
