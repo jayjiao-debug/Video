@@ -1375,7 +1375,11 @@ const MemeScene: React.FC<{T: number; v: Voice; i: number}> = ({T, v, i}) => {
 	const orn = (k: number) => on ? out3(cl01(hit / 0.1)) : 0, late = (k: number) => out3(cl01((hit - BEAT * (0.5 + 0.5 * k)) / 0.22));
 	const nameU = on ? cl01(hit / 0.3) : 0, tag = fade(t, rv + 0.12, 0.25), say = fade(t, rv + 2 * BEAT, 0.3), sweep = cl01((hit - 0.35) / 0.45);
 	const beatPulse = Math.max(0, 1 - ((((T - PH) % BEAT) + BEAT) % BEAT) / 0.16), lit = on ? cl01(hit / 0.3) : 0;
-	const push = sc * (1 + 0.04 * ease(t / CYC)) * (1 + 0.012 * beatPulse * lit), shake = v.kind === 'ang' && hit > 0.6 ? 3 * Math.sin(T * 41) * Math.sin(T * 7.3) * (1 - cl01((hit - 0.6) / 2.5)) : 0;
+	const wind = !on && t > rv - BEAT ? Math.pow(cl01((t - (rv - BEAT)) / BEAT), 3) : 0;           // slow → fast gather into the hit
+	const punch = on ? 1 + 0.07 * Math.pow(1 - cl01(hit / 0.45), 3) : 1;                              // fast → slow out of it
+	const push = sc * (1 + 0.04 * ease(t / CYC)) * (1 + 0.012 * beatPulse * lit) * (1 + 0.05 * wind) * punch;
+	const hitShake = on && hit < 0.16 ? 11 * (1 - hit / 0.16) * Math.sin(hit * 95) : 0;
+	const shake = hitShake + (v.kind === 'ang' && hit > 0.6 ? 3 * Math.sin(T * 41) * Math.sin(T * 7.3) * (1 - cl01((hit - 0.6) / 2.5)) : 0);
 	const nb = 46 * (1 - out3(nameU)), urge = t > rv - 2 * BEAT ? cl01((t - (rv - 2 * BEAT)) / (2 * BEAT)) : 0;
 	const discY = cy + 40 * sc;
 	const NameText: React.FC<{x: number; y: number; ch: string; fs: number; k: string; anchor?: 'start' | 'middle'}> = ({x, y, ch, fs, k, anchor = 'start'}) => <g>
