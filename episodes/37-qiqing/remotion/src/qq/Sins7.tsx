@@ -1375,8 +1375,9 @@ const Intro: React.FC<{T: number}> = ({T}) => {
 		<Typer x={960} y={330} text={INTRO.line1} size={100} t={T} cps={8} start={3} />
 		{T > 1.25 && <Typer x={960} y={430} text={INTRO.caption} size={38} t={T - 1.25} cps={16} start={0} weight={600} col="#cfc8de" spacing={0.1} />}
 		{VOICES.map((v, k) => { const at = PH + k * BEAT, h = T - at, pop = h >= 0 && h < 0.35 ? Math.sin(Math.PI * h / 0.35) : 0;
+			const pre = k === 0 ? out3(cl01((T - (PH + 7 * BEAT)) / 0.2)) : 0;
 			return <g key={v.n}>
-				<Sticker v={v} x={sx(k)} y={sy} r={112} sil={1} s={1 + 0.14 * pop} id={`is${k}`} />
+				<Sticker v={v} x={sx(k)} y={sy} r={112} sil={1} s={1 + 0.14 * pop + 0.12 * pre} id={`is${k}`} />
 				{h >= 0 && h < 0.45 && <circle cx={sx(k)} cy={sy} r={120 + 120 * out3(h / 0.45)} fill="none" stroke={v.col} strokeWidth={6 * (1 - h / 0.45)} opacity={1 - h / 0.45} />}
 				<text x={sx(k)} y={sy + 172} textAnchor="middle" style={{fontFamily: SERIF, fontWeight: 900, fontSize: 40}} fill={v.col} opacity={h >= 0 ? cl01(h / 0.15) : 0}>{v.ch}</text>
 			</g>; })}
@@ -1398,11 +1399,11 @@ const Outro: React.FC<{T: number}> = ({T}) => {
 			<Defs v={{col: GOLD, hot: '#fff2c8', deep: '#1c1408'}} />
 			<rect width={W} height={H} fill="url(#bgG)" />
 			<radialGradient id="slamGlow" cx="0.5" cy="0.5" r="0.5"><stop offset="0" stopColor="#ffd98a" stopOpacity="0.55" /><stop offset="0.6" stopColor="#c08a2a" stopOpacity="0.18" /><stop offset="1" stopColor="#000" stopOpacity="0" /></radialGradient>
-			{hit >= 0 && <circle cx={960} cy={540} r={760} fill="url(#slamGlow)" opacity={lerp(1.2, 0.75, cl01(hit / 1.2))} />}
+			{hit >= 0 && <circle cx={960} cy={540} r={760} fill="url(#slamGlow)" opacity={lerp(1.2, 0.75, cl01(hit / 1.2)) + 0.12 * Math.sin(Math.max(0, hit - 1.2) * 2.2)} />}
 			<g transform={`translate(960,540) scale(${lerp(0.94, 1, out3(t / 0.5)) * ringPunch})`}>
 				<circle r={R} fill="#0c0a12" stroke="url(#goldG)" strokeWidth={4} />
 				<circle r={R + 18} fill="none" stroke={GOLD} strokeWidth={1.2} opacity={0.5} />
-				{VOICES.map((v, i) => { const a = -Math.PI / 2 + i / N * Math.PI * 2, d = cl01((t - 0.05 - i * BEAT / 2) / 0.3), rr = R * lerp(2.3, 1, out3(d));
+				{VOICES.map((v, i) => { const a = -Math.PI / 2 + i / N * Math.PI * 2 + Math.max(0, hit) * 0.06, d = cl01((t - 0.05 - i * BEAT / 2) / 0.3), rr = R * lerp(2.3, 1, out3(d));
 					const on = hit >= 0 ? 1 : i === lit ? 1 : 0, pop = i === lit ? Math.max(0, 1 - (t - lastStep) / 0.25) : 0, dim = hit >= 0 || lit < 0 ? 1 : i === lit ? 1 : 0.45;
 					return d <= 0 ? null : <g key={v.n} opacity={dim} transform={`translate(${Math.cos(a) * rr},${Math.sin(a) * rr}) scale(${lerp(1.5, 1, outBack(d)) * (1 + (hit >= 0 ? 0.06 : 0.16) * on + 0.1 * pop)})`}>
 						{on > 0 && <circle r={128} fill={v.col} opacity={0.45} filter="url(#gM)" />}
@@ -1410,15 +1411,15 @@ const Outro: React.FC<{T: number}> = ({T}) => {
 						<rect x={-62} y={66} width={124} height={50} rx={25} fill={v.col} /><text y={102} textAnchor="middle" style={{fontFamily: SERIF, fontWeight: 900, fontSize: 40}} fill="#fff">{v.ch}</text>
 					</g>; })}
 			</g>
-			<g opacity={1 - qOut}><BlurText id="o1" x={960 + (/[。？！]$/.test(OUTRO.question) ? 54 * 0.25 : 0)} y={560} text={OUTRO.question} size={54} anchor="middle" u={q} /></g>
+			<g opacity={1 - qOut}>{OUTRO.question.split(/(?<=，)/).map((l, k) => <BlurText key={k} id={`o1${k}`} x={960 + (/[，。？！]$/.test(l) ? 56 * 0.25 : 0)} y={530 + k * 76} text={l} size={56} anchor="middle" u={q} />)}</g>
 			{title > 0 && <g transform={`translate(960,540) scale(${lerp(1.18, 1, slam)}) translate(-960,-540)`}>
-				<text x={960} y={540} textAnchor="middle" style={{fontFamily: SERIF, fontWeight: 900, fontSize: 170, letterSpacing: '0.1em'}} fill="#fff2d0" opacity={0.8} filter="url(#gL)">七宗罪</text>
-				<text x={960} y={540} textAnchor="middle" style={{fontFamily: SERIF, fontWeight: 900, fontSize: 170, letterSpacing: '0.1em'}} fill="url(#goldG)">七宗罪</text>
-				<text x={960} y={606} textAnchor="middle" style={{fontFamily: SERIF, fontWeight: 600, fontSize: 26, letterSpacing: '0.6em'}} fill={GOLD}>SEVEN DEADLY SINS</text>
-				{th.map((l, k) => <text key={k} x={960} y={680 + k * 64} textAnchor="middle" style={{fontFamily: SERIF, fontWeight: 800, fontSize: 56}} fill="#fff" opacity={cl01((hit - 0.4 - k * 0.25) / 0.3)}>{l + (k < th.length - 1 ? '，' : '')}</text>)}
+				<text x={968.5} y={540} textAnchor="middle" style={{fontFamily: SERIF, fontWeight: 900, fontSize: 170, letterSpacing: '0.1em'}} fill="#fff2d0" opacity={0.8} filter="url(#gL)">七宗罪</text>
+				<text x={968.5} y={540} textAnchor="middle" style={{fontFamily: SERIF, fontWeight: 900, fontSize: 170, letterSpacing: '0.1em'}} fill="url(#goldG)">七宗罪</text>
+				<text x={967.8} y={606} textAnchor="middle" style={{fontFamily: SERIF, fontWeight: 600, fontSize: 26, letterSpacing: '0.6em'}} fill={GOLD}>SEVEN DEADLY SINS</text>
+				{th.map((l, k) => <text key={k} x={960 + 56 * 0.25} y={680 + k * 64} textAnchor="middle" style={{fontFamily: SERIF, fontWeight: 800, fontSize: 56}} fill="#fff" opacity={cl01((hit - 0.4 - k * 0.25) / 0.3)}>{l + (k < th.length - 1 ? '，' : '')}</text>)}
 			</g>}
 			{hit >= 0 && hit < 0.9 && <circle cx={960} cy={540} r={R + 40 + 700 * out3(hit / 0.9)} fill="none" stroke={GOLD} strokeWidth={5 * (1 - hit / 0.9)} opacity={1 - hit / 0.9} />}
-			<IrisOpen o={t / 0.4} x={960} y={540} col={GOLD_V.col} deep={GOLD_V.deep} id="ioOut" />
+			<IrisOpen o={t / 0.4} x={1360} y={508} col={GOLD_V.col} deep={GOLD_V.deep} id="ioOut" />
 		</svg>
 	);
 };

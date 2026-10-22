@@ -105,3 +105,90 @@ The bans hold. No white or grey flash anywhere, every reveal and the title land 
   - pace.py's 37–58 % "waiting" (an artefact of stacked labels; the real read-time problems are findings 3 and 4)
 
 Files: `auto_checks.md`, `probe.json`, `sheet_01…13.png`, `strips/`, `full/` (full-res frames and crops), `evidence/`, `checks/` (luma_scan, sync, ink_centre, loudness_curve, shake scripts and outputs).
+
+---
+
+# Re-review r4 (七宗罪_r4.mp4 send version; HD master checked for sync and loudness) — verdict: FIX FIRST (two ~10-minute fixes)
+
+r4 is a real step up. The iris now lands on the bar line, the dead bar is gone, the ending builds into the slam and frame 0 is bright. Every reveal still hits the kick. Two problems are left that the owner has flagged before, and both are cheap to fix. (1) During the roulette, the outro question collides with the lit stickers at both ends. (2) The end-card thesis and title sit off-centre (owner rows 89/97). Fix those two, re-measure, and it is READY. No full re-review is needed.
+
+Evidence for this pass: `review_r2/r4/` holds auto_checks.md, probe.json, sheet_01–12, checks/ (around_bars.txt = luma/Δ/detail per frame at every bar line, sync.txt) and R4_E1–E3 PNGs. I also pulled full-res HD frames and crops and frame strips around all 8 transitions, the burn-out, the outro and the props exits.
+
+| # | Sev | Time | What's wrong | Evidence | Suggested fix |
+|---|-----|------|--------------|----------|---------------|
+| 1 | MAJOR (new) | 49.74–50.24, 51.26–51.77, 53.39–54.05 | **The outro question collides with the lit roulette stickers.** The stickers are bigger now (r 96, ×1.16 + pop when lit), and the question (54 px, ink x 638–1278, y 525–571) sits at the height of the 3 and 9 o'clock stickers. Lit 暴怒 reaches x = 1243, so it covers the trailing ？ by **35 px**. Lit 暴食 reaches x = 668, so it covers 你 by **~40 px**. 暴怒 is the lit sticker for most of bar 26's held step (53.39–54.05), right before the slam. That is the line that drives comments. | `r4/R4_E1_question_vs_lit_stickers_51.5_53.5.png` (HD 51.5 s and 53.5 s) | Set the question in two centred lines (你心里，/ 哪一宗罪最大声？) at ~56 px, centred on y≈540 between the side stickers. Or keep one line at ≤46 px. Check that the gap to every **lit** sticker (including its glow) is ≥30 px. |
+| 2 | MAJOR (new, owner rows 89/97) | 55.0–59.46 | **End card off-centre.** The thesis now breaks into two lines, and each ends in full-width punctuation that is not pulled back. 七个梗， has its ink centre at **939.5 px** (−20.5) and 七个放大版的你。 at **942.0 px** (−18). The title 七宗罪 is at **945.5 px** (−14.5) because of its trailing 0.1 em letter-spacing. This is the last frame people see, held for 4.6 s. | `r4/R4_E2_endcard_offcentre_57.5s.png` (red line = x 960) | Apply the same ½-em pull-back to each thesis line (+0.25 em offset, as the question already has). Offset the title by +½ of its letter-spacing (≈+8.5 px) and SEVEN DEADLY SINS by +½ × 0.6 em. Re-measure on a rendered frame. |
+| 3 | MINOR | 32.5 (鼠鼠), 38.0 (哈基米) | **Cut-outs: much better, two leftovers.** 鼠鼠 is now round-topped and shown at 78 %, but the face is still the soft upscale: the eyes are green blobs. 哈基米's ghost rectangle is gone, but the head cloth still has a straight top, a straight-cut white wedge left of the cheek and a vertical cut down the right cheek. The new white die-cut outline traces these straight segments. | `r4/R4_E3_cutouts_…png` (bottom-centre 38.0, top-right 32.5) | 哈基米: round off the left wedge and the right cheek cut along the fur (about 15 min of matte). 鼠鼠: only if a sharper frame of the meme exists. Otherwise leave it; at phone size it now reads as "cat in a headset". |
+| 4 | MINOR | 46.67–46.85 | **The outro entrance jumps and dips.** The gold flood grows from the 色欲 disc at x≈1360. On the bar-line frame (f1401) the ring opens at x = 960, a 400 px sideways jump (every other transition keeps the disc position). The next 4 frames are the **darkest of the film (9–13/255)**: an empty ring before the first sticker arrives at ~46.9. | `/home/claude/video/episodes/39-qizongzui/review_r2/r4/checks/around_bars.txt` (f1400–1406), strip at 46.57–46.80 | Start the outro ring at the disc's position and glide it to the centre over ~6 frames. Or centre the last flood on 960. Have the first sticker already in flight on f1401. |
+| 5 | MINOR | 1.0–4.2, scene 1 | **Small leftovers in the intro and scene 1.** (a) Intro line 1 ink centre is **950 px** (r2: 925), still 10 px left. (b) The picture is completely still from 3.50 to 3.83 (Δ = 0.00 for 11 frames), and the 3.61 kick lands on it. As a hold before the dive it is fine; a "?" bounce on 3.61 would keep the "something on every beat" promise. (c) The scene-1 context line is readable 4.23 → 6.03 = 1.80 s against 1.96 s needed (6 字). Scenes 2–7 now pass (e.g. 朋友上岸了 10.27 → 12.10 = 1.83 s against 1.81 s). | `/home/claude/video/episodes/39-qizongzui/review_r2/r4/sheet_01.png`, strip f120–127, HD 3.4 s crop | (a) Pull back a further ~0.1 em. (b) Optional. (c) Fine to leave: P1's hold at 5.58 gives the eye time. |
+| 6 | MINOR | 55.73–59.40 | The end card is a **3.7 s frozen frame** (Δ ≈ 0.01). It is the end card, so this is acceptable. A slow breathe on the sticker glows would stop it reading as a stall (row 91). | `probe.json` frozen [55.73, 59.4] | Optional: 2–3 % glow pulse or a very slow ring turn. |
+| 7 | MINOR (carried) | end | Still no Juno follow pill or source line, and the music fade still ends 1.18 beats into bar 29. The audio is bit-identical to r2 (decoded md5 match). Both are owner decisions (r2 findings 9 and 10). The Douyin library-track upload note (r2 finding 11) still stands. | — | Owner decides. |
+
+## Fixed since r2: each r2 finding
+
+| r2 # | Status | Evidence on r4 |
+|---|---|---|
+| 1 Cut-outs | **PARTLY** | Silhouettes are now solid binary fills: 鼠鼠 (29.5) has a round top and no texture; 哈基米 (35.3) has no grey patch; 袋鼠's base (5.0) has no specks, only a stepped edge; 刀盾狗's blade is silhouetted and the speck at 20.84 is gone. 鼠鼠's reveal is smaller and round-topped but still soft. 哈基米's ghost rectangle is gone, but its straight cuts remain (#3 above). |
+| 2 Frame 0 dark / small | **FIXED** | Frame-0 mean is **37.9/255** (send) / 37.1 (HD), against 19.6 before. The stickers span ~87 % of the width. A pop lands on every beat from 0.06 (one per beat, all seven by 3.10). 七宗罪\| is typed on frame 0. |
+| 3 Dead bar before the ending | **FIXED** | 色欲 irises out at 46.69 like every other scene. Bar 23 is the fly-in (46.75–48.2). The question lands at 48.72. The roulette steps on every kick in bars 24–25 (Δ spikes), slows through bar 26 (52.77 / 53.39 / 54.05), inhales 54.30–54.77 (Δ 0.4–0.6), then the slam. No Δ = 0 stretch before the title. |
+| 4 Pre-reveal reading window | **FIXED** (scene 1 borderline, #5c) | The context lines are ≤ 5–6 字 and readable from ~+0.07–0.12 s after the bar line until 0.1 s before the reveal. |
+| 5 Off-centre punctuation | **PARTLY** | Outro question **958 px** (was 943). Bubbles: visually centred in all 13 (board of HD crops at x = 1445). Intro line 950 (was 925). **New:** the thesis is now two lines and both are off (#2), and the title is 14.5 px left. |
+| 6 Ring stickers unnamed | **FIXED** | Each sticker has a 40 px name on a sin-colour pill. The stickers are ~192 px. (Their new size causes #1.) |
+| 7 懒惰 payoff too short | **FIXED** | 明天 is up by 26.42 and holds to the flood at ~28.2 (≈1.8 s). The calendar now sits inside the rim. |
+| 8 Thesis size | **FIXED** | 56 px font; line-2 ink height 58 px. |
+| 9 Juno end card | NOT FIXED (owner decision) | #7 |
+| 10 Fade not on a downbeat | NOT FIXED (owner decision) | Audio is identical to r2. |
+| 11 Upload instruction | Not checkable in the film | — |
+
+## Director gate-4 notes
+
+| Note | Status | Evidence |
+|---|---|---|
+| 1 Cut-outs + die-cut edge | **PARTLY** | Every reveal has the white die-cut outline and the silhouettes are binary. 鼠鼠 is soft and 哈基米 has straight cuts (#3). I can't see whether the owner was sent the 7 crops before the render. |
+| 2 No empty colour field; open on the bar line; props out before the flood | **FIXED** | Empty (detail < 2) frames per transition are now **1–2 frames** (f122–123, 305, 487–488, 670, 852–853, 1035, 1217–1218, 1400), against ~8 in r2. The new disc + silhouette is complete on the first new-scene frame, which is 5–32 ms after the measured bar kick (bar 11: kick 22.362, disc f671 = 22.367). Bubbles, lemon, 外卖 boxes and bags fade out 2–3 frames **before** the flood starts (strips f474–485, f1204–1215). The scene-A left column still stays until the iris covers it (owner decision, not flagged). |
+| 3 Ending as a roulette into the slam | **FIXED** (with #1, #2) | The steps fall on every kick, slow down and hold, then the slam lands at f1644 with all seven lit at once and a gold glow. Frame luminance after the slam is **39.5/255** (r2: 24). The gold Rings start outside the title. |
+| 4 Tease pulse / lock / squash | **FIXED** | The "?" bounces on the kicks (scene 1: Δ 1.8 at f139 and f154 = 4.63 / 5.13). It locks from 5.58 (Δ ~0.2). The squash gather is at f182–183 (Δ 1.0), then the reveal (Δ 30). Scene 4 shows the same pattern. |
+| 5 Bar-10 burn-out | **FIXED** (subtle) | The disc darkens to maroon from 20.4, the cracks turn ember orange, small embers rise, and there is a slow push. Motion over 21.4–22.0 is Δ ≈ 0.2 (r2: 0.12), so the frame is alive but quiet on a phone. The release on 22.36 opens 懒惰's disc on the kick. |
+| 6 Intro brightness / no freeze | **FIXED** (0.33 s pre-dive hold remains, #5b) | Frame 0 is 37.9. Δ over 3.0–3.5 is now 0.36 (r2: 0.00). |
+| 7 Bubble punctuation | **FIXED** | See r2 #5. |
+| 8 Scene-1 quip | **DONE** | 本王，从不低头。 answers the silhouette's 我？先低头？ as a punchline, and the crown sells it. It reads alone. |
+| 9 Labels (七宗罪·之X 44 px, calendar in disc, cracks) | **FIXED** | 44 px. Calendar inside the rim. Cracks 5 px with an ember glow. |
+| 10 End card | Owner decision | #7 |
+
+## Automatic checks re-run (r4)
+- **Format/size:** send version 1920×1080 30 fps, 59.46 s, **17.0 MB, 2.08 Mbps video**, AAC 195 kbps. HD master 34.7 MB, 4.40 Mbps. Both meet owner row 21 (≤28 MB, ~2 Mbps). The probe's "<8 Mbps" flag is dismissed per rows 21/44.
+- **Loudness:** **−14.17 LUFS, −2.71 dBTP**, LRA 1.0. Short-term −14.7 to −13.3 LUFS throughout. No silence. HD −14.1 LUFS.
+- **Flashes:** none. No isolated brightness bump in 1783 frames. The brightest frames are the gold flood into the outro (73/255, gold).
+- **The 4 probe "single-frame glitches"** (10.20, 22.37, 34.53, 46.70) are the bar-line frames where the flood gives way to the new scene. Brightness falls monotonically (e.g. 56→52→34) with no spike, so they are not flashes.
+- **Kick sync** (broadband attack on the delivered audio):
+  - R1 +3.1 ms, R2 −12.6, R3 +3.2, R4 −13.4, R5 +4.2, R6 −13.4, R7 +3.3.
+  - **Title f1644 = 54.800, +3.0 ms.**
+  - The HD master is identical.
+- **Black:** none. **Frozen:** only the end card (55.73–59.40, #6) and the 3.50–3.83 pre-dive hold.
+- **Ink centring:**
+  - intro line 950 (−10)
+  - caption 957
+  - outro question 958
+  - bubbles centred
+  - thesis 939.5 / 942.0 (#2)
+  - title 945.5 (#2)
+- **Frame 0:** 37.9/255.
+- **Pace:** pace.py's 59 % "waiting" is the stacked-label artefact (dismissed as in r2). The real read windows are covered above.
+- **Brand:** no "Juno 出品"; the facts.py "no facts table" flag is dismissed (one sourced caption).
+
+## Script pass (changed lines)
+- 朋友上岸了, ddl前一晚 and 又刷ta主页 are all shorter, and each still reads alone.
+- ddl is everyday slang for the target viewer.
+- 本王，从不低头。 is clearer than 你的胆子真是肥嘟嘟的啊 and pays off the silhouette's line.
+- Nothing new overclaims. The order, the thesis and the question are unchanged.
+
+## Owner-notes pass (r4)
+- **Would flag:** rows 89/97 (#2, and the ？ in #1); row 18 (renders whole: #3, minor now); row 91 (frozen end card, #6, minor); rows 17/66 (owner decisions).
+- **Now pass:** rows 8/22/47 (frame 0), row 14 (no dead bar), row 86 (props leave before the move), row 88 (the slam is now the brightest, fullest frame of the ending), row 112 (hold → hit on the slam and on every reveal), rows 26/51/64, row 21.
+
+## Not checked / can't judge
+- The sound itself (I measured levels and sync only; the audio is bit-identical to r2).
+- Real phone playback.
+- Douyin fingerprinting.
+- Whether the owner saw the reveal crops before this render.
+- Whole-frame shake on reveals 2–7.
