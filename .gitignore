@@ -48,3 +48,7 @@ episodes/31-baoji/style/
 episodes/31-baoji/audio/
 episodes/33-doorway/style/
 episodes/*/build/node_modules/
+
+# Remotion projects: dependencies and renders stay local
+episodes/*/remotion/node_modules/
+episodes/*/remotion/out/
