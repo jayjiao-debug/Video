@@ -33279,7 +33279,9 @@ var camKeys = (keys, t) => {
   const a = keys[i], b = keys[Math.min(i + 1, keys.length - 1)], u = b.t === a.t ? 0 : ease((t - a.t) / (b.t - a.t));
   const pos = a.pos.map((v, k) => v + (b.pos[k] - v) * u), look = a.look.map((v, k) => v + (b.look[k] - v) * u), fov2 = (a.fov ?? 36) + ((b.fov ?? 36) - (a.fov ?? 36)) * u, roll = (a.roll ?? 0) + ((b.roll ?? 0) - (a.roll ?? 0)) * u;
   camera.position.set(pos[0], pos[1], pos[2]);
-  camera.up.set(Math.sin(roll), Math.cos(roll), 0);
+  const dy = look[1] - pos[1], dl = Math.hypot(look[0] - pos[0], dy, look[2] - pos[2]);
+  if (dy / dl < -0.97) camera.up.set(0, 0, -1);
+  else camera.up.set(Math.sin(roll), Math.cos(roll), 0);
   camera.lookAt(look[0], look[1], look[2]);
   camera.fov = fov2;
   camera.updateProjectionMatrix();
@@ -33393,7 +33395,7 @@ var makeLand = (a) => {
   const col = new Float32Array(p.count * 3);
   for (let i = 0; i < p.count; i++) {
     const x = p.getX(i), z = p.getZ(i), d = Math.hypot(x, z);
-    p.setY(i, d < 380 ? 0 : Math.min(70, (d - 380) * 0.035 * (1 + Math.sin(x * 4e-3) * Math.cos(z * 3e-3))));
+    p.setY(i, d < 900 ? 0 : Math.min(90, (d - 900) * 0.045 * (1 + Math.sin(x * 4e-3) * Math.cos(z * 3e-3))));
     const n2 = 0.5 + 0.25 * Math.sin(x * 0.013 + z * 7e-3) + 0.2 * Math.sin(x * 0.031 - z * 0.019) + 0.1 * Math.sin(x * 0.07 + z * 0.05);
     col[i * 3] = 0.78 + 0.32 * n2;
     col[i * 3 + 1] = 0.8 + 0.28 * n2;
@@ -33406,12 +33408,12 @@ var makeLand = (a) => {
   scene.add(ground);
   const hgt = (x, z) => {
     const d = Math.hypot(x, z);
-    return d < 380 ? 0 : Math.min(70, (d - 380) * 0.035 * (1 + Math.sin(x * 4e-3) * Math.cos(z * 3e-3)));
+    return d < 900 ? 0 : Math.min(90, (d - 900) * 0.045 * (1 + Math.sin(x * 4e-3) * Math.cos(z * 3e-3)));
   };
   const R = rnd(11), n = 3200, canopy = new InstancedMesh(new IcosahedronGeometry(1, 2), new MeshStandardMaterial({ color: "#34422a", roughness: 1 }), n), trunk = new InstancedMesh(new CylinderGeometry(0.25, 0.35, 1, 6), new MeshStandardMaterial({ color: "#3a2c20" }), n);
   const o = new Object3D(), cc = new Color();
   for (let i = 0; i < n; i++) {
-    const ang = R() * Math.PI * 2, d = 460 + R() * 380 + (R() < 0.3 ? R() * 400 : 0);
+    const ang = R() * Math.PI * 2, d = 980 + R() * 420 + (R() < 0.3 ? R() * 500 : 0);
     const x = Math.sin(ang) * d, z = Math.cos(ang) * d, y = hgt(x, z), h = 8 + R() * 10;
     o.position.set(x, y + h * 0.35, z);
     o.scale.set(0.6, h * 0.7, 0.6);
@@ -33554,7 +33556,7 @@ var simBodies = (sim, t, pose = "aim", dx = 0, dz = 0, fallK = 1) => {
       }
       if (t < sim.t0 + 0.6 && t > sim.t0 - 0.9) p = "aim";
     }
-    return { x: u.x + dx, z: u.z + dz, ry: (u.side === 0 ? -Math.PI / 2 : Math.PI / 2) + (u.fx - 0.5) * 0.22, side: u.side, pose: p, fall, fallDir: u.fx < 0.25 ? -1 : 1, s: 0.95 + u.fx * 0.1 };
+    return { x: u.x + dx, z: u.z + dz, ry: (u.side === 0 ? Math.PI / 2 : -Math.PI / 2) + (u.fx - 0.5) * 0.22, side: u.side, pose: p, fall, fallDir: u.fx < 0.25 ? -1 : 1, s: 0.95 + u.fx * 0.1 };
   });
 };
 var spriteTex = /* @__PURE__ */ (() => {
@@ -33622,8 +33624,8 @@ var simSmoke = (sim, t, dx = 0, dz = 0) => {
     const age = t - s.t;
     if (age < 0 || age > 8) continue;
     const u = sim.units[s.from], dir = u.side ? -1 : 1;
-    const a = 0.32 * Math.exp(-age / 3) * Math.min(1, age * 7), sz = 1 + age * 1.5;
-    sm.push([u.x + dx + dir * (1.4 + age * 0.6) + age * 1, 1.5 + age * 0.45, u.z + dz + age * 0.8 + (u.fx - 0.5) * 1.5, sz, 0.9, 0.88, 0.84, a]);
+    const a = 0.14 * Math.exp(-age / 2.6) * Math.min(1, age * 7), sz = 0.9 + age * 1.05;
+    sm.push([u.x + dx + dir * (1.4 + age * 0.7) + age * 0.6, 1.5 + age * 0.75, u.z + dz + age * 0.8 + (u.fx - 0.5) * 1.5, sz, 0.9, 0.88, 0.84, a]);
     if (age < 0.09) fl.push([u.x + dx + dir * 1.3, 1.45, u.z + dz, 0.9 + (1 - age / 0.09) * 0.8, 2.4, 1.6, 0.7, 1 - age / 0.09]);
   }
   return { sm, fl };
@@ -33658,13 +33660,13 @@ var Tracers = class {
 var FLIGHT = 0.28;
 var simTracers = (sim, t, opts = {}) => {
   const out = [];
-  const len = opts.len ?? 0.12, br = opts.bright ?? 1, dx = opts.dx ?? 0, dz = opts.dz ?? 0;
+  const len = opts.len ?? 0.06, br = (opts.bright ?? 1) * 0.45, dx = opts.dx ?? 0, dz = opts.dz ?? 0;
   for (const s of sim.shots) {
     const age = t - s.t;
-    if (age < 0 || age > FLIGHT) continue;
+    if (age < 0 || age > FLIGHT || !s.hit && s.from % 3) continue;
     const a = sim.units[s.from], b = sim.units[s.to], dir = a.side ? -1 : 1;
     const x1 = a.x + dir * 1.3 + dx, z1 = a.z + dz, y1 = 1.45;
-    const tx = s.hit ? b.x + dx : b.x + dx + dir * 6, tz = b.z + dz + (s.hit ? 0 : (a.fx - 0.5) * 3), ty = s.hit ? 1.3 : 0.6;
+    const tx = s.hit ? b.x + dx : b.x + dx + dir * 3, tz = b.z + dz + (s.hit ? 0 : (a.fx - 0.5) * 3), ty = s.hit ? 1.3 : 0.9;
     const f0 = Math.max(0, age / FLIGHT - len), f1 = age / FLIGHT;
     const c = a.side ? [3.2, 1.6, 1.1] : [1.4, 2.1, 3.4];
     out.push([x1 + (tx - x1) * f0, y1 + (ty - y1) * f0, z1 + (tz - z1) * f0, x1 + (tx - x1) * f1, y1 + (ty - y1) * f1, z1 + (tz - z1) * f1, c[0] * br, c[1] * br, c[2] * br]);
@@ -33696,7 +33698,7 @@ var GroundSquares = class {
         o.scale.set(s.w, s.d, 1);
       }
       it.m.material.color.set(s.color);
-      it.m.material.opacity = 0.32 * s.a;
+      it.m.material.opacity = 0.24 * s.a;
       it.e.material.color.set(s.color);
       it.e.material.opacity = (s.edge ?? 1) * s.a;
     });
@@ -33874,7 +33876,7 @@ var flat = (scene, color) => {
   scene.add(m);
   return m;
 };
-var seaMarks = (c, o, adv) => {
+var seaMarks = (c, o, adv, tracks = true) => {
   if (!MARKS) MARKS = { tracks: [flat(c.sea.scene, "#ffcf6a"), flat(c.sea.scene, "#ffcf6a")], hot: flat(c.sea.scene, "#ffcf6a"), van: flat(c.sea.scene, "#9a9a9a") };
   const set = (m, x0, z0, x1, z1, wd, a) => {
     m.position.set((x0 + x1) / 2, 0.6, (z0 + z1) / 2);
@@ -33883,14 +33885,14 @@ var seaMarks = (c, o, adv) => {
     m.material.opacity = a;
     m.visible = a > 0.01;
   };
-  set(MARKS.tracks[0], -2600 + adv, 460, 30, 470, 10, o * 0.9);
-  set(MARKS.tracks[1], -2450 + adv, -420, 20, -420, 10, o * 0.9);
-  set(MARKS.hot, 150, -1650, 150, 520, 26, o * 0.7);
-  set(MARKS.van, 230, 560, 230, 1650, 26, o * 0.6);
+  set(MARKS.tracks[0], -2600 + adv, 460, 30, 470, 22, tracks ? o : 0);
+  set(MARKS.tracks[1], -2450 + adv, -420, 20, -420, 22, tracks ? o : 0);
+  set(MARKS.hot, 170, -1650, 170, 520, 60, o * 0.85);
+  set(MARKS.van, 250, 560, 250, 1650, 60, o * 0.7);
 };
 var seaDraw = (c, t, g = {}) => {
   c.sea.water.material.uniforms.time.value = t * 0.6;
-  setGrade({ vig: 0.36, warm: 0.04, bloom: 0.5, exposure: 0.6, ...g });
+  setGrade({ vig: 0.4, warm: 0.04, bloom: 0.45, exposure: 0.5, ...g });
   draw(c.sea.scene);
 };
 var broadsides = (ships, t, rate, seed) => {
@@ -33962,8 +33964,8 @@ var TIMELINE = [
     camKeys([
       { t: 0, pos: [-51, 1.9, -9], look: [45, 1.5, 4], fov: 38 },
       { t: 3.8, pos: [-50, 2.4, -8], look: [45, 1.5, 2], fov: 36 },
-      { t: 7.5, pos: [-120, 30, -170], look: [0, 0, 0], fov: 40 },
-      { t: 15.05, pos: [-260, 120, -520], look: [-10, 0, 0], fov: 36 }
+      { t: 7.5, pos: [-110, 24, -150], look: [0, 0, 0], fov: 40 },
+      { t: 15.05, pos: [-200, 75, -360], look: [-10, 0, 0], fov: 38 }
     ], u);
     battle(c, SA, st);
     const [b, r] = aliveAt(SA, st);
@@ -33977,7 +33979,7 @@ var TIMELINE = [
   // 02 — 866 on the lift; the guess tick fades out
   { a: T.drop, b: T.rewind, draw: (c, u) => {
     clearLand(c);
-    camKeys([{ t: 0, pos: [-260, 120, -520], look: [-10, 0, 0], fov: 36 }, { t: 3.75, pos: [-190, 46, -250], look: [-60, 0, -40], fov: 34 }], u);
+    camKeys([{ t: 0, pos: [-200, 75, -360], look: [-10, 0, 0], fov: 38 }, { t: 3.75, pos: [-170, 40, -230], look: [-60, 0, -40], fov: 34 }], u);
     battle(c, SA, SA.end + 0.2 + u * 0.4);
     counters(c.hud, 866, 0, 1 - env(u, 0, 99, 0.2));
     guessBar(c, 866, 1 - clamp01(u / 0.6));
@@ -33990,7 +33992,7 @@ var TIMELINE = [
     clearLand(c);
     const d = T.swords - T.rewind, k = ease2(u / d);
     const st = lerp2(SA.end + 1.6, -0.6, k);
-    camKeys([{ t: 0, pos: [-190, 46, -250], look: [-60, 0, -40], fov: 34 }, { t: d, pos: [-150, 70, -230], look: [-20, 0, 0], fov: 38 }], u);
+    camKeys([{ t: 0, pos: [-170, 40, -230], look: [-60, 0, -40], fov: 34 }, { t: d, pos: [-150, 70, -230], look: [-20, 0, 0], fov: 38 }], u);
     battle(c, SA, st, { tracers: false });
     const [b, r] = aliveAt(SA, Math.max(0, st));
     counters(c.hud, b, r, env(u, 0.1, 99));
@@ -34055,7 +34057,7 @@ var TIMELINE = [
       const t = to[i];
       return { ...t, x: lerp2(f.x, t.x, fan), z: lerp2(f.z, t.z, fan), pose: fan > 0.02 && fan < 0.98 ? "march" : fan >= 0.98 ? "aim" : "rest" };
     }) : to;
-    camKeys([{ t: 0, pos: [-130, 70, -90], look: [-40, 0, 0], fov: 40 }, { t: 6.5, pos: [-230, 60, -330], look: [-30, 0, 0], fov: 40 }, { t: 9.5, pos: [-60, 4, -60], look: [45, 1.5, 20], fov: 38 }, { t: 14, pos: [-160, 50, -200], look: [20, 0, 20], fov: 38 }, { t: 18.75, pos: [-240, 110, -420], look: [0, 0, 0], fov: 36 }], u);
+    camKeys([{ t: 0, pos: [-130, 70, -90], look: [-40, 0, 0], fov: 40 }, { t: 6.5, pos: [-170, 26, -170], look: [-20, 0, 0], fov: 40 }, { t: 9.5, pos: [-62, 3.2, -40], look: [45, 1.5, 20], fov: 38 }, { t: 14, pos: [-160, 50, -200], look: [20, 0, 20], fov: 38 }, { t: 18.75, pos: [-200, 75, -360], look: [0, 0, 0], fov: 38 }], u);
     c.army.set(bodies, cp());
     if (u >= 7.5) {
       const { sm, fl } = simSmoke(SA, st);
@@ -34189,7 +34191,7 @@ var TIMELINE = [
     }
     if (tape > 0) {
       const fs = 866 * LEN;
-      const pt = P(-45 - fs / 2, fs / 2 + 40);
+      const pt = P(-45 - fs / 2, -fs / 2 - 60);
       if (u < 11.25) tag(c.hud, pt.x, pt.y, `${Math.round(866 * tape)}`, env(u, 9.9, 99), 64, "#fff", GOLD);
       else slam(c.hud, pt.x, pt.y, "866", u, 11.25, 99, 110, BLUE);
       html(c.hud, `<div style="position:absolute;left:0;right:0;top:92px;text-align:center;font-weight:900;font-size:76px;color:#fff;opacity:${env(u, 11.6, 99)};text-shadow:0 0 6px ${GOLD},0 0 26px rgba(246,207,120,.6),0 2px 10px rgba(0,0,0,.65)">1000\xB2 \u2212 500\xB2 \u2248 866\xB2</div>`);
@@ -34246,10 +34248,6 @@ var TIMELINE = [
     clearLand(c);
     const big = 1e3 * LEN, hs = 500 * LEN, k = ease2((u - 0.9) / 1.2);
     camKeys([{ t: 0, pos: [-200, 120, -360], look: [40, 0, 0], fov: 40 }, { t: 1, pos: [0, 820, 0], look: [0, 0, 0.01], fov: 40 }], u);
-    if (u > 1) {
-      camera.up.set(0, 0, 1);
-      camera.lookAt(0, 0, 0.01);
-    }
     c.army.set(simBodies(SR2, 99), cp());
     c.smoke.set([]);
     c.flash.set([]);
@@ -34269,10 +34267,6 @@ var TIMELINE = [
     const d = T.sea - T.sunzi;
     const big = 1e3 * LEN;
     camKeys([{ t: 0, pos: [0, 820, 0], look: [0, 0, 0.01], fov: 40 }, { t: 2.2, pos: [0, 640, -120], look: [0, 0, 120], fov: 40 }, { t: d, pos: [0, 520, -300], look: [0, 900, 3e3], fov: 42 }], u);
-    if (u < 0.05) {
-      camera.up.set(0, 0, 1);
-      camera.lookAt(0, 0, 0.01);
-    }
     c.army.set(simBodies(SR2, 99), cp());
     c.smoke.set([]);
     c.flash.set([]);
@@ -34301,12 +34295,12 @@ var TIMELINE = [
     counters(c.hud, 27, 33, env(u, 0.8, d - 0.3), ["\u82F1\u56FD", "\u6CD5\u897F\u8054\u5408"]);
     if (u > 4.2 && u < d - 1.6) {
       const ph = toScreen([150, 0, -600]), pv = toScreen([230, 0, 1100]);
-      tag(c.hud, ph.x + 60, ph.y, "\u4E24\u5217\uFF0C\u6253\u540C\u4E00\u6BB5", env(u, 4.4, d - 1.7), 42, "#fff", GOLD, "l");
-      tag(c.hud, pv.x + 60, pv.y, "\u524D\u961F\uFF1A\u6CA1\u4EBA\u8DDF\u5B83\u6253", env(u, 5, d - 1.7), 42, "#ddd", void 0, "l");
+      tag(c.hud, ph.x + 70, ph.y, "\u4E24\u5217\uFF0C\u6253\u540C\u4E00\u6BB5", env(u, 4.4, d - 1.7), 52, "#fff", GOLD, "l");
+      tag(c.hud, pv.x + 70, pv.y, "\u524D\u961F\uFF1A\u6CA1\u4EBA\u8DDF\u5B83\u6253", env(u, 5, d - 1.7), 52, "#eee", void 0, "l");
     }
     sub(c.hud, "\u82F1\u56FD\u8239\u5C11\uFF0C\u786C\u62FC[\u8BE5\u8F93]", u, 0.05, 3.4);
     sub(c.hud, "\u4E24\u5217\uFF0C\u5168\u538B\u5411[\u540C\u4E00\u6BB5]", u, 3.8, 7.2);
-    seaDraw(c, u, { exposure: 0.6 + 0.6 * (1 - clamp01(u / 0.8)) });
+    seaDraw(c, u, { exposure: 0.5 + 0.7 * (1 - clamp01(u / 0.8)) });
   } },
   // 15b — CLIMAX (15 s): the lead ship cuts the line on the downbeat; slow motion past the stern; the second column breaks through at u = 7.5; crane up on the loudest bar
   { a: T.climax, b: T.chart, draw: (c, u) => {
@@ -34323,20 +34317,20 @@ var TIMELINE = [
     const a = broadsides(near, tm, 0.55, 7), b = broadsides(COLS(adv).slice(12, 18), tm, 0.55, 9), e = broadsides(COLS(adv).slice(0, 6).filter(() => u > 7), tm + 1.3, 0.6, 11);
     c.seaSmoke.set([...a.sm, ...b.sm, ...e.sm]);
     c.seaFlash.set([...a.fl, ...b.fl, ...e.fl]);
-    seaDraw(c, T.climax - T.sea + u, { bloom: 0.8, vig: 0.42 });
+    seaDraw(c, T.climax - T.sea + u, { bloom: 0.6, vig: 0.45, exposure: 0.46 });
   } },
   // 15c — chart: the line in three pieces, the van sails away
   { a: T.chart, b: T.quiet, draw: (c, u) => {
     const d = T.quiet - T.chart;
     const tt = T.chart - T.sea + u;
     const adv = 1500 + 90 * (T.climax - T.sea) + 3.4 * 60 + 8 * 60 + u * 40;
-    camKeys([{ t: 0, pos: [-800, 900, -1400], look: [0, 0, 0], fov: 42 }, { t: 1.6, pos: [-200, 4200, 0], look: [-200, 0, 0.01], fov: 45 }], u);
+    camKeys([{ t: 0, pos: [-800, 900, -1400], look: [0, 0, 0], fov: 42 }, { t: 1.6, pos: [-350, 2700, 350], look: [-350, 0, 350.01], fov: 45 }], u);
     if (u > 1.6) {
-      camera.up.set(0, 0, 1);
-      camera.lookAt(-200, 0, 0.01);
+      camera.up.set(1, 0, 0);
+      camera.lookAt(-350, 0, 350.01);
     }
-    seaMarks(c, 0, 0);
     const van = ease2((u - 1.8) / 5) * 900;
+    seaMarks(c, env(u, 1.8, 99) * 0.8, 0, false);
     setFleet(c.sea.combined, LINE(tt, van), u);
     setFleet(c.sea.british, COLS(adv), u);
     c.seaSmoke.set([]);
@@ -34348,7 +34342,7 @@ var TIMELINE = [
     html(c.hud, `<div class="lbl" style="left:0;right:0;top:860px;text-align:center;font-size:58px;opacity:${env(u, 7.5, 99)}"><span style="text-shadow:0 0 8px ${BLUE},0 0 24px ${BLUE}">\u82F1\u56FD \u635F\u5931 0 \u8258</span> &nbsp;\xB7&nbsp; <span style="text-shadow:0 0 8px ${RED},0 0 24px ${RED}">\u5BF9\u65B9 \u635F\u5931\u4E00\u534A\u4EE5\u4E0A</span></div>`);
     sub(c.hud, "\u654C\u4EBA\u7684\u524D\u961F\uFF0C[\u8D76\u4E0D\u56DE\u6765]", u, 0.3, 3.7);
     sub(c.hud, "\u82F1\u56FD\uFF0C\u4E00\u8258\u8239\u90FD[\u6CA1\u4E22]", u, 7.5, 10.9);
-    seaDraw(c, tt, { sepia: sep * 0.85, bloom: 0.3, vig: 0.5 });
+    seaDraw(c, tt, { sepia: sep * 0.55, bloom: 0.3, vig: 0.5, exposure: 0.55 });
   } },
   // 16 — quiet: one ship drifting at sunset, no text; a bank of smoke crosses the lens and carries the cut to the field
   { a: T.quiet, b: T.limit, draw: (c, u) => {
@@ -34373,8 +34367,6 @@ var TIMELINE = [
     const bodies = simBodies(SL, st, "aim").map((b, i) => Math.abs(SL.units[i].z) > 120 ? { ...b, x: b.x + (SL.units[i].side ? 40 : -40), pose: "rest" } : b);
     c.army.set(bodies, cp());
     const sm = simSmoke(SL, st);
-    const R = rnd(9);
-    for (let k = 0; k < 300; k++) sm.sm.push([(R() - 0.5) * 300, 3 + R() * 14, (R() - 0.5) * 500, 18 + R() * 20, 0.85, 0.8, 0.76, 0.22]);
     c.smoke.set(sm.sm);
     c.flash.set(sm.fl);
     c.tracers.set([]);
@@ -34385,7 +34377,7 @@ var TIMELINE = [
   { a: T.ending, b: T.card, draw: (c, u) => {
     clearLand(c);
     const d = T.card - T.ending;
-    camKeys([{ t: 0, pos: [-160, 30, -170], look: [0, 0, 0], fov: 40 }, { t: d, pos: [-230, 110, -260], look: [0, 0, 0], fov: 40 }], u);
+    camKeys([{ t: 0, pos: [-110, 16, -120], look: [0, 0, 0], fov: 40 }, { t: d, pos: [-150, 45, -170], look: [0, 0, 0], fov: 40 }], u);
     const R = rnd(5), m = ease2((u - 0.1) / 3.4);
     const bodies = [];
     const centres = Array.from({ length: 8 }, () => [(R() - 0.5) * 300, (R() - 0.5) * 240]);
@@ -34405,7 +34397,7 @@ var TIMELINE = [
   // 19 — end card
   { a: T.card, b: T.end, draw: (c, u) => {
     clearLand(c);
-    camKeys([{ t: 0, pos: [-230, 110, -260], look: [0, 0, 0], fov: 40 }], 0);
+    camKeys([{ t: 0, pos: [-150, 45, -170], look: [0, 0, 0], fov: 40 }], 0);
     c.army.set([], cp());
     landDraw(c, { exposure: 0.45, warm: 0.12, vig: 0.6, fade: 0.85 });
     const o = env(u, 0.2, 99, 0.6);
