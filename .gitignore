@@ -52,3 +52,4 @@ episodes/*/build/node_modules/
 # Remotion projects: dependencies and renders stay local
 episodes/*/remotion/node_modules/
 episodes/*/remotion/out/
+episodes/*/remotion/look_check/
