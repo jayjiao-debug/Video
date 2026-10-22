@@ -351,7 +351,7 @@ const FigAi: React.FC<FigProps> = ({T, v, draw, open, orn, late}) => (
 	</g>
 );
 
-const FigJu: React.FC<FigProps> = ({T, v, draw, open, orn, late}) => {
+const FigJuA: React.FC<FigProps> = ({T, v, draw, open, orn, late}) => {
 	const tr = 1.4 * Math.sin(T * 37) * Math.sin(T * 6.3);
 	const spikes = Array.from({length: 23}, (_, i) => { const a = lerp(-172, -8, i / 22) * Math.PI / 180, r0 = 160, r1 = 200 + 60 * rnd(i, 2) + 30 * Math.sin(i * 1.7); return [Math.cos(a) * r0, Math.sin(a) * r0 - 14, Math.cos(a + 0.03 * Math.sin(T * 9 + i)) * r1, Math.sin(a) * r1 - 14] as const; });
 	const hair = 'M-122,-30 ' + spikes.map(([x0, y0, x1, y1], i) => `L${x1.toFixed(1)},${y1.toFixed(1)} L${(spikes[i + 1] ? (x0 + spikes[i + 1][0]) / 2 : 122).toFixed(1)},${(spikes[i + 1] ? (y0 + spikes[i + 1][1]) / 2 : -30).toFixed(1)}`).join(' ') + ' Z';
@@ -377,6 +377,61 @@ const FigJu: React.FC<FigProps> = ({T, v, draw, open, orn, late}) => {
 		</g>
 	</g>;
 };
+const FigJuB: React.FC<FigProps> = ({T, v, draw, open, orn, late}) => {
+	const tr = 1.4 * Math.sin(T * 37) * Math.sin(T * 6.3);
+	const N = 31, sp = Array.from({length: N}, (_, i) => { const a = lerp(-174, -6, i / (N - 1)) * Math.PI / 180, r0 = 166, r1 = 196 + 46 * rnd(i, 2) + 16 * Math.sin(i * 1.7), j = 0.03 * Math.sin(T * 9 + i); return {b: [Math.cos(a) * r0, Math.sin(a) * r0 - 14] as P, t: [Math.cos(a + j) * r1, Math.sin(a + j) * r1 - 14] as P}; });
+	const f = (p: P) => p[0].toFixed(1) + ',' + p[1].toFixed(1);
+	const hair = 'M' + f(sp[0].b) + ' ' + sp.map((q, i) => `L${f(q.t)} L${f(i < N - 1 ? [(q.b[0] + sp[i + 1].b[0]) / 2, (q.b[1] + sp[i + 1].b[1]) / 2] : q.b)}`).join(' ') + ` C140,-110 84,-134 0,-132 C-84,-134 -140,-110 ${f(sp[0].b)} Z`;
+	const hands = late(0);
+	// the back of one hand (s = +1 right, -1 left): four fingers held together, tips at the nose, thumb hidden behind
+	const back = (s: number) => { const X = (x: number) => (s * x).toFixed(1); return `M${X(6)},252 C${X(2)},190 ${X(0)},130 ${X(2)},72 Q${X(2)},38 ${X(16)},38 Q${X(29)},38 ${X(30)},62 Q${X(30)},30 ${X(44)},30 Q${X(57)},30 ${X(57)},60 Q${X(58)},36 ${X(70)},36 Q${X(83)},36 ${X(83)},66 Q${X(84)},52 ${X(94)},52 Q${X(105)},54 ${X(105)},82 C${X(110)},140 ${X(108)},196 ${X(98)},246 C${X(140)},300 ${X(180)},360 ${X(214)},440 L${X(70)},440 C${X(50)},360 ${X(24)},300 ${X(6)},252 Z`; };
+	return <g>
+		<FrontFace T={T} v={v} draw={draw} open={open} eye="wide" brow="up" mouth="closed" hideMouth look={0.15 * Math.sin(T * 3)} />
+		<Garment T={T} v={v} draw={draw} />
+		<path d={hair} fill="url(#hairG)" opacity={draw} />
+		<path d={hair} fill="url(#sheenG)" opacity={draw} />
+		{Array.from({length: 9}, (_, k) => { const x = lerp(-110, 110, k / 8); return <path key={k} d={`M${x * 0.7},-128 C${x * 0.85},-170 ${x * 1.1},-196 ${x * 1.3 + 4 * Math.sin(T * 9 + k)},${-226 - 10 * rnd(k, 5)}`} stroke={v.hot} strokeWidth={1.1} fill="none" opacity={0.45 * draw} />; })}
+		<Neon d={hair} v={v} draw={draw} w={2.2} L={4000} />
+		<path d={`M-98,${-70 + ((T * 30) % 80)} c6,10 10,16 0,22 c-10,-6 -6,-12 0,-22 Z`} fill={v.hot} opacity={0.9 * open} />
+		<g opacity={hands} transform={`translate(${tr},${120 * (1 - out3(hands)) + tr * 0.5})`}>
+			{[-1, 1].map((s) => <g key={s} transform={`rotate(${s * 3},0,250)`}>
+				<path d={back(s)} fill="#0b1018" stroke={v.col} strokeWidth={10} opacity={0.3} filter="url(#gM)" />
+				<path d={back(s)} fill="#0b1018" stroke={v.hot} strokeWidth={2.6} strokeLinejoin="round" />
+				{[[30, 62, 150], [57, 60, 162], [83, 66, 150]].map(([x, y0, y1]) => <path key={x} d={`M${s * x},${y0} C${s * (x + 1)},${(y0 + y1) / 2} ${s * (x + 2)},${y1 - 20} ${s * (x + 3)},${y1}`} stroke={v.hot} strokeWidth={1.4} fill="none" opacity={0.6} />)}
+				{[[16, 48], [44, 40], [70, 46], [94, 62]].map(([x, y]) => <path key={'n' + x} d={`M${s * (x - 7)},${y + 8} Q${s * x},${y - 6} ${s * (x + 7)},${y + 8}`} stroke={v.hot} strokeWidth={1.2} fill="none" opacity={0.55} />)}
+				{[[16, 112], [44, 104], [70, 110], [94, 120]].map(([x, y]) => <path key={'k' + x} d={`M${s * (x - 8)},${y} q${s * 8},-5 ${s * 16},0`} stroke={v.hot} strokeWidth={1.1} fill="none" opacity={0.45} />)}
+				<path d={`M${s * 4},258 C${s * 40},250 ${s * 70},248 ${s * 102},252`} stroke="url(#goldG)" strokeWidth={6} fill="none" strokeLinecap="round" />
+				<circle cx={s * 54} cy={250} r={5} fill={v.col} stroke="#fff2c8" strokeWidth={1} />
+			</g>)}
+		</g>
+	</g>;
+};
+const FigJuC: React.FC<FigProps> = ({T, v, draw, open, orn, late}) => {
+	const tr = 1.4 * Math.sin(T * 37) * Math.sin(T * 6.3);
+	const N = 31, sp = Array.from({length: N}, (_, i) => { const a = lerp(-174, -6, i / (N - 1)) * Math.PI / 180, r0 = 166, r1 = 196 + 46 * rnd(i, 2) + 16 * Math.sin(i * 1.7), j = 0.03 * Math.sin(T * 9 + i); return {b: [Math.cos(a) * r0, Math.sin(a) * r0 - 14] as P, t: [Math.cos(a + j) * r1, Math.sin(a + j) * r1 - 14] as P}; });
+	const f = (p: P) => p[0].toFixed(1) + ',' + p[1].toFixed(1);
+	const hair = 'M' + f(sp[0].b) + ' ' + sp.map((q, i) => `L${f(q.t)} L${f(i < N - 1 ? [(q.b[0] + sp[i + 1].b[0]) / 2, (q.b[1] + sp[i + 1].b[1]) / 2] : q.b)}`).join(' ') + ` C140,-110 84,-134 0,-132 C-84,-134 -140,-110 ${f(sp[0].b)} Z`;
+	const hands = late(0);
+	return <g>
+		<FrontFace T={T} v={v} draw={draw} open={open} eye="wide" brow="up" mouth="closed" hideMouth look={0.15 * Math.sin(T * 3)} />
+		<Garment T={T} v={v} draw={draw} />
+		{/* the mouth falls open */}
+		<g opacity={draw}><ellipse cx={0} cy={92} rx={17} ry={22} fill="#05040a" stroke={v.hot} strokeWidth={2.4} /><path d="M-15,80 Q0,72 15,80" stroke={v.col} strokeWidth={2.4} fill="none" /></g>
+		<path d={hair} fill="url(#hairG)" opacity={draw} />
+		<path d={hair} fill="url(#sheenG)" opacity={draw} />
+		{Array.from({length: 9}, (_, k) => { const x = lerp(-110, 110, k / 8); return <path key={k} d={`M${x * 0.7},-128 C${x * 0.85},-170 ${x * 1.1},-196 ${x * 1.3 + 4 * Math.sin(T * 9 + k)},${-226 - 10 * rnd(k, 5)}`} stroke={v.hot} strokeWidth={1.1} fill="none" opacity={0.45 * draw} />; })}
+		<Neon d={hair} v={v} draw={draw} w={2.2} L={4000} />
+		<path d={`M-98,${-70 + ((T * 30) % 80)} c6,10 10,16 0,22 c-10,-6 -6,-12 0,-22 Z`} fill={v.hot} opacity={0.9 * open} />
+		{/* both hands pressed to the cheeks */}
+		<g opacity={hands} transform={`translate(${tr},${60 * (1 - out3(hands)) + tr * 0.5})`}>
+			{[1, -1].map((s) => <g key={s} transform={`translate(${s * 200},258) scale(${s},1) rotate(-6) scale(1.0)`}>
+				<Hand T={T} v={v} spread={0.45} arm w={2.6} fill="#0b1018" />
+			</g>)}
+		</g>
+	</g>;
+};
+const JU_STYLE: 'A' | 'B' | 'C' = 'A';
+const FigJu: React.FC<FigProps> = (p) => JU_STYLE === 'A' ? <FigJuA {...p} /> : JU_STYLE === 'B' ? <FigJuB {...p} /> : <FigJuC {...p} />;
 
 const FigLove: React.FC<FigProps> = ({T, v, draw, open, orn, late}) => {
 	const pulse = Math.max(0, 1 - ((((T - PH) % BEAT) + BEAT) % BEAT) / 0.25);
