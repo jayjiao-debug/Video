@@ -227,8 +227,8 @@ const FigXi: React.FC<FigProps> = ({T, v, draw, open, orn}) => {
 	const bob = 6 * Math.sin(T * Math.PI * 2 / (BEAT * 2));
 	return <g transform={`translate(0,${bob}) rotate(${-4 + 2 * Math.sin(T * 1.3)})`}>
 		{/* twin buns and fluttering ribbons */}
-		{[1, -1].map((s) => <g key={s} opacity={orn(0)}>
-			{Array.from({length: 3}, (_, k) => { const w = Math.sin(T * 3 + k + s) * 30; return <path key={k} d={`M${s * 130},-200 C${s * (200 + k * 30)},${-260 + w} ${s * (260 + k * 40)},${-140 - w} ${s * (330 + k * 30)},${-80 + w * 1.4}`} stroke={k === 1 ? '#ff6a4a' : v.col} strokeWidth={10 - k * 2} fill="none" opacity={0.85} />; })}
+		{[1, -1].map((s) => <g key={s}>
+			{Array.from({length: 3}, (_, k) => { const w = Math.sin(T * 3 + k + s) * 30 * orn(0); return <path key={k} d={`M${s * 130},-200 C${s * (200 + k * 30)},${-260 + w} ${s * (260 + k * 40)},${-140 - w} ${s * (330 + k * 30)},${-80 + w * 1.4}`} stroke={k === 1 ? '#ff6a4a' : v.col} strokeWidth={10 - k * 2} fill="none" opacity={0.85} />; })}
 			<circle cx={s * 110} cy={-200} r={70} fill="#0d0a10" />
 			<Neon d={`M${s * 110 - 70},-200 A70,70 0 1,1 ${s * 110 + 70},-200 A70,70 0 1,1 ${s * 110 - 70},-200`} v={v} draw={draw} w={2.6} />
 			{[0, 1, 2].map((k) => <path key={k} d={`M${s * 60},${-230 + k * 22} C${s * 100},${-262 + k * 18} ${s * 140},${-250 + k * 14} ${s * 172},${-210 + k * 10}`} stroke={v.hot} strokeWidth={1.4} fill="none" opacity={0.6 * draw} />)}
@@ -580,25 +580,104 @@ const Icon: React.FC<{x: number; y: number; ch: string; col: string; o: number; 
 	</g>
 );
 
-/** the hit on a downbeat: a light pillar, a hot core, two shockwaves, gold and colour shards, god rays */
-const HitFX: React.FC<{hit: number; cx: number; cy: number; col: string; hot: string; seed: number}> = ({hit, cx, cy, col, hot, seed}) => {
-	if (hit < 0 || hit > 1.1) return null;
-	const u = cl01(hit / 0.45), k1 = cl01(hit / 0.6), k2 = cl01((hit - 0.07) / 0.85), ks = cl01(hit / 1.0);
-	const pw = 260 * Math.pow(1 - u, 2) + 4;
+/** the sample's hit: the whole frame lifts to grey for one frame, a little for the next — nothing more */
+const Lift: React.FC<{hit: number}> = ({hit}) => { const f = Math.round(hit * FPS), o = f === 0 ? 0.42 : f === 1 ? 0.14 : 0; return o > 0 ? <rect width={W} height={H} fill="#cfcad8" opacity={o} /> : null; };
+/** two thin rings opening from a point */
+const Rings: React.FC<{hit: number; x: number; y: number; col: string}> = ({hit, x, y, col}) => hit < 0 || hit > 0.8 ? null : <g>{[0, 1].map((k) => { const u = cl01((hit - k * 0.05) / (0.7 - k * 0.15)); return u > 0 && u < 1 ? <circle key={k} cx={x} cy={y} r={(k ? 70 : 120) + (k ? 420 : 820) * out3(u)} fill="none" stroke={k ? col : '#fff'} strokeWidth={3.2 * (1 - u) + 0.6} opacity={0.9 * (1 - u)} /> : null; })}</g>;
+
+/** a filled strip along a centre line, width w(u) */
+const strip = (c: P[], w: (u: number) => number) => {
+	const n = c.length - 1, L: P[] = [], R: P[] = [];
+	c.forEach((p, i) => { const a = c[Math.max(0, i - 1)], b = c[Math.min(n, i + 1)], dx = b[0] - a[0], dy = b[1] - a[1], l = Math.hypot(dx, dy) || 1, nx = -dy / l, ny = dx / l, h = w(i / n) / 2; L.push([p[0] + nx * h, p[1] + ny * h]); R.push([p[0] - nx * h, p[1] - ny * h]); });
+	const f = (q: P) => q[0].toFixed(1) + ',' + q[1].toFixed(1);
+	return 'M' + L.map(f).join(' L') + ' L' + R.reverse().map(f).join(' L') + ' Z';
+};
+const cub = (a: P, b: P, c: P, d: P, u: number): P => { const m = 1 - u; return [m * m * m * a[0] + 3 * m * m * u * b[0] + 3 * m * u * u * c[0] + u * u * u * d[0], m * m * m * a[1] + 3 * m * m * u * b[1] + 3 * m * u * u * c[1] + u * u * u * d[1]]; };
+
+/** each voice's signature piece behind the figure (in figure space), unfurling on the hit */
+const AccBack: React.FC<{T: number; v: Voice; u: number}> = ({T, v, u}) => {
+	if (u <= 0) return null;
+	const k = out3(u);
+	switch (v.kind) {
+		case 'xi': return <g opacity={cl01(u * 3)}>{[1, -1].map((s) => { const sw = 5 * Math.sin(T * 1.8 + s), x = s * 330, y = -60 + 40 * (1 - k); return <g key={s} transform={`translate(${x},${y}) rotate(${sw})`}>
+			<line x1={0} y1={-400} x2={0} y2={-52} stroke={GOLD} strokeWidth={1.4} opacity={0.7} />
+			<ellipse rx={92} ry={70} fill="#ff4a2a" opacity={0.35} filter="url(#gL)" />
+			<rect x={-26} y={-56} width={52} height={12} rx={3} fill="url(#goldG)" />
+			<path d="M-56,-44 C-74,-20 -74,20 -56,44 L56,44 C74,20 74,-20 56,-44 Z" fill="#c8241a" stroke="#ffd2a0" strokeWidth={2} />
+			{[-30, 0, 30].map((lx) => <path key={lx} d={`M${lx * 0.7},-44 C${lx * 1.25},-14 ${lx * 1.25},14 ${lx * 0.7},44`} stroke="#ffb070" strokeWidth={1.2} fill="none" opacity={0.7} />)}
+			<text y={13} textAnchor="middle" style={{fontFamily: SERIF, fontWeight: 900, fontSize: 40}} fill="#ffe08a">喜</text>
+			<rect x={-26} y={44} width={52} height={12} rx={3} fill="url(#goldG)" />
+			{[-8, -3, 2, 7].map((tx) => <line key={tx} x1={tx} y1={56} x2={tx + 2 * Math.sin(T * 2 + tx)} y2={112} stroke="#ff6a4a" strokeWidth={2} />)}
+		</g>; })}</g>;
+		case 'nu': return <g>{[1, -1].map((s) => Array.from({length: 5}, (_, j) => { const L = (400 - Math.abs(j - 2) * 40) * lerp(0.4, 1, k), w = 34, wig = 14 * Math.sin(T * 6 + j * 1.7 + s), cur = 60 + 20 * Math.sin(T * 2 + j); return <g key={s + '-' + j} transform={`translate(${s * 180},300) rotate(${s * (30 + j * 12)})`}>
+			<path d={`M${-w},0 C${-w - 30},${-L * 0.35} ${cur + wig},${-L * 0.6} ${cur * 0.6 + wig},${-L} C${cur * 0.2 + 30},${-L * 0.7} ${w + 20},${-L * 0.35} ${w},0 Z`} fill="#ff5a1a" opacity={0.3} filter="url(#gM)" />
+			<path d={`M${-w},0 C${-w - 30},${-L * 0.35} ${cur + wig},${-L * 0.6} ${cur * 0.6 + wig},${-L} C${cur * 0.2 + 30},${-L * 0.7} ${w + 20},${-L * 0.35} ${w},0 Z`} fill="url(#flameG)" opacity={0.55} />
+			<path d={`M${-w * 0.3},0 C${-w * 0.5},${-L * 0.3} ${cur * 0.6 + wig * 0.6},${-L * 0.5} ${cur * 0.4 + wig * 0.6},${-L * 0.68} C${cur * 0.1 + 10},${-L * 0.45} ${w * 0.4},${-L * 0.2} ${w * 0.3},0 Z`} fill="#fff1c4" opacity={0.5} />
+		</g>; }))}</g>;
+		case 'ai': return <g opacity={k}>{Array.from({length: 17}, (_, i) => { const x0 = lerp(-330, 330, i / 16), y0 = -340 + 60 * Math.pow(x0 / 330, 2), len = (380 + 340 * rnd(i, 51)) * k, n = Math.floor(len / 28); return <g key={i}>
+			<line x1={x0} y1={y0} x2={x0 + 6 * Math.sin(T * 1.1 + i)} y2={y0 + len} stroke={v.hot} strokeWidth={0.8} opacity={0.5} />
+			{Array.from({length: n}, (_, j) => { const q = j / Math.max(1, n); return <circle key={j} cx={x0 + 6 * Math.sin(T * 1.1 + i) * q} cy={y0 + j * 28 + 14} r={j % 4 === 3 ? 4.6 : 2.6} fill="#eef2ff" opacity={0.85} />; })}
+		</g>; })}</g>;
+		case 'ju': { const fl = 1 - 0.1 * Math.abs(Math.sin(T * 3.2)); return <g>{[1, -1].map((s) => <g key={s} transform={`translate(${s * 110},210) scale(${0.6 * s * fl * lerp(0.3, 1, k)},${0.6 * lerp(0.3, 1, k)})`}>
+			<path d="M-20,-10 C140,-280 400,-430 450,-260 C480,-150 330,-40 40,10 Z" fill="#061016" stroke={v.hot} strokeWidth={2.4} />
+			<path d="M10,30 C220,10 380,110 350,230 C320,320 160,250 20,60 Z" fill="#061016" stroke={v.hot} strokeWidth={2.4} />
+			{[[300, -220, 48], [250, 160, 32]].map(([x, y, r], j) => <g key={j}><circle cx={x} cy={y} r={r} fill="none" stroke={v.col} strokeWidth={3} /><circle cx={x} cy={y} r={r * 0.6} fill={v.col} opacity={0.35} /><circle cx={x + r * 0.12} cy={y} r={r * 0.25} fill="#e8fbff" /><circle cx={x + r * 0.15} cy={y} r={r * 0.1} fill="#000" /></g>)}
+			{[[-20, -10, 420, -280], [-10, 0, 380, -130], [0, 10, 300, -20], [10, 40, 330, 150], [20, 60, 240, 240]].map(([a, b, c, d], j) => <path key={'v' + j} d={`M${a},${b} Q${(a + c) / 2},${(b + d) / 2 - 40} ${c},${d}`} stroke={v.hot} strokeWidth={1} fill="none" opacity={0.4} />)}
+		</g>)}</g>; }
+		case 'love': return <g opacity={cl01(u * 3)}>{[1, -1].map((s) => { const c = Array.from({length: 36}, (_, i) => { const q = i / 35 * k, p = cub([s * 40, 160], [s * 280, -60], [s * 430, 220], [s * 480, 660], q); return [p[0] + 16 * Math.sin(q * 9 + T * 1.5 + s), p[1]] as P; }); const wd = (q: number) => 44 + 16 * Math.sin(q * 6 + 1); return <g key={s}><path d={strip(c, wd)} fill={v.col} opacity={0.35} filter="url(#gM)" /><path d={strip(c, wd)} fill={v.hot} opacity={0.32} /><path d={strip(c, (q) => wd(q) * 0.35)} fill="#fff" opacity={0.25} /><path d={strip(c, wd)} fill="none" stroke="#fff" strokeWidth={1.2} opacity={0.6} /></g>; })}</g>;
+		default: return null;
+	}
+};
+/** pieces in front of the figure */
+const AccFront: React.FC<{T: number; v: Voice; u: number}> = ({T, v, u}) => {
+	if (u <= 0) return null;
+	const k = out3(u);
+	if (v.kind === 'wu') {
+		// a green serpent over her back shoulder, rising behind her head
+		const c: P[] = Array.from({length: 46}, (_, i) => { const q = i / 45; const p = q < 0.55 ? cub([-470, 720], [-360, 400], [-40, 560], [-140, 330], q / 0.55) : cub([-140, 330], [-230, 160], [-420, 180], [-330, 20], (q - 0.55) / 0.45); return [p[0] + 6 * Math.sin(T * 2 + q * 8) * q, p[1] - 4 * Math.sin(T * 1.6 + q * 5)] as P; });
+		const vis = Math.max(2, Math.round(45 * k)), body = c.slice(0, vis + 1), head = body[body.length - 1], prev = body[body.length - 2], ha = Math.atan2(head[1] - prev[1], head[0] - prev[0]) * 180 / Math.PI;
+		const w = (q: number) => lerp(6, 44, Math.min(1, q * 2.2)) * (q > 0.9 ? lerp(1, 0.75, (q - 0.9) / 0.1) : 1);
+		const tongue = Math.sin(T * 9) > 0.2;
+		return <g opacity={cl01(u * 3)}>
+			<path d={strip(body, w)} fill={v.col} opacity={0.35} filter="url(#gM)" />
+			<path d={strip(body, w)} fill="#08140a" stroke={v.col} strokeWidth={2.4} strokeLinejoin="round" />
+			{body.map((p, i) => i > 3 && i % 2 === 0 && i < body.length - 2 ? <circle key={i} cx={p[0]} cy={p[1]} r={3} fill={v.hot} opacity={0.55} /> : null)}
+			<g transform={`translate(${head[0]},${head[1]}) rotate(${ha})`}>
+				{tongue && <path d="M42,0 L74,0 L84,-7 M74,0 L84,7" stroke="#ff4a4a" strokeWidth={2.4} fill="none" />}
+				<path d="M-14,-20 C14,-30 40,-16 46,0 C40,16 14,30 -14,20 C-24,10 -24,-10 -14,-20 Z" fill="#08140a" stroke={v.col} strokeWidth={2.6} />
+				<ellipse cx={18} cy={-10} rx={7} ry={5} fill="#e6ff7a" /><ellipse cx={19} cy={-10} rx={1.6} ry={4.4} fill="#000" />
+				<ellipse cx={18} cy={-10} rx={16} ry={10} fill={v.col} opacity={0.5} filter="url(#gS)" />
+			</g>
+		</g>;
+	}
+	if (v.kind === 'yu') return <g opacity={k}>{[0, 1, 2].map((j) => <g key={j}>{Array.from({length: 23}, (_, i) => { const q = i / 22, x = lerp(-280 + j * 30, 280 - j * 30, q), y = 262 + j * 40 + (70 + j * 20) * Math.sin(Math.PI * q); return i % 4 === 2 ? <g key={i} transform={`translate(${x},${y + 8}) rotate(${(q - 0.5) * 40})`}><circle r={12} fill="url(#goldG)" /><rect x={-4} y={-4} width={8} height={8} fill="#1a0a2c" /></g> : <circle key={i} cx={x} cy={y} r={3.2} fill={i % 2 ? GOLD : v.col} />; })}</g>)}</g>;
+	return null;
+};
+
+/** fine particles living behind the figure; on the hit they open outward from the orb */
+const BackMotes: React.FC<{T: number; v: Voice; hit: number}> = ({T, v, hit}) => {
+	if (hit < 0) return null;
+	const burst = out3(cl01(hit / 0.9));
 	return <g>
-		{u < 1 && <g>
-			<rect x={cx - pw} y={0} width={pw * 2} height={H} fill={col} opacity={0.55 * (1 - u)} filter="url(#gL)" />
-			<linearGradient id="pilG" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stopColor={hot} stopOpacity="0" /><stop offset="0.5" stopColor="#fff" stopOpacity="1" /><stop offset="1" stopColor={hot} stopOpacity="0" /></linearGradient>
-			<rect x={cx - pw * 0.3} y={0} width={pw * 0.6} height={H} fill="url(#pilG)" opacity={0.9 * (1 - u)} />
-			<ellipse cx={cx} cy={cy} rx={1400 * out3(u)} ry={7} fill="#fff" opacity={0.9 * (1 - u)} filter="url(#gS)" />
-			<circle cx={cx} cy={cy} r={lerp(80, 460, out3(u))} fill="url(#hotG)" opacity={0.85 * Math.pow(1 - u, 2)} />
-			<g transform={`translate(${cx},${cy}) rotate(${seed * 17 + hit * 30})`}>{Array.from({length: 14}, (_, i) => <path key={i} transform={`rotate(${i * 360 / 14})`} d={`M-6,-200 L0,${-200 - 1100 * out3(u)} L6,-200 Z`} fill={hot} opacity={0.5 * (1 - u)} />)}</g>
-		</g>}
-		{k1 < 1 && <circle cx={cx} cy={cy} r={260 + 1000 * out3(k1)} fill="none" stroke={hot} strokeWidth={18 * (1 - k1)} opacity={1 - k1} />}
-		{k2 > 0 && k2 < 1 && <circle cx={cx} cy={cy} r={220 + 760 * out3(k2)} fill="none" stroke="url(#goldG)" strokeWidth={5 * (1 - k2)} opacity={1 - k2} />}
-		{ks < 1 && Array.from({length: 30}, (_, i) => { const a = (i / 30) * Math.PI * 2 + (rnd(i, seed) - 0.5) * 0.3, d = 240 + (380 + 520 * rnd(i, seed + 1)) * out3(ks), sz = 9 + 16 * rnd(i, seed + 2); return <path key={i} transform={`translate(${cx + Math.cos(a) * d},${cy + Math.sin(a) * d + 120 * ks * ks}) rotate(${(rnd(i, seed + 3) - 0.5) * 720 * ks + i * 37})`} d={`M0,${-sz} L${sz * 0.45},0 L0,${sz} L${-sz * 0.45},0 Z`} fill={i % 3 === 0 ? GOLD : i % 3 === 1 ? col : hot} opacity={1 - ks} />; })}
+		{Array.from({length: 60}, (_, i) => {
+			const a = rnd(i, 41) * Math.PI * 2 + T * 0.06 * (i % 2 ? 1 : -1), r0 = 230 + 420 * rnd(i, 42), sp = 0.06 + 0.07 * rnd(i, 43), ph = (T * sp + rnd(i, 44)) % 1;
+			const r = r0 * lerp(0.35, 1, burst), x = Math.cos(a) * r, y = Math.sin(a) * r - 160 * ph * (v.kind === 'ai' ? -1 : 1), o = Math.sin(Math.PI * ph) * (0.35 + 0.65 * burst);
+			const sz = 0.6 + rnd(i, 45);
+			if (v.kind === 'nu') return <circle key={i} cx={x} cy={y} r={2 + 2.5 * sz} fill={i % 3 ? '#ffb070' : '#fff1c4'} opacity={o} />;
+			if (v.kind === 'ai') return <path key={i} d={`M${x},${y} c4,7 7,11 0,15 c-7,-4 -4,-8 0,-15 Z`} fill={v.hot} opacity={0.7 * o} />;
+			if (i % 4 === 0) return <circle key={i} cx={x} cy={y} r={4 + 5 * sz} fill="none" stroke={v.hot} strokeWidth={1.3} opacity={0.7 * o} />;
+			if (i % 4 === 1) return <path key={i} transform={`translate(${x},${y}) scale(${sz})`} d="M0,-11 L2.4,-2.4 L11,0 L2.4,2.4 L0,11 L-2.4,2.4 L-11,0 L-2.4,-2.4 Z" fill={i % 8 === 1 ? GOLD : '#fff'} opacity={o} />;
+			return <circle key={i} cx={x} cy={y} r={1.6 + 2 * sz} fill={v.col} opacity={o} filter={i % 3 ? undefined : 'url(#gS)'} />;
+		})}
+		{hit < 1.3 && Array.from({length: 26}, (_, i) => { const a = i / 26 * Math.PI * 2 + rnd(i, 47) * 0.4, d = 210 + (300 + 260 * rnd(i, 48)) * out3(hit / 1.3); return <circle key={'e' + i} cx={Math.cos(a) * d} cy={Math.sin(a) * d} r={2 + 2 * rnd(i, 49)} fill={i % 3 ? v.hot : GOLD} opacity={1 - hit / 1.3} />; })}
 	</g>;
 };
+
+/** the coming voice's eyes, glowing in the orb during the last two beats before it appears */
+const OrbEyes: React.FC<{v: Voice; u: number; T: number}> = ({v, u, T}) => u <= 0 ? null : <g opacity={u}>{[-1, 1].map((s) => <g key={s} transform={`translate(${s * 54},-4)`}>
+	<ellipse rx={38} ry={12} fill={v.col} opacity={0.9} filter="url(#gM)" />
+	{v.kind === 'ai' ? <path d="M-24,-2 Q0,10 24,-2" stroke="#fff" strokeWidth={3.4} fill="none" strokeLinecap="round" /> : <path d={`M-26,0 Q0,${-12 * (Math.sin(T * 0.9 + 1) > 0.97 ? 0.15 : 1)} 26,0 Q0,9 -26,0 Z`} fill="#fff" />}
+</g>)}</g>;
 
 // ---------------------------------------------------------------- one voice
 const FIG: Record<Kind, React.FC<FigProps>> = {xi: FigXi, nu: FigNu, ai: FigAi, ju: FigJu, love: FigLove, wu: FigWu, yu: FigYu};
@@ -607,88 +686,80 @@ const PLACE: Record<Kind, {dx: number; dy: number; s: number; flip?: boolean}> =
 	love: {dx: 10, dy: 40, s: 1.5}, wu: {dx: -40, dy: 10, s: 1.45}, yu: {dx: 0, dy: 70, s: 1.5},
 };
 const VoiceScene: React.FC<{T: number; v: Voice; i: number}> = ({T, v, i}) => {
-	const t0 = Q0[i], t = T - t0, rv = BAR, CYC = (i < 6 ? Q0[i + 1] : OUT) - t0, hit = t - rv;
+	// the reveal is snapped to the frame that holds the downbeat (never a frame late)
+	const t0 = Q0[i], t = T - t0, rv = Math.round(REV[i] * FPS - 0.2) / FPS - t0, CYC = (i < 6 ? Q0[i + 1] : OUT) - t0, hit = t - rv;
 	const cx = 1400, cy = 500, pl = PLACE[v.kind];
-	// beat map: the line on its downbeat; the last beat gathers the light into the orb; the figure SLAMS in on the
-	// next downbeat (pillar, shockwaves, shards, zoom punch, colour split); beat 2 the name; beat 3 the eyes open;
-	// the next bar the closing line
-	const cap = fade(t, 0.04, 0.3), quote = fade(t, BEAT * 0.5, 0.35), outQ = fade(t, rv - 0.16, 0.14);
-	const gather = cl01((t - (rv - BEAT)) / BEAT);
-	const orb = fade(t, 0, 0.25) * (hit < 0 ? 1 : 0);
-	const lit = cl01((hit + 0.02) / 0.3), rise = cl01((hit + 0.02) / 0.2);
-	const open = ease((hit - 2 * BEAT) / (v.kind === 'ju' ? 0.07 : 0.18));
+	// the sample's beat map: the line on its downbeat; the voice's eyes glow in the orb for the last two beats; on the
+	// next downbeat the frame lifts for a frame, the figure is simply THERE and the name lands with it (motion blur,
+	// two thin rings); its piece unfurls behind it and particles open out; ornaments pop on the half beats
+	const cap = fade(t, 0.04, 0.3), quote = fade(t, BEAT * 0.5, 0.35), outQ = fade(t, rv - 0.2, 0.18);
+	const on = hit >= 0, orb = fade(t, 0, 0.25) * (on ? 0 : 1), icon = 1 - fade(t, rv - 2 * BEAT, 0.3), eyes = fade(t, rv - 2 * BEAT + 0.1, 0.3);
+	const lit = on ? cl01(hit / 0.3) : 0;
+	const open = v.kind === 'ai' ? 0 : on ? 1 : 0;
 	const orn = (k: number) => out3(cl01((hit - BEAT * (0.5 + 0.5 * k)) / 0.22));
-	const flare = Math.max(0, 1 - Math.abs(hit - 2 * BEAT) / 0.16);
-	const sub = fade(t, rv + BEAT - 0.12, 0.2), name = cl01((hit - BEAT) / 0.16), say = fade(t, rv + 4 * BEAT, 0.3);
+	const nameU = on ? cl01(hit / 0.3) : 0, tag = fade(t, rv + 0.12, 0.25), say = fade(t, rv + 4 * BEAT, 0.3);
 	const leave = fade(t, CYC - 0.22, 0.22);
-	const shakeHit = hit >= 0 && hit < 0.32 ? 11 * (1 - hit / 0.32) * Math.sin(hit * 90) : 0;
-	const shakeMood = v.kind === 'ju' || v.kind === 'nu' ? (hit > 0.6 ? 4 * Math.sin(T * 41) * Math.sin(T * 7.3) * (1 - cl01((hit - 0.6) / 2.5)) : 0) : 0;
-	const shake = shakeHit + shakeMood;
-	const beatPulse = Math.max(0, 1 - (((T - PH) % BEAT) + BEAT) % BEAT / 0.16);
-	const punch = hit >= 0 ? 1 + 0.075 * Math.pow(1 - cl01(hit / 0.4), 2) : 1 - 0.035 * ease(gather);
-	const push = (1 + 0.05 * ease(t / CYC)) * (1 + 0.014 * beatPulse * lit);
-	const dim = hit < 0 ? 0.45 * Math.pow(gather, 2) : 0.45 * (1 - cl01(hit / 0.06));
-	const sweep = cl01((hit - BEAT - 0.16) / 0.45);
-	const split = hit >= 0 && hit < 0.2 ? 18 * (1 - hit / 0.2) : 0;
+	const shake = v.kind === 'ju' || v.kind === 'nu' ? (hit > 0.6 ? 3 * Math.sin(T * 41) * Math.sin(T * 7.3) * (1 - cl01((hit - 0.6) / 2.5)) : 0) : 0;
+	const beatPulse = Math.max(0, 1 - ((((T - PH) % BEAT) + BEAT) % BEAT) / 0.16);
+	const push = (1 + 0.05 * ease(t / CYC)) * (1 + 0.012 * beatPulse * lit);
+	const sweep = cl01((hit - 0.35) / 0.45);
 	const Fig = FIG[v.kind];
-	const figT = (dx: number) => `translate(${pl.dx + dx},${pl.dy}) scale(${pl.s * lerp(1.22, 1, out3(rise))}) ${pl.flip ? 'scale(-1,1)' : ''}`;
+	const figT = `translate(${pl.dx},${pl.dy}) scale(${pl.s * (on ? lerp(1.035, 1, out3(hit / 0.3)) : 1)}) ${pl.flip ? 'scale(-1,1)' : ''}`;
 	const bolts: [P, P][] = [[[cx - 340, cy - 120], [880, 140]], [[cx + 300, cy + 200], [1900, 460]], [[cx - 280, cy + 240], [1000, 900]]];
+	const nb = 46 * (1 - out3(nameU));
 	return (
 		<svg width={W} height={H}>
 			<Defs v={v} />
 			<g opacity={1 - leave} transform={`translate(${shake},${shake * 0.6})`}>
-				<g transform={`translate(${cx},${cy}) scale(${punch}) translate(${-cx},${-cy})`}>
-					<rect x={-100} y={-100} width={W + 200} height={H + 200} fill="url(#bgG)" />
-					{Array.from({length: 50}, (_, k) => <circle key={k} cx={rnd(k) * W} cy={rnd(k, 1) * H} r={0.8 + 1.4 * rnd(k, 2)} fill="#eef" opacity={0.15 + 0.35 * Math.sin(T * 1.2 + k * 2.1) ** 2} />)}
-					<circle cx={520} cy={560} r={620} fill="none" stroke={v.hot} strokeWidth={2.2} opacity={0.25 + 0.4 * lit} />
-					<circle cx={520} cy={560} r={640} fill="none" stroke={v.col} strokeWidth={10} opacity={0.12 * lit} filter="url(#gM)" />
-					<Worlds T={T} v={v} u={cl01(hit / 1.4)} cx={cx} cy={cy} />
-					<g transform={`translate(${cx},${cy}) scale(${push})`}>
-						<Halo T={T} v={v} s={(hit < 0 ? lerp(0.85, 1, out3(t / 0.3)) * (1 - 0.06 * ease(gather)) : lerp(0.78, 1, outBack(cl01(hit / 0.35)))) * (1 + 0.045 * beatPulse * lit)} t={t} rv={rv} lit={lit} />
-						{/* the gather: the orb draws in and brightens, streaks rush to its centre */}
-						{orb > 0 && <g opacity={orb} transform={`scale(${1 - 0.7 * Math.pow(gather, 3)})`}>
-							<circle r={248} fill="url(#orbG)" />
-							<OrbMoment T={T} v={v} />
-							{gather > 0 && <circle r={248} fill="url(#hotG)" opacity={Math.pow(gather, 2)} />}
-						</g>}
-						{gather > 0 && hit < 0 && Array.from({length: 18}, (_, k) => { const a = k / 18 * Math.PI * 2 + rnd(k, v.n) * 0.3, ro = lerp(1000, 90, ease(cl01(gather * 1.15 - rnd(k, 3) * 0.15))), ri = ro * 0.55; return <line key={k} x1={Math.cos(a) * ro} y1={Math.sin(a) * ro} x2={Math.cos(a) * ri} y2={Math.sin(a) * ri} stroke={k % 3 ? v.hot : GOLD} strokeWidth={3} strokeLinecap="round" opacity={0.8 * Math.sin(Math.PI * gather)} />; })}
-						{rise > 0 && <g opacity={cl01(rise * 5)}>
-							{split > 0 && <>
-								<g transform={figT(-split)} filter="url(#chR)" opacity={0.7}><Fig T={T} v={v} draw={out3(rise)} open={open} orn={orn} t={t} /></g>
-								<g transform={figT(split)} filter="url(#chB)" opacity={0.7}><Fig T={T} v={v} draw={out3(rise)} open={open} orn={orn} t={t} /></g>
-							</>}
-							<g transform={figT(0)}><Fig T={T} v={v} draw={out3(cl01((hit + 0.02) / 0.3))} open={open} orn={orn} t={t} /></g>
-						</g>}
-					</g>
-					{v.kind === 'yu' && <ReachHand T={T} v={v} u={cl01((hit - 0.4) / 0.6)} />}
-					{v.kind === 'love' && lit > 0 && Array.from({length: 3}, (_, k) => { const ox = cx + 120, oy = cy - 60, ex = [1180, 1960, 1960][k], ey = [-40, 160, 620][k], w = Math.sin(T * 1.4 + k) * 60, len = 1800; const d = `M${ox},${oy + (k - 1) * 30} C${ox + 160},${oy - 260 + w} ${ex - 200},${ey + 260 - w} ${ex},${ey}`; const u = cl01((hit - 0.4) / 1.4); return <g key={k}><path d={d} stroke={v.col} strokeWidth={6} fill="none" opacity={0.3} filter="url(#gM)" strokeDasharray={len} strokeDashoffset={len * (1 - out3(u - k * 0.05))} /><path d={d} stroke={v.col} strokeWidth={2.2} fill="none" strokeDasharray={len} strokeDashoffset={len * (1 - out3(u - k * 0.05))} /></g>; })}
-					{lit > 0 && bolts.map(([a, b], k) => <Bolt key={k} a={a} b={b} seed={k + v.n * 10} T={T} col={v.col} o={lit * (0.4 + 0.5 * Math.sin(T * 3 + k)) * (v.kind === 'ai' ? 0.4 : 1)} />)}
-					<Particles T={T} v={v} lit={lit} />
-					{dim > 0 && <rect x={-100} y={-100} width={W + 200} height={H + 200} fill="#000" opacity={dim} />}
-					<HitFX hit={hit} cx={cx} cy={cy} col={v.col} hot={v.hot} seed={v.n * 7} />
+				<rect width={W} height={H} fill="url(#bgG)" />
+				{Array.from({length: 50}, (_, k) => <circle key={k} cx={rnd(k) * W} cy={rnd(k, 1) * H} r={0.8 + 1.4 * rnd(k, 2)} fill="#eef" opacity={0.15 + 0.35 * Math.sin(T * 1.2 + k * 2.1) ** 2} />)}
+				<circle cx={520} cy={560} r={620} fill="none" stroke={v.hot} strokeWidth={2.2} opacity={0.25 + 0.4 * lit} />
+				<Worlds T={T} v={v} u={on ? cl01(hit / 1.4) : 0} cx={cx} cy={cy} />
+				<g transform={`translate(${cx},${cy}) scale(${push})`}>
+					<Halo T={T} v={v} s={lerp(0.9, 1, out3(t / 0.3)) * (on ? 1 + 0.035 * Math.max(0, 1 - hit / 0.2) : 1)} t={t} rv={rv} lit={lit} />
+					<BackMotes T={T} v={v} hit={hit} />
+					{orb > 0 && <g opacity={orb}>
+						<circle r={248} fill="url(#orbG)" />
+						<g opacity={icon}><OrbMoment T={T} v={v} /></g>
+						<OrbEyes v={v} u={eyes} T={T} />
+					</g>}
+					{on && <g transform={figT}>
+						<AccBack T={T} v={v} u={cl01(hit / 0.5)} />
+						<Fig T={T} v={v} draw={1} open={open} orn={orn} t={t} />
+						<AccFront T={T} v={v} u={orn(1)} />
+					</g>}
 				</g>
-				{/* left: the moment and the line */}
+				{v.kind === 'yu' && <ReachHand T={T} v={v} u={cl01((hit - 0.4) / 0.6)} />}
+				{v.kind === 'love' && lit > 0 && Array.from({length: 3}, (_, k) => { const ox = cx + 120, oy = cy - 60, ex = [1180, 1960, 1960][k], ey = [-40, 160, 620][k], w = Math.sin(T * 1.4 + k) * 60, len = 1800; const d = `M${ox},${oy + (k - 1) * 30} C${ox + 160},${oy - 260 + w} ${ex - 200},${ey + 260 - w} ${ex},${ey}`; const u = cl01((hit - 0.4) / 1.4); return <g key={k}><path d={d} stroke={v.col} strokeWidth={6} fill="none" opacity={0.3} filter="url(#gM)" strokeDasharray={len} strokeDashoffset={len * (1 - out3(u - k * 0.05))} /><path d={d} stroke={v.col} strokeWidth={2.2} fill="none" strokeDasharray={len} strokeDashoffset={len * (1 - out3(u - k * 0.05))} /></g>; })}
+				{lit > 0 && bolts.map(([a, b], k) => <Bolt key={k} a={a} b={b} seed={k + v.n * 10} T={T} col={v.col} o={lit * (0.4 + 0.5 * Math.sin(T * 3 + k)) * (v.kind === 'ai' ? 0.4 : 1)} />)}
+				{on && hit < 0.9 && <Bolt a={[120, 760]} b={[560, 380]} seed={v.n * 3 + 1} T={T} col={v.col} o={1 - hit / 0.9} />}
+				<Particles T={T} v={v} lit={lit} />
+				{/* left: the moment and the line (blurs away sideways just before the beat) */}
 				<BlurText id={`c${v.n}`} x={150} y={470} text={v.when} size={36} weight={600} col="#d4cde2" spacing="0.12em" u={cap} out={outQ} />
 				<BlurText id={`q${v.n}`} x={130} y={590} text={v.line} size={92} u={quote} out={outQ} />
-				{/* left: the name slams in on beat 2 */}
-				<BlurText id={`s${v.n}`} x={150} y={330} text={`七情之${NUM[v.n]}，它叫`} size={38} weight={700} col="#efe9fb" spacing="0.16em" u={sub} />
-				{name > 0 && <g>
+				{/* left: the name lands with the figure */}
+				{on && <g>
+					<ellipse cx={300} cy={525} rx={460} ry={58} fill="#fff" opacity={0.32 * (1 - out3(cl01(hit / 0.9)))} filter="url(#gL)" />
+					<filter id={`nb${v.n}`} x="-40%" y="-20%" width="180%" height="140%"><feGaussianBlur stdDeviation={`${nb.toFixed(2)} 0`} /></filter>
+					<text x={150} y={330} style={{fontFamily: SERIF, fontWeight: 700, fontSize: 38, letterSpacing: '0.16em'}} fill="#efe9fb" opacity={cl01(hit / 0.12)} filter={nb > 0.3 ? `url(#nb${v.n})` : undefined}>{`七情之${NUM[v.n]}，它叫`}</text>
 					<clipPath id={`sw${v.n}`}><rect x={60 + 620 * sweep} y={340} width={110} height={360} transform="skewX(-18)" /></clipPath>
-					<g transform={`translate(300,530) scale(${lerp(1.45, 1, out3(name))}) translate(-300,-530)`} opacity={cl01(name * 3)}>
-						<text x={140} y={640} style={{fontFamily: SERIF, fontWeight: 900, fontSize: 330}} fill={v.col} opacity={0.7 + 0.3 * (1 - out3(name))} filter="url(#gL)">{v.ch}</text>
-						<text x={140} y={640} style={{fontFamily: SERIF, fontWeight: 900, fontSize: 330}} fill="url(#nameG)">{v.ch}</text>
-						<text x={140} y={640} style={{fontFamily: SERIF, fontWeight: 900, fontSize: 330}} fill="#fff" clipPath={`url(#sw${v.n})`}>{v.ch}</text>
+					<g transform={`translate(${-70 * (1 - out3(nameU))},0)`}>
+						<text x={140} y={640} style={{fontFamily: SERIF, fontWeight: 900, fontSize: 330}} fill={v.col} opacity={0.75} filter="url(#gL)">{v.ch}</text>
+						<g filter={nb > 0.3 ? `url(#nb${v.n})` : undefined}>
+							<text x={140} y={640} style={{fontFamily: SERIF, fontWeight: 900, fontSize: 330}} fill="url(#nameG)">{v.ch}</text>
+						</g>
+						{sweep > 0 && sweep < 1 && <text x={140} y={640} style={{fontFamily: SERIF, fontWeight: 900, fontSize: 330}} fill="#fff" clipPath={`url(#sw${v.n})`}>{v.ch}</text>}
 					</g>
-					<g opacity={cl01((hit - BEAT - 0.08) / 0.2)}>
+					<g opacity={tag}>
 						<text x={510} y={470} style={{fontFamily: SERIF, fontWeight: 600, fontSize: 52, fontStyle: 'italic', letterSpacing: '0.1em'}} fill="#fff">{v.py}</text>
 						<rect x={492} y={410} width={6} height={230} fill="url(#goldG)" />
 						<text x={510} y={540} style={{fontFamily: SERIF, fontWeight: 600, fontSize: 30, letterSpacing: '0.24em'}} fill={GOLD}>七情 · 之{NUM[v.n]}</text>
 					</g>
-					{name < 1 && <circle cx={300} cy={530} r={120 + 380 * out3(name)} fill="none" stroke={v.hot} strokeWidth={8 * (1 - name)} opacity={1 - name} />}
+					<Rings hit={hit} x={300} y={525} col={v.col} />
 				</g>}
 				<BlurText id={`y${v.n}`} x={150} y={770} text={v.say} size={48} weight={800} col="#ffffff" spacing="0.05em" u={say} />
 			</g>
-			{flare > 0 && <ellipse cx={cx} cy={cy - 40} rx={900 * flare} ry={6} fill="#fff" opacity={0.8 * flare} filter="url(#gS)" />}
+			<Lift hit={hit} />
 		</svg>
 	);
 };
@@ -715,7 +786,7 @@ const Intro: React.FC<{T: number}> = ({T}) => (
 );
 const Outro: React.FC<{T: number}> = ({T}) => {
 	// bar 25 the question, the seven on the half beats; bar 26 (the break) they hold; bar 27 the title slams with the kick
-	const t = T - OUT, q = fade(t, 0.05, 0.35), qOut = fade(t, 2 * BAR - 0.2, 0.18), title = cl01((t - 2 * BAR) / 0.18), hit = t - 2 * BAR;
+	const tq = Math.round(bt(27) * FPS - 0.2) / FPS - OUT, t = T - OUT, q = fade(t, 0.05, 0.35), qOut = fade(t, tq - 0.2, 0.18), title = t >= tq ? cl01((t - tq) / 0.12) : 0, hit = t - tq;
 	return (
 		<svg width={W} height={H}>
 			<Defs v={{col: GOLD, hot: '#fff2c8', deep: '#1c1408'}} />
@@ -731,7 +802,8 @@ const Outro: React.FC<{T: number}> = ({T}) => {
 				<text x={960} y={690} textAnchor="middle" style={{fontFamily: SERIF, fontWeight: 600, fontSize: 34, letterSpacing: '0.9em'}} fill={GOLD}>喜怒哀惧爱恶欲</text>
 				<ellipse cx={lerp(400, 1520, ease(title))} cy={520} rx={600} ry={9} fill="#fff" opacity={0.8 * Math.sin(Math.PI * title)} filter="url(#gS)" />
 			</g>}
-			<HitFX hit={hit} cx={960} cy={520} col={GOLD} hot="#fff2c8" seed={99} />
+			<Rings hit={hit} x={960} y={540} col={GOLD} />
+			<Lift hit={hit} />
 		</svg>
 	);
 };
