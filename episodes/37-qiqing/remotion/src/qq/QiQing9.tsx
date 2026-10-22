@@ -36,9 +36,9 @@ type Kind = 'xi' | 'nu' | 'ai' | 'ju' | 'love' | 'wu' | 'yu';
 type Voice = {n: number; ch: string; py: string; kind: Kind; col: string; hot: string; deep: string; when: string; line: string; say: string};
 const VOICES: Voice[] = [
 	{n: 1, ch: '喜', py: 'xǐ', kind: 'xi', col: '#ffc23a', hot: '#fff1c4', deep: '#2a1c04', when: '它在你收到他消息的那一秒说', line: '“嘴角，压不住了。”', say: '被在乎的感觉，藏不住。'},
-	{n: 2, ch: '怒', py: 'nù', kind: 'nu', col: '#ff4a2a', hot: '#ffd2b8', deep: '#2c0704', when: '它在你被冤枉时说', line: '“凭什么是我？”', say: '心里有火，是因为在乎公平。'},
+	{n: 2, ch: '怒', py: 'nù', kind: 'nu', col: '#ff4a2a', hot: '#ffd2b8', deep: '#2c0704', when: '它在你被冤枉时说', line: '“凭什么是我?”', say: '心里有火，是因为在乎公平。'},
 	{n: 3, ch: '哀', py: 'āi', kind: 'ai', col: '#7aa6ff', hot: '#dce8ff', deep: '#081226', when: '它在你删掉合照时说', line: '“原来，真的结束了。”', say: '会疼，是因为真的爱过。'},
-	{n: 4, ch: '惧', py: 'jù', kind: 'ju', col: '#5fe0ff', hot: '#d8f8ff', deep: '#04202c', when: '它在你按下发送前说', line: '“万一，他不回呢？”', say: '怕失去，所以不敢开口。'},
+	{n: 4, ch: '惧', py: 'jù', kind: 'ju', col: '#5fe0ff', hot: '#d8f8ff', deep: '#04202c', when: '它在你按下发送前说', line: '“万一，他不回呢?”', say: '怕失去，所以不敢开口。'},
 	{n: 5, ch: '爱', py: 'ài', kind: 'love', col: '#ff4f86', hot: '#ffd6e4', deep: '#2c0616', when: '它在你记住他随口一句话时说', line: '“他说过，他怕冷。”', say: '心里有人，才会记得。'},
 	{n: 6, ch: '恶', py: 'wù', kind: 'wu', col: '#9be35a', hot: '#e6ffd0', deep: '#0c1c06', when: '它在你听见虚伪的客套时说', line: '“别装了。”', say: '讨厌，是在替你守住底线。'},
 	{n: 7, ch: '欲', py: 'yù', kind: 'yu', col: '#c47bff', hot: '#f0dcff', deep: '#1a0a2c', when: '它在你深夜刷购物车时说', line: '“就这一次。”', say: '想要，让人往前，也让人停不下。'},
@@ -83,13 +83,14 @@ const Bolt: React.FC<{a: P; b: P; seed: number; T: number; col: string; w?: numb
 };
 
 // ---------------------------------------------------------------- the face kit (front)
-type Eye = 'calm' | 'happy' | 'wide' | 'angry' | 'sad' | 'lidded';
+type Eye = 'calm' | 'happy' | 'joy' | 'wide' | 'angry' | 'sad' | 'lidded';
 type Brow = 'calm' | 'up' | 'angry' | 'sad' | 'arch';
 type Mouth = 'grin' | 'set' | 'sad' | 'closed' | 'part' | 'smile';
 const FACE_F = 'M0,-170 C72,-170 118,-122 120,-54 C122,-6 114,40 98,78 C82,118 46,152 0,162 C-46,152 -82,118 -98,78 C-114,40 -122,-6 -120,-54 C-118,-122 -72,-170 0,-170 Z';
 const NECK_F = 'M-44,130 C-44,180 -48,222 -58,244 C-140,266 -282,288 -362,352 C-404,388 -424,464 -434,660 L434,660 C424,464 404,388 362,352 C282,288 140,266 58,244 C48,222 44,180 44,130';
 const eyeShape = (e: Eye) => ({
 	calm: {up: 'M-28,2 C-14,-15 12,-19 31,-5', lo: 'M-28,2 C-10,13 14,12 31,-5'},
+	joy: {up: 'M-29,3 C-14,-19 13,-22 32,-4', lo: 'M-29,3 C-10,4 14,3 32,-4'},
 	wide: {up: 'M-29,2 C-16,-24 14,-26 32,-4', lo: 'M-29,2 C-12,20 16,18 32,-4'},
 	happy: {up: 'M-29,6 C-12,-16 14,-16 32,6', lo: 'M-29,6 C-12,-2 14,-2 32,6'},
 	angry: {up: 'M-28,4 C-12,-4 12,-12 31,-12', lo: 'M-28,4 C-10,12 14,10 31,-12'},
@@ -239,7 +240,9 @@ const FigXi: React.FC<FigProps> = ({T, v, draw, open, orn}) => {
 		{/* hair cap with bangs */}
 		<path d="M-122,-60 C-130,-150 -70,-196 0,-196 C70,-196 130,-150 122,-60 C100,-110 60,-120 30,-112 C20,-100 6,-90 -6,-100 C-30,-120 -80,-120 -122,-60 Z" fill="#0f0b12" opacity={draw} />
 		<Neon d="M-122,-60 C-130,-150 -70,-196 0,-196 C70,-196 130,-150 122,-60 C100,-110 60,-120 30,-112 C20,-100 6,-90 -6,-100 C-30,-120 -80,-120 -122,-60" v={v} draw={draw} w={2.4} />
-		<FrontFace T={T} v={v} draw={draw} open={open} eye="happy" brow="arch" mouth="grin" />
+		<FrontFace T={T} v={v} draw={draw} open={open} eye="joy" brow="arch" mouth="grin" />
+		{open > 0 && [1, -1].map((sx) => <g key={'sp' + sx} opacity={open} transform={`translate(${sx * 46 + 12},-34) scale(${0.8 + 0.2 * Math.sin(T * 5 + sx)})`}><path d="M0,-7 L1.6,-1.6 L7,0 L1.6,1.6 L0,7 L-1.6,1.6 L-7,0 L-1.6,-1.6 Z" fill="#fff" /></g>)}
+		{[1, -1].map((sx) => <path key={'lw' + sx} transform={`translate(${sx * 46},-22) scale(${sx},1)`} d="M-20,12 C-6,18 10,16 24,8" stroke={v.hot} strokeWidth={1.4} fill="none" opacity={0.6 * draw} />)}
 		{/* blush */}
 		{[1, -1].map((s) => <ellipse key={s} cx={s * 70} cy={30} rx={26} ry={12} fill="#ff6a4a" opacity={0.35 * open} filter="url(#gS)" />)}
 		{/* crossed collar with gold trim */}
@@ -359,13 +362,13 @@ const FigLove: React.FC<FigProps> = ({T, v, draw, open, orn}) => {
 };
 
 const FigWu: React.FC<FigProps> = ({T, v, draw, open, orn}) => {
-	const op = orn(1), N = 15, R = 340, r0 = 66, px = 112, py = 272;
+	const op = orn(1), N = 13, R = 238, r0 = 48, px = 124, py = 214;
 	const span = 98 * lerp(0.06, 1, outBack(op)), mid = -82, A0 = mid - span / 2;
 	const ang = (k: number) => (A0 + span * k / (N - 1)) * Math.PI / 180;
 	const Pt = (a: number, rr: number) => `${(px + Math.cos(a) * rr).toFixed(1)},${(py + Math.sin(a) * rr).toFixed(1)}`;
 	const seg = (k: number) => { const am = (ang(k) + ang(k + 1)) / 2; return `M${Pt(ang(k), r0)} L${Pt(ang(k), R)} Q${Pt(am, R + 24)} ${Pt(ang(k + 1), R)} L${Pt(ang(k + 1), r0)} Z`; };
 	let edge = `M${Pt(ang(0), R)}`; for (let k = 0; k < N - 1; k++) edge += ` Q${Pt((ang(k) + ang(k + 1)) / 2, R + 24)} ${Pt(ang(k + 1), R)}`;
-	const vine = Array.from({length: 13}, (_, i) => { const u = i / 12, a = lerp(ang(0), ang(N - 1), 0.08 + 0.84 * u), rr = 240 + 34 * Math.sin(u * Math.PI * 2.5); return [px + Math.cos(a) * rr, py + Math.sin(a) * rr] as P; });
+	const vine = Array.from({length: 13}, (_, i) => { const u = i / 12, a = lerp(ang(0), ang(N - 1), 0.08 + 0.84 * u), rr = 168 + 24 * Math.sin(u * Math.PI * 2.5); return [px + Math.cos(a) * rr, py + Math.sin(a) * rr] as P; });
 	return <g>
 		{/* a high bun on a full head of hair, long gold pins */}
 		<g opacity={draw}>
@@ -384,11 +387,11 @@ const FigWu: React.FC<FigProps> = ({T, v, draw, open, orn}) => {
 			<g opacity={cl01((op - 0.5) * 2)}>
 				<path d={'M' + vine.map((p) => p.map((q) => q.toFixed(1)).join(',')).join(' L')} stroke={v.col} strokeWidth={3} fill="none" strokeLinejoin="round" />
 				{vine.slice(1, -1).map(([x, y], i) => <path key={i} d={`M${x},${y} l${i % 2 ? 10 : -10},${-18} l${i % 2 ? 6 : -6},${20} Z`} fill={v.hot} />)}
-				<path d={`M${Pt(ang(N - 1) - 0.25, 150)} A150,150 0 0,0 ${Pt(ang(N - 1) - 0.62, 150)}`} stroke={v.hot} strokeWidth={2} fill="none" opacity={0.6} />
+				<path d={`M${Pt(ang(N - 1) - 0.25, 105)} A105,105 0 0,0 ${Pt(ang(N - 1) - 0.62, 105)}`} stroke={v.hot} strokeWidth={2} fill="none" opacity={0.6} />
 			</g>
 			{Array.from({length: N}, (_, k) => <line key={'r' + k} x1={px + Math.cos(ang(k)) * 30} y1={py + Math.sin(ang(k)) * 30} x2={px + Math.cos(ang(k)) * R} y2={py + Math.sin(ang(k)) * R} stroke={k === 0 || k === N - 1 ? 'url(#goldG)' : v.hot} strokeWidth={k === 0 || k === N - 1 ? 7 : 1.2} opacity={k === 0 || k === N - 1 ? 1 : 0.35} />)}
 			{/* iron blades past the leaf */}
-			{Array.from({length: N}, (_, k) => { const a = ang(k), l = 62 + (k % 2 ? 0 : 26) + (k === 0 || k === N - 1 ? 30 : 0), nx = -Math.sin(a) * 5, ny = Math.cos(a) * 5; const bx = px + Math.cos(a) * (R - 6), by = py + Math.sin(a) * (R - 6); return <path key={'b' + k} d={`M${(bx + nx).toFixed(1)},${(by + ny).toFixed(1)} L${(px + Math.cos(a) * (R + l)).toFixed(1)},${(py + Math.sin(a) * (R + l)).toFixed(1)} L${(bx - nx).toFixed(1)},${(by - ny).toFixed(1)} Z`} fill="#dfe8d4" stroke={v.col} strokeWidth={1} />; })}
+			{Array.from({length: N}, (_, k) => { const a = ang(k), l = 40 + (k % 2 ? 0 : 18) + (k === 0 || k === N - 1 ? 20 : 0), nx = -Math.sin(a) * 5, ny = Math.cos(a) * 5; const bx = px + Math.cos(a) * (R - 6), by = py + Math.sin(a) * (R - 6); return <path key={'b' + k} d={`M${(bx + nx).toFixed(1)},${(by + ny).toFixed(1)} L${(px + Math.cos(a) * (R + l)).toFixed(1)},${(py + Math.sin(a) * (R + l)).toFixed(1)} L${(bx - nx).toFixed(1)},${(by - ny).toFixed(1)} Z`} fill="#dfe8d4" stroke={v.col} strokeWidth={1} />; })}
 			<path d={edge} fill="none" stroke={v.hot} strokeWidth={2.4} />
 			<path d={`M${Pt(ang(0), r0)} A${r0},${r0} 0 0,1 ${Pt(ang(N - 1), r0)}`} stroke="url(#goldG)" strokeWidth={3} fill="none" />
 			<circle cx={px} cy={py} r={16} fill="url(#goldG)" /><circle cx={px} cy={py} r={7} fill={v.col} />
@@ -686,7 +689,7 @@ const OrbEyes: React.FC<{v: Voice; u: number; T: number}> = ({v, u, T}) => u <= 
 const FIG: Record<Kind, React.FC<FigProps>> = {xi: FigXi, nu: FigNu, ai: FigAi, ju: FigJu, love: FigLove, wu: FigWu, yu: FigYu};
 const PLACE: Record<Kind, {dx: number; dy: number; s: number; flip?: boolean}> = {
 	xi: {dx: 0, dy: 40, s: 1.55}, nu: {dx: 0, dy: 60, s: 1.55}, ai: {dx: 60, dy: 60, s: 1.4, flip: true}, ju: {dx: 0, dy: 0, s: 1.75},
-	love: {dx: 10, dy: 40, s: 1.5}, wu: {dx: -40, dy: 10, s: 1.45}, yu: {dx: 0, dy: 70, s: 1.5},
+	love: {dx: 10, dy: 40, s: 1.5}, wu: {dx: -40, dy: 10, s: 1.45}, yu: {dx: 0, dy: 30, s: 1.45},
 };
 const VoiceScene: React.FC<{T: number; v: Voice; i: number}> = ({T, v, i}) => {
 	// the reveal is snapped to the frame that holds the downbeat (never a frame late)
