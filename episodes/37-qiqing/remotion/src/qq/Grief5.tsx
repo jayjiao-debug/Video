@@ -30,16 +30,15 @@ export const QQ9_END = bt(22) + 0.6;
 
 type Kind = 'xi' | 'nu' | 'ai' | 'ju' | 'love' | 'wu' | 'yu' | 'den' | 'ang' | 'bar' | 'dep' | 'acc';
 /** the new voices borrow an old voice's world / halo / particles */
-const LOOK: Partial<Record<Kind, Kind>> = {dep: 'ai', bar: 'yu'};
-const NEWWORLD = (k: Kind) => k === 'ang' || k === 'acc';
+const LOOK: Partial<Record<Kind, Kind>> = {ang: 'nu', dep: 'ai', acc: 'xi', bar: 'yu'};
 const look = <T extends {kind: Kind}>(v: T): T => ({...v, kind: LOOK[v.kind] ?? v.kind});
 type Voice = {n: number; ch: string; py: string; kind: Kind; col: string; hot: string; deep: string; when: string; line: string; say: string};
 const VOICES: Voice[] = [
 	{n: 1, ch: '否认', py: 'Denial', kind: 'den', col: '#9fc4d8', hot: '#e6f4fb', deep: '#0a1a24', when: '它在你收到“我们分手吧”时说', line: '“他只是开玩笑吧。”', say: '不信，是心在给你缓冲的时间。'},
-	{n: 2, ch: '愤怒', py: 'Anger', kind: 'ang', col: '#9cc0e4', hot: '#eef6ff', deep: '#0a1626', when: '它在你看到他换了新头像时说', line: '“他怎么能这么快?”', say: '生气，是因为还放不下。'},
+	{n: 2, ch: '愤怒', py: 'Anger', kind: 'ang', col: '#ff3b4a', hot: '#ffd0d4', deep: '#2a0508', when: '它在你看到他换了新头像时说', line: '“他怎么能这么快?”', say: '生气，是因为还放不下。'},
 	{n: 3, ch: '讨价还价', py: 'Bargaining', kind: 'bar', col: '#e6b04a', hot: '#fff0c8', deep: '#241806', when: '它在你凌晨三点重读聊天记录时说', line: '“如果那天我没说……”', say: '想改写过去，是因为太想留住。'},
 	{n: 4, ch: '沮丧', py: 'Depression', kind: 'dep', col: '#6a7ee0', hot: '#d6dcff', deep: '#0a0e26', when: '它在你连饭都不想吃时说', line: '“做什么，都没意思了。”', say: '低落，是告别正在发生。'},
-	{n: 5, ch: '接受', py: 'Acceptance', kind: 'acc', col: '#b8d4ea', hot: '#f6fbff', deep: '#0c1826', when: '它在你又路过那家店时说', line: '“原来，已经不疼了。”', say: '接受，不是忘记，是带着它往前走。'},
+	{n: 5, ch: '接受', py: 'Acceptance', kind: 'acc', col: '#ffb8a0', hot: '#fff1ea', deep: '#2a120c', when: '它在你又路过那家店时说', line: '“原来，已经不疼了。”', say: '接受，不是忘记，是带着它往前走。'},
 ];
 const NUM = ['零', '一', '二', '三', '四', '五', '六', '七'];
 
@@ -83,7 +82,7 @@ const Bolt: React.FC<{a: P; b: P; seed: number; T: number; col: string; w?: numb
 // ---------------------------------------------------------------- the face kit (front)
 type Eye = 'calm' | 'happy' | 'joy' | 'wide' | 'angry' | 'sad' | 'lidded';
 type Brow = 'calm' | 'up' | 'angry' | 'sad' | 'arch';
-type Mouth = 'grin' | 'set' | 'sad' | 'closed' | 'part' | 'smile';
+type Mouth = 'grin' | 'set' | 'sad' | 'closed' | 'part' | 'smile' | 'roar';
 const FACE_F = 'M0,-170 C72,-170 118,-122 120,-54 C122,-6 114,40 98,78 C82,118 46,152 0,162 C-46,152 -82,118 -98,78 C-114,40 -122,-6 -120,-54 C-118,-122 -72,-170 0,-170 Z';
 const NECK_F = 'M-44,130 C-44,180 -48,222 -58,244 C-120,262 -230,284 -292,340 C-326,372 -342,450 -350,660 L350,660 C342,450 326,372 292,340 C230,284 120,262 58,244 C48,222 44,180 44,130';
 const eyeShape = (e: Eye) => ({
@@ -102,6 +101,7 @@ const browPath = (b: Brow) => ({
 const mouthEl = (m: Mouth, v: Voice, T: number) => {
 	const lip = v.col;
 	switch (m) {
+		case 'roar': return <g><path d="M-34,70 C-18,62 18,62 34,70 C32,128 -32,128 -34,70 Z" fill="#05040a" stroke={v.hot} strokeWidth={2.6} /><path d="M-28,72 C-12,68 12,68 28,72 L26,82 C10,79 -10,79 -26,82 Z" fill="#fff" opacity={0.92} /><path d="M-20,114 C-8,110 8,110 20,114 L18,106 C8,104 -8,104 -18,106 Z" fill="#fff" opacity={0.8} /><ellipse cx={0} cy={100} rx={14} ry={8} fill={v.col} opacity={0.6} /></g>;
 		case 'grin': return <g><path d="M-40,76 C-18,70 18,70 40,76 C30,118 -30,118 -40,76 Z" fill="#05040a" stroke={v.hot} strokeWidth={2.4} /><path d="M-34,78 C-14,74 14,74 34,78 L31,88 C10,85 -10,85 -31,88 Z" fill="#fff" opacity={0.9} /><path d="M-18,104 C-6,110 6,110 18,104" stroke={lip} strokeWidth={3} fill="none" /></g>;
 		case 'set': return <g><path d="M-32,86 C-12,82 12,82 32,86" stroke={v.hot} strokeWidth={3.2} fill="none" /><path d="M-20,94 C-8,98 8,98 20,94" stroke={lip} strokeWidth={3} fill="none" /></g>;
 		case 'sad': return <g><path d="M-26,90 C-14,82 -6,82 0,85 C6,82 14,82 26,90 C14,92 -14,92 -26,90 Z" fill={lip} opacity={0.85} /><path d="M-24,92 C-12,100 12,100 24,92 C12,95 -12,95 -24,92 Z" fill={lip} opacity={0.7} /></g>;
@@ -552,161 +552,91 @@ const ReachHand: React.FC<{T: number; v: Voice; u: number}> = ({T, v, u}) => {
 };
 
 
-
-// ---------------------------------------------------------------- the new world: dark porcelain figures mended with gold (金缮)
-/** gold seams on a front-facing porcelain figure; level 0..1 = how much of it has broken and been mended; molten = still burning */
-const SEAMS = ['M-96,-150 L-62,-112 L-74,-72 L-42,-34 L-58,8', 'M86,30 L104,64 L88,100 L110,132', 'M-30,122 L-10,150 L-24,190 L6,240', 'M70,-162 L84,-122 L62,-86', 'M-62,-112 L-30,-122', 'M-160,300 L-110,320 L-126,360 L-80,400', 'M150,282 L190,320 L170,362 L214,400', 'M-58,8 L-92,26'];
-const Seams: React.FC<{T: number; level: number; molten?: boolean}> = ({T, level, molten}) => {
-	const n = Math.round(level * SEAMS.length);
-	return <g>{SEAMS.slice(0, n).map((d, i) => { const sh = 0.6 + 0.4 * Math.sin(T * 2.4 - i * 0.9); return <g key={i}>
-		<path d={d} stroke={molten ? '#ff6a1a' : GOLD} strokeWidth={molten ? 16 : 12} fill="none" opacity={(molten ? 0.6 : 0.35) * sh} filter="url(#gM)" strokeLinejoin="round" />
-		<path d={d} stroke="#1a1006" strokeWidth={7} fill="none" strokeLinejoin="round" opacity={0.7} />
-		<path d={d} stroke="url(#goldG)" strokeWidth={4.2} fill="none" strokeLinejoin="round" />
-		<path d={d} stroke={molten ? '#fff1c4' : '#fffbe8'} strokeWidth={1.3} fill="none" strokeLinejoin="round" opacity={0.6 + 0.4 * sh} />
-	</g>; })}</g>;
-};
-/** a rose window drawn in thin gold tracery: the halo of this world */
-const RoseHalo: React.FC<{T: number; v: Voice; s: number; crack?: number; rays?: boolean}> = ({T, v, s, crack = 0, rays}) => <g transform={`scale(${s})`}>
-	<circle r={560} fill="url(#auraG)" />
-	{rays && <g opacity={0.5}>{Array.from({length: 28}, (_, i) => <path key={i} transform={`rotate(${i * 360 / 28 + T * 3})`} d={`M-5,-350 L0,${-640 - 60 * Math.sin(T * 2 + i)} L5,-350 Z`} fill={GOLD} opacity={0.5} />)}</g>}
-	<g transform={`rotate(${T * 2})`}>
-		<circle r={340} fill="none" stroke="url(#goldG)" strokeWidth={3} />
-		<circle r={318} fill="none" stroke={v.hot} strokeWidth={1} opacity={0.5} />
-		{Array.from({length: 24}, (_, i) => { const a = i / 24 * Math.PI * 2; return <circle key={'o' + i} cx={Math.cos(a) * 329} cy={Math.sin(a) * 329} r={7} fill="none" stroke={GOLD} strokeWidth={1.4} opacity={0.85} />; })}
-		{Array.from({length: 12}, (_, i) => <g key={'p' + i} transform={`rotate(${i * 30})`}>
-			<path d="M0,-132 C44,-170 44,-262 0,-300 C-44,-262 -44,-170 0,-132 Z" fill={v.col} fillOpacity={0.07} stroke="url(#goldG)" strokeWidth={1.8} />
-			<circle cy={-246} r={14} fill="none" stroke={v.hot} strokeWidth={1.2} opacity={0.7} />
-		</g>)}
-		<circle r={128} fill="none" stroke="url(#goldG)" strokeWidth={2.4} />
-		{Array.from({length: 6}, (_, i) => <circle key={'q' + i} cx={Math.cos(i * Math.PI / 3) * 84} cy={Math.sin(i * Math.PI / 3) * 84} r={42} fill="none" stroke={GOLD} strokeWidth={1.2} opacity={0.7} />)}
-	</g>
-	{crack > 0 && ['M-330,-60 L-260,-30 L-240,30 L-170,60', 'M300,-150 L230,-110 L250,-50', 'M120,300 L90,240 L130,190'].map((d, i) => <g key={'c' + i} opacity={crack}><path d={d} stroke="#ff6a1a" strokeWidth={10} fill="none" opacity={0.5} filter="url(#gM)" /><path d={d} stroke="url(#goldG)" strokeWidth={3} fill="none" /></g>)}
-</g>;
-/** porcelain shards drifting in the dark (anger's world) */
-const ShardWorld: React.FC<{T: number; v: Voice; u: number; cx: number; cy: number}> = ({T, v, u, cx, cy}) => <g opacity={u}>{Array.from({length: 16}, (_, i) => {
-	const a = rnd(i, 71) * Math.PI * 2, r = 380 + 300 * rnd(i, 72), x = cx + Math.cos(a + T * 0.05) * r, y = cy + Math.sin(a + T * 0.05) * r * 0.75, sz = 20 + 36 * rnd(i, 73);
-	return <g key={i} transform={`translate(${x},${y}) rotate(${T * 30 * (rnd(i, 74) - 0.5) + i * 50})`}><path d={`M0,${-sz} L${sz * 0.7},${sz * 0.4} L${-sz * 0.5},${sz * 0.6} Z`} fill="#0c1422" stroke={v.hot} strokeWidth={1.4} opacity={0.8} /><path d={`M0,${-sz} L${sz * 0.7},${sz * 0.4}`} stroke="url(#goldG)" strokeWidth={2.4} /></g>;
-})}</g>;
-
-
-// ---------------------------------------------------------------- Roman world: a temple portico, a laurel-wreath coin halo, Roman numerals
-const ROMAN_N = ['', 'I', 'II', 'III', 'IV', 'V'];
-/** two Corinthian columns and an entablature with a meander band, drawn in thin ice lines with gold accents */
-const Temple: React.FC<{v: Voice; o: number}> = ({v, o}) => {
-	const col = (x: number) => <g key={x} transform={`translate(${x},0)`}>
-		<rect x={-42} y={-360} width={84} height={900} fill="#0a1220" opacity={0.85} />
-		{[-28, -14, 0, 14, 28].map((fx) => <line key={fx} x1={fx} y1={-330} x2={fx} y2={520} stroke={v.hot} strokeWidth={1.2} opacity={0.45} />)}
-		<path d="M-42,-360 L42,-360 M-42,520 L42,520" stroke={v.hot} strokeWidth={2} />
-		{/* capital: abacus, two volutes, acanthus */}
-		<rect x={-66} y={-420} width={132} height={22} fill="#0a1220" stroke="url(#goldG)" strokeWidth={2} />
-		{[-1, 1].map((s) => <g key={s}><circle cx={s * 50} cy={-386} r={14} fill="none" stroke="url(#goldG)" strokeWidth={2} /><circle cx={s * 50} cy={-386} r={6} fill="none" stroke={GOLD} strokeWidth={1.2} /></g>)}
-		{[-30, -10, 10, 30].map((ax) => <path key={ax} d={`M${ax},-360 C${ax - 12},-374 ${ax - 6},-392 ${ax},-398 C${ax + 6},-392 ${ax + 12},-374 ${ax},-360 Z`} fill="none" stroke={v.hot} strokeWidth={1.2} opacity={0.8} />)}
-	</g>;
-	const key = Array.from({length: 26}, (_, i) => { const x = -560 + i * 44; return `M${x},-452 L${x},-476 L${x + 30},-476 L${x + 30},-458 L${x + 14},-458 L${x + 14},-466`; }).join(' ');
-	return <g opacity={o}>
-		{col(-450)}{col(450)}
-		<rect x={-560} y={-500} width={1120} height={70} fill="#0a1220" opacity={0.9} />
-		<path d="M-560,-430 L560,-430 M-560,-500 L560,-500" stroke="url(#goldG)" strokeWidth={2.4} />
-		<path d={key} stroke={GOLD} strokeWidth={1.6} fill="none" opacity={0.8} />
-	</g>;
-};
-/** the halo as a Roman coin: a laurel wreath round the rim, a meander band inside, the stage's numeral on top */
-const RomanHalo: React.FC<{T: number; v: Voice; s: number; rays?: boolean}> = ({T, v, s, rays}) => <g transform={`scale(${s})`}>
-	<circle r={560} fill="url(#auraG)" />
-	{rays && <g opacity={0.45}>{Array.from({length: 28}, (_, i) => <path key={i} transform={`rotate(${i * 360 / 28 + T * 3})`} d={`M-5,-350 L0,${-640 - 60 * Math.sin(T * 2 + i)} L5,-350 Z`} fill={GOLD} opacity={0.5} />)}</g>}
-	<circle r={350} fill="none" stroke="url(#goldG)" strokeWidth={3} />
-	<circle r={262} fill="none" stroke="url(#goldG)" strokeWidth={2} />
-	{/* meander band between 270 and 300 */}
-	<path d={Array.from({length: 48}, (_, i) => { const a0 = i / 48 * Math.PI * 2, a1 = (i + 0.5) / 48 * Math.PI * 2, P_ = (a: number, r: number) => `${(Math.cos(a) * r).toFixed(1)},${(Math.sin(a) * r).toFixed(1)}`; return `${i ? 'L' : 'M'}${P_(a0, 272)} L${P_(a0, 296)} L${P_(a1, 296)} L${P_(a1, 284)} L${P_((a0 + a1) / 2, 284)}`; }).join(' ')} stroke={v.hot} strokeWidth={1.4} fill="none" opacity={0.75} />
-	{/* laurel round the rim, two branches meeting at the top */}
-	{[1, -1].map((side) => Array.from({length: 16}, (_, i) => { const a = Math.PI / 2 + side * (0.25 + i * 0.17), x = Math.cos(a) * 322, y = Math.sin(a) * 322; return <g key={side + '-' + i} transform={`translate(${x.toFixed(1)},${y.toFixed(1)}) rotate(${(a * 180 / Math.PI) + (side > 0 ? 50 : 130)})`}><ellipse rx={7} ry={17} fill="url(#goldG)" stroke="#6a4a18" strokeWidth={0.8} /></g>; }))}
-	<g transform="translate(0,-350)"><circle r={30} fill="#0a1220" stroke="url(#goldG)" strokeWidth={2.4} /><text y={11} textAnchor="middle" style={{fontFamily: SERIF, fontWeight: 900, fontSize: 30}} fill={GOLD}>{ROMAN_N[v.n]}</text></g>
-</g>;
-
 // ---------------------------------------------------------------- the five stages
-/** 否认: turned away in profile, eyes shut; a pocket watch stopped at the moment it happened */
-const FigDen: React.FC<FigProps> = ({T, v, draw, open, orn}) => (
-	<g>
+/** 否认: deep in a hood, turned away; behind her the clock spins and stops dead — time frozen */
+const FigDen: React.FC<FigProps> = ({T, v, draw, open, orn}) => {
+	const hood = 'M156,-150 C130,-266 -40,-306 -156,-236 C-262,-166 -262,50 -300,430 L-96,430 C-108,260 -96,130 -72,46 C-58,-36 -36,-110 24,-150 C76,-180 124,-176 156,-150 Z';
+	return <g>
 		<ProfileFace T={T} v={v} draw={draw} open={0} look={-1} />
 		<Garment T={T} v={v} draw={draw} />
-		<ProfileHair v={v} draw={draw} extra="M-170,-80 C-178,40 -190,200 -214,420 L-112,420 C-112,260 -104,140 -100,86 L-108,86 C-150,40 -168,-20 -170,-80 Z" />
-		<Earring T={T} v={v} o={orn(0)} />
+		<path d={hood} fill="#08121a" opacity={draw} />
+		<path d={hood} fill="url(#sheenG)" opacity={draw * 0.8} />
+		{[0, 1, 2, 3].map((k) => <path key={k} d={`M${120 - k * 40},${-176 - k * 14} C${-10 - k * 30},${-210 - k * 6} ${-170 - k * 10},${-120 + k * 10} ${-200 - k * 18},${430}`} stroke={v.hot} strokeWidth={1.2} fill="none" opacity={0.4 * draw} />)}
+		<Neon d={hood} v={v} draw={draw} w={2.6} L={3000} />
+		<path d="M156,-150 C124,-176 76,-180 24,-150 C-36,-110 -58,-36 -72,46" stroke="url(#goldG)" strokeWidth={3} fill="none" />
 		<g opacity={orn(0)} transform={`translate(30,${330 + 4 * Math.sin(T * 1.4)})`}>
 			<path d="M-70,-90 C-50,-40 -20,-30 0,-34" stroke={GOLD} strokeWidth={1.6} fill="none" />
 			<circle r={38} fill="#0c1820" stroke="url(#goldG)" strokeWidth={5} /><circle cy={-42} r={6} fill="url(#goldG)" />
-			{Array.from({length: 12}, (_, i) => <line key={i} x1={Math.sin(i * Math.PI / 6) * 30} y1={-Math.cos(i * Math.PI / 6) * 30} x2={Math.sin(i * Math.PI / 6) * 25} y2={-Math.cos(i * Math.PI / 6) * 25} stroke={v.hot} strokeWidth={1.4} />)}
 			<line x1={0} y1={0} x2={0} y2={-22} stroke={v.hot} strokeWidth={2.4} /><line x1={0} y1={0} x2={14} y2={8} stroke={v.hot} strokeWidth={2.4} />
 			<path d="M-20,-24 L-6,-6 L-14,6 L4,26" stroke="#fff" strokeWidth={1.4} fill="none" opacity={0.8} />
 		</g>
-	</g>
-);
-/** 愤怒: a Roman legionary — crested helmet with cheek guards, banded armour, a cloak pinned at the shoulder */
-const FigAng: React.FC<FigProps> = ({T, v, draw, open, orn}) => {
-	const bowl = 'M-142,-56 C-152,-204 -82,-266 0,-266 C82,-266 152,-204 142,-56 L122,-56 C120,-142 72,-178 0,-178 C-72,-178 -120,-142 -122,-56 Z';
-	return <g>
-		{/* the crest: a fan of horsehair rising from the helmet's ridge */}
-		<g opacity={draw}>{Array.from({length: 23}, (_, i) => { const u = i / 22 - 0.5, sway = 6 * Math.sin(T * 3 + i * 0.4); return <path key={i} d={`M${u * 60},-262 C${u * 90 + sway},-330 ${u * 150 + sway},-380 ${u * 170 + sway * 1.6},${-400 + Math.abs(u) * 90}`} stroke={i % 3 ? '#b3202a' : '#e0443c'} strokeWidth={9} strokeLinecap="round" fill="none" />; })}
-			<path d="M-40,-262 L40,-262 L30,-284 L-30,-284 Z" fill="url(#goldG)" /></g>
-		<FrontFace T={T} v={v} draw={draw} open={open} eye="angry" brow="angry" mouth="set" />
-		{/* armour: banded plates on the chest */}
-		<path d={BODY_F} fill="#0c1422" opacity={draw} /><Neon d={BODY_F} v={v} draw={draw} w={2.2} L={2400} glow={0.35} />
-		{[330, 372, 414, 456].map((y, i) => <path key={y} d={`M${-250 + i * 12},${y + 10} C-120,${y - 26} 120,${y - 26} ${250 - i * 12},${y + 10}`} stroke={v.hot} strokeWidth={2} fill="none" opacity={0.7} />)}
-		{[[-170, 324], [170, 324], [-150, 368], [150, 368]].map(([x, y], i) => <circle key={i} cx={x} cy={y} r={5} fill="url(#goldG)" />)}
-		{/* the cloak over the left shoulder, pinned with a round fibula */}
-		<path d="M-300,330 C-200,292 -60,300 40,360 C80,440 110,540 140,660 L-348,660 C-340,500 -326,400 -300,330 Z" fill="#4a0e14" opacity={0.95} />
-		{[-220, -140, -60].map((x, i) => <path key={x} d={`M${x},${320 + i * 6} C${x + 20},420 ${x + 30},540 ${x + 40},660`} stroke="#8a2a2a" strokeWidth={2} fill="none" opacity={0.7} />)}
-		<g transform="translate(-196,322)"><circle r={24} fill="url(#goldG)" /><circle r={15} fill="#0c1422" /><circle r={7} fill="#b3202a" /></g>
-		{/* helmet bowl, brow band, cheek guards */}
-		<path d={bowl} fill="#111a28" opacity={draw} /><Neon d={bowl} v={v} draw={draw} w={2.4} L={1800} />
-		<path d="M-136,-92 C-80,-132 80,-132 136,-92" stroke="url(#goldG)" strokeWidth={9} fill="none" />
-		<path d="M0,-266 L0,-180" stroke="url(#goldG)" strokeWidth={5} />
-		{[1, -1].map((s) => <g key={s}><path d={`M${s * 122},-70 C${s * 140},-10 ${s * 130},60 ${s * 96},102 L${s * 76},92 C${s * 98},40 ${s * 104},-20 ${s * 100},-66 Z`} fill="#111a28" stroke="url(#goldG)" strokeWidth={2.4} /><circle cx={s * 112} cy={-30} r={4} fill="url(#goldG)" /><circle cx={s * 104} cy={50} r={4} fill="url(#goldG)" /></g>)}
 	</g>;
 };
-/** 讨价还价: looking up, hands clasped under the chin */
-const FigBar: React.FC<FigProps> = ({T, v, draw, open, orn, late}) => (
-	<g>
-		<path d="M-130,-30 C-150,-160 -80,-226 0,-226 C80,-226 150,-160 130,-30 C150,60 170,160 180,250 L120,250 C108,150 110,60 104,-20 C80,-110 -80,-110 -104,-20 C-110,60 -108,150 -120,250 L-180,250 C-170,160 -150,60 -130,-30 Z" fill="url(#hairG)" opacity={draw} />
-		<path d="M-130,-30 C-150,-160 -80,-226 0,-226 C80,-226 150,-160 130,-30" fill="url(#sheenG)" opacity={draw} />
-		<Neon d="M-130,-30 C-150,-160 -80,-226 0,-226 C80,-226 150,-160 130,-30 C150,60 170,160 180,250 M-130,-30 C-150,60 -170,160 -180,250" v={v} draw={draw} w={2.2} L={2400} />
+/** 愤怒: a roar — hair flaring out like fire, eyes burning, the face cracked with red light */
+const FigAng: React.FC<FigProps> = ({T, v, draw, open, orn}) => {
+	const N = 11, tongues = Array.from({length: N}, (_, i) => { const u = i / (N - 1), x = lerp(-300, 300, u), peak = 1 - Math.abs(u - 0.5) * 2; return {x, tip: -170 - 120 * peak - 80 * peak * peak - 26 * Math.sin(T * 6 + i * 1.7), lean: (u - 0.5) * 260 + 16 * Math.sin(T * 5 + i)}; });
+	const valley = (i: number) => { const u = (i + 0.5) / (N - 1); return {x: lerp(-300, 300, u) * 0.82, y: -170 - 40 * (1 - Math.abs(u - 0.5) * 2)}; };
+	const top = tongues.map(({x, tip, lean}, i) => { const vx = i < N - 1 ? valley(i) : {x: 168, y: -110}; return `Q${x - 22 + lean * 0.3},${(tip - 140) * 0.5 - 40} ${x + lean},${tip} Q${x + 26 + lean * 0.4},${(tip + vx.y) / 2} ${vx.x},${vx.y}`; }).join(' ');
+	const hair = `M-122,-40 C-150,-70 -200,-96 -240,-110 ${top} C160,-96 134,-70 122,-40 C110,-90 70,-118 0,-122 C-70,-118 -110,-90 -122,-40 Z`;
+	const cracks = ['M-30,-150 L-44,-110 L-28,-80 L-52,-40', 'M74,-20 L96,10 L84,40 L104,74', 'M-80,30 L-60,52 L-74,80'];
+	return <g transform={`translate(${3 * Math.sin(T * 31)},${2 * Math.sin(T * 27)})`}>
+		<path d={hair} fill={v.col} opacity={0.3 * draw} filter="url(#gL)" />
+		<path d={hair} fill="url(#hairG)" opacity={draw} />
+		<path d={hair} fill="url(#sheenG)" opacity={draw} />
+		{Array.from({length: 13}, (_, k) => { const x0 = lerp(-110, 110, k / 12), x1 = lerp(-340, 340, k / 12); return <path key={k} d={`M${x0},-122 C${x0 * 1.3},-170 ${x1 * 0.9 + 10 * Math.sin(T * 5 + k)},-230 ${x1},${-230 - 110 * (1 - Math.abs(k - 6) / 6)}`} stroke={k % 3 ? v.hot : '#fff1c4'} strokeWidth={1.4} fill="none" opacity={0.55 * draw} />; })}
+		<Neon d={hair} v={v} draw={draw} w={2.8} L={5000} />
+		<FrontFace T={T} v={v} draw={draw} open={open} eye="angry" brow="angry" mouth="roar" />
+		{[1, -1].map((s) => <g key={s}><ellipse cx={s * 48} cy={-24} rx={44} ry={13} fill={v.col} opacity={0.85 * open} filter="url(#gM)" /><ellipse cx={s * 48} cy={-24} rx={10} ry={4} fill="#fff" opacity={0.9 * open} /></g>)}
+		<Garment T={T} v={v} draw={draw} />
+		<g opacity={orn(0)}>{cracks.map((d, i) => <g key={i}><path d={d} stroke={v.col} strokeWidth={6} fill="none" opacity={0.7} filter="url(#gS)" /><path d={d} stroke="#ffe0e0" strokeWidth={1.6} fill="none" /></g>)}</g>
+	</g>;
+};
+/** 讨价还价: a headscarf and a fringe of gold coins on the brow — she has something to offer; looking up, pleading */
+const FigBar: React.FC<FigProps> = ({T, v, draw, open, orn, late}) => {
+	const scarf = 'M-152,-30 C-172,-190 -90,-262 0,-262 C90,-262 172,-190 152,-30 C170,90 196,200 226,320 L-226,320 C-196,200 -170,90 -152,-30 Z';
+	return <g>
+		<path d={scarf} fill="#1c1408" opacity={draw} /><path d={scarf} fill="url(#sheenG)" opacity={draw * 0.8} />
+		{[0, 1, 2].map((k) => [1, -1].map((s) => <path key={k + '' + s} d={`M${s * (60 + k * 30)},-250 C${s * (150 + k * 20)},-200 ${s * (170 + k * 12)},40 ${s * (200 + k * 10)},320`} stroke={v.hot} strokeWidth={1.2} fill="none" opacity={0.4} />))}
+		<Neon d={scarf} v={v} draw={draw} w={2.4} L={2600} />
 		<FrontFace T={T} v={v} draw={draw} open={open} eye="sad" brow="up" mouth="part" look={0} />
 		<Garment T={T} v={v} draw={draw} />
-		<g opacity={orn(0)}><path d="M-10,-126 L0,-140 L10,-126 L0,-112 Z" fill={v.col} stroke="#fff0c8" strokeWidth={1.2} /></g>
-	</g>
-);
-/** 沮丧: head bowed low, eyes shut, a tear, a small cloud raining on her */
+		{/* the band and its coins */}
+		<path d="M-142,-112 C-90,-176 90,-176 142,-112" stroke="url(#goldG)" strokeWidth={8} fill="none" />
+		<g opacity={orn(0)}>{Array.from({length: 13}, (_, i) => { const u = i / 12, x = lerp(-130, 130, u), y = -112 - 54 * Math.sin(Math.PI * u) + 8, sw = 3 * Math.sin(T * 2.2 + i * 0.7), len = 16 + 10 * Math.sin(Math.PI * u); return <g key={i}><line x1={x} y1={y} x2={x + sw} y2={y + len} stroke={GOLD} strokeWidth={1.2} /><circle cx={x + sw} cy={y + len + 9} r={9} fill="url(#goldG)" stroke="#7a5a20" strokeWidth={1} /><rect x={x + sw - 2.5} y={y + len + 6.5} width={5} height={5} fill="#1c1408" /></g>; })}</g>
+		<g opacity={orn(0)}><path d="M-10,-132 L0,-148 L10,-132 L0,-116 Z" fill={v.col} stroke="#fff0c8" strokeWidth={1.2} /></g>
+	</g>;
+};
+/** 沮丧: head bowed low, eyes shut, a tear; a cloud pours on her and the water rises to her chin */
 const FigDep: React.FC<FigProps> = ({T, v, draw, open, orn}) => (
 	<g transform="rotate(24)">
 		<ProfileFace T={T} v={v} draw={draw} open={0} tears={orn(0)} />
 		<Garment T={T} v={v} draw={draw} />
 		<ProfileHair v={v} draw={draw} extra="M-170,-80 C-178,40 -190,200 -214,420 L-112,420 C-112,260 -104,140 -100,86 L-108,86 C-150,40 -168,-20 -170,-80 Z" />
-		<g opacity={orn(0)} transform={`rotate(-24) translate(${40 + 6 * Math.sin(T * 0.8)},-262)`}>
+		<g opacity={orn(0)} transform={`rotate(-24) translate(${40 + 6 * Math.sin(T * 0.8)},-262) scale(1.5)`}>
 			<path d="M-90,10 C-110,10 -116,-24 -90,-30 C-88,-60 -40,-66 -26,-44 C-10,-74 40,-70 46,-38 C80,-46 92,-6 70,10 Z" fill="#141a36" stroke={v.hot} strokeWidth={2} />
-			{Array.from({length: 7}, (_, i) => { const ph = (T * 1.4 + i / 7) % 1; return <line key={i} x1={-70 + i * 22} y1={18 + ph * 140} x2={-74 + i * 22} y2={30 + ph * 140} stroke={v.hot} strokeWidth={1.6} opacity={0.8 * (1 - ph)} />; })}
+			{Array.from({length: 9}, (_, i) => { const ph = (T * 1.6 + i / 9) % 1; return <line key={i} x1={-80 + i * 19} y1={18 + ph * 260} x2={-84 + i * 19} y2={32 + ph * 260} stroke={v.hot} strokeWidth={1.6} opacity={0.85 * (1 - ph)} />; })}
 		</g>
 	</g>
 );
-/** 接受: a Roman lady at peace — hair parted in soft waves, a laurel crown, a mantle (palla) over the shoulder */
+/** 接受: eyes closed, a small smile, hair loose, a lotus in the hair; the sun rising behind her, doves lifting off */
 const FigAcc: React.FC<FigProps> = ({T, v, draw, open, orn}) => {
-	const back = 'M-140,-40 C-162,-184 -80,-238 0,-238 C80,-238 162,-184 140,-40 C146,40 140,120 120,170 L-120,170 C-140,120 -146,40 -140,-40 Z';
-	const cap = 'M-136,-20 C-150,-160 -80,-232 0,-232 C80,-232 150,-160 136,-20 C124,-92 90,-130 4,-138 L0,-226 L-4,-138 C-90,-130 -124,-92 -136,-20 Z';
-	return <g transform={`rotate(${1.5 * Math.sin(T * 0.7)},0,200)`}>
-		<path d={back} fill="url(#hairG)" opacity={draw} /><Neon d={back} v={v} draw={draw} w={1.8} L={2600} glow={0.3} />
+	const lock = (s: number, x0: number, y0: number, len: number, drift: number, amp: number, w0: number, ph: number) => {
+		const n = 24, L: P[] = [], R: P[] = [];
+		for (let i = 0; i <= n; i++) { const u = i / n, y = y0 + len * u, x = s * (x0 + drift * u + amp * Math.sin(u * Math.PI * 2 + ph + T * 0.9) * Math.min(1, u * 3)), w = u < 0.15 ? lerp(w0 * 0.25, w0, Math.sin(u / 0.15 * Math.PI / 2)) : lerp(w0, 12, Math.pow((u - 0.15) / 0.85, 1.4)); L.push([x - w / 2, y]); R.push([x + w / 2, y]); }
+		return 'M' + L.map((p) => p.map((q) => q.toFixed(1)).join(',')).join(' L') + ' L' + R.reverse().map((p) => p.map((q) => q.toFixed(1)).join(',')).join(' L') + ' Z';
+	};
+	const cap = 'M-136,-10 C-150,-150 -86,-232 0,-232 C86,-232 150,-150 136,-10 C126,-80 96,-128 4,-140 C-90,-128 -126,-80 -136,-10 Z';
+	const locks = [[-1, 140, -20, 380, 90, 26, 50, 0], [1, 140, -20, 380, 90, 26, 50, 1.4]].map(([s, ...a]) => lock(s, ...(a as [number, number, number, number, number, number, number])));
+	return <g transform={`rotate(${2 * Math.sin(T * 0.8)},0,200)`}>
 		<FrontFace T={T} v={v} draw={draw} open={open} eye="happy" brow="calm" mouth="smile" />
-		<path d="M-34,80 C-18,78 -6,78 0,82 C6,78 18,78 34,80 C16,92 -16,92 -34,80 Z M-32,82 C-14,104 14,104 32,82 C14,92 -14,92 -32,82 Z" fill="#c98e72" />
-		{/* stola with a gold border, and the palla draped across from the left shoulder */}
-		<path d={BODY_F} fill="#0c1422" opacity={draw} /><Neon d={BODY_F} v={v} draw={draw} w={2.2} L={2400} glow={0.35} />
-		<path d="M-110,262 C-50,300 50,300 110,262" stroke="url(#goldG)" strokeWidth={5} fill="none" />
-		<path d="M-310,340 C-180,300 -40,330 120,420 C200,470 260,560 300,660 L-348,660 C-340,500 -330,400 -310,340 Z" fill="#16243a" opacity={0.95} />
-		{[0, 1, 2, 3].map((k) => <path key={k} d={`M${-260 + k * 70},${336 + k * 14} C${-150 + k * 70},${400 + k * 10} ${-40 + k * 70},${480 + k * 6} ${40 + k * 70},660`} stroke={v.hot} strokeWidth={1.4} fill="none" opacity={0.5} />)}
-		<path d="M-310,340 C-180,300 -40,330 120,420 C200,470 260,560 300,660" stroke="url(#goldG)" strokeWidth={3} fill="none" />
-		{/* soft waves parted in the middle */}
+		<Garment T={T} v={v} draw={draw} />
+		{locks.map((d, k) => <g key={k} opacity={draw}><path d={d} fill="url(#hairG)" /><path d={d} fill="url(#sheenG)" opacity={0.8} /><path d={d} fill="none" stroke={v.hot} strokeWidth={1.4} opacity={0.8} /></g>)}
 		<path d={cap} fill="url(#hairG)" opacity={draw} /><path d={cap} fill="url(#sheenG)" opacity={draw} />
-		{[0, 1, 2, 3].map((k) => [1, -1].map((s) => <path key={k + '' + s} d={`M${s * 6},${-224 + k * 6} C${s * (50 + k * 8)},${-214 + k * 12} ${s * (96 + k * 6)},${-176 + k * 16} ${s * (118 + k * 4)},${-120 + k * 24} C${s * (126 + k * 2)},${-100 + k * 24} ${s * (124 + k * 2)},${-80 + k * 24} ${s * (130)},${-50 + k * 20}`} stroke={v.hot} strokeWidth={1.1} fill="none" opacity={0.45 * draw} />))}
-		<Neon d={cap} v={v} draw={draw} w={2} L={1800} />
-		{/* the laurel crown */}
-		<g opacity={orn(0)}>{[1, -1].map((s) => Array.from({length: 10}, (_, i) => { const a = lerp(0.05, Math.PI / 2 - 0.12, i / 9), x = s * Math.cos(a) * 146, y = -128 - Math.sin(a) * 78; return <g key={s + '-' + i} transform={`translate(${x.toFixed(1)},${y.toFixed(1)}) rotate(${s * (-20 - i * 9)})`}><ellipse rx={9} ry={20} fill="url(#goldG)" stroke="#7a5a20" strokeWidth={1} /></g>; }))}</g>
-		{[1, -1].map((sx) => <g key={sx} transform={`translate(${sx * 130},12)`} opacity={orn(0)}><line x1={0} y1={0} x2={2 * Math.sin(T * 2 + sx)} y2={26} stroke={GOLD} strokeWidth={1.4} /><circle cx={2 * Math.sin(T * 2 + sx)} cy={32} r={6} fill="#fffbe8" stroke={GOLD} strokeWidth={1} /></g>)}
+		{[0, 1, 2].map((k) => <path key={k} d={`M${4 - k * 8},-226 C${-50 - k * 14},-214 ${-110 - k * 4},-150 ${-124 + k * 6},-50`} stroke={v.hot} strokeWidth={1.1} fill="none" opacity={0.4 * draw} />)}
+		{[0, 1, 2].map((k) => <path key={'r' + k} d={`M${12 + k * 8},-226 C${60 + k * 14},-214 ${116 + k * 4},-150 ${124 - k * 6},-50`} stroke={v.hot} strokeWidth={1.1} fill="none" opacity={0.4 * draw} />)}
+		<Neon d={cap} v={v} draw={draw} w={2.2} L={1800} />
+		<g opacity={orn(0)} transform="translate(-112,-176)">{[[8, 30, 0.6], [6, 20, 0.9]].map(([n, r, o], ring) => Array.from({length: n}, (_, i) => <path key={ring + '-' + i} transform={`rotate(${i * 360 / n + ring * 22})`} d={`M0,0 C${-r * 0.4},${-r * 0.5} ${-r * 0.3},${-r} 0,${-r * 1.1} C${r * 0.3},${-r} ${r * 0.4},${-r * 0.5} 0,0 Z`} fill="#fff6f0" fillOpacity={0.5 + 0.2 * ring} stroke={v.col} strokeWidth={1.2} opacity={o} />))}<circle r={6} fill={GOLD} /></g>
+		{[1, -1].map((sx) => <g key={sx} transform={`translate(${sx * 130},12)`} opacity={orn(0)}><line x1={0} y1={0} x2={2 * Math.sin(T * 2 + sx)} y2={26} stroke={GOLD} strokeWidth={1.4} /><circle cx={2 * Math.sin(T * 2 + sx)} cy={32} r={6} fill="#fff6f0" stroke={GOLD} strokeWidth={1} /></g>)}
 	</g>;
 };
 
@@ -715,16 +645,15 @@ const Halo: React.FC<{T: number; v: Voice; s: number; t: number; rv: number; lit
 	if (v0.kind === 'den') { const v = v0, R = 330; return <g transform={`scale(${s})`}>
 		<circle r={560} fill="url(#auraG)" />
 		<circle r={R} fill={v.deep} opacity={0.6} /><circle r={R} fill="none" stroke="url(#goldG)" strokeWidth={4} /><circle r={R - 46} fill="none" stroke={v.hot} strokeWidth={1.2} opacity={0.6} />
-		{['XII', 'I', 'II', 'III', 'IV', 'V', 'VI', 'VII', 'VIII', 'IX', 'X', 'XI'].map((n, i) => <text key={n} x={Math.sin(i * Math.PI / 6) * (R - 24)} y={-Math.cos(i * Math.PI / 6) * (R - 24) + 9} textAnchor="middle" style={{fontFamily: SERIF, fontWeight: 600, fontSize: 26}} fill={v.hot} opacity={0.75}>{n}</text>)}
-		<line x1={0} y1={0} x2={Math.sin(-0.5) * 230} y2={-Math.cos(-0.5) * 230} stroke={v.hot} strokeWidth={3} opacity={0.35} /><line x1={0} y1={0} x2={Math.sin(2.1) * 170} y2={-Math.cos(2.1) * 170} stroke={v.hot} strokeWidth={5} opacity={0.35} />
+		{['XII', 'I', 'II', 'III', 'IV', 'V', 'VI', 'VII', 'VIII', 'IX', 'X', 'XI'].map((n, i) => <text key={n} x={Math.sin(i * Math.PI / 6) * (R - 24)} y={-Math.cos(i * Math.PI / 6) * (R - 24) + 9} textAnchor="middle" style={{fontFamily: SERIF, fontWeight: 600, fontSize: 26}} fill={v.hot} opacity={1}>{n}</text>)}
+		{(() => { const h = t - rv, spin = h < 0 ? 0 : Math.pow(Math.max(0, 0.9 - h), 2) * 40; return <g><line x1={0} y1={0} x2={Math.sin(-0.5 + spin) * 240} y2={-Math.cos(-0.5 + spin) * 240} stroke={v.hot} strokeWidth={4} opacity={0.8} /><line x1={0} y1={0} x2={Math.sin(2.1 + spin / 12) * 170} y2={-Math.cos(2.1 + spin / 12) * 170} stroke="url(#goldG)" strokeWidth={7} opacity={0.85} /><circle r={12} fill="url(#goldG)" /></g>; })()}
 	</g>; }
 	if (v0.kind === 'bar') { const v = v0, tilt = 7 * Math.sin(T * 1.1); return <g transform={`scale(${s})`}>
 		<circle r={560} fill="url(#auraG)" />
 		<circle r={340} fill="none" stroke="url(#goldG)" strokeWidth={3} /><circle r={250} fill="none" stroke={v.hot} strokeWidth={1.4} opacity={0.6} />
-		<g transform="translate(0,-300)" opacity={0.85}><line x1={0} y1={-40} x2={0} y2={10} stroke="url(#goldG)" strokeWidth={4} /><g transform={`rotate(${tilt})`}><line x1={-260} y1={0} x2={260} y2={0} stroke="url(#goldG)" strokeWidth={5} />{[-1, 1].map((k) => <g key={k} transform={`translate(${k * 250},0) rotate(${-tilt})`}><line x1={-50} y1={90} x2={0} y2={0} stroke={GOLD} strokeWidth={1.4} /><line x1={50} y1={90} x2={0} y2={0} stroke={GOLD} strokeWidth={1.4} /><path d="M-60,90 Q0,128 60,90 Z" fill={v.deep} stroke="url(#goldG)" strokeWidth={3} /></g>)}</g><circle cy={-44} r={8} fill="url(#goldG)" /></g>
+		<g transform="translate(0,-300)" opacity={0.85}><line x1={0} y1={-40} x2={0} y2={10} stroke="url(#goldG)" strokeWidth={4} /><g transform={`rotate(${tilt})`}><line x1={-260} y1={0} x2={260} y2={0} stroke="url(#goldG)" strokeWidth={5} />{[-1, 1].map((k) => <g key={k} transform={`translate(${k * 250},0) rotate(${-tilt})`}><line x1={-50} y1={90} x2={0} y2={0} stroke={GOLD} strokeWidth={1.4} /><line x1={50} y1={90} x2={0} y2={0} stroke={GOLD} strokeWidth={1.4} /><path d="M-60,90 Q0,128 60,90 Z" fill={v.deep} stroke="url(#goldG)" strokeWidth={3} />{k < 0 ? <path d="M0,92 C-24,72 -24,50 -10,50 C-4,50 0,56 0,60 C0,56 4,50 10,50 C24,50 24,72 0,92 Z" fill={v.col} stroke="#fff0c8" strokeWidth={1.4} /> : <g><path d="M-14,46 L14,46 L0,70 L14,94 L-14,94 L0,70 Z" fill="none" stroke="#fff0c8" strokeWidth={2.4} /><path d="M-8,88 L8,88 L0,76 Z" fill={v.col} /></g>}</g>)}</g><circle cy={-44} r={8} fill="url(#goldG)" /></g>
 	</g>; }
-	if (v0.kind === 'ang') return <g><Temple v={v0} o={lit} /><RomanHalo T={T} v={v0} s={s} /></g>;
-	if (v0.kind === 'acc') return <g><Temple v={v0} o={lit} /><RomanHalo T={T} v={v0} s={s} rays /></g>;
+	if (v0.kind === 'acc' && !(v0 as any).__inner) { const h = t - rv, rise = h < 0 ? 0 : ease(cl01(h / 1.6)); return <g><g transform={`translate(0,${lerp(260, 0, rise)})`} opacity={rise}><circle r={460} fill="url(#hotG)" opacity={0.75} /><circle r={300} fill="#ffd9a8" opacity={0.35} /><circle r={300} fill="none" stroke="url(#goldG)" strokeWidth={3} /></g><Halo T={T} v={{...v0, kind: 'xi', __inner: true} as any} s={s} t={t} rv={rv} lit={lit} /></g>; }
 	const v = look(v0);
 	const r0 = 250, r1 = 340, crack = v.kind === 'ju' || v.kind === 'nu' ? cl01((t - rv) / 1.2) : 0;
 	if (v.kind === 'ai') return <g transform={`scale(${s})`}>
@@ -767,6 +696,13 @@ const Halo: React.FC<{T: number; v: Voice; s: number; t: number; rv: number; lit
 const Worlds: React.FC<{T: number; v: Voice; u: number; cx: number; cy: number}> = ({T, v, u, cx, cy}) => {
 	if (u <= 0) return null;
 	switch (v.kind) {
+		case 'den': return <g opacity={u}>{Array.from({length: 18}, (_, i) => {
+			const a = lerp(-1.75, 1.75, rnd(i, 51)), r = 330 + 260 * rnd(i, 52), x = cx + Math.cos(a) * r, y = cy + Math.sin(a) * r * 0.85, sz = 14 + 26 * rnd(i, 53), sh = 0.7 + 0.3 * Math.sin(T * 1.5 + i);
+			return <g key={i}>
+				<line x1={x - Math.cos(a) * sz * 3} y1={y - Math.sin(a) * sz * 2.5} x2={x} y2={y} stroke={v.hot} strokeWidth={1.4} opacity={0.35} />
+				<path transform={`translate(${x},${y}) rotate(${i * 47})`} d={`M0,${-sz} L${sz * 0.7},${sz * 0.4} L${-sz * 0.5},${sz * 0.6} Z`} fill={v.col} fillOpacity={0.14} stroke={v.hot} strokeWidth={1.6} opacity={sh} />
+			</g>;
+		})}</g>;
 		case 'xi': return <g>{Array.from({length: 3}, (_, k) => {
 			const per = BEAT * 2, ph = ((T - k * per / 3) % per) / per, bx = 900 + rnd(k, 61) * 1000, by = 120 + rnd(k, 62) * 520;
 			return <g key={k} opacity={u * (1 - ph)}>{Array.from({length: 16}, (_, i) => { const a = i / 16 * Math.PI * 2, r = 30 + 150 * out3(ph); return <line key={i} x1={bx + Math.cos(a) * r * 0.6} y1={by + Math.sin(a) * r * 0.6} x2={bx + Math.cos(a) * r} y2={by + Math.sin(a) * r + 30 * ph * ph} stroke={k % 2 ? v.col : '#ff6a4a'} strokeWidth={3} strokeLinecap="round" />; })}</g>;
@@ -984,7 +920,7 @@ const FIG: Record<Kind, React.FC<FigProps>> = {xi: FigXi, nu: FigNu, ai: FigAi, 
 const PLACE: Record<Kind, {dx: number; dy: number; s: number; flip?: boolean}> = {
 	xi: {dx: 0, dy: 40, s: 1.55}, nu: {dx: 0, dy: 60, s: 1.55}, ai: {dx: 60, dy: 60, s: 1.4, flip: true}, ju: {dx: 0, dy: 0, s: 1.75},
 	love: {dx: 10, dy: 40, s: 1.5}, wu: {dx: -40, dy: 10, s: 1.45}, yu: {dx: 0, dy: 30, s: 1.45},
-	den: {dx: 40, dy: 60, s: 1.4}, ang: {dx: 0, dy: 120, s: 1.18}, bar: {dx: 0, dy: 40, s: 1.5}, dep: {dx: 60, dy: 70, s: 1.4, flip: true}, acc: {dx: 0, dy: 90, s: 1.25},
+	den: {dx: 40, dy: 60, s: 1.4}, ang: {dx: 0, dy: 60, s: 1.5}, bar: {dx: 0, dy: 40, s: 1.5}, dep: {dx: 60, dy: 70, s: 1.4, flip: true}, acc: {dx: 0, dy: 40, s: 1.5},
 };
 const VoiceScene: React.FC<{T: number; v: Voice; i: number}> = ({T, v, i}) => {
 	// the reveal is snapped to the frame that holds the downbeat (never a frame late)
@@ -1018,7 +954,7 @@ const VoiceScene: React.FC<{T: number; v: Voice; i: number}> = ({T, v, i}) => {
 				<rect width={W} height={H} fill="url(#bgG)" />
 				{Array.from({length: 50}, (_, k) => <circle key={k} cx={rnd(k) * W} cy={rnd(k, 1) * H} r={0.8 + 1.4 * rnd(k, 2)} fill="#eef" opacity={0.15 + 0.35 * Math.sin(T * 1.2 + k * 2.1) ** 2} />)}
 				<circle cx={520} cy={560} r={620} fill="none" stroke={v.hot} strokeWidth={2.2} opacity={0.25 + 0.4 * lit} />
-				<g opacity={0.55}>{v.kind === 'ang' ? null : <Worlds T={T} v={look(v)} u={on ? cl01(hit / 1.4) : 0} cx={cx} cy={cy} />}</g>
+				<g opacity={0.55}><Worlds T={T} v={look(v)} u={on ? cl01(hit / 1.4) : 0} cx={cx} cy={cy} /></g>
 				<g transform={`translate(${cx},${cy}) scale(${push})`}>
 					<Halo T={T} v={v} s={lerp(0.9, 1, out3(t / 0.3)) * (on ? 1 + 0.035 * Math.max(0, 1 - hit / 0.2) : 1)} t={t} rv={rv} lit={lit} />
 					<BackMotes T={T} v={look(v)} hit={hit} />
@@ -1033,6 +969,16 @@ const VoiceScene: React.FC<{T: number; v: Voice; i: number}> = ({T, v, i}) => {
 					</g>}
 				</g>
 				{v.kind === 'yu' && <ReachHand T={T} v={v} u={cl01((hit - 0.4) / 0.6)} />}
+				{v.kind === 'ang' && on && [[cx - 120, -40, cx - 60, cy - 330], [cx + 260, -40, cx + 160, cy - 300], [cx + 520, 40, cx + 320, cy - 120]].map(([a1, a2, b1, b2], k) => <Bolt key={'lb' + k} a={[a1, a2]} b={[b1, b2]} seed={k * 7 + 3} T={T} col={v.col} w={3.4} o={(hit < 0.5 ? 1 : 0.35 + 0.65 * (Math.sin(T * 7 + k * 2) > 0.6 ? 1 : 0))} />)}
+				{v.kind === 'dep' && on && (() => { const sy = lerp(1100, 735, ease(cl01(hit / 2.2))) + 6 * Math.sin(T * 1.3); const wave = `M820,${sy} ` + Array.from({length: 23}, (_, i) => `Q${860 + i * 50},${sy + 10 * Math.sin(T * 2 + i)} ${900 + i * 50},${sy}`).join(' ') + ` L1960,1100 L820,1100 Z`; return <g>
+					<linearGradient id="waterG" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stopColor={v.col} stopOpacity="0.35" /><stop offset="1" stopColor="#04081a" stopOpacity="0.85" /></linearGradient>
+					<linearGradient id="waterFade" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stopColor="#fff" stopOpacity="0" /><stop offset="0.22" stopColor="#fff" stopOpacity="1" /></linearGradient>
+					<mask id="waterM" maskUnits="userSpaceOnUse" x={820} y={0} width={1140} height={1100}><rect x={820} y={0} width={1140} height={1100} fill="url(#waterFade)" /></mask>
+					<g mask="url(#waterM)"><path d={wave} fill="url(#waterG)" /><path d={wave.split(' L1960')[0]} stroke={v.hot} strokeWidth={2} fill="none" opacity={0.8} /></g>
+					{Array.from({length: 7}, (_, i) => { const ph = (T * 0.8 + i / 7) % 1, x = 960 + rnd(i, 61) * 900; return <ellipse key={'r' + i} cx={x} cy={sy + 4} rx={10 + 70 * ph} ry={(10 + 70 * ph) * 0.18} fill="none" stroke={v.hot} strokeWidth={1.4} opacity={0.7 * (1 - ph)} />; })}
+					{Array.from({length: 14}, (_, i) => { const ph = (T * 0.25 + rnd(i, 62)) % 1, x = 980 + rnd(i, 63) * 860 + 10 * Math.sin(T * 2 + i), y = lerp(1080, sy + 20, ph); return <circle key={'b' + i} cx={x} cy={y} r={3 + 5 * rnd(i, 64)} fill="none" stroke={v.hot} strokeWidth={1.2} opacity={0.6} />; })}
+				</g>; })()}
+				{v.kind === 'acc' && on && Array.from({length: 9}, (_, i) => { const ph = ((hit * 0.22 + rnd(i, 71)) % 1), x = cx + (i % 2 ? 1 : -1) * (300 + rnd(i, 72) * 260) + 40 * Math.sin(T + i), y = lerp(cy + 200, -80, ph), f = Math.sin(T * 9 + i * 2), sz = 1 + rnd(i, 73) * 0.8; return <g key={'dv' + i} transform={`translate(${x},${y}) scale(${sz})`} opacity={Math.sin(Math.PI * ph)}><path d={`M-34,0 Q-17,${-26 * f} 0,0 Q17,${-26 * f} 34,0`} stroke="#fff" strokeWidth={4} fill="none" strokeLinecap="round" /><ellipse cx={0} cy={2} rx={7} ry={4} fill="#fff" /><path d={`M-34,0 Q-17,${-26 * f} 0,0 Q17,${-26 * f} 34,0`} stroke={GOLD} strokeWidth={10} fill="none" opacity={0.25} filter="url(#gS)" /></g>; })}
 				{v.kind === 'love' && lit > 0 && Array.from({length: 1}, (_, k) => { const ox = cx + 120, oy = cy - 60, ex = [1180, 1960, 1960][k], ey = [-40, 160, 620][k], w = Math.sin(T * 1.4 + k) * 60, len = 1800; const d = `M${ox},${oy + (k - 1) * 30} C${ox + 160},${oy - 260 + w} ${ex - 200},${ey + 260 - w} ${ex},${ey}`; const u = cl01((hit - 0.4) / 1.4); return <g key={k}><path d={d} stroke={v.col} strokeWidth={6} fill="none" opacity={0.3} filter="url(#gM)" strokeDasharray={len} strokeDashoffset={len * (1 - out3(u - k * 0.05))} /><path d={d} stroke={v.col} strokeWidth={2.2} fill="none" strokeDasharray={len} strokeDashoffset={len * (1 - out3(u - k * 0.05))} /></g>; })}
 				{lit > 0 && bolts.slice(0, 1).map(([a, b], k) => <Bolt key={k} a={a} b={b} seed={k + v.n * 10} T={T} col={v.col} o={lit * (0.25 + 0.3 * Math.sin(T * 3 + k)) * (v.kind === 'ai' ? 0.5 : 1)} />)}
 				{on && hit < 0.6 && <Bolt a={[120, 760]} b={[560, 380]} seed={v.n * 3 + 1} T={T} col={v.col} o={1 - hit / 0.6} />}
@@ -1048,16 +994,16 @@ const VoiceScene: React.FC<{T: number; v: Voice; i: number}> = ({T, v, i}) => {
 					<text x={150} y={330} style={{fontFamily: SERIF, fontWeight: 700, fontSize: 38, letterSpacing: '0.16em'}} fill="#efe9fb" opacity={cl01(hit / 0.12)} filter={nb > 0.3 ? `url(#nb${v.n})` : undefined}>{`悲伤的第${NUM[v.n]}个阶段，它叫`}</text>
 					<clipPath id={`sw${v.n}`}><rect x={60 + 620 * sweep} y={340} width={110} height={360} transform="skewX(-18)" /></clipPath>
 					<g transform={`translate(${-70 * (1 - out3(nameU))},0)`}>
-						<text x={140} y={640} style={{fontFamily: SERIF, fontWeight: 900, fontSize: nameFs}} fill={NEWWORLD(v.kind) ? GOLD : v.col} opacity={0.75} filter="url(#gL)">{v.ch}</text>
+						<text x={140} y={640} style={{fontFamily: SERIF, fontWeight: 900, fontSize: nameFs}} fill={v.col} opacity={0.75} filter="url(#gL)">{v.ch}</text>
 						<g filter={nb > 0.3 ? `url(#nb${v.n})` : undefined}>
-							<text x={140} y={640} style={{fontFamily: SERIF, fontWeight: 900, fontSize: nameFs}} fill={NEWWORLD(v.kind) ? 'url(#goldG)' : 'url(#nameG)'}>{v.ch}</text>
+							<text x={140} y={640} style={{fontFamily: SERIF, fontWeight: 900, fontSize: nameFs}} fill="url(#nameG)">{v.ch}</text>
 						</g>
 						{sweep > 0 && sweep < 1 && <text x={140} y={640} style={{fontFamily: SERIF, fontWeight: 900, fontSize: nameFs}} fill="#fff" clipPath={`url(#sw${v.n})`}>{v.ch}</text>}
 					</g>
 					<g opacity={tag}>
 						<text x={170 + nameW} y={470} style={{fontFamily: SERIF, fontWeight: 600, fontSize: 48, fontStyle: 'italic', letterSpacing: '0.06em'}} fill="#fff">{v.py}</text>
 						<rect x={152 + nameW} y={410} width={6} height={230} fill="url(#goldG)" />
-						<text x={170 + nameW} y={540} style={{fontFamily: SERIF, fontWeight: 600, fontSize: 30, letterSpacing: '0.2em'}} fill={GOLD}>{NEWWORLD(v.kind) ? `STAGE ${ROMAN_N[v.n]}` : `STAGE ${v.n}`}</text>
+						<text x={170 + nameW} y={540} style={{fontFamily: SERIF, fontWeight: 600, fontSize: 30, letterSpacing: '0.2em'}} fill={GOLD}>STAGE {v.n}</text>
 					</g>
 					<Rings hit={hit} x={nameX} y={525} col={v.col} />
 				</g>}
