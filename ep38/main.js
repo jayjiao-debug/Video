@@ -34516,7 +34516,7 @@ var TIMELINE = [
     const a = broadsides(near, tm, 0.5, 7), b = broadsides(COLS(adv).slice(13, 18), tm, 0.5, 9), e = broadsides(COLS(adv).slice(1, 6).filter(() => u > 7), tm + 1.3, 0.55, 11);
     const r1 = rake(lead, tm, 0.04), r2 = rake(nel, tm, tN, -1);
     const lens = [];
-    const cpz = camera.position, k1 = env(u, 1, 4.2, 0.6, 1);
+    const cpz = camera.position, k1 = 0;
     if (k1 > 0) for (let k = 0; k < 18; k++) {
       const side = k % 2 ? 1 : -1;
       lens.push([cpz.x + 20 + k * 5.3 % 40 + u * 3, cpz.y - 3 + k % 4 * 1.4, cpz.z + side * (10 + k * 2.9 % 14) - u * 2.5 * side, 7 + k % 5 * 2.5, 0.6, 0.56, 0.5, 0.35 * k1]);
