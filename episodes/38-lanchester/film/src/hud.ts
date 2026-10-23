@@ -16,7 +16,7 @@ export const sub = (hud: HTMLElement, text: string, t: number, a: number, b: num
 export const counters = (hud: HTMLElement, b: number, r: number, o = 1, labels?: [string, string]) => {
 	if (o <= 0) return;
 	hud.insertAdjacentHTML('beforeend', `<div class="num" style="left:86px;top:50px;font-size:112px;opacity:${o};text-shadow:${sh(BLUE)}">${b}</div><div class="num" style="right:86px;top:50px;font-size:112px;text-align:right;opacity:${o};text-shadow:${sh(RED)}">${r}</div>` +
-		(labels ? `<div class="lbl" style="left:92px;top:182px;font-size:36px;opacity:${o * 0.9}">${labels[0]}</div><div class="lbl" style="right:92px;top:182px;font-size:36px;text-align:right;opacity:${o * 0.9}">${labels[1]}</div>` : ''));
+		(labels ? `<div class="lbl" style="left:92px;top:182px;font-size:44px;opacity:${o * 0.95};text-shadow:0 0 3px rgba(8,6,10,.95),0 0 12px rgba(8,6,10,.7)">${labels[0]}</div><div class="lbl" style="right:92px;top:182px;font-size:44px;text-align:right;opacity:${o * 0.95};text-shadow:0 0 3px rgba(8,6,10,.95),0 0 12px rgba(8,6,10,.7)">${labels[1]}</div>` : ''));
 };
 /** a label at a screen point; anchor c = centred */
 export const tag = (hud: HTMLElement, x: number, y: number, text: string, o: number, size = 44, color = '#fff', glow?: string, anchor: 'l' | 'c' | 'r' = 'c') => {

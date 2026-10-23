@@ -97,7 +97,7 @@ const guessBar = (c: Ctx, _b: number, o: number, strike = 0) => { if (o <= 0) re
 	html(c.hud, `<div class="lbl" style="left:${x}px;top:${y}px;font-size:58px;color:#ffd98a;opacity:${o};text-shadow:0 0 6px rgba(8,6,10,.9),0 0 22px rgba(246,207,120,.45)">你猜：剩 500<div style="position:absolute;left:-6px;top:50%;height:6px;width:${strike * 104}%;background:#ff6a5a;box-shadow:0 0 10px #ff6a5a;border-radius:3px"></div></div>
 	<div style="position:absolute;left:${x}px;top:${y + 78}px;width:330px;border-top:4px dashed rgba(246,207,120,.85);opacity:${o}"></div>`); };
 /** a hook battle: 0 → 11.23 s of sim in 15 s, slowing for the end */
-const hookST = (u: number) => (u < 14.0 ? 0.2 + u * 0.765 : 0.2 + 14.0 * 0.765 + (u - 14.0) * 0.32); // fire on frame 0; 11.23 s of sim lands on 15.05
+const hookST = (u: number) => (u < 14.0 ? 0.2 + (u - 0.4) * 0.79 : 0.2 + 13.6 * 0.79 + (u - 14.0) * 0.32); // the first volley at 0.4 s (frame 0 still reads 500); 11.23 s of sim lands on 15.05
 /** melee: duellists lunge at the contact line; a little dust where they meet */
 const meleeBodies = (st: number, k: number): Body[] => simBodies(SM, st, 'rest', 0, 0, k).map((b, i) => { const u = SM.units[i]; if (b.fall > 0 || Math.abs(u.x) > 4) return b;
 	const ph = Math.sin(st * 2.3 + u.fx * 40); return {...b, pose: 'charge', x: b.x + (u.side ? -1 : 1) * (0.35 + 0.35 * Math.max(0, ph)), lean: 0.22 * Math.max(0, ph)}; });
@@ -258,14 +258,14 @@ export const TIMELINE: Shot[] = [
 		c.squares.set(L);
 		const P = (x: number, z: number) => toScreen([x, 0, z]);
 		const pb = P(-45 - bs / 2, bs / 2 + 40), pr = P(47 + rs / 2, rs / 2 + 40);
-		tag(c.hud, pb.x, pb.y - 30, '边长 = 一排人的长度', env(u, 0.4, 3.6), 44, '#fff', BLUE); tag(c.hud, pr.x, pr.y - 30, '500 人', env(u, 0.4, 3.6), 44, '#fff', RED);
+		tag(c.hud, pb.x, pb.y - 84, '1000 人', env(u, 0.4, 3.6), 52, '#fff', BLUE); tag(c.hud, pb.x, pb.y - 30, '边长 = 一排人的长度', env(u, 0.4, 3.6), 40, '#fff', BLUE); tag(c.hud, pr.x, pr.y - 84, '500 人', env(u, 0.4, 3.6), 52, '#fff', RED);
 		if (tile > 0) { const k = Math.max(1, Math.min(4, 1 + Math.floor((u - 1.6) / 0.25))); const pc = P(-45 - bs / 2, 0); slam(c.hud, pc.x, pc.y, `×${k}`, u, 1.6 + (k - 1) * 0.25, 3.75, 150, GOLD, '#fff6dd'); }
 		if (u >= 3.75 && u < 8.2) counters(c.hud, b, r);
 		if (fold > 0.95) { const pf = P(47 + rs / 2, 0); tag(c.hud, pf.x, pf.y, '一样大', env(u, 9.6, 11.1), 64, '#fff', GOLD); }
 		if (tape > 0) { const fs = 866 * LEN; const pt = P(-45 - fs - 70, 0);
 			if (u < 11.25) tag(c.hud, pt.x - 40, pt.y, `${Math.round(866 * tape)}`, env(u, 9.9, 99), 64, '#fff', GOLD); else slam(c.hud, pt.x - 60, pt.y, '866', u, 11.25, 99, 110, BLUE);
 			html(c.hud, `<div style="position:absolute;left:0;right:0;top:92px;text-align:center;font-weight:900;font-size:76px;color:#fff;opacity:${env(u, 11.6, 99)};text-shadow:0 0 6px ${GOLD},0 0 26px rgba(246,207,120,.6),0 2px 10px rgba(0,0,0,.65)">1000² − 500² ≈ 866²</div>`);
-			tag(c.hud, W / 2, 236, '英国工程师 兰彻斯特 · 1914', env(u, 12.2, 99) * 0.9, 40, '#fff'); }
+			tag(c.hud, W / 2, 236, '英国工程师 兰彻斯特，1914 年提出', env(u, 12.2, 99) * 0.9, 44, '#fff'); }
 		sub(c.hud, '战斗力，看人数的[平方]', u, 0.05, 3.4); sub(c.hud, '每一刻，两边掉的面积[一样多]', u, 3.8, 7.3); sub(c.hud, '开头的866，就是[这么来的]', u, 11.3, 14.8);
 		landDraw(c, {bloom: 0.6});
 	}},
@@ -289,7 +289,7 @@ export const TIMELINE: Shot[] = [
 		{ const q1 = toScreen([45, 2, -60]), q2 = toScreen([45 + 260 * (1 - clamp01((v - w1) / mar)), 2, -60]); if (v < w1 && q1.front) tag(c.hud, q1.x, q1.y - 70, '第一拨 500', env(v, 0.1, w1, 0.2, 0.2), 52, '#fff', RED); if (v < w1 + mar && q2.front) tag(c.hud, q2.x, q2.y - 70, '第二拨 500', env(v, 0.1, w1 + mar, 0.2, 0.2), 52, '#fff', RED); }
 		const b = v < w1 ? aliveAt(SA2, st1)[0] : aliveAt(SR2, Math.max(0, st2))[0], r = v < w1 ? aliveAt(SA2, st1)[1] + 500 : aliveAt(SR2, Math.max(0, st2))[1];
 		const done = v > w1 + mar + w2; counters(c.hud, b, r, done ? 1 - clamp01((v - w1 - mar - w2) / 0.3) : 1, ['', '两拨，各 500']);
-		if (done) { slam(c.hud, W / 2, H / 2 - 40, '707', u, 4.0 + w1 + mar + w2 + 0.05, 99, 220, BLUE); tag(c.hud, W / 2, H / 2 + 100, '同样打 1000 人，还剩 707', env(u, 4.0 + w1 + mar + w2 + 0.5, 99), 50, '#fff'); }
+		if (done) { slam(c.hud, W / 2, H / 2 - 40, '707', u, 4.0 + w1 + mar + w2 + 0.05, 99, 220, BLUE); tag(c.hud, W / 2, H / 2 + 100, '同样打 1000 人，还剩 <span style="color:#ffd27a">707</span>', env(u, 4.0 + w1 + mar + w2 + 0.3, 99, 0.15), 58, '#fff', BLUE); }
 		sub(c.hud, '要是对面分[两拨]来呢？', u, 4.05, 6.4); sub(c.hud, '打团最忌：[一拨一拨上]', u, 6.5, 9.25);
 		landDraw(c);
 	}},
@@ -359,12 +359,12 @@ export const TIMELINE: Shot[] = [
 		const v = p(150, 1350 + van);
 		if (v.front) tag(c.hud, Math.min(W - 160, v.x), Math.max(150, v.y - 60), '前队', env(u, 1.0, 99), 52, '#fff', RED);
 		html(c.hud, `<div class="lbl" style="left:0;right:0;top:200px;text-align:center;font-size:52px;opacity:${env(u, 11.0, 99)}"><span style="text-shadow:0 0 8px ${RED},0 0 24px ${RED}">对方 33 艘：一半以上 被俘或被毁</span></div>`);
-		sub(c.hud, '敌人的前队，[赶不回来]', u, 0.3, 3.7); tag(c.hud, W / 2, 132, '兰彻斯特用平方律分析过这一仗 · 1916', env(u, 3.9, 7.3) * 0.9, 40, '#fff'); sub(c.hud, '英国，一艘船都[没丢]', u, 7.5, 10.9);
+		sub(c.hud, '敌人的前队，[赶不回来]', u, 0.3, 3.7); tag(c.hud, W / 2, 132, '兰彻斯特在 1916 年的书里，用平方律算过这一仗', env(u, 3.9, 7.3) * 0.9, 40, '#fff'); sub(c.hud, '英国，一艘船都[没丢]', u, 7.5, 10.9);
 		seaDraw(c, tt, {bloom: 0.4, vig: 0.46, exposure: 0.5});
 	}},
 	// 16 — quiet: one ship drifting at sunset, no text; a bank of smoke crosses the lens and carries the cut to the field
 	{a: T.quiet, b: T.limit, draw: (c, u) => {
-		const d = T.limit - T.quiet; setFleet(c.sea.combined, [], u); setFleet(c.sea.british, [{x: 0, z: 0, heading: 0.3}], u); seaMarks(c, 0, 0);
+		const d = T.limit - T.quiet; setFleet(c.sea.combined, [], u); setFleet(c.sea.british, Array.from({length: 7}, (_, k) => ({x: -k * 150 + (k % 2) * 30, z: -k * 46 + (k % 3) * 12, heading: 0.3})), u); seaMarks(c, 0, 0);
 		camKeys([{t: 0, pos: [-700, 520, -700], look: [300, 0, 400], fov: 44}, {t: 2.2, pos: [-260, 6, -180], look: [1000, 40, 900], fov: 38}, {t: d, pos: [-215, 5, -205], look: [1000, 36, 900], fov: 37}], u);
 		const bank = clamp01((u - d + 1.6) / 1.6); const sm: number[][] = Array.from({length: 40}, (_, i) => [-200 + i * 12, 20 + (i % 5) * 6, 120 + (i % 7) * 20, 60, 0.85, 0.8, 0.78, 0.18 * clamp01((u - 2.0) / 0.8)]);
 		for (let k = 0; k < 60; k++) { const f = (k % 10) / 10, g = Math.floor(k / 10) / 6; const fw = camera.getWorldDirection(new THREE.Vector3()); const rt = new THREE.Vector3().crossVectors(fw, camera.up).normalize();
