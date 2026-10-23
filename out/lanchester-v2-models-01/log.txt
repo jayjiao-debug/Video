@@ -1,0 +1,50 @@
+token present: yes
+sketchfab model ea4047922b5644fdb48b5ac910974241
+  saved out/models/ant_rig.glb 3.9 MB
+  optimized 3.9 -> 0.7 MB
+sketchfab model 6ea6dfb45845443b9f99b2fe4456f9a3
+  saved out/models/ant_ergin.glb 3.9 MB
+  optimized 3.9 -> 0.7 MB
+sketchfab model daff0fd5908d4085a193a6fc126f597e
+  saved out/models/ant_black.glb 3.0 MB
+  optimized 3.0 -> 0.9 MB
+sketchfab model 53e0980d555a4af6b921cc00c208e4a3
+  saved out/models/osaka.glb 31.5 MB
+  optimized 31.5 -> 20.0 MB
+sketchfab model f93476af2615476e85888b76ac85ef30
+  saved out/models/city_lowpoly.glb 2.3 MB
+  optimized 2.3 -> 0.7 MB
+sketchfab model bc44625cbf2f4ec985192fa017d7ed0b
+  saved out/models/hero_archer.glb 0.3 MB
+  optimized 0.3 -> 0.2 MB
+sketchfab model 94465670d3d74f939a9c9b8e1ab47e9e
+  saved out/models/hero_mage_glasses.glb 0.2 MB
+  optimized 0.2 -> 0.1 MB
+sketchfab model 6825e1a8695449a79c0b2ca17f1bf6cb
+  saved out/models/hero_mage.glb 0.2 MB
+  optimized 0.2 -> 0.1 MB
+sketchfab model 0e43d37c08d848aab61da53b29c41fff
+  saved out/models/forest_floor.glb 45.7 MB
+  optimized 45.7 -> 30.9 MB
+polyhaven forest_leaves_02
+  saved out/polyhaven/forest_leaves_02/forest_leaves_02.gltf 0.0 MB
+  saved out/polyhaven/forest_leaves_02/forest_leaves_02.bin 2.4 MB
+  saved out/polyhaven/forest_leaves_02/textures/forest_leaves_02_nor_gl_2k.jpg 2.3 MB
+  saved out/polyhaven/forest_leaves_02/textures/forest_leaves_02_diffuse_2k.jpg 1.7 MB
+  saved out/polyhaven/forest_leaves_02/textures/forest_leaves_02_rough_2k.jpg 0.7 MB
+polyhaven brown_mud_leaves_01
+  saved out/polyhaven/brown_mud_leaves_01/brown_mud_leaves_01.gltf 0.0 MB
+  saved out/polyhaven/brown_mud_leaves_01/textures/brown_mud_leaves_01_arm_2k.jpg 3.7 MB
+  saved out/polyhaven/brown_mud_leaves_01/textures/brown_mud_leaves_01_nor_gl_2k.jpg 5.7 MB
+  saved out/polyhaven/brown_mud_leaves_01/textures/brown_mud_leaves_01_diff_2k.jpg 4.5 MB
+  saved out/polyhaven/brown_mud_leaves_01/brown_mud_leaves_01.bin 2.4 MB
+polyhaven cobblestone_floor_07
+  saved out/polyhaven/cobblestone_floor_07/cobblestone_floor_07.gltf 0.0 MB
+  saved out/polyhaven/cobblestone_floor_07/textures/cobblestone_floor_07_nor_gl_2k.jpg 1.0 MB
+  saved out/polyhaven/cobblestone_floor_07/textures/cobblestone_floor_07_rough_2k.jpg 1.7 MB
+  saved out/polyhaven/cobblestone_floor_07/cobblestone_floor_07.bin 2.4 MB
+  saved out/polyhaven/cobblestone_floor_07/textures/cobblestone_floor_07_diff_2k.jpg 2.1 MB
+polyhaven kloofendal_48d_partly_cloudy_puresky
+  saved out/polyhaven/kloofendal_48d_partly_cloudy_puresky_2k.hdr 5.5 MB
+  saved out/polyhaven/kloofendal_48d_partly_cloudy_puresky_preview.jpg 22.2 MB
+done
