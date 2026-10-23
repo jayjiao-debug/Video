@@ -38,7 +38,7 @@ export const setGrade = (o: {vig?: number; warm?: number; fade?: number; bloom?:
 	if (o.vig !== undefined) grade.uniforms.vig.value = o.vig; if (o.warm !== undefined) grade.uniforms.warm.value = o.warm; grade.uniforms.fade.value = o.fade ?? 0;
 	bloom.strength = o.bloom ?? 0.5; renderer.toneMappingExposure = o.exposure ?? 0.66;
 };
-export const draw = (scene: THREE.Scene) => { renderPass.scene = scene; composer.render(); };
+export const draw = (scene: THREE.Scene) => { if ((window as any).NODRAW) return; renderPass.scene = scene; composer.render(); };
 
 // ================================================================ camera keys
 export type Key = {t: number; pos: number[]; look: number[]; fov?: number; roll?: number; upZ?: boolean};

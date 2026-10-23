@@ -33173,6 +33173,7 @@ var setGrade = (o) => {
   renderer.toneMappingExposure = o.exposure ?? 0.66;
 };
 var draw = (scene) => {
+  if (window.NODRAW) return;
   renderPass.scene = scene;
   composer.render();
 };
@@ -33978,7 +33979,7 @@ var seaMarks = (c, o, adv, tracks = true) => {
   set(MARKS.van, 250, 880, 250, 1650, 60, o * 0.7);
 };
 var ADV = (t) => 1500 + t * 106.7;
-var ADV0 = 1500 + 106.7 * (bar(64) - bar(59));
+var ADV0 = 1500 + 106.7 * 9.375;
 var rake = (s, tm, t0, towardCam = -1) => {
   const sm = [], fl = [];
   for (let k = 0; k < 28; k++) for (const side of [-1, 1]) {

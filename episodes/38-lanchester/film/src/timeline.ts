@@ -69,7 +69,7 @@ const seaMarks = (c: Ctx, o: number, adv: number, tracks = true) => {
 };
 /** the British advance (m) at sea-shot time t: Collingwood's lead reaches the gap between two enemy hulls on the climax downbeat */
 const ADV = (t: number) => 1500 + t * 106.7;
-const ADV0 = 1500 + 106.7 * (bar(64) - bar(59));
+const ADV0 = 1500 + 106.7 * 9.375; // = ADV(T.climax − T.sea)
 /** raking broadside of a ship breaking the line: every gun on both sides fires bow to stern, 0.05 s apart, starting at t0 */
 const rake = (s: {x: number; z: number}, tm: number, t0: number, towardCam = -1) => { const sm: number[][] = [], fl: number[][] = [];
 	for (let k = 0; k < 28; k++) for (const side of [-1, 1]) { const age = tm - (t0 + k * 0.05 + (side > 0 ? 0.025 : 0)); if (age < 0 || age > 14) continue; const px = s.x + 25 - k * 1.85, pz = s.z + side * 8.5;
