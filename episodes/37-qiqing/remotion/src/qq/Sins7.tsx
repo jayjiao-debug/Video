@@ -1504,4 +1504,35 @@ export const Sins7: React.FC = () => {
 };
 
 
-registerRoot(() => <Composition id="SINS7" component={Sins7} durationInFrames={Math.round(QQ9_END * FPS)} fps={FPS} width={W} height={H} />);
+/** Douyin covers: 刀盾狗 (the film's strongest reveal) on its red disc, the gold title, the seven memes in a row, the question */
+const CoverSins: React.FC<{layout: 'wide' | 'tall'}> = ({layout}) => {
+	const wide = layout === 'wide', CW = wide ? 1440 : 1080, CH = wide ? 1080 : 1440, v = VOICES[2], T = 19.9;
+	const fx = wide ? 1095 : 540, fy = wide ? 480 : 405, fs = wide ? 0.86 : 0.78;
+	const tx = wide ? 410 : 540, ty = wide ? 560 : 930, ts = wide ? 200 : 200, sp = wide ? 94 : 116, sr = wide ? 40 : 48;
+	const one = () => 1;
+	return <AbsoluteFill style={{background: '#030205'}}>
+		<svg width={CW} height={CH}>
+			<Defs v={v} />
+			<rect width={CW} height={CH} fill="url(#bgG)" />
+			{Array.from({length: 60}, (_, k) => <circle key={k} cx={rnd(k) * CW} cy={rnd(k, 1) * CH} r={0.8 + 1.6 * rnd(k, 2)} fill="#eef" opacity={0.15 + 0.4 * rnd(k, 3)} />)}
+			<g transform={`translate(${fx},${fy}) scale(${fs})`}>
+				<g transform="translate(0,40)"><MemeDisc T={T} v={v} u={1} /></g>
+				<g transform="translate(0,70)"><FigMeme T={T} v={v} draw={1} open={1} orn={one} late={one} t={3} /></g>
+			</g>
+			<radialGradient id="vigG" cx="0.5" cy="0.5" r="0.75"><stop offset="0.6" stopColor="#000" stopOpacity="0" /><stop offset="1" stopColor="#000" stopOpacity="0.7" /></radialGradient>
+			<rect width={CW} height={CH} fill="url(#vigG)" />
+			{!wide && <><linearGradient id="fadeG" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stopColor="#030205" stopOpacity="0" /><stop offset="0.4" stopColor="#030205" stopOpacity="0.85" /><stop offset="1" stopColor="#030205" stopOpacity="0.95" /></linearGradient><rect x={0} y={CH * 0.52} width={CW} height={CH * 0.48} fill="url(#fadeG)" /></>}
+			<text x={tx + ts * 0.04} y={ty} textAnchor="middle" style={{fontFamily: SERIF, fontWeight: 900, fontSize: ts, letterSpacing: '0.08em'}} fill="#fff2d0" opacity={0.65} filter="url(#gL)">七宗罪</text>
+			<text x={tx + ts * 0.04} y={ty} textAnchor="middle" style={{fontFamily: SERIF, fontWeight: 900, fontSize: ts, letterSpacing: '0.08em'}} fill="url(#goldG)">七宗罪</text>
+			{VOICES.map((vv, i) => <Sticker key={vv.n} v={vv} x={tx + (i - 3) * sp} y={ty + (wide ? 100 : 100)} r={sr} sil={0} id={`cv${i}`} />)}
+			<text x={tx + 22} y={ty + (wide ? 215 : 210)} textAnchor="middle" style={{fontFamily: SERIF, fontWeight: 800, fontSize: wide ? 50 : 56, letterSpacing: '0.12em'}} fill="#fff">你中了几宗？</text>
+			<text x={wide ? 90 : CW / 2} y={wide ? 100 : 82} textAnchor={wide ? 'start' : 'middle'} style={{fontFamily: SERIF, fontWeight: 600, fontSize: 30, letterSpacing: '0.3em', paintOrder: 'stroke'}} stroke="#030205" strokeWidth={8} strokeLinejoin="round" fill={GOLD}>VIBE知识大赏 · Juno</text>
+		</svg>
+	</AbsoluteFill>;
+};
+
+registerRoot(() => <>
+	<Composition id="SINS7" component={Sins7} durationInFrames={Math.round(QQ9_END * FPS)} fps={FPS} width={W} height={H} />
+	<Composition id="CoverWide" component={() => <CoverSins layout="wide" />} durationInFrames={1} fps={FPS} width={1440} height={1080} />
+	<Composition id="CoverTall" component={() => <CoverSins layout="tall" />} durationInFrames={1} fps={FPS} width={1080} height={1440} />
+</>);
