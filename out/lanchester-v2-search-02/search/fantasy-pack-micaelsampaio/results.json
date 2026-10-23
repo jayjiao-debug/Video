@@ -1,0 +1,58 @@
+[
+  {
+    "n": 1,
+    "uid": "bc44625cbf2f4ec985192fa017d7ed0b",
+    "name": "Low Poly Archer [Fantasy Pack]",
+    "author": "micaelsampaio",
+    "license": "CC Attribution",
+    "faces": 3252,
+    "vertices": 1675,
+    "likes": 65,
+    "views": 1509,
+    "animated": false,
+    "url": "https://sketchfab.com/3d-models/none-bc44625cbf2f4ec985192fa017d7ed0b",
+    "thumb": "01_bc44625cbf2f4ec985192fa017d7ed0b.jpg"
+  },
+  {
+    "n": 2,
+    "uid": "94465670d3d74f939a9c9b8e1ab47e9e",
+    "name": "Low Poly Elf Mage with Glasses [Fantasy Pack]",
+    "author": "micaelsampaio",
+    "license": "CC Attribution",
+    "faces": 2793,
+    "vertices": 1442,
+    "likes": 37,
+    "views": 729,
+    "animated": false,
+    "url": "https://sketchfab.com/3d-models/none-94465670d3d74f939a9c9b8e1ab47e9e",
+    "thumb": "02_94465670d3d74f939a9c9b8e1ab47e9e.jpg"
+  },
+  {
+    "n": 3,
+    "uid": "6825e1a8695449a79c0b2ca17f1bf6cb",
+    "name": "Low Poly Elf Mage [Fantasy Pack]",
+    "author": "micaelsampaio",
+    "license": "CC Attribution",
+    "faces": 2746,
+    "vertices": 1439,
+    "likes": 36,
+    "views": 1160,
+    "animated": false,
+    "url": "https://sketchfab.com/3d-models/none-6825e1a8695449a79c0b2ca17f1bf6cb",
+    "thumb": "03_6825e1a8695449a79c0b2ca17f1bf6cb.jpg"
+  },
+  {
+    "n": 4,
+    "uid": "aaaaa5d1007e46b58e530c1fa7aee1c1",
+    "name": "Horror game low poly pack [LudumDare 53]",
+    "author": "micaelsampaio",
+    "license": "CC Attribution",
+    "faces": 6769,
+    "vertices": 3560,
+    "likes": 33,
+    "views": 949,
+    "animated": false,
+    "url": "https://sketchfab.com/3d-models/none-aaaaa5d1007e46b58e530c1fa7aee1c1",
+    "thumb": "04_aaaaa5d1007e46b58e530c1fa7aee1c1.jpg"
+  }
+]

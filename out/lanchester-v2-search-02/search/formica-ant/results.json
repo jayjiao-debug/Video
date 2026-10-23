@@ -1,0 +1,72 @@
+[
+  {
+    "n": 1,
+    "uid": "05dc90851a924ac8a733d596c6a54c06",
+    "name": "Brachyponera luteipes Worker CASENT0709409",
+    "author": "cjhoward",
+    "license": "CC Attribution",
+    "faces": 2889413,
+    "vertices": 1393632,
+    "likes": 5,
+    "views": 108,
+    "animated": false,
+    "url": "https://sketchfab.com/3d-models/none-05dc90851a924ac8a733d596c6a54c06",
+    "thumb": "01_05dc90851a924ac8a733d596c6a54c06.jpg"
+  },
+  {
+    "n": 2,
+    "uid": "9588e5ffb8b8446a935d2a722e01a529",
+    "name": "Meruem",
+    "author": "VitorToledo",
+    "license": "CC Attribution",
+    "faces": 2130912,
+    "vertices": 1065484,
+    "likes": 4,
+    "views": 601,
+    "animated": false,
+    "url": "https://sketchfab.com/3d-models/none-9588e5ffb8b8446a935d2a722e01a529",
+    "thumb": "02_9588e5ffb8b8446a935d2a722e01a529.jpg"
+  },
+  {
+    "n": 3,
+    "uid": "475519acb3e84f098132955e368d3565",
+    "name": "Ant_lowpoly",
+    "author": "celso1.rochar",
+    "license": "CC Attribution",
+    "faces": 3816,
+    "vertices": 1933,
+    "likes": 3,
+    "views": 950,
+    "animated": true,
+    "url": "https://sketchfab.com/3d-models/none-475519acb3e84f098132955e368d3565",
+    "thumb": "03_475519acb3e84f098132955e368d3565.jpg"
+  },
+  {
+    "n": 4,
+    "uid": "eb50d1be93b341438623a53f46c4a63c",
+    "name": "Wood Ant (Formica rufa) head",
+    "author": "Make_it_Visible",
+    "license": "CC Attribution-NonCommercial-ShareAlike",
+    "faces": 180000,
+    "vertices": 89893,
+    "likes": 1,
+    "views": 112,
+    "animated": false,
+    "url": "https://sketchfab.com/3d-models/none-eb50d1be93b341438623a53f46c4a63c",
+    "thumb": "04_eb50d1be93b341438623a53f46c4a63c.jpg"
+  },
+  {
+    "n": 5,
+    "uid": "bc45e7e37c7b45f998b51293c56044d8",
+    "name": "Fumiga hiper realista",
+    "author": "danij7br",
+    "license": "CC Attribution",
+    "faces": 79850,
+    "vertices": 39755,
+    "likes": 0,
+    "views": 156,
+    "animated": false,
+    "url": "https://sketchfab.com/3d-models/none-bc45e7e37c7b45f998b51293c56044d8",
+    "thumb": "05_bc45e7e37c7b45f998b51293c56044d8.jpg"
+  }
+]
