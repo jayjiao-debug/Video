@@ -33645,9 +33645,9 @@ var spriteTex = /* @__PURE__ */ (() => {
     return t;
   };
 })();
-var pointsMat = (additive) => new ShaderMaterial({
-  uniforms: { map: { value: spriteTex() }, scale: { value: H / 2 / Math.tan(36 * Math.PI / 360) }, fogColor: { value: new Color("#b9b2ad") } },
-  vertexShader: "attribute float size; attribute vec4 rgba; varying vec4 vC; uniform float scale; void main(){ vC = rgba; vec4 mv = modelViewMatrix * vec4(position,1.0); gl_PointSize = min(900.0, size * scale / -mv.z); gl_Position = projectionMatrix * mv; }",
+var pointsMat = (additive, near = 0) => new ShaderMaterial({
+  uniforms: { map: { value: spriteTex() }, scale: { value: H / 2 / Math.tan(36 * Math.PI / 360) }, fogColor: { value: new Color("#b9b2ad") }, near: { value: near } },
+  vertexShader: "attribute float size; attribute vec4 rgba; varying vec4 vC; uniform float scale; uniform float near; void main(){ vC = rgba; vec4 mv = modelViewMatrix * vec4(position,1.0); if (near > 0.0) vC.a *= smoothstep(near * 0.3, near, -mv.z - size * 0.5); gl_PointSize = min(900.0, size * scale / -mv.z); gl_Position = projectionMatrix * mv; }",
   fragmentShader: "uniform sampler2D map; varying vec4 vC; void main(){ vec4 t = texture2D(map, gl_PointCoord); gl_FragColor = vec4(vC.rgb, vC.a * t.a); }",
   transparent: true,
   depthWrite: false,
@@ -33657,13 +33657,13 @@ var pointsMat = (additive) => new ShaderMaterial({
 var Puffs = class {
   pts;
   n;
-  constructor(scene, n, additive) {
+  constructor(scene, n, additive, near = 0) {
     this.n = n;
     const g = new BufferGeometry();
     g.setAttribute("position", new BufferAttribute(new Float32Array(n * 3), 3));
     g.setAttribute("size", new BufferAttribute(new Float32Array(n), 1));
     g.setAttribute("rgba", new BufferAttribute(new Float32Array(n * 4), 4));
-    this.pts = new Points(g, pointsMat(additive));
+    this.pts = new Points(g, pointsMat(additive, near));
     this.pts.frustumCulled = false;
     this.pts.renderOrder = additive ? 3 : 2;
     scene.add(this.pts);
@@ -34701,7 +34701,7 @@ var sunziText = (scene) => {
     tracers: new Tracers(land.scene, 2600),
     rings,
     text: sunziText(land.scene),
-    seaSmoke: new Puffs(sea.scene, 16e3, false),
+    seaSmoke: new Puffs(sea.scene, 16e3, false, 30),
     seaFlash: new Puffs(sea.scene, 6e3, true),
     hud,
     split
