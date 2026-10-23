@@ -1,0 +1,102 @@
+plan: {'tier': None, 'character_count': None, 'character_limit': None, 'status': None}
+models: ['eleven_v4', 'eleven_v4_turbo', 'eleven_v3', 'eleven_v3_conversational', 'eleven_multilingual_v2', 'eleven_flash_v2_5', 'eleven_turbo_v2_5', 'eleven_turbo_v2', 'eleven_flash_v2', 'eleven_english_sts_v2', 'eleven_multilingual_sts_v2']
+model: eleven_v4
+{"name": "01_shang_n1_E4", "lang": "zh", "text": "三千年前，商朝的占卜师，把一个问题刻在龟甲上……放进火里烤。", "voice": "MI36FIkp9wRP7cpWKPTl", "voice_id": "MI36FIkp9wRP7cpWKPTl", "model": "eleven_v4", "status": 200, "file": "01_shang_n1_E4.mp3", "bytes": 108712}
+{"name": "01_shang_n2_E4", "lang": "zh", "text": "裂开的纹路，就是天的回答。那一天……真的下雨了。", "voice": "MI36FIkp9wRP7cpWKPTl", "voice_id": "MI36FIkp9wRP7cpWKPTl", "model": "eleven_v4", "status": 200, "file": "01_shang_n2_E4.mp3", "bytes": 97009}
+{"name": "01_shang_n1_J4", "lang": "zh", "text": "三千年前，商朝的占卜师，把一个问题刻在龟甲上……放进火里烤。", "voice": "4VZIsMPtgggwNg7OXbPY", "voice_id": "4VZIsMPtgggwNg7OXbPY", "model": "eleven_v4", "status": 200, "file": "01_shang_n1_J4.mp3", "bytes": 116235}
+{"name": "01_shang_n2_J4", "lang": "zh", "text": "裂开的纹路，就是天的回答。那一天……真的下雨了。", "voice": "4VZIsMPtgggwNg7OXbPY", "voice_id": "4VZIsMPtgggwNg7OXbPY", "model": "eleven_v4", "status": 200, "file": "01_shang_n2_J4.mp3", "bytes": 99517}
+{"name": "01_shang_q_J4", "lang": "zh", "text": "其自东来雨？", "voice": "4VZIsMPtgggwNg7OXbPY", "voice_id": "4VZIsMPtgggwNg7OXbPY", "model": "eleven_v4", "status": 200, "file": "01_shang_q_J4.mp3", "bytes": 30554}
+{"name": "00_hook_E4", "lang": "zh", "text": "人类打出的第一通电话……第一句话，说的是什么？", "voice": "MI36FIkp9wRP7cpWKPTl", "voice_id": "MI36FIkp9wRP7cpWKPTl", "model": "eleven_v4", "status": 200, "file": "00_hook_E4.mp3", "bytes": 75275}
+Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+[
+ {
+  "name": "01_shang_n1_E4",
+  "lang": "zh",
+  "text": "三千年前，商朝的占卜师，把一个问题刻在龟甲上……放进火里烤。",
+  "voice": "MI36FIkp9wRP7cpWKPTl",
+  "voice_id": "MI36FIkp9wRP7cpWKPTl",
+  "model": "eleven_v4",
+  "status": 200,
+  "file": "01_shang_n1_E4.mp3",
+  "bytes": 108712,
+  "heard": "三千年前,商朝的占卜师把一个问题刻在硅甲上放进火里烤",
+  "heard_lang": "zh",
+  "heard_lang_p": 1.0,
+  "seconds": 6.72
+ },
+ {
+  "name": "01_shang_n2_E4",
+  "lang": "zh",
+  "text": "裂开的纹路，就是天的回答。那一天……真的下雨了。",
+  "voice": "MI36FIkp9wRP7cpWKPTl",
+  "voice_id": "MI36FIkp9wRP7cpWKPTl",
+  "model": "eleven_v4",
+  "status": 200,
+  "file": "01_shang_n2_E4.mp3",
+  "bytes": 97009,
+  "heard": "裂开的纹路就是天的回答那一天真的下雨了",
+  "heard_lang": "zh",
+  "heard_lang_p": 0.998,
+  "seconds": 6.0
+ },
+ {
+  "name": "01_shang_n1_J4",
+  "lang": "zh",
+  "text": "三千年前，商朝的占卜师，把一个问题刻在龟甲上……放进火里烤。",
+  "voice": "4VZIsMPtgggwNg7OXbPY",
+  "voice_id": "4VZIsMPtgggwNg7OXbPY",
+  "model": "eleven_v4",
+  "status": 200,
+  "file": "01_shang_n1_J4.mp3",
+  "bytes": 116235,
+  "heard": "三千年前 商朝的占卜师把一个问题刻在硅甲上放进火里烤",
+  "heard_lang": "zh",
+  "heard_lang_p": 1.0,
+  "seconds": 7.2
+ },
+ {
+  "name": "01_shang_n2_J4",
+  "lang": "zh",
+  "text": "裂开的纹路，就是天的回答。那一天……真的下雨了。",
+  "voice": "4VZIsMPtgggwNg7OXbPY",
+  "voice_id": "4VZIsMPtgggwNg7OXbPY",
+  "model": "eleven_v4",
+  "status": 200,
+  "file": "01_shang_n2_J4.mp3",
+  "bytes": 99517,
+  "heard": "裂开的纹路就是天的回答那一天真的下雨了",
+  "heard_lang": "zh",
+  "heard_lang_p": 1.0,
+  "seconds": 6.16
+ },
+ {
+  "name": "01_shang_q_J4",
+  "lang": "zh",
+  "text": "其自东来雨？",
+  "voice": "4VZIsMPtgggwNg7OXbPY",
+  "voice_id": "4VZIsMPtgggwNg7OXbPY",
+  "model": "eleven_v4",
+  "status": 200,
+  "file": "01_shang_q_J4.mp3",
+  "bytes": 30554,
+  "heard": "其字東蘭語",
+  "heard_lang": "zh",
+  "heard_lang_p": 0.995,
+  "seconds": 1.84
+ },
+ {
+  "name": "00_hook_E4",
+  "lang": "zh",
+  "text": "人类打出的第一通电话……第一句话，说的是什么？",
+  "voice": "MI36FIkp9wRP7cpWKPTl",
+  "voice_id": "MI36FIkp9wRP7cpWKPTl",
+  "model": "eleven_v4",
+  "status": 200,
+  "file": "00_hook_E4.mp3",
+  "bytes": 75275,
+  "heard": "人类打出的第一通电话第一句话说的是什么",
+  "heard_lang": "zh",
+  "heard_lang_p": 0.998,
+  "seconds": 4.64
+ }
+]
