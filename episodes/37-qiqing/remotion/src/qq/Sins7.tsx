@@ -1465,7 +1465,14 @@ const MemeScene: React.FC<{T: number; v: Voice; i: number}> = ({T, v, i}) => {
 				{on && <g transform={`translate(0,70) scale(${lerp(1.06, 1, out3(hit / 0.3))})`}><FigMeme T={T} v={v} draw={1} open={exitU} orn={orn} late={late} t={hit} /></g>}
 			</g>
 			{/* left column: before the reveal only the moment; after it 七宗罪·之X / the name / the closing line */}
-			<BlurText id={`c${v.n}`} x={150} y={560} text={sc.ctx} size={64} weight={800} col="#ece6f6" spacing="0.06em" u={cap} out={outQ} />
+			{/* the moment, big: it punches in on the bar line, a marker in the sin's colour sweeps under it, it leaves just before the reveal */}
+			{(() => { const fs = 124, wid = [...sc.ctx].reduce((a, c) => a + (/[\x00-\x7f]/.test(c) ? 0.56 : 1), 0) * fs * 1.04, inU = out3(cl01(t / 0.18)), mk = out3(cl01((t - 0.1) / 0.28)), o = 1 - outQ;
+				return o <= 0.01 ? null : <g opacity={o} transform={`translate(${140 - 40 * (1 - inU)},600) scale(${lerp(1.12, 1, inU)})`}>
+					<text x={8} y={-fs - 22} style={{fontFamily: SERIF, fontWeight: 700, fontSize: 34, letterSpacing: '0.3em'}} fill={v.col} opacity={inU}>{`七宗罪 · ${NUM[v.n]}`}</text>
+					<rect x={-10} y={-fs * 0.38} width={(wid + 20) * mk} height={fs * 0.42} rx={6} fill={v.col} opacity={0.85} />
+					<text x={0} y={0} style={{fontFamily: SERIF, fontWeight: 900, fontSize: fs, letterSpacing: '0.04em'}} fill={v.col} opacity={0.5} filter="url(#gM)">{sc.ctx}</text>
+					<text x={0} y={0} style={{fontFamily: SERIF, fontWeight: 900, fontSize: fs, letterSpacing: '0.04em'}} fill="#ffffff" stroke={v.deep} strokeWidth={3} paintOrder="stroke">{sc.ctx}</text>
+				</g>; })()}
 			{on && <g>
 				<text x={150} y={330} style={{fontFamily: SERIF, fontWeight: 700, fontSize: 44, letterSpacing: '0.16em'}} fill="#efe9fb" opacity={cl01(hit / 0.12)}>{`七宗罪 · 之${NUM[v.n]}`}</text>
 				<filter id={`nb${v.n}`} x="-40%" y="-20%" width="180%" height="140%"><feGaussianBlur stdDeviation={`${nb.toFixed(2)} 0`} /></filter>
