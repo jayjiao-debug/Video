@@ -296,7 +296,7 @@ export const TIMELINE: Shot[] = [
 	// 13 — ★4: two half-armies are half the strength (overhead)
 	{a: T.half, b: T.sunzi, draw: (c, u) => {
 		clearLand(c); const big = 1000 * LEN, hs = 500 * LEN, k = ease((u - 0.25) / 1.0);
-		camKeys([{t: 0, pos: [-110, 55, -300], look: [90, 0, 0], fov: 42}, {t: 0.85, pos: [0, 770, -330], look: [0, 0, 10], fov: 40}, {t: 3.75, pos: [0, 790, -320], look: [0, 0, 10], fov: 40}], u);
+		camKeys([{t: 0, pos: [-110, 55, -300], look: [90, 0, 0], fov: 42}, {t: 0.85, pos: [0, 860, -380], look: [0, 0, -10], fov: 40}, {t: 3.75, pos: [0, 880, -370], look: [0, 0, -10], fov: 40}], u);
 		c.army.set(simBodies(SR2, 99), cp()); c.smoke.set([]); c.flash.set([]); c.tracers.set([]);
 		c.squares.set([{x: -big / 2, z: -big / 2, w: big, d: big, color: '#ff8a7a', a: 0.45, edge: 1},
 			{x: lerp(-big / 2 - 320, -big / 2, k), z: -big / 2, w: hs, d: hs, color: '#ff5a47', a: 1, edgeColor: GOLD},
@@ -308,7 +308,7 @@ export const TIMELINE: Shot[] = [
 	// 14 — 孙子: "以十攻其一" in gold brush strokes across the empty half; then the camera rises into the sky (bridge to the sea)
 	{a: T.sunzi, b: T.sea, draw: (c, u) => {
 		clearLand(c); const d = T.sea - T.sunzi; const big = 1000 * LEN;
-		camKeys([{t: 0, pos: [0, 790, -320], look: [0, 0, 10], fov: 40}, {t: 2.2, pos: [0, 640, -380], look: [0, 0, 160], fov: 40}, {t: d, pos: [0, 520, -300], look: [0, 900, 3000], fov: 42}], u);
+		camKeys([{t: 0, pos: [0, 880, -370], look: [0, 0, -10], fov: 40}, {t: 2.2, pos: [0, 640, -380], look: [0, 0, 160], fov: 40}, {t: d, pos: [0, 520, -300], look: [0, 900, 3000], fov: 42}], u);
 		c.army.set(simBodies(SR2, 99), cp()); c.smoke.set([]); c.flash.set([]); c.tracers.set([]);
 		c.squares.set([{x: -big / 2, z: -big / 2, w: big, d: big, color: '#ff8a7a', a: 0.45 * (1 - clamp01((u - 2.4) / 0.8)), edge: 1}]);
 		c.text.visible = true; c.text.position.set(0, 0.3, big / 4); c.text.userData.reveal(clamp01((u - 0.05) / 1.8));
@@ -319,7 +319,7 @@ export const TIMELINE: Shot[] = [
 	// 15 — Trafalgar: down from the clouds onto 27 v 33; the plan drawn on the water: both columns into the same stretch, the van left alone
 	{a: T.sea, b: T.climax, draw: (c, u) => {
 		const d = T.climax - T.sea; const adv = ADV(u);
-		camKeys([{t: 0, pos: [-1500, 1600, -2600], look: [-1200, 2600, 1200], fov: 42}, {t: 1.4, pos: [-1700, 900, -2300], look: [0, 0, 0], fov: 40}, {t: 6.5, pos: [-1500, 260, -1200], look: [0, 10, 0], fov: 38}, {t: d, pos: [adv - 2450 - 20, 7, -492], look: [adv - 2450 + 260, 9, -450], fov: 40}], u);
+		camKeys([{t: 0, pos: [-1500, 1600, -2600], look: [-1200, 2600, 1200], fov: 42}, {t: 1.4, pos: [-1700, 900, -2300], look: [0, 0, 0], fov: 40}, {t: 6.5, pos: [-1500, 260, -1200], look: [0, 10, 0], fov: 38}, {t: d, pos: [adv - 2450 - 85, 17, -440], look: [adv - 2450 + 60, 8, -440], fov: 40}], u);
 		setFleet(c.sea.combined, LINE(u, 0), u); setFleet(c.sea.british, COLS(adv), u);
 		const {sm, fl} = broadsides(LINE(u, 0).slice(0, 18), u, 1, 3); c.seaSmoke.set(u > 4 ? sm : []); c.seaFlash.set(u > 4 ? fl : []);
 		seaMarks(c, env(u, 3.75, d - 1.6, 0.5, 0.6), adv);
@@ -334,8 +334,8 @@ export const TIMELINE: Shot[] = [
 	{a: T.climax, b: T.chart, draw: (c, u) => {
 		const d = T.chart - T.climax; const tm = u < 1.2 ? u : u < 3.0 ? 1.2 + (u - 1.2) * 0.25 : 1.65 + (u - 3.0); // slow motion as the bow passes the stern
 		const adv = ADV0 + tm * 55; const lead = {x: adv - 2450, z: -440}, nel = {x: adv - 2755, z: 670}; const tN = 6.15; // Nelson's lead reaches the line at tm = 6.15 (u = 7.5)
-		if (u < 7.5) camKeys([{t: 0, pos: [lead.x - 20, 7, -492], look: [lead.x + 260, 9, -450], fov: 40}, {t: 1.2, pos: [lead.x - 26, 6, -500], look: [lead.x + 90, 9, -440], fov: 42}, {t: 3.0, pos: [lead.x - 30, 5.5, -505], look: [lead.x + 70, 10, -440], fov: 42}, {t: 7.5, pos: [lead.x - 140, 30, -590], look: [lead.x + 60, 6, -400], fov: 42}], u);
-		else camKeys([{t: 7.5, pos: [nel.x - 70, 9, 610], look: [nel.x + 120, 10, 680], fov: 40}, {t: 9.0, pos: [nel.x - 150, 50, 520], look: [nel.x + 60, 4, 620], fov: 42}, {t: 11.6, pos: [-900, 650, -1500], look: [0, 0, 0], fov: 44}, {t: d, pos: [-960, 700, -1560], look: [0, 0, 60], fov: 44}], u);
+		if (u < 7.5) camKeys([{t: 0, pos: [lead.x - 85, 17, -440], look: [lead.x + 60, 8, -440], fov: 40}, {t: 1.2, pos: [lead.x - 70, 13, -446], look: [lead.x + 50, 9, -440], fov: 44}, {t: 3.0, pos: [lead.x - 62, 11, -452], look: [lead.x + 40, 9, -440], fov: 46}, {t: 7.5, pos: [lead.x - 140, 34, -560], look: [lead.x + 40, 6, -420], fov: 42}], u);
+		else camKeys([{t: 7.5, pos: [nel.x - 80, 16, 670], look: [nel.x + 50, 8, 670], fov: 42}, {t: 9.0, pos: [nel.x - 150, 50, 520], look: [nel.x + 60, 4, 620], fov: 42}, {t: 11.6, pos: [-900, 650, -1500], look: [0, 0, 0], fov: 44}, {t: d, pos: [-960, 700, -1560], look: [0, 0, 60], fov: 44}], u);
 		const heel = (q: any, k: number) => ({...q, roll: -0.075 * k});
 		const line = LINE(T.climax - T.sea + u, 0).map((q) => Math.abs(q.z - lead.z) < 75 ? heel(q, clamp01((tm - 0.3) / 0.9)) : Math.abs(q.z - nel.z) < 75 ? heel(q, clamp01((tm - tN - 0.3) / 0.9)) : q);
 		setFleet(c.sea.combined, line, u); setFleet(c.sea.british, COLS(adv), u);
@@ -344,7 +344,7 @@ export const TIMELINE: Shot[] = [
 		const r1 = rake(lead, tm, 0.04), r2 = rake(nel, tm, tN, -1);
 		// smoke rolling across the lens during the slow motion
 		const lens: number[][] = []; const cpz = camera.position, k1 = env(u, 1.0, 4.2, 0.6, 1.0);
-		if (k1 > 0) for (let k = 0; k < 28; k++) { const f = 0.25 + (k % 7) * 0.08; lens.push([cpz.x + 30 * f + 14 + (k * 3.7) % 40 - u * 4, cpz.y - 1 + (k % 4) * 1.6, cpz.z + 18 + f * 40 - (k % 5) * 3, 16 + (k % 6) * 4, 0.9, 0.88, 0.85, 0.42 * k1]); }
+		if (k1 > 0) for (let k = 0; k < 18; k++) { const side = k % 2 ? 1 : -1; lens.push([cpz.x + 20 + (k * 5.3) % 40 + u * 3, cpz.y - 3 + (k % 4) * 1.4, cpz.z + side * (10 + (k * 2.9) % 14) - u * 2.5 * side, 7 + (k % 5) * 2.5, 0.9, 0.88, 0.85, 0.3 * k1]); } // smoke drifting past both sides of the lens
 		c.seaSmoke.set([...a.sm, ...b.sm, ...e.sm, ...r1.sm, ...r2.sm, ...lens]); c.seaFlash.set([...a.fl, ...b.fl, ...e.fl, ...r1.fl, ...r2.fl]);
 		seaDraw(c, T.climax - T.sea + u, {bloom: 0.62, vig: 0.48, exposure: 0.4});
 	}},
@@ -366,7 +366,7 @@ export const TIMELINE: Shot[] = [
 	{a: T.quiet, b: T.limit, draw: (c, u) => {
 		const d = T.limit - T.quiet; setFleet(c.sea.combined, [], u); setFleet(c.sea.british, [{x: 0, z: 0, heading: 0.3}], u); seaMarks(c, 0, 0);
 		camKeys([{t: 0, pos: [-700, 520, -700], look: [300, 0, 400], fov: 44}, {t: 2.2, pos: [-260, 6, -180], look: [1000, 40, 900], fov: 38}, {t: d, pos: [-215, 5, -205], look: [1000, 36, 900], fov: 37}], u);
-		const bank = clamp01((u - d + 1.6) / 1.6); const sm: number[][] = Array.from({length: 40}, (_, i) => [-200 + i * 12, 20 + (i % 5) * 6, 120 + (i % 7) * 20, 60, 0.85, 0.8, 0.78, 0.18]);
+		const bank = clamp01((u - d + 1.6) / 1.6); const sm: number[][] = Array.from({length: 40}, (_, i) => [-200 + i * 12, 20 + (i % 5) * 6, 120 + (i % 7) * 20, 60, 0.85, 0.8, 0.78, 0.18 * clamp01((u - 2.0) / 0.8)]);
 		for (let k = 0; k < 60; k++) { const f = (k % 10) / 10, g = Math.floor(k / 10) / 6; const fw = camera.getWorldDirection(new THREE.Vector3()); const rt = new THREE.Vector3().crossVectors(fw, camera.up).normalize();
 			const dist = 9 + g * 10; const p = camera.position.clone().addScaledVector(fw, dist).addScaledVector(rt, (f - 0.5) * dist * 1.5 + (1 - bank) * dist * 1.6).add(new THREE.Vector3(0, ((k * 7) % 5 - 2) * dist * 0.18, 0)); sm.push([p.x, p.y, p.z, dist * 0.55, 0.86, 0.82, 0.8, 0.7 * bank]); }
 		c.seaSmoke.set(sm); c.seaFlash.set([]);
@@ -377,7 +377,7 @@ export const TIMELINE: Shot[] = [
 		clearLand(c); const d = T.ending - T.limit; camKeys([{t: 0, pos: [-210, 60, -260], look: [0, 0, 0], fov: 40}, {t: d, pos: [-190, 70, -240], look: [0, 0, 0], fov: 39}], u);
 		const st = 3 + u; const RR = rnd(31); const bodies = simBodies(SL, st, 'aim').map((b, i) => { const z = SL.units[i].z, j = RR(); const grp = Math.floor((z + 300) / 70); const off = (grp % 3) * 22 * (SL.units[i].side ? 1 : -1) + Math.sin(grp * 1.7) * 12; return {...b, x: b.x + off, z: b.z + (j - 0.5) * 3, pose: (grp % 4 === 1 ? 'rest' : b.pose) as any}; });
 		c.army.set(bodies, cp()); const sm = simSmoke(SL, st); 
-		const clear = 1 - clamp01(u / 1.1); const lens: number[][] = [];
+		const clear = 1 - clamp01(u / 0.6); const lens: number[][] = [];
 		if (clear > 0) { const fw = camera.getWorldDirection(new THREE.Vector3()), rt = new THREE.Vector3().crossVectors(fw, camera.up).normalize(); for (let k = 0; k < 60; k++) { const f = (k % 10) / 10, g = Math.floor(k / 10) / 6, dist = 9 + g * 10; const p = camera.position.clone().addScaledVector(fw, dist).addScaledVector(rt, (f - 0.5) * dist * 1.5 - (1 - clear) * dist * 1.6).add(new THREE.Vector3(0, ((k * 7) % 5 - 2) * dist * 0.18, 0)); lens.push([p.x, p.y, p.z, dist * 0.55, 0.86, 0.82, 0.8, 0.7 * clear]); } }
 		c.smoke.set([...sm.sm, ...lens]); c.flash.set(sm.fl); c.tracers.set([]);
 		sub(c.hud, '真实的仗，没平方这么[夸张]', u, 0.05, 3.6);
@@ -385,7 +385,7 @@ export const TIMELINE: Shot[] = [
 	}},
 	// 18 — ending image: scattered companies gather into one block
 	{a: T.ending, b: T.card, draw: (c, u) => {
-		clearLand(c); const d = T.card - T.ending; camKeys([{t: 0, pos: [-150, 45, -190], look: [-20, 0, 0], fov: 40}, {t: d, pos: [-110, 30, -120], look: [-20, 0, 0], fov: 40}], u);
+		clearLand(c); const d = T.card - T.ending; camKeys([{t: 0, pos: [-125, 32, -115], look: [-35, 1, 0], fov: 40}, {t: d, pos: [-100, 16, -66], look: [-40, 1, 0], fov: 40}], u);
 		const R = rnd(5), m = ease((u - 0.1) / 3.4); const bodies: Body[] = [];
 		const centres = Array.from({length: 8}, () => [(R() - 0.5) * 300, (R() - 0.5) * 240]);
 		for (let i = 0; i < 800; i++) { const g = i % 8, k = Math.floor(i / 8); const cx = centres[g][0] + ((k % 10) - 4.5) * 1.6, cz = centres[g][1] + (Math.floor(k / 10) - 4.5) * 1.6; const fx = (i % 40 - 19.5) * 1.6, fz = (Math.floor(i / 40) - 9.5) * 1.6;

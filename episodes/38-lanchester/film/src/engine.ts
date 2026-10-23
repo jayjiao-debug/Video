@@ -189,7 +189,10 @@ export const makeLand = (a: Assets) => {
 	gmat.onBeforeCompile = (sh) => { sh.fragmentShader = sh.fragmentShader.replace('#include <map_fragment>', `#ifdef USE_MAP
 		vec2 uvB = mat2(0.799, -0.602, 0.602, 0.799) * vMapUv * 0.173 + vec2(0.37, 0.71); vec2 uvC = mat2(0.276, 0.961, -0.961, 0.276) * vMapUv * 0.0491 + vec2(0.13, 0.52);
 		float nz = 0.5 + 0.5 * sin(vMapUv.x * 0.031 + sin(vMapUv.y * 0.023) * 2.0) * sin(vMapUv.y * 0.027 + 1.3);
-		vec4 sampledDiffuseColor = mix(mix(texture2D(map, vMapUv), texture2D(map, uvB), smoothstep(0.2, 0.8, nz)), texture2D(map, uvC), 0.35);
+		float fw = length(fwidth(vMapUv)); float farK = smoothstep(0.004, 0.02, fw); // far away the 31 m tile becomes a grid: hand over to the large rotated layers
+		vec4 nearC = mix(mix(texture2D(map, vMapUv), texture2D(map, uvB), smoothstep(0.2, 0.8, nz)), texture2D(map, uvC), 0.35);
+		vec4 farC = mix(texture2D(map, uvB), texture2D(map, uvC), 0.5 + 0.3 * (nz - 0.5));
+		vec4 sampledDiffuseColor = mix(nearC, farC, farK);
 		diffuseColor *= sampledDiffuseColor;
 	#endif`); };
 	const ground = new THREE.Mesh(g, gmat);
