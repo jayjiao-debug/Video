@@ -1,8 +1,8 @@
 {
-  "id": "fix_v31-1792611251",
-  "composition": "FILM2",
-  "start": 1100,
-  "end": 2950,
+  "id": "ep41_v2-1",
+  "composition": "EP41V2",
+  "start": 0,
+  "end": 4892,
   "chunks": 20,
-  "output": "fix_v31"
+  "output": "ep41_v2"
 }
