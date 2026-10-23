@@ -1,0 +1,14 @@
+{
+  "file": "audio/bgm.mp3 (gitignored; owner's attachment 2026-10-23, 9:24 = two different mixes back to back; we use mix 1, 0-282 s)",
+  "bpm": 95.4,
+  "grid_A": {"valid": "<201.0 s", "beat_period": 0.62889, "beat0": 140.0985, "downbeat": "beats with index = 3 mod 4 from beat0 -> 119.35, 121.86, ... 141.99, 162.11, 182.23, 199.84"},
+  "grid_B": {"valid": ">202.6 s", "beat_period": 0.62813, "beat0": 203.3428, "downbeat": "202.71, 205.23, ... 212.77 (drop), 222.82, 232.87, 242.92, 252.97, 263.02"},
+  "sections": [
+    [0.8, 10.2, "intro, filtered, no bass"], [10.2, 21, "full"], [21, 39.5, "pumping verse"], [39.5, 41.5, "riser"],
+    [60.5, 61.2, "short stop"], [101.5, 119.35, "less highs"], [119.35, 141.0, "full (highs back)"], [141.0, 141.99, "fill/stop"],
+    [141.99, 162.11, "full, 8 bars"], [162.11, 182.23, "breakdown: bass every 2 bars, 8 bars"], [182.23, 201.05, "build, bass roll, 7.5 bars"],
+    [201.05, 202.65, "SILENCE 1.6 s"], [202.71, 212.77, "filtered 8-bit texture, no bass, 4 bars"], [212.77, 222.82, "DROP A, 4 bars"],
+    [222.82, 263.02, "drop B, 16 bars, loudest 248-262"], [263.02, 281.9, "bassless lead"], [281.94, 282.84, "silence, end of mix 1"]
+  ],
+  "film_window": {"song_in": 119.35, "song_out_fade": [242.92, 247.95], "film_t": "song_t - 119.35"}
+}
