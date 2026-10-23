@@ -1,68 +1,524 @@
 {
-  "id": "ep41-vo-06",
-  "model_prefs": [
-    "eleven_v4"
-  ],
-  "items": [
-    {
-      "model": "eleven_v3",
-      "settings": {
-        "stability": 0.35,
-        "similarity_boost": 0.8,
-        "style": 0.6
-      },
-      "lang": "en",
-      "voice_id": "MFZUKuGQUsGJPQjTS4wC",
-      "name": "03_morse_n1b",
-      "text": "[somber] In 1825, the painter Samuel Morse was far from home when a letter came: his wife had died. [pause] By the time he got back… she had already been buried."
-    },
-    {
-      "model": "eleven_v3",
-      "settings": {
-        "stability": 0.35,
-        "similarity_boost": 0.8,
-        "style": 0.6
-      },
-      "lang": "en",
-      "voice_id": "gUbIduqGzBP438teh4ZA",
-      "name": "05_bell_qb",
-      "text": "[urgently] Mr. Watson — come here — I want to see you."
-    },
-    {
-      "lang": "en",
-      "voice_id": "gUbIduqGzBP438teh4ZA",
-      "model": "eleven_v4",
-      "settings": {
-        "stability": 0.35,
-        "similarity_boost": 0.8,
-        "style": 0.6
-      },
-      "name": "05_bell_qc",
-      "text": "Mr. Watson — come here — I want to see you."
-    },
-    {
-      "model": "eleven_v3",
-      "settings": {
-        "stability": 0.35,
-        "similarity_boost": 0.8,
-        "style": 0.6
-      },
-      "lang": "en",
-      "voice_id": "ZthjuvLPty3kTMaNKVKb",
-      "name": "07_arpa_n1b",
-      "text": "October 29th, 1969. A student at UCLA tries to send one word to a computer three hundred and fifty miles away: [pause] “log in.”"
-    },
-    {
-      "model": "eleven_v3",
-      "settings": {
-        "stability": 0.35,
-        "similarity_boost": 0.8,
-        "style": 0.6
-      },
-      "lang": "en",
-      "voice_id": "yj30vwTGJxSHezdAGsv9",
-      "name": "09_fin_n1b",
-      "text": "[tenderly] In 1977, Ann Druyan called Carl Sagan to say she had found a Chinese song for the Golden Record. [pause] By the end of that call… they were engaged."
-    }
-  ]
+ "id": "ep41-vo-07",
+ "model_prefs": [
+  "eleven_v4"
+ ],
+ "items": [
+  {
+   "name": "H1",
+   "lang": "zh",
+   "voice_id": "MI36FIkp9wRP7cpWKPTl",
+   "model": "eleven_v4",
+   "settings": {
+    "stability": 0.45,
+    "similarity_boost": 0.8,
+    "style": 0.4
+   },
+   "text": "人类打出的第一通电话，第一句话，说的是什么？"
+  },
+  {
+   "name": "H2",
+   "lang": "zh",
+   "voice_id": "MI36FIkp9wRP7cpWKPTl",
+   "model": "eleven_v4",
+   "settings": {
+    "stability": 0.45,
+    "similarity_boost": 0.8,
+    "style": 0.4
+   },
+   "text": "答案，要从三千年前说起。"
+  },
+  {
+   "name": "S1",
+   "lang": "zh",
+   "voice_id": "MI36FIkp9wRP7cpWKPTl",
+   "model": "eleven_v4",
+   "settings": {
+    "stability": 0.45,
+    "similarity_boost": 0.8,
+    "style": 0.4
+   },
+   "text": "商朝人有一句话，想问老天。"
+  },
+  {
+   "name": "S2",
+   "lang": "zh",
+   "voice_id": "MI36FIkp9wRP7cpWKPTl",
+   "model": "eleven_v4",
+   "settings": {
+    "stability": 0.45,
+    "similarity_boost": 0.8,
+    "style": 0.4
+   },
+   "text": "火烤龟甲，裂纹就是回答。"
+  },
+  {
+   "name": "S3",
+   "lang": "zh",
+   "voice_id": "MI36FIkp9wRP7cpWKPTl",
+   "model": "eleven_v4",
+   "settings": {
+    "stability": 0.45,
+    "similarity_boost": 0.8,
+    "style": 0.4
+   },
+   "text": "刻下的这句问话，留到了今天。"
+  },
+  {
+   "name": "D1",
+   "lang": "zh",
+   "voice_id": "MI36FIkp9wRP7cpWKPTl",
+   "model": "eleven_v4",
+   "settings": {
+    "stability": 0.45,
+    "similarity_boost": 0.8,
+    "style": 0.4
+   },
+   "text": "七五七年，长安被叛军攻破。"
+  },
+  {
+   "name": "D2",
+   "lang": "zh",
+   "voice_id": "MI36FIkp9wRP7cpWKPTl",
+   "model": "eleven_v4",
+   "settings": {
+    "stability": 0.45,
+    "similarity_boost": 0.8,
+    "style": 0.4
+   },
+   "text": "杜甫困在城里，不知道家人还在不在。"
+  },
+  {
+   "name": "D3",
+   "lang": "zh",
+   "voice_id": "MI36FIkp9wRP7cpWKPTl",
+   "model": "eleven_v4",
+   "settings": {
+    "stability": 0.45,
+    "similarity_boost": 0.8,
+    "style": 0.4
+   },
+   "text": "那年春天，他写下："
+  },
+  {
+   "name": "B3",
+   "lang": "zh",
+   "voice_id": "MI36FIkp9wRP7cpWKPTl",
+   "model": "eleven_v4",
+   "settings": {
+    "stability": 0.45,
+    "similarity_boost": 0.8,
+    "style": 0.4
+   },
+   "text": "人类第一通电话的第一句话，是：我想见你。"
+  },
+  {
+   "name": "J1",
+   "lang": "zh",
+   "voice_id": "MI36FIkp9wRP7cpWKPTl",
+   "model": "eleven_v4",
+   "settings": {
+    "stability": 0.45,
+    "similarity_boost": 0.8,
+    "style": 0.4
+   },
+   "text": "中国的第一封电子邮件，写好了。"
+  },
+  {
+   "name": "J2",
+   "lang": "zh",
+   "voice_id": "MI36FIkp9wRP7cpWKPTl",
+   "model": "eleven_v4",
+   "settings": {
+    "stability": 0.45,
+    "similarity_boost": 0.8,
+    "style": 0.4
+   },
+   "text": "可程序卡住了，整整六天。"
+  },
+  {
+   "name": "O1a",
+   "lang": "zh",
+   "voice_id": "MI36FIkp9wRP7cpWKPTl",
+   "model": "eleven_v4",
+   "settings": {
+    "stability": 0.45,
+    "similarity_boost": 0.8,
+    "style": 0.4
+   },
+   "text": "唱片上，还录着她恋爱时的脑电波和心跳。"
+  },
+  {
+   "name": "O1b",
+   "lang": "zh",
+   "voice_id": "MI36FIkp9wRP7cpWKPTl",
+   "model": "eleven_v4",
+   "settings": {
+    "stability": 0.45,
+    "similarity_boost": 0.8,
+    "style": 0.4
+   },
+   "text": "唱片上，还录着她恋爱时的脑电波，和身体的声音。"
+  },
+  {
+   "name": "O3",
+   "lang": "zh",
+   "voice_id": "MI36FIkp9wRP7cpWKPTl",
+   "model": "eleven_v4",
+   "settings": {
+    "stability": 0.45,
+    "similarity_boost": 0.8,
+    "style": 0.4
+   },
+   "text": "你最想对谁说一句话？"
+  },
+  {
+   "name": "M1",
+   "lang": "en",
+   "voice_id": "MFZUKuGQUsGJPQjTS4wC",
+   "model": "eleven_v3",
+   "settings": {
+    "stability": 0.35,
+    "similarity_boost": 0.8,
+    "style": 0.6
+   },
+   "text": "[somber] A letter told Samuel Morse his wife had died."
+  },
+  {
+   "name": "M2",
+   "lang": "en",
+   "voice_id": "MFZUKuGQUsGJPQjTS4wC",
+   "model": "eleven_v3",
+   "settings": {
+    "stability": 0.35,
+    "similarity_boost": 0.8,
+    "style": 0.6
+   },
+   "text": "[quietly] When he got home, she was already buried."
+  },
+  {
+   "name": "M3",
+   "lang": "en",
+   "voice_id": "MFZUKuGQUsGJPQjTS4wC",
+   "model": "eleven_v3",
+   "settings": {
+    "stability": 0.35,
+    "similarity_boost": 0.8,
+    "style": 0.6
+   },
+   "text": "Nineteen years later, his telegraph sent words in an instant:"
+  },
+  {
+   "name": "C1",
+   "lang": "fr",
+   "voice_id": "aQROLel5sQbj1vuIVi6B",
+   "model": "eleven_v3",
+   "settings": {
+    "stability": 0.35,
+    "similarity_boost": 0.8,
+    "style": 0.6
+   },
+   "text": "[softly] Scott invente une machine qui écrit la voix."
+  },
+  {
+   "name": "C2",
+   "lang": "fr",
+   "voice_id": "aQROLel5sQbj1vuIVi6B",
+   "model": "eleven_v3",
+   "settings": {
+    "stability": 0.35,
+    "similarity_boost": 0.8,
+    "style": 0.6
+   },
+   "text": "Mais personne ne pourra l'écouter avant cent quarante-huit ans."
+  },
+  {
+   "name": "C3",
+   "lang": "fr",
+   "voice_id": "aQROLel5sQbj1vuIVi6B",
+   "model": "eleven_v3",
+   "settings": {
+    "stability": 0.35,
+    "similarity_boost": 0.8,
+    "style": 0.6
+   },
+   "text": "[warmly] Le chanteur ? Sans doute lui-même."
+  },
+  {
+   "name": "CQ_real",
+   "lang": "fr",
+   "url": "https://www.firstsounds.org/sounds/Scott-Feaster-No-36.mp3",
+   "text": "Au clair de la lune (Scott, 9 April 1860, First Sounds CC BY)"
+  },
+  {
+   "name": "B1",
+   "lang": "en",
+   "voice_id": "gUbIduqGzBP438teh4ZA",
+   "model": "eleven_v3",
+   "settings": {
+    "stability": 0.35,
+    "similarity_boost": 0.8,
+    "style": 0.6
+   },
+   "text": "Bell's wire runs to another room, where Watson waits."
+  },
+  {
+   "name": "B2",
+   "lang": "en",
+   "voice_id": "gUbIduqGzBP438teh4ZA",
+   "model": "eleven_v3",
+   "settings": {
+    "stability": 0.35,
+    "similarity_boost": 0.8,
+    "style": 0.6
+   },
+   "text": "[moved] Watson heard it — and he came."
+  },
+  {
+   "name": "BQa",
+   "lang": "en",
+   "accent": "scottish",
+   "gender": "male",
+   "pick": 2,
+   "model": "eleven_v3",
+   "settings": {
+    "stability": 0.35,
+    "similarity_boost": 0.8,
+    "style": 0.6
+   },
+   "text": "[shouting] Mr. Watson — come here — I want to see you!"
+  },
+  {
+   "name": "BQb",
+   "lang": "en",
+   "accent": "scottish",
+   "gender": "male",
+   "pick": 3,
+   "model": "eleven_v3",
+   "settings": {
+    "stability": 0.35,
+    "similarity_boost": 0.8,
+    "style": 0.6
+   },
+   "text": "[shouting] Mr. Watson — come here — I want to see you!"
+  },
+  {
+   "name": "K1",
+   "lang": "it",
+   "voice_id": "W71zT1VwIFFx3mMGH2uZ",
+   "model": "eleven_v3",
+   "settings": {
+    "stability": 0.35,
+    "similarity_boost": 0.8,
+    "style": 0.6
+   },
+   "text": "[tense] Dalla Cornovaglia, una stazione ripete una sola lettera: S."
+  },
+  {
+   "name": "K2",
+   "lang": "it",
+   "voice_id": "W71zT1VwIFFx3mMGH2uZ",
+   "model": "eleven_v3",
+   "settings": {
+    "stability": 0.35,
+    "similarity_boost": 0.8,
+    "style": 0.6
+   },
+   "text": "Oltreoceano, un aquilone alza l'antenna per catturarla."
+  },
+  {
+   "name": "K3",
+   "lang": "it",
+   "voice_id": "W71zT1VwIFFx3mMGH2uZ",
+   "model": "eleven_v3",
+   "settings": {
+    "stability": 0.35,
+    "similarity_boost": 0.8,
+    "style": 0.6
+   },
+   "text": "[awed] Tre brevi suoni: la S. Aveva attraversato l'Atlantico."
+  },
+  {
+   "name": "A1",
+   "lang": "en",
+   "voice_id": "ZthjuvLPty3kTMaNKVKb",
+   "model": "eleven_v3",
+   "settings": {
+    "stability": 0.35,
+    "similarity_boost": 0.8,
+    "style": 0.6
+   },
+   "text": "[hushed] The internet's ancestor is about to send its first message."
+  },
+  {
+   "name": "A2",
+   "lang": "en",
+   "voice_id": "ZthjuvLPty3kTMaNKVKb",
+   "model": "eleven_v3",
+   "settings": {
+    "stability": 0.35,
+    "similarity_boost": 0.8,
+    "style": 0.6
+   },
+   "text": "Charley Kline types log in, to a computer hundreds of miles away."
+  },
+  {
+   "name": "A3",
+   "lang": "en",
+   "voice_id": "ZthjuvLPty3kTMaNKVKb",
+   "model": "eleven_v3",
+   "settings": {
+    "stability": 0.35,
+    "similarity_boost": 0.8,
+    "style": 0.6
+   },
+   "text": "[flatly] Then the system crashed."
+  },
+  {
+   "name": "AQ1",
+   "lang": "en",
+   "voice_id": "6OzrBCQf8cjERkYgzSg8",
+   "model": "eleven_v3",
+   "settings": {
+    "stability": 0.35,
+    "similarity_boost": 0.8,
+    "style": 0.6
+   },
+   "text": "Did you get the L?"
+  },
+  {
+   "name": "AQ2",
+   "lang": "en",
+   "voice_id": "6OzrBCQf8cjERkYgzSg8",
+   "model": "eleven_v3",
+   "settings": {
+    "stability": 0.35,
+    "similarity_boost": 0.8,
+    "style": 0.6
+   },
+   "text": "Did you get the O?"
+  },
+  {
+   "name": "AQ3",
+   "lang": "en",
+   "voice_id": "6OzrBCQf8cjERkYgzSg8",
+   "model": "eleven_v3",
+   "settings": {
+    "stability": 0.35,
+    "similarity_boost": 0.8,
+    "style": 0.6
+   },
+   "text": "Did you get the G?"
+  },
+  {
+   "name": "AA1",
+   "lang": "en",
+   "accent": "american",
+   "gender": "male",
+   "pick": 4,
+   "model": "eleven_v3",
+   "settings": {
+    "stability": 0.35,
+    "similarity_boost": 0.8,
+    "style": 0.6
+   },
+   "text": "Got the L."
+  },
+  {
+   "name": "AA2",
+   "lang": "en",
+   "accent": "american",
+   "gender": "male",
+   "pick": 4,
+   "model": "eleven_v3",
+   "settings": {
+    "stability": 0.35,
+    "similarity_boost": 0.8,
+    "style": 0.6
+   },
+   "text": "Got the O."
+  },
+  {
+   "name": "V1",
+   "lang": "en",
+   "voice_id": "yj30vwTGJxSHezdAGsv9",
+   "model": "eleven_v3",
+   "settings": {
+    "stability": 0.35,
+    "similarity_boost": 0.8,
+    "style": 0.6
+   },
+   "text": "[tenderly] Ann Druyan found the Chinese song — and called Carl Sagan."
+  },
+  {
+   "name": "VQ1",
+   "lang": "en",
+   "accent": "american",
+   "gender": "female",
+   "pick": 2,
+   "model": "eleven_v3",
+   "settings": {
+    "stability": 0.35,
+    "similarity_boost": 0.8,
+    "style": 0.6
+   },
+   "text": "[softly, nervous] For keeps?"
+  },
+  {
+   "name": "VQ2",
+   "lang": "en",
+   "accent": "american",
+   "gender": "male",
+   "pick": 5,
+   "model": "eleven_v3",
+   "settings": {
+    "stability": 0.35,
+    "similarity_boost": 0.8,
+    "style": 0.6
+   },
+   "text": "[gently, surprised] You mean… get married?"
+  },
+  {
+   "name": "VQ3",
+   "lang": "en",
+   "accent": "american",
+   "gender": "female",
+   "pick": 2,
+   "model": "eleven_v3",
+   "settings": {
+    "stability": 0.35,
+    "similarity_boost": 0.8,
+    "style": 0.6
+   },
+   "text": "[a soft laugh] Yes."
+  },
+  {
+   "name": "O2",
+   "lang": "zh",
+   "accent": "standard",
+   "gender": "female",
+   "pick": 0,
+   "model": "eleven_v4",
+   "settings": {
+    "stability": 0.45,
+    "similarity_boost": 0.8,
+    "style": 0.4
+   },
+   "text": "各位都好吧？我们都很想念你们，有空请到这儿来玩。"
+  },
+  {
+   "name": "O2b",
+   "lang": "zh",
+   "accent": "standard",
+   "gender": "female",
+   "pick": 1,
+   "model": "eleven_v4",
+   "settings": {
+    "stability": 0.45,
+    "similarity_boost": 0.8,
+    "style": 0.4
+   },
+   "text": "各位都好吧？我们都很想念你们，有空请到这儿来玩。"
+  }
+ ]
 }

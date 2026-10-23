@@ -58,6 +58,14 @@ def find_own(accent, gender):
     return own[0]["voice_id"], f"own:{own[0]['name']}"
 
 for it in req["items"]:
+    if it.get("url"):   # fetch a public, openly licensed recording (e.g. First Sounds, CC BY) instead of synthesising
+        rec = {"name": it["name"], "lang": it.get("lang", ""), "text": it.get("text", ""), "url": it["url"]}
+        try:
+            r = requests.get(it["url"], timeout=60, headers={"User-Agent": "Mozilla/5.0 (voice-farm)"})
+            rec["status"] = r.status_code
+            if r.ok: fn = f"{it['name']}.mp3"; open(f"out/{fn}", "wb").write(r.content); rec["file"] = fn; rec["bytes"] = len(r.content)
+        except Exception as e: rec["error"] = str(e)[:300]
+        log(json.dumps(rec, ensure_ascii=False)); report["clips"].append(rec); continue
     vid, vname = (it.get("voice_id"), it.get("voice_id"))
     if not vid and it.get("shared", True): vid, vname = find_shared(it["lang"], it.get("accent"), it.get("gender"), it.get("age"), it.get("search"), it.get("use_case"), it.get("pick", 0))
     if not vid: vid, vname = find_own(it.get("accent"), it.get("gender"))
