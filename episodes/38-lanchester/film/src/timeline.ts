@@ -72,17 +72,17 @@ const ADV = (t: number) => 1500 + t * 99.5;
 const ADV0 = 1500 + 99.5 * 9.375; // = ADV(T.climax − T.sea): Collingwood's lead crosses the enemy line in the slow motion (tm ≈ 1.4)
 /** raking broadside of a ship breaking the line: every gun on both sides fires bow to stern, 0.05 s apart, starting at t0 */
 const rake = (s: {x: number; z: number}, tm: number, t0: number, towardCam = -1) => { const sm: number[][] = [], fl: number[][] = [];
-	for (let k = 0; k < 28; k++) for (const side of [-1, 1]) { const age = tm - (t0 + k * 0.05 + (side > 0 ? 0.025 : 0)); if (age < 0 || age > 14) continue; const px = s.x + 25 - k * 1.85, pz = s.z + side * 8.5;
-		if (age < 0.22) fl.push([px, 4.5, pz + side * 2.5, 4 + (1 - age / 0.22) * 5, 3.4, 1.9, 0.7, 1 - age / 0.22]);
-		const drift = side === towardCam ? 7.5 : 4; sm.push([px + age * 2.2, 4.5 + age * 2.4, pz + side * (3 + age * drift), 4 + age * 8, 0.92, 0.9, 0.86, 0.8 * Math.exp(-age / 6) * Math.min(1, age * 10)]); }
+	for (let k = 0; k < 28; k++) for (const side of [-1, 1]) { const age = tm - (t0 + k * 0.035 + (side > 0 ? 0.017 : 0)); if (age < 0 || age > 14) continue; const px = s.x + 25 - k * 1.85, pz = s.z + side * 8.5;
+		if (age < 0.35) { const k2 = 1 - age / 0.35; for (let j = 0; j < 4; j++) fl.push([px, 4.5, pz + side * (2 + j * 2.6), (3.4 - j * 0.7) * (0.6 + 0.6 * k2), 3.8, 1.8 - j * 0.3, 0.5, k2]); } // a flame jet out of the port
+		const drift = side === towardCam ? 7.5 : 4; sm.push([px + age * 2.2, 4.5 + age * 2.4, pz + side * (3 + age * drift), 4 + age * 8, 0.62, 0.58, 0.52, 0.7 * Math.exp(-age / 6) * Math.min(1, age * 10)]); }
 	return {sm, fl}; };
 const seaDraw = (c: Ctx, t: number, g: any = {}) => { (c.sea.water.material as any).uniforms.time.value = t * 0.6; setGrade({vig: 0.4, warm: 0.04, bloom: 0.45, exposure: 0.5, ...g}); draw(c.sea.scene); };
 const broadsides = (ships: {x: number; z: number; heading: number}[], t: number, rate: number, seed: number) => {
 	const R = rnd(seed), sm: number[][] = [], fl: number[][] = [];
 	ships.forEach((s, i) => { for (let k = 0; k < 16; k++) { const ph = R() * 4; const age = ((t + ph) % 4) / rate; if (age > 7) continue; const along = (R() - 0.5) * 46, side = R() < 0.5 ? -1 : 1;
 		const hx = Math.cos(s.heading), hz = -Math.sin(s.heading); const px = s.x + hx * along + hz * side * 9, pz = s.z + hz * along - hx * side * 9;
-		sm.push([px + hz * side * (4 + age * 6) + age * 3, 5 + age * 2.2, pz - hx * side * (4 + age * 6), 10 + age * 10, 0.9, 0.88, 0.84, 0.85 * Math.exp(-age / 3.5) * Math.min(1, age * 8)]);
-		if (age < 0.16) fl.push([px + hz * side * 3, 5, pz - hx * side * 3, 18 + (1 - age / 0.16) * 22, 3.2, 2.1, 1.0, 1 - age / 0.16]); } });
+		sm.push([px + hz * side * (4 + age * 6) + age * 3, 5 + age * 2.2, pz - hx * side * (4 + age * 6), 8 + age * 9, 0.6, 0.56, 0.5, 0.6 * Math.exp(-age / 3.5) * Math.min(1, age * 8)]);
+		if (age < 0.3) { const k2 = 1 - age / 0.3; for (let j = 0; j < 3; j++) fl.push([px + hz * side * (2 + j * 2.4), 5, pz - hx * side * (2 + j * 2.4), (3.6 - j) * (0.6 + 0.6 * k2), 3.6, 1.7 - j * 0.3, 0.5, k2]); } } });
 	return {sm, fl};
 };
 
@@ -97,7 +97,7 @@ const guessBar = (c: Ctx, _b: number, o: number, strike = 0) => { if (o <= 0) re
 	html(c.hud, `<div class="lbl" style="left:${x}px;top:${y}px;font-size:58px;color:#ffd98a;opacity:${o};text-shadow:0 0 6px rgba(8,6,10,.9),0 0 22px rgba(246,207,120,.45)">你猜：剩 500<div style="position:absolute;left:-6px;top:50%;height:6px;width:${strike * 104}%;background:#ff6a5a;box-shadow:0 0 10px #ff6a5a;border-radius:3px"></div></div>
 	<div style="position:absolute;left:${x}px;top:${y + 78}px;width:330px;border-top:4px dashed rgba(246,207,120,.85);opacity:${o}"></div>`); };
 /** a hook battle: 0 → 11.23 s of sim in 15 s, slowing for the end */
-const hookST = (u: number) => (u < 14.0 ? 0.2 + (u - 0.4) * 0.79 : 0.2 + 13.6 * 0.79 + (u - 14.0) * 0.32); // the first volley at 0.4 s (frame 0 still reads 500); 11.23 s of sim lands on 15.05
+const hookST = (u: number) => (u < 14.0 ? 0.2 + (u - 1.85) * 0.88 : 0.2 + 12.15 * 0.88 + (u - 14.0) * 0.32); // the first volley at 0.4 s (frame 0 still reads 500); 11.23 s of sim lands on 15.05
 /** melee: duellists lunge at the contact line; a little dust where they meet */
 const meleeBodies = (st: number, k: number): Body[] => simBodies(SM, st, 'rest', 0, 0, k).map((b, i) => { const u = SM.units[i]; if (b.fall > 0 || Math.abs(u.x) > 4) return b;
 	const ph = Math.sin(st * 2.3 + u.fx * 40); return {...b, pose: 'charge', x: b.x + (u.side ? -1 : 1) * (0.35 + 0.35 * Math.max(0, ph)), lean: 0.22 * Math.max(0, ph)}; });
@@ -121,7 +121,7 @@ export const TIMELINE: Shot[] = [
 		], u);
 		battle(c, SA, st);
 		const [, r] = aliveAt(SA, Math.max(0, st)); counters(c.hud, '???' as any, r); guessBar(c, 0, env(u, 3.9, 99));
-		sub(c.hud, '你有1000人，对面500人', u, 0.1, 3.4); sub(c.hud, '打光对面，你还剩[几个]？', u, 3.8, 7.2);
+		sub(c.hud, '你有1000人，对面500人', u, 0.05, 1.95); sub(c.hud, '打光对面，你还剩[几个]？', u, 2.15, 5.6);
 		landDraw(c);
 	}},
 	// 02 — 866 on the lift; the guess tick fades out
@@ -175,7 +175,7 @@ export const TIMELINE: Shot[] = [
 		clearLand(c); const fan = ease((u - 0.4) / 5.8), st = u < 7.5 ? -1 : 0.2 + (u - 7.5);
 		const from = simBodies(SM, 0, 'rest'), to = simBodies(SA, Math.max(-1, st));
 		const bodies = u < 7.5 ? from.map((f, i) => { const t = to[i]; return {...t, x: lerp(f.x, t.x, fan), z: lerp(f.z, t.z, fan), pose: (fan > 0.02 && fan < 0.98 ? 'march' : fan >= 0.98 ? 'aim' : 'rest') as any}; }) : to;
-		camKeys([{t: 0, pos: [-130, 70, -90], look: [-40, 0, 0], fov: 40}, {t: 3.5, pos: [-110, 20, -100], look: [-25, 0, 0], fov: 40}, {t: 6.5, pos: [-120, 14, -120], look: [-20, 0, 0], fov: 40}, {t: 9.5, pos: [-62, 3.2, -40], look: [45, 1.5, 20], fov: 38}, {t: 14, pos: [-160, 50, -200], look: [20, 0, 20], fov: 38}, {t: 18.75, pos: [-200, 75, -360], look: [0, 0, 0], fov: 38}], u);
+		camKeys([{t: 0, pos: [-130, 70, -90], look: [-40, 0, 0], fov: 40}, {t: 2.2, pos: [-75, 18, -62], look: [-25, 1, -10], fov: 42}, {t: 5.0, pos: [-38, 6, -78], look: [-50, 1.2, -20], fov: 44}, {t: 7.5, pos: [-70, 3.4, -52], look: [45, 1.5, 10], fov: 40}, {t: 9.5, pos: [-62, 3.2, -40], look: [45, 1.5, 20], fov: 38}, {t: 14, pos: [-160, 50, -200], look: [20, 0, 20], fov: 38}, {t: 18.75, pos: [-200, 75, -360], look: [0, 0, 0], fov: 38}], u);
 		c.army.set(bodies, cp());
 		if (u >= 7.5) { const {sm, fl} = simSmoke(SA, st); c.smoke.set(sm); c.flash.set(fl); c.tracers.set(simTracers(SA, st)); } else { c.smoke.set([]); c.flash.set([]); c.tracers.set([]); }
 		const [b, r] = aliveAt(SA, Math.max(0, st)); counters(c.hud, b, r);
@@ -245,14 +245,15 @@ export const TIMELINE: Shot[] = [
 		if (tile > 0) [[0, 0], [rs, 0], [0, rs], [rs, rs]].forEach(([ox, oz], k) => L.push({x: -45 - bs + ox, z: -bs / 2 + oz, w: rs, d: rs, color: '#ffb0a4', a: tile * clamp01((u - 1.6 - k * 0.25) / 0.2), edge: 1}));
 		// the three peels: each side's lost L, lit gold, then reshaped into a bar 140 m wide laid side by side
 		const pk = PEEL.peel(u); const bars: {x: number; y: number; t: string}[] = [];
-		if (pk) { const [b1, r1] = aliveAt(SA, pk.s0), [b2, r2] = aliveAt(SA, pk.s1); const B1 = b1 * LEN, B2 = b2 * LEN, R1 = r1 * LEN, R2 = r2 * LEN, Wt = 140;
+		if (pk) { const [b1, r1] = aliveAt(SA, pk.s0), [b2, r2] = aliveAt(SA, pk.s1); const B1 = b1 * LEN, B2 = b2 * LEN, R1 = r1 * LEN, R2 = r2 * LEN, Wt = 38, SC = 0.4; // bars 38 m wide in the clear strip between the lines; both shrink by the same 0.4 so they fit
 			const lit = clamp01(pk.v / 0.25), m = ease((pk.v - 0.28) / 0.45), o = 1 - clamp01((pk.v - 0.9) / 0.1);
-			const morph = (rects: number[][], x0: number) => { const tot = rects.reduce((q, R) => q + R[2] * R[3], 0); let z = -tot / Wt / 2; rects.forEach(([x, zz, w, d]) => { const dd = (w * d) / Wt;
-				L.push({x: lerp(x, x0, m), z: lerp(zz, z, m), w: lerp(w, Wt, m), d: lerp(d, dd, m), color: '#ffd27a', a: o * (0.6 + 0.4 * lit), edge: lit, edgeColor: GOLD, wall: 0.6}); z += dd; }); return tot / Wt; };
+			const morph = (rects: number[][], x0: number) => { const tot = rects.reduce((q, R) => q + R[2] * R[3], 0); let z = -tot * SC / Wt / 2; rects.forEach(([x, zz, w, d]) => { const dd = (w * d) * SC / Wt;
+				L.push({x: lerp(x, x0, m), z: lerp(zz, z, m), w: lerp(w, Wt, m), d: lerp(d, dd, m), color: '#ffd27a', a: o * (0.6 + 0.4 * lit), edge: lit, edgeColor: GOLD, wall: 0.6}); z += dd; }); return tot * SC / Wt; };
 			const hb = morph([[-45 - B1, -B1 / 2, B1 - B2, B1], [-45 - B2, B2 / 2, B2, (B1 - B2) / 2], [-45 - B2, -B1 / 2, B2, (B1 - B2) / 2]], -4 - Wt);
 			const hr = morph([[47 + R2, -R1 / 2, R1 - R2, R1], [47, R2 / 2, R2, (R1 - R2) / 2], [47, -R1 / 2, R2, (R1 - R2) / 2]], 4);
 			if (m > 0.9 && pk.i === 0) { const qb = toScreen([-4 - Wt / 2, 0, hb / 2 + 30]), qr = toScreen([4 + Wt / 2, 0, hr / 2 + 30]); bars.push({x: qb.x, y: qb.y, t: '蓝方掉的'}, {x: qr.x, y: qr.y, t: '红方掉的'}); }
-			bars.forEach((q, k) => tag(c.hud, q.x, q.y - 26, q.t, o * clamp01((m - 0.9) / 0.1), 40, '#fff', k ? RED : BLUE)); }
+			bars.forEach((q, k) => tag(c.hud, q.x + (k ? -70 : 70), q.y - 26, q.t, o * clamp01((m - 0.9) / 0.1), 44, '#fff', k ? RED : BLUE));
+			if (m > 0.9) { const qe = toScreen([0, 0, 0]); tag(c.hud, qe.x, qe.y, '=', o * clamp01((m - 0.9) / 0.1), 96, '#fff6dd', GOLD); } }
 		// fold: blue's whole loss (the pale L) becomes one square laid exactly on red's ghost
 		if (fold > 0) L.push({x: lerp(-45 - bs, 47, fold), z: lerp(-bs / 2, -rs / 2, fold), w: rs, d: rs, color: '#8fb6ff', a: env(u, 8.2, 99) * 0.9, edge: 1, edgeColor: GOLD});
 		c.squares.set(L);
@@ -344,9 +345,9 @@ export const TIMELINE: Shot[] = [
 		const r1 = rake(lead, tm, 0.04), r2 = rake(nel, tm, tN, -1);
 		// smoke rolling across the lens during the slow motion
 		const lens: number[][] = []; const cpz = camera.position, k1 = env(u, 1.0, 4.2, 0.6, 1.0);
-		if (k1 > 0) for (let k = 0; k < 18; k++) { const side = k % 2 ? 1 : -1; lens.push([cpz.x + 20 + (k * 5.3) % 40 + u * 3, cpz.y - 3 + (k % 4) * 1.4, cpz.z + side * (10 + (k * 2.9) % 14) - u * 2.5 * side, 7 + (k % 5) * 2.5, 0.9, 0.88, 0.85, 0.3 * k1]); } // smoke drifting past both sides of the lens
+		if (k1 > 0) for (let k = 0; k < 18; k++) { const side = k % 2 ? 1 : -1; lens.push([cpz.x + 20 + (k * 5.3) % 40 + u * 3, cpz.y - 3 + (k % 4) * 1.4, cpz.z + side * (10 + (k * 2.9) % 14) - u * 2.5 * side, 7 + (k % 5) * 2.5, 0.6, 0.56, 0.5, 0.35 * k1]); } // smoke drifting past both sides of the lens
 		c.seaSmoke.set([...a.sm, ...b.sm, ...e.sm, ...r1.sm, ...r2.sm, ...lens]); c.seaFlash.set([...a.fl, ...b.fl, ...e.fl, ...r1.fl, ...r2.fl]);
-		seaDraw(c, T.climax - T.sea + u, {bloom: 0.62, vig: 0.48, exposure: 0.4});
+		seaDraw(c, T.climax - T.sea + u, {bloom: 0.5, vig: 0.5, exposure: 0.36});
 	}},
 	// 15c — chart: the line in three pieces, the van sails away
 	{a: T.chart, b: T.quiet, draw: (c, u) => {
@@ -359,12 +360,12 @@ export const TIMELINE: Shot[] = [
 		const v = p(150, 1350 + van);
 		if (v.front) tag(c.hud, Math.min(W - 160, v.x), Math.max(150, v.y - 60), '前队', env(u, 1.0, 99), 52, '#fff', RED);
 		html(c.hud, `<div class="lbl" style="left:0;right:0;top:200px;text-align:center;font-size:52px;opacity:${env(u, 11.0, 99)}"><span style="text-shadow:0 0 8px ${RED},0 0 24px ${RED}">对方 33 艘：一半以上 被俘或被毁</span></div>`);
-		sub(c.hud, '敌人的前队，[赶不回来]', u, 0.3, 3.7); tag(c.hud, W / 2, 132, '兰彻斯特在 1916 年的书里，用平方律算过这一仗', env(u, 3.9, 7.3) * 0.9, 40, '#fff'); sub(c.hud, '英国，一艘船都[没丢]', u, 7.5, 10.9);
+		sub(c.hud, '敌人的前队，[赶不回来]', u, 0.3, 3.7); tag(c.hud, W / 2, 132, '兰彻斯特在 1916 年的书里，用平方律分析过纳尔逊的打法', env(u, 3.9, 7.3) * 0.9, 40, '#fff'); sub(c.hud, '英国，一艘船都[没丢]', u, 7.5, 10.9);
 		seaDraw(c, tt, {bloom: 0.4, vig: 0.46, exposure: 0.5});
 	}},
 	// 16 — quiet: one ship drifting at sunset, no text; a bank of smoke crosses the lens and carries the cut to the field
 	{a: T.quiet, b: T.limit, draw: (c, u) => {
-		const d = T.limit - T.quiet; setFleet(c.sea.combined, [], u); setFleet(c.sea.british, Array.from({length: 7}, (_, k) => ({x: -k * 150 + (k % 2) * 30, z: -k * 46 + (k % 3) * 12, heading: 0.3})), u); seaMarks(c, 0, 0);
+		const d = T.limit - T.quiet; setFleet(c.sea.combined, [], u); setFleet(c.sea.british, Array.from({length: 12}, (_, k) => ({x: -260 + 0.76 * (190 + k * 120) - 0.65 * (-150 + k * 22), z: -180 + 0.65 * (190 + k * 120) + 0.76 * (-150 + k * 22), heading: 0.3})), u); seaMarks(c, 0, 0);
 		camKeys([{t: 0, pos: [-700, 520, -700], look: [300, 0, 400], fov: 44}, {t: 2.2, pos: [-260, 6, -180], look: [1000, 40, 900], fov: 38}, {t: d, pos: [-215, 5, -205], look: [1000, 36, 900], fov: 37}], u);
 		const bank = clamp01((u - d + 1.6) / 1.6); const sm: number[][] = Array.from({length: 40}, (_, i) => [-200 + i * 12, 20 + (i % 5) * 6, 120 + (i % 7) * 20, 60, 0.85, 0.8, 0.78, 0.18 * clamp01((u - 2.0) / 0.8)]);
 		for (let k = 0; k < 60; k++) { const f = (k % 10) / 10, g = Math.floor(k / 10) / 6; const fw = camera.getWorldDirection(new THREE.Vector3()); const rt = new THREE.Vector3().crossVectors(fw, camera.up).normalize();
