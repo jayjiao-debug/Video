@@ -79,7 +79,7 @@ const rake = (s: {x: number; z: number}, tm: number, t0: number, towardCam = -1)
 	for (let k = 0; k < 28; k++) for (const side of [-1, 1]) { const age = tm - (t0 + k * 0.035 + (side > 0 ? 0.017 : 0)); if (age < 0 || age > 14) continue; const px = s.x + 25 - k * 1.85, pz = s.z + side * 8.5;
 		if (age < 0.4) { const k2 = 1 - age / 0.4; for (let j = 0; j < 5; j++) fl.push([px, 4.5 + j * 0.15, pz + side * (2 + j * 3.2), (6 - j * 1.0) * (0.6 + 0.6 * k2), 4.2, 1.9 - j * 0.3, 0.5, k2]); } // a flame jet out of the port
 		const drift = side === towardCam ? 7.5 : 4; for (let q = 0; q < 5; q++) { const h1 = Math.sin(k * 12.9 + q * 78.2) * 0.5 + 0.5, h2 = Math.sin(k * 39.3 + q * 11.7) * 0.5 + 0.5; // many small billows, not one big disc
-			sm.push([px + age * (1.2 + h1 * 2.5) + (h2 - 0.5) * 4, 4 + age * (1.2 + h2 * 2.2), pz + side * (3 + age * drift * (0.5 + h1 * 0.8)), 3.5 + age * (2.5 + h2 * 2.5), 0.6 + h1 * 0.08, 0.56 + h1 * 0.06, 0.5 + h1 * 0.05, 0.42 * Math.exp(-age / 6) * Math.min(1, age * 10)]); } }
+			sm.push([px + age * (1.2 + h1 * 2.5) + (h2 - 0.5) * 4, 4 + age * (1.2 + h2 * 2.2), pz + side * (3 + age * drift * (0.5 + h1 * 0.8)), 3.5 + age * (2.5 + h2 * 2.5), 0.6 + h1 * 0.08, 0.56 + h1 * 0.06, 0.5 + h1 * 0.05, 0.42 * Math.exp(-age / 2.2) * Math.min(1, age * 10)]); } }
 	return {sm, fl}; };
 const seaDraw = (c: Ctx, t: number, g: any = {}) => { (c.sea.water.material as any).uniforms.time.value = t * 0.6; setGrade({vig: 0.4, warm: 0.04, bloom: 0.45, exposure: 0.5, ...g}); draw(c.sea.scene); };
 const broadsides = (ships: {x: number; z: number; heading: number}[], t: number, rate: number, seed: number) => {
@@ -296,7 +296,7 @@ export const TIMELINE: Shot[] = [
 		{ const q1 = toScreen([45, 2, -60]), q2 = toScreen([45 + 260 * (1 - clamp01((v - w1) / mar)), 2, -60]); if (v < w1 && q1.front) tag(c.hud, q1.x, q1.y - 70, '第一拨 500', env(v, 0.1, w1, 0.2, 0.2), 52, '#fff', RED); if (v < w1 + mar && q2.front) tag(c.hud, q2.x, q2.y - 70, '第二拨 500', env(v, 0.1, w1 + mar, 0.2, 0.2), 52, '#fff', RED); }
 		const b = v < w1 ? aliveAt(SA2, st1)[0] : aliveAt(SR2, Math.max(0, st2))[0], r = v < w1 ? aliveAt(SA2, st1)[1] + 500 : aliveAt(SR2, Math.max(0, st2))[1];
 		const done = v > w1 + mar + w2; counters(c.hud, b, r, done ? 1 - clamp01((v - w1 - mar - w2) / 0.3) : 1, ['', '两拨，各 500']);
-		if (done) { slam(c.hud, W / 2, H / 2 - 40, '707', u, 4.0 + w1 + mar + w2 + 0.05, 99, 220, BLUE); tag(c.hud, W / 2, H / 2 + 100, '同样打 1000 人，还剩 <span style="color:#ffd27a">707</span>', env(u, 4.0 + w1 + mar + w2 + 0.3, 99, 0.15), 58, '#fff', BLUE); }
+		if (done) { slam(c.hud, W / 2, H / 2 - 40, '707', u, 4.0 + w1 + mar + w2 + 0.05, T.half - T.divide, 220, BLUE); tag(c.hud, W / 2, H / 2 + 100, '同样打 1000 人，还剩 <span style="color:#ffd27a">707</span>', env(u, 4.0 + w1 + mar + w2 + 0.3, T.half - T.divide, 0.15, 0.3), 58, '#fff', BLUE); }
 		sub(c.hud, '要是对面分[两拨]来呢？', u, 4.05, 6.4); sub(c.hud, '打团最忌：[一拨一拨上]', u, 6.5, 9.25);
 		landDraw(c);
 	}},
@@ -341,7 +341,7 @@ export const TIMELINE: Shot[] = [
 	{a: T.climax, b: T.chart, draw: (c, u) => {
 		const d = T.chart - T.climax; const tm = u < 1.2 ? u : u < 3.0 ? 1.2 + (u - 1.2) * 0.25 : 1.65 + (u - 3.0); // slow motion as the bow passes the stern
 		const adv = ADV0 + tm * 55; const lead = {x: adv - 2450, z: -440}, nel = {x: adv - 2710, z: 670}; const tN = 6.15; // Nelson's lead reaches the line at tm = 6.15 (u = 7.5)
-		if (u < 7.5) camKeys([{t: 0, pos: [lead.x - 110, 24, -463], look: [lead.x + 60, 8, -440], fov: 44}, {t: 1.2, pos: [lead.x - 60, 12, -463], look: [lead.x + 40, 8, -440], fov: 52}, {t: 3.0, pos: [lead.x - 42, 10, -463], look: [lead.x + 30, 7, -440], fov: 54}, {t: 7.5, pos: [lead.x - 140, 64, -463], look: [lead.x + 40, 6, -420], fov: 42}], u); // the camera rides the clear lane between the lead's yards and the enemy's
+		if (u < 7.5) camKeys([{t: 0, pos: [lead.x - 110, 24, -463], look: [lead.x + 60, 8, -440], fov: 44}, {t: 1.2, pos: [lead.x - 60, 12, -463], look: [lead.x + 40, 8, -440], fov: 52}, {t: 3.0, pos: [31.5, 10, -463], look: [lead.x + 30, 7, -440], fov: 54}, {t: 7.5, pos: [18, 72, -525], look: [lead.x + 40, 6, -420], fov: 44}], u); // after the slow motion the camera stops short of the enemy line (its bowsprit reaches z −440) and rises behind it // the camera rides the clear lane between the lead's yards and the enemy's
 		else camKeys([{t: 7.5, pos: [nel.x - 105, 22, 696], look: [nel.x + 50, 8, 670], fov: 50}, {t: 9.0, pos: [nel.x - 150, 50, 520], look: [nel.x + 60, 4, 620], fov: 42}, {t: 11.6, pos: [-900, 650, -1500], look: [0, 0, 0], fov: 44}, {t: d, pos: [-960, 700, -1560], look: [0, 0, 60], fov: 44}], u);
 		const heel = (q: any, k: number) => ({...q, roll: -0.075 * k});
 		const line = LINE(T.climax - T.sea + u, 0).map((q) => Math.abs(q.z - lead.z) < 75 ? heel(q, clamp01((tm - 0.3) / 0.9)) : Math.abs(q.z - nel.z) < 75 ? heel(q, clamp01((tm - tN - 0.3) / 0.9)) : q);

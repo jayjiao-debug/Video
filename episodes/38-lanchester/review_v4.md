@@ -56,3 +56,22 @@ Evidence frames were pulled at full resolution into the scratchpad and deleted a
 - Whether the enemy hulls visibly heel.
 - The march/carry and charge poses close up (they never appear close).
 - Frames were sampled every 5 s, at subtitle midpoints, on both sides of every cut, plus about 95 targeted full-resolution frames and frame-difference scans at four hand-overs. A short fault between samples could be missed. Not checked on a phone.
+
+---
+
+## v8 note (2026-10-23, delta check only: `ep38out/集中优势兵力_v8.mp4`, 1920x1080, 30 fps, 176.3 s)
+**Verdict: NOT FINAL. One thing must still change: the flat grey smoke discs at 2:03.6–2:07.5 are still in v8.**
+
+- **Discs: not fixed.** Smoke close to the ships at 121.5–122.5 is now haze made of small billows, which is good. But one flat round grey disc sits left of the lead ship at 123.6, 123.7, 124.0 and 124.2. Two discs flank the lone ship in the overhead at 124.5, 125.5, 126.5, 127.2, 127.4 and 127.5, up to the 127.57 cut. They look identical to v6. Whatever draws them (probably the lens-smoke or near-camera sprite in the 123.6 shot and the overhead shot) was not touched. Fix: remove those sprites, or replace them with the small-billow smoke. Check by frame-stepping 123.5–127.6.
+- **Same stretch, new to me: the camera flies through the enemy's jib-boom at 123.4–123.6** (owner row 43: the camera never passes through a model). At 123.47 and 123.53 the spar and its fittings fill the frame at point-blank range. By 123.6 only rigging lines remain, so the camera went through or grazed the boom in about 8 frames. Fix: offset that camera key 3–5 m outboard (or higher) so the boom passes beside the lens. If that can't be done tonight, it is the second item. It sits in the same 4 seconds as the discs.
+- **Aim close-up (v6 #1 MAJOR): fixed by staging.** 65.8–71.3 is shot from behind-left; no hand faces the lens, and the 两人才挨 1 枪 tag and rings read.
+- **Dissolves:**
+  - 150.05 is smooth: frame-to-frame change ≤ 0.9 throughout, and the labels fade (150.15).
+  - 161.27 is smooth: ≤ 1.0 throughout.
+  - 103.17: the scene dissolves, but the big 707 and its label still pop off in about 2 frames (103.13 → 103.2; one frame spikes to 3.8) while the smoke stays. MINOR: fade the label over 0.3 s.
+- **2:00–2:15 scan** (120.1, 120.7, 121.5, 122.5, 123.4–124.2, 124.5–127.8, 129.4, 131–135):
+  - The downbeat and both break-throughs (120.7, 127.8) still look strong.
+  - The bar-69 crane and the chart are fine.
+  - The only faults are the two above.
+
+Frames were pulled into the scratchpad and deleted afterwards.
