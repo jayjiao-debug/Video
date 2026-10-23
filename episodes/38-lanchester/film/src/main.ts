@@ -1,7 +1,7 @@
 // ep38 film entry: loads assets, builds the worlds, exposes window.renderAt(t) for the frame grabber.
 import * as THREE from 'three';
 import {loadAssets, makeLand, makeSea, Army, Puffs, GroundSquares, Tracers} from './engine';
-import {TIMELINE, type Ctx} from './timeline';
+import {TIMELINE, bar, type Ctx} from './timeline';
 
 const hud = document.getElementById('hud')!, split = document.getElementById('split') as HTMLCanvasElement;
 /** 孙子 written in light across the field: a ground decal whose characters appear one by one */
@@ -29,10 +29,15 @@ const sunziText = (scene: THREE.Scene) => {
 		smoke: new Puffs(land.scene, 14000, false), flash: new Puffs(land.scene, 2500, true), squares: new GroundSquares(land.scene, 16), tracers: new Tracers(land.scene, 2600), rings, text: sunziText(land.scene),
 		seaSmoke: new Puffs(sea.scene, 16000, false, 30), seaFlash: new Puffs(sea.scene, 6000, true), hud, split,
 	};
+	const XF = 0.4, xfAt = [bar(55), bar(80), bar(86)]; // dissolves where a held camera would otherwise swap the scene in one frame
+	const sg = split.getContext('2d')!;
 	(window as any).renderAt = (t: number) => {
-		const shot = TIMELINE.find((s) => t >= s.a && t < s.b) ?? TIMELINE[TIMELINE.length - 1];
+		const i = TIMELINE.findIndex((s) => t >= s.a && t < s.b); const shot = TIMELINE[i < 0 ? TIMELINE.length - 1 : i];
 		hud.innerHTML = ''; split.style.display = 'none';
-		shot.draw(ctx, t - shot.a, t);
+		const u = t - shot.a; const xf = i > 0 && u < XF && xfAt.some((x) => Math.abs(x - shot.a) < 0.01);
+		if (xf) { const prev = TIMELINE[i - 1]; prev.draw(ctx, prev.b - prev.a - 1 / 30, prev.b - 1 / 30); sg.clearRect(0, 0, 1920, 1080); sg.drawImage(document.getElementById('c') as HTMLCanvasElement, 0, 0); hud.innerHTML = ''; }
+		shot.draw(ctx, u, t);
+		if (xf) { const k = u / XF; split.style.display = 'block'; split.style.opacity = String(1 - k * k * (3 - 2 * k)); }
 	};
 	(window as any).DURATION = TIMELINE[TIMELINE.length - 1].b;
 	await document.fonts.load('900 300px "Noto Serif CJK SC"').catch(() => null);

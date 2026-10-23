@@ -200,8 +200,8 @@ export const TIMELINE: Shot[] = [
 	{a: T.bullet, b: T.x4, draw: (c, u) => {
 		clearLand(c); const d = T.x4 - T.bullet; const R = SA.units[redStar[0]], B = SA.units[blueOne[0]], B2 = SA.units[bluePartner];
 		if (u < 5.6) camKeys([{t: 0, pos: [-60, 26, -64], look: [0, 1, 0], fov: 38}, {t: 5.6, pos: [R.x - 14, 3.2, R.z - 9], look: [R.x, 1.4, R.z], fov: 36}], u);
-		else if (u < 11.25) camKeys([{t: 5.6, pos: [R.x - 14, 3.2, R.z - 9], look: [R.x, 1.4, R.z], fov: 36}, {t: 6.45, pos: [(B.x + B2.x) / 2 + 8.6, 2.7, (B.z + B2.z) / 2 - 7.6], look: [(B.x + B2.x) / 2, 1.3, (B.z + B2.z) / 2], fov: 38}, {t: 11.25, pos: [(B.x + B2.x) / 2 + 8, 2.6, (B.z + B2.z) / 2 - 7], look: [(B.x + B2.x) / 2, 1.2, (B.z + B2.z) / 2], fov: 38}], u);
-		else camKeys([{t: 11.25, pos: [(B.x + B2.x) / 2 + 8, 2.6, (B.z + B2.z) / 2 - 7], look: [(B.x + B2.x) / 2, 1.2, (B.z + B2.z) / 2], fov: 38}, {t: d, pos: [-10, 44, -80], look: [0, 0, 0], fov: 40}], u);
+		else if (u < 11.25) camKeys([{t: 5.6, pos: [R.x - 14, 3.2, R.z - 9], look: [R.x, 1.4, R.z], fov: 36}, {t: 6.45, pos: [(B.x + B2.x) / 2 - 8.6, 2.9, (B.z + B2.z) / 2 - 7.2], look: [(B.x + B2.x) / 2, 1.3, (B.z + B2.z) / 2], fov: 38}, {t: 11.25, pos: [(B.x + B2.x) / 2 - 8, 2.8, (B.z + B2.z) / 2 - 6.6], look: [(B.x + B2.x) / 2, 1.2, (B.z + B2.z) / 2], fov: 38}], u);
+		else camKeys([{t: 11.25, pos: [(B.x + B2.x) / 2 - 8, 2.8, (B.z + B2.z) / 2 - 6.6], look: [(B.x + B2.x) / 2, 1.2, (B.z + B2.z) / 2], fov: 38}, {t: d, pos: [-10, 44, -80], look: [0, 0, 0], fov: 40}], u);
 		battle(c, SA, FREEZE, {tracers: false});
 		const segs: number[][] = [], balls: number[][] = []; firstVolley.forEach((s) => { const a = SA.units[s.from], b = SA.units[s.to], dir = a.side ? -1 : 1; let f = clamp01((FREEZE - s.t) / 0.28);
 			const focus = (s.to === redStar[0] || s.to === blueOne[0]); if (focus) f = 0.99; if (!focus) return; // only the counted balls
