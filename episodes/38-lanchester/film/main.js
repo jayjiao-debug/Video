@@ -33955,10 +33955,10 @@ var FREEZE = 0.42;
 var LINE = (t, vanAway) => Array.from({ length: 33 }, (_, i) => {
   const u = i / 32;
   const van = i >= 25;
-  return { x: 40 * Math.sin(u * 3) + u * 70 + (van ? vanAway * 0.25 : 0), z: -1600 + u * 3200 + (van ? vanAway : 0) + t * 1.2, heading: -Math.PI / 2 };
+  return { x: 40 * Math.sin(u * 3) + u * 70 + (van ? vanAway * 0.25 : 0), z: -1600 + u * 3200 + (i <= 11 ? -50 : i <= 22 ? 15 : 50) + (van ? vanAway : 0) + t * 1.2, heading: -Math.PI / 2 };
 });
 var COLS = (adv) => [
-  ...Array.from({ length: 12 }, (_, k) => ({ x: -2710 + adv - k * 130, z: 670 + k * 6, heading: 0 })),
+  ...Array.from({ length: 12 }, (_, k) => ({ x: -2710 + adv - k * 130, z: 705 + k * 6, heading: 0 })),
   // Nelson (weather column) → cuts ahead of the centre
   ...Array.from({ length: 15 }, (_, k) => ({ x: -2450 + adv - k * 125, z: -440 + k * 5, heading: 0 }))
   // Collingwood (lee column) → cuts the rear
@@ -33979,7 +33979,7 @@ var seaMarks = (c, o, adv, tracks = true) => {
     m.material.opacity = a;
     m.visible = a > 0.01;
   };
-  set(MARKS.tracks[0], -2710 + adv, 670, 30, 680, 22, tracks ? o : 0);
+  set(MARKS.tracks[0], -2710 + adv, 705, 30, 715, 22, tracks ? o : 0);
   set(MARKS.tracks[1], -2450 + adv, -440, 20, -440, 22, tracks ? o : 0);
   set(MARKS.hot, 170, -1650, 170, 820, 60, o * 0.85);
   set(MARKS.van, 250, 880, 250, 1650, 60, o * 0.7);
@@ -34511,10 +34511,10 @@ var TIMELINE = [
     const d = T.chart - T.climax;
     const tm = u < 1.2 ? u : u < 3 ? 1.2 + (u - 1.2) * 0.25 : 1.65 + (u - 3);
     const adv = ADV0 + tm * 55;
-    const lead = { x: adv - 2450, z: -440 }, nel = { x: adv - 2710, z: 670 };
+    const lead = { x: adv - 2450, z: -440 }, nel = { x: adv - 2710, z: 705 };
     const tN = 6.15;
     if (u < 7.5) camKeys([{ t: 0, pos: [lead.x - 110, 24, -463], look: [lead.x + 60, 8, -440], fov: 44 }, { t: 1.2, pos: [lead.x - 60, 12, -463], look: [lead.x + 40, 8, -440], fov: 52 }, { t: 3, pos: [31.5, 10, -463], look: [lead.x + 30, 7, -440], fov: 54 }, { t: 7.5, pos: [-60, 85, -463], look: [lead.x + 40, 6, -420], fov: 46 }], u);
-    else camKeys([{ t: 7.5, pos: [nel.x - 105, 22, 696], look: [nel.x + 50, 8, 670], fov: 50 }, { t: 9, pos: [nel.x - 150, 50, 520], look: [nel.x + 60, 4, 620], fov: 42 }, { t: 11.6, pos: [-900, 650, -1500], look: [0, 0, 0], fov: 44 }, { t: d, pos: [-960, 700, -1560], look: [0, 0, 60], fov: 44 }], u);
+    else camKeys([{ t: 7.5, pos: [nel.x - 105, 22, 731], look: [nel.x + 50, 8, 705], fov: 50 }, { t: 9, pos: [nel.x - 150, 50, 555], look: [nel.x + 60, 4, 655], fov: 42 }, { t: 11.6, pos: [-900, 650, -1500], look: [0, 0, 0], fov: 44 }, { t: d, pos: [-960, 700, -1560], look: [0, 0, 60], fov: 44 }], u);
     const heel = (q, k) => ({ ...q, roll: -0.075 * k });
     const line2 = LINE(T.climax - T.sea + u, 0).map((q) => Math.abs(q.z - lead.z) < 75 ? heel(q, clamp01((tm - 0.3) / 0.9)) : Math.abs(q.z - nel.z) < 75 ? heel(q, clamp01((tm - tN - 0.3) / 0.9)) : q);
     setFleet(c.sea.combined, line2, u);
@@ -34553,8 +34553,8 @@ var TIMELINE = [
     setFleet(c.sea.british, COLS(adv), u);
     {
       const tm = 13.65 + u, ko = 1 - clamp01(u / 2.6);
-      const near = LINE(tt, van).filter((q) => Math.abs(q.z + 440) < 420 || Math.abs(q.z - 670) < 420);
-      const a = broadsides(near, tm, 0.5, 7), r1 = rake({ x: adv - 2450, z: -440 }, tm, 0.04), r2 = rake({ x: adv - 2710, z: 670 }, tm, 6.15);
+      const near = LINE(tt, van).filter((q) => Math.abs(q.z + 440) < 420 || Math.abs(q.z - 705) < 420);
+      const a = broadsides(near, tm, 0.5, 7), r1 = rake({ x: adv - 2450, z: -440 }, tm, 0.04), r2 = rake({ x: adv - 2710, z: 705 }, tm, 6.15);
       const age = 15 - 9.375 + u, vs = [...LINE(tt, van), ...COLS(adv)].map((q, i) => [q.x + age * 3, 6 + age * 2, q.z + (i % 2 * 2 - 1) * (14 + age * 5), 26 + age * 14, 0.6, 0.56, 0.5, 0.7 * Math.exp(-age / 5)]);
       c.seaSmoke.set(ko > 0 ? [...a.sm, ...r1.sm, ...r2.sm, ...vs].map((q) => [...q.slice(0, 7), q[7] * ko]) : []);
       c.seaFlash.set(ko > 0.5 ? a.fl.map((q) => [...q.slice(0, 7), q[7] * ko]) : []);

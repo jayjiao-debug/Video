@@ -54,9 +54,9 @@ const SQ = 0.4; const BX = -470, BZ = -230; // blue square corner
 const lineBodies = (n: number, x0: number, z0: number, side: 0 | 1, sp = SQ): Body[] => Array.from({length: n}, (_, i) => ({x: x0 + i * sp + sp / 2, z: z0 - 1.2, ry: 0, side, pose: 'rest', fall: 0}));
 
 // ---------------------------------------------------------------- the sea: the Combined line (33, van to the north) and two British columns
-const LINE = (t: number, vanAway: number) => Array.from({length: 33}, (_, i) => { const u = i / 32; const van = i >= 25; return {x: 40 * Math.sin(u * 3.0) + u * 70 + (van ? vanAway * 0.25 : 0), z: -1600 + u * 3200 + (van ? vanAway : 0) + t * 1.2, heading: -Math.PI / 2}; });
+const LINE = (t: number, vanAway: number) => Array.from({length: 33}, (_, i) => { const u = i / 32; const van = i >= 25; return {x: 40 * Math.sin(u * 3.0) + u * 70 + (van ? vanAway * 0.25 : 0), z: -1600 + u * 3200 + (i <= 11 ? -50 : i <= 22 ? 15 : 50) + (van ? vanAway : 0) + t * 1.2, heading: -Math.PI / 2}; }); // wider gaps where the two columns break through (no spar passes through a hull)
 const COLS = (adv: number) => [
-	...Array.from({length: 12}, (_, k) => ({x: -2710 + adv - k * 130, z: 670 + k * 6, heading: 0})),   // Nelson (weather column) → cuts ahead of the centre
+	...Array.from({length: 12}, (_, k) => ({x: -2710 + adv - k * 130, z: 705 + k * 6, heading: 0})),   // Nelson (weather column) → cuts ahead of the centre
 	...Array.from({length: 15}, (_, k) => ({x: -2450 + adv - k * 125, z: -440 + k * 5, heading: 0})),  // Collingwood (lee column) → cuts the rear
 ];
 let MARKS: {tracks: THREE.Mesh[]; hot: THREE.Mesh; van: THREE.Mesh} | null = null;
@@ -64,7 +64,7 @@ const flat = (scene: THREE.Scene, color: string) => { const m = new THREE.Mesh(n
 const seaMarks = (c: Ctx, o: number, adv: number, tracks = true) => {
 	if (!MARKS) MARKS = {tracks: [flat(c.sea.scene, '#ffcf6a'), flat(c.sea.scene, '#ffcf6a')], hot: flat(c.sea.scene, '#ffcf6a'), van: flat(c.sea.scene, '#9a9a9a')};
 	const set = (m: THREE.Mesh, x0: number, z0: number, x1: number, z1: number, wd: number, a: number) => { m.position.set((x0 + x1) / 2, 0.6, (z0 + z1) / 2); m.scale.set(Math.hypot(x1 - x0, z1 - z0), wd, 1); m.rotation.z = -Math.atan2(z1 - z0, x1 - x0); (m.material as THREE.MeshBasicMaterial).opacity = a; m.visible = a > 0.01; };
-	set(MARKS.tracks[0], -2710 + adv, 670, 30, 680, 22, tracks ? o : 0); set(MARKS.tracks[1], -2450 + adv, -440, 20, -440, 22, tracks ? o : 0);
+	set(MARKS.tracks[0], -2710 + adv, 705, 30, 715, 22, tracks ? o : 0); set(MARKS.tracks[1], -2450 + adv, -440, 20, -440, 22, tracks ? o : 0);
 	set(MARKS.hot, 170, -1650, 170, 820, 60, o * 0.85); set(MARKS.van, 250, 880, 250, 1650, 60, o * 0.7);
 };
 /** a bank of powder smoke wiping across the lens (2D, soft): k = 0 clear → 1 covered; `drift` moves the billows sideways */
@@ -340,9 +340,9 @@ export const TIMELINE: Shot[] = [
 	//       at u = 7.5 Nelson's column breaks through the same way; then a crane up shows the line cut in two places, the van untouched
 	{a: T.climax, b: T.chart, draw: (c, u) => {
 		const d = T.chart - T.climax; const tm = u < 1.2 ? u : u < 3.0 ? 1.2 + (u - 1.2) * 0.25 : 1.65 + (u - 3.0); // slow motion as the bow passes the stern
-		const adv = ADV0 + tm * 55; const lead = {x: adv - 2450, z: -440}, nel = {x: adv - 2710, z: 670}; const tN = 6.15; // Nelson's lead reaches the line at tm = 6.15 (u = 7.5)
+		const adv = ADV0 + tm * 55; const lead = {x: adv - 2450, z: -440}, nel = {x: adv - 2710, z: 705}; const tN = 6.15; // Nelson's lead reaches the line at tm = 6.15 (u = 7.5)
 		if (u < 7.5) camKeys([{t: 0, pos: [lead.x - 110, 24, -463], look: [lead.x + 60, 8, -440], fov: 44}, {t: 1.2, pos: [lead.x - 60, 12, -463], look: [lead.x + 40, 8, -440], fov: 52}, {t: 3.0, pos: [31.5, 10, -463], look: [lead.x + 30, 7, -440], fov: 54}, {t: 7.5, pos: [-60, 85, -463], look: [lead.x + 40, 6, -420], fov: 46}], u); // after the slow motion the camera stops short of the enemy line (its bowsprit reaches z −440) and rises behind it // the camera rides the clear lane between the lead's yards and the enemy's
-		else camKeys([{t: 7.5, pos: [nel.x - 105, 22, 696], look: [nel.x + 50, 8, 670], fov: 50}, {t: 9.0, pos: [nel.x - 150, 50, 520], look: [nel.x + 60, 4, 620], fov: 42}, {t: 11.6, pos: [-900, 650, -1500], look: [0, 0, 0], fov: 44}, {t: d, pos: [-960, 700, -1560], look: [0, 0, 60], fov: 44}], u);
+		else camKeys([{t: 7.5, pos: [nel.x - 105, 22, 731], look: [nel.x + 50, 8, 705], fov: 50}, {t: 9.0, pos: [nel.x - 150, 50, 555], look: [nel.x + 60, 4, 655], fov: 42}, {t: 11.6, pos: [-900, 650, -1500], look: [0, 0, 0], fov: 44}, {t: d, pos: [-960, 700, -1560], look: [0, 0, 60], fov: 44}], u);
 		const heel = (q: any, k: number) => ({...q, roll: -0.075 * k});
 		const line = LINE(T.climax - T.sea + u, 0).map((q) => Math.abs(q.z - lead.z) < 75 ? heel(q, clamp01((tm - 0.3) / 0.9)) : Math.abs(q.z - nel.z) < 75 ? heel(q, clamp01((tm - tN - 0.3) / 0.9)) : q);
 		setFleet(c.sea.combined, line, u); setFleet(c.sea.british, COLS(adv), u);
@@ -362,7 +362,7 @@ export const TIMELINE: Shot[] = [
 		const d = T.quiet - T.chart; const tt = T.chart - T.sea + u; const adv = ADV0 + 13.65 * 55 + u * 40;
 		camKeys([{t: 0, pos: [-900, 650, -1500], look: [0, 0, 0], fov: 44}, {t: 7.5, pos: [-1700, 900, -300], look: [0, 0, 500], fov: 44}, {t: 15, pos: [-1900, 1100, 200], look: [100, 0, 900], fov: 44}], u);
 		const van = ease((u - 1.8) / 5) * 900; seaMarks(c, 0, 0, false); setFleet(c.sea.combined, LINE(tt, van), u); setFleet(c.sea.british, COLS(adv), u);
-		{ const tm = 13.65 + u, ko = 1 - clamp01(u / 2.6); const near = LINE(tt, van).filter((q) => Math.abs(q.z + 440) < 420 || Math.abs(q.z - 670) < 420); const a = broadsides(near, tm, 0.5, 7), r1 = rake({x: adv - 2450, z: -440}, tm, 0.04), r2 = rake({x: adv - 2710, z: 670}, tm, 6.15);
+		{ const tm = 13.65 + u, ko = 1 - clamp01(u / 2.6); const near = LINE(tt, van).filter((q) => Math.abs(q.z + 440) < 420 || Math.abs(q.z - 705) < 420); const a = broadsides(near, tm, 0.5, 7), r1 = rake({x: adv - 2450, z: -440}, tm, 0.04), r2 = rake({x: adv - 2710, z: 705}, tm, 6.15);
 			const age = 15 - 9.375 + u, vs = [...LINE(tt, van), ...COLS(adv)].map((q, i) => [q.x + age * 3, 6 + age * 2, q.z + ((i % 2) * 2 - 1) * (14 + age * 5), 26 + age * 14, 0.6, 0.56, 0.5, 0.7 * Math.exp(-age / 5)]);
 			c.seaSmoke.set(ko > 0 ? [...a.sm, ...r1.sm, ...r2.sm, ...vs].map((q) => [...q.slice(0, 7), q[7] * ko]) : []); c.seaFlash.set(ko > 0.5 ? a.fl.map((q) => [...q.slice(0, 7), q[7] * ko]) : []); }
 		const sep = clamp01((u - 1.6) / 0.8); const p = (x: number, z: number) => toScreen([x, 0, z]);
