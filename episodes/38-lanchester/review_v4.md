@@ -75,3 +75,11 @@ Evidence frames were pulled at full resolution into the scratchpad and deleted a
   - The only faults are the two above.
 
 Frames were pulled into the scratchpad and deleted afterwards.
+
+## v9 note (2026-10-23, `ep38out/集中优势兵力_v9.mp4`, 176.3 s; checked only 2:00–2:16 and 1:43.0–1:43.6)
+**Verdict: FINAL OK.**
+- 123.3–127.6, every frame checked (129 frames): no flat grey discs. The rake smoke has thinned to haze by 122.5. The camera stops short of the enemy bowsprit, which stays at least half a frame away (123.3–124.1). It then cranes back and up over its own lane. The ship entering on the right at 124.37–124.9 passes beside the lens, with no model in front of the camera at any frame. The cut at 127.57 is clean.
+- 2:00–2:16 at 0.5-s steps: the downbeat and the broadsides at 120.0–121.5 and 127.5–128.0, the bar-69 crane at 129.5, and the chart at 130–135.5 are all fine.
+- 1:43.0–1:43.6, every frame checked: the 707, its label and 打团最忌 fade out over 103.00–103.17, and the scene dissolves over 103.30–103.57. No pop.
+- Leftover MINOR (carried as v6 #4): a small round orange muzzle glow at the bottom edge for about 2 frames (124.23, 124.67, 125.1). It does not hold back the release.
+Frames were pulled into the scratchpad and deleted.

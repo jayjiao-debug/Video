@@ -37,3 +37,14 @@ Decisions taken in the owner's place (each can be reversed in the morning):
   - The end card is static for 10 s (the music tail).
   - 25 lines against the ~20 aim.
   - Muzzle flashes are still round.
+- **v9 = release candidate (reviewer: FINAL OK; director r2: approve once stills match, and they do).**
+  - The climax crane rises back over its own lane.
+  - The raking smoke thins by 122.5.
+  - The 707 fades through the dissolve.
+  - HD master: GitHub Actions artifact on branch deliver-lanchester (run 39896710344), md5 checked.
+- **Open questions for the owner:**
+  - The temp BGM (Rynos Theme, CC BY) or his own track. Shots are keyed to bars, so a 128-BPM swap is easy.
+  - The title: 为什么要"集中优势兵力" or one of the other two options in script.md.
+  - Whether to cut toward ~20 lines.
+  - The limit shot is still fairly tidy.
+  - Muzzle flashes are still round.
