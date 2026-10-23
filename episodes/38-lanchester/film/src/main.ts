@@ -27,7 +27,7 @@ const sunziText = (scene: THREE.Scene) => {
 	const ctx: Ctx = {
 		a, land, sea, army: new Army(a, land.scene, 2100),
 		smoke: new Puffs(land.scene, 14000, false), flash: new Puffs(land.scene, 2500, true), squares: new GroundSquares(land.scene, 16), tracers: new Tracers(land.scene, 2600), rings, text: sunziText(land.scene),
-		seaSmoke: new Puffs(sea.scene, 16000, false), seaFlash: new Puffs(sea.scene, 6000, true), hud, split,
+		seaSmoke: new Puffs(sea.scene, 16000, false, 30), seaFlash: new Puffs(sea.scene, 6000, true), hud, split,
 	};
 	(window as any).renderAt = (t: number) => {
 		const shot = TIMELINE.find((s) => t >= s.a && t < s.b) ?? TIMELINE[TIMELINE.length - 1];

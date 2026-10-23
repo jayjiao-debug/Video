@@ -261,15 +261,15 @@ export const simBodies = (sim: Sim, t: number, pose: Pose = 'aim', dx = 0, dz = 
 const spriteTex = (() => { let t: THREE.CanvasTexture | null = null; return () => { if (t) return t; const c = document.createElement('canvas'); c.width = c.height = 128; const g = c.getContext('2d')!;
 	for (let k = 0; k < 6; k++) { const x = 64 + (Math.random() - 0.5) * 24, y = 64 + (Math.random() - 0.5) * 24, r = 30 + Math.random() * 20; const gr = g.createRadialGradient(x, y, 0, x, y, r); gr.addColorStop(0, 'rgba(255,255,255,0.5)'); gr.addColorStop(1, 'rgba(255,255,255,0)'); g.fillStyle = gr; g.fillRect(0, 0, 128, 128); }
 	t = new THREE.CanvasTexture(c); return t; }; })();
-const pointsMat = (additive: boolean) => new THREE.ShaderMaterial({
-	uniforms: {map: {value: spriteTex()}, scale: {value: H / 2 / Math.tan((36 * Math.PI) / 360)}, fogColor: {value: new THREE.Color('#b9b2ad')}},
-	vertexShader: 'attribute float size; attribute vec4 rgba; varying vec4 vC; uniform float scale; void main(){ vC = rgba; vec4 mv = modelViewMatrix * vec4(position,1.0); gl_PointSize = min(900.0, size * scale / -mv.z); gl_Position = projectionMatrix * mv; }',
+const pointsMat = (additive: boolean, near = 0) => new THREE.ShaderMaterial({
+	uniforms: {map: {value: spriteTex()}, scale: {value: H / 2 / Math.tan((36 * Math.PI) / 360)}, fogColor: {value: new THREE.Color('#b9b2ad')}, near: {value: near}},
+	vertexShader: 'attribute float size; attribute vec4 rgba; varying vec4 vC; uniform float scale; uniform float near; void main(){ vC = rgba; vec4 mv = modelViewMatrix * vec4(position,1.0); if (near > 0.0) vC.a *= smoothstep(near * 0.3, near, -mv.z - size * 0.5); gl_PointSize = min(900.0, size * scale / -mv.z); gl_Position = projectionMatrix * mv; }',
 	fragmentShader: 'uniform sampler2D map; varying vec4 vC; void main(){ vec4 t = texture2D(map, gl_PointCoord); gl_FragColor = vec4(vC.rgb, vC.a * t.a); }',
 	transparent: true, depthWrite: false, blending: additive ? THREE.AdditiveBlending : THREE.NormalBlending, toneMapped: !additive,
 });
 export class Puffs {
 	pts: THREE.Points; n: number;
-	constructor(scene: THREE.Scene, n: number, additive: boolean) { this.n = n; const g = new THREE.BufferGeometry(); g.setAttribute('position', new THREE.BufferAttribute(new Float32Array(n * 3), 3)); g.setAttribute('size', new THREE.BufferAttribute(new Float32Array(n), 1)); g.setAttribute('rgba', new THREE.BufferAttribute(new Float32Array(n * 4), 4)); this.pts = new THREE.Points(g, pointsMat(additive)); this.pts.frustumCulled = false; this.pts.renderOrder = additive ? 3 : 2; scene.add(this.pts); }
+	constructor(scene: THREE.Scene, n: number, additive: boolean, near = 0) { this.n = n; const g = new THREE.BufferGeometry(); g.setAttribute('position', new THREE.BufferAttribute(new Float32Array(n * 3), 3)); g.setAttribute('size', new THREE.BufferAttribute(new Float32Array(n), 1)); g.setAttribute('rgba', new THREE.BufferAttribute(new Float32Array(n * 4), 4)); this.pts = new THREE.Points(g, pointsMat(additive, near)); this.pts.frustumCulled = false; this.pts.renderOrder = additive ? 3 : 2; scene.add(this.pts); }
 	/** items: [x,y,z,size,r,g,b,a] */
 	set(items: number[][]) { const g = this.pts.geometry, P = g.attributes.position as THREE.BufferAttribute, S = g.attributes.size as THREE.BufferAttribute, C = g.attributes.rgba as THREE.BufferAttribute; const n = Math.min(items.length, this.n);
 		// far → near so normal blending composites correctly
