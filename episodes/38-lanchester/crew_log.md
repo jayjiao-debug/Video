@@ -48,3 +48,11 @@ Decisions taken in the owner's place (each can be reversed in the morning):
   - Whether to cut toward ~20 lines.
   - The limit shot is still fairly tidy.
   - Muzzle flashes are still round.
+
+## v5 (2026-10-23) — owner re-cut
+- New owner BGM (118.52 BPM, grid 0.4 + 2.025n); bars 48–71 cut with a 20 ms crossfade, ends 115.8 s, then a 4 s silent card. Total 119.825 s.
+- Title lands on drop 1 (bar 8 = 16.6 s). Explanation (melee → guns → squares → 866) cut to about 30 s.
+- Non-military examples: 5v3 team fight (示意, generic CC0 KayKit heroes), the Japanese 兰彻斯特战略 business example (Osaka photogrammetry, no company named), AoE II knight 1v4 ✓ / 1v5 ✗, StarCraft AI about 90 % (Stanescu 2015). Ants dropped: the evidence doesn't support the square law (Lymbery 2023).
+- Trafalgar kept. Clipping and black flash at 1:25 / 1:45 fixed with wider line gaps, a moved camera lane, and dissolves that use the previous frame (no black).
+- Labels now use the current frame's camera (no one-frame lag).
+- Polish left open: the chart at 93 s is dark; labels at 43.5 s and 91 s sit tight; companies in the converge shot (110 s) are small.
