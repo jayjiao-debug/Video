@@ -13,12 +13,13 @@ export type Face = { hair?: 'part' | 'short'; mole?: boolean; tilt?: number; smi
 export const girl = (g: G, x: number, y: number, k: number, o: Face = {}) => {
   const w = o.wide ?? 0, pr = o.pretty ?? 0, bl = o.blink ?? 0, mo = o.mouth ?? 0;
   g.save(); g.translate(x, y); g.scale(o.flip ? -k : k, k); g.rotate(o.tilt ?? 0); const short = o.hair === 'short';
+  // hair, back
+  g.fillStyle = short ? '#3a2418' : HAIR; g.beginPath(); if (short) { g.ellipse(0, -40, 128, 120, 0, 0, 7); } else { g.moveTo(-132, -40); g.bezierCurveTo(-156, 60, -146, 130, -122, 156); g.quadraticCurveTo(0, 170, 122, 156); g.bezierCurveTo(146, 130, 156, 60, 132, -40); g.bezierCurveTo(124, -186, -124, -186, -132, -40); } g.fill();
   // shoulders + neck
   g.fillStyle = o.top ?? TOP; g.beginPath(); g.moveTo(-230, 330); g.bezierCurveTo(-225, 230, -150, 190, -60, 180); g.lineTo(60, 180); g.bezierCurveTo(150, 190, 225, 230, 230, 330); g.closePath(); g.fill();
   g.fillStyle = SKIN_D; g.beginPath(); g.moveTo(-42, 100); g.lineTo(-46, 190); g.quadraticCurveTo(0, 215, 46, 190); g.lineTo(42, 100); g.fill();
+  { const ns = g.createLinearGradient(0, 100, 0, 150); ns.addColorStop(0, 'rgba(120,60,40,.45)'); ns.addColorStop(1, 'rgba(120,60,40,0)'); g.fillStyle = ns; g.fillRect(-46, 100, 92, 50); }
   g.fillStyle = 'rgba(0,0,0,.18)'; g.beginPath(); g.ellipse(0, 182, 52, 14, 0, 0, 7); g.fill();
-  // hair, back
-  g.fillStyle = short ? '#3a2418' : HAIR; g.beginPath(); if (short) { g.ellipse(0, -40, 128, 120, 0, 0, 7); } else { g.moveTo(-132, -40); g.bezierCurveTo(-156, 60, -146, 130, -122, 156); g.quadraticCurveTo(0, 170, 122, 156); g.bezierCurveTo(146, 130, 156, 60, 132, -40); g.bezierCurveTo(124, -186, -124, -186, -132, -40); } g.fill();
   // ears (shrink when the camera is close)
   const es = 1 - 0.45 * w; g.fillStyle = SKIN_D; for (const s of [-1, 1]) { g.beginPath(); g.ellipse(s * (100 - 6 * w), 12, 15 * es, 26 * es, 0, 0, 7); g.fill(); }
   // face
