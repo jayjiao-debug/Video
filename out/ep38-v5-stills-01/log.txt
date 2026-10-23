@@ -1,0 +1,40 @@
+token id present: yes
+token secret present: yes
+✓ Initialized. View run at 
+https://modal.com/apps/jayjiao249/main/ap-AhKy5Fv8RkG1PIBgLSWXhZ
+Building image im-EEulXiLaOn4nXaYulF1Tzr
+
+=> Step 0: FROM base
+
+=> Step 1: RUN mkdir -p /app/assets/grass/textures /app/assets/v2/models /app/assets/v2/polyhaven/cobblestone_floor_07/textures && cd /app && npm init -y >/dev/null && npm i playwright-core@1.48.2
+
+added 1 package, and audited 2 packages in 878ms
+
+found 0 vulnerabilities
+
+=> Step 2: RUN curl -sSL -o /app/assets/sky.hdr 'https://raw.githubusercontent.com/jayjiao-debug/Video/asset-output/out/lanchester-assets-01/polyhaven/kloppenheim_06_puresky_4k.hdr' && curl -sSL -o /app/assets/ground_diff.jpg 'https://raw.githubusercontent.com/jayjiao-debug/Video/asset-output/out/lanchester-assets-01/polyhaven/aerial_grass_rock/textures/aerial_grass_rock_diff_2k.jpg' && curl -sSL -o /app/assets/ground_nor.jpg 'https://raw.githubusercontent.com/jayjiao-debug/Video/asset-output/out/lanchester-assets-01/polyhaven/aerial_grass_rock/textures/aerial_grass_rock_nor_gl_2k.jpg' && curl -sSL -o /app/assets/ground_rough.jpg 'https://raw.githubusercontent.com/jayjiao-debug/Video/asset-output/out/lanchester-assets-01/polyhaven/aerial_grass_rock/textures/aerial_grass_rock_rough_2k.jpg' && curl -sSL -o /app/assets/soldier.glb 'https://raw.githubusercontent.com/jayjiao-debug/Video/asset-output/out/lanchester-assets-01/models/infantry_rigged.glb' && curl -sSL -o /app/assets/ship_bucentaure.glb 'https://raw.githubusercontent.com/jayjiao-debug/Video/asset-output/out/lanchester-assets-01/models/ship_bucentaure.glb' && curl -sSL -o /app/assets/ship_agamemnon.glb 'https://raw.githubusercontent.com/jayjiao-debug/Video/asset-output/out/lanchester-assets-01/models/ship_agamemnon.glb' && curl -sSL -o /app/assets/grass/grass.gltf 'https://raw.githubusercontent.com/jayjiao-debug/Video/asset-output/out/lanchester-assets-01/polyhaven/grass_medium_01/grass_medium_01.gltf' && curl -sSL -o /app/assets/grass/grass_medium_01.bin 'https://raw.githubusercontent.com/jayjiao-debug/Video/asset-output/out/lanchester-assets-01/polyhaven/grass_medium_01/grass_medium_01.bin' && curl -sSL -o /app/assets/grass/textures/grass_medium_01_diff_1k.jpg 'https://raw.githubusercontent.com/jayjiao-debug/Video/asset-output/out/lanchester-assets-01/polyhaven/grass_medium_01/textures/grass_medium_01_diff_1k.jpg' && curl -sSL -o /app/assets/grass/textures/grass_medium_01_nor_gl_1k.jpg 'https://raw.githubusercontent.com/jayjiao-debug/Video/asset-output/out/lanchester-assets-01/polyhaven/grass_medium_01/textures/grass_medium_01_nor_gl_1k.jpg' && curl -sSL -o /app/assets/grass/textures/grass_medium_01_arm_1k.jpg 'https://raw.githubusercontent.com/jayjiao-debug/Video/asset-output/out/lanchester-assets-01/polyhaven/grass_medium_01/textures/grass_medium_01_arm_1k.jpg'
+
+=> Step 3: RUN curl -sSL -o /app/assets/v2/models/osaka.glb 'https://raw.githubusercontent.com/jayjiao-debug/Video/asset-output/out/lanchester-v2-models-01/models/osaka.glb' && curl -sSL -o /app/assets/v2/polyhaven/cobblestone_floor_07/textures/cobblestone_floor_07_diff_2k.jpg 'https://raw.githubusercontent.com/jayjiao-debug/Video/asset-output/out/lanchester-v2-models-01/polyhaven/cobblestone_floor_07/textures/cobblestone_floor_07_diff_2k.jpg' && curl -sSL -o /app/assets/v2/polyhaven/cobblestone_floor_07/textures/cobblestone_floor_07_nor_gl_2k.jpg 'https://raw.githubusercontent.com/jayjiao-debug/Video/asset-output/out/lanchester-v2-models-01/polyhaven/cobblestone_floor_07/textures/cobblestone_floor_07_nor_gl_2k.jpg' && curl -sSL -o /app/assets/v2/polyhaven/cobblestone_floor_07/textures/cobblestone_floor_07_rough_2k.jpg 'https://raw.githubusercontent.com/jayjiao-debug/Video/asset-output/out/lanchester-v2-models-01/polyhaven/cobblestone_floor_07/textures/cobblestone_floor_07_rough_2k.jpg'
+Saving image...
+Image saved, took 1.16s
+
+Built image im-EEulXiLaOn4nXaYulF1Tzr in 9.65s
+
+
+✓ Created objects.
+├── ✓ Uploaded /home/runner/work/Video/Video/render_ep38.py
+├── ✓ Uploaded /home/runner/work/Video/Video/ep38
+├── ✓ Created Function chunk.
+└── ✓ Created Function stills.
+0 STILLS 8
+
+1 STILLS 8
+
+2 STILLS 8
+
+3 STILLS 8
+
+DONE stills
+Stopping app - local entrypoint completed.
+✓ App completed. View run at 
+https://modal.com/apps/jayjiao249/main/ap-AhKy5Fv8RkG1PIBgLSWXhZ
