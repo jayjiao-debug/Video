@@ -1,0 +1,86 @@
+plan: {'tier': None, 'character_count': None, 'character_limit': None, 'status': None}
+models: ['eleven_v4', 'eleven_v4_turbo', 'eleven_v3', 'eleven_v3_conversational', 'eleven_multilingual_v2', 'eleven_flash_v2_5', 'eleven_turbo_v2_5', 'eleven_turbo_v2', 'eleven_flash_v2', 'eleven_english_sts_v2', 'eleven_multilingual_sts_v2']
+model: eleven_v4
+{"name": "03_morse_n1b", "lang": "en", "text": "[somber] In 1825, the painter Samuel Morse was far from home when a letter came: his wife had died. [pause] By the time he got back… she had already been buried.", "voice": "MFZUKuGQUsGJPQjTS4wC", "voice_id": "MFZUKuGQUsGJPQjTS4wC", "model": "eleven_v3", "status": 200, "file": "03_morse_n1b.mp3", "bytes": 171406}
+{"name": "05_bell_qb", "lang": "en", "text": "[urgently] Mr. Watson — come here — I want to see you.", "voice": "gUbIduqGzBP438teh4ZA", "voice_id": "gUbIduqGzBP438teh4ZA", "model": "eleven_v3", "status": 200, "file": "05_bell_qb.mp3", "bytes": 43510}
+{"name": "05_bell_qc", "lang": "en", "text": "Mr. Watson — come here — I want to see you.", "voice": "gUbIduqGzBP438teh4ZA", "voice_id": "gUbIduqGzBP438teh4ZA", "model": "eleven_v4", "status": 200, "file": "05_bell_qc.mp3", "bytes": 47272}
+{"name": "07_arpa_n1b", "lang": "en", "text": "October 29th, 1969. A student at UCLA tries to send one word to a computer three hundred and fifty miles away: [pause] “log in.”", "voice": "ZthjuvLPty3kTMaNKVKb", "voice_id": "ZthjuvLPty3kTMaNKVKb", "model": "eleven_v3", "status": 200, "file": "07_arpa_n1b.mp3", "bytes": 193140}
+{"name": "09_fin_n1b", "lang": "en", "text": "[tenderly] In 1977, Ann Druyan called Carl Sagan to say she had found a Chinese song for the Golden Record. [pause] By the end of that call… they were engaged.", "voice": "yj30vwTGJxSHezdAGsv9", "voice_id": "yj30vwTGJxSHezdAGsv9", "model": "eleven_v3", "status": 200, "file": "09_fin_n1b.mp3", "bytes": 176421}
+Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+[
+ {
+  "name": "03_morse_n1b",
+  "lang": "en",
+  "text": "[somber] In 1825, the painter Samuel Morse was far from home when a letter came: his wife had died. [pause] By the time he got back… she had already been buried.",
+  "voice": "MFZUKuGQUsGJPQjTS4wC",
+  "voice_id": "MFZUKuGQUsGJPQjTS4wC",
+  "model": "eleven_v3",
+  "status": 200,
+  "file": "03_morse_n1b.mp3",
+  "bytes": 171406,
+  "heard": "In 1825, the painter Samuel Morse was far from home when a letter came. His wife had died. By the time he got back, she had already been buried.",
+  "heard_lang": "en",
+  "heard_lang_p": 0.999,
+  "seconds": 10.64
+ },
+ {
+  "name": "05_bell_qb",
+  "lang": "en",
+  "text": "[urgently] Mr. Watson — come here — I want to see you.",
+  "voice": "gUbIduqGzBP438teh4ZA",
+  "voice_id": "gUbIduqGzBP438teh4ZA",
+  "model": "eleven_v3",
+  "status": 200,
+  "file": "05_bell_qb.mp3",
+  "bytes": 43510,
+  "heard": "Mr. Watson, come here. I want to see you.",
+  "heard_lang": "en",
+  "heard_lang_p": 0.997,
+  "seconds": 2.64
+ },
+ {
+  "name": "05_bell_qc",
+  "lang": "en",
+  "text": "Mr. Watson — come here — I want to see you.",
+  "voice": "gUbIduqGzBP438teh4ZA",
+  "voice_id": "gUbIduqGzBP438teh4ZA",
+  "model": "eleven_v4",
+  "status": 200,
+  "file": "05_bell_qc.mp3",
+  "bytes": 47272,
+  "heard": "Mr. Watson, come here. I want to see you.",
+  "heard_lang": "en",
+  "heard_lang_p": 0.991,
+  "seconds": 2.88
+ },
+ {
+  "name": "07_arpa_n1b",
+  "lang": "en",
+  "text": "October 29th, 1969. A student at UCLA tries to send one word to a computer three hundred and fifty miles away: [pause] “log in.”",
+  "voice": "ZthjuvLPty3kTMaNKVKb",
+  "voice_id": "ZthjuvLPty3kTMaNKVKb",
+  "model": "eleven_v3",
+  "status": 200,
+  "file": "07_arpa_n1b.mp3",
+  "bytes": 193140,
+  "heard": "October 29th, 1969. A student at UCLA tries to send one word to a computer 350 miles away. Log in.",
+  "heard_lang": "en",
+  "heard_lang_p": 0.996,
+  "seconds": 12.0
+ },
+ {
+  "name": "09_fin_n1b",
+  "lang": "en",
+  "text": "[tenderly] In 1977, Ann Druyan called Carl Sagan to say she had found a Chinese song for the Golden Record. [pause] By the end of that call… they were engaged.",
+  "voice": "yj30vwTGJxSHezdAGsv9",
+  "voice_id": "yj30vwTGJxSHezdAGsv9",
+  "model": "eleven_v3",
+  "status": 200,
+  "file": "09_fin_n1b.mp3",
+  "bytes": 176421,
+  "heard": "In 1977, Ann Druyan called Carl Sagan to say she had found a Chinese song for the Golden Record. By the end of that call, they were engaged.",
+  "heard_lang": "en",
+  "heard_lang_p": 0.99,
+  "seconds": 10.96
+ }
+]
