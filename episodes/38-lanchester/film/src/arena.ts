@@ -58,7 +58,7 @@ export const makeCity = async (sky: THREE.Texture, env: THREE.Texture): Promise<
 	const sc = new THREE.Scene(); sc.background = new THREE.Color('#241c22'); sc.environment = env; sc.environmentIntensity = 0.7; sc.fog = new THREE.Fog('#241c22', 750, 1500);
 	const city = fit(os.scene, 1200, 'xz'); sc.add(city);
 	const under = new THREE.Mesh(new THREE.PlaneGeometry(6000, 6000).rotateX(-Math.PI / 2), new THREE.MeshStandardMaterial({color: '#2a2228', roughness: 1})); under.position.y = 2; sc.add(under);
-	sc.add(Object.assign(new THREE.DirectionalLight('#ffcf9a', 2.4), {position: new THREE.Vector3(-400, 300, -300)}), new THREE.HemisphereLight('#d8e0ff', '#40302a', 0.5));
+	const sunC = new THREE.DirectionalLight('#ffcf9a', 2.4); sunC.position.set(-400, 300, -300); sc.add(sunC, new THREE.HemisphereLight('#d8e0ff', '#40302a', 0.5));
 	// zones tint the buildings themselves: up to 8 discs (x, z, r) with colour × strength, added as emissive in the city's own shader
 	const N = 8; const zoneU = {value: Array.from({length: N}, () => new THREE.Vector4(0, 0, 0, 0))}, colU = {value: Array.from({length: N}, () => new THREE.Vector3())};
 	city.traverse((m: any) => { if (!m.isMesh) return; const mat = m.material as THREE.MeshStandardMaterial; mat.onBeforeCompile = (sh) => {

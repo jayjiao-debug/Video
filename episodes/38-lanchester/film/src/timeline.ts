@@ -3,10 +3,11 @@ import * as THREE from 'three';
 import {block, rifle, melee, rnd, aliveAt, FPS, type Sim, type Unit} from './sim';
 import {Army, Puffs, GroundSquares, Tracers, simBodies, simSmoke, simTracers, camKeys, camOrbit, draw, setGrade, setFleet, camera, toScreen, renderer, W, H, type Body, type Key} from './engine';
 import {sub, counters, tag, slam, scrim, html, env, clamp01, GOLD, BLUE, RED} from './hud';
+import {hpBar, type Arena, type City, type HeroPose} from './arena';
 
 export type Ctx = {
 	a: any; land: {scene: THREE.Scene; sun: THREE.DirectionalLight}; sea: {scene: THREE.Scene; water: any; combined: THREE.InstancedMesh[]; british: THREE.InstancedMesh[]};
-	army: Army; smoke: Puffs; flash: Puffs; squares: GroundSquares; tracers: Tracers; rings: THREE.Mesh[]; text: THREE.Mesh; seaSmoke: Puffs; seaFlash: Puffs; hud: HTMLElement; split: HTMLCanvasElement;
+	army: Army; arena: Arena; city: City; cityPts: Puffs; smoke: Puffs; flash: Puffs; squares: GroundSquares; tracers: Tracers; rings: THREE.Mesh[]; text: THREE.Mesh; seaSmoke: Puffs; seaFlash: Puffs; hud: HTMLElement; split: HTMLCanvasElement;
 };
 export type Shot = {a: number; b: number; draw: (c: Ctx, u: number, t: number) => void};
 
@@ -56,7 +57,7 @@ const lineBodies = (n: number, x0: number, z0: number, side: 0 | 1, sp = SQ): Bo
 // ---------------------------------------------------------------- the sea: the Combined line (33, van to the north) and two British columns
 const LINE = (t: number, vanAway: number) => Array.from({length: 33}, (_, i) => { const u = i / 32; const van = i >= 25; return {x: 40 * Math.sin(u * 3.0) + u * 70 + (van ? vanAway * 0.25 : 0), z: -1600 + u * 3200 + (i <= 11 ? -50 : i <= 22 ? 15 : 50) + (van ? vanAway : 0) + t * 1.2, heading: -Math.PI / 2}; }); // wider gaps where the two columns break through (no spar passes through a hull)
 const COLS = (adv: number) => [
-	...Array.from({length: 12}, (_, k) => ({x: -2710 + adv - k * 130, z: 705 + k * 6, heading: 0})),   // Nelson (weather column) → cuts ahead of the centre
+	...Array.from({length: 12}, (_, k) => ({x: -2529 + adv - k * 130, z: 705 + k * 6, heading: 0})),   // Nelson (weather column) → cuts ahead of the centre
 	...Array.from({length: 15}, (_, k) => ({x: -2450 + adv - k * 125, z: -440 + k * 5, heading: 0})),  // Collingwood (lee column) → cuts the rear
 ];
 let MARKS: {tracks: THREE.Mesh[]; hot: THREE.Mesh; van: THREE.Mesh} | null = null;
@@ -64,7 +65,7 @@ const flat = (scene: THREE.Scene, color: string) => { const m = new THREE.Mesh(n
 const seaMarks = (c: Ctx, o: number, adv: number, tracks = true) => {
 	if (!MARKS) MARKS = {tracks: [flat(c.sea.scene, '#ffcf6a'), flat(c.sea.scene, '#ffcf6a')], hot: flat(c.sea.scene, '#ffcf6a'), van: flat(c.sea.scene, '#9a9a9a')};
 	const set = (m: THREE.Mesh, x0: number, z0: number, x1: number, z1: number, wd: number, a: number) => { m.position.set((x0 + x1) / 2, 0.6, (z0 + z1) / 2); m.scale.set(Math.hypot(x1 - x0, z1 - z0), wd, 1); m.rotation.z = -Math.atan2(z1 - z0, x1 - x0); (m.material as THREE.MeshBasicMaterial).opacity = a; m.visible = a > 0.01; };
-	set(MARKS.tracks[0], -2710 + adv, 705, 30, 715, 22, tracks ? o : 0); set(MARKS.tracks[1], -2450 + adv, -440, 20, -440, 22, tracks ? o : 0);
+	set(MARKS.tracks[0], -2529 + adv, 705, 30, 715, 22, tracks ? o : 0); set(MARKS.tracks[1], -2450 + adv, -440, 20, -440, 22, tracks ? o : 0);
 	set(MARKS.hot, 170, -1650, 170, 820, 60, o * 0.85); set(MARKS.van, 250, 880, 250, 1650, 60, o * 0.7);
 };
 /** a bank of powder smoke wiping across the lens (2D, soft): k = 0 clear → 1 covered; `drift` moves the billows sideways */
@@ -73,7 +74,7 @@ const fogBank = (c: Ctx, k: number, drift: number) => { if (k <= 0.001) return; 
 	html(c.hud, `<div style="position:absolute;inset:-12%;opacity:${Math.min(1, k * 1.25)};background:${L.join(',')},rgba(208,200,190,${clamp01(k * 1.4 - 0.35) * 0.97});filter:blur(28px)"></div>`); };
 /** the British advance (m) at sea-shot time t: Collingwood's lead reaches the gap between two enemy hulls on the climax downbeat */
 const ADV = (t: number) => 1500 + t * 99.5;
-const ADV0 = 1500 + 99.5 * 9.375; // = ADV(T.climax − T.sea): Collingwood's lead crosses the enemy line in the slow motion (tm ≈ 1.4)
+const ADV0 = 1500 + 99.5 * 9.375; // = ADV(sea time at the drop): Collingwood's lead crosses the enemy line in the slow motion (tm ≈ 1.4)
 /** raking broadside of a ship breaking the line: every gun on both sides fires bow to stern, 0.05 s apart, starting at t0 */
 const rake = (s: {x: number; z: number}, tm: number, t0: number, towardCam = -1) => { const sm: number[][] = [], fl: number[][] = [];
 	for (let k = 0; k < 28; k++) for (const side of [-1, 1]) { const age = tm - (t0 + k * 0.035 + (side > 0 ? 0.017 : 0)); if (age < 0 || age > 14) continue; const px = s.x + 25 - k * 1.85, pz = s.z + side * 8.5;
@@ -92,328 +93,322 @@ const broadsides = (ships: {x: number; z: number; heading: number}[], t: number,
 	return {sm, fl};
 };
 
-// ================================================================ shot table (seconds). Snapped to the music grid by crew (see music.md).
-export const bar = (k: number) => 0.045 + 1.875 * k;
+// ================================================================ shot table v5 (script v5, owner's track cut to 1:55.8; bar n = 0.400 + 2.025·n)
+export const bar = (k: number) => 0.4 + 2.025 * k;
 export const T = {
-	volley: 0, drop: bar(8), rewind: bar(10), swords: bar(11), s1: bar(14), title: bar(16), guns: bar(18), why: bar(28), bullet: bar(32), x4: bar(40), squares: bar(42),
-	divide: bar(50), half: bar(55), sunzi: bar(57), sea: bar(59), climax: bar(64), chart: bar(72), quiet: bar(80), limit: bar(84), ending: bar(86), card: bar(88), end: bar(94),
+	hook: 0, s866: bar(6), title: bar(8), melee: bar(9), guns: bar(13), squares: bar(18), game: bar(24), biz: bar(31), traf: bar(37), drop: bar(40), chart: bar(44),
+	rts: bar(46), sc: bar(50), cb: bar(52), conv: bar(54), stop: bar(56), mend: 115.825, end: 119.825,
 };
 /** the viewer's guess under the blue counter: 你猜：剩 500 in gold; `strike` (0→1) draws a line through it */
-const guessBar = (c: Ctx, _b: number, o: number, strike = 0) => { if (o <= 0) return; const x = 92, y = 196;
+const guessBar = (c: Ctx, o: number, strike = 0) => { if (o <= 0) return; const x = 92, y = 196;
 	html(c.hud, `<div class="lbl" style="left:${x}px;top:${y}px;font-size:58px;color:#ffd98a;opacity:${o};text-shadow:0 0 6px rgba(8,6,10,.9),0 0 22px rgba(246,207,120,.45)">你猜：剩 500<div style="position:absolute;left:-6px;top:50%;height:6px;width:${strike * 104}%;background:#ff6a5a;box-shadow:0 0 10px #ff6a5a;border-radius:3px"></div></div>
 	<div style="position:absolute;left:${x}px;top:${y + 78}px;width:330px;border-top:4px dashed rgba(246,207,120,.85);opacity:${o}"></div>`); };
-/** a hook battle: 0 → 11.23 s of sim in 15 s, slowing for the end */
-const hookST = (u: number) => (u < 14.0 ? 0.2 + (u - 1.85) * 0.88 : 0.2 + 12.15 * 0.88 + (u - 14.0) * 0.32); // the first volley at 0.4 s (frame 0 still reads 500); 11.23 s of sim lands on 15.05
+/** the hook battle: both lines hold aim through line ①, fire at 2.0 s; red reaches 0 at 12.4 */
+const hookST = (u: number) => 0.2 + (u - 2.0) * ((SA.end - 0.2) / 10.4);
 /** melee: duellists lunge at the contact line; a little dust where they meet */
 const meleeBodies = (st: number, k: number): Body[] => simBodies(SM, st, 'rest', 0, 0, k).map((b, i) => { const u = SM.units[i]; if (b.fall > 0 || Math.abs(u.x) > 4) return b;
 	const ph = Math.sin(st * 2.3 + u.fx * 40); return {...b, pose: 'charge', x: b.x + (u.side ? -1 : 1) * (0.35 + 0.35 * Math.max(0, ph)), lean: 0.22 * Math.max(0, ph)}; });
 const meleeDust = (st: number) => { const R = rnd(Math.floor(st * 3) + 7), out: number[][] = []; for (let k = 0; k < 40; k++) out.push([(R() - 0.5) * 3, 0.5 + R() * 0.8, (R() - 0.5) * 40, 1.2 + R() * 1.5, 0.62, 0.55, 0.45, 0.22]); return out; };
+const rewindSign = (c: Ctx, o: number) => html(c.hud, `<div class="lbl" style="left:${W / 2 - 40}px;top:110px;font-size:64px;opacity:${0.8 * o}">◀◀</div>`);
+const titleCard = (c: Ctx, u: number, o: number) => { if (o <= 0) return; const sc = u < 0.12 ? 1.25 - 0.25 * (u / 0.12) : 1 + 0.03 * Math.exp(-(u - 0.12) * 9) * Math.sin((u - 0.12) * 40);
+	html(c.hud, `<div style="position:absolute;left:0;right:0;top:${H / 2 - 330}px;height:520px;background:radial-gradient(ellipse 52% 46% at 50% 50%, rgba(12,9,12,.72) 0%, rgba(12,9,12,.45) 45%, rgba(12,9,12,0) 100%);opacity:${o}"></div>`);
+	html(c.hud, `<div style="position:absolute;left:0;right:0;top:${H / 2 - 100}px;text-align:center;font-weight:900;font-size:124px;letter-spacing:.06em;color:#fff6dd;opacity:${o};transform:scale(${sc});text-shadow:0 0 10px ${GOLD},0 0 40px rgba(246,207,120,.6),0 4px 30px rgba(0,0,0,.6)">为什么要<span style="color:${GOLD}">“集中优势兵力<span style="margin-right:-0.56em">”</span></span></div>`); };
+const corner = (c: Ctx, text: string, o: number) => { if (o > 0) html(c.hud, `<div class="lbl" style="right:56px;bottom:170px;font-size:30px;color:rgba(255,255,255,.75);opacity:${o}">${text}</div>`); };
+const header = (c: Ctx, text: string, o: number) => tag(c.hud, W / 2, 80, text, o, 40, '#fff');
 
-/** ★3 replay schedule: the sim runs in three steps (0.2→2.5→7.6→11.3 s, windows where blue and red lose within 5 % of the same area); after each, a peel */
-const PEEL = (() => { const seg = [[3.75, 4.45, 0.2, 2.5], [5.35, 6.25, 2.5, 7.6], [7.15, 7.6, 7.6, 11.3]], peels = [[4.45, 5.35], [6.25, 7.15], [7.6, 8.2]];
-	return {
-		st: (u: number) => { if (u < 3.75) return 0.1; for (let i = 0; i < 3; i++) { const [a, b, s0, s1] = seg[i]; if (u < b) return lerp(s0, s1, clamp01((u - a) / (b - a))); if (i < 2 && u < seg[i + 1][0]) return s1; } return 11.3; },
-		moving: (u: number) => seg.some(([a, b]) => u >= a && u < b),
-		peel: (u: number) => { for (let i = 0; i < 3; i++) { const [a, b] = peels[i]; if (u >= a && u < b) return {i, v: (u - a) / (b - a), s0: seg[i][2], s1: seg[i][3]}; } return null; },
-	}; })();
+// ---------------------------------------------------------------- the game: 5 v 3 (illustration of the square law)
+const HB: {c: number; x: number; z: number; clip: string}[] = [{c: 0, x: -1.3, z: -1.3, clip: '1H_Melee_Attack_Chop'}, {c: 1, x: -1.4, z: 1.1, clip: '2H_Melee_Attack_Slice'}, {c: 2, x: -5.2, z: -0.6, clip: 'Spellcast_Shoot'}, {c: 3, x: -4.8, z: 2.2, clip: '1H_Ranged_Shoot'}, {c: 4, x: -2.0, z: 3.0, clip: 'Dualwield_Melee_Attack_Stab'}];
+const HR: {c: number; x: number; z: number; clip: string}[] = [{c: 0, x: 1.3, z: -0.9, clip: '1H_Melee_Attack_Chop'}, {c: 1, x: 1.4, z: 1.3, clip: '2H_Melee_Attack_Slice'}, {c: 2, x: 4.6, z: 0.2, clip: 'Spellcast_Shoot'}];
+/** all together: red die at 1.3 / 2.2 / 3.1, blue's front knight at 2.6; the other four end damaged (25 − 9 = 16 → 4 left) */
+const togetherAt = (v: number): HeroPose[] => {
+	const rd = [1.3, 2.2, 3.1], bEnd = [0, 0.72, 0.85, 0.8, 0.68];
+	return [
+		...HB.map((h, i) => { const dies = i === 0 ? 2.6 : Infinity; return {char: h.c, side: 0 as const, x: h.x, z: h.z, ry: Math.PI / 2, clip: v > 3.3 ? 'Idle' : h.clip, time: v * (0.9 + i * 0.07), hp: i === 0 ? 1 - clamp01(v / 2.6) : lerp(1, bEnd[i], clamp01(v / 3.1)), dead: v > dies ? v - dies : undefined}; }),
+		...HR.map((h, i) => ({char: h.c, side: 1 as const, x: h.x, z: h.z, ry: -Math.PI / 2, clip: h.clip, time: v * (0.95 + i * 0.05), hp: 1 - clamp01(v / rd[i]), dead: v > rd[i] ? v - rd[i] : undefined})),
+	];
+};
+/** one at a time: each blue hero runs in, fights ~0.55 s, falls; red's front knight goes down after the third; two red stand at the end */
+const oneByOneAt = (v: number): HeroPose[] => {
+	const out: HeroPose[] = [];
+	HB.forEach((h, i) => { const s0 = i * 1.0, arrive = s0 + 0.45, dies = s0 + 1.0; if (v < s0) return; const k = clamp01((v - s0) / 0.45);
+		out.push({char: h.c, side: 0, x: lerp(-12, -1.3, k), z: 0.1 + i * 0.12, ry: Math.PI / 2, clip: v < arrive ? 'Running_A' : HB[i].clip, time: v - s0, hp: v < arrive ? 1 : 1 - clamp01((v - arrive) / 0.55), dead: v > dies ? v - dies : undefined}); });
+	HR.forEach((h, i) => { const dies = i === 0 ? 3.0 : Infinity; out.push({char: h.c, side: 1, x: h.x, z: h.z, ry: -Math.PI / 2, clip: h.clip, time: v * (0.95 + i * 0.05), hp: i === 0 ? 1 - clamp01(v / 3.0) : 1 - 0.12 * i - 0.04 * clamp01(v / 5), dead: v > dies ? v - dies : undefined}); });
+	return out;
+};
+const drawHeroes = (c: Ctx, heroes: HeroPose[], u: number, bolts = true) => {
+	c.arena.set(heroes); c.arena.clearBolts();
+	if (bolts) heroes.forEach((h) => { if (h.dead !== undefined || h.clip.indexOf('Spell') < 0 && h.clip.indexOf('Ranged') < 0) return; const foes = heroes.filter((q) => q.side !== h.side && q.dead === undefined); if (!foes.length) return;
+		const f = foes[Math.floor(u * 1.6) % foes.length]; c.arena.bolt([h.x, 1.3, h.z], [f.x, 1.2, f.z], (u * 1.6) % 1, h.side ? '#ff7a5a' : '#6ab0ff'); });
+	heroes.forEach((h) => { if (h.dead === undefined || h.dead < 0.3) hpBar(c.hud, c.arena.heroTop(h), h.hp, h.side, h.dead === undefined ? 1 : 1 - h.dead / 0.3); });
+};
+const gameDraw = (c: Ctx, g: any = {}) => { setGrade({vig: 0.42, warm: 0.04, bloom: 0.6, exposure: 0.8, ...g}); draw(c.arena.scene); };
+
+// ---------------------------------------------------------------- the city (business): red points everywhere, blue pulls into one district
+const CITY = (() => { const R = rnd(77), red: number[][] = [], blue: number[][] = []; const D = {x: -120, z: 60, r: 110};
+	for (let i = 0; i < 70; i++) { const a = R() * 6.283, d = 60 + R() * 480; red.push([Math.cos(a) * d, Math.sin(a) * d]); }
+	for (let i = 0; i < 12; i++) { const a = R() * 6.283, d = 120 + R() * 420; const ta = R() * 6.283, td = Math.sqrt(R()) * D.r * 0.8; blue.push([Math.cos(a) * d, Math.sin(a) * d, D.x + Math.cos(ta) * td, D.z + Math.sin(ta) * td]); }
+	return {red, blue, D}; })();
+const cityState = (c: Ctx, k: number, t: number) => { // k: 0 scattered → 1 gathered
+	const {red, blue, D} = CITY; const pts: number[][] = [];
+	red.forEach(([x, z], i) => { const inside = Math.hypot(x - D.x, z - D.z) < D.r; const o = inside ? 1 - clamp01(k * 1.6 - 0.3) : 1; const tw = 0.75 + 0.25 * Math.sin(t * 3 + i); if (o > 0.01) pts.push([x, 26, z, 26, 3.2, 0.9, 0.6, o * tw]); });
+	blue.forEach(([x0, z0, x1, z1], i) => { const m = ease(k * 1.15 - i * 0.012); pts.push([lerp(x0, x1, m), 30, lerp(z0, z1, m), 30, 0.8, 1.8, 4.0, 0.95]); });
+	c.cityPts.set(pts); c.city.setGlow([{x: D.x, z: D.z, r: D.r, color: '#3a8bff', k: 1.6 * clamp01(k * 1.3 - 0.25)}]);
+};
+const cityDraw = (c: Ctx, g: any = {}) => { setGrade({vig: 0.6, warm: 0.12, bloom: 0.7, exposure: 0.62, ...g}); draw(c.city.scene); };
+
+// ---------------------------------------------------------------- the sea (Trafalgar, compressed): approach 6.075 s, breakthrough 8.1 s
+const NB = 2529; // Nelson's weather column trails; its lead reaches the line on bar 42
+const tmOf = (u: number) => (u < 1.0 ? u : u < 2.6 ? 1.0 + (u - 1.0) * 0.25 : 1.4 + (u - 2.6)); // slow motion as Collingwood's lead passes between the hulls
+const TN = tmOf(bar(42) - bar(40));
+const approachS = 9.375 / (bar(40) - bar(37)); // the approach plays the built 9.4-s move in 6.1 s
+
+// ---------------------------------------------------------------- RTS (Age of Empires II knight) and the StarCraft pull-back, in the arena
+const knightRound = (v: number, n: number, r0: number): HeroPose[] => { // one knight v n swordsmen; kills at times, dies (n = 5) at 2.0 s after they arrive
+	const out: HeroPose[] = []; const kills = n === 4 ? [0.8, 1.45, 2.1, 2.75] : [0.9, 1.5]; const kDies = n === 5 ? 2.0 : Infinity;
+	out.push({char: 0, side: 0, x: 0, z: 0, ry: Math.PI / 2 + v * 1.6, clip: v > 0.3 ? '1H_Melee_Attack_Slice_Horizontal' : 'Idle', time: v, hp: n === 4 ? 1 - 0.8 * clamp01(v / 2.8) : 1 - clamp01(v / kDies), dead: v > kDies ? v - kDies : undefined});
+	for (let i = 0; i < n; i++) { const a = r0 + (i / n) * Math.PI * 2, k = clamp01(v / 0.6), d = lerp(6, 1.25, k); const dies = kills[i] ?? Infinity;
+		out.push({char: [3, 4, 1, 3, 4][i], side: 1, x: Math.cos(a) * d, z: Math.sin(a) * d, ry: Math.atan2(Math.cos(a), Math.sin(a)) + Math.PI, clip: v < 0.6 ? 'Running_A' : '1H_Melee_Attack_Chop', time: v + i * 0.2, hp: dies < Infinity ? 1 - clamp01((v - 0.3) / (dies - 0.3)) : 1 - 0.15 * clamp01(v / 2), dead: v > dies ? v - dies : undefined}); }
+	return out;
+};
+const SKIRM = Array.from({length: 10}, (_, i) => ({x: -14 + (i % 5) * 7, z: i < 5 ? -4 : 4, t: 0.9 + ((i * 7) % 10) * 0.26, ok: i !== 6})); // 9 predictions right, 1 wrong
+const skirmAt = (v: number): HeroPose[] => SKIRM.flatMap((s, i) => { const done = v > s.t; const blueWins = i % 3 !== 0;
+	return [{char: i % 5, side: 0 as const, x: s.x - 0.9, z: s.z, ry: Math.PI / 2, clip: '1H_Melee_Attack_Chop', time: v + i * 0.13, hp: done && !blueWins ? 0 : 0.6, dead: done && !blueWins ? v - s.t : undefined},
+		{char: (i + 2) % 5, side: 1 as const, x: s.x + 0.9, z: s.z, ry: -Math.PI / 2, clip: '1H_Melee_Attack_Chop', time: v + i * 0.17, hp: done && blueWins ? 0 : 0.5, dead: done && blueWins ? v - s.t : undefined}]; });
+
+/** the last line, typed in, its last three characters slamming on the stop */
+const typedLine = (c: Ctx, t: number) => { const head = '同一时刻、同一地方，', tail = '比他多'; if (t < 112.3) return;
+	const n = Math.min(head.length, Math.floor((t - 112.3) / 0.11)); const s = t < T.stop ? 1 : 1 + 0.18 * Math.exp(-(t - T.stop) * 7) * Math.cos((t - T.stop) * 30);
+	html(c.hud, `<div class="sub" style="opacity:1">${head.slice(0, n)}<span style="display:inline-block;color:${GOLD};opacity:${t < T.stop ? 0 : 1};transform:scale(${s});text-shadow:0 0 3px rgba(8,6,10,.95),0 0 22px rgba(246,207,120,.7)">${tail}</span></div>`); };
+const convergeAt = (c: Ctx, m: number) => { const R = rnd(5), bodies: Body[] = []; const centres = Array.from({length: 8}, () => [(R() - 0.5) * 300, (R() - 0.5) * 240]);
+	for (let i = 0; i < 800; i++) { const g = i % 8, k = Math.floor(i / 8); const cx = centres[g][0] + ((k % 10) - 4.5) * 1.6, cz = centres[g][1] + (Math.floor(k / 10) - 4.5) * 1.6; const fx = (i % 40 - 19.5) * 1.6, fz = (Math.floor(i / 40) - 9.5) * 1.6;
+		bodies.push({x: lerp(cx, fx, m), z: lerp(cz, fz, m), ry: -Math.PI / 2, side: 0, pose: m > 0.02 && m < 0.98 ? 'march' : 'aim', fall: 0}); }
+	for (let i = 0; i < 100; i++) bodies.push({x: -62 - Math.floor(i / 20) * 1.6, z: ((i % 20) - 9.5) * 1.6, ry: Math.PI / 2, side: 1, pose: 'rest', fall: 0});
+	c.army.set(bodies, cp()); c.smoke.set([]); c.flash.set([]); c.tracers.set([]); };
 
 export const TIMELINE: Shot[] = [
-	// 01 — the hook: two firing lines; the battle runs live from frame 0; red reaches 0 on the bar-8 lift
-	{a: T.volley, b: T.drop, draw: (c, u) => {
+	// 01 — hook: both lines aim; volley at 2.0; red melts; blue's count hidden
+	{a: T.hook, b: T.s866, draw: (c, u) => {
 		clearLand(c); const st = hookST(u);
-		camKeys([
-			{t: 0, pos: [-52, 1.9, -9], look: [45, 1.5, 4], fov: 40}, {t: 6.0, pos: [-49.5, 2.1, -7], look: [45, 1.5, 2], fov: 36},
-			{t: 9.0, pos: [-8, 11, -34], look: [46, 0.5, 4], fov: 40}, {t: 15.05, pos: [6, 19, -46], look: [46, 0, 10], fov: 42},
-		], u);
+		camKeys([{t: 0, pos: [-52, 1.9, -9], look: [45, 1.5, 4], fov: 40}, {t: 4.5, pos: [-49.5, 2.1, -7], look: [45, 1.5, 2], fov: 36}, {t: 8.0, pos: [-8, 11, -34], look: [46, 0.5, 4], fov: 40}, {t: T.s866, pos: [6, 19, -46], look: [46, 0, 10], fov: 42}], u);
 		battle(c, SA, st);
-		const [, r] = aliveAt(SA, Math.max(0, st)); counters(c.hud, '???' as any, r); guessBar(c, 0, env(u, 3.9, 99));
-		sub(c.hud, '你有1000人，对面500人', u, 0.05, 1.95); sub(c.hud, '打光对面，你还剩[几个]？', u, 2.15, 5.6);
+		const [, r] = aliveAt(SA, Math.max(0, st)); counters(c.hud, '???' as any, r); guessBar(c, env(u, 5.5, 99));
+		sub(c.hud, '你有1000人，对面500人', u, 0.05, 2.35); sub(c.hud, '打光对面，你还剩[几个]？', u, 2.55, 5.45);
 		landDraw(c);
 	}},
-	// 02 — 866 on the lift; the guess tick fades out
-	{a: T.drop, b: T.rewind, draw: (c, u) => {
-		clearLand(c); camKeys([{t: 0, pos: [6, 19, -46], look: [46, 0, 10], fov: 42}, {t: 3.75, pos: [-170, 40, -230], look: [-60, 0, -40], fov: 34}], u);
-		battle(c, SA, SA.end + 0.2 + u * 0.4);
-		counters(c.hud, 866, 0, 1 - env(u, 0, 99, 0.2)); guessBar(c, 0, 1 - clamp01((u - 1.3) / 0.5), clamp01((u - 0.15) / 0.35));
-		slam(c.hud, W / 2, H / 2 - 30, '866', u, 0.0, 3.6, 260, BLUE);
-		tag(c.hud, W / 2, H / 2 + 160, '只倒下 134 人', env(u, 0.9, 3.4), 50, '#fff');
-		landDraw(c, {bloom: 0.7});
+	// 02 — 866 slams on bar 6; bar 7 holds still while the smoke and the dark bank roll in
+	{a: T.s866, b: T.title, draw: (c, u) => {
+		clearLand(c); camKeys([{t: 0, pos: [6, 19, -46], look: [46, 0, 10], fov: 42}, {t: 2.025, pos: [-30, 30, -110], look: [10, 0, 0], fov: 40}], u);
+		battle(c, SA, SA.end + 0.2 + Math.min(u, 2.025) * 0.4);
+		counters(c.hud, 866, 0, 1 - env(u, 0, 99, 0.2)); guessBar(c, 1 - clamp01((u - 1.3) / 0.5), clamp01((u - 0.15) / 0.35));
+		slam(c.hud, W / 2, H / 2 - 30, '866', u, 0.0, 3.7, 260, BLUE);
+		tag(c.hud, W / 2, H / 2 + 160, '只倒下 134 人', env(u, 0.8, 3.7), 50, '#fff');
+		landDraw(c, {bloom: 0.7}); fogBank(c, 0.55 * ease((u - 2.6) / 1.4), (1 - clamp01((u - 2.6) / 1.4)) * 60);
 	}},
-	// 03 — rewind: the battle runs backwards; the fallen stand up, the smoke goes back into the muzzles
-	{a: T.rewind, b: T.swords, draw: (c, u) => {
-		clearLand(c); const d = T.swords - T.rewind, k = ease(u / (d * 0.62)); const st = lerp(SA.end + 1.6, -0.6, k), fold = ease((u - d * 0.55) / (d * 0.45));
-		camKeys([{t: 0, pos: [-170, 40, -230], look: [-60, 0, -40], fov: 34}, {t: d, pos: [-62, 30, -70], look: [0, 0, 0], fov: 38}], u);
-		battle(c, SA, st, {tracers: false}); const [b, r] = aliveAt(SA, Math.max(0, st)); counters(c.hud, b, r, env(u, 0.1, 99));
-		if (fold > 0) { const from = simBodies(SA, -0.6), to = simBodies(SM, 0, 'rest'); c.army.set(from.map((f, i) => ({...f, x: lerp(f.x, to[i].x, fold), z: lerp(f.z, to[i].z, fold), pose: (fold < 0.98 ? 'march' : 'rest') as any})), cp()); }
-		html(c.hud, `<div class="lbl" style="left:${W / 2 - 40}px;top:110px;font-size:64px;opacity:${0.8 * env(u, 0, d - 0.1)}">◀◀</div>`);
-		landDraw(c, {bloom: 0.5, warm: 0.0, vig: 0.5});
+	// 03 — TITLE on drop 1
+	{a: T.title, b: T.melee, draw: (c, u) => {
+		clearLand(c); camKeys([{t: 0, pos: [-30, 30, -110], look: [10, 0, 0], fov: 40}], 0); battle(c, SA, SA.end + 1.2, {tracers: false});
+		landDraw(c, {bloom: 0.65, vig: 0.55}); fogBank(c, 0.55, 0); titleCard(c, u, env(u, 0, 99, 0.02));
 	}},
-	// 04 — bayonets: deep columns meet; men fight one on one along the contact strip; the back half waits
-	{a: T.swords, b: T.s1, draw: (c, u) => {
-		clearLand(c); const k = 10, st = 0.2 + u * k; const fadeIn = 0;
-		camKeys([{t: 0, pos: [-62, 30, -70], look: [0, 0, 0], fov: 38}, {t: 3.75, pos: [-40, 40, -78], look: [-10, 0, 0], fov: 38}, {t: 5.63, pos: [-130, 70, -90], look: [-40, 0, 0], fov: 40}], u);
-		c.army.set(meleeBodies(st, k), cp()); c.smoke.set(meleeDust(st)); c.flash.set([]); c.tracers.set([]);
-		const [b, r] = aliveAt(SM, st); counters(c.hud, b, r);
-		sub(c.hud, '拼刺刀，只能[一对一]', u, 0.05, 2.9); sub(c.hud, '多出的人，只能[排队]', u, 3.0, 5.5);
-		const q = toScreen([-48, 2, 0]); tag(c.hud, q.x, q.y - 60, '在排队', env(u, 3.2, 99), 48, '#fff', BLUE);
-		landDraw(c, {fade: fadeIn});
-	}},
-	// 05 — ★1: your 500 belongs to the age of cold steel
-	{a: T.s1, b: T.title, draw: (c, u) => {
-		clearLand(c); const st = Math.min(SM.end + 0.4, 0.2 + (T.s1 - T.swords) * 10 + u * 10);
-		camOrbit([-25, 0, 0], 120, 60, -2.25 + u * 0.05, 38, 0);
-		c.army.set(meleeBodies(st, 10), cp()); c.smoke.set(st < SM.end ? meleeDust(st) : []); c.flash.set([]); c.tracers.set([]);
-		const [b, r] = aliveAt(SM, st); counters(c.hud, b, r); guessBar(c, b, env(u, 0, 3.5));
-		if (r === 0) { slam(c.hud, 350, 112, '✓', u, 0.6, 3.6, 90, '#2bd67b', '#7dffb0'); tag(c.hud, W / 2, 232, '拼刺刀：剩 500', env(u, 0.8, 3.5), 56, '#fff', BLUE); }
-		sub(c.hud, '你的直觉，属于[冷兵器时代]', u, 0.05, 3.6);
+	// 04 — ★1: ◀◀ the battle back into columns; bayonets one on one → 500 ✓
+	{a: T.melee, b: T.guns, draw: (c, u) => {
+		clearLand(c); const R0 = 1.02;
+		if (u < R0) { const k = ease(u / (R0 * 0.62)), fold = ease((u - R0 * 0.55) / (R0 * 0.45)); const st = lerp(SA.end + 1.2, -0.6, k);
+			camKeys([{t: 0, pos: [-30, 30, -110], look: [10, 0, 0], fov: 40}, {t: R0, pos: [-62, 30, -70], look: [0, 0, 0], fov: 38}], u);
+			battle(c, SA, st, {tracers: false}); const [b, r] = aliveAt(SA, Math.max(0, st)); counters(c.hud, b, r);
+			if (fold > 0) { const from = simBodies(SA, -0.6), to = simBodies(SM, 0, 'rest'); c.army.set(from.map((f, i) => ({...f, x: lerp(f.x, to[i].x, fold), z: lerp(f.z, to[i].z, fold), pose: (fold < 0.98 ? 'march' : 'rest') as any})), cp()); }
+			rewindSign(c, env(u, 0, R0, 0.05, 0.1)); landDraw(c, {bloom: 0.5, warm: 0.0, vig: 0.5}); fogBank(c, 0.55 * (1 - clamp01(u / 0.5)), u * 60); titleCard(c, 3, 1 - clamp01(u / 0.6)); return; }
+		const v = u - R0, k = (SM.end - 0.2) / 3.03, st = Math.min(SM.end + 0.4, 0.2 + v * k);
+		if (v < 3.03) camKeys([{t: 0, pos: [-62, 30, -70], look: [0, 0, 0], fov: 38}, {t: 1.6, pos: [-40, 40, -78], look: [-10, 0, 0], fov: 38}, {t: 3.03, pos: [-110, 62, -80], look: [-35, 0, 0], fov: 40}], v);
+		else camOrbit([-25, 0, 0], 120, 60, -2.25 + (v - 3.03) * 0.05, 38, 0);
+		c.army.set(meleeBodies(st, k), cp()); c.smoke.set(st < SM.end ? meleeDust(st) : []); c.flash.set([]); c.tracers.set([]);
+		const [b, r] = aliveAt(SM, st); counters(c.hud, b, r); guessBar(c, env(v, 3.0, 99));
+		const q = toScreen([-48, 2, 0]); if (v < 3.0) tag(c.hud, q.x, q.y - 60, '在排队', env(u, 20.9 - T.melee, 22.6 - T.melee), 48, '#fff', BLUE);
+		if (r === 0) { slam(c.hud, 350, 112, '✓', v, 3.05, 99, 90, '#2bd67b', '#7dffb0'); tag(c.hud, W / 2, 232, '拼刺刀：剩 500', env(v, 3.2, 99), 56, '#fff', BLUE); }
+		sub(c.hud, '拼刺刀，只能[一对一]', u, 19.7 - T.melee, 22.45 - T.melee); sub(c.hud, '你的直觉，属于[冷兵器时代]', u, 22.75 - T.melee, 25.8 - T.melee);
 		landDraw(c);
 	}},
-	// 06 — TITLE on the hardest drop: letters condense out of the battle smoke
-	{a: T.title, b: T.guns, draw: (c, u) => {
-		clearLand(c); camOrbit([-25, 0, 0], 112, 52, -2.06 + u * 0.06, 38, 0);
-		c.army.set(meleeBodies(SM.end + 1, 10), cp()); const R = rnd(4); c.smoke.set(Array.from({length: 260}, () => [(R() - 0.5) * 200, 4 + R() * 26, (R() - 0.5) * 140 - 40, 18 + R() * 22, 0.5, 0.47, 0.44, 0.3 * (1 - clamp01((u - 2.6) / 1.1))])); c.flash.set([]); c.tracers.set([]);
-		const sc = u < 0.12 ? 1.25 - 0.25 * (u / 0.12) : 1 + 0.03 * Math.exp(-(u - 0.12) * 9) * Math.sin((u - 0.12) * 40), to = env(u, 0, 3.75, 0.02, 0.5);
-		html(c.hud, `<div style="position:absolute;left:0;right:0;top:${H / 2 - 330}px;height:520px;background:radial-gradient(ellipse 52% 46% at 50% 50%, rgba(12,9,12,.72) 0%, rgba(12,9,12,.45) 45%, rgba(12,9,12,0) 100%);opacity:${to}"></div>`); html(c.hud, `<div style="position:absolute;left:0;right:0;top:${H / 2 - 100}px;text-align:center;font-weight:900;font-size:124px;letter-spacing:.06em;color:#fff6dd;opacity:${to};transform:scale(${sc});text-shadow:0 0 10px ${GOLD},0 0 40px rgba(246,207,120,.6),0 4px 30px rgba(0,0,0,.6)">为什么要<span style="color:${GOLD}">“集中优势兵力<span style="margin-right:-0.56em">”</span></span></div>`);
-		landDraw(c, {bloom: 0.65, vig: 0.55, exposure: 0.6 + 0.5 * clamp01((u - 3.35) / 0.4)});
+	// 05 — ★2: ½-bar ◀◀; the columns fan into lines; the first volley erupts on bar 14 and freezes; count the balls; ×2 ÷2
+	{a: T.guns, b: T.squares, draw: (c, u) => {
+		clearLand(c); const d = T.squares - T.guns; const V = 2.025; // volley
+		const Rb = SA.units[redStar[0]], B = SA.units[blueOne[0]], B2 = SA.units[bluePartner];
+		if (u < V) { // ◀◀ the melee back to its start, then fan out into lines
+			const rw = clamp01(u / 0.9), fan = ease((u - 0.9) / (V - 0.9));
+			camKeys([{t: 0, pos: [-110, 62, -80], look: [-35, 0, 0], fov: 40}, {t: 0.9, pos: [-75, 18, -62], look: [-25, 1, -10], fov: 42}, {t: V, pos: [-70, 3.4, -52], look: [45, 1.5, 10], fov: 40}], u);
+			if (u < 0.9) { c.army.set(meleeBodies(lerp(SM.end + 0.4, 0.2, ease(rw)), 18), cp()); rewindSign(c, env(u, 0, 0.9, 0.05, 0.1)); counters(c.hud, ...aliveAt(SM, lerp(SM.end + 0.4, 0.2, ease(rw))) as [number, number]); }
+			else { const from = simBodies(SM, 0, 'rest'), to = simBodies(SA, -0.5); c.army.set(from.map((f, i) => ({...to[i], x: lerp(f.x, to[i].x, fan), z: lerp(f.z, to[i].z, fan), pose: (fan < 0.98 ? 'march' : 'aim') as any})), cp()); counters(c.hud, 1000, 500); }
+			c.smoke.set([]); c.flash.set([]); c.tracers.set([]);
+		} else {
+			const v = u - V; const st = v < 0.55 ? lerp(-0.2, FREEZE, v / 0.55) : FREEZE; // erupts, freezes
+			if (v < 3.05) camKeys([{t: 0, pos: [-70, 3.4, -52], look: [45, 1.5, 10], fov: 40}, {t: 0.7, pos: [-60, 26, -64], look: [0, 1, 0], fov: 38}, {t: 2.4, pos: [Rb.x - 14, 3.2, Rb.z - 9], look: [Rb.x, 1.4, Rb.z], fov: 36}, {t: 3.05, pos: [Rb.x - 14, 3.2, Rb.z - 9], look: [Rb.x, 1.4, Rb.z], fov: 36}], v);
+			else if (v < 6.05) camKeys([{t: 3.05, pos: [Rb.x - 14, 3.2, Rb.z - 9], look: [Rb.x, 1.4, Rb.z], fov: 36}, {t: 3.8, pos: [(B.x + B2.x) / 2 - 8.6, 2.9, (B.z + B2.z) / 2 - 7.2], look: [(B.x + B2.x) / 2, 1.3, (B.z + B2.z) / 2], fov: 38}, {t: 6.05, pos: [(B.x + B2.x) / 2 - 8, 2.8, (B.z + B2.z) / 2 - 6.6], look: [(B.x + B2.x) / 2, 1.2, (B.z + B2.z) / 2], fov: 38}], v);
+			else camKeys([{t: 6.05, pos: [(B.x + B2.x) / 2 - 8, 2.8, (B.z + B2.z) / 2 - 6.6], look: [(B.x + B2.x) / 2, 1.2, (B.z + B2.z) / 2], fov: 38}, {t: d - V, pos: [-10, 44, -80], look: [0, 0, 0], fov: 40}], v);
+			battle(c, SA, st, {tracers: v < 0.55});
+			if (v >= 0.55) { const segs: number[][] = [], balls: number[][] = []; firstVolley.forEach((s) => { if (s.to !== redStar[0] && s.to !== blueOne[0]) return; const a = SA.units[s.from], b = SA.units[s.to], dir = a.side ? -1 : 1, f = 0.99;
+				const x1 = a.x + dir * 1.3, tx = s.hit ? b.x : b.x + dir * 6, tz = s.hit ? b.z : b.z + (a.fx - 0.5) * 3; const p = (q: number) => [x1 + (tx - x1) * q, 1.45 + ((s.hit ? 1.3 : 0.6) - 1.45) * q, a.z + (tz - a.z) * q];
+				const col = a.side ? [9.6, 4.8, 3.3] : [4.2, 6.3, 10.2]; segs.push([...p(f - 0.05), ...p(f), ...col]); const qq = p(f); balls.push([qq[0], qq[1], qq[2], 0.55, a.side ? 3.4 : 1.4, a.side ? 1.5 : 2.2, a.side ? 1.0 : 3.6, 0.95]); });
+				c.tracers.set(segs); c.flash.set([...simSmoke(SA, FREEZE).fl, ...balls]); }
+			const ring = (m: THREE.Mesh, x: number, z: number, o: number, col: string) => { m.visible = o > 0; m.position.set(x, 0.12, z); (m.material as THREE.MeshBasicMaterial).color.set(col); (m.material as THREE.MeshBasicMaterial).opacity = o; };
+			ring(c.rings[0], Rb.x, Rb.z, env(v, 1.6, 3.1), '#ff6a5a'); ring(c.rings[1], B.x, B.z, env(v, 3.6, 6.0), '#6aa8ff'); ring(c.rings[2], B2.x, B2.z, env(v, 3.6, 6.0), '#6aa8ff');
+			counters(c.hud, 1000, 500, 0.6);
+			if (v < 3.05) firstVolley.filter((s) => s.to === redStar[0]).forEach((s, k) => { const a = SA.units[s.from], dir = a.side ? -1 : 1; const x1 = a.x + dir * 1.3; const p = toScreen([x1 + (Rb.x - x1) * 0.99, 1.35, a.z + (Rb.z - a.z) * 0.99]); tag(c.hud, p.x + (k ? 34 : -34), p.y - 40, `${k + 1}`, env(u, 30.3 - T.guns + k * 0.45, 31.8 - T.guns), 64, '#fff', RED); });
+			else if (v < 6.05) { const p = toScreen([(B.x + B2.x) / 2, 2.3, (B.z + B2.z) / 2]); tag(c.hud, p.x, p.y - 30, '两人才挨 1 枪', env(u, 32.0 - T.guns, 34.7 - T.guns), 56, '#fff', BLUE); }
+			else { const pb = {x: 520, y: 420}, pr = {x: 1400, y: 420}; const m = clamp01((u - (36.25 - T.guns)) / 0.55);
+				tag(c.hud, lerp(pb.x, W / 2, m), lerp(pb.y, 520, m), '火力 ×2', env(u, 34.85 - T.guns, 99) * (1 - m), 72, '#fff', BLUE); tag(c.hud, lerp(pr.x, W / 2, m), lerp(pr.y, 520, m), '挨打 ÷2', env(u, 35.3 - T.guns, 99) * (1 - m), 72, '#fff', RED); }
+		}
+		sub(c.hud, '有了枪，[人人]都能开火', u, 26.8 - T.guns, 29.45 - T.guns); sub(c.hud, '你开的枪[多一倍]，挨的枪[少一半]', u, 29.75 - T.guns, 33.05 - T.guns);
+		landDraw(c, {bloom: 0.72, warm: -0.01, vig: 0.46});
 	}},
-	// 07 — guns: from the sun flare, the columns fan out into lines; first volley on bar 22; the battle at full speed → 866 again
-	{a: T.guns, b: T.why, draw: (c, u) => {
-		clearLand(c); const fan = ease((u - 0.4) / 5.8), st = u < 7.5 ? -1 : 0.2 + (u - 7.5);
-		const from = simBodies(SM, 0, 'rest'), to = simBodies(SA, Math.max(-1, st));
-		const bodies = u < 7.5 ? from.map((f, i) => { const t = to[i]; return {...t, x: lerp(f.x, t.x, fan), z: lerp(f.z, t.z, fan), pose: (fan > 0.02 && fan < 0.98 ? 'march' : fan >= 0.98 ? 'aim' : 'rest') as any}; }) : to;
-		camKeys([{t: 0, pos: [-130, 70, -90], look: [-40, 0, 0], fov: 40}, {t: 2.2, pos: [-75, 18, -62], look: [-25, 1, -10], fov: 42}, {t: 5.0, pos: [-38, 6, -78], look: [-50, 1.2, -20], fov: 44}, {t: 7.5, pos: [-70, 3.4, -52], look: [45, 1.5, 10], fov: 40}, {t: 9.5, pos: [-62, 3.2, -40], look: [45, 1.5, 20], fov: 38}, {t: 14, pos: [-160, 50, -200], look: [20, 0, 20], fov: 38}, {t: 18.75, pos: [-200, 75, -360], look: [0, 0, 0], fov: 38}], u);
-		c.army.set(bodies, cp());
-		if (u >= 7.5) { const {sm, fl} = simSmoke(SA, st); c.smoke.set(sm); c.flash.set(fl); c.tracers.set(simTracers(SA, st)); } else { c.smoke.set([]); c.flash.set([]); c.tracers.set([]); }
-		const [b, r] = aliveAt(SA, Math.max(0, st)); counters(c.hud, b, r);
-		if (u > 8.2 && r > 0) tag(c.hud, W / 2, 112, `人数比 ${(b / r).toFixed(1)} : 1`, env(u, 8.2, 99), 56, '#fff', GOLD);
-		sub(c.hud, '有了枪，[人人]都能开火', u, 0.05, 3.5); sub(c.hud, '人越少，还手[越弱]', u, 11.3, 14.7);
-		landDraw(c, {exposure: 0.66 + 0.5 * (1 - clamp01(u / 0.6))});
-	}},
-	// 08 — why? flash back to the first volley; it erupts in slow motion and stops
-	{a: T.why, b: T.bullet, draw: (c, u) => {
-		clearLand(c); const d = T.bullet - T.why; const v = clamp01((u - 1.2) / (d - 1.2)); const st = u < 1.2 ? lerp(11.45, -0.4, ease(u / 1.05)) : 0.2 + 0.22 * (1 - (1 - v) * (1 - v)); // ◀◀ back to the first volley
-		camKeys([{t: 0, pos: [-200, 75, -360], look: [0, 0, 0], fov: 38}, {t: 1.2, pos: [-96, 2.2, -14], look: [45, 2, 0], fov: 40}, {t: 3.5, pos: [-88, 9, -26], look: [20, 1, 0], fov: 38}, {t: d, pos: [-60, 26, -64], look: [0, 1, 0], fov: 38}], u);
-		battle(c, SA, st, {tracers: u > 1.2}); const [cb, cr] = aliveAt(SA, Math.max(0, st)); counters(c.hud, u < 1.2 ? cb : 1000, u < 1.2 ? cr : 500);
-		html(c.hud, `<div class="lbl" style="left:${W / 2 - 40}px;top:110px;font-size:64px;opacity:${0.8 * env(u, 0, 1.15, 0.1, 0.15)}">◀◀</div>`);
-		sub(c.hud, '差距，从[第一枪]就开始了', u, 0.3, 3.4);
-		landDraw(c, {bloom: 0.65});
-	}},
-	// 09 — bullet time on the first volley: count the balls
-	{a: T.bullet, b: T.x4, draw: (c, u) => {
-		clearLand(c); const d = T.x4 - T.bullet; const R = SA.units[redStar[0]], B = SA.units[blueOne[0]], B2 = SA.units[bluePartner];
-		if (u < 5.6) camKeys([{t: 0, pos: [-60, 26, -64], look: [0, 1, 0], fov: 38}, {t: 5.6, pos: [R.x - 14, 3.2, R.z - 9], look: [R.x, 1.4, R.z], fov: 36}], u);
-		else if (u < 11.25) camKeys([{t: 5.6, pos: [R.x - 14, 3.2, R.z - 9], look: [R.x, 1.4, R.z], fov: 36}, {t: 6.45, pos: [(B.x + B2.x) / 2 - 8.6, 2.9, (B.z + B2.z) / 2 - 7.2], look: [(B.x + B2.x) / 2, 1.3, (B.z + B2.z) / 2], fov: 38}, {t: 11.25, pos: [(B.x + B2.x) / 2 - 8, 2.8, (B.z + B2.z) / 2 - 6.6], look: [(B.x + B2.x) / 2, 1.2, (B.z + B2.z) / 2], fov: 38}], u);
-		else camKeys([{t: 11.25, pos: [(B.x + B2.x) / 2 - 8, 2.8, (B.z + B2.z) / 2 - 6.6], look: [(B.x + B2.x) / 2, 1.2, (B.z + B2.z) / 2], fov: 38}, {t: d, pos: [-10, 44, -80], look: [0, 0, 0], fov: 40}], u);
-		battle(c, SA, FREEZE, {tracers: false});
-		const segs: number[][] = [], balls: number[][] = []; firstVolley.forEach((s) => { const a = SA.units[s.from], b = SA.units[s.to], dir = a.side ? -1 : 1; let f = clamp01((FREEZE - s.t) / 0.28);
-			const focus = (s.to === redStar[0] || s.to === blueOne[0]); if (focus) f = 0.99; if (!focus) return; // only the counted balls
-			const x1 = a.x + dir * 1.3, tx = s.hit ? b.x : b.x + dir * 6, tz = s.hit ? b.z : b.z + (a.fx - 0.5) * 3; const p = (q: number) => [x1 + (tx - x1) * q, 1.45 + ((s.hit ? 1.3 : 0.6) - 1.45) * q, a.z + (tz - a.z) * q];
-			const k = focus ? 3.0 : u < 3.2 ? 0.07 : 0.16; const col = a.side ? [3.2 * k, 1.6 * k, 1.1 * k] : [1.4 * k, 2.1 * k, 3.4 * k]; segs.push([...p(Math.max(0, f - (focus ? 0.05 : 0.04))), ...p(f), ...col]);
-			if (focus) { const q = p(f); balls.push([q[0], q[1], q[2], 0.55, a.side ? 3.4 : 1.4, a.side ? 1.5 : 2.2, a.side ? 1.0 : 3.6, 0.95]); } });
-		c.flash.set([...simSmoke(SA, FREEZE).fl, ...balls]);
-		c.tracers.set(segs);
-		const ring = (m: THREE.Mesh, x: number, z: number, o: number, col: string) => { m.visible = o > 0; m.position.set(x, 0.12, z); (m.material as THREE.MeshBasicMaterial).color.set(col); (m.material as THREE.MeshBasicMaterial).opacity = o; };
-		ring(c.rings[0], R.x, R.z, env(u, 3.0, 11.0), '#ff6a5a'); ring(c.rings[1], B.x, B.z, env(u, 6.2, 11.2), '#6aa8ff'); ring(c.rings[2], B2.x, B2.z, env(u, 6.2, 11.2), '#6aa8ff');
-		counters(c.hud, 1000, 500, 0.6);
-		if (u < 5.6) { // count the two balls at their tips
-			firstVolley.filter((s) => s.to === redStar[0]).forEach((s, k) => { const a = SA.units[s.from], dir = a.side ? -1 : 1; const x1 = a.x + dir * 1.3; const p = toScreen([x1 + (R.x - x1) * 0.99, 1.35, a.z + (R.z - a.z) * 0.99]); tag(c.hud, p.x + (k ? 34 : -34), p.y - 40, `${k + 1}`, env(u, 3.2 + k * 0.45, 5.5), 64, '#fff', RED); });
-		} else if (u < 11.25) { const p = toScreen([(B.x + B2.x) / 2, 2.3, (B.z + B2.z) / 2]); tag(c.hud, p.x, p.y - 30, '两人才挨 1 枪', env(u, 6.8, 11.1), 56, '#fff', BLUE); }
-		else { const pb = {x: 520, y: 420}, pr = {x: 1400, y: 420};
-			const m = clamp01((u - 13.4) / 0.6); tag(c.hud, lerp(pb.x, W / 2, m), lerp(pb.y, 520, m), '火力 ×2', env(u, 11.3, 99) * (1 - m), 72, '#fff', BLUE); tag(c.hud, lerp(pr.x, W / 2, m), lerp(pr.y, 520, m), '挨打 ÷2', env(u, 11.8, 99) * (1 - m), 72, '#fff', RED);
-			if (u > 13.9) slam(c.hud, W / 2, 520, '战斗力 ×4', u, 13.9, 99, 120, GOLD, '#fff6dd'); }
-		sub(c.hud, '你开的枪，是他的[两倍]', u, 0.05, 3.4); sub(c.hud, '他的子弹，要分给[两倍]的人', u, 5.6, 9.0); sub(c.hud, '人多一倍，强了[不止一倍]', u, 11.3, 14.8);
-		landDraw(c, {bloom: 0.75, warm: -0.02, vig: 0.48});
-	}},
-	// 10 — time resumes; the camera climbs to straight down over the two lines
-	{a: T.x4, b: T.squares, draw: (c, u) => {
-		clearLand(c); const d = T.squares - T.x4; const st = FREEZE + u * 0.9;
-		camKeys([{t: 0, pos: [-10, 44, -80], look: [0, 0, 0], fov: 40}, {t: d, pos: [-140, 640, -620], look: [-130, 0, -20], fov: 40}], u);
-		battle(c, SA, st); counters(c.hud, ...aliveAt(SA, st) as [number, number]);
-		slam(c.hud, W / 2, 520, '战斗力 ×4', u, -1, 1.2, 120, GOLD, '#fff6dd');
-		landDraw(c);
-	}},
-	// 11 — ★3: each firing line is the side of a square; red's square tiles blue's four times; replay in three steps: after each, the area each side lost
-	//       is peeled off and laid out as a bar of the same width — the two bars come out the same size; blue's total loss folds onto red's square; what's left is 866
-	{a: T.squares, b: T.divide, draw: (c, u) => {
-		clearLand(c); camKeys([{t: 0, pos: [-140, 640, -620], look: [-130, 0, -20], fov: 40}], 0);
-		const bs = 1000 * LEN, rs = 500 * LEN, grow = ease(u / 1.4), tile = env(u, 1.6, 3.75, 0.2, 0.25);
-		const st = PEEL.st(u); const [b, r] = aliveAt(SA, u < 3.75 ? 0 : st);
-		const bl = b * LEN, rl = r * LEN; // live sides
-		const fold = ease((u - 8.2) / 1.6), tape = clamp01((u - 9.9) / 1.3);
-		const moving = PEEL.moving(u);
-		c.army.set(simBodies(SA, u < 3.75 ? 0.1 : st), cp()); c.smoke.set([]); c.flash.set([]); c.tracers.set(moving ? simTracers(SA, st) : []);
+	// 06 — ★3: 战斗力 ×4 slams on bar 18; the camera climbs; squares grow and tile (×1→×4); one replay; the lost areas peel into two equal bars; tape → 866; equation
+	{a: T.squares, b: T.game, draw: (c, u) => {
+		clearLand(c); const G = 2.025, RP = 4.05, PL = 5.15, TP = 8.1;
+		camKeys([{t: 0, pos: [-10, 44, -80], look: [0, 0, 0], fov: 40}, {t: G, pos: [-140, 640, -620], look: [-130, 0, -20], fov: 40}], u);
+		slam(c.hud, W / 2, 520, '战斗力 ×4', u, 0, 1.75, 120, GOLD, '#fff6dd');
+		const bs = 1000 * LEN, rs = 500 * LEN, grow = ease((u - G) / 1.0), tile = env(u, G + 0.9, RP, 0.2, 0.25);
+		const st = u < RP ? 0.1 : lerp(0.2, SA.end + 0.1, clamp01((u - RP) / (PL - RP))); const [b, r] = aliveAt(SA, u < RP ? 0 : st);
+		const bl = b * LEN, rl = r * LEN, pk = clamp01((u - PL) / 1.25), fold = ease((u - 7.2) / 0.9), tape = clamp01((u - TP) / 1.0);
+		c.army.set([], cp()); c.smoke.set([]); c.flash.set([]); c.tracers.set([]); // the diagram stands alone (no men or balls showing through the slabs)
+		if (u < G) { battle(c, SA, FREEZE + u * 0.9); counters(c.hud, ...aliveAt(SA, FREEZE + u * 0.9) as [number, number]); landDraw(c); return; }
 		const L: any[] = [];
-		// blue: ghost of the full square, live square (anchored on its line, centred on it)
-		L.push({x: -45 - bs * grow, z: -bs / 2, w: bs * grow, d: bs, color: '#4a90ff', a: u < 3.75 ? 1 : 0.22, edge: u < 3.75 ? 1 : 0.35, wall: u < 3.75 ? 1 : 0.3});
-		if (u >= 3.75) L.push({x: -45 - bl, z: -bl / 2, w: bl, d: bl, color: '#4a90ff', a: 1});
-		// red: ghost (brighter, gold-edged while blue's loss folds onto it) + live square
-		L.push({x: 47, z: -rs / 2, w: rs * grow, d: rs, color: '#ff5a47', a: u < 3.75 ? 1 : fold > 0 ? 0.5 : 0.2, edge: fold > 0 ? 1 : 0.6, edgeColor: fold > 0 ? GOLD : undefined}); if (u >= 3.75 && rl > 0.5) L.push({x: 47, z: -rl / 2, w: rl, d: rl, color: '#ff5a47', a: 1});
-		if (tile > 0) [[0, 0], [rs, 0], [0, rs], [rs, rs]].forEach(([ox, oz], k) => L.push({x: -45 - bs + ox, z: -bs / 2 + oz, w: rs, d: rs, color: '#ffb0a4', a: tile * clamp01((u - 1.6 - k * 0.25) / 0.2), edge: 1}));
-		// the three peels: each side's lost L, lit gold, then reshaped into a bar 140 m wide laid side by side
-		const pk = PEEL.peel(u); const bars: {x: number; y: number; t: string}[] = [];
-		if (pk) { const [b1, r1] = aliveAt(SA, pk.s0), [b2, r2] = aliveAt(SA, pk.s1); const B1 = b1 * LEN, B2 = b2 * LEN, R1 = r1 * LEN, R2 = r2 * LEN, Wt = 38, SC = 0.4; // bars 38 m wide in the clear strip between the lines; both shrink by the same 0.4 so they fit
-			const lit = clamp01(pk.v / 0.25), m = ease((pk.v - 0.28) / 0.45), o = 1 - clamp01((pk.v - 0.9) / 0.1);
-			const morph = (rects: number[][], x0: number) => { const tot = rects.reduce((q, R) => q + R[2] * R[3], 0); let z = -tot * SC / Wt / 2; rects.forEach(([x, zz, w, d]) => { const dd = (w * d) * SC / Wt;
-				L.push({x: lerp(x, x0, m), z: lerp(zz, z, m), w: lerp(w, Wt, m), d: lerp(d, dd, m), color: '#ffd27a', a: o * (0.6 + 0.4 * lit), edge: lit, edgeColor: GOLD, wall: 0.6}); z += dd; }); return tot * SC / Wt; };
+		L.push({x: -45 - bs * grow, z: -bs / 2, w: bs * grow, d: bs, color: '#4a90ff', a: u < RP ? 1 : 0.22, edge: u < RP ? 1 : 0.35, wall: u < RP ? 1 : 0.3});
+		if (u >= RP) L.push({x: -45 - bl, z: -bl / 2, w: bl, d: bl, color: '#4a90ff', a: 1});
+		L.push({x: 47, z: -rs / 2, w: rs * grow, d: rs, color: '#ff5a47', a: u < RP ? 1 : fold > 0 ? 0.5 : 0.2, edge: fold > 0 ? 1 : 0.6, edgeColor: fold > 0 ? GOLD : undefined}); if (u >= RP && rl > 0.5) L.push({x: 47, z: -rl / 2, w: rl, d: rl, color: '#ff5a47', a: 1});
+		if (tile > 0) [[0, 0], [rs, 0], [0, rs], [rs, rs]].forEach(([ox, oz], k) => L.push({x: -45 - bs + ox, z: -bs / 2 + oz, w: rs, d: rs, color: '#ffb0a4', a: tile * clamp01((u - G - 0.9 - k * 0.22) / 0.2), edge: 1}));
+		if (pk > 0 && u < 7.4) { const B1 = bs, B2 = 866 * LEN, R1 = rs, Wt = 38, SC = 0.18; const lit = clamp01(pk / 0.25), m = ease((pk - 0.28) / 0.6), o = 1 - clamp01((u - 7.0) / 0.4);
+			const morph = (rects: number[][], x0: number) => { const tot = rects.reduce((q, R) => q + R[2] * R[3], 0); let z = -tot * SC / Wt / 2; rects.forEach(([x, zz, w, dd0]) => { const dd = (w * dd0) * SC / Wt;
+				L.push({x: lerp(x, x0, m), z: lerp(zz, z, m), w: lerp(w, Wt, m), d: lerp(dd0, dd, m), color: '#ffd27a', a: o * (0.6 + 0.4 * lit), edge: lit, edgeColor: GOLD, wall: 0.6}); z += dd; }); return tot * SC / Wt; };
 			const hb = morph([[-45 - B1, -B1 / 2, B1 - B2, B1], [-45 - B2, B2 / 2, B2, (B1 - B2) / 2], [-45 - B2, -B1 / 2, B2, (B1 - B2) / 2]], -4 - Wt);
-			const hr = morph([[47 + R2, -R1 / 2, R1 - R2, R1], [47, R2 / 2, R2, (R1 - R2) / 2], [47, -R1 / 2, R2, (R1 - R2) / 2]], 4);
-			if (m > 0.9 && pk.i === 0) { const qb = toScreen([-4 - Wt / 2, 0, hb / 2 + 30]), qr = toScreen([4 + Wt / 2, 0, hr / 2 + 30]); bars.push({x: qb.x, y: qb.y, t: '蓝方掉的'}, {x: qr.x, y: qr.y, t: '红方掉的'}); }
-			bars.forEach((q, k) => tag(c.hud, q.x + (k ? -70 : 70), q.y - 26, q.t, o * clamp01((m - 0.9) / 0.1), 44, '#fff', k ? RED : BLUE));
-			if (m > 0.9) { const qe = toScreen([0, 0, 0]); tag(c.hud, qe.x, qe.y, '=', o * clamp01((m - 0.9) / 0.1), 96, '#fff6dd', GOLD); } }
-		// fold: blue's whole loss (the pale L) becomes one square laid exactly on red's ghost
-		if (fold > 0) L.push({x: lerp(-45 - bs, 47, fold), z: lerp(-bs / 2, -rs / 2, fold), w: rs, d: rs, color: '#8fb6ff', a: env(u, 8.2, 99) * 0.9, edge: 1, edgeColor: GOLD});
+			const hr = morph([[47, -R1 / 2, R1, R1]], 4);
+			if (m > 0.9) { const qb = toScreen([-4 - Wt / 2, 0, hb / 2 + 30]), qr = toScreen([4 + Wt / 2, 0, hr / 2 + 30]), ko = o * clamp01((m - 0.9) / 0.1);
+				tag(c.hud, qb.x + 70, qb.y - 26, '蓝方掉的', ko, 48, '#fff', BLUE); tag(c.hud, qr.x - 70, qr.y - 26, '红方掉的', ko, 48, '#fff', RED); const qe = toScreen([0, 0, 0]); tag(c.hud, qe.x, qe.y, '=', ko, 96, '#fff6dd', GOLD); } }
+		if (fold > 0) L.push({x: lerp(-45 - bs, 47, fold), z: lerp(-bs / 2, -rs / 2, fold), w: rs, d: rs, color: '#8fb6ff', a: env(u, 7.2, 99) * 0.9, edge: 1, edgeColor: GOLD});
 		c.squares.set(L);
-		const P = (x: number, z: number) => toScreen([x, 0, z]);
-		const pb = P(-45 - bs / 2, bs / 2 + 40), pr = P(47 + rs / 2, rs / 2 + 40);
-		tag(c.hud, pb.x, pb.y - 84, '1000 人', env(u, 0.4, 3.6), 52, '#fff', BLUE); tag(c.hud, pb.x, pb.y - 30, '边长 = 一排人的长度', env(u, 0.4, 3.6), 40, '#fff', BLUE); tag(c.hud, pr.x, pr.y - 84, '500 人', env(u, 0.4, 3.6), 52, '#fff', RED);
-		if (tile > 0) { const k = Math.max(1, Math.min(4, 1 + Math.floor((u - 1.6) / 0.25))); const pc = P(-45 - bs / 2, 0); slam(c.hud, pc.x, pc.y, `×${k}`, u, 1.6 + (k - 1) * 0.25, 3.75, 150, GOLD, '#fff6dd'); }
-		if (u >= 3.75 && u < 8.2) counters(c.hud, b, r);
-		if (fold > 0.95) { const pf = P(47 + rs / 2, 0); tag(c.hud, pf.x, pf.y, '一样大', env(u, 9.6, 11.1), 64, '#fff', GOLD); }
+		const P = (x: number, z: number) => toScreen([x, 0, z]); const pb = P(-45 - bs / 2, bs / 2 + 40), pr = P(47 + rs / 2, rs / 2 + 40);
+		tag(c.hud, pb.x, pb.y - 84, '1000 人', env(u, 38.9 - T.squares, 40.9 - T.squares), 52, '#fff', BLUE); tag(c.hud, pb.x, pb.y - 30, '边长 = 一排人的长度', env(u, 38.9 - T.squares, 40.9 - T.squares), 40, '#fff', BLUE); tag(c.hud, pr.x, pr.y - 84, '500 人', env(u, 38.9 - T.squares, 40.9 - T.squares), 52, '#fff', RED);
+		if (tile > 0) { const k = Math.max(1, Math.min(4, 1 + Math.floor((u - G - 0.9) / 0.22))); const pc = P(-45 - bs / 2, 0); slam(c.hud, pc.x, pc.y, `×${k}`, u, G + 0.9 + (k - 1) * 0.22, RP, 150, GOLD, '#fff6dd'); }
+		if (u >= RP && u < PL + 0.3) counters(c.hud, b, r);
 		if (tape > 0) { const fs = 866 * LEN; const pt = P(-45 - fs - 70, 0);
-			if (u < 11.25) tag(c.hud, pt.x - 40, pt.y, `${Math.round(866 * tape)}`, env(u, 9.9, 99), 64, '#fff', GOLD); else slam(c.hud, pt.x - 60, pt.y, '866', u, 11.25, 99, 110, BLUE);
-			html(c.hud, `<div style="position:absolute;left:0;right:0;top:92px;text-align:center;font-weight:900;font-size:76px;color:#fff;opacity:${env(u, 11.6, 99)};text-shadow:0 0 6px ${GOLD},0 0 26px rgba(246,207,120,.6),0 2px 10px rgba(0,0,0,.65)">1000² − 500² ≈ 866²</div>`);
-			tag(c.hud, W / 2, 236, '英国工程师 兰彻斯特，1914 年提出', env(u, 12.2, 99) * 0.9, 44, '#fff'); }
-		sub(c.hud, '战斗力，看人数的[平方]', u, 0.05, 3.4); sub(c.hud, '每一刻，两边掉的面积[一样多]', u, 3.8, 7.3); sub(c.hud, '开头的866，就是[这么来的]', u, 11.3, 14.8);
+			if (u < 45.96 - T.squares) tag(c.hud, pt.x - 40, pt.y, `${Math.round(866 * tape)}`, 1, 64, '#fff', GOLD); else slam(c.hud, pt.x - 60, pt.y, '866', u, 45.96 - T.squares, 99, 110, BLUE);
+			html(c.hud, `<div style="position:absolute;left:0;right:0;top:92px;text-align:center;font-weight:900;font-size:76px;color:#fff;opacity:${env(u, 46.98 - T.squares, 99)};text-shadow:0 0 6px ${GOLD},0 0 26px rgba(246,207,120,.6),0 2px 10px rgba(0,0,0,.65)">1000² − 500² ≈ 866²</div>`);
+			tag(c.hud, W / 2, 236, '兰彻斯特 · 1914', env(u, 47.3 - T.squares, 99) * 0.9, 40, '#fff'); }
+		sub(c.hud, '战斗力，看人数的[平方]', u, 37.0 - T.squares, 39.75 - T.squares); sub(c.hud, '开头的866，就是[这么来的]', u, 46.05 - T.squares, 48.9 - T.squares);
 		landDraw(c, {bloom: 0.6});
 	}},
-	// 12 — divide: 1000 v 1000 runs to the end (0 : 7) and holds; ◀◀; the same 1000 against two waves of 500 → 866 → 707
-	{a: T.divide, b: T.half, draw: (c, u) => {
-		clearLand(c); const E = SL.end + 0.3; const so = 1 - clamp01(u / 0.7);
-		if (so > 0) c.squares.set([{x: -45 - 866 * LEN, z: -866 * LEN / 2, w: 866 * LEN, d: 866 * LEN, color: '#4a90ff', a: so}, {x: 47, z: -500 * LEN / 2, w: 500 * LEN, d: 500 * LEN, color: '#ff5a47', a: 0.5 * so, edgeColor: GOLD}, {x: 47, z: -500 * LEN / 2, w: 500 * LEN, d: 500 * LEN, color: '#8fb6ff', a: 0.9 * so, edgeColor: GOLD}]);
-		if (u < 4.0) { const rw = clamp01((u - 3.55) / 0.45), st = u < 0.8 ? 0.1 : u < 3.55 ? 0.2 + (E - 0.2) * Math.pow(clamp01((u - 0.8) / 1.9), 1.35) : lerp(E, -0.6, ease(rw)); // hold 1000 v 1000, fight to the end, ◀◀
-			camKeys([{t: 0, pos: [-140, 640, -620], look: [-130, 0, -20], fov: 40}, {t: 1.4, pos: [-170, 60, -260], look: [0, 0, 0], fov: 40}, {t: 4.0, pos: [-180, 70, -270], look: [0, 0, 0], fov: 40}], u);
-			battle(c, SL, st, {tracers: u < 3.55}); c.army.set(simBodies(SL, st, 'aim', 0, 0, 40), cp()); const [b, r] = aliveAt(SL, Math.max(0, st)); counters(c.hud, b, r);
-			if (u > 3.55) html(c.hud, `<div class="lbl" style="left:${W / 2 - 40}px;top:110px;font-size:64px;opacity:${0.8 * env(u, 3.55, 4.0, 0.08, 0.1)}">◀◀</div>`);
-			sub(c.hud, '两边一样多？[两败俱伤]', u, 0.05, 3.4); landDraw(c); return; }
-		const v = u - 4.0; const w1 = 1.6, mar = 0.45, w2 = 1.6; // wave 1, the second wave marches up, wave 2; 707 from v = 3.65
-		camKeys([{t: 4.0, pos: [-180, 70, -270], look: [0, 0, 0], fov: 40}, {t: 5.2, pos: [-120, 60, -330], look: [120, 0, 0], fov: 42}, {t: 9.375, pos: [-110, 55, -300], look: [90, 0, 0], fov: 42}], u);
-		let bodies: Body[]; const st1 = 0.2 + clamp01(v / w1) * SA2.end, st2 = 0.2 + clamp01((v - w1 - mar) / w2) * (SR2.end + 0.1);
-		const wave2At = (m: number) => simBodies(SR2, v < w1 + mar ? -1 : st2, 'aim', 0, 0, 8).map((x, i) => (SR2.units[i].side === 1 ? {...x, x: x.x + (1 - m) * 260, pose: (m < 1 ? 'march' : x.pose) as any} : x));
-		const fallen1 = simBodies(SA2, SA2.end + 3).filter((x) => x.side === 1);
-		if (v < w1) { bodies = [...simBodies(SA2, st1, 'aim', 0, 0, 7), ...wave2At(0).filter((x) => x.side === 1)]; const sm = simSmoke(SA2, st1); c.smoke.set(sm.sm); c.flash.set(sm.fl); c.tracers.set(simTracers(SA2, st1)); }
-		else { const m = clamp01((v - w1) / mar); bodies = [...wave2At(m), ...fallen1]; const sm = simSmoke(SR2, st2); c.smoke.set(v < w1 + mar ? [] : sm.sm); c.flash.set(v < w1 + mar ? [] : sm.fl); c.tracers.set(v < w1 + mar ? [] : simTracers(SR2, st2)); }
-		c.army.set(bodies, cp());
-		{ const q1 = toScreen([45, 2, -60]), q2 = toScreen([45 + 260 * (1 - clamp01((v - w1) / mar)), 2, -60]); if (v < w1 && q1.front) tag(c.hud, q1.x, q1.y - 70, '第一拨 500', env(v, 0.1, w1, 0.2, 0.2), 52, '#fff', RED); if (v < w1 + mar && q2.front) tag(c.hud, q2.x, q2.y - 70, '第二拨 500', env(v, 0.1, w1 + mar, 0.2, 0.2), 52, '#fff', RED); }
-		const b = v < w1 ? aliveAt(SA2, st1)[0] : aliveAt(SR2, Math.max(0, st2))[0], r = v < w1 ? aliveAt(SA2, st1)[1] + 500 : aliveAt(SR2, Math.max(0, st2))[1];
-		const done = v > w1 + mar + w2; counters(c.hud, b, r, done ? 1 - clamp01((v - w1 - mar - w2) / 0.3) : 1, ['', '两拨，各 500']);
-		if (done) { slam(c.hud, W / 2, H / 2 - 40, '707', u, 4.0 + w1 + mar + w2 + 0.05, T.half - T.divide, 220, BLUE); tag(c.hud, W / 2, H / 2 + 100, '同样打 1000 人，还剩 <span style="color:#ffd27a">707</span>', env(u, 4.0 + w1 + mar + w2 + 0.3, T.half - T.divide, 0.15, 0.3), 58, '#fff', BLUE); }
-		sub(c.hud, '要是对面分[两拨]来呢？', u, 4.05, 6.4); sub(c.hud, '打团最忌：[一拨一拨上]', u, 6.5, 9.25);
-		landDraw(c);
+	// 07 — game 5 v 3 (illustration): all together → 4 left; ◀◀; one at a time → all five fall, two of theirs stand
+	{a: T.game, b: T.biz, draw: (c, u) => {
+		const A1 = 4.05, RW = 6.075, B0 = 6.6;
+		camKeys([{t: 0, pos: [-0.5, 6.4, 11.8], look: [-0.5, 0.9, -0.2], fov: 40}, {t: 6.0, pos: [1.0, 7.0, 11.0], look: [-0.8, 0.9, 0], fov: 40}, {t: 14.2, pos: [-1.0, 7.6, 11.4], look: [-1.5, 0.9, 0], fov: 40}], u);
+		if (u < RW) drawHeroes(c, togetherAt(u), u, u < 3.3);
+		else if (u < B0) { const v = lerp(4.0, 0, ease((u - RW) / (B0 - RW))); drawHeroes(c, togetherAt(v), u, false); rewindSign(c, env(u, RW, B0, 0.05, 0.08)); }
+		else drawHeroes(c, oneByOneAt((u - B0) * 1.0), u);
+		corner(c, '示意 · 按平方律算', 1);
+		if (u > A1 && u < RW) { slam(c.hud, W / 2, 150, '5² − 3² = 16 = 4²', u, A1, RW - 0.1, 84, GOLD, '#fff6dd'); togetherAt(u).filter((h) => h.side === 0 && h.dead === undefined).forEach((h) => { const q = toScreen([h.x, 2.9, h.z]); }); tag(c.hud, W / 2, 250, '剩 4 个', env(u, A1 + 0.5, RW - 0.1), 56, '#fff', BLUE); }
+		if (u > 60.64 - T.game) tag(c.hud, W / 2, 160, '全灭 · 对面还剩 <span style="color:#ff8a7a">2</span> 个', env(u, 60.64 - T.game, 99), 64, '#fff', RED);
+		sub(c.hud, '打团5打3，[一起上]', u, 49.3 - T.game, 52.2 - T.game); sub(c.hud, '一拨一拨上？那叫[送]', u, 57.2 - T.game, 60.1 - T.game);
+		gameDraw(c);
 	}},
-	// 13 — ★4: two half-armies are half the strength (overhead)
-	{a: T.half, b: T.sunzi, draw: (c, u) => {
-		clearLand(c); const big = 1000 * LEN, hs = 500 * LEN, k = ease((u - 0.9) / 0.9), sa = env(u, 0.45, 99, 0.4);
-		camKeys([{t: 0, pos: [-110, 55, -300], look: [90, 0, 0], fov: 42}, {t: 0.85, pos: [0, 860, -380], look: [0, 0, -10], fov: 46}, {t: 3.75, pos: [0, 880, -370], look: [0, 0, -10], fov: 46}], u);
-		c.army.set(simBodies(SR2, 99), cp()); c.smoke.set([]); c.flash.set([]); c.tracers.set([]);
-		c.squares.set([{x: -big / 2, z: -big / 2, w: big, d: big, color: '#ff8a7a', a: 0.45 * sa, edge: 1},
-			{x: lerp(-big / 2 - 320, -big / 2, k), z: -big / 2, w: hs, d: hs, color: '#ff5a47', a: sa, edgeColor: GOLD},
-			{x: lerp(big / 2 + 80, -big / 2 + hs, k), z: -big / 2, w: hs, d: hs, color: '#ff5a47', a: sa, edgeColor: GOLD}]);
-		tag(c.hud, W / 2, 140, '两块加起来 = <span style="color:#ffd27a">一半</span>', env(u, 1.8, 99), 64, '#fff', RED);
-		sub(c.hud, '分成两拨，总力量只剩[一半]', u, 0.3, 3.7);
-		landDraw(c, {bloom: 0.6});
+	// 08 — 商战: the camera leaves the arena for a city at dusk; red everywhere and thin; blue pulls into one district; 41.7 %
+	{a: T.biz, b: T.traf, draw: (c, u) => {
+		camKeys([{t: 0, pos: [-560, 900, -640], look: [-80, 0, 30], fov: 36}, {t: 6.0, pos: [-480, 760, -560], look: [-100, 0, 40], fov: 34}, {t: 12.15, pos: [-420, 620, -480], look: [-110, 0, 50], fov: 33}], u);
+		cityState(c, ease((u - 4.05) / 2.2), u);
+		header(c, '日本 · 兰彻斯特战略 · 田冈信夫，1970年代起', env(u, 0.4, 11.9)); corner(c, '示意', 1);
+		const D = toScreen([CITY.D.x, 60, CITY.D.z]);
+		if (u < 4.1) { const pr = toScreen([CITY.red[3][0], 40, CITY.red[3][1]]), pbq = toScreen([CITY.blue[2][0], 40, CITY.blue[2][1]]); tag(c.hud, pr.x, pr.y - 40, '老大', env(u, 64.5 - T.biz, 67.2 - T.biz), 48, '#fff', RED); tag(c.hud, pbq.x, pbq.y - 40, '你', env(u, 64.5 - T.biz, 67.2 - T.biz), 48, '#fff', BLUE); }
+		tag(c.hud, D.x, D.y - 120, '局地战', env(u, 67.4 - T.biz, 71.2 - T.biz), 56, '#fff', BLUE);
+		const sh = clamp01((u - 6.0) / 2.05); if (u > 6.0) { html(c.hud, `<div style="position:absolute;right:120px;top:300px;width:46px;height:420px;border:3px solid rgba(255,255,255,.7);border-radius:6px;opacity:${env(u, 6.0, 99)}"><div style="position:absolute;left:0;right:0;bottom:0;height:${sh * 41.7}%;background:${BLUE};box-shadow:0 0 18px ${BLUE}"></div></div><div class="lbl" style="right:96px;top:740px;font-size:32px;opacity:${env(u, 6.0, 99)}">这一片的份额</div>`); }
+		if (u > 8.1) { slam(c.hud, W / 2 + 330, 420, '41.7%', u, 8.1, 99, 130, BLUE); tag(c.hud, W / 2 + 330, 540, '第一才算坐稳 · 日本兰彻斯特协会的经验值', env(u, 8.4, 99), 34, '#fff'); }
+		sub(c.hud, '日本人把这套算术，用进了[商战]', u, 63.3 - T.biz, 66.45 - T.biz); sub(c.hud, '不是老大？缩小战场，[集中一点]', u, 67.35 - T.biz, 70.55 - T.biz);
+		cityDraw(c);
 	}},
-	// 14 — 孙子: "以十攻其一" in gold brush strokes across the empty half; then the camera rises into the sky (bridge to the sea)
-	{a: T.sunzi, b: T.sea, draw: (c, u) => {
-		clearLand(c); const d = T.sea - T.sunzi; const big = 1000 * LEN;
-		camKeys([{t: 0, pos: [0, 880, -370], look: [0, 0, -10], fov: 46}, {t: 2.2, pos: [0, 640, -380], look: [0, 0, 160], fov: 40}, {t: d, pos: [0, 520, -300], look: [0, 900, 3000], fov: 42}], u);
-		c.army.set(simBodies(SR2, 99), cp()); c.smoke.set([]); c.flash.set([]); c.tracers.set([]);
-		c.squares.set([{x: -big / 2, z: -big / 2, w: big, d: big, color: '#ff8a7a', a: 0.45 * (1 - clamp01((u - 2.4) / 0.8)), edge: 1}]);
-		c.text.visible = true; c.text.position.set(0, 0.3, big / 4); c.text.userData.reveal(clamp01((u - 0.05) / 1.8));
-		tag(c.hud, W / 2, 140, '《孙子·虚实篇》', env(u, 0.3, 2.6), 46, '#fff', GOLD);
-		sub(c.hud, '我专为一，敌分为十', u, 0.05, 2.9);
-		landDraw(c, {bloom: 0.7, exposure: 0.66 + 0.6 * clamp01((u - d + 0.5) / 0.5)});
+	// 09 — Trafalgar: the plan on the water; bar 39 holds
+	{a: T.traf, b: T.drop, draw: (c, u) => {
+		const d = T.drop - T.traf, su = u * approachS; const adv = ADV(su);
+		camKeys([{t: 0, pos: [-1700, 900, -2300], look: [0, 0, 0], fov: 40}, {t: 2.4, pos: [-1500, 260, -1200], look: [0, 10, 0], fov: 38}, {t: 4.05, pos: [adv - 2450 - 120, 26, -463], look: [adv - 2450 + 60, 8, -440], fov: 44}, {t: d, pos: [adv - 2450 - 110, 24, -463], look: [adv - 2450 + 60, 8, -440], fov: 44}], u);
+		setFleet(c.sea.combined, LINE(su, 0), su); setFleet(c.sea.british, COLS(adv), su);
+		const {sm, fl} = broadsides(LINE(su, 0).slice(0, 18), su, 1, 3); c.seaSmoke.set(su > 4 ? sm : []); c.seaFlash.set(su > 4 ? fl : []);
+		seaMarks(c, env(u, 0.3, 3.9, 0.4, 0.4), adv);
+		header(c, '1805 · 特拉法加', env(u, 0.2, 99)); counters(c.hud, 27, 33, env(u, 0.3, d - 0.1), ['英国', '法西联合']);
+		const pv = toScreen([260, 0, 1450]); if (pv.front) tag(c.hud, Math.min(W - 260, pv.x + 40), pv.y - 50, '前队：先不理它', env(u, 76.4 - T.traf, 79.3 - T.traf), 52, '#eee');
+		sub(c.hud, '船少的英国，全压向[同一段]', u, 75.45 - T.traf, 78.6 - T.traf);
+		seaDraw(c, su);
 	}},
-	// 15 — Trafalgar: down from the clouds onto 27 v 33; the plan drawn on the water: both columns into the same stretch, the van left alone
-	{a: T.sea, b: T.climax, draw: (c, u) => {
-		const d = T.climax - T.sea; const adv = ADV(u);
-		camKeys([{t: 0, pos: [-1500, 1600, -2600], look: [-1200, 2600, 1200], fov: 42}, {t: 1.4, pos: [-1700, 900, -2300], look: [0, 0, 0], fov: 40}, {t: 6.5, pos: [-1500, 260, -1200], look: [0, 10, 0], fov: 38}, {t: d, pos: [adv - 2450 - 110, 24, -463], look: [adv - 2450 + 60, 8, -440], fov: 44}], u);
-		setFleet(c.sea.combined, LINE(u, 0), u); setFleet(c.sea.british, COLS(adv), u);
-		const {sm, fl} = broadsides(LINE(u, 0).slice(0, 18), u, 1, 3); c.seaSmoke.set(u > 4 ? sm : []); c.seaFlash.set(u > 4 ? fl : []);
-		seaMarks(c, env(u, 3.75, d - 1.6, 0.5, 0.6), adv);
-		tag(c.hud, W / 2, 80, '1805 · 特拉法加', env(u, 0.5, d - 0.5), 40, '#fff');
-		counters(c.hud, 27, 33, env(u, 0.8, d - 0.3), ['英国', '法西联合']);
-		if (u > 4.2 && u < d - 1.6) { const pv = toScreen([260, 0, 1450]); if (pv.front) tag(c.hud, Math.min(W - 260, pv.x + 40), pv.y - 50, '前队：先不理它', env(u, 5.0, d - 1.7), 52, '#eee'); }
-		sub(c.hud, '英国船少，硬拼[该输]', u, 0.05, 3.4); sub(c.hud, '两列，全压向[同一段]', u, 3.8, 7.2);
-		seaDraw(c, u, {exposure: 0.5 + 0.7 * (1 - clamp01(u / 0.8))});
-	}},
-	// 15b — CLIMAX (15 s): on the downbeat Collingwood's lead is already between two hulls and rakes both; slow motion as the smoke rolls over the lens;
-	//       at u = 7.5 Nelson's column breaks through the same way; then a crane up shows the line cut in two places, the van untouched
-	{a: T.climax, b: T.chart, draw: (c, u) => {
-		const d = T.chart - T.climax; const tm = u < 1.2 ? u : u < 3.0 ? 1.2 + (u - 1.2) * 0.25 : 1.65 + (u - 3.0); // slow motion as the bow passes the stern
-		const adv = ADV0 + tm * 55; const lead = {x: adv - 2450, z: -440}, nel = {x: adv - 2710, z: 705}; const tN = 6.15; // Nelson's lead reaches the line at tm = 6.15 (u = 7.5)
-		if (u < 7.5) camKeys([{t: 0, pos: [lead.x - 110, 24, -463], look: [lead.x + 60, 8, -440], fov: 44}, {t: 1.2, pos: [lead.x - 60, 12, -463], look: [lead.x + 40, 8, -440], fov: 52}, {t: 3.0, pos: [31.5, 10, -463], look: [lead.x + 30, 7, -440], fov: 54}, {t: 7.5, pos: [-60, 85, -463], look: [lead.x + 40, 6, -420], fov: 46}], u); // after the slow motion the camera stops short of the enemy line (its bowsprit reaches z −440) and rises behind it // the camera rides the clear lane between the lead's yards and the enemy's
-		else camKeys([{t: 7.5, pos: [nel.x - 105, 22, 731], look: [nel.x + 50, 8, 705], fov: 50}, {t: 9.0, pos: [nel.x - 150, 50, 555], look: [nel.x + 60, 4, 655], fov: 42}, {t: 11.6, pos: [-900, 650, -1500], look: [0, 0, 0], fov: 44}, {t: d, pos: [-960, 700, -1560], look: [0, 0, 60], fov: 44}], u);
+	// 10 — DROP 2: Collingwood's lead between two hulls, raking both, slow motion; Nelson on bar 42; crane on bar 43; every ship fires
+	{a: T.drop, b: T.chart, draw: (c, u) => {
+		const d = T.chart - T.drop, tm = tmOf(u), ST = T.drop - T.traf; const sea0 = ST * approachS; // sea time continues
+		const adv = ADV0 + tm * 55; const lead = {x: adv - 2450, z: -440}, nel = {x: adv - NB, z: 705};
+		if (u < 4.05) camKeys([{t: 0, pos: [lead.x - 110, 24, -463], look: [lead.x + 60, 8, -440], fov: 44}, {t: 1.0, pos: [lead.x - 60, 12, -463], look: [lead.x + 40, 8, -440], fov: 52}, {t: 2.6, pos: [31.5, 10, -463], look: [lead.x + 30, 7, -440], fov: 54}, {t: 4.05, pos: [-30, 70, -463], look: [lead.x + 40, 6, -420], fov: 46}], u);
+		else camKeys([{t: 4.05, pos: [nel.x - 105, 22, 731], look: [nel.x + 50, 8, 705], fov: 50}, {t: 5.0, pos: [nel.x - 150, 50, 555], look: [nel.x + 60, 4, 655], fov: 42}, {t: 6.6, pos: [-700, 480, -1200], look: [0, 0, 0], fov: 44}, {t: d, pos: [-900, 650, -1500], look: [0, 0, 0], fov: 44}], u);
 		const heel = (q: any, k: number) => ({...q, roll: -0.075 * k});
-		const line = LINE(T.climax - T.sea + u, 0).map((q) => Math.abs(q.z - lead.z) < 75 ? heel(q, clamp01((tm - 0.3) / 0.9)) : Math.abs(q.z - nel.z) < 75 ? heel(q, clamp01((tm - tN - 0.3) / 0.9)) : q);
+		const line = LINE(sea0 + u, 0).map((q) => Math.abs(q.z - lead.z) < 75 ? heel(q, clamp01((tm - 0.3) / 0.9)) : Math.abs(q.z - nel.z) < 75 ? heel(q, clamp01((tm - TN - 0.3) / 0.9)) : q);
 		setFleet(c.sea.combined, line, u); setFleet(c.sea.british, COLS(adv), u);
-		const near = line.filter((q) => Math.abs(q.z - lead.z) < 420 || (u > 7.0 && Math.abs(q.z - nel.z) < 420));
-		const a = broadsides(near, tm, 0.5, 7), b = broadsides(COLS(adv).slice(13, 18), tm, 0.5, 9), e = broadsides(COLS(adv).slice(1, 6).filter(() => u > 7.0), tm + 1.3, 0.55, 11);
-		const r1 = rake(lead, tm, 0.04), r2 = rake(nel, tm, tN, -1);
-		// smoke rolling across the lens during the slow motion
-		const lens: number[][] = []; const cpz = camera.position, k1 = 0; // (lens smoke sprites read as flat discs: dropped)
-		if (k1 > 0) for (let k = 0; k < 18; k++) { const side = k % 2 ? 1 : -1; lens.push([cpz.x + 20 + (k * 5.3) % 40 + u * 3, cpz.y - 3 + (k % 4) * 1.4, cpz.z + side * (10 + (k * 2.9) % 14) - u * 2.5 * side, 7 + (k % 5) * 2.5, 0.6, 0.56, 0.5, 0.35 * k1]); } // smoke drifting past both sides of the lens
-		const all = u > 9.3 ? broadsides([...line, ...COLS(adv)], tm - 7.8, 0.5, 21) : {sm: [], fl: []}; // bar 69: every ship in the fight fires
-		const volley: number[][] = []; if (u > 9.375) { const age = u - 9.375; [...line, ...COLS(adv)].forEach((q, i) => { if (age < 0.5) for (const sd of [-1, 1]) volley.push([q.x, 5, q.z + sd * 11, 30 * (1 - age / 0.5) + 10, 4.0, 2.0, 0.6, (1 - age / 0.5) * (0.6 + 0.4 * ((i * 7) % 3) / 2)]); volley.push([q.x + age * 3, 6 + age * 2, q.z + ((i % 2) * 2 - 1) * (14 + age * 5), 26 + age * 14, 0.6, 0.56, 0.5, 0.7 * Math.min(1, age * 4) * Math.exp(-age / 5)]); }); }
-		c.seaSmoke.set([...a.sm, ...b.sm, ...e.sm, ...r1.sm, ...r2.sm, ...lens, ...all.sm, ...volley.filter((q) => q[4] < 1)]); c.seaFlash.set([...a.fl, ...b.fl, ...e.fl, ...r1.fl, ...r2.fl, ...all.fl, ...volley.filter((q) => q[4] > 1)]);
-		seaDraw(c, T.climax - T.sea + u, {bloom: 0.5, vig: 0.5, exposure: 0.36});
+		const near = line.filter((q) => Math.abs(q.z - lead.z) < 420 || (u > 3.6 && Math.abs(q.z - nel.z) < 420));
+		const a = broadsides(near, tm, 0.5, 7), b = broadsides(COLS(adv).slice(13, 18), tm, 0.5, 9), e = broadsides(COLS(adv).slice(1, 6).filter(() => u > 3.6), tm + 1.3, 0.55, 11);
+		const r1 = rake(lead, tm, 0.04), r2 = rake(nel, tm, TN, -1);
+		const all = u > 6.0 ? broadsides([...line, ...COLS(adv)], tm - 4.3, 0.5, 21) : {sm: [], fl: []};
+		const volley: number[][] = []; if (u > 6.075) { const age = u - 6.075; [...line, ...COLS(adv)].forEach((q, i) => { if (age < 0.5) for (const sd of [-1, 1]) volley.push([q.x, 5, q.z + sd * 11, 30 * (1 - age / 0.5) + 10, 4.0, 2.0, 0.6, (1 - age / 0.5) * (0.6 + 0.4 * ((i * 7) % 3) / 2)]); volley.push([q.x + age * 3, 6 + age * 2, q.z + ((i % 2) * 2 - 1) * (14 + age * 5), 26 + age * 14, 0.6, 0.56, 0.5, 0.7 * Math.min(1, age * 4) * Math.exp(-age / 5)]); }); }
+		c.seaSmoke.set([...a.sm, ...b.sm, ...e.sm, ...r1.sm, ...r2.sm, ...all.sm, ...volley.filter((q) => q[4] < 1)]); c.seaFlash.set([...a.fl, ...b.fl, ...e.fl, ...r1.fl, ...r2.fl, ...all.fl, ...volley.filter((q) => q[4] > 1)]);
+		header(c, '1805 · 特拉法加', 1);
+		seaDraw(c, sea0 + u, {bloom: 0.5, vig: 0.5, exposure: 0.36});
 	}},
-	// 15c — chart: the line in three pieces, the van sails away
-	{a: T.chart, b: T.quiet, draw: (c, u) => {
-		const d = T.quiet - T.chart; const tt = T.chart - T.sea + u; const adv = ADV0 + 13.65 * 55 + u * 40;
-		camKeys([{t: 0, pos: [-900, 650, -1500], look: [0, 0, 0], fov: 44}, {t: 7.5, pos: [-1700, 900, -300], look: [0, 0, 500], fov: 44}, {t: 15, pos: [-1900, 1100, 200], look: [100, 0, 900], fov: 44}], u);
-		const van = ease((u - 1.8) / 5) * 900; seaMarks(c, 0, 0, false); setFleet(c.sea.combined, LINE(tt, van), u); setFleet(c.sea.british, COLS(adv), u);
-		{ const tm = 13.65 + u, ko = 1 - clamp01(u / 2.6); const near = LINE(tt, van).filter((q) => Math.abs(q.z + 440) < 420 || Math.abs(q.z - 705) < 420); const a = broadsides(near, tm, 0.5, 7), r1 = rake({x: adv - 2450, z: -440}, tm, 0.04), r2 = rake({x: adv - 2710, z: 705}, tm, 6.15);
-			const age = 15 - 9.375 + u, vs = [...LINE(tt, van), ...COLS(adv)].map((q, i) => [q.x + age * 3, 6 + age * 2, q.z + ((i % 2) * 2 - 1) * (14 + age * 5), 26 + age * 14, 0.6, 0.56, 0.5, 0.7 * Math.exp(-age / 5)]);
-			c.seaSmoke.set(ko > 0 ? [...a.sm, ...r1.sm, ...r2.sm, ...vs].map((q) => [...q.slice(0, 7), q[7] * ko]) : []); c.seaFlash.set(ko > 0.5 ? a.fl.map((q) => [...q.slice(0, 7), q[7] * ko]) : []); }
-		const sep = clamp01((u - 1.6) / 0.8); const p = (x: number, z: number) => toScreen([x, 0, z]);
-		const v = p(150, 1350 + van);
-		if (v.front) tag(c.hud, Math.min(W - 160, v.x), Math.max(150, v.y - 60), '前队', env(u, 1.0, 99), 52, '#fff', RED);
-		html(c.hud, `<div class="lbl" style="left:0;right:0;top:200px;text-align:center;font-size:52px;opacity:${env(u, 11.0, 99)}"><span style="text-shadow:0 0 8px ${RED},0 0 24px ${RED}">对方 33 艘：一半以上 被俘或被毁</span></div>`);
-		sub(c.hud, '敌人的前队，[赶不回来]', u, 0.3, 3.7); tag(c.hud, W / 2, 132, '兰彻斯特在 1916 年的书里，用平方律分析过纳尔逊的打法', env(u, 3.9, 7.3) * 0.9, 40, '#fff'); sub(c.hud, '英国，一艘船都[没丢]', u, 7.5, 10.9);
-		seaDraw(c, tt, {bloom: 0.4, vig: 0.46, exposure: 0.5});
+	// 11 — chart: the line in pieces, the van sails off; the tally
+	{a: T.chart, b: T.rts, draw: (c, u) => {
+		const ST = T.drop - T.traf, tt = ST * approachS + (T.chart - T.drop) + u, tmE = tmOf(T.chart - T.drop), adv = ADV0 + tmE * 55 + u * 40;
+		camKeys([{t: 0, pos: [-900, 650, -1500], look: [0, 0, 0], fov: 44}, {t: 4.05, pos: [-300, 1900, -200], look: [-120, 0, 260], fov: 44}], u);
+		const van = ease(u / 3.5) * 700; seaMarks(c, 0, 0, false); setFleet(c.sea.combined, LINE(tt, van), u); setFleet(c.sea.british, COLS(adv), u);
+		{ const ko = 1 - clamp01(u / 1.6); const age = (T.chart - T.drop) - 6.075 + u; const vs = [...LINE(tt, van), ...COLS(adv)].map((q, i) => [q.x + age * 3, 6 + age * 2, q.z + ((i % 2) * 2 - 1) * (14 + age * 5), 26 + age * 14, 0.6, 0.56, 0.5, 0.7 * Math.exp(-age / 5) * ko]); c.seaSmoke.set(ko > 0 ? vs : []); c.seaFlash.set([]); }
+		const v = toScreen([150, 0, 1350 + van]); if (v.front) tag(c.hud, Math.min(W - 160, v.x), Math.max(150, v.y - 60), '前队', env(u, 0.3, 99), 52, '#fff', RED);
+		html(c.hud, `<div class="lbl" style="left:0;right:0;top:170px;text-align:center;font-size:50px;opacity:${env(u, 0.6, 99)}"><span style="text-shadow:0 0 8px ${BLUE},0 0 24px ${BLUE}">英国 损失 0 艘</span> · <span style="text-shadow:0 0 8px ${RED},0 0 24px ${RED}">对方 损失一半以上</span></div>`);
+		header(c, '1805 · 特拉法加', 1);
+		sub(c.hud, '结果，英国一艘船都[没丢]', u, 89.6 - T.chart, 92.55 - T.chart);
+		seaDraw(c, tt, {bloom: 0.4, vig: 0.5, exposure: 0.5, sepia: 0.45});
 	}},
-	// 16 — quiet: one ship drifting at sunset, no text; a bank of smoke crosses the lens and carries the cut to the field
-	{a: T.quiet, b: T.limit, draw: (c, u) => {
-		const d = T.limit - T.quiet; setFleet(c.sea.combined, [], u); setFleet(c.sea.british, Array.from({length: 12}, (_, k) => ({x: -260 + 0.76 * (190 + k * 120) - 0.65 * (-150 + k * 22), z: -180 + 0.65 * (190 + k * 120) + 0.76 * (-150 + k * 22), heading: 0.3})), u); seaMarks(c, 0, 0);
-		camKeys([{t: 0, pos: [-1900, 1100, 200], look: [100, 0, 900], fov: 44}, {t: 3.0, pos: [-260, 6, -180], look: [1000, 40, 900], fov: 38}, {t: d, pos: [-215, 5, -205], look: [1000, 36, 900], fov: 37}], u);
-		const bank = clamp01((u - d + 1.6) / 1.6); const sm: number[][] = Array.from({length: 40}, (_, i) => [-200 + i * 12, 20 + (i % 5) * 6, 120 + (i % 7) * 20, 60, 0.85, 0.8, 0.78, 0.18 * clamp01((u - 2.0) / 0.8)]);
-		c.seaSmoke.set(sm); c.seaFlash.set([]);
-		seaDraw(c, 30 + u, {exposure: 0.52, warm: 0.08, vig: 0.5}); fogBank(c, ease(bank), (1 - bank) * 80);
+	// 12 — Age of Empires II: one knight beats four swordsmen, loses to five
+	{a: T.rts, b: T.sc, draw: (c, u) => {
+		const R2 = 4.05; const v = u < R2 ? u : u - R2;
+		camKeys([{t: 0, pos: [0, 15, 8], look: [0, 0, 0], fov: 38}, {t: 8.1, pos: [1.5, 12.5, 7.0], look: [0, 0, 0], fov: 38}], u);
+		drawHeroes(c, knightRound(v, u < R2 ? 4 : 5, u < R2 ? 0.3 : 0.9), u, false);
+		header(c, '《帝国时代2》里的实验', env(u, 93.8 - T.rts, 100.6 - T.rts));
+		if (u > 96.59 - T.rts && u < R2) slam(c.hud, W / 2, 200, '1 v 4 <span style="color:#7dffb0">✓</span>', u, 96.59 - T.rts, R2 - 0.05, 96, BLUE);
+		if (u > 99.6 - T.rts) slam(c.hud, W / 2, 200, '1 v 5 <span style="color:#ff8a7a">✗</span>', u, 99.6 - T.rts, 99, 96, RED);
+		sub(c.hud, '骑士能1打4，[1打5必输]', u, 97.7 - T.rts, 100.7 - T.rts);
+		gameDraw(c, {exposure: 0.78});
 	}},
-	// 17 — limit: the same field at dusk, a messy fight: smoke banks, companies arriving late, men with no target standing idle
-	{a: T.limit, b: T.ending, draw: (c, u) => {
-		clearLand(c); const d = T.ending - T.limit; camKeys([{t: 0, pos: [-210, 60, -260], look: [0, 0, 0], fov: 40}, {t: d, pos: [-190, 70, -240], look: [0, 0, 0], fov: 39}], u);
-		const st = 3 + u; const RR = rnd(31); const bodies = simBodies(SL, st, 'aim').map((b, i) => { const z = SL.units[i].z, j = RR(); const grp = Math.floor((z + 300) / 70); const off = (grp % 3) * 22 * (SL.units[i].side ? 1 : -1) + Math.sin(grp * 1.7) * 12; return {...b, x: b.x + off, z: b.z + (j - 0.5) * 3, pose: (grp % 4 === 1 ? 'rest' : b.pose) as any}; });
-		c.army.set(bodies, cp()); const sm = simSmoke(SL, st); 
-		const clear = 1 - clamp01(u / 0.9);
-		c.smoke.set(sm.sm); c.flash.set(sm.fl); c.tracers.set([]);
-		sub(c.hud, '真实的仗，没平方这么[夸张]', u, 0.6, 3.65);
-		landDraw(c, {exposure: 0.52, warm: 0.1, vig: 0.5}); fogBank(c, ease(clear), -(1 - clear) * 80);
+	// 13 — StarCraft: pull back over ten skirmishes; the predictions resolve, nine right, one wrong
+	{a: T.sc, b: T.cb, draw: (c, u) => {
+		camKeys([{t: 0, pos: [0, 16, 10], look: [0, 0, 0], fov: 40}, {t: 1.2, pos: [0, 32, 20], look: [0, 0, -1], fov: 42}, {t: 4.05, pos: [0, 34, 22], look: [0, 0, -1], fov: 42}], u);
+		drawHeroes(c, skirmAt(u), u, false);
+		SKIRM.forEach((s) => { const q = toScreen([s.x, 3.4, s.z]); const done = u > s.t; html(c.hud, `<div class="lbl" style="left:${q.x}px;top:${q.y}px;transform:translate(-50%,-50%);font-size:44px;color:${done ? (s.ok ? '#7dffb0' : '#ff8a7a') : '#fff'}">${done ? (s.ok ? '✓' : '✗') : '?'}</div>`); });
+		if (u > 2.8) { slam(c.hud, W / 2, 170, '约九成猜中', u, 2.8, 99, 96, GOLD, '#fff6dd'); tag(c.hud, W / 2, 260, '2015 · 阿尔伯塔大学', env(u, 3.0, 99), 34, '#fff'); }
+		header(c, '《星际争霸》AI', env(u, 0.1, 2.7));
+		sub(c.hud, '星际争霸AI，按这套算法[猜胜负]', u, 101.75 - T.sc, 104.9 - T.sc);
+		gameDraw(c, {exposure: 0.8});
 	}},
-	// 18 — ending image: scattered companies gather into one block
-	{a: T.ending, b: T.card, draw: (c, u) => {
-		clearLand(c); const d = T.card - T.ending; camKeys([{t: 0, pos: [-190, 70, -240], look: [0, 0, 0], fov: 39}, {t: 1.6, pos: [-125, 32, -115], look: [-35, 1, 0], fov: 40}, {t: d, pos: [-100, 16, -66], look: [-40, 1, 0], fov: 40}], u);
-		const R = rnd(5), m = ease((u - 0.1) / 3.4); const bodies: Body[] = [];
-		const centres = Array.from({length: 8}, () => [(R() - 0.5) * 300, (R() - 0.5) * 240]);
-		for (let i = 0; i < 800; i++) { const g = i % 8, k = Math.floor(i / 8); const cx = centres[g][0] + ((k % 10) - 4.5) * 1.6, cz = centres[g][1] + (Math.floor(k / 10) - 4.5) * 1.6; const fx = (i % 40 - 19.5) * 1.6, fz = (Math.floor(i / 40) - 9.5) * 1.6;
-			bodies.push({x: lerp(cx, fx, m), z: lerp(cz, fz, m), ry: -Math.PI / 2, side: 0, pose: m > 0.02 && m < 0.98 ? 'march' : 'aim', fall: 0}); }
-		for (let i = 0; i < 100; i++) bodies.push({x: -62 - Math.floor(i / 20) * 1.6, z: ((i % 20) - 9.5) * 1.6, ry: Math.PI / 2, side: 1, pose: 'rest', fall: 0}); // one red company, facing them
-		c.army.set(bodies, cp()); c.smoke.set([]); c.flash.set([]); c.tracers.set([]);
-		sub(c.hud, '同一时刻、同一地方，[比他多]', u, 0.05, 3.45);
-		landDraw(c, {exposure: 0.5, warm: 0.12, vig: 0.55, fade: clamp01((u - 3.45) / 0.3) * 0.85});
+	// 14 — callbacks: the bigger side losing (a lone hero walks into three; the line breaking; the district going blue)
+	{a: T.cb, b: T.conv, draw: (c, u) => {
+		const k = Math.floor(u / 1.35), v = u - k * 1.35;
+		if (k === 0) { camKeys([{t: 0, pos: [-0.5, 5.6, 9.8], look: [-0.5, 0.9, 0], fov: 38}], 0); drawHeroes(c, oneByOneAt(v * 0.75).slice(0, 1).concat(oneByOneAt(v * 0.75).filter((h) => h.side === 1)), u); gameDraw(c); }
+		else if (k === 1) { const tt = 30 + v, adv = ADV0 + 6.9 * 55; camKeys([{t: 0, pos: [-700, 480, -1200], look: [0, 0, 0], fov: 44}], 0); setFleet(c.sea.combined, LINE(tt, 300 + v * 80), tt); setFleet(c.sea.british, COLS(adv), tt); c.seaSmoke.set([]); c.seaFlash.set([]); seaMarks(c, 0, 0, false); seaDraw(c, tt, {exposure: 0.45}); }
+		else { camKeys([{t: 0, pos: [-480, 760, -560], look: [-100, 0, 40], fov: 34}], 0); cityState(c, clamp01(0.3 + v / 1.2), 70 + v); cityDraw(c); }
+		sub(c.hud, '人多，不一定[赢]', u, 105.8 - T.cb, 108.4 - T.cb);
 	}},
-	// 19 — end card
-	{a: T.card, b: T.end, draw: (c, u) => {
-		clearLand(c); camKeys([{t: 0, pos: [-110, 30, -120], look: [0, 0, 0], fov: 40}], 0); c.army.set([], cp());
-		landDraw(c, {exposure: 0.45, warm: 0.12, vig: 0.6, fade: 0.85});
-		const o = env(u, 0.2, 99, 0.6);
+	// 15 — converge: scattered blue companies march into one block in front of one red company; the block locks on the stop; freeze and dim
+	{a: T.conv, b: T.mend, draw: (c, u, t) => {
+		clearLand(c); const S = T.stop - T.conv, uu = Math.min(u, S); const m = ease(uu / S);
+		camKeys([{t: 0, pos: [-150, 45, -190], look: [-20, 0, 0], fov: 40}, {t: S, pos: [-100, 30, -70], look: [-40, 1, 0], fov: 40}], uu);
+		convergeAt(c, m); typedLine(c, t);
+		landDraw(c, {exposure: 0.5, warm: 0.12, vig: 0.55, fade: clamp01((u - S) / (T.mend - T.stop)) * 0.55});
+	}},
+	// 16 — end card (silence)
+	{a: T.mend, b: T.end, draw: (c, u) => {
+		clearLand(c); const S = T.stop - T.conv; camKeys([{t: 0, pos: [-100, 30, -70], look: [-40, 1, 0], fov: 40}], 0); convergeAt(c, 1);
+		landDraw(c, {exposure: 0.5, warm: 0.12, vig: 0.6, fade: 0.55 + 0.3 * clamp01(u / 0.6)});
+		const o = env(u, 0.1, 99, 0.5);
 		html(c.hud, `<div style="position:absolute;inset:0;opacity:${o}">
 			<div style="position:absolute;left:50%;top:120px;transform:translateX(-50%);width:96px;height:96px;border-radius:48px;border:3px solid ${GOLD};color:${GOLD};font-weight:900;font-size:58px;line-height:92px;text-align:center;font-family:'Noto Serif CJK SC',serif">J</div>
 			<div style="position:absolute;left:0;right:0;top:250px;text-align:center;font-weight:900;font-size:50px;color:${GOLD};letter-spacing:.08em">为什么要“集中优势兵力<span style="margin-right:-0.6em">”</span></div>
 			<div style="position:absolute;left:0;right:0;top:350px;text-align:center;font-weight:900;font-size:76px;color:#fff;text-shadow:0 0 10px ${GOLD},0 0 34px rgba(246,207,120,.5)">你还在哪见过<span style="color:${GOLD}">「集中优势兵力」</span><span style="margin-right:-0.54em">？</span></div>
 			<div style="position:absolute;left:0;right:0;top:470px;text-align:center;font-weight:700;font-size:40px;color:rgba(255,246,221,.85);letter-spacing:.2em">评论区聊聊<span style="margin-right:-0.2em"></span></div>
 			<div style="position:absolute;left:50%;top:590px;transform:translateX(-50%);padding:14px 40px;border:2px solid rgba(246,207,120,.8);border-radius:40px;font-weight:700;font-size:36px;color:#fff6dd">关注 Juno · 一起看懂世界</div>
-			<div style="position:absolute;left:0;right:0;bottom:46px;text-align:center;font-size:22px;color:rgba(255,255,255,.55);line-height:1.6">F. W. Lanchester, Aircraft in Warfare (1916) · London Gazette, 6 Nov 1805 · Nelson's memorandum, 9 Oct 1805 · 《孙子·虚实篇》<br>模拟：每名士兵独立装弹、随机瞄准、命中率约14%；866、707 为平方律的值 · 素材：Poly Haven (CC0)，Sketchfab：Andywoodhead、mixmamo.studio (CC BY)<br>音乐：“Rynos Theme” Kevin MacLeod (incompetech.com)，Licensed under Creative Commons: By Attribution 4.0</div>
+			<div style="position:absolute;left:0;right:0;bottom:40px;text-align:center;font-size:21px;color:rgba(255,255,255,.55);line-height:1.6">F. W. Lanchester 1914/1916 · London Gazette, 6 Nov 1805 · ランチェスター協会 · Lymbery et al., PNAS 2023 · Stanescu et al., AIIDE 2015 · 5 打 3 为按平方律示意<br>模拟：每名士兵独立装弹、随机瞄准、命中率约14% · 素材：Poly Haven (CC0)，KayKit (CC0)，Sketchfab：Andywoodhead、mixmamo.studio、matousekfoto (CC BY)</div>
 		</div>`);
 	}},
 ];

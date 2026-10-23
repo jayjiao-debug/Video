@@ -1,3 +1,161 @@
+# Script v5: 为什么要"集中优势兵力" — 1:55.8 re-cut on the owner's track (2026-10-23)
+
+**Logline:** 1000 v 500 leaves 866, not 500. In 30 s the film shows why (melee 500 → bullets ×2 ÷2 = ×4 → squares → 866). Then the same arithmetic shows up in four everyday places: a 5 v 3 team fight, Japanese 商战, Trafalgar, and RTS games.
+**Takeaway (the last line, on the song's stop):** 同一时刻、同一地方，[比他多]。
+**Length:** the music runs 115.825 s (bars 0–57). The picture runs **119.8 s**, because the end card holds 4.0 s after the song's tail ends (see Q1). There are **18 subtitles** (v4 had 25), all ≤ 14 字.
+**pace.py** (`lines_v5.json`, film end 119.825): 0 too fast, 0 waits, **0 % waiting**. Every gap over 2 s is a named picture beat (listed under the lines).
+**Grid:** downbeat(n) = 0.400 + 2.025·n (music_v2.md). Every section starts on a downbeat. Shot times below are absolute.
+**Files:** `lines_v5.json` holds the 18 lines below. The v4 `lines.json` is untouched.
+
+## Owner notes → what changed
+- **Note 1 "the explaining is dragging on for too long"** → the explanation now runs from title to bar 24 (18.6–49.0 s = **30.4 s**; in v4 it was about 90 s, 20.7–110.7). It keeps three beats: ★1 melee 500, ★2 ×2 ÷2 = ×4, ★3 squares → 866. Cut: the 排队 line (the 在排队 tag says it), the snowball and 人越少 line, 差距从第一枪, the peel line (the 红方掉的 = 蓝方掉的 bars say it), 1000 v 1000, the two waves and 707, ★4, 孙子, the honest-limit shot, and the sunset fleet.
+- **Note 2 "multiple relatable, non-military real-life examples"** → three of the four examples are non-military: a game team fight, Japanese 商战 and an RTS game. Trafalgar stays, but short (18.2 s).
+- **Note 3 "opening title on the ~16 s drop"** → the title slams at **16.600** (bar 8). 866 lands one section earlier, at 12.55 (bar 6), and bar 7 is a held picture, so the drop hits after a pause.
+- **Note 4 "about 2:00"** → the music runs 1:55.8 and the picture 1:59.8 with the end card.
+- **Note 5, the owner's examples, ants out** → game 5 v 3 (E17, 示意), ランチェスター戦略 (E9–E12), Trafalgar (T1–T4, T11, T14, T15), and AoE II + StarCraft (E16, E14). E1–E8 (ants, chimps) are not used.
+- **Producer: business** → only E9–E12. The lines use 局地战 and 集中一点 (一点集中) plus 41.7 %. No company is named (E13 ✗).
+- **Producer: 5 v 3** → 5² − 3² = 16 → 4 left, labelled **示意** on screen. The line is 「一拨一拨上？那叫[送]」. The one-by-one run (all 5 die, 2 of theirs left) is our arithmetic from L3, the same method as L5 (see Q2).
+- **Producer: Trafalgar** → 18.2 s. Bar 39 is a held picture, and the breakthrough lands on drop 2 at **81.400**.
+- **Producer: ending** → the punchline's last words [比他多] slam on the stop at **113.800**. Nothing brightens after it.
+- **Kept from review_v4 / gate4_director_r2 ("what works")**:
+  - the hook (frame-0 volley, ??? on blue, 你猜：剩 500 struck through by the 866 slam);
+  - the title slamming over the dark bank;
+  - the ◀◀ rewinds;
+  - 在排队 / ✓ / 拼刺刀：剩 500;
+  - bullet time (a) 1·2, (b) 两人才挨 1 枪, (c) ×2 ÷2 → 战斗力 ×4;
+  - the slab squares with ×1→×4, the 红方掉的 = 蓝方掉的 bars, and tape → 866 with the equation;
+  - from Trafalgar: the plan drawn on the water, 前队：先不理它, the breakthrough, the chart with the tally;
+  - the convergence ending.
+  The wording of ①②③④⑤⑦⑧ is unchanged from v4. Only the times move.
+
+## Beat table (bars and seconds)
+| Section | Bars | Seconds | Music | Purpose / what the viewer gets | Lines |
+|---|---|---|---|---|---|
+| Hook | 0–5 | 0.00–12.55 | intro groove; thins at bar 5 | 1000 v 500, live battle; "how many are left?" | ① ② |
+| 866 | 6–7 | 12.55–16.60 | bar 7 = the song's inhale | 866, not 500; bar 7 holds still (picture pause) | — |
+| **Title** | **8** | **16.60–18.63** | **DROP 1** | 为什么要"集中优势兵力" | — |
+| ★1 Melee | 9–12 | 18.63–26.73 | A1 | ◀◀; swords trade one for one → 500 ✓: "your guess is the sword rule" | ③ ④ |
+| ★2 Guns ×4 | 13–17 | 26.73–36.85 | A1 lift 14–15 → A2 | everyone can fire; frozen volley: 2 balls per red man, 1 ball per 2 blue men | ⑤ ⑥ |
+| ★3 Squares | 18–23 | 36.85–49.00 | A2; lift 22–23 | ×4 slam on 18; squares, ×1→×4, equal losses, fold, tape → 866 | ⑦ ⑧ |
+| Ex 1 Game 5 v 3 | 24–30 | 49.00–63.18 | breakdown (sparse) | all together: 4 left; ◀◀ one by one: all 5 die, 2 of theirs left | ⑨ ⑩ |
+| Ex 2 商战 | 31–36 | 63.18–75.33 | riser 31 → build | Japan turned it into business: not No.1? fight on a small patch | ⑪ ⑫ |
+| Ex 3 Trafalgar | 37–45 | 75.33–93.55 | build → bar 39 dip → **DROP 2 (40)** | 27 v 33, both columns on one stretch → breakthrough on 81.4 → 0 ships lost | ⑬ ⑭ |
+| Ex 4 RTS | 46–51 | 93.55–105.70 | lift 46–47 → final phrase 48 | knight beats 4 and loses to the 5th; StarCraft AI predicts about 9 in 10 | ⑮ ⑯ |
+| Ending | 52–55 | 105.70–113.80 | final phrase, brightest lift 54–55 | callbacks: more and still losing → scattered blue converges | ⑰ ⑱ (typed in bar 55) |
+| **Stop** | **56** | **113.80–115.83** | **song stops; chord tail** | **[比他多] slams on 113.80**, the picture freezes and dims | ⑱ holds |
+| End card | — | 115.83–119.83 | silence | 你还在哪见过「集中优势兵力」？ | — |
+
+## Shot list (start/end bar for every shot)
+| Shot | Bars | Start–end (s) | Picture: what the viewer sees, and the move into the next shot | Fact |
+|---|---|---|---|---|
+| 01 Hook | 0–5 | 0.00–12.55 | **As built in v4/v9.** Frame 0: red's volley, low behind the blue line. Blue's counter reads ???, red's reads 500. Blue's first volley hits on bar 1 (2.425), just as ① leaves. The camera cranes up to a high ¾ view while red melts. The sim is timed so red reaches 0 at 12.4 (≈ 10 s of sim from the first volley, ×1.0–1.1). | L4 |
+| 02 866 | 6–7 | 12.55–16.60 | **866** slams on bar 6 at centre, and the gold 你猜：剩 500 is struck through. Bar 7 (14.575) is the **picture pause**: smoke rolls in, the camera stops, and the feathered dark bank fills the frame on the last beat (the song's dip). | L4 |
+| 03 Title | 8 | 16.60–18.63 | **DROP 1.** The title slams in sharp over the dark bank (as built). It fades over the first half of bar 9 while the rewind starts under it. | — |
+| 04 Melee ★1 | 9–12 | 18.63–26.73 | ◀◀ on bar 9 (18.63–19.65): the battle runs backwards, the men stand up, the lines fold into deep columns, and the counters roll back to 1000 / 500. 19.65: the columns meet with bayonets in a fast time-lapse, one-on-one along the contact strip. Pull up: the idle back half is tagged 在排队. Red hits 0 on **bar 11 (22.675)**, blue holds 500, and ✓ snaps on. A high orbit holds to 26.7. | L2 |
+| 05 Guns → bullet time ★2 | 13–17 | 26.73–36.85 | Bar 13: a ½-bar ◀◀, then the columns, **including the idle back half** (rim-lit), fan into 3-rank firing lines, flown low (as built). **Bar 14 (28.75), bright lift: the first volley erupts and freezes.** (a) 28.75–31.8: the camera flies to one red man with two blue balls frozen in front of him, ringed. (b) 31.8–34.8: it swings round behind two ringed blue men who share one red ball. (c) 34.8–36.85: it climbs to a wide over both lines. | L2, L3 |
+| 06 Squares ★3 | 18–23 | 36.85–49.00 | **Bar 18: 战斗力 ×4 slams** (the merged tag), time resumes, and the camera climbs to straight down. Bar 19 (38.875): the lit slab squares grow off each firing line, and four red squares tile blue's square (×1→×4). Bar 20 (40.9): a short replay in which both squares shrink together; the lost strips peel into two equal gold bars with = between them, then fold onto red's ghost (one peel step, not three). Bar 22 (44.95): the tape runs along blue's square, and **866** slams on bar 22 beat 3 (45.96). **Bar 23 (46.975):** the equation, then the lift into the breakdown. | L3, L4, L1, L10 |
+| 07 Game 5 v 3 | 24–30 | 49.00–63.18 | **Match cut on 49.0:** blue's 866 slab becomes a gold-edged floor tile in a stylised arena (KayKit chunky fantasy heroes, high ¾ view, no game UI or IP). 5 blue heroes face 3 red, with HP bars over every head. Bars 24–25: all 5 collapse on the 3 together, with spell bolts. 3 red fall and 1 blue falls. Bar 26 (53.05): the floor shows a 5² square and a 3² square, and the equation slams; the 4 survivors glow. **Bar 27 (55.075): ◀◀** (the series device). Bars 27–30: the same 5 go in **one at a time**, and each dies in turn. Over the run one red hero falls, and red's HP pool drains only slowly. 60.64: the last blue falls, and two red heroes stand. The music is sparse here, so the camera is a slow tactical drift and the fight runs at about 0.8×. | E17, L3 |
+| 08 商战 | 31–36 | 63.18–75.33 | **Bar 31 (riser, no bass):** the camera rises straight up out of the arena. The arena shrinks into one block of a real city at dusk (Osaka photogrammetry aerial, not labelled). Red points are sprinkled over the whole city (老大, everywhere and thin). A few blue points (你) are scattered too. **Bar 33 (67.225):** the blue points pull together into one district, which lights blue; the red points inside it go out. Bars 34–35: a share bar in the district fills, and **41.7 %** slams on bar 35 (71.275). Bar 36: the camera drifts toward the bay. | E9, E11, E12 |
+| 09 Trafalgar approach | 37–39 | 75.33–81.40 | **Bar 37:** the camera crosses the bay's water, and the gold district edge carries over as the gold plan lines drawn on the 1805 sea (the built approach): the Combined line of 33, two British columns of 12 + 15 from the west, gold tracks from both columns into one stretch, and the grey van. Descend to the waterline beside the southern column's lead ship. **Bar 39 (79.375): hold.** The bow is lined up on the gap astern of an enemy ship and nothing new moves (the pre-drop dip). | T1, T2, T8, T9, T11 |
+| 10 Breakthrough | 40–43 | 81.40–89.50 | **DROP 2 = the film's biggest image** (as built, v9 FINAL OK). On 81.400 the lead ship is between two hulls, with gun-port flame jets rippling down both sides and slow motion through the pass. **Bar 42 (85.45):** Nelson's column breaks through further up. **Bar 43:** the camera cranes up through the smoke to a high wide view of the line cut in two places. | T3, T9 |
+| 11 Chart + tally | 44–45 | 89.50–93.55 | **Bar 44:** straight down, sepia chart grade. The line is in pieces, and the van sails off north. The tally rises. | T4, T11, T14, T15 |
+| 12 RTS knight | 46–49 | 93.55–101.65 | **Bar 46:** the chart's top-down view dissolves into an RTS-style field from the same angle (generic units, no game UI). One armoured knight against 4 swordsmen: he cuts them down, and **1 v 4 ✓** lands on bar 47's beat 3 (96.59). **Bar 48 (97.6, final phrase):** five swordsmen close in from all sides, and the knight falls at about 99.6 (bar 49). **1 v 5 ✗**. | E16 |
+| 13 StarCraft pull-back | 50–51 | 101.65–105.70 | **Bar 50:** the camera pulls far back. The same RTS map now holds 10 small skirmishes (generic sci-fi and fantasy units, no StarCraft art), each with a predicted-winner flag above it. One by one the flags resolve: 9 turn ✓ and 1 turns ✗. | E14 |
+| 14 Callbacks | 52–53 | 105.70–109.75 | Picture density: three cuts, about 1.35 s each, on the half-bar. (a) A blue hero walks into the 3 alone and drops. (b) The 33-ship line breaking. (c) The red city points going dark in the blue district. Every one shows the bigger side losing. | E17, T1, T4, E11 |
+| 15 Converge + punchline | 54–56 | 109.75–115.83 | **Bars 54–55 (brightest lift):** back on the hook's field at dusk, low sun. Eight scattered blue companies march into one block in front of a red company, and the camera rises as the block forms. ⑱ is typed in from 112.30. **113.800, the stop:** the block locks shut and [比他多] slams. Picture and sound hit together, then the frame **freezes and dims slowly** under the chord tail. No flash, nothing brighter after this. | L3, L5 |
+| 16 End card | — | 115.83–119.83 | The dim frozen frame stays behind the Juno end card (fade-up, no brightening). | — |
+
+## Lines (lines_v5.json)
+Needs = 0.5 + n/7 + 0.6 s (n counts each run of digits as 1).
+| # | Start | End | Line | 字 | Needs | Has | Picture under it | Fact |
+|---|---|---|---|---|---|---|---|---|
+| ① | 0.05 | 2.35 | 你有1000人，对面500人 | 13 | 2.24 | 2.30 | red fires first; ??? / 500 | L4 |
+| ② | 2.55 | 5.45 | 打光对面，你还剩[几个]？ | 9 | 2.39 | 2.90 | blue's volley hits; crane up | L4 |
+| ③ | 19.70 | 22.45 | 拼刺刀，只能[一对一] | 8 | 2.24 | 2.75 | bayonet duels along the strip | L2 |
+| ④ | 22.75 | 25.80 | 你的直觉，属于[冷兵器时代] | 11 | 2.67 | 3.05 | 500 ✓, 拼刺刀：剩 500 | L2 |
+| ⑤ | 26.80 | 29.45 | 有了枪，[人人]都能开火 | 9 | 2.39 | 2.65 | the back half joins the line; volley freezes | L2 |
+| ⑥ | 29.75 | 33.05 | 你开的枪[多一倍]，挨的枪[少一半] | 13 | 2.96 | 3.30 | (a) 1·2 on the red man → (b) the blue pair | L3 |
+| ⑦ | 37.00 | 39.75 | 战斗力，看人数的[平方] | 9 | 2.39 | 2.75 | ×4 → squares grow, ×1→×4 | L3 |
+| ⑧ | 46.05 | 48.90 | 开头的866，就是[这么来的] | 12 | 2.53 | 2.85 | 866 slam, equation | L4 |
+| ⑨ | 49.30 | 52.20 | 打团5打3，[一起上] | 8 | 2.24 | 2.90 | 5 heroes collapse on 3 | E17 (示意) |
+| ⑩ | 57.20 | 60.10 | 一拨一拨上？那叫[送] | 8 | 2.24 | 2.90 | heroes walk in one at a time and drop | E17, L3 (示意) |
+| ⑪ | 63.30 | 66.45 | 日本人把这套算术，用进了[商战] | 13 | 2.96 | 3.15 | camera rises; arena → city | E9 |
+| ⑫ | 67.35 | 70.55 | 不是老大？缩小战场，[集中一点] | 12 | 2.81 | 3.20 | blue points pull into one lit district | E11 |
+| ⑬ | 75.45 | 78.60 | 船少的英国，全压向[同一段] | 11 | 2.67 | 3.15 | plan on the water, 27 / 33 | T1, T2, T8 |
+| ⑭ | 89.60 | 92.55 | 结果，英国一艘船都[没丢] | 10 | 2.53 | 2.95 | chart, van sailing off, tally | T4, T15 |
+| ⑮ | 97.70 | 100.70 | 骑士能1打4，[1打5必输] | 11 | 2.67 | 3.00 | five swordsmen close in; knight falls | E16 |
+| ⑯ | 101.75 | 104.90 | 星际争霸AI，按这套算法[猜胜负] | 14 | 2.96 | 3.15 | 10 skirmishes, 9 ✓ 1 ✗ | E14 |
+| ⑰ | 105.80 | 108.40 | 人多，不一定[赢] | 6 | 1.96 | 2.60 | callbacks: the bigger side losing | E17, T1/T4 |
+| ⑱ | 112.30 | 115.80 | 同一时刻、同一地方，[比他多] | 11 | 2.67 | 3.50 | typed in during bar 55; **[比他多] slams on 113.80** | L3, L5 |
+
+(字 counts every digit. pace.py counts 1000 as one unit, so its "needs" figure is a little lower for ①⑧⑨⑮.)
+
+**Named silent beats** (pace.py CHECK, all intended):
+- 5.5–19.7: the battle, 866, the bar-7 hold, the title, the ◀◀.
+- 33.0–37.0: (b) → (c), ×2 ÷2 → ×4 slam.
+- 39.8–46.0: tiling, replay, = bars, fold, tape (all tags).
+- 52.2–57.2: 5² − 3² = 4², ◀◀.
+- 60.1–63.3: 全灭 · 对面还剩 2 个, rise out of the arena.
+- 70.5–75.5: 41.7 % slam.
+- **78.6–89.6: the bar-39 hold and the breakthrough.**
+- 92.5–97.7: 1 v 4 ✓.
+- 108.4–112.3: the convergence riser.
+
+**原来如此 beats:**
+- ★1 23 s: your 500 is the sword rule.
+- ★2 37 s: ×2 ÷2 = ×4.
+- ★3 46 s: the hook's 866 is square − square.
+- ★4 61 s: the same 5 heroes, sent one by one, lose to 3 (this replaces v4's two waves / 707 with the viewer's own game).
+
+## On-screen tags (every number traces to a row)
+| Time (s) | Tag (size) | Fact |
+|---|---|---|
+| 0.00–12.55 | counters: blue **???**, red **500** (live) | L4 |
+| 5.5–12.55 | gold **你猜：剩 500**, struck through on 12.55 | L4 (the intuitive answer) |
+| 12.55–16.4 | **866** (slam); **只倒下 134 人** 13.35–16.4 | L4 |
+| 16.60–19.1 | title **为什么要"集中优势兵力"** | — |
+| 18.63–19.65 | ◀◀; counters roll back to 1000 / 500 | L4 |
+| 20.9–22.6 | **在排队** (on the idle men) | L2 |
+| 22.68–25.8 | green **✓** + **拼刺刀：剩 500** | L2 (sim) |
+| 30.3 / 30.75–31.8 | **1**, **2** at the ball tips | L3 (our count) |
+| 32.0–34.7 | **两人才挨 1 枪** | L3 (our count) |
+| 34.85 / 35.3 → 36.85 | **火力 ×2**, **挨打 ÷2** → merge → **战斗力 ×4** slam (to 38.6) | L3 |
+| 38.9–40.9 | **1000 人** / **500 人**; **边长 = 一排人的长度**; **×1→×4** | L4, L3 |
+| 42.0–44.9 | **红方掉的 = 蓝方掉的** (≥ 48 px) | L3 |
+| 44.95–45.96 | tape count → **866** slam at 45.96 | L4 |
+| 46.98–48.95 | **1000² − 500² ≈ 866²**; small **兰彻斯特 · 1914** | L4; L1, L10 |
+| 49.0–63.1 | corner **示意 · 按平方律算** | E17 (✗ as a citation, so labelled 示意), L3 |
+| 53.05–55.0 | **5² − 3² = 16 = 4²**, then **剩 4 个** on the survivors | E17 |
+| 60.64–63.1 | **全灭 · 对面还剩 2 个** | our arithmetic from L3: 3² − 5 × 1² = 4 = 2² (Q2) |
+| 63.6–75.2 | header **日本 · 兰彻斯特战略 · 田冈信夫，1970年代起**; corner **示意** | E9 |
+| 64.5–67.2 | **老大** on the red points, **你** on the blue | E11 (强者 = share No.1) |
+| 67.4–71.2 | **局地战** on the lit district | E11 |
+| 71.28–75.2 | **41.7 %** slam + **第一才算坐稳 · 日本兰彻斯特协会的经验值** | E12 (the association's number, not Lanchester's) |
+| 75.6–93.4 | header **1805 · 特拉法加** | T1 |
+| 75.6–81.3 | counters **英国 27** / **法西联合 33** | T1 |
+| 76.4–79.3 | grey **前队：先不理它** (gold tracks, no text) | T2, T11 |
+| 89.5–93.4 | **前队** on the van; tally **英国 损失 0 艘 · 对方 损失一半以上** | T11; T4, T14, T15 |
+| 93.8–100.6 | **《帝国时代2》里的实验** | E16 (PNAS 2023, E5) |
+| 96.59–97.6 / 99.6–101.5 | **1 v 4 ✓** / **1 v 5 ✗** | E16 |
+| 102.2–105.6 | **约九成猜中** (big) + small **2015 · 阿尔伯塔大学** | E14 (✗ 九成以上) |
+| 115.83–119.83 | end card: **你还在哪见过「集中优势兵力」？** · 评论区聊聊 · **关注 Juno · 一起看懂世界** · sources: Lanchester 1914/1916; London Gazette 1805; ランチェスター協会; Lymbery et al., PNAS 2023; Stanescu et al., AIIDE 2015; 5 打 3 为按平方律示意 | L1, T1, E9–E12, E16, E14, E17 |
+
+Not on screen, on purpose: no company names (E13 ✗), no 「兰彻斯特算出的41.7%」 (E12), no 「九成以上」 (E14), no 「研究发现」 for 5 v 3 (E17), no 73.9, no 1916, no 13·5·15, no 孙子 (cut for time), and no ants.
+
+## Title options
+1. **为什么要"集中优势兵力"** (10 字) — current. Everyone knows the phrase and few know the maths under it. It promises a reason, not a result, so it can't overclaim. *(Recommended.)*
+2. **一拨一拨上，就是送** (8 字) — the gamer's own words. An 18–25 viewer recognises it in a second, and the film shows it literally (5 heroes fed one by one lose to 3, labelled 示意). It is the takeaway turned around, so it doesn't misstate the content.
+3. **人多，为什么还会输？** (8 字) — the paradox the film shows three times (5 fed one by one v 3, 27 v 33, the big company losing a district), answered by the last line. It says "can lose", not "always loses".
+
+## Questions and flags for the producer
+1. **End card past the music.** The song stops at 113.80 and its tail ends at 115.825. The punchline needs 2.7 s, and the question needs its own time. My plan is a 4.0 s end card in silence (film = 119.825 = 1:59.8, which matches "about 2:00"). If the film must end at 115.825, show the end-card question at 114.6 under the frozen punchline instead, and accept two texts on screen at once.
+2. **Researcher row needed (E17b).** The one-by-one run is our arithmetic, done the same way as L5: 5 blue heroes enter one at a time against 3 red, and 3² − 1² × 5 = 4 → 2 red left, while every lone blue dies. It is labelled 示意 like E17. Please add it to facts.md before the build.
+3. **⑱ is typed in during bar 55** so that it is readable when [比他多] slams on 113.80. If the owner wants the whole line to appear on the stop, set it to 113.80–116.50 and slide the end card to 116.5–120.5.
+4. **Not used, available if wanted:** E11 「强者：你出什么，我跟什么」 (ミート戦略) and 「约74%」 (E12). The Lanchester 1916 tag (L1, L9) is cut. It would fit the bar-43 crane only at the cost of crowding the drop.
+
+---
+
+# (v4, superseded: the 176.3 s film on Rynos Theme)
 # Script v4 (as built): 为什么要"集中优势兵力" (2026-10-23)
 
 **Source of truth:** `film/src/timeline.ts` (`T` table + `TIMELINE`), built by the producer from v3 + gate-1 director notes + cold read + facts.md (T5–T17, L9–L10, Changes) + music.md (Rynos Theme, 128 BPM, bar(k) = 0.045 + 1.875·k). This section only writes down what the code does; nothing here was changed in code.
