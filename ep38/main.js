@@ -33457,7 +33457,10 @@ var makeLand = (a) => {
     sh2.fragmentShader = sh2.fragmentShader.replace("#include <map_fragment>", `#ifdef USE_MAP
 		vec2 uvB = mat2(0.799, -0.602, 0.602, 0.799) * vMapUv * 0.173 + vec2(0.37, 0.71); vec2 uvC = mat2(0.276, 0.961, -0.961, 0.276) * vMapUv * 0.0491 + vec2(0.13, 0.52);
 		float nz = 0.5 + 0.5 * sin(vMapUv.x * 0.031 + sin(vMapUv.y * 0.023) * 2.0) * sin(vMapUv.y * 0.027 + 1.3);
-		vec4 sampledDiffuseColor = mix(mix(texture2D(map, vMapUv), texture2D(map, uvB), smoothstep(0.2, 0.8, nz)), texture2D(map, uvC), 0.35);
+		float fw = length(fwidth(vMapUv)); float farK = smoothstep(0.004, 0.02, fw); // far away the 31 m tile becomes a grid: hand over to the large rotated layers
+		vec4 nearC = mix(mix(texture2D(map, vMapUv), texture2D(map, uvB), smoothstep(0.2, 0.8, nz)), texture2D(map, uvC), 0.35);
+		vec4 farC = mix(texture2D(map, uvB), texture2D(map, uvC), 0.5 + 0.3 * (nz - 0.5));
+		vec4 sampledDiffuseColor = mix(nearC, farC, farK);
 		diffuseColor *= sampledDiffuseColor;
 	#endif`);
   };
@@ -34422,7 +34425,7 @@ var TIMELINE = [
   { a: T.half, b: T.sunzi, draw: (c, u) => {
     clearLand(c);
     const big = 1e3 * LEN, hs = 500 * LEN, k = ease2((u - 0.25) / 1);
-    camKeys([{ t: 0, pos: [-110, 55, -300], look: [90, 0, 0], fov: 42 }, { t: 0.85, pos: [0, 770, -330], look: [0, 0, 10], fov: 40 }, { t: 3.75, pos: [0, 790, -320], look: [0, 0, 10], fov: 40 }], u);
+    camKeys([{ t: 0, pos: [-110, 55, -300], look: [90, 0, 0], fov: 42 }, { t: 0.85, pos: [0, 860, -380], look: [0, 0, -10], fov: 40 }, { t: 3.75, pos: [0, 880, -370], look: [0, 0, -10], fov: 40 }], u);
     c.army.set(simBodies(SR2, 99), cp());
     c.smoke.set([]);
     c.flash.set([]);
@@ -34441,7 +34444,7 @@ var TIMELINE = [
     clearLand(c);
     const d = T.sea - T.sunzi;
     const big = 1e3 * LEN;
-    camKeys([{ t: 0, pos: [0, 790, -320], look: [0, 0, 10], fov: 40 }, { t: 2.2, pos: [0, 640, -380], look: [0, 0, 160], fov: 40 }, { t: d, pos: [0, 520, -300], look: [0, 900, 3e3], fov: 42 }], u);
+    camKeys([{ t: 0, pos: [0, 880, -370], look: [0, 0, -10], fov: 40 }, { t: 2.2, pos: [0, 640, -380], look: [0, 0, 160], fov: 40 }, { t: d, pos: [0, 520, -300], look: [0, 900, 3e3], fov: 42 }], u);
     c.army.set(simBodies(SR2, 99), cp());
     c.smoke.set([]);
     c.flash.set([]);
@@ -34458,7 +34461,7 @@ var TIMELINE = [
   { a: T.sea, b: T.climax, draw: (c, u) => {
     const d = T.climax - T.sea;
     const adv = ADV(u);
-    camKeys([{ t: 0, pos: [-1500, 1600, -2600], look: [-1200, 2600, 1200], fov: 42 }, { t: 1.4, pos: [-1700, 900, -2300], look: [0, 0, 0], fov: 40 }, { t: 6.5, pos: [-1500, 260, -1200], look: [0, 10, 0], fov: 38 }, { t: d, pos: [adv - 2450 - 20, 7, -492], look: [adv - 2450 + 260, 9, -450], fov: 40 }], u);
+    camKeys([{ t: 0, pos: [-1500, 1600, -2600], look: [-1200, 2600, 1200], fov: 42 }, { t: 1.4, pos: [-1700, 900, -2300], look: [0, 0, 0], fov: 40 }, { t: 6.5, pos: [-1500, 260, -1200], look: [0, 10, 0], fov: 38 }, { t: d, pos: [adv - 2450 - 85, 17, -440], look: [adv - 2450 + 60, 8, -440], fov: 40 }], u);
     setFleet(c.sea.combined, LINE(u, 0), u);
     setFleet(c.sea.british, COLS(adv), u);
     const { sm, fl } = broadsides(LINE(u, 0).slice(0, 18), u, 1, 3);
@@ -34483,8 +34486,8 @@ var TIMELINE = [
     const adv = ADV0 + tm * 55;
     const lead = { x: adv - 2450, z: -440 }, nel = { x: adv - 2755, z: 670 };
     const tN = 6.15;
-    if (u < 7.5) camKeys([{ t: 0, pos: [lead.x - 20, 7, -492], look: [lead.x + 260, 9, -450], fov: 40 }, { t: 1.2, pos: [lead.x - 26, 6, -500], look: [lead.x + 90, 9, -440], fov: 42 }, { t: 3, pos: [lead.x - 30, 5.5, -505], look: [lead.x + 70, 10, -440], fov: 42 }, { t: 7.5, pos: [lead.x - 140, 30, -590], look: [lead.x + 60, 6, -400], fov: 42 }], u);
-    else camKeys([{ t: 7.5, pos: [nel.x - 70, 9, 610], look: [nel.x + 120, 10, 680], fov: 40 }, { t: 9, pos: [nel.x - 150, 50, 520], look: [nel.x + 60, 4, 620], fov: 42 }, { t: 11.6, pos: [-900, 650, -1500], look: [0, 0, 0], fov: 44 }, { t: d, pos: [-960, 700, -1560], look: [0, 0, 60], fov: 44 }], u);
+    if (u < 7.5) camKeys([{ t: 0, pos: [lead.x - 85, 17, -440], look: [lead.x + 60, 8, -440], fov: 40 }, { t: 1.2, pos: [lead.x - 70, 13, -446], look: [lead.x + 50, 9, -440], fov: 44 }, { t: 3, pos: [lead.x - 62, 11, -452], look: [lead.x + 40, 9, -440], fov: 46 }, { t: 7.5, pos: [lead.x - 140, 34, -560], look: [lead.x + 40, 6, -420], fov: 42 }], u);
+    else camKeys([{ t: 7.5, pos: [nel.x - 80, 16, 670], look: [nel.x + 50, 8, 670], fov: 42 }, { t: 9, pos: [nel.x - 150, 50, 520], look: [nel.x + 60, 4, 620], fov: 42 }, { t: 11.6, pos: [-900, 650, -1500], look: [0, 0, 0], fov: 44 }, { t: d, pos: [-960, 700, -1560], look: [0, 0, 60], fov: 44 }], u);
     const heel = (q, k) => ({ ...q, roll: -0.075 * k });
     const line2 = LINE(T.climax - T.sea + u, 0).map((q) => Math.abs(q.z - lead.z) < 75 ? heel(q, clamp01((tm - 0.3) / 0.9)) : Math.abs(q.z - nel.z) < 75 ? heel(q, clamp01((tm - tN - 0.3) / 0.9)) : q);
     setFleet(c.sea.combined, line2, u);
@@ -34494,9 +34497,9 @@ var TIMELINE = [
     const r1 = rake(lead, tm, 0.04), r2 = rake(nel, tm, tN, -1);
     const lens = [];
     const cpz = camera.position, k1 = env(u, 1, 4.2, 0.6, 1);
-    if (k1 > 0) for (let k = 0; k < 28; k++) {
-      const f = 0.25 + k % 7 * 0.08;
-      lens.push([cpz.x + 30 * f + 14 + k * 3.7 % 40 - u * 4, cpz.y - 1 + k % 4 * 1.6, cpz.z + 18 + f * 40 - k % 5 * 3, 16 + k % 6 * 4, 0.9, 0.88, 0.85, 0.42 * k1]);
+    if (k1 > 0) for (let k = 0; k < 18; k++) {
+      const side = k % 2 ? 1 : -1;
+      lens.push([cpz.x + 20 + k * 5.3 % 40 + u * 3, cpz.y - 3 + k % 4 * 1.4, cpz.z + side * (10 + k * 2.9 % 14) - u * 2.5 * side, 7 + k % 5 * 2.5, 0.9, 0.88, 0.85, 0.3 * k1]);
     }
     c.seaSmoke.set([...a.sm, ...b.sm, ...e.sm, ...r1.sm, ...r2.sm, ...lens]);
     c.seaFlash.set([...a.fl, ...b.fl, ...e.fl, ...r1.fl, ...r2.fl]);
@@ -34537,7 +34540,7 @@ var TIMELINE = [
     seaMarks(c, 0, 0);
     camKeys([{ t: 0, pos: [-700, 520, -700], look: [300, 0, 400], fov: 44 }, { t: 2.2, pos: [-260, 6, -180], look: [1e3, 40, 900], fov: 38 }, { t: d, pos: [-215, 5, -205], look: [1e3, 36, 900], fov: 37 }], u);
     const bank = clamp01((u - d + 1.6) / 1.6);
-    const sm = Array.from({ length: 40 }, (_, i) => [-200 + i * 12, 20 + i % 5 * 6, 120 + i % 7 * 20, 60, 0.85, 0.8, 0.78, 0.18]);
+    const sm = Array.from({ length: 40 }, (_, i) => [-200 + i * 12, 20 + i % 5 * 6, 120 + i % 7 * 20, 60, 0.85, 0.8, 0.78, 0.18 * clamp01((u - 2) / 0.8)]);
     for (let k = 0; k < 60; k++) {
       const f = k % 10 / 10, g = Math.floor(k / 10) / 6;
       const fw = camera.getWorldDirection(new Vector3());
@@ -34565,7 +34568,7 @@ var TIMELINE = [
     });
     c.army.set(bodies, cp());
     const sm = simSmoke(SL, st);
-    const clear = 1 - clamp01(u / 1.1);
+    const clear = 1 - clamp01(u / 0.6);
     const lens = [];
     if (clear > 0) {
       const fw = camera.getWorldDirection(new Vector3()), rt2 = new Vector3().crossVectors(fw, camera.up).normalize();
@@ -34585,7 +34588,7 @@ var TIMELINE = [
   { a: T.ending, b: T.card, draw: (c, u) => {
     clearLand(c);
     const d = T.card - T.ending;
-    camKeys([{ t: 0, pos: [-150, 45, -190], look: [-20, 0, 0], fov: 40 }, { t: d, pos: [-110, 30, -120], look: [-20, 0, 0], fov: 40 }], u);
+    camKeys([{ t: 0, pos: [-125, 32, -115], look: [-35, 1, 0], fov: 40 }, { t: d, pos: [-100, 16, -66], look: [-40, 1, 0], fov: 40 }], u);
     const R = rnd(5), m = ease2((u - 0.1) / 3.4);
     const bodies = [];
     const centres = Array.from({ length: 8 }, () => [(R() - 0.5) * 300, (R() - 0.5) * 240]);
