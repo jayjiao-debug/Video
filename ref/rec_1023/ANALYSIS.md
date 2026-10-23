@@ -42,3 +42,16 @@
 - **Hand-off transitions.** The outgoing object morphs or zooms into the incoming one.
 - **Native-language lines need verification** (a researcher plus a native check). Use real quotes only where they are documented; otherwise use a paraphrased question.
 - **Ending.** All the silhouettes line up and walk together, then the question goes to the viewer.
+
+## Voice-over vs music (measured 2026-10-23)
+- **How much voice.** Subtitles are on screen about 64 % of the time: 26 windows of 5–6 s each, with about 3 s of music only between scenes.
+  - The spectrogram shows speech harmonics through most of each window.
+  - Each scene's voice is about 5 s: the question in the native language plus one sentence of story, not just a short quote. Voice is on air for roughly 55 % of the film.
+- **How loud.**
+  - The music ducks only slightly under the voice: the low band (< 150 Hz) is 1.4 dB lower while subtitles show.
+  - The speech band (300–3400 Hz) is no louder with voice than without. The voice sits about level with, to a few dB under, the music.
+  - Loudness is −11.1 LUFS during lines and −13.1 LUFS between them; −11.7 LUFS integrated.
+  - It is a music-forward mix: the voice is a texture you can follow, and the Chinese subtitles carry the meaning.
+- **For our films.**
+  - Put voice about 3 LU under the BGM's loudness, compressed so it does not need loud peaks. The BGM is not ducked (house rule).
+  - Write about 5 s of native-language voice per scene (quote + one line of story) to match the reference's density.

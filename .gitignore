@@ -54,3 +54,5 @@ episodes/*/remotion/node_modules
 episodes/*/remotion/out/
 episodes/*/remotion/look_check/
 episodes/39-qizongzui/*.mp4
+episodes/*/audio/**/*.mp3
+episodes/*/audio/**/*.wav
