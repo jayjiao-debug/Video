@@ -1,0 +1,134 @@
+plan: {'tier': None, 'character_count': None, 'character_limit': None, 'status': None}
+models: ['eleven_v4', 'eleven_v4_turbo', 'eleven_v3', 'eleven_v3_conversational', 'eleven_multilingual_v2', 'eleven_flash_v2_5', 'eleven_turbo_v2_5', 'eleven_turbo_v2', 'eleven_flash_v2', 'eleven_english_sts_v2', 'eleven_multilingual_sts_v2']
+model: eleven_v4
+{"name": "00_hook_A", "lang": "zh", "text": "[softly] 人类打出的第一通电话…… [pause] 第一句话，说的是什么？", "voice": "shared:James Gao - Calm, Friendly and Warm (standard, zh)", "voice_id": "4VZIsMPtgggwNg7OXbPY", "model": "eleven_v3", "status": 200, "file": "00_hook_A.mp3", "bytes": 118743}
+{"name": "00_hook_B", "lang": "zh", "text": "[softly] 人类打出的第一通电话…… [pause] 第一句话，说的是什么？", "voice": "shared:Adam Li -  Deep, Steady and Calm (singapore mandarin, zh)", "voice_id": "hZTuv9Zqrq4yHYrEmF1r", "model": "eleven_v3", "status": 200, "file": "00_hook_B.mp3", "bytes": 94501}
+{"name": "00_hook_C", "lang": "zh", "text": "[softly] 人类打出的第一通电话…… [pause] 第一句话，说的是什么？", "voice": "shared:Evan Zhao - Warm, Calm and Trustworthy (beijing mandarin, zh)", "voice_id": "MI36FIkp9wRP7cpWKPTl", "model": "eleven_v3", "status": 200, "file": "00_hook_C.mp3", "bytes": 129192}
+{"name": "01_shang_n1_A", "lang": "zh", "text": "[thoughtfully] 三千年前，殷商的占卜师，把一个问题刻在龟甲上…… 再放进火里烤。", "voice": "shared:James Gao - Calm, Friendly and Warm (standard, zh)", "voice_id": "4VZIsMPtgggwNg7OXbPY", "model": "eleven_v3", "status": 200, "file": "01_shang_n1_A.mp3", "bytes": 130446}
+{"name": "01_shang_n1_B", "lang": "zh", "text": "[thoughtfully] 三千年前，殷商的占卜师，把一个问题刻在龟甲上…… 再放进火里烤。", "voice": "shared:Adam Li -  Deep, Steady and Calm (singapore mandarin, zh)", "voice_id": "hZTuv9Zqrq4yHYrEmF1r", "model": "eleven_v3", "status": 200, "file": "01_shang_n1_B.mp3", "bytes": 112474}
+{"name": "01_shang_q", "lang": "zh", "text": "[whispers] 其自东来雨？", "voice": "shared:Julian - Deep, Rich and Mature (british, en)", "voice_id": "7p1Ofvcwsv7UBPoFNcpI", "model": "eleven_v3", "status": 200, "file": "01_shang_q.mp3", "bytes": 44764}
+{"name": "01_shang_n2_A", "lang": "zh", "text": "龟甲裂开的纹路，就是天的回答。[pause] 有的龟甲上，还刻着后来的结果—— [softly] 允雨。真的，下雨了。", "voice": "shared:James Gao - Calm, Friendly and Warm (standard, zh)", "voice_id": "4VZIsMPtgggwNg7OXbPY", "model": "eleven_v3", "status": 200, "file": "01_shang_n2_A.mp3", "bytes": 199409}
+{"name": "01_shang_n2_B", "lang": "zh", "text": "龟甲裂开的纹路，就是天的回答。[pause] 有的龟甲上，还刻着后来的结果—— [softly] 允雨。真的，下雨了。", "voice": "shared:Adam Li -  Deep, Steady and Calm (singapore mandarin, zh)", "voice_id": "hZTuv9Zqrq4yHYrEmF1r", "model": "eleven_v3", "status": 200, "file": "01_shang_n2_B.mp3", "bytes": 242877}
+Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+[
+ {
+  "name": "00_hook_A",
+  "lang": "zh",
+  "text": "[softly] 人类打出的第一通电话…… [pause] 第一句话，说的是什么？",
+  "voice": "shared:James Gao - Calm, Friendly and Warm (standard, zh)",
+  "voice_id": "4VZIsMPtgggwNg7OXbPY",
+  "model": "eleven_v3",
+  "status": 200,
+  "file": "00_hook_A.mp3",
+  "bytes": 118743,
+  "heard": "人类打出的第一通电话第一句话说的是什么",
+  "heard_lang": "zh",
+  "heard_lang_p": 0.999,
+  "seconds": 7.36
+ },
+ {
+  "name": "00_hook_B",
+  "lang": "zh",
+  "text": "[softly] 人类打出的第一通电话…… [pause] 第一句话，说的是什么？",
+  "voice": "shared:Adam Li -  Deep, Steady and Calm (singapore mandarin, zh)",
+  "voice_id": "hZTuv9Zqrq4yHYrEmF1r",
+  "model": "eleven_v3",
+  "status": 200,
+  "file": "00_hook_B.mp3",
+  "bytes": 94501,
+  "heard": "人类打出的第一通电话第一句话说的是什么",
+  "heard_lang": "zh",
+  "heard_lang_p": 1.0,
+  "seconds": 5.84
+ },
+ {
+  "name": "00_hook_C",
+  "lang": "zh",
+  "text": "[softly] 人类打出的第一通电话…… [pause] 第一句话，说的是什么？",
+  "voice": "shared:Evan Zhao - Warm, Calm and Trustworthy (beijing mandarin, zh)",
+  "voice_id": "MI36FIkp9wRP7cpWKPTl",
+  "model": "eleven_v3",
+  "status": 200,
+  "file": "00_hook_C.mp3",
+  "bytes": 129192,
+  "heard": "人类打出的第一通电话第一句话说的是什么",
+  "heard_lang": "zh",
+  "heard_lang_p": 0.999,
+  "seconds": 8.0
+ },
+ {
+  "name": "01_shang_n1_A",
+  "lang": "zh",
+  "text": "[thoughtfully] 三千年前，殷商的占卜师，把一个问题刻在龟甲上…… 再放进火里烤。",
+  "voice": "shared:James Gao - Calm, Friendly and Warm (standard, zh)",
+  "voice_id": "4VZIsMPtgggwNg7OXbPY",
+  "model": "eleven_v3",
+  "status": 200,
+  "file": "01_shang_n1_A.mp3",
+  "bytes": 130446,
+  "heard": "三千年前,殷商的占卜师把一个问题刻在硅架上,再放进火里烤。",
+  "heard_lang": "zh",
+  "heard_lang_p": 0.998,
+  "seconds": 8.08
+ },
+ {
+  "name": "01_shang_n1_B",
+  "lang": "zh",
+  "text": "[thoughtfully] 三千年前，殷商的占卜师，把一个问题刻在龟甲上…… 再放进火里烤。",
+  "voice": "shared:Adam Li -  Deep, Steady and Calm (singapore mandarin, zh)",
+  "voice_id": "hZTuv9Zqrq4yHYrEmF1r",
+  "model": "eleven_v3",
+  "status": 200,
+  "file": "01_shang_n1_B.mp3",
+  "bytes": 112474,
+  "heard": "三千年前,殷商的占卜师把一个问题刻在硅甲上,再放进活理考。",
+  "heard_lang": "zh",
+  "heard_lang_p": 0.999,
+  "seconds": 6.96
+ },
+ {
+  "name": "01_shang_q",
+  "lang": "zh",
+  "text": "[whispers] 其自东来雨？",
+  "voice": "shared:Julian - Deep, Rich and Mature (british, en)",
+  "voice_id": "7p1Ofvcwsv7UBPoFNcpI",
+  "model": "eleven_v3",
+  "status": 200,
+  "file": "01_shang_q.mp3",
+  "bytes": 44764,
+  "heard": "曲自東來語",
+  "heard_lang": "zh",
+  "heard_lang_p": 0.968,
+  "seconds": 2.72
+ },
+ {
+  "name": "01_shang_n2_A",
+  "lang": "zh",
+  "text": "龟甲裂开的纹路，就是天的回答。[pause] 有的龟甲上，还刻着后来的结果—— [softly] 允雨。真的，下雨了。",
+  "voice": "shared:James Gao - Calm, Friendly and Warm (standard, zh)",
+  "voice_id": "4VZIsMPtgggwNg7OXbPY",
+  "model": "eleven_v3",
+  "status": 200,
+  "file": "01_shang_n2_A.mp3",
+  "bytes": 199409,
+  "heard": "龟甲裂开的纹路,就是天的回答。有的龟甲上,还刻着后来的结果,云雨,真的下雨了。",
+  "heard_lang": "zh",
+  "heard_lang_p": 1.0,
+  "seconds": 12.4
+ },
+ {
+  "name": "01_shang_n2_B",
+  "lang": "zh",
+  "text": "龟甲裂开的纹路，就是天的回答。[pause] 有的龟甲上，还刻着后来的结果—— [softly] 允雨。真的，下雨了。",
+  "voice": "shared:Adam Li -  Deep, Steady and Calm (singapore mandarin, zh)",
+  "voice_id": "hZTuv9Zqrq4yHYrEmF1r",
+  "model": "eleven_v3",
+  "status": 200,
+  "file": "01_shang_n2_B.mp3",
+  "bytes": 242877,
+  "heard": "龟甲裂开的纹路,就是天的回答。有的龟甲上还刻着后来的结果。云雨真的下雨了。",
+  "heard_lang": "zh",
+  "heard_lang_p": 1.0,
+  "seconds": 15.12
+ }
+]
