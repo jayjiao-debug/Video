@@ -1,82 +1,24 @@
 {
-  "id": "ep41-vo-02",
+  "id": "ep41-vo-03",
   "model_prefs": [
     "eleven_v4"
   ],
   "items": [
     {
       "lang": "zh",
-      "gender": "male",
-      "use_case": "narrative_story",
+      "voice_id": "MI36FIkp9wRP7cpWKPTl",
       "model": "eleven_v3",
       "settings": {
-        "stability": 0.35,
+        "stability": 0.4,
         "similarity_boost": 0.8,
-        "style": 0.55
+        "style": 0.5
       },
-      "name": "00_hook_A",
-      "text": "[softly] 人类打出的第一通电话…… [pause] 第一句话，说的是什么？"
+      "name": "01_shang_n1",
+      "text": "三千年前，商朝的占卜师，把一个问题刻在龟甲上…… 放进火里烤。"
     },
     {
       "lang": "zh",
-      "gender": "male",
-      "use_case": "narrative_story",
-      "model": "eleven_v3",
-      "settings": {
-        "stability": 0.35,
-        "similarity_boost": 0.8,
-        "style": 0.55
-      },
-      "pick": 1,
-      "name": "00_hook_B",
-      "text": "[softly] 人类打出的第一通电话…… [pause] 第一句话，说的是什么？"
-    },
-    {
-      "lang": "zh",
-      "gender": "male",
-      "use_case": "narrative_story",
-      "model": "eleven_v3",
-      "settings": {
-        "stability": 0.35,
-        "similarity_boost": 0.8,
-        "style": 0.55
-      },
-      "pick": 2,
-      "name": "00_hook_C",
-      "text": "[softly] 人类打出的第一通电话…… [pause] 第一句话，说的是什么？"
-    },
-    {
-      "lang": "zh",
-      "gender": "male",
-      "use_case": "narrative_story",
-      "model": "eleven_v3",
-      "settings": {
-        "stability": 0.35,
-        "similarity_boost": 0.8,
-        "style": 0.55
-      },
-      "name": "01_shang_n1_A",
-      "text": "[thoughtfully] 三千年前，殷商的占卜师，把一个问题刻在龟甲上…… 再放进火里烤。"
-    },
-    {
-      "lang": "zh",
-      "gender": "male",
-      "use_case": "narrative_story",
-      "model": "eleven_v3",
-      "settings": {
-        "stability": 0.35,
-        "similarity_boost": 0.8,
-        "style": 0.55
-      },
-      "pick": 1,
-      "name": "01_shang_n1_B",
-      "text": "[thoughtfully] 三千年前，殷商的占卜师，把一个问题刻在龟甲上…… 再放进火里烤。"
-    },
-    {
-      "lang": "zh",
-      "gender": "male",
-      "age": "old",
-      "search": "deep",
+      "voice_id": "4VZIsMPtgggwNg7OXbPY",
       "model": "eleven_v3",
       "settings": {
         "stability": 0.3,
@@ -88,30 +30,15 @@
     },
     {
       "lang": "zh",
-      "gender": "male",
-      "use_case": "narrative_story",
+      "voice_id": "MI36FIkp9wRP7cpWKPTl",
       "model": "eleven_v3",
       "settings": {
-        "stability": 0.35,
+        "stability": 0.4,
         "similarity_boost": 0.8,
-        "style": 0.55
+        "style": 0.5
       },
-      "name": "01_shang_n2_A",
-      "text": "龟甲裂开的纹路，就是天的回答。[pause] 有的龟甲上，还刻着后来的结果—— [softly] 允雨。真的，下雨了。"
-    },
-    {
-      "lang": "zh",
-      "gender": "male",
-      "use_case": "narrative_story",
-      "model": "eleven_v3",
-      "settings": {
-        "stability": 0.35,
-        "similarity_boost": 0.8,
-        "style": 0.55
-      },
-      "pick": 1,
-      "name": "01_shang_n2_B",
-      "text": "龟甲裂开的纹路，就是天的回答。[pause] 有的龟甲上，还刻着后来的结果—— [softly] 允雨。真的，下雨了。"
+      "name": "01_shang_n2",
+      "text": "裂开的纹路，就是天的回答。[pause] 那一天…… 真的下雨了。"
     }
   ]
 }
