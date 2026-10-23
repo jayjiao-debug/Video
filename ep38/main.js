@@ -34003,7 +34003,10 @@ var rake = (s, tm, t0, towardCam = -1) => {
       for (let j = 0; j < 5; j++) fl.push([px, 4.5 + j * 0.15, pz + side * (2 + j * 3.2), (6 - j * 1) * (0.6 + 0.6 * k2), 4.2, 1.9 - j * 0.3, 0.5, k2]);
     }
     const drift = side === towardCam ? 7.5 : 4;
-    for (let q = 0; q < 2; q++) sm.push([px + age * 2.2 + q * 1.5, 4.5 + age * (2 + q), pz + side * (3 + age * drift * (0.7 + q * 0.5)), 6 + age * 9, 0.6, 0.56, 0.5, 0.75 * Math.exp(-age / 6) * Math.min(1, age * 10)]);
+    for (let q = 0; q < 5; q++) {
+      const h1 = Math.sin(k * 12.9 + q * 78.2) * 0.5 + 0.5, h2 = Math.sin(k * 39.3 + q * 11.7) * 0.5 + 0.5;
+      sm.push([px + age * (1.2 + h1 * 2.5) + (h2 - 0.5) * 4, 4 + age * (1.2 + h2 * 2.2), pz + side * (3 + age * drift * (0.5 + h1 * 0.8)), 3.5 + age * (2.5 + h2 * 2.5), 0.6 + h1 * 0.08, 0.56 + h1 * 0.06, 0.5 + h1 * 0.05, 0.42 * Math.exp(-age / 6) * Math.min(1, age * 10)]);
+    }
   }
   return { sm, fl };
 };
@@ -34241,8 +34244,8 @@ var TIMELINE = [
     const d = T.x4 - T.bullet;
     const R = SA.units[redStar[0]], B = SA.units[blueOne[0]], B2 = SA.units[bluePartner];
     if (u < 5.6) camKeys([{ t: 0, pos: [-60, 26, -64], look: [0, 1, 0], fov: 38 }, { t: 5.6, pos: [R.x - 14, 3.2, R.z - 9], look: [R.x, 1.4, R.z], fov: 36 }], u);
-    else if (u < 11.25) camKeys([{ t: 5.6, pos: [R.x - 14, 3.2, R.z - 9], look: [R.x, 1.4, R.z], fov: 36 }, { t: 6.45, pos: [(B.x + B2.x) / 2 + 8.6, 2.7, (B.z + B2.z) / 2 - 7.6], look: [(B.x + B2.x) / 2, 1.3, (B.z + B2.z) / 2], fov: 38 }, { t: 11.25, pos: [(B.x + B2.x) / 2 + 8, 2.6, (B.z + B2.z) / 2 - 7], look: [(B.x + B2.x) / 2, 1.2, (B.z + B2.z) / 2], fov: 38 }], u);
-    else camKeys([{ t: 11.25, pos: [(B.x + B2.x) / 2 + 8, 2.6, (B.z + B2.z) / 2 - 7], look: [(B.x + B2.x) / 2, 1.2, (B.z + B2.z) / 2], fov: 38 }, { t: d, pos: [-10, 44, -80], look: [0, 0, 0], fov: 40 }], u);
+    else if (u < 11.25) camKeys([{ t: 5.6, pos: [R.x - 14, 3.2, R.z - 9], look: [R.x, 1.4, R.z], fov: 36 }, { t: 6.45, pos: [(B.x + B2.x) / 2 - 8.6, 2.9, (B.z + B2.z) / 2 - 7.2], look: [(B.x + B2.x) / 2, 1.3, (B.z + B2.z) / 2], fov: 38 }, { t: 11.25, pos: [(B.x + B2.x) / 2 - 8, 2.8, (B.z + B2.z) / 2 - 6.6], look: [(B.x + B2.x) / 2, 1.2, (B.z + B2.z) / 2], fov: 38 }], u);
+    else camKeys([{ t: 11.25, pos: [(B.x + B2.x) / 2 - 8, 2.8, (B.z + B2.z) / 2 - 6.6], look: [(B.x + B2.x) / 2, 1.2, (B.z + B2.z) / 2], fov: 38 }, { t: d, pos: [-10, 44, -80], look: [0, 0, 0], fov: 40 }], u);
     battle(c, SA, FREEZE, { tracers: false });
     const segs = [], balls = [];
     firstVolley.forEach((s) => {
@@ -34706,11 +34709,28 @@ var sunziText = (scene) => {
     hud,
     split
   };
+  const XF = 0.4, xfAt = [bar(55), bar(80), bar(86)];
+  const sg = split.getContext("2d");
   window.renderAt = (t) => {
-    const shot = TIMELINE.find((s) => t >= s.a && t < s.b) ?? TIMELINE[TIMELINE.length - 1];
+    const i = TIMELINE.findIndex((s) => t >= s.a && t < s.b);
+    const shot = TIMELINE[i < 0 ? TIMELINE.length - 1 : i];
     hud.innerHTML = "";
     split.style.display = "none";
-    shot.draw(ctx, t - shot.a, t);
+    const u = t - shot.a;
+    const xf = i > 0 && u < XF && xfAt.some((x) => Math.abs(x - shot.a) < 0.01);
+    if (xf) {
+      const prev = TIMELINE[i - 1];
+      prev.draw(ctx, prev.b - prev.a - 1 / 30, prev.b - 1 / 30);
+      sg.clearRect(0, 0, 1920, 1080);
+      sg.drawImage(document.getElementById("c"), 0, 0);
+      hud.innerHTML = "";
+    }
+    shot.draw(ctx, u, t);
+    if (xf) {
+      const k = u / XF;
+      split.style.display = "block";
+      split.style.opacity = String(1 - k * k * (3 - 2 * k));
+    }
   };
   window.DURATION = TIMELINE[TIMELINE.length - 1].b;
   await document.fonts.load('900 300px "Noto Serif CJK SC"').catch(() => null);
