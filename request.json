@@ -1,18 +1,6 @@
 {
- "id": "lanchester-v2-models-01",
+ "id": "lanchester-v2-kaykit-01",
  "items": [
-  {"type": "sketchfab", "uid": "ea4047922b5644fdb48b5ac910974241", "name": "ant_rig"},
-  {"type": "sketchfab", "uid": "6ea6dfb45845443b9f99b2fe4456f9a3", "name": "ant_ergin"},
-  {"type": "sketchfab", "uid": "daff0fd5908d4085a193a6fc126f597e", "name": "ant_black"},
-  {"type": "sketchfab", "uid": "53e0980d555a4af6b921cc00c208e4a3", "name": "osaka"},
-  {"type": "sketchfab", "uid": "f93476af2615476e85888b76ac85ef30", "name": "city_lowpoly"},
-  {"type": "sketchfab", "uid": "bc44625cbf2f4ec985192fa017d7ed0b", "name": "hero_archer"},
-  {"type": "sketchfab", "uid": "94465670d3d74f939a9c9b8e1ab47e9e", "name": "hero_mage_glasses"},
-  {"type": "sketchfab", "uid": "6825e1a8695449a79c0b2ca17f1bf6cb", "name": "hero_mage"},
-  {"type": "sketchfab", "uid": "0e43d37c08d848aab61da53b29c41fff", "name": "forest_floor"},
-  {"type": "polyhaven", "id": "forest_leaves_02", "res": "2k"},
-  {"type": "polyhaven", "id": "brown_mud_leaves_01", "res": "2k"},
-  {"type": "polyhaven", "id": "cobblestone_floor_07", "res": "2k"},
-  {"type": "polyhaven", "id": "kloofendal_48d_partly_cloudy_puresky", "res": "2k"}
+  {"type": "url", "url": "https://github.com/KayKit-Game-Assets/KayKit-Character-Pack-Adventures-1.0/archive/672074b73ba276876a19e8816ecdc5241817ab47.zip", "name": "kaykit_adventurers.zip", "license": "CC0 - KayKit Character Pack: Adventurers 1.0 by Kay Lousberg (kaylousberg.com)"}
  ]
 }
