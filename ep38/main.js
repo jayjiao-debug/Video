@@ -34025,7 +34025,11 @@ var broadsides = (ships, t, rate, seed) => {
       const along = (R() - 0.5) * 46, side = R() < 0.5 ? -1 : 1;
       const hx = Math.cos(s.heading), hz = -Math.sin(s.heading);
       const px = s.x + hx * along + hz * side * 9, pz = s.z + hz * along - hx * side * 9;
-      sm.push([px + hz * side * (4 + age * 6) + age * 3, 5 + age * 2.2, pz - hx * side * (4 + age * 6), 8 + age * 9, 0.6, 0.56, 0.5, 0.6 * Math.exp(-age / 3.5) * Math.min(1, age * 8)]);
+      for (let q = 0; q < 3; q++) {
+        const h1 = Math.sin(i * 7.1 + k * 12.9 + q * 78.2) * 0.5 + 0.5, h2 = Math.sin(i * 3.3 + k * 39.3 + q * 11.7) * 0.5 + 0.5;
+        const out = 4 + age * (3 + h1 * 5);
+        sm.push([px + hz * side * out + age * (1.5 + h2 * 2) + (h1 - 0.5) * 5, 4 + age * (1.2 + h2 * 1.6), pz - hx * side * out + (h2 - 0.5) * 5, 4 + age * (3 + h2 * 3), 0.6 + h1 * 0.08, 0.56 + h1 * 0.06, 0.5 + h1 * 0.05, 0.36 * Math.exp(-age / 3.5) * Math.min(1, age * 8)]);
+      }
       if (age < 0.3) {
         const k2 = 1 - age / 0.3;
         for (let j = 0; j < 3; j++) fl.push([px + hz * side * (2 + j * 2.4), 5, pz - hx * side * (2 + j * 2.4), (3.6 - j) * (0.6 + 0.6 * k2), 3.6, 1.7 - j * 0.3, 0.5, k2]);
@@ -34733,6 +34737,7 @@ var sunziText = (scene) => {
     }
   };
   window.DURATION = TIMELINE[TIMELINE.length - 1].b;
+  window.CTX = ctx;
   await document.fonts.load('900 300px "Noto Serif CJK SC"').catch(() => null);
   window.READY = true;
 })().catch((e) => {
