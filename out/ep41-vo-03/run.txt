@@ -1,0 +1,54 @@
+plan: {'tier': None, 'character_count': None, 'character_limit': None, 'status': None}
+models: ['eleven_v4', 'eleven_v4_turbo', 'eleven_v3', 'eleven_v3_conversational', 'eleven_multilingual_v2', 'eleven_flash_v2_5', 'eleven_turbo_v2_5', 'eleven_turbo_v2', 'eleven_flash_v2', 'eleven_english_sts_v2', 'eleven_multilingual_sts_v2']
+model: eleven_v4
+{"name": "01_shang_n1", "lang": "zh", "text": "三千年前，商朝的占卜师，把一个问题刻在龟甲上…… 放进火里烤。", "voice": "MI36FIkp9wRP7cpWKPTl", "voice_id": "MI36FIkp9wRP7cpWKPTl", "model": "eleven_v3", "status": 200, "file": "01_shang_n1.mp3", "bytes": 134207}
+{"name": "01_shang_q", "lang": "zh", "text": "[whispers] 其自东来雨？", "voice": "4VZIsMPtgggwNg7OXbPY", "voice_id": "4VZIsMPtgggwNg7OXbPY", "model": "eleven_v3", "status": 200, "file": "01_shang_q.mp3", "bytes": 38077}
+{"name": "01_shang_n2", "lang": "zh", "text": "裂开的纹路，就是天的回答。[pause] 那一天…… 真的下雨了。", "voice": "MI36FIkp9wRP7cpWKPTl", "voice_id": "MI36FIkp9wRP7cpWKPTl", "model": "eleven_v3", "status": 200, "file": "01_shang_n2.mp3", "bytes": 119997}
+Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+[
+ {
+  "name": "01_shang_n1",
+  "lang": "zh",
+  "text": "三千年前，商朝的占卜师，把一个问题刻在龟甲上…… 放进火里烤。",
+  "voice": "MI36FIkp9wRP7cpWKPTl",
+  "voice_id": "MI36FIkp9wRP7cpWKPTl",
+  "model": "eleven_v3",
+  "status": 200,
+  "file": "01_shang_n1.mp3",
+  "bytes": 134207,
+  "heard": "關鍵年前,商朝的占卜師把一個問題刻在歸家上。放軍活禮考。",
+  "heard_lang": "zh",
+  "heard_lang_p": 0.996,
+  "seconds": 8.32
+ },
+ {
+  "name": "01_shang_q",
+  "lang": "zh",
+  "text": "[whispers] 其自东来雨？",
+  "voice": "4VZIsMPtgggwNg7OXbPY",
+  "voice_id": "4VZIsMPtgggwNg7OXbPY",
+  "model": "eleven_v3",
+  "status": 200,
+  "file": "01_shang_q.mp3",
+  "bytes": 38077,
+  "heard": "其自東蘭語",
+  "heard_lang": "zh",
+  "heard_lang_p": 0.994,
+  "seconds": 2.32
+ },
+ {
+  "name": "01_shang_n2",
+  "lang": "zh",
+  "text": "裂开的纹路，就是天的回答。[pause] 那一天…… 真的下雨了。",
+  "voice": "MI36FIkp9wRP7cpWKPTl",
+  "voice_id": "MI36FIkp9wRP7cpWKPTl",
+  "model": "eleven_v3",
+  "status": 200,
+  "file": "01_shang_n2.mp3",
+  "bytes": 119997,
+  "heard": "我也開的文錄就是天的回答,那一天真的下雨了。",
+  "heard_lang": "zh",
+  "heard_lang_p": 0.997,
+  "seconds": 7.44
+ }
+]
