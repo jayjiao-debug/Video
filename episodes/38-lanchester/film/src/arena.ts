@@ -64,7 +64,8 @@ export const makeCity = async (sky: THREE.Texture, env: THREE.Texture): Promise<
 	city.traverse((m: any) => { if (!m.isMesh) return; const mat = m.material as THREE.MeshStandardMaterial; mat.onBeforeCompile = (sh) => {
 		sh.uniforms.zones = zoneU; sh.uniforms.zcol = colU;
 		sh.vertexShader = sh.vertexShader.replace('#include <common>', '#include <common>\nvarying vec3 vWp;').replace('#include <worldpos_vertex>', '#include <worldpos_vertex>\nvWp = (modelMatrix * vec4(transformed, 1.0)).xyz;');
-		sh.fragmentShader = sh.fragmentShader.replace('#include <common>', `#include <common>\nvarying vec3 vWp; uniform vec4 zones[${N}]; uniform vec3 zcol[${N}];`).replace('#include <emissivemap_fragment>', `#include <emissivemap_fragment>
-			for (int i = 0; i < ${N}; i++) { float d = length(vWp.xz - zones[i].xy); float k = zones[i].w * (1.0 - smoothstep(zones[i].z * 0.82, zones[i].z, d)); totalEmissiveRadiance += zcol[i] * k * (0.35 + 0.65 * smoothstep(0.0, 80.0, vWp.y)); }`); }; mat.needsUpdate = true; });
+		sh.fragmentShader = sh.fragmentShader.replace('#include <common>', `#include <common>\nvarying vec3 vWp; uniform vec4 zones[${N}]; uniform vec3 zcol[${N}];`).replace('#include <opaque_fragment>', `vec3 zg = vec3(0.0); for (int i = 0; i < ${N}; i++) { float d = length(vWp.xz - zones[i].xy); float k = zones[i].w * (1.0 - smoothstep(zones[i].z * 0.82, zones[i].z, d)); zg += zcol[i] * k * (0.35 + 0.65 * smoothstep(0.0, 80.0, vWp.y)); }
+			outgoingLight = outgoingLight * (1.0 + 0.6 * length(zg)) + zg * 0.55;
+			#include <opaque_fragment>`); }; mat.needsUpdate = true; });
 	return {scene: sc, setGlow: (zones) => { for (let i = 0; i < N; i++) { const z = zones[i]; if (!z) { zoneU.value[i].set(0, 0, 0, 0); continue; } zoneU.value[i].set(z.x, z.z, z.r, z.k); const c = new THREE.Color(z.color); colU.value[i].set(c.r, c.g, c.b); } }};
 };

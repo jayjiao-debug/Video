@@ -47,11 +47,11 @@ export const camKeys = (keys: Key[], t: number) => {
 	let i = 0; while (i < keys.length - 2 && t > keys[i + 1].t) i++;
 	const a = keys[i], b = keys[Math.min(i + 1, keys.length - 1)], u = b.t === a.t ? 0 : ease((t - a.t) / (b.t - a.t));
 	const pos = a.pos.map((v, k) => v + (b.pos[k] - v) * u), look = a.look.map((v, k) => v + (b.look[k] - v) * u), fov = (a.fov ?? 36) + ((b.fov ?? 36) - (a.fov ?? 36)) * u, roll = (a.roll ?? 0) + ((b.roll ?? 0) - (a.roll ?? 0)) * u;
-	camera.position.set(pos[0], pos[1], pos[2]); const dy = look[1] - pos[1], dl = Math.hypot(look[0] - pos[0], dy, look[2] - pos[2]); if (a.upZ) camera.up.set(0, 0, 1); else if (dy / dl < -0.97) camera.up.set(0, 0, -1); else camera.up.set(Math.sin(roll), Math.cos(roll), 0); camera.lookAt(look[0], look[1], look[2]); camera.fov = fov; camera.updateProjectionMatrix();
+	camera.position.set(pos[0], pos[1], pos[2]); const dy = look[1] - pos[1], dl = Math.hypot(look[0] - pos[0], dy, look[2] - pos[2]); if (a.upZ) camera.up.set(0, 0, 1); else if (dy / dl < -0.97) camera.up.set(0, 0, -1); else camera.up.set(Math.sin(roll), Math.cos(roll), 0); camera.lookAt(look[0], look[1], look[2]); camera.fov = fov; camera.updateProjectionMatrix(); camera.updateMatrixWorld(true); // labels projected this frame use this frame's camera
 	return {pos, look};
 };
 /** orbit around a point (bullet time) */
-export const camOrbit = (c: number[], r: number, h: number, ang: number, fov = 34, lookY = 1.3) => { camera.position.set(c[0] + Math.cos(ang) * r, c[1] + h, c[2] + Math.sin(ang) * r); camera.up.set(0, 1, 0); camera.lookAt(c[0], lookY, c[2]); camera.fov = fov; camera.updateProjectionMatrix(); };
+export const camOrbit = (c: number[], r: number, h: number, ang: number, fov = 34, lookY = 1.3) => { camera.position.set(c[0] + Math.cos(ang) * r, c[1] + h, c[2] + Math.sin(ang) * r); camera.up.set(0, 1, 0); camera.lookAt(c[0], lookY, c[2]); camera.fov = fov; camera.updateProjectionMatrix(); camera.updateMatrixWorld(true); };
 export const toScreen = (v: number[]) => { const p = new THREE.Vector3(v[0], v[1], v[2]).project(camera); return {x: (p.x + 1) / 2 * W, y: (1 - p.y) / 2 * H, front: p.z < 1}; };
 
 // ================================================================ assets

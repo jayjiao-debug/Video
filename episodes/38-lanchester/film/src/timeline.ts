@@ -150,8 +150,8 @@ const CITY = (() => { const R = rnd(77), red: number[][] = [], blue: number[][] 
 	return {red, blue, D}; })();
 const cityState = (c: Ctx, k: number, t: number) => { // k: 0 scattered → 1 gathered
 	const {red, blue, D} = CITY; const pts: number[][] = [];
-	red.forEach(([x, z], i) => { const inside = Math.hypot(x - D.x, z - D.z) < D.r; const o = inside ? 1 - clamp01(k * 1.6 - 0.3) : 1; const tw = 0.75 + 0.25 * Math.sin(t * 3 + i); if (o > 0.01) pts.push([x, 26, z, 26, 3.2, 0.9, 0.6, o * tw]); });
-	blue.forEach(([x0, z0, x1, z1], i) => { const m = ease(k * 1.15 - i * 0.012); pts.push([lerp(x0, x1, m), 30, lerp(z0, z1, m), 30, 0.8, 1.8, 4.0, 0.95]); });
+	red.forEach(([x, z], i) => { const inside = Math.hypot(x - D.x, z - D.z) < D.r; const o = inside ? 1 - clamp01(k * 1.6 - 0.3) : 1; const tw = 0.75 + 0.25 * Math.sin(t * 3 + i); if (o > 0.01) pts.push([x, 60, z, 20, 2.4, 0.7, 0.45, 0.8 * o * tw]); });
+	blue.forEach(([x0, z0, x1, z1], i) => { const m = ease(k * 1.15 - i * 0.012); pts.push([lerp(x0, x1, m), 64, lerp(z0, z1, m), 30, 0.8, 1.8, 4.0, 0.95]); });
 	c.cityPts.set(pts); c.city.setGlow([{x: D.x, z: D.z, r: D.r, color: '#3a8bff', k: 1.6 * clamp01(k * 1.3 - 0.25)}]);
 };
 const cityDraw = (c: Ctx, g: any = {}) => { setGrade({vig: 0.6, warm: 0.12, bloom: 0.7, exposure: 0.62, ...g}); draw(c.city.scene); };
@@ -355,8 +355,8 @@ export const TIMELINE: Shot[] = [
 		camKeys([{t: 0, pos: [-900, 650, -1500], look: [0, 0, 0], fov: 44}, {t: 4.05, pos: [-300, 1900, -200], look: [-120, 0, 260], fov: 44}], u);
 		const van = ease(u / 3.5) * 700; seaMarks(c, 0, 0, false); setFleet(c.sea.combined, LINE(tt, van), u); setFleet(c.sea.british, COLS(adv), u);
 		{ const ko = 1 - clamp01(u / 1.6); const age = (T.chart - T.drop) - 6.075 + u; const vs = [...LINE(tt, van), ...COLS(adv)].map((q, i) => [q.x + age * 3, 6 + age * 2, q.z + ((i % 2) * 2 - 1) * (14 + age * 5), 26 + age * 14, 0.6, 0.56, 0.5, 0.7 * Math.exp(-age / 5) * ko]); c.seaSmoke.set(ko > 0 ? vs : []); c.seaFlash.set([]); }
-		const v = toScreen([150, 0, 1350 + van]); if (v.front) tag(c.hud, Math.min(W - 160, v.x), Math.max(150, v.y - 60), '前队', env(u, 0.3, 99), 52, '#fff', RED);
-		html(c.hud, `<div class="lbl" style="left:0;right:0;top:170px;text-align:center;font-size:50px;opacity:${env(u, 0.6, 99)}"><span style="text-shadow:0 0 8px ${BLUE},0 0 24px ${BLUE}">英国 损失 0 艘</span> · <span style="text-shadow:0 0 8px ${RED},0 0 24px ${RED}">对方 损失一半以上</span></div>`);
+		const v = toScreen([150, 0, 1350 + van]); if (v.front) tag(c.hud, Math.min(W - 160, v.x), Math.max(300, v.y - 60), '前队', env(u, 0.3, 99), 52, '#fff', RED);
+		html(c.hud, `<div class="lbl" style="left:0;right:0;top:136px;text-align:center;font-size:50px;opacity:${env(u, 0.6, 99)}"><span style="text-shadow:0 0 8px ${BLUE},0 0 24px ${BLUE}">英国 损失 0 艘</span> · <span style="text-shadow:0 0 8px ${RED},0 0 24px ${RED}">对方 损失一半以上</span></div>`);
 		header(c, '1805 · 特拉法加', 1);
 		sub(c.hud, '结果，英国一艘船都[没丢]', u, 89.6 - T.chart, 92.55 - T.chart);
 		seaDraw(c, tt, {bloom: 0.4, vig: 0.5, exposure: 0.5, sepia: 0.45});

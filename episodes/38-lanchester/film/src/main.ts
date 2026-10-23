@@ -26,7 +26,7 @@ const sunziText = (scene: THREE.Scene) => {
 	const land = makeLand(a), sea = makeSea(a); const [arena, city] = await Promise.all([makeArena(a.sky, a.env), makeCity(a.sky, a.env)]);
 	const rings = [0, 1, 2].map(() => { const r = new THREE.Mesh(new THREE.RingGeometry(1.05, 1.5, 48), new THREE.MeshBasicMaterial({color: '#ff6a5a', transparent: true, blending: THREE.AdditiveBlending, depthWrite: false, toneMapped: false, side: THREE.DoubleSide})); r.rotation.x = -Math.PI / 2; r.visible = false; land.scene.add(r); return r; });
 	const ctx: Ctx = {
-		a, land, sea, army: new Army(a, land.scene, 2100), arena, city, cityPts: new Puffs(city.scene, 300, true),
+		a, land, sea, army: new Army(a, land.scene, 2100), arena, city, cityPts: (() => { const p = new Puffs(city.scene, 300, true); (p.pts.material as any).depthTest = false; return p; })(),
 		smoke: new Puffs(land.scene, 14000, false), flash: new Puffs(land.scene, 2500, true), squares: new GroundSquares(land.scene, 16), tracers: new Tracers(land.scene, 2600), rings, text: sunziText(land.scene),
 		seaSmoke: new Puffs(sea.scene, 16000, false, 30), seaFlash: new Puffs(sea.scene, 6000, true), hud, split,
 	};
