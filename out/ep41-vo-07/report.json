@@ -1,0 +1,1217 @@
+{
+  "id": "ep41-vo-07",
+  "clips": [
+    {
+      "name": "H1",
+      "lang": "zh",
+      "text": "人类打出的第一通电话，第一句话，说的是什么？",
+      "voice": "MI36FIkp9wRP7cpWKPTl",
+      "voice_id": "MI36FIkp9wRP7cpWKPTl",
+      "model": "eleven_v4",
+      "status": 200,
+      "file": "H1.mp3",
+      "bytes": 69006,
+      "heard": "人类打出的第一通电话,第一句话,说的是什么?",
+      "heard_lang": "zh",
+      "heard_lang_p": 0.999,
+      "seconds": 4.24
+    },
+    {
+      "name": "H2",
+      "lang": "zh",
+      "text": "答案，要从三千年前说起。",
+      "voice": "MI36FIkp9wRP7cpWKPTl",
+      "voice_id": "MI36FIkp9wRP7cpWKPTl",
+      "model": "eleven_v4",
+      "status": 200,
+      "file": "H2.mp3",
+      "bytes": 46018,
+      "heard": "答案要從三千年前說起",
+      "heard_lang": "zh",
+      "heard_lang_p": 0.999,
+      "seconds": 2.8
+    },
+    {
+      "name": "S1",
+      "lang": "zh",
+      "text": "商朝人有一句话，想问老天。",
+      "voice": "MI36FIkp9wRP7cpWKPTl",
+      "voice_id": "MI36FIkp9wRP7cpWKPTl",
+      "model": "eleven_v4",
+      "status": 200,
+      "file": "S1.mp3",
+      "bytes": 51034,
+      "heard": "商朝人有一句话想问老天",
+      "heard_lang": "zh",
+      "heard_lang_p": 0.999,
+      "seconds": 3.12
+    },
+    {
+      "name": "S2",
+      "lang": "zh",
+      "text": "火烤龟甲，裂纹就是回答。",
+      "voice": "MI36FIkp9wRP7cpWKPTl",
+      "voice_id": "MI36FIkp9wRP7cpWKPTl",
+      "model": "eleven_v4",
+      "status": 200,
+      "file": "S2.mp3",
+      "bytes": 51034,
+      "heard": "火烤归家,列文就是回答。",
+      "heard_lang": "zh",
+      "heard_lang_p": 0.999,
+      "seconds": 3.12
+    },
+    {
+      "name": "S3",
+      "lang": "zh",
+      "text": "刻下的这句问话，留到了今天。",
+      "voice": "MI36FIkp9wRP7cpWKPTl",
+      "voice_id": "MI36FIkp9wRP7cpWKPTl",
+      "model": "eleven_v4",
+      "status": 200,
+      "file": "S3.mp3",
+      "bytes": 47272,
+      "heard": "课下的这句问话留到了今天。",
+      "heard_lang": "zh",
+      "heard_lang_p": 0.999,
+      "seconds": 2.88
+    },
+    {
+      "name": "D1",
+      "lang": "zh",
+      "text": "七五七年，长安被叛军攻破。",
+      "voice": "MI36FIkp9wRP7cpWKPTl",
+      "voice_id": "MI36FIkp9wRP7cpWKPTl",
+      "model": "eleven_v4",
+      "status": 200,
+      "file": "D1.mp3",
+      "bytes": 49780,
+      "heard": "757年,长安被判军攻破",
+      "heard_lang": "zh",
+      "heard_lang_p": 0.998,
+      "seconds": 3.04
+    },
+    {
+      "name": "D2",
+      "lang": "zh",
+      "text": "杜甫困在城里，不知道家人还在不在。",
+      "voice": "MI36FIkp9wRP7cpWKPTl",
+      "voice_id": "MI36FIkp9wRP7cpWKPTl",
+      "model": "eleven_v4",
+      "status": 200,
+      "file": "D2.mp3",
+      "bytes": 58557,
+      "heard": "杜甫困在城里不知道家人还在不在",
+      "heard_lang": "zh",
+      "heard_lang_p": 0.998,
+      "seconds": 3.6
+    },
+    {
+      "name": "D3",
+      "lang": "zh",
+      "text": "那年春天，他写下：",
+      "voice": "MI36FIkp9wRP7cpWKPTl",
+      "voice_id": "MI36FIkp9wRP7cpWKPTl",
+      "model": "eleven_v4",
+      "status": 200,
+      "file": "D3.mp3",
+      "bytes": 34315,
+      "heard": "那年春天他写下",
+      "heard_lang": "zh",
+      "heard_lang_p": 0.999,
+      "seconds": 2.08
+    },
+    {
+      "name": "B3",
+      "lang": "zh",
+      "text": "人类第一通电话的第一句话，是：我想见你。",
+      "voice": "MI36FIkp9wRP7cpWKPTl",
+      "voice_id": "MI36FIkp9wRP7cpWKPTl",
+      "model": "eleven_v4",
+      "status": 200,
+      "file": "B3.mp3",
+      "bytes": 71514,
+      "heard": "人类第一通电话的第一句话是:「我想见你。」",
+      "heard_lang": "zh",
+      "heard_lang_p": 0.999,
+      "seconds": 4.4
+    },
+    {
+      "name": "J1",
+      "lang": "zh",
+      "text": "中国的第一封电子邮件，写好了。",
+      "voice": "MI36FIkp9wRP7cpWKPTl",
+      "voice_id": "MI36FIkp9wRP7cpWKPTl",
+      "model": "eleven_v4",
+      "status": 200,
+      "file": "J1.mp3",
+      "bytes": 47272,
+      "heard": "中国的第一封电子邮件写好了",
+      "heard_lang": "zh",
+      "heard_lang_p": 0.999,
+      "seconds": 2.88
+    },
+    {
+      "name": "J2",
+      "lang": "zh",
+      "text": "可程序卡住了，整整六天。",
+      "voice": "MI36FIkp9wRP7cpWKPTl",
+      "voice_id": "MI36FIkp9wRP7cpWKPTl",
+      "model": "eleven_v4",
+      "status": 200,
+      "file": "J2.mp3",
+      "bytes": 48526,
+      "heard": "可程序卡住了整整六天",
+      "heard_lang": "zh",
+      "heard_lang_p": 0.999,
+      "seconds": 2.96
+    },
+    {
+      "name": "O1a",
+      "lang": "zh",
+      "text": "唱片上，还录着她恋爱时的脑电波和心跳。",
+      "voice": "MI36FIkp9wRP7cpWKPTl",
+      "voice_id": "MI36FIkp9wRP7cpWKPTl",
+      "model": "eleven_v4",
+      "status": 200,
+      "file": "O1a.mp3",
+      "bytes": 62318,
+      "heard": "唱片上還錄著他戀愛時的腦電波和心跳",
+      "heard_lang": "zh",
+      "heard_lang_p": 1.0,
+      "seconds": 3.84
+    },
+    {
+      "name": "O1b",
+      "lang": "zh",
+      "text": "唱片上，还录着她恋爱时的脑电波，和身体的声音。",
+      "voice": "MI36FIkp9wRP7cpWKPTl",
+      "voice_id": "MI36FIkp9wRP7cpWKPTl",
+      "model": "eleven_v4",
+      "status": 200,
+      "file": "O1b.mp3",
+      "bytes": 74021,
+      "heard": "唱片上還錄著他戀愛時的腦電波和身體的聲音",
+      "heard_lang": "zh",
+      "heard_lang_p": 1.0,
+      "seconds": 4.56
+    },
+    {
+      "name": "O3",
+      "lang": "zh",
+      "text": "你最想对谁说一句话？",
+      "voice": "MI36FIkp9wRP7cpWKPTl",
+      "voice_id": "MI36FIkp9wRP7cpWKPTl",
+      "model": "eleven_v4",
+      "status": 200,
+      "file": "O3.mp3",
+      "bytes": 35569,
+      "heard": "你最想对谁说一句话。",
+      "heard_lang": "zh",
+      "heard_lang_p": 0.999,
+      "seconds": 2.16
+    },
+    {
+      "name": "M1",
+      "lang": "en",
+      "text": "[somber] A letter told Samuel Morse his wife had died.",
+      "voice": "MFZUKuGQUsGJPQjTS4wC",
+      "voice_id": "MFZUKuGQUsGJPQjTS4wC",
+      "model": "eleven_v3",
+      "status": 200,
+      "file": "M1.mp3",
+      "bytes": 48526,
+      "heard": "A letter told Samuel Morse his wife had died.",
+      "heard_lang": "en",
+      "heard_lang_p": 0.999,
+      "seconds": 2.96
+    },
+    {
+      "name": "M2",
+      "lang": "en",
+      "text": "[quietly] When he got home, she was already buried.",
+      "voice": "MFZUKuGQUsGJPQjTS4wC",
+      "voice_id": "MFZUKuGQUsGJPQjTS4wC",
+      "model": "eleven_v3",
+      "status": 200,
+      "file": "M2.mp3",
+      "bytes": 48526,
+      "heard": "When he got home, she was already buried.",
+      "heard_lang": "en",
+      "heard_lang_p": 0.998,
+      "seconds": 2.96
+    },
+    {
+      "name": "M3",
+      "lang": "en",
+      "text": "Nineteen years later, his telegraph sent words in an instant:",
+      "voice": "MFZUKuGQUsGJPQjTS4wC",
+      "voice_id": "MFZUKuGQUsGJPQjTS4wC",
+      "model": "eleven_v3",
+      "status": 200,
+      "file": "M3.mp3",
+      "bytes": 65244,
+      "heard": "Nineteen years later, his telegraph sent words in an instant.",
+      "heard_lang": "en",
+      "heard_lang_p": 0.999,
+      "seconds": 4.0
+    },
+    {
+      "name": "C1",
+      "lang": "fr",
+      "text": "[softly] Scott invente une machine qui écrit la voix.",
+      "voice": "aQROLel5sQbj1vuIVi6B",
+      "voice_id": "aQROLel5sQbj1vuIVi6B",
+      "model": "eleven_v3",
+      "status": 200,
+      "file": "C1.mp3",
+      "bytes": 48526,
+      "heard": "Scott invente une machine qui écrit la voix.",
+      "heard_lang": "fr",
+      "heard_lang_p": 0.996,
+      "seconds": 2.96
+    },
+    {
+      "name": "C2",
+      "lang": "fr",
+      "text": "Mais personne ne pourra l'écouter avant cent quarante-huit ans.",
+      "voice": "aQROLel5sQbj1vuIVi6B",
+      "voice_id": "aQROLel5sQbj1vuIVi6B",
+      "model": "eleven_v3",
+      "status": 200,
+      "file": "C2.mp3",
+      "bytes": 48526,
+      "heard": "Mais personne ne pourra l'écouter avant 148 ans.",
+      "heard_lang": "fr",
+      "heard_lang_p": 0.992,
+      "seconds": 2.96
+    },
+    {
+      "name": "C3",
+      "lang": "fr",
+      "text": "[warmly] Le chanteur ? Sans doute lui-même.",
+      "voice": "aQROLel5sQbj1vuIVi6B",
+      "voice_id": "aQROLel5sQbj1vuIVi6B",
+      "model": "eleven_v3",
+      "status": 200,
+      "file": "C3.mp3",
+      "bytes": 36823,
+      "heard": "Le chanteur, sans doute lui-même.",
+      "heard_lang": "fr",
+      "heard_lang_p": 0.998,
+      "seconds": 2.24
+    },
+    {
+      "name": "CQ_real",
+      "lang": "fr",
+      "text": "Au clair de la lune (Scott, 9 April 1860, First Sounds CC BY)",
+      "url": "https://www.firstsounds.org/sounds/Scott-Feaster-No-36.mp3",
+      "status": 200,
+      "file": "CQ_real.mp3",
+      "bytes": 352712,
+      "heard": "I'll see you in the next video.",
+      "heard_lang": "en",
+      "heard_lang_p": 0.278,
+      "seconds": 21.71
+    },
+    {
+      "name": "B1",
+      "lang": "en",
+      "text": "Bell's wire runs to another room, where Watson waits.",
+      "voice": "gUbIduqGzBP438teh4ZA",
+      "voice_id": "gUbIduqGzBP438teh4ZA",
+      "model": "eleven_v3",
+      "status": 200,
+      "file": "B1.mp3",
+      "bytes": 44764,
+      "heard": "Bell's Wire runs to another room, where Watson waits.",
+      "heard_lang": "en",
+      "heard_lang_p": 0.999,
+      "seconds": 2.72
+    },
+    {
+      "name": "B2",
+      "lang": "en",
+      "text": "[moved] Watson heard it — and he came.",
+      "voice": "gUbIduqGzBP438teh4ZA",
+      "voice_id": "gUbIduqGzBP438teh4ZA",
+      "model": "eleven_v3",
+      "status": 200,
+      "file": "B2.mp3",
+      "bytes": 36823,
+      "heard": "Watson heard it, and he came.",
+      "heard_lang": "en",
+      "heard_lang_p": 0.988,
+      "seconds": 2.24
+    },
+    {
+      "name": "BQa",
+      "lang": "en",
+      "text": "[shouting] Mr. Watson — come here — I want to see you!",
+      "voice": "shared:Crofty - Energetic Radio Host (scottish, en)",
+      "voice_id": "keLVje3aBMuRpxuu0bqO",
+      "model": "eleven_v3",
+      "status": 200,
+      "file": "BQa.mp3",
+      "bytes": 49780,
+      "heard": "Mr Watson, come here! I want to see you!",
+      "heard_lang": "en",
+      "heard_lang_p": 0.982,
+      "seconds": 3.04
+    },
+    {
+      "name": "BQb",
+      "lang": "en",
+      "text": "[shouting] Mr. Watson — come here — I want to see you!",
+      "voice": "shared:Adam - Classic Scottish Storyteller (scottish, en)",
+      "voice_id": "U5UjeJMsOvyhYhXfZdvZ",
+      "model": "eleven_v3",
+      "status": 200,
+      "file": "BQb.mp3",
+      "bytes": 57303,
+      "heard": "Mr. Watson, come here! I want to see you!",
+      "heard_lang": "en",
+      "heard_lang_p": 0.882,
+      "seconds": 3.52
+    },
+    {
+      "name": "K1",
+      "lang": "it",
+      "text": "[tense] Dalla Cornovaglia, una stazione ripete una sola lettera: S.",
+      "voice": "W71zT1VwIFFx3mMGH2uZ",
+      "voice_id": "W71zT1VwIFFx3mMGH2uZ",
+      "model": "eleven_v3",
+      "status": 200,
+      "file": "K1.mp3",
+      "bytes": 81545,
+      "heard": "Dalla cornovaglia, una stazione a ripete una sola lettera, S.",
+      "heard_lang": "it",
+      "heard_lang_p": 0.988,
+      "seconds": 5.04
+    },
+    {
+      "name": "K2",
+      "lang": "it",
+      "text": "Oltreoceano, un aquilone alza l'antenna per catturarla.",
+      "voice": "W71zT1VwIFFx3mMGH2uZ",
+      "voice_id": "W71zT1VwIFFx3mMGH2uZ",
+      "model": "eleven_v3",
+      "status": 200,
+      "file": "K2.mp3",
+      "bytes": 57303,
+      "heard": "Oltre oceano, una quilone alza l'antinna per catturarla.",
+      "heard_lang": "it",
+      "heard_lang_p": 0.992,
+      "seconds": 3.52
+    },
+    {
+      "name": "K3",
+      "lang": "it",
+      "text": "[awed] Tre brevi suoni: la S. Aveva attraversato l'Atlantico.",
+      "voice": "W71zT1VwIFFx3mMGH2uZ",
+      "voice_id": "W71zT1VwIFFx3mMGH2uZ",
+      "model": "eleven_v3",
+      "status": 200,
+      "file": "K3.mp3",
+      "bytes": 88232,
+      "heard": "Tre brevi suoni. La S aveva attraversato l'Atlantico.",
+      "heard_lang": "it",
+      "heard_lang_p": 0.982,
+      "seconds": 5.44
+    },
+    {
+      "name": "A1",
+      "lang": "en",
+      "text": "[hushed] The internet's ancestor is about to send its first message.",
+      "voice": "ZthjuvLPty3kTMaNKVKb",
+      "voice_id": "ZthjuvLPty3kTMaNKVKb",
+      "model": "eleven_v3",
+      "status": 200,
+      "file": "A1.mp3",
+      "bytes": 53541,
+      "heard": "The internet's ancestor is about to send its first message.",
+      "heard_lang": "en",
+      "heard_lang_p": 0.998,
+      "seconds": 3.28
+    },
+    {
+      "name": "A2",
+      "lang": "en",
+      "text": "Charley Kline types log in, to a computer hundreds of miles away.",
+      "voice": "ZthjuvLPty3kTMaNKVKb",
+      "voice_id": "ZthjuvLPty3kTMaNKVKb",
+      "model": "eleven_v3",
+      "status": 401,
+      "error": "{\"detail\":{\"type\":\"invalid_request\",\"code\":\"quota_exceeded\",\"message\":\"This request exceeds your quota of 10000. You have 8 credits remaining, while 14 credits are required for this request.\",\"status\":\"quota_exceeded\",\"request_id\":\"8dc95902f1e5a9a0e1e5dba1062dcee8\"}}"
+    },
+    {
+      "name": "A3",
+      "lang": "en",
+      "text": "[flatly] Then the system crashed.",
+      "voice": "ZthjuvLPty3kTMaNKVKb",
+      "voice_id": "ZthjuvLPty3kTMaNKVKb",
+      "model": "eleven_v3",
+      "status": 200,
+      "file": "A3.mp3",
+      "bytes": 48526,
+      "heard": "then the system crashed.",
+      "heard_lang": "en",
+      "heard_lang_p": 0.996,
+      "seconds": 2.96
+    },
+    {
+      "name": "AQ1",
+      "lang": "en",
+      "text": "Did you get the L?",
+      "voice": "6OzrBCQf8cjERkYgzSg8",
+      "voice_id": "6OzrBCQf8cjERkYgzSg8",
+      "model": "eleven_v3",
+      "status": 401,
+      "error": "{\"detail\":{\"type\":\"invalid_request\",\"code\":\"quota_exceeded\",\"message\":\"This request exceeds your quota of 10000. You have 1 credits remaining, while 4 credits are required for this request.\",\"status\":\"quota_exceeded\",\"request_id\":\"52f3abf22913c87451cb8e8add11e1b5\"}}"
+    },
+    {
+      "name": "AQ2",
+      "lang": "en",
+      "text": "Did you get the O?",
+      "voice": "6OzrBCQf8cjERkYgzSg8",
+      "voice_id": "6OzrBCQf8cjERkYgzSg8",
+      "model": "eleven_v3",
+      "status": 401,
+      "error": "{\"detail\":{\"type\":\"invalid_request\",\"code\":\"quota_exceeded\",\"message\":\"This request exceeds your quota of 10000. You have 1 credits remaining, while 4 credits are required for this request.\",\"status\":\"quota_exceeded\",\"request_id\":\"2b24a195ff9df220cdae6ce964767e4b\"}}"
+    },
+    {
+      "name": "AQ3",
+      "lang": "en",
+      "text": "Did you get the G?",
+      "voice": "6OzrBCQf8cjERkYgzSg8",
+      "voice_id": "6OzrBCQf8cjERkYgzSg8",
+      "model": "eleven_v3",
+      "status": 401,
+      "error": "{\"detail\":{\"type\":\"invalid_request\",\"code\":\"quota_exceeded\",\"message\":\"This request exceeds your quota of 10000. You have 1 credits remaining, while 4 credits are required for this request.\",\"status\":\"quota_exceeded\",\"request_id\":\"6718398b9ca52a10f83738eb8bb403f0\"}}"
+    },
+    {
+      "name": "AA1",
+      "lang": "en",
+      "text": "Got the L.",
+      "voice": "shared:Spuds Oxley - Grandpa  (american, en)",
+      "voice_id": "NOpBlnGInO9m6vDvFkFC",
+      "model": "eleven_v3",
+      "status": 401,
+      "error": "{\"detail\":{\"type\":\"invalid_request\",\"code\":\"quota_exceeded\",\"message\":\"This request exceeds your quota of 10000. You have 1 credits remaining, while 2 credits are required for this request.\",\"status\":\"quota_exceeded\",\"request_id\":\"a80cd55432082445ca162e03bd8a3b51\"}}"
+    },
+    {
+      "name": "AA2",
+      "lang": "en",
+      "text": "Got the O.",
+      "voice": "shared:Spuds Oxley - Grandpa  (american, en)",
+      "voice_id": "NOpBlnGInO9m6vDvFkFC",
+      "model": "eleven_v3",
+      "status": 401,
+      "error": "{\"detail\":{\"type\":\"invalid_request\",\"code\":\"quota_exceeded\",\"message\":\"This request exceeds your quota of 10000. You have 1 credits remaining, while 2 credits are required for this request.\",\"status\":\"quota_exceeded\",\"request_id\":\"d06478cf788f2122f39a5557f459f245\"}}"
+    },
+    {
+      "name": "V1",
+      "lang": "en",
+      "text": "[tenderly] Ann Druyan found the Chinese song — and called Carl Sagan.",
+      "voice": "yj30vwTGJxSHezdAGsv9",
+      "voice_id": "yj30vwTGJxSHezdAGsv9",
+      "model": "eleven_v3",
+      "status": 401,
+      "error": "{\"detail\":{\"type\":\"invalid_request\",\"code\":\"quota_exceeded\",\"message\":\"This request exceeds your quota of 10000. You have 1 credits remaining, while 15 credits are required for this request.\",\"status\":\"quota_exceeded\",\"request_id\":\"8cd4c83dac806d5741d66c797a85155e\"}}"
+    },
+    {
+      "name": "VQ1",
+      "lang": "en",
+      "text": "[softly, nervous] For keeps?",
+      "voice": "shared:Hope - Natural, Clear and Calm (american, en)",
+      "voice_id": "OYTbf65OHHFELVut7v2H",
+      "model": "eleven_v3",
+      "status": 401,
+      "error": "{\"detail\":{\"type\":\"invalid_request\",\"code\":\"quota_exceeded\",\"message\":\"This request exceeds your quota of 10000. You have 1 credits remaining, while 6 credits are required for this request.\",\"status\":\"quota_exceeded\",\"request_id\":\"2c8a36fd5a9b96d2dc5328487e50fc03\"}}"
+    },
+    {
+      "name": "VQ2",
+      "lang": "en",
+      "text": "[gently, surprised] You mean… get married?",
+      "voice": "shared:Andrew Griffin - Football Commentator (american, en)",
+      "voice_id": "SF9uvIlY93SJRMdV5jeP",
+      "model": "eleven_v3",
+      "status": 401,
+      "error": "{\"detail\":{\"type\":\"invalid_request\",\"code\":\"quota_exceeded\",\"message\":\"This request exceeds your quota of 10000. You have 1 credits remaining, while 9 credits are required for this request.\",\"status\":\"quota_exceeded\",\"request_id\":\"8846f28e2f01380f85f0c246c4d9eb5e\"}}"
+    },
+    {
+      "name": "VQ3",
+      "lang": "en",
+      "text": "[a soft laugh] Yes.",
+      "voice": "shared:Hope - Natural, Clear and Calm (american, en)",
+      "voice_id": "OYTbf65OHHFELVut7v2H",
+      "model": "eleven_v3",
+      "status": 401,
+      "error": "{\"detail\":{\"type\":\"invalid_request\",\"code\":\"quota_exceeded\",\"message\":\"This request exceeds your quota of 10000. You have 1 credits remaining, while 4 credits are required for this request.\",\"status\":\"quota_exceeded\",\"request_id\":\"085dade36d0039dbca162e03bd8a362d\"}}"
+    },
+    {
+      "name": "O2",
+      "lang": "zh",
+      "text": "各位都好吧？我们都很想念你们，有空请到这儿来玩。",
+      "voice": "shared:Anna Su - Casual, Friendly and Bright (taiwan mandarin, zh)",
+      "voice_id": "9lHjugDhwqoxA5MhX0az",
+      "model": "eleven_v4",
+      "status": 401,
+      "error": "{\"detail\":{\"type\":\"invalid_request\",\"code\":\"quota_exceeded\",\"message\":\"This request exceeds your quota of 10000. You have 1 credits remaining, while 5 credits are required for this request.\",\"status\":\"quota_exceeded\",\"request_id\":\"3e5dd7f2258d1b01df99b13fecbf3b61\"}}"
+    },
+    {
+      "name": "O2b",
+      "lang": "zh",
+      "text": "各位都好吧？我们都很想念你们，有空请到这儿来玩。",
+      "voice": "shared:Stacy - Young, Sweet and Cute (standard, zh)",
+      "voice_id": "hkfHEbBvdQFNX4uWHqRF",
+      "model": "eleven_v4",
+      "status": 401,
+      "error": "{\"detail\":{\"type\":\"invalid_request\",\"code\":\"quota_exceeded\",\"message\":\"This request exceeds your quota of 10000. You have 1 credits remaining, while 5 credits are required for this request.\",\"status\":\"quota_exceeded\",\"request_id\":\"211a7d4e35cee3a3e86a7b535068cf58\"}}"
+    }
+  ],
+  "plan": {
+    "tier": null,
+    "character_count": null,
+    "character_limit": null,
+    "status": null
+  },
+  "models": [
+    "eleven_v4",
+    "eleven_v4_turbo",
+    "eleven_v3",
+    "eleven_v3_conversational",
+    "eleven_multilingual_v2",
+    "eleven_flash_v2_5",
+    "eleven_turbo_v2_5",
+    "eleven_turbo_v2",
+    "eleven_flash_v2",
+    "eleven_english_sts_v2",
+    "eleven_multilingual_sts_v2"
+  ],
+  "model": "eleven_v4",
+  "own_voices": [
+    {
+      "id": "yj30vwTGJxSHezdAGsv9",
+      "name": "en-Jessa - Easygoing and Effortless",
+      "labels": {
+        "use_case": "narrative_story",
+        "accent": "american",
+        "descriptive": "casual",
+        "language": "en",
+        "gender": "female",
+        "age": "young"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "h1i3CVVBUuF6s46cxUGG",
+      "name": "en-Andy Lin - Gentle and Friendly Narrat",
+      "labels": {
+        "language": "en",
+        "accent": "chinese",
+        "descriptive": "gentle",
+        "use_case": "narrative_story",
+        "gender": "male",
+        "age": "young"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "ZthjuvLPty3kTMaNKVKb",
+      "name": "en-Peter",
+      "labels": {
+        "use_case": "narrative_story",
+        "language": "en",
+        "descriptive": "confident",
+        "accent": "american",
+        "gender": "male",
+        "age": "middle_aged"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "W71zT1VwIFFx3mMGH2uZ",
+      "name": "it-MarcoTrox - Warm, Balanced and Polish",
+      "labels": {
+        "use_case": "narrative_story",
+        "language": "it",
+        "descriptive": "intense",
+        "accent": "standard",
+        "gender": "male",
+        "age": "middle_aged"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "gUbIduqGzBP438teh4ZA",
+      "name": "en-Lewis - Friendly, Calm, and Full",
+      "labels": {
+        "accent": "scottish",
+        "language": "en",
+        "descriptive": "calm",
+        "use_case": "narrative_story",
+        "gender": "male",
+        "age": "young"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "MFZUKuGQUsGJPQjTS4wC",
+      "name": "en-Jon - Warm & Grounded Storyteller",
+      "labels": {
+        "use_case": "narrative_story",
+        "accent": "american",
+        "descriptive": "calm",
+        "language": "en",
+        "gender": "male",
+        "age": "middle_aged"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "MI36FIkp9wRP7cpWKPTl",
+      "name": "zh-Evan Zhao - Warm, Calm and Trustworth",
+      "labels": {
+        "use_case": "narrative_story",
+        "accent": "beijing mandarin",
+        "descriptive": "gentle",
+        "language": "zh",
+        "gender": "male",
+        "age": "young"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "hZTuv9Zqrq4yHYrEmF1r",
+      "name": "zh-Adam Li -  Deep, Steady and Calm",
+      "labels": {
+        "use_case": "narrative_story",
+        "language": "zh",
+        "descriptive": "deep",
+        "accent": "singapore mandarin",
+        "gender": "male",
+        "age": "middle_aged"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "YxbjaPemDJV2xlfvkiIG",
+      "name": "zh-Yun - Elegant, Sweet and Gentle",
+      "labels": {
+        "use_case": "narrative_story",
+        "accent": "standard",
+        "descriptive": "calm",
+        "language": "zh",
+        "gender": "female",
+        "age": "middle_aged"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "NxUQ5SgevJvRsX9HsM0O",
+      "name": "en-Wenchang - Chinese accent",
+      "labels": {
+        "use_case": "informative_educational",
+        "accent": "chinese",
+        "descriptive": "chill",
+        "language": "en",
+        "gender": "male",
+        "age": "middle_aged"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "6OzrBCQf8cjERkYgzSg8",
+      "name": "en-Young Jamal",
+      "labels": {
+        "accent": "american",
+        "use_case": "social_media",
+        "descriptive": "chill",
+        "language": "en",
+        "gender": "male",
+        "age": "young"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "iLVmqjzCGGvqtMCk6vVQ",
+      "name": "en-Antonio - Lively, Engaging and Energe",
+      "labels": {
+        "accent": "italian",
+        "language": "en",
+        "descriptive": "calm",
+        "use_case": "conversational",
+        "gender": "male",
+        "age": "young"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "y6p0SvBlfEe2MH4XN7BP",
+      "name": "en-Hugh - Rhythmic and Engaging Storytel",
+      "labels": {
+        "use_case": "narrative_story",
+        "language": "en",
+        "descriptive": "casual",
+        "accent": "scottish",
+        "gender": "male",
+        "age": "middle_aged"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "NOpBlnGInO9m6vDvFkFC",
+      "name": "en-Spuds Oxley - Grandpa ",
+      "labels": {
+        "accent": "american",
+        "use_case": "narrative_story",
+        "descriptive": "gentle",
+        "language": "en",
+        "gender": "male",
+        "age": "old"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "7p1Ofvcwsv7UBPoFNcpI",
+      "name": "zh-Julian - Deep, Rich and Mature",
+      "labels": {
+        "language": "en",
+        "accent": "british",
+        "descriptive": "mature",
+        "use_case": "narrative_story",
+        "gender": "male",
+        "age": "old"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "6vTyAgAT8PncODBcLjRf",
+      "name": "fr-Claire - Warm, Pretty and Charming",
+      "labels": {
+        "accent": "standard",
+        "use_case": "narrative_story",
+        "descriptive": "casual",
+        "language": "fr",
+        "gender": "female",
+        "age": "middle_aged"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "aQROLel5sQbj1vuIVi6B",
+      "name": "fr-Nicolas - Narrator",
+      "labels": {
+        "use_case": "narrative_story",
+        "accent": "parisian",
+        "descriptive": "professional",
+        "language": "fr",
+        "gender": "male",
+        "age": "middle_aged"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "v3V1d2rk6528UrLKRuy8",
+      "name": "de-Susi - Effortless and Confident",
+      "labels": {
+        "use_case": "conversational",
+        "language": "de",
+        "descriptive": "calm",
+        "accent": "standard",
+        "gender": "female",
+        "age": "middle_aged"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "FTNCalFNG5bRnkkaP5Ug",
+      "name": "de-Otto - Casual and Normal",
+      "labels": {
+        "language": "de",
+        "use_case": "narrative_story",
+        "descriptive": "calm",
+        "accent": "standard",
+        "gender": "male",
+        "age": "middle_aged"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "ymDCYd8puC7gYjxIamPt",
+      "name": "ru-Marina - Soft, Clear and Warm",
+      "labels": {
+        "accent": "standard",
+        "use_case": "narrative_story",
+        "descriptive": "calm",
+        "language": "ru",
+        "gender": "female",
+        "age": "middle_aged"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "3EuKHIEZbSzrHGNmdYsx",
+      "name": "ru-Nikolay - Confident, Clear and Engagi",
+      "labels": {
+        "use_case": "social_media",
+        "language": "ru",
+        "descriptive": "confident",
+        "accent": "standard",
+        "gender": "male",
+        "age": "middle_aged"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "9lHjugDhwqoxA5MhX0az",
+      "name": "zh-Anna Su - Casual, Friendly and Bright",
+      "labels": {
+        "language": "zh",
+        "accent": "taiwan mandarin",
+        "descriptive": "casual",
+        "use_case": "social_media",
+        "gender": "female",
+        "age": "young"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "4VZIsMPtgggwNg7OXbPY",
+      "name": "zh-James Gao - Calm, Friendly and Warm",
+      "labels": {
+        "use_case": "narrative_story",
+        "language": "zh",
+        "descriptive": "calm",
+        "accent": "standard",
+        "gender": "male",
+        "age": "middle_aged"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "n1PvBOwxb8X6m7tahp2h",
+      "name": "Michael C. Vincent - Suspenseful Storyteller",
+      "labels": {
+        "accent": "american",
+        "use_case": "narrative_story",
+        "descriptive": "serious",
+        "language": "en",
+        "gender": "male",
+        "age": "middle_aged"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "6FiCmD8eY5VyjOdG5Zjk",
+      "name": "Adam - Deep English Story Voice",
+      "labels": {
+        "use_case": "narrative_story",
+        "language": "en",
+        "descriptive": "calm",
+        "accent": "american",
+        "gender": "male",
+        "age": "middle_aged"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "UgBBYS2sOqTuMpoF3BR0",
+      "name": "Mark - Natural Conversations",
+      "labels": {
+        "accent": "american",
+        "language": "en",
+        "descriptive": "casual",
+        "use_case": "conversational",
+        "gender": "male",
+        "age": "young"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "RABOvaPec1ymXz02oDQi",
+      "name": "Anika - Sweet, Lively and Warm",
+      "labels": {
+        "use_case": "social_media",
+        "accent": "standard",
+        "descriptive": "upbeat",
+        "language": "hi",
+        "gender": "female",
+        "age": "young"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "hpp4J3VqNfWAUOO0d1Us",
+      "name": "Bella - Professional, Bright, Warm",
+      "labels": {
+        "language": "en",
+        "gender": "female",
+        "age": "middle_aged",
+        "use_case": "informative_educational",
+        "descriptive": "professional",
+        "accent": "american"
+      },
+      "category": "premade"
+    },
+    {
+      "id": "CwhRBWXzGAHq8TQ4Fs17",
+      "name": "Roger - Laid-Back, Casual, Resonant",
+      "labels": {
+        "use_case": "conversational",
+        "age": "middle_aged",
+        "language": "en",
+        "accent": "american",
+        "descriptive": "classy",
+        "gender": "male"
+      },
+      "category": "premade"
+    },
+    {
+      "id": "EXAVITQu4vr4xnSDxMaL",
+      "name": "Sarah - Mature, Reassuring, Confident",
+      "labels": {
+        "gender": "female",
+        "language": "en",
+        "use_case": "entertainment_tv",
+        "age": "young",
+        "descriptive": "professional",
+        "accent": "american"
+      },
+      "category": "premade"
+    },
+    {
+      "id": "FGY2WhTYpPnrIDTdsKH5",
+      "name": "Laura - Enthusiast, Quirky Attitude",
+      "labels": {
+        "language": "en",
+        "gender": "female",
+        "accent": "american",
+        "descriptive": "sassy",
+        "age": "young",
+        "use_case": "social_media"
+      },
+      "category": "premade"
+    },
+    {
+      "id": "IKne3meq5aSn9XLyUdCD",
+      "name": "Charlie - Deep, Confident, Energetic",
+      "labels": {
+        "descriptive": "hyped",
+        "gender": "male",
+        "accent": "australian",
+        "age": "young",
+        "use_case": "conversational",
+        "language": "en"
+      },
+      "category": "premade"
+    },
+    {
+      "id": "JBFqnCBsd6RMkjVDRZzb",
+      "name": "George - Warm, Captivating Storyteller",
+      "labels": {
+        "age": "middle_aged",
+        "accent": "british",
+        "gender": "male",
+        "language": "en",
+        "use_case": "narrative_story",
+        "descriptive": "mature"
+      },
+      "category": "premade"
+    },
+    {
+      "id": "N2lVS1w4EtoT3dr4eOWO",
+      "name": "Callum - Husky Trickster",
+      "labels": {
+        "use_case": "characters_animation",
+        "age": "middle_aged",
+        "language": "en",
+        "accent": "american",
+        "gender": "male"
+      },
+      "category": "premade"
+    },
+    {
+      "id": "SAz9YHcvj6GT2YYXdXww",
+      "name": "River - Relaxed, Neutral, Informative",
+      "labels": {
+        "use_case": "conversational",
+        "age": "middle_aged",
+        "language": "en",
+        "accent": "american",
+        "descriptive": "calm",
+        "gender": "neutral"
+      },
+      "category": "premade"
+    },
+    {
+      "id": "SOYHLrjzK2X1ezoPC6cr",
+      "name": "Harry - Fierce Warrior",
+      "labels": {
+        "use_case": "characters_animation",
+        "age": "young",
+        "language": "en",
+        "accent": "american",
+        "descriptive": "rough",
+        "gender": "male"
+      },
+      "category": "premade"
+    },
+    {
+      "id": "TX3LPaxmHKxFdv7VOQHJ",
+      "name": "Liam - Energetic, Social Media Creator",
+      "labels": {
+        "use_case": "social_media",
+        "gender": "male",
+        "language": "en",
+        "descriptive": "confident",
+        "accent": "american",
+        "age": "young"
+      },
+      "category": "premade"
+    },
+    {
+      "id": "Xb7hH8MSUJpSbSDYk0k2",
+      "name": "Alice - Clear, Engaging Educator",
+      "labels": {
+        "use_case": "informative_educational",
+        "age": "middle_aged",
+        "language": "en",
+        "accent": "british",
+        "descriptive": "professional",
+        "gender": "female"
+      },
+      "category": "premade"
+    },
+    {
+      "id": "XrExE9yKIg1WjnnlVkGX",
+      "name": "Matilda - Knowledgable, Professional",
+      "labels": {
+        "age": "middle_aged",
+        "use_case": "informative_educational",
+        "accent": "american",
+        "gender": "female",
+        "descriptive": "upbeat",
+        "language": "en"
+      },
+      "category": "premade"
+    },
+    {
+      "id": "bIHbv24MWmeRgasZH58o",
+      "name": "Will - Relaxed Optimist",
+      "labels": {
+        "use_case": "conversational",
+        "age": "young",
+        "language": "en",
+        "accent": "american",
+        "descriptive": "chill",
+        "gender": "male"
+      },
+      "category": "premade"
+    },
+    {
+      "id": "cgSgspJ2msm6clMCkdW9",
+      "name": "Jessica - Playful, Bright, Warm",
+      "labels": {
+        "age": "young",
+        "accent": "american",
+        "use_case": "conversational",
+        "descriptive": "cute",
+        "language": "en",
+        "gender": "female"
+      },
+      "category": "premade"
+    },
+    {
+      "id": "cjVigY5qzO86Huf0OWal",
+      "name": "Eric - Smooth, Trustworthy",
+      "labels": {
+        "use_case": "conversational",
+        "age": "middle_aged",
+        "language": "en",
+        "accent": "american",
+        "descriptive": "classy",
+        "gender": "male"
+      },
+      "category": "premade"
+    },
+    {
+      "id": "iP95p4xoKVk53GoZ742B",
+      "name": "Chris - Charming, Down-to-Earth",
+      "labels": {
+        "age": "middle_aged",
+        "accent": "american",
+        "use_case": "conversational",
+        "descriptive": "casual",
+        "language": "en",
+        "gender": "male"
+      },
+      "category": "premade"
+    },
+    {
+      "id": "nPczCjzI2devNBz1zQrb",
+      "name": "Brian - Deep, Resonant and Comforting",
+      "labels": {
+        "use_case": "social_media",
+        "age": "middle_aged",
+        "language": "en",
+        "accent": "american",
+        "descriptive": "classy",
+        "gender": "male"
+      },
+      "category": "premade"
+    },
+    {
+      "id": "onwK4e9ZLuTAKqWW03F9",
+      "name": "Daniel - Steady Broadcaster",
+      "labels": {
+        "use_case": "informative_educational",
+        "gender": "male",
+        "descriptive": "formal",
+        "language": "en",
+        "age": "middle_aged",
+        "accent": "british"
+      },
+      "category": "premade"
+    },
+    {
+      "id": "pFZP5JQG7iQjIQuC4Bku",
+      "name": "Lily - Velvety Actress",
+      "labels": {
+        "language": "en",
+        "accent": "british",
+        "gender": "female",
+        "age": "middle_aged",
+        "use_case": "informative_educational",
+        "descriptive": "confident"
+      },
+      "category": "premade"
+    },
+    {
+      "id": "pNInz6obpgDQGcFmaJgB",
+      "name": "Adam - Dominant, Firm",
+      "labels": {
+        "use_case": "social_media",
+        "accent": "american",
+        "language": "en",
+        "age": "middle_aged",
+        "gender": "male"
+      },
+      "category": "premade"
+    },
+    {
+      "id": "pqHfZKP75CvOlQylNhV4",
+      "name": "Bill - Wise, Mature, Balanced",
+      "labels": {
+        "use_case": "advertisement",
+        "accent": "american",
+        "gender": "male",
+        "age": "old",
+        "descriptive": "crisp",
+        "language": "en"
+      },
+      "category": "premade"
+    }
+  ]
+}
