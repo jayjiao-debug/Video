@@ -1,0 +1,20 @@
+plan: {'tier': None, 'character_count': None, 'character_limit': None, 'status': None}
+models: ['eleven_v4', 'eleven_v4_turbo', 'eleven_v3', 'eleven_v3_conversational', 'eleven_multilingual_v2', 'eleven_flash_v2_5', 'eleven_turbo_v2_5', 'eleven_turbo_v2', 'eleven_flash_v2', 'eleven_english_sts_v2', 'eleven_multilingual_sts_v2']
+model: eleven_v4
+{"name": "A2_cut", "lang": "en", "text": "October 29th, 1969. A student at UCLA tries to send one word: log in.", "url": "https://raw.githubusercontent.com/jayjiao-debug/video/voice-farm/check/ep41_A2_cut.mp3", "status": 200, "file": "A2_cut.mp3", "bytes": 163675}
+Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+[
+ {
+  "name": "A2_cut",
+  "lang": "en",
+  "text": "October 29th, 1969. A student at UCLA tries to send one word: log in.",
+  "url": "https://raw.githubusercontent.com/jayjiao-debug/video/voice-farm/check/ep41_A2_cut.mp3",
+  "status": 200,
+  "file": "A2_cut.mp3",
+  "bytes": 163675,
+  "heard": "October 29th, 1969. A student at UCLA tries to send one word. Log.",
+  "heard_lang": "en",
+  "heard_lang_p": 0.998,
+  "seconds": 6.75
+ }
+]
