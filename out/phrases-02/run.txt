@@ -1,0 +1,155 @@
+models: []
+model: eleven_multilingual_v2
+add shared failed 401 {"detail":{"type":"authentication_error","code":"unauthorized","message":"The API key you used is missing the permission voices_write to execute this operation.","status":"missing_permissions","reques
+{"name": "1_zh_qianli", "lang": "zh", "text": "千里之行，始于足下。", "voice": "own:Michael C. Vincent - Suspenseful Storyteller {'language': 'en', 'age': 'middle_aged', 'accent': 'american', 'gender': 'male', 'descriptive': 'serious', 'use_case': 'narrative_story'}", "status": 200, "file": "1_zh_qianli.mp3", "bytes": 35987}
+add shared failed 401 {"detail":{"type":"authentication_error","code":"unauthorized","message":"The API key you used is missing the permission voices_write to execute this operation.","status":"missing_permissions","reques
+{"name": "2_zh_sanren", "lang": "zh", "text": "三人行，必有我师焉。", "voice": "own:Anika - Sweet, Lively and Warm {'language': 'hi', 'age': 'young', 'accent': 'standard', 'gender': 'female', 'descriptive': 'upbeat', 'use_case': 'social_media'}", "status": 200, "file": "2_zh_sanren.mp3", "bytes": 38913}
+add shared failed 401 {"detail":{"type":"authentication_error","code":"unauthorized","message":"The API key you used is missing the permission voices_write to execute this operation.","status":"missing_permissions","reques
+{"name": "3_ru_tishe", "lang": "ru", "text": "Тише едешь — дальше будешь.", "voice": "own:Michael C. Vincent - Suspenseful Storyteller {'language': 'en', 'age': 'middle_aged', 'accent': 'american', 'gender': 'male', 'descriptive': 'serious', 'use_case': 'narrative_story'}", "status": 200, "file": "3_ru_tishe.mp3", "bytes": 28464}
+add shared failed 401 {"detail":{"type":"authentication_error","code":"unauthorized","message":"The API key you used is missing the permission voices_write to execute this operation.","status":"missing_permissions","reques
+{"name": "4_ru_moskva", "lang": "ru", "text": "Москва не сразу строилась.", "voice": "own:Anika - Sweet, Lively and Warm {'language': 'hi', 'age': 'young', 'accent': 'standard', 'gender': 'female', 'descriptive': 'upbeat', 'use_case': 'social_media'}", "status": 200, "file": "4_ru_moskva.mp3", "bytes": 32225}
+add shared failed 401 {"detail":{"type":"authentication_error","code":"unauthorized","message":"The API key you used is missing the permission voices_write to execute this operation.","status":"missing_permissions","reques
+{"name": "5_de_ende", "lang": "de", "text": "Ende gut, alles gut.", "voice": "own:Michael C. Vincent - Suspenseful Storyteller {'language': 'en', 'age': 'middle_aged', 'accent': 'american', 'gender': 'male', 'descriptive': 'serious', 'use_case': 'narrative_story'}", "status": 200, "file": "5_de_ende.mp3", "bytes": 29300}
+add shared failed 401 {"detail":{"type":"authentication_error","code":"unauthorized","message":"The API key you used is missing the permission voices_write to execute this operation.","status":"missing_permissions","reques
+{"name": "6_de_uebung", "lang": "de", "text": "Übung macht den Meister.", "voice": "own:Anika - Sweet, Lively and Warm {'language': 'hi', 'age': 'young', 'accent': 'standard', 'gender': 'female', 'descriptive': 'upbeat', 'use_case': 'social_media'}", "status": 200, "file": "6_de_uebung.mp3", "bytes": 24702}
+add shared failed 401 {"detail":{"type":"authentication_error","code":"unauthorized","message":"The API key you used is missing the permission voices_write to execute this operation.","status":"missing_permissions","reques
+{"name": "7_fr_pense", "lang": "fr", "text": "Je pense, donc je suis.", "voice": "own:Michael C. Vincent - Suspenseful Storyteller {'language': 'en', 'age': 'middle_aged', 'accent': 'american', 'gender': 'male', 'descriptive': 'serious', 'use_case': 'narrative_story'}", "status": 200, "file": "7_fr_pense.mp3", "bytes": 26374}
+add shared failed 401 {"detail":{"type":"authentication_error","code":"unauthorized","message":"The API key you used is missing the permission voices_write to execute this operation.","status":"missing_permissions","reques
+{"name": "8_fr_liberte", "lang": "fr", "text": "Liberté, égalité, fraternité.", "voice": "own:Anika - Sweet, Lively and Warm {'language': 'hi', 'age': 'young', 'accent': 'standard', 'gender': 'female', 'descriptive': 'upbeat', 'use_case': 'social_media'}", "status": 200, "file": "8_fr_liberte.mp3", "bytes": 38913}
+add shared failed 401 {"detail":{"type":"authentication_error","code":"unauthorized","message":"The API key you used is missing the permission voices_write to execute this operation.","status":"missing_permissions","reques
+{"name": "9_en_keepcalm", "lang": "en", "text": "Keep calm and carry on.", "voice": "own:Alice - Clear, Engaging Educator {'accent': 'british', 'use_case': 'informative_educational', 'gender': 'female', 'age': 'middle_aged', 'descriptive': 'professional', 'language': 'en'}", "status": 200, "file": "9_en_keepcalm.mp3", "bytes": 25538}
+add shared failed 401 {"detail":{"type":"authentication_error","code":"unauthorized","message":"The API key you used is missing the permission voices_write to execute this operation.","status":"missing_permissions","reques
+{"name": "10_en_surrender", "lang": "en", "text": "We shall fight on the beaches. We shall never surrender.", "voice": "own:George - Warm, Captivating Storyteller {'accent': 'british', 'use_case': 'narrative_story', 'gender': 'male', 'age': 'middle_aged', 'descriptive': 'mature', 'language': 'en'}", "status": 200, "file": "10_en_surrender.mp3", "bytes": 51034}
+Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+[
+ {
+  "name": "1_zh_qianli",
+  "lang": "zh",
+  "text": "千里之行，始于足下。",
+  "voice": "own:Michael C. Vincent - Suspenseful Storyteller {'language': 'en', 'age': 'middle_aged', 'accent': 'american', 'gender': 'male', 'descriptive': 'serious', 'use_case': 'narrative_story'}",
+  "status": 200,
+  "file": "1_zh_qianli.mp3",
+  "bytes": 35987,
+  "heard": "前立之行是于足下。",
+  "heard_lang": "zh",
+  "heard_lang_p": 0.999,
+  "seconds": 2.18
+ },
+ {
+  "name": "2_zh_sanren",
+  "lang": "zh",
+  "text": "三人行，必有我师焉。",
+  "voice": "own:Anika - Sweet, Lively and Warm {'language': 'hi', 'age': 'young', 'accent': 'standard', 'gender': 'female', 'descriptive': 'upbeat', 'use_case': 'social_media'}",
+  "status": 200,
+  "file": "2_zh_sanren.mp3",
+  "bytes": 38913,
+  "heard": "三人性必有我誓言",
+  "heard_lang": "zh",
+  "heard_lang_p": 0.998,
+  "seconds": 2.37
+ },
+ {
+  "name": "3_ru_tishe",
+  "lang": "ru",
+  "text": "Тише едешь — дальше будешь.",
+  "voice": "own:Michael C. Vincent - Suspenseful Storyteller {'language': 'en', 'age': 'middle_aged', 'accent': 'american', 'gender': 'male', 'descriptive': 'serious', 'use_case': 'narrative_story'}",
+  "status": 200,
+  "file": "3_ru_tishe.mp3",
+  "bytes": 28464,
+  "heard": "Тише едешь. Дальше будешь.",
+  "heard_lang": "ru",
+  "heard_lang_p": 0.998,
+  "seconds": 1.72
+ },
+ {
+  "name": "4_ru_moskva",
+  "lang": "ru",
+  "text": "Москва не сразу строилась.",
+  "voice": "own:Anika - Sweet, Lively and Warm {'language': 'hi', 'age': 'young', 'accent': 'standard', 'gender': 'female', 'descriptive': 'upbeat', 'use_case': 'social_media'}",
+  "status": 200,
+  "file": "4_ru_moskva.mp3",
+  "bytes": 32225,
+  "heard": "Москва не сразу строилась.",
+  "heard_lang": "ru",
+  "heard_lang_p": 0.95,
+  "seconds": 1.95
+ },
+ {
+  "name": "5_de_ende",
+  "lang": "de",
+  "text": "Ende gut, alles gut.",
+  "voice": "own:Michael C. Vincent - Suspenseful Storyteller {'language': 'en', 'age': 'middle_aged', 'accent': 'american', 'gender': 'male', 'descriptive': 'serious', 'use_case': 'narrative_story'}",
+  "status": 200,
+  "file": "5_de_ende.mp3",
+  "bytes": 29300,
+  "heard": "Ende gut, alles gut.",
+  "heard_lang": "de",
+  "heard_lang_p": 0.946,
+  "seconds": 1.76
+ },
+ {
+  "name": "6_de_uebung",
+  "lang": "de",
+  "text": "Übung macht den Meister.",
+  "voice": "own:Anika - Sweet, Lively and Warm {'language': 'hi', 'age': 'young', 'accent': 'standard', 'gender': 'female', 'descriptive': 'upbeat', 'use_case': 'social_media'}",
+  "status": 200,
+  "file": "6_de_uebung.mp3",
+  "bytes": 24702,
+  "heard": "Übung macht den Meister.",
+  "heard_lang": "de",
+  "heard_lang_p": 0.975,
+  "seconds": 1.49
+ },
+ {
+  "name": "7_fr_pense",
+  "lang": "fr",
+  "text": "Je pense, donc je suis.",
+  "voice": "own:Michael C. Vincent - Suspenseful Storyteller {'language': 'en', 'age': 'middle_aged', 'accent': 'american', 'gender': 'male', 'descriptive': 'serious', 'use_case': 'narrative_story'}",
+  "status": 200,
+  "file": "7_fr_pense.mp3",
+  "bytes": 26374,
+  "heard": "Je pense, donc je suis.",
+  "heard_lang": "fr",
+  "heard_lang_p": 0.993,
+  "seconds": 1.58
+ },
+ {
+  "name": "8_fr_liberte",
+  "lang": "fr",
+  "text": "Liberté, égalité, fraternité.",
+  "voice": "own:Anika - Sweet, Lively and Warm {'language': 'hi', 'age': 'young', 'accent': 'standard', 'gender': 'female', 'descriptive': 'upbeat', 'use_case': 'social_media'}",
+  "status": 200,
+  "file": "8_fr_liberte.mp3",
+  "bytes": 38913,
+  "heard": "liberté, égalité, fraternité.",
+  "heard_lang": "fr",
+  "heard_lang_p": 0.996,
+  "seconds": 2.37
+ },
+ {
+  "name": "9_en_keepcalm",
+  "lang": "en",
+  "text": "Keep calm and carry on.",
+  "voice": "own:Alice - Clear, Engaging Educator {'accent': 'british', 'use_case': 'informative_educational', 'gender': 'female', 'age': 'middle_aged', 'descriptive': 'professional', 'language': 'en'}",
+  "status": 200,
+  "file": "9_en_keepcalm.mp3",
+  "bytes": 25538,
+  "heard": "Keep calm and carry on.",
+  "heard_lang": "en",
+  "heard_lang_p": 0.99,
+  "seconds": 1.53
+ },
+ {
+  "name": "10_en_surrender",
+  "lang": "en",
+  "text": "We shall fight on the beaches. We shall never surrender.",
+  "voice": "own:George - Warm, Captivating Storyteller {'accent': 'british', 'use_case': 'narrative_story', 'gender': 'male', 'age': 'middle_aged', 'descriptive': 'mature', 'language': 'en'}",
+  "status": 200,
+  "file": "10_en_surrender.mp3",
+  "bytes": 51034,
+  "heard": "We shall fight on the beaches. We shall never surrender.",
+  "heard_lang": "en",
+  "heard_lang_p": 0.992,
+  "seconds": 3.11
+ }
+]
