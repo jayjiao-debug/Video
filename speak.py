@@ -32,15 +32,17 @@ MODEL = pick_model(); report["model"] = MODEL; log("model:", MODEL)
 # voices: own library (premade) with labels; optionally the shared library per language
 own = requests.get(f"{API}/v2/voices?page_size=100", headers=H, timeout=30).json().get("voices", [])
 report["own_voices"] = [{"id": v["voice_id"], "name": v["name"], "labels": v.get("labels"), "category": v.get("category")} for v in own]
-def find_shared(lang, accent, gender, age=None):
+def find_shared(lang, accent, gender, age=None, search=None, use_case=None, pick=0):
     try:
         p = {"page_size": 20, "language": lang, "sort": "usage_character_count_1y"}
         if accent: p["accent"] = accent
         if gender: p["gender"] = gender
         if age: p["age"] = age
+        if search: p["search"] = search
+        if use_case: p["use_cases"] = use_case
         r = requests.get(f"{API}/v1/shared-voices", headers=H, params=p, timeout=30).json()
         vs = r.get("voices", [])
-        for v in vs:
+        for v in vs[pick:]:
             a = requests.post(f"{API}/v1/voices/add/{v['public_owner_id']}/{v['voice_id']}", headers=H, json={"new_name": f"{lang}-{v['name']}"[:40]}, timeout=30)
             if a.ok: return a.json().get("voice_id", v["voice_id"]), f"shared:{v['name']} ({v.get('accent')}, {v.get('language')})"
             log("add shared failed", a.status_code, a.text[:200]); break
@@ -56,16 +58,16 @@ def find_own(accent, gender):
     return own[0]["voice_id"], f"own:{own[0]['name']}"
 
 for it in req["items"]:
-    vid, vname = (None, None)
-    if it.get("shared", True): vid, vname = find_shared(it["lang"], it.get("accent"), it.get("gender"), it.get("age"))
+    vid, vname = (it.get("voice_id"), it.get("voice_id"))
+    if not vid and it.get("shared", True): vid, vname = find_shared(it["lang"], it.get("accent"), it.get("gender"), it.get("age"), it.get("search"), it.get("use_case"), it.get("pick", 0))
     if not vid: vid, vname = find_own(it.get("accent"), it.get("gender"))
-    body = {"text": it["text"], "model_id": MODEL, "language_code": it["lang"]}
+    body = {"text": it["text"], "model_id": it.get("model", MODEL), "language_code": it["lang"]}
     if it.get("settings"): body["voice_settings"] = it["settings"]
     url = f"{API}/v1/text-to-speech/{vid}?output_format=mp3_44100_128"
     r = requests.post(url, headers=H, json=body, timeout=120)
     if not r.ok and r.status_code in (400, 422):
         log("retry without language_code:", r.text[:200]); body.pop("language_code"); r = requests.post(url, headers=H, json=body, timeout=120)
-    rec = {"name": it["name"], "lang": it["lang"], "text": it["text"], "voice": vname, "status": r.status_code}
+    rec = {"name": it["name"], "lang": it["lang"], "text": it["text"], "voice": vname, "voice_id": vid, "model": body["model_id"], "status": r.status_code}
     if r.ok:
         fn = f"{it['name']}.mp3"; open(f"out/{fn}", "wb").write(r.content); rec["file"] = fn; rec["bytes"] = len(r.content)
     else: rec["error"] = r.text[:400]

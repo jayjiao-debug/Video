@@ -1,79 +1,117 @@
 {
-  "id": "ep41-vo-01",
+  "id": "ep41-vo-02",
   "model_prefs": [
     "eleven_v4"
   ],
   "items": [
     {
-      "name": "01_shang",
+      "lang": "zh",
+      "gender": "male",
+      "use_case": "narrative_story",
+      "model": "eleven_v3",
+      "settings": {
+        "stability": 0.35,
+        "similarity_boost": 0.8,
+        "style": 0.55
+      },
+      "name": "00_hook_A",
+      "text": "[softly] 人类打出的第一通电话…… [pause] 第一句话，说的是什么？"
+    },
+    {
+      "lang": "zh",
+      "gender": "male",
+      "use_case": "narrative_story",
+      "model": "eleven_v3",
+      "settings": {
+        "stability": 0.35,
+        "similarity_boost": 0.8,
+        "style": 0.55
+      },
+      "pick": 1,
+      "name": "00_hook_B",
+      "text": "[softly] 人类打出的第一通电话…… [pause] 第一句话，说的是什么？"
+    },
+    {
+      "lang": "zh",
+      "gender": "male",
+      "use_case": "narrative_story",
+      "model": "eleven_v3",
+      "settings": {
+        "stability": 0.35,
+        "similarity_boost": 0.8,
+        "style": 0.55
+      },
+      "pick": 2,
+      "name": "00_hook_C",
+      "text": "[softly] 人类打出的第一通电话…… [pause] 第一句话，说的是什么？"
+    },
+    {
+      "lang": "zh",
+      "gender": "male",
+      "use_case": "narrative_story",
+      "model": "eleven_v3",
+      "settings": {
+        "stability": 0.35,
+        "similarity_boost": 0.8,
+        "style": 0.55
+      },
+      "name": "01_shang_n1_A",
+      "text": "[thoughtfully] 三千年前，殷商的占卜师，把一个问题刻在龟甲上…… 再放进火里烤。"
+    },
+    {
+      "lang": "zh",
+      "gender": "male",
+      "use_case": "narrative_story",
+      "model": "eleven_v3",
+      "settings": {
+        "stability": 0.35,
+        "similarity_boost": 0.8,
+        "style": 0.55
+      },
+      "pick": 1,
+      "name": "01_shang_n1_B",
+      "text": "[thoughtfully] 三千年前，殷商的占卜师，把一个问题刻在龟甲上…… 再放进火里烤。"
+    },
+    {
       "lang": "zh",
       "gender": "male",
       "age": "old",
-      "accent": "standard",
-      "text": "其自东来雨？"
+      "search": "deep",
+      "model": "eleven_v3",
+      "settings": {
+        "stability": 0.3,
+        "similarity_boost": 0.8,
+        "style": 0.6
+      },
+      "name": "01_shang_q",
+      "text": "[whispers] 其自东来雨？"
     },
     {
-      "name": "02_du",
       "lang": "zh",
       "gender": "male",
-      "age": "old",
-      "accent": "standard",
-      "text": "烽火连三月，家书抵万金。"
+      "use_case": "narrative_story",
+      "model": "eleven_v3",
+      "settings": {
+        "stability": 0.35,
+        "similarity_boost": 0.8,
+        "style": 0.55
+      },
+      "name": "01_shang_n2_A",
+      "text": "龟甲裂开的纹路，就是天的回答。[pause] 有的龟甲上，还刻着后来的结果—— [softly] 允雨。真的，下雨了。"
     },
     {
-      "name": "03_morse",
-      "lang": "en",
-      "gender": "male",
-      "age": "old",
-      "accent": "american",
-      "text": "What hath God wrought?"
-    },
-    {
-      "name": "04_scott",
-      "lang": "fr",
-      "gender": "male",
-      "age": "middle_aged",
-      "text": "Au clair de la lune, mon ami Pierrot, prête-moi ta plume, pour écrire un mot."
-    },
-    {
-      "name": "05_bell",
-      "lang": "en",
-      "gender": "male",
-      "age": "middle_aged",
-      "accent": "scottish",
-      "text": "Mr. Watson, come here. I want to see you."
-    },
-    {
-      "name": "06_marconi",
-      "lang": "en",
-      "gender": "male",
-      "age": "young",
-      "accent": "italian",
-      "text": "Can you hear anything, Mr. Kemp?"
-    },
-    {
-      "name": "07_kline",
-      "lang": "en",
-      "gender": "male",
-      "age": "young",
-      "accent": "american",
-      "text": "Did you get the L? ... Did you get the O?"
-    },
-    {
-      "name": "08_beijing",
-      "lang": "en",
-      "gender": "male",
-      "age": "middle_aged",
-      "accent": "chinese",
-      "text": "Across the Great Wall, we can reach every corner in the world."
-    },
-    {
-      "name": "09_voyager",
       "lang": "zh",
-      "gender": "female",
-      "age": "middle_aged",
-      "accent": "standard",
-      "text": "各位都好吧？我们都很想念你们，有空请到这儿来玩。"
+      "gender": "male",
+      "use_case": "narrative_story",
+      "model": "eleven_v3",
+      "settings": {
+        "stability": 0.35,
+        "similarity_boost": 0.8,
+        "style": 0.55
+      },
+      "pick": 1,
+      "name": "01_shang_n2_B",
+      "text": "龟甲裂开的纹路，就是天的回答。[pause] 有的龟甲上，还刻着后来的结果—— [softly] 允雨。真的，下雨了。"
     }
   ]
 }
