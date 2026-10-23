@@ -1525,8 +1525,6 @@ const CoverSins: React.FC<{layout: 'wide' | 'tall'}> = ({layout}) => {
 			<text x={tx + ts * 0.04} y={ty} textAnchor="middle" style={{fontFamily: SERIF, fontWeight: 900, fontSize: ts, letterSpacing: '0.08em'}} fill="#fff2d0" opacity={0.65} filter="url(#gL)">七宗罪</text>
 			<text x={tx + ts * 0.04} y={ty} textAnchor="middle" style={{fontFamily: SERIF, fontWeight: 900, fontSize: ts, letterSpacing: '0.08em'}} fill="url(#goldG)">七宗罪</text>
 			{VOICES.map((vv, i) => <Sticker key={vv.n} v={vv} x={tx + (i - 3) * sp} y={ty + (wide ? 100 : 100)} r={sr} sil={0} id={`cv${i}`} />)}
-			<text x={tx + 22} y={ty + (wide ? 215 : 210)} textAnchor="middle" style={{fontFamily: SERIF, fontWeight: 800, fontSize: wide ? 50 : 56, letterSpacing: '0.12em'}} fill="#fff">你中了几宗？</text>
-			<text x={wide ? 90 : CW / 2} y={wide ? 100 : 82} textAnchor={wide ? 'start' : 'middle'} style={{fontFamily: SERIF, fontWeight: 600, fontSize: 30, letterSpacing: '0.3em', paintOrder: 'stroke'}} stroke="#030205" strokeWidth={8} strokeLinejoin="round" fill={GOLD}>VIBE知识大赏 · Juno</text>
 		</svg>
 	</AbsoluteFill>;
 };
