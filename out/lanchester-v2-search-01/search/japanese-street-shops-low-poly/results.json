@@ -1,0 +1,44 @@
+[
+  {
+    "n": 1,
+    "uid": "782403f71c8b48bc878e28c19dd8d20d",
+    "name": "Japanese low poly building",
+    "author": "NemerionRae",
+    "license": "CC Attribution",
+    "faces": 264934,
+    "vertices": 141120,
+    "likes": 175,
+    "views": 9645,
+    "animated": false,
+    "url": "https://sketchfab.com/3d-models/none-782403f71c8b48bc878e28c19dd8d20d",
+    "thumb": "01_782403f71c8b48bc878e28c19dd8d20d.jpg"
+  },
+  {
+    "n": 2,
+    "uid": "aff31f282155471d8222287596c7ac59",
+    "name": "PSX - Vending Machine",
+    "author": "Kasugay",
+    "license": "CC Attribution",
+    "faces": 92,
+    "vertices": 59,
+    "likes": 103,
+    "views": 2930,
+    "animated": false,
+    "url": "https://sketchfab.com/3d-models/none-aff31f282155471d8222287596c7ac59",
+    "thumb": "02_aff31f282155471d8222287596c7ac59.jpg"
+  },
+  {
+    "n": 3,
+    "uid": "565dc84823834d4884bef69944e0d4be",
+    "name": "Japanese low poly building store",
+    "author": "KingKusak",
+    "license": "CC Attribution",
+    "faces": 7046,
+    "vertices": 4084,
+    "likes": 3,
+    "views": 282,
+    "animated": false,
+    "url": "https://sketchfab.com/3d-models/none-565dc84823834d4884bef69944e0d4be",
+    "thumb": "03_565dc84823834d4884bef69944e0d4be.jpg"
+  }
+]
