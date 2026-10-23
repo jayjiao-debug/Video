@@ -1,0 +1,62 @@
+plan: {'tier': None, 'character_count': None, 'character_limit': None, 'status': None}
+models: ['eleven_v4', 'eleven_v4_turbo', 'eleven_v3', 'eleven_v3_conversational', 'eleven_multilingual_v2', 'eleven_flash_v2_5', 'eleven_turbo_v2_5', 'eleven_turbo_v2', 'eleven_flash_v2', 'eleven_english_sts_v2', 'eleven_multilingual_sts_v2']
+model: eleven_v4
+{"name": "J1_0.92", "lang": "zh", "text": "一九八七年，北京。电子邮件，写好了。", "url": "https://raw.githubusercontent.com/jayjiao-debug/video/voice-farm/check/ep41_J1_0.92.mp3", "status": 200, "file": "J1_0.92.mp3", "bytes": 99727}
+{"name": "J1_0.98", "lang": "zh", "text": "一九八七年，北京。电子邮件，写好了。", "url": "https://raw.githubusercontent.com/jayjiao-debug/video/voice-farm/check/ep41_J1_0.98.mp3", "status": 200, "file": "J1_0.98.mp3", "bytes": 98473}
+{"name": "J1_1.04", "lang": "zh", "text": "一九八七年，北京。电子邮件，写好了。", "url": "https://raw.githubusercontent.com/jayjiao-debug/video/voice-farm/check/ep41_J1_1.04.mp3", "status": 200, "file": "J1_1.04.mp3", "bytes": 97219}
+{"name": "D1_cut", "lang": "zh", "text": "长安被叛军攻破。", "url": "https://raw.githubusercontent.com/jayjiao-debug/video/voice-farm/check/ep41_D1_cut.mp3", "status": 200, "file": "D1_cut.mp3", "bytes": 47064}
+Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+[
+ {
+  "name": "J1_0.92",
+  "lang": "zh",
+  "text": "一九八七年，北京。电子邮件，写好了。",
+  "url": "https://raw.githubusercontent.com/jayjiao-debug/video/voice-farm/check/ep41_J1_0.92.mp3",
+  "status": 200,
+  "file": "J1_0.92.mp3",
+  "bytes": 99727,
+  "heard": "1987年 北京 电子邮件 写好了",
+  "heard_lang": "zh",
+  "heard_lang_p": 0.998,
+  "seconds": 4.1
+ },
+ {
+  "name": "J1_0.98",
+  "lang": "zh",
+  "text": "一九八七年，北京。电子邮件，写好了。",
+  "url": "https://raw.githubusercontent.com/jayjiao-debug/video/voice-farm/check/ep41_J1_0.98.mp3",
+  "status": 200,
+  "file": "J1_0.98.mp3",
+  "bytes": 98473,
+  "heard": "1987年北京电子邮件写好了",
+  "heard_lang": "zh",
+  "heard_lang_p": 0.998,
+  "seconds": 4.04
+ },
+ {
+  "name": "J1_1.04",
+  "lang": "zh",
+  "text": "一九八七年，北京。电子邮件，写好了。",
+  "url": "https://raw.githubusercontent.com/jayjiao-debug/video/voice-farm/check/ep41_J1_1.04.mp3",
+  "status": 200,
+  "file": "J1_1.04.mp3",
+  "bytes": 97219,
+  "heard": "1987年北京電子郵件寫好了",
+  "heard_lang": "zh",
+  "heard_lang_p": 0.996,
+  "seconds": 3.98
+ },
+ {
+  "name": "D1_cut",
+  "lang": "zh",
+  "text": "长安被叛军攻破。",
+  "url": "https://raw.githubusercontent.com/jayjiao-debug/video/voice-farm/check/ep41_D1_cut.mp3",
+  "status": 200,
+  "file": "D1_cut.mp3",
+  "bytes": 47064,
+  "heard": "长安被判军攻破",
+  "heard_lang": "zh",
+  "heard_lang_p": 0.998,
+  "seconds": 1.9
+ }
+]
