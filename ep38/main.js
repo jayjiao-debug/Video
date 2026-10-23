@@ -33462,6 +33462,9 @@ var makeLand = (a) => {
 		vec4 farC = mix(texture2D(map, uvB), texture2D(map, uvC), 0.5 + 0.3 * (nz - 0.5));
 		vec4 sampledDiffuseColor = mix(nearC, farC, farK);
 		diffuseColor *= sampledDiffuseColor;
+	#endif`).replace("#include <normal_fragment_maps>", `#include <normal_fragment_maps>
+	#ifdef USE_MAP
+	normal = normalize(mix(normal, nonPerturbedNormal, farK)); // no tiled normal grid in the distance
 	#endif`);
   };
   const ground = new Mesh(g, gmat);
@@ -33989,9 +33992,9 @@ var rake = (s, tm, t0, towardCam = -1) => {
     const age = tm - (t0 + k * 0.05 + (side > 0 ? 0.025 : 0));
     if (age < 0 || age > 14) continue;
     const px = s.x + 25 - k * 1.85, pz = s.z + side * 8.5;
-    if (age < 0.22) fl.push([px, 4.5, pz + side * 2.5, 22 + (1 - age / 0.22) * 26, 4.2, 2.7, 1.2, 1 - age / 0.22]);
+    if (age < 0.22) fl.push([px, 4.5, pz + side * 2.5, 5 + (1 - age / 0.22) * 7, 4.6, 2.5, 0.9, 1 - age / 0.22]);
     const drift = side === towardCam ? 7.5 : 4;
-    sm.push([px + age * 2.2, 4.5 + age * 2.4, pz + side * (3 + age * drift), 9 + age * 11, 0.92, 0.9, 0.86, 0.9 * Math.exp(-age / 6) * Math.min(1, age * 10)]);
+    sm.push([px + age * 2.2, 4.5 + age * 2.4, pz + side * (3 + age * drift), 4 + age * 8, 0.92, 0.9, 0.86, 0.8 * Math.exp(-age / 6) * Math.min(1, age * 10)]);
   }
   return { sm, fl };
 };
@@ -34425,7 +34428,7 @@ var TIMELINE = [
   { a: T.half, b: T.sunzi, draw: (c, u) => {
     clearLand(c);
     const big = 1e3 * LEN, hs = 500 * LEN, k = ease2((u - 0.25) / 1);
-    camKeys([{ t: 0, pos: [-110, 55, -300], look: [90, 0, 0], fov: 42 }, { t: 0.85, pos: [0, 860, -380], look: [0, 0, -10], fov: 40 }, { t: 3.75, pos: [0, 880, -370], look: [0, 0, -10], fov: 40 }], u);
+    camKeys([{ t: 0, pos: [-110, 55, -300], look: [90, 0, 0], fov: 42 }, { t: 0.85, pos: [0, 860, -380], look: [0, 0, -10], fov: 46 }, { t: 3.75, pos: [0, 880, -370], look: [0, 0, -10], fov: 46 }], u);
     c.army.set(simBodies(SR2, 99), cp());
     c.smoke.set([]);
     c.flash.set([]);
@@ -34444,7 +34447,7 @@ var TIMELINE = [
     clearLand(c);
     const d = T.sea - T.sunzi;
     const big = 1e3 * LEN;
-    camKeys([{ t: 0, pos: [0, 880, -370], look: [0, 0, -10], fov: 40 }, { t: 2.2, pos: [0, 640, -380], look: [0, 0, 160], fov: 40 }, { t: d, pos: [0, 520, -300], look: [0, 900, 3e3], fov: 42 }], u);
+    camKeys([{ t: 0, pos: [0, 880, -370], look: [0, 0, -10], fov: 46 }, { t: 2.2, pos: [0, 640, -380], look: [0, 0, 160], fov: 40 }, { t: d, pos: [0, 520, -300], look: [0, 900, 3e3], fov: 42 }], u);
     c.army.set(simBodies(SR2, 99), cp());
     c.smoke.set([]);
     c.flash.set([]);
