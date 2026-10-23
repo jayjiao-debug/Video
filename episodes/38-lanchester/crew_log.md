@@ -19,3 +19,21 @@ Decisions taken in the owner's place (each can be reversed in the morning):
   - Climax: Collingwood's lead is between two enemy hulls on the downbeat, framed from astern, and rakes both (gun-by-gun flashes, smoke rolling), with the enemy hulls heeling. Nelson's column now trails by about 35 min of sail (as in 1805) and breaks through on 127.55 the same way. A crane up shows the line cut in two places.
   - Hand-overs: the sea smoke thins over the chart; quiet cranes down from the chart height; limit opens inside the smoke bank (no white flash); the ending converges on one red company and dims only after its line.
   - The title slams in sharp over a feathered dark bank. The aim pose now has the butt at the cheek and the head on the stock. Labels have a dark halo. lines.json is regenerated from the timeline.
+- **v3 → v8 (director r2 REVISE → "approve once the stills match"; reviewer v3/v4 FIX FIRST, no blocker; cold reader v3):**
+  - First line reads 500 (the volley is at 1.85 s).
+  - Gun-port flame jets ripple bow→stern. The camera rides the clear lane between Collingwood's lead and the enemy hull. Every ship fires on bar 69. The breakthrough lands inside the slow motion (tm ≈ 1.4).
+  - Smoke is drawn as small billows, and sea smoke fades near the lens.
+  - The fan-out is flown low.
+  - A 12-ship British line at sunset replaces the lone ship, which read as "only one left".
+  - Peel bars sit in the strip between the lines with an =.
+  - Labels: 1000 人 / 500 人; 兰彻斯特，1914 年提出 and 1916 年…分析过纳尔逊的打法 (facts L9: he analysed the memorandum, not the day's arithmetic).
+  - The ★4 squares fade in with the crane.
+  - A 2D smoke bank carries the sea→field cut, and ㉓ starts after it clears.
+  - 0.4 s dissolves at bars 55, 80 and 86.
+  - The bullet-time pair is shot from behind: the model's hands are open, so the grip never faces the lens.
+  - Muzzle flashes are smaller.
+- **Known minors left for the owner's call:**
+  - The limit shot is still fairly tidy.
+  - The end card is static for 10 s (the music tail).
+  - 25 lines against the ~20 aim.
+  - Muzzle flashes are still round.
