@@ -1,0 +1,146 @@
+plan: {'tier': None, 'character_count': None, 'character_limit': None, 'status': None}
+models: ['eleven_v4', 'eleven_v4_turbo', 'eleven_v3', 'eleven_v3_conversational', 'eleven_multilingual_v2', 'eleven_flash_v2_5', 'eleven_turbo_v2_5', 'eleven_turbo_v2', 'eleven_flash_v2', 'eleven_english_sts_v2', 'eleven_multilingual_sts_v2']
+model: eleven_v4
+{"name": "1_zh_qianli", "lang": "zh", "text": "千里之行，始于足下。", "voice": "shared:James Gao - Calm, Friendly and Warm (standard, zh)", "status": 200, "file": "1_zh_qianli.mp3", "bytes": 41838}
+{"name": "2_zh_sanren", "lang": "zh", "text": "三人行，必有我师焉。", "voice": "shared:Anna Su - Casual, Friendly and Bright (taiwan mandarin, zh)", "status": 200, "file": "2_zh_sanren.mp3", "bytes": 43510}
+{"name": "3_ru_tishe", "lang": "ru", "text": "Тише едешь — дальше будешь.", "voice": "shared:Nikolay - Confident, Clear and Engaging (standard, ru)", "status": 200, "file": "3_ru_tishe.mp3", "bytes": 38077}
+{"name": "4_ru_moskva", "lang": "ru", "text": "Москва не сразу строилась.", "voice": "shared:Marina - Soft, Clear and Warm (standard, ru)", "status": 200, "file": "4_ru_moskva.mp3", "bytes": 33061}
+{"name": "5_de_ende", "lang": "de", "text": "Ende gut, alles gut.", "voice": "shared:Otto - Casual and Normal (standard, de)", "status": 200, "file": "5_de_ende.mp3", "bytes": 33061}
+{"name": "6_de_uebung", "lang": "de", "text": "Übung macht den Meister.", "voice": "shared:Susi - Effortless and Confident (standard, de)", "status": 200, "file": "6_de_uebung.mp3", "bytes": 28046}
+{"name": "7_fr_pense", "lang": "fr", "text": "Je pense, donc je suis.", "voice": "shared:Nicolas - Narrator (parisian, fr)", "status": 200, "file": "7_fr_pense.mp3", "bytes": 38077}
+{"name": "8_fr_liberte", "lang": "fr", "text": "Liberté, égalité, fraternité.", "voice": "shared:Claire - Warm, Pretty and Charming (standard, fr)", "status": 200, "file": "8_fr_liberte.mp3", "bytes": 47272}
+{"name": "9_en_keepcalm", "lang": "en", "text": "Keep calm and carry on.", "voice": "own:Alice - Clear, Engaging Educator {'accent': 'british', 'use_case': 'informative_educational', 'gender': 'female', 'age': 'middle_aged', 'descriptive': 'professional', 'language': 'en'}", "status": 200, "file": "9_en_keepcalm.mp3", "bytes": 36823}
+{"name": "10_en_surrender", "lang": "en", "text": "We shall fight on the beaches. We shall never surrender.", "voice": "own:George - Warm, Captivating Storyteller {'accent': 'british', 'use_case': 'narrative_story', 'gender': 'male', 'age': 'middle_aged', 'descriptive': 'mature', 'language': 'en'}", "status": 200, "file": "10_en_surrender.mp3", "bytes": 61065}
+Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+[
+ {
+  "name": "1_zh_qianli",
+  "lang": "zh",
+  "text": "千里之行，始于足下。",
+  "voice": "shared:James Gao - Calm, Friendly and Warm (standard, zh)",
+  "status": 200,
+  "file": "1_zh_qianli.mp3",
+  "bytes": 41838,
+  "heard": "千里之行使于足下",
+  "heard_lang": "zh",
+  "heard_lang_p": 0.992,
+  "seconds": 2.56
+ },
+ {
+  "name": "2_zh_sanren",
+  "lang": "zh",
+  "text": "三人行，必有我师焉。",
+  "voice": "shared:Anna Su - Casual, Friendly and Bright (taiwan mandarin, zh)",
+  "status": 200,
+  "file": "2_zh_sanren.mp3",
+  "bytes": 43510,
+  "heard": "三人型必有我誓焉",
+  "heard_lang": "zh",
+  "heard_lang_p": 0.998,
+  "seconds": 2.64
+ },
+ {
+  "name": "3_ru_tishe",
+  "lang": "ru",
+  "text": "Тише едешь — дальше будешь.",
+  "voice": "shared:Nikolay - Confident, Clear and Engaging (standard, ru)",
+  "status": 200,
+  "file": "3_ru_tishe.mp3",
+  "bytes": 38077,
+  "heard": "Тише едешь, дальше будешь.",
+  "heard_lang": "ru",
+  "heard_lang_p": 0.992,
+  "seconds": 2.32
+ },
+ {
+  "name": "4_ru_moskva",
+  "lang": "ru",
+  "text": "Москва не сразу строилась.",
+  "voice": "shared:Marina - Soft, Clear and Warm (standard, ru)",
+  "status": 200,
+  "file": "4_ru_moskva.mp3",
+  "bytes": 33061,
+  "heard": "Москва не сразу строилась.",
+  "heard_lang": "ru",
+  "heard_lang_p": 0.995,
+  "seconds": 2.0
+ },
+ {
+  "name": "5_de_ende",
+  "lang": "de",
+  "text": "Ende gut, alles gut.",
+  "voice": "shared:Otto - Casual and Normal (standard, de)",
+  "status": 200,
+  "file": "5_de_ende.mp3",
+  "bytes": 33061,
+  "heard": "Ende gut, alles gut.",
+  "heard_lang": "de",
+  "heard_lang_p": 0.992,
+  "seconds": 2.0
+ },
+ {
+  "name": "6_de_uebung",
+  "lang": "de",
+  "text": "Übung macht den Meister.",
+  "voice": "shared:Susi - Effortless and Confident (standard, de)",
+  "status": 200,
+  "file": "6_de_uebung.mp3",
+  "bytes": 28046,
+  "heard": "Übung macht den Meister.",
+  "heard_lang": "de",
+  "heard_lang_p": 0.993,
+  "seconds": 1.68
+ },
+ {
+  "name": "7_fr_pense",
+  "lang": "fr",
+  "text": "Je pense, donc je suis.",
+  "voice": "shared:Nicolas - Narrator (parisian, fr)",
+  "status": 200,
+  "file": "7_fr_pense.mp3",
+  "bytes": 38077,
+  "heard": "Je pense, donc je suis.",
+  "heard_lang": "fr",
+  "heard_lang_p": 0.993,
+  "seconds": 2.32
+ },
+ {
+  "name": "8_fr_liberte",
+  "lang": "fr",
+  "text": "Liberté, égalité, fraternité.",
+  "voice": "shared:Claire - Warm, Pretty and Charming (standard, fr)",
+  "status": 200,
+  "file": "8_fr_liberte.mp3",
+  "bytes": 47272,
+  "heard": "Liberté, égalité, fraternité.",
+  "heard_lang": "fr",
+  "heard_lang_p": 0.996,
+  "seconds": 2.88
+ },
+ {
+  "name": "9_en_keepcalm",
+  "lang": "en",
+  "text": "Keep calm and carry on.",
+  "voice": "own:Alice - Clear, Engaging Educator {'accent': 'british', 'use_case': 'informative_educational', 'gender': 'female', 'age': 'middle_aged', 'descriptive': 'professional', 'language': 'en'}",
+  "status": 200,
+  "file": "9_en_keepcalm.mp3",
+  "bytes": 36823,
+  "heard": "Keep calm and carry on.",
+  "heard_lang": "en",
+  "heard_lang_p": 0.991,
+  "seconds": 2.24
+ },
+ {
+  "name": "10_en_surrender",
+  "lang": "en",
+  "text": "We shall fight on the beaches. We shall never surrender.",
+  "voice": "own:George - Warm, Captivating Storyteller {'accent': 'british', 'use_case': 'narrative_story', 'gender': 'male', 'age': 'middle_aged', 'descriptive': 'mature', 'language': 'en'}",
+  "status": 200,
+  "file": "10_en_surrender.mp3",
+  "bytes": 61065,
+  "heard": "We shall fight on the beaches. We shall never surrender.",
+  "heard_lang": "en",
+  "heard_lang_p": 0.996,
+  "seconds": 3.76
+ }
+]
