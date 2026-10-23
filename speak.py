@@ -32,11 +32,12 @@ MODEL = pick_model(); report["model"] = MODEL; log("model:", MODEL)
 # voices: own library (premade) with labels; optionally the shared library per language
 own = requests.get(f"{API}/v2/voices?page_size=100", headers=H, timeout=30).json().get("voices", [])
 report["own_voices"] = [{"id": v["voice_id"], "name": v["name"], "labels": v.get("labels"), "category": v.get("category")} for v in own]
-def find_shared(lang, accent, gender):
+def find_shared(lang, accent, gender, age=None):
     try:
         p = {"page_size": 20, "language": lang, "sort": "usage_character_count_1y"}
         if accent: p["accent"] = accent
         if gender: p["gender"] = gender
+        if age: p["age"] = age
         r = requests.get(f"{API}/v1/shared-voices", headers=H, params=p, timeout=30).json()
         vs = r.get("voices", [])
         for v in vs:
@@ -56,7 +57,7 @@ def find_own(accent, gender):
 
 for it in req["items"]:
     vid, vname = (None, None)
-    if it.get("shared", True): vid, vname = find_shared(it["lang"], it.get("accent"), it.get("gender"))
+    if it.get("shared", True): vid, vname = find_shared(it["lang"], it.get("accent"), it.get("gender"), it.get("age"))
     if not vid: vid, vname = find_own(it.get("accent"), it.get("gender"))
     body = {"text": it["text"], "model_id": MODEL, "language_code": it["lang"]}
     if it.get("settings"): body["voice_settings"] = it["settings"]
