@@ -20,3 +20,4 @@
 4. End card: 《七情》 shipped without a follow pill / source line — keep it that way here?
 5. Upload: if you add the track from Douyin's library for credit, set 配乐 to 0 (the film already contains the music), 原声 100.
 6. Title pick: 七宗罪，但全是热梗 (cold reader + screenwriter pick) / 刀盾狗是暴怒，你呢？ / 七宗罪，你每天都在犯.
+- 09:10 owner notes: 傲慢 back to 你的胆子真是肥嘟嘟的啊, no crown; no lemon; 鼠鼠 chin restored (filled the body between the arms from the source); small memes (刀盾狗, 鼠鼠, 草地牛) centred in the disc. Stills sent for OK before re-render.

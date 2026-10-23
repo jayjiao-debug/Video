@@ -760,7 +760,7 @@ const DAYS = ['周一', '周二', '周三', '周四', '周五', '周六', '周�
 /** the words of each scene (screenwriter's lines; the moment context, the sin's own words in the silhouette's bubble,
     the meme's quip after the reveal, the closing insight and its key word) */
 const SCRIPT: Record<string, {ctx: string; quote: string; quip: string; closing: string; key: string}> = {
-	pri: {ctx: '对方等你道歉', quote: '我？先低头？', quip: '本王，从不低头。', closing: '嘴硬，是心虚。', key: '心虚'},
+	pri: {ctx: '对方等你道歉', quote: '我？先低头？', quip: '你的胆子真是肥嘟嘟的啊', closing: '嘴硬，是心虚。', key: '心虚'},
 	env: {ctx: '朋友上岸了', quote: '恭喜恭喜！', quip: '运气好而已。', closing: '酸谁，就是想成为谁。', key: '成为'},
 	ang: {ctx: '被人阴阳了', quote: '你再说一遍？', quip: '我很冷静！', closing: '怒火，最先烧的是自己。', key: '自己'},
 	slo: {ctx: 'ddl前一晚', quote: '明天再说。', quip: '牛来了，魂没来。', closing: '懒，有时是累到不想面对。', key: '累'},
@@ -779,12 +779,12 @@ const Bubble: React.FC<{text: string; x: number; y: number; pop: number; col: st
 	</g>;
 };
 /** where a meme sits in its disc (figure coordinates: the picture stands on y = 340) */
-const memeBox = (k: string) => { const img = MEME_IMG[k], r = Math.min(600 / img.w, 640 / img.h) * (k === 'gre' ? 0.78 : 1), iw = img.w * r, ih = img.h * r; return {img, iw, ih, top: 340 - ih, x0: -iw / 2}; };
+const memeBox = (k: string) => { const img = MEME_IMG[k], r = Math.min(600 / img.w, 640 / img.h) * (k === 'gre' ? 0.86 : 1), iw = img.w * r, ih = img.h * r, top = ih < 500 ? -30 - ih / 2 + 10 : 340 - ih; return {img, iw, ih, top, x0: -iw / 2, bot: top + ih}; };
 /** the figure freezes (e.g. 刀盾狗 mid-roar while the kick drops out in bar 10) */
 const memeClock = (k: string, T: number) => k === 'ang' && T >= bt(10) && T < bt(11) ? bt(10) : T;
 const FigMeme: React.FC<FigProps> = ({T: T0, v, orn, late, t = 0, open: ex = 1}) => {
 	const T = memeClock(v.kind, T0), c = late(3), m = MEME[v.kind], k = v.kind, r = m.rig, on = orn(0), sc = SCRIPT[k];
-	const {img, iw, ih, top, x0} = memeBox(k);
+	const {img, iw, ih, top, x0, bot} = memeBox(k);
 	const bp = ((((T - PH) % BEAT) + BEAT) % BEAT) / BEAT, pulse = kickOn(T) ? Math.max(0, 1 - bp / 0.18) : 0;
 	let dx = 0, dy = 0, rotAll = 0, sx = 1 + 0.025 * pulse, sy = 1 - 0.04 * pulse, sway = 0;
 	const br = Math.sin(T * 2.4);
@@ -810,15 +810,15 @@ const FigMeme: React.FC<FigProps> = ({T: T0, v, orn, late, t = 0, open: ex = 1})
 		</g>; })}
 		</g>
 		{/* the puppet: the whole picture breathes, bounces on the beat and sways like jelly from its feet */}
-		<g transform={`translate(${dx},${dy}) rotate(${rotAll},0,340) translate(0,340) scale(${sx},${sy}) skewX(${-sway * 0.9}) translate(0,-340)`}>
+		<g transform={`translate(${dx},${dy}) rotate(${rotAll},0,${bot}) translate(0,${bot}) scale(${sx},${sy}) skewX(${-sway * 0.9}) translate(0,${-bot})`}>
 			<g filter="url(#memeRim)"><image href={img.src} x={x0} y={top} width={iw} height={ih} clipPath="url(#discClip)" /></g>
 		</g>
 		<g opacity={ex}>
-		{k === 'pri' && <g transform={`translate(${x0 + 0.5 * iw + dx},${top + 0.17 * ih + dy - 300 * (1 - out3(c))}) rotate(${sway * 0.6 - 6})`} opacity={c > 0 ? 1 : 0}>
+		{false && k === 'pri' && <g transform={`translate(${x0 + 0.5 * iw + dx},${top + 0.17 * ih + dy - 300 * (1 - out3(c))}) rotate(${sway * 0.6 - 6})`} opacity={c > 0 ? 1 : 0}>
 			<path d="M-90,0 L-90,-54 L-58,-22 L-30,-76 L0,-34 L30,-76 L58,-22 L90,-54 L90,0 Z" fill="url(#goldG)" stroke="#7a5a20" strokeWidth={2} />
 			{[-58, 0, 58].map((x) => <circle key={x} cx={x} cy={-14} r={9} fill={v.col} stroke="#fff" strokeWidth={1.4} />)}</g>}
 		{/* 嫉妒: a lemon (柠檬精) pops up beside it and drips */}
-		{k === 'env' && tl > 0 && <g transform={`translate(330,-90) rotate(${-18 + 6 * Math.sin(T * 3)}) scale(${1.8 * outBack(cl01(tl / 0.3)) * (1 + 0.06 * pulse)})`}>
+		{false && k === 'env' && tl > 0 && <g transform={`translate(330,-90) rotate(${-18 + 6 * Math.sin(T * 3)}) scale(${1.8 * outBack(cl01(tl / 0.3)) * (1 + 0.06 * pulse)})`}>
 			<path d="M-70,0 C-70,-50 70,-50 70,0 C70,50 -70,50 -70,0 Z" fill="#ffe14a" stroke="#c9a400" strokeWidth={4} /><path d="M70,0 L92,-6 L92,6 Z" fill="#ffe14a" stroke="#c9a400" strokeWidth={3} /><path d="M-70,0 L-90,-5 L-90,5 Z" fill="#ffe14a" stroke="#c9a400" strokeWidth={3} />
 			<path d="M-10,-40 C10,-80 50,-80 60,-60 C30,-56 10,-50 -10,-40 Z" fill="#4caf50" stroke="#2e7d32" strokeWidth={3} />
 			<ellipse cx={-24} cy={-14} rx={18} ry={8} fill="#fff8c0" opacity={0.8} />
@@ -846,11 +846,11 @@ const FigMeme: React.FC<FigProps> = ({T: T0, v, orn, late, t = 0, open: ex = 1})
 };
 /** before the reveal: the meme as a dark silhouette with a coloured rim and a "?", saying the sin's words */
 const MemeSil: React.FC<{T: number; v: Voice; u: number; quoteU: number}> = ({T, v, u, quoteU}) => {
-	const {img, iw, ih, top, x0} = memeBox(v.kind);
+	const {img, iw, ih, top, x0, bot} = memeBox(v.kind);
 	const bp = ((((T - PH) % BEAT) + BEAT) % BEAT) / BEAT, pulse = kickOn(T) ? Math.max(0, 1 - bp / 0.2) : 0;
 	return <g opacity={u}>
 		<filter id="silF" x="-20%" y="-20%" width="140%" height="140%"><feColorMatrix type="matrix" values="0 0 0 0 0.03  0 0 0 0 0.02  0 0 0 0 0.06  0 0 0 6 -1.2" result="b" /><feMorphology in="SourceAlpha" operator="dilate" radius={5} result="d" /><feFlood floodColor={v.hot} /><feComposite in2="d" operator="in" result="c" /><feGaussianBlur in="c" stdDeviation={6} result="g" /><feMerge><feMergeNode in="g" /><feMergeNode in="b" /></feMerge></filter>
-		<g transform={`translate(0,340) scale(${1 + 0.02 * pulse},${1 - 0.03 * pulse}) translate(0,-340)`}><g clipPath="url(#silClip)"><image href={img.src} x={x0} y={top} width={iw} height={ih} filter="url(#silF)" /></g><clipPath id="silClip"><circle cx={0} cy={-30} r={384} /><rect x={-1200} y={-1500} width={2400} height={1470} /></clipPath></g>
+		<g transform={`translate(0,${bot}) scale(${1 + 0.02 * pulse},${1 - 0.03 * pulse}) translate(0,${-bot})`}><g clipPath="url(#silClip)"><image href={img.src} x={x0} y={top} width={iw} height={ih} filter="url(#silF)" /></g><clipPath id="silClip"><circle cx={0} cy={-30} r={384} /><rect x={-1200} y={-1500} width={2400} height={1470} /></clipPath></g>
 		<g transform={`translate(0,${-26 * pulse})`}>
 		<text x={0} y={top + ih * 0.55 + 70} textAnchor="middle" style={{fontFamily: SERIF, fontWeight: 900, fontSize: 200 * (1 + 0.12 * pulse)}} fill={v.hot} filter="url(#gS)">?</text>
 		<text x={0} y={top + ih * 0.55 + 70} textAnchor="middle" style={{fontFamily: SERIF, fontWeight: 900, fontSize: 200 * (1 + 0.12 * pulse)}} fill="#fff">?</text>
