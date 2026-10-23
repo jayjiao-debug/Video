@@ -34530,6 +34530,7 @@ var camKeys = (keys, t) => {
   camera.lookAt(look[0], look[1], look[2]);
   camera.fov = fov2;
   camera.updateProjectionMatrix();
+  camera.updateMatrixWorld(true);
   return { pos, look };
 };
 var camOrbit = (c, r, h, ang, fov2 = 34, lookY = 1.3) => {
@@ -34538,6 +34539,7 @@ var camOrbit = (c, r, h, ang, fov2 = 34, lookY = 1.3) => {
   camera.lookAt(c[0], lookY, c[2]);
   camera.fov = fov2;
   camera.updateProjectionMatrix();
+  camera.updateMatrixWorld(true);
 };
 var toScreen = (v) => {
   const p = new Vector3(v[0], v[1], v[2]).project(camera);
@@ -35391,8 +35393,9 @@ var makeCity = async (sky, env2) => {
       sh2.uniforms.zcol = colU;
       sh2.vertexShader = sh2.vertexShader.replace("#include <common>", "#include <common>\nvarying vec3 vWp;").replace("#include <worldpos_vertex>", "#include <worldpos_vertex>\nvWp = (modelMatrix * vec4(transformed, 1.0)).xyz;");
       sh2.fragmentShader = sh2.fragmentShader.replace("#include <common>", `#include <common>
-varying vec3 vWp; uniform vec4 zones[${N}]; uniform vec3 zcol[${N}];`).replace("#include <emissivemap_fragment>", `#include <emissivemap_fragment>
-			for (int i = 0; i < ${N}; i++) { float d = length(vWp.xz - zones[i].xy); float k = zones[i].w * (1.0 - smoothstep(zones[i].z * 0.82, zones[i].z, d)); totalEmissiveRadiance += zcol[i] * k * (0.35 + 0.65 * smoothstep(0.0, 80.0, vWp.y)); }`);
+varying vec3 vWp; uniform vec4 zones[${N}]; uniform vec3 zcol[${N}];`).replace("#include <opaque_fragment>", `vec3 zg = vec3(0.0); for (int i = 0; i < ${N}; i++) { float d = length(vWp.xz - zones[i].xy); float k = zones[i].w * (1.0 - smoothstep(zones[i].z * 0.82, zones[i].z, d)); zg += zcol[i] * k * (0.35 + 0.65 * smoothstep(0.0, 80.0, vWp.y)); }
+			outgoingLight = outgoingLight * (1.0 + 0.6 * length(zg)) + zg * 0.55;
+			#include <opaque_fragment>`);
     };
     mat.needsUpdate = true;
   });
@@ -35679,11 +35682,11 @@ var cityState = (c, k, t) => {
     const inside = Math.hypot(x - D.x, z - D.z) < D.r;
     const o = inside ? 1 - clamp01(k * 1.6 - 0.3) : 1;
     const tw = 0.75 + 0.25 * Math.sin(t * 3 + i);
-    if (o > 0.01) pts.push([x, 26, z, 26, 3.2, 0.9, 0.6, o * tw]);
+    if (o > 0.01) pts.push([x, 60, z, 20, 2.4, 0.7, 0.45, 0.8 * o * tw]);
   });
   blue.forEach(([x0, z0, x1, z1], i) => {
     const m = ease2(k * 1.15 - i * 0.012);
-    pts.push([lerp2(x0, x1, m), 30, lerp2(z0, z1, m), 30, 0.8, 1.8, 4, 0.95]);
+    pts.push([lerp2(x0, x1, m), 64, lerp2(z0, z1, m), 30, 0.8, 1.8, 4, 0.95]);
   });
   c.cityPts.set(pts);
   c.city.setGlow([{ x: D.x, z: D.z, r: D.r, color: "#3a8bff", k: 1.6 * clamp01(k * 1.3 - 0.25) }]);
@@ -36073,8 +36076,8 @@ var TIMELINE = [
       c.seaFlash.set([]);
     }
     const v = toScreen([150, 0, 1350 + van]);
-    if (v.front) tag(c.hud, Math.min(W - 160, v.x), Math.max(150, v.y - 60), "\u524D\u961F", env(u, 0.3, 99), 52, "#fff", RED);
-    html(c.hud, `<div class="lbl" style="left:0;right:0;top:170px;text-align:center;font-size:50px;opacity:${env(u, 0.6, 99)}"><span style="text-shadow:0 0 8px ${BLUE},0 0 24px ${BLUE}">\u82F1\u56FD \u635F\u5931 0 \u8258</span> \xB7 <span style="text-shadow:0 0 8px ${RED},0 0 24px ${RED}">\u5BF9\u65B9 \u635F\u5931\u4E00\u534A\u4EE5\u4E0A</span></div>`);
+    if (v.front) tag(c.hud, Math.min(W - 160, v.x), Math.max(300, v.y - 60), "\u524D\u961F", env(u, 0.3, 99), 52, "#fff", RED);
+    html(c.hud, `<div class="lbl" style="left:0;right:0;top:136px;text-align:center;font-size:50px;opacity:${env(u, 0.6, 99)}"><span style="text-shadow:0 0 8px ${BLUE},0 0 24px ${BLUE}">\u82F1\u56FD \u635F\u5931 0 \u8258</span> \xB7 <span style="text-shadow:0 0 8px ${RED},0 0 24px ${RED}">\u5BF9\u65B9 \u635F\u5931\u4E00\u534A\u4EE5\u4E0A</span></div>`);
     header(c, "1805 \xB7 \u7279\u62C9\u6CD5\u52A0", 1);
     sub(c.hud, "\u7ED3\u679C\uFF0C\u82F1\u56FD\u4E00\u8258\u8239\u90FD[\u6CA1\u4E22]", u, 89.6 - T.chart, 92.55 - T.chart);
     seaDraw(c, tt, { bloom: 0.4, vig: 0.5, exposure: 0.5, sepia: 0.45 });
@@ -36219,7 +36222,11 @@ var sunziText = (scene) => {
     army: new Army(a, land.scene, 2100),
     arena,
     city,
-    cityPts: new Puffs(city.scene, 300, true),
+    cityPts: (() => {
+      const p = new Puffs(city.scene, 300, true);
+      p.pts.material.depthTest = false;
+      return p;
+    })(),
     smoke: new Puffs(land.scene, 14e3, false),
     flash: new Puffs(land.scene, 2500, true),
     squares: new GroundSquares(land.scene, 16),
