@@ -1,0 +1,132 @@
+plan: {'tier': None, 'character_count': None, 'character_limit': None, 'status': None}
+models: ['eleven_v4', 'eleven_v4_turbo', 'eleven_v3', 'eleven_v3_conversational', 'eleven_multilingual_v2', 'eleven_flash_v2_5', 'eleven_turbo_v2_5', 'eleven_turbo_v2', 'eleven_flash_v2', 'eleven_english_sts_v2', 'eleven_multilingual_sts_v2']
+model: eleven_v4
+{"name": "01_shang", "lang": "zh", "text": "其自东来雨？", "voice": "shared:Julian - Deep, Rich and Mature (british, en)", "status": 200, "file": "01_shang.mp3", "bytes": 30554}
+{"name": "02_du", "lang": "zh", "text": "烽火连三月，家书抵万金。", "voice": "shared:Julian - Deep, Rich and Mature (british, en)", "status": 200, "file": "02_du.mp3", "bytes": 57303}
+{"name": "03_morse", "lang": "en", "text": "What hath God wrought?", "voice": "shared:Spuds Oxley - Grandpa  (american, en)", "status": 200, "file": "03_morse.mp3", "bytes": 30554}
+{"name": "04_scott", "lang": "fr", "text": "Au clair de la lune, mon ami Pierrot, prête-moi ta plume, pour écrire un mot.", "voice": "shared:Nicolas - Narrator (parisian, fr)", "status": 200, "file": "04_scott.mp3", "bytes": 79037}
+{"name": "05_bell", "lang": "en", "text": "Mr. Watson, come here. I want to see you.", "voice": "shared:Hugh - Rhythmic and Engaging Storyteller (scottish, en)", "status": 200, "file": "05_bell.mp3", "bytes": 47272}
+{"name": "06_marconi", "lang": "en", "text": "Can you hear anything, Mr. Kemp?", "voice": "shared:Antonio - Lively, Engaging and Energetic (italian, en)", "status": 200, "file": "06_marconi.mp3", "bytes": 33061}
+{"name": "07_kline", "lang": "en", "text": "Did you get the L? ... Did you get the O?", "voice": "shared:Young Jamal (american, en)", "status": 200, "file": "07_kline.mp3", "bytes": 41838}
+{"name": "08_beijing", "lang": "en", "text": "Across the Great Wall, we can reach every corner in the world.", "voice": "shared:Wenchang - Chinese accent (chinese, en)", "status": 200, "file": "08_beijing.mp3", "bytes": 66498}
+{"name": "09_voyager", "lang": "zh", "text": "各位都好吧？我们都很想念你们，有空请到这儿来玩。", "voice": "shared:Yun - Elegant, Sweet and Gentle (standard, zh)", "status": 200, "file": "09_voyager.mp3", "bytes": 76529}
+Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+[
+ {
+  "name": "01_shang",
+  "lang": "zh",
+  "text": "其自东来雨？",
+  "voice": "shared:Julian - Deep, Rich and Mature (british, en)",
+  "status": 200,
+  "file": "01_shang.mp3",
+  "bytes": 30554,
+  "heard": "其字東來語",
+  "heard_lang": "zh",
+  "heard_lang_p": 0.997,
+  "seconds": 1.84
+ },
+ {
+  "name": "02_du",
+  "lang": "zh",
+  "text": "烽火连三月，家书抵万金。",
+  "voice": "shared:Julian - Deep, Rich and Mature (british, en)",
+  "status": 200,
+  "file": "02_du.mp3",
+  "bytes": 57303,
+  "heard": "風火連三月 家書抵萬斤",
+  "heard_lang": "zh",
+  "heard_lang_p": 0.995,
+  "seconds": 3.52
+ },
+ {
+  "name": "03_morse",
+  "lang": "en",
+  "text": "What hath God wrought?",
+  "voice": "shared:Spuds Oxley - Grandpa  (american, en)",
+  "status": 200,
+  "file": "03_morse.mp3",
+  "bytes": 30554,
+  "heard": "What hath God wrought?",
+  "heard_lang": "en",
+  "heard_lang_p": 0.998,
+  "seconds": 1.84
+ },
+ {
+  "name": "04_scott",
+  "lang": "fr",
+  "text": "Au clair de la lune, mon ami Pierrot, prête-moi ta plume, pour écrire un mot.",
+  "voice": "shared:Nicolas - Narrator (parisian, fr)",
+  "status": 200,
+  "file": "04_scott.mp3",
+  "bytes": 79037,
+  "heard": "Au clair de la lune, mon ami Piero, prête-moi ta plume pour écrire un mot.",
+  "heard_lang": "fr",
+  "heard_lang_p": 0.999,
+  "seconds": 4.88
+ },
+ {
+  "name": "05_bell",
+  "lang": "en",
+  "text": "Mr. Watson, come here. I want to see you.",
+  "voice": "shared:Hugh - Rhythmic and Engaging Storyteller (scottish, en)",
+  "status": 200,
+  "file": "05_bell.mp3",
+  "bytes": 47272,
+  "heard": "Mr. Watson, come here. I want to see you.",
+  "heard_lang": "en",
+  "heard_lang_p": 0.994,
+  "seconds": 2.88
+ },
+ {
+  "name": "06_marconi",
+  "lang": "en",
+  "text": "Can you hear anything, Mr. Kemp?",
+  "voice": "shared:Antonio - Lively, Engaging and Energetic (italian, en)",
+  "status": 200,
+  "file": "06_marconi.mp3",
+  "bytes": 33061,
+  "heard": "Can you hear anything, Mr Kemp?",
+  "heard_lang": "en",
+  "heard_lang_p": 0.965,
+  "seconds": 2.0
+ },
+ {
+  "name": "07_kline",
+  "lang": "en",
+  "text": "Did you get the L? ... Did you get the O?",
+  "voice": "shared:Young Jamal (american, en)",
+  "status": 200,
+  "file": "07_kline.mp3",
+  "bytes": 41838,
+  "heard": "Did you get the L? Did you get the O?",
+  "heard_lang": "en",
+  "heard_lang_p": 0.925,
+  "seconds": 2.56
+ },
+ {
+  "name": "08_beijing",
+  "lang": "en",
+  "text": "Across the Great Wall, we can reach every corner in the world.",
+  "voice": "shared:Wenchang - Chinese accent (chinese, en)",
+  "status": 200,
+  "file": "08_beijing.mp3",
+  "bytes": 66498,
+  "heard": "Across the Great Wall, we can reach every corner in the world.",
+  "heard_lang": "en",
+  "heard_lang_p": 0.989,
+  "seconds": 4.08
+ },
+ {
+  "name": "09_voyager",
+  "lang": "zh",
+  "text": "各位都好吧？我们都很想念你们，有空请到这儿来玩。",
+  "voice": "shared:Yun - Elegant, Sweet and Gentle (standard, zh)",
+  "status": 200,
+  "file": "09_voyager.mp3",
+  "bytes": 76529,
+  "heard": "各位都好吧,我們都很想念你們有空請到這兒來玩",
+  "heard_lang": "zh",
+  "heard_lang_p": 0.999,
+  "seconds": 4.72
+ }
+]
