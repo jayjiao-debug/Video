@@ -259,7 +259,7 @@ export const simBodies = (sim: Sim, t: number, pose: Pose = 'aim', dx = 0, dz = 
 
 // ================================================================ smoke + flashes
 const spriteTex = (() => { let t: THREE.CanvasTexture | null = null; return () => { if (t) return t; const c = document.createElement('canvas'); c.width = c.height = 128; const g = c.getContext('2d')!;
-	for (let k = 0; k < 6; k++) { const x = 64 + (Math.random() - 0.5) * 30, y = 64 + (Math.random() - 0.5) * 30, r = 34 + Math.random() * 26; const gr = g.createRadialGradient(x, y, 0, x, y, r); gr.addColorStop(0, 'rgba(255,255,255,0.5)'); gr.addColorStop(1, 'rgba(255,255,255,0)'); g.fillStyle = gr; g.fillRect(0, 0, 128, 128); }
+	for (let k = 0; k < 6; k++) { const x = 64 + (Math.random() - 0.5) * 24, y = 64 + (Math.random() - 0.5) * 24, r = 30 + Math.random() * 20; // stays inside the 128 px quad: no square edges const gr = g.createRadialGradient(x, y, 0, x, y, r); gr.addColorStop(0, 'rgba(255,255,255,0.5)'); gr.addColorStop(1, 'rgba(255,255,255,0)'); g.fillStyle = gr; g.fillRect(0, 0, 128, 128); }
 	t = new THREE.CanvasTexture(c); return t; }; })();
 const pointsMat = (additive: boolean) => new THREE.ShaderMaterial({
 	uniforms: {map: {value: spriteTex()}, scale: {value: H / 2 / Math.tan((36 * Math.PI) / 360)}, fogColor: {value: new THREE.Color('#b9b2ad')}},

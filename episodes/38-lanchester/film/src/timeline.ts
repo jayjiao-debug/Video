@@ -319,7 +319,7 @@ export const TIMELINE: Shot[] = [
 	// 15 — Trafalgar: down from the clouds onto 27 v 33; the plan drawn on the water: both columns into the same stretch, the van left alone
 	{a: T.sea, b: T.climax, draw: (c, u) => {
 		const d = T.climax - T.sea; const adv = ADV(u);
-		camKeys([{t: 0, pos: [-1500, 1600, -2600], look: [-1200, 2600, 1200], fov: 42}, {t: 1.4, pos: [-1700, 900, -2300], look: [0, 0, 0], fov: 40}, {t: 6.5, pos: [-1500, 260, -1200], look: [0, 10, 0], fov: 38}, {t: d, pos: [adv - 2450 - 110, 20, -440], look: [adv - 2450 + 60, 8, -440], fov: 44}], u);
+		camKeys([{t: 0, pos: [-1500, 1600, -2600], look: [-1200, 2600, 1200], fov: 42}, {t: 1.4, pos: [-1700, 900, -2300], look: [0, 0, 0], fov: 40}, {t: 6.5, pos: [-1500, 260, -1200], look: [0, 10, 0], fov: 38}, {t: d, pos: [adv - 2450 - 110, 24, -468], look: [adv - 2450 + 60, 8, -440], fov: 44}], u);
 		setFleet(c.sea.combined, LINE(u, 0), u); setFleet(c.sea.british, COLS(adv), u);
 		const {sm, fl} = broadsides(LINE(u, 0).slice(0, 18), u, 1, 3); c.seaSmoke.set(u > 4 ? sm : []); c.seaFlash.set(u > 4 ? fl : []);
 		seaMarks(c, env(u, 3.75, d - 1.6, 0.5, 0.6), adv);
@@ -334,8 +334,8 @@ export const TIMELINE: Shot[] = [
 	{a: T.climax, b: T.chart, draw: (c, u) => {
 		const d = T.chart - T.climax; const tm = u < 1.2 ? u : u < 3.0 ? 1.2 + (u - 1.2) * 0.25 : 1.65 + (u - 3.0); // slow motion as the bow passes the stern
 		const adv = ADV0 + tm * 55; const lead = {x: adv - 2450, z: -440}, nel = {x: adv - 2710, z: 670}; const tN = 6.15; // Nelson's lead reaches the line at tm = 6.15 (u = 7.5)
-		if (u < 7.5) camKeys([{t: 0, pos: [lead.x - 110, 20, -440], look: [lead.x + 60, 8, -440], fov: 44}, {t: 1.2, pos: [lead.x - 104, 16, -444], look: [lead.x + 50, 9, -440], fov: 50}, {t: 3.0, pos: [lead.x - 100, 14, -448], look: [lead.x + 40, 9, -440], fov: 52}, {t: 7.5, pos: [lead.x - 140, 34, -560], look: [lead.x + 40, 6, -420], fov: 42}], u);
-		else camKeys([{t: 7.5, pos: [nel.x - 105, 18, 670], look: [nel.x + 50, 8, 670], fov: 50}, {t: 9.0, pos: [nel.x - 150, 50, 520], look: [nel.x + 60, 4, 620], fov: 42}, {t: 11.6, pos: [-900, 650, -1500], look: [0, 0, 0], fov: 44}, {t: d, pos: [-960, 700, -1560], look: [0, 0, 60], fov: 44}], u);
+		if (u < 7.5) camKeys([{t: 0, pos: [lead.x - 110, 24, -468], look: [lead.x + 60, 8, -440], fov: 44}, {t: 1.2, pos: [lead.x - 104, 18, -466], look: [lead.x + 50, 9, -440], fov: 50}, {t: 3.0, pos: [lead.x - 100, 15, -464], look: [lead.x + 40, 9, -440], fov: 52}, {t: 7.5, pos: [lead.x - 140, 34, -560], look: [lead.x + 40, 6, -420], fov: 42}], u);
+		else camKeys([{t: 7.5, pos: [nel.x - 105, 22, 696], look: [nel.x + 50, 8, 670], fov: 50}, {t: 9.0, pos: [nel.x - 150, 50, 520], look: [nel.x + 60, 4, 620], fov: 42}, {t: 11.6, pos: [-900, 650, -1500], look: [0, 0, 0], fov: 44}, {t: d, pos: [-960, 700, -1560], look: [0, 0, 60], fov: 44}], u);
 		const heel = (q: any, k: number) => ({...q, roll: -0.075 * k});
 		const line = LINE(T.climax - T.sea + u, 0).map((q) => Math.abs(q.z - lead.z) < 75 ? heel(q, clamp01((tm - 0.3) / 0.9)) : Math.abs(q.z - nel.z) < 75 ? heel(q, clamp01((tm - tN - 0.3) / 0.9)) : q);
 		setFleet(c.sea.combined, line, u); setFleet(c.sea.british, COLS(adv), u);
