@@ -13,8 +13,10 @@ try:
     u = requests.get(f"{API}/v1/user/subscription", headers=H, timeout=30).json()
     report["plan"] = {k: u.get(k) for k in ("tier", "character_count", "character_limit", "status")}
 except Exception as e: report["plan"] = str(e)
+log("plan:", report["plan"])
 models = requests.get(f"{API}/v1/models", headers=H, timeout=30).json()
 ids = [m.get("model_id") for m in models] if isinstance(models, list) else []
+if not ids: log("models response:", str(models)[:300])
 report["models"] = ids
 log("models:", ids)
 def pick_model():

@@ -1,16 +1,70 @@
 {
-  "id": "phrases-02",
+  "id": "phrases-03",
   "model_prefs": [],
   "items": [
-    {"name": "1_zh_qianli", "lang": "zh", "gender": "male", "text": "千里之行，始于足下。"},
-    {"name": "2_zh_sanren", "lang": "zh", "gender": "female", "text": "三人行，必有我师焉。"},
-    {"name": "3_ru_tishe", "lang": "ru", "gender": "male", "text": "Тише едешь — дальше будешь."},
-    {"name": "4_ru_moskva", "lang": "ru", "gender": "female", "text": "Москва не сразу строилась."},
-    {"name": "5_de_ende", "lang": "de", "gender": "male", "text": "Ende gut, alles gut."},
-    {"name": "6_de_uebung", "lang": "de", "gender": "female", "text": "Übung macht den Meister."},
-    {"name": "7_fr_pense", "lang": "fr", "gender": "male", "text": "Je pense, donc je suis."},
-    {"name": "8_fr_liberte", "lang": "fr", "gender": "female", "text": "Liberté, égalité, fraternité."},
-    {"name": "9_en_keepcalm", "lang": "en", "accent": "british", "gender": "female", "text": "Keep calm and carry on."},
-    {"name": "10_en_surrender", "lang": "en", "accent": "british", "gender": "male", "text": "We shall fight on the beaches. We shall never surrender."}
+    {
+      "name": "1_zh_qianli",
+      "lang": "zh",
+      "gender": "male",
+      "text": "千里之行，始于足下。"
+    },
+    {
+      "name": "2_zh_sanren",
+      "lang": "zh",
+      "gender": "female",
+      "text": "三人行，必有我师焉。"
+    },
+    {
+      "name": "3_ru_tishe",
+      "lang": "ru",
+      "gender": "male",
+      "text": "Тише едешь — дальше будешь."
+    },
+    {
+      "name": "4_ru_moskva",
+      "lang": "ru",
+      "gender": "female",
+      "text": "Москва не сразу строилась."
+    },
+    {
+      "name": "5_de_ende",
+      "lang": "de",
+      "gender": "male",
+      "text": "Ende gut, alles gut."
+    },
+    {
+      "name": "6_de_uebung",
+      "lang": "de",
+      "gender": "female",
+      "text": "Übung macht den Meister."
+    },
+    {
+      "name": "7_fr_pense",
+      "lang": "fr",
+      "gender": "male",
+      "text": "Je pense, donc je suis."
+    },
+    {
+      "name": "8_fr_liberte",
+      "lang": "fr",
+      "gender": "female",
+      "text": "Liberté, égalité, fraternité."
+    },
+    {
+      "name": "9_en_keepcalm",
+      "lang": "en",
+      "accent": "british",
+      "gender": "female",
+      "text": "Keep calm and carry on.",
+      "shared": false
+    },
+    {
+      "name": "10_en_surrender",
+      "lang": "en",
+      "accent": "british",
+      "gender": "male",
+      "text": "We shall fight on the beaches. We shall never surrender.",
+      "shared": false
+    }
   ]
 }
