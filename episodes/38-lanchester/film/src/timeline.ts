@@ -73,8 +73,8 @@ const ADV0 = 1500 + 106.7 * 9.375; // = ADV(T.climax − T.sea)
 /** raking broadside of a ship breaking the line: every gun on both sides fires bow to stern, 0.05 s apart, starting at t0 */
 const rake = (s: {x: number; z: number}, tm: number, t0: number, towardCam = -1) => { const sm: number[][] = [], fl: number[][] = [];
 	for (let k = 0; k < 28; k++) for (const side of [-1, 1]) { const age = tm - (t0 + k * 0.05 + (side > 0 ? 0.025 : 0)); if (age < 0 || age > 14) continue; const px = s.x + 25 - k * 1.85, pz = s.z + side * 8.5;
-		if (age < 0.22) fl.push([px, 4.5, pz + side * 2.5, 22 + (1 - age / 0.22) * 26, 4.2, 2.7, 1.2, 1 - age / 0.22]);
-		const drift = side === towardCam ? 7.5 : 4; sm.push([px + age * 2.2, 4.5 + age * 2.4, pz + side * (3 + age * drift), 9 + age * 11, 0.92, 0.9, 0.86, 0.9 * Math.exp(-age / 6) * Math.min(1, age * 10)]); }
+		if (age < 0.22) fl.push([px, 4.5, pz + side * 2.5, 5 + (1 - age / 0.22) * 7, 4.6, 2.5, 0.9, 1 - age / 0.22]);
+		const drift = side === towardCam ? 7.5 : 4; sm.push([px + age * 2.2, 4.5 + age * 2.4, pz + side * (3 + age * drift), 4 + age * 8, 0.92, 0.9, 0.86, 0.8 * Math.exp(-age / 6) * Math.min(1, age * 10)]); }
 	return {sm, fl}; };
 const seaDraw = (c: Ctx, t: number, g: any = {}) => { (c.sea.water.material as any).uniforms.time.value = t * 0.6; setGrade({vig: 0.4, warm: 0.04, bloom: 0.45, exposure: 0.5, ...g}); draw(c.sea.scene); };
 const broadsides = (ships: {x: number; z: number; heading: number}[], t: number, rate: number, seed: number) => {
@@ -296,7 +296,7 @@ export const TIMELINE: Shot[] = [
 	// 13 — ★4: two half-armies are half the strength (overhead)
 	{a: T.half, b: T.sunzi, draw: (c, u) => {
 		clearLand(c); const big = 1000 * LEN, hs = 500 * LEN, k = ease((u - 0.25) / 1.0);
-		camKeys([{t: 0, pos: [-110, 55, -300], look: [90, 0, 0], fov: 42}, {t: 0.85, pos: [0, 860, -380], look: [0, 0, -10], fov: 40}, {t: 3.75, pos: [0, 880, -370], look: [0, 0, -10], fov: 40}], u);
+		camKeys([{t: 0, pos: [-110, 55, -300], look: [90, 0, 0], fov: 42}, {t: 0.85, pos: [0, 860, -380], look: [0, 0, -10], fov: 46}, {t: 3.75, pos: [0, 880, -370], look: [0, 0, -10], fov: 46}], u);
 		c.army.set(simBodies(SR2, 99), cp()); c.smoke.set([]); c.flash.set([]); c.tracers.set([]);
 		c.squares.set([{x: -big / 2, z: -big / 2, w: big, d: big, color: '#ff8a7a', a: 0.45, edge: 1},
 			{x: lerp(-big / 2 - 320, -big / 2, k), z: -big / 2, w: hs, d: hs, color: '#ff5a47', a: 1, edgeColor: GOLD},
@@ -308,7 +308,7 @@ export const TIMELINE: Shot[] = [
 	// 14 — 孙子: "以十攻其一" in gold brush strokes across the empty half; then the camera rises into the sky (bridge to the sea)
 	{a: T.sunzi, b: T.sea, draw: (c, u) => {
 		clearLand(c); const d = T.sea - T.sunzi; const big = 1000 * LEN;
-		camKeys([{t: 0, pos: [0, 880, -370], look: [0, 0, -10], fov: 40}, {t: 2.2, pos: [0, 640, -380], look: [0, 0, 160], fov: 40}, {t: d, pos: [0, 520, -300], look: [0, 900, 3000], fov: 42}], u);
+		camKeys([{t: 0, pos: [0, 880, -370], look: [0, 0, -10], fov: 46}, {t: 2.2, pos: [0, 640, -380], look: [0, 0, 160], fov: 40}, {t: d, pos: [0, 520, -300], look: [0, 900, 3000], fov: 42}], u);
 		c.army.set(simBodies(SR2, 99), cp()); c.smoke.set([]); c.flash.set([]); c.tracers.set([]);
 		c.squares.set([{x: -big / 2, z: -big / 2, w: big, d: big, color: '#ff8a7a', a: 0.45 * (1 - clamp01((u - 2.4) / 0.8)), edge: 1}]);
 		c.text.visible = true; c.text.position.set(0, 0.3, big / 4); c.text.userData.reveal(clamp01((u - 0.05) / 1.8));

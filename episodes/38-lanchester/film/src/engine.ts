@@ -194,6 +194,9 @@ export const makeLand = (a: Assets) => {
 		vec4 farC = mix(texture2D(map, uvB), texture2D(map, uvC), 0.5 + 0.3 * (nz - 0.5));
 		vec4 sampledDiffuseColor = mix(nearC, farC, farK);
 		diffuseColor *= sampledDiffuseColor;
+	#endif`).replace('#include <normal_fragment_maps>', `#include <normal_fragment_maps>
+	#ifdef USE_MAP
+	normal = normalize(mix(normal, nonPerturbedNormal, farK)); // no tiled normal grid in the distance
 	#endif`); };
 	const ground = new THREE.Mesh(g, gmat);
 	ground.receiveShadow = true; scene.add(ground);
