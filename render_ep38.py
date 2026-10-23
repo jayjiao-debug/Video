@@ -11,10 +11,13 @@ GET = [("polyhaven/kloppenheim_06_puresky_4k.hdr", "sky.hdr"),
        ("polyhaven/grass_medium_01/textures/grass_medium_01_diff_1k.jpg", "grass/textures/grass_medium_01_diff_1k.jpg"),
        ("polyhaven/grass_medium_01/textures/grass_medium_01_nor_gl_1k.jpg", "grass/textures/grass_medium_01_nor_gl_1k.jpg"),
        ("polyhaven/grass_medium_01/textures/grass_medium_01_arm_1k.jpg", "grass/textures/grass_medium_01_arm_1k.jpg")]
+RAW2 = "https://raw.githubusercontent.com/jayjiao-debug/Video/asset-output/out/lanchester-v2-models-01"
+GET2 = [("models/osaka.glb", "v2/models/osaka.glb")] + [(f"polyhaven/cobblestone_floor_07/textures/cobblestone_floor_07_{m}_2k.jpg", f"v2/polyhaven/cobblestone_floor_07/textures/cobblestone_floor_07_{m}_2k.jpg") for m in ("diff", "nor_gl", "rough")]
 img = (modal.Image.from_registry("mcr.microsoft.com/playwright:v1.48.2-jammy", add_python="3.11")
        .apt_install("ffmpeg", "fonts-noto-cjk")
-       .run_commands("mkdir -p /app/assets/grass/textures && cd /app && npm init -y >/dev/null && npm i playwright-core@1.48.2",
-                     " && ".join(f"curl -sSL -o /app/assets/{d} '{RAW}/{s}'" for s, d in GET))
+       .run_commands("mkdir -p /app/assets/grass/textures /app/assets/v2/models /app/assets/v2/polyhaven/cobblestone_floor_07/textures && cd /app && npm init -y >/dev/null && npm i playwright-core@1.48.2",
+                     " && ".join(f"curl -sSL -o /app/assets/{d} '{RAW}/{s}'" for s, d in GET),
+                     " && ".join(f"curl -sSL -o /app/assets/{d} '{RAW2}/{s}'" for s, d in GET2))
        .add_local_dir("ep38", "/app/src"))
 app = modal.App("juno-ep38")
 FPS = 30
@@ -24,7 +27,7 @@ A, Bn = JOB.get("range", [0, 30]); CHUNKS = JOB.get("chunks", 10)
 @app.function(image=img, gpu="T4", timeout=3600)
 def chunk(args):
     i, a, b = args
-    subprocess.run("cp -r /app/src/* /app/ && cp /app/src/assets_extra/* /app/assets/ 2>/dev/null; echo '[]' > /app/lines.json; echo '{\"type\":\"module\"}' > /app/package.json.tmp", shell=True, check=True)
+    subprocess.run("cp -r /app/src/* /app/ && cp -r /app/src/assets_extra/. /app/assets/ 2>/dev/null; echo '[]' > /app/lines.json; echo '{\"type\":\"module\"}' > /app/package.json.tmp", shell=True, check=True)
     r = subprocess.run(["node", "chunk.mjs", "/tmp/f", str(a), str(b), str(FPS)], cwd="/app", capture_output=True, text=True)
     log = (r.stdout + r.stderr)[-2500:]
     base = ["ffmpeg", "-y", "-v", "error", "-framerate", str(FPS), "-start_number", str(a), "-i", "/tmp/f/f%05d.jpg", "-pix_fmt", "yuv420p"]
@@ -35,7 +38,7 @@ def chunk(args):
 
 @app.function(image=img, gpu="T4", timeout=3600)
 def stills(ts):
-    subprocess.run("cp -r /app/src/* /app/ && cp /app/src/assets_extra/* /app/assets/ 2>/dev/null; true", shell=True, check=True)
+    subprocess.run("cp -r /app/src/* /app/ && cp -r /app/src/assets_extra/. /app/assets/ 2>/dev/null; true", shell=True, check=True)
     r = subprocess.run(["node", "stills.mjs", "/tmp/s"] + [str(t) for t in ts], cwd="/app", capture_output=True, text=True)
     subprocess.run("cd /tmp/s && tar cf /tmp/s.tar *.jpg", shell=True)
     return pathlib.Path("/tmp/s.tar").read_bytes(), (r.stdout + r.stderr)[-3000:]
