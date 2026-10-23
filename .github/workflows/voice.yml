@@ -1,0 +1,46 @@
+name: voice
+
+# Push a new request.json to the voice-farm branch. The runner calls ElevenLabs with the
+# ELEVENLABS_API_KEY secret (never stored in the repo), checks each clip with Whisper, and pushes
+# the clips + a report to the `voice-output` branch under out/<request id>/.
+on:
+  push:
+    branches: [voice-farm]
+    paths: ['request.json']
+
+permissions:
+  contents: write
+
+concurrency:
+  group: voice
+  cancel-in-progress: false
+
+jobs:
+  speak:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with: { python-version: '3.11' }
+      - name: speak
+        env:
+          ELEVENLABS_API_KEY: ${{ secrets.ELEVENLABS_API_KEY }}
+        run: |
+          mkdir -p out
+          echo "key present: $([ -n "$ELEVENLABS_API_KEY" ] && echo yes || echo no)" >> out/log.txt
+          pip install -q requests faster-whisper >/dev/null 2>&1 || true
+          python speak.py 2>&1 | tee -a out/run.txt || echo "speak exited non-zero" >> out/log.txt
+      - name: publish
+        if: always()
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          ID=$(python -c "import json;print(json.load(open('request.json'))['id'])")
+          grep -rl "sk_" out && sed -i 's/sk_[A-Za-z0-9]*/sk_REDACTED/g' $(grep -rl "sk_" out) || true
+          git clone -q --depth 1 --branch voice-output "https://x-access-token:${GH_TOKEN}@github.com/${{ github.repository }}.git" /tmp/vo || (mkdir -p /tmp/vo && cd /tmp/vo && git init -q && git checkout -q -b voice-output && git remote add origin "https://x-access-token:${GH_TOKEN}@github.com/${{ github.repository }}.git")
+          rm -rf "/tmp/vo/out/$ID"; mkdir -p "/tmp/vo/out/$ID"; cp -r out/. "/tmp/vo/out/$ID/"
+          cd /tmp/vo
+          echo "{\"id\":\"$ID\",\"finished\":$(date -u +%s)}" > latest.json
+          git config user.name "voice-farm"; git config user.email "voice-farm@users.noreply.github.com"
+          git add -A && git commit -q -m "voice: $ID" && git push -q origin voice-output
