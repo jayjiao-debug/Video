@@ -34481,7 +34481,7 @@ var TIMELINE = [
   { a: T.sea, b: T.climax, draw: (c, u) => {
     const d = T.climax - T.sea;
     const adv = ADV(u);
-    camKeys([{ t: 0, pos: [-1500, 1600, -2600], look: [-1200, 2600, 1200], fov: 42 }, { t: 1.4, pos: [-1700, 900, -2300], look: [0, 0, 0], fov: 40 }, { t: 6.5, pos: [-1500, 260, -1200], look: [0, 10, 0], fov: 38 }, { t: d, pos: [adv - 2450 - 110, 24, -468], look: [adv - 2450 + 60, 8, -440], fov: 44 }], u);
+    camKeys([{ t: 0, pos: [-1500, 1600, -2600], look: [-1200, 2600, 1200], fov: 42 }, { t: 1.4, pos: [-1700, 900, -2300], look: [0, 0, 0], fov: 40 }, { t: 6.5, pos: [-1500, 260, -1200], look: [0, 10, 0], fov: 38 }, { t: d, pos: [adv - 2450 - 110, 24, -463], look: [adv - 2450 + 60, 8, -440], fov: 44 }], u);
     setFleet(c.sea.combined, LINE(u, 0), u);
     setFleet(c.sea.british, COLS(adv), u);
     const { sm, fl } = broadsides(LINE(u, 0).slice(0, 18), u, 1, 3);
@@ -34506,7 +34506,7 @@ var TIMELINE = [
     const adv = ADV0 + tm * 55;
     const lead = { x: adv - 2450, z: -440 }, nel = { x: adv - 2710, z: 670 };
     const tN = 6.15;
-    if (u < 7.5) camKeys([{ t: 0, pos: [lead.x - 110, 24, -468], look: [lead.x + 60, 8, -440], fov: 44 }, { t: 1.2, pos: [lead.x - 60, 12, -474], look: [lead.x + 40, 8, -440], fov: 52 }, { t: 3, pos: [lead.x - 42, 9, -476], look: [lead.x + 30, 7, -440], fov: 54 }, { t: 7.5, pos: [lead.x - 140, 34, -560], look: [lead.x + 40, 6, -420], fov: 42 }], u);
+    if (u < 7.5) camKeys([{ t: 0, pos: [lead.x - 110, 24, -463], look: [lead.x + 60, 8, -440], fov: 44 }, { t: 1.2, pos: [lead.x - 60, 12, -463], look: [lead.x + 40, 8, -440], fov: 52 }, { t: 3, pos: [lead.x - 42, 10, -463], look: [lead.x + 30, 7, -440], fov: 54 }, { t: 7.5, pos: [lead.x - 140, 64, -463], look: [lead.x + 40, 6, -420], fov: 42 }], u);
     else camKeys([{ t: 7.5, pos: [nel.x - 105, 22, 696], look: [nel.x + 50, 8, 670], fov: 50 }, { t: 9, pos: [nel.x - 150, 50, 520], look: [nel.x + 60, 4, 620], fov: 42 }, { t: 11.6, pos: [-900, 650, -1500], look: [0, 0, 0], fov: 44 }, { t: d, pos: [-960, 700, -1560], look: [0, 0, 60], fov: 44 }], u);
     const heel = (q, k) => ({ ...q, roll: -0.075 * k });
     const line2 = LINE(T.climax - T.sea + u, 0).map((q) => Math.abs(q.z - lead.z) < 75 ? heel(q, clamp01((tm - 0.3) / 0.9)) : Math.abs(q.z - nel.z) < 75 ? heel(q, clamp01((tm - tN - 0.3) / 0.9)) : q);
