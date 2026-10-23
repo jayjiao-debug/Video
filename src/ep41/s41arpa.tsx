@@ -137,7 +137,11 @@ const UCLA: React.FC<{t: number; tau: number; cam: number; only?: number}> = ({t
 		{Array.from({length: 16}, (_, i) => <circle key={i} cx={1796 + (i % 8) * 19} cy={860 - 535 + Math.floor(i / 8) * 24} r={4} fill={rnd(i, Math.floor(t * 3)) > 0.5 ? LAMP : '#3a2f1a'} />)}
 		<rect x={1770} y={846} width={185} height={14} fill="#0d1212" />
 		{/* a night window: campus lights */}
-		<rect x={2010} y={300} width={60} height={0} />
+		<rect x={1066} y={296} width={190} height={268} fill="#1a2422" />
+		<rect x={1076} y={306} width={170} height={248} fill="#0b1430" />
+		{Array.from({length: 8}, (_, i) => <circle key={i} cx={1086 + rnd(i, 61) * 150} cy={470 + rnd(i, 62) * 60} r={1.6 + rnd(i, 63) * 1.6} fill="#ffd9a0" opacity={0.5 + 0.3 * Math.sin(t * 0.7 + i)} />)}
+		<path d="M1076,500 L1120,488 L1170,496 L1210,484 L1246,492 L1246,554 L1076,554 Z" fill="#070b18" />
+		<path d="M1161,306 L1161,554 M1076,430 L1246,430" stroke="#1a2422" strokeWidth={7} />
 		<Chalk tau={tau} />
 		{/* the Teletype and Kline, seated and typing in a telephone headset */}
 		<TTY x={U.ttyX} g={U.g} text={text} t={t} head={text.length} />

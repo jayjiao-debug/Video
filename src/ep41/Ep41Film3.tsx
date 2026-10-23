@@ -1,5 +1,6 @@
 import React from 'react';
-import {AbsoluteFill, Composition, registerRoot, useCurrentFrame} from 'remotion';
+import {AbsoluteFill, Composition, Img, registerRoot, staticFile, useCurrentFrame} from 'remotion';
+import {PLATES3} from './plates3';
 import {W, H, FPS, SERIF, SANS, LATS, cl, fio} from './v3base';
 import {Grain, Letterbox} from './fx';
 import {VhsOverlay, vhsJitter, yearAt} from './vhs';
@@ -20,7 +21,7 @@ const FLASHES: [number, number, number, number][] = [   // [scene index, tau fro
 	[3, 12.0, 9.0, 1860],     // Scott: the drum / the moon
 	[2, 16.0, 13.0, 1844],    // Morse: the key and the wire
 	[2, 4.0, 1.5, 1825],      // Morse: the sealed letter
-	[1, 9.0, 6.0, 757],       // Du Fu: beacons
+	[1, 10.5, 7.5, 757],      // Du Fu: beacons lighting (backwards: going out)
 	[0, 8.0, 5.0, -1200],     // Shang: the crack spreading (backwards: closing)
 ];
 const Rewind: React.FC<{t: number; f: number}> = ({t, f}) => {
@@ -48,6 +49,8 @@ export const Ep41Film3: React.FC = () => {
 	const lab = LABELS3.find(([a, b]) => t >= a && t < b);
 	const lb = LETTERBOX3(t), subY = 0, endFade = 1 - cl((t - (T3.end - 1.4)) / 1.4);
 	return <AbsoluteFill style={{background: '#000'}}>
+		{/* SVG <image> is not tracked by delayRender: hidden <Img>s make Remotion wait until every plate is decoded */}
+		<div style={{position: 'absolute', width: 1, height: 1, overflow: 'hidden', opacity: 0}}>{PLATES3.map((p) => <Img key={p} src={staticFile(p)} style={{width: 1, height: 1}} />)}</div>
 		<AbsoluteFill style={{opacity: endFade}}>{body}</AbsoluteFill>
 		<svg width={W} height={H} style={{position: 'absolute'}}>
 			<Letterbox k={lb} />

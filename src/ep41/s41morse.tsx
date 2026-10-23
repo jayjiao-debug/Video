@@ -14,7 +14,7 @@ import {TelegraphKey} from './props41';
 /** scene-relative seconds; VO from vo_timeline_v3.md (film − 54.875) */
 export const MORSE_T = {
 	m1: 0.425, m1End: 3.425, m2: 4.025, m2End: 7.025, m3: 8.425, m3End: 12.475, mq: 12.925, mqEnd: 15.275, end: 18.14,
-	seal: 0.95, open: 1.15, pull: 1.15, pullEnd: 2.9, brush: 3.0,           // studio: seal breaks on M1, pull back, brush falls
+	seal: 0.95, open: 1.15, pull: 0.6, pullEnd: 2.9, brush: 3.0,           // studio: seal breaks on M1, pull back, brush falls
 	road: 3.962, stopA: 5.55, stopB: 6.35, hatA: 6.45, hatB: 6.85, hatC: 7.45,   // MO3: walk, stop at the grave, hat off
 	crane: 7.924, lapse: 8.55, spring: 9.25, springEnd: 10.15, pole0: 9.62, // crane up, 19 years, crane down; a pole per beat
 	chamber: 11.887, press: 12.925, push: 13.55, window: 14.75, ride: 15.25, merge: 16.75, wave: 17.15,
@@ -57,14 +57,15 @@ const Snow: React.FC<{t: number; n?: number; drift?: number; op?: number; seed?:
 
 /** 1825: a folded letter sheet with a red wax seal (no envelope). open 0 → 1 unfolds it; crack 0 → 1 breaks the seal. Origin = centre. */
 const SealedLetter: React.FC<{x: number; y: number; s: number; open: number; crack: number; rot?: number}> = ({x, y, s, open, crack, rot = 0}) => {
-	const w = lerp(120, 150, open), hh = lerp(76, 196, sm(open)), lines = sm(seg(open, 0.4, 1));
+	const w = lerp(60, 150, open), hh = lerp(126, 196, sm(open)), lines = sm(seg(open, 0.4, 1));
 	return <g transform={`translate(${x},${y}) rotate(${rot}) scale(${s})`}>
 		<rect x={-w / 2 + 3} y={-hh / 2 + 4} width={w} height={hh} fill="#000" opacity={0.18} />
 		<rect x={-w / 2} y={-hh / 2} width={w} height={hh} fill="#ECE3CC" />
 		<rect x={-w / 2} y={-hh / 2} width={w} height={hh * 0.5} fill="#F4ECD8" opacity={0.6} />
 		{open < 0.5 && <g opacity={1 - open * 2}>
-			<path d={`M${-w / 2},${-hh / 2} L0,${-hh * 0.08} L${w / 2},${-hh / 2}`} fill="none" stroke="#C8BB9C" strokeWidth={1.4} />
-			<path d={`M${-w / 2},${hh * 0.18} L${w / 2},${hh * 0.18}`} stroke="#D6CAAC" strokeWidth={1} />
+			<rect x={-w / 2} y={-hh * 0.06} width={w} height={hh * 0.14} fill="#E2D7BC" />
+			<path d={`M${-w / 2},${-hh * 0.06} L${w / 2},${-hh * 0.06} M${-w / 2},${hh * 0.08} L${w / 2},${hh * 0.08}`} stroke="#C8BB9C" strokeWidth={0.8} />
+			<path d={`M${-w / 2},${-hh / 2} L${-w * 0.2},${-hh * 0.06} M${w / 2},${-hh / 2} L${w * 0.2},${-hh * 0.06}`} stroke="#D6CAAC" strokeWidth={0.6} />
 		</g>}
 		{open > 0.3 && <g opacity={lines}>
 			<path d={`M${-w / 2},${-hh / 6} L${w / 2},${-hh / 6} M${-w / 2},${hh / 6} L${w / 2},${hh / 6}`} stroke="#CFC2A2" strokeWidth={1} />
@@ -74,11 +75,11 @@ const SealedLetter: React.FC<{x: number; y: number; s: number; open: number; cra
 		</g>}
 		{/* the seal: one disc on the fold; it cracks and the halves part with the paper */}
 		{[-1, 1].map((sd) => { const off = sd * (crack > 0 ? 2 + open * (w / 2 - 2) : 0), half = crack > 0.05;
-			return <g key={sd} transform={`translate(${off},${lerp(0, -hh * 0.2, open)}) scale(${lerp(1, 0.7, open)})`}>
+			return <g key={sd} transform={`translate(${off},${lerp(2.4, -hh * 0.2, open)}) scale(${lerp(0.9, 0.7, open)})`}>
 				<path d={half ? (sd < 0 ? 'M0,-13 A13,13 0 0,0 0,13 L2,6 L-2,0 L1,-6 Z' : 'M0,-13 A13,13 0 0,1 0,13 L2,6 L-2,0 L1,-6 Z') : (sd < 0 ? 'M0,-13 A13,13 0 0,0 0,13 Z' : 'M0,-13 A13,13 0 0,1 0,13 Z')} fill="#A8231B" />
 				<path d={sd < 0 ? 'M-3,-8 A8,8 0 0,0 -3,8' : 'M3,-8 A8,8 0 0,1 3,8'} stroke="#D9574A" strokeWidth={1.4} fill="none" opacity={0.8} />
 			</g>; })}
-		{crack <= 0.05 && <circle cx={-4} cy={-5} r={3} fill="#F08A7A" opacity={0.6} />}
+		{crack <= 0.05 && <circle cx={-4} cy={-2.6} r={2.6} fill="#F08A7A" opacity={0.6} />}
 	</g>;
 };
 /** the studio easel with a full-length canvas (a standing figure blocked in, unfinished) */
@@ -103,6 +104,8 @@ const Brush: React.FC<{x: number; y: number; a: number; h: number}> = ({x, y, a,
 	return <g transform={`translate(${x},${y}) rotate(${a})`}><line x1={0} y1={-L * 0.25} x2={0} y2={L * 0.75} stroke="#1E1812" strokeWidth={3.4} strokeLinecap="round" /><rect x={-2.4} y={L * 0.62} width={4.8} height={L * 0.12} fill="#B9A27A" /><path d={`M-2.6,${L * 0.74} Q0,${L * 0.95} 2.6,${L * 0.74} Z`} fill="#8E3A24" /></g>; };
 
 /* ---------- MO1–2: the studio ---------- */
+/** opening zoom: the folded packet (60 × 126 units × 0.62) is 400 × 840 px on screen, centred — Du Fu's last frame */
+export const MORSE_OPEN_Z = 400 / (60 * 0.62);
 const STUDIO_S = 1920 / 2048;
 const MX = 1050, MG = 1004, MH = 650;          // Morse in the studio: faces the canvas (left)
 const EASEL_X = 560;
@@ -114,8 +117,9 @@ const studioPose = (tau: number) => {
 	return fkPose({...base, hip: base.hip + breath * 0.3});
 };
 const letterAt = (tau: number): P2 => { const p = studioPose(tau), hd = jointAt(p, 'LHand', MX, MG, MH, true); return [hd[0] - 0.035 * MH, hd[1] - 0.01 * MH]; };
+const letterEl = (tau: number) => { const L = letterAt(tau); return <SealedLetter x={L[0]} y={L[1]} s={0.62} open={sm(seg(tau, T.open, T.open + 0.55))} crack={seg(tau, T.seal, T.seal + 0.12)} rot={-3 * sm(seg(tau, T.open, T.open + 0.6))} />; };
 const Studio: React.FC<{tau: number; t: number}> = ({tau, t}) => {
-	const pose = studioPose(tau), L = letterAt(tau), rh = jointAt(pose, 'RHand', MX, MG, MH, true);
+	const pose = studioPose(tau), rh = jointAt(pose, 'RHand', MX, MG, MH, true);
 	const fl = 0.85 + 0.15 * Math.sin(t * 11) * Math.sin(t * 5.3);
 	// the brush: in his raised right hand, then it slips and falls to the boards
 	const dt = tau - T.brush, fallT = 0.42; let bx = rh[0] - 6, by = rh[1] + 4, ba = 160;
@@ -131,7 +135,7 @@ const Studio: React.FC<{tau: number; t: number}> = ({tau, t}) => {
 		<Easel x={EASEL_X} floor={MG - 2} t={t} />
 		<Rimmed x={MX} ground={MG} h={MH} pose={pose} look={{dress: 'coat', head: 'short'}} flip col="#151A20" rimOp={0} T={tau} />
 		<Brush x={bx} y={by} a={ba} h={MH} />
-		<SealedLetter x={L[0]} y={L[1]} s={0.62} open={sm(seg(tau, T.open, T.open + 0.55))} crack={seg(tau, T.seal, T.seal + 0.12)} rot={-4 + 2 * sm(seg(tau, T.open, T.open + 0.6))} />
+		{letterEl(tau)}
 	</g>;
 };
 
@@ -221,8 +225,11 @@ const poleTop = (i: number, cam: number): P2 => [260 + i * POLE_P - cam * 0.85, 
 const SpringWorld: React.FC<{tau: number; t: number}> = ({tau, t}) => {
 	const cam = springCam(tau);
 	return <g>
-		<rect x={-200} y={-1400} width={W + 400} height={1500} fill="#7FC4EC" />
+		<defs><linearGradient id="mSprUp" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stopColor="#5FA8DE" /><stop offset="1" stopColor="#86CDF2" /></linearGradient>
+			<linearGradient id="mSprFade" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stopColor="#86CDF2" stopOpacity="1" /><stop offset="1" stopColor="#86CDF2" stopOpacity="0" /></linearGradient></defs>
+		<rect x={-200} y={-1400} width={W + 400} height={1380} fill="url(#mSprUp)" />
 		<image href={staticFile('ep41/morse_spring.webp')} x={-60 - cam * 0.05} y={-40} width={2100} height={1181} />
+		<rect x={-200} y={-42} width={W + 400} height={300} fill="url(#mSprFade)" />
 		<Layer cam={cam} f={0.85} base={PG + 2} amp={10} seed={4} col="#4E7A4C" period={400} item={(x, gy, i) => rnd(i, 3) > 0.55 ? <path d={`M${x - 60},${gy + 4} Q${x - 40},${gy - 26} ${x},${gy - 30} Q${x + 40},${gy - 26} ${x + 60},${gy + 4} Z`} fill="#45704A" /> : null}
 			front={<g><path d={`M-50,${PG + 26} L${W + 50},${PG + 30}`} stroke="#A89470" strokeWidth={18} /><rect x={-50} y={PG + 40} width={W + 100} height={300} fill="#3E6440" /></g>} />
 		{/* poles (no crossarms): each is raised upright on its beat, then the wire runs to it */}
@@ -231,7 +238,6 @@ const SpringWorld: React.FC<{tau: number; t: number}> = ({tau, t}) => {
 			return <g key={i} transform={`rotate(${a} ${x} ${PG + 6})`}><path d={`M${x - 7},${PG + 8} L${x - 5},${y + 6} L${x + 5},${y + 6} L${x + 7},${PG + 8} Z`} fill="#2A2A24" /><rect x={x - 6} y={y - 4} width={12} height={10} rx={2} fill="#2A2A24" /><circle cx={x + 7} cy={y + 14} r={4} fill="#3A3A30" /></g>; })}
 		{Array.from({length: NPOLE - 1}, (_, i) => { const a = poleTop(i, cam), b = poleTop(i + 1, cam), k = seg(tau, poleT(i + 1) + 0.3, poleT(i + 1) + 0.6);
 			return k > 0 ? <path key={i} d={`M${a[0] + 7},${a[1] + 14} Q${(a[0] + b[0]) / 2},${a[1] + 50} ${b[0] + 7},${b[1] + 14}`} stroke="#22221C" strokeWidth={2.6} fill="none" pathLength={1} strokeDasharray={`${k} 1`} /> : null; })}
-		<rect x={0} y={0} width={W} height={H} fill="url(#mTL)" />
 	</g>;
 };
 
@@ -273,7 +279,6 @@ const Chamber: React.FC<{tau: number; t: number}> = ({tau, t}) => {
 		{/* gold pulses: each key-down sends one along the wire and out of the window (dot short, dash long) */}
 		{PRESSES.map(([a, d], i) => { if (tau < a) return null; const s1 = (tau - a) * PV, s0 = Math.max(0, (tau - a - d) * PV), path = subPoly(WIRE_PTS, WL, s0, s1); if (!path) return null;
 			return <g key={i}><path d={path} stroke="#F2CF7A" strokeWidth={12} strokeLinecap="round" fill="none" opacity={0.3} /><path d={path} stroke="#FFF1C8" strokeWidth={5} strokeLinecap="round" fill="none" /></g>; })}
-		<rect x={0} y={0} width={W} height={H} fill="url(#mTL)" />
 	</g>;
 };
 
@@ -310,11 +315,13 @@ export const MORSE3: React.FC<{tau: number; t: number}> = ({tau, t}) => {
 	const defs = <defs><radialGradient id="mTL" cx="0.12" cy="0.1" r="0.55"><stop offset="0" stopColor="#0A0C12" stopOpacity="0.42" /><stop offset="1" stopColor="#0A0C12" stopOpacity="0" /></radialGradient></defs>;
 	if (tau < T.road) {   // the fold fills the frame (match from Du Fu's letter) → the seal breaks → pull back to the easel → push in as he reads
 		const L = letterAt(Math.min(tau, T.pullEnd)), d = drift(t, 1);
-		const zp = Math.exp(lerp(Math.log(31), Math.log(1.12), ease(seg(tau, T.pull, T.pullEnd))));
+		const pu = seg(tau, T.pull, T.pullEnd), zp = Math.exp(lerp(Math.log(MORSE_OPEN_Z), Math.log(1.12), pu < 0.5 ? 2 * pu * pu * 0 + (1 - Math.pow(1 - pu, 2)) : 1 - Math.pow(1 - pu, 2)));
 		const z = zp * lerp(1, 1.2, ease(seg(tau, T.pullEnd, T.road))) * (1 + 0.02 * (1 - seg(tau, 0, T.pull)) * tau);
 		const k = ease(seg(tau, T.pull + 0.4, T.pullEnd));
 		const cx = lerp(L[0], 905, k) + lerp(0, 50, ease(seg(tau, T.pullEnd, T.road))), cy = lerp(L[1], 560, k) - lerp(0, 50, ease(seg(tau, T.pullEnd, T.road)));
-		return <g>{defs}<CamC z={z} cx={cx + d.px * 0.3 / z} cy={cy + d.py * 0.3 / z} roll={d.roll * 0.5}><Studio tau={tau} t={t} /></CamC><rect width={W} height={H} fill="url(#mTL)" /></g>;
+		const dark = 1 - sm(seg(tau, 0.7, 1.5));
+		return <g>{defs}<CamC z={z} cx={cx + d.px * 0.3 / z * (1 - dark)} cy={cy + d.py * 0.3 / z * (1 - dark)} roll={d.roll * 0.5 * (1 - dark)}><Studio tau={tau} t={t} /></CamC><rect width={W} height={H} fill="url(#mTL)" />
+			{dark > 0 && <g><rect width={W} height={H} fill="#2A1420" opacity={dark} /><CamC z={z} cx={cx + d.px * 0.3 / z * (1 - dark)} cy={cy + d.py * 0.3 / z * (1 - dark)} roll={d.roll * 0.5 * (1 - dark)}>{letterEl(tau)}</CamC></g>}</g>;
 	}
 	if (tau < T.crane + 0.9) {   // MO3 (+ crane up into the snowing sky)
 		const d = drift(t, 0.8), cr = ease(seg(tau, T.crane, T.crane + 0.9)), stopK = seg(tau, T.stopB, T.crane);
@@ -331,14 +338,14 @@ export const MORSE3: React.FC<{tau: number; t: number}> = ({tau, t}) => {
 			<g opacity={1 - sm(seg(tau, T.spring, T.spring + 0.5))}><rect width={W} height={H} fill={skyCol} />
 				{Array.from({length: 14}, (_, i) => { const x = ((rnd(i, 1) * 2600 + (tau - T.lapse) * (900 + 600 * rnd(i, 2))) % 2600) - 340; return <ellipse key={i} cx={x} cy={120 + rnd(i, 3) * 760} rx={240 + 200 * rnd(i, 4)} ry={20 + 18 * rnd(i, 5)} fill="#EEF2F8" opacity={0.18 * Math.sin(Math.PI * lap)} />; })}
 				<Snow t={t} n={120} op={1 - sm(seg(tau, T.lapse - 0.2, T.lapse + 0.4))} />
-			</g>
+			</g><rect width={W} height={H} fill="url(#mTL)" />
 		</g>;
 	}
 	if (tau < T.ride) {   // MO5: the Capitol; push from the key to the window, following the pulses out
 		const d = drift(t, 1 - seg(tau, T.push, T.window)), p = ease(seg(tau, T.push, T.window)), w = easeIn(seg(tau, T.window, T.ride));
 		const z = lerp(1.1, 1.22, ease(seg(tau, T.chamber, T.press))) * lerp(1, 2.4, p) * lerp(1, 6, w);
 		const cx = lerp(lerp(900, 880, seg(tau, T.chamber, T.press)), 1250, p), cy = lerp(620, 330, p);
-		return <g>{defs}<CamC z={z} cx={cx + d.px} cy={cy + d.py} roll={d.roll}><Chamber tau={tau} t={t} /></CamC><rect width={W} height={H} fill="#FFF6E0" opacity={0.3 * w} /></g>;
+		return <g>{defs}<CamC z={z} cx={cx + d.px} cy={cy + d.py} roll={d.roll}><Chamber tau={tau} t={t} /></CamC><rect width={W} height={H} fill="url(#mTL)" opacity={1 - p} /><rect width={W} height={H} fill="#FFF6E0" opacity={0.3 * w} /></g>;
 	}
 	return <g>{defs}<Ride tau={tau} t={t} /><rect width={W} height={H} fill="#FFF6E0" opacity={0.3 * (1 - seg(tau, T.ride, T.ride + 0.35))} /></g>;
 };

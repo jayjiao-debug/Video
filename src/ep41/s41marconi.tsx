@@ -45,7 +45,7 @@ const PoldhuIn: React.FC<{t: number; tau: number}> = ({t, tau}) => {
 	const kx = 430, ky = 668, ang = press * 3.2;
 	const knob = [kx + 230 * Math.cos(ang * Math.PI / 180), ky - 26 + 230 * Math.sin(ang * Math.PI / 180)];
 	return <g>
-		<rect width={W} height={H} fill="#16131a" />
+		<rect x={-300} y={-300} width={W + 600} height={H + 600} fill="#16131a" />
 		{Array.from({length: 22}, (_, i) => <rect key={i} x={i * 90} y={0} width={2} height={700} fill="#0e0c12" />)}
 		{/* warm sunset light through the (unseen) window behind us, and the oil lamp on the shelf */}
 		<rect x={0} y={0} width={W} height={700} fill="#ff9a5a" opacity={0.06} />
@@ -62,7 +62,7 @@ const PoldhuIn: React.FC<{t: number; tau: number}> = ({t, tau}) => {
 		{[[905, 452], [1015, 452]].map(([x, y], i) => <g key={i}><circle cx={x} cy={y} r={46} fill="#8a6a2e" /><circle cx={x - 14} cy={y - 16} r={16} fill="#f0d090" opacity={0.35 + 0.6 * fire} /></g>)}
 		<Arc x1={951} x2={969} y={452} k={fire} f={f} />
 		{/* bench */}
-		<rect x={0} y={700} width={W} height={30} fill="#2a2018" /><rect x={0} y={730} width={W} height={350} fill="#100d0c" />
+		<rect x={-300} y={700} width={W + 600} height={30} fill="#2a2018" /><rect x={-300} y={730} width={W + 600} height={650} fill="#100d0c" />
 		{/* the heavy key: lever on a pivot, brass contacts */}
 		<rect x={360} y={676} width={360} height={24} fill="#1f1812" />
 		<rect x={620} y={664} width={30} height={14} fill="#c8a050" opacity={0.85} />
@@ -82,7 +82,7 @@ const ML = 560, MR = 1225, MTOP = [96, 112], LI: [number, number] = [910, 606];
 export const HUTWIN = {x: 806, y: 704, w: 96, h: 54};
 const PoldhuOut: React.FC<{t: number; tau: number; inside?: React.ReactNode}> = ({t, tau, inside}) => {
 	const T = MARCONI_T, {fire, dot} = keyState(tau, T);
-	let cliff = `M0,1080 L0,${cliffY(0).toFixed(1)}`; for (let x = 20; x <= 1300; x += 20) cliff += ` L${x},${cliffY(x).toFixed(1)}`; cliff += ' L1330,830 L1352,900 L1340,1080 Z';
+	let cliff = `M-300,1400 L-300,${cliffY(-300).toFixed(1)}`; for (let x = -280; x <= 1300; x += 20) cliff += ` L${x},${cliffY(x).toFixed(1)}`; cliff += ' L1330,830 L1352,900 L1340,1400 Z';
 	const span = (u: number): [number, number] => [lerp(ML, MR, u), lerp(MTOP[0], MTOP[1], u) + 34 * Math.sin(Math.PI * u)];
 	const mast = (x: number, top: number) => { const g = cliffY(x); return <g><path d={`M${x - 6},${g} L${x - 2},${top} L${x + 2},${top} L${x + 6},${g} Z`} fill="#0b0e16" />
 		{[-1, 1].map((s) => [0.0, 0.45].map((h, j) => <line key={`${s}${j}`} x1={x} y1={lerp(top, g, h)} x2={x + s * (200 - j * 70)} y2={cliffY(x + s * (200 - j * 70)) + 2} stroke="#0b0e16" strokeWidth={1.2} opacity={0.7} />))}</g>; };
@@ -91,7 +91,9 @@ const PoldhuOut: React.FC<{t: number; tau: number; inside?: React.ReactNode}> = 
 		return <path key={i} d={`M${890 + r * Math.cos(-0.9)},${330 + r * Math.sin(-0.9)} A${r},${r} 0 0,1 ${890 + r * Math.cos(0.9)},${330 + r * Math.sin(0.9)}`} stroke={RING} strokeWidth={4 - 2.5 * age / 1.6} fill="none" opacity={0.8 * op} />; });
 	return <g>
 		<defs><linearGradient id="mcExt" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stopColor="#9e8cb5" /><stop offset="0.3" stopColor="#a07d9a" /><stop offset="0.48" stopColor="#d88a6a" /><stop offset="0.505" stopColor="#5a4a66" /><stop offset="1" stopColor="#2f2f40" /></linearGradient></defs>
-		<rect x={W - 4} y={0} width={2600} height={1080} fill="url(#mcExt)" />
+		<rect x={W - 4} y={-300} width={2600} height={1680} fill="url(#mcExt)" />
+		<image href={staticFile('ep41/marconi_poldhu.webp')} x={0} y={0} width={W} height={1080} preserveAspectRatio="none" transform="scale(-1,1)" />
+		<rect x={-W} y={1078} width={2 * W + 2600} height={400} fill="#2f2f40" /><rect x={-W} y={-300} width={3 * W + 2600} height={302} fill="#9e8cb5" />
 		<image href={staticFile('ep41/marconi_poldhu.webp')} x={0} y={0} width={W} height={1080} preserveAspectRatio="none" />
 		<Glow x={1210} y={528} r={300} c="#ffc27a" o={0.25 + 0.03 * Math.sin(t * 2)} id="mcSunG" />
 		{/* sea glitter shimmer over the plate */}
@@ -137,12 +139,12 @@ const SeaRun: React.FC<{t: number; tau: number}> = ({t, tau}) => {
 	const run = tau * 2600;
 	return <g>
 		<defs><linearGradient id="mcRunSky" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stopColor={sky[0]} /><stop offset="0.6" stopColor={sky[1]} /><stop offset="1" stopColor={sky[2]} /></linearGradient></defs>
-		<rect width={W} height={hz} fill="url(#mcRunSky)" />
+		<rect x={-1400} y={-300} width={W + 2800} height={hz + 300} fill="url(#mcRunSky)" />
 		{k < 0.9 && <Glow x={1500} y={hz} r={260} c="#ffc27a" o={0.6 * (1 - k)} id="mcRunSun" />}
 		<defs><filter id="mcSoft2" x="-30%" y="-200%" width="160%" height="500%"><feGaussianBlur stdDeviation="12" /></filter></defs>
 		<g filter="url(#mcSoft2)">{Array.from({length: 6}, (_, i) => { const x = ((1900 - (run * 0.25 + i * 420)) % 2400 + 2400) % 2400 - 240; return <ellipse key={i} cx={x} cy={120 + i * 52} rx={300} ry={18} fill={mixC('#3a2e4a', '#2c333e', k)} opacity={0.55} />; })}</g>
-		<rect y={hz} width={W} height={H - hz} fill={mixC('#2A2F4A', '#3A4058', k)} />
-		{Array.from({length: 70}, (_, i) => { const row = i % 10, y = hz + 8 + row * row * 6.2, sp = 0.15 + row * row * 0.06, x = ((rnd(i, 2) * 2400 - run * sp) % 2400 + 2400) % 2400 - 240, w = 30 + row * 14;
+		<rect x={-1400} y={hz} width={W + 2800} height={H - hz + 300} fill={mixC('#2A2F4A', '#3A4058', k)} />
+		{Array.from({length: 70}, (_, i) => { const row = i % 10, y = hz + 8 + row * row * 6.2, sp = 0.15 + row * row * 0.06, x = ((rnd(i, 2) * 4200 - run * sp) % 4200 + 4200) % 4200 - 1140, w = 30 + row * 14;
 			return <path key={i} d={`M${x},${y} q${w / 2},${-4 - row * 0.6} ${w},0`} stroke={mixC('#ffb070', '#9FB4C4', k)} strokeWidth={1 + row * 0.35} fill="none" opacity={0.25 + 0.04 * row} />; })}
 		<Steamer x={lerp(1700, 300, seg(tau, T.sea, T.hill))} y={hz + 46} s={0.7} t={t} />
 		{/* the S keeps going: rings racing ahead, west */}
@@ -167,16 +169,24 @@ const alongWire = (t: number, u: number): [number, number] => { const {bridle, h
 	const v = (u - 0.82) / 0.18; return [lerp(hands[0], win[0], v), lerp(hands[1], win[1], v) + 26 * Math.sin(Math.PI * v)]; };
 const SignalHill: React.FC<{t: number; tau: number; py: number}> = ({t, tau, py}) => {
 	const T = MARCONI_T, [kx, ky, kr] = kiteAt(t), {bridle, hands, win, ax, ag} = wirePts(t);
-	let fg = `M0,1100 L0,${fgY(0).toFixed(1)}`; for (let x = 24; x <= W + 24; x += 24) fg += ` L${x},${fgY(x).toFixed(1)}`; fg += ` L${W + 24},1100 Z`;
-	let bg = `M0,1100 L0,${bgY(0).toFixed(1)}`; for (let x = 24; x <= W + 24; x += 24) bg += ` L${x},${bgY(x).toFixed(1)}`; bg += ` L${W + 24},1100 Z`;
+	let fg = `M-1300,1500 L-1300,${fgY(-1300).toFixed(1)}`; for (let x = -1276; x <= W + 1300; x += 24) fg += ` L${x},${fgY(x).toFixed(1)}`; fg += ` L${W + 1300},1500 Z`;
+	let bg = `M-1300,1500 L-1300,${bgY(-1300).toFixed(1)}`; for (let x = -1276; x <= W + 1300; x += 24) bg += ` L${x},${bgY(x).toFixed(1)}`; bg += ` L${W + 1300},1500 Z`;
 	const glintU = seg(tau, T.glint, T.glint + 1.55), wind = t * 900;
 	const hb = hospBase, hx0 = HOSP.x0, hx1 = HOSP.x1, top = hb - 290, peak = hb - 400;
 	return <g>
 		<g transform={`translate(0,${py * 0.25})`}>
 			<defs><linearGradient id="mcHillSky" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stopColor="#262d39" /><stop offset="0.55" stopColor="#4A5868" /><stop offset="1" stopColor="#899197" /></linearGradient></defs>
-			<rect x={-50} y={-1400} width={W + 100} height={2480} fill="url(#mcHillSky)" />
+			<rect x={-1300} y={-1400} width={W + 2600} height={2900} fill="url(#mcHillSky)" />
 		</g>
-		<g transform={`translate(0,${py * 0.45})`}><image href={staticFile('ep41/marconi_sea.webp')} x={0} y={0} width={W} height={1080} preserveAspectRatio="none" /></g>
+		<g transform={`translate(0,${py * 0.45})`}>
+			<defs><linearGradient id="mcSkyTop" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stopColor="#2a313d" /><stop offset="1" stopColor="#899197" /></linearGradient>
+				<linearGradient id="mcFeather" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stopColor="#899197" stopOpacity="1" /><stop offset="1" stopColor="#899197" stopOpacity="0" /></linearGradient></defs>
+			<rect x={-1300} y={-1700} width={W + 2600} height={1702} fill="url(#mcSkyTop)" />
+			<image href={staticFile('ep41/marconi_sea.webp')} x={0} y={0} width={W} height={1080} preserveAspectRatio="none" />
+			<image href={staticFile('ep41/marconi_sea.webp')} x={0} y={0} width={W} height={1080} preserveAspectRatio="none" transform="scale(-1,1)" />
+			<image href={staticFile('ep41/marconi_sea.webp')} x={0} y={0} width={W} height={1080} preserveAspectRatio="none" transform={`translate(${2 * W},0) scale(-1,1)`} />
+			<rect x={-1300} y={1076} width={W + 2600} height={500} fill="#43494f" />
+			<rect x={-1300} y={0} width={W + 2600} height={220} fill="url(#mcFeather)" /></g>
 		{/* racing low cloud */}
 		<defs><filter id="mcSoft" x="-30%" y="-200%" width="160%" height="500%"><feGaussianBlur stdDeviation="14" /></filter></defs>
 		<g transform={`translate(0,${py * 0.3})`} filter="url(#mcSoft)">{Array.from({length: 7}, (_, i) => { const x = ((rnd(i, 11) * 2600 + t * (260 + 60 * i)) % 2600) - 340; return <ellipse key={i} cx={x} cy={-560 + i * 110} rx={340 + 120 * rnd(i, 12)} ry={22 + 14 * rnd(i, 13)} fill="#3a4350" opacity={0.55} />; })}</g>
@@ -205,7 +215,7 @@ const SignalHill: React.FC<{t: number; tau: number; py: number}> = ({t, tau, py}
 				<HexKite x={kx} y={ky} s={2.5} col="#cfc6ae" />
 				<path d={`M${kx},${ky - 150} L${kx},${ky + 150} M${kx - 110},${ky - 75} L${kx + 110},${ky + 75} M${kx + 110},${ky - 75} L${kx - 110},${ky + 75}`} stroke="#5a4a32" strokeWidth={5} />
 				<path d={`M${kx},${ky - 150} L${kx + 110},${ky - 75} L${kx + 110},${ky + 75} L${kx},${ky + 150} L${kx - 110},${ky + 75} L${kx - 110},${ky - 75} Z`} stroke="#8c8270" strokeWidth={3} fill="none" />
-				<rect x={kx - 110} y={ky - 150} width={220} height={300} fill="#ffffff" opacity={0.05 + 0.05 * Math.sin(t * 7)} />
+				<path d={`M${kx},${ky - 150} L${kx + 110},${ky - 75} L${kx + 110},${ky + 75} L${kx},${ky + 150} Z`} fill="#ffffff" opacity={0.06 + 0.05 * Math.sin(t * 7)} />
 			</g>
 			{/* the assistant braces at the line */}
 			<Rimmed x={ax} ground={ag + 2} h={250} pose={mixPose(BRACE, fkPose({hip: 0.6, lean: -12, neck: -28, lt: 26, lk: 30, rt: -20, rk: 8, la: 146, le: 10, ra: 134, re: 20}), 0.5 + 0.5 * Math.sin(t * 2.3))} look={KITE_LOOK} col={FIG} rimOp={0} T={t} />
@@ -253,7 +263,7 @@ const Room: React.FC<{t: number; tau: number}> = ({t, tau}) => {
 	const T = MARCONI_T, {m, k, ear} = roomPoses(tau), fl = 0.92 + 0.08 * Math.sin(t * 13) * Math.sin(t * 7.1), wind = t * 700;
 	const ticks = [T.tick1, T.tick2, T.tick3];
 	return <g>
-		<rect width={W} height={FLOOR} fill="#333944" />
+		<rect x={-300} y={-300} width={W + 600} height={FLOOR + 300} fill="#333944" />
 		{Array.from({length: 22}, (_, i) => <rect key={i} x={i * 88 + 20} y={0} width={3} height={FLOOR} fill="#2b3039" />)}
 		<rect x={0} y={560} width={W} height={6} fill="#2a2f38" />
 		{/* the window: grey gale outside, the aerial coming in at the top */}
@@ -269,7 +279,7 @@ const Room: React.FC<{t: number; tau: number}> = ({t, tau}) => {
 		<path d="M910,180 L910,510 M770,345 L1050,345" stroke="#1b1f26" strokeWidth={10} />
 		<rect x={740} y={510} width={340} height={16} fill="#1b1f26" />
 		<rect x={0} y={0} width={W} height={FLOOR} fill="#9AA8B4" opacity={0.04} />
-		<rect y={FLOOR} width={W} height={H - FLOOR} fill="#1a1e25" />
+		<rect x={-300} y={FLOOR} width={W + 600} height={H - FLOOR + 300} fill="#1a1e25" />
 		{Array.from({length: 9}, (_, i) => <line key={i} x1={0} x2={W} y1={FLOOR + 10 + i * i * 3.2} y2={FLOOR + 10 + i * i * 3.2} stroke="#15181e" strokeWidth={2} />)}
 		{/* Kemp stands behind the table, against the window */}
 		<Rimmed x={KX} ground={FLOOR} h={KH} pose={k} look={KEMP_LOOK} flip col={FIG} rimOp={0} T={t} />

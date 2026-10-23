@@ -25,7 +25,7 @@ const SENT_A = 'Across the Great Wall we can reach every', SENT_B = 'corner in t
 /* room geometry (world, zoom 1) */
 const SCR = {x: 1185, y: 410, w: 310, h: 230}, SCRC: [number, number] = [SCR.x + SCR.w / 2, SCR.y + SCR.h / 2];
 const WIN = {x: 140, y: 220, w: 620, h: 349}, WINC: [number, number] = [WIN.x + WIN.w / 2, WIN.y + WIN.h / 2];
-const DESK = 690, FLOOR = 960, WALLB = 870, EX = 960, EH = 600, ENTER: [number, number] = [1302, 694];
+const DESK = 690, FLOOR = 960, WALLB = 870, EX = 1040, EH = 600, ENTER: [number, number] = [1302, 694];
 const ENG: Look4 = {dress: 'jacket', head: 'glasses'}, ELDER: Look4 = {dress: 'jacket', head: 'short', build: 1.05};
 const DAYS = ['14', '15', '16', '17', '18', '19', '20'], WEEK = ['星期一', '星期二', '星期三', '星期四', '星期五', '星期六', '星期日'];
 const dayIdx = (tau: number) => BJ_T.tears.filter((x) => tau >= x).length;
@@ -36,7 +36,7 @@ const TYPE = (t: number, k = 1) => fkPose({hip: 0.37, lean: 16, neck: 8, lt: 88,
 const CROSS = fkPose({hip: 0.37, lean: -4, neck: 6, lt: 88, lk: 92, rt: 84, rk: 86, la: 60, le: 120, ra: 56, re: 116});
 const CHIN = fkPose({hip: 0.37, lean: 20, neck: 4, lt: 88, lk: 92, rt: 84, rk: 86, la: 30, le: 140, ra: 52, re: 60});
 const BACK = fkPose({hip: 0.37, lean: -10, neck: -6, lt: 80, lk: 84, rt: 76, rk: 80, la: 150, le: 150, ra: 146, re: 150});
-const REACH = (tr: number, press: number) => fkPose({hip: 0.37, lean: 20, neck: 12, lt: 88, lk: 92, rt: 84, rk: 86, la: 40, le: 50, ra: 80 + tr - press * 4, re: 6 + press * 8});
+const REACH = (tr: number, press: number) => fkPose({hip: 0.37, lean: 20, neck: 12, lt: 88, lk: 92, rt: 84, rk: 86, la: 40, le: 50, ra: 80 + tr - press * 3, re: -12 - press * 8});
 const DAY_POSES = (t: number): Pose[] => [TYPE(t), CROSS, CHIN, TYPE(t, 0.3), BACK, CROSS, TYPE(t, 0.15)];
 const HB = fkPose({hip: 0.655, lean: 2, neck: 6, lt: 2, lk: 2, rt: -3, rk: 3, la: -28, le: 60, ra: -26, re: 64});
 
@@ -90,22 +90,21 @@ const Room: React.FC<{t: number; tau: number; pow: number; pose: Pose; finger: n
 	return <g>
 		<defs><radialGradient id="bjTube" cx="0.5" cy="0.5" r="0.7"><stop offset="0.6" stopColor="#000" stopOpacity="0" /><stop offset="1" stopColor="#000" stopOpacity="0.7" /></radialGradient>
 			<clipPath id="bjWinC"><rect x={WIN.x} y={WIN.y} width={WIN.w} height={WIN.h} /></clipPath></defs>
-		<rect x={-200} y={0} width={W + 400} height={WALLB} fill="#2E2A3A" />
-		<rect x={-200} y={0} width={W + 400} height={70} fill="#1d1a26" />
+		<rect x={-300} y={-300} width={W + 600} height={WALLB + 300} fill="#2E2A3A" />
+		<rect x={-300} y={-300} width={W + 600} height={370} fill="#1d1a26" />
 		{/* the fluorescent tube in the ceiling */}
 		<path d="M820,18 L1240,18 L1226,46 L834,46 Z" fill="#141220" /><path d="M836,24 L1224,24 L1214,40 L846,40 Z" fill="#F2F6E8" opacity={hum} />
 		<ellipse cx={1030} cy={150} rx={620} ry={200} fill="#F2F6E8" opacity={0.06} />
 		{/* window: night (or day) over the hutong roofs */}
 		<rect x={WIN.x - 14} y={WIN.y - 14} width={WIN.w + 28} height={WIN.h + 28} fill="#1a1722" />
 		<g clipPath="url(#bjWinC)"><WindowView tau={tau} t={t} d={d} x={WIN.x} y={WIN.y} s={WIN.w / W} /></g>
-		<path d={`M${WIN.x + WIN.w / 2},${WIN.y} L${WIN.x + WIN.w / 2},${WIN.y + WIN.h} M${WIN.x},${WIN.y + WIN.h * 0.38} L${WIN.x + WIN.w},${WIN.y + WIN.h * 0.38}`} stroke="#1a1722" strokeWidth={9} />
 		<rect x={WIN.x - 24} y={WIN.y + WIN.h + 10} width={WIN.w + 48} height={14} fill="#221f2c" />
 		<rect x={0} y={0} width={W} height={WALLB} fill="#9fc0e8" opacity={0.08 * d} />
 		{/* tall machine cabinets along the back wall (the mainframe's peripherals), no logos */}
 		{[1560, 1730].map((cx, i) => <g key={i}><rect x={cx} y={WALLB - 560} width={160} height={560} fill="#3a3846" stroke="#141220" strokeWidth={3} />
 			<rect x={cx + 16} y={WALLB - 530} width={128} height={44} fill="#0d0e12" />{Array.from({length: 10}, (_, j) => <circle key={j} cx={cx + 28 + (j % 5) * 26} cy={WALLB - 518 + Math.floor(j / 5) * 20} r={3.5} fill={rnd(j + i * 10, Math.floor(t * 2)) > 0.5 ? '#ffcf6a' : '#3a2f1a'} />)}
 			<line x1={cx + 80} y1={WALLB - 470} x2={cx + 80} y2={WALLB - 10} stroke="#24222e" strokeWidth={3} /></g>)}
-		<rect x={-200} y={WALLB} width={W + 400} height={300} fill="#1a1820" />
+		<rect x={-300} y={WALLB} width={W + 600} height={500} fill="#1a1820" />
 		<rect x={-200} y={WALLB - 8} width={W + 400} height={8} fill="#121019" />
 		{/* the thermos on the floor */}
 		<g><rect x={706} y={FLOOR - 186} width={58} height={176} rx={8} fill="#7a2a24" /><rect x={714} y={FLOOR - 206} width={42} height={22} rx={4} fill="#3a2a20" /><rect x={700} y={FLOOR - 12} width={70} height={12} fill="#2a1a18" /><rect x={716} y={FLOOR - 150} width={8} height={110} fill="#e8b0a0" opacity={0.25} /></g>
@@ -146,12 +145,15 @@ const glowLine = (pts: [number, number][], w: number, op = 1) => { const d = pts
 	return <g opacity={op}><path d={d} stroke={GOLD} strokeWidth={w * 4} fill="none" opacity={0.18} strokeLinecap="round" strokeLinejoin="round" /><path d={d} stroke={GOLD} strokeWidth={w * 1.6} fill="none" opacity={0.6} strokeLinecap="round" strokeLinejoin="round" /><path d={d} stroke="#fff6d8" strokeWidth={w * 0.6} fill="none" strokeLinecap="round" strokeLinejoin="round" /></g>; };
 const bez = (a: [number, number], c: [number, number], b: [number, number], u: number): [number, number] => [(1 - u) * (1 - u) * a[0] + 2 * (1 - u) * u * c[0] + u * u * b[0], (1 - u) * (1 - u) * a[1] + 2 * (1 - u) * u * c[1] + u * u * b[1]];
 const Roofs: React.FC<{t: number; tau: number}> = ({t, tau}) => {
-	const T = BJ_T, u = easeOut(seg(tau, T.win - 0.1, T.roofsB)), A: [number, number] = [380, 1200], C: [number, number] = [640, 520], B: [number, number] = [1010, 336];
+	const T = BJ_T, u = lerp(0.6, 1, easeOut(seg(tau, T.win, T.roofsB))), A: [number, number] = [560, 1250], C: [number, number] = [900, 420], B: [number, number] = [1560, 300];
 	const pts = Array.from({length: 40}, (_, i) => bez(A, C, B, (i / 39) * u)), head = bez(A, C, B, u);
 	const cv = seg(tau, T.win - 0.6, T.wall + 0.4), cy = lerp(1080, 560, cv), cx = lerp(870, 548, cv), ch = lerp(150, 34, cv);
 	return <g>
-		<rect x={-200} y={-800} width={W + 400} height={900} fill="#21243c" />
+		<rect x={-400} y={-800} width={W + 800} height={900} fill="#21243c" />
 		<image href={staticFile('ep41/bj_night.webp')} x={0} y={0} width={W} height={1080} preserveAspectRatio="none" />
+		<image href={staticFile('ep41/bj_night.webp')} x={0} y={0} width={W} height={1080} preserveAspectRatio="none" transform="scale(-1,1)" />
+		<image href={staticFile('ep41/bj_night.webp')} x={0} y={0} width={W} height={1080} preserveAspectRatio="none" transform={`translate(${2 * W},0) scale(-1,1)`} />
+		<image href={staticFile('ep41/bj_night.webp')} x={0} y={0} width={W} height={1080} preserveAspectRatio="none" transform={`translate(0,${2 * 1080}) scale(1,-1)`} />
 		<Sprite k="cyclist" x={cx} y={cy} h={ch} c="#14121c" sink={2} />
 		<Glow x={head[0]} y={head[1]} r={240 * (1 - 0.6 * u)} c={GOLD} o={0.35} id="bjRoofG" />
 		{glowLine(pts, lerp(16, 5, u))}
@@ -159,25 +161,26 @@ const Roofs: React.FC<{t: number; tau: number}> = ({t, tau}) => {
 	</g>;
 };
 const WALL_L = {f: 0.45, base: 860, amp: 400, seed: 5};
-const Wall: React.FC<{t: number; tau: number; cam: number; py: number}> = ({t, tau, cam, py}) => {
+const Wall: React.FC<{t: number; tau: number; cam: number; py: number; skyRot?: number; pole?: [number, number]; lineOp?: number}> = ({t, tau, cam, py, skyRot = 0, pole = [960, 120], lineOp = 1}) => {
 	const T = BJ_T, ry = ridgeY(cam, WALL_L.f, WALL_L.base, WALL_L.amp, WALL_L.seed), top = (x: number) => ry(x) - 24;
 	const hx = lerp(-60, 1460, ease(seg(tau, T.wall - 0.1, T.wallB)));
 	let wall = `M-40,${ry(-40) + 8}`; for (let x = -40; x <= W + 40; x += 12) wall += ` L${x},${top(x).toFixed(1)}`; for (let x = W + 40; x >= -40; x -= 12) wall += ` L${x},${(ry(x) + 8).toFixed(1)}`; wall += ' Z';
-	const cren = Array.from({length: Math.ceil((W + 80) / 14)}, (_, i) => { const x = -40 + i * 14; return <rect key={i} x={x} y={top(x) - 7} width={7} height={8} fill="#222842" />; });
+	const cren = Array.from({length: Math.ceil((W + 80) / 14)}, (_, i) => { const x = -40 + i * 14; return <rect key={i} x={x} y={top(x) - 9} width={8} height={10} fill="#3a4268" />; });
 	const per = 380, off = cam * WALL_L.f, i0 = Math.floor((off - 200) / per), i1 = Math.ceil((off + W + 200) / per);
-	const towers = Array.from({length: i1 - i0 + 1}, (_, k) => { const i = i0 + k, x = i * per - off + 90 * rnd(i, 7); const base = Math.max(ry(x - 32), ry(x), ry(x + 32)) + 6, tt = Math.min(top(x - 32), top(x + 32)) - 50, lit = hx > x ? sm(seg(hx - x, 0, 120)) : 0;
-		return <g key={i}><rect x={x - 32} y={tt} width={64} height={base - tt} fill="#262c4a" />{[-28, -12, 4, 20].map((dx, j) => <rect key={j} x={x + dx} y={tt - 9} width={9} height={10} fill="#262c4a" />)}
+	const towers = Array.from({length: i1 - i0 + 1}, (_, k) => { const i = i0 + k, x = i * per - off + 90 * rnd(i, 7); const base = Math.max(ry(x - 40), ry(x - 20), ry(x), ry(x + 20), ry(x + 40)) + 8, tt = Math.min(top(x - 40), top(x + 40)) - 64, lit = hx > x ? sm(seg(hx - x, 0, 120)) : 0;
+		return <g key={i}><rect x={x - 40} y={tt} width={80} height={base - tt} fill="#424a74" />{[-38, -20, -2, 16, 32].map((dx, j) => <rect key={j} x={x + dx} y={tt - 11} width={10} height={12} fill="#424a74" />)}
 			<path d={`M${x - 8},${tt + 50} L${x - 8},${tt + 30} Q${x},${tt + 22} ${x + 8},${tt + 30} L${x + 8},${tt + 50} Z`} fill={lit > 0 ? '#ffcf8a' : '#0c0e1c'} opacity={lit > 0 ? 0.4 + 0.6 * lit : 1} />
 			{lit > 0 && <Glow x={x} y={tt + 20} r={110} c={GOLD} o={0.35 * lit} id={`bjTw${i}`} />}</g>; });
 	const pts: [number, number][] = []; for (let x = -60; x <= hx; x += 10) pts.push([x, top(x) - 10]);
 	return <g>
 		<g transform={`translate(0,${py * 0.1})`}>
-			<defs><linearGradient id="bjNight" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stopColor="#04050d" /><stop offset="0.7" stopColor="#10142c" /><stop offset="1" stopColor="#1c2244" /></linearGradient></defs>
+			<defs><linearGradient id="bjNight" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stopColor="#04050d" /><stop offset="0.6" stopColor="#141a3a" /><stop offset="1" stopColor="#2c3462" /></linearGradient></defs>
 			<rect x={-100} y={-900} width={W + 200} height={2100} fill="url(#bjNight)" />
-			<StarField n={240} maxY={900} t={t} seed={3} />
+			<g transform={`rotate(${skyRot} ${pole[0]} ${pole[1] - py * 0.1})`}><StarField n={240} maxY={900} t={t} seed={3} /></g>
+			<circle cx={pole[0]} cy={pole[1] - py * 0.1} r={2.6} fill="#f4f6ff" opacity={0.9} />
 		</g>
-		<g transform={`translate(0,${py * 0.3})`}><Layer cam={cam} f={0.15} base={700} amp={230} seed={2} col="#11152a" /></g>
-		<g transform={`translate(0,${py * 0.6})`}><Layer cam={cam} f={WALL_L.f} base={WALL_L.base} amp={WALL_L.amp} seed={WALL_L.seed} col="#0e1122" front={<g><path d={wall} fill="#1e2440" />{cren}{towers}{pts.length > 1 && glowLine(pts, 6)}{pts.length > 1 && <Glow x={pts[pts.length - 1][0]} y={pts[pts.length - 1][1]} r={70} c="#fff6d8" o={0.9} id="bjWallHead" />}</g>} /></g>
+		<g transform={`translate(0,${py * 0.3})`}><Layer cam={cam} f={0.15} base={700} amp={230} seed={2} col="#1c2244" /></g>
+		<g transform={`translate(0,${py * 0.6})`}><Layer cam={cam} f={WALL_L.f} base={WALL_L.base} amp={WALL_L.amp} seed={WALL_L.seed} col="#121731" front={<g><path d={wall} fill="#3a4268" /><path d={wall} fill="none" stroke="#5a6494" strokeWidth={1.5} opacity={0.5} />{cren}{towers}{pts.length > 1 && glowLine(pts, 6, lineOp)}{pts.length > 1 && lineOp > 0.7 && <Glow x={pts[pts.length - 1][0]} y={pts[pts.length - 1][1]} r={70} c="#fff6d8" o={0.9} id="bjWallHead" />}</g>} /></g>
 		<g transform={`translate(0,${py})`}><Layer cam={cam} f={1.0} base={1150} amp={250} seed={9} col="#06070e" period={170} item={(x, gy, i) => rnd(i, 4) > 0.45 ? <g><path d={`M${x},${gy - 70 - 40 * rnd(i, 5)} L${x + 26},${gy + 4} L${x - 26},${gy + 4} Z`} fill="#06070e" /></g> : <ellipse cx={x} cy={gy - 24} rx={40} ry={34} fill="#06070e" />} /></g>
 	</g>;
 };
@@ -198,13 +201,13 @@ export const BJ3: React.FC<{tau: number; t: number}> = ({tau, t}) => {
 		const PF: [number, number] = [1150, 560];
 		const shake = tau > T.enter && tau < T.enter + 0.1 ? 6 * Math.sin(t * 200) : 0;
 		// after the press: pan to the window, push through it until the window fills the frame (= the roofs plate)
-		const zOut = lerp(zP, W / WIN.w, easeIn(out)), fxO = lerp(PF[0], WINC[0], ease(out)), fyO = lerp(PF[1], WINC[1], ease(out));
+		const zOut = lerp(zP, (W / WIN.w) * 1.05, easeIn(out)), fxO = lerp(PF[0], WINC[0], ease(out)), fyO = lerp(PF[1], WINC[1], ease(out));
 		const zoom = tau < T.pullB ? zA : tau < T.out ? zP : zOut;
 		const fx = tau < T.pullB ? SCRC[0] : tau < T.out ? lerp(960, PF[0], sm(pk * 2)) : fxO, fy = tau < T.pullB ? SCRC[1] : tau < T.out ? lerp(560, PF[1], sm(pk * 2)) : fyO;
 		const px = tau < T.pullB ? (960 - SCRC[0]) * kA + d.px * (1 - kA) : tau < T.out ? lerp(0, 960 - PF[0], sm(pk * 2)) + d.px : lerp(960 - PF[0], 960 - WINC[0], ease(out)) + d.px * (1 - out);
 		const py = tau < T.pullB ? (540 - SCRC[1]) * kA + d.py * (1 - kA) : tau < T.out ? lerp(0, 540 - PF[1], sm(pk * 2)) + d.py : lerp(540 - PF[1], 540 - WINC[1], ease(out)) + d.py * (1 - out);
 		// the light: from the screen across the room and out of the window
-		const lu = easeIn(seg(tau, T.enter + 0.1, T.win - 0.15));
+		const lu = ease(seg(tau, T.enter + 0.06, T.win - 0.4));
 		const LA: [number, number] = [SCRC[0] - 60, 548], LC: [number, number] = [900, 160], LB: [number, number] = [WINC[0] + 60, WINC[1] - 40];
 		const lpts = lu > 0 ? Array.from({length: 30}, (_, i) => bez(LA, LC, LB, (i / 29) * lu)) : [];
 		return <g><Cam zoom={zoom} fx={fx} fy={fy} px={px + shake} py={py}>
@@ -214,8 +217,8 @@ export const BJ3: React.FC<{tau: number; t: number}> = ({tau, t}) => {
 	}
 	// over the roofs → the Wall → up into the sky
 	if (tau < T.wall + 0.35) {
-		const z = lerp(1, 1.5, easeIn(seg(tau, T.win, T.wall + 0.35))), mix = seg(tau, T.wall - 0.05, T.wall + 0.35);
-		return <g><Cam zoom={z} fx={1010} fy={336} px={d.px} py={d.py - 40 * seg(tau, T.win, T.wall)}><Roofs t={t} tau={tau} /></Cam>
+		const z = lerp(1.05, 1.5, easeIn(seg(tau, T.win, T.wall + 0.35))), mix = seg(tau, T.wall - 0.05, T.wall + 0.35), pk = ease(seg(tau, T.win, T.wall));
+		return <g><Cam zoom={z} fx={lerp(960, 1400, pk)} fy={lerp(540, 320, pk)} px={d.px * pk} py={d.py * pk - 20 * pk}><Roofs t={t} tau={tau} /></Cam>
 			{mix > 0 && <g opacity={mix}><Wall t={t} tau={tau} cam={(tau - T.wall) * 420} py={0} /></g>}</g>;
 	}
 	const cam = (tau - T.wall) * 420, tilt = ease(seg(tau, T.climb, T.end)), py = tilt * 520;
@@ -223,13 +226,13 @@ export const BJ3: React.FC<{tau: number; t: number}> = ({tau, t}) => {
 	const A: [number, number] = [1460, ry(1460) - 34 + py * 0.6], STAR: [number, number] = [1120, 250], C: [number, number] = [1560, 420];
 	const pts = cu > 0 ? Array.from({length: 30}, (_, i) => bez(A, C, STAR, (i / 29) * cu)) : [];
 	const starK = seg(tau, T.star - 0.15, T.star + 0.3), lineOut = 1 - seg(tau, T.star, T.star + 0.6);
-	const rot = -32 * easeIn(seg(tau, T.trails, T.end)), pole: [number, number] = [700, 140];
+	const rot = 30 * easeIn(seg(tau, T.trails, T.end)), pole: [number, number] = [960, 120];
 	return <g>
-		<g transform={`rotate(${rot} ${pole[0]} ${pole[1]})`}><Wall t={t} tau={tau} cam={cam} py={py} /></g>
+		<Wall t={t} tau={tau} cam={cam} py={py} skyRot={rot} pole={pole} lineOp={1 - 0.45 * seg(tau, T.star, T.end)} />
 		{/* the reversing sky: short trail arcs about the pole (1987 → 1977) */}
 		{tau > T.trails && <g opacity={sm(seg(tau, T.trails, T.trails + 0.3))}>{Array.from({length: 90}, (_, i) => { const r = 60 + rnd(i, 51) * 1100, a0 = rnd(i, 52) * Math.PI * 2, da = rot * Math.PI / 180;
 			const p0 = [pole[0] + r * Math.cos(a0), pole[1] + r * Math.sin(a0)], p1 = [pole[0] + r * Math.cos(a0 + da), pole[1] + r * Math.sin(a0 + da)];
-			return p0[1] < 820 ? <path key={i} d={`M${p0[0]},${p0[1]} A${r},${r} 0 0,0 ${p1[0]},${p1[1]}`} stroke="#dfe6ff" strokeWidth={1.2} fill="none" opacity={0.35} /> : null; })}</g>}
+			return p0[1] < 640 && p1[1] < 640 ? <path key={i} d={`M${p0[0]},${p0[1]} A${r},${r} 0 0,1 ${p1[0]},${p1[1]}`} stroke="#dfe6ff" strokeWidth={1.2} fill="none" opacity={0.35} /> : null; })}</g>}
 		{pts.length > 1 && glowLine(pts, 5, lineOut)}
 		{starK > 0 && <g transform={`rotate(${rot} ${pole[0]} ${pole[1]})`}><Glow x={STAR[0]} y={STAR[1]} r={90} c="#fff4d8" o={0.55 * starK} id="bjStarG" /><circle cx={STAR[0]} cy={STAR[1]} r={4.5 * starK} fill="#fff8e8" />
 			<path d={`M${STAR[0] - 34},${STAR[1]} L${STAR[0] + 34},${STAR[1]} M${STAR[0]},${STAR[1] - 34} L${STAR[0]},${STAR[1] + 34}`} stroke="#fff4d8" strokeWidth={1.5} opacity={starK * (0.6 + 0.4 * Math.sin(t * 6))} /></g>}
