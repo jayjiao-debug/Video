@@ -348,7 +348,7 @@ export const TIMELINE: Shot[] = [
 		const a = broadsides(near, tm, 0.5, 7), b = broadsides(COLS(adv).slice(13, 18), tm, 0.5, 9), e = broadsides(COLS(adv).slice(1, 6).filter(() => u > 7.0), tm + 1.3, 0.55, 11);
 		const r1 = rake(lead, tm, 0.04), r2 = rake(nel, tm, tN, -1);
 		// smoke rolling across the lens during the slow motion
-		const lens: number[][] = []; const cpz = camera.position, k1 = env(u, 1.0, 4.2, 0.6, 1.0);
+		const lens: number[][] = []; const cpz = camera.position, k1 = 0; // (lens smoke sprites read as flat discs: dropped)
 		if (k1 > 0) for (let k = 0; k < 18; k++) { const side = k % 2 ? 1 : -1; lens.push([cpz.x + 20 + (k * 5.3) % 40 + u * 3, cpz.y - 3 + (k % 4) * 1.4, cpz.z + side * (10 + (k * 2.9) % 14) - u * 2.5 * side, 7 + (k % 5) * 2.5, 0.6, 0.56, 0.5, 0.35 * k1]); } // smoke drifting past both sides of the lens
 		const all = u > 9.3 ? broadsides([...line, ...COLS(adv)], tm - 7.8, 0.5, 21) : {sm: [], fl: []}; // bar 69: every ship in the fight fires
 		const volley: number[][] = []; if (u > 9.375) { const age = u - 9.375; [...line, ...COLS(adv)].forEach((q, i) => { if (age < 0.5) for (const sd of [-1, 1]) volley.push([q.x, 5, q.z + sd * 11, 30 * (1 - age / 0.5) + 10, 4.0, 2.0, 0.6, (1 - age / 0.5) * (0.6 + 0.4 * ((i * 7) % 3) / 2)]); volley.push([q.x + age * 3, 6 + age * 2, q.z + ((i % 2) * 2 - 1) * (14 + age * 5), 26 + age * 14, 0.6, 0.56, 0.5, 0.7 * Math.min(1, age * 4) * Math.exp(-age / 5)]); }); }
