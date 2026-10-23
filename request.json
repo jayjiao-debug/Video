@@ -1,14 +1,13 @@
 {
- "id": "lanchester-v2-search-01",
+ "id": "lanchester-v2-search-02",
  "items": [
-  {"type": "sketchfab-search", "q": "ant", "license": "by", "count": 24},
-  {"type": "sketchfab-search", "q": "ant animated rigged", "count": 24},
-  {"type": "sketchfab-search", "q": "fire ant", "count": 16},
-  {"type": "sketchfab-search", "q": "low poly fantasy character pack", "license": "by", "count": 24},
-  {"type": "sketchfab-search", "q": "stylized hero knight mage archer", "license": "by", "count": 24},
-  {"type": "sketchfab-search", "q": "moba arena stylized", "count": 24},
-  {"type": "sketchfab-search", "q": "japanese street shops low poly", "license": "by", "count": 24},
-  {"type": "sketchfab-search", "q": "japan map 3d", "count": 16},
-  {"type": "sketchfab-search", "q": "forest floor leaves ground scan", "license": "by", "count": 16}
+  {"type": "sketchfab-search", "q": "ant insect", "license": "by", "count": 24},
+  {"type": "sketchfab-search", "q": "ant realistic", "license": "by", "count": 24},
+  {"type": "sketchfab-search", "q": "formica ant", "count": 16},
+  {"type": "sketchfab-search", "q": "army ant", "count": 16},
+  {"type": "sketchfab-search", "q": "fantasy pack micaelsampaio", "count": 24},
+  {"type": "sketchfab-search", "q": "low poly knight fantasy pack", "license": "by", "count": 24},
+  {"type": "sketchfab-search", "q": "stylized arena battleground", "license": "by", "count": 16},
+  {"type": "sketchfab-search", "q": "tokyo city", "license": "by", "count": 16}
  ]
 }
