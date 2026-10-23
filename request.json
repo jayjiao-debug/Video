@@ -1,5 +1,5 @@
 {
-  "id": "ep41-vo-03",
+  "id": "ep41-vo-04",
   "model_prefs": [
     "eleven_v4"
   ],
@@ -7,38 +7,74 @@
     {
       "lang": "zh",
       "voice_id": "MI36FIkp9wRP7cpWKPTl",
-      "model": "eleven_v3",
+      "model": "eleven_v4",
       "settings": {
-        "stability": 0.4,
+        "stability": 0.45,
         "similarity_boost": 0.8,
-        "style": 0.5
+        "style": 0.45
       },
-      "name": "01_shang_n1",
-      "text": "三千年前，商朝的占卜师，把一个问题刻在龟甲上…… 放进火里烤。"
-    },
-    {
-      "lang": "zh",
-      "voice_id": "4VZIsMPtgggwNg7OXbPY",
-      "model": "eleven_v3",
-      "settings": {
-        "stability": 0.3,
-        "similarity_boost": 0.8,
-        "style": 0.6
-      },
-      "name": "01_shang_q",
-      "text": "[whispers] 其自东来雨？"
+      "name": "01_shang_n1_E4",
+      "text": "三千年前，商朝的占卜师，把一个问题刻在龟甲上……放进火里烤。"
     },
     {
       "lang": "zh",
       "voice_id": "MI36FIkp9wRP7cpWKPTl",
-      "model": "eleven_v3",
+      "model": "eleven_v4",
       "settings": {
-        "stability": 0.4,
+        "stability": 0.45,
         "similarity_boost": 0.8,
-        "style": 0.5
+        "style": 0.45
       },
-      "name": "01_shang_n2",
-      "text": "裂开的纹路，就是天的回答。[pause] 那一天…… 真的下雨了。"
+      "name": "01_shang_n2_E4",
+      "text": "裂开的纹路，就是天的回答。那一天……真的下雨了。"
+    },
+    {
+      "lang": "zh",
+      "voice_id": "4VZIsMPtgggwNg7OXbPY",
+      "model": "eleven_v4",
+      "settings": {
+        "stability": 0.45,
+        "similarity_boost": 0.8,
+        "style": 0.45
+      },
+      "name": "01_shang_n1_J4",
+      "text": "三千年前，商朝的占卜师，把一个问题刻在龟甲上……放进火里烤。"
+    },
+    {
+      "lang": "zh",
+      "voice_id": "4VZIsMPtgggwNg7OXbPY",
+      "model": "eleven_v4",
+      "settings": {
+        "stability": 0.45,
+        "similarity_boost": 0.8,
+        "style": 0.45
+      },
+      "name": "01_shang_n2_J4",
+      "text": "裂开的纹路，就是天的回答。那一天……真的下雨了。"
+    },
+    {
+      "lang": "zh",
+      "voice_id": "4VZIsMPtgggwNg7OXbPY",
+      "model": "eleven_v4",
+      "settings": {
+        "stability": 0.35,
+        "similarity_boost": 0.8,
+        "style": 0.6
+      },
+      "name": "01_shang_q_J4",
+      "text": "其自东来雨？"
+    },
+    {
+      "lang": "zh",
+      "voice_id": "MI36FIkp9wRP7cpWKPTl",
+      "model": "eleven_v4",
+      "settings": {
+        "stability": 0.45,
+        "similarity_boost": 0.8,
+        "style": 0.45
+      },
+      "name": "00_hook_E4",
+      "text": "人类打出的第一通电话……第一句话，说的是什么？"
     }
   ]
 }
