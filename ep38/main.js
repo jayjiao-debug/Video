@@ -33958,7 +33958,7 @@ var LINE = (t, vanAway) => Array.from({ length: 33 }, (_, i) => {
   return { x: 40 * Math.sin(u * 3) + u * 70 + (van ? vanAway * 0.25 : 0), z: -1600 + u * 3200 + (van ? vanAway : 0) + t * 1.2, heading: -Math.PI / 2 };
 });
 var COLS = (adv) => [
-  ...Array.from({ length: 12 }, (_, k) => ({ x: -2755 + adv - k * 130, z: 670 + k * 6, heading: 0 })),
+  ...Array.from({ length: 12 }, (_, k) => ({ x: -2710 + adv - k * 130, z: 670 + k * 6, heading: 0 })),
   // Nelson (weather column) → cuts ahead of the centre
   ...Array.from({ length: 15 }, (_, k) => ({ x: -2450 + adv - k * 125, z: -440 + k * 5, heading: 0 }))
   // Collingwood (lee column) → cuts the rear
@@ -33979,20 +33979,20 @@ var seaMarks = (c, o, adv, tracks = true) => {
     m.material.opacity = a;
     m.visible = a > 0.01;
   };
-  set(MARKS.tracks[0], -2755 + adv, 670, 30, 680, 22, tracks ? o : 0);
+  set(MARKS.tracks[0], -2710 + adv, 670, 30, 680, 22, tracks ? o : 0);
   set(MARKS.tracks[1], -2450 + adv, -440, 20, -440, 22, tracks ? o : 0);
   set(MARKS.hot, 170, -1650, 170, 820, 60, o * 0.85);
   set(MARKS.van, 250, 880, 250, 1650, 60, o * 0.7);
 };
-var ADV = (t) => 1500 + t * 106.7;
-var ADV0 = 1500 + 106.7 * 9.375;
+var ADV = (t) => 1500 + t * 99.5;
+var ADV0 = 1500 + 99.5 * 9.375;
 var rake = (s, tm, t0, towardCam = -1) => {
   const sm = [], fl = [];
   for (let k = 0; k < 28; k++) for (const side of [-1, 1]) {
     const age = tm - (t0 + k * 0.05 + (side > 0 ? 0.025 : 0));
     if (age < 0 || age > 14) continue;
     const px = s.x + 25 - k * 1.85, pz = s.z + side * 8.5;
-    if (age < 0.22) fl.push([px, 4.5, pz + side * 2.5, 5 + (1 - age / 0.22) * 7, 4.6, 2.5, 0.9, 1 - age / 0.22]);
+    if (age < 0.22) fl.push([px, 4.5, pz + side * 2.5, 4 + (1 - age / 0.22) * 5, 3.4, 1.9, 0.7, 1 - age / 0.22]);
     const drift = side === towardCam ? 7.5 : 4;
     sm.push([px + age * 2.2, 4.5 + age * 2.4, pz + side * (3 + age * drift), 4 + age * 8, 0.92, 0.9, 0.86, 0.8 * Math.exp(-age / 6) * Math.min(1, age * 10)]);
   }
@@ -34464,7 +34464,7 @@ var TIMELINE = [
   { a: T.sea, b: T.climax, draw: (c, u) => {
     const d = T.climax - T.sea;
     const adv = ADV(u);
-    camKeys([{ t: 0, pos: [-1500, 1600, -2600], look: [-1200, 2600, 1200], fov: 42 }, { t: 1.4, pos: [-1700, 900, -2300], look: [0, 0, 0], fov: 40 }, { t: 6.5, pos: [-1500, 260, -1200], look: [0, 10, 0], fov: 38 }, { t: d, pos: [adv - 2450 - 85, 17, -440], look: [adv - 2450 + 60, 8, -440], fov: 40 }], u);
+    camKeys([{ t: 0, pos: [-1500, 1600, -2600], look: [-1200, 2600, 1200], fov: 42 }, { t: 1.4, pos: [-1700, 900, -2300], look: [0, 0, 0], fov: 40 }, { t: 6.5, pos: [-1500, 260, -1200], look: [0, 10, 0], fov: 38 }, { t: d, pos: [adv - 2450 - 110, 20, -440], look: [adv - 2450 + 60, 8, -440], fov: 44 }], u);
     setFleet(c.sea.combined, LINE(u, 0), u);
     setFleet(c.sea.british, COLS(adv), u);
     const { sm, fl } = broadsides(LINE(u, 0).slice(0, 18), u, 1, 3);
@@ -34487,10 +34487,10 @@ var TIMELINE = [
     const d = T.chart - T.climax;
     const tm = u < 1.2 ? u : u < 3 ? 1.2 + (u - 1.2) * 0.25 : 1.65 + (u - 3);
     const adv = ADV0 + tm * 55;
-    const lead = { x: adv - 2450, z: -440 }, nel = { x: adv - 2755, z: 670 };
+    const lead = { x: adv - 2450, z: -440 }, nel = { x: adv - 2710, z: 670 };
     const tN = 6.15;
-    if (u < 7.5) camKeys([{ t: 0, pos: [lead.x - 85, 17, -440], look: [lead.x + 60, 8, -440], fov: 40 }, { t: 1.2, pos: [lead.x - 70, 13, -446], look: [lead.x + 50, 9, -440], fov: 44 }, { t: 3, pos: [lead.x - 62, 11, -452], look: [lead.x + 40, 9, -440], fov: 46 }, { t: 7.5, pos: [lead.x - 140, 34, -560], look: [lead.x + 40, 6, -420], fov: 42 }], u);
-    else camKeys([{ t: 7.5, pos: [nel.x - 80, 16, 670], look: [nel.x + 50, 8, 670], fov: 42 }, { t: 9, pos: [nel.x - 150, 50, 520], look: [nel.x + 60, 4, 620], fov: 42 }, { t: 11.6, pos: [-900, 650, -1500], look: [0, 0, 0], fov: 44 }, { t: d, pos: [-960, 700, -1560], look: [0, 0, 60], fov: 44 }], u);
+    if (u < 7.5) camKeys([{ t: 0, pos: [lead.x - 110, 20, -440], look: [lead.x + 60, 8, -440], fov: 44 }, { t: 1.2, pos: [lead.x - 104, 16, -444], look: [lead.x + 50, 9, -440], fov: 50 }, { t: 3, pos: [lead.x - 100, 14, -448], look: [lead.x + 40, 9, -440], fov: 52 }, { t: 7.5, pos: [lead.x - 140, 34, -560], look: [lead.x + 40, 6, -420], fov: 42 }], u);
+    else camKeys([{ t: 7.5, pos: [nel.x - 105, 18, 670], look: [nel.x + 50, 8, 670], fov: 50 }, { t: 9, pos: [nel.x - 150, 50, 520], look: [nel.x + 60, 4, 620], fov: 42 }, { t: 11.6, pos: [-900, 650, -1500], look: [0, 0, 0], fov: 44 }, { t: d, pos: [-960, 700, -1560], look: [0, 0, 60], fov: 44 }], u);
     const heel = (q, k) => ({ ...q, roll: -0.075 * k });
     const line2 = LINE(T.climax - T.sea + u, 0).map((q) => Math.abs(q.z - lead.z) < 75 ? heel(q, clamp01((tm - 0.3) / 0.9)) : Math.abs(q.z - nel.z) < 75 ? heel(q, clamp01((tm - tN - 0.3) / 0.9)) : q);
     setFleet(c.sea.combined, line2, u);
@@ -34521,7 +34521,7 @@ var TIMELINE = [
     {
       const tm = 13.65 + u, ko = 1 - clamp01(u / 2.6);
       const near = LINE(tt, van).filter((q) => Math.abs(q.z + 440) < 420 || Math.abs(q.z - 670) < 420);
-      const a = broadsides(near, tm, 0.5, 7), r1 = rake({ x: adv - 2450, z: -440 }, tm, 0.04), r2 = rake({ x: adv - 2755, z: 670 }, tm, 6.15);
+      const a = broadsides(near, tm, 0.5, 7), r1 = rake({ x: adv - 2450, z: -440 }, tm, 0.04), r2 = rake({ x: adv - 2710, z: 670 }, tm, 6.15);
       c.seaSmoke.set(ko > 0 ? [...a.sm, ...r1.sm, ...r2.sm].map((q) => [...q.slice(0, 7), q[7] * ko]) : []);
       c.seaFlash.set(ko > 0.5 ? a.fl.map((q) => [...q.slice(0, 7), q[7] * ko]) : []);
     }
