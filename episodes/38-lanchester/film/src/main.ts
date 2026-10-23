@@ -39,7 +39,7 @@ const sunziText = (scene: THREE.Scene) => {
 		shot.draw(ctx, u, t);
 		if (xf) { const k = u / XF; split.style.display = 'block'; split.style.opacity = String(1 - k * k * (3 - 2 * k)); }
 	};
-	(window as any).DURATION = TIMELINE[TIMELINE.length - 1].b;
+	(window as any).DURATION = TIMELINE[TIMELINE.length - 1].b; (window as any).CTX = ctx;
 	await document.fonts.load('900 300px "Noto Serif CJK SC"').catch(() => null);
 	(window as any).READY = true;
 })().catch((e) => { console.error('BOOT', e?.message || e, e?.stack); });
