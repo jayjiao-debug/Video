@@ -130,7 +130,7 @@ export const TIMELINE: Shot[] = [
 		battle(c, SA, SA.end + 0.2 + u * 0.4);
 		counters(c.hud, 866, 0, 1 - env(u, 0, 99, 0.2)); guessBar(c, 0, 1 - clamp01((u - 1.3) / 0.5), clamp01((u - 0.15) / 0.35));
 		slam(c.hud, W / 2, H / 2 - 30, '866', u, 0.0, 3.6, 260, BLUE);
-		tag(c.hud, W / 2, H / 2 + 120, '只倒下 134 人', env(u, 0.9, 3.4), 50, '#fff');
+		tag(c.hud, W / 2, H / 2 + 160, '只倒下 134 人', env(u, 0.9, 3.4), 50, '#fff');
 		landDraw(c, {bloom: 0.7});
 	}},
 	// 03 — rewind: the battle runs backwards; the fallen stand up, the smoke goes back into the muzzles
@@ -200,7 +200,7 @@ export const TIMELINE: Shot[] = [
 		else camKeys([{t: 11.25, pos: [(B.x + B2.x) / 2 + 8, 2.6, (B.z + B2.z) / 2 - 7], look: [(B.x + B2.x) / 2, 1.2, (B.z + B2.z) / 2], fov: 38}, {t: d, pos: [-10, 44, -80], look: [0, 0, 0], fov: 40}], u);
 		battle(c, SA, FREEZE, {tracers: false});
 		const segs: number[][] = [], balls: number[][] = []; firstVolley.forEach((s) => { const a = SA.units[s.from], b = SA.units[s.to], dir = a.side ? -1 : 1; let f = clamp01((FREEZE - s.t) / 0.28);
-			const focus = (s.to === redStar[0] || s.to === blueOne[0]); if (focus) f = 0.975; if (f <= 0 && !focus) return;
+			const focus = (s.to === redStar[0] || s.to === blueOne[0]); if (focus) f = 0.99; if (!focus) return; // only the counted balls
 			const x1 = a.x + dir * 1.3, tx = s.hit ? b.x : b.x + dir * 6, tz = s.hit ? b.z : b.z + (a.fx - 0.5) * 3; const p = (q: number) => [x1 + (tx - x1) * q, 1.45 + ((s.hit ? 1.3 : 0.6) - 1.45) * q, a.z + (tz - a.z) * q];
 			const k = focus ? 3.0 : u < 3.2 ? 0.07 : 0.16; const col = a.side ? [3.2 * k, 1.6 * k, 1.1 * k] : [1.4 * k, 2.1 * k, 3.4 * k]; segs.push([...p(Math.max(0, f - (focus ? 0.05 : 0.04))), ...p(f), ...col]);
 			if (focus) { const q = p(f); balls.push([q[0], q[1], q[2], 0.55, a.side ? 3.4 : 1.4, a.side ? 1.5 : 2.2, a.side ? 1.0 : 3.6, 0.95]); } });
@@ -210,7 +210,7 @@ export const TIMELINE: Shot[] = [
 		ring(c.rings[0], R.x, R.z, env(u, 3.0, 11.0), '#ff6a5a'); ring(c.rings[1], B.x, B.z, env(u, 6.2, 11.2), '#6aa8ff'); ring(c.rings[2], B2.x, B2.z, env(u, 6.2, 11.2), '#6aa8ff');
 		counters(c.hud, 1000, 500, 0.6);
 		if (u < 5.6) { // count the two balls at their tips
-			firstVolley.filter((s) => s.to === redStar[0]).forEach((s, k) => { const a = SA.units[s.from], dir = a.side ? -1 : 1; const x1 = a.x + dir * 1.3; const p = toScreen([x1 + (R.x - x1) * 0.975, 1.35, a.z + (R.z - a.z) * 0.975]); tag(c.hud, p.x + (k ? 34 : -34), p.y - 40, `${k + 1}`, env(u, 3.2 + k * 0.45, 5.5), 64, '#fff', RED); });
+			firstVolley.filter((s) => s.to === redStar[0]).forEach((s, k) => { const a = SA.units[s.from], dir = a.side ? -1 : 1; const x1 = a.x + dir * 1.3; const p = toScreen([x1 + (R.x - x1) * 0.99, 1.35, a.z + (R.z - a.z) * 0.99]); tag(c.hud, p.x + (k ? 34 : -34), p.y - 40, `${k + 1}`, env(u, 3.2 + k * 0.45, 5.5), 64, '#fff', RED); });
 		} else if (u < 11.25) { const p = toScreen([(B.x + B2.x) / 2, 2.3, (B.z + B2.z) / 2]); tag(c.hud, p.x, p.y - 30, '两人才挨 1 枪', env(u, 6.8, 11.1), 56, '#fff', BLUE); }
 		else { const pb = {x: 520, y: 420}, pr = {x: 1400, y: 420};
 			const m = clamp01((u - 13.4) / 0.6); tag(c.hud, lerp(pb.x, W / 2, m), lerp(pb.y, 520, m), '火力 ×2', env(u, 11.3, 99) * (1 - m), 72, '#fff', BLUE); tag(c.hud, lerp(pr.x, W / 2, m), lerp(pr.y, 520, m), '挨打 ÷2', env(u, 11.8, 99) * (1 - m), 72, '#fff', RED);
@@ -273,7 +273,7 @@ export const TIMELINE: Shot[] = [
 	{a: T.divide, b: T.half, draw: (c, u) => {
 		clearLand(c); const E = SL.end + 0.3; const so = 1 - clamp01(u / 0.7);
 		if (so > 0) c.squares.set([{x: -45 - 866 * LEN, z: -866 * LEN / 2, w: 866 * LEN, d: 866 * LEN, color: '#4a90ff', a: so}, {x: 47, z: -500 * LEN / 2, w: 500 * LEN, d: 500 * LEN, color: '#ff5a47', a: 0.5 * so, edgeColor: GOLD}, {x: 47, z: -500 * LEN / 2, w: 500 * LEN, d: 500 * LEN, color: '#8fb6ff', a: 0.9 * so, edgeColor: GOLD}]);
-		if (u < 4.0) { const rw = clamp01((u - 3.55) / 0.45), st = u < 3.55 ? 0.2 + (E - 0.2) * Math.pow(clamp01(u / 2.6), 1.35) : lerp(E, -0.6, ease(rw));
+		if (u < 4.0) { const rw = clamp01((u - 3.55) / 0.45), st = u < 0.8 ? 0.1 : u < 3.55 ? 0.2 + (E - 0.2) * Math.pow(clamp01((u - 0.8) / 1.9), 1.35) : lerp(E, -0.6, ease(rw)); // hold 1000 v 1000, fight to the end, ◀◀
 			camKeys([{t: 0, pos: [-140, 640, -620], look: [-130, 0, -20], fov: 40}, {t: 1.4, pos: [-170, 60, -260], look: [0, 0, 0], fov: 40}, {t: 4.0, pos: [-180, 70, -270], look: [0, 0, 0], fov: 40}], u);
 			battle(c, SL, st, {tracers: u < 3.55}); c.army.set(simBodies(SL, st, 'aim', 0, 0, 40), cp()); const [b, r] = aliveAt(SL, Math.max(0, st)); counters(c.hud, b, r);
 			if (u > 3.55) html(c.hud, `<div class="lbl" style="left:${W / 2 - 40}px;top:110px;font-size:64px;opacity:${0.8 * env(u, 3.55, 4.0, 0.08, 0.1)}">◀◀</div>`);
@@ -286,6 +286,7 @@ export const TIMELINE: Shot[] = [
 		if (v < w1) { bodies = [...simBodies(SA2, st1, 'aim', 0, 0, 7), ...wave2At(0).filter((x) => x.side === 1)]; const sm = simSmoke(SA2, st1); c.smoke.set(sm.sm); c.flash.set(sm.fl); c.tracers.set(simTracers(SA2, st1)); }
 		else { const m = clamp01((v - w1) / mar); bodies = [...wave2At(m), ...fallen1]; const sm = simSmoke(SR2, st2); c.smoke.set(v < w1 + mar ? [] : sm.sm); c.flash.set(v < w1 + mar ? [] : sm.fl); c.tracers.set(v < w1 + mar ? [] : simTracers(SR2, st2)); }
 		c.army.set(bodies, cp());
+		{ const q1 = toScreen([45, 2, -60]), q2 = toScreen([45 + 260 * (1 - clamp01((v - w1) / mar)), 2, -60]); if (v < w1 && q1.front) tag(c.hud, q1.x, q1.y - 70, '第一拨 500', env(v, 0.1, w1, 0.2, 0.2), 52, '#fff', RED); if (v < w1 + mar && q2.front) tag(c.hud, q2.x, q2.y - 70, '第二拨 500', env(v, 0.1, w1 + mar, 0.2, 0.2), 52, '#fff', RED); }
 		const b = v < w1 ? aliveAt(SA2, st1)[0] : aliveAt(SR2, Math.max(0, st2))[0], r = v < w1 ? aliveAt(SA2, st1)[1] + 500 : aliveAt(SR2, Math.max(0, st2))[1];
 		const done = v > w1 + mar + w2; counters(c.hud, b, r, done ? 1 - clamp01((v - w1 - mar - w2) / 0.3) : 1, ['', '两拨，各 500']);
 		if (done) { slam(c.hud, W / 2, H / 2 - 40, '707', u, 4.0 + w1 + mar + w2 + 0.05, 99, 220, BLUE); tag(c.hud, W / 2, H / 2 + 100, '同样打 1000 人，还剩 707', env(u, 4.0 + w1 + mar + w2 + 0.5, 99), 50, '#fff'); }

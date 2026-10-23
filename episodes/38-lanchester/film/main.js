@@ -34104,7 +34104,7 @@ var TIMELINE = [
     counters(c.hud, 866, 0, 1 - env(u, 0, 99, 0.2));
     guessBar(c, 0, 1 - clamp01((u - 1.3) / 0.5), clamp01((u - 0.15) / 0.35));
     slam(c.hud, W / 2, H / 2 - 30, "866", u, 0, 3.6, 260, BLUE);
-    tag(c.hud, W / 2, H / 2 + 120, "\u53EA\u5012\u4E0B 134 \u4EBA", env(u, 0.9, 3.4), 50, "#fff");
+    tag(c.hud, W / 2, H / 2 + 160, "\u53EA\u5012\u4E0B 134 \u4EBA", env(u, 0.9, 3.4), 50, "#fff");
     landDraw(c, { bloom: 0.7 });
   } },
   // 03 — rewind: the battle runs backwards; the fallen stand up, the smoke goes back into the muzzles
@@ -34230,8 +34230,8 @@ var TIMELINE = [
       const a = SA.units[s.from], b = SA.units[s.to], dir = a.side ? -1 : 1;
       let f = clamp01((FREEZE - s.t) / 0.28);
       const focus = s.to === redStar[0] || s.to === blueOne[0];
-      if (focus) f = 0.975;
-      if (f <= 0 && !focus) return;
+      if (focus) f = 0.99;
+      if (!focus) return;
       const x1 = a.x + dir * 1.3, tx = s.hit ? b.x : b.x + dir * 6, tz = s.hit ? b.z : b.z + (a.fx - 0.5) * 3;
       const p = (q) => [x1 + (tx - x1) * q, 1.45 + ((s.hit ? 1.3 : 0.6) - 1.45) * q, a.z + (tz - a.z) * q];
       const k = focus ? 3 : u < 3.2 ? 0.07 : 0.16;
@@ -34258,7 +34258,7 @@ var TIMELINE = [
       firstVolley.filter((s) => s.to === redStar[0]).forEach((s, k) => {
         const a = SA.units[s.from], dir = a.side ? -1 : 1;
         const x1 = a.x + dir * 1.3;
-        const p = toScreen([x1 + (R.x - x1) * 0.975, 1.35, a.z + (R.z - a.z) * 0.975]);
+        const p = toScreen([x1 + (R.x - x1) * 0.99, 1.35, a.z + (R.z - a.z) * 0.99]);
         tag(c.hud, p.x + (k ? 34 : -34), p.y - 40, `${k + 1}`, env(u, 3.2 + k * 0.45, 5.5), 64, "#fff", RED);
       });
     } else if (u < 11.25) {
@@ -34368,7 +34368,7 @@ var TIMELINE = [
     const so = 1 - clamp01(u / 0.7);
     if (so > 0) c.squares.set([{ x: -45 - 866 * LEN, z: -866 * LEN / 2, w: 866 * LEN, d: 866 * LEN, color: "#4a90ff", a: so }, { x: 47, z: -500 * LEN / 2, w: 500 * LEN, d: 500 * LEN, color: "#ff5a47", a: 0.5 * so, edgeColor: GOLD }, { x: 47, z: -500 * LEN / 2, w: 500 * LEN, d: 500 * LEN, color: "#8fb6ff", a: 0.9 * so, edgeColor: GOLD }]);
     if (u < 4) {
-      const rw = clamp01((u - 3.55) / 0.45), st = u < 3.55 ? 0.2 + (E - 0.2) * Math.pow(clamp01(u / 2.6), 1.35) : lerp2(E, -0.6, ease2(rw));
+      const rw = clamp01((u - 3.55) / 0.45), st = u < 0.8 ? 0.1 : u < 3.55 ? 0.2 + (E - 0.2) * Math.pow(clamp01((u - 0.8) / 1.9), 1.35) : lerp2(E, -0.6, ease2(rw));
       camKeys([{ t: 0, pos: [-140, 640, -620], look: [-130, 0, -20], fov: 40 }, { t: 1.4, pos: [-170, 60, -260], look: [0, 0, 0], fov: 40 }, { t: 4, pos: [-180, 70, -270], look: [0, 0, 0], fov: 40 }], u);
       battle(c, SL, st, { tracers: u < 3.55 });
       c.army.set(simBodies(SL, st, "aim", 0, 0, 40), cp());
@@ -34401,6 +34401,11 @@ var TIMELINE = [
       c.tracers.set(v < w1 + mar ? [] : simTracers(SR2, st2));
     }
     c.army.set(bodies, cp());
+    {
+      const q1 = toScreen([45, 2, -60]), q2 = toScreen([45 + 260 * (1 - clamp01((v - w1) / mar)), 2, -60]);
+      if (v < w1 && q1.front) tag(c.hud, q1.x, q1.y - 70, "\u7B2C\u4E00\u62E8 500", env(v, 0.1, w1, 0.2, 0.2), 52, "#fff", RED);
+      if (v < w1 + mar && q2.front) tag(c.hud, q2.x, q2.y - 70, "\u7B2C\u4E8C\u62E8 500", env(v, 0.1, w1 + mar, 0.2, 0.2), 52, "#fff", RED);
+    }
     const b = v < w1 ? aliveAt(SA2, st1)[0] : aliveAt(SR2, Math.max(0, st2))[0], r = v < w1 ? aliveAt(SA2, st1)[1] + 500 : aliveAt(SR2, Math.max(0, st2))[1];
     const done = v > w1 + mar + w2;
     counters(c.hud, b, r, done ? 1 - clamp01((v - w1 - mar - w2) / 0.3) : 1, ["", "\u4E24\u62E8\uFF0C\u5404 500"]);
