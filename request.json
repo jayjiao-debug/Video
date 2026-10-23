@@ -1,80 +1,344 @@
 {
-  "id": "ep41-vo-04",
+  "id": "ep41-vo-05",
   "model_prefs": [
     "eleven_v4"
   ],
   "items": [
     {
       "lang": "zh",
+      "model": "eleven_v4",
+      "settings": {
+        "stability": 0.45,
+        "similarity_boost": 0.8,
+        "style": 0.45
+      },
       "voice_id": "MI36FIkp9wRP7cpWKPTl",
+      "name": "02_du_n1",
+      "text": "公元七五七年，长安城被叛军占领。杜甫困在城里，和家人断了音信。"
+    },
+    {
+      "lang": "zh",
       "model": "eleven_v4",
       "settings": {
         "stability": 0.45,
         "similarity_boost": 0.8,
         "style": 0.45
       },
-      "name": "01_shang_n1_E4",
-      "text": "三千年前，商朝的占卜师，把一个问题刻在龟甲上……放进火里烤。"
+      "voice_id": "4VZIsMPtgggwNg7OXbPY",
+      "name": "02_du_q",
+      "text": "烽火连三月……家书抵万金。"
     },
     {
       "lang": "zh",
+      "model": "eleven_v4",
+      "settings": {
+        "stability": 0.45,
+        "similarity_boost": 0.8,
+        "style": 0.45
+      },
       "voice_id": "MI36FIkp9wRP7cpWKPTl",
-      "model": "eleven_v4",
-      "settings": {
-        "stability": 0.45,
-        "similarity_boost": 0.8,
-        "style": 0.45
-      },
-      "name": "01_shang_n2_E4",
-      "text": "裂开的纹路，就是天的回答。那一天……真的下雨了。"
+      "name": "02_du_n2",
+      "text": "那时候，一封信可能要走好几个月，也可能，永远到不了。"
     },
     {
-      "lang": "zh",
-      "voice_id": "4VZIsMPtgggwNg7OXbPY",
-      "model": "eleven_v4",
-      "settings": {
-        "stability": 0.45,
-        "similarity_boost": 0.8,
-        "style": 0.45
-      },
-      "name": "01_shang_n1_J4",
-      "text": "三千年前，商朝的占卜师，把一个问题刻在龟甲上……放进火里烤。"
-    },
-    {
-      "lang": "zh",
-      "voice_id": "4VZIsMPtgggwNg7OXbPY",
-      "model": "eleven_v4",
-      "settings": {
-        "stability": 0.45,
-        "similarity_boost": 0.8,
-        "style": 0.45
-      },
-      "name": "01_shang_n2_J4",
-      "text": "裂开的纹路，就是天的回答。那一天……真的下雨了。"
-    },
-    {
-      "lang": "zh",
-      "voice_id": "4VZIsMPtgggwNg7OXbPY",
-      "model": "eleven_v4",
+      "model": "eleven_v3",
       "settings": {
         "stability": 0.35,
         "similarity_boost": 0.8,
         "style": 0.6
       },
-      "name": "01_shang_q_J4",
-      "text": "其自东来雨？"
+      "lang": "en",
+      "gender": "male",
+      "accent": "american",
+      "use_case": "narrative_story",
+      "name": "03_morse_n1",
+      "text": "[somber] In 1825, a painter named Samuel Morse was in Washington, painting a portrait of Lafayette. A letter from his father told him that his wife had died. [pause] By the time he got home… she had already been buried."
+    },
+    {
+      "model": "eleven_v3",
+      "settings": {
+        "stability": 0.35,
+        "similarity_boost": 0.8,
+        "style": 0.6
+      },
+      "lang": "en",
+      "gender": "male",
+      "accent": "american",
+      "use_case": "narrative_story",
+      "name": "03_morse_n2",
+      "text": "[hopeful] Nineteen years later, his first telegraph message crossed forty miles in an instant:"
+    },
+    {
+      "model": "eleven_v3",
+      "settings": {
+        "stability": 0.35,
+        "similarity_boost": 0.8,
+        "style": 0.6
+      },
+      "lang": "en",
+      "gender": "male",
+      "age": "old",
+      "accent": "american",
+      "name": "03_morse_q",
+      "text": "[awed] What hath God wrought."
+    },
+    {
+      "model": "eleven_v3",
+      "settings": {
+        "stability": 0.35,
+        "similarity_boost": 0.8,
+        "style": 0.6
+      },
+      "lang": "fr",
+      "gender": "male",
+      "use_case": "narrative_story",
+      "name": "04_scott_n1",
+      "text": "[softly] Paris, 1860. Édouard-Léon Scott enregistre une voix qui chante… mais aucune machine ne peut encore la faire entendre."
+    },
+    {
+      "model": "eleven_v3",
+      "settings": {
+        "stability": 0.35,
+        "similarity_boost": 0.8,
+        "style": 0.6
+      },
+      "lang": "fr",
+      "gender": "male",
+      "age": "middle_aged",
+      "name": "04_scott_q",
+      "text": "[sings softly] Au clair de la lune, mon ami Pierrot…"
+    },
+    {
+      "model": "eleven_v3",
+      "settings": {
+        "stability": 0.35,
+        "similarity_boost": 0.8,
+        "style": 0.6
+      },
+      "lang": "fr",
+      "gender": "male",
+      "use_case": "narrative_story",
+      "name": "04_scott_n2",
+      "text": "[softly] Il faudra attendre cent quarante-huit ans… pour l'entendre."
+    },
+    {
+      "model": "eleven_v3",
+      "settings": {
+        "stability": 0.35,
+        "similarity_boost": 0.8,
+        "style": 0.6
+      },
+      "lang": "en",
+      "gender": "male",
+      "accent": "scottish",
+      "use_case": "narrative_story",
+      "name": "05_bell_n1",
+      "text": "[warmly] Boston, March the tenth, 1876. Alexander Graham Bell leans over his new transmitter, and speaks."
+    },
+    {
+      "model": "eleven_v3",
+      "settings": {
+        "stability": 0.35,
+        "similarity_boost": 0.8,
+        "style": 0.6
+      },
+      "lang": "en",
+      "gender": "male",
+      "accent": "scottish",
+      "use_case": "narrative_story",
+      "pick": 1,
+      "name": "05_bell_q",
+      "text": "[urgently] Mr. Watson — come here — I want to see you."
+    },
+    {
+      "model": "eleven_v3",
+      "settings": {
+        "stability": 0.35,
+        "similarity_boost": 0.8,
+        "style": 0.6
+      },
+      "lang": "en",
+      "gender": "male",
+      "accent": "scottish",
+      "use_case": "narrative_story",
+      "name": "05_bell_n2",
+      "text": "[warmly] In the next room, Watson heard every word."
+    },
+    {
+      "model": "eleven_v3",
+      "settings": {
+        "stability": 0.35,
+        "similarity_boost": 0.8,
+        "style": 0.6
+      },
+      "lang": "it",
+      "gender": "male",
+      "use_case": "narrative_story",
+      "name": "06_marconi_n1",
+      "text": "[tense] Dicembre 1901. Su una collina di Terranova, Marconi alza un aquilone nella tempesta. Il vento ne porta via uno."
+    },
+    {
+      "model": "eleven_v3",
+      "settings": {
+        "stability": 0.35,
+        "similarity_boost": 0.8,
+        "style": 0.6
+      },
+      "lang": "en",
+      "gender": "male",
+      "accent": "italian",
+      "name": "06_marconi_q",
+      "text": "[whispers] Can you hear anything, Mr. Kemp?"
+    },
+    {
+      "model": "eleven_v3",
+      "settings": {
+        "stability": 0.35,
+        "similarity_boost": 0.8,
+        "style": 0.6
+      },
+      "lang": "it",
+      "gender": "male",
+      "use_case": "narrative_story",
+      "name": "06_marconi_n2",
+      "text": "[emotional] Tre punti. La lettera S. Aveva attraversato l'oceano."
+    },
+    {
+      "model": "eleven_v3",
+      "settings": {
+        "stability": 0.35,
+        "similarity_boost": 0.8,
+        "style": 0.6
+      },
+      "lang": "en",
+      "gender": "male",
+      "accent": "american",
+      "use_case": "narrative_story",
+      "pick": 1,
+      "name": "07_arpa_n1",
+      "text": "October 29th, 1969. A student at UCLA tries to send one word to a computer three hundred and fifty miles away: LOGIN."
+    },
+    {
+      "model": "eleven_v3",
+      "settings": {
+        "stability": 0.35,
+        "similarity_boost": 0.8,
+        "style": 0.6
+      },
+      "lang": "en",
+      "gender": "male",
+      "age": "young",
+      "accent": "american",
+      "name": "07_arpa_q1",
+      "text": "Did you get the L?"
+    },
+    {
+      "model": "eleven_v3",
+      "settings": {
+        "stability": 0.35,
+        "similarity_boost": 0.8,
+        "style": 0.6
+      },
+      "lang": "en",
+      "gender": "male",
+      "age": "middle_aged",
+      "accent": "american",
+      "pick": 1,
+      "name": "07_arpa_a1",
+      "text": "Yes."
+    },
+    {
+      "model": "eleven_v3",
+      "settings": {
+        "stability": 0.35,
+        "similarity_boost": 0.8,
+        "style": 0.6
+      },
+      "lang": "en",
+      "gender": "male",
+      "age": "young",
+      "accent": "american",
+      "name": "07_arpa_q2",
+      "text": "Did you get the O?"
+    },
+    {
+      "model": "eleven_v3",
+      "settings": {
+        "stability": 0.35,
+        "similarity_boost": 0.8,
+        "style": 0.6
+      },
+      "lang": "en",
+      "gender": "male",
+      "age": "middle_aged",
+      "accent": "american",
+      "pick": 1,
+      "name": "07_arpa_a2",
+      "text": "Yes."
     },
     {
       "lang": "zh",
-      "voice_id": "MI36FIkp9wRP7cpWKPTl",
       "model": "eleven_v4",
       "settings": {
         "stability": 0.45,
         "similarity_boost": 0.8,
         "style": 0.45
       },
-      "name": "00_hook_E4",
-      "text": "人类打出的第一通电话……第一句话，说的是什么？"
+      "voice_id": "MI36FIkp9wRP7cpWKPTl",
+      "name": "08_bj_n1",
+      "text": "一九八七年，北京。中国的第一封电子邮件，写好后又等了六天，才发出去。"
+    },
+    {
+      "model": "eleven_v3",
+      "settings": {
+        "stability": 0.35,
+        "similarity_boost": 0.8,
+        "style": 0.6
+      },
+      "lang": "en",
+      "gender": "male",
+      "accent": "chinese",
+      "name": "08_bj_q",
+      "text": "Across the Great Wall, we can reach every corner in the world."
+    },
+    {
+      "model": "eleven_v3",
+      "settings": {
+        "stability": 0.35,
+        "similarity_boost": 0.8,
+        "style": 0.6
+      },
+      "lang": "en",
+      "gender": "female",
+      "accent": "american",
+      "use_case": "narrative_story",
+      "name": "09_fin_n1",
+      "text": "[tenderly] In 1977, Ann Druyan called Carl Sagan. She had found a two-thousand-five-hundred-year-old Chinese song for the Golden Record. [pause] By the end of that call… they were engaged."
+    },
+    {
+      "lang": "zh",
+      "model": "eleven_v4",
+      "settings": {
+        "stability": 0.45,
+        "similarity_boost": 0.8,
+        "style": 0.45
+      },
+      "gender": "female",
+      "accent": "standard",
+      "name": "09_fin_greet",
+      "text": "各位都好吧？我们都很想念你们。有空，请到这儿来玩。"
+    },
+    {
+      "lang": "zh",
+      "model": "eleven_v4",
+      "settings": {
+        "stability": 0.45,
+        "similarity_boost": 0.8,
+        "style": 0.45
+      },
+      "voice_id": "MI36FIkp9wRP7cpWKPTl",
+      "name": "09_fin_title",
+      "text": "为了跟你说一句话……人类，努力了三千年。"
     }
   ]
 }
