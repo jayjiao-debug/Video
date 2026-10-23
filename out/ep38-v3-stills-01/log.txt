@@ -1,0 +1,69 @@
+token id present: yes
+token secret present: yes
+✓ Initialized. View run at 
+https://modal.com/apps/jayjiao249/main/ap-So5nmPXPgpOcrtlYBvwNNc
+✓ Created objects.
+├── ✓ Uploaded /home/runner/work/Video/Video/render_ep38.py
+├── ✓ Uploaded /home/runner/work/Video/Video/ep38
+├── ✓ Created Function chunk.
+└── ✓ Created Function stills.
+0 PAGEERR bar is not a function
+node:internal/modules/run_main:129
+    triggerUncaughtException(
+    ^
+
+page.waitForFunction: Timeout 600000ms exceeded.
+    at /app/stills.mjs:8:61 {
+  name: 'TimeoutError'
+}
+
+Node.js v20.18.0
+
+tar: *.jpg: Cannot stat: No such file or directory
+tar: Exiting with failure status due to previous errors
+1 PAGEERR bar is not a function
+node:internal/modules/run_main:129
+    triggerUncaughtException(
+    ^
+
+page.waitForFunction: Timeout 600000ms exceeded.
+    at /app/stills.mjs:8:61 {
+  name: 'TimeoutError'
+}
+
+Node.js v20.18.0
+
+tar: *.jpg: Cannot stat: No such file or directory
+tar: Exiting with failure status due to previous errors
+tar: *.jpg: Cannot stat: No such file or directory
+tar: Exiting with failure status due to previous errors
+2 PAGEERR bar is not a function
+node:internal/modules/run_main:129
+    triggerUncaughtException(
+    ^
+
+page.waitForFunction: Timeout 600000ms exceeded.
+    at /app/stills.mjs:8:61 {
+  name: 'TimeoutError'
+}
+
+Node.js v20.18.0
+
+3 PAGEERR bar is not a function
+node:internal/modules/run_main:129
+    triggerUncaughtException(
+    ^
+
+page.waitForFunction: Timeout 600000ms exceeded.
+    at /app/stills.mjs:8:61 {
+  name: 'TimeoutError'
+}
+
+Node.js v20.18.0
+
+DONE stills
+Stopping app - local entrypoint completed.
+tar: *.jpg: Cannot stat: No such file or directory
+tar: Exiting with failure status due to previous errors
+✓ App completed. View run at 
+https://modal.com/apps/jayjiao249/main/ap-So5nmPXPgpOcrtlYBvwNNc
