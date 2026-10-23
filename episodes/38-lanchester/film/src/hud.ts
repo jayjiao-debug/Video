@@ -1,7 +1,7 @@
 // HTML layer on top of the canvas: subtitles, counters, tags, big numbers, title, end card. Rebuilt every frame.
 export const GOLD = '#f6cf78', BLUE = '#3d6fd8', RED = '#d8463a';
 const PUNCT = '？！。，：；、”';
-const sh = (c: string) => `0 0 6px ${c}, 0 0 26px ${c}, 0 2px 10px rgba(0,0,0,.65)`;
+const sh = (c: string) => `0 0 3px rgba(8,6,10,.95), 0 0 10px rgba(8,6,10,.7), 0 0 6px ${c}, 0 0 26px ${c}, 0 2px 10px rgba(0,0,0,.65)`;
 export const clamp01 = (x: number) => Math.max(0, Math.min(1, x));
 /** fade envelope for an element alive in [a,b] (s): 0.25 s in, 0.25 s out */
 export const env = (t: number, a: number, b: number, fi = 0.22, fo = 0.22) => clamp01((t - a) / fi) * clamp01((b - t) / fo);

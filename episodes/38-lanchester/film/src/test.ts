@@ -10,9 +10,12 @@ import {renderer, camera, soldierPoses, POSE_NAMES, MUZZLE, A} from './engine';
 	const g = new THREE.Mesh(new THREE.PlaneGeometry(60, 60), new THREE.MeshStandardMaterial({color: '#6a6a50'})); g.rotateX(-Math.PI / 2); scene.add(g);
 	const lane = (x: number) => { const w = new THREE.Mesh(new THREE.PlaneGeometry(0.02, 3), new THREE.MeshBasicMaterial({color: '#222'})); w.rotateX(-Math.PI / 2); w.position.set(x, 0.01, 1.5); scene.add(w); }; [0, 2.6, 5.2, 7.8].forEach(lane);
 	POSE_NAMES.forEach((p, i) => { for (const [k, set] of [[0, H], [1, L]] as const) for (const part of set[p]) { const m = new THREE.Mesh(part.geo, part.mat); m.position.set(i * 2.6, 0, k * 4); scene.add(m); } });
+	for (let j = 0; j < 12; j++) for (const part of H.aim) { const m = new THREE.Mesh(part.geo, part.mat); m.position.set(30 + (j % 2) * 1.6, 0, -8 + j * 1.6); m.rotation.y = Math.PI / 2; scene.add(m); }
 	// muzzle markers
 	const mk = new THREE.Mesh(new THREE.SphereGeometry(0.05), new THREE.MeshBasicMaterial({color: 'red'})); mk.position.set(2.6, MUZZLE.y, MUZZLE.fwd); scene.add(mk);
 	(window as any).view = (v: number, i: number, k = 0) => {
+		if (v === 9) { camera.position.set(22, 2.0, -6); camera.up.set(0, 1, 0); camera.lookAt(60, 1.5, 2); camera.fov = 40; camera.updateProjectionMatrix(); renderer.render(scene, camera); return; }
+		if (v === 8) { camera.position.set(31, 30, 0); camera.up.set(0, 1, 0); camera.lookAt(31, 0, 0.01); camera.fov = 40; camera.updateProjectionMatrix(); renderer.render(scene, camera); return; }
 		const cx = i * 2.6, cz = k * 4; const views = [[3.2, 1.5, 0.6], [-2.2, 1.7, 2.6], [0.3, 1.6, 3.6], [-0.4, 1.9, -2.6]]; const p = views[v];
 		camera.position.set(cx + p[0], p[1], cz + p[2]); camera.up.set(0, 1, 0); camera.lookAt(cx, 1.15, cz + 0.55); camera.fov = 42; camera.updateProjectionMatrix();
 		renderer.toneMappingExposure = 1; renderer.render(scene, camera);

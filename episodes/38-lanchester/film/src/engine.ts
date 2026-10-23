@@ -63,7 +63,7 @@ export type Assets = {sky: THREE.DataTexture; env: THREE.Texture; ground: THREE.
 /** starting bone rotations (added to the bind pose); the aim and charge arms are then solved onto the musket */
 const POSES: Record<PoseName, Record<string, number[]>> = {
 	rest: {upperarm_l: [0, 1.2, 0], upperarm_r: [0, 1.2, 0]},
-	aim: {upperarm_l: [0, 0.6, 0.5], upperarm_r: [0, 0.5, 0.2]},
+	aim: {upperarm_l: [0, 0.6, 0.5], upperarm_r: [0, 0.5, 0.2], head: [0, 0.25, -0.3], neck_01: [0, 0, -0.12]},
 	march: {upperarm_l: [0, 1.15, 0.25], upperarm_r: [0, 1.0, -0.3], thigh_l: [0, 0, 0.35], thigh_r: [0, 0, -0.3]},
 	charge: {upperarm_l: [0, 0.9, 0.5], upperarm_r: [0, 1.0, 0.2]},
 };
@@ -72,7 +72,7 @@ const POSES: Record<PoseName, Record<string, number[]>> = {
 type Grip = {butt: number[]; dir: number[]; rh: number; lh?: number};
 const GRIPS: Partial<Record<PoseName, Grip>> = {
 	rest: {butt: [0.0, -1.3, 0.12], dir: [0.02, 1, 0.06], rh: 0.5}, // order arms: butt by the right foot, bayonet up
-	aim: {butt: [0.06, -0.04, 0.05], dir: [0.06, -0.025, 1], rh: 0.17, lh: 0.27},
+	aim: {butt: [0.07, 0.06, 0.03], dir: [0.05, -0.01, 1], rh: 0.17, lh: 0.3},
 	march: {butt: [0.02, -0.62, 0.06], dir: [0.03, 1, -0.12], rh: 0.04}, // carried upright at the right side
 	charge: {butt: [0.03, -0.52, -0.08], dir: [0.1, 0.3, 1], rh: 0.05, lh: 0.38},
 };
@@ -185,7 +185,14 @@ export const makeLand = (a: Assets) => {
 		const n = 0.5 + 0.25 * Math.sin(x * 0.013 + z * 0.007) + 0.2 * Math.sin(x * 0.031 - z * 0.019) + 0.1 * Math.sin(x * 0.07 + z * 0.05);
 		col[i * 3] = 0.78 + 0.32 * n; col[i * 3 + 1] = 0.8 + 0.28 * n; col[i * 3 + 2] = 0.72 + 0.2 * n; }
 	g.setAttribute('color', new THREE.BufferAttribute(col, 3)); g.computeVertexNormals();
-	const ground = new THREE.Mesh(g, new THREE.MeshStandardMaterial({map: a.ground[0], normalMap: a.ground[1], roughnessMap: a.ground[2], color: '#d8d2b8', vertexColors: true}));
+	const gmat = new THREE.MeshStandardMaterial({map: a.ground[0], normalMap: a.ground[1], roughnessMap: a.ground[2], color: '#d8d2b8', vertexColors: true});
+	gmat.onBeforeCompile = (sh) => { sh.fragmentShader = sh.fragmentShader.replace('#include <map_fragment>', `#ifdef USE_MAP
+		vec2 uvB = mat2(0.799, -0.602, 0.602, 0.799) * vMapUv * 0.173 + vec2(0.37, 0.71); vec2 uvC = mat2(0.276, 0.961, -0.961, 0.276) * vMapUv * 0.0491 + vec2(0.13, 0.52);
+		float nz = 0.5 + 0.5 * sin(vMapUv.x * 0.031 + sin(vMapUv.y * 0.023) * 2.0) * sin(vMapUv.y * 0.027 + 1.3);
+		vec4 sampledDiffuseColor = mix(mix(texture2D(map, vMapUv), texture2D(map, uvB), smoothstep(0.2, 0.8, nz)), texture2D(map, uvC), 0.35);
+		diffuseColor *= sampledDiffuseColor;
+	#endif`); };
+	const ground = new THREE.Mesh(g, gmat);
 	ground.receiveShadow = true; scene.add(ground);
 	const hgt = (x: number, z: number) => { const d = Math.hypot(x, z); return d < 900 ? 0 : Math.min(90, (d - 900) * 0.045 * (1 + Math.sin(x * 0.004) * Math.cos(z * 0.003))); };
 	// forest on the rising ground
@@ -298,18 +305,26 @@ export const simTracers = (sim: Sim, t: number, opts: {len?: number; bright?: nu
 };
 
 // ================================================================ glowing ground squares (strength = area)
+/** squares on the field as lit slabs: a tinted floor, glowing walls that fade upward, and bright edge ribbons */
+const wallTex = (() => { let t: THREE.CanvasTexture | null = null; return () => { if (t) return t; const c = document.createElement('canvas'); c.width = 4; c.height = 128; const g = c.getContext('2d')!; const gr = g.createLinearGradient(0, 0, 0, 128); gr.addColorStop(0, 'rgba(255,255,255,0)'); gr.addColorStop(0.75, 'rgba(255,255,255,0.35)'); gr.addColorStop(1, 'rgba(255,255,255,1)'); g.fillStyle = gr; g.fillRect(0, 0, 4, 128); t = new THREE.CanvasTexture(c); return t; }; })();
 export class GroundSquares {
-	group = new THREE.Group(); items: {m: THREE.Mesh; e: THREE.LineSegments}[] = [];
+	group = new THREE.Group(); items: {floor: THREE.Mesh; walls: THREE.Mesh[]; edges: THREE.Mesh[]}[] = [];
 	constructor(scene: THREE.Scene, n: number) { scene.add(this.group);
-		for (let i = 0; i < n; i++) { const m = new THREE.Mesh(new THREE.PlaneGeometry(1, 1), new THREE.MeshBasicMaterial({color: '#4a90ff', transparent: true, opacity: 0.3, depthWrite: false, blending: THREE.AdditiveBlending, toneMapped: false})); m.rotation.x = -Math.PI / 2;
-			const e = new THREE.LineSegments(new THREE.EdgesGeometry(new THREE.PlaneGeometry(1, 1)), new THREE.LineBasicMaterial({color: '#9cc8ff', transparent: true, toneMapped: false})); e.rotation.x = -Math.PI / 2;
-			this.group.add(m, e); this.items.push({m, e}); } }
-	/** each: {x, z (corner), w, d, color, a} ; corner at (x, z), extends +x, +z */
-	set(list: {x: number; z: number; w: number; d: number; color: string; a: number; edge?: number}[]) {
-		this.items.forEach((it, i) => { const s = list[i]; it.m.visible = it.e.visible = !!s && s.a > 0.001; if (!s) return;
-			for (const o of [it.m, it.e]) { o.position.set(s.x + s.w / 2, 0.15 + i * 0.02, s.z + s.d / 2); o.scale.set(s.w, s.d, 1); }
-			(it.m.material as THREE.MeshBasicMaterial).color.set(s.color); (it.m.material as THREE.MeshBasicMaterial).opacity = 0.15 * s.a;
-			(it.e.material as THREE.LineBasicMaterial).color.set(s.color); (it.e.material as THREE.LineBasicMaterial).opacity = (s.edge ?? 1) * s.a; });
+		const add = (m: THREE.Mesh) => { m.renderOrder = 1; m.frustumCulled = false; this.group.add(m); return m; };
+		for (let i = 0; i < n; i++) {
+			const floor = add(new THREE.Mesh(new THREE.PlaneGeometry(1, 1).rotateX(-Math.PI / 2), new THREE.MeshBasicMaterial({transparent: true, depthWrite: false, toneMapped: false})));
+			const walls = [0, 1, 2, 3].map(() => add(new THREE.Mesh(new THREE.PlaneGeometry(1, 1).translate(0, 0.5, 0), new THREE.MeshBasicMaterial({map: wallTex(), transparent: true, depthWrite: false, blending: THREE.AdditiveBlending, side: THREE.DoubleSide, toneMapped: false}))));
+			const edges = [0, 1, 2, 3].map(() => add(new THREE.Mesh(new THREE.PlaneGeometry(1, 1).rotateX(-Math.PI / 2), new THREE.MeshBasicMaterial({transparent: true, depthWrite: false, blending: THREE.AdditiveBlending, toneMapped: false}))));
+			this.items.push({floor, walls, edges}); } }
+	/** each: {x, z (corner), w, d, color, a, edge?, edgeColor?, wall?} ; corner at (x, z), extends +x, +z */
+	set(list: {x: number; z: number; w: number; d: number; color: string; a: number; edge?: number; edgeColor?: string; wall?: number}[]) {
+		this.items.forEach((it, i) => { const s = list[i]; const on = !!s && s.a > 0.001; it.floor.visible = on; it.walls.forEach((m) => (m.visible = on)); it.edges.forEach((m) => (m.visible = on)); if (!s || !on) return;
+			const y = 0.12 + i * 0.03, cx = s.x + s.w / 2, cz = s.z + s.d / 2, ec = s.edgeColor ?? s.color, ew = Math.max(0.6, Math.min(3.2, Math.max(s.w, s.d) * 0.006)), wh = (s.wall ?? 1) * Math.min(14, Math.max(2, Math.max(s.w, s.d) * 0.03));
+			it.floor.position.set(cx, y, cz); it.floor.scale.set(s.w, 1, s.d); const fm = it.floor.material as THREE.MeshBasicMaterial; fm.color.set(s.color); fm.opacity = 0.3 * s.a;
+			const sides = [[cx, s.z, s.w, 0], [cx, s.z + s.d, s.w, 0], [s.x, cz, s.d, Math.PI / 2], [s.x + s.w, cz, s.d, Math.PI / 2]];
+			sides.forEach(([x, z, len, ry], k) => { const w = it.walls[k]; w.position.set(x, y, z); w.rotation.set(0, ry, 0); w.scale.set(len, wh, 1); const wm = w.material as THREE.MeshBasicMaterial; wm.color.set(ec); wm.opacity = 0.32 * s.a * (s.edge ?? 1) * (s.wall ?? 1);
+				const e = it.edges[k]; e.position.set(x, y + 0.02, z); e.rotation.set(0, ry, 0); e.scale.set(len + ew, 1, ew); const em = e.material as THREE.MeshBasicMaterial; em.color.set(ec).multiplyScalar(1.6); em.opacity = (s.edge ?? 1) * s.a; });
+		});
 	}
 }
 
