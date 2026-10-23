@@ -78,7 +78,8 @@ const ADV0 = 1500 + 99.5 * 9.375; // = ADV(T.climax − T.sea): Collingwood's le
 const rake = (s: {x: number; z: number}, tm: number, t0: number, towardCam = -1) => { const sm: number[][] = [], fl: number[][] = [];
 	for (let k = 0; k < 28; k++) for (const side of [-1, 1]) { const age = tm - (t0 + k * 0.035 + (side > 0 ? 0.017 : 0)); if (age < 0 || age > 14) continue; const px = s.x + 25 - k * 1.85, pz = s.z + side * 8.5;
 		if (age < 0.4) { const k2 = 1 - age / 0.4; for (let j = 0; j < 5; j++) fl.push([px, 4.5 + j * 0.15, pz + side * (2 + j * 3.2), (6 - j * 1.0) * (0.6 + 0.6 * k2), 4.2, 1.9 - j * 0.3, 0.5, k2]); } // a flame jet out of the port
-		const drift = side === towardCam ? 7.5 : 4; for (let q = 0; q < 2; q++) sm.push([px + age * 2.2 + q * 1.5, 4.5 + age * (2.0 + q), pz + side * (3 + age * drift * (0.7 + q * 0.5)), 6 + age * 9, 0.6, 0.56, 0.5, 0.75 * Math.exp(-age / 6) * Math.min(1, age * 10)]); }
+		const drift = side === towardCam ? 7.5 : 4; for (let q = 0; q < 5; q++) { const h1 = Math.sin(k * 12.9 + q * 78.2) * 0.5 + 0.5, h2 = Math.sin(k * 39.3 + q * 11.7) * 0.5 + 0.5; // many small billows, not one big disc
+			sm.push([px + age * (1.2 + h1 * 2.5) + (h2 - 0.5) * 4, 4 + age * (1.2 + h2 * 2.2), pz + side * (3 + age * drift * (0.5 + h1 * 0.8)), 3.5 + age * (2.5 + h2 * 2.5), 0.6 + h1 * 0.08, 0.56 + h1 * 0.06, 0.5 + h1 * 0.05, 0.42 * Math.exp(-age / 6) * Math.min(1, age * 10)]); } }
 	return {sm, fl}; };
 const seaDraw = (c: Ctx, t: number, g: any = {}) => { (c.sea.water.material as any).uniforms.time.value = t * 0.6; setGrade({vig: 0.4, warm: 0.04, bloom: 0.45, exposure: 0.5, ...g}); draw(c.sea.scene); };
 const broadsides = (ships: {x: number; z: number; heading: number}[], t: number, rate: number, seed: number) => {
