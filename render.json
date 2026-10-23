@@ -1,1 +1,1 @@
-{ "id": "mirror-1", "composition": "Film", "start": 0, "end": 4349, "chunks": 36, "output": "mirror_v1", "flags": "--crf=16" }
+{ "id": "mirror-2", "composition": "Film", "start": 0, "end": 4349, "chunks": 36, "output": "mirror_v2", "flags": "--crf=16" }
