@@ -67,14 +67,18 @@ const seaMarks = (c: Ctx, o: number, adv: number, tracks = true) => {
 	set(MARKS.tracks[0], -2710 + adv, 670, 30, 680, 22, tracks ? o : 0); set(MARKS.tracks[1], -2450 + adv, -440, 20, -440, 22, tracks ? o : 0);
 	set(MARKS.hot, 170, -1650, 170, 820, 60, o * 0.85); set(MARKS.van, 250, 880, 250, 1650, 60, o * 0.7);
 };
+/** a bank of powder smoke wiping across the lens (2D, soft): k = 0 clear → 1 covered; `drift` moves the billows sideways */
+const fogBank = (c: Ctx, k: number, drift: number) => { if (k <= 0.001) return; const b = (x: number, y: number, w: number, h: number, col: string, a: number) => `radial-gradient(ellipse ${w}% ${h}% at ${x}% ${y}%, rgba(${col},${a}) 0%, rgba(${col},${a * 0.6}) 35%, rgba(${col},0) 72%)`;
+	const L = [b(30 + drift * 0.6, 35, 45, 55, '214,206,196', 0.95), b(70 + drift * 0.9, 65, 50, 60, '196,188,178', 0.9), b(50 + drift * 1.2, 20, 55, 40, '226,219,209', 0.85), b(15 + drift * 0.8, 80, 40, 45, '205,197,187', 0.9), b(88 + drift, 30, 40, 50, '218,210,200', 0.9)];
+	html(c.hud, `<div style="position:absolute;inset:-12%;opacity:${Math.min(1, k * 1.25)};background:${L.join(',')},rgba(208,200,190,${clamp01(k * 1.4 - 0.35) * 0.97});filter:blur(28px)"></div>`); };
 /** the British advance (m) at sea-shot time t: Collingwood's lead reaches the gap between two enemy hulls on the climax downbeat */
 const ADV = (t: number) => 1500 + t * 99.5;
 const ADV0 = 1500 + 99.5 * 9.375; // = ADV(T.climax − T.sea): Collingwood's lead crosses the enemy line in the slow motion (tm ≈ 1.4)
 /** raking broadside of a ship breaking the line: every gun on both sides fires bow to stern, 0.05 s apart, starting at t0 */
 const rake = (s: {x: number; z: number}, tm: number, t0: number, towardCam = -1) => { const sm: number[][] = [], fl: number[][] = [];
 	for (let k = 0; k < 28; k++) for (const side of [-1, 1]) { const age = tm - (t0 + k * 0.035 + (side > 0 ? 0.017 : 0)); if (age < 0 || age > 14) continue; const px = s.x + 25 - k * 1.85, pz = s.z + side * 8.5;
-		if (age < 0.35) { const k2 = 1 - age / 0.35; for (let j = 0; j < 4; j++) fl.push([px, 4.5, pz + side * (2 + j * 2.6), (3.4 - j * 0.7) * (0.6 + 0.6 * k2), 3.8, 1.8 - j * 0.3, 0.5, k2]); } // a flame jet out of the port
-		const drift = side === towardCam ? 7.5 : 4; sm.push([px + age * 2.2, 4.5 + age * 2.4, pz + side * (3 + age * drift), 4 + age * 8, 0.62, 0.58, 0.52, 0.7 * Math.exp(-age / 6) * Math.min(1, age * 10)]); }
+		if (age < 0.4) { const k2 = 1 - age / 0.4; for (let j = 0; j < 5; j++) fl.push([px, 4.5 + j * 0.15, pz + side * (2 + j * 3.2), (6 - j * 1.0) * (0.6 + 0.6 * k2), 4.2, 1.9 - j * 0.3, 0.5, k2]); } // a flame jet out of the port
+		const drift = side === towardCam ? 7.5 : 4; for (let q = 0; q < 2; q++) sm.push([px + age * 2.2 + q * 1.5, 4.5 + age * (2.0 + q), pz + side * (3 + age * drift * (0.7 + q * 0.5)), 6 + age * 9, 0.6, 0.56, 0.5, 0.75 * Math.exp(-age / 6) * Math.min(1, age * 10)]); }
 	return {sm, fl}; };
 const seaDraw = (c: Ctx, t: number, g: any = {}) => { (c.sea.water.material as any).uniforms.time.value = t * 0.6; setGrade({vig: 0.4, warm: 0.04, bloom: 0.45, exposure: 0.5, ...g}); draw(c.sea.scene); };
 const broadsides = (ships: {x: number; z: number; heading: number}[], t: number, rate: number, seed: number) => {
@@ -296,13 +300,13 @@ export const TIMELINE: Shot[] = [
 	}},
 	// 13 — ★4: two half-armies are half the strength (overhead)
 	{a: T.half, b: T.sunzi, draw: (c, u) => {
-		clearLand(c); const big = 1000 * LEN, hs = 500 * LEN, k = ease((u - 0.25) / 1.0);
+		clearLand(c); const big = 1000 * LEN, hs = 500 * LEN, k = ease((u - 0.9) / 0.9), sa = env(u, 0.45, 99, 0.4);
 		camKeys([{t: 0, pos: [-110, 55, -300], look: [90, 0, 0], fov: 42}, {t: 0.85, pos: [0, 860, -380], look: [0, 0, -10], fov: 46}, {t: 3.75, pos: [0, 880, -370], look: [0, 0, -10], fov: 46}], u);
 		c.army.set(simBodies(SR2, 99), cp()); c.smoke.set([]); c.flash.set([]); c.tracers.set([]);
-		c.squares.set([{x: -big / 2, z: -big / 2, w: big, d: big, color: '#ff8a7a', a: 0.45, edge: 1},
-			{x: lerp(-big / 2 - 320, -big / 2, k), z: -big / 2, w: hs, d: hs, color: '#ff5a47', a: 1, edgeColor: GOLD},
-			{x: lerp(big / 2 + 80, -big / 2 + hs, k), z: -big / 2, w: hs, d: hs, color: '#ff5a47', a: 1, edgeColor: GOLD}]);
-		tag(c.hud, W / 2, 140, '两块加起来 = <span style="color:#ffd27a">一半</span>', env(u, 1.15, 99), 64, '#fff', RED);
+		c.squares.set([{x: -big / 2, z: -big / 2, w: big, d: big, color: '#ff8a7a', a: 0.45 * sa, edge: 1},
+			{x: lerp(-big / 2 - 320, -big / 2, k), z: -big / 2, w: hs, d: hs, color: '#ff5a47', a: sa, edgeColor: GOLD},
+			{x: lerp(big / 2 + 80, -big / 2 + hs, k), z: -big / 2, w: hs, d: hs, color: '#ff5a47', a: sa, edgeColor: GOLD}]);
+		tag(c.hud, W / 2, 140, '两块加起来 = <span style="color:#ffd27a">一半</span>', env(u, 1.8, 99), 64, '#fff', RED);
 		sub(c.hud, '分成两拨，总力量只剩[一半]', u, 0.3, 3.7);
 		landDraw(c, {bloom: 0.6});
 	}},
@@ -335,7 +339,7 @@ export const TIMELINE: Shot[] = [
 	{a: T.climax, b: T.chart, draw: (c, u) => {
 		const d = T.chart - T.climax; const tm = u < 1.2 ? u : u < 3.0 ? 1.2 + (u - 1.2) * 0.25 : 1.65 + (u - 3.0); // slow motion as the bow passes the stern
 		const adv = ADV0 + tm * 55; const lead = {x: adv - 2450, z: -440}, nel = {x: adv - 2710, z: 670}; const tN = 6.15; // Nelson's lead reaches the line at tm = 6.15 (u = 7.5)
-		if (u < 7.5) camKeys([{t: 0, pos: [lead.x - 110, 24, -468], look: [lead.x + 60, 8, -440], fov: 44}, {t: 1.2, pos: [lead.x - 104, 18, -466], look: [lead.x + 50, 9, -440], fov: 50}, {t: 3.0, pos: [lead.x - 100, 15, -464], look: [lead.x + 40, 9, -440], fov: 52}, {t: 7.5, pos: [lead.x - 140, 34, -560], look: [lead.x + 40, 6, -420], fov: 42}], u);
+		if (u < 7.5) camKeys([{t: 0, pos: [lead.x - 110, 24, -468], look: [lead.x + 60, 8, -440], fov: 44}, {t: 1.2, pos: [lead.x - 60, 12, -474], look: [lead.x + 40, 8, -440], fov: 52}, {t: 3.0, pos: [lead.x - 42, 9, -476], look: [lead.x + 30, 7, -440], fov: 54}, {t: 7.5, pos: [lead.x - 140, 34, -560], look: [lead.x + 40, 6, -420], fov: 42}], u);
 		else camKeys([{t: 7.5, pos: [nel.x - 105, 22, 696], look: [nel.x + 50, 8, 670], fov: 50}, {t: 9.0, pos: [nel.x - 150, 50, 520], look: [nel.x + 60, 4, 620], fov: 42}, {t: 11.6, pos: [-900, 650, -1500], look: [0, 0, 0], fov: 44}, {t: d, pos: [-960, 700, -1560], look: [0, 0, 60], fov: 44}], u);
 		const heel = (q: any, k: number) => ({...q, roll: -0.075 * k});
 		const line = LINE(T.climax - T.sea + u, 0).map((q) => Math.abs(q.z - lead.z) < 75 ? heel(q, clamp01((tm - 0.3) / 0.9)) : Math.abs(q.z - nel.z) < 75 ? heel(q, clamp01((tm - tN - 0.3) / 0.9)) : q);
@@ -346,7 +350,9 @@ export const TIMELINE: Shot[] = [
 		// smoke rolling across the lens during the slow motion
 		const lens: number[][] = []; const cpz = camera.position, k1 = env(u, 1.0, 4.2, 0.6, 1.0);
 		if (k1 > 0) for (let k = 0; k < 18; k++) { const side = k % 2 ? 1 : -1; lens.push([cpz.x + 20 + (k * 5.3) % 40 + u * 3, cpz.y - 3 + (k % 4) * 1.4, cpz.z + side * (10 + (k * 2.9) % 14) - u * 2.5 * side, 7 + (k % 5) * 2.5, 0.6, 0.56, 0.5, 0.35 * k1]); } // smoke drifting past both sides of the lens
-		c.seaSmoke.set([...a.sm, ...b.sm, ...e.sm, ...r1.sm, ...r2.sm, ...lens]); c.seaFlash.set([...a.fl, ...b.fl, ...e.fl, ...r1.fl, ...r2.fl]);
+		const all = u > 9.3 ? broadsides([...line, ...COLS(adv)], tm - 7.8, 0.5, 21) : {sm: [], fl: []}; // bar 69: every ship in the fight fires
+		const volley: number[][] = []; if (u > 9.375) { const age = u - 9.375; [...line, ...COLS(adv)].forEach((q, i) => { if (age < 0.5) for (const sd of [-1, 1]) volley.push([q.x, 5, q.z + sd * 11, 30 * (1 - age / 0.5) + 10, 4.0, 2.0, 0.6, (1 - age / 0.5) * (0.6 + 0.4 * ((i * 7) % 3) / 2)]); volley.push([q.x + age * 3, 6 + age * 2, q.z + ((i % 2) * 2 - 1) * (14 + age * 5), 26 + age * 14, 0.6, 0.56, 0.5, 0.7 * Math.min(1, age * 4) * Math.exp(-age / 5)]); }); }
+		c.seaSmoke.set([...a.sm, ...b.sm, ...e.sm, ...r1.sm, ...r2.sm, ...lens, ...all.sm, ...volley.filter((q) => q[4] < 1)]); c.seaFlash.set([...a.fl, ...b.fl, ...e.fl, ...r1.fl, ...r2.fl, ...all.fl, ...volley.filter((q) => q[4] > 1)]);
 		seaDraw(c, T.climax - T.sea + u, {bloom: 0.5, vig: 0.5, exposure: 0.36});
 	}},
 	// 15c — chart: the line in three pieces, the van sails away
@@ -355,7 +361,8 @@ export const TIMELINE: Shot[] = [
 		camKeys([{t: 0, pos: [-900, 650, -1500], look: [0, 0, 0], fov: 44}, {t: 7.5, pos: [-1700, 900, -300], look: [0, 0, 500], fov: 44}, {t: 15, pos: [-1900, 1100, 200], look: [100, 0, 900], fov: 44}], u);
 		const van = ease((u - 1.8) / 5) * 900; seaMarks(c, 0, 0, false); setFleet(c.sea.combined, LINE(tt, van), u); setFleet(c.sea.british, COLS(adv), u);
 		{ const tm = 13.65 + u, ko = 1 - clamp01(u / 2.6); const near = LINE(tt, van).filter((q) => Math.abs(q.z + 440) < 420 || Math.abs(q.z - 670) < 420); const a = broadsides(near, tm, 0.5, 7), r1 = rake({x: adv - 2450, z: -440}, tm, 0.04), r2 = rake({x: adv - 2710, z: 670}, tm, 6.15);
-			c.seaSmoke.set(ko > 0 ? [...a.sm, ...r1.sm, ...r2.sm].map((q) => [...q.slice(0, 7), q[7] * ko]) : []); c.seaFlash.set(ko > 0.5 ? a.fl.map((q) => [...q.slice(0, 7), q[7] * ko]) : []); }
+			const age = 15 - 9.375 + u, vs = [...LINE(tt, van), ...COLS(adv)].map((q, i) => [q.x + age * 3, 6 + age * 2, q.z + ((i % 2) * 2 - 1) * (14 + age * 5), 26 + age * 14, 0.6, 0.56, 0.5, 0.7 * Math.exp(-age / 5)]);
+			c.seaSmoke.set(ko > 0 ? [...a.sm, ...r1.sm, ...r2.sm, ...vs].map((q) => [...q.slice(0, 7), q[7] * ko]) : []); c.seaFlash.set(ko > 0.5 ? a.fl.map((q) => [...q.slice(0, 7), q[7] * ko]) : []); }
 		const sep = clamp01((u - 1.6) / 0.8); const p = (x: number, z: number) => toScreen([x, 0, z]);
 		const v = p(150, 1350 + van);
 		if (v.front) tag(c.hud, Math.min(W - 160, v.x), Math.max(150, v.y - 60), '前队', env(u, 1.0, 99), 52, '#fff', RED);
@@ -366,27 +373,24 @@ export const TIMELINE: Shot[] = [
 	// 16 — quiet: one ship drifting at sunset, no text; a bank of smoke crosses the lens and carries the cut to the field
 	{a: T.quiet, b: T.limit, draw: (c, u) => {
 		const d = T.limit - T.quiet; setFleet(c.sea.combined, [], u); setFleet(c.sea.british, Array.from({length: 12}, (_, k) => ({x: -260 + 0.76 * (190 + k * 120) - 0.65 * (-150 + k * 22), z: -180 + 0.65 * (190 + k * 120) + 0.76 * (-150 + k * 22), heading: 0.3})), u); seaMarks(c, 0, 0);
-		camKeys([{t: 0, pos: [-700, 520, -700], look: [300, 0, 400], fov: 44}, {t: 2.2, pos: [-260, 6, -180], look: [1000, 40, 900], fov: 38}, {t: d, pos: [-215, 5, -205], look: [1000, 36, 900], fov: 37}], u);
+		camKeys([{t: 0, pos: [-1900, 1100, 200], look: [100, 0, 900], fov: 44}, {t: 3.0, pos: [-260, 6, -180], look: [1000, 40, 900], fov: 38}, {t: d, pos: [-215, 5, -205], look: [1000, 36, 900], fov: 37}], u);
 		const bank = clamp01((u - d + 1.6) / 1.6); const sm: number[][] = Array.from({length: 40}, (_, i) => [-200 + i * 12, 20 + (i % 5) * 6, 120 + (i % 7) * 20, 60, 0.85, 0.8, 0.78, 0.18 * clamp01((u - 2.0) / 0.8)]);
-		for (let k = 0; k < 60; k++) { const f = (k % 10) / 10, g = Math.floor(k / 10) / 6; const fw = camera.getWorldDirection(new THREE.Vector3()); const rt = new THREE.Vector3().crossVectors(fw, camera.up).normalize();
-			const dist = 9 + g * 10; const p = camera.position.clone().addScaledVector(fw, dist).addScaledVector(rt, (f - 0.5) * dist * 1.5 + (1 - bank) * dist * 1.6).add(new THREE.Vector3(0, ((k * 7) % 5 - 2) * dist * 0.18, 0)); sm.push([p.x, p.y, p.z, dist * 0.55, 0.86, 0.82, 0.8, 0.7 * bank]); }
 		c.seaSmoke.set(sm); c.seaFlash.set([]);
-		seaDraw(c, 30 + u, {exposure: 0.52, warm: 0.08, vig: 0.5});
+		seaDraw(c, 30 + u, {exposure: 0.52, warm: 0.08, vig: 0.5}); fogBank(c, ease(bank), (1 - bank) * 80);
 	}},
 	// 17 — limit: the same field at dusk, a messy fight: smoke banks, companies arriving late, men with no target standing idle
 	{a: T.limit, b: T.ending, draw: (c, u) => {
 		clearLand(c); const d = T.ending - T.limit; camKeys([{t: 0, pos: [-210, 60, -260], look: [0, 0, 0], fov: 40}, {t: d, pos: [-190, 70, -240], look: [0, 0, 0], fov: 39}], u);
 		const st = 3 + u; const RR = rnd(31); const bodies = simBodies(SL, st, 'aim').map((b, i) => { const z = SL.units[i].z, j = RR(); const grp = Math.floor((z + 300) / 70); const off = (grp % 3) * 22 * (SL.units[i].side ? 1 : -1) + Math.sin(grp * 1.7) * 12; return {...b, x: b.x + off, z: b.z + (j - 0.5) * 3, pose: (grp % 4 === 1 ? 'rest' : b.pose) as any}; });
 		c.army.set(bodies, cp()); const sm = simSmoke(SL, st); 
-		const clear = 1 - clamp01(u / 0.6); const lens: number[][] = [];
-		if (clear > 0) { const fw = camera.getWorldDirection(new THREE.Vector3()), rt = new THREE.Vector3().crossVectors(fw, camera.up).normalize(); for (let k = 0; k < 60; k++) { const f = (k % 10) / 10, g = Math.floor(k / 10) / 6, dist = 9 + g * 10; const p = camera.position.clone().addScaledVector(fw, dist).addScaledVector(rt, (f - 0.5) * dist * 1.5 - (1 - clear) * dist * 1.6).add(new THREE.Vector3(0, ((k * 7) % 5 - 2) * dist * 0.18, 0)); lens.push([p.x, p.y, p.z, dist * 0.55, 0.86, 0.82, 0.8, 0.7 * clear]); } }
-		c.smoke.set([...sm.sm, ...lens]); c.flash.set(sm.fl); c.tracers.set([]);
-		sub(c.hud, '真实的仗，没平方这么[夸张]', u, 0.05, 3.6);
-		landDraw(c, {exposure: 0.52, warm: 0.1, vig: 0.5});
+		const clear = 1 - clamp01(u / 0.9);
+		c.smoke.set(sm.sm); c.flash.set(sm.fl); c.tracers.set([]);
+		sub(c.hud, '真实的仗，没平方这么[夸张]', u, 0.6, 3.65);
+		landDraw(c, {exposure: 0.52, warm: 0.1, vig: 0.5}); fogBank(c, ease(clear), -(1 - clear) * 80);
 	}},
 	// 18 — ending image: scattered companies gather into one block
 	{a: T.ending, b: T.card, draw: (c, u) => {
-		clearLand(c); const d = T.card - T.ending; camKeys([{t: 0, pos: [-125, 32, -115], look: [-35, 1, 0], fov: 40}, {t: d, pos: [-100, 16, -66], look: [-40, 1, 0], fov: 40}], u);
+		clearLand(c); const d = T.card - T.ending; camKeys([{t: 0, pos: [-190, 70, -240], look: [0, 0, 0], fov: 39}, {t: 1.6, pos: [-125, 32, -115], look: [-35, 1, 0], fov: 40}, {t: d, pos: [-100, 16, -66], look: [-40, 1, 0], fov: 40}], u);
 		const R = rnd(5), m = ease((u - 0.1) / 3.4); const bodies: Body[] = [];
 		const centres = Array.from({length: 8}, () => [(R() - 0.5) * 300, (R() - 0.5) * 240]);
 		for (let i = 0; i < 800; i++) { const g = i % 8, k = Math.floor(i / 8); const cx = centres[g][0] + ((k % 10) - 4.5) * 1.6, cz = centres[g][1] + (Math.floor(k / 10) - 4.5) * 1.6; const fx = (i % 40 - 19.5) * 1.6, fz = (Math.floor(i / 40) - 9.5) * 1.6;

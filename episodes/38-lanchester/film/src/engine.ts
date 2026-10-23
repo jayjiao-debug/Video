@@ -284,7 +284,7 @@ export const simSmoke = (sim: Sim, t: number, dx = 0, dz = 0) => {
 		const age = t - s.t; if (age < 0 || age > 8) continue; const u = sim.units[s.from], dir = u.side ? -1 : 1;
 		const a = 0.14 * Math.exp(-age / 2.6) * Math.min(1, age * 7), sz = 0.9 + age * 1.05;
 		sm.push([u.x + dx + dir * (MUZZLE.fwd + 0.1 + age * 0.7) + age * 0.6, MUZZLE.y + 0.05 + age * 0.75, u.z + dz + age * 0.8 + (u.fx - 0.5) * 1.5, sz, 0.9, 0.88, 0.84, a]);
-		if (age < 0.09) fl.push([u.x + dx + dir * MUZZLE.fwd, MUZZLE.y, u.z + dz, 0.9 + (1 - age / 0.09) * 0.8, 2.4, 1.6, 0.7, 1 - age / 0.09]);
+		if (age < 0.09) fl.push([u.x + dx + dir * MUZZLE.fwd, MUZZLE.y, u.z + dz, 0.45 + (1 - age / 0.09) * 0.55, 3.0, 1.6, 0.5, 1 - age / 0.09]);
 	}
 	return {sm, fl};
 };
