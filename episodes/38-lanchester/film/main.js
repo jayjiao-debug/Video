@@ -33634,7 +33634,7 @@ var spriteTex = /* @__PURE__ */ (() => {
     c.width = c.height = 128;
     const g = c.getContext("2d");
     for (let k = 0; k < 6; k++) {
-      const x = 64 + (Math.random() - 0.5) * 30, y = 64 + (Math.random() - 0.5) * 30, r = 34 + Math.random() * 26;
+      const x = 64 + (Math.random() - 0.5) * 24, y = 64 + (Math.random() - 0.5) * 24, r = 30 + Math.random() * 20;
       const gr = g.createRadialGradient(x, y, 0, x, y, r);
       gr.addColorStop(0, "rgba(255,255,255,0.5)");
       gr.addColorStop(1, "rgba(255,255,255,0)");
@@ -33868,7 +33868,7 @@ var sub = (hud2, text, t, a, b) => {
 };
 var counters = (hud2, b, r, o = 1, labels) => {
   if (o <= 0) return;
-  hud2.insertAdjacentHTML("beforeend", `<div class="num" style="left:86px;top:50px;font-size:112px;opacity:${o};text-shadow:${sh(BLUE)}">${b}</div><div class="num" style="right:86px;top:50px;font-size:112px;text-align:right;opacity:${o};text-shadow:${sh(RED)}">${r}</div>` + (labels ? `<div class="lbl" style="left:92px;top:182px;font-size:36px;opacity:${o * 0.9}">${labels[0]}</div><div class="lbl" style="right:92px;top:182px;font-size:36px;text-align:right;opacity:${o * 0.9}">${labels[1]}</div>` : ""));
+  hud2.insertAdjacentHTML("beforeend", `<div class="num" style="left:86px;top:50px;font-size:112px;opacity:${o};text-shadow:${sh(BLUE)}">${b}</div><div class="num" style="right:86px;top:50px;font-size:112px;text-align:right;opacity:${o};text-shadow:${sh(RED)}">${r}</div>` + (labels ? `<div class="lbl" style="left:92px;top:182px;font-size:44px;opacity:${o * 0.95};text-shadow:0 0 3px rgba(8,6,10,.95),0 0 12px rgba(8,6,10,.7)">${labels[0]}</div><div class="lbl" style="right:92px;top:182px;font-size:44px;text-align:right;opacity:${o * 0.95};text-shadow:0 0 3px rgba(8,6,10,.95),0 0 12px rgba(8,6,10,.7)">${labels[1]}</div>` : ""));
 };
 var tag = (hud2, x, y, text, o, size = 44, color = "#fff", glow, anchor = "c") => {
   if (o <= 0) return;
@@ -34050,7 +34050,7 @@ var guessBar = (c, _b, o, strike = 0) => {
   html(c.hud, `<div class="lbl" style="left:${x}px;top:${y}px;font-size:58px;color:#ffd98a;opacity:${o};text-shadow:0 0 6px rgba(8,6,10,.9),0 0 22px rgba(246,207,120,.45)">\u4F60\u731C\uFF1A\u5269 500<div style="position:absolute;left:-6px;top:50%;height:6px;width:${strike * 104}%;background:#ff6a5a;box-shadow:0 0 10px #ff6a5a;border-radius:3px"></div></div>
 	<div style="position:absolute;left:${x}px;top:${y + 78}px;width:330px;border-top:4px dashed rgba(246,207,120,.85);opacity:${o}"></div>`);
 };
-var hookST = (u) => u < 14 ? 0.2 + u * 0.765 : 0.2 + 14 * 0.765 + (u - 14) * 0.32;
+var hookST = (u) => u < 14 ? 0.2 + (u - 0.4) * 0.79 : 0.2 + 13.6 * 0.79 + (u - 14) * 0.32;
 var meleeBodies = (st, k) => simBodies(SM, st, "rest", 0, 0, k).map((b, i) => {
   const u = SM.units[i];
   if (b.fall > 0 || Math.abs(u.x) > 4) return b;
@@ -34343,8 +34343,9 @@ var TIMELINE = [
     c.squares.set(L);
     const P = (x, z) => toScreen([x, 0, z]);
     const pb = P(-45 - bs / 2, bs / 2 + 40), pr = P(47 + rs / 2, rs / 2 + 40);
-    tag(c.hud, pb.x, pb.y - 30, "\u8FB9\u957F = \u4E00\u6392\u4EBA\u7684\u957F\u5EA6", env(u, 0.4, 3.6), 44, "#fff", BLUE);
-    tag(c.hud, pr.x, pr.y - 30, "500 \u4EBA", env(u, 0.4, 3.6), 44, "#fff", RED);
+    tag(c.hud, pb.x, pb.y - 84, "1000 \u4EBA", env(u, 0.4, 3.6), 52, "#fff", BLUE);
+    tag(c.hud, pb.x, pb.y - 30, "\u8FB9\u957F = \u4E00\u6392\u4EBA\u7684\u957F\u5EA6", env(u, 0.4, 3.6), 40, "#fff", BLUE);
+    tag(c.hud, pr.x, pr.y - 84, "500 \u4EBA", env(u, 0.4, 3.6), 52, "#fff", RED);
     if (tile > 0) {
       const k = Math.max(1, Math.min(4, 1 + Math.floor((u - 1.6) / 0.25)));
       const pc = P(-45 - bs / 2, 0);
@@ -34361,7 +34362,7 @@ var TIMELINE = [
       if (u < 11.25) tag(c.hud, pt.x - 40, pt.y, `${Math.round(866 * tape)}`, env(u, 9.9, 99), 64, "#fff", GOLD);
       else slam(c.hud, pt.x - 60, pt.y, "866", u, 11.25, 99, 110, BLUE);
       html(c.hud, `<div style="position:absolute;left:0;right:0;top:92px;text-align:center;font-weight:900;font-size:76px;color:#fff;opacity:${env(u, 11.6, 99)};text-shadow:0 0 6px ${GOLD},0 0 26px rgba(246,207,120,.6),0 2px 10px rgba(0,0,0,.65)">1000\xB2 \u2212 500\xB2 \u2248 866\xB2</div>`);
-      tag(c.hud, W / 2, 236, "\u82F1\u56FD\u5DE5\u7A0B\u5E08 \u5170\u5F7B\u65AF\u7279 \xB7 1914", env(u, 12.2, 99) * 0.9, 40, "#fff");
+      tag(c.hud, W / 2, 236, "\u82F1\u56FD\u5DE5\u7A0B\u5E08 \u5170\u5F7B\u65AF\u7279\uFF0C1914 \u5E74\u63D0\u51FA", env(u, 12.2, 99) * 0.9, 44, "#fff");
     }
     sub(c.hud, "\u6218\u6597\u529B\uFF0C\u770B\u4EBA\u6570\u7684[\u5E73\u65B9]", u, 0.05, 3.4);
     sub(c.hud, "\u6BCF\u4E00\u523B\uFF0C\u4E24\u8FB9\u6389\u7684\u9762\u79EF[\u4E00\u6837\u591A]", u, 3.8, 7.3);
@@ -34418,7 +34419,7 @@ var TIMELINE = [
     counters(c.hud, b, r, done ? 1 - clamp01((v - w1 - mar - w2) / 0.3) : 1, ["", "\u4E24\u62E8\uFF0C\u5404 500"]);
     if (done) {
       slam(c.hud, W / 2, H / 2 - 40, "707", u, 4 + w1 + mar + w2 + 0.05, 99, 220, BLUE);
-      tag(c.hud, W / 2, H / 2 + 100, "\u540C\u6837\u6253 1000 \u4EBA\uFF0C\u8FD8\u5269 707", env(u, 4 + w1 + mar + w2 + 0.5, 99), 50, "#fff");
+      tag(c.hud, W / 2, H / 2 + 100, '\u540C\u6837\u6253 1000 \u4EBA\uFF0C\u8FD8\u5269 <span style="color:#ffd27a">707</span>', env(u, 4 + w1 + mar + w2 + 0.3, 99, 0.15), 58, "#fff", BLUE);
     }
     sub(c.hud, "\u8981\u662F\u5BF9\u9762\u5206[\u4E24\u62E8]\u6765\u5462\uFF1F", u, 4.05, 6.4);
     sub(c.hud, "\u6253\u56E2\u6700\u5FCC\uFF1A[\u4E00\u62E8\u4E00\u62E8\u4E0A]", u, 6.5, 9.25);
@@ -34464,7 +34465,7 @@ var TIMELINE = [
   { a: T.sea, b: T.climax, draw: (c, u) => {
     const d = T.climax - T.sea;
     const adv = ADV(u);
-    camKeys([{ t: 0, pos: [-1500, 1600, -2600], look: [-1200, 2600, 1200], fov: 42 }, { t: 1.4, pos: [-1700, 900, -2300], look: [0, 0, 0], fov: 40 }, { t: 6.5, pos: [-1500, 260, -1200], look: [0, 10, 0], fov: 38 }, { t: d, pos: [adv - 2450 - 110, 20, -440], look: [adv - 2450 + 60, 8, -440], fov: 44 }], u);
+    camKeys([{ t: 0, pos: [-1500, 1600, -2600], look: [-1200, 2600, 1200], fov: 42 }, { t: 1.4, pos: [-1700, 900, -2300], look: [0, 0, 0], fov: 40 }, { t: 6.5, pos: [-1500, 260, -1200], look: [0, 10, 0], fov: 38 }, { t: d, pos: [adv - 2450 - 110, 24, -468], look: [adv - 2450 + 60, 8, -440], fov: 44 }], u);
     setFleet(c.sea.combined, LINE(u, 0), u);
     setFleet(c.sea.british, COLS(adv), u);
     const { sm, fl } = broadsides(LINE(u, 0).slice(0, 18), u, 1, 3);
@@ -34489,8 +34490,8 @@ var TIMELINE = [
     const adv = ADV0 + tm * 55;
     const lead = { x: adv - 2450, z: -440 }, nel = { x: adv - 2710, z: 670 };
     const tN = 6.15;
-    if (u < 7.5) camKeys([{ t: 0, pos: [lead.x - 110, 20, -440], look: [lead.x + 60, 8, -440], fov: 44 }, { t: 1.2, pos: [lead.x - 104, 16, -444], look: [lead.x + 50, 9, -440], fov: 50 }, { t: 3, pos: [lead.x - 100, 14, -448], look: [lead.x + 40, 9, -440], fov: 52 }, { t: 7.5, pos: [lead.x - 140, 34, -560], look: [lead.x + 40, 6, -420], fov: 42 }], u);
-    else camKeys([{ t: 7.5, pos: [nel.x - 105, 18, 670], look: [nel.x + 50, 8, 670], fov: 50 }, { t: 9, pos: [nel.x - 150, 50, 520], look: [nel.x + 60, 4, 620], fov: 42 }, { t: 11.6, pos: [-900, 650, -1500], look: [0, 0, 0], fov: 44 }, { t: d, pos: [-960, 700, -1560], look: [0, 0, 60], fov: 44 }], u);
+    if (u < 7.5) camKeys([{ t: 0, pos: [lead.x - 110, 24, -468], look: [lead.x + 60, 8, -440], fov: 44 }, { t: 1.2, pos: [lead.x - 104, 18, -466], look: [lead.x + 50, 9, -440], fov: 50 }, { t: 3, pos: [lead.x - 100, 15, -464], look: [lead.x + 40, 9, -440], fov: 52 }, { t: 7.5, pos: [lead.x - 140, 34, -560], look: [lead.x + 40, 6, -420], fov: 42 }], u);
+    else camKeys([{ t: 7.5, pos: [nel.x - 105, 22, 696], look: [nel.x + 50, 8, 670], fov: 50 }, { t: 9, pos: [nel.x - 150, 50, 520], look: [nel.x + 60, 4, 620], fov: 42 }, { t: 11.6, pos: [-900, 650, -1500], look: [0, 0, 0], fov: 44 }, { t: d, pos: [-960, 700, -1560], look: [0, 0, 60], fov: 44 }], u);
     const heel = (q, k) => ({ ...q, roll: -0.075 * k });
     const line2 = LINE(T.climax - T.sea + u, 0).map((q) => Math.abs(q.z - lead.z) < 75 ? heel(q, clamp01((tm - 0.3) / 0.9)) : Math.abs(q.z - nel.z) < 75 ? heel(q, clamp01((tm - tN - 0.3) / 0.9)) : q);
     setFleet(c.sea.combined, line2, u);
@@ -34531,7 +34532,7 @@ var TIMELINE = [
     if (v.front) tag(c.hud, Math.min(W - 160, v.x), Math.max(150, v.y - 60), "\u524D\u961F", env(u, 1, 99), 52, "#fff", RED);
     html(c.hud, `<div class="lbl" style="left:0;right:0;top:200px;text-align:center;font-size:52px;opacity:${env(u, 11, 99)}"><span style="text-shadow:0 0 8px ${RED},0 0 24px ${RED}">\u5BF9\u65B9 33 \u8258\uFF1A\u4E00\u534A\u4EE5\u4E0A \u88AB\u4FD8\u6216\u88AB\u6BC1</span></div>`);
     sub(c.hud, "\u654C\u4EBA\u7684\u524D\u961F\uFF0C[\u8D76\u4E0D\u56DE\u6765]", u, 0.3, 3.7);
-    tag(c.hud, W / 2, 132, "\u5170\u5F7B\u65AF\u7279\u7528\u5E73\u65B9\u5F8B\u5206\u6790\u8FC7\u8FD9\u4E00\u4ED7 \xB7 1916", env(u, 3.9, 7.3) * 0.9, 40, "#fff");
+    tag(c.hud, W / 2, 132, "\u5170\u5F7B\u65AF\u7279\u5728 1916 \u5E74\u7684\u4E66\u91CC\uFF0C\u7528\u5E73\u65B9\u5F8B\u7B97\u8FC7\u8FD9\u4E00\u4ED7", env(u, 3.9, 7.3) * 0.9, 40, "#fff");
     sub(c.hud, "\u82F1\u56FD\uFF0C\u4E00\u8258\u8239\u90FD[\u6CA1\u4E22]", u, 7.5, 10.9);
     seaDraw(c, tt, { bloom: 0.4, vig: 0.46, exposure: 0.5 });
   } },
@@ -34539,7 +34540,7 @@ var TIMELINE = [
   { a: T.quiet, b: T.limit, draw: (c, u) => {
     const d = T.limit - T.quiet;
     setFleet(c.sea.combined, [], u);
-    setFleet(c.sea.british, [{ x: 0, z: 0, heading: 0.3 }], u);
+    setFleet(c.sea.british, Array.from({ length: 7 }, (_, k) => ({ x: -k * 150 + k % 2 * 30, z: -k * 46 + k % 3 * 12, heading: 0.3 })), u);
     seaMarks(c, 0, 0);
     camKeys([{ t: 0, pos: [-700, 520, -700], look: [300, 0, 400], fov: 44 }, { t: 2.2, pos: [-260, 6, -180], look: [1e3, 40, 900], fov: 38 }, { t: d, pos: [-215, 5, -205], look: [1e3, 36, 900], fov: 37 }], u);
     const bank = clamp01((u - d + 1.6) / 1.6);
