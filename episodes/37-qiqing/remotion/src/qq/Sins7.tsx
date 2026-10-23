@@ -1504,38 +1504,33 @@ export const Sins7: React.FC = () => {
 };
 
 
-/** Douyin covers: 刀盾狗 (the film's strongest reveal) on its red disc, the gold title, the seven memes in a row, the question */
+/** Douyin covers: only the title, gold, with the seven sins orbiting it as coloured satellites (no meme: it would give
+    the film away), over faint rays in the seven colours */
 const CoverSins: React.FC<{layout: 'wide' | 'tall'}> = ({layout}) => {
-	const wide = layout === 'wide', CW = wide ? 1440 : 1080, CH = wide ? 1080 : 1440, v = VOICES[2], T = 19.9;
-	const fx = wide ? 1110 : 540, fy = wide ? 480 : 300, fs = wide ? 0.8 : 0.72;
-	const tx = wide ? 450 : 540, ty = wide ? 600 : 960, ts = wide ? 180 : 200, sp = wide ? 94 : 116, sr = wide ? 40 : 48;
-	const one = () => 1;
+	const wide = layout === 'wide', CW = wide ? 1440 : 1080, CH = wide ? 1080 : 1440, v = {col: GOLD, hot: '#fff2c8', deep: '#1c1408'};
+	const ts = wide ? 250 : 230, ox = CW / 2, oy = wide ? 540 : 610, ty = oy + ts * 0.36, tx = ox - ts * 0.04;
+	const rx = wide ? 520 : 420, ry = wide ? 330 : 330, fz = wide ? 54 : 52;
 	return <AbsoluteFill style={{background: '#030205'}}>
 		<svg width={CW} height={CH}>
 			<Defs v={v} />
-			<rect width={CW} height={CH} fill="url(#bgG)" />
+			<radialGradient id="cvBg" gradientUnits="userSpaceOnUse" cx={ox} cy={oy} r={CW * 0.8}><stop offset="0" stopColor="#2a1f10" /><stop offset="0.55" stopColor="#0a0810" /><stop offset="1" stopColor="#030205" /></radialGradient>
+			<rect width={CW} height={CH} fill="url(#cvBg)" />
 			{Array.from({length: 60}, (_, k) => <circle key={k} cx={rnd(k) * CW} cy={rnd(k, 1) * CH} r={0.8 + 1.6 * rnd(k, 2)} fill="#eef" opacity={0.15 + 0.4 * rnd(k, 3)} />)}
-			<g transform={`translate(${fx},${fy}) scale(${fs})`}>
-				<g transform="translate(0,40)"><MemeDisc T={T} v={v} u={1} /></g>
-				<g transform="translate(0,70)"><FigMeme T={T} v={v} draw={1} open={1} orn={one} late={one} t={3} /></g>
-			</g>
-			<radialGradient id="vigG" cx="0.5" cy="0.5" r="0.75"><stop offset="0.6" stopColor="#000" stopOpacity="0" /><stop offset="1" stopColor="#000" stopOpacity="0.7" /></radialGradient>
-			<rect width={CW} height={CH} fill="url(#vigG)" />
-			{!wide && <><linearGradient id="fadeG" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stopColor="#030205" stopOpacity="0" /><stop offset="0.4" stopColor="#030205" stopOpacity="0.85" /><stop offset="1" stopColor="#030205" stopOpacity="0.95" /></linearGradient><rect x={0} y={CH * 0.52} width={CW} height={CH * 0.48} fill="url(#fadeG)" /></>}
-			<text x={tx + ts * 0.04} y={ty} textAnchor="middle" style={{fontFamily: SERIF, fontWeight: 900, fontSize: ts, letterSpacing: '0.08em'}} fill="#fff2d0" opacity={0.65} filter="url(#gL)">七宗罪</text>
+			<radialGradient id="cvRayFade" gradientUnits="userSpaceOnUse" cx={ox} cy={oy} r={CW * 0.75}><stop offset="0.2" stopColor="#fff" /><stop offset="1" stopColor="#000" /></radialGradient>
+			<mask id="cvRayM" maskUnits="userSpaceOnUse" x={0} y={0} width={CW} height={CH}><rect width={CW} height={CH} fill="url(#cvRayFade)" /></mask>
+			<g mask="url(#cvRayM)" opacity={0.2}><g transform={`translate(${ox},${oy})`}>{Array.from({length: 14}, (_, i) => <path key={i} transform={`rotate(${i * 360 / 14 + 6})`} d="M0,0 L-80,-1300 L80,-1300 Z" fill={VOICES[i % 7].col} />)}</g></g>
+			<ellipse cx={ox} cy={oy} rx={rx * 0.92} ry={ry * 0.85} fill="#07050c" opacity={0.7} filter="url(#gL)" />
+			<circle cx={ox} cy={oy} r={ts * 1.2} fill="#ffd98a" opacity={0.1} filter="url(#gL)" />
+			<ellipse cx={ox} cy={oy} rx={rx} ry={ry} fill="none" stroke="url(#goldG)" strokeWidth={3} opacity={0.75} />
+			<ellipse cx={ox} cy={oy} rx={rx + 20} ry={ry + 16} fill="none" stroke={GOLD} strokeWidth={1.2} opacity={0.35} strokeDasharray="4 12" />
+			<text x={tx} y={ty} textAnchor="middle" style={{fontFamily: SERIF, fontWeight: 900, fontSize: ts, letterSpacing: '0.08em'}} fill="#fff2d0" opacity={0.65} filter="url(#gL)">七宗罪</text>
 			<text x={tx + ts * 0.04} y={ty} textAnchor="middle" style={{fontFamily: SERIF, fontWeight: 900, fontSize: ts, letterSpacing: '0.08em'}} fill="url(#goldG)">七宗罪</text>
-			{/* the seven sins orbit the title like satellites */}
-			{(() => { const ox = tx + ts * 0.04, oy = ty - ts * 0.36, rx = wide ? 330 : 400, ry = wide ? 250 : 235, fz = wide ? 44 : 50;
-				return <g>
-					<ellipse cx={ox} cy={oy} rx={rx} ry={ry} fill="none" stroke="url(#goldG)" strokeWidth={2.5} opacity={0.7} />
-					<ellipse cx={ox} cy={oy} rx={rx + 16} ry={ry + 12} fill="none" stroke={GOLD} strokeWidth={1} opacity={0.35} strokeDasharray="4 10" />
-					{VOICES.map((vv, i) => { const a = [-150, -90, -30, 30, 75, 105, 150][i] * Math.PI / 180, x = ox + rx * Math.cos(a), y = oy + ry * Math.sin(a);
-						return <g key={vv.n} transform={`translate(${x},${y})`}>
-							<circle r={fz * 1.25} fill={vv.col} opacity={0.35} filter="url(#gM)" />
-							<rect x={-fz * 1.18} y={-fz * 0.78} width={fz * 2.36} height={fz * 1.4} rx={fz * 0.7} fill="#0c0a12" stroke={vv.col} strokeWidth={3.5} />
-							<text y={fz * 0.36} textAnchor="middle" style={{fontFamily: SERIF, fontWeight: 900, fontSize: fz}} fill="#fff">{vv.ch}</text>
-						</g>; })}
-				</g>; })()}
+			{VOICES.map((vv, i) => { const a = [-150, -90, -30, 30, 75, 105, 150][i] * Math.PI / 180, x = ox + rx * Math.cos(a), y = oy + ry * Math.sin(a);
+				return <g key={vv.n} transform={`translate(${x},${y})`}>
+					<circle r={fz * 1.3} fill={vv.col} opacity={0.4} filter="url(#gM)" />
+					<rect x={-fz * 1.2} y={-fz * 0.8} width={fz * 2.4} height={fz * 1.44} rx={fz * 0.72} fill="#0c0a12" stroke={vv.col} strokeWidth={4} />
+					<text y={fz * 0.36} textAnchor="middle" style={{fontFamily: SERIF, fontWeight: 900, fontSize: fz}} fill="#fff">{vv.ch}</text>
+				</g>; })}
 		</svg>
 	</AbsoluteFill>;
 };
