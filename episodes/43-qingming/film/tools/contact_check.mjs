@@ -16,5 +16,6 @@ const fails = await p.evaluate(() => window.CONTACTS);
 const worst = {}; for (const f of fails) { const k = `${f.who} · ${f.what}`; if (!worst[k] || f.err > worst[k].err) worst[k] = f; }
 const keys = Object.keys(worst);
 console.log(keys.length ? 'FAIL' : 'PASS', `${n} frames ${from}–${to}s`);
+const seen = await p.evaluate(() => window.CONTACT_SEEN || {}); console.log('  checked:', Object.keys(seen).length ? Object.entries(seen).map(([k, v]) => `${k} (worst ${v.toFixed(1)})`).join(' | ') : 'none');
 for (const k of keys) console.log(`  ${k}: worst ${worst[k].err} at t=${worst[k].t.toFixed(2)} (${fails.filter((f) => `${f.who} · ${f.what}` === k).length} frames)`);
 await b.close(); SRV.close(); process.exit(keys.length ? 1 : 0);

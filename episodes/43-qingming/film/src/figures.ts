@@ -201,7 +201,7 @@ export const reachGap = (pose: Pose, side: Side, target: P, opt: ReachOpt = {}) 
 export const gripOf = (pose: Pose, side: Side): P => add(pose[`${side}Hand`], mul(nrm(sub(pose[`${side}Tip`], pose[`${side}Hand`])), BL.grip));
 
 /* ---------------- placement ---------------- */
-export type FigOpts = {x: number; ground: number; h: number; pose: Pose; look: LookQ; flip?: boolean; T?: number; col?: string};
+export type FigOpts = {x: number; ground: number; h: number; pose: Pose; look: LookQ; flip?: boolean; T?: number; col?: string; part?: 'R' | 'L'};   // part: only that arm (sleeve, hand, cuff) — draw it again over a carried prop
 type Place = {x: number; ground: number; h: number; flip?: boolean};
 /** body units → screen px for a placement */
 export const toScreen = (o: Place, p: P): P => [o.x + (o.flip ? -1 : 1) * p[0] * o.h, o.ground - p[1] * o.h];
@@ -266,7 +266,9 @@ export const figurePaths = (o: FigOpts): string[] => {
 			[0.062, ...prof(tn, (t) => (t < 0.4 ? lerp(0.064, 0.058, t / 0.4) : t < 0.78 ? lerp(0.058, 0.072, (t - 0.4) / 0.38) : lerp(0.072, 0.024, (t - 0.78) / 0.22)))].map((v) => v * b))); }
 	// ---- arms + hands
 	const cloth = look.dress !== 'robe' || look.sleeves !== 'wide' ? 1.08 : 1;
+	const armIdx: Record<string, number[]> = {R: [], L: []};
 	for (const s of ['R', 'L']) {
+		const i0 = out.length;
 		const sh = p[`${s}Sh`], el = p[`${s}Elb`], ha = p[`${s}Hand`], tip = p[`${s}Tip`];
 		const pts = [...along(sh, el, 5), ...along(el, ha, 5).slice(1)], n = pts.length - 1;
 		out.push(chain(pts, prof(n, (t) => (t < 0.5 ? lerp(0.036, 0.025, t * 2) : lerp(0.025, 0.019, (t - 0.5) * 2)) * b * cloth), prof(n, (t) => (t < 0.15 ? 0.04 : t < 0.5 ? lerp(0.036, 0.023, (t - 0.15) / 0.35) : lerp(0.023, 0.018, (t - 0.5) * 2)) * b * cloth)));
@@ -276,6 +278,7 @@ export const figurePaths = (o: FigOpts): string[] => {
 			const fd = nrm(sub(ha, el)), c = add(ha, mul(fd, -0.012)), nn: P = [fd[1], -fd[0]];
 			out.push(rounded([add(c, mul(nn, 0.027)), add(add(c, mul(fd, -0.04)), mul(nn, 0.026)), add(add(c, mul(fd, -0.04)), mul(nn, -0.026)), add(c, mul(nn, -0.027))], 0.006));
 		}
+		for (let i = i0; i < out.length; i++) armIdx[s].push(i);
 	}
 	// ---- head (profile: brow, nose, chin; no face)
 	const up = nrm(sub(p.Top, p.Neck1)), fw: P = [up[1], -up[0]], hc = mix(p.Head, p.Top, 0.45), S = 0.93;
@@ -392,6 +395,7 @@ export const figurePaths = (o: FigOpts): string[] => {
 	if (look.dress === 'greatcoat') out.push(rounded([tf(p.Neck1, -0.05, -0.03), tf(p.Neck1, 0.032, -0.04), tf(p.Neck1, 0.04, 0.012), tf(p.Neck1, -0.042, 0.03)], 0.012));   // broad turned-up collar
 	// ---- wide sleeves: per arm segment, a bag that hangs by gravity below the arm
 	if (look.sleeves === 'wide') for (const s of ['R', 'L']) {
+		const i0 = out.length;
 		const sh = p[`${s}Sh`], el = p[`${s}Elb`], wr = p[`${s}Hand`], dn: P = [0, -1];
 		const seg = (a: P, c: P, wa: number, wc: number, sag: number, cuff: boolean) => {
 			const d = nrm(sub(c, a)), n: P = [d[1], -d[0]], hz = Math.abs(d[0]), sg2 = sag * hz;
@@ -402,12 +406,14 @@ export const figurePaths = (o: FigOpts): string[] => {
 		};
 		seg(sh, el, 0.044 * b, 0.046 * b, 0.05, false);
 		seg(el, add(wr, mul(nrm(sub(wr, el)), -0.006)), 0.046 * b, 0.05 * b, 0.13, true);
+		for (let i = i0; i < out.length; i++) armIdx[s].push(i);
 	}
 	// ---- belt, packs
 	if (look.pack === 'bundle') { const c = tf(sp, -0.12, 0.0), e = (a: number, r: number): P => tf(c, Math.cos(a) * 0.072, Math.sin(a) * r);
 		out.push(rounded(Array.from({length: 12}, (_, i) => e((i / 12) * Math.PI * 2, 0.095)), 0.03));
 		out.push(rounded([tf(sp, -0.06, 0.07), tf(sp, -0.13, 0.11), tf(sp, -0.15, 0.09), tf(sp, -0.07, 0.04)], 0.01)); }
 	if (look.pack === 'backpack') out.push(rounded([tf(sp, -0.06, 0.06), tf(sp, -0.15, 0.05), tf(sp, -0.16, -0.12), tf(sp, -0.06, -0.12)], 0.03));
+	if (o.part) return armIdx[o.part].map((i) => out[i]);
 	return out;
 };
 
