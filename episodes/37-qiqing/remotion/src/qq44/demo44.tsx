@@ -25,6 +25,10 @@ export const Cam: React.FC<{cx: number; cy: number; z: number; r?: number; child
 const scr = (p: P2, cx: number, cy: number, z: number): P2 => [(p[0] - cx) * z + W / 2, (p[1] - cy) * z + H / 2];
 /** place a figure so that its Head joint lands at (hx, hy) */
 const placeHead = (pose: Pose, hx: number, hy: number, h: number, flip = false) => ({x: hx - (flip ? -1 : 1) * pose.Head[0] * h, ground: hy + pose.Head[1] * h});
+/** the back of the skull (final pass: the 你 glow sits behind the ear in profile, never on the face) */
+export const skullBack = (pose: Pose, x: number, g: number, h: number, flip = false, k = 0.03): P2 => { const n1 = jointAt(pose, 'Neck1', x, g, h, flip), tp = jointAt(pose, 'Top', x, g, h, flip), c = headC(pose, x, g, h, flip);
+	const ux = tp[0] - n1[0], uy = tp[1] - n1[1], l = Math.hypot(ux, uy) || 1, fx = -uy / l, fy = ux / l, sgn = flip ? -1 : 1;   // f = the face direction
+	return [c[0] - sgn * fx * k * h * 0.93, c[1] - sgn * fy * k * h * 0.93]; };
 const headC = (pose: Pose, x: number, g: number, h: number, flip = false): P2 => { const hd = jointAt(pose, 'Head', x, g, h, flip), tp = jointAt(pose, 'Top', x, g, h, flip); return [lerp(hd[0], tp[0], 0.45), lerp(hd[1], tp[1], 0.45)]; };
 const Dust: React.FC<{t: number; n?: number; c?: string; o?: number; seed?: number}> = ({t, n = 40, c = '#c8d8dc', o = 0.16, seed = 0}) => <g>{Array.from({length: n}, (_, i) => {
 	const x = ((rnd(i, 1 + seed) * W + t * (8 + 14 * rnd(i, 5))) % (W + 40)) - 20, y = rnd(i, 2 + seed) * H + Math.sin(t * 0.8 + i) * 12;
@@ -123,10 +127,12 @@ export const CiderBox: React.FC<{t: number}> = ({t}) => {
 };
 
 /* ================= C3 5.75–7.75: a slide goes under the microscope ================= */
+/** the scope (scaled to the seated user): base x, stage height, scale */
+const MS = {x: 977, stage: 648, s: 0.47};
 export const Microscope: React.FC<{t: number}> = ({t}) => {
-	const u = t - T.mic, slide = ease(seg(u, 0.0, 0.6)), sx = lerp(720, 1080, slide), pull = ease(seg(u, 0, 0.9)), whip = ei(seg(u, 1.72, 2.0));
-	const cx = lerp(sx, 990 + 30 * u, pull) + whip * 1100, cy = lerp(593, 560, pull), z = lerp(2.6, 1.06, pull);
-	const lean = 30 + 8 * ease(seg(u, 0.5, 1.0)), bloom = (i: number) => eo(seg(u, 0.65 + 0.7 * rnd(i, 45), 0.95 + 0.7 * rnd(i, 45)));
+	const u = t - T.mic, slide = ease(seg(u, 0.0, 0.6)), sx = lerp(720, MS.x, slide), pull = ease(seg(u, 0, 0.9)), whip = ei(seg(u, 1.72, 2.0));
+	const cx = lerp(sx, 990 + 30 * u, pull) + whip * 1100, cy = lerp(MS.stage, 560, pull), z = lerp(2.6, 1.06, pull);
+	const lean = 34 + 4 * ease(seg(u, 0.5, 1.0)), bloom = (i: number) => eo(seg(u, 0.65 + 0.7 * rnd(i, 45), 0.95 + 0.7 * rnd(i, 45)));
 	return <g>
 		<Sky id="c3s" stops={[[0, '#1a2024'], [0.66, '#242b2f'], [0.67, '#15191b'], [1, '#0d0f11']]} />
 		<Cam cx={cx} cy={cy} z={z}>
@@ -137,13 +143,14 @@ export const Microscope: React.FC<{t: number}> = ({t}) => {
 			<Pendant x={1080} y={150} len={200} id="c3p" o={0.7} col="#e8ece8" />
 			<Motes t={t} x={300} y={500} w={700} h={400} n={18} o={0.3} />
 			<rect x={420} y={700} width={1500} height={18} fill="#3a4044" /><rect x={460} y={718} width={16} height={260} fill="#262a2d" /><rect x={1840} y={718} width={16} height={260} fill="#262a2d" />
-			<Glow x={1080} y={640} r={320} c={B.halo} o={0.15 + 0.3 * slide} id="c3a" />
-			<g transform="translate(1080,700)" fill="#0e1012"><rect x={-110} y={-24} width={220} height={24} rx={6} /><path d="M40,-24 L60,-24 L70,-260 Q60,-300 20,-300 L10,-260 Z" /><rect x={-80} y={-110} width={160} height={14} rx={4} />
+			<Glow x={MS.x} y={MS.stage + 10} r={300} c={B.halo} o={0.15 + 0.3 * slide} id="c3a" />
+			{/* final pass: the scope scaled to the sitter (eyepiece at her eye), a lab stool under her */}
+			<g transform={`translate(${MS.x},700) scale(${MS.s})`} fill="#0e1012"><rect x={-110} y={-24} width={220} height={24} rx={6} /><path d="M40,-24 L60,-24 L70,-260 Q60,-300 20,-300 L10,-260 Z" /><rect x={-80} y={-110} width={160} height={14} rx={4} />
 				<rect x={-40} y={-330} width={56} height={170} rx={10} transform="rotate(-24 0 -250)" /><rect x={-70} y={-360} width={40} height={60} rx={8} transform="rotate(-24 0 -250)" /><rect x={-18} y={-170} width={20} height={56} /></g>
 			{/* the glass slide */}
-			<g transform={`translate(${sx},593)`}><rect x={-80} y={-6} width={160} height={10} rx={2} fill="#d8e8ec" opacity={0.55} /><rect x={-22} y={-7} width={44} height={11} fill={B.mid} /><Glow x={0} y={-2} r={70} c={B.core} o={0.6 + 0.3 * slide} id="c3g" /></g>
-			<Rimmed x={760} ground={912} h={620} pose={fkPose({hip: 0.37, lean, neck: 22, lt: 86, lk: 90, rt: 82, rk: 86, la: 70, le: 50, ra: lerp(50, 64, slide), re: 60})} look={LK.diamond} col="#121416" rim={RIMB} rimOp={0.6} />
-			<g transform="translate(560,912)"><rect x={-60} y={-240} width={120} height={14} fill="#1a1e20" /><rect x={-4} y={-226} width={8} height={226} fill="#1a1e20" /></g>
+			<g transform={`translate(${sx},${MS.stage - 3}) scale(0.62)`}><rect x={-80} y={-6} width={160} height={10} rx={2} fill="#d8e8ec" opacity={0.55} /><rect x={-22} y={-7} width={44} height={11} fill={B.mid} /><Glow x={0} y={-2} r={70} c={B.core} o={0.6 + 0.3 * slide} id="c3g" /></g>
+			<g transform="translate(760,912)" fill="#1a1e20"><rect x={-70} y={-180} width={140} height={14} rx={5} /><rect x={-6} y={-166} width={12} height={130} /><path d="M-56,0 L-4,-40 L4,-40 L56,0" stroke="#1a1e20" strokeWidth={8} fill="none" /><rect x={-36} y={-70} width={72} height={6} /></g>
+			<Rimmed x={760} ground={912} h={620} pose={fkPose({hip: 0.37, lean, neck: 22, lt: 86, lk: 90, rt: 82, rk: 86, la: 44, le: 64, ra: lerp(36, 46, slide), re: 60})} look={LK.diamond} col="#121416" rim={RIMB} rimOp={0.6} />
 			<g transform="translate(1500,470)"><circle r={210} fill="#120a08" /><circle r={210} fill="none" stroke="#3a3e42" strokeWidth={14} />
 				<defs><clipPath id="c3c"><circle r={200} /></clipPath></defs>
 				<g clipPath="url(#c3c)"><Glow x={0} y={0} r={260} c={B.halo} o={0.35 * bloom(0)} id="c3e" />{Array.from({length: 60}, (_, i) => <circle key={i} cx={(rnd(i, 41) - 0.5) * 400} cy={(rnd(i, 42) - 0.5) * 400} r={(6 + 10 * rnd(i, 43)) * bloom(i)} fill={i % 3 ? B.mid : B.core} opacity={0.55 + 0.4 * rnd(i, 44)} />)}</g>
@@ -158,8 +165,9 @@ export const Microscope: React.FC<{t: number}> = ({t}) => {
 const mesa = (y0: number, pts: [number, number][]) => `M-200,${y0} ` + pts.map(([x, y]) => `L${x},${y}`).join(' ') + ` L2400,${y0} L2400,1200 L-200,1200 Z`;
 export const Highway: React.FC<{t: number}> = ({t}) => {
 	const u = t - T.car, k = ease(seg(u, 0, 2.0)), s = lerp(1, 0.46, k), cyy = lerp(905, 742, k), push = ei(seg(u, 1.7, 2.0));
-	const trunk: P2 = [960, cyy - 8 * s];
-	const cx = lerp(lerp(360, 960, eo(seg(u, 0, 0.35))) + 20 * u, trunk[0], push), cy = lerp(540 - 10 * u, trunk[1], push), z = lerp(1.03 + 0.02 * u, 3.2, push);
+	const hw = (y: number) => 1240 * (y - 640) / 560, carX = 960 + 0.6 * hw(cyy + 100 * s);   // final pass: the car keeps to the right-hand lane
+	const trunk: P2 = [carX, cyy - 8 * s];
+	const cx = lerp(lerp(carX - 560, carX - 200, eo(seg(u, 0, 0.35))) + 20 * u, trunk[0], push), cy = lerp(540 - 10 * u, trunk[1], push), z = lerp(1.03 + 0.02 * u, 3.2, push);
 	const vp: P2 = [960, 640], persp = (p: number, side: number): P2 => [vp[0] + side * 760 * p, vp[1] + 440 * p];
 	return <g>
 		<Sky id="c4s" stops={[[0, '#1c2530'], [0.38, '#38404a'], [0.53, '#6e6668'], [0.6, '#9a8a80']]} />
@@ -171,16 +179,16 @@ export const Highway: React.FC<{t: number}> = ({t}) => {
 			<path d="M140,560 L170,520 L420,518 L450,560 M1420,540 L1700,536" stroke="#e2c8b0" strokeWidth={2.5} fill="none" opacity={0.35} />
 			<path d={mesa(660, [[-200, 620], [300, 612], [600, 628], [900, 636], [1100, 630], [1500, 610], [1900, 618], [2400, 625]])} fill="#34333a" />
 			<rect x={-200} y={640} width={2600} height={600} fill="#24222a" />
-			<path d={`M${vp[0] - 4},${vp[1]} L${vp[0] + 4},${vp[1]} L${vp[0] + 820},1200 L${vp[0] - 820},1200 Z`} fill="#1b1a1f" />
-			<path d={`M${vp[0] - 3},${vp[1]} L${vp[0] - 780},1150 M${vp[0] + 3},${vp[1]} L${vp[0] + 780},1150`} stroke="#8a8478" strokeWidth={3} opacity={0.5} />
+			<path d={`M${vp[0] - 4},${vp[1]} L${vp[0] + 4},${vp[1]} L${vp[0] + 1240},1200 L${vp[0] - 1240},1200 Z`} fill="#1b1a1f" />
+			<path d={`M${vp[0] - 3},${vp[1]} L${vp[0] - 1130},1150 M${vp[0] + 3},${vp[1]} L${vp[0] + 1130},1150`} stroke="#8a8478" strokeWidth={3} opacity={0.5} />
 			{Array.from({length: 14}, (_, i) => { const p = ((i + u * 4.5) % 14) / 14, p2 = p + 0.025; const y1 = vp[1] + 440 * p * p * 1.25, y2 = vp[1] + 440 * p2 * p2 * 1.25, w = 2 + 10 * p;
 				return <path key={i} d={`M${960 - w / 2},${y1} L${960 + w / 2},${y1} L${960 + w},${y2} L${960 - w},${y2} Z`} fill="#d8cfb8" opacity={0.7} />; })}
 			{/* poles and signs streaming past */}
-			{Array.from({length: 6}, (_, i) => { const p = ((i / 6 + u * 0.45) % 1), pp = p * p * 1.3, [x, y] = persp(pp, -1.15); return <rect key={i} x={x - 2 - 6 * pp} y={y - 420 * pp} width={4 + 12 * pp} height={420 * pp} fill="#141318" />; })}
-			{[0.15, 1.15].map((a, i) => { const p = cl((u - a) / 1.0), pp = 0.1 + p * p * 1.6, [x, y] = persp(pp, 1.25); return p > 0 && p < 1 ? <g key={i} transform={`translate(${x},${y}) scale(${pp})`}><rect x={-6} y={-300} width={12} height={300} fill="#141318" /><rect x={-150} y={-420} width={300} height={150} rx={10} fill="#3e5450" stroke="#cfd4cc" strokeWidth={6} /><rect x={-110} y={-380} width={220} height={18} fill="#cfd4cc" opacity={0.7} /><rect x={-110} y={-340} width={150} height={14} fill="#cfd4cc" opacity={0.5} /></g> : null; })}
-			{[0, 1, 2, 3, 4].map((i) => { const p = 0.05 + i * 0.22, [x, y] = persp(p, 1.6), [x2, y2] = persp(p + 0.22, 1.6); return <g key={i}><rect x={x - 3 - 3 * p} y={y - 300 * p - 40} width={6 + 6 * p} height={300 * p + 40} fill="#18171c" /><path d={`M${x},${y - 300 * p - 30} Q${(x + x2) / 2},${(y + y2) / 2 - 150 * (p + 0.1)} ${x2},${y2 - 300 * (p + 0.22) - 30}`} stroke="#18171c" strokeWidth={2} fill="none" /></g>; })}
+			{Array.from({length: 6}, (_, i) => { const p = ((i / 6 + u * 0.45) % 1), pp = p * p * 1.3, [x, y] = persp(pp, -1.55); return <rect key={i} x={x - 2 - 6 * pp} y={y - 420 * pp} width={4 + 12 * pp} height={420 * pp} fill="#141318" />; })}
+			{[0.15, 1.15].map((a, i) => { const p = cl((u - a) / 1.0), pp = 0.1 + p * p * 1.6, [x, y] = persp(pp, 1.55); return p > 0 && p < 1 ? <g key={i} transform={`translate(${x},${y}) scale(${pp})`}><rect x={-6} y={-300} width={12} height={300} fill="#141318" /><rect x={-150} y={-420} width={300} height={150} rx={10} fill="#3e5450" stroke="#cfd4cc" strokeWidth={6} /><rect x={-110} y={-380} width={220} height={18} fill="#cfd4cc" opacity={0.7} /><rect x={-110} y={-340} width={150} height={14} fill="#cfd4cc" opacity={0.5} /></g> : null; })}
+			{[0, 1, 2, 3, 4].map((i) => { const p = 0.05 + i * 0.22, [x, y] = persp(p, 1.95), [x2, y2] = persp(p + 0.22, 1.95); return <g key={i}><rect x={x - 3 - 3 * p} y={y - 300 * p - 40} width={6 + 6 * p} height={300 * p + 40} fill="#18171c" /><path d={`M${x},${y - 300 * p - 30} Q${(x + x2) / 2},${(y + y2) / 2 - 150 * (p + 0.1)} ${x2},${y2 - 300 * (p + 0.22) - 30}`} stroke="#18171c" strokeWidth={2} fill="none" /></g>; })}
 			{/* the sedan from behind; light leaks from the trunk */}
-			<g transform={`translate(960,${cyy}) scale(${s}) translate(0,${Math.sin(u * 18) * 1.5})`}>
+			<g transform={`translate(${carX},${cyy}) scale(${s}) translate(0,${Math.sin(u * 18) * 1.5})`}>
 				<ellipse cx={0} cy={118} rx={300} ry={26} fill="#000" opacity={0.35} />
 				<path d="M-270,100 L-280,20 Q-276,-10 -240,-20 L-190,-120 Q-176,-140 -140,-142 L140,-142 Q176,-140 190,-120 L240,-20 Q276,-10 280,20 L270,100 Z" fill="#2f5250" />
 				<path d="M-176,-118 Q-164,-130 -136,-130 L136,-130 Q164,-130 176,-118 L206,-36 L-206,-36 Z" fill="#1c2a2e" />
@@ -189,7 +197,7 @@ export const Highway: React.FC<{t: number}> = ({t}) => {
 				<path d="M-190,-120 Q0,-150 190,-120" stroke="#cfd8d4" strokeWidth={3} fill="none" opacity={0.35} />
 				<rect x={-240} y={-14} width={480} height={8} fill="#24484a" />
 				<Glow x={0} y={-8} r={270} c={B.halo} o={0.55} id="c4t" /><rect x={-230} y={-10} width={460} height={4} fill={B.core} opacity={0.9} /><Glow x={0} y={-8} r={110} c={B.core} o={0.6} id="c4tc" />
-				<rect x={-262} y={10} width={70} height={26} rx={4} fill="#5a3a34" /><rect x={192} y={10} width={70} height={26} rx={4} fill="#5a3a34" />
+				{[-227, 227].map((x) => <g key={x}><Glow x={x} y={23} r={90} c="#d86a58" o={0.45} id={`c4tl${x}`} /><rect x={x - 35} y={10} width={70} height={26} rx={4} fill="#d8705c" /><rect x={x - 26} y={15} width={52} height={8} rx={3} fill="#f4c0a8" opacity={0.8} /></g>)}
 				<rect x={-70} y={40} width={140} height={34} rx={3} fill="#d8d4c4" opacity={0.85} />
 				<rect x={-280} y={80} width={560} height={26} rx={8} fill="#1a2a2a" /><rect x={-250} y={100} width={80} height={30} rx={8} fill="#0c0e10" /><rect x={170} y={100} width={80} height={30} rx={8} fill="#0c0e10" />
 			</g>
@@ -237,7 +245,10 @@ const homeCam = (t: number): {cx: number; cy: number; z: number} => {
 	const push = ease(seg(t, 20.75, 21.55)), cp = compassAt(t); cx = lerp(cx, cp[0], push); cy = lerp(cy, cp[1], push); z = lerp(z, 3.4, push);
 	return {cx, cy, z};
 };
-const fatherP = (t: number) => fkPose({hip: 0.37, lean: lerp(4, 12, ease(seg(t, 18.5, 19.2))), neck: 14, lt: 86, lk: 90, rt: 82, rk: 86, la: 40, le: 60, ra: lerp(18, 62, ease(seg(t, 18.5, 19.2))), re: lerp(70, 34, ease(seg(t, 18.5, 19.2)))});
+/** the father holds the compass out at the boy's eye level, the boy's hands take it; then the father's hand comes back to his knee
+    (final pass, logic 18: no empty paddle hands hovering over the boy's head) */
+const fatherP = (t: number) => { const k = ease(seg(t, 18.5, 19.2)), back = ease(seg(t, 19.95, 20.6));
+	return fkPose({hip: 0.37, lean: lerp(lerp(4, 12, k), 8, back), neck: 14, lt: 86, lk: 90, rt: 82, rk: 86, la: 24, le: 56, ra: lerp(lerp(18, 62, k), 30, back), re: lerp(lerp(70, 34, k), 58, back)}); };
 const compassAt = (t: number): P2 => { const fh = jointAt(fatherP(t), 'RHand', KX + 760, 910, 700), kh = jointAt(kidP, 'RHand', KX + 1080, 904, 430, true), k = ease(seg(t, 19.3, 19.9)); return [lerp(fh[0] + 18, kh[0] - 10, k), lerp(fh[1] - 14, kh[1] - 18, k)]; };
 /** a plain brass compass: no red, the north tip is dark oxide */
 export const Compass44: React.FC<{x: number; y: number; r: number; a: number; rot?: number; glow?: number; id: string; halo?: boolean}> = ({x, y, r, a, rot = 0, glow = 0, id, halo = true}) => <g transform={`translate(${x},${y})`}>
@@ -250,18 +261,29 @@ export const Compass44: React.FC<{x: number; y: number; r: number; a: number; ro
 	<circle r={r * 0.06} fill="#6e5426" />
 	<path d={`M${-r * 0.6},${-r * 0.5} Q${-r * 0.2},${-r * 0.8} ${r * 0.3},${-r * 0.72}`} stroke="#fff" strokeWidth={r * 0.05} opacity={0.4} fill="none" />
 </g>;
-/** baby in a cradle: a big, angular back of the head (comic), no face */
+/** baby in a cradle (final pass, logic 12): lying on its back, head on the pillow at left, face in profile looking up, an ear,
+    a small body under the blanket; the oversized, angular back of the head stays as the joke */
+const BABY_HEAD = 'M-62,40 L-92,4 L-84,-46 L-46,-84 L6,-86 Q40,-80 50,-56 L53,-44 Q66,-36 62,-27 L55,-23 Q60,-16 55,-9 Q58,-4 52,2 Q48,14 38,18 Q24,32 6,38 L-14,52 Z';
 const Baby: React.FC<{x: number; y: number; t: number}> = ({x, y, t}) => <g transform={`translate(${x},${y})`}>
-	<path d="M30,10 Q20,-40 90,-46 L260,-40 Q300,-20 290,20 L40,30 Z" fill="#cbbfae" opacity={0.85} />
-	<g transform="translate(0,-26) scale(1.35) translate(0,26)"><path d="M-78,-44 L-50,-84 L10,-84 Q46,-76 50,-36 Q54,-14 44,4 Q36,22 10,26 L-56,26 L-84,-6 Z" fill="#140f0d" />
-	<path d="M-84,-6 L-78,-44 L-50,-84 L10,-84" stroke={RIMB} strokeWidth={3} fill="none" opacity={0.7} /></g>
-	<HeadGlow x={-6} y={-26} r={20 + 2 * Math.sin(t * 3)} id="bbg" />
+	<path d="M-120,30 Q-110,-6 -40,0 Q10,2 40,26 Z" fill="#cbbfae" opacity={0.55} />
+	{/* the body under the blanket: shoulders, tummy, knees, feet */}
+	<path d="M30,26 Q34,-46 92,-50 Q140,-58 176,-44 Q214,-62 248,-46 Q270,-40 276,-22 Q296,-20 292,4 L288,26 Z" fill="#cbbfae" opacity={0.92} />
+	<path d="M44,-30 Q120,-50 176,-38 Q214,-56 250,-40" stroke="#efe6d8" strokeWidth={3} fill="none" opacity={0.6} />
+	<path d="M60,-20 Q70,-12 64,0 M150,-30 Q160,-16 152,0 M226,-36 Q236,-20 230,0" stroke="#9a8e7e" strokeWidth={2} fill="none" opacity={0.6} />
+	<g transform="translate(-14,-70) rotate(-90) scale(1.12)">
+		<path d={BABY_HEAD} fill="#140f0d" />
+		<path d="M-62,40 L-92,4 L-84,-46 L-46,-84 L6,-86 Q40,-80 50,-56 L53,-44 Q66,-36 62,-27" stroke={RIMB} strokeWidth={3} fill="none" opacity={0.7} />
+		<path d="M-16,-6 Q-4,-14 2,0 Q0,12 -12,10" stroke={RIMB} strokeWidth={2.5} fill="none" opacity={0.5} />
+	</g>
+	<HeadGlow x={-22} y={-48} r={18 + 2 * Math.sin(t * 3)} id="bbg" />
 </g>;
-export const House: React.FC<{t: number}> = ({t}) => {
+export const House: React.FC<{t: number; hold?: number}> = ({t, hold = 0}) => {
 	const {cx, cy, z} = homeCam(t), nurse = sm(seg(t, 13.95, 14.6)), rew = 1 - nurse;
-	const momLean = lerp(lerp(4, 30, ease(seg(t, 15.0, 15.7))), -14, ease(seg(t, 16.25, 16.55))) + 8 * ease(seg(t, 17.2, 17.9));
-	const startle = ease(seg(t, 16.25, 16.5)) * (1 - 0.6 * ease(seg(t, 17.2, 17.9)));
-	const momP = fkPose({...STAND, lean: momLean, neck: lerp(10, -6, startle), la: lerp(30, 110, startle), le: lerp(40, 60, startle), ra: lerp(36, 100, startle), re: lerp(30, 70, startle)});
+	/* final pass (logic 12): she kneels by the cradle, leans in, and on the shock pulls back with a hand to her mouth and one to her chest;
+	   then she reaches back to the cradle's rim (her hand stays on the cradle through the pan) */
+	const k1 = ease(seg(t, 15.0, 15.7)), k2 = ease(seg(t, 16.25, 16.5)), k3 = ease(seg(t, 17.2, 17.9));
+	const mp = (a: number, b: number, c: number, d: number) => lerp(lerp(lerp(a, b, k1), c, k2), d, k3);
+	const momP = fkPose({hip: 0.36, lt: 94, lk: 94, rt: 0, rk: 90, lean: mp(14, 44, -10, 26), neck: mp(10, 14, -10, 14), la: mp(20, 38, 72, 34), le: mp(30, 6, 152, 8), ra: mp(24, 18, -30, -10), re: mp(30, 30, 148, 120)});
 	const rock = Math.sin(t * 2.2) * 1.6, kGlow = t < T.think ? 0.5 : 1, cp = compassAt(t);
 	const needle = 18 + 28 * Math.sin(t * 2.6) * Math.exp(-Math.max(0, t - 19.9) * 0.9) * seg(t, 19.3, 19.6);
 	return <g>
@@ -285,7 +307,7 @@ export const House: React.FC<{t: number}> = ({t}) => {
 					<path d="M640,640 Q640,600 700,600 L720,780 L660,780 Z" fill="#4a3426" />
 					<Baby x={NURSE_HEAD[0] + 6} y={NURSE_HEAD[1] + 20} t={t} />
 				</g>
-				<Rimmed x={1180} ground={935} h={660} pose={momP} look={LK.mother} flip col="#140f0c" rim="#ffd8a8" rimOp={0.45} rimDx={2.4} />
+				<Rimmed x={1250} ground={935} h={660} pose={momP} look={LK.mother} flip col="#140f0c" rim="#ffd8a8" rimOp={0.45} rimDx={2.4} />
 				<g opacity={sm(seg(t, 16.0, 16.4))}><path d="M600,560 Q630,640 690,690" stroke={INK} strokeWidth={4} fill="none" strokeDasharray="10 8" /><path d="M690,690 l-18,-4 l10,-14 Z" fill={INK} />
 					<text x={560} y={540} textAnchor="middle" style={{fontFamily: SANS, fontWeight: 900, fontSize: 40}} fill={INK} stroke="rgba(12,8,5,0.6)" strokeWidth={5} paintOrder="stroke">又大又方</text></g>
 				{/* years later, the same house: the compass */}
@@ -307,25 +329,32 @@ export const House: React.FC<{t: number}> = ({t}) => {
 					<g transform={`translate(${KX + 1800},1080)`}><rect x={-60} y={-110} width={120} height={110} rx={10} />{Array.from({length: 7}, (_, i) => <ellipse key={i} cx={Math.cos(i) * 70} cy={-150 - 60 * rnd(i, 2)} rx={60} ry={22} transform={`rotate(${-40 + i * 14} 0 -110)`} />)}</g></g>
 			</Cam>
 		</g>}
-		{rew > 0 && <Rewind t={t} o={rew} cam={{cx, cy, z}} />}
+		{rew > 0 && <Rewind t={t} o={rew} cam={{cx, cy, z}} hold={hold} />}
 	</g>;
 };
 const TITLE = '你是爱因斯坦的大脑';
-const Rewind: React.FC<{t: number; o: number; cam: {cx: number; cy: number; z: number}}> = ({t, o, cam}) => {
-	const u = t - T.title, fuse = sm(seg(u, 0.85, 1.15)), go = ease(seg(t, 13.95, 14.6)), hd = scr(NURSE_HEAD, cam.cx, cam.cy, cam.z);
-	const bx = lerp(960, hd[0], go), by = lerp(430, hd[1] - 30, go), bs = lerp(0.6 + 0.04 * u, 0.09, go);
+/** the title rewind. `hold` = film seconds the master has paused the story clock for (final pass: the title lands by film ≈14.0
+    and holds ≥ 2.5 s); continuous motion (streaks, rays, breathing, the slow push) runs on ua = u + hold so the picture never freezes. */
+const Rewind: React.FC<{t: number; o: number; cam: {cx: number; cy: number; z: number}; hold?: number}> = ({t, o, cam, hold = 0}) => {
+	const u = t - T.title, ua = u + hold, fuse = sm(seg(u, 0.85, 1.15)), go = ease(seg(t, 13.95, 14.6)), hd = scr(NURSE_HEAD, cam.cx, cam.cy, cam.z);
+	const push = 1 + 0.011 * Math.max(0, ua - 1.0) * (1 - go), breathe = 1 + 0.035 * Math.sin((ua - 1.1) * 2.3) * seg(u, 1.0, 1.4);
+	const bx = lerp(960, hd[0], go), by = lerp(430, hd[1] - 30, go), bs = lerp((0.6 + 0.04 * Math.min(u, 1.5)) * breathe * push, 0.09, go);
+	const rays = fuse * (1 - go) * (0.85 + 0.15 * Math.sin(ua * 1.7));
 	return <g opacity={o}>
 		<Sky id="rws" stops={[[0, '#0c1316'], [1, '#1a2226']]} />
-		{Array.from({length: 5}, (_, i) => { const y = ((i * 260 - u * 900) % 1300 + 1300) % 1300 - 100; return <rect key={i} x={0} y={y} width={W} height={18 + 10 * rnd(i, 2)} fill="#c8d4d8" opacity={0.05} />; })}
+		{Array.from({length: 5}, (_, i) => { const y = ((i * 260 - ua * 900 * (1 - 0.75 * seg(u, 1.1, 1.5))) % 1300 + 1300) % 1300 - 100; return <rect key={i} x={0} y={y} width={W} height={18 + 10 * rnd(i, 2)} fill="#c8d4d8" opacity={0.05} />; })}
+		{/* slow light rays turning behind the fused brain (the hold keeps moving) */}
+		{rays > 0.01 && <g transform={`translate(${bx},${by}) rotate(${ua * 7})`} opacity={rays}>{Array.from({length: 14}, (_, i) => { const a = i * Math.PI / 7, w = 0.06 + 0.03 * rnd(i, 21), L = 1300 * (0.8 + 0.3 * rnd(i, 22));
+			return <path key={i} d={`M0,0 L${Math.cos(a - w) * L},${Math.sin(a - w) * L} L${Math.cos(a + w) * L},${Math.sin(a + w) * L} Z`} fill={B.mid} opacity={0.07 + 0.04 * rnd(i, 23)} />; })}</g>}
 		{Array.from({length: 34}, (_, i) => { const a = rnd(i, 1) * Math.PI * 2, d = 320 + 600 * rnd(i, 2), x = 960 + Math.cos(a) * d, y = 430 + Math.sin(a) * d * 0.6, k = seg(u, 0.05, 0.9);
-			return <line key={i} x1={x} y1={y} x2={lerp(x, 960, 0.2 + 0.4 * k)} y2={lerp(y, 430, 0.2 + 0.4 * k)} stroke={B.mid} strokeWidth={3 + 4 * rnd(i, 3)} opacity={0.45 * (1 - fuse * 0.7)} strokeLinecap="round" />; })}
+			return <line key={i} x1={x} y1={y} x2={lerp(x, 960, 0.2 + 0.4 * k)} y2={lerp(y, 430, 0.2 + 0.4 * k)} stroke={B.mid} strokeWidth={3 + 4 * rnd(i, 3)} opacity={0.45 * (1 - fuse * 0.7) * (1 - go)} strokeLinecap="round" />; })}
 		{Array.from({length: 30}, (_, i) => { const a = rnd(i, 4) * Math.PI * 2, d0 = 700 + 500 * rnd(i, 5), k = ei(seg(u, 0.05 + 0.25 * rnd(i, 6), 1.0 + 0.1 * rnd(i, 6))), d = lerp(d0, 0, k), x = 960 + Math.cos(a) * d, y = 430 + Math.sin(a) * d * 0.6, sz = lerp(70, 26, k);
 			return k < 0.99 ? <g key={i} transform={`translate(${x},${y}) rotate(${(1 - k) * 300 * (rnd(i, 7) - 0.5)})`}>
 				<line x1={0} y1={0} x2={Math.cos(a) * 120 * (1 - k)} y2={Math.sin(a) * 72 * (1 - k)} stroke={B.mid} strokeWidth={4} opacity={0.4} />
 				<rect x={-sz / 2} y={-sz / 2} width={sz} height={sz} rx={6} fill={B.mid} opacity={0.8} stroke={B.core} strokeWidth={2} />
 				{sz > 44 && <Sticker x={0} y={0} n={1 + Math.floor(rnd(i, 8) * 240)} s={sz / 90} />}</g> : null; })}
 		<g opacity={fuse}>
-			<Glow x={bx} y={by} r={300 * bs / 0.6} c={B.halo} o={0.45} id="rwh" />
+			<Glow x={bx} y={by} r={300 * bs / 0.6} c={B.halo} o={0.45 * (0.9 + 0.1 * breathe)} id="rwh" />
 			<g transform={`translate(${bx},${by}) scale(${bs})`}>
 				<path d={BRAIN_D} fill={B.mid} opacity={0.42} /><path d={BRAIN_D} fill="none" stroke={B.core} strokeWidth={7 / Math.max(0.3, bs / 0.6)} />
 				{['M-220,-40 C-160,-90 -100,-60 -60,-110', 'M-40,-160 C0,-110 60,-150 110,-120', 'M140,-60 C180,-20 230,-60 250,0', 'M-200,60 C-140,30 -90,80 -30,50', 'M20,40 C70,0 120,60 170,30'].map((d, i) => <path key={i} d={d} stroke={B.core} strokeWidth={5} fill="none" opacity={0.55} strokeLinecap="round" />)}
@@ -333,76 +362,104 @@ const Rewind: React.FC<{t: number; o: number; cam: {cx: number; cy: number; z: n
 			<Glow x={bx} y={by} r={90 * bs / 0.6} c={B.core} o={0.6 * (1 - fuse) + 0.25} id="rwc" />
 		</g>
 		<rect width={W} height={H} fill={B.core} opacity={0.22 * Math.exp(-Math.max(0, u - 0.95) / 0.12) * seg(u, 0.85, 0.95)} />
-		{/* the title: each character flies out of the fused light and settles under it */}
-		<g transform={`translate(960,${812 - 30 * go}) scale(${1 + 0.03 * u})`} opacity={1 - sm(seg(t, 14.35, 14.75))}>
-			{TITLE.split('').map((ch, i) => { const k = eo(seg(u, 1.0 + 0.06 * i, 1.4 + 0.06 * i)), x0 = (i - 4) * 118, sx = lerp(0, x0, k), sy = lerp(-380, 0, k);
+		{/* the title: each character flies out of the fused light; all 9 settle by film ≈14.0, then hold at full size (slow push) until the hand-over */}
+		<g transform={`translate(960,${812 - 30 * go}) scale(${push})`} opacity={1 - sm(seg(t, 14.35, 14.75))}>
+			{TITLE.split('').map((ch, i) => { const k = eo(seg(u, 0.7 + 0.03 * i, 1.05 + 0.03 * i)), x0 = (i - 4) * 118, sx = lerp(0, x0, k), sy = lerp(-380, 0, k);
 				return k > 0 ? <text key={i} x={sx} y={sy} textAnchor="middle" opacity={k} style={{fontFamily: SANS, fontWeight: 900, fontSize: 112 * lerp(0.4, 1, k)}} fill={i === 0 ? ROSE : INK} stroke="rgba(12,8,5,0.6)" strokeWidth={6} paintOrder="stroke">{ch}</text> : null; })}
-			<Glow x={0} y={-40} r={640} c={B.mid} o={0.1 * seg(u, 1.0, 1.6)} id="rwt" />
+			<Glow x={0} y={-40} r={640} c={B.mid} o={0.1 * seg(u, 0.8, 1.4)} id="rwt" />
 		</g>
-		<g opacity={0.6 + 0.4 * Math.sin(u * 12)}><path d="M240,190 l-60,36 l60,36 Z M310,190 l-60,36 l60,36 Z" fill={INK} /></g>
+		<g opacity={(0.6 + 0.4 * Math.sin(u * 12)) * (1 - sm(seg(u, 1.25, 1.5)))}><path d="M240,190 l-60,36 l60,36 Z M310,190 l-60,36 l60,36 Z" fill={INK} /></g>
 	</g>;
 };
 
-/* ================= K2 21.5–25.25: the needle, close; a small hand holds it ================= */
-const rotAt = (t: number) => 38 * ease(seg(t, 21.7, 22.4)) - 70 * ease(seg(t, 22.7, 23.4)) + 22 * ease(seg(t, 23.6, 24.1));
-/** a child's hand cupping the compass from below: palm under the lower rim, four short tapered fingers curling up the side
-    (with joint creases and gaps), the thumb on the front of the rim. Units of r; m = ±1 mirrors left/right. */
+/* ================= K2 21.5–25.25: the needle, close; the boy holds it =================
+   FINAL PASS (logic note 1, shared with the ending): the hands now belong to the seated boy in frame. His forearms come down from
+   his own shoulders to the compass in his lap at chest height; the near hand cups the lower-left rim with a real thumb (tapered,
+   with a nail) on the front; the far hand's fingertips curl over the right rim. Child proportions (a big head, short reach).
+   EXPORTED FOR rough44b (F2–F4 reuse this exact shot): `K2Scene` (everything inside the camera), `k2Rot`, `k2Glow`, `K2_C`, `K2_R`. */
+export const k2Rot = (t: number) => 38 * ease(seg(t, 21.7, 22.4)) - 70 * ease(seg(t, 22.7, 23.4)) + 22 * ease(seg(t, 23.6, 24.1));
+const rotAt = k2Rot;
 const pol = (deg: number, R: number): P2 => [Math.cos(deg * Math.PI / 180) * R, Math.sin(deg * Math.PI / 180) * R];
-const SKIN = '#1b1311', EDGE = '#5a463c', NAIL = '#4e3e36';
-const finger = (R0: number, R1: number, a0: number, a1: number, w0: number, w1: number) => { const L: P2[] = [], Rr: P2[] = [], n = 10;
-	for (let i = 0; i <= n; i++) { const k = i / n, a = lerp(a0, a1, k), R = lerp(R0, R1, k), w = lerp(w0, w1, k) / 2, c = pol(a, R), nx = Math.cos(a * Math.PI / 180), ny = Math.sin(a * Math.PI / 180); L.push([c[0] + nx * w, c[1] + ny * w]); Rr.push([c[0] - nx * w, c[1] - ny * w]); }
-	const f = (p: P2) => `${p[0].toFixed(4)},${p[1].toFixed(4)}`;
-	return {d: `M${L.map(f).join(' L')} L${Rr.reverse().map(f).join(' L')} Z`, tip: pol(a1, R1), at: (k: number) => ({c: pol(lerp(a0, a1, k), lerp(R0, R1, k)), a: lerp(a0, a1, k), w: lerp(w0, w1, k)})}; };
-const THUMB = finger(1.16, 0.88, 108, 148, 0.21, 0.15);
-const Finger: React.FC<{F: ReturnType<typeof finger>; s: number}> = ({F, s}) => { const t = F.at(1);
-	return <g><path d={F.d} fill={SKIN} stroke={EDGE} strokeWidth={2.2 / s} strokeLinejoin="round" /><circle cx={F.tip[0]} cy={F.tip[1]} r={t.w / 2} fill={SKIN} />
-		<path d={(() => { const q = F.at(1), c = q.c, n = [Math.cos((q.a + 90) * Math.PI / 180), Math.sin((q.a + 90) * Math.PI / 180)]; const e = pol(q.a, 0); void e; return `M${c[0] + n[0] * q.w * 0.5 - Math.cos(q.a * Math.PI / 180) * q.w * 0.5},${c[1] + n[1] * q.w * 0.5 - Math.sin(q.a * Math.PI / 180) * q.w * 0.5} A${q.w / 2},${q.w / 2} 0 0 1 ${c[0] + n[0] * q.w * 0.5 + Math.cos(q.a * Math.PI / 180) * q.w * 0.5},${c[1] + n[1] * q.w * 0.5 + Math.sin(q.a * Math.PI / 180) * q.w * 0.5}`; })()} stroke={EDGE} strokeWidth={2.2 / s} fill="none" />
-		{[0.42, 0.74].map((k) => { const q = F.at(k), nx = Math.cos(q.a * Math.PI / 180), ny = Math.sin(q.a * Math.PI / 180); return <line key={k} x1={q.c[0] + nx * q.w * 0.42} y1={q.c[1] + ny * q.w * 0.42} x2={q.c[0] - nx * q.w * 0.42} y2={q.c[1] - ny * q.w * 0.42} stroke={EDGE} strokeWidth={1.6 / s} opacity={0.75} />; })}</g>; };
-/** one silhouette: wrist, palm under the lower rim, and the curled fingers as one block hugging the side, separated by short gaps */
-const HAND_D = (() => { const f = (p: P2) => `${p[0].toFixed(4)},${p[1].toFixed(4)}`, out: string[] = [];
-	out.push('M-1.42,2.6', 'C-1.5,2.05 -1.62,1.55 ' + f(pol(140, 1.5)));
-	for (let i = 0; i <= 24; i++) { const k = i / 24, a = lerp(140, 176, k), R = 1.46 + 0.035 * Math.abs(Math.sin(k * Math.PI * 3.6)) - 0.12 * k * k; out.push('L' + f(pol(a, R))); }
-	out.push('Q' + f(pol(184, 1.24)) + ' ' + f(pol(181, 1.1)));
-	for (let i = 0; i <= 12; i++) out.push('L' + f(pol(lerp(181, 124, i / 12), 1.08)));
-	out.push('Q-0.35,1.16 -0.06,1.12', 'Q-0.02,1.4 -0.3,1.62', 'C-0.6,1.85 -0.82,2.2 -0.88,2.6 Z');
-	return out.join(' '); })();
-const HandBack: React.FC<{m: number; r: number}> = ({m, r}) => <g transform={`scale(${m * r},${r})`}>
-	<path d={HAND_D} fill={SKIN} />
-	<path d={HAND_D} fill="none" stroke={RIMB} strokeWidth={2.4 / r} opacity={0.4} strokeDasharray="0" />
-	{[150, 160, 169].map((a) => { const p0 = pol(a + 1, 1.1), p1 = pol(a + 3, 1.3); return <path key={a} d={`M${p0[0]},${p0[1]} Q${pol(a + 2.5, 1.2)[0]},${pol(a + 2.5, 1.2)[1]} ${p1[0]},${p1[1]}`} stroke={EDGE} strokeWidth={2.4 / r} fill="none" opacity={0.85} />; })}
+const SKIN = '#1b1311', EDGE = '#5a463c', NAIL = '#5e4c42';
+export const K2_C: P2 = [1060, 600];
+export const K2_R = 170;
+const KH = 1860, KX0 = 0, KG = 1400, K2LOOK: Look4 = {dress: 'tunic', head: 'child', build: 0.86};   // the boy's rig: authored in world coordinates, converted to body units
+/** the boy's pose for compass rotation `rot` (deg) and `look` (0 = eyes on the needle, 1 = looking up from it) */
+const k2Pose = (rot: number, look: number): {pose: Pose; head: P2; glow: P2} => {
+	const P = (p: P2): P2 => [(p[0] - KX0) / KH, (KG - p[1]) / KH], tilt = lerp(40, -4, look) * Math.PI / 180, u: P2 = [Math.sin(tilt), -Math.cos(tilt)];
+	const n1: P2 = [520 - 14 * look, 480 - 12 * look], hd: P2 = [n1[0] + 115 * u[0], n1[1] + 115 * u[1]], top: P2 = [hd[0] + 123 * u[0], hd[1] + 123 * u[1]];
+	const hc: P2 = [lerp(hd[0], top[0], 0.45), lerp(hd[1], top[1], 0.45)], f: P2 = [Math.cos(tilt), Math.sin(tilt)], back = 0.034 * KH * 0.93;
+	const rr = rot * 0.9, nh = pol(150 + rr, K2_R * 1.0), fh = pol(30 + rr, K2_R * 0.42);
+	const pose: Pose = {Hips: P([390, 860]), LUp: P([405, 983]), LKnee: P([896, 1000]), LAnk: P([900, 1500]), LToe: P([1100, 1540]), RUp: P([395, 983]), RKnee: P([880, 1010]), RAnk: P([870, 1510]), RToe: P([1070, 1550]),
+		Spine1: P([470 - 6 * look, 590]), Neck1: P(n1), Head: P(hd), Top: P(top), LSh: P([505, 500]), LElb: P([640, 860]), LHand: P([K2_C[0] + nh[0], K2_C[1] + nh[1]]),
+		RSh: P([525, 490]), RElb: P([790, 850]), RHand: P([K2_C[0] + fh[0], K2_C[1] + fh[1]])};
+	return {pose, head: hc, glow: [hc[0] - f[0] * back, hc[1] - f[1] * back]};
+};
+/** where the boy's head glow sits (the back of his skull) for a given look */
+export const k2Glow = (look = 0): P2 => k2Pose(0, look).glow;
+const fp = (p: P2) => `${p[0].toFixed(4)},${p[1].toFixed(4)}`;
+/* the near hand (units of r, compass-local, before rotation): palm cupping the lower-left rim, four fingers curling up the left side */
+const NEAR_D = (() => { const o: string[] = [`M${fp(pol(122, 1.02))}`, `L${fp(pol(122, 1.3))}`, `Q${fp(pol(136, 1.42))} ${fp(pol(150, 1.36))}`];
+	for (let j = 0; j < 4; j++) { const a0 = 153 + j * 12.5, a1 = a0 + 10.5, R = 1.33 - 0.03 * j; o.push(`Q${fp(pol((a0 + a1) / 2, R + 0.05))} ${fp(pol(a1, R - 0.02))}`, `L${fp(pol(a1 + 1, R - 0.1))}`); }
+	o.push(`Q${fp(pol(206, 1.2))} ${fp(pol(206, 1.12))}`, `L${fp(pol(204, 1.03))}`);
+	for (let i = 0; i <= 10; i++) o.push(`L${fp(pol(lerp(204, 122, i / 10), 1.02))}`);
+	return o.join(' ') + ' Z'; })();
+/* the thumb on the front of the rim: broad at the base where it joins the palm, a slight bend at the knuckle, a round tip, a nail */
+const THUMB_D = (() => { const c = (a: number, R: number) => fp(pol(a, R));
+	return `M${c(128, 1.12)} Q${c(131, 0.95)} ${c(141, 0.9)} Q${c(152, 0.86)} ${c(160, 0.84)} Q${c(166, 0.83)} ${c(167, 0.89)} Q${c(167, 0.95)} ${c(160, 0.97)} Q${c(152, 1.0)} ${c(146, 1.06)} Q${c(141, 1.14)} ${c(140, 1.2)} Z`; })();
+/* the far hand: the back of the hand outside the right rim, three fingertips curling over the bezel */
+const FAR_D = (() => { const o: string[] = [`M${fp(pol(-30, 1.03))}`, `L${fp(pol(-30, 1.14))}`];
+	for (let j = 0; j < 4; j++) { const a0 = -30 + j * 16, a1 = a0 + 16; o.push(`Q${fp(pol(a0 + 8, 1.24))} ${fp(pol(a1, 1.15))}`); }
+	o.push(`Q${fp(pol(40, 1.24))} ${fp(pol(46, 1.1))}`, `L${fp(pol(46, 1.03))}`);
+	for (let i = 0; i <= 10; i++) o.push(`L${fp(pol(lerp(46, -30, i / 10), 1.03))}`); return o.join(' ') + ' Z'; })();
+const TIP = (a: number, len: number, w: number) => { const b = pol(a, 1.08), t = pol(a, 1.08 - len), n: P2 = [-Math.sin(a * Math.PI / 180) * w / 2, Math.cos(a * Math.PI / 180) * w / 2];
+	return `M${fp([b[0] + n[0], b[1] + n[1]])} L${fp([t[0] + n[0], t[1] + n[1]])} A${w / 2},${w / 2} 0 0 0 ${fp([t[0] - n[0], t[1] - n[1]])} L${fp([b[0] - n[0], b[1] - n[1]])} Z`; };
+const FAR_TIPS = [-22, -6, 10, 26].map((a, i) => ({d: TIP(a, i === 3 ? 0.1 : 0.13, 0.13), a}));
+/** the boy's hands, drawn over the compass (rotate with it) */
+const K2Hands: React.FC<{rot: number; r: number; rim?: number}> = ({rot, r, rim = 0.4}) => <g transform={`translate(${K2_C[0]},${K2_C[1]}) rotate(${rot * 0.9}) scale(${r})`}>
+	<path d={FAR_D} fill={SKIN} /><path d={FAR_D} fill="none" stroke={RIMB} strokeWidth={2.2 / r} opacity={rim} />
+	{FAR_TIPS.map((f, i) => <g key={i}><path d={f.d} fill={SKIN} stroke={EDGE} strokeWidth={2 / r} /><ellipse cx={pol(f.a, 0.99)[0]} cy={pol(f.a, 0.99)[1]} rx={0.035} ry={0.045} fill={NAIL} transform={`rotate(${f.a} ${pol(f.a, 0.99)[0]} ${pol(f.a, 0.99)[1]})`} opacity={0.8} /></g>)}
+	<path d={NEAR_D} fill={SKIN} /><path d={NEAR_D} fill="none" stroke={RIMB} strokeWidth={2.4 / r} opacity={rim} />
+	{[0, 1, 2].map((j) => { const a = 153 + (j + 1) * 12.5 - 1; return <path key={j} d={`M${fp(pol(a, 1.06))} L${fp(pol(a + 0.5, 1.24))}`} stroke={EDGE} strokeWidth={2.2 / r} opacity={0.9} />; })}
+	<path d={THUMB_D} fill={SKIN} stroke={EDGE} strokeWidth={2.2 / r} strokeLinejoin="round" />
+	<ellipse cx={pol(163, 0.885)[0]} cy={pol(163, 0.885)[1]} rx={0.05} ry={0.035} fill={NAIL} transform={`rotate(${163 + 90} ${pol(163, 0.885)[0]} ${pol(163, 0.885)[1]})`} />
+	<path d={`M${fp(pol(147, 0.93))} Q${fp(pol(149, 0.97))} ${fp(pol(148, 1.02))}`} stroke={EDGE} strokeWidth={2 / r} fill="none" opacity={0.8} />
+</g>;
+/** K2's picture inside the camera: room, the seated boy (his own arms reach the compass), field lines, compass, his hands.
+    t = demo clock (21.5–25.25); look = 0..1 he looks up; flare = the head glow; bright = extra glow (F4); fieldK = field-line opacity factor */
+export const K2Scene: React.FC<{t: number; id: string; look?: number; flare: number; bright?: number; fieldK?: number; rimOp?: number}> = ({t, id, look = 0, flare, bright = 0, fieldK = 1, rimOp = 0.5}) => {
+	const rot = rotAt(t), north = -8, needle = north + 0.85 * (rot - rotAt(t - 0.22)) + 6 * Math.sin(t * 9) * Math.exp(-((t - 23.45) ** 2) / 0.1);
+	const C = K2_C, r = K2_R, tip: P2 = [C[0] + Math.sin(needle * Math.PI / 180) * r * 0.72, C[1] - Math.cos(needle * Math.PI / 180) * r * 0.72], fl = seg(t, 23.7, 24.6);
+	const kp = k2Pose(rot, look), f = Math.min(1, flare);
+	return <g>
+		<Wallpaper id={`${id}w`} x={-300} y={-300} w={2600} h={1100} col="#5e4a3c" o={0.45} s={2.2} />
+		<rect x={-300} y={800} width={2600} height={600} fill="#2e221b" /><rect x={-300} y={792} width={2600} height={14} fill="#241a14" />
+		<Frame x={1480} y={-60} w={380} h={300} col="#241a14" /><Curtain x={-120} y={-200} w={300} h={1300} />
+		<Glow x={1900} y={700} r={520} c="#ffcf9a" o={0.14} id={`${id}st`} />
+		<Glow x={260} y={760} r={600} c="#ffd28a" o={0.16} id={`${id}l`} />
+		<Motes t={t} x={300} y={100} w={1500} h={800} n={26} o={0.35} />
+		{Array.from({length: 7}, (_, i) => <circle key={i} cx={1500 + rnd(i, 3) * 400} cy={200 + rnd(i, 4) * 400} r={30 + 40 * rnd(i, 5)} fill="#ffe2b0" opacity={0.04 + 0.04 * rnd(i, 6)} />)}
+		<Rimmed x={KX0} ground={KG} h={KH} pose={kp.pose} look={K2LOOK} col="#130e0d" rim={RIMB} rimOp={rimOp} />
+		{bright > 0 && <Glow x={kp.glow[0]} y={kp.glow[1]} r={420} c={B.mid} o={0.3 * bright} id={`${id}hb`} />}
+		<HeadGlow x={kp.glow[0]} y={kp.glow[1]} r={66 + 24 * bright} id={`${id}h`} o={flare} />
+		{fl > 0 && <g opacity={fl * 0.8 * fieldK}>{Array.from({length: 7}, (_, i) => { const s = (i - 3) * 0.32, L = 900;
+			return <path key={i} d={`M${tip[0]},${tip[1]} C${tip[0] + Math.sin(s) * 300},${tip[1] - 300} ${tip[0] + Math.sin(s) * L},${tip[1] - 200 - 300 * Math.cos(s)} ${tip[0] + Math.sin(s) * L * 1.4},${tip[1] + 200}`} stroke={B.core} strokeWidth={2} fill="none" strokeDasharray="14 12" strokeDashoffset={-t * 60} opacity={0.6 - Math.abs(i - 3) * 0.12} />; })}</g>}
+		<Glow x={C[0]} y={C[1]} r={r * 3.4} c={B.mid} o={0.5 * Math.min(1.2, flare)} id={`${id}cg`} />
+		<Compass44 x={C[0]} y={C[1]} r={r} a={needle} rot={rot} glow={f} id={`${id}c`} halo={false} />
+		<K2Hands rot={rot} r={r} rim={rimOp * 0.8} />
+		<Glow x={tip[0]} y={tip[1]} r={60} c={B.core} o={0.6 * f} id={`${id}t`} />
 	</g>;
-const HandThumb: React.FC<{m: number; r: number}> = ({m, r}) => { const q = THUMB.at(0.93);
-	return <g transform={`scale(${m * r},${r})`}><Finger F={THUMB} s={r} />
-		<ellipse cx={q.c[0]} cy={q.c[1]} rx={q.w * 0.3} ry={q.w * 0.22} fill={NAIL} transform={`rotate(${q.a + 90} ${q.c[0]} ${q.c[1]})`} />
-		<path d={(() => { const a = THUMB.at(0.1).c, b = THUMB.at(0.6).c; return `M${a[0]},${a[1]} Q${(a[0] + b[0]) / 2 - 0.05},${(a[1] + b[1]) / 2 - 0.05} ${b[0]},${b[1]}`; })()} stroke={RIMB} strokeWidth={2 / r} fill="none" opacity={0.45} transform="translate(-0.06,-0.04)" /></g>; };
+};
+/** the needle tip in world coordinates at demo time t (for the push-in) */
+export const k2Tip = (t: number): P2 => { const rot = rotAt(t), needle = -8 + 0.85 * (rot - rotAt(t - 0.22)) + 6 * Math.sin(t * 9) * Math.exp(-((t - 23.45) ** 2) / 0.1);
+	return [K2_C[0] + Math.sin(needle * Math.PI / 180) * K2_R * 0.72, K2_C[1] - Math.cos(needle * Math.PI / 180) * K2_R * 0.72]; };
 export const Needle: React.FC<{t: number}> = ({t}) => {
-	const u = t - T.think, rot = rotAt(t), north = -8, needle = north + 0.85 * (rot - rotAt(t - 0.22)) + 6 * Math.sin(t * 9) * Math.exp(-((t - 23.45) ** 2) / 0.1);
-	const flare = 0.55 + 0.45 * sm(seg(u, 0, 0.5)) + 0.1 * Math.sin(t * 4), C: P2 = [1060, 600], r = 170;
-	const tip: P2 = [C[0] + Math.sin(needle * Math.PI / 180) * r * 0.72, C[1] - Math.cos(needle * Math.PI / 180) * r * 0.72];
-	const intro = eo(seg(u, 0, 0.5)), push = ease(seg(t, 24.3, 25.25)), fl = seg(t, 23.7, 24.6);
+	const u = t - T.think, flare = 0.55 + 0.45 * sm(seg(u, 0, 0.5)) + 0.1 * Math.sin(t * 4), C = K2_C, tip = k2Tip(t);
+	const intro = eo(seg(u, 0, 0.5)), push = ease(seg(t, 24.3, 25.25));
 	const cx = lerp(lerp(C[0] - 120, 1000, intro), tip[0], push), cy = lerp(lerp(C[1] - 60, 560, intro), tip[1], push), z = lerp(lerp(1.7, 1.06, intro) + 0.02 * u, 4.2, push);
-	const kp = fkPose({hip: 0.36, lean: 16, neck: 34, lt: 88, lk: 92, rt: 84, rk: 88, la: 52, le: 76, ra: 48, re: 80}), ph = placeHead(kp, 470, 250, 1500, false), hc = headC(kp, ph.x, ph.ground, 1500);
 	return <g>
 		<Sky id="k2s" stops={[[0, '#4a3a30'], [0.7, '#3a2c24'], [1, '#2a201a']]} />
-		<Cam cx={cx} cy={cy} z={z}>
-			<Wallpaper id="k2w" x={-300} y={-300} w={2600} h={1100} col="#5e4a3c" o={0.45} s={2.2} />
-			<rect x={-300} y={800} width={2600} height={600} fill="#2e221b" /><rect x={-300} y={792} width={2600} height={14} fill="#241a14" />
-			<Frame x={1480} y={-60} w={380} h={300} col="#241a14" /><Curtain x={-120} y={-200} w={300} h={1300} />
-			<Glow x={1900} y={700} r={520} c="#ffcf9a" o={0.14} id="k2st" />
-			<Glow x={260} y={760} r={600} c="#ffd28a" o={0.16} id="k2l" />
-			<Motes t={t} x={300} y={100} w={1500} h={800} n={26} o={0.35} />
-			{Array.from({length: 7}, (_, i) => <circle key={i} cx={1500 + rnd(i, 3) * 400} cy={200 + rnd(i, 4) * 400} r={30 + 40 * rnd(i, 5)} fill="#ffe2b0" opacity={0.04 + 0.04 * rnd(i, 6)} />)}
-			{z < 3 && <><defs><clipPath id="k2k"><rect x={-400} y={-400} width={1180} height={2000} /></clipPath></defs><g clipPath="url(#k2k)"><Rimmed x={ph.x} ground={ph.ground} h={1500} pose={kp} look={LK.child} col="#130e0d" rim={RIMB} rimOp={0.5} /></g>
-				<HeadGlow x={hc[0]} y={hc[1]} r={60} id="k2h" o={flare} /></>}
-			{/* field lines fan out behind the tip */}
-			{fl > 0 && <g opacity={fl * 0.8}>{Array.from({length: 7}, (_, i) => { const s = (i - 3) * 0.32, L = 900;
-				return <path key={i} d={`M${tip[0]},${tip[1]} C${tip[0] + Math.sin(s) * 300},${tip[1] - 300} ${tip[0] + Math.sin(s) * L},${tip[1] - 200 - 300 * Math.cos(s)} ${tip[0] + Math.sin(s) * L * 1.4},${tip[1] + 200}`} stroke={B.core} strokeWidth={2} fill="none" strokeDasharray="14 12" strokeDashoffset={-t * 60} opacity={0.6 - Math.abs(i - 3) * 0.12} />; })}</g>}
-			<Glow x={C[0]} y={C[1]} r={r * 3.4} c={B.mid} o={0.5 * flare} id="k2cg" />
-			<g transform={`translate(${C[0]},${C[1]}) rotate(${rot * 0.9})`}><HandBack m={1} r={r} /><HandBack m={-1} r={r} /></g>
-			<Compass44 x={C[0]} y={C[1]} r={r} a={needle} rot={rot} glow={flare} id="k2c" halo={false} />
-			<g transform={`translate(${C[0]},${C[1]}) rotate(${rot * 0.9})`}><HandThumb m={1} r={r} /><HandThumb m={-1} r={r} /></g>
-			<Glow x={tip[0]} y={tip[1]} r={60} c={B.core} o={0.6 * flare} id="k2t" />
-		</Cam>
+		<Cam cx={cx} cy={cy} z={z}><K2Scene t={t} id="k2" flare={flare} /></Cam>
 	</g>;
 };
 
@@ -417,8 +474,11 @@ const LAYERS: {base: number; a1: number; l1: number; a2: number; l2: number; f: 
 	{base: 790, a1: 22, l1: 140, a2: 8, l2: 50, f: 0.8, c: '#242b29', rim: 0.22, ph: 4},
 ];
 export const Meadow: React.FC<{t: number}> = ({t}) => {
-	const u = t - T.light, scroll = u * 620, ph = u * 1.55, runP = gaitPose('08_04', ph), rx = 1060, g = 960, h = 500;
-	const hc = headC(runP, rx, g, h), beamY = 600, bx = rx + 240 + 20 * Math.sin(u * 2.4);
+	const u = t - T.light, scroll = u * 760, ph = u * 2.3 * Math.PI * 2, rx = 1060, g = 960, h = 500;
+	/* final pass (logic 21): 追着光跑 = a run, not a stroll: forward lean, high knees, bent arms pumping, a bounce */
+	const sn = Math.sin(ph), runP = fkPose({hip: 0.6 + 0.025 * Math.abs(Math.cos(ph)), lean: 16, neck: -6, lt: 44 * sn + 6, lk: 18 + 70 * Math.max(0, Math.sin(ph - 1.2)), rt: -44 * sn + 6, rk: 18 + 70 * Math.max(0, Math.sin(ph - 1.2 + Math.PI)),
+		lf: 10 * Math.max(0, -sn), rf: 10 * Math.max(0, sn), la: -40 * sn + 6, le: 88, ra: 40 * sn + 6, re: 88});
+	const hc = skullBack(runP, rx, g, h, false, 0.025), beamY = 600, bx = rx + 240 + 20 * Math.sin(u * 2.4);
 	const intro = ease(seg(u, 0, 0.9)), push = ei(seg(t, 28.05, 28.5));
 	const cx = lerp(lerp(bx, 960, intro) + 20 * u, hc[0], push), cy = lerp(lerp(beamY, 540, intro), hc[1], push), z = lerp(lerp(2.6, 1.02, intro) + 0.015 * u, 3.0, push);
 	return <g>
@@ -441,7 +501,7 @@ export const Meadow: React.FC<{t: number}> = ({t}) => {
 			<path d={Array.from({length: 40}, (_, i) => `${i ? 'L' : 'M'}${bx - 40 - i * 14},${beamY + 22 * Math.sin(i * 0.55) * (1 - i / 44)}`).join(' ')} stroke="#fff6e0" strokeWidth={3} fill="none" opacity={0.55} />
 			{Array.from({length: 6}, (_, i) => <rect key={i} x={rx - 220 - i * 70} y={hc[1] - 4 + i * 3} width={150 - i * 18} height={4} rx={2} fill={B.mid} opacity={0.5 - i * 0.07} />)}
 			<g transform={`rotate(4 ${rx} ${g})`}><Rimmed x={rx} ground={g} h={h} pose={runP} look={LK.teen} col="#120e12" rim={RIMB} rimOp={0.7} rimDx={-2.4} /></g>
-			<HeadGlow x={hc[0] + 4} y={hc[1]} r={26} id="l1g" />
+			<HeadGlow x={hc[0]} y={hc[1]} r={26} id="l1g" />
 			{Array.from({length: 9}, (_, i) => { const x = ((i * 290 - scroll * 1.5) % 2600 + 2600) % 2600 - 300; return <path key={`fg${i}`} d={`M${x},1100 q10,-${120 + 60 * rnd(i, 2)} 30,-${150 + 70 * rnd(i, 3)} q-4,60 4,150 Z M${x + 40},1100 q-8,-90 -40,-${110 + 40 * rnd(i, 4)} q30,40 50,110 Z`} fill="#0a0c0b" />; })}
 			{Array.from({length: 5}, (_, i) => <rect key={i} x={rx - 340 - i * 80} y={760 + i * 34} width={140 - i * 16} height={3} fill="#fff" opacity={0.3 - i * 0.05} />)}
 		</Cam>
@@ -461,7 +521,7 @@ const Sheet: React.FC<{title?: string; eq?: boolean; lit?: number}> = ({title, e
 		: Array.from({length: 9}, (_, i) => <rect key={i} x={-68} y={-36 + i * 15} width={100 + (i % 3) * 18} height={4} fill="#8a8274" />)}
 </g>;
 export const Office: React.FC<{t: number}> = ({t}) => {
-	const u = t - T.office, p = typeP(t), hc = headC(p, DX, DG, DH), intro = ease(seg(u, 0, 0.95)), pp = ease(seg(t, 31.55, 32.4)), late = ease(seg(t, 33.3, 35.0));
+	const u = t - T.office, p = typeP(t), hc = skullBack(p, DX, DG, DH, false, 0.032), intro = ease(seg(u, 0, 0.95)), pp = ease(seg(t, 31.55, 32.4)), late = ease(seg(t, 33.3, 35.0));
 	const lift = ease(seg(t, 33.35, 33.95)), lit = sm(seg(t, 33.75, 34.15)), word = eo(seg(t, 33.95, 34.45));
 	const cx = lerp(lerp(hc[0], 960, intro) + 18 * u, lerp(1150, 1260, late), pp), cy = lerp(lerp(hc[1], 540, intro), lerp(560, 480, late), pp), z = lerp(lerp(2.6, 1.03, intro) + 0.012 * u, lerp(1.4, 1.5, late), pp);
 	const stack = Array.from({length: 7}, (_, i) => 28.9 + i * 0.42);
@@ -499,8 +559,8 @@ export const Office: React.FC<{t: number}> = ({t}) => {
 			{/* the beam from 16 still runs in his head, then folds into the paper */}
 			<Rimmed x={DX} ground={DG} h={DH} pose={p} look={LK.ein} col="#121212" rim={RIMB} rimOp={0.6} />
 			<g transform="translate(600,930)"><rect x={-70} y={-262} width={140} height={14} fill="#1e1a16" /><rect x={-60} y={-248} width={10} height={248} fill="#1e1a16" /><rect x={50} y={-248} width={10} height={248} fill="#1e1a16" /></g>
-			<HeadGlow x={hc[0]} y={hc[1]} r={30 + 8 * lit} id="ofh" />
-			{(() => { const k = (u * 1.6) % 1, x = hc[0] - 22 + 44 * k; return t < 33.4 ? <><rect x={x - 14} y={hc[1] - 1.5} width={14} height={3} fill="#fff" opacity={0.9} /><circle cx={x} cy={hc[1]} r={4} fill="#fff" /></> : null; })()}
+			<HeadGlow x={hc[0]} y={hc[1]} r={26 + 8 * lit} id="ofh" />
+			{(() => { const k = (u * 1.6) % 1, x = hc[0] - 12 + 20 * k; return t < 33.4 ? <><rect x={x - 10} y={hc[1] - 1.5} width={10} height={3} fill="#fff" opacity={0.6} /><circle cx={x} cy={hc[1]} r={3} fill="#fff" opacity={0.8} /></> : null; })()}
 			{t >= 33.3 && (() => { const k = ease(seg(t, 33.4, 33.85)), ex = lerp(hc[0], S3[0], k), ey = lerp(hc[1], S3[1], k), mx = (hc[0] + ex) / 2, my = Math.min(hc[1], ey) - 120 * k;
 				return <><path d={`M${hc[0]},${hc[1]} Q${mx},${my} ${ex},${ey}`} stroke="#fff6e0" strokeWidth={4} fill="none" opacity={0.85 * (1 - 0.6 * lit)} /><Glow x={ex} y={ey} r={60} c="#fff6e0" o={0.8 * (1 - lit)} id="ofb" /></>; })()}
 			<g fill="#0b0d0c"><rect x={1830} y={480} width={320} height={640} /><rect x={1830} y={470} width={330} height={16} /><rect x={60} y={220} width={10} height={860} /><path d="M20,240 L65,220 L110,240 M30,300 L65,280 L100,300" stroke="#0b0d0c" strokeWidth={8} fill="none" /><path d="M10,300 Q60,280 110,300 L120,700 L0,700 Z" /></g>
