@@ -11,7 +11,7 @@ FPS = 30
 JOB = json.load(open("job.json")) if pathlib.Path("job.json").exists() else {}
 A, Bn = JOB.get("range", [0, 30]); CHUNKS = JOB.get("chunks", 10)
 
-@app.function(image=img, gpu="T4", timeout=3600)
+@app.function(image=img, gpu="T4", timeout=3600, memory=16384)
 def chunk(args):
     i, a, b = args
     subprocess.run("cp -r /app/src/* /app/ && echo '[]' > /app/lines.json", shell=True, check=True)
@@ -23,7 +23,7 @@ def chunk(args):
         subprocess.run(base + ["-c:v", "libx264", "-preset", "veryfast", "-crf", "16", "/tmp/c.mp4"], check=True)
     return pathlib.Path("/tmp/c.mp4").read_bytes(), log
 
-@app.function(image=img, gpu="T4", timeout=3600)
+@app.function(image=img, gpu="T4", timeout=3600, memory=16384)
 def stills(ts):
     subprocess.run("cp -r /app/src/* /app/; true", shell=True, check=True)
     r = subprocess.run(["node", "stills.mjs", "/tmp/s"] + [str(t) for t in ts], cwd="/app", capture_output=True, text=True)
@@ -33,7 +33,7 @@ def stills(ts):
 @app.local_entrypoint()
 def main():
     if "stills" in JOB:
-        out = pathlib.Path("out"); out.mkdir(exist_ok=True); ts = JOB["stills"]; n = 4
+        out = pathlib.Path("out"); out.mkdir(exist_ok=True); ts = JOB["stills"]; n = 6
         groups = [ts[i::n] for i in range(n)]
         for k, (data, log) in enumerate(stills.map(groups)):
             (out / f"s{k}.tar").write_bytes(data); print(k, log)
