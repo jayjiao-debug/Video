@@ -13,6 +13,16 @@ export const P = {
 };
 export const CU = {core: '#FFE6CC', hi: '#FFC79A', mid: '#EE8F58', deep: '#A84E2A', dark: '#6E2C16', halo: '#FF8A50'};   // 你
 export const KEY = '#9FE6D8';   // key words: water/patina, never glowing
+/* hand-tinted engraving washes (owner 22:48: more colour in the world). Muted, never glowing; 你 stays the only glow. */
+export const T = {
+	skyDay: ['#7FA3BC', '#D7E4E2'], skyDusk: ['#62748F', '#D9C6A8'], skyNight: ['#1E2A44', '#41506C'], skySmoke: ['#5B5048', '#B49C80'],
+	marble: '#EAE3D4', marbleSh: '#C2B7A2', slate: '#56687A', win: '#2A3946', stone: '#BFB6A3', stoneSh: '#8E8675',
+	pave: '#CDBE9C', pave2: '#A39274', grass: '#8FA67E', tree: '#5D7E5C', treeD: '#3F5E47',
+	water: '#8CC3BE', waterL: '#D6EEEA',
+	wood: '#7B5A42', woodD: '#4E3828', baize: '#3F6457', wallG: '#4F6E64', wallW: '#6E4249', wallB: '#4B5A68', wallBL: '#6D7F8E', cream: '#E9DFC8',
+	bronze: '#8A6146', bronzeD: '#563A27', bronzeL: '#B08463',
+	ink: '#26313A', fig: '#1D252B',
+};
 
 /* ---------- engraving defs: hatch patterns (put once per svg) ---------- */
 export const HatchDefs: React.FC = () => <defs>
@@ -21,21 +31,21 @@ export const HatchDefs: React.FC = () => <defs>
 </defs>;
 
 /** engraved sky: gradient + horizontal engraving lines that thin out toward the light */
-export const PlateSky: React.FC<{id: string; top?: string; bot?: string; y0?: number; y1?: number; lines?: number; glowX?: number; glowY?: number}> = ({id, top = P.deep, bot = P.mid, y0 = 0, y1 = H, lines = 0.5, glowX, glowY}) => {
+export const PlateSky: React.FC<{id: string; top?: string; bot?: string; y0?: number; y1?: number; lines?: number; glowX?: number; glowY?: number; lineC?: string}> = ({id, top = P.deep, bot = P.mid, y0 = 0, y1 = H, lines = 0.5, glowX, glowY, lineC = P.line}) => {
 	const n = Math.round((y1 - y0) / 7);
 	return <g>
 		<defs><linearGradient id={id} x1="0" y1="0" x2="0" y2="1"><stop offset="0" stopColor={top} /><stop offset="1" stopColor={bot} /></linearGradient></defs>
 		<rect x={0} y={y0} width={W} height={y1 - y0} fill={`url(#${id})`} />
 		{Array.from({length: n}, (_, i) => { const y = y0 + i * 7 + 3, u = i / n, gap = glowX !== undefined ? Math.max(0, 1 - Math.hypot(0, (y - (glowY ?? 0)) / 260)) : 0;
-			const wv = (1 - u) * 1.3 + 0.3; return <line key={i} x1={0} y1={y} x2={W} y2={y} stroke={P.line} strokeWidth={wv} opacity={lines * (0.35 + 0.4 * (1 - u)) * (1 - gap * 0.7)} />; })}
+			const wv = (1 - u) * 1.3 + 0.3; return <line key={i} x1={0} y1={y} x2={W} y2={y} stroke={lineC} strokeWidth={wv} opacity={lines * (0.35 + 0.4 * (1 - u)) * (1 - gap * 0.7)} />; })}
 	</g>;
 };
 /** ground plane: flat tone + horizontal hatch getting denser to the front */
-export const PlateGround: React.FC<{y: number; c?: string; c2?: string}> = ({y, c = P.mid, c2 = P.plate}) => <g>
+export const PlateGround: React.FC<{y: number; c?: string; c2?: string; edge?: string; hatch?: number}> = ({y, c = P.mid, c2 = P.plate, edge = P.line, hatch = 1}) => <g>
 	<defs><linearGradient id={`gr${y}`} x1="0" y1="0" x2="0" y2="1"><stop offset="0" stopColor={c} /><stop offset="1" stopColor={c2} /></linearGradient></defs>
 	<rect x={0} y={y} width={W} height={H - y} fill={`url(#gr${y})`} />
-	{Array.from({length: Math.round((H - y) / 9)}, (_, i) => <line key={i} x1={0} y1={y + 4 + i * 9 * (1 + i * 0.02)} x2={W} y2={y + 4 + i * 9 * (1 + i * 0.02)} stroke={P.ink} strokeWidth={1 + i * 0.05} opacity={0.18 + i * 0.01} />)}
-	<line x1={0} y1={y} x2={W} y2={y} stroke={P.line} strokeWidth={2} opacity={0.5} />
+	{Array.from({length: Math.round((H - y) / 9)}, (_, i) => <line key={i} x1={0} y1={y + 4 + i * 9 * (1 + i * 0.02)} x2={W} y2={y + 4 + i * 9 * (1 + i * 0.02)} stroke={P.ink} strokeWidth={1 + i * 0.05} opacity={(0.18 + i * 0.01) * hatch} />)}
+	<line x1={0} y1={y} x2={W} y2={y} stroke={edge} strokeWidth={2} opacity={0.5} />
 </g>;
 
 /* ---------- 你: the bronze horse head (profile, facing left; origin ≈ the eye; ~640 × 740 at s = 1) ----------
@@ -117,21 +127,22 @@ const ZPATH: Record<Z, string> = {
 	猪: 'M-42,32 C-50,-4 -32,-30 0,-32 C32,-30 50,-4 42,32 Z M-36,-24 L-46,-44 L-22,-32 Z M36,-24 L46,-44 L22,-32 Z',
 };
 /** a brother's head: 'cool' = solid slate silhouette, 'ghost' = engraved outline only (missing), 'faint' = dim */
-export const ZHead: React.FC<{z: Z; x: number; y: number; s: number; mode?: 'cool' | 'ghost' | 'faint'; c?: string}> = ({z, x, y, s, mode = 'cool', c = P.ink}) =>
+export const ZHead: React.FC<{z: Z; x: number; y: number; s: number; mode?: 'cool' | 'ghost' | 'faint' | 'bronze'; c?: string; ghostC?: string}> = ({z, x, y, s, mode = 'cool', c = P.ink, ghostC = P.line}) => mode === 'bronze' ?
+	<g transform={`translate(${x},${y}) scale(${s})`}><path d={ZPATH[z]} fill={T.bronze} stroke={T.bronzeD} strokeWidth={2.2 / s} /><path d={ZPATH[z]} fill="url(#h45d)" opacity={0.45} /><path d={ZPATH[z]} fill="none" stroke={T.bronzeL} strokeWidth={1.4 / s} opacity={0.5} transform="translate(-1.5,-1.5)" /></g> :
 	<g transform={`translate(${x},${y}) scale(${s})`}>
-		<path d={ZPATH[z]} fill={mode === 'ghost' ? 'none' : c} fillRule="nonzero" stroke={mode === 'ghost' ? P.line : P.line} strokeWidth={mode === 'ghost' ? 2.4 / s : 1.2 / s} strokeDasharray={mode === 'ghost' ? `${6 / s} ${5 / s}` : undefined} opacity={mode === 'faint' ? 0.55 : 1} />
+		<path d={ZPATH[z]} fill={mode === 'ghost' ? 'none' : c} fillRule="nonzero" stroke={mode === 'ghost' ? ghostC : P.line} strokeWidth={mode === 'ghost' ? 2.4 / s : 1.2 / s} strokeDasharray={mode === 'ghost' ? `${6 / s} ${5 / s}` : undefined} opacity={mode === 'faint' ? 0.55 : 1} />
 		{mode !== 'ghost' && <path d={ZPATH[z]} fill="url(#h45)" opacity={0.5} />}
 	</g>;
 
 /* ---------- a seated stone body (robed, hands in sleeves), front-quarter; origin = seat top centre; ~ 120 × 150 at s = 1 ---------- */
-export const StoneBody: React.FC<{x: number; y: number; s: number; flip?: boolean; tone?: string}> = ({x, y, s, flip, tone = P.soft}) =>
+export const StoneBody: React.FC<{x: number; y: number; s: number; flip?: boolean; tone?: string; base?: string; line?: string}> = ({x, y, s, flip, tone = T.stone, base = T.stoneSh, line = T.ink}) =>
 	<g transform={`translate(${x},${y}) scale(${flip ? -s : s},${s})`}>
-		<rect x={-58} y={60} width={116} height={70} fill={P.mid} stroke={P.line} strokeWidth={1.5} />
+		<rect x={-58} y={60} width={116} height={70} fill={base} stroke={line} strokeWidth={1.5} />
 		<rect x={-58} y={60} width={116} height={70} fill="url(#h45d)" opacity={0.7} />
-		<path d="M-34,-40 C-46,-10 -52,30 -56,64 L56,64 C52,30 46,-10 34,-40 C20,-50 -20,-50 -34,-40 Z" fill={tone} stroke={P.line} strokeWidth={1.5} />
+		<path d="M-34,-40 C-46,-10 -52,30 -56,64 L56,64 C52,30 46,-10 34,-40 C20,-50 -20,-50 -34,-40 Z" fill={tone} stroke={line} strokeWidth={1.5} />
 		<path d="M-34,-40 C-46,-10 -52,30 -56,64 L-10,64 C-14,20 -20,-14 -34,-40 Z" fill="url(#h135d)" opacity={0.8} />
-		<path d="M-38,14 C-20,30 20,30 38,14 L36,36 C16,46 -16,46 -36,36 Z" fill={P.mid} stroke={P.line} strokeWidth={1.2} />
-		<path d="M-20,-36 L0,-10 L20,-36" stroke={P.line} strokeWidth={1.2} fill="none" />
+		<path d="M-38,14 C-20,30 20,30 38,14 L36,36 C16,46 -16,46 -36,36 Z" fill={base} stroke={line} strokeWidth={1.2} />
+		<path d="M-20,-36 L0,-10 L20,-36" stroke={line} strokeWidth={1.2} fill="none" />
 	</g>;
 
 /* ---------- water arc between two points (peak h above the higher end) ---------- */
@@ -141,3 +152,23 @@ export const WaterArc: React.FC<{x0: number; y0: number; x1: number; y1: number;
 		<path d={`M${x0},${y0} Q${cx},${cy} ${x1},${y1}`} stroke="#ffffff" strokeWidth={w * 0.35} fill="none" strokeLinecap="round" opacity={0.7} />
 		{Array.from({length: 6}, (_, i) => <circle key={i} cx={x1 + (rnd(i, x0) - 0.5) * 30} cy={y1 - rnd(i, y0) * 16} r={2 + 2 * rnd(i, 9)} fill={P.water} opacity={0.7} />)}</g>;
 };
+
+/* ---------- props ---------- */
+/** a side-view wooden chair; seatY = top of the seat; faces +x (back on the left) unless flip */
+export const Chair: React.FC<{x: number; seatY: number; floor: number; k?: number; flip?: boolean; c?: string}> = ({x, seatY, floor, k = 1, flip, c = T.wood}) => {
+	const f = flip ? -1 : 1, d = 120 * k, back = 190 * k;
+	return <g>
+		<rect x={Math.min(x - f * d * 0.55, x + f * d * 0.45)} y={seatY} width={d} height={12 * k} fill={c} stroke={T.ink} strokeWidth={1.5} />
+		<rect x={x - f * d * 0.55 - (flip ? 10 * k : 0)} y={seatY - back} width={10 * k} height={back + (floor - seatY)} fill={c} stroke={T.ink} strokeWidth={1.5} />
+		<rect x={x + f * d * 0.45 - (flip ? 0 : 10 * k)} y={seatY + 10 * k} width={10 * k} height={floor - seatY - 10 * k} fill={c} stroke={T.ink} strokeWidth={1.5} />
+		<rect x={Math.min(x - f * d * 0.55, x + f * d * 0.45)} y={seatY + (floor - seatY) * 0.6} width={d} height={6 * k} fill={T.woodD} />
+	</g>;
+};
+/** a stylised tree (engraved): round crown of leaf clumps on a trunk; ground = base y */
+export const Tree: React.FC<{x: number; g: number; h: number; c?: string; c2?: string; seed?: number; willow?: boolean}> = ({x, g, h, c = T.tree, c2 = T.treeD, seed = 1, willow}) => <g>
+	<path d={`M${x - h * 0.03},${g} L${x - h * 0.02},${g - h * 0.55} L${x + h * 0.02},${g - h * 0.55} L${x + h * 0.03},${g} Z`} fill={T.woodD} />
+	{Array.from({length: 9}, (_, i) => { const a = rnd(i, seed) * Math.PI * 2, r = h * (0.12 + 0.12 * rnd(i, seed + 1)), cx = x + Math.cos(a) * h * 0.22, cy = g - h * 0.68 + Math.sin(a) * h * 0.16;
+		return <ellipse key={i} cx={cx} cy={cy} rx={r} ry={r * 0.8} fill={i % 3 ? c : c2} stroke={T.ink} strokeWidth={1.2} strokeOpacity={0.6} />; })}
+	{willow && Array.from({length: 14}, (_, i) => { const x0 = x - h * 0.3 + i * h * 0.045; return <path key={i} d={`M${x0},${g - h * 0.75} C${x0 - 6},${g - h * 0.5} ${x0 + 4},${g - h * 0.35} ${x0 - 2},${g - h * 0.22}`} stroke={c} strokeWidth={3} fill="none" opacity={0.8} />; })}
+	<ellipse cx={x} cy={g - h * 0.68} rx={h * 0.36} ry={h * 0.26} fill="url(#h45d)" opacity={0.35} />
+</g>;
