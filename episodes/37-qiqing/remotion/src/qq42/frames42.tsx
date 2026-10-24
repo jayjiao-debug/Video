@@ -3,7 +3,7 @@ import {W, H, SERIF, SANS, LATS, MONO, GOLD, rnd, lerp, Glow, Plate, Sky, Label,
 /* ep42 《人活着为了什么？人类问了近四千年》 — the 11 key frames (one still per scene) in the ep41 v3 look. */
 
 /* ===================== 1 · 11  the room (today) ===================== */
-const Room: React.FC<{dawn?: boolean}> = ({dawn}) => {
+export const Room: React.FC<{dawn?: boolean}> = ({dawn}) => {
 	const d = dawn ? 1 : 0;
 	return <g>
 		<Sky id={`rmW${d}`} stops={dawn ? [[0, '#2c2c3c'], [1, '#3b3036']] : [[0, '#17141b'], [1, '#2a1f22']]} />
@@ -117,7 +117,7 @@ export const KF11: React.FC = () => <g>
 </g>;
 
 /* ===================== 2  the rewind turns the screen into papyrus; the title ===================== */
-const Papyrus: React.FC<{id: string; x?: number; y?: number; w?: number; h?: number; base?: string}> = ({id, x = 0, y = 0, w = W, h = H, base = '#d7bd88'}) => <g>
+export const Papyrus: React.FC<{id: string; x?: number; y?: number; w?: number; h?: number; base?: string}> = ({id, x = 0, y = 0, w = W, h = H, base = '#d7bd88'}) => <g>
 	<defs><clipPath id={`${id}c`}><rect x={x} y={y} width={w} height={h} /></clipPath></defs>
 	<g clipPath={`url(#${id}c)`}>
 		<rect x={x} y={y} width={w} height={h} fill={base} />
@@ -159,7 +159,7 @@ export const KF02: React.FC = () => {
 };
 
 /* ===================== 3  Egypt: the scribe and his Ba ===================== */
-const LK: Record<string, Look4> = {
+export const LK: Record<string, Look4> = {
 	scribe: {dress: 'shirt', legs: 'bare', head: 'egwig'},
 	gilg: {dress: 'pelt', head: 'meso', beard: 'square', build: 1.08},
 	alewife: {dress: 'dress', head: 'bun'},
@@ -184,7 +184,7 @@ const Ba: React.FC<{x: number; y: number; s: number; flip?: boolean}> = ({x, y, 
 	<Blur id="baB" s={7}><g fill="#ffd27a" opacity={0.55}>{BA_D.map((d, i) => <path key={i} d={d} />)}</g></Blur>
 	<g fill="#ffe2a6" opacity={0.42} stroke="#fff3d0" strokeWidth={1.4} strokeOpacity={0.7}>{BA_D.map((d, i) => <path key={i} d={d} />)}</g>
 </g>;
-const Hieratic: React.FC<{x: number; y: number; w: number; h: number; cols: number; seed: number; col?: string}> = ({x, y, w, h, cols, seed, col = '#1a120a'}) => <g>
+export const Hieratic: React.FC<{x: number; y: number; w: number; h: number; cols: number; seed: number; col?: string}> = ({x, y, w, h, cols, seed, col = '#1a120a'}) => <g>
 	{Array.from({length: cols}, (_, c) => Array.from({length: Math.floor(h / 15)}, (_, r) => { const cx = x + w - (c + 0.5) * (w / cols), cy = y + 8 + r * 15, k = rnd(c * 31 + r, seed);
 		return k < 0.12 ? null : <path key={`${c}_${r}`} d={k < 0.4 ? `M${cx - 5},${cy} q4,-6 9,0 t4,3` : k < 0.7 ? `M${cx - 3},${cy - 5} l2,9 m3,-9 q4,4 -1,8` : `M${cx - 6},${cy + 2} h11 m-6,-6 v8`} stroke={col} strokeWidth={1.8} fill="none" strokeLinecap="round" />; }))}
 </g>;
