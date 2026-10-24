@@ -11,3 +11,4 @@
 | 2026-10-24 22:55 | owner: more colour, fix chairs/poses → key frames v2 hand-tinted + pose45/check45 (PASS) | producer/art | style/ep45_keyframes_v2.jpg | ~35 |
 | 2026-10-24 23:12 | owner OK look v2, "做个demo看看"; demo 0–34.53 s built (EP45DEMO) on bgm2 grid, check45 PASS (244 poses), farm render on branch render-farm-mashou | producer | bgm2 still missing | ~40 |
 | 2026-10-24 23:24 | farm render ep45_demo_v1 OK (1036 frames, 10 min); probe: 0 glitches, 0 black; 720p picture-only sent; waiting for bgm2 to mux | producer | | ~15 |
+| 2026-10-24 23:36 | owner: bgm2 attached; "为什么流口水？图片做的好粗糙" → drip removed; demo v1 + music sent for timing; quality pass (sets45: shading, shadows, detailed 海晏堂, metal head, short neck + fine mane) → 2 stills to owner | producer/art | waiting for OK before redoing all scenes | ~45 |
