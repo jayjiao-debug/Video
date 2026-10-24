@@ -158,15 +158,17 @@ const t1Fig = (t: number) => {
 	let roll = rollLie, contacts;
 	if (t < T1.land) contacts = [{side: 'R' as const, target: [seam - 11, 612] as P, name: 'R on copy roller'}, {side: 'L' as const, target: [seam + 9, 548] as P, name: 'L on your roller'}];
 	else {
-		const k = smooth((t - T1.grab) / (T1.lift - T1.grab));
-		const c0: P = [rollX, (SL.y0 + SL.y1) / 2], c1: P = [w.x + 0.25 * CH, CG - 0.64 * CH], c: P = [lerp(c0[0], c1[0], k), lerp(c0[1], c1[1], k) - 26 * Math.sin(Math.PI * k)];
-		const ang = lerp(Math.PI / 2, 0.06, k), L = (SL.y1 - SL.y0 + 8) / 2, dv: P = [Math.cos(ang) * L, Math.sin(ang) * L];
+		// the roll turns from lying in depth (vertical on screen) to level in front of the chest; roll[1] (the far end on the
+		// table) becomes the front end, so the far (L) hand keeps it and the near (R) hand holds the middle — no crossed hands
+		const k = smooth((t - T1.grab) / (T1.lift - T1.grab)), sh = toScreen(o, base.LSh);
+		const c0: P = [rollX, (SL.y0 + SL.y1) / 2], c1: P = [sh[0] + 0.17 * CH, sh[1] + 0.2 * CH], c: P = [lerp(c0[0], c1[0], k), lerp(c0[1], c1[1], k) - 24 * Math.sin(Math.PI * k)];
+		const ang = lerp(-Math.PI / 2, -0.06, k), L = (SL.y1 - SL.y0 + 8) / 2, dv: P = [Math.cos(ang) * L, Math.sin(ang) * L];
 		roll = [[c[0] - dv[0], c[1] - dv[1]], [c[0] + dv[0], c[1] + dv[1]]];
-		const pa: P = [lerp(roll[0][0], roll[1][0], 0.3), lerp(roll[0][1], roll[1][1], 0.3)], pb: P = [lerp(roll[0][0], roll[1][0], 0.72), lerp(roll[0][1], roll[1][1], 0.72)];
-		// before the lift the near hand moves from the copy roller onto your roll
-		const kr = smooth((t - T1.land) / (T1.grab - T1.land));
-		const rFrom: P = [SL.x1 - 2, 612], rTo = ang > 0.8 ? pb : pa;
-		contacts = [{side: 'R' as const, target: (t < T1.grab ? [lerp(rFrom[0], pb[0], kr), lerp(rFrom[1], pb[1], kr) - 18 * Math.sin(Math.PI * kr)] : rTo) as P, name: 'R on your roll'}, {side: 'L' as const, target: (ang > 0.8 ? pa : pb) as P, name: 'L on your roll'}];
+		const at = (u: number): P => [lerp(roll[0][0], roll[1][0], u), lerp(roll[0][1], roll[1][1], u)];
+		const pR = at(lerp(0.55, 0.36, k)), pL = at(lerp(0.85, 0.68, k));
+		// between landing and the grab the near hand moves from the copy roller onto your roll
+		const kr = smooth((t - T1.land) / (T1.grab - T1.land)), rFrom: P = [SL.x1 - 11, 612];
+		contacts = [{side: 'R' as const, target: (t < T1.grab ? [lerp(rFrom[0], pR[0], kr), lerp(rFrom[1], pR[1], kr) - 14 * Math.sin(Math.PI * kr)] : pR) as P, name: 'R on your roll'}, {side: 'L' as const, target: pL, name: 'L on your roll'}];
 	}
 	const f = rig(o, contacts, () => CG, 'T1 craftsman');
 	return {f, roll, seam};

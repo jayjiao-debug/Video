@@ -300,8 +300,9 @@ const drawJiaolouWindows = (g: CanvasRenderingContext2D, k: number) => {
 // ================================================================================================ 21 · the tail: bare end → 冯保's columns
 let tail: Stage, lit21: Live, feng: HTMLCanvasElement, fengPlane: any;
 const SK = 1080 / 1536;                                   // section px → world px (the silk's height fills the frame at zoom 1)
-const XE = 0, XC = -4096 * SK, XF = XC - 1800 * SK;      // the end section, the colophon section, 冯保's sheet (left edges)
-const FCOLS = [1560, 1260, 960, 660];                     // 冯保's four columns (sheet px), right → left (read order)
+const FW21 = 2700;                                        // 冯保's sheet (with a later hand's columns on its left), sheet px
+const XE = 0, XC = -4096 * SK, XF = XC - FW21 * SK;       // the end section, the colophon section, 冯保's sheet (left edges)
+const FCOLS = [2460, 2160, 1860, 1560];                   // 冯保's four columns (sheet px), right → left (read order)
 const fengW = (sx: number) => XF + sx * SK;
 const CAM21_A: Cam = [600, 700, 1.3];                     // the bare lower-left corner of the painting's end (Z1's callback)
 const CAM21_B: Cam = [(fengW(FCOLS[0]) + fengW(FCOLS[3])) / 2 - 330 + 50, 560, 1.0];
@@ -315,17 +316,28 @@ export const d21 = (t: number): Frame => {
 	const st = tail, c = cam21(t); st.setCam(c[0], c[1], c[2]);
 	const lit = FCOLS.map((_, i) => smooth(clamp01((t - b(36 + 0.25 * i)) / 0.14)));
 	lit21.draw(lit.map((v) => v.toFixed(2)).join(','), (g) => { g.scale(SK, SK);
-		for (let i = 0; i < 4; i++) { if (lit[i] <= 0) continue; const x = FCOLS[i]; g.save(); g.globalAlpha = lit[i];
-			const gr = g.createLinearGradient(x - 120, 0, x + 120, 0); gr.addColorStop(0, 'rgba(0,0,0,0)'); gr.addColorStop(0.25, 'rgba(0,0,0,1)'); gr.addColorStop(0.75, 'rgba(0,0,0,1)'); gr.addColorStop(1, 'rgba(0,0,0,0)');
-			g.drawImage(feng, x - 120, 0, 240, 1536, x - 120, 0, 240, 1536); g.globalCompositeOperation = 'destination-in'; g.fillStyle = gr; g.fillRect(x - 120, 0, 240, 1536); g.restore(); }
+		for (let i = 0; i < 4; i++) { if (lit[i] <= 0) continue; g.globalAlpha = lit[i]; g.drawImage(pools21[i], FCOLS[i] - POOL.w / 2, POOL.y0); }
+		g.globalAlpha = 1;
 	});
 	st.heroAt(c[0], 540, 0, 1200);
 	return {st, grade: {vig: 0.48, vigCol: '#1a120c', corners: 1, exposure: 1}, bloom: 0.7};
 };
+/** each lit column: the sheet's own pixels under a soft vertical pool of lamplight (drawn brighter than the dimmed sheet) */
+const POOL = {w: 300, y0: 130, h: 1280};
+let pools21: HTMLCanvasElement[] = [];
+const makePools = (sheet: HTMLCanvasElement) => FCOLS.map((x) => {
+	const c = mkCanvas(POOL.w, POOL.h), g = c.getContext('2d')!; g.drawImage(sheet, x - POOL.w / 2, POOL.y0, POOL.w, POOL.h, 0, 0, POOL.w, POOL.h);
+	g.globalCompositeOperation = 'source-atop'; g.fillStyle = 'rgba(255,214,150,0.10)'; g.fillRect(0, 0, POOL.w, POOL.h);
+	g.globalCompositeOperation = 'destination-in'; g.save(); g.translate(POOL.w / 2, POOL.h / 2); g.scale(1, POOL.h / POOL.w);
+	const gr = g.createRadialGradient(0, 0, 0, 0, 0, POOL.w / 2); gr.addColorStop(0, 'rgba(0,0,0,1)'); gr.addColorStop(0.55, 'rgba(0,0,0,0.85)'); gr.addColorStop(1, 'rgba(0,0,0,0)'); g.fillStyle = gr; g.beginPath(); g.arc(0, 0, POOL.w / 2, 0, Math.PI * 2); g.fill(); g.restore();
+	return c;
+});
 const fengSheet = (col: HTMLCanvasElement) => {
-	const c = mkCanvas(1800, 1536), g = c.getContext('2d')!;
-	for (let y = 0; y < 1536; y += 176) g.drawImage(col, 0, 0, 1330, 180, 0, y, 1800, 180);                  // the paper (from the colophon painter's margins)
-	g.fillStyle = 'rgba(42,31,23,0.08)'; g.fillRect(1796, 0, 4, 1536); g.fillStyle = 'rgba(42,31,23,0.45)'; g.fillRect(1798, 0, 1.4, 1536);
+	const c = mkCanvas(FW21, 1536), g = c.getContext('2d')!;
+	for (let y = 0; y < 1536; y += 176) for (let x = 0; x < FW21; x += 1300) g.drawImage(col, 0, 0, 1330, 180, x, y, 1330, 180);   // the paper (from the colophon painter's margins)
+	g.fillStyle = 'rgba(42,31,23,0.08)'; g.fillRect(FW21 - 4, 0, 4, 1536); g.fillStyle = 'rgba(42,31,23,0.45)'; g.fillRect(FW21 - 2, 0, 1.4, 1536);
+	g.fillStyle = 'rgba(42,31,23,0.08)'; g.fillRect(900, 0, 5, 1536); g.fillStyle = 'rgba(42,31,23,0.4)'; g.fillRect(902, 0, 1.2, 1536);       // the next sheet's join
+	g.drawImage(col, 1330, 0, 800, 1536, 60, 0, 800, 1536);                                                       // a later hand (small script), left of 冯保
 	// four columns in a large running hand (illegible stand-ins: the painter's own cells), right → left
 	const src = [1240, 1088, 936, 784], n = [8, 7, 6, 8];
 	FCOLS.forEach((x, i) => { for (let k = 0; k < n[i]; k++) { const y = 240 + k * 128; g.drawImage(col, src[i] - 70, y - 66, 140, 132, x - 70, y - 66, 140, 132); } });
@@ -338,11 +350,12 @@ const buildTail = async () => {
 	st.add('table', canvasTex(gradCanvas([[0, '#1c140e'], [0.5, '#2a1f17'], [1, '#1c140e']])), 0, 540, 30000, 4000, -400);
 	const end = paintSection('end', {width: 4096, height: 1536, mode: 'mono', seed: 43});
 	const col = paintSection('colophon', {width: 4096, height: 1536, mode: 'mono', seed: 43});
-	feng = fengSheet(col);
-	st.add('end', canvasTex(end), XE + 2048 * SK, 540, 4096 * SK, 1080, 0, {emissive: 0.1});
-	st.add('col', canvasTex(col), XC + 2048 * SK, 540, 4096 * SK, 1080, 0, {emissive: 0.1});
-	fengPlane = st.add('feng', canvasTex(feng), XF + 900 * SK, 540, 1800 * SK, 1080, 0, {emissive: 0.1, tint: '#a39684'});
-	lit21 = new Live(st, 'lit', XF + 900 * SK, 540, 1800 * SK, 1080, 0.5, {emissive: 0.22}, 1 / SK * 0.75, 3);
+	feng = fengSheet(col); pools21 = makePools(feng);
+	const dim = '#b3a690';                                   // the tail in lamplit shade; 冯保's columns get the pools of light
+	st.add('end', canvasTex(end), XE + 2048 * SK, 540, 4096 * SK, 1080, 0, {emissive: 0.08, tint: dim});
+	st.add('col', canvasTex(col), XC + 2048 * SK, 540, 4096 * SK, 1080, 0, {emissive: 0.08, tint: dim});
+	fengPlane = st.add('feng', canvasTex(feng), XF + FW21 / 2 * SK, 540, FW21 * SK, 1080, 0, {emissive: 0.08, tint: dim});
+	lit21 = new Live(st, 'lit', XF + FW21 / 2 * SK, 540, FW21 * SK, 1080, 0.5, {emissive: 0.16}, 1 / SK * 0.6, 3);
 	lit21.L.mesh.renderOrder = 5;
 };
 

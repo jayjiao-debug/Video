@@ -289,7 +289,13 @@ const drawPassage = (g: CanvasRenderingContext2D) => {
 	const gr = g.createLinearGradient(0, base - h, 0, base); gr.addColorStop(0, '#6a4526'); gr.addColorStop(1, '#a8703c'); g.fillStyle = gr; arch(1); g.fill();
 	g.fillStyle = '#E9D9B0'; arch(0.46, 6); g.fill();
 };
-(window as any).DBG29 = (t: number) => ({cam: cam29(t), match: crestMatch(t), peak: peakCam(t), roll: peakRoll(t)});
+// debug (never reached by the film: t ≥ 999): the painting at t − 868.62 with the real arch's deck curve, as scene 29's camera
+// would frame it at that moment, drawn over it in red — to check the bridge match
+addScene({id: 'dbg-match', a: 999, z: 1000, draw: (t) => {
+	const tt = t - 868.62, f = peakDraw(tt), [cx, cy, z] = cam29(tt); let pts = '';
+	for (let sx = 0; sx <= 1920; sx += 20) { const wx = cx + (sx - 960) / z, y = 900 + 500 * Math.min(1.4, ((wx - 960) / 1700) ** 2); pts += `${sx},${(540 + (y - cy) * z).toFixed(1)} `; }
+	return {...f, hideSubs: true, hideFurniture: true, hud: (hud: HTMLElement) => hud.insertAdjacentHTML('beforeend', `<svg width="1920" height="1080" style="position:absolute;inset:0"><polyline points="${pts}" fill="none" stroke="#ff2020" stroke-width="4"/></svg>`)};
+}});
 addScene({id: '29', a: b(57) - 0.12, z: b(58.5), in: {mode: 7, a: b(57) - 0.12, z: b(57) + 0.06, soft: 0.5}, draw: (t) => {
 	const st = day.st, [cx, cy, zm] = cam29(t); st.setCam(cx, cy, zm);
 	const u = (t - b(57)) / (2 * BEAT), x1 = staffX(t), x2 = x1 + 300, H2 = 560;

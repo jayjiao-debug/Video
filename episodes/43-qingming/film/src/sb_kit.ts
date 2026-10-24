@@ -62,7 +62,7 @@ export class GlowData {
 /** a texture holding data (no colour-space conversion, no mipmaps) */
 export const dataTex = (cv: HTMLCanvasElement) => { const t = new THREE.CanvasTexture(cv); t.colorSpace = THREE.NoColorSpace; t.generateMipmaps = false; t.minFilter = THREE.LinearFilter; t.magFilter = THREE.LinearFilter; return t; };
 /** a hi-quality texture for big canvases */
-export const bigTex = (cv: HTMLCanvasElement) => { const t = canvasTex(cv); t.anisotropy = 8; return t; };
+export const bigTex = (cv: HTMLCanvasElement) => { const t = canvasTex(cv); t.anisotropy = 4; return t; };
 
 // ------------------------------------------------------------------------------------------------ canvases
 /** blank silk exactly as the painter's background (ground fill + the same weave overlay) */
