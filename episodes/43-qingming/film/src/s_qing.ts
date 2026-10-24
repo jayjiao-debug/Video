@@ -44,6 +44,7 @@ const palaceSvg = (x0: number, x1: number, base: number, s: number, col = SIL, o
 	const wallH = 64 * s, X = (x: number) => ox + x * sx;
 	let o = `<rect fill="${col}" x="${X(x0).toFixed(1)}" y="${(base - wallH).toFixed(1)}" width="${((x1 - x0) * sx).toFixed(1)}" height="${(wallH + 900).toFixed(1)}"/>`;
 	o += `<rect fill="${col}" x="${X(x0).toFixed(1)}" y="${(base - wallH - 10 * s).toFixed(1)}" width="${((x1 - x0) * sx).toFixed(1)}" height="${(13 * s).toFixed(1)}"/>`;
+	o += `<rect fill="${col}" x="${X(x0).toFixed(1)}" y="${(base - wallH - 104 * s).toFixed(1)}" width="${((x1 - x0) * sx).toFixed(1)}" height="${(104 * s).toFixed(1)}"/>`;   // the courts behind the wall
 	for (const [cx, w, h] of HALLS) if (cx > x0 && cx < x1) o += hall(X(cx), base - wallH, w * s * sx, h * s, 1, col);
 	o += jiaolou(X(-360), base - wallH + 4 * s, 0.6 * s * sx, col);
 	return o;
@@ -51,8 +52,8 @@ const palaceSvg = (x0: number, x1: number, base: number, s: number, col = SIL, o
 /** lit windows of the palace frontage (warm, small): rects [x, y, w, h] */
 const palaceWindows = (base: number, s: number, ox = 0, sx = 1) => {
 	const out: [number, number, number, number][] = []; const wallH = 64 * s;
-	HALLS.forEach(([cx, w, h], i) => { const bh = h * s * 0.55, ww = w * s * sx; for (let k = 0; k < 5; k++) { if (hash(i * 7.3 + k * 1.9) < 0.45) continue;
-		out.push([ox + cx * sx - ww * 0.36 + k * ww * 0.15, base - wallH - bh * 0.78, ww * 0.09, bh * 0.42]); } });
+	HALLS.forEach(([cx, w, h], i) => { const bh = h * s * 0.55, ww = w * s * sx; for (let k = 0; k < 5; k++) { if (hash(i * 7.3 + k * 1.9) < 0.5) continue;
+		out.push([ox + cx * sx - ww * 0.33 + k * ww * 0.15, base - wallH - bh * 0.5, ww * 0.035, bh * 0.26]); } });
 	return out;
 };
 /** a cloth bundle hugged to the chest: the kit's bundle; glow = your light leaking through the cloth (else a grey copy) */
@@ -104,18 +105,18 @@ const gustFlakes = (g: CanvasRenderingContext2D, ex: number, t: number, k: numbe
 // CR-D: the look-point low (the water line), zoomed; the near boat plane (z 330) in front of the arch lowers its mast from b37.75;
 // the procession of Qing officials crosses left above (进④ on b38); the 紫禁城 under the span. The horizon layers of this crest are
 // lowered to the low eye line, so the far bank shows under the arch (a low camera sees the far bank below the span).
-let c22: Crest, cast22: Cast, box22: Live, arms22: Live, glow22: Live, boat22: Live, crew22: Live, refl22: Live;
+let c22: Crest, cast22: Cast, box22: Live, arms22: Live, glow22: Live, boat22: Live, crewL22: Live, refl22: Live;
 const A22 = b(37.25), H22 = 300, Z22 = 0.66;
 const LK22: LookQ[] = [{...LOOKS.qingOfficial, beard: 'short'}, {...LOOKS.qingOfficial}, {...LOOKS.qingOfficial, build: 1.05}, {...LOOKS.qingOfficial, beard: 'long', build: 0.97}];
 const STR22 = gaitStride('08_04', 0.72) * H22;
-const OFF22 = [-262, 0, 258, 520], PH22 = [0.18, 0, 0.62, 0.37];
+const OFF22 = [-262, 0, 258, 520], PH22 = [0.25, 0, 0.625, 0.375];            // phases 0.125 apart mod ½ (no two stride as one)
 const xYou22 = (t: number) => 960 - ((t - b(38)) / (2 * BEAT)) * STR22;            // you top the crest on b38 (进④)
 const cam22 = (t: number): Cam => {
 	const k = smooth((t - A22) / (b(37.8) - A22)), dy = lerp(420, 500, k), Z = lerp(0.70, Z22, k);
 	return [1040 + (xYou22(t) - 960) * 0.3, 900 - (dy - 540) / Z, Z];
 };
 const REF22 = (): Cam => cam22(b(38));
-const BOXH = {ox: 0.135, oy: -0.15, hw: 0.092, hh: 0.04};
+const BOXH = {ox: 0.14, oy: -0.15, hw: 0.105, hh: 0.046};
 const ground22 = (x: number) => deck(x) + 4;
 const proc22 = (t: number) => {
 	const out: {f: FigOpts; c: P; you: boolean}[] = [];
@@ -139,7 +140,7 @@ const palaceBox = (g: CanvasRenderingContext2D, c: P, w: number, h: number, you:
 	g.restore();
 };
 /** the near boat in reference-screen px: hull, matting cabin, mast pivoting at (MX, MY) toward the stern (right) */
-const NB = {wl: 1012, x0: 820, x1: 2200, MX: 1150, MY: 958, L: 630};
+const NB = {wl: 1012, x0: 470, x1: 2300, MX: 1400, MY: 958, L: 620};
 const mast22 = (t: number) => 64 * easeInOut(clamp01((t - b(37.75)) / (b(39) + 0.25 - b(37.75))));
 const mastTop = (deg: number): P => [NB.MX + Math.sin((deg * Math.PI) / 180) * NB.L, NB.MY - Math.cos((deg * Math.PI) / 180) * NB.L];
 const drawNearBoat = (g: CanvasRenderingContext2D, deg: number, t: number) => {
@@ -148,10 +149,10 @@ const drawNearBoat = (g: CanvasRenderingContext2D, deg: number, t: number) => {
 	g.beginPath(); g.moveTo(x0, wl - 70); g.quadraticCurveTo(x0 + 40, wl - 10, x0 + 160, wl + 6); g.lineTo(x1, wl + 10); g.lineTo(x1, wl - 40); g.lineTo(x0 + 120, wl - 44); g.quadraticCurveTo(x0 + 50, wl - 50, x0 + 6, wl - 92); g.closePath(); g.fill();
 	g.fillRect(x0 + 100, wl - 52, x1 - x0 - 100, 10);                                                              // gunwale
 	// the matting cabin (篷): arched roof, ribs
-	g.beginPath(); g.moveTo(1330, wl - 46); g.lineTo(1330, wl - 120); g.quadraticCurveTo(1560, wl - 196, 1880, wl - 132); g.lineTo(1880, wl - 46); g.closePath(); g.fill();
-	g.strokeStyle = 'rgba(70,52,34,0.55)'; g.lineWidth = 3; for (let x = 1360; x < 1870; x += 46) { g.beginPath(); g.moveTo(x, wl - 50); g.lineTo(x, wl - 118 - Math.sin(((x - 1330) / 550) * Math.PI) * 50); g.stroke(); }
+	g.beginPath(); g.moveTo(1580, wl - 46); g.lineTo(1580, wl - 120); g.quadraticCurveTo(1810, wl - 196, 2130, wl - 132); g.lineTo(2130, wl - 46); g.closePath(); g.fill();
+	g.strokeStyle = 'rgba(70,52,34,0.55)'; g.lineWidth = 3; for (let x = 1610; x < 2120; x += 46) { g.beginPath(); g.moveTo(x, wl - 50); g.lineTo(x, wl - 118 - Math.sin(((x - 1580) / 550) * Math.PI) * 50); g.stroke(); }
 	// rudder post, sweep oar at the stern
-	g.strokeStyle = SIL; g.lineWidth = 9; g.lineCap = 'round'; g.beginPath(); g.moveTo(1990, wl - 60); g.lineTo(2150, wl + 70); g.stroke();
+	g.strokeStyle = SIL; g.lineWidth = 9; g.lineCap = 'round'; g.beginPath(); g.moveTo(2180, wl - 60); g.lineTo(2300, wl + 60); g.stroke();
 	// mast (tabernacle at its foot) + its stay to the bow
 	const tp = mastTop(deg); g.fillRect(NB.MX - 12, NB.MY - 30, 24, 40);
 	g.lineWidth = 13; g.beginPath(); g.moveTo(NB.MX, NB.MY); g.lineTo(tp[0], tp[1]); g.stroke();
@@ -160,7 +161,7 @@ const drawNearBoat = (g: CanvasRenderingContext2D, deg: number, t: number) => {
 	g.fillStyle = 'rgba(200,170,120,0.18)'; for (let i = 0; i < 9; i++) { const x = x0 + 120 + i * 140 + Math.sin(t * 2 + i) * 12; g.fillRect(x, wl + 14 + (i % 2) * 6, 70, 3); }
 };
 /** the bow hand easing the forestay: rope from the mast top through both hands to a cleat at the bow */
-const CREW = {x: 965, ground: 968, h: 190, cleat: [880, 966] as P};
+const CREW = {x: 1225, ground: 962, h: 196, cleat: [1120, 960] as P};
 const crew22 = (deg: number) => {
 	const top = mastTop(deg), base = fkPose({hip: 0.62, lean: -10, neck: -4, lt: 18, lk: 8, rt: -12, rk: 6, la: 30, le: 30, ra: 34, re: 30});
 	const o: FigOpts = {x: CREW.x, ground: CREW.ground, h: CREW.h, pose: base, look: {head: 'bun', dress: 'tunic'} as LookQ};
@@ -179,7 +180,7 @@ const boot22 = async () => {
 	c22 = new Crest('q1-dusk', {sky: 'dusk', era: '清', lanterns: true, boat: false, bankCrowd: true}); await c22.ready;
 	const st = c22.st;
 	// the low eye line: the far bank, haze, river and its ripples sit lower (so they show under the span); the streak is replaced
-	for (const [n, dy] of [['far', 72], ['haze', 64], ['river', 96], ['ripples', 96], ['sunglow', 60]] as [string, number][]) { const L = st.get(n); st.place(L, L.cx, L.cy + dy); }
+	for (const [n, dy] of [['far', 72], ['willows', 72], ['haze', 64], ['river', 96], ['ripples', 96], ['sunglow', 60]] as [string, number][]) { const L = st.get(n); st.place(L, L.cx, L.cy + dy); }
 	st.get('streak').mesh.visible = false;
 	// the 紫禁城 under the span (a crisp layer in front of the far bank)
 	const pal = svgDoc(palaceSvg(-700, 2500, 904, 0.62), 4200, 1200, '', -1200, 0);
@@ -190,7 +191,7 @@ const boot22 = async () => {
 	arms22 = new Live(st, 'arms22', 960, 700, 3000, 900, 22, {rim: 1.0, rimPx: 4}, 1);
 	glow22 = new Live(st, 'glow22', 960, 700, 3000, 900, 24, {emissive: 1.0}, 0.5);
 	boat22 = new Live(st, 'boat22', 1700, 1600, 3600, 2200, 330, {rim: 0.35, rimPx: 6}, 0.6);
-	crew22 = new Live(st, 'crew22', 1700, 1600, 3600, 2200, 331, {rim: 0.6, rimPx: 5}, 0.8);
+	crewL22 = new Live(st, 'crew22', 1700, 1600, 3600, 2200, 331, {rim: 0.6, rimPx: 5}, 0.8);
 };
 const IN22: In = {mode: 4, a: A22, z: b(37.5), pt: [0.5, 0.4]};
 addScene({id: '22', a: A22, z: b(39), in: IN22, draw: (t): Frame => {
@@ -206,7 +207,7 @@ addScene({id: '22', a: A22, z: b(39), in: IN22, draw: (t): Frame => {
 	const deg = mast22(t), ref = REF22();
 	boat22.drawW(`${deg.toFixed(2)}:${Math.round(t * 10)}`, (g) => { refTx(g, ref, 330); drawNearBoat(g, deg, t); });
 	const cr = crew22(deg);
-	crew22.drawW(deg.toFixed(2), (g) => { refTx(g, ref, 331); g.strokeStyle = '#2a1f17'; g.lineWidth = 2.5; g.beginPath(); cr.rope.forEach((q, i) => (i ? g.lineTo(q[0], q[1]) : g.moveTo(q[0], q[1]))); g.stroke(); drawFig(g, cr.f); });
+	crewL22.drawW(deg.toFixed(2), (g) => { refTx(g, ref, 331); g.strokeStyle = '#2a1f17'; g.lineWidth = 2.5; g.beginPath(); cr.rope.forEach((q, i) => (i ? g.lineTo(q[0], q[1]) : g.moveTo(q[0], q[1]))); g.stroke(); drawFig(g, cr.f); });
 	refl22.drawW(`${Math.round(you.c[0] / 4)}:${Math.floor(t * 8)}`, (g) => drawRefl(g, you.c[0], 1000, 0.55, t));
 	st.heroAt(you.c[0], you.c[1], 21, 700);
 	return {st, grade: {vig: 0.34, vigCol: '#1a1410', exposure: 1}, bloom: 1};
@@ -218,21 +219,21 @@ addScene({id: '22', a: A22, z: b(39), in: IN22, draw: (t): Frame => {
 // 嘉庆 impressions slam in one per beat (b39 … b40), on the mounting silk, across the join and in the blank opening edge — never
 // on painted figures, never on the 虹桥 (G2). Then a slow pull-back while palace eaves close from top and bottom (b40 → b40.75).
 let st23: Stage, seals23: Live, eaves23: Live, eaveTop: HTMLCanvasElement, eaveBot: HTMLCanvasElement;
-const SC = {w: 3200, h: 1200, join: 1880, mount1: 2880, k: 1.1};          // canvas px; world px per canvas px
+const SC = {w: 3200, h: 1200, join: 1880, mount1: 2600, k: 1.1};          // canvas px; world px per canvas px
 const c2w = (x: number, y: number): P => [960 + (x - SC.w / 2) * SC.k, 540 + (y - SC.h / 2) * SC.k];
 // the five seals of 五玺全 (G2), their legends exact; size in canvas px; where: mounting / the join (骑缝) / the blank opening edge
 const SEALS: {text: string; x: number; y: number; size: number; style: 'zhu' | 'bai'; tall?: boolean; beat: number; rot: number}[] = [
-	{text: '嘉庆御览之宝', x: 2330, y: 430, size: 250, style: 'zhu', beat: 39.0, rot: -0.01},
-	{text: '石渠宝笈', x: SC.join, y: 820, size: 196, style: 'zhu', tall: true, beat: 39.25, rot: 0.015},
-	{text: '三希堂精鉴玺', x: 2690, y: 470, size: 188, style: 'bai', tall: true, beat: 39.5, rot: -0.012},
-	{text: '宜子孙', x: 2690, y: 760, size: 124, style: 'bai', beat: 39.75, rot: 0.01},
-	{text: '嘉庆鉴赏', x: 1700, y: 380, size: 150, style: 'zhu', beat: 40.0, rot: -0.008},
+	{text: '嘉庆御览之宝', x: 2250, y: 590, size: 200, style: 'zhu', beat: 39.0, rot: -0.01},
+	{text: '石渠宝笈', x: SC.join, y: 700, size: 172, style: 'zhu', tall: true, beat: 39.25, rot: 0.015},
+	{text: '三希堂精鉴玺', x: 2470, y: 556, size: 172, style: 'bai', tall: true, beat: 39.5, rot: -0.012},
+	{text: '宜子孙', x: 2470, y: 738, size: 112, style: 'bai', beat: 39.75, rot: 0.01},
+	{text: '嘉庆鉴赏', x: 1772, y: 520, size: 124, style: 'zhu', beat: 40.0, rot: -0.008},
 ];
 let sealCvs: HTMLCanvasElement[] = [];
 const cam23 = (t: number): Cam => {
 	const drift = clamp01((t - b(39)) / (b(40) - b(39))), pull = easeInOut(clamp01((t - b(40)) / (b(41) - b(40))));
-	const c0 = c2w(2160, 600), c1 = c2w(1900, 600);
-	return camMix([lerp(c0[0], c0[0] - 30, drift), c0[1], lerp(1.2, 1.17, drift)], [c1[0], c1[1], 0.88], pull);
+	const c0 = c2w(2150, 615), c1 = c2w(1930, 600);
+	return camMix([lerp(c0[0], c0[0] - 30, drift), c0[1], lerp(1.15, 1.12, drift)], [c1[0], c1[1], 0.86], pull);
 };
 const startCanvas = () => {
 	const cv = mkCanvas(SC.w, SC.h), g = cv.getContext('2d')!;
@@ -242,18 +243,20 @@ const startCanvas = () => {
 	const tmp = mkCanvas(SC.join, SC.h), tg = tmp.getContext('2d')!;
 	tg.drawImage(shed, 820, 0, 1580, 900, -40, 0, 1580 * (SC.h / 900), SC.h);
 	tg.globalCompositeOperation = 'destination-in'; const fade = tg.createLinearGradient(0, 0, SC.join, 0);
-	fade.addColorStop(0, 'rgba(0,0,0,1)'); fade.addColorStop(0.62, 'rgba(0,0,0,1)'); fade.addColorStop(0.8, 'rgba(0,0,0,0)'); tg.fillStyle = fade; tg.fillRect(0, 0, SC.join, SC.h);
+	fade.addColorStop(0, 'rgba(0,0,0,1)'); fade.addColorStop(0.76, 'rgba(0,0,0,1)'); fade.addColorStop(0.9, 'rgba(0,0,0,0)'); tg.fillStyle = fade; tg.fillRect(0, 0, SC.join, SC.h);
 	g.drawImage(tmp, 0, 0);
 	// the opening's mist: a soft wash over the blank edge
-	const mist = g.createLinearGradient(SC.join - 600, 0, SC.join, 0); mist.addColorStop(0, 'rgba(236,222,190,0)'); mist.addColorStop(1, 'rgba(236,222,190,0.6)'); g.fillStyle = mist; g.fillRect(SC.join - 600, 0, 600, SC.h);
-	// the front mounting silk (隔水): a cool pale damask with a faint cloud-and-dragon-roundel weave
+	const mist = g.createLinearGradient(SC.join - 400, 0, SC.join, 0); mist.addColorStop(0, 'rgba(236,222,190,0)'); mist.addColorStop(1, 'rgba(236,222,190,0.6)'); g.fillStyle = mist; g.fillRect(SC.join - 600, 0, 600, SC.h);
+	// the front mounting silk (隔水): a cool pale damask, a faint lozenge twill with small four-petal flowers
 	g.fillStyle = '#E4DCC8'; g.fillRect(SC.join, 0, SC.mount1 - SC.join, SC.h);
-	g.strokeStyle = 'rgba(150,140,118,0.16)'; g.lineWidth = 3;
-	for (let yy = 60; yy < SC.h; yy += 150) for (let xx = SC.join + 70 + ((yy / 150) % 2) * 75; xx < SC.mount1; xx += 150) { g.beginPath(); g.arc(xx, yy, 34, 0, Math.PI * 2); g.stroke(); g.beginPath(); g.arc(xx, yy, 18, 0.4, 5.2); g.stroke();
-		g.beginPath(); g.moveTo(xx + 40, yy + 30); g.bezierCurveTo(xx + 60, yy + 10, xx + 90, yy + 50, xx + 110, yy + 28); g.stroke(); }
+	g.save(); g.beginPath(); g.rect(SC.join, 0, SC.mount1 - SC.join, SC.h); g.clip(); g.strokeStyle = 'rgba(140,128,104,0.13)'; g.lineWidth = 2;
+	for (let k = -1400; k < 2000; k += 64) { g.beginPath(); g.moveTo(SC.join + k, 0); g.lineTo(SC.join + k + SC.h, SC.h); g.stroke(); g.beginPath(); g.moveTo(SC.join + k + SC.h, 0); g.lineTo(SC.join + k, SC.h); g.stroke(); }
+	g.fillStyle = 'rgba(140,128,104,0.16)'; for (let yy = 0; yy < SC.h; yy += 64) for (let xx = SC.join + ((yy / 64) % 2) * 32; xx < SC.mount1; xx += 64) for (let p = 0; p < 4; p++) { g.beginPath(); g.ellipse(xx + Math.cos(p * Math.PI / 2) * 6, yy + 32 + Math.sin(p * Math.PI / 2) * 6, 5, 3, p * Math.PI / 2, 0, Math.PI * 2); g.fill(); }
+	g.restore();
 	// the outer brocade (blue) and the stave edge at the right end
 	g.fillStyle = '#34506A'; g.fillRect(SC.mount1, 0, SC.w - SC.mount1, SC.h);
-	g.strokeStyle = 'rgba(210,174,106,0.45)'; g.lineWidth = 4; for (let yy = 40; yy < SC.h; yy += 80) for (let xx = SC.mount1 + 30 + ((yy / 80) % 2) * 40; xx < SC.w - 40; xx += 80) { g.beginPath(); g.moveTo(xx - 12, yy); g.lineTo(xx, yy - 12); g.lineTo(xx + 12, yy); g.lineTo(xx, yy + 12); g.closePath(); g.stroke(); }
+	g.fillStyle = '#2E4760'; g.fillRect(SC.mount1, 0, SC.w - SC.mount1, SC.h);
+	g.strokeStyle = 'rgba(196,164,104,0.28)'; g.lineWidth = 2; for (let yy = 20; yy < SC.h; yy += 40) for (let xx = SC.mount1 + 20 + ((yy / 40) % 2) * 20; xx < SC.w - 50; xx += 40) { g.beginPath(); g.moveTo(xx - 6, yy); g.lineTo(xx, yy - 6); g.lineTo(xx + 6, yy); g.lineTo(xx, yy + 6); g.closePath(); g.stroke(); }
 	g.fillStyle = '#2a3e52'; g.fillRect(SC.w - 46, 0, 46, SC.h);
 	// joins: a thin seam and a slight overlap shadow
 	for (const jx of [SC.join, SC.mount1]) { g.fillStyle = 'rgba(80,62,40,0.35)'; g.fillRect(jx - 2, 0, 4, SC.h); g.fillStyle = 'rgba(80,62,40,0.12)'; g.fillRect(jx + 2, 0, 10, SC.h); }
@@ -278,7 +281,7 @@ const boot23 = async () => {
 	st23.add('silk', canvasTex(cv), 960, 540, SC.w * SC.k, SC.h * SC.k, 0, {emissive: 0.14});
 	seals23 = new Live(st23, 'seals23', 960, 540, SC.w * SC.k, SC.h * SC.k, 1, {}, 0.6);
 	sealCvs = SEALS.map((s, i) => paintSeal(s.text, {size: Math.round(s.size * 1.3), style: s.style, seed: 811 + i * 17, tall: s.tall, fade: 0.05}));
-	eaves23 = new Live(st23, 'eaves23', 960, 540, W, H, 400, {rim: 1.0, rimPx: 7}, 1);
+	eaves23 = new Live(st23, 'eaves23', 960, 540, W, H, 400, {rim: 0.55, rimPx: 6}, 1);
 	eaveTop = eaveTopCanvas();
 	eaveBot = await svgToCanvas(svgDoc(palaceSvg(-1700, 2600, 860, 1, '#1b1511'), W, H), W, H, 1);
 };
@@ -337,7 +340,8 @@ const boot24 = async () => {
 	const pc = mkCanvas(4400, 1100), pg = pc.getContext('2d')!; pg.drawImage(snow, 0, 0); pg.drawImage(dark, 0, 4);
 	st.add('pal24', canvasTex(pc), -1800 + 2200, 550, 4400, 1100, -2400, {fog: [HORIZON.snow, 0.12]});
 	win24 = new Live(st, 'win24', 400, 550, 4400, 1100, -2398, {emissive: 0.9}, 1);
-	win24.drawW('w', (g) => { for (const [x, y, w, h] of palaceWindows(860, 1)) { g.fillStyle = `rgba(255,184,104,${(0.55 + 0.35 * hash(x)).toFixed(2)})`; g.fillRect(x, y + 4, w, h); } });
+	win24.drawW('w', (g) => { for (const [x, y, w, h] of palaceWindows(860, 1)) { g.fillStyle = `rgba(255,184,104,${(0.32 + 0.22 * hash(x)).toFixed(2)})`; g.fillRect(x, y + 4, w, h); } });
+	st.get('far').mesh.visible = false;                                          // the stock far bank's gate tower would break the roofline match
 	await snowDeck(st, 1); snowRail(st, 'railSnow24');
 	cast24 = new Cast(st, 'cast24', 1200, 640, 3600, 1100, 20);
 	prop24 = new Live(st, 'prop24', 1200, 640, 3600, 1100, 22, {rim: 0.4, emissive: 0.35}, 1);
@@ -420,10 +424,10 @@ const draw25a = (t: number): Frame => {
 	const key = k30(t), figs: FigOpts[] = [], held: {c: P; r: number; i: number}[] = [];
 	for (let i = 3; i >= 0; i--) { if (t < enter25(i)) continue; const x = x25(i, t); if (x > 4000) continue; const r = ROWS[i], hh = H25 * (1 - 0.02 * r);
 		const gr = (xx: number) => rowY(xx, r, 0) + 1;
-		const hw = hugWalk(YOUTH, (x - XL25(i)) / STR25 + i * 0.29, x, hh, gr, `P2 carrier ${i}`);
+		const hw = hugWalk(YOUTH, (x - XL25(i)) / STR25 + i * 0.281, x, hh, gr, `P2 carrier ${i}`);
 		figs.push(hw.f); held.push({c: hw.c, r: hw.r, i}); }
 	const show = q < 0.02;
-	cast25.L.mesh.visible = prop25.L.mesh.visible = arms25.L.mesh.visible = glow25.L.mesh.visible = show;
+	cast25.L.L.mesh.visible = prop25.L.mesh.visible = arms25.L.mesh.visible = glow25.L.mesh.visible = show;
 	cast25.draw(key, figs);
 	prop25.drawW(key, (g) => { for (const h of held) bundle(g, h.c, h.r, h.i === 1 ? 1 : 0, h.i !== 1); });
 	prop25.L.mat.uniforms.uEmissive.value = 0.3;
