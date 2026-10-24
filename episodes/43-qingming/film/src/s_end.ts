@@ -303,7 +303,7 @@ const drawToday = (t: number): Frame => {
 	todayCast.draw(k30(t), visitorsToday(t));
 	today.setBoat(1650 - (t - b(67.5)) * 40, 60); today.setStreak(0, 0, t); today.setLanterns(() => 0);
 	st.setHero(-9999, 0, 1);
-	const grade = {vig: 0.22, exposure: 1.0, corners: 1, cornersTop: 0.55, cornersBand: [0, 300, 470, 0.8] as [number, number, number, number]};
+	const grade = {vig: 0.2, exposure: 1.08, corners: 1, cornersTop: 0.5, cornersBand: [0, 300, 470, 0.45] as [number, number, number, number]};   // day 110–150
 	if (t < WIPE.in0) return {st, grade, bloom: 1};
 	const e = lerp(-60, 1990, easeIn(clamp01((t - WIPE.in0) / (WIPE.in1 - WIPE.in0))));
 	wipeL.draw(`${Math.round(e)}`, (g) => masonry(g, -400, e));
@@ -316,12 +316,12 @@ addScene({id: '34', a: b(67.5), z: b(69), in: {mode: 12, a: b(67.5), z: b(68), d
 // walking left BEHIND the case (their lower bodies hidden by it), leaning to look in; ceiling spots in a soffit at the very
 // top, their pools on the wall above the case. The case's central pane (x 760–1160, y 512–690) is the rectangle the storage
 // box's face matches at b74.
-const HZ = {wall: -800, pools: -790, ceil: -700, floor: -420, crowd: -216, inner: -215, silk: -210, card: -209, rollers: -208, glass: -200, frame: -195, box: -197, staff: -194, halo: -193};
+const HZ = {wall: -800, pools: -790, ceil: -700, floor: -420, crowd: -216, inner: -215, silk: -210, card: -209, rollers: -208, arms: -205, glass: -200, frame: -195, box: -197, staff: -194, halo: -193};
 const CASE = {x0: 240, x1: 1680, top: 494, rail: 512, pane1: 690, base: 900, mull: [600, 760, 1160, 1320], band0: 548, band1: 612, sx0: 300, sx1: 1620};
 const PANE_C: P = [960, 601], PANE_W = 400;
 const HG = 800;                                   // the floor line behind the case (rest px at the crowd's depth)
 const FIX = [210, 510, 810, 1110, 1410, 1710];    // ceiling spots
-let hallSt: Stage, hallCeil: Live, hallPools: Live, hallCrowd: Cast, hallSilk: Live, hallHalo: Live, hallCard: Live, hallRollers: Live, hallBox: Live, hallStaff: Live, hallDust: Motes, hallSconce: Live;
+let hallSt: Stage, hallCeil: Live, hallPools: Live, hallCrowd: Cast, hallSilk: Live, hallHalo: Live, hallCard: Live, hallRollers: Live, hallBox: Live, hallStaff: Live, hallArms: Live, hallDust: Motes, hallSconce: Live;
 const bootHall = async () => {
 	const st = hallSt = new Stage('e5hall');
 	st.add('wall', canvasTex(gradCanvas([[0, '#30363b'], [0.25, '#3a4046'], [0.55, '#464C52'], [1, '#4b5157']])), 960, 400, 4600, 2800, HZ.wall);
@@ -356,6 +356,7 @@ const bootHall = async () => {
 		st.add('frame', canvasTex(c), 960, 540, 1920, 1080, HZ.frame, {rim: 0.6, rimPx: 4}); }
 	hallBox = new Live(st, 'box', 400, 450, 400, 200, HZ.box, {rim: 0.5, rimPx: 3}, 3);
 	hallStaff = new Live(st, 'staff', 960, 560, 2000, 900, HZ.staff, {rim: 1.0, rimPx: 6}, 1);
+	hallArms = new Live(st, 'arms', 960, 560, 2000, 900, HZ.arms, {rim: 1.0, rimPx: 6}, 1);   // arms reaching into the case: behind its front rail and glass
 	hallHalo = new Live(st, 'halo', 960, 560, 1800, 500, HZ.halo, {emissive: 1.0}, 0.4);
 	hallSconce = new Live(st, 'sconce', 960, 430, 3400, 200, HZ.wall + 4, {emissive: 0.9}, 0.5);
 	hallSconce.drawW('s', (g) => { for (const x of [-420, 2340]) { g.fillStyle = '#1b1f23'; g.fillRect(x - 16, 400, 32, 50); g.fillStyle = '#E8D2A8'; g.fillRect(x - 10, 406, 20, 36); glowBlob(g, [x, 424], 120, 90, 0.25, '232,214,180'); } });
@@ -384,7 +385,9 @@ const drawHall = (m: HallMode) => {
 	hallStaff.L.mesh.visible = !!m.staff;
 	const fk = k30(m.t);
 	if (m.staff) { const s = m.staff; hallStaff.drawW(`${fk}:${s.A.x.toFixed(1)}`, (g) => { g.save(); g.beginPath(); g.rect(-2000, -2000, 6000, 2000 + s.clipY); g.clip(); drawFig(g, s.A); drawFig(g, s.B); if (s.clipArms) { fillD(g, armPaths(s.A)); fillD(g, armPaths(s.B)); } g.restore();
-		if (!s.clipArms) { fillD(g, armPaths(s.A)); fillD(g, armPaths(s.B)); } }); }   // arms that reach into the case pass over its top; any others stay behind it
+	}); }
+	hallArms.L.mesh.visible = !!m.staff && !m.staff.clipArms;
+	if (m.staff && !m.staff.clipArms) { const s = m.staff; hallArms.drawW(`${fk}:${s.A.x.toFixed(1)}`, (g) => { fillD(g, armPaths(s.A)); fillD(g, armPaths(s.B)); }); }
 	hallCrowd.draw(fk + ':' + m.crowd.length, m.crowd);
 	const inBox = !!m.box && m.box.roll >= 0, yc: P = rl ? [(rl.xl + rl.xr) / 2, 580 - rl.lift] : inBox ? [BOX35.x0 + BOX35.w / 2, BOX35.top - 4] : [960, 580];
 	const yc0: P = m.box ? [BOX35.x0 + BOX35.w / 2, BOX35.top - 4] : rl ? [(rl.xl + rl.xr) / 2, 580 - rl.lift] : [960, 580];
@@ -592,7 +595,7 @@ addScene({id: '37', a: b(76), z: 184.3 + 1, draw: (t) => {
 	}
 	if (t < E37.passZ) {           // ---- back through the passage (its far opening is the hall)
 		const k = easeOut(clamp01((t - E37.hallZ) / (E37.passZ - E37.hallZ)));
-		pass.setCam(960, 540, Math.exp(lerp(Math.log(12), 0, k)));
+		pass.setCam(960, 540, Math.exp(lerp(Math.log(12), 0, k))); dimWorld(pass, 0.72, new Set(), [1, 0.97, 0.94]);   // warm-lit, but never brighter than the hall it leaves
 		return {st: pass, grade: {vig: 0.45, exposure: 1}, bloom: 1, hideFurniture: true, hud: endHud(t)};
 	}
 	// ---- outside: the door at the top of the empty ramp; the crane settles, then a slow rise to the end

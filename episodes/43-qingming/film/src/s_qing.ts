@@ -322,13 +322,15 @@ addScene({id: '23', a: b(39), z: b(41), draw: (t): Frame => {
 let c24: Crest, cast24: Cast, prop24: Live, arms24: Live, glow24: Live, gust24: Live, win24: Live;
 const YOUTH = LOOKS.youth1923, YH = 470, YZOOM = 0.94;
 const STRY = gaitStride('08_04', stepFor(YOUTH)) * YH;
-const x24 = (t: number) => 1150 - ((b(42.5) - t) / (2 * BEAT)) * STRY;                 // reaches x 900 on b42.5 (enters from the left ≈ b41.3)
+const x24 = (t: number) => 1000 - ((b(42.5) - t) / (2 * BEAT)) * STRY;                 // reaches x 900 on b42.5 (enters from the left ≈ b41.3)
 let hugOff: P = [0.128, 0.715];
-const lock24 = (t: number): Cam => { const x = x24(t); return camLock(YZOOM, x - hugOff[0] * YH * 1, deck(x) + 4 - hugOff[1] * YH, 22, 960, 580); };
+const lock24 = (t: number): Cam => { const x = x24(t); return camLock(YZOOM, x - hugOff[0] * YH * 1, deck(x) + 4 - hugOff[1] * YH, 22, 960, 545); };
 const cam24 = (t: number): Cam => {
-	const rest: Cam = [960, 540, lerp(1, 1.012, clamp01((t - b(41)) / 0.9))];
-	const k = smooth(clamp01((t - b(41.45)) / (b(42.05) - b(41.45))));
-	return camMix(rest, lock24(t), k);
+	// the cut lands at rest (the roofline match); the look-point drops at once so the deck (and his feet) rise clear of the
+	// HUD band before he steps in from the left, then the camera settles into T3's framing on the bundle
+	const rest: Cam = [960, 540, 1], low: Cam = [1000, 720, 1.0];
+	const c1 = camMix(rest, low, smooth(clamp01((t - b(41)) / 0.55)));
+	return camMix(c1, lock24(t), smooth(clamp01((t - b(41.3)) / (b(41.85) - b(41.3)))));
 };
 const snowDeck = async (st: Stage, z: number, back = 6) => {
 	const dk = new Live(st, `deckSnow${z}`, 960, 1100, 4800, 1600, z, {}, 0.5);

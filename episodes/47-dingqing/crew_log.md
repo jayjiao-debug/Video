@@ -11,3 +11,4 @@
 | 2026-10-24 23:35 | topic → 定情信物「一人一半」; folder 47-dingqing; brief + facts (17 rows) | producer | | |
 | 2026-10-24 23:35 | script v1 + lines.json (45 lines, beat-snapped to bgm2 v2), pace OK (7 % wait) | producer | | |
 | 2026-10-24 23:46 | owner (23:43): going to bed — "get all agents to review, improve, especially animator and logical checkers… give me final video". Unattended from here; agents back on. Title default: #1 (情侣头像这招，古人一千四百年前就用过了) unless the director ranks otherwise. Look: 对折剪纸 (producer's pick; no owner touchpoint tonight). | producer | | |
+| 2026-10-25 01:06 | gate 1: cold reader (swipe risk at 诗经, 三转一响/520 not halves, unclear 杨素/长恨歌) + director REVISE 3→4 (hook names the mirror with 相传 by 5.7 s; H4 1400多年; P2 「这一招还在」 — softens the brief's 「意思没变过」, logged; 破镜 cause = his poem; 长恨歌 who/why; ≤16 字). Script v2 = director's lines + D1 「相传，陈朝将亡时，」 (cold reader misread). 46 lines, 5 % wait. Title #1 with digits. | producer | 80 |

@@ -12,6 +12,7 @@ import {SIL, dagoba, skyline} from './draw';
 import {Cast, drawRoll, drawRoller, glowBlob, rig, drawCarriedRoll, drawFig, Contact} from './actors';
 import {LOOKS, FigOpts, walkFor, gaitStride, gaitPose, stepFor, armsFrom, underArm, fkPose, LookQ, P, POSES} from './figures';
 import {paintSection, silkWeave} from './silk';
+import {ROLLUP_IN} from './s_song';
 
 const b = bar;
 export type Cam = [number, number, number];
@@ -432,7 +433,7 @@ export const bootYuan = async () => {
 			<rect x="${PX0 + PW - 160}" y="${DTB + 14}" width="70" height="18" rx="5" fill="#1b1612"/>`, W, 1200);
 		st.add('mydesk', canvasTex(await svgToCanvas(dk, W, 1200, 0.9)), 960, 600, W, 1200, -2, {rim: 0.9, rimPx: 5});
 		paper17 = st.add('paper', canvasTex(paperCanvas()), PX0 + PW / 2, PYF + 350 - PHF / 2, PW, PHF, 0, {emissive: 0.03, tint: '#e2d5bd'}, 10);
-		rt17 = new THREE.WebGLRenderTarget(768, 432, {type: THREE.HalfFloatType, samples: 4});
+		rt17 = new THREE.WebGLRenderTarget(640, 360, {type: THREE.HalfFloatType, samples: 0});
 		const sr = slotRect();
 		slot17 = st.add('slot', rt17.texture as any, sr.x + sr.w / 2, sr.y + sr.h / 2, sr.w, sr.h, 0, {emissive: 0.3, fog: ['#E8D6B0', 0]}, 11);
 		ink17 = new Live(st, 'ink17', PX0 + NEWX * PK, PYF + 350 - PHF / 2, 180 * PK, PHF, 0, {}, 3, 12);
@@ -447,11 +448,10 @@ export const bootYuan = async () => {
 		const c = cam17(b(29.25)); st.setCam(c[0], c[1], c[2]); const tip = brushTip17(b(29.25), 1), q = scr(st, tip[0], tip[1], 0);
 		BLEED_PT[0] = q.x / W; BLEED_PT[1] = 1 - q.y / H;
 	}
-	(window as any).YDBG = () => ({CAM15_0, DAG_END, CAM17_0, BLEED_PT, room15: {n: room15.layers.length, cam: room15.cam.position.toArray(), layers: room15.layers.map((l) => [l.name, l.z, l.mesh.visible, l.mat.uniforms.uOpacity.value])}});
 };
 
 // ================================================================================================ the scenes
-addScene({id: '14', a: b(23), z: b(25), in: {mode: 2, a: b(23), z: b(23.5), dir: [1, 0], soft: 0.03}, draw: d14});
+addScene({id: '14', a: b(23), z: b(25), in: ROLLUP_IN, draw: d14});           // scene 13's roll-up wipe (its edge rides the rolling roller)
 addScene({id: '15', a: b(25), z: b(26.5), draw: d15});
 addScene({id: '16', a: b(26.5), z: b(27.75), draw: d16});
 const PIP_PT: [number, number] = [SLOT_SCREEN.cx / W, 1 - SLOT_SCREEN.cy / H], PIP_HS: [number, number] = [SLOT_SCREEN.w / 2 / W, (SLOT_SCREEN.w * 9 / 16) / 2 / H];
