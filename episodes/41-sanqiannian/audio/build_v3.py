@@ -37,7 +37,7 @@ ir2 = np.random.default_rng(11).standard_normal(int(4.0 * SR)) * np.exp(-np.aran
 tail_at(251.72, 252.12, joins[2] - 0.4, ir2, -9)
 
 ECHO = 'aecho=0.8:0.55:45|90|140:0.22|0.14|0.08'; OLD = 'highpass=f=320,lowpass=f=2800,acrusher=bits=10:mix=0.2'; PHONE = 'highpass=f=300,lowpass=f=3400'
-SPACE = 'aecho=0.8:0.6:180|340:0.25|0.15'; SCOTT = 'highpass=f=170:poles=2,afftdn=nr=14:nf=-32:tn=1,equalizer=f=250:t=q:w=1:g=-3,equalizer=f=900:t=q:w=1:g=6,equalizer=f=2000:t=q:w=1:g=5,equalizer=f=3200:t=q:w=1:g=3,lowpass=f=5500,acompressor=threshold=-30dB:ratio=2.5:attack=8:release=120:makeup=2'   # r4: owner 'make the voices clearer'
+SPACE = 'aecho=0.8:0.6:180|340:0.25|0.15'; SCOTT = 'equalizer=f=148:t=q:w=4:g=-14,equalizer=f=296:t=q:w=4:g=-6,highpass=f=170:poles=2,afftdn=nr=14:nf=-32:tn=1,equalizer=f=250:t=q:w=1:g=-3,equalizer=f=900:t=q:w=1:g=6,equalizer=f=2000:t=q:w=1:g=5,equalizer=f=3200:t=q:w=1:g=3,lowpass=f=5500,acompressor=threshold=-30dB:ratio=2.5:attack=8:release=120:makeup=2'   # r4: owner 'make the voices clearer'
 FX = {'': '', 'ECHO': ECHO, 'OLD': OLD, 'PHONE': PHONE, 'SPACE': SPACE}
 LINES = [(l['file'], l['at'], ','.join(x for x in (SCOTT if 'CQ_cut' in l['file'] else FX.get(l.get('fx', ''), l.get('fx', '')), l.get('extra', '')) if x), l.get('gain', 0.0)) for l in json.load(open(f'{A}/lines_v3.json'))]
 meter = pyln.Meter(SR); dyn = 'highpass=f=90,acompressor=threshold=-26dB:ratio=3:attack=5:release=120:makeup=2'
@@ -48,7 +48,7 @@ for f, at, fx, gdb in LINES:
     if len(c) > 400: c = c[:-144]
     fi, fo = min(240, len(c) // 4), min(720, len(c) // 4); c[:fi] *= np.linspace(0, 1, fi)[:, None]; c[-fo:] *= np.linspace(1, 0, fo)[:, None]
     if 'CQ_cut' in f and c2_band is not None:   # match the 1860 voice's speech band to the narration's, minus 2 dB
-        g = c2_band + 1 - meter.integrated_loudness(band(c)); c *= 10 ** (g / 20); pk = np.abs(c).max(); c *= min(1, 0.6 / pk)
+        g = c2_band + 3 - meter.integrated_loudness(band(c)); c *= 10 ** (g / 20); c = (np.tanh(c / 0.9) * 0.9).astype(np.float32)   # soft-clip the rare peaks instead of turning the whole voice down
     else:
         L = meter.integrated_loudness(c); c *= 10 ** ((VO_L - (2.0 if OLD in fx else 0) + gdb - L) / 20)
         if f.endswith('/C2'): c2_band = meter.integrated_loudness(band(c))
@@ -78,6 +78,12 @@ env = smooth(np.where(sp, depth, 1.0)); env_mid = smooth(np.where(sp, 10 ** (-3 
 mid = sosfiltfilt(butter(2, [900, 4500], btype='band', fs=SR, output='sos'), bgm, axis=0)
 bgm = (bgm * env[:, None] - mid * (env[:, None] * (1 - env_mid[:, None]))) * ramp_env(LIFT)[:, None]
 mix = (bgm + vo).astype(np.float32)
+# the ring-back tone (China: 450 Hz, 嘟——) bridges the silence after the coda and motivates the point-of-light → phone match;
+# the second ring is cut off when 妈 picks up (connect at OUT + 19.7)
+for a, b in [(OUT + 17.3, OUT + 18.3), (OUT + 18.8, OUT + 19.68)]:
+    i0, i1 = int(a * SR), int(b * SR); tt = np.arange(i1 - i0) / SR; env_t = np.minimum(1, np.minimum(tt / 0.03, (b - a - tt) / 0.03))
+    tone = (np.sin(2 * np.pi * 450 * tt) * 0.5 + 0.08 * np.sin(2 * np.pi * 900 * tt)) * env_t * 10 ** (-31 / 20)
+    mix[i0:i1] += tone[:, None].astype(np.float32)
 sf.write(f'{A}/ep41_v3_mix_raw.wav', mix, SR, subtype='FLOAT')
 print(f'{DUR:.2f}s, joins at {", ".join(f"{j:.3f}" for j in joins)}, raw {meter.integrated_loudness(mix):.1f} LUFS, peak {20*np.log10(np.abs(mix).max()):.1f} dBFS'); print('\n'.join(rep))
 # delivery loudness: oversampled limiter, then linear two-pass loudnorm to −14 LUFS / −1.5 dBTP
