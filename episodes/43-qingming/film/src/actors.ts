@@ -140,7 +140,9 @@ import {underArmRoll, gripOf} from './figures';
  *  so the order is body (cast layer) → roll → near arm, the upper arm over the roll's middle third and the hand at its front
  *  end. Logs both contacts for the checker. Call it on the prop layer (draw/drawW in world px); returns the roll's ends. */
 export const drawCarriedRoll = (g: CanvasRenderingContext2D, fig: FigOpts, who: string, side: 'R' | 'L' = 'R', length = 0.29, r = 13, glow = 1, grey = false, col = SILHOUETTE) => {
-	const [r0, r1] = underArmRoll(fig.pose, side, length), p0 = figToScreen(fig, r0), p1 = figToScreen(fig, r1);
+	// the roll runs from the palm back to the armpit and stops there (it must not stick out behind the back, or it reads as going through the chest)
+	const gp = gripOf(fig.pose, side), pit0: P = [fig.pose[`${side}Sh`][0], fig.pose[`${side}Sh`][1] - 0.11], toPit = Math.hypot(pit0[0] - gp[0], pit0[1] - gp[1]);
+	const [r0, r1] = underArmRoll(fig.pose, side, Math.min(length, toPit + 0.01)), p0 = figToScreen(fig, r0), p1 = figToScreen(fig, r1);
 	drawRoll(g, p0, p1, r, glow, grey); drawFig(g, {...fig, part: side}, col);
 	const hand = figToScreen(fig, gripOf(fig.pose, side)), pit = figToScreen(fig, [fig.pose[`${side}Sh`][0], fig.pose[`${side}Sh`][1] - 0.11]);
 	const dx = p1[0] - p0[0], dy = p1[1] - p0[1], L = Math.hypot(dx, dy), off = (q: P) => Math.abs((q[0] - p0[0]) * dy - (q[1] - p0[1]) * dx) / Math.max(1, L);

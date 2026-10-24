@@ -79,7 +79,7 @@ const tableCanvas = () => {
 	g.fillStyle = '#18120d'; g.fillRect(800, TOPF, 990, 30);                                                               // front slab
 	g.fillRect(820, TOPF + 30, 24, FLOOR - TOPF - 30); g.fillRect(1750, TOPF + 30, 24, FLOOR - TOPF - 30); g.fillRect(844, TOPF + 30, 906, 14);
 	// stool under the researcher
-	g.fillStyle = '#15100C'; g.fillRect(612, 796, 176, 14); g.fillRect(624, 810, 12, FLOOR - 810); g.fillRect(764, 810, 12, FLOOR - 810); g.fillRect(636, 960, 128, 8);
+	g.fillStyle = '#15100C'; g.fillRect(652, 796, 176, 14); g.fillRect(664, 810, 12, FLOOR - 810); g.fillRect(804, 810, 12, FLOOR - 810); g.fillRect(676, 960, 128, 8);
 	return c;
 };
 const crateCanvas = () => {
@@ -92,7 +92,7 @@ const crateCanvas = () => {
 	g.save(); g.translate(1000, 618); g.rotate(-0.12); g.fillStyle = '#231d17'; g.fillRect(-90, -8, 170, 14); g.restore();
 	return c;
 };
-const LAMP = {base: [1250, TOPF - 10] as [number, number], sw: [884, TOPF - 8] as [number, number], bulb: [1150, 648] as [number, number]};
+const LAMP = {base: [1250, TOPB + 6] as [number, number], sw: [884, TOPB + 14] as [number, number], bulb: [1150, 648] as [number, number]};
 const lampCanvas = () => {
 	const c = mkCanvas(W, H), g = c.getContext('2d')!, [bx, by] = LAMP.base;
 	g.fillStyle = '#15100C'; g.beginPath(); g.ellipse(bx, by + 4, 40, 9, 0, 0, Math.PI * 2); g.fill();
@@ -101,15 +101,15 @@ const lampCanvas = () => {
 	g.save(); g.translate(1168, 616); g.rotate(-0.55); g.fillStyle = '#2f4a3a'; g.beginPath(); g.moveTo(-14, -34); g.lineTo(14, -34); g.lineTo(46, 26); g.quadraticCurveTo(0, 38, -46, 26); g.closePath(); g.fill();
 	g.fillStyle = '#4f6f58'; g.fillRect(-12, -34, 24, 6); g.restore();
 	// cord along the table front to the inline switch by the researcher, then off the edge to the floor
-	g.strokeStyle = '#100c09'; g.lineWidth = 3; g.beginPath(); g.moveTo(bx - 30, by + 6); g.bezierCurveTo(1100, TOPF - 2, 980, TOPF - 1, LAMP.sw[0] + 16, LAMP.sw[1]); g.stroke();
-	g.beginPath(); g.moveTo(LAMP.sw[0] - 14, LAMP.sw[1]); g.bezierCurveTo(820, TOPF + 4, 805, TOPF + 60, 806, FLOOR); g.stroke();
-	g.fillStyle = '#2a221b'; g.beginPath(); g.roundRect(LAMP.sw[0] - 16, LAMP.sw[1] - 7, 32, 13, 4); g.fill();                     // the switch
+	g.strokeStyle = '#100c09'; g.lineWidth = 3; g.beginPath(); g.moveTo(bx - 30, by + 4); g.bezierCurveTo(1150, TOPB + 12, 1000, TOPB + 14, LAMP.sw[0] + 30, LAMP.sw[1]); g.stroke();   // cord along the back edge
 	return c;
 };
 
 // ------------------------------------------------------------------------------------------------ store action
-const ROLLY = [TOPF - 6, TOPF - 22, TOPF - 38], ROLLX = [905, 925, 945];   // three copies, front → back (overlapped in depth)
+const ROLLY = [TOPB + 20, TOPB + 12, TOPB + 4], ROLLX = [955, 975, 995];   // three copies at the back of the table (the strip unrolls in front of them)   // three copies, front → back (overlapped in depth)
 const openAt = (i: number) => b(51.25 + 0.25 * (2 - i));                       // back roll first
+/** the cord switch: held up in his hand when the lamp clicks on (b50), then set down on the table by b50.45 */
+const switchAt = (t: number): [number, number] => { const k = smooth(clamp01((t - b(50.1)) / 0.3)); return [lerp(850, LAMP.sw[0] + 20, k), lerp(668, LAMP.sw[1] - 4, k)]; };
 /** x of copy i's free end: opens a hand's width (90 px) toward him on its beat */
 const freeEnd = (i: number, t: number) => ROLLX[i] - 90 * smooth(clamp01((t - openAt(i) + 0.12) / 0.24));
 const unrollAt = (t: number) => { const u = clamp01((t - T0) / 0.9); return u < 0.35 ? (u / 0.35) * 0.72 : 0.72 + 0.28 * easeOut((u - 0.35) / 0.65); };   // fast then slow
@@ -117,9 +117,9 @@ const unrollAt = (t: number) => { const u = clamp01((t - T0) / 0.9); return u < 
 const batteredAt = (t: number): [number, number] => { const k = smooth(clamp01((t - b(53.5)) / 0.32)); return [lerp(905, SX, k), lerp(600, TOPF - 12, k) - Math.sin(k * Math.PI) * 30]; };
 /** the researcher, seated at the table's left end facing right; hands on what the board says, beat by beat */
 const researcher = (t: number): FigOpts => {
-	const o: FigOpts = {x: 700, ground: FLOOR, h: 700, pose: POSES.sit, look: lk50};
+	const o: FigOpts = {x: 740, ground: FLOOR, h: 700, pose: POSES.sit, look: lk50};
 	const c: Contact[] = [];
-	if (t < b(50.4)) c.push({side: 'R', target: [LAMP.sw[0], LAMP.sw[1] - 4], name: 'switch'});
+	if (t < b(50.45)) c.push({side: 'R', target: switchAt(t), name: 'switch'});
 	else if (t < b(51.25) - 0.18) { /* hands in the lap */ }
 	else if (t < b(53.5) - 0.2) { const i = t < openAt(1) - 0.05 ? 2 : t < openAt(0) - 0.05 ? 1 : 0; c.push({side: 'R', target: [freeEnd(i, t), ROLLY[i] - 4], name: 'roller'}); }
 	else if (t < T0) { const p = batteredAt(t); c.push({side: 'R', target: [p[0] + 6, p[1] - 12], name: 'battered'}); }
@@ -155,7 +155,7 @@ const drawCopies = (g: CanvasRenderingContext2D, t: number) => {
 	for (let i = 2; i >= 0; i--) {
 		const x0 = freeEnd(i, t), y = ROLLY[i], grey = i > 0 && t >= b(53 + 0.25 * (i - 1)), rx = ROLLX[i];
 		if (rx - x0 > 2) {      // the opened hand's width lies on the table: a foreshortened panel showing a 虹桥
-			const ph = 46; g.save(); g.beginPath(); g.moveTo(x0, y); g.lineTo(rx, y); g.lineTo(rx + 8, y - ph); g.lineTo(x0 + 8, y - ph); g.closePath(); g.clip();
+			const ph = 24; g.save(); g.beginPath(); g.moveTo(x0, y); g.lineTo(rx, y); g.lineTo(rx + 8, y - ph); g.lineTo(x0 + 8, y - ph); g.closePath(); g.clip();
 			g.fillStyle = grey ? '#8f8a82' : '#cdbd9c'; g.fillRect(x0 - 4, y - ph - 2, rx - x0 + 16, ph + 4);
 			g.globalAlpha = 0.8; g.drawImage(grey ? greyArt : monoBase, grey ? 330 : 1320, grey ? 70 : 280, grey ? 380 : 1520, grey ? 190 : 760, rx - 230, y - ph - 6, 240, ph + 10); g.globalAlpha = 1; g.restore();
 			g.fillStyle = '#34506A'; g.fillRect(x0 - 3, y - ph + 2, 6, ph - 2);              // the free end's stick
@@ -187,7 +187,9 @@ const storeDraw = (t: number) => {
 	st.setCam(cx + shake, cy + shake * 0.4, zm);
 	const fk = `${Math.round(t * 30)}`;
 	cast.draw(fk, [researcher(t)]);
-	rolls.draw(fk, (g) => drawCopies(g, t));
+	rolls.draw(fk, (g) => { drawCopies(g, t); const [sx2, sy2] = switchAt(Math.min(t, b(50.45)));
+		g.strokeStyle = '#100c09'; g.lineWidth = 3; g.beginPath(); g.moveTo(LAMP.sw[0] + 30, LAMP.sw[1]); g.quadraticCurveTo(sx2 + 30, (sy2 + LAMP.sw[1]) / 2 + 10, sx2 + 10, sy2); g.stroke();
+		g.fillStyle = '#2a221b'; g.beginPath(); g.roundRect(sx2 - 10, sy2 - 7, 22, 14, 4); g.fill(); });
 	// the battered roll / the strip
 	const r = stripRect(t), bp = batteredAt(t), unrolled = t >= T0;
 	const tremble = t > b(53.75) && t < T0 ? Math.sin(t * 70) * (t > 123.13 ? 2.4 : 0.9) : 0;
@@ -219,7 +221,7 @@ const storeDraw = (t: number) => {
 addScene({id: '27', a: b(50), z: b(54.5) - 0.1, draw: storeDraw});
 
 // ------------------------------------------------------------------------------------------------ the PEAK (painting stage)
-function cartAt(t: number) { return 0.52 + 0.33 * clamp01((t - b(54.5)) / (b(56) - b(54.5))); }
+function cartAt(t: number) { return 0.52 + 0.1 * clamp01((t - b(54.5)) / (b(56) - b(54.5))); }
 const camOf = (v: View): [number, number, number] => [FX0 + v.u * FW, v.v * FH, 1920 / (v.f * FW)];
 const clampV = (v: View): View => { const zm = 1920 / (v.f * FW), hh = 540 / zm / FH; return {...v, v: Math.min(1 - hh, Math.max(hh, v.v))}; };
 /** scene 29's first camera (the crest arch spans the frame): the peak's exit lands the painted arch on it */
@@ -309,8 +311,8 @@ addScene({id: '29', a: b(57) - 0.12, z: b(58.5), in: {mode: 7, a: b(57) - 0.12, 
 	// front staff carries you in both hands at chest height; the second walks a step behind
 	// the front staff cradles you against his chest (hands under both ends, the near arm drawn over the roll); the second
 	// walks a step behind, out of phase with him (a quarter-cycle, so the two silhouettes don't stride as one)
-	const rc: [number, number] = [x1 - 0.11 * H2, ground29(x1) - 0.64 * H2];
-	const rl = 0.22 * H2, e0: [number, number] = [rc[0] - rl / 2, rc[1] + 3], e1: [number, number] = [rc[0] + rl / 2, rc[1] - 3];
+	const rc: [number, number] = [x1 - 0.09 * H2, ground29(x1) - 0.72 * H2];
+	const rl = 0.2 * H2, e0: [number, number] = [rc[0] - rl / 2, rc[1] + 3], e1: [number, number] = [rc[0] + rl / 2, rc[1] - 3];
 	const f1 = rig({x: x1, ground: ground29(x1), h: H2, pose: gaitPose('08_04', u, STEP29), look: lk50, flip: true}, [{side: 'L', target: [e0[0] + 8, e0[1] + 9], name: 'roll end'}, {side: 'R', target: [e1[0] - 8, e1[1] + 9], name: 'roll end'}], ground29, 'staff1');
 	const f2 = rig({x: x2, ground: ground29(x2), h: H2 + 8, pose: gaitPose('08_04', u + 0.28, STEP29), look: lk50, flip: true}, [], ground29, 'staff2');
 	dayCast.draw(`${Math.round(t * 30)}`, [f2, f1]);

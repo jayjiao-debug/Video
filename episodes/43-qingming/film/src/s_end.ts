@@ -17,7 +17,7 @@ import {Crest, deck, fillSvg} from './crest';
 import {Cast, look, drawRoll, drawFig, glowBlob, rig, Contact, drawCarriedRoll} from './actors';
 import {POSES, FigOpts, Pose, P, LookQ, gaitPose, gaitStride, walkFor, stepFor, underArm, underArmRoll, armsFrom, carryArmful, armfulAt, toScreen, mixPose, figurePaths} from './figures';
 import {paintSection} from './silk';
-import {SIL, skyline, roof as roofSvg, hall as hallSvg} from './draw';
+import {SIL, skyline, roof as roofSvg, hall as hallSvg, hills, jiaolou, cityGate} from './draw';
 import {endCard} from './hud';
 import {lockCam, robeSafe, bowUpper, armPaths} from './s_teaser';
 
@@ -39,9 +39,11 @@ let riverMono: HTMLCanvasElement & {silk: any}, riverGrey: HTMLCanvasElement & {
 
 // ================================================================================================ boot
 export const bootEnd = async () => {
-	riverMono = paintSection('river', {width: 2048, height: 768, mode: 'mono', seed: 43});
-	riverGrey = paintSection('river', {width: 2048, height: 768, mode: 'grey', seed: 43});
-	await Promise.all([bootWall(), bootFlip(), bootToday(), bootHall(), bootLid(), bootAisle(), bootExt()]);
+	try {      // a failure here must not stop the rest of the film from booting
+		riverMono = paintSection('river', {width: 2048, height: 768, mode: 'mono', seed: 43});
+		riverGrey = paintSection('river', {width: 2048, height: 768, mode: 'grey', seed: 43});
+		await Promise.all([bootWall(), bootFlip(), bootToday(), bootHall(), bootAisle(), bootExt()]);
+	} catch (e: any) { console.error('BOOT end', e?.message || e, e?.stack); }
 };
 
 // ================================================================================================ 32 · E3 beat cuts
@@ -137,9 +139,9 @@ const LK = {song: look('refugee'), yuan: look('yuanNoble'), ming: look('mingEunu
 const eraT0 = (e: number) => b(66 + 0.25 * e);
 type EraSet = {crest: Crest; cast: Cast; prop: Live; glow: Live; arms?: Live; crowd?: Cast};
 const ERAS: EraSet[] = [];
-let OFF_UA: Record<string, P> = {}, OFF_BUNDLE: P = [0, 0];
+let OFF_UA: Record<string, P> = {}, OFF_BUNDLE: P = [0, 0], FAR_MING: any, FAR_YUAN: any;
 /** today's light, the daybreak camera both matched stages share (b67.5 → b68.5) */
-const CAM_DB: [number, number, number] = [640, 650, 1.0];
+const CAM_DB: [number, number, number] = [200, 660, 1.0];
 // the standing crowd on the bridge (1923: gowns, Qing caps; after the daybreak: today's visitors) — same places, same sizes
 const CROWD = [{x: -170, h: 410}, {x: 70, h: 398}, {x: 300, h: 425}, {x: 342, h: 262, child: true}, {x: 560, h: 404}, {x: 790, h: 412}, {x: 1030, h: 420}];
 const L1923: LookQ[] = [{head: 'qingcap', dress: 'robe', sleeves: 'narrow', surcoat: true}, {head: 'guapi', dress: 'gown', sleeves: 'narrow'}, {head: 'qingcap', dress: 'robe', sleeves: 'narrow', beard: 'moustache'},
@@ -147,9 +149,9 @@ const L1923: LookQ[] = [{head: 'qingcap', dress: 'robe', sleeves: 'narrow', surc
 const deckFar = (x: number) => deck(x) - 6;
 const bootFlip = async () => {
 	const defs: [string, any][] = [['e4-song', {sky: 'fire', era: '宋', lanterns: true, boat: false, bankCrowd: true, embers: true}], ['e4-yuan', {sky: 'night', era: '元', lanterns: true, boat: false, bankCrowd: false}],
-		['e4-ming', {sky: 'night', era: '明', lanterns: true, boat: false, bankCrowd: false}], ['e4-1923', {sky: 'snow', era: '1923', lanterns: true, boat: false, bankCrowd: true, snow: true}]];
+		['e4-1923', {sky: 'snow', era: '1923', lanterns: true, boat: false, bankCrowd: true, snow: true}]];
 	const crests = defs.map(([n, o]) => new Crest(n, o)); await Promise.all(crests.map((c) => c.ready));
-	crests.forEach((crest, e) => {
+	crests.forEach((crest, e0) => { const e = e0 === 2 ? 3 : e0;
 		const st = crest.st, s: EraSet = {crest, cast: new Cast(st, 'e4cast', 1000, 700, 3200, 1000, 20), prop: new Live(st, 'e4prop', 1000, 700, 3200, 1000, 23, {rim: 0.3}, 1), glow: new Live(st, 'e4glow', 1000, 700, 3200, 1000, 24, {emissive: 1.0}, 0.4)};
 		if (e === 0) st.get('sunglow').mat.uniforms.uOpacity.value = 0.8;
 		if (e === 3) {
@@ -162,8 +164,13 @@ const bootFlip = async () => {
 			dk.drawW('s', (g) => { g.fillStyle = '#C9D2D8'; g.beginPath(); const xs: number[] = []; for (let x = -1300; x <= 3200; x += 20) xs.push(x);
 				xs.forEach((x, i) => (i ? g.lineTo(x, deck(x) - 6 - 2 * Math.sin(x * 0.05)) : g.moveTo(x, deck(x) - 6))); for (const x of xs.slice().reverse()) g.lineTo(x, deck(x) + 3); g.closePath(); g.fill(); });
 		}
-		ERAS.push(s);
+		ERAS[e] = s;
 	});
+	// 明 shares the 元 night stage (memory): only the far bank differs — 紫禁城 角楼 + a gate instead of the Dagoba
+	const farW = 8400, farH = 1400, base = 860;
+	const mingFar = svgDoc(`<g transform="translate(${farW / 2 - 960},${-(860 - farH * 0.55)})">${hills(-3200, 5200, base - 40, 90, 7, '#000')}${skyline(-3200, 5200, base, 40, 110, 11)}${jiaolou(-420, base, 1.3)}${cityGate(250, base, 0.75)}</g>`, farW, farH);
+	FAR_MING = canvasTex(await svgToCanvas(mingFar, farW, farH, 0.5)); FAR_YUAN = ERAS[1].crest.st.get('far').mat.uniforms.map.value;
+	ERAS[2] = ERAS[1];
 	const mean = (f: (u: number) => P): P => { let sx = 0, sy = 0; for (let i = 0; i < 16; i++) { const p = f(i / 16); sx += p[0] / 16; sy += p[1] / 16; } return [sx, sy]; };
 	for (const k of ['yuan', 'ming'] as const) OFF_UA[k] = mean((u) => { let p = robeSafe(walkFor(LK[k], u)); p = armsFrom(p, underArm(p), 'R'); const [a, c] = underArmRoll(p, 'R', 0.29); return [(a[0] + c[0]) / 2, (a[1] + c[1]) / 2]; });
 	OFF_BUNDLE = mean((u) => armfulAt(carryArmful(robeSafe(walkFor(LK.youth, u)))).c);
@@ -201,7 +208,7 @@ const clothBundle = (g: CanvasRenderingContext2D, c: P, r: number) => {
 };
 /** walk parameter and x of the carrier in era e at t (1923 quickens his step after b67) */
 const eraWalk = (e: number, t: number, lk: LookQ) => {
-	const extra = e === 3 ? quicken(t, b(67), 0.5, 0.35) : 0, u = (t - eraT0(e) + 0.25 + extra) / (2 * BEAT);
+	const extra = e === 3 ? quicken(t, b(67), 0.75, 0.3) : 0, u = (t - eraT0(e) + 0.25 + extra) / (2 * BEAT);
 	const x0 = e === 0 ? 1150 : e === 3 ? 760 : 700;
 	return {u, x: x0 + u * gaitStride('08_04', stepFor(lk)) * FH};
 };
@@ -209,7 +216,7 @@ type EraPose = {figs: FigOpts[]; glowC: P; target: P; draw: (g: CanvasRenderingC
 const eraPose = (e: number, t: number): EraPose => {
 	if (e === 0) {
 		const lk = LK.song, {u, x} = eraWalk(0, t, lk), o: FigOpts = {x, ground: deck(x), h: FH, pose: walkFor(lk, u), look: lk};
-		const hand = toScreen(o, [-0.03, 0.42]), ax = x - 0.92 * FH, cg = cartGeo(ax, deck(ax), [hand[0] - 2, hand[1] + 2], FH);
+		const hand = toScreen(o, [-0.02, 0.54]), ax = x - 0.92 * FH, cg = cartGeo(ax, deck(ax), [hand[0] - 2, hand[1] + 2], FH);
 		const f = rig(o, [{side: 'R', target: [hand[0] - 2, hand[1] + 2], name: 'shaft'}, {side: 'L', target: [hand[0] - 9, hand[1] + 4], name: 'shaft'}], deck, 'E4 宋 puller');
 		const you: [P, P] = [cg.bed(-0.2, 0.085), cg.bed(0.2, 0.095)], c = P2(you[0], you[1], 0.5);
 		return {figs: [f], glowC: c, target: c, draw: (g) => { cartBack(g, cg, FH); drawFig(g, f); }, front: (g) => { drawRoll(g, you[0], you[1], 0.03 * FH, 1); cartFront(g, cg, FH); }};
@@ -232,11 +239,12 @@ const flipCam = (e: number, t: number, ep: EraPose): [number, number, number] =>
 	const [cx, cy] = lockAt(FZOOM, ep.target[0], ep.target[1], 22);
 	if (e < 3 || t < b(67)) return [cx, cy, FZOOM];
 	// b67: the camera stops following you and eases back toward the bank-side framing the daybreak needs
-	const ep0 = eraPose(3, b(67)), [x0, y0] = lockAt(FZOOM, ep0.target[0], ep0.target[1], 22), k = easeInOut(clamp01((t - b(67)) / (b(67.5) - b(67))));
+	const ep0 = eraPose(3, b(67)), [x0, y0] = lockAt(FZOOM, ep0.target[0], ep0.target[1], 22), k = smooth(clamp01((t - b(67)) / (b(67.5) - b(67))));
 	return [lerp(x0, CAM_DB[0], k), lerp(y0, CAM_DB[1], k), Math.exp(lerp(Math.log(FZOOM), Math.log(CAM_DB[2]), k))];
 };
 function flipDraw(t: number, eForce?: number): Frame {
 	const e = eForce ?? (t < eraT0(1) ? 0 : t < eraT0(2) ? 1 : t < eraT0(3) ? 2 : 3), S = ERAS[e], st = S.crest.st, ep = eraPose(e, t);
+	if (e === 1 || e === 2) st.get('far').mat.uniforms.map.value = e === 2 ? FAR_MING : FAR_YUAN;
 	const [cx, cy, zm] = flipCam(e, t, ep); st.setCam(cx, cy, zm);
 	const key = k30(t);
 	S.cast.draw(key, [], (g) => ep.draw(g));
@@ -271,7 +279,7 @@ const bootToday = async () => {
 /** the gate wall in cross-section, its passage-side jamb at x = edge (screen px); side 'R' = the wall lies left of the edge */
 const masonry = (g: CanvasRenderingContext2D, x0: number, x1: number) => {
 	if (x1 <= x0) return;
-	const gr = g.createLinearGradient(x0, 0, x1, 0); gr.addColorStop(0, '#6e3a2c'); gr.addColorStop(0.5, '#7a4230'); gr.addColorStop(1, '#6a3629');
+	const gr = g.createLinearGradient(x0, 0, x1, 0); gr.addColorStop(0, '#644036'); gr.addColorStop(0.5, '#6e4638'); gr.addColorStop(1, '#5f3c33');
 	g.fillStyle = gr; g.fillRect(x0, -20, x1 - x0, 1120);
 	g.fillStyle = 'rgba(40,18,12,0.35)'; for (let y = 18; y < 1080; y += 38) g.fillRect(x0, y, x1 - x0, 3);
 	for (let r = 0; r < 29; r++) for (let x = x0 + ((r % 2) * 46) - 92; x < x1; x += 92) if (x > x0) g.fillRect(x, 21 + r * 38, 3, 35);
@@ -308,7 +316,7 @@ addScene({id: '34', a: b(67.5), z: b(69), in: {mode: 12, a: b(67.5), z: b(68), d
 // walking left BEHIND the case (their lower bodies hidden by it), leaning to look in; ceiling spots in a soffit at the very
 // top, their pools on the wall above the case. The case's central pane (x 760–1160, y 512–690) is the rectangle the storage
 // box's face matches at b74.
-const HZ = {wall: -800, pools: -790, ceil: -700, floor: -420, crowd: -216, inner: -215, silk: -210, card: -209, rollers: -208, glass: -200, frame: -195, box: -194.5, staff: -194, halo: -193};
+const HZ = {wall: -800, pools: -790, ceil: -700, floor: -420, crowd: -216, inner: -215, silk: -210, card: -209, rollers: -208, glass: -200, frame: -195, box: -197, staff: -194, halo: -193};
 const CASE = {x0: 240, x1: 1680, top: 494, rail: 512, pane1: 690, base: 900, mull: [600, 760, 1160, 1320], band0: 548, band1: 612, sx0: 300, sx1: 1620};
 const PANE_C: P = [960, 601], PANE_W = 400;
 const HG = 800;                                   // the floor line behind the case (rest px at the crowd's depth)
@@ -330,11 +338,11 @@ const bootHall = async () => {
 		g.fillStyle = '#353c42'; g.beginPath(); g.moveTo(CASE.x0 + 30, 640); g.lineTo(CASE.x1 - 30, 640); g.lineTo(CASE.x1 - 46, 532); g.lineTo(CASE.x0 + 46, 532); g.closePath(); g.fill();
 		g.fillStyle = '#2b3136'; g.fillRect(CASE.x0 + 30, 640, CASE.x1 - CASE.x0 - 60, 18);
 		st.add('inner', canvasTex(c), 960, 540, 1920, 1080, HZ.inner, {rim: 0.2}); }
-	hallSilk = new Live(st, 'silk', 960, 580, 1400, 120, HZ.silk, {emissive: 0.32}, 1.4);
+	hallSilk = new Live(st, 'silk', 960, 570, 1400, 220, HZ.silk, {emissive: 0.32}, 1.4);
 	hallCard = new Live(st, 'card', 960, 582, 260, 110, HZ.card, {}, 2);
 	hallCard.drawW('c', (g) => { g.fillStyle = '#20252a'; g.fillRect(944, 612, 32, 8); g.fillStyle = '#cfc8b8'; g.fillRect(862, 548, 196, 66); g.strokeStyle = '#8a8478'; g.lineWidth = 1.5; g.strokeRect(867, 553, 186, 56);
 		g.fillStyle = '#2b2a28'; g.textAlign = 'center'; g.font = '900 28px "Noto Serif CJK SC"'; g.fillText('撤展回库', 960, 582); g.font = '700 16px "Noto Serif CJK SC"'; g.fillText('下次展出：未公布', 960, 603); });
-	hallRollers = new Live(st, 'rollers', 960, 580, 1400, 160, HZ.rollers, {emissive: 0.2}, 1.4);
+	hallRollers = new Live(st, 'rollers', 960, 570, 1400, 260, HZ.rollers, {emissive: 0.2}, 1.4);
 	// the front: glass sheen, top rail, mullions, plinth
 	{ const c = mkCanvas(960, 540), g = c.getContext('2d')!; g.scale(0.5, 0.5);
 		for (let i = 0; i < 5; i++) { const x0 = [CASE.x0, ...CASE.mull][i], x1 = [...CASE.mull, CASE.x1][i]; g.strokeStyle = 'rgba(220,230,236,0.07)'; g.lineWidth = 14; g.beginPath(); g.moveTo(x0 + 40, CASE.pane1); g.lineTo(x0 + 120, CASE.rail); g.stroke(); g.lineWidth = 4; g.beginPath(); g.moveTo(x0 + 78, CASE.pane1); g.lineTo(x0 + 158, CASE.rail); g.stroke(); void x1; }
@@ -355,7 +363,7 @@ const bootHall = async () => {
 };
 /** spot i's light level at t (the rows go out right → left on b72.0 → b72.25); 'out' after; 36 keeps them off */
 const spotLevel = (i: number, t: number) => { const at = b(72) + (5 - i) * 0.09; return t < at ? 1 : t < at + 0.05 ? (Math.round((t - at) * 120) % 2 ? 0.4 : 0.7) : 0; };
-type HallMode = {t: number; spots: (i: number) => number; you: number; card: number; crowd: FigOpts[]; wallK: number; staff?: {A: FigOpts; B: FigOpts; clipY: number}; rollers?: {xl: number; xr: number; lift: number; r: number}; box?: {lid: number; roll: number}};
+type HallMode = {t: number; spots: (i: number) => number; you: number; card: number; crowd: FigOpts[]; wallK: number; staff?: {A: FigOpts; B: FigOpts; clipY: number; clipArms?: boolean}; rollers?: {xl: number; xr: number; lift: number; r: number}; box?: {lid: number; roll: number}};
 const drawHall = (m: HallMode) => {
 	const lv = FIX.map((_, i) => m.spots(i)), key = lv.map((v) => v.toFixed(2)).join(',');
 	hallCeil.drawW(key, (g) => { g.fillStyle = '#1a1d21'; g.fillRect(-1100, -660, 4200, 716); g.fillStyle = '#23272b'; g.fillRect(-1100, 50, 4200, 8);
@@ -375,7 +383,8 @@ const drawHall = (m: HallMode) => {
 	if (m.box) hallBox.drawW(`${m.box.lid.toFixed(3)}:${m.box.roll.toFixed(2)}`, (g) => storageBox(g, m.box!.lid, m.box!.roll));
 	hallStaff.L.mesh.visible = !!m.staff;
 	const fk = k30(m.t);
-	if (m.staff) { const s = m.staff; hallStaff.drawW(`${fk}:${s.A.x.toFixed(1)}`, (g) => { g.save(); g.beginPath(); g.rect(-2000, -2000, 6000, 2000 + s.clipY); g.clip(); drawFig(g, s.A); drawFig(g, s.B); g.restore(); fillD(g, armPaths(s.A)); fillD(g, armPaths(s.B)); }); }
+	if (m.staff) { const s = m.staff; hallStaff.drawW(`${fk}:${s.A.x.toFixed(1)}`, (g) => { g.save(); g.beginPath(); g.rect(-2000, -2000, 6000, 2000 + s.clipY); g.clip(); drawFig(g, s.A); drawFig(g, s.B); if (s.clipArms) { fillD(g, armPaths(s.A)); fillD(g, armPaths(s.B)); } g.restore();
+		if (!s.clipArms) { fillD(g, armPaths(s.A)); fillD(g, armPaths(s.B)); } }); }   // arms that reach into the case pass over its top; any others stay behind it
 	hallCrowd.draw(fk + ':' + m.crowd.length, m.crowd);
 	const inBox = !!m.box && m.box.roll >= 0, yc: P = rl ? [(rl.xl + rl.xr) / 2, 580 - rl.lift] : inBox ? [BOX35.x0 + BOX35.w / 2, BOX35.top - 4] : [960, 580];
 	const yc0: P = m.box ? [BOX35.x0 + BOX35.w / 2, BOX35.top - 4] : rl ? [(rl.xl + rl.xr) / 2, 580 - rl.lift] : [960, 580];
@@ -444,10 +453,11 @@ addScene({id: '35a', a: b(72), z: b(72.25), draw: (t) => {
 // 35b (b72.25 → b72.75): two staff behind the case, each with both hands on a roller, roll you up toward the middle and lift you
 const STAFF: LookQ[] = [{head: 'short', dress: 'smock'}, {head: 'ponytail', dress: 'smock', build: 0.95}];
 const rollUp = (t: number) => {
-	const k = smooth(clamp01((t - b(72.3)) / (b(72.6) - b(72.3)))), lift = 46 * smooth(clamp01((t - b(72.6)) / 0.16));
-	const xl = lerp(842, 947, k), xr = lerp(1078, 973, k), yT = 552 - lift, yB = 582 - lift, lean = lerp(50, 68, k) - 16 * lift / 46;
-	const A = rig({x: 800, ground: HG, h: 470, pose: bowUpper(POSES.stand, lean), look: STAFF[0]}, [{side: 'R', target: [xl - 4, yT], name: 'roller'}, {side: 'L', target: [xl - 4, yB], name: 'roller'}], () => HG, 'staff A');
-	const B = rig({x: 1120, ground: HG, h: 462, pose: bowUpper(POSES.stand, lean), look: STAFF[1], flip: true}, [{side: 'R', target: [xr + 4, yT], name: 'roller'}, {side: 'L', target: [xr + 4, yB], name: 'roller'}], () => HG, 'staff B');
+	// each with both hands near the top of a roller; the rollers lift a little as they wind in, then the whole roll comes up
+	const k = smooth(clamp01((t - b(72.3)) / (b(72.6) - b(72.3)))), lift = 16 * k + 40 * smooth(clamp01((t - b(72.6)) / 0.16));
+	const xl = lerp(840, 947, k), xr = lerp(1080, 973, k), yT = 532 - lift, yB = 556 - lift, lean = 35 + 10 * k - 12 * clamp01((lift - 16) / 40);
+	const A = rig({x: 770, ground: HG, h: 470, pose: bowUpper(POSES.stand, lean), look: STAFF[0]}, [{side: 'R', target: [xl - 4, yT], name: 'roller'}, {side: 'L', target: [xl - 4, yB], name: 'roller'}], () => HG, 'staff A');
+	const B = rig({x: 1150, ground: HG, h: 462, pose: bowUpper(POSES.stand, lean), look: STAFF[1], flip: true}, [{side: 'R', target: [xr + 4, yT], name: 'roller'}, {side: 'L', target: [xr + 4, yB], name: 'roller'}], () => HG, 'staff B');
 	return {A, B, rl: {xl, xr, lift, r: lerp(11, 16, k)}};
 };
 addScene({id: '35b', a: b(72.25), z: b(72.75), draw: (t) => {
@@ -467,10 +477,10 @@ const layLid = (t: number) => {
 	return {A, B, lid, roll};
 };
 addScene({id: '35c', a: b(72.75), z: b(73), draw: (t) => {
-	const zm = Math.exp(lerp(Math.log(1.7), Math.log(3.1), easeIn(clamp01((t - (b(72.75) + 0.1)) / (b(73) - b(72.75) - 0.1)))));
-	lockCam(hallSt, zm, BOX35.x0 + BOX35.w / 2, BOX35.top + 6, HZ.box, 960, lerp(640, 600, clamp01((zm - 1.7) / 1.4)));
+	const zm = Math.exp(lerp(Math.log(1.7), Math.log(4.2), easeIn(clamp01((t - (b(72.75) + 0.1)) / (b(73) - b(72.75) - 0.1)))));
+	lockCam(hallSt, zm, BOX35.x0 + BOX35.w / 2, BOX35.top + 6, HZ.box, 960, lerp(640, 590, clamp01((zm - 1.7) / 2.5)));
 	const L = layLid(t);
-	drawHall({t, spots: () => 0, you: 1, card: 0, crowd: [], wallK: 0.84, staff: {A: L.A, B: L.B, clipY: CASE.top}, box: {lid: L.lid, roll: L.roll}});
+	drawHall({t, spots: () => 0, you: 1, card: 0, crowd: [], wallK: 0.84, staff: {A: L.A, B: L.B, clipY: CASE.top, clipArms: true}, box: {lid: L.lid, roll: L.roll}});
 	return {st: hallSt, grade: {vig: 0.42, exposure: 1}, bloom: 1};
 }});
 // 35d (b73 → b74): the storage aisle (#3E454A): a wall of shelved boxes face-on, yours glowing faintly at its seams on the
@@ -493,7 +503,7 @@ const bootAisle = async () => {
 	for (const yb of boards) { g.fillStyle = '#23272b'; g.fillRect(OX, yb, 2440, 16); g.fillStyle = '#50565b'; g.fillRect(OX, yb, 2440, 2); }
 	for (let x = -980; x <= 1440; x += 610) { g.fillStyle = '#1e2225'; g.fillRect(x - 10, OY, 20, 1300); }
 	for (let r = 0; r < boards.length; r++) { const yb = boards[r]; let x = -960 + hash(r * 3.1) * 40;
-		while (x < 1400) { const w = 200 + hash(x * 0.13 + r) * 60, h = 86 + hash(x * 0.7 + r) * 28; const mine = r === 2 && x < 960 && x + w + 24 > 960;
+		while (x < 1400) { const w = 200 + hash(x * 0.13 + r) * 60, h = 86 + hash(x * 0.7 + r) * 28; const mine = r === 2 && x < ABOX.cx + ABOX.w / 2 + 14 && x + w > ABOX.cx - ABOX.w / 2 - 14;
 			if (!mine && x + w < 1420) { const bg = g.createLinearGradient(0, yb - h, 0, yb); bg.addColorStop(0, '#4a3a2c'); bg.addColorStop(1, '#33281f'); g.fillStyle = bg; g.fillRect(x, yb - h, w, h);
 				g.fillStyle = '#5c4834'; g.fillRect(x, yb - h, w, 3); g.fillStyle = 'rgba(20,14,10,0.6)'; g.fillRect(x, yb - h + 14, w, 1.5);
 				g.fillStyle = '#a89a80'; g.fillRect(x + w / 2 - 20, yb - h * 0.55, 40, 16); g.fillStyle = '#5a5248'; g.fillRect(x + w / 2 - 14, yb - h * 0.55 + 6, 28, 2); }
@@ -560,7 +570,7 @@ const bootExt = async () => {
 		fg.fillStyle = gr; fg.fillRect(x0, y0, w, h); fg.fillStyle = '#23282d'; fg.fillRect(960 - 40, PCY - 10, 80, 20); fg.fillStyle = '#2a2f34'; fg.fillRect(960 - 42, PCY + 10, 84, 26); fg.fillStyle = '#9a9488'; fg.fillRect(960 - 8, PCY - 5, 16, 6); }
 	pass.add('far', canvasTex(farCv), 960, 540, 1920, 1080, 0, {});
 	[250, 480, 700, 900, 1060, 1180, 1250].forEach((z, i, RZ) => { const c = mkCanvas(960, 540), g = c.getContext('2d')!, s2 = D / (D - z), hw = PH * s2 / 2, hh = PV * s2 / 2, cy = 540 / 2 + (PCY - 540) * s2 / 2, k = i / (RZ.length - 1);
-		const lit = Math.round(lerp(150, 62, k)); g.fillStyle = `rgb(${lit},${Math.round(lit * 0.8)},${Math.round(lit * 0.64)})`; g.fillRect(0, 0, 960, 540);
+		const lit = Math.round(lerp(104, 50, k)); g.fillStyle = `rgb(${lit},${Math.round(lit * 0.8)},${Math.round(lit * 0.64)})`; g.fillRect(0, 0, 960, 540);
 		g.strokeStyle = `rgba(30,18,10,${0.25 + 0.2 * k})`; g.lineWidth = 1.5; for (let y = 6; y < 540; y += 14 * s2 / 2 + 6) { g.beginPath(); g.moveTo(0, y); g.lineTo(960, y); g.stroke(); }
 		g.globalCompositeOperation = 'destination-out'; g.beginPath(); g.moveTo(480 - hw, cy + hh); g.lineTo(480 - hw, cy - hh + hw); g.arc(480, cy - hh + hw, hw, Math.PI, 0); g.lineTo(480 + hw, cy + hh); g.closePath(); g.fill();
 		g.globalCompositeOperation = 'source-over'; pass.add('ring' + i, canvasTex(c), 960, 540, 1920, 1080, z, {}); });
@@ -570,7 +580,7 @@ const Q_LINE = (LINES.find((l) => l[2].startsWith('要是排')) ?? [174.657, 184
 const SOURCES = '资料：故宫博物院 · 余辉（故宫博物院院刊 2012；光明日报 2017）· 朱鸿文（光明日报 2026）· 王文锋（长春日报 2020）· 许忠陵《清明上河图装裱记》· 北京晚报 2015';
 const endHud = (t: number) => (hud: HTMLElement) => {
 	const o = smooth(clamp01((t - b(76)) / 0.5)), n = [...Q_LINE].filter((c) => c !== '[' && c !== ']').length, qT = clamp01((t - b(76.5)) / 0.4) * n + (t >= b(76.5) ? 1 : 0);
-	endCard(hud, o, Q_LINE, SOURCES, t < b(76.5) ? 0 : Math.floor(qT + 1e-6), smooth(clamp01((t - b(78)) / 0.3)), smooth(clamp01((t - b(78.5)) / 0.3)));
+	endCard(hud, o, t < b(76.5) ? '' : Q_LINE, SOURCES, t < b(76.5) ? 0 : Math.floor(qT + 1e-6), smooth(clamp01((t - b(78)) / 0.3)), smooth(clamp01((t - b(78.5)) / 0.3)));
 };
 addScene({id: '37', a: b(76), z: 184.3 + 1, draw: (t) => {
 	const dimK = lerp(1, 0.5, smooth(clamp01((t - b(76.2)) / (b(77.6) - b(76.2)))));

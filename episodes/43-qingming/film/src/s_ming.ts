@@ -65,7 +65,7 @@ export const d18 = (t: number): Frame => {
 	const clipX = DOOR.x1 - 2;            // whoever goes through the friend's door passes behind its right jamb
 	cast18.L.drawW(fk, (g) => { drawFig(g, c.lu); g.save(); g.beginPath(); g.rect(-2000, -2000, clipX + 2000, 6000); g.clip(); drawFig(g, c.fr); g.restore(); });
 	const inside = clamp01((c.rc[0] - DOOR.x0 - 20) / 50);
-	roll18.drawW(fk, (g) => { g.save(); g.beginPath(); g.rect(-2000, -2000, clipX + 2000, 6000); g.clip(); glowBlob(g, c.rc, 120, 80, 0.4); softRoll(g, c.e0, c.e1, 11);
+	roll18.drawW(fk, (g) => { g.save(); g.beginPath(); g.rect(-2000, -2000, clipX + 2000, 6000); g.clip(); glowBlob(g, c.rc, 140, 95, 0.55); softRoll(g, c.e0, c.e1, 11);
 		drawFig(g, {...c.fr, part: 'L'}); if (t < b(30.12)) drawFig(g, {...c.lu, part: 'L'}); g.restore(); });
 	// the friend's door: your light inside, the leaves swing shut, a sliver under the door until b30.75
 	const dk = doorK(t), sliver = t < b(30.5) ? 1 : 1 - smooth(clamp01((t - b(30.5)) / (b(30.75) - b(30.5))));
@@ -82,7 +82,7 @@ export const d18 = (t: number): Frame => {
 	});
 	// torches at the front gate (left): flicker
 	const fl = (i: number) => 0.85 + 0.15 * Math.sin(t * 13 + i * 2.1) * Math.sin(t * 7.3 + i);
-	torch18.drawW(`${Math.round(t * 15)}`, (g) => { for (const [x, y, r, i] of TORCH_GLOW) glowBlob(g, [x, y], r, r * 0.7, 0.34 * fl(i), '255,170,90'); for (const f of TORCHES) { const [x, y] = f; g.fillStyle = `rgba(255,${190 + 30 * fl(x)},110,0.95)`; g.beginPath(); g.ellipse(x, y - 9, 6, 12 * fl(x), 0, 0, Math.PI * 2); g.fill(); glowBlob(g, [x, y - 8], 26, 30, 0.7 * fl(x), '255,190,110'); } });
+	torch18.drawW(`${Math.round(t * 15)}`, (g) => { for (const [x, y, r, i] of TORCH_GLOW) glowBlob(g, [x, y], r, r * 0.7, 0.2 * fl(i), '255,170,90'); for (const f of TORCHES) { const [x, y] = f; g.fillStyle = `rgba(255,${190 + 30 * fl(x)},110,0.95)`; g.beginPath(); g.ellipse(x, y - 9, 6, 12 * fl(x), 0, 0, Math.PI * 2); g.fill(); glowBlob(g, [x, y - 8], 22, 26, 0.45 * fl(x), '255,190,110'); } });
 	st.heroAt(c.rc[0], c.rc[1], -150, 560);
 	return {st, grade: {vig: 0.36, vigCol: '#0b1013', exposure: 1}, bloom: 1};
 };
@@ -139,7 +139,7 @@ const drawBox = (g: CanvasRenderingContext2D, c: P, w: number, h: number) => {
 	g.fillStyle = '#4e2019'; g.fillRect(c[0] - w / 2, c[1] - h / 2, w, h * 0.12);
 	g.fillStyle = '#FFE2A8'; g.fillRect(c[0] - w / 2 + 2, c[1] - h * 0.18, w - 4, Math.max(1.2, h * 0.05));
 };
-const boxGlow = (g: CanvasRenderingContext2D, c: P, w: number, h: number, a = 0.5) => { glowBlob(g, [c[0], c[1] - h * 0.16], w * 0.9, h * 0.45, a); };
+const boxGlow = (g: CanvasRenderingContext2D, c: P, w: number, h: number, a = 0.68) => { glowBlob(g, [c[0], c[1] - h * 0.16], w * 0.9, h * 0.45, a); };
 /** a figure carrying the box at the chest, both hands on it, walking right across a doorway */
 const boxCarrier = (x: number, gr: number, h: number, look: LookQ, u: number, who: string) => {
 	const bw = 0.22 * h, bh = 0.14 * h, bc: P = [x + 0.15 * h, gr - 0.62 * h];
@@ -188,7 +188,7 @@ export const d19 = (t: number): Frame => {
 	const O2 = away ? rig({x: o2x + sb * CAREFUL * 134, ground: HD.y1, h: 134, pose: stepB ? careful(sb + 0.28) : base, look: lkOff}, [], () => HD.y1, 'seal-official-2')
 		: rig({x: o2x, ground: HD.y1, h: 134, pose: stepping ? careful(su + 0.28) : base, look: lkOff, flip: true}, cO2, () => HD.y1, 'seal-official-2');
 	offs.draw(`${fk}`, t >= b(31.9) ? [O1, O2] : [], (g) => { if (!slap && raise > 0) for (const hnd of [o1h, o2h]) { g.fillStyle = '#E4DCC6'; g.fillRect(hnd[0] - 4, hnd[1], 8, 26 * raise); } });
-	lamps19.drawW('l', (g) => { for (const [x, y, r] of LAMPS19) { glowBlob(g, [x, y], r * 2.6, r * 2.6, 0.45, '255,184,104'); g.fillStyle = '#FFC98A'; g.beginPath(); g.ellipse(x, y, r * 0.55, r * 0.75, 0, 0, Math.PI * 2); g.fill(); } });
+	lamps19.drawW('l', (g) => { for (const [x, y, r] of LAMPS19) { glowBlob(g, [x, y], r * 2.2, r * 2.2, 0.22, '255,184,104'); g.fillStyle = '#FFC98A'; g.beginPath(); g.ellipse(x, y, r * 0.55, r * 0.75, 0, 0, Math.PI * 2); g.fill(); } });
 	st.heroAt(960, 650, ZW3, 900);
 	return {st, grade: {vig: 0.4, vigCol: '#120c09', exposure: 1}, bloom: 1};
 };
@@ -335,7 +335,7 @@ const POOL = {w: 300, y0: 130, h: 1280};
 let pools21: HTMLCanvasElement[] = [];
 const makePools = (sheet: HTMLCanvasElement) => FCOLS.map((x) => {
 	const c = mkCanvas(POOL.w, POOL.h), g = c.getContext('2d')!; g.drawImage(sheet, x - POOL.w / 2, POOL.y0, POOL.w, POOL.h, 0, 0, POOL.w, POOL.h);
-	g.globalCompositeOperation = 'source-atop'; g.fillStyle = 'rgba(255,214,150,0.10)'; g.fillRect(0, 0, POOL.w, POOL.h);
+	g.globalCompositeOperation = 'source-atop'; g.fillStyle = 'rgba(255,214,150,0.06)'; g.fillRect(0, 0, POOL.w, POOL.h);
 	g.globalCompositeOperation = 'destination-in'; g.save(); g.translate(POOL.w / 2, POOL.h / 2); g.scale(1, POOL.h / POOL.w);
 	const gr = g.createRadialGradient(0, 0, 0, 0, 0, POOL.w / 2); gr.addColorStop(0, 'rgba(0,0,0,1)'); gr.addColorStop(0.55, 'rgba(0,0,0,0.85)'); gr.addColorStop(1, 'rgba(0,0,0,0)'); g.fillStyle = gr; g.beginPath(); g.arc(0, 0, POOL.w / 2, 0, Math.PI * 2); g.fill(); g.restore();
 	return c;
@@ -356,14 +356,15 @@ const fengSheet = (col: HTMLCanvasElement) => {
 const buildTail = async () => {
 	const st = new Stage('tail'); tail = st;
 	st.add('table', canvasTex(gradCanvas([[0, '#1c140e'], [0.5, '#2a1f17'], [1, '#1c140e']])), 0, 540, 30000, 4000, -400);
-	const end = paintSection('end', {width: 4096, height: 1536, mode: 'mono', seed: 43});
+	const end = paintSection('end', {width: 3072, height: 1152, mode: 'mono', seed: 43});
 	const col = paintSection('colophon', {width: 4096, height: 1536, mode: 'mono', seed: 43});
 	feng = fengSheet(col); pools21 = makePools(feng);
+	const col3 = mkCanvas(3072, 1152); col3.getContext('2d')!.drawImage(col, 0, 0, 3072, 1152);          // displayed at 3/4 size (GPU memory)
 	const dim = '#b3a690';                                   // the tail in lamplit shade; 冯保's columns get the pools of light
 	st.add('end', canvasTex(end), XE + 2048 * SK, 540, 4096 * SK, 1080, 0, {emissive: 0.08, tint: dim});
-	st.add('col', canvasTex(col), XC + 2048 * SK, 540, 4096 * SK, 1080, 0, {emissive: 0.08, tint: dim});
+	st.add('col', canvasTex(col3), XC + 2048 * SK, 540, 4096 * SK, 1080, 0, {emissive: 0.08, tint: dim});
 	fengPlane = st.add('feng', canvasTex(feng), XF + FW21 / 2 * SK, 540, FW21 * SK, 1080, 0, {emissive: 0.08, tint: dim});
-	lit21 = new Live(st, 'lit', XF + FW21 / 2 * SK, 540, FW21 * SK, 1080, 0.5, {emissive: 0.16}, 1 / SK * 0.6, 3);
+	lit21 = new Live(st, 'lit', XF + FW21 / 2 * SK, 540, FW21 * SK, 1080, 0.5, {emissive: 0.0, tint: '#e8ddca'}, 1 / SK * 0.6, 3);
 	lit21.L.mesh.renderOrder = 5;
 };
 
@@ -375,10 +376,10 @@ export const bootMing = async () => {
 		const st = c20.st;
 		nightSky20 = st.add('nightSky', canvasTex(gradCanvas([[0, '#1F2E38'], [0.3, '#26363f'], [0.46, '#2E404B'], [0.62, '#45565D'], [0.7, '#5A5A4C'], [1, '#3A3E3A']])), 960, 700, 9000, 3600, -8990, {opacity: 0});
 		jl20 = new Live(st, 'jlWin', -420, 760, 600, 260, -2590, {emissive: 1.3}, 1);
-		cart20 = new Live(st, 'cart20', 0, 1100, 5000, 1000, 18, {rim: 0.6, rimPx: 5}, 1);
-		cast20 = new Cast(st, 'cast20', 0, 1100, 5000, 1400, 20);
-		near20 = new Live(st, 'near20', 0, 1100, 5000, 1000, 21, {rim: 0.6, rimPx: 5}, 1);
-		roll20 = new Live(st, 'roll20', 0, 1100, 5000, 1400, 22, {emissive: 0.55}, 0.8);
+		cart20 = new Live(st, 'cart20', -1300, 1100, 2400, 800, 18, {rim: 0.6, rimPx: 5}, 1);
+		cast20 = new Cast(st, 'cast20', -1300, 1060, 2400, 880, 20);
+		near20 = new Live(st, 'near20', -1300, 1100, 2400, 800, 21, {rim: 0.6, rimPx: 5}, 1);
+		roll20 = new Live(st, 'roll20', -1300, 1060, 2400, 880, 22, {emissive: 0.55}, 0.8);
 		mine20 = [nightSky20.mat, jl20.L.mat, roll20.L.mat, c20.streak.L.mat, c20.glowLive.L.mat];
 		// the match: the X on the crate at b33 lands where the hall doors' X ended scene 19
 		hallSt.setCam(...(camPath(b(33), K19) as [number, number, number]));
