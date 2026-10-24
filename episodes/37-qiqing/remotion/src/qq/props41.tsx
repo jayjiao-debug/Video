@@ -73,18 +73,47 @@ export const Phonautograph: React.FC<PP & {crank?: number; trace?: number}> = ({
 		<g transform={`translate(190,-125) rotate(${crank * 360})`}><rect x={-4} y={-4} width={36} height={8} fill={col} /><circle cx={32} cy={0} r={7} fill={col} /></g>
 	</g>;
 
-/** 1876: Bell's liquid transmitter — speak down into the funnel; a needle on the diaphragm dips into acidulated water */
-export const LiquidTransmitter: React.FC<PP & {vib?: number}> = ({x, y, s = 1, col = C, hi = '#cfe6ff', t = 0, vib = 0}) =>
-	<g transform={`translate(${x},${y}) scale(${s})`}>
-		<rect x={-70} y={-14} width={140} height={14} fill={col} />
-		<rect x={44} y={-190} width={14} height={180} fill={col} /><rect x={-26} y={-190} width={84} height={12} fill={col} />
-		<path d="M-44,-250 L28,-250 L2,-196 L-18,-196 Z" fill={col} />
-		<ellipse cx={-8} cy={-250} rx={36} ry={7} fill="#26222c" />
-		<line x1={-8} y1={-196} x2={-8} y2={-58 + vib * 2 * Math.sin(t * 60)} stroke={hi} strokeWidth={2} opacity={0.8} />
-		<path d="M-34,-66 L-30,-14 L14,-14 L18,-66" fill="none" stroke={hi} strokeOpacity={0.55} strokeWidth={3} />
-		<rect x={-31} y={-48} width={46} height={32} fill={hi} opacity={0.18} />
-		{vib > 0 && <circle cx={-8} cy={-56} r={6 + 4 * vib} fill={hi} opacity={0.5 * vib} />}
+/* 1876: Bell's liquid transmitter (10 March). The speaker talks into a mouthpiece tilted toward him; the voice shakes a
+   membrane stretched across the bottom of a short drum; a needle fixed to the membrane dips into a small cup of
+   acidulated water. A brass strip from the binding post also dips into the cup, so the circuit runs post → strip →
+   acid → needle; the line wire leaves from the binding post. Local units, origin at the bottom centre of the base. */
+const LT = {A: 35, drum: [-14, -200] as [number, number], neck: 10, len: 72, rIn: 7, rOut: 40, mem: -184, cup: {x: -14, top: -38, bot: -12, wT: 23, wB: 19, liq: -33}, term: [24, -12] as [number, number], post: [36, 46] as [number, number], postTop: -212};
+const ltU: [number, number] = [-Math.sin(LT.A * Math.PI / 180), -Math.cos(LT.A * Math.PI / 180)], ltP: [number, number] = [-ltU[1], ltU[0]];   // axis toward the speaker, and across it
+const ltAt = (d: number, w: number): [number, number] => [LT.drum[0] + ltU[0] * d + ltP[0] * w, LT.drum[1] + ltU[1] * d + ltP[1] * w];
+/** screen geometry of a LiquidTransmitter drawn at (x, y, s): the mouthpiece (centre, axis, radius), the drum, cup, binding post and wire run */
+export const ltGeom = (x: number, y: number, s: number) => { const S = (p: [number, number]): [number, number] => [x + p[0] * s, y + p[1] * s];
+	return {mouth: S(ltAt(LT.len, 0)), axis: ltU, rMouth: LT.rOut * s, throat: S(ltAt(LT.neck, 0)), drum: S(LT.drum), membrane: S([LT.drum[0], LT.mem]), cup: S([LT.cup.x, LT.cup.liq]),
+		term: S([LT.term[0], LT.term[1] - 14]), wire: [S([LT.term[0] + 4, LT.term[1] - 12]), S([LT.post[1] + 2, LT.term[1] - 12]), S([LT.post[1] + 2, LT.postTop + 6])] as [number, number][], postTop: S([(LT.post[0] + LT.post[1]) / 2, LT.postTop])}; };
+/** a point on the mouthpiece axis: d from the drum (0) to the opening (1), w across (−1..1 of the local radius) */
+export const ltAxis = (x: number, y: number, s: number, d: number, w = 0): [number, number] => { const D = d * LT.len, r = D < LT.neck ? LT.rIn : LT.rIn + (LT.rOut - LT.rIn) * ((D - LT.neck) / (LT.len - LT.neck)) ** 1.4, p = ltAt(D, w * r); return [x + p[0] * s, y + p[1] * s]; };
+export const LiquidTransmitter: React.FC<PP & {vib?: number; brass?: string}> = ({x, y, s = 1, col = C, hi = '#cfe6ff', t = 0, vib = 0, brass = '#c9a35e'}) => {
+	const f1 = (v: number) => v.toFixed(2), P = (d: number, w: number) => { const p = ltAt(d, w); return `${f1(p[0])},${f1(p[1])}`; };
+	const flare = Array.from({length: 9}, (_, i) => { const d = LT.neck + (LT.len - LT.neck) * i / 8; return [d, LT.rIn + (LT.rOut - LT.rIn) * (i / 8) ** 1.4] as [number, number]; });
+	const horn = `M${P(0, -LT.rIn - 2)} L${P(LT.neck, -LT.rIn)} ${flare.map(([d, r]) => `L${P(d, -r)}`).join(' ')} ${[...flare].reverse().map(([d, r]) => `L${P(d, r)}`).join(' ')} L${P(LT.neck, LT.rIn)} L${P(0, LT.rIn + 2)} Z`;
+	const mo = ltAt(LT.len, 0), ang = Math.atan2(ltP[1], ltP[0]) * 180 / Math.PI, buzz = vib * Math.sin(t * 61) * Math.sin(t * 17.3), c = LT.cup, nx = LT.drum[0] + buzz * 0.6, tip = c.liq + 5 + buzz * 2.2;
+	return <g transform={`translate(${x},${y}) scale(${s})`}>
+		{/* base board, upright post and the arm that holds the drum */}
+		<rect x={-78} y={-12} width={142} height={12} rx={2} fill={col} /><rect x={-78} y={-12} width={142} height={2} fill={hi} opacity={0.12} />
+		<rect x={LT.post[0]} y={LT.postTop} width={LT.post[1] - LT.post[0]} height={-LT.postTop - 10} fill={col} /><rect x={LT.post[0] - 2} y={LT.postTop - 4} width={LT.post[1] - LT.post[0] + 4} height={6} rx={2} fill={col} />
+		<rect x={LT.drum[0] + 18} y={-197} width={LT.post[0] - LT.drum[0] - 16} height={8} fill={col} />
+		{/* the drum; its membrane is the lit line across the bottom, bowing with the voice */}
+		<rect x={LT.drum[0] - 22} y={LT.drum[1]} width={44} height={LT.mem - LT.drum[1]} rx={3} fill={col} />
+		<path d={`M${LT.drum[0] - 19},${LT.mem} Q${nx},${LT.mem + 3 * buzz} ${LT.drum[0] + 19},${LT.mem}`} stroke={hi} strokeWidth={1.6} fill="none" opacity={0.55 + 0.3 * vib} />
+		{/* the mouthpiece, tilted toward the speaker */}
+		<path d={horn} fill={col} />
+		<ellipse cx={mo[0]} cy={mo[1]} rx={LT.rOut} ry={8} transform={`rotate(${ang} ${mo[0]} ${mo[1]})`} fill="#26222c" />
+		<path d={`M${P(LT.len, LT.rOut)} L${P(LT.neck + 2, LT.rIn + 1)}`} stroke={hi} strokeWidth={1.2} opacity={0.22} />
+		{/* the needle from the membrane down into the acid */}
+		<line x1={nx} y1={LT.mem} x2={nx} y2={tip} stroke={hi} strokeWidth={1.5} opacity={0.85} />
+		{/* the small squat acid cup on the base; the lit surface, ripples when the needle shakes */}
+		<path d={`M${c.x - c.wT - 2},${c.top} L${c.x + c.wT + 2},${c.top} L${c.x + c.wT},${c.top + 3} L${c.x + c.wB},${c.bot} L${c.x - c.wB},${c.bot} L${c.x - c.wT},${c.top + 3} Z`} fill={col} />
+		<ellipse cx={c.x} cy={c.liq} rx={c.wT - 2} ry={2.6} fill={hi} opacity={0.32} />
+		{vib > 0 && [0, 1].map((k) => { const u = ((t * 2.2 + k / 2) % 1); return <ellipse key={k} cx={nx} cy={c.liq} rx={3 + u * (c.wT - 5)} ry={0.6 + u * 1.8} fill="none" stroke={hi} strokeWidth={0.9} opacity={vib * (1 - u) * 0.8} />; })}
+		{/* binding post with its brass strip over the rim into the acid (the second contact) */}
+		<rect x={LT.term[0] - 5} y={LT.term[1] - 14} width={10} height={14} rx={1.5} fill={col} /><ellipse cx={LT.term[0]} cy={LT.term[1] - 14} rx={6} ry={2.2} fill={brass} opacity={0.75} />
+		<path d={`M${LT.term[0] - 2},${LT.term[1] - 14} L${LT.term[0] - 2},${c.top - 8} Q${LT.term[0] - 4},${c.top - 12} ${c.x + c.wT - 2},${c.top - 9} L${c.x + 10},${c.liq + 6}`} stroke={brass} strokeWidth={2.4} fill="none" strokeLinejoin="round" opacity={0.9} />
 	</g>;
+};
 /** Watson's reed receiver: an electromagnet in a short brass tube with a membrane, held to the ear */
 export const ReedReceiver: React.FC<PP & {rot?: number; glow?: number}> = ({x, y, s = 1, col = C, hi = '#e3b45a', rot = 0, glow = 0}) =>
 	<g transform={`translate(${x},${y}) rotate(${rot}) scale(${s})`}>
