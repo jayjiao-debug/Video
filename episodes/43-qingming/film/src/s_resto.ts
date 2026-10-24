@@ -88,18 +88,20 @@ export const bootResto = async () => {
 	// the table's front
 	st.add('front', canvasTex(frontCanvas()), 960, 540, W, H, 0, {rim: 0.6, rimPx: 4}, -10);
 	// ---- the lens content: a collage of the shed (8192) and the gate (8192), plus the animated patch region
-	const shed8 = (patch: 'bare' | 'donkey' | 'peeled') => paintSection('shed', {width: 8192, height: 3072, mode: 'mono', seed: 43, patch});
+	// painted without the weave (no 100 MB weave overlay cached at this size); the crops get their own weave
+	const shed8 = (patch: 'bare' | 'donkey' | 'peeled') => paintSection('shed', {width: 8192, height: 3072, mode: 'mono', seed: 43, patch, weave: 0});
+	const wv = (c: HTMLCanvasElement) => { silkWeave(c, 1, {mode: 'mono', seed: 43}); return c; };
 	const sb = shed8('bare');
 	collage = mkCanvas(GATE_AT + GATE_CROP.w, SHED_CROP.h); CW = collage.width; CH = collage.height;
 	const cg = collage.getContext('2d')!; cg.drawImage(sb, SHED_CROP.x, SHED_CROP.y, SHED_CROP.w, SHED_CROP.h, 0, 0, SHED_CROP.w, SHED_CROP.h);
 	P_BARE = crop(sb, PATCH_CROP.x, PATCH_CROP.y, PATCH_CROP.w, PATCH_CROP.h);
 	sb.width = sb.height = 1;
 	const free = (c: HTMLCanvasElement) => { const o = crop(c, PATCH_CROP.x, PATCH_CROP.y, PATCH_CROP.w, PATCH_CROP.h); c.width = c.height = 1; return o; };
-	P_DONKEY = free(shed8('donkey')); P_PEELED = free(shed8('peeled'));
-	const gate8 = paintSection('gate', {width: 8192, height: 3072, mode: 'mono', seed: 43});
+	P_DONKEY = wv(free(shed8('donkey'))); P_PEELED = wv(free(shed8('peeled'))); wv(P_BARE);
+	const gate8 = paintSection('gate', {width: 8192, height: 3072, mode: 'mono', seed: 43, weave: 0});
 	const gc = crop(gate8, GATE_CROP.x, GATE_CROP.y, GATE_CROP.w, GATE_CROP.h), gcg = gc.getContext('2d')!; gate8.width = gate8.height = 1;
 	const fade = gcg.createLinearGradient(0, 0, 420, 0); fade.addColorStop(0, 'rgba(0,0,0,0)'); fade.addColorStop(1, 'rgba(0,0,0,1)'); gcg.globalCompositeOperation = 'destination-in'; gcg.fillStyle = fade; gcg.fillRect(0, 0, 420, GATE_CROP.h); gcg.fillStyle = '#000'; gcg.fillRect(420, 0, GATE_CROP.w, GATE_CROP.h);
-	cg.drawImage(gc, GATE_AT, 0);
+	cg.drawImage(gc, GATE_AT, 0); wv(collage);
 	P_NOPOST = inpaintPosts(P_BARE); P_DLINES = inkOnly(P_DONKEY); P_PIECE = pieceOf(P_DONKEY, P_PEELED);
 	patchCv = mkCanvas(PATCH_CROP.w, PATCH_CROP.h); patchTex = canvasTex(patchCv); patchTex.generateMipmaps = false; patchTex.minFilter = THREE.LinearFilter;
 	lensMat = lensMaterial(bigTex(collage), patchTex);
@@ -195,8 +197,14 @@ const drawPatch = (t: number) => {
 	else if (kPost > 0) { g.drawImage(P_NOPOST, 0, 0); const yr = lerp(206, 66, easeOut(kPost)); g.save(); g.beginPath(); g.rect(360, yr, 100, 210 - yr); g.clip(); g.drawImage(P_BARE, 0, 0); g.restore(); }
 	else g.drawImage(P_NOPOST, 0, 0);
 	if (t >= T_PEEL - 0.3 && kPeel <= 0) tweezers(g, TW_TIP, clamp01((t - (T_PEEL - 0.3)) / 0.3));
+	g.globalCompositeOperation = 'destination-in'; g.drawImage(featherMask(), 0, 0); g.globalCompositeOperation = 'source-over';
 	patchTex.needsUpdate = true;
 };
+let FEATHER: HTMLCanvasElement | null = null;
+/** the patch canvas fades out over its outer 70 px, so its own silk weave never shows a seam against the collage */
+const featherMask = () => { if (FEATHER) return FEATHER; const w = PATCH_CROP.w, h = PATCH_CROP.h, c = mkCanvas(w, h), g = c.getContext('2d')!, id = g.createImageData(w, h), f = 70;
+	for (let y = 0; y < h; y++) for (let x = 0; x < w; x++) { const d = Math.min(x, y, w - 1 - x, h - 1 - y); id.data[(y * w + x) * 4 + 3] = Math.round(255 * smooth(Math.min(1, d / f))); }
+	g.putImageData(id, 0, 0); FEATHER = c; return c; };
 let SHADOW: HTMLCanvasElement | null = null;
 const pieceShadow = () => { if (SHADOW) return SHADOW; SHADOW = mkCanvas(P_PIECE.width, P_PIECE.height); const g = SHADOW.getContext('2d')!; g.drawImage(P_PIECE, 0, 0); g.globalCompositeOperation = 'source-in'; g.fillStyle = '#2A1F17'; g.fillRect(0, 0, SHADOW.width, SHADOW.height); return SHADOW; };
 const dashes = (g: CanvasRenderingContext2D, k: number, alpha: number) => {
