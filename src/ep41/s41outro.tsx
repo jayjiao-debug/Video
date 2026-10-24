@@ -1,5 +1,5 @@
 import React from 'react';
-import {W, H, SERIF, SANS, rnd, cl, sm, lerp, fio, fkPose, Rimmed, LOOK4, Glow, Pose, Look4} from './v3base';
+import {W, H, SERIF, SANS, LATS, rnd, cl, sm, lerp, fio, fkPose, Rimmed, LOOK4, Glow, Pose, Look4} from './v3base';
 import {Cam, ease, easeOut, seg} from './fx';
 import {Voyager, RecordCover, voyRecordPos} from './voyager';
 import {MilkyWay, StarField, hill} from './sky41';
@@ -16,6 +16,18 @@ const REC = voyRecordPos(VP.x, VP.y, VP.s, VP.yaw, VP.pitch, VP.roll);
 const Brain: React.FC<{x: number; y: number; w: number; t: number; k: number}> = ({x, y, w, t, k}) => k <= 0 ? null : <path
 	d={Array.from({length: 121}, (_, i) => { const u = i / 120, v = Math.sin(u * 40 + t * 9) * 0.5 + Math.sin(u * 97 + t * 15) * 0.3 + Math.sin(u * 13 - t * 4) * 0.4; return `${i ? 'L' : 'M'}${(x - w / 2 + u * w).toFixed(1)},${(y + v * 14 * Math.sin(Math.PI * u)).toFixed(1)}`; }).join(' ')}
 	stroke="#fff1c4" strokeWidth={2.2} fill="none" opacity={0.7 * k} style={{filter: 'drop-shadow(0 0 6px rgba(255,210,120,0.8))'}} />;
+
+/* end-card layout: pixel-measured centring nudges, and the monogram + pill row (centred as one group on the hill) */
+const DX = {t1: 23, t2: 19, q: 20, c: 9};
+const PILL = {x: 960 - 400 / 2 + 40, w: 400};
+/** the channel monogram (as in the Juno brand package): a gold ring, an italic J, a four-point spark; draw 0..1 */
+const JMark: React.FC<{draw: number}> = ({draw}) => { const r = 54, c = 2 * Math.PI * r, spark = cl((draw - 0.6) / 0.4);
+	return <g>
+		<circle r={r} fill="none" stroke={GOLD} strokeWidth={2.5} strokeDasharray={c} strokeDashoffset={c * (1 - Math.min(1, draw * 1.3))} transform="rotate(-90)" />
+		<circle r={47} fill="none" stroke={GOLD} strokeWidth={1} opacity={0.35 * draw} />
+		<text y={22} textAnchor="middle" style={{fontFamily: LATS, fontStyle: 'italic', fontWeight: 600, fontSize: 70}} fill={GOLD} opacity={cl((draw - 0.3) / 0.4)}>J</text>
+		<path d="M0,-9 L2.2,-2.2 L9,0 L2.2,2.2 L0,9 L-2.2,2.2 L-9,0 L-2.2,-2.2 Z" fill="#fff4d6" transform={`translate(40,-40) scale(${spark * 1.4}) rotate(${draw * 90})`} />
+	</g>; };
 
 type Cast = {look: Look4; pose: Pose; flip?: boolean; dh?: number};
 const up = (lean: number, neck: number, la: number, le: number, ra: number, re: number, step = 0): Pose => fkPose({hip: 0.655, lean, neck, lt: 3 + step, lk: 3, rt: -4 - step, rk: 4, la, le, ra, re});
@@ -50,7 +62,7 @@ export const OUTRO3: React.FC<{tau: number; t: number}> = ({tau, t}) => {
 				<Voyager x={VP.x} y={VP.y} s={VP.s} yaw={VP.yaw + tau * 0.012} pitch={VP.pitch} roll={VP.roll} mag={0.9} glint={0.4 + 0.3 * Math.sin(t * 0.8)} recordGlow={0.12 + 0.2 * (1 - pull)} light={[-0.8, 0.35, 0.6]} />
 			</Cam>
 			{/* the record close: a full-frame cover that becomes the small disc on the bus as we pull back */}
-			{coverOp > 0.01 && <g opacity={coverOp}><Cam zoom={lerp(1, 0.1, pull)} fx={960} fy={540} px={(REC[0] - 960) * pull} py={(REC[1] - 540) * pull}>
+			{coverOp > 0.01 && <g opacity={coverOp}><Cam zoom={lerp(1, 0.1, pull) * lerp(1, 1.1, ease(seg(tau, 0, T.pull + 0.4)))} fx={960} fy={540} px={(REC[0] - 960) * pull} py={(REC[1] - 540) * pull}>
 				<rect width={W} height={H} fill="#06050a" opacity={1 - pull} />
 				<RecordCover x={960} y={540} r={410} t={t} glow={0.5} />
 				<Brain x={960} y={540} w={620} t={t} k={fio(tau, 0.4, T.pull + 0.2, 0.6)} />
@@ -59,27 +71,37 @@ export const OUTRO3: React.FC<{tau: number; t: number}> = ({tau, t}) => {
 		</g>;
 	}
 	// 3 · the hilltop: everyone on the ground, looking up at one moving point of light
-	const k = ease(seg(tau, T.tilt, T.tilt + 1.6)), hl = hill(W, H, 960, 830, 980, 1010), py = lerp(-700, 0, k);
+	const k = ease(seg(tau, T.tilt, T.tilt + 1.6)), hl = hill(W, H, 960, 830, 980, 1010), py = lerp(760, 0, k);
 	const star: [number, number] = [lerp(1060, 1180, seg(tau, T.tilt, T.end)), lerp(170, 150, seg(tau, T.tilt, T.end))];
 	return <g>
 		<defs><linearGradient id="oSky" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stopColor="#05040c" /><stop offset="0.55" stopColor="#14123a" /><stop offset="0.85" stopColor="#2e2a5a" /><stop offset="1" stopColor="#5a4a7a" /></linearGradient></defs>
 		<g transform={`translate(0,${py})`}>
 			<rect y={-800} width={W} height={H + 800} fill="url(#oSky)" />
-			<StarField t={t} n={300} maxY={760} seed={5} />
+			<StarField t={t} n={300} maxY={760} seed={5} /><g transform="translate(0,-780)"><StarField t={t} n={260} maxY={780} seed={9} /></g>
 			<MilkyWay t={t} op={0.9} cx={960} cy={300} ang={-32} />
 			<Glow x={star[0]} y={star[1]} r={40} c="#fff4d8" o={0.8} id="oVoy" /><circle cx={star[0]} cy={star[1]} r={2.6} fill="#fff" />
 			<path d={hl.d} fill="#07060c" />
 			{CAST.map((c, i) => { const x = 420 + i * 98 + (i >= 10 ? 14 : 0), g = hl.yAt(x) + 3, h = 150 * (c.dh ?? 1);
 				return <Rimmed key={i} x={x} ground={g} h={h} pose={c.pose} look={c.look} flip={c.flip} col="#050409" rim="#9fb0ff" rimOp={0.28} rimDx={0} rimDy={-1.5} T={t + i} />; })}
 		</g>
-		{/* title, then the question */}
+		{/* the Juno end card: title, the question, then (on the dark hill) the monogram + follow pill and the sources.
+		   Lines ending in full-width punctuation are nudged right (DX) so the visible ink is centred. */}
 		<g opacity={fio(tau, T.title, T.end + 1, 0.7)}>
-			<text x={960} y={300} textAnchor="middle" style={{fontFamily: SERIF, fontWeight: 900, fontSize: 60, letterSpacing: '0.06em'}} fill="#fff">为了跟你说一句话，</text>
-			<text x={960} y={384} textAnchor="middle" style={{fontFamily: SERIF, fontWeight: 900, fontSize: 60, letterSpacing: '0.06em'}} fill={GOLD} opacity={cl((tau - T.title - 0.5) / 0.5)}>人类努力了三千年。</text>
+			<text x={960 + DX.t1} y={300} textAnchor="middle" style={{fontFamily: SERIF, fontWeight: 900, fontSize: 60, letterSpacing: '0.06em'}} fill="#fff">为了跟你说一句话，</text>
+			<text x={960 + DX.t2} y={384} textAnchor="middle" style={{fontFamily: SERIF, fontWeight: 900, fontSize: 60, letterSpacing: '0.06em'}} fill={GOLD} opacity={cl((tau - T.title - 0.5) / 0.5)}>人类努力了三千年。</text>
 		</g>
 		<g opacity={cl((tau - T.q) / 0.6)}>
-			<text x={960} y={540} textAnchor="middle" style={{fontFamily: SERIF, fontWeight: 900, fontSize: 80}} fill={GOLD} stroke="rgba(0,0,0,0.4)" strokeWidth={5} paintOrder="stroke">你最想对谁说一句话？</text>
-			<text x={960} y={612} textAnchor="middle" style={{fontFamily: SANS, fontSize: 32}} fill="#fff" opacity={0.85 * cl((tau - T.q - 0.8) / 0.6)}>写在评论区，也许，ta 会听见。</text>
+			<text x={960 + DX.q} y={540} textAnchor="middle" style={{fontFamily: SERIF, fontWeight: 900, fontSize: 80}} fill={GOLD} stroke="rgba(0,0,0,0.4)" strokeWidth={5} paintOrder="stroke">你最想对谁说一句话？</text>
+			<text x={960 + DX.c} y={612} textAnchor="middle" style={{fontFamily: SANS, fontSize: 32}} fill="#fff" opacity={0.85 * cl((tau - T.q - 0.8) / 0.6)}>写在评论区，也许，ta 会听见。</text>
+		</g>
+		<g opacity={cl((tau - T.q - 0.5) / 0.6)}>
+			<g transform={`translate(${PILL.x - 50},928) scale(0.56)`}><JMark draw={cl((tau - T.q - 0.4) / 1.1)} /></g>
+			<rect x={PILL.x} y={899} width={PILL.w} height={58} rx={29} fill="rgba(242,207,122,0.10)" stroke={GOLD} strokeOpacity={0.75} strokeWidth={2} />
+			<text x={PILL.x + PILL.w / 2} y={938} textAnchor="middle" style={{fontFamily: SERIF, fontWeight: 700, fontSize: 28, letterSpacing: '0.1em'}} fill={GOLD}>关注 Juno · 一起看懂世界</text>
+		</g>
+		<g opacity={0.62 * cl((tau - T.q - 0.9) / 0.6)} style={{fontFamily: SERIF, fontSize: 19}} fill="#d8d2e8">
+			<text x={960} y={1018} textAnchor="middle">资料：美国国会图书馆（贝尔笔记）· Watson 1913 · Marconi 1902 · Kleinrock / UCLA · Zorn 1988 · CNNIC · NASA / JPL · NPR</text>
+			<text x={960} y={1046} textAnchor="middle">音频：First Sounds · firstsounds.org · CC BY（有剪辑） · 画面为示意 · 内容由AI生成</text>
 		</g>
 		{void rnd}{void easeOut}
 	</g>;

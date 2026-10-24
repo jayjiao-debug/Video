@@ -11,7 +11,7 @@ void H;
 export const BELL_T = {lean: 0.5, pushA: 1.4, pushB: 4.6, say: 4.75, sayEnd: 8.3, dive: 8.15, tunnel: 8.85, roomB: 10.3, jolt: 10.65, lower: 11.4, run: 12.0, whip: 12.85, roomA2: 13.2, lamp: 18.35, end: 19.54};
 const PLATE_S = 1920 / 2048;
 // Bell's room (plate bellA): transmitter on the table, wire to the hole by the door
-const TX = {x: 742, y: 657, s: 0.9}, HOLE: [number, number] = [1165, 457];
+const TX = {x: 742, y: 657, s: 0.9}, HOLE: [number, number] = [1165, 457], KNOB: [number, number] = [1192, 330];   // porcelain knob by the door frame where the wire goes through the wall
 export const FUNNEL: [number, number] = [TX.x - 5 * TX.s, TX.y - 250 * TX.s];      // funnel mouth
 const FLOOR_A = 1052, BELL_H = 790;
 export const LEAN = fkPose({hip: 0.62, lean: 50, neck: 26, lt: 10, lk: 14, rt: -4, rk: 8, la: 46, le: 16, ra: 38, re: 24});
@@ -51,7 +51,8 @@ export const RoomA: React.FC<{t: number; tau: number; pose: Pose; vib: number; r
 			<path d={`M1255,208 L${1255 + 300 * (1 - door * 0.85)},${208 + 40 * door} L${1255 + 300 * (1 - door * 0.85)},${873 - 30 * door} L1255,873 Z`} fill="#5e3f26" stroke="#3a2614" strokeWidth={4} />
 			{watson > 0 && <Rimmed x={1400} ground={872} h={560} pose={mixPose(gaitPose('08_01', tau / CYCLE), POSES.stand, sm(watson))} look={LOOK4.watson} flip col="#1a120c" rim="#fff1cf" rimOp={0} rimDx={0} rimDy={-2} />}
 		</g>}
-<path d={`M${TX.x + 30},${TX.y - 4} Q${TX.x + 140},${TX.y + 6} 1100,${TX.y - 2} Q1150,${TX.y - 6} 1152,${TX.y - 60} Q1150,${HOLE[1] + 80} ${HOLE[0]},${HOLE[1] + 3}`} stroke="#2a1a10" strokeWidth={2.5} fill="none" />
+<path d={`M${TX.x + 46},${TX.y - 176} L${TX.x + 46},${KNOB[1] + 6} Q${TX.x + 46},${KNOB[1]} ${TX.x + 56},${KNOB[1]} Q${(TX.x + KNOB[0]) / 2},${KNOB[1] + 14} ${KNOB[0] - 8},${KNOB[1]}`} stroke="#2a1a10" strokeWidth={2.5} fill="none" />
+		<circle cx={KNOB[0]} cy={KNOB[1]} r={7} fill="#ece4d2" stroke="#8a7a62" strokeWidth={1.5} /><circle cx={KNOB[0] + 1.5} cy={KNOB[1] - 1.5} r={2.2} fill="#fff" opacity={0.7} />
 		<LiquidTransmitter x={TX.x} y={TX.y} s={TX.s} col="#2a1c12" hi="#e6f2ff" t={t} vib={vib} />
 		<Rings x={FUNNEL[0] - 6} y={FUNNEL[1] - 26} t={t} k={rings} />
 		<Rimmed x={bx} ground={FLOOR_A} h={BELL_H} pose={pose} look={LOOK4.bell} col="#1a120c" rim="#ffd796" rimOp={0} rimDx={3} rimDy={-1.5} T={tau} />

@@ -11,7 +11,7 @@ export const OPEN_T = {dive: 0.75, fibre: 1.25, copper: 1.75, eras: [1.75, 2.55,
 
 /* 1 · the phone */
 const Phone: React.FC<{t: number}> = ({t}) => {
-	const cx = 960, cy = 560, pw = 470, ph = 960, ring = (t * 1.3) % 1;
+	const cx = 960, cy = 480, pw = 420, ph = 860, ring = (t * 1.3) % 1;
 	return <g>
 		<rect width={W} height={H} fill="#07080e" />
 		{/* a dark bedroom: a window with a blurred city at night behind */}
@@ -98,7 +98,7 @@ const House: React.FC<{t: number; tau: number}> = ({t, tau}) => {
 export const OPEN3: React.FC<{tau: number; t: number}> = ({tau, t}) => {
 	const O = OPEN_T;
 	if (tau < O.fibre) { const z = lerp(1, 1.8, ease(seg(tau, 0, O.dive))) * lerp(1, 60, easeIn(seg(tau, O.dive, O.fibre)));
-		return <g><Cam zoom={z} fx={960 - 2} fy={560 - 470} ><Phone t={t} /></Cam></g>; }
+		return <g><Cam zoom={z} fx={935} fy={80} ><Phone t={t} /></Cam></g>; }
 	if (tau < O.copper) {   // inside the fibre: light streaks
 		const u = seg(tau, O.fibre, O.copper);
 		return <g><rect width={W} height={H} fill="#000" /><Iris id="oFib" x={W / 2} y={540} r={30 + ease(seg(tau, O.fibre, O.fibre + 0.35)) * 1200}><rect width={W} height={H} fill="#02040a" />

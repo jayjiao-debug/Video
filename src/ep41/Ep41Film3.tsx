@@ -28,7 +28,8 @@ const Rewind: React.FC<{t: number; f: number}> = ({t, f}) => {
 	const tau = t - T3.hit, D = T3.title - T3.hit;
 	let body: React.ReactNode, year = '1876';
 	if (tau < 0.22) body = <svg width={W} height={H}><OPEN3 tau={T3.hit - 0.001} t={T3.hit} /></svg>;   // freeze
-	else { const v = (tau - 0.22) / (D - 0.22), k = Math.min(FLASHES.length - 1, Math.floor(v * FLASHES.length)), loc = v * FLASHES.length - k, [si, a, b] = FLASHES[k];
+	else { const v = (tau - 0.22) / (D - 0.22), k = Math.min(FLASHES.length - 1, Math.floor(v * FLASHES.length)), loc = v * FLASHES.length - k, [si, a, b, yr] = FLASHES[k];
+		year = yearAt(k ? FLASHES[k - 1][3] : 1876, yr, Math.min(1, loc * 2.5));
 		body = <Scene i={si} t={BOUNDS[si] + lerp2(a, b, loc)} tau={lerp2(a, b, loc)} />; }
 	const jit = vhsJitter(f, 1);
 	return <AbsoluteFill style={{background: '#000'}}>
@@ -44,6 +45,7 @@ export const Ep41Film3: React.FC = () => {
 	if (t < T3.hit) body = <svg width={W} height={H}><OPEN3 tau={t} t={t} /></svg>;
 	else if (t < T3.title) body = <Rewind t={t} f={f} />;
 	else if (t < T3.s1) body = <svg width={W} height={H}><TITLE3 tau={t - T3.title} t={t} dur={T3.s1 - T3.title} /></svg>;
+	else if (t >= T3.s5 && t < T3.s5 + 0.8) body = <><Scene i={3} t={T3.s5 - 0.001} tau={T3.s5 - T3.s4 - 0.001} /><AbsoluteFill style={{opacity: Math.min(1, Math.max(0, (t - T3.s5) / 0.8)) ** 1.5}}><Scene i={4} t={t} /></AbsoluteFill></>;   // the moon stays, the world changes
 	else body = <Scene i={sceneAt(t)} t={t} />;
 	const s = SUBS3.filter(([a, b]) => t >= a - 0.05 && t < b + 0.05).pop();
 	const lab = LABELS3.find(([a, b]) => t >= a && t < b);
@@ -62,8 +64,8 @@ export const Ep41Film3: React.FC = () => {
 				<rect x={96} y={96} width={40} height={5} fill="#e0453a" /><text x={148} y={106} style={{fontFamily: SANS, fontWeight: 500, fontSize: 28, letterSpacing: '0.06em'}} fill="#fff" opacity={0.9}>{lab[2]}</text>
 				<text x={96} y={160} style={{fontFamily: SERIF, fontWeight: 900, fontSize: 44, letterSpacing: '0.04em'}} fill="#fff">{lab[3]}</text></g>}
 			{s && <g opacity={fio(t, s[0] - 0.05, s[1] + 0.05, 0.15)} transform={`translate(0,${subY})`}>
-				{s[3] && <text x={W / 2} y={962} textAnchor="middle" style={{fontFamily: /[a-zA-Z]/.test(s[3]) ? LATS : SERIF, fontSize: s[3].length > 60 ? 28 : 33, fontStyle: /[a-zA-Z]/.test(s[3]) ? 'italic' : 'normal'}} fill="#fff" opacity={0.88} stroke="rgba(0,0,0,0.45)" strokeWidth={4} paintOrder="stroke">{s[3]}</text>}
-				<text x={W / 2} y={s[3] ? 1022 : 1006} textAnchor="middle" style={{fontFamily: SANS, fontSize: s[2].length > 22 ? 42 : 48, fontWeight: 700, letterSpacing: '0.03em'}} fill="#ffe6b0" stroke="rgba(0,0,0,0.65)" strokeWidth={7} paintOrder="stroke">{s[2]}</text></g>}
+				{s[3] && <text x={W / 2} y={958} textAnchor="middle" style={{fontFamily: /[a-zA-Z]/.test(s[3]) ? LATS : SERIF, fontSize: s[3].length > 60 ? 28 : 33, fontStyle: /[a-zA-Z]/.test(s[3]) ? 'italic' : 'normal'}} fill="#fff" opacity={0.88} stroke="rgba(0,0,0,0.45)" strokeWidth={4} paintOrder="stroke">{s[3]}</text>}
+				<text x={W / 2} y={s[3] ? 1026 : 1010} textAnchor="middle" style={{fontFamily: SANS, fontSize: s[2].length > 18 ? 50 : 54, fontWeight: 700, letterSpacing: '0.03em'}} fill="#ffe6b0" stroke="rgba(0,0,0,0.65)" strokeWidth={7} paintOrder="stroke">{s[2]}</text></g>}
 		</svg>
 	</AbsoluteFill>;
 };

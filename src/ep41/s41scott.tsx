@@ -184,22 +184,35 @@ export const SCOTT3: React.FC<{tau: number; t: number}> = ({tau, t}) => {
 					<Sheet x={sheet.x} y={sheet.y} w={sheet.w} h={sheet.h} backlit={lamp} t={t} /></g>} /></CamC>
 		</g>;
 	}
-	if (tau < T.open2008) {   // filed away: the folder closes; dust settles; days and years pass over it
-		const shut = ease(seg(tau, T.file, T.shut)), yrs = seg(tau, T.shut, T.open2008), lift = ease(seg(tau, T.open2008 - 0.25, T.open2008));
-		const z = lerp(1.0, 1.08, seg(tau, T.file, T.open2008)), d = drift(t, 0.6);
-		return <g>{defs}<CamC z={z} cx={960 + d.px} cy={540 + d.py}>
-			<rect x={-200} y={-200} width={W + 400} height={H + 400} fill="#1A1612" />
-			{Array.from({length: 8}, (_, i) => <rect key={i} x={-200} y={-200 + i * 190} width={W + 400} height={8} fill="#120F0C" />)}
-			<rect x={300} y={240} width={1320} height={620} fill="#4A3C2A" />
-			<Sheet x={420} y={330} w={1080} h={440} t={t} />
-			<rect x={300} y={240} width={1320} height={620 * Math.max(shut, 0) * (1 - lift)} fill="#5C4A32" />
-			{shut > 0.9 && lift < 0.5 && <g><rect x={300} y={240} width={1320} height={620} fill="#5C4A32" /><rect x={300} y={240} width={1320} height={620} fill="#A89A80" opacity={0.25 * yrs} />
-				<rect x={760} y={470} width={400} height={140} fill="#D8CCB0" opacity={0.85 - 0.3 * yrs} /><path d="M800,520 L1080,520 M800,560 L1010,560" stroke="#6A5A44" strokeWidth={6} opacity={0.6} />
-				{Array.from({length: 260}, (_, i) => { const tt = rnd(i, 3) * 0.9; if (yrs < tt) return null; return <circle key={i} cx={300 + rnd(i, 1) * 1320} cy={240 + rnd(i, 2) * 620} r={1 + rnd(i, 4) * 2} fill="#B8AE98" opacity={0.5} />; })}</g>}
-			{/* days pass: window light crosses the shelf again and again */}
-			{yrs > 0 && Array.from({length: 3}, (_, i) => { const u = (yrs * 9 + i / 3) % 1; return <path key={i} d={`M${lerp(-600, 2200, u)},-200 l500,0 l-300,1500 l-500,0 Z`} fill="#E8DEC4" opacity={0.08 * Math.sin(Math.PI * u)} />; })}
-			{Array.from({length: 50}, (_, i) => <circle key={i} cx={((rnd(i, 5) * 2000 + t * 10 * rnd(i, 7)) % 2000) - 40} cy={((rnd(i, 6) * 1200 + t * 30 * (0.3 + rnd(i, 8))) % 1200) - 60} r={1 + rnd(i, 9) * 1.6} fill="#D8CCB0" opacity={0.3} />)}
-		</CamC><rect width={W} height={H} fill="url(#scTL)" /></g>;
+	if (tau < T.open2008) {   // filed away: the sheet itself lies in an archive drawer of the Académie; dust settles on it,
+		// daylight crosses it again and again, and the year on its paper label runs 1860 → 2008
+		const lay = ease(seg(tau, T.file, T.shut)), yrs = seg(tau, T.shut + 0.05, T.open2008 - 0.2), yk = yrs < 0.5 ? 2 * yrs * yrs : 1 - 2 * (1 - yrs) * (1 - yrs);
+		const year = Math.round(lerp(1860, 2008, yk)), dust = sm(seg(tau, T.shut, T.open2008 - 0.1)), cool = sm(seg(tau, T.open2008 - 0.3, T.open2008));
+		const z = lerp(1.0, 1.1, ease(seg(tau, T.file, T.open2008))), d = drift(t, 0.6);
+		return <g>{defs}<CamC z={z} cx={960 + d.px} cy={520 + d.py}>
+			{/* the drawer: dark oak sides, the inside lined with card */}
+			<rect x={-300} y={-300} width={W + 600} height={H + 600} fill="#120D09" />
+			<rect x={150} y={110} width={1620} height={860} rx={6} fill="#2E2116" />
+			<rect x={190} y={150} width={1540} height={780} fill="#1E160F" />
+			<path d="M190,150 L1730,150 L1700,180 L220,180 Z" fill="#3A2A1C" /><path d="M190,150 L220,180 L220,900 L190,930 Z" fill="#2A1E14" />
+			{/* the folder (card) and the phonautogram on it */}
+			<rect x={250} y={205} width={1420} height={690} fill="#B9AA88" /><path d="M960,205 L960,895" stroke="#9C8C6C" strokeWidth={3} />
+			<g transform={`translate(0,${lerp(-260, 0, lay)}) rotate(${lerp(-3, 0, lay)} 960 500)`} opacity={sm(seg(tau, T.file, T.file + 0.12))}>
+				<Sheet x={330} y={270} w={1260} h={430} t={t} />
+				{/* the paper label pasted on the sheet's margin: 「Académie des sciences」 and the year */}
+				<g transform="translate(1250,700)"><rect x={0} y={0} width={330} height={128} fill="#EDE3CA" stroke="#8A7A5A" strokeWidth={3} />
+					<text x={18} y={44} style={{fontFamily: '"FreeSerif", "DejaVu Serif", serif', fontStyle: 'italic', fontSize: 30}} fill="#3A2C20">Académie des sciences</text>
+					<path d="M18,60 L312,60" stroke="#8A7A5A" strokeWidth={1.5} />
+					<text x={165} y={108} textAnchor="middle" style={{fontFamily: '"DejaVu Serif", serif', fontSize: 44, fontWeight: 700, letterSpacing: '0.06em'}} fill={year >= 2008 ? '#1E4A66' : '#3A2C20'}>{year}</text></g>
+			</g>
+			{/* dust settling: a grey film and specks that build up over the years */}
+			<rect x={250} y={205} width={1420} height={690} fill="#9C9480" opacity={0.3 * dust} />
+			{Array.from({length: 320}, (_, i) => { const tt = 0.05 + rnd(i, 3) * 0.9; if (dust < tt) return null; return <circle key={i} cx={260 + rnd(i, 1) * 1400} cy={215 + rnd(i, 2) * 670} r={0.8 + rnd(i, 4) * 2.2} fill="#C8BEA6" opacity={0.55 * cl((dust - tt) * 6)} />; })}
+			{/* days pass: daylight from a window crosses the drawer again and again */}
+			{yrs > 0 && yrs < 1 && Array.from({length: 3}, (_, i) => { const u = (yrs * 7 + i / 3) % 1; return <path key={i} d={`M${lerp(-700, 2300, u)},-200 l420,0 l-380,1500 l-420,0 Z`} fill="#F2E6C8" opacity={0.1 * Math.sin(Math.PI * u)} />; })}
+			{Array.from({length: 50}, (_, i) => <circle key={i} cx={((rnd(i, 5) * 2000 + t * 10 * rnd(i, 7)) % 2000) - 40} cy={((rnd(i, 6) * 1200 + t * 30 * (0.3 + rnd(i, 8))) % 1200) - 60} r={1 + rnd(i, 9) * 1.6} fill="#D8CCB0" opacity={0.25} />)}
+			<rect x={-300} y={-300} width={W + 600} height={H + 600} fill="#BFE9FF" opacity={0.12 * cool} />
+		</CamC><rect width={W} height={H} fill="url(#scTL)" /><defs><linearGradient id="scBot" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stopColor="#05060C" stopOpacity="0" /><stop offset="1" stopColor="#05060C" stopOpacity="0.45" /></linearGradient></defs><rect x={0} y={780} width={W} height={300} fill="url(#scBot)" /></g>;
 	}
 	if (tau < T.dex + 0.5) {   // S3: 2008 — the scan light crosses the sheet; the trace lights up and plays the real voice
 		const sc = seg(tau, T.scan, T.scanEnd), play = seg(tau, T.cq, T.cq + CQ_DUR), sheet = {x: 160, y: 300, w: 1600, h: 480};

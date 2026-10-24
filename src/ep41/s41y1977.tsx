@@ -1,20 +1,21 @@
 import React from 'react';
 import {staticFile} from 'remotion';
-import {W, H, SANS, rnd, sm, lerp, POSES, mixPose, fkPose, Rimmed, jointAt, LOOK4, Glow} from './v3base';
+import {W, H, SANS, rnd, sm, lerp, POSES, mixPose, fkPose, Rimmed, jointAt, LOOK4, Glow, Pose} from './v3base';
 import {Cam, Whip, Flash, ease, easeIn, easeOut, seg, drift} from './fx';
+import {reach, toBody} from './s41morse';
 /* 1977 (owner note 10: "this scene could be much more powerful").
    1 Jun 1977: Ann Druyan, at night, finds the Chinese song and phones Carl Sagan; he is away in Tucson — the hotel takes a
    message ("Annie called"); he calls back. Split screen, the two of them on one line; on "they were engaged" the
    divider dissolves and the two rooms become one frame; the warm light between them becomes the golden record. */
-export const Y77_T = {annIn: 0, lift: 0.9, race: 2.4, carl: 4.0, slip: 4.0, callBack: 5.2, split: 6.6, merge: 8.6, engaged: 10.2, record: 11.2, end: 12.05};
+export const Y77_T = {annIn: 0, lift: 0.9, race: 2.4, carl: 4.0, slip: 4.0, callBack: 5.2, split: 6.6, merge: 8.25, engaged: 9.75, record: 11.2, end: 12.05};
 const PS = 1920 / 2048;
 const GOLD = '#f2cf7a';
 // Ann's room (plate y77_ann): desk top y≈811; lamp at (499,768); turntable 557–806; moon (1152,216)
 const ANN = {x: 430, ground: 1190, h: 820}, A_PHONE: [number, number] = [880, 806];
 // Carl's hotel room (plate y77_carl): nightstand top y≈686, lamp (922,595); bed edge; moon (312,259)
 const CARL = {x: 760, ground: 1078, h: 700}, C_PHONE: [number, number] = [880, 684];
-const SIT = fkPose({hip: 0.37, lean: 8, neck: 8, lt: 86, lk: 92, rt: 80, rk: 84, la: 22, le: 136, ra: 34, re: 22});
-const STAND_PH = POSES.phoneStand;
+const SIT_FK = {hip: 0.37, lean: 8, neck: 8, lt: 86, lk: 92, rt: 80, rk: 84, la: 22, le: 136, ra: 34, re: 22};
+const ANN_FK = {hip: 0.655, lean: 6, neck: 10, lt: 4, lk: 4, rt: -6, rk: 4, la: 24, le: 132, ra: 2, re: 12};
 
 const Handset: React.FC<{x: number; y: number; rot: number; s?: number; col?: string}> = ({x, y, rot, s = 1, col = '#0d0a12'}) =>
 	<g transform={`translate(${x},${y}) rotate(${rot}) scale(${s})`}><path d="M-46,-10 Q-50,6 -36,12 L-24,10 Q-14,4 -10,-2 L10,-2 Q14,4 24,10 L36,12 Q50,6 46,-10 Q40,-20 -40,-20 Z" fill={col} /></g>;
@@ -32,10 +33,19 @@ const Phone77: React.FC<{x: number; y: number; s?: number; col?: string; cradled
 		{cradled && <Handset x={0} y={-60} rot={0} s={1.25} col={col} />}
 	</g>;
 
+/** where a held handset goes: earpiece on the ear, mouthpiece at the chin (dir = +1 facing right, −1 facing left) */
+const atEar = (pose: Pose, x: number, ground: number, h: number, flip: boolean) => {
+	const hd = jointAt(pose, 'Head', x, ground, h, flip), tp = jointAt(pose, 'Top', x, ground, h, flip), dir = flip ? -1 : 1;
+	const hc: [number, number] = [lerp(hd[0], tp[0], 0.45), lerp(hd[1], tp[1], 0.45)];
+	const E: [number, number] = [hc[0] - dir * 0.012 * h, hc[1] + 0.004 * h], M: [number, number] = [hc[0] + dir * 0.05 * h, hc[1] + 0.088 * h];
+	return {c: [(E[0] + M[0]) / 2, (E[1] + M[1]) / 2] as [number, number], rot: Math.atan2(M[1] - E[1], M[0] - E[0]) * 180 / Math.PI, len: Math.hypot(M[0] - E[0], M[1] - E[1]), M};
+};
+const STAND_PH = fkPose(reach(ANN_FK, 'l', toBody(atEar(fkPose(ANN_FK), ANN.x, ANN.ground, ANN.h, false).c, ANN.x, ANN.ground, ANN.h, false)));
+const SIT = fkPose(reach(SIT_FK, 'l', toBody(atEar(fkPose(SIT_FK), CARL.x, CARL.ground, CARL.h, true).c, CARL.x, CARL.ground, CARL.h, true)));
 /** Ann's room; ox shifts the plate and figures together (for the split screen) */
 const AnnRoom: React.FC<{t: number; tau: number; ox?: number; lift: number; part?: 'bg' | 'fig' | 'all'}> = ({t, tau, ox = 0, lift, part = 'all'}) => {
-	const pose = mixPose(POSES.stand, STAND_PH, sm(lift)), hand = jointAt(pose, 'LHand', ANN.x + ox, ANN.ground, ANN.h);
-	const rest: [number, number] = [A_PHONE[0] + ox, A_PHONE[1] - 66], hs: [number, number] = [lerp(rest[0], hand[0] + 10, sm(lift)), lerp(rest[1], hand[1] - 8, sm(lift))];
+	const pose = mixPose(POSES.stand, STAND_PH, sm(lift)), ear = atEar(STAND_PH, ANN.x + ox, ANN.ground, ANN.h, false);
+	const rest: [number, number] = [A_PHONE[0] + ox, A_PHONE[1] - 66], hs: [number, number] = [lerp(rest[0], ear.c[0], sm(lift)), lerp(rest[1], ear.c[1], sm(lift))];
 	const bg = part !== 'fig', fg = part !== 'bg';
 	return <g>{bg && <>
 		<image href={staticFile('ep41/y77_ann.webp')} x={ox} y={0} width={2048 * PS} height={1152 * PS} />
@@ -43,15 +53,15 @@ const AnnRoom: React.FC<{t: number; tau: number; ox?: number; lift: number; part
 		<ellipse cx={681 + ox} cy={746} rx={64} ry={10} fill="none" stroke="#fff" strokeOpacity={0.22} strokeWidth={2} strokeDasharray="30 170" strokeDashoffset={-t * 260} />
 		<Glow x={640 + ox} y={560} r={260} c="#ffc48a" o={0.12 + 0.02 * Math.sin(t * 7)} id="y77lampA" />
 		<Phone77 x={A_PHONE[0] + ox} y={A_PHONE[1]} s={0.95} /></>}{fg && <>
-		<Coil a={[A_PHONE[0] + ox + 40, A_PHONE[1] - 20]} b={[hs[0] + 20, hs[1] + 14]} />
-		<Handset x={hs[0]} y={hs[1]} rot={lerp(0, -70, sm(lift))} s={1.2} col="#0d0a12" />
+		<Coil a={[A_PHONE[0] + ox + 40, A_PHONE[1] - 20]} b={lift > 0.5 ? ear.M : [hs[0] + 20, hs[1] + 14]} />
+		<Handset x={hs[0]} y={hs[1]} rot={lerp(0, ear.rot, sm(lift))} s={lerp(1.2, ear.len / 80, sm(lift))} col="#0d0a12" />
 		<Rimmed x={ANN.x + ox} ground={ANN.ground} h={ANN.h} pose={pose} look={LOOK4.druyan} col="#0d0a12" rim="#ffd9a8" rimOp={0} rimDx={-2} rimDy={-1} T={tau} /></>}
 	</g>;
 };
 const CarlRoom: React.FC<{t: number; tau: number; ox?: number; lift: number; slip?: number; part?: 'bg' | 'fig' | 'all'}> = ({t, tau, ox = 0, lift, slip = 0, part = 'all'}) => {
 	const pose = mixPose(fkPose({hip: 0.37, lean: 10, neck: 14, lt: 86, lk: 92, rt: 80, rk: 84, la: 30, le: 70, ra: 26, re: 64}), SIT, sm(lift));
-	const hand = jointAt(pose, 'LHand', CARL.x + ox, CARL.ground, CARL.h, true);
-	const rest: [number, number] = [C_PHONE[0] + ox, C_PHONE[1] - 58], hs: [number, number] = [lerp(rest[0], hand[0] - 8, sm(lift)), lerp(rest[1], hand[1] - 6, sm(lift))];
+	const ear = atEar(SIT, CARL.x + ox, CARL.ground, CARL.h, true);
+	const rest: [number, number] = [C_PHONE[0] + ox, C_PHONE[1] - 58], hs: [number, number] = [lerp(rest[0], ear.c[0], sm(lift)), lerp(rest[1], ear.c[1], sm(lift))];
 	const bg = part !== 'fig', fg = part !== 'bg';
 	return <g>{bg && <>
 		<image href={staticFile('ep41/y77_carl.webp')} x={ox} y={0} width={2048 * PS} height={1152 * PS} />
@@ -59,8 +69,8 @@ const CarlRoom: React.FC<{t: number; tau: number; ox?: number; lift: number; sli
 		{/* the hotel message slip by the lamp */}
 		<g transform={`translate(${968 + ox},${672}) rotate(-6)`} opacity={1 - slip}><rect x={-34} y={-14} width={68} height={22} fill="#f2ead6" /><text x={0} y={2} textAnchor="middle" style={{fontFamily: '"DejaVu Serif", serif', fontSize: 9, fontStyle: 'italic'}} fill="#3a3020">Annie called</text></g>
 		<Phone77 x={C_PHONE[0] + ox} y={C_PHONE[1]} s={0.7} /></>}{fg && <>
-		<Coil a={[C_PHONE[0] + ox - 30, C_PHONE[1] - 16]} b={[hs[0] - 10, hs[1] + 12]} />
-		<Handset x={hs[0]} y={hs[1]} rot={lerp(0, 70, sm(lift))} s={0.85} col="#0d0a12" />
+		<Coil a={[C_PHONE[0] + ox - 30, C_PHONE[1] - 16]} b={lift > 0.5 ? ear.M : [hs[0] - 10, hs[1] + 12]} />
+		<Handset x={hs[0]} y={hs[1]} rot={lerp(0, ear.rot + 180, sm(lift))} s={lerp(0.85, ear.len / 80, sm(lift))} col="#0d0a12" />
 		<g fill="#0d0a12"><rect x={CARL.x + ox - 70} y={CARL.ground - 0.37 * CARL.h + 6} width={150} height={16} rx={4} /><rect x={CARL.x + ox - 62} y={CARL.ground - 0.37 * CARL.h + 20} width={10} height={0.37 * CARL.h - 20} /><rect x={CARL.x + ox + 62} y={CARL.ground - 0.37 * CARL.h - 150} width={12} height={0.37 * CARL.h + 150} /><rect x={CARL.x + ox + 40} y={CARL.ground - 0.37 * CARL.h - 150} width={40} height={90} rx={6} /></g>
 		<Rimmed x={CARL.x + ox} ground={CARL.ground} h={CARL.h} pose={pose} look={LOOK4.sagan} flip col="#0d0a12" rim="#ffd9a8" rimOp={0} rimDx={2} rimDy={-1} T={tau} /></>}
 	</g>;
@@ -109,7 +119,7 @@ export const Y1977: React.FC<{tau: number; t: number}> = ({tau, t}) => {
 		return <Cam zoom={lerp(1.3, 1.1, ease(seg(tau, T.callBack, T.split)))} fx={CARL.x} fy={560} px={d.px} py={d.py}><CarlRoom t={t} tau={tau} lift={seg(tau, T.callBack + 0.2, T.callBack + 0.9)} slip={0} /></Cam>;
 	}
 	// split screen → one frame
-	const m = sm(seg(tau, T.merge, T.engaged + 0.4)), split = 1 - m, push = lerp(1, 1.12, ease(seg(tau, T.split, T.end)));
+	const m = sm(seg(tau, T.merge, T.engaged + 0.35)), split = 1 - m, push = lerp(1, 1.06, ease(seg(tau, T.split, T.merge))) * lerp(1, 1.14, ease(seg(tau, T.merge, T.end)));
 	const ax = lerp(0, 90, m), cx = lerp(560, 390, m);   // the rooms slide toward each other
 	const glow = sm(seg(tau, T.engaged, T.engaged + 0.8)), toRec = easeIn(seg(tau, T.record, T.end));
 	const aH = jointAt(STAND_PH, 'LHand', ANN.x + ax, ANN.ground, ANN.h), cH = jointAt(SIT, 'LHand', CARL.x + cx, CARL.ground, CARL.h, true);

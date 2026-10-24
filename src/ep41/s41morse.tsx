@@ -30,7 +30,7 @@ export const tracePath = (phase: number, amp: number, y0 = TRACE_Y, x0 = -40, x1
 const rideV = (tau: number) => lerp(2300, 640, easeOut(seg(tau, T.wave, T.end)));
 const integ = (f: (x: number) => number, a: number, b: number) => { let s = 0; const n = Math.max(1, Math.ceil((b - a) * 60)), d = (b - a) / n; for (let i = 0; i < n; i++) s += f(a + (i + 0.5) * d) * d; return s; };
 export const MORSE_END = {phase: integ(rideV, T.ride, T.end), speed: rideV(T.end), amp: 46, col: '#FBEBC4'};
-const traceAmp = (tau: number) => 46 * sm(seg(tau, T.wave, T.end - 0.15));
+const traceAmp = (tau: number) => 46 * sm(seg(tau, T.end - 0.45, T.end - 0.12));   // the wire trembles only as the poles fade
 
 /* ---------- local helpers (shared-module requests are listed in the report) ---------- */
 type FKA = Parameters<typeof fkPose>[0];
@@ -275,8 +275,12 @@ const Chamber: React.FC<{tau: number; t: number}> = ({tau, t}) => {
 		<image href={staticFile('ep41/morse_chamber.webp')} x={0} y={0} width={1920} height={1080} />
 		<rect width={W} height={H} fill="#3A2C1E" opacity={0.22} />
 		<path d="M1170,260 L1360,260 L1700,1080 L900,1080 Z" fill="#FFF4DC" opacity={0.07 + 0.015 * Math.sin(t * 0.9)} />
-		{gent(470, 948, 560, {dress: 'coat', head: 'short', beard: 'short', build: 1.05}, {hip: 0.655, lean: 9, neck: 14, lt: 3, lk: 4, rt: -5, rk: 5, la: -26, le: 60, ra: -30, re: 60}, 0)}
-		{gent(320, 935, 540, {dress: 'coat', head: 'bald', build: 1.1}, {hip: 0.655, lean: 4, neck: 8, lt: 2, lk: 2, rt: -4, rk: 3, la: 10, le: 80, ra: 4, re: 14}, 2)}
+		{/* two witnesses, two different men: a short stout bald one, hands behind his back, leaning back; a tall slim one with
+		    whiskers, bent forward to watch the key, his top hat held at his side */}
+		{gent(300, 932, 470, {dress: 'coat', head: 'bald', beard: 'moustache', build: 1.3}, {hip: 0.655, lean: -4, neck: 6, lt: 4, lk: 3, rt: -7, rk: 4, la: -28, le: 64, ra: -32, re: 60}, 2)}
+		{(() => { const fk: FKA = {hip: 0.655, lean: 14, neck: 18, lt: 2, lk: 6, rt: -9, rk: 8, la: -4, le: 14, ra: 24, re: 52}, hx = 475, hg = 950, hh = 620, P = fkPose({...fk, hip: fk.hip + 0.003 * Math.sin(t * 1.4)}), hand = jointAt(P, 'LHand', hx, hg, hh), s = hh * 0.93;
+			return <g><Rimmed x={hx} ground={hg} h={hh} pose={P} look={{dress: 'coat', head: 'short', beard: 'full', build: 0.86}} col="#24221E" rimOp={0} />
+				<path d={HAT(s)} fill="#24221E" transform={`translate(${hand[0] + 0.012 * hh},${hand[1] + 0.07 * hh}) rotate(172) translate(0,${0.11 * s})`} /></g>; })()}
 		{/* chair */}
 		<path d={`M${CH.x - 70},${CH.g} L${CH.x - 62},${CH.g - 210} L${CH.x - 80},${CH.g - 420} L${CH.x - 62},${CH.g - 420} L${CH.x - 44},${CH.g - 218} L${CH.x + 60},${CH.g - 218} L${CH.x + 62},${CH.g} L${CH.x + 50},${CH.g} L${CH.x + 46},${CH.g - 200} L${CH.x - 50},${CH.g - 200} L${CH.x - 56},${CH.g} Z`} fill="#24180F" />
 		<Rimmed x={CH.x} ground={CH.g} h={CH.h} pose={pose} look={{dress: 'coat', head: 'short'}} col="#1A1E1A" rimOp={0} T={tau} />
@@ -295,19 +299,28 @@ const Chamber: React.FC<{tau: number; t: number}> = ({tau, t}) => {
 /* ---------- MO6: ride the last pulse along the wire; the wire trembles into the trace ---------- */
 const RIDE_P = 820;
 const Ride: React.FC<{tau: number; t: number}> = ({tau, t}) => {
-	const camX = integ(rideV, T.ride, tau), night = sm(seg(tau, T.merge - 0.2, T.end - 0.1)), merge = sm(seg(tau, T.merge, T.merge + 0.5)), amp = traceAmp(tau), poleOp = 1 - sm(seg(tau, T.wave - 0.1, T.wave + 0.5));
+	const camX = integ(rideV, T.ride, tau), night = sm(seg(tau, T.merge - 0.2, T.end - 0.1)), merge = sm(seg(tau, T.merge, T.merge + 0.5)), amp = traceAmp(tau), poleOp = 1 - sm(seg(tau, T.end - 0.4, T.end));
 	const ph = camX, spd = rideV(tau);
 	// the code train ahead of us (screen space, fixed: it travels with the camera); "·−− ····" etc.
 	const train: [number, number][] = []; { let x = 560; for (let i = PRESSES.length - 1; i >= 0 && x < W + 400; i--) { const L = PRESSES[i][1] / UNIT * 70; train.push([x, x + L]); x += L + 70 * lerp(1, 0, merge); } }
 	return <g>
-		<Sky id="mRideSky" stops={[[0, '#4F8CC4'], [0.55, '#9CC3E3'], [1, '#E9E2CC']]} />
-		<image href={staticFile('ep41/morse_spring.webp')} x={-((camX * 0.05) % 1900) - 40} y={120} width={2100} height={1181} />
-		<image href={staticFile('ep41/morse_spring.webp')} x={-((camX * 0.05) % 1900) + 2060} y={120} width={2100} height={1181} transform={`translate(${2 * (-((camX * 0.05) % 1900) + 2060) + 2100},0) scale(-1,1)`} />
-		<Whip id="mRideW" amt={18}>{Array.from({length: 30}, (_, i) => { const x = ((i * 211 - camX * 0.7) % 2600 + 2600) % 2600 - 300; return <ellipse key={i} cx={x} cy={940 + (i % 4) * 30} rx={120} ry={34} fill={i % 2 ? '#3E6440' : '#4E7A4C'} />; })}</Whip>
+		<Sky id="mRideSky" stops={[[0, '#6AB4E6'], [0.111, '#86CDF2'], [1, '#86CDF2']]} />
+		{(() => { const off = (camX * 0.08) % 4200; return <g><image href={staticFile('ep41/morse_spring.webp')} x={-off - 40} y={120} width={2100} height={1181} />
+			<g transform={`translate(${2 * (-off + 2060) + 2100},0) scale(-1,1)`}><image href={staticFile('ep41/morse_spring.webp')} x={-off + 2060} y={120} width={2100} height={1181} /></g>
+			<image href={staticFile('ep41/morse_spring.webp')} x={-off + 4160} y={120} width={2100} height={1181} />
+			<defs><linearGradient id="mRideFade" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stopColor="#86CDF2" stopOpacity="1" /><stop offset="1" stopColor="#86CDF2" stopOpacity="0" /></linearGradient></defs>
+			<rect x={0} y={118} width={W} height={260} fill="url(#mRideFade)" /></g>; })()}
 		<rect x={0} y={0} width={W} height={H} fill="#07080F" opacity={night * 0.97} />
 		{night > 0.2 && Array.from({length: 70}, (_, i) => <circle key={i} cx={((rnd(i, 1) * W - camX * 0.01) % W + W) % W} cy={rnd(i, 2) * 420} r={0.8 + rnd(i, 3) * 1.2} fill="#EEF0FF" opacity={(night - 0.2) * 0.6 * (0.5 + 0.5 * Math.sin(t * 2 + i))} />)}
-		<g opacity={poleOp}><Whip id="mPoleW" amt={lerp(34, 10, seg(tau, T.wave, T.end))}>{Array.from({length: 5}, (_, i) => { const x = ((i * RIDE_P - camX) % (RIDE_P * 4) + RIDE_P * 4) % (RIDE_P * 4) - 400;
-			return <g key={i}><rect x={x - 16} y={TRACE_Y - 22} width={32} height={H} fill="#1E1E18" /><rect x={x - 18} y={TRACE_Y - 30} width={36} height={14} rx={4} fill="#1E1E18" /></g>; })}</Whip></g>
+		{/* poles whip past: opaque and complete (rounded top, glass insulator on a peg where the wire is tied; no crossarm in 1844);
+		    a short trail behind each (they move right → left) carries the speed without blurring the pole itself */}
+		<g opacity={poleOp}>{Array.from({length: 5}, (_, i) => { const x = ((i * RIDE_P - camX) % (RIDE_P * 4) + RIDE_P * 4) % (RIDE_P * 4) - 400, top = TRACE_Y - 92;
+			const pole = (dx: number, op: number, k: number) => <g key={k} opacity={op}><path d={`M${x + dx - 15},${top + 8} Q${x + dx},${top - 6} ${x + dx + 15},${top + 8} L${x + dx + 19},${H + 20} L${x + dx - 19},${H + 20} Z`} fill={mixHex('#2A2620', '#07080F', night)} /></g>;
+			return <g key={i}>{[3, 2, 1].map((k) => pole(k * 26, 0.18 / k, k))}{pole(0, 1, 0)}
+				<path d={`M${x - 8},${top + 6} L${x - 12},${H}`} stroke="#4A4236" strokeWidth={3} opacity={0.35 * (1 - night)} />
+				<rect x={x - 26} y={TRACE_Y - 5} width={12} height={8} fill="#2A2620" />
+				<path d={`M${x - 34},${TRACE_Y + 7} Q${x - 34},${TRACE_Y - 14} ${x - 26},${TRACE_Y - 14} Q${x - 18},${TRACE_Y - 14} ${x - 18},${TRACE_Y + 7} Z`} fill="#9FC7B8" opacity={lerp(1, 0.35, night)} />
+				<path d={`M${x - 31},${TRACE_Y - 8} Q${x - 29},${TRACE_Y - 12} ${x - 26},${TRACE_Y - 12}`} stroke="#E4F4EC" strokeWidth={2} fill="none" opacity={lerp(0.9, 0.3, night)} /></g>; })}</g>
 		{/* the wire */}
 		{amp < 0.5 ? <path d={`M-40,${TRACE_Y} L${W + 40},${TRACE_Y}`} stroke={merge > 0 ? '#F2CF7A' : '#1A1A14'} strokeOpacity={merge > 0 ? merge : 1} strokeWidth={merge > 0 ? 4 : 3} />
 			: <><path d={tracePath(ph, amp)} stroke="#F2CF7A" strokeWidth={12} fill="none" opacity={0.25} /><path d={tracePath(ph, amp)} stroke={MORSE_END.col} strokeWidth={4} fill="none" /></>}

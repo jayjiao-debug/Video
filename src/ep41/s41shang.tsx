@@ -56,11 +56,13 @@ const ikArm = (base: Parameters<typeof fkPose>[0], target: [number, number]) => 
 const toBody = (p: [number, number]): [number, number] => [(p[0] - DX) / FH, (GY - p[1]) / FH];
 const FIRE_PT: [number, number] = [FX + -4, GY - 6 - 54];
 /** world point of the graph column when the shell is held up (offer pose, rot -14) — for the tilt → fire camera move */
-const SHELL_UP: [number, number] = (() => { const lh = jointAt(P_OFFER, 'LHand', DX, GY, FH), P = [lh[0] + 6, lh[1] - 58], r = -14 * Math.PI / 180, x = -30 * PS, y = 10 * PS; return [P[0] + x * Math.cos(r) - y * Math.sin(r), P[1] + x * Math.sin(r) + y * Math.cos(r)]; })();
+const SHELL_UP: [number, number] = (() => { const lh = jointAt(P_OFFER, 'LHand', DX, GY, FH), P = [lh[0] + 6, lh[1] - 64], r = -14 * Math.PI / 180, x = -30 * PS, y = 10 * PS; return [P[0] + x * Math.cos(r) - y * Math.sin(r), P[1] + x * Math.sin(r) + y * Math.cos(r)]; })();
 
 /* ---------- the plastron (local units; front = outer face with cracks and graphs, back = inner face with drilled hollows) ---------- */
-const OUT = 'M0,-99 C20,-99 40,-94 47,-80 C51,-72 51,-62 50,-54 L58,-50 C66,-46 69,-40 69,-32 L69,24 C69,32 66,38 58,42 L51,45 C51,60 50,74 46,84 C42,93 32,99 18,101 L8,94 L0,86 L-8,94 L-18,101 C-32,99 -42,93 -46,84 C-50,74 -51,60 -51,45 L-58,42 C-66,38 -69,32 -69,24 L-69,-32 C-69,-40 -66,-46 -58,-50 L-50,-54 C-51,-62 -51,-72 -47,-80 C-40,-94 -20,-99 0,-99 Z';
-const SULCI = 'M0,-99 L0,86 M-46,-70 Q-20,-62 0,-66 Q20,-62 46,-70 M-52,-44 Q-24,-34 0,-38 Q24,-34 52,-44 M-69,-4 Q-30,4 0,0 Q30,4 69,-4 M-51,44 Q-24,36 0,40 Q24,36 51,44 M-48,72 Q-22,66 0,70 Q22,66 48,72';
+// a flat, long plastron: straight-sided front and hind lobes, the trimmed bridge stubs (notched) at mid-sides, a notched tail
+const OUT = 'M0,-106 L7,-110 L30,-108 L40,-96 L46,-74 L50,-48 L64,-42 L66,-14 L61,-8 L66,-2 L66,18 L52,26 L50,56 L47,80 L38,100 L22,110 L0,93 L-22,110 L-38,100 L-47,80 L-50,56 L-52,26 L-66,18 L-66,-2 L-61,-8 L-66,-14 L-64,-42 L-50,-48 L-46,-74 L-40,-96 L-30,-108 L-7,-110 Z';
+const SULCI = 'M0,-106 L0,93 M-44,-86 Q-20,-80 0,-84 Q20,-80 44,-86 M-50,-50 Q-24,-44 0,-50 Q24,-44 50,-50 M-66,-6 Q-30,0 0,-8 Q30,0 66,-6 M-51,42 Q-24,36 0,42 Q24,36 51,42 M-47,80 Q-22,72 0,78 Q22,72 47,80';
+const STUBS = 'M50,-48 L52,26 M-50,-48 L-52,26';
 const OLD_STEM = (() => { const x = LC[0] + 1000 * KL, y = LC[1] - 12 * KL; let d = `M${x.toFixed(2)},${(y - 16).toFixed(2)}`; for (let i = 1; i <= 8; i++) d += ` L${(x + (rnd(i, 81) - 0.5) * 2.4).toFixed(2)},${(y - 16 + i * 4.6).toFixed(2)}`; return d; })();
 // the new 卜 crack (left half, branch toward the midline)
 const NX = -18;   // x of the new crack's stem (local)
@@ -69,7 +71,8 @@ const NEW_BR: [number, number][] = Array.from({length: 7}, (_, i) => [NX + i * 2
 const pathOf = (p: [number, number][], k = 1) => { const n = Math.max(1, Math.round(k * (p.length - 1))); return 'M' + p.slice(0, n + 1).map((q) => `${q[0].toFixed(2)},${q[1].toFixed(2)}`).join(' L'); };
 const NEW_TWIGS = ['M-18,22 L-22,27 L-24,31', 'M-3,-2 L0,-5', 'M-17,38 L-13,42'];
 // drilled hollows on the back: [x, y, charred]
-const HOLES: [number, number, number][] = [[NX - 6.5, 6, 0], [26, 6, 0], [-30, -40, 0], [42, -46, 1], [-34, 40, 0], [34, 40, 0], [-20, 70, 0], [20, 70, 0], [-22, -72, 0], [22, -72, 0]];
+// chiselled hollows on the inner face: an oval 凿 with a round 钻 beside it, in rows; some already scorched by earlier questions
+const HOLES: [number, number, number][] = [-1, 1].flatMap((sd) => [...[-80, -52, -24, 6, 36, 64].map((y) => [sd * 24.5, y, sd > 0 && (y === -52 || y === -24) ? 1 : 0] as [number, number, number]), ...[-30, -2].map((y) => [sd * 44, y, sd > 0 && y === -30 ? 1 : 0] as [number, number, number])]);
 /* oracle-bone graphs 其 自 東 來 雨 (unit box ±0.5; simplified pictographs, incised strokes) */
 export const GLYPHS: string[] = [
 	'M-0.36,-0.46 L-0.22,0.38 L0.22,0.38 L0.36,-0.46 M-0.3,-0.12 L0.26,0.3 M0.3,-0.12 L-0.26,0.3 M-0.31,-0.22 L0.31,-0.22 M-0.26,0.38 L-0.34,0.5 M0.26,0.38 L0.34,0.5',   // 其: a winnowing basket, cross-hatched
@@ -78,7 +81,7 @@ export const GLYPHS: string[] = [
 	'M0,-0.42 L0,0.5 M0,-0.42 Q0.12,-0.52 0.24,-0.42 M-0.32,-0.08 L0,-0.24 L0.32,-0.08 M-0.3,0.14 L0,-0.02 L0.3,0.14 M0,0.3 L-0.24,0.5 M0,0.3 L0.24,0.5',   // 來: a wheat plant with a drooping ear
 	'M-0.42,-0.46 L0.42,-0.46 M-0.26,-0.32 L-0.26,-0.14 M0,-0.34 L0,-0.06 M0.26,-0.32 L0.26,-0.14 M-0.26,0.04 L-0.26,0.22 M0.26,0.04 L0.26,0.22 M0,0.1 L0,0.3 M-0.13,0.32 L-0.13,0.48 M0.13,0.32 L0.13,0.48',   // 雨: a line of sky, drops falling
 ];
-const GX = -40, GS = 21, GY0 = -38, GDY = 24;        // the column of graphs beside the new crack (local)
+const GX = -38.5, GS = 21, GY0 = -38, GDY = 24;        // the column of graphs beside the new crack (local)
 
 type PlastronState = {cosT: number; heat: number; newK: number; glyph: number[]; cool: number; t: number};
 const PlastronV: React.FC<PlastronState & {tf: string}> = ({tf, cosT, heat, newK, glyph, cool, t}) => {
@@ -86,11 +89,13 @@ const PlastronV: React.FC<PlastronState & {tf: string}> = ({tf, cosT, heat, newK
 	const fill = front ? (cool > 0 ? mixHex('#d6b282', '#f1ead9', cool) : '#d6b282') : '#c4a070';
 	return <g transform={tf}>
 		<g transform={`scale(${Math.max(0.04, Math.abs(cosT))},1)`}>
-			<path d={OUT} fill={fill} stroke={front ? '#8a6a3e' : '#7a5a32'} strokeWidth={1.4} vectorEffect="non-scaling-stroke" />
+			<path d={OUT} fill={fill} stroke={front ? '#7a5a34' : '#6a4a2a'} strokeWidth={1.8} vectorEffect="non-scaling-stroke" strokeLinejoin="round" />
+			<path d={OUT} transform="scale(0.955,0.968)" fill="none" stroke="#a88658" strokeWidth={1} vectorEffect="non-scaling-stroke" opacity={0.55} />
 			{/* firelight from the right, and a cool shade on the left */}
 			<path d={OUT} fill="url(#shPlFire)" opacity={0.55 * warm} />
 			{front ? <g>
-				<path d={SULCI} stroke="#a2804f" strokeWidth={0.9} fill="none" vectorEffect="non-scaling-stroke" opacity={0.75} />
+				<path d={SULCI} stroke="#8e6c42" strokeWidth={1.3} fill="none" vectorEffect="non-scaling-stroke" opacity={0.85} />
+				<path d={STUBS} stroke="#a88658" strokeWidth={1} fill="none" vectorEffect="non-scaling-stroke" opacity={0.5} />
 				{/* bone grain: fine pores and fibres (they only read in the macro shot) */}
 				{Array.from({length: 70}, (_, i) => { const x = LC[0] + (rnd(i, 61) - 0.5) * 52, y = LC[1] + (rnd(i, 62) - 0.5) * 34, a = 0.25 + (rnd(i, 63) - 0.5) * 0.25, L = 2 + 6 * rnd(i, 64);
 					return <path key={i} d={`M${(x).toFixed(2)},${y.toFixed(2)} q${(Math.cos(a) * L * 0.5).toFixed(2)},${(Math.sin(a) * L * 0.5 + 0.3).toFixed(2)} ${(Math.cos(a) * L).toFixed(2)},${(Math.sin(a) * L).toFixed(2)}`} stroke="#9a7c54" strokeWidth={0.05 + 0.06 * rnd(i, 65)} fill="none" opacity={0.25 + 0.3 * rnd(i, 66)} strokeLinecap="round" />; })}
@@ -108,11 +113,14 @@ const PlastronV: React.FC<PlastronState & {tf: string}> = ({tf, cosT, heat, newK
 					<path d={g} transform={`translate(${GX + 0.45},${GY0 + i * GDY + 0.55}) scale(${GS})`} stroke="#fbf0d6" strokeWidth={2.2} fill="none" vectorEffect="non-scaling-stroke" strokeLinecap="round" strokeLinejoin="round" strokeDasharray={6} strokeDashoffset={6 * (1 - k)} pathLength={6} opacity={0.8} />
 					<path d={g} transform={`translate(${GX},${GY0 + i * GDY}) scale(${GS})`} stroke="#24130a" strokeWidth={4.6} fill="none" vectorEffect="non-scaling-stroke" strokeLinecap="round" strokeLinejoin="round" strokeDasharray={6} strokeDashoffset={6 * (1 - k)} pathLength={6} /></g>; })}
 			</g> : <g>
-				<path d="M0,-99 L0,93" stroke="#a2804f" strokeWidth={0.9} vectorEffect="non-scaling-stroke" opacity={0.6} />
-				{HOLES.map(([x, y, ch], i) => <g key={i}>
-					<ellipse cx={x} cy={y} rx={3.6} ry={9} fill={ch ? '#2a160a' : '#6e4e2a'} />
-					<circle cx={x + (x < 0 ? 6.5 : -6.5)} cy={y + 1} r={3.8} fill={ch ? '#1e0e06' : '#7a5830'} />
-				</g>)}
+				<path d="M0,-106 L0,93" stroke="#8e6c42" strokeWidth={1.1} vectorEffect="non-scaling-stroke" opacity={0.7} />
+				<path d={STUBS} stroke="#a88658" strokeWidth={1} fill="none" vectorEffect="non-scaling-stroke" opacity={0.5} />
+				{HOLES.map(([x, y, ch], i) => { const zx = x + (x < 0 ? 6.5 : -6.5); return <g key={i}>
+					<ellipse cx={x} cy={y} rx={3.4} ry={9.5} fill={ch ? '#24120a' : '#5e4024'} />
+					<ellipse cx={x + 0.8} cy={y + 0.9} rx={2.1} ry={7.4} fill={ch ? '#120804' : '#3e2812'} />
+					<circle cx={zx} cy={y + 1} r={3.7} fill={ch ? '#1e0e06' : '#6a4a28'} />
+					<circle cx={zx + 0.6} cy={y + 1.6} r={2.2} fill={ch ? '#0e0602' : '#46301a'} />
+				</g>; })}
 				{heat > 0 && <><circle cx={NX} cy={7} r={10} fill="#ff7a2a" opacity={0.5 * heat} /><circle cx={NX} cy={7} r={4} fill="#ffe08a" opacity={heat} /></>}
 			</g>}
 		</g>
@@ -206,7 +214,7 @@ export const SHANG3: React.FC<{tau: number; t: number}> = ({tau, t}) => {
 	const back = seg(tau, T.reach - 0.05, T.reach + 0.35) - seg(tau, T.flipA, T.flipB);
 	const theta = Math.PI * sm(back), cosT = Math.cos(theta);
 	const rot = lerp(-6, -14, offerK) + lerp(0, 4, lookK);   // SHELL_UP assumes -14 at the end of the offer
-	const P: [number, number] = [lh[0] + 6, lh[1] - 58 + br * 0.3];
+	const P: [number, number] = [lh[0] + 6, lh[1] - 64 + br * 0.3];
 	const tfP = `translate(${P[0].toFixed(3)},${P[1].toFixed(3)}) rotate(${rot.toFixed(3)}) scale(${PS})`;
 	const toW = (lx: number, ly: number): [number, number] => { const c = Math.cos(rot * Math.PI / 180), s = Math.sin(rot * Math.PI / 180), x = lx * PS * cosT, y = ly * PS; return [P[0] + x * c - y * s, P[1] + x * s + y * c]; };
 	// the rod: rests in the fire, is lifted to the hollow, then laid back
@@ -308,7 +316,7 @@ export const SHANG3: React.FC<{tau: number; t: number}> = ({tau, t}) => {
 					<circle cx={rodTipD[0]} cy={rodTipD[1]} r={3} fill="#fff0c0" />
 				</g>}
 				{/* left fingers over the shell's edge */}
-				{[-10, -2, 6].map((lx, i) => { const e = toW(lx * Math.sign(cosT || 1), 97); return <ellipse key={i} cx={e[0]} cy={e[1] + 1} rx={3.4} ry={5.2} fill="#0a0710" transform={`rotate(${rot} ${e[0]} ${e[1]})`} />; })}
+				{[-18, -10, 10].map((lx, i) => { const e = toW(lx * Math.sign(cosT || 1), 104); return <ellipse key={i} cx={e[0]} cy={e[1] + 1} rx={3.4} ry={5.2} fill="#0a0710" transform={`rotate(${rot} ${e[0]} ${e[1]})`} />; })}
 				{/* the puff of smoke and sparks at the touch */}
 				{tau > T.touch - 0.05 && tau < T.flipA + 0.8 && Array.from({length: 10}, (_, i) => { const u = cl((tau - T.touch) / (0.9 + 0.3 * rnd(i, 3))); return u <= 0 || u >= 1 ? null : <circle key={i} cx={holeW[0] + (rnd(i, 1) - 0.5) * 40 * u - 10 * u} cy={holeW[1] - 50 * u * (0.5 + rnd(i, 2))} r={2 + 9 * u} fill={i < 4 ? '#ffd27a' : '#6a5a66'} opacity={(1 - u) * (i < 4 ? 0.9 : 0.45)} />; })}
 				{/* foreground grass, blurred */}

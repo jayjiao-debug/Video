@@ -26,6 +26,7 @@ export const DU_T = {
 	push: 17.1,                      // push onto the sealed packet → it fills the frame at the end
 };
 const T = DU_T;
+const mixC = (a: string, b: string, u: number) => { const p = (s: string, i: number) => parseInt(s.slice(1 + 2 * i, 3 + 2 * i), 16), c = (i: number) => Math.round(p(a, i) + (p(b, i) - p(a, i)) * Math.max(0, Math.min(1, u))).toString(16).padStart(2, '0'); return `#${c(0)}${c(1)}${c(2)}`; };
 const GY = 880, DH = 430, DX = 760;
 const look: Look4 = {dress: 'robe', head: 'futou', beard: 'long', build: 0.9};
 const V = speed4(look, DH);
@@ -117,7 +118,7 @@ const Apricot: React.FC<{x: number; gy: number; h: number; col: string; t: numbe
 </g>;
 
 /* ---------- the sheet: written, folded in three, banded ---------- */
-const Sheet: React.FC<{x: number; y: number; fs: number; chars: number[]; fold1: number; fold2: number; band: number}> = ({x, y, fs, chars, fold1, fold2, band}) => {
+const Sheet: React.FC<{x: number; y: number; fs: number; chars: number[]; fold1: number; fold2: number; band: number; dim?: number}> = ({x, y, fs, chars, fold1, fold2, band, dim = 0}) => {
 	const paper = '#efe3c4', back = '#e4d6b2', edge = '#b8a074';
 	const writing = <g>{CHARS.map((col, c) => col.split('').map((ch, i) => { const k = chars[c * 5 + i]; if (k <= 0) return null; const cx = COLX[c], cy = ROW0 + i * ROWD;
 		return <g key={`${c}${i}`}><clipPath id={`duCh${c}${i}`}><rect x={cx - 12} y={cy - 12} width={24} height={24 * k} /></clipPath>
@@ -138,6 +139,8 @@ const Sheet: React.FC<{x: number; y: number; fs: number; chars: number[]; fold1:
 		{/* band: last frame (zoom 15.5) puts it at screen y 520–590, as reported to the Morse scene */}
 		{band > 0 && <g><rect x={-28} y={lerp(-120, -2.9, easeOut(band))} width={56} height={10} fill="#d9c69c" stroke={edge} strokeWidth={0.6} opacity={cl(band * 3)} />
 			{band > 0.8 && <path d={`M-6,${-16} L-4,${-16 + 34 * cl((band - 0.8) / 0.2)}`} stroke="#3a1a10" strokeWidth={2.4} strokeLinecap="round" />}</g>}
+		{/* in the dusk wide shots the sheet is only faintly lit; it brightens as the camera comes down to it */}
+		{dim > 0 && <rect x={-76} y={-61} width={152} height={122} fill="#3a1c28" opacity={0.78 * dim} />}
 	</g>;
 };
 
@@ -281,7 +284,7 @@ export const DU3: React.FC<{tau: number; t: number}> = ({tau, t}) => {
 				{/* the low table (案): top with a little visible depth, splayed legs standing on the ground */}
 				<g>
 					<path d={`M${tableX + 8},${GY + 2} L${tableX + 18},${tableTop + 4} M${tableX + TW - 8},${GY + 2} L${tableX + TW - 18},${tableTop + 4}`} stroke="#140a0f" strokeWidth={7} strokeLinecap="round" />
-					<path d={`M${tableX},${tableTop + 6} L${tableX + 6},${tableTop - 30 * fs} L${tableX + TW - 6},${tableTop - 30 * fs} L${tableX + TW},${tableTop + 6} Z`} fill="#3a2028" />
+					<path d={`M${tableX},${tableTop + 6} L${tableX + 6},${tableTop - 30 * fs} L${tableX + TW - 6},${tableTop - 30 * fs} L${tableX + TW},${tableTop + 6} Z`} fill={mixC('#1e0f15', '#3a2028', sm(seg(tau, T.kneelA + 0.2, T.char0 - 0.1)))} />
 					<rect x={tableX - 2} y={tableTop + 4} width={TW + 4} height={7} fill="#140a0f" />
 				</g>
 				</g>
@@ -289,7 +292,7 @@ export const DU3: React.FC<{tau: number; t: number}> = ({tau, t}) => {
 			{/* the first beacon's flame on top (kept while we are inside it) */}
 			{!far && <g><Glow x={fireBase[0]} y={fireBase[1] - 20 * b0s} r={150 * b0s} c="#ff8a3a" o={0.6} id="duB0g" /><Blaze x={fireBase[0]} y={fireBase[1]} s={blazeS} t={t} lean={SHANG_END.lean} seed={SHANG_END.seed} /></g>}
 			{far && <g transform={cy(1)}>
-				<Sheet x={sheetC[0]} y={sheetC[1]} fs={fs} chars={chars} fold1={fold1} fold2={fold2} band={band} />
+				<Sheet x={sheetC[0]} y={sheetC[1]} fs={fs} chars={chars} fold1={fold1} fold2={fold2} band={band} dim={1 - sm(seg(tau, T.kneelA + 0.2, T.char0 - 0.1))} />
 				{cuHands.length > 0 && <mask id="duHandMask" maskUnits="userSpaceOnUse" x={-4000} y={-4000} width={12000} height={12000}><rect x={-4000} y={-4000} width={12000} height={12000} fill="#fff" />
 					{cuHands.map((hi, i) => { const l = Math.hypot(hi.w[0] - hi.e[0], hi.w[1] - hi.e[1]) || 1; return <circle key={i} cx={hi.w[0] + (hi.w[0] - hi.e[0]) / l * 0.04 * DH} cy={hi.w[1] + (hi.w[1] - hi.e[1]) / l * 0.04 * DH} r={0.033 * DH} fill="#000" />; })}</mask>}
 				<g mask={cuHands.length > 0 ? 'url(#duHandMask)' : undefined}><Rimmed x={DX} ground={GY} h={DH} pose={pose} look={look} col="#120810" rim="#ffcf9a" rimOp={0.18} rimDx={-2} rimDy={-1.4} T={tau} lag={tau < T.stopB ? gaitPose('08_04', (tau - 0.05) / CYCLE) : undefined} /></g>
