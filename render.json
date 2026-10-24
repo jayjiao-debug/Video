@@ -1,8 +1,8 @@
 {
-  "id": "ep42_rough_p1",
+  "id": "ep42_rough_p2",
   "composition": "EP42ROUGH",
-  "start": 0,
-  "end": 2394,
+  "start": 2395,
+  "end": 4353,
   "chunks": 12,
-  "output": "ep42_rough_p1"
+  "output": "ep42_rough_p2"
 }
