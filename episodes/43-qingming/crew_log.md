@@ -5,3 +5,5 @@
 | 2026-10-24 15:43 | folder created | producer | | |
 | 2026-10-24 15:45 | brief written from the iwanau format study (owner picked 清明上河图) | producer | brief.md | 20 |
 | 2026-10-24 15:45 | researcher + art director launched in parallel | producer | | |
+| 2026-10-24 18:40 | gate 2a: owner picked look A 汴河暮影; corner mark stays the old 21 px mark (series default unchanged) | owner | A | |
+| 2026-10-24 18:40 | gate 1 r1: director REVISE (10 notes, script 4/5), cold read: keep watching, swipe risk at 冯保 run; routed to screenwriter + researcher | producer | | |
