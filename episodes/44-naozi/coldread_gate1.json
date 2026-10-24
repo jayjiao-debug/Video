@@ -1,0 +1,45 @@
+{
+  "label": "gate1",
+  "source_read": "/home/claude/video/episodes/44-naozi/lines.json only (49 subtitle lines; numbered #1-#49 in file order). No frames, no titles file, no plan.",
+  "would_keep_watching_after_3s": true,
+  "why": "#1 '爱因斯坦死后，你被切成[约240块]' grabbed me with Einstein plus a body-horror image, and the line is aimed at ME. My first thought was 'wait, me?' and I wanted to know who 你 is. 240 is a precise number, so it sounds like a real story and not an AI 'you were reincarnated as...' clip.",
+  "swipe_check": {
+    "2s": "No. By 2s I have '爱因斯坦死后，你被切成...' and that is enough. Small risk: before I see the title, '你' could read as a cheap 'imagine you are X' AI story. The concrete '约240块' saves it.",
+    "5s": "No. #2 '躺在[苹果酒纸箱]里' is the best detail in the hook. A genius's brain in a cider box is so specific and undignified that I need to know why.",
+    "15s": "Mostly no. #5 '天才，藏在你[哪一块]？' followed by the title 「你是爱因斯坦的大脑」 at ~12s answers the 你 puzzle and gives me a small 'oh, the brain is narrating' moment. Two risks. (a) 12.25-14.75s has no subtitle. If the title card is static, those 2.5s are the most dangerous gap in the first 15 seconds. (b) At 14.75s #6 '刚出生，他的后脑勺就[大得吓人]' is a fact I didn't know, so it holds me, but I can already tell the video is switching to 'he was born...' biography mode, and that makes me a bit wary."
+  },
+  "first_moment_I_got_curious": "#2 (0:03.5) '苹果酒纸箱'. #1 grabbed me, but the cider box is what made me actively curious. The second spike was #21 (1:03) '你没有。' right after '他停在了76岁'. That pulled me back in after the biography stretch.",
+  "where_I_would_swipe_away": [
+    "0:28-0:54 (#10-#17), the biggest risk. It's an Einstein CV montage: patent office, 1905, 1919, Nobel, 1933, 1939, the bomb letter. That's five years in 26 seconds, and it feels like a timeline I've seen in a hundred videos. The hook promised the brain's story (cider box, road trip) and I'm getting his résumé. Things that keep me: '你对了，他红了' is cute, '不是因为相对论' is trivia I can repeat, and '最大的错误' has weight. If I swipe, it's around #11-#14.",
+    "0:12.25-0:14.75: no subtitle while the title shows. Whether I stay depends entirely on the visual.",
+    "1:57-2:13 (#38-#41): claim, debunk, claim, debunk. By the second '！' (多了一道褶) I already know the next line will say 'not proven', so it feels predictable. '顶叶宽了15%' means nothing to me as a number. It's short enough that I'd probably ride it out.",
+    "2:27-2:41 (#47-#49): once I hear 'I have no special talent, only curiosity' I know it's the moral and the video is wrapping up. I've heard that quote in 鸡汤 videos. I might swipe before #49, and then you lose the comment prompt."
+  ],
+  "best_stretch_no_swipe": "1:00-1:56 (#20-#37). '他停在了76岁。/你没有。' through '她[没有收]' is the real video: no consent, ashes without the brain, 1.2 kg and no heavier than anyone else's, 23 years missing, Kansas, the cider box payoff, '找到了！' then '只有1块不一样', the 84-year-old driving across America. Every line is a new fact and each one is stranger than the last.",
+  "lines_I_did_not_understand": [
+    "#1 (0:00) '你被切成约240块': for 12 seconds I don't know who 你 is. That's good confusion because it's why I stayed. But if I miss the title card, the device stays confusing for a while.",
+    "#6-#11 (0:14-0:35), 他/你 switching: 'he' had a big head, 'you' thought something is hidden, 'you' at 16 wondered about chasing light, 'he' was at the patent office, 'you' wrote 4 papers. I reread #8 before I worked out that 你 = the brain (the thinking) and 他 = the man (the life events). #12 '你对了，他红了' made the rule click, and after that it's fun.",
+    "#12 (0:35) '1919年日全食：你对了': right about what? It never says his prediction (light bending) was confirmed. I vaguely link eclipse and Einstein, but a lot of people won't.",
+    "#13 (0:38) '诺奖却不是因为相对论': then what was it for? It opens a question and drops it. A minor itch, and the comments will ask.",
+    "#32 (1:39) '胶质细胞': I don't know what glial cells are or why having more would mean smarter. The '找到了！' energy carries me, but the key word is a blank.",
+    "#33 (1:42) '可4块里，[只有1块]不一样': I needed a second to get it. Only 1 of the 4 samples was different, so the evidence is weak. I got there, but it's tight for a 3s line.",
+    "#38 (1:57) '你的顶叶，宽了15%': 顶叶 is jargon. I don't know what that part does, and 15% wider than whom? The number lands as noise.",
+    "#40 (2:03) '照片上，你多了一道褶': why 'on photos'? Was the brain itself unavailable? '照片上' sounds like it matters but nothing explains it.",
+    "#44 (2:16) '147岁的你': I stopped and did math. He died at 76, so how is the brain 147? Then I got it: counting from his birth to now, the brain 'didn't stop' like #21 said. Clever, but I definitely reread it, and some viewers will comment 'mistake? he died at 76'.",
+    "#44 '有一部分进了[博物馆]': which museum, and where? Can I go see it? It's left hanging.",
+    "#47 (2:27) '可他自己说': the '可' tripped me. #45-#46 say the researchers are curious like he was, then '可' he says he only had curiosity. That isn't a contrast, it's the same thing. I think the intended irony is 'they searched the tissue for genius, and he said genius was curiosity', but at speed the '可' felt wrong.",
+    "#49 (2:35) '你觉得': for 2.5 minutes 你 was the brain, and now 你 is suddenly me. For half a second I wondered if it was asking the brain. Mild."
+  ],
+  "takeaway_in_my_words": "After Einstein died, a doctor took his brain without asking the family, cut it into 240 numbered pieces, and kept it in a cider box for decades. At least 18 researchers looked for where his genius was. Every 'found it!' fell apart, and nobody found solid evidence. Einstein himself said he wasn't specially talented, just very curious. So genius probably isn't a piece of brain you can cut out. (Second takeaway I got without being told: the whole thing was kind of a violation, with no consent and the ashes scattered without the brain.)",
+  "surprise_that_stuck": "Harvey, at 84, drove the brain 6000+ km across America to give it back to Einstein's granddaughter, and she said no. The picture of an old man with the brain in his car being turned away is what I'd tell my roommate. Runners-up: '骨灰被悄悄撒掉，你不在里面', and '你约1.2公斤，不比别人重' (I assumed a genius's brain would be bigger).",
+  "title_I_would_click": "「你是爱因斯坦的大脑」: yes, I'd stop for it. The second-person angle is odd enough to catch my thumb, and it pays off at '他停在了76岁。你没有。' and '147岁的你'. Honestly though, a title built on the cider box (something like '爱因斯坦的大脑，在苹果酒纸箱里躺了23年') would grab me faster. That's a concrete, unbelievable fact, where the current title is a concept I have to decode.",
+  "title_that_misleads": "Slightly. 「你是爱因斯坦的大脑」 could read as a 'you have Einstein's brain' personality-test or flattery video, or an AI 'imagine you are...' clip. The bigger mismatch is inside the video: about 40s (0:14-0:54) is Einstein's life story, not the brain's journey, and the title plus hook set me up for the brain.",
+  "what_I_would_comment": "'没经过家属同意就拿走，还藏了23年，这不就是偷吗？最后84岁开车送回去，孙女都不要，太讽刺了' (Taking it without family consent and hiding it 23 years is just theft? Then at 84 he drives it back and the granddaughter won't take it, so ironic.) I would NOT answer '天才是天生的吗'. It's too generic and feels like a school essay prompt. Comments I'd expect from others: '147岁那句我算了半天', '诺奖到底是因为啥', '孙女为什么不收', '博物馆在哪能看', and joke answers like '不是天生的，是专利局上班摸鱼摸出来的'.",
+  "interest_curve": "0-12s high (hook) -> 12-15s depends on the title visual -> 15-28s medium (new childhood facts, 你/他 device being learned) -> 28-54s lowest (bio timeline) -> 54-63s rising (refused surgery, '该走了') -> 63-117s peak ('你没有' through '她没有收') -> 117-136s dip (repetitive claim/debunk) -> 136-147s small bump ('147岁', callback) -> 147-161s soft landing, known quote, generic question.",
+  "for_frames_only": [
+    {
+      "frame": "n/a",
+      "what_this_says_in_5s": "My task gave me no frames, only subtitle lines, so I have no visual read."
+    }
+  ]
+}
