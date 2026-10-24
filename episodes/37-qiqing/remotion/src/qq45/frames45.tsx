@@ -11,7 +11,7 @@ export type KF = {scene: React.ReactNode; furn: React.ReactNode; label: string};
 const ALL = new Set<Z>(ZODIAC), BACK7 = RETURNED, BACK5 = new Set<Z>(['牛', '虎', '猴', '猪', '马']), BACK4 = new Set<Z>(['牛', '虎', '猴', '猪']), NONE = new Set<Z>();
 const home12 = dialFor(ALL), back = (s: Set<Z>) => dialFor(s);
 export const LK: Record<string, Look4> = {
-	auct: {dress: 'jacket', head: 'short'}, bidA: {dress: 'jacket', head: 'glasses'}, bidB: {dress: 'dress', head: 'bob'}, bidC: {dress: 'jacket', head: 'short'},
+	auct: {dress: 'shirt', head: 'short'}, bidA: {dress: 'shirt', head: 'glasses'}, bidB: {dress: 'dress', head: 'bob'}, bidC: {dress: 'shirt', head: 'short'},
 	soldier: {dress: 'coat', head: 'cylcap'}, soldier2: {dress: 'coat', head: 'cap'},
 };
 export const FIG = T.fig, RIM = '#E9DFC8';
@@ -74,7 +74,7 @@ export const Garden: React.FC<{id: string; g: number; sky?: string[]}> = ({id, g
 </g>;
 
 /* ---------- the auction room ---------- */
-export const AUCT_X = 1440, AUCT_G = 950, AUCT_H = 620;
+export const AUCT_X = 1440, AUCT_G = 950, AUCT_H = 540;
 export const auctPose = (hammer: 'down' | 'held'): Pose => grounded({lean: hammer === 'down' ? 10 : 4, neck: hammer === 'down' ? 16 : 4, lt: 2, lk: 2, rt: -3, rk: 3, ra: hammer === 'down' ? 40 : 150, re: hammer === 'down' ? 30 : 8, la: 34, le: 64});
 /** gavel along the forearm, head across it; returns the head centre */
 export const gavelGeom = (pose: Pose) => { const hand = jointAt(pose, 'RHand', AUCT_X, AUCT_G, AUCT_H, true), el = jointAt(pose, 'RElb', AUCT_X, AUCT_G, AUCT_H, true), a = Math.atan2(hand[1] - el[1], hand[0] - el[0]);
@@ -106,7 +106,7 @@ export const AuctionRoom: React.FC<{hammer: 'down' | 'held'; wall: string; trim?
 /** seated bidders on chairs (profile, facing right toward the rostrum); paddles in raised hands */
 export const FLOOR = 1010, BH = 430;
 export const Bidders: React.FC<{frame: string; up?: number[]; xs?: number[]}> = ({frame, up = [1], xs = [150, 380, 600]}) => <g>
-	{xs.map((x, i) => { const raise = up.includes(i), {pose, seat} = seated(raise ? {ra: 166, re: 6, la: 28, le: 46} : {ra: 26, re: 52, la: 30, le: 46});
+	{xs.map((x, i) => { const raise = up.includes(i), {pose, seat} = seated(raise ? {ra: 128, re: 22, la: 28, le: 46} : {ra: 26, re: 52, la: 30, le: 46});
 		const seatY = FLOOR - seat * BH, look = [LK.bidA, LK.bidB, LK.bidC][i % 3], hd = jointAt(pose, 'RHand', x, FLOOR, BH);
 		reg({frame, who: `bidder${i}`, x, ground: FLOOR, h: BH, pose, intent: 'sit', seatY});
 		return <g key={i}>

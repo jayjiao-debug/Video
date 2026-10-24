@@ -6,7 +6,7 @@ from scipy.signal import fftconvolve
 sys.path.insert(0, '/home/claude/video/episodes/42-yiyi/music')
 from build42 import song, SR, B, P, STOP
 SP = [(0.0, B(9)), (B(1) - 0.010, B(9)), (B(1) - 0.010, B(21)), (B(33) - 0.010, B(129)), (B(265) - 0.010, B(320)), (B(321) - 0.010, B(354)), (B(426) - 0.040, STOP), ('gap', 1.70), (0.0, B(29))]
-XF = [0.010, 0.010, 0.010, 0.010, 0.010, 0.040, 0.015, 0.010]
+XF = [0.010, 0.010, 0.010, 0.020, 0.010, 0.040, 0.015, 0.010]
 bgm = song[:0]; joins = []
 for k, sp in enumerate(SP):
     seg = np.zeros((int(round(sp[1] * SR)), 2), np.float32) if sp[0] == 'gap' else song[int(round(sp[0] * SR)):int(round(sp[1] * SR))].copy()
@@ -23,8 +23,9 @@ tail_at(B(354) - 0.3, B(354), joins[5], ir, -12)
 tail_at(STOP - 0.4, STOP, joins[6] - 0.4, ir2, -9)
 t = np.arange(n) / SR; g = np.ones(n)
 DROP = joins[5] - (B(354) - B(338))
-up = np.clip((t - (DROP - 2 * P)) / P, 0, 1); w = 0.5 - 0.5 * np.cos(np.pi * up); w[t >= DROP] = 0; g *= 10 ** (-5 * w / 20)
-jr = int((joins[7] - 0.010) * SR); g[jr:] *= 10 ** (-3 / 20)
+up = np.clip((t - (DROP - 2 * P)) / P, 0, 1); w = 0.5 - 0.5 * np.cos(np.pi * up); w[t >= DROP] = 0; g *= 10 ** (-8 * w / 20)
+lead = np.clip((t - 106.986) / 0.3, 0, 1); lead[t >= DROP] = 0; g *= 10 ** (-2 * lead / 20)   # v2: a softer lead-in so the drop lifts on a phone
+bk = np.clip((t - joins[6]) / (joins[7] - 0.010 - joins[6]), 0, 1); g *= 10 ** (-3 * bk / 20)   # v2: ramp the bookend over the gap
 F = B(29) - B(21); i = int((n / SR - F) * SR); g[i:] *= np.cos(np.linspace(0, 1, n - i) * np.pi / 2) ** 1.5
 x = (bgm * g[:, None]).astype(np.float32)
 m = pyln.Meter(SR); x *= 10 ** ((-14 - m.integrated_loudness(x)) / 20)

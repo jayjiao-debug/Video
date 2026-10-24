@@ -22,7 +22,7 @@ const camPath = (t: number, keys: [number, Cam][]): Cam => { if (t <= keys[0][0]
 
 /* ---------------- the courtyard (岱庙 汉柏院) at a given state ---------------- */
 type Court = {sky: [string, string]; night?: number; snow?: number; autumn?: number; tint?: number; earth?: number; wall?: number; hall?: number; steles?: number; qlStele?: number; nbGrey?: number; nbBare?: number;
-	torch?: number; torch2?: number; altar?: number; age?: number; west?: number; burn?: number; legend?: number; glow?: number; sap?: number; treeO?: number; stars?: number; drift?: number; huaiDead?: number; huaiO?: number; steleGlow?: number; idp: string};
+	torch?: number; torch2?: number; altar?: number; age?: number; west?: number; burn?: number; legend?: number; glow?: number; sap?: number; treeO?: number; stars?: number; drift?: number; huaiDead?: number; huaiO?: number; climb?: number; steleGlow?: number; idp: string};
 export const STELES: [number, number, number][] = [[140, 862, 0.7], [-20, 952, 0.9], [1760, 965, 0.8], [640, 838, 0.55]];
 type Depth = {g: number; node: React.ReactNode};
 const World: React.FC<{c: Court; t: number; children?: React.ReactNode; extra?: React.ReactNode; people?: Depth[]}> = ({c, t, children, extra, people = []}) => {
@@ -30,6 +30,7 @@ const World: React.FC<{c: Court; t: number; children?: React.ReactNode; extra?: 
 	return <g>
 		<Sky46 id={`${c.idp}sky`} c={c.sky} stars={c.stars ?? 0} drift={c.drift ?? t} />
 		<Mountain46 id={`${c.idp}mt`} tint={c.tint ?? 0} snow={c.snow ?? 0} night={n} />
+		{(c.climb ?? 0) > 0 && <Climbers t={t} o={c.climb} />}
 		{(c.torch ?? -1) >= 0 && <Torches u={c.torch!} seed={1} />}
 		{(c.torch2 ?? -1) >= 0 && <Torches u={c.torch2!} seed={7} n={10} />}
 		{(c.altar ?? 0) > 0 && <Altar o={c.altar} t={t} />}
@@ -66,10 +67,12 @@ const qianlongDepth = (t: number, o: number): Depth[] => {
 	out.push({g: g - 1, node: <g key="tb" opacity={o}><Shadow x={(TABLE.x0 + TABLE.x1) / 2 + 12} y={g + 2} rx={88} ry={8} o={0.3} />
 		<rect x={TABLE.x0} y={tableTop} width={TABLE.x1 - TABLE.x0} height={9} fill="#6B4A32" />
 		{[TABLE.x0 + 30, TABLE.x1 - 14].map((x) => <rect key={x} x={x} y={tableTop + 9} width={7} height={g - tableTop - 9} fill="#4E3626" />)}
-		<rect x={TABLE.x0 + 12} y={tableTop - 3} width={100} height={3.5} fill={C.paper} /></g>});
+		<path d={`M${TABLE.x0},${tableTop} L${TABLE.x1},${tableTop} L${TABLE.x1 - 8},${tableTop - 12} L${TABLE.x0 + 8},${tableTop - 12} Z`} fill="#8A6444" />
+		<path d={`M${TABLE.x0 + 14},${tableTop - 1} L${TABLE.x0 + 116},${tableTop - 1} L${TABLE.x0 + 110},${tableTop - 11} L${TABLE.x0 + 20},${tableTop - 11} Z`} fill={C.paper} />
+		{Array.from({length: Math.floor(12 * seg(t, 62.6, 64.4))}, (_, i) => <line key={i} x1={TABLE.x0 + 26 + (i % 6) * 13} y1={tableTop - 4 - (i % 3) * 2} x2={TABLE.x0 + 32 + (i % 6) * 13} y2={tableTop - 8 - (i % 2) * 2} stroke={C.ink} strokeWidth={1.6} />)}</g>});
 	const paint = ease(seg(t, 62.0, 62.6)), active = t >= 62.6 && t < 64.6;
 	const sx = active ? 8 * Math.sin((t - 62.6) * 6.1) : 0;
-	const target: [number, number] = [TABLE.x0 + 30 + sx, tableTop - 3];
+	const target: [number, number] = [TABLE.x0 + 30 + sx, tableTop - 6];
 	const look = grounded({...STAND, lean: -2, neck: -18, la: -2, ra: 2});
 	const pp = reachPose({hip: 0.655, lean: 22, neck: 16, lt: 6, lk: 6, rt: -8, rk: 4, la: 16, le: 24, ra: 40, re: 40}, [(target[0] - X) / h, (g - target[1]) / h], 'R');
 	const pose = paint <= 0 ? look : paint >= 1 ? pp : reground(mixPoseP(look, pp, paint));
@@ -91,11 +94,11 @@ const soldiersDepth = (t: number, o: number): Depth[] => {
 	[F1, F2].forEach((fx, i) => out.push({g: g + 1, node: <g key={'f' + i} opacity={o}><Fire46 x={fx} g={g + 1} s={fs} t={t + i} />
 		{Array.from({length: 4}, (_, j) => { const k = ((t * 0.5 + j / 4 + i * 0.3) % 1); return <ellipse key={j} cx={fx + Math.sin(k * 5 + j) * 6} cy={potTop - 8 - k * 70} rx={6 + 10 * k} ry={4 + 6 * k} fill="#F4F0E8" opacity={(1 - k) * 0.5} filter="url(#k3)" />; })}</g>}));
 	// a stack of three rifles leaning together, by the second fire
-	out.push({g: g - 2, node: <g key="rifles" opacity={o}>{[-14, 0, 14].map((dx, i) => <line key={i} x1={790 + dx * 1.6} y1={g - 2} x2={790 + dx * 0.15} y2={g - 92} stroke="#3A3028" strokeWidth={4} />)}</g>});
+	out.push({g: g - 2, node: <g key="rifles" opacity={o}>{[-14, 0, 14].map((dx, i) => <line key={i} x1={232 + dx * 1.6} y1={g - 2} x2={232 + dx * 0.15} y2={g - 92} stroke="#3A3028" strokeWidth={4} />)}</g>});
 	const cy = soldier;
-	{ const x = 290, at: [number, number] = [x + 0.26 * h, g - 0.3 * h], r = reacher(x, g, h, {hip: 0.36, lean: 18, neck: 10, lt: 94, lk: 94, rt: 0, rk: 90, rf: 160, la: 40, le: 40, ra: 50, re: 30}, at);
+	{ const x = 290, push = 5 * Math.sin(t * 1.8), at: [number, number] = [x + 0.26 * h + push, g - 0.3 * h], r = reacher(x, g, h, {hip: 0.36, lean: 18, neck: 10, lt: 94, lk: 94, rt: 0, rk: 90, rf: 160, la: 40, le: 40, ra: 50, re: 30}, at);
 		out.push({g, node: <Person key="s1" who="soldier-feed" t={t} x={x} ground={g} h={h} pose={r.pose} look={cy} o={o} hands={[{joint: 'RHand', at, tol: 6}]} />});
-		out.push({g: g + 0.4, node: <line key="stick" x1={r.hand[0] - 8} y1={r.hand[1] - 4} x2={F1 - 2} y2={g - 4} stroke="#5A4230" strokeWidth={4} opacity={o} />}); }
+		out.push({g: g + 0.4, node: <g key="stick" opacity={o}><line x1={r.hand[0]} y1={r.hand[1]} x2={F1 - 10 + push} y2={g - 6} stroke="#5A4230" strokeWidth={4} />{Array.from({length: 4}, (_, j) => { const k = ((t * 1.3 + j / 4) % 1); return <circle key={j} cx={F1 - 8 + push + Math.sin(j * 3 + t) * 10} cy={g - 10 - k * 50} r={2} fill={C.fireCore} opacity={1 - k} />; })}</g>}); }
 	{ const x = 444, st = Math.sin(t * 3.2) * 5, at: [number, number] = [x - 0.22 * h + st * 0.4, g - 0.56 * h], r = reacher(x, g, h, {...STAND, lean: 14, neck: 12, ra: 50, re: 40}, at, true);
 		out.push({g, node: <Person key="s2" who="soldier-stir1" t={t} x={x} ground={g} h={h} pose={r.pose} look={cy} flip o={o} hands={[{joint: 'RHand', at, tol: 6}]} />});
 		out.push({g: g + 0.4, node: <g key="ladle1" opacity={o}><line x1={r.hand[0]} y1={r.hand[1]} x2={F1 + 4 + st} y2={potTop + 6} stroke="#4A3A2C" strokeWidth={3.5} /><ellipse cx={F1 + 4 + st} cy={potTop + 6} rx={6} ry={3} fill="#4A3A2C" /></g>}); }
@@ -110,25 +113,28 @@ const soldiersDepth = (t: number, o: number): Depth[] => {
 const soldier = LOOK.soldier;
 /** 1928: the market at the back — bamboo stalls, two shoppers, one passer-by on the right */
 const marketDepth = (t: number, o: number): Depth[] => {
-	const g = 812, h = 112, out: Depth[] = [];
-	[[180, '#C9B27E'], [520, '#B98A6A'], [1640, '#A9B48A']].forEach(([x, c], i) => out.push({g: g - 6, node: <g key={'s' + i} opacity={o}><Stall46 x={x as number} g={g - 6} s={0.62} c={c as string} /></g>}));
-	out.push({g, node: <Person key="b1" who="buyer-s" t={t} x={250} ground={g} h={h} pose={grounded({...STAND, lean: 8, neck: 12})} look={LOOK.buyer} flip o={o} />});
-	out.push({g, node: <Person key="b2" who="buyer-s2" t={t} x={590} ground={g} h={h} pose={grounded({...STAND, lean: 6, neck: 10})} look={LOOK.buyer2} flip o={o} />});
-	if (t < 87.0) { const w = walkAt(1060, 1, t, 77.55, h); out.push({g: g + 2, node: <Person key="w" who="walker" t={t} x={w.x} ground={g + 2} h={h} pose={w.pose} look={LOOK.buyer} intent="walk" o={o} />}); }
+	const g = 806, h = 108, out: Depth[] = [];
+	[[330, '#C9B27E'], [470, '#B98A6A'], [1580, '#A9B48A']].forEach(([x, c], i) => out.push({g: g - 6, node: <g key={'s' + i} opacity={o}><Stall46 x={x as number} g={g - 6} s={0.6} c={c as string} /></g>}));
+	// vendors behind their stalls, a buyer reaching into a basket
+	out.push({g: g - 10, node: <Person key="v1" who="vendor1" t={t} x={330} ground={g - 10} h={h} pose={grounded({...STAND, lean: 6, neck: 10})} look={LOOK.vendor} o={o} />});
+	out.push({g: g - 10, node: <Person key="v2" who="vendor2" t={t} x={1580} ground={g - 10} h={h} pose={grounded({...STAND, lean: 6, neck: 10})} look={LOOK.vendor} o={o} />});
+	{ const x = 528, at: [number, number] = [470 + 32, g - 6 - 0.6 * 64 - 4], r = reacher(x, g + 8, h, {...STAND, lean: 18, neck: 14, ra: 50, re: 30}, at, true);
+		out.push({g: g + 8, node: <Person key="b1" who="buyer-reach" t={t} x={x} ground={g + 8} h={h} pose={r.pose} look={LOOK.buyer2} flip o={o} hands={[{joint: 'RHand', at, tol: 6}]} />}); }
+	out.push({g: g + 10, node: <Person key="b2" who="buyer-s" t={t} x={1500} ground={g + 10} h={h} pose={grounded({...STAND, lean: 8, neck: 12})} look={LOOK.buyer} o={o} />});
 	return out;
 };
 /** today: visitors on the back lane (one steady speed, evenly spaced, two lanes for the two directions) and two
    people photographing the tree with a clear line to it */
 const visitorsDepth = (t: number, o: number, fast = 1): Depth[] => {
-	const list: Depth[] = [], h = 108, v = STRIDE * h / 1.1 * fast, span = 2600;
+	const list: Depth[] = [], h = 96, v = STRIDE * h / 1.1 * fast, span = 2600;
 	const looks = [LOOK.tourist, LOOK.tourist2, LOOK.tourist3, LOOK.child, LOOK.tourist2, LOOK.tourist, LOOK.tourist3, LOOK.tourist, LOOK.tourist2, LOOK.child, LOOK.tourist3];
 	for (let i = 0; i < 11; i++) {
-		const right = true, n = 11, k = i, g = 796 + (i % 2) * 14, hh = looks[i] === LOOK.child ? h * 0.7 : h;
+		const right = true, n = 11, k = i, g = 776 + (i % 2) * 8, hh = looks[i] === LOOK.child ? h * 0.7 : h;
 		const dist = (((t - 123.97) * v + k * span / n + (right ? 0 : 200)) % span + span) % span, x = right ? -300 + dist : 2300 - dist, u = dist / (STRIDE * hh);
 		list.push({g, node: <Person key={i} who={'visitor' + i} t={t} x={x} ground={g} h={hh} o={o} pose={reground(gaitPose('08_04', u))} look={looks[i]} intent="walk" flip={!right} />});
 	}
 	[[1000, false], [1610, true]].forEach(([x, flip], k) => {
-		const X = x as number, F = flip as boolean, g = 905, hh = 158, pose = reachPose({...STAND, lean: 2, neck: -8, ra: 40, re: 40}, [0.17, 0.86], 'R'), hand = jointAt(pose, 'RHand', X, g, hh, F);
+		const X = x as number, F = flip as boolean, g = 925, hh = 160, pose = reachPose({...STAND, lean: 2, neck: -8, ra: 40, re: 40}, [0.17, 0.86], 'R'), hand = jointAt(pose, 'RHand', X, g, hh, F);
 		list.push({g, node: <Person key={'ph' + k} o={o} who={'photo' + k} t={t} x={X} ground={g} h={hh} pose={pose} look={k ? LOOK.tourist2 : LOOK.tourist3} flip={F} hands={[{joint: 'RHand', at: hand, tol: 4}]} />});
 		const flash = (Math.sin(t * 2.3 + k * 3) > 0.96) ? 1 : 0, dir = F ? -1 : 1;
 		list.push({g: g + 0.5, node: <g key={'pp' + k} opacity={o}><rect x={hand[0] + dir * 3 - 2} y={hand[1] - 15} width={5} height={18} rx={1.5} fill="#2A2A30" stroke="#C9CDD6" strokeWidth={1} />
@@ -170,8 +176,8 @@ const Maoling: React.FC<{t: number; o: number; glow: number}> = ({t, o, glow}) =
 		<Mound46 x={960} g={760} s={1.2} rim={glow * 0.8} />
 		{/* 相传: the man said to have planted you, a dashed ghost on the mound */}
 		{t >= 114.91 && t < 118.3 && <g opacity={0.55 * ease(seg(t, 114.91, 115.6)) * (1 - ease(seg(t, 117.5, 118.2)))}>
-			<Person who="legend-wudi" t={t} x={960} ground={402} h={210} pose={grounded({hip: 0.655, lean: 2, neck: 2, lt: 2, lk: 2, rt: -3, rk: 3, la: -2, le: 12, ra: 3, re: 14})} look={{dress: 'robe', head: 'guan', sleeves: 'wide', beard: 'long'}} col="url(#legendPat)" rim={C.glowCore} rimOp={0.35} />
-			<text x={1050} y={330} textAnchor="start" style={{fontFamily: "'Noto Sans CJK SC',sans-serif", fontWeight: 900, fontSize: 44}} fill="#FFF8EC" stroke="#2A1A0A" strokeWidth={6} paintOrder="stroke">相传</text>
+			<Person who="legend-wudi" t={t} x={1230} ground={402} h={180} pose={grounded({hip: 0.655, lean: 2, neck: 2, lt: 2, lk: 2, rt: -3, rk: 3, la: -2, le: 12, ra: 3, re: 14})} look={{dress: 'robe', head: 'guan', sleeves: 'wide', beard: 'long'}} col="url(#legendPat)" rim={C.glowCore} rimOp={0.35} />
+			<text x={1290} y={300} textAnchor="start" style={{fontFamily: "'Noto Sans CJK SC',sans-serif", fontWeight: 900, fontSize: 44}} fill="#FFF8EC" stroke="#2A1A0A" strokeWidth={6} paintOrder="stroke">相传</text>
 		</g>}
 		<rect x={-200} y={750} width={2400} height={500} fill="#BBA676" />
 		<rect x={-200} y={750} width={2400} height={26} fill="#9FB07C" />
@@ -333,16 +339,16 @@ export const Film46: React.FC<{t: number}> = ({t}) => {
 	else if (t < 109.25) {
 		const still = t >= 107.552 ? 1 : 0;
 		layers.push(<World key="H" t={t} c={{idp: 'H', sky: SKY.day, wall: 1, hall: 1, steles: 1, qlStele: 1, age: 1, west: 1, glow: 1, nbGrey: 0.3, sap: 0.6}}
-			extra={<g>
-				<Shadow x={1040} y={952} rx={90} ry={12} o={0.35} />
-				<path d="M960,900 L1120,900 L1104,950 L976,950 Z" fill="#B48A52" /><path d="M960,900 L1120,900" stroke="#8A6438" strokeWidth={6} />
-				{Array.from({length: 7}, (_, i) => <line key={i} x1={972 + i * 22} y1={904} x2={980 + i * 21} y2={948} stroke="#8A6438" strokeWidth={2} />)}
-			</g>}>
-			{Array.from({length: 9}, (_, i) => { const t0 = 105.4 + i * 0.25, k = clamp((t - t0) / 1.0), x0 = 1200 + (rnd(i, 81) - 0.5) * 300, y0 = 300 + rnd(i, 82) * 120, x1 = 990 + i * 15, y1 = 902;
-				if (t < t0) return null; const kk = still ? Math.min(k, 1) : k; return <g key={i}><ellipse cx={lerp(x0, x1, kk)} cy={lerp(y0, y1, easeIn(kk))} rx={7} ry={9} fill="#7A6A4A" stroke="#4E4232" strokeWidth={2} /></g>; })}
-			{still > 0 && <Glow x={1040} y={900} r={160} c={C.glow} o={0.5 * (1 - seg(t, 108.8, 109.25)) + 0.2} id="seedg" />}
+			people={[{g: 952, node: <g key="basket">
+				<Shadow x={1600} y={952} rx={90} ry={12} o={0.35} />
+				<path d="M1520,900 L1680,900 L1664,950 L1536,950 Z" fill="#B48A52" /><path d="M1520,900 L1680,900" stroke="#8A6438" strokeWidth={6} />
+				{Array.from({length: 7}, (_, i) => <line key={i} x1={1532 + i * 22} y1={904} x2={1540 + i * 21} y2={948} stroke="#8A6438" strokeWidth={2} />)}
+			</g>}]}>
+			{Array.from({length: 9}, (_, i) => { const t0 = 105.4 + i * 0.25, k = clamp((t - t0) / 1.0), x0 = 1330 + rnd(i, 81) * 200, y0 = 260 + rnd(i, 82) * 140, x1 = 1550 + i * 15, y1 = 902;
+				if (t < t0) return null; const kk = still ? Math.min(k, 1) : k; return <g key={i}><ellipse cx={lerp(x0, x1, kk)} cy={lerp(y0, y1, easeIn(kk))} rx={4.5} ry={6} fill="#7A6A4A" stroke="#4E4232" strokeWidth={1.5} /></g>; })}
+			{still > 0 && <Glow x={1600} y={900} r={160} c={C.glow} o={0.5 * (1 - seg(t, 108.8, 109.25)) + 0.2} id="seedg" />}
 		</World>);
-		cam = mixCam(CAM0, {cx: 1080, cy: 760, z: 1.45}, ease(seg(t, 105.6, 107.4)));
+		cam = mixCam(CAM0, {cx: 1460, cy: 700, z: 1.45}, ease(seg(t, 105.6, 107.4)));
 	}
 	/* ===== I. 2024: six lights leave the tree, cross the plain, land before 茂陵 and grow; the drop 118.307 ===== */
 	else if (t < 123.97) {
@@ -365,8 +371,8 @@ export const Film46: React.FC<{t: number}> = ({t}) => {
 		const dusk = seg(t, 133.59, 136.5), night = ease(seg(t, 135.0, 137.6)) * (1 - ease(seg(t, 140.0, 144.5))), dawn = seg(t, 140.0, 146);
 		const sky: [string, string] = t < 133.59 ? SKY.day : t < 140.0 ? skyMix('dusk', 'night', night) : skyMix('night', 'dawn', dawn);
 		const visO = (1 - ease(seg(t, 134.5, 136.0)));
-		layers.push(<World key="K" t={t} c={{idp: 'K', sky: t < 133.59 ? SKY.day : t < 135 ? skyMix('day', 'dusk', dusk) : sky, night, stars: night, wall: 1, hall: 1, steles: 1, qlStele: 1, age: 1, west: 1, glow: 1 + 0.5 * night, sap: 0.4, drift: t * (t < 133.59 ? 8 : 2)}}
-			extra={<Climbers t={t} o={(1 - ease(seg(t, 127.6, 130.0)) * 0.7) * (1 - night)} />} people={visO > 0 ? visitorsDepth(t, visO, t < 127.36 ? 1 : lerp(1, 3, seg(t, 127.36, 128.5))) : []}>
+		layers.push(<World key="K" t={t} c={{idp: 'K', sky: t < 133.59 ? SKY.day : t < 135 ? skyMix('day', 'dusk', dusk) : sky, night, stars: night, wall: 1, hall: 1, steles: 1, qlStele: 1, age: 1, west: 1, glow: 1 + 0.5 * night, sap: 0.4, climb: (1 - ease(seg(t, 127.6, 130.0)) * 0.7) * (1 - night), drift: t * (t < 133.59 ? 8 : 2)}}
+			people={visO > 0 ? visitorsDepth(t, visO, t < 127.36 ? 1 : lerp(1, 3, seg(t, 127.36, 128.5))) : []}>
 			
 		</World>);
 		cam = t < 126.2 ? mixCam({cx: 1150, cy: 520, z: 1.2}, CAM0, ease(seg(t, 123.97, 126.2))) : t < 140.58 ? mixCam(CAM0, {cx: 1100, cy: 520, z: 1.06}, ease(seg(t, 133.59, 140))) : mixCam({cx: 1100, cy: 520, z: 1.06}, {cx: 1180, cy: 500, z: 1.14}, ease(seg(t, 140.58, 156.4)));
