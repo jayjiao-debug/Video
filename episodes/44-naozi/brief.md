@@ -1,4 +1,4 @@
-# Brief: 爱因斯坦的大脑 (ep43, working title)
+# Brief: 爱因斯坦的大脑 (ep44, working title)
 
 - **Owner ask (2026-10-24 19:34–19:37):** 「假如说你是爱因斯坦的大脑」, then 「我们可以先说他的一生，然后大脑到现在」.
 - **Learn from the reference** (iwanau《假如你是传国玉玺》, #vibe知识大赏, 5.5万赞): not its content but its rhythm, hook and text:
