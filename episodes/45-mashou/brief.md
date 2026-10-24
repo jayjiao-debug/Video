@@ -1,0 +1,13 @@
+# Brief: 圆明园马首 (ep45)
+
+- **Owner ask (2026-10-24 21:38):** 圆明园马首 — 1860 年被抢出圆明园，流落海外，被拍卖，2007 年何鸿燊买下捐出，2020 年回到圆明园，是十二兽首里第一个回到原址的；还有 5 个兄弟没回家。「你」= 马首，计数器可以是「你 X 岁」或「回家 7/12」。
+- **Owner note (21:39):** the hook should be 「假如说 XXX」 (cold open opens on a 假如说… line).
+- **Episode:** ep45 · **Series:** VIBE知识大赏 (Juno), history-video-style format (iwanau 《假如你是传国玉玺》 rhythm, our own look).
+- **Idea in one sentence:** the life of one bronze horse head told in the second person — made for an emperor's water clock, cut off in a fire, sold and resold for 147 years, bought back and given away, and the first of the twelve to stand again where it was made — while five brothers are still missing.
+- **Why a 18–25 viewer cares:** everyone has seen the 兽首 in the news or a textbook; almost nobody knows they were a clock, that the horse was bought then *given*, that it is back in the garden itself (not a museum in the city), and that five are still lost. "You" being the head turns 160 years into one life with a running counter and an open ending (五个兄弟在哪？).
+- **Takeaway:** to be found by the screenwriter; direction: coming home is not the same as being bought back.
+- **Length target:** ≈2:30, max 3:00 · **Format:** 1920×1080, subtitle-first, music only (bgm2.mp3, cut with episodes/42-yiyi/music/ scripts; never committed). No voice unless the owner asks.
+- **Format reference (rhythm only, from the ep43/ep44 briefs):** cold open lists fates fast (~1 event / 1.5 s) and ends on a present-day hook, title after (~12 s); one 「你」 + running counter; one repeated set-piece that varies and speeds up (here: the auction/hand-over); every beat an event with a result or twist; ending question that starts arguments; text big top-left, lines stack and stay, punch lines centred and bigger.
+- **Visual direction:** an episode-specific look (NOT the reference's red chip / red key words / serif seal furniture, NOT ep41–43's silhouette-on-dusk family), one background family, 「你」 (the bronze horse head) the only glowing colour. Flat vector backgrounds, no generated painterly plates, no AI images. See docs/history-video-style/.
+- **Must avoid:** maps with borders; presenting legends as fact (label 相传 or drop); hands reaching in from off-screen; copying the reference's look; nationalist chest-beating that the sources don't carry; naming buyers/sellers of the missing heads unless verified.
+- **Owner approvals (stop at each):** (1) research + script v1 with 3 titles and the cold open written out, after director gate 1 + cold reader (Sonnet, one round unless structural); (2) ~12 key frames; (3) 30–35 s demo with music, farm-rendered; (4) full build → farm render, glitch scan, video-reviewer, 720p preview + HD link.
