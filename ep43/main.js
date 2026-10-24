@@ -26702,7 +26702,7 @@ var Crest = class {
     st2.add("banks", canvasTex(await svgToCanvas(bankSvg, 8800, 1800, 0.5)), CX, 900, 8800, 1800, -60, { rim: 0.6 });
     const archSvg = svgDoc(`<g transform="translate(${2400 - CX},${-300})">${hongqiao(CX, YTOP, HS, YEND)}</g>`, 4800, 1600);
     st2.add("arch", canvasTex(await svgToCanvas(archSvg, 4800, 1600, 0.75)), CX, 300 + 800, 4800, 1600, 0, { rim: 0.45, rimPx: 6 });
-    const rl = railing(CX, YTOP + 6, HS, YEND, 150, 116);
+    const rl = railing(CX, YTOP + 6, HS, YEND, 240, 116);
     this.posts = rl.posts.filter((_, i) => i % 2 === 0);
     const railSvg = svgDoc(`<g transform="translate(${2400 - CX},${-300})">${rl.svg}</g>`, 4800, 1600);
     st2.add("rail", canvasTex(await svgToCanvas(railSvg, 4800, 1600, 0.75)), CX, 300 + 800, 4800, 1600, 40, { rim: 0.5, rimPx: 5 });
@@ -31311,7 +31311,7 @@ var build9 = async () => {
   }
 };
 var traceCanvas = async () => {
-  let s = hongqiao(960, 900, 1700, 1400) + railing(960, 906, 1700, 1400, 150, 116).svg;
+  let s = hongqiao(960, 900, 1700, 1400) + railing(960, 906, 1700, 1400, 240, 116).svg;
   for (let x = 960 - 1700 * 1.12, i = 0; x <= 960 + 1700 * 1.12; x += 116, i++) if (i % 2 === 0) {
     const y = 900 + 500 * Math.min(1.4, ((x - 960) / 1700) ** 2) - 150 + 6;
     s += `<ellipse cx="${x}" cy="${y + 50}" rx="20" ry="27" fill="#15100C"/>`;
@@ -36526,14 +36526,14 @@ var drawToday = (t) => {
   today.setStreak(0, 0, t);
   today.setLanterns(() => 0);
   st2.setHero(-9999, 0, 1);
-  const grade = { vig: 0.22, exposure: 1, corners: 1, cornersTop: 0.55, cornersBand: [0, 300, 470, 0.8] };
+  const grade = { vig: 0.2, exposure: 1.08, corners: 1, cornersTop: 0.5, cornersBand: [0, 300, 470, 0.45] };
   if (t < WIPE.in0) return { st: st2, grade, bloom: 1 };
   const e = lerp2(-60, 1990, easeIn(clamp01((t - WIPE.in0) / (WIPE.in1 - WIPE.in0))));
   wipeL.draw(`${Math.round(e)}`, (g) => masonry(g, -400, e));
   return { st: wipeSt, under: st2, blurUnder: 0, grade, bloom: 1 };
 };
 addScene({ id: "34", a: b11(67.5), z: b11(69), in: { mode: 12, a: b11(67.5), z: b11(68), dir: [1, 0], soft: 0.07, ease: easeInOut }, draw: drawToday });
-var HZ2 = { wall: -800, pools: -790, ceil: -700, floor: -420, crowd: -216, inner: -215, silk: -210, card: -209, rollers: -208, glass: -200, frame: -195, box: -197, staff: -194, halo: -193 };
+var HZ2 = { wall: -800, pools: -790, ceil: -700, floor: -420, crowd: -216, inner: -215, silk: -210, card: -209, rollers: -208, arms: -205, glass: -200, frame: -195, box: -197, staff: -194, halo: -193 };
 var CASE = { x0: 240, x1: 1680, top: 494, rail: 512, pane1: 690, base: 900, mull: [600, 760, 1160, 1320], band0: 548, band1: 612, sx0: 300, sx1: 1620 };
 var PANE_C = [960, 601];
 var PANE_W = 400;
@@ -36549,6 +36549,7 @@ var hallCard2;
 var hallRollers;
 var hallBox;
 var hallStaff;
+var hallArms;
 var hallDust2;
 var hallSconce;
 var bootHall = async () => {
@@ -36638,6 +36639,7 @@ var bootHall = async () => {
   }
   hallBox = new Live(st2, "box", 400, 450, 400, 200, HZ2.box, { rim: 0.5, rimPx: 3 }, 3);
   hallStaff = new Live(st2, "staff", 960, 560, 2e3, 900, HZ2.staff, { rim: 1, rimPx: 6 }, 1);
+  hallArms = new Live(st2, "arms", 960, 560, 2e3, 900, HZ2.arms, { rim: 1, rimPx: 6 }, 1);
   hallHalo = new Live(st2, "halo", 960, 560, 1800, 500, HZ2.halo, { emissive: 1 }, 0.4);
   hallSconce = new Live(st2, "sconce", 960, 430, 3400, 200, HZ2.wall + 4, { emissive: 0.9 }, 0.5);
   hallSconce.drawW("s", (g) => {
@@ -36724,10 +36726,14 @@ var drawHall = (m) => {
         fillD3(g, armPaths(s.B));
       }
       g.restore();
-      if (!s.clipArms) {
-        fillD3(g, armPaths(s.A));
-        fillD3(g, armPaths(s.B));
-      }
+    });
+  }
+  hallArms.L.mesh.visible = !!m.staff && !m.staff.clipArms;
+  if (m.staff && !m.staff.clipArms) {
+    const s = m.staff;
+    hallArms.drawW(`${fk}:${s.A.x.toFixed(1)}`, (g) => {
+      fillD3(g, armPaths(s.A));
+      fillD3(g, armPaths(s.B));
     });
   }
   hallCrowd2.draw(fk + ":" + m.crowd.length, m.crowd);
@@ -37081,6 +37087,7 @@ addScene({ id: "37", a: b11(76), z: 184.3 + 1, draw: (t) => {
   if (t < E37.passZ) {
     const k2 = easeOut(clamp01((t - E37.hallZ) / (E37.passZ - E37.hallZ)));
     pass2.setCam(960, 540, Math.exp(lerp2(Math.log(12), 0, k2)));
+    dimWorld(pass2, 0.72, /* @__PURE__ */ new Set(), [1, 0.97, 0.94]);
     return { st: pass2, grade: { vig: 0.45, exposure: 1 }, bloom: 1, hideFurniture: true, hud: endHud(t) };
   }
   const k = easeOut(clamp01((t - E37.passZ) / (E37.extSettle - E37.passZ))), rise = smooth(clamp01((t - E37.extSettle) / (184.3 - E37.extSettle)));
