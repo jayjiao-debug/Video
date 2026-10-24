@@ -2,7 +2,10 @@ import React from 'react';
 import {W, H, rnd, lerp, Glow, Rimmed, fkPose, gaitPose, mixPose, Look4, Pose, B, jointAt, Sky, BRAIN_D, HeadGlow, Jar} from './kit44';
 import {SANS, MONO, ROSE, INK} from './skin44';
 import {Shaft, Motes, Pendant, Shelf, Frame, Wallpaper, Curtain, Stove, Cloud, Farm, Fence, Clock} from './bg44';
-/* ep44 demo (film 0–35.0): every scene takes film time t; camera on every shot; motivated transitions. */
+/* ep44 demo (story 0–35.0): every scene takes story time t (demo v1 clock); camera on every shot; motivated transitions.
+   FOR rough44b (Fixer 2): the fixed compass close-up is exported as `K2Scene` (+ `k2Rot`, `k2Tip`, `k2Glow`, `K2_C`, `K2_R`), see the K2 block.
+   Use it inside your own <Cam> for F2–F4: <K2Scene t={demoT} id="bk2" look={0..1} flare={…} bright={…} fieldK={…} />. The boy's own arms now
+   hold the compass; his head glow sits at k2Glow(look) (back of the skull). Also exported: `skullBack` (glow position helper). */
 export const T = {box: 3.5, mic: 5.75, car: 7.75, room: 9.75, title: 12.25, birth: 14.75, comp: 18.25, think: 21.5, light: 25.25, office: 28.5, paper: 31.75, end: 35.0};
 export const cl = (v: number, a = 0, b = 1) => Math.min(b, Math.max(a, v));
 export const seg = (t: number, a: number, b: number) => cl((t - a) / (b - a));
