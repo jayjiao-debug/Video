@@ -19,3 +19,17 @@ export type FigSpec = {frame: string; who: string; x: number; ground: number; h:
 	intent: 'stand' | 'walk' | 'sit'; seatY?: number; hands?: {joint: 'LHand' | 'RHand'; at: [number, number]; tol?: number}[]};
 export const FIGS: FigSpec[] = [];
 export const reg = (f: FigSpec) => { FIGS.push(f); return f; };
+/* ---------- walking (mocap gait) with arms set by angle from the gait's own shoulders ---------- */
+import {gaitPose, gaitStride} from '../qq44/figure44';
+const UP = 0.194, FORE = 0.135, D = Math.PI / 180;
+const dirA = (deg: number, l: number): [number, number] => [Math.sin(deg * D) * l, -Math.cos(deg * D) * l];
+/** gait at phase u, both arms forward (a = upper arm from straight down, e = elbow bend), feet re-based onto y = 0 */
+export const walkArms = (u: number, arms?: {la: number; le: number; ra: number; re: number}): Pose => {
+	const g = gaitPose('08_04', u), low = Math.min(g.LToe[1], g.RToe[1]), p: Pose = {};
+	for (const k of Object.keys(g)) p[k] = [g[k][0], g[k][1] - low];
+	if (arms) { const arm = (sh: [number, number], a: number, e: number): [[number, number], [number, number]] => { const el: [number, number] = [sh[0] + dirA(a, UP)[0], sh[1] + dirA(a, UP)[1]]; return [el, [el[0] + dirA(a + e, FORE)[0], el[1] + dirA(a + e, FORE)[1]]]; };
+		[p.LElb, p.LHand] = arm(p.LSh, arms.la, arms.le); [p.RElb, p.RHand] = arm(p.RSh, arms.ra, arms.re); }
+	return p;
+};
+/** distance walked (body units) → gait phase */
+export const phaseFor = (dist: number) => dist / gaitStride('08_04');

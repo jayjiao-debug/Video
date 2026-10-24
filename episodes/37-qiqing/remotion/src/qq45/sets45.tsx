@@ -145,7 +145,7 @@ export const WaterArc3: React.FC<{x0: number; y0: number; x1: number; y1: number
 	return <g opacity={o}><path d={d} stroke="#BFE3E0" strokeWidth={w * 1.8} fill="none" strokeLinecap="round" opacity={0.35} filter="url(#soft6)" /><path d={d} stroke="#D9F0EE" strokeWidth={w} fill="none" strokeLinecap="round" /><path d={d} stroke="#ffffff" strokeWidth={w * 0.35} fill="none" strokeLinecap="round" opacity={0.85} />
 		{Array.from({length: 8}, (_, i) => <circle key={i} cx={x1 + (rnd(i, x0) - 0.5) * 34} cy={y1 - rnd(i, y0) * 18} r={1.6 + 2 * rnd(i, 9)} fill="#E8F6F4" opacity={0.85} />)}</g>;
 };
-export const Pool3: React.FC<{cx: number; g: number; k: number; present: Set<Z> | 'all'; ghost?: boolean; arcs?: 'none' | 'all' | 'memory' | 'one'; id: string; active?: Z; grow?: number; youGlow?: number}> = ({cx, g, k, present, arcs = 'none', ghost, id, active, grow = 1, youGlow = 0.9}) => {
+export const Pool3: React.FC<{cx: number; g: number; k: number; present: Set<Z> | 'all'; ghost?: boolean; ghostSet?: Set<Z>; arcs?: 'none' | 'all' | 'memory' | 'one'; id: string; active?: Z; grow?: number; youGlow?: number; you?: boolean}> = ({cx, g, k, present, arcs = 'none', ghost, ghostSet, id, active, grow = 1, youGlow = 0.9, you = true}) => {
 	const pos = ZPos3(cx, g, k), cys = g + 150 * k;
 	const basin = (o: number) => `M${cx - (480 - o) * k},${g + (306 - o * 0.6) * k} L${cx - (205 - o * 0.4) * k},${g + (8 + o * 0.6) * k} L${cx + (205 - o * 0.4) * k},${g + (8 + o * 0.6) * k} L${cx + (480 - o) * k},${g + (306 - o * 0.6) * k} Z`;
 	return <g>
@@ -161,8 +161,8 @@ export const Pool3: React.FC<{cx: number; g: number; k: number; present: Set<Z> 
 		{[...pos].sort((a, b) => a.y - b.y).map((p) => { const isYou = p.z === '马', has = present === 'all' || (present as Set<Z>).has(p.z), hy = p.y - 58 * p.s;
 			return <g key={p.z}>
 				<StoneBody3 x={p.x} y={p.y} s={p.s} flip={p.side > 0} />
-				{isYou ? <HorseHead x={p.x + p.side * 2} y={hy - 5 * p.s} s={0.135 * p.s} id={`${id}y`} glow={youGlow} flip={p.side > 0} />
-					: has ? <ZHead3 z={p.z} x={p.x} y={hy} s={0.92 * p.s} flip={p.side > 0} /> : ghost ? <ZHead3 z={p.z} x={p.x} y={hy} s={0.92 * p.s} ghost="#3B4650" flip={p.side > 0} /> : null}
+				{isYou ? (you && <HorseHead x={p.x + p.side * 2} y={hy - 5 * p.s} s={0.135 * p.s} id={`${id}y`} glow={youGlow} flip={p.side > 0} />)
+					: has ? <ZHead3 z={p.z} x={p.x} y={hy} s={0.92 * p.s} flip={p.side > 0} /> : ghost && (!ghostSet || ghostSet.has(p.z)) ? <ZHead3 z={p.z} x={p.x} y={hy} s={0.92 * p.s} ghost="#3B4650" flip={p.side > 0} /> : null}
 			</g>; })}
 		{arcs !== 'none' && pos.map((p) => { if (arcs === 'one' && p.z !== active) return null; const solid = p.z === '马' || arcs === 'all' || arcs === 'one';
 			return <WaterArc3 key={p.z} x0={p.x - p.side * 30 * p.s} y0={p.y - 62 * p.s} x1={cx + (p.x - cx) * 0.16} y1={cys - 34 * k} h={(70 * k + 46 * p.s) * (arcs === 'one' ? 2 * grow : grow)} o={solid ? 0.95 : 0.3} w={(solid ? 5.5 : 3.5) * k} />; })}

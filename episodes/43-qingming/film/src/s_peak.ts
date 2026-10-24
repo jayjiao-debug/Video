@@ -61,6 +61,13 @@ export const bootPeak = async () => {
 	dayRoll = new Live(day.st, 'dayRoll', 960, 900, 7000, 1800, 22, {emissive: 0.55}, 0.6);
 	gateGlow = new Live(day.st, 'gateGlow', -300, 800, 200, 160, -2590, {emissive: 0.5}, 2, -1990);   // drawn after the haze (−2000)
 	gateGlow.draw('g', (g) => drawPassage(g));
+	// the near banks continue down past the frame and the river darkens toward us (the bridge-match camera starts wide enough
+	// to see below the crest's bank shapes, which end at y 1700)
+	{ const c = mkCanvas(1000, 200), g = c.getContext('2d')!, X = (x: number) => (x + 4040) / 10, Y = (y: number) => (y - 1640) / 10;
+		g.fillStyle = '#2b3735'; g.fillRect(0, Y(2150), 1000, 200); g.fillStyle = '#15100C';
+		g.beginPath(); g.moveTo(0, Y(1690)); g.lineTo(X(-610), Y(1690)); g.lineTo(X(-150), 200); g.lineTo(0, 200); g.fill();      // banks slope away toward us
+		g.beginPath(); g.moveTo(X(2530), Y(1690)); g.lineTo(1000, Y(1690)); g.lineTo(1000, 200); g.lineTo(X(2070), 200); g.fill();
+		day.st.add('nearfill', canvasTex(c), 960, 2640, 10000, 2000, -60, {}); }
 };
 
 // ------------------------------------------------------------------------------------------------ store set pieces (static)
@@ -263,7 +270,7 @@ const peakDraw = (t: number) => {
 	const hide = t >= b(56), ex = easeInOut(clamp01((t - b(56.75)) / (b(57) - b(56.75))));
 	const pool = clamp01((t - b(56) + 0.15) / 0.3);         // the HUD leaves; the lamplight becomes a pool on the bridge (no lift on the hit)
 	return {st, grade: {vig: 0.32, vigCol: '#1c140e', corners: 1 - pool, exposure: lerp(0.84, 0.74, ex), tint: ex > 0 ? '#' + [lerp(255, 226, ex), lerp(255, 234, ex), lerp(255, 238, ex)].map((v) => Math.round(v).toString(16).padStart(2, '0')).join('') : '#ffffff',
-		pool: [960, 500, 640, pool * (1 - 0.6 * ex)]}, bloom: 0.8, hideFurniture: hide};
+		pool: [960, 500, 640, pool * (1 - 0.6 * ex)]}, bloom: 0.8, hideFurniture: hide, hideSubs: hide};
 };
 addScene({id: '28', a: b(54.5) - 0.1, z: b(57) - 0.12, draw: peakDraw, in: {mode: 7, a: b(54.5) - 0.1, z: b(54.5), soft: 0.5}});
 
@@ -307,7 +314,7 @@ addScene({id: '29', a: b(57) - 0.12, z: b(58.5), in: {mode: 7, a: b(57) - 0.12, 
 	const f1 = rig({x: x1, ground: ground29(x1), h: H2, pose: gaitPose('08_04', u, STEP29), look: lk50, flip: true}, [{side: 'L', target: [e0[0] + 8, e0[1] + 9], name: 'roll end'}, {side: 'R', target: [e1[0] - 8, e1[1] + 9], name: 'roll end'}], ground29, 'staff1');
 	const f2 = rig({x: x2, ground: ground29(x2), h: H2 + 8, pose: gaitPose('08_04', u + 0.28, STEP29), look: lk50, flip: true}, [], ground29, 'staff2');
 	dayCast.draw(`${Math.round(t * 30)}`, [f2, f1]);
-	dayRoll.drawW(`${Math.round(t * 30)}`, (g) => { glowBlob(g, rc, 120, 60, 0.35); drawRoll(g, e0, e1, 14, 1); drawFig(g, {...f1, part: 'L'}); });
+	dayRoll.drawW(`${Math.round(t * 30)}`, (g) => { glowBlob(g, rc, 140, 70, 0.42); drawRoll(g, e0, e1, 14, 1); drawFig(g, {...f1, part: 'L'}); });
 	day.setBoat(1650 - (t - b(57)) * 40, 60); day.setStreak(rc[0], 0.25, t); day.setLanterns(() => 0);
 	st.heroAt(rc[0], rc[1], 22, 650);
 	return {st, grade: {vig: 0.22, exposure: 1.0, corners: 1, cornersTop: 0.55, cornersBand: [0, 300, 470, 0.8]}, bloom: 1, hideFurniture: t < b(57)};

@@ -98,9 +98,9 @@ export const bootResto = async () => {
 	sb.width = sb.height = 1;
 	const free = (c: HTMLCanvasElement) => { const o = crop(c, PATCH_CROP.x, PATCH_CROP.y, PATCH_CROP.w, PATCH_CROP.h); c.width = c.height = 1; return o; };
 	P_DONKEY = wv(free(shed8('donkey'))); P_PEELED = wv(free(shed8('peeled'))); wv(P_BARE);
-	const gate8 = paintSection('gate', {width: 8192, height: 3072, mode: 'mono', seed: 43, weave: 0});
-	const gc = crop(gate8, GATE_CROP.x, GATE_CROP.y, GATE_CROP.w, GATE_CROP.h), gcg = gc.getContext('2d')!; gate8.width = gate8.height = 1;
-	const fade = gcg.createLinearGradient(0, 0, 420, 0); fade.addColorStop(0, 'rgba(0,0,0,0)'); fade.addColorStop(1, 'rgba(0,0,0,1)'); gcg.globalCompositeOperation = 'destination-in'; gcg.fillStyle = fade; gcg.fillRect(0, 0, 420, GATE_CROP.h); gcg.fillStyle = '#000'; gcg.fillRect(420, 0, GATE_CROP.w, GATE_CROP.h);
+	const gate6 = paintSection('gate', {width: 6144, height: 2304, mode: 'mono', seed: 43, weave: 0}), k6 = 6144 / 8192;   // the gate is seen only in passing: 6144 is enough
+	const gc = crop(gate6, GATE_CROP.x * k6, GATE_CROP.y * k6, GATE_CROP.w * k6, GATE_CROP.h * k6, GATE_CROP.w, GATE_CROP.h), gcg = gc.getContext('2d')!; gate6.width = gate6.height = 1;
+	const fade = gcg.createLinearGradient(0, 0, 420, 0); fade.addColorStop(0, 'rgba(0,0,0,0)'); fade.addColorStop(1, 'rgba(0,0,0,1)'); gcg.globalCompositeOperation = 'destination-in'; gcg.fillStyle = fade; gcg.fillRect(0, 0, GATE_CROP.w, GATE_CROP.h);   // one fill: destination-in clears outside the shape
 	cg.drawImage(gc, GATE_AT, 0); wv(collage);
 	P_NOPOST = inpaintPosts(P_BARE); P_DLINES = inkOnly(P_DONKEY); P_PIECE = pieceOf(P_DONKEY, P_PEELED);
 	patchCv = mkCanvas(PATCH_CROP.w, PATCH_CROP.h); patchTex = canvasTex(patchCv); patchTex.generateMipmaps = false; patchTex.minFilter = THREE.LinearFilter;
@@ -238,7 +238,7 @@ const lensWin = (t: number): {c: P2; span: number} => {
 	// b58.5: out through the painted gate (the arch, tight → wider), then a fast eased slide left to the shed
 	const u0 = clamp01((t - b(58.5) + 0.25) / 0.45), u1 = easeInOut(clamp01((t - b(58.5) - 0.1) / (b(58.75) - b(58.5) - 0.1)));
 	const span = lerp(lerp(900, 1400, easeOut(u0)), 1500, u1);
-	return {c: lerpP([ARCH_C[0] + 40, ARCH_C[1] - 170 + 60 * u0], [PATCH_C[0] + 40, PATCH_C[1] - 30], u1), span};
+	return {c: lerpP([ARCH_C[0] + 40, ARCH_C[1] - 40 + 30 * u0], [PATCH_C[0] + 40, PATCH_C[1] - 30], u1), span};
 	void room;
 };
 const camR = (t: number): Cam => {
@@ -322,6 +322,5 @@ const drawR = (t: number) => {
 	const inLens = c.z > 6 ? 1 : 0, top = c.th < 0.3 ? 1 : 0;
 	return {st, grade: {vig: inLens ? 0.62 : top ? 0.5 : 0.3, vigCol: '#1a120b', corners: inLens || top ? 0.95 : 0.25, exposure: 1}, bloom: 1};
 };
-(window as any).RESTO_DBG = (t: number) => { const c = camR(t); return {c, th: strip.theta}; };
 addScene({id: '30', a: b(58.5), z: b(62), draw: drawR});
 addScene({id: '31', a: b(62), z: b(64), draw: drawR});
