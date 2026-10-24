@@ -25662,6 +25662,7 @@ var lines_bars_default = [
 // src/film.ts
 var LINES = lines_bars_default;
 var SCENES = [];
+var FALLBACK = {};
 var addScene = (s) => {
   SCENES.push(s);
   SCENES.sort((p, q) => p.a - q.a);
@@ -25676,7 +25677,8 @@ var renderFilm = (t, hud2) => {
       return sc.draw(tt);
     } catch (e) {
       console.error("DRAW-FAIL", sc.id, tt.toFixed(2), e?.message || e);
-      return SCENES.find((q) => q.id === "gap").draw(tt);
+      FALLBACK.st ??= new Stage("fallback");
+      return { st: FALLBACK.st, grade: { vig: 0 } };
     }
   };
   const fc = safe(cur, t);
@@ -35719,7 +35721,7 @@ var camR = (t) => {
 };
 var frameAt2 = (lx, ly, z, sx = 960, sy = 540) => ({ x: S.x0 + lx - (sx - 960) / z, y: S.edge - ly - (sy - 540) / z, z, th: 0 });
 var lk73 = look("restorer1973");
-var restorers = (t) => {
+var restorers = (t, on) => {
   const out = { figs: [], tw: null };
   const pe = (lx, ly, lz = 0.5) => strip2.screen(lx, ly, lz);
   const seat = { x: 1300, ground: TB2.floor, h: 560, pose: fkPose({ hip: 0.37, lean: 34, neck: 12, lt: 86, lk: 92, rt: 82, rk: 86, la: 30, le: 40, ra: 26, re: 44 }), look: lk73, flip: true };
@@ -35735,10 +35737,10 @@ var restorers = (t) => {
     const k = smooth((t - b10(61.55)) / (b10(61.65) - b10(61.55)));
     s1.pose = reach(s1.pose, "L", toBody(s1, lerpP(silkPt, arm, k)));
   }
-  out.figs.push(rig(s1, c12, () => s1.ground, "restorer-seated"));
+  out.figs.push(on ? rig(s1, c12, () => s1.ground, "restorer-seated") : s1);
   const stand = { x: 860, ground: TB2.floor, h: 575, pose: fkPose({ hip: 0.645, hipX: -0.04, lean: 30, neck: -2, lt: 6, lk: 5, rt: 3, rk: 4, la: 28, le: 30, ra: 24, re: 28 }), look: lk73 };
   const s2 = onScreen(st, stand, ZR);
-  out.figs.push(rig(s2, [{ side: "R", target: pe(lxPatch - 120, S.py0 + 3, 0.5), name: "margin", opt: { dir: -6 } }, { side: "L", target: pe(lxPatch - 92, S.py0 + 4, 0.5), name: "margin", opt: { dir: -6 } }], () => s2.ground, "restorer-standing"));
+  out.figs.push(!on ? s2 : rig(s2, [{ side: "R", target: pe(lxPatch - 120, S.py0 + 3, 0.5), name: "margin", opt: { dir: -6 } }, { side: "L", target: pe(lxPatch - 92, S.py0 + 4, 0.5), name: "margin", opt: { dir: -6 } }], () => s2.ground, "restorer-standing"));
   return out;
 };
 var armEnd = (lc) => [lc[0], lc[1] - LENS.r * 1.3];
@@ -35785,9 +35787,9 @@ var drawR = (t) => {
   u.uPatch.value.set((PATCH_C[0] - 306) / CW, 1 - (PATCH_C[1] - 366 + PATCH_CROP.h) / CH2, (PATCH_C[0] - 306 + PATCH_CROP.w) / CW, 1 - (PATCH_C[1] - 366) / CH2);
   shedMesh.material = t >= b10(61.25) ? shedPeeled : shedDonkey;
   glowR.set((i) => i >= 65 && i <= 69 ? clamp01((t - b10(63) - (i - 65) * 0.07) / 0.12) : 0);
-  const fk = `${Math.round(t * 60)}`, R = restorers(t);
+  const fk = `${Math.round(t * 60)}`;
   const poly3 = [strip2.screen(TB2.x0 - S.x0, 0, -2), strip2.screen(TB2.x1 - S.x0, 0, -2), strip2.screen(TB2.x1 - S.x0, S.depth, -2), strip2.screen(TB2.x0 - S.x0, S.depth, -2)];
-  const deskOn = c.th > 1 && c.z < 4;
+  const deskOn = c.th > 1 && c.z < 4, R = restorers(t, deskOn);
   body.draw(fk, (g) => {
     if (!deskOn) return;
     g.save();
@@ -36666,10 +36668,10 @@ addScene({ id: "35a", a: b11(72), z: b11(72.25), draw: (t) => {
 } });
 var STAFF = [{ head: "short", dress: "smock" }, { head: "ponytail", dress: "smock", build: 0.95 }];
 var rollUp = (t) => {
-  const k = smooth(clamp01((t - b11(72.3)) / (b11(72.6) - b11(72.3)))), lift = 46 * smooth(clamp01((t - b11(72.6)) / 0.16));
-  const xl = lerp2(842, 947, k), xr = lerp2(1078, 973, k), yT = 552 - lift, yB = 582 - lift, lean = lerp2(50, 68, k) - 16 * lift / 46;
-  const A = rig({ x: 800, ground: HG, h: 470, pose: bowUpper(POSES.stand, lean), look: STAFF[0] }, [{ side: "R", target: [xl - 4, yT], name: "roller" }, { side: "L", target: [xl - 4, yB], name: "roller" }], () => HG, "staff A");
-  const B = rig({ x: 1120, ground: HG, h: 462, pose: bowUpper(POSES.stand, lean), look: STAFF[1], flip: true }, [{ side: "R", target: [xr + 4, yT], name: "roller" }, { side: "L", target: [xr + 4, yB], name: "roller" }], () => HG, "staff B");
+  const k = smooth(clamp01((t - b11(72.3)) / (b11(72.6) - b11(72.3)))), lift = 16 * k + 40 * smooth(clamp01((t - b11(72.6)) / 0.16));
+  const xl = lerp2(840, 947, k), xr = lerp2(1080, 973, k), yT = 532 - lift, yB = 556 - lift, lean = 35 + 10 * k - 12 * clamp01((lift - 16) / 40);
+  const A = rig({ x: 770, ground: HG, h: 470, pose: bowUpper(POSES.stand, lean), look: STAFF[0] }, [{ side: "R", target: [xl - 4, yT], name: "roller" }, { side: "L", target: [xl - 4, yB], name: "roller" }], () => HG, "staff A");
+  const B = rig({ x: 1150, ground: HG, h: 462, pose: bowUpper(POSES.stand, lean), look: STAFF[1], flip: true }, [{ side: "R", target: [xr + 4, yT], name: "roller" }, { side: "L", target: [xr + 4, yB], name: "roller" }], () => HG, "staff B");
   return { A, B, rl: { xl, xr, lift, r: lerp2(11, 16, k) } };
 };
 addScene({ id: "35b", a: b11(72.25), z: b11(72.75), draw: (t) => {
