@@ -37,7 +37,9 @@ if (process.argv[2] === 'crop') {
 } else {
   const res = await page.evaluate(() => {
     const T = {}; const tiles = [];
-    const time = (k, f) => { const t0 = performance.now(); const v = f(); T[k] = Math.round(performance.now() - t0); return v; };
+    const flush = v => (Array.isArray(v) ? v : [v]).forEach(c => c.getContext && c.getContext('2d').getImageData(0, 0, 1, 1));
+    const time = (k, f) => { const t0 = performance.now(); const v = f(); flush(v); T[k] = Math.round(performance.now() - t0); return v; };
+    SILK.paintSection('river', { mode: 'mono' }); // warm-up (JIT, font)
     for (const n of ['river', 'gate', 'shed', 'end', 'colophon']) tiles.push([n + ' · mono', time(n, () => SILK.paintSection(n, { mode: 'mono' }))]);
     tiles.splice(1, 0, ['river · colour', time('river colour', () => SILK.paintSection('river', { mode: 'colour' }))], ['river · grey', time('river grey', () => SILK.paintSection('river', { mode: 'grey' }))]);
     for (const p of ['ears', 'donkey', 'peeled']) tiles.push(['shed · ' + p, time('shed ' + p, () => SILK.paintSection('shed', { mode: 'mono', patch: p }))]);
@@ -47,7 +49,7 @@ if (process.argv[2] === 'crop') {
     tiles.push(['river · mono · sprites:false (base)', base]);
     const sp = time('paintRiverSprites setup', () => SILK.paintRiverSprites({ mode: 'mono' }));
     const comp = document.createElement('canvas'); comp.width = 4096; comp.height = 1536; const cg = comp.getContext('2d'); cg.drawImage(base, 0, 0);
-    const per = (k, f) => { const t0 = performance.now(); for (let i = 0; i < 10; i++) f(i / 9); T[k] = +((performance.now() - t0) / 10).toFixed(1); };
+    const per = (k, f) => { const t0 = performance.now(); for (let i = 0; i < 10; i++) { f(i / 9); sg2.getImageData(0, 0, 1, 1); } T[k] = +((performance.now() - t0) / 10).toFixed(1); };
     const scratch = document.createElement('canvas'); scratch.width = 4096; scratch.height = 1536; const sg2 = scratch.getContext('2d');
     per('sprite mast (ms/frame)', k => sp.mast(sg2, k)); per('sprite railing (ms/frame)', k => sp.railing(sg2, k)); per('sprite cart (ms/frame)', k => sp.cart(sg2, k));
     sp.cart(cg, 0.62); sp.railing(cg, 1); sp.mast(cg, 0.15);
@@ -56,8 +58,8 @@ if (process.argv[2] === 'crop') {
     const layers = time('relief colour (5 layers, ghost + shadow)', () => SILK.paintRelief('river', { mode: 'colour', shadow: true }));
     // relief composited with a small parallax offset per layer so the lift shows
     const rc = document.createElement('canvas'); rc.width = 4096; rc.height = 1536; const rg = rc.getContext('2d');
-    layers.forEach((l, i) => { rg.save(); const s = 1 + i * 0.012; rg.translate(2048, 900); rg.scale(s, s); rg.translate(-2048 - i * 14, -900 + i * 10); rg.drawImage(l, 0, 0); rg.restore(); });
-    tiles.push(['relief · colour · 5 layers composited (parallax offset)', rc]);
+    layers.forEach((l, i) => { rg.save(); const s = 1 + i * 0.012; rg.translate(2048, 900); rg.scale(s, s); rg.translate(-2048 - i * 10, -900 - i * 24); rg.drawImage(l, 0, 0); rg.restore(); });
+    tiles.push(['relief · colour · ghost + shadow · layers lifted (parallax offset)', rc]);
     const strip = document.createElement('canvas'); strip.width = 4096; strip.height = 1536; const sg = strip.getContext('2d');
     for (let i = 0; i < 5; i++) { const x = i * 819, y = 400; for (let a = 0; a < 819; a += 24) for (let b = 0; b < 307; b += 24) { sg.fillStyle = ((a + b) / 24) % 2 ? '#777' : '#555'; sg.fillRect(x + a, y + b, 24, 24); } sg.drawImage(layers[i], x, y, 819, 307); sg.fillStyle = '#fff'; sg.font = '60px sans-serif'; sg.fillText('L' + i, x + 20, y - 20); }
     // seals

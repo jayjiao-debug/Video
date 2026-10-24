@@ -5,10 +5,11 @@ import {Crest, deck} from './crest';
 import {addScene} from './film';
 import {Cast, look, drawRoller, drawRoll, glowBlob, rig} from './actors';
 import {POSES, walkFor, underArm, underArmRoll, toScreen, FigOpts, gaitStride, stepFor, armsFrom} from './figures';
-import {paintSection, silkWeave} from './silk';
+import {paintSection, silkWeave, paintRiverSprites} from './silk';
 import {titleInk} from './hud';
 
 const b = bar;
+let riverBase: HTMLCanvasElement, riverFrame: HTMLCanvasElement, sprites: ReturnType<typeof paintRiverSprites>, lastSpriteKey = '';
 let crest: Crest, nightCrest: Crest, cast: Cast, silk: Live, rollers: Live, river: HTMLCanvasElement, titleSt: Stage, band: Live, bandCv: HTMLCanvasElement;
 // the open silk in world px (CR-A two-shot)
 const SX0 = 700, SX1 = 1220, SY = 560, SH = 190;
@@ -17,6 +18,9 @@ export const bootOpen = async () => {
 	nightCrest = new Crest('title-night', {sky: 'night', era: 'none', lanterns: true, boat: false, bankCrowd: false});
 	await Promise.all([crest.ready, nightCrest.ready]);
 	river = paintSection('river', {width: 4096, height: 1536, mode: 'mono', mast: 0.25, seed: 43});
+	riverBase = paintSection('river', {width: 4096, height: 1536, mode: 'mono', seed: 43, sprites: false});
+	sprites = paintRiverSprites({width: 4096, height: 1536, mode: 'mono', seed: 43});
+	riverFrame = mkCanvas(4096, 1536);
 	cast = new Cast(crest.st, 'cast', 1200, 640, 2600, 1100, 20);
 	silk = new Live(crest.st, 'silk', (SX0 + SX1) / 2, SY, SX1 - SX0 + 40, SH + 60, 22, {emissive: 0.32}, 5.6);
 	rollers = new Live(crest.st, 'rollers', 1200, 640, 2600, 1100, 23, {rim: 0.0}, 1);
@@ -71,12 +75,15 @@ addScene({id: '01', a: 0, z: 8.96, draw: (t) => {
 	if (!walking) { const h = holders(rollK); figs = [h.A, h.B]; hero = [(h.xL + h.xR) / 2, SY]; silkWin = [h.xL, h.xR]; }
 	else { const w = walkers(t, b(2.5)); figs = [w.A, w.B]; rollPts = w.roll; hero = [(w.roll[0][0] + w.roll[1][0]) / 2, (w.roll[0][1] + w.roll[1][1]) / 2]; silkWin = null; }
 	cast.draw(`${Math.round(t * 30)}`, figs);
-	// the silk (open) or the roll (carried)
-	const mast = 0.25 + 0.6 * smooth(clamp01((t - 0.57) / 2.4));
+	// the painted sprites (mast lowering, railing onlookers, cart) — already moving on frame 0, quicker from the first note
+	const mastK = clamp01(0.08 + t * 0.03 + 0.55 * smooth(clamp01((t - 0.57) / 2.6))), railK = clamp01(0.15 + t * 0.05 + 0.8 * smooth(clamp01((t - 0.57) / 1.2))), cartK = clamp01(0.3 + t * 0.06);
+	const sk = `${mastK.toFixed(3)}:${railK.toFixed(3)}:${cartK.toFixed(3)}`;
+	if (sk !== lastSpriteKey && pull < 0.999) { lastSpriteKey = sk; const g = riverFrame.getContext('2d')!; g.drawImage(riverBase, 0, 0); sprites.cart(g, cartK); sprites.railing(g, railK); sprites.mast(g, mastK); }
+	const src = pull < 0.999 ? riverFrame : river;
 	silk.L.mat.uniforms.uEmissive.value = 0.32;
 	silk.drawW(`${Math.round(t * 30)}`, (g) => { if (!silkWin) return; const [x0, x1] = silkWin; const w = x1 - x0; if (w < 3) return;
 		g.save(); g.beginPath(); g.rect(x0, SY - SH / 2, w, SH); g.clip(); g.fillStyle = '#FFF3D8'; g.fillRect(x0, SY - SH / 2, w, SH);
-		const srcW = river.width * (w / (SX1 - SX0)), sx = (river.width - srcW) / 2; g.drawImage(river, sx, 0, srcW, river.height, x0, SY - SH / 2, w, SH);
+		const srcW = src.width * (w / (SX1 - SX0)), sx = (src.width - srcW) / 2; g.drawImage(src, sx, 0, srcW, src.height, x0, SY - SH / 2, w, SH);
 		g.fillStyle = 'rgba(52,80,106,0.9)'; g.fillRect(x0, SY - SH / 2, w, 9); g.fillRect(x0, SY + SH / 2 - 9, w, 9); g.restore(); });
 	rollers.drawW(`${Math.round(t * 30)}`, (g) => {
 		if (silkWin) { drawRoller(g, silkWin[0], SY, SH + 24); drawRoller(g, silkWin[1], SY, SH + 24); }

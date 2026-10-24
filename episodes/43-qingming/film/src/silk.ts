@@ -8,6 +8,9 @@
 //   paintSeal(text, o)     -> HTMLCanvasElement    red square seal impression (朱文 / 白文), '' = illegible stand-in
 //   stampSeals(canvas, list)                       stamps seals onto a canvas (canvas pixel coordinates)
 //   silkWeave(canvas, strength)                    silk weave + age texture over a canvas
+//   paintRiverSprites(o) -> {mast, railing, cart, rects, cartRect}   per-frame sprites over paintSection('river', {sprites:false})
+//   layerShadow(layer, o) -> HTMLCanvasElement     soft drop shadow of a relief layer (to animate with the lift)
+//   paintRelief(..., {ghost, ghostTo, shadow})     lifted layers leave an ink ghost behind; optional baked drop shadow
 // Every returned section canvas carries `canvas.silk: SilkInfo` (patch rect, colophon glyph boxes, seal slots, ...)
 // in that canvas's pixel coordinates. Deterministic from `seed`; no network; colophon font 'Noto Serif CJK SC'.
 
@@ -292,7 +295,7 @@ function figure(P: Painter, x: number, y: number, H: number, f: Fig = {}) {
   { const a = T(-10, -47), b = T(10, -46); seg(P, a[0], a[1], b[0], b[1], lw * 0.8, 0.8); }
   // arm + hand
   let hand: Pt = T(11, -50);
-  if (pose === 'raise') hand = T(13, -106); else if (pose === 'point') hand = T(30, -74);
+  if (pose === 'raise') hand = T(16, -112); else if (pose === 'point') hand = T(36, -82);
   else if (pose === 'push' || pose === 'pull') hand = T(22, -64); else if (pose === 'carry' || f.load === 'pole') hand = T(10, -79);
   else if (pose === 'lean' || pose === 'bow') hand = T(16, -60); else if (pose === 'walk') hand = T(14, -54);
   else if (pose === 'sit') hand = T(16, -48);
@@ -349,7 +352,7 @@ function beast(P: Painter, x: number, y: number, H: number, kind: 'donkey' | 'ho
   });
   let body: Pt[];
   if (kind === 'camel') {
-    body = [Tb(-36, -62), Tb(-28, -86), Tb(-18, -92), Tb(-8, -82), Tb(4, -94), Tb(14, -86), Tb(26, -72), Tb(30, -62), Tb(16, -56), Tb(-30, -56)];
+    body = [Tb(-38, -64), Tb(-32, -78), Tb(-20, -97), Tb(-11, -97), Tb(-5, -82), Tb(2, -98), Tb(11, -98), Tb(22, -78), Tb(30, -66), Tb(18, -57), Tb(-28, -57)];
   } else if (kind === 'ox') {
     body = [Tb(-36, -40), Tb(-34, -58), Tb(-10, -62), Tb(18, -66), Tb(30, -56), Tb(30, -34), Tb(18, -28), Tb(-28, -30)];
   } else {
@@ -361,8 +364,8 @@ function beast(P: Painter, x: number, y: number, H: number, kind: 'donkey' | 'ho
   // neck + head
   let neck: Pt[], head: Pt[], ears: Pt[] = [];
   if (kind === 'camel') {
-    neck = [Tb(22, -70), Tb(38, -72), Tb(48, -84), Tb(50, -104), Tb(44, -108), Tb(40, -88), Tb(30, -80)];
-    head = [Tb(42, -110), Tb(50, -114), Tb(62, -108), Tb(60, -102), Tb(48, -100)];
+    neck = [Tb(24, -76), Tb(40, -74), Tb(50, -86), Tb(54, -104), Tb(47, -106), Tb(43, -90), Tb(36, -66), Tb(28, -62)];
+    head = [Tb(45, -108), Tb(53, -112), Tb(65, -105), Tb(63, -99), Tb(50, -100)];
   } else if (kind === 'ox') {
     neck = [Tb(20, -64), Tb(36, -60), Tb(44, -48), Tb(36, -40), Tb(26, -44)];
     head = [Tb(36, -62), Tb(46, -60), Tb(54, -40), Tb(50, -34), Tb(40, -40)];
@@ -379,7 +382,7 @@ function beast(P: Painter, x: number, y: number, H: number, kind: 'donkey' | 'ho
   shape(P, head, wash, lw, { amp: 0.2, smooth: true });
   if (ears.length) { shape(P, ears, wash, lw * 0.9, { amp: 0.1 }); if (kind === 'donkey') { const e2 = ears.map(p => [p[0] + 4 * u * d, p[1] + 1] as Pt); shape(P, e2, wash, lw * 0.9, { amp: 0.1 }); } }
   if (load) {
-    const lp: Pt[] = kind === 'camel' ? [Tb(-24, -82), Tb(-4, -96), Tb(16, -84), Tb(10, -66), Tb(-20, -66)] : [Tb(-24, -58), Tb(-20, -80), Tb(8, -82), Tb(14, -58), Tb(4, -46), Tb(-18, -46)];
+    const lp: Pt[] = kind === 'camel' ? [Tb(-15, -86), Tb(4, -86), Tb(6, -62), Tb(-2, -58), Tb(-17, -62)] : [Tb(-24, -58), Tb(-20, -80), Tb(8, -82), Tb(14, -58), Tb(4, -46), Tb(-18, -46)];
     shape(P, lp, P.pal.straw, lw, { smooth: true });
     const a = lp[1], b = lp[3]; seg(P, a[0], a[1], b[0], b[1], lw * 0.7, 0.6);
   }
@@ -451,7 +454,7 @@ function roof(P: Painter, X: number, Z: number, w: number, d: number, Yb: number
   const W = (a: number, Y: number, b: number): Pt => along ? P.pt(X + a, Y, Z + b) : P.pt(X + b, Y, Z + a);
   const straw = type === 'straw', lw = straw ? 1.8 : 2.0;
   const Ye = Yb - 3, Yr = Yb + rh, bm = D / 2;
-  const lift = straw ? 0 : rh * 0.12;
+  const lift = straw ? 0 : rh * (type === 'hip' ? 0.2 : 0.12);
   // eave front (b = -ov) with corner lift (翼角)
   const eave = (t: number, b: number): Pt => { const a = lerp(-sx, L + sx, t); const k = Math.pow(Math.abs(2 * t - 1), 4); return W(a + (t < 0.5 ? -1 : 1) * k * sx * 0.25, Ye + k * lift, b); };
   const hipIn = type === 'hip' ? Math.min(D * 0.55, L * 0.3) : type === 'xieshan' ? D * 0.3 : 0;
@@ -932,7 +935,7 @@ function drawBItem(P: Painter, B: BridgeDef, it: BItem, o: BridgeDraw = {}) {
   const p = P.pt(X, G.E(X), B.Zb + B.Db * it.u);
   switch (it.kind) {
     case 'fig': figure(P, p[0], p[1], 50, it.f); break;
-    case 'rail': { const a = railArm(it.i!, o.railK ?? 0.7); figure(P, p[0], p[1], 50, { ...it.f, arm: it.f!.pose === 'lean' ? undefined : a, lean: it.f!.pose === 'lean' ? 0.3 + 0.7 * a : undefined }); break; }
+    case 'rail': { const a = railArm(it.i!, o.railK ?? 0.7); figure(P, p[0], p[1], 56, { ...it.f, arm: it.f!.pose === 'lean' ? undefined : a, lean: it.f!.pose === 'lean' ? 0.2 + 1.1 * a : -0.25 * a }); break; }
     case 'stall': { const tb: Pt[] = [[p[0] - 22, p[1] - 22], [p[0] + 22, p[1] - 22], [p[0] + 28, p[1] - 16], [p[0] - 16, p[1] - 16]]; shape(P, tb, P.pal.wood, 1.3, { k: 0.7 }); seg(P, p[0] - 18, p[1] - 16, p[0] - 18, p[1], 1.2); seg(P, p[0] + 22, p[1] - 16, p[0] + 22, p[1], 1.2); figure(P, p[0] - 30, p[1] + 4, 46, { dir: 1, pose: 'sit', robe: 2, hat: 'jin' }); parasol(P, p[0], p[1] + 2, 58, 92); break; }
     case 'sedan': sedan(P, p[0], p[1], 52, -1); break;
     case 'rider': beast(P, p[0], p[1], 50, 'horse', 1, false, 0.3); figure(P, p[0] + 2, p[1] - 44, 46, { dir: 1, pose: 'point', hat: 'futou', robe: 1, force: true }); figure(P, p[0] + 66, p[1] + 2, 48, { dir: -1, pose: 'walk', body: 'short', hat: 'cap', robe: 4 }); break;
@@ -1107,17 +1110,15 @@ export function paintRelief(name: SectionName, o: SilkOptions = {}): (HTMLCanvas
     const c2 = cv as HTMLCanvasElement & { silk: SilkInfo }; c2.silk = info; out.push(c2);
   }
   const ga = o.ghost ?? 0.22;
-  if (ga > 0) { const ghosts = out.map((c, i) => (i > 0 ? inkGhost(c, mode) : null)); for (let i = 4; i >= 1; i--) { const t = out[o.ghostTo === 'silk' ? 0 : i - 1].getContext('2d')!; t.save(); t.globalAlpha = ga; t.imageSmoothingQuality = 'high'; t.drawImage(ghosts[i]!, 0, 0, W, H); t.restore(); } }
+  if (ga > 0) { const ghosts = out.map((c, i) => (i > 0 ? inkGhost(c, mode) : null)); for (let i = 4; i >= 1; i--) { const t = out[o.ghostTo === 'silk' ? 0 : i - 1].getContext('2d')!; t.save(); t.globalAlpha = ga; t.imageSmoothingQuality = 'low'; t.drawImage(ghosts[i]!, 0, 0, W, H); t.restore(); } }
   const wv = o.weave ?? 1;
   const paperFrom = S.info.join !== undefined ? S.info.join * W / W0 : undefined;
   if (wv > 0) for (const c of out) silkWeave(c, wv, { mode, seed: o.seed ?? 43, paperFrom });
   if (o.shadow) {
     const so = typeof o.shadow === 'object' ? o.shadow : {};
     for (let i = 1; i < 5; i++) {
-      const sh = layerShadow(out[i], { ...so, mode });
-      const t = makeCanvas(W, H), tc = t.getContext('2d')!;
-      tc.drawImage(sh, 0, 0); tc.drawImage(out[i], 0, 0);
-      const oc = out[i].getContext('2d')!; oc.clearRect(0, 0, W, H); oc.drawImage(t, 0, 0);
+      const sm = shadowSmall(out[i], { ...so, mode });
+      const oc = out[i].getContext('2d')!; oc.save(); oc.globalCompositeOperation = 'destination-over'; oc.imageSmoothingQuality = 'low'; oc.drawImage(sm, 0, 0, W, H); oc.restore();
     }
   }
   return out;
@@ -1125,14 +1126,15 @@ export function paintRelief(name: SectionName, o: SilkOptions = {}): (HTMLCanvas
 // the linework of a layer as ink-only pixels (half resolution, the ghost is soft anyway)
 function inkGhost(src: HTMLCanvasElement, mode: SilkMode): HTMLCanvasElement {
   const w = Math.ceil(src.width / 2), h = Math.ceil(src.height / 2), cv = makeCanvas(w, h), c = cv.getContext('2d')!;
-  c.imageSmoothingQuality = 'high'; c.drawImage(src, 0, 0, w, h);
+  c.imageSmoothingQuality = 'medium'; c.drawImage(src, 0, 0, w, h);
   const id = c.getImageData(0, 0, w, h), d = id.data, pal = palette(mode);
-  const lum = (r: number, g: number, b: number) => 0.3 * r + 0.59 * g + 0.11 * b;
-  const lg = lum(...pal.ground), li = lum(...pal.ink);
+  const lum = (r: number, g: number, b: number) => (77 * r + 151 * g + 28 * b) >> 8;
+  const lg = lum(...pal.ground), li = lum(...pal.ink), lut = new Float32Array(256);
+  for (let l = 0; l < 256; l++) lut[l] = Math.pow(clamp((lg - l) / (lg - li), 0, 1), 1.4);
+  const ir = pal.ink[0], ig = pal.ink[1], ib = pal.ink[2];
   for (let i = 0; i < d.length; i += 4) {
-    if (!d[i + 3]) continue;
-    const t = clamp((lg - lum(d[i], d[i + 1], d[i + 2])) / (lg - li), 0, 1);
-    d[i + 3] = d[i + 3] * Math.pow(t, 1.4); d[i] = pal.ink[0]; d[i + 1] = pal.ink[1]; d[i + 2] = pal.ink[2];
+    const a = d[i + 3]; if (!a) continue;
+    d[i + 3] = a * lut[(77 * d[i] + 151 * d[i + 1] + 28 * d[i + 2]) >> 8]; d[i] = ir; d[i + 1] = ig; d[i + 2] = ib;
   }
   c.putImageData(id, 0, 0);
   return cv;
@@ -1140,14 +1142,18 @@ function inkGhost(src: HTMLCanvasElement, mode: SilkMode): HTMLCanvasElement {
 /** A soft drop shadow for a lifted relief layer (same size as the layer, offset and blurred, ink-tinted).
  *  Draw it under the layer and move it with the lift (e.g. offset grows with height). Sizes in canvas px. */
 export function layerShadow(layer: HTMLCanvasElement, o: { blur?: number; dx?: number; dy?: number; alpha?: number; mode?: SilkMode } = {}): HTMLCanvasElement {
+  const small = shadowSmall(layer, o);
+  const out = makeCanvas(layer.width, layer.height), oc = out.getContext('2d')!; oc.imageSmoothingQuality = 'high'; oc.drawImage(small, 0, 0, layer.width, layer.height);
+  return out;
+}
+function shadowSmall(layer: HTMLCanvasElement, o: { blur?: number; dx?: number; dy?: number; alpha?: number; mode?: SilkMode } = {}): HTMLCanvasElement {
   const W = layer.width, H = layer.height, k = W / W0;
   const blur = o.blur ?? 22 * k, dx = o.dx ?? 12 * k, dy = o.dy ?? 20 * k, alpha = o.alpha ?? 0.3;
   const q = 4, sw = Math.ceil(W / q), shh = Math.ceil(H / q);
   const small = makeCanvas(sw, shh), sc = small.getContext('2d')!;
   sc.filter = `blur(${Math.max(0.5, blur / q)}px)`; sc.drawImage(layer, dx / q, dy / q, sw, shh); sc.filter = 'none';
   sc.globalCompositeOperation = 'source-in'; sc.fillStyle = rgba(palette(o.mode ?? 'mono').ink, alpha); sc.fillRect(0, 0, sw, shh);
-  const out = makeCanvas(W, H), oc = out.getContext('2d')!; oc.imageSmoothingQuality = 'high'; oc.drawImage(small, 0, 0, W, H);
-  return out;
+  return small;
 }
 
 export interface RiverSprites {
@@ -1215,11 +1221,19 @@ export function paintRiverSprites(o: SilkOptions = {}): RiverSprites {
 }
 
 /** Silk weave + age (mottling, foxing, roll creases) over a canvas. Only darkens where the canvas already has paint,
- *  so it is safe on transparent relief layers. strength 0..2 (1 = default). */
+ *  so it is safe on transparent relief layers. strength 0..2 (1 = default). The overlay is cached per size/mode/seed. */
 export function silkWeave(canvas: HTMLCanvasElement, strength = 1, opt: { mode?: SilkMode; seed?: number; paperFrom?: number } = {}) {
   if (strength <= 0) return;
-  const ctx = canvas.getContext('2d')!; const W = canvas.width, H = canvas.height, k = W / W0;
-  const seed = opt.seed ?? 43, r = mulberry32(seed * 101 + 7), ink: RGB = opt.mode === 'grey' ? hex('#55524C') : hex('#2A1F17');
+  const ov = weaveOverlay(canvas.width, canvas.height, strength, opt.mode ?? 'mono', opt.seed ?? 43, opt.paperFrom);
+  const ctx = canvas.getContext('2d')!;
+  ctx.save(); ctx.setTransform(1, 0, 0, 1, 0, 0); ctx.globalCompositeOperation = 'source-atop'; ctx.drawImage(ov, 0, 0); ctx.restore();
+}
+let WEAVE_CACHE: { key: string; cv: HTMLCanvasElement }[] = [];
+function weaveOverlay(W: number, H: number, strength: number, mode: SilkMode, seed: number, paperFrom?: number): HTMLCanvasElement {
+  const key = [W, H, strength, mode, seed, paperFrom ?? -1].join('|');
+  const hit = WEAVE_CACHE.find(e => e.key === key); if (hit) return hit.cv;
+  const cv = makeCanvas(W, H), ctx = cv.getContext('2d')!, k = W / W0;
+  const r = mulberry32(seed * 101 + 7), ink: RGB = mode === 'grey' ? hex('#55524C') : hex('#2A1F17');
   const pitch = Math.max(2, Math.round(3 * k)), T = pitch * 86;
   const tile = makeCanvas(T, T), tc = tile.getContext('2d')!, id = tc.createImageData(T, T);
   const rowV: number[] = [], colV: number[] = [];
@@ -1238,21 +1252,20 @@ export function silkWeave(canvas: HTMLCanvasElement, strength = 1, opt: { mode?:
     }
   }
   tc.putImageData(id, 0, 0);
-  ctx.save(); ctx.globalCompositeOperation = 'source-atop';
-  ctx.fillStyle = ctx.createPattern(tile, 'repeat')!;
-  if (opt.paperFrom !== undefined) { ctx.beginPath(); ctx.rect(opt.paperFrom, 0, W - opt.paperFrom, H); ctx.clip(); }
+  ctx.save(); ctx.fillStyle = ctx.createPattern(tile, 'repeat')!;
+  if (paperFrom !== undefined) { ctx.beginPath(); ctx.rect(paperFrom, 0, W - paperFrom, H); ctx.clip(); }
   ctx.fillRect(0, 0, W, H); ctx.restore();
-  if (opt.paperFrom !== undefined) paperFibers(canvas, 0, opt.paperFrom, strength, seed);
+  if (paperFrom !== undefined) paperFibers(cv, 0, paperFrom, strength, seed);
   // age: low-frequency mottling (warm brown), a few foxing spots, vertical roll creases
   const nw = 128, nh = 48, nc = makeCanvas(nw, nh), nx = nc.getContext('2d')!, nd = nx.createImageData(nw, nh);
-  const n1 = vnoise(seed + 11), n2 = vnoise(seed + 23), stain: RGB = opt.mode === 'grey' ? hex('#4A4842') : hex('#8A5A2A');
+  const n1 = vnoise(seed + 11), n2 = vnoise(seed + 23), stain: RGB = mode === 'grey' ? hex('#4A4842') : hex('#8A5A2A');
   for (let y = 0; y < nh; y++) for (let x = 0; x < nw; x++) {
     const v = n1(x / 9, y / 6) * 0.65 + n2(x / 3.5, y / 2.5) * 0.35;
     const i4 = (y * nw + x) * 4; nd.data[i4] = stain[0]; nd.data[i4 + 1] = stain[1]; nd.data[i4 + 2] = stain[2];
     nd.data[i4 + 3] = clamp((v - 0.42) * 120 * strength, 0, 255);
   }
   nx.putImageData(nd, 0, 0);
-  ctx.save(); ctx.globalCompositeOperation = 'source-atop'; ctx.globalAlpha = 0.32; ctx.imageSmoothingEnabled = true; ctx.imageSmoothingQuality = 'high';
+  ctx.save(); ctx.globalAlpha = 0.32; ctx.imageSmoothingEnabled = true; ctx.imageSmoothingQuality = 'high';
   ctx.drawImage(nc, 0, 0, W, H); ctx.globalAlpha = 1;
   for (let i = 0; i < 26; i++) { const x = r() * W, y = r() * H, s = (2 + r() * 7) * k; ctx.beginPath(); ctx.ellipse(x, y, s, s * (0.6 + r() * 0.5), r() * 3, 0, 7); ctx.fillStyle = rgba(stain, 0.08 * strength); ctx.fill(); }
   for (let i = 0; i < 4; i++) {
@@ -1261,10 +1274,12 @@ export function silkWeave(canvas: HTMLCanvasElement, strength = 1, opt: { mode?:
     ctx.lineWidth = Math.max(1, 1.6 * k); ctx.strokeStyle = rgba(ink, 0.05 * strength); ctx.stroke();
   }
   ctx.restore();
+  WEAVE_CACHE.unshift({ key, cv }); WEAVE_CACHE = WEAVE_CACHE.slice(0, 2);
+  return cv;
 }
 function paperFibers(canvas: HTMLCanvasElement, x0: number, x1: number, strength: number, seed: number) {
   const ctx = canvas.getContext('2d')!; const H = canvas.height, k = canvas.width / W0, r = mulberry32(seed * 53 + 3);
-  ctx.save(); ctx.globalCompositeOperation = 'source-atop'; ctx.beginPath(); ctx.rect(x0, 0, x1 - x0, H); ctx.clip();
+  ctx.save(); ctx.beginPath(); ctx.rect(x0, 0, x1 - x0, H); ctx.clip();
   const n = Math.round((x1 - x0) * H / (900 * k * k) * strength);
   for (let i = 0; i < n; i++) {
     const x = x0 + r() * (x1 - x0), y = r() * H, l = (6 + r() * 22) * k, a = r() * Math.PI;
@@ -1513,7 +1528,7 @@ BUILDERS.gate = (S, o) => {
   addTree(S, 1, 1500, 1800, 330, 'leaf', fog); addTree(S, 1, 300, 2200, 300, 'bare', fog); addTree(S, 1, 2300, 1700, 300, 'willow', fog);
   // the gate and the ramparts
   S.add(2, GZ, GX, P => gatePlatform(P, GX, GZ, GW, GD, GH, PX, 150, 210));
-  S.add(2, GZ - 1, GX + 60, P => house(P, GX + 130, GZ + 60, GW - 260, GD - 130, 124, { roof: 'hip', front: 'lattice', rh: 160, lift: GH }));
+  S.add(2, GZ - 1, GX + 60, P => house(P, GX + 130, GZ + 60, GW - 260, GD - 130, 124, { roof: 'hip', front: 'lattice', rh: 128, lift: GH }));
   S.add(2, GZ + 60, GX - 600, P => mound(P, GX - 700, GX - 20, GZ + 60, 160, 120));
   S.add(2, GZ + 60, GX + GW + 40, P => mound(P, GX + GW + 40, GX + GW + 900, GZ + 60, 160, 120));
   for (const [X, H, k] of [[GX - 600, 330, 'willow'], [GX - 380, 300, 'bare'], [GX + GW + 520, 340, 'willow'], [GX + GW + 800, 300, 'leaf']] as [number, number, string][]) addTree(S, 2, X, GZ + 120, H, k as 'willow', Z => fog(Z) * 0.5);
@@ -1540,7 +1555,7 @@ BUILDERS.gate = (S, o) => {
   S.add(3, 560, 3000, P => { const c = P.pt(3000, 0, 560); figure(P, c[0], c[1], 54, { dir: -1, pose: 'raise', hat: 'jin', robe: 1, force: true }); for (let i = 0; i < 9; i++) { const a = Math.PI * 2 * i / 9; const q = P.pt(3000 + Math.cos(a) * 110, 0, 560 + Math.sin(a) * 90); figure(P, q[0], q[1], 50, { dir: Math.cos(a) > 0 ? -1 : 1, pose: 'stand', robe: i, hat: pick(P.r, HATS) }); } }, { fog: fog(560) });
   // near row (bottom edge), roofs only partly in frame
   houseRow(S, 4, -400, 3700, 40, fog, { awn: 0.6, gableZ: 0.15 });
-  addTree(S, 4, 2200, 260, 420, 'leaf', fog); addTree(S, 4, 600, 300, 400, 'willow', fog);
+  addTree(S, 4, 3150, 260, 420, 'leaf', fog); addTree(S, 4, 300, 300, 400, 'willow', fog);
   hazeOverlay(S, 1, 0, 320, 0.95);
   const g0 = pP(GX, 0, GZ), g1 = pP(GX + GW, GH + 104 + 160, GZ + GD);
   S.info.gate = { x: g0[0], y: g1[1], w: g1[0] - g0[0] + 40, h: g0[1] - g1[1] };
@@ -1601,7 +1616,7 @@ BUILDERS.shed = (S, o) => {
   const SX0 = 2860, SX1 = 2990;
   S.ground(2, P => {
     const poly: Pt[] = [P.pt(SX0 + 60, 0, -150), P.pt(SX1 + 60, 0, -150), P.pt(SX1 - 120, 0, 2900), P.pt(SX0 - 140, 0, 2900)];
-    fill(P, poly, P.gfill()); fill(P, poly, P.wash(P.pal.water, 1.3)); ripples(P, poly, [proj.A, -proj.B], 0.7);
+    fill(P, poly, P.gfill()); fill(P, poly, P.wash(P.pal.water, 2.2)); ripples(P, poly, [proj.A, -proj.B], 1.2);
     line(P, [poly[0], poly[3]], 1.8, { amp: 1.5 }); line(P, [poly[1], poly[2]], 1.8, { amp: 1.5 });
   });
   S.add(2, RZ - 10, SX0, P => { P.setFog(fog(RZ)); const bx0 = SX0 - 60, bx1 = SX1 + 40; const q: Pt[] = [P.pt(bx0, 14, RZ), P.pt(bx1, 14, RZ), P.pt(bx1, 14, RZ + 130), P.pt(bx0, 14, RZ + 130)]; shape(P, q, P.pal.wood, 2, { k: 0.8 }); for (let z = RZ + 12; z < RZ + 130; z += 13) { const a = P.pt(bx0, 14, z), b = P.pt(bx1, 14, z); seg(P, a[0], a[1], b[0], b[1], 0.8, 0.6); } const f: Pt[] = [P.pt(bx0, 14, RZ), P.pt(bx1, 14, RZ), P.pt(bx1, 0, RZ), P.pt(bx0, 0, RZ)]; shape(P, f, P.pal.wood, 1.6, { k: 1.4 }); for (const x of [bx0 + 20, bx1 - 20]) { const a = P.pt(x, 0, RZ), b = P.pt(x, -34, RZ); seg(P, a[0], a[1], b[0], b[1], 2); } });
@@ -1629,6 +1644,14 @@ BUILDERS.shed = (S, o) => {
   addFig(S, 1, 40, RZ + 80, { dir: -1, body: 'short', pose: 'walk', hat: 'cap', robe: 5, force: true }, Z => fog(Z) * 0.6);
   addCrowd(S, 4, -300, 3800, 120, 700, 9, fog);
   addCrowd(S, 1, -400, 3600, 1400, 2000, 7, fog, 46, { body: 'short', hat: 'li' });
+  // ploughing in the field, travellers on the road, a grove by the stream
+  addBeast(S, 1, 560, 2010, 62, 'ox', -1, false, fog); addFig(S, 1, 660, 2020, { dir: -1, body: 'short', pose: 'push', hat: 'li', robe: 2, force: true, lean: 0.8 }, fog, 48);
+  S.add(1, 2015, 600, P => { const a = P.pt(600, 10, 2015), b2 = P.pt(640, 0, 2018); seg(P, a[0], a[1], b2[0], b2[1], 1.6, 0.8); }, { fog: fog(2015) });
+  addBeast(S, 1, 1500, RZ + 60, 64, 'donkey', 1, false, fog, { dir: 1, hat: 'li', robe: 3 });
+  addFig(S, 1, 1660, RZ + 40, { dir: 1, body: 'short', pose: 'carry', load: 'pole', hat: 'cap', robe: 1, force: true }, fog);
+  addFig(S, 1, 1180, RZ + 90, { dir: -1, body: 'robe', pose: 'walk', hat: 'futou', robe: 6, load: 'parasol', force: true }, fog);
+  for (const [X, Z, H] of [[SX0 - 420, 1250, 340], [SX0 - 560, 1330, 300], [SX1 + 260, 1500, 330], [SX1 + 120, 1720, 300]] as [number, number, number][]) addTree(S, 1, X, Z, H, 'willow', fog);
+  S.add(1, 1300, 1150, P => fence(P, 1150, 1300, 1700, 1300, 34), { fog: fog(1300) });
   // the straw shed (front-left roof corner = where the silk was lost and later patched)
   const SHX = 1500, SHZ = 760, SHW = 430, SHD = 210, SHH = 112, RH = 92;
   const ov = Math.min(SHD * 0.3, 40), sxo = Math.min(SHW * 0.12, 30);
@@ -1638,46 +1661,78 @@ BUILDERS.shed = (S, o) => {
     figure(P, t[0] + 90, t[1] + 8, 56, { dir: -1, pose: 'sit', hat: 'jin', robe: 2 });
     figure(P, t[0] - 20, t[1] - 30, 54, { dir: 1, pose: 'sit', hat: 'futou', robe: 5 });
   }, { fog: 0 });
-  // geometry of the damage: a donkey of scale u facing right has its ears exactly on the two poles
-  const corner = pP(SHX - sxo, SHH - 3, SHZ - ov);
-  const u = 1.9, ex = 34, ey = -88, el = 20;
-  const X0 = corner[0] + 14 - ex * u, Y0 = corner[1] + 12 - ey * u; // donkey feet
-  const earB1: Pt = [X0 + (ex - 1) * u, Y0 + ey * u], earT1: Pt = [X0 + (ex - 4) * u, Y0 + (ey - el) * u];
-  const earB2: Pt = [X0 + (ex + 3) * u, Y0 + (ey - 1) * u], earT2: Pt = [X0 + ex * u, Y0 + (ey - el) * u];
-  const PR: Rect = { x: X0 - 52 * u, y: Y0 + (ey - 3) * u, w: (52 + 66) * u, h: (-ey + 3) * u + 18 };
+  // geometry of the damage: the Ming donkey (scale u, facing right) has its ears exactly on the two poles
+  const corner = pP(SHX - sxo * 1.25, SHH - 3, SHZ - ov);
+  const u = 1.9;
+  const X0 = corner[0] + 10 - DK_EAR1[0] * u, Y0 = corner[1] + 10 - DK_EAR1[1] * u; // donkey feet
+  const L = (p: Pt): Pt => [X0 + p[0] * u, Y0 + p[1] * u];
+  const earB1 = L(DK_EAR1), earT1 = L(DK_TIP1), earB2 = L(DK_EAR2), earT2 = L(DK_TIP2);
+  const PR: Rect = { x: X0 - 50 * u, y: Y0 - 96 * u, w: 116 * u, h: 96 * u + 14 };
   S.info.patch = PR; S.info.posts = { x: earT1[0] - 10, y: earT1[1] - 6, w: earB2[0] - earT1[0] + 22, h: earB1[1] - earT1[1] + 12 };
-  const blob = (inset: number, seed: number): Pt[] => { const n = vnoise(seed); const out: Pt[] = []; const cx = PR.x + PR.w / 2, cy = PR.y + PR.h / 2; for (let i = 0; i < 56; i++) { const a = i / 56 * Math.PI * 2; const k = 0.86 + 0.24 * n(Math.cos(a) * 2 + 3, Math.sin(a) * 2 + 3); const c = Math.cos(a), sn = Math.sin(a); const sq = 1 / Math.max(Math.abs(c), Math.abs(sn)) ** 0.6; out.push([cx + c * sq * (PR.w / 2 - inset) * k, cy + sn * sq * (PR.h / 2 - inset) * k]); } return out; };
+  const blob = (inset: number, seed: number, amp = 0.2): Pt[] => { const n = vnoise(seed); const out: Pt[] = []; const cx = PR.x + PR.w / 2, cy = PR.y + PR.h / 2; for (let i = 0; i < 64; i++) { const a = i / 64 * Math.PI * 2; const k = 1 - amp + amp * 1.2 * n(Math.cos(a) * 2.2 + 3, Math.sin(a) * 2.2 + 3); const c = Math.cos(a), sn = Math.sin(a); const sq = 1 / Math.max(Math.abs(c), Math.abs(sn)) ** 0.75; out.push([cx + c * sq * (PR.w / 2 - inset) * k, cy + sn * sq * (PR.h / 2 - inset) * k]); } return out; };
   S.overlay(4, P => {
     P.setFog(0);
+    const backing = P.mode === 'grey' ? hex('#6E6A62') : hex('#8E8576');
     if (patch === 'bare' || patch === 'ears') {
-      // lost silk: the darker backing shows through, frayed threads at the edge, broken ink fragments
-      const tear = blob(26, 77);
-      fill(P, tear, rgba(mix(P.pal.ground, P.mode === 'grey' ? hex('#6E6A62') : hex('#B89C70'), 0.5)), true);
-      fill(P, blob(44, 78), rgba(mix(P.pal.ground, P.mode === 'grey' ? hex('#5E5A54') : hex('#A88A5E'), 0.4)), true);
-      for (let i = 0; i < 160; i++) { const p = pick(P.r, tear); const a = P.r() * Math.PI * 2; const l = rr(P.r, 3, 12); seg(P, p[0], p[1], p[0] + Math.cos(a) * l, p[1] + Math.sin(a) * l, 0.6, 0.35); }
-      line(P, tear, 1.0, { closed: true, a: 0.5, amp: 1.4 });
-      for (let i = 0; i < 9; i++) { const x = rr(P.r, PR.x + 50, PR.x + PR.w - 50), y = rr(P.r, PR.y + 60, PR.y + PR.h - 40); seg(P, x, y, x + rr(P.r, -18, 18), y + rr(P.r, -8, 8), 1.3, 0.45); }
+      // lost silk: the greyer backing shows through, a few warp threads survive across the hole, frayed light fibres
+      const hole = blob(2, 77, 0.16);
+      fill(P, hole, rgba(mix(P.pal.ground, backing, 0.42)), true);
+      fill(P, blob(22, 78, 0.3), rgba(mix(P.pal.ground, backing, 0.52)), true);
+      P.ctx.save(); P.ctx.beginPath(); tracePath(P.ctx, hole, true, true); P.ctx.clip();
+      for (let y = PR.y + 6; y < PR.y + PR.h; y += rr(P.r, 5, 11)) { if (P.r() < 0.55) continue; const x0 = PR.x + rr(P.r, 0, PR.w * 0.5); line(P, [[x0, y], [x0 + rr(P.r, 40, PR.w), y + rr(P.r, -1.5, 1.5)]], 0.7, { color: rgba(mix(P.pal.ground, hex('#FFFFFF'), 0.3), 0.6), amp: 0.4 }); }
+      for (let i = 0; i < 7; i++) { const x = rr(P.r, PR.x + 30, PR.x + PR.w - 30), y = rr(P.r, PR.y + 40, PR.y + PR.h - 30); seg(P, x, y, x + rr(P.r, -16, 16), y + rr(P.r, -6, 6), 1.2, 0.35); }
+      P.ctx.restore();
+      for (let i = 0; i < 220; i++) { const p = pick(P.r, hole); const a = P.r() * Math.PI * 2; const l = rr(P.r, 3, 10); line(P, [p, [p[0] + Math.cos(a) * l, p[1] + Math.sin(a) * l]], 0.6, { color: rgba(mix(P.pal.ground, hex('#FFFFFF'), 0.2), 0.7), amp: 0 }); }
+      line(P, hole, 0.9, { closed: true, a: 0.3, amp: 1.0 });
     } else if (patch === 'donkey') {
       // the Ming mounter's patch, a shade greyer than the silk, and the donkey he painted under the "ears"
-      const pa = blob(6, 79);
+      const pa = blob(2, 79, 0.12);
       fill(P, pa, rgba(mix(P.pal.ground, hex('#B5B0A3'), 0.3)), true);
-      line(P, pa, 1.0, { closed: true, a: 0.32, amp: 0.6 });
-      beast(P, X0, Y0, 100 * u, 'donkey', 1, false, 0.35);
+      line(P, pa, 1.0, { closed: true, a: 0.3, amp: 0.5 });
+      patchDonkey(P, X0, Y0, u);
     } else {
       // 1973: the old patch lifted and new plain silk let in; the poles stand over blank silk
-      const pa = blob(6, 79);
-      fill(P, pa, rgba(mix(P.pal.ground, hex('#FFFBF0'), 0.6)), true);
-      line(P, pa, 0.9, { closed: true, a: 0.16, amp: 0.4 });
+      const pa = blob(2, 79, 0.12);
+      fill(P, pa, rgba(mix(P.pal.ground, hex('#FFFCF4'), 0.45)), true);
+      line(P, pa, 0.9, { closed: true, a: 0.14, amp: 0.4 });
     }
     // the two thin poles of the broken shed roof (original paint)
-    brush(P, earB1, [lerp(earB1[0], earT1[0], 0.5) - 1, lerp(earB1[1], earT1[1], 0.5)], earT1, 4.2, 1.5, P.ink(0.95), 6);
-    brush(P, earB2, [lerp(earB2[0], earT2[0], 0.5) + 1, lerp(earB2[1], earT2[1], 0.5)], earT2, 4.0, 1.5, P.ink(0.95), 6);
+    brush(P, earB1, [lerp(earB1[0], earT1[0], 0.5) - 1, lerp(earB1[1], earT1[1], 0.5)], earT1, 4.4, 1.6, P.ink(0.95), 6);
+    brush(P, earB2, [lerp(earB2[0], earT2[0], 0.5) + 1, lerp(earB2[1], earT2[1], 0.5)], earT2, 4.2, 1.6, P.ink(0.95), 6);
     if (patch === 'ears') for (const [b, t] of [[earB1, earT1], [earB2, earT2]] as [Pt, Pt][]) {
-      const w = 7 * u * 0.5;
-      line(P, [[b[0] - w, b[1] + 4], [lerp(b[0], t[0], 0.55) - w * 1.1, lerp(b[1], t[1], 0.55)], [t[0], t[1] - 6], [lerp(b[0], t[0], 0.55) + w * 1.1, lerp(b[1], t[1], 0.55)], [b[0] + w, b[1] + 4]], 1.7, { dash: [6, 5], amp: 0 });
+      const w = 4.2 * u;
+      line(P, [[b[0] - w * 0.7, b[1] + 3], [lerp(b[0], t[0], 0.5) - w, lerp(b[1], t[1], 0.5)], [t[0], t[1] - 7], [lerp(b[0], t[0], 0.5) + w, lerp(b[1], t[1], 0.5)], [b[0] + w * 0.7, b[1] + 3]], 1.8, { dash: [7, 5], amp: 0 });
     }
   });
 };
+// the donkey a Ming mounter painted on his patch (local units, facing right, feet at 0; ears on DK_EAR → DK_TIP)
+const DK_EAR1: Pt = [35, -90], DK_TIP1: Pt = [30, -119], DK_EAR2: Pt = [40, -90], DK_TIP2: Pt = [36, -118];
+function patchDonkey(P: Painter, X0: number, Y0: number, u: number) {
+  const L = (x: number, y: number): Pt => [X0 + x * u, Y0 + y * u], lw = 2.0;
+  const legs: [Pt, Pt, Pt][] = [[[-27, -42], [-23, -22], [-26, -1]], [[-19, -40], [-21, -21], [-17, -1]], [[16, -40], [14, -21], [17, -1]], [[23, -42], [25, -22], [24, -1]]];
+  legs.forEach(([a, k, f], i) => {
+    const far = i === 1 || i === 2, A = L(...a), K = L(...k), F = L(...f), w0 = 6.5 * u, w1 = 3.2 * u;
+    const pts: Pt[] = [[A[0] - w0 / 2, A[1]], [K[0] - w1 / 2 - 0.5 * u, K[1]], [F[0] - w1 / 2, F[1] - 3 * u], [F[0] + w1 / 2, F[1] - 3 * u], [K[0] + w1 / 2 + 0.5 * u, K[1]], [A[0] + w0 / 2, A[1]]];
+    shape(P, pts, P.pal.shade, lw * 0.9, { k: far ? 1.6 : 0.8, amp: 0.3 });
+    fill(P, [[F[0] - w1 / 2 - 1, F[1] - 3.5 * u], [F[0] + w1 / 2 + 1.5, F[1] - 3.5 * u], [F[0] + w1 / 2 + 2, F[1]], [F[0] - w1 / 2 - 1, F[1]]], P.ink(0.9));
+  });
+  brush(P, L(-37, -56), L(-44, -44), L(-42, -27), 3.4, 1.2, P.ink(0.9), 8);
+  brush(P, L(-42, -31), L(-44, -26), L(-41, -21), 5, 1, P.ink(0.85), 5);
+  const body: Pt[] = [L(-40, -50), L(-37, -60), L(-22, -64), L(-2, -61), L(14, -64), L(26, -60), L(31, -50), L(25, -40), L(10, -36), L(-12, -36), L(-29, -39), L(-39, -45)];
+  shape(P, body, P.pal.shade, lw, { k: 0.75, amp: 0.4, smooth: true });
+  for (let i = 0; i < 6; i++) { const x = -22 + i * 7; seg(P, ...L(x, -40), ...L(x + 3, -45), 0.8, 0.45); }
+  const neck: Pt[] = [L(13, -62), L(24, -80), L(33, -89), L(42, -86), L(38, -72), L(31, -52)];
+  shape(P, neck, P.pal.shade, lw, { k: 0.75, amp: 0.3, smooth: true });
+  for (let i = 0; i < 7; i++) { const a = L(16 + i * 3, -66 - i * 3.2); seg(P, a[0], a[1], a[0] - 3 * u, a[1] - 1.5 * u, 1.1, 0.75); }
+  const head: Pt[] = [L(31, -91), L(39, -93), L(47, -86), L(57, -72), L(58, -65), L(52, -61), L(45, -65), L(36, -77)];
+  shape(P, head, P.pal.shade, lw, { k: 0.75, amp: 0.25, smooth: true });
+  fill(P, [L(52, -71), L(57, -71), L(58, -65), L(53, -62)], P.wash(P.pal.shade, 2.5), true);
+  P.ctx.beginPath(); P.ctx.arc(...L(40, -84), 1.6 * u, 0, 7); P.ctx.fillStyle = P.ink(0.9); P.ctx.fill();
+  for (const [b, t, dx] of [[DK_EAR1, DK_TIP1, 0], [DK_EAR2, DK_TIP2, 1]] as [Pt, Pt, number][]) {
+    const B = L(...b), T2 = L(...t), w = 4 * u;
+    shape(P, [[B[0] - w * 0.6, B[1] + 2], [lerp(B[0], T2[0], 0.5) - w * 0.75, lerp(B[1], T2[1], 0.5)], T2, [lerp(B[0], T2[0], 0.5) + w * 0.75, lerp(B[1], T2[1], 0.5)], [B[0] + w * 0.6, B[1] + 2]], P.pal.shade, lw * 0.9, { k: dx ? 1.3 : 0.75, amp: 0.15, smooth: true });
+  }
+}
 
 // ---------------- 'colophon': the join from the painting's silk to paper, 张著's colophon verbatim, other hands
 // Text: 张著 (1186), as transcribed by 余辉 (光明日报 2017-02-19) / facts.md C6. The object has no punctuation.
@@ -1727,13 +1782,21 @@ BUILDERS.colophon = (S, o) => {
   S.info.phrases = ph;
   S.add(2, 0, 0, P => {
     const c = P.ctx; c.textAlign = 'center'; c.textBaseline = 'middle';
+    // each glyph is inked on its own small sheet: slight spread, a heavier or lighter load, dry-brush streaks
+    const gs = Math.ceil(glyphs[0].size * 1.5 * P.scale), gcv = makeCanvas(gs, gs), gc = gcv.getContext('2d')!;
     for (const g of glyphs) {
       if (g.i >= reveal) break;
-      const r = P.r; const a = 0.86 + 0.14 * r();
-      c.save(); c.translate(g.x + rr(r, -2.5, 2.5), g.y + rr(r, -2, 2)); c.rotate(rr(r, -0.025, 0.025));
-      c.font = `500 ${Math.round(g.size * rr(r, 0.96, 1.04))}px ${FONT}`;
-      c.shadowColor = P.ink(0.45); c.shadowBlur = 2.5 * P.scale; c.fillStyle = P.ink(a * 0.7); c.fillText(g.ch, 0, 0);
-      c.shadowBlur = 0; c.fillStyle = P.ink(a); c.fillText(g.ch, 0, 0);
+      const r = P.r; const a = 0.84 + 0.16 * r(), k = P.scale;
+      gc.setTransform(1, 0, 0, 1, 0, 0); gc.clearRect(0, 0, gs, gs);
+      gc.setTransform(k * rr(r, 0.95, 1.06), 0, rr(r, -0.04, 0.04) * k, k, gs / 2, gs / 2);
+      gc.font = `${r() < 0.5 ? 500 : 600} ${g.size}px ${FONT}`; gc.textAlign = 'center'; gc.textBaseline = 'middle';
+      gc.fillStyle = P.ink(1); gc.strokeStyle = P.ink(0.9); gc.lineWidth = rr(r, 0.4, 1.6); gc.lineJoin = 'round';
+      gc.shadowColor = P.ink(0.5); gc.shadowBlur = 2.2 * k; gc.fillText(g.ch, 0, 0); gc.shadowBlur = 0; gc.strokeText(g.ch, 0, 0);
+      gc.globalCompositeOperation = 'destination-out';
+      for (let q = 0; q < 14; q++) { const y = rr(r, -g.size * 0.5, g.size * 0.5), x = rr(r, -g.size * 0.5, g.size * 0.2); gc.fillStyle = `rgba(0,0,0,${rr(r, 0.25, 0.7)})`; gc.fillRect(x, y, rr(r, 6, g.size * 0.4), rr(r, 0.6, 1.6)); }
+      gc.globalCompositeOperation = 'source-over';
+      c.save(); c.translate(g.x + rr(r, -2.5, 2.5), g.y + rr(r, -2, 2)); c.rotate(rr(r, -0.025, 0.025)); c.globalAlpha = a;
+      c.drawImage(gcv, -gs / 2 / k, -gs / 2 / k, gs / k, gs / k);
       c.restore();
       if (o.punctuate && ZHANG_PUNCT[g.i + 1] !== undefined) { c.font = `500 ${Math.round(g.size * 0.5)}px ${FONT}`; c.fillStyle = P.ink(0.8); c.fillText(ZHANG_PUNCT[g.i + 1], g.x + g.size * 0.38, g.y + g.size * 0.62); }
     }
