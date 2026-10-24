@@ -1,4 +1,4 @@
-# Script: 同一天出生的两个人  (vN)
+# Script: 一张香烟纸  (vN)
 
 **Logline:** · **Takeaway:** · **Length:** ~NN s
 

@@ -136,16 +136,16 @@ const bootT1 = async () => {
 	t1Arms = new Live(st, 't1arms', 960, 640, 2600, 1100, T1Z.arms, {rim: 1.0, rimPx: 6}, 1);
 };
 // timing
-const T1 = {go: 11.95, land: b(5), grab: 13.18, lift: 13.48};
+const T1 = {go: 11.95, land: b(5), grab: 12.95, lift: 13.3};
 /** the swap: roller position along the table (x of the two rollers at the seam) */
 const t1Seam = (t: number) => lerp(SL.x0, SL.x1, easeInOut((t - T1.go) / (T1.land - T1.go)));
 const strideC = () => gaitStride('08_04', stepFor(CRAFT)) * CH;
 /** the craftsman's figure x and walk distance at t */
 const t1Walk = (t: number) => {
 	const off = 152;                                             // figure x behind the seam
-	if (t < T1.lift) return {x: Math.min(t1Seam(t), SL.x1 + 8) - off, dist: Math.min(t1Seam(t), SL.x1 + 8) - SL.x0};
-	// hurry off right: speeds up from the lift, out of frame before b5.75
-	const u = t - T1.lift, v = 690, x0 = SL.x1 + 8 - off, x = x0 + v * (u * u / (2 * 0.35) * (u < 0.35 ? 1 : 0) + (u >= 0.35 ? 0.175 + (u - 0.35) : 0));
+	if (t < T1.grab) return {x: Math.min(t1Seam(t), SL.x1 + 8) - off, dist: Math.min(t1Seam(t), SL.x1 + 8) - SL.x0};
+	// hurry off right: he gathers you up as he steps off, speeding up; out of frame by b5.75 (only grey is left)
+	const u = t - T1.grab, v = 700, a = 0.5, x0 = SL.x1 + 8 - off, x = x0 + v * (u < a ? u * u / (2 * a) : a / 2 + (u - a));
 	return {x, dist: SL.x1 + 8 - SL.x0 + (x - x0)};
 };
 const t1Fig = (t: number) => {
@@ -358,8 +358,8 @@ const bootN = async () => {
 	ext.add('sky', canvasTex(gradCanvas([[0, '#1F2E38'], [0.42, '#2E404B'], [0.7, '#45565D'], [0.8, '#5A5A4C'], [1, '#4a4a40']])), 960, 420, 9000, 3200, -6000);
 	const far = svgDoc(`${skyline(-2600, 4600, 760, 24, 70, 17, '#222a30')}` + Array.from({length: 40}, (_, i) => `<rect x="${-2400 + i * 170 + hash(i) * 80}" y="${728 + hash(i * 3) * 24}" width="8" height="5" fill="#FFB868" fill-opacity="${0.35 + 0.3 * hash(i * 7)}"/>`).join(''), 7400, 900, '', -2700, 0);
 	ext.add('far', canvasTex(await svgToCanvas(far, 7400, 900, 0.5)), 950, 450, 7400, 900, -3000, {fog: ['#45565D', 0.3]});
-	const wallG = `<defs><linearGradient id="wg" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#3e2a25"/><stop offset="0.6" stop-color="#4c312a"/><stop offset="1" stop-color="#5a3a2f"/></linearGradient>` +
-		`<radialGradient id="fl"><stop offset="0" stop-color="#8a5a40" stop-opacity="0.45"/><stop offset="1" stop-color="#8a5a40" stop-opacity="0"/></radialGradient></defs>`;
+	const wallG = `<defs><linearGradient id="wg" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#3a2d2a"/><stop offset="0.6" stop-color="#46352f"/><stop offset="1" stop-color="#523e35"/></linearGradient>` +
+		`<radialGradient id="fl"><stop offset="0" stop-color="#7a5a48" stop-opacity="0.4"/><stop offset="1" stop-color="#7a5a48" stop-opacity="0"/></radialGradient></defs>`;
 	let gate = `<rect x="-1500" y="640" width="4900" height="560" fill="url(#wg)"/>`;
 	for (let i = 0; i < 14; i++) gate += `<line x1="-1500" x2="3400" y1="${668 + i * 38}" y2="${668 + i * 38}" stroke="#2e1f1a" stroke-opacity="0.35" stroke-width="2"/>`;
 	for (const x of [-500, 420, 1500, 2420]) gate += `<ellipse cx="${x}" cy="1180" rx="300" ry="260" fill="url(#fl)"/>`;
@@ -496,8 +496,8 @@ const bootS1 = async () => {
 	crestS1 = new Crest('s1-dusk', {sky: 'dusk', era: '宋', lanterns: true, boat: true, bankCrowd: true}); await crestS1.ready;
 	s1Boat = new Live(crestS1.st, 's1boat', 1500, 900, 1400, 900, -520, {fog: ['#C9A47A', 0.22], rim: 0}, 0.6);
 	s1Boat.drawW('b', (g) => fillSvg(g, boatSvg(1560, 1010, 520, 0, SIL, 5)));
-	s1Shade = new Live(crestS1.st, 's1shade', 1300, 1100, 5200, 1600, 2, {}, 0.5);
-	s1Light = new Live(crestS1.st, 's1light', 960, 1100, 5200, 1600, 3, {emissive: 0.8}, 0.5);
+	s1Shade = new Live(crestS1.st, 's1shade', 1300, 1100, 5200, 1600, 44, {}, 0.5);
+	s1Light = new Live(crestS1.st, 's1light', 960, 1100, 5200, 1600, 43, {emissive: 0.55}, 0.5);
 };
 const deckBand = (g: CanvasRenderingContext2D, x0: number, x1: number, up: number, dn: number) => { g.beginPath(); for (let x = x0; x <= x1; x += 24) g.lineTo(x, deck(x) - up); for (let x = x1; x >= x0; x -= 24) g.lineTo(x, deck(x) + dn); g.closePath(); };
 addScene({id: '08', a: N.pane, z: b(13), in: IN08, draw: (t) => {
@@ -509,13 +509,16 @@ addScene({id: '08', a: N.pane, z: b(13), in: IN08, draw: (t) => {
 	crestS1.setBoat(1640, 0); crestS1.setStreak(0, 0, t);
 	// b12.0 → b12.45: the shadow runs right along the deck into the road; b12.5 → b12.95: the light runs left to the palace
 	const sh = clamp01((t - b(12)) / (b(12.45) - b(12))), lt = clamp01((t - b(12.5)) / (b(12.95) - b(12.5)));
-	s1Shade.drawW(`${sh.toFixed(3)}`, (g) => { if (sh <= 0) return; const xe = lerp(960, 3300, easeInOut(sh));
-		const gr = g.createLinearGradient(xe - 600, 0, xe, 0); gr.addColorStop(0, 'rgba(14,10,8,0.5)'); gr.addColorStop(0.85, 'rgba(14,10,8,0.5)'); gr.addColorStop(1, 'rgba(14,10,8,0)');
-		g.fillStyle = gr; deckBand(g, 960, xe, 6, 40); g.fill(); });
-	s1Light.drawW(`${lt.toFixed(3)}`, (g) => { if (lt <= 0) return; const xe = lerp(960, -1400, easeInOut(lt));
-		const gr = g.createLinearGradient(xe, 0, xe + 520, 0); gr.addColorStop(0, 'rgba(255,200,130,0)'); gr.addColorStop(0.12, 'rgba(255,214,150,0.7)'); gr.addColorStop(0.4, 'rgba(255,196,128,0.28)'); gr.addColorStop(1, 'rgba(255,196,128,0.22)');
-		g.fillStyle = gr; deckBand(g, xe, 960, 3, 6); g.fill(); });
+	s1Shade.drawW(`${sh.toFixed(3)}`, (g) => { if (sh <= 0) return; const xe = lerp(960, 3400, easeInOut(sh));
+		const gr = g.createLinearGradient(960, 0, xe, 0), L = xe - 960, a0 = clamp01(260 / L), a1 = clamp01(1 - 140 / L); gr.addColorStop(0, 'rgba(12,9,7,0)'); if (a1 > a0) { gr.addColorStop(a0, 'rgba(12,9,7,0.4)'); gr.addColorStop(a1, 'rgba(12,9,7,0.4)'); } gr.addColorStop(1, 'rgba(12,9,7,0)');
+		g.fillStyle = gr; deckBand(g, 960, xe, 175, 320); g.fill(); });
+	s1Light.drawW(`${lt.toFixed(3)}`, (g) => { if (lt <= 0) return; const xe = lerp(960, -1500, easeInOut(lt));
+		const L = 960 - xe, gr = g.createLinearGradient(xe, 0, 960, 0); gr.addColorStop(0, 'rgba(255,200,130,0)'); gr.addColorStop(clamp01(50 / L), 'rgba(255,222,160,0.62)'); gr.addColorStop(clamp01(200 / L), 'rgba(255,196,128,0.26)'); gr.addColorStop(clamp01(1 - 260 / L), 'rgba(255,190,120,0.2)'); gr.addColorStop(1, 'rgba(255,190,120,0)');
+		g.fillStyle = gr; deckBand(g, xe, 960, 165, 24); g.fill(); });
 	st.setHero(-9999, 0, 1);
+	// dusk luma 75–100: dim the world layers (not the lanterns or the running light) with their tint, not the exposure
+	const keep = new Set([crestS1.lanternsLive.L.mat, crestS1.glowLive.L.mat, s1Light.L.mat]);
+	for (const m of st.mats) if (!keep.has(m)) m.uniforms.uTint.value.setRGB(0.86, 0.85, 0.83);
 	const tr = t < N.paneZ;
 	return {st, grade: {vig: 0.32, exposure: 1}, bloom: 1, hud: tr ? (hud) => glassLine(hud, t) : undefined};
 }});
@@ -524,5 +527,5 @@ const glassLine = (hud: HTMLElement, t: number) => {
 	const u = clamp01((t - N.pane) / (N.paneZ - N.pane)), [px, py] = IN08.pt!, [hx, hy] = IN08.dir!;
 	const x0 = (px - hx) * 1920, y0 = (1 - py - hy) * 1080, w = hx * 2 * 1920, h = hy * 2 * 1080, pos = lerp(18, 112, easeIn(u)), a = 0.55 * (1 - smooth((u - 0.8) / 0.2));
 	hud.insertAdjacentHTML('afterbegin', `<div style="position:absolute;left:${x0.toFixed(1)}px;top:${y0.toFixed(1)}px;width:${w.toFixed(1)}px;height:${h.toFixed(1)}px;overflow:hidden;pointer-events:none;` +
-		`background:linear-gradient(112deg, rgba(255,246,230,0) ${pos - 6}%, rgba(255,246,230,${(a * 0.18).toFixed(3)}) ${pos - 2}%, rgba(255,248,236,${a.toFixed(3)}) ${pos}%, rgba(255,246,230,${(a * 0.18).toFixed(3)}) ${pos + 0.8}%, rgba(255,246,230,0) ${pos + 5}%)"></div>`);
+		`background:radial-gradient(ellipse 18% 26% at ${(30 - 12 * u).toFixed(1)}% 34%, rgba(196,206,214,${(0.1 * (1 - u)).toFixed(3)}), rgba(196,206,214,0) 100%), radial-gradient(ellipse 14% 22% at ${(78 + 10 * u).toFixed(1)}% 30%, rgba(196,206,214,${(0.07 * (1 - u)).toFixed(3)}), rgba(196,206,214,0) 100%), linear-gradient(112deg, rgba(255,246,230,0) ${pos - 6}%, rgba(255,246,230,${(a * 0.18).toFixed(3)}) ${pos - 2}%, rgba(255,248,236,${a.toFixed(3)}) ${pos}%, rgba(255,246,230,${(a * 0.18).toFixed(3)}) ${pos + 0.8}%, rgba(255,246,230,0) ${pos + 5}%)"></div>`);
 };
