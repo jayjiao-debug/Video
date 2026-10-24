@@ -1,4 +1,4 @@
-# Storyboard: 同一天出生的两个人
+# Storyboard: 一张香烟纸
 
 ## Look
 Palette (hex) · type (fonts, weights) · texture/lighting · motifs · what it must NOT look like · references
