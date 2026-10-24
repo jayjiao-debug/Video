@@ -29950,6 +29950,16 @@ var robeSafe = (p, max = 54) => {
     o[`${s}Ank`] = r(A);
     o[`${s}Toe`] = r(T);
   }
+  for (const s of ["L", "R"]) {
+    const U = o[`${s}Up`], K = o[`${s}Knee`], v = [K[0] - U[0], K[1] - U[1]], ang = Math.atan2(Math.abs(v[0]), -v[1]) * 180 / Math.PI;
+    if (ang <= 40) continue;
+    const d = (ang - 40) * Math.PI / 180 * (v[0] < 0 ? -1 : 1), c = Math.cos(d), sn = Math.sin(d);
+    const r = (q) => {
+      const w = [q[0] - U[0], q[1] - U[1]];
+      return [U[0] + w[0] * c - w[1] * sn, U[1] + w[0] * sn + w[1] * c];
+    };
+    for (const j of ["Knee", "Ank", "Toe"]) o[`${s}${j}`] = r(o[`${s}${j}`]);
+  }
   return o;
 };
 var neck = (g, f3) => {
@@ -32534,7 +32544,7 @@ var bootYuan = async () => {
 			<rect x="${PX0 + PW - 160}" y="${DTB + 14}" width="70" height="18" rx="5" fill="#1b1612"/>`, W, 1200);
     st2.add("mydesk", canvasTex(await svgToCanvas(dk, W, 1200, 0.9)), 960, 600, W, 1200, -2, { rim: 0.9, rimPx: 5 });
     paper17 = st2.add("paper", canvasTex(paperCanvas()), PX0 + PW / 2, PYF + 350 - PHF / 2, PW, PHF, 0, { emissive: 0.03, tint: "#e2d5bd" }, 10);
-    rt17 = new WebGLRenderTarget(768, 432, { type: HalfFloatType, samples: 4 });
+    rt17 = new WebGLRenderTarget(640, 360, { type: HalfFloatType, samples: 0 });
     const sr = slotRect();
     slot17 = st2.add("slot", rt17.texture, sr.x + sr.w / 2, sr.y + sr.h / 2, sr.w, sr.h, 0, { emissive: 0.3, fog: ["#E8D6B0", 0] }, 11);
     ink17 = new Live(st2, "ink17", PX0 + NEWX * PK, PYF + 350 - PHF / 2, 180 * PK, PHF, 0, {}, 3, 12);
@@ -32565,9 +32575,8 @@ var bootYuan = async () => {
     BLEED_PT[0] = q.x / W;
     BLEED_PT[1] = 1 - q.y / H;
   }
-  window.YDBG = () => ({ CAM15_0, DAG_END, CAM17_0, BLEED_PT, room15: { n: room15.layers.length, cam: room15.cam.position.toArray(), layers: room15.layers.map((l) => [l.name, l.z, l.mesh.visible, l.mat.uniforms.uOpacity.value]) } });
 };
-addScene({ id: "14", a: b5(23), z: b5(25), in: { mode: 2, a: b5(23), z: b5(23.5), dir: [1, 0], soft: 0.03 }, draw: d14 });
+addScene({ id: "14", a: b5(23), z: b5(25), in: ROLLUP_IN, draw: d14 });
 addScene({ id: "15", a: b5(25), z: b5(26.5), draw: d15 });
 addScene({ id: "16", a: b5(26.5), z: b5(27.75), draw: d16 });
 var PIP_PT = [SLOT_SCREEN.cx / W, 1 - SLOT_SCREEN.cy / H];
@@ -32912,14 +32921,14 @@ var buildHall = async () => {
 		<ellipse cx="890" cy="560" rx="11" ry="16" fill="#1a1411"/><ellipse cx="1040" cy="556" rx="13" ry="18" fill="#1a1411"/><rect x="884" y="574" width="12" height="8" fill="#1a1411"/>
 		<path d="M940,566 L992,566 L986,586 L946,586 Z" fill="#1a1411"/><rect x="930" y="640" width="80" height="6" fill="#20170f"/><rect x="936" y="646" width="5" height="54" fill="#1a1411"/><rect x="999" y="646" width="5" height="54" fill="#1a1411"/>
 		<circle cx="905" cy="520" r="5" fill="#FFC98A"/><circle cx="1015" cy="520" r="5" fill="#FFC98A"/>`, 3100, 1400, `${wallG("hw", 960, 560)}`, -600, -200);
-  st2.add("hall", canvasTex(await svgToCanvas(hallSvg, 3100, 1400, 1.4)), 950, 500, 3100, 1400, ZHALL, { rim: 0.5, rimPx: 3 });
+  st2.add("hall", canvasTex(await svgToCanvas(hallSvg, 3100, 1400, 0.85)), 950, 500, 3100, 1400, ZHALL, { rim: 0.5, rimPx: 3 });
   c3 = new Cast(st2, "servant3", 960, 640, 600, 400, ZHALL + 4, {}, 3);
   box3 = new Live(st2, "box3", 960, 640, 600, 400, ZHALL + 5, { emissive: 0.5 }, 3);
   const w3 = svgDoc(`<path fill-rule="evenodd" fill="url(#w3)" d="M-700,-300 L2600,-300 L2600,1400 L-700,1400 Z M${HD.x0},${HD.y0} L${HD.x1},${HD.y0} L${HD.x1},${HD.y1} L${HD.x0},${HD.y1} Z"/>
 		<rect x="${HD.x0 - 10}" y="${HD.y0 - 12}" width="${HD.x1 - HD.x0 + 20}" height="12" fill="#1c1510"/>${roof(960, HD.y0 - 58, 230, 40, 0.4, "#1c1510")}
 		<rect x="-700" y="${HD.y1}" width="3300" height="700" fill="#2e2620"/><rect x="${HD.x0 - 16}" y="${HD.y1 - 4}" width="${HD.x1 - HD.x0 + 32}" height="8" fill="#1c1510"/>
-		<rect x="${HD.x0 - 8}" y="${HD.y0}" width="8" height="${HD.y1 - HD.y0}" fill="#1c1510"/><rect x="${HD.x1}" y="${HD.y0}" width="8" height="${HD.y1 - HD.y0}" fill="#1c1510"/>`, 3300, 1700, `${wallG("w3", 960, 640)}`, -700, -300);
-  st2.add("w3", canvasTex(await svgToCanvas(w3, 3300, 1700, 1.2)), 950, 550, 3300, 1700, ZW3, { rim: 0.4, rimPx: 3 });
+		<rect x="${HD.x0 - 8}" y="${HD.y0}" width="8" height="${HD.y1 - HD.y0}" fill="#1c1510"/><rect x="${HD.x1}" y="${HD.y0}" width="8" height="${HD.y1 - HD.y0}" fill="#1c1510"/>`, 2220, 1400, `${wallG("w3", 960, 640)}`, -150, -150);
+  st2.add("w3", canvasTex(await svgToCanvas(w3, 2220, 1400, 1.1)), 960, 550, 2220, 1400, ZW3, { rim: 0.4, rimPx: 3 });
   leaves19 = new Live(st2, "leaves", 960, 640, 300, 260, ZW3 + 1, { rim: 0.4 }, 4);
   strips19 = new Live(st2, "strips", 960, 640, 300, 260, ZW3 + 2, {}, 4);
   offs = new Cast(st2, "officials", 960, 640, 500, 300, ZW3 + 3, { rim: 0.55 }, 4);
@@ -32930,13 +32939,13 @@ var buildHall = async () => {
   };
   const w2 = svgDoc(`<path fill-rule="evenodd" fill="url(#w2)" d="M-800,-400 L2700,-400 L2700,1500 L-800,1500 Z ${vase(960)}"/><path d="${vase(960)}" fill="none" stroke="#1c1510" stroke-width="7"/>
 		<rect x="-800" y="${VASE_Y1}" width="3500" height="800" fill="#30271f"/><rect x="900" y="${VASE_Y1 - 3}" width="120" height="7" fill="#1c1510"/>`, 3500, 1900, `${wallG("w2", 960, 620)}`, -800, -400);
-  st2.add("w2", canvasTex(await svgToCanvas(w2, 3500, 1900, 0.9)), 950, 550, 3500, 1900, ZW2, { rim: 0.4, rimPx: 3 });
+  st2.add("w2", canvasTex(await svgToCanvas(w2, 3500, 1900, 0.6)), 950, 550, 3500, 1900, ZW2, { rim: 0.4, rimPx: 3 });
   c2 = new Cast(st2, "carrier2", 960, 640, 800, 500, ZW2 + 3, {}, 2);
   box2 = new Live(st2, "box2", 960, 640, 800, 500, ZW2 + 4, { emissive: 0.5 }, 2);
   const w1 = svgDoc(`<path fill-rule="evenodd" fill="url(#w1)" d="M-900,-500 L2800,-500 L2800,1600 L-900,1600 Z M${MOON.x},${MOON.y} m-${MOON.r},0 a${MOON.r},${MOON.r} 0 1,0 ${2 * MOON.r},0 a${MOON.r},${MOON.r} 0 1,0 -${2 * MOON.r},0 Z"/>
 		<circle cx="${MOON.x}" cy="${MOON.y}" r="${MOON.r + 6}" fill="none" stroke="#1c1510" stroke-width="16"/><rect x="${MOON.x - 150}" y="${MOON.y + MOON.r - 8}" width="300" height="14" fill="#1c1510"/>
 		<rect x="-900" y="${MOON.y + MOON.r + 4}" width="3700" height="800" fill="#2c241e"/>`, 3700, 2100, `${wallG("w1", 960, 560)}`, -900, -500);
-  st2.add("w1", canvasTex(await svgToCanvas(w1, 3700, 2100, 0.7)), 950, 550, 3700, 2100, ZW1, { rim: 0.4, rimPx: 3 });
+  st2.add("w1", canvasTex(await svgToCanvas(w1, 3700, 2100, 0.5)), 950, 550, 3700, 2100, ZW1, { rim: 0.4, rimPx: 3 });
   c1 = new Cast(st2, "carrier1", 960, 640, 1400, 900, ZW1 + 3, {}, 1);
   box1 = new Live(st2, "box1", 960, 640, 1400, 900, ZW1 + 4, { emissive: 0.5 }, 1);
 };
@@ -33781,16 +33790,16 @@ var YOUTH2 = LOOKS.youth1923;
 var YH2 = 470;
 var YZOOM2 = 0.94;
 var STRY = gaitStride("08_04", stepFor(YOUTH2)) * YH2;
-var x24 = (t) => 1150 - (b7(42.5) - t) / (2 * BEAT) * STRY;
+var x24 = (t) => 1e3 - (b7(42.5) - t) / (2 * BEAT) * STRY;
 var hugOff = [0.128, 0.715];
 var lock24 = (t) => {
   const x = x24(t);
-  return camLock(YZOOM2, x - hugOff[0] * YH2 * 1, deck(x) + 4 - hugOff[1] * YH2, 22, 960, 580);
+  return camLock(YZOOM2, x - hugOff[0] * YH2 * 1, deck(x) + 4 - hugOff[1] * YH2, 22, 960, 545);
 };
 var cam24 = (t) => {
-  const rest = [960, 540, lerp2(1, 1.012, clamp01((t - b7(41)) / 0.9))];
-  const k = smooth(clamp01((t - b7(41.45)) / (b7(42.05) - b7(41.45))));
-  return camMix(rest, lock24(t), k);
+  const rest = [960, 540, 1], low = [1e3, 720, 1];
+  const c12 = camMix(rest, low, smooth(clamp01((t - b7(41)) / 0.55)));
+  return camMix(c12, lock24(t), smooth(clamp01((t - b7(41.3)) / (b7(41.85) - b7(41.3)))));
 };
 var snowDeck = async (st2, z, back = 6) => {
   const dk = new Live(st2, `deckSnow${z}`, 960, 1100, 4800, 1600, z, {}, 0.5);
