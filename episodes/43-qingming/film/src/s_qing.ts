@@ -478,13 +478,13 @@ const ledgerArt = (g: CanvasRenderingContext2D, t: number) => {
 	scribble(g, colX(0, 1), y0 + 30, gs * 0.9, 900, 'rgba(70,58,44,0.3)'); scribble(g, colX(0, 1), y0 + 30 + pitch, gs * 0.9, 901, 'rgba(70,58,44,0.3)');
 };
 /** the young man behind the desk holding the lid: lid y (world) as it comes down */
-const LIDY = (t: number) => lerp(BX.y0 - 96, BX.y0 - 6, easeInOut(clamp01((t - b(45.5)) / (b(45.75) - b(45.5)))));
+const LIDY = (t: number) => lerp(BX.y0 - 84, BX.y0 - 6, easeInOut(clamp01((t - b(45.5)) / (b(45.75) - b(45.5)))));
 const packer = (t: number) => {
-	const ly = LIDY(t), down = clamp01((ly - (BX.y0 - 96)) / 90), o: FigOpts = {x: 1545, ground: 1086, h: 660, pose: bowUpper(POSES.stand, 8 + 24 * down), look: YOUTH, flip: true};
+	const ly = LIDY(t), down = clamp01((ly - (BX.y0 - 84)) / 78), o: FigOpts = {x: 1526, ground: 1086, h: 660, pose: bowUpper(POSES.stand, 14 + 20 * down), look: YOUTH, flip: true};
 	return rig(o, [{side: 'L', target: [BX.x0 + 34, ly + 4], name: 'L on lid'}, {side: 'R', target: [BX.x0 + BX.w - 22, ly + 4], name: 'R on lid'}], () => 1086, 'P3 packer');
 };
 const cam25b = (t: number): Cam => {
-	const close = camLock(4.15, (PG.x0 + PG.x1) / 2 + 60, (PG.y0 + PG.y1) / 2 + 4, PG.z, 960, 560);
+	const close = camLock(3.0, (PG.x0 + PG.x1) / 2 + 40, (PG.y0 + PG.y1) / 2, PG.z, 960, 650);
 	const wide: Cam = [1040, 640, 0.98];
 	const fc = (BX.x0 + BX.w / 2), slats = camLock(12.5, fc, BX.y0 + BX.h / 2, BX.z, 960, 560);
 	if (t < b(45.25)) return camMix(close, [close[0] - 10, close[1] + 4, close[2] * 1.03], clamp01((t - b(44.66)) / (b(45.25) - b(44.66))));
@@ -509,7 +509,7 @@ const boot25b = async () => {
 };
 /** the open box (seen side-on, a little from above): your glow inside; then the lid closes */
 const drawBox25 = (g: CanvasRenderingContext2D, t: number, leak: number) => {
-	const {x0, y0, w, h} = BX, ly = LIDY(t), open = clamp01((y0 - 6 - ly) / 90);
+	const {x0, y0, w, h} = BX, ly = LIDY(t), open = clamp01((y0 - 6 - ly) / 78);
 	g.fillStyle = '#241b13'; g.fillRect(x0 - 2, y0 - 10, w + 4, 12);                                                     // the open top edge (inside)
 	if (open > 0) { const gr = g.createLinearGradient(0, y0 - 10, 0, y0 + 2); gr.addColorStop(0, `rgba(255,226,170,${0.95 * open})`); gr.addColorStop(1, `rgba(255,190,110,${0.4 * open})`); g.fillStyle = gr; g.fillRect(x0 + 6, y0 - 9, w - 12, 9); }
 	slatFace(g, x0, y0, w, h, leak);
@@ -517,7 +517,7 @@ const drawBox25 = (g: CanvasRenderingContext2D, t: number, leak: number) => {
 const draw25b = (t: number): Frame => {
 	const st = desk25.st, cam = cam25b(t); setCam(st, cam);
 	page25.drawW(`${clamp01((t - b(45)) / 0.24).toFixed(2)}:${clamp01((t - b(45.25)) / 0.24).toFixed(2)}`, (g) => ledgerArt(g, t));
-	const lidOpen = clamp01((BX.y0 - 6 - LIDY(t)) / 90), into = clamp01((t - b(45.75)) / (b(46) - b(45.75)));
+	const lidOpen = clamp01((BX.y0 - 6 - LIDY(t)) / 78), into = clamp01((t - b(45.75)) / (b(46) - b(45.75)));
 	const leak = (0.35 + 0.65 * (1 - lidOpen)) * (1 - smooth(clamp01((t - (b(46) - 0.1)) / 0.1)));         // the light dims as the lid shuts it in (scene 26 has none)
 	box25.drawW(`${LIDY(t).toFixed(1)}:${leak.toFixed(2)}`, (g) => drawBox25(g, t, leak));
 	box25.L.mat.uniforms.uEmissive.value = 0.25 * leak;
@@ -530,7 +530,7 @@ const draw25b = (t: number): Frame => {
 	glow25b.drawW(`${lidOpen.toFixed(2)}:${leak.toFixed(2)}`, (g) => { glowBlob(g, gc, 150, 70 + 50 * lidOpen, 0.3 * (0.4 + 0.6 * lidOpen) * leak); glowBlob(g, [(PG.x0 + PG.x1) / 2, (PG.y0 + PG.y1) / 2], 300, 200, 0.06 * (1 - into)); });
 	st.heroAt(gc[0], gc[1] - 10, BX.z, 520 + 300 * lidOpen);
 	const cl = clamp01((t - b(44.66)) / 0.01) * (1 - easeInOut(clamp01((t - b(45.25)) / (b(45.5) - b(45.25)))));
-	return {st, grade: {vig: 0.42, vigCol: '#140e0a', exposure: 1, corners: 0.85 * cl}, bloom: 1};
+	return {st, grade: {vig: 0.42, vigCol: '#140e0a', exposure: 1, corners: 0.35 + 0.65 * cl}, bloom: 1};
 };
 addScene({id: '25b', a: b(44.66), z: b(46), in: {mode: 7, a: b(44.66), z: b(44.66) + 0.13, ease: smooth}, draw: draw25b});
 

@@ -39,9 +39,11 @@ let riverMono: HTMLCanvasElement & {silk: any}, riverGrey: HTMLCanvasElement & {
 
 // ================================================================================================ boot
 export const bootEnd = async () => {
-	riverMono = paintSection('river', {width: 2048, height: 768, mode: 'mono', seed: 43});
-	riverGrey = paintSection('river', {width: 2048, height: 768, mode: 'grey', seed: 43});
-	await Promise.all([bootWall(), bootFlip(), bootToday(), bootHall(), bootLid(), bootAisle(), bootExt()]);
+	try {      // a failure here must not stop the rest of the film from booting
+		riverMono = paintSection('river', {width: 2048, height: 768, mode: 'mono', seed: 43});
+		riverGrey = paintSection('river', {width: 2048, height: 768, mode: 'grey', seed: 43});
+		await Promise.all([bootWall(), bootFlip(), bootToday(), bootHall(), bootAisle(), bootExt()]);
+	} catch (e: any) { console.error('BOOT end', e?.message || e, e?.stack); }
 };
 
 // ================================================================================================ 32 · E3 beat cuts
@@ -139,7 +141,7 @@ type EraSet = {crest: Crest; cast: Cast; prop: Live; glow: Live; arms?: Live; cr
 const ERAS: EraSet[] = [];
 let OFF_UA: Record<string, P> = {}, OFF_BUNDLE: P = [0, 0];
 /** today's light, the daybreak camera both matched stages share (b67.5 → b68.5) */
-const CAM_DB: [number, number, number] = [640, 650, 1.0];
+const CAM_DB: [number, number, number] = [280, 660, 1.0];
 // the standing crowd on the bridge (1923: gowns, Qing caps; after the daybreak: today's visitors) — same places, same sizes
 const CROWD = [{x: -170, h: 410}, {x: 70, h: 398}, {x: 300, h: 425}, {x: 342, h: 262, child: true}, {x: 560, h: 404}, {x: 790, h: 412}, {x: 1030, h: 420}];
 const L1923: LookQ[] = [{head: 'qingcap', dress: 'robe', sleeves: 'narrow', surcoat: true}, {head: 'guapi', dress: 'gown', sleeves: 'narrow'}, {head: 'qingcap', dress: 'robe', sleeves: 'narrow', beard: 'moustache'},
@@ -201,7 +203,7 @@ const clothBundle = (g: CanvasRenderingContext2D, c: P, r: number) => {
 };
 /** walk parameter and x of the carrier in era e at t (1923 quickens his step after b67) */
 const eraWalk = (e: number, t: number, lk: LookQ) => {
-	const extra = e === 3 ? quicken(t, b(67), 0.5, 0.35) : 0, u = (t - eraT0(e) + 0.25 + extra) / (2 * BEAT);
+	const extra = e === 3 ? quicken(t, b(67), 0.6, 0.3) : 0, u = (t - eraT0(e) + 0.25 + extra) / (2 * BEAT);
 	const x0 = e === 0 ? 1150 : e === 3 ? 760 : 700;
 	return {u, x: x0 + u * gaitStride('08_04', stepFor(lk)) * FH};
 };
@@ -232,7 +234,7 @@ const flipCam = (e: number, t: number, ep: EraPose): [number, number, number] =>
 	const [cx, cy] = lockAt(FZOOM, ep.target[0], ep.target[1], 22);
 	if (e < 3 || t < b(67)) return [cx, cy, FZOOM];
 	// b67: the camera stops following you and eases back toward the bank-side framing the daybreak needs
-	const ep0 = eraPose(3, b(67)), [x0, y0] = lockAt(FZOOM, ep0.target[0], ep0.target[1], 22), k = easeInOut(clamp01((t - b(67)) / (b(67.5) - b(67))));
+	const ep0 = eraPose(3, b(67)), [x0, y0] = lockAt(FZOOM, ep0.target[0], ep0.target[1], 22), k = smooth(clamp01((t - b(67)) / (b(67.5) - b(67))));
 	return [lerp(x0, CAM_DB[0], k), lerp(y0, CAM_DB[1], k), Math.exp(lerp(Math.log(FZOOM), Math.log(CAM_DB[2]), k))];
 };
 function flipDraw(t: number, eForce?: number): Frame {
@@ -308,7 +310,7 @@ addScene({id: '34', a: b(67.5), z: b(69), in: {mode: 12, a: b(67.5), z: b(68), d
 // walking left BEHIND the case (their lower bodies hidden by it), leaning to look in; ceiling spots in a soffit at the very
 // top, their pools on the wall above the case. The case's central pane (x 760–1160, y 512–690) is the rectangle the storage
 // box's face matches at b74.
-const HZ = {wall: -800, pools: -790, ceil: -700, floor: -420, crowd: -216, inner: -215, silk: -210, card: -209, rollers: -208, glass: -200, frame: -195, box: -194.5, staff: -194, halo: -193};
+const HZ = {wall: -800, pools: -790, ceil: -700, floor: -420, crowd: -216, inner: -215, silk: -210, card: -209, rollers: -208, glass: -200, frame: -195, box: -197, staff: -194, halo: -193};
 const CASE = {x0: 240, x1: 1680, top: 494, rail: 512, pane1: 690, base: 900, mull: [600, 760, 1160, 1320], band0: 548, band1: 612, sx0: 300, sx1: 1620};
 const PANE_C: P = [960, 601], PANE_W = 400;
 const HG = 800;                                   // the floor line behind the case (rest px at the crowd's depth)
@@ -330,11 +332,11 @@ const bootHall = async () => {
 		g.fillStyle = '#353c42'; g.beginPath(); g.moveTo(CASE.x0 + 30, 640); g.lineTo(CASE.x1 - 30, 640); g.lineTo(CASE.x1 - 46, 532); g.lineTo(CASE.x0 + 46, 532); g.closePath(); g.fill();
 		g.fillStyle = '#2b3136'; g.fillRect(CASE.x0 + 30, 640, CASE.x1 - CASE.x0 - 60, 18);
 		st.add('inner', canvasTex(c), 960, 540, 1920, 1080, HZ.inner, {rim: 0.2}); }
-	hallSilk = new Live(st, 'silk', 960, 580, 1400, 120, HZ.silk, {emissive: 0.32}, 1.4);
+	hallSilk = new Live(st, 'silk', 960, 570, 1400, 220, HZ.silk, {emissive: 0.32}, 1.4);
 	hallCard = new Live(st, 'card', 960, 582, 260, 110, HZ.card, {}, 2);
 	hallCard.drawW('c', (g) => { g.fillStyle = '#20252a'; g.fillRect(944, 612, 32, 8); g.fillStyle = '#cfc8b8'; g.fillRect(862, 548, 196, 66); g.strokeStyle = '#8a8478'; g.lineWidth = 1.5; g.strokeRect(867, 553, 186, 56);
 		g.fillStyle = '#2b2a28'; g.textAlign = 'center'; g.font = '900 28px "Noto Serif CJK SC"'; g.fillText('撤展回库', 960, 582); g.font = '700 16px "Noto Serif CJK SC"'; g.fillText('下次展出：未公布', 960, 603); });
-	hallRollers = new Live(st, 'rollers', 960, 580, 1400, 160, HZ.rollers, {emissive: 0.2}, 1.4);
+	hallRollers = new Live(st, 'rollers', 960, 570, 1400, 260, HZ.rollers, {emissive: 0.2}, 1.4);
 	// the front: glass sheen, top rail, mullions, plinth
 	{ const c = mkCanvas(960, 540), g = c.getContext('2d')!; g.scale(0.5, 0.5);
 		for (let i = 0; i < 5; i++) { const x0 = [CASE.x0, ...CASE.mull][i], x1 = [...CASE.mull, CASE.x1][i]; g.strokeStyle = 'rgba(220,230,236,0.07)'; g.lineWidth = 14; g.beginPath(); g.moveTo(x0 + 40, CASE.pane1); g.lineTo(x0 + 120, CASE.rail); g.stroke(); g.lineWidth = 4; g.beginPath(); g.moveTo(x0 + 78, CASE.pane1); g.lineTo(x0 + 158, CASE.rail); g.stroke(); void x1; }
@@ -493,7 +495,7 @@ const bootAisle = async () => {
 	for (const yb of boards) { g.fillStyle = '#23272b'; g.fillRect(OX, yb, 2440, 16); g.fillStyle = '#50565b'; g.fillRect(OX, yb, 2440, 2); }
 	for (let x = -980; x <= 1440; x += 610) { g.fillStyle = '#1e2225'; g.fillRect(x - 10, OY, 20, 1300); }
 	for (let r = 0; r < boards.length; r++) { const yb = boards[r]; let x = -960 + hash(r * 3.1) * 40;
-		while (x < 1400) { const w = 200 + hash(x * 0.13 + r) * 60, h = 86 + hash(x * 0.7 + r) * 28; const mine = r === 2 && x < 960 && x + w + 24 > 960;
+		while (x < 1400) { const w = 200 + hash(x * 0.13 + r) * 60, h = 86 + hash(x * 0.7 + r) * 28; const mine = r === 2 && x < ABOX.cx + ABOX.w / 2 + 14 && x + w > ABOX.cx - ABOX.w / 2 - 14;
 			if (!mine && x + w < 1420) { const bg = g.createLinearGradient(0, yb - h, 0, yb); bg.addColorStop(0, '#4a3a2c'); bg.addColorStop(1, '#33281f'); g.fillStyle = bg; g.fillRect(x, yb - h, w, h);
 				g.fillStyle = '#5c4834'; g.fillRect(x, yb - h, w, 3); g.fillStyle = 'rgba(20,14,10,0.6)'; g.fillRect(x, yb - h + 14, w, 1.5);
 				g.fillStyle = '#a89a80'; g.fillRect(x + w / 2 - 20, yb - h * 0.55, 40, 16); g.fillStyle = '#5a5248'; g.fillRect(x + w / 2 - 14, yb - h * 0.55 + 6, 28, 2); }

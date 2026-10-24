@@ -246,7 +246,7 @@ const refugees = (t: number, st: Stage): Grp => {
 		const s = onScreen(st, o, ZC);
 		if (kind === 'walk') { out.figs.push(rig(s, [], gS, who)); return; }
 		// the puller: hands on the shaft ends at his hips, the cart behind him
-		const sh = toScreen(s, s.pose.RSh as any), hand: P2 = [sh[0] - 0.04 * s.h, sh[1] + 0.31 * s.h]; const axw = x - 0.92 * o.h; const axS = proj(st, axw, deck(axw) + 4, ZC);   // hands at the hips, well inside arm reach const axS = proj(st, axw, deck(axw) + 4, ZC);
+		const sh = toScreen(s, s.pose.RSh as any), hand: P2 = [sh[0] - 0.04 * s.h, sh[1] + 0.31 * s.h]; const axw = x - 0.92 * o.h; const axS = proj(st, axw, deck(axw) + 4, ZC);   // hands at the hips, well inside arm reach
 		const cg = cartGeo(axS[0], axS[1], [hand[0] - 2, hand[1] + 2], s.h);
 		const f = rig(s, [{side: 'R', target: [hand[0] - 2, hand[1] + 2], name: 'shaft'}, {side: 'L', target: [hand[0] - 6, hand[1] + 3], name: 'shaft'}], gS, who);
 		out.figs.push(f); out.carts.push({c: cg, load: kind === 'pullYou' ? 'you' : 'bundles'});
