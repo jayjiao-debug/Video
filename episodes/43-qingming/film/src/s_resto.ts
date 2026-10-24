@@ -15,16 +15,16 @@ const b = bar;
 const SC = 82 / 1536;                                   // section px (4096-wide sections) → world px: the scroll is 82 px deep (25 cm)
 const S = {x0: -131, edge: 760, py0: 14, depth: 300};    // strip origin (front-left of the table top)
 const TB = {x0: -500, x1: 2400, floor: 1010};
-const ZR = -110, TH_R = 1.36;                           // restorers' depth; table tilt in the room view
+const ZR = -110, ZS = 70, TH_R = 1.36;                   // ZS: the seated restorer, in front of the table                           // restorers' depth; table tilt in the room view
 // the strip: tail sheets (two other colophon stand-ins, cropped), 张著's colophon section, the painting's end, gate, river, shed
 const PARTS = {colB: 0, colA: 2600 * SC, col: 5200 * SC, end: 5200 * SC + 4096 * SC, gate: 5200 * SC + 2 * 4096 * SC, river: 5200 * SC + 3 * 4096 * SC, shed: 5200 * SC + 4 * 4096 * SC};
 const PATCH4 = {x: 1853, y: 1308};                      // the patch centre in the shed section (4096 px)
 const lxPatch = PARTS.shed + PATCH4.x * SC, lyPatch = S.py0 + (1536 - PATCH4.y) * SC;
 // the lens: a disc at depth 0; its content is a window (collage px) into the hi-res collage (gate + shed at 8192 px)
-const LENS = {r: 60, x: 1120, y: 618};
-const POST: P2 = [1262, 556];                           // the lamp's post top (screen px in the room view; world px at depth 0)
+const LENS = {r: 34, x: 1112, y: 712, asp: 0.6};          // a hand-sized magnifier just above the patch, tilted (an ellipse)
+const POST: P2 = [1236, 612];                           // the lamp's post top (screen px in the room view; world px at depth 0)
 let st: Stage, strip: Strip, shedMesh: THREE.Mesh, shedDonkey: Mat, shedPeeled: Mat, lens: THREE.Mesh, lensMat: THREE.ShaderMaterial, ring: THREE.Mesh;
-let body: ScreenLayer, lampL: ScreenLayer, arms: ScreenLayer, sheetMat: Mat, glowR = new GlowData();
+let body: ScreenLayer, lampL: ScreenLayer, arms: ScreenLayer, front: ScreenLayer, sheetMat: Mat, glowR = new GlowData();
 let collage: HTMLCanvasElement, CW = 0, CH = 0, patchCv: HTMLCanvasElement, patchTex: THREE.CanvasTexture, patchKey = '';
 let P_BARE: HTMLCanvasElement, P_NOPOST: HTMLCanvasElement, P_DONKEY: HTMLCanvasElement, P_DLINES: HTMLCanvasElement, P_PEELED: HTMLCanvasElement, P_PIECE: HTMLCanvasElement;
 let GL31: {i: number; x: number; y: number; size: number}[] = [];
@@ -105,16 +105,18 @@ export const bootResto = async () => {
 	P_NOPOST = inpaintPosts(P_BARE); P_DLINES = inkOnly(P_DONKEY); P_PIECE = pieceOf(P_DONKEY, P_PEELED);
 	patchCv = mkCanvas(PATCH_CROP.w, PATCH_CROP.h); patchTex = canvasTex(patchCv); patchTex.generateMipmaps = false; patchTex.minFilter = THREE.LinearFilter;
 	lensMat = lensMaterial(bigTex(collage), patchTex);
-	lens = new THREE.Mesh(new THREE.PlaneGeometry(2 * LENS.r, 2 * LENS.r), lensMat); lens.renderOrder = -15; st.scene.add(lens); st.mats.push(lensMat);
-	ring = new THREE.Mesh(new THREE.PlaneGeometry(2 * LENS.r * 1.3, 2 * LENS.r * 1.3), texMat(canvasTex(ringCanvas()), 0)); ring.renderOrder = -14; st.scene.add(ring); st.mats.push(ring.material as Mat);
+	lens = new THREE.Mesh(new THREE.PlaneGeometry(2 * LENS.r, 2 * LENS.r), lensMat); lens.scale.y = LENS.asp; lens.renderOrder = -15; st.scene.add(lens); st.mats.push(lensMat);
+	ring = new THREE.Mesh(new THREE.PlaneGeometry(2 * LENS.r * 1.3, 2 * LENS.r * 1.3), texMat(canvasTex(ringCanvas()), 0)); ring.scale.y = LENS.asp; ring.renderOrder = -14; st.scene.add(ring); st.mats.push(ring.material as Mat);
 	body = new ScreenLayer(st, 'rbody', ZR, {rim: 0.9, rimPx: 6}, -20);
 	lampL = new ScreenLayer(st, 'rlamp', -60, {rim: 0.5, rimPx: 4}, -19);
 	arms = new ScreenLayer(st, 'rarms', 0, {rim: 0.6, rimPx: 4}, -18);
+	front = new ScreenLayer(st, 'rfront', ZS, {rim: 0.9, rimPx: 6}, -9);
 };
 const frontCanvas = () => {
 	const c = mkCanvas(W, H), g = c.getContext('2d')!, top = S.edge;
 	g.fillStyle = '#4a2c20'; g.fillRect(0, top - 2, W, 8); g.fillStyle = '#2e1c14'; g.fillRect(0, top + 5, W, 24);
-	for (const x of [150, 1700]) g.fillRect(x, top + 26, 30, TB.floor - top - 26);
+	g.fillStyle = '#21140e'; for (const x of [230, 1620]) g.fillRect(x, top + 26, 20, TB.floor - 75 - top - 26);   // back legs
+	g.fillStyle = '#2e1c14'; for (const x of [150, 1700]) g.fillRect(x, top + 26, 30, TB.floor - top - 26);
 	g.fillRect(180, TB.floor - 90, 1520, 12); g.fillStyle = 'rgba(255,230,190,0.12)'; g.fillRect(0, top - 2, W, 2);
 	return c;
 };
@@ -132,7 +134,7 @@ const lensMaterial = (map: THREE.Texture, patch: THREE.Texture) => new THREE.Sha
 	vertexShader: `varying vec2 vUv; void main(){ vUv = uv; gl_Position = projectionMatrix * modelViewMatrix * vec4(position,1.0); }`,
 	fragmentShader: `uniform sampler2D map, patchT; uniform vec4 uWin, uPatch; uniform float uOpacity, uGlowPass, uEmissive, uHeroR, uDefocus; uniform vec2 uHero; varying vec2 vUv;
 	void main(){ vec2 d = vUv - 0.5; float r = length(d); if (r > 0.5) discard;
-		vec2 c = uWin.xy + d * 2.0 * uWin.zw; vec3 col = texture2D(map, c).rgb;
+		vec2 c = uWin.xy + vec2(d.x, d.y * 0.6) * 2.0 * uWin.zw; vec3 col = texture2D(map, c).rgb;
 		vec2 pu = (c - uPatch.xy) / (uPatch.zw - uPatch.xy);
 		if (pu.x >= 0.0 && pu.x <= 1.0 && pu.y >= 0.0 && pu.y <= 1.0) { vec4 p = texture2D(patchT, pu); col = mix(col, p.rgb, p.a); }
 		col = mix(col, vec3(0.80, 0.71, 0.52), uDefocus * 0.85); col *= 1.0 - 0.22 * smoothstep(0.40, 0.5, r); float a = uOpacity;
@@ -161,7 +163,8 @@ const pieceOf = (dk: HTMLCanvasElement, pe: HTMLCanvasElement) => {
 	for (let i = 0; i < a.data.length; i += 4) { const df = Math.abs(a.data[i] - p.data[i]) + Math.abs(a.data[i + 1] - p.data[i + 1]) + Math.abs(a.data[i + 2] - p.data[i + 2]); mi.data[i + 3] = df > 6 ? 255 : 0; }
 	mg.putImageData(mi, 0, 0);
 	const m2 = mkCanvas(c.width, c.height), m2g = m2.getContext('2d')!; m2g.filter = 'blur(5px)'; m2g.drawImage(m, 0, 0); m2g.filter = 'none'; m2g.drawImage(m2, 0, 0); m2g.drawImage(m, 0, 0);
-	g.drawImage(dk, 0, 0); g.globalCompositeOperation = 'destination-in'; g.drawImage(m2, 0, 0); return c;
+	g.drawImage(dk, 0, 0); g.globalCompositeOperation = 'destination-in'; g.drawImage(m2, 0, 0);
+	g.beginPath(); g.rect(0, 0, c.width, c.height); g.roundRect(80, 168, 452, 400, 40); g.fillStyle = '#000'; g.globalCompositeOperation = 'destination-out'; g.fill('evenodd'); return c;
 };
 
 // ------------------------------------------------------------------------------------------------ the patch, beat by beat
@@ -183,9 +186,9 @@ const drawPatch = (t: number) => {
 	if (kPeel > 0) {
 		g.drawImage(P_PEELED, 0, 0);
 		// the old patch lifts at its right edge (the tweezers), rises toward the lens and slides off
-		const lift = smooth(kPeel), ang = -0.5 * lift, dx = 520 * easeIn(kPeel) + 30 * lift, dy = -470 * easeIn(kPeel) - 20 * lift, sc = 1 + 0.12 * lift;
+		const lift = smooth(kPeel), ang = -0.5 * lift, dx = 150 * easeIn(kPeel) + 30 * lift, dy = -130 * easeIn(kPeel) - 20 * lift, sc = 1 + 0.12 * lift;
 		g.save(); g.globalAlpha = 0.35 * lift * (1 - easeIn(kPeel)); g.filter = 'blur(10px)'; g.translate(TW_TIP[0] - 20 * lift, TW_TIP[1] + 26 * lift); g.rotate(ang * 0.6); g.translate(-TW_TIP[0], -TW_TIP[1]); g.drawImage(pieceShadow(), 0, 0); g.restore(); g.filter = 'none';
-		g.save(); g.globalAlpha = 1 - clamp01((kPeel - 0.82) / 0.18); g.translate(TW_TIP[0] + dx, TW_TIP[1] + dy); g.rotate(ang); g.scale(sc, sc); g.translate(-TW_TIP[0], -TW_TIP[1]); g.drawImage(P_PIECE, 0, 0); g.restore();
+		g.save(); g.globalAlpha = 1 - 0.55 * clamp01((kPeel - 0.7) / 0.3); g.translate(TW_TIP[0] + dx, TW_TIP[1] + dy); g.rotate(ang); g.scale(sc, sc); g.translate(-TW_TIP[0], -TW_TIP[1]); g.drawImage(P_PIECE, 0, 0); g.restore();
 		tweezers(g, [TW_TIP[0] + dx, TW_TIP[1] + dy], 1);
 	} else if (kDonk > 0) {
 		g.drawImage(P_BARE, 0, 0); dashes(g, 1, 1 - kDonk);
@@ -214,15 +217,15 @@ const dashes = (g: CanvasRenderingContext2D, k: number, alpha: number) => {
 /** the tweezers' magnified tips at the patch's right edge, the shank running off toward the restorer (upper right) */
 const tweezers = (g: CanvasRenderingContext2D, tip: P2, a: number) => {
 	if (a <= 0) return; g.save(); g.globalAlpha = a; g.fillStyle = '#1d211f';
-	g.beginPath(); g.moveTo(tip[0], tip[1]); g.lineTo(tip[0] + 6, tip[1] - 4); g.lineTo(tip[0] + 260, tip[1] - 300); g.lineTo(tip[0] + 236, tip[1] - 318); g.closePath(); g.fill();
-	g.beginPath(); g.moveTo(tip[0] - 2, tip[1] + 6); g.lineTo(tip[0] + 6, tip[1] + 6); g.lineTo(tip[0] + 290, tip[1] - 270); g.lineTo(tip[0] + 270, tip[1] - 292); g.closePath(); g.fill();
+	g.beginPath(); g.moveTo(tip[0], tip[1]); g.lineTo(tip[0] + 6, tip[1] - 4); g.lineTo(tip[0] + 300, tip[1] - 190); g.lineTo(tip[0] + 284, tip[1] - 210); g.closePath(); g.fill();
+	g.beginPath(); g.moveTo(tip[0] - 2, tip[1] + 6); g.lineTo(tip[0] + 6, tip[1] + 6); g.lineTo(tip[0] + 316, tip[1] - 168); g.lineTo(tip[0] + 304, tip[1] - 186); g.closePath(); g.fill();
 	g.restore();
 };
 
 // ------------------------------------------------------------------------------------------------ camera, lens, figures
 type Cam = {x: number; y: number; z: number; th: number};
 /** inside the lens: camera on the lens centre, zoom so the disc covers the frame */
-const LENS_IN = 19.5;
+const LENS_IN = 42;
 const lensCam = (lc: P2, z = LENS_IN): Cam => ({x: lc[0], y: lc[1], z, th: TH_R});
 const ROOM: Cam = {x: 960, y: 590, z: 1.0, th: TH_R};
 const blend = (a: Cam, c: Cam, u: number, ut = u): Cam => ({x: lerp(a.x, c.x, u), y: lerp(a.y, c.y, u), z: Math.exp(lerp(Math.log(a.z), Math.log(c.z), u)), th: lerp(a.th, c.th, ut)});
@@ -234,11 +237,11 @@ const lensWin = (t: number): {c: P2; span: number} => {
 	const room = {c: PATCH_C, span: ROOM_SPAN};
 	const ROOMW = {c: [PATCH_C[0], PATCH_C[1] - 110] as P2, span: ROOM_SPAN};
 	if (t >= b(60.25)) return ROOMW;
-	if (t >= b(58.75)) { const d = clamp01((t - b(58.75)) / (b(60.25) - b(58.75))), z = smooth(clamp01((t - b(60)) / (b(60.25) - b(60)))); return {c: lerpP([PATCH_C[0] + 40 - 30 * d, PATCH_C[1] - 30], ROOMW.c, z), span: lerp(1500, ROOM_SPAN, z)}; }
+	if (t >= b(58.75)) { const d = clamp01((t - b(58.75)) / (b(60.25) - b(58.75))), z = smooth(clamp01((t - b(60)) / (b(60.25) - b(60)))); return {c: lerpP([PATCH_C[0] - 90 - 30 * d, PATCH_C[1] - 30], ROOMW.c, z), span: lerp(1500, ROOM_SPAN, z)}; }
 	// b58.5: out through the painted gate (the arch, tight → wider), then a fast eased slide left to the shed
 	const u0 = clamp01((t - b(58.5) + 0.25) / 0.45), u1 = easeInOut(clamp01((t - b(58.5) - 0.1) / (b(58.75) - b(58.5) - 0.1)));
 	const span = lerp(lerp(900, 1400, easeOut(u0)), 1500, u1);
-	return {c: lerpP([ARCH_C[0] + 40, ARCH_C[1] - 40 + 30 * u0], [PATCH_C[0] + 40, PATCH_C[1] - 30], u1), span};
+	return {c: lerpP([ARCH_C[0] + 40, ARCH_C[1] - 40 + 30 * u0], [PATCH_C[0] - 90, PATCH_C[1] - 30], u1), span};
 	void room;
 };
 const camR = (t: number): Cam => {
@@ -265,8 +268,8 @@ const restorers = (t: number, on: boolean) => {
 	const out: {figs: FigOpts[]; tw: [P2, P2] | null} = {figs: [], tw: null};
 	const pe = (lx: number, ly: number, lz = 0.5): P2 => strip.screen(lx, ly, lz);
 	// seated, facing left
-	const seat: FigOpts = {x: 1300, ground: TB.floor, h: 560, pose: fkPose({hip: 0.37, lean: 34, neck: 12, lt: 86, lk: 92, rt: 82, rk: 86, la: 30, le: 40, ra: 26, re: 44}), look: lk73, flip: true};
-	const s1 = onScreen(st, seat, ZR), c1: Contact[] = [];
+	const seat: FigOpts = {x: 1262, ground: TB.floor, h: 560, pose: fkPose({hip: 0.3, lean: 30, neck: 18, lt: 84, lk: 80, rt: 78, rk: 74, la: 30, le: 40, ra: 26, re: 44}), look: lk73, flip: true};
+	const s1 = onScreen(st, seat, ZS), c1: Contact[] = [];
 	const tip = pe(lxPatch + 5.5, lyPatch + 1.5, 0.6), grip = pe(lxPatch + 5.5 + 9, lyPatch + 1.5, 26);
 	out.tw = [grip, tip];
 	c1.push({side: 'R', target: grip, name: 'tweezers'});
@@ -276,18 +279,21 @@ const restorers = (t: number, on: boolean) => {
 	else if (t >= b(61.65) && t < b(62)) c1.push({side: 'L', target: arm, name: 'lamp arm'});
 	else if (t >= b(62)) s1.pose = reach(s1.pose, 'L', toBody(s1, arm));            // the crane leaves him; the hand stays on the arm
 	else { const k = smooth((t - b(61.55)) / (b(61.65) - b(61.55))); s1.pose = reach(s1.pose, 'L', toBody(s1, lerpP(silkPt, arm, k))); }
-	out.figs.push(on ? rig(s1, c1, () => s1.ground, 'restorer-seated') : s1); void sw;
+	out.figs.push(on ? rig(s1, c1, () => s1.ground, 'restorer-seated') : unlogged(s1, c1)); void sw;
 	// standing, facing right, holding the scroll flat by its near margin
-	const stand: FigOpts = {x: 905, ground: TB.floor, h: 575, pose: fkPose({hip: 0.64, hipX: -0.07, lean: 46, neck: -6, lt: 10, lk: 8, rt: 5, rk: 6, la: 34, le: 30, ra: 28, re: 25}), look: lk73};
+	const stand: FigOpts = {x: 905, ground: TB.floor - 75, h: 575, pose: fkPose({hip: 0.62, hipX: -0.12, lean: 62, neck: -6, lt: 10, lk: 8, rt: 5, rk: 6, la: 34, le: 30, ra: 28, re: 25}), look: lk73};
 	const s2 = onScreen(st, stand, ZR);
 	// his hands go to the near margin where it lies within reach: the margin point about a third of his height in front of the shoulder
 	const shS = proj(st, 0, 0, 0) && [s2.x + (s2.pose.RSh[0]) * s2.h, s2.ground - s2.pose.RSh[1] * s2.h] as P2;
 	let best = lxPatch - 120, bd = 1e9; for (let lx = lxPatch - 260; lx < lxPatch - 20; lx += 2) { const q = pe(lx, S.py0 + 78, 0.5), d = Math.abs(Math.hypot(q[0] - shS[0], q[1] - shS[1]) - 0.31 * s2.h) + Math.max(0, shS[0] - q[0]) * 5; if (d < bd) { bd = d; best = lx; } }
-	out.figs.push(!on ? s2 : rig(s2, [{side: 'R', target: pe(best, S.py0 + 78, 0.5), name: 'margin', opt: {dir: -6}}, {side: 'L', target: pe(best + 26, S.py0 + 77, 0.5), name: 'margin', opt: {dir: -6}}], () => s2.ground, 'restorer-standing'));
+	const c2: Contact[] = [{side: 'R', target: pe(best, S.py0 + 78, 0.5), name: 'margin', opt: {dir: -6}}, {side: 'L', target: pe(best + 26, S.py0 + 77, 0.5), name: 'margin', opt: {dir: -6}}];
+	out.figs.push(!on ? unlogged(s2, c2) : rig(s2, c2, () => s2.ground, 'restorer-standing'));
 	return out;
 };
 /** a point on the lamp's arm (screen px) where the hand pushes it */
-const armEnd = (lc: P2): P2 => [lc[0], lc[1] - LENS.r * 1.3];
+const armEnd = (lc: P2): P2 => [lc[0] + LENS.r * 0.4, lc[1] - LENS.r * LENS.asp * 1.25];
+/** reach without logging (while the camera cranes off them) */
+const unlogged = (f: FigOpts, cs: Contact[]) => { let p = f.pose; for (const c of cs) p = reach(p, c.side, toBody(f, c.target), c.opt ?? {}); return {...f, pose: p}; };
 const lensArmPoint = (t: number): P2 => { const m = lerpP(POST, armEnd(lensAt(t)), 0.3); return proj(st, m[0], m[1], 0); };
 const drawLamp = (g: CanvasRenderingContext2D, t: number, lc: P2) => {
 	const P = (x: number, y: number) => proj(st, x, y, 0), base = P(POST[0], S.edge - 18), top = P(POST[0], POST[1]), lcs = P(lc[0], lc[1]), k = proj(st, 100, 0, 0)[0] - proj(st, 0, 0, 0)[0];
@@ -306,7 +312,7 @@ const drawR = (t: number) => {
 	// lens disc + ring follow the (swung) lens; its window: the collage px → uv
 	const lc = lensAt(t), win = lensWin(t), u = lensMat.uniforms;
 	lens.position.set(lc[0] - W / 2, H / 2 - lc[1], 0); ring.position.set(lc[0] - W / 2, H / 2 - lc[1], 0.5);
-	const lo = clamp01((c.th - 1.1) / 0.2); lens.visible = ring.visible = lo > 0; lensMat.uniforms.uOpacity.value = lo; (ring.material as Mat).uniforms.uOpacity.value = lo;
+	const lo = c.z < 60 ? 1 : 0; lens.visible = ring.visible = lo > 0; lensMat.uniforms.uOpacity.value = lo; (ring.material as Mat).uniforms.uOpacity.value = lo;
 	u.uWin.value.set(win.c[0] / CW, 1 - win.c[1] / CH, win.span / 2 / CW, win.span / 2 / CH); u.uDefocus.value = swingK(t);
 	u.uPatch.value.set((PATCH_C[0] - 306) / CW, 1 - (PATCH_C[1] - 366 + PATCH_CROP.h) / CH, (PATCH_C[0] - 306 + PATCH_CROP.w) / CW, 1 - (PATCH_C[1] - 366) / CH);
 	shedMesh.material = t >= b(61.25) ? shedPeeled : shedDonkey;
@@ -315,13 +321,14 @@ const drawR = (t: number) => {
 	// figures: behind the table, hidden by the table top while the paper stands up
 	const fk = `${Math.round(t * 60)}`;
 	const poly: P2[] = [strip.screen(TB.x0 - S.x0, 0, -2), strip.screen(TB.x1 - S.x0, 0, -2), strip.screen(TB.x1 - S.x0, S.depth, -2), strip.screen(TB.x0 - S.x0, S.depth, -2)];
-	const deskOn = c.th > 1.0 && c.z < 4, R = restorers(t, deskOn);
-	body.draw(fk, (g) => { if (!deskOn) return; g.save(); g.beginPath(); g.rect(-50, -50, W + 100, H + 100); g.moveTo(poly[0][0], poly[0][1]); for (const q of poly.slice(1)) g.lineTo(q[0], q[1]); g.closePath(); g.clip('evenodd');
-		const s1 = R.figs[0], k = s1.h / 560; g.fillStyle = '#15100C'; g.fillRect(s1.x - 70 * k, s1.ground - 196 * k, 150 * k, 14 * k); g.fillRect(s1.x - 60 * k, s1.ground - 184 * k, 11 * k, 184 * k); g.fillRect(s1.x + 54 * k, s1.ground - 184 * k, 11 * k, 184 * k);
-		for (const f of R.figs) drawFig(g, f); g.restore(); });
-	lampL.draw(fk, (g) => { if (c.th > 1.0) drawLamp(g, t, lc); });
-	arms.draw(fk, (g) => { if (!deskOn) return; for (const f of R.figs) { drawFig(g, {...f, part: 'L'}); drawFig(g, {...f, part: 'R'}); }
-		if (R.tw) { g.strokeStyle = '#1d211f'; g.lineWidth = 3; g.beginPath(); g.moveTo(R.tw[0][0], R.tw[0][1]); g.lineTo(R.tw[1][0], R.tw[1][1]); g.stroke(); } });
+	const vis = c.z < 4, R = restorers(t, vis && c.th > 1.25), sit = R.figs[0], standF = R.figs[1];
+	body.draw(fk, (g) => { if (!vis) return; g.save(); if (c.th > 1.0) { g.beginPath(); g.rect(-50, -50, W + 100, H + 100); g.moveTo(poly[0][0], poly[0][1]); for (const q of poly.slice(1)) g.lineTo(q[0], q[1]); g.closePath(); g.clip('evenodd'); }
+		drawFig(g, standF); g.restore(); });
+	lampL.draw(fk, (g) => { if (vis) drawLamp(g, t, lc); });
+	arms.draw(fk, (g) => { if (!vis) return; drawFig(g, {...standF, part: 'L'}); drawFig(g, {...standF, part: 'R'}); });
+	front.draw(fk, (g) => { if (!vis) return; const k = sit.h / 560; g.fillStyle = '#15100C';                       // his low stool, in front of the table
+		g.fillRect(sit.x - 80 * k, sit.ground - 160 * k, 150 * k, 13 * k); g.fillRect(sit.x - 70 * k, sit.ground - 150 * k, 11 * k, 150 * k); g.fillRect(sit.x + 48 * k, sit.ground - 150 * k, 11 * k, 150 * k);
+		drawFig(g, sit); if (R.tw) { g.strokeStyle = '#1d211f'; g.lineWidth = 3; g.beginPath(); g.moveTo(R.tw[0][0], R.tw[0][1]); g.lineTo(R.tw[1][0], R.tw[1][1]); g.stroke(); } });
 	const hero = strip.screen(lxPatch, lyPatch); st.setHero(lc[0] < 2000 && c.th > 1 ? proj(st, lc[0], lc[1], 0)[0] : hero[0], c.th > 1 ? proj(st, lc[0], lc[1], 0)[1] : hero[1], 1100);
 	const inLens = c.z > 6 ? 1 : 0, top = c.th < 0.3 ? 1 : 0;
 	return {st, grade: {vig: inLens ? 0.62 : top ? 0.5 : 0.3, vigCol: '#1a120b', corners: inLens || top ? 0.95 : 0.25, exposure: 1}, bloom: 1};
