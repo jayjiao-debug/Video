@@ -179,14 +179,14 @@ export const d19 = (t: number): Frame => {
 	const base = fkPose({hip: 0.655, lean: 4, neck: 2, lt: 2, lk: 2, rt: -3, rk: 3, la: 3, le: 10, ra: 4, re: 14});
 	const su = 0.5 * clamp01((t - b(32.02)) / (b(32.25) - b(32.02))), stepping = su > 0 && su < 0.5;
 	const o1x = 876 + su * CAREFUL * 132, o2x = 1044 - su * CAREFUL * 134, lwN = lerp(5, (HD.x1 - HD.x0) / 2, shut);
-	const c1: Contact[] = t >= b(32.27) ? [{side: 'L', target: o1h, name: slap ? 'hand on the strip' : 'strip'}] : stepping ? [{side: 'L', target: [HD.x0 + lwN - 3, 630], name: 'hand on the door leaf'}] : [];
-	const c2: Contact[] = t >= b(32.27) ? [{side: 'L', target: o2h, name: slap ? 'hand on the strip' : 'strip'}] : stepping ? [{side: 'L', target: [HD.x1 - lwN + 3, 630], name: 'hand on the door leaf'}] : [];
+	const cO1: Contact[] = t >= b(32.27) ? [{side: 'L', target: o1h, name: slap ? 'hand on the strip' : 'strip'}] : stepping ? [{side: 'L', target: [HD.x0 + lwN - 3, 630], name: 'hand on the door leaf'}] : [];
+	const cO2: Contact[] = t >= b(32.27) ? [{side: 'L', target: o2h, name: slap ? 'hand on the strip' : 'strip'}] : stepping ? [{side: 'L', target: [HD.x1 - lwN + 3, 630], name: 'hand on the door leaf'}] : [];
 	// after the slap they turn and step back to the jambs, clear of the X
 	const sb = 0.5 * clamp01((t - b(32.62)) / 0.24), away = t >= b(32.62), stepB = sb > 0 && sb < 0.5;
 	const O1 = away ? rig({x: o1x - sb * CAREFUL * 132, ground: HD.y1, h: 132, pose: stepB ? careful(sb) : base, look: lkOff, flip: true}, [], () => HD.y1, 'seal-official-1')
-		: rig({x: o1x, ground: HD.y1, h: 132, pose: stepping ? careful(su) : base, look: lkOff}, c1, () => HD.y1, 'seal-official-1');
+		: rig({x: o1x, ground: HD.y1, h: 132, pose: stepping ? careful(su) : base, look: lkOff}, cO1, () => HD.y1, 'seal-official-1');
 	const O2 = away ? rig({x: o2x + sb * CAREFUL * 134, ground: HD.y1, h: 134, pose: stepB ? careful(sb + 0.28) : base, look: lkOff}, [], () => HD.y1, 'seal-official-2')
-		: rig({x: o2x, ground: HD.y1, h: 134, pose: stepping ? careful(su + 0.28) : base, look: lkOff, flip: true}, c2, () => HD.y1, 'seal-official-2');
+		: rig({x: o2x, ground: HD.y1, h: 134, pose: stepping ? careful(su + 0.28) : base, look: lkOff, flip: true}, cO2, () => HD.y1, 'seal-official-2');
 	offs.draw(`${fk}`, t >= b(31.9) ? [O1, O2] : [], (g) => { if (!slap && raise > 0) for (const hnd of [o1h, o2h]) { g.fillStyle = '#E4DCC6'; g.fillRect(hnd[0] - 4, hnd[1], 8, 26 * raise); } });
 	lamps19.drawW('l', (g) => { for (const [x, y, r] of LAMPS19) { glowBlob(g, [x, y], r * 2.6, r * 2.6, 0.45, '255,184,104'); g.fillStyle = '#FFC98A'; g.beginPath(); g.ellipse(x, y, r * 0.55, r * 0.75, 0, 0, Math.PI * 2); g.fill(); } });
 	st.heroAt(960, 650, ZW3, 900);

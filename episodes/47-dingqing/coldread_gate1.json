@@ -1,0 +1,29 @@
+{
+  "would_keep_watching_after_3s": true,
+  "why": "Lines 1-2 are about me. I have a couple avatar, or my friends do, so '一张图，一人一半' gets me right away. Line 3 makes a promise: someone did this 1400 years ago. I stay because I want to know who did it and what they split. It's music only, so the subtitle text has to do all of the hooking, and these three lines manage it.",
+  "first_moment_I_got_curious": "#3 (一千四百多年前就有人用了). The next real jolt is #12 (一千八百年前，就送戒指了), because I always thought rings were a Western thing.",
+  "where_I_would_swipe_away": [
+    "#4-#8: line 3 just promised me the 1400-year-old story, and line 4 jumps to 'two thousand years ago, 诗经'. It feels like the video dodged its own hook and turned into a textbook. Papaya and jade is the line I already memorized in middle school (投我以木瓜). This is my first real thumb-twitch, around 0:12-0:25.",
+  "#9-#11: '东汉末年，一首《定情诗》', then a jewelry list (金臂环，明珠耳环，银戒指). With no voice it's just nouns on screen. If the visuals are boring here, I'm gone. #12 saves it, but only if I'm still watching.",
+  "#29-#33: the jump to 三转一响 and 520 is fun, but it isn't 'one half each' anymore. For about 15 s it feels like a different video (marriage-gift history). I'd stay because the bicycle salary number is interesting, but the thread from the title is lost.",
+  "#37-#40: four lines in a row that restate what I already got from line 2 (两千多年过去了 / 还是一人一半 / 东西一直在换意思没变过). It's slow. #40 '我把一半，留给你' is a nice line, but by then I may have already swiped to the next video."
+  ],
+  "lines_I_did_not_understand": [
+    "#3 vs #4 vs #37: first it's 1400 years, then right away 2000 years, then '两千多年过去了'. I briefly thought the 1400 was a typo. Only around #14 do I realize the 1400 is the mirror story and the video is going in chronological order.",
+    "#14 '南朝陈快亡国时': read fast, I parsed it as '南朝 / 陈快'. It looks like a person's name. '南朝的陈国快亡国时' or '陈朝快亡的时候' would read cleanly.",
+    "#17 '约好：将来正月十五，在集市上卖镜子': who sells it? Him, her, both? Only at #20 do I work out that her half shows up for sale. Even then I'm not sure if she sold it or someone did it for her.",
+    "#18/#22 杨素: who is this guy? A general? An official? Why does he get her, and why does he just give her back? #22 is so abrupt it reads like a skipped step. A 3-word tag like '隋朝权臣杨素' would fix it.",
+    "#25-#26: 'she broke the gold hairpin in two and sent one half to him'. Him = 唐玄宗, I guess, but sent from where? Without the 长恨歌 context (she's already dead, this happens in the immortal realm), #28 '天上人间' and #42 '只能天上人间' sound poetic but I don't actually get that it's a sad ending.",
+    "#25 says 金钗, but the quote in #27 says 金钿. Are these the same object? I'd wonder for a second if it's a mistake.",
+    "#32 '1998年，一首歌': which song?? Not naming it is frustrating. I'd go to the comments to find out.",
+    "#33 '红包上限变成520': on which app? I'd assume WeChat, but it's not said. Also, the red-packet limit isn't 'one half each', so I'm not sure why it's in this video."
+  ],
+  "takeaway_in_my_words": "Chinese couples have been splitting one thing into two halves for over a thousand years, from the broken mirror and the split hairpin down to our couple avatars. The objects change, but the message is always 'I'm keeping half for you'.",
+  "surprise_that_stuck": "The broken-mirror story is real and has a happy ending. I knew 破镜重圆 as an idiom but never knew it was an actual couple, each holding half a mirror, matching them at a market on 正月十五. Second place: a bicycle cost three months' salary.",
+  "title_I_would_click": "(1) 情侣头像这招，古人一千四百年前就用过了. It starts with something I own (情侣头像) and promises a 'wait, really?' fact. It's the same energy as lines 1-3, so the title and the hook reinforce each other. (3) sounds like a school history-lesson video, and (2) is fine but vaguer.",
+  "title_that_misleads": "(2) 中国人谈恋爱，一千多年都在'一人一半': papaya/jade, the rings, 三转一响 and 520 aren't halves at all, so about half the video doesn't match. Mild issue with (1) too: it promises the 1400-year story, but the video makes me wait until #14 (~0:45) for it. If I click because of the title and get 诗经 first, I feel baited. (3) is the most accurate but the least clickable.",
+  "what_I_would_comment": "'换过几次了' 这句太狠了，我直接沉默 / 1998年那首是什么歌啊有没有人知道 / 原来破镜重圆是真事，还是HE",
+  "for_frames_only": [
+    {"frame": "none provided", "what_this_says_in_5s": "No frames were included in my input, only subtitle lines, so I can't judge visuals. Note: because it's music only, #9-#11 (the jewelry list) and #29-#30 (三转一响 list) depend entirely on the images to stay interesting."}
+  ]
+}

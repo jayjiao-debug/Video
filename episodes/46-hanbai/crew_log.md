@@ -11,3 +11,4 @@
 | 2026-10-24 23:39 | script v2 (gate 1 r1 notes 1–13 + researcher R1/R2/row 51; bgm2 grid: title 13.588 crash, F6 131.892 DROP) | screenwriter | 2:33, 54 lines, pace 5% waiting, 0 TOO FAST | 15 |
 | 2026-10-24 23:40 | gate 1 r1 done (director REVISE → v2; cold read); producer fact spot-check of v2 OK; to owner | producer | script v2 | 5 |
 | 2026-10-24 23:49 | owner away (23:43: 'get all agents to review… give me final video'); title = director #1 「汉柏的孩子，去守汉武帝」; music bed v1 (plan A + 2-bar intro loop); lines v3 retimed (赤眉 block cut) | producer/editor | music/build46.py, lines.json v3 | 25 |
+| 2026-10-25 00:21 | look '岱庙 · 同一个机位' built (no gate 2a: owner asleep, single look by producer, logged); film skeleton FILM46 + KF46 key frames; pose checker check46 PASS (R2/R3/R4/R5/R7/R8) | producer/art/animator | src/qq46, scripts/check46.mjs | 120 |
