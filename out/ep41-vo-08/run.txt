@@ -1,0 +1,262 @@
+plan: {'tier': None, 'character_count': None, 'character_limit': None, 'status': None}
+models: ['eleven_v4', 'eleven_v4_turbo', 'eleven_v3', 'eleven_v3_conversational', 'eleven_multilingual_v2', 'eleven_flash_v2_5', 'eleven_turbo_v2_5', 'eleven_turbo_v2', 'eleven_flash_v2', 'eleven_english_sts_v2', 'eleven_multilingual_sts_v2']
+model: eleven_v4
+{"name": "S1n", "lang": "zh", "text": "三千年前，人最想说话的对象，是天。", "voice": "MI36FIkp9wRP7cpWKPTl", "voice_id": "MI36FIkp9wRP7cpWKPTl", "model": "eleven_v4", "status": 200, "file": "S1n.mp3", "bytes": 66498}
+{"name": "S3n", "lang": "zh", "text": "火烤龟甲，裂纹，就是天的回答。", "voice": "MI36FIkp9wRP7cpWKPTl", "voice_id": "MI36FIkp9wRP7cpWKPTl", "model": "eleven_v4", "status": 200, "file": "S3n.mp3", "bytes": 62318}
+{"name": "S4n", "lang": "zh", "text": "人和天的这场对话，刻在龟甲上，留到了今天。", "voice": "MI36FIkp9wRP7cpWKPTl", "voice_id": "MI36FIkp9wRP7cpWKPTl", "model": "eleven_v4", "status": 200, "file": "S4n.mp3", "bytes": 71514}
+{"name": "G1", "lang": "zh", "text": "这张金唱片，是写给外星人的一封信。", "voice": "MI36FIkp9wRP7cpWKPTl", "voice_id": "MI36FIkp9wRP7cpWKPTl", "model": "eleven_v4", "status": 200, "file": "G1.mp3", "bytes": 56049}
+{"name": "G2", "lang": "zh", "text": "没人知道，会不会有谁听见。", "voice": "MI36FIkp9wRP7cpWKPTl", "voice_id": "MI36FIkp9wRP7cpWKPTl", "model": "eleven_v4", "status": 200, "file": "G2.mp3", "bytes": 48526}
+{"name": "G3", "lang": "zh", "text": "可人类，还是把它寄了出去。", "voice": "MI36FIkp9wRP7cpWKPTl", "voice_id": "MI36FIkp9wRP7cpWKPTl", "model": "eleven_v4", "status": 200, "file": "G3.mp3", "bytes": 43510}
+{"name": "N4", "lang": "zh", "text": "人类发明的每一种通讯，都是因为有人，想跟够不着的人，说一句话。", "voice": "MI36FIkp9wRP7cpWKPTl", "voice_id": "MI36FIkp9wRP7cpWKPTl", "model": "eleven_v4", "status": 200, "file": "N4.mp3", "bytes": 98263}
+{"name": "N4b", "lang": "zh", "text": "人类发明的每一种通讯，都是因为有人，想跟够不着的人，说一句话。", "voice": "MI36FIkp9wRP7cpWKPTl", "voice_id": "MI36FIkp9wRP7cpWKPTl", "model": "eleven_v4", "status": 200, "file": "N4b.mp3", "bytes": 99517}
+{"name": "N5", "lang": "zh", "text": "现在，这句话，只要一秒钟。", "voice": "MI36FIkp9wRP7cpWKPTl", "voice_id": "MI36FIkp9wRP7cpWKPTl", "model": "eleven_v4", "status": 200, "file": "N5.mp3", "bytes": 49780}
+{"name": "MOM0", "lang": "zh", "text": "喂？这么晚了，还没睡啊？", "voice": "shared:Yun - Elegant, Sweet and Gentle (standard, zh)", "voice_id": "YxbjaPemDJV2xlfvkiIG", "model": "eleven_v4", "status": 200, "file": "MOM0.mp3", "bytes": 46018}
+{"name": "YOU0", "lang": "zh", "text": "妈，没什么事……就是，想你了。", "voice": "shared:Adrian - Chinese Mandarin Narration (standard, zh)", "voice_id": "agczkAUlHLowaNnL72Cc", "model": "eleven_v4", "status": 200, "file": "YOU0.mp3", "bytes": 66498}
+{"name": "MOM1", "lang": "zh", "text": "喂？这么晚了，还没睡啊？", "voice": "shared:Helen Sun - Smooth, Clear and Mature (standard, zh)", "voice_id": "Iqi0ix5WGtiSXX9VDZB4", "model": "eleven_v4", "status": 200, "file": "MOM1.mp3", "bytes": 43510}
+{"name": "YOU1", "lang": "zh", "text": "妈，没什么事……就是，想你了。", "voice": "shared:Karo Yang - Clear, Lively and Energetic (standard, zh)", "voice_id": "5mZxJZhSmJTjL7GoYfYI", "model": "eleven_v4", "status": 200, "file": "YOU1.mp3", "bytes": 67752}
+{"name": "O2_0", "lang": "zh", "text": "各位都好吧？我们都很想念你们，有空请到这儿来玩。", "voice": "shared:Anna Su - Casual, Friendly and Bright (taiwan mandarin, zh)", "voice_id": "9lHjugDhwqoxA5MhX0az", "model": "eleven_v4", "status": 200, "file": "O2_0.mp3", "bytes": 70260}
+{"name": "O2_1", "lang": "zh", "text": "各位都好吧？我们都很想念你们，有空请到这儿来玩。", "voice": "shared:Stacy - Young, Sweet and Cute (standard, zh)", "voice_id": "hkfHEbBvdQFNX4uWHqRF", "model": "eleven_v4", "status": 200, "file": "O2_1.mp3", "bytes": 74021}
+{"name": "O2_2", "lang": "zh", "text": "各位都好吧？我们都很想念你们，有空请到这儿来玩。", "voice": "shared:Sage - Soothing & Gentle (standard, zh)", "voice_id": "APSIkVZudNbPAwyPoeVO", "model": "eleven_v4", "status": 200, "file": "O2_2.mp3", "bytes": 74021}
+Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+[
+ {
+  "name": "S1n",
+  "lang": "zh",
+  "text": "三千年前，人最想说话的对象，是天。",
+  "voice": "MI36FIkp9wRP7cpWKPTl",
+  "voice_id": "MI36FIkp9wRP7cpWKPTl",
+  "model": "eleven_v4",
+  "status": 200,
+  "file": "S1n.mp3",
+  "bytes": 66498,
+  "heard": "三千年前,人最想说话的对象是天。",
+  "heard_lang": "zh",
+  "heard_lang_p": 0.999,
+  "seconds": 4.08
+ },
+ {
+  "name": "S3n",
+  "lang": "zh",
+  "text": "火烤龟甲，裂纹，就是天的回答。",
+  "voice": "MI36FIkp9wRP7cpWKPTl",
+  "voice_id": "MI36FIkp9wRP7cpWKPTl",
+  "model": "eleven_v4",
+  "status": 200,
+  "file": "S3n.mp3",
+  "bytes": 62318,
+  "heard": "火烤归家,列文就是天的回答。",
+  "heard_lang": "zh",
+  "heard_lang_p": 0.999,
+  "seconds": 3.84
+ },
+ {
+  "name": "S4n",
+  "lang": "zh",
+  "text": "人和天的这场对话，刻在龟甲上，留到了今天。",
+  "voice": "MI36FIkp9wRP7cpWKPTl",
+  "voice_id": "MI36FIkp9wRP7cpWKPTl",
+  "model": "eleven_v4",
+  "status": 200,
+  "file": "S4n.mp3",
+  "bytes": 71514,
+  "heard": "人和天的这场对话刻在硅甲上留到了今天",
+  "heard_lang": "zh",
+  "heard_lang_p": 0.999,
+  "seconds": 4.4
+ },
+ {
+  "name": "G1",
+  "lang": "zh",
+  "text": "这张金唱片，是写给外星人的一封信。",
+  "voice": "MI36FIkp9wRP7cpWKPTl",
+  "voice_id": "MI36FIkp9wRP7cpWKPTl",
+  "model": "eleven_v4",
+  "status": 200,
+  "file": "G1.mp3",
+  "bytes": 56049,
+  "heard": "这张金唱片是写给外星人的一封信",
+  "heard_lang": "zh",
+  "heard_lang_p": 1.0,
+  "seconds": 3.44
+ },
+ {
+  "name": "G2",
+  "lang": "zh",
+  "text": "没人知道，会不会有谁听见。",
+  "voice": "MI36FIkp9wRP7cpWKPTl",
+  "voice_id": "MI36FIkp9wRP7cpWKPTl",
+  "model": "eleven_v4",
+  "status": 200,
+  "file": "G2.mp3",
+  "bytes": 48526,
+  "heard": "沒人知道會不會有誰聽見",
+  "heard_lang": "zh",
+  "heard_lang_p": 0.996,
+  "seconds": 2.96
+ },
+ {
+  "name": "G3",
+  "lang": "zh",
+  "text": "可人类，还是把它寄了出去。",
+  "voice": "MI36FIkp9wRP7cpWKPTl",
+  "voice_id": "MI36FIkp9wRP7cpWKPTl",
+  "model": "eleven_v4",
+  "status": 200,
+  "file": "G3.mp3",
+  "bytes": 43510,
+  "heard": "可人类还是把它寄了出去",
+  "heard_lang": "zh",
+  "heard_lang_p": 0.997,
+  "seconds": 2.64
+ },
+ {
+  "name": "N4",
+  "lang": "zh",
+  "text": "人类发明的每一种通讯，都是因为有人，想跟够不着的人，说一句话。",
+  "voice": "MI36FIkp9wRP7cpWKPTl",
+  "voice_id": "MI36FIkp9wRP7cpWKPTl",
+  "model": "eleven_v4",
+  "status": 200,
+  "file": "N4.mp3",
+  "bytes": 98263,
+  "heard": "人类发明的每一种通讯都是因为有人想跟够不着的人说一句话",
+  "heard_lang": "zh",
+  "heard_lang_p": 1.0,
+  "seconds": 6.08
+ },
+ {
+  "name": "N4b",
+  "lang": "zh",
+  "text": "人类发明的每一种通讯，都是因为有人，想跟够不着的人，说一句话。",
+  "voice": "MI36FIkp9wRP7cpWKPTl",
+  "voice_id": "MI36FIkp9wRP7cpWKPTl",
+  "model": "eleven_v4",
+  "status": 200,
+  "file": "N4b.mp3",
+  "bytes": 99517,
+  "heard": "人类发明的每一种通讯都是因为有人想跟够不着的人说一句话",
+  "heard_lang": "zh",
+  "heard_lang_p": 1.0,
+  "seconds": 6.16
+ },
+ {
+  "name": "N5",
+  "lang": "zh",
+  "text": "现在，这句话，只要一秒钟。",
+  "voice": "MI36FIkp9wRP7cpWKPTl",
+  "voice_id": "MI36FIkp9wRP7cpWKPTl",
+  "model": "eleven_v4",
+  "status": 200,
+  "file": "N5.mp3",
+  "bytes": 49780,
+  "heard": "现在这句话只要一秒钟",
+  "heard_lang": "zh",
+  "heard_lang_p": 1.0,
+  "seconds": 3.04
+ },
+ {
+  "name": "MOM0",
+  "lang": "zh",
+  "text": "喂？这么晚了，还没睡啊？",
+  "voice": "shared:Yun - Elegant, Sweet and Gentle (standard, zh)",
+  "voice_id": "YxbjaPemDJV2xlfvkiIG",
+  "model": "eleven_v4",
+  "status": 200,
+  "file": "MOM0.mp3",
+  "bytes": 46018,
+  "heard": "喂 這麼晚了 還沒睡啊",
+  "heard_lang": "zh",
+  "heard_lang_p": 0.999,
+  "seconds": 2.8
+ },
+ {
+  "name": "YOU0",
+  "lang": "zh",
+  "text": "妈，没什么事……就是，想你了。",
+  "voice": "shared:Adrian - Chinese Mandarin Narration (standard, zh)",
+  "voice_id": "agczkAUlHLowaNnL72Cc",
+  "model": "eleven_v4",
+  "status": 200,
+  "file": "YOU0.mp3",
+  "bytes": 66498,
+  "heard": "妈 没什么事 就是想你了",
+  "heard_lang": "zh",
+  "heard_lang_p": 0.999,
+  "seconds": 4.08
+ },
+ {
+  "name": "MOM1",
+  "lang": "zh",
+  "text": "喂？这么晚了，还没睡啊？",
+  "voice": "shared:Helen Sun - Smooth, Clear and Mature (standard, zh)",
+  "voice_id": "Iqi0ix5WGtiSXX9VDZB4",
+  "model": "eleven_v4",
+  "status": 200,
+  "file": "MOM1.mp3",
+  "bytes": 43510,
+  "heard": "喂?这么晚了还没睡啊?",
+  "heard_lang": "zh",
+  "heard_lang_p": 0.997,
+  "seconds": 2.64
+ },
+ {
+  "name": "YOU1",
+  "lang": "zh",
+  "text": "妈，没什么事……就是，想你了。",
+  "voice": "shared:Karo Yang - Clear, Lively and Energetic (standard, zh)",
+  "voice_id": "5mZxJZhSmJTjL7GoYfYI",
+  "model": "eleven_v4",
+  "status": 200,
+  "file": "YOU1.mp3",
+  "bytes": 67752,
+  "heard": "媽,沒什麼事,就是…想你了",
+  "heard_lang": "zh",
+  "heard_lang_p": 0.992,
+  "seconds": 4.16
+ },
+ {
+  "name": "O2_0",
+  "lang": "zh",
+  "text": "各位都好吧？我们都很想念你们，有空请到这儿来玩。",
+  "voice": "shared:Anna Su - Casual, Friendly and Bright (taiwan mandarin, zh)",
+  "voice_id": "9lHjugDhwqoxA5MhX0az",
+  "model": "eleven_v4",
+  "status": 200,
+  "file": "O2_0.mp3",
+  "bytes": 70260,
+  "heard": "各位都好吧,我們都很想念你們,有空請到這兒來玩",
+  "heard_lang": "zh",
+  "heard_lang_p": 0.998,
+  "seconds": 4.32
+ },
+ {
+  "name": "O2_1",
+  "lang": "zh",
+  "text": "各位都好吧？我们都很想念你们，有空请到这儿来玩。",
+  "voice": "shared:Stacy - Young, Sweet and Cute (standard, zh)",
+  "voice_id": "hkfHEbBvdQFNX4uWHqRF",
+  "model": "eleven_v4",
+  "status": 200,
+  "file": "O2_1.mp3",
+  "bytes": 74021,
+  "heard": "各位都好吧我們都很想念你們有空請到這兒來玩",
+  "heard_lang": "zh",
+  "heard_lang_p": 0.997,
+  "seconds": 4.56
+ },
+ {
+  "name": "O2_2",
+  "lang": "zh",
+  "text": "各位都好吧？我们都很想念你们，有空请到这儿来玩。",
+  "voice": "shared:Sage - Soothing & Gentle (standard, zh)",
+  "voice_id": "APSIkVZudNbPAwyPoeVO",
+  "model": "eleven_v4",
+  "status": 200,
+  "file": "O2_2.mp3",
+  "bytes": 74021,
+  "heard": "各位都好吧我們都很想念你們有空請到這兒來玩",
+  "heard_lang": "zh",
+  "heard_lang_p": 0.998,
+  "seconds": 4.56
+ }
+]
