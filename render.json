@@ -1,8 +1,8 @@
 {
-  "id": "farmtest46-1792880687",
-  "composition": "FILM46",
+  "id": "ep44_final_v1b",
+  "composition": "EP44ROUGH",
   "start": 0,
-  "end": 179,
-  "chunks": 4,
-  "output": "farmtest46"
+  "end": 4934,
+  "chunks": 20,
+  "output": "ep44_final_v1"
 }
