@@ -5,7 +5,7 @@
 // (出④, T3's framing). 25: snow-gust wipe to a deck-level track — four bundle-carriers one per beat (the 2nd glows), four lines
 // of footprints; the camera looks down into the snow, which becomes the ledger page; pull back to the 清宫 night room; the lid
 // comes down on your box; into the slats (scene 26 pulls back out of the 伪满 library).
-import {Stage, Live, Layer, bar, BEAT, W, H, D, clamp01, smooth, easeInOut, easeOut, easeIn, lerp, mkCanvas, canvasTex, gradCanvas, svgDoc, svgToCanvas, hash} from './core';
+import {renderer, Stage, Live, Layer, bar, BEAT, W, H, D, clamp01, smooth, easeInOut, easeOut, easeIn, lerp, mkCanvas, canvasTex, gradCanvas, svgDoc, svgToCanvas, hash} from './core';
 import {addScene, In, Frame} from './film';
 import {Crest, deck, HORIZON, fillSvg} from './crest';
 import {Desk} from './rooms';
@@ -191,8 +191,8 @@ const boot22 = async () => {
 	box22 = new Live(st, 'box22', 960, 700, 3000, 900, 21, {rim: 0.5, rimPx: 3}, 1);
 	arms22 = new Live(st, 'arms22', 960, 700, 3000, 900, 22, {rim: 1.0, rimPx: 4}, 1);
 	glow22 = new Live(st, 'glow22', 960, 700, 3000, 900, 24, {emissive: 1.0}, 0.5);
-	boat22 = new Live(st, 'boat22', 1700, 1600, 3600, 2200, 330, {rim: 0.35, rimPx: 6}, 0.6);
-	crewL22 = new Live(st, 'crew22', 1700, 1600, 3600, 2200, 331, {rim: 0.6, rimPx: 5}, 0.8);
+	boat22 = new Live(st, 'boat22', 1700, 1600, 3600, 2200, 330, {rim: 0.35, rimPx: 6}, 0.45);
+	crewL22 = new Live(st, 'crew22', 1950, 1260, 1900, 1240, 331, {rim: 0.6, rimPx: 5}, 0.8);
 };
 const IN22: In = {mode: 4, a: A22, z: b(37.5), pt: [0.5, 0.4]};
 addScene({id: '22', a: A22, z: b(39), in: IN22, draw: (t): Frame => {
@@ -344,10 +344,10 @@ const boot24 = async () => {
 	win24.drawW('w', (g) => { for (const [x, y, w, h] of palaceWindows(860, 1)) { g.fillStyle = `rgba(255,184,104,${(0.32 + 0.22 * hash(x)).toFixed(2)})`; g.fillRect(x, y + 4, w, h); } });
 	st.get('far').mesh.visible = false;                                          // the stock far bank's gate tower would break the roofline match
 	await snowDeck(st, 1); snowRail(st, 'railSnow24');
-	cast24 = new Cast(st, 'cast24', 1200, 640, 3600, 1100, 20);
-	prop24 = new Live(st, 'prop24', 1200, 640, 3600, 1100, 22, {rim: 0.4, emissive: 0.35}, 1);
-	arms24 = new Live(st, 'arms24', 1200, 640, 3600, 1100, 23, {rim: 1.0, rimPx: 5}, 1);
-	glow24 = new Live(st, 'glow24', 1200, 640, 3600, 1100, 24, {emissive: 1.0}, 0.5);
+	cast24 = new Cast(st, 'cast24', 950, 640, 2600, 1000, 20);
+	prop24 = new Live(st, 'prop24', 950, 640, 2600, 1000, 22, {rim: 0.4, emissive: 0.35}, 1);
+	arms24 = new Live(st, 'arms24', 950, 640, 2600, 1000, 23, {rim: 1.0, rimPx: 5}, 1);
+	glow24 = new Live(st, 'glow24', 950, 640, 2600, 1000, 24, {emissive: 1.0}, 0.5);
 	gust24 = new Live(st, 'gust24', 960, 540, W, H, 600, {}, 0.5, 9800);
 	let sx = 0, sy = 0; for (let i = 0; i < 16; i++) { const a = armfulAt(carryArmful(walkFor(YOUTH, i / 16))); sx += a.c[0] / 16; sy += a.c[1] / 16; } hugOff = [sx, sy];
 };
@@ -406,15 +406,15 @@ const boot25a = async () => {
 	for (const [n, o] of [['rail', 5], ['railSnow25', 6], ['lanterns', 7], ['lglow', 8]] as [string, number][]) st.get(n).mesh.renderOrder = o;
 	top25 = new Live(st, 'top25', 1200, 1800, 4600, 2000, 10, {}, 0.4, 10);
 	top25.drawW('s', (g) => { const xs: number[] = []; for (let x = -1100; x <= 3500; x += 20) xs.push(x);
-		const gr = g.createLinearGradient(0, 900, 0, 2700); gr.addColorStop(0, '#8C979F'); gr.addColorStop(0.15, '#A2ACB3'); gr.addColorStop(1, '#B4BDC3'); g.fillStyle = gr;
+		const gr = g.createLinearGradient(0, 900, 0, 2700); gr.addColorStop(0, '#7E8991'); gr.addColorStop(0.15, '#8F9AA2'); gr.addColorStop(1, '#9AA4AB'); g.fillStyle = gr;
 		g.beginPath(); xs.forEach((x, i) => (i ? g.lineTo(x, deck(x) + 4) : g.moveTo(x, deck(x) + 4))); g.lineTo(3500, 2800); g.lineTo(-1100, 2800); g.closePath(); g.fill();
 		g.fillStyle = 'rgba(60,66,72,0.5)'; g.beginPath(); xs.forEach((x, i) => (i ? g.lineTo(x, deck(x) + 4) : g.moveTo(x, deck(x) + 4))); for (const x of xs.slice().reverse()) g.lineTo(x, deck(x) + 12); g.fill();   // the railing's foot
 		for (let k = 0; k < 2600; k++) { const x = -1000 + hash(k * 1.7) * 4400, y = deck(x) + 10 + Math.pow(hash(k * 3.1), 1.6) * 1700, s = 1 + (y - 900) / 500; g.fillStyle = k % 3 ? 'rgba(226,232,236,0.5)' : 'rgba(120,130,138,0.4)'; g.fillRect(x, y, 2.5 * s, 1.5 * s); } });
-	prints25 = new Live(st, 'prints25', 1200, 1100, 4600, 600, 11, {}, 0.6, 11);
-	cast25 = new Cast(st, 'cast25', 1200, 700, 4600, 1100, 20);
-	prop25 = new Live(st, 'prop25', 1200, 700, 4600, 1100, 22, {rim: 0.4, emissive: 0.0}, 1);
-	arms25 = new Live(st, 'arms25', 1200, 700, 4600, 1100, 23, {rim: 1.0, rimPx: 5}, 1);
-	glow25 = new Live(st, 'glow25', 1200, 700, 4600, 1100, 24, {emissive: 1.0}, 0.5);
+	prints25 = new Live(st, 'prints25', 1150, 1100, 2800, 400, 11, {}, 0.6, 11);
+	cast25 = new Cast(st, 'cast25', 1150, 720, 2800, 1000, 20);
+	prop25 = new Live(st, 'prop25', 1150, 720, 2800, 1000, 22, {rim: 0.4, emissive: 0.0}, 1);
+	arms25 = new Live(st, 'arms25', 1150, 720, 2800, 1000, 23, {rim: 1.0, rimPx: 5}, 1);
+	glow25 = new Live(st, 'glow25', 1150, 720, 2800, 1000, 24, {emissive: 1.0}, 0.5);
 	gust25 = new Live(st, 'gust25', 960, 540, W, H, 600, {}, 0.5, 9800);
 };
 /** footprints of crossing i up to where it is now: dark dents on its line, alternating feet, settling under new snow */
@@ -423,7 +423,7 @@ const prints = (g: CanvasRenderingContext2D, i: number, t: number) => {
 	const set = clamp01((t - b(43.5)) / (b(44.5) - b(43.5)));
 	for (let n = 0; ; n++) { const x = x0 + (n + 0.35) * half; if (x > xNow - 40) break;
 		const y = rowY(x, r) + (n % 2 ? -3 : 3) * s, a = 0.62 - 0.25 * set;
-		g.fillStyle = `rgba(48,54,60,${a})`; g.beginPath(); g.ellipse(x, y, 15 * s, 3.4 * s, 0, 0, Math.PI * 2); g.fill();
+		g.fillStyle = `rgba(40,46,52,${a})`; g.beginPath(); g.ellipse(x, y, 17 * s, 4 * s, 0, 0, Math.PI * 2); g.fill();
 		g.fillStyle = `rgba(214,222,228,${0.6 * a})`; g.beginPath(); g.ellipse(x - 2, y + 2.4 * s, 14 * s, 1.3 * s, 0, 0, Math.PI); g.fill(); }
 };
 const draw25a = (t: number): Frame => {
@@ -444,7 +444,7 @@ const draw25a = (t: number): Frame => {
 	c25.motes?.update(t, [-1200, -300, 3600, 2400], 70, 24, 0.85);
 	drawGust(st, gust25, cam, t);
 	if (you) st.heroAt(you.c[0], you.c[1], 22, 430); else st.setHero(-9999, 0, 1);
-	return {st, grade: {vig: 0.4, exposure: 1 - 0.1 * q}, bloom: 1};
+	return {st, grade: {vig: 0.4, exposure: 1 - 0.12 * q, corners: 0.6, cornersTop: 0}, bloom: 1};
 };
 addScene({id: '25', a: GUST.a, z: b(44.66), in: GUST, draw: draw25a});
 
@@ -501,8 +501,8 @@ const boot25b = async () => {
 	roll25 = new Live(st, 'roll25', 1080, 740, 300, 60, -33, {rim: 0.6}, 2);
 	roll25.drawW('r', (g) => { const y = TOP25 - 15, gr = g.createLinearGradient(0, y - 11, 0, y + 11); gr.addColorStop(0, '#8E8A82'); gr.addColorStop(0.45, '#B7B2A8'); gr.addColorStop(1, '#5E5A54');
 		g.fillStyle = gr; g.beginPath(); g.roundRect(985, y - 11, 190, 22, 6); g.fill(); g.fillStyle = '#4A4E54'; g.fillRect(985, y - 11, 12, 22); g.fillRect(1163, y - 11, 12, 22); g.fillStyle = '#9A968E'; for (const x of [981, 1179]) { g.beginPath(); g.ellipse(x, y, 4, 8, 0, 0, Math.PI * 2); g.fill(); } });
-	box25 = new Live(st, 'box25', BX.x0 + BX.w / 2, BX.y0 + 20, 300, 180, BX.z, {rim: 0.5}, 9);
-	lid25 = new Live(st, 'lid25', BX.x0 + BX.w / 2, 640, 340, 280, -30, {rim: 0.8, rimPx: 4}, 3);
+	box25 = new Live(st, 'box25', BX.x0 + BX.w / 2, BX.y0 + 30, 240, 120, BX.z, {rim: 0.5}, 8);
+	lid25 = new Live(st, 'lid25', BX.x0 + BX.w / 2, 640, 260, 160, -30, {rim: 0.8, rimPx: 4}, 3);
 	cast25b = new Cast(st, 'cast25b', 1400, 700, 900, 1000, -45);
 	arms25b = new Live(st, 'arms25b', 1400, 700, 900, 1000, -29, {rim: 1.0, rimPx: 5}, 1);
 	glow25b = new Live(st, 'glow25b', 1100, 640, 1400, 700, -28, {emissive: 1.0}, 0.6);
@@ -535,4 +535,8 @@ const draw25b = (t: number): Frame => {
 addScene({id: '25b', a: b(44.66), z: b(46), in: {mode: 7, a: b(44.66), z: b(44.66) + 0.13, ease: smooth}, draw: draw25b});
 
 // ================================================================================================ boot
-export const bootQing = async () => { await boot22(); await boot23(); await boot24(); await boot25a(); await boot25b(); };
+export const bootQing = async () => {
+	renderer.domElement.addEventListener('webglcontextlost', () => console.error('WEBGL CONTEXT LOST'));
+	const sub = (window as any).QSUB as string[] | undefined, want = (id: string) => !sub || sub.includes(id);   // dev only: boot some stages (SwiftShader memory)
+	if (want('22')) await boot22(); if (want('23')) await boot23(); if (want('24')) await boot24(); if (want('25')) await boot25a(); if (want('25b')) await boot25b();
+};

@@ -44,8 +44,8 @@ const dagobaSil = (cx: number, base: number, sc: number, col: string) => {
 	let o = `<path fill="${col}" d="M${p(-120, 0)} L${p(120, 0)} L${p(120, 26)} L${p(96, 26)} L${p(96, 50)} L${p(-96, 50)} L${p(-96, 26)} L${p(-120, 26)} Z
 	M${p(-80, 50)} L${p(80, 50)} L${p(70, 72)} L${p(-70, 72)} Z M${p(-70, 72)} C${p(-98, 122)} ${p(-88, 172)} ${p(-40, 188)} L${p(40, 188)} C${p(88, 172)} ${p(98, 122)} ${p(70, 72)} Z
 	M${p(-36, 186)} L${p(36, 186)} L${p(28, 206)} L${p(-28, 206)} Z M${p(-26, 206)} L${p(26, 206)} L${p(12, 318)} L${p(-12, 318)} Z
-	M${p(-60, 318)} Q${p(-50, 330)} ${p(-36, 346)} Q${p(0, 358)} ${p(36, 346)} Q${p(50, 330)} ${p(60, 318)} Z
-	M${p(-7, 352)} C${p(-16, 362)} ${p(-12, 378)} ${p(0, 380)} C${p(12, 378)} ${p(16, 362)} ${p(7, 352)} Z M${p(-2.5, 378)} L${p(2.5, 378)} L${p(1, 398)} L${p(-1, 398)} Z"/>`;
+	M${p(-58, 316)} C${p(-56, 340)} ${p(-30, 352)} ${p(0, 354)} C${p(30, 352)} ${p(56, 340)} ${p(58, 316)} Z
+	M${p(-16, 350)} C${p(-20, 366)} ${p(-10, 374)} ${p(0, 376)} C${p(10, 374)} ${p(20, 366)} ${p(16, 350)} Z"/>`;
 	for (let i = 0; i < 9; i++) o += `<rect fill="${col}" x="${(cx - (27 - i * 1.6) * sc).toFixed(1)}" y="${(base - (214 + i * 11.5) * sc).toFixed(1)}" width="${((54 - i * 3.2) * sc).toFixed(1)}" height="${(4 * sc).toFixed(1)}"/>`;
 	for (const x of [-56, -28, 28, 56]) o += `<rect fill="${col}" x="${(cx + x * sc - 1.5).toFixed(1)}" y="${(base - 318 * sc).toFixed(1)}" width="3" height="${(12 * sc).toFixed(1)}"/>`;
 	return o;
@@ -231,7 +231,7 @@ const t2Fig = (t: number) => { const {u, x} = t2Walk(t); let p = robeSafe(walkFo
 addScene({id: '04', a: b(6), z: b(7), draw: (t) => {
 	const st = crestT2.st, f = t2Fig(t), {x} = t2Walk(t), o = rollOff!;
 	const target: P = [x + o[0] * EH, deck(x) + 4 - o[1] * EH];
-	lockCam(st, EZOOM, target[0], target[1], 22);
+	lockCam(st, EZOOM, target[0], target[1], 22, LOCK[0] - 16, LOCK[1]);   // the roll's light sits forward of its centre (hand end + halo)
 	const key = k30(t); let roll: [P, P] = [[0, 0], [0, 0]];
 	castT2.draw(key, [f]);
 	propT2.L.mat.uniforms.uEmissive.value = 0.55;
@@ -317,7 +317,7 @@ const bootT4 = async () => {
 	store = new Store(); await store.ready; const st = store.st;
 	// the cool spill: a soft shaft from above-right, landing on the heap
 	const bc = mkCanvas(960, 540), g = bc.getContext('2d')!;
-	const gr = g.createLinearGradient(640, 0, 430, 400); gr.addColorStop(0, 'rgba(176,196,206,0.30)'); gr.addColorStop(1, 'rgba(160,182,194,0.07)');
+	const gr = g.createLinearGradient(640, 0, 430, 400); gr.addColorStop(0, 'rgba(176,196,206,0.2)'); gr.addColorStop(1, 'rgba(160,182,194,0.05)');
 	g.filter = 'blur(14px)'; g.fillStyle = gr; g.beginPath(); g.moveTo(585, -20); g.lineTo(700, -20); g.lineTo(560, 470); g.lineTo(330, 470); g.closePath(); g.fill(); g.filter = 'none';
 	t4Beam = new Live(st, 't4beam', 960, 540, 1920, 1080, T4Z.beam, {}, 0.5); t4Beam.draw('b', (q) => q.drawImage(bc, 0, 0, 1920, 1080));
 	// the heap on the lock point: a long mound (cool-lit tops), the buried glow, rolls lying over it
@@ -327,7 +327,7 @@ const bootT4 = async () => {
 	t4Occl = new Live(st, 't4occl', 960, 580, 600, 400, T4Z.occl, {rim: 0.8, rimPx: 4}, 1);
 	t4Occl.drawW('o', (q) => { const roll = (x: number, y: number, len: number, d: number, a: number) => { q.save(); q.translate(x, y); q.rotate(a); q.fillStyle = '#1b1612'; q.strokeStyle = SIL; q.lineWidth = 2; q.beginPath(); q.roundRect(-len / 2, -d / 2, len, d, d / 2); q.fill(); q.stroke(); q.restore(); };
 		roll(900, 556, 230, 30, -0.12); roll(1030, 610, 220, 34, 0.1); roll(905, 612, 150, 28, 0.25); roll(1010, 548, 120, 26, -0.3); });
-	t4Glow.drawW('g', (q) => { glowBlob(q, [962, 582], 70, 50, 0.55); q.fillStyle = '#FFE9C0'; q.beginPath(); q.ellipse(962, 582, 13, 18, 0, 0, Math.PI * 2); q.fill(); q.strokeStyle = '#E8B878'; q.lineWidth = 3; q.beginPath(); q.ellipse(962, 582, 6, 9, 0, 0, Math.PI * 2); q.stroke(); });
+	t4Glow.drawW('g', (q) => { glowBlob(q, [962, 582], 80, 58, 0.7); q.fillStyle = '#FFE9C0'; q.beginPath(); q.ellipse(962, 582, 13, 18, 0, 0, Math.PI * 2); q.fill(); q.strokeStyle = '#E8B878'; q.lineWidth = 3; q.beginPath(); q.ellipse(962, 582, 6, 9, 0, 0, Math.PI * 2); q.stroke(); });
 	// the desk lamp of scene 27, unlit, on the table
 	store.lamp.draw('off', (q) => { q.fillStyle = SIL; q.fillRect(1296, 750, 52, 10); q.fillRect(1318, 690, 8, 62); q.beginPath(); q.moveTo(1292, 700); q.lineTo(1352, 700); q.lineTo(1338, 664); q.lineTo(1306, 664); q.closePath(); q.fill(); });
 	store.lamp.L.mat.uniforms.uEmissive.value = 0;
@@ -522,7 +522,7 @@ addScene({id: '08', a: N.pane, z: b(13), in: IN08, draw: (t) => {
 	st.setHero(-9999, 0, 1);
 	// dusk luma 75–100: dim the world layers (not the lanterns or the running light) with their tint, not the exposure
 	const keep = new Set([crestS1.lanternsLive.L.mat, crestS1.glowLive.L.mat, s1Light.L.mat]);
-	for (const m of st.mats) if (!keep.has(m)) m.uniforms.uTint.value.setRGB(0.86, 0.85, 0.83);
+	for (const m of st.mats) if (!keep.has(m)) m.uniforms.uTint.value.setRGB(0.82, 0.81, 0.79);
 	const tr = t < N.paneZ;
 	return {st, grade: {vig: 0.32, exposure: 1}, bloom: 1, hud: tr ? (hud) => glassLine(hud, t) : undefined};
 }});
