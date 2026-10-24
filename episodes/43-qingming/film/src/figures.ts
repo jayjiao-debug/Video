@@ -498,7 +498,7 @@ export const crouch = (o: {at?: P} = {}): Pose => {
 /** a roll clamped under the R upper arm (against the ribs), its front end in the R hand; underArmRoll() gives the roll's ends */
 export const underArm = (base?: Pose): Pose => {
 	const b = base ?? fkPose(STAND), sh = b.RSh;
-	return reach(b, 'R', [sh[0] + 0.17, sh[1] - 0.15], {dir: 12});
+	return reach(b, 'R', [sh[0] + 0.085, sh[1] - 0.25], {dir: 12});   // hand at the front of the hip: the roll runs up the side of the torso to the armpit (clamped, not carried out front)
 };
 /** the roll's two ends (body units) for a pose made with underArm(): through the palm and under the armpit, sticking out behind the back */
 export const underArmRoll = (p: Pose, side: Side = 'R', length = 0.29): [P, P] => {
