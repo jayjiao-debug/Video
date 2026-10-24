@@ -10,7 +10,7 @@ import {addScene, In} from './film';
 import {Desk} from './rooms';
 import {Crest, deck, SKIES, WATER} from './crest';
 import {look, drawRoll, glowBlob, rig, Contact, drawFig} from './actors';
-import {POSES, FigOpts, walkFor, gaitStride, gaitPose, stepFor, bow, handOver, fkPose, mixPose, toScreen, toBody, reach, LookQ} from './figures';
+import {POSES, FigOpts, walkFor, gaitStride, gaitPose, armsFrom, stepFor, bow, handOver, fkPose, mixPose, toScreen, toBody, reach, LookQ} from './figures';
 import {paintSection, silkWeave} from './silk';
 import {hongqiao, railing, skyline, cityGate, hills, willow} from './draw';
 import {Strip, ScreenLayer, texMat, revealMat, glyphMat, GlowData, dataTex, bigTex, blankLike, crop, strokeOrder, glyphOrder, rollerCanvas, woodCanvas,
@@ -25,7 +25,8 @@ const tableFront = (x0: number, x1: number, top: number, floor: number, col = '#
 	const c = mkCanvas(W, H), g = c.getContext('2d')!;
 	g.fillStyle = '#2a2018'; g.fillRect(x0, top - 2, x1 - x0, 8);
 	g.fillStyle = col; g.fillRect(x0, top + 5, x1 - x0, 20);
-	for (const x of [x0 + 18, x1 - 44]) { g.fillRect(x, top + 20, 26, floor - top - 20); }
+	g.fillStyle = '#120d0a'; for (const x of [x0 + 60, x1 - 80]) g.fillRect(x, top + 20, 18, floor - 75 - top - 20);   // back legs (people behind the table stand on their line)
+	g.fillStyle = col; for (const x of [x0 + 18, x1 - 44]) { g.fillRect(x, top + 20, 26, floor - top - 20); }
 	g.fillRect(x0 + 30, floor - 70, x1 - x0 - 60, 10);
 	g.fillStyle = 'rgba(255,214,150,0.10)'; g.fillRect(x0, top - 2, x1 - x0, 2);
 	return c;
@@ -96,8 +97,8 @@ const build9 = async () => {
 
 /** the crest as ink on silk (screen px for camera (960,560,1)): arch, deck, railing, lanterns, far-bank roofline */
 const traceCanvas = async () => {
-	let s = hongqiao(960, 900, 1700, 1400) + railing(960, 906, 1700, 1400, 150, 116).svg;
-	for (let x = 960 - 1700 * 1.12, i = 0; x <= 960 + 1700 * 1.12; x += 116, i++) if (i % 2 === 0) { const y = 900 + 500 * Math.min(1.4, ((x - 960) / 1700) ** 2) - 150 + 6; s += `<ellipse cx="${x}" cy="${y + 50}" rx="20" ry="27" fill="#15100C"/>`; }
+	let s = hongqiao(960, 900, 1700, 1400) + railing(960, 906, 1700, 1400, 240, 116).svg;
+	for (let x = 960 - 1700 * 1.12, i = 0; x <= 960 + 1700 * 1.12; x += 116, i++) if (i % 2 === 0) { const y = 900 + 500 * Math.min(1.4, ((x - 960) / 1700) ** 2) - 240 + 6; s += `<ellipse cx="${x}" cy="${y + 50}" rx="20" ry="27" fill="#15100C"/>`; }
 	s = `<g transform="translate(0,-20)">${s}</g><g transform="translate(0,-8)">${hills(-400, 2400, 820, 90, 7)}${skyline(-300, 2300, 860, 40, 110, 11)}${cityGate(180, 860, 1.1)}${willow(700, 866, 230, 23)}${willow(1500, 866, 250, 25)}</g>`;
 	s = s.replace(/fill="#15100C"/g, 'fill="rgba(42,31,23,0.06)" stroke="#2A1F17" stroke-width="2.4" stroke-linejoin="round"').replace(/fill="#1d1611"/g, 'fill="rgba(42,31,23,0.08)" stroke="#2A1F17" stroke-width="2.4"').replace(/stroke="#15100C"/g, 'stroke="#2A1F17"').replace(/fill="#000"/g, 'fill="none" stroke="#2A1F17" stroke-width="1.6" stroke-opacity="0.7"');
 	const c = await svgToCanvas(svgDoc(s, W, H), W, H, 1); return c;
@@ -107,7 +108,7 @@ const traceCanvas = async () => {
 const heldRoll = (t: number, win: [number, number]): [P2, P2] => {
 	const st = desk9.st, lift = clamp01((t - P2t) / (P3 - P2t)), lk = smooth(clamp01(lift / 0.55));
 	const M = (win[0] + win[1]) / 2, a = strip9.screen(M, S9.py0 + 14, 9), f = strip9.screen(M, S9.py0 + 226, 9);
-	const cx = lerp(860, 800, smooth(clamp01((lift - 0.45) / 0.55))), cc = proj(st, cx, 612, ZF9), half = (proj(st, cx + 100, 612, ZF9)[0] - cc[0]);
+	const cx = lerp(860, 800, smooth(clamp01((lift - 0.45) / 0.55))), cc = proj(st, cx, 560, ZF9), half = (proj(st, cx + 100, 560, ZF9)[0] - cc[0]);
 	const e0: P2 = [cc[0] - half, cc[1] + 3], e1: P2 = [cc[0] + half, cc[1] - 3];
 	return [lerpP(f, e0, lk), lerpP(a, e1, lk)];
 };
@@ -126,7 +127,7 @@ const scene9State = (t: number): S9State => {
 	const lean2 = fkPose({hip: 0.64, hipX: -0.07, lean: 46, neck: -6, lt: 10, lk: 8, rt: 5, rk: 6, la: 34, le: 30, ra: 28, re: 25});
 	const roll0 = smooth(clamp01((t - P1) / (P2t - P1)));
 	let pPose = mixPose(bent, lean2, roll0); if (lift > 0) pPose = mixPose(pPose, handOver(), lk);
-	const painter: FigOpts = {x: xp, ground: T9.floor, h: 560, pose: pPose, look: lkPainter, flip: true};
+	const painter: FigOpts = {x: xp, ground: T9.floor - 75, h: 560, pose: pPose, look: lkPainter, flip: true};
 	const held = () => heldRoll(t, win);
 	const pc: Contact[] = [];
 	if (lift <= 0) { if (tableOn) { pc.push({side: 'R', target: near(win[1]), name: 'roller near end'}); pc.push({side: 'L', target: far(win[1]), name: 'roller far end'}); } }
@@ -136,7 +137,7 @@ const scene9State = (t: number): S9State => {
 	// the court official: waits at the table's left end with a slight bow, steps in and takes the roll in both hands
 	const take = clamp01((lift - 0.35) / 0.4), xo = lerp(540, 590, smooth(take));
 	const oPose = take > 0 ? mixPose(bow(14), handOver(), smooth(take)) : bow(14);
-	const official: FigOpts = {x: xo, ground: T9.floor, h: 575, pose: oPose, look: lkOfficial};
+	const official: FigOpts = {x: xo, ground: T9.floor - 75, h: 575, pose: oPose, look: lkOfficial};
 	const oc: Contact[] = []; if (roll && take >= 1) { const at = (s: number): P2 => lerpP(roll![0], roll![1], s); oc.push({side: 'R', target: at(0.32), name: 'roll'}); oc.push({side: 'L', target: at(0.1), name: 'roll'}); }
 	else if (roll && take > 0) { const at = (s: number): P2 => lerpP(roll![0], roll![1], s); const r0 = onScreen(st, official, ZF9); const fr = (side: 'L' | 'R', s: number) => lerpP(toScreen(r0, oPose[`${side}Hand`] as any), at(s), smooth(take));
 		official.pose = oPose; figs.push(rigLoose(st, official, [['R', fr('R', 0.32)], ['L', fr('L', 0.1)]])); }
@@ -197,7 +198,7 @@ const smokeCanvas = () => {
 };
 const FIRE0 = b(15.25), FIRE1 = b(15.5);
 /** the carrying pair: the front official holds the roll by both ends at chest height; the second walks a step behind */
-const CSTEP = 0.7, CSPB = 1.5;                                          // a careful step (they carry you), 1.5 steps per beat
+const CSTEP = 0.7, CSPB = 2.0;                                          // a careful step (they carry you), 1.5 steps per beat
 const carryH = () => Math.max(380, Math.min(520, (deck(HANDOFF_FRAME[0]) + 4 - HANDOFF_FRAME[1]) / 0.64));
 const carryX = (t: number, h: number) => HANDOFF_FRAME[0] + 0.11 * h - ((t - P3) / (2 * BEAT)) * CSPB * gaitStride('08_04', CSTEP) * h;
 let HANDOFF_FRAME: P2 = [790, 635];
@@ -235,7 +236,7 @@ const cartFront = (g: CanvasRenderingContext2D, c: Cart, h: number) => {
 	poly(g, [B(-0.3, 0.09), B(0.36, 0.09), B(0.36, 0.1), B(-0.3, 0.1)], 'rgba(60,40,26,0.9)');
 	wheel(g, c.ax, c.ay, c.r, c.ax / c.r);
 };
-type Grp = {figs: FigOpts[]; carts: {c: Cart; load: 'bundles' | 'you'}[]; you: [P2, P2] | null; hs: number};
+type Grp = {figs: FigOpts[]; carts: {c: Cart; load: 'bundles' | 'you'; puller: FigOpts}[]; you: [P2, P2] | null; hs: number};
 /** the refugees (screen px), streaming right: a walker, two pullers with carts (the second carries you), a walker */
 const refugees = (t: number, st: Stage): Grp => {
 	const h = 440, ax = refX(t, h), u = (t - REF0) / (2 * BEAT) * REFV, out: Grp = {figs: [], carts: [], you: null, hs: h};
@@ -246,10 +247,10 @@ const refugees = (t: number, st: Stage): Grp => {
 		const s = onScreen(st, o, ZC);
 		if (kind === 'walk') { out.figs.push(rig(s, [], gS, who)); return; }
 		// the puller: hands on the shaft ends at his hips, the cart behind him
-		const sh = toScreen(s, s.pose.RSh as any), hand: P2 = [sh[0] - 0.04 * s.h, sh[1] + 0.31 * s.h]; const axw = x - 0.92 * o.h; const axS = proj(st, axw, deck(axw) + 4, ZC);   // hands at the hips, well inside arm reach const axS = proj(st, axw, deck(axw) + 4, ZC);
+		const sh = toScreen(s, s.pose.RSh as any), hand: P2 = [sh[0] - 0.09 * s.h, sh[1] + 0.32 * s.h]; const axw = x - 0.92 * o.h; const axS = proj(st, axw, deck(axw) + 4, ZC);   // hands at the hips, well inside arm reach
 		const cg = cartGeo(axS[0], axS[1], [hand[0] - 2, hand[1] + 2], s.h);
 		const f = rig(s, [{side: 'R', target: [hand[0] - 2, hand[1] + 2], name: 'shaft'}, {side: 'L', target: [hand[0] - 6, hand[1] + 3], name: 'shaft'}], gS, who);
-		out.figs.push(f); out.carts.push({c: cg, load: kind === 'pullYou' ? 'you' : 'bundles'});
+		out.figs.push(f); out.carts.push({c: cg, load: kind === 'pullYou' ? 'you' : 'bundles', puller: f});
 		if (kind === 'pullYou') { const B = cg.bed; out.you = [B(-0.22, 0.09), B(0.22, 0.1)]; out.hs = s.h; }
 	};
 	member(560, 0.35, 'walk', 'ref-lead'); member(300, 0.1, 'pullYou', 'ref-pull1'); member(-230, 0.6, 'pull', 'ref-pull2'); member(-650, 0.85, 'walk', 'ref-tail');
@@ -273,12 +274,12 @@ const draw10 = (t: number) => {
 	const grp = refugees(t, st);
 	// the carriers (screen px)
 	const figs: FigOpts[] = []; let roll: [P2, P2] | null = null, cradle: FigOpts | null = null;
-	const out = 1 - smooth(clamp01((t - (FIRE0 - 0.12)) / 0.32));          // time-lapse: the court carry gives way to 1127
+	const out = t < FIRE0 ? 1 : 0;                                           // hard cut on the sky change (b15.25): 1127
 	if (out > 0) {
 		const h = carryH(), x1 = carryX(t, h), u = (t - P3) / (2 * BEAT) * CSPB, x2 = x1 + 300 * h / 560;
 		const gS = (sx: number) => { const p = unproj(st, sx, 0, ZC); return proj(st, p[0], deck(p[0]) + 4, ZC)[1]; };
 		const o1: FigOpts = {x: x1, ground: deck(x1) + 4, h, pose: gaitPose('08_04', u, CSTEP), look: lkOfficial, flip: true};
-		const o2: FigOpts = {x: x2, ground: deck(x2) + 4, h: h + 8, pose: gaitPose('08_04', u + 0.28, CSTEP), look: lkOfficial, flip: true};
+		const o2: FigOpts = {x: x2, ground: deck(x2) + 4, h: h + 8, pose: armsFrom(gaitPose('08_04', u + 0.28, CSTEP), bow(4)), look: lkOfficial, flip: true};   // hands folded in his sleeves
 		const s1 = onScreen(st, o1, ZC), s2 = onScreen(st, o2, ZC);
 		// the front official cradles you against his chest, hands under both ends; the second walks a step behind
 		const rc = toScreen(s1, [0.11, 0.64]), rl = 0.22 * s1.h, k = s1.h / 560;
@@ -288,18 +289,21 @@ const draw10 = (t: number) => {
 		figs.push(cradle);
 	}
 	const fk = `${Math.round(t * 60)}`;
-	const fade = smooth(clamp01((t - REF0) / 0.3));
-	body10.draw(fk, (g) => { g.globalAlpha = out; for (const f of figs) drawFig(g, f); g.globalAlpha = fade; for (const c of grp.carts) cartBack(g, c.c, c.c.r / 0.115, c.load); for (const f of grp.figs) drawFig(g, f); g.globalAlpha = 1; });
+	const fade = t >= REF0 ? 1 : 0;
+	body10.draw(fk, (g) => { g.globalAlpha = out; for (const f of figs) drawFig(g, f); g.globalAlpha = fade; for (const c of grp.carts) cartBack(g, c.c, c.c.r / 0.15, c.load); for (const f of grp.figs) drawFig(g, f); g.globalAlpha = 1; });
 	props10.draw(fk, (g) => {
 		const pushK = clamp01((t - b(15.75)) / (b(16.15) - b(15.75)));
 		if (roll && cradle) { g.globalAlpha = out; glowBlob(g, lerpP(roll[0], roll[1], 0.5), 130, 70, 0.34); drawRoll(g, roll[0], roll[1], 0.025 * cradle.h, 1); drawFig(g, {...cradle, part: 'L'}); g.globalAlpha = 1; }
 		g.globalAlpha = fade;
 		if (grp.you) { const m = lerpP(grp.you[0], grp.you[1], 0.5); glowBlob(g, m, 150 + 900 * easeIn(pushK), 80 + 600 * easeIn(pushK), 0.4 + 0.5 * pushK); drawRoll(g, grp.you[0], grp.you[1], 0.032 * grp.hs, 1); }
-		for (const c of grp.carts) cartFront(g, c.c, c.c.r / 0.115);
+		for (const c of grp.carts) { cartFront(g, c.c, c.c.r / 0.15);
+			// the near shaft runs to the puller's hands, his near arm over it
+			const B = c.c.bed; g.strokeStyle = '#15100C'; g.lineWidth = 0.024 * c.c.r / 0.15; g.lineCap = 'round'; g.beginPath(); g.moveTo(...B(0.3, 0.03)); g.lineTo(c.c.hand[0], c.c.hand[1]); g.stroke();
+			drawFig(g, {...c.puller, part: 'R'}); }
 		g.globalAlpha = 1;
 	});
 	// sky: dusk → fire
-	const fk2 = smooth(clamp01((t - FIRE0) / (FIRE1 - FIRE0)));
+	const fk2 = t < FIRE0 ? 0 : 0.72 + 0.28 * smooth(clamp01((t - FIRE0) / (FIRE1 - FIRE0)));
 	fireSky.mat.uniforms.uOpacity.value = fk2; fireRiver.mat.uniforms.uOpacity.value = fk2 * 0.95;
 	const flick = 0.85 + 0.15 * Math.sin(t * 9) * Math.sin(t * 5.3);
 	fireGlow.mat.uniforms.uOpacity.value = fk2 * flick; fireHaze.mat.uniforms.uOpacity.value = 0.32 * fk2 * flick;
@@ -308,7 +312,7 @@ const draw10 = (t: number) => {
 	const far = st.get('far'); far.mat.uniforms.uFog.value.set(lerp(0.788, 0.42, fk2), lerp(0.643, 0.16, fk2), lerp(0.478, 0.1, fk2), lerp(0.32, 0.16, fk2));
 	st.get('haze').mat.uniforms.uTint.value.setRGB(1, lerp(1, 0.55, fk2), lerp(1, 0.4, fk2));
 	embers.update(t, [-400, 200, 2000, 1000], 60, 40, 0.75 * fk2);
-	crest10.setLanterns((i, x) => (t < FIRE0 ? 1 : t < FIRE0 + 0.12 + (x + 800) / 4000 * 0.2 ? 1 : 0));
+	crest10.setLanterns(() => (t < FIRE0 ? 1 : 0));
 	crest10.setBoat(1660, lerp(0, 35, clamp01((t - b(14.5)) / 2)));
 	const hero: P2 = grp.you ? lerpP(grp.you[0], grp.you[1], 0.5) : roll ? lerpP(roll[0], roll[1], 0.5) : [-400, 700];
 	st.setHero(hero[0], hero[1], 650);
@@ -347,14 +351,14 @@ const buildJ = async () => {
 	endMat = texMat(bigTex(endC), 0.22); endMesh = stripJ.plane(endMat, SHEET_W - 0.5, S12.py0, END_W, 200, 0.2, -29);
 	const rc = canvasTex(rollerCanvas());
 	rollJ = stripJ.plane(texMat(rc, 0.18), SHEET_W + END_W - 8, S12.py0 - 8, 22, 216, 3, -27);        // the rest of the painting, rolled
-	tailRoll = stripJ.plane(texMat(canvasTex(rollerCanvas(['#3a2c22', '#8a6a4a', '#2a2018'], '#34506A', '#EADCC0')), 0), -6, S12.py0 - 8, 9, 216, 3, -27);
+	tailRoll = stripJ.plane(texMat(canvasTex(rollerCanvas()), 0.12), -6, S12.py0 - 8, 14, 216, 3, -27);
 	st.add('frontJ', canvasTex(tableFront(T12.x0, T12.x1, S12.edge, T12.floor)), 960, 540, W, H, 0, {rim: 0.8, rimPx: 5}, -10);
 	bodyJ = new ScreenLayer(st, 'bodyJ', ZZ, {rim: 1.0, rimPx: 6}, -20);
 	propsJ = new ScreenLayer(st, 'propsJ', 0, {emissive: 0.4, rim: 0.4, rimPx: 4}, -19);
 	buildRollup();
 };
 /** writing progress (glyphs written; fractional = the current glyph) */
-const progJ = (t: number) => keyed(t, [[b(17.5) - 0.01, 0], [b(17.75), 12], [b(18.5), 24], [b(18.62), 24], [b(18.75), 24.8], [b(19), 26], [b(20.6), 70], [b(21), 84]], (u) => u);
+const progJ = (t: number) => keyed(t, [[b(17.5) - 0.01, 0], [b(17.75), 12], [b(18.08), 12], [b(18.5), 24], [b(18.62), 24], [b(18.75), 24.8], [b(19), 26], [b(20.6), 70], [b(21), 84]], (u) => u);
 /** glyph glow: 翰林张择端 b19 → b19.5, settling; 藏者宜宝之 one per beat b21 … b22 */
 const glowOf = (t: number) => (i: number) => {
 	if (i <= 4) { const on = b(19) + i * 0.1; return clamp01((t - on) / 0.12) * (1 - 0.6 * clamp01((t - b(20.4)) / 0.5)); }
@@ -399,7 +403,7 @@ const camJ = (t: number): CamJ => {
 };
 // ---- the roll-up (b23 → b23.5): 张著 pushes the tail roller; the camera dives toward the paper; the roller crosses the frame
 const RU = {soft: 0.025};
-const rollerX = (u: number) => 210 * easeOut(Math.min(1, u * 1.05)) + 230 * u * u;     // local x of the rolling roller
+const rollerX = (u: number) => 34 * smooth(Math.min(1, u / 0.3)) + 420 * Math.pow(Math.max(0, (u - 0.3) / 0.7), 1.35);   // he rolls it a hand's width, then pushes it on
 const rollCam = (u: number): CamJ => {
 	const zoomIn = easeIn(clamp01(u * 1.15)), th = TH_J * (1 - smooth(clamp01(u * 1.4)));
 	const tgt = frameAt(SHEET_W * 0.95 + 60 * u, S12.py0 + 100, 5.4);
@@ -435,18 +439,18 @@ const drawJ = (t: number) => {
 	const ru = clamp01((t - b(23)) / (b(23.5) - b(23))), rx = t >= b(23) ? rollerX(ru) : 0;
 	// the roll-up: paper left of the roller is wound on it
 	sheetMat.uniforms.uClip.value.set(rx / SHEET_W, 2, -1, 2); endMat.uniforms.uClip.value.set((rx - SHEET_W) / END_W, 2, -1, 2);
-	const rd = 9 + rx * 0.03; stripJ.place(tailRoll, rx - rd * 0.66, S12.py0 - 8, rd, 216, 3 + rd * 0.3);
+	const rd = 14 + rx * 0.03; stripJ.place(tailRoll, rx - rd * 0.66, S12.py0 - 8, rd, 216, 3 + rd * 0.3);
 	const deskOn = c.th > 1.12;
 	// 张著, seated at the table's left end facing right: brush at the newest glyph, left hand flat on the paper's edge
 	const zx = 528;
 	const o: FigOpts = {x: zx, ground: T12.floor, h: 560, pose: fkPose({hip: 0.37, lean: 14, neck: 6, lt: 88, lk: 92, rt: 84, rk: 86, la: 20, le: 50, ra: 16, re: 56}), look: lkZhang};
 	const cs: Contact[] = []; let brush: [P2, P2] | null = null;
-	const roll0 = b(22.86), rel = b(23) + 0.06;
+	const roll0 = b(22.86), rel = b(23) + 0.3 * (b(23.5) - b(23));
 	if (deskOn && t < b(22.25)) {
 		const tip = tipAt(p), lift = t > b(18.5) && t < b(18.62) ? Math.sin((t - b(18.5)) / (b(18.62) - b(18.5)) * Math.PI) * 14 : 0;
 		const tS = stripJ.screen(tip[0], tip[1], lift), gS = stripJ.screen(tip[0], tip[1], 54 + lift);
 		brush = [gS, tS]; cs.push({side: 'R', target: gS, name: 'brush'});
-		cs.push({side: 'L', target: stripJ.screen(10, S12.py0 + 12, 1), name: 'paper edge', opt: {dir: -10}});
+		cs.push({side: 'L', target: stripJ.screen(24, S12.py0 + 22, 1), name: 'paper edge', opt: {dir: -10}});
 	} else if (deskOn && t >= roll0 && t < rel) {
 		cs.push({side: 'R', target: stripJ.screen(rx - 2, S12.py0 + 10, 7), name: 'roller near end'});
 		cs.push({side: 'L', target: stripJ.screen(rx - 2, S12.py0 + 190, 7), name: 'roller far end'});
@@ -454,7 +458,7 @@ const drawJ = (t: number) => {
 	const s = onScreen(st, o, ZZ); const zhang = deskOn ? rig(s, cs, () => s.ground, 'zhangzhu') : s;
 	// his stool
 	const fk = `${Math.round(t * 60)}`;
-	const ext = 520 * (1 - smooth(clamp01(c.th / TH_J * 1.05))), lxL = T12.x0 - S12.x0 - ext;      // while the paper stands up it hides him
+	const ext = 900 * (1 - smooth(clamp01((c.th / TH_J - 0.72) / 0.26))), lxL = T12.x0 - S12.x0 - ext;      // while the paper stands up it hides him
 	const polyJ: P2[] = [stripJ.screen(lxL, -ext * 0.4, -2), stripJ.screen(T12.x1 - S12.x0, 0, -2), stripJ.screen(T12.x1 - S12.x0, S12.depth + ext, -2), stripJ.screen(lxL, S12.depth + ext, -2)];
 	bodyJ.draw(fk, (g) => {
 		g.save(); g.beginPath(); g.rect(-50, -50, W + 100, H + 100); g.moveTo(polyJ[0][0], polyJ[0][1]); for (const q of polyJ.slice(1)) g.lineTo(q[0], q[1]); g.closePath(); g.clip('evenodd');
@@ -466,11 +470,11 @@ const drawJ = (t: number) => {
 	const hero = stripJ.screen(SHEET_W + 260, S12.py0 + 100); st.setHero(hero[0], hero[1], 1300);
 	deskJ.lamp.draw('off', () => {});
 	const ins = 1 - clamp01((c.th - 0.2) / 0.9), pool = t < b(17.5) ? 0.55 : 0.55 * (1 - clamp01((t - b(17.5)) / 0.4));
-	return {st, grade: {vig: lerp(0.36, 0.62, ins), vigCol: '#1a120b', corners: 0.95 * ins, exposure: 1, pool: [980, 600, 640, pool * ins] as [number, number, number, number]}, bloom: 1};
+	return {st, grade: {vig: lerp(0.36, 0.62, ins), vigCol: '#1a120b', corners: 0.95 * ins, cornersBand: [0, 330, 560, 1] as [number, number, number, number], exposure: 1, pool: [980, 600, 640, pool * ins] as [number, number, number, number]}, bloom: 1};
 };
 addScene({id: '11', a: b(16), z: b(17.5), draw: drawJ, in: {mode: 5, a: b(16), z: b(16.15), pt: [0.5, 0.5], soft: 0.08}});
 addScene({id: '12', a: b(17.5), z: b(19), draw: drawJ});
-addScene({id: '13', a: b(19), z: (window as any).SONG_TEST ? b(23.5) : b(23), draw: drawJ});             // scene 14 starts at b23 with in: ROLLUP_IN (b23 → b23.5)
+addScene({id: '13', a: b(19), z: b(23), draw: drawJ});             // scene 14 starts at b23 with in: ROLLUP_IN (b23 → b23.5)
 
 // ================================================================================================ boot
 export const bootSong = async () => {

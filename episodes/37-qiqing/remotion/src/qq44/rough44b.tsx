@@ -342,7 +342,7 @@ const BC: P2 = [1100, 700], BS = 1.3, LBL_Y = 238, REG: P2 = [110, -150], J0 = -
 const bw = (p: P2): P2 => [BC[0] + p[0] * BS, BC[1] + p[1] * BS];
 const Calipers: React.FC<{t: number}> = ({t}) => {
 	const u = t - 117, pull = ease(seg(u, 0.05, 1.0)), draw = ease(seg(u, 0.1, 0.9)), reg = sm(seg(u, 0.5, 0.95)),slideIn = ease(seg(u, 0.6, 1.0)), widen = ease(seg(u, 1.1, 1.5));
-const plus = eo(seg(u, 1.55, 1.85)), label = sm(seg(u, 0.9, 1.2)), found = seg(t, 119.25, 119.39), expert = ease(seg(t, 120.3, 120.95)), doubt = seg(t, 121.0, 121.14), dim = 1 - 0.6 * sm(seg(t, 121.0, 121.4));
+const plus = eo(seg(u, 1.55, 1.85)), label = sm(seg(u, 0.9, 1.2)), found = seg(t, 119.05, 119.19), expert = ease(seg(t, 120.3, 120.95)), doubt = seg(t, 121.0, 121.14), dim = 1 - 0.6 * sm(seg(t, 121.0, 121.4));
 	const rp = bw(REG), cx = lerp(rp[0], 990 + 14 * u, pull), cy = lerp(rp[1], 580, pull), z = lerp(2.8, 1.0 + 0.012 * u, pull);
 	const jaw = lerp(JN, JW, widen), off = (1 - slideIn) * 500;
 	return <g>

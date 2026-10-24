@@ -50,21 +50,22 @@ const wallCanvas = () => {
 /** a few scrolls dropped on the floor and the dark heap (rolls and a toppled closed box) the camera drifts toward */
 const floorScrollsCanvas = () => {
 	const c = mkCanvas(2400, 600), g = c.getContext('2d')!, o = (x: number, y: number) => [x + 240, y - 760] as P;
-	const roll = (x: number, y: number, L: number, r: number, a: number) => { const [X, Y] = o(x, y); g.save(); g.translate(X, Y); g.rotate(a); g.fillStyle = '#2b241d'; g.beginPath(); g.roundRect(-L / 2, -r, L, 2 * r, r * 0.6); g.fill(); g.fillStyle = '#3e352b'; g.beginPath(); g.ellipse(L / 2, 0, r * 0.4, r, 0, 0, Math.PI * 2); g.fill(); g.restore(); };
-	roll(1380, 940, 170, 11, 0.08); roll(1560, 975, 150, 10, -0.25); roll(880, 1000, 190, 12, 0.15);
+	const roll = (x: number, y: number, L: number, r: number, a: number) => { const [X, Y] = o(x, y); g.save(); g.translate(X, Y); g.rotate(a); const gr = g.createLinearGradient(0, -r, 0, r); gr.addColorStop(0, '#6e5d44'); gr.addColorStop(0.45, '#857152'); gr.addColorStop(1, '#4a3d2e'); g.fillStyle = gr; g.beginPath(); g.roundRect(-L / 2, -r, L, 2 * r, r * 0.6); g.fill();
+		g.fillStyle = '#3a4a5c'; g.fillRect(-L / 2, -r, L * 0.07, 2 * r); g.fillRect(L / 2 - L * 0.07, -r, L * 0.07, 2 * r); g.fillStyle = '#a39371'; g.beginPath(); g.ellipse(L / 2 + 2, 0, r * 0.42, r, 0, 0, Math.PI * 2); g.fill(); g.strokeStyle = '#6a5a44'; g.lineWidth = 1.5; g.beginPath(); g.ellipse(L / 2 + 2, 0, r * 0.18, r * 0.45, 0, 0, Math.PI * 2); g.stroke(); g.restore(); };
+	roll(1380, 1010, 170, 11, 0.08); roll(1560, 1045, 150, 10, -0.25); roll(880, 1060, 190, 12, 0.15);
 	// the heap (left of centre on the floor): a toppled closed box and a tangle of rolls, in the cool spill's edge
-	const [hx, hy] = o(520, 960); g.save(); g.translate(hx, hy); g.rotate(-0.1); slatFace(g, -110, -64, 190, 64, 0, '#2e261e', '#151110'); g.restore();
-	for (let i = 0; i < 14; i++) roll(420 + hash(i * 3.3) * 260, 900 + hash(i * 7.7) * 90 - (i % 4) * 14, 120 + hash(i) * 120, 10 + hash(i * 2) * 4, (hash(i * 5.1) - 0.5) * 0.8);
+	const [hx, hy] = o(560, 1040); g.save(); g.translate(hx, hy); g.rotate(-0.1); slatFace(g, -110, -64, 190, 64, 0, '#2e261e', '#151110'); g.restore();
+	for (let i = 0; i < 14; i++) roll(460 + hash(i * 3.3) * 260, 985 + hash(i * 7.7) * 80 - (i % 4) * 12, 120 + hash(i) * 120, 10 + hash(i * 2) * 4, (hash(i * 5.1) - 0.5) * 0.8);
 	return c;
 };
 const guardLook = LOOKS.guard1945;
 const GH = 480, GSTR = gaitStride('08_04', stepFor(guardLook)) * GH, GV = 1.42 * GSTR / (2 * BEAT);   // hurried: 1.42× the natural pace (phase follows x)
-const GX0 = [1500, 950, 330], GPH = [0, 0.28, 0.56], GFLOOR = 900;
+const GX0 = [1500, 950, 330], GPH = [0, 0.17, 0.34], GFLOOR = 900;
 const gx = (i: number, t: number) => GX0[i] + (t - DOOR_CUT) * GV;
 /** an armful of rolled scrolls hugged by a guard (ends toward us, a few long ones) — no glow, these are not you */
 const armful = (g: CanvasRenderingContext2D, c: P, r: number, seed: number) => {
-	for (let i = 0; i < 3; i++) { const a = (hash(seed + i) - 0.5) * 0.5, L = r * (3.2 + hash(seed * 2 + i)); g.save(); g.translate(c[0], c[1] - r * 0.2 + i * r * 0.35); g.rotate(a); g.fillStyle = '#3a3027'; g.beginPath(); g.roundRect(-L / 2, -r * 0.2, L, r * 0.4, r * 0.15); g.fill(); g.restore(); }
-	for (let i = 0; i < 7; i++) { const ang = (i / 7) * Math.PI * 2, cx = c[0] + Math.cos(ang) * r * 0.55, cy = c[1] + Math.sin(ang) * r * 0.5, rr = r * (0.3 + 0.08 * hash(seed + i * 3)); g.fillStyle = '#2c251e'; g.beginPath(); g.arc(cx, cy, rr, 0, Math.PI * 2); g.fill(); g.strokeStyle = '#51463a'; g.lineWidth = 2; g.beginPath(); g.arc(cx, cy, rr * 0.45, 0, Math.PI * 2); g.stroke(); }
+	g.fillStyle = '#2a231c'; g.beginPath(); g.ellipse(c[0], c[1], r * 1.08, r * 0.98, 0, 0, Math.PI * 2); g.fill();
+	for (let i = 0; i < 8; i++) { const ang = (i / 7) * Math.PI * 2, rad = i === 7 ? 0 : 1, cx = c[0] + Math.cos(ang) * r * 0.58 * rad, cy = c[1] + Math.sin(ang) * r * 0.52 * rad, rr = r * (0.3 + 0.08 * hash(seed + i * 3)); g.fillStyle = '#a48d68'; g.beginPath(); g.arc(cx, cy, rr, 0, Math.PI * 2); g.fill(); g.strokeStyle = '#5c4c38'; g.lineWidth = 2; g.beginPath(); g.arc(cx, cy, rr * 0.45, 0, Math.PI * 2); g.stroke(); g.beginPath(); g.arc(cx, cy, rr, 0, Math.PI * 2); g.stroke(); }
 };
 const guardFig = (i: number, t: number, x: number, h = GH, ground = GFLOOR, who = `1945 guard ${i}`) => {
 	const base = carryArmful(walkFor(guardLook, (x - GX0[i]) / GSTR + GPH[i])), a = armfulAt(base), o: FigOpts = {x, ground, h, pose: base, look: guardLook};
@@ -132,12 +133,14 @@ const treeCanvas = (season: number) => {
 	const c = mkCanvas(900, 760), g = c.getContext('2d')!;
 	const br = (x: number, y: number, a: number, l: number, w: number, d: number, seed: number, tips: P[]) => {
 		const x2 = x + Math.sin(a) * l, y2 = y - Math.cos(a) * l; g.strokeStyle = '#2a241e'; g.lineWidth = w; g.lineCap = 'round'; g.beginPath(); g.moveTo(x, y); g.lineTo(x2, y2); g.stroke();
+		if (season === 3 && Math.abs(Math.sin(a)) > 0.25) { g.strokeStyle = '#E8EDF0'; g.lineWidth = Math.max(2, w * 0.35); g.beginPath(); g.moveTo(x + Math.cos(a) * w * 0.4 * Math.sign(-Math.sin(a)), y - w * 0.45); g.lineTo(x2, y2 - w * 0.4); g.stroke(); }
 		if (d === 0) { tips.push([x2, y2]); return; }
 		const n = d > 2 ? 2 : 3; for (let i = 0; i < n; i++) br(x2, y2, a + (i - (n - 1) / 2) * 0.55 + (hash(seed + i) - 0.5) * 0.4, l * (0.68 + hash(seed * 3 + i) * 0.1), w * 0.66, d - 1, seed * 7 + i, tips);
 	};
 	const tips: P[] = []; br(430, 760, 0.02, 165, 30, 4, 11, tips);
 	const col = [['#8DB35A', '#A8C86E', '#6E9446'], ['#3F6B34', '#4F7D3E', '#2F5428'], ['#C0873A', '#D4A24A', '#9A5E2C'], ['#E2E8EA', '#F2F4F4', '#C8D0D4']][season];
 	const leafy = season !== 3, n = season === 0 ? 0.55 : 1;
+	if (!leafy) return c;
 	for (let i = 0; i < tips.length; i++) { const [x, y] = tips[i]; for (let k = 0; k < (leafy ? 7 : 2); k++) { const r = (leafy ? 34 + hash(i * 3 + k) * 28 : 9 + hash(i + k) * 6) * n, dx = (hash(i * 7 + k) - 0.5) * 80, dy = (hash(i * 5 + k) - 0.5) * 60;
 		g.fillStyle = col[(i + k) % 3]; g.globalAlpha = leafy ? 0.9 : 0.85; g.beginPath(); g.arc(x + dx, y + dy + (leafy ? 0 : -4), r, 0, Math.PI * 2); g.fill(); } }
 	g.globalAlpha = 1; return c;
@@ -173,7 +176,7 @@ const lightEx = (t: number) => {
 	for (const L of [exTree.L, exDoors.L, exSnow.L]) L.mat.uniforms.uTint.value.setRGB(lerp(1, nt[0], n), lerp(1, nt[1], n), lerp(1, nt[2], n));
 	exTree.draw(`${s}`, (g) => g.drawImage(treeCvs[s], 0, 0));
 	exSnow.L.mesh.visible = s === 3 && n < 1;
-	exDoors.drawW(`${t >= NIGHT1 ? 1 : 0}`, (g) => { const {x, w, y0, y1} = DOOR; if (t >= NIGHT1) { g.drawImage(doorArt, x - w / 2, y0, w, y1 - y0);
+	exDoors.drawW(`${t >= NIGHT0 ? 1 : 0}`, (g) => { const {x, w, y0, y1} = DOOR; if (t >= NIGHT0) { g.drawImage(doorArt, x - w / 2, y0, w, y1 - y0);
 			g.fillStyle = '#2b2925'; g.fillRect(x - w / 2, y0, 14, y1 - y0); g.fillRect(x + w / 2 - 14, y0, 14, y1 - y0); }                        // the leaves stand open (edge-on against the jambs)
 		else { g.fillStyle = '#4a3c2e'; g.fillRect(x - w / 2, y0, w, y1 - y0); g.fillStyle = '#3a2e23'; g.fillRect(x - 1, y0, 2, y1 - y0); for (const dx of [-w / 4, w / 4]) { g.fillStyle = '#56473a'; g.fillRect(x + dx - 16, y0 + 18, 32, 60); g.fillRect(x + dx - 16, y0 + 100, 32, 60); } } });
 };
@@ -190,15 +193,15 @@ const drawCars = (t: number) => {
 	exLamps.drawW(key, (g) => { if (!on) return; for (let i = 0; i < 2; i++) { const x = carX(i, t) + 146; g.fillStyle = '#FFE0B0'; g.beginPath(); g.ellipse(x, 948, 7, 9, 0, 0, Math.PI * 2); g.fill(); glowBlob(g, [x + 6, 948], 40, 26, 0.6, '255,184,104'); } });
 	exBeams.drawW(key, (g) => { if (!on) return; for (let i = 0; i < 2; i++) { const x = carX(i, t) + 150;
 		const gr = g.createLinearGradient(x, 0, x + 900, 0); gr.addColorStop(0, 'rgba(255,196,128,0.42)'); gr.addColorStop(1, 'rgba(255,196,128,0)'); g.fillStyle = gr; g.beginPath(); g.moveTo(x, 940); g.lineTo(x + 900, 860); g.lineTo(x + 900, 1040); g.lineTo(x, 958); g.fill();
-		const wx = x + 380, gw = g.createRadialGradient(wx, 760, 0, wx, 760, 260); gw.addColorStop(0, 'rgba(255,200,140,0.22)'); gw.addColorStop(1, 'rgba(255,200,140,0)'); g.fillStyle = gw; g.fillRect(wx - 300, 480, 600, 420); } });
+		const gw = g.createLinearGradient(x, 0, x + 700, 0); gw.addColorStop(0, 'rgba(255,200,140,0.10)'); gw.addColorStop(1, 'rgba(255,200,140,0)'); g.fillStyle = gw; g.fillRect(x, 820, 700, 60); } });
 };
 /** b47.8 → b48.4: a guard steps out of the open doorway with an armful and walks right along the facade */
 const exGuardDraw = (t: number) => {
 	const on = t >= b(47.8); exGuard.L.L.mesh.visible = exGuardProp.L.mesh.visible = exGuardArms.L.mesh.visible = on; if (!on) return;
-	const h = 176, str = gaitStride('08_04', 1) * h, x = DOOR.x - 10 + (t - b(47.8)) * 1.3 * str / (2 * BEAT);
-	const base = carryArmful(walkFor(guardLook, (x - DOOR.x) / str + 0.1)), a = armfulAt(base), o: FigOpts = {x, ground: 880, h, pose: base, look: guardLook};
+	const h = 142, str = gaitStride('08_04', 1) * h, x = DOOR.x - 10 + (t - b(47.8)) * 1.3 * str / (2 * BEAT);
+	const base = carryArmful(walkFor(guardLook, (x - DOOR.x) / str + 0.1)), a = armfulAt(base), o: FigOpts = {x, ground: 878, h, pose: base, look: guardLook};
 	const R = toScreen(o, [a.c[0] + 0.03, a.c[1] - a.r - 0.014]), L = toScreen(o, [a.c[0] + a.r + 0.008, a.c[1] + 0.012]);
-	const f = rig(o, [{side: 'R', target: R, name: 'R under armful', opt: {dir: 12}}, {side: 'L', target: L, name: 'L round armful', opt: {dir: -78}}], () => 880, '1945 guard at the door');
+	const f = rig(o, [{side: 'R', target: R, name: 'R under armful', opt: {dir: 12}}, {side: 'L', target: L, name: 'L round armful', opt: {dir: -78}}], () => 878, '1945 guard at the door');
 	const key = k30(t); exGuard.draw(key, [f]); exGuardProp.drawW(key, (g) => armful(g, toScreen(f, a.c), a.r * h, 5)); exGuardArms.drawW(key, (g) => fillD(g, [...figurePaths({...f, part: 'R'}), ...figurePaths({...f, part: 'L'})]));
 };
 
@@ -216,7 +219,7 @@ const camIn = (t: number): Cam => {
 	if (t < DOOR_CUT) { const k = smooth(clamp01(pullU(t) / 0.55)), F: P = [lerp(BOXF.x0 + BOXF.w / 2, 960, k), lerp(BOXF.y0 + BOXF.h / 2, 520, k)], S = winC(t);
 		return camLock(Zi(t), F[0], F[1], ZBOX, S[0], S[1] + (1 - k) * 20); }
 	// 1945: inside at the doors' framing → the search pan to your empty slot (b48.5 → b48.8) → on along the shelves → the drift to the heap
-	const K: [number, number, number, number][] = [[DOOR_CUT, 1160, 560, 1.12], [b(48.5), 1110, 556, 1.18], [b(48.72), 960, 548, 1.42], [b(49), 650, 590, 1.46], [END, 560, 740, 1.78]];
+	const K: [number, number, number, number][] = [[DOOR_CUT, 1160, 560, 1.12], [b(48.5), 1110, 556, 1.18], [b(48.72), 960, 548, 1.42], [b(49), 660, 860, 1.5], [END, 610, 932, 1.66]];
 	let i = 0; while (i < K.length - 2 && t > K[i + 1][0]) i++;
 	const [t0, x0, y0, z0] = K[i], [t1, x1, y1, z1] = K[i + 1], u = clamp01((t - t0) / (t1 - t0)), e = i === K.length - 2 ? u : easeInOut(u);
 	return camLock(Math.exp(lerp(Math.log(z0), Math.log(z1), e)), lerp(x0, x1, e), lerp(y0, y1, e), ZBOX, 960, 540);
@@ -265,4 +268,6 @@ addScene({id: '26', a: T0, z: P0, draw: (t) => { if (t >= P0) { updatePane(t); r
 addScene({id: '26b', a: P0, z: DOOR_CUT, in: PANE, draw: (t) => { if (t < P1) { updatePane(t); return {...drawInterior(t), hud: (hud: HTMLElement) => paneGlint(hud, t)}; } return drawExterior(t); }});
 addScene({id: '26c', a: DOOR_CUT, z: END, draw: drawInterior});
 
-export const bootXbl = async () => { await bootIn(); await bootEx(); };
+export const bootXbl = async () => { await bootIn(); await bootEx();
+	for (const m of [...inSt.mats, ...exSt.mats]) m.uniforms.uRimCol.value.set('#A8BCCB');      // no warm light in 26: every rim is cool moon/sky light
+};
