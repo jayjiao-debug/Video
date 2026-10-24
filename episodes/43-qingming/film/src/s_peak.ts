@@ -4,8 +4,8 @@ import {Stage, Live, bar, BEAT, W, H, D, clamp01, smooth, easeInOut, easeOut, ea
 import {addScene} from './film';
 import {Store} from './rooms';
 import {Crest, deck} from './crest';
-import {Cast, look, drawRoll, glowBlob, rig, Contact} from './actors';
-import {POSES, FigOpts, walkFor, gaitStride, stepFor} from './figures';
+import {Cast, look, drawRoll, drawFig, glowBlob, rig, Contact} from './actors';
+import {POSES, FigOpts, gaitPose, gaitStride} from './figures';
 import {paintSection, paintRelief, paintRiverSprites, layerShadow} from './silk';
 
 const b = bar, T0 = 123.40;                         // the hardest drop's audible bass (b54 grid = 123.71)
@@ -20,7 +20,7 @@ let monoBase: HTMLCanvasElement, greyArt: HTMLCanvasElement, colBase: HTMLCanvas
 let sprC: ReturnType<typeof paintRiverSprites>;
 let peak: Stage, pMono: Live, pCol: Live;
 const relief: {L: any; sh?: any}[] = [];
-let BR = {x: 0, y: 0, w: 0, h: 0}, UB = 0.5, VB = 0.4;
+let BR = {x: 0, y: 0, w: 0, h: 0}, UB = 0.5, VB = 0.4, APEX: [number, number] = [0, 0];
 let day: Crest, dayCast: Cast, dayRoll: Live, gateGlow: Live;
 
 // ------------------------------------------------------------------------------------------------ boot
@@ -42,7 +42,7 @@ export const bootPeak = async () => {
 	greyArt = paintSection('river', {width: 1024, height: 384, mode: 'grey', seed: 61});
 	colBase = paintSection('river', {width: 4096, height: 1536, mode: 'colour', seed: 43, sprites: false});
 	sprC = paintRiverSprites({width: 4096, height: 1536, mode: 'colour', seed: 43});
-	BR = colBase.silk.bridge; UB = (BR.x + BR.w * 0.5) / 4096; VB = (BR.y + BR.h * 0.42) / 1536;
+	BR = colBase.silk.bridge; UB = (BR.x + BR.w * 0.5) / 4096; VB = (BR.y + BR.h * 0.42) / 1536; APEX = [BR.x + BR.w * 0.5 - 160 / SEC / 1.418, BR.y + 134 / SEC];   // the arch facade's top (measured at the exit)
 	// the PEAK stage
 	peak = new Stage('peak');
 	peak.add('back', canvasTex(gradCanvas([[0, '#d6c6a3'], [1, '#c4b18c']])), 960, 540, 9000, 5000, -3000);
@@ -59,7 +59,7 @@ export const bootPeak = async () => {
 	// the day crest: staff + your roll, and the warm-lit gate passage on the far bank
 	dayCast = new Cast(day.st, 'dayCast', 960, 900, 7000, 1800, 20);
 	dayRoll = new Live(day.st, 'dayRoll', 960, 900, 7000, 1800, 22, {emissive: 0.55}, 0.6);
-	gateGlow = new Live(day.st, 'gateGlow', -300, 800, 200, 160, -2590, {emissive: 0.5}, 2);
+	gateGlow = new Live(day.st, 'gateGlow', -300, 800, 200, 160, -2590, {emissive: 0.5}, 2, -1990);   // drawn after the haze (−2000)
 	gateGlow.draw('g', (g) => drawPassage(g));
 };
 
@@ -116,10 +116,26 @@ const researcher = (t: number): FigOpts => {
 	else if (t < b(51.25) - 0.18) { /* hands in the lap */ }
 	else if (t < b(53.5) - 0.2) { const i = t < openAt(1) - 0.05 ? 2 : t < openAt(0) - 0.05 ? 1 : 0; c.push({side: 'R', target: [freeEnd(i, t), ROLLY[i] - 4], name: 'roller'}); }
 	else if (t < T0) { const p = batteredAt(t); c.push({side: 'R', target: [p[0] + 6, p[1] - 12], name: 'battered'}); }
-	else { c.push({side: 'R', target: [SX + 8, TOPF - 4], name: 'silk edge'}); if (t < T0 + 0.12) c.push({side: 'L', target: [SX + 14 + SW * unrollAt(t), TOPF - 16], name: 'roller'}); }
+	else { c.push({side: 'R', target: [SX + 8, TOPF - 4], name: 'silk edge'}); if (t < T0 + 0.035) c.push({side: 'L', target: [SX + 14 + SW * unrollAt(t), TOPF - 16], name: 'roller'}); }   // L hand only on the push: the roll then runs out of reach
 	return rig(o, c, () => FLOOR, 'researcher');
 };
 
+/** the battered roll: stained, torn, a frayed end; matte like the rejects around it until he draws it out (k 0 → 1 warms it) */
+const battered = (g: CanvasRenderingContext2D, x: number, y: number, k: number) => {
+	const L = 150, r = 13, a = Math.atan2(-6, L);
+	g.save(); g.translate(x, y); g.rotate(a);
+	const gr = g.createLinearGradient(0, -r, 0, r);
+	gr.addColorStop(0, `rgb(${lerp(110, 226, k)},${lerp(92, 196, k)},${lerp(70, 150, k)})`); gr.addColorStop(0.45, `rgb(${lerp(140, 246, k)},${lerp(120, 228, k)},${lerp(92, 196, k)})`); gr.addColorStop(1, `rgb(${lerp(70, 180, k)},${lerp(56, 140, k)},${lerp(42, 100, k)})`);
+	g.fillStyle = gr; g.beginPath(); g.moveTo(0, -r);
+	for (let i = 1; i <= 12; i++) g.lineTo((i / 12) * L, -r + ((i * 7) % 5 === 0 ? 5 : (i % 3) * 1.4));          // torn top edge
+	g.lineTo(L + 6, -4); g.lineTo(L + 1, 0); g.lineTo(L + 8, 4); g.lineTo(L, r);                                   // frayed end
+	for (let i = 11; i >= 0; i--) g.lineTo((i / 12) * L, r - ((i * 5) % 4 === 0 ? 4 : (i % 2) * 1.6));            // torn bottom edge
+	g.closePath(); g.fill();
+	g.fillStyle = 'rgba(40,28,18,.55)'; for (const [cx, rr] of [[34, 6], [78, 4], [112, 7]] as [number, number][]) { g.beginPath(); g.ellipse(cx, (cx % 3) - 2, rr * 1.6, rr, 0.3, 0, Math.PI * 2); g.fill(); }   // water stains
+	g.fillStyle = '#2c3e52'; g.fillRect(0, -r, L * 0.05, 2 * r);
+	g.fillStyle = '#b8aa90'; g.beginPath(); g.ellipse(-r * 0.25, 0, r * 0.35, r * 0.7, 0, 0, Math.PI * 2); g.fill();
+	g.restore();
+};
 /** a copy's roll: matte silk (it doesn't glow; only you do), grey once it is shown to be a copy */
 const dullRoll = (g: CanvasRenderingContext2D, x: number, y: number, L: number, r: number, grey: boolean) => {
 	const gr = g.createLinearGradient(0, y - r, 0, y + r);
@@ -168,28 +184,30 @@ const storeDraw = (t: number) => {
 	// the battered roll / the strip
 	const r = stripRect(t), bp = batteredAt(t), unrolled = t >= T0;
 	const tremble = t > b(53.75) && t < T0 ? Math.sin(t * 70) * (t > 123.13 ? 2.4 : 0.9) : 0;
-	strip.L.mat.uniforms.uEmissive.value = unrolled ? 0.08 + 0.12 * burst * (1 - r.dv) + 0.08 * r.dv : 0.06;
+	strip.L.mat.uniforms.uEmissive.value = unrolled ? lerp(0.05 + 0.08 * burst, 0.16, r.dv) : 0.03 + 0.12 * clamp01((t - b(53.5)) / 0.4);
 	strip.drawW(`${fk}:${r.h.toFixed(1)}`, (g) => {
 		if (unrolled && r.w > 2) {
 			g.save(); g.beginPath(); g.rect(r.x, r.y, r.w, r.h); g.clip(); g.fillStyle = '#F3E6CA'; g.fillRect(r.x, r.y, r.w, r.h);
-			g.drawImage(monoBase, 0, 0, 4096 * (r.w / SW), 1536, r.x, r.y, r.w, r.h); g.restore();
+			g.drawImage(monoBase, 0, 0, 4096 * (r.w / SW), 1536, r.x, r.y, r.w, r.h);
+			g.fillStyle = `rgba(48,32,20,${(0.14 * (1 - r.dv)).toFixed(3)})`; g.fillRect(r.x, r.y, r.w, r.h); g.restore();   // ≤ 85 % luma; the bloom carries the glow
 			g.fillStyle = 'rgba(30,22,16,.75)';                                             // torn edges (top and bottom margins)
 			for (let i = 0; i < 40; i++) { const x = r.x + (i / 40) * r.w, d = (Math.sin(i * 12.9898) * 43758.5) % 1; g.fillRect(x, r.y, r.w / 40 + 1, Math.abs(d) * r.h * 0.035); g.fillRect(x, r.y + r.h - Math.abs(d * 1.7 % 1) * r.h * 0.03, r.w / 40 + 1, r.h * 0.03); }
 			const ex = r.x + r.w; g.fillStyle = '#d9c39c'; g.beginPath(); g.roundRect(ex - 4, r.y + 2, 22, r.h - 4, 9); g.fill();   // what's left of the roll, lying across the table's depth
 			g.fillStyle = '#2c3e52'; g.fillRect(ex - 4, r.y + 2, 22, Math.min(10, r.h * 0.08)); g.fillRect(ex - 4, r.y + r.h - 2 - Math.min(10, r.h * 0.08), 22, Math.min(10, r.h * 0.08));
-		} else { drawRoll(g, [bp[0] + tremble, bp[1]], [bp[0] + 150 + tremble, bp[1] - 6], 13, 0.3, false);
-			g.fillStyle = 'rgba(28,20,14,.85)'; for (const [dx, w] of [[18, 7], [52, 5], [83, 9], [121, 6]]) { g.beginPath(); g.moveTo(bp[0] + dx + tremble, bp[1] - 13 - dx * 0.04); g.lineTo(bp[0] + dx + w + tremble, bp[1] - 13 - dx * 0.04); g.lineTo(bp[0] + dx + w * 0.4 + tremble, bp[1] - 5 - dx * 0.04); g.closePath(); g.fill(); } }
+		} else battered(g, bp[0] + tremble, bp[1], clamp01((t - b(53.5)) / 0.4));
 	});
 	glow.draw(fk, (g) => {
-		const a0 = t >= b(50.5) && !unrolled ? 0.10 + 0.03 * Math.sin(t * 7) + (t > b(53.5) ? 0.06 + (t > 123.13 ? 0.06 : 0) : 0) : 0;
+		const a0 = t >= b(50.5) && !unrolled ? (t < b(53.5) ? 0.05 + 0.015 * Math.sin(t * 7) : 0.12 + 0.04 * clamp01((t - b(53.5)) / 0.4) + (t > 123.13 ? 0.06 : 0)) : 0;
 		glowBlob(g, [bp[0] + 75, bp[1]], 110, 50, a0);
 		if (unrolled) glowBlob(g, [r.x + r.w / 2, r.y + r.h / 2], 260 + 260 * burst, 70 + r.h * 0.8, 0.2 * burst * (1 - r.dv));
 	});
+	store.lamp.L.mat.uniforms.uOpacity.value = 1 - stripRect(t).dv;
 	store.lamp.draw(`${on}`, (g) => { if (!on) return; glowBlob(g, LAMP.bulb, 60, 46, 0.55, '255,196,120'); glowBlob(g, [1080, TOPF - 30], 300, 70, 0.22, '255,190,110'); });
 	store.dust.update(t, [300, 120, 1800, 1000], 22 + 30 * burst, 5, 0.18 + 0.55 * burst);
 	if (!unrolled) st.heroAt(on ? (t > b(50.5) ? bp[0] + 75 : LAMP.bulb[0]) : 960, on ? (t > b(50.5) ? bp[1] : LAMP.bulb[1]) : 580, 6, on ? 700 : 300);
 	else st.heroAt(r.x + r.w / 2, r.y + r.h / 2, 0, 700 + 900 * burst);
-	return {st, grade: {vig: 0.42, vigCol: '#140e0a', exposure: on ? 1 + 0.06 * burst : 0.6, corners: 0.5 + 0.5 * clamp01((t - DIVE_A) / 0.3)}, bloom: 1 + 0.25 * burst};
+	const dv = r.dv;
+	return {st, grade: {vig: lerp(0.42, 0.32, dv), vigCol: '#140e0a', exposure: on ? lerp(1 + 0.04 * burst, 0.88, dv) : 0.6, corners: 0.5 + 0.5 * clamp01((t - DIVE_A) / 0.3)}, bloom: lerp(1 + 0.15 * burst, 0.8, dv)};
 };
 addScene({id: '27', a: b(50), z: b(54.5) - 0.1, draw: storeDraw});
 
@@ -211,14 +229,18 @@ const peakCam = (t: number): [number, number, number] => {
 	const [x2, y2, z2] = camOf(clampV({u: vc.u, v: vc.v + 0.01, f: 0.47}));
 	return [lerp(x1, x2, k), lerp(y1, y2, k), Math.exp(lerp(Math.log(z1), Math.log(z2), k))];
 };
+/** the exit's camera roll: the painted arch is drawn obliquely (left side steeper); a slight roll balances it onto the real one */
+const ROLL = -0.09;
+const peakRoll = (t: number) => ROLL * easeInOut(clamp01((t - b(56.75)) / (b(57) - 0.12 - b(56.75))));
 /** the crest camera that puts the real arch's apex + span on the painted arch's apex + span as framed at time t */
 const crestMatch = (t: number): [number, number, number] => {
-	const [cx, cy, zm] = peakCam(t), ax = FX0 + (BR.x + BR.w * 0.5) * SEC, ay = BR.y * SEC + 134;   // BR.y is the crowd's top; +134 world px = the deck / arch-facade line
-	const sx = 960 + (ax - cx) * zm, sy = 540 + (ay - cy) * zm, half = BR.w * SEC * 0.5 * zm, zc = half / 1700;
+	const [cx, cy, zm] = peakCam(t); peak.setCam(cx, cy, zm, peakRoll(t));
+	const A = peak.toScreen(peak.at(FX0 + APEX[0] * SEC, APEX[1] * SEC, 0)), sx = A.x, sy = A.y;
+	const zc = 0.2993 * zm;            // the real arch drops as much as the painted one (mean of its two sides) 465 painting px either side of the apex
 	return [960 - (sx - 960) / zc, 900 - (sy - 540) / zc, zc];
 };
 const peakDraw = (t: number) => {
-	const st = peak, [cx, cy, zm] = peakCam(t); st.setCam(cx, cy, zm);
+	const st = peak, [cx, cy, zm] = peakCam(t); st.setCam(cx, cy, zm, peakRoll(t));
 	const flood = easeOut(clamp01((t - b(54.5)) / 0.65));
 	const mastK = 0.2 + 0.8 * clamp01((t - b(54.5)) / 2.6), railK = 0.3 + 0.7 * clamp01((t - b(54.5)) / 1.0), cartK = cartAt(t);
 	const rel = t >= b(56);
@@ -238,13 +260,15 @@ const peakDraw = (t: number) => {
 		if (r.sh) { const zs = z - 6, ss = (D - zs) / D; r.sh.mat.uniforms.uOpacity.value = rel ? 0.85 * cr : 0; r.sh.mesh.position.copy(st.at(960 + 14 * cr, 540 + 22 * cr, zs)); r.sh.mesh.scale.set(ss, ss, 1); }
 	}
 	st.setHero(960, 540, 2400);
-	const hide = t >= b(56);
-	return {st, grade: {vig: 0.32, vigCol: '#1c140e', corners: 1 - clamp01((t - b(56)) / 0.3), exposure: 0.93}, bloom: 0.8, hideFurniture: hide};
+	const hide = t >= b(56), ex = easeInOut(clamp01((t - b(56.75)) / (b(57) - b(56.75))));
+	const pool = clamp01((t - b(56) + 0.15) / 0.3);         // the HUD leaves; the lamplight becomes a pool on the bridge (no lift on the hit)
+	return {st, grade: {vig: 0.32, vigCol: '#1c140e', corners: 1 - pool, exposure: lerp(0.88, 0.76, ex), tint: ex > 0 ? '#' + [lerp(255, 226, ex), lerp(255, 234, ex), lerp(255, 238, ex)].map((v) => Math.round(v).toString(16).padStart(2, '0')).join('') : '#ffffff',
+		pool: [960, 500, 640, pool * (1 - 0.6 * ex)]}, bloom: 0.8, hideFurniture: hide};
 };
 addScene({id: '28', a: b(54.5) - 0.1, z: b(57) - 0.12, draw: peakDraw, in: {mode: 7, a: b(54.5) - 0.1, z: b(54.5), soft: 0.5}});
 
 // ------------------------------------------------------------------------------------------------ scene 29: the 1950s day crest, 进⑤
-const STR = gaitStride('08_04', stepFor(lk50)) * 560;
+const STEP29 = 0.7, STR = gaitStride('08_04', STEP29) * 560;      // a careful, shorter step: they carry you
 const staffX = (t: number) => 1250 - ((t - b(57)) / (2 * BEAT)) * STR;
 const ground29 = (x: number) => (x < -740 ? 1380 : deck(x));
 const cam29 = (t: number): [number, number, number] => {
@@ -267,15 +291,17 @@ const drawPassage = (g: CanvasRenderingContext2D) => {
 };
 addScene({id: '29', a: b(57) - 0.12, z: b(58.5), in: {mode: 7, a: b(57) - 0.12, z: b(57) + 0.06, soft: 0.5}, draw: (t) => {
 	const st = day.st, [cx, cy, zm] = cam29(t); st.setCam(cx, cy, zm);
-	const u = (t - b(57)) / (2 * BEAT), x1 = staffX(t), x2 = x1 + 330, H2 = 560;
+	const u = (t - b(57)) / (2 * BEAT), x1 = staffX(t), x2 = x1 + 300, H2 = 560;
 	// front staff carries you in both hands at chest height; the second walks a step behind
-	const rc: [number, number] = [x1 - 0.16 * H2, ground29(x1) - 0.66 * H2];
-	const rl = 0.24 * H2, e0: [number, number] = [rc[0] - rl / 2, rc[1] + 4], e1: [number, number] = [rc[0] + rl / 2, rc[1] - 4];
-	const f1 = rig({x: x1, ground: ground29(x1), h: H2, pose: walkFor(lk50, u), look: lk50, flip: true}, [{side: 'L', target: [e0[0] + 6, e0[1] + 8], name: 'roll end'}, {side: 'R', target: [e1[0] - 6, e1[1] + 8], name: 'roll end'}], ground29, 'staff1');
-	const f2 = rig({x: x2, ground: ground29(x2), h: H2 + 8, pose: walkFor(lk50, u + 0.5), look: lk50, flip: true}, [], ground29, 'staff2');
+	// the front staff cradles you against his chest (hands under both ends, the near arm drawn over the roll); the second
+	// walks a step behind, out of phase with him (a quarter-cycle, so the two silhouettes don't stride as one)
+	const rc: [number, number] = [x1 - 0.11 * H2, ground29(x1) - 0.64 * H2];
+	const rl = 0.22 * H2, e0: [number, number] = [rc[0] - rl / 2, rc[1] + 3], e1: [number, number] = [rc[0] + rl / 2, rc[1] - 3];
+	const f1 = rig({x: x1, ground: ground29(x1), h: H2, pose: gaitPose('08_04', u, STEP29), look: lk50, flip: true}, [{side: 'L', target: [e0[0] + 8, e0[1] + 9], name: 'roll end'}, {side: 'R', target: [e1[0] - 8, e1[1] + 9], name: 'roll end'}], ground29, 'staff1');
+	const f2 = rig({x: x2, ground: ground29(x2), h: H2 + 8, pose: gaitPose('08_04', u + 0.28, STEP29), look: lk50, flip: true}, [], ground29, 'staff2');
 	dayCast.draw(`${Math.round(t * 30)}`, [f2, f1]);
-	dayRoll.drawW(`${Math.round(t * 30)}`, (g) => { glowBlob(g, rc, 120, 60, 0.35); drawRoll(g, e0, e1, 15, 1); });
+	dayRoll.drawW(`${Math.round(t * 30)}`, (g) => { glowBlob(g, rc, 120, 60, 0.35); drawRoll(g, e0, e1, 14, 1); drawFig(g, {...f1, part: 'L'}); });
 	day.setBoat(1650 - (t - b(57)) * 40, 60); day.setStreak(rc[0], 0.25, t); day.setLanterns(() => 0);
 	st.heroAt(rc[0], rc[1], 22, 650);
-	return {st, grade: {vig: 0.22, exposure: 1.0}, bloom: 1, hideFurniture: t < b(57)};
+	return {st, grade: {vig: 0.22, exposure: 1.0, corners: 1, cornersTop: 0.55, cornersBand: [0, 300, 470, 0.8]}, bloom: 1, hideFurniture: t < b(57)};
 }});
