@@ -115,7 +115,7 @@ export const bootResto = async () => {
 const frontCanvas = () => {
 	const c = mkCanvas(W, H), g = c.getContext('2d')!, top = S.edge;
 	g.fillStyle = '#4a2c20'; g.fillRect(0, top - 2, W, 8); g.fillStyle = '#2e1c14'; g.fillRect(0, top + 5, W, 24);
-	g.fillStyle = '#21140e'; for (const x of [230, 1620]) g.fillRect(x, top + 26, 20, TB.floor - 75 - top - 26);   // back legs
+	g.fillStyle = '#21140e'; for (const x of [230, 1620]) g.fillRect(x, top + 26, 20, TB.floor - 40 - top - 26);   // back legs
 	g.fillStyle = '#2e1c14'; for (const x of [150, 1700]) g.fillRect(x, top + 26, 30, TB.floor - top - 26);
 	g.fillRect(180, TB.floor - 90, 1520, 12); g.fillStyle = 'rgba(255,230,190,0.12)'; g.fillRect(0, top - 2, W, 2);
 	return c;
@@ -281,7 +281,7 @@ const restorers = (t: number, on: boolean) => {
 	else { const k = smooth((t - b(61.55)) / (b(61.65) - b(61.55))); s1.pose = reach(s1.pose, 'L', toBody(s1, lerpP(silkPt, arm, k))); }
 	out.figs.push(on ? rig(s1, c1, () => s1.ground, 'restorer-seated') : unlogged(s1, c1)); void sw;
 	// standing, facing right, holding the scroll flat by its near margin
-	const stand: FigOpts = {x: 905, ground: TB.floor - 75, h: 575, pose: fkPose({hip: 0.62, hipX: -0.12, lean: 62, neck: -6, lt: 10, lk: 8, rt: 5, rk: 6, la: 34, le: 30, ra: 28, re: 25}), look: lk73};
+	const stand: FigOpts = {x: 905, ground: TB.floor - 40, h: 540, pose: fkPose({hip: 0.62, hipX: -0.12, lean: 62, neck: -6, lt: 10, lk: 8, rt: 5, rk: 6, la: 34, le: 30, ra: 28, re: 25}), look: lk73};
 	const s2 = onScreen(st, stand, ZR);
 	// his hands go to the near margin where it lies within reach: the margin point about a third of his height in front of the shoulder
 	const shS = proj(st, 0, 0, 0) && [s2.x + (s2.pose.RSh[0]) * s2.h, s2.ground - s2.pose.RSh[1] * s2.h] as P2;
