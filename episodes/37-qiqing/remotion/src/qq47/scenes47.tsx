@@ -2,7 +2,7 @@ import React from 'react';
 import {W, H, rnd, lerp, PP, AU, Sheet, Band, Bg, Cloud, Xiangyun, Moon, Mirror, Hairpin, Ring, Bangle, Pearl, Quince, JadeBi, Phone, AvatarArt, Pager, RedPacket, Bike, Watch, Sewing, Radio, Hall, Lantern, Fence, Tree, Scroll, TokGlow} from './kit47';
 import {Rimmed, Look4} from '../qq44/kit44';
 import {Pose} from '../qq44/figure44';
-import {jointAt, reg, PZ, walkNat} from './pose47';
+import {jointAt, reg, PZ, walkNat, STRIDE, GAIT_S} from './pose47';
 import {mixPose} from '../qq44/figure44';
 /* ep47 scenes. Each scene takes u = seconds since the scene started (and d = its length).
    People are cut-paper figures (ink with a paper-white edge), placed from their bodies and registered for check47. */
@@ -22,6 +22,7 @@ export const LK: Record<string, Look4> = {
 	yang: {dress: 'robe', head: 'bun', sleeves: 'wide'}, fangshi: {dress: 'robe', head: 'guan', beard: 'long', sleeves: 'wide'}, emperor: {dress: 'robe', head: 'futou', beard: 'full', sleeves: 'wide'},
 	groom70: {dress: 'jacket', head: 'short', legs: 'trousers'}, bride70: {dress: 'jacket', head: 'bob', legs: 'trousers'},
 	man: {dress: 'shirt', head: 'young', legs: 'trousers'}, woman: {dress: 'dress', head: 'long'},
+	guard: {dress: 'tunic', head: 'bowl', legs: 'trousers'}, yangsu: {dress: 'robe', head: 'guan', beard: 'full', sleeves: 'wide'},
 };
 type FigP = {frame: string; who: string; x: number; g: number; h: number; pose: Pose; look: Look4; flip?: boolean; o?: number; col?: string};
 /** a cut-paper person; registered for the body-logic check */
@@ -35,20 +36,19 @@ const hand = (p: Pose, n: 'LHand' | 'RHand', x: number, g: number, h: number, fl
    OPEN · two phones on a table, one couple avatar split across them; a mirror half slides into the gap
    ===================================================================================== */
 export const Open: React.FC<SceneP> = ({u}) => {
-	const apart = ease(seg(u, 2.27, 3.4)), mirrorIn = ease(seg(u, 4.6, 6.6)), z = 1 + 0.04 * seg(u, 0, 9);
-	const gap = 0 + 640 * apart;
+	const apart = ease(seg(u, 0.555, 1.9)), mirrorIn = ease(seg(u, 5.66, 6.9)), z = 1 + 0.04 * seg(u, 0, 9);
+	const gap = 640 * apart;
 	return <g>
 		<Bg c={PP.ochreL} c2={PP.ochre} id="opbg" />
 		<Sheet c="#B9864A" d={Band(760, 14, 3)} />
 		{Array.from({length: 6}, (_, i) => <path key={i} d={`M0,${800 + i * 50} Q960,${790 + i * 52} 1920,${806 + i * 50}`} stroke="#8F6334" strokeWidth={3} fill="none" opacity={0.35} />)}
 		<Cam z={z} y={560}>
-			<Phone x={960 - 175 - gap / 2} y={560} s={0.95} side="L" id="opL" name="" glow={0.5 + 0.3 * apart} />
-			<Phone x={960 + 175 + gap / 2} y={560} s={0.95} side="R" id="opR" name="" glow={0.5 + 0.3 * apart} />
+			<Phone x={960 - 162 - gap / 2} y={560} s={0.95} side="L" id="opL" glow={0.5 + 0.3 * apart} />
+			<Phone x={960 + 162 + gap / 2} y={560} s={0.95} side="R" id="opR" glow={0.5 + 0.3 * apart} />
 			{mirrorIn > 0 && <g opacity={mirrorIn} transform={`translate(0,${(1 - mirrorIn) * 420})`}><Mirror x={960} y={474} r={150} id="opm" half="L" gap={0} /></g>}
 		</Cam>
 	</g>;
 };
-/* TITLE · the mirror half turns, its other half arrives, they close into a full mirror with the moon */
 export const TitleScene: React.FC<SceneP> = ({u}) => {
 	const close = ease(seg(u, 0, 0.5)), z = 1.0 + 0.03 * seg(u, 0, 2.8);
 	return <g>
@@ -63,35 +63,45 @@ export const TitleScene: React.FC<SceneP> = ({u}) => {
    诗经 · spring, a fence; she tosses a quince over it, he catches it; he gives back a jade pendant
    ===================================================================================== */
 export const Shijing: React.FC<SceneP> = ({u}) => {
-	const g = 900, h = 560, gx = 640, bx = 1300;
-	const fly = seg(u, 0.4, 2.2), giveJade = seg(u, 4.4, 6.0), close = ease(seg(u, 9.2, 12.4));
-	const girlPose = u < 1.8 ? PZ.toss : mixPose(PZ.toss, PZ.catch_, ease(seg(u, 4.4, 6.0)));
-	const boyPose = u < 2.2 ? mixPose(PZ.stand, PZ.catch_, ease(seg(u, 0.8, 2.0))) : u < 4.4 ? PZ.catch_ : PZ.offer;
-	const [qx0, qy0] = hand(PZ.toss, 'LHand', gx, g, h), [cx, cy] = hand(PZ.catch_, 'LHand', bx, g, h, true), [ox, oy] = hand(PZ.offer, 'LHand', bx, g, h, true), [gcx, gcy] = hand(PZ.catch_, 'LHand', gx, g, h);
-	const qx = u < 0.4 ? qx0 : u < 2.2 ? lerp(qx0, cx, fly) : cx, qy = u < 0.4 ? qy0 : u < 2.2 ? lerp(qy0, cy, fly) - 260 * Math.sin(fly * Math.PI) : cy;
-	const jx = u < 4.4 ? ox : lerp(ox, gcx, ease(giveJade)), jy = u < 4.4 ? oy : lerp(oy, gcy, ease(giveJade)) - 60 * Math.sin(giveJade * Math.PI);
+	const g = 900, h = 560, FX = 980;
+	/* where they stop at the fence so that his right hand (offerR) meets her left hand (offer) over the top rail */
+	const gStop = FX - PZ.offer.LHand[0] * h - 6, bStop = FX + PZ.offerR.RHand[0] * h + 6;
+	const gw = walkNat(u, 3.0, 3.0 + (gStop - 640) / (STRIDE * h / GAIT_S), 640, 1, h, PZ.stand);
+	const bw = walkNat(u, 3.0, 3.0 + (1300 - bStop) / (STRIDE * h / GAIT_S), 1300, -1, h, PZ.stand);
+	const giveK = ease(seg(u, 4.7, 5.7)), take = ease(seg(u, 5.9, 6.8)), close = ease(seg(u, 9.2, 12.4));
+	/* her: toss (0–0.9), relax, walk, offer to receive, then hold the pendant at her chest */
+	const girlPose = u < 0.9 ? PZ.toss : u < 1.5 ? mixPose(PZ.toss, PZ.offer, ease(seg(u, 0.9, 1.5))) : u < 3.0 ? mixPose(PZ.offer, PZ.stand, ease(seg(u, 1.5, 2.4))) : gw.moving ? gw.pose : u < 5.9 ? mixPose(PZ.stand, PZ.offer, giveK) : mixPose(PZ.offer, PZ.holdChest, take);
+	const gx = u < 3.0 ? 640 : gw.x;
+	/* him: watches, catches with both hands (catch_), walks to the fence, offers the jade over it with the right hand */
+	const boyPose = u < 2.2 ? mixPose(PZ.stand, PZ.catch_, ease(seg(u, 1.0, 2.0))) : u < 3.0 ? mixPose(PZ.catch_, PZ.stand, ease(seg(u, 2.4, 3.0))) : bw.moving ? bw.pose : u < 5.9 ? mixPose(PZ.stand, PZ.offerR, giveK) : mixPose(PZ.offerR, PZ.stand, take);
+	const bx = u < 3.0 ? 1300 : bw.x;
+	const [tx, ty] = hand(PZ.toss, 'LHand', 640, g, h);
+	const cL = hand(PZ.catch_, 'LHand', 1300, g, h, true), cR = hand(PZ.catch_, 'RHand', 1300, g, h, true), [cx, cy] = [(cL[0] + cR[0]) / 2, (cL[1] + cR[1]) / 2];
+	const fly = seg(u, 0.9, 2.1);
+	/* the quince: in her hand → arc → his hands → his left hand (at his side, also while walking) */
+	const qL = hand(boyPose, 'LHand', bx, g, h, true);
+	const [qx, qy] = u < 0.9 ? [tx, ty] : u < 2.1 ? [lerp(tx, cx, fly), lerp(ty, cy, fly) - 300 * Math.sin(fly * Math.PI)] : u < 2.4 ? [cx, cy] : qL;
+	/* the jade: in his right hand from 3.0 (taken from his belt as he turns), handed over the rail, then in her left hand */
+	const jB = hand(boyPose, 'RHand', bx, g, h, true), jG = hand(girlPose, 'LHand', gx, g, h);
+	const [jx, jy] = u < 5.9 ? jB : jG;
 	const people = 1 - close;
 	return <g>
 		<Bg c={PP.skyL} c2="#F6E7C8" id="sjbg" />
 		<Moon x={1580} y={200} r={70} c="#FFF2CF" />
-		<Cloud x={420} y={230} s={1.2} c={PP.cream} /><Cloud x={1250} y={170} s={0.9} c={PP.cream} />
+		<Cloud x={1250} y={170} s={0.9} c={PP.cream} />
 		<Sheet c={PP.sage} d={Band(640, 40, 11)} /><Sheet c={PP.leaf} d={Band(760, 30, 12)} />
-		<Tree x={240} g={820} s={1.2} blossom /><Tree x={1720} g={830} s={1.05} c={PP.sage} c2={PP.leaf} blossom />
+		<Tree x={200} g={820} s={1.2} blossom /><Tree x={1740} g={830} s={1.05} c={PP.sage} c2={PP.leaf} blossom />
 		<Sheet c="#A9C48C" d={Band(g - 10, 8, 13)} />
 		<g opacity={people}>
-			<Fence x0={900} x1={1060} y={g + 6} h={260} />
 			<Fig frame="Shijing" who="girl" x={gx} g={g} h={h} pose={girlPose} look={LK.zhouGirl} />
 			<Fig frame="Shijing" who="boy" x={bx} g={g} h={h} pose={boyPose} look={LK.zhouBoy} flip />
-		</g>
-		{/* the gifts: quince follows her throw into his hands; jade goes from his hand to hers */}
-		<g opacity={people}>
-			{u < 4.4 ? <Quince x={qx} y={qy} s={0.5} rot={fly * 240} /> : <Quince x={hand(PZ.catch_, 'LHand', gx, g, h)[0] - 30} y={gcy + 20} s={0.45} />}
-			{u >= 3.6 && <JadeBi x={jx} y={jy + 40} s={0.42} glow={0.8} />}
+			<Fence x0={FX - 70} x1={FX + 70} y={g + 6} h={250} />
+			<Quince x={qx} y={qy + (u < 2.1 ? 0 : 26)} s={0.42} rot={u < 2.1 ? fly * 300 : 0} />
+			{u >= 3.0 && <JadeBi x={jx} y={jy + 46} s={0.36} glow={0.8} />}
 		</g>
 		{close > 0 && <g opacity={close}><Quince x={lerp(700, 820, close)} y={540} s={1.25} rot={-8} /><JadeBi x={lerp(1220, 1100, close)} y={520} s={1.25} glow={1} /></g>}
 	</g>;
 };
-
 /* =====================================================================================
    东汉 · a lamp-lit study: the poem on a scroll; its gifts land on a lacquer tray; the pairs light up
    ===================================================================================== */
@@ -111,7 +121,7 @@ export const Donghan: React.FC<SceneP> = ({u}) => {
 		<Sheet c={PP.lacquer} sh="pdL" d="M1010,760 L1530,760 L1490,830 L1050,830 Z" /><Sheet c="#2A1210" d="M1050,830 L1490,830 L1490,846 L1050,846 Z" sh="none" />
 		{u > 2.8 && <Bangle x={1110} y={drop(2.8, 730)} r={66} />}
 		{u > 4.0 && <><Pearl x={1240} y={drop(4.0, 720)} /><Pearl x={1286} y={drop(4.0, 726)} /></>}
-		{u > 5.1 && <><Ring x={1380} y={drop(5.1, 742)} r={38} /><Ring x={1448} y={drop(5.15, 746)} r={38} /></>}
+		{u > 5.1 && <><Ring x={1380 - 120 * ease(seg(u, 12.0, 13.4))} y={drop(5.1, 742)} r={38} /><Ring x={1448 + 120 * ease(seg(u, 12.0, 13.4))} y={drop(5.15, 746)} r={38} /></>}
 		{u > 5.1 && <TokGlow x={1414} y={742} r={130} o={land(5.1)} />}
 		{lit > 0 && DH_COLS.map((c, i) => c.k ? <circle key={i} cx={240 + 720 - 60 - i * 80 + 22} cy={440 + 70 + (c.k === 2 ? 4 : c.k === 3 ? 3 : 2) * 48 - 20} r={34} fill={AU.hi} opacity={0.35 * lit} /> : null)}
 	</g>;
@@ -122,22 +132,32 @@ export const Donghan: React.FC<SceneP> = ({u}) => {
    ===================================================================================== */
 const XU_X = 760, PR_X = 1180, PG = 940, PH = 600;
 export const Pojing1: React.FC<SceneP> = ({u}) => {
-	const split = seg(u, 2.6, 3.0), give = ease(seg(u, 5.2, 7.0)), fire = 0.6 + 0.4 * Math.sin(u * 3.1);
-	const xuPose = u < 5.2 ? PZ.holdUp : mixPose(PZ.holdUp, PZ.offer, give), prPose = mixPose(PZ.stand, PZ.offer, ease(seg(u, 5.6, 7.0)));
-	const [hx, hy] = hand(xuPose, 'LHand', XU_X, PG, PH), [px, py] = hand(prPose, 'LHand', PR_X, PG, PH, true);
+	/* he holds the mirror by the rim with both hands (catch_); it cracks (2.6); his right hand offers the right half to her,
+	   his left hand keeps the left half at his side; she takes it with her left hand; then both raise their halves to the moon */
+	const crack = seg(u, 2.4, 2.9), give = ease(seg(u, 3.4, 4.6)), raise = ease(seg(u, 5.2, 6.6)), fire = 0.6 + 0.4 * Math.sin(u * 3.1);
+	const XX = 700, R = 64;
+	const prX = XX + PZ.offerR.RHand[0] * PH + PZ.offer.LHand[0] * PH + 10;
+	const xuPose = u < 3.4 ? PZ.catch_ : u < 5.2 ? mixPose(PZ.catch_, PZ.offerR, give) : mixPose(PZ.offerR, PZ.holdUp, raise);
+	const prPose = u < 3.4 ? PZ.stand : u < 5.2 ? mixPose(PZ.stand, PZ.offer, give) : mixPose(PZ.offer, PZ.holdUp, raise);
+	const xL = hand(xuPose, 'LHand', XX, PG, PH), xR = hand(xuPose, 'RHand', XX, PG, PH), pL = hand(prPose, 'LHand', prX, PG, PH, true);
+	const mid: [number, number] = [(xL[0] + xR[0]) / 2 + 30, (xL[1] + xR[1]) / 2 - 20];
+	/* who holds which half: before 3.4 both halves sit together in his hands; from 3.4 the right half rides his right hand
+	   until 4.6, then her left hand; the left half rides his left hand */
+	const rightAt: [number, number] = u < 3.4 ? mid : u < 4.6 ? [xR[0] + R * 0.5, xR[1] - 30] : [pL[0] + R * 0.5, pL[1] - 30];
+	const leftAt: [number, number] = u < 3.4 ? mid : [xL[0] - R * 0.3, xL[1] - 30];
 	return <g>
 		<Bg c={PP.night} c2={PP.indigo} id="pj1" />
-		<Moon x={1500} y={170} r={64} />
+		<Moon x={1460} y={170} r={64} />
 		<g opacity={fire}><Sheet c="#C8664A" d={Band(560, 40, 31)} o={0.55} /></g>
 		<Sheet c={PP.indigo2} d={Band(600, 26, 32)} />
 		<Hall cx={960} g={700} k={0.85} lit />
 		<Sheet c="#3A4778" d={Band(PG - 4, 4, 33)} />
-		<Fig frame="Pojing1" who="xu" x={XU_X} g={PG} h={PH} pose={xuPose} look={LK.xu} />
-		<Fig frame="Pojing1" who="princess" x={PR_X} g={PG} h={PH} pose={prPose} look={LK.princess} flip />
-		{u < 2.6 ? <Mirror x={hx + 10} y={hy - 50} r={70} id="pj1w" half="both" gap={0} />
-			: <><Mirror x={hx + 6} y={hy - 50} r={70} id="pj1l" half="L" gap={0} tilt={-6 * split} />
-				<Mirror x={lerp(hx + 14, px - 6, give)} y={lerp(hy - 50, py - 50, give)} r={70} id="pj1r" half="R" gap={0} tilt={6 * split} /></>}
-		{split > 0 && split < 1 && <circle cx={hx + 10} cy={hy - 50} r={120 * split} fill={AU.core} opacity={0.6 * (1 - split)} />}
+		<Fig frame="Pojing1" who="xu" x={XX} g={PG} h={PH} pose={xuPose} look={LK.xu} />
+		<Fig frame="Pojing1" who="princess" x={prX} g={PG} h={PH} pose={prPose} look={LK.princess} flip />
+		{u < 2.6 ? <Mirror x={mid[0]} y={mid[1]} r={R} id="pj1w" half="both" gap={0} />
+			: <><Mirror x={leftAt[0]} y={leftAt[1]} r={R} id="pj1l" half="L" gap={u < 3.4 ? 8 * crack : 0} tilt={-4} />
+				<Mirror x={rightAt[0]} y={rightAt[1]} r={R} id="pj1r" half="R" gap={u < 3.4 ? 8 * crack : 0} tilt={4} /></>}
+		{crack > 0 && crack < 1 && <circle cx={mid[0]} cy={mid[1]} r={110 * crack} fill={AU.core} opacity={0.6 * (1 - crack)} />}
 	</g>;
 };
 /** the market on the fifteenth: lanterns; two halves lie apart (the promise) */
@@ -157,18 +177,22 @@ export const Market: React.FC<SceneP> = ({u}) => {
 };
 /** the city falls; she is led in through the gate of 杨素's house */
 export const Gate: React.FC<SceneP> = ({u}) => {
-	const g = 930, h = 470, w = walkNat(u, 0.2, 2.1, 1800, -1, h, PZ.stand);
+	/* she is led in: two guards walk ahead of her toward the gate (all at walking speed, feet on the ground) */
+	const g = 930, h = 450, w = walkNat(u, 0.1, 2.6, 1860, -1, h, PZ.stand), a = walkNat(u, 0.1, 2.6, 1600, -1, h, PZ.stand), b = walkNat(u, 0.1, 2.6, 1420, -1, h, PZ.stand);
 	const [mx, my] = hand(w.pose, 'RHand', w.x, g, h, true);
 	return <g>
 		<Bg c="#6D5A7A" c2="#B88E86" id="gt" />
 		<Sheet c="#8C6E86" d={Band(560, 30, 51)} />
-		<Sheet c={PP.brick} d="M360,930 L360,420 L1560,420 L1560,930 Z" />
-		<Sheet c={PP.indigo} sh="pdL" d="M300,430 L420,330 L1500,330 L1620,430 Z" />
-		<Sheet c={PP.lacquer} d="M760,930 L760,560 L1160,560 L1160,930 Z" />
-		{Array.from({length: 4}, (_, r) => Array.from({length: 5}, (_, c) => <circle key={`${r}${c}`} cx={790 + c * 80} cy={600 + r * 80} r={9} fill={AU.mid} />))}
+		<Sheet c={PP.brick} d="M360,930 L360,380 L1560,380 L1560,930 Z" />
+		<Sheet c={PP.indigo} sh="pdL" d="M300,390 L420,290 L1500,290 L1620,390 Z" />
+		<Sheet c={PP.lacquer} d="M700,930 L700,420 L1220,420 L1220,930 Z" />
+		<Sheet c="#2A1210" d={`M${960 - 120 * seg(u, 0, 0.6)},930 L${960 - 120 * seg(u, 0, 0.6)},430 L${960 + 120 * seg(u, 0, 0.6)},430 L${960 + 120 * seg(u, 0, 0.6)},930 Z`} sh="none" />
+		{Array.from({length: 5}, (_, r) => Array.from({length: 6}, (_, c) => <circle key={`${r}${c}`} cx={740 + c * 88} cy={470 + r * 88} r={9} fill={AU.mid} />))}
 		<Sheet c="#7E6A6E" d={Band(g - 4, 4, 52)} />
+		<Fig frame="Gate" who="guard1" x={b.x} g={g} h={h * 1.04} pose={b.pose} look={LK.guard} flip />
+		<Fig frame="Gate" who="guard2" x={a.x} g={g} h={h * 1.04} pose={a.pose} look={LK.guard} flip />
 		<Fig frame="Gate" who="princess" x={w.x} g={g} h={h} pose={w.pose} look={LK.princess} flip />
-		<Mirror x={mx} y={my + 8} r={24} id="gtm" half="R" gap={0} glow={0.6} />
+		<Mirror x={mx} y={my + 8} r={22} id="gtm" half="R" gap={0} glow={0.6} />
 	</g>;
 };
 /** he walks the long road to the capital; seasons pass */
@@ -187,18 +211,26 @@ export const Road: React.FC<SceneP> = ({u, d}) => {
 };
 /** a servant at a stall holds up a half mirror; he arrives with the other half */
 export const Stall: React.FC<SceneP> = ({u}) => {
-	const g = 930, h = 520, sx = 1260, wk = walkNat(u, 0, 0.9, 290, 1, h, PZ.stand), mx = wk.x;
-	const [vx, vy] = hand(PZ.holdUp, 'LHand', sx, g, h, true);
+	/* the servant holds the right half out over his counter; he walks in, stops, raises his left half with his right
+	   hand, and the two men bring the halves together between them */
+	const g = 930, h = 520, sx = 1300, R = 60;
+	const sH = hand(PZ.offer, 'LHand', sx, g, h, true), J: [number, number] = [sH[0] - 6, sH[1] - 34];
+	const xStop = J[0] - PZ.offerR.RHand[0] * h - 6, v = STRIDE * h / GAIT_S, wk = walkNat(u, 0, (xStop - 300) / v, 300, 1, h, PZ.stand);
+	const tEnd = (xStop - 300) / v, raise = ease(seg(u, tEnd + 0.15, tEnd + 0.75));
+	const xuPose = wk.moving ? wk.pose : mixPose(PZ.stand, PZ.offerR, raise);
+	const xR = hand(xuPose, 'RHand', wk.x, g, h);
 	return <g>
 		<Bg c={PP.night} c2="#4A3A6A" id="st" />
-		{Array.from({length: 4}, (_, i) => <Lantern key={i} x={1220 + i * 210} y={230 + (i % 2) * 40} s={0.7} c={i % 3 === 1 ? PP.apricot : '#D8473A'} />)}
+		{Array.from({length: 4}, (_, i) => <Lantern key={i} x={1220 + i * 210} y={210 + (i % 2) * 40} s={0.7} c={i % 3 === 1 ? PP.apricot : '#D8473A'} />)}
 		<Sheet c="#5B4A80" d={Band(620, 20, 71)} />
-		<Sheet c={PP.brick} d="M1010,600 L1034,600 L1034,770 L1010,770 Z" /><Sheet c={PP.brick} d="M1546,600 L1570,600 L1570,770 L1546,770 Z" /><Sheet c={PP.teal} d="M1000,600 L960,540 L1620,540 L1580,600 Z" />
-		<Fig frame="Stall" who="servant" x={sx} g={g} h={h} pose={PZ.holdUp} look={LK.servant} flip />
-		<Sheet c={PP.ochre} d="M1000,760 L1580,760 L1580,940 L1000,940 Z" />
+		<Sheet c={PP.brick} d="M1050,600 L1074,600 L1074,770 L1050,770 Z" /><Sheet c={PP.brick} d="M1586,600 L1610,600 L1610,770 L1586,770 Z" />
+		<Sheet c={PP.teal} d="M1040,600 L1000,540 L1660,540 L1620,600 Z" />
+		<Fig frame="Stall" who="servant" x={sx} g={g} h={h} pose={PZ.offer} look={LK.servant} flip />
+		<Sheet c={PP.ochre} d="M1060,770 L1620,770 L1620,940 L1060,940 Z" />
 		<Sheet c="#3C3060" d={Band(g - 4, 4, 72)} />
-		<Mirror x={vx - 6} y={vy - 60} r={64} id="stR" half="R" gap={0} glow={1} />
-		<Fig frame="Stall" who="xu" x={mx} g={g} h={h} pose={wk.pose} look={LK.xu} />
+		<Mirror x={J[0]} y={J[1]} r={R} id="stR" half="R" gap={0} glow={1} />
+		<Fig frame="Stall" who="xu" x={wk.x} g={g} h={h} pose={xuPose} look={LK.xu} />
+		<Mirror x={raise > 0 ? lerp(xR[0], J[0], raise) : xR[0] + 4} y={raise > 0 ? lerp(xR[1] - 10, J[1], raise) : xR[1] + 8} r={raise > 0 ? lerp(22, R, raise) : 22} id="stL" half="L" gap={0} glow={0.6 + 0.4 * raise} />
 	</g>;
 };
 /** close-up: the two halves meet and the crack lines up */
@@ -212,58 +244,78 @@ export const Meet: React.FC<SceneP> = ({u}) => {
 };
 /** the gate opens; she walks out to him */
 export const Return: React.FC<SceneP> = ({u}) => {
-	const g = 930, h = 470, open = ease(seg(u, 0, 1.0)), wk = walkNat(u, 0.6, 1.45, 960, 1, h, PZ.stand);
+	/* 杨素 (in the gateway, facing out) lets her go; she walks out to her husband, who waits facing her */
+	const g = 930, h = 450, open = ease(seg(u, 0, 0.8)), wk = walkNat(u, 0.5, 1.9, 1000, 1, h, PZ.stand);
 	return <g>
 		<Bg c="#F0C99A" c2="#F6E3C2" id="rt" />
 		<Sheet c="#D9A27E" d={Band(560, 30, 81)} />
-		<Sheet c={PP.brick} d="M360,930 L360,420 L1560,420 L1560,930 Z" />
-		<Sheet c={PP.indigo} sh="pdL" d="M300,430 L420,330 L1500,330 L1620,430 Z" />
-		<Sheet c="#FFE9C0" d="M760,930 L760,560 L1160,560 L1160,930 Z" sh="none" />
-		<Sheet c={PP.lacquer} d={`M760,930 L760,560 L${960 - 200 * open},560 L${960 - 200 * open},930 Z`} /><Sheet c={PP.lacquer} d={`M${960 + 200 * open},930 L${960 + 200 * open},560 L1160,560 L1160,930 Z`} />
+		<Sheet c={PP.brick} d="M360,930 L360,380 L1560,380 L1560,930 Z" />
+		<Sheet c={PP.indigo} sh="pdL" d="M300,390 L420,290 L1500,290 L1620,390 Z" />
+		<Sheet c="#FFE9C0" d="M700,930 L700,420 L1220,420 L1220,930 Z" sh="none" />
+		<Sheet c={PP.lacquer} d={`M700,930 L700,420 L${960 - 250 * open},420 L${960 - 250 * open},930 Z`} /><Sheet c={PP.lacquer} d={`M${960 + 250 * open},930 L${960 + 250 * open},420 L1220,420 L1220,930 Z`} />
 		<Sheet c="#BE8F78" d={Band(g - 4, 4, 82)} />
+		<Fig frame="Return" who="yangsu" x={830} g={g} h={h * 1.06} pose={PZ.stand} look={LK.yangsu} />
 		<Fig frame="Return" who="princess" x={wk.x} g={g} h={h} pose={wk.pose} look={LK.princess} />
-		<Fig frame="Return" who="xu" x={1500} g={g} h={h} pose={PZ.stand} look={LK.xu} flip />
+		<Fig frame="Return" who="xu" x={1560} g={g} h={h} pose={PZ.stand} look={LK.xu} flip />
 	</g>;
 };
-
 /* =====================================================================================
    唐 · cloud palace: she gives one prong to the messenger; below, the emperor holds it; above, she keeps the other
    ===================================================================================== */
 export const Tang: React.FC<SceneP> = ({u}) => {
-	const split = seg(u, 3.2, 3.8), hand1 = ease(seg(u, 4.4, 5.8)), down = ease(seg(u, 7.6, 9.6));
-	const g = 560, h = 380, yx = 820, fx = 1100;
-	const yPose = u < 4.4 ? PZ.holdUp : mixPose(PZ.holdUp, PZ.offer, hand1), fPose = mixPose(PZ.stand, PZ.offer, ease(seg(u, 4.8, 5.8)));
-	const [yhx, yhy] = hand(yPose, 'LHand', yx, g, h), [fhx, fhy] = hand(fPose, 'LHand', fx, g, h, true);
-	const eg = 1020, eh = 420, ex = 1260, [ehx, ehy] = hand(PZ.holdUp, 'LHand', ex, eg, eh, true);
+	/* Two storeys: the cloud palace (ground 560) above, the emperor's palace (ground 1640) below.
+	   She holds the hairpin in both hands, pulls it into two prongs (3.4), hands the right one to the messenger (方士),
+	   keeps the left. He walks off right; the camera goes down; he walks in from the right and hands it to 玄宗; then the
+	   camera pulls back to show both: she looks down holding hers, he looks up holding his. */
+	const g = 560, h = 380, yx = 760, eg = 1640, eh = 420, ex = 980;
+	const fx = yx + PZ.offerR.RHand[0] * h + PZ.offer.LHand[0] * h + 8;
+	const give = ease(seg(u, 5.7, 6.6)), split = seg(u, 3.3, 3.8);
+	const yPose = u < 5.7 ? PZ.catch_ : u < 7.0 ? mixPose(PZ.catch_, PZ.offerR, give) : mixPose(PZ.offerR, PZ.holdChest, ease(seg(u, 7.0, 7.8)));
+	const fOut = walkNat(u, 7.0, 8.4, fx, 1, h, PZ.offer);
+	const fPose = u < 5.7 ? PZ.stand : u < 7.0 ? mixPose(PZ.stand, PZ.offer, give) : fOut.pose;
+	const meet = ex + PZ.offer.LHand[0] * eh + PZ.offerR.RHand[0] * eh + 8, vIn = STRIDE * eh / GAIT_S, tIn0 = 8.4, tIn1 = tIn0 + (1640 - meet) / vIn;
+	const fIn = walkNat(u, tIn0, tIn1, 1640, -1, eh, PZ.stand), hand2 = ease(seg(u, tIn1 + 0.1, tIn1 + 0.8));
+	const f2Pose = fIn.moving ? fIn.pose : mixPose(PZ.stand, PZ.offerR, hand2);
+	const ePose = u < tIn1 + 0.1 ? PZ.stand : u < tIn1 + 1.2 ? mixPose(PZ.stand, PZ.offer, hand2) : mixPose(PZ.offer, PZ.lookUpHold, ease(seg(u, tIn1 + 1.2, tIn1 + 2.0)));
+	const down = ease(seg(u, 7.6, 8.5)), back = ease(seg(u, tIn1 + 1.0, tIn1 + 1.8));
+	const camY = lerp(400, 1480, down), z = lerp(1.3, 0.5, back), cy = lerp(camY, 1100, back);
+	const yL = hand(yPose, 'LHand', yx, g, h), yR = hand(yPose, 'RHand', yx, g, h), fL = hand(fPose, 'LHand', fOut.x, g, h, u < 7.0);
+	const f2R = hand(f2Pose, 'RHand', fIn.x, eg, eh, true), eL = hand(ePose, 'LHand', ex, eg, eh);
+	const pinMid: [number, number] = [(yL[0] + yR[0]) / 2 + 20, (yL[1] + yR[1]) / 2 - 40];
+	const keptAt: [number, number] = u < 3.3 ? pinMid : [yL[0], yL[1] - 50];
+	const sentAt: [number, number] = u < 3.3 ? pinMid : u < 6.6 ? [yR[0] + 6, yR[1] - 50] : u < 8.4 ? [fL[0], fL[1] - 50] : u < tIn1 + 0.8 ? [f2R[0], f2R[1] - 54] : [eL[0], eL[1] - 54];
 	return <g>
-		<Bg c={PP.lav} c2={PP.lavL} id="tg" />
-		<g transform={`translate(0,${-420 * down})`}>
-			<Cloud x={420} y={250} s={1.6} c="#F2ECF8" /><Cloud x={1560} y={300} s={1.3} c="#F2ECF8" />
-			{/* cloud terrace */}
-			<Sheet c="#E9E1F3" d="M420,590 C380,540 470,500 540,520 C580,470 700,470 740,510 C800,470 960,470 1000,512 C1060,480 1200,490 1220,540 C1300,530 1360,580 1310,600 Z" />
-			<Hall cx={960} g={g - 40} k={0.55} wall={PP.rose} roof={PP.plum} />
+		<Bg c={PP.lav} c2={PP.indigo2} id="tg" />
+		<g transform={`translate(960,540) scale(${z}) translate(${-960},${-cy})`}>
+			<rect x={-2000} y={-1200} width={6000} height={2380} fill={PP.lavL} />
+			<Cloud x={420} y={200} s={1.6} c="#F2ECF8" /><Cloud x={1560} y={250} s={1.3} c="#F2ECF8" />
+			<Sheet c="#E9E1F3" d="M200,600 C160,540 300,500 400,520 C460,470 640,470 700,510 C800,470 1100,470 1160,512 C1260,480 1500,490 1560,540 C1700,530 1820,580 1760,610 Z" />
+			<Hall cx={1060} g={g - 30} k={0.55} wall={PP.rose} roof={PP.plum} />
 			<Fig frame="Tang" who="yang" x={yx} g={g} h={h} pose={yPose} look={LK.yang} />
-			{down < 0.9 && <Fig frame="Tang" who="fangshi" x={fx} g={g} h={h} pose={fPose} look={LK.fangshi} flip o={1 - down} />}
-			<Hairpin x={yhx + 4} y={yhy - 70} s={0.55} prong={u < 3.2 ? 'both' : 'L'} spread={0} glow={0.8} />
-			{u >= 3.2 && down < 0.9 && <Hairpin x={lerp(yhx + 30, fhx - 4, hand1)} y={lerp(yhy - 70, fhy - 70, hand1)} s={0.55} prong="R" glow={0.8} />}
-			{split > 0 && split < 1 && <circle cx={yhx} cy={yhy - 30} r={80 * split} fill={AU.core} opacity={0.6 * (1 - split)} />}
-		</g>
-		{/* the world below: the old emperor at his palace holds the prong the messenger brought */}
-		<g transform={`translate(0,${640 * (1 - down)})`}>
-			<Sheet c={PP.indigo2} d={Band(700, 20, 91)} />
-			<Hall cx={760} g={eg} k={0.7} wall={PP.brick} roof={PP.indigo} />
-			<Sheet c="#5A6798" d={Band(eg - 4, 4, 92)} />
-			<Fig frame="Tang" who="emperor" x={ex} g={eg} h={eh} pose={PZ.holdUp} look={LK.emperor} flip />
-			<Hairpin x={ehx - 4} y={ehy - 80} s={0.6} prong="R" glow={0.9} />
+			{u < 8.4 && <Fig frame="Tang" who="fangshi" x={fOut.x} g={g} h={h} pose={fPose} look={LK.fangshi} flip={u < 7.0} />}
+			<Hairpin x={keptAt[0]} y={keptAt[1]} s={0.5} prong={u < 3.3 ? 'both' : 'L'} glow={0.8} />
+			{u >= 3.3 && u < 8.4 && <Hairpin x={sentAt[0]} y={sentAt[1]} s={0.5} prong="R" glow={0.8} />}
+			{split > 0 && split < 1 && <circle cx={pinMid[0]} cy={pinMid[1]} r={80 * split} fill={AU.core} opacity={0.6 * (1 - split)} />}
+			<path d="M1700,610 C1850,800 1700,1000 1900,1200" stroke="#F2ECF8" strokeWidth={60} fill="none" opacity={0.7} />
+			<rect x={-2000} y={1180} width={6000} height={1400} fill={PP.indigo2} />
+			<Sheet c={PP.indigo} d="M-2000,1400 L-2000,1260 C0,1230 1000,1300 3900,1250 L3900,1400 Z" />
+			<Hall cx={560} g={eg} k={0.7} wall={PP.brick} roof={PP.indigo} />
+			<rect x={-2000} y={eg - 4} width={6000} height={1400} fill="#5A6798" />
+			<Fig frame="Tang" who="emperor" x={ex} g={eg} h={eh} pose={ePose} look={LK.emperor} />
+			{u >= tIn0 && <Fig frame="Tang" who="fangshi2" x={fIn.x} g={eg} h={eh} pose={f2Pose} look={LK.fangshi} flip />}
+			{u >= tIn0 && <Hairpin x={sentAt[0]} y={sentAt[1]} s={0.55} prong="R" glow={0.9} />}
 		</g>
 	</g>;
 };
-
 /* =====================================================================================
    1970s · courtyard wedding: 囍 on the door; the four things stamp in; then the price of a bicycle
    ===================================================================================== */
 export const Seventies: React.FC<SceneP> = ({u}) => {
-	const g = 930, h = 520, st = (a: number) => easeOut(seg(u, a, a + 0.25)), price = seg(u, 5.66, 6.2);
+	/* true scale: the bike's wheel reaches about the groom's knee-to-hip; the sewing machine on its own table, the radio on a
+	   side table; the watch is ON the groom's wrist, shown by a ring callout. Each thing drops onto its surface on a beat. */
+	const g = 930, h = 520, gx = 860, bx = 1060, land = (a: number) => easeOut(seg(u, a, a + 0.22)), price = seg(u, 5.66, 6.2);
+	const wr = hand(PZ.stand, 'LHand', gx, g, h);
+	const wheel = 0.21 * h, bs = wheel / 120;
 	return <g>
 		<Bg c="#CFE3E4" c2="#F3EBDD" id="s7" />
 		<Sheet c="#C9B9A2" d="M0,700 L0,300 L1920,300 L1920,700 Z" />
@@ -271,17 +323,19 @@ export const Seventies: React.FC<SceneP> = ({u}) => {
 		<Sheet c={PP.lacquer} d="M820,700 L820,360 L1100,360 L1100,700 Z" />
 		<text x={960} y={560} textAnchor="middle" fontFamily="'Noto Serif CJK SC',serif" fontWeight={900} fontSize={190} fill="#E9473A" filter="url(#pdS)">囍</text>
 		<Sheet c="#D9CBB2" d={Band(700, 4, 101)} />
-		<Fig frame="Seventies" who="groom" x={860} g={g} h={h} pose={PZ.stand} look={LK.groom70} />
-		<Fig frame="Seventies" who="bride" x={1060} g={g} h={h} pose={PZ.stand} look={LK.bride70} flip />
-		{u > 2.83 && <g opacity={st(2.83)}><Bike x={330} y={880} s={0.62 + 0.1 * (1 - st(2.83))} /></g>}
-		{u > 3.4 && <g opacity={st(3.4)}><Watch x={1420} y={460} s={0.7 + 0.15 * (1 - st(3.4))} /></g>}
-		{u > 3.96 && <g opacity={st(3.96)}><Sewing x={1570} y={840} s={0.7 + 0.12 * (1 - st(3.96))} /></g>}
-		{u > 4.53 && <g opacity={st(4.53)}><Radio x={420} y={460} s={0.62 + 0.12 * (1 - st(4.53))} /></g>}
-		{price > 0 && <g opacity={price} transform={`translate(330,${700 - 20 * price})`} filter="url(#pd)">
-			<rect x={-150} y={-300} width={300} height={110} rx={12} fill={PP.cream} /><text x={0} y={-228} textAnchor="middle" fontFamily="'Noto Sans CJK SC',sans-serif" fontWeight={900} fontSize={54} fill={PP.ink}>百余元</text></g>}
-		{price > 0 && [0, 1, 2].map((i) => <g key={i} opacity={easeOut(seg(u, 5.9 + i * 0.28, 6.2 + i * 0.28))} transform={`translate(${1250 + i * 70},${300 + i * 30}) rotate(${-6 + i * 5})`} filter="url(#pd)">
-			<rect x={-140} y={-80} width={280} height={160} rx={10} fill="#F8F1E4" /><text x={0} y={-20} textAnchor="middle" fontFamily="'Noto Sans CJK SC',sans-serif" fontWeight={700} fontSize={34} fill={PP.ink}>工资条</text>
-			<text x={0} y={40} textAnchor="middle" fontFamily="'Noto Sans CJK SC',sans-serif" fontWeight={900} fontSize={40} fill={PP.brick}>月薪 三四十元</text></g>)}
+		<Sheet c={PP.brick} d="M1200,760 L1420,760 L1420,780 L1200,780 Z" /><Sheet c={PP.brick} d="M1218,780 L1232,780 L1232,930 L1218,930 Z" /><Sheet c={PP.brick} d="M1388,780 L1402,780 L1402,930 L1388,930 Z" />
+		<Sheet c={PP.ochre} d="M1500,800 L1800,800 L1800,820 L1500,820 Z" /><Sheet c={PP.ink} d="M1520,820 L1536,820 L1536,930 L1520,930 Z" /><Sheet c={PP.ink} d="M1764,820 L1780,820 L1780,930 L1764,930 Z" />
+		<Fig frame="Seventies" who="groom" x={gx} g={g} h={h} pose={PZ.stand} look={LK.groom70} />
+		<Fig frame="Seventies" who="bride" x={bx} g={g} h={h} pose={PZ.stand} look={LK.bride70} flip />
+		{u > 2.83 && <g transform={`translate(0,${-(1 - land(2.83)) * 260})`} opacity={land(2.83)}><Bike x={450} y={g - wheel} s={bs} /></g>}
+		{u > 3.4 && <g opacity={land(3.4)}><circle cx={wr[0]} cy={wr[1] - 6} r={26} fill="none" stroke={AU.hi} strokeWidth={5} /><line x1={wr[0] - 18} y1={wr[1] - 24} x2={wr[0] - 110} y2={wr[1] - 140} stroke={AU.hi} strokeWidth={4} /><Watch x={wr[0] - 160} y={wr[1] - 210} s={0.45} /></g>}
+		{u > 3.96 && <g transform={`translate(0,${-(1 - land(3.96)) * 240})`} opacity={land(3.96)}><Sewing x={1650} y={757} s={0.62} /></g>}
+		{u > 4.53 && <g transform={`translate(0,${-(1 - land(4.53)) * 240})`} opacity={land(4.53)}><Radio x={1310} y={700} s={0.5} /></g>}
+		{price > 0 && <g opacity={price} transform={`translate(450,${640 - 20 * price})`} filter="url(#pd)">
+			<rect x={-150} y={-60} width={300} height={110} rx={12} fill={PP.cream} /><text x={0} y={12} textAnchor="middle" fontFamily="'Noto Sans CJK SC',sans-serif" fontWeight={900} fontSize={54} fill={PP.ink}>百余元</text></g>}
+		{price > 0 && [0, 1, 2].map((i) => <g key={i} opacity={easeOut(seg(u, 5.9 + i * 0.28, 6.2 + i * 0.28))} transform={`translate(${1530 + i * 60},${400 + i * 26}) rotate(${-6 + i * 5})`} filter="url(#pd)">
+			<rect x={-140} y={-70} width={280} height={140} rx={10} fill="#F8F1E4" /><text x={0} y={-12} textAnchor="middle" fontFamily="'Noto Sans CJK SC',sans-serif" fontWeight={700} fontSize={32} fill={PP.ink}>工资条</text>
+			<text x={0} y={42} textAnchor="middle" fontFamily="'Noto Sans CJK SC',sans-serif" fontWeight={900} fontSize={38} fill={PP.brick}>月薪 三四十元</text></g>)}
 	</g>;
 };
 /** 1998: a pager on a desk blinks 520 */
@@ -296,7 +350,7 @@ export const Nineties: React.FC<SceneP> = ({u}) => {
 };
 /** 2016-05-20: the red packet's limit flips 200 → 520 */
 export const Packet: React.FC<SceneP> = ({u}) => {
-	const flip = seg(u, 1.4, 1.9), amt = flip < 0.5 ? '200.00' : '520.00';
+	const flip = seg(u, 2.45, 2.95), amt = flip < 0.5 ? '200.00' : '520.00';
 	return <g>
 		<Bg c="#F4C7B8" c2="#F8E3D2" id="rp" />
 		{Array.from({length: 18}, (_, i) => <path key={i} d={`M${rnd(i, 3) * W},${rnd(i, 4) * H} l14,-24 l14,24 z`} fill={i % 2 ? '#D8473A' : AU.mid} opacity={0.4} />)}
@@ -345,11 +399,10 @@ export const DropClose: React.FC<SceneP> = ({u}) => {
 	const pull = ease(seg(u, 0.2, 1.4));
 	return <g>
 		<Bg c={PP.indigo} c2={PP.night} id="dc" />
-		<Phone x={960 - 175 - 120 * (1 - pull)} y={560} s={0.95} side="L" id="dcL" />
-		<Phone x={960 + 175 + 120 * (1 - pull)} y={560} s={0.95} side="R" id="dcR" />
+		<Phone x={960 - 162 - 120 * (1 - pull)} y={560} s={0.95} side="L" id="dcL" glow={1} />
+		<Phone x={960 + 162 + 120 * (1 - pull)} y={560} s={0.95} side="R" id="dcR" glow={1} />
 	</g>;
 };
-
 /* =====================================================================================
    CODA · the whole mirror; the hairpin in heaven and on earth; one phone with half, the other side empty
    ===================================================================================== */
@@ -381,6 +434,17 @@ export const EndScene: React.FC<SceneP> = ({u}) => {
 		</g>
 		<g opacity={1 - fill}><Phone x={1160} y={560} s={0.95} side="R" ghost id="enG" glow={0} /></g>
 		{void PAIRS}
+	</g>;
+};
+/** his poem, on paper beside his half mirror: 镜与人俱去，镜归人不归 */
+export const Poem: React.FC<SceneP> = ({u}) => {
+	const cols = ['鏡與人俱去', '鏡歸人不歸', '無復嫦娥影', '空留明月輝'], n = Math.floor(seg(u, 0.1, 1.6) * 20);
+	let left = n;
+	return <g>
+		<Bg c="#5B4A80" c2={PP.night} id="pm" />
+		<Sheet c={PP.cream} sh="pdL" d="M1000,250 L1720,232 L1740,990 L1020,1006 Z" />
+		{cols.map((c, i) => { const k = Math.max(0, Math.min(5, left)); left -= 5; return <text key={i} x={1600 - i * 150} y={340} style={{writingMode: 'vertical-rl', fontFamily: "'Noto Serif CJK SC',serif", fontWeight: 900, fontSize: 92, letterSpacing: 18} as React.CSSProperties} fill={i === 1 ? AU.deep : PP.ink}>{c.slice(0, k)}</text>; })}
+		<Mirror x={560} y={760} r={150} id="pmm" half="L" gap={0} glow={0.8} tilt={-10} />
 	</g>;
 };
 export {AvatarArt};
