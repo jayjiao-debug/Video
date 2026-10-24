@@ -15,7 +15,7 @@ export const TIMELINE: Shot[] = [
 	{a: 0, b: 10, draw: (u, t, hud) => {
 		const c = crestA, st = c.st;
 		st.setCam(960, 640, 1); st.heroAt(960, 780, 20, 600);
-		c.setLanterns(() => 0); c.setBoat(1500, 40);
+		c.setLanterns(() => 0); c.setBoat(1500, 40); c.setStreak(980, 0.8, t);
 		renderStage(st, 0); composite({mode: 0, k: 0}, {vig: 0.3});
 		mark(hud);
 	}},
