@@ -228,6 +228,7 @@ export const Huai46: React.FC<{x: number; g: number; h: number; dead?: number}> 
 	return <g>
 		<Shadow x={x + h * 0.1} y={g + 3} rx={h * 0.4} ry={h * 0.05} o={0.3} />
 		<path d={`M${x - h * 0.06},${g} C${x - h * 0.05},${g - h * 0.3} ${x - h * 0.12},${g - h * 0.45} ${x - h * 0.25},${g - h * 0.55} L${x - h * 0.2},${g - h * 0.58} C${x - h * 0.08},${g - h * 0.5} ${x},${g - h * 0.46} ${x + h * 0.04},${g - h * 0.6} L${x + h * 0.08},${g - h * 0.58} C${x + h * 0.06},${g - h * 0.4} ${x + h * 0.09},${g - h * 0.2} ${x + h * 0.08},${g} Z`} fill={mixC('#5D4A3A', '#857C70', dead)} />
+		{[[-0.3, 0.74], [0.0, 0.84], [0.28, 0.72], [-0.14, 0.66], [0.16, 0.8]].map(([dx, dy], i) => <path key={'br' + i} d={`M${x - h * 0.05},${g - h * 0.55} Q${x + dx * h * 0.4},${g - h * (dy - 0.06)} ${x + dx * h - h * 0.05},${g - h * dy}`} stroke={mixC('#5D4A3A', '#857C70', dead)} strokeWidth={h * 0.025} fill="none" />)}
 		<g opacity={1 - dead * 0.8}>{Array.from({length: 12}, (_, i) => { const a = rnd(i, 41) * Math.PI, r = h * (0.12 + 0.06 * rnd(i, 42)); return <ellipse key={i} cx={x + Math.cos(a) * h * 0.32 - h * 0.05} cy={g - h * 0.68 - Math.sin(a) * h * 0.2} rx={r} ry={r * 0.75} fill={i % 3 ? leaf : leafD} />; })}</g>
 		{dead > 0.3 && [[-0.3, 0.75], [0.2, 0.8], [0.32, 0.66], [-0.2, 0.86]].map(([dx, dy], i) => <path key={i} d={`M${x},${g - h * 0.58} Q${x + dx * h * 0.5},${g - h * (dy - 0.05)} ${x + dx * h},${g - h * dy}`} stroke="#857C70" strokeWidth={5} fill="none" opacity={dead} />)}
 	</g>;
@@ -235,12 +236,15 @@ export const Huai46: React.FC<{x: number; g: number; h: number; dead?: number}> 
 
 /* ---------- 1928: market stalls, cooking fire ---------- */
 export const Stall46: React.FC<{x: number; g: number; s?: number; c?: string}> = ({x, g, s = 1, c = '#C9B27E'}) => <g>
-	<Shadow x={x} y={g + 2} rx={90 * s} ry={10 * s} o={0.3} />
-	<rect x={x - 70 * s} y={g - 70 * s} width={140 * s} height={70 * s} fill="#7A6450" /><rect x={x - 70 * s} y={g - 70 * s} width={140 * s} height={10 * s} fill="#5C4A3A" />
-	{[-60, 60].map((dx) => <rect key={dx} x={x + dx * s - 3 * s} y={g - 150 * s} width={6 * s} height={150 * s} fill="#4A3B2E" />)}
-	<path d={`M${x - 90 * s},${g - 138 * s} L${x + 90 * s},${g - 138 * s} L${x + 74 * s},${g - 168 * s} L${x - 74 * s},${g - 168 * s} Z`} fill={c} />
-	{Array.from({length: 6}, (_, i) => <path key={i} d={`M${x - 90 * s + i * 30 * s},${g - 138 * s} q${15 * s},${12 * s} ${30 * s},0`} fill={c} />)}
-	{Array.from({length: 5}, (_, i) => <circle key={i} cx={x - 50 * s + i * 25 * s} cy={g - 78 * s} r={9 * s} fill={['#C7713C', '#D9B04A', '#8C9A55', '#B85A3C', '#D6C38C'][i]} />)}
+	<Shadow x={x} y={g + 2} rx={95 * s} ry={10 * s} o={0.3} />
+	{/* bamboo frame, a sloping cloth awning, a low table with goods in round baskets */}
+	{[-80, 80].map((dx) => <rect key={dx} x={x + dx * s - 3 * s} y={g - 170 * s} width={6 * s} height={170 * s} fill="#B89A5E" />)}
+	<path d={`M${x - 100 * s},${g - 150 * s} L${x + 100 * s},${g - 170 * s} L${x + 100 * s},${g - 158 * s} L${x - 100 * s},${g - 138 * s} Z`} fill={c} />
+	<path d={`M${x - 100 * s},${g - 138 * s} L${x + 100 * s},${g - 158 * s}`} stroke="#000" strokeWidth={2 * s} opacity={0.15} />
+	<rect x={x - 80 * s} y={g - 64 * s} width={160 * s} height={8 * s} fill="#8A6A44" />
+	{[-70, 66].map((dx) => <rect key={dx} x={x + dx * s} y={g - 56 * s} width={5 * s} height={56 * s} fill="#6E5236" />)}
+	{[-50, 0, 50].map((dx, i) => <g key={i}><path d={`M${x + dx * s - 22 * s},${g - 64 * s} Q${x + dx * s},${g - 40 * s} ${x + dx * s + 22 * s},${g - 64 * s} Z`} fill="#C7A36A" stroke="#8C6A3C" strokeWidth={1.5 * s} />
+		{Array.from({length: 4}, (_, j) => <circle key={j} cx={x + dx * s - 12 * s + j * 8 * s} cy={g - 68 * s} r={5 * s} fill={['#C7713C', '#D9B04A', '#8C9A55', '#B85A3C'][(i + j) % 4]} />)}</g>)}
 </g>;
 export const Fire46: React.FC<{x: number; g: number; s?: number; t: number; o?: number}> = ({x, g, s = 1, t, o = 1}) => <g opacity={o}>
 	<Glow x={x} y={g - 20 * s} r={120 * s} c={C.fire} o={0.35} id={`fg${Math.round(x)}`} />

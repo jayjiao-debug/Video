@@ -55,72 +55,89 @@ const World: React.FC<{c: Court; t: number; children?: React.ReactNode; extra?: 
 };
 
 /* ---------------- the people ---------------- */
-/** 1762: Qianlong walks in with two attendants, stops at the painting table, paints (right hand on the paper) */
-const TABLE = {x0: 720, x1: 960, y: 0};   // table top height is set from the body below
-const qianlongDepth = (t: number, o: number): Depth[] => {
-	const h = 300, g = 975, stopX = 712, t0 = 59.44, walkEnd = 61.9;
-	const tableTop = g - 0.56 * h;   // a little above hip height for a standing painter
-	const out: Depth[] = [];
-	// table (side view): top + two legs, the paper on it
-	out.push({g: g - 1, node: <g key="tb" opacity={o}><Shadow x={(TABLE.x0 + TABLE.x1) / 2 + 20} y={g + 2} rx={150} ry={12} o={0.3} />
-		<rect x={TABLE.x0} y={tableTop} width={TABLE.x1 - TABLE.x0} height={14} fill="#6B4A32" />
-		{[TABLE.x0 + 14, TABLE.x1 - 24].map((x) => <rect key={x} x={x} y={tableTop + 14} width={10} height={g - tableTop - 14} fill="#4E3626" />)}
-		<rect x={TABLE.x0 + 40} y={tableTop - 4} width={160} height={5} fill={C.paper} /></g>});
-	const walking = t < walkEnd;
-	if (walking) {
-		const lead = (walkEnd - t0) / 1.1 * STRIDE * h, {x, pose} = walkAt(stopX - lead, 1, t, t0, h);
-		const xx = Math.min(x, stopX);
-		out.push({g, node: <Person key="ql" who="qianlong" t={t} x={xx} ground={g} h={h} pose={pose} look={LOOK.emperor} intent="walk" hat="qing" o={o} />});
-		[[-190, 0.6], [-350, 1.3]].forEach(([dx, ph], i) => { const w = walkAt(stopX + dx - (walkEnd - t0) / 1.1 * STRIDE * h * 0.94, 1, t, t0, h * 0.94, '08_04', ph);
-			out.push({g: g + 12 + 8 * i, node: <Person key={'at' + i} who={'attendant' + i} t={t} x={Math.min(w.x, stopX + dx)} ground={g + 12 + 8 * i} h={h * 0.94} pose={w.pose} look={LOOK.attendant} intent="walk" hat="qing" o={o} />}); });
-	} else {
-		// painting: right hand on the paper, moving with the brush stroke
-		const stroke = t < 64.53 ? Math.sin((t - walkEnd) * 5.2) : 0, tgtX = (TABLE.x0 + 56 + stroke * 16 - stopX) / h, tgtY = (g - (tableTop - 4)) / h;
-		const pose = reachPose({hip: 0.655, lean: 22, neck: 16, lt: 6, lk: 6, rt: -8, rk: 4, la: 16, le: 24, ra: 40, re: 40}, [tgtX, tgtY], 'R');
-		const hand = jointAt(pose, 'RHand', stopX, g, h);
-		out.push({g, node: <Person key="ql" who="qianlong-paint" o={o} t={t} x={stopX} ground={g} h={h} pose={pose} look={LOOK.emperor} hat="qing" hands={[{joint: 'RHand', at: [TABLE.x0 + 56 + stroke * 16, tableTop - 4], tol: 14}]} />});
-		out.push({g: g + 0.5, node: <g key="brush" opacity={o}><line x1={hand[0] + 2} y1={hand[1] + 6} x2={hand[0] + 8} y2={hand[1] - 34} stroke="#3A2A1E" strokeWidth={5} /><circle cx={hand[0] + 2} cy={hand[1] + 8} r={4} fill={C.ink} /></g>});
-		[[-190, 0], [-350, 1]].forEach(([dx, i]) => out.push({g: g + 12 + 8 * i, node: <Person key={'at' + i} o={o} who={'attendant' + i} t={t} x={stopX + dx} ground={g + 12 + 8 * i} h={h * 0.94} pose={grounded({hip: 0.655, lean: 4, neck: 6, lt: 2, lk: 2, rt: -3, rk: 3, la: -2, le: 12, ra: 3, re: 14})} look={LOOK.attendant} hat="qing" />}));
-	}
-	return out;
-};
-/** 1928: soldiers around two cooking fires */
-const soldiersDepth = (t: number, o: number): Depth[] => {
-	const g = 900, h = 250, fires = [430, 760];
-	const st = (k: number) => grounded({hip: 0.655, lean: 6 + k, neck: 8, lt: 2, lk: 3, rt: -4, rk: 4, la: 4, le: 18, ra: -2, re: 12});
-	const P = (who: string, x: number, gg: number, k: number, look: typeof LOOK.soldier, flip?: boolean): Depth => ({g: gg, node: <Person key={who} who={who} t={t} x={x} ground={gg} h={h} pose={st(k)} look={look} flip={flip} o={o} />});
-	return [...fires.map((fx, i): Depth => ({g: g + 2, node: <g key={'f' + i} opacity={o}><Fire46 x={fx} g={g + 2} s={1.1} t={t + i} /></g>})),
-		P('soldier-a', 320, g, 0, LOOK.soldier), P('soldier-b', 555, g + 10, 4, LOOK.soldier2, true), P('soldier-c', 650, g + 16, 2, LOOK.soldier), P('soldier-d', 890, g + 6, 6, LOOK.soldier2, true)];
-};
-/** 1928: the market — stalls and a few people standing/walking at the back */
-const marketDepth = (t: number, o: number): Depth[] => {
-	const g = 800, h = 150, out: Depth[] = [];
-	[[160, '#C9B27E', 0.9], [420, '#B98A6A', 0.9], [700, '#A9B48A', 0.85], [1650, '#C9A27E', 0.85]].forEach(([x, c, sc], i) => out.push({g: g - 2, node: <g key={'s' + i} opacity={o}><Stall46 x={x as number} g={g} s={sc as number} c={c as string} /></g>}));
-	[[60, 0.0, 1], [900, 0.4, -1], [1100, 0.8, 1]].forEach(([x0, ph, dir], i) => { const gg = g + 5 + i * 5, w = walkAt(x0, dir as 1 | -1, t, 77.55, h, '08_04', ph); out.push({g: gg, node: <Person key={'w' + i} who={'walker' + i} t={t} x={w.x} ground={gg} h={h} pose={w.pose} look={[LOOK.buyer, LOOK.buyer2, LOOK.vendor][i]} intent="walk" flip={dir < 0} o={o} />}); });
-	out.push({g: g + 40, node: <Person key="b1" who="buyer-s" t={t} x={240} ground={g + 40} h={h} pose={grounded({hip: 0.655, lean: 8, neck: 10, lt: 2, lk: 2, rt: -3, rk: 3, la: 2, le: 14, ra: -3, re: 10})} look={LOOK.buyer} o={o} />});
-	out.push({g: g + 36, node: <Person key="b2" who="buyer-s2" t={t} x={770} ground={g + 36} h={h} pose={grounded({hip: 0.655, lean: 4, neck: 6, lt: 2, lk: 2, rt: -3, rk: 3, la: 3, le: 12, ra: 2, re: 12})} look={LOOK.buyer2} flip o={o} />});
-	return out;
-};
-/** today: visitors walking behind the tree and a few standing with phones (the phone held at the face) */
+/* People are drawn to the tree's scale (11.5 m ≈ 740 px → a person ≈ 150–165 px at the tree's depth, ≈ 110 px by the
+   back wall). Every hand that holds something is solved (IK) to that thing; every figure stands clear of the others. */
 const STRIDE = 0.9759;
+const STAND = {hip: 0.655, lean: 3, neck: 4, lt: 2, lk: 2, rt: -3, rk: 3, la: -2, le: 12, ra: 3, re: 14};
+const TABLE = {x0: 775, x1: 920};
+/** 1762: Qianlong looks at the tree, then paints it at a table; two attendants stand behind him */
+const qianlongDepth = (t: number, o: number): Depth[] => {
+	const h = 165, g = 905, X = 760, tableTop = g - 0.56 * h, out: Depth[] = [];
+	out.push({g: g - 1, node: <g key="tb" opacity={o}><Shadow x={(TABLE.x0 + TABLE.x1) / 2 + 12} y={g + 2} rx={88} ry={8} o={0.3} />
+		<rect x={TABLE.x0} y={tableTop} width={TABLE.x1 - TABLE.x0} height={9} fill="#6B4A32" />
+		{[TABLE.x0 + 30, TABLE.x1 - 14].map((x) => <rect key={x} x={x} y={tableTop + 9} width={7} height={g - tableTop - 9} fill="#4E3626" />)}
+		<rect x={TABLE.x0 + 12} y={tableTop - 3} width={100} height={3.5} fill={C.paper} /></g>});
+	const paint = ease(seg(t, 62.0, 62.6)), active = t >= 62.6 && t < 64.6;
+	const sx = active ? 8 * Math.sin((t - 62.6) * 6.1) : 0;
+	const target: [number, number] = [TABLE.x0 + 30 + sx, tableTop - 3];
+	const look = grounded({...STAND, lean: -2, neck: -18, la: -2, ra: 2});
+	const pp = reachPose({hip: 0.655, lean: 22, neck: 16, lt: 6, lk: 6, rt: -8, rk: 4, la: 16, le: 24, ra: 40, re: 40}, [(target[0] - X) / h, (g - target[1]) / h], 'R');
+	const pose = paint <= 0 ? look : paint >= 1 ? pp : reground(mixPoseP(look, pp, paint));
+	out.push({g, node: <Person key="ql" who={paint >= 1 ? 'qianlong-paint' : 'qianlong'} o={o} t={t} x={X} ground={g} h={h} pose={pose} look={LOOK.emperor} hat="qing" rim="#FFD36E" rimOp={0.75}
+		hands={paint >= 1 ? [{joint: 'RHand', at: target, tol: 8}] : undefined} />});
+	if (paint >= 1) { const hand = jointAt(pp, 'RHand', X, g, h); out.push({g: g + 0.5, node: <g key="brush" opacity={o}><line x1={hand[0] + 1} y1={hand[1] + 4} x2={hand[0] + 5} y2={hand[1] - 20} stroke="#3A2A1E" strokeWidth={3.5} /><circle cx={hand[0] + 1} cy={hand[1] + 5} r={2.6} fill={C.ink} /></g>}); }
+	[[-160, 0], [-300, 1]].forEach(([dx, i]) => out.push({g: g + 6 + 6 * i, node: <Person key={'at' + i} o={o} who={'attendant' + i} t={t} x={X + dx} ground={g + 6 + 6 * i} h={h * 0.9} pose={grounded({...STAND, lean: 5, neck: 8})} look={LOOK.attendant} hat="qing" />}));
+	return out;
+};
+const mixPoseP = (a: Record<string, [number, number]>, b: Record<string, [number, number]>, k: number) => { const o: Record<string, [number, number]> = {}; for (const n of Object.keys(a)) o[n] = [lerp(a[n][0], b[n][0], k), lerp(a[n][1], b[n][1], k)]; return o; };
+/** a standing (or kneeling) person whose right hand reaches a world point */
+const reacher = (x: number, g: number, h: number, base: Parameters<typeof grounded>[0], at: [number, number], flip = false) => {
+	const pose = reachPose(base, [(flip ? x - at[0] : at[0] - x) / h, (g - at[1]) / h], 'R'), hand = jointAt(pose, 'RHand', x, g, h, flip);
+	return {pose, hand};
+};
+/** 1928: soldiers cooking at two fires — one feeds the fire, two stir the pots with ladles, one eats from a bowl */
+const soldiersDepth = (t: number, o: number): Depth[] => {
+	const g = 905, h = 158, F1 = 385, F2 = 765, fs = 0.7, potTop = g - 46 * fs, out: Depth[] = [];
+	[F1, F2].forEach((fx, i) => out.push({g: g + 1, node: <g key={'f' + i} opacity={o}><Fire46 x={fx} g={g + 1} s={fs} t={t + i} />
+		{Array.from({length: 4}, (_, j) => { const k = ((t * 0.5 + j / 4 + i * 0.3) % 1); return <ellipse key={j} cx={fx + Math.sin(k * 5 + j) * 6} cy={potTop - 8 - k * 70} rx={6 + 10 * k} ry={4 + 6 * k} fill="#F4F0E8" opacity={(1 - k) * 0.5} filter="url(#k3)" />; })}</g>}));
+	const cy = soldier;
+	// 1: kneels and feeds a stick into fire 1
+	{ const x = 306, at: [number, number] = [x + 0.26 * h, g - 0.3 * h], r = reacher(x, g, h, {hip: 0.36, lean: 18, neck: 10, lt: 94, lk: 94, rt: 0, rk: 90, rf: 160, la: 40, le: 40, ra: 50, re: 30}, at);
+		out.push({g, node: <Person key="s1" who="soldier-feed" t={t} x={x} ground={g} h={h} pose={r.pose} look={cy} o={o} hands={[{joint: 'RHand', at, tol: 6}]} />});
+		out.push({g: g + 0.4, node: <line key="stick" x1={r.hand[0] - 8} y1={r.hand[1] - 4} x2={F1 - 2} y2={g - 4} stroke="#5A4230" strokeWidth={4} opacity={o} />}); }
+	// 2: stirs pot 1 with a ladle (faces left)
+	{ const x = 458, st = Math.sin(t * 3.2) * 5, at: [number, number] = [x - 0.22 * h + st * 0.4, g - 0.56 * h], r = reacher(x, g, h, {...STAND, lean: 14, neck: 12, ra: 50, re: 40}, at, true);
+		out.push({g, node: <Person key="s2" who="soldier-stir1" t={t} x={x} ground={g} h={h} pose={r.pose} look={cy} flip o={o} hands={[{joint: 'RHand', at, tol: 6}]} />});
+		out.push({g: g + 0.4, node: <g key="ladle1" opacity={o}><line x1={r.hand[0]} y1={r.hand[1]} x2={F1 + 4 + st} y2={potTop + 6} stroke="#4A3A2C" strokeWidth={3.5} /><ellipse cx={F1 + 4 + st} cy={potTop + 6} rx={6} ry={3} fill="#4A3A2C" /></g>}); }
+	// 3: holds a bowl at the chest (faces right, toward fire 2)
+	{ const x = 678, at: [number, number] = [x + 0.2 * h, g - 0.6 * h], r = reacher(x, g, h, {...STAND, lean: 6, neck: 14, ra: 50, re: 60}, at);
+		out.push({g, node: <Person key="s3" who="soldier-bowl" t={t} x={x} ground={g} h={h} pose={r.pose} look={LOOK.soldier2} o={o} hands={[{joint: 'RHand', at, tol: 6}]} />});
+		out.push({g: g + 0.4, node: <path key="bowl" d={`M${r.hand[0] - 11},${r.hand[1] - 6} Q${r.hand[0]},${r.hand[1] + 8} ${r.hand[0] + 11},${r.hand[1] - 6} Z`} fill="#D9D2C2" stroke="#6E6658" strokeWidth={1.5} opacity={o} />}); }
+	// 4: stirs pot 2 (faces left)
+	{ const x = 838, st = Math.sin(t * 2.7 + 1) * 5, at: [number, number] = [x - 0.22 * h + st * 0.4, g - 0.56 * h], r = reacher(x, g, h, {...STAND, lean: 14, neck: 12, ra: 50, re: 40}, at, true);
+		out.push({g, node: <Person key="s4" who="soldier-stir2" t={t} x={x} ground={g} h={h} pose={r.pose} look={cy} flip o={o} hands={[{joint: 'RHand', at, tol: 6}]} />});
+		out.push({g: g + 0.4, node: <g key="ladle2" opacity={o}><line x1={r.hand[0]} y1={r.hand[1]} x2={F2 + 4 + st} y2={potTop + 6} stroke="#4A3A2C" strokeWidth={3.5} /><ellipse cx={F2 + 4 + st} cy={potTop + 6} rx={6} ry={3} fill="#4A3A2C" /></g>}); }
+	return out;
+};
+const soldier = LOOK.soldier;
+/** 1928: the market at the back — bamboo stalls, two shoppers, one passer-by on the right */
+const marketDepth = (t: number, o: number): Depth[] => {
+	const g = 812, h = 112, out: Depth[] = [];
+	[[180, '#C9B27E'], [520, '#B98A6A'], [1640, '#A9B48A']].forEach(([x, c], i) => out.push({g: g - 6, node: <g key={'s' + i} opacity={o}><Stall46 x={x as number} g={g - 6} s={0.62} c={c as string} /></g>}));
+	out.push({g, node: <Person key="b1" who="buyer-s" t={t} x={250} ground={g} h={h} pose={grounded({...STAND, lean: 8, neck: 12})} look={LOOK.buyer} flip o={o} />});
+	out.push({g, node: <Person key="b2" who="buyer-s2" t={t} x={590} ground={g} h={h} pose={grounded({...STAND, lean: 6, neck: 10})} look={LOOK.buyer2} flip o={o} />});
+	if (t < 87.0) { const w = walkAt(1060, 1, t, 77.55, h); out.push({g: g + 2, node: <Person key="w" who="walker" t={t} x={w.x} ground={g + 2} h={h} pose={w.pose} look={LOOK.buyer} intent="walk" o={o} />}); }
+	return out;
+};
+/** today: visitors on the back lane (one steady speed, evenly spaced, two lanes for the two directions) and two
+   people photographing the tree with a clear line to it */
 const visitorsDepth = (t: number, o: number, fast = 1): Depth[] => {
-	const g = 860, list: Depth[] = [];
-	for (let i = 0; i < 7; i++) {
-		const h = 175 * (0.88 + 0.12 * rnd(i, 3)), dir: 1 | -1 = i % 2 ? -1 : 1, v = STRIDE * h / 1.1 * fast, span = 2500, x0 = dir > 0 ? -300 : 2200;
-		const dist = (((t - 123.97) * v + i * 380) % span + span) % span, x = x0 + dir * dist, u = dist / (STRIDE * h);
-		list.push({g: 790 + i * 4, node: <Person key={i} who={'visitor' + i} t={t} x={x} ground={790 + i * 4} h={h} o={o} pose={reground(gaitPose('08_04', u))} look={[LOOK.tourist, LOOK.tourist2, LOOK.tourist3, LOOK.child][i % 4]} intent="walk" flip={dir < 0} />});
+	const list: Depth[] = [], h = 108, v = STRIDE * h / 1.1 * fast, span = 2600;
+	const looks = [LOOK.tourist, LOOK.tourist2, LOOK.tourist3, LOOK.child, LOOK.tourist2, LOOK.tourist, LOOK.tourist3, LOOK.tourist, LOOK.tourist2, LOOK.child, LOOK.tourist3];
+	for (let i = 0; i < 11; i++) {
+		const right = i < 6, n = right ? 6 : 5, k = right ? i : i - 6, g = right ? 798 : 814, hh = looks[i] === LOOK.child ? h * 0.7 : h;
+		const dist = (((t - 123.97) * v + k * span / n + (right ? 0 : 200)) % span + span) % span, x = right ? -300 + dist : 2300 - dist, u = dist / (STRIDE * hh);
+		list.push({g, node: <Person key={i} who={'visitor' + i} t={t} x={x} ground={g} h={hh} o={o} pose={reground(gaitPose('08_04', u))} look={looks[i]} intent="walk" flip={!right} />});
 	}
-	[[560, 0], [1820, 1]].forEach(([x, k]) => {
-		const flip = k === 1, h = 210, base = {hip: 0.655, lean: 2, neck: -6, lt: 2, lk: 2, rt: -3, rk: 3, la: 4, le: 14, ra: 40, re: 40};
-		const pose = reachPose(base, [0.13, 0.86], 'R'), hand = jointAt(pose, 'RHand', x, g + 20, h, flip);
-		list.push({g: g + 20, node: <Person key={'ph' + k} o={o} who={'photo' + k} t={t} x={x} ground={g + 20} h={h} pose={pose} look={k ? LOOK.tourist2 : LOOK.tourist3} flip={flip} hands={[{joint: 'RHand', at: hand, tol: 4}]} />});
-		const flash = (Math.sin(t * 2.3 + k * 3) > 0.96) ? 1 : 0;
-		list.push({g: g + 20.5, node: <g key={'pp' + k} opacity={o}><rect x={hand[0] - 7} y={hand[1] - 22} width={14} height={24} rx={3} fill="#1C1C22" />{flash > 0 && <Glow x={hand[0]} y={hand[1] - 12} r={60} c="#FFFFFF" o={0.6} id={`fl${k}`} />}</g>});
+	[[1000, false], [1610, true]].forEach(([x, flip], k) => {
+		const X = x as number, F = flip as boolean, g = 905, hh = 158, pose = reachPose({...STAND, lean: 2, neck: -8, ra: 40, re: 40}, [0.17, 0.86], 'R'), hand = jointAt(pose, 'RHand', X, g, hh, F);
+		list.push({g, node: <Person key={'ph' + k} o={o} who={'photo' + k} t={t} x={X} ground={g} h={hh} pose={pose} look={k ? LOOK.tourist2 : LOOK.tourist3} flip={F} hands={[{joint: 'RHand', at: hand, tol: 4}]} />});
+		const flash = (Math.sin(t * 2.3 + k * 3) > 0.96) ? 1 : 0, dir = F ? -1 : 1;
+		list.push({g: g + 0.5, node: <g key={'pp' + k} opacity={o}><rect x={hand[0] + dir * 3 - 2} y={hand[1] - 15} width={5} height={18} rx={1.5} fill="#2A2A30" stroke="#C9CDD6" strokeWidth={1} />
+			{flash > 0 && <Glow x={hand[0] + dir * 6} y={hand[1] - 8} r={46} c="#FFFFFF" o={0.65} id={`fl${k}`} />}</g>});
 	});
 	return list;
 };
-
-
 /* ---------------- 2024: the journey and 茂陵 ---------------- */
 const Journey: React.FC<{t: number; o: number}> = ({t, o}) => {
 	const u = seg(t, 109.25, 117.17), tx = lerp(-300, 1180, easeOut(seg(t, 109.25, 114.6))), moundIn = ease(seg(t, 111.6, 114.0));
@@ -252,14 +269,14 @@ export const Film46: React.FC<{t: number}> = ({t}) => {
 	}
 	/* ===== E. Qianlong, 59.44 – 77.55 ===== */
 	else if (t < 77.55) {
-		const scrollO = ease(seg(t, 62.4, 62.9)) * (1 - ease(seg(t, 66.9, 67.6))), steleK = ease(seg(t, 66.9, 68.2)), figO = 1 - ease(seg(t, 67.0, 68.0));
+		const scrollO = ease(seg(t, 62.4, 62.9)) * (1 - ease(seg(t, 66.2, 66.8))), steleK = ease(seg(t, 66.9, 68.2)), figO = 1 - ease(seg(t, 66.0, 66.7));
 		layers.push(<World key="E" t={t} c={{idp: 'E', sky: skyMix('day', 'noon', seg(t, 59.44, 77)), wall: 1, hall: 1, steles: 1, qlStele: steleK, steleGlow: ease(seg(t, 74.4, 75.2)), age: 0.97, west: 0, glow: 1 + 0.4 * Math.sin(seg(t, 71.32, 74.1) * Math.PI)}}
 			people={figO > 0 ? qianlongDepth(t, figO) : []} />);
-		if (scrollO > 0) layers.push(<g key="scr" opacity={scrollO}><path d="M800,795 L880,760 L930,760 Z" fill="#F3EBDA" opacity={0.9} /><rect x={808} y={276} width={244} height={490} rx={14} fill="#F3EBDA" opacity={0.92} /><Scroll46 x={930} y={300} s={0.44} open={easeOut(seg(t, 62.4, 63.0))} ink={seg(t, 62.6, 64.4)} inscr={seg(t, 64.6, 65.6)} /></g>);
+		if (scrollO > 0) layers.push(<g key="scr" opacity={scrollO}><path d="M812,806 L880,770 L910,770 Z" fill="#F3EBDA" opacity={0.92} /><rect x={858} y={440} width={168} height={334} rx={10} fill="#F3EBDA" opacity={0.92} /><Scroll46 x={942} y={456} s={0.3} open={easeOut(seg(t, 62.4, 63.0))} ink={seg(t, 62.6, 64.4)} inscr={seg(t, 64.6, 65.6)} /></g>);
 		if (t >= 71.32 && t < 77.4) { const o = ease(seg(t, 71.5, 72.0)) * (1 - seg(t, 77.0, 77.4)), lab = (x: number, y: number, txt: string) => <text x={x} y={y} textAnchor="middle" style={{fontFamily: "'Noto Sans CJK SC',sans-serif", fontWeight: 900, fontSize: 48}} fill="#FFF8EC" stroke="#2A1A0A" strokeWidth={7} paintOrder="stroke">{txt}</text>;
 			layers.push(<g key="hg" opacity={o}>{lab(880, 560, '石碑里的你')}{lab(1420, 240, '真的你')}</g>); }
 		if (t >= 71.32 && t < 74.3) { const u = ease(seg(t, 71.4, 72.6)); layers.push(<path key="sight" d={`M900,700 Q1100,${560 - 120 * u} ${lerp(900, 1240, u)},${lerp(700, 560, u)}`} stroke={C.glowCore} strokeWidth={4} strokeDasharray="8 10" fill="none" opacity={0.85 * (1 - seg(t, 73.8, 74.3))} />); }
-		cam = t < 69.06 ? CAM0 : mixCam(CAM0, {cx: 1080, cy: 600, z: 1.18}, ease(seg(t, 69.06, 70.6)));
+		cam = t < 69.06 ? mixCam(CAM0, {cx: 880, cy: 700, z: 1.55}, ease(seg(t, 61.6, 62.8)) * (1 - ease(seg(t, 66.0, 67.4)))) : mixCam(CAM0, {cx: 1080, cy: 600, z: 1.18}, ease(seg(t, 69.06, 70.6)));
 		if (t > 76.6) cam = mixCam(cam, CAM0, ease(seg(t, 76.6, 77.55)));
 	}
 	/* ===== F. 1928, 77.55 – 91.14 ===== */
@@ -270,7 +287,8 @@ export const Film46: React.FC<{t: number}> = ({t}) => {
 			<SmokeBank o={smoke * 0.8} t={t} y={480} />
 			{grey > 0 && Array.from({length: 18}, (_, i) => { const k = ((t - 83.9) * 0.4 + rnd(i, 5)) % 1; return <ellipse key={i} cx={(i % 2 ? 260 : 1840) + (rnd(i, 6) - 0.5) * 300 + k * 60} cy={400 + k * 450} rx={6} ry={3} fill="#8C877C" opacity={grey * (1 - k)} />; })}
 		</World>);
-		cam = mixCam(CAM0, {cx: 200, cy: 540, z: 1.05}, pan);
+		const cook = ease(seg(t, 80.2, 81.2)) * (1 - ease(seg(t, 83.6, 84.8)));
+		cam = mixCam(mixCam(CAM0, {cx: 600, cy: 740, z: 1.6}, cook), {cx: 200, cy: 540, z: 1.05}, pan);
 	}
 	/* ===== G. you survived; half alive, 91.14 – 105.29 ===== */
 	else if (t < 105.29) {
@@ -288,9 +306,9 @@ export const Film46: React.FC<{t: number}> = ({t}) => {
 		if (eastFocus > 0 && t < 102.6) { const p = treeAt(TX, TG, 1, 1, STRIP_MID), o = ease(seg(t, 99.3, 99.8)) * (1 - seg(t, 102.2, 102.6));
 			layers.push(<g key="el" opacity={o}><path d={`M${p[0] + 20},${p[1] - 8} L${p[0] + 90},${p[1] - 8} M${p[0] + 20},${p[1] + 8} L${p[0] + 90},${p[1] + 8}`} stroke={C.glowCore} strokeWidth={3} />
 				<text x={p[0] + 100} y={p[1] + 14} style={{fontFamily: "'Noto Sans CJK SC',sans-serif", fontWeight: 900, fontSize: 56}} fill="#FFD36E" stroke="#2A1A0A" strokeWidth={7} paintOrder="stroke">32厘米</text></g>); }
-		if (t >= 102.46) { const o = ease(seg(t, 102.9, 103.5)), top = TG - 740, hgt = ease(seg(t, 102.9, 104.0));
-			layers.push(<g key="hb" opacity={o}><line x1={1720} y1={TG} x2={1720} y2={lerp(TG, top, hgt)} stroke="#FFF2D2" strokeWidth={4} /><line x1={1700} y1={TG} x2={1740} y2={TG} stroke="#FFF2D2" strokeWidth={4} /><line x1={1700} y1={top} x2={1740} y2={top} stroke="#FFF2D2" strokeWidth={4} opacity={hgt} />
-				<text x={1750} y={(TG + top) / 2} style={{fontFamily: "'Noto Sans CJK SC',sans-serif", fontWeight: 900, fontSize: 60}} fill="#FFD36E" stroke="#2A1A0A" strokeWidth={7} paintOrder="stroke">11.5米</text></g>); }
+		if (t >= 102.46) { const o = ease(seg(t, 102.9, 103.5)), top = TG - 830, hgt = ease(seg(t, 102.9, 104.0));
+			layers.push(<g key="hb" opacity={o}><line x1={1660} y1={TG} x2={1660} y2={lerp(TG, top, hgt)} stroke="#FFF2D2" strokeWidth={4} /><line x1={1640} y1={TG} x2={1680} y2={TG} stroke="#FFF2D2" strokeWidth={4} /><line x1={1640} y1={top} x2={1680} y2={top} stroke="#FFF2D2" strokeWidth={4} opacity={hgt} /><line x1={1430} y1={top} x2={1640} y2={top} stroke="#FFF2D2" strokeWidth={2} strokeDasharray="6 6" opacity={hgt} />
+				<text x={1690} y={(TG + top) / 2} style={{fontFamily: "'Noto Sans CJK SC',sans-serif", fontWeight: 900, fontSize: 60}} fill="#FFD36E" stroke="#2A1A0A" strokeWidth={7} paintOrder="stroke">11.5米</text></g>); }
 	}
 	/* ===== H. seeds, 105.29 – 109.25 ===== */
 	else if (t < 109.25) {
