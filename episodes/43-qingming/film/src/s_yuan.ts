@@ -98,7 +98,7 @@ export const d14 = (t: number): Frame => {
 	roll14.drawW(fk, (g) => { glowBlob(g, w.rc, 170, 95, 0.42); drawRoll(g, w.e0, w.e1, 14, 1); drawFig(g, {...w.car, part: 'L'}); });
 	c14.setLanterns(() => 1); c14.setBoat(1760 - (t - b(23)) * 22, 0); c14.setStreak(w.rc[0], 0.25, t);
 	st.heroAt(w.rc[0], w.rc[1], 22, 640);
-	return {st, grade: {vig: 0.28, vigCol: '#1a1c1c', exposure: 1}, bloom: 1};
+	return {st, grade: {vig: 0.62, vigCol: '#141a1b', exposure: 1}, bloom: 1};
 };
 /** where the Dagoba sits on screen at the end of 14 (axis x, base y, height): the match into 15's round window */
 let DAG_END = {x: 0, y: 0, h: 0};
@@ -113,7 +113,7 @@ const LAMP15: P = [1110, 470];
 const lkCraft = LOOKS.yuanCraftsman;
 let room15: Stage, cast15: Cast, arms15: Cast, you15: Live, copy15: Live, glow15: Live, lamp15: Live;
 let CAM15_0: Cam = [960, 540, 1];
-const CAM15_1: Cam = [1010, 560, 1.12];
+const CAM15_1: Cam = [985, 615, 1.34];
 const buildRoom15 = async () => {
 	const st = new Stage('room15'); room15 = st;
 	st.add('osky', canvasTex(gradCanvas([[0, '#2B4552'], [0.36, '#4d6869'], [0.52, '#6E827E'], [0.7, '#C9A877'], [0.8, '#E6B676'], [0.9, '#F3CC8E'], [1, '#E9C08A']])), WIN.x, 470, 3200, 1400, -2600);
@@ -177,7 +177,7 @@ const drawLamp15 = (g: CanvasRenderingContext2D, k: number, cup: number) => {
 	g.fillStyle = '#15100C'; g.fillRect(x - 20, y - 36, 40, 7); g.fillRect(x - 16, y + 30, 32, 6);
 	const c = [40 + 205 * k, 32 + 160 * k, 24 + 84 * k].map(Math.round); g.fillStyle = `rgb(${c[0]},${c[1]},${c[2]})`; g.beginPath(); g.ellipse(x, y, 24, 31, 0, 0, Math.PI * 2); g.fill();
 	g.strokeStyle = 'rgba(21,16,12,.5)'; g.lineWidth = 2; for (const dx of [-9, 0, 9]) { g.beginPath(); g.moveTo(x + dx, y - 29); g.quadraticCurveTo(x + dx * 1.5, y, x + dx, y + 29); g.stroke(); }
-	if (k > 0) glowBlob(g, [x, y], 140 * (1 - 0.5 * cup), 120 * (1 - 0.5 * cup), 0.42 * k, '255,184,104');
+	if (k > 0) glowBlob(g, [x, y], 105 * (1 - 0.4 * cup), 95 * (1 - 0.4 * cup), 0.3 * k, '255,184,104');
 };
 export const d15 = (t: number): Frame => {
 	const st = room15, s = s15(t);
@@ -261,8 +261,10 @@ let desk17: Desk, cast17: Cast, paper17: any, slot17: any, ink17: Live, roll17: 
 const PSRC_W = 2400, PSRC_H = 1536;                     // the paper canvas (src px): 杨准's sheet (left) + an earlier colophon (right)
 const PX0 = 720, PW = 1060, PK = PW / PSRC_W, PHF = PSRC_H * PK;   // world x range; scale; full (upright) height
 const DTB = 652, DTF = 714, PYB = 658, PYF = 708;       // desk top back / front edge; the paper lying on it (back → front)
-const SLOT = {x: 760, y: 560, w: 384, h: 216};          // the replay slot in 杨准's column (src px), 16:9
-const NEWX = 372, NEWY0 = 168, NEWP = 108, NEWS = 84;   // the newest column (src px): x, first glyph centre, pitch, size
+const SLOT = {x: 560, y: 640, w: 384, h: 216};          // the replay slot in 杨准's column (src px), 16:9
+const NEWX = 286, NEWY0 = 220, NEWP = 68, NEWN = 16;    // the newest column (src px): x, first glyph centre, pitch, glyphs
+const BCOL = (c: number) => 1210 - c * 84;              // the colophon painter's small-script columns, moved onto 杨准's sheet
+let cells17: HTMLCanvasElement;                         // 16 glyph cells (84 × 72) to ink the newest column with
 const H17 = 700, FLOOR17 = 1040, X17 = 640;
 const lkYang = LOOKS.yuanScholar;
 /** f = 0 the paper faces the camera (upright on the desk's front edge) → 1 lying on the desk (foreshortened) */
@@ -275,26 +277,23 @@ const slotRect = () => { const a = srcToWorld(SLOT.x, SLOT.y, 0), c = srcToWorld
 const SLOT_SCREEN = {cx: 1056, cy: 520, w: 400};
 const paperCanvas = () => {
 	const c = mkCanvas(PSRC_W, PSRC_H), g = c.getContext('2d')!;
-	g.fillStyle = '#F1E2C2'; g.fillRect(0, 0, PSRC_W, PSRC_H);
-	// the earlier colophon (right): the colophon section's large running hand, its sheet join
+	// the colophon painter's other hands: its small regular script (cols at 2540 − 84c) becomes 杨准's sheet (left), its large
+	// running hand an earlier colophon (right). Illegible stand-ins, as the board asks; no invented text.
 	const col = paintSection('colophon', {width: 4096, height: 1536, mode: 'mono', seed: 47});
-	g.drawImage(col, 0, 0, PSRC_W - 1420, PSRC_H, 1420, 0, PSRC_W - 1420, PSRC_H);
-	g.fillStyle = 'rgba(42,31,23,0.12)'; g.fillRect(1412, 0, 9, PSRC_H); g.fillStyle = 'rgba(42,31,23,0.5)'; g.fillRect(1416, 0, 1.5, PSRC_H);
-	// 杨准's sheet: faint ruled columns, his columns (stand-ins) right → left, the replay slot framed in ink
-	g.fillStyle = 'rgba(42,31,23,0.07)'; for (let x = 1360; x > 140; x -= 110) g.fillRect(x - 55, 110, 1.2, 1320);
-	const cols = [1300, 1190, 1080, 970, 860, 750, 640, 530];
-	cols.forEach((x, i) => {
-		const inSlot = x > SLOT.x - 40 && x < SLOT.x + SLOT.w + 40;
-		for (let k = 0; k < 11; k++) { const y = NEWY0 + k * NEWP; if (inSlot && y > SLOT.y - 70 && y < SLOT.y + SLOT.h + 50) continue; standinGlyph(g, x + (hash(i * 7 + k) - 0.5) * 6, y, NEWS * (0.9 + hash(i * 3.1 + k) * 0.15), 900 + i * 37 + k, 'rgba(42,31,23,0.88)'); }
-	});
-	g.strokeStyle = 'rgba(42,31,23,0.85)'; g.lineWidth = 5; g.strokeRect(SLOT.x - 10, SLOT.y - 10, SLOT.w + 20, SLOT.h + 20); g.lineWidth = 1.5; g.strokeRect(SLOT.x - 18, SLOT.y - 18, SLOT.w + 36, SLOT.h + 36);
-	// the newest column's first glyphs (already written before the scene); the rest are inked live
-	silkWeave(c, 0.5, {mode: 'mono', seed: 51});
+	g.drawImage(col, 1330, 0, 1270, PSRC_H, 0, 0, 1270, PSRC_H);
+	g.drawImage(col, 0, 0, PSRC_W - 1270, PSRC_H, 1270, 0, PSRC_W - 1270, PSRC_H);
+	const blank = (x: number, y: number) => g.drawImage(col, 1330 + x - 42, 120, 84, 72, x - 42, y - 36, 84, 72);   // paper (with its ruling) from the same column's top margin
+	for (const cc of [11, 12, 13]) for (let k = 0; k < 18; k++) blank(BCOL(cc), NEWY0 + k * NEWP);                       // the newest columns: still blank
+	for (let cc = 0; cc < 14; cc++) { const x = BCOL(cc); if (x < SLOT.x - 40 || x > SLOT.x + SLOT.w + 40) continue;
+		for (let k = 0; k < 18; k++) { const y = NEWY0 + k * NEWP; if (y > SLOT.y - 56 && y < SLOT.y + SLOT.h + 56) blank(x, y); } }
+	g.strokeStyle = 'rgba(42,31,23,0.85)'; g.lineWidth = 4; g.strokeRect(SLOT.x - 9, SLOT.y - 9, SLOT.w + 18, SLOT.h + 18); g.lineWidth = 1.4; g.strokeRect(SLOT.x - 16, SLOT.y - 16, SLOT.w + 32, SLOT.h + 32);
+	cells17 = mkCanvas(84, 72 * NEWN); const gc = cells17.getContext('2d')!;
+	for (let k = 0; k < NEWN; k++) gc.drawImage(col, 2540 - 2 * 84 - 42, NEWY0 + k * NEWP - 36, 84, 72, 0, k * 72, 84, 72);
 	return c;
 };
 /** glyphs of the newest column written by time t (fractional = the stroke in progress) */
-const written17 = (t: number) => 5 + clamp01((t - b(27.75)) / (b(29.25) - b(27.75))) * 3.6;
-const brushTip17 = (t: number, f: number): P => { const n = written17(t), k = Math.min(10, Math.floor(n)), fr = n - Math.floor(n); return srcToWorld(NEWX + Math.sin(fr * 9) * 18, NEWY0 + k * NEWP - 30 + fr * 60, f); };
+const written17 = (t: number) => 9 + clamp01((t - b(27.75)) / (b(29.25) - b(27.75))) * 4.6;
+const brushTip17 = (t: number, f: number): P => { const n = written17(t), k = Math.min(NEWN - 1, Math.floor(n)), fr = n - Math.floor(n); return srcToWorld(NEWX + Math.sin(fr * 9) * 12, NEWY0 + k * NEWP - 22 + fr * 44, f); };
 const yang17 = (t: number, f: number): FigOpts => {
 	const tip = brushTip17(t, f), flat = srcToWorld(150, 900, f);
 	const base = fkPose({hip: 0.372, lean: 20, neck: 12, lt: 88, lk: 92, rt: 84, rk: 86, la: 30, le: 50, ra: 30, re: 50});
@@ -330,7 +329,7 @@ const cam17 = (t: number): Cam => {
 export const BLEED_PT: [number, number] = [0.5, 0.5];
 export const d17 = (t: number): Frame => {
 	const st = desk17.st;
-	const pb = pb17(t), f = pb;
+	const f = easeInOut(clamp01((t - b(28.05)) / (b(28.62) - b(28.05)))), pb = pb17(t);
 	const cam = cam17(t); st.setCam(cam[0], cam[1], cam[2]);
 	const fk = `${Math.round(t * 30)}`;
 	// the paper and everything on it share one transform
@@ -345,9 +344,10 @@ export const d17 = (t: number): Frame => {
 	const n = written17(t), blot = smooth(clamp01((t - b(29.0)) / (b(29.45) - b(29.0))));
 	ink17.draw(`${n.toFixed(2)}:${blot.toFixed(3)}`, (g) => {
 		g.save(); g.scale(PK, PK); g.translate(-(NEWX - 90), 0);
-		for (let k = 0; k < Math.floor(n); k++) standinGlyph(g, NEWX, NEWY0 + k * NEWP, NEWS, 4000 + k, 'rgba(32,24,18,0.95)');
-		const fr = n - Math.floor(n), k = Math.floor(n); if (fr > 0.05) { g.save(); g.beginPath(); g.rect(NEWX - 60, NEWY0 + k * NEWP - 50, 120, 100 * fr); g.clip(); standinGlyph(g, NEWX, NEWY0 + k * NEWP, NEWS, 4000 + k, 'rgba(32,24,18,0.95)'); g.restore(); }
-		if (blot > 0) { const by = NEWY0 + Math.min(10, k) * NEWP; for (let i = 0; i < 7; i++) { const a = i * 0.9, r = (40 + 130 * blot) * (0.6 + hash(i * 3.7) * 0.6); g.fillStyle = `rgba(26,22,24,${(0.5 + 0.4 * blot).toFixed(2)})`; g.beginPath(); g.ellipse(NEWX + Math.cos(a) * r * 0.3, by + Math.sin(a) * r * 0.5, r * 0.7, r, a, 0, Math.PI * 2); g.fill(); } }
+		const cell = (k: number, frac = 1) => g.drawImage(cells17, 0, k * 72, 84, 72 * frac, NEWX - 42, NEWY0 + k * NEWP - 36, 84, 72 * frac);
+		const k = Math.min(NEWN - 1, Math.floor(n)), fr = n - Math.floor(n);
+		for (let i = 0; i < k; i++) cell(i); if (fr > 0.05) cell(k, fr);
+		if (blot > 0) { const by = NEWY0 + k * NEWP; for (let i = 0; i < 8; i++) { const a = i * 0.8, r = (24 + 120 * blot) * (0.6 + hash(i * 3.7) * 0.6); g.fillStyle = `rgba(24,22,26,${(0.45 + 0.45 * blot).toFixed(2)})`; g.beginPath(); g.ellipse(NEWX + Math.cos(a) * r * 0.35, by + Math.sin(a) * r * 0.5, r * 0.75, r, a, 0, Math.PI * 2); g.fill(); } }
 		g.restore();
 	});
 	const yang = yang17(t, f), tip = brushTip17(t, f);
@@ -379,12 +379,13 @@ export const bootYuan = async () => {
 		const st = c14.st;
 		// keep the top of the day sky at or below #5E7A82 (ivory subtitles ≥ 4.5 : 1): a soft shade over the far sky only
 		st.add('skyShade', canvasTex(gradCanvas([[0, 'rgba(38,58,68,0.92)'], [0.3, 'rgba(46,68,78,0.72)'], [0.5, 'rgba(60,84,92,0.35)'], [0.66, 'rgba(70,92,98,0)'], [1, 'rgba(70,92,98,0)']])), 960, 420, 12000, 1900, -8900);
+		st.get('sunglow').mat.uniforms.uOpacity.value = 0.14;                 // the day sun stays low and soft: you lead
 		cast14 = new Cast(st, 'cast14', 900, 900, 5200, 1800, 20);
 		roll14 = new Live(st, 'roll14', 900, 900, 5200, 1800, 22, {emissive: 0.55}, 0.6);
 		// the match: where the Dagoba lands at the end of 14 → 15 opens with its window's Dagoba in the same place
 		const [cx, cy, zm] = camPath(b(25), K14); st.setCam(cx, cy, zm);
 		const base = scr(st, -520, 860, -2600), top = scr(st, -520, 860 - 372 * 1.25, -2600);
-		DAG_END = {x: base[0], y: base[1], h: base[1] - top[1]};
+		DAG_END = {x: base.x, y: base.y, h: base.y - top.y};
 		CAM15_0 = solveCam(DAG15.x, DAG15.base, -960, DAG_END.x, DAG_END.y, DAG_END.h / (372 * DAG15.s));
 	}
 	{
@@ -395,7 +396,7 @@ export const bootYuan = async () => {
 		cast16 = new Cast(st, 'cast16', 960, 640, 2600, 1100, 20);
 		silk16 = new Live(st, 'silk16', (SX0 + SX1) / 2, SY, SX1 - SX0 + 40, SH + 60, 22, {emissive: 0.34}, 3);
 		rollers16 = new Live(st, 'rollers16', 960, 640, 2600, 1100, 23, {rim: 0}, 1);
-		glow16 = new Live(st, 'glow16', 960, 640, 2600, 1100, 24, {emissive: 1.0}, 0.5);
+		glow16 = new Live(st, 'glow16', 960, 640, 2600, 1100, 18, {emissive: 1.0}, 0.5);
 	}
 	{
 		const st = desk17.st;
@@ -422,14 +423,15 @@ export const bootYuan = async () => {
 		roll17 = new Live(st, 'roll17', PX0 + (PSRC_W + 10) * PK, PYF - PHF / 2, 140 * PK, (PSRC_H + 80) * PK, 0, {emissive: 0.45}, 2, 13);
 		roll17.draw('roll', (g) => { const w = 140 * PK, h = (PSRC_H + 80) * PK; const gr = g.createLinearGradient(0, 0, w, 0); gr.addColorStop(0, '#D9B07A'); gr.addColorStop(0.45, '#FFF3D8'); gr.addColorStop(1, '#C99C66');
 			g.fillStyle = gr; g.beginPath(); g.roundRect(w * 0.15, 18 * PK, w * 0.7, h - 36 * PK, 10); g.fill(); g.fillStyle = '#34506A'; g.fillRect(w * 0.15, 18 * PK, w * 0.7, h * 0.05); g.fillRect(w * 0.15, h - 18 * PK - h * 0.05, w * 0.7, h * 0.05); });
-		cast17 = new Cast(st, 'cast17', 960, 640, W + 400, 1200, 4, {}, 1);
+		cast17 = new Cast(st, 'cast17', 960, 640, W + 400, 1200, 4, {}, 1); cast17.L.L.mesh.renderOrder = 20;
 		lamp17 = new Live(st, 'lamp17', LAMP17[0], LAMP17[1], 400, 400, -1, {emissive: 1.3}, 1);
-		glow17 = new Live(st, 'glow17', 1100, 600, 2400, 1400, 6, {emissive: 1.0}, 0.5);
+		glow17 = new Live(st, 'glow17', 1100, 600, 2400, 1400, 6, {emissive: 1.0}, 0.5, 21);
 		// the opening camera: the slot at SLOT_SCREEN, 16:9
 		const k = SLOT_SCREEN.w / sr.w; CAM17_0 = solveCam(sr.x + sr.w / 2, sr.y + sr.h / 2, 0, SLOT_SCREEN.cx, SLOT_SCREEN.cy, k);
 		const c = cam17(b(29.25)); st.setCam(c[0], c[1], c[2]); const tip = brushTip17(b(29.25), 1), q = scr(st, tip[0], tip[1], 0);
 		BLEED_PT[0] = q.x / W; BLEED_PT[1] = 1 - q.y / H;
 	}
+	(window as any).YDBG = () => ({CAM15_0, DAG_END, CAM17_0, BLEED_PT, room15: {n: room15.layers.length, cam: room15.cam.position.toArray(), layers: room15.layers.map((l) => [l.name, l.z, l.mesh.visible, l.mat.uniforms.uOpacity.value])}});
 };
 
 // ================================================================================================ the scenes
