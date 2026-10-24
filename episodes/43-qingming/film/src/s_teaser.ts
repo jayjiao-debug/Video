@@ -128,12 +128,12 @@ const bootT1 = async () => {
 	g.fillStyle = 'rgba(120,86,56,0.35)'; g.fillRect(TB.fx0, TB.front, TB.fx1 - TB.fx0, 3);
 	g.fillStyle = SIL; for (const x of [TB.fx0 + 22, TB.fx1 - 62]) g.fillRect(x, TB.apron - 2, 40, 1010 - TB.apron);
 	st.add('t1table', canvasTex(cv), 960, 540, 1920, 1080, T1Z.table, {rim: 0.5, rimPx: 4});
-	t1Body = new Live(st, 't1body', 960, 640, 2600, 1100, T1Z.body, {rim: 1.0, rimPx: 6}, 1);
-	t1Pool = new Live(st, 't1pool', 960, 540, 1920, 1080, T1Z.pool, {}, 0.5);
-	t1Copy = new Live(st, 't1copy', 960, 600, 1920, 400, T1Z.copy, {}, 1);
-	t1Silk = new Live(st, 't1silk', 1200, 600, 2600, 700, T1Z.silk, {emissive: 0.32}, 1);
-	t1Halo = new Live(st, 't1halo', 1200, 600, 2600, 900, -76, {emissive: 1.0}, 0.5);
-	t1Arms = new Live(st, 't1arms', 960, 640, 2600, 1100, T1Z.arms, {rim: 1.0, rimPx: 6}, 1);
+	t1Body = new Live(st, 't1body', 1250, 640, 1900, 720, T1Z.body, {rim: 1.0, rimPx: 6}, 1);
+	t1Pool = new Live(st, 't1pool', 960, 600, 1920, 320, T1Z.pool, {}, 0.4);
+	t1Copy = new Live(st, 't1copy', 960, 580, 720, 230, T1Z.copy, {}, 1);
+	t1Silk = new Live(st, 't1silk', 1250, 560, 1900, 520, T1Z.silk, {emissive: 0.32}, 1);
+	t1Halo = new Live(st, 't1halo', 1250, 560, 1900, 520, -76, {emissive: 1.0}, 0.4);
+	t1Arms = new Live(st, 't1arms', 1250, 560, 1900, 520, T1Z.arms, {rim: 1.0, rimPx: 6}, 1);
 };
 // timing
 const T1 = {go: 11.95, land: b(5), grab: 12.95, lift: 13.3};
@@ -221,9 +221,9 @@ const meanRollOff = (lk: typeof EUN, side: 'R' = 'R'): P => {
 };
 const bootT2 = async () => {
 	crestT2 = new Crest('t2-night', {sky: 'night', era: '明', lanterns: true, boat: false, bankCrowd: false}); await crestT2.ready;
-	castT2 = new Cast(crestT2.st, 't2cast', 1200, 640, 3400, 1100, 20);
-	propT2 = new Live(crestT2.st, 't2prop', 1200, 640, 3400, 1100, 23, {rim: 0}, 1);
-	glowT2 = new Live(crestT2.st, 't2glow', 1200, 640, 3400, 1100, 24, {emissive: 1.0}, 0.5);
+	castT2 = new Cast(crestT2.st, 't2cast', 1000, 700, 1700, 900, 20);
+	propT2 = new Live(crestT2.st, 't2prop', 1000, 640, 1700, 500, 23, {rim: 0}, 1);
+	glowT2 = new Live(crestT2.st, 't2glow', 1000, 640, 1700, 500, 24, {emissive: 1.0}, 0.4);
 	rollOff = meanRollOff(EUN);
 };
 const t2Walk = (t: number) => { const u = (t - b(6) + 0.2) / (2 * BEAT); return {u, x: T2X0 + u * gaitStride('08_04', stepFor(EUN)) * EH}; };
@@ -256,21 +256,21 @@ const bootT3 = async () => {
 	const fw = new Live(st, 't3farWin', 960, 850, 8400, 200, -2540, {emissive: 0.9}, 0.5);
 	fw.drawW('w', (g) => { for (let i = 0; i < 60; i++) { const x = -1600 + i * 75 + hash(i * 3.3) * 50, y = 818 + hash(i * 7.1) * 26; if (hash(i * 1.9) < 0.35) continue; g.fillStyle = `rgba(255,184,104,${0.55 + 0.3 * hash(i)})`; g.fillRect(x, y, 9 + (i % 3) * 3, 6 + (i % 2) * 2); } });
 	// snow lying on the deck (z 1, just in front of the arch) and on the railing (z 41, just in front of the rail)
-	const dk = new Live(st, 't3deckSnow', 960, 1100, 4800, 1600, 1, {}, 0.5);
+	const dk = new Live(st, 't3deckSnow', 960, 1100, 4800, 1600, 1, {}, 0.35);
 	dk.drawW('s', (g) => { g.fillStyle = '#C9D2D8'; g.beginPath(); const xs: number[] = []; for (let x = -1300; x <= 3200; x += 20) xs.push(x);
 		xs.forEach((x, i) => (i ? g.lineTo(x, deck(x) - 6 - 2 * Math.sin(x * 0.05)) : g.moveTo(x, deck(x) - 6))); for (const x of xs.slice().reverse()) g.lineTo(x, deck(x) + 3); g.closePath(); g.fill(); });
 	const rl = railingSvg(960, 906, 1700, 1400, 150, 116), dy = (x: number) => deck(x) + 6;
-	const rs = new Live(st, 't3railSnow', 960, 1100, 4800, 1600, 41, {}, 0.5);
+	const rs = new Live(st, 't3railSnow', 960, 1100, 4800, 1600, 41, {}, 0.4);
 	rs.drawW('s', (g) => {
 		g.fillStyle = '#D9E1E6';
 		for (const [yo, th] of [[150, 7], [67.5, 4]] as [number, number][]) { g.beginPath(); const xs: number[] = []; for (let x = 960 - 1904; x <= 960 + 1904; x += 20) xs.push(x);
 			xs.forEach((x, i) => { const y = dy(x) - yo - 4.5 - th * (0.7 + 0.3 * Math.sin(x * 0.031)); i ? g.lineTo(x, y) : g.moveTo(x, y); }); for (const x of xs.slice().reverse()) g.lineTo(x, dy(x) - yo - 3); g.closePath(); g.fill(); }
 		for (const [x, y] of rl.posts) { g.beginPath(); g.ellipse(x, y - 13, 10, 5, 0, Math.PI, 0); g.fill(); }
 	});
-	castT3 = new Cast(st, 't3cast', 1200, 640, 3400, 1100, 20);
-	propT3 = new Live(st, 't3prop', 1200, 640, 3400, 1100, 22, {rim: 0.4}, 1);
-	glowT3 = new Live(st, 't3glow', 1200, 640, 3400, 1100, 24, {emissive: 1.0}, 0.5);
-	armsT3 = new Live(st, 't3arms', 1200, 640, 3400, 1100, 23, {rim: 1.0, rimPx: 5}, 1);
+	castT3 = new Cast(st, 't3cast', 1000, 700, 1600, 800, 20);
+	propT3 = new Live(st, 't3prop', 1000, 640, 1600, 500, 22, {rim: 0.4}, 1);
+	glowT3 = new Live(st, 't3glow', 1000, 640, 1600, 500, 24, {emissive: 1.0}, 0.4);
+	armsT3 = new Live(st, 't3arms', 1000, 640, 1600, 500, 23, {rim: 1.0, rimPx: 5}, 1);
 	let sx = 0, sy = 0; for (let i = 0; i < 16; i++) { const a = armfulAt(carryArmful(walkFor(YOUTH, i / 16))); sx += a.c[0] / 16; sy += a.c[1] / 16; } bundleOff = [sx, sy];
 };
 const t3Walk = (t: number) => { const u = (t - b(7) + 0.2) / (2 * BEAT); return {u, x: T3X0 + u * gaitStride('08_04', stepFor(YOUTH)) * YH}; };
@@ -385,12 +385,12 @@ const bootN = async () => {
 	pass = new Stage('n1pass');
 	// a uniform tunnel: every ring has the same world-size arch hole (PH × PV); the far opening (z 0) shows the hall
 	const PH = 78, PV = 112, PCY = 600;
-	const farCv = mkCanvas(1920, 1080), fg = farCv.getContext('2d')!;
+	const farCv = mkCanvas(1920, 1080), fg = farCv.getContext('2d')!;   // drawn at full size, uploaded as a 960×540 copy below
 	fg.fillStyle = '#41474d'; fg.fillRect(0, 0, 1920, 1080);
 	{ const x0 = 960 - 110, y0 = PCY - 64, w = 220, h = 124; const gr = fg.createLinearGradient(0, y0, 0, y0 + h); gr.addColorStop(0, '#3a4046'); gr.addColorStop(0.7, '#464C52'); gr.addColorStop(1, '#2c3135');
 		fg.fillStyle = gr; fg.fillRect(x0, y0, w, h); fg.fillStyle = '#262b30'; fg.fillRect(960 - 34, PCY - 14, 68, 32); glowBlob(fg, [960, PCY], 60, 24, 0.6); fg.fillStyle = '#FFF0CF'; fg.fillRect(960 - 29, PCY - 4, 58, 10);
 		fg.fillStyle = '#2a2f34'; fg.fillRect(960 - 36, PCY + 18, 72, 20); }
-	pass.add('far', canvasTex(farCv), 960, 540, 1920, 1080, 0, {emissive: 0.2});
+	const farS = mkCanvas(960, 540); farS.getContext('2d')!.drawImage(farCv, 0, 0, 960, 540); pass.add('far', canvasTex(farS), 960, 540, 1920, 1080, 0, {emissive: 0.2});
 	const RZ = [250, 480, 700, 900, 1060, 1180, 1250];
 	RZ.forEach((z, i) => { const c = mkCanvas(960, 540), g = c.getContext('2d')!, s2 = D / (D - z), hw = PH * s2 / 2, hh = PV * s2 / 2, cy = 540 / 2 + (PCY - 540) * s2 / 2, k = i / (RZ.length - 1);
 		const lit = Math.round(lerp(150, 62, k)); g.fillStyle = `rgb(${lit},${Math.round(lit * 0.8)},${Math.round(lit * 0.64)})`; g.fillRect(0, 0, 960, 540);
@@ -429,7 +429,7 @@ const bootN = async () => {
 	hallCard.drawW('c', (g) => { g.fillStyle = '#cfc8b8'; g.fillRect(820, 752, 280, 96); g.strokeStyle = '#8a8478'; g.lineWidth = 2; g.strokeRect(826, 758, 268, 84);
 		g.fillStyle = '#2b2a28'; g.textAlign = 'center'; g.font = '900 34px "Noto Serif CJK SC"'; g.fillText('撤展回库', 960, 796); g.font = '700 22px "Noto Serif CJK SC"'; g.fillText('下次展出：未公布', 960, 830); });
 	hallDust = new Motes(hallSt, 140, 'dust', -200, 6, '#C9CED2', false);
-	hallCrowd = new Live(hallSt, 'crowd', 960, 640, 2600, 1100, HZ.crowd, {rim: 1.0, rimPx: 6}, 1);
+	hallCrowd = new Live(hallSt, 'crowd', 960, 770, 2700, 620, HZ.crowd, {rim: 1.0, rimPx: 6}, 0.8);
 };
 const N = {cut: b(9), passA: b(10), hallA: b(10.25), out: b(10.75), card: b(11), pane: b(11.5), paneZ: b(11.75)};
 /** the queue steps forward on each beat b9 → b10 (time-lapse), shuffles slowly after */
@@ -498,10 +498,10 @@ let crestS1: Crest, s1Shade: Live, s1Light: Live, s1Boat: Live;
 const LANT_ON: [number, number][] = [[1832, b(11.5)], [1600, b(11.5)], [1368, b(11.75)], [1136, b(11.75)], [904, b(12.0)], [672, b(12.0)], [440, b(12.25)], [208, b(12.25)], [-24, b(12.5)], [-256, b(12.55)], [2064, b(11.5)], [2296, b(11.5)]];
 const bootS1 = async () => {
 	crestS1 = new Crest('s1-dusk', {sky: 'dusk', era: '宋', lanterns: true, boat: true, bankCrowd: true}); await crestS1.ready;
-	s1Boat = new Live(crestS1.st, 's1boat', 1500, 900, 1400, 900, -520, {fog: ['#C9A47A', 0.22], rim: 0}, 0.6);
+	s1Boat = new Live(crestS1.st, 's1boat', 1560, 780, 700, 660, -520, {fog: ['#C9A47A', 0.22], rim: 0}, 0.6);
 	s1Boat.drawW('b', (g) => fillSvg(g, boatSvg(1560, 1010, 520, 0, SIL, 5)));
-	s1Shade = new Live(crestS1.st, 's1shade', 1300, 1100, 5200, 1600, 44, {}, 0.5);
-	s1Light = new Live(crestS1.st, 's1light', 960, 1100, 5200, 1600, 43, {emissive: 0.55}, 0.5);
+	s1Shade = new Live(crestS1.st, 's1shade', 1300, 1100, 5200, 1600, 44, {}, 0.25);
+	s1Light = new Live(crestS1.st, 's1light', 960, 1100, 5200, 1600, 43, {emissive: 0.55}, 0.25);
 };
 const deckBand = (g: CanvasRenderingContext2D, x0: number, x1: number, up: number, dn: number) => { g.beginPath(); for (let x = x0; x <= x1; x += 24) g.lineTo(x, deck(x) - up); for (let x = x1; x >= x0; x -= 24) g.lineTo(x, deck(x) + dn); g.closePath(); };
 addScene({id: '08', a: N.pane, z: b(13), in: IN08, draw: (t) => {
