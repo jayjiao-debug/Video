@@ -61,6 +61,12 @@ export const bootPeak = async () => {
 	dayRoll = new Live(day.st, 'dayRoll', 960, 900, 7000, 1800, 22, {emissive: 0.55}, 0.6);
 	gateGlow = new Live(day.st, 'gateGlow', -300, 800, 200, 160, -2590, {emissive: 0.5}, 2, -1990);   // drawn after the haze (−2000)
 	gateGlow.draw('g', (g) => drawPassage(g));
+	// the near banks continue down past the frame and the river darkens toward us (the bridge-match camera starts wide enough
+	// to see below the crest's bank shapes, which end at y 1700)
+	{ const c = mkCanvas(1000, 200), g = c.getContext('2d')!, X = (x: number) => (x + 4040) / 10, Y = (y: number) => (y - 1640) / 10;
+		g.fillStyle = '#2b3735'; g.fillRect(0, Y(2150), 1000, 200); g.fillStyle = '#15100C';
+		g.fillRect(0, Y(1690), X(-610), 200); g.fillRect(X(2530), Y(1690), 1000, 200);
+		day.st.add('nearfill', canvasTex(c), 960, 2640, 10000, 2000, -60, {}); }
 };
 
 // ------------------------------------------------------------------------------------------------ store set pieces (static)

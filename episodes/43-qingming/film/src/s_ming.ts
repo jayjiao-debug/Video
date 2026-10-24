@@ -51,7 +51,7 @@ const scene18Cast = (t: number) => {
 	const luContacts: Contact[] = t < b(30.12) ? [{side: 'L', target: [e0[0] + 26, e0[1] + 9], name: 'roll'}, {side: 'R', target: [e0[0] + 8, e0[1] + 9], name: 'roll end'}] : [];
 	const lu = rig({x: lx, ground: G18, h: H18, pose: lw ? careful(ul) : fkPose({hip: 0.655, lean: 5, neck: 4, lt: 2, lk: 2, rt: -3, rk: 3, la: 4, le: 18, ra: 6, re: 22}), look: lkLu}, luContacts, () => G18, 'lu-wan');
 	let frC: Contact[] = [];
-	if (t >= b(29.92) && t < b(30.12)) frC = [{side: 'L', target: [e1[0] - 26, e1[1] + 9], name: 'roll'}, {side: 'R', target: [e1[0] - 8, e1[1] + 9], name: 'roll end'}];
+	if (t >= b(30.0) && t < b(30.12)) frC = [{side: 'L', target: [e1[0] - 22, e1[1] + 9], name: 'roll'}, {side: 'R', target: [e1[0] - 6, e1[1] + 9], name: 'roll end'}];
 	else if (t >= b(30.12)) frC = twoHands(e0, e1, F.flip);
 	const fpose = F.walk ? careful(F.u * H18 / (H18 - 6) + 0.1) : fkPose({hip: 0.655, lean: 6 + 4 * give, neck: 4, lt: 2, lk: 2, rt: -3, rk: 3, la: 4, le: 16, ra: 6, re: 20});
 	const fr = rig({x: F.x, ground: G18, h: H18 - 6, pose: fpose, look: lkFriend, flip: F.flip}, frC, () => G18, 'friend');
@@ -160,9 +160,9 @@ export const d19 = (t: number): Frame => {
 	{ const h = 120, gx = 938, gy = 700, top = 640, bc: P = [968, top - 7], set = smooth(clamp01((t - b(31.7)) / 0.3)), back = smooth(clamp01((t - b(32.08)) / 0.25));
 		const bcNow: P = [bc[0], lerp(bc[1] - 14, bc[1], set)], bw = 30, bh = 16;
 		const pose = fkPose({hip: 0.645, hipX: -0.05, lean: lerp(46, 6, back), neck: 4, lt: 6, lk: 4, rt: 2, rk: 2, la: 20, le: 30, ra: 20, re: 30});
-		const hands: Contact[] = back < 0.5 ? [{side: 'L', target: [bcNow[0] + bw / 2 - 1, bcNow[1]], name: 'box side'}, {side: 'R', target: [bcNow[0] - bw / 2 + 2, bcNow[1] + 2], name: 'box side'}] : [];
+		const hands: Contact[] = back < 0.2 ? [{side: 'L', target: [bcNow[0] + bw / 2 - 1, bcNow[1]], name: 'box side'}, {side: 'R', target: [bcNow[0] - bw / 2 + 2, bcNow[1] + 2], name: 'box side'}] : [];
 		const f = rig({x: gx - 18 * back, ground: gy, h, pose, look: lkF3}, hands, () => gy, 'box-servant-3');
-		c3.draw(fk, [f]); box3.drawW(fk, (g) => { boxGlow(g, bcNow, bw * 1.6, bh * 2.2, 0.55); drawBox(g, bcNow, bw, bh); if (back < 0.5) drawFig(g, {...f, part: 'L'}); }); }
+		c3.draw(fk, [f]); box3.drawW(fk, (g) => { boxGlow(g, bcNow, bw * 1.6, bh * 2.2, 0.55); drawBox(g, bcNow, bw, bh); if (back < 0.2) drawFig(g, {...f, part: 'L'}); }); }
 	// the hall doors swing shut (b32.0 → b32.25); two officials flank them and slap the strips on at b32.5
 	const shut = smooth(clamp01((t - b(32.02)) / (b(32.25) - b(32.02)))), slap = t >= b(32.5) ? 1 : 0, raise = smooth(clamp01((t - b(32.27)) / (b(32.47) - b(32.27))));
 	leaves19.drawW(`${shut.toFixed(3)}`, (g) => { const lw = (HD.x1 - HD.x0) / 2, w = lerp(5, lw, shut); for (const [hx, s] of [[HD.x0, 1], [HD.x1, -1]] as [number, number][]) { const x0 = s > 0 ? hx : hx - w;

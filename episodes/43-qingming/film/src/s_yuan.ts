@@ -171,7 +171,7 @@ const s15 = (t: number): S15 => {
 	const yc = (FRONT[0] + FRONT[1]) / 2, ycb = (BACK[0] + BACK[1]) / 2, ycopy = lerp(ycb, yc, copyY);
 	let L: P | null, R: P | null, Lflat = false;
 	if (t < b(25.12)) { L = [P0 + 190, yc + 2]; Lflat = true; R = [P0 + 40 + SW, ycb]; }                       // flat on you; near hand on the copy's roller
-	else if (t < b(25.36)) { L = [you[0] + 190, yc + 2]; Lflat = true; R = [you[1], yc]; }                    // draws you aside (right)
+	else if (t < b(25.36)) { L = [you[0] + 168, yc + 2]; Lflat = true; R = [you[1], yc]; }                    // draws you aside (right)
 	else if (t < b(25.75)) { L = [copy[1], ycopy]; R = [you[1], yc]; }                                          // lays the copy where you lay
 	else { L = [you[0], yc]; R = [you[1], yc]; }                                                               // both hands on your rollers, rolls you up
 	if (kup > 0) R = [lerp(you[1], LAMP15[0] + 26, kup), lerp(yc, LAMP15[1] + 6, kup)];                        // the near hand cups the lamp
@@ -228,20 +228,20 @@ const STR16 = CAREFUL * (HF + 12);
 const hold16 = (t: number) => {
 	const k = smooth(clamp01((t - b(27.0)) / (0.3 * BAR_))), lean = Math.sin(t * 1.3) * 0.6;
 	const xL = lerp(SX0, SX1 - 26, k), xR = SX1;
-	const ax = SX0 - 104, bx = SX1 + 100;
+	const ax = SX0 - 98, bx = SX1 + 96;
 	const let_go = xL > SX0 + 50;                           // he follows his roller a hand's width, then lets go
 	const A = rig({x: ax, ground: deck(ax) + 4, h: HF, pose: fkPose({hip: 0.655, lean: 7 + lean + 5 * smooth(clamp01((xL - SX0) / 50)), neck: 6, lt: 2, lk: 2, rt: -3, rk: 3, la: -3, le: 10, ra: 4, re: 14}), look: lkSeller},
-		let_go ? [] : [{side: 'R', target: [xL, SY - 42], name: 'upper roller'}, {side: 'L', target: [xL, SY + 44], name: 'lower roller'}], deck, 'craftsman16');
+		let_go ? [] : [{side: 'R', target: [xL, SY - 46], name: 'upper roller'}, {side: 'L', target: [xL, SY + 34], name: 'lower roller'}], deck, 'craftsman16');
 	const B = rig({x: bx, ground: deck(bx) + 4, h: HF + 12, pose: fkPose({hip: 0.655, lean: 8 - lean, neck: 6, lt: 2, lk: 2, rt: -3, rk: 3, la: -3, le: 10, ra: 4, re: 14}), look: lkBuyer, flip: true},
-		[{side: 'R', target: [xR, SY - 42], name: 'upper roller'}, {side: 'L', target: [xR, SY + 44], name: 'lower roller'}], deck, 'quangui16');
+		[{side: 'R', target: [xR, SY - 46], name: 'upper roller'}, {side: 'L', target: [xR, SY + 34], name: 'lower roller'}], deck, 'quangui16');
 	return {A, B, xL, xR, k};
 };
 /** from b27.5 the 权贵 walks off right, the roll under his arm */
 const walk16 = (t: number) => {
-	const t0 = b(27.5), u = (t - t0) / (2 * BEAT), x = SX1 + 100 + 30 + u * STR16;
+	const t0 = b(27.5), u = (t - t0) / (2 * BEAT), x = SX1 + 96 + 30 + u * STR16;
 	let p = careful(u + 0.5); p = armsFrom(p, underArm(p), 'R');
 	const B = rig({x, ground: deck(x) + 4, h: HF + 12, pose: p, look: lkBuyer}, [], deck, 'quangui16-walk');
-	const ax = SX0 - 104;
+	const ax = SX0 - 98;
 	const A = rig({x: ax, ground: deck(ax) + 4, h: HF, pose: fkPose({hip: 0.655, lean: 3, neck: 2, lt: 2, lk: 2, rt: -3, rk: 3, la: -2, le: 8, ra: 3, re: 10}), look: lkSeller}, [], deck, 'craftsman16');
 	return {A, B};
 };

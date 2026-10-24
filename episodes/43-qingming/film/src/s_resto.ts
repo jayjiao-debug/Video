@@ -98,9 +98,9 @@ export const bootResto = async () => {
 	sb.width = sb.height = 1;
 	const free = (c: HTMLCanvasElement) => { const o = crop(c, PATCH_CROP.x, PATCH_CROP.y, PATCH_CROP.w, PATCH_CROP.h); c.width = c.height = 1; return o; };
 	P_DONKEY = wv(free(shed8('donkey'))); P_PEELED = wv(free(shed8('peeled'))); wv(P_BARE);
-	const gate8 = paintSection('gate', {width: 8192, height: 3072, mode: 'mono', seed: 43, weave: 0});
-	const gc = crop(gate8, GATE_CROP.x, GATE_CROP.y, GATE_CROP.w, GATE_CROP.h), gcg = gc.getContext('2d')!; gate8.width = gate8.height = 1;
-	const fade = gcg.createLinearGradient(0, 0, 420, 0); fade.addColorStop(0, 'rgba(0,0,0,0)'); fade.addColorStop(1, 'rgba(0,0,0,1)'); gcg.globalCompositeOperation = 'destination-in'; gcg.fillStyle = fade; gcg.fillRect(0, 0, 420, GATE_CROP.h); gcg.fillStyle = '#000'; gcg.fillRect(420, 0, GATE_CROP.w, GATE_CROP.h);
+	const gate6 = paintSection('gate', {width: 6144, height: 2304, mode: 'mono', seed: 43, weave: 0}), k6 = 6144 / 8192;   // the gate is seen only in passing: 6144 is enough
+	const gc = crop(gate6, GATE_CROP.x * k6, GATE_CROP.y * k6, GATE_CROP.w * k6, GATE_CROP.h * k6, GATE_CROP.w, GATE_CROP.h), gcg = gc.getContext('2d')!; gate6.width = gate6.height = 1;
+	const fade = gcg.createLinearGradient(0, 0, 420, 0); fade.addColorStop(0, 'rgba(0,0,0,0)'); fade.addColorStop(1, 'rgba(0,0,0,1)'); gcg.globalCompositeOperation = 'destination-in'; gcg.fillStyle = fade; gcg.fillRect(0, 0, GATE_CROP.w, GATE_CROP.h);   // one fill: destination-in clears outside the shape
 	cg.drawImage(gc, GATE_AT, 0); wv(collage);
 	P_NOPOST = inpaintPosts(P_BARE); P_DLINES = inkOnly(P_DONKEY); P_PIECE = pieceOf(P_DONKEY, P_PEELED);
 	patchCv = mkCanvas(PATCH_CROP.w, PATCH_CROP.h); patchTex = canvasTex(patchCv); patchTex.generateMipmaps = false; patchTex.minFilter = THREE.LinearFilter;
