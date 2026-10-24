@@ -42,10 +42,10 @@ const F2: KF = {
 		<rect x={1420} y={300} width={360} height={370} fill="#3a342c" /><rect x={1440} y={330} width={320} height={10} fill="#2a2620" /><rect x={1440} y={460} width={320} height={10} fill="#2a2620" />
 		{/* the red cooler (prop only) */}
 		<g transform="translate(470,880)"><rect x={-130} y={-120} width={260} height={120} rx={14} fill="#8e3a30" /><rect x={-140} y={-140} width={280} height={34} rx={10} fill="#a8463a" /><rect x={-40} y={-158} width={80} height={20} rx={8} fill="#d8d2c8" opacity={0.8} /></g>
-		{/* two stacked boxes; the bottom one says COSTA CIDER; the top one is open */}
+		{/* two stacked boxes; the bottom one says CIDER (our own lettering, not the real brand: facts P2); the top one is open */}
 		<g transform="translate(980,880)">
 			<rect x={-230} y={-210} width={460} height={210} fill="#8a6a46" /><rect x={-230} y={-210} width={460} height={12} fill="#6a5034" />
-			<text x={0} y={-90} textAnchor="middle" style={{fontFamily: 'DejaVu Sans, sans-serif', fontWeight: 800, fontSize: 46, letterSpacing: '0.12em'}} fill="#3a2614" opacity={0.85}>COSTA CIDER</text>
+			<text x={0} y={-90} textAnchor="middle" style={{fontFamily: 'DejaVu Sans, sans-serif', fontWeight: 800, fontSize: 46, letterSpacing: '0.12em'}} fill="#3a2614" opacity={0.85}>CIDER</text>
 			<rect x={-150} y={-62} width={300} height={6} fill="#3a2614" opacity={0.6} />
 			<rect x={-200} y={-400} width={400} height={190} fill="#967450" /><path d="M-200,-400 L-262,-470 L-150,-470 L-110,-400 Z" fill="#a8845c" /><path d="M200,-400 L262,-470 L150,-470 L110,-400 Z" fill="#7e6040" />
 		</g>
@@ -87,7 +87,8 @@ const F4: KF = {
 		<g transform="translate(560,640)"><rect x={-120} y={0} width={240} height={14} fill="#3a2a1e" /><rect x={-100} y={14} width={12} height={250} fill="#3a2a1e" /><rect x={88} y={14} width={12} height={250} fill="#3a2a1e" />
 			<path d="M-24,0 L-18,-60 Q0,-80 18,-60 L24,0 Z" fill="#8a6a3a" /><Glow x={0} y={-90} r={160} c="#ffd28a" o={0.5} id="f4l" /><ellipse cx={0} cy={-92} rx={10} ry={20} fill="#ffe2a8" /></g>
 		<Rimmed x={760} ground={910} h={700} pose={fkPose({hip: 0.37, lean: 6, neck: 14, lt: 86, lk: 90, rt: 82, rk: 86, la: 40, le: 60, ra: 58, re: 40})} look={LK.father} col="#140f0c" rim="#ffd8a8" rimOp={0.45} />
-		<g transform="translate(910,904)"><rect x={-60} y={-260} width={120} height={14} fill="#2a1e16" /><rect x={-50} y={-246} width={10} height={246} fill="#2a1e16" /><rect x={40} y={-246} width={10} height={246} fill="#2a1e16" /></g>
+		<g transform="translate(740,912)"><rect x={-70} y={-262} width={140} height={14} fill="#2a1e16" /><rect x={-60} y={-248} width={10} height={248} fill="#2a1e16" /><rect x={50} y={-248} width={10} height={248} fill="#2a1e16" /></g>
+		<g transform="translate(1084,904)"><rect x={-58} y={-158} width={116} height={14} rx={4} fill="#2a1e16" /><rect x={-48} y={-144} width={10} height={144} fill="#2a1e16" /><rect x={38} y={-144} width={10} height={144} fill="#2a1e16" /></g>
 		<Carrier x={1080} g={904} h={430} pose={kidP} look={LK.child} flip id="f4c" />
 		{(() => { const hd = jointAt(kidP, 'RHand', 1080, 904, 430, true); return <Compass x={hd[0] - 10} y={hd[1] - 18} r={34} a={18} glow={0.5} id="f4cp" />; })()}
 		{/* the needle, close: an inset of light */}
@@ -116,14 +117,13 @@ const F6: KF = {
 	scene: <g>
 		<Sky id="s6" stops={[[0, '#0a0f1c'], [0.55, '#1a2236'], [0.85, '#3a3640'], [1, '#2a241e']]} />
 		{Array.from({length: 60}, (_, i) => <circle key={i} cx={rnd(i, 11) * W} cy={rnd(i, 12) * 700} r={0.8 + 1.6 * rnd(i, 13) ** 3} fill="#eef0ff" opacity={0.25 + 0.5 * rnd(i, 14)} />)}
-		<g transform="translate(1180,400)">
+		<g transform="translate(1150,480)">
 			<Glow x={0} y={0} r={260} c="#f4f0e4" o={0.45} id="cor" />{Array.from({length: 24}, (_, i) => { const a = i * Math.PI / 12, l = 120 + 70 * rnd(i, 2); return <path key={i} d={`M${Math.cos(a) * 96},${Math.sin(a) * 96} L${Math.cos(a + 0.05) * l},${Math.sin(a + 0.05) * l}`} stroke="#f4f0e4" strokeWidth={4} opacity={0.35} />; })}
 			<circle r={96} fill="#05060a" /><circle r={98} fill="none" stroke="#fffaf0" strokeWidth={3} opacity={0.9} />
 			{/* a star behind the sun: its light bends round the sun toward the island */}
-			<circle cx={330} cy={-240} r={6} fill="#fff" /><Glow x={330} y={-240} r={30} c="#ffffff" o={0.8} id="st6" />
-			<path d="M330,-240 Q120,-150 40,-118 Q-260,20 -520,330" stroke="#fff4dc" strokeWidth={3} fill="none" strokeDasharray="10 9" opacity={0.85} />
-			<path d="M330,-240 L-520,330" stroke="#fff4dc" strokeWidth={1.5} fill="none" strokeDasharray="3 10" opacity={0.35} />
-			<circle cx={230} cy={-292} r={4} fill="#fff" opacity={0.5} /><text x={210} y={-310} style={{fontFamily: SERIF, fontSize: 26}} fill="#e8e4d8" opacity={0.7}>看起来的位置</text>
+			<circle cx={330} cy={-130} r={6} fill="#fff" /><Glow x={330} y={-130} r={30} c="#ffffff" o={0.8} id="st6" />
+			<path d="M330,-130 Q140,-118 30,-112 Q-250,-40 -520,330" stroke="#fff4dc" strokeWidth={3} fill="none" strokeDasharray="10 9" opacity={0.85} />
+			<path d="M330,-130 L-520,330" stroke="#fff4dc" strokeWidth={1.5} fill="none" strokeDasharray="3 10" opacity={0.3} />
 		</g>
 		{/* Príncipe: the observers' telescope under palms */}
 		<path d="M0,820 Q500,780 1100,810 Q1500,830 1920,800 L1920,1080 L0,1080 Z" fill="#14120e" />
@@ -169,7 +169,7 @@ const F8: KF = {
 		<rect x={360} y={760} width={760} height={40} rx={10} fill="#2a3240" /><rect x={380} y={800} width={16} height={130} fill="#1a2028" /><rect x={1090} y={800} width={16} height={130} fill="#1a2028" />
 		<path d="M360,764 Q700,690 1120,720 L1120,800 L360,800 Z" fill="#9aa6b8" opacity={0.55} /><rect x={380} y={712} width={150} height={54} rx={22} fill="#b8c2d0" opacity={0.6} />
 		<rect x={260} y={560} width={30} height={370} fill="#1a2028" /><rect x={230} y={550} width={90} height={14} fill="#1a2028" />
-		<BrainLight x={470} y={640} s={0.22} id="b8" />
+		<HeadGlow x={462} y={716} r={34} id="b8" />
 	</g>,
 	furn: <Furniture sub={['他停在了[76岁]。']} punch="你没有。" stamp={['1955 · 普林斯顿医院', '4月18日 凌晨1点多']} era="身后"
 		age={<div style={{display: 'flex', alignItems: 'flex-end', gap: 40}}><div style={{opacity: 0.5, filter: 'grayscale(1)'}}><Age who="他" n={76} /></div><div style={{position: 'relative'}}><Age n={76} /><span style={{position: 'absolute', right: -70, bottom: 18, fontSize: 34, color: RED, fontWeight: 900}}>→</span></div></div>} />,
