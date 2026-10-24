@@ -1,0 +1,134 @@
+plan: {'tier': None, 'character_count': None, 'character_limit': None, 'status': None}
+models: ['eleven_v4', 'eleven_v4_turbo', 'eleven_v3', 'eleven_v3_conversational', 'eleven_multilingual_v2', 'eleven_flash_v2_5', 'eleven_turbo_v2_5', 'eleven_turbo_v2', 'eleven_flash_v2', 'eleven_english_sts_v2', 'eleven_multilingual_sts_v2']
+model: eleven_v4
+{"name": "CQ_m0", "lang": "zh", "text": "未知生，焉知死？", "voice": "shared:James Gao - Calm, Friendly and Warm (standard, zh)", "voice_id": "4VZIsMPtgggwNg7OXbPY", "model": "eleven_v4", "status": 200, "file": "CQ_m0.mp3", "bytes": 40585}
+{"name": "CQ_m1", "lang": "zh", "text": "未知生，焉知死？", "voice": "shared:Martin Li - Raspy, Serious and Deep (standard, zh)", "voice_id": "WuLq5z7nEcrhppO0ZQJw", "model": "eleven_v4", "status": 200, "file": "CQ_m1.mp3", "bytes": 41838}
+{"name": "CQ_m2", "lang": "zh", "text": "未知生，焉知死？", "voice": "shared:Adrian - Chinese Mandarin Narration (standard, zh)", "voice_id": "agczkAUlHLowaNnL72Cc", "model": "eleven_v4", "status": 200, "file": "CQ_m2.mp3", "bytes": 36823}
+{"name": "CQ_o0", "lang": "zh", "text": "未知生，焉知死？", "voice": "own:el-Christos - Casual, Calm and Serious {'language': 'el', 'use_case': 'narrative_story', 'age': 'middle_aged', 'accent': 'standard', 'gender': 'male', 'descriptive': 'confident', 'locale': 'el-gr'}", "voice_id": "PaZ8laODC1yRxHTPYJFh", "model": "eleven_v4", "status": 200, "file": "CQ_o0.mp3", "bytes": 40585}
+{"name": "CQ_o1", "lang": "zh", "text": "未知生，焉知死？", "voice": "own:el-Christos - Casual, Calm and Serious {'language': 'el', 'use_case': 'narrative_story', 'age': 'middle_aged', 'accent': 'standard', 'gender': 'male', 'descriptive': 'confident', 'locale': 'el-gr'}", "voice_id": "PaZ8laODC1yRxHTPYJFh", "model": "eleven_v4", "status": 200, "file": "CQ_o1.mp3", "bytes": 40585}
+{"name": "T2_f0", "lang": "zh", "text": "你也没睡？明天吃火锅！", "voice": "shared:Anna Su - Casual, Friendly and Bright (taiwan mandarin, zh)", "voice_id": "9lHjugDhwqoxA5MhX0az", "model": "eleven_v4", "status": 200, "file": "T2_f0.mp3", "bytes": 36823}
+{"name": "T2_f1", "lang": "zh", "text": "你也没睡？明天吃火锅！", "voice": "shared:Stacy - Young, Sweet and Cute (standard, zh)", "voice_id": "hkfHEbBvdQFNX4uWHqRF", "model": "eleven_v4", "status": 200, "file": "T2_f1.mp3", "bytes": 39331}
+{"name": "T2_f2", "lang": "zh", "text": "你也没睡？明天吃火锅！", "voice": "shared:Sage - Soothing & Gentle (standard, zh)", "voice_id": "APSIkVZudNbPAwyPoeVO", "model": "eleven_v4", "status": 200, "file": "T2_f2.mp3", "bytes": 40585}
+Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+[
+ {
+  "name": "CQ_m0",
+  "lang": "zh",
+  "text": "未知生，焉知死？",
+  "voice": "shared:James Gao - Calm, Friendly and Warm (standard, zh)",
+  "voice_id": "4VZIsMPtgggwNg7OXbPY",
+  "model": "eleven_v4",
+  "status": 200,
+  "file": "CQ_m0.mp3",
+  "bytes": 40585,
+  "heard": "未知生,焉知死",
+  "heard_lang": "zh",
+  "heard_lang_p": 0.997,
+  "seconds": 2.48
+ },
+ {
+  "name": "CQ_m1",
+  "lang": "zh",
+  "text": "未知生，焉知死？",
+  "voice": "shared:Martin Li - Raspy, Serious and Deep (standard, zh)",
+  "voice_id": "WuLq5z7nEcrhppO0ZQJw",
+  "model": "eleven_v4",
+  "status": 200,
+  "file": "CQ_m1.mp3",
+  "bytes": 41838,
+  "heard": "未知生 焉知死",
+  "heard_lang": "zh",
+  "heard_lang_p": 0.988,
+  "seconds": 2.56
+ },
+ {
+  "name": "CQ_m2",
+  "lang": "zh",
+  "text": "未知生，焉知死？",
+  "voice": "shared:Adrian - Chinese Mandarin Narration (standard, zh)",
+  "voice_id": "agczkAUlHLowaNnL72Cc",
+  "model": "eleven_v4",
+  "status": 200,
+  "file": "CQ_m2.mp3",
+  "bytes": 36823,
+  "heard": "未知生,焉知死",
+  "heard_lang": "zh",
+  "heard_lang_p": 0.99,
+  "seconds": 2.24
+ },
+ {
+  "name": "CQ_o0",
+  "lang": "zh",
+  "text": "未知生，焉知死？",
+  "voice": "own:el-Christos - Casual, Calm and Serious {'language': 'el', 'use_case': 'narrative_story', 'age': 'middle_aged', 'accent': 'standard', 'gender': 'male', 'descriptive': 'confident', 'locale': 'el-gr'}",
+  "voice_id": "PaZ8laODC1yRxHTPYJFh",
+  "model": "eleven_v4",
+  "status": 200,
+  "file": "CQ_o0.mp3",
+  "bytes": 40585,
+  "heard": "蜜之生,煙之死",
+  "heard_lang": "zh",
+  "heard_lang_p": 0.987,
+  "seconds": 2.48
+ },
+ {
+  "name": "CQ_o1",
+  "lang": "zh",
+  "text": "未知生，焉知死？",
+  "voice": "own:el-Christos - Casual, Calm and Serious {'language': 'el', 'use_case': 'narrative_story', 'age': 'middle_aged', 'accent': 'standard', 'gender': 'male', 'descriptive': 'confident', 'locale': 'el-gr'}",
+  "voice_id": "PaZ8laODC1yRxHTPYJFh",
+  "model": "eleven_v4",
+  "status": 200,
+  "file": "CQ_o1.mp3",
+  "bytes": 40585,
+  "heard": "秘之生,焉之死",
+  "heard_lang": "zh",
+  "heard_lang_p": 0.956,
+  "seconds": 2.48
+ },
+ {
+  "name": "T2_f0",
+  "lang": "zh",
+  "text": "你也没睡？明天吃火锅！",
+  "voice": "shared:Anna Su - Casual, Friendly and Bright (taiwan mandarin, zh)",
+  "voice_id": "9lHjugDhwqoxA5MhX0az",
+  "model": "eleven_v4",
+  "status": 200,
+  "file": "T2_f0.mp3",
+  "bytes": 36823,
+  "heard": "你也沒睡,明天吃火鍋",
+  "heard_lang": "zh",
+  "heard_lang_p": 0.997,
+  "seconds": 2.24
+ },
+ {
+  "name": "T2_f1",
+  "lang": "zh",
+  "text": "你也没睡？明天吃火锅！",
+  "voice": "shared:Stacy - Young, Sweet and Cute (standard, zh)",
+  "voice_id": "hkfHEbBvdQFNX4uWHqRF",
+  "model": "eleven_v4",
+  "status": 200,
+  "file": "T2_f1.mp3",
+  "bytes": 39331,
+  "heard": "你也沒睡?明天吃火鍋",
+  "heard_lang": "zh",
+  "heard_lang_p": 0.999,
+  "seconds": 2.4
+ },
+ {
+  "name": "T2_f2",
+  "lang": "zh",
+  "text": "你也没睡？明天吃火锅！",
+  "voice": "shared:Sage - Soothing & Gentle (standard, zh)",
+  "voice_id": "APSIkVZudNbPAwyPoeVO",
+  "model": "eleven_v4",
+  "status": 200,
+  "file": "T2_f2.mp3",
+  "bytes": 40585,
+  "heard": "你也沒睡 明天吃火鍋",
+  "heard_lang": "zh",
+  "heard_lang_p": 0.996,
+  "seconds": 2.48
+ }
+]
