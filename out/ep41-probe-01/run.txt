@@ -1,0 +1,22 @@
+plan: {'tier': None, 'character_count': None, 'character_limit': None, 'status': None}
+models: ['eleven_v4', 'eleven_v4_turbo', 'eleven_v3', 'eleven_v3_conversational', 'eleven_multilingual_v2', 'eleven_flash_v2_5', 'eleven_turbo_v2_5', 'eleven_turbo_v2', 'eleven_flash_v2', 'eleven_english_sts_v2', 'eleven_multilingual_sts_v2']
+model: eleven_v4
+{"name": "P1", "lang": "zh", "text": "嗯。", "voice": "MI36FIkp9wRP7cpWKPTl", "voice_id": "MI36FIkp9wRP7cpWKPTl", "model": "eleven_v4", "status": 200, "file": "P1.mp3", "bytes": 15089}
+Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+[
+ {
+  "name": "P1",
+  "lang": "zh",
+  "text": "嗯。",
+  "voice": "MI36FIkp9wRP7cpWKPTl",
+  "voice_id": "MI36FIkp9wRP7cpWKPTl",
+  "model": "eleven_v4",
+  "status": 200,
+  "file": "P1.mp3",
+  "bytes": 15089,
+  "heard": "Hmm",
+  "heard_lang": "en",
+  "heard_lang_p": 0.666,
+  "seconds": 0.88
+ }
+]
