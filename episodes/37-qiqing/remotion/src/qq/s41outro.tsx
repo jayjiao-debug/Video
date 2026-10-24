@@ -30,20 +30,24 @@ const Brain: React.FC<{x: number; y: number; w: number; t: number; k: number}> =
 const Space: React.FC<{tau: number; t: number}> = ({tau, t}) => {
 	const T = OUT_T;
 	const pull = ease(seg(tau, T.pull, T.voy + 1.2)), u = ease(seg(tau, T.recede, T.point));
-	const zoom = lerp(9, 1, pull) * Math.pow(0.004, u);
+	const ZR = 410 * 1.1 / (0.19 * VP.s);   // the close-up cover (r 410 × 1.1) is the bus's record (r 0.19·s) seen at this zoom
+	const zoom = lerp(ZR, 1, pull) * Math.pow(0.004, u), coverS = pull > 0 ? lerp(ZR, 1, pull) / ZR * 1.1 : lerp(1, 1.1, ease(seg(tau, 0, T.pull)));
 	const coverOp = 1 - sm(seg(tau, T.pull + 0.3, T.voy + 0.4));
 	const fx = lerp(REC[0], AV[0], u), fy = lerp(REC[1], AV[1], u);
 	const sx = (VP.x - fx) * zoom + fx, sy = (VP.y - fy) * zoom + fy, dot = cl((0.16 - zoom) / 0.1);   // the craft's centre on screen; a point of light takes over as it shrinks
 	return <g>
 		<rect width={W} height={H} fill="#03040a" />
-		<StarField t={t} n={320} maxY={H} op={0.9} seed={3} />
-		<g transform={`rotate(${-6 + tau * 0.4} 960 540)`}><MilkyWay t={t} op={0.85} cx={900} cy={430} ang={-24} /></g>
-		{zoom > 0.012 && <Cam zoom={zoom} fx={fx} fy={fy}>
+		<Cam zoom={1 + 0.09 * ease(seg(tau, T.recede, T.phone + 0.7))} fx={AV[0]} fy={AV[1]}>
+			<StarField t={t} n={320} maxY={H} op={0.9} seed={3} />
+			<g transform={`rotate(${-6 + tau * 0.4} 960 540)`}><MilkyWay t={t} op={0.85} cx={900} cy={430} ang={-24} /></g>
+		</Cam>
+		{zoom > 0.012 && <Cam zoom={zoom} fx={fx} fy={fy} px={(960 - REC[0]) * (1 - pull)} py={(540 - REC[1]) * (1 - pull)}>   {/* the bus's record sits exactly under the close-up cover until the pull-back separates them */}
 			<Voyager x={VP.x} y={VP.y} s={VP.s} yaw={VP.yaw + tau * 0.012} pitch={VP.pitch} roll={VP.roll} mag={0.9} glint={0.4 + 0.3 * Math.sin(t * 0.8)} recordGlow={0.12 + 0.2 * (1 - pull)} light={[-0.8, 0.35, 0.6]} />
 		</Cam>}
-		{dot > 0 && <><Glow x={sx} y={sy} r={34} c="#fff4d8" o={0.8 * dot} id="oDot" /><circle cx={sx} cy={sy} r={2.6} fill="#fff" opacity={dot} /></>}
+		{dot > 0 && <><Glow x={sx} y={sy} r={34 + 5 * Math.sin(t * 2.3)} c="#fff4d8" o={(0.72 + 0.12 * Math.sin(t * 3.1)) * dot} id="oDot" /><circle cx={sx} cy={sy} r={2.6} fill="#fff" opacity={dot} />
+			<path d={`M${sx - 16},${sy} L${sx + 16},${sy} M${sx},${sy - 16} L${sx},${sy + 16}`} stroke="#fff4d8" strokeWidth={1.2} opacity={0.4 * dot * (0.6 + 0.4 * Math.sin(t * 1.7))} transform={`rotate(${t * 6} ${sx} ${sy})`} /></>}
 		{/* the record close: a full-frame cover that becomes the small disc on the bus as we pull back */}
-		{coverOp > 0.01 && <g opacity={coverOp}><Cam zoom={lerp(1, 0.1, pull) * lerp(1, 1.1, ease(seg(tau, 0, T.pull + 0.4)))} fx={960} fy={540} px={(REC[0] - 960) * pull} py={(REC[1] - 540) * pull}>
+		{coverOp > 0.01 && <g opacity={coverOp}><Cam zoom={coverS} fx={960} fy={540} px={(REC[0] - 960) * pull} py={(REC[1] - 540) * pull}>
 			<rect width={W} height={H} fill="#06050a" opacity={1 - pull} />
 			<RecordCover x={960} y={540} r={410} t={t} glow={0.5} />
 			<Brain x={960} y={540} w={620} t={t} k={fio(tau, BRAIN_IN, T.pull + 0.3, 0.6)} />
@@ -195,7 +199,7 @@ const Hill: React.FC<{tau: number; t: number}> = ({tau, t}) => {
 	const star: [number, number] = [lerp(1060, 1180, seg(tau, T.hill, T.end)), lerp(170, 150, seg(tau, T.hill, T.end))];
 	return <g>
 		<defs><linearGradient id="oSky" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stopColor="#05040c" /><stop offset="0.55" stopColor="#14123a" /><stop offset="0.85" stopColor="#2e2a5a" /><stop offset="1" stopColor="#5a4a7a" /></linearGradient></defs>
-		<g transform={`translate(0,${py})`}>
+		<Cam zoom={1 + 0.07 * ease(seg(tau, T.hill + 2.0, T.end))} fx={960} fy={840}><g transform={`translate(0,${py})`}>
 			<rect y={-800} width={W} height={H + 800} fill="url(#oSky)" />
 			<StarField t={t} n={300} maxY={760} seed={5} /><g transform="translate(0,-780)"><StarField t={t} n={260} maxY={780} seed={9} /></g>
 			<MilkyWay t={t} op={0.9} cx={960} cy={300} ang={-32} />
@@ -206,7 +210,7 @@ const Hill: React.FC<{tau: number; t: number}> = ({tau, t}) => {
 			{/* last in the row: you, tonight, the phone at your ear */}
 			<Rimmed x={NOW_X} ground={NOW_G} h={NOW_H} pose={NOW_STAND} look={NOW_LOOK} col="#050409" rim="#9fb0ff" rimOp={0.28} rimDx={0} rimDy={-1.5} T={t + 12} />
 			<HeldPhone pose={NOW_STAND} x={NOW_X} ground={NOW_G} h={NOW_H} glow={1.4} id="nowPhH" />
-		</g>
+		</g></Cam>
 		{/* the Juno end card: title, the question, then (on the dark hill) the monogram + follow pill and the sources.
 		   Lines ending in full-width punctuation are nudged right (DX) so the visible ink is centred. */}
 		<g opacity={fio(tau, T.title, T.end + 1, 0.7)}>
