@@ -24,7 +24,7 @@
 | 104 | 236.92 | outro: no bass, soft |
 | — | 252.2 | the song ends (the file ends at 254.1) |
 
-## The one cut (needs the owner's approval)
+## The one cut (approved by the owner 2026-10-24; the owner also chose to use this 71 kbps file as is)
 - **Remove track bars 28–57** (30 bars = 67.92 s): play to 64.846 s, then jump to 132.771 s, with a 20 ms crossfade on the bar line.
 - **The cut sits inside the 2-bar loop**, so neighbouring bars match at 0.99 similarity against 0.94 for an ordinary 8-bar repeat, and there is no level jump at the splice. It should be inaudible.
 - **No other processing:** no fade needed, because the song ends by itself.
