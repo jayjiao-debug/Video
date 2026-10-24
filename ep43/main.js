@@ -26416,7 +26416,8 @@ var rig = (o, contacts, ground, who = "fig") => {
   return f3;
 };
 var drawCarriedRoll = (g, fig, who, side = "R", length = 0.29, r = 13, glow2 = 1, grey = false, col = SILHOUETTE) => {
-  const [r0, r1] = underArmRoll(fig.pose, side, length), p0 = toScreen(fig, r0), p1 = toScreen(fig, r1);
+  const gp = gripOf(fig.pose, side), pit0 = [fig.pose[`${side}Sh`][0], fig.pose[`${side}Sh`][1] - 0.11], toPit = Math.hypot(pit0[0] - gp[0], pit0[1] - gp[1]);
+  const [r0, r1] = underArmRoll(fig.pose, side, Math.min(length, toPit + 0.01)), p0 = toScreen(fig, r0), p1 = toScreen(fig, r1);
   drawRoll(g, p0, p1, r, glow2, grey);
   drawFig(g, { ...fig, part: side }, col);
   const hand = toScreen(fig, gripOf(fig.pose, side)), pit = toScreen(fig, [fig.pose[`${side}Sh`][0], fig.pose[`${side}Sh`][1] - 0.11]);
@@ -31882,7 +31883,7 @@ var softRoll = (g, p0, p1, r) => {
   }
   g.restore();
 };
-var SILK_BASE = "#EEDAB2";
+var SILK_BASE = "#E4CDA2";
 var riverMono2;
 var riverGrey2;
 var silkPanel = (g, src, x0, y0, w, h, dead = false) => {
@@ -31946,11 +31947,11 @@ var d14 = (t) => {
   const w = walk14(t), fk = `${Math.round(t * 30)}`;
   cast14.draw(fk, w.figs);
   roll14.drawW(fk, (g) => {
-    glowBlob(g, w.rc, 170, 95, 0.4);
+    glowBlob(g, w.rc, 200, 120, 0.6);
     softRoll(g, w.e0, w.e1, 14);
     drawFig(g, { ...w.car, part: "L" });
   });
-  c14.setLanterns(() => 1);
+  c14.setLanterns(() => 0.55);
   c14.setBoat(1760 - (t - b5(23)) * 22, 0);
   c14.setStreak(w.rc[0], 0.25, t);
   st2.heroAt(w.rc[0], w.rc[1], 22, 640);
@@ -31991,7 +31992,7 @@ var buildRoom15 = async () => {
 		<rect x="-1100" y="-500" width="4120" height="440" fill="#1b1814"/><rect x="-1100" y="-80" width="4120" height="26" fill="#15100C"/>
 		<rect x="40" y="-500" width="40" height="2100" fill="#1f2528"/><rect x="1820" y="-500" width="40" height="2100" fill="#1f2528"/>`, 4120, 2100, "", -1100, -500);
   st2.add("wall", canvasTex(await svgToCanvas(wall, 4120, 2100, 0.6)), 960, 550, 4120, 2100, -900, { rim: 0.35 });
-  lamp15 = new Live(st2, "lamp", 960, 540, W, H, -120, { emissive: 1.25 }, 1);
+  lamp15 = new Live(st2, "lamp", 960, 540, W, H, -120, { emissive: 0.6 }, 1);
   cast15 = new Cast(st2, "craftsman", 1200, 800, 1e3, 1e3, -80);
   const top = mkCanvas(2600, 260), gt = top.getContext("2d");
   const tg = gt.createLinearGradient(0, 0, 0, 260);
@@ -32003,7 +32004,7 @@ var buildRoom15 = async () => {
   for (let i = 0; i < 26; i++) gt.fillRect(0, 6 + i * 9.5, 2600, 1.2);
   st2.add("top", canvasTex(top), 960, TOPB + (TOPF - TOPB) / 2 + 10, 2600, TOPF - TOPB + 20, -60, { rim: 0 });
   copy15 = new Live(st2, "copy", 960, 780, W, 260, -56, {}, 1.4);
-  you15 = new Live(st2, "you", 960, 780, W, 260, -54, { emissive: 0.34 }, 1.4);
+  you15 = new Live(st2, "you", 960, 780, W, 260, -54, { emissive: 0.14 }, 1.4);
   arms15 = new Cast(st2, "arms", 1200, 800, 1e3, 1e3, -50);
   glow15 = new Live(st2, "glow", 960, 640, W + 400, 1300, -48, { emissive: 1 }, 0.5);
   const front = svgDoc(`<rect x="-400" y="${TOPF}" width="2720" height="30" fill="#1d1610"/><rect x="-400" y="${TOPF + 28}" width="2720" height="420" fill="#16110d"/>
@@ -32059,7 +32060,7 @@ var drawLamp15 = (g, k, cup) => {
   g.fillStyle = "#15100C";
   g.fillRect(x - 20, y - 36, 40, 7);
   g.fillRect(x - 16, y + 30, 32, 6);
-  const c = [40 + 205 * k, 32 + 160 * k, 24 + 84 * k].map(Math.round);
+  const c = [40 + 180 * k, 32 + 140 * k, 24 + 70 * k].map(Math.round);
   g.fillStyle = `rgb(${c[0]},${c[1]},${c[2]})`;
   g.beginPath();
   g.ellipse(x, y, 24, 31, 0, 0, Math.PI * 2);
@@ -32170,7 +32171,7 @@ var d16 = (t) => {
     });
     hero = [(h.xL + h.xR) / 2, SY2];
     glow16.drawW(fk, (g) => {
-      glowBlob(g, hero, lerp2(330, 130, h.k), lerp2(220, 120, h.k), 0.3);
+      glowBlob(g, hero, lerp2(330, 130, h.k), lerp2(220, 120, h.k), 0.22);
       glowBlob(g, hero, 900, 520, 0.07);
     });
   } else {
@@ -32407,7 +32408,8 @@ var bootYuan = async () => {
     st2.add("skyShade", canvasTex(gradCanvas([[0, "rgba(38,58,68,0.92)"], [0.3, "rgba(46,68,78,0.72)"], [0.5, "rgba(60,84,92,0.35)"], [0.66, "rgba(70,92,98,0)"], [1, "rgba(70,92,98,0)"]])), 960, 420, 12e3, 1900, -8900);
     st2.get("sunglow").mat.uniforms.uOpacity.value = 0.14;
     cast14 = new Cast(st2, "cast14", 1e3, 880, 2400, 1120, 20);
-    roll14 = new Live(st2, "roll14", 1e3, 880, 2400, 1120, 22, { emissive: 0.55 }, 0.6);
+    roll14 = new Live(st2, "roll14", 1e3, 880, 2400, 1120, 22, { emissive: 0.9 }, 0.6);
+    for (const n of ["river", "ripples", "haze"]) st2.get(n).mat.uniforms.uTint.value.setRGB(0.8, 0.82, 0.84);
     const [cx, cy, zm] = camPath(b5(25), K14);
     st2.setCam(cx, cy, zm);
     const base = scr(st2, -520, 860, -2600), top = scr(st2, -520, 860 - 372 * 1.25, -2600);
@@ -32426,7 +32428,7 @@ var bootYuan = async () => {
       }
     });
     cast16 = new Cast(st2, "cast16", 960, 640, 2600, 1100, 20);
-    silk16 = new Live(st2, "silk16", (SX02 + SX12) / 2, SY2, SX12 - SX02 + 40, SH2 + 60, 22, { emissive: 0.34 }, 3);
+    silk16 = new Live(st2, "silk16", (SX02 + SX12) / 2, SY2, SX12 - SX02 + 40, SH2 + 60, 22, { emissive: 0.12 }, 3);
     rollers16 = new Live(st2, "rollers16", 1100, 640, 1800, 900, 23, { rim: 0 }, 1);
     glow16 = new Live(st2, "glow16", 960, 640, 2600, 1100, 18, { emissive: 1 }, 0.5);
   }
@@ -32446,12 +32448,12 @@ var bootYuan = async () => {
 			<rect x="${LAMP17[0] - 18}" y="${LAMP17[1] + 6}" width="36" height="6" fill="#15100C"/><rect x="${LAMP17[0] - 4}" y="${LAMP17[1] + 10}" width="8" height="${DTB - LAMP17[1] - 2}" fill="#15100C"/><ellipse cx="${LAMP17[0]}" cy="${DTB + 6}" rx="26" ry="6" fill="#15100C"/>
 			<rect x="${PX0 + PW - 160}" y="${DTB + 14}" width="70" height="18" rx="5" fill="#1b1612"/>`, W, 1200);
     st2.add("mydesk", canvasTex(await svgToCanvas(dk, W, 1200, 0.9)), 960, 600, W, 1200, -2, { rim: 0.9, rimPx: 5 });
-    paper17 = st2.add("paper", canvasTex(paperCanvas()), PX0 + PW / 2, PYF + 350 - PHF / 2, PW, PHF, 0, { emissive: 0.12 }, 10);
+    paper17 = st2.add("paper", canvasTex(paperCanvas()), PX0 + PW / 2, PYF + 350 - PHF / 2, PW, PHF, 0, { emissive: 0.03, tint: "#e2d5bd" }, 10);
     rt17 = new WebGLRenderTarget(768, 432, { type: HalfFloatType, samples: 4 });
     const sr = slotRect();
     slot17 = st2.add("slot", rt17.texture, sr.x + sr.w / 2, sr.y + sr.h / 2, sr.w, sr.h, 0, { emissive: 0.3, fog: ["#E8D6B0", 0] }, 11);
     ink17 = new Live(st2, "ink17", PX0 + NEWX * PK, PYF + 350 - PHF / 2, 180 * PK, PHF, 0, {}, 3, 12);
-    roll17 = new Live(st2, "roll17", PX0 + (PSRC_W + 10) * PK, PYF + 350 - PHF / 2, 140 * PK, (PSRC_H + 80) * PK, 0, { emissive: 0.45 }, 2, 13);
+    roll17 = new Live(st2, "roll17", PX0 + (PSRC_W + 10) * PK, PYF + 350 - PHF / 2, 140 * PK, (PSRC_H + 80) * PK, 0, { emissive: 0.25 }, 2, 13);
     roll17.draw("roll", (g) => {
       const w = 140 * PK, h = (PSRC_H + 80) * PK;
       const gr = g.createLinearGradient(0, 0, w, 0);
@@ -32569,7 +32571,7 @@ var d18 = (t) => {
     g.beginPath();
     g.rect(-2e3, -2e3, clipX + 2e3, 6e3);
     g.clip();
-    glowBlob(g, c.rc, 120, 80, 0.4);
+    glowBlob(g, c.rc, 140, 95, 0.55);
     softRoll(g, c.e0, c.e1, 11);
     drawFig(g, { ...c.fr, part: "L" });
     if (t < b6(30.12)) drawFig(g, { ...c.lu, part: "L" });
@@ -32609,14 +32611,14 @@ var d18 = (t) => {
   });
   const fl = (i) => 0.85 + 0.15 * Math.sin(t * 13 + i * 2.1) * Math.sin(t * 7.3 + i);
   torch18.drawW(`${Math.round(t * 15)}`, (g) => {
-    for (const [x, y, r, i] of TORCH_GLOW) glowBlob(g, [x, y], r, r * 0.7, 0.34 * fl(i), "255,170,90");
+    for (const [x, y, r, i] of TORCH_GLOW) glowBlob(g, [x, y], r, r * 0.7, 0.2 * fl(i), "255,170,90");
     for (const f3 of TORCHES) {
       const [x, y] = f3;
       g.fillStyle = `rgba(255,${190 + 30 * fl(x)},110,0.95)`;
       g.beginPath();
       g.ellipse(x, y - 9, 6, 12 * fl(x), 0, 0, Math.PI * 2);
       g.fill();
-      glowBlob(g, [x, y - 8], 26, 30, 0.7 * fl(x), "255,190,110");
+      glowBlob(g, [x, y - 8], 22, 26, 0.45 * fl(x), "255,190,110");
     }
   });
   st2.heroAt(c.rc[0], c.rc[1], -150, 560);
@@ -32703,7 +32705,7 @@ var drawBox = (g, c, w, h) => {
   g.fillStyle = "#FFE2A8";
   g.fillRect(c[0] - w / 2 + 2, c[1] - h * 0.18, w - 4, Math.max(1.2, h * 0.05));
 };
-var boxGlow = (g, c, w, h, a = 0.5) => {
+var boxGlow = (g, c, w, h, a = 0.68) => {
   glowBlob(g, [c[0], c[1] - h * 0.16], w * 0.9, h * 0.45, a);
 };
 var boxCarrier = (x, gr, h, look4, u, who) => {
@@ -32803,7 +32805,7 @@ var d19 = (t) => {
   });
   lamps19.drawW("l", (g) => {
     for (const [x, y, r] of LAMPS19) {
-      glowBlob(g, [x, y], r * 2.6, r * 2.6, 0.45, "255,184,104");
+      glowBlob(g, [x, y], r * 2.2, r * 2.2, 0.22, "255,184,104");
       g.fillStyle = "#FFC98A";
       g.beginPath();
       g.ellipse(x, y, r * 0.55, r * 0.75, 0, 0, Math.PI * 2);
@@ -33049,7 +33051,7 @@ var makePools = (sheet) => FCOLS.map((x) => {
   const c = mkCanvas(POOL.w, POOL.h), g = c.getContext("2d");
   g.drawImage(sheet, x - POOL.w / 2, POOL.y0, POOL.w, POOL.h, 0, 0, POOL.w, POOL.h);
   g.globalCompositeOperation = "source-atop";
-  g.fillStyle = "rgba(255,214,150,0.10)";
+  g.fillStyle = "rgba(255,214,150,0.06)";
   g.fillRect(0, 0, POOL.w, POOL.h);
   g.globalCompositeOperation = "destination-in";
   g.save();
@@ -33105,7 +33107,7 @@ var buildTail = async () => {
   st2.add("end", canvasTex(end), XE + 2048 * SK, 540, 4096 * SK, 1080, 0, { emissive: 0.08, tint: dim });
   st2.add("col", canvasTex(col3), XC2 + 2048 * SK, 540, 4096 * SK, 1080, 0, { emissive: 0.08, tint: dim });
   fengPlane = st2.add("feng", canvasTex(feng), XF + FW21 / 2 * SK, 540, FW21 * SK, 1080, 0, { emissive: 0.08, tint: dim });
-  lit21 = new Live(st2, "lit", XF + FW21 / 2 * SK, 540, FW21 * SK, 1080, 0.5, { emissive: 0.16 }, 1 / SK * 0.6, 3);
+  lit21 = new Live(st2, "lit", XF + FW21 / 2 * SK, 540, FW21 * SK, 1080, 0.5, { emissive: 0, tint: "#e8ddca" }, 1 / SK * 0.6, 3);
   lit21.L.mesh.renderOrder = 5;
 };
 var bootMing = async () => {
@@ -34842,10 +34844,10 @@ var tableCanvas = () => {
   g.fillRect(1750, TOPF2 + 30, 24, FLOOR - TOPF2 - 30);
   g.fillRect(844, TOPF2 + 30, 906, 14);
   g.fillStyle = "#15100C";
-  g.fillRect(612, 796, 176, 14);
-  g.fillRect(624, 810, 12, FLOOR - 810);
-  g.fillRect(764, 810, 12, FLOOR - 810);
-  g.fillRect(636, 960, 128, 8);
+  g.fillRect(652, 796, 176, 14);
+  g.fillRect(664, 810, 12, FLOOR - 810);
+  g.fillRect(804, 810, 12, FLOOR - 810);
+  g.fillRect(676, 960, 128, 8);
   return c;
 };
 var crateCanvas = () => {
@@ -34879,7 +34881,7 @@ var crateCanvas = () => {
   g.restore();
   return c;
 };
-var LAMP = { base: [1250, TOPF2 - 10], sw: [884, TOPF2 - 8], bulb: [1150, 648] };
+var LAMP = { base: [1250, TOPB2 + 6], sw: [884, TOPB2 + 14], bulb: [1150, 648] };
 var lampCanvas = () => {
   const c = mkCanvas(W, H), g = c.getContext("2d"), [bx, by] = LAMP.base;
   g.fillStyle = "#15100C";
@@ -34911,22 +34913,18 @@ var lampCanvas = () => {
   g.strokeStyle = "#100c09";
   g.lineWidth = 3;
   g.beginPath();
-  g.moveTo(bx - 30, by + 6);
-  g.bezierCurveTo(1100, TOPF2 - 2, 980, TOPF2 - 1, LAMP.sw[0] + 16, LAMP.sw[1]);
+  g.moveTo(bx - 30, by + 4);
+  g.bezierCurveTo(1150, TOPB2 + 12, 1e3, TOPB2 + 14, LAMP.sw[0] + 30, LAMP.sw[1]);
   g.stroke();
-  g.beginPath();
-  g.moveTo(LAMP.sw[0] - 14, LAMP.sw[1]);
-  g.bezierCurveTo(820, TOPF2 + 4, 805, TOPF2 + 60, 806, FLOOR);
-  g.stroke();
-  g.fillStyle = "#2a221b";
-  g.beginPath();
-  g.roundRect(LAMP.sw[0] - 16, LAMP.sw[1] - 7, 32, 13, 4);
-  g.fill();
   return c;
 };
-var ROLLY = [TOPF2 - 6, TOPF2 - 22, TOPF2 - 38];
-var ROLLX = [905, 925, 945];
+var ROLLY = [TOPB2 + 20, TOPB2 + 12, TOPB2 + 4];
+var ROLLX = [955, 975, 995];
 var openAt = (i) => b9(51.25 + 0.25 * (2 - i));
+var switchAt = (t) => {
+  const k = smooth(clamp01((t - b9(50.1)) / 0.3));
+  return [lerp2(850, LAMP.sw[0] + 20, k), lerp2(668, LAMP.sw[1] - 4, k)];
+};
 var freeEnd = (i, t) => ROLLX[i] - 90 * smooth(clamp01((t - openAt(i) + 0.12) / 0.24));
 var unrollAt = (t) => {
   const u = clamp01((t - T02) / 0.9);
@@ -34937,9 +34935,9 @@ var batteredAt = (t) => {
   return [lerp2(905, SX, k), lerp2(600, TOPF2 - 12, k) - Math.sin(k * Math.PI) * 30];
 };
 var researcher = (t) => {
-  const o = { x: 700, ground: FLOOR, h: 700, pose: POSES.sit, look: lk50 };
+  const o = { x: 740, ground: FLOOR, h: 700, pose: POSES.sit, look: lk50 };
   const c = [];
-  if (t < b9(50.4)) c.push({ side: "R", target: [LAMP.sw[0], LAMP.sw[1] - 4], name: "switch" });
+  if (t < b9(50.45)) c.push({ side: "R", target: switchAt(t), name: "switch" });
   else if (t < b9(51.25) - 0.18) {
   } else if (t < b9(53.5) - 0.2) {
     const i = t < openAt(1) - 0.05 ? 2 : t < openAt(0) - 0.05 ? 1 : 0;
@@ -35016,7 +35014,7 @@ var drawCopies = (g, t) => {
   for (let i = 2; i >= 0; i--) {
     const x0 = freeEnd(i, t), y = ROLLY[i], grey = i > 0 && t >= b9(53 + 0.25 * (i - 1)), rx = ROLLX[i];
     if (rx - x0 > 2) {
-      const ph = 46;
+      const ph = 24;
       g.save();
       g.beginPath();
       g.moveTo(x0, y);
@@ -35067,7 +35065,20 @@ var storeDraw = (t) => {
   st2.setCam(cx + shake, cy + shake * 0.4, zm);
   const fk = `${Math.round(t * 30)}`;
   cast2.draw(fk, [researcher(t)]);
-  rolls.draw(fk, (g) => drawCopies(g, t));
+  rolls.draw(fk, (g) => {
+    drawCopies(g, t);
+    const [sx2, sy2] = switchAt(Math.min(t, b9(50.45)));
+    g.strokeStyle = "#100c09";
+    g.lineWidth = 3;
+    g.beginPath();
+    g.moveTo(LAMP.sw[0] + 30, LAMP.sw[1]);
+    g.quadraticCurveTo(sx2 + 30, (sy2 + LAMP.sw[1]) / 2 + 10, sx2 + 10, sy2);
+    g.stroke();
+    g.fillStyle = "#2a221b";
+    g.beginPath();
+    g.roundRect(sx2 - 10, sy2 - 7, 22, 14, 4);
+    g.fill();
+  });
   const r = stripRect(t), bp = batteredAt(t), unrolled = t >= T02;
   const tremble = t > b9(53.75) && t < T02 ? Math.sin(t * 70) * (t > 123.13 ? 2.4 : 0.9) : 0;
   strip.L.mat.uniforms.uEmissive.value = unrolled ? lerp2(0.05 + 0.08 * burst, 0.16, r.dv) : 0.03 + 0.12 * clamp01((t - b9(53.5)) / 0.4);
@@ -35118,7 +35129,7 @@ var storeDraw = (t) => {
 };
 addScene({ id: "27", a: b9(50), z: b9(54.5) - 0.1, draw: storeDraw });
 function cartAt(t) {
-  return 0.52 + 0.33 * clamp01((t - b9(54.5)) / (b9(56) - b9(54.5)));
+  return 0.52 + 0.1 * clamp01((t - b9(54.5)) / (b9(56) - b9(54.5)));
 }
 var camOf = (v) => [FX0 + v.u * FW, v.v * FH, 1920 / (v.f * FW)];
 var clampV = (v) => {
@@ -35246,8 +35257,8 @@ addScene({ id: "29", a: b9(57) - 0.12, z: b9(58.5), in: { mode: 7, a: b9(57) - 0
   const st2 = day.st, [cx, cy, zm] = cam29(t);
   st2.setCam(cx, cy, zm);
   const u = (t - b9(57)) / (2 * BEAT), x1 = staffX(t), x2 = x1 + 300, H23 = 560;
-  const rc = [x1 - 0.11 * H23, ground29(x1) - 0.64 * H23];
-  const rl = 0.22 * H23, e0 = [rc[0] - rl / 2, rc[1] + 3], e1 = [rc[0] + rl / 2, rc[1] - 3];
+  const rc = [x1 - 0.09 * H23, ground29(x1) - 0.72 * H23];
+  const rl = 0.2 * H23, e0 = [rc[0] - rl / 2, rc[1] + 3], e1 = [rc[0] + rl / 2, rc[1] - 3];
   const f12 = rig({ x: x1, ground: ground29(x1), h: H23, pose: gaitPose("08_04", u, STEP29), look: lk50, flip: true }, [{ side: "L", target: [e0[0] + 8, e0[1] + 9], name: "roll end" }, { side: "R", target: [e1[0] - 8, e1[1] + 9], name: "roll end" }], ground29, "staff1");
   const f22 = rig({ x: x2, ground: ground29(x2), h: H23 + 8, pose: gaitPose("08_04", u + 0.28, STEP29), look: lk50, flip: true }, [], ground29, "staff2");
   dayCast.draw(`${Math.round(t * 30)}`, [f22, f12]);
@@ -35268,14 +35279,14 @@ var b10 = bar;
 var SC2 = 82 / 1536;
 var S = { x0: -131, edge: 760, py0: 14, depth: 300 };
 var TB2 = { x0: -500, x1: 2400, floor: 1010 };
-var ZR = -250;
+var ZR = -110;
 var TH_R = 1.36;
 var PARTS = { colB: 0, colA: 2600 * SC2, col: 5200 * SC2, end: 5200 * SC2 + 4096 * SC2, gate: 5200 * SC2 + 2 * 4096 * SC2, river: 5200 * SC2 + 3 * 4096 * SC2, shed: 5200 * SC2 + 4 * 4096 * SC2 };
 var PATCH4 = { x: 1853, y: 1308 };
 var lxPatch = PARTS.shed + PATCH4.x * SC2;
 var lyPatch = S.py0 + (1536 - PATCH4.y) * SC2;
 var LENS = { r: 60, x: 1120, y: 618 };
-var POST = [1262, 470];
+var POST = [1262, 556];
 var st;
 var strip2;
 var shedMesh;
@@ -35732,20 +35743,30 @@ var restorers = (t, on) => {
   const sw = swingK(t), arm = lensArmPoint(t);
   const silkPt = pe(lxPatch + 24, lyPatch + 30, 0.6);
   if (t < b10(61.55)) c12.push({ side: "L", target: silkPt, name: "flat on silk", opt: { dir: 180 } });
-  else if (t >= b10(61.65)) c12.push({ side: "L", target: arm, name: "lamp arm" });
+  else if (t >= b10(61.65) && t < b10(62)) c12.push({ side: "L", target: arm, name: "lamp arm" });
+  else if (t >= b10(62)) s1.pose = reach(s1.pose, "L", toBody(s1, arm));
   else {
     const k = smooth((t - b10(61.55)) / (b10(61.65) - b10(61.55)));
     s1.pose = reach(s1.pose, "L", toBody(s1, lerpP(silkPt, arm, k)));
   }
   out.figs.push(on ? rig(s1, c12, () => s1.ground, "restorer-seated") : s1);
-  const stand = { x: 860, ground: TB2.floor, h: 575, pose: fkPose({ hip: 0.645, hipX: -0.04, lean: 30, neck: -2, lt: 6, lk: 5, rt: 3, rk: 4, la: 28, le: 30, ra: 24, re: 28 }), look: lk73 };
+  const stand = { x: 905, ground: TB2.floor, h: 575, pose: fkPose({ hip: 0.64, hipX: -0.07, lean: 46, neck: -6, lt: 10, lk: 8, rt: 5, rk: 6, la: 34, le: 30, ra: 28, re: 25 }), look: lk73 };
   const s2 = onScreen(st, stand, ZR);
-  out.figs.push(!on ? s2 : rig(s2, [{ side: "R", target: pe(lxPatch - 120, S.py0 + 3, 0.5), name: "margin", opt: { dir: -6 } }, { side: "L", target: pe(lxPatch - 92, S.py0 + 4, 0.5), name: "margin", opt: { dir: -6 } }], () => s2.ground, "restorer-standing"));
+  const shS = proj(st, 0, 0, 0) && [s2.x + s2.pose.RSh[0] * s2.h, s2.ground - s2.pose.RSh[1] * s2.h];
+  let best = lxPatch - 120, bd = 1e9;
+  for (let lx = lxPatch - 260; lx < lxPatch - 20; lx += 2) {
+    const q = pe(lx, S.py0 + 78, 0.5), d = Math.abs(Math.hypot(q[0] - shS[0], q[1] - shS[1]) - 0.31 * s2.h) + Math.max(0, shS[0] - q[0]) * 5;
+    if (d < bd) {
+      bd = d;
+      best = lx;
+    }
+  }
+  out.figs.push(!on ? s2 : rig(s2, [{ side: "R", target: pe(best, S.py0 + 78, 0.5), name: "margin", opt: { dir: -6 } }, { side: "L", target: pe(best + 26, S.py0 + 77, 0.5), name: "margin", opt: { dir: -6 } }], () => s2.ground, "restorer-standing"));
   return out;
 };
 var armEnd = (lc) => [lc[0], lc[1] - LENS.r * 1.3];
 var lensArmPoint = (t) => {
-  const m = lerpP(POST, armEnd(lensAt(t)), 0.42);
+  const m = lerpP(POST, armEnd(lensAt(t)), 0.3);
   return proj(st, m[0], m[1], 0);
 };
 var drawLamp = (g, t, lc) => {
@@ -36052,7 +36073,7 @@ var eraT0 = (e) => b11(66 + 0.25 * e);
 var ERAS = [];
 var OFF_UA = {};
 var OFF_BUNDLE = [0, 0];
-var CAM_DB = [280, 660, 1];
+var CAM_DB = [200, 660, 1];
 var CROWD = [{ x: -170, h: 410 }, { x: 70, h: 398 }, { x: 300, h: 425 }, { x: 342, h: 262, child: true }, { x: 560, h: 404 }, { x: 790, h: 412 }, { x: 1030, h: 420 }];
 var L1923 = [
   { head: "qingcap", dress: "robe", sleeves: "narrow", surcoat: true },
@@ -36201,14 +36222,14 @@ var clothBundle2 = (g, c, r) => {
   g.fill();
 };
 var eraWalk = (e, t, lk) => {
-  const extra = e === 3 ? quicken(t, b11(67), 0.6, 0.3) : 0, u = (t - eraT0(e) + 0.25 + extra) / (2 * BEAT);
+  const extra = e === 3 ? quicken(t, b11(67), 0.75, 0.3) : 0, u = (t - eraT0(e) + 0.25 + extra) / (2 * BEAT);
   const x0 = e === 0 ? 1150 : e === 3 ? 760 : 700;
   return { u, x: x0 + u * gaitStride("08_04", stepFor(lk)) * FH2 };
 };
 var eraPose = (e, t) => {
   if (e === 0) {
     const lk2 = LK.song, { u: u2, x: x2 } = eraWalk(0, t, lk2), o2 = { x: x2, ground: deck(x2), h: FH2, pose: walkFor(lk2, u2), look: lk2 };
-    const hand = toScreen(o2, [-0.03, 0.42]), ax = x2 - 0.92 * FH2, cg = cartGeo2(ax, deck(ax), [hand[0] - 2, hand[1] + 2], FH2);
+    const hand = toScreen(o2, [-0.02, 0.54]), ax = x2 - 0.92 * FH2, cg = cartGeo2(ax, deck(ax), [hand[0] - 2, hand[1] + 2], FH2);
     const f4 = rig(o2, [{ side: "R", target: [hand[0] - 2, hand[1] + 2], name: "shaft" }, { side: "L", target: [hand[0] - 9, hand[1] + 4], name: "shaft" }], deck, "E4 \u5B8B puller");
     const you = [cg.bed(-0.2, 0.085), cg.bed(0.2, 0.095)], c4 = P24(you[0], you[1], 0.5);
     return { figs: [f4], glowC: c4, target: c4, draw: (g) => {
@@ -36312,9 +36333,9 @@ var bootToday = async () => {
 var masonry = (g, x0, x1) => {
   if (x1 <= x0) return;
   const gr = g.createLinearGradient(x0, 0, x1, 0);
-  gr.addColorStop(0, "#6e3a2c");
-  gr.addColorStop(0.5, "#7a4230");
-  gr.addColorStop(1, "#6a3629");
+  gr.addColorStop(0, "#644036");
+  gr.addColorStop(0.5, "#6e4638");
+  gr.addColorStop(1, "#5f3c33");
   g.fillStyle = gr;
   g.fillRect(x0, -20, x1 - x0, 1120);
   g.fillStyle = "rgba(40,18,12,0.35)";
@@ -36545,9 +36566,15 @@ var drawHall = (m) => {
       g.clip();
       drawFig(g, s.A);
       drawFig(g, s.B);
+      if (s.clipArms) {
+        fillD3(g, armPaths(s.A));
+        fillD3(g, armPaths(s.B));
+      }
       g.restore();
-      fillD3(g, armPaths(s.A));
-      fillD3(g, armPaths(s.B));
+      if (!s.clipArms) {
+        fillD3(g, armPaths(s.A));
+        fillD3(g, armPaths(s.B));
+      }
     });
   }
   hallCrowd2.draw(fk + ":" + m.crowd.length, m.crowd);
@@ -36690,10 +36717,10 @@ var layLid = (t) => {
   return { A, B, lid, roll };
 };
 addScene({ id: "35c", a: b11(72.75), z: b11(73), draw: (t) => {
-  const zm = Math.exp(lerp2(Math.log(1.7), Math.log(3.1), easeIn(clamp01((t - (b11(72.75) + 0.1)) / (b11(73) - b11(72.75) - 0.1)))));
-  lockCam(hallSt3, zm, BOX35.x0 + BOX35.w / 2, BOX35.top + 6, HZ2.box, 960, lerp2(640, 600, clamp01((zm - 1.7) / 1.4)));
+  const zm = Math.exp(lerp2(Math.log(1.7), Math.log(4.2), easeIn(clamp01((t - (b11(72.75) + 0.1)) / (b11(73) - b11(72.75) - 0.1)))));
+  lockCam(hallSt3, zm, BOX35.x0 + BOX35.w / 2, BOX35.top + 6, HZ2.box, 960, lerp2(640, 590, clamp01((zm - 1.7) / 2.5)));
   const L = layLid(t);
-  drawHall({ t, spots: () => 0, you: 1, card: 0, crowd: [], wallK: 0.84, staff: { A: L.A, B: L.B, clipY: CASE.top }, box: { lid: L.lid, roll: L.roll } });
+  drawHall({ t, spots: () => 0, you: 1, card: 0, crowd: [], wallK: 0.84, staff: { A: L.A, B: L.B, clipY: CASE.top, clipArms: true }, box: { lid: L.lid, roll: L.roll } });
   return { st: hallSt3, grade: { vig: 0.42, exposure: 1 }, bloom: 1 };
 } });
 var aisleSt;
@@ -36860,7 +36887,7 @@ var bootExt = async () => {
   pass2.add("far", canvasTex(farCv), 960, 540, 1920, 1080, 0, {});
   [250, 480, 700, 900, 1060, 1180, 1250].forEach((z, i, RZ) => {
     const c = mkCanvas(960, 540), g = c.getContext("2d"), s2 = D / (D - z), hw = PH * s2 / 2, hh = PV * s2 / 2, cy = 540 / 2 + (PCY - 540) * s2 / 2, k = i / (RZ.length - 1);
-    const lit = Math.round(lerp2(150, 62, k));
+    const lit = Math.round(lerp2(104, 50, k));
     g.fillStyle = `rgb(${lit},${Math.round(lit * 0.8)},${Math.round(lit * 0.64)})`;
     g.fillRect(0, 0, 960, 540);
     g.strokeStyle = `rgba(30,18,10,${0.25 + 0.2 * k})`;
@@ -36888,7 +36915,7 @@ var Q_LINE = (LINES.find((l) => l[2].startsWith("\u8981\u662F\u6392")) ?? [174.6
 var SOURCES = "\u8D44\u6599\uFF1A\u6545\u5BAB\u535A\u7269\u9662 \xB7 \u4F59\u8F89\uFF08\u6545\u5BAB\u535A\u7269\u9662\u9662\u520A 2012\uFF1B\u5149\u660E\u65E5\u62A5 2017\uFF09\xB7 \u6731\u9E3F\u6587\uFF08\u5149\u660E\u65E5\u62A5 2026\uFF09\xB7 \u738B\u6587\u950B\uFF08\u957F\u6625\u65E5\u62A5 2020\uFF09\xB7 \u8BB8\u5FE0\u9675\u300A\u6E05\u660E\u4E0A\u6CB3\u56FE\u88C5\u88F1\u8BB0\u300B\xB7 \u5317\u4EAC\u665A\u62A5 2015";
 var endHud = (t) => (hud2) => {
   const o = smooth(clamp01((t - b11(76)) / 0.5)), n = [...Q_LINE].filter((c) => c !== "[" && c !== "]").length, qT = clamp01((t - b11(76.5)) / 0.4) * n + (t >= b11(76.5) ? 1 : 0);
-  endCard(hud2, o, Q_LINE, SOURCES, t < b11(76.5) ? 0 : Math.floor(qT + 1e-6), smooth(clamp01((t - b11(78)) / 0.3)), smooth(clamp01((t - b11(78.5)) / 0.3)));
+  endCard(hud2, o, t < b11(76.5) ? "" : Q_LINE, SOURCES, t < b11(76.5) ? 0 : Math.floor(qT + 1e-6), smooth(clamp01((t - b11(78)) / 0.3)), smooth(clamp01((t - b11(78.5)) / 0.3)));
 };
 addScene({ id: "37", a: b11(76), z: 184.3 + 1, draw: (t) => {
   const dimK = lerp2(1, 0.5, smooth(clamp01((t - b11(76.2)) / (b11(77.6) - b11(76.2)))));
