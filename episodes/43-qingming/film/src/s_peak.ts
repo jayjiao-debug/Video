@@ -101,7 +101,7 @@ const lampCanvas = () => {
 };
 
 // ------------------------------------------------------------------------------------------------ store action
-const ROLLY = [TOPF - 6, TOPF - 22, TOPF - 38], ROLLX = [968, 1000, 1032];   // three copies, front → back (overlapped in depth)
+const ROLLY = [TOPF - 6, TOPF - 22, TOPF - 38], ROLLX = [905, 925, 945];   // three copies, front → back (overlapped in depth)
 const openAt = (i: number) => b(51.25 + 0.25 * (2 - i));                       // back roll first
 /** x of copy i's free end: opens a hand's width (90 px) toward him on its beat */
 const freeEnd = (i: number, t: number) => ROLLX[i] - 90 * smooth(clamp01((t - openAt(i) + 0.12) / 0.24));
@@ -213,7 +213,7 @@ const peakCam = (t: number): [number, number, number] => {
 };
 /** the crest camera that puts the real arch's apex + span on the painted arch's apex + span as framed at time t */
 const crestMatch = (t: number): [number, number, number] => {
-	const [cx, cy, zm] = peakCam(t), ax = FX0 + (BR.x + BR.w * 0.5) * SEC, ay = BR.y * SEC;
+	const [cx, cy, zm] = peakCam(t), ax = FX0 + (BR.x + BR.w * 0.5) * SEC, ay = BR.y * SEC + 134;   // BR.y is the crowd's top; +134 world px = the deck / arch-facade line
 	const sx = 960 + (ax - cx) * zm, sy = 540 + (ay - cy) * zm, half = BR.w * SEC * 0.5 * zm, zc = half / 1700;
 	return [960 - (sx - 960) / zc, 900 - (sy - 540) / zc, zc];
 };
@@ -269,8 +269,8 @@ addScene({id: '29', a: b(57) - 0.12, z: b(58.5), in: {mode: 7, a: b(57) - 0.12, 
 	const st = day.st, [cx, cy, zm] = cam29(t); st.setCam(cx, cy, zm);
 	const u = (t - b(57)) / (2 * BEAT), x1 = staffX(t), x2 = x1 + 330, H2 = 560;
 	// front staff carries you in both hands at chest height; the second walks a step behind
-	const rc: [number, number] = [x1 - 0.2 * H2, ground29(x1) - 0.6 * H2];
-	const rl = 0.29 * H2, e0: [number, number] = [rc[0] - rl / 2, rc[1] + 4], e1: [number, number] = [rc[0] + rl / 2, rc[1] - 4];
+	const rc: [number, number] = [x1 - 0.16 * H2, ground29(x1) - 0.66 * H2];
+	const rl = 0.24 * H2, e0: [number, number] = [rc[0] - rl / 2, rc[1] + 4], e1: [number, number] = [rc[0] + rl / 2, rc[1] - 4];
 	const f1 = rig({x: x1, ground: ground29(x1), h: H2, pose: walkFor(lk50, u), look: lk50, flip: true}, [{side: 'L', target: [e0[0] + 6, e0[1] + 8], name: 'roll end'}, {side: 'R', target: [e1[0] - 6, e1[1] + 8], name: 'roll end'}], ground29, 'staff1');
 	const f2 = rig({x: x2, ground: ground29(x2), h: H2 + 8, pose: walkFor(lk50, u + 0.5), look: lk50, flip: true}, [], ground29, 'staff2');
 	dayCast.draw(`${Math.round(t * 30)}`, [f2, f1]);
