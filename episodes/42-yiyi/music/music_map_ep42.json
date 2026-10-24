@@ -1,0 +1,582 @@
+{
+ "grid": {
+  "beat_s": 0.56605,
+  "film_downbeats": "0.5688 + 2.2642*n from 0 until the coda (bar 50 = DROP); after the gap: T_intro + 0.5688 + 2.2642*n",
+  "song_part1_downbeats": "0.5688 + 2.2642*n (beats k = 1 mod 4)",
+  "song_part2_downbeats": "1.1348 + 2.2642*n (beats k = 2 mod 4, from 182.271); the song stop bar 317-321 has 5 beats"
+ },
+ "A": {
+  "SPANS": [
+   [
+    0.0,
+    86.608
+   ],
+   [
+    163.581,
+    181.139
+   ],
+   [
+    181.695,
+    200.384
+   ],
+   [
+    241.1,
+    252.128
+   ],
+   [
+    "gap",
+    1.7
+   ],
+   [
+    0.0,
+    16.418
+   ]
+  ],
+  "XF": [
+   0.01,
+   0.01,
+   0.04,
+   0.015,
+   0.01
+  ],
+  "length": 151.916,
+  "map": [
+   [
+    "cold open (song intro, first note 0.555, F chord)",
+    0.0
+   ],
+   [
+    "HIT: crash+808 pickup, song beat 16 (LUFS peak 9.30 is 240 ms later)",
+    9.06
+   ],
+   [
+    "A-section downbeat (rewind may run 9.060 -> 11.891)",
+    9.626
+   ],
+   [
+    "TITLE slam (downbeat, A bar 2)",
+    11.891
+   ],
+   [
+    "S1 body: song B section, bright B pedal (8-bar phrase start)",
+    18.682
+   ],
+   [
+    "S2 (B bar 7; C section begins inside at 36.796)",
+    32.27
+   ],
+   [
+    "S3 (C bar 5; turnaround 50.382, 1-beat break 54.343, re-entry HIT 54.910)",
+    45.854
+   ],
+   [
+    "S4 (L1 loop F-E-Am-C)",
+    59.437
+   ],
+   [
+    "S5 (L1, phrase start)",
+    73.023
+   ],
+   [
+    "S6: J1 -> song 163.591 crash, B-pedal build (brightest)",
+    86.608
+   ],
+   [
+    "PRE-DROP section (B-pedal bar 7)",
+    100.192
+   ],
+   [
+    "stop bar (Am)",
+    102.457
+   ],
+   [
+    "stop HIT",
+    103.024
+   ],
+   [
+    "silence (0.98 s)",
+    103.717
+   ],
+   [
+    "lead-in (filtered, no sub, 4 bars)",
+    104.722
+   ],
+   [
+    "breath -5 dB (2 beats)",
+    112.647
+   ],
+   [
+    "DROP (A min -> Bb min, sub +24 dB)",
+    113.779
+   ],
+   [
+    "J2 hard cut to coda (Gb) + 2.5 s reverb -12 dB",
+    122.835
+   ],
+   [
+    "coda chord changes: F 123.95, Bb 124.96, Gb 125.89, F 127.05, Bb 128.13, Db 129.37, Gb 130.40, F 131.56, Bb 132.71",
+    123.95
+   ],
+   [
+    "coda dead STOP (+4 s reverb -9 dB)",
+    133.823
+   ],
+   [
+    "intro return (song 0.0), -3 dB",
+    135.498
+   ],
+   [
+    "intro first note",
+    136.053
+   ],
+   [
+    "FINAL HIT",
+    144.558
+   ],
+   [
+    "downbeat after hit",
+    145.124
+   ],
+   [
+    "fade start (downbeat)",
+    147.389
+   ],
+   [
+    "fade end / film end (downbeat)",
+    151.916
+   ]
+  ]
+ },
+ "A_valley": {
+  "SPANS": [
+   [
+    0.0,
+    73.023
+   ],
+   [
+    149.996,
+    181.139
+   ],
+   [
+    181.695,
+    200.384
+   ],
+   [
+    241.1,
+    252.128
+   ],
+   [
+    "gap",
+    1.7
+   ],
+   [
+    0.0,
+    16.418
+   ]
+  ],
+  "XF": [
+   0.01,
+   0.01,
+   0.04,
+   0.015,
+   0.01
+  ],
+  "length": 151.916,
+  "map": [
+   [
+    "cold open (song intro, first note 0.555, F chord)",
+    0.0
+   ],
+   [
+    "HIT: crash+808 pickup, song beat 16 (LUFS peak 9.30 is 240 ms later)",
+    9.06
+   ],
+   [
+    "A-section downbeat (rewind may run 9.060 -> 11.891)",
+    9.626
+   ],
+   [
+    "TITLE slam (downbeat, A bar 2)",
+    11.891
+   ],
+   [
+    "S1 body: song B section, bright B pedal (8-bar phrase start)",
+    18.682
+   ],
+   [
+    "S2 (B bar 7; C section begins inside at 36.796)",
+    32.27
+   ],
+   [
+    "S3 (C bar 5; turnaround 50.382, 1-beat break 54.343, re-entry HIT 54.910)",
+    45.854
+   ],
+   [
+    "S4 (L1 loop F-E-Am-C)",
+    59.437
+   ],
+   [
+    "S5 VALLEY: J1 -> song 150.006 breakdown cycle 2",
+    73.023
+   ],
+   [
+    "S6: song-own crash 163.591, B-pedal build",
+    86.608
+   ],
+   [
+    "PRE-DROP section (B-pedal bar 7)",
+    100.192
+   ],
+   [
+    "stop bar (Am)",
+    102.457
+   ],
+   [
+    "stop HIT",
+    103.024
+   ],
+   [
+    "silence (0.98 s)",
+    103.717
+   ],
+   [
+    "lead-in (filtered, no sub, 4 bars)",
+    104.722
+   ],
+   [
+    "breath -5 dB (2 beats)",
+    112.647
+   ],
+   [
+    "DROP (A min -> Bb min, sub +24 dB)",
+    113.779
+   ],
+   [
+    "J2 hard cut to coda (Gb) + 2.5 s reverb -12 dB",
+    122.835
+   ],
+   [
+    "coda chord changes: F 123.95, Bb 124.96, Gb 125.89, F 127.05, Bb 128.13, Db 129.37, Gb 130.40, F 131.56, Bb 132.71",
+    123.95
+   ],
+   [
+    "coda dead STOP (+4 s reverb -9 dB)",
+    133.823
+   ],
+   [
+    "intro return (song 0.0), -3 dB",
+    135.498
+   ],
+   [
+    "intro first note",
+    136.053
+   ],
+   [
+    "FINAL HIT",
+    144.558
+   ],
+   [
+    "downbeat after hit",
+    145.124
+   ],
+   [
+    "fade start (downbeat)",
+    147.389
+   ],
+   [
+    "fade end / film end (downbeat)",
+    151.916
+   ]
+  ]
+ },
+ "B": {
+  "SPANS": [
+   [
+    0.0,
+    73.023
+   ],
+   [
+    149.996,
+    181.139
+   ],
+   [
+    181.695,
+    200.384
+   ],
+   [
+    227.545,
+    252.128
+   ],
+   [
+    "gap",
+    1.7
+   ],
+   [
+    0.0,
+    16.418
+   ]
+  ],
+  "XF": [
+   0.01,
+   0.01,
+   0.01,
+   0.015,
+   0.01
+  ],
+  "length": 165.501,
+  "map": [
+   [
+    "cold open (song intro, first note 0.555, F chord)",
+    0.0
+   ],
+   [
+    "HIT: crash+808 pickup, song beat 16 (LUFS peak 9.30 is 240 ms later)",
+    9.06
+   ],
+   [
+    "A-section downbeat (rewind may run 9.060 -> 11.891)",
+    9.626
+   ],
+   [
+    "TITLE slam (downbeat, A bar 2)",
+    11.891
+   ],
+   [
+    "S1 body: song B section, bright B pedal (8-bar phrase start)",
+    18.682
+   ],
+   [
+    "S2 (B bar 7; C section begins inside at 36.796)",
+    32.27
+   ],
+   [
+    "S3 (C bar 5; turnaround 50.382, 1-beat break 54.343, re-entry HIT 54.910)",
+    45.854
+   ],
+   [
+    "S4 (L1 loop F-E-Am-C)",
+    59.437
+   ],
+   [
+    "S5 VALLEY: J1 -> song 150.006 breakdown cycle 2 (Bb, no kick; 808 bumps 76.42, 80.94, 85.47)",
+    73.023
+   ],
+   [
+    "S6: song-own crash 163.591, B-pedal build",
+    86.608
+   ],
+   [
+    "PRE-DROP section",
+    100.192
+   ],
+   [
+    "stop bar",
+    102.457
+   ],
+   [
+    "stop HIT",
+    103.024
+   ],
+   [
+    "silence (0.98 s)",
+    103.717
+   ],
+   [
+    "lead-in",
+    104.722
+   ],
+   [
+    "breath -5 dB",
+    112.647
+   ],
+   [
+    "DROP",
+    113.779
+   ],
+   [
+    "J2 inside the drop loop (inaudible) -> song 227.555, last 4 drop bars",
+    122.835
+   ],
+   [
+    "song-own fall into the coda (drums decay from 131.28)",
+    131.891
+   ],
+   [
+    "coda chord changes: Gb 132.32, F 133.00, Bb 134.15, Db 135.65, Gb 136.37, F 137.53, Bb 138.54, Gb 139.47, F 140.63, Bb 141.71, Db 142.95, Gb 143.98, F 145.14, Bb 146.29",
+    132.32
+   ],
+   [
+    "coda dead STOP",
+    147.408
+   ],
+   [
+    "intro return (song 0.0), -3 dB",
+    149.083
+   ],
+   [
+    "intro first note",
+    149.638
+   ],
+   [
+    "FINAL HIT",
+    158.142
+   ],
+   [
+    "downbeat after hit",
+    158.709
+   ],
+   [
+    "fade start",
+    160.974
+   ],
+   [
+    "fade end / film end",
+    165.501
+   ]
+  ]
+ },
+ "v2": {
+  "note": "A_valley without the title section: cut song 11.890 (b21) -> 18.672 (b33-XF); everything after 11.890 shifts -6.793 s; coda chord list shifts by the same amount",
+  "SPANS": [
+   [
+    0.0,
+    11.89
+   ],
+   [
+    18.672,
+    73.023
+   ],
+   [
+    149.996,
+    181.139
+   ],
+   [
+    181.695,
+    200.384
+   ],
+   [
+    241.1,
+    252.128
+   ],
+   [
+    "gap",
+    1.7
+   ],
+   [
+    0.0,
+    16.418
+   ]
+  ],
+  "XF": [
+   0.01,
+   0.01,
+   0.01,
+   0.04,
+   0.015,
+   0.01
+  ],
+  "length": 145.124,
+  "map": [
+   [
+    "cold open (song intro, first note 0.555, F chord)",
+    0.0
+   ],
+   [
+    "HIT: crash+808 pickup, song beat 16 (LUFS peak 9.30 is 240 ms later)",
+    9.06
+   ],
+   [
+    "A-section downbeat (rewind may run 9.060 -> 11.891)",
+    9.626
+   ],
+   [
+    "S1 body: song B section, bright B pedal (8-bar phrase start)",
+    11.889
+   ],
+   [
+    "S2 (B bar 7; C section begins inside at 36.796)",
+    25.477
+   ],
+   [
+    "S3 (C bar 5; turnaround 50.382, 1-beat break 54.343, re-entry HIT 54.910)",
+    39.061
+   ],
+   [
+    "S4 (L1 loop F-E-Am-C)",
+    52.644
+   ],
+   [
+    "S5 VALLEY: J1 -> song 150.006 breakdown cycle 2",
+    66.23
+   ],
+   [
+    "S6: song-own crash 163.591, B-pedal build",
+    79.815
+   ],
+   [
+    "PRE-DROP section (B-pedal bar 7)",
+    93.399
+   ],
+   [
+    "stop bar (Am)",
+    95.664
+   ],
+   [
+    "stop HIT",
+    96.231
+   ],
+   [
+    "silence (0.98 s)",
+    96.924
+   ],
+   [
+    "lead-in (filtered, no sub, 4 bars)",
+    97.929
+   ],
+   [
+    "breath -5 dB (2 beats)",
+    105.854
+   ],
+   [
+    "DROP (A min -> Bb min, sub +24 dB)",
+    106.986
+   ],
+   [
+    "J2 hard cut to coda (Gb) + 2.5 s reverb -12 dB",
+    116.042
+   ],
+   [
+    "coda chord changes: F 123.95, Bb 124.96, Gb 125.89, F 127.05, Bb 128.13, Db 129.37, Gb 130.40, F 131.56, Bb 132.71",
+    117.157
+   ],
+   [
+    "coda dead STOP (+4 s reverb -9 dB)",
+    127.03
+   ],
+   [
+    "intro return (song 0.0), -3 dB",
+    128.705
+   ],
+   [
+    "intro first note",
+    129.26
+   ],
+   [
+    "FINAL HIT",
+    137.765
+   ],
+   [
+    "downbeat after hit",
+    138.331
+   ],
+   [
+    "fade start (downbeat)",
+    140.596
+   ],
+   [
+    "fade end / film end (downbeat)",
+    145.123
+   ]
+  ]
+ }
+}
