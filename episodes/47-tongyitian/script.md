@@ -1,4 +1,4 @@
-# Script: 假如说你是一块龙骨  (vN)
+# Script: 同一天出生的两个人  (vN)
 
 **Logline:** · **Takeaway:** · **Length:** ~NN s
 
