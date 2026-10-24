@@ -152,11 +152,11 @@ const bootFlip = async () => {
 		['e4-1923', {sky: 'snow', era: '1923', lanterns: true, boat: false, bankCrowd: true, snow: true}]];
 	const crests = defs.map(([n, o]) => new Crest(n, o)); await Promise.all(crests.map((c) => c.ready));
 	crests.forEach((crest, e0) => { const e = e0 === 2 ? 3 : e0;
-		const st = crest.st, s: EraSet = {crest, cast: new Cast(st, 'e4cast', 1000, 700, 3200, 1000, 20), prop: new Live(st, 'e4prop', 1000, 700, 3200, 1000, 23, {rim: 0.3}, 1), glow: new Live(st, 'e4glow', 1000, 700, 3200, 1000, 24, {emissive: 1.0}, 0.4)};
+		const st = crest.st, s: EraSet = {crest, cast: new Cast(st, 'e4cast', 760, 700, 2500, 900, 20), prop: new Live(st, 'e4prop', 760, 700, 2500, 900, 23, {rim: 0.3}, 1), glow: new Live(st, 'e4glow', 760, 700, 2500, 900, 24, {emissive: 1.0}, 0.4)};
 		if (e === 0) st.get('sunglow').mat.uniforms.uOpacity.value = 0.8;
 		if (e === 3) {
-			s.arms = new Live(st, 'e4arms', 1000, 700, 3200, 1000, 23.5, {rim: 1.0, rimPx: 5}, 1);
-			s.crowd = new Cast(st, 'e4crowd', 900, 700, 3400, 1000, 10, {rim: 0.7, rimPx: 4});
+			s.arms = new Live(st, 'e4arms', 1100, 700, 1800, 900, 23.5, {rim: 1.0, rimPx: 5}, 1);
+			s.crowd = new Cast(st, 'e4crowd', 430, 700, 1500, 900, 10, {rim: 0.7, rimPx: 4});
 			st.get('sunglow').mat.uniforms.uOpacity.value = 0.22;
 			const fw = new Live(st, 'farWin', 960, 850, 8400, 200, -2540, {emissive: 0.9}, 0.5);
 			fw.drawW('w', (g) => { for (let i = 0; i < 60; i++) { const x = -1600 + i * 75 + hash(i * 3.3) * 50, y = 818 + hash(i * 7.1) * 26; if (hash(i * 1.9) < 0.35) continue; g.fillStyle = `rgba(255,184,104,${0.55 + 0.3 * hash(i)})`; g.fillRect(x, y, 9 + (i % 3) * 3, 6 + (i % 2) * 2); } });
@@ -267,7 +267,7 @@ const VLOOK = {man: look('visitor'), woman: look('visitorW'), old: {head: 'short
 const TODAY_L: LookQ[] = [VLOOK.man2, VLOOK.woman, VLOOK.man, VLOOK.child, VLOOK.old, VLOOK.woman2, VLOOK.man];
 const bootToday = async () => {
 	today = new Crest('e5-today', {sky: 'day', era: '1950', lanterns: false, boat: true, bankCrowd: true}); await today.ready;
-	todayCast = new Cast(today.st, 'e5cast', 900, 700, 5200, 1000, 10, {rim: 0});
+	todayCast = new Cast(today.st, 'e5cast', 0, 800, 2800, 1100, 10, {rim: 0});
 	// the far-bank gate's open passage, warm-lit (no plaque), and the near banks continued below the frame
 	const gp = new Live(today.st, 'gatePass', -300, 800, 200, 160, -2590, {emissive: 0.5}, 2, -1990);
 	gp.draw('g', (g) => { const cx = 100, base = 140, w = 52, h = 94; const arch = (s: number, oy = 0) => { g.beginPath(); g.moveTo(cx - w * s / 2, base - oy); g.lineTo(cx - w * s / 2, base - oy - h * s + w * s / 2); g.arc(cx, base - oy - h * s + w * s / 2, w * s / 2, Math.PI, 0); g.lineTo(cx + w * s / 2, base - oy); g.closePath(); };
