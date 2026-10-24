@@ -60,7 +60,7 @@ export {reach, handAt, toBody};
 export type {Pose, FigOpts, P};
 
 // ------------------------------------------------------------------------------------------------ rig + contact check
-import {jointAt, toScreen as figToScreen, ReachOpt} from './figures';
+import {jointAt, toScreen as figToScreen, ReachOpt, soleOf} from './figures';
 export type Contact = {side: 'L' | 'R'; target: P; opt?: ReachOpt; name?: string};
 /** contact log: per frame, the worst hand miss and foot miss (px); window.CONTACTS collects failures when window.CHECK is set */
 export const CONTACTS: {t: number; who: string; what: string; err: number}[] = [];
@@ -71,8 +71,8 @@ const log = (who: string, what: string, err: number, lim: number) => { if (err >
 export const slopeFeet = (o: FigOpts, ground: (x: number) => number): FigOpts => {
 	const p: Pose = {...o.pose};
 	for (const s of ['L', 'R']) {
-		const ax = figToScreen(o, p[`${s}Ank`])[0], tx = figToScreen(o, p[`${s}Toe`])[0];
-		const gy = ground((ax + tx) / 2), d = -(gy - o.ground) / o.h;           // body units, y up
+		const so = figToScreen(o, soleOf(p, s as any));
+		const gy = ground(so[0]), d = -(gy - o.ground) / o.h;           // body units, y up
 		for (const [j, k] of [[`${s}Ank`, 1], [`${s}Toe`, 1], [`${s}Knee`, 0.5]] as [string, number][]) p[j] = [p[j][0], p[j][1] + d * k];
 	}
 	return {...o, pose: p};
@@ -86,7 +86,7 @@ export const rig = (o: FigOpts, contacts: Contact[], ground?: (x: number) => num
 	for (const c of contacts) { const h = handAt(f as any, c.side); log(who, `${c.name ?? c.side} hand`, Math.hypot(h[0] - c.target[0], h[1] - c.target[1]), 4); }
 	if (ground) {
 		// soles: ankle sits BL.ankle above the sole; the lower sole carries the weight and must touch; neither may sink
-		const sole = (s: string) => { const a = jointAt(f as any, `${s}Ank`), tp = jointAt(f as any, `${s}Toe`); const x = (a[0] + tp[0]) / 2; return {x, y: Math.max(a[1] + 0.045 * f.h, tp[1] + 0.004 * f.h), g: ground(x)}; };
+		const sole = (s: string) => { const q = figToScreen(f, soleOf(f.pose, s as any)); return {x: q[0], y: q[1], g: ground(q[0])}; };
 		const L = sole('L'), R = sole('R'), st = (L.y - L.g) > (R.y - R.g) ? L : R;
 		log(who, 'stance foot', Math.abs(st.y - st.g), 3);
 		for (const q of [L, R]) if (q.y - q.g > 3) log(who, 'foot sinks', q.y - q.g, 3);

@@ -11,7 +11,7 @@ import {titleInk} from './hud';
 const b = bar;
 let crest: Crest, nightCrest: Crest, cast: Cast, silk: Live, rollers: Live, river: HTMLCanvasElement, titleSt: Stage, band: Live, bandCv: HTMLCanvasElement;
 // the open silk in world px (CR-A two-shot)
-const SX0 = 700, SX1 = 1220, SY = 600, SH = 190;
+const SX0 = 700, SX1 = 1220, SY = 560, SH = 190;
 export const bootOpen = async () => {
 	crest = new Crest('open-dusk', {sky: 'dusk', era: 'none', lanterns: true, boat: true, bankCrowd: true});
 	nightCrest = new Crest('title-night', {sky: 'night', era: 'none', lanterns: true, boat: false, bankCrowd: false});
@@ -37,7 +37,7 @@ const XC = (SX0 + SX1) / 2 + 40;
 const holders = (rollK: number) => {
 	// rollK 0 = open, 1 = rolled up: both rollers wind in toward XC; the holders step in
 	const k = smooth(rollK), xL = lerp(SX0, XC - 14, k), xR = lerp(SX1, XC + 14, k);
-	const ax = lerp(585, 760, k), bx = lerp(1335, 1150, k);
+	const ax = xL - 108, bx = xR + 108;
 	const A: FigOpts = {x: ax, ground: deck(ax) + 4, h: H, pose: POSES.stand, look: lookA};
 	const Bf: FigOpts = {x: bx, ground: deck(bx) + 4, h: H + 10, pose: POSES.stand, look: lookB, flip: true};
 	const a = rig(A, [{side: 'R', target: [xL, SY - 40]}, {side: 'L', target: [xL, SY + 42]}], deck, 'hookA');
@@ -47,7 +47,7 @@ const holders = (rollK: number) => {
 /** walking off right from t0: B in front with the roll under his arm, A behind */
 const walkers = (t: number, t0: number) => {
 	const u = (t - t0) / (2 * BEAT), strideA = gaitStride('08_04', stepFor(lookA)) * H, strideB = gaitStride('08_04', stepFor(lookB)) * (H + 10);
-	const xb = 1150 + 40 + u * strideB, xa = 760 + 60 + u * strideA;
+	const xb = XC + 14 + 108 + 40 + u * strideB, xa = XC - 14 - 108 + 60 + u * strideA;
 	let pb = walkFor(lookB, u + 0.5); pb = armsFrom(pb, underArm(pb), 'R');
 	const B: FigOpts = rig({x: xb, ground: deck(xb) + 4, h: H + 10, pose: pb, look: lookB}, [], deck, 'walkB');
 	const A: FigOpts = rig({x: xa, ground: deck(xa) + 4, h: H, pose: walkFor(lookA, u), look: lookA}, [], deck, 'walkA');

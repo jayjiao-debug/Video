@@ -516,3 +516,6 @@ export const POSES = {
 	underArm: underArm(),
 };
 export type PoseName = keyof typeof POSES;
+
+/** the lowest shoe point of a foot, in body units (y up): for sole contact checks and slope placement */
+export const soleOf = (p: Pose, side: Side): P => { const m = shoeMap(p[`${side}Ank`], p[`${side}Toe`]); let best: P = [0, Infinity]; for (const q of SHOE_PTS) { const v = m(q); if (v[1] < best[1]) best = v; } return best; };
