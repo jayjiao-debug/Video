@@ -6,15 +6,24 @@ const f = (v: number) => v.toFixed(1);
 const rn = (i: number) => hash(i * 2.17 + 0.3);
 /** a heap of rolled scrolls (ends toward the camera as ellipses, bodies as rounded bars), lit edge colour */
 export const scrollHeap = (cx: number, base: number, w: number, h: number, n: number, seed: number, body = '#1b1612', end = '#2a231c', ring = '#3a3027') => {
+	// a heap, not a staircase: round-ended rolls at mixed angles, rows overlapping and jittered, a few lying end-on toward us
 	let o = '';
-	const rows = Math.max(2, Math.round(h / 40));
+	const rows = Math.max(2, Math.round(h / 34));
 	for (let r = 0; r < rows; r++) {
-		const y = base - r * (h / rows) * 0.9, rw = w * (1 - r / rows * 0.75), cnt = Math.max(1, Math.round(n * (1 - r / rows * 0.7) / rows));
+		const y0 = base - r * (h / rows) * 0.78, rw = w * Math.sqrt(1 - (r / rows) * 0.85), cnt = Math.max(1, Math.round(n * (1 - r / rows * 0.6) / rows));
 		for (let i = 0; i < cnt; i++) {
-			const x = cx - rw / 2 + (i + 0.5) * rw / cnt + (rn(seed + r * 31 + i) - 0.5) * 22, len = 120 + rn(seed + i * 7 + r) * 160, dia = 22 + rn(seed + i + r * 9) * 16, ang = (rn(seed + i * 3 + r * 5) - 0.5) * 0.5;
-			const dx = Math.cos(ang) * len / 2, dy = Math.sin(ang) * len / 2;
-			o += `<path fill="${body}" stroke="${SIL}" stroke-width="2" d="M${f(x - dx)},${f(y - dy - dia / 2)} L${f(x + dx)},${f(y + dy - dia / 2)} L${f(x + dx)},${f(y + dy + dia / 2)} L${f(x - dx)},${f(y - dy + dia / 2)} Z"/>`;
-			o += `<ellipse fill="${end}" stroke="${ring}" stroke-width="2" cx="${f(x + dx)}" cy="${f(y + dy)}" rx="${f(dia * 0.32)}" ry="${f(dia / 2)}"/>`;
+			const q = (k: number) => rn(seed + r * 31 + i * 7 + k * 13);
+			const x = cx - rw / 2 + q(1) * rw, y = y0 + (q(2) - 0.5) * 18, dia = 20 + q(3) * 16;
+			if (q(4) < 0.22) {      // end-on roll: a disc with a core ring
+				o += `<circle fill="${body}" stroke="${SIL}" stroke-width="2" cx="${f(x)}" cy="${f(y)}" r="${f(dia * 0.55)}"/><circle fill="${end}" stroke="${ring}" stroke-width="2" cx="${f(x)}" cy="${f(y)}" r="${f(dia * 0.3)}"/>`;
+				continue;
+			}
+			const len = 110 + q(5) * 190, ang = (q(6) - 0.5) * 0.9, c = Math.cos(ang), sn = Math.sin(ang), rr = dia / 2;
+			const P = (u: number, v: number) => `${f(x + u * c - v * sn)},${f(y + u * sn + v * c)}`;
+			const L = len / 2;
+			o += `<path fill="${body}" stroke="${SIL}" stroke-width="2" d="M${P(-L, -rr)} L${P(L, -rr)} A${f(rr * 0.35)},${f(rr)} ${f(ang * 57.3)} 0 1 ${P(L, rr)} L${P(-L, rr)} A${f(rr * 0.35)},${f(rr)} ${f(ang * 57.3)} 0 1 ${P(-L, -rr)} Z"/>`;
+			o += `<path fill="none" stroke="${ring}" stroke-opacity="0.55" stroke-width="2" d="M${P(-L + 6, -rr * 0.45)} L${P(L - 6, -rr * 0.45)}"/>`;
+			o += `<ellipse fill="${end}" stroke="${ring}" stroke-width="2" transform="rotate(${f(ang * 57.3)} ${P(L, 0).replace(',', ' ')})" cx="${P(L, 0).split(',')[0]}" cy="${P(L, 0).split(',')[1]}" rx="${f(rr * 0.35)}" ry="${f(rr)}"/>`;
 		}
 	}
 	return o;

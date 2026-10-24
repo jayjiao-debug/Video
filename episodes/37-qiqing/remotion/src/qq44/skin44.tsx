@@ -3,7 +3,7 @@ import React from 'react';
    Key words in the brain's rose-gold, a modern sans for the story text, lab-record mono years in the stamp,
    and the counter as a specimen label. No red anywhere. */
 export const SANS = "'Noto Sans CJK SC','Noto Sans CJK',sans-serif", MONO = "'DejaVu Sans Mono',monospace", FIG = "'DejaVu Sans','Noto Sans CJK SC',sans-serif";
-export const ROSE = '#FFB291', ROSE_D = '#C9775E', INK = '#F4EEE4', LABEL = '#EEE8DC', LABEL_INK = '#2A2420';
+export const ROSE = '#FFB291', ROSE_D = '#C9775E', INK = '#F4EEE4';
 const SH = '0 0 2px rgba(10,8,8,0.95), 0 2px 6px rgba(10,8,8,0.7), 0 3px 22px rgba(10,8,8,0.55)';
 const KEY_SH = '0 0 2px rgba(10,8,8,0.95), 0 2px 6px rgba(10,8,8,0.7), 0 0 18px rgba(255,140,105,0.55)';
 const fx: React.CSSProperties = {position: 'absolute', fontFamily: SANS, color: INK, textShadow: SH};
@@ -28,29 +28,22 @@ export const Odo: React.FC<{v: number; size: number; blur?: number}> = ({v, size
 		<span style={{display: 'block', transform: `translateY(${-f * lh}px)`, filter: blur > 0.2 ? `blur(${blur}px)` : undefined}}>
 			<span style={{display: 'block', height: lh, lineHeight: `${lh}px`}}>{Math.max(0, a)}</span><span style={{display: 'block', height: lh, lineHeight: `${lh}px`}}>{Math.max(0, a + 1)}</span></span></span>;
 };
-/** the specimen label (bottom-left): era tag | 你 N 岁 */
-export const Specimen: React.FC<{era: string; v: number; blur?: number; who?: string; pre?: string}> = ({era, v, blur = 0, who = '你', pre = ''}) =>
-	<div style={{position: 'absolute', left: 150, bottom: 62, background: LABEL, color: LABEL_INK, border: `2px solid ${LABEL_INK}`, borderRadius: 3, padding: 4, boxShadow: '0 4px 18px rgba(0,0,0,0.45)', fontFamily: SANS}}>
-		<div style={{border: `1px solid ${LABEL_INK}`, display: 'flex', alignItems: 'stretch'}}>
-			<div style={{display: 'flex', flexDirection: 'column', justifyContent: 'space-between', padding: '8px 12px', borderRight: `1px solid ${LABEL_INK}`}}>
-				<div style={{fontFamily: MONO, fontSize: 13, letterSpacing: '0.14em', fontWeight: 700, opacity: 0.75}}>SPECIMEN</div>
-				<div style={{fontSize: 30, fontWeight: 900, letterSpacing: '0.12em', lineHeight: 1.05}}>{era}</div>
-			</div>
-			<div style={{display: 'flex', alignItems: 'flex-end', padding: '6px 16px 8px 14px', gap: 6, whiteSpace: 'nowrap'}}>
-				<span style={{fontSize: 30, fontWeight: 900, lineHeight: 1, marginBottom: 6}}>{who}{pre && ` ${pre}`}</span>
-				<span style={{fontFamily: FIG, fontSize: 70, fontWeight: 700, lineHeight: 1, letterSpacing: '-0.01em', fontVariantNumeric: 'tabular-nums'}}><Odo v={v} size={70} blur={blur} /></span>
-				<span style={{fontSize: 30, fontWeight: 900, lineHeight: 1, marginBottom: 6}}>岁</span>
-			</div>
-		</div>
+/** the counter (bottom-left): no box, just calm text over the picture; era tag optional */
+export const Counter: React.FC<{era?: string; v: number; blur?: number; o?: number}> = ({era, v, blur = 0, o = 1}) =>
+	<div style={{...fx, left: 150, bottom: 58, display: 'flex', alignItems: 'flex-end', gap: 10, whiteSpace: 'nowrap', opacity: o, textShadow: '0 0 2px rgba(10,8,8,0.9), 0 2px 8px rgba(10,8,8,0.75), 0 0 26px rgba(10,8,8,0.55)'}}>
+		{era && <span style={{fontSize: 26, fontWeight: 700, opacity: 0.8, marginBottom: 8, marginRight: 6, letterSpacing: '0.08em'}}>{era}</span>}
+		<span style={{fontSize: 30, fontWeight: 700, marginBottom: 6}}>你</span>
+		<span style={{fontFamily: FIG, fontSize: 62, fontWeight: 700, lineHeight: 1, fontVariantNumeric: 'tabular-nums'}}><Odo v={v} size={62} blur={blur} /></span>
+		<span style={{fontSize: 30, fontWeight: 700, marginBottom: 6}}>岁</span>
 	</div>;
-/** stamp (top-right): lab-record year in mono, place in sans, rose-gold rule */
-export const Stamp: React.FC<{y: string; place?: string; l2?: string; l3?: string; o?: number}> = ({y, place, l2, l3, o = 1}) =>
-	<div style={{...fx, top: 92, right: 60, textAlign: 'right', paddingRight: 22, borderRight: `4px solid ${ROSE}`, opacity: o}}>
-		<div style={{fontWeight: 900, fontSize: 54, lineHeight: 1.22}}><span style={{fontFamily: MONO, fontWeight: 700, letterSpacing: '-0.02em'}}>{y}</span>{place && <span> · {place}</span>}</div>
-		{l2 && <div style={{fontWeight: 700, fontSize: 38, lineHeight: 1.45, marginTop: 2}}>{l2}</div>}
-		{l3 && <div style={{fontWeight: 500, fontSize: 32, lineHeight: 1.45, opacity: 0.85}}>{l3}</div>}
-	</div>;
-export const Brand: React.FC = () => <div style={{...fx, top: 34, right: 60, fontSize: 28, letterSpacing: '0.06em', fontWeight: 700, opacity: 0.92}}><span style={{color: ROSE, textShadow: KEY_SH}}>◆</span> Juno · VIBE知识大赏</div>;
+/** stamp (top-right): ONE line, year in lab-record mono, place in sans, rose-gold rule */
+export const Stamp: React.FC<{y: string; place?: string; o?: number}> = ({y, place, o = 1}) =>
+	<div style={{...fx, top: 60, right: 60, textAlign: 'right', paddingRight: 20, borderRight: `4px solid ${ROSE}`, opacity: o, fontWeight: 900, fontSize: 50, lineHeight: 1.2, whiteSpace: 'nowrap'}}>
+		<span style={{fontFamily: MONO, fontWeight: 700, letterSpacing: '-0.02em'}}>{y}</span>{place && <span> · {place}</span>}</div>;
+/** the brand as a small round seal, bottom-right, low opacity */
+export const Seal: React.FC = () => <div style={{position: 'absolute', right: 56, bottom: 52, width: 54, height: 54, borderRadius: '50%', border: `2.5px solid ${INK}`, opacity: 0.36, transform: 'rotate(-10deg)', display: 'flex', alignItems: 'center', justifyContent: 'center'}}>
+	<div style={{position: 'absolute', inset: 4, borderRadius: '50%', border: `1px solid ${INK}`}} />
+	<span style={{fontFamily: "'DejaVu Serif',serif", fontWeight: 700, fontSize: 28, color: INK, lineHeight: 1, marginTop: 2}}>J</span></div>;
 /** story text, top-left; rows stack (row 1 stays while row 2 types) */
 export const Story: React.FC<{rows: SubRow[]}> = ({rows}) => rows.length === 0 ? null : <>
 	<div style={{position: 'absolute', borderRadius: '50%', filter: 'blur(38px)', left: 40, top: 70, width: 1080, height: 120 + 88 * rows.length, background: 'rgba(12,16,20,0.30)'}} />

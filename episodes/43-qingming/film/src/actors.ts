@@ -60,7 +60,7 @@ export {reach, handAt, toBody};
 export type {Pose, FigOpts, P};
 
 // ------------------------------------------------------------------------------------------------ rig + contact check
-import {jointAt, toScreen as figToScreen, ReachOpt, soleOf} from './figures';
+import {jointAt, toScreen as figToScreen, ReachOpt, soleOf, shoePoints} from './figures';
 export type Contact = {side: 'L' | 'R'; target: P; opt?: ReachOpt; name?: string};
 /** contact log: per frame, the worst hand miss and foot miss (px); window.CONTACTS collects failures when window.CHECK is set */
 export const CONTACTS: {t: number; who: string; what: string; err: number}[] = [];
@@ -68,29 +68,64 @@ export const CONTACTS: {t: number; who: string; what: string; err: number}[] = [
 let CHECK_T = 0; export const checkTime = (t: number) => { CHECK_T = t; };
 const SEEN: Record<string, number> = {}; (window as any).CONTACT_SEEN = SEEN;   // every declared contact (for the checker's list)
 const log = (who: string, what: string, err: number, lim: number) => { if (!(window as any).CHECK) return; const k = `${who} · ${what}`; SEEN[k] = Math.max(SEEN[k] ?? 0, err); if (err > lim) CONTACTS.push({t: CHECK_T, who, what, err: Math.round(err * 10) / 10}); };
-/** shift each foot (ankle, toe; knee by half) so the shoe rests on ground(x) at its own x — robes hide the small leg stretch */
+/** put each shoe on ground(x) at its own x (keeping the swing foot's lift), turn the feet with the slope, drop the pelvis
+ *  when a foot is out of reach, and re-solve each knee with two-bone IK, so the legs keep their lengths on ramps */
 export const slopeFeet = (o: FigOpts, ground: (x: number) => number): FigOpts => {
-	const p: Pose = {...o.pose};
+	const p: Pose = {...o.pose}, sg = o.flip ? -1 : 1;
+	const rot = (q: P, c: P, a: number): P => { const dx = q[0] - c[0], dy = q[1] - c[1], cs = Math.cos(a), sn = Math.sin(a); return [c[0] + dx * cs - dy * sn, c[1] + dx * sn + dy * cs]; };
+	// leg lengths: the pose's own, held within ±2.5 % of the canonical thigh / shin (BL, the checker's reference)
+	const cl = (v: number, bl: number) => Math.min(bl * 1.025, Math.max(bl * 0.975, v));
+	const L0: Record<string, [number, number]> = {};
+	for (const s of ['L', 'R']) { const up = p[`${s}Up`], kn = p[`${s}Knee`], an = p[`${s}Ank`]; L0[s] = [cl(Math.hypot(kn[0] - up[0], kn[1] - up[1]), 0.264), cl(Math.hypot(an[0] - kn[0], an[1] - kn[1]), 0.269)]; }
+	const gb = (X: number) => -(ground(X) - o.ground) / o.h;                                       // ground height (body units) under screen x
+	const shift: Record<string, number> = {};
 	for (const s of ['L', 'R']) {
-		const so = figToScreen(o, soleOf(p, s as any));
-		const gy = ground(so[0]), d = -(gy - o.ground) / o.h;           // body units, y up
-		for (const [j, k] of [[`${s}Ank`, 1], [`${s}Toe`, 1], [`${s}Knee`, 0.5]] as [string, number][]) p[j] = [p[j][0], p[j][1] + d * k];
+		// turn the foot with the ground under it (about its lowest point), then lift/lower it so its closest shoe point keeps the
+		// clearance it had over flat ground (0 for the stance foot, the lift for a swinging one)
+		const pts0 = shoePoints(p, s as any), lift = Math.min(...pts0.map((q) => q[1])), a0 = p[`${s}Ank`];
+		const c = pts0.reduce((m, q) => (q[1] < m[1] ? q : m), pts0[0]), cx = figToScreen(o, c)[0];
+		const ang = Math.atan(-((ground(cx + 6) - ground(cx - 6)) / 12) * sg);
+		for (const j of [`${s}Ank`, `${s}Toe`]) p[j] = rot(p[j], c, ang);
+		const gap = Math.min(...shoePoints(p, s as any).map((q) => q[1] - gb(figToScreen(o, q)[0])));
+		for (const j of [`${s}Ank`, `${s}Toe`]) p[j] = [p[j][0], p[j][1] + (lift - gap)];
+		shift[s] = p[`${s}Ank`][1] - a0[1];
+	}
+	// under a long robe the legs aren't drawn (the hull covers them): move each knee by half its foot's shift, as before
+	if (['robe', 'gown'].includes((o.look as any).dress)) { for (const s of ['L', 'R']) p[`${s}Knee`] = [p[`${s}Knee`][0], p[`${s}Knee`][1] + shift[s] * 0.5]; return {...o, pose: p}; }
+	// pelvis drop so the farther foot is reachable (legs ≤ 99.5 % straight)
+	const upper = ['Hips', 'LUp', 'RUp', 'Spine1', 'Neck1', 'Head', 'Top', 'LSh', 'LElb', 'LHand', 'LTip', 'RSh', 'RElb', 'RHand', 'RTip'];
+	let drop = 0;
+	for (let it = 0; it < 4; it++) {
+		let worst = 0;
+		for (const s of ['L', 'R']) { const up = p[`${s}Up`], an = p[`${s}Ank`]; worst = Math.max(worst, Math.hypot(an[0] - up[0], an[1] - (up[1] - drop)) - (L0[s][0] + L0[s][1]) * 0.995); }
+		if (worst <= 1e-5) break; drop += worst;
+	}
+	if (drop > 0) for (const j of upper) if (p[j]) p[j] = [p[j][0], p[j][1] - drop];
+	// two-bone IK per leg; knees always bend forward (+x in body units, whatever way the figure faces)
+	for (const s of ['L', 'R']) {
+		const H = p[`${s}Up`], A = p[`${s}Ank`], [l1, l2] = L0[s];
+		const dx = A[0] - H[0], dy = A[1] - H[1], n = Math.max(1e-6, Math.hypot(dx, dy)), dd = Math.min(n, l1 + l2 - 1e-6), ux = dx / n, uy = dy / n;
+		const a = (l1 * l1 - l2 * l2 + dd * dd) / (2 * dd), h = Math.sqrt(Math.max(0, l1 * l1 - a * a));
+		const mx = H[0] + ux * a, my = H[1] + uy * a, k1: P = [mx - uy * h, my + ux * h], k2: P = [mx + uy * h, my - ux * h];
+		p[`${s}Knee`] = k1[0] >= k2[0] ? k1 : k2;
 	}
 	return {...o, pose: p};
 };
 /** place a figure: aim its hands at screen targets, put its feet on the ground curve, and log contact errors */
 export const rig = (o: FigOpts, contacts: Contact[], ground?: (x: number) => number, who = 'fig'): FigOpts => {
-	let pose = o.pose;
+	// feet first (it may lower the pelvis on a ramp), then the hands reach from where the body really is
+	let f: FigOpts = ground ? slopeFeet(o, ground) : o;
+	let pose = f.pose;
 	for (const c of contacts) pose = reach(pose, c.side, toBody(o, c.target), c.opt ?? {});
-	let f: FigOpts = {...o, pose};
-	if (ground) f = slopeFeet(f, ground);
+	f = {...f, pose};
 	for (const c of contacts) { const h = handAt(f as any, c.side); log(who, `${c.name ?? c.side} hand`, Math.hypot(h[0] - c.target[0], h[1] - c.target[1]), 4); }
 	if (ground) {
 		// soles: ankle sits BL.ankle above the sole; the lower sole carries the weight and must touch; neither may sink
-		const sole = (s: string) => { const q = figToScreen(f, soleOf(f.pose, s as any)); return {x: q[0], y: q[1], g: ground(q[0])}; };
-		const L = sole('L'), R = sole('R'), st = (L.y - L.g) > (R.y - R.g) ? L : R;
-		log(who, 'stance foot', Math.abs(st.y - st.g), 3);
-		for (const q of [L, R]) if (q.y - q.g > 3) log(who, 'foot sinks', q.y - q.g, 3);
+		// per foot: the smallest gap between any shoe point and the ground under it (screen px, + = above); slope-aware
+		const gap = (s: string) => Math.min(...shoePoints(f.pose, s as any).map((q) => { const v = figToScreen(f, q); return ground(v[0]) - v[1]; }));
+		const gL = gap('L'), gR = gap('R');
+		log(who, 'stance foot', Math.abs(Math.min(gL, gR)), 3);
+		for (const g2 of [gL, gR]) if (g2 < -3) log(who, 'foot sinks', -g2, 3);
 		// limb lengths ±3 % where legs show (not under robes/gowns)
 		const showsLegs = !['robe', 'gown'].includes((f.look as any).dress);
 		if (showsLegs) for (const [a, b2, bl] of [['LUp', 'LKnee', 0.264], ['LKnee', 'LAnk', 0.269], ['RUp', 'RKnee', 0.264], ['RKnee', 'RAnk', 0.269]] as [string, string, number][]) {

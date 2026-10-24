@@ -101,7 +101,7 @@ const lampCanvas = () => {
 };
 
 // ------------------------------------------------------------------------------------------------ store action
-const ROLLY = [TOPF - 6, TOPF - 22, TOPF - 38], ROLLX = [968, 1000, 1032];   // three copies, front → back (overlapped in depth)
+const ROLLY = [TOPF - 6, TOPF - 22, TOPF - 38], ROLLX = [905, 925, 945];   // three copies, front → back (overlapped in depth)
 const openAt = (i: number) => b(51.25 + 0.25 * (2 - i));                       // back roll first
 /** x of copy i's free end: opens a hand's width (90 px) toward him on its beat */
 const freeEnd = (i: number, t: number) => ROLLX[i] - 90 * smooth(clamp01((t - openAt(i) + 0.12) / 0.24));
@@ -116,7 +116,7 @@ const researcher = (t: number): FigOpts => {
 	else if (t < b(51.25) - 0.18) { /* hands in the lap */ }
 	else if (t < b(53.5) - 0.2) { const i = t < openAt(1) - 0.05 ? 2 : t < openAt(0) - 0.05 ? 1 : 0; c.push({side: 'R', target: [freeEnd(i, t), ROLLY[i] - 4], name: 'roller'}); }
 	else if (t < T0) { const p = batteredAt(t); c.push({side: 'R', target: [p[0] + 6, p[1] - 12], name: 'battered'}); }
-	else { c.push({side: 'R', target: [SX + 8, TOPF - 4], name: 'silk edge'}); if (t < T0 + 0.12) c.push({side: 'L', target: [SX + 14 + SW * unrollAt(t), TOPF - 16], name: 'roller'}); }
+	else { c.push({side: 'R', target: [SX + 8, TOPF - 4], name: 'silk edge'}); if (t < T0 + 0.035) c.push({side: 'L', target: [SX + 14 + SW * unrollAt(t), TOPF - 16], name: 'roller'}); }   // L hand only on the push: the roll then runs out of reach
 	return rig(o, c, () => FLOOR, 'researcher');
 };
 
@@ -206,11 +206,16 @@ const peakCam = (t: number): [number, number, number] => {
 	const vc = clampV({u: lerp(vd.u, UB + 0.01, cr), v: lerp(vd.v, VB - 0.07, cr), f: lerp(vd.f, 0.52, cr)});
 	const [x1, y1, z1] = camOf(vc);
 	if (t < b(56.75)) return [x1, y1, z1];
-	// exit: the painted arch onto the real one (apex to apex, span to span)
-	const ax = FX0 + (BR.x + BR.w * 0.5) * SEC, ay = BR.y * SEC, sxA = 960 + (960 - C29[0]) * C29[2], syA = 540 + (900 - C29[1]) * C29[2];
-	const zE = (1700 * C29[2]) / (BR.w * SEC * 0.5), xE = ax - (sxA - 960) / zE, yE = ay - (syA - 540) / zE;
-	const k = easeInOut(clamp01((t - b(56.75)) / (b(57) - 0.12 - b(56.75))));
-	return [lerp(x1, xE, k), lerp(y1, yE, k), Math.exp(lerp(Math.log(z1), Math.log(zE), k))];
+	// exit: the crane settles into a slow push; scene 29's camera does the matching (the real arch is framed onto the painted one)
+	const k = easeOut(clamp01((t - b(56.75)) / (b(57) + 0.1 - b(56.75))));
+	const [x2, y2, z2] = camOf(clampV({u: vc.u, v: vc.v + 0.01, f: 0.47}));
+	return [lerp(x1, x2, k), lerp(y1, y2, k), Math.exp(lerp(Math.log(z1), Math.log(z2), k))];
+};
+/** the crest camera that puts the real arch's apex + span on the painted arch's apex + span as framed at time t */
+const crestMatch = (t: number): [number, number, number] => {
+	const [cx, cy, zm] = peakCam(t), ax = FX0 + (BR.x + BR.w * 0.5) * SEC, ay = BR.y * SEC + 134;   // BR.y is the crowd's top; +134 world px = the deck / arch-facade line
+	const sx = 960 + (ax - cx) * zm, sy = 540 + (ay - cy) * zm, half = BR.w * SEC * 0.5 * zm, zc = half / 1700;
+	return [960 - (sx - 960) / zc, 900 - (sy - 540) / zc, zc];
 };
 const peakDraw = (t: number) => {
 	const st = peak, [cx, cy, zm] = peakCam(t); st.setCam(cx, cy, zm);
@@ -246,7 +251,12 @@ const cam29 = (t: number): [number, number, number] => {
 	const xs = staffX(Math.min(t, b(58.25)));
 	const cx = lerp(C29[0], xs - 300, smooth(clamp01((t - b(57)) / 0.9)));
 	const p = easeIn(clamp01((t - b(58.25)) / (b(58.75) - b(58.25))));
-	return [lerp(cx, -2250, p), lerp(C29[1], 760, p), Math.exp(lerp(Math.log(C29[2]), Math.log(1.5), p))];
+	const wide: [number, number, number] = [lerp(cx, -2250, p), lerp(C29[1], 760, p), Math.exp(lerp(Math.log(C29[2]), Math.log(1.5), p))];
+	// bridge match: the scene opens on the camera that lays the real arch over the painted one, then settles into CR-B
+	const s0 = b(57) - 0.12, k = smooth(clamp01((t - s0) / 0.85));
+	if (k >= 1) return wide;
+	const m = crestMatch(Math.min(t, b(57) + 0.1));
+	return [lerp(m[0], wide[0], k), lerp(m[1], wide[1], k), Math.exp(lerp(Math.log(m[2]), Math.log(wide[2]), k))];
 };
 const drawPassage = (g: CanvasRenderingContext2D) => {
 	// the 午门 centre passage (52 × 94 at s 0.9, base 860): warm lamplit vault, its far opening a bright arch
@@ -259,8 +269,8 @@ addScene({id: '29', a: b(57) - 0.12, z: b(58.5), in: {mode: 7, a: b(57) - 0.12, 
 	const st = day.st, [cx, cy, zm] = cam29(t); st.setCam(cx, cy, zm);
 	const u = (t - b(57)) / (2 * BEAT), x1 = staffX(t), x2 = x1 + 330, H2 = 560;
 	// front staff carries you in both hands at chest height; the second walks a step behind
-	const rc: [number, number] = [x1 - 0.2 * H2, ground29(x1) - 0.6 * H2];
-	const rl = 0.29 * H2, e0: [number, number] = [rc[0] - rl / 2, rc[1] + 4], e1: [number, number] = [rc[0] + rl / 2, rc[1] - 4];
+	const rc: [number, number] = [x1 - 0.16 * H2, ground29(x1) - 0.66 * H2];
+	const rl = 0.24 * H2, e0: [number, number] = [rc[0] - rl / 2, rc[1] + 4], e1: [number, number] = [rc[0] + rl / 2, rc[1] - 4];
 	const f1 = rig({x: x1, ground: ground29(x1), h: H2, pose: walkFor(lk50, u), look: lk50, flip: true}, [{side: 'L', target: [e0[0] + 6, e0[1] + 8], name: 'roll end'}, {side: 'R', target: [e1[0] - 6, e1[1] + 8], name: 'roll end'}], ground29, 'staff1');
 	const f2 = rig({x: x2, ground: ground29(x2), h: H2 + 8, pose: walkFor(lk50, u + 0.5), look: lk50, flip: true}, [], ground29, 'staff2');
 	dayCast.draw(`${Math.round(t * 30)}`, [f2, f1]);
