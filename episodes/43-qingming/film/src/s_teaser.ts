@@ -36,6 +36,27 @@ export const bowUpper = (p: Pose, deg: number): Pose => {
 };
 /** the arm (+ hand + cuff) paths of a figure, to draw over a prop that sits in front of the body */
 export const armPaths = (f: FigOpts, sides: ('R' | 'L')[] = ['R', 'L']) => sides.flatMap((s) => figurePaths({...f, part: s}));
+/** the White Dagoba with a readable top: bell-shaped bronze canopy (华盖) and a small stupa finial (never a cross) */
+const dagobaSil = (cx: number, base: number, sc: number, col: string) => {
+	const p = (x: number, y: number) => `${(cx + x * sc).toFixed(1)},${(base - y * sc).toFixed(1)}`;
+	let o = `<path fill="${col}" d="M${p(-120, 0)} L${p(120, 0)} L${p(120, 26)} L${p(96, 26)} L${p(96, 50)} L${p(-96, 50)} L${p(-96, 26)} L${p(-120, 26)} Z
+	M${p(-80, 50)} L${p(80, 50)} L${p(70, 72)} L${p(-70, 72)} Z M${p(-70, 72)} C${p(-98, 122)} ${p(-88, 172)} ${p(-40, 188)} L${p(40, 188)} C${p(88, 172)} ${p(98, 122)} ${p(70, 72)} Z
+	M${p(-36, 186)} L${p(36, 186)} L${p(28, 206)} L${p(-28, 206)} Z M${p(-26, 206)} L${p(26, 206)} L${p(12, 318)} L${p(-12, 318)} Z
+	M${p(-60, 318)} Q${p(-50, 330)} ${p(-36, 346)} Q${p(0, 358)} ${p(36, 346)} Q${p(50, 330)} ${p(60, 318)} Z
+	M${p(-7, 352)} C${p(-16, 362)} ${p(-12, 378)} ${p(0, 380)} C${p(12, 378)} ${p(16, 362)} ${p(7, 352)} Z M${p(-2.5, 378)} L${p(2.5, 378)} L${p(1, 398)} L${p(-1, 398)} Z"/>`;
+	for (let i = 0; i < 9; i++) o += `<rect fill="${col}" x="${(cx - (27 - i * 1.6) * sc).toFixed(1)}" y="${(base - (214 + i * 11.5) * sc).toFixed(1)}" width="${((54 - i * 3.2) * sc).toFixed(1)}" height="${(4 * sc).toFixed(1)}"/>`;
+	for (const x of [-56, -28, 28, 56]) o += `<rect fill="${col}" x="${(cx + x * sc - 1.5).toFixed(1)}" y="${(base - 318 * sc).toFixed(1)}" width="3" height="${(12 * sc).toFixed(1)}"/>`;
+	return o;
+};
+/** walking under a long robe: keep the swing shin within 54° of vertical so the robe stays one A-line hull (no split legs) */
+export const robeSafe = (p: Pose, max = 54): Pose => {
+	const o: Pose = {...p};
+	for (const s of ['L', 'R']) { const K = p[`${s}Knee`], A = p[`${s}Ank`], T = p[`${s}Toe`], v = [A[0] - K[0], A[1] - K[1]], ang = Math.atan2(Math.abs(v[0]), -v[1]) * 180 / Math.PI;
+		if (ang <= max) continue; const d = (ang - max) * Math.PI / 180 * (v[0] < 0 ? -1 : 1), c = Math.cos(d), sn = Math.sin(d);
+		const r = (q: P): P => { const w = [q[0] - K[0], q[1] - K[1]]; return [K[0] + w[0] * c - w[1] * sn, K[1] + w[0] * sn + w[1] * c]; };
+		o[`${s}Ank`] = r(A); o[`${s}Toe`] = r(T); }
+	return o;
+};
 const fillD = (g: CanvasRenderingContext2D, ds: string[], col = SIL) => { g.fillStyle = col; for (const d of ds) g.fill(new Path2D(d)); };
 const k30 = (t: number) => `${Math.round(t * 30)}`;
 /** a rolled scroll lying on a table, seen from above at a slant (vertical on screen): body + knobs */
@@ -53,7 +74,7 @@ const vRoll = (g: CanvasRenderingContext2D, x: number, y0: number, y1: number, r
 // ------------------------------------------------------------------------------------------------ boot
 let riverMono: HTMLCanvasElement, riverGrey: HTMLCanvasElement;
 // 03 · T1
-let room: RoomYuan, t1Body: Live, t1Arms: Live, t1Copy: Live, t1Silk: Live, t1Pool: Live;
+let room: RoomYuan, t1Halo: Live, t1Body: Live, t1Arms: Live, t1Copy: Live, t1Silk: Live, t1Pool: Live;
 export const bootTeaser = async () => {
 	riverMono = paintSection('river', {width: 2048, height: 768, mode: 'mono', seed: 43});
 	riverGrey = paintSection('river', {width: 2048, height: 768, mode: 'grey', seed: 43});
@@ -89,7 +110,7 @@ const bootT1 = async () => {
 	const st = room.st; st.get('table').mesh.visible = false; st.get('outside').mesh.visible = false; st.get('osky').mesh.visible = false;
 	// the moon window: a night sky a step lighter than the wall, the White Dagoba and roofs standing above the table line
 	st.add('t1sky', canvasTex(gradCanvas([[0, '#2c3f4b'], [0.5, '#3d515b'], [0.85, '#5a6a6c'], [1, '#66716c']])), 1240, 400, 1400, 700, -2500);
-	const out = svgDoc(`${skyline(900, 1600, 482, 26, 70, 51, '#18202a')}${dagoba(1345, 470, 0.62, '#18202a')}` +
+	const out = svgDoc(`${skyline(900, 1600, 482, 26, 70, 51, '#18202a')}${dagobaSil(1345, 470, 0.62, '#18202a')}` +
 		Array.from({length: 7}, (_, i) => `<rect x="${1000 + i * 83 + (i % 2) * 17}" y="${452 + (i % 3) * 6}" width="7" height="5" fill="#FFB868" fill-opacity="${0.45 + (i % 3) * 0.15}"/>`).join(''), W, H);
 	st.add('t1out', canvasTex(await svgToCanvas(out, W, H, 0.6)), 960, 540, W, H, -1800, {fog: ['#3d515b', 0.18]});
 	// floor behind the table (the craftsman stands on it; seen under the table top between the legs)
@@ -109,6 +130,7 @@ const bootT1 = async () => {
 	t1Pool = new Live(st, 't1pool', 960, 540, 1920, 1080, T1Z.pool, {}, 0.5);
 	t1Copy = new Live(st, 't1copy', 960, 600, 1920, 400, T1Z.copy, {}, 1);
 	t1Silk = new Live(st, 't1silk', 1200, 600, 2600, 700, T1Z.silk, {emissive: 0.32}, 1);
+	t1Halo = new Live(st, 't1halo', 1200, 600, 2600, 900, -76, {emissive: 1.0}, 0.5);
 	t1Arms = new Live(st, 't1arms', 960, 640, 2600, 1100, T1Z.arms, {rim: 1.0, rimPx: 6}, 1);
 };
 // timing
@@ -127,7 +149,7 @@ const t1Walk = (t: number) => {
 const t1Fig = (t: number) => {
 	const w = t1Walk(t), seam = t1Seam(t), u = w.dist / strideC();
 	const lean = t < T1.grab ? 24 : lerp(24, 6, smooth((t - T1.grab) / (T1.lift + 0.2 - T1.grab)));
-	const base = bowUpper(walkFor(CRAFT, u), lean);
+	const base = bowUpper(robeSafe(walkFor(CRAFT, u)), lean);
 	const o: FigOpts = {x: w.x, ground: CG, h: CH, pose: base, look: CRAFT};
 	// the roll: lying at the seam until the grab, then lifted and turned level in front of the chest
 	const rollX = seam + 9, rollLie: [P, P] = [[rollX, SL.y0 - 4], [rollX, SL.y1 + 4]];
@@ -173,7 +195,10 @@ addScene({id: '03', a: b(4.5), z: b(6), draw: (t) => {
 		g.save(); g.beginPath(); g.moveTo(TB.bx0, TB.back); g.lineTo(TB.bx1, TB.back); g.lineTo(TB.fx1, TB.apron); g.lineTo(TB.fx0, TB.apron); g.closePath(); g.clip();
 		glowBlob(g, [gx, gy + 30], 560, 220, 0.34 * glowK, '255,196,128'); g.restore();
 	});
-	room.setLamp(905, 352, 0.6);
+	t1Halo.drawW(key, (g) => rolled ? glowBlob(g, [gx, gy], 95, 60, 0.42) : glowBlob(g, [gx, gy], 70 + openW * 0.45, 125, 0.22));
+	room.lamp.L.mat.uniforms.uEmissive.value = 0.8;
+	room.lamp.draw('lamp', (g) => { const x = 905, y = 352; g.strokeStyle = SIL; g.lineWidth = 3; g.beginPath(); g.moveTo(x, -10); g.lineTo(x, y - 26); g.stroke(); g.fillStyle = SIL; g.fillRect(x - 20, y - 30, 40, 7);
+		glowBlob(g, [x, y], 64, 64, 0.16, '255,184,104'); g.fillStyle = '#E9A35E'; g.beginPath(); g.ellipse(x, y, 17, 22, 0, 0, Math.PI * 2); g.fill(); g.fillStyle = SIL; g.fillRect(x - 12, y + 19, 24, 5); });
 	st.heroAt(gx, gy, T1Z.silk, rolled ? 560 : 760);
 	return {st, grade: {vig: 0.42, exposure: 1}, bloom: 1};
 }});
@@ -198,7 +223,7 @@ const bootT2 = async () => {
 	rollOff = meanRollOff(EUN);
 };
 const t2Walk = (t: number) => { const u = (t - b(6) + 0.2) / (2 * BEAT); return {u, x: T2X0 + u * gaitStride('08_04', stepFor(EUN)) * EH}; };
-const t2Fig = (t: number) => { const {u, x} = t2Walk(t); let p = walkFor(EUN, u); p = armsFrom(p, underArm(p), 'R'); return rig({x, ground: deck(x) + 4, h: EH, pose: p, look: EUN}, [], deck, 'T2 eunuch'); };
+const t2Fig = (t: number) => { const {u, x} = t2Walk(t); let p = robeSafe(walkFor(EUN, u)); p = armsFrom(p, underArm(p), 'R'); return rig({x, ground: deck(x) + 4, h: EH, pose: p, look: EUN}, [], deck, 'T2 eunuch'); };
 addScene({id: '04', a: b(6), z: b(7), draw: (t) => {
 	const st = crestT2.st, f = t2Fig(t), {x} = t2Walk(t), o = rollOff!;
 	const target: P = [x + o[0] * EH, deck(x) + 4 - o[1] * EH];
@@ -222,7 +247,10 @@ const YOUTH = look('youth1923'), YH = 470, YZOOM = 0.94, T3X0 = 640;
 let bundleOff: P | null = null;
 const bootT3 = async () => {
 	crestT3 = new Crest('t3-snow', {sky: 'snow', era: '1923', lanterns: true, boat: false, bankCrowd: false, snow: true}); await crestT3.ready;
-	const st = crestT3.st;
+	const st = crestT3.st; st.get('sunglow').mat.uniforms.uOpacity.value = 0.22;
+	// warm windows along the far bank (the one colour besides you): small lit panes in the palace wall and the town
+	const fw = new Live(st, 't3farWin', 960, 850, 8400, 200, -2540, {emissive: 0.9}, 0.5);
+	fw.drawW('w', (g) => { for (let i = 0; i < 60; i++) { const x = -1600 + i * 75 + hash(i * 3.3) * 50, y = 818 + hash(i * 7.1) * 26; if (hash(i * 1.9) < 0.35) continue; g.fillStyle = `rgba(255,184,104,${0.55 + 0.3 * hash(i)})`; g.fillRect(x, y, 9 + (i % 3) * 3, 6 + (i % 2) * 2); } });
 	// snow lying on the deck (z 1, just in front of the arch) and on the railing (z 41, just in front of the rail)
 	const dk = new Live(st, 't3deckSnow', 960, 1100, 4800, 1600, 1, {}, 0.5);
 	dk.drawW('s', (g) => { g.fillStyle = '#C9D2D8'; g.beginPath(); const xs: number[] = []; for (let x = -1300; x <= 3200; x += 20) xs.push(x);
@@ -243,24 +271,33 @@ const bootT3 = async () => {
 };
 const t3Walk = (t: number) => { const u = (t - b(7) + 0.2) / (2 * BEAT); return {u, x: T3X0 + u * gaitStride('08_04', stepFor(YOUTH)) * YH}; };
 const t3Fig = (t: number) => {
-	const {u, x} = t3Walk(t), base = carryArmful(walkFor(YOUTH, u)), a = armfulAt(base), o: FigOpts = {x, ground: deck(x) + 4, h: YH, pose: base, look: YOUTH};
+	const {u, x} = t3Walk(t), base = carryArmful(robeSafe(walkFor(YOUTH, u))), a = armfulAt(base), o: FigOpts = {x, ground: deck(x) + 4, h: YH, pose: base, look: YOUTH};
 	// contacts on the bundle: near forearm under it, far hand over its front (the same points carryArmful aims at)
 	const R = toScreen(o, [a.c[0] + 0.03, a.c[1] - a.r - 0.014]), L = toScreen(o, [a.c[0] + a.r + 0.008, a.c[1] + 0.012]);
 	const f = rig(o, [{side: 'R', target: R, name: 'R under bundle', opt: {dir: 12}}, {side: 'L', target: L, name: 'L round bundle', opt: {dir: -78}}], deck, 'T3 youth');
 	return {f, c: toScreen(f, a.c), r: a.r * YH};
+};
+/** a cloth bundle (包袱) hugged to the chest: soft cloth over a long box, knotted on top; your light seeps through the thin cloth */
+const clothBundle = (g: CanvasRenderingContext2D, c: P, r: number) => {
+	const w = r * 2.9, h = r * 2.0, x0 = c[0] - w / 2, y0 = c[1] - h / 2;
+	g.save();
+	const gr = g.createRadialGradient(c[0], c[1], 0, c[0], c[1], w * 0.6); gr.addColorStop(0, '#B8874E'); gr.addColorStop(0.55, '#6E4E30'); gr.addColorStop(1, '#3a2a1e');
+	g.fillStyle = gr; g.beginPath(); g.roundRect(x0, y0, w, h, h * 0.42); g.fill();
+	// folds + the knot (two ears) on top
+	g.strokeStyle = 'rgba(30,22,16,0.7)'; g.lineWidth = 2.5; g.beginPath(); g.moveTo(x0 + w * 0.18, y0 + 3); g.quadraticCurveTo(c[0], c[1] + h * 0.1, x0 + w * 0.86, y0 + h - 4); g.stroke();
+	g.fillStyle = '#4a3524'; g.beginPath(); g.ellipse(c[0] - 6, y0 - 2, 9, 6, -0.5, 0, Math.PI * 2); g.fill(); g.beginPath(); g.ellipse(c[0] + 9, y0 - 4, 10, 6, 0.6, 0, Math.PI * 2); g.fill();
+	g.strokeStyle = 'rgba(255,226,170,0.85)'; g.lineWidth = 2; g.beginPath(); g.moveTo(c[0] - 14, y0 + 3); g.quadraticCurveTo(c[0] + 2, y0 + 9, c[0] + 16, y0 + 2); g.stroke();
+	g.restore();
 };
 addScene({id: '05', a: b(7), z: b(8), draw: (t) => {
 	const st = crestT3.st, {f, c, r} = t3Fig(t), {x} = t3Walk(t), o = bundleOff!;
 	lockCam(st, YZOOM, x + o[0] * YH, deck(x) + 4 - o[1] * YH, 22);
 	const key = k30(t);
 	castT3.draw(key, [f]);
-	propT3.drawW(key, (g) => { drawBundle(g, c, r * 2.5, r * 2.1, 1);
-		// glow leaking through the cloth: warm seams and a soft spill along the folds
-		g.save(); g.lineCap = 'round'; for (const [a0, a1, w] of [[-0.6, 0.5, 3], [2.2, 3.1, 2.5], [3.7, 4.4, 2]] as [number, number, number][]) { g.strokeStyle = 'rgba(255,214,150,0.95)'; g.lineWidth = w; g.beginPath(); g.ellipse(c[0], c[1], r * 0.95, r * 0.8, -0.08, a0, a1); g.stroke(); }
-		g.restore(); });
-	propT3.L.mat.uniforms.uEmissive.value = 0.0;
+	propT3.drawW(key, (g) => clothBundle(g, c, r));
+	propT3.L.mat.uniforms.uEmissive.value = 0.35;
 	armsT3.drawW(key, (g) => fillD(g, armPaths(f)));
-	glowT3.drawW(key, (g) => { glowBlob(g, c, 120, 90, 0.36); glowBlob(g, c, 46, 40, 0.5, '255,226,170'); });
+	glowT3.drawW(key, (g) => { glowBlob(g, c, 120, 90, 0.34); glowBlob(g, c, 40, 30, 0.42, '255,226,170'); });
 	crestT3.setLanterns(() => 0); crestT3.setStreak(c[0], 0.35, t);
 	crestT3.motes?.update(t, [-900, -300, 3000, 1300], 70, 24, 0.85);
 	st.heroAt(c[0], c[1], 22, 420);
@@ -281,7 +318,7 @@ const bootT4 = async () => {
 	t4Beam = new Live(st, 't4beam', 960, 540, 1920, 1080, T4Z.beam, {}, 0.5); t4Beam.draw('b', (q) => q.drawImage(bc, 0, 0, 1920, 1080));
 	// the heap on the lock point: a long mound (cool-lit tops), the buried glow, rolls lying over it
 	const heap = svgDoc(`${scrollHeap(860, 930, 1500, 430, 120, 31)}${scrollHeap(1180, 900, 700, 260, 46, 37)}`, 3600, 1500, '', -900, -100);
-	st.add('t4heap', canvasTex(await svgToCanvas(heap, 3600, 1500, 0.6)), 900, 650, 3600, 1500, T4Z.heap, {rim: 0.9, rimPx: 5});
+	st.add('t4heap', canvasTex(await svgToCanvas(heap, 3600, 1500, 0.6)), 900, 650, 3600, 1500, T4Z.heap, {rim: 0.35, rimPx: 4});
 	t4Glow = new Live(st, 't4glow', 960, 580, 400, 300, T4Z.glow, {emissive: 0.9}, 1);
 	t4Occl = new Live(st, 't4occl', 960, 580, 600, 400, T4Z.occl, {rim: 0.8, rimPx: 4}, 1);
 	t4Occl.drawW('o', (q) => { const roll = (x: number, y: number, len: number, d: number, a: number) => { q.save(); q.translate(x, y); q.rotate(a); q.fillStyle = '#1b1612'; q.strokeStyle = SIL; q.lineWidth = 2; q.beginPath(); q.roundRect(-len / 2, -d / 2, len, d, d / 2); q.fill(); q.stroke(); q.restore(); };

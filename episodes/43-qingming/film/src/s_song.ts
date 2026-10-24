@@ -55,16 +55,16 @@ let body9: ScreenLayer, props9: ScreenLayer;
 /** the hand-over roll (screen px) at b14.5, measured at boot: scene 10 starts its carry there (match on action) */
 export let HANDOFF: {c: P2; len: number} = {c: [790, 615], len: 200};
 
-const CAM9_A = [...ins9(2300, 760), 6.4] as number[], CAM9_B = [...ins9(1850, 790), 5.8] as number[], CAM9_D = [960, 612, 1.1];
+const CAM9_A = [...ins9(2300, 760), 6.4] as number[], CAM9_B = [...ins9(1850, 790), 5.8] as number[], CAM9_D = [960, 596, 1.0];
 const cam9 = (t: number): {x: number; y: number; z: number; th: number} => {
-	if (t < b(13)) return {x: CAM9_A[0], y: CAM9_A[1], z: CAM9_A[2], th: 0};
-	if (t < b(14)) { const u = easeInOut((t - b(13)) / (b(14) - b(13))); return {x: lerp(CAM9_A[0], CAM9_B[0], u), y: lerp(CAM9_A[1], CAM9_B[1], u), z: Math.exp(lerp(Math.log(CAM9_A[2]), Math.log(CAM9_B[2]), u)), th: 0}; }
+	if (t < b(13.25)) return {x: CAM9_A[0], y: CAM9_A[1], z: CAM9_A[2], th: 0};
+	if (t < b(14)) { const u = easeInOut((t - b(13.25)) / (b(14) - b(13.25))); return {x: lerp(CAM9_A[0], CAM9_B[0], u), y: lerp(CAM9_A[1], CAM9_B[1], u), z: Math.exp(lerp(Math.log(CAM9_A[2]), Math.log(CAM9_B[2]), u)), th: 0}; }
 	const u = clamp01((t - b(14)) / (b(14.25) - b(14))), uz = easeInOut(u), ut = easeOut(Math.min(1, u * 1.2));
 	const drift = clamp01((t - b(14.25)) / (b(14.5) - b(14.25)));
 	return {x: lerp(CAM9_B[0], CAM9_D[0], uz) - 6 * drift, y: lerp(CAM9_B[1], CAM9_D[1], uz), z: Math.exp(lerp(Math.log(CAM9_B[2]), Math.log(CAM9_D[2]), uz)) * (1 + 0.012 * drift), th: TH_D * ut};
 };
 /** stroke-landing progress: an ink attack on each beat b13 … b14 */
-const progL9 = (t: number) => { const steps = [[b(13), 0.3], [b(13.25), 0.48], [b(13.5), 0.66], [b(13.75), 0.84], [b(14), 1.06]]; let v = 0;
+const progL9 = (t: number) => { const steps = [[b(13.25), 0.32], [b(13.5), 0.52], [b(13.75), 0.74], [b(14), 1.06]]; let v = 0;
 	for (const [tb, val] of steps) if (t >= tb) v = lerp(v, val, easeOut((t - tb) / 0.2)); return v; };
 const P1 = b(14.25), P2t = b(14.375), P3 = b(14.5);
 /** the window edges (local x) and the closed roll's local x */
@@ -153,8 +153,9 @@ const draw9 = (t: number) => {
 	const pl = progL9(t), pw = Math.max(0, progL9(t - 0.32) * 0.97);
 	paperMat9.uniforms.uProgL.value = pl; paperMat9.uniforms.uProgW.value = pw;
 	const u0 = S.win[0] / 640, u1 = S.win[1] / 640; paperMat9.uniforms.uClip.value.set(u0, u1, -1, 2);
-	traceMat9.uniforms.uOpacity.value = 1 - smooth(clamp01((t - b(13)) / (b(13.4) - b(13))));
-	trace9.visible = t < b(13.45);
+	traceMat9.uniforms.uOpacity.value = 1 - smooth(clamp01((t - b(13.25)) / (b(13.6) - b(13.25))));
+	trace9.visible = t < b(13.65);
+	paper9.visible = S.rollOnTable;
 	// rollers: the rolled bulk at both window edges; one roll once closed; lifted off at P2
 	strip9.place(rollL9, S.win[0] - 10, S9.py0 - 8, 20, 256, 3); strip9.place(rollR9, S.win[1] - 9, S9.py0 - 8, 18, 256, 3);
 	rollL9.visible = rollR9.visible = S.rollOnTable;
@@ -169,7 +170,7 @@ const draw9 = (t: number) => {
 	const ins = 1 - clamp01((c.th - 0.2) / 0.9);
 	return {st, grade: {vig: lerp(0.38, 0.6, ins), vigCol: '#1a120b', corners: 0.9 * ins, exposure: 1}, bloom: 1};
 };
-addScene({id: '09', a: b(13), z: b(14.5), draw: draw9, in: {mode: 2, a: b(12.75), z: b(13), dir: [-1, 0], soft: 0.05}});
+addScene({id: '09', a: b(13), z: b(14.5), draw: draw9, in: {mode: 2, a: b(13), z: b(13.25), dir: [-1, 0], soft: 0.05}});
 
 // ================================================================================================ 10: the 宋 crest, dusk → fire
 const ZC = 20;
@@ -254,7 +255,7 @@ const refugees = (t: number, st: Stage): Grp => {
 };
 const cam10 = (t: number, glow: P2 | null, st: Stage): [number, number, number] => {
 	const base: [number, number, number] = [960, 560, 1];
-	const u = clamp01((t - b(15.75)) / (b(16) - b(15.75)));
+	const u = clamp01((t - b(15.75)) / (b(16.15) - b(15.75)));
 	if (u <= 0 || !glow) return base;
 	const k = easeIn(u), z = Math.exp(lerp(0, Math.log(3.4), k));
 	// centre the drifting glow: its frame px at the cast depth
@@ -284,7 +285,7 @@ const draw10 = (t: number) => {
 	const fk = `${Math.round(t * 60)}`;
 	body10.draw(fk, (g) => { for (const c of grp.carts) cartBack(g, c.c, c.c.r / 0.115, c.load); for (const f of [...figs, ...grp.figs]) drawFig(g, f); });
 	props10.draw(fk, (g) => {
-		const pushK = clamp01((t - b(15.75)) / (b(16) - b(15.75)));
+		const pushK = clamp01((t - b(15.75)) / (b(16.15) - b(15.75)));
 		if (roll) { glowBlob(g, lerpP(roll[0], roll[1], 0.5), 130, 70, 0.34); drawRoll(g, roll[0], roll[1], 0.032 * 445 * cz, 1); for (const f of figs.slice(-1)) { drawFig(g, {...f, part: 'L'}); drawFig(g, {...f, part: 'R'}); } }
 		if (grp.you) { const m = lerpP(grp.you[0], grp.you[1], 0.5); glowBlob(g, m, 150 + 900 * easeIn(pushK), 80 + 600 * easeIn(pushK), 0.4 + 0.5 * pushK); drawRoll(g, grp.you[0], grp.you[1], 0.032 * grp.hs, 1); }
 		for (const c of grp.carts) cartFront(g, c.c, c.c.r / 0.115);
@@ -454,9 +455,9 @@ const drawJ = (t: number) => {
 	const ins = 1 - clamp01((c.th - 0.2) / 0.9);
 	return {st, grade: {vig: lerp(0.36, 0.62, ins), vigCol: '#1a120b', corners: 0.95 * ins, exposure: 1}, bloom: 1};
 };
-addScene({id: '11', a: b(16), z: b(17.5), draw: drawJ, in: {mode: 5, a: b(15.88), z: b(16), pt: [0.5, 0.5], soft: 0.08}});
+addScene({id: '11', a: b(16), z: b(17.5), draw: drawJ, in: {mode: 5, a: b(16), z: b(16.15), pt: [0.5, 0.5], soft: 0.08}});
 addScene({id: '12', a: b(17.5), z: b(19), draw: drawJ});
-addScene({id: '13', a: b(19), z: b(23.5), draw: drawJ});
+addScene({id: '13', a: b(19), z: (window as any).SONG_TEST ? b(23.5) : b(23), draw: drawJ});             // scene 14 starts at b23 with in: ROLLUP_IN (b23 → b23.5)
 
 // ================================================================================================ boot
 export const bootSong = async () => {
