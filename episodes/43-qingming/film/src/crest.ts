@@ -43,18 +43,33 @@ const palaceSVG = (era: Era, sky: Sky) => {
 
 export class Crest {
 	st: Stage; o: CrestOpts; lanternsLive!: Live; glowLive!: Live; boatLive?: Live; motes?: Motes; posts: [number, number][] = [];
-	ready: Promise<void>;
+	ready: Promise<void>; streak!: Live;
 	constructor(name: string, o: CrestOpts) { this.st = new Stage(name); this.o = o; this.ready = this.build(); }
 	async build() {
 		const st = this.st, o = this.o;
 		// sky (far): a vertical gradient covering everything
 		st.add('sky', canvasTex(gradCanvas(SKIES[o.sky])), CX, 700, 9000, 3600, -9000);
+		// sun / moon / fire glow behind the far bank, and a haze band on the horizon
+		const glowSvg = svgDoc(`<defs><radialGradient id="g"><stop offset="0" stop-color="${o.sky === 'night' || o.sky === 'snow' ? '#DDE6EA' : o.sky === 'fire' ? '#FF9A50' : '#FFEDC4'}" stop-opacity="${o.sky === 'day' ? 0.35 : 0.9}"/><stop offset="0.25" stop-color="${o.sky === 'fire' ? '#E8703A' : o.sky === 'night' || o.sky === 'snow' ? '#9FB2BD' : '#F2B060'}" stop-opacity="${o.sky === 'night' ? 0.25 : 0.4}"/><stop offset="1" stop-color="#000" stop-opacity="0"/></radialGradient></defs>
+			<circle cx="1200" cy="800" r="800" fill="url(#g)"/>${o.sky === 'night' ? '<circle cx="1200" cy="800" r="46" fill="#E6EBEC"/>' : ''}`, 2400, 1600);
+		st.add('sunglow', canvasTex(await svgToCanvas(glowSvg, 2400, 1600, 0.5)), o.sky === 'night' ? 1500 : 1380, o.sky === 'night' ? 380 : 760, 2400, 1600, -8500, {emissive: o.sky === 'night' ? 0.6 : 0.25});
+		if (o.sky === 'night') { let stars = ''; for (let i = 0; i < 260; i++) stars += `<circle cx="${(Math.sin(i * 12.9898) * 43758.5453 % 1 + 1) % 1 * 6000}" cy="${(Math.sin(i * 78.233) * 12345.678 % 1 + 1) % 1 * 1300}" r="${1 + (i % 3) * 0.6}" fill="#E8EEF0" fill-opacity="${0.25 + (i % 5) * 0.12}"/>`;
+			st.add('stars', canvasTex(await svgToCanvas(svgDoc(stars, 6000, 1300), 6000, 1300, 0.5)), CX, 250, 6000, 1300, -8800, {}); }
+		const haze = svgDoc(`<defs><linearGradient id="h" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="${HORIZON[o.sky]}" stop-opacity="0"/><stop offset="0.5" stop-color="${HORIZON[o.sky]}" stop-opacity="0.55"/><stop offset="1" stop-color="${HORIZON[o.sky]}" stop-opacity="0"/></linearGradient></defs><rect width="8000" height="300" fill="url(#h)"/>`, 8000, 300);
+		st.add('haze', canvasTex(await svgToCanvas(haze, 8000, 300, 0.25)), CX, 850, 8000, 300, -2000, {});
 		// far bank (palace, skyline, willows, bank crowd)
 		const farW = 8400, farH = 1400;
 		const farSvg = svgDoc(`<g transform="translate(${farW / 2 - CX},${-(860 - farH * 0.55)})">${palaceSVG(o.era, o.sky)}${o.bankCrowd ? crowd(-3000, 5000, 862, 26, 40, 220, 5) : ''}</g>`, farW, farH);
 		st.add('far', canvasTex(await svgToCanvas(farSvg, farW, farH, 0.5)), CX, 860 - farH * 0.55 + farH / 2, farW, farH, -2600, {fog: [HORIZON[o.sky], o.sky === 'day' ? 0.45 : 0.32], rim: 0.0});
 		// river: from the far bank down past the arch
 		const wc = gradCanvas(WATER[o.sky], 64, 1024); st.add('river', canvasTex(wc), CX, 860 + 1400 / 2, 9000, 1400, -1400);
+		// lights on the far bank at night (windows, lamps)
+		if (o.sky === 'night' || o.sky === 'snow') { let d = ''; for (let i = 0; i < 70; i++) { const x = ((Math.sin(i * 9.17) * 4375.5) % 1 + 1) % 1 * 7000 - 3000, y = 830 + ((Math.sin(i * 3.7) * 9375.1) % 1 + 1) % 1 * 25; d += `<rect x="${x}" y="${y}" width="${4 + (i % 3) * 2}" height="${3 + (i % 2) * 2}" fill="#FFB868" fill-opacity="${0.5 + (i % 4) * 0.12}"/>`; }
+			st.add('farlights', canvasTex(await svgToCanvas(svgDoc(`<g transform="translate(${4200 - CX},-700)">${d}</g>`, 8400, 400), 8400, 400, 0.5)), CX, 900, 8400, 400, -2550, {emissive: 1.4}); }
+		// ripples on the river (lighter dashes) + the hero's broken streak (emissive, redrawn)
+		{ let d = ''; for (let i = 0; i < 520; i++) { const x = ((Math.sin(i * 4.13) * 7531.3) % 1 + 1) % 1 * 8000 - 3000, y = 880 + Math.pow(((Math.sin(i * 1.91) * 3217.7) % 1 + 1) % 1, 1.6) * 1250, w = 20 + (y - 880) * 0.25; d += `<rect x="${x}" y="${y}" width="${w}" height="${2 + (y - 880) * 0.008}" rx="2" fill="${o.sky === 'day' ? '#E8E2C8' : o.sky === 'fire' ? '#E07A40' : '#C9C2A6'}" fill-opacity="${o.sky === 'night' ? 0.12 : 0.22}"/>`; }
+			st.add('ripples', canvasTex(await svgToCanvas(svgDoc(`<g transform="translate(${4500 - CX},-160)">${d}</g>`, 9000, 1400), 9000, 1400, 0.5)), CX, 860 + 700, 9000, 1400, -1380, {}); }
+		this.streak = new Live(st, 'streak', CX, 1300, 4800, 1000, -1360, {emissive: 1.0}, 0.4);
 		// near banks where the arch lands (both ends), with shops and crowd
 		const bankSvg = svgDoc(`<g transform="translate(${4400 - CX},0)">
 			<path fill="${SIL}" d="M-4000,1380 L-760,1380 L-640,1420 L-600,1700 L-4000,1700 Z M2560,1380 L6000,1380 L6000,1700 L2520,1700 L2560,1420 Z"/>
@@ -63,12 +78,12 @@ export class Crest {
 		st.add('banks', canvasTex(await svgToCanvas(bankSvg, 8800, 1800, 0.5)), CX, 900, 8800, 1800, -60, {rim: 0.6});
 		// the arch + deck
 		const archSvg = svgDoc(`<g transform="translate(${2400 - CX},${-300})">${hongqiao(CX, YTOP, HS, YEND)}</g>`, 4800, 1600);
-		st.add('arch', canvasTex(await svgToCanvas(archSvg, 4800, 1600, 0.75)), CX, 300 + 800, 4800, 1600, 0, {rim: 0.9, rimPx: 6});
+		st.add('arch', canvasTex(await svgToCanvas(archSvg, 4800, 1600, 0.75)), CX, 300 + 800, 4800, 1600, 0, {rim: 0.45, rimPx: 6});
 		// near railing (in front of the figures), lantern hooks on alternate posts
 		const rl = railing(CX, YTOP + 6, HS, YEND, 150, 116);
 		this.posts = rl.posts.filter((_, i) => i % 2 === 0);
 		const railSvg = svgDoc(`<g transform="translate(${2400 - CX},${-300})">${rl.svg}</g>`, 4800, 1600);
-		st.add('rail', canvasTex(await svgToCanvas(railSvg, 4800, 1600, 0.75)), CX, 300 + 800, 4800, 1600, 40, {rim: 0.9, rimPx: 5});
+		st.add('rail', canvasTex(await svgToCanvas(railSvg, 4800, 1600, 0.75)), CX, 300 + 800, 4800, 1600, 40, {rim: 0.5, rimPx: 5});
 		// lanterns (bodies; lit/dark state redrawn) + glow (emissive)
 		this.lanternsLive = new Live(st, 'lanterns', CX, 1100, 4800, 1600, 45, {rim: 0.5}, 0.5);
 		this.glowLive = new Live(st, 'lglow', CX, 1100, 4800, 1600, 46, {emissive: 1.6}, 0.5);
@@ -81,6 +96,13 @@ export class Crest {
 		const vals = this.posts.map(([x], i) => Math.round(lit(i, x) * 20) / 20); const key = vals.join(',');
 		this.lanternsLive.drawW(key, (g) => { for (let i = 0; i < this.posts.length; i++) { const [x, y] = this.posts[i]; drawLantern(g, x, y - 4, vals[i]); } });
 		this.glowLive.drawW(key, (g) => { for (let i = 0; i < this.posts.length; i++) { const [x, y] = this.posts[i]; if (vals[i] > 0) { const gr = g.createRadialGradient(x, y + 46, 0, x, y + 46, 30); gr.addColorStop(0, `rgba(255,190,110,${vals[i]})`); gr.addColorStop(1, 'rgba(255,170,90,0)'); g.fillStyle = gr; g.beginPath(); g.ellipse(x, y + 46, 30, 36, 0, 0, Math.PI * 2); g.fill(); } } });
+	}
+	/** the hero's light on the water: a soft broken streak below world x (k = strength) */
+	setStreak(x: number, k: number, t: number) {
+		const key = `${x.toFixed(0)}:${k.toFixed(2)}:${Math.floor(t * 8)}`;
+		this.streak.drawW(key, (g) => { if (k <= 0) return; for (let i = 0; i < 9; i++) { const y = 900 + i * 34 + (i * i) * 2, w = 60 + i * 26 + Math.sin(t * 2 + i * 1.7) * 14, a = k * (0.55 - i * 0.05);
+			const gr = g.createLinearGradient(x - w, 0, x + w, 0); gr.addColorStop(0, 'rgba(255,208,138,0)'); gr.addColorStop(0.5, `rgba(255,208,138,${Math.max(0, a)})`); gr.addColorStop(1, 'rgba(255,208,138,0)');
+			g.fillStyle = gr; g.fillRect(x - w + Math.sin(t * 1.3 + i) * 10, y, w * 2, 4 + i * 0.8); } });
 	}
 	/** the river boat at world x, mast angle */
 	setBoat(x: number, mast: number) {
