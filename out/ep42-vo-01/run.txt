@@ -1,0 +1,150 @@
+plan: {'tier': None, 'character_count': None, 'character_limit': None, 'status': None}
+models: ['eleven_v4', 'eleven_v4_turbo', 'eleven_v3', 'eleven_v3_conversational', 'eleven_multilingual_v2', 'eleven_flash_v2_5', 'eleven_turbo_v2_5', 'eleven_turbo_v2', 'eleven_flash_v2', 'eleven_english_sts_v2', 'eleven_multilingual_sts_v2']
+model: eleven_v4
+{"name": "Q0a", "lang": "zh", "text": "人活着……到底为了什么？", "voice": "agczkAUlHLowaNnL72Cc", "voice_id": "agczkAUlHLowaNnL72Cc", "model": "eleven_v4", "status": 200, "file": "Q0a.mp3", "bytes": 46018}
+{"name": "Q0b", "lang": "zh", "text": "人活着，到底为了什么？", "voice": "agczkAUlHLowaNnL72Cc", "voice_id": "agczkAUlHLowaNnL72Cc", "model": "eleven_v4", "status": 200, "file": "Q0b.mp3", "bytes": 39331}
+{"name": "O1", "lang": "zh", "text": "凌晨三点，你也搜过吧？", "voice": "MI36FIkp9wRP7cpWKPTl", "voice_id": "MI36FIkp9wRP7cpWKPTl", "model": "eleven_v4", "status": 200, "file": "O1.mp3", "bytes": 40585}
+{"name": "O2", "lang": "zh", "text": "近四千年前，就有人写下了这个问题。", "voice": "MI36FIkp9wRP7cpWKPTl", "voice_id": "MI36FIkp9wRP7cpWKPTl", "model": "eleven_v4", "status": 200, "file": "O2.mp3", "bytes": 53541}
+{"name": "O3", "lang": "zh", "text": "而泥板上的答案，和哈佛一样。", "voice": "MI36FIkp9wRP7cpWKPTl", "voice_id": "MI36FIkp9wRP7cpWKPTl", "model": "eleven_v4", "status": 200, "file": "O3.mp3", "bytes": 46018}
+{"name": "TT", "lang": "zh", "text": "人活着为了什么？人类问了近四千年。", "voice": "MI36FIkp9wRP7cpWKPTl", "voice_id": "MI36FIkp9wRP7cpWKPTl", "model": "eleven_v4", "status": 200, "file": "TT.mp3", "bytes": 67752}
+{"name": "E1", "lang": "zh", "text": "一卷埃及莎草纸上，无名诗人写下：", "voice": "MI36FIkp9wRP7cpWKPTl", "voice_id": "MI36FIkp9wRP7cpWKPTl", "model": "eleven_v4", "status": 200, "file": "E1.mp3", "bytes": 58557}
+{"name": "E2", "lang": "zh", "text": "一个人，和自己的灵魂吵了起来。", "voice": "MI36FIkp9wRP7cpWKPTl", "voice_id": "MI36FIkp9wRP7cpWKPTl", "model": "eleven_v4", "status": 200, "file": "E2.mp3", "bytes": 51034}
+{"name": "E3", "lang": "zh", "text": "人人自私贪心，这样活着，值不值？", "voice": "MI36FIkp9wRP7cpWKPTl", "voice_id": "MI36FIkp9wRP7cpWKPTl", "model": "eleven_v4", "status": 200, "file": "E3.mp3", "bytes": 67752}
+Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+[
+ {
+  "name": "Q0a",
+  "lang": "zh",
+  "text": "人活着……到底为了什么？",
+  "voice": "agczkAUlHLowaNnL72Cc",
+  "voice_id": "agczkAUlHLowaNnL72Cc",
+  "model": "eleven_v4",
+  "status": 200,
+  "file": "Q0a.mp3",
+  "bytes": 46018,
+  "heard": "人活着到底为了什么",
+  "heard_lang": "zh",
+  "heard_lang_p": 0.999,
+  "seconds": 2.8
+ },
+ {
+  "name": "Q0b",
+  "lang": "zh",
+  "text": "人活着，到底为了什么？",
+  "voice": "agczkAUlHLowaNnL72Cc",
+  "voice_id": "agczkAUlHLowaNnL72Cc",
+  "model": "eleven_v4",
+  "status": 200,
+  "file": "Q0b.mp3",
+  "bytes": 39331,
+  "heard": "人活着到底为了什么",
+  "heard_lang": "zh",
+  "heard_lang_p": 0.998,
+  "seconds": 2.4
+ },
+ {
+  "name": "O1",
+  "lang": "zh",
+  "text": "凌晨三点，你也搜过吧？",
+  "voice": "MI36FIkp9wRP7cpWKPTl",
+  "voice_id": "MI36FIkp9wRP7cpWKPTl",
+  "model": "eleven_v4",
+  "status": 200,
+  "file": "O1.mp3",
+  "bytes": 40585,
+  "heard": "凌晨3点你也搜过吧",
+  "heard_lang": "zh",
+  "heard_lang_p": 0.997,
+  "seconds": 2.48
+ },
+ {
+  "name": "O2",
+  "lang": "zh",
+  "text": "近四千年前，就有人写下了这个问题。",
+  "voice": "MI36FIkp9wRP7cpWKPTl",
+  "voice_id": "MI36FIkp9wRP7cpWKPTl",
+  "model": "eleven_v4",
+  "status": 200,
+  "file": "O2.mp3",
+  "bytes": 53541,
+  "heard": "近四千年前就有人写下了这个问题",
+  "heard_lang": "zh",
+  "heard_lang_p": 0.999,
+  "seconds": 3.28
+ },
+ {
+  "name": "O3",
+  "lang": "zh",
+  "text": "而泥板上的答案，和哈佛一样。",
+  "voice": "MI36FIkp9wRP7cpWKPTl",
+  "voice_id": "MI36FIkp9wRP7cpWKPTl",
+  "model": "eleven_v4",
+  "status": 200,
+  "file": "O3.mp3",
+  "bytes": 46018,
+  "heard": "而你版上的答案和哈佛一样",
+  "heard_lang": "zh",
+  "heard_lang_p": 1.0,
+  "seconds": 2.8
+ },
+ {
+  "name": "TT",
+  "lang": "zh",
+  "text": "人活着为了什么？人类问了近四千年。",
+  "voice": "MI36FIkp9wRP7cpWKPTl",
+  "voice_id": "MI36FIkp9wRP7cpWKPTl",
+  "model": "eleven_v4",
+  "status": 200,
+  "file": "TT.mp3",
+  "bytes": 67752,
+  "heard": "人活着 为了什么人类问了近四千年",
+  "heard_lang": "zh",
+  "heard_lang_p": 0.998,
+  "seconds": 4.16
+ },
+ {
+  "name": "E1",
+  "lang": "zh",
+  "text": "一卷埃及莎草纸上，无名诗人写下：",
+  "voice": "MI36FIkp9wRP7cpWKPTl",
+  "voice_id": "MI36FIkp9wRP7cpWKPTl",
+  "model": "eleven_v4",
+  "status": 200,
+  "file": "E1.mp3",
+  "bytes": 58557,
+  "heard": "一卷埃及沙草紙上無名詩人寫下",
+  "heard_lang": "zh",
+  "heard_lang_p": 0.999,
+  "seconds": 3.6
+ },
+ {
+  "name": "E2",
+  "lang": "zh",
+  "text": "一个人，和自己的灵魂吵了起来。",
+  "voice": "MI36FIkp9wRP7cpWKPTl",
+  "voice_id": "MI36FIkp9wRP7cpWKPTl",
+  "model": "eleven_v4",
+  "status": 200,
+  "file": "E2.mp3",
+  "bytes": 51034,
+  "heard": "一个人和自己的灵魂吵了起来",
+  "heard_lang": "zh",
+  "heard_lang_p": 0.997,
+  "seconds": 3.12
+ },
+ {
+  "name": "E3",
+  "lang": "zh",
+  "text": "人人自私贪心，这样活着，值不值？",
+  "voice": "MI36FIkp9wRP7cpWKPTl",
+  "voice_id": "MI36FIkp9wRP7cpWKPTl",
+  "model": "eleven_v4",
+  "status": 200,
+  "file": "E3.mp3",
+  "bytes": 67752,
+  "heard": "人人自私貪心,這樣活著值不值",
+  "heard_lang": "zh",
+  "heard_lang_p": 0.999,
+  "seconds": 4.16
+ }
+]
