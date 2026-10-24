@@ -14,6 +14,7 @@ import {Cast, look, glowBlob, rig, drawBundle, drawFig, Contact} from './actors'
 import {LOOKS, LookQ, FigOpts, Pose, P, walkFor, gaitStride, stepFor, toScreen, figurePaths, carryArmful, armfulAt, fkPose, POSES} from './figures';
 import {paintSection, paintSeal, silkWeave} from './silk';
 import {robeSafe, bowUpper} from './s_teaser';
+import {standinGlyph} from './s_yuan';
 
 const b = bar;
 export type Cam = [number, number, number];
@@ -44,6 +45,7 @@ const palaceSvg = (x0: number, x1: number, base: number, s: number, col = SIL, o
 	const wallH = 64 * s, X = (x: number) => ox + x * sx;
 	let o = `<rect fill="${col}" x="${X(x0).toFixed(1)}" y="${(base - wallH).toFixed(1)}" width="${((x1 - x0) * sx).toFixed(1)}" height="${(wallH + 900).toFixed(1)}"/>`;
 	o += `<rect fill="${col}" x="${X(x0).toFixed(1)}" y="${(base - wallH - 10 * s).toFixed(1)}" width="${((x1 - x0) * sx).toFixed(1)}" height="${(13 * s).toFixed(1)}"/>`;
+	o += `<rect fill="${col}" x="${X(x0).toFixed(1)}" y="${(base - wallH - 104 * s).toFixed(1)}" width="${((x1 - x0) * sx).toFixed(1)}" height="${(104 * s).toFixed(1)}"/>`;   // the courts behind the wall
 	for (const [cx, w, h] of HALLS) if (cx > x0 && cx < x1) o += hall(X(cx), base - wallH, w * s * sx, h * s, 1, col);
 	o += jiaolou(X(-360), base - wallH + 4 * s, 0.6 * s * sx, col);
 	return o;
@@ -51,8 +53,8 @@ const palaceSvg = (x0: number, x1: number, base: number, s: number, col = SIL, o
 /** lit windows of the palace frontage (warm, small): rects [x, y, w, h] */
 const palaceWindows = (base: number, s: number, ox = 0, sx = 1) => {
 	const out: [number, number, number, number][] = []; const wallH = 64 * s;
-	HALLS.forEach(([cx, w, h], i) => { const bh = h * s * 0.55, ww = w * s * sx; for (let k = 0; k < 5; k++) { if (hash(i * 7.3 + k * 1.9) < 0.45) continue;
-		out.push([ox + cx * sx - ww * 0.36 + k * ww * 0.15, base - wallH - bh * 0.78, ww * 0.09, bh * 0.42]); } });
+	HALLS.forEach(([cx, w, h], i) => { const bh = h * s * 0.55, ww = w * s * sx; for (let k = 0; k < 5; k++) { if (hash(i * 7.3 + k * 1.9) < 0.5) continue;
+		out.push([ox + cx * sx - ww * 0.33 + k * ww * 0.15, base - wallH - bh * 0.5, ww * 0.035, bh * 0.26]); } });
 	return out;
 };
 /** a cloth bundle hugged to the chest: the kit's bundle; glow = your light leaking through the cloth (else a grey copy) */
@@ -91,12 +93,12 @@ export const slatFace = (g: CanvasRenderingContext2D, x: number, y: number, w: n
 /** snow flakes of a gust, drawn in screen px around the wipe edge at screen x ex (same field in both stages) */
 const gustFlakes = (g: CanvasRenderingContext2D, ex: number, t: number, k: number) => {
 	g.clearRect(0, 0, W, H); if (k <= 0) return;
-	for (let i = 0; i < 70; i++) {
-		const a = hash(i * 3.17), c = hash(i * 7.31), d = hash(i * 1.93), r = 14 + c * 52, y = a * 1180 - 50 + Math.sin(t * 3 + i) * 20, x = ex + (d - 0.5) * 520 * (0.6 + c) + (t * 900 * (0.4 + c)) % 60;
+	for (let i = 0; i < 160; i++) {
+		const a = hash(i * 3.17), c = hash(i * 7.31), d = hash(i * 1.93), r = 4 + c * c * 30, y = a * 1180 - 50 + Math.sin(t * 3 + i) * 20, x = ex + (d - 0.5) * 520 * (0.6 + c) + (t * 900 * (0.4 + c)) % 60;
 		const al = (0.35 + 0.5 * c) * k * (1 - Math.abs(d - 0.5) * 1.3);
 		if (al <= 0) continue;
 		const gr = g.createRadialGradient(x, y, 0, x, y, r); gr.addColorStop(0, `rgba(236,242,246,${al})`); gr.addColorStop(0.5, `rgba(226,234,240,${al * 0.55})`); gr.addColorStop(1, 'rgba(220,230,236,0)');
-		g.fillStyle = gr; g.save(); g.translate(x, y); g.scale(1.9, 1); g.translate(-x, -y); g.beginPath(); g.arc(x, y, r, 0, Math.PI * 2); g.fill(); g.restore();
+		g.fillStyle = gr; g.save(); g.translate(x, y); g.scale(2.6 + c * 2, 1); g.translate(-x, -y); g.beginPath(); g.arc(x, y, r, 0, Math.PI * 2); g.fill(); g.restore();
 	}
 };
 
@@ -104,18 +106,18 @@ const gustFlakes = (g: CanvasRenderingContext2D, ex: number, t: number, k: numbe
 // CR-D: the look-point low (the water line), zoomed; the near boat plane (z 330) in front of the arch lowers its mast from b37.75;
 // the procession of Qing officials crosses left above (进④ on b38); the 紫禁城 under the span. The horizon layers of this crest are
 // lowered to the low eye line, so the far bank shows under the arch (a low camera sees the far bank below the span).
-let c22: Crest, cast22: Cast, box22: Live, arms22: Live, glow22: Live, boat22: Live, crew22: Live, refl22: Live;
+let c22: Crest, cast22: Cast, box22: Live, arms22: Live, glow22: Live, boat22: Live, crewL22: Live, refl22: Live;
 const A22 = b(37.25), H22 = 300, Z22 = 0.66;
 const LK22: LookQ[] = [{...LOOKS.qingOfficial, beard: 'short'}, {...LOOKS.qingOfficial}, {...LOOKS.qingOfficial, build: 1.05}, {...LOOKS.qingOfficial, beard: 'long', build: 0.97}];
 const STR22 = gaitStride('08_04', 0.72) * H22;
-const OFF22 = [-262, 0, 258, 520], PH22 = [0.18, 0, 0.62, 0.37];
+const OFF22 = [-262, 0, 258, 520], PH22 = [0.25, 0, 0.625, 0.375];            // phases 0.125 apart mod ½ (no two stride as one)
 const xYou22 = (t: number) => 960 - ((t - b(38)) / (2 * BEAT)) * STR22;            // you top the crest on b38 (进④)
 const cam22 = (t: number): Cam => {
 	const k = smooth((t - A22) / (b(37.8) - A22)), dy = lerp(420, 500, k), Z = lerp(0.70, Z22, k);
 	return [1040 + (xYou22(t) - 960) * 0.3, 900 - (dy - 540) / Z, Z];
 };
 const REF22 = (): Cam => cam22(b(38));
-const BOXH = {ox: 0.135, oy: -0.15, hw: 0.092, hh: 0.04};
+const BOXH = {ox: 0.14, oy: -0.15, hw: 0.105, hh: 0.046};
 const ground22 = (x: number) => deck(x) + 4;
 const proc22 = (t: number) => {
 	const out: {f: FigOpts; c: P; you: boolean}[] = [];
@@ -139,7 +141,7 @@ const palaceBox = (g: CanvasRenderingContext2D, c: P, w: number, h: number, you:
 	g.restore();
 };
 /** the near boat in reference-screen px: hull, matting cabin, mast pivoting at (MX, MY) toward the stern (right) */
-const NB = {wl: 1012, x0: 820, x1: 2200, MX: 1150, MY: 958, L: 630};
+const NB = {wl: 1012, x0: 470, x1: 2300, MX: 1400, MY: 958, L: 620};
 const mast22 = (t: number) => 64 * easeInOut(clamp01((t - b(37.75)) / (b(39) + 0.25 - b(37.75))));
 const mastTop = (deg: number): P => [NB.MX + Math.sin((deg * Math.PI) / 180) * NB.L, NB.MY - Math.cos((deg * Math.PI) / 180) * NB.L];
 const drawNearBoat = (g: CanvasRenderingContext2D, deg: number, t: number) => {
@@ -148,10 +150,10 @@ const drawNearBoat = (g: CanvasRenderingContext2D, deg: number, t: number) => {
 	g.beginPath(); g.moveTo(x0, wl - 70); g.quadraticCurveTo(x0 + 40, wl - 10, x0 + 160, wl + 6); g.lineTo(x1, wl + 10); g.lineTo(x1, wl - 40); g.lineTo(x0 + 120, wl - 44); g.quadraticCurveTo(x0 + 50, wl - 50, x0 + 6, wl - 92); g.closePath(); g.fill();
 	g.fillRect(x0 + 100, wl - 52, x1 - x0 - 100, 10);                                                              // gunwale
 	// the matting cabin (篷): arched roof, ribs
-	g.beginPath(); g.moveTo(1330, wl - 46); g.lineTo(1330, wl - 120); g.quadraticCurveTo(1560, wl - 196, 1880, wl - 132); g.lineTo(1880, wl - 46); g.closePath(); g.fill();
-	g.strokeStyle = 'rgba(70,52,34,0.55)'; g.lineWidth = 3; for (let x = 1360; x < 1870; x += 46) { g.beginPath(); g.moveTo(x, wl - 50); g.lineTo(x, wl - 118 - Math.sin(((x - 1330) / 550) * Math.PI) * 50); g.stroke(); }
+	g.beginPath(); g.moveTo(1580, wl - 46); g.lineTo(1580, wl - 120); g.quadraticCurveTo(1810, wl - 196, 2130, wl - 132); g.lineTo(2130, wl - 46); g.closePath(); g.fill();
+	g.strokeStyle = 'rgba(70,52,34,0.55)'; g.lineWidth = 3; for (let x = 1610; x < 2120; x += 46) { g.beginPath(); g.moveTo(x, wl - 50); g.lineTo(x, wl - 118 - Math.sin(((x - 1580) / 550) * Math.PI) * 50); g.stroke(); }
 	// rudder post, sweep oar at the stern
-	g.strokeStyle = SIL; g.lineWidth = 9; g.lineCap = 'round'; g.beginPath(); g.moveTo(1990, wl - 60); g.lineTo(2150, wl + 70); g.stroke();
+	g.strokeStyle = SIL; g.lineWidth = 9; g.lineCap = 'round'; g.beginPath(); g.moveTo(2180, wl - 60); g.lineTo(2300, wl + 60); g.stroke();
 	// mast (tabernacle at its foot) + its stay to the bow
 	const tp = mastTop(deg); g.fillRect(NB.MX - 12, NB.MY - 30, 24, 40);
 	g.lineWidth = 13; g.beginPath(); g.moveTo(NB.MX, NB.MY); g.lineTo(tp[0], tp[1]); g.stroke();
@@ -160,7 +162,7 @@ const drawNearBoat = (g: CanvasRenderingContext2D, deg: number, t: number) => {
 	g.fillStyle = 'rgba(200,170,120,0.18)'; for (let i = 0; i < 9; i++) { const x = x0 + 120 + i * 140 + Math.sin(t * 2 + i) * 12; g.fillRect(x, wl + 14 + (i % 2) * 6, 70, 3); }
 };
 /** the bow hand easing the forestay: rope from the mast top through both hands to a cleat at the bow */
-const CREW = {x: 965, ground: 968, h: 190, cleat: [880, 966] as P};
+const CREW = {x: 1225, ground: 962, h: 196, cleat: [1120, 960] as P};
 const crew22 = (deg: number) => {
 	const top = mastTop(deg), base = fkPose({hip: 0.62, lean: -10, neck: -4, lt: 18, lk: 8, rt: -12, rk: 6, la: 30, le: 30, ra: 34, re: 30});
 	const o: FigOpts = {x: CREW.x, ground: CREW.ground, h: CREW.h, pose: base, look: {head: 'bun', dress: 'tunic'} as LookQ};
@@ -179,7 +181,7 @@ const boot22 = async () => {
 	c22 = new Crest('q1-dusk', {sky: 'dusk', era: '清', lanterns: true, boat: false, bankCrowd: true}); await c22.ready;
 	const st = c22.st;
 	// the low eye line: the far bank, haze, river and its ripples sit lower (so they show under the span); the streak is replaced
-	for (const [n, dy] of [['far', 72], ['haze', 64], ['river', 96], ['ripples', 96], ['sunglow', 60]] as [string, number][]) { const L = st.get(n); st.place(L, L.cx, L.cy + dy); }
+	for (const [n, dy] of [['far', 72], ['willows', 72], ['haze', 64], ['river', 96], ['ripples', 96], ['sunglow', 60]] as [string, number][]) { const L = st.get(n); st.place(L, L.cx, L.cy + dy); }
 	st.get('streak').mesh.visible = false;
 	// the 紫禁城 under the span (a crisp layer in front of the far bank)
 	const pal = svgDoc(palaceSvg(-700, 2500, 904, 0.62), 4200, 1200, '', -1200, 0);
@@ -190,7 +192,7 @@ const boot22 = async () => {
 	arms22 = new Live(st, 'arms22', 960, 700, 3000, 900, 22, {rim: 1.0, rimPx: 4}, 1);
 	glow22 = new Live(st, 'glow22', 960, 700, 3000, 900, 24, {emissive: 1.0}, 0.5);
 	boat22 = new Live(st, 'boat22', 1700, 1600, 3600, 2200, 330, {rim: 0.35, rimPx: 6}, 0.6);
-	crew22 = new Live(st, 'crew22', 1700, 1600, 3600, 2200, 331, {rim: 0.6, rimPx: 5}, 0.8);
+	crewL22 = new Live(st, 'crew22', 1700, 1600, 3600, 2200, 331, {rim: 0.6, rimPx: 5}, 0.8);
 };
 const IN22: In = {mode: 4, a: A22, z: b(37.5), pt: [0.5, 0.4]};
 addScene({id: '22', a: A22, z: b(39), in: IN22, draw: (t): Frame => {
@@ -206,7 +208,7 @@ addScene({id: '22', a: A22, z: b(39), in: IN22, draw: (t): Frame => {
 	const deg = mast22(t), ref = REF22();
 	boat22.drawW(`${deg.toFixed(2)}:${Math.round(t * 10)}`, (g) => { refTx(g, ref, 330); drawNearBoat(g, deg, t); });
 	const cr = crew22(deg);
-	crew22.drawW(deg.toFixed(2), (g) => { refTx(g, ref, 331); g.strokeStyle = '#2a1f17'; g.lineWidth = 2.5; g.beginPath(); cr.rope.forEach((q, i) => (i ? g.lineTo(q[0], q[1]) : g.moveTo(q[0], q[1]))); g.stroke(); drawFig(g, cr.f); });
+	crewL22.drawW(deg.toFixed(2), (g) => { refTx(g, ref, 331); g.strokeStyle = '#2a1f17'; g.lineWidth = 2.5; g.beginPath(); cr.rope.forEach((q, i) => (i ? g.lineTo(q[0], q[1]) : g.moveTo(q[0], q[1]))); g.stroke(); drawFig(g, cr.f); });
 	refl22.drawW(`${Math.round(you.c[0] / 4)}:${Math.floor(t * 8)}`, (g) => drawRefl(g, you.c[0], 1000, 0.55, t));
 	st.heroAt(you.c[0], you.c[1], 21, 700);
 	return {st, grade: {vig: 0.34, vigCol: '#1a1410', exposure: 1}, bloom: 1};
@@ -218,21 +220,21 @@ addScene({id: '22', a: A22, z: b(39), in: IN22, draw: (t): Frame => {
 // 嘉庆 impressions slam in one per beat (b39 … b40), on the mounting silk, across the join and in the blank opening edge — never
 // on painted figures, never on the 虹桥 (G2). Then a slow pull-back while palace eaves close from top and bottom (b40 → b40.75).
 let st23: Stage, seals23: Live, eaves23: Live, eaveTop: HTMLCanvasElement, eaveBot: HTMLCanvasElement;
-const SC = {w: 3200, h: 1200, join: 1880, mount1: 2880, k: 1.1};          // canvas px; world px per canvas px
+const SC = {w: 3200, h: 1200, join: 1880, mount1: 2600, k: 1.1};          // canvas px; world px per canvas px
 const c2w = (x: number, y: number): P => [960 + (x - SC.w / 2) * SC.k, 540 + (y - SC.h / 2) * SC.k];
 // the five seals of 五玺全 (G2), their legends exact; size in canvas px; where: mounting / the join (骑缝) / the blank opening edge
 const SEALS: {text: string; x: number; y: number; size: number; style: 'zhu' | 'bai'; tall?: boolean; beat: number; rot: number}[] = [
-	{text: '嘉庆御览之宝', x: 2330, y: 430, size: 250, style: 'zhu', beat: 39.0, rot: -0.01},
-	{text: '石渠宝笈', x: SC.join, y: 820, size: 196, style: 'zhu', tall: true, beat: 39.25, rot: 0.015},
-	{text: '三希堂精鉴玺', x: 2690, y: 470, size: 188, style: 'bai', tall: true, beat: 39.5, rot: -0.012},
-	{text: '宜子孙', x: 2690, y: 760, size: 124, style: 'bai', beat: 39.75, rot: 0.01},
-	{text: '嘉庆鉴赏', x: 1700, y: 380, size: 150, style: 'zhu', beat: 40.0, rot: -0.008},
+	{text: '嘉庆御览之宝', x: 2250, y: 590, size: 200, style: 'zhu', beat: 39.0, rot: -0.01},
+	{text: '石渠宝笈', x: SC.join, y: 700, size: 172, style: 'zhu', tall: true, beat: 39.25, rot: 0.015},
+	{text: '三希堂精鉴玺', x: 2470, y: 556, size: 172, style: 'bai', tall: true, beat: 39.5, rot: -0.012},
+	{text: '宜子孙', x: 2470, y: 738, size: 112, style: 'bai', beat: 39.75, rot: 0.01},
+	{text: '嘉庆鉴赏', x: 1772, y: 520, size: 124, style: 'zhu', beat: 40.0, rot: -0.008},
 ];
 let sealCvs: HTMLCanvasElement[] = [];
 const cam23 = (t: number): Cam => {
 	const drift = clamp01((t - b(39)) / (b(40) - b(39))), pull = easeInOut(clamp01((t - b(40)) / (b(41) - b(40))));
-	const c0 = c2w(2160, 600), c1 = c2w(1900, 600);
-	return camMix([lerp(c0[0], c0[0] - 30, drift), c0[1], lerp(1.2, 1.17, drift)], [c1[0], c1[1], 0.88], pull);
+	const c0 = c2w(2150, 615), c1 = c2w(1930, 600);
+	return camMix([lerp(c0[0], c0[0] - 30, drift), c0[1], lerp(1.15, 1.12, drift)], [c1[0], c1[1], 0.86], pull);
 };
 const startCanvas = () => {
 	const cv = mkCanvas(SC.w, SC.h), g = cv.getContext('2d')!;
@@ -242,18 +244,20 @@ const startCanvas = () => {
 	const tmp = mkCanvas(SC.join, SC.h), tg = tmp.getContext('2d')!;
 	tg.drawImage(shed, 820, 0, 1580, 900, -40, 0, 1580 * (SC.h / 900), SC.h);
 	tg.globalCompositeOperation = 'destination-in'; const fade = tg.createLinearGradient(0, 0, SC.join, 0);
-	fade.addColorStop(0, 'rgba(0,0,0,1)'); fade.addColorStop(0.62, 'rgba(0,0,0,1)'); fade.addColorStop(0.8, 'rgba(0,0,0,0)'); tg.fillStyle = fade; tg.fillRect(0, 0, SC.join, SC.h);
+	fade.addColorStop(0, 'rgba(0,0,0,1)'); fade.addColorStop(0.76, 'rgba(0,0,0,1)'); fade.addColorStop(0.9, 'rgba(0,0,0,0)'); tg.fillStyle = fade; tg.fillRect(0, 0, SC.join, SC.h);
 	g.drawImage(tmp, 0, 0);
 	// the opening's mist: a soft wash over the blank edge
-	const mist = g.createLinearGradient(SC.join - 600, 0, SC.join, 0); mist.addColorStop(0, 'rgba(236,222,190,0)'); mist.addColorStop(1, 'rgba(236,222,190,0.6)'); g.fillStyle = mist; g.fillRect(SC.join - 600, 0, 600, SC.h);
-	// the front mounting silk (隔水): a cool pale damask with a faint cloud-and-dragon-roundel weave
+	const mist = g.createLinearGradient(SC.join - 400, 0, SC.join, 0); mist.addColorStop(0, 'rgba(236,222,190,0)'); mist.addColorStop(1, 'rgba(236,222,190,0.6)'); g.fillStyle = mist; g.fillRect(SC.join - 600, 0, 600, SC.h);
+	// the front mounting silk (隔水): a cool pale damask, a faint lozenge twill with small four-petal flowers
 	g.fillStyle = '#E4DCC8'; g.fillRect(SC.join, 0, SC.mount1 - SC.join, SC.h);
-	g.strokeStyle = 'rgba(150,140,118,0.16)'; g.lineWidth = 3;
-	for (let yy = 60; yy < SC.h; yy += 150) for (let xx = SC.join + 70 + ((yy / 150) % 2) * 75; xx < SC.mount1; xx += 150) { g.beginPath(); g.arc(xx, yy, 34, 0, Math.PI * 2); g.stroke(); g.beginPath(); g.arc(xx, yy, 18, 0.4, 5.2); g.stroke();
-		g.beginPath(); g.moveTo(xx + 40, yy + 30); g.bezierCurveTo(xx + 60, yy + 10, xx + 90, yy + 50, xx + 110, yy + 28); g.stroke(); }
+	g.save(); g.beginPath(); g.rect(SC.join, 0, SC.mount1 - SC.join, SC.h); g.clip(); g.strokeStyle = 'rgba(140,128,104,0.13)'; g.lineWidth = 2;
+	for (let k = -1400; k < 2000; k += 64) { g.beginPath(); g.moveTo(SC.join + k, 0); g.lineTo(SC.join + k + SC.h, SC.h); g.stroke(); g.beginPath(); g.moveTo(SC.join + k + SC.h, 0); g.lineTo(SC.join + k, SC.h); g.stroke(); }
+	g.fillStyle = 'rgba(140,128,104,0.16)'; for (let yy = 0; yy < SC.h; yy += 64) for (let xx = SC.join + ((yy / 64) % 2) * 32; xx < SC.mount1; xx += 64) for (let p = 0; p < 4; p++) { g.beginPath(); g.ellipse(xx + Math.cos(p * Math.PI / 2) * 6, yy + 32 + Math.sin(p * Math.PI / 2) * 6, 5, 3, p * Math.PI / 2, 0, Math.PI * 2); g.fill(); }
+	g.restore();
 	// the outer brocade (blue) and the stave edge at the right end
 	g.fillStyle = '#34506A'; g.fillRect(SC.mount1, 0, SC.w - SC.mount1, SC.h);
-	g.strokeStyle = 'rgba(210,174,106,0.45)'; g.lineWidth = 4; for (let yy = 40; yy < SC.h; yy += 80) for (let xx = SC.mount1 + 30 + ((yy / 80) % 2) * 40; xx < SC.w - 40; xx += 80) { g.beginPath(); g.moveTo(xx - 12, yy); g.lineTo(xx, yy - 12); g.lineTo(xx + 12, yy); g.lineTo(xx, yy + 12); g.closePath(); g.stroke(); }
+	g.fillStyle = '#2E4760'; g.fillRect(SC.mount1, 0, SC.w - SC.mount1, SC.h);
+	g.strokeStyle = 'rgba(196,164,104,0.28)'; g.lineWidth = 2; for (let yy = 20; yy < SC.h; yy += 40) for (let xx = SC.mount1 + 20 + ((yy / 40) % 2) * 20; xx < SC.w - 50; xx += 40) { g.beginPath(); g.moveTo(xx - 6, yy); g.lineTo(xx, yy - 6); g.lineTo(xx + 6, yy); g.lineTo(xx, yy + 6); g.closePath(); g.stroke(); }
 	g.fillStyle = '#2a3e52'; g.fillRect(SC.w - 46, 0, 46, SC.h);
 	// joins: a thin seam and a slight overlap shadow
 	for (const jx of [SC.join, SC.mount1]) { g.fillStyle = 'rgba(80,62,40,0.35)'; g.fillRect(jx - 2, 0, 4, SC.h); g.fillStyle = 'rgba(80,62,40,0.12)'; g.fillRect(jx + 2, 0, 10, SC.h); }
@@ -278,7 +282,7 @@ const boot23 = async () => {
 	st23.add('silk', canvasTex(cv), 960, 540, SC.w * SC.k, SC.h * SC.k, 0, {emissive: 0.14});
 	seals23 = new Live(st23, 'seals23', 960, 540, SC.w * SC.k, SC.h * SC.k, 1, {}, 0.6);
 	sealCvs = SEALS.map((s, i) => paintSeal(s.text, {size: Math.round(s.size * 1.3), style: s.style, seed: 811 + i * 17, tall: s.tall, fade: 0.05}));
-	eaves23 = new Live(st23, 'eaves23', 960, 540, W, H, 400, {rim: 1.0, rimPx: 7}, 1);
+	eaves23 = new Live(st23, 'eaves23', 960, 540, W, H, 400, {rim: 0.55, rimPx: 6}, 1);
 	eaveTop = eaveTopCanvas();
 	eaveBot = await svgToCanvas(svgDoc(palaceSvg(-1700, 2600, 860, 1, '#1b1511'), W, H), W, H, 1);
 };
@@ -337,7 +341,8 @@ const boot24 = async () => {
 	const pc = mkCanvas(4400, 1100), pg = pc.getContext('2d')!; pg.drawImage(snow, 0, 0); pg.drawImage(dark, 0, 4);
 	st.add('pal24', canvasTex(pc), -1800 + 2200, 550, 4400, 1100, -2400, {fog: [HORIZON.snow, 0.12]});
 	win24 = new Live(st, 'win24', 400, 550, 4400, 1100, -2398, {emissive: 0.9}, 1);
-	win24.drawW('w', (g) => { for (const [x, y, w, h] of palaceWindows(860, 1)) { g.fillStyle = `rgba(255,184,104,${(0.55 + 0.35 * hash(x)).toFixed(2)})`; g.fillRect(x, y + 4, w, h); } });
+	win24.drawW('w', (g) => { for (const [x, y, w, h] of palaceWindows(860, 1)) { g.fillStyle = `rgba(255,184,104,${(0.32 + 0.22 * hash(x)).toFixed(2)})`; g.fillRect(x, y + 4, w, h); } });
+	st.get('far').mesh.visible = false;                                          // the stock far bank's gate tower would break the roofline match
 	await snowDeck(st, 1); snowRail(st, 'railSnow24');
 	cast24 = new Cast(st, 'cast24', 1200, 640, 3600, 1100, 20);
 	prop24 = new Live(st, 'prop24', 1200, 640, 3600, 1100, 22, {rim: 0.4, emissive: 0.35}, 1);
@@ -374,75 +379,72 @@ addScene({id: '24', a: b(41), z: GUST.a, draw: (t): Frame => {
 // 清宫 night room: the two 「张择端清明上河图一卷」 entries ink in warm (b45, b45.25), the other two stay unlit; pull back to the desk:
 // the grey roll beside it, the young man already holding the lid over the open slatted box with your glow inside; the lid
 // comes down (b45.5 → b45.75); into the slats (b45.75 → b46): the cut to scene 26 hides in the close-up.
-let c25: Crest, cast25: Cast, prop25: Live, arms25: Live, glow25: Live, gust25: Live, top25: Live, prints25: Live, rail25: Layer[] = [];
+let c25: Crest, cast25: Cast, prop25: Live, arms25: Live, glow25: Live, gust25: Live, top25: Live, prints25: Live;
+// the camera stands ON the deck (deck level, raised a little), looking across it at the far railing; the four carriers cross on
+// the snowy deck surface between, each on his own line (row 0 = farthest), so their footprints make four lines
 const Z25 = 0.84, H25 = 470, STR25 = gaitStride('08_04', stepFor(YOUTH)) * H25, V25 = 840;       // world px/s: a 2.5× time-lapse
-const ROWS = [1, 3, 0, 2];                                                                         // deck-top row of each crossing (0 = front)
+const ROWS = [1, 3, 0, 2], ROWD = [24, 58, 100, 150], ROWS_S = [0.86, 0.92, 1.0, 1.08];
 const enter25 = (i: number) => b(42.5 + 0.25 * i) - 0.12;
 const tilt25 = (t: number) => easeInOut(clamp01((t - b(44.5)) / (b(44.75) - b(44.5) + 0.04)));
-const camX25 = (t: number) => 980 + (t - b(42.5)) * 34;
-const XL25 = (i: number) => unproj([camX25(enter25(i)), 0, Z25], -170, 0, 20)[0];
+const camX25 = (t: number) => 1000 + (t - b(42.5)) * 34;
+const XL25 = (i: number) => unproj([camX25(enter25(i)), 0, Z25], -190, 0, 20)[0];
 const x25 = (i: number, t: number) => XL25(i) + (t - enter25(i)) * V25;
-/** the deck top as a surface: front edge at deck + 6, back edge rising as the camera looks down (q 0 → 1) */
-const topBack = (x: number, q: number) => deck(x) - 40 - 640 * q;
-const rowY = (x: number, r: number, q: number) => { const yf = deck(x) + 6, yb = topBack(x, q); return yf + (yb - yf) * ((r + 0.7) / 4.6); };
+const rowY = (x: number, r: number) => deck(x) + 6 + ROWD[r];
 const cam25 = (t: number): Cam => {
-	const q = tilt25(t), cx = camX25(Math.min(t, b(44.5))), x = cx;
-	const look: Cam = [cx, 900 - (782 - 540) / Z25, Z25];
-	const yf = deck(x) + 6, yb = topBack(x, 1), down: Cam = [cx + 40, (yf + yb) / 2 - 10, 1080 * 1.12 / (yf - yb) * 1.0];
-	return camMix(look, down, q);
+	const q = tilt25(t), cx = camX25(Math.min(t, b(44.5)));
+	const look: Cam = [cx, 900 + 6 - (622 - 540) / Z25, Z25];
+	return camMix(look, [cx + 30, look[1] + 1050, 1.02], q);
 };
 const boot25a = async () => {
 	c25 = new Crest('p2-snow', {sky: 'snow', era: '1923', lanterns: true, boat: false, bankCrowd: false, snow: true}); await c25.ready;
 	const st = c25.st; st.get('sunglow').mat.uniforms.uOpacity.value = 0.22;
+	for (const n of ['arch', 'banks']) st.get(n).mesh.visible = false;          // we stand on the deck: no side view of the arch
 	const fw = new Live(st, 'farWin25', 960, 850, 8400, 200, -2540, {emissive: 0.9}, 0.5);
-	fw.drawW('w', (g) => { for (let i = 0; i < 60; i++) { const x = -1600 + i * 75 + hash(i * 3.3) * 50, y = 818 + hash(i * 7.1) * 26; if (hash(i * 1.9) < 0.35) continue; g.fillStyle = `rgba(255,184,104,${0.55 + 0.3 * hash(i)})`; g.fillRect(x, y, 9 + (i % 3) * 3, 6 + (i % 2) * 2); } });
-	top25 = new Live(st, 'top25', 1200, 900, 3600, 1800, 1, {}, 0.6);
-	prints25 = new Live(st, 'prints25', 1200, 900, 3600, 1800, 2, {}, 0.6);
+	fw.drawW('w', (g) => { for (let i = 0; i < 60; i++) { const x = -1600 + i * 75 + hash(i * 3.3) * 50, y = 818 + hash(i * 7.1) * 26; if (hash(i * 1.9) < 0.35) continue; g.fillStyle = `rgba(255,184,104,${0.35 + 0.2 * hash(i)})`; g.fillRect(x, y, 7 + (i % 3) * 2, 5 + (i % 2) * 2); } });
 	snowRail(st, 'railSnow25');
-	rail25 = [st.get('rail'), st.get('railSnow25'), st.get('lanterns'), st.get('lglow')];
-	cast25 = new Cast(st, 'cast25', 1200, 640, 4400, 1100, 20);
-	prop25 = new Live(st, 'prop25', 1200, 640, 4400, 1100, 22, {rim: 0.4, emissive: 0.0}, 1);
-	arms25 = new Live(st, 'arms25', 1200, 640, 4400, 1100, 23, {rim: 1.0, rimPx: 5}, 1);
-	glow25 = new Live(st, 'glow25', 1200, 640, 4400, 1100, 24, {emissive: 1.0}, 0.5);
+	// the far railing (+ its snow, dead lanterns) stands behind the carriers
+	for (const [n, o] of [['rail', 5], ['railSnow25', 6], ['lanterns', 7], ['lglow', 8]] as [string, number][]) st.get(n).mesh.renderOrder = o;
+	top25 = new Live(st, 'top25', 1200, 1800, 4600, 2000, 10, {}, 0.4, 10);
+	top25.drawW('s', (g) => { const xs: number[] = []; for (let x = -1100; x <= 3500; x += 20) xs.push(x);
+		const gr = g.createLinearGradient(0, 900, 0, 2700); gr.addColorStop(0, '#8C979F'); gr.addColorStop(0.15, '#A2ACB3'); gr.addColorStop(1, '#B4BDC3'); g.fillStyle = gr;
+		g.beginPath(); xs.forEach((x, i) => (i ? g.lineTo(x, deck(x) + 4) : g.moveTo(x, deck(x) + 4))); g.lineTo(3500, 2800); g.lineTo(-1100, 2800); g.closePath(); g.fill();
+		g.fillStyle = 'rgba(60,66,72,0.5)'; g.beginPath(); xs.forEach((x, i) => (i ? g.lineTo(x, deck(x) + 4) : g.moveTo(x, deck(x) + 4))); for (const x of xs.slice().reverse()) g.lineTo(x, deck(x) + 12); g.fill();   // the railing's foot
+		for (let k = 0; k < 2600; k++) { const x = -1000 + hash(k * 1.7) * 4400, y = deck(x) + 10 + Math.pow(hash(k * 3.1), 1.6) * 1700, s = 1 + (y - 900) / 500; g.fillStyle = k % 3 ? 'rgba(226,232,236,0.5)' : 'rgba(120,130,138,0.4)'; g.fillRect(x, y, 2.5 * s, 1.5 * s); } });
+	prints25 = new Live(st, 'prints25', 1200, 1100, 4600, 600, 11, {}, 0.6, 11);
+	cast25 = new Cast(st, 'cast25', 1200, 700, 4600, 1100, 20);
+	prop25 = new Live(st, 'prop25', 1200, 700, 4600, 1100, 22, {rim: 0.4, emissive: 0.0}, 1);
+	arms25 = new Live(st, 'arms25', 1200, 700, 4600, 1100, 23, {rim: 1.0, rimPx: 5}, 1);
+	glow25 = new Live(st, 'glow25', 1200, 700, 4600, 1100, 24, {emissive: 1.0}, 0.5);
 	gust25 = new Live(st, 'gust25', 960, 540, W, H, 600, {}, 0.5, 9800);
 };
-/** footprints: the stance positions of crossing i up to its current x (dark dents, softened by settling snow) */
-const prints = (g: CanvasRenderingContext2D, i: number, t: number, q: number) => {
-	if (t < enter25(i)) return; const xNow = x25(i, t), r = ROWS[i], half = STR25 / 2, x0 = XL25(i);
-	const set = clamp01((t - b(43.5)) / (b(44.5) - b(43.5)));                       // snow settling into them
-	for (let n = 0; ; n++) { const x = x0 + (n + 0.35) * half + (n % 2 ? 10 : -10); if (x > xNow - 30) break;
-		const y = rowY(x, r, q), s = 1 + q * 9, a = 0.7 - 0.25 * set;
-		g.fillStyle = `rgba(52,58,64,${a})`; g.beginPath(); g.ellipse(x, y, 13 * s * 0.8, 3.2 * s, 0, 0, Math.PI * 2); g.fill();
-		g.fillStyle = `rgba(240,244,246,${0.5 * a})`; g.beginPath(); g.ellipse(x + 1, y - 2.2 * s, 12 * s * 0.8, 1.4 * s, 0, 0, Math.PI); g.fill(); }
+/** footprints of crossing i up to where it is now: dark dents on its line, alternating feet, settling under new snow */
+const prints = (g: CanvasRenderingContext2D, i: number, t: number) => {
+	if (t < enter25(i)) return; const xNow = x25(i, t), r = ROWS[i], half = STR25 * ROWS_S[r] / 2, x0 = XL25(i), s = ROWS_S[r];
+	const set = clamp01((t - b(43.5)) / (b(44.5) - b(43.5)));
+	for (let n = 0; ; n++) { const x = x0 + (n + 0.35) * half; if (x > xNow - 40) break;
+		const y = rowY(x, r) + (n % 2 ? -3 : 3) * s, a = 0.62 - 0.25 * set;
+		g.fillStyle = `rgba(48,54,60,${a})`; g.beginPath(); g.ellipse(x, y, 15 * s, 3.4 * s, 0, 0, Math.PI * 2); g.fill();
+		g.fillStyle = `rgba(214,222,228,${0.6 * a})`; g.beginPath(); g.ellipse(x - 2, y + 2.4 * s, 14 * s, 1.3 * s, 0, 0, Math.PI); g.fill(); }
 };
 const draw25a = (t: number): Frame => {
 	const st = c25.st, cam = cam25(t), q = tilt25(t); setCam(st, cam);
 	const key = k30(t), figs: FigOpts[] = [], held: {c: P; r: number; i: number}[] = [];
-	for (let i = 3; i >= 0; i--) { if (t < enter25(i)) continue; const x = x25(i, t); if (x > 4000) continue; const r = ROWS[i], hh = H25 * (1 - 0.02 * r);
-		const gr = (xx: number) => rowY(xx, r, 0) + 1;
-		const hw = hugWalk(YOUTH, (x - XL25(i)) / STR25 + i * 0.29, x, hh, gr, `P2 carrier ${i}`);
+	const order = [0, 1, 2, 3].sort((a, c) => ROWS[a] - ROWS[c]);                      // far lines first
+	for (const i of order) { if (t < enter25(i)) continue; const x = x25(i, t), r = ROWS[i], hh = H25 * ROWS_S[r];
+		const hw = hugWalk(YOUTH, (x - XL25(i)) / (STR25 * ROWS_S[r]) + i * 0.281, x, hh, (xx) => rowY(xx, r), `P2 carrier ${i}`);
 		figs.push(hw.f); held.push({c: hw.c, r: hw.r, i}); }
-	const show = q < 0.02;
-	cast25.L.mesh.visible = prop25.L.mesh.visible = arms25.L.mesh.visible = glow25.L.mesh.visible = show;
 	cast25.draw(key, figs);
 	prop25.drawW(key, (g) => { for (const h of held) bundle(g, h.c, h.r, h.i === 1 ? 1 : 0, h.i !== 1); });
 	prop25.L.mat.uniforms.uEmissive.value = 0.3;
-	arms25.drawW(key, (g) => { for (const f of figs) fillD(g, armPaths(f)); });
+	arms25.drawW(key, (g) => { for (const h of held) fillD(g, armPaths(figs[held.indexOf(h)])); });
 	const you = held.find((h) => h.i === 1);
 	glow25.drawW(key, (g) => { if (!you) return; glowBlob(g, you.c, 120, 90, 0.34); glowBlob(g, you.c, 40, 30, 0.42, '255,226,170'); });
-	// the deck top: snow surface (opens up as the camera looks down) + the four lines of footprints
-	top25.drawW(q.toFixed(3), (g) => { const xs: number[] = []; for (let x = -1000; x <= 3400; x += 20) xs.push(x);
-		const gr = g.createLinearGradient(0, deck(960) - 40 - 640 * q, 0, deck(960) + 6); gr.addColorStop(0, '#AEB9C0'); gr.addColorStop(1, '#D3DBE0'); g.fillStyle = gr;
-		g.beginPath(); xs.forEach((x, i) => (i ? g.lineTo(x, topBack(x, q)) : g.moveTo(x, topBack(x, q)))); for (const x of xs.slice().reverse()) g.lineTo(x, deck(x) + 6); g.closePath(); g.fill();
-		if (q > 0) { g.globalAlpha = 0.35 * q; for (let k = 0; k < 900; k++) { const x = -800 + hash(k * 1.7) * 4000, f = hash(k * 3.1), y = topBack(x, q) + f * (deck(x) + 6 - topBack(x, q)); g.fillStyle = k % 3 ? '#E8EEF1' : '#9EA9B0'; g.fillRect(x, y, 3 + 5 * q, 2 + 3 * q); } g.globalAlpha = 1; } });
-	prints25.drawW(`${key}:${q.toFixed(3)}`, (g) => { for (let i = 0; i < 4; i++) prints(g, i, t, q); });
-	// looking down: the near railing drops out of the bottom of the frame
-	for (const L of rail25) { st.place(L, L.cx, (L === rail25[0] || L === rail25[1] ? 1100 : 1100) + q * 900); }
-	c25.setLanterns(() => 0); c25.setStreak(you ? you.c[0] : 0, you ? 0.3 : 0, t);
-	c25.motes?.update(t, [-1200, -300, 3600, 1600], 70, 24, 0.85);
+	prints25.drawW(key, (g) => { for (let i = 0; i < 4; i++) prints(g, i, t); });
+	c25.setLanterns(() => 0); c25.setStreak(0, 0, t);
+	c25.motes?.update(t, [-1200, -300, 3600, 2400], 70, 24, 0.85);
 	drawGust(st, gust25, cam, t);
 	if (you) st.heroAt(you.c[0], you.c[1], 22, 430); else st.setHero(-9999, 0, 1);
-	return {st, grade: {vig: 0.4, exposure: 1}, bloom: 1};
+	return {st, grade: {vig: 0.4, exposure: 1 - 0.1 * q}, bloom: 1};
 };
 addScene({id: '25', a: GUST.a, z: b(44.66), in: GUST, draw: draw25a});
 
@@ -453,11 +455,7 @@ const BX = {x0: 1250, y0: 690, w: SLAT.w, h: SLAT.h, z: -31};                   
 const TOP25 = 768;                                                                                  // desk top (front edge) in this set
 const ENTRIES = [{s: '仇英仿张择端清明上河图一卷', lit: -1}, {s: '张择端清明上河图一卷', lit: 45.0}, {s: '谢遂仿明人清明上河图一卷', lit: -1}, {s: '张择端清明上河图一卷', lit: 45.25}];
 /** stand-in brush strokes for the unlit entries and the rest of the list (never legible) */
-const scribble = (g: CanvasRenderingContext2D, cx: number, cy: number, s: number, seed: number, col: string) => {
-	g.strokeStyle = col; g.lineCap = 'round'; g.lineWidth = s * 0.09; const r = (k: number) => hash(seed * 3.7 + k * 1.3);
-	for (let k = 0; k < 3 + Math.floor(r(0) * 3); k++) { const y = cy - s * 0.4 + r(k + 1) * s * 0.8, x0 = cx - s * 0.42 + r(k + 7) * s * 0.2; g.beginPath(); g.moveTo(x0, y); g.lineTo(x0 + s * (0.5 + r(k + 3) * 0.3), y - s * 0.05); g.stroke(); }
-	if (r(9) < 0.8) { const x = cx - s * 0.1 + r(10) * s * 0.2; g.beginPath(); g.moveTo(x, cy - s * 0.45); g.lineTo(x + s * 0.02, cy + s * 0.45); g.stroke(); }
-};
+const scribble = (g: CanvasRenderingContext2D, cx: number, cy: number, s: number, seed: number, col: string) => standinGlyph(g, cx, cy, s * 0.92, seed + 7, col, 0.075);
 const ledgerArt = (g: CanvasRenderingContext2D, t: number) => {
 	const {x0, x1, y0, y1} = PG, w = x1 - x0, h = y1 - y0;
 	// the stand: two legs and a ledge on the desk top, leaning back
@@ -482,12 +480,12 @@ const ledgerArt = (g: CanvasRenderingContext2D, t: number) => {
 /** the young man behind the desk holding the lid: lid y (world) as it comes down */
 const LIDY = (t: number) => lerp(BX.y0 - 96, BX.y0 - 6, easeInOut(clamp01((t - b(45.5)) / (b(45.75) - b(45.5)))));
 const packer = (t: number) => {
-	const ly = LIDY(t), down = clamp01((ly - (BX.y0 - 96)) / 90), o: FigOpts = {x: 1610, ground: 1086, h: 760, pose: bowUpper(POSES.stand, 8 + 24 * down), look: YOUTH, flip: true};
+	const ly = LIDY(t), down = clamp01((ly - (BX.y0 - 96)) / 90), o: FigOpts = {x: 1545, ground: 1086, h: 660, pose: bowUpper(POSES.stand, 8 + 24 * down), look: YOUTH, flip: true};
 	return rig(o, [{side: 'L', target: [BX.x0 + 34, ly + 4], name: 'L on lid'}, {side: 'R', target: [BX.x0 + BX.w - 22, ly + 4], name: 'R on lid'}], () => 1086, 'P3 packer');
 };
 const cam25b = (t: number): Cam => {
 	const close = camLock(4.15, (PG.x0 + PG.x1) / 2 + 60, (PG.y0 + PG.y1) / 2 + 4, PG.z, 960, 560);
-	const wide: Cam = [1060, 600, 1.12];
+	const wide: Cam = [1040, 640, 0.98];
 	const fc = (BX.x0 + BX.w / 2), slats = camLock(12.5, fc, BX.y0 + BX.h / 2, BX.z, 960, 560);
 	if (t < b(45.25)) return camMix(close, [close[0] - 10, close[1] + 4, close[2] * 1.03], clamp01((t - b(44.66)) / (b(45.25) - b(44.66))));
 	if (t < b(45.75)) return camMix(close, wide, easeInOut(clamp01((t - b(45.25)) / (b(45.5) - b(45.25)))));

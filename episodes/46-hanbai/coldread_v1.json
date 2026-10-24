@@ -1,0 +1,26 @@
+{
+  "would_keep_watching_after_3s": true,
+  "why": "'假如说，你是一棵2100多岁的树' puts me in the tree's body right away, and by 2.83s 'Han Wudi planted you' gives it a famous name. 'Burned, painted by Qianlong, alive on one strip of bark' (to 13.6s) is a strong hook with no setup. What I don't know yet is what kind of tree it is, and I'm not sure why I should care. But the three images (fire, an emperor painting it, one strip of bark) are enough to keep me for the next few seconds.",
+  "first_moment_I_got_curious": "Line 6 (10.75s) '今天，你只靠一条树皮活着' is the first real jolt. The 0-3s opener was already enough to stay on.",
+  "where_I_would_swipe_away": [
+    "54-65s (lines 21-26): the list '56年光武帝 / 666年唐高宗 / 725年唐玄宗 / 1008年宋真宗' is four years and four emperor names in 8 seconds. I can't hold that many, the tree is absent, and it reads like a history quiz. This is the most likely swipe point.",
+    "27-34s (lines 11-13): '《汉书·武帝纪》次次都记，却一个字没提种树' is a citation about sources. It sets up a 'maybe it's fake' question, which is interesting, but 'the earliest record is hundreds of years later' is dry until '盖就是大概' pays it off at 37s. If I'm tired I leave before the payoff.",
+    "13.6-17s and 71.3-74.7s: blank gaps in the subtitles (3.4s and 3.4s). If the picture isn't doing something big there, I'll feel the story stall and swipe.",
+    "138.7-143s: '泰山一年来800多万人次' is a stat that doesn't connect to the tree. It's short, though, and the 'come and go' echo rescues it."
+  ],
+  "lines_I_did_not_understand": [
+    "Line 2 and line 3: what tree is it? I never hear 柏 for 'you'. Line 17 says '一棵柏树' for the one the 赤眉军 cut, so I can't tell whether 'you' and 'that tree' are the same.",
+    "Lines 15-19 (赤眉军 and 赤眉斧痕): '砍出了血，斧头停了' is a vivid legend, but it's a different tree from me. '岱庙至今有棵树叫赤眉斧痕' makes me wonder whether it's the same tree. I lose track of who 'you' is.",
+    "Lines 25-26 (65-71s): '封禅泰山的皇帝，只有6位' and '除了秦始皇，5位来时你都在山下'. Is 'you' here the tree from before Han Wudi (so planted by someone else), or the one he planted? Han Wudi is one of the six and he supposedly planted me, so what does 'I was at the foot of the mountain when he came' mean? The 'except Qin Shihuang' part makes me count and doubt, and I also don't know what 封禅 is. It's never explained, only used.",
+    "Line 33-35 (石碑 and '石头里的你，望着真的你'): I like it, but I wasn't sure whether the stone stele is the painting or the tree. It took one beat to work out.",
+    "Line 7 (唐槐): 'the neighboring 唐槐 also died' arrives without context, as if I should know about it.",
+    "Last line '谁是主，谁是客': what is 'host' and what is 'guest'? Is it the emperor or the tree who is the host? It sounds profound but I'm not sure I got it. It works as a mood line, less as an answer.",
+    "Line 49 '32厘米宽，给11.5米高的你输送养分': I got it, but it's a quick two-number line that gets lost because the images matter more than the numbers there."
+  ],
+  "takeaway_in_my_words": "There's a Han-dynasty cypress at the Dai Temple on Mount Tai, said to be planted by Emperor Wu 2000+ years ago, though the sources don't actually prove it. Emperors came and went, warlords' campfires and fire killed other trees, but this one survived on a single strip of bark. Now its seeds are growing into six saplings that went to guard Emperor Wu's tomb, so the child of the tree he supposedly planted is guarding him. The trees outlast the people.",
+  "surprise_that_stuck": "1) The 'birth' is just a '盖' (probably) in an old book, so the tree's origin is only a 'maybe'. 2) It survives on a 32 cm strip of bark. 3) Best of all: its children went to guard the tomb of the emperor who supposedly planted it (line 46, 133.6s). That reversal is the one I'd remember.",
+  "title_I_would_click": "3 '它的孩子，去守汉武帝'. It's the only one that makes me ask 'wait, how? a tree guarding an emperor?'. It's concrete (a person, a verb) and it reverses the usual power relation. It also matches the actual ending of the film. Title 1 is pretty but familiar (the 'dynasty falls but the mountain stays' trope), and I've seen many posts like it.",
+  "title_that_misleads": "2 '乾隆画了它，又问谁是主': Qianlong is only 10 seconds in the middle (74-93s), and out of context '谁是主' is cryptic, so a viewer expects a Qianlong story or a painting story and gets an old-tree story. It's also the one that makes me wonder 'main what?'. It does share the last line, though, so it isn't wrong, just a smaller part of the film. Title 3 leaks the ending, but I think that's fine because it makes me want to see how it gets there.",
+  "what_I_would_comment": "'树比皇帝活得久，原来是这个意思' / '一条树皮养活11米的树，我连早饭都吃不稳' / 'so was it even planted by Han Wudi or not?' / 'the 6 saplings guarding the tomb, I got chills'. Also somebody will ask 'what kind of tree is this?'.",
+  "for_frames_only": []
+}

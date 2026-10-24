@@ -1,4 +1,4 @@
-# Storyboard: 一张香烟纸
+# Storyboard: 定情信物 · 一人一半
 
 ## Look
 Palette (hex) · type (fonts, weights) · texture/lighting · motifs · what it must NOT look like · references

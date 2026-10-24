@@ -79,26 +79,29 @@ export const bootResto = async () => {
 	// 张著's sheet at 6144 (for the drop onto 藏者宜宝之), with the join seals, laid exactly over his part of the colophon
 	const hi = paintSection('colophon', {width: 6144, height: 2304, mode: 'mono', seed: 43});
 	seals(hi, [], 0);
-	const hiC = crop(hi, 3900, 0, 6144 - 3900, 2304);
+	const hiC = crop(hi, 3900, 0, 6144 - 3900, 2304); const hiGlyphs = hi.silk.glyphs!;
 	stampSeals(hiC, [{x: 5745 - 3900 + 10, y: 480, size: 190, seed: 611, style: 'bai', fade: 0.3, alpha: 0.9} as any, {x: 5745 - 3900 - 12, y: 1720, size: 160, seed: 612, style: 'zhu', fade: 0.45, alpha: 0.88} as any]);
-	const order = dataTex(glyphOrder(hi.silk.glyphs!, 6144 - 3900, 2304, 2, 3900, 0));
-	sheetMat = glyphMat(bigTex(hiC), bigTex(hiC), order, glowR.tex, 0.18);
+	const order = dataTex(glyphOrder(hiGlyphs, 6144 - 3900, 2304, 2, 3900, 0)); hi.width = hi.height = 1;
+	const hiT = bigTex(hiC); sheetMat = glyphMat(hiT, hiT, order, glowR.tex, 0.18);
 	strip.plane(sheetMat, PARTS.col + 2600 * SC, S.py0, (4096 - 2600) * SC, 82, 0.15, -28.8);
-	GL31 = hi.silk.glyphs!.map((g) => ({i: g.i, x: PARTS.col + g.x / 1.5 * SC, y: S.py0 + (1536 - g.y / 1.5) * SC, size: g.size / 1.5 * SC}));
+	GL31 = hiGlyphs.map((g) => ({i: g.i, x: PARTS.col + g.x / 1.5 * SC, y: S.py0 + (1536 - g.y / 1.5) * SC, size: g.size / 1.5 * SC}));
 	// the table's front
 	st.add('front', canvasTex(frontCanvas()), 960, 540, W, H, 0, {rim: 0.6, rimPx: 4}, -10);
 	// ---- the lens content: a collage of the shed (8192) and the gate (8192), plus the animated patch region
-	const shed8 = (patch: 'bare' | 'donkey' | 'peeled') => paintSection('shed', {width: 8192, height: 3072, mode: 'mono', seed: 43, patch});
+	// painted without the weave (no 100 MB weave overlay cached at this size); the crops get their own weave
+	const shed8 = (patch: 'bare' | 'donkey' | 'peeled') => paintSection('shed', {width: 8192, height: 3072, mode: 'mono', seed: 43, patch, weave: 0});
+	const wv = (c: HTMLCanvasElement) => { silkWeave(c, 1, {mode: 'mono', seed: 43}); return c; };
 	const sb = shed8('bare');
 	collage = mkCanvas(GATE_AT + GATE_CROP.w, SHED_CROP.h); CW = collage.width; CH = collage.height;
 	const cg = collage.getContext('2d')!; cg.drawImage(sb, SHED_CROP.x, SHED_CROP.y, SHED_CROP.w, SHED_CROP.h, 0, 0, SHED_CROP.w, SHED_CROP.h);
 	P_BARE = crop(sb, PATCH_CROP.x, PATCH_CROP.y, PATCH_CROP.w, PATCH_CROP.h);
-	P_DONKEY = crop(shed8('donkey'), PATCH_CROP.x, PATCH_CROP.y, PATCH_CROP.w, PATCH_CROP.h);
-	P_PEELED = crop(shed8('peeled'), PATCH_CROP.x, PATCH_CROP.y, PATCH_CROP.w, PATCH_CROP.h);
-	const gate8 = paintSection('gate', {width: 8192, height: 3072, mode: 'mono', seed: 43});
-	const gc = crop(gate8, GATE_CROP.x, GATE_CROP.y, GATE_CROP.w, GATE_CROP.h), gcg = gc.getContext('2d')!;
-	const fade = gcg.createLinearGradient(0, 0, 420, 0); fade.addColorStop(0, 'rgba(0,0,0,0)'); fade.addColorStop(1, 'rgba(0,0,0,1)'); gcg.globalCompositeOperation = 'destination-in'; gcg.fillStyle = fade; gcg.fillRect(0, 0, 420, GATE_CROP.h); gcg.fillStyle = '#000'; gcg.fillRect(420, 0, GATE_CROP.w, GATE_CROP.h);
-	cg.drawImage(gc, GATE_AT, 0);
+	sb.width = sb.height = 1;
+	const free = (c: HTMLCanvasElement) => { const o = crop(c, PATCH_CROP.x, PATCH_CROP.y, PATCH_CROP.w, PATCH_CROP.h); c.width = c.height = 1; return o; };
+	P_DONKEY = wv(free(shed8('donkey'))); P_PEELED = wv(free(shed8('peeled'))); wv(P_BARE);
+	const gate6 = paintSection('gate', {width: 6144, height: 2304, mode: 'mono', seed: 43, weave: 0}), k6 = 6144 / 8192;   // the gate is seen only in passing: 6144 is enough
+	const gc = crop(gate6, GATE_CROP.x * k6, GATE_CROP.y * k6, GATE_CROP.w * k6, GATE_CROP.h * k6, GATE_CROP.w, GATE_CROP.h), gcg = gc.getContext('2d')!; gate6.width = gate6.height = 1;
+	const fade = gcg.createLinearGradient(0, 0, 420, 0); fade.addColorStop(0, 'rgba(0,0,0,0)'); fade.addColorStop(1, 'rgba(0,0,0,1)'); gcg.globalCompositeOperation = 'destination-in'; gcg.fillStyle = fade; gcg.fillRect(0, 0, GATE_CROP.w, GATE_CROP.h);   // one fill: destination-in clears outside the shape
+	cg.drawImage(gc, GATE_AT, 0); wv(collage);
 	P_NOPOST = inpaintPosts(P_BARE); P_DLINES = inkOnly(P_DONKEY); P_PIECE = pieceOf(P_DONKEY, P_PEELED);
 	patchCv = mkCanvas(PATCH_CROP.w, PATCH_CROP.h); patchTex = canvasTex(patchCv); patchTex.generateMipmaps = false; patchTex.minFilter = THREE.LinearFilter;
 	lensMat = lensMaterial(bigTex(collage), patchTex);
@@ -125,14 +128,14 @@ const ringCanvas = () => {
 /** the lens: a disc showing a window of the collage (+ the patch canvas on top), soft fall-off at the rim */
 const lensMaterial = (map: THREE.Texture, patch: THREE.Texture) => new THREE.ShaderMaterial({
 	uniforms: {map: {value: map}, patchT: {value: patch}, uWin: {value: new THREE.Vector4(0.5, 0.5, 0.2, 0.2)}, uPatch: {value: new THREE.Vector4(0, 0, 1, 1)},
-		uOpacity: {value: 1}, uGlowPass: {value: 0}, uEmissive: {value: 0.2}, uHero: {value: new THREE.Vector2()}, uHeroR: {value: 900}},
+		uOpacity: {value: 1}, uGlowPass: {value: 0}, uEmissive: {value: 0.2}, uHero: {value: new THREE.Vector2()}, uHeroR: {value: 900}, uDefocus: {value: 0}},
 	vertexShader: `varying vec2 vUv; void main(){ vUv = uv; gl_Position = projectionMatrix * modelViewMatrix * vec4(position,1.0); }`,
-	fragmentShader: `uniform sampler2D map, patchT; uniform vec4 uWin, uPatch; uniform float uOpacity, uGlowPass, uEmissive, uHeroR; uniform vec2 uHero; varying vec2 vUv;
+	fragmentShader: `uniform sampler2D map, patchT; uniform vec4 uWin, uPatch; uniform float uOpacity, uGlowPass, uEmissive, uHeroR, uDefocus; uniform vec2 uHero; varying vec2 vUv;
 	void main(){ vec2 d = vUv - 0.5; float r = length(d); if (r > 0.5) discard;
 		vec2 c = uWin.xy + d * 2.0 * uWin.zw; vec3 col = texture2D(map, c).rgb;
 		vec2 pu = (c - uPatch.xy) / (uPatch.zw - uPatch.xy);
 		if (pu.x >= 0.0 && pu.x <= 1.0 && pu.y >= 0.0 && pu.y <= 1.0) { vec4 p = texture2D(patchT, pu); col = mix(col, p.rgb, p.a); }
-		col *= 1.0 - 0.22 * smoothstep(0.40, 0.5, r); float a = uOpacity;
+		col = mix(col, vec3(0.80, 0.71, 0.52), uDefocus * 0.85); col *= 1.0 - 0.22 * smoothstep(0.40, 0.5, r); float a = uOpacity;
 		if (uGlowPass > 0.5) gl_FragColor = vec4(col * uEmissive, a); else gl_FragColor = vec4(col, a);
 		#include <colorspace_fragment>
 	}`, transparent: true, depthWrite: false, depthTest: true});
@@ -180,9 +183,9 @@ const drawPatch = (t: number) => {
 	if (kPeel > 0) {
 		g.drawImage(P_PEELED, 0, 0);
 		// the old patch lifts at its right edge (the tweezers), rises toward the lens and slides off
-		const lift = smooth(kPeel), ang = -0.5 * lift, dx = 140 * easeIn(kPeel) + 30 * lift, dy = -120 * easeIn(kPeel) - 20 * lift, sc = 1 + 0.12 * lift;
+		const lift = smooth(kPeel), ang = -0.5 * lift, dx = 520 * easeIn(kPeel) + 30 * lift, dy = -470 * easeIn(kPeel) - 20 * lift, sc = 1 + 0.12 * lift;
 		g.save(); g.globalAlpha = 0.35 * lift * (1 - easeIn(kPeel)); g.filter = 'blur(10px)'; g.translate(TW_TIP[0] - 20 * lift, TW_TIP[1] + 26 * lift); g.rotate(ang * 0.6); g.translate(-TW_TIP[0], -TW_TIP[1]); g.drawImage(pieceShadow(), 0, 0); g.restore(); g.filter = 'none';
-		g.save(); g.translate(TW_TIP[0] + dx, TW_TIP[1] + dy); g.rotate(ang); g.scale(sc, sc); g.translate(-TW_TIP[0], -TW_TIP[1]); g.drawImage(P_PIECE, 0, 0); g.restore();
+		g.save(); g.globalAlpha = 1 - clamp01((kPeel - 0.82) / 0.18); g.translate(TW_TIP[0] + dx, TW_TIP[1] + dy); g.rotate(ang); g.scale(sc, sc); g.translate(-TW_TIP[0], -TW_TIP[1]); g.drawImage(P_PIECE, 0, 0); g.restore();
 		tweezers(g, [TW_TIP[0] + dx, TW_TIP[1] + dy], 1);
 	} else if (kDonk > 0) {
 		g.drawImage(P_BARE, 0, 0); dashes(g, 1, 1 - kDonk);
@@ -194,8 +197,14 @@ const drawPatch = (t: number) => {
 	else if (kPost > 0) { g.drawImage(P_NOPOST, 0, 0); const yr = lerp(206, 66, easeOut(kPost)); g.save(); g.beginPath(); g.rect(360, yr, 100, 210 - yr); g.clip(); g.drawImage(P_BARE, 0, 0); g.restore(); }
 	else g.drawImage(P_NOPOST, 0, 0);
 	if (t >= T_PEEL - 0.3 && kPeel <= 0) tweezers(g, TW_TIP, clamp01((t - (T_PEEL - 0.3)) / 0.3));
+	g.globalCompositeOperation = 'destination-in'; g.drawImage(featherMask(), 0, 0); g.globalCompositeOperation = 'source-over';
 	patchTex.needsUpdate = true;
 };
+let FEATHER: HTMLCanvasElement | null = null;
+/** the patch canvas fades out over its outer 70 px, so its own silk weave never shows a seam against the collage */
+const featherMask = () => { if (FEATHER) return FEATHER; const w = PATCH_CROP.w, h = PATCH_CROP.h, c = mkCanvas(w, h), g = c.getContext('2d')!, id = g.createImageData(w, h), f = 70;
+	for (let y = 0; y < h; y++) for (let x = 0; x < w; x++) { const d = Math.min(x, y, w - 1 - x, h - 1 - y); id.data[(y * w + x) * 4 + 3] = Math.round(255 * smooth(Math.min(1, d / f))); }
+	g.putImageData(id, 0, 0); FEATHER = c; return c; };
 let SHADOW: HTMLCanvasElement | null = null;
 const pieceShadow = () => { if (SHADOW) return SHADOW; SHADOW = mkCanvas(P_PIECE.width, P_PIECE.height); const g = SHADOW.getContext('2d')!; g.drawImage(P_PIECE, 0, 0); g.globalCompositeOperation = 'source-in'; g.fillStyle = '#2A1F17'; g.fillRect(0, 0, SHADOW.width, SHADOW.height); return SHADOW; };
 const dashes = (g: CanvasRenderingContext2D, k: number, alpha: number) => {
@@ -228,8 +237,8 @@ const lensWin = (t: number): {c: P2; span: number} => {
 	if (t >= b(58.75)) { const d = clamp01((t - b(58.75)) / (b(60.25) - b(58.75))), z = smooth(clamp01((t - b(60)) / (b(60.25) - b(60)))); return {c: lerpP([PATCH_C[0] + 40 - 30 * d, PATCH_C[1] - 30], ROOMW.c, z), span: lerp(1500, ROOM_SPAN, z)}; }
 	// b58.5: out through the painted gate (the arch, tight → wider), then a fast eased slide left to the shed
 	const u0 = clamp01((t - b(58.5) + 0.25) / 0.45), u1 = easeInOut(clamp01((t - b(58.5) - 0.1) / (b(58.75) - b(58.5) - 0.1)));
-	const span = lerp(lerp(520, 1400, easeOut(u0)), 1500, u1);
-	return {c: lerpP([ARCH_C[0], ARCH_C[1] - 60], [PATCH_C[0] + 40, PATCH_C[1] - 30], u1), span};
+	const span = lerp(lerp(900, 1400, easeOut(u0)), 1500, u1);
+	return {c: lerpP([ARCH_C[0] + 40, ARCH_C[1] - 40 + 30 * u0], [PATCH_C[0] + 40, PATCH_C[1] - 30], u1), span};
 	void room;
 };
 const camR = (t: number): Cam => {
@@ -294,7 +303,7 @@ const drawR = (t: number) => {
 	const lc = lensAt(t), win = lensWin(t), u = lensMat.uniforms;
 	lens.position.set(lc[0] - W / 2, H / 2 - lc[1], 0); ring.position.set(lc[0] - W / 2, H / 2 - lc[1], 0.5);
 	const lo = clamp01((c.th - 1.1) / 0.2); lens.visible = ring.visible = lo > 0; lensMat.uniforms.uOpacity.value = lo; (ring.material as Mat).uniforms.uOpacity.value = lo;
-	u.uWin.value.set(win.c[0] / CW, 1 - win.c[1] / CH, win.span / 2 / CW, win.span / 2 / CH);
+	u.uWin.value.set(win.c[0] / CW, 1 - win.c[1] / CH, win.span / 2 / CW, win.span / 2 / CH); u.uDefocus.value = swingK(t);
 	u.uPatch.value.set((PATCH_C[0] - 306) / CW, 1 - (PATCH_C[1] - 366 + PATCH_CROP.h) / CH, (PATCH_C[0] - 306 + PATCH_CROP.w) / CW, 1 - (PATCH_C[1] - 366) / CH);
 	shedMesh.material = t >= b(61.25) ? shedPeeled : shedDonkey;
 	// the tail's glow: 藏者宜宝之 from b63
@@ -313,6 +322,5 @@ const drawR = (t: number) => {
 	const inLens = c.z > 6 ? 1 : 0, top = c.th < 0.3 ? 1 : 0;
 	return {st, grade: {vig: inLens ? 0.62 : top ? 0.5 : 0.3, vigCol: '#1a120b', corners: inLens || top ? 0.95 : 0.25, exposure: 1}, bloom: 1};
 };
-(window as any).RESTO_DBG = (t: number) => { const c = camR(t); return {c, th: strip.theta}; };
 addScene({id: '30', a: b(58.5), z: b(62), draw: drawR});
 addScene({id: '31', a: b(62), z: b(64), draw: drawR});
