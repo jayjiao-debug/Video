@@ -1,4 +1,4 @@
-# Storyboard: 圆明园马首
+# Storyboard: 假如说你是一块龙骨
 
 ## Look
 Palette (hex) · type (fonts, weights) · texture/lighting · motifs · what it must NOT look like · references
