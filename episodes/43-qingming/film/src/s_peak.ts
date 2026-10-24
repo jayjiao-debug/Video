@@ -116,7 +116,7 @@ const researcher = (t: number): FigOpts => {
 	else if (t < b(51.25) - 0.18) { /* hands in the lap */ }
 	else if (t < b(53.5) - 0.2) { const i = t < openAt(1) - 0.05 ? 2 : t < openAt(0) - 0.05 ? 1 : 0; c.push({side: 'R', target: [freeEnd(i, t), ROLLY[i] - 4], name: 'roller'}); }
 	else if (t < T0) { const p = batteredAt(t); c.push({side: 'R', target: [p[0] + 6, p[1] - 12], name: 'battered'}); }
-	else { c.push({side: 'R', target: [SX + 8, TOPF - 4], name: 'silk edge'}); if (t < T0 + 0.12) c.push({side: 'L', target: [SX + 14 + SW * unrollAt(t), TOPF - 16], name: 'roller'}); }
+	else { c.push({side: 'R', target: [SX + 8, TOPF - 4], name: 'silk edge'}); if (t < T0 + 0.035) c.push({side: 'L', target: [SX + 14 + SW * unrollAt(t), TOPF - 16], name: 'roller'}); }   // L hand only on the push: the roll then runs out of reach
 	return rig(o, c, () => FLOOR, 'researcher');
 };
 

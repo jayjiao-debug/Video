@@ -55,16 +55,16 @@ let body9: ScreenLayer, props9: ScreenLayer;
 /** the hand-over roll (screen px) at b14.5, measured at boot: scene 10 starts its carry there (match on action) */
 export let HANDOFF: {c: P2; len: number} = {c: [790, 615], len: 200};
 
-const CAM9_A = [...ins9(2300, 760), 6.4] as number[], CAM9_B = [...ins9(1850, 790), 5.8] as number[], CAM9_D = [960, 612, 1.1];
+const CAM9_A = [...ins9(2300, 760), 6.4] as number[], CAM9_B = [...ins9(1850, 790), 5.8] as number[], CAM9_D = [960, 596, 1.0];
 const cam9 = (t: number): {x: number; y: number; z: number; th: number} => {
-	if (t < b(13)) return {x: CAM9_A[0], y: CAM9_A[1], z: CAM9_A[2], th: 0};
-	if (t < b(14)) { const u = easeInOut((t - b(13)) / (b(14) - b(13))); return {x: lerp(CAM9_A[0], CAM9_B[0], u), y: lerp(CAM9_A[1], CAM9_B[1], u), z: Math.exp(lerp(Math.log(CAM9_A[2]), Math.log(CAM9_B[2]), u)), th: 0}; }
+	if (t < b(13.25)) return {x: CAM9_A[0], y: CAM9_A[1], z: CAM9_A[2], th: 0};
+	if (t < b(14)) { const u = easeInOut((t - b(13.25)) / (b(14) - b(13.25))); return {x: lerp(CAM9_A[0], CAM9_B[0], u), y: lerp(CAM9_A[1], CAM9_B[1], u), z: Math.exp(lerp(Math.log(CAM9_A[2]), Math.log(CAM9_B[2]), u)), th: 0}; }
 	const u = clamp01((t - b(14)) / (b(14.25) - b(14))), uz = easeInOut(u), ut = easeOut(Math.min(1, u * 1.2));
 	const drift = clamp01((t - b(14.25)) / (b(14.5) - b(14.25)));
 	return {x: lerp(CAM9_B[0], CAM9_D[0], uz) - 6 * drift, y: lerp(CAM9_B[1], CAM9_D[1], uz), z: Math.exp(lerp(Math.log(CAM9_B[2]), Math.log(CAM9_D[2]), uz)) * (1 + 0.012 * drift), th: TH_D * ut};
 };
 /** stroke-landing progress: an ink attack on each beat b13 … b14 */
-const progL9 = (t: number) => { const steps = [[b(13), 0.3], [b(13.25), 0.48], [b(13.5), 0.66], [b(13.75), 0.84], [b(14), 1.06]]; let v = 0;
+const progL9 = (t: number) => { const steps = [[b(13.25), 0.32], [b(13.5), 0.52], [b(13.75), 0.74], [b(14), 1.06]]; let v = 0;
 	for (const [tb, val] of steps) if (t >= tb) v = lerp(v, val, easeOut((t - tb) / 0.2)); return v; };
 const P1 = b(14.25), P2t = b(14.375), P3 = b(14.5);
 /** the window edges (local x) and the closed roll's local x */
@@ -153,8 +153,9 @@ const draw9 = (t: number) => {
 	const pl = progL9(t), pw = Math.max(0, progL9(t - 0.32) * 0.97);
 	paperMat9.uniforms.uProgL.value = pl; paperMat9.uniforms.uProgW.value = pw;
 	const u0 = S.win[0] / 640, u1 = S.win[1] / 640; paperMat9.uniforms.uClip.value.set(u0, u1, -1, 2);
-	traceMat9.uniforms.uOpacity.value = 1 - smooth(clamp01((t - b(13)) / (b(13.4) - b(13))));
-	trace9.visible = t < b(13.45);
+	traceMat9.uniforms.uOpacity.value = 1 - smooth(clamp01((t - b(13.25)) / (b(13.6) - b(13.25))));
+	trace9.visible = t < b(13.65);
+	paper9.visible = S.rollOnTable;
 	// rollers: the rolled bulk at both window edges; one roll once closed; lifted off at P2
 	strip9.place(rollL9, S.win[0] - 10, S9.py0 - 8, 20, 256, 3); strip9.place(rollR9, S.win[1] - 9, S9.py0 - 8, 18, 256, 3);
 	rollL9.visible = rollR9.visible = S.rollOnTable;
@@ -169,11 +170,11 @@ const draw9 = (t: number) => {
 	const ins = 1 - clamp01((c.th - 0.2) / 0.9);
 	return {st, grade: {vig: lerp(0.38, 0.6, ins), vigCol: '#1a120b', corners: 0.9 * ins, exposure: 1}, bloom: 1};
 };
-addScene({id: '09', a: b(13), z: b(14.5), draw: draw9, in: {mode: 2, a: b(12.75), z: b(13), dir: [-1, 0], soft: 0.05}});
+addScene({id: '09', a: b(13), z: b(14.5), draw: draw9, in: {mode: 2, a: b(13), z: b(13.25), dir: [-1, 0], soft: 0.05}});
 
 // ================================================================================================ 10: the 宋 crest, dusk → fire
 const ZC = 20;
-let crest10: Crest, body10: ScreenLayer, props10: ScreenLayer, fireSky: any, fireRiver: any, fireGlow: any, smoke: any, embers: Motes;
+let crest10: Crest, body10: ScreenLayer, props10: ScreenLayer, fireSky: any, fireRiver: any, fireGlow: any, fireHaze: any, smoke: any, embers: Motes;
 const lkRef = look('refugee');
 const build10 = async () => {
 	crest10 = new Crest('song-dusk', {sky: 'dusk', era: '宋', lanterns: true, boat: true, bankCrowd: true}); await crest10.ready;
@@ -181,7 +182,8 @@ const build10 = async () => {
 	fireSky = st.add('firesky', canvasTex(gradCanvas(SKIES.fire)), 960, 700, 9000, 3600, -8990, {opacity: 0});
 	fireRiver = st.add('fireriver', canvasTex(gradCanvas(WATER.fire, 64, 1024)), 960, 860 + 700, 9000, 1400, -1399, {opacity: 0});
 	const fg = mkCanvas(512, 256), g = fg.getContext('2d')!, gr = g.createRadialGradient(256, 256, 10, 256, 256, 256); gr.addColorStop(0, 'rgba(255,150,70,0.95)'); gr.addColorStop(0.4, 'rgba(226,96,44,0.55)'); gr.addColorStop(1, 'rgba(120,40,20,0)'); g.fillStyle = gr; g.fillRect(0, 0, 512, 256);
-	fireGlow = st.add('fireglow', canvasTex(fg), 200, 760, 2000, 900, -2700, {opacity: 0});
+	fireGlow = st.add('fireglow', canvasTex(fg), 220, 800, 2600, 1100, -2700, {opacity: 0});
+	fireHaze = st.add('firehaze', canvasTex(fg), 300, 860, 3400, 520, -2450, {opacity: 0, blending: THREE.AdditiveBlending});
 	smoke = st.add('smoke', canvasTex(smokeCanvas()), 260, 470, 1800, 900, -2500, {opacity: 0});
 	embers = new Motes(st, 160, 'ember', 300, 8, '#FFB06A', false);
 	body10 = new ScreenLayer(st, 'body10', ZC, {rim: 1.0, rimPx: 6}, 20);
@@ -195,12 +197,12 @@ const smokeCanvas = () => {
 };
 const FIRE0 = b(15.25), FIRE1 = b(15.5);
 /** the carrying pair: the front official holds the roll by both ends at chest height; the second walks a step behind */
-const STEP10 = 2.3;                                                     // steps per beat (hurried: into the palace before the fire)
+const STEP10 = 2.5;                                                     // steps per beat (hurried: into the palace before the fire)
 const carryX = (t: number, h: number) => { const str = gaitStride('08_04', stepFor(lkOfficial)) * h; return HANDOFF_FRAME[0] + 0.2 * h - ((t - P3) / (2 * BEAT)) * STEP10 * str; };
 let HANDOFF_FRAME: P2 = [790, 635];
 /** the refugee column: x of the group's anchor (moving right) */
-const REF0 = b(15.15), REFV = 1.5;                                      // enters at REF0, 1.5 steps per beat
-const refX = (t: number, h: number) => { const str = gaitStride('08_04', stepFor(lkRef)) * h; return -260 + ((t - REF0) / (2 * BEAT)) * REFV * str; };
+const REF0 = b(15.25), REFV = 1.3;                                      // appears with the fire (time-lapse), 1.3 steps per beat
+const refX = (t: number, h: number) => { const str = gaitStride('08_04', stepFor(lkRef)) * h; return 620 + ((t - b(15.75)) / (2 * BEAT)) * REFV * str; };
 const unproj = (st: Stage, sx: number, sy: number, z: number): P2 => {   // screen → frame px at depth z (camera without tilt)
 	const c = st.cam, d = c.position.z, Xw = c.position.x + (sx - 960) * (d - z) / D, Yw = c.position.y - (sy - 540) * (d - z) / D;
 	return [960 + Xw * D / (D - z), 540 - Yw * D / (D - z)];
@@ -208,7 +210,7 @@ const unproj = (st: Stage, sx: number, sy: number, z: number): P2 => {   // scre
 /** a refugee handcart: wheel on the deck, shafts to the puller's hands; draws far wheel, bed, load, (front board, near wheel later) */
 type Cart = {ax: number; ay: number; r: number; ang: number; bed: (s: number, up?: number) => P2; hand: P2};
 const cartGeo = (ax: number, groundY: number, hand: P2, h: number): Cart => {
-	const r = 0.115 * h, ay = groundY - r + 2, piv: P2 = [ax, ay - r * 0.25], ang = Math.atan2(hand[1] - piv[1], hand[0] - piv[0]);
+	const r = 0.15 * h, ay = groundY - r + 2, piv: P2 = [ax, ay - r * 0.25], ang = Math.atan2(hand[1] - piv[1], hand[0] - piv[0]);
 	const ca = Math.cos(ang), sa = Math.sin(ang);
 	const bed = (s: number, up = 0): P2 => [piv[0] + ca * s * h + sa * up * h, piv[1] + sa * s * h - ca * up * h];
 	return {ax, ay, r, ang, bed, hand};
@@ -221,40 +223,40 @@ const wheel = (g: CanvasRenderingContext2D, x: number, y: number, r: number, rot
 const poly = (g: CanvasRenderingContext2D, pts: P2[], col: string) => { g.fillStyle = col; g.beginPath(); g.moveTo(pts[0][0], pts[0][1]); for (const p of pts.slice(1)) g.lineTo(p[0], p[1]); g.closePath(); g.fill(); };
 const cartBack = (g: CanvasRenderingContext2D, c: Cart, h: number, load: 'bundles' | 'you') => {
 	wheel(g, c.ax + 0.05 * h, c.ay - 0.012 * h, c.r * 0.96, c.ax / c.r, '#120d0a');
-	const B = c.bed; poly(g, [B(-0.36, 0), B(0.42, 0), B(0.42, 0.035), B(-0.36, 0.035)], '#15100C');       // bed
+	const B = c.bed; poly(g, [B(-0.3, 0), B(0.36, 0), B(0.36, 0.035), B(-0.3, 0.035)], '#15100C');       // bed
 	g.strokeStyle = '#15100C'; g.lineWidth = 0.022 * h; g.lineCap = 'round'; g.beginPath(); g.moveTo(...B(0.3, 0.02)); g.lineTo(c.hand[0], c.hand[1]); g.stroke();   // shafts
-	poly(g, [B(-0.36, 0.03), B(-0.33, 0.03), B(-0.33, 0.17), B(-0.36, 0.17)], '#15100C');                   // tail board
+	poly(g, [B(-0.3, 0.03), B(-0.27, 0.03), B(-0.27, 0.15), B(-0.3, 0.15)], '#15100C');                     // tail board
 	if (load === 'bundles') { for (const [s, rr, up] of [[-0.2, 0.08, 0.1], [0.0, 0.1, 0.12], [0.2, 0.075, 0.1], [-0.08, 0.07, 0.2]] as [number, number, number][]) { const p = B(s, up); g.fillStyle = '#1d1712'; g.beginPath(); g.ellipse(p[0], p[1], rr * h, rr * h * 0.72, c.ang, 0, Math.PI * 2); g.fill(); } }
 	else { for (const [s, rr, up] of [[-0.22, 0.075, 0.1], [0.26, 0.07, 0.1]] as [number, number, number][]) { const p = B(s, up); g.fillStyle = '#1d1712'; g.beginPath(); g.ellipse(p[0], p[1], rr * h, rr * h * 0.72, c.ang, 0, Math.PI * 2); g.fill(); } }
 };
 const cartFront = (g: CanvasRenderingContext2D, c: Cart, h: number) => {
-	const B = c.bed; poly(g, [B(-0.36, 0.0), B(0.42, 0.0), B(0.42, 0.115), B(-0.36, 0.115)], '#17110d');     // the near side board
-	g.fillStyle = 'rgba(255,214,150,0.06)'; poly(g, [B(-0.36, 0.105), B(0.42, 0.105), B(0.42, 0.115), B(-0.36, 0.115)], 'rgba(60,40,26,0.9)');
+	const B = c.bed; poly(g, [B(-0.3, 0.0), B(0.36, 0.0), B(0.36, 0.1), B(-0.3, 0.1)], '#17110d');           // the near side board
+	poly(g, [B(-0.3, 0.09), B(0.36, 0.09), B(0.36, 0.1), B(-0.3, 0.1)], 'rgba(60,40,26,0.9)');
 	wheel(g, c.ax, c.ay, c.r, c.ax / c.r);
 };
 type Grp = {figs: FigOpts[]; carts: {c: Cart; load: 'bundles' | 'you'}[]; you: [P2, P2] | null; hs: number};
 /** the refugees (screen px), streaming right: a walker, two pullers with carts (the second carries you), a walker */
 const refugees = (t: number, st: Stage): Grp => {
 	const h = 440, ax = refX(t, h), u = (t - REF0) / (2 * BEAT) * REFV, out: Grp = {figs: [], carts: [], you: null, hs: h};
-	if (t < REF0 - 0.05) return out;
+	if (t < REF0) return out;
 	const gS = (sx: number) => { const p = unproj(st, sx, 0, ZC); return proj(st, p[0], deck(p[0]) + 4, ZC)[1]; };
 	const member = (dx: number, du: number, kind: 'walk' | 'pull' | 'pullYou', who: string) => {
 		const x = ax + dx; const o: FigOpts = {x, ground: deck(x) + 4, h: h + (hash(dx) - 0.5) * 30, pose: walkFor(lkRef, u + du), look: lkRef};
 		const s = onScreen(st, o, ZC);
 		if (kind === 'walk') { out.figs.push(rig(s, [], gS, who)); return; }
 		// the puller: hands on the shaft ends at his hips, the cart behind him
-		const hand = toScreen(s, [-0.04, 0.47]); const axw = x - 0.62 * o.h; const axS = proj(st, axw, deck(axw) + 4, ZC);
+		const hand = toScreen(s, [-0.03, 0.42]); const axw = x - 0.92 * o.h; const axS = proj(st, axw, deck(axw) + 4, ZC);
 		const cg = cartGeo(axS[0], axS[1], [hand[0] - 2, hand[1] + 2], s.h);
 		const f = rig(s, [{side: 'R', target: [hand[0] - 2, hand[1] + 2], name: 'shaft'}, {side: 'L', target: [hand[0] - 9, hand[1] + 4], name: 'shaft'}], gS, who);
 		out.figs.push(f); out.carts.push({c: cg, load: kind === 'pullYou' ? 'you' : 'bundles'});
-		if (kind === 'pullYou') { const B = cg.bed; out.you = [B(-0.24, 0.1), B(0.2, 0.12)]; out.hs = s.h; }
+		if (kind === 'pullYou') { const B = cg.bed; out.you = [B(-0.22, 0.09), B(0.22, 0.1)]; out.hs = s.h; }
 	};
-	member(420, 0.35, 'walk', 'ref-lead'); member(230, 0.1, 'pull', 'ref-pull1'); member(-150, 0.6, 'pullYou', 'ref-pull2'); member(-470, 0.85, 'walk', 'ref-tail');
+	member(560, 0.35, 'walk', 'ref-lead'); member(300, 0.1, 'pullYou', 'ref-pull1'); member(-230, 0.6, 'pull', 'ref-pull2'); member(-650, 0.85, 'walk', 'ref-tail');
 	return out;
 };
 const cam10 = (t: number, glow: P2 | null, st: Stage): [number, number, number] => {
 	const base: [number, number, number] = [960, 560, 1];
-	const u = clamp01((t - b(15.75)) / (b(16) - b(15.75)));
+	const u = clamp01((t - b(15.75)) / (b(16.15) - b(15.75)));
 	if (u <= 0 || !glow) return base;
 	const k = easeIn(u), z = Math.exp(lerp(0, Math.log(3.4), k));
 	// centre the drifting glow: its frame px at the cast depth
@@ -282,17 +284,21 @@ const draw10 = (t: number) => {
 		figs.push(rig(s1, [{side: 'L', target: [roll[0][0] + 6, roll[0][1] + 7], name: 'roll end'}, {side: 'R', target: [roll[1][0] - 6, roll[1][1] + 7], name: 'roll end'}], gS, 'official10a'));
 	}
 	const fk = `${Math.round(t * 60)}`;
-	body10.draw(fk, (g) => { for (const c of grp.carts) cartBack(g, c.c, c.c.r / 0.115, c.load); for (const f of [...figs, ...grp.figs]) drawFig(g, f); });
+	const fade = smooth(clamp01((t - REF0) / 0.3));
+	body10.draw(fk, (g) => { for (const f of figs) drawFig(g, f); g.globalAlpha = fade; for (const c of grp.carts) cartBack(g, c.c, c.c.r / 0.115, c.load); for (const f of grp.figs) drawFig(g, f); g.globalAlpha = 1; });
 	props10.draw(fk, (g) => {
-		const pushK = clamp01((t - b(15.75)) / (b(16) - b(15.75)));
+		const pushK = clamp01((t - b(15.75)) / (b(16.15) - b(15.75)));
 		if (roll) { glowBlob(g, lerpP(roll[0], roll[1], 0.5), 130, 70, 0.34); drawRoll(g, roll[0], roll[1], 0.032 * 445 * cz, 1); for (const f of figs.slice(-1)) { drawFig(g, {...f, part: 'L'}); drawFig(g, {...f, part: 'R'}); } }
+		g.globalAlpha = fade;
 		if (grp.you) { const m = lerpP(grp.you[0], grp.you[1], 0.5); glowBlob(g, m, 150 + 900 * easeIn(pushK), 80 + 600 * easeIn(pushK), 0.4 + 0.5 * pushK); drawRoll(g, grp.you[0], grp.you[1], 0.032 * grp.hs, 1); }
 		for (const c of grp.carts) cartFront(g, c.c, c.c.r / 0.115);
+		g.globalAlpha = 1;
 	});
 	// sky: dusk → fire
 	const fk2 = smooth(clamp01((t - FIRE0) / (FIRE1 - FIRE0)));
 	fireSky.mat.uniforms.uOpacity.value = fk2; fireRiver.mat.uniforms.uOpacity.value = fk2 * 0.95;
-	fireGlow.mat.uniforms.uOpacity.value = fk2 * (0.8 + 0.2 * Math.sin(t * 9) * Math.sin(t * 5.3));
+	const flick = 0.85 + 0.15 * Math.sin(t * 9) * Math.sin(t * 5.3);
+	fireGlow.mat.uniforms.uOpacity.value = fk2 * flick; fireHaze.mat.uniforms.uOpacity.value = 0.32 * fk2 * flick;
 	smoke.mat.uniforms.uOpacity.value = fk2 * 0.9; st.place(smoke, 260 + (t - FIRE0) * 6, 470 - (t - FIRE0) * 22);
 	st.get('sunglow').mat.uniforms.uOpacity.value = 1 - fk2;
 	const far = st.get('far'); far.mat.uniforms.uFog.value.set(lerp(0.788, 0.42, fk2), lerp(0.643, 0.16, fk2), lerp(0.478, 0.1, fk2), lerp(0.32, 0.16, fk2));
@@ -359,7 +365,7 @@ const blend = (a: CamJ, c: CamJ, u: number, ut = u): CamJ => ({x: lerp(a.x, c.x,
 /** the camera through 11 → 12 → 13 (one continuous path on one stage) */
 const camJ = (t: number): CamJ => {
 	const endL = SHEET_W;                                      // the painting's left edge (local)
-	const F16 = frameAt(endL + 200, S12.py0 + 100, 5.5), FLL = frameAt(endL + 66, S12.py0 + 56, 8.2), FUL = frameAt(endL + 64, S12.py0 + 168, 8.2);
+	const F16 = frameAt(endL + 215, S12.py0 + 100, 5.5), FLL = frameAt(endL + 122, S12.py0 + 56, 8.2), FUL = frameAt(endL + 118, S12.py0 + 168, 8.2);
 	const g0 = C0(0), g4 = C0(4), mid04 = (g0.y + g4.y) / 2;
 	const FPAPER = frameAt(g0.x - 18, S12.py0 + 104, 7.2);
 	const F19 = frameAt(g0.x, mid04, 10.2, 1330, 650);
@@ -443,20 +449,23 @@ const drawJ = (t: number) => {
 	const s = onScreen(st, o, ZZ); const zhang = deskOn ? rig(s, cs, () => s.ground, 'zhangzhu') : s;
 	// his stool
 	const fk = `${Math.round(t * 60)}`;
+	const ext = 520 * (1 - smooth(clamp01(c.th / TH_J * 1.05))), lxL = T12.x0 - S12.x0 - ext;      // while the paper stands up it hides him
+	const polyJ: P2[] = [stripJ.screen(lxL, -ext * 0.4, -2), stripJ.screen(T12.x1 - S12.x0, 0, -2), stripJ.screen(T12.x1 - S12.x0, S12.depth + ext, -2), stripJ.screen(lxL, S12.depth + ext, -2)];
 	bodyJ.draw(fk, (g) => {
+		g.save(); g.beginPath(); g.rect(-50, -50, W + 100, H + 100); g.moveTo(polyJ[0][0], polyJ[0][1]); for (const q of polyJ.slice(1)) g.lineTo(q[0], q[1]); g.closePath(); g.clip('evenodd');
 		const k = s.h / 560, sx = s.x, sy = s.ground; g.fillStyle = '#15100C';
 		g.fillRect(sx - 95 * k, sy - 196 * k, 160 * k, 14 * k); g.fillRect(sx - 85 * k, sy - 184 * k, 11 * k, 184 * k); g.fillRect(sx + 44 * k, sy - 184 * k, 11 * k, 184 * k); g.fillRect(sx - 80 * k, sy - 40 * k, 130 * k, 7 * k);
-		drawFig(g, zhang);
+		drawFig(g, zhang); g.restore();
 	});
-	propsJ.draw(fk, (g) => { if (brush) drawBrush(g, brush[0], brush[1], 6 * s.h / 560); if (deskOn) drawArms(g, [zhang]); });
+	propsJ.draw(fk, (g) => { if (brush) drawBrush(g, brush[0], brush[1], 6 * s.h / 560); if (c.th > 1.0) drawArms(g, [zhang]); });
 	const hero = stripJ.screen(SHEET_W + 260, S12.py0 + 100); st.setHero(hero[0], hero[1], 1300);
 	deskJ.lamp.draw('off', () => {});
 	const ins = 1 - clamp01((c.th - 0.2) / 0.9);
 	return {st, grade: {vig: lerp(0.36, 0.62, ins), vigCol: '#1a120b', corners: 0.95 * ins, exposure: 1}, bloom: 1};
 };
-addScene({id: '11', a: b(16), z: b(17.5), draw: drawJ, in: {mode: 5, a: b(15.88), z: b(16), pt: [0.5, 0.5], soft: 0.08}});
+addScene({id: '11', a: b(16), z: b(17.5), draw: drawJ, in: {mode: 5, a: b(16), z: b(16.15), pt: [0.5, 0.5], soft: 0.08}});
 addScene({id: '12', a: b(17.5), z: b(19), draw: drawJ});
-addScene({id: '13', a: b(19), z: b(23.5), draw: drawJ});
+addScene({id: '13', a: b(19), z: (window as any).SONG_TEST ? b(23.5) : b(23), draw: drawJ});             // scene 14 starts at b23 with in: ROLLUP_IN (b23 → b23.5)
 
 // ================================================================================================ boot
 export const bootSong = async () => {
