@@ -80,7 +80,7 @@ const PoldhuIn: React.FC<{t: number; tau: number}> = ({t, tau}) => {
 const cliffY = (x: number) => 792 + 10 * Math.sin(x * 0.004 + 1) + 6 * Math.sin(x * 0.013);
 const ML = 560, MR = 1225, MTOP = [96, 112], LI: [number, number] = [910, 606];
 export const HUTWIN = {x: 806, y: 704, w: 96, h: 54};
-const PoldhuOut: React.FC<{t: number; tau: number; inside?: React.ReactNode}> = ({t, tau, inside}) => {
+const PoldhuOut: React.FC<{t: number; tau: number; inside?: React.ReactNode; winK?: number}> = ({t, tau, inside, winK = 1}) => {
 	const T = MARCONI_T, {fire, dot} = keyState(tau, T);
 	let cliff = `M-300,1400 L-300,${cliffY(-300).toFixed(1)}`; for (let x = -280; x <= 1300; x += 20) cliff += ` L${x},${cliffY(x).toFixed(1)}`; cliff += ' L1330,830 L1352,900 L1340,1400 Z';
 	const span = (u: number): [number, number] => [lerp(ML, MR, u), lerp(MTOP[0], MTOP[1], u) + 34 * Math.sin(Math.PI * u)];
@@ -109,7 +109,12 @@ const PoldhuOut: React.FC<{t: number; tau: number; inside?: React.ReactNode}> = 
 		<rect x={990} y={722} width={42} height={cliffY(1010) - 722 + 8} fill="#0c0d14" />
 		<rect x={HUTWIN.x - 6} y={HUTWIN.y - 6} width={HUTWIN.w + 12} height={HUTWIN.h + 12} fill="#0c0d14" />
 		{inside ? <g><defs><clipPath id="mcWin"><rect x={HUTWIN.x} y={HUTWIN.y} width={HUTWIN.w} height={HUTWIN.h} /></clipPath></defs>
-			<g clipPath="url(#mcWin)"><g transform={`translate(${HUTWIN.x},${HUTWIN.y}) scale(${HUTWIN.w / W})`}>{inside}</g></g></g>
+			<g clipPath="url(#mcWin)"><g transform={`translate(${HUTWIN.x},${HUTWIN.y}) scale(${HUTWIN.w / W})`}>{inside}</g>
+				{/* seen through glass from outside, the room grows a little dimmer and warmer as we pull away — gradually, never a flat fill */}
+				<rect x={HUTWIN.x} y={HUTWIN.y} width={HUTWIN.w} height={HUTWIN.h} fill="#2a180c" opacity={0.22 * winK} />
+				<rect x={HUTWIN.x} y={HUTWIN.y} width={HUTWIN.w} height={HUTWIN.h} fill="#ffb86a" opacity={0.16 * winK} />
+				<rect x={HUTWIN.x} y={HUTWIN.y} width={HUTWIN.w} height={HUTWIN.h} fill="#dff4ff" opacity={0.35 * fire * winK} /></g>
+				<Glow x={HUTWIN.x + HUTWIN.w / 2} y={HUTWIN.y + HUTWIN.h / 2} r={70} c="#ffb86a" o={0.22 * winK} id="mcWinGlow" /></g>
 			: <g><rect x={HUTWIN.x} y={HUTWIN.y} width={HUTWIN.w} height={HUTWIN.h} fill="#ffb86a" opacity={0.75} /><rect x={HUTWIN.x} y={HUTWIN.y} width={HUTWIN.w} height={HUTWIN.h} fill="#dff4ff" opacity={0.8 * fire} /></g>}
 		<Glow x={LI[0]} y={LI[1]} r={60} c="#cfefff" o={0.8 * fire} id="mcLiG" />
 		<path d={cliff} fill="#141826" />
@@ -321,9 +326,9 @@ export const MARCONI3: React.FC<{tau: number; t: number}> = ({tau, t}) => {
 		}
 		const u = ease(seg(tau, T.pullA, T.pullB)), Z0 = W / HUTWIN.w, z = Math.pow(Z0, 1 - u) * lerp(1, 1.04, seg(tau, T.pullB, T.whip));
 		const cx = HUTWIN.x + HUTWIN.w / 2, cy = HUTWIN.y + HUTWIN.h / 2, k = (z - 1) / (Z0 - 1);
-		const inside = z > 1.6 ? <PoldhuIn t={t} tau={tau} /> : undefined;
+		const inside = <PoldhuIn t={t} tau={tau} />;   // the interior stays in the window all the way out
 		return <Whip id="mcWhip1" amt={whipK * 90}><Cam zoom={z} fx={cx} fy={cy} px={(960 - cx) * k + d.px * (1 - k) - easeIn(whipK) * 1500} py={(540 - cy) * k + d.py * (1 - k)} roll={d.roll * (1 - k)}>
-			<PoldhuOut t={t} tau={tau} inside={inside} /></Cam></Whip>;
+			<PoldhuOut t={t} tau={tau} inside={inside} winK={sm(1 - k)} /></Cam></Whip>;
 	}
 	// 2. the Atlantic, westward
 	if (tau < T.hill) { const k = 1 - seg(tau, T.whip + 0.25, T.whip + 0.5);

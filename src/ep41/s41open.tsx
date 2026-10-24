@@ -1,7 +1,7 @@
 import React from 'react';
-import {W, H, SANS, rnd, cl, sm, lerp, mixPose, Glow} from './v3base';
+import {W, H, SANS, rnd, cl, lerp, Glow} from './v3base';
 import {Cam, Whip, Flash, ease, easeIn, easeOut, seg} from './fx';
-import {RoomA, LEAN, STAND, FUNNEL} from './s41bell';
+import {RoomA, bellRig, FACE, LookCam} from './s41bell';
 import {Moon} from './sky41';
 import {Iris} from './fx';
 /* Cold open 0–9.30 (owner note 2: the first frames must move and promise).
@@ -80,18 +80,19 @@ const YearTicker: React.FC<{tau: number}> = ({tau}) => { const O = OPEN_T, u = s
 	return <g><text x={W - 90} y={150} textAnchor="end" style={{fontFamily: '"DejaVu Sans Mono", monospace', fontWeight: 700, fontSize: 84, letterSpacing: '0.04em'}} fill="#f4ead2" opacity={0.92} stroke="rgba(0,0,0,0.5)" strokeWidth={5} paintOrder="stroke">{y}</text></g>; };
 /* 3 · the boarding house: the wire runs to one lit top-floor window */
 const House: React.FC<{t: number; tau: number}> = ({t, tau}) => {
-	const O = OPEN_T, u = seg(tau, O.house, O.room), zoom = lerp(1, 9, easeIn(seg(tau, O.house + 0.35, O.room))), wx = 1180, wy = 430;
+	const O = OPEN_T, u = seg(tau, O.house, O.room), zoom = lerp(1, 9, easeIn(seg(tau, O.house + 0.35, O.room))), wx = 1180, wy = 430, KN = [wx - 58, wy - 30];
 	return <Cam zoom={zoom} fx={wx} fy={wy} px={lerp(-200, 0, easeOut(seg(tau, O.house, O.house + 0.6)))}>
 		<Street e={ERAS[3]} cam={-(tau - O.copper) * 1400} t={t} seed={4} />
-		<path d={`M0,${wy - 160} Q${W * 0.5},${wy - 110} ${W},${wy - 170}`} stroke="#c98a4a" strokeWidth={3} fill="none" opacity={0.8} />
 		<rect x={980} y={300} width={520} height={800} fill="#08070b" />
 		<path d="M960,300 L1240,170 L1520,300 Z" fill="#08070b" /><rect x={1350} y={150} width={40} height={110} fill="#08070b" />
 		{[[1060, 560], [1180, 560], [1300, 560], [1060, 760], [1300, 760]].map(([x, y], i) => <rect key={i} x={x - 30} y={y - 50} width={60} height={100} fill="#1a1520" />)}
 		<Glow x={wx} y={wy} r={240} c="#ffc46a" o={0.55} id="ohwin" />
 		<rect x={wx - 34} y={wy - 56} width={68} height={112} fill="#ffcf7a" />
 		<path d={`M${wx},${wy - 56} v112 M${wx - 34},${wy} h68`} stroke="#3a2614" strokeWidth={5} />
-		{/* a silhouette at the window, bending */}
-		<circle cx={wx - 4} cy={wy - 4} r={13} fill="#1a120c" opacity={sm(u * 3)} />
+		{/* the line drops from the street to a knob on the wall beside the lit window, where it goes in */}
+		<path d={`M0,${wy - 160} Q${W * 0.3},${wy - 40} ${KN[0] - 4},${KN[1] - 2}`} stroke="#c98a4a" strokeWidth={3} fill="none" opacity={0.85} />
+		<circle cx={KN[0]} cy={KN[1]} r={5} fill="#d9cdb4" /><circle cx={KN[0] + 1.2} cy={KN[1] - 1.2} r={1.6} fill="#fff" opacity={0.7} />
+		<path d={`M${KN[0]},${KN[1] + 5} v${8 + 2 * Math.sin(u * 9)}`} stroke="#c98a4a" strokeWidth={2.5} opacity={0.85} />
 	</Cam>;
 };
 
@@ -107,11 +108,10 @@ export const OPEN3: React.FC<{tau: number; t: number}> = ({tau, t}) => {
 			</Iris><Flash k={seg(tau, O.copper - 0.12, O.copper) * 0.3} col="#fff4dc" /></g>; }
 	if (tau < O.house) return <WireRace t={t} tau={tau} />;
 	if (tau < O.room) return <g><House t={t} tau={tau} /></g>;
-	// 4 · Bell's room: he leans in, the camera pushes to his lips; frozen at 9.30 by the caller
-	const pose = mixPose(STAND, LEAN, sm(seg(tau, O.room - 0.2, O.room + 2.0)));
-	const zoom = lerp(1.15, 2.35, ease(seg(tau, O.room, O.end)));
-	return <g><Cam zoom={zoom} fx={FUNNEL[0] - 50} fy={lerp(560, FUNNEL[1] - 10, ease(seg(tau, O.room, O.end)))}>
-		<RoomA t={t} tau={tau} pose={pose} vib={0} rings={0} door={0} />
-	</Cam>{tau < O.room + 0.45 && <g opacity={1 - ease(seg(tau, O.room, O.room + 0.45))}><House t={t} tau={O.room - 0.001} /></g>}</g>;
+	// 4 · Bell's room: bent over the cup, he rises to the mouthpiece; the camera pushes to his lips; frozen at 9.30 by the caller
+	const bell = bellRig(seg(tau, O.room + 0.3, O.room + 2.1), t), p = ease(seg(tau, O.room, O.end));
+	return <g><LookCam z={lerp(1.15, 2.55, p)} L={[lerp(760, FACE[0], p), lerp(560, FACE[1], p)]} S={[lerp(760, 1040, p), lerp(560, 460, p)]}>
+		<RoomA t={t} tau={tau} bell={bell} vib={0} rings={0} door={0} />
+	</LookCam>{tau < O.room + 0.45 && <g opacity={1 - ease(seg(tau, O.room, O.room + 0.45))}><House t={t} tau={O.room - 0.001} /></g>}</g>;
 };
 void cl;

@@ -10,7 +10,7 @@ import {SCENES3, LETTERBOX3} from './scenes3';
 import {SUBS3, LABELS3} from './subs3';
 /* ep41 v3 — the cut. Fixed music map (brief_v3.md). Each scene owns its own entrance and exit (motivated transitions);
    the master switches on the music cuts, runs the VHS rewind, the title, labels, subtitles, letterbox and grain. */
-export const T3 = {hit: 9.30, title: 11.564, s1: 18.965, s2: 34.836, s3: 54.875, s4: 72.80, s5: 90.63, s6: 110.17, s7: 128.282, crash: 143.895, s8: 145.43, climax: 154.54, fin: 160.67, outro: 172.64, end: 187.83};   // after the music fix at the first splice (−0.215 s), measured landmarks
+export const T3 = {hit: 9.30, title: 11.564, s1: 18.965, s2: 34.836, s3: 54.875, s4: 72.80, s5: 90.63, s6: 110.17, s7: 128.282, crash: 143.895, s8: 145.43, climax: 154.54, fin: 160.67, outro: 172.64, end: 215.33};   // after the music fix at the first splice (−0.215 s), measured landmarks
 const BOUNDS = [T3.s1, T3.s2, T3.s3, T3.s4, T3.s5, T3.s6, T3.s7, T3.s8, T3.fin, T3.outro, T3.end];
 
 const sceneAt = (t: number) => { let i = -1; for (let k = 0; k < BOUNDS.length - 1; k++) if (t >= BOUNDS[k]) i = k; return i; };
@@ -45,7 +45,8 @@ export const Ep41Film3: React.FC = () => {
 	if (t < T3.hit) body = <svg width={W} height={H}><OPEN3 tau={t} t={t} /></svg>;
 	else if (t < T3.title) body = <Rewind t={t} f={f} />;
 	else if (t < T3.s1) body = <svg width={W} height={H}><TITLE3 tau={t - T3.title} t={t} dur={T3.s1 - T3.title} /></svg>;
-	else if (t >= T3.s5 && t < T3.s5 + 0.8) body = <><Scene i={3} t={T3.s5 - 0.001} tau={T3.s5 - T3.s4 - 0.001} /><AbsoluteFill style={{opacity: Math.min(1, Math.max(0, (t - T3.s5) / 0.8)) ** 1.5}}><Scene i={4} t={t} /></AbsoluteFill></>;   // the moon stays, the world changes
+	else if (t >= T3.s5 && t < T3.s5 + 0.9) { const u = Math.min(1, Math.max(0, (t - T3.s5) / 0.9)), R = 50 + 2400 * u ** 1.7, m = `radial-gradient(circle at 510px 300px, #000 ${R}px, transparent ${R + 280}px)`;
+		body = <><Scene i={3} t={T3.s5 - 0.001} tau={T3.s5 - T3.s4 - 0.001} /><AbsoluteFill style={{WebkitMaskImage: m, maskImage: m}}><Scene i={4} t={t} /></AbsoluteFill></>; }   // the moon stays; Bell's world opens out from it (no Paris roofs over his room)
 	else body = <Scene i={sceneAt(t)} t={t} />;
 	const s = SUBS3.filter(([a, b]) => t >= a - 0.05 && t < b + 0.05).pop();
 	const lab = LABELS3.find(([a, b]) => t >= a && t < b);

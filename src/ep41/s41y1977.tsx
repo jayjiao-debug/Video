@@ -34,7 +34,7 @@ const Phone77: React.FC<{x: number; y: number; s?: number; col?: string; cradled
 	</g>;
 
 /** where a held handset goes: earpiece on the ear, mouthpiece at the chin (dir = +1 facing right, −1 facing left) */
-const atEar = (pose: Pose, x: number, ground: number, h: number, flip: boolean) => {
+export const atEar = (pose: Pose, x: number, ground: number, h: number, flip: boolean) => {
 	const hd = jointAt(pose, 'Head', x, ground, h, flip), tp = jointAt(pose, 'Top', x, ground, h, flip), dir = flip ? -1 : 1;
 	const hc: [number, number] = [lerp(hd[0], tp[0], 0.45), lerp(hd[1], tp[1], 0.45)];
 	const E: [number, number] = [hc[0] - dir * 0.012 * h, hc[1] + 0.004 * h], M: [number, number] = [hc[0] + dir * 0.05 * h, hc[1] + 0.088 * h];

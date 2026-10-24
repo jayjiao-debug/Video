@@ -200,10 +200,11 @@ export const SCOTT3: React.FC<{tau: number; t: number}> = ({tau, t}) => {
 			<g transform={`translate(0,${lerp(-260, 0, lay)}) rotate(${lerp(-3, 0, lay)} 960 500)`} opacity={sm(seg(tau, T.file, T.file + 0.12))}>
 				<Sheet x={330} y={270} w={1260} h={430} t={t} />
 				{/* the paper label pasted on the sheet's margin: 「Académie des sciences」 and the year */}
-				<g transform="translate(1250,700)"><rect x={0} y={0} width={330} height={128} fill="#EDE3CA" stroke="#8A7A5A" strokeWidth={3} />
-					<text x={18} y={44} style={{fontFamily: '"FreeSerif", "DejaVu Serif", serif', fontStyle: 'italic', fontSize: 30}} fill="#3A2C20">Académie des sciences</text>
-					<path d="M18,60 L312,60" stroke="#8A7A5A" strokeWidth={1.5} />
-					<text x={165} y={108} textAnchor="middle" style={{fontFamily: '"DejaVu Serif", serif', fontSize: 44, fontWeight: 700, letterSpacing: '0.06em'}} fill={year >= 2008 ? '#1E4A66' : '#3A2C20'}>{year}</text></g>
+				{/* the text is fitted to the label (textLength), so it keeps its margins whatever font the renderer has */}
+				<g transform="translate(1226,700)"><rect x={0} y={0} width={364} height={128} fill="#EDE3CA" stroke="#8A7A5A" strokeWidth={3} />
+					<text x={26} y={44} textLength={312} lengthAdjust="spacingAndGlyphs" style={{fontFamily: '"FreeSerif", "DejaVu Serif", serif', fontStyle: 'italic', fontSize: 28}} fill="#3A2C20">Académie des sciences</text>
+					<path d="M26,60 L338,60" stroke="#8A7A5A" strokeWidth={1.5} />
+					<text x={182} y={108} textAnchor="middle" textLength={124} lengthAdjust="spacingAndGlyphs" style={{fontFamily: '"DejaVu Serif", serif', fontSize: 44, fontWeight: 700}} fill={year >= 2008 ? '#1E4A66' : '#3A2C20'}>{year}</text></g>
 			</g>
 			{/* dust settling: a grey film and specks that build up over the years */}
 			<rect x={250} y={205} width={1420} height={690} fill="#9C9480" opacity={0.3 * dust} />
