@@ -130,6 +130,11 @@ export const Figure4: React.FC<{x: number; ground: number; h: number; pose: Pose
 	// clothing — lagging a little behind the body for the swing
 	const LP = lag ?? pose, LS = (n: string) => S(LP[n]);
 	const front = (p: P, d: number): P => [p[0] + d * h, p[1]];
+	/* final pass (logic note 13, "backpack"): jackets and coat tops follow the torso axis, with one smooth back curve from
+	   shoulder to hem, instead of an axis-aligned box whose back corner jutted out whenever the figure leaned */
+	const ax0 = sp[0] - hips[0], ay0 = sp[1] - hips[1], al = Math.hypot(ax0, ay0) || 1, ax = ax0 / al, ay = ay0 / al, bkx = ay, bky = -ax;
+	const TP = (s: number, w: number): P => [hips[0] + (ax * s + bkx * w) * h, hips[1] + (ay * s + bky * w) * h];
+	const tq = (s: number, w: number) => { const p = TP(s, w); return `${f1(p[0])},${f1(p[1])}`; };
 	if (look.dress === 'robe' || look.dress === 'dress') {   // long robe: follows the back, belted waist, moderate flare at the hem
 		const hem = ground - (look.dress === 'robe' ? 0.06 : 0.2) * h, kn = [LS('LKnee'), LS('RKnee')], an = [LS('LAnk'), LS('RAnk')];
 		const at = (K: P, A: P) => lerp(K[0], A[0], Math.min(1, Math.max(0, (hem - K[1]) / Math.max(1, A[1] - K[1]))));
@@ -140,11 +145,11 @@ export const Figure4: React.FC<{x: number; ground: number; h: number; pose: Pose
 	}
 	if (look.dress === 'coat') {   // frock coat: a fuller skirt to the knee, open a little in front
 		const kn = [LS('LKnee'), LS('RKnee')], ky = Math.max(kn[0][1], kn[1][1]), fx = Math.max(kn[0][0], kn[1][0]) + 0.02 * h, bx = Math.min(kn[0][0], kn[1][0]) - 0.04 * h, wy = hips[1] - 0.06 * h;
-		parts.push(`M${f1(hips[0] - 0.066 * h)},${f1(wy)} L${f1(hips[0] + 0.058 * h)},${f1(wy)} Q${f1(hips[0] + 0.066 * h)},${f1(hips[1])} ${f1(hips[0] + 0.07 * h)},${f1(hips[1] + 0.03 * h)} L${f1(fx)},${f1(ky - 0.04 * h)} Q${f1((fx + bx) / 2)},${f1(ky + 0.03 * h)} ${f1(bx)},${f1(ky + 0.01 * h)} Q${f1(hips[0] - 0.085 * h)},${f1(hips[1] + 0.06 * h)} ${f1(hips[0] - 0.074 * h)},${f1(hips[1])} Q${f1(hips[0] - 0.068 * h)},${f1(wy + 0.02 * h)} ${f1(hips[0] - 0.066 * h)},${f1(wy)} Z`);
+		void wy; parts.push(`M${tq(0.06, 0.062)} L${tq(0.06, -0.056)} Q${f1(hips[0] + 0.066 * h)},${f1(hips[1])} ${f1(hips[0] + 0.07 * h)},${f1(hips[1] + 0.03 * h)} L${f1(fx)},${f1(ky - 0.04 * h)} Q${f1((fx + bx) / 2)},${f1(ky + 0.03 * h)} ${f1(bx)},${f1(ky + 0.01 * h)} Q${f1(hips[0] - 0.085 * h)},${f1(hips[1] + 0.06 * h)} ${f1(hips[0] - 0.074 * h)},${f1(hips[1])} Q${tq(0.03, 0.074)} ${tq(0.06, 0.062)} Z`);
 	}
-	if (look.dress === 'jacket') parts.push(`M${f1(hips[0] - 0.08 * h)},${f1(hips[1] - 0.1 * h)} L${f1(hips[0] + 0.07 * h)},${f1(hips[1] - 0.1 * h)} L${f1(hips[0] + 0.074 * h)},${f1(hips[1] + 0.07 * h)} L${f1(hips[0] - 0.082 * h)},${f1(hips[1] + 0.07 * h)} Z`);
+	if (look.dress === 'jacket') parts.push(`M${tq(0.1, 0.064)} Q${tq(0.02, 0.08)} ${tq(-0.055, 0.08)} Q${tq(-0.076, 0.079)} ${tq(-0.074, 0.06)} L${tq(-0.074, -0.068)} Q${tq(-0.072, -0.076)} ${tq(-0.05, -0.074)} Q${tq(0.02, -0.074)} ${tq(0.1, -0.062)} Z`);
 	if (look.dress === 'tunic') { const kn = [LS('LKnee'), LS('RKnee')], hem = Math.max(kn[0][1], kn[1][1]) - 0.02 * h, fx = Math.max(kn[0][0], kn[1][0]) + 0.04 * h, bx = Math.min(kn[0][0], kn[1][0]) - 0.05 * h;
-		parts.push(`M${f1(hips[0] - 0.08 * h)},${f1(hips[1] - 0.08 * h)} L${f1(hips[0] + 0.07 * h)},${f1(hips[1] - 0.08 * h)} Q${f1(fx)},${f1(hips[1] + 0.05 * h)} ${f1(fx)},${f1(hem)} L${f1(bx)},${f1(hem + 0.01 * h)} Q${f1(bx)},${f1(hips[1] + 0.05 * h)} ${f1(hips[0] - 0.08 * h)},${f1(hips[1] - 0.08 * h)} Z`); }
+		parts.push(`M${tq(0.08, 0.066)} L${tq(0.08, -0.064)} Q${f1(fx)},${f1(hips[1] + 0.05 * h)} ${f1(fx)},${f1(hem)} L${f1(bx)},${f1(hem + 0.01 * h)} Q${f1(bx)},${f1(hips[1] + 0.05 * h)} ${tq(0.02, 0.078)} Q${tq(0.06, 0.074)} ${tq(0.08, 0.066)} Z`); }
 	if (look.dress === 'himation' || look.dress === 'cloak' || look.dress === 'pelt') {   // ep42: a robe/tunic with a mantle hanging down the back
 		const kn = [LS('LKnee'), LS('RKnee')], an = [LS('LAnk'), LS('RAnk')], ky = Math.max(kn[0][1], kn[1][1]), sh = J('LSh');
 		const hemY = look.dress === 'himation' ? Math.max(an[0][1], an[1][1]) - 0.05 * h : ky - 0.02 * h;
