@@ -9,3 +9,4 @@
 | 2026-10-24 22:23 | owner OK gate 1 ("ok"); title not named → director's #1 马首回家，用了160年; H9–H10 stay cut | owner | | |
 | 2026-10-24 22:41 | 12 key frames v1, look 铜版·午时 (Remotion qq45) | producer/art | sheet in style/ | ~75 |
 | 2026-10-24 22:55 | owner: more colour, fix chairs/poses → key frames v2 hand-tinted + pose45/check45 (PASS) | producer/art | style/ep45_keyframes_v2.jpg | ~35 |
+| 2026-10-24 23:12 | owner OK look v2, "做个demo看看"; demo 0–34.53 s built (EP45DEMO) on bgm2 grid, check45 PASS (244 poses), farm render on branch render-farm-mashou | producer | bgm2 still missing | ~40 |

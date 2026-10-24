@@ -1,7 +1,7 @@
 import React from 'react';
 import {W, H, rnd, lerp, Glow, P, CU, KEY, T, PlateSky, PlateGround, HorseHead, ZHead, StoneBody, WaterArc, ZODIAC, RETURNED, Z, Chair, Tree} from './kit45';
 import {Story, Punch, Stamp, Brand, Dial, dialFor, SANS} from './skin45';
-import {Rimmed, fkPose, Look4, Pose} from '../qq44/kit44';
+import {Rimmed, fkPose, mixPose, Look4, Pose} from '../qq44/kit44';
 import {jointAt, grounded, seated, reg} from './pose45';
 /* ep45 key frames v2, look "铜版 · 午时" hand-tinted (owner 22:48: more colour; fix chairs and poses).
    Engraved line work over muted colour washes; 你 is still the only glowing thing. Every person is placed from
@@ -10,16 +10,16 @@ export type KF = {scene: React.ReactNode; furn: React.ReactNode; label: string};
 
 const ALL = new Set<Z>(ZODIAC), BACK7 = RETURNED, BACK5 = new Set<Z>(['牛', '虎', '猴', '猪', '马']), BACK4 = new Set<Z>(['牛', '虎', '猴', '猪']), NONE = new Set<Z>();
 const home12 = dialFor(ALL), back = (s: Set<Z>) => dialFor(s);
-const LK: Record<string, Look4> = {
+export const LK: Record<string, Look4> = {
 	auct: {dress: 'jacket', head: 'short'}, bidA: {dress: 'jacket', head: 'glasses'}, bidB: {dress: 'dress', head: 'bob'}, bidC: {dress: 'jacket', head: 'short'},
 	soldier: {dress: 'coat', head: 'cylcap'}, soldier2: {dress: 'coat', head: 'cap'},
 };
-const FIG = T.fig, RIM = '#E9DFC8';
-const hatchOver = (x: number, y: number, w: number, h: number, id = 'h45d', o = 0.25) => <rect x={x} y={y} width={w} height={h} fill={`url(#${id})`} opacity={o} />;
+export const FIG = T.fig, RIM = '#E9DFC8';
+export const hatchOver = (x: number, y: number, w: number, h: number, id = 'h45d', o = 0.25) => <rect x={x} y={y} width={w} height={h} fill={`url(#${id})`} opacity={o} />;
 
 /* ---------- sets ---------- */
 /** 海晏堂, west facade (our drawing after the 1780s copperplate views), hand-tinted marble + slate */
-const Haiyantang: React.FC<{cx: number; g: number; k: number; o?: number; dim?: number}> = ({cx, g, k, o = 1, dim = 0}) => {
+export const Haiyantang: React.FC<{cx: number; g: number; k: number; o?: number; dim?: number}> = ({cx, g, k, o = 1, dim = 0}) => {
 	const w = 1100 * k, h = 390 * k, x0 = cx - w / 2, top = g - h, bay = 300 * k;
 	const win = (x: number, y: number, ww: number, hh: number, key: string) => <path key={key} d={`M${x},${y + hh} L${x},${y + ww / 2} A${ww / 2},${ww / 2} 0 0 1 ${x + ww},${y + ww / 2} L${x + ww},${y + hh} Z`} fill={T.win} stroke={T.ink} strokeWidth={1.4} />;
 	return <g opacity={o}>
@@ -42,14 +42,14 @@ const Haiyantang: React.FC<{cx: number; g: number; k: number; o?: number; dim?: 
 		{dim > 0 && <rect x={x0 - 20} y={top - 80 * k} width={w + 40} height={h + 80 * k} fill={T.skyDay[1]} opacity={dim} />}
 	</g>;
 };
-const ZPos = (cx: number, g: number, k: number) => {
+export const ZPos = (cx: number, g: number, k: number) => {
 	const out: {z: Z; x: number; y: number; s: number; side: number}[] = [];
 	const L: Z[] = ['蛇', '龙', '兔', '虎', '牛', '鼠'], R: Z[] = ['马', '羊', '猴', '鸡', '狗', '猪'];
 	[L, R].forEach((row, side) => row.forEach((z, i) => { const u = i / 5, sg = side ? 1 : -1;
 		out.push({z, x: cx + sg * lerp(430 * k, 170 * k, u), y: g + lerp(250 * k, 30 * k, u), s: lerp(1.0, 0.62, u) * k, side: sg}); }));
 	return out;
 };
-const Pool: React.FC<{cx: number; g: number; k: number; present: Set<Z> | 'all'; ghost?: boolean; arcs?: 'none' | 'all' | 'memory'; id: string}> = ({cx, g, k, present, arcs = 'none', ghost, id}) => {
+export const Pool: React.FC<{cx: number; g: number; k: number; present: Set<Z> | 'all'; ghost?: boolean; arcs?: 'none' | 'all' | 'memory' | 'one'; id: string; active?: Z; grow?: number}> = ({cx, g, k, present, arcs = 'none', ghost, id, active, grow = 1}) => {
 	const pos = ZPos(cx, g, k), cys = g + 150 * k;
 	return <g>
 		<path d={`M${cx - 470 * k},${g + 300 * k} L${cx - 200 * k},${g + 10 * k} L${cx + 200 * k},${g + 10 * k} L${cx + 470 * k},${g + 300 * k} Z`} fill={T.marble} stroke={T.ink} strokeWidth={2} />
@@ -63,31 +63,31 @@ const Pool: React.FC<{cx: number; g: number; k: number; present: Set<Z> | 'all';
 				{isYou ? <HorseHead x={p.x + p.side * 2} y={hy - 4 * p.s} s={0.13 * p.s} id={`${id}y`} glow={0.9} flip={p.side > 0} />
 					: has ? <ZHead z={p.z} x={p.x} y={hy} s={0.9 * p.s} mode="bronze" /> : ghost ? <ZHead z={p.z} x={p.x} y={hy} s={0.9 * p.s} mode="ghost" ghostC={T.ink} /> : null}
 			</g>; })}
-		{arcs !== 'none' && pos.map((p) => { const solid = p.z === '马' || arcs === 'all';
-			return <WaterArc key={p.z} x0={p.x - p.side * 30 * p.s} y0={p.y - 60 * p.s} x1={cx + (p.x - cx) * 0.18} y1={cys - 30 * k} h={60 * k + 40 * p.s} o={solid ? 0.95 : 0.3} w={(solid ? 5 : 3.5) * k} />; })}
+		{arcs !== 'none' && pos.map((p) => { if (arcs === 'one' && p.z !== active) return null; const solid = p.z === '马' || arcs === 'all' || arcs === 'one';
+			return <WaterArc key={p.z} x0={p.x - p.side * 30 * p.s} y0={p.y - 60 * p.s} x1={cx + (p.x - cx) * 0.18} y1={cys - 30 * k} h={(60 * k + 40 * p.s) * (arcs === 'one' ? 2.2 * grow : grow)} o={solid ? 0.95 : 0.3} w={(solid ? (arcs === 'one' ? 7 : 5) : 3.5) * k} />; })}
 	</g>;
 };
 /** daylight garden behind the palace: blue sky, trees both sides, paving */
-const Garden: React.FC<{id: string; g: number; sky?: string[]}> = ({id, g, sky = T.skyDay}) => <g>
+export const Garden: React.FC<{id: string; g: number; sky?: string[]}> = ({id, g, sky = T.skyDay}) => <g>
 	<PlateSky id={id} top={sky[0]} bot={sky[1]} lines={0.3} lineC={T.ink} />
 	{[[90, 1.2], [260, 0.95], [1660, 1.0], [1840, 1.25]].map(([x, s], i) => <Tree key={i} x={x} g={g} h={420 * s} seed={i + 2} willow={i % 2 === 0} />)}
 </g>;
 
 /* ---------- the auction room ---------- */
-const AUCT_X = 1440, AUCT_G = 950, AUCT_H = 620;
-const auctPose = (hammer: 'down' | 'held'): Pose => grounded({lean: hammer === 'down' ? 10 : 4, neck: hammer === 'down' ? 16 : 4, lt: 2, lk: 2, rt: -3, rk: 3, ra: hammer === 'down' ? 40 : 150, re: hammer === 'down' ? 30 : 8, la: 34, le: 64});
+export const AUCT_X = 1440, AUCT_G = 950, AUCT_H = 620;
+export const auctPose = (hammer: 'down' | 'held'): Pose => grounded({lean: hammer === 'down' ? 10 : 4, neck: hammer === 'down' ? 16 : 4, lt: 2, lk: 2, rt: -3, rk: 3, ra: hammer === 'down' ? 40 : 150, re: hammer === 'down' ? 30 : 8, la: 34, le: 64});
 /** gavel along the forearm, head across it; returns the head centre */
-const gavelGeom = (pose: Pose) => { const hand = jointAt(pose, 'RHand', AUCT_X, AUCT_G, AUCT_H, true), el = jointAt(pose, 'RElb', AUCT_X, AUCT_G, AUCT_H, true), a = Math.atan2(hand[1] - el[1], hand[0] - el[0]);
+export const gavelGeom = (pose: Pose) => { const hand = jointAt(pose, 'RHand', AUCT_X, AUCT_G, AUCT_H, true), el = jointAt(pose, 'RElb', AUCT_X, AUCT_G, AUCT_H, true), a = Math.atan2(hand[1] - el[1], hand[0] - el[0]);
 	return {hand, a, head: [hand[0] + Math.cos(a) * 70, hand[1] + Math.sin(a) * 70] as [number, number]}; };
-const LECTERN_TOP = Math.round(gavelGeom(auctPose('down')).head[1] + 16);
-const AuctionRoom: React.FC<{hammer: 'down' | 'held'; wall: string; trim?: string; frame: string; screen?: boolean; plinthX?: number}> = ({hammer, wall, trim = T.cream, frame, screen, plinthX = 800}) => {
-	const pose = auctPose(hammer), gv = gavelGeom(pose), deg = gv.a * 180 / Math.PI;
+export const LECTERN_TOP = Math.round(gavelGeom(auctPose('down')).head[1] + 16);
+export const AuctionRoom: React.FC<{hammer: 'down' | 'held'; wall: string; trim?: string; frame: string; screen?: React.ReactNode; plinthX?: number; k?: number}> = ({hammer, wall, trim = T.cream, frame, screen, plinthX = 800, k}) => {
+	const pose = k === undefined ? auctPose(hammer) : mixPose(auctPose('held'), auctPose('down'), k), gv = gavelGeom(pose), deg = gv.a * 180 / Math.PI; hammer = k === undefined ? hammer : k > 0.97 ? 'down' : 'held';
 	reg({frame, who: 'auctioneer', x: AUCT_X, ground: AUCT_G, h: AUCT_H, pose, flip: true, intent: 'stand'});
 	return <g>
 		<rect x={0} y={0} width={W} height={H} fill={wall} />
 		{Array.from({length: 7}, (_, i) => <g key={i}><rect x={60 + i * 270} y={110} width={220} height={560} fill="none" stroke={trim} strokeWidth={3} opacity={0.75} /><rect x={78 + i * 270} y={128} width={184} height={524} fill="none" stroke={trim} strokeWidth={1.2} opacity={0.5} /></g>)}
 		{hatchOver(0, 0, W, 760, 'h45d', 0.12)}
-		{screen && <><rect x={1060} y={300} width={300} height={190} fill={T.win} stroke={T.ink} strokeWidth={3} /><text x={1210} y={384} textAnchor="middle" style={{fontFamily: SANS, fontSize: 50, fontWeight: 900, letterSpacing: '0.1em'}} fill={T.cream}>LOT</text><text x={1210} y={452} textAnchor="middle" style={{fontFamily: "'DejaVu Sans Mono',monospace", fontSize: 48, fontWeight: 700}} fill={T.cream} opacity={0.8}>— — —</text></>}
+		{screen && <><rect x={1040} y={300} width={340} height={190} fill={T.win} stroke={T.ink} strokeWidth={3} /><text x={1210} y={370} textAnchor="middle" style={{fontFamily: SANS, fontSize: 44, fontWeight: 900, letterSpacing: '0.1em'}} fill={T.cream}>LOT</text>{screen === true ? <text x={1210} y={452} textAnchor="middle" style={{fontFamily: "'DejaVu Sans Mono',monospace", fontSize: 48, fontWeight: 700}} fill={T.cream} opacity={0.8}>— — —</text> : screen}</>}
 		<PlateGround y={760} c={T.wood} c2={T.woodD} edge={T.ink} hatch={1.2} />
 		<path d={`M${plinthX - 40},0 L${plinthX + 40},0 L${plinthX + 260},880 L${plinthX - 260},880 Z`} fill="#FFF8E8" opacity={0.1} />
 		<rect x={plinthX - 170} y={690} width={340} height={210} fill={T.marble} stroke={T.ink} strokeWidth={2} />
@@ -104,8 +104,8 @@ const AuctionRoom: React.FC<{hammer: 'down' | 'held'; wall: string; trim?: strin
 	</g>;
 };
 /** seated bidders on chairs (profile, facing right toward the rostrum); paddles in raised hands */
-const FLOOR = 1010, BH = 430;
-const Bidders: React.FC<{frame: string; up?: number[]; xs?: number[]}> = ({frame, up = [1], xs = [150, 380, 600]}) => <g>
+export const FLOOR = 1010, BH = 430;
+export const Bidders: React.FC<{frame: string; up?: number[]; xs?: number[]}> = ({frame, up = [1], xs = [150, 380, 600]}) => <g>
 	{xs.map((x, i) => { const raise = up.includes(i), {pose, seat} = seated(raise ? {ra: 166, re: 6, la: 28, le: 46} : {ra: 26, re: 52, la: 30, le: 46});
 		const seatY = FLOOR - seat * BH, look = [LK.bidA, LK.bidB, LK.bidC][i % 3], hd = jointAt(pose, 'RHand', x, FLOOR, BH);
 		reg({frame, who: `bidder${i}`, x, ground: FLOOR, h: BH, pose, intent: 'sit', seatY});
@@ -176,7 +176,7 @@ const F6: KF = {label: '6 A7 正午一起喷水',
 /* ---------- 7 · B2 1860 ---------- */
 const carry = (kind: 'crate' | 'vase', phase: number) => grounded({lean: 6, neck: 4, lt: phase ? 22 : -16, lk: phase ? 6 : 30, rt: phase ? -16 : 22, rk: phase ? 30 : 6,
 	la: kind === 'crate' ? 32 : 22, le: kind === 'crate' ? 62 : 66, ra: kind === 'crate' ? 38 : 26, re: kind === 'crate' ? 56 : 62});
-const Soldier: React.FC<{x: number; kind: 'crate' | 'vase'; phase: number; look: Look4; i: number}> = ({x, kind, phase, look, i}) => {
+export const Soldier: React.FC<{x: number; kind: 'crate' | 'vase'; phase: number; look: Look4; i: number}> = ({x, kind, phase, look, i}) => {
 	const g = 975, h = 540, p = carry(kind, phase), l = jointAt(p, 'LHand', x, g, h), r = jointAt(p, 'RHand', x, g, h), hx = (l[0] + r[0]) / 2, hy = (l[1] + r[1]) / 2;
 	reg({frame: 'F7', who: `soldier${i}`, x, ground: g, h, pose: p, intent: 'walk'});
 	return <g>

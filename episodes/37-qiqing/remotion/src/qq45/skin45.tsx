@@ -41,7 +41,7 @@ export const Brand: React.FC = () => <div style={{...fx, top: 34, right: 60, fon
 /* ---------- the counter: the water clock's dial (子 at the top, 午 = you at the bottom) ---------- */
 export type DialState = 'you' | 'lit' | 'dark' | 'ghost';
 export const dialFor = (back: Set<Z>, youLit = true): Record<Z, DialState> => Object.fromEntries(ZODIAC.map((z) => [z, z === '马' ? (youLit ? 'you' : 'dark') : back.has(z) ? 'lit' : 'ghost'])) as Record<Z, DialState>;
-const Ring: React.FC<{st: Record<Z, DialState>; r?: number; homeOnly?: boolean}> = ({st, r = 50, homeOnly}) => {
+const Ring: React.FC<{st: Record<Z, DialState>; r?: number; homeOnly?: boolean; hand?: number}> = ({st, r = 50, homeOnly, hand = 180}) => {
 	const S = r * 2 + 36;
 	return <svg width={S} height={S} viewBox={`${-S / 2} ${-S / 2} ${S} ${S}`} style={{overflow: 'visible', filter: 'drop-shadow(0 2px 8px rgba(10,16,20,0.7))'}}>
 		<defs><radialGradient id={`dy${r}`}><stop offset="0" stopColor={CU.core} /><stop offset="0.5" stopColor={CU.mid} /><stop offset="1" stopColor={CU.halo} stopOpacity="0" /></radialGradient></defs>
@@ -52,7 +52,7 @@ const Ring: React.FC<{st: Record<Z, DialState>; r?: number; homeOnly?: boolean}>
 				{s === 'you' && <circle cx={x} cy={y} r={16} fill={`url(#dy${r})`} />}
 				<circle cx={x} cy={y} r={s === 'you' ? 8.5 : 7} fill={s === 'you' ? CU.core : s === 'lit' ? INK : 'rgba(20,30,36,0.9)'} stroke={s === 'ghost' ? P.line : s === 'dark' ? P.soft : 'none'} strokeWidth={1.8} strokeDasharray={s === 'ghost' ? '3 3' : undefined} />
 			</g>; })}
-		<line x1={0} y1={0} x2={0} y2={r - 18} stroke={P.line} strokeWidth={2.5} strokeLinecap="round" />
+		<line x1={0} y1={0} x2={Math.sin(hand * Math.PI / 180) * (r - 18)} y2={-Math.cos(hand * Math.PI / 180) * (r - 18)} stroke={P.line} strokeWidth={2.5} strokeLinecap="round" />
 		<circle r={4} fill={P.line} />
 	</svg>;
 };
@@ -63,9 +63,9 @@ export const DialRow: React.FC<{label: string; n: React.ReactNode; of?: string; 
 		<span style={{fontFamily: NUM, fontSize: 34, fontWeight: 700, lineHeight: 1, marginBottom: 8, opacity: 0.85}}>{of}</span>
 	</div>;
 /** bottom-left counter: the dial + one or two rows */
-export const Dial: React.FC<{st: Record<Z, DialState>; rows: {label: string; n: React.ReactNode; dim?: boolean; home?: boolean}[]}> = ({st, rows}) =>
-	<div style={{...fx, left: 132, bottom: 56, display: 'flex', alignItems: 'flex-end', gap: 20}}>
-		<Ring st={st} />
+export const Dial: React.FC<{st: Record<Z, DialState>; rows: {label: string; n: React.ReactNode; dim?: boolean; home?: boolean}[]; hand?: number; o?: number}> = ({st, rows, hand, o = 1}) =>
+	<div style={{...fx, left: 132, bottom: 56, display: 'flex', alignItems: 'flex-end', gap: 20, opacity: o}}>
+		<Ring st={st} hand={hand} />
 		<div style={{display: 'flex', flexDirection: 'column', gap: 6, marginBottom: 14}}>{rows.map((r, i) => <div key={i} style={{display: 'flex', alignItems: 'center', gap: 12}}>
 			{r.home && <span style={{display: 'inline-block', width: 14, height: 14, borderRadius: 7, background: CU.core, boxShadow: `0 0 12px ${CU.halo}, 0 0 4px ${CU.mid}`}} />}
 			<DialRow label={r.label} n={r.n} dim={r.dim} /></div>)}</div>
