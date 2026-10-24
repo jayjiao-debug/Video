@@ -1,7 +1,218 @@
 {
- "id": "ep41-probe-01",
- "model_prefs": ["eleven_v4"],
+ "id": "ep41-vo-08",
+ "model_prefs": [
+  "eleven_v4"
+ ],
  "items": [
-  {"name": "P1", "lang": "zh", "voice_id": "MI36FIkp9wRP7cpWKPTl", "text": "嗯。"}
+  {
+   "lang": "zh",
+   "voice_id": "MI36FIkp9wRP7cpWKPTl",
+   "model": "eleven_v4",
+   "settings": {
+    "stability": 0.45,
+    "similarity_boost": 0.8,
+    "style": 0.4
+   },
+   "name": "S1n",
+   "text": "三千年前，人最想说话的对象，是天。"
+  },
+  {
+   "lang": "zh",
+   "voice_id": "MI36FIkp9wRP7cpWKPTl",
+   "model": "eleven_v4",
+   "settings": {
+    "stability": 0.45,
+    "similarity_boost": 0.8,
+    "style": 0.4
+   },
+   "name": "S3n",
+   "text": "火烤龟甲，裂纹，就是天的回答。"
+  },
+  {
+   "lang": "zh",
+   "voice_id": "MI36FIkp9wRP7cpWKPTl",
+   "model": "eleven_v4",
+   "settings": {
+    "stability": 0.45,
+    "similarity_boost": 0.8,
+    "style": 0.4
+   },
+   "name": "S4n",
+   "text": "人和天的这场对话，刻在龟甲上，留到了今天。"
+  },
+  {
+   "lang": "zh",
+   "voice_id": "MI36FIkp9wRP7cpWKPTl",
+   "model": "eleven_v4",
+   "settings": {
+    "stability": 0.45,
+    "similarity_boost": 0.8,
+    "style": 0.4
+   },
+   "name": "G1",
+   "text": "这张金唱片，是写给外星人的一封信。"
+  },
+  {
+   "lang": "zh",
+   "voice_id": "MI36FIkp9wRP7cpWKPTl",
+   "model": "eleven_v4",
+   "settings": {
+    "stability": 0.45,
+    "similarity_boost": 0.8,
+    "style": 0.4
+   },
+   "name": "G2",
+   "text": "没人知道，会不会有谁听见。"
+  },
+  {
+   "lang": "zh",
+   "voice_id": "MI36FIkp9wRP7cpWKPTl",
+   "model": "eleven_v4",
+   "settings": {
+    "stability": 0.45,
+    "similarity_boost": 0.8,
+    "style": 0.4
+   },
+   "name": "G3",
+   "text": "可人类，还是把它寄了出去。"
+  },
+  {
+   "lang": "zh",
+   "voice_id": "MI36FIkp9wRP7cpWKPTl",
+   "model": "eleven_v4",
+   "settings": {
+    "stability": 0.45,
+    "similarity_boost": 0.8,
+    "style": 0.4
+   },
+   "name": "N4",
+   "text": "人类发明的每一种通讯，都是因为有人，想跟够不着的人，说一句话。"
+  },
+  {
+   "lang": "zh",
+   "voice_id": "MI36FIkp9wRP7cpWKPTl",
+   "model": "eleven_v4",
+   "settings": {
+    "stability": 0.45,
+    "similarity_boost": 0.8,
+    "style": 0.4
+   },
+   "name": "N4b",
+   "text": "人类发明的每一种通讯，都是因为有人，想跟够不着的人，说一句话。"
+  },
+  {
+   "lang": "zh",
+   "voice_id": "MI36FIkp9wRP7cpWKPTl",
+   "model": "eleven_v4",
+   "settings": {
+    "stability": 0.45,
+    "similarity_boost": 0.8,
+    "style": 0.4
+   },
+   "name": "N5",
+   "text": "现在，这句话，只要一秒钟。"
+  },
+  {
+   "name": "MOM0",
+   "lang": "zh",
+   "accent": "standard",
+   "gender": "female",
+   "age": "middle_aged",
+   "pick": 0,
+   "model": "eleven_v4",
+   "settings": {
+    "stability": 0.35,
+    "similarity_boost": 0.8,
+    "style": 0.5
+   },
+   "text": "喂？这么晚了，还没睡啊？"
+  },
+  {
+   "name": "YOU0",
+   "lang": "zh",
+   "accent": "standard",
+   "gender": "male",
+   "age": "young",
+   "pick": 0,
+   "model": "eleven_v4",
+   "settings": {
+    "stability": 0.35,
+    "similarity_boost": 0.8,
+    "style": 0.5
+   },
+   "text": "妈，没什么事……就是，想你了。"
+  },
+  {
+   "name": "MOM1",
+   "lang": "zh",
+   "accent": "standard",
+   "gender": "female",
+   "age": "middle_aged",
+   "pick": 1,
+   "model": "eleven_v4",
+   "settings": {
+    "stability": 0.35,
+    "similarity_boost": 0.8,
+    "style": 0.5
+   },
+   "text": "喂？这么晚了，还没睡啊？"
+  },
+  {
+   "name": "YOU1",
+   "lang": "zh",
+   "accent": "standard",
+   "gender": "male",
+   "age": "young",
+   "pick": 1,
+   "model": "eleven_v4",
+   "settings": {
+    "stability": 0.35,
+    "similarity_boost": 0.8,
+    "style": 0.5
+   },
+   "text": "妈，没什么事……就是，想你了。"
+  },
+  {
+   "name": "O2_0",
+   "lang": "zh",
+   "accent": "standard",
+   "gender": "female",
+   "pick": 0,
+   "model": "eleven_v4",
+   "settings": {
+    "stability": 0.45,
+    "similarity_boost": 0.8,
+    "style": 0.4
+   },
+   "text": "各位都好吧？我们都很想念你们，有空请到这儿来玩。"
+  },
+  {
+   "name": "O2_1",
+   "lang": "zh",
+   "accent": "standard",
+   "gender": "female",
+   "pick": 1,
+   "model": "eleven_v4",
+   "settings": {
+    "stability": 0.45,
+    "similarity_boost": 0.8,
+    "style": 0.4
+   },
+   "text": "各位都好吧？我们都很想念你们，有空请到这儿来玩。"
+  },
+  {
+   "name": "O2_2",
+   "lang": "zh",
+   "accent": "standard",
+   "gender": "female",
+   "pick": 2,
+   "model": "eleven_v4",
+   "settings": {
+    "stability": 0.45,
+    "similarity_boost": 0.8,
+    "style": 0.4
+   },
+   "text": "各位都好吧？我们都很想念你们，有空请到这儿来玩。"
+  }
  ]
 }
