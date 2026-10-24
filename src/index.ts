@@ -1,2 +1,2 @@
-// Remotion entry (the render farm requires this file to mention registerRoot): ./qq42/EP42ROUGH calls registerRoot() itself.
-import './qq42/EP42ROUGH';
+// Remotion entry (the render farm requires this file to mention registerRoot): ./qq44/EP44DEMO calls registerRoot() itself.
+import './qq44/EP44DEMO';
