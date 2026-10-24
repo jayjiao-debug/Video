@@ -14,7 +14,9 @@ const hud = document.getElementById('hud')!;
 	await document.fonts.load('600 96px "Cormorant Garamond"').catch(() => null);
 	const only = (window as any).ONLY as string[] | undefined;      // optional: boot only some modules (dev speed)
 	await bootOpen();
-	for (const [name, boot] of Object.entries(M.BOOTS)) if (!only || only.includes(name)) await boot();
+	const failed: string[] = [];   // a module that fails to boot is skipped (logged), so one unfinished module can't stop every render
+	for (const [name, boot] of Object.entries(M.BOOTS)) if (!only || only.includes(name)) { try { await boot(); } catch (e: any) { failed.push(name); console.error('BOOT-FAIL', name, e?.message || e); } }
+	(window as any).BOOT_FAILED = failed;
 	// fill gaps with an empty stage so every t renders
 	const empty = new Stage('todo'); const sorted = [...SCENES].sort((p, q) => p.a - q.a); let t0 = 0;
 	for (const s of sorted) { if (s.a > t0 + 1e-3) addScene({id: 'gap', a: t0, z: s.a, draw: () => ({st: empty, grade: {vig: 0}})}); t0 = Math.max(t0, s.z); }

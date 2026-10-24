@@ -95,7 +95,7 @@ export const F_D1: React.FC<{t: number}> = ({t}) => <LondonLot t={t} k={0} frame
 export const F_D2: React.FC<{t: number}> = ({t}) => <LondonLot t={t} k={ease(seg(t, bt(98.5), bt(99)))} frame="D2" />;
 /* 2000 Hong Kong: the three brothers, hammer held through the break, slams on the re-entry hit (63.97) */
 export const F_D3: React.FC<{t: number}> = ({t}) => { const k = t < TL.D4 ? 0 : 1, sh = t < TL.D4 ? 0 : Math.exp(-(t - TL.D4) * 10) * Math.sin((t - TL.D4) * 80) * 6;
-	return <g transform={`translate(${sh},0)`}><Cam z={1.02} x={920}><AuctionRoom hammer="held" k={k} wall="#4B5A68" trim="#6D7F8E" frame="D3" screen plinthX={800} />
+	return <g transform={`translate(${sh},0)`}><Cam z={1.0 + 0.14 * ease(seg(t, TL.D3, TL.D4))} x={lerp(920, 1080, ease(seg(t, TL.D3, TL.D4)))} y={lerp(540, 470, ease(seg(t, TL.D3, TL.D4)))}><AuctionRoom hammer="held" k={k} wall="#4B5A68" trim="#6D7F8E" frame="D3" screen plinthX={800} />
 		{(['牛', '猴', '虎'] as Z[]).map((zz, i) => <ZHead3 key={zz} z={zz} x={700 + i * 100} y={640} s={1.25} flip />)}<Bidders frame="D3" up={t < TL.D4 ? [0, 1, 2] : [0]} xs={[110, 320, 520]} /></Cam></g>; };
 /* 2003: the pig head, a handshake (no hammer) */
 const shakeA = grounded({lean: 4, neck: 6, lt: 2, lk: 2, rt: -3, rk: 3, la: -2, le: 12, ra: 44, re: 36}), shakeB = shakeA;
@@ -117,7 +117,7 @@ export const F_D6: React.FC<{t: number}> = ({t}) => { const v = 6910; void v;
 /* D8–D9: the quiet room, the deal; the number slams */
 export const F_D8: React.FC<{t: number}> = ({t}) => { const g = 960, h = 600, x = 560, p = grounded({lean: 6, neck: 14, lt: 2, lk: 2, rt: -3, rk: 3, la: 8, le: 20, ra: 30, re: 40});
 	reg({frame: 'D8', who: 'Ho', x, ground: g, h, pose: p, intent: 'stand'});
-	return <Cam z={1.04 - 0.04 * seg(t, TL.D8, TL.D10)}>
+	return <Cam z={1.0 + 0.16 * ease(seg(t, TL.D8, TL.D10))} x={lerp(960, 1020, seg(t, TL.D8, TL.D10))} y={lerp(540, 600, seg(t, TL.D8, TL.D10))}>
 		<rect width={W} height={H} fill="#3E4A55" />{hatchOver(0, 0, W, 760, 'h45d', 0.12)}
 		<rect x={0} y={760} width={W} height={320} fill="#2E3740" />
 		<path d="M1000,0 L1100,0 L1260,780 L860,780 Z" fill="#FFF4E0" opacity={0.12} />
@@ -176,13 +176,13 @@ export const F_E1: React.FC<{t: number}> = ({t}) => { const FL = 960, PH = 600;
 /* E2: 2019, given to the state */
 export const F_E2: React.FC<{t: number}> = ({t}) => <Handover t={t} t0={TL.E2} t1={TL.E3} frame="E2" item="you" />;
 /* E3–E4: the empty chair; the lamp goes out; a far copper glint in the window */
-export const F_E3: React.FC<{t: number}> = ({t}) => { const lamp = 1 - easeOut(seg(t, bt(181.5), bt(182))), z = 1 + 0.06 * seg(t, TL.E3, TL.H1a);
-	return <Cam z={z} x={900} y={560}>
+export const F_E3: React.FC<{t: number}> = ({t}) => { const lamp = 1 - easeOut(seg(t, bt(181.5), bt(182))), z = 1 + 0.22 * ease(seg(t, TL.E3, TL.H1a));
+	return <Cam z={z} x={lerp(900, 1380, ease(seg(t, TL.E4, TL.H1a)))} y={lerp(560, 520, seg(t, TL.E3, TL.H1a))}>
 		<rect width={W} height={H} fill="#46605A" />{hatchOver(0, 0, W, 820, 'h45d', 0.15)}
 		<rect x={1180} y={180} width={460} height={560} fill="#1E2A44" stroke="#E9DFC8" strokeWidth={4} />
 		{Array.from({length: 30}, (_, i) => <circle key={i} cx={1190 + rnd(i, 2) * 440} cy={190 + rnd(i, 3) * 540} r={1 + rnd(i, 4) * 1.5} fill="#EAF0FF" opacity={0.5} />)}
 		<line x1={1410} y1={180} x2={1410} y2={740} stroke="#E9DFC8" strokeWidth={4} /><line x1={1180} y1={460} x2={1640} y2={460} stroke="#E9DFC8" strokeWidth={4} />
-		<Glow x={1520} y={600} r={50} c={CU.halo} o={0.6} id="e3g" /><circle cx={1520} cy={600} r={5} fill={CU.core} />
+		<Glow x={1520} y={600} r={50 + 20 * Math.sin(t * 2.2) ** 2} c={CU.halo} o={0.6} id="e3g" /><circle cx={1520} cy={600} r={5} fill={CU.core} />
 		<rect x={0} y={820} width={W} height={260} fill="#4E3828" />
 		<Shadow x={850} y={832} rx={260} ry={18} />
 		<path d="M640,820 L640,560 C640,500 700,470 760,470 L940,470 C1000,470 1060,500 1060,560 L1060,820 Z" fill="#6E8C7C" stroke="#2B2722" strokeWidth={2} />{hatchOver(640, 470, 420, 350, 'h45d', 0.3)}
@@ -232,10 +232,10 @@ const Twist: React.FC<{t: number}> = ({t}) => { const split = easeOut(seg(t, TL.
 		<rect x={860} y={600} width={200} height={100} fill="url(#mbV)" stroke="#2B2722" strokeWidth={2} />
 		<HorseHead x={960} y={548} s={0.14} id="h4h" glow={1} />
 		{/* the six lights: around you before the cut, drifting off to the city after it */}
-		{Array.from({length: 6}, (_, i) => { const a = (i / 6) * Math.PI * 2, x0 = 960 + Math.cos(a) * 160, y0 = 520 + Math.sin(a) * 70, tx = i < 4 ? 1360 + i * 36 : 1610 + (i - 4) * 36, ty = i < 4 ? 440 : 480;
+		{Array.from({length: 6}, (_, i) => { const a = (i / 6) * Math.PI * 2 + (Math.min(t, TL.H4) - TL.H3) * 0.9, x0 = 960 + Math.cos(a) * 160, y0 = 520 + Math.sin(a) * 70, tx = i < 4 ? 1360 + i * 36 : 1610 + (i - 4) * 36, ty = i < 4 ? 440 : 480;
 			return <circle key={i} cx={lerp(x0, tx, split)} cy={lerp(y0, ty, split) - Math.sin(split * Math.PI) * 60} r={11} fill="#B08463" stroke="#2B2722" strokeWidth={2} opacity={1 - 0.2 * split} />; })}
 	</g>; };
-export const F_H3: React.FC<{t: number}> = ({t}) => <Twist t={t} />;
+export const F_H3: React.FC<{t: number}> = ({t}) => <Cam z={1.0 + 0.08 * ease(seg(t, TL.H3, TL.H4)) - 0.08 * ease(seg(t, TL.H4, TL.H4 + 1.2))}><Twist t={t} /></Cam>;
 /* H5: the temple that the fire missed */
 export const F_H5: React.FC<{t: number}> = ({t}) => { const ghost = seg(t, TL.H5 + 0.4, TL.H5 + 2.2);
 	return <Cam z={1.05 - 0.05 * seg(t, TL.H5, TL.H7)}>
@@ -264,7 +264,7 @@ export const F_K1: React.FC<{t: number}> = ({t}) => { const gone = t >= TL.K2, f
 		{!gone && <rect width={W} height={H} fill="#E3ECE8" opacity={0.12} />}</Cam>; };
 /* K5: France 2018, a "dragon" outline under the hammer, on the final hit */
 export const F_K5: React.FC<{t: number}> = ({t}) => { const k = ease(seg(t, TL.K5 - 0.08, TL.K5));
-	return <Cam z={1.02} x={900}><AuctionRoom hammer="held" k={k} wall="#5C5F7A" frame="K5" plinthX={800} />
+	return <Cam z={1.02 + 0.16 * ease(seg(t, TL.K5 + 0.3, TL.Q))} x={lerp(900, 820, seg(t, TL.K5, TL.Q))} y={lerp(540, 560, seg(t, TL.K5, TL.Q))}><AuctionRoom hammer="held" k={k} wall="#5C5F7A" frame="K5" plinthX={800} />
 		<ZHead3 z="龙" x={800} y={600} s={2.0} ghost="#E9DFC8" />
 		<text x={800} y={560} textAnchor="middle" style={{fontFamily: SANS, fontSize: 96, fontWeight: 900}} fill="#E9DFC8" opacity={0.8}>?</text>
 		<Bidders frame="K5" up={[]} xs={[110, 330]} /></Cam>; };

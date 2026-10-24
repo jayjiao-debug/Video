@@ -5,7 +5,7 @@
 // (出④, T3's framing). 25: snow-gust wipe to a deck-level track — four bundle-carriers one per beat (the 2nd glows), four lines
 // of footprints; the camera looks down into the snow, which becomes the ledger page; pull back to the 清宫 night room; the lid
 // comes down on your box; into the slats (scene 26 pulls back out of the 伪满 library).
-import {Stage, Live, Layer, bar, BEAT, W, H, D, clamp01, smooth, easeInOut, easeOut, easeIn, lerp, mkCanvas, canvasTex, gradCanvas, svgDoc, svgToCanvas, hash} from './core';
+import {renderer, Stage, Live, Layer, bar, BEAT, W, H, D, clamp01, smooth, easeInOut, easeOut, easeIn, lerp, mkCanvas, canvasTex, gradCanvas, svgDoc, svgToCanvas, hash} from './core';
 import {addScene, In, Frame} from './film';
 import {Crest, deck, HORIZON, fillSvg} from './crest';
 import {Desk} from './rooms';
@@ -59,14 +59,14 @@ const palaceWindows = (base: number, s: number, ox = 0, sx = 1) => {
 };
 /** a cloth bundle hugged to the chest: the kit's bundle; glow = your light leaking through the cloth (else a grey copy) */
 const bundle = (g: CanvasRenderingContext2D, c: P, r: number, glow: number, grey = false) => {
-	const w = r * 2.9, h = r * 2.0;
-	if (grey) { g.save(); g.fillStyle = '#5c5954'; g.beginPath(); g.ellipse(c[0], c[1], w / 2, h / 2, -0.08, 0, Math.PI * 2); g.fill();
-		g.strokeStyle = '#3a3834'; g.lineWidth = 2.5; g.beginPath(); g.moveTo(c[0] - w * 0.1, c[1] - h / 2); g.quadraticCurveTo(c[0] + w * 0.05, c[1] - h * 0.65, c[0] + w * 0.12, c[1] - h * 0.48); g.stroke(); g.restore(); return; }
-	drawBundle(g, c, w, h);
-	if (glow > 0) { g.save(); g.beginPath(); g.ellipse(c[0], c[1], w / 2 - 1, h / 2 - 1, -0.08, 0, Math.PI * 2); g.clip();
-		const gr = g.createRadialGradient(c[0], c[1], 0, c[0], c[1], w * 0.55); gr.addColorStop(0, `rgba(255,214,150,${0.85 * glow})`); gr.addColorStop(0.55, `rgba(214,150,84,${0.55 * glow})`); gr.addColorStop(1, 'rgba(90,60,36,0)');
-		g.fillStyle = gr; g.fillRect(c[0] - w, c[1] - h, 2 * w, 2 * h);
-		g.strokeStyle = `rgba(60,40,26,${0.6 * glow})`; g.lineWidth = 2.5; g.beginPath(); g.moveTo(c[0] - w * 0.32, c[1] - h * 0.3); g.quadraticCurveTo(c[0], c[1] + h * 0.15, c[0] + w * 0.36, c[1] + h * 0.32); g.stroke(); g.restore(); }
+	// a wrapped handscroll: a stubby cloth-wrapped cylinder held across the chest, the wrapping cloth knotted at its front end
+	const w = r * 2.7, h = r * 1.5, x0 = c[0] - w / 2, y0 = c[1] - h / 2, kx = c[0] + w / 2 - 4;
+	const shape = () => { g.beginPath(); g.roundRect(x0, y0, w, h, h * 0.45); };
+	g.save(); g.fillStyle = grey ? '#5c5954' : '#2b2620'; shape(); g.fill();
+	g.strokeStyle = grey ? '#46433f' : '#191510'; g.lineWidth = 2; for (const f of [0.3, 0.55]) { g.beginPath(); g.moveTo(x0 + w * f, y0 + 2); g.quadraticCurveTo(x0 + w * (f + 0.06), c[1], x0 + w * f, y0 + h - 2); g.stroke(); }
+	if (glow > 0) { g.save(); shape(); g.clip(); const gr = g.createRadialGradient(c[0], c[1], 0, c[0], c[1], w * 0.6); gr.addColorStop(0, `rgba(255,214,150,${0.85 * glow})`); gr.addColorStop(0.55, `rgba(214,150,84,${0.55 * glow})`); gr.addColorStop(1, 'rgba(90,60,36,0)'); g.fillStyle = gr; g.fillRect(x0 - 5, y0 - 5, w + 10, h + 10); g.restore(); }
+	g.fillStyle = grey ? '#4e4b47' : '#3a2c20'; g.beginPath(); g.ellipse(kx + 6, c[1] - h * 0.18, 9, 6, 0.6, 0, Math.PI * 2); g.fill(); g.beginPath(); g.ellipse(kx + 8, c[1] + h * 0.14, 10, 5, -0.5, 0, Math.PI * 2); g.fill();   // the knot's two ears
+	g.restore();
 };
 /** carryArmful-style hug of a bundle while walking: returns the rigged figure and the bundle centre / radius (screen) */
 const hugWalk = (lk: LookQ, u: number, x: number, h: number, ground: (x: number) => number, who: string, flip = false) => {
@@ -141,7 +141,7 @@ const palaceBox = (g: CanvasRenderingContext2D, c: P, w: number, h: number, you:
 	g.restore();
 };
 /** the near boat in reference-screen px: hull, matting cabin, mast pivoting at (MX, MY) toward the stern (right) */
-const NB = {wl: 1012, x0: 470, x1: 2300, MX: 1400, MY: 958, L: 620};
+const NB = {wl: 1052, x0: 470, x1: 2300, MX: 1400, MY: 998, L: 620};
 const mast22 = (t: number) => 64 * easeInOut(clamp01((t - b(37.75)) / (b(39) + 0.25 - b(37.75))));
 const mastTop = (deg: number): P => [NB.MX + Math.sin((deg * Math.PI) / 180) * NB.L, NB.MY - Math.cos((deg * Math.PI) / 180) * NB.L];
 const drawNearBoat = (g: CanvasRenderingContext2D, deg: number, t: number) => {
@@ -162,9 +162,9 @@ const drawNearBoat = (g: CanvasRenderingContext2D, deg: number, t: number) => {
 	g.fillStyle = 'rgba(200,170,120,0.18)'; for (let i = 0; i < 9; i++) { const x = x0 + 120 + i * 140 + Math.sin(t * 2 + i) * 12; g.fillRect(x, wl + 14 + (i % 2) * 6, 70, 3); }
 };
 /** the bow hand easing the forestay: rope from the mast top through both hands to a cleat at the bow */
-const CREW = {x: 1225, ground: 962, h: 196, cleat: [1120, 960] as P};
+const CREW = {x: 1190, ground: 1002, h: 290, cleat: [1318, 998] as P};
 const crew22 = (deg: number) => {
-	const top = mastTop(deg), base = fkPose({hip: 0.62, lean: -10, neck: -4, lt: 18, lk: 8, rt: -12, rk: 6, la: 30, le: 30, ra: 34, re: 30});
+	const top = mastTop(deg), base = fkPose({hip: 0.62, lean: -16, neck: -2, lt: 18, lk: 8, rt: -12, rk: 6, la: 30, le: 30, ra: 34, re: 30});
 	const o: FigOpts = {x: CREW.x, ground: CREW.ground, h: CREW.h, pose: base, look: {head: 'bun', dress: 'tunic'} as LookQ};
 	const sh = toScreen(o, base.LSh), dx = top[0] - sh[0], dy = top[1] - sh[1], n = Math.hypot(dx, dy), u: P = [dx / n, dy / n];
 	const p2: P = [sh[0] + u[0] * 0.27 * CREW.h, sh[1] + u[1] * 0.27 * CREW.h + 0.03 * CREW.h], p1: P = [sh[0] + u[0] * 0.16 * CREW.h, sh[1] + u[1] * 0.16 * CREW.h + 0.07 * CREW.h];
@@ -191,8 +191,8 @@ const boot22 = async () => {
 	box22 = new Live(st, 'box22', 960, 700, 3000, 900, 21, {rim: 0.5, rimPx: 3}, 1);
 	arms22 = new Live(st, 'arms22', 960, 700, 3000, 900, 22, {rim: 1.0, rimPx: 4}, 1);
 	glow22 = new Live(st, 'glow22', 960, 700, 3000, 900, 24, {emissive: 1.0}, 0.5);
-	boat22 = new Live(st, 'boat22', 1700, 1600, 3600, 2200, 330, {rim: 0.35, rimPx: 6}, 0.6);
-	crewL22 = new Live(st, 'crew22', 1700, 1600, 3600, 2200, 331, {rim: 0.6, rimPx: 5}, 0.8);
+	boat22 = new Live(st, 'boat22', 1700, 1600, 3600, 2200, 330, {rim: 0.35, rimPx: 6}, 0.45);
+	crewL22 = new Live(st, 'crew22', 1950, 1260, 1900, 1240, 331, {rim: 0.6, rimPx: 5}, 0.8);
 };
 const IN22: In = {mode: 4, a: A22, z: b(37.5), pt: [0.5, 0.4]};
 addScene({id: '22', a: A22, z: b(39), in: IN22, draw: (t): Frame => {
@@ -231,6 +231,19 @@ const SEALS: {text: string; x: number; y: number; size: number; style: 'zhu' | '
 	{text: '嘉庆鉴赏', x: 1772, y: 520, size: 124, style: 'zhu', beat: 40.0, rot: -0.008},
 ];
 let sealCvs: HTMLCanvasElement[] = [];
+/** 宜子孙 as a 白文 seal laid out as it reads: 宜 the full right column, 子 over 孙 in the left column */
+const sealYZS = (S: number) => {
+	const c = mkCanvas(S, S), g = c.getContext('2d')!, m = S * 0.05;
+	g.fillStyle = '#B42E22'; g.fillRect(m, m, S - 2 * m, S - 2 * m);
+	g.globalCompositeOperation = 'destination-out'; g.fillStyle = '#000';
+	const glyph = (ch: string, x: number, y: number, w: number, h: number) => { g.save(); g.font = '900 100px "Noto Serif CJK SC"'; g.textBaseline = 'alphabetic'; const mt = g.measureText(ch), gw = mt.actualBoundingBoxLeft + mt.actualBoundingBoxRight, gh = mt.actualBoundingBoxAscent + mt.actualBoundingBoxDescent;
+		g.translate(x, y); g.scale(w / gw, h / gh); g.fillText(ch, mt.actualBoundingBoxLeft, mt.actualBoundingBoxAscent); g.restore(); };
+	const p = S * 0.13, cw = (S - 2 * p) / 2 - S * 0.03;
+	glyph('宜', S - p - cw, p, cw, S - 2 * p);
+	glyph('子', p, p, cw, (S - 2 * p) / 2 - S * 0.03); glyph('孙', p, S / 2 + S * 0.03, cw, (S - 2 * p) / 2 - S * 0.03);
+	g.globalCompositeOperation = 'destination-out'; for (let i = 0; i < 260; i++) { g.globalAlpha = 0.25; g.beginPath(); g.arc(hash(i * 3.1) * S, hash(i * 7.7) * S, 1 + hash(i) * 2.5, 0, Math.PI * 2); g.fill(); }
+	g.globalAlpha = 1; g.globalCompositeOperation = 'source-over'; return c;
+};
 const cam23 = (t: number): Cam => {
 	const drift = clamp01((t - b(39)) / (b(40) - b(39))), pull = easeInOut(clamp01((t - b(40)) / (b(41) - b(40))));
 	const c0 = c2w(2150, 615), c1 = c2w(1930, 600);
@@ -281,7 +294,7 @@ const boot23 = async () => {
 	const cv = startCanvas();
 	st23.add('silk', canvasTex(cv), 960, 540, SC.w * SC.k, SC.h * SC.k, 0, {emissive: 0.14});
 	seals23 = new Live(st23, 'seals23', 960, 540, SC.w * SC.k, SC.h * SC.k, 1, {}, 0.6);
-	sealCvs = SEALS.map((s, i) => paintSeal(s.text, {size: Math.round(s.size * 1.3), style: s.style, seed: 811 + i * 17, tall: s.tall, fade: 0.05}));
+	sealCvs = SEALS.map((s, i) => s.text === '宜子孙' ? sealYZS(Math.round(s.size * 1.3)) : paintSeal(s.text, {size: Math.round(s.size * 1.3), style: s.style, seed: 811 + i * 17, tall: s.tall, fade: 0.05}));
 	eaves23 = new Live(st23, 'eaves23', 960, 540, W, H, 400, {rim: 0.55, rimPx: 6}, 1);
 	eaveTop = eaveTopCanvas();
 	eaveBot = await svgToCanvas(svgDoc(palaceSvg(-1700, 2600, 860, 1, '#1b1511'), W, H), W, H, 1);
@@ -309,7 +322,7 @@ addScene({id: '23', a: b(39), z: b(41), draw: (t): Frame => {
 let c24: Crest, cast24: Cast, prop24: Live, arms24: Live, glow24: Live, gust24: Live, win24: Live;
 const YOUTH = LOOKS.youth1923, YH = 470, YZOOM = 0.94;
 const STRY = gaitStride('08_04', stepFor(YOUTH)) * YH;
-const x24 = (t: number) => 900 - ((b(42.5) - t) / (2 * BEAT)) * STRY;                 // reaches x 900 on b42.5 (enters from the left ≈ b41.3)
+const x24 = (t: number) => 1150 - ((b(42.5) - t) / (2 * BEAT)) * STRY;                 // reaches x 900 on b42.5 (enters from the left ≈ b41.3)
 let hugOff: P = [0.128, 0.715];
 const lock24 = (t: number): Cam => { const x = x24(t); return camLock(YZOOM, x - hugOff[0] * YH * 1, deck(x) + 4 - hugOff[1] * YH, 22, 960, 580); };
 const cam24 = (t: number): Cam => {
@@ -344,10 +357,10 @@ const boot24 = async () => {
 	win24.drawW('w', (g) => { for (const [x, y, w, h] of palaceWindows(860, 1)) { g.fillStyle = `rgba(255,184,104,${(0.32 + 0.22 * hash(x)).toFixed(2)})`; g.fillRect(x, y + 4, w, h); } });
 	st.get('far').mesh.visible = false;                                          // the stock far bank's gate tower would break the roofline match
 	await snowDeck(st, 1); snowRail(st, 'railSnow24');
-	cast24 = new Cast(st, 'cast24', 1200, 640, 3600, 1100, 20);
-	prop24 = new Live(st, 'prop24', 1200, 640, 3600, 1100, 22, {rim: 0.4, emissive: 0.35}, 1);
-	arms24 = new Live(st, 'arms24', 1200, 640, 3600, 1100, 23, {rim: 1.0, rimPx: 5}, 1);
-	glow24 = new Live(st, 'glow24', 1200, 640, 3600, 1100, 24, {emissive: 1.0}, 0.5);
+	cast24 = new Cast(st, 'cast24', 950, 640, 2600, 1000, 20);
+	prop24 = new Live(st, 'prop24', 950, 640, 2600, 1000, 22, {rim: 0.4, emissive: 0.35}, 1);
+	arms24 = new Live(st, 'arms24', 950, 640, 2600, 1000, 23, {rim: 1.0, rimPx: 5}, 1);
+	glow24 = new Live(st, 'glow24', 950, 640, 2600, 1000, 24, {emissive: 1.0}, 0.5);
 	gust24 = new Live(st, 'gust24', 960, 540, W, H, 600, {}, 0.5, 9800);
 	let sx = 0, sy = 0; for (let i = 0; i < 16; i++) { const a = armfulAt(carryArmful(walkFor(YOUTH, i / 16))); sx += a.c[0] / 16; sy += a.c[1] / 16; } hugOff = [sx, sy];
 };
@@ -367,7 +380,7 @@ addScene({id: '24', a: b(41), z: GUST.a, draw: (t): Frame => {
 	c24.setLanterns(() => 0); c24.setStreak(h.c[0], 0.35, t);
 	c24.motes?.update(t, [-1200, -300, 3200, 1300], 70, 24, 0.85 * smooth(clamp01((t - b(41)) / 0.35)));
 	drawGust(st, gust24, cam, t);
-	st.heroAt(h.c[0], h.c[1], 22, 430);
+	st.heroAt(h.c[0], h.c[1], 22, 300);
 	return {st, grade: {vig: 0.4, exposure: 1}, bloom: 1};
 }});
 
@@ -406,15 +419,15 @@ const boot25a = async () => {
 	for (const [n, o] of [['rail', 5], ['railSnow25', 6], ['lanterns', 7], ['lglow', 8]] as [string, number][]) st.get(n).mesh.renderOrder = o;
 	top25 = new Live(st, 'top25', 1200, 1800, 4600, 2000, 10, {}, 0.4, 10);
 	top25.drawW('s', (g) => { const xs: number[] = []; for (let x = -1100; x <= 3500; x += 20) xs.push(x);
-		const gr = g.createLinearGradient(0, 900, 0, 2700); gr.addColorStop(0, '#8C979F'); gr.addColorStop(0.15, '#A2ACB3'); gr.addColorStop(1, '#B4BDC3'); g.fillStyle = gr;
+		const gr = g.createLinearGradient(0, 900, 0, 2700); gr.addColorStop(0, '#7E8991'); gr.addColorStop(0.15, '#8F9AA2'); gr.addColorStop(1, '#9AA4AB'); g.fillStyle = gr;
 		g.beginPath(); xs.forEach((x, i) => (i ? g.lineTo(x, deck(x) + 4) : g.moveTo(x, deck(x) + 4))); g.lineTo(3500, 2800); g.lineTo(-1100, 2800); g.closePath(); g.fill();
 		g.fillStyle = 'rgba(60,66,72,0.5)'; g.beginPath(); xs.forEach((x, i) => (i ? g.lineTo(x, deck(x) + 4) : g.moveTo(x, deck(x) + 4))); for (const x of xs.slice().reverse()) g.lineTo(x, deck(x) + 12); g.fill();   // the railing's foot
 		for (let k = 0; k < 2600; k++) { const x = -1000 + hash(k * 1.7) * 4400, y = deck(x) + 10 + Math.pow(hash(k * 3.1), 1.6) * 1700, s = 1 + (y - 900) / 500; g.fillStyle = k % 3 ? 'rgba(226,232,236,0.5)' : 'rgba(120,130,138,0.4)'; g.fillRect(x, y, 2.5 * s, 1.5 * s); } });
-	prints25 = new Live(st, 'prints25', 1200, 1100, 4600, 600, 11, {}, 0.6, 11);
-	cast25 = new Cast(st, 'cast25', 1200, 700, 4600, 1100, 20);
-	prop25 = new Live(st, 'prop25', 1200, 700, 4600, 1100, 22, {rim: 0.4, emissive: 0.0}, 1);
-	arms25 = new Live(st, 'arms25', 1200, 700, 4600, 1100, 23, {rim: 1.0, rimPx: 5}, 1);
-	glow25 = new Live(st, 'glow25', 1200, 700, 4600, 1100, 24, {emissive: 1.0}, 0.5);
+	prints25 = new Live(st, 'prints25', 1150, 1100, 2800, 400, 11, {}, 0.6, 11);
+	cast25 = new Cast(st, 'cast25', 1150, 720, 2800, 1000, 20);
+	prop25 = new Live(st, 'prop25', 1150, 720, 2800, 1000, 22, {rim: 0.4, emissive: 0.0}, 1);
+	arms25 = new Live(st, 'arms25', 1150, 720, 2800, 1000, 23, {rim: 1.0, rimPx: 5}, 1);
+	glow25 = new Live(st, 'glow25', 1150, 720, 2800, 1000, 24, {emissive: 1.0}, 0.5);
 	gust25 = new Live(st, 'gust25', 960, 540, W, H, 600, {}, 0.5, 9800);
 };
 /** footprints of crossing i up to where it is now: dark dents on its line, alternating feet, settling under new snow */
@@ -423,7 +436,7 @@ const prints = (g: CanvasRenderingContext2D, i: number, t: number) => {
 	const set = clamp01((t - b(43.5)) / (b(44.5) - b(43.5)));
 	for (let n = 0; ; n++) { const x = x0 + (n + 0.35) * half; if (x > xNow - 40) break;
 		const y = rowY(x, r) + (n % 2 ? -3 : 3) * s, a = 0.62 - 0.25 * set;
-		g.fillStyle = `rgba(48,54,60,${a})`; g.beginPath(); g.ellipse(x, y, 15 * s, 3.4 * s, 0, 0, Math.PI * 2); g.fill();
+		g.fillStyle = `rgba(40,46,52,${a})`; g.beginPath(); g.ellipse(x, y, 24 * s, 5 * s, 0, 0, Math.PI * 2); g.fill();
 		g.fillStyle = `rgba(214,222,228,${0.6 * a})`; g.beginPath(); g.ellipse(x - 2, y + 2.4 * s, 14 * s, 1.3 * s, 0, 0, Math.PI); g.fill(); }
 };
 const draw25a = (t: number): Frame => {
@@ -431,7 +444,7 @@ const draw25a = (t: number): Frame => {
 	const key = k30(t), figs: FigOpts[] = [], held: {c: P; r: number; i: number}[] = [];
 	const order = [0, 1, 2, 3].sort((a, c) => ROWS[a] - ROWS[c]);                      // far lines first
 	for (const i of order) { if (t < enter25(i)) continue; const x = x25(i, t), r = ROWS[i], hh = H25 * ROWS_S[r];
-		const hw = hugWalk(YOUTH, (x - XL25(i)) / (STR25 * ROWS_S[r]) + i * 0.281, x, hh, (xx) => rowY(xx, r), `P2 carrier ${i}`);
+		const hw = hugWalk(YOUTH, (x - XL25(i)) / (STR25 * ROWS_S[r]) + i * 0.37, x, hh, (xx) => rowY(xx, r), `P2 carrier ${i}`);
 		figs.push(hw.f); held.push({c: hw.c, r: hw.r, i}); }
 	cast25.draw(key, figs);
 	prop25.drawW(key, (g) => { for (const h of held) bundle(g, h.c, h.r, h.i === 1 ? 1 : 0, h.i !== 1); });
@@ -444,7 +457,7 @@ const draw25a = (t: number): Frame => {
 	c25.motes?.update(t, [-1200, -300, 3600, 2400], 70, 24, 0.85);
 	drawGust(st, gust25, cam, t);
 	if (you) st.heroAt(you.c[0], you.c[1], 22, 430); else st.setHero(-9999, 0, 1);
-	return {st, grade: {vig: 0.4, exposure: 1 - 0.1 * q}, bloom: 1};
+	return {st, grade: {vig: 0.4, exposure: 1 - 0.12 * q, corners: 0.6, cornersTop: 0}, bloom: 1};
 };
 addScene({id: '25', a: GUST.a, z: b(44.66), in: GUST, draw: draw25a});
 
@@ -459,7 +472,7 @@ const scribble = (g: CanvasRenderingContext2D, cx: number, cy: number, s: number
 const ledgerArt = (g: CanvasRenderingContext2D, t: number) => {
 	const {x0, x1, y0, y1} = PG, w = x1 - x0, h = y1 - y0;
 	// the stand: two legs and a ledge on the desk top, leaning back
-	g.fillStyle = SIL; g.fillRect(x0 + 30, y1 - 6, w - 60, 14); g.beginPath(); g.moveTo(x0 + 60, y1 + 8); g.lineTo(x0 + 80, TOP25); g.lineTo(x0 + 96, TOP25); g.lineTo(x0 + 78, y1 + 8); g.fill(); g.beginPath(); g.moveTo(x1 - 60, y1 + 8); g.lineTo(x1 - 80, TOP25); g.lineTo(x1 - 96, TOP25); g.lineTo(x1 - 78, y1 + 8); g.fill();
+	g.fillStyle = SIL; g.beginPath(); g.moveTo(x0 + 10, y1 - 4); g.lineTo(x1 - 10, y1 - 4); g.lineTo(x1 - 36, TOP25); g.lineTo(x0 + 36, TOP25); g.closePath(); g.fill();   // a low reading slope (书托) on the desk
 	// the open register: two leaves, a slight gutter, ruled columns, a thin cover edge
 	g.fillStyle = '#3a2f26'; g.fillRect(x0 - 8, y0 - 6, w + 16, h + 10);
 	const pg = g.createLinearGradient(x0, 0, x1, 0); pg.addColorStop(0, '#DDCFAE'); pg.addColorStop(0.48, '#E9DDBE'); pg.addColorStop(0.5, '#C9BB98'); pg.addColorStop(0.52, '#E9DDBE'); pg.addColorStop(1, '#E2D5B4'); g.fillStyle = pg; g.fillRect(x0, y0, w, h);
@@ -478,13 +491,13 @@ const ledgerArt = (g: CanvasRenderingContext2D, t: number) => {
 	scribble(g, colX(0, 1), y0 + 30, gs * 0.9, 900, 'rgba(70,58,44,0.3)'); scribble(g, colX(0, 1), y0 + 30 + pitch, gs * 0.9, 901, 'rgba(70,58,44,0.3)');
 };
 /** the young man behind the desk holding the lid: lid y (world) as it comes down */
-const LIDY = (t: number) => lerp(BX.y0 - 96, BX.y0 - 6, easeInOut(clamp01((t - b(45.5)) / (b(45.75) - b(45.5)))));
+const LIDY = (t: number) => lerp(BX.y0 - 90, BX.y0 - 19, easeInOut(clamp01((t - b(45.5)) / (b(45.75) - b(45.5)))));
 const packer = (t: number) => {
-	const ly = LIDY(t), down = clamp01((ly - (BX.y0 - 96)) / 90), o: FigOpts = {x: 1545, ground: 1086, h: 660, pose: bowUpper(POSES.stand, 8 + 24 * down), look: YOUTH, flip: true};
-	return rig(o, [{side: 'L', target: [BX.x0 + 34, ly + 4], name: 'L on lid'}, {side: 'R', target: [BX.x0 + BX.w - 22, ly + 4], name: 'R on lid'}], () => 1086, 'P3 packer');
+	const ly = LIDY(t), down = clamp01((ly - (BX.y0 - 90)) / 71), o: FigOpts = {x: 1526, ground: 1086, h: 660, pose: bowUpper(POSES.stand, 14 + 20 * down), look: YOUTH, flip: true};
+	return rig(o, [{side: 'L', target: [BX.x0 + 30, ly - 11], name: 'L on lid'}, {side: 'R', target: [BX.x0 + BX.w - 26, ly - 11], name: 'R on lid'}], () => 1086, 'P3 packer');
 };
 const cam25b = (t: number): Cam => {
-	const close = camLock(4.15, (PG.x0 + PG.x1) / 2 + 60, (PG.y0 + PG.y1) / 2 + 4, PG.z, 960, 560);
+	const close = camLock(3.0, (PG.x0 + PG.x1) / 2 + 40, (PG.y0 + PG.y1) / 2, PG.z, 960, 650);
 	const wide: Cam = [1040, 640, 0.98];
 	const fc = (BX.x0 + BX.w / 2), slats = camLock(12.5, fc, BX.y0 + BX.h / 2, BX.z, 960, 560);
 	if (t < b(45.25)) return camMix(close, [close[0] - 10, close[1] + 4, close[2] * 1.03], clamp01((t - b(44.66)) / (b(45.25) - b(44.66))));
@@ -501,15 +514,15 @@ const boot25b = async () => {
 	roll25 = new Live(st, 'roll25', 1080, 740, 300, 60, -33, {rim: 0.6}, 2);
 	roll25.drawW('r', (g) => { const y = TOP25 - 15, gr = g.createLinearGradient(0, y - 11, 0, y + 11); gr.addColorStop(0, '#8E8A82'); gr.addColorStop(0.45, '#B7B2A8'); gr.addColorStop(1, '#5E5A54');
 		g.fillStyle = gr; g.beginPath(); g.roundRect(985, y - 11, 190, 22, 6); g.fill(); g.fillStyle = '#4A4E54'; g.fillRect(985, y - 11, 12, 22); g.fillRect(1163, y - 11, 12, 22); g.fillStyle = '#9A968E'; for (const x of [981, 1179]) { g.beginPath(); g.ellipse(x, y, 4, 8, 0, 0, Math.PI * 2); g.fill(); } });
-	box25 = new Live(st, 'box25', BX.x0 + BX.w / 2, BX.y0 + 20, 300, 180, BX.z, {rim: 0.5}, 9);
-	lid25 = new Live(st, 'lid25', BX.x0 + BX.w / 2, 640, 340, 280, -30, {rim: 0.8, rimPx: 4}, 3);
+	box25 = new Live(st, 'box25', BX.x0 + BX.w / 2, BX.y0 + 30, 240, 120, BX.z, {rim: 0.5}, 8);
+	lid25 = new Live(st, 'lid25', BX.x0 + BX.w / 2, 640, 260, 160, -30, {rim: 0.8, rimPx: 4}, 3);
 	cast25b = new Cast(st, 'cast25b', 1400, 700, 900, 1000, -45);
 	arms25b = new Live(st, 'arms25b', 1400, 700, 900, 1000, -29, {rim: 1.0, rimPx: 5}, 1);
 	glow25b = new Live(st, 'glow25b', 1100, 640, 1400, 700, -28, {emissive: 1.0}, 0.6);
 };
 /** the open box (seen side-on, a little from above): your glow inside; then the lid closes */
 const drawBox25 = (g: CanvasRenderingContext2D, t: number, leak: number) => {
-	const {x0, y0, w, h} = BX, ly = LIDY(t), open = clamp01((y0 - 6 - ly) / 90);
+	const {x0, y0, w, h} = BX, ly = LIDY(t), open = clamp01((y0 - 19 - ly) / 71);
 	g.fillStyle = '#241b13'; g.fillRect(x0 - 2, y0 - 10, w + 4, 12);                                                     // the open top edge (inside)
 	if (open > 0) { const gr = g.createLinearGradient(0, y0 - 10, 0, y0 + 2); gr.addColorStop(0, `rgba(255,226,170,${0.95 * open})`); gr.addColorStop(1, `rgba(255,190,110,${0.4 * open})`); g.fillStyle = gr; g.fillRect(x0 + 6, y0 - 9, w - 12, 9); }
 	slatFace(g, x0, y0, w, h, leak);
@@ -517,22 +530,26 @@ const drawBox25 = (g: CanvasRenderingContext2D, t: number, leak: number) => {
 const draw25b = (t: number): Frame => {
 	const st = desk25.st, cam = cam25b(t); setCam(st, cam);
 	page25.drawW(`${clamp01((t - b(45)) / 0.24).toFixed(2)}:${clamp01((t - b(45.25)) / 0.24).toFixed(2)}`, (g) => ledgerArt(g, t));
-	const lidOpen = clamp01((BX.y0 - 6 - LIDY(t)) / 90), into = clamp01((t - b(45.75)) / (b(46) - b(45.75)));
-	const leak = (0.35 + 0.65 * (1 - lidOpen)) * (1 - smooth(clamp01((t - (b(46) - 0.1)) / 0.1)));         // the light dims as the lid shuts it in (scene 26 has none)
+	const lidOpen = clamp01((BX.y0 - 19 - LIDY(t)) / 71), into = clamp01((t - b(45.75)) / (b(46) - b(45.75)));
+	const leak = (0.35 + 0.65 * (1 - lidOpen)) * (1 - smooth(clamp01((t - (b(46) - 0.17)) / 0.1)));         // the light dims as the lid shuts it in (scene 26 has none)
 	box25.drawW(`${LIDY(t).toFixed(1)}:${leak.toFixed(2)}`, (g) => drawBox25(g, t, leak));
 	box25.L.mat.uniforms.uEmissive.value = 0.25 * leak;
 	const f = packer(t), key = k30(t), ly = LIDY(t);
 	cast25b.draw(key, [f]);
-	lid25.drawW(ly.toFixed(1), (g) => { g.fillStyle = '#3a2d20'; g.fillRect(BX.x0 - 6, ly - 10, BX.w + 12, 14); g.fillStyle = '#4c3b2a'; g.fillRect(BX.x0 - 6, ly - 10, BX.w + 12, 4);
-		g.fillStyle = '#2a2016'; for (let k = 0; k < 6; k++) g.fillRect(BX.x0 + k * (BX.w / 5) - 2, ly - 10, 3, 14); });
+	lid25.drawW(ly.toFixed(1), (g) => { g.fillStyle = '#4a3a2b'; g.fillRect(BX.x0 - 6, ly - 9, BX.w + 12, 18); g.fillStyle = '#6b5236'; g.fillRect(BX.x0 - 6, ly - 9, BX.w + 12, 4); g.fillStyle = '#2a2016'; g.fillRect(BX.x0 - 6, ly + 6, BX.w + 12, 3);
+		for (let k = 1; k < 5; k++) g.fillRect(BX.x0 + k * (BX.w / 5) - 1, ly - 5, 2, 11); });
 	arms25b.drawW(key, (g) => fillD(g, armPaths(f)));
 	const gc: P = [BX.x0 + BX.w / 2, BX.y0 - 8];
-	glow25b.drawW(`${lidOpen.toFixed(2)}:${leak.toFixed(2)}`, (g) => { glowBlob(g, gc, 150, 70 + 50 * lidOpen, 0.3 * (0.4 + 0.6 * lidOpen) * leak); glowBlob(g, [(PG.x0 + PG.x1) / 2, (PG.y0 + PG.y1) / 2], 300, 200, 0.06 * (1 - into)); });
-	st.heroAt(gc[0], gc[1] - 10, BX.z, 520 + 300 * lidOpen);
+	glow25b.drawW(`${lidOpen.toFixed(2)}:${leak.toFixed(2)}`, (g) => { glowBlob(g, gc, 150, 70 + 50 * lidOpen, 0.3 * lidOpen * leak); glowBlob(g, [(PG.x0 + PG.x1) / 2, (PG.y0 + PG.y1) / 2], 300, 200, 0.06 * (1 - into)); });
+	if (leak > 0.03) st.heroAt(gc[0], gc[1] - 10, BX.z, (520 + 300 * lidOpen) * leak); else st.setHero(-9999, 0, 1);
 	const cl = clamp01((t - b(44.66)) / 0.01) * (1 - easeInOut(clamp01((t - b(45.25)) / (b(45.5) - b(45.25)))));
-	return {st, grade: {vig: 0.42, vigCol: '#140e0a', exposure: 1, corners: 0.85 * cl}, bloom: 1};
+	return {st, grade: {vig: 0.42, vigCol: '#140e0a', exposure: 1, corners: 0.35 + 0.65 * cl}, bloom: 1};
 };
 addScene({id: '25b', a: b(44.66), z: b(46), in: {mode: 7, a: b(44.66), z: b(44.66) + 0.13, ease: smooth}, draw: draw25b});
 
 // ================================================================================================ boot
-export const bootQing = async () => { await boot22(); await boot23(); await boot24(); await boot25a(); await boot25b(); };
+export const bootQing = async () => {
+	renderer.domElement.addEventListener('webglcontextlost', () => console.error('WEBGL CONTEXT LOST'));
+	const sub = (window as any).QSUB as string[] | undefined, want = (id: string) => !sub || sub.includes(id);   // dev only: boot some stages (SwiftShader memory)
+	if (want('22')) await boot22(); if (want('23')) await boot23(); if (want('24')) await boot24(); if (want('25')) await boot25a(); if (want('25b')) await boot25b();
+};

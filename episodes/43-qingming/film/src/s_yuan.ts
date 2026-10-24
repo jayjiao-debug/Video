@@ -65,7 +65,7 @@ export const softRoll = (g: CanvasRenderingContext2D, p0: P, p1: P, r: number) =
 	g.fillStyle = '#DCCDB0'; for (const x of [-r * 0.25, L + r * 0.25]) { g.beginPath(); g.ellipse(x, 0, r * 0.35, r * 0.7, 0, 0, Math.PI * 2); g.fill(); }
 	g.restore();
 };
-export const SILK_BASE = '#EEDAB2';
+export const SILK_BASE = '#E4CDA2';
 
 // ================================================================================================ shared art
 let riverMono: HTMLCanvasElement & {silk: any}, riverGrey: HTMLCanvasElement & {silk: any};
@@ -110,8 +110,8 @@ export const d14 = (t: number): Frame => {
 	const st = c14.st, [cx, cy, zm] = camPath(t, K14); st.setCam(cx, cy, zm);
 	const w = walk14(t), fk = `${Math.round(t * 30)}`;
 	cast14.draw(fk, w.figs);
-	roll14.drawW(fk, (g) => { glowBlob(g, w.rc, 170, 95, 0.4); softRoll(g, w.e0, w.e1, 14); drawFig(g, {...w.car, part: 'L'}); });
-	c14.setLanterns(() => 1); c14.setBoat(1760 - (t - b(23)) * 22, 0); c14.setStreak(w.rc[0], 0.25, t);
+	roll14.drawW(fk, (g) => { glowBlob(g, w.rc, 200, 120, 0.6); softRoll(g, w.e0, w.e1, 14); drawFig(g, {...w.car, part: 'L'}); });
+	c14.setLanterns(() => 0.55); c14.setBoat(1760 - (t - b(23)) * 22, 0); c14.setStreak(w.rc[0], 0.25, t);
 	st.heroAt(w.rc[0], w.rc[1], 22, 640);
 	return {st, grade: {vig: 0.62, vigCol: '#141a1b', exposure: 1}, bloom: 1};
 };
@@ -144,15 +144,15 @@ const buildRoom15 = async () => {
 		<rect x="-1100" y="-500" width="4120" height="440" fill="#1b1814"/><rect x="-1100" y="-80" width="4120" height="26" fill="#15100C"/>
 		<rect x="40" y="-500" width="40" height="2100" fill="#1f2528"/><rect x="1820" y="-500" width="40" height="2100" fill="#1f2528"/>`, 4120, 2100, '', -1100, -500);
 	st.add('wall', canvasTex(await svgToCanvas(wall, 4120, 2100, 0.6)), 960, 550, 4120, 2100, -900, {rim: 0.35});
-	lamp15 = new Live(st, 'lamp', 960, 540, W, H, -120, {emissive: 1.25}, 1);
-	cast15 = new Cast(st, 'craftsman', 960, 640, W + 400, 1300, -80);
+	lamp15 = new Live(st, 'lamp', 960, 540, W, H, -120, {emissive: 0.6}, 1);
+	cast15 = new Cast(st, 'craftsman', 1200, 800, 1000, 1000, -80);
 	// table top (behind the hands and silks, in front of his body), the silks, his arms again, your halo, the table front
 	const top = mkCanvas(2600, 260), gt = top.getContext('2d')!; const tg = gt.createLinearGradient(0, 0, 0, 260); tg.addColorStop(0, '#2c2219'); tg.addColorStop(1, '#4a3826'); gt.fillStyle = tg; gt.fillRect(0, 0, 2600, 260);
 	gt.fillStyle = 'rgba(255,220,170,0.04)'; for (let i = 0; i < 26; i++) gt.fillRect(0, 6 + i * 9.5, 2600, 1.2);
 	st.add('top', canvasTex(top), 960, TOPB + (TOPF - TOPB) / 2 + 10, 2600, TOPF - TOPB + 20, -60, {rim: 0.0});
 	copy15 = new Live(st, 'copy', 960, 780, W, 260, -56, {}, 1.4);
-	you15 = new Live(st, 'you', 960, 780, W, 260, -54, {emissive: 0.34}, 1.4);
-	arms15 = new Cast(st, 'arms', 960, 640, W + 400, 1300, -50);
+	you15 = new Live(st, 'you', 960, 780, W, 260, -54, {emissive: 0.14}, 1.4);
+	arms15 = new Cast(st, 'arms', 1200, 800, 1000, 1000, -50);
 	glow15 = new Live(st, 'glow', 960, 640, W + 400, 1300, -48, {emissive: 1.0}, 0.5);
 	const front = svgDoc(`<rect x="-400" y="${TOPF}" width="2720" height="30" fill="#1d1610"/><rect x="-400" y="${TOPF + 28}" width="2720" height="420" fill="#16110d"/>
 		<rect x="-400" y="${TOPF + 28}" width="2720" height="8" fill="#0f0b08"/>`, 2720, 460, '', -400, TOPF);
@@ -170,8 +170,8 @@ const s15 = (t: number): S15 => {
 	const X = 1190 + 60 * smooth(clamp01((t - b(25.12)) / 0.25)) - 60 * smooth(clamp01((t - b(25.36)) / 0.22)) + 60 * smooth(clamp01((t - b(25.7)) / 0.3));
 	const yc = (FRONT[0] + FRONT[1]) / 2, ycb = (BACK[0] + BACK[1]) / 2, ycopy = lerp(ycb, yc, copyY);
 	let L: P | null, R: P | null, Lflat = false;
-	if (t < b(25.12)) { L = [P0 + 130 + 60 * (1 - smooth(clamp01((t - b(25.0)) / 0.25))), yc + 2]; Lflat = true; R = [P0 + 40 + SW, ycb]; }                       // flat on you; near hand on the copy's roller
-	else if (t < b(25.36)) { L = [you[0] + 130, yc + 2]; Lflat = true; R = [you[1], yc]; }                    // draws you aside (right)
+	if (t < b(25.12)) { L = [P0 + 230, yc + 2]; Lflat = true; R = [P0 + 40 + SW, ycb]; }                       // flat on you; near hand on the copy's roller
+	else if (t < b(25.36)) { L = [you[0] + 230, yc + 2]; Lflat = true; R = [you[1], yc]; }                    // draws you aside (right)
 	else if (t < b(25.75)) { L = [copy[1], ycopy]; R = [you[1], yc]; }                                          // lays the copy where you lay
 	else { L = [you[0], yc]; R = [you[1], yc]; }                                                               // both hands on your rollers, rolls you up
 	if (kup > 0) R = [lerp(you[1], LAMP15[0] + 26, kup), lerp(yc, LAMP15[1] + 6, kup)];                        // the near hand cups the lamp
@@ -190,7 +190,7 @@ const craftsman15 = (s: S15): FigOpts => {
 const drawLamp15 = (g: CanvasRenderingContext2D, k: number, cup: number) => {
 	const [x, y] = LAMP15; g.strokeStyle = '#15100C'; g.lineWidth = 3; g.beginPath(); g.moveTo(x, -120); g.lineTo(x, y - 34); g.stroke();
 	g.fillStyle = '#15100C'; g.fillRect(x - 20, y - 36, 40, 7); g.fillRect(x - 16, y + 30, 32, 6);
-	const c = [40 + 205 * k, 32 + 160 * k, 24 + 84 * k].map(Math.round); g.fillStyle = `rgb(${c[0]},${c[1]},${c[2]})`; g.beginPath(); g.ellipse(x, y, 24, 31, 0, 0, Math.PI * 2); g.fill();
+	const c = [40 + 180 * k, 32 + 140 * k, 24 + 70 * k].map(Math.round); g.fillStyle = `rgb(${c[0]},${c[1]},${c[2]})`; g.beginPath(); g.ellipse(x, y, 24, 31, 0, 0, Math.PI * 2); g.fill();
 	g.strokeStyle = 'rgba(21,16,12,.5)'; g.lineWidth = 2; for (const dx of [-9, 0, 9]) { g.beginPath(); g.moveTo(x + dx, y - 29); g.quadraticCurveTo(x + dx * 1.5, y, x + dx, y + 29); g.stroke(); }
 	if (k > 0) glowBlob(g, [x, y], 105 * (1 - 0.4 * cup), 95 * (1 - 0.4 * cup), 0.3 * k, '255,184,104');
 };
@@ -254,7 +254,7 @@ export const d16 = (t: number): Frame => {
 		silk16.drawW(fk, (g) => { const w = h.xR - h.xL; if (w > 4) silkPanel(g, riverMono, h.xL, SY - SH / 2, w, SH); });
 		rollers16.drawW(fk, (g) => { drawRoller(g, h.xL, SY, SH + 24); drawRoller(g, h.xR, SY, SH + 24); });
 		hero = [(h.xL + h.xR) / 2, SY];
-		glow16.drawW(fk, (g) => { glowBlob(g, hero, lerp(330, 130, h.k), lerp(220, 120, h.k), 0.3); glowBlob(g, hero, 900, 520, 0.07); });
+		glow16.drawW(fk, (g) => { glowBlob(g, hero, lerp(330, 130, h.k), lerp(220, 120, h.k), 0.22); glowBlob(g, hero, 900, 520, 0.07); });
 	} else {
 		const w = walk16(t); cast16.draw(fk, [w.A, w.B]); silk16.drawW(fk, () => {});
 		rollers16.drawW(fk, (g) => { drawCarriedRoll(g, w.B, 'quangui16-carry', 'R', 0.29, 13, 1); });
@@ -395,8 +395,9 @@ export const bootYuan = async () => {
 		// keep the top of the day sky at or below #5E7A82 (ivory subtitles ≥ 4.5 : 1): a soft shade over the far sky only
 		st.add('skyShade', canvasTex(gradCanvas([[0, 'rgba(38,58,68,0.92)'], [0.3, 'rgba(46,68,78,0.72)'], [0.5, 'rgba(60,84,92,0.35)'], [0.66, 'rgba(70,92,98,0)'], [1, 'rgba(70,92,98,0)']])), 960, 420, 12000, 1900, -8900);
 		st.get('sunglow').mat.uniforms.uOpacity.value = 0.14;                 // the day sun stays low and soft: you lead
-		cast14 = new Cast(st, 'cast14', 900, 900, 5200, 1800, 20);
-		roll14 = new Live(st, 'roll14', 900, 900, 5200, 1800, 22, {emissive: 0.55}, 0.6);
+		cast14 = new Cast(st, 'cast14', 1000, 880, 2400, 1120, 20);
+		roll14 = new Live(st, 'roll14', 1000, 880, 2400, 1120, 22, {emissive: 0.9}, 0.6);
+		for (const n of ['river', 'ripples', 'haze']) st.get(n).mat.uniforms.uTint.value.setRGB(0.8, 0.82, 0.84);   // the pale day water stays below your light
 		// the match: where the Dagoba lands at the end of 14 → 15 opens with its window's Dagoba in the same place
 		const [cx, cy, zm] = camPath(b(25), K14); st.setCam(cx, cy, zm);
 		const base = scr(st, -520, 860, -2600), top = scr(st, -520, 860 - 372 * 1.25, -2600);
@@ -409,8 +410,8 @@ export const bootYuan = async () => {
 		win16 = new Live(st, 'win16', 960, 820, 2400, 200, -2540, {emissive: 1.3}, 1);
 		win16.draw('w', (g) => { for (let i = 0; i < 9; i++) { const x = 60 + i * 52 + hash(i * 4.1) * 30, y = 78 + hash(i * 2.3) * 22; g.fillStyle = `rgba(255,184,104,${0.55 + hash(i) * 0.35})`; g.fillRect(x, y, 5 + (i % 3) * 2, 4 + (i % 2) * 2); } });
 		cast16 = new Cast(st, 'cast16', 960, 640, 2600, 1100, 20);
-		silk16 = new Live(st, 'silk16', (SX0 + SX1) / 2, SY, SX1 - SX0 + 40, SH + 60, 22, {emissive: 0.34}, 3);
-		rollers16 = new Live(st, 'rollers16', 960, 640, 2600, 1100, 23, {rim: 0}, 1);
+		silk16 = new Live(st, 'silk16', (SX0 + SX1) / 2, SY, SX1 - SX0 + 40, SH + 60, 22, {emissive: 0.12}, 3);
+		rollers16 = new Live(st, 'rollers16', 1100, 640, 1800, 900, 23, {rim: 0}, 1);
 		glow16 = new Live(st, 'glow16', 960, 640, 2600, 1100, 18, {emissive: 1.0}, 0.5);
 	}
 	{
@@ -430,15 +431,15 @@ export const bootYuan = async () => {
 			<rect x="${LAMP17[0] - 18}" y="${LAMP17[1] + 6}" width="36" height="6" fill="#15100C"/><rect x="${LAMP17[0] - 4}" y="${LAMP17[1] + 10}" width="8" height="${DTB - LAMP17[1] - 2}" fill="#15100C"/><ellipse cx="${LAMP17[0]}" cy="${DTB + 6}" rx="26" ry="6" fill="#15100C"/>
 			<rect x="${PX0 + PW - 160}" y="${DTB + 14}" width="70" height="18" rx="5" fill="#1b1612"/>`, W, 1200);
 		st.add('mydesk', canvasTex(await svgToCanvas(dk, W, 1200, 0.9)), 960, 600, W, 1200, -2, {rim: 0.9, rimPx: 5});
-		paper17 = st.add('paper', canvasTex(paperCanvas()), PX0 + PW / 2, PYF + 350 - PHF / 2, PW, PHF, 0, {emissive: 0.12}, 10);
+		paper17 = st.add('paper', canvasTex(paperCanvas()), PX0 + PW / 2, PYF + 350 - PHF / 2, PW, PHF, 0, {emissive: 0.03, tint: '#e2d5bd'}, 10);
 		rt17 = new THREE.WebGLRenderTarget(768, 432, {type: THREE.HalfFloatType, samples: 4});
 		const sr = slotRect();
 		slot17 = st.add('slot', rt17.texture as any, sr.x + sr.w / 2, sr.y + sr.h / 2, sr.w, sr.h, 0, {emissive: 0.3, fog: ['#E8D6B0', 0]}, 11);
 		ink17 = new Live(st, 'ink17', PX0 + NEWX * PK, PYF + 350 - PHF / 2, 180 * PK, PHF, 0, {}, 3, 12);
-		roll17 = new Live(st, 'roll17', PX0 + (PSRC_W + 10) * PK, PYF + 350 - PHF / 2, 140 * PK, (PSRC_H + 80) * PK, 0, {emissive: 0.45}, 2, 13);
+		roll17 = new Live(st, 'roll17', PX0 + (PSRC_W + 10) * PK, PYF + 350 - PHF / 2, 140 * PK, (PSRC_H + 80) * PK, 0, {emissive: 0.25}, 2, 13);
 		roll17.draw('roll', (g) => { const w = 140 * PK, h = (PSRC_H + 80) * PK; const gr = g.createLinearGradient(0, 0, w, 0); gr.addColorStop(0, '#CFA872'); gr.addColorStop(0.45, '#EED8AE'); gr.addColorStop(1, '#BE905A');
 			g.fillStyle = gr; g.beginPath(); g.roundRect(w * 0.15, 18 * PK, w * 0.7, h - 36 * PK, 10); g.fill(); g.fillStyle = '#34506A'; g.fillRect(w * 0.15, 18 * PK, w * 0.7, h * 0.05); g.fillRect(w * 0.15, h - 18 * PK - h * 0.05, w * 0.7, h * 0.05); });
-		cast17 = new Cast(st, 'cast17', 960, 640, W + 400, 1200, 4, {}, 1); cast17.L.L.mesh.renderOrder = 20;
+		cast17 = new Cast(st, 'cast17', 700, 700, 800, 800, 4, {}, 1); cast17.L.L.mesh.renderOrder = 20;
 		lamp17 = new Live(st, 'lamp17', LAMP17[0], LAMP17[1], 400, 400, -1, {emissive: 1.3}, 1);
 		glow17 = new Live(st, 'glow17', 1100, 600, 2400, 1400, 6, {emissive: 1.0}, 0.5, 21);
 		// the opening camera: the slot at SLOT_SCREEN, 16:9
