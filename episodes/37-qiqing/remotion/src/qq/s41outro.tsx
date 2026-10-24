@@ -1,34 +1,121 @@
 import React from 'react';
+import {staticFile} from 'remotion';
 import {W, H, SERIF, SANS, LATS, rnd, cl, sm, lerp, fio, fkPose, Rimmed, LOOK4, Glow, Pose, Look4} from './v3base';
-import {Cam, ease, easeOut, seg} from './fx';
+import {Cam, ease, easeIn, seg} from './fx';
 import {Voyager, RecordCover, voyRecordPos} from './voyager';
 import {MilkyWay, StarField, hill} from './sky41';
-/* Outro 172.935–188.1 (owner note 11: "people standing in space? the satellite is too cheap looking").
-   1 · the Golden Record, close, its grooves catching light; a faint trace of her brain waves crosses it (O1).
-   2 · pull back: the record is on the side of Voyager — the real spacecraft in detail — as the greeting plays (O2).
-   3 · tilt down to Earth: on a hilltop at night everyone from the relay stands on the ground, looking up at one moving
-       point of light. The title, then the question (O3). */
-export const OUT_T = {pull: 4.4, voy: 5.4, recede: 8.6, tilt: 9.9, title: 10.4, q: 11.145, end: 15.165};
+import {reach, toBody} from './s41morse';
+import {atEar} from './s41y1977';
+/* Outro from film 172.64. r4 (owner, 24 Oct: "回到妈，浪漫的解释人类想沟通的心情"; "金唱片有啥特殊含义"):
+   1 · the Golden Record close, her brain-wave trace (O1).
+   2 · pull back: the record is on the side of Voyager; the Mandarin greeting (O2).
+   3 · Voyager recedes into the stars until it is one point of light: 「这张金唱片，是写给外星人的一封信……可人类，还是把它寄了出去。」
+   4 · the point of light becomes the ringing circle on the 23:47 phone from the cold open. The call connects. 妈：「喂？这么晚了，还没睡啊？」
+   5 · wide: the caller on the edge of the bed by the window: 「妈，没什么事……就是，想你了。」 Push through the window into the sky.
+   6 · the hilltop: everyone from the relay stands on the ground looking up at the moving point; last in the row, the caller,
+       phone at the ear (N4: 「人类发明的每一种通讯，都是因为有人，想跟够不着的人，说一句话。」).
+   7 · the Juno end card: title, 「现在，这句话，只要一秒钟。」, the question. */
+export const OUT_T = {pull: 7.2, voy: 8.2, recede: 13.4, point: 20.2, phone: 20.3, connect: 21.5, room: 24.3, win: 28.4, hill: 29.3, title: 35.0, q: 36.6, end: 42.0};
 const GOLD = '#f2cf7a';
+const BRAIN_IN = 3.9;   // her brain-wave trace crosses the record when the line about it starts
 const VP = {x: 980, y: 470, s: 175, yaw: 0.3, pitch: -1.35, roll: 0.05};   // the hero framing: record faces us, dish behind
 const REC = voyRecordPos(VP.x, VP.y, VP.s, VP.yaw, VP.pitch, VP.roll);
+/** where the 妈 avatar circle sits on screen in the phone shot (the phone is drawn rotated −4° about (960, 480)) */
+const AV: [number, number] = [960 - 170 * Math.sin(4 * Math.PI / 180), 480 - 170 * Math.cos(4 * Math.PI / 180)];
 
 const Brain: React.FC<{x: number; y: number; w: number; t: number; k: number}> = ({x, y, w, t, k}) => k <= 0 ? null : <path
 	d={Array.from({length: 121}, (_, i) => { const u = i / 120, v = Math.sin(u * 40 + t * 9) * 0.5 + Math.sin(u * 97 + t * 15) * 0.3 + Math.sin(u * 13 - t * 4) * 0.4; return `${i ? 'L' : 'M'}${(x - w / 2 + u * w).toFixed(1)},${(y + v * 14 * Math.sin(Math.PI * u)).toFixed(1)}`; }).join(' ')}
 	stroke="#fff1c4" strokeWidth={2.2} fill="none" opacity={0.7 * k} style={{filter: 'drop-shadow(0 0 6px rgba(255,210,120,0.8))'}} />;
 
-/* end-card layout: pixel-measured centring nudges, and the monogram + pill row (centred as one group on the hill) */
-const DX = {t1: 23, t2: 19, q: 20, c: 9};
-const PILL = {x: 960 - 400 / 2 + 40, w: 400};
-/** the channel monogram (as in the Juno brand package): a gold ring, an italic J, a four-point spark; draw 0..1 */
-const JMark: React.FC<{draw: number}> = ({draw}) => { const r = 54, c = 2 * Math.PI * r, spark = cl((draw - 0.6) / 0.4);
+/* ---------------------------------------------------------------- 1–3 · space */
+const Space: React.FC<{tau: number; t: number}> = ({tau, t}) => {
+	const T = OUT_T;
+	const pull = ease(seg(tau, T.pull, T.voy + 1.2)), u = ease(seg(tau, T.recede, T.point));
+	const zoom = lerp(9, 1, pull) * Math.pow(0.004, u);
+	const coverOp = 1 - sm(seg(tau, T.pull + 0.3, T.voy + 0.4));
+	const fx = lerp(REC[0], AV[0], u), fy = lerp(REC[1], AV[1], u);
+	const sx = (VP.x - fx) * zoom + fx, sy = (VP.y - fy) * zoom + fy, dot = cl((0.16 - zoom) / 0.1);   // the craft's centre on screen; a point of light takes over as it shrinks
 	return <g>
-		<circle r={r} fill="none" stroke={GOLD} strokeWidth={2.5} strokeDasharray={c} strokeDashoffset={c * (1 - Math.min(1, draw * 1.3))} transform="rotate(-90)" />
-		<circle r={47} fill="none" stroke={GOLD} strokeWidth={1} opacity={0.35 * draw} />
-		<text y={22} textAnchor="middle" style={{fontFamily: LATS, fontStyle: 'italic', fontWeight: 600, fontSize: 70}} fill={GOLD} opacity={cl((draw - 0.3) / 0.4)}>J</text>
-		<path d="M0,-9 L2.2,-2.2 L9,0 L2.2,2.2 L0,9 L-2.2,2.2 L-9,0 L-2.2,-2.2 Z" fill="#fff4d6" transform={`translate(40,-40) scale(${spark * 1.4}) rotate(${draw * 90})`} />
-	</g>; };
+		<rect width={W} height={H} fill="#03040a" />
+		<StarField t={t} n={320} maxY={H} op={0.9} seed={3} />
+		<g transform={`rotate(${-6 + tau * 0.4} 960 540)`}><MilkyWay t={t} op={0.85} cx={900} cy={430} ang={-24} /></g>
+		{zoom > 0.012 && <Cam zoom={zoom} fx={fx} fy={fy}>
+			<Voyager x={VP.x} y={VP.y} s={VP.s} yaw={VP.yaw + tau * 0.012} pitch={VP.pitch} roll={VP.roll} mag={0.9} glint={0.4 + 0.3 * Math.sin(t * 0.8)} recordGlow={0.12 + 0.2 * (1 - pull)} light={[-0.8, 0.35, 0.6]} />
+		</Cam>}
+		{dot > 0 && <><Glow x={sx} y={sy} r={34} c="#fff4d8" o={0.8 * dot} id="oDot" /><circle cx={sx} cy={sy} r={2.6} fill="#fff" opacity={dot} /></>}
+		{/* the record close: a full-frame cover that becomes the small disc on the bus as we pull back */}
+		{coverOp > 0.01 && <g opacity={coverOp}><Cam zoom={lerp(1, 0.1, pull) * lerp(1, 1.1, ease(seg(tau, 0, T.pull + 0.4)))} fx={960} fy={540} px={(REC[0] - 960) * pull} py={(REC[1] - 540) * pull}>
+			<rect width={W} height={H} fill="#06050a" opacity={1 - pull} />
+			<RecordCover x={960} y={540} r={410} t={t} glow={0.5} />
+			<Brain x={960} y={540} w={620} t={t} k={fio(tau, BRAIN_IN, T.pull + 0.3, 0.6)} />
+		</Cam></g>}
+		{tau < 0.6 && <rect width={W} height={H} fill="#ffe6a8" opacity={0.35 * (1 - tau / 0.6)} />}
+	</g>;
+};
 
+/* ---------------------------------------------------------------- 4 · the 23:47 phone, now connecting */
+const PhoneCall: React.FC<{tau: number; t: number}> = ({tau, t}) => {
+	const T = OUT_T, cx = 960, cy = 480, pw = 420, ph = 860;
+	const ringing = 1 - cl((tau - T.connect) / 0.25), ring = ((tau - T.phone) * 1.3) % 1, on = cl((tau - T.connect) / 0.3);
+	const secs = Math.max(0, Math.floor(tau - T.connect + 1)), talk = fio(tau, T.connect + 0.15, T.connect + 2.6, 0.15);
+	const z = lerp(1.0, 1.12, ease(seg(tau, T.phone, T.room + 0.6)));
+	return <Cam zoom={z} fx={AV[0]} fy={AV[1] + 120}>
+		<rect x={-200} y={-200} width={W + 400} height={H + 400} fill="#07080e" />
+		{/* the same dark bedroom as the cold open: a window with the city at night behind */}
+		<rect x={1250} y={120} width={520} height={600} fill="#0d1424" />
+		{Array.from({length: 40}, (_, i) => <circle key={i} cx={1260 + rnd(i, 3) * 500} cy={300 + rnd(i, 4) * 400} r={6 + 14 * rnd(i, 5)} fill={i % 4 ? '#ffd9a0' : '#9fc8ff'} opacity={0.12 + 0.2 * rnd(i, 6)} />)}
+		<rect x={1250} y={120} width={520} height={600} fill="none" stroke="#000" strokeWidth={18} />
+		<Glow x={cx} y={cy} r={700} c={on > 0.5 ? '#7fe0a0' : '#6f9cff'} o={0.2} id="ph2Glow" />
+		<g transform={`rotate(-4 ${cx} ${cy})`}>
+			<rect x={cx - pw / 2 - 14} y={cy - ph / 2 - 14} width={pw + 28} height={ph + 28} rx={70} fill="#111318" stroke="#2a2d36" strokeWidth={3} />
+			<defs><linearGradient id="ph2Scr" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stopColor="#1d2a3f" /><stop offset="1" stopColor="#0a0f18" /></linearGradient></defs>
+			<rect x={cx - pw / 2} y={cy - ph / 2} width={pw} height={ph} rx={58} fill="url(#ph2Scr)" />
+			<rect x={cx - 60} y={cy - ph / 2 + 22} width={120} height={14} rx={7} fill="#05070a" />
+			<text x={cx - pw / 2 + 40} y={cy - ph / 2 + 60} fill="#dfe6f2" style={{fontFamily: SANS, fontSize: 24, fontWeight: 600}}>23:47</text>
+			{ringing > 0 && [0, 1, 2].map((k) => { const v = (ring + k / 3) % 1; return <circle key={k} cx={cx} cy={cy - 170} r={92 + v * 120} fill="none" stroke="#7fd99a" strokeWidth={3} opacity={(1 - v) * 0.6 * ringing} />; })}
+			{on > 0 && <circle cx={cx} cy={cy - 170} r={100 + 40 * (1 - on)} fill="none" stroke="#7fd99a" strokeWidth={4} opacity={0.8 * on * (1 - 0.6 * cl((tau - T.connect - 0.5) / 0.6))} />}
+			<circle cx={cx} cy={cy - 170} r={92} fill="#3a4a62" /><text x={cx} y={cy - 146} textAnchor="middle" fill="#fff" style={{fontFamily: SANS, fontSize: 72, fontWeight: 700}}>妈</text>
+			<text x={cx} y={cy - 10} textAnchor="middle" fill="#fff" style={{fontFamily: SANS, fontSize: 52, fontWeight: 700}}>妈</text>
+			{ringing > 0.5
+				? <text x={cx} y={cy + 48} textAnchor="middle" fill="#a9b6c9" style={{fontFamily: SANS, fontSize: 30}}>{'正在呼叫' + '…'.slice(0, 1) + '·'.repeat(1 + Math.floor(t * 3) % 3)}</text>
+				: <text x={cx} y={cy + 48} textAnchor="middle" fill="#9fe6b4" style={{fontFamily: SANS, fontSize: 32, fontWeight: 600}}>{`00:${String(secs).padStart(2, '0')}`}</text>}
+			{/* her voice: a small level meter under the timer while she speaks */}
+			{talk > 0 && <g opacity={talk}>{Array.from({length: 9}, (_, i) => { const a = 0.25 + 0.75 * Math.abs(Math.sin(t * (7 + i * 1.7) + i * 1.3)) * (0.5 + 0.5 * Math.sin(t * 3.1 + i)); return <rect key={i} x={cx - 72 + i * 16} y={cy + 92 - 22 * a} width={8} height={44 * a} rx={4} fill="#9fe6b4" opacity={0.85} />; })}</g>}
+			<circle cx={cx} cy={cy + ph / 2 - 140} r={58} fill="#e5483d" /><rect x={cx - 26} y={cy + ph / 2 - 146} width={52} height={12} rx={6} fill="#fff" />
+		</g>
+	</Cam>;
+};
+
+/* ---------------------------------------------------------------- 5 · the room: the caller on the edge of the bed by the window */
+const NOW_LOOK: Look4 = {dress: 'shirt', head: 'short'};
+const RF = {x: 742, ground: 992, h: 640};
+const NOW_FK = {hip: 0.37, lean: 12, neck: 18, lt: 84, lk: 90, rt: 78, rk: 86, la: 22, le: 136, ra: 40, re: 30};
+const NOW_SIT = fkPose(reach(NOW_FK, 'l', toBody(atEar(fkPose(NOW_FK), RF.x, RF.ground, RF.h, false).c, RF.x, RF.ground, RF.h, false)));
+/** a smartphone held at the ear, its screen light spilling on the cheek */
+const HeldPhone: React.FC<{pose: Pose; x: number; ground: number; h: number; flip?: boolean; glow?: number; id: string}> = ({pose, x, ground, h, flip = false, glow = 1, id}) => {
+	const e = atEar(pose, x, ground, h, flip), L = 0.088 * h, w = 0.042 * h;
+	return <g>
+		<Glow x={e.c[0]} y={e.c[1]} r={0.16 * h} c="#bcd4ff" o={0.22 * glow} id={id} />
+		<g transform={`translate(${e.c[0]},${e.c[1]}) rotate(${e.rot})`}><rect x={-L / 2} y={-w / 2} width={L} height={w} rx={w * 0.25} fill="#090b12" /><rect x={-L / 2 + 2} y={w / 2 - 3} width={L - 4} height={2} fill="#bcd4ff" opacity={0.5 * glow} /></g>
+	</g>;
+};
+const Room: React.FC<{tau: number; t: number}> = ({tau, t}) => {
+	const T = OUT_T, push = ease(seg(tau, T.room, T.win)), dive = easeIn(seg(tau, T.win, T.hill + 0.3));
+	const z = lerp(1.0, 1.1, push) * lerp(1, 7, dive), fx = lerp(820, 1120, dive), fy = lerp(640, 250, dive);
+	const breathe = 0.004 * Math.sin(t * 1.6);
+	return <Cam zoom={z} fx={fx} fy={fy}>
+		<image href={staticFile('ep41/now_room.webp')} x={0} y={0} width={W} height={H} preserveAspectRatio="xMidYMid slice" />
+		{/* the city breathes: a few windows across the street switch on and off */}
+		{Array.from({length: 6}, (_, i) => { const on = Math.sin(t * (0.3 + 0.2 * rnd(i, 2)) + i * 2.1) > 0.6; return on ? <rect key={i} x={[700, 760, 1395, 1455, 1508, 1452][i]} y={[440, 590, 500, 620, 700, 760][i]} width={44} height={22} fill="#ffe2a8" opacity={0.55} /> : null; })}
+		<Glow x={1150} y={520} r={520} c="#7fa6ff" o={0.08} id="nowWin" />
+		<g transform={`translate(0,${-breathe * RF.h})`}>
+			<Rimmed x={RF.x} ground={RF.ground} h={RF.h} pose={NOW_SIT} look={NOW_LOOK} col="#080a12" rim="#9fc0ff" rimOp={0.42} rimDx={2.4} rimDy={-1} T={tau} />
+			<HeldPhone pose={NOW_SIT} x={RF.x} ground={RF.ground} h={RF.h} id="nowPh" />
+		</g>
+	</Cam>;
+};
+
+/* ---------------------------------------------------------------- 6–7 · the hilltop and the end card */
 type Cast = {look: Look4; pose: Pose; flip?: boolean; dh?: number};
 const up = (lean: number, neck: number, la: number, le: number, ra: number, re: number, step = 0): Pose => fkPose({hip: 0.655, lean, neck, lt: 3 + step, lk: 3, rt: -4 - step, rk: 4, la, le, ra, re});
 const CAST: Cast[] = [
@@ -45,34 +132,24 @@ const CAST: Cast[] = [
 	{look: LOOK4.druyan, pose: up(-6, -32, 6, 12, 22, 30)},
 	{look: LOOK4.sagan, pose: up(-6, -30, 22, 30, -2, 8), flip: false},
 ];
-
-export const OUTRO3: React.FC<{tau: number; t: number}> = ({tau, t}) => {
-	const T = OUT_T;
-	// 1–2 · record → Voyager: one continuous pull-back about the record's position
-	if (tau < T.tilt) {
-		const pull = ease(seg(tau, T.pull, T.voy + 1.2)), recede = ease(seg(tau, T.recede, T.tilt));
-		const zoom = lerp(9, 1, pull) * lerp(1, 0.22, recede);
-		const coverOp = 1 - sm(seg(tau, T.pull + 0.3, T.voy + 0.4));
-		const fx = lerp(REC[0], 960, recede * 0.6), fy = lerp(REC[1], 470, recede * 0.6);
-		return <g>
-			<rect width={W} height={H} fill="#03040a" />
-			<StarField t={t} n={320} maxY={H} op={0.9} seed={3} />
-			<g transform={`rotate(${-6 + tau * 0.4} 960 540)`}><MilkyWay t={t} op={0.85} cx={900} cy={430} ang={-24} /></g>
-			<Cam zoom={zoom} fx={fx} fy={fy}>
-				<Voyager x={VP.x} y={VP.y} s={VP.s} yaw={VP.yaw + tau * 0.012} pitch={VP.pitch} roll={VP.roll} mag={0.9} glint={0.4 + 0.3 * Math.sin(t * 0.8)} recordGlow={0.12 + 0.2 * (1 - pull)} light={[-0.8, 0.35, 0.6]} />
-			</Cam>
-			{/* the record close: a full-frame cover that becomes the small disc on the bus as we pull back */}
-			{coverOp > 0.01 && <g opacity={coverOp}><Cam zoom={lerp(1, 0.1, pull) * lerp(1, 1.1, ease(seg(tau, 0, T.pull + 0.4)))} fx={960} fy={540} px={(REC[0] - 960) * pull} py={(REC[1] - 540) * pull}>
-				<rect width={W} height={H} fill="#06050a" opacity={1 - pull} />
-				<RecordCover x={960} y={540} r={410} t={t} glow={0.5} />
-				<Brain x={960} y={540} w={620} t={t} k={fio(tau, 0.4, T.pull + 0.2, 0.6)} />
-			</Cam></g>}
-			{tau < 0.6 && <rect width={W} height={H} fill="#ffe6a8" opacity={0.35 * (1 - tau / 0.6)} />}
-		</g>;
-	}
-	// 3 · the hilltop: everyone on the ground, looking up at one moving point of light
-	const k = ease(seg(tau, T.tilt, T.tilt + 1.6)), hl = hill(W, H, 960, 830, 980, 1010), py = lerp(760, 0, k);
-	const star: [number, number] = [lerp(1060, 1180, seg(tau, T.tilt, T.end)), lerp(170, 150, seg(tau, T.tilt, T.end))];
+const HL = hill(W, H, 960, 830, 980, 1010);
+const NOW_X = 1640, NOW_G = HL.yAt(NOW_X) + 3, NOW_H = 150;
+const NOW_UP_FK = {hip: 0.655, lean: -5, neck: -26, lt: 4, lk: 3, rt: -6, rk: 4, la: 24, le: 132, ra: -2, re: 10};
+const NOW_STAND = fkPose(reach(NOW_UP_FK, 'l', toBody(atEar(fkPose(NOW_UP_FK), NOW_X, NOW_G, NOW_H, false).c, NOW_X, NOW_G, NOW_H, false)));
+/* end-card layout: pixel-measured centring nudges, and the monogram + pill row (centred as one group on the hill) */
+const DX = {t1: 23, t2: 19, q: 20, c: 9};
+const PILL = {x: 960 - 400 / 2 + 40, w: 400};
+/** the channel monogram (as in the Juno brand package): a gold ring, an italic J, a four-point spark; draw 0..1 */
+const JMark: React.FC<{draw: number}> = ({draw}) => { const r = 54, c = 2 * Math.PI * r, spark = cl((draw - 0.6) / 0.4);
+	return <g>
+		<circle r={r} fill="none" stroke={GOLD} strokeWidth={2.5} strokeDasharray={c} strokeDashoffset={c * (1 - Math.min(1, draw * 1.3))} transform="rotate(-90)" />
+		<circle r={47} fill="none" stroke={GOLD} strokeWidth={1} opacity={0.35 * draw} />
+		<text y={22} textAnchor="middle" style={{fontFamily: LATS, fontStyle: 'italic', fontWeight: 600, fontSize: 70}} fill={GOLD} opacity={cl((draw - 0.3) / 0.4)}>J</text>
+		<path d="M0,-9 L2.2,-2.2 L9,0 L2.2,2.2 L0,9 L-2.2,2.2 L-9,0 L-2.2,-2.2 Z" fill="#fff4d6" transform={`translate(40,-40) scale(${spark * 1.4}) rotate(${draw * 90})`} />
+	</g>; };
+const Hill: React.FC<{tau: number; t: number}> = ({tau, t}) => {
+	const T = OUT_T, k = ease(seg(tau, T.hill, T.hill + 2.4)), py = lerp(760, 0, k);
+	const star: [number, number] = [lerp(1060, 1180, seg(tau, T.hill, T.end)), lerp(170, 150, seg(tau, T.hill, T.end))];
 	return <g>
 		<defs><linearGradient id="oSky" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stopColor="#05040c" /><stop offset="0.55" stopColor="#14123a" /><stop offset="0.85" stopColor="#2e2a5a" /><stop offset="1" stopColor="#5a4a7a" /></linearGradient></defs>
 		<g transform={`translate(0,${py})`}>
@@ -80,9 +157,12 @@ export const OUTRO3: React.FC<{tau: number; t: number}> = ({tau, t}) => {
 			<StarField t={t} n={300} maxY={760} seed={5} /><g transform="translate(0,-780)"><StarField t={t} n={260} maxY={780} seed={9} /></g>
 			<MilkyWay t={t} op={0.9} cx={960} cy={300} ang={-32} />
 			<Glow x={star[0]} y={star[1]} r={40} c="#fff4d8" o={0.8} id="oVoy" /><circle cx={star[0]} cy={star[1]} r={2.6} fill="#fff" />
-			<path d={hl.d} fill="#07060c" />
-			{CAST.map((c, i) => { const x = 420 + i * 98 + (i >= 10 ? 14 : 0), g = hl.yAt(x) + 3, h = 150 * (c.dh ?? 1);
+			<path d={HL.d} fill="#07060c" />
+			{CAST.map((c, i) => { const x = 420 + i * 98 + (i >= 10 ? 14 : 0), g = HL.yAt(x) + 3, h = 150 * (c.dh ?? 1);
 				return <Rimmed key={i} x={x} ground={g} h={h} pose={c.pose} look={c.look} flip={c.flip} col="#050409" rim="#9fb0ff" rimOp={0.28} rimDx={0} rimDy={-1.5} T={t + i} />; })}
+			{/* last in the row: you, tonight, the phone at your ear */}
+			<Rimmed x={NOW_X} ground={NOW_G} h={NOW_H} pose={NOW_STAND} look={NOW_LOOK} col="#050409" rim="#9fb0ff" rimOp={0.28} rimDx={0} rimDy={-1.5} T={t + 12} />
+			<HeldPhone pose={NOW_STAND} x={NOW_X} ground={NOW_G} h={NOW_H} glow={1.4} id="nowPhH" />
 		</g>
 		{/* the Juno end card: title, the question, then (on the dark hill) the monogram + follow pill and the sources.
 		   Lines ending in full-width punctuation are nudged right (DX) so the visible ink is centred. */}
@@ -103,6 +183,16 @@ export const OUTRO3: React.FC<{tau: number; t: number}> = ({tau, t}) => {
 			<text x={960} y={1018} textAnchor="middle">资料：美国国会图书馆（贝尔笔记）· Watson 1913 · Marconi 1902 · Kleinrock / UCLA · Zorn 1988 · CNNIC · NASA / JPL · NPR</text>
 			<text x={960} y={1046} textAnchor="middle">音频：First Sounds · firstsounds.org · CC BY（有剪辑） · 画面为示意 · 内容由AI生成</text>
 		</g>
-		{void rnd}{void easeOut}
+	</g>;
+};
+
+export const OUTRO3: React.FC<{tau: number; t: number}> = ({tau, t}) => {
+	const T = OUT_T;
+	const phoneOp = cl((tau - T.phone) / 0.7), roomOp = cl((tau - T.room) / 0.5), hillOp = cl((tau - T.hill) / 0.7);
+	return <g>
+		{phoneOp < 1 && <Space tau={tau} t={t} />}
+		{phoneOp > 0 && roomOp < 1 && <g opacity={phoneOp}><PhoneCall tau={tau} t={t} /></g>}
+		{roomOp > 0 && hillOp < 1 && <g opacity={roomOp}><Room tau={tau} t={t} /></g>}
+		{hillOp > 0 && <g opacity={hillOp}><Hill tau={tau} t={t} /></g>}
 	</g>;
 };

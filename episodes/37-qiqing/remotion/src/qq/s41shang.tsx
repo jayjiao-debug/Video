@@ -11,18 +11,18 @@ import {crackPaths} from './s41title';
    cools to bone white; he lifts it to the clouded east; the camera pushes into the fire until flame fills the frame
    (杜甫 opens by pulling back out of a beacon fire). No rain is shown (the 验辞 is unverified). */
 
-/** scene-relative seconds, keyed to the measured VO (vo_timeline_v3.md): S1 19.40–22.56, SQ 23.00–24.88, S2 25.40–28.56, S3 29.10–32.03 */
+/** scene-relative seconds, keyed to the measured VO: S1n 19.215–23.11, SQ 23.465–25.35, S3n 25.6–29.29, S4n 29.6–33.82 (film) */
 export const SHANG_T = {
-	S1: 0.435, S1e: 3.595, SQ: 4.035, SQe: 5.915, S2: 6.435, S2e: 9.595, S3: 10.135, S3e: 13.065, end: 15.871,
+	S1: 0.25, S1e: 4.14, SQ: 4.5, SQe: 6.38, S2: 6.635, S2e: 10.33, S3: 10.635, S3e: 14.86, end: 15.871,   // r4: the new lines (vo08 S1n/S3n/S4n)
 	pullEnd: 3.8,                 // macro on the old crack → medium on the diviner
-	look: 3.6, lookEnd: 6.0,      // he lifts his face to the eastern sky for the question
-	wind: 3.9,                    // wind rises, clouds roll in from the east
-	reach: 5.95, lift: 6.35, touch: 6.62, flipA: 6.98, flipB: 7.28,
-	crack: 7.358,                 // beat 13 of the scene: the 卜 crack shoots across (inside the 25.6–26.4 film window)
-	glyph0: 10.188, glyphStep: 0.566,   // the five graphs on beats 18–22 (during S3)
-	offer: 12.75, cool: 12.6, coolEnd: 13.9,
-	sky: 14.0,                    // the tilt has landed on the shell against the clouded eastern sky
-	fire: 14.2,                   // push into the fire
+	look: 4.0, lookEnd: 6.4,      // he lifts his face to the eastern sky for the question
+	wind: 4.3,                    // wind rises, clouds roll in from the east
+	reach: 6.516, lift: 6.916, touch: 7.186, flipA: 7.546, flipB: 7.846,
+	crack: 7.924,                 // a beat before 「裂纹」 (scene 8.11): the 卜 crack shoots across
+	glyph0: 10.754, glyphStep: 0.566,   // the five graphs carved under 「刻在龟甲上」
+	offer: 13.1, cool: 13.0, coolEnd: 14.1,
+	sky: 14.3,                    // the raised shell against the clouded eastern sky (「留到了今天」)
+	fire: 14.5,                   // push into the fire
 };
 const T = SHANG_T;
 /** the last frame: camera at zoom 24 on the fire's Blaze (scale 1.05, lean -0.27, seed 0), 54 px above its base, 4 px left; warm tint 0.3 */

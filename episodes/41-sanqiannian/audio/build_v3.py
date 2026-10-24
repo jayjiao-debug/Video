@@ -30,18 +30,18 @@ j2 = int(joins[1] * SR); m = min(len(rv), n - j2); bgm[j2:j2 + m] += rv[:m]
 ECHO = 'aecho=0.8:0.55:45|90|140:0.22|0.14|0.08'; OLD = 'highpass=f=320,lowpass=f=2800,acrusher=bits=10:mix=0.2'; PHONE = 'highpass=f=300,lowpass=f=3400'
 SPACE = 'aecho=0.8:0.6:180|340:0.25|0.15'; SCOTT = 'highpass=f=100,lowshelf=f=180:g=-6,equalizer=f=900:t=q:w=1:g=5,equalizer=f=2200:t=q:w=1:g=3'
 FX = {'': '', 'ECHO': ECHO, 'OLD': OLD, 'PHONE': PHONE, 'SPACE': SPACE}
-LINES = [(l['file'], l['at'], ','.join(x for x in (SCOTT if 'CQ_cut' in l['file'] else FX.get(l.get('fx', ''), l.get('fx', '')), l.get('extra', '')) if x)) for l in json.load(open(f'{A}/lines_v3.json'))]
+LINES = [(l['file'], l['at'], ','.join(x for x in (SCOTT if 'CQ_cut' in l['file'] else FX.get(l.get('fx', ''), l.get('fx', '')), l.get('extra', '')) if x), l.get('gain', 0.0)) for l in json.load(open(f'{A}/lines_v3.json'))]
 meter = pyln.Meter(SR); dyn = 'highpass=f=90,acompressor=threshold=-26dB:ratio=3:attack=5:release=120:makeup=2'
 band = lambda x: sosfiltfilt(butter(4, [300, 3400], btype='band', fs=SR, output='sos'), x, axis=0)
 vo = np.zeros((n, 2), np.float32); speaking = np.zeros(n, bool); rep = []; c2_band = None
-for f, at, fx in LINES:
+for f, at, fx, gdb in LINES:
     c = load(f'{A}/{f}.mp3', ','.join(x for x in (fx, dyn if 'CQ_cut' not in f else '') if x))
     if len(c) > 400: c = c[:-144]
     fi, fo = min(240, len(c) // 4), min(720, len(c) // 4); c[:fi] *= np.linspace(0, 1, fi)[:, None]; c[-fo:] *= np.linspace(1, 0, fo)[:, None]
     if 'CQ_cut' in f and c2_band is not None:   # match the 1860 voice's speech band to the narration's, minus 2 dB
         g = c2_band - 2 - meter.integrated_loudness(band(c)); c *= 10 ** (g / 20); pk = np.abs(c).max(); c *= min(1, 0.6 / pk)
     else:
-        L = meter.integrated_loudness(c); c *= 10 ** ((VO_L - (2.0 if OLD in fx else 0) - L) / 20)
+        L = meter.integrated_loudness(c); c *= 10 ** ((VO_L - (2.0 if OLD in fx else 0) + gdb - L) / 20)
         if f.endswith('/C2'): c2_band = meter.integrated_loudness(band(c))
     i0 = int(at * SR); mm = min(len(c), n - i0); vo[i0:i0 + mm] += c[:mm]; speaking[i0:i0 + mm] = True
     rep.append(f'{f.split("/")[-1]:16s} {at:7.2f} → {at + len(c)/SR:7.2f}')
