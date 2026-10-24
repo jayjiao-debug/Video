@@ -25367,7 +25367,9 @@ var AGES = [
   { a: b(41), z: b(46), era: "\u6C11\u56FD", v0: 699, v1: 823, r0: b(41), r1: b(41.6), pre: "\u7EA6" },
   { a: b(46), z: b(47.5), era: "\u6C11\u56FD", v0: 823, v1: 830, r0: b(46), r1: b(46.4), post: "\u591A" },
   { a: b(47.5), z: b(49), era: "\u6C11\u56FD", v0: 830, v1: 845, r0: b(47.5), r1: b(48), pre: "\u7EA6" },
-  { a: b(49), z: b(56), era: "\u65B0\u4E2D\u56FD", v0: 845, v1: 850, r0: 112.8, r1: 114.25, pre: "\u7EA6" },
+  { a: b(49), z: b(50), era: "\u6C11\u56FD", v0: 845, v1: 850, r0: 112.8, r1: 114.25, pre: "\u7EA6" },
+  // still 民国 through the silence (1945); 新中国 from the lamp reveal
+  { a: b(50), z: b(56), era: "\u65B0\u4E2D\u56FD", v0: 850, v1: 850, pre: "\u7EA6" },
   { a: b(57), z: b(58.5), era: "\u65B0\u4E2D\u56FD", v0: 850, v1: 850, post: "\u591A" },
   { a: b(58.5), z: b(60.5), era: "\u660E", v0: -1, v1: -1 },
   // chip only, counter hidden (undated Ming flashback)
@@ -26293,21 +26295,6 @@ var drawRoll = (g, p0, p1, r, glow2 = 1, grey = false) => {
     g.fill();
   }
   g.restore();
-};
-var drawBundle = (g, c, w, h, glow2 = 1) => {
-  g.save();
-  g.fillStyle = "#2b2620";
-  g.beginPath();
-  g.ellipse(c[0], c[1], w / 2, h / 2, -0.08, 0, Math.PI * 2);
-  g.fill();
-  g.strokeStyle = "#191510";
-  g.lineWidth = 3;
-  g.beginPath();
-  g.moveTo(c[0] - w * 0.1, c[1] - h / 2);
-  g.quadraticCurveTo(c[0] + w * 0.05, c[1] - h * 0.65, c[0] + w * 0.12, c[1] - h * 0.48);
-  g.stroke();
-  g.restore();
-  return glow2;
 };
 var glowBlob = (g, c, rx, ry, a, col = "255,214,150") => {
   if (a <= 0) return;
@@ -27294,18 +27281,18 @@ function beast(P9, x, y, H5, kind, d = 1, load = false, walk = 0.5) {
   const tb = kind === "camel" ? Tb(-35, -66) : Tb(-37, -54);
   brush(P9, tb, [tb[0] - 6 * u * d, tb[1] + 8 * u], [tb[0] - 4 * u * d, tb[1] + 22 * u], 3 * u, 1 * u, P9.ink(0.85), 6);
   shape(P9, body2, wash, lw, { amp: 0.25, smooth: true });
-  let neck, head, ears = [];
+  let neck2, head, ears = [];
   if (kind === "camel") {
-    neck = [Tb(24, -76), Tb(40, -74), Tb(50, -86), Tb(54, -104), Tb(47, -106), Tb(43, -90), Tb(36, -66), Tb(28, -62)];
+    neck2 = [Tb(24, -76), Tb(40, -74), Tb(50, -86), Tb(54, -104), Tb(47, -106), Tb(43, -90), Tb(36, -66), Tb(28, -62)];
     head = [Tb(45, -108), Tb(53, -112), Tb(65, -105), Tb(63, -99), Tb(50, -100)];
   } else if (kind === "ox") {
-    neck = [Tb(20, -64), Tb(36, -60), Tb(44, -48), Tb(36, -40), Tb(26, -44)];
+    neck2 = [Tb(20, -64), Tb(36, -60), Tb(44, -48), Tb(36, -40), Tb(26, -44)];
     head = [Tb(36, -62), Tb(46, -60), Tb(54, -40), Tb(50, -34), Tb(40, -40)];
     const h1 = Tb(40, -62);
     line(P9, [h1, [h1[0] + 4 * u * d, h1[1] - 10 * u], [h1[0] + 12 * u * d, h1[1] - 12 * u]], lw * 1.3);
   } else {
     const long = kind === "horse" ? 1.15 : 1;
-    neck = [Tb(14, -60), Tb(32 * long, -84), Tb(40 * long, -82), Tb(34, -56), Tb(26, -50)];
+    neck2 = [Tb(14, -60), Tb(32 * long, -84), Tb(40 * long, -82), Tb(34, -56), Tb(26, -50)];
     head = [Tb(32 * long, -88), Tb(40 * long, -90), Tb(56 * long, -70), Tb(54 * long, -64), Tb(46 * long, -64), Tb(36 * long, -76)];
     const ex = 34 * long, ey = -88, el = kind === "donkey" ? 20 : 9;
     ears = [Tb(ex - 1, ey), Tb(ex - 4, ey - el), Tb(ex + 2, ey - 1)];
@@ -27314,7 +27301,7 @@ function beast(P9, x, y, H5, kind, d = 1, load = false, walk = 0.5) {
       seg(P9, a[0], a[1], a[0] - 4 * u * d, a[1] + 3 * u, lw * 0.8, 0.8);
     }
   }
-  shape(P9, neck, wash, lw, { amp: 0.2, smooth: true });
+  shape(P9, neck2, wash, lw, { amp: 0.2, smooth: true });
   shape(P9, head, wash, lw, { amp: 0.2, smooth: true });
   if (ears.length) {
     shape(P9, ears, wash, lw * 0.9, { amp: 0.1 });
@@ -29288,8 +29275,8 @@ function patchDonkey(P9, X0, Y0, u) {
     const x = -22 + i * 7;
     seg(P9, ...L(x, -40), ...L(x + 3, -45), 0.8, 0.45);
   }
-  const neck = [L(13, -62), L(24, -80), L(33, -89), L(42, -86), L(38, -72), L(31, -52)];
-  shape(P9, neck, P9.pal.shade, lw, { k: 0.75, amp: 0.3, smooth: true });
+  const neck2 = [L(13, -62), L(24, -80), L(33, -89), L(42, -86), L(38, -72), L(31, -52)];
+  shape(P9, neck2, P9.pal.shade, lw, { k: 0.75, amp: 0.3, smooth: true });
   for (let i = 0; i < 7; i++) {
     const a = L(16 + i * 3, -66 - i * 3.2);
     seg(P9, a[0], a[1], a[0] - 3 * u, a[1] - 1.5 * u, 1.1, 0.75);
@@ -29965,6 +29952,18 @@ var robeSafe = (p, max = 54) => {
   }
   return o;
 };
+var neck = (g, f3) => {
+  const a = toScreen(f3, f3.pose.Neck1), c = toScreen(f3, f3.pose.Head), sp = toScreen(f3, f3.pose.Spine1), w = 0.034 * f3.h;
+  const dx = c[0] - sp[0], dy = c[1] - sp[1], L = Math.hypot(dx, dy) || 1, nx = -dy / L * w, ny = dx / L * w;
+  g.fillStyle = SIL;
+  g.beginPath();
+  g.moveTo(sp[0] + nx * 1.5, sp[1] + ny * 1.5);
+  g.lineTo(c[0] + nx, c[1] + ny);
+  g.lineTo(c[0] - nx, c[1] - ny);
+  g.lineTo(sp[0] - nx * 1.5, sp[1] - ny * 1.5);
+  g.closePath();
+  g.fill();
+};
 var fillD = (g, ds, col = SIL) => {
   g.fillStyle = col;
   for (const d of ds) g.fill(new Path2D(d));
@@ -30023,8 +30022,8 @@ var TB = { back: 478, front: 690, apron: 722, bx0: 110, bx1: 1810, fx0: 60, fx1:
 var SL = { x0: 660, x1: 1260, y0: 497, y1: 665 };
 var T1Z = { floor: -200, body: -120, table: -80, pool: -79, copy: -78, silk: -77, arms: -70 };
 var CRAFT = look("yuanCraftsman");
-var CH = 520;
-var CG = 884;
+var CH = 560;
+var CG = 905;
 var tsq = (y) => 0.965 + 0.035 * clamp01((y - TB.back) / (TB.front - TB.back));
 var tx = (X, y) => 960 + (X - 960) * tsq(y);
 var drawFlat = (g, src, X0, X1, c0, c12) => {
@@ -30094,6 +30093,15 @@ var bootT1 = async () => {
   g.fillRect(TB.fx0, TB.front, TB.fx1 - TB.fx0, TB.apron - TB.front);
   g.fillStyle = "rgba(120,86,56,0.35)";
   g.fillRect(TB.fx0, TB.front, TB.fx1 - TB.fx0, 3);
+  {
+    const sh = g.createLinearGradient(0, TB.apron, 0, 920);
+    sh.addColorStop(0, "rgba(8,6,5,0.62)");
+    sh.addColorStop(1, "rgba(8,6,5,0.25)");
+    g.fillStyle = sh;
+    g.fillRect(TB.fx0 + 60, TB.apron, TB.fx1 - TB.fx0 - 120, 920 - TB.apron);
+    g.fillStyle = "#1a1410";
+    g.fillRect(TB.fx0 + 60, 860, TB.fx1 - TB.fx0 - 120, 12);
+  }
   g.fillStyle = SIL;
   for (const x of [TB.fx0 + 22, TB.fx1 - 62]) g.fillRect(x, TB.apron - 2, 40, 1010 - TB.apron);
   st2.add("t1table", canvasTex(cv), 960, 540, 1920, 1080, T1Z.table, { rim: 0.5, rimPx: 4 });
@@ -30104,23 +30112,23 @@ var bootT1 = async () => {
   t1Halo = new Live(st2, "t1halo", 1250, 560, 1900, 520, -76, { emissive: 1 }, 0.4);
   t1Arms = new Live(st2, "t1arms", 1250, 560, 1900, 520, T1Z.arms, { rim: 1, rimPx: 6 }, 1);
 };
-var T1 = { go: 11.95, land: b3(5), grab: 12.95, lift: 13.3 };
+var T1 = { go: 11.72, land: b3(5), grab: 12.95, lift: 13.3 };
 var t1Seam = (t) => lerp2(SL.x0, SL.x1, easeInOut((t - T1.go) / (T1.land - T1.go)));
 var strideC = () => gaitStride("08_04", stepFor(CRAFT)) * CH;
 var t1Walk = (t) => {
-  const off = 152;
+  const off = 112;
   if (t < T1.grab) return { x: Math.min(t1Seam(t), SL.x1 + 8) - off, dist: Math.min(t1Seam(t), SL.x1 + 8) - SL.x0 };
   const u = t - T1.grab, v = 700, a = 0.5, x0 = SL.x1 + 8 - off, x = x0 + v * (u < a ? u * u / (2 * a) : a / 2 + (u - a));
   return { x, dist: SL.x1 + 8 - SL.x0 + (x - x0) };
 };
 var t1Fig = (t) => {
   const w = t1Walk(t), seam = t1Seam(t), u = w.dist / strideC();
-  const lean = t < T1.grab ? 24 : lerp2(24, 6, smooth((t - T1.grab) / (T1.lift + 0.2 - T1.grab)));
+  const lean = t < T1.grab ? 14 : lerp2(14, 4, smooth((t - T1.grab) / (T1.lift + 0.2 - T1.grab)));
   const base = bowUpper(robeSafe(walkFor(CRAFT, u)), lean);
   const o = { x: w.x, ground: CG, h: CH, pose: base, look: CRAFT };
   const rollX = seam + 9, rollLie = [[rollX, SL.y0 - 4], [rollX, SL.y1 + 4]];
   let roll = rollLie, contacts;
-  if (t < T1.land) contacts = [{ side: "R", target: [seam - 11, 612], name: "R on copy roller" }, { side: "L", target: [seam + 9, 548], name: "L on your roller" }];
+  if (t < T1.land) contacts = [{ side: "R", target: [seam - 11, 594], name: "R on copy roller" }, { side: "L", target: [seam + 9, 540], name: "L on your roller" }];
   else {
     const k = smooth((t - T1.grab) / (T1.lift - T1.grab)), sh = toScreen(o, base.LSh);
     const c0 = [rollX, (SL.y0 + SL.y1) / 2], c12 = [sh[0] + 0.17 * CH, sh[1] + 0.2 * CH], c = [lerp2(c0[0], c12[0], k), lerp2(c0[1], c12[1], k) - 24 * Math.sin(Math.PI * k)];
@@ -30128,7 +30136,7 @@ var t1Fig = (t) => {
     roll = [[c[0] - dv[0], c[1] - dv[1]], [c[0] + dv[0], c[1] + dv[1]]];
     const at = (u2) => [lerp2(roll[0][0], roll[1][0], u2), lerp2(roll[0][1], roll[1][1], u2)];
     const pR = at(lerp2(0.55, 0.36, k)), pL = at(lerp2(0.85, 0.68, k));
-    const kr = smooth((t - T1.land) / (T1.grab - T1.land)), rFrom = [SL.x1 - 11, 612];
+    const kr = smooth((t - T1.land) / (T1.grab - T1.land)), rFrom = [SL.x1 - 11, 594];
     contacts = [{ side: "R", target: t < T1.grab ? [lerp2(rFrom[0], pR[0], kr), lerp2(rFrom[1], pR[1], kr) - 14 * Math.sin(Math.PI * kr)] : pR, name: "R on your roll" }, { side: "L", target: pL, name: "L on your roll" }];
   }
   const f3 = rig(o, contacts, () => CG, "T1 craftsman");
@@ -30141,9 +30149,16 @@ addScene({ id: "03", a: b3(4.5), z: b3(6), draw: (t) => {
   const { f: f3, roll, seam } = t1Fig(t), key = k30(t);
   const rolled = t >= T1.land;
   const openW = SL.x1 - Math.min(SL.x1, seam + 8), gx2 = rolled ? (roll[0][0] + roll[1][0]) / 2 : (seam + 8 + SL.x1) / 2, gy = rolled ? (roll[0][1] + roll[1][1]) / 2 : 581;
-  const glowK = rolled ? 0.55 : 0.55 + 0.45 * openW / (SL.x1 - SL.x0);
+  const glowK = (rolled ? 0.55 : 0.55 + 0.45 * openW / (SL.x1 - SL.x0)) * clamp01((1900 - gx2) / 420);
   t1Body.drawW(key, (g) => fillD(g, figurePaths(f3)));
-  t1Arms.drawW(key, (g) => fillD(g, armPaths(f3)));
+  t1Arms.drawW(key, (g) => {
+    g.save();
+    g.beginPath();
+    g.rect(0, TB.back + 1, 4e3, 2e3);
+    g.clip();
+    fillD(g, armPaths(f3));
+    g.restore();
+  });
   t1Copy.drawW(key, (g) => {
     drawFlat(g, riverGrey, SL.x0, SL.x1, SL.x0, seam - 10);
     vRoll(g, tx(seam - 12, 581), SL.y0 - 4, SL.y1 + 4, lerp2(17, 9, clamp01((seam - SL.x0) / (SL.x1 - SL.x0))), "grey", -(seam - 12 - 960) * 0.035 / (SL.y1 - SL.y0));
@@ -30176,9 +30191,10 @@ addScene({ id: "03", a: b3(4.5), z: b3(6), draw: (t) => {
     g.closePath();
     g.clip();
     glowBlob(g, [gx2, gy + 30], 560, 220, 0.34 * glowK, "255,196,128");
+    glowBlob(g, [905, 600], 300, 120, 0.1, "255,184,104");
     g.restore();
   });
-  t1Halo.drawW(key, (g) => rolled ? glowBlob(g, [gx2, gy], 95, 60, 0.42) : glowBlob(g, [gx2, gy], 70 + openW * 0.45, 125, 0.22));
+  t1Halo.drawW(key, (g) => glowK <= 0.01 ? void 0 : rolled ? glowBlob(g, [gx2, gy], 95, 60, 0.42) : glowBlob(g, [gx2, gy], 70 + openW * 0.45, 125, 0.22));
   room.lamp.L.mat.uniforms.uEmissive.value = 0.8;
   room.lamp.draw("lamp", (g) => {
     const x = 905, y = 352;
@@ -30214,7 +30230,7 @@ var meanRollOff = (lk, side = "R") => {
   let sx = 0, sy = 0;
   const n = 16;
   for (let i = 0; i < n; i++) {
-    let p = walkFor(lk, i / n);
+    let p = robeSafe(gaitPose("08_04", i / n, 0.82));
     p = armsFrom(p, underArm(p), side);
     const [a, c] = underArmRoll(p, side, 0.29);
     sx += (a[0] + c[0]) / 2 / n;
@@ -30232,11 +30248,11 @@ var bootT2 = async () => {
 };
 var t2Walk = (t) => {
   const u = (t - b3(6) + 0.2) / (2 * BEAT);
-  return { u, x: T2X0 + u * gaitStride("08_04", stepFor(EUN)) * EH };
+  return { u, x: T2X0 + u * gaitStride("08_04", 0.82) * EH };
 };
 var t2Fig = (t) => {
   const { u, x } = t2Walk(t);
-  let p = robeSafe(walkFor(EUN, u));
+  let p = robeSafe(gaitPose("08_04", u, 0.82));
   p = armsFrom(p, underArm(p), "R");
   return rig({ x, ground: deck(x) + 4, h: EH, pose: p, look: EUN }, [], deck, "T2 eunuch");
 };
@@ -30246,7 +30262,7 @@ addScene({ id: "04", a: b3(6), z: b3(7), draw: (t) => {
   lockCam(st2, EZOOM, target[0], target[1], 22, LOCK[0] - 16, LOCK[1]);
   const key = k30(t);
   let roll = [[0, 0], [0, 0]];
-  castT2.draw(key, [f3]);
+  castT2.draw(key, [f3], (g) => neck(g, f3));
   propT2.L.mat.uniforms.uEmissive.value = 0.55;
   propT2.drawW(key, (g) => {
     roll = drawCarriedRoll(g, f3, "T2 eunuch", "R", 0.29, 13, 1);
@@ -30321,7 +30337,7 @@ var bootT3 = async () => {
   armsT3 = new Live(st2, "t3arms", 1e3, 640, 1600, 500, 23, { rim: 1, rimPx: 5 }, 1);
   let sx = 0, sy = 0;
   for (let i = 0; i < 16; i++) {
-    const a = armfulAt(carryArmful(walkFor(YOUTH, i / 16)));
+    const a = armfulAt(carryArmful(bowUpper(robeSafe(gaitPose("08_04", i / 16, 0.82)), 5)));
     sx += a.c[0] / 16;
     sy += a.c[1] / 16;
   }
@@ -30329,10 +30345,10 @@ var bootT3 = async () => {
 };
 var t3Walk = (t) => {
   const u = (t - b3(7) + 0.2) / (2 * BEAT);
-  return { u, x: T3X0 + u * gaitStride("08_04", stepFor(YOUTH)) * YH };
+  return { u, x: T3X0 + u * gaitStride("08_04", 0.82) * YH };
 };
 var t3Fig = (t) => {
-  const { u, x } = t3Walk(t), base = carryArmful(robeSafe(walkFor(YOUTH, u))), a = armfulAt(base), o = { x, ground: deck(x) + 4, h: YH, pose: base, look: YOUTH };
+  const { u, x } = t3Walk(t), base = carryArmful(bowUpper(robeSafe(gaitPose("08_04", u, 0.82)), 5)), a = armfulAt(base), o = { x, ground: deck(x) + 4, h: YH, pose: base, look: YOUTH };
   const R = toScreen(o, [a.c[0] + 0.03, a.c[1] - a.r - 0.014]), L = toScreen(o, [a.c[0] + a.r + 8e-3, a.c[1] + 0.012]);
   const f3 = rig(o, [{ side: "R", target: R, name: "R under bundle", opt: { dir: 12 } }, { side: "L", target: L, name: "L round bundle", opt: { dir: -78 } }], deck, "T3 youth");
   return { f: f3, c: toScreen(f3, a.c), r: a.r * YH };
@@ -30447,18 +30463,62 @@ var bootT4 = async () => {
     q.ellipse(962, 582, 6, 9, 0, 0, Math.PI * 2);
     q.stroke();
   });
-  store.lamp.draw("off", (q) => {
-    q.fillStyle = SIL;
-    q.fillRect(1296, 750, 52, 10);
-    q.fillRect(1318, 690, 8, 62);
-    q.beginPath();
-    q.moveTo(1292, 700);
-    q.lineTo(1352, 700);
-    q.lineTo(1338, 664);
-    q.lineTo(1306, 664);
-    q.closePath();
-    q.fill();
-  });
+  st2.get("table").mesh.visible = false;
+  const tc = mkCanvas(1920, 1080), tg = tc.getContext("2d"), TOPF3 = 756, TOPB3 = 690, FLOOR2 = 1040;
+  tg.fillStyle = "#2b221a";
+  tg.beginPath();
+  tg.moveTo(812, TOPB3);
+  tg.lineTo(1760, TOPB3);
+  tg.lineTo(1790, TOPF3);
+  tg.lineTo(800, TOPF3);
+  tg.closePath();
+  tg.fill();
+  tg.fillStyle = "rgba(255,220,170,.05)";
+  for (let i = 0; i < 9; i++) tg.fillRect(812, TOPB3 + 6 + i * 7, 960, 1);
+  tg.fillStyle = "#18120d";
+  tg.fillRect(800, TOPF3, 990, 30);
+  tg.fillRect(820, TOPF3 + 30, 24, FLOOR2 - TOPF3 - 30);
+  tg.fillRect(1750, TOPF3 + 30, 24, FLOOR2 - TOPF3 - 30);
+  tg.fillRect(844, TOPF3 + 30, 906, 14);
+  tg.fillStyle = SIL;
+  tg.fillRect(652, 796, 176, 14);
+  tg.fillRect(664, 810, 12, FLOOR2 - 810);
+  tg.fillRect(804, 810, 12, FLOOR2 - 810);
+  tg.fillRect(676, 960, 128, 8);
+  const bx = 1250, by = TOPB3 + 6;
+  tg.fillStyle = SIL;
+  tg.beginPath();
+  tg.ellipse(bx, by + 4, 40, 9, 0, 0, Math.PI * 2);
+  tg.fill();
+  tg.strokeStyle = SIL;
+  tg.lineWidth = 7;
+  tg.lineCap = "round";
+  tg.beginPath();
+  tg.moveTo(bx, by);
+  tg.lineTo(bx + 6, 610);
+  tg.quadraticCurveTo(bx - 10, 572, 1190, 600);
+  tg.stroke();
+  tg.save();
+  tg.translate(1168, 616);
+  tg.rotate(-0.55);
+  tg.fillStyle = "#2f4a3a";
+  tg.beginPath();
+  tg.moveTo(-14, -34);
+  tg.lineTo(14, -34);
+  tg.lineTo(46, 26);
+  tg.quadraticCurveTo(0, 38, -46, 26);
+  tg.closePath();
+  tg.fill();
+  tg.fillStyle = "#4f6f58";
+  tg.fillRect(-12, -34, 24, 6);
+  tg.restore();
+  tg.strokeStyle = "#100c09";
+  tg.lineWidth = 3;
+  tg.beginPath();
+  tg.moveTo(bx - 30, by + 4);
+  tg.bezierCurveTo(1150, TOPB3 + 12, 1e3, TOPB3 + 14, 914, TOPB3 + 14);
+  tg.stroke();
+  st2.add("t4table", canvasTex(tc), 960, 540, 1920, 1080, 0, { rim: 1, rimPx: 5 });
   store.lamp.L.mat.uniforms.uEmissive.value = 0;
 };
 addScene({ id: "06", a: b3(8), z: b3(9), draw: (t) => {
@@ -30647,19 +30707,6 @@ var bootN = async () => {
   frg.fillRect(PANE.x0 - 30, PANE.y0 - 40, PANE.x1 - PANE.x0 + 60, 28);
   hallSt.add("frame", canvasTex(fr), 960, 540, 1920, 1080, HZ.frame, { rim: 0.6, rimPx: 4 });
   hallCard = new Live(hallSt, "card", 960, 800, 420, 160, HZ.card, {}, 1.5);
-  hallCard.drawW("c", (g) => {
-    g.fillStyle = "#cfc8b8";
-    g.fillRect(820, 752, 280, 96);
-    g.strokeStyle = "#8a8478";
-    g.lineWidth = 2;
-    g.strokeRect(826, 758, 268, 84);
-    g.fillStyle = "#2b2a28";
-    g.textAlign = "center";
-    g.font = '900 34px "Noto Serif CJK SC"';
-    g.fillText("\u64A4\u5C55\u56DE\u5E93", 960, 796);
-    g.font = '700 22px "Noto Serif CJK SC"';
-    g.fillText("\u4E0B\u6B21\u5C55\u51FA\uFF1A\u672A\u516C\u5E03", 960, 830);
-  });
   hallDust = new Motes(hallSt, 140, "dust", -200, 6, "#C9CED2", false);
   hallCrowd = new Live(hallSt, "crowd", 960, 770, 2700, 620, HZ.crowd, { rim: 1, rimPx: 6 }, 0.8);
 };
@@ -30678,13 +30725,23 @@ var hallZoom = (t) => {
   return Math.exp(lerp2(Math.log(1.08), Math.log(30), easeIn(clamp01((t - N.pane) / (N.paneZ - N.pane)))));
 };
 var VIS = [look("visitor"), look("visitorW")];
+var queueDraw = (g, st2, tot) => {
+  const fr = st2 - Math.floor(st2), stepping = fr > 1e-3 && fr < 0.999;
+  for (let j = Math.floor(st2) - 1; j < Math.floor(st2) + 80; j++) {
+    const jit = (hash(j * 3.7) - 0.5) * 14, s0 = tot - (j + 1) * 38 + jit + st2 * 38, q = qAt(s0);
+    if (!q) continue;
+    const child = hash(j * 5.3) < 0.1, lk = child ? look("visitorW") : VIS[hash(j * 2.1) < 0.5 ? 0 : 1], h = child ? 30 : 41 + 9 * hash(j * 1.7);
+    const pose = stepping ? walkFor(lk, fr * 0.5 + hash(j) * 0.1) : fkPose({ hip: 0.655, lean: 2 + 4 * hash(j * 9.1), lt: 4 * hash(j), lk: 3, rt: -4, rk: 4, la: -4 + 8 * hash(j * 4.4), le: 12, ra: 6, re: 16 + 30 * hash(j * 6.6) });
+    fillD(g, figurePaths({ x: q[0], ground: q[1] + 1, h, pose, look: lk }), "#120e0b");
+  }
+};
 var crowdAt = (t) => {
   const out = [], u0 = t - N.hallA;
   const X0 = [60, 380, 640, 930, 1180, 1430, 1700], V = [1850, 1950, 1800, 2e3, 1880, 1960, 1900], HS2 = [480, 455, 500, 470, 492, 450, 486];
   X0.forEach((x0, i) => {
     const lk = VIS[i * 3 % 2 ? 1 : 0], h = HS2[i], xx = x0 + 260 - u0 * V[i];
     if (xx < -280 || xx > 2250) return;
-    const ph = (x0 - xx) / (gaitStride("08_04", stepFor(lk)) * h) + i * 0.37, gy = 1010 + i % 2 * 16;
+    const ph = (x0 - xx) / (gaitStride("08_04", stepFor(lk)) * h) + [0, 0.31, 0.62, 0.17, 0.83, 0.46, 0.71][i], gy = 1010 + i % 2 * 16;
     out.push(rig({ x: xx, ground: gy, h, pose: walkFor(lk, ph), look: lk, flip: true }, [], () => gy, "N visitor " + i));
   });
   return out;
@@ -30696,13 +30753,7 @@ addScene({ id: "07", a: N.cut, z: N.pane, draw: (t) => {
     lockCam(ext, zoom2, DOOR.x, DOOR.y, DOOR.z, 960, 580 + rise);
     const st3 = qStep(t), sp = 31;
     const tot = qLen.reduce((a2, c4) => a2 + c4, 0) - 4;
-    extQueue.drawW(`${Math.round(st3 * 40)}`, (g) => {
-      for (let j = Math.floor(st3) - 1; j < Math.floor(st3) + 112; j++) {
-        const q = qAt(tot - (j + 1) * sp + st3 * sp);
-        if (!q) continue;
-        fillSvg(g, tinyFig(q[0], q[1], 40 + 6 * hash(j * 1.7), 700 + j, "#120e0b"));
-      }
-    });
+    extQueue.drawW(`${Math.round(st3 * 40)}`, (g) => queueDraw(g, st3, tot));
     ext.heroAt(DOOR.x, DOOR.y, DOOR.z, 900);
     return { st: ext, grade: { vig: 0.38, exposure: 1 }, bloom: 1 };
   }
@@ -30713,13 +30764,39 @@ addScene({ id: "07", a: N.cut, z: N.pane, draw: (t) => {
   const zoom = hallZoom(t), st2 = hallSt;
   lockCam(st2, zoom, 960, 580, HZ.glass);
   const outK = clamp01((t - N.out) / 0.28), on = 1 - smooth(outK);
-  const crowd2 = crowdAt(t), key = k30(t);
+  const crowd2 = crowdAt(t), key = k30(t), cardK = smooth((t - N.card) / 0.2);
+  hallCard.drawW(`${cardK.toFixed(2)}`, (g) => {
+    g.fillStyle = "#cfc8b8";
+    g.fillRect(820, 752, 280, 96);
+    g.strokeStyle = "#8a8478";
+    g.lineWidth = 2;
+    g.strokeRect(826, 758, 268, 84);
+    g.textAlign = "center";
+    if (cardK < 1) {
+      g.globalAlpha = 1 - cardK;
+      g.fillStyle = "#2b2a28";
+      g.font = '900 30px "Noto Serif CJK SC"';
+      g.fillText("\u6E05\u660E\u4E0A\u6CB3\u56FE", 960, 796);
+      g.font = '700 21px "Noto Serif CJK SC"';
+      g.fillText("\u5317\u5B8B \xB7 \u5F20\u62E9\u7AEF", 960, 828);
+    }
+    if (cardK > 0) {
+      g.globalAlpha = cardK;
+      g.fillStyle = "#cfc8b8";
+      g.fillRect(828, 760, 264, 80);
+      g.fillStyle = "#2b2a28";
+      g.font = '900 34px "Noto Serif CJK SC"';
+      g.fillText("\u64A4\u5C55\u56DE\u5E93", 960, 796);
+      g.font = '700 22px "Noto Serif CJK SC"';
+      g.fillText("\u4E0B\u6B21\u5C55\u51FA\uFF1A\u672A\u516C\u5E03", 960, 830);
+    }
+    g.globalAlpha = 1;
+  });
   hallCrowd.drawW(key, (g) => {
     for (const f3 of crowd2) fillD(g, figurePaths(f3));
   });
   hallSilk.L.mat.uniforms.uEmissive.value = 0.32 * on;
-  hallSilk.L.mat.uniforms.uOpacity.value = on;
-  hallSilk.drawW("s", (g) => {
+  hallSilk.drawW(`${on.toFixed(2)}`, (g) => {
     g.fillStyle = "#FFF3D8";
     g.fillRect(700, 545, 520, 82);
     const hh = riverMono.width / (520 / 82);
@@ -30727,7 +30804,9 @@ addScene({ id: "07", a: N.cut, z: N.pane, draw: (t) => {
     g.fillStyle = "rgba(52,80,106,0.9)";
     g.fillRect(700, 545, 520, 6);
     g.fillRect(700, 621, 520, 6);
-    glowBlob(g, [960, 586], 330, 110, 0.35);
+    if (on > 0) glowBlob(g, [960, 586], 330, 110, 0.35 * on);
+    g.fillStyle = `rgba(30,34,38,${(0.72 * (1 - on)).toFixed(3)})`;
+    g.fillRect(700, 545, 520, 82);
   });
   hallRefl.drawW(`${on.toFixed(2)}`, (g) => {
     glowBlob(g, [960, 900], 420, 50, 0.22 * on, "255,214,150");
@@ -30794,8 +30873,14 @@ addScene({ id: "08", a: N.pane, z: b3(13), in: IN08, draw: (t) => {
     gr.addColorStop(clamp01(1 - 260 / L), "rgba(255,190,120,0.2)");
     gr.addColorStop(1, "rgba(255,190,120,0)");
     g.fillStyle = gr;
-    deckBand(g, xe, 960, 165, 24);
+    deckBand(g, xe, 960, 6, 10);
     g.fill();
+    g.save();
+    g.translate(0, -150);
+    g.globalAlpha = 0.7;
+    deckBand(g, xe, 960, 6, 6);
+    g.fill();
+    g.restore();
   });
   st2.setHero(-9999, 0, 1);
   const keep2 = /* @__PURE__ */ new Set([crestS1.lanternsLive.L.mat, crestS1.glowLive.L.mat, s1Light.L.mat]);
@@ -31760,7 +31845,7 @@ var drawJ = (t) => {
   const s = onScreen(st2, o, ZZ);
   const zhang = deskOn ? rig(s, cs, () => s.ground, "zhangzhu") : s;
   const fk = `${Math.round(t * 60)}`;
-  const ext3 = 520 * (1 - smooth(clamp01(c.th / TH_J * 1.05))), lxL = T12.x0 - S12.x0 - ext3;
+  const ext3 = 900 * (1 - smooth(clamp01((c.th / TH_J - 0.72) / 0.26))), lxL = T12.x0 - S12.x0 - ext3;
   const polyJ = [stripJ.screen(lxL, -ext3 * 0.4, -2), stripJ.screen(T12.x1 - S12.x0, 0, -2), stripJ.screen(T12.x1 - S12.x0, S12.depth + ext3, -2), stripJ.screen(lxL, S12.depth + ext3, -2)];
   bodyJ.draw(fk, (g) => {
     g.save();
@@ -31792,7 +31877,7 @@ var drawJ = (t) => {
 };
 addScene({ id: "11", a: b4(16), z: b4(17.5), draw: drawJ, in: { mode: 5, a: b4(16), z: b4(16.15), pt: [0.5, 0.5], soft: 0.08 } });
 addScene({ id: "12", a: b4(17.5), z: b4(19), draw: drawJ });
-addScene({ id: "13", a: b4(19), z: window.SONG_TEST ? b4(23.5) : b4(23), draw: drawJ });
+addScene({ id: "13", a: b4(19), z: b4(23), draw: drawJ });
 var bootSong = async () => {
   await document.fonts.load('500 92px "Noto Serif CJK SC"').catch(() => null);
   await build9();
@@ -33182,42 +33267,43 @@ var palaceWindows = (base, s, ox = 0, sx = 1) => {
   return out;
 };
 var bundle = (g, c, r, glow2, grey = false) => {
-  const w = r * 2.9, h = r * 2;
-  if (grey) {
-    g.save();
-    g.fillStyle = "#5c5954";
+  const w = r * 2.7, h = r * 1.5, x0 = c[0] - w / 2, y0 = c[1] - h / 2, kx = c[0] + w / 2 - 4;
+  const shape2 = () => {
     g.beginPath();
-    g.ellipse(c[0], c[1], w / 2, h / 2, -0.08, 0, Math.PI * 2);
-    g.fill();
-    g.strokeStyle = "#3a3834";
-    g.lineWidth = 2.5;
+    g.roundRect(x0, y0, w, h, h * 0.45);
+  };
+  g.save();
+  g.fillStyle = grey ? "#5c5954" : "#2b2620";
+  shape2();
+  g.fill();
+  g.strokeStyle = grey ? "#46433f" : "#191510";
+  g.lineWidth = 2;
+  for (const f3 of [0.3, 0.55]) {
     g.beginPath();
-    g.moveTo(c[0] - w * 0.1, c[1] - h / 2);
-    g.quadraticCurveTo(c[0] + w * 0.05, c[1] - h * 0.65, c[0] + w * 0.12, c[1] - h * 0.48);
+    g.moveTo(x0 + w * f3, y0 + 2);
+    g.quadraticCurveTo(x0 + w * (f3 + 0.06), c[1], x0 + w * f3, y0 + h - 2);
     g.stroke();
-    g.restore();
-    return;
   }
-  drawBundle(g, c, w, h);
   if (glow2 > 0) {
     g.save();
-    g.beginPath();
-    g.ellipse(c[0], c[1], w / 2 - 1, h / 2 - 1, -0.08, 0, Math.PI * 2);
+    shape2();
     g.clip();
-    const gr = g.createRadialGradient(c[0], c[1], 0, c[0], c[1], w * 0.55);
+    const gr = g.createRadialGradient(c[0], c[1], 0, c[0], c[1], w * 0.6);
     gr.addColorStop(0, `rgba(255,214,150,${0.85 * glow2})`);
     gr.addColorStop(0.55, `rgba(214,150,84,${0.55 * glow2})`);
     gr.addColorStop(1, "rgba(90,60,36,0)");
     g.fillStyle = gr;
-    g.fillRect(c[0] - w, c[1] - h, 2 * w, 2 * h);
-    g.strokeStyle = `rgba(60,40,26,${0.6 * glow2})`;
-    g.lineWidth = 2.5;
-    g.beginPath();
-    g.moveTo(c[0] - w * 0.32, c[1] - h * 0.3);
-    g.quadraticCurveTo(c[0], c[1] + h * 0.15, c[0] + w * 0.36, c[1] + h * 0.32);
-    g.stroke();
+    g.fillRect(x0 - 5, y0 - 5, w + 10, h + 10);
     g.restore();
   }
+  g.fillStyle = grey ? "#4e4b47" : "#3a2c20";
+  g.beginPath();
+  g.ellipse(kx + 6, c[1] - h * 0.18, 9, 6, 0.6, 0, Math.PI * 2);
+  g.fill();
+  g.beginPath();
+  g.ellipse(kx + 8, c[1] + h * 0.14, 10, 5, -0.5, 0, Math.PI * 2);
+  g.fill();
+  g.restore();
 };
 var hugWalk = (lk, u, x, h, ground, who, flip = false) => {
   const base = carryArmful(robeSafe(walkFor(lk, u))), a = armfulAt(base), o = { x, ground: ground(x), h, pose: base, look: lk, flip };
@@ -33343,7 +33429,7 @@ var palaceBox = (g, c, w, h, you) => {
   }
   g.restore();
 };
-var NB = { wl: 1012, x0: 470, x1: 2300, MX: 1400, MY: 958, L: 620 };
+var NB = { wl: 1052, x0: 470, x1: 2300, MX: 1400, MY: 998, L: 620 };
 var mast22 = (t) => 64 * easeInOut(clamp01((t - b7(37.75)) / (b7(39) + 0.25 - b7(37.75))));
 var mastTop = (deg) => [NB.MX + Math.sin(deg * Math.PI / 180) * NB.L, NB.MY - Math.cos(deg * Math.PI / 180) * NB.L];
 var drawNearBoat = (g, deg, t) => {
@@ -33400,9 +33486,9 @@ var drawNearBoat = (g, deg, t) => {
     g.fillRect(x, wl + 14 + i % 2 * 6, 70, 3);
   }
 };
-var CREW = { x: 1225, ground: 962, h: 196, cleat: [1120, 960] };
+var CREW = { x: 1190, ground: 1002, h: 290, cleat: [1318, 998] };
 var crew22 = (deg) => {
-  const top = mastTop(deg), base = fkPose({ hip: 0.62, lean: -10, neck: -4, lt: 18, lk: 8, rt: -12, rk: 6, la: 30, le: 30, ra: 34, re: 30 });
+  const top = mastTop(deg), base = fkPose({ hip: 0.62, lean: -16, neck: -2, lt: 18, lk: 8, rt: -12, rk: 6, la: 30, le: 30, ra: 34, re: 30 });
   const o = { x: CREW.x, ground: CREW.ground, h: CREW.h, pose: base, look: { head: "bun", dress: "tunic" } };
   const sh = toScreen(o, base.LSh), dx = top[0] - sh[0], dy = top[1] - sh[1], n = Math.hypot(dx, dy), u = [dx / n, dy / n];
   const p2 = [sh[0] + u[0] * 0.27 * CREW.h, sh[1] + u[1] * 0.27 * CREW.h + 0.03 * CREW.h], p1 = [sh[0] + u[0] * 0.16 * CREW.h, sh[1] + u[1] * 0.16 * CREW.h + 0.07 * CREW.h];
@@ -33492,6 +33578,37 @@ var SEALS = [
   { text: "\u5609\u5E86\u9274\u8D4F", x: 1772, y: 520, size: 124, style: "zhu", beat: 40, rot: -8e-3 }
 ];
 var sealCvs = [];
+var sealYZS = (S2) => {
+  const c = mkCanvas(S2, S2), g = c.getContext("2d"), m = S2 * 0.05;
+  g.fillStyle = "#B42E22";
+  g.fillRect(m, m, S2 - 2 * m, S2 - 2 * m);
+  g.globalCompositeOperation = "destination-out";
+  g.fillStyle = "#000";
+  const glyph = (ch, x, y, w, h) => {
+    g.save();
+    g.font = '900 100px "Noto Serif CJK SC"';
+    g.textBaseline = "alphabetic";
+    const mt = g.measureText(ch), gw = mt.actualBoundingBoxLeft + mt.actualBoundingBoxRight, gh = mt.actualBoundingBoxAscent + mt.actualBoundingBoxDescent;
+    g.translate(x, y);
+    g.scale(w / gw, h / gh);
+    g.fillText(ch, mt.actualBoundingBoxLeft, mt.actualBoundingBoxAscent);
+    g.restore();
+  };
+  const p = S2 * 0.13, cw = (S2 - 2 * p) / 2 - S2 * 0.03;
+  glyph("\u5B9C", S2 - p - cw, p, cw, S2 - 2 * p);
+  glyph("\u5B50", p, p, cw, (S2 - 2 * p) / 2 - S2 * 0.03);
+  glyph("\u5B59", p, S2 / 2 + S2 * 0.03, cw, (S2 - 2 * p) / 2 - S2 * 0.03);
+  g.globalCompositeOperation = "destination-out";
+  for (let i = 0; i < 260; i++) {
+    g.globalAlpha = 0.25;
+    g.beginPath();
+    g.arc(hash(i * 3.1) * S2, hash(i * 7.7) * S2, 1 + hash(i) * 2.5, 0, Math.PI * 2);
+    g.fill();
+  }
+  g.globalAlpha = 1;
+  g.globalCompositeOperation = "source-over";
+  return c;
+};
 var cam23 = (t) => {
   const drift = clamp01((t - b7(39)) / (b7(40) - b7(39))), pull = easeInOut(clamp01((t - b7(40)) / (b7(41) - b7(40))));
   const c0 = c2w(2150, 615), c12 = c2w(1930, 600);
@@ -33610,7 +33727,7 @@ var boot23 = async () => {
   const cv = startCanvas();
   st23.add("silk", canvasTex(cv), 960, 540, SC.w * SC.k, SC.h * SC.k, 0, { emissive: 0.14 });
   seals23 = new Live(st23, "seals23", 960, 540, SC.w * SC.k, SC.h * SC.k, 1, {}, 0.6);
-  sealCvs = SEALS.map((s, i) => paintSeal(s.text, { size: Math.round(s.size * 1.3), style: s.style, seed: 811 + i * 17, tall: s.tall, fade: 0.05 }));
+  sealCvs = SEALS.map((s, i) => s.text === "\u5B9C\u5B50\u5B59" ? sealYZS(Math.round(s.size * 1.3)) : paintSeal(s.text, { size: Math.round(s.size * 1.3), style: s.style, seed: 811 + i * 17, tall: s.tall, fade: 0.05 }));
   eaves23 = new Live(st23, "eaves23", 960, 540, W, H, 400, { rim: 0.55, rimPx: 6 }, 1);
   eaveTop = eaveTopCanvas();
   eaveBot = await svgToCanvas(svgDoc(palaceSvg(-1700, 2600, 860, 1, "#1b1511"), W, H), W, H, 1);
@@ -33664,7 +33781,7 @@ var YOUTH2 = LOOKS.youth1923;
 var YH2 = 470;
 var YZOOM2 = 0.94;
 var STRY = gaitStride("08_04", stepFor(YOUTH2)) * YH2;
-var x24 = (t) => 900 - (b7(42.5) - t) / (2 * BEAT) * STRY;
+var x24 = (t) => 1150 - (b7(42.5) - t) / (2 * BEAT) * STRY;
 var hugOff = [0.128, 0.715];
 var lock24 = (t) => {
   const x = x24(t);
@@ -33777,7 +33894,7 @@ addScene({ id: "24", a: b7(41), z: GUST.a, draw: (t) => {
   c24.setStreak(h.c[0], 0.35, t);
   c24.motes?.update(t, [-1200, -300, 3200, 1300], 70, 24, 0.85 * smooth(clamp01((t - b7(41)) / 0.35)));
   drawGust(st2, gust24, cam, t);
-  st2.heroAt(h.c[0], h.c[1], 22, 430);
+  st2.heroAt(h.c[0], h.c[1], 22, 300);
   return { st: st2, grade: { vig: 0.4, exposure: 1 }, bloom: 1 };
 } });
 var c25;
@@ -33866,7 +33983,7 @@ var prints = (g, i, t) => {
     const y = rowY(x, r) + (n % 2 ? -3 : 3) * s, a = 0.62 - 0.25 * set;
     g.fillStyle = `rgba(40,46,52,${a})`;
     g.beginPath();
-    g.ellipse(x, y, 17 * s, 4 * s, 0, 0, Math.PI * 2);
+    g.ellipse(x, y, 24 * s, 5 * s, 0, 0, Math.PI * 2);
     g.fill();
     g.fillStyle = `rgba(214,222,228,${0.6 * a})`;
     g.beginPath();
@@ -33882,7 +33999,7 @@ var draw25a = (t) => {
   for (const i of order) {
     if (t < enter25(i)) continue;
     const x = x25(i, t), r = ROWS[i], hh = H25 * ROWS_S[r];
-    const hw = hugWalk(YOUTH2, (x - XL25(i)) / (STR25 * ROWS_S[r]) + i * 0.281, x, hh, (xx) => rowY(xx, r), `P2 carrier ${i}`);
+    const hw = hugWalk(YOUTH2, (x - XL25(i)) / (STR25 * ROWS_S[r]) + i * 0.37, x, hh, (xx) => rowY(xx, r), `P2 carrier ${i}`);
     figs.push(hw.f);
     held.push({ c: hw.c, r: hw.r, i });
   }
@@ -33928,18 +34045,12 @@ var scribble = (g, cx, cy, s, seed, col) => standinGlyph(g, cx, cy, s * 0.92, se
 var ledgerArt = (g, t) => {
   const { x0, x1, y0, y1 } = PG, w = x1 - x0, h = y1 - y0;
   g.fillStyle = SIL;
-  g.fillRect(x0 + 30, y1 - 6, w - 60, 14);
   g.beginPath();
-  g.moveTo(x0 + 60, y1 + 8);
-  g.lineTo(x0 + 80, TOP25);
-  g.lineTo(x0 + 96, TOP25);
-  g.lineTo(x0 + 78, y1 + 8);
-  g.fill();
-  g.beginPath();
-  g.moveTo(x1 - 60, y1 + 8);
-  g.lineTo(x1 - 80, TOP25);
-  g.lineTo(x1 - 96, TOP25);
-  g.lineTo(x1 - 78, y1 + 8);
+  g.moveTo(x0 + 10, y1 - 4);
+  g.lineTo(x1 - 10, y1 - 4);
+  g.lineTo(x1 - 36, TOP25);
+  g.lineTo(x0 + 36, TOP25);
+  g.closePath();
   g.fill();
   g.fillStyle = "#3a2f26";
   g.fillRect(x0 - 8, y0 - 6, w + 16, h + 10);
@@ -33988,10 +34099,10 @@ var ledgerArt = (g, t) => {
   scribble(g, colX(0, 1), y0 + 30, gs * 0.9, 900, "rgba(70,58,44,0.3)");
   scribble(g, colX(0, 1), y0 + 30 + pitch, gs * 0.9, 901, "rgba(70,58,44,0.3)");
 };
-var LIDY = (t) => lerp2(BX.y0 - 84, BX.y0 - 6, easeInOut(clamp01((t - b7(45.5)) / (b7(45.75) - b7(45.5)))));
+var LIDY = (t) => lerp2(BX.y0 - 90, BX.y0 - 19, easeInOut(clamp01((t - b7(45.5)) / (b7(45.75) - b7(45.5)))));
 var packer = (t) => {
-  const ly = LIDY(t), down = clamp01((ly - (BX.y0 - 84)) / 78), o = { x: 1526, ground: 1086, h: 660, pose: bowUpper(POSES.stand, 14 + 20 * down), look: YOUTH2, flip: true };
-  return rig(o, [{ side: "L", target: [BX.x0 + 34, ly + 4], name: "L on lid" }, { side: "R", target: [BX.x0 + BX.w - 22, ly + 4], name: "R on lid" }], () => 1086, "P3 packer");
+  const ly = LIDY(t), down = clamp01((ly - (BX.y0 - 90)) / 71), o = { x: 1526, ground: 1086, h: 660, pose: bowUpper(POSES.stand, 14 + 20 * down), look: YOUTH2, flip: true };
+  return rig(o, [{ side: "L", target: [BX.x0 + 30, ly - 11], name: "L on lid" }, { side: "R", target: [BX.x0 + BX.w - 26, ly - 11], name: "R on lid" }], () => 1086, "P3 packer");
 };
 var cam25b = (t) => {
   const close = camLock(3, (PG.x0 + PG.x1) / 2 + 40, (PG.y0 + PG.y1) / 2, PG.z, 960, 650);
@@ -34048,7 +34159,7 @@ var boot25b = async () => {
   glow25b = new Live(st2, "glow25b", 1100, 640, 1400, 700, -28, { emissive: 1 }, 0.6);
 };
 var drawBox25 = (g, t, leak) => {
-  const { x0, y0, w, h } = BX, ly = LIDY(t), open = clamp01((y0 - 6 - ly) / 78);
+  const { x0, y0, w, h } = BX, ly = LIDY(t), open = clamp01((y0 - 19 - ly) / 71);
   g.fillStyle = "#241b13";
   g.fillRect(x0 - 2, y0 - 10, w + 4, 12);
   if (open > 0) {
@@ -34064,27 +34175,29 @@ var draw25b = (t) => {
   const st2 = desk25.st, cam = cam25b(t);
   setCam(st2, cam);
   page25.drawW(`${clamp01((t - b7(45)) / 0.24).toFixed(2)}:${clamp01((t - b7(45.25)) / 0.24).toFixed(2)}`, (g) => ledgerArt(g, t));
-  const lidOpen = clamp01((BX.y0 - 6 - LIDY(t)) / 78), into = clamp01((t - b7(45.75)) / (b7(46) - b7(45.75)));
-  const leak = (0.35 + 0.65 * (1 - lidOpen)) * (1 - smooth(clamp01((t - (b7(46) - 0.1)) / 0.1)));
+  const lidOpen = clamp01((BX.y0 - 19 - LIDY(t)) / 71), into = clamp01((t - b7(45.75)) / (b7(46) - b7(45.75)));
+  const leak = (0.35 + 0.65 * (1 - lidOpen)) * (1 - smooth(clamp01((t - (b7(46) - 0.17)) / 0.1)));
   box25.drawW(`${LIDY(t).toFixed(1)}:${leak.toFixed(2)}`, (g) => drawBox25(g, t, leak));
   box25.L.mat.uniforms.uEmissive.value = 0.25 * leak;
   const f3 = packer(t), key = k302(t), ly = LIDY(t);
   cast25b.draw(key, [f3]);
   lid25.drawW(ly.toFixed(1), (g) => {
-    g.fillStyle = "#3a2d20";
-    g.fillRect(BX.x0 - 6, ly - 10, BX.w + 12, 14);
-    g.fillStyle = "#4c3b2a";
-    g.fillRect(BX.x0 - 6, ly - 10, BX.w + 12, 4);
+    g.fillStyle = "#4a3a2b";
+    g.fillRect(BX.x0 - 6, ly - 9, BX.w + 12, 18);
+    g.fillStyle = "#6b5236";
+    g.fillRect(BX.x0 - 6, ly - 9, BX.w + 12, 4);
     g.fillStyle = "#2a2016";
-    for (let k = 0; k < 6; k++) g.fillRect(BX.x0 + k * (BX.w / 5) - 2, ly - 10, 3, 14);
+    g.fillRect(BX.x0 - 6, ly + 6, BX.w + 12, 3);
+    for (let k = 1; k < 5; k++) g.fillRect(BX.x0 + k * (BX.w / 5) - 1, ly - 5, 2, 11);
   });
   arms25b.drawW(key, (g) => fillD2(g, armPaths2(f3)));
   const gc = [BX.x0 + BX.w / 2, BX.y0 - 8];
   glow25b.drawW(`${lidOpen.toFixed(2)}:${leak.toFixed(2)}`, (g) => {
-    glowBlob(g, gc, 150, 70 + 50 * lidOpen, 0.3 * (0.4 + 0.6 * lidOpen) * leak);
+    glowBlob(g, gc, 150, 70 + 50 * lidOpen, 0.3 * lidOpen * leak);
     glowBlob(g, [(PG.x0 + PG.x1) / 2, (PG.y0 + PG.y1) / 2], 300, 200, 0.06 * (1 - into));
   });
-  st2.heroAt(gc[0], gc[1] - 10, BX.z, 520 + 300 * lidOpen);
+  if (leak > 0.03) st2.heroAt(gc[0], gc[1] - 10, BX.z, (520 + 300 * lidOpen) * leak);
+  else st2.setHero(-9999, 0, 1);
   const cl = clamp01((t - b7(44.66)) / 0.01) * (1 - easeInOut(clamp01((t - b7(45.25)) / (b7(45.5) - b7(45.25)))));
   return { st: st2, grade: { vig: 0.42, vigCol: "#140e0a", exposure: 1, corners: 0.35 + 0.65 * cl }, bloom: 1 };
 };
@@ -34202,26 +34315,38 @@ var floorScrollsCanvas = () => {
     g.save();
     g.translate(X, Y);
     g.rotate(a);
-    g.fillStyle = "#2b241d";
+    const gr = g.createLinearGradient(0, -r, 0, r);
+    gr.addColorStop(0, "#6e5d44");
+    gr.addColorStop(0.45, "#857152");
+    gr.addColorStop(1, "#4a3d2e");
+    g.fillStyle = gr;
     g.beginPath();
     g.roundRect(-L / 2, -r, L, 2 * r, r * 0.6);
     g.fill();
-    g.fillStyle = "#3e352b";
+    g.fillStyle = "#3a4a5c";
+    g.fillRect(-L / 2, -r, L * 0.07, 2 * r);
+    g.fillRect(L / 2 - L * 0.07, -r, L * 0.07, 2 * r);
+    g.fillStyle = "#a39371";
     g.beginPath();
-    g.ellipse(L / 2, 0, r * 0.4, r, 0, 0, Math.PI * 2);
+    g.ellipse(L / 2 + 2, 0, r * 0.42, r, 0, 0, Math.PI * 2);
     g.fill();
+    g.strokeStyle = "#6a5a44";
+    g.lineWidth = 1.5;
+    g.beginPath();
+    g.ellipse(L / 2 + 2, 0, r * 0.18, r * 0.45, 0, 0, Math.PI * 2);
+    g.stroke();
     g.restore();
   };
-  roll(1380, 940, 170, 11, 0.08);
-  roll(1560, 975, 150, 10, -0.25);
-  roll(880, 1e3, 190, 12, 0.15);
-  const [hx, hy] = o(520, 960);
+  roll(1380, 1010, 170, 11, 0.08);
+  roll(1560, 1045, 150, 10, -0.25);
+  roll(880, 1060, 190, 12, 0.15);
+  const [hx, hy] = o(560, 1040);
   g.save();
   g.translate(hx, hy);
   g.rotate(-0.1);
   slatFace(g, -110, -64, 190, 64, 0, "#2e261e", "#151110");
   g.restore();
-  for (let i = 0; i < 14; i++) roll(420 + hash(i * 3.3) * 260, 900 + hash(i * 7.7) * 90 - i % 4 * 14, 120 + hash(i) * 120, 10 + hash(i * 2) * 4, (hash(i * 5.1) - 0.5) * 0.8);
+  for (let i = 0; i < 14; i++) roll(460 + hash(i * 3.3) * 260, 985 + hash(i * 7.7) * 80 - i % 4 * 12, 120 + hash(i) * 120, 10 + hash(i * 2) * 4, (hash(i * 5.1) - 0.5) * 0.8);
   return c;
 };
 var guardLook = LOOKS.guard1945;
@@ -34229,31 +34354,27 @@ var GH = 480;
 var GSTR = gaitStride("08_04", stepFor(guardLook)) * GH;
 var GV = 1.42 * GSTR / (2 * BEAT);
 var GX0 = [1500, 950, 330];
-var GPH = [0, 0.28, 0.56];
+var GPH = [0, 0.17, 0.34];
 var GFLOOR = 900;
 var gx = (i, t) => GX0[i] + (t - DOOR_CUT) * GV;
 var armful = (g, c, r, seed) => {
-  for (let i = 0; i < 3; i++) {
-    const a = (hash(seed + i) - 0.5) * 0.5, L = r * (3.2 + hash(seed * 2 + i));
-    g.save();
-    g.translate(c[0], c[1] - r * 0.2 + i * r * 0.35);
-    g.rotate(a);
-    g.fillStyle = "#3a3027";
-    g.beginPath();
-    g.roundRect(-L / 2, -r * 0.2, L, r * 0.4, r * 0.15);
-    g.fill();
-    g.restore();
-  }
-  for (let i = 0; i < 7; i++) {
-    const ang = i / 7 * Math.PI * 2, cx = c[0] + Math.cos(ang) * r * 0.55, cy = c[1] + Math.sin(ang) * r * 0.5, rr2 = r * (0.3 + 0.08 * hash(seed + i * 3));
-    g.fillStyle = "#2c251e";
+  g.fillStyle = "#2a231c";
+  g.beginPath();
+  g.ellipse(c[0], c[1], r * 1.08, r * 0.98, 0, 0, Math.PI * 2);
+  g.fill();
+  for (let i = 0; i < 8; i++) {
+    const ang = i / 7 * Math.PI * 2, rad = i === 7 ? 0 : 1, cx = c[0] + Math.cos(ang) * r * 0.58 * rad, cy = c[1] + Math.sin(ang) * r * 0.52 * rad, rr2 = r * (0.3 + 0.08 * hash(seed + i * 3));
+    g.fillStyle = "#a48d68";
     g.beginPath();
     g.arc(cx, cy, rr2, 0, Math.PI * 2);
     g.fill();
-    g.strokeStyle = "#51463a";
+    g.strokeStyle = "#5c4c38";
     g.lineWidth = 2;
     g.beginPath();
     g.arc(cx, cy, rr2 * 0.45, 0, Math.PI * 2);
+    g.stroke();
+    g.beginPath();
+    g.arc(cx, cy, rr2, 0, Math.PI * 2);
     g.stroke();
   }
 };
@@ -34420,6 +34541,14 @@ var treeCanvas = (season) => {
     g.moveTo(x, y);
     g.lineTo(x2, y2);
     g.stroke();
+    if (season === 3 && Math.abs(Math.sin(a)) > 0.25) {
+      g.strokeStyle = "#E8EDF0";
+      g.lineWidth = Math.max(2, w * 0.35);
+      g.beginPath();
+      g.moveTo(x + Math.cos(a) * w * 0.4 * Math.sign(-Math.sin(a)), y - w * 0.45);
+      g.lineTo(x2, y2 - w * 0.4);
+      g.stroke();
+    }
     if (d === 0) {
       tips2.push([x2, y2]);
       return;
@@ -34431,6 +34560,7 @@ var treeCanvas = (season) => {
   br(430, 760, 0.02, 165, 30, 4, 11, tips);
   const col = [["#8DB35A", "#A8C86E", "#6E9446"], ["#3F6B34", "#4F7D3E", "#2F5428"], ["#C0873A", "#D4A24A", "#9A5E2C"], ["#E2E8EA", "#F2F4F4", "#C8D0D4"]][season];
   const leafy = season !== 3, n = season === 0 ? 0.55 : 1;
+  if (!leafy) return c;
   for (let i = 0; i < tips.length; i++) {
     const [x, y] = tips[i];
     for (let k = 0; k < (leafy ? 7 : 2); k++) {
@@ -34516,9 +34646,9 @@ var lightEx = (t) => {
   for (const L of [exTree.L, exDoors.L, exSnow.L]) L.mat.uniforms.uTint.value.setRGB(lerp2(1, nt[0], n), lerp2(1, nt[1], n), lerp2(1, nt[2], n));
   exTree.draw(`${s}`, (g) => g.drawImage(treeCvs[s], 0, 0));
   exSnow.L.mesh.visible = s === 3 && n < 1;
-  exDoors.drawW(`${t >= NIGHT1 ? 1 : 0}`, (g) => {
+  exDoors.drawW(`${t >= NIGHT0 ? 1 : 0}`, (g) => {
     const { x, w, y0, y1 } = DOOR3;
-    if (t >= NIGHT1) {
+    if (t >= NIGHT0) {
       g.drawImage(doorArt, x - w / 2, y0, w, y1 - y0);
       g.fillStyle = "#2b2925";
       g.fillRect(x - w / 2, y0, 14, y1 - y0);
@@ -34597,11 +34727,11 @@ var drawCars = (t) => {
       g.lineTo(x + 900, 1040);
       g.lineTo(x, 958);
       g.fill();
-      const wx = x + 380, gw = g.createRadialGradient(wx, 760, 0, wx, 760, 260);
-      gw.addColorStop(0, "rgba(255,200,140,0.22)");
+      const gw = g.createLinearGradient(x, 0, x + 700, 0);
+      gw.addColorStop(0, "rgba(255,200,140,0.10)");
       gw.addColorStop(1, "rgba(255,200,140,0)");
       g.fillStyle = gw;
-      g.fillRect(wx - 300, 480, 600, 420);
+      g.fillRect(x, 820, 700, 60);
     }
   });
 };
@@ -34609,10 +34739,10 @@ var exGuardDraw = (t) => {
   const on = t >= b8(47.8);
   exGuard.L.L.mesh.visible = exGuardProp.L.mesh.visible = exGuardArms.L.mesh.visible = on;
   if (!on) return;
-  const h = 176, str = gaitStride("08_04", 1) * h, x = DOOR3.x - 10 + (t - b8(47.8)) * 1.3 * str / (2 * BEAT);
-  const base = carryArmful(walkFor(guardLook, (x - DOOR3.x) / str + 0.1)), a = armfulAt(base), o = { x, ground: 880, h, pose: base, look: guardLook };
+  const h = 142, str = gaitStride("08_04", 1) * h, x = DOOR3.x - 10 + (t - b8(47.8)) * 1.3 * str / (2 * BEAT);
+  const base = carryArmful(walkFor(guardLook, (x - DOOR3.x) / str + 0.1)), a = armfulAt(base), o = { x, ground: 878, h, pose: base, look: guardLook };
   const R = toScreen(o, [a.c[0] + 0.03, a.c[1] - a.r - 0.014]), L = toScreen(o, [a.c[0] + a.r + 8e-3, a.c[1] + 0.012]);
-  const f3 = rig(o, [{ side: "R", target: R, name: "R under armful", opt: { dir: 12 } }, { side: "L", target: L, name: "L round armful", opt: { dir: -78 } }], () => 880, "1945 guard at the door");
+  const f3 = rig(o, [{ side: "R", target: R, name: "R under armful", opt: { dir: 12 } }, { side: "L", target: L, name: "L round armful", opt: { dir: -78 } }], () => 878, "1945 guard at the door");
   const key = k302(t);
   exGuard.draw(key, [f3]);
   exGuardProp.drawW(key, (g) => armful(g, toScreen(f3, a.c), a.r * h, 5));
@@ -34639,7 +34769,7 @@ var camIn = (t) => {
     const k = smooth(clamp01(pullU(t) / 0.55)), F = [lerp2(BOXF.x0 + BOXF.w / 2, 960, k), lerp2(BOXF.y0 + BOXF.h / 2, 520, k)], S2 = winC(t);
     return camLock(Zi(t), F[0], F[1], ZBOX, S2[0], S2[1] + (1 - k) * 20);
   }
-  const K = [[DOOR_CUT, 1160, 560, 1.12], [b8(48.5), 1110, 556, 1.18], [b8(48.72), 960, 548, 1.42], [b8(49), 650, 590, 1.46], [END, 560, 740, 1.78]];
+  const K = [[DOOR_CUT, 1160, 560, 1.12], [b8(48.5), 1110, 556, 1.18], [b8(48.72), 960, 548, 1.42], [b8(49), 660, 860, 1.5], [END, 610, 932, 1.66]];
   let i = 0;
   while (i < K.length - 2 && t > K[i + 1][0]) i++;
   const [t0, x0, y0, z0] = K[i], [t1, x1, y1, z1] = K[i + 1], u = clamp01((t - t0) / (t1 - t0)), e = i === K.length - 2 ? u : easeInOut(u);
@@ -34728,6 +34858,7 @@ addScene({ id: "26c", a: DOOR_CUT, z: END, draw: drawInterior });
 var bootXbl = async () => {
   await bootIn();
   await bootEx();
+  for (const m of [...inSt.mats, ...exSt.mats]) m.uniforms.uRimCol.value.set("#A8BCCB");
 };
 
 // src/s_peak.ts
@@ -34806,6 +34937,8 @@ var bootPeak = async () => {
   dayRoll = new Live(day.st, "dayRoll", 960, 900, 7e3, 1800, 22, { emissive: 0.55 }, 0.6);
   gateGlow = new Live(day.st, "gateGlow", -300, 800, 200, 160, -2590, { emissive: 0.5 }, 2, -1990);
   gateGlow.draw("g", (g) => drawPassage(g));
+  const s30 = SCENES.find((q) => q.id === "30");
+  if (s30 && !s30.in) s30.in = IRIS30;
   {
     const c = mkCanvas(1e3, 200), g = c.getContext("2d"), X = (x) => (x + 4040) / 10, Y = (y) => (y - 1640) / 10;
     g.fillStyle = "#2b3735";
@@ -35224,6 +35357,7 @@ var cam29 = (t) => {
   const m = crestMatch(Math.min(t, b9(57) + 0.1));
   return [lerp2(m[0], wide[0], k), lerp2(m[1], wide[1], k), Math.exp(lerp2(Math.log(m[2]), Math.log(wide[2]), k))];
 };
+var IRIS30 = { mode: 5, a: b9(58.5), z: b9(58.5) + 0.32, pt: [0.5, 0.5], soft: 0.05, ease: easeIn };
 var drawPassage = (g) => {
   const cx = 100, base = 140, w = 52, h = 94;
   const arch = (s, oy = 0) => {
@@ -35271,6 +35405,8 @@ addScene({ id: "29", a: b9(57) - 0.12, z: b9(58.5), in: { mode: 7, a: b9(57) - 0
   day.setStreak(rc[0], 0.25, t);
   day.setLanterns(() => 0);
   st2.heroAt(rc[0], rc[1], 22, 650);
+  const pp = st2.toScreen(st2.at(-300, 813, -2590));
+  IRIS30.pt = [pp.x / 1920, 1 - pp.y / 1080];
   return { st: st2, grade: { vig: 0.22, exposure: 1, corners: 1, cornersTop: 0.55, cornersBand: [0, 300, 470, 0.8] }, bloom: 1, hideFurniture: t < b9(57) };
 } });
 
@@ -36073,6 +36209,8 @@ var eraT0 = (e) => b11(66 + 0.25 * e);
 var ERAS = [];
 var OFF_UA = {};
 var OFF_BUNDLE = [0, 0];
+var FAR_MING;
+var FAR_YUAN;
 var CAM_DB = [200, 660, 1];
 var CROWD = [{ x: -170, h: 410 }, { x: 70, h: 398 }, { x: 300, h: 425 }, { x: 342, h: 262, child: true }, { x: 560, h: 404 }, { x: 790, h: 412 }, { x: 1030, h: 420 }];
 var L1923 = [
@@ -36089,17 +36227,17 @@ var bootFlip = async () => {
   const defs = [
     ["e4-song", { sky: "fire", era: "\u5B8B", lanterns: true, boat: false, bankCrowd: true, embers: true }],
     ["e4-yuan", { sky: "night", era: "\u5143", lanterns: true, boat: false, bankCrowd: false }],
-    ["e4-ming", { sky: "night", era: "\u660E", lanterns: true, boat: false, bankCrowd: false }],
     ["e4-1923", { sky: "snow", era: "1923", lanterns: true, boat: false, bankCrowd: true, snow: true }]
   ];
   const crests = defs.map(([n, o]) => new Crest(n, o));
   await Promise.all(crests.map((c) => c.ready));
-  crests.forEach((crest2, e) => {
-    const st2 = crest2.st, s = { crest: crest2, cast: new Cast(st2, "e4cast", 1e3, 700, 3200, 1e3, 20), prop: new Live(st2, "e4prop", 1e3, 700, 3200, 1e3, 23, { rim: 0.3 }, 1), glow: new Live(st2, "e4glow", 1e3, 700, 3200, 1e3, 24, { emissive: 1 }, 0.4) };
+  crests.forEach((crest2, e0) => {
+    const e = e0 === 2 ? 3 : e0;
+    const st2 = crest2.st, s = { crest: crest2, cast: new Cast(st2, "e4cast", 760, 700, 2500, 900, 20), prop: new Live(st2, "e4prop", 760, 700, 2500, 900, 23, { rim: 0.3 }, 1), glow: new Live(st2, "e4glow", 760, 700, 2500, 900, 24, { emissive: 1 }, 0.4) };
     if (e === 0) st2.get("sunglow").mat.uniforms.uOpacity.value = 0.8;
     if (e === 3) {
-      s.arms = new Live(st2, "e4arms", 1e3, 700, 3200, 1e3, 23.5, { rim: 1, rimPx: 5 }, 1);
-      s.crowd = new Cast(st2, "e4crowd", 900, 700, 3400, 1e3, 10, { rim: 0.7, rimPx: 4 });
+      s.arms = new Live(st2, "e4arms", 1100, 700, 1800, 900, 23.5, { rim: 1, rimPx: 5 }, 1);
+      s.crowd = new Cast(st2, "e4crowd", 430, 700, 1500, 900, 10, { rim: 0.7, rimPx: 4 });
       st2.get("sunglow").mat.uniforms.uOpacity.value = 0.22;
       const fw = new Live(st2, "farWin", 960, 850, 8400, 200, -2540, { emissive: 0.9 }, 0.5);
       fw.drawW("w", (g) => {
@@ -36122,8 +36260,13 @@ var bootFlip = async () => {
         g.fill();
       });
     }
-    ERAS.push(s);
+    ERAS[e] = s;
   });
+  const farW = 8400, farH = 1400, base = 860;
+  const mingFar = svgDoc(`<g transform="translate(${farW / 2 - 960},${-(860 - farH * 0.55)})">${hills(-3200, 5200, base - 40, 90, 7, "#000")}${skyline(-3200, 5200, base, 40, 110, 11)}${jiaolou(-420, base, 1.3)}${cityGate(250, base, 0.75)}</g>`, farW, farH);
+  FAR_MING = canvasTex(await svgToCanvas(mingFar, farW, farH, 0.5));
+  FAR_YUAN = ERAS[1].crest.st.get("far").mat.uniforms.map.value;
+  ERAS[2] = ERAS[1];
   const mean = (f3) => {
     let sx = 0, sy = 0;
     for (let i = 0; i < 16; i++) {
@@ -36265,6 +36408,7 @@ var flipCam = (e, t, ep) => {
 };
 function flipDraw(t, eForce) {
   const e = eForce ?? (t < eraT0(1) ? 0 : t < eraT0(2) ? 1 : t < eraT0(3) ? 2 : 3), S2 = ERAS[e], st2 = S2.crest.st, ep = eraPose(e, t);
+  if (e === 1 || e === 2) st2.get("far").mat.uniforms.map.value = e === 2 ? FAR_MING : FAR_YUAN;
   const [cx, cy, zm] = flipCam(e, t, ep);
   st2.setCam(cx, cy, zm);
   const key = k303(t);
@@ -36304,7 +36448,7 @@ var TODAY_L = [VLOOK.man2, VLOOK.woman, VLOOK.man, VLOOK.child, VLOOK.old, VLOOK
 var bootToday = async () => {
   today = new Crest("e5-today", { sky: "day", era: "1950", lanterns: false, boat: true, bankCrowd: true });
   await today.ready;
-  todayCast = new Cast(today.st, "e5cast", 900, 700, 5200, 1e3, 10, { rim: 0 });
+  todayCast = new Cast(today.st, "e5cast", 0, 800, 2800, 1100, 10, { rim: 0 });
   const gp = new Live(today.st, "gatePass", -300, 800, 200, 160, -2590, { emissive: 0.5 }, 2, -1990);
   gp.draw("g", (g) => {
     const cx = 100, base = 140, w = 52, h = 94;
