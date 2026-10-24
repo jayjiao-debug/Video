@@ -541,4 +541,4 @@ const draw25b = (t: number): Frame => {
 addScene({id: '25b', a: b(44.66), z: b(46), in: {mode: 7, a: b(44.66), z: b(44.66) + 0.13, ease: smooth}, draw: draw25b});
 
 // ================================================================================================ boot
-export const bootQing = async () => { await boot22(); await boot23(); await boot24(); await boot25a(); await boot25b(); };
+export const bootQing = async () => { await boot22(); await boot23(); await boot24(); await boot25a(); await boot25b(); (window as any).QDBG = {desk25, c25}; };

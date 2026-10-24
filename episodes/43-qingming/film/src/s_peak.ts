@@ -42,7 +42,7 @@ export const bootPeak = async () => {
 	greyArt = paintSection('river', {width: 1024, height: 384, mode: 'grey', seed: 61});
 	colBase = paintSection('river', {width: 4096, height: 1536, mode: 'colour', seed: 43, sprites: false});
 	sprC = paintRiverSprites({width: 4096, height: 1536, mode: 'colour', seed: 43});
-	BR = colBase.silk.bridge; UB = (BR.x + BR.w * 0.5) / 4096; VB = (BR.y + BR.h * 0.42) / 1536; APEX = [BR.x + BR.w * 0.5 - 160 / SEC / 1.418, BR.y + 134 / SEC];   // the arch facade's top (measured at the exit)
+	BR = colBase.silk.bridge; UB = (BR.x + BR.w * 0.5) / 4096; VB = (BR.y + BR.h * 0.42) / 1536; APEX = [BR.x + BR.w * 0.5 - 160 / SEC / 1.418, BR.y + 113 / SEC];   // the arch facade's top (measured at the exit)
 	// the PEAK stage
 	peak = new Stage('peak');
 	peak.add('back', canvasTex(gradCanvas([[0, '#d6c6a3'], [1, '#c4b18c']])), 960, 540, 9000, 5000, -3000);
@@ -189,7 +189,7 @@ const storeDraw = (t: number) => {
 		if (unrolled && r.w > 2) {
 			g.save(); g.beginPath(); g.rect(r.x, r.y, r.w, r.h); g.clip(); g.fillStyle = '#F3E6CA'; g.fillRect(r.x, r.y, r.w, r.h);
 			g.drawImage(monoBase, 0, 0, 4096 * (r.w / SW), 1536, r.x, r.y, r.w, r.h);
-			g.fillStyle = 'rgba(48,32,20,0.2)'; g.fillRect(r.x, r.y, r.w, r.h); g.restore();   // ≤ 85 % luma; the bloom carries the glow
+			g.fillStyle = `rgba(48,32,20,${(0.2 * (1 - r.dv)).toFixed(3)})`; g.fillRect(r.x, r.y, r.w, r.h); g.restore();   // ≤ 85 % luma; the bloom carries the glow
 			g.fillStyle = 'rgba(30,22,16,.75)';                                             // torn edges (top and bottom margins)
 			for (let i = 0; i < 40; i++) { const x = r.x + (i / 40) * r.w, d = (Math.sin(i * 12.9898) * 43758.5) % 1; g.fillRect(x, r.y, r.w / 40 + 1, Math.abs(d) * r.h * 0.035); g.fillRect(x, r.y + r.h - Math.abs(d * 1.7 % 1) * r.h * 0.03, r.w / 40 + 1, r.h * 0.03); }
 			const ex = r.x + r.w; g.fillStyle = '#d9c39c'; g.beginPath(); g.roundRect(ex - 4, r.y + 2, 22, r.h - 4, 9); g.fill();   // what's left of the roll, lying across the table's depth
@@ -207,7 +207,7 @@ const storeDraw = (t: number) => {
 	if (!unrolled) st.heroAt(on ? (t > b(50.5) ? bp[0] + 75 : LAMP.bulb[0]) : 960, on ? (t > b(50.5) ? bp[1] : LAMP.bulb[1]) : 580, 6, on ? 700 : 300);
 	else st.heroAt(r.x + r.w / 2, r.y + r.h / 2, 0, 700 + 900 * burst);
 	const dv = r.dv;
-	return {st, grade: {vig: lerp(0.42, 0.32, dv), vigCol: '#140e0a', exposure: on ? lerp(1 + 0.02 * burst, 0.97, dv) : 0.6, corners: 0.5 + 0.5 * clamp01((t - DIVE_A) / 0.3)}, bloom: lerp(1 + 0.15 * burst, 0.8, dv)};
+	return {st, grade: {vig: lerp(0.42, 0.32, dv), vigCol: '#140e0a', exposure: on ? lerp(1 - 0.1 * burst, 0.84, dv) : 0.6, corners: 0.5 + 0.5 * clamp01((t - DIVE_A) / 0.3)}, bloom: lerp(1 + 0.15 * burst, 0.8, dv)};
 };
 addScene({id: '27', a: b(50), z: b(54.5) - 0.1, draw: storeDraw});
 
@@ -230,13 +230,13 @@ const peakCam = (t: number): [number, number, number] => {
 	return [lerp(x1, x2, k), lerp(y1, y2, k), Math.exp(lerp(Math.log(z1), Math.log(z2), k))];
 };
 /** the exit's camera roll: the painted arch is drawn obliquely (left side steeper); a slight roll balances it onto the real one */
-const ROLL = -0.09;
+const ROLL = -0.045;
 const peakRoll = (t: number) => ROLL * easeInOut(clamp01((t - b(56.75)) / (b(57) - 0.12 - b(56.75))));
 /** the crest camera that puts the real arch's apex + span on the painted arch's apex + span as framed at time t */
 const crestMatch = (t: number): [number, number, number] => {
 	const [cx, cy, zm] = peakCam(t); peak.setCam(cx, cy, zm, peakRoll(t));
 	const A = peak.toScreen(peak.at(FX0 + APEX[0] * SEC, APEX[1] * SEC, 0)), sx = A.x, sy = A.y;
-	const zc = 0.2993 * zm;            // the real arch drops as much as the painted one (mean of its two sides) 465 painting px either side of the apex
+	const zc = 0.22 * zm;               // the real arch drops as much as the painted one ~520 px either side of the apex (measured with the t ≥ 999 overlay)
 	return [960 - (sx - 960) / zc, 900 - (sy - 540) / zc, zc];
 };
 const peakDraw = (t: number) => {
