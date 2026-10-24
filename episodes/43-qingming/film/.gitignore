@@ -1,0 +1,6 @@
+node_modules
+assets/
+out/
+frames/
+*.mp4
+main.js
