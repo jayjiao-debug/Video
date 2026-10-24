@@ -2,6 +2,7 @@
 
 Screenwriter, 2026-10-24. Files: this script + `lines.json` (48 lines, `[[start, end, "text"], ...]`, `[red]` = red key word).
 **Length:** 170.0 s (2:50), was 180.0 s (v2.1: unchanged). **Lines:** 48, was 51. Title card at 23.25–26.25.
+**v2.2 (2026-10-24): retimed to the owner's track. Timing only, with no wording changes.** The build uses `lines_bars.json` (184.3 s, title card on bar 10 = 24.09). See "Retiming to bars".
 **Look:** A 汴河暮影 (owner pick, gate 2a). The picture column describes look A only. The B and C mappings are gone.
 
 ## Changelog v2.1 (cold read of v2, routed by the producer)
@@ -44,7 +45,7 @@ Runtime unchanged at **170.0 s**, 48 lines. The only timing change is the D1/D2 
 **Takeaway:** 人人都想据为己有的东西，直到不再属于任何一个人，才终于留住了。安全的代价是：它很难再被看见。
 
 **Notes on the numbers:**
-- **Timing is nominal.** Every start is on a 0.25 s grid. All lines are retimed to the bars of the chosen track (see "Music and retiming").
+- **Timing is nominal** in this table and in `lines.json` (0.25 s grid). The bar-locked timing for the build is `lines_bars.json` (see "Retiming to bars").
 - **Counting.** 字 is counted as in `pace.py` (a number counts as one). The ≤ 16 rule is checked on display width (punctuation 1, each digit 0.55). The widest lines are 16.0.
 
 ## Story in 3 lines
@@ -160,7 +161,151 @@ P3 → Y3 is **not** a callback. No source ties the 1950 scrolls to the 1923 ent
   - No plane, airfield or map in 1945.
   - Deaths (陆完's mother, 王忬) are not shown or mentioned.
 
-## Music and retiming (no track yet)
+## Retiming to bars (v2.2 · the owner's track)
+
+Screenwriter, 2026-10-24.
+- **Timing only.** The same 48 lines, same wording, same order; no new lines.
+- **Files.** `lines_bars.json` is the build timing (same format as `lines.json`). `lines.json` stays as the nominal v2.1 timing.
+- **Length.** The film is **184.3 s (3:04)** and ends where the song ends (music.md).
+
+**Grid.** From music.md: 106 BPM, film bar j = 1.4498 + 2.26415·j s, one beat = 0.566 s. I re-checked it by measuring each bar's loudness on `audio/bgm_cut.wav`:
+- the bass is off on the even bars 34–40;
+- the stop is at bar 49, with no bass in bars 50–52 and the bass back at 53;
+- the hardest drop is at bar 54, and the loudest bars are 56–57 and 64–65;
+- the outro starts at bar 74, and the music ends at about 184.3 (silent by 184.5).
+
+**Bar notation.** 4.5 = bar 4, beat 3 (the half-bar). 51.25 = bar 51, beat 2. 52.75 = bar 52, beat 4.
+
+**Rules used**
+- **Starts.** Every line starts on a beat. Scene cuts sit on a bar or a half-bar (owner row 49). A line inside the same shot may start on any beat. The one exception is H1 at 0.00 (owner rows 22/47: subtitle on frame 0).
+- **Pace.** No line is TOO FAST in pace.py. The script's own floor (Needs + 0.4 s for typed lines) holds wherever the anchors leave room. The lines that miss it are listed under "Below the floor".
+- **Note 4a.** M2, Q2 and D1 only gain time.
+- **Holds** go where the producer named them: 才是你, E3, the moral and the end card. Where a long hold would leave a read line sitting on screen, the text clears and a named picture beat carries the time instead.
+
+### Anchor table (line → bar → time)
+"Needs" is pace.py's 0.5 + 字/7 + 0.6. "vs v2.1" is the on-screen change from `lines.json`. **Bold bars** are the music map's anchors.
+
+| # | ID | Line | Bar | Start | End | On | Needs | vs v2.1 | Music on the bar → what lands on it |
+|---|---|---|---|---|---|---|---|---|---|
+| 1 | H1 | 九百年，人人都想【留住】你。 | frame 0 | 0.00 | 3.71 | 3.71 | 2.5 | +0.71 | Intro, no bass. Typed from frame 0. 留住 turns red on the first downbeat (bar 0, 1.45). Line 1, which stays. |
+| 2 | H2 | 所以，你一直在被【带走】。 | 1 | 3.71 | 7.11 | 3.40 | 2.4 | +0.65 | Pull back through the silk on bar 1. The silhouettes roll you up on bar 2 and walk off rightward. |
+| — | (no subtitle) | | 2.5 | 7.11 | 8.24 | 1.13 | — | — | **Wind-up before drop 1** (pauses.md §1 and §3). H1 and H2 clear, your glow is carried off right, and the crest falls dark. The walk keeps moving (owner row 91). |
+| 3 | T1 | 你被人偷偷【换成了假的】， | **3** | 8.24 | 11.64 | 3.40 | 2.5 | +0.40 | **Drop 1: HARD CUT**, and the line appears whole. It gets 1.5 bars, because one bar would be 0.015 s under pace for 10 字. The copy slides into your place on bar 4. |
+| 4 | T2 | 被一个【太监】带出皇宫， | 4.5 | 11.64 | 13.90 | 2.26 | 2.4 | −0.24 | HARD CUT on the half-bar. Cut-on. |
+| 5 | T3 | 被【末代皇帝】偷运出宫， | 5.5 | 13.90 | 16.17 | 2.26 | 2.4 | −0.24 | HARD CUT. Cut-on. |
+| 6 | T4 | 还躺在一堆【破画】里。 | 6.5 | 16.17 | 18.43 | 2.26 | 2.2 | −0.24 | HARD CUT. Cut-on. |
+| 7 | N1 | 排队【四五个小时】，只看你【一两分钟】。 | 7.5 | 18.43 | 21.83 | 3.40 | 3.1 | −0.10 | The 午门 queue in time-lapse. **The bar-8 phrase change (lighter top end) is the cut inside to the case.** |
+| 8 | N2 | 你，为什么这么【难见】？ | 9 (asked: **8**) | 21.83 | 24.09 | 2.26 | 2.2 | **−1.24** | Moved one bar (see "Anchors that moved"). Your glow goes out on 9.5. |
+| — | Title card | 假如你是清明上河图 | **10** | 24.09 | 26.92 | 2.83 | (2.4) | −0.17 | The title slams on bar 10 (scale-down + damped jolt, no flash; owner row 84). The card hands over to the empty crest across 11 → 11.25. |
+| 9 | S1 | 你这一生：【四次出宫】，【五次进宫】。 | 11.25 | 26.92 | 30.88 | 3.96 | 2.8 | −0.29 | The tally starts drawing on bar 11, and the line types one beat later. |
+| 10 | B1 | 北宋末年，你在【汴京】被画了出来。 | 13 | 30.88 | 34.28 | 3.40 | 3.0 | −0.10 | Push into the silk on bar 13. Labels on 13.5 and 14. |
+| 11 | BO | 你进了北宋【皇宫】，靖康后流入【金国】。 | 14.5 | 34.28 | 37.68 | 3.40 | 3.1 | −0.10 | 进 lights on bar 15 as the lift starts. Fire-glow sky on 15.5, and 出 on 15.75. |
+| 12 | Z1 | 你身上，没有画家的【名字】。 | **16** | 37.68 | 41.07 | 3.40 | 2.5 | +0.40 | **The full section starts**, and the 张著 run begins on it. |
+| 13 | Z2 | 1186年，金人【张著】在你身后写下： | 17.5 | 41.07 | 44.47 | 3.40 | 2.8 | −0.10 | Line 1, which stays through Z3 (6.8 s on screen). |
+| 14 | Z3 | 画你的人，叫【张择端】。 | 19 | 44.47 | 47.87 | 3.40 | 2.2 | −0.10 | 「翰林张择端」 lights up on 19.5. |
+| 15 | Z4 | 他在最后写道：【藏者宜宝之】。 | 20.5 | 47.87 | 51.26 | 3.40 | 2.7 | −0.60 | The five characters glow one per beat from bar 21. Line 1, which stays through Z5 (6.8 s). |
+| 16 | Z5 | 谁收藏你，都要好好【珍惜】。 | 22 | 51.26 | 54.66 | 3.40 | 2.5 | −0.60 | Pull back, and you roll up on bar 23. |
+| 17 | I2 | 元朝建立后，你又进了【皇宫】。 | 23.5 | 54.66 | 58.05 | 3.40 | 2.7 | +0.15 | 进 lights on bar 24.5. |
+| 18 | W1 | 宫里的裱画匠，拿【假画】换走了你。 | 25 | 58.05 | 61.45 | 3.40 | 3.0 | −0.10 | Pays off T1 on the same shot. |
+| 19 | W2 | 真的你，被偷偷卖给了一个【权贵】。 | 26.5 | 61.45 | 64.85 | 3.40 | 3.0 | −0.10 | 出 lights on bar 27.5. |
+| 20 | W3 | 后来买下你的文人，【记下】了调包。 | 28 | 64.85 | 68.24 | 3.40 | 3.0 | −0.10 | The inaudible splice sits on this bar line. |
+| 21 | M1 | 明朝，主人陆完被抄家前【藏】起了你。 | 29.5 | 68.24 | 71.64 | 3.40 | 3.1 | −0.10 | The friend's door closes on bar 30.5. |
+| 22 | M2 | 几经辗转，你落到权臣【严嵩】手里， | 31 | 71.64 | 75.03 | 3.40 | 3.0 | **+0.15 (4a)** | Three dissolves on 31.5, 32 and 32.25. |
+| 23 | M3 | 严家倒台，你被抄进了【皇宫】。 | 32.5 | 75.03 | 78.43 | 3.40 | 2.7 | +0.15 | Seal strips on bar 33 and 进 on 33.5. The sky darkens into F1 on the held shot. |
+| 24 | F1 | 1578年，太监冯保把你【偷】出了宫。 | **34** | 78.43 | 81.83 | 3.40 | 2.8 | +0.15 | **The breakdown starts and the bass drops out**, so the eunuch slips off in the bare bar. 出 lights on bar 35 as the bass returns. |
+| 25 | F2 | 画你的人没留名，偷你的倒【题了字】。 | 35.5 | 81.83 | 86.36 | 4.53 | 3.1 | +1.03 | Insert. 冯保's colophon lights one column per beat through bar 36 (no bass), so the joke gets a bar to land. |
+| 26 | Q1 | 清朝，主人家被抄，你【又进了宫】。 | 37.5 | 86.36 | 89.75 | 3.40 | 2.8 | +0.15 | 进 lights on bar 38. |
+| 27 | Q2 | 嘉庆盖了五方大印：你归【皇家】了。 | 39 | 89.75 | 94.28 | 4.53 | 3.0 | **+1.28 (4a)** | Five seals slam on five beats (39 → 40, bass on). The roofs close in the no-bass bar 40. |
+| 28 | P1 | 1923年，溥仪把你【偷运】出了宫。 | 41 (asked: **42**) | 94.28 | 97.68 | 3.40 | 2.7 | +0.15 | The bass is back. **The build (bar 42, brighter) lands on P1's 出 tick** as the crate rolls off right. |
+| 29 | P2 | 一个月内，四卷【清明上河图】出了宫。 | 42.5 | 97.68 | 102.20 | 4.53 | 3.1 | +0.53 | Four rolls cross on 42.5, 42.75, 43 and 43.25. Then **43.5 → 44.5 is the bar where nothing new appears** (the v2 design). |
+| 30 | P3 | 清单上，其中两卷都写着【张择端】。 | 44.5 | 102.20 | 105.60 | 3.40 | 3.0 | −0.35 | The two ledger entries light on 45 and 45.25. |
+| 31 | V1 | 你在【伪满皇宫】，一放就是十几年。 | 46 | 105.60 | 109.00 | 3.40 | 3.0 | −0.10 | Seasons in time-lapse, one per beat. |
+| 32 | V2 | 1945年，伪满覆灭，溥仪出逃。 | 47.5 | 109.00 | 112.39 | 3.40 | 2.5 | +0.40 | Headlights sweep away on bar 48. Line 1, which stays through V3. |
+| 33 | V3 | 混乱中，你【下落不明】。 | **49** | 112.39 | 114.66 | 2.26 | 2.2 | −0.49 | **The stop.** The line appears whole on the downbeat, as T1–T4 do. The stop itself is the pause: the camera keeps searching the dark, nothing new appears, and the counter keeps rolling. This replaces v2.1's 1-s gap. |
+| 34 | Y1 | 几年后，沈阳一间【临时库房】里， | **50** | 114.66 | 117.49 | 2.83 | 2.8 | −0.67 | **Re-entry, no bass.** The desk lamp clicks on the downbeat. Line 1, which stays through Y2 (6.2 s on screen). |
+| 35 | Y2 | 专家杨仁恺，翻出【好几卷】“你”。 | 51.25 | 117.49 | 120.88 | 3.40 | 2.7 | −0.10 | Same storeroom shot, so it starts on a beat. |
+| 36 | Y3 | 标着真迹的两卷，都是【仿的】。 | 52.75 (map: **53**) | 120.88 | 123.71 | 2.83 | 2.7 | −0.42 | One beat before **the pickup (bar 53)**. The 真迹 slips turn grey on bar 53 as the bass returns. Line 1, which stays through Y4 (7.4 s). |
+| 37 | Y4 | 混在残次品里的那一卷，【才是你】。 | **54** | 123.71 | 128.24 | 4.53 | 3.0 | +0.28 | **The hardest drop. HIT:** the battered roll opens and glows. Two bars of text (hold). |
+| — | (no subtitle) | | 56 | 128.24 | 130.51 | 2.26 | — | — | **The film's biggest frame on its loudest bar** (owner row 88). Y3 and Y4 clear, and the 虹桥 crowd fills the frame in full colour and comes alive: the boat lowers its mast and the bridge crowd moves. It is frame 0 again, now real. |
+| 38 | R1 | 1950年代，你回到了【故宫】。 | 57 | 130.51 | 133.90 | 3.40 | 2.4 | +0.40 | The fifth 进 lights on 57.5, and all nine marks flash red on bar 58. |
+| 39 | D1 | 明朝人把草棚当驴耳，【补画】了头驴。 | 58.5 | 133.90 | 138.43 | 4.53 | 3.1 | **+1.03 (4a)** | The posts on 58.5, the dashed ear outline on 59, and the donkey painted on its grey patch on 59.5. |
+| 40 | D2 | 1973年重裱，【假驴】才被揭掉。 | 60.5 | 138.43 | 141.83 | 3.40 | 2.5 | +0.40 | The patch peels on bar 61. |
+| — | (no subtitle) | | 62 | 141.83 | 142.39 | 0.57 | — | — | Phrase start. The camera starts its run along your tail one beat before the line. |
+| 41 | E1 | 藏者宜宝之——人人都很【珍惜】你： | 62.25 | 142.39 | 146.36 | 3.96 | 2.8 | −0.29 | 藏者宜宝之 glows on bar 63. Line 1, which stays through E3 (8.5 s). |
+| 42 | E3 | 【偷你】、【换你】、【藏你】、【抄你】。 | 64 | 146.36 | 150.88 | 4.53 | 2.2 | **+1.03 hold** | **Loud bar 64:** 偷 on 64, 换 on 64.25, 藏 on 64.5, 抄 on 64.75. The 抄 wall (「约一百卷 · 只有一卷是你」) holds through bar 65. |
+| 43 | E4 | 可四个朝代的皇宫，都没【留住】你。 | 66 | 150.88 | 154.28 | 3.40 | 3.0 | −0.10 | 宋 on 66, 元 on 66.25, 明 on 66.5 and 清 on 66.75, each with its 出 flash. |
+| 44 | E5 | 直到你不再属于【任何一个人】， | 67.5 | 154.28 | 157.68 | 3.40 | 2.8 | −0.10 | The hats fall away on bar 68. Line 1, which stays through E6. |
+| 45 | E6 | 你才终于，不再被谁【带走】。 | 69 | 157.68 | 162.20 | 4.53 | 2.5 | **+0.53 hold** | Inside: you lie in the case and light the faces of the crowd. |
+| — | (no subtitle) | | 71 | 162.20 | 165.04 | 2.83 | — | — | **The moral's picture.** E5 and E6 clear. A slow pull-back: the crowd keeps filing past your glow, and nobody carries you anywhere. The case starts to dim on bar 72. |
+| 46 | E7 | 安全的代价：展完要静养【三年以上】。 | 72.25 | 165.04 | 169.00 | 3.96 | 3.1 | +0.46 | You are rolled up and boxed, and the lid closes on bar 73. Three light sweeps (three years) on 73, 73.25 and 73.5. Line 1, which stays through E8. |
+| 47 | E8 | 所以，你才这么【难见】。 | **74** | 169.00 | 172.39 | 3.40 | 2.2 | −0.10 | **Outro, no bass.** Callback to N2: the empty case and the card 「下次展出：未公布」. |
+| — | (no subtitle) | | 75.5 | 172.39 | 174.66 | 2.26 | — | — | The card alone for a half-bar. **The Juno end card arrives on bar 76** (J monogram and gold title). |
+| 48 | Q | 要是排【五小时】看两分钟，你去吗？ | 76.5 | 174.66 | 184.30 | 9.64 | 3.0 | **+4.14 hold** | Types on 76.5. The follow pill comes in on bar 78 and the sources line on 78.5. Holds to the song's own end. Nothing gets brighter after this (owner row 95): a slow drift while the dusk sky dims. |
+
+### The title card: bar 10
+- **Bar 9 is impossible.** From drop 1 (bar 3), T1–T4 + N1 + N2 need at least 27 beats (6.75 bars) to pass pace.py. With every hard cut on a bar or half-bar they need 28 beats. So N2 can't end before bar 10.
+- **Bar 10 is the earliest bar that works.** It keeps S1 within 0.7 s of v2.1 (26.92 against 26.25), and Z1 still lands on the bar-16 lift.
+- **The card holds to 11.25 (2.83 s).** v2.1 gave it 3.0 s. One bar (2.26 s) would be 0.12 s under the title's own reading time (9 字 → 2.39 s).
+- **Flag:** the title sits on no musical hit. Bars 8–15 measure flat (about −16 dB). Drop 1 carries T1, and the hardest drop (bar 54) carries 才是你, as the music map assigns them. Owner rows 26 and 84 put the title on the hardest drop, so it is worth saying this to the owner before he watches.
+
+### Anchors that moved
+| Asked for | Where it is | Why |
+|---|---|---|
+| N2 on bar 8 (19.56) | **Bar 9 (21.83)** | T1 needs 1.5 bars (one bar is 0.015 s under pace for 10 字), T2–T4 one bar each, and N1 1.5 bars (14 字). So N1 can't start before 7.5, and N2 can't start before 9. Bar 8's phrase change now lands inside N1, on the cut from the queue outside to the case inside. **Cost:** N2 shows 2.26 s (v2.1: 3.5), but the title card follows at once and answers it. |
+| 1923 (P1) on bar 42 (96.55) | **Bar 41 (94.28)** | P1–V2 need 32 beats before the stop: P1 6, P2 8 with its rest bar, P3, V1 and V2 6 each, all at their floors. Starting on bar 42 leaves only 28. On bar 41 the bass is back, and **the build on bar 42 lands on P1's 出 tick** as the crate leaves. F1–Q2 then fill bars 34 → 41 exactly (6 + 8 + 6 + 8 beats). |
+| Y3 on the pickup (bar 53) | **52.75** (one beat early) | One bar is TOO FAST for 11 字 (2.26 against 2.42). The 真迹 slips turn grey on bar 53, so the pickup still lands on the twist. |
+| V3 on the stop (bar 49) | Bar 49 ✓, but only one bar | Y1 is fixed on bar 50, so V3 gets exactly 2.26 s (it needs 2.24). It should **appear whole on the downbeat** rather than be typed. The v2.1 1-s gap is gone, and the stop itself is the pause. |
+| H1–H2 over the intro (bars 0–2) | ✓ | H1 runs from 0 to bar 1 and H2 from bar 1 to 2.5, then comes the half-bar wind-up. The old "H1–H2 within budget + 0.5 s" rule can't hold, because the intro is 8.24 s long. The picture beats above fill it. |
+
+### Where the extra 14.6 s went
+Up to the hardest drop the film runs as v2.1 did: the drop is at 123.71, and v2.1 had Y4 at 124.0. After the drop it runs 60.6 s instead of 46.0 s.
+
+| Where | Gained | How |
+|---|---|---|
+| 才是你 (Y4 + the 虹桥 bar) | +2.0 s | Two bars of text, then one picture-only bar on the loudest bar of the song |
+| E3 | +1.0 s | The 抄 wall holds a full bar |
+| The moral (E4–E6 + its picture) | +3.2 s | E6 gets 2 bars, then a picture-only 1.25 bars |
+| End card (E8 → Q) | +5.9 s | The card arrives on bar 76, and Q holds to 184.3 |
+| D1 (4a), R1, D2, E1, E7 | +2.6 s | D1 +1.03 (4a). The others gain 0.3–0.5 s so that each scene cut lands on a half-bar |
+
+### Below the floor (Needs + 0.4 s). All of them pass pace.py.
+| Line | On | Floor | Why |
+|---|---|---|---|
+| N1, BO, M1 (14 字) | 3.40 | 3.50 | They get 6 beats; 7 would push the next scene cut off the half-bar. Z1 → F1 is 18 bars for 12 lines, each at its 6-beat minimum, and S1–BO fill bars 11.25–16. |
+| N2 | 2.26 | 2.64 | See "Anchors that moved". |
+| V3 | 2.26 | (typed: 2.64) | It is shown whole, so the typed floor doesn't apply. It has 0.02 s over Needs. |
+| Y1 | 2.83 | 3.21 | Bars 50 → 54 hold three lines. Y1 is line 1 and stays through Y2, so it is on screen for 6.2 s. |
+| Y3 | 2.83 | 3.07 | Same reason. It is line 1 and stays through Y4 (7.4 s). |
+
+- **Note 4a.** All three lines gain time:
+  - **M2** gets 3.40 (floor 3.36; v2.1 3.25).
+  - **Q2** gets 4.53 (v2.1 3.25). The five seal slams fall on five beats, and the roofs close in the no-bass bar 40.
+  - **D1** gets 4.53 (floor 3.50; v2.1 3.50).
+- **Lines that lost more than 0.1 s against v2.1:** N2 −1.24, Y1 −0.67, Z4 −0.60, Z5 −0.60, V3 −0.49, Y3 −0.42, P3 −0.35, S1 −0.29, E1 −0.29, T2–T4 −0.24.
+  - All of them are forced by the fixed anchors. The stretch from the title to F1 (bars 10 → 34) is 1.7 s shorter than in v2.1, and V3 → Y4 (bars 49 → 54) is 2.7 s shorter.
+  - Every one is still at or above its Needs.
+
+### Checks run on `lines_bars.json`
+- **`pace.py lines_bars.json --film-end 184.3`**
+  - **TOO FAST:** none.
+  - **Waiting:** 18.4 s = 10 % (target ≤ 12 %).
+  - **The 8 WAIT lines are all deliberate holds:**
+    - F2 1.4: the joke and the colophon.
+    - Q2 1.6: note 4a and the five seals.
+    - P2 1.4: the designed rest bar.
+    - D1 1.4: note 4a.
+    - The producer's named holds: Y4 1.6, E3 2.3, E6 2.0 and Q 6.7.
+  - **4 CHECKs, all named picture beats:** the title card (24.1–26.9), the 虹桥 bar (128.2–130.5), the moral's picture (162.2–165.0) and the end card arriving (172.4–174.7).
+  - **Text-free time pace.py doesn't count:** about 11.9 s across the six text-free beats in the anchor table (10.2 s in the four CHECK gaps). If a picture beat isn't built as described, that time becomes dead air, so each beat is spelled out in the table above.
+- **`facts.py script.md --lines lines_bars.json`:** no problems (same wording, so the same numbers).
+- **Other checks:**
+  - The text is identical to `lines.json` on all 48 rows.
+  - Every start is on a beat (H1 at 0.00).
+  - No windows overlap, and the last line ends at 184.30.
+  - The widest line is still 16.0.
+- **Side note.** P3 is 13 字 in pace.py (Needs 3.0). The line table above says 12, which is a miscount in v2.1, and the wording is unchanged. At 3.40 s, P3 still meets its floor (3.36).
+
+## Music and retiming (written before the track; superseded by "Retiming to bars" above)
 - **Title (23.25).** Lands on the hardest drop. Move the whole opening with it. If the drop comes later, hold N2 longer, but don't add a line.
 - **Teaser T1–T4.** Hard cuts on the beat, about 2.5–3 s each. The year stamp slams on each cut.
 - **P2 → P3.** One bar where nothing new appears after the fourth roll crosses, so the "four?" lands (cold read).
