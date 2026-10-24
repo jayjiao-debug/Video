@@ -10,13 +10,14 @@ export type Frame = {st: Stage; under?: Stage; blurUnder?: number; grade?: Grade
 export type In = {mode: number; a: number; z: number; dir?: [number, number]; pt?: [number, number]; soft?: number; band?: number; ease?: (u: number) => number};
 export type Scene = {id: string; a: number; z: number; draw: (t: number) => Frame; in?: In};
 export const SCENES: Scene[] = [];
+const FALLBACK: {st?: Stage} = {};
 export const addScene = (s: Scene) => { SCENES.push(s); SCENES.sort((p, q) => p.a - q.a); };
 
 export const renderFilm = (t: number, hud: HTMLElement) => {
 	hud.innerHTML = '';
 	let i = SCENES.findIndex((s) => t >= s.a && t < s.z); if (i < 0) i = t < SCENES[0].a ? 0 : SCENES.length - 1;
 	const cur = SCENES[i], tr = cur.in && i > 0 && t >= cur.in.a && t < cur.in.z ? cur.in : null;
-	const safe = (sc: Scene, tt: number): Frame => { try { return sc.draw(tt); } catch (e: any) { console.error('DRAW-FAIL', sc.id, tt.toFixed(2), e?.message || e); return SCENES.find((q) => q.id === 'gap')!.draw(tt); } };
+	const safe = (sc: Scene, tt: number): Frame => { try { return sc.draw(tt); } catch (e: any) { console.error('DRAW-FAIL', sc.id, tt.toFixed(2), e?.message || e); FALLBACK.st ??= new Stage('fallback'); return {st: FALLBACK.st, grade: {vig: 0}}; } };
 	const fc = safe(cur, t);
 	if (tr) {
 		const prev = SCENES[i - 1], fp = safe(prev, t);

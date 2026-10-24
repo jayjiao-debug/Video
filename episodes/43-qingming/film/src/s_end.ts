@@ -446,10 +446,11 @@ addScene({id: '35a', a: b(72), z: b(72.25), draw: (t) => {
 // 35b (b72.25 → b72.75): two staff behind the case, each with both hands on a roller, roll you up toward the middle and lift you
 const STAFF: LookQ[] = [{head: 'short', dress: 'smock'}, {head: 'ponytail', dress: 'smock', build: 0.95}];
 const rollUp = (t: number) => {
-	const k = smooth(clamp01((t - b(72.3)) / (b(72.6) - b(72.3)))), lift = 46 * smooth(clamp01((t - b(72.6)) / 0.16));
-	const xl = lerp(842, 947, k), xr = lerp(1078, 973, k), yT = 552 - lift, yB = 582 - lift, lean = lerp(50, 68, k) - 16 * lift / 46;
-	const A = rig({x: 800, ground: HG, h: 470, pose: bowUpper(POSES.stand, lean), look: STAFF[0]}, [{side: 'R', target: [xl - 4, yT], name: 'roller'}, {side: 'L', target: [xl - 4, yB], name: 'roller'}], () => HG, 'staff A');
-	const B = rig({x: 1120, ground: HG, h: 462, pose: bowUpper(POSES.stand, lean), look: STAFF[1], flip: true}, [{side: 'R', target: [xr + 4, yT], name: 'roller'}, {side: 'L', target: [xr + 4, yB], name: 'roller'}], () => HG, 'staff B');
+	// each with both hands near the top of a roller; the rollers lift a little as they wind in, then the whole roll comes up
+	const k = smooth(clamp01((t - b(72.3)) / (b(72.6) - b(72.3)))), lift = 16 * k + 40 * smooth(clamp01((t - b(72.6)) / 0.16));
+	const xl = lerp(840, 947, k), xr = lerp(1080, 973, k), yT = 532 - lift, yB = 556 - lift, lean = 35 + 10 * k - 12 * clamp01((lift - 16) / 40);
+	const A = rig({x: 770, ground: HG, h: 470, pose: bowUpper(POSES.stand, lean), look: STAFF[0]}, [{side: 'R', target: [xl - 4, yT], name: 'roller'}, {side: 'L', target: [xl - 4, yB], name: 'roller'}], () => HG, 'staff A');
+	const B = rig({x: 1150, ground: HG, h: 462, pose: bowUpper(POSES.stand, lean), look: STAFF[1], flip: true}, [{side: 'R', target: [xr + 4, yT], name: 'roller'}, {side: 'L', target: [xr + 4, yB], name: 'roller'}], () => HG, 'staff B');
 	return {A, B, rl: {xl, xr, lift, r: lerp(11, 16, k)}};
 };
 addScene({id: '35b', a: b(72.25), z: b(72.75), draw: (t) => {
