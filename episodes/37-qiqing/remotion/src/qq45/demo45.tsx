@@ -50,11 +50,11 @@ export const S2: React.FC<{t: number}> = ({t}) => { const a = T45.c2, lift = eas
 	</g>; };
 /* ---------- S3 · C3: London 1989, the hammer comes down on the beat ---------- */
 export const S3: React.FC<{t: number}> = ({t}) => { const k = ease(seg(t, beat(10.5), beat(11)));
-	return <Cam z={1.04 - 0.04 * seg(t, T45.c3, T45.c4)}><AuctionRoom hammer="held" k={k} wall={T.wallG} frame="D3" plinthX={860} /><HorseHead x={860} y={482} s={0.5} id="d3h" glow={0.9} /><Bidders frame="D3" up={[2]} xs={[130, 360, 580]} /></Cam>; };
+	return <Cam z={1.04 - 0.04 * seg(t, T45.c3, T45.c4)}><AuctionRoom hammer="held" k={k} wall={T.wallG} frame="D3" plinthX={860} /><HorseHead x={860} y={604} s={0.26} id="d3h" glow={0.9} /><Bidders frame="D3" up={[2]} xs={[130, 360, 580]} /></Cam>; };
 /* ---------- S4 · C4: Hong Kong 2007, the price rolls, the hammer stays up ---------- */
 export const S4: React.FC<{t: number}> = ({t}) => { const v = Math.round(6910 * easeOut(seg(t, T45.c4, T45.c4 + 1.3)));
 	const screen = <text x={1210} y={452} textAnchor="middle" style={{fontFamily: "'DejaVu Sans',sans-serif", fontSize: 50, fontWeight: 700}} fill={T.cream}>HK$ {v}万</text>;
-	return <Cam z={1.0 + 0.05 * seg(t, T45.c4, T45.c5)} x={900}><AuctionRoom hammer="held" wall={T.wallB} trim={T.wallBL} frame="D4" screen={screen} plinthX={800} /><HorseHead x={800} y={482} s={0.5} id="d4h" glow={1} /><Bidders frame="D4" up={[0, 1]} xs={[110, 320, 520]} /></Cam>; };
+	return <Cam z={1.0 + 0.05 * seg(t, T45.c4, T45.c5)} x={900}><AuctionRoom hammer="held" wall={T.wallB} trim={T.wallBL} frame="D4" screen={screen} plinthX={800} /><HorseHead x={800} y={604} s={0.26} id="d4h" glow={1} /><Bidders frame="D4" up={[0, 1]} xs={[110, 320, 520]} /></Cam>; };
 /* ---------- S5 · C5: 2019, handed over ---------- */
 const giver = grounded({lean: 4, neck: 8, lt: 2, lk: 2, rt: -3, rk: 3, la: -2, le: 14, ra: 34, re: 30}), taker = grounded({lean: 6, neck: 12, lt: 2, lk: 2, rt: -3, rk: 3, la: 4, le: 18, ra: 30, re: 44});
 export const S5: React.FC<{t: number}> = ({t}) => { const g = 940, h = 600;
@@ -66,7 +66,7 @@ export const S5: React.FC<{t: number}> = ({t}) => { const g = 940, h = 600;
 		<path d="M920,0 L1000,0 L1160,880 L760,880 Z" fill="#FFF8E8" opacity={0.25} />
 		<rect x={820} y={700} width={280} height={240} fill={T.marble} stroke={T.ink} strokeWidth={2} />{hatchOver(820, 700, 280, 240, 'h45d', 0.2)}
 		<rect x={800} y={686} width={320} height={18} fill={T.wallW} stroke={T.ink} strokeWidth={1.5} />
-		<HorseHead x={960} y={540} s={0.38} id="d5h" glow={1} />
+		<HorseHead x={960} y={614} s={0.25} id="d5h" glow={1} />
 		<Rimmed x={560} ground={g} h={h} pose={giver} look={LK.auct} col={FIG} rim={RIM} rimOp={0.4} />
 		<Rimmed x={1360} ground={g} h={h} pose={taker} look={{dress: 'jacket', head: 'glasses'} as Look4} flip col={FIG} rim={RIM} rimOp={0.4} />
 	</Cam>; };
