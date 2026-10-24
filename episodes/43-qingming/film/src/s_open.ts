@@ -110,7 +110,7 @@ addScene({id: '01', a: 0, z: 8.96, draw: (t) => {
 	// lamplight on the insert: top band only (no chip / tally in scene 01), ending higher so the crowd and the cart stay lit; the
 	// top mount band keeps its own colour (the darkening starts below it)
 	const mountY = st.toScreen(st.at(960, SY - SH / 2 + 9, 22)).y;
-	return {st, grade: {vig: lerp(0.55, 0.32, pull), exposure: 1, corners: 1 - pull, cornersBand: [Math.max(0, mountY + 1), 240, 420, 0]}, bloom: 1};
+	return {st, grade: {vig: lerp(0.55, 0.32, pull), exposure: 1, corners: 1 - pull, cornersBand: [Math.max(0, mountY + 1), 255, 445, 0]}, bloom: 1};
 }});
 let silkWin: [number, number] | null = null;
 

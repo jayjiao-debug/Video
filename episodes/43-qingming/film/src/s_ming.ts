@@ -12,16 +12,18 @@ import {SIL, roof, hall, skyline} from './draw';
 import {Cast, drawRoll, glowBlob, rig, drawCarriedRoll, drawFig, Contact} from './actors';
 import {LOOKS, FigOpts, walkFor, gaitStride, stepFor, armsFrom, underArm, underArmRoll, fkPose, LookQ, P, toScreen as figToScreen} from './figures';
 import {paintSection, paintSeal} from './silk';
-import {camPath, solveCam, scr, BLEED_PT, Cam} from './s_yuan';
+import {camPath, solveCam, scr, BLEED_PT, Cam, careful, CAREFUL, softRoll} from './s_yuan';
 
 const b = bar;
 type Key = [number, number, number, number];
 const BAR4 = 4 * BEAT;
 const keep = (st: Stage, ms: THREE.ShaderMaterial[], r: number, g: number, bl: number) => { const k = new Set(ms); for (const m of st.mats) if (!k.has(m)) m.uniforms.uTint.value.setRGB(r, g, bl); };
 /** a two-handed carry in front of the chest (roll centre 0.16h ahead, 0.66h up, length 0.24h) */
-const carry2 = (x: number, gr: number, h: number, flip: boolean) => { const sg = flip ? -1 : 1, rc: P = [x + sg * 0.16 * h, gr - 0.66 * h], hl = 0.12 * h; return {rc, e0: [rc[0] - hl, rc[1] + 2] as P, e1: [rc[0] + hl, rc[1] - 2] as P}; };
+/** a roll carried in the hands, cradled against the chest (centre 0.11h ahead, 0.64h up, length 0.22h) */
+const carry2 = (x: number, gr: number, h: number, flip: boolean) => { const sg = flip ? -1 : 1, rc: P = [x + sg * 0.11 * h, gr - 0.64 * h], hl = 0.11 * h; return {rc, e0: [rc[0] - hl, rc[1] + 3] as P, e1: [rc[0] + hl, rc[1] - 3] as P}; };
+/** hands just under both ends (near hand L at the front end) */
 const twoHands = (e0: P, e1: P, flip: boolean, name = 'roll'): Contact[] => { const f: P = flip ? e0 : e1, bk: P = flip ? e1 : e0, sg = flip ? 1 : -1;
-	return [{side: 'L', target: [f[0] + sg * 7, f[1] + 5], name: `${name} front end`}, {side: 'R', target: [bk[0] - sg * 7, bk[1] + 5], name: `${name} back end`}]; };
+	return [{side: 'L', target: [f[0] + sg * 8, f[1] + 9], name: `${name} front end`}, {side: 'R', target: [bk[0] - sg * 8, bk[1] + 9], name: `${name} back end`}]; };
 
 // ================================================================================================ 18 · MING-LANE, night
 const G18 = 905, H18 = 380;
@@ -29,7 +31,7 @@ const lkLu = LOOKS.mingScholar, lkFriend: LookQ = {head: 'fangjin', dress: 'robe
 const lkTorch = LOOKS.mingOfficial;
 const DOOR = {x0: 1480, x1: 1600, y0: 470, y1: G18};      // the friend's door (opening)
 const GATE = {x0: 762, x1: 872};                            // 陆完's back gate
-const STR18 = gaitStride('08_04', stepFor(lkLu)) * H18;
+const STR18 = CAREFUL * H18;
 const HANDX = 1235, FRX = 1428;                             // where 陆完 stops for the hand-over; where the friend waits
 let lane: Stage, cast18: Cast, roll18: Live, glow18: Live, door18: Live, torch18: Live, torchFigs: Cast;
 const luX = (t: number) => Math.min(HANDX, 820 + ((t - b(29.25)) / (2 * BEAT)) * STR18);
@@ -45,13 +47,13 @@ const scene18Cast = (t: number) => {
 	// the roll: in 陆完's hands → both men's hands (b29.95 → b30.12) → the friend's chest
 	let rc = luC.rc, e0 = luC.e0, e1 = luC.e1;
 	const fc = carry2(F.x, G18, H18, F.flip);
-	if (t >= b(30.12)) { const k = smooth(clamp01((t - b(30.12)) / 0.1)); const mid = luC.rc; rc = F.walk ? fc.rc : [lerp(mid[0], fc.rc[0], k), lerp(mid[1], fc.rc[1], k)]; e0 = [rc[0] - 0.12 * H18, rc[1] + 2]; e1 = [rc[0] + 0.12 * H18, rc[1] - 2]; }
-	const luContacts: Contact[] = t < b(30.12) ? [{side: 'L', target: [e0[0] + 26, e0[1] + 5], name: 'roll'}, {side: 'R', target: [e0[0] + 6, e0[1] + 5], name: 'roll end'}] : [];
-	const lu = rig({x: lx, ground: G18, h: H18, pose: lw ? walkFor(lkLu, ul) : fkPose({hip: 0.655, lean: 5, neck: 4, lt: 2, lk: 2, rt: -3, rk: 3, la: 4, le: 18, ra: 6, re: 22}), look: lkLu}, luContacts, () => G18, 'lu-wan');
+	if (t >= b(30.12)) { const k = smooth(clamp01((t - b(30.12)) / 0.1)); const mid = luC.rc; rc = F.walk ? fc.rc : [lerp(mid[0], fc.rc[0], k), lerp(mid[1], fc.rc[1], k)]; e0 = [rc[0] - 0.11 * H18, rc[1] + 3]; e1 = [rc[0] + 0.11 * H18, rc[1] - 3]; }
+	const luContacts: Contact[] = t < b(30.12) ? [{side: 'L', target: [e0[0] + 26, e0[1] + 9], name: 'roll'}, {side: 'R', target: [e0[0] + 8, e0[1] + 9], name: 'roll end'}] : [];
+	const lu = rig({x: lx, ground: G18, h: H18, pose: lw ? careful(ul) : fkPose({hip: 0.655, lean: 5, neck: 4, lt: 2, lk: 2, rt: -3, rk: 3, la: 4, le: 18, ra: 6, re: 22}), look: lkLu}, luContacts, () => G18, 'lu-wan');
 	let frC: Contact[] = [];
-	if (t >= b(29.92) && t < b(30.12)) frC = [{side: 'L', target: [e1[0] - 26, e1[1] + 5], name: 'roll'}, {side: 'R', target: [e1[0] - 6, e1[1] + 5], name: 'roll end'}];
+	if (t >= b(29.92) && t < b(30.12)) frC = [{side: 'L', target: [e1[0] - 26, e1[1] + 9], name: 'roll'}, {side: 'R', target: [e1[0] - 8, e1[1] + 9], name: 'roll end'}];
 	else if (t >= b(30.12)) frC = twoHands(e0, e1, F.flip);
-	const fpose = F.walk ? walkFor(lkFriend, F.u + 0.1) : fkPose({hip: 0.655, lean: 6 + 4 * give, neck: 4, lt: 2, lk: 2, rt: -3, rk: 3, la: 4, le: 16, ra: 6, re: 20});
+	const fpose = F.walk ? careful(F.u * H18 / (H18 - 6) + 0.1) : fkPose({hip: 0.655, lean: 6 + 4 * give, neck: 4, lt: 2, lk: 2, rt: -3, rk: 3, la: 4, le: 16, ra: 6, re: 20});
 	const fr = rig({x: F.x, ground: G18, h: H18 - 6, pose: fpose, look: lkFriend, flip: F.flip}, frC, () => G18, 'friend');
 	return {lu, fr, rc, e0, e1};
 };
@@ -62,8 +64,8 @@ export const d18 = (t: number): Frame => {
 	const fk = `${Math.round(t * 30)}`, c = scene18Cast(t);
 	const clipX = DOOR.x1 - 2;            // whoever goes through the friend's door passes behind its right jamb
 	cast18.L.drawW(fk, (g) => { drawFig(g, c.lu); g.save(); g.beginPath(); g.rect(-2000, -2000, clipX + 2000, 6000); g.clip(); drawFig(g, c.fr); g.restore(); });
-	const inside = clamp01((c.rc[0] - DOOR.x0) / 60);
-	roll18.drawW(fk, (g) => { g.save(); g.beginPath(); g.rect(-2000, -2000, clipX + 2000, 6000); g.clip(); glowBlob(g, c.rc, 120, 80, 0.4); drawRoll(g, c.e0, c.e1, 11, 1);
+	const inside = clamp01((c.rc[0] - DOOR.x0 - 20) / 50);
+	roll18.drawW(fk, (g) => { g.save(); g.beginPath(); g.rect(-2000, -2000, clipX + 2000, 6000); g.clip(); glowBlob(g, c.rc, 120, 80, 0.4); softRoll(g, c.e0, c.e1, 11);
 		drawFig(g, {...c.fr, part: 'L'}); if (t < b(30.12)) drawFig(g, {...c.lu, part: 'L'}); g.restore(); });
 	// the friend's door: your light inside, the leaves swing shut, a sliver under the door until b30.75
 	const dk = doorK(t), sliver = t < b(30.5) ? 1 : 1 - smooth(clamp01((t - b(30.5)) / (b(30.75) - b(30.5))));
@@ -74,7 +76,8 @@ export const d18 = (t: number): Frame => {
 	});
 	glow18.drawW(`${fk}`, (g) => {
 		const lit = inside * (t < b(30.52) ? 1 : sliver);
-		if (dk < 1 && lit > 0) { const gap = (DOOR.x1 - DOOR.x0) * (1 - dk); glowBlob(g, [(DOOR.x0 + DOOR.x1) / 2, 720], 40 + gap * 0.6, 200, 0.5 * lit); }
+		if (dk < 1 && lit > 0) { const gap = (DOOR.x1 - DOOR.x0) * (1 - dk); g.save(); g.beginPath(); g.rect((DOOR.x0 + DOOR.x1) / 2 - gap / 2, DOOR.y0, gap, DOOR.y1 - DOOR.y0); g.clip();
+			const gr = g.createLinearGradient(0, DOOR.y0, 0, DOOR.y1); gr.addColorStop(0, `rgba(255,200,130,${(0.18 * lit).toFixed(3)})`); gr.addColorStop(1, `rgba(255,210,140,${(0.55 * lit).toFixed(3)})`); g.fillStyle = gr; g.fillRect(DOOR.x0, DOOR.y0, DOOR.x1 - DOOR.x0, DOOR.y1 - DOOR.y0); g.restore(); }
 		if (dk > 0.6 && sliver > 0) { g.fillStyle = `rgba(255,214,150,${(0.95 * sliver * inside).toFixed(3)})`; g.fillRect(DOOR.x0 + 3, DOOR.y1 - 5, DOOR.x1 - DOOR.x0 - 6, 3.5); glowBlob(g, [(DOOR.x0 + DOOR.x1) / 2, DOOR.y1 - 3], 80, 16, 0.5 * sliver * inside); }
 	});
 	// torches at the front gate (left): flicker
@@ -140,10 +143,10 @@ const boxGlow = (g: CanvasRenderingContext2D, c: P, w: number, h: number, a = 0.
 /** a figure carrying the box at the chest, both hands on it, walking right across a doorway */
 const boxCarrier = (x: number, gr: number, h: number, look: LookQ, u: number, who: string) => {
 	const bw = 0.22 * h, bh = 0.14 * h, bc: P = [x + 0.15 * h, gr - 0.62 * h];
-	const f = rig({x, ground: gr, h, pose: walkFor(look, u), look}, [{side: 'L', target: [bc[0] + bw / 2 - 2, bc[1] + 1], name: 'box front'}, {side: 'R', target: [bc[0] - bw * 0.15, bc[1] + bh / 2 - 1], name: 'box bottom'}], () => gr, who);
+	const f = rig({x, ground: gr, h, pose: careful(u), look}, [{side: 'L', target: [bc[0] + bw / 2 - 2, bc[1] + 1], name: 'box front'}, {side: 'R', target: [bc[0] - bw * 0.15, bc[1] + bh / 2 - 1], name: 'box bottom'}], () => gr, who);
 	return {f, bc, bw, bh};
 };
-const STR19 = (look: LookQ, h: number) => gaitStride('08_04', stepFor(look)) * h;
+const STR19 = (look: LookQ, h: number) => CAREFUL * h;
 export const d19 = (t: number): Frame => {
 	const st = hallSt, [cx, cy, zm] = camPath(t, K19); st.setCam(cx, cy, zm);
 	const fk = `${Math.round(t * 30)}`;
@@ -204,7 +207,7 @@ const buildHall = async () => {
 	st.add('w3', canvasTex(await svgToCanvas(w3, 3300, 1700, 1.2)), 950, 550, 3300, 1700, ZW3, {rim: 0.4, rimPx: 3});
 	leaves19 = new Live(st, 'leaves', 960, 640, 300, 260, ZW3 + 1, {rim: 0.4}, 4);
 	strips19 = new Live(st, 'strips', 960, 640, 300, 260, ZW3 + 2, {}, 4);
-	offs = new Cast(st, 'officials', 960, 640, 500, 300, ZW3 + 3, {}, 4);
+	offs = new Cast(st, 'officials', 960, 640, 500, 300, ZW3 + 3, {rim: 0.55}, 4);
 	lamps19 = new Live(st, 'lamps', 960, 600, 400, 200, ZW3 + 1.5, {emissive: 1.2}, 3);
 	// the vase gate wall (z 800)
 	const vase = (cx: number) => { const y0 = VASE_Y0, y1 = VASE_Y1; return `M${cx - 30},${y1} C${cx - 64},${y1 - 40} ${cx - 92},${y1 - 120} ${cx - 86},${y0 + 150} C${cx - 80},${y0 + 90} ${cx - 34},${y0 + 82} ${cx - 34},${y0 + 46} L${cx - 40},${y0} L${cx + 40},${y0} L${cx + 34},${y0 + 46} C${cx + 34},${y0 + 82} ${cx + 80},${y0 + 90} ${cx + 86},${y0 + 150} C${cx + 92},${y1 - 120} ${cx + 64},${y1 - 40} ${cx + 30},${y1} Z`; };
@@ -224,14 +227,14 @@ const buildHall = async () => {
 let c20: Crest, cast20: Cast, cart20: Live, near20: Live, roll20: Live, nightSky20: any, jl20: Live, mine20: THREE.ShaderMaterial[] = [];
 const H20 = 560, lkCarter: LookQ = {head: 'bun', dress: 'tunic'}, lkEunuch = LOOKS.mingEunuch;
 const g20 = (x: number) => (x < -740 || x > 2660 ? 1380 : deck(x));
-const STRC = gaitStride('08_04', stepFor(lkCarter)) * H20, STRO = gaitStride('08_04', stepFor(lkOff)) * H20, STRE = gaitStride('08_04', stepFor(lkEunuch)) * H20;
+const STRC = CAREFUL * (H20 - 10), STRO = CAREFUL * (H20 + 8), STRE = CAREFUL * H20;
 const CART = {bed: 200, wheel: 92, len: 380, cw: 250, ch: 200, shaft: 300};
 const cartX = (t: number) => -900 - ((t - b(33)) / (1.6 * BEAT)) * STRC;            // the crate's centre x (walks left, brisk)
 const crateX = (x: number) => ({c: [x, 1380 - CART.bed - CART.ch / 2] as P, w: CART.cw * 0.62});   // the X on the crate's face
 const CR_B: Cam = [-100, 760, 0.62];
 let CAM20_0: Cam = [-900, 1100, 1.4];
 const eunX = (t: number) => -1720 + ((t - b(34)) / (2 * BEAT)) * STRE;
-const eunuch20 = (t: number) => { const u = (t - b(34)) / (2 * BEAT), x = eunX(t); let p = walkFor(lkEunuch, u); p = armsFrom(p, underArm(p), 'R');
+const eunuch20 = (t: number) => { const u = (t - b(34)) / (2 * BEAT), x = eunX(t); let p = careful(u); p = armsFrom(p, underArm(p), 'R');
 	return rig({x, ground: g20(x), h: H20, pose: p, look: lkEunuch}, [], g20, 'eunuch20'); };
 const eunRoll = (f: FigOpts): P => { const [a, c] = underArmRoll(f.pose, 'R', 0.29), p0 = figToScreen(f, a), p1 = figToScreen(f, c); return [(p0[0] + p1[0]) / 2, (p0[1] + p1[1]) / 2]; };
 const cam20 = (t: number): Cam => {
@@ -252,9 +255,9 @@ export const d20 = (t: number): Frame => {
 	// the cart: crate with the X, a carter between the shafts, an official behind
 	const xc = cartX(t), uc = (t - b(33)) / (1.6 * BEAT), bedY = 1380 - CART.bed, front = xc - CART.len / 2;
 	const shaftEnd: P = [front - CART.shaft, 1380 - 0.53 * H20], carterX = shaftEnd[0] - 0.06 * H20;
-	const carter = rig({x: carterX, ground: 1380, h: H20 - 10, pose: walkFor(lkCarter, uc), look: lkCarter, flip: true}, [{side: 'L', target: [shaftEnd[0], shaftEnd[1] + 4], name: 'near shaft'}, {side: 'R', target: [shaftEnd[0] + 4, shaftEnd[1] + 2], name: 'far shaft'}], () => 1380, 'carter20');
+	const carter = rig({x: carterX, ground: 1380, h: H20 - 10, pose: careful(uc), look: lkCarter, flip: true}, [{side: 'L', target: [shaftEnd[0], shaftEnd[1] + 4], name: 'near shaft'}, {side: 'R', target: [shaftEnd[0] + 4, shaftEnd[1] + 2], name: 'far shaft'}], () => 1380, 'carter20');
 	const ox = xc + CART.len / 2 + 150, uo = (t - b(33)) / (1.6 * BEAT) * (STRC / STRO);
-	const off = rig({x: ox, ground: 1380, h: H20 + 8, pose: walkFor(lkOff, uo + 0.5), look: lkOff, flip: true}, [], () => 1380, 'cart-official20');
+	const off = rig({x: ox, ground: 1380, h: H20 + 8, pose: careful(uo + 0.28), look: lkOff, flip: true}, [], () => 1380, 'cart-official20');
 	const eun = t >= b(34) - 0.05 ? eunuch20(t) : null;
 	cast20.draw(fk, eun ? [carter, off, eun] : [carter, off]);
 	cart20.drawW(fk, (g) => drawCart(g, xc, bedY, shaftEnd, uc));

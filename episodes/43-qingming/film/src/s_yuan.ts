@@ -10,7 +10,7 @@ import {Crest, deck} from './crest';
 import {Desk} from './rooms';
 import {SIL, dagoba, skyline} from './draw';
 import {Cast, drawRoll, drawRoller, glowBlob, rig, drawCarriedRoll, drawFig, Contact} from './actors';
-import {LOOKS, FigOpts, walkFor, gaitStride, stepFor, armsFrom, underArm, fkPose, LookQ, P, POSES} from './figures';
+import {LOOKS, FigOpts, walkFor, gaitStride, gaitPose, stepFor, armsFrom, underArm, fkPose, LookQ, P, POSES} from './figures';
 import {paintSection, silkWeave} from './silk';
 
 const b = bar;
@@ -52,13 +52,28 @@ export const standinGlyph = (g: CanvasRenderingContext2D, cx: number, cy: number
 /** one column of stand-in glyphs */
 const standinColumn = (g: CanvasRenderingContext2D, x: number, y0: number, n: number, size: number, pitch: number, seed: number, ink = 'rgba(42,31,23,0.9)', w = 0.085) => { for (let i = 0; i < n; i++) standinGlyph(g, x + (hash(seed + i * 3.3) - 0.5) * size * 0.08, y0 + i * pitch, size * (0.9 + hash(seed * 1.7 + i) * 0.16), seed * 31 + i, ink, w); };
 
+/** people carrying you take a shorter, careful step */
+export const careful = (u: number) => gaitPose('08_04', u, 0.7);
+export const CAREFUL = gaitStride('08_04', 0.7);
+/** a rolled scroll: as actors.drawRoll, but its brightest band stays ≤ ~85 % luma (the bloom carries the glow) */
+export const softRoll = (g: CanvasRenderingContext2D, p0: P, p1: P, r: number) => {
+	const dx = p1[0] - p0[0], dy = p1[1] - p0[1], L = Math.hypot(dx, dy), a = Math.atan2(dy, dx);
+	g.save(); g.translate(p0[0], p0[1]); g.rotate(a);
+	const gr = g.createLinearGradient(0, -r, 0, r); gr.addColorStop(0, '#DDBB84'); gr.addColorStop(0.45, '#EED8AE'); gr.addColorStop(1, '#BE905A');
+	g.fillStyle = gr; g.beginPath(); g.roundRect(0, -r, L, 2 * r, r * 0.4); g.fill();
+	g.fillStyle = '#34506A'; g.fillRect(0, -r, L * 0.06, 2 * r); g.fillRect(L * 0.94, -r, L * 0.06, 2 * r);
+	g.fillStyle = '#DCCDB0'; for (const x of [-r * 0.25, L + r * 0.25]) { g.beginPath(); g.ellipse(x, 0, r * 0.35, r * 0.7, 0, 0, Math.PI * 2); g.fill(); }
+	g.restore();
+};
+export const SILK_BASE = '#EEDAB2';
+
 // ================================================================================================ shared art
 let riverMono: HTMLCanvasElement & {silk: any}, riverGrey: HTMLCanvasElement & {silk: any};
 /** draw a window of the river painting (around the 虹桥) into a rect, as an open silk: mount bands, the painting */
 const silkPanel = (g: CanvasRenderingContext2D, src: HTMLCanvasElement & {silk: any}, x0: number, y0: number, w: number, h: number, dead = false) => {
 	if (w < 2) return; const br = src.silk.bridge, sh = src.height * 0.62, sw = sh * (w / h), cx = br.x + br.w * 0.5, sx = Math.max(0, Math.min(src.width - sw, cx - sw / 2)), sy = Math.max(0, br.y - sh * 0.22);
 	g.save(); g.beginPath(); g.rect(x0, y0, w, h); g.clip();
-	g.fillStyle = dead ? '#9A968E' : '#FFF3D8'; g.fillRect(x0, y0, w, h);
+	g.fillStyle = dead ? '#9A968E' : SILK_BASE; g.fillRect(x0, y0, w, h);
 	g.globalAlpha = 0.95; g.drawImage(src, sx, sy, sw, sh, x0, y0, w, h); g.globalAlpha = 1;
 	g.fillStyle = dead ? 'rgba(90,88,84,0.95)' : 'rgba(52,80,106,0.92)'; g.fillRect(x0, y0, w, Math.max(2, h * 0.06)); g.fillRect(x0, y0 + h - Math.max(2, h * 0.06), w, Math.max(2, h * 0.06));
 	g.restore();
@@ -75,27 +90,27 @@ const H14 = 560;
 const lkCarrier: LookQ = {...LOOKS.yuanNoble, beard: 'short', build: 1.02};
 const lkLead: LookQ = {...LOOKS.yuanNoble, beard: 'long', build: 1.0};
 const lkRear: LookQ = {...LOOKS.yuanNoble, build: 1.06};
-const STR14 = gaitStride('08_04', stepFor(lkCarrier)) * H14;
+const STR14 = CAREFUL * H14;
 const g14 = (x: number) => (x < -740 || x > 2660 ? 1380 : deck(x));
 const x14 = (t: number) => 960 - ((t - b(24)) / (2 * BEAT)) * STR14;          // the carrier tops the crest on b24
 // side-on wide (raised a little so the far bank sits behind the carry); from b24.5 a slow push left toward the Dagoba
 const K14: Key[] = [[b(23), 1010, 318, 0.62], [b(24), 860, 320, 0.62], [b(24.5), 470, 330, 0.63], [b(25), -600, 360, 0.70]];
 const walk14 = (t: number) => {
 	const u = (t - b(24)) / (2 * BEAT), x1 = x14(t), gr = g14(x1);
-	const rc: P = [x1 - 0.16 * H14, gr - 0.66 * H14], hl = 0.12 * H14;
+	const rc: P = [x1 - 0.11 * H14, gr - 0.64 * H14], hl = 0.11 * H14;          // cradled against the chest
 	const e0: P = [rc[0] - hl, rc[1] + 3], e1: P = [rc[0] + hl, rc[1] - 3];
-	const car = rig({x: x1, ground: gr, h: H14, pose: walkFor(lkCarrier, u + 0.1), look: lkCarrier, flip: true},
-		[{side: 'L', target: [e0[0] + 8, e0[1] + 5], name: 'roll front end'}, {side: 'R', target: [e1[0] - 8, e1[1] + 5], name: 'roll back end'}], g14, 'official-carrier');
-	const xa = x1 - 300, xr = x1 + 330;
-	const lead = rig({x: xa, ground: g14(xa), h: H14 + 8, pose: walkFor(lkLead, u + 0.6), look: lkLead, flip: true}, [], g14, 'official-lead');
-	const rear = rig({x: xr, ground: g14(xr), h: H14 - 6, pose: walkFor(lkRear, u + 0.35), look: lkRear, flip: true}, [], g14, 'official-rear');
+	const car = rig({x: x1, ground: gr, h: H14, pose: careful(u + 0.1), look: lkCarrier, flip: true},
+		[{side: 'L', target: [e0[0] + 8, e0[1] + 9], name: 'roll front end'}, {side: 'R', target: [e1[0] - 8, e1[1] + 9], name: 'roll back end'}], g14, 'official-carrier');
+	const xa = x1 - 300, xr = x1 + 330, ua = u * H14 / (H14 + 8), ur = u * H14 / (H14 - 6);   // same speed, each with his own stride
+	const lead = rig({x: xa, ground: g14(xa), h: H14 + 8, pose: careful(ua + 0.38), look: lkLead, flip: true}, [], g14, 'official-lead');
+	const rear = rig({x: xr, ground: g14(xr), h: H14 - 6, pose: careful(ur + 0.72), look: lkRear, flip: true}, [], g14, 'official-rear');
 	return {figs: [rear, lead, car], car, e0, e1, rc};
 };
 export const d14 = (t: number): Frame => {
 	const st = c14.st, [cx, cy, zm] = camPath(t, K14); st.setCam(cx, cy, zm);
 	const w = walk14(t), fk = `${Math.round(t * 30)}`;
 	cast14.draw(fk, w.figs);
-	roll14.drawW(fk, (g) => { glowBlob(g, w.rc, 170, 95, 0.42); drawRoll(g, w.e0, w.e1, 14, 1); drawFig(g, {...w.car, part: 'L'}); });
+	roll14.drawW(fk, (g) => { glowBlob(g, w.rc, 170, 95, 0.4); softRoll(g, w.e0, w.e1, 14); drawFig(g, {...w.car, part: 'L'}); });
 	c14.setLanterns(() => 1); c14.setBoat(1760 - (t - b(23)) * 22, 0); c14.setStreak(w.rc[0], 0.25, t);
 	st.heroAt(w.rc[0], w.rc[1], 22, 640);
 	return {st, grade: {vig: 0.62, vigCol: '#141a1b', exposure: 1}, bloom: 1};
@@ -208,7 +223,7 @@ export const d15 = (t: number): Frame => {
 let c16: Crest, cast16: Cast, silk16: Live, rollers16: Live, glow16: Live, win16: Live;
 const SX0 = 742, SX1 = 1178, SY = 588, SH = 186, HF = 560;
 const lkSeller = LOOKS.yuanCraftsman, lkBuyer: LookQ = LOOKS.yuanNoble;
-const STR16 = gaitStride('08_04', stepFor(lkBuyer)) * (HF + 12);
+const STR16 = CAREFUL * (HF + 12);
 /** rollK 0 open → 1 closed (the left roller winds over to the 权贵's); the craftsman lets go at 1 */
 const hold16 = (t: number) => {
 	const k = smooth(clamp01((t - b(27.0)) / (0.3 * BAR_))), lean = Math.sin(t * 1.3) * 0.6;
@@ -224,7 +239,7 @@ const hold16 = (t: number) => {
 /** from b27.5 the 权贵 walks off right, the roll under his arm */
 const walk16 = (t: number) => {
 	const t0 = b(27.5), u = (t - t0) / (2 * BEAT), x = SX1 + 112 + 30 + u * STR16;
-	let p = walkFor(lkBuyer, u + 0.5); p = armsFrom(p, underArm(p), 'R');
+	let p = careful(u + 0.5); p = armsFrom(p, underArm(p), 'R');
 	const B = rig({x, ground: deck(x) + 4, h: HF + 12, pose: p, look: lkBuyer}, [], deck, 'quangui16-walk');
 	const ax = SX0 - 112 + 40;
 	const A = rig({x: ax, ground: deck(ax) + 4, h: HF, pose: fkPose({hip: 0.655, lean: 3, neck: 2, lt: 2, lk: 2, rt: -3, rk: 3, la: -2, le: 8, ra: 3, re: 10}), look: lkSeller}, [], deck, 'craftsman16');
@@ -421,7 +436,7 @@ export const bootYuan = async () => {
 		slot17 = st.add('slot', rt17.texture as any, sr.x + sr.w / 2, sr.y + sr.h / 2, sr.w, sr.h, 0, {emissive: 0.3, fog: ['#E8D6B0', 0]}, 11);
 		ink17 = new Live(st, 'ink17', PX0 + NEWX * PK, PYF - PHF / 2, 180 * PK, PHF, 0, {}, 3, 12);
 		roll17 = new Live(st, 'roll17', PX0 + (PSRC_W + 10) * PK, PYF - PHF / 2, 140 * PK, (PSRC_H + 80) * PK, 0, {emissive: 0.45}, 2, 13);
-		roll17.draw('roll', (g) => { const w = 140 * PK, h = (PSRC_H + 80) * PK; const gr = g.createLinearGradient(0, 0, w, 0); gr.addColorStop(0, '#D9B07A'); gr.addColorStop(0.45, '#FFF3D8'); gr.addColorStop(1, '#C99C66');
+		roll17.draw('roll', (g) => { const w = 140 * PK, h = (PSRC_H + 80) * PK; const gr = g.createLinearGradient(0, 0, w, 0); gr.addColorStop(0, '#CFA872'); gr.addColorStop(0.45, '#EED8AE'); gr.addColorStop(1, '#BE905A');
 			g.fillStyle = gr; g.beginPath(); g.roundRect(w * 0.15, 18 * PK, w * 0.7, h - 36 * PK, 10); g.fill(); g.fillStyle = '#34506A'; g.fillRect(w * 0.15, 18 * PK, w * 0.7, h * 0.05); g.fillRect(w * 0.15, h - 18 * PK - h * 0.05, w * 0.7, h * 0.05); });
 		cast17 = new Cast(st, 'cast17', 960, 640, W + 400, 1200, 4, {}, 1); cast17.L.L.mesh.renderOrder = 20;
 		lamp17 = new Live(st, 'lamp17', LAMP17[0], LAMP17[1], 400, 400, -1, {emissive: 1.3}, 1);

@@ -189,7 +189,7 @@ const storeDraw = (t: number) => {
 		if (unrolled && r.w > 2) {
 			g.save(); g.beginPath(); g.rect(r.x, r.y, r.w, r.h); g.clip(); g.fillStyle = '#F3E6CA'; g.fillRect(r.x, r.y, r.w, r.h);
 			g.drawImage(monoBase, 0, 0, 4096 * (r.w / SW), 1536, r.x, r.y, r.w, r.h);
-			g.fillStyle = `rgba(48,32,20,${(0.14 * (1 - r.dv)).toFixed(3)})`; g.fillRect(r.x, r.y, r.w, r.h); g.restore();   // ≤ 85 % luma; the bloom carries the glow
+			g.fillStyle = 'rgba(48,32,20,0.2)'; g.fillRect(r.x, r.y, r.w, r.h); g.restore();   // ≤ 85 % luma; the bloom carries the glow
 			g.fillStyle = 'rgba(30,22,16,.75)';                                             // torn edges (top and bottom margins)
 			for (let i = 0; i < 40; i++) { const x = r.x + (i / 40) * r.w, d = (Math.sin(i * 12.9898) * 43758.5) % 1; g.fillRect(x, r.y, r.w / 40 + 1, Math.abs(d) * r.h * 0.035); g.fillRect(x, r.y + r.h - Math.abs(d * 1.7 % 1) * r.h * 0.03, r.w / 40 + 1, r.h * 0.03); }
 			const ex = r.x + r.w; g.fillStyle = '#d9c39c'; g.beginPath(); g.roundRect(ex - 4, r.y + 2, 22, r.h - 4, 9); g.fill();   // what's left of the roll, lying across the table's depth
@@ -207,7 +207,7 @@ const storeDraw = (t: number) => {
 	if (!unrolled) st.heroAt(on ? (t > b(50.5) ? bp[0] + 75 : LAMP.bulb[0]) : 960, on ? (t > b(50.5) ? bp[1] : LAMP.bulb[1]) : 580, 6, on ? 700 : 300);
 	else st.heroAt(r.x + r.w / 2, r.y + r.h / 2, 0, 700 + 900 * burst);
 	const dv = r.dv;
-	return {st, grade: {vig: lerp(0.42, 0.32, dv), vigCol: '#140e0a', exposure: on ? lerp(1 + 0.04 * burst, 0.88, dv) : 0.6, corners: 0.5 + 0.5 * clamp01((t - DIVE_A) / 0.3)}, bloom: lerp(1 + 0.15 * burst, 0.8, dv)};
+	return {st, grade: {vig: lerp(0.42, 0.32, dv), vigCol: '#140e0a', exposure: on ? lerp(1 + 0.02 * burst, 0.97, dv) : 0.6, corners: 0.5 + 0.5 * clamp01((t - DIVE_A) / 0.3)}, bloom: lerp(1 + 0.15 * burst, 0.8, dv)};
 };
 addScene({id: '27', a: b(50), z: b(54.5) - 0.1, draw: storeDraw});
 
@@ -262,7 +262,7 @@ const peakDraw = (t: number) => {
 	st.setHero(960, 540, 2400);
 	const hide = t >= b(56), ex = easeInOut(clamp01((t - b(56.75)) / (b(57) - b(56.75))));
 	const pool = clamp01((t - b(56) + 0.15) / 0.3);         // the HUD leaves; the lamplight becomes a pool on the bridge (no lift on the hit)
-	return {st, grade: {vig: 0.32, vigCol: '#1c140e', corners: 1 - pool, exposure: lerp(0.88, 0.76, ex), tint: ex > 0 ? '#' + [lerp(255, 226, ex), lerp(255, 234, ex), lerp(255, 238, ex)].map((v) => Math.round(v).toString(16).padStart(2, '0')).join('') : '#ffffff',
+	return {st, grade: {vig: 0.32, vigCol: '#1c140e', corners: 1 - pool, exposure: lerp(0.84, 0.74, ex), tint: ex > 0 ? '#' + [lerp(255, 226, ex), lerp(255, 234, ex), lerp(255, 238, ex)].map((v) => Math.round(v).toString(16).padStart(2, '0')).join('') : '#ffffff',
 		pool: [960, 500, 640, pool * (1 - 0.6 * ex)]}, bloom: 0.8, hideFurniture: hide};
 };
 addScene({id: '28', a: b(54.5) - 0.1, z: b(57) - 0.12, draw: peakDraw, in: {mode: 7, a: b(54.5) - 0.1, z: b(54.5), soft: 0.5}});
@@ -289,6 +289,7 @@ const drawPassage = (g: CanvasRenderingContext2D) => {
 	const gr = g.createLinearGradient(0, base - h, 0, base); gr.addColorStop(0, '#6a4526'); gr.addColorStop(1, '#a8703c'); g.fillStyle = gr; arch(1); g.fill();
 	g.fillStyle = '#E9D9B0'; arch(0.46, 6); g.fill();
 };
+(window as any).DBG29 = (t: number) => ({cam: cam29(t), match: crestMatch(t), peak: peakCam(t), roll: peakRoll(t)});
 addScene({id: '29', a: b(57) - 0.12, z: b(58.5), in: {mode: 7, a: b(57) - 0.12, z: b(57) + 0.06, soft: 0.5}, draw: (t) => {
 	const st = day.st, [cx, cy, zm] = cam29(t); st.setCam(cx, cy, zm);
 	const u = (t - b(57)) / (2 * BEAT), x1 = staffX(t), x2 = x1 + 300, H2 = 560;
