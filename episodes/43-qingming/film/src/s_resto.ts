@@ -15,14 +15,14 @@ const b = bar;
 const SC = 82 / 1536;                                   // section px (4096-wide sections) → world px: the scroll is 82 px deep (25 cm)
 const S = {x0: -131, edge: 760, py0: 14, depth: 300};    // strip origin (front-left of the table top)
 const TB = {x0: -500, x1: 2400, floor: 1010};
-const ZR = -250, TH_R = 1.36;                           // restorers' depth; table tilt in the room view
+const ZR = -110, TH_R = 1.36;                           // restorers' depth; table tilt in the room view
 // the strip: tail sheets (two other colophon stand-ins, cropped), 张著's colophon section, the painting's end, gate, river, shed
 const PARTS = {colB: 0, colA: 2600 * SC, col: 5200 * SC, end: 5200 * SC + 4096 * SC, gate: 5200 * SC + 2 * 4096 * SC, river: 5200 * SC + 3 * 4096 * SC, shed: 5200 * SC + 4 * 4096 * SC};
 const PATCH4 = {x: 1853, y: 1308};                      // the patch centre in the shed section (4096 px)
 const lxPatch = PARTS.shed + PATCH4.x * SC, lyPatch = S.py0 + (1536 - PATCH4.y) * SC;
 // the lens: a disc at depth 0; its content is a window (collage px) into the hi-res collage (gate + shed at 8192 px)
 const LENS = {r: 60, x: 1120, y: 618};
-const POST: P2 = [1262, 470];                           // the lamp's post top (screen px in the room view; world px at depth 0)
+const POST: P2 = [1262, 556];                           // the lamp's post top (screen px in the room view; world px at depth 0)
 let st: Stage, strip: Strip, shedMesh: THREE.Mesh, shedDonkey: Mat, shedPeeled: Mat, lens: THREE.Mesh, lensMat: THREE.ShaderMaterial, ring: THREE.Mesh;
 let body: ScreenLayer, lampL: ScreenLayer, arms: ScreenLayer, sheetMat: Mat, glowR = new GlowData();
 let collage: HTMLCanvasElement, CW = 0, CH = 0, patchCv: HTMLCanvasElement, patchTex: THREE.CanvasTexture, patchKey = '';
@@ -261,7 +261,7 @@ const frameAt = (lx: number, ly: number, z: number, sx = 960, sy = 540): Cam => 
 const lk73 = look('restorer1973');
 /** the restorers (screen px): one seated behind the table bent over the lens (tweezers at the patch's edge, other hand flat on
  *  the silk; from b61.65 that hand pushes the lamp arm); one standing, both hands flat on the scroll's near margin */
-const restorers = (t: number) => {
+const restorers = (t: number, on: boolean) => {
 	const out: {figs: FigOpts[]; tw: [P2, P2] | null} = {figs: [], tw: null};
 	const pe = (lx: number, ly: number, lz = 0.5): P2 => strip.screen(lx, ly, lz);
 	// seated, facing left
@@ -273,18 +273,22 @@ const restorers = (t: number) => {
 	const sw = swingK(t), arm = lensArmPoint(t);
 	const silkPt = pe(lxPatch + 24, lyPatch + 30, 0.6);
 	if (t < b(61.55)) c1.push({side: 'L', target: silkPt, name: 'flat on silk', opt: {dir: 180}});
-	else if (t >= b(61.65)) c1.push({side: 'L', target: arm, name: 'lamp arm'});
+	else if (t >= b(61.65) && t < b(62)) c1.push({side: 'L', target: arm, name: 'lamp arm'});
+	else if (t >= b(62)) s1.pose = reach(s1.pose, 'L', toBody(s1, arm));            // the crane leaves him; the hand stays on the arm
 	else { const k = smooth((t - b(61.55)) / (b(61.65) - b(61.55))); s1.pose = reach(s1.pose, 'L', toBody(s1, lerpP(silkPt, arm, k))); }
-	out.figs.push(rig(s1, c1, () => s1.ground, 'restorer-seated')); void sw;
+	out.figs.push(on ? rig(s1, c1, () => s1.ground, 'restorer-seated') : s1); void sw;
 	// standing, facing right, holding the scroll flat by its near margin
-	const stand: FigOpts = {x: 860, ground: TB.floor, h: 575, pose: fkPose({hip: 0.645, hipX: -0.04, lean: 30, neck: -2, lt: 6, lk: 5, rt: 3, rk: 4, la: 28, le: 30, ra: 24, re: 28}), look: lk73};
+	const stand: FigOpts = {x: 905, ground: TB.floor, h: 575, pose: fkPose({hip: 0.64, hipX: -0.07, lean: 46, neck: -6, lt: 10, lk: 8, rt: 5, rk: 6, la: 34, le: 30, ra: 28, re: 25}), look: lk73};
 	const s2 = onScreen(st, stand, ZR);
-	out.figs.push(rig(s2, [{side: 'R', target: pe(lxPatch - 120, S.py0 + 3, 0.5), name: 'margin', opt: {dir: -6}}, {side: 'L', target: pe(lxPatch - 92, S.py0 + 4, 0.5), name: 'margin', opt: {dir: -6}}], () => s2.ground, 'restorer-standing'));
+	// his hands go to the near margin where it lies within reach: the margin point about a third of his height in front of the shoulder
+	const shS = proj(st, 0, 0, 0) && [s2.x + (s2.pose.RSh[0]) * s2.h, s2.ground - s2.pose.RSh[1] * s2.h] as P2;
+	let best = lxPatch - 120, bd = 1e9; for (let lx = lxPatch - 260; lx < lxPatch - 20; lx += 2) { const q = pe(lx, S.py0 + 78, 0.5), d = Math.abs(Math.hypot(q[0] - shS[0], q[1] - shS[1]) - 0.31 * s2.h) + Math.max(0, shS[0] - q[0]) * 5; if (d < bd) { bd = d; best = lx; } }
+	out.figs.push(!on ? s2 : rig(s2, [{side: 'R', target: pe(best, S.py0 + 78, 0.5), name: 'margin', opt: {dir: -6}}, {side: 'L', target: pe(best + 26, S.py0 + 77, 0.5), name: 'margin', opt: {dir: -6}}], () => s2.ground, 'restorer-standing'));
 	return out;
 };
 /** a point on the lamp's arm (screen px) where the hand pushes it */
 const armEnd = (lc: P2): P2 => [lc[0], lc[1] - LENS.r * 1.3];
-const lensArmPoint = (t: number): P2 => { const m = lerpP(POST, armEnd(lensAt(t)), 0.42); return proj(st, m[0], m[1], 0); };
+const lensArmPoint = (t: number): P2 => { const m = lerpP(POST, armEnd(lensAt(t)), 0.3); return proj(st, m[0], m[1], 0); };
 const drawLamp = (g: CanvasRenderingContext2D, t: number, lc: P2) => {
 	const P = (x: number, y: number) => proj(st, x, y, 0), base = P(POST[0], S.edge - 18), top = P(POST[0], POST[1]), lcs = P(lc[0], lc[1]), k = proj(st, 100, 0, 0)[0] - proj(st, 0, 0, 0)[0];
 	g.strokeStyle = '#262c2a'; g.lineCap = 'round'; g.lineWidth = 0.09 * k;
@@ -309,9 +313,9 @@ const drawR = (t: number) => {
 	// the tail's glow: 藏者宜宝之 from b63
 	glowR.set((i) => (i >= 65 && i <= 69 ? clamp01((t - b(63) - (i - 65) * 0.07) / 0.12) : 0));
 	// figures: behind the table, hidden by the table top while the paper stands up
-	const fk = `${Math.round(t * 60)}`, R = restorers(t);
+	const fk = `${Math.round(t * 60)}`;
 	const poly: P2[] = [strip.screen(TB.x0 - S.x0, 0, -2), strip.screen(TB.x1 - S.x0, 0, -2), strip.screen(TB.x1 - S.x0, S.depth, -2), strip.screen(TB.x0 - S.x0, S.depth, -2)];
-	const deskOn = c.th > 1.0 && c.z < 4;
+	const deskOn = c.th > 1.0 && c.z < 4, R = restorers(t, deskOn);
 	body.draw(fk, (g) => { if (!deskOn) return; g.save(); g.beginPath(); g.rect(-50, -50, W + 100, H + 100); g.moveTo(poly[0][0], poly[0][1]); for (const q of poly.slice(1)) g.lineTo(q[0], q[1]); g.closePath(); g.clip('evenodd');
 		const s1 = R.figs[0], k = s1.h / 560; g.fillStyle = '#15100C'; g.fillRect(s1.x - 70 * k, s1.ground - 196 * k, 150 * k, 14 * k); g.fillRect(s1.x - 60 * k, s1.ground - 184 * k, 11 * k, 184 * k); g.fillRect(s1.x + 54 * k, s1.ground - 184 * k, 11 * k, 184 * k);
 		for (const f of R.figs) drawFig(g, f); g.restore(); });

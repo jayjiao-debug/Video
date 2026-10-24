@@ -141,7 +141,7 @@ type EraSet = {crest: Crest; cast: Cast; prop: Live; glow: Live; arms?: Live; cr
 const ERAS: EraSet[] = [];
 let OFF_UA: Record<string, P> = {}, OFF_BUNDLE: P = [0, 0];
 /** today's light, the daybreak camera both matched stages share (b67.5 → b68.5) */
-const CAM_DB: [number, number, number] = [280, 660, 1.0];
+const CAM_DB: [number, number, number] = [200, 660, 1.0];
 // the standing crowd on the bridge (1923: gowns, Qing caps; after the daybreak: today's visitors) — same places, same sizes
 const CROWD = [{x: -170, h: 410}, {x: 70, h: 398}, {x: 300, h: 425}, {x: 342, h: 262, child: true}, {x: 560, h: 404}, {x: 790, h: 412}, {x: 1030, h: 420}];
 const L1923: LookQ[] = [{head: 'qingcap', dress: 'robe', sleeves: 'narrow', surcoat: true}, {head: 'guapi', dress: 'gown', sleeves: 'narrow'}, {head: 'qingcap', dress: 'robe', sleeves: 'narrow', beard: 'moustache'},
@@ -203,7 +203,7 @@ const clothBundle = (g: CanvasRenderingContext2D, c: P, r: number) => {
 };
 /** walk parameter and x of the carrier in era e at t (1923 quickens his step after b67) */
 const eraWalk = (e: number, t: number, lk: LookQ) => {
-	const extra = e === 3 ? quicken(t, b(67), 0.6, 0.3) : 0, u = (t - eraT0(e) + 0.25 + extra) / (2 * BEAT);
+	const extra = e === 3 ? quicken(t, b(67), 0.75, 0.3) : 0, u = (t - eraT0(e) + 0.25 + extra) / (2 * BEAT);
 	const x0 = e === 0 ? 1150 : e === 3 ? 760 : 700;
 	return {u, x: x0 + u * gaitStride('08_04', stepFor(lk)) * FH};
 };
@@ -211,7 +211,7 @@ type EraPose = {figs: FigOpts[]; glowC: P; target: P; draw: (g: CanvasRenderingC
 const eraPose = (e: number, t: number): EraPose => {
 	if (e === 0) {
 		const lk = LK.song, {u, x} = eraWalk(0, t, lk), o: FigOpts = {x, ground: deck(x), h: FH, pose: walkFor(lk, u), look: lk};
-		const hand = toScreen(o, [-0.03, 0.42]), ax = x - 0.92 * FH, cg = cartGeo(ax, deck(ax), [hand[0] - 2, hand[1] + 2], FH);
+		const hand = toScreen(o, [-0.02, 0.54]), ax = x - 0.92 * FH, cg = cartGeo(ax, deck(ax), [hand[0] - 2, hand[1] + 2], FH);
 		const f = rig(o, [{side: 'R', target: [hand[0] - 2, hand[1] + 2], name: 'shaft'}, {side: 'L', target: [hand[0] - 9, hand[1] + 4], name: 'shaft'}], deck, 'E4 宋 puller');
 		const you: [P, P] = [cg.bed(-0.2, 0.085), cg.bed(0.2, 0.095)], c = P2(you[0], you[1], 0.5);
 		return {figs: [f], glowC: c, target: c, draw: (g) => { cartBack(g, cg, FH); drawFig(g, f); }, front: (g) => { drawRoll(g, you[0], you[1], 0.03 * FH, 1); cartFront(g, cg, FH); }};
@@ -273,7 +273,7 @@ const bootToday = async () => {
 /** the gate wall in cross-section, its passage-side jamb at x = edge (screen px); side 'R' = the wall lies left of the edge */
 const masonry = (g: CanvasRenderingContext2D, x0: number, x1: number) => {
 	if (x1 <= x0) return;
-	const gr = g.createLinearGradient(x0, 0, x1, 0); gr.addColorStop(0, '#6e3a2c'); gr.addColorStop(0.5, '#7a4230'); gr.addColorStop(1, '#6a3629');
+	const gr = g.createLinearGradient(x0, 0, x1, 0); gr.addColorStop(0, '#644036'); gr.addColorStop(0.5, '#6e4638'); gr.addColorStop(1, '#5f3c33');
 	g.fillStyle = gr; g.fillRect(x0, -20, x1 - x0, 1120);
 	g.fillStyle = 'rgba(40,18,12,0.35)'; for (let y = 18; y < 1080; y += 38) g.fillRect(x0, y, x1 - x0, 3);
 	for (let r = 0; r < 29; r++) for (let x = x0 + ((r % 2) * 46) - 92; x < x1; x += 92) if (x > x0) g.fillRect(x, 21 + r * 38, 3, 35);
@@ -357,7 +357,7 @@ const bootHall = async () => {
 };
 /** spot i's light level at t (the rows go out right → left on b72.0 → b72.25); 'out' after; 36 keeps them off */
 const spotLevel = (i: number, t: number) => { const at = b(72) + (5 - i) * 0.09; return t < at ? 1 : t < at + 0.05 ? (Math.round((t - at) * 120) % 2 ? 0.4 : 0.7) : 0; };
-type HallMode = {t: number; spots: (i: number) => number; you: number; card: number; crowd: FigOpts[]; wallK: number; staff?: {A: FigOpts; B: FigOpts; clipY: number}; rollers?: {xl: number; xr: number; lift: number; r: number}; box?: {lid: number; roll: number}};
+type HallMode = {t: number; spots: (i: number) => number; you: number; card: number; crowd: FigOpts[]; wallK: number; staff?: {A: FigOpts; B: FigOpts; clipY: number; clipArms?: boolean}; rollers?: {xl: number; xr: number; lift: number; r: number}; box?: {lid: number; roll: number}};
 const drawHall = (m: HallMode) => {
 	const lv = FIX.map((_, i) => m.spots(i)), key = lv.map((v) => v.toFixed(2)).join(',');
 	hallCeil.drawW(key, (g) => { g.fillStyle = '#1a1d21'; g.fillRect(-1100, -660, 4200, 716); g.fillStyle = '#23272b'; g.fillRect(-1100, 50, 4200, 8);
@@ -377,7 +377,8 @@ const drawHall = (m: HallMode) => {
 	if (m.box) hallBox.drawW(`${m.box.lid.toFixed(3)}:${m.box.roll.toFixed(2)}`, (g) => storageBox(g, m.box!.lid, m.box!.roll));
 	hallStaff.L.mesh.visible = !!m.staff;
 	const fk = k30(m.t);
-	if (m.staff) { const s = m.staff; hallStaff.drawW(`${fk}:${s.A.x.toFixed(1)}`, (g) => { g.save(); g.beginPath(); g.rect(-2000, -2000, 6000, 2000 + s.clipY); g.clip(); drawFig(g, s.A); drawFig(g, s.B); g.restore(); fillD(g, armPaths(s.A)); fillD(g, armPaths(s.B)); }); }
+	if (m.staff) { const s = m.staff; hallStaff.drawW(`${fk}:${s.A.x.toFixed(1)}`, (g) => { g.save(); g.beginPath(); g.rect(-2000, -2000, 6000, 2000 + s.clipY); g.clip(); drawFig(g, s.A); drawFig(g, s.B); if (s.clipArms) { fillD(g, armPaths(s.A)); fillD(g, armPaths(s.B)); } g.restore();
+		if (!s.clipArms) { fillD(g, armPaths(s.A)); fillD(g, armPaths(s.B)); } }); }   // arms that reach into the case pass over its top; any others stay behind it
 	hallCrowd.draw(fk + ':' + m.crowd.length, m.crowd);
 	const inBox = !!m.box && m.box.roll >= 0, yc: P = rl ? [(rl.xl + rl.xr) / 2, 580 - rl.lift] : inBox ? [BOX35.x0 + BOX35.w / 2, BOX35.top - 4] : [960, 580];
 	const yc0: P = m.box ? [BOX35.x0 + BOX35.w / 2, BOX35.top - 4] : rl ? [(rl.xl + rl.xr) / 2, 580 - rl.lift] : [960, 580];
@@ -470,10 +471,10 @@ const layLid = (t: number) => {
 	return {A, B, lid, roll};
 };
 addScene({id: '35c', a: b(72.75), z: b(73), draw: (t) => {
-	const zm = Math.exp(lerp(Math.log(1.7), Math.log(3.1), easeIn(clamp01((t - (b(72.75) + 0.1)) / (b(73) - b(72.75) - 0.1)))));
-	lockCam(hallSt, zm, BOX35.x0 + BOX35.w / 2, BOX35.top + 6, HZ.box, 960, lerp(640, 600, clamp01((zm - 1.7) / 1.4)));
+	const zm = Math.exp(lerp(Math.log(1.7), Math.log(4.2), easeIn(clamp01((t - (b(72.75) + 0.1)) / (b(73) - b(72.75) - 0.1)))));
+	lockCam(hallSt, zm, BOX35.x0 + BOX35.w / 2, BOX35.top + 6, HZ.box, 960, lerp(640, 590, clamp01((zm - 1.7) / 2.5)));
 	const L = layLid(t);
-	drawHall({t, spots: () => 0, you: 1, card: 0, crowd: [], wallK: 0.84, staff: {A: L.A, B: L.B, clipY: CASE.top}, box: {lid: L.lid, roll: L.roll}});
+	drawHall({t, spots: () => 0, you: 1, card: 0, crowd: [], wallK: 0.84, staff: {A: L.A, B: L.B, clipY: CASE.top, clipArms: true}, box: {lid: L.lid, roll: L.roll}});
 	return {st: hallSt, grade: {vig: 0.42, exposure: 1}, bloom: 1};
 }});
 // 35d (b73 → b74): the storage aisle (#3E454A): a wall of shelved boxes face-on, yours glowing faintly at its seams on the
@@ -563,7 +564,7 @@ const bootExt = async () => {
 		fg.fillStyle = gr; fg.fillRect(x0, y0, w, h); fg.fillStyle = '#23282d'; fg.fillRect(960 - 40, PCY - 10, 80, 20); fg.fillStyle = '#2a2f34'; fg.fillRect(960 - 42, PCY + 10, 84, 26); fg.fillStyle = '#9a9488'; fg.fillRect(960 - 8, PCY - 5, 16, 6); }
 	pass.add('far', canvasTex(farCv), 960, 540, 1920, 1080, 0, {});
 	[250, 480, 700, 900, 1060, 1180, 1250].forEach((z, i, RZ) => { const c = mkCanvas(960, 540), g = c.getContext('2d')!, s2 = D / (D - z), hw = PH * s2 / 2, hh = PV * s2 / 2, cy = 540 / 2 + (PCY - 540) * s2 / 2, k = i / (RZ.length - 1);
-		const lit = Math.round(lerp(150, 62, k)); g.fillStyle = `rgb(${lit},${Math.round(lit * 0.8)},${Math.round(lit * 0.64)})`; g.fillRect(0, 0, 960, 540);
+		const lit = Math.round(lerp(104, 50, k)); g.fillStyle = `rgb(${lit},${Math.round(lit * 0.8)},${Math.round(lit * 0.64)})`; g.fillRect(0, 0, 960, 540);
 		g.strokeStyle = `rgba(30,18,10,${0.25 + 0.2 * k})`; g.lineWidth = 1.5; for (let y = 6; y < 540; y += 14 * s2 / 2 + 6) { g.beginPath(); g.moveTo(0, y); g.lineTo(960, y); g.stroke(); }
 		g.globalCompositeOperation = 'destination-out'; g.beginPath(); g.moveTo(480 - hw, cy + hh); g.lineTo(480 - hw, cy - hh + hw); g.arc(480, cy - hh + hw, hw, Math.PI, 0); g.lineTo(480 + hw, cy + hh); g.closePath(); g.fill();
 		g.globalCompositeOperation = 'source-over'; pass.add('ring' + i, canvasTex(c), 960, 540, 1920, 1080, z, {}); });
@@ -573,7 +574,7 @@ const Q_LINE = (LINES.find((l) => l[2].startsWith('要是排')) ?? [174.657, 184
 const SOURCES = '资料：故宫博物院 · 余辉（故宫博物院院刊 2012；光明日报 2017）· 朱鸿文（光明日报 2026）· 王文锋（长春日报 2020）· 许忠陵《清明上河图装裱记》· 北京晚报 2015';
 const endHud = (t: number) => (hud: HTMLElement) => {
 	const o = smooth(clamp01((t - b(76)) / 0.5)), n = [...Q_LINE].filter((c) => c !== '[' && c !== ']').length, qT = clamp01((t - b(76.5)) / 0.4) * n + (t >= b(76.5) ? 1 : 0);
-	endCard(hud, o, Q_LINE, SOURCES, t < b(76.5) ? 0 : Math.floor(qT + 1e-6), smooth(clamp01((t - b(78)) / 0.3)), smooth(clamp01((t - b(78.5)) / 0.3)));
+	endCard(hud, o, t < b(76.5) ? '' : Q_LINE, SOURCES, t < b(76.5) ? 0 : Math.floor(qT + 1e-6), smooth(clamp01((t - b(78)) / 0.3)), smooth(clamp01((t - b(78.5)) / 0.3)));
 };
 addScene({id: '37', a: b(76), z: 184.3 + 1, draw: (t) => {
 	const dimK = lerp(1, 0.5, smooth(clamp01((t - b(76.2)) / (b(77.6) - b(76.2)))));
