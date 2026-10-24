@@ -1,0 +1,36 @@
+{
+  "would_keep_watching_after_3s": true,
+  "would_keep_watching_after_8s": true,
+  "why": "On its own, line 1 (0-3s, '九百年，人人都想留住你。') reads like an emo love quote. I only know '你' is a thing and not a person because of the picture behind it. Line 2 ('所以，你一直在被带走') is a paradox (everyone wants to keep you, so you keep getting taken), and at 5.75s '你被人偷偷换成了假的' turns it into a heist. By 8s I want to know who swapped it. Then the list of 太监, 末代皇帝 and 一堆破画 keeps me going until the question at 19.75s. Risk: if the opening shot doesn't clearly show the scroll, the first 3s look like a breakup-caption video and I might swipe before line 2.",
+  "first_moment_I_got_curious": "Line 3, 5.75s, '你被人偷偷[换成了假的]'. Line 2 at 3.0s raised the question and this line made it concrete.",
+  "where_I_would_swipe_away": [
+    "MOST LIKELY: 69.25s, '陆完被抄家前，把你藏进了朋友家。' From 55.5s on it's one owner per line, 3.25s each. The 权贵 (62.25) has no name, the 文人 (65.75) has no name, and then 陆完 shows up out of nowhere. I can't tell if 陆完 is that 文人, and I don't know why he got 抄家. It's the fourth handoff in a row with nothing paid off, so it feels like a list. If I make it to 冯保 at 79.25 I'll stay, because '偷你的倒题了字' rewards me.",
+    "Second risk: 23.25-26.25s. Three seconds with no text right after the hook question. If the landscape shot isn't doing something, my thumb moves.",
+    "Small dip at 30.5s, '北宋末年，你在汴京被画了出来'. It sounds like a textbook starting. It recovers fast at 37.5s, '你身上，没有画家的名字', which is a mini-mystery."
+  ],
+  "lines_I_did_not_understand": [
+    "#1 (0.0s) '人人都想留住你': for 3s I didn't know who 你 is. I worked it out at line 4 (太监) or from the visuals. Fine if the painting is on screen from frame 1.",
+    "#9 (26.25s) '四次出宫，五次进宫': I read the numbers and didn't keep them. I never checked them against the story later. It works as a promise, not as information.",
+    "#11 (40.5s) '在你身后写下': it took me a beat to read 身后 as the end of the scroll, not 'behind your back'. Minor.",
+    "#18-19 (65.75s / 69.25s) '后来买下你的文人' then '陆完': had to reread. Is 陆完 the 文人? Who is he? Why was he 抄家? The weakest link in the chain.",
+    "#24 (86.0s) '清朝，主人家被抄': which 主人家? I let it go, but it's vague.",
+    "#27 (95.75s) '四卷清明上河图出了宫': reread it. Four? I thought there was one painting. The first time the painting is named in text, it's plural. The confusion is productive, though: I wanted to know which one was real, and 120.75-124.0 answers it.",
+    "#33 (117.25s) '翻出好几卷“你”': CLEAR. Because '四卷' and '两卷都写着张择端' came 20s earlier, the quote marks read as 'so-called you, copies claiming to be you'. Even if I miss the small quote marks on a phone, '好几卷你' reads strange for only a second, and the next line ('标着真迹的两卷，都是仿的', 120.75s) settles it within 3.5s. No reread needed. If anything I'd change, it's making sure the quote marks are big enough in the font to see.",
+    "#36-37 (131.75s / 134.75s) '揭掉了一头[假驴]' / '明朝人把草棚看成了[驴耳朵]': had to reread both. I can work out that someone in the Ming saw a shed as donkey ears and painted in a donkey, which got peeled off in 1973. But the line never says anyone painted it in ('补画' is missing), so '看成了' and '揭掉' don't connect on first read. Fun fact, and the most confusing 7s in the video.",
+    "#42 (157.0s) '展一次静养三年以上': compressed. I got 'after each showing it rests 3+ years' only on a second glance."
+  ],
+  "too_fast": [
+    "55.5-92.5s: 11 lines at about 3.25s each, almost every one a new owner or dynasty. Each line is readable alone, but together I can't hold the chain.",
+    "131.75-138.25s: the donkey pair. 3s each isn't enough when the reader has to fill in the missing step.",
+    "34.0s '你进了北宋皇宫，靖康后流入金国': two events in 3.5s. OK, but tight."
+  ],
+  "takeaway_in_my_words": "Everyone who loved 清明上河图 stole it, swapped it, hid it or confiscated it, and four dynasties of palaces still couldn't keep it. It only stopped moving once it belonged to nobody. Now it has to rest 3+ years between showings, which is why the line is 5 hours long.",
+  "the_point_in_one_sentence": "Everyone wanted to own it, so it kept getting taken. Only when it belonged to no one was it safe, and that safety (3+ years of rest per showing) is why it's so hard to see.",
+  "surprise_that_stuck": "'画你的人没留名，偷你的倒题了字' (82.5s): the painter left no name but the eunuch who stole it signed it. Close second: the two scrolls labeled 真迹 were fakes, and the real one was in the junk pile (124.0s). That pays off the hook's '躺在一堆破画里' and felt great.",
+  "ending_landed": "Yes, mostly. '藏者宜宝之——人人都很珍惜你：偷你、换你、藏你、抄你' (138.25-146.0s) is the best moment in the video, and I'd screenshot it. The callback works because the red 珍惜 matches the 47.5s line. '直到你不再属于任何一个人，你才终于，不再被谁带走' mirrors the opening and hits. The drop to '安全的代价：展一次静养三年以上' is a slight tonal bump from poetic to practical, but it does answer the hook question. One catch: the 900-year theft story is not really why it's hard to see today; conservation is. The '所以' leans on the emotional link more than on logic. I accepted it while watching. The donkey detour just before the ending dilutes the build-up a little.",
+  "final_question_check": "'要是排五小时看两分钟，你去吗？' Here 你 switches from the painting to me. It was clear right away because of the queue context, and the switch actually feels like a nice turn: after 2:45 of 'you' meaning the painting, now it means me.",
+  "title_I_would_click": "2) 谁偷走过清明上河图. 'Who stole it' plus an emperor and a eunuch is heist bait, and the first 15s deliver exactly that. 3) 清明上河图，为什么难见 matches the video's spine best (hook question and ending) but reads like an explainer, so I'd scroll past it. 1) 假如你是清明上河图 does explain the second-person 你, which helps the first 3s, but it reads like a role-play or 'what if you were X' template and feels generic.",
+  "title_that_misleads": "Mildly #2: '谁' promises one culprit and a whodunit. The answer is 'everyone', and the payoff is about conservation, not catching a thief. Not a bait-and-switch, but expectations shift. #1 could make me expect a skit or role-play.",
+  "what_I_would_comment": "去。它被偷来偷去九百年才轮到所有人能看，我排五个小时算什么。（另外那头驴到底是谁画上去的）",
+  "for_frames_only": []
+}

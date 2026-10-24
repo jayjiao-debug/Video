@@ -1,0 +1,145 @@
+{
+  "label": "gate2a_r2",
+  "viewer": "20-year-old in China, Douyin in the evening, phone held landscape, full screen. About 5s per frame, as if I had just landed on it. Second look at the revised versions of the same six frames.",
+  "material_seen": "Six revised still frames only (lookA/B/C, hook and key for each). No audio, motion, titles or plan. All text is placeholder.",
+
+  "would_keep_watching_after_3s": true,
+  "why": "The hook line 你被人偷偷换成了假的 still makes me stop. Now all three hooks show a real (warm) and fake (grey) scroll together, so I get 'you = the painting' in about 1 second. In the first round only A and B did this. The new top-right label 元·宫中 adds a kick: it was in the PALACE and someone still swapped it?",
+
+  "first_moment_I_got_curious": "Hook frames, top-right '元·宫中'. Stolen from inside the palace is a bigger deal than just 'Yuan Dadu'. Then the key frames' '你约240岁' confirms the painting is the narrator's 'you'.",
+
+  "where_I_would_swipe_away": [
+    "lookB_key: no longer because of clutter (that's fixed). Now it's the opposite: the middle of the frame is a lot of empty parchment, and the two small, polite line-drawn men don't feel like a shady deal. If the whole video is this calm, I'd drift off.",
+    "lookC (both): the red box is less harsh now (cloud pattern instead of diamonds), but 3 minutes inside a dark red box with a tilted frame would still feel heavy."
+  ],
+
+  "lines_I_did_not_understand": [
+    "Key frames, top-right '元·至正年间': I don't know when 至正 is. The old '1352年' was a number I could instantly place. And the key frames no longer say 元大都, so I've lost that it's Beijing.",
+    "Key frames, '杨准：1351年买下你的文人' vs the subtitle '转手卖给了一位权贵': so who bought me, the 权贵 or 杨准? Is 杨准 the 权贵? (The label calls him 文人, so probably not.) And did the swap happen before or after 1351? The frame introduces a third person who isn't on screen, so for a second I'm unsure who is who. It's still better than 'r1 杨准跋', because now at least I know 杨准 is a person.",
+    "'裱画匠以假换真（杨准记）': clear now. 裱画匠 is easier than 装裱匠, and 以假换真 is plain language. Note that the 相传 is gone, so it now reads as a recorded fact rather than a legend."
+  ],
+
+  "takeaway_in_my_words": "Sometime in the Yuan dynasty, while 清明上河图 was in the palace, the craftsman remounting it swapped in a fake and sold the real one to a powerful official. A scholar named 杨准 wrote this down and later bought the painting himself (1351). The video tells it as if I am the painting, now about 240 years old.",
+
+  "surprise_that_stuck": "It was taken from the palace by the person trusted to repair it, an inside job. That '宫中' label does more work than any other new element.",
+
+  "title_I_would_click": "No titles were provided, so this doesn't apply.",
+  "title_that_misleads": "N/A.",
+
+  "what_I_would_comment": "'修画的师傅监守自盗，太真实了' / '所以现在故宫那幅是真的吗？' The 二百五 joke is gone now that it says 240. Nobody will spam it, and that's good.",
+
+  "for_frames_only": [
+    {
+      "frame": "lookA_hook.png",
+      "what_this_says_in_5s": "Night room, round window with a white stupa at dusk. A man leans over the table and lays his hand on the warm, glowing scroll; the grey copy sits right next to it. He is caught in the act of choosing the real one.",
+      "eye_went_first": "Subtitle (white + red), then the man's hand touching the warm scroll, then the grey copy.",
+      "text_read": {
+        "subtitle": "你被人偷偷换成了假的，: very readable, same as r1.",
+        "top_right": "Juno · VIBE知识大赏 with a red diamond is now readable (r1 was unreadable). 元·宫中 is big and readable.",
+        "bottom_left_counter": "None."
+      },
+      "keep_or_swipe": "Keep. Stronger than r1.",
+      "confusing_or_off_putting": "The man's arm is very long and thin, and his body angles awkwardly from the window to the table, so the pose looks a bit stretched. The grey scroll is cut off at the right edge, which is fine. The room looks like a study, not obviously 宫中, but I don't mind."
+    },
+    {
+      "frame": "lookA_key.png",
+      "what_this_says_in_5s": "Two silhouettes on a lantern-lit bridge at dusk hold open a scroll between them. It's clearly 清明上河图 (I can see the rainbow bridge in it). The handoff is happening.",
+      "eye_went_first": "The open, glowing painting in the center. It's bigger now and I can actually see what it is. Then the subtitle, then 240.",
+      "text_read": {
+        "subtitle": "裱画匠用一幅假画换走了你，转手卖给了一位权贵。: clean and fully readable. The half-faded 官。 glitch from r1 is gone.",
+        "top_right": "元·至正年间 is readable. 裱画匠以假换真（杨准记） is readable. 杨准：1351年买下你的文人 is smaller and lighter but readable. All better than r1's unreadable dimensions line.",
+        "bottom_left_counter": "元 你约240岁: very readable."
+      },
+      "keep_or_swipe": "Keep. Still the frame I'd screenshot.",
+      "confusing_or_off_putting": "The left figure's hair reads like a bob or helmet haircut, slightly odd. A deal on a public bridge still feels posed. The label introduces 杨准 (not in the scene) while the subtitle talks about a 权贵, which is a small 'who is who' moment."
+    },
+    {
+      "frame": "lookB_hook.png",
+      "what_this_says_in_5s": "Inside 清明上河图: the bridge, crowds and boat on aged paper. A roller splits it into a colour half and a grey half with fewer people. Real vs copy.",
+      "eye_went_first": "The big arched bridge, then the roller split, then the subtitle.",
+      "text_read": {
+        "subtitle": "你被人偷偷换成了假的，: readable. The linework behind it is faded now, so it's cleaner than r1.",
+        "top_right": "Watermark and 元·宫中 are both readable on the lighter top-right area. In r1 the watermark collided with a tree.",
+        "bottom_left_counter": "None."
+      },
+      "keep_or_swipe": "Keep. Still the single clearest 'real vs fake' image of all six.",
+      "confusing_or_off_putting": "The black bar at the bottom is now a wooden table edge, which looks intentional. I can't read the seal glyphs, but that's fine since it reads as 'collector's seal'. It's still busy with no single focal point, but okay for a hook."
+    },
+    {
+      "frame": "lookB_key.png",
+      "what_this_says_in_5s": "Line-drawn 国风 scene: a craftsman and an official hold an open scroll of 清明上河图 in front of a mountain screen. A few red seals, and a strip of the painting on the right.",
+      "eye_went_first": "Subtitle (top-left) and top-right label first, then the red seals, then the figures. The figures are still not the first thing I see.",
+      "text_read": {
+        "subtitle": "Readable, dark on parchment.",
+        "top_right": "All three lines readable. They sit on plain parchment now, not on roof lines as in r1. The decorative border strip fades out behind 杨准 so it doesn't interfere.",
+        "bottom_left_counter": "元 你约240岁: readable."
+      },
+      "keep_or_swipe": "Would keep for a while. Much less of a museum display board than r1.",
+      "confusing_or_off_putting": "The big empty band of parchment between the subtitle and the figures makes the frame feel under-filled. The figures are small with blank faces and formal posture, with no sneakiness or tension. Now that the painting is open (it was a closed blue roll in r1) I can see what's being handed over, which is good."
+    },
+    {
+      "frame": "lookC_hook.png",
+      "what_this_says_in_5s": "It's like I'm the painting lying in a red box: in the foreground I see the warm scroll and the grey scroll side by side, and a silhouetted man looms over me from the opening. The POV finally makes sense: 'you' are being looked down at by the thief.",
+      "eye_went_first": "The man's gold-rimmed face, then the two scrolls at the bottom, then the subtitle.",
+      "text_read": {
+        "subtitle": "Readable. 你被人偷偷 crosses from the red wall into the dark frame but is still fine.",
+        "top_right": "Watermark and 元·宫中 are readable, white on dark red.",
+        "bottom_left_counter": "None."
+      },
+      "keep_or_swipe": "Keep. Biggest improvement of all six. In r1 there was one ambiguous grey scroll; now the frame proves the swap and the POV idea lands.",
+      "confusing_or_off_putting": "The man has no visible hands or action; he just looms, which feels a bit horror-movie. The scrolls at the bottom are steeply skewed and cut off, so it takes a beat to see they're two different scrolls. The red is still heavy, but the cloud pattern is much less 'hotel carpet' than the r1 diamonds."
+    },
+    {
+      "frame": "lookC_key.png",
+      "what_this_says_in_5s": "Tilted frame, two silhouettes facing each other with a glowing lantern between them, and the real scroll lying in the foreground. A secret deal at night.",
+      "eye_went_first": "The lantern between the two faces, then the subtitle, then the scroll at the bottom.",
+      "text_read": {
+        "subtitle": "Readable. Line 2 crosses the dark frame border, but white holds up.",
+        "top_right": "元·至正年间 and 裱画匠以假换真（杨准记） are readable. '杨准：1351年…' runs across the frame border and the official's hat, so the '1351' gets a little lost against the edge line.",
+        "bottom_left_counter": "元 你约240岁: readable."
+      },
+      "keep_or_swipe": "Keep for now. The painting is back in the scene (it was missing in r1), and the lantern gives the deal a focal point.",
+      "confusing_or_off_putting": "The official's hat still has a pointy beak/horn shape from this angle, still a bit cartoon villain. The tilt plus dark red is tense, close to horror. The top-right label block crowds the official's head."
+    }
+  ],
+
+  "per_look": {
+    "A": {
+      "would_watch_3_min": "Yes, still my pick.",
+      "better_vs_r1": "The hook now has action (hand on the real scroll). The key frame is tighter with less empty water, and the painting held up is big enough to recognise as 清明上河图. No queue-like braid. Bottom dead space gone.",
+      "worse_vs_r1": "The man's stretched arm/pose in the hook looks a little awkward. The left figure's bob haircut in the key frame is odd."
+    },
+    "B": {
+      "would_watch_3_min": "Maybe, closer than r1. Now a real second choice.",
+      "better_vs_r1": "The colophon wall of text is gone. The label is no longer printed over roof lines. The scroll in the key frame is open and recognisable. The black bottom bar is now a table edge. The subtitle background is cleaner.",
+      "worse_vs_r1": "The key frame now feels under-filled: lots of blank parchment and small, emotionless figures. Still no tension."
+    },
+    "C": {
+      "would_watch_3_min": "Not yet, but it's the most improved.",
+      "better_vs_r1": "Both frames now include the scroll(s). The hook shows real and fake together, and the 'you are the painting in the box' POV is understandable. The lantern gives the key frame a focus. The cloud pattern is less carpet-like.",
+      "worse_vs_r1": "Same heaviness overall. The beak-like hat is still there. In the key frame the top-right label now overlaps the frame edge and hat."
+    }
+  },
+
+  "preferred_look_for_3_minutes": "A",
+  "why_preferred": "Every A frame now has one clear focal point AND shows the painting large enough to recognise, and the text is effortless to read. It still feels like a short film. B is now a fair runner-up if you want a 国风 museum feel. C has the cleverest idea (POV from inside the box) but I wouldn't want to stay inside that red box for 3 minutes.",
+
+  "changes_vs_r1_summary": {
+    "better": [
+      "Watermark 'Juno · VIBE知识大赏' with a red diamond is readable in all six (unreadable in r1).",
+      "Dimensions line removed. The sub-label now explains who 杨准 is instead of '杨准跋'.",
+      "250 changed to 240, so the 二百五 joke is gone.",
+      "The faded '官。' glitch is gone. 权贵 reads more naturally than 贵官. 裱画匠 / 以假换真 are plainer words.",
+      "All three hooks now show real + fake together; in r1, C had only one scroll.",
+      "All three key frames now show the open painting being handed over; in r1, C had none and B had a closed roll.",
+      "B key decluttered (colophon text removed, fewer seals, label on clean background)."
+    ],
+    "worse_or_new_issues": [
+      "'元·至正年间' is less clear than '1352年' to me. I can't place 至正, and the key frames lost '元大都'.",
+      "The '杨准：1351年买下你的文人' line next to '卖给了一位权贵' makes me ask who bought me, and when. It's a third person who isn't in the scene.",
+      "'相传' is dropped, so the story now reads as a recorded fact.",
+      "B key is now under-filled. C key's label crowds the frame edge and the official's hat.",
+      "A hook's reaching arm is a bit stretched."
+    ]
+  }
+}

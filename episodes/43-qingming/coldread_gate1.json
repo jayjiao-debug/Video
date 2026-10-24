@@ -1,0 +1,72 @@
+{
+  "label": "gate1",
+  "read_scope": "Only lines.json (51 subtitle entries, numbered #1-#51 in order). No frames, no other files.",
+
+  "would_keep_watching_after_3s": true,
+  "why": "#1 + #2 is a paradox ('人人都想留住你' -> '所以你一直在被带走'), and the 'so' makes no sense yet, so I want to see where it goes. Caveat: on their own those two lines read like a 情感语录 / breakup quote. If the background is generic scenery and not the scroll, I might take it for an emo-quote video and swipe at 3s.",
+
+  "after_first_8s": {
+    "keep_watching": true,
+    "why": "By 8s I've seen #3 '你被人偷偷[换成了假的]', which turns the emo-sounding opening into a heist. #4-#6 then fire three more teasers 2.5s apart (太监, 末代皇帝, 破画堆). That's three open loops, and I'd stay to get them paid off. The weak point is that I still don't officially know who '你' is. The words 清明上河图 don't appear on screen until #30 (99.5s). I'd only work it out from the visuals or the title, or at #15 (张择端, 47s) at the latest. If the title says 清明上河图, this problem disappears."
+  },
+
+  "first_moment_I_got_curious": "#3 (6.0s) '换成了假的'. The second spike is #30 (99.5s) '一个月内，四卷清明上河图出了宫': wait, FOUR?",
+
+  "most_likely_swipe_line": "#26 (85.75s) '他还在你身后，写了一段[题跋]。'",
+  "most_likely_swipe_why": "The 太监 in #4 was one of the hooks I was waiting for. When he finally shows up (#25 冯保), he just 'took you out of the palace' and 'wrote a 题跋'. He didn't steal it and nothing happens, so it's an anticlimax. It also lands in the middle of a run of six names in about 28s (杨准 #21, 陆完 #22, 严嵩 #24, 冯保 #25, 毕沅 #27, 嘉庆 #28). That's the point where I realize it's a chronological list. The only thing keeping me is that 溥仪 (#5) and the 破画堆 (#6) haven't been paid off yet.",
+
+  "where_I_would_swipe_away": [
+    "#26 (85.75s): the 太监 payoff is just 'wrote a postscript', inside a list of unfamiliar names. Most likely exit.",
+    "23.25s-26.25s: 3 seconds with no text right after the question in #8 '你，为什么这么难见？'. With no voice, an empty screen after a question feels like the video stalled. Fine if the music or visual hits hard there, risky if not.",
+    "#22-#24 (72-82s): 陆完 hides you at a friend's house, then suddenly 严嵩 falls and you're seized into the palace. I lose the thread, and confusion makes me swipe.",
+    "#41-#43 (138-149s): the mystery was solved at #38 ('才是你'), so emotionally the story is over. The donkey and the '一百卷' line feel like an epilogue, and some people will leave here before the real ending."
+  ],
+
+  "lines_I_did_not_understand": [
+    "#1-#2: who is '你'? First I thought it meant me, then I thought it was a relationship quote. Only the visuals or the title fix this.",
+    "#9 '四次出宫，五次进宫': I tried to count along and lost track by the Ming section. At the end I couldn't tell you which exit was which, so the number didn't really pay off for me. An on-screen counter (出1/进2...) would help.",
+    "#20 '卖给了一个[权贵]': which powerful person? It's vague right after a very specific story.",
+    "#21 '文人[杨准]后来买下你，记下了调包': new name plus new fact in 3.5s. I had to reread it to see that he's the one who documented the swap.",
+    "#23 -> #24: how did 严嵩 get it if 陆完 hid it at a friend's house? There's a missing link. The friend's-house detail sets something up and never pays it off.",
+    "#25 '太监冯保带你出了宫': stolen? Given as a gift? Borrowed? 'Took you out' is too soft after the teaser in #4.",
+    "#28 '盖了[五方大印]': so what? Is this an honor or damage? There's no reaction to it.",
+    "#30-#31 '四卷…其中两卷，都写着张择端': I reread this. #13-#15 told me the real one has no painter's name on the painting itself but has 张择端 written by 张著 at the back. So does the real one count as 'written 张择端' or not? I only realized afterward that the setup in #13 ('没有画家的名字') is supposed to pay off here, against the fakes that bear the name. '标着真迹' (#37) and '写着张择端' (#31) are worded differently, so I didn't connect them.",
+    "#36 '三卷': four left the palace in #30 and three were found. Where's the fourth? It's left hanging.",
+    "#41-#42 the donkey: I had to read these twice. A Ming restorer misread a 草棚 as donkey ears and painted a whole donkey, and in 1973 it got peeled off? Funny, but I only get it if the frame shows the before/after.",
+    "#43 '世上约有[一百卷]': interesting, but why here? It isn't linked to anything. Is it because everyone copied you because everyone wanted you? The video doesn't say.",
+    "#49 '代价是：展一次，要静养三年': 'cost' of what? Belonging to nobody doesn't cause the fragility. The silk is just 900 years old. The logic jump felt forced, though emotionally it still works.",
+    "#51 '看你两分钟，你去吗？': two '你' in one line. The first is the painting, the second is me. I parsed it on the second read. Minor, and it might even be intentional."
+  ],
+
+  "lines_that_went_by_too_fast": [
+    "#30 + #31 (99.5-107s): the biggest twist in the video (there were FOUR scrolls, two claiming 张择端) gets 7.5s total at normal pace. It needs a beat or a pause after #30.",
+    "#41 + #42 (138.75-145.75s): a two-step visual gag (painted-on donkey <- mistaken donkey ears) at 3.5s each. Too fast unless the frame does the work.",
+    "#21 (68.75s): 14 characters, an unfamiliar name, and the idea that the swap was recorded, all in 3.5s.",
+    "#36 (120.75s): '专家杨仁恺翻出了三卷清明上河图' is 15 characters with a name I don't know, in 4s. OK to read, but I miss that it's 3 and not 4.",
+    "The general issue isn't raw speed (most lines are about 4 characters per second). It's that 72-96s introduces a new person and a new event every 3.5s."
+  ],
+
+  "takeaway_in_my_words": "For 900 years everyone grabbed 清明上河图: stole it, swapped it for a fake, hid it, confiscated it, and 溥仪 smuggled it out. The real one was finally recognized in a pile of rejects while the 'authentic' ones were fakes. It only stopped moving once it belonged to the 故宫, not to any one person. It's so old that each showing costs it 3+ years of rest, and that's why you queue 5 hours for 2 minutes.",
+
+  "surprise_that_stuck": "#37-#38: the two scrolls labeled as the real thing were both fakes, and the real one was mixed in with the 残次品. That pays off the teaser in #6 ('躺在一堆破画里') and felt great. Runner-up, and the one I'd tell friends about: a Ming restorer painted a whole donkey because he mistook a shed for donkey ears.",
+
+  "video_point_one_sentence": "清明上河图 was taken out of palaces again and again by people who all wanted to own it, and it's only safe now that it belongs to nobody. That safety, plus its age, is why it's so hard to see.",
+
+  "did_the_ending_land": "Mostly yes. #44 '藏者宜宝之——人人都很珍惜你' followed by #45 '偷你、换你、藏你、抄你' is the best moment in the video: the 张著 quote from #16 comes back as irony, and it hit me. #46-#48 close the '留住/带走' loop from #1-#2, and #50 '所以，你才这么难见' closes the question from #8. That structure feels satisfying. What weakens it: (a) the donkey and the 一百卷 detour (#41-#43) changes tone to comedy right before the emotional close and delays it about 10s; (b) #49's '代价是' is a logic stretch; (c) the opening says '四五个小时/一两分钟' and the end says '五小时/两分钟'. I read that as rounding up for punch, not a mistake, but a nitpicker will comment on it.",
+
+  "would_I_answer_final_question": true,
+  "what_I_would_comment": "去。三年才展一次，五小时算什么。所以下次什么时候展？",
+  "comment_alt_I_would_upvote": "只有我想看那头被揭掉的驴吗",
+
+  "titles": {
+    "1_假如你是清明上河图": "Best at telling me who '你' is, and it fits the second-person voice. But '假如你是X' is an overused template. It looks like a 营销号 or a POV skit, and I'd scroll past it.",
+    "2_谁偷走过清明上河图": "The one I'd click. It's a question, it has a crime word (偷), and it names something I know from textbooks. It also tells me what '你' refers to without spelling it out.",
+    "3_清明上河图，四出五进": "Accurate but cryptic. '四出五进' sounds like 四合院 layout or a score until you've watched the video. It reads like a documentary chapter heading. I wouldn't click."
+  },
+  "title_I_would_click": "#2 谁偷走过清明上河图: a question with a theft hook about a painting I already know. The thefts and the fake swap deliver on it early (#3, #19, #29).",
+  "title_that_misleads": "#2, slightly. It promises a whodunit, but the video is a biography plus 'why it's hard to see', and nobody is revealed as THE thief. It's not enough to feel cheated. #1 could mislead people into expecting a 拟人 comedy/emo skit.",
+
+  "for_frames_only": [
+    {"frame": "none provided", "what_this_says_in_5s": "Not assessed. I read only the subtitle lines. Several lines (#1-#2 who '你' is, #41-#42 the donkey) depend on what the frame shows."}
+  ]
+}
