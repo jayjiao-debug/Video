@@ -179,7 +179,7 @@ const Letter: React.FC<{t: number}> = ({t}) => {
 	const back = ease(seg(t, 49.05, 49.9)), sp = signP(t), hand = jointAt(sp, 'RHand', DESK.x, DESK.g, DESK.h);
 	const sig = seg(t, 48.15, 49.0), pan = ease(seg(t, 47.2, 47.9)), hk = ease(seg(t, 47.75, 48.15)) * (1 - ease(seg(t, 49.0, 49.3)));
 	const ch = Math.floor(TYPED.length * seg(t, 44.65, 45.55)), lines = Math.floor(12 * seg(t, 45.3, 47.3));
-	const ps = 0.7, px = 960, py = 640 - 420 * pan;
+	const ps = 0.7, px = 1300, py = 700 - 150 * pan;   // right of the subtitle rows
 	const cx = lerp(960 + 10 * (t - 44.5), 900 + 15 * (t - 49.05), back), cy = lerp(560 - 20 * Math.min(t - 44.5, 2.7), 560, back), z = lerp(1.04, (1.12 + 0.01 * (t - 49.05)) * 1.06, back);
 	const glow = lerp(0.62, 0.32, sm(seg(t, 47.75, 48.6))), nib = sigAt(sig);
 	/* on the desk: the page lies flat, its signature under his pen hand */
@@ -191,7 +191,7 @@ const Letter: React.FC<{t: number}> = ({t}) => {
 				<Win x={1240} y={160} w={360} h={420} id="w1win" sky={<g><rect x={1240} y={160} width={360} height={420} fill="#0e1626" /><Stars n={16} x={1240} y={170} w={360} h={260} seed={21} t={t} /><path d="M1240,520 Q1420,490 1600,510 L1600,580 L1240,580 Z" fill="#1a2a30" /></g>} />
 				<Curtain x={1170} y={150} w={110} h={480} col="#2a201c" /><Curtain x={1560} y={150} w={110} h={480} col="#2a201c" flip />
 				<Shelf x={140} y={300} w={520} kind="books" col="#16120f" tone="#241c16" seed={7} /><Shelf x={140} y={470} w={520} kind="books" col="#16120f" tone="#241c16" seed={8} />
-				<Clock x={980} y={240} r={30} t={t} />
+				<Clock x={1130} y={330} r={30} t={t} />
 				<Glow x={1180} y={600} r={560} c="#ffcf8a" o={0.3} id="w1l" />
 				<Motes t={t} x={700} y={300} w={800} h={500} n={22} o={0.35} />
 				<path d={`M${DESK.x - 10},706 L${DESK.x + 650},706 L${DESK.x + 630},690 L${DESK.x + 10},690 Z`} fill="#4a3826" />
@@ -223,11 +223,16 @@ const Letter: React.FC<{t: number}> = ({t}) => {
 					<path d={Array.from({length: 41}, (_, i) => { const p = sigAt(i / 40 * sig); return `${i ? 'L' : 'M'}${p[0].toFixed(1)},${p[1].toFixed(1)}`; }).join(' ')} stroke="#1a1612" strokeWidth={6} fill="none" strokeLinecap="round" strokeLinejoin="round" opacity={sig > 0 ? 1 : 0} />
 					{/* his hand and pen enter from the lower right; the nib rides the signature */}
 					{hk > 0.01 && <g transform={`translate(${lerp(nib[0] + 420, nib[0], hk)},${lerp(nib[1] + 520, nib[1], hk)})`}>
-						<path d="M150,560 L330,620 L420,330 Q330,250 230,230 Q150,215 110,260 Q70,300 92,360 Z" fill="#191210" />
-						<path d="M60,120 Q36,170 70,214 Q110,250 160,236 L190,200 Q150,150 120,110 Z" fill="#191210" />
-						<path d="M60,120 Q36,170 70,214 Q110,250 160,236" stroke={RIMB} strokeWidth={3} fill="none" opacity={0.5} />
-						<path d="M0,0 L118,150" stroke="#0e0a08" strokeWidth={14} strokeLinecap="round" /><path d="M0,0 L22,28" stroke="#c8b070" strokeWidth={6} strokeLinecap="round" />
-						<path d="M92,120 Q70,92 86,76 Q104,74 116,104 Z" fill="#191210" />
+						{/* sleeve and shirt cuff from the lower right, the back of the hand, index finger along the pen, thumb opposite */}
+						<path d="M150,250 L250,190 L520,620 L380,700 Z" fill="#17110f" />
+						<path d="M150,250 L250,190 L272,226 L172,286 Z" fill="#d8d0c0" opacity={0.85} />
+						<path d="M70,128 Q60,170 96,212 Q140,256 196,236 Q248,214 236,170 Q222,126 176,104 Q120,82 70,128 Z" fill="#1d1512" />
+						<path d="M70,128 Q60,170 96,212 Q140,256 196,236" stroke={RIMB} strokeWidth={3} fill="none" opacity={0.45} />
+						<path d="M0,0 L170,216" stroke="#0e0a08" strokeWidth={13} strokeLinecap="round" /><path d="M0,0 L20,25" stroke="#c8b070" strokeWidth={6} strokeLinecap="round" />
+						<path d="M30,46 Q24,36 34,30 Q44,28 50,38 L104,112 L80,126 Z" fill="#1d1512" stroke="#4a3a32" strokeWidth={2} />
+						<path d="M46,72 Q36,66 40,56 Q50,50 60,58 L120,134 L98,146 Z" fill="#1d1512" stroke="#4a3a32" strokeWidth={2} />
+						<path d="M150,108 Q148,96 158,92 Q168,92 172,102" stroke="#4a3a32" strokeWidth={2} fill="none" />
+						<path d="M110,110 Q120,104 130,112 M140,128 Q150,122 160,130" stroke="#4a3a32" strokeWidth={2} fill="none" opacity={0.8} />
 					</g>}
 				</g>
 			</g>}
@@ -290,7 +295,7 @@ const Hospital: React.FC<{t: number}> = ({t}) => {
 				<rect x={1180} y={170} width={420} height={520} fill="#0a1222" />
 				<rect x={1180} y={170} width={420} height={520} fill="#7a8ea4" opacity={0.42 * pale} />
 				<Stars n={30} x={1190} y={180} w={400} h={380} seed={41} t={tf} o={1 - 0.6 * pale} />
-				<circle cx={1480} cy={300} r={36} fill="#e8e4d6" opacity={0.9} /><Glow x={1480} y={300} r={160} c="#e8eaf4" o={0.25} id="h1m" />
+				<circle cx={1290} cy={400} r={34} fill="#e8e4d6" opacity={0.9} /><Glow x={1290} y={400} r={150} c="#e8eaf4" o={0.25} id="h1m" />
 				<path d="M1180,600 Q1300,570 1400,590 Q1500,600 1600,575 L1600,690 L1180,690 Z" fill="#0c1018" />
 			</g>} />
 			<path d="M1180,690 L1600,690 L1760,1080 L1000,1080 Z" fill="#c8d4e8" opacity={0.05 + 0.04 * pale} />
@@ -325,7 +330,7 @@ const Hospital: React.FC<{t: number}> = ({t}) => {
 /* ================= A1 66.0–69.5: a corridor; the door closes, its lamp goes out; Harvey comes out with you ================= */
 const Door: React.FC<{t: number}> = ({t}) => {
 	const u = t - 66.0, lampOff = t >= 67.0 ? 1 : 0, reopen = ease(seg(t, 67.45, 67.75)), gap = reopen * 0.85;
-	const wx = lerp(980, 1500, seg(t, 67.7, 69.7)), ph = (t - 67.7) * 7.2, wp = walkP(ph, {la: 54, le: 70, ra: 58, re: 66}, 4), wv = t >= 67.7;
+	const wx = lerp(960, 1500, seg(t, 67.55, 69.7)), ph = (t - 67.55) * 7.2, wp = walkP(ph, {la: 54, le: 70, ra: 58, re: 66}, 4), wv = t >= 67.5, wIn = sm(seg(t, 67.5, 67.85));   // he steps out of the lit doorway
 	const hand = jointAt(wp, 'RHand', wx, 930, 620), jar: P2 = [hand[0] + 6, hand[1] - 6];
 	const cx = lerp(930, wx - 80, ease(seg(t, 67.6, 69.4))) + 10 * u, cy = 540, z = lerp(1.18, 1.1, ease(seg(u, 0, 3.5))) * 1.04;
 	const clockA = 36 * 60 * ease(seg(t, 66.6, 67.4));
@@ -352,7 +357,7 @@ const Door: React.FC<{t: number}> = ({t}) => {
 			</g>
 			<path d={`M860,700 L${860 + 220 * gap},700 L${960 + 300 * gap},1100 L760,1100 Z`} fill="#e8f0e0" opacity={0.08 * gap} />
 			<Motes t={t} x={500} y={300} w={1200} h={500} n={22} o={0.3} col="#e0e8e8" />
-			{wv && <g>
+			{wv && <g opacity={wIn}>
 				<Rimmed x={wx} ground={930} h={620} pose={wp} look={LK.harvey} col="#101416" rim="#ffd8c0" rimOp={0.55} rimDx={-2.4} />
 				<Glow x={jar[0]} y={jar[1] - 40} r={220} c={B.halo} o={0.45} id="a1jg" />
 				<g transform={`translate(${jar[0]},${jar[1]})`}><rect x={-34} y={-82} width={68} height={86} rx={12} fill="#cfe2e6" opacity={0.22} stroke="#e8f2f4" strokeWidth={2} strokeOpacity={0.6} /><rect x={-28} y={-94} width={56} height={14} rx={3} fill="#8a8e94" /></g>
@@ -507,8 +512,8 @@ const Scale: React.FC<{t: number}> = ({t}) => {
 				<text x={DIAL[0] + 188} y={DIAL[1] - 10} style={txt(SANS, 30, 900)} fill={INK} stroke="rgba(12,8,5,0.6)" strokeWidth={5} paintOrder="stroke">普通人的范围</text></g>
 			<g opacity={tag}><path d={`M${DIAL[0] - 10},${DIAL[1] - 40} L${DIAL[0] - 150},${DIAL[1] + 150} L${DIAL[0] - 190},${DIAL[1] + 150}`} stroke={ROSE} strokeWidth={2.5} fill="none" />
 				<text x={DIAL[0] - 198} y={DIAL[1] + 160} textAnchor="end" style={txt(SANS, 32, 900)} fill={ROSE} stroke="rgba(12,8,5,0.6)" strokeWidth={5} paintOrder="stroke">约1.2公斤</text></g>
-			<Rimmed x={470} ground={960} h={660} pose={hp} look={LK.harvey} col="#121616" rim={RIMB} rimOp={0.5} />
-			{(() => { const hh = jointAt(hp, 'RHand', 470, 960, 660); return <g transform={`rotate(10 ${hh[0]} ${hh[1]})`}><rect x={hh[0] - 10} y={hh[1] - 74} width={72} height={96} fill="#e8e4d8" />{Array.from({length: 5}, (_, i) => <rect key={i} x={hh[0] - 2} y={hh[1] - 60 + i * 14} width={50} height={3} fill="#8a8274" />)}</g>; })()}
+			<Rimmed x={250} ground={960} h={660} pose={hp} look={LK.harvey} col="#121616" rim={RIMB} rimOp={0.5} />
+			{(() => { const hh = jointAt(hp, 'RHand', 250, 960, 660); return <g transform={`rotate(10 ${hh[0]} ${hh[1]})`}><rect x={hh[0] - 10} y={hh[1] - 74} width={72} height={96} fill="#e8e4d8" />{Array.from({length: 5}, (_, i) => <rect key={i} x={hh[0] - 2} y={hh[1] - 60 + i * 14} width={50} height={3} fill="#8a8274" />)}</g>; })()}
 			<g fill="#0a0c0c"><rect x={-300} y={960} width={2600} height={300} /></g>
 		</Cam>
 	</g>;
