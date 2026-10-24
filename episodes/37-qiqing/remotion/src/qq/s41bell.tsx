@@ -157,8 +157,8 @@ export const LookCam: React.FC<{z: number; L: P2; S: P2; px?: number; py?: numbe
 export const FACE: P2 = [lerp(LIPS[0], FUNNEL[0], 0.5) - 10, lerp(LIPS[1], FUNNEL[1], 0.5) - 18];
 const DIVE: P2 = ltAxis(TX.x, TX.y, TX.s, 0.45, 0);   // inside the horn: the camera dives in along the voice
 /** WireTunnel's copper rings advance 22 spacings per unit u: over the 1.45 s tunnel u 0→1 is ~0.5 spacing a frame, which
-    strobes at 15 Hz; 0.55 keeps them at ~0.28 a frame (smooth), and room B's underlay continues at the same rate */
-const TUN_U = 0.55;
+    strobes at 15 Hz; 0.3 keeps them at ~0.15 a frame (smooth), and room B's underlay continues at the same rate */
+const TUN_U = 0.3;
 /** the whip pan runs along one wall: Bell's room sits left of Watson's, so the pan (W px in all) never shows past a plate.
     Room B travels WHIP_B in its 0.35 s, room A the rest in its 0.3 s: the same speed on both sides of the cut */
 const WHIP_B = Math.round(W * 0.35 / 0.65);

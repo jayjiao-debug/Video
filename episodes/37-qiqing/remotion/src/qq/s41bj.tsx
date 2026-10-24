@@ -210,10 +210,10 @@ const S_EDGE = RUN.find((r) => r[3] === 99)![4], S_END = RUN[RUN.length - 1][4];
 const runAt = (s: number) => { let i = 0; while (i < RUN.length - 2 && RUN[i + 1][4] < s) i++; const a = RUN[i], b = RUN[i + 1], u = cl((s - a[4]) / (b[4] - a[4])); return a.map((q, j) => lerp(q, b[j], u)); };
 
 /* ---- the light's path through the room, the hutong and the sky: [t, x, y, size] in plate/world units ---- */
-const P1R: V2 = [1285, 541], P2R: V2 = [1150, 345], Q0 = ((0.12 / 0.18) ** 2);   // phantom chosen so the light starts from rest on the text
+const P1R: V2 = [1285, 541], P2R: V2 = [1150, 412], Q0 = ((0.12 / 0.18) ** 2);   // phantom chosen so the light starts from rest on the text
 const CH: number[][] = [
 	[9.0, ...r2p(P1R[0] + (P2R[0] - P1R[0]) * Q0, P1R[1] + (P2R[1] - P1R[1]) * Q0), 150],
-	[9.12, ...r2p(...P1R), 150], [9.3, ...r2p(...P2R), 150], [9.44, ...r2p(960, 268), 146], [9.6, ...r2p(640, 330), 128],   // off the screen → over his head → straight in through the window
+	[9.12, ...r2p(...P1R), 150], [9.3, ...r2p(...P2R), 150], [9.44, ...r2p(965, 318), 146], [9.6, ...r2p(640, 352), 128],   // off the screen → over his head → straight in through the window
 	[9.8, 1480, 540, 110], [10.12, 1230, 770, 88], [10.32, 850, 900, 66], [10.52, 700, 760, 50], [10.72, 600, 600, 40],   // down over the roofs, up the lane
 	[10.92, 590, 410, 33], [11.12, 660, 200, 29], [11.34, 840, -30, 27], [11.6, 980, -290, 26], [11.86, 1200, -440, 26],   // over the trees, up into the sky
 	[12.1, 1460, -470, 26], [12.37, 1630, -300, 28], [12.62, 1735, 110, 30], [12.8, 1850, 465, 32], [FL.land, LAND[0], LAND[1], 33],   // over the top, down, skimming the first tower onto the wall
