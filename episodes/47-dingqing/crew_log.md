@@ -10,3 +10,4 @@
 | 2026-10-24 23:01 | brief.md + facts.md (29 rows, own research) | producer | | |
 | 2026-10-24 23:35 | topic → 定情信物「一人一半」; folder 47-dingqing; brief + facts (17 rows) | producer | | |
 | 2026-10-24 23:35 | script v1 + lines.json (45 lines, beat-snapped to bgm2 v2), pace OK (7 % wait) | producer | | |
+| 2026-10-24 23:46 | owner (23:43): going to bed — "get all agents to review, improve, especially animator and logical checkers… give me final video". Unattended from here; agents back on. Title default: #1 (情侣头像这招，古人一千四百年前就用过了) unless the director ranks otherwise. Look: 对折剪纸 (producer's pick; no owner touchpoint tonight). | producer | | |
