@@ -1,8 +1,8 @@
 {
-  "id": "ep44_demo_v2",
-  "composition": "EP44DEMO",
+  "id": "ep45_demo_v1",
+  "composition": "EP45DEMO",
   "start": 0,
-  "end": 1064,
+  "end": 1035,
   "chunks": 8,
-  "output": "ep44_demo_v2"
+  "output": "ep45_demo_v1"
 }
