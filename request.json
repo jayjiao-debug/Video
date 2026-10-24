@@ -1,32 +1,7 @@
 {
- "id": "ep41-chk-02",
- "model_prefs": [
-  "eleven_v4"
- ],
+ "id": "ep41-probe-01",
+ "model_prefs": ["eleven_v4"],
  "items": [
-  {
-   "name": "J1_0.92",
-   "lang": "zh",
-   "url": "https://raw.githubusercontent.com/jayjiao-debug/video/voice-farm/check/ep41_J1_0.92.mp3",
-   "text": "一九八七年，北京。电子邮件，写好了。"
-  },
-  {
-   "name": "J1_0.98",
-   "lang": "zh",
-   "url": "https://raw.githubusercontent.com/jayjiao-debug/video/voice-farm/check/ep41_J1_0.98.mp3",
-   "text": "一九八七年，北京。电子邮件，写好了。"
-  },
-  {
-   "name": "J1_1.04",
-   "lang": "zh",
-   "url": "https://raw.githubusercontent.com/jayjiao-debug/video/voice-farm/check/ep41_J1_1.04.mp3",
-   "text": "一九八七年，北京。电子邮件，写好了。"
-  },
-  {
-   "name": "D1_cut",
-   "lang": "zh",
-   "url": "https://raw.githubusercontent.com/jayjiao-debug/video/voice-farm/check/ep41_D1_cut.mp3",
-   "text": "长安被叛军攻破。"
-  }
+  {"name": "P1", "lang": "zh", "voice_id": "MI36FIkp9wRP7cpWKPTl", "text": "嗯。"}
  ]
 }
