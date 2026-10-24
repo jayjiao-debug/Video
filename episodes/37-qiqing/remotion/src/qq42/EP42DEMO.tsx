@@ -14,7 +14,7 @@ const SUBS: [number, number, string][] = [
 	[15.85, 19.45, '一个人，和自己的灵魂吵了起来。'],
 	[19.82, 24.2, '人人自私贪心，这样活着，[值不值]？'],
 ];
-const LABELS: [number, number, string, string][] = [[0.15, 2.2, '今天', '凌晨 3:07'], [2.6, 6.1, '1938 年起', '哈佛 · 波士顿'], [16.9, 40, '约公元前 1850 年', '古埃及']];
+const LABELS: [number, number, string, string][] = [[0.15, 2.2, '今天', '凌晨 3:07'], [2.6, 6.1, '1938 年起', '哈佛大学 · 美国'], [16.9, 40, '约公元前 1850 年', '古埃及']];
 const fio = (t: number, a: number, b: number, f: number) => Math.max(0, Math.min(1, (t - a) / f, (b - t) / f));
 const Demo: React.FC = () => {
 	const f = useCurrentFrame(), t = f / FPS;

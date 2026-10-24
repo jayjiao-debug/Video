@@ -448,7 +448,7 @@ export const KF09: React.FC = () => {
 		</g>
 		<Glow x={1130} y={540} r={360} c="#fff0d0" o={0.25} id="hvSeamG" />
 		<text x={W - 90} y={150} textAnchor="end" style={{fontFamily: MONO, fontWeight: 700, fontSize: 72}} fill="#f4ead2" stroke="rgba(0,0,0,0.5)" strokeWidth={5} paintOrder="stroke">1938 → 2026</text>
-		<Label date="1938 年起" name="哈佛 · 波士顿" />
+		<Label date="1938 年起" name="哈佛大学 · 美国" />
 		<Subs zh="好的关系，让人更[快乐]、更[健康]。" nat="Good relationships keep us happier and healthier." />
 	</g>;
 };
