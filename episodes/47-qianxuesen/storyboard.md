@@ -1,4 +1,4 @@
-# Storyboard: 假如说你是一块龙骨
+# Storyboard: 一张香烟纸
 
 ## Look
 Palette (hex) · type (fonts, weights) · texture/lighting · motifs · what it must NOT look like · references

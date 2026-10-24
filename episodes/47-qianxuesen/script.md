@@ -1,4 +1,4 @@
-# Script: 假如说你是一块龙骨  (vN)
+# Script: 一张香烟纸  (vN)
 
 **Logline:** · **Takeaway:** · **Length:** ~NN s
 

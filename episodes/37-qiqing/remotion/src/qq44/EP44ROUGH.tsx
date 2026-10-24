@@ -1,0 +1,117 @@
+import React from 'react';
+import {AbsoluteFill, Composition, registerRoot, useCurrentFrame} from 'remotion';
+import {W, H, Grain44} from './kit44';
+import {LINES44F} from './lines44full';
+import {T, seg, sm, ease, ColdBrain, CiderBox, Microscope, Highway, Storage, House, Needle, Meadow, Office} from './demo44';
+import {Story, Punch, Stamp, Seal, Counter, SubRow} from './skin44';
+import {RoughA} from './rough44a';
+import {RoughB} from './rough44b';
+/* ep44 full rough cut: film 0–160.5 (4815 frames). Picture: the approved demo (0–35.5, EP44DEMO's scenes on their v1 clock),
+   then RoughA (35.5–95.5) and RoughB (95.5–160.5). Furniture for the whole film is drawn here, once.
+   Film time = lines.json + 0.5 s for every line after line 1 (line 1 runs 0–4.0). */
+const FPS = 30, SH = 0.5, L1 = 4.0, END = 160.5;
+const sceneT = (t: number) => (t < L1 ? t * T.box / L1 : t - SH);
+const film = (v1: number) => (v1 <= T.box ? v1 * L1 / T.box : v1 + SH);
+const LINES: [number, number, string][] = LINES44F.map(([a, b, s], i) => (i === 0 ? [0, L1, s] : [a + SH, b + SH, s]));
+LINES[48][1] = END;   // the question holds to the end; everything fades together
+/* ---------- picture ---------- */
+type Sc = {a: number; b: number; C: React.FC<{t: number}>};
+const DEMO: Sc[] = [
+	{a: 0, b: T.box, C: ColdBrain}, {a: T.box, b: T.mic, C: CiderBox}, {a: T.mic, b: T.car, C: Microscope}, {a: T.car, b: T.room, C: Highway},
+	{a: T.room, b: T.title, C: Storage}, {a: T.title, b: T.think, C: House}, {a: T.think, b: T.light, C: Needle}, {a: T.light, b: T.office, C: Meadow}, {a: T.office, b: T.end + 1, C: Office},
+];
+const XF = [0, 0.3, 0.24, 0.14, 0.3, 0.3, 0.24, 0.3, 0.3];
+const Demo44: React.FC<{t: number}> = ({t}) => {
+	const parts: React.ReactNode[] = [];
+	DEMO.forEach((S, i) => { const x0 = XF[i] / 2, x1 = (XF[i + 1] ?? 0) / 2;
+		if (t < S.a - x0 || t >= S.b + x1) return;
+		const o = x0 > 0 ? sm(seg(t, S.a - x0, S.a + x0)) : 1;
+		parts.push(<g key={i} opacity={o}><S.C t={Math.max(S.a, Math.min(S.b + x1, t))} /></g>); });
+	return <>{parts}</>;
+};
+/** hand-offs: the demo → A dissolves on the glow of the 相对论 sheet; A → B is a match on one glowing block */
+const A0 = 35.5, B0 = 95.5, XA = 0.36, XB = 0.24;
+const Picture: React.FC<{t: number}> = ({t}) => <>
+	{t < A0 + XA / 2 && <Demo44 t={sceneT(Math.min(t, A0 + XA / 2))} />}
+	{t >= A0 - XA / 2 && t < B0 + XB / 2 && <g opacity={sm(seg(t, A0 - XA / 2, A0 + XA / 2))}><RoughA t={Math.min(t, B0 + XB / 2)} /></g>}
+	{t >= B0 - XB / 2 && <g opacity={sm(seg(t, B0 - XB / 2, B0 + XB / 2))}><RoughB t={Math.max(B0, t)} /></g>}
+</>;
+/* ---------- subtitles ---------- */
+const CUT_ON = new Set([1, 2, 3, 4, 12, 19, 20, 36, 39, 40, 48]), PUNCH = new Set([4, 20, 48]);
+const STACK: Record<number, number> = {7: 6, 10: 9, 12: 11, 15: 14, 18: 17, 23: 22, 29: 28, 31: 30, 34: 33, 36: 35, 38: 37, 40: 39, 42: 41, 45: 44, 47: 46};
+/** F2 sets 一定【深藏着什么】 exactly where K2 had it (K2's prefix is 4 字 longer) */
+const INDENT: Record<number, number> = {45: 4};
+const ATTRIB: Record<number, string> = {46: '——爱因斯坦', 47: '——爱因斯坦'};
+const TYPE = 0.35, STAMP_AT = 0.45, COUNT_AT = 0.8;
+const subsAt = (t: number): {rows: SubRow[]; punch?: {s: string; o: number}} => {
+	const i = LINES.findIndex(([a, b]) => t >= a && t < b); if (i < 0) return {rows: []};
+	const [a, , s] = LINES[i], len = s.replace(/[[\]]/g, '').length, typed = CUT_ON.has(i) ? len : Math.ceil(len * (i === 0 ? 0.35 + 0.65 * seg(t, 0, TYPE) : seg(t, a, a + TYPE)));
+	if (PUNCH.has(i)) return {rows: [], punch: {s, o: sm(seg(t, a, a + 0.12))}};
+	const rows: SubRow[] = []; const top = STACK[i];
+	if (top !== undefined) rows.push({s: LINES[top][2], indent: INDENT[top]});
+	rows.push({s, n: typed, indent: INDENT[i]});
+	if (ATTRIB[i]) rows.push({s: ATTRIB[i], small: true, o: i === 46 ? sm(seg(t, a + 0.6, a + 1.0)) : 1});
+	return {rows};
+};
+/* ---------- stamp: [line, year, place, note]; the cold open (0–12.75) keeps year-only stamps ---------- */
+const STAMPS: [number, string, string?, string?][] = [
+	[0, '1955'], [1, '1978'], [2, '1985'], [3, '1997'], [4, '2026'],
+	[5, '1879', '德国 乌尔姆', '后脑勺又大又方'], [6, '约1884', '德国 慕尼黑', '爸爸给他看指南针'], [8, '1895', '瑞士 阿劳', '16岁的追光问题'],
+	[9, '1902', '瑞士 伯尔尼', '专利局三级技术员'], [10, '1905', '瑞士 伯尔尼', '这一年：4篇论文'],
+	[11, '1919', '普林西比岛', '爱丁顿观测日全食'], [13, '1922', '诺贝尔物理学奖', '理由：光电效应'],
+	[14, '1939', '美国', '致罗斯福的信 8月2日'], [16, '1954', '美国 普林斯顿', '对鲍林说'],
+	[17, '1955', '美国 普林斯顿', '据秘书杜卡斯回忆'], [19, '1955.4.18', '普林斯顿医院', '凌晨1点多'],
+	[21, '1955', '普林斯顿医院', '值班病理医生 哈维'], [22, '1955', '美国 普林斯顿', '长子汉斯·阿尔伯特'],
+	[24, '1955.4.18', '当天火化', '骨灰撒掉：不想被朝拜'], [25, '1955', '普林斯顿医院', '称重：1230克'],
+	[26, '1955', '美国 费城', '切前先拍了几十张照片'], [27, '1955 → 1978', undefined, '报纸：几天内开始研究'],
+	[28, '1978', '美国 威奇托', '记者 列维 找到你'],
+	[30, '1985', '美国 伯克利', '对照：11个男性大脑'], [33, '1997', '美国公路', '作家帕特尼蒂租车同行'], [35, '1997', '美国 伯克利', '爱因斯坦的孙女伊芙琳'],
+	[37, '1999', '《柳叶刀》', '对照：35个男性大脑'], [39, '2012', '美国 佛罗里达', '右额叶：4道褶'],
+	[41, '1955–2015', undefined, '6篇正式论文'], [43, '2026', '今天', '切片：两家医学博物馆'],
+	[44, '1955 → 今天', undefined, '研究你的人'], [45, '约1884', '德国 慕尼黑', '那只指南针'], [46, '柏林', undefined, '纪念牌上，他自己的原话'],
+];
+const stampAt = (t: number) => { if (t >= film(T.title) && t < LINES[5][0]) return null; if (t >= LINES[48][0]) return null;
+	let cur: (typeof STAMPS)[number] | null = null; for (const s of STAMPS) if (t >= (s[0] === 0 ? 0 : LINES[s[0]][0] + STAMP_AT)) cur = s;
+	if (!cur) return null; const a = cur[0] === 0 ? -1 : LINES[cur[0]][0] + STAMP_AT; return {s: cur, o: sm(seg(t, a, a + 0.15))}; };
+/* ---------- counter: [film time, value, era, roll s, date (fractional year) or undefined] ---------- */
+const lc = (i: number) => LINES[i][0] + COUNT_AT;
+const D1 = LINES[19][0], D2 = LINES[20][0], A7 = LINES[27][0];
+const CK: [number, number, string | undefined, number, number?][] = [[0, 76, undefined, 0], [lc(1), 99, undefined, 0.35], [lc(2), 106, undefined, 0.3], [lc(3), 117, undefined, 0.3], [lc(4), 147, undefined, 0.35],
+	[film(T.title) + 0.1, 0, undefined, 2.1], [LINES[5][0], 0, '出生', 0], [lc(6), 4, '童年', 0.3], [film(20.3), 5, '童年', 0.3], [lc(8), 16, '少年', 0.4], [lc(9), 23, '青年', 0.4], [lc(10), 26, '青年', 0.4],
+	[lc(11), 40, '壮年', 0.5], [lc(13), 43, '壮年', 0.3], [lc(14), 60, '晚年', 0.5], [lc(16), 75, '晚年', 0.4], [lc(17), 76, '晚年', 0.3],
+	[D1, 76, undefined, 0], [D2, 76, undefined, 0, 1955.296], [A7 + 0.3, 99, undefined, 2.6, 1978.58],
+	[lc(30), 106, undefined, 2.4, 1985.4], [lc(33), 117, undefined, 0.4, 1997.15], [lc(37), 120, undefined, 0.3, 1999.45], [lc(39), 133, undefined, 0.25, 2012.87],
+	[lc(41), 136, undefined, 0.3, 2015.5], [lc(43), 147, undefined, 0.4, 2026.81]];
+const MD = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
+const fmtDate = (y: number) => { const yr = Math.floor(y); let d = Math.floor((y - yr) * 365), m = 0; while (m < 11 && d >= MD[m]) { d -= MD[m]; m++; }
+	return `${yr}.${String(m + 1).padStart(2, '0')}.${String(d + 1).padStart(2, '0')}`; };
+const counterAt = (t: number) => { let i = 0; while (i + 1 < CK.length && t >= CK[i + 1][0]) i++;
+	const [a, v, era, roll, dt] = CK[i], prev = i > 0 ? CK[i - 1][1] : v, k = roll > 0 ? ease(seg(t, a, a + roll)) : 1, val = prev + (v - prev) * k;
+	const k2 = roll > 0 ? ease(seg(t + 1 / 30, a, a + roll)) : 1, speed = Math.abs((v - prev) * (k2 - k)) * 30;
+	let date: string | undefined;
+	if (dt !== undefined) { const pd = i > 0 && CK[i - 1][4] !== undefined ? CK[i - 1][4]! + 0.0045 * (a - CK[i - 1][0]) : dt, hold = (t - a - roll) * 0.0045;
+		const last = i === CK.length - 1;   // today: the date stops at the present
+		date = fmtDate(roll > 0 ? pd + (dt - pd) * k + (last ? 0 : Math.max(0, hold)) : dt + Math.max(0, t - a) * 0.0045); }
+	return {val, era, blur: Math.min(5, speed / 25), date}; };
+const Furniture: React.FC<{t: number}> = ({t}) => {
+	const sub = subsAt(t), st = stampAt(t), c = counterAt(t);
+	const dimC = t >= LINES[44][0] ? 0.55 : 1, hideC = 1 - sm(seg(t, LINES[48][0] - 0.3, LINES[48][0]));
+	const frozen = t >= D1 && t < D2, ghost = t >= D2 ? 1 - sm(seg(t, D2 + 0.4, D2 + 1.6)) : 0, pulse = t >= D2 ? Math.exp(-(t - D2) / 0.35) : 0;
+	return <>
+		<Story rows={sub.rows} />
+		{sub.punch && <Punch s={sub.punch.s} o={sub.punch.o} />}
+		{st && <Stamp y={st.s[1]} place={st.s[2]} note={st.s[3]} o={st.o} />}
+		{ghost > 0.01 && <Counter who="他" v={76} grey o={0.75 * ghost} lift={78 + 40 * (1 - ghost)} />}
+		{hideC > 0.01 && <Counter era={c.era} v={c.val} blur={c.blur} grey={frozen} pulse={pulse} o={dimC * hideC} date={c.date ? c.date : undefined} />}
+		<Seal />
+	</>;
+};
+const Rough: React.FC = () => {
+	const f = useCurrentFrame(), t = f / FPS, fade = sm(seg(t, END - 1.2, END - 0.05));
+	return <AbsoluteFill style={{background: '#0c1012'}}>
+		<svg width={W} height={H} style={{position: 'absolute'}}><Picture t={t} /><Grain44 seed={3 + (f % 6)} /></svg>
+		<Furniture t={t} />
+		{fade > 0 && <AbsoluteFill style={{background: '#06080a', opacity: fade}} />}
+	</AbsoluteFill>;
+};
+registerRoot(() => <Composition id="EP44ROUGH" component={Rough} durationInFrames={4815} fps={FPS} width={W} height={H} />);
