@@ -58,11 +58,14 @@ Status key: ✓ verified in the source I opened · Disputed (use the safe wordin
 | F23 | 七个回来了。还有五个：龙、蛇、羊、鸡、狗 | ✓ | 人民日报海外版 2020: 「截至目前，圆明园12尊兽首铜像中已有7尊回归中国」「其余5尊下落不明」. 澎湃 2019: 「2018年，一件疑似流失龙首的拍品曾现身拍场；蛇首、羊首、鸡首和狗首至今下落不明」; the dragon lot: 17 Dec 2018, Tessier & Sarrou, France; 「现在也不能确认100%是真的」. 新京报 2023: same. 中央社 2020: 龙、蛇、雞、狗、羊 unaccounted for. | 人民日报海外版 2020 ; 澎湃 2019 ; 新京报 2023-10-20 https://m.bjnews.com.cn/detail/1697778447168846.html ; 中央社 2020 | No new return found up to Dec 2025 (China Daily 2025-12-23 lists none). 2026 status = caution. |
 | F24 | 2023年10月，牛、虎、猴、猪回到圆明园，和你重聚了12天 | ✓ | 新京报 2023: 「牛首、虎首、猴首、猪首，时隔163年后首次重聚圆明园，并与马首一起亮相」; 2023-10-18 to 10-29, 正觉寺最上楼. | 新京报 2023 | Visit, not a move: they went back to 保利. Lovely beat: 「兄弟来看你」. |
 | F25 | 2026年是马年 | ✓ (calendar) | 2026 丙午年 began 17 Feb 2026. | Chinese calendar (general knowledge) | 本命年 hook option. |
+| F26 | 2018年，法国拍出一个疑似龙首，240万欧元；是不是它，说不清 | ✓ (sale) · Disputed (authenticity) | 中央社 2018-12-19: sold at TESSIER & SARROU on 17 Dec 2018, 「最終以240萬歐元落槌」 (estimate 「2至3萬」); buyer unnamed (刘阳: 「一名華人」); 刘阳: 「我認為這件東西是圓明園的」; 上海博物馆 周亚: 「要肯定它是圓明園十二獸首中的龍首…現在資料是不充分的」; the agency calls it 「真偽仍存疑」. 澎湃 2019 (人民日报 etc.): same date and house; 「现在也不能确认100%是真的」. | 中央社 https://www.cna.com.tw/news/acn/201812190196.aspx ; 澎湃 2019 https://m.thepaper.cn/baijiahao_4954139 | Answers director note 3 / R4. Never call it 「龙首」 flat: 「疑似龙首」 + 「说不清」. Not counted in 7/12 by any source (2019–2026). |
+| F27 | (status, Oct 2026) still seven returned; the horse still in 圆明园 | caution (no source says "as of today", but nothing contradicts) | 昆山融媒 via 名城苏州网, 2026-10-20: exhibition 31 Oct 2026 – 5 Jan 2027 shows 「牛、虎、猴、猪、马、鼠、兔七尊圆明园兽首」, 「其中牛、虎、猴、猪四尊为珍贵原件」 (so the horse shown there is not the original). 浙江省博物馆 2026-07-30 – 10-18: four originals 牛 虎 猴 猪 (猪 「何鸿燊博士捐赠」). China Daily 2025-12-23: no new return. | https://www.sina.cn/weibo/detail/5356211425515736.html ; https://hznews.hangzhou.com.cn/wenti/content/2026-08/01/content_9269459.htm ; https://cn.chinadaily.com.cn/a/202512/23/WS694a2fd9a310942cc49980ab.html | Answers R1/R2. Supports 「至今」 (K4) and 「只有你」 (H4): the other six stay with 保利 / 国博 and tour. Pig head: 保利艺术博物馆 (中央社 2020, 中新网 2022). |
 
 ## Estimates (估算)
 - 1860 → 1989 = 129 years; 1860 → 2007 = 147; 1860 → 2020 = 160; 1860 → 2026 = 166.
 - 1989 → 2007 price ratio 22–24× → 「二十多倍」.
-- 回国 counter: 2000 → 3/12; 2003 → 4/12; 2007 → 5/12 (horse); 2013 → 7/12. 回园 counter: 2020 → 1/12.
+- 回国 counter: 2000 → 3/12; 2003 → 4/12; 2007 → 5/12 (horse); 2013 → 7/12. 回家 (= 圆明园) counter: 2020 → 1/12.
+- R3 (noon, second non-press source): MIT Visualizing Cultures (F8b) + CityU exhibition (F3). R5 (sequence): Aug 2007 国家文物局 learns of the lot and states it opposes the public sale; Sotheby's cooperates; 20 Sep 2007 Ho buys it privately, brokered by Sotheby's (F12, F13). 唯一 (F22): 中新网 2011 + 北京旅游网.
 
 ## Story-worthy
 1. **You are noon.** The twelve took turns telling the hour; only at noon did all twelve spout together, and noon is you (F3). The film can end on the one image the garden hasn't seen since 1860: twelve together.

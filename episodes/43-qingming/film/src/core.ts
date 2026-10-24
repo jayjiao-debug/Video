@@ -227,19 +227,22 @@ const compMat = new THREE.ShaderMaterial({
 			col += vec3(1.0, 0.9, 0.7) * 0.35 * exp(-pow((p - e) / soft, 2.0)) * step(0.001, k) * step(k, 0.999);
 		}
 		else if (mode == 13) { // overlay B (alpha) over a defocused A
-			vec3 a = vec3(0.0); float n = 0.0;
-			for (int i = -3; i <= 3; i++) for (int j = -3; j <= 3; j++) { vec2 o = vec2(float(i), float(j)) * blurA / vec2(1920.0, 1080.0); a += sideA(uv + o); n += 1.0; }
+			vec3 a = vec3(0.0); float n = 0.0;      // round Gaussian kernel (no square specks from stars / far lights)
+			for (int i = -3; i <= 3; i++) for (int j = -3; j <= 3; j++) { float r2 = float(i * i + j * j); if (r2 > 10.0) continue; float w = exp(-r2 / 6.0);
+				vec2 o = vec2(float(i), float(j)) * blurA / vec2(1920.0, 1080.0); a += sideA(uv + o) * w; n += w; }
 			a /= n; vec4 b = texture2D(B, uv); col = mix(a, b.rgb / max(b.a, 0.001), clamp(b.a, 0.0, 1.0)) + bl(Bg0, Bg1, Bg2, Bg3, uv) * bloomB;
 		}
 		else { col = k < 0.5 ? sideA(uv) : sideB(uv); }
 		col *= exposure * tint; col += lift;
 		col += vec3(1.0, 0.86, 0.6) * flash;
 		float v = length((uv - 0.5) * vec2(1.0, 0.85)); col = mix(col, vigCol, smoothstep(0.45, 1.05, v) * vig);
-		if (corners > 0.0) { // lamplight insert: warm dark under the subtitle (top-left), stamp (top-right) and counter (bottom-left)
-			float tl = 1.0 - smoothstep(0.0, 1.0, length((uv - vec2(0.18, 0.88)) / vec2(0.42, 0.2)));
-			float tr = 1.0 - smoothstep(0.0, 1.0, length((uv - vec2(0.88, 0.86)) / vec2(0.26, 0.2)));
-			float bl2 = 1.0 - smoothstep(0.0, 1.0, length((uv - vec2(0.15, 0.08)) / vec2(0.3, 0.14)));
-			col = mix(col, vec3(0.23, 0.17, 0.12) * 0.55, clamp(max(max(tl, tr), bl2), 0.0, 1.0) * corners);
+		if (corners > 0.0) { // lamplight insert: falls to warm dark (≤ #4A3B2C) under the subtitle band (top-left), mark + stamp (top-right), chip + tally (bottom)
+			vec2 p = vec2(uv.x * 1920.0, (1.0 - uv.y) * 1080.0);
+			float tl = 1.0 - smoothstep(0.0, 170.0, length(max(vec2(0.0), abs(p - vec2(575.0, 160.0)) - vec2(575.0, 160.0))));
+			float tr = 1.0 - smoothstep(0.0, 170.0, length(max(vec2(0.0), abs(p - vec2(1570.0, 165.0)) - vec2(350.0, 165.0))));
+			float bl2 = 1.0 - smoothstep(0.0, 150.0, length(max(vec2(0.0), abs(p - vec2(575.0, 975.0)) - vec2(575.0, 105.0))));
+			float m = clamp(max(max(tl, tr), bl2), 0.0, 1.0) * corners;
+			col = mix(col, col * 0.03 + vec3(0.042, 0.027, 0.015), m);
 		}
 		col += (h21(uv * 1920.0 + time) - 0.5) * grain;
 		gl_FragColor = vec4(col, 1.0);

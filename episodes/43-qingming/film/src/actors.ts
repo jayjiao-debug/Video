@@ -66,7 +66,8 @@ export type Contact = {side: 'L' | 'R'; target: P; opt?: ReachOpt; name?: string
 export const CONTACTS: {t: number; who: string; what: string; err: number}[] = [];
 (window as any).CONTACTS = CONTACTS;
 let CHECK_T = 0; export const checkTime = (t: number) => { CHECK_T = t; };
-const log = (who: string, what: string, err: number, lim: number) => { if (err > lim && (window as any).CHECK) CONTACTS.push({t: CHECK_T, who, what, err: Math.round(err * 10) / 10}); };
+const SEEN: Record<string, number> = {}; (window as any).CONTACT_SEEN = SEEN;   // every declared contact (for the checker's list)
+const log = (who: string, what: string, err: number, lim: number) => { if (!(window as any).CHECK) return; const k = `${who} · ${what}`; SEEN[k] = Math.max(SEEN[k] ?? 0, err); if (err > lim) CONTACTS.push({t: CHECK_T, who, what, err: Math.round(err * 10) / 10}); };
 /** shift each foot (ankle, toe; knee by half) so the shoe rests on ground(x) at its own x — robes hide the small leg stretch */
 export const slopeFeet = (o: FigOpts, ground: (x: number) => number): FigOpts => {
 	const p: Pose = {...o.pose};
@@ -96,4 +97,18 @@ export const rig = (o: FigOpts, contacts: Contact[], ground?: (x: number) => num
 			const p0 = f.pose[a], p1 = f.pose[b2]; const len = Math.hypot(p1[0] - p0[0], p1[1] - p0[1]); log(who, `${a}-${b2} length`, Math.abs(len / bl - 1) * 100, 3); }
 	}
 	return f;
+};
+
+// ------------------------------------------------------------------------------------------------ the under-arm carry (shared)
+import {underArmRoll, gripOf} from './figures';
+/** a roll clamped under the upper arm (pose made with underArm()): draws the roll and then the carrying arm again on top,
+ *  so the order is body (cast layer) → roll → near arm, the upper arm over the roll's middle third and the hand at its front
+ *  end. Logs both contacts for the checker. Call it on the prop layer (draw/drawW in world px); returns the roll's ends. */
+export const drawCarriedRoll = (g: CanvasRenderingContext2D, fig: FigOpts, who: string, side: 'R' | 'L' = 'R', length = 0.29, r = 13, glow = 1, grey = false, col = SILHOUETTE) => {
+	const [r0, r1] = underArmRoll(fig.pose, side, length), p0 = figToScreen(fig, r0), p1 = figToScreen(fig, r1);
+	drawRoll(g, p0, p1, r, glow, grey); drawFig(g, {...fig, part: side}, col);
+	const hand = figToScreen(fig, gripOf(fig.pose, side)), pit = figToScreen(fig, [fig.pose[`${side}Sh`][0], fig.pose[`${side}Sh`][1] - 0.11]);
+	const dx = p1[0] - p0[0], dy = p1[1] - p0[1], L = Math.hypot(dx, dy), off = (q: P) => Math.abs((q[0] - p0[0]) * dy - (q[1] - p0[1]) * dx) / Math.max(1, L);
+	log(who, 'roll in hand', off(hand), 4); log(who, 'roll under arm', off(pit), 4);
+	return [p0, p1] as [P, P];
 };
