@@ -207,6 +207,24 @@ const compMat = new THREE.ShaderMaterial({
 			float under = 1.0 - smoothstep(band * 0.8, band, abs(p - c));
 			col = (p < c ? sideB(uv) : sideA(uv)); col = mix(col, vec3(0.055, 0.04, 0.03), under);
 		} else if (mode == 7) col = mix(sideA(uv), sideB(uv), smoothstep(0.0, 1.0, k));
+		else if (mode == 9) { // rectangular pane (pt = centre, dir = half size, uv units): B inside the pane, fading in by k, with a glass sheen
+			vec2 q = abs(uv - pt) / dir; float inside = 1.0 - smoothstep(0.98, 1.0, max(q.x, q.y));
+			col = mix(sideA(uv), mix(sideA(uv), sideB(uv), k), inside);
+			col += inside * vec3(0.06, 0.06, 0.07) * (1.0 - smoothstep(0.0, 0.6, abs(uv.x - pt.x + uv.y - pt.y - 0.2)));
+		} else if (mode == 10) { // directional smear (whip pan): A smears out along dir, B smears in, switch at k=.5
+			vec2 d = normalize(dir) * 0.06 * sin(k * 3.14159); vec3 a = vec3(0.0), b = vec3(0.0);
+			for (int i = 0; i < 12; i++) { float f = float(i) / 11.0 - 0.5; a += sideA(uv + d * f); b += sideB(uv + d * f); }
+			col = (k < 0.5 ? a : b) / 12.0;
+		} else if (mode == 11) { // picture-in-picture: A shrinks into the rect (pt centre, dir half-size) over B
+			vec2 c = mix(vec2(0.5), pt, k), hs = mix(vec2(0.5), dir, k); vec2 q = (uv - c) / hs * 0.5 + 0.5;
+			bool inR = all(greaterThanEqual(q, vec2(0.0))) && all(lessThanEqual(q, vec2(1.0)));
+			col = inR ? sideA(q) : sideB(uv);
+			if (inR) { vec2 e = min(q, 1.0 - q); col *= 0.75 + 0.25 * smoothstep(0.0, 0.03, min(e.x, e.y)); }
+		} else if (mode == 12) { // light-edged wipe: B revealed behind a bright soft edge travelling along dir
+			vec2 d = normalize(dir); float p = dot(uv - 0.5, d) / (abs(d.x) * 0.5 + abs(d.y) * 0.5) * 0.5 + 0.5; float e = k * (1.0 + 2.0 * soft) - soft;
+			float m = smoothstep(e - soft, e + soft, p); col = mix(sideB(uv), sideA(uv), m);
+			col += vec3(1.0, 0.9, 0.7) * 0.35 * exp(-pow((p - e) / soft, 2.0)) * step(0.001, k) * step(k, 0.999);
+		}
 		else { col = k < 0.5 ? sideA(uv) : sideB(uv); }
 		col *= exposure * tint; col += lift;
 		col += vec3(1.0, 0.86, 0.6) * flash;

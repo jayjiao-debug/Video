@@ -7,7 +7,19 @@ Screenwriter, 2026-10-24. Files: this script + `lines.json` (48 lines, `[[start,
 - **New order:** H1–H2 → **title card on drop 1 (9.05 s)** → T1–T4 → N1 → N2 → S1.
 - **Timing only:** the same 48 lines with the same wording, and no new lines. From B1 (bar 13) onward nothing moves.
 - **Files:** `lines.json` stays as the nominal v2.1 timing (old order, title at 23.25–26.25). The build uses `lines_bars.json`. See "Retiming to bars (v2.3)".
+**v2.3.1 (2026-10-24): gate-2b note 11. Only the stamp and chip columns change.** No line wording or timing changes; `lines.json` and `lines_bars.json` are untouched. See "Changelog v2.3.1".
 **Look:** A 汴河暮影 (owner pick, gate 2a). The picture column describes look A only. The B and C mappings are gone.
+
+## Changelog v2.3.1 (gate 2b r1, note 11)
+
+The only note routed to the screenwriter. Lines, timing, `lines.json` and `lines_bars.json` are unchanged.
+
+| Note | What changed |
+|---|---|
+| 11a E4 chip (b66–67.5) | **E4's Era · age** 〃 → **hidden: no chip and no counter from b66 to b67.5.** The stamp 「— 宋 · 元 · 明 · 清 / 四次出宫（故宫博物院）」 names the four eras. P1 showed the 1923 exit under 民国, so a chip that flips to 清 on the same exit would contradict it. The tally stays, and its four 出 marks still flash on b66 / 66.25 / 66.5 / 66.75. The counter returns with E5 on b67.5 as 「你 900多岁」. E5's 〃 is now written out, because it used to inherit E4's value. Screen furniture and the anchor table list the new hidden span. |
+| 11b V2 stamp spoils V3 | **V2 stamp** 「— 1945年8月 / 伪满覆灭，下落不明」 → **「— 1945年8月 · 长春 / 伪满覆灭」** on b47.5. 长春 comes from C27b, which places 1945年8月 in 长春. **V3 stamp** 〃 → line 1 stays, and **line 2 changes to 「下落不明（伪满皇宫博物院）」** (13 with the brackets, ≤ 14), slamming on the b49 hit with V3. The source in brackets is C28's verdict, from 王文锋 of the 伪满皇宫博物院: "目前尚未发现详实、准确的资料和记载". 下落不明 now appears only with V3, not 3.4 s earlier. |
+
+**Watch (11b):** 长春 in line 1 gives the place and date for 伪满覆灭. It does not say you were lost there. C28's three accounts (沈阳机场, 大栗子沟, 长春) stay open, and the line still names no place. If the director reads 「长春 / 下落不明」 as the place of the loss, the fallback is line 1 「— 1945年8月」 with no place. No other change would be needed.
 
 ## Changelog v2.1 (cold read of v2, routed by the producer)
 
@@ -143,6 +155,7 @@ P3 → Y3 is **not** a callback. No source ties the 1950 scrolls to the 1923 ent
 - **Era chip + counter (bottom-left).** Red era chip + `你 约N 岁`.
   - Anchor c. 1100 (O8, 估算). "约N" where the stamp has a year; "N多" where it has only an era.
   - The counter is hidden in the hook, teaser, present day, title and end card, and on the D1 flashback (明, undated). It never stops on 250.
+  - **E4's flip-book (b66–67.5) hides both the chip and the counter** (v2.3.1). The stamp 「宋 · 元 · 明 · 清」 names the eras, and P1 already showed the 1923 exit under 民国. The tally stays, and both return with E5 on b67.5.
   - Chips: 北宋 · 金 · 元 · 明 · 清 · 民国 · 新中国. 伪满 is never a chip.
 - **四出五进 tally.** Beside the counter: four 出 and five 进 marks, labelled 「四出五进 —— 故宫博物院」.
   - Marks light on their beats: 进 BO · 出 BO · 进 I2 · 出 W2 · 进 M3 · 出 F1 · 进 Q1 · 出 P1 · 进 R1 (complete; all nine flash red).
@@ -265,8 +278,8 @@ Measured on `audio/bgm_cut.wav` in 10 ms windows, split into sub-bass (< 100 Hz)
 | 29 | P2 | 一个月内，四卷【清明上河图】出了宫。 | 42.5 | 97.68 | 102.20 | 4.53 | 3.1 | +0.53 | Four rolls cross on 42.5, 42.75, 43 and 43.25. Then **43.5 → 44.5 is the bar where nothing new appears** (the v2 design). |
 | 30 | P3 | 清单上，其中两卷都写着【张择端】。 | 44.5 | 102.20 | 105.60 | 3.40 | 3.0 | −0.35 | The two ledger entries light on 45 and 45.25. |
 | 31 | V1 | 你在【伪满皇宫】，一放就是十几年。 | 46 | 105.60 | 109.00 | 3.40 | 3.0 | −0.10 | Seasons in time-lapse, one per beat. |
-| 32 | V2 | 1945年，伪满覆灭，溥仪出逃。 | 47.5 | 109.00 | 112.39 | 3.40 | 2.5 | +0.40 | Headlights sweep away on bar 48. Line 1, which stays through V3. |
-| 33 | V3 | 混乱中，你【下落不明】。 | **49** | 112.39 | 114.66 | 2.26 | 2.2 | −0.49 | **The stop.** The line appears whole on the downbeat, as T1–T4 do. The stop itself is the pause: the camera keeps searching the dark, nothing new appears, and the counter keeps rolling. This replaces v2.1's 1-s gap. |
+| 32 | V2 | 1945年，伪满覆灭，溥仪出逃。 | 47.5 | 109.00 | 112.39 | 3.40 | 2.5 | +0.40 | Headlights sweep away on bar 48. Line 1, which stays through V3. The stamp 「— 1945年8月 · 长春 / 伪满覆灭」 slams on 47.5. It doesn't show 下落不明 yet (v2.3.1). |
+| 33 | V3 | 混乱中，你【下落不明】。 | **49** | 112.39 | 114.66 | 2.26 | 2.2 | −0.49 | **The stop.** The line appears whole on the downbeat, as T1–T4 do. The stop itself is the pause: the camera keeps searching the dark, nothing new appears, and the counter keeps rolling. This replaces v2.1's 1-s gap. **v2.3.1:** on the same downbeat the stamp's line 2 changes to 「下落不明（伪满皇宫博物院）」, so the words land only once, on the stop. |
 | 34 | Y1 | 几年后，沈阳一间【临时库房】里， | **50** | 114.66 | 117.49 | 2.83 | 2.8 | −0.67 | **Re-entry, no bass.** The desk lamp clicks on the downbeat. Line 1, which stays through Y2 (6.2 s on screen). |
 | 35 | Y2 | 专家杨仁恺，翻出【好几卷】“你”。 | 51.25 | 117.49 | 120.88 | 3.40 | 2.7 | −0.10 | Same storeroom shot, so it starts on a beat. |
 | 36 | Y3 | 标着真迹的两卷，都是【仿的】。 | 52.75 (map: **53**) | 120.88 | 123.71 | 2.83 | 2.7 | −0.42 | One beat before **the pickup (bar 53)**. The 真迹 slips turn grey on bar 53 as the bass returns. Line 1, which stays through Y4 (7.4 s). |
@@ -278,7 +291,7 @@ Measured on `audio/bgm_cut.wav` in 10 ms windows, split into sub-bass (< 100 Hz)
 | — | (no subtitle) | | 62 | 141.83 | 142.39 | 0.57 | — | — | Phrase start. The camera starts its run along your tail one beat before the line. |
 | 41 | E1 | 藏者宜宝之——人人都很【珍惜】你： | 62.25 | 142.39 | 146.36 | 3.96 | 2.8 | −0.29 | 藏者宜宝之 glows on bar 63. Line 1, which stays through E3 (8.5 s). |
 | 42 | E3 | 【偷你】、【换你】、【藏你】、【抄你】。 | 64 | 146.36 | 150.88 | 4.53 | 2.2 | **+1.03 hold** | **Loud bar 64:** 偷 on 64, 换 on 64.25, 藏 on 64.5, 抄 on 64.75. The 抄 wall (「约一百卷 · 只有一卷是你」) holds through bar 65. |
-| 43 | E4 | 可四个朝代的皇宫，都没【留住】你。 | 66 | 150.88 | 154.28 | 3.40 | 3.0 | −0.10 | 宋 on 66, 元 on 66.25, 明 on 66.5 and 清 on 66.75, each with its 出 flash. |
+| 43 | E4 | 可四个朝代的皇宫，都没【留住】你。 | 66 | 150.88 | 154.28 | 3.40 | 3.0 | −0.10 | 宋 on 66, 元 on 66.25, 明 on 66.5 and 清 on 66.75, each with its 出 flash. **v2.3.1:** chip and counter hidden 66 → 67.5, while the stamp names the eras and the tally stays. Both return on 67.5 with E5. |
 | 44 | E5 | 直到你不再属于【任何一个人】， | 67.5 | 154.28 | 157.68 | 3.40 | 2.8 | −0.10 | The hats fall away on bar 68. Line 1, which stays through E6. |
 | 45 | E6 | 你才终于，不再被谁【带走】。 | 69 | 157.68 | 162.20 | 4.53 | 2.5 | **+0.53 hold** | Inside: you lie in the case and light the faces of the crowd. |
 | — | (no subtitle) | | 71 | 162.20 | 165.04 | 2.83 | — | — | **The moral's picture.** E5 and E6 clear. A slow pull-back: the crowd keeps filing past your glow, and nobody carries you anywhere. The case starts to dim on bar 72. |
@@ -432,8 +445,8 @@ Stage: **crest** = the 虹桥 handover stage · **insert** = full-frame painting
 | 29 | P2 | 95.75 | 99.75 | 一个月内，四卷【清明上河图】出了宫。 | 14 | 3.1 | line 1 (stays) | 清明上河图 | 〃 / 25天内 · 4卷（清宫档案） | 〃 |  | crest | Four rolls cross the crest rightward, one after another (one glowing, three grey). A ledger page beside them fills with one entry per roll. After the fourth, one bar where nothing new appears. | C25 |
 | 30 | P3 | 99.75 | 103.50 | 清单上，其中两卷都写着【张择端】。 | 12 | 2.8 · key: read twice | line 2 | 张择端 | 〃 | 〃 |  | crest | In the ledger, two entries light up, each reading 「张择端清明上河图一卷」. Below, those two rolls lie side by side: one glows (you), one is grey. | C25, C24 |
 | 31 | V1 | 103.50 | 107.00 | 你在【伪满皇宫】，一放就是十几年。 | 13 | 3.0 |  | 伪满皇宫 | — 伪满时期 · 长春 / 存于伪满皇宫图书楼 | 民国 · 你 830多岁 |  | int. | A small two-storey library building in a courtyard, in silhouette. Inside, crates sit on shelves, and a faint glow shows through the slats of one. The sky time-lapses through seasons for years. No likeness of 溥仪, no flags, no map. | C26 |
-| 32 | V2 | 107.00 | 110.00 | 1945年，伪满覆灭，溥仪出逃。 | 10 | 2.5 | line 1 (stays) |  | — 1945年8月 / 伪满覆灭，下落不明 | 民国 · 你 约845岁 |  | int. | Night: the courtyard empties, and car headlights sweep across the building and away (C27). No crates pried open, no plane, no route (note 10). | C27, C28 |
-| 33 | V3 | 110.00 | 112.75 | 混乱中，你【下落不明】。 | 8 | 2.2 | line 2 | 下落不明 | 〃 | 〃 |  | int. | Your glow is lost: the camera searches the dark and can't find you while the counter keeps rolling. Then the 1-s picture pause with a music dip (named beat). | C28 |
+| 32 | V2 | 107.00 | 110.00 | 1945年，伪满覆灭，溥仪出逃。 | 10 | 2.5 | line 1 (stays) |  | — 1945年8月 · 长春 / 伪满覆灭 | 民国 · 你 约845岁 |  | int. | Night: the courtyard empties, and car headlights sweep across the building and away (C27). No crates pried open, no plane, no route (note 10). | C27, C27b (stamp) |
+| 33 | V3 | 110.00 | 112.75 | 混乱中，你【下落不明】。 | 8 | 2.2 | line 2 | 下落不明 | 〃 / 下落不明（伪满皇宫博物院）, line 2 slams on the b49 hit with the line | 〃 |  | int. | Your glow is lost: the camera searches the dark and can't find you while the counter keeps rolling. Then the 1-s picture pause with a music dip (named beat). | C28 |
 | 34 | Y1 | 113.75 | 117.25 | 几年后，沈阳一间【临时库房】里， | 12 | 2.8 | line 1 (stays) | 临时库房 | — 约1950 · 沈阳 / 东北博物馆 · 杨仁恺 | 新中国 · 你 约850岁 |  | int. | Pays off T4: the same storeroom. A small desk lamp clicks on, and a researcher (whole figure) starts working through the heap. | C29, C30 |
 | 35 | Y2 | 117.25 | 120.75 | 专家杨仁恺，翻出【好几卷】“你”。 | 11 | 2.7 | line 2 | 好几卷 | 〃 | 〃 |  | int. | Several rolls on the table, each opened a hand's width to show a 虹桥. (Three, per C30, but overlapped so they aren't counted.) | C30 |
 | 36 | Y3 | 120.75 | 124.00 | 标着真迹的两卷，都是【仿的】。 | 11 | 2.7 | line 1 (stays) | 仿的 | 〃 | 〃 |  | int. | Two neat rolls with paper slips reading 「真迹」 turn grey. | K5, C31 |
@@ -443,8 +456,8 @@ Stage: **crest** = the 虹桥 handover stage · **insert** = full-frame painting
 | 40 | D2 | 135.25 | 138.25 | 1973年重裱，【假驴】才被揭掉。 | 10 | 2.5 | line 2 | 假驴 | — 1973 · 故宫 / 重新装裱（故宫装裱记录） | 新中国 · 你 约873岁 |  | int. → insert | The 1973 restoration table under daylight lamps, with restorers (whole figures) bent over you. Insert: the grey patch with the donkey peels away, and the two posts stand alone over blank silk. | C33 |
 | 41 | E1 | 138.25 | 142.50 | 藏者宜宝之——人人都很【珍惜】你： | 12 | 2.8 · key: read twice | line 1 (stays) | 珍惜 | — 1186 · 张著题跋 / 你身上：96方印 · 14段题跋 | 你 900多岁 |  | insert | Callback: the camera travels along your whole tail, past colophons and red seals, to the glowing 藏者宜宝之. | C6; O4, O5 (stamp) |
 | 42 | E3 | 142.50 | 146.00 | 【偷你】、【换你】、【藏你】、【抄你】。 | 8 | 2.2 (cut-on) · key: read twice | line 2 | 偷你、换你、藏你、抄你 | 〃 → on the 抄 beat: — 今天 / 约百卷仿本（余辉估） | 〃 |  | mixed | Four flashes, one per beat, each word turning red as it lands. **偷**: the eunuch walking off the night crest. **换**: the grey copy sliding in (mounting room). **藏**: the friend's door closing. **抄**: pull back to a wall of grey 清明上河图 copies with only one glowing, labelled 「约一百卷 · 只有一卷是你」. The 抄 frame holds to the end of the line (about 1.5 s). | C20, C24, C9, C15, K1, K4 |
-| 43 | E4 | 146.00 | 149.50 | 可四个朝代的皇宫，都没【留住】你。 | 13 | 3.0 |  | 留住 | — 宋 · 元 · 明 · 清 / 四次出宫（故宫博物院） | 〃 | four 出 marks flash | crest | The crest cycles sky, hats and far-bank palace 宋 → 元 → 明 → 清. Each time your glow is carried off rightward, away from the palace, and an 出 mark flashes. | O6 |
-| 44 | E5 | 149.50 | 153.00 | 直到你不再属于【任何一个人】， | 12 | 2.8 | line 1 (stays) | 任何一个人 | — 1950年代至今 · 故宫博物院 / 结束流离（故宫博物院） | 〃 |  | crest | Day on the crest: the hats fall away. Ordinary visitors in today's clothes cross leftward toward the 午门 with its museum plaque (the queue from N1). | C32 |
+| 43 | E4 | 146.00 | 149.50 | 可四个朝代的皇宫，都没【留住】你。 | 13 | 3.0 |  | 留住 | — 宋 · 元 · 明 · 清 / 四次出宫（故宫博物院） | hidden b66–67.5: no chip, no counter. The stamp names the eras, and P1 showed 1923 under 民国 | four 出 marks flash | crest | The crest cycles sky, hats and far-bank palace 宋 → 元 → 明 → 清. Each time your glow is carried off rightward, away from the palace, and an 出 mark flashes. | O6 |
+| 44 | E5 | 149.50 | 153.00 | 直到你不再属于【任何一个人】， | 12 | 2.8 | line 1 (stays) | 任何一个人 | — 1950年代至今 · 故宫博物院 / 结束流离（故宫博物院） | 你 900多岁 (back on b67.5) |  | crest | Day on the crest: the hats fall away. Ordinary visitors in today's clothes cross leftward toward the 午门 with its museum plaque (the queue from N1). | C32 |
 | 45 | E6 | 153.00 | 157.00 | 你才终于，不再被谁【带走】。 | 10 | 2.5 · key: read twice | line 2 | 带走 | 〃 | 〃 |  | int. | Inside: you lie in the case and light the faces of the crowd filing past. Nobody carries you anywhere. | C32 |
 | 46 | E7 | 157.00 | 160.50 | 安全的代价：展完要静养【三年以上】。 | 14 | 3.1 | line 1 (stays) | 三年以上 | — 故宫规定 / 展后静养三年以上（北京晚报） | 〃 |  | int. | The case dims. You are rolled up and laid in a storage box, and the lid closes. Three seasons' cycles of light sweep across the box: three years. | O9 |
 | 47 | E8 | 160.50 | 164.00 | 所以，你才这么【难见】。 | 8 | 2.2 · key: read twice | line 2 | 难见 | 〃 | 〃 |  | int. | Callback to N2: the empty case and the card 「下次展出：未公布」. | O9, P5 |
@@ -496,7 +509,8 @@ Stage: **crest** = the 虹桥 handover stage · **insert** = full-frame painting
 | C23 | ✓ | Q2 | 嘉庆 五玺全, 《石渠宝笈三编》, 延春阁 | 故宫VR; 故宫 2022 |
 | C26 | ✓ | V1 | 伪满皇宫 图书楼; 十几年 | 光明网/大河报 2025-10-01; 人民政协网 2019 |
 | C27 | ✓ | V2 (line + picture) | 1945年8月 伪满覆灭，溥仪出逃 | 爱新觉罗·毓嶦, 人民政协报 2014 |
-| C28 | 争议 → proposed wording | V3 | 混乱中，你下落不明 (no place named) | 王文锋 2020 |
+| C27b | ✓ | V2 stamp line 1 | 1945年8月 · 长春 (the row's own stamp form for when and where 溥仪 fled) | 李天垠, 人民周刊 2026; 王文锋 2020 |
+| C28 | 争议 → proposed wording | V3 (line + stamp line 2) | 混乱中，你下落不明 (no place named); stamp 下落不明（伪满皇宫博物院）, the museum researcher's verdict | 王文锋 2020 |
 | C29 | ✓ | Y1 stamp | 东北博物馆, 沈阳 | 王文锋 2020; 中新网 2009 |
 | C32 | ✓ ("1950年代") | R1, E5, E6 | 1950年代回到故宫, 自此结束辗转流离 | 故宫 2022; 新京报/中新社 2025 |
 | C33 | ✓ | D1, D2 | 明代裱画师把草棚误作驴耳，补画了驴 (D1; stamp 裱画师误补); 1973 修裱时揭去 (D2). 揭补约47处 / 接笔38处 is no longer on screen | 许忠陵《清明上河图装裱记》, 故宫博物院 2016 |

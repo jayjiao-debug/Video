@@ -10,3 +10,4 @@
 | 2026-10-24 19:21 | gate 1: director APPROVE r2 (5/5); v2.1 fixes from cold read; owner OK, title 假如你是清明上河图; owner will send the BGM | owner | script v2.1 | |
 | 2026-10-24 19:33 | owner sent the BGM (106 BPM, 4:14, mono 71 kbps — owner: use as is); owner approved one 30-bar cut (track bars 28–57) → film ~3:04; storyboard (look A) + retiming to bars launched in parallel | owner/producer | music.md | |
 | 2026-10-24 20:14 | storyboard r1 done (37 scenes, look A, on bars); lines retimed to bars (v2.2). Owner: title on the 0:08 drop (bar 3), before the fate teaser — reorder the opening | owner/producer | | |
+| 2026-10-24 21:00 | gate 2b r1 REVISE routed (art director r3; screenwriter note 11 done as v2.3.1; researcher note 13). Producer decision on V3: stamp line 1 drops 长春 when 下落不明 slams (「— 1945年8月 / 下落不明（伪满皇宫博物院）」), so no place of loss is implied (C28) | producer | | |
