@@ -8,7 +8,9 @@ import {addScene, In} from './film';
 import {Cast, look, drawRoll, glowBlob, rig, drawBundle, drawCarriedRoll} from './actors';
 import {POSES, walkFor, underArm, underArmRoll, toScreen, FigOpts, Pose, P, gaitStride, stepFor, armsFrom, figurePaths, carryArmful, armfulAt, fkPose} from './figures';
 import {paintSection, silkWeave} from './silk';
-import {SIL, railing as railingSvg, skyline, dagoba} from './draw';
+import {SIL, railing as railingSvg, skyline, dagoba, hall as hallSvg, roof as roofSvg, tinyFig, boat as boatSvg} from './draw';
+import {fillSvg} from './crest';
+import {html} from './hud';
 
 const b = bar;
 export const LOCK: P = [960, 580];
@@ -78,7 +80,7 @@ let room: RoomYuan, t1Halo: Live, t1Body: Live, t1Arms: Live, t1Copy: Live, t1Si
 export const bootTeaser = async () => {
 	riverMono = paintSection('river', {width: 2048, height: 768, mode: 'mono', seed: 43});
 	riverGrey = paintSection('river', {width: 2048, height: 768, mode: 'grey', seed: 43});
-	await bootT1(); await bootT2(); await bootT3(); await bootT4();
+	await bootT1(); await bootT2(); await bootT3(); await bootT4(); await bootN(); await bootS1();
 };
 
 // ================================================================================================ 03 · T1 (b4.5 → b6)
@@ -335,3 +337,192 @@ addScene({id: '06', a: b(8), z: b(9), draw: (t) => {
 	st.heroAt(962, 582, T4Z.glow, 330);
 	return {st, grade: {vig: 0.38, exposure: 1}, bloom: 1};
 }});
+
+// ================================================================================================ 07 · N1/N2 (b9 → b11.5)
+// 午门 at night: the queue snakes up the 马道 to the one warm point at the top (the exhibition hall's lit door = your case
+// light, on the lock point at the b9 cut). b9 → b10 the camera cranes up the ramp toward it; b10 a match into the hall's deep
+// door passage (warm-lit, far opening visible), through it by b10.25; the hall: you glowing in the glass case, profiles
+// filing past lit only by you; b10.75 your glow goes out; the card; b11.5 the pane move into scene 08.
+let ext: Stage, extDoor: Live, extQueue: Live, pass: Stage, hallSt: Stage, hallSilk: Live, hallCrowd: Live, hallRefl: Live, hallCard: Live;
+const DOOR = {x: 960, y: 604, w: 48, h: 72, z: -190};
+const PANE = {x0: 660, x1: 1260, y0: 432, y1: 728, z: -290};
+const HZ = {wall: -800, inner: -320, silk: -310, glass: -290, frame: -285, card: -280, floor: -400, refl: -395, crowd: 120};
+// the queue path in the gate's plane: plaza (right → left), the 马道 ramp up to the platform, along it to the door
+const rampY = (x: number) => 1100 - (x + 200) * (460 / 1080);
+const QPATH: P[] = [[-480, rampY(-480) - 2], [880, rampY(880) - 2], [DOOR.x - 20, 638]];
+const qLen = QPATH.slice(1).map((q, i) => Math.hypot(q[0] - QPATH[i][0], q[1] - QPATH[i][1]));
+const qAt = (s: number): P | null => { if (s < 0) return null; for (let i = 0; i < qLen.length; i++) { if (s <= qLen[i]) { const u = s / qLen[i]; return [lerp(QPATH[i][0], QPATH[i + 1][0], u), lerp(QPATH[i][1], QPATH[i + 1][1], u)]; } s -= qLen[i]; } return null; };
+const bootN = async () => {
+	// ---------- exterior
+	ext = new Stage('n1ext');
+	ext.add('sky', canvasTex(gradCanvas([[0, '#1F2E38'], [0.42, '#2E404B'], [0.7, '#45565D'], [0.8, '#5A5A4C'], [1, '#4a4a40']])), 960, 420, 9000, 3200, -6000);
+	const far = svgDoc(`${skyline(-2600, 4600, 760, 24, 70, 17, '#222a30')}` + Array.from({length: 40}, (_, i) => `<rect x="${-2400 + i * 170 + hash(i) * 80}" y="${728 + hash(i * 3) * 24}" width="8" height="5" fill="#FFB868" fill-opacity="${0.35 + 0.3 * hash(i * 7)}"/>`).join(''), 7400, 900, '', -2700, 0);
+	ext.add('far', canvasTex(await svgToCanvas(far, 7400, 900, 0.5)), 950, 450, 7400, 900, -3000, {fog: ['#45565D', 0.3]});
+	const wallG = `<defs><linearGradient id="wg" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#3e2a25"/><stop offset="0.6" stop-color="#4c312a"/><stop offset="1" stop-color="#5a3a2f"/></linearGradient>` +
+		`<radialGradient id="fl"><stop offset="0" stop-color="#8a5a40" stop-opacity="0.45"/><stop offset="1" stop-color="#8a5a40" stop-opacity="0"/></radialGradient></defs>`;
+	let gate = `<rect x="-1500" y="640" width="4900" height="560" fill="url(#wg)"/>`;
+	for (let i = 0; i < 14; i++) gate += `<line x1="-1500" x2="3400" y1="${668 + i * 38}" y2="${668 + i * 38}" stroke="#2e1f1a" stroke-opacity="0.35" stroke-width="2"/>`;
+	for (const x of [-500, 420, 1500, 2420]) gate += `<ellipse cx="${x}" cy="1180" rx="300" ry="260" fill="url(#fl)"/>`;
+	for (let x = -1500; x < 3400; x += 34) gate += `<rect x="${x}" y="628" width="20" height="14" fill="#2c201c"/>`;
+	for (const [ax, aw, ah] of [[960, 118, 200], [690, 84, 150], [1230, 84, 150]]) gate += `<path fill="#24170f" d="M${ax - aw / 2},1200 L${ax - aw / 2},${1200 - ah + aw / 2} A${aw / 2},${aw / 2} 0 0 1 ${ax + aw / 2},${1200 - ah + aw / 2} L${ax + aw / 2},1200 Z"/>`;
+	// wings (雁翅楼) and pavilions on the platform, the main hall over the centre
+	for (const sg of [-1, 1]) { gate += `<rect x="${sg < 0 ? 960 - 860 : 960 + 300}" y="598" width="560" height="44" fill="#17191c"/>` + roofSvg(960 + sg * 580, 570, 620, 34, 0.3, '#17191c') + hallSvg(960 + sg * 900, 642, 200, 130, 1, '#17191c'); }
+	gate += hallSvg(960, 642, 400, 196, 2, '#17191c');
+	ext.add('gate', canvasTex(await svgToCanvas(svgDoc(wallG + gate, 4900, 1200, '', -1500, 100), 4900, 1200, 0.6)), 950, 700, 4900, 1200, -200, {});
+	// the 马道 ramp on the wall face (stone, its parapet), the plaza
+	const ramp = `<path fill="#3d302b" d="M-200,1100 L880,640 L960,640 L960,654 L890,654 L-150,1110 Z"/><path fill="none" stroke="#17120f" stroke-width="7" d="M-200,1086 L880,628"/>` +
+		Array.from({length: 26}, (_, i) => { const x = -160 + i * 40, y = 1086 - (x + 200) * (458 / 1080); return `<rect x="${x}" y="${y - 12}" width="4" height="12" fill="#17120f"/>`; }).join('');
+	ext.add('ramp', canvasTex(await svgToCanvas(svgDoc(ramp, 2400, 700, '', -400, 560), 2400, 700, 0.6)), 800, 910, 2400, 700, -160, {});
+	ext.add('plaza', canvasTex(gradCanvas([[0, '#2c2826'], [1, '#1b1918']])), 960, 1300, 6000, 420, -150);
+	extDoor = new Live(ext, 'door', DOOR.x, DOOR.y, 400, 300, DOOR.z, {emissive: 0.85}, 1);
+	extDoor.draw('d', (g) => { g.translate(200 - DOOR.x, 150 - DOOR.y);
+		glowBlob(g, [DOOR.x, DOOR.y + 10], 150, 90, 0.35); const gr = g.createLinearGradient(0, DOOR.y - DOOR.h / 2, 0, DOOR.y + DOOR.h / 2); gr.addColorStop(0, '#E8A860'); gr.addColorStop(0.55, '#FFE2AE'); gr.addColorStop(1, '#F2C27E');
+		g.fillStyle = gr; g.fillRect(DOOR.x - DOOR.w / 2, DOOR.y - DOOR.h / 2, DOOR.w, DOOR.h); g.fillStyle = 'rgba(255,248,230,0.9)'; g.beginPath(); g.ellipse(DOOR.x, DOOR.y + 12, 16, 9, 0, 0, Math.PI * 2); g.fill(); });
+	extQueue = new Live(ext, 'queue', 950, 860, 2600, 700, -155, {rim: 0.5, rimPx: 3}, 0.75);
+	// ---------- the door passage: warm-lit masonry rings receding to the far opening (the hall)
+	pass = new Stage('n1pass');
+	// a uniform tunnel: every ring has the same world-size arch hole (PH × PV); the far opening (z 0) shows the hall
+	const PH = 78, PV = 112, PCY = 600;
+	const farCv = mkCanvas(1920, 1080), fg = farCv.getContext('2d')!;
+	fg.fillStyle = '#41474d'; fg.fillRect(0, 0, 1920, 1080);
+	{ const x0 = 960 - 110, y0 = PCY - 64, w = 220, h = 124; const gr = fg.createLinearGradient(0, y0, 0, y0 + h); gr.addColorStop(0, '#3a4046'); gr.addColorStop(0.7, '#464C52'); gr.addColorStop(1, '#2c3135');
+		fg.fillStyle = gr; fg.fillRect(x0, y0, w, h); fg.fillStyle = '#262b30'; fg.fillRect(960 - 34, PCY - 14, 68, 32); glowBlob(fg, [960, PCY], 60, 24, 0.6); fg.fillStyle = '#FFF0CF'; fg.fillRect(960 - 29, PCY - 4, 58, 10);
+		fg.fillStyle = '#2a2f34'; fg.fillRect(960 - 36, PCY + 18, 72, 20); }
+	pass.add('far', canvasTex(farCv), 960, 540, 1920, 1080, 0, {emissive: 0.2});
+	const RZ = [250, 480, 700, 900, 1060, 1180, 1250];
+	RZ.forEach((z, i) => { const c = mkCanvas(960, 540), g = c.getContext('2d')!, s2 = D / (D - z), hw = PH * s2 / 2, hh = PV * s2 / 2, cy = 540 / 2 + (PCY - 540) * s2 / 2, k = i / (RZ.length - 1);
+		const lit = Math.round(lerp(150, 62, k)); g.fillStyle = `rgb(${lit},${Math.round(lit * 0.8)},${Math.round(lit * 0.64)})`; g.fillRect(0, 0, 960, 540);
+		g.strokeStyle = `rgba(30,18,10,${0.25 + 0.2 * k})`; g.lineWidth = 1.5; for (let y = 6; y < 540; y += 14 * s2 / 2 + 6) { g.beginPath(); g.moveTo(0, y); g.lineTo(960, y); g.stroke(); }
+		g.globalCompositeOperation = 'destination-out'; g.beginPath(); g.moveTo(480 - hw, cy + hh); g.lineTo(480 - hw, cy - hh + hw); g.arc(480, cy - hh + hw, hw, Math.PI, 0); g.lineTo(480 + hw, cy + hh); g.closePath(); g.fill();
+		g.globalCompositeOperation = 'source-over'; pass.add('ring' + i, canvasTex(c), 960, 540, 1920, 1080, z, {}); });
+	// ---------- the hall
+	hallSt = new Stage('n2hall');
+	const hw = mkCanvas(960, 540), hg = hw.getContext('2d')!;
+	const hgr = hg.createLinearGradient(0, 0, 0, 540); hgr.addColorStop(0, '#3a4046'); hgr.addColorStop(0.5, '#464C52'); hgr.addColorStop(1, '#4b5157'); hg.fillStyle = hgr; hg.fillRect(0, 0, 960, 540);
+	for (const x of [120, 840]) { const r = hg.createRadialGradient(x, 200, 0, x, 200, 210); r.addColorStop(0, 'rgba(120,128,134,0.55)'); r.addColorStop(1, 'rgba(120,128,134,0)'); hg.fillStyle = r; hg.fillRect(0, 0, 960, 540); }
+	hg.fillStyle = 'rgba(30,34,38,0.5)'; for (let x = 40; x < 960; x += 160) hg.fillRect(x, 0, 3, 540);
+	hallSt.add('wall', canvasTex(hw), 960, 540, 2400 * 1.2, 1350 * 1.2, HZ.wall);
+	hallSt.add('floor', canvasTex(gradCanvas([[0, '#3a3f44'], [0.2, '#2f3438'], [1, '#202428']])), 960, 1100, 4000, 520, HZ.floor);
+	hallRefl = new Live(hallSt, 'refl', 960, 960, 1400, 300, HZ.refl, {emissive: 0.4}, 0.5);
+	// the case: dark interior + inclined bed (behind the glass), the plinth, the frame around the pane
+	const inner = mkCanvas(1920, 1080), ig = inner.getContext('2d')!;
+	ig.fillStyle = '#262b30'; ig.fillRect(PANE.x0, PANE.y0, PANE.x1 - PANE.x0, PANE.y1 - PANE.y0);
+	ig.fillStyle = '#3a4046'; ig.beginPath(); ig.moveTo(PANE.x0 + 30, 650); ig.lineTo(PANE.x1 - 30, 650); ig.lineTo(PANE.x1 - 50, 520); ig.lineTo(PANE.x0 + 50, 520); ig.closePath(); ig.fill();
+	ig.fillStyle = '#2f353a'; ig.fillRect(PANE.x0 + 30, 650, PANE.x1 - PANE.x0 - 60, 22);
+	hallSt.add('inner', canvasTex(inner), 960, 540, 1920, 1080, HZ.inner, {rim: 0.3});
+	hallSilk = new Live(hallSt, 'silk', 960, 580, 700, 260, HZ.silk, {emissive: 0.32}, 1);
+	const glass = mkCanvas(960, 540), gg = glass.getContext('2d')!;
+	gg.strokeStyle = 'rgba(220,230,236,0.08)'; gg.lineWidth = 10; gg.beginPath(); gg.moveTo(PANE.x0 / 2 + 60, PANE.y1 / 2); gg.lineTo(PANE.x0 / 2 + 140, PANE.y0 / 2); gg.stroke();
+	gg.lineWidth = 3; gg.beginPath(); gg.moveTo(PANE.x0 / 2 + 92, PANE.y1 / 2); gg.lineTo(PANE.x0 / 2 + 172, PANE.y0 / 2); gg.stroke();
+	hallSt.add('glass', canvasTex(glass), 960, 540, 1920, 1080, HZ.glass, {});
+	const fr = mkCanvas(1920, 1080), frg = fr.getContext('2d')!;
+	frg.fillStyle = '#2a2f34'; frg.fillRect(PANE.x0 - 40, PANE.y1 + 10, PANE.x1 - PANE.x0 + 80, 200);                         // plinth
+	frg.fillStyle = '#3c4248'; frg.fillRect(PANE.x0 - 40, PANE.y1 + 10, PANE.x1 - PANE.x0 + 80, 6);
+	frg.fillStyle = '#1b1f23'; frg.fillRect(PANE.x0 - 12, PANE.y0 - 12, PANE.x1 - PANE.x0 + 24, 12); frg.fillRect(PANE.x0 - 12, PANE.y1, PANE.x1 - PANE.x0 + 24, 14);
+	frg.fillRect(PANE.x0 - 12, PANE.y0 - 12, 12, PANE.y1 - PANE.y0 + 26); frg.fillRect(PANE.x1, PANE.y0 - 12, 12, PANE.y1 - PANE.y0 + 26);
+	frg.fillStyle = 'rgba(200,210,218,0.35)'; frg.fillRect(PANE.x0, PANE.y0 - 1, PANE.x1 - PANE.x0, 2); frg.fillRect(PANE.x0 - 1, PANE.y0, 2, PANE.y1 - PANE.y0);   // the glass edge catching light
+	frg.fillStyle = '#1b1f23'; frg.fillRect(PANE.x0 - 30, PANE.y0 - 40, PANE.x1 - PANE.x0 + 60, 28);                                 // the case top
+	hallSt.add('frame', canvasTex(fr), 960, 540, 1920, 1080, HZ.frame, {rim: 0.6, rimPx: 4});
+	hallCard = new Live(hallSt, 'card', 960, 800, 420, 160, HZ.card, {}, 1.5);
+	hallCard.drawW('c', (g) => { g.fillStyle = '#cfc8b8'; g.fillRect(820, 752, 280, 96); g.strokeStyle = '#8a8478'; g.lineWidth = 2; g.strokeRect(826, 758, 268, 84);
+		g.fillStyle = '#2b2a28'; g.textAlign = 'center'; g.font = '900 34px "Noto Serif CJK SC"'; g.fillText('撤展回库', 960, 796); g.font = '700 22px "Noto Serif CJK SC"'; g.fillText('下次展出：未公布', 960, 830); });
+	hallCrowd = new Live(hallSt, 'crowd', 960, 640, 2600, 1100, HZ.crowd, {rim: 1.0, rimPx: 6}, 1);
+};
+const N = {cut: b(9), passA: b(10), hallA: b(10.25), out: b(10.75), card: b(11), pane: b(11.5), paneZ: b(11.75)};
+/** the queue steps forward on each beat b9 → b10 (time-lapse), shuffles slowly after */
+const qStep = (t: number) => { const bt = (t - N.cut) / BEAT; if (bt < 0) return bt * 0.25; const n = Math.floor(Math.min(bt, 4)), f = Math.min(bt, 4) - n; return n + easeOut(Math.min(1, f / 0.35)) + Math.max(0, bt - 4) * 0.25; };
+const extZoom = (t: number) => Math.exp(lerp(Math.log(0.86), Math.log(9), easeIn(clamp01((t - N.cut - 0.25) / (N.passA - N.cut - 0.25)) ** 0.85)));
+const passZoom = (t: number) => Math.exp(lerp(0, Math.log(12), easeIn(clamp01((t - N.passA) / (N.hallA - N.passA)) ** 0.8)));
+/** hall camera zoom: out of the passage (0.9 → 1), slow push to b11.5, then through the pane (scene 08's mask grows with it) */
+const hallZoom = (t: number) => {
+	if (t < b(10.5)) return lerp(0.9, 1.0, easeOut((t - N.hallA) / (b(10.5) - N.hallA)));
+	if (t < N.pane) return lerp(1.0, 1.08, smooth((t - b(10.5)) / (N.pane - b(10.5))));
+	return Math.exp(lerp(Math.log(1.08), Math.log(30), easeIn(clamp01((t - N.pane) / (N.paneZ - N.pane)))));
+};
+const VIS = [look('visitor'), look('visitorW')];
+/** visitors filing past right → left in front of the case, thinning out; the last leaves the frame on b10.75 */
+const crowdAt = (t: number) => {
+	const out: FigOpts[] = [], u0 = t - N.hallA;
+	const X0 = [60, 380, 640, 930, 1180, 1430, 1700], V = [1850, 1950, 1800, 2000, 1880, 1960, 1900], HS = [480, 455, 500, 470, 492, 450, 486];
+	X0.forEach((x0, i) => {
+		const lk = VIS[(i * 3) % 2 ? 1 : 0], h = HS[i], xx = x0 + 260 - u0 * V[i];
+		if (xx < -280 || xx > 2250) return;
+		const ph = (x0 - xx) / (gaitStride('08_04', stepFor(lk)) * h) + i * 0.37, gy = 1010 + (i % 2) * 16;
+		out.push(rig({x: xx, ground: gy, h, pose: walkFor(lk, ph), look: lk, flip: true}, [], () => gy, 'N visitor ' + i));
+	});
+	return out;
+};
+// the pane transition (scene 08's IN) reads its rect from here; scene 07's draw updates it from its own camera every frame
+const IN08: In = {mode: 9, a: N.pane, z: N.paneZ, pt: [0.5, 0.5], dir: [0.16, 0.14], ease: (u) => u < 0.07 ? 0.74 * smooth(u / 0.07) : 0.74 + 0.26 * smooth((u - 0.07) / 0.93)};
+addScene({id: '07', a: N.cut, z: N.pane, draw: (t) => {
+	if (t < N.passA) {           // ---- exterior: the queue up the 马道, the warm door on the lock point; crane up toward it
+		const zoom = extZoom(t), rise = 40 * smooth((t - N.cut) / (N.passA - N.cut));
+		lockCam(ext, zoom, DOOR.x, DOOR.y, DOOR.z, 960, 580 + rise);
+		const st = qStep(t), sp = 31;
+		const tot = qLen.reduce((a, c) => a + c, 0) - 4;
+		extQueue.drawW(`${Math.round(st * 40)}`, (g) => { for (let j = Math.floor(st) - 1; j < Math.floor(st) + 112; j++) { const q = qAt(tot - (j + 1) * sp + st * sp); if (!q) continue;
+			fillSvg(g, tinyFig(q[0], q[1], 40 + 6 * hash(j * 1.7), 700 + j, '#120e0b')); } });
+		ext.heroAt(DOOR.x, DOOR.y, DOOR.z, 900);
+		return {st: ext, grade: {vig: 0.38, exposure: 1}, bloom: 1};
+	}
+	if (t < N.hallA) {           // ---- the door passage
+		pass.setCam(960, 540, passZoom(t));
+		return {st: pass, grade: {vig: 0.45, exposure: 1}, bloom: 1};
+	}
+	// ---- the hall
+	const zoom = hallZoom(t), st = hallSt;
+	lockCam(st, zoom, 960, 580, HZ.glass);
+	const outK = clamp01((t - N.out) / 0.28), on = 1 - smooth(outK);
+	const crowd = crowdAt(t), key = k30(t);
+	hallCrowd.drawW(key, (g) => { for (const f of crowd) fillD(g, figurePaths(f)); });
+	hallSilk.L.mat.uniforms.uEmissive.value = 0.32 * on; hallSilk.L.mat.uniforms.uOpacity.value = on;
+	hallSilk.drawW('s', (g) => { g.fillStyle = '#FFF3D8'; g.fillRect(700, 545, 520, 82); const hh = riverMono.width / (520 / 82); g.drawImage(riverMono, 0, (riverMono.height - hh) / 2, riverMono.width, hh, 700, 545, 520, 82);
+		g.fillStyle = 'rgba(52,80,106,0.9)'; g.fillRect(700, 545, 520, 6); g.fillRect(700, 621, 520, 6); glowBlob(g, [960, 586], 330, 110, 0.35); });
+	hallRefl.drawW(`${on.toFixed(2)}`, (g) => { glowBlob(g, [960, 900], 420, 50, 0.22 * on, '255,214,150'); });
+	st.heroAt(960, 586, HZ.silk, 1100 * on + 1);
+	// the pane rect for scene 08's IN mask (screen uv, y up) from this camera
+	const a = st.toScreen(st.at(PANE.x0, PANE.y0, HZ.glass)), c = st.toScreen(st.at(PANE.x1, PANE.y1, HZ.glass));
+	IN08.pt = [((a.x + c.x) / 2) / 1920, 1 - ((a.y + c.y) / 2) / 1080]; IN08.dir = [((c.x - a.x) / 2) / 1920, ((c.y - a.y) / 2) / 1080];
+	return {st, grade: {vig: 0.36, exposure: 1}, bloom: 1};
+}});
+
+// ================================================================================================ 08 · S1 (b11.5 → b13)
+// CREST CR-B wide, 宋 DUSK, P-宋 gate far left: the empty stage. Seen first through the case's pane (lanterns lighting right →
+// left in the dark glass), the push through the glass eases into the locked wide by b11.75. b12.0 a shadow runs right along
+// the deck into the road (出); b12.5 the warm light runs left toward the palace (进). The tally draws itself (HUD).
+let crestS1: Crest, s1Shade: Live, s1Light: Live, s1Boat: Live;
+const LANT_ON: [number, number][] = [[1832, b(11.5)], [1600, b(11.5)], [1368, b(11.75)], [1136, b(11.75)], [904, b(12.0)], [672, b(12.0)], [440, b(12.25)], [208, b(12.25)], [-24, b(12.5)], [-256, b(12.55)], [2064, b(11.5)], [2296, b(11.5)]];
+const bootS1 = async () => {
+	crestS1 = new Crest('s1-dusk', {sky: 'dusk', era: '宋', lanterns: true, boat: true, bankCrowd: true}); await crestS1.ready;
+	s1Boat = new Live(crestS1.st, 's1boat', 1500, 900, 1400, 900, -520, {fog: ['#C9A47A', 0.22], rim: 0}, 0.6);
+	s1Boat.drawW('b', (g) => fillSvg(g, boatSvg(1560, 1010, 520, 0, SIL, 5)));
+	s1Shade = new Live(crestS1.st, 's1shade', 1300, 1100, 5200, 1600, 2, {}, 0.5);
+	s1Light = new Live(crestS1.st, 's1light', 960, 1100, 5200, 1600, 3, {emissive: 0.8}, 0.5);
+};
+const deckBand = (g: CanvasRenderingContext2D, x0: number, x1: number, up: number, dn: number) => { g.beginPath(); for (let x = x0; x <= x1; x += 24) g.lineTo(x, deck(x) - up); for (let x = x1; x >= x0; x -= 24) g.lineTo(x, deck(x) + dn); g.closePath(); };
+addScene({id: '08', a: N.pane, z: b(13), in: IN08, draw: (t) => {
+	const st = crestS1.st;
+	// camera: inside the pane it starts low and wide (the lanterns sit in the glass), easing into the CR-B rest by b11.75
+	const k = easeOut(clamp01((t - N.pane) / (N.paneZ - N.pane)));
+	st.setCam(960, lerp(745, 540, k), Math.exp(lerp(Math.log(0.74), 0, k)));
+	crestS1.setLanterns((i, x) => { const r = LANT_ON.find(([lx]) => Math.abs(lx - x) < 60); const at = r ? r[1] : b(12.6); return smooth((t - at) / 0.12); });
+	crestS1.setBoat(1640, 0); crestS1.setStreak(0, 0, t);
+	// b12.0 → b12.45: the shadow runs right along the deck into the road; b12.5 → b12.95: the light runs left to the palace
+	const sh = clamp01((t - b(12)) / (b(12.45) - b(12))), lt = clamp01((t - b(12.5)) / (b(12.95) - b(12.5)));
+	s1Shade.drawW(`${sh.toFixed(3)}`, (g) => { if (sh <= 0) return; const xe = lerp(960, 3300, easeInOut(sh));
+		const gr = g.createLinearGradient(xe - 600, 0, xe, 0); gr.addColorStop(0, 'rgba(14,10,8,0.5)'); gr.addColorStop(0.85, 'rgba(14,10,8,0.5)'); gr.addColorStop(1, 'rgba(14,10,8,0)');
+		g.fillStyle = gr; deckBand(g, 960, xe, 6, 40); g.fill(); });
+	s1Light.drawW(`${lt.toFixed(3)}`, (g) => { if (lt <= 0) return; const xe = lerp(960, -1400, easeInOut(lt));
+		const gr = g.createLinearGradient(xe, 0, xe + 520, 0); gr.addColorStop(0, 'rgba(255,200,130,0)'); gr.addColorStop(0.12, 'rgba(255,214,150,0.7)'); gr.addColorStop(0.4, 'rgba(255,196,128,0.28)'); gr.addColorStop(1, 'rgba(255,196,128,0.22)');
+		g.fillStyle = gr; deckBand(g, xe, 960, 3, 6); g.fill(); });
+	st.setHero(-9999, 0, 1);
+	const tr = t < N.paneZ;
+	return {st, grade: {vig: 0.32, exposure: 1}, bloom: 1, hud: tr ? (hud) => glassLine(hud, t) : undefined};
+}});
+/** the glass: one thin highlight line crossing the pane as the camera pushes through it (under the subtitles) */
+const glassLine = (hud: HTMLElement, t: number) => {
+	const u = clamp01((t - N.pane) / (N.paneZ - N.pane)), [px, py] = IN08.pt!, [hx, hy] = IN08.dir!;
+	const x0 = (px - hx) * 1920, y0 = (1 - py - hy) * 1080, w = hx * 2 * 1920, h = hy * 2 * 1080, pos = lerp(18, 112, easeIn(u)), a = 0.55 * (1 - smooth((u - 0.8) / 0.2));
+	hud.insertAdjacentHTML('afterbegin', `<div style="position:absolute;left:${x0.toFixed(1)}px;top:${y0.toFixed(1)}px;width:${w.toFixed(1)}px;height:${h.toFixed(1)}px;overflow:hidden;pointer-events:none;` +
+		`background:linear-gradient(112deg, rgba(255,246,230,0) ${pos - 6}%, rgba(255,246,230,${(a * 0.18).toFixed(3)}) ${pos - 2}%, rgba(255,248,236,${a.toFixed(3)}) ${pos}%, rgba(255,246,230,${(a * 0.18).toFixed(3)}) ${pos + 0.8}%, rgba(255,246,230,0) ${pos + 5}%)"></div>`);
+};
