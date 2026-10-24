@@ -48,7 +48,7 @@ export class Store {
 	constructor() { this.ready = this.build(); }
 	async build() {
 		const st = this.st;
-		st.add('wall', canvasTex(gradCanvas([[0, '#2a2622'], [0.35, '#3a3530'], [0.7, '#433d36'], [1, '#33302b']])), 960, 540, 4200, 2400, -1800);
+		st.add('wall', canvasTex(gradCanvas([[0, '#3A322B'], [0.35, '#463c34'], [0.7, '#4A4038'], [1, '#3c342d']])), 960, 540, 4200, 2400, -1800);
 		const back = svgDoc(`${shelves(-600, 900, 120, 760, 4, 11)}${shelves(1020, 2520, 120, 760, 4, 23)}<rect fill="#141110" x="-900" y="760" width="3800" height="600"/>`, 3600, 1500, '', -900, -100);
 		st.add('shelves', canvasTex(await svgToCanvas(back, 3600, 1500, 0.6)), 900, 650, 3600, 1500, -900, {fog: ['#4a4239', 0.22], rim: 0.6});
 		const heaps = svgDoc(`${scrollHeap(-80, 980, 900, 260, 60, 3)}${scrollHeap(1950, 1000, 1000, 300, 70, 7)}${scrollHeap(560, 1040, 520, 120, 26, 13)}`, 3600, 1500, '', -900, -100);
@@ -71,7 +71,7 @@ export class XBL {
 		const yard = svgDoc(`${willow(1250, 760, 520, 4, '#10151a')}<rect fill="#141a1e" x="0" y="740" width="1920" height="400"/><path fill="#10151a" d="M0,740 L600,700 L1400,700 L1920,740 Z"/>`, W, H);
 		st.add('yard', canvasTex(await svgToCanvas(yard, W, H, 0.7)), 960, 540, W, H, -1500, {fog: ['#3b474b', 0.2]});
 		// the room: wall with door opening (cut out), shelves of slatted boxes left and right
-		const room = svgDoc(`<path fill-rule="evenodd" fill="#33383d" d="M-900,-200 L2820,-200 L2820,1300 L-900,1300 Z M800,260 L1120,260 L1120,830 L800,830 Z"/>
+		const room = svgDoc(`<path fill-rule="evenodd" fill="#3A4046" d="M-900,-200 L2820,-200 L2820,1300 L-900,1300 Z M800,260 L1120,260 L1120,830 L800,830 Z"/>
 			<rect fill="#15100C" x="786" y="246" width="348" height="18"/><rect fill="#15100C" x="786" y="246" width="16" height="590"/><rect fill="#15100C" x="1118" y="246" width="16" height="590"/>
 			<path fill="#15100C" d="M800,262 L700,300 L700,860 L800,830 Z M1120,262 L1220,300 L1220,860 L1120,830 Z"/>
 			${boxShelves(-700, 640, 120, 820, 4, 5)}${boxShelves(1280, 2620, 120, 820, 4, 9)}`, 3720, 1500, '', -900, -200);
@@ -96,7 +96,7 @@ export class RoomYuan {
 		const out = svgDoc(`${dagobaSvg(1240, 640, 0.95, night ? '#1a2128' : '#3e4a4c')}${skylineSvg(700, 1800, 660, 30, 80, 51, night ? '#141a1f' : '#2e3a3e')}`, W, H);
 		st.add('outside', canvasTex(await svgToCanvas(out, W, H, 0.6)), 960, 540, W, H, -1800, {fog: [night ? '#3a4a52' : '#BCA07A', 0.25]});
 		// wall with a round moon window cut out; hung scrolls; lattice
-		const wall = svgDoc(`<path fill-rule="evenodd" fill="${night ? '#3a4a54' : '#41525a'}" d="M-600,-300 L2520,-300 L2520,1400 L-600,1400 Z M1240,420 m-280,0 a280,280 0 1,0 560,0 a280,280 0 1,0 -560,0 Z"/>
+		const wall = svgDoc(`<path fill-rule="evenodd" fill="${night ? '#2E3E46' : '#3a4c55'}" d="M-600,-300 L2520,-300 L2520,1400 L-600,1400 Z M1240,420 m-280,0 a280,280 0 1,0 560,0 a280,280 0 1,0 -560,0 Z"/>
 			<circle cx="1240" cy="420" r="292" fill="none" stroke="#15100C" stroke-width="26"/>
 			<rect x="180" y="120" width="120" height="430" fill="#2a3036"/><rect x="176" y="112" width="128" height="14" fill="#15100C"/><rect x="176" y="546" width="128" height="14" fill="#15100C"/>
 			<rect x="360" y="150" width="100" height="380" fill="#2a3036"/><rect x="356" y="142" width="108" height="14" fill="#15100C"/><rect x="356" y="526" width="108" height="14" fill="#15100C"/>
@@ -161,7 +161,7 @@ export class Desk {
 	constructor(public kind: DeskKind) { this.st = new Stage('desk-' + kind); this.ready = this.build(); }
 	async build() {
 		const st = this.st, k = this.kind;
-		const wallCol = {song: '#4a3f33', jin: '#45403a', yuan: '#3f4a40', qing: '#3a3330'}[k];
+		const wallCol = {song: '#4a3f33', jin: '#45403a', yuan: '#4A3E30', qing: '#3E3A34'}[k];
 		const outSky = {song: [[0, '#5c6c70'], [1, '#c9a47a']], jin: [[0, '#3a4a52'], [1, '#8a8a7a']], yuan: [[0, '#4a5e58'], [1, '#a7b39a']], qing: [[0, '#1d2a33'], [1, '#3a4850']]}[k] as [number, string][];
 		st.add('osky', canvasTex(gradCanvas(outSky)), 1300, 420, 1200, 900, -2400);
 		let win = '', outside = '';

@@ -12,12 +12,12 @@ export type Era = '宋' | '元' | '明' | '清' | '1923' | '1950' | 'none';
 export const SKIES: Record<Sky, [number, string][]> = {
 	dusk: [[0, '#2B4552'], [0.3, '#3F5C66'], [0.46, '#6E827E'], [0.58, '#BCA07A'], [0.66, '#E6B676'], [0.72, '#F3CC8E'], [0.8, '#E9C08A'], [1, '#B89670']],
 	day: [[0, '#4E6B75'], [0.3, '#5E7A82'], [0.5, '#8FA7A6'], [0.64, '#D9CFAE'], [0.75, '#F1E2BE'], [1, '#D8CBAA']],
-	night: [[0, '#16222B'], [0.4, '#22323C'], [0.66, '#34454C'], [0.74, '#4A4A3E'], [1, '#2A2E2C']],
+	night: [[0, '#1F2E38'], [0.4, '#2E404B'], [0.66, '#45565D'], [0.74, '#5A5A4C'], [1, '#3A3E3A']],
 	fire: [[0, '#2A1D1F'], [0.35, '#4A2722'], [0.55, '#6B2E22'], [0.66, '#C2562F'], [0.73, '#E88A45'], [1, '#7A3A22']],
 	snow: [[0, '#2E3B47'], [0.4, '#4A5A66'], [0.68, '#6C7A82'], [0.76, '#7E8A90'], [1, '#4A545A']],
 };
 /** horizon colour per sky (fog target for far layers) */
-export const HORIZON: Record<Sky, string> = {dusk: '#C9A47A', day: '#C9C2A6', night: '#3E4744', fire: '#B04E2E', snow: '#6E7B82'};
+export const HORIZON: Record<Sky, string> = {dusk: '#C9A47A', day: '#C9C2A6', night: '#55605E', fire: '#B04E2E', snow: '#6E7B82'};
 export const WATER: Record<Sky, [number, string][]> = {
 	dusk: [[0, '#8C8573'], [0.25, '#4E5B5A'], [1, '#1A2326']], day: [[0, '#B9B7A0'], [0.3, '#7E8E8C'], [1, '#33403F']],
 	night: [[0, '#3A4442'], [0.3, '#232D30'], [1, '#121A1D']], fire: [[0, '#9A4A2C'], [0.3, '#4A2A22'], [1, '#1A1414']], snow: [[0, '#6A767A'], [0.3, '#3E4A50'], [1, '#1E262A']],
