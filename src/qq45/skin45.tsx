@@ -24,17 +24,17 @@ export const Story: React.FC<{rows: SubRow[]}> = ({rows}) => rows.length === 0 ?
 	<div style={{position: 'absolute', borderRadius: '50%', filter: 'blur(40px)', left: 40, top: 70, width: 1080, height: 120 + 88 * rows.length, background: 'rgba(16,24,28,0.34)'}} />
 	<div style={{...fx, left: 150, top: 132, fontWeight: 900, fontSize: 58, lineHeight: 1.5, letterSpacing: '0.03em', whiteSpace: 'nowrap'}}>{rows.map((r, i) => <div key={i} style={{opacity: r.o ?? 1}}><Marked s={r.s} n={r.n} /></div>)}</div>
 </>;
-export const Punch: React.FC<{s: string; o?: number; n?: number; top?: number}> = ({s, o = 1, n, top = 470}) => <>
+export const Punch: React.FC<{s: string; o?: number; n?: number; top?: number; size?: number}> = ({s, o = 1, n, top = 470, size = 76}) => <>
 	<div style={{position: 'absolute', left: 420, right: 420, top: top - 30, height: 160, borderRadius: '50%', filter: 'blur(40px)', background: 'rgba(14,20,24,0.42)', opacity: o}} />
-	<div style={{...fx, left: 0, right: 0, top, textAlign: 'center', fontWeight: 900, fontSize: 76, letterSpacing: '0.06em', opacity: o}}><Marked s={s} n={n} pull /></div></>;
+	<div style={{...fx, left: 0, right: 0, top, textAlign: 'center', fontWeight: 900, fontSize: size, letterSpacing: '0.06em', opacity: o}}><Marked s={s} n={n} pull /></div></>;
 
 /** stamp (top-right): an engraved plate caption — year in figures, place, a note line; double rule on the right */
 export const Stamp: React.FC<{y: string; place?: string; l2?: string; l3?: string; o?: number}> = ({y, place, l2, l3, o = 1}) =>
 	<div style={{...fx, top: 92, right: 60, textAlign: 'right', paddingRight: 24, opacity: o}}>
 		<div style={{position: 'absolute', right: 0, top: 6, bottom: 6, width: 9, borderLeft: `2px solid ${P.line}`, borderRight: `2px solid ${P.line}`, opacity: 0.85}} />
 		<div style={{fontWeight: 900, fontSize: 54, lineHeight: 1.22}}><span style={{fontFamily: NUM, fontWeight: 700, letterSpacing: '0.01em'}}>{y}</span>{place && <span> · {place}</span>}</div>
-		{l2 && <div style={{fontWeight: 700, fontSize: 38, lineHeight: 1.45, marginTop: 2}}>{l2}</div>}
-		{l3 && <div style={{fontWeight: 500, fontSize: 32, lineHeight: 1.45, opacity: 0.85}}>{l3}</div>}
+		{l2 && <div style={{fontWeight: 700, fontSize: 44, lineHeight: 1.4, marginTop: 2}}>{l2}</div>}
+		{l3 && <div style={{fontWeight: 600, fontSize: 38, lineHeight: 1.4, opacity: 0.9}}>{l3}</div>}
 	</div>;
 export const Brand: React.FC = () => <div style={{...fx, top: 34, right: 60, fontSize: 28, letterSpacing: '0.06em', fontWeight: 700, opacity: 0.92}}><span style={{color: KEY}}>◆</span> Juno · VIBE知识大赏</div>;
 
@@ -58,13 +58,13 @@ const Ring: React.FC<{st: Record<Z, DialState>; r?: number; homeOnly?: boolean; 
 };
 export const DialRow: React.FC<{label: string; n: React.ReactNode; of?: string; dim?: boolean}> = ({label, n, of = '/12', dim}) =>
 	<div style={{display: 'flex', alignItems: 'flex-end', gap: 8, whiteSpace: 'nowrap', opacity: dim ? 0.55 : 1}}>
-		<span style={{fontSize: 32, fontWeight: 900, lineHeight: 1, marginBottom: 8}}>{label}</span>
+		<span style={{fontSize: 40, fontWeight: 900, lineHeight: 1, marginBottom: 8}}>{label}</span>
 		<span style={{fontFamily: NUM, fontSize: 76, fontWeight: 700, lineHeight: 1, letterSpacing: '-0.01em'}}>{n}</span>
 		<span style={{fontFamily: NUM, fontSize: 34, fontWeight: 700, lineHeight: 1, marginBottom: 8, opacity: 0.85}}>{of}</span>
 	</div>;
 /** bottom-left counter: the dial + one or two rows */
-export const Dial: React.FC<{st: Record<Z, DialState>; rows: {label: string; n: React.ReactNode; dim?: boolean; home?: boolean}[]; hand?: number; o?: number}> = ({st, rows, hand, o = 1}) =>
-	<div style={{...fx, left: 132, bottom: 56, display: 'flex', alignItems: 'flex-end', gap: 20, opacity: o}}>
+export const Dial: React.FC<{st: Record<Z, DialState>; rows: {label: string; n: React.ReactNode; dim?: boolean; home?: boolean}[]; hand?: number; o?: number; scale?: number}> = ({st, rows, hand, o = 1, scale = 1}) =>
+	<div style={{...fx, left: 132, bottom: 56, display: 'flex', alignItems: 'flex-end', gap: 20, opacity: o, transform: `scale(${scale})`, transformOrigin: '0% 100%'}}>
 		<Ring st={st} hand={hand} />
 		<div style={{display: 'flex', flexDirection: 'column', gap: 6, marginBottom: 14}}>{rows.map((r, i) => <div key={i} style={{display: 'flex', alignItems: 'center', gap: 12}}>
 			{r.home && <span style={{display: 'inline-block', width: 14, height: 14, borderRadius: 7, background: CU.core, boxShadow: `0 0 12px ${CU.halo}, 0 0 4px ${CU.mid}`}} />}
