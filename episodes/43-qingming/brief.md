@@ -1,6 +1,6 @@
 # Brief: 假如你是清明上河图
 
-- **Episode:** ep40 · **Series:** VIBE知识大赏 (Juno)
+- **Episode:** ep43 · **Series:** VIBE知识大赏 (Juno)
 - **Idea in one sentence:** Tell the ~900-year life of 《清明上河图》 in the second person — the viewer *is* the scroll — as it passes from emperor to conqueror to thief to a child emperor who smuggles it out, gets lost, is found, and ends up in a museum that almost never shows it.
 - **Why a 18–25 viewer cares:** everyone has seen this painting in a textbook; almost nobody knows it was carried off by invaders, copied dozens of times, smuggled out of the Forbidden City by Puyi, and found in a pile of scrolls. "You" living through all of it makes 900 years feel like one life.
 - **Takeaway (one line the viewer should remember):** to be decided with the screenwriter; direction: a thing everyone wanted to own survived because people kept passing it on — the same way iwanau's seal ends on "天下，从来不在一块石头里".
