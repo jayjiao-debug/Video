@@ -182,7 +182,7 @@ const compMat = new THREE.ShaderMaterial({
 	float h21(vec2 p){ return fract(sin(dot(p, vec2(127.1, 311.7))) * 43758.5453); }
 	float n2(vec2 p){ vec2 i = floor(p), f = fract(p); f = f*f*(3.0-2.0*f); return mix(mix(h21(i), h21(i+vec2(1,0)), f.x), mix(h21(i+vec2(0,1)), h21(i+vec2(1,1)), f.x), f.y); }
 	float fbm(vec2 p){ float s = 0.0, a = 0.5; for (int i = 0; i < 5; i++){ s += a * n2(p); p *= 2.03; a *= 0.5; } return s; }
-	vec3 bl(sampler2D g0, sampler2D g1, sampler2D g2, sampler2D g3, vec2 uv){ return texture2D(g0, uv).rgb * 0.55 + texture2D(g1, uv).rgb * 0.7 + texture2D(g2, uv).rgb * 0.85 + texture2D(g3, uv).rgb * 1.0; }
+	vec3 bl(sampler2D g0, sampler2D g1, sampler2D g2, sampler2D g3, vec2 uv){ return (texture2D(g0, uv).rgb * 0.35 + texture2D(g1, uv).rgb * 0.45 + texture2D(g2, uv).rgb * 0.6 + texture2D(g3, uv).rgb * 0.75) * 0.5; }
 	vec3 sideA(vec2 uv){ return texture2D(A, uv).rgb + bl(Ag0, Ag1, Ag2, Ag3, uv) * bloomA; }
 	vec3 sideB(vec2 uv){ return texture2D(B, uv).rgb + bl(Bg0, Bg1, Bg2, Bg3, uv) * bloomB; }
 	void main(){
