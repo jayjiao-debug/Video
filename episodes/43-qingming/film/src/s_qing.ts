@@ -44,7 +44,7 @@ const palaceSvg = (x0: number, x1: number, base: number, s: number, col = SIL, o
 	const wallH = 64 * s, X = (x: number) => ox + x * sx;
 	let o = `<rect fill="${col}" x="${X(x0).toFixed(1)}" y="${(base - wallH).toFixed(1)}" width="${((x1 - x0) * sx).toFixed(1)}" height="${(wallH + 900).toFixed(1)}"/>`;
 	o += `<rect fill="${col}" x="${X(x0).toFixed(1)}" y="${(base - wallH - 10 * s).toFixed(1)}" width="${((x1 - x0) * sx).toFixed(1)}" height="${(13 * s).toFixed(1)}"/>`;
-	o += `<rect fill="${col}" x="${X(x0).toFixed(1)}" y="${(base - wallH - 80 * s).toFixed(1)}" width="${((x1 - x0) * sx).toFixed(1)}" height="${(80 * s).toFixed(1)}"/>`;   // the courts behind the wall
+	o += `<rect fill="${col}" x="${X(x0).toFixed(1)}" y="${(base - wallH - 104 * s).toFixed(1)}" width="${((x1 - x0) * sx).toFixed(1)}" height="${(104 * s).toFixed(1)}"/>`;   // the courts behind the wall
 	for (const [cx, w, h] of HALLS) if (cx > x0 && cx < x1) o += hall(X(cx), base - wallH, w * s * sx, h * s, 1, col);
 	o += jiaolou(X(-360), base - wallH + 4 * s, 0.6 * s * sx, col);
 	return o;
@@ -52,8 +52,8 @@ const palaceSvg = (x0: number, x1: number, base: number, s: number, col = SIL, o
 /** lit windows of the palace frontage (warm, small): rects [x, y, w, h] */
 const palaceWindows = (base: number, s: number, ox = 0, sx = 1) => {
 	const out: [number, number, number, number][] = []; const wallH = 64 * s;
-	HALLS.forEach(([cx, w, h], i) => { const bh = h * s * 0.55, ww = w * s * sx; for (let k = 0; k < 5; k++) { if (hash(i * 7.3 + k * 1.9) < 0.45) continue;
-		out.push([ox + cx * sx - ww * 0.36 + k * ww * 0.15, base - wallH - bh * 0.78, ww * 0.09, bh * 0.42]); } });
+	HALLS.forEach(([cx, w, h], i) => { const bh = h * s * 0.55, ww = w * s * sx; for (let k = 0; k < 5; k++) { if (hash(i * 7.3 + k * 1.9) < 0.5) continue;
+		out.push([ox + cx * sx - ww * 0.33 + k * ww * 0.15, base - wallH - bh * 0.5, ww * 0.035, bh * 0.26]); } });
 	return out;
 };
 /** a cloth bundle hugged to the chest: the kit's bundle; glow = your light leaking through the cloth (else a grey copy) */
@@ -255,7 +255,8 @@ const startCanvas = () => {
 	g.restore();
 	// the outer brocade (blue) and the stave edge at the right end
 	g.fillStyle = '#34506A'; g.fillRect(SC.mount1, 0, SC.w - SC.mount1, SC.h);
-	g.strokeStyle = 'rgba(210,174,106,0.45)'; g.lineWidth = 4; for (let yy = 40; yy < SC.h; yy += 80) for (let xx = SC.mount1 + 30 + ((yy / 80) % 2) * 40; xx < SC.w - 40; xx += 80) { g.beginPath(); g.moveTo(xx - 12, yy); g.lineTo(xx, yy - 12); g.lineTo(xx + 12, yy); g.lineTo(xx, yy + 12); g.closePath(); g.stroke(); }
+	g.fillStyle = '#2E4760'; g.fillRect(SC.mount1, 0, SC.w - SC.mount1, SC.h);
+	g.strokeStyle = 'rgba(196,164,104,0.28)'; g.lineWidth = 2; for (let yy = 20; yy < SC.h; yy += 40) for (let xx = SC.mount1 + 20 + ((yy / 40) % 2) * 20; xx < SC.w - 50; xx += 40) { g.beginPath(); g.moveTo(xx - 6, yy); g.lineTo(xx, yy - 6); g.lineTo(xx + 6, yy); g.lineTo(xx, yy + 6); g.closePath(); g.stroke(); }
 	g.fillStyle = '#2a3e52'; g.fillRect(SC.w - 46, 0, 46, SC.h);
 	// joins: a thin seam and a slight overlap shadow
 	for (const jx of [SC.join, SC.mount1]) { g.fillStyle = 'rgba(80,62,40,0.35)'; g.fillRect(jx - 2, 0, 4, SC.h); g.fillStyle = 'rgba(80,62,40,0.12)'; g.fillRect(jx + 2, 0, 10, SC.h); }
@@ -339,7 +340,8 @@ const boot24 = async () => {
 	const pc = mkCanvas(4400, 1100), pg = pc.getContext('2d')!; pg.drawImage(snow, 0, 0); pg.drawImage(dark, 0, 4);
 	st.add('pal24', canvasTex(pc), -1800 + 2200, 550, 4400, 1100, -2400, {fog: [HORIZON.snow, 0.12]});
 	win24 = new Live(st, 'win24', 400, 550, 4400, 1100, -2398, {emissive: 0.9}, 1);
-	win24.drawW('w', (g) => { for (const [x, y, w, h] of palaceWindows(860, 1)) { g.fillStyle = `rgba(255,184,104,${(0.55 + 0.35 * hash(x)).toFixed(2)})`; g.fillRect(x, y + 4, w, h); } });
+	win24.drawW('w', (g) => { for (const [x, y, w, h] of palaceWindows(860, 1)) { g.fillStyle = `rgba(255,184,104,${(0.32 + 0.22 * hash(x)).toFixed(2)})`; g.fillRect(x, y + 4, w, h); } });
+	st.get('far').mesh.visible = false;                                          // the stock far bank's gate tower would break the roofline match
 	await snowDeck(st, 1); snowRail(st, 'railSnow24');
 	cast24 = new Cast(st, 'cast24', 1200, 640, 3600, 1100, 20);
 	prop24 = new Live(st, 'prop24', 1200, 640, 3600, 1100, 22, {rim: 0.4, emissive: 0.35}, 1);
@@ -425,7 +427,7 @@ const draw25a = (t: number): Frame => {
 		const hw = hugWalk(YOUTH, (x - XL25(i)) / STR25 + i * 0.281, x, hh, gr, `P2 carrier ${i}`);
 		figs.push(hw.f); held.push({c: hw.c, r: hw.r, i}); }
 	const show = q < 0.02;
-	cast25.L.mesh.visible = prop25.L.mesh.visible = arms25.L.mesh.visible = glow25.L.mesh.visible = show;
+	cast25.L.L.mesh.visible = prop25.L.mesh.visible = arms25.L.mesh.visible = glow25.L.mesh.visible = show;
 	cast25.draw(key, figs);
 	prop25.drawW(key, (g) => { for (const h of held) bundle(g, h.c, h.r, h.i === 1 ? 1 : 0, h.i !== 1); });
 	prop25.L.mat.uniforms.uEmissive.value = 0.3;
