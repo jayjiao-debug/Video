@@ -39,7 +39,7 @@ export const walkNat = (u: number, t0: number, t1: number, x0: number, dir: 1 | 
 export const PZ = {
 	stand: grounded({lean: 3, lt: 2, lk: 2, rt: -3, rk: 3, la: -3, le: 10, ra: 4, re: 14}),
 	/** toss: near arm up and forward over the head, far arm down */
-	toss: grounded({lean: -4, neck: -10, lt: 10, lk: 6, rt: -14, rk: 4, la: 150, le: 20, ra: -6, re: 12}),
+	toss: grounded({lean: -2, neck: -6, lt: 10, lk: 6, rt: -14, rk: 4, la: 115, le: 20, ra: -6, re: 12}),
 	/** catch: both hands forward at chest height */
 	catch_: grounded({lean: 8, neck: 4, lt: 6, lk: 8, rt: -8, rk: 6, la: 70, le: 40, ra: 62, re: 46}),
 	/** offer: near arm forward at chest height, palm up; far arm relaxed */
@@ -56,6 +56,8 @@ export const PZ = {
 	holdChest: grounded({lean: 6, neck: 18, lt: 3, lk: 4, rt: -4, rk: 4, la: 40, le: 100, ra: 34, re: 104}),
 	/** look up while holding something up in the near hand */
 	lookUpHold: grounded({lean: -4, neck: -26, lt: 3, lk: 3, rt: -5, rk: 4, la: 120, le: 26, ra: 4, re: 14}),
+	/** phone held low at the chest, looking down at it */
+	phoneLow: grounded({lean: 6, neck: 24, lt: 4, lk: 4, rt: -6, rk: 4, la: 28, le: 92, ra: 2, re: 12}),
 	/** phone: near hand holds a phone in front of the face */
 	phone: grounded({lean: 6, neck: 12, lt: 4, lk: 4, rt: -6, rk: 4, la: 24, le: 128, ra: 2, re: 12}),
 };

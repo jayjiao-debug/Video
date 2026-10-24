@@ -92,16 +92,22 @@ export const MirrorBack: React.FC<{x: number; y: number; r: number}> = ({x, y, r
 	<circle cx={x} cy={y} r={r} fill={AU.deep} /><circle cx={x} cy={y} r={r * 0.9} fill="url(#auDisk)" />
 	<circle cx={x} cy={y} r={r * 0.62} fill="none" stroke={AU.dark} strokeWidth={r * 0.04} opacity={0.6} /><circle cx={x} cy={y} r={r * 0.16} fill={AU.mid} stroke={AU.dark} strokeWidth={r * 0.03} />
 </g>;
-/** gold hairpin (钗): two prongs joined under an ornamental head; split → each prong separately */
+/** gold hairpin (钗): two prongs under a flower cluster. Split → each prong keeps its half of the cluster (钗擘黄金).
+    Length at s = 1 ≈ 340 (prong) — use s ≈ 0.18 in a figure's hand (a 钗 is ~12 % of body height). */
+const PIN_FLOWERS: [number, number, number][] = [[-58, -40, 26], [-24, -66, 30], [16, -70, 28], [54, -44, 26], [-6, -30, 22], [34, -20, 18], [-40, -12, 18]];
+const Flower: React.FC<{x: number; y: number; r: number}> = ({x, y, r}) => <g>
+	{Array.from({length: 5}, (_, i) => { const a = i * Math.PI * 2 / 5 - Math.PI / 2; return <ellipse key={i} cx={x + Math.cos(a) * r * 0.55} cy={y + Math.sin(a) * r * 0.55} rx={r * 0.5} ry={r * 0.36} transform={`rotate(${a * 180 / Math.PI + 90} ${x + Math.cos(a) * r * 0.55} ${y + Math.sin(a) * r * 0.55})`} fill="url(#auDisk)" stroke={AU.dark} strokeWidth={1.2} />; })}
+	<circle cx={x} cy={y} r={r * 0.28} fill={AU.core} stroke={AU.dark} strokeWidth={1} /></g>;
 export const Hairpin: React.FC<{x: number; y: number; s?: number; prong?: 'L' | 'R' | 'both'; spread?: number; rot?: number; glow?: number}> = ({x, y, s = 1, prong = 'both', spread = 0, rot = 0, glow = 1}) => {
 	const P = (sg: number) => <g transform={`translate(${sg * spread / 2},0)`}>
-		<path d={`M${sg * 12},0 C${sg * 16},90 ${sg * 20},200 ${sg * 14},330 L${sg * 9},340 C${sg * 8},210 ${sg * 4},90 ${sg * 2},0 Z`} fill="url(#auBar)" stroke={AU.dark} strokeWidth={1.5} />
-		<path d={`M${sg * 4},-10 C${sg * 30},-40 ${sg * 70},-46 ${sg * 82},-80 C${sg * 60},-70 ${sg * 30},-80 ${sg * 20},-100 C${sg * 6},-70 ${sg * 2},-40 ${sg * 2},-10 Z`} fill="url(#auDisk)" stroke={AU.dark} strokeWidth={1.5} />
-		<circle cx={sg * 46} cy={-62} r={8} fill={AU.core} /></g>;
+		<path d={`M${sg * 10},0 C${sg * 13},90 ${sg * 16},200 ${sg * 11},330 L${sg * 7},338 C${sg * 6},210 ${sg * 3},90 ${sg * 1},0 Z`} fill="url(#auBar)" stroke={AU.dark} strokeWidth={1.5} />
+		{PIN_FLOWERS.filter(([fx]) => sg < 0 ? fx <= 0 : fx > 0 || (prong === 'both' && fx === 0)).map(([fx, fy, r], i) => <g key={i}>
+			<path d={`M${sg * 4},-4 Q${fx * 0.6},${fy * 0.4} ${fx},${fy}`} stroke={AU.deep} strokeWidth={3} fill="none" /><Flower x={fx} y={fy} r={r} /></g>)}
+		{[[sg * 70, -70], [sg * 30, -96]].map(([lx, ly], i) => <path key={`l${i}`} d={`M${sg * 6},-6 Q${lx * 0.5},${ly * 0.3} ${lx},${ly} Q${lx * 0.7},${ly * 0.75} ${sg * 6},-6 Z`} fill={AU.mid} stroke={AU.dark} strokeWidth={1} opacity={0.9} />)}
+	</g>;
 	return <g transform={`translate(${x},${y}) rotate(${rot}) scale(${s})`}>
-		{glow > 0 && <TokGlow x={0} y={60} r={260} o={glow} />}
-		<g filter="url(#pd)">{(prong === 'both' || prong === 'L') && P(-1)}{(prong === 'both' || prong === 'R') && P(1)}
-			{prong === 'both' && spread === 0 && <circle cx={0} cy={-18} r={16} fill="url(#auDisk)" stroke={AU.dark} strokeWidth={1.5} />}</g>
+		{glow > 0 && <TokGlow x={0} y={40} r={230} o={glow} />}
+		<g filter="url(#pd)">{(prong === 'both' || prong === 'L') && P(-1)}{(prong === 'both' || prong === 'R') && P(1)}</g>
 	</g>;
 };
 /** silver ring, seen at an angle */
@@ -166,6 +172,10 @@ export const Phone: React.FC<{x: number; y: number; s?: number; rot?: number; si
 	{name && <text x={0} y={80} textAnchor="middle" fontFamily="'Noto Sans CJK SC',sans-serif" fontWeight={700} fontSize={34} fill={PP.ink}>{name}</text>}
 	{[120, 160, 200].map((yy, i) => <rect key={i} x={-110} y={yy} width={[220, 170, 200][i]} height={14} rx={7} fill={PP.ivory2} />)}
 </g>;
+/** a small folding phone stand (drawn before the phone, at the phone's base) */
+export const PhoneStand: React.FC<{x: number; y: number; s?: number}> = ({x, y, s = 1}) => <g transform={`translate(${x},${y}) scale(${s})`} filter="url(#pdS)">
+	<path d="M-120,330 L120,330 L150,350 L-150,350 Z" fill={PP.ink} opacity={0.9} /><path d="M-60,330 L-20,120 L20,120 L60,330 Z" fill="#3A3D5C" />
+	<rect x={-170} y={300} width={340} height={30} rx={8} fill="#3A3D5C" /></g>;
 /** 1990s pager with a green LCD */
 export const Pager: React.FC<{x: number; y: number; s?: number; text: string; rot?: number}> = ({x, y, s = 1, text, rot = 0}) => <g transform={`translate(${x},${y}) rotate(${rot}) scale(${s})`}>
 	<TokGlow x={0} y={0} r={300} o={0.7} />
@@ -193,7 +203,11 @@ export const Bike: React.FC<{x: number; y: number; s?: number}> = ({x, y, s = 1}
 		{Array.from({length: 12}, (_, i) => <line key={i} x1={cx} y1={0} x2={cx + Math.cos(i * Math.PI / 6) * 104} y2={Math.sin(i * Math.PI / 6) * 104} stroke={AG.deep} strokeWidth={2} />)}</g>)}
 	<path d="M-170,0 L-40,-140 L120,-140 L0,0 Z M-40,-140 L-70,-190 M120,-140 L170,0 M120,-140 L136,-200" fill="none" stroke={PP.ink} strokeWidth={14} strokeLinejoin="round" strokeLinecap="round" />
 	<path d="M-100,-196 L-30,-196" stroke={PP.ink} strokeWidth={20} strokeLinecap="round" /><path d="M110,-204 C140,-214 170,-206 186,-196" stroke={PP.ink} strokeWidth={10} fill="none" strokeLinecap="round" />
-	<circle cx={0} cy={0} r={26} fill={AG.mid} stroke={PP.ink} strokeWidth={6} /></g>;
+	<circle cx={0} cy={0} r={26} fill={AG.mid} stroke={PP.ink} strokeWidth={6} />
+	{[-170, 170].map((cx) => <path key={`f${cx}`} d={`M${cx - 128},-10 A130,130 0 0 1 ${cx + 128},-10`} fill="none" stroke={PP.ink} strokeWidth={10} />)}
+	<path d="M-20,-24 L-170,-24 L-170,24 L-20,24 Z" fill={PP.ink} opacity={0.85} />
+	<path d="M-180,-130 L-60,-130 M-170,-130 L-170,0 M-120,-130 L-110,-40" stroke={PP.ink} strokeWidth={8} fill="none" />
+	<path d="M-150,0 L-175,120 M-150,0 L-125,120" stroke={PP.ink} strokeWidth={8} /></g>;
 export const Watch: React.FC<{x: number; y: number; s?: number}> = ({x, y, s = 1}) => <g transform={`translate(${x},${y}) scale(${s})`} filter="url(#pd)">
 	<rect x={-34} y={-150} width={68} height={300} rx={14} fill={PP.brick} />
 	<circle r={86} fill={AG.mid} /><circle r={72} fill={PP.cream} />
