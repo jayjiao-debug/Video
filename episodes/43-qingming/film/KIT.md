@@ -44,7 +44,8 @@ except caches keyed by what they draw.
 
 ## Your module
 - One file per group `src/s_<group>.ts`: `export const boot<Group> = async () => {…}` builds stages/textures; scenes registered with `addScene` at import.
-- The producer wires the boot into `main.ts`.
+- Your file `src/s_<group>.ts` already exists as a stub and is wired into `src/modules.ts` (don't edit modules.ts). Fill it in.
+- Dev speed: `ONLY=<group> node preview.mjs …` boots only your module (plus the opening).
 - Glow-lock point (960, 580) for glow-locked cuts. Labels leave before any move starts.
 
 ## Check your work

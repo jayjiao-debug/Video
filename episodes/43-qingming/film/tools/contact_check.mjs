@@ -8,6 +8,7 @@ const b = await chromium.launch({executablePath: process.env.CHROME || '/opt/pw-
 const p = await b.newPage({viewport: {width: 1920, height: 1080}});
 p.on('pageerror', (e) => console.error('PAGEERR', e.message));
 await p.addInitScript(() => { window.NODRAW = true; window.CHECK = true; });
+await p.addInitScript((o) => { if (o) window.ONLY = o.split(','); }, process.env.ONLY || '');
 await p.goto(`http://127.0.0.1:${PORT}/film.html`); await p.waitForFunction(() => window.READY === true, null, {timeout: 900000});
 const n = Math.round((+to - +from) * +fps);
 await p.evaluate(([f0, n, fps]) => { for (let i = 0; i < n; i++) { const t = f0 + i / fps; window.CHECKT?.(t); window.renderAt(t); } }, [+from, n, +fps]);
