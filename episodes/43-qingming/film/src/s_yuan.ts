@@ -170,8 +170,8 @@ const s15 = (t: number): S15 => {
 	const X = 1190 + 60 * smooth(clamp01((t - b(25.12)) / 0.25)) - 60 * smooth(clamp01((t - b(25.36)) / 0.22)) + 60 * smooth(clamp01((t - b(25.7)) / 0.3));
 	const yc = (FRONT[0] + FRONT[1]) / 2, ycb = (BACK[0] + BACK[1]) / 2, ycopy = lerp(ycb, yc, copyY);
 	let L: P | null, R: P | null, Lflat = false;
-	if (t < b(25.12)) { L = [P0 + 190, yc + 2]; Lflat = true; R = [P0 + 40 + SW, ycb]; }                       // flat on you; near hand on the copy's roller
-	else if (t < b(25.36)) { L = [you[0] + 168, yc + 2]; Lflat = true; R = [you[1], yc]; }                    // draws you aside (right)
+	if (t < b(25.12)) { L = [P0 + 130 + 60 * (1 - smooth(clamp01((t - b(25.0)) / 0.25))), yc + 2]; Lflat = true; R = [P0 + 40 + SW, ycb]; }                       // flat on you; near hand on the copy's roller
+	else if (t < b(25.36)) { L = [you[0] + 130, yc + 2]; Lflat = true; R = [you[1], yc]; }                    // draws you aside (right)
 	else if (t < b(25.75)) { L = [copy[1], ycopy]; R = [you[1], yc]; }                                          // lays the copy where you lay
 	else { L = [you[0], yc]; R = [you[1], yc]; }                                                               // both hands on your rollers, rolls you up
 	if (kup > 0) R = [lerp(you[1], LAMP15[0] + 26, kup), lerp(yc, LAMP15[1] + 6, kup)];                        // the near hand cups the lamp

@@ -14,6 +14,7 @@ import {Cast, look, glowBlob, rig, drawBundle, drawFig, Contact} from './actors'
 import {LOOKS, LookQ, FigOpts, Pose, P, walkFor, gaitStride, stepFor, toScreen, figurePaths, carryArmful, armfulAt, fkPose, POSES} from './figures';
 import {paintSection, paintSeal, silkWeave} from './silk';
 import {robeSafe, bowUpper} from './s_teaser';
+import {standinGlyph} from './s_yuan';
 
 const b = bar;
 export type Cam = [number, number, number];
@@ -92,12 +93,12 @@ export const slatFace = (g: CanvasRenderingContext2D, x: number, y: number, w: n
 /** snow flakes of a gust, drawn in screen px around the wipe edge at screen x ex (same field in both stages) */
 const gustFlakes = (g: CanvasRenderingContext2D, ex: number, t: number, k: number) => {
 	g.clearRect(0, 0, W, H); if (k <= 0) return;
-	for (let i = 0; i < 70; i++) {
-		const a = hash(i * 3.17), c = hash(i * 7.31), d = hash(i * 1.93), r = 14 + c * 52, y = a * 1180 - 50 + Math.sin(t * 3 + i) * 20, x = ex + (d - 0.5) * 520 * (0.6 + c) + (t * 900 * (0.4 + c)) % 60;
+	for (let i = 0; i < 160; i++) {
+		const a = hash(i * 3.17), c = hash(i * 7.31), d = hash(i * 1.93), r = 4 + c * c * 30, y = a * 1180 - 50 + Math.sin(t * 3 + i) * 20, x = ex + (d - 0.5) * 520 * (0.6 + c) + (t * 900 * (0.4 + c)) % 60;
 		const al = (0.35 + 0.5 * c) * k * (1 - Math.abs(d - 0.5) * 1.3);
 		if (al <= 0) continue;
 		const gr = g.createRadialGradient(x, y, 0, x, y, r); gr.addColorStop(0, `rgba(236,242,246,${al})`); gr.addColorStop(0.5, `rgba(226,234,240,${al * 0.55})`); gr.addColorStop(1, 'rgba(220,230,236,0)');
-		g.fillStyle = gr; g.save(); g.translate(x, y); g.scale(1.9, 1); g.translate(-x, -y); g.beginPath(); g.arc(x, y, r, 0, Math.PI * 2); g.fill(); g.restore();
+		g.fillStyle = gr; g.save(); g.translate(x, y); g.scale(2.6 + c * 2, 1); g.translate(-x, -y); g.beginPath(); g.arc(x, y, r, 0, Math.PI * 2); g.fill(); g.restore();
 	}
 };
 
@@ -378,75 +379,72 @@ addScene({id: '24', a: b(41), z: GUST.a, draw: (t): Frame => {
 // 清宫 night room: the two 「张择端清明上河图一卷」 entries ink in warm (b45, b45.25), the other two stay unlit; pull back to the desk:
 // the grey roll beside it, the young man already holding the lid over the open slatted box with your glow inside; the lid
 // comes down (b45.5 → b45.75); into the slats (b45.75 → b46): the cut to scene 26 hides in the close-up.
-let c25: Crest, cast25: Cast, prop25: Live, arms25: Live, glow25: Live, gust25: Live, top25: Live, prints25: Live, rail25: Layer[] = [];
+let c25: Crest, cast25: Cast, prop25: Live, arms25: Live, glow25: Live, gust25: Live, top25: Live, prints25: Live;
+// the camera stands ON the deck (deck level, raised a little), looking across it at the far railing; the four carriers cross on
+// the snowy deck surface between, each on his own line (row 0 = farthest), so their footprints make four lines
 const Z25 = 0.84, H25 = 470, STR25 = gaitStride('08_04', stepFor(YOUTH)) * H25, V25 = 840;       // world px/s: a 2.5× time-lapse
-const ROWS = [1, 3, 0, 2];                                                                         // deck-top row of each crossing (0 = front)
+const ROWS = [1, 3, 0, 2], ROWD = [24, 58, 100, 150], ROWS_S = [0.86, 0.92, 1.0, 1.08];
 const enter25 = (i: number) => b(42.5 + 0.25 * i) - 0.12;
 const tilt25 = (t: number) => easeInOut(clamp01((t - b(44.5)) / (b(44.75) - b(44.5) + 0.04)));
-const camX25 = (t: number) => 980 + (t - b(42.5)) * 34;
-const XL25 = (i: number) => unproj([camX25(enter25(i)), 0, Z25], -170, 0, 20)[0];
+const camX25 = (t: number) => 1000 + (t - b(42.5)) * 34;
+const XL25 = (i: number) => unproj([camX25(enter25(i)), 0, Z25], -190, 0, 20)[0];
 const x25 = (i: number, t: number) => XL25(i) + (t - enter25(i)) * V25;
-/** the deck top as a surface: front edge at deck + 6, back edge rising as the camera looks down (q 0 → 1) */
-const topBack = (x: number, q: number) => deck(x) - 40 - 640 * q;
-const rowY = (x: number, r: number, q: number) => { const yf = deck(x) + 6, yb = topBack(x, q); return yf + (yb - yf) * ((r + 0.7) / 4.6); };
+const rowY = (x: number, r: number) => deck(x) + 6 + ROWD[r];
 const cam25 = (t: number): Cam => {
-	const q = tilt25(t), cx = camX25(Math.min(t, b(44.5))), x = cx;
-	const look: Cam = [cx, 900 - (782 - 540) / Z25, Z25];
-	const yf = deck(x) + 6, yb = topBack(x, 1), down: Cam = [cx + 40, (yf + yb) / 2 - 10, 1080 * 1.12 / (yf - yb) * 1.0];
-	return camMix(look, down, q);
+	const q = tilt25(t), cx = camX25(Math.min(t, b(44.5)));
+	const look: Cam = [cx, 900 + 6 - (622 - 540) / Z25, Z25];
+	return camMix(look, [cx + 30, look[1] + 1050, 1.02], q);
 };
 const boot25a = async () => {
 	c25 = new Crest('p2-snow', {sky: 'snow', era: '1923', lanterns: true, boat: false, bankCrowd: false, snow: true}); await c25.ready;
 	const st = c25.st; st.get('sunglow').mat.uniforms.uOpacity.value = 0.22;
+	for (const n of ['arch', 'banks']) st.get(n).mesh.visible = false;          // we stand on the deck: no side view of the arch
 	const fw = new Live(st, 'farWin25', 960, 850, 8400, 200, -2540, {emissive: 0.9}, 0.5);
-	fw.drawW('w', (g) => { for (let i = 0; i < 60; i++) { const x = -1600 + i * 75 + hash(i * 3.3) * 50, y = 818 + hash(i * 7.1) * 26; if (hash(i * 1.9) < 0.35) continue; g.fillStyle = `rgba(255,184,104,${0.55 + 0.3 * hash(i)})`; g.fillRect(x, y, 9 + (i % 3) * 3, 6 + (i % 2) * 2); } });
-	top25 = new Live(st, 'top25', 1200, 900, 3600, 1800, 1, {}, 0.6);
-	prints25 = new Live(st, 'prints25', 1200, 900, 3600, 1800, 2, {}, 0.6);
+	fw.drawW('w', (g) => { for (let i = 0; i < 60; i++) { const x = -1600 + i * 75 + hash(i * 3.3) * 50, y = 818 + hash(i * 7.1) * 26; if (hash(i * 1.9) < 0.35) continue; g.fillStyle = `rgba(255,184,104,${0.35 + 0.2 * hash(i)})`; g.fillRect(x, y, 7 + (i % 3) * 2, 5 + (i % 2) * 2); } });
 	snowRail(st, 'railSnow25');
-	rail25 = [st.get('rail'), st.get('railSnow25'), st.get('lanterns'), st.get('lglow')];
-	cast25 = new Cast(st, 'cast25', 1200, 640, 4400, 1100, 20);
-	prop25 = new Live(st, 'prop25', 1200, 640, 4400, 1100, 22, {rim: 0.4, emissive: 0.0}, 1);
-	arms25 = new Live(st, 'arms25', 1200, 640, 4400, 1100, 23, {rim: 1.0, rimPx: 5}, 1);
-	glow25 = new Live(st, 'glow25', 1200, 640, 4400, 1100, 24, {emissive: 1.0}, 0.5);
+	// the far railing (+ its snow, dead lanterns) stands behind the carriers
+	for (const [n, o] of [['rail', 5], ['railSnow25', 6], ['lanterns', 7], ['lglow', 8]] as [string, number][]) st.get(n).mesh.renderOrder = o;
+	top25 = new Live(st, 'top25', 1200, 1800, 4600, 2000, 10, {}, 0.4, 10);
+	top25.drawW('s', (g) => { const xs: number[] = []; for (let x = -1100; x <= 3500; x += 20) xs.push(x);
+		const gr = g.createLinearGradient(0, 900, 0, 2700); gr.addColorStop(0, '#8C979F'); gr.addColorStop(0.15, '#A2ACB3'); gr.addColorStop(1, '#B4BDC3'); g.fillStyle = gr;
+		g.beginPath(); xs.forEach((x, i) => (i ? g.lineTo(x, deck(x) + 4) : g.moveTo(x, deck(x) + 4))); g.lineTo(3500, 2800); g.lineTo(-1100, 2800); g.closePath(); g.fill();
+		g.fillStyle = 'rgba(60,66,72,0.5)'; g.beginPath(); xs.forEach((x, i) => (i ? g.lineTo(x, deck(x) + 4) : g.moveTo(x, deck(x) + 4))); for (const x of xs.slice().reverse()) g.lineTo(x, deck(x) + 12); g.fill();   // the railing's foot
+		for (let k = 0; k < 2600; k++) { const x = -1000 + hash(k * 1.7) * 4400, y = deck(x) + 10 + Math.pow(hash(k * 3.1), 1.6) * 1700, s = 1 + (y - 900) / 500; g.fillStyle = k % 3 ? 'rgba(226,232,236,0.5)' : 'rgba(120,130,138,0.4)'; g.fillRect(x, y, 2.5 * s, 1.5 * s); } });
+	prints25 = new Live(st, 'prints25', 1200, 1100, 4600, 600, 11, {}, 0.6, 11);
+	cast25 = new Cast(st, 'cast25', 1200, 700, 4600, 1100, 20);
+	prop25 = new Live(st, 'prop25', 1200, 700, 4600, 1100, 22, {rim: 0.4, emissive: 0.0}, 1);
+	arms25 = new Live(st, 'arms25', 1200, 700, 4600, 1100, 23, {rim: 1.0, rimPx: 5}, 1);
+	glow25 = new Live(st, 'glow25', 1200, 700, 4600, 1100, 24, {emissive: 1.0}, 0.5);
 	gust25 = new Live(st, 'gust25', 960, 540, W, H, 600, {}, 0.5, 9800);
 };
-/** footprints: the stance positions of crossing i up to its current x (dark dents, softened by settling snow) */
-const prints = (g: CanvasRenderingContext2D, i: number, t: number, q: number) => {
-	if (t < enter25(i)) return; const xNow = x25(i, t), r = ROWS[i], half = STR25 / 2, x0 = XL25(i);
-	const set = clamp01((t - b(43.5)) / (b(44.5) - b(43.5)));                       // snow settling into them
-	for (let n = 0; ; n++) { const x = x0 + (n + 0.35) * half + (n % 2 ? 10 : -10); if (x > xNow - 30) break;
-		const y = rowY(x, r, q), s = 1 + q * 9, a = 0.7 - 0.25 * set;
-		g.fillStyle = `rgba(52,58,64,${a})`; g.beginPath(); g.ellipse(x, y, 13 * s * 0.8, 3.2 * s, 0, 0, Math.PI * 2); g.fill();
-		g.fillStyle = `rgba(240,244,246,${0.5 * a})`; g.beginPath(); g.ellipse(x + 1, y - 2.2 * s, 12 * s * 0.8, 1.4 * s, 0, 0, Math.PI); g.fill(); }
+/** footprints of crossing i up to where it is now: dark dents on its line, alternating feet, settling under new snow */
+const prints = (g: CanvasRenderingContext2D, i: number, t: number) => {
+	if (t < enter25(i)) return; const xNow = x25(i, t), r = ROWS[i], half = STR25 * ROWS_S[r] / 2, x0 = XL25(i), s = ROWS_S[r];
+	const set = clamp01((t - b(43.5)) / (b(44.5) - b(43.5)));
+	for (let n = 0; ; n++) { const x = x0 + (n + 0.35) * half; if (x > xNow - 40) break;
+		const y = rowY(x, r) + (n % 2 ? -3 : 3) * s, a = 0.62 - 0.25 * set;
+		g.fillStyle = `rgba(48,54,60,${a})`; g.beginPath(); g.ellipse(x, y, 15 * s, 3.4 * s, 0, 0, Math.PI * 2); g.fill();
+		g.fillStyle = `rgba(214,222,228,${0.6 * a})`; g.beginPath(); g.ellipse(x - 2, y + 2.4 * s, 14 * s, 1.3 * s, 0, 0, Math.PI); g.fill(); }
 };
 const draw25a = (t: number): Frame => {
 	const st = c25.st, cam = cam25(t), q = tilt25(t); setCam(st, cam);
 	const key = k30(t), figs: FigOpts[] = [], held: {c: P; r: number; i: number}[] = [];
-	for (let i = 3; i >= 0; i--) { if (t < enter25(i)) continue; const x = x25(i, t); if (x > 4000) continue; const r = ROWS[i], hh = H25 * (1 - 0.02 * r);
-		const gr = (xx: number) => rowY(xx, r, 0) + 1;
-		const hw = hugWalk(YOUTH, (x - XL25(i)) / STR25 + i * 0.281, x, hh, gr, `P2 carrier ${i}`);
+	const order = [0, 1, 2, 3].sort((a, c) => ROWS[a] - ROWS[c]);                      // far lines first
+	for (const i of order) { if (t < enter25(i)) continue; const x = x25(i, t), r = ROWS[i], hh = H25 * ROWS_S[r];
+		const hw = hugWalk(YOUTH, (x - XL25(i)) / (STR25 * ROWS_S[r]) + i * 0.281, x, hh, (xx) => rowY(xx, r), `P2 carrier ${i}`);
 		figs.push(hw.f); held.push({c: hw.c, r: hw.r, i}); }
-	const show = q < 0.02;
-	cast25.L.L.mesh.visible = prop25.L.mesh.visible = arms25.L.mesh.visible = glow25.L.mesh.visible = show;
 	cast25.draw(key, figs);
 	prop25.drawW(key, (g) => { for (const h of held) bundle(g, h.c, h.r, h.i === 1 ? 1 : 0, h.i !== 1); });
 	prop25.L.mat.uniforms.uEmissive.value = 0.3;
-	arms25.drawW(key, (g) => { for (const f of figs) fillD(g, armPaths(f)); });
+	arms25.drawW(key, (g) => { for (const h of held) fillD(g, armPaths(figs[held.indexOf(h)])); });
 	const you = held.find((h) => h.i === 1);
 	glow25.drawW(key, (g) => { if (!you) return; glowBlob(g, you.c, 120, 90, 0.34); glowBlob(g, you.c, 40, 30, 0.42, '255,226,170'); });
-	// the deck top: snow surface (opens up as the camera looks down) + the four lines of footprints
-	top25.drawW(q.toFixed(3), (g) => { const xs: number[] = []; for (let x = -1000; x <= 3400; x += 20) xs.push(x);
-		const gr = g.createLinearGradient(0, deck(960) - 40 - 640 * q, 0, deck(960) + 6); gr.addColorStop(0, '#AEB9C0'); gr.addColorStop(1, '#D3DBE0'); g.fillStyle = gr;
-		g.beginPath(); xs.forEach((x, i) => (i ? g.lineTo(x, topBack(x, q)) : g.moveTo(x, topBack(x, q)))); for (const x of xs.slice().reverse()) g.lineTo(x, deck(x) + 6); g.closePath(); g.fill();
-		if (q > 0) { g.globalAlpha = 0.35 * q; for (let k = 0; k < 900; k++) { const x = -800 + hash(k * 1.7) * 4000, f = hash(k * 3.1), y = topBack(x, q) + f * (deck(x) + 6 - topBack(x, q)); g.fillStyle = k % 3 ? '#E8EEF1' : '#9EA9B0'; g.fillRect(x, y, 3 + 5 * q, 2 + 3 * q); } g.globalAlpha = 1; } });
-	prints25.drawW(`${key}:${q.toFixed(3)}`, (g) => { for (let i = 0; i < 4; i++) prints(g, i, t, q); });
-	// looking down: the near railing drops out of the bottom of the frame
-	for (const L of rail25) { st.place(L, L.cx, (L === rail25[0] || L === rail25[1] ? 1100 : 1100) + q * 900); }
-	c25.setLanterns(() => 0); c25.setStreak(you ? you.c[0] : 0, you ? 0.3 : 0, t);
-	c25.motes?.update(t, [-1200, -300, 3600, 1600], 70, 24, 0.85);
+	prints25.drawW(key, (g) => { for (let i = 0; i < 4; i++) prints(g, i, t); });
+	c25.setLanterns(() => 0); c25.setStreak(0, 0, t);
+	c25.motes?.update(t, [-1200, -300, 3600, 2400], 70, 24, 0.85);
 	drawGust(st, gust25, cam, t);
 	if (you) st.heroAt(you.c[0], you.c[1], 22, 430); else st.setHero(-9999, 0, 1);
-	return {st, grade: {vig: 0.4, exposure: 1}, bloom: 1};
+	return {st, grade: {vig: 0.4, exposure: 1 - 0.1 * q}, bloom: 1};
 };
 addScene({id: '25', a: GUST.a, z: b(44.66), in: GUST, draw: draw25a});
 
@@ -457,11 +455,7 @@ const BX = {x0: 1250, y0: 690, w: SLAT.w, h: SLAT.h, z: -31};                   
 const TOP25 = 768;                                                                                  // desk top (front edge) in this set
 const ENTRIES = [{s: '仇英仿张择端清明上河图一卷', lit: -1}, {s: '张择端清明上河图一卷', lit: 45.0}, {s: '谢遂仿明人清明上河图一卷', lit: -1}, {s: '张择端清明上河图一卷', lit: 45.25}];
 /** stand-in brush strokes for the unlit entries and the rest of the list (never legible) */
-const scribble = (g: CanvasRenderingContext2D, cx: number, cy: number, s: number, seed: number, col: string) => {
-	g.strokeStyle = col; g.lineCap = 'round'; g.lineWidth = s * 0.09; const r = (k: number) => hash(seed * 3.7 + k * 1.3);
-	for (let k = 0; k < 3 + Math.floor(r(0) * 3); k++) { const y = cy - s * 0.4 + r(k + 1) * s * 0.8, x0 = cx - s * 0.42 + r(k + 7) * s * 0.2; g.beginPath(); g.moveTo(x0, y); g.lineTo(x0 + s * (0.5 + r(k + 3) * 0.3), y - s * 0.05); g.stroke(); }
-	if (r(9) < 0.8) { const x = cx - s * 0.1 + r(10) * s * 0.2; g.beginPath(); g.moveTo(x, cy - s * 0.45); g.lineTo(x + s * 0.02, cy + s * 0.45); g.stroke(); }
-};
+const scribble = (g: CanvasRenderingContext2D, cx: number, cy: number, s: number, seed: number, col: string) => standinGlyph(g, cx, cy, s * 0.92, seed + 7, col, 0.075);
 const ledgerArt = (g: CanvasRenderingContext2D, t: number) => {
 	const {x0, x1, y0, y1} = PG, w = x1 - x0, h = y1 - y0;
 	// the stand: two legs and a ledge on the desk top, leaning back
@@ -486,12 +480,12 @@ const ledgerArt = (g: CanvasRenderingContext2D, t: number) => {
 /** the young man behind the desk holding the lid: lid y (world) as it comes down */
 const LIDY = (t: number) => lerp(BX.y0 - 96, BX.y0 - 6, easeInOut(clamp01((t - b(45.5)) / (b(45.75) - b(45.5)))));
 const packer = (t: number) => {
-	const ly = LIDY(t), down = clamp01((ly - (BX.y0 - 96)) / 90), o: FigOpts = {x: 1610, ground: 1086, h: 760, pose: bowUpper(POSES.stand, 8 + 24 * down), look: YOUTH, flip: true};
+	const ly = LIDY(t), down = clamp01((ly - (BX.y0 - 96)) / 90), o: FigOpts = {x: 1545, ground: 1086, h: 660, pose: bowUpper(POSES.stand, 8 + 24 * down), look: YOUTH, flip: true};
 	return rig(o, [{side: 'L', target: [BX.x0 + 34, ly + 4], name: 'L on lid'}, {side: 'R', target: [BX.x0 + BX.w - 22, ly + 4], name: 'R on lid'}], () => 1086, 'P3 packer');
 };
 const cam25b = (t: number): Cam => {
 	const close = camLock(4.15, (PG.x0 + PG.x1) / 2 + 60, (PG.y0 + PG.y1) / 2 + 4, PG.z, 960, 560);
-	const wide: Cam = [1060, 600, 1.12];
+	const wide: Cam = [1040, 640, 0.98];
 	const fc = (BX.x0 + BX.w / 2), slats = camLock(12.5, fc, BX.y0 + BX.h / 2, BX.z, 960, 560);
 	if (t < b(45.25)) return camMix(close, [close[0] - 10, close[1] + 4, close[2] * 1.03], clamp01((t - b(44.66)) / (b(45.25) - b(44.66))));
 	if (t < b(45.75)) return camMix(close, wide, easeInOut(clamp01((t - b(45.25)) / (b(45.5) - b(45.25)))));
@@ -541,4 +535,4 @@ const draw25b = (t: number): Frame => {
 addScene({id: '25b', a: b(44.66), z: b(46), in: {mode: 7, a: b(44.66), z: b(44.66) + 0.13, ease: smooth}, draw: draw25b});
 
 // ================================================================================================ boot
-export const bootQing = async () => { await boot22(); await boot23(); await boot24(); await boot25a(); await boot25b(); (window as any).QDBG = {desk25, c25}; };
+export const bootQing = async () => { await boot22(); await boot23(); await boot24(); await boot25a(); await boot25b(); };
