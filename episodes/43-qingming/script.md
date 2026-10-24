@@ -1,8 +1,20 @@
-# Script: 假如你是清明上河图  (v2 · gate 1 r1 revision)
+# Script: 假如你是清明上河图  (v2.1 · fix pass on the v2 cold read; v2 approved at gate 1 r2)
 
 Screenwriter, 2026-10-24. Files: this script + `lines.json` (48 lines, `[[start, end, "text"], ...]`, `[red]` = red key word).
-**Length:** 170.0 s (2:50), was 180.0 s. **Lines:** 48, was 51. Title card at 23.25–26.25.
+**Length:** 170.0 s (2:50), was 180.0 s (v2.1: unchanged). **Lines:** 48, was 51. Title card at 23.25–26.25.
 **Look:** A 汴河暮影 (owner pick, gate 2a). The picture column describes look A only. The B and C mappings are gone.
+
+## Changelog v2.1 (cold read of v2, routed by the producer)
+
+Runtime unchanged at **170.0 s**, 48 lines. The only timing change is the D1/D2 boundary (134.75 → 135.25). Only the lines the producer routed changed: M1, D1–D2 and E7. Their protected parts are kept: M2's 几经辗转, two donkey lines tied by 假驴, and E7's 「安全的代价」.
+
+| Note | What changed |
+|---|---|
+| 1 Donkey pair (131.75–138.25): "nothing says someone painted the donkey in" | Reordered as cause → effect, still two lines (C33). **D1** 「1973年重裱，揭掉了一头【假驴】。」 → 「明朝人把草棚当驴耳，【补画】了头驴。」 (14: who, why, what). **D2** 「原来，明朝人把草棚看成了【驴耳朵】。」 → 「1973年重裱，【假驴】才被揭掉。」 (10). 假驴 stays, so the tie to the fakes holds. D1 is now 3.5 s and D2 3.0 s, and both meet the Needs + 0.4 s retiming floor (old D1 was 0.1 s under it). **Stamps.** D1 「— 明代 / 裱画师误补（故宫装裱记录）」 and D2 「— 1973 · 故宫 / 重新装裱（故宫装裱记录）」. The 47/38 line 3 is dropped because the 1973 stamp now holds 3.0 s (< 4 s). D1 is an undated Ming flashback, so its chip reads 明 and the counter is hidden. |
+| 2 陆完 (69.25): "no introduction; is he the 文人?" | **M1** 「陆完被抄家前，把你藏进了【朋友家】。」 → 「明朝，主人陆完被抄家前【藏】起了你。」 (14, same 3.5 s). 明朝 separates him from the Yuan 文人, and 主人 says who he is to you. **Not 大臣 / 尚书:** neither is in a ✓ row. C15 calls him only 主人, and C7 lists him as a colophon writer. Identity + name + cause + 朋友家 doesn't fit in 16 wide, so the friend's house moves to the picture and the stamp (「陆完藏画友人家（余辉考）」, unchanged). The red moves to 藏, which seeds E3's 藏你 the way F1's 偷 seeds 偷你. |
+| 3a Z2 「在你身后」 (40.5) | **Not changed.** Z2 is on the don't-change list (Z1–Z5). The only same-length option, 「在你卷尾写下」, loses the personification and isn't clearly better. The picture (张著 writing on the paper joined to your end) settles 身后. |
+| 3b Q1 「主人家」 (86.0) | **Not changed.** M1 now introduces 主人 as "whoever owned you then", so 「清朝，主人家被抄」 reads as M1's parallel. The same-length 「清朝，新主人被抄」 is less natural and not clearly better. The Q1 stamp still names 毕沅. |
+| 3c E7 「展一次静养三年以上」 (157.0) | **E7** → 「安全的代价：展完要静养【三年以上】。」 (same 14, same width 16). 完 and 要 supply the missing "after" and "must". This is O9's own logic: "一次展出以后…必须…“静养”三年以上". |
 
 ## Changelog (gate 1 r1 → v2)
 
@@ -65,7 +77,7 @@ Screenwriter, 2026-10-24. Files: this script + `lines.json` (48 lines, `[[start,
 | 2 Fate teaser (4 hard cuts, year stamps) | 5.75–16.25 | 你被人偷偷【换成了假的】，(元 · 1351年前) / 被一个【太监】带出皇宫，(1578) / 被【末代皇帝】偷运出宫，(1923) / 还躺在一堆【破画】里。(约1950) |
 | 3 Present-day hook | 16.25–23.25 | 排队【四五个小时】，只看你【一两分钟】。 / 你，为什么这么【难见】？ (centred) |
 | 4 Title card | 23.25–26.25 | 假如你是清明上河图 (on the hardest drop) |
-| 6 Twist + moral | 138.25–164.00 | 藏者宜宝之——人人都很【珍惜】你： / 【偷你】、【换你】、【藏你】、【抄你】。 / 可四个朝代的皇宫，都没【留住】你。 / 直到你不再属于【任何一个人】， / 你才终于，不再被谁【带走】。 / 安全的代价：展一次静养【三年以上】。 / 所以，你才这么【难见】。 |
+| 6 Twist + moral | 138.25–164.00 | 藏者宜宝之——人人都很【珍惜】你： / 【偷你】、【换你】、【藏你】、【抄你】。 / 可四个朝代的皇宫，都没【留住】你。 / 直到你不再属于【任何一个人】， / 你才终于，不再被谁【带走】。 / 安全的代价：展完要静养【三年以上】。 / 所以，你才这么【难见】。 |
 | 7 Comment question + end card | 164.50–170.00 | 要是排【五小时】看两分钟，你去吗？ (centred, on the Juno end card) |
 
 ## Beat sheet
@@ -78,10 +90,10 @@ Screenwriter, 2026-10-24. Files: this script + `lines.json` (48 lines, `[[start,
 | 5a Spine + birth | 26.25–37.5 s | 四出五进 tally; painted; in and out of the Song palace in one line. | The tally is the map: 4 outs, 5 ins. |
 | 5b 张著 | 37.5–55.5 s | 原来如此 1: the unsigned painting gets its painter's name from a Jin owner's note, which ends 「藏者宜宝之」. | Set-up for F2 and the ending. |
 | 5c 元 | 55.5–69.25 s | In; the swap (teaser 1 paid off); the later buyer wrote it down. | 原来如此 2: you carry your own diary. |
-| 5d 明 | 69.25–86 s | Hidden at a friend's house → 辗转 → 严嵩 → confiscated in → 冯保 steals you (teaser 2 paid off), and the thief signs where the painter didn't. | 藏 and 偷; the irony of names. |
+| 5d 明 | 69.25–86 s | Your Ming owner 陆完 hides you before his house is raided (the friend's house is in the picture) → 辗转 → 严嵩 → confiscated in → 冯保 steals you (teaser 2 paid off), and the thief signs where the painter didn't. | 藏 and 偷; the irony of names. |
 | 5e 清 · 民国 | 86–112.75 s | Confiscated in; 嘉庆's five seals: you belong to the court → the court's own emperor smuggles you out (teaser 3 paid off); four 清明上河图 in a month; 伪满; 1945 lost. | The fakes travel with you; then you are lost from frame. |
 | 5f 约1950 | 113.75–128.25 s | Storeroom; several "you"s; the labelled ones are copies, the reject is you (teaser 4 paid off). | 原来如此 3: the real one looked like the worst one. |
-| 5g Home | 128.75–138.25 s | 1950s back (tally complete); 1973, a fake donkey peeled off you. | 原来如此 4: even you carried a fake part. |
+| 5g Home | 128.75–138.25 s | 1950s back (tally complete); a Ming hand painted a donkey onto you (cause), and the 1973 remount peeled the fake off (effect). | 原来如此 4: even you carried a fake part. |
 | 6 Twist + moral | 138.25–164 s | 藏者宜宝之 → 偷换藏抄 → four palaces lost you → safe once you belong to no one → the price of safety: rarely shown. | 原来如此 5: answers 「为什么这么难见」. |
 | 7 Question + end card | 164.5–170 s | Something viewers will answer in one word. | 「要是排五小时看两分钟，你去吗？」 |
 
@@ -99,7 +111,8 @@ Screenwriter, 2026-10-24. Files: this script + `lines.json` (48 lines, `[[start,
 | Y2 好几卷“你” | Y4 「混在残次品里的那一卷，才是你」 |
 | N1 queue · N2 「为什么这么难见？」 | E7–E8 「安全的代价…」/「所以，你才这么难见」; Q asks about the same queue |
 | Z4–Z5 「藏者宜宝之」 + gloss | E1 「藏者宜宝之——人人都很珍惜你：」 |
-| W1 假画 · P3 两卷都写着张择端 · Y3 仿的 · D1 假驴 | E3 换你 / 抄你 (the 抄 flash: 约一百卷 · 只有一卷是你) |
+| M1 【藏】起了你 · F1 【偷】 · W1 换走了你 | E3 藏你 / 偷你 / 换你: each verb is seeded on its own beat |
+| W1 假画 · P3 两卷都写着张择端 · Y3 仿的 · D2 假驴 | E3 换你 / 抄你 (the 抄 flash: 约一百卷 · 只有一卷是你) |
 | S1 tally 出○○○○ 进○○○○○ | fills at every in/out; complete at R1; the 出 marks flash at E4 |
 
 P3 → Y3 is **not** a callback. No source ties the 1950 scrolls to the 1923 entries (C31), so the lines don't link them.
@@ -120,7 +133,7 @@ P3 → Y3 is **not** a callback. No source ties the 1950 scrolls to the 1923 ent
   - `〃` = unchanged. Stamps change on a beat. Teaser cuts show line 1 only.
 - **Era chip + counter (bottom-left).** Red era chip + `你 约N 岁`.
   - Anchor c. 1100 (O8, 估算). "约N" where the stamp has a year; "N多" where it has only an era.
-  - The counter is hidden in the hook, teaser, present day, title and end card, and it never stops on 250.
+  - The counter is hidden in the hook, teaser, present day, title and end card, and on the D1 flashback (明, undated). It never stops on 250.
   - Chips: 北宋 · 金 · 元 · 明 · 清 · 民国 · 新中国. 伪满 is never a chip.
 - **四出五进 tally.** Beside the counter: four 出 and five 进 marks, labelled 「四出五进 —— 故宫博物院」.
   - Marks light on their beats: 进 BO · 出 BO · 进 I2 · 出 W2 · 进 M3 · 出 F1 · 进 Q1 · 出 P1 · 进 R1 (complete; all nine flash red).
@@ -140,7 +153,7 @@ P3 → Y3 is **not** a callback. No source ties the 1950 scrolls to the 1923 ent
 - **Interiors.**
   - The mounting room with the round window and White Dagoba (the gate-2a hook still): T1, W1.
   - A southern study: W3. A Ming house: M1–M2. The 伪满 library building: V1–V2. The 沈阳 storeroom: T4, Y1–Y4.
-  - The 1973 restoration table: D1. The 午门 queue and the case: N1–N2, E5–E8.
+  - The 1973 restoration table: D2. The 午门 queue and the case: N1–N2, E5–E8.
 - **People.**
   - Whole figures only, profiles and silhouettes, never hands from off-screen (brief).
   - No likeness of 溥仪: at most a distant back view, never comic.
@@ -185,7 +198,7 @@ Stage: **crest** = the 虹桥 handover stage · **insert** = full-frame painting
 | 18 | W1 | 58.75 | 62.25 | 宫里的裱画匠，拿【假画】换走了你。 | 13 | 3.0 | line 1 (stays) | 假画 | — 元 · 1351年前 / 裱画匠调包（杨准记） / 杨准原话："以似本易去" | 元 · 你 200多岁 |  | int. | Pays off T1: the same mounting-room shot, longer. The craftsman lays the grey copy where you lay and rolls you up. | C9 |
 | 19 | W2 | 62.25 | 65.75 | 真的你，被偷偷卖给了一个【权贵】。 | 13 | 3.0 | line 2 | 权贵 | 〃 | 〃 | 出 ●● | crest | The secret sale (R7): the crest at night, lanterns out, the two figures close (the gate-2a key frame, relit for night). The craftsman hands your glowing roll to a 权贵 in a Yuan brim, both men's hands on the rollers. They turn rightward, away from the palace, and 出 lights. | C9 |
 | 20 | W3 | 65.75 | 69.25 | 后来买下你的文人，【记下】了调包。 | 13 | 3.0 |  | 记下 | — 1351 · 江西泰和 / 文人杨准买下，次年题跋 | 元 · 你 约251岁 |  | int. | A southern study: a scholar (whole figure) writes on your tail by your glow. Inside his columns a tiny silhouette replay of the swap plays (craftsman, copy, hand-over): you carry your own diary. The counter rolls to 约251 without stopping on 250. | C10, C11, C9 |
-| 21 | M1 | 69.25 | 72.75 | 陆完被抄家前，把你藏进了【朋友家】。 | 14 | 3.1 |  | 朋友家 | — 明 · 正德年间 · 苏州 / 陆完藏画友人家（余辉考） | 明 · 你 400多岁 |  | int. | A Ming official's house at night: torchlight gathers at the front gate (silhouettes only, no violence). At the back gate the official (whole figure) hands your glowing roll to a friend. The friend's door closes, and the glow vanishes behind it. His mother is not mentioned. | C15 |
+| 21 | M1 | 69.25 | 72.75 | 明朝，主人陆完被抄家前【藏】起了你。 | 14 | 3.1 |  | 藏 | — 明 · 正德年间 · 苏州 / 陆完藏画友人家（余辉考） | 明 · 你 400多岁 |  | int. | Your Ming owner's house at night: torchlight gathers at the front gate (silhouettes only, no violence). At the back gate your owner (whole figure, Ming robe) hands your glowing roll to a friend. The friend's door closes, and the glow vanishes behind it. The friend's house now lives in the picture and the stamp, not the line. His mother is not mentioned. | C15 |
 | 22 | M2 | 72.75 | 76.00 | 几经辗转，你落到权臣【严嵩】手里， | 13 | 3.0 | line 1 (stays) | 严嵩 | — 明 · 中期 / 辗转归严嵩（故宫博物院） | 〃 |  | int. | Three quick dissolves: your glow passes through doorways and between Ming silhouettes (no faces, no names). It comes to rest in a grand hall, in a lacquer box among treasures. | C16 |
 | 23 | M3 | 76.00 | 79.25 | 严家倒台，你被抄进了【皇宫】。 | 11 | 2.7 | line 2 | 皇宫 | — 明 · 隆庆年间 / 严家被抄，你入宫（故宫博物院） | 明 · 你 约470岁 | 进 ●●● | crest | Paper seal strips slap across the hall's doors. Dusk on the crest: a confiscation cart with Ming officials crosses leftward toward the 紫禁城, and 进 lights. **Hold this shot into F1** (note 5): the sky darkens to night and the counter rolls 约470 → 约478. | C16, C19 |
 | 24 | F1 | 79.25 | 82.50 | 1578年，太监冯保把你【偷】出了宫。 | 12 | 2.8 | line 1 (stays) | 偷 | — 1578 · 紫禁城 / 冯保偷盗而出（故宫博物院） / 冯保跋："心思爽然" | 明 · 你 约478岁 | 出 ●●● | crest | Pays off T2 on the same shot: night, lanterns out. The eunuch walks off rightward with you under his arm, and 出 lights. | C20 |
@@ -203,14 +216,14 @@ Stage: **crest** = the 虹桥 handover stage · **insert** = full-frame painting
 | 36 | Y3 | 120.75 | 124.00 | 标着真迹的两卷，都是【仿的】。 | 11 | 2.7 | line 1 (stays) | 仿的 | 〃 | 〃 |  | int. | Two neat rolls with paper slips reading 「真迹」 turn grey. | K5, C31 |
 | 37 | Y4 | 124.00 | 128.25 | 混在残次品里的那一卷，【才是你】。 | 13 | 3.0 · key: read twice | line 2 | 才是你 | 〃 | 〃 |  | insert | HIT on a downbeat. The battered roll with torn edges opens and glows, and the camera pushes into the 虹桥 crowd in full colour. Hold 0.5 s. | C30 |
 | 38 | R1 | 128.75 | 131.75 | 1950年代，你回到了【故宫】。 | 9 | 2.4 |  | 故宫 | — 1950年代 · 北京 / 回到故宫博物院 | 新中国 · 你 850多岁 | 进 ●●●●● (complete) | crest | Daylight on the crest, visitors on the bank, and the far-bank 午门 now carries a museum plaque. Staff in 1950s clothes carry you leftward. The fifth 进 lights and all nine marks flash red: 「四出五进」. | C32, O6 |
-| 39 | D1 | 131.75 | 134.75 | 1973年重裱，揭掉了一头【假驴】。 | 11 | 2.7 | line 1 (stays) | 假驴 | — 1973 · 故宫 / 重新装裱（故宫装裱记录） / 揭补约47处，接笔38处 | 新中国 · 你 约873岁 |  | insert | A restoration table under daylight lamps, with restorers (whole figures) bent over you. Then the insert: an old patch with a painted donkey peels away, leaving blank silk. | C33 |
-| 40 | D2 | 134.75 | 138.25 | 原来，明朝人把草棚看成了【驴耳朵】。 | 14 | 3.1 | line 2 | 驴耳朵 | 〃 | 〃 |  | insert | 原来如此: the two posts of a broken straw shed. A dashed donkey-ear outline drawn over them morphs back into posts. | C33 |
+| 39 | D1 | 131.75 | 135.25 | 明朝人把草棚当驴耳，【补画】了头驴。 | 14 | 3.1 | line 1 (stays) | 补画 | — 明代 / 裱画师误补（故宫装裱记录） | 明 (flashback; counter hidden, because the 补画 has no date) |  | insert | Push back through your silk into the painted street: the two thin posts of a broken straw shed stand up from a torn spot. A dashed donkey-ear outline draws itself over the two posts. Then a donkey is painted in below them, on a patch a shade greyer than your silk (a fake on the real thing). No figure is drawn. | C33 |
+| 40 | D2 | 135.25 | 138.25 | 1973年重裱，【假驴】才被揭掉。 | 10 | 2.5 | line 2 | 假驴 | — 1973 · 故宫 / 重新装裱（故宫装裱记录） | 新中国 · 你 约873岁 |  | int. → insert | The 1973 restoration table under daylight lamps, with restorers (whole figures) bent over you. Insert: the grey patch with the donkey peels away, and the two posts stand alone over blank silk. | C33 |
 | 41 | E1 | 138.25 | 142.50 | 藏者宜宝之——人人都很【珍惜】你： | 12 | 2.8 · key: read twice | line 1 (stays) | 珍惜 | — 1186 · 张著题跋 / 你身上：96方印 · 14段题跋 | 你 900多岁 |  | insert | Callback: the camera travels along your whole tail, past colophons and red seals, to the glowing 藏者宜宝之. | C6; O4, O5 (stamp) |
 | 42 | E3 | 142.50 | 146.00 | 【偷你】、【换你】、【藏你】、【抄你】。 | 8 | 2.2 (cut-on) · key: read twice | line 2 | 偷你、换你、藏你、抄你 | 〃 → on the 抄 beat: — 今天 / 约百卷仿本（余辉估） | 〃 |  | mixed | Four flashes, one per beat, each word turning red as it lands. **偷**: the eunuch walking off the night crest. **换**: the grey copy sliding in (mounting room). **藏**: the friend's door closing. **抄**: pull back to a wall of grey 清明上河图 copies with only one glowing, labelled 「约一百卷 · 只有一卷是你」. The 抄 frame holds to the end of the line (about 1.5 s). | C20, C24, C9, C15, K1, K4 |
 | 43 | E4 | 146.00 | 149.50 | 可四个朝代的皇宫，都没【留住】你。 | 13 | 3.0 |  | 留住 | — 宋 · 元 · 明 · 清 / 四次出宫（故宫博物院） | 〃 | four 出 marks flash | crest | The crest cycles sky, hats and far-bank palace 宋 → 元 → 明 → 清. Each time your glow is carried off rightward, away from the palace, and an 出 mark flashes. | O6 |
 | 44 | E5 | 149.50 | 153.00 | 直到你不再属于【任何一个人】， | 12 | 2.8 | line 1 (stays) | 任何一个人 | — 1950年代至今 · 故宫博物院 / 结束流离（故宫博物院） | 〃 |  | crest | Day on the crest: the hats fall away. Ordinary visitors in today's clothes cross leftward toward the 午门 with its museum plaque (the queue from N1). | C32 |
 | 45 | E6 | 153.00 | 157.00 | 你才终于，不再被谁【带走】。 | 10 | 2.5 · key: read twice | line 2 | 带走 | 〃 | 〃 |  | int. | Inside: you lie in the case and light the faces of the crowd filing past. Nobody carries you anywhere. | C32 |
-| 46 | E7 | 157.00 | 160.50 | 安全的代价：展一次静养【三年以上】。 | 14 | 3.1 | line 1 (stays) | 三年以上 | — 故宫规定 / 展后静养三年以上（北京晚报） | 〃 |  | int. | The case dims. You are rolled up and laid in a storage box, and the lid closes. Three seasons' cycles of light sweep across the box: three years. | O9 |
+| 46 | E7 | 157.00 | 160.50 | 安全的代价：展完要静养【三年以上】。 | 14 | 3.1 | line 1 (stays) | 三年以上 | — 故宫规定 / 展后静养三年以上（北京晚报） | 〃 |  | int. | The case dims. You are rolled up and laid in a storage box, and the lid closes. Three seasons' cycles of light sweep across the box: three years. | O9 |
 | 47 | E8 | 160.50 | 164.00 | 所以，你才这么【难见】。 | 8 | 2.2 · key: read twice | line 2 | 难见 | 〃 | 〃 |  | int. | Callback to N2: the empty case and the card 「下次展出：未公布」. | O9, P5 |
 | 48 | Q | 164.50 | 170.00 | 要是排【五小时】看两分钟，你去吗？ | 13 | 3.0 · key: read twice |  | 五小时 | — | — | — | end card | CENTRED ？ line on the Juno end card: J monogram, gold title 假如你是清明上河图, this question, the follow pill 「关注 Juno · 一起看懂世界」 and the sources line. | P3 |
 
@@ -253,7 +266,7 @@ Stage: **crest** = the 虹桥 handover stage · **insert** = full-frame painting
 | C2 | ✓ | Z1, Z3, F2 | 画上没有画家的名字 | 故宫VR |
 | C6 | ✓ (藏者宜宝之 = 张著's own words, Pass 2) | Z2–Z5, E1 | 1186 · 金人张著; 翰林张择端; 藏者宜宝之; 落款 清明后一日 | 余辉, 光明日报 2017; 张健, 澎湃 2015; 祝勇, 新京报 2025 |
 | C8 | ✓ | I2 | 元朝建立后再次入宫 | 故宫 2022; 故宫VR |
-| C15 | ✓ | M1, E3 | 陆完被抄家前，把画藏到友人处 (正德, 苏州) | 余辉, 澎湃 2015; 光明日报 2025-06-12 |
+| C15 | ✓ | M1, E3 | 明朝 · 主人陆完 · 被抄家前藏起了你; stamp 陆完藏画友人家 (正德, 苏州). 主人 is C15's own word; no row gives his office, so no 大臣/尚书 | 余辉, 澎湃 2015; 光明日报 2025-06-12 |
 | C16 | ✓ | M2 | 后经辗转，为权臣严嵩所得 | 故宫 2022; 故宫VR; 光明日报 2025 |
 | C19 | ✓ (隆庆; no year) | M3 | 严家被抄 → 隆庆年间入宫 | 故宫VR; 故宫 2022 |
 | C21, C22 | ✓ | Q1 | 清 毕沅 (owner, seals); 1799 抄家，入宫 | 清华新闻网 2024; 余辉讲座 2012; 文摘报 2012 |
@@ -263,11 +276,11 @@ Stage: **crest** = the 虹桥 handover stage · **insert** = full-frame painting
 | C28 | 争议 → proposed wording | V3 | 混乱中，你下落不明 (no place named) | 王文锋 2020 |
 | C29 | ✓ | Y1 stamp | 东北博物馆, 沈阳 | 王文锋 2020; 中新网 2009 |
 | C32 | ✓ ("1950年代") | R1, E5, E6 | 1950年代回到故宫, 自此结束辗转流离 | 故宫 2022; 新京报/中新社 2025 |
-| C33 | ✓ | D1, D2 | 1973 修裱; 明代裱画师把草棚误作驴耳，补画了驴, 揭去; 揭补约47处, 接笔38处 | 许忠陵《清明上河图装裱记》, 故宫博物院 2016 |
+| C33 | ✓ | D1, D2 | 明代裱画师把草棚误作驴耳，补画了驴 (D1; stamp 裱画师误补); 1973 修裱时揭去 (D2). 揭补约47处 / 接笔38处 is no longer on screen | 许忠陵《清明上河图装裱记》, 故宫博物院 2016 |
 | K1 | ✓ (余辉's estimate) | E3 抄 flash label + stamp | 约一百卷 · 只有一卷是你 | 余辉讲座, 故宫博物院 2012 |
 | K4 | ✓ | E3 抄 flash picture | the wall of copies (苏州片 etc.) | 台北故宫博物院 2018; 院刊 2008 |
 | O4, O5 | ✓ | E1 stamp | 96方印 · 14段题跋 (no claim of one seal per owner) | 故宫藏品页; 余辉, 澎湃 2015 |
-| O9 | ✓ (as reported) | E7 | 展一次，回库静养三年以上 | 孙乐琪, 北京晚报 2015-09-08 (新华网) |
+| O9 | ✓ (as reported) | E7 | 展完要静养三年以上 (source: 一次展出以后…必须回到库房“静养”三年以上) | 孙乐琪, 北京晚报 2015-09-08 (新华网) |
 
 **Framing lines (interpretation, not facts).** Each follows from the rows above and states no new fact.
 - H1 「人人都想留住你」 and H2 「所以…一直在被带走」.
@@ -303,13 +316,16 @@ Stage: **crest** = the 虹桥 handover stage · **insert** = full-frame painting
 3. **P3 reworded, though not routed:** 「清单上，其中两卷都写着【张择端】。」. The cold reader asked whether the real one "counts as written 张择端" after Z1 said you are unsigned. 清单上 makes it the palace list's label, which is true of you (C24) and true of the copy (C25). P3 is not on the don't-change list.
 4. **Y2 says 好几卷“你”, not 好几卷清明上河图.** The full name makes the line 17 wide. 「“你”」 also sets up Y4 「才是你」. The cold reader should check that 「“你”」 reads cleanly.
 5. **K7 is not used** (reasons above). It is offered as a spare line.
+6. **v2.1, M1 identity: 主人, not 大臣 / 尚书.** The producer offered 「明朝大臣陆完 / 尚书陆完, whichever is ✓」. Neither office is in facts.md (C15: 主人; C7: colophon writer), so the line uses 明朝 + 主人. If the owner wants his office on screen, the researcher needs a sourced row first. Even then, 「明朝大臣陆完」 costs 2 more 字 than 「明朝，主人陆完」, and M1 is already 16 wide.
 
 ## Checks run
 - **`pace.py lines.json --film-end 170`:**
   - **TOO FAST:** none.
   - **Waiting:** 16.0 s = 9 % (target ≤ 12 %). All of it sits on "key: read twice" lines, E3's flashes and the end-card question.
   - **CHECK:** one, at 23.2–26.2, the title card (named beat).
-- **Width:** every line ≤ 16.0 display width (punctuation 1, digits 0.55). The 16.0 lines are N1, BO, M1, F2, P2, D2 and E7.
+- **Width:** every line ≤ 16.0 display width (punctuation 1, digits 0.55). The 16.0 lines are N1, BO, M1, F2, P2, D1 and E7 (v2.1: D1 replaces D2).
+- **v2.1 re-run (2026-10-24):** `pace.py` gives the same result: no TOO FAST, 16.0 s = 9 % waiting, the one CHECK is the title card. `facts.py script.md --lines lines.json` finds no problems. lines.json matches the line table on all 48 rows.
+  - The retiming floor (Needs + 0.4 s) is met by all four changed lines: M1 3.5/3.5, D1 3.5/3.5, D2 3.0/2.93, E7 3.5/3.5. D1 has left the under-floor list. M2 and Q2 are still 0.1–0.15 s under (director's carry-forward 4a).
 - **Facts:** every number on screen maps to a row above.
   - Years: 1186, 1578, 1923, 1945, 约1950, 1950年代, 1973, 2025; stamps 1127, 1351, 1799.
   - Counts: 九百年, 四五个小时, 一两分钟, 四次/五次, 五方大印, 四卷/两卷, 好几卷, 三年以上, 25天/4卷, 96方印/14段, 约一百卷.
