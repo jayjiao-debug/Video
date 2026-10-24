@@ -1,6 +1,6 @@
 // ep43 HUD (HTML over the canvas): top-left subtitle with typed reveal, top-right stamp, old corner mark, era chip +
 // odometer counter, the 四出五进 tally, labels, title ink, Juno end card. Rebuilt every frame from t.
-import {clamp01, smooth} from './core';
+import {clamp01, smooth, BEAT} from './core';
 
 export const IVORY = '#FFF3D8', RED = '#EE4B3B', INK = '#2A1F17', GOLD = '#f6cf78';
 const PUNCT = '？！。，：；、”';
@@ -17,13 +17,13 @@ const whole = (s: string) => WHOLE.some((p) => s.startsWith(p));
 const centred = (s: string) => s.includes('？');
 
 /** markup for a line with [red] words, revealing n characters (fractional = the next char fading in) */
-const markup = (s: string, n: number, ctr: boolean) => {
-	let out = '', i = 0, red = false; const chars = [...s];
+const markup = (s: string, n: number, ctr: boolean, redOn: (group: number) => boolean = () => true) => {
+	let out = '', i = 0, red = false, grp = -1; const chars = [...s];
 	const lastVis = chars.filter((c) => c !== '[' && c !== ']').length - 1;
 	for (const ch of chars) {
-		if (ch === '[') { red = true; continue; } if (ch === ']') { red = false; continue; }
+		if (ch === '[') { red = true; grp++; continue; } if (ch === ']') { red = false; continue; }
 		const o = clamp01(n - i); const pull = ctr && i === lastVis && PUNCT.includes(ch) ? 'margin-right:-0.5em;' : '';
-		out += `<span style="opacity:${o.toFixed(3)};${red ? `color:${RED};` : ''}${pull}">${ch}</span>`; i++;
+		out += `<span style="opacity:${o.toFixed(3)};${red && redOn(grp) ? `color:${RED};` : ''}${pull}">${ch}</span>`; i++;
 	}
 	return out;
 };
@@ -31,6 +31,7 @@ const markup = (s: string, n: number, ctr: boolean) => {
 export const subtitles = (hud: HTMLElement, lines: Line[], t: number, yTop = 132) => {
 	for (let i = 0; i < lines.length; i++) {
 		const [a, b, s] = lines[i];
+		if (s.startsWith('要是排')) continue;                     // Q lives only in the end card's slot
 		const prevStays = i > 0 && stays(lines[i - 1][2]) && Math.abs(lines[i - 1][1] - a) < 0.05;
 		const end = stays(s) && i + 1 < lines.length && Math.abs(lines[i + 1][0] - b) < 0.05 ? lines[i + 1][1] : b;
 		if (t < a - 0.01 || t > end + 0.2) continue;
@@ -38,7 +39,9 @@ export const subtitles = (hud: HTMLElement, lines: Line[], t: number, yTop = 132
 		const nVis = [...s].filter((c) => c !== '[' && c !== ']').length;
 		const n = whole(s) ? 99 : Math.max(1, (t - a) / Math.min(0.4, 0.035 * nVis) * nVis + (i === 0 ? 4 : 0));
 		const ctr = centred(s); const row = prevStays ? 1 : 0;
-		html(hud, `<div class="${ctr ? 'subc' : 'sub'} sh" style="top:${yTop - 8 + row * 88}px;opacity:${o.toFixed(3)}">${markup(s, n, ctr)}</div>`);
+		const perWord = s.startsWith('[偷你]');                      // E3: each verb turns red on its own beat
+		const redOn = perWord ? (g: number) => t >= a + g * BEAT - 0.02 : undefined;
+		html(hud, `<div class="${ctr ? 'subc' : 'sub'} sh" style="top:${yTop - 8 + row * 88}px;opacity:${o.toFixed(3)}">${markup(s, n, ctr, redOn)}</div>`);
 	}
 };
 
@@ -90,14 +93,15 @@ export const titleInk = (hud: HTMLElement, o: number, sink = 0, cy = 540) => {
 		<div style="font-weight:900;font-size:170px;letter-spacing:.06em;margin-right:-.06em;line-height:1.05">清明上河图</div></div>`);
 };
 /** Juno end card (engine layout) */
-export const endCard = (hud: HTMLElement, o: number, q: string, sources: string) => {
+export const endCard = (hud: HTMLElement, o: number, q: string, sources: string, qType = 99, oPill = 1, oSrc = 1) => {
 	if (o <= 0) return;
+	let k = 0; q = [...q].filter((c) => { if (c === '[' || c === ']') return true; k++; return k <= qType; }).join(''); if ((q.match(/\[/g) || []).length > (q.match(/\]/g) || []).length) q += ']';
 	const qm = q.replace(/\[([^\]]+)\]/g, `<span style="color:${GOLD}">$1</span>`).replace(/？$/, '<span style="margin-right:-0.54em">？</span>');
 	html(hud, `<div style="position:absolute;inset:0;opacity:${o.toFixed(3)};font-family:'Noto Sans CJK SC','Noto Sans SC',sans-serif">
 		<div style="position:absolute;left:50%;top:120px;transform:translateX(-50%);width:96px;height:96px;border-radius:48px;border:3px solid ${GOLD};color:${GOLD};font-weight:900;font-size:58px;line-height:92px;text-align:center;font-family:'Noto Serif CJK SC',serif">J</div>
 		<div style="position:absolute;left:0;right:0;top:250px;text-align:center;font-weight:900;font-size:50px;color:${GOLD};letter-spacing:.08em;font-family:'Noto Serif CJK SC',serif">假如你是清明上河图</div>
 		<div style="position:absolute;left:0;right:0;top:350px;text-align:center;font-weight:900;font-size:72px;color:#fff;text-shadow:0 0 10px ${GOLD},0 0 34px rgba(246,207,120,.5);font-family:'Noto Serif CJK SC',serif">${qm}</div>
 		<div style="position:absolute;left:0;right:0;top:470px;text-align:center;font-weight:700;font-size:40px;color:rgba(255,246,221,.85);letter-spacing:.2em">评论区聊聊</div>
-		<div style="position:absolute;left:50%;top:590px;transform:translateX(-50%);padding:14px 40px;border:2px solid rgba(246,207,120,.8);border-radius:40px;font-weight:700;font-size:36px;color:#fff6dd;white-space:nowrap">关注 Juno · 一起看懂世界</div>
-		<div style="position:absolute;left:120px;right:120px;bottom:40px;text-align:center;font-size:21px;color:rgba(255,255,255,.55);line-height:1.6">${sources}</div></div>`);
+		<div style="position:absolute;left:50%;top:590px;transform:translateX(-50%);padding:14px 40px;border:2px solid rgba(246,207,120,.8);border-radius:40px;font-weight:700;font-size:36px;color:#fff6dd;white-space:nowrap;opacity:${oPill}">关注 Juno · 一起看懂世界</div>
+		<div style="position:absolute;left:120px;right:120px;bottom:40px;text-align:center;font-size:21px;color:rgba(255,255,255,.55);line-height:1.6;opacity:${oSrc}">${sources}</div></div>`);
 };

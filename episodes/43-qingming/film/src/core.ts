@@ -147,6 +147,7 @@ export const initPost = () => { slots = [mkSlot(), mkSlot()]; };
 const blackBg = new THREE.Color('#000000');
 /** render a stage (base + glow pass) into slot k; bloom mips blurred */
 export const renderStage = (st: Stage, k: number, bloom = 1) => {
+	if ((window as any).NODRAW) return;
 	const s = slots[k];
 	for (const m of st.mats) { m.uniforms.uHero.value.copy(st.hero); m.uniforms.uHeroR.value = st.heroR; m.uniforms.uGlowPass.value = 0; }
 	st.scene.background = null; renderer.setClearColor(0x000000, 1);
@@ -237,6 +238,7 @@ const compMat = new THREE.ShaderMaterial({
 export type Grade = {exposure?: number; vig?: number; vigCol?: string; lift?: number; tint?: string; grain?: number; flash?: number};
 /** composite slot 0 (A) and optionally slot 1 (B) to the screen */
 export const composite = (x: Xf, g: Grade = {}, t = 0, bloomA = 1, bloomB = 1) => {
+	if ((window as any).NODRAW) return;
 	const u = compMat.uniforms, a = slots[0], b = slots[1];
 	u.A.value = a.base.texture; u.B.value = b.base.texture;
 	[u.Ag0, u.Ag1, u.Ag2, u.Ag3].forEach((s, i) => (s.value = a.mips[i][0].texture)); [u.Bg0, u.Bg1, u.Bg2, u.Bg3].forEach((s, i) => (s.value = b.mips[i][0].texture));
