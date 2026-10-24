@@ -68,22 +68,48 @@ export const CONTACTS: {t: number; who: string; what: string; err: number}[] = [
 let CHECK_T = 0; export const checkTime = (t: number) => { CHECK_T = t; };
 const SEEN: Record<string, number> = {}; (window as any).CONTACT_SEEN = SEEN;   // every declared contact (for the checker's list)
 const log = (who: string, what: string, err: number, lim: number) => { if (!(window as any).CHECK) return; const k = `${who} · ${what}`; SEEN[k] = Math.max(SEEN[k] ?? 0, err); if (err > lim) CONTACTS.push({t: CHECK_T, who, what, err: Math.round(err * 10) / 10}); };
-/** shift each foot (ankle, toe; knee by half) so the shoe rests on ground(x) at its own x — robes hide the small leg stretch */
+/** put each shoe on ground(x) at its own x (keeping the swing foot's lift), turn the feet with the slope, drop the pelvis
+ *  when a foot is out of reach, and re-solve each knee with two-bone IK, so the legs keep their lengths on ramps */
 export const slopeFeet = (o: FigOpts, ground: (x: number) => number): FigOpts => {
-	const p: Pose = {...o.pose};
+	const p: Pose = {...o.pose}, sg = o.flip ? -1 : 1;
+	const rot = (q: P, c: P, a: number): P => { const dx = q[0] - c[0], dy = q[1] - c[1], cs = Math.cos(a), sn = Math.sin(a); return [c[0] + dx * cs - dy * sn, c[1] + dx * sn + dy * cs]; };
+	const L0: Record<string, [number, number]> = {};
 	for (const s of ['L', 'R']) {
-		const so = figToScreen(o, soleOf(p, s as any));
-		const gy = ground(so[0]), d = -(gy - o.ground) / o.h;           // body units, y up
-		for (const [j, k] of [[`${s}Ank`, 1], [`${s}Toe`, 1], [`${s}Knee`, 0.5]] as [string, number][]) p[j] = [p[j][0], p[j][1] + d * k];
+		const up = p[`${s}Up`], kn = p[`${s}Knee`], an = p[`${s}Ank`];
+		L0[s] = [Math.hypot(kn[0] - up[0], kn[1] - up[1]), Math.hypot(an[0] - kn[0], an[1] - kn[1])];
+		const sole = soleOf(p, s as any), so = figToScreen(o, sole), gy = ground(so[0]), d = -(gy - o.ground) / o.h;
+		const slope = -((ground(so[0] + 6) - ground(so[0] - 6)) / 12) * sg, ang = Math.atan(slope);        // ground slope in body units (x forward, y up)
+		const c: P = [sole[0], sole[1] + d];
+		for (const j of [`${s}Ank`, `${s}Toe`]) p[j] = rot([p[j][0], p[j][1] + d], c, ang);
+	}
+	// pelvis drop so the farther foot is reachable (legs ≤ 99.5 % straight)
+	const upper = ['Hips', 'LUp', 'RUp', 'Spine1', 'Neck1', 'Head', 'Top', 'LSh', 'LElb', 'LHand', 'LTip', 'RSh', 'RElb', 'RHand', 'RTip'];
+	let drop = 0;
+	for (let it = 0; it < 4; it++) {
+		let worst = 0;
+		for (const s of ['L', 'R']) { const up = p[`${s}Up`], an = p[`${s}Ank`]; worst = Math.max(worst, Math.hypot(an[0] - up[0], an[1] - (up[1] - drop)) - (L0[s][0] + L0[s][1]) * 0.995); }
+		if (worst <= 1e-5) break; drop += worst;
+	}
+	if (drop > 0) for (const j of upper) if (p[j]) p[j] = [p[j][0], p[j][1] - drop];
+	// two-bone IK per leg, knee on the side it was on
+	for (const s of ['L', 'R']) {
+		const H = p[`${s}Up`], A = p[`${s}Ank`], K0 = o.pose[`${s}Knee`], [l1, l2] = L0[s];
+		const dx = A[0] - H[0], dy = A[1] - H[1], dd = Math.min(Math.hypot(dx, dy), l1 + l2 - 1e-6), ux = dx / Math.max(1e-6, Math.hypot(dx, dy)), uy = dy / Math.max(1e-6, Math.hypot(dx, dy));
+		const a = (l1 * l1 - l2 * l2 + dd * dd) / (2 * dd), h = Math.sqrt(Math.max(0, l1 * l1 - a * a));
+		const mx = H[0] + ux * a, my = H[1] + uy * a, k1: P = [mx - uy * h, my + ux * h], k2: P = [mx + uy * h, my - ux * h];
+		const side0 = Math.sign((K0[0] - o.pose[`${s}Up`][0]) * (o.pose[`${s}Ank`][1] - o.pose[`${s}Up`][1]) - (K0[1] - o.pose[`${s}Up`][1]) * (o.pose[`${s}Ank`][0] - o.pose[`${s}Up`][0])) || 1;
+		const side1 = Math.sign((k1[0] - H[0]) * dy - (k1[1] - H[1]) * dx) || 1;
+		p[`${s}Knee`] = side1 === side0 ? k1 : k2;
 	}
 	return {...o, pose: p};
 };
 /** place a figure: aim its hands at screen targets, put its feet on the ground curve, and log contact errors */
 export const rig = (o: FigOpts, contacts: Contact[], ground?: (x: number) => number, who = 'fig'): FigOpts => {
-	let pose = o.pose;
+	// feet first (it may lower the pelvis on a ramp), then the hands reach from where the body really is
+	let f: FigOpts = ground ? slopeFeet(o, ground) : o;
+	let pose = f.pose;
 	for (const c of contacts) pose = reach(pose, c.side, toBody(o, c.target), c.opt ?? {});
-	let f: FigOpts = {...o, pose};
-	if (ground) f = slopeFeet(f, ground);
+	f = {...f, pose};
 	for (const c of contacts) { const h = handAt(f as any, c.side); log(who, `${c.name ?? c.side} hand`, Math.hypot(h[0] - c.target[0], h[1] - c.target[1]), 4); }
 	if (ground) {
 		// soles: ankle sits BL.ankle above the sole; the lower sole carries the weight and must touch; neither may sink

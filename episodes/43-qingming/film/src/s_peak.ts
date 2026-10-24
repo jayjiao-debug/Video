@@ -206,11 +206,16 @@ const peakCam = (t: number): [number, number, number] => {
 	const vc = clampV({u: lerp(vd.u, UB + 0.01, cr), v: lerp(vd.v, VB - 0.07, cr), f: lerp(vd.f, 0.52, cr)});
 	const [x1, y1, z1] = camOf(vc);
 	if (t < b(56.75)) return [x1, y1, z1];
-	// exit: the painted arch onto the real one (apex to apex, span to span)
-	const ax = FX0 + (BR.x + BR.w * 0.5) * SEC, ay = BR.y * SEC, sxA = 960 + (960 - C29[0]) * C29[2], syA = 540 + (900 - C29[1]) * C29[2];
-	const zE = Math.max((1700 * C29[2]) / (BR.w * SEC * 0.5), (syA + 30) / ay), xE = ax - (sxA - 960) / zE, yE = ay - (syA - 540) / zE;
-	const k = easeInOut(clamp01((t - b(56.75)) / (b(57) - 0.12 - b(56.75))));
-	return [lerp(x1, xE, k), lerp(y1, yE, k), Math.exp(lerp(Math.log(z1), Math.log(zE), k))];
+	// exit: the crane settles into a slow push; scene 29's camera does the matching (the real arch is framed onto the painted one)
+	const k = easeOut(clamp01((t - b(56.75)) / (b(57) + 0.1 - b(56.75))));
+	const [x2, y2, z2] = camOf(clampV({u: vc.u, v: vc.v + 0.01, f: 0.47}));
+	return [lerp(x1, x2, k), lerp(y1, y2, k), Math.exp(lerp(Math.log(z1), Math.log(z2), k))];
+};
+/** the crest camera that puts the real arch's apex + span on the painted arch's apex + span as framed at time t */
+const crestMatch = (t: number): [number, number, number] => {
+	const [cx, cy, zm] = peakCam(t), ax = FX0 + (BR.x + BR.w * 0.5) * SEC, ay = BR.y * SEC;
+	const sx = 960 + (ax - cx) * zm, sy = 540 + (ay - cy) * zm, half = BR.w * SEC * 0.5 * zm, zc = half / 1700;
+	return [960 - (sx - 960) / zc, 900 - (sy - 540) / zc, zc];
 };
 const peakDraw = (t: number) => {
 	const st = peak, [cx, cy, zm] = peakCam(t); st.setCam(cx, cy, zm);
@@ -246,7 +251,12 @@ const cam29 = (t: number): [number, number, number] => {
 	const xs = staffX(Math.min(t, b(58.25)));
 	const cx = lerp(C29[0], xs - 300, smooth(clamp01((t - b(57)) / 0.9)));
 	const p = easeIn(clamp01((t - b(58.25)) / (b(58.75) - b(58.25))));
-	return [lerp(cx, -2250, p), lerp(C29[1], 760, p), Math.exp(lerp(Math.log(C29[2]), Math.log(1.5), p))];
+	const wide: [number, number, number] = [lerp(cx, -2250, p), lerp(C29[1], 760, p), Math.exp(lerp(Math.log(C29[2]), Math.log(1.5), p))];
+	// bridge match: the scene opens on the camera that lays the real arch over the painted one, then settles into CR-B
+	const s0 = b(57) - 0.12, k = smooth(clamp01((t - s0) / 0.85));
+	if (k >= 1) return wide;
+	const m = crestMatch(Math.min(t, b(57) + 0.1));
+	return [lerp(m[0], wide[0], k), lerp(m[1], wide[1], k), Math.exp(lerp(Math.log(m[2]), Math.log(wide[2]), k))];
 };
 const drawPassage = (g: CanvasRenderingContext2D) => {
 	// the 午门 centre passage (52 × 94 at s 0.9, base 860): warm lamplit vault, its far opening a bright arch
