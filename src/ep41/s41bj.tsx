@@ -88,7 +88,7 @@ const Calendar: React.FC<{tau: number}> = ({tau}) => {
 	</g>;
 };
 /** the room. `d` = dayness (0 night … 1 day) */
-const Room: React.FC<{t: number; tau: number; pow: number; pose: Pose; finger: number; elder: number}> = ({t, tau, pow, pose, finger, elder}) => {
+const Room: React.FC<{t: number; tau: number; pow: number; pose: Pose; finger: number; elder: number; win?: boolean}> = ({t, tau, pow, pose, finger, elder, win = true}) => {
 	const d = dayness(tau), hum = 0.96 + 0.04 * Math.sin(t * 50);
 	const hand = jointAt(pose, 'RHand', EX, FLOOR, EH);
 	return <g>
@@ -101,7 +101,7 @@ const Room: React.FC<{t: number; tau: number; pow: number; pose: Pose; finger: n
 		<ellipse cx={1030} cy={150} rx={620} ry={200} fill="#F2F6E8" opacity={0.06} />
 		{/* window: night (or day) over the hutong roofs */}
 		<rect x={WIN.x - 14} y={WIN.y - 14} width={WIN.w + 28} height={WIN.h + 28} fill="#1a1722" />
-		<g clipPath="url(#bjWinC)"><WindowView tau={tau} t={t} d={d} x={WIN.x} y={WIN.y} s={WIN.w / W} /></g>
+		{win ? <g clipPath="url(#bjWinC)"><WindowView tau={tau} t={t} d={d} x={WIN.x} y={WIN.y} s={WIN.w / W} /></g> : <rect x={WIN.x} y={WIN.y} width={WIN.w} height={WIN.h} fill="#21243c" />}
 		<rect x={WIN.x - 24} y={WIN.y + WIN.h + 10} width={WIN.w + 48} height={14} fill="#221f2c" />
 		<rect x={0} y={0} width={W} height={WALLB} fill="#9fc0e8" opacity={0.08 * d} />
 		{/* tall machine cabinets along the back wall (the mainframe's peripherals), no logos */}
@@ -210,17 +210,19 @@ const S_EDGE = RUN.find((r) => r[3] === 99)![4], S_END = RUN[RUN.length - 1][4];
 const runAt = (s: number) => { let i = 0; while (i < RUN.length - 2 && RUN[i + 1][4] < s) i++; const a = RUN[i], b = RUN[i + 1], u = cl((s - a[4]) / (b[4] - a[4])); return a.map((q, j) => lerp(q, b[j], u)); };
 
 /* ---- the light's path through the room, the hutong and the sky: [t, x, y, size] in plate/world units ---- */
-const P1R: V2 = [1285, 541], P2R: V2 = [1160, 352], Q0 = ((0.12 / 0.22) ** 2);   // phantom chosen so the light starts from rest on the text
+const P1R: V2 = [1285, 541], P2R: V2 = [1150, 412], Q0 = ((0.12 / 0.18) ** 2);   // phantom chosen so the light starts from rest on the text
 const CH: number[][] = [
 	[9.0, ...r2p(P1R[0] + (P2R[0] - P1R[0]) * Q0, P1R[1] + (P2R[1] - P1R[1]) * Q0), 150],
-	[9.12, ...r2p(...P1R), 150], [9.34, ...r2p(...P2R), 150], [9.55, ...r2p(920, 262), 145], [9.75, ...r2p(700, 300), 135],   // off the screen → over his head → in at the window
-	[9.93, 1480, 540, 112], [10.12, 1230, 770, 88], [10.32, 850, 900, 66], [10.52, 700, 760, 50], [10.72, 600, 600, 40],   // down over the roofs, up the lane
+	[9.12, ...r2p(...P1R), 150], [9.3, ...r2p(...P2R), 150], [9.44, ...r2p(965, 318), 146], [9.6, ...r2p(640, 352), 128],   // off the screen → over his head → straight in through the window
+	[9.8, 1480, 540, 110], [10.12, 1230, 770, 88], [10.32, 850, 900, 66], [10.52, 700, 760, 50], [10.72, 600, 600, 40],   // down over the roofs, up the lane
 	[10.92, 590, 410, 33], [11.12, 660, 200, 29], [11.34, 840, -30, 27], [11.6, 980, -290, 26], [11.86, 1200, -440, 26],   // over the trees, up into the sky
 	[12.1, 1460, -470, 26], [12.37, 1630, -300, 28], [12.62, 1735, 110, 30], [12.8, 1850, 465, 32], [FL.land, LAND[0], LAND[1], 33],   // over the top, down, skimming the first tower onto the wall
 	[FL.land + 0.14, ...((p) => [p[0] + BX, walkY(p[1], p[2]) + BY])(ridgeAtV(V_LAND + 0.5)), 31],
 ];
 const CHK = CH.map((c) => c[0]), CHP = CH.map((c) => c.slice(1));
 const chainAt = (tau: number) => crAt(CHP, CHK, tau);
+/** when the head passes the window opening; after this the light is beyond the window plane (clipped to the opening in the room shot) */
+const T_WIN = (() => { for (let k = 9.12; k < 10; k += 1 / 240) { const p = chainAt(k), rx = WIN.x + p[0] * SW, ry = WIN.y + p[1] * SW; if (rx > WIN.x && rx < WIN.x + WIN.w && ry > WIN.y && ry < WIN.y + WIN.h) return k; } return 10; })();
 const V_ARR = ((a, b) => Math.hypot(a[0] - b[0], a[1] - b[1]) / 0.01)(chainAt(FL.land), chainAt(FL.land - 0.01));   // arrival speed on the wall
 const RUN_S = mono([FL.land, FL.mid, FL.edge, FL.edge + 0.32, FL.star], [0, 0.56 * S_EDGE, S_EDGE, S_EDGE + 0.6 * (S_END - S_EDGE), S_END], V_ARR, 0);
 /** the light at time tau: world x, y, size; v = position on the wall (−1 before it lands, 99 after it leaves) */
@@ -254,6 +256,8 @@ const PB_X = camX(FL.edge);   // parallax reference: the layers line up exactly 
 
 /* ---- shared sky (world-fixed): one gradient and one star field for the window, the rise, and the Wall ---- */
 const SKY_STOPS: [number, string][] = [[-1500, '#06071a'], [-700, '#0f1129'], [-200, '#1b1e3a'], [0, '#21243c'], [120, '#272b3f'], [200, '#2b2c42'], [255, '#2e2d43'], [330, '#302f47']];
+const hexMix = (a: string, b: string, u: number) => '#' + [1, 3, 5].map((i) => Math.round(lerp(parseInt(a.slice(i, i + 2), 16), parseInt(b.slice(i, i + 2), 16), u)).toString(16).padStart(2, '0')).join('');
+const skyCol = (y: number) => { const S = SKY_STOPS; if (y <= S[0][0]) return S[0][1]; for (let i = 1; i < S.length; i++) if (y <= S[i][0]) return hexMix(S[i - 1][1], S[i][1], (y - S[i - 1][0]) / (S[i][0] - S[i - 1][0])); return S[S.length - 1][1]; };
 const SkyBg: React.FC<{rc: number[]}> = ({rc}) => <g>
 	<defs><linearGradient id="bjSkyW" gradientUnits="userSpaceOnUse" x1={0} y1={SKY_STOPS[0][0]} x2={0} y2={SKY_STOPS[SKY_STOPS.length - 1][0]}>
 		{SKY_STOPS.map(([y, c], i) => <stop key={i} offset={(y - SKY_STOPS[0][0]) / (SKY_STOPS[SKY_STOPS.length - 1][0] - SKY_STOPS[0][0])} stopColor={c} />)}</linearGradient></defs>
@@ -263,7 +267,7 @@ const Stars: React.FC<{rc: number[]; t: number; mv?: V2; rot?: number; trails?: 
 	const C = 220, out: React.ReactNode[] = [], tr: React.ReactNode[] = [], streak = Math.hypot(mv[0], mv[1]) > 4, sk = 0.3;
 	for (let gx = Math.floor(rc[0] / C); gx <= Math.floor(rc[2] / C); gx++) for (let gy = Math.floor(rc[1] / C); gy <= Math.min(1, Math.floor(rc[3] / C)); gy++) for (let j = 0; j < 5; j++) {
 		const id = gx * 7919 + gy * 104729 + j * 13, x = (gx + rnd(id, 40)) * C, y = (gy + rnd(id, 41)) * C; if (y > 300) continue;
-		const b = rnd(id, 42), tw = 0.6 + 0.4 * Math.sin(t * (0.8 + 2 * rnd(id, 43)) + id), r = 0.7 + 1.8 * b ** 4, op = (0.2 + 0.7 * b) * tw * (1 - 0.6 * sm(seg(y, 120, 300)));
+		const b = rnd(id, 42), tw = 0.6 + 0.4 * Math.sin(t * (0.8 + 2 * rnd(id, 43)) + id), r = 0.7 + 1.8 * b ** 4, op = (0.2 + 0.7 * b) * tw * (1 - 0.6 * sm(seg(y, 120, 300))) * (1 - sm(seg(y, 170, 250)));
 		out.push(streak ? <line key={id} x1={x} y1={y} x2={x + mv[0] * sk} y2={y + mv[1] * sk} stroke="#eef0ff" strokeWidth={2 * r} strokeLinecap="round" opacity={op} /> : <circle key={id} cx={x} cy={y} r={r} fill="#eef0ff" opacity={op} />);
 		if (b > 0.975 && !streak) out.push(<path key={`g${id}`} d={`M${x - 10},${y} L${x + 10},${y} M${x},${y - 10} L${x},${y + 10}`} stroke="#eef0ff" strokeWidth={0.9} opacity={0.5 * tw} />);
 		if (trails > 0 && b > 0.35) { const dx = x - STAR[0], dy = y - STAR[1], rr = Math.hypot(dx, dy), a0 = Math.atan2(dy, dx), a1 = a0 + rot * Math.PI / 180;
@@ -278,17 +282,18 @@ const Clouds: React.FC<{t: number}> = ({t}) => <g>
 	{CLOUDS.map(([x, y, w, h, o], i) => { const dx = 6 * (t - 150); return <g key={i} opacity={o}>
 		<ellipse cx={x + dx} cy={y} rx={w} ry={h} fill="url(#bjCld)" /><ellipse cx={x + dx - w * 0.35} cy={y + h * 0.35} rx={w * 0.55} ry={h * 0.7} fill="url(#bjCld)" /><ellipse cx={x + dx + w * 0.4} cy={y - h * 0.2} rx={w * 0.5} ry={h * 0.6} fill="url(#bjCld)" /></g>; })}
 </g>;
-/** the hutong plate: its painted sky melts into the shared sky (mask), a cyclist rides up the lane */
+/** the hutong plate: its painted sky melts into the shared sky (an overlay in the sky's own colours), a cyclist rides up the lane */
 const PlateA: React.FC<{tau: number}> = ({tau}) => { const e = Math.pow(seg(tau, 8.6, 12.4), 0.85);
 	return <g>
-		<defs><linearGradient id="bjPlMG" gradientUnits="userSpaceOnUse" x1={0} y1={165} x2={0} y2={258}><stop offset="0" stopColor="#000" /><stop offset="1" stopColor="#fff" /></linearGradient>
-			<mask id="bjPlM" maskUnits="userSpaceOnUse" x={-10} y={-10} width={W + 20} height={1100}><rect x={-10} y={-10} width={W + 20} height={1100} fill="url(#bjPlMG)" /></mask></defs>
-		<image href={staticFile('ep41/bj_night.webp')} x={0} y={0} width={W} height={1080} preserveAspectRatio="none" mask="url(#bjPlM)" />
+		<defs><linearGradient id="bjPlOv" gradientUnits="userSpaceOnUse" x1={0} y1={-10} x2={0} y2={258}>
+			{[-10, 0, 120, 165, 200, 255, 258].map((y) => <stop key={y} offset={(y + 10) / 268} stopColor={skyCol(y)} stopOpacity={1 - cl((y - 165) / 93)} />)}</linearGradient></defs>
+		<image href={staticFile('ep41/bj_night.webp')} x={0} y={0} width={W} height={1080} preserveAspectRatio="none" />
+		<rect x={-10} y={-10} width={W + 20} height={268} fill="url(#bjPlOv)" />
 		<Sprite k="cyclist" x={lerp(872, 566, e)} y={lerp(1125, 592, e)} h={lerp(158, 36, e)} c="#14121c" sink={2} />
 	</g>; };
 /** the view through the window during the time-lapse (same plate, same sky), with a day grade */
 const WindowView: React.FC<{tau: number; t: number; d: number; x: number; y: number; s: number}> = ({tau, t, d, x, y, s}) => <g transform={`translate(${x},${y}) scale(${s})`}>
-	<SkyBg rc={[0, 0, W, 1080]} /><Stars rc={[0, 0, W, 300]} t={t} /><Clouds t={t} /><PlateA tau={tau} />
+	<SkyBg rc={[0, 0, W, 1080]} /><PlateA tau={tau} /><Stars rc={[0, 0, W, 300]} t={t} /><Clouds t={t} />
 	{d > 0 && <g><rect x={0} y={0} width={W} height={1080} fill="#6E9BD0" opacity={0.62 * d} /><rect x={0} y={0} width={W} height={330} fill="#a8c8ec" opacity={0.6 * d} /><Glow x={1500} y={160} r={160} c="#fff4d8" o={0.8 * d} id="bjSun" /></g>}
 </g>;
 
@@ -330,10 +335,10 @@ const strokeSet = (pts: number[][], wf: (i: number) => number, op = 1, key = 'c'
 	([[4, GOLD, 0.16], [1.6, GOLD, 0.6], [0.6, '#fff6d8', 1]] as [number, string, number][]).map(([mul, col, o], pi) => <g key={`${key}${pi}`} opacity={o * op}>
 		{pts.slice(0, -1).map((p, i) => { const q = pts[i + 1], w = wf(i) * mul; return w < 0.05 ? null : <line key={i} x1={p[0]} y1={p[1]} x2={q[0]} y2={q[1]} stroke={col} strokeWidth={w} strokeLinecap="round" />; })}</g>);
 /** the light in world units: comet tail + head; on the wall the lit wall-walk stays behind it; then the climb and the star */
-const LightFx: React.FC<{tau: number; t: number}> = ({tau, t}) => {
+const LightFx: React.FC<{tau: number; t: number; room?: boolean}> = ({tau, t, room = false}) => {
 	if (tau < FL.l0) return null;
 	const N = 24, dt = 1 / 90, tail: number[][] = [];
-	for (let j = 0; j <= N; j++) { const tj = tau - j * dt; if (tj < FL.l0 - 0.02) break; const L = lightAt(tj); tail.push([L.x, L.y, L.r]); }
+	for (let j = 0; j <= N; j++) { const tj = tau - j * dt; if (tj < FL.l0 - 0.02) break; const L = lightAt(tj); tail.push([L.x, L.y, L.r, tj]); }
 	const H0 = lightAt(tau), starK = sm(seg(tau, FL.star - 0.2, FL.star + 0.15)), fade = 1 - seg(tau, FL.star, FL.star + 0.3);
 	const parts: React.ReactNode[] = [];
 	if (H0.s > 0) {   // the lit wall-walk and the climb, kept as a trail
@@ -343,11 +348,21 @@ const LightFx: React.FC<{tau: number; t: number}> = ({tau, t}) => {
 		parts.push(...strokeSet(wall, (i) => Math.max(0.9, 6.5 * wall[i][2]), 0.85 * dim, 'w'));
 		if (climb.length > 1) parts.push(...strokeSet(climb, (i) => 1.5 * (0.45 + 0.55 * i / climb.length), 0.9 * (1 - 0.75 * seg(tau, FL.star - 0.05, FL.star + 0.34)), 'k'));
 	}
-	parts.push(...strokeSet(tail, (i) => tail[i][2] * 0.13 * Math.pow(1 - i / N, 0.8), 1, 'h'));
+	const tw = (i: number) => tail[i][2] * 0.13 * Math.pow(1 - i / N, 0.8);
 	const r = H0.r * (0.25 + 0.75 * sm(seg(tau, FL.l0, FL.l0 + 0.12)));
+	const head = [<Glow key="a" x={H0.x} y={H0.y} r={r * 2.6} c={GOLD} o={0.3 * fade + 0.1} id="bjHdA" />, <Glow key="b" x={H0.x} y={H0.y} r={r} c="#fff6d8" o={0.95} id="bjHdB" />];
+	if (room) {   // in the room: what is past the window opening is seen only through it (window = plate rect 0..W × 0..1080 here)
+		const k = tail.findIndex((q) => q[3] < T_WIN), kk = k < 0 ? tail.length : k, past = tail.slice(0, Math.min(tail.length, kk + 1)), before = tail.slice(Math.max(0, kk - 1));
+		return <g>
+			<defs><clipPath id="bjWinL"><rect x={0} y={0} width={W} height={1080} /></clipPath></defs>
+			{before.length > 1 && strokeSet(before, (i) => tw(i + Math.max(0, kk - 1)), 1, 'hr')}
+			{tau < T_WIN && head}
+			<g clipPath="url(#bjWinL)">{past.length > 1 && strokeSet(past, tw, 1, 'hw')}{tau >= T_WIN && head}</g>
+		</g>;
+	}
+	parts.push(...strokeSet(tail, tw, 1, 'h'));
 	return <g>{parts}
-		<Glow x={H0.x} y={H0.y} r={r * 2.6} c={GOLD} o={0.3 * fade + 0.1} id="bjHdA" />
-		<Glow x={H0.x} y={H0.y} r={r} c="#fff6d8" o={0.95} id="bjHdB" />
+		{head}
 		{starK > 0 && <g>
 			<Glow x={STAR[0]} y={STAR[1]} r={84} c="#fff4d8" o={0.5 * starK} id="bjStarG" />
 			<circle cx={STAR[0]} cy={STAR[1]} r={4.2} fill="#fff8e8" opacity={starK} />
@@ -378,25 +393,24 @@ export const BJ3: React.FC<{tau: number; t: number}> = ({tau, t}) => {
 			const c = camAt(tau), rc: V2 = [WIN.x + c.cx * SW, WIN.y + c.cy * SW];
 			zoom = c.z / SW; fx = rc[0]; fy = rc[1]; px = 960 - rc[0] + d.px; py = 540 - rc[1] + d.py;
 		}
+		const sx = (x: number) => (x - fx) * zoom + fx + px, sy = (y: number) => (y - fy) * zoom + fy + py;   // window on screen?
+		const win = sx(WIN.x + WIN.w) > -40 && sx(WIN.x) < W + 40 && sy(WIN.y + WIN.h) > -40 && sy(WIN.y) < 1120;
 		return <g><Cam zoom={zoom} fx={fx} fy={fy} px={px} py={py}>
-			<Room t={t} tau={tau} pow={pow} pose={pose} finger={finger} elder={elder} />
-			<g transform={`translate(${WIN.x},${WIN.y}) scale(${SW})`}><LightFx tau={tau} t={t} /></g>
+			<Room t={t} tau={tau} pow={pow} pose={pose} finger={finger} elder={elder} win={win} />
+			<g transform={`translate(${WIN.x},${WIN.y}) scale(${SW})`}><LightFx tau={tau} t={t} room /></g>
 		</Cam></g>;
 	}
 	// outside: the plate, the sky, the Wall — one world, one camera
 	const c = camAt(tau), p = camAt(tau - 1 / 60), mv: V2 = [c.cx - p.cx, c.cy - p.cy];
 	const hw = 960 / c.z + 60, hh = 540 / c.z + 60, rot = 22 * easeIn(seg(tau, T.trails, T.end)), trails = sm(seg(tau, T.trails, T.trails + 0.2));
 	const rc = [c.cx - hw - (rot ? 600 : 0), c.cy - hh - (rot ? 600 : 0), c.cx + hw + (rot ? 600 : 0), c.cy + hh];
-	const bl: V2 = [Math.max(0, Math.abs(mv[0]) - 6) * 0.22, Math.max(0, Math.abs(mv[1]) - 6) * 0.22], blur = Math.max(bl[0], bl[1]) > 0.8;
 	const L = lightAt(tau);
 	return <g transform={`translate(${960 + d.px},${540 + d.py}) scale(${c.z}) translate(${-c.cx},${-c.cy})`}>
 		<SkyBg rc={rc} />
+		{tau < FL.hand && <PlateA tau={tau} />}
 		<Stars rc={rc} t={t} mv={rot ? [0, 0] : mv} rot={rot} trails={trails} />
 		<Clouds t={t} />
-		{blur && <defs><filter id="bjMB" filterUnits="userSpaceOnUse" x={rc[0]} y={rc[1]} width={rc[2] - rc[0]} height={rc[3] - rc[1]}><feGaussianBlur stdDeviation={`${bl[0].toFixed(2)} ${bl[1].toFixed(2)}`} /></filter></defs>}
-		<g filter={blur ? 'url(#bjMB)' : undefined}>
-			{tau < FL.hand ? <PlateA tau={tau} /> : <g transform={`translate(${BX},${BY})`}><LandB cx={c.cx} t={t} tau={tau} v={L.v} /></g>}
-		</g>
+		{tau >= FL.hand && <g transform={`translate(${BX},${BY})`}><LandB cx={c.cx} t={t} tau={tau} v={L.v} /></g>}
 		<LightFx tau={tau} t={t} />
 	</g>;
 };

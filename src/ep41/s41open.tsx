@@ -46,15 +46,15 @@ const Street: React.FC<{e: Era; cam: number; t: number; seed: number}> = ({e, ca
 	const per = 170, off = ((-cam * 0.45) % per + per) % per;
 	return <g>
 		<defs><linearGradient id={`esky${seed}`} x1="0" y1="0" x2="0" y2="1"><stop offset="0" stopColor={e.sky[0]} /><stop offset="1" stopColor={e.sky[1]} /></linearGradient></defs>
-		<rect width={W} height={H} fill={`url(#esky${seed})`} />
+		<rect x={-W} width={3 * W} height={H} fill={`url(#esky${seed})`} />
 		{e.moon && <Moon x={1460} y={210} r={52} id="omoon" />}
-		{Array.from({length: Math.ceil(W / per) + 2}, (_, k) => { const i = Math.floor((-cam * 0.45) / per) - k + 6, x = W - k * per - off + per, hh = lerp(e.bld[0], e.bld[1], rnd(i, seed)), y = 900 - hh, w = per - 8;
+		{Array.from({length: Math.ceil(W / per) + 5}, (_, kk) => { const k = kk - 3, i = Math.floor((-cam * 0.45) / per) - k + 6, x = W - k * per - off + per, hh = lerp(e.bld[0], e.bld[1], rnd(i, seed)), y = 900 - hh, w = per - 8;
 			return <g key={k}><rect x={x - w} y={y} width={w} height={hh + 200} fill="#06060a" />
 				{e.chimney && <rect x={x - w + 20 + 60 * rnd(i, 7)} y={y - 34} width={16} height={34} fill="#06060a" />}
 				{Array.from({length: Math.floor(hh / 46)}, (_, r) => Array.from({length: 3}, (_, c) => rnd(i * 31 + r * 7 + c, seed + 1) < e.winP ? <rect key={`${r}_${c}`} x={x - w + 18 + c * 50} y={y + 22 + r * 46} width={22} height={26} fill={e.win} opacity={0.85} /> : null))}
 				{e.neon && rnd(i, 9) > 0.4 && <rect x={x - w + 20} y={y + 30} width={90} height={34} rx={6} fill="none" stroke={rnd(i, 10) > 0.5 ? '#ff4fa8' : '#4ff0ff'} strokeWidth={5} style={{filter: 'drop-shadow(0 0 8px currentColor)'}} />}
 			</g>; })}
-		<rect x={0} y={900} width={W} height={180} fill="#040406" />
+		<rect x={-W} y={900} width={3 * W} height={180} fill="#040406" />
 	</g>;
 };
 const WireRace: React.FC<{t: number; tau: number}> = ({t, tau}) => {

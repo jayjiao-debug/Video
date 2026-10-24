@@ -143,10 +143,10 @@ export const Blaze: React.FC<{x: number; y: number; s?: number; t: number; lean?
 		{L.slice(1).map(([i, h0, w0, c, o]) => <path key={i} d={tongue(i, h0, w0, seed + i * 1.7)} fill={c} opacity={o} />)}
 	</g>;
 };
-const FirePit: React.FC<{t: number; lean: number; tau: number; zoom: number; bed?: number}> = ({t, lean, tau, zoom, bed = 0}) => <g>
+const FirePit: React.FC<{t: number; lean: number; tau: number; zoom: number; bed?: number}> = ({t, lean, tau, zoom, bed = 0}) => { const fz = 1 - seg(zoom, 2.4, 3.2); return <g>
 	<Glow x={FX} y={GY - 70} r={420} c="#ff8a3a" o={0.42 + 0.06 * Math.sin(t * 13) * Math.sin(t * 7.1)} id="shFireG" />
 	<ellipse cx={FX} cy={GY + 6} rx={260} ry={34} fill="#ff8a3a" opacity={0.14} />
-	<Smoke x={FX} y={GY - 150} tau={tau} lean={lean} s={1.1} op={0.8} seed={3} />
+	{fz > 0 && <Smoke x={FX} y={GY - 150} tau={tau} lean={lean} s={1.1} op={0.8 * fz} seed={3} />}
 	<path d={`M${FX - 70},${GY + 2} L${FX + 70},${GY - 4} M${FX - 60},${GY - 8} L${FX + 64},${GY + 4}`} stroke="#1a0c06" strokeWidth={13} strokeLinecap="round" />
 	<Blaze x={FX} y={GY - 6} s={1.05} t={t} lean={lean} bed={bed} bedId="shBed" />
 	{/* coals and ring of stones */}
@@ -154,7 +154,7 @@ const FirePit: React.FC<{t: number; lean: number; tau: number; zoom: number; bed
 	{Array.from({length: 9}, (_, i) => { const a = (i / 8 - 0.5) * 2.6, x = FX + Math.sin(a) * 96; return <ellipse key={i} cx={x} cy={GY + 4 - Math.cos(a) * 4} rx={20 + 6 * rnd(i, 3)} ry={13} fill="#0a0610" />; })}
 	{/* sparks */}
 	{Array.from({length: 22}, (_, i) => { const u = ((t * (0.5 + 0.3 * rnd(i, 1)) + rnd(i, 2)) % 1); return <circle key={i} cx={FX + (rnd(i, 3) - 0.5) * 70 + Math.sin(u * 8 + i) * 14 + lean * 300 * u} cy={GY - 60 - u * 340} r={1.4 + rnd(i, 4) * 1.8} fill={rnd(i, 5) > 0.5 ? '#ffcf6a' : '#ffe9b0'} opacity={(1 - u) * 0.9 * (1 - seg(zoom, 3, 7))} />; })}
-</g>;
+</g>; };
 
 /* ---------- the world ---------- */
 /** a Shang hall: rammed-earth platform (battered sides, tamping courses), timber posts, wattle walls, thatched hip roof (no tiles, no upturned eaves) */
@@ -265,6 +265,7 @@ export const SHANG3: React.FC<{tau: number; t: number}> = ({tau, t}) => {
 	const shake = tau > T.crack && tau < T.crack + 0.1 ? (rnd(Math.floor(tau * 30), 5) - 0.5) * 14 : 0;
 	const cam = {zoom: c.zoom, fx: c.F[0], fy: c.F[1], px: c.S[0] - c.F[0] + dpx + shake, py: c.S[1] - c.F[1] + dpy + shake * 0.6};
 	const CT = camT(cam.zoom, cam.fx, cam.fy, cam.px, cam.py);
+	const fz = 1 - seg(cam.zoom, 2.4, 3.2);   // blurred groups fade out by zoom 3.2 and are skipped above it (huge filter regions glitch on the farm)
 	const dark = 1 - sm(seg(tau, 0.25, 1.9));
 	const showWorld = cam.zoom < 40;
 	const pre = 1 - seg(tau, 2.6, 2.9);              // the title crack overlay (glowing, cooling) until it is part of the shell
@@ -288,14 +289,14 @@ export const SHANG3: React.FC<{tau: number; t: number}> = ({tau, t}) => {
 				<image href={staticFile('ep41/shang_sky.webp')} x={-80} y={-150} width={2100} height={1181} preserveAspectRatio="none" />
 				<rect x={-200} y={-200} width={W + 400} height={1000} fill="url(#shSkyDim)" />
 				<StarField t={t} n={180} maxY={560} op={0.85 * (1 - 0.85 * sm(seg(tau, T.wind, T.wind + 3)))} seed={3} />
-				<Clouds tau={tau} k={easeOut(seg(tau, T.wind - 0.2, T.wind + 3.2))} />
+				{fz > 0 && <g opacity={fz}><Clouds tau={tau} k={easeOut(seg(tau, T.wind - 0.2, T.wind + 3.2))} /></g>}   {/* blurred layers are skipped in the close-ups: huge filter regions under zoom glitch on the render farm */}
 				<Layer cam={0} f={0.04} base={700} amp={22} seed={2} col="#2b2238" period={700} item={(x, gy, i) => i % 3 === 1 ? <ShangHall x={x} gy={gy} w={70} col="#2b2238" t={t} seed={i + 40} lit={0.6} /> : null} />
 				<rect x={-200} y={712} width={W + 400} height={34} fill="#3a3456" />
 				<path d={`M-200,${722} L${W + 200},${719}`} stroke="#8b7fa8" strokeWidth={1.5} opacity={0.35 + 0.1 * Math.sin(t * 2)} />
 				<Layer cam={0} f={0.22} base={772} amp={30} seed={5} col="#1c1528" period={560} pad={300} item={(x, gy, i) => {
 					if (i % 2 === 0) return <g><ShangHall x={x} gy={gy} w={230 + 40 * rnd(i, 7)} col="#1c1528" t={t} seed={i} />
 						{/* hearth smoke from the hall */}
-						<Smoke x={x + 20} y={gy - 110} tau={tau + i} lean={lean} s={0.45} op={0.6} seed={i} /></g>;
+						{fz > 0 && <Smoke x={x + 20} y={gy - 110} tau={tau + i} lean={lean} s={0.45} op={0.6 * fz} seed={i} />}</g>;
 					if (i === 1) return <g>{[0, 1].map((j) => <Rimmed key={j} x={x + j * 34} ground={gy + 2} h={46} pose={fkPose({...KN, lean: 20, neck: 10, la: 60, le: 40, ra: 50, re: 50})} look={{dress: 'tunic', head: 'cylcap'}} col="#141020" rimOp={0} />)}</g>;
 					return null; }} />
 				<Layer cam={0} f={0.55} base={826} amp={14} seed={8} col="#120d1c" period={420} pad={300} item={(x, gy, i) => i === 0 ? <Sprite k="tree" x={x - 120} y={gy} h={330} c="#0f0a17" /> : i === 1 ? <Sprite k="ding" x={x - 160} y={gy} h={96} c="#0f0a17" /> : (i % 1 === 0 && i > 1 && i < 5) ? <Millet x={x} gy={gy} h={60 + 20 * rnd(i, 2)} col="#0f0a17" t={t} wind={wind} seed={i} /> : null} />
@@ -322,8 +323,8 @@ export const SHANG3: React.FC<{tau: number; t: number}> = ({tau, t}) => {
 				{/* the puff of smoke and sparks at the touch */}
 				{tau > T.touch - 0.05 && tau < T.flipA + 0.8 && Array.from({length: 10}, (_, i) => { const u = cl((tau - T.touch) / (0.9 + 0.3 * rnd(i, 3))); return u <= 0 || u >= 1 ? null : <circle key={i} cx={holeW[0] + (rnd(i, 1) - 0.5) * 40 * u - 10 * u} cy={holeW[1] - 50 * u * (0.5 + rnd(i, 2))} r={2 + 9 * u} fill={i < 4 ? '#ffd27a' : '#6a5a66'} opacity={(1 - u) * (i < 4 ? 0.9 : 0.45)} />; })}
 				{/* foreground grass, blurred */}
-				<g filter="url(#shFg)">{Array.from({length: 16}, (_, i) => { const x = -100 + i * 140 + 40 * rnd(i, 3), hh = 70 + 60 * rnd(i, 4), sw = (Math.sin(t * 1.4 + i) * 0.1 - wind * 0.25) * hh;
-					return <path key={i} d={`M${x - 14},${H + 40} Q${x},${H - hh * 0.5} ${x + sw},${H - hh} Q${x + 6},${H - hh * 0.5} ${x + 14},${H + 40} Z`} fill="#05030a" />; })}</g>
+				{fz > 0 && <g filter="url(#shFg)" opacity={fz}>{Array.from({length: 16}, (_, i) => { const x = -100 + i * 140 + 40 * rnd(i, 3), hh = 70 + 60 * rnd(i, 4), sw = (Math.sin(t * 1.4 + i) * 0.1 - wind * 0.25) * hh;
+					return <path key={i} d={`M${x - 14},${H + 40} Q${x},${H - hh * 0.5} ${x + sw},${H - hh} Q${x + 6},${H - hh * 0.5} ${x + 14},${H + 40} Z`} fill="#05030a" />; })}</g>}
 			</g>}
 			{!showWorld && <PlastronV tf={tfP} cosT={cosT} heat={heat} newK={newK} glyph={glyph} cool={cool} t={t} />}
 		</g>

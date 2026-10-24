@@ -73,7 +73,11 @@ export const bellRig = (rise: number, t: number, speak = 0, turn = 0): {pose: Po
 };
 // Watson's room (plate bellB, the door painted out: a picture hangs there now)
 const RX: P2 = [236, 676], FLOOR_B = 1012, WAT_H = 760, KNOB_B: P2 = [352, 262];
-const HOLD = fkPose({hip: 0.655, lean: 10, neck: 10, lt: 4, lk: 4, rt: -5, rk: 5, la: 22, le: 134, ra: 4, re: 14});
+const HOLD_FK = {hip: 0.655, lean: 8, neck: 6, lt: 4, lk: 4, rt: -5, rk: 5, la: 22, le: 134, ra: 4, re: 14};
+/** Watson's ear in body units (figure4's head frame: just behind the head centre) and the receiver held there by IK */
+const earB = (p: Pose): P2 => { const hc: P2 = [lerp(p.Head[0], p.Top[0], 0.45), lerp(p.Head[1], p.Top[1], 0.45)]; return [hc[0] - 0.014, hc[1] - 0.006]; };
+const HOLD = (() => { const P = fkPose(HOLD_FK), e = earB(P), [a, b] = ik2(P.LSh, [e[0] + 0.012, e[1] - 0.026], A1, A2, -1); return fkPose({...HOLD_FK, la: a, le: b - a}); })();
+const flipPt = (b: P2, x: number, ground: number): P2 => [x - b[0] * WAT_H, ground - b[1] * WAT_H];
 
 // the window: narrower than r3 and set so the moon (510, 300) sits clear in the right pane, away from the mullion
 export const BWIN = {x: 360, y: 168, w: 210, h: 316, moon: [510, 300] as P2, r: 34};
@@ -126,15 +130,17 @@ const RoomB: React.FC<{t: number; tau: number; lower: number; jolt: number; run:
 	// Watson stands by the side table, the receiver at his ear; he jolts, sets it down, and runs off to the left (toward Bell's room)
 	const RATE = 1.7, sp = gaitStride('08_01') * WAT_H / CYCLE * RATE, wx = 470 - (run > 0 ? Math.max(0, tau) * sp : 0);
 	const pose = run > 0 ? gaitPose('08_01', tau * RATE / CYCLE) : mixPose(HOLD, POSES.stand, sm(lower));
-	const hop = Math.sin(Math.PI * cl(jolt)) * 26, hand = jointAt(pose, 'LHand', wx, FLOOR_B - hop, WAT_H, true);
-	const rxPos: P2 = run > 0 ? RX : [lerp(hand[0] - 6, RX[0], sm(lower)), lerp(hand[1] - 10, RX[1], sm(lower))];
+	const hop = Math.sin(Math.PI * cl(jolt)) * 26, g = FLOOR_B - hop, ear = flipPt(earB(HOLD), wx, g), elb = jointAt(HOLD, 'LElb', wx, g, WAT_H, true);
+	const heldRot = Math.atan2(elb[1] - ear[1], elb[0] - ear[0]) * 180 / Math.PI, L = sm(lower);   // the handle runs down along his forearm
+	const rxPos: P2 = run > 0 ? RX : [lerp(ear[0], RX[0], L), lerp(ear[1], RX[1], L)], rot = run > 0 ? 0 : lerp(heldRot, 0, L);
 	return <g>
 		<image href={staticFile('ep41/bellB.webp')} x={0} y={0} width={2048 * PLATE_S} height={1152 * PLATE_S} />
 		<Wire a={[KNOB_B[0] - 2, KNOB_B[1] + 4]} b={rxPos} sag={60} col="#1a1a22" w={2.5} />
 		<Knob p={KNOB_B} r={6} c="#8e939c" e="#3e4350" />
-		<ReedReceiver x={rxPos[0]} y={rxPos[1]} s={0.55} rot={-70 * (1 - sm(lower))} col="#16161c" hi="#d6a85a" glow={glow} />
+		<Rimmed x={wx} ground={g} h={WAT_H} pose={pose} look={LOOK4.watson} flip col="#10121a" rim="#b8c8ff" rimOp={0.22} rimDx={2.5} rimDy={-1.5} T={tau} />
+		{/* the receiver on his near ear (in front of the head), then set down on the table */}
+		<ReedReceiver x={rxPos[0]} y={rxPos[1]} s={0.55} rot={rot} col="#1c1c24" hi="#d6a85a" glow={glow} />
 		<Rings x={rxPos[0] + 4} y={rxPos[1]} t={t} k={glow * 0.8} dir={1} col="#fff0c8" />
-		<Rimmed x={wx} ground={FLOOR_B - hop} h={WAT_H} pose={pose} look={LOOK4.watson} flip col="#10121a" rim="#b8c8ff" rimOp={0.22} rimDx={2.5} rimDy={-1.5} T={tau} />
 	</g>;
 };
 /** sound rings at the receiver (Watson's ear) */
@@ -142,7 +148,7 @@ const Rings: React.FC<{x: number; y: number; t: number; k: number; dir?: number;
 	{Array.from({length: 4}, (_, i) => { const u = ((t * 1.6 + i / 4) % 1), r = 14 + u * 70; return <path key={i} d={`M${x + dir * r * 0.2},${y - r} A${r},${r} 0 0,${dir > 0 ? 1 : 0} ${x + dir * r * 0.2},${y + r}`} fill="none" stroke={col} strokeWidth={3 - 2 * u} opacity={k * (1 - u) * 0.85} transform={`rotate(${dir > 0 ? 35 : -35} ${x} ${y})`} />; })}
 </g>;
 /** where the receiver is at Watson's ear (screen), for the iris */
-const EAR = jointAt(HOLD, 'LHand', 470, FLOOR_B, WAT_H, true);
+const EAR = flipPt(earB(HOLD), 470, FLOOR_B);
 const LAMP: P2 = [979, 520];
 /** camera that puts world point L at screen point S, zoom z (no drift at z = 1, L = S: identity) */
 export const LookCam: React.FC<{z: number; L: P2; S: P2; px?: number; py?: number; roll?: number; children: React.ReactNode}> = ({z, L, S, px = 0, py = 0, roll = 0, children}) =>
@@ -150,6 +156,12 @@ export const LookCam: React.FC<{z: number; L: P2; S: P2; px?: number; py?: numbe
 /** the push-in on Bell at the mouthpiece: world point between his lips and the opening, framed above the subtitles */
 export const FACE: P2 = [lerp(LIPS[0], FUNNEL[0], 0.5) - 10, lerp(LIPS[1], FUNNEL[1], 0.5) - 18];
 const DIVE: P2 = ltAxis(TX.x, TX.y, TX.s, 0.45, 0);   // inside the horn: the camera dives in along the voice
+/** WireTunnel's copper rings advance 22 spacings per unit u: over the 1.45 s tunnel u 0→1 is ~0.5 spacing a frame, which
+    strobes at 15 Hz; 0.3 keeps them at ~0.15 a frame (smooth), and room B's underlay continues at the same rate */
+const TUN_U = 0.3;
+/** the whip pan runs along one wall: Bell's room sits left of Watson's, so the pan (W px in all) never shows past a plate.
+    Room B travels WHIP_B in its 0.35 s, room A the rest in its 0.3 s: the same speed on both sides of the cut */
+const WHIP_B = Math.round(W * 0.35 / 0.65);
 
 export const BELL3: React.FC<{tau: number; t: number}> = ({tau, t}) => {
 	const T = BELL_T;
@@ -165,13 +177,14 @@ export const BELL3: React.FC<{tau: number; t: number}> = ({tau, t}) => {
 			<RoomA t={t} tau={tau} bell={bell} vib={speaking} rings={speaking} door={0} />
 		</LookCam></g>;
 	}
-	if (tau < T.roomB) { const u = seg(tau, T.tunnel, T.roomB), op = ease(seg(tau, T.tunnel, T.tunnel + 0.45));
+	if (tau < T.roomB) { const u = TUN_U * seg(tau, T.tunnel, T.roomB), op = ease(seg(tau, T.tunnel, T.tunnel + 0.45));
 		return <g><rect width={W} height={H} fill="#140904" /><Iris id="bTunIn" x={W / 2} y={H / 2} r={40 + op * 1200}><WireTunnel u={u} t={t} /></Iris></g>; }
 	if (tau < T.roomA2) {   // room B: iris out of the receiver at Watson's ear; he jolts, sets it down, runs off left
 		const iris = ease(seg(tau, T.roomB, T.roomB + 0.7)), whip = seg(tau, T.whip - 0.15, T.roomA2);
 		const zoom = lerp(2.6, 1.12, ease(seg(tau, T.roomB, T.roomB + 1.6)));
-		return <g>{iris < 1 && <WireTunnel u={1 + (tau - T.roomB) * 0.4} t={t} />}<Whip id="bwhip" amt={whip * 90}><Iris id="bIris" x={EAR[0]} y={EAR[1]} r={30 + iris * 2400}>
-			<LookCam z={zoom} L={EAR} S={EAR} px={whip * 1400}>
+		return <g>{iris < 1 && <WireTunnel u={TUN_U + (tau - T.roomB) * TUN_U / (T.roomB - T.tunnel)} t={t} />}<Whip id="bwhip" amt={whip * 90}><Iris id="bIris" x={EAR[0]} y={EAR[1]} r={30 + iris * 2400}>
+			<LookCam z={zoom} L={EAR} S={EAR} px={whip * WHIP_B}>
+				{whip > 0 && <image href={staticFile('ep41/bellA.webp')} x={-2048 * PLATE_S} y={0} width={2048 * PLATE_S} height={1152 * PLATE_S} />}
 				<RoomB t={t} tau={tau - T.run} jolt={seg(tau, T.jolt, T.jolt + 0.35)} lower={seg(tau, T.lower, T.lower + 0.5)} run={seg(tau, T.run, T.whip)} glow={(1 - seg(tau, T.lower - 0.2, T.lower)) * (0.6 + 0.4 * Math.sin(t * 20))} />
 			</LookCam></Iris></Whip></g>;
 	}
@@ -180,7 +193,8 @@ export const BELL3: React.FC<{tau: number; t: number}> = ({tau, t}) => {
 	const bell = bellRig(1, t, 0, seg(tau, T.roomA2 + 0.5, T.roomA2 + 1.8));
 	const d = drift(t, 1), lp = easeIn(seg(tau, T.lamp, T.end)), fxy = ease(seg(tau, T.lamp - 0.6, T.lamp + 0.4)), z = lerp(1.25, 1.1, ease(seg(tau, T.roomA2, T.lamp))) * lerp(1, 9, lp);
 	const F: P2 = [lerp(1000, LAMP[0], fxy), lerp(560, LAMP[1], fxy)];
-	return <g><Whip id="bwhip2" amt={whipIn * 90}><LookCam z={z} L={F} S={F} px={d.px * (1 - lp) - whipIn * 1400} py={d.py * (1 - lp)}>
+	return <g><Whip id="bwhip2" amt={whipIn * 90}><LookCam z={z} L={F} S={F} px={d.px * (1 - lp) - whipIn * (W - WHIP_B)} py={d.py * (1 - lp)}>
+		{whipIn > 0 && <image href={staticFile('ep41/bellB.webp')} x={2048 * PLATE_S} y={0} width={2048 * PLATE_S} height={1152 * PLATE_S} />}
 		<RoomA t={t} tau={tau} bell={bell} vib={0} rings={0} door={sm(k)} watson={seg(tau, T.roomA2 + 0.6, T.roomA2 + 1.6)} />
 	</LookCam></Whip><Flash k={seg(tau, T.end - 0.5, T.end) * 0.35} col="#fff6e6" /></g>;
 };

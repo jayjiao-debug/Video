@@ -61,11 +61,11 @@ const F1A = DU_T.foldA + 0.25, F1B = F1A + 0.6, F2A = DU_T.foldB + 0.15, F2B = F
 
 /* ---------- architecture (all drawn standing on the ground y they are given) ---------- */
 /** 烽燧: a square, tapered rammed-earth beacon tower with a parapet and a brushwood stack on top */
-const Beacon: React.FC<{x: number; gy: number; s: number; col: string; lit: number; t: number; seed: number; lean?: number; bed?: number}> = ({x, gy, s, col, lit, t, seed, lean = -0.25, bed = 0}) => {
+const Beacon: React.FC<{x: number; gy: number; s: number; col: string; lit: number; t: number; seed: number; lean?: number; bed?: number; fz?: number}> = ({x, gy, s, col, lit, t, seed, lean = -0.25, bed = 0, fz = 1}) => {
 	const bw = 70 * s, tw = 46 * s, h = 112 * s, top = gy - h;
 	return <g>
 		{lit > 0 && <Glow x={x} y={top - 30 * s} r={150 * s} c="#ffb050" o={0.5 * lit} id={`duBg${seed}`} />}
-		{lit > 0 && <g filter="url(#duBlurS)" opacity={lit}>{Array.from({length: 18}, (_, i) => { const u = ((t * 0.16 + i / 18 + rnd(seed, 3)) % 1); return <circle key={i} cx={x + (lean * 900 * u * u + Math.sin(u * 5 + i) * 8) * s} cy={top - 50 * s - u * 520 * s} r={(10 + 50 * u) * s} fill="#4a2a36" opacity={0.55 * Math.sin(Math.PI * Math.min(1, u * 1.2))} />; })}</g>}
+		{lit > 0 && fz > 0 && <g filter="url(#duBlurS)" opacity={lit * fz}>{Array.from({length: 18}, (_, i) => { const u = ((t * 0.16 + i / 18 + rnd(seed, 3)) % 1); return <circle key={i} cx={x + (lean * 900 * u * u + Math.sin(u * 5 + i) * 8) * s} cy={top - 50 * s - u * 520 * s} r={(10 + 50 * u) * s} fill="#4a2a36" opacity={0.55 * Math.sin(Math.PI * Math.min(1, u * 1.2))} />; })}</g>}
 		<path d={`M${x - bw / 2},${gy + 3} L${x - tw / 2},${top} L${x + tw / 2},${top} L${x + bw / 2},${gy + 3} Z`} fill={col} />
 		{[0.25, 0.5, 0.75].map((k, i) => <path key={i} d={`M${lerp(x - bw / 2, x - tw / 2, k)},${lerp(gy, top, k)} L${lerp(x + bw / 2, x + tw / 2, k)},${lerp(gy, top, k)}`} stroke="#000" strokeOpacity={0.14} strokeWidth={Math.max(0.6, 1.4 * s)} />)}
 		<path d={`M${x - tw / 2 - 2 * s},${top + 1} L${x - tw / 2 - 2 * s},${top - 9 * s} L${x - tw / 2 + 7 * s},${top - 9 * s} L${x - tw / 2 + 7 * s},${top - 5 * s} L${x + tw / 2 - 7 * s},${top - 5 * s} L${x + tw / 2 - 7 * s},${top - 9 * s} L${x + tw / 2 + 2 * s},${top - 9 * s} L${x + tw / 2 + 2 * s},${top + 1} Z`} fill={col} />
@@ -88,7 +88,7 @@ const Pagoda: React.FC<{x: number; gy: number; s: number; col: string}> = ({x, g
 	return <g>{parts}</g>;
 };
 /** a Tang hall: platform, columns, hipped tile roof with broad gently curved eaves; `burned` breaks the roof and adds smoke */
-const TangHall: React.FC<{x: number; gy: number; w: number; col: string; burned?: number; t: number; tau: number; seed: number}> = ({x, gy, w, col, burned = 0, t, tau, seed}) => {
+const TangHall: React.FC<{x: number; gy: number; w: number; col: string; burned?: number; t: number; tau: number; seed: number; fz?: number}> = ({x, gy, w, col, burned = 0, t, tau, seed, fz = 1}) => {
 	const ph = w * 0.06, top = gy - ph, wh = w * 0.22, ey = top - wh, ov = w * 0.14, rh = w * 0.2, rl = w * 0.5, hw = w / 2;
 	return <g>
 		<rect x={x - hw - 6} y={top} width={w + 12} height={ph + 4} fill={col} />
@@ -97,7 +97,7 @@ const TangHall: React.FC<{x: number; gy: number; w: number; col: string; burned?
 		{burned < 0.5 ? <path d={`M${x - hw - ov},${ey + 6} Q${x - hw * 0.6},${ey - 2} ${x - rl / 2},${ey - rh} L${x + rl / 2},${ey - rh} Q${x + hw * 0.6},${ey - 2} ${x + hw + ov},${ey + 6} Q${x},${ey + 1} ${x - hw - ov},${ey + 6} Z M${x - rl / 2 - 6},${ey - rh + 2} L${x - rl / 2 - 4},${ey - rh - 7} L${x + rl / 2 + 4},${ey - rh - 7} L${x + rl / 2 + 6},${ey - rh + 2} Z`} fill={col} />
 			: <g><path d={`M${x - hw - ov * 0.5},${ey + 6} Q${x - hw * 0.6},${ey} ${x - rl / 2},${ey - rh * 0.8} L${x - rl * 0.1},${ey - rh * 0.55} L${x + rl * 0.05},${ey - rh * 0.2} L${x + hw * 0.4},${ey + 2} L${x + hw * 0.85},${ey + 6} Z`} fill={col} />
 				{[-0.2, 0.05, 0.25, 0.4].map((k, i) => <path key={i} d={`M${x + k * w},${ey + 2} L${x + k * w + 14 * (i % 2 ? 1 : -1)},${ey - rh * (0.4 + 0.3 * rnd(i, seed))}`} stroke={col} strokeWidth={4} />)}
-				<g filter="url(#duBlurS)">{Array.from({length: 7}, (_, i) => { const u = ((tau * 0.12 + i / 7 + rnd(seed, 1)) % 1); return <circle key={i} cx={x + w * 0.1 - u * u * 160 + Math.sin(u * 6 + i) * 8} cy={ey - 10 - u * 260} r={8 + 30 * u} fill="#3a2230" opacity={0.4 * Math.sin(Math.PI * Math.min(1, u * 1.2))} />; })}</g></g>}
+				{fz > 0 && <g filter="url(#duBlurS)" opacity={fz}>{Array.from({length: 7}, (_, i) => { const u = ((tau * 0.12 + i / 7 + rnd(seed, 1)) % 1); return <circle key={i} cx={x + w * 0.1 - u * u * 160 + Math.sin(u * 6 + i) * 8} cy={ey - 10 - u * 260} r={8 + 30 * u} fill="#3a2230" opacity={0.4 * Math.sin(Math.PI * Math.min(1, u * 1.2))} />; })}</g>}</g>}
 	</g>;
 };
 /** a rammed-earth ward wall along the layer: battered faces, tamping courses, an earthen parapet; a gate tower; one breach */
@@ -242,8 +242,9 @@ export const DU3: React.FC<{tau: number; t: number}> = ({tau, t}) => {
 	const dpx = dAmt * (6 * Math.sin(t * 0.37) + 3 * Math.sin(t * 0.91 + 1)), dpy = dAmt * (4 * Math.sin(t * 0.29 + 2) + 2 * Math.sin(t * 1.13));
 	const CT = camT(c.zoom, c.F[0], c.F[1], c.S[0] - c.F[0] + dpx, c.S[1] - c.F[1] + dpy);
 	const far = c.zoom < 45;                // skip the heavy layers while we are deep inside the flame
+	const fz = 1 - seg(c.zoom, 2.4, 3.2);  // blurred groups (smoke, foreground grass) fade out by zoom 3.2 and are skipped above it (huge filter regions glitch on the farm)
 	const tint = SHANG_END.tint * (1 - seg(tau, 0, 0.7));
-	const fireBed = 1 - sm(seg(tau, 0.45, 1.45));   // the same warm bed the 商 fire ends on; the world appears out of it as we pull back
+	const fireBed = 1 - sm(seg(tau, 1.15, 2.05));   // the same warm bed the 商 fire ends on; opaque until the world is switched on (zoom < 45 at tau ≈ 1.07), then the world appears out of it
 	const lit = (L: number | null) => L === null ? 1 : easeOut(seg(tau, T.beacon0 + L * T.beaconStep, T.beacon0 + L * T.beaconStep + 0.5));
 	const breachX = DX + 330 + CAM_STOP * 0.25, gateX = 1500;
 	const craneY = 300 * sm(seg(tau, T.craneA, T.craneB)) * (1 - sm(seg(tau, T.craneDownA, T.craneDownB)));
@@ -266,19 +267,19 @@ export const DU3: React.FC<{tau: number; t: number}> = ({tau, t}) => {
 				<rect x={-300} y={-300} width={W + 600} height={1000} fill="url(#duSkyTint)" /></g>
 				{/* far hills, each ridge with its own 烽燧 */}
 				<g transform={cy(0.05)}><Layer cam={cam} f={0.02} base={560} amp={90} seed={2} col="#8a4652" />
-				{BEACONS.filter((b) => b[0] === 0.02).map((b, i) => { const x = b[4] - cam * b[0]; return <Beacon key={'a' + i} x={x} gy={ridgeY(cam, b[0], b[1], b[2], b[3])(x)} s={b[5]} col="#8a4652" lit={lit(b[6])} t={t} seed={20 + i} />; })}
+				{BEACONS.filter((b) => b[0] === 0.02).map((b, i) => { const x = b[4] - cam * b[0]; return <Beacon fz={fz} key={'a' + i} x={x} gy={ridgeY(cam, b[0], b[1], b[2], b[3])(x)} s={b[5]} col="#8a4652" lit={lit(b[6])} t={t} seed={20 + i} />; })}
 				</g>
 				<rect x={-300} y={520} width={W + 600} height={200} fill="#c8604a" opacity={0.08} />
 				<g transform={cy(0.08)}><Layer cam={cam} f={0.04} base={600} amp={120} seed={4} col="#7a3a46" />
-				{BEACONS.filter((b) => b[0] === 0.04).map((b, i) => { const x = b[4] - cam * b[0]; return <Beacon key={'b' + i} x={x} gy={ridgeY(cam, b[0], b[1], b[2], b[3])(x)} s={b[5]} col="#7a3a46" lit={lit(b[6])} t={t} seed={30 + i} />; })}
+				{BEACONS.filter((b) => b[0] === 0.04).map((b, i) => { const x = b[4] - cam * b[0]; return <Beacon fz={fz} key={'b' + i} x={x} gy={ridgeY(cam, b[0], b[1], b[2], b[3])(x)} s={b[5]} col="#7a3a46" lit={lit(b[6])} t={t} seed={30 + i} />; })}
 				</g>
 				<g transform={cy(0.12)}><Layer cam={cam} f={0.07} base={650} amp={90} seed={9} col="#6e3646" />
-				{BEACONS.filter((b) => b[0] === 0.07).map((b, i) => { const x = b[4] - cam * b[0]; return <Beacon key={'c' + i} x={x} gy={ridgeY(cam, b[0], b[1], b[2], b[3])(x)} s={b[5]} col="#6e3646" lit={lit(b[6])} t={t} seed={i === 0 ? SHANG_END.seed : 40 + i} lean={i === 0 ? SHANG_END.lean : -0.25} bed={i === 0 ? fireBed : 0} />; })}
+				{BEACONS.filter((b) => b[0] === 0.07).map((b, i) => { const x = b[4] - cam * b[0]; return <Beacon fz={fz} key={'c' + i} x={x} gy={ridgeY(cam, b[0], b[1], b[2], b[3])(x)} s={b[5]} col="#6e3646" lit={lit(b[6])} t={t} seed={i === 0 ? SHANG_END.seed : 40 + i} lean={i === 0 ? SHANG_END.lean : -0.25} bed={i === 0 ? fireBed : 0} />; })}
 				</g>
 				{/* the city: pagoda and halls on their own ground */}
-				<g transform={cy(0.18)}><Layer cam={cam} f={0.1} base={712} amp={26} seed={11} col="#5e2c3e" period={520} pad={500} item={(x, gy, i) => i === 2 ? <Pagoda x={x} gy={gy} s={1.25} col="#5e2c3e" /> : i % 2 ? <TangHall x={x} gy={gy} w={150 + 30 * rnd(i, 2)} col="#5e2c3e" burned={i === 3 ? 1 : 0} t={t} tau={tau} seed={i} /> : null} />
+				<g transform={cy(0.18)}><Layer cam={cam} f={0.1} base={712} amp={26} seed={11} col="#5e2c3e" period={520} pad={500} item={(x, gy, i) => i === 2 ? <Pagoda x={x} gy={gy} s={1.25} col="#5e2c3e" /> : i % 2 ? <TangHall fz={fz} x={x} gy={gy} w={150 + 30 * rnd(i, 2)} col="#5e2c3e" burned={i === 3 ? 1 : 0} t={t} tau={tau} seed={i} /> : null} />
 				</g>
-				<g transform={cy(0.28)}><Layer cam={cam} f={0.18} base={760} amp={10} seed={12} col="#522638" period={430} pad={400} item={(x, gy, i) => (i % 3 === 1) ? <TangHall x={x} gy={gy} w={190} col="#522638" burned={i % 2} t={t} tau={tau + i} seed={i + 9} /> : null} />
+				<g transform={cy(0.28)}><Layer cam={cam} f={0.18} base={760} amp={10} seed={12} col="#522638" period={430} pad={400} item={(x, gy, i) => (i % 3 === 1) ? <TangHall fz={fz} x={x} gy={gy} w={190} col="#522638" burned={i % 2} t={t} tau={tau + i} seed={i + 9} /> : null} />
 				</g>
 				{/* rammed-earth ward wall with a gate tower and a breach */}
 				<g transform={cy(0.4)}><WardWall cam={cam} f={0.25} gy={800} col="#4a2433" breachX={breachX} gateX={gateX} t={t} tau={tau} />
@@ -302,7 +303,7 @@ export const DU3: React.FC<{tau: number; t: number}> = ({tau, t}) => {
 			{!far && <g><Glow x={fireBase[0]} y={fireBase[1] - 20 * b0s} r={150 * b0s} c="#ff8a3a" o={0.6} id="duB0g" /><Blaze x={fireBase[0]} y={fireBase[1]} s={blazeS} t={t} lean={SHANG_END.lean} seed={SHANG_END.seed} bed={fireBed} bedId="duBed0" /></g>}
 			{far && <g transform={cy(1)}>
 				<Sheet x={sheetC[0]} y={sheetC[1]} fs={fs} chars={chars} fold1={fold1} fold2={fold2} band={band} dim={1 - sm(seg(tau, T.kneelA + 0.2, T.char0 - 0.1))} />
-				{cuHands.length > 0 && <mask id="duHandMask" maskUnits="userSpaceOnUse" x={-4000} y={-4000} width={12000} height={12000}><rect x={-4000} y={-4000} width={12000} height={12000} fill="#fff" />
+				{cuHands.length > 0 && <mask id="duHandMask" maskUnits="userSpaceOnUse" x={DX - 1.1 * DH} y={GY - 1.3 * DH} width={2.2 * DH} height={1.5 * DH}><rect x={DX - 1.1 * DH} y={GY - 1.3 * DH} width={2.2 * DH} height={1.5 * DH} fill="#fff" />   {/* a tight mask region: a 12000-unit one under the close-up zoom glitched on the farm (a second hand, black slabs) */}
 					{cuHands.map((hi, i) => { const l = Math.hypot(hi.w[0] - hi.e[0], hi.w[1] - hi.e[1]) || 1, v = Math.round(255 * (1 - handK)); return <circle key={i} cx={hi.w[0] + (hi.w[0] - hi.e[0]) / l * 0.04 * DH} cy={hi.w[1] + (hi.w[1] - hi.e[1]) / l * 0.04 * DH} r={0.033 * DH} fill={`rgb(${v},${v},${v})`} />; })}</mask>}
 				<g mask={cuHands.length > 0 ? 'url(#duHandMask)' : undefined}><Rimmed x={DX} ground={GY} h={DH} pose={pose} look={look} col="#120810" rim="#ffcf9a" rimOp={0.18} rimDx={-2} rimDy={-1.4} T={tau} lag={tau < T.stopB ? gaitPose('08_04', (tau - 0.05) / CYCLE) : undefined} /></g>
 				{tau >= WEND && <line x1={tableX + 120} y1={tableTop - 4} x2={tableX + 160} y2={tableTop - 8} stroke="#2a1a12" strokeWidth={2.4} strokeLinecap="round" opacity={seg(tau, WEND, WEND + 0.25)} />}
@@ -318,7 +319,7 @@ export const DU3: React.FC<{tau: number; t: number}> = ({tau, t}) => {
 			{far && tau > T.crows && tau < T.crows + 4.4 && <g transform={cy(0.06)}>{Array.from({length: 8}, (_, i) => { const u = tau - T.crows - rnd(i, 1) * 0.4; if (u < 0) return null; const x = 1240 - cam * 0.18 + 30 * rnd(i, 2) - u * (90 + 60 * rnd(i, 3)), y = 600 - u * (75 + 40 * rnd(i, 4)) + Math.sin(u * 3 + i) * 10, fl = Math.sin(t * 22 + i * 2) * 5.5;
 				return <path key={i} d={`M${x - 10},${y + fl} Q${x - 4.5},${y - 2} ${x},${y + 2} Q${x + 4.5},${y - 2} ${x + 10},${y + fl}`} stroke="#1d0f16" strokeWidth={2.8} fill="none" strokeLinecap="round" />; })}</g>}
 			{/* foreground grass, blurred */}
-			{far && <g filter="url(#duFg)" transform={cy(1.3)}>{Array.from({length: 14}, (_, i) => { const x = ((i * 190 - cam * 1.6) % 2660 + 2660) % 2660 - 370, hh = 80 + 70 * rnd(i, 3), sw = Math.sin(t * 1.2 + i) * 0.1 * hh;
+			{far && fz > 0 && <g filter="url(#duFg)" transform={cy(1.3)} opacity={fz}>{Array.from({length: 14}, (_, i) => { const x = ((i * 190 - cam * 1.6) % 2660 + 2660) % 2660 - 370, hh = 80 + 70 * rnd(i, 3), sw = Math.sin(t * 1.2 + i) * 0.1 * hh;
 				return <path key={i} d={`M${x - 16},${H + 60} Q${x},${H - hh * 0.5} ${x + sw},${H - hh} Q${x + 8},${H - hh * 0.5} ${x + 16},${H + 60} Z`} fill="#0c0508" />; })}</g>}
 		</g>
 		{tint > 0 && <rect width={W} height={H} fill="#ff9b2e" opacity={tint} />}

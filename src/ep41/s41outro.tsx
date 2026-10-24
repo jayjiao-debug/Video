@@ -30,20 +30,25 @@ const Brain: React.FC<{x: number; y: number; w: number; t: number; k: number}> =
 const Space: React.FC<{tau: number; t: number}> = ({tau, t}) => {
 	const T = OUT_T;
 	const pull = ease(seg(tau, T.pull, T.voy + 1.2)), u = ease(seg(tau, T.recede, T.point));
-	const zoom = lerp(9, 1, pull) * Math.pow(0.004, u);
+	const ZR = 410 * 1.1 / (0.19 * VP.s);   // the close-up cover (r 410 × 1.1) is the bus's record (r 0.19·s) seen at this zoom
+	const zoom = lerp(ZR, 1, pull) * Math.pow(0.004, u), coverS = pull > 0 ? lerp(ZR, 1, pull) / ZR * 1.1 : lerp(1, 1.1, ease(seg(tau, 0, T.pull)));
 	const coverOp = 1 - sm(seg(tau, T.pull + 0.3, T.voy + 0.4));
 	const fx = lerp(REC[0], AV[0], u), fy = lerp(REC[1], AV[1], u);
 	const sx = (VP.x - fx) * zoom + fx, sy = (VP.y - fy) * zoom + fy, dot = cl((0.16 - zoom) / 0.1);   // the craft's centre on screen; a point of light takes over as it shrinks
 	return <g>
 		<rect width={W} height={H} fill="#03040a" />
-		<StarField t={t} n={320} maxY={H} op={0.9} seed={3} />
-		<g transform={`rotate(${-6 + tau * 0.4} 960 540)`}><MilkyWay t={t} op={0.85} cx={900} cy={430} ang={-24} /></g>
-		{zoom > 0.012 && <Cam zoom={zoom} fx={fx} fy={fy}>
+		<Cam zoom={1 + 0.09 * ease(seg(tau, T.recede, T.phone + 0.7))} fx={AV[0]} fy={AV[1]}>
+			<StarField t={t} n={320} maxY={H} op={0.9} seed={3} />
+			<g transform={`rotate(${-6 + tau * 0.4} 960 540)`}><MilkyWay t={t} op={0.85} cx={900} cy={430} ang={-24} /></g>
+		</Cam>
+		{zoom > 0.012 && <Cam zoom={zoom} fx={fx} fy={fy} px={(960 - REC[0]) * (1 - pull)} py={(540 - REC[1]) * (1 - pull)}>   {/* the bus's record sits exactly under the close-up cover until the pull-back separates them */}
 			<Voyager x={VP.x} y={VP.y} s={VP.s} yaw={VP.yaw + tau * 0.012} pitch={VP.pitch} roll={VP.roll} mag={0.9} glint={0.4 + 0.3 * Math.sin(t * 0.8)} recordGlow={0.12 + 0.2 * (1 - pull)} light={[-0.8, 0.35, 0.6]} />
 		</Cam>}
-		{dot > 0 && <><Glow x={sx} y={sy} r={34} c="#fff4d8" o={0.8 * dot} id="oDot" /><circle cx={sx} cy={sy} r={2.6} fill="#fff" opacity={dot} /></>}
+		{tau > T.phone - 0.7 && [0, 1, 2].map((k) => { const v = ((tau - (T.phone - 0.7)) * 1.3 + k / 3) % 1, r = 6 + v * 200 * cl((tau - T.phone + 0.7) / 0.7); return <circle key={k} cx={sx} cy={sy} r={r} fill="none" stroke="#7fd99a" strokeWidth={2.5} opacity={(1 - v) * 0.55 * cl((tau - T.phone + 0.7) / 0.4)} />; })}
+		{dot > 0 && <><Glow x={sx} y={sy} r={34 + 5 * Math.sin(t * 2.3)} c="#fff4d8" o={(0.72 + 0.12 * Math.sin(t * 3.1)) * dot} id="oDot" /><circle cx={sx} cy={sy} r={2.6} fill="#fff" opacity={dot} />
+			<path d={`M${sx - 16},${sy} L${sx + 16},${sy} M${sx},${sy - 16} L${sx},${sy + 16}`} stroke="#fff4d8" strokeWidth={1.2} opacity={0.4 * dot * (0.6 + 0.4 * Math.sin(t * 1.7))} transform={`rotate(${t * 6} ${sx} ${sy})`} /></>}
 		{/* the record close: a full-frame cover that becomes the small disc on the bus as we pull back */}
-		{coverOp > 0.01 && <g opacity={coverOp}><Cam zoom={lerp(1, 0.1, pull) * lerp(1, 1.1, ease(seg(tau, 0, T.pull + 0.4)))} fx={960} fy={540} px={(REC[0] - 960) * pull} py={(REC[1] - 540) * pull}>
+		{coverOp > 0.01 && <g opacity={coverOp}><Cam zoom={coverS} fx={960} fy={540} px={(REC[0] - 960) * pull} py={(REC[1] - 540) * pull}>
 			<rect width={W} height={H} fill="#06050a" opacity={1 - pull} />
 			<RecordCover x={960} y={540} r={410} t={t} glow={0.5} />
 			<Brain x={960} y={540} w={620} t={t} k={fio(tau, BRAIN_IN, T.pull + 0.3, 0.6)} />
@@ -85,11 +90,19 @@ const PhoneCall: React.FC<{tau: number; t: number}> = ({tau, t}) => {
 	</Cam>;
 };
 
+type FKA = Parameters<typeof fkPose>[0];
+const reachOut = (base: FKA, side: 'l' | 'r', tgt: [number, number]): FKA => {
+	const D = Math.PI / 180, P = fkPose(base), sh = side === 'l' ? P.LSh : P.RSh, L1 = 0.194, L2 = 0.135 + 0.034;
+	const dx = tgt[0] - sh[0], dy = tgt[1] - sh[1], d = Math.min(Math.hypot(dx, dy), (L1 + L2) * 0.995), phi = Math.atan2(dx, -dy) / D;
+	const alpha = Math.acos(cl((L1 * L1 + d * d - L2 * L2) / (2 * L1 * Math.max(d, 1e-4)), -1, 1)) / D, a = phi + alpha;
+	const el: [number, number] = [sh[0] + Math.sin(a * D) * L1, sh[1] - Math.cos(a * D) * L1], b = Math.atan2(tgt[0] - el[0], -(tgt[1] - el[1])) / D;
+	return side === 'l' ? {...base, la: a, le: b - a} : {...base, ra: a, re: b - a};
+};
 /* ---------------------------------------------------------------- 5 · the room: the caller on the edge of the bed by the window */
 const NOW_LOOK: Look4 = {dress: 'shirt', head: 'short'};
 const RF = {x: 742, ground: 992, h: 640};
 const NOW_FK = {hip: 0.37, lean: 12, neck: 18, lt: 84, lk: 90, rt: 78, rk: 86, la: 22, le: 136, ra: 40, re: 30};
-const NOW_SIT = fkPose(reach(NOW_FK, 'l', toBody(atEar(fkPose(NOW_FK), RF.x, RF.ground, RF.h, false).c, RF.x, RF.ground, RF.h, false)));
+const NOW_SIT = fkPose(reach(reachOut(NOW_FK, 'r', toBody(atEar(fkPose(NOW_FK), RF.x, RF.ground, RF.h, false).c, RF.x, RF.ground, RF.h, false)), 'l', ((k) => [k[0] - 0.01, k[1] + 0.03] as [number, number])(fkPose(NOW_FK).LKnee)));
 /** a smartphone held at the ear, its screen light spilling on the cheek */
 const HeldPhone: React.FC<{pose: Pose; x: number; ground: number; h: number; flip?: boolean; glow?: number; id: string}> = ({pose, x, ground, h, flip = false, glow = 1, id}) => {
 	const e = atEar(pose, x, ground, h, flip), L = 0.088 * h, w = 0.042 * h;
@@ -125,13 +138,13 @@ const CityNight: React.FC<{t: number}> = ({t}) => {
 };
 /** a dark modern bedroom in the cold open's flat style: window wall on the right, the bed on the left */
 const NowRoom: React.FC<{t: number}> = ({t}) => <g>
-	<defs><linearGradient id="nowWall" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stopColor="#0c1020" /><stop offset="1" stopColor="#090b14" /></linearGradient></defs>
+	<defs><linearGradient id="nowWall" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stopColor="#161d33" /><stop offset="1" stopColor="#0f1424" /></linearGradient></defs>
 	<rect x={-400} y={-300} width={W + 800} height={H + 600} fill="url(#nowWall)" />
-	<rect x={-400} y={900} width={W + 800} height={500} fill="#05060b" />
+	<rect x={-400} y={900} width={W + 800} height={500} fill="#0a0c15" />
 	<CityNight t={t} />
-	<Glow x={WIN.x + WIN.w / 2} y={WIN.y + WIN.h * 0.6} r={760} c="#7fa6ff" o={0.1} id="nowWinG" />
+	<Glow x={WIN.x + WIN.w / 2} y={WIN.y + WIN.h * 0.6} r={760} c="#7fa6ff" o={0.17} id="nowWinG" />
 	{/* window light falling on the floor */}
-	<path d={`M${WIN.x},900 L${WIN.x + WIN.w},900 L${WIN.x + WIN.w + 260},1080 L${WIN.x - 240},1080 Z`} fill="#8fb0ff" opacity={0.06} />
+	<path d={`M${WIN.x},900 L${WIN.x + WIN.w},900 L${WIN.x + WIN.w + 260},1080 L${WIN.x - 240},1080 Z`} fill="#8fb0ff" opacity={0.1} />
 	{/* curtain gathered at the window's left */}
 	<path d={`M${WIN.x - 70},${WIN.y - 24} L${WIN.x + 18},${WIN.y - 24} L${WIN.x + 26},900 L${WIN.x - 82},900 Z`} fill="#0e1424" />
 	<path d={`M${WIN.x - 44},${WIN.y - 20} L${WIN.x - 50},898 M${WIN.x - 16},${WIN.y - 20} L${WIN.x - 14},898 M${WIN.x + 6},${WIN.y - 20} L${WIN.x + 12},898`} stroke="#090d18" strokeWidth={6} />
@@ -139,8 +152,8 @@ const NowRoom: React.FC<{t: number}> = ({t}) => <g>
 	{/* bed: headboard, frame, mattress, rumpled duvet lit along its top by the window, pillow; a bedside table */}
 	<rect x={20} y={560} width={34} height={300} rx={6} fill="#10141f" />
 	<rect x={40} y={790} width={700} height={52} rx={6} fill="#0b0e18" /><rect x={60} y={838} width={16} height={62} fill="#0b0e18" /><rect x={704} y={838} width={16} height={62} fill="#0b0e18" />
-	<rect x={50} y={742} width={688} height={56} rx={16} fill="#1a2132" />
-	<path d="M70,750 Q180,700 300,738 Q420,712 540,742 Q640,724 730,752 L734,800 L66,800 Z" fill="#212a3e" />
+	<rect x={50} y={742} width={688} height={56} rx={16} fill="#222a3e" />
+	<path d="M70,750 Q180,700 300,738 Q420,712 540,742 Q640,724 730,752 L734,800 L66,800 Z" fill="#2a3550" />
 	<path d="M70,750 Q180,700 300,738 Q420,712 540,742 Q640,724 730,752" stroke="#3a4a6c" strokeWidth={4} fill="none" opacity={0.7} />
 	<path d="M80,742 Q78,700 120,694 L236,690 Q270,694 268,730 Q262,748 230,750 L110,752 Q82,752 80,742 Z" fill="#2a3348" />
 	<rect x={-60} y={690} width={64} height={210} fill="#0d111c" /><rect x={-40} y={640} width={10} height={50} fill="#0d111c" /><path d="M-62,640 L-8,640 L-20,604 L-50,604 Z" fill="#141a28" />
@@ -178,7 +191,7 @@ const CAST: Cast[] = [
 const HL = hill(W, H, 960, 830, 980, 1010);
 const NOW_X = 1640, NOW_G = HL.yAt(NOW_X) + 3, NOW_H = 150;
 const NOW_UP_FK = {hip: 0.655, lean: -5, neck: -26, lt: 4, lk: 3, rt: -6, rk: 4, la: 24, le: 132, ra: -2, re: 10};
-const NOW_STAND = fkPose(reach(NOW_UP_FK, 'l', toBody(atEar(fkPose(NOW_UP_FK), NOW_X, NOW_G, NOW_H, false).c, NOW_X, NOW_G, NOW_H, false)));
+const NOW_STAND = fkPose(reachOut(NOW_UP_FK, 'r', toBody(atEar(fkPose(NOW_UP_FK), NOW_X, NOW_G, NOW_H, false).c, NOW_X, NOW_G, NOW_H, false)));
 /* end-card layout: pixel-measured centring nudges, and the monogram + pill row (centred as one group on the hill) */
 const DX = {t1: 23, t2: 19, q: 20, c: 9};
 const PILL = {x: 960 - 400 / 2 + 40, w: 400};
@@ -195,7 +208,7 @@ const Hill: React.FC<{tau: number; t: number}> = ({tau, t}) => {
 	const star: [number, number] = [lerp(1060, 1180, seg(tau, T.hill, T.end)), lerp(170, 150, seg(tau, T.hill, T.end))];
 	return <g>
 		<defs><linearGradient id="oSky" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stopColor="#05040c" /><stop offset="0.55" stopColor="#14123a" /><stop offset="0.85" stopColor="#2e2a5a" /><stop offset="1" stopColor="#5a4a7a" /></linearGradient></defs>
-		<g transform={`translate(0,${py})`}>
+		<Cam zoom={1 + 0.07 * ease(seg(tau, T.hill + 2.0, T.end))} fx={960} fy={840}><g transform={`translate(0,${py})`}>
 			<rect y={-800} width={W} height={H + 800} fill="url(#oSky)" />
 			<StarField t={t} n={300} maxY={760} seed={5} /><g transform="translate(0,-780)"><StarField t={t} n={260} maxY={780} seed={9} /></g>
 			<MilkyWay t={t} op={0.9} cx={960} cy={300} ang={-32} />
@@ -206,7 +219,7 @@ const Hill: React.FC<{tau: number; t: number}> = ({tau, t}) => {
 			{/* last in the row: you, tonight, the phone at your ear */}
 			<Rimmed x={NOW_X} ground={NOW_G} h={NOW_H} pose={NOW_STAND} look={NOW_LOOK} col="#050409" rim="#9fb0ff" rimOp={0.28} rimDx={0} rimDy={-1.5} T={t + 12} />
 			<HeldPhone pose={NOW_STAND} x={NOW_X} ground={NOW_G} h={NOW_H} glow={1.4} id="nowPhH" />
-		</g>
+		</g></Cam>
 		{/* the Juno end card: title, the question, then (on the dark hill) the monogram + follow pill and the sources.
 		   Lines ending in full-width punctuation are nudged right (DX) so the visible ink is centred. */}
 		<g opacity={fio(tau, T.title, T.end + 1, 0.7)}>
