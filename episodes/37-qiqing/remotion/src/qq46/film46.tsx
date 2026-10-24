@@ -4,7 +4,7 @@ import {W, H, rnd, lerp, clamp, ease, easeOut, easeIn, seg, mixC, C, SKY, skyMix
 import {HanBai, treeAt, STRIP_MID, WEST_MID} from './tree46';
 import {Story, Punch, Stamp, Brand, Counter, SealRow, SealState, TitleCard, EndCard, Src, plainLen, Row} from './skin46';
 import {Person, LOOK, walkAt, grounded, reachPose, jointAt, POSES, reground, gaitPose} from './people46';
-import LINES from '../../../../46-hanbai/lines.json';
+import LINES from './lines46.json';
 /* ep46 《汉柏的孩子，去守汉武帝》 — the film. Every frame is a pure function of t (seconds).
    Music: episodes/46-hanbai/music/build46.py (anchors46.json): title on the first crash 13.588, stop HIT 107.552,
    DROP 118.307, coda 127.364, dead stop 138.352, intro return 140.037, final hit 149.097, end 156.445. */
@@ -176,7 +176,7 @@ const STAMPS: [number, string, string?, string?][] = [
 const stampAt = (t: number) => { let s = STAMPS[0]; for (const x of STAMPS) if (t >= x[0]) s = x; return s; };
 const spin = (t: number, a: number, b: number, n0: number, n1: number) => Math.round(lerp(n0, n1, easeIn(seg(t, a, b)) * 0.4 + ease(seg(t, a, b)) * 0.6));
 const counterAt = (t: number): number | string | null => {
-	if (t < 2.83) return 2135; if (t < 5.10) return 0; if (t < 7.36) return spin(t, 5.1, 7.3, 0, 1117); if (t < 9.06) return '?'; if (t < 10.76) return 1871; if (t < 13.4) return 2135;
+	if (t < 2.83) return '2100多'; if (t < 5.10) return 0; if (t < 7.36) return spin(t, 5.1, 7.3, 0, 1117); if (t < 9.06) return '?'; if (t < 10.76) return 1871; if (t < 13.4) return '2100多';
 	if (t < 15.85) return null; if (t < 24.34) return 0; if (t < 26.61) return Math.round(lerp(0, 21, seg(t, 24.34, 26.3))); if (t < 31.14) return 21; if (t < 38.49) return '约630'; if (t < 41.32) return '约630';
 	if (t < 44.15) return null; if (t < 46.98) return '—'; if (t < 49.81) return 0; if (t < 50.66) return 165; if (t < 51.51) return 775; if (t < 52.36) return 834; if (t < 56.04) return 1117;
 	if (t < 59.44) return spin(t, 56.04, 59.3, 1117, 1871); if (t < 66.79) return 1871; if (t < 77.55) return 1880; if (t < 91.14) return 2037; if (t < 109.25) return 2135; if (t < 123.97) return 2133;
@@ -206,7 +206,7 @@ export const Film46: React.FC<{t: number}> = ({t}) => {
 	else if (t < 15.85) {
 		const u = seg(t, 13.588, 15.6), age = lerp(1, 0.04, easeIn(u) * 0.3 + ease(u) * 0.7), flick = Math.sin(u * Math.PI * 9);
 		layers.push(<World key="T" t={t} c={{idp: 'T', sky: skyMix('day', u > 0.5 ? 'han' : 'night', Math.abs(flick) * 0.5), earth: ease(seg(t, 14.6, 15.6)), wall: 1 - ease(seg(t, 14.6, 15.6)), hall: 1 - ease(seg(t, 14.4, 15.4)), steles: 1 - u * 1.2, age, west: u > 0.4 ? 0 : 1, legend: ease(seg(t, 15.0, 15.8)), glow: 1}} />);
-		extraHtml = <TitleCard t={t} t0={13.588} t1={15.85} num={lerp(2135, 0, ease(seg(t, 13.75, 15.55)))} />;
+		extraHtml = <TitleCard t={t} t0={13.588} t1={15.85} num={lerp(2026, -109, ease(seg(t, 13.75, 15.55)))} />;
 	}
 	/* ===== B. Han, 15.85 – 41.32 ===== */
 	else if (t < 41.32) {
@@ -220,12 +220,12 @@ export const Film46: React.FC<{t: number}> = ({t}) => {
 		if (doc) {
 			scrim = 0.35 * ease(seg(t, 26.61, 27.2)) * (1 - ease(seg(t, 38.2, 38.8)));
 			const slipsO = ease(seg(t, 26.61, 27.0)) * (1 - ease(seg(t, 31.14, 31.6)));
-			if (slipsO > 0) layers.push(<g key="slips" opacity={slipsO} transform={`translate(${lerp(-300, 0, easeOut(seg(t, 26.61, 27.2)))},0)`}><Slips46 x={560} y={260} s={0.95} u={seg(t, 26.61, 28.4)} lit={8} grey={ease(seg(t, 28.87, 29.6))} />
-				{t >= 28.87 && <g opacity={ease(seg(t, 28.87, 29.4))}><rect x={985} y={330} width={92} height={330} rx={8} fill="none" stroke="#FFF2D2" strokeWidth={4} strokeDasharray="12 9" /><VText x={1031} y={380} s="种树" size={60} fill="#FFF2D2" />
-					<line x1={995} y1={650} x2={1067} y2={340} stroke="#FFD36E" strokeWidth={6} opacity={ease(seg(t, 29.6, 30.0))} /></g>}</g>);
+			if (slipsO > 0) layers.push(<g key="slips" opacity={slipsO} transform={`translate(${lerp(-300, 0, easeOut(seg(t, 26.61, 27.2)))},0)`}><Slips46 x={560} y={340} s={0.88} u={seg(t, 26.61, 28.4)} lit={8} grey={ease(seg(t, 28.87, 29.6))} />
+				{t >= 28.87 && <g opacity={ease(seg(t, 28.87, 29.4))}><rect x={945} y={400} width={92} height={330} rx={8} fill="none" stroke="#FFF2D2" strokeWidth={4} strokeDasharray="12 9" /><VText x={991} y={450} s="种树" size={60} fill="#FFF2D2" />
+					<line x1={955} y1={720} x2={1027} y2={410} stroke="#FFD36E" strokeWidth={6} opacity={ease(seg(t, 29.6, 30.0))} /></g>}</g>);
 			const bookO = ease(seg(t, 31.14, 31.6)) * (1 - ease(seg(t, 38.3, 38.9)));
-			if (bookO > 0) layers.push(<g key="book" opacity={bookO} transform={`translate(${lerp(-200, 0, easeOut(seg(t, 31.14, 31.7)))},0)`}><Book46 x={700} y={260} s={0.95} u={seg(t, 31.4, 34.3)} hl={ease(seg(t, 34.4, 35.2))} />
-				{t >= 36.8 && <g opacity={ease(seg(t, 36.8, 37.2))}><text x={1150} y={560} style={{fontFamily: "'Noto Serif CJK SC',serif", fontWeight: 900, fontSize: 120}} fill="#FFD36E" stroke="#2A1A0A" strokeWidth={6} paintOrder="stroke">盖 = 大概</text></g>}</g>);
+			if (bookO > 0) layers.push(<g key="book" opacity={bookO} transform={`translate(${lerp(-200, 0, easeOut(seg(t, 31.14, 31.7)))},0)`}><Book46 x={700} y={340} s={0.85} u={seg(t, 31.4, 34.3)} hl={ease(seg(t, 34.4, 35.2))} />
+				{t >= 36.8 && <g opacity={ease(seg(t, 36.8, 37.2))}><text x={1150} y={640} style={{fontFamily: "'Noto Serif CJK SC',serif", fontWeight: 900, fontSize: 120}} fill="#FFD36E" stroke="#2A1A0A" strokeWidth={6} paintOrder="stroke">盖 = 大概</text></g>}</g>);
 		}
 	}
 	/* ===== C. the six emperors, 41.32 – 56.04 ===== */
@@ -256,6 +256,8 @@ export const Film46: React.FC<{t: number}> = ({t}) => {
 		layers.push(<World key="E" t={t} c={{idp: 'E', sky: skyMix('day', 'noon', seg(t, 59.44, 77)), wall: 1, hall: 1, steles: 1, qlStele: steleK, steleGlow: ease(seg(t, 74.4, 75.2)), age: 0.97, west: 0, glow: 1 + 0.4 * Math.sin(seg(t, 71.32, 74.1) * Math.PI)}}
 			people={figO > 0 ? qianlongDepth(t, figO) : []} />);
 		if (scrollO > 0) layers.push(<g key="scr" opacity={scrollO}><path d="M800,795 L880,760 L930,760 Z" fill="#F3EBDA" opacity={0.9} /><rect x={808} y={276} width={244} height={490} rx={14} fill="#F3EBDA" opacity={0.92} /><Scroll46 x={930} y={300} s={0.44} open={easeOut(seg(t, 62.4, 63.0))} ink={seg(t, 62.6, 64.4)} inscr={seg(t, 64.6, 65.6)} /></g>);
+		if (t >= 71.32 && t < 77.4) { const o = ease(seg(t, 71.5, 72.0)) * (1 - seg(t, 77.0, 77.4)), lab = (x: number, y: number, txt: string) => <text x={x} y={y} textAnchor="middle" style={{fontFamily: "'Noto Sans CJK SC',sans-serif", fontWeight: 900, fontSize: 48}} fill="#FFF8EC" stroke="#2A1A0A" strokeWidth={7} paintOrder="stroke">{txt}</text>;
+			layers.push(<g key="hg" opacity={o}>{lab(880, 560, '石碑里的你')}{lab(1420, 240, '真的你')}</g>); }
 		if (t >= 71.32 && t < 74.3) { const u = ease(seg(t, 71.4, 72.6)); layers.push(<path key="sight" d={`M900,700 Q1100,${560 - 120 * u} ${lerp(900, 1240, u)},${lerp(700, 560, u)}`} stroke={C.glowCore} strokeWidth={4} strokeDasharray="8 10" fill="none" opacity={0.85 * (1 - seg(t, 73.8, 74.3))} />); }
 		cam = t < 69.06 ? CAM0 : mixCam(CAM0, {cx: 1080, cy: 600, z: 1.18}, ease(seg(t, 69.06, 70.6)));
 		if (t > 76.6) cam = mixCam(cam, CAM0, ease(seg(t, 76.6, 77.55)));
@@ -279,13 +281,16 @@ export const Film46: React.FC<{t: number}> = ({t}) => {
 		</World>);
 		cam = mixCam(CAM0, {cx: TX - 40, cy: 640, z: 1.55}, push);
 		// labels on the trunk
-		if (westFocus > 0) { const p = treeAt(TX, TG, 1, 1, WEST_MID); layers.push(<g key="wl" opacity={westFocus}><path d={`M${p[0] - 70},${p[1] - 160} L${p[0] - 70},${p[1] + 220}`} stroke="#FFF2D2" strokeWidth={3} strokeDasharray="8 8" /></g>); }
+		if (westFocus > 0) { const p = treeAt(TX, TG, 1, 1, WEST_MID); layers.push(<g key="wl" opacity={westFocus}><path d={`M${p[0] - 70},${p[1] - 160} L${p[0] - 70},${p[1] + 220}`} stroke="#FFF2D2" strokeWidth={3} strokeDasharray="8 8" />
+			<text x={p[0] - 90} y={p[1] - 180} textAnchor="end" style={{fontFamily: "'Noto Sans CJK SC',sans-serif", fontWeight: 900, fontSize: 52}} fill="#FFF8EC" stroke="#2A1A0A" strokeWidth={7} paintOrder="stroke">西干 · 死了</text></g>); }
+		if (t >= 99.06 && t < 102.6) { const p = treeAt(TX, TG, 1, 1, STRIP_MID), o = ease(seg(t, 99.1, 99.5)) * (1 - seg(t, 102.2, 102.6));
+			layers.push(<text key="eastname" x={p[0] + 100} y={p[1] - 70} style={{fontFamily: "'Noto Sans CJK SC',sans-serif", fontWeight: 900, fontSize: 52}} fill="#FFF8EC" stroke="#2A1A0A" strokeWidth={7} paintOrder="stroke" opacity={o}>东干 · 活着</text>); }
 		if (eastFocus > 0 && t < 102.6) { const p = treeAt(TX, TG, 1, 1, STRIP_MID), o = ease(seg(t, 99.3, 99.8)) * (1 - seg(t, 102.2, 102.6));
 			layers.push(<g key="el" opacity={o}><path d={`M${p[0] + 20},${p[1] - 8} L${p[0] + 90},${p[1] - 8} M${p[0] + 20},${p[1] + 8} L${p[0] + 90},${p[1] + 8}`} stroke={C.glowCore} strokeWidth={3} />
-				<text x={p[0] + 100} y={p[1] + 14} style={{fontFamily: "'Noto Sans CJK SC',sans-serif", fontWeight: 900, fontSize: 40}} fill="#FFD36E" stroke="#2A1A0A" strokeWidth={6} paintOrder="stroke">32厘米</text></g>); }
+				<text x={p[0] + 100} y={p[1] + 14} style={{fontFamily: "'Noto Sans CJK SC',sans-serif", fontWeight: 900, fontSize: 56}} fill="#FFD36E" stroke="#2A1A0A" strokeWidth={7} paintOrder="stroke">32厘米</text></g>); }
 		if (t >= 102.46) { const o = ease(seg(t, 102.9, 103.5)), top = TG - 740, hgt = ease(seg(t, 102.9, 104.0));
 			layers.push(<g key="hb" opacity={o}><line x1={1720} y1={TG} x2={1720} y2={lerp(TG, top, hgt)} stroke="#FFF2D2" strokeWidth={4} /><line x1={1700} y1={TG} x2={1740} y2={TG} stroke="#FFF2D2" strokeWidth={4} /><line x1={1700} y1={top} x2={1740} y2={top} stroke="#FFF2D2" strokeWidth={4} opacity={hgt} />
-				<text x={1750} y={(TG + top) / 2} style={{fontFamily: "'Noto Sans CJK SC',sans-serif", fontWeight: 900, fontSize: 44}} fill="#FFD36E" stroke="#2A1A0A" strokeWidth={6} paintOrder="stroke">11.5米</text></g>); }
+				<text x={1750} y={(TG + top) / 2} style={{fontFamily: "'Noto Sans CJK SC',sans-serif", fontWeight: 900, fontSize: 60}} fill="#FFD36E" stroke="#2A1A0A" strokeWidth={7} paintOrder="stroke">11.5米</text></g>); }
 	}
 	/* ===== H. seeds, 105.29 – 109.25 ===== */
 	else if (t < 109.25) {
@@ -336,7 +341,7 @@ export const Film46: React.FC<{t: number}> = ({t}) => {
 		{seals}
 		{!endOn && st[1] && st[1] !== '' && <Stamp y={st[1]} place={st[2]} l2={st[3]} />}
 		{t >= 83.78 && t < 87.17 && <Src s="据《齐鲁晚报》2015" top={132 + 87 * 3 + 8} o={seg(t, 84.0, 84.4)} />}
-		{!endOn && cnt !== null && <Counter n={cnt} note={t < 5.1 ? '按汉武帝首次封禅（前110年）推算 · 估算' : undefined} />}
+		{!endOn && cnt !== null && <Counter n={cnt} note={t >= 2.83 && t < 5.1 ? '从前110年汉武帝首次封禅算起 · 估算' : t >= 15.85 && t < 24.34 ? '从前110年算起 · 估算' : undefined} />}
 		<Brand />
 		{extraHtml}
 		{endOn && <EndCard t={t} t0={149.097} />}

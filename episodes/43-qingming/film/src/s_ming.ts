@@ -356,12 +356,13 @@ const fengSheet = (col: HTMLCanvasElement) => {
 const buildTail = async () => {
 	const st = new Stage('tail'); tail = st;
 	st.add('table', canvasTex(gradCanvas([[0, '#1c140e'], [0.5, '#2a1f17'], [1, '#1c140e']])), 0, 540, 30000, 4000, -400);
-	const end = paintSection('end', {width: 4096, height: 1536, mode: 'mono', seed: 43});
+	const end = paintSection('end', {width: 3072, height: 1152, mode: 'mono', seed: 43});
 	const col = paintSection('colophon', {width: 4096, height: 1536, mode: 'mono', seed: 43});
 	feng = fengSheet(col); pools21 = makePools(feng);
+	const col3 = mkCanvas(3072, 1152); col3.getContext('2d')!.drawImage(col, 0, 0, 3072, 1152);          // displayed at 3/4 size (GPU memory)
 	const dim = '#b3a690';                                   // the tail in lamplit shade; 冯保's columns get the pools of light
 	st.add('end', canvasTex(end), XE + 2048 * SK, 540, 4096 * SK, 1080, 0, {emissive: 0.08, tint: dim});
-	st.add('col', canvasTex(col), XC + 2048 * SK, 540, 4096 * SK, 1080, 0, {emissive: 0.08, tint: dim});
+	st.add('col', canvasTex(col3), XC + 2048 * SK, 540, 4096 * SK, 1080, 0, {emissive: 0.08, tint: dim});
 	fengPlane = st.add('feng', canvasTex(feng), XF + FW21 / 2 * SK, 540, FW21 * SK, 1080, 0, {emissive: 0.08, tint: dim});
 	lit21 = new Live(st, 'lit', XF + FW21 / 2 * SK, 540, FW21 * SK, 1080, 0.5, {emissive: 0.16}, 1 / SK * 0.6, 3);
 	lit21.L.mesh.renderOrder = 5;
@@ -375,10 +376,10 @@ export const bootMing = async () => {
 		const st = c20.st;
 		nightSky20 = st.add('nightSky', canvasTex(gradCanvas([[0, '#1F2E38'], [0.3, '#26363f'], [0.46, '#2E404B'], [0.62, '#45565D'], [0.7, '#5A5A4C'], [1, '#3A3E3A']])), 960, 700, 9000, 3600, -8990, {opacity: 0});
 		jl20 = new Live(st, 'jlWin', -420, 760, 600, 260, -2590, {emissive: 1.3}, 1);
-		cart20 = new Live(st, 'cart20', 0, 1100, 5000, 1000, 18, {rim: 0.6, rimPx: 5}, 1);
-		cast20 = new Cast(st, 'cast20', 0, 1100, 5000, 1400, 20);
-		near20 = new Live(st, 'near20', 0, 1100, 5000, 1000, 21, {rim: 0.6, rimPx: 5}, 1);
-		roll20 = new Live(st, 'roll20', 0, 1100, 5000, 1400, 22, {emissive: 0.55}, 0.8);
+		cart20 = new Live(st, 'cart20', -1300, 1100, 2400, 800, 18, {rim: 0.6, rimPx: 5}, 1);
+		cast20 = new Cast(st, 'cast20', -1300, 1060, 2400, 880, 20);
+		near20 = new Live(st, 'near20', -1300, 1100, 2400, 800, 21, {rim: 0.6, rimPx: 5}, 1);
+		roll20 = new Live(st, 'roll20', -1300, 1060, 2400, 880, 22, {emissive: 0.55}, 0.8);
 		mine20 = [nightSky20.mat, jl20.L.mat, roll20.L.mat, c20.streak.L.mat, c20.glowLive.L.mat];
 		// the match: the X on the crate at b33 lands where the hall doors' X ended scene 19
 		hallSt.setCam(...(camPath(b(33), K19) as [number, number, number]));

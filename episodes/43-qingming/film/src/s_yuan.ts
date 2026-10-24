@@ -145,14 +145,14 @@ const buildRoom15 = async () => {
 		<rect x="40" y="-500" width="40" height="2100" fill="#1f2528"/><rect x="1820" y="-500" width="40" height="2100" fill="#1f2528"/>`, 4120, 2100, '', -1100, -500);
 	st.add('wall', canvasTex(await svgToCanvas(wall, 4120, 2100, 0.6)), 960, 550, 4120, 2100, -900, {rim: 0.35});
 	lamp15 = new Live(st, 'lamp', 960, 540, W, H, -120, {emissive: 1.25}, 1);
-	cast15 = new Cast(st, 'craftsman', 960, 640, W + 400, 1300, -80);
+	cast15 = new Cast(st, 'craftsman', 1200, 800, 1000, 1000, -80);
 	// table top (behind the hands and silks, in front of his body), the silks, his arms again, your halo, the table front
 	const top = mkCanvas(2600, 260), gt = top.getContext('2d')!; const tg = gt.createLinearGradient(0, 0, 0, 260); tg.addColorStop(0, '#2c2219'); tg.addColorStop(1, '#4a3826'); gt.fillStyle = tg; gt.fillRect(0, 0, 2600, 260);
 	gt.fillStyle = 'rgba(255,220,170,0.04)'; for (let i = 0; i < 26; i++) gt.fillRect(0, 6 + i * 9.5, 2600, 1.2);
 	st.add('top', canvasTex(top), 960, TOPB + (TOPF - TOPB) / 2 + 10, 2600, TOPF - TOPB + 20, -60, {rim: 0.0});
 	copy15 = new Live(st, 'copy', 960, 780, W, 260, -56, {}, 1.4);
 	you15 = new Live(st, 'you', 960, 780, W, 260, -54, {emissive: 0.34}, 1.4);
-	arms15 = new Cast(st, 'arms', 960, 640, W + 400, 1300, -50);
+	arms15 = new Cast(st, 'arms', 1200, 800, 1000, 1000, -50);
 	glow15 = new Live(st, 'glow', 960, 640, W + 400, 1300, -48, {emissive: 1.0}, 0.5);
 	const front = svgDoc(`<rect x="-400" y="${TOPF}" width="2720" height="30" fill="#1d1610"/><rect x="-400" y="${TOPF + 28}" width="2720" height="420" fill="#16110d"/>
 		<rect x="-400" y="${TOPF + 28}" width="2720" height="8" fill="#0f0b08"/>`, 2720, 460, '', -400, TOPF);
@@ -395,8 +395,8 @@ export const bootYuan = async () => {
 		// keep the top of the day sky at or below #5E7A82 (ivory subtitles ≥ 4.5 : 1): a soft shade over the far sky only
 		st.add('skyShade', canvasTex(gradCanvas([[0, 'rgba(38,58,68,0.92)'], [0.3, 'rgba(46,68,78,0.72)'], [0.5, 'rgba(60,84,92,0.35)'], [0.66, 'rgba(70,92,98,0)'], [1, 'rgba(70,92,98,0)']])), 960, 420, 12000, 1900, -8900);
 		st.get('sunglow').mat.uniforms.uOpacity.value = 0.14;                 // the day sun stays low and soft: you lead
-		cast14 = new Cast(st, 'cast14', 900, 900, 5200, 1800, 20);
-		roll14 = new Live(st, 'roll14', 900, 900, 5200, 1800, 22, {emissive: 0.55}, 0.6);
+		cast14 = new Cast(st, 'cast14', 1000, 880, 2400, 1120, 20);
+		roll14 = new Live(st, 'roll14', 1000, 880, 2400, 1120, 22, {emissive: 0.55}, 0.6);
 		// the match: where the Dagoba lands at the end of 14 → 15 opens with its window's Dagoba in the same place
 		const [cx, cy, zm] = camPath(b(25), K14); st.setCam(cx, cy, zm);
 		const base = scr(st, -520, 860, -2600), top = scr(st, -520, 860 - 372 * 1.25, -2600);
@@ -410,7 +410,7 @@ export const bootYuan = async () => {
 		win16.draw('w', (g) => { for (let i = 0; i < 9; i++) { const x = 60 + i * 52 + hash(i * 4.1) * 30, y = 78 + hash(i * 2.3) * 22; g.fillStyle = `rgba(255,184,104,${0.55 + hash(i) * 0.35})`; g.fillRect(x, y, 5 + (i % 3) * 2, 4 + (i % 2) * 2); } });
 		cast16 = new Cast(st, 'cast16', 960, 640, 2600, 1100, 20);
 		silk16 = new Live(st, 'silk16', (SX0 + SX1) / 2, SY, SX1 - SX0 + 40, SH + 60, 22, {emissive: 0.34}, 3);
-		rollers16 = new Live(st, 'rollers16', 960, 640, 2600, 1100, 23, {rim: 0}, 1);
+		rollers16 = new Live(st, 'rollers16', 1100, 640, 1800, 900, 23, {rim: 0}, 1);
 		glow16 = new Live(st, 'glow16', 960, 640, 2600, 1100, 18, {emissive: 1.0}, 0.5);
 	}
 	{
@@ -438,7 +438,7 @@ export const bootYuan = async () => {
 		roll17 = new Live(st, 'roll17', PX0 + (PSRC_W + 10) * PK, PYF + 350 - PHF / 2, 140 * PK, (PSRC_H + 80) * PK, 0, {emissive: 0.45}, 2, 13);
 		roll17.draw('roll', (g) => { const w = 140 * PK, h = (PSRC_H + 80) * PK; const gr = g.createLinearGradient(0, 0, w, 0); gr.addColorStop(0, '#CFA872'); gr.addColorStop(0.45, '#EED8AE'); gr.addColorStop(1, '#BE905A');
 			g.fillStyle = gr; g.beginPath(); g.roundRect(w * 0.15, 18 * PK, w * 0.7, h - 36 * PK, 10); g.fill(); g.fillStyle = '#34506A'; g.fillRect(w * 0.15, 18 * PK, w * 0.7, h * 0.05); g.fillRect(w * 0.15, h - 18 * PK - h * 0.05, w * 0.7, h * 0.05); });
-		cast17 = new Cast(st, 'cast17', 960, 640, W + 400, 1200, 4, {}, 1); cast17.L.L.mesh.renderOrder = 20;
+		cast17 = new Cast(st, 'cast17', 700, 700, 800, 800, 4, {}, 1); cast17.L.L.mesh.renderOrder = 20;
 		lamp17 = new Live(st, 'lamp17', LAMP17[0], LAMP17[1], 400, 400, -1, {emissive: 1.3}, 1);
 		glow17 = new Live(st, 'glow17', 1100, 600, 2400, 1400, 6, {emissive: 1.0}, 0.5, 21);
 		// the opening camera: the slot at SLOT_SCREEN, 16:9
