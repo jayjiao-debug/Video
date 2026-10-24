@@ -32,7 +32,7 @@ const lkTorch = LOOKS.mingOfficial;
 const DOOR = {x0: 1480, x1: 1600, y0: 470, y1: G18};      // the friend's door (opening)
 const GATE = {x0: 762, x1: 872};                            // 陆完's back gate
 const STR18 = CAREFUL * H18;
-const HANDX = 1235, FRX = 1428;                             // where 陆完 stops for the hand-over; where the friend waits
+const HANDX = 1235, FRX = 1385;                             // where 陆完 stops for the hand-over; where the friend waits
 let lane: Stage, cast18: Cast, roll18: Live, glow18: Live, door18: Live, torch18: Live, torchFigs: Cast;
 const luX = (t: number) => Math.min(HANDX, 820 + ((t - b(29.25)) / (2 * BEAT)) * STR18);
 const fr18 = (t: number) => {
@@ -47,11 +47,11 @@ const scene18Cast = (t: number) => {
 	// the roll: in 陆完's hands → both men's hands (b29.95 → b30.12) → the friend's chest
 	let rc = luC.rc, e0 = luC.e0, e1 = luC.e1;
 	const fc = carry2(F.x, G18, H18, F.flip);
-	if (t >= b(30.12)) { const k = smooth(clamp01((t - b(30.12)) / 0.1)); const mid = luC.rc; rc = F.walk ? fc.rc : [lerp(mid[0], fc.rc[0], k), lerp(mid[1], fc.rc[1], k)]; e0 = [rc[0] - 0.11 * H18, rc[1] + 3]; e1 = [rc[0] + 0.11 * H18, rc[1] - 3]; }
+	if (t >= b(29.95)) { const k = smooth(clamp01((t - b(29.95)) / (b(30.12) - b(29.95)))); const mid = luC.rc; rc = F.walk ? fc.rc : [lerp(mid[0], fc.rc[0], k), lerp(mid[1], fc.rc[1], k)]; e0 = [rc[0] - 0.11 * H18, rc[1] + 3]; e1 = [rc[0] + 0.11 * H18, rc[1] - 3]; }
 	const luContacts: Contact[] = t < b(30.12) ? [{side: 'L', target: [e0[0] + 26, e0[1] + 9], name: 'roll'}, {side: 'R', target: [e0[0] + 8, e0[1] + 9], name: 'roll end'}] : [];
 	const lu = rig({x: lx, ground: G18, h: H18, pose: lw ? careful(ul) : fkPose({hip: 0.655, lean: 5, neck: 4, lt: 2, lk: 2, rt: -3, rk: 3, la: 4, le: 18, ra: 6, re: 22}), look: lkLu}, luContacts, () => G18, 'lu-wan');
 	let frC: Contact[] = [];
-	if (t >= b(29.92) && t < b(30.12)) frC = [{side: 'L', target: [e1[0] - 26, e1[1] + 9], name: 'roll'}, {side: 'R', target: [e1[0] - 8, e1[1] + 9], name: 'roll end'}];
+	if (t >= b(30.0) && t < b(30.12)) frC = [{side: 'L', target: [e1[0] - 22, e1[1] + 9], name: 'roll'}, {side: 'R', target: [e1[0] - 6, e1[1] + 9], name: 'roll end'}];
 	else if (t >= b(30.12)) frC = twoHands(e0, e1, F.flip);
 	const fpose = F.walk ? careful(F.u * H18 / (H18 - 6) + 0.1) : fkPose({hip: 0.655, lean: 6 + 4 * give, neck: 4, lt: 2, lk: 2, rt: -3, rk: 3, la: 4, le: 16, ra: 6, re: 20});
 	const fr = rig({x: F.x, ground: G18, h: H18 - 6, pose: fpose, look: lkFriend, flip: F.flip}, frC, () => G18, 'friend');
@@ -157,12 +157,12 @@ export const d19 = (t: number): Frame => {
 	{ const h = 168, u = (t - b(31.2)) / (2 * BEAT), x = 880 + u * STR19(lkF2, h), r = boxCarrier(x, VASE_Y1, h, lkF2, u, 'box-carrier-2');
 		c2.draw(fk, [r.f]); box2.drawW(fk, (g) => { boxGlow(g, r.bc, r.bw, r.bh); drawBox(g, r.bc, r.bw, r.bh); drawFig(g, {...r.f, part: 'L'}); }); }
 	// the hall (beyond the door): a servant sets the box on the table among the treasures, then steps back
-	{ const h = 120, gx = 925, gy = 700, top = 662, bc: P = [968, top - 7], set = smooth(clamp01((t - b(31.7)) / 0.3)), back = smooth(clamp01((t - b(32.08)) / 0.25));
+	{ const h = 120, gx = 938, gy = 700, top = 640, bc: P = [968, top - 7], set = smooth(clamp01((t - b(31.7)) / 0.3)), back = smooth(clamp01((t - b(32.08)) / 0.25));
 		const bcNow: P = [bc[0], lerp(bc[1] - 14, bc[1], set)], bw = 30, bh = 16;
-		const pose = fkPose({hip: 0.645, hipX: -0.05, lean: lerp(30, 6, back), neck: 4, lt: 6, lk: 4, rt: 2, rk: 2, la: 20, le: 30, ra: 20, re: 30});
-		const hands: Contact[] = back < 0.5 ? [{side: 'L', target: [bcNow[0] + bw / 2 - 1, bcNow[1]], name: 'box side'}, {side: 'R', target: [bcNow[0] - bw / 2 + 2, bcNow[1] + 2], name: 'box side'}] : [];
+		const pose = fkPose({hip: 0.645, hipX: -0.05, lean: lerp(46, 6, back), neck: 4, lt: 6, lk: 4, rt: 2, rk: 2, la: 20, le: 30, ra: 20, re: 30});
+		const hands: Contact[] = back < 0.2 ? [{side: 'L', target: [bcNow[0] + bw / 2 - 1, bcNow[1]], name: 'box side'}, {side: 'R', target: [bcNow[0] - bw / 2 + 2, bcNow[1] + 2], name: 'box side'}] : [];
 		const f = rig({x: gx - 18 * back, ground: gy, h, pose, look: lkF3}, hands, () => gy, 'box-servant-3');
-		c3.draw(fk, [f]); box3.drawW(fk, (g) => { boxGlow(g, bcNow, bw * 1.6, bh * 2.2, 0.55); drawBox(g, bcNow, bw, bh); if (back < 0.5) drawFig(g, {...f, part: 'L'}); }); }
+		c3.draw(fk, [f]); box3.drawW(fk, (g) => { boxGlow(g, bcNow, bw * 1.6, bh * 2.2, 0.55); drawBox(g, bcNow, bw, bh); if (back < 0.2) drawFig(g, {...f, part: 'L'}); }); }
 	// the hall doors swing shut (b32.0 → b32.25); two officials flank them and slap the strips on at b32.5
 	const shut = smooth(clamp01((t - b(32.02)) / (b(32.25) - b(32.02)))), slap = t >= b(32.5) ? 1 : 0, raise = smooth(clamp01((t - b(32.27)) / (b(32.47) - b(32.27))));
 	leaves19.drawW(`${shut.toFixed(3)}`, (g) => { const lw = (HD.x1 - HD.x0) / 2, w = lerp(5, lw, shut); for (const [hx, s] of [[HD.x0, 1], [HD.x1, -1]] as [number, number][]) { const x0 = s > 0 ? hx : hx - w;
@@ -174,11 +174,19 @@ export const d19 = (t: number): Frame => {
 			for (const [a, c] of [[X.a0, X.a1], [X.b0, X.b1]] as [P, P][]) { g.strokeStyle = '#E4DCC6'; g.lineWidth = 9; g.lineCap = 'butt'; g.beginPath(); g.moveTo(a[0], a[1]); g.lineTo(c[0], c[1]); g.stroke(); g.strokeStyle = 'rgba(120,110,90,0.35)'; g.lineWidth = 1; g.stroke(); }
 			g.restore(); }
 	});
-	const o1h: P = slap ? [X.a0[0] + 4, X.a0[1] + 3] : [lerp(880, X.a0[0] + 4, raise), lerp(700, X.a0[1] + 3, raise)];
-	const o2h: P = slap ? [X.b0[0] - 4, X.b0[1] + 3] : [lerp(1040, X.b0[0] - 4, raise), lerp(700, X.b0[1] + 3, raise)];
+	const o1h: P = slap ? [X.a0[0] + 4, X.a0[1] + 3] : [lerp(952, X.a0[0] + 4, raise), lerp(630, X.a0[1] + 3, raise)];
+	const o2h: P = slap ? [X.b0[0] - 4, X.b0[1] + 3] : [lerp(968, X.b0[0] - 4, raise), lerp(630, X.b0[1] + 3, raise)];
 	const base = fkPose({hip: 0.655, lean: 4, neck: 2, lt: 2, lk: 2, rt: -3, rk: 3, la: 3, le: 10, ra: 4, re: 14});
-	const O1 = rig({x: 876, ground: HD.y1, h: 132, pose: base, look: lkOff}, t >= b(32.27) ? [{side: 'L', target: o1h, name: slap ? 'hand on the strip' : 'strip'}] : [], () => HD.y1, 'seal-official-1');
-	const O2 = rig({x: 1044, ground: HD.y1, h: 134, pose: base, look: lkOff, flip: true}, t >= b(32.27) ? [{side: 'L', target: o2h, name: slap ? 'hand on the strip' : 'strip'}] : [], () => HD.y1, 'seal-official-2');
+	const su = 0.5 * clamp01((t - b(32.02)) / (b(32.25) - b(32.02))), stepping = su > 0 && su < 0.5;
+	const o1x = 876 + su * CAREFUL * 132, o2x = 1044 - su * CAREFUL * 134, lwN = lerp(5, (HD.x1 - HD.x0) / 2, shut);
+	const c1: Contact[] = t >= b(32.27) ? [{side: 'L', target: o1h, name: slap ? 'hand on the strip' : 'strip'}] : stepping ? [{side: 'L', target: [HD.x0 + lwN - 3, 630], name: 'hand on the door leaf'}] : [];
+	const c2: Contact[] = t >= b(32.27) ? [{side: 'L', target: o2h, name: slap ? 'hand on the strip' : 'strip'}] : stepping ? [{side: 'L', target: [HD.x1 - lwN + 3, 630], name: 'hand on the door leaf'}] : [];
+	// after the slap they turn and step back to the jambs, clear of the X
+	const sb = 0.5 * clamp01((t - b(32.62)) / 0.24), away = t >= b(32.62), stepB = sb > 0 && sb < 0.5;
+	const O1 = away ? rig({x: o1x - sb * CAREFUL * 132, ground: HD.y1, h: 132, pose: stepB ? careful(sb) : base, look: lkOff, flip: true}, [], () => HD.y1, 'seal-official-1')
+		: rig({x: o1x, ground: HD.y1, h: 132, pose: stepping ? careful(su) : base, look: lkOff}, c1, () => HD.y1, 'seal-official-1');
+	const O2 = away ? rig({x: o2x + sb * CAREFUL * 134, ground: HD.y1, h: 134, pose: stepB ? careful(sb + 0.28) : base, look: lkOff}, [], () => HD.y1, 'seal-official-2')
+		: rig({x: o2x, ground: HD.y1, h: 134, pose: stepping ? careful(su + 0.28) : base, look: lkOff, flip: true}, c2, () => HD.y1, 'seal-official-2');
 	offs.draw(`${fk}`, t >= b(31.9) ? [O1, O2] : [], (g) => { if (!slap && raise > 0) for (const hnd of [o1h, o2h]) { g.fillStyle = '#E4DCC6'; g.fillRect(hnd[0] - 4, hnd[1], 8, 26 * raise); } });
 	lamps19.drawW('l', (g) => { for (const [x, y, r] of LAMPS19) { glowBlob(g, [x, y], r * 2.6, r * 2.6, 0.45, '255,184,104'); g.fillStyle = '#FFC98A'; g.beginPath(); g.ellipse(x, y, r * 0.55, r * 0.75, 0, 0, Math.PI * 2); g.fill(); } });
 	st.heroAt(960, 650, ZW3, 900);
@@ -195,7 +203,7 @@ const buildHall = async () => {
 		<rect x="-600" y="700" width="3100" height="500" fill="#2b231d"/>
 		${[[880, 640, 18, 34], [906, 650, 12, 24], [1030, 636, 16, 40], [1052, 648, 10, 28], [860, 600, 50, 6], [1014, 598, 60, 6]].map(([x, y, w, h]) => `<rect x="${x}" y="${y - h}" width="${w}" height="${h}" fill="#1a1411" rx="3"/>`).join('')}
 		<ellipse cx="890" cy="560" rx="11" ry="16" fill="#1a1411"/><ellipse cx="1040" cy="556" rx="13" ry="18" fill="#1a1411"/><rect x="884" y="574" width="12" height="8" fill="#1a1411"/>
-		<path d="M940,586 L992,586 L986,606 L946,606 Z" fill="#1a1411"/><rect x="930" y="662" width="80" height="6" fill="#20170f"/><rect x="936" y="668" width="5" height="32" fill="#1a1411"/><rect x="999" y="668" width="5" height="32" fill="#1a1411"/>
+		<path d="M940,566 L992,566 L986,586 L946,586 Z" fill="#1a1411"/><rect x="930" y="640" width="80" height="6" fill="#20170f"/><rect x="936" y="646" width="5" height="54" fill="#1a1411"/><rect x="999" y="646" width="5" height="54" fill="#1a1411"/>
 		<circle cx="905" cy="520" r="5" fill="#FFC98A"/><circle cx="1015" cy="520" r="5" fill="#FFC98A"/>`, 3100, 1400, `${wallG('hw', 960, 560)}`, -600, -200);
 	st.add('hall', canvasTex(await svgToCanvas(hallSvg, 3100, 1400, 1.4)), 950, 500, 3100, 1400, ZHALL, {rim: 0.5, rimPx: 3});
 	c3 = new Cast(st, 'servant3', 960, 640, 600, 400, ZHALL + 4, {}, 3); box3 = new Live(st, 'box3', 960, 640, 600, 400, ZHALL + 5, {emissive: 0.5}, 3);

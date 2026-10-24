@@ -38,7 +38,8 @@ export const subtitles = (hud: HTMLElement, lines: Line[], t: number, yTop = 132
 		const end = stays(s) && i + 1 < lines.length && Math.abs(lines[i + 1][0] - b) < 0.05 ? lines[i + 1][1] : b;
 		// the outgoing line is gone by the time the next line in the same row starts typing (no text over text)
 		let outEnd = end + 0.2;
-		for (let k = i + 1; k < lines.length && lines[k][0] < outEnd; k++) if (!lines[k][2].startsWith('要是排') && rowOf(lines, k) === rowOf(lines, i) && lines[k][0] >= a + 0.1) { outEnd = Math.max(a + 0.2, lines[k][0]); break; }
+		// any line is fully gone when the next line (in any row) starts — except the line it stays above (its own line 2)
+		for (let k = i + 1; k < lines.length && lines[k][0] < outEnd; k++) { if (lines[k][2].startsWith('要是排') || lines[k][0] < a + 0.1) continue; if (stays(s) && k === i + 1 && Math.abs(lines[k][0] - b) < 0.05) continue; outEnd = Math.max(a + 0.2, lines[k][0]); break; }
 		const fade = Math.min(0.2, outEnd - end + 0.12);
 		if (t < a - 0.01 || t > outEnd) continue;
 		const o = clamp01((outEnd - t) / fade) * clamp01((t - a + 0.06) / 0.06);
