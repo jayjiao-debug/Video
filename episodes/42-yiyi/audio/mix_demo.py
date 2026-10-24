@@ -3,13 +3,13 @@
 import numpy as np, subprocess, json, os, pyloudnorm as pyln, soundfile as sf
 from scipy.ndimage import uniform_filter1d
 from scipy.signal import butter, sosfiltfilt
-SR = 48000; A = os.path.dirname(os.path.abspath(__file__)); END = 32.27 + 0.4
-BED = '/tmp/claude-0/-home-claude/bf206d1e-1152-5595-9b84-b15be6e5a777/scratchpad/music42/ep42_bed_optionA_valley.wav'
+SR = 48000; A = os.path.dirname(os.path.abspath(__file__)); END = 25.48 + 0.4
+BED = '/tmp/claude-0/-home-claude/bf206d1e-1152-5595-9b84-b15be6e5a777/scratchpad/music42/ep42_bed_v2.wav'
 def load(path, af=''):
     raw = subprocess.run(['ffmpeg', '-loglevel', 'error', '-i', path] + (['-af', af] if af else []) + ['-f', 'f32le', '-ac', '2', '-ar', str(SR), '-'], capture_output=True).stdout
     return np.frombuffer(raw, np.float32).reshape(-1, 2).copy()
-LINES = [('vo01/Q0b', 0.0, 'highpass=f=90,aecho=0.6:0.4:30:0.12'), ('vo01/O1', 2.267, ''), ('vo01/O2', 5.097, ''), ('vo02/O3b', 9.060, ''), ('vo01/TT', 13.022, ''),
-         ('vo01/E1', 18.682, ''), ('vo01/E2', 22.645, ''), ('vo01/E3', 26.607, '')]
+LINES = [('vo01/Q0b', 0.0, 'highpass=f=90,aecho=0.6:0.4:30:0.12'), ('vo03/H1b', 2.267, 'atempo=1.06'), ('vo03/H2a', 6.229, ''),
+         ('vo01/E1', 11.891, ''), ('vo01/E2', 15.854, ''), ('vo01/E3', 19.816, '')]   # v2 hook (no title card); Egypt shifted −6.791 s
 bed = load(BED)[:int(END * SR)]; n = len(bed); bed[-int(0.4 * SR):] *= np.linspace(1, 0, int(0.4 * SR))[:, None]
 meter = pyln.Meter(SR); dyn = 'highpass=f=90,acompressor=threshold=-26dB:ratio=3:attack=5:release=120:makeup=2'
 vo = np.zeros((n, 2), np.float32); speaking = np.zeros(n, bool)
