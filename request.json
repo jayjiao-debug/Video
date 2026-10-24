@@ -1,5 +1,5 @@
 {
- "id": "ep42-vo-02",
+ "id": "ep42-vo-03",
  "model_prefs": [
   "eleven_v4"
  ],
@@ -11,10 +11,10 @@
    "settings": {
     "stability": 0.45,
     "similarity_boost": 0.8,
-    "style": 0.4
+    "style": 0.45
    },
-   "name": "O3b",
-   "text": "而泥板上的答案，和哈佛一样。"
+   "name": "H1a",
+   "text": "哈佛追踪724个人八十多年，找到了答案。"
   },
   {
    "lang": "zh",
@@ -23,10 +23,10 @@
    "settings": {
     "stability": 0.45,
     "similarity_boost": 0.8,
-    "style": 0.4
+    "style": 0.45
    },
-   "name": "O3c",
-   "text": "而那块泥板上的答案，和哈佛一样。"
+   "name": "H2a",
+   "text": "可这个答案，近四千年前，就刻在一块泥板上。"
   },
   {
    "lang": "zh",
@@ -35,10 +35,34 @@
    "settings": {
     "stability": 0.45,
     "similarity_boost": 0.8,
-    "style": 0.4
+    "style": 0.45
    },
-   "name": "O3d",
-   "text": "而泥板上写的答案，和哈佛一样。"
+   "name": "H1b",
+   "text": "哈佛追踪724个人八十多年，找到了答案。"
+  },
+  {
+   "lang": "zh",
+   "voice_id": "MI36FIkp9wRP7cpWKPTl",
+   "model": "eleven_v4",
+   "settings": {
+    "stability": 0.45,
+    "similarity_boost": 0.8,
+    "style": 0.45
+   },
+   "name": "H2b",
+   "text": "可这个答案，近四千年前，就刻在一块泥板上。"
+  },
+  {
+   "lang": "zh",
+   "voice_id": "MI36FIkp9wRP7cpWKPTl",
+   "model": "eleven_v4",
+   "settings": {
+    "stability": 0.45,
+    "similarity_boost": 0.8,
+    "style": 0.45
+   },
+   "name": "H1c",
+   "text": "哈佛追踪了七百二十四个人，八十多年，找到了答案。"
   }
  ]
 }
