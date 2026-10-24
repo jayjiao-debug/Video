@@ -4,7 +4,7 @@ import {LK, Hieratic, Tablet} from './frames42';
 import {LookCam, PHX, PHY, PhoneLive, RoomLive, Viewer, MatCard, MATS, InkChar, mixF, SC_WRITE, SC_ARGA, SC_ARGB, SC_LOOK, FKA, Ba2, Greed, Birds, Water, Palm, Reeds, BEAT, beatAt} from './demo42';
 /* ep42 demo v2 (owner's new hook, no title card): phone 0–2.27 → Harvard montage → the tablet (HIT 9.060 push) →
    rewind to 11.891 → Egypt with the title inked onto the scribe's papyrus, then the pull back; ends 25.48. */
-export const T = {harvard: 2.267, dark: 6.06, tablet: 7.3, hit: 9.06, egypt: 11.891, e2: 15.85, e3: 19.82, stop: 21.55, end: 25.48};
+export const T = {harvard: 2.267, dark: 6.06, tablet: 6.9, hit: 9.06, egypt: 11.891, e2: 15.85, e3: 19.82, stop: 21.55, end: 25.48};
 const cl = (v: number, a = 0, b = 1) => Math.min(b, Math.max(a, v));
 const seg = (t: number, a: number, b: number) => cl((t - a) / (b - a));
 const ease = (u: number) => { const x = cl(u); return x < 0.5 ? 4 * x * x * x : 1 - Math.pow(-2 * x + 2, 3) / 2; };
@@ -60,7 +60,7 @@ export const Harvard: React.FC<{t: number}> = ({t}) => {
 	const flash = Math.max(0, ...FLASH_T.map((a) => (tau >= a ? Math.exp(-(tau - a) / 0.07) : 0)), ...AGE_T.map((a) => (tau >= a ? 0.6 * Math.exp(-(tau - a) / 0.05) : 0)));
 	const count = Math.round(724 * easeOut(seg(t, 2.3, 3.0))), pop = Math.exp(-((t - 3.0) ** 2) / 0.01);
 	const files = seg(tau, 1.13, 1.7), ageIdx = AGE_T.filter((a) => tau >= a).length - 1, year = Math.round(lerp(1938, 2026, easeOut(seg(t, 3.97, 5.1))));
-	const dark = sm(seg(t, 6.15, 7.1)), push = lerp(1, 1.08, seg(tau, 0, 5)), wife = sm(seg(t, 5.25, 5.9));
+	const dark = sm(seg(t, 6.15, 6.9)), push = lerp(1, 1.08, seg(tau, 0, 5)), wife = sm(seg(t, 5.25, 5.9));
 	const portraitOut = easeIn(seg(tau, 1.13, 1.45));
 	return <g>
 		<defs><radialGradient id="hvBg" cx="0.5" cy="0.45" r="0.7"><stop offset="0" stopColor="#3a2a1e" /><stop offset="1" stopColor="#0c0806" /></radialGradient></defs>
@@ -94,7 +94,7 @@ const ROW_Y = TB.y + 36 + TB.row * ((TB.h - 60) / TB.rows), ROW_X = TB.x + 30 + 
 export const tabletCam = (t: number) => { const slow = ease(seg(t, T.tablet, 8.6)), hard = easeIn(seg(t, 8.55, T.hit));
 	return {z: lerp(0.96, 1.18, slow) * lerp(1, 2.4, hard), L: [lerp(960, ROW_X, slow * 0.4 + hard * 0.6), lerp(530, ROW_Y, slow * 0.3 + hard * 0.7)] as P2}; };
 const TabletScene: React.FC<{t: number; z: number; L: P2; blur?: number}> = ({t, z, L, blur = 0}) => {
-	const lit = sm(seg(t, T.tablet - 0.3, 8.2)), sweep = seg(t, 7.6, 9.0);
+	const lit = sm(seg(t, T.tablet, 7.9)), sweep = seg(t, 7.6, 9.0);
 	return <g>
 		<rect width={W} height={H} fill="#070403" />
 		<g style={blur > 0.5 ? {filter: `blur(${blur * 0.4}px)`} : undefined}>
