@@ -1,0 +1,485 @@
+plan: {'tier': None, 'character_count': None, 'character_limit': None, 'status': None}
+models: ['eleven_v4', 'eleven_v4_turbo', 'eleven_v3', 'eleven_v3_conversational', 'eleven_multilingual_v2', 'eleven_flash_v2_5', 'eleven_turbo_v2_5', 'eleven_turbo_v2', 'eleven_flash_v2', 'eleven_english_sts_v2', 'eleven_multilingual_sts_v2']
+model: eleven_v4
+{"name": "B1", "lang": "zh", "text": "泥板上，吉尔伽美什失去好友，想要不死。", "voice": "MI36FIkp9wRP7cpWKPTl", "voice_id": "MI36FIkp9wRP7cpWKPTl", "model": "eleven_v4", "status": 200, "file": "B1.mp3", "bytes": 69006}
+{"name": "B3", "lang": "zh", "text": "她后面的话，留到最后。", "voice": "MI36FIkp9wRP7cpWKPTl", "voice_id": "MI36FIkp9wRP7cpWKPTl", "model": "eleven_v4", "status": 200, "file": "B3.mp3", "bytes": 36823}
+{"name": "C1", "lang": "zh", "text": "学生问孔子：死，是怎么回事？", "voice": "MI36FIkp9wRP7cpWKPTl", "voice_id": "MI36FIkp9wRP7cpWKPTl", "model": "eleven_v4", "status": 200, "file": "C1.mp3", "bytes": 57303}
+{"name": "C2", "lang": "zh", "text": "他把目光，从死，拉回了生。", "voice": "MI36FIkp9wRP7cpWKPTl", "voice_id": "MI36FIkp9wRP7cpWKPTl", "model": "eleven_v4", "status": 200, "file": "C2.mp3", "bytes": 53541}
+{"name": "S2", "lang": "zh", "text": "照他说，你凌晨三点那一问，问得好。", "voice": "MI36FIkp9wRP7cpWKPTl", "voice_id": "MI36FIkp9wRP7cpWKPTl", "model": "eleven_v4", "status": 200, "file": "S2.mp3", "bytes": 62318}
+{"name": "M2", "lang": "zh", "text": "管着帝国的人，也不想起床。", "voice": "MI36FIkp9wRP7cpWKPTl", "voice_id": "MI36FIkp9wRP7cpWKPTl", "model": "eleven_v4", "status": 200, "file": "M2.mp3", "bytes": 43510}
+{"name": "F4", "lang": "zh", "text": "一无所有的人，想着所爱，也能感到幸福。", "voice": "MI36FIkp9wRP7cpWKPTl", "voice_id": "MI36FIkp9wRP7cpWKPTl", "model": "eleven_v4", "status": 200, "file": "F4.mp3", "bytes": 66498}
+{"name": "R1", "lang": "zh", "text": "泥板上，酒馆女主人接着说：", "voice": "MI36FIkp9wRP7cpWKPTl", "voice_id": "MI36FIkp9wRP7cpWKPTl", "model": "eleven_v4", "status": 200, "file": "R1.mp3", "bytes": 46018}
+{"name": "L1", "lang": "zh", "text": "泥板上的答案，真的和哈佛一样。", "voice": "MI36FIkp9wRP7cpWKPTl", "voice_id": "MI36FIkp9wRP7cpWKPTl", "model": "eleven_v4", "status": 200, "file": "L1.mp3", "bytes": 48526}
+{"name": "TE", "lang": "zh", "text": "你把“为了什么”，改成了“为了谁”。", "voice": "MI36FIkp9wRP7cpWKPTl", "voice_id": "MI36FIkp9wRP7cpWKPTl", "model": "eleven_v4", "status": 200, "file": "TE.mp3", "bytes": 56049}
+{"name": "T3", "lang": "zh", "text": "你活着，是为了谁？", "voice": "MI36FIkp9wRP7cpWKPTl", "voice_id": "MI36FIkp9wRP7cpWKPTl", "model": "eleven_v4", "status": 200, "file": "T3.mp3", "bytes": 34315}
+{"name": "BQ", "lang": "zh", "text": "你找的那种生命，你找不到。", "voice": "Iqi0ix5WGtiSXX9VDZB4", "voice_id": "Iqi0ix5WGtiSXX9VDZB4", "model": "eleven_v4", "status": 200, "file": "BQ.mp3", "bytes": 48526}
+{"name": "RQ1", "lang": "zh", "text": "看看那个牵着你手的孩子，", "voice": "Iqi0ix5WGtiSXX9VDZB4", "voice_id": "Iqi0ix5WGtiSXX9VDZB4", "model": "eleven_v4", "status": 200, "file": "RQ1.mp3", "bytes": 40585}
+{"name": "RQ2", "lang": "zh", "text": "常常拥抱你的妻子。", "voice": "Iqi0ix5WGtiSXX9VDZB4", "voice_id": "Iqi0ix5WGtiSXX9VDZB4", "model": "eleven_v4", "status": 200, "file": "RQ2.mp3", "bytes": 34315}
+{"name": "CQ0", "lang": "zh", "text": "未知生，焉知死？", "voice": "shared:Julian - Deep, Rich and Mature (british, en)", "voice_id": "7p1Ofvcwsv7UBPoFNcpI", "model": "eleven_v4", "status": 200, "file": "CQ0.mp3", "bytes": 40585}
+{"name": "CQ1", "lang": "zh", "text": "未知生，焉知死？", "voice": "shared:Wolf Spencer - Rough and Deep (standard, de)", "voice_id": "2OcnG4mH3jIMtWz3vKus", "model": "eleven_v4", "status": 200, "file": "CQ1.mp3", "bytes": 40585}
+{"name": "S1", "lang": "el", "text": "Ο Σωκράτης καταδικάζεται με διαφορά τριάντα ψήφων. Τον περιμένει θάνατος.", "voice": "shared:Theos - Narrational, Assertive and Warm (standard, el)", "voice_id": "n0vzWypeCK1NlWPVwhOc", "model": "eleven_v4", "status": 200, "file": "S1.mp3", "bytes": 91994}
+{"name": "SQa", "lang": "el", "text": "Πριν από την ποινή είπε:", "voice": "shared:Theos - Narrational, Assertive and Warm (standard, el)", "voice_id": "n0vzWypeCK1NlWPVwhOc", "model": "eleven_v4", "status": 200, "file": "SQa.mp3", "bytes": 31807}
+{"name": "M1", "lang": "el", "text": "Ο αυτοκράτορας Μάρκος Αυρήλιος γράφει στον εαυτό του:", "voice": "shared:Theos - Narrational, Assertive and Warm (standard, el)", "voice_id": "n0vzWypeCK1NlWPVwhOc", "model": "eleven_v4", "status": 200, "file": "M1.mp3", "bytes": 58557}
+{"name": "SQb", "lang": "el", "text": "ὁ δὲ ἀνεξέταστος βίος οὐ βιωτὸς ἀνθρώπῳ.", "voice": "shared:Talos (standard, el)", "voice_id": "QpnXVbX7RkmUGDwpJh5v", "model": "eleven_v4", "status": 200, "file": "SQb.mp3", "bytes": 57303}
+{"name": "MQ1", "lang": "el", "text": "Ὄρθρου, ὅταν δυσόκνως ἐξεγείρῃ, πρόχειρον ἔστω·", "voice": "shared:Christos - Casual, Calm and Serious (standard, el)", "voice_id": "PaZ8laODC1yRxHTPYJFh", "model": "eleven_v4", "status": 200, "file": "MQ1.mp3", "bytes": 66498}
+{"name": "MQ2", "lang": "el", "text": "ὅτι ἐπὶ ἀνθρώπου ἔργον ἐγείρομαι.", "voice": "shared:Christos - Casual, Calm and Serious (standard, el)", "voice_id": "PaZ8laODC1yRxHTPYJFh", "model": "eleven_v4", "status": 200, "file": "MQ2.mp3", "bytes": 41838}
+{"name": "F0", "lang": "de", "text": "Der Arzt Viktor Frankl und seine Familie werden ins Lager deportiert.", "voice": "shared:Otto - Casual and Normal (standard, de)", "voice_id": "FTNCalFNG5bRnkkaP5Ug", "model": "eleven_v4", "status": 200, "file": "F0.mp3", "bytes": 74021}
+{"name": "F1", "lang": "de", "text": "Beim Marsch im Morgengrauen denkt er an das Gesicht seiner Frau.", "voice": "shared:Otto - Casual and Normal (standard, de)", "voice_id": "FTNCalFNG5bRnkkaP5Ug", "model": "eleven_v4", "status": 200, "file": "F1.mp3", "bytes": 65244}
+{"name": "F2", "lang": "de", "text": "Er begreift: Die Liebe ist das Höchste, wonach ein Mensch streben kann.", "voice": "shared:Otto - Casual and Normal (standard, de)", "voice_id": "FTNCalFNG5bRnkkaP5Ug", "model": "eleven_v4", "status": 200, "file": "F2.mp3", "bytes": 80291}
+{"name": "F3", "lang": "de", "text": "Nach der Befreiung erfährt er: Seine Frau lebt nicht mehr.", "voice": "shared:Otto - Casual and Normal (standard, de)", "voice_id": "FTNCalFNG5bRnkkaP5Ug", "model": "eleven_v4", "status": 200, "file": "F3.mp3", "bytes": 66498}
+{"name": "H1", "lang": "en", "text": "Since nineteen thirty-eight, Harvard has followed seven hundred twenty-four lives.", "voice": "shared:Young Jamal (american, en)", "voice_id": "6OzrBCQf8cjERkYgzSg8", "model": "eleven_v4", "status": 200, "file": "H1.mp3", "bytes": 80291}
+{"name": "H3", "lang": "en", "text": "The finding: good relationships keep us happier, and healthier.", "voice": "shared:Young Jamal (american, en)", "voice_id": "6OzrBCQf8cjERkYgzSg8", "model": "eleven_v4", "status": 200, "file": "H3.mp3", "bytes": 72767}
+{"name": "T2a", "lang": "zh", "text": "你也没睡？明天吃火锅！", "voice": "shared:Anna Su - Casual, Friendly and Bright (taiwan mandarin, zh)", "voice_id": "9lHjugDhwqoxA5MhX0az", "model": "eleven_v4", "status": 200, "file": "T2a.mp3", "bytes": 36823}
+{"name": "T2b", "lang": "zh", "text": "你也没睡？明天吃火锅！", "voice": "agczkAUlHLowaNnL72Cc", "voice_id": "agczkAUlHLowaNnL72Cc", "model": "eleven_v4", "status": 200, "file": "T2b.mp3", "bytes": 38077}
+[
+ {
+  "name": "B1",
+  "lang": "zh",
+  "text": "泥板上，吉尔伽美什失去好友，想要不死。",
+  "voice": "MI36FIkp9wRP7cpWKPTl",
+  "voice_id": "MI36FIkp9wRP7cpWKPTl",
+  "model": "eleven_v4",
+  "status": 200,
+  "file": "B1.mp3",
+  "bytes": 69006,
+  "heard": "泥板上,吉尔加美食失去好友,想要不死",
+  "heard_lang": "zh",
+  "heard_lang_p": 0.999,
+  "seconds": 4.24
+ },
+ {
+  "name": "B3",
+  "lang": "zh",
+  "text": "她后面的话，留到最后。",
+  "voice": "MI36FIkp9wRP7cpWKPTl",
+  "voice_id": "MI36FIkp9wRP7cpWKPTl",
+  "model": "eleven_v4",
+  "status": 200,
+  "file": "B3.mp3",
+  "bytes": 36823,
+  "heard": "它后面的话留到最后",
+  "heard_lang": "zh",
+  "heard_lang_p": 0.999,
+  "seconds": 2.24
+ },
+ {
+  "name": "C1",
+  "lang": "zh",
+  "text": "学生问孔子：死，是怎么回事？",
+  "voice": "MI36FIkp9wRP7cpWKPTl",
+  "voice_id": "MI36FIkp9wRP7cpWKPTl",
+  "model": "eleven_v4",
+  "status": 200,
+  "file": "C1.mp3",
+  "bytes": 57303,
+  "heard": "學生問孔子,死是怎麼回事?",
+  "heard_lang": "zh",
+  "heard_lang_p": 0.998,
+  "seconds": 3.52
+ },
+ {
+  "name": "C2",
+  "lang": "zh",
+  "text": "他把目光，从死，拉回了生。",
+  "voice": "MI36FIkp9wRP7cpWKPTl",
+  "voice_id": "MI36FIkp9wRP7cpWKPTl",
+  "model": "eleven_v4",
+  "status": 200,
+  "file": "C2.mp3",
+  "bytes": 53541,
+  "heard": "他把目光从死拉回了生",
+  "heard_lang": "zh",
+  "heard_lang_p": 0.995,
+  "seconds": 3.28
+ },
+ {
+  "name": "S2",
+  "lang": "zh",
+  "text": "照他说，你凌晨三点那一问，问得好。",
+  "voice": "MI36FIkp9wRP7cpWKPTl",
+  "voice_id": "MI36FIkp9wRP7cpWKPTl",
+  "model": "eleven_v4",
+  "status": 200,
+  "file": "S2.mp3",
+  "bytes": 62318,
+  "heard": "照他说你凌晨三点那一问问得好",
+  "heard_lang": "zh",
+  "heard_lang_p": 0.999,
+  "seconds": 3.84
+ },
+ {
+  "name": "M2",
+  "lang": "zh",
+  "text": "管着帝国的人，也不想起床。",
+  "voice": "MI36FIkp9wRP7cpWKPTl",
+  "voice_id": "MI36FIkp9wRP7cpWKPTl",
+  "model": "eleven_v4",
+  "status": 200,
+  "file": "M2.mp3",
+  "bytes": 43510,
+  "heard": "管着帝国的人也不想起床",
+  "heard_lang": "zh",
+  "heard_lang_p": 0.999,
+  "seconds": 2.64
+ },
+ {
+  "name": "F4",
+  "lang": "zh",
+  "text": "一无所有的人，想着所爱，也能感到幸福。",
+  "voice": "MI36FIkp9wRP7cpWKPTl",
+  "voice_id": "MI36FIkp9wRP7cpWKPTl",
+  "model": "eleven_v4",
+  "status": 200,
+  "file": "F4.mp3",
+  "bytes": 66498,
+  "heard": "一無所有的人想著所愛也能感到幸福",
+  "heard_lang": "zh",
+  "heard_lang_p": 0.999,
+  "seconds": 4.08
+ },
+ {
+  "name": "R1",
+  "lang": "zh",
+  "text": "泥板上，酒馆女主人接着说：",
+  "voice": "MI36FIkp9wRP7cpWKPTl",
+  "voice_id": "MI36FIkp9wRP7cpWKPTl",
+  "model": "eleven_v4",
+  "status": 200,
+  "file": "R1.mp3",
+  "bytes": 46018,
+  "heard": "尼板上,酒管女主人接着说。",
+  "heard_lang": "zh",
+  "heard_lang_p": 0.998,
+  "seconds": 2.8
+ },
+ {
+  "name": "L1",
+  "lang": "zh",
+  "text": "泥板上的答案，真的和哈佛一样。",
+  "voice": "MI36FIkp9wRP7cpWKPTl",
+  "voice_id": "MI36FIkp9wRP7cpWKPTl",
+  "model": "eleven_v4",
+  "status": 200,
+  "file": "L1.mp3",
+  "bytes": 48526,
+  "heard": "泥板上的答案真的和哈佛一樣",
+  "heard_lang": "zh",
+  "heard_lang_p": 0.996,
+  "seconds": 2.96
+ },
+ {
+  "name": "TE",
+  "lang": "zh",
+  "text": "你把“为了什么”，改成了“为了谁”。",
+  "voice": "MI36FIkp9wRP7cpWKPTl",
+  "voice_id": "MI36FIkp9wRP7cpWKPTl",
+  "model": "eleven_v4",
+  "status": 200,
+  "file": "TE.mp3",
+  "bytes": 56049,
+  "heard": "你把为了什么改成了为了谁?",
+  "heard_lang": "zh",
+  "heard_lang_p": 0.999,
+  "seconds": 3.44
+ },
+ {
+  "name": "T3",
+  "lang": "zh",
+  "text": "你活着，是为了谁？",
+  "voice": "MI36FIkp9wRP7cpWKPTl",
+  "voice_id": "MI36FIkp9wRP7cpWKPTl",
+  "model": "eleven_v4",
+  "status": 200,
+  "file": "T3.mp3",
+  "bytes": 34315,
+  "heard": "你活着是为了谁",
+  "heard_lang": "zh",
+  "heard_lang_p": 0.992,
+  "seconds": 2.08
+ },
+ {
+  "name": "BQ",
+  "lang": "zh",
+  "text": "你找的那种生命，你找不到。",
+  "voice": "Iqi0ix5WGtiSXX9VDZB4",
+  "voice_id": "Iqi0ix5WGtiSXX9VDZB4",
+  "model": "eleven_v4",
+  "status": 200,
+  "file": "BQ.mp3",
+  "bytes": 48526,
+  "heard": "你找的那种生命你找不到",
+  "heard_lang": "zh",
+  "heard_lang_p": 0.993,
+  "seconds": 2.96
+ },
+ {
+  "name": "RQ1",
+  "lang": "zh",
+  "text": "看看那个牵着你手的孩子，",
+  "voice": "Iqi0ix5WGtiSXX9VDZB4",
+  "voice_id": "Iqi0ix5WGtiSXX9VDZB4",
+  "model": "eleven_v4",
+  "status": 200,
+  "file": "RQ1.mp3",
+  "bytes": 40585,
+  "heard": "看看那个牵着你手的孩子",
+  "heard_lang": "zh",
+  "heard_lang_p": 0.998,
+  "seconds": 2.48
+ },
+ {
+  "name": "RQ2",
+  "lang": "zh",
+  "text": "常常拥抱你的妻子。",
+  "voice": "Iqi0ix5WGtiSXX9VDZB4",
+  "voice_id": "Iqi0ix5WGtiSXX9VDZB4",
+  "model": "eleven_v4",
+  "status": 200,
+  "file": "RQ2.mp3",
+  "bytes": 34315,
+  "heard": "常常擁抱你的妻子",
+  "heard_lang": "zh",
+  "heard_lang_p": 0.997,
+  "seconds": 2.08
+ },
+ {
+  "name": "CQ0",
+  "lang": "zh",
+  "text": "未知生，焉知死？",
+  "voice": "shared:Julian - Deep, Rich and Mature (british, en)",
+  "voice_id": "7p1Ofvcwsv7UBPoFNcpI",
+  "model": "eleven_v4",
+  "status": 200,
+  "file": "CQ0.mp3",
+  "bytes": 40585,
+  "heard": "未知生,焉知死",
+  "heard_lang": "zh",
+  "heard_lang_p": 0.994,
+  "seconds": 2.48
+ },
+ {
+  "name": "CQ1",
+  "lang": "zh",
+  "text": "未知生，焉知死？",
+  "voice": "shared:Wolf Spencer - Rough and Deep (standard, de)",
+  "voice_id": "2OcnG4mH3jIMtWz3vKus",
+  "model": "eleven_v4",
+  "status": 200,
+  "file": "CQ1.mp3",
+  "bytes": 40585,
+  "heard": "未知生,焉知死",
+  "heard_lang": "zh",
+  "heard_lang_p": 0.995,
+  "seconds": 2.48
+ },
+ {
+  "name": "S1",
+  "lang": "el",
+  "text": "Ο Σωκράτης καταδικάζεται με διαφορά τριάντα ψήφων. Τον περιμένει θάνατος.",
+  "voice": "shared:Theos - Narrational, Assertive and Warm (standard, el)",
+  "voice_id": "n0vzWypeCK1NlWPVwhOc",
+  "model": "eleven_v4",
+  "status": 200,
+  "file": "S1.mp3",
+  "bytes": 91994,
+  "heard": "Ο σοκράτης καταδικάζεται με διαφορά 30 ψήφων, τον περιμένει θάνατος.",
+  "heard_lang": "el",
+  "heard_lang_p": 0.999,
+  "seconds": 5.68
+ },
+ {
+  "name": "SQa",
+  "lang": "el",
+  "text": "Πριν από την ποινή είπε:",
+  "voice": "shared:Theos - Narrational, Assertive and Warm (standard, el)",
+  "voice_id": "n0vzWypeCK1NlWPVwhOc",
+  "model": "eleven_v4",
+  "status": 200,
+  "file": "SQa.mp3",
+  "bytes": 31807,
+  "heard": "Πριν να πω την πινή, είπε.",
+  "heard_lang": "el",
+  "heard_lang_p": 0.658,
+  "seconds": 1.92
+ },
+ {
+  "name": "M1",
+  "lang": "el",
+  "text": "Ο αυτοκράτορας Μάρκος Αυρήλιος γράφει στον εαυτό του:",
+  "voice": "shared:Theos - Narrational, Assertive and Warm (standard, el)",
+  "voice_id": "n0vzWypeCK1NlWPVwhOc",
+  "model": "eleven_v4",
+  "status": 200,
+  "file": "M1.mp3",
+  "bytes": 58557,
+  "heard": "Ο αυτοκράτορας Μάρκος Αυρίλιος γράφει στον εαυτό του.",
+  "heard_lang": "el",
+  "heard_lang_p": 0.997,
+  "seconds": 3.6
+ },
+ {
+  "name": "SQb",
+  "lang": "el",
+  "text": "ὁ δὲ ἀνεξέταστος βίος οὐ βιωτὸς ἀνθρώπῳ.",
+  "voice": "shared:Talos (standard, el)",
+  "voice_id": "QpnXVbX7RkmUGDwpJh5v",
+  "model": "eleven_v4",
+  "status": 200,
+  "file": "SQb.mp3",
+  "bytes": 57303,
+  "heard": "Ο δέαν εξέταστος βίος, ού βιωτός ανθρώπο.",
+  "heard_lang": "el",
+  "heard_lang_p": 0.999,
+  "seconds": 3.52
+ },
+ {
+  "name": "MQ1",
+  "lang": "el",
+  "text": "Ὄρθρου, ὅταν δυσόκνως ἐξεγείρῃ, πρόχειρον ἔστω·",
+  "voice": "shared:Christos - Casual, Calm and Serious (standard, el)",
+  "voice_id": "PaZ8laODC1yRxHTPYJFh",
+  "model": "eleven_v4",
+  "status": 200,
+  "file": "MQ1.mp3",
+  "bytes": 66498,
+  "heard": "όρθρου όταν δυσόκνος εξεγύρι πρόχειρονέστο.",
+  "heard_lang": "el",
+  "heard_lang_p": 0.997,
+  "seconds": 4.08
+ },
+ {
+  "name": "MQ2",
+  "lang": "el",
+  "text": "ὅτι ἐπὶ ἀνθρώπου ἔργον ἐγείρομαι.",
+  "voice": "shared:Christos - Casual, Calm and Serious (standard, el)",
+  "voice_id": "PaZ8laODC1yRxHTPYJFh",
+  "model": "eleven_v4",
+  "status": 200,
+  "file": "MQ2.mp3",
+  "bytes": 41838,
+  "heard": "ότι επί ανθρώπου έργονε γύρω με.",
+  "heard_lang": "el",
+  "heard_lang_p": 0.952,
+  "seconds": 2.56
+ },
+ {
+  "name": "F0",
+  "lang": "de",
+  "text": "Der Arzt Viktor Frankl und seine Familie werden ins Lager deportiert.",
+  "voice": "shared:Otto - Casual and Normal (standard, de)",
+  "voice_id": "FTNCalFNG5bRnkkaP5Ug",
+  "model": "eleven_v4",
+  "status": 200,
+  "file": "F0.mp3",
+  "bytes": 74021,
+  "heard": "Der Arzt Viktor Frankl und seine Familie werden ins Lager deportiert.",
+  "heard_lang": "de",
+  "heard_lang_p": 0.999,
+  "seconds": 4.56
+ },
+ {
+  "name": "F1",
+  "lang": "de",
+  "text": "Beim Marsch im Morgengrauen denkt er an das Gesicht seiner Frau.",
+  "voice": "shared:Otto - Casual and Normal (standard, de)",
+  "voice_id": "FTNCalFNG5bRnkkaP5Ug",
+  "model": "eleven_v4",
+  "status": 200,
+  "file": "F1.mp3",
+  "bytes": 65244,
+  "heard": "Beim Marsch im Morgengrauen denkt er an das Gesicht seiner Frau.",
+  "heard_lang": "de",
+  "heard_lang_p": 0.999,
+  "seconds": 4.0
+ },
+ {
+  "name": "F2",
+  "lang": "de",
+  "text": "Er begreift: Die Liebe ist das Höchste, wonach ein Mensch streben kann.",
+  "voice": "shared:Otto - Casual and Normal (standard, de)",
+  "voice_id": "FTNCalFNG5bRnkkaP5Ug",
+  "model": "eleven_v4",
+  "status": 200,
+  "file": "F2.mp3",
+  "bytes": 80291,
+  "heard": "Er begreift, die Liebe ist das Höchste, wonach ein Mensch streben kann.",
+  "heard_lang": "de",
+  "heard_lang_p": 0.999,
+  "seconds": 4.96
+ },
+ {
+  "name": "F3",
+  "lang": "de",
+  "text": "Nach der Befreiung erfährt er: Seine Frau lebt nicht mehr.",
+  "voice": "shared:Otto - Casual and Normal (standard, de)",
+  "voice_id": "FTNCalFNG5bRnkkaP5Ug",
+  "model": "eleven_v4",
+  "status": 200,
+  "file": "F3.mp3",
+  "bytes": 66498,
+  "heard": "Nach der Befreiung erfährt er, seine Frau lebt nicht mehr.",
+  "heard_lang": "de",
+  "heard_lang_p": 0.994,
+  "seconds": 4.08
+ },
+ {
+  "name": "H1",
+  "lang": "en",
+  "text": "Since nineteen thirty-eight, Harvard has followed seven hundred twenty-four lives.",
+  "voice": "shared:Young Jamal (american, en)",
+  "voice_id": "6OzrBCQf8cjERkYgzSg8",
+  "model": "eleven_v4",
+  "status": 200,
+  "file": "H1.mp3",
+  "bytes": 80291,
+  "heard": "Since 1938, Harvard has followed 724 lives.",
+  "heard_lang": "en",
+  "heard_lang_p": 0.999,
+  "seconds": 4.96
+ },
+ {
+  "name": "H3",
+  "lang": "en",
+  "text": "The finding: good relationships keep us happier, and healthier.",
+  "voice": "shared:Young Jamal (american, en)",
+  "voice_id": "6OzrBCQf8cjERkYgzSg8",
+  "model": "eleven_v4",
+  "status": 200,
+  "file": "H3.mp3",
+  "bytes": 72767,
+  "heard": "The finding. Good relationships keep us happier and healthier.",
+  "heard_lang": "en",
+  "heard_lang_p": 0.997,
+  "seconds": 4.48
+ },
+ {
+  "name": "T2a",
+  "lang": "zh",
+  "text": "你也没睡？明天吃火锅！",
+  "voice": "shared:Anna Su - Casual, Friendly and Bright (taiwan mandarin, zh)",
+  "voice_id": "9lHjugDhwqoxA5MhX0az",
+  "model": "eleven_v4",
+  "status": 200,
+  "file": "T2a.mp3",
+  "bytes": 36823,
+  "heard": "你也沒睡 明天吃火鍋",
+  "heard_lang": "zh",
+  "heard_lang_p": 0.997,
+  "seconds": 2.24
+ },
+ {
+  "name": "T2b",
+  "lang": "zh",
+  "text": "你也没睡？明天吃火锅！",
+  "voice": "agczkAUlHLowaNnL72Cc",
+  "voice_id": "agczkAUlHLowaNnL72Cc",
+  "model": "eleven_v4",
+  "status": 200,
+  "file": "T2b.mp3",
+  "bytes": 38077,
+  "heard": "你也没睡 明天吃火锅",
+  "heard_lang": "zh",
+  "heard_lang_p": 0.998,
+  "seconds": 2.32
+ }
+]
