@@ -1,20 +1,58 @@
-# Storyboard: 假如你是清明上河图 · look A 汴河暮影 (gate 2b, r1)
+# Storyboard: 假如你是清明上河图 · look A 汴河暮影 (gate 2b, r2)
 
 Art director, 2026-10-24. Inputs: script v2.1 + lines.json (owner-approved), music.md (owner BGM, 30-bar cut, film ≈ 3:04),
 notes_gate2a_r1/r2 (R7 mood follows the deal, R8 move list), notes_gate1_r2 carry-forward 1–4, facts.md (all rows incl. C27b),
 figure-rules.md, owner-notes (art-director rows), craft.md, pauses.md, ref_sheet_1–6 (rhythm only), style/lookA_*.png.
 
+**r2 (2026-10-24): the owner put the title card on drop 1, before the fate teaser.** Only the opening changed, frame 0 → S1
+(scenes 01–08), and it now runs on the screenwriter's v2.3 times (`lines_bars.json`). What changed:
+- **Order and numbers.** Hook (01) → **title (02)** → T1–T4 (03–06) → N1/N2 (07) → S1 (08). Scenes 02–07 are renumbered.
+  Scene 08 onward keeps its number, and everything from B1 (b13) on keeps its bars and content.
+- **The drop is measured, not read off the grid.** Nothing happens on bar 3's downbeat (8.24). The track breathes at 8.78, picks
+  up at 8.96 and hits at **9.05**. The title slams on 9.05 and holds to b4.5, which leaves 2.59 s to read it.
+- **Intro → title.** Frame 0 → pull-back → roll-up → carried off right is now one 9-second take that winds up into the drop.
+  - The lanterns die in pairs, the last pair on the breath, so 8.78–8.96 is the darkest frame. It is still moving.
+  - Then comes the film's first hard cut, glow-locked: the title band's right roller stands where your glow was, and the band
+    slams open leftward on the hit.
+- **Title → teaser.** The title leaves on the first teaser cut (b4.5), glow-locked: the band becomes your silk on the Yuan
+  table. So the **glow-lock point moves to (960, 580)**, the band's centre (it was 1250, 600). Every later "on the lock point"
+  follows it.
+- **N2 → S1.** A new move, "lanterns in the glass", replaces r1's "light returns" (06→07) and "band match" (07→08). Both
+  belonged to the old title slot.
+- **One picture change after S1** (producer's request, measured): the hardest drop's bass lands at **123.40**, 0.31 s before
+  b54. The peak's burst moves to 123.40, and 「才是你」 keeps its b54 line time. Scenes 27–28 and transition 27 are updated.
+- **Unchanged:**
+  - the engine layer, apart from the lock point;
+  - the 14 crest visits (01's OUT and 08's IN are updated, and the teaser visits are renumbered 04/05);
+  - scenes 09–37, apart from the burst;
+  - the stills list keeps its four shots and now starts with frame 0, the drop pair and the pull-back.
+
 **Length:** 0:00 → 184.30 s (the music ends at ≈ 184.2). **Scenes:** 37. **Grid:** film bar `b(j) = 1.4498 + 2.26415·j`;
-`b34.25` = bar 34, beat 2. Every hard cut sits on a bar or half-bar (owner row 49); continuous moves start anywhere and
-**land** on a bar, half-bar or beat. Anchors used exactly as music.md gives them: teaser cuts b3–b6, N2 picture beat b8,
-title b10, 冯保 b34, 1923 over the build b41–b42, 「下落不明」 on the stop b49, the storeroom on b50, 「才是你」 on b54,
-outro b74.
+`b34.25` = bar 34, beat 2. Every hard cut sits on a bar or half-bar (owner row 49). Continuous moves start anywhere and
+**land** on a bar, half-bar or beat.
+- **Two measured exceptions:** the title's slam on drop 1's hit (9.05) and the peak's burst on the hardest drop's bass (123.40).
+  Both drops land off the bar line (owner row 26: find drops by measuring the audio, not from a grid).
+- **Anchors** (`lines_bars.json` v2.3):
+  - **title on drop 1 (9.05)**;
+  - teaser cuts b4.5 / b6 / b7 / b8 (T4 on the b8 phrase change), N1 b9, N2 b10.5, S1 b11.5;
+  - 冯保 b34, 1923 over the build b41–b42, 「下落不明」 on the stop b49, the storeroom on b50;
+  - 「才是你」 on b54 (burst 123.40), outro b74.
 
 **Measured on `audio/bgm_cut.wav` (so the picture uses the real track, not only the map):**
 - The music starts at **0.55 s** (0–0.55 is silence). Frame 0 already moves; the first motion beat is on 0.55.
+- **Drop 1 is heard at 9.05, not on bar 3's downbeat (8.24),** where nothing happens.
+  - From **8.78** (bar 3, beat 2) the track breathes for half a beat: highs −13 dB, the mix −5 dB.
+  - There is a small pickup at **8.96**.
+  - The crash and sub-bass attack land at **9.04–9.05**, the off-beat eighth after beat 2. The bass is full by 9.10.
+  - The next attack, on b3.5 (9.37), is the loudest of the opening.
+  - `bgm_full.wav` gives the same times, and so does the screenwriter's measurement (script v2.3, "Drop 1, measured").
+- **b8:** the phrase change. The attacks drop about 3.5 dB (a lighter top end).
 - **b34–b40:** the breakdown alternates. Bars 34, 36, 38 and 40 have no bass; bars 35, 37 and 39 bring the bass back on beats 2–3.
 - **b49 (the stop):** one hit on the downbeat, then **true silence from 112.8 to 114.25 s**, then a pickup into b50.
-- **b53:** the bass returns on beat 4 (123.15). **b56–b57:** the loudest bars of the film (attacks +3 dB).
+- **b53 → b54:** the bass comes back on the off-beat after beat 4, at **123.40** (sub −42 → −17 dB within 30 ms).
+  - That is 0.31 s before the b54 downbeat, which is itself soft. There is only a small onset at 123.13.
+  - The burst goes on 123.40; 「才是你」 keeps its b54 line time.
+- **b56–b57:** the loudest bars of the film (attacks +3 dB).
 - **b64:** an accent (+3 dB attack). **b74:** the bass drops out to the end.
 
 ---
@@ -60,7 +98,7 @@ the vignette. **Type** (all on the render machines):
   stamp and counter corners, so the ivory subtitles keep **one polarity all film** (gate-2a ruling: never flip mid-line).
 
 **Motifs.** The glowing roll vs the dead-grey copy. The four-出-five-进 tally. The boat lowering its mast (in the painting
-and on the real river). Red seals. Ink appearing on paper. The glow locked to one screen point (the teaser, inverted at E6).
+and on the real river). Red seals. Ink appearing on paper. The glow locked to one screen point (the title and the teaser, inverted at E6).
 
 **Must NOT look like.**
 - iwanau: an altar with dynasty banners, mint jade, red-purple sunsets, their title card.
@@ -84,7 +122,7 @@ stacked line pair, a recurring handover set where only the era markers change).
 | Era chip + counter | Bottom-left: red vertical chip (北宋 · 金 · 元 · 明 · 清 · 民国 · 新中国; 伪满 is never a chip) + `你 约N 岁` (88 px numerals). The counter rolls like an odometer and never stops on 250. Hidden in the hook, teaser, present day, title, D1 and the end card. |
 | Tally | Right of the counter: `出 ○○○○  进 ○○○○○` (≥ 40 px), label `四出五进 —— 故宫博物院` (≥ 40 px). Marks fill red on their beats: 进 b15.0 · 出 b15.75 · 进 b24.0 · 出 b27.5 · 进 b33.5 · 出 b35.25 · 进 b37.25 · 出 b42.0 · 进 b57.5 (complete; all nine flash red b58.0). E4: the four 出 flash b65.5/66.0/66.5/67.0. |
 | Labels | Noto Serif CJK SC Bold 44 px, ivory with a thin dark halo + feathered scrim (pond rule), only in the mid band (y 560–820). They leave **before** any transition starts (owner row 86). |
-| Safe zones | Subtitle zone x 120–1120, y 100–340 is quiet in every composition: sky, wall, haze or vignette. Stamp zone x 1280–1870, y 36–300 is quiet. Counter zone x 120–1100, y 880–1040 is dark: deck, floor, table or vignette. Key visuals live in x 200–1700, y 300–880. **Glow-lock point: (1250, 600).** |
+| Safe zones | Subtitle zone x 120–1120, y 100–340 is quiet in every composition: sky, wall, haze or vignette. Stamp zone x 1280–1870, y 36–300 is quiet. Counter zone x 120–1100, y 880–1040 is dark: deck, floor, table or vignette. Key visuals live in x 200–1700, y 300–880. **Glow-lock point: (960, 580)**, the title band's centre (r2; it was 1250, 600). The title and the four teaser cuts share it, and T4 → N1, Y1 (b50.5) and E6 use it. |
 | End card | Juno end card from the engine: J monogram, gold title 假如你是清明上河图, the question, follow pill `关注 Juno · 一起看懂世界`, the sources line from script.md. |
 
 ## Build: how this is made (three.js 2.5D silhouette kit inside Remotion)
@@ -92,7 +130,7 @@ stacked line pair, a recurring handover set where only the era markers change).
 - **Stack.** Remotion 4 + @remotion/three (three r169).
   - Every set is one three.js stage. A **TransitionCompositor** renders the outgoing and incoming stages to targets and mixes
     them with the move's own mask or displacement: roller edge, ink-bleed noise, ripple, door panel, eaves iris, lens circle,
-    costume-sweep band.
+    costume-sweep band, and (r2) the glass pane, where the incoming stage first shows as a reflection.
   - Hard cuts are plain switches on the frame.
 - **2.5D silhouette kit.**
   - Alpha-silhouette planes (SVG → canvas textures at 2×) at 4–6 depths, with per-layer fog.
@@ -131,15 +169,15 @@ stacked line pair, a recurring handover set where only the era markers change).
 
 | Code | Set | Dressings / variants | Top-left stays quiet because… | Scenes |
 |---|---|---|---|---|
-| **CREST** | **The 虹桥 crest, the handover stage.** Woven timber arch, deck, railing with lanterns on the posts, the river and a boat that lowers its mast, the bank crowd, the far-bank palace slot (left), the dark road (right). | **Skies:** DUSK, DAY, NIGHT, FIRE, SNOW-NIGHT. **Far bank:** P-宋 宫城门楼; P-元 大都 skyline + White Dagoba; P-明 紫禁城 角楼; P-清 紫禁城; P-1923 紫禁城 under snow; P-1950/今 紫禁城 in daylight, gate open, **no plaque**. **Lanterns:** lit / out. **Weather:** snow, embers, smoke. **Cameras:** CR-A medium two-shot (gate-2a key: figures ≥ 45 % of frame height, open scroll ≥ 420 px); CR-B locked wide (arch spans the frame); CR-C lateral track at deck level; CR-D low from the water under the arch; CR-E high oblique 30°; CR-F tilt from river/sky; CR-G steep high 70° (snow). | sky | 01, 03, 04, 08, 10, 14, 16, 20, 22, 24, 25, 29, 33, 34 |
-| SILK | **The painting (you), full frame.** Sections: 汴河 boats + 虹桥; city gate + streets; the straw shed; the painting's last section with its bare corner; the colophon paper (张著's columns 翰林张择端…藏者宜宝之…燕山张著跋, 杨准's columns with a replay slot, 冯保's columns, other colophons as illegible stand-ins); seals as stand-ins (嘉庆 五玺 slots). | mono / colour / grey · relief · patch states | vignette | 01, 09, 11–13, 21, 23, 28, 30–31 |
-| ROOM-元 | Yuan palace mounting room (the gate-2a hook still): round moon window with the White Dagoba, hanging lamp, long table, hanging scrolls on the wall. | dusk / night | dark wall | 02, 15, 32 (换) |
+| **CREST** | **The 虹桥 crest, the handover stage.** Woven timber arch, deck, railing with lanterns on the posts, the river and a boat that lowers its mast, the bank crowd, the far-bank palace slot (left), the dark road (right). | **Skies:** DUSK, DAY, NIGHT, FIRE, SNOW-NIGHT. **Far bank:** P-宋 宫城门楼; P-元 大都 skyline + White Dagoba; P-明 紫禁城 角楼; P-清 紫禁城; P-1923 紫禁城 under snow; P-1950/今 紫禁城 in daylight, gate open, **no plaque**. **Lanterns:** lit / out. **Weather:** snow, embers, smoke. **Cameras:** CR-A medium two-shot (gate-2a key: figures ≥ 45 % of frame height, open scroll ≥ 420 px); CR-B locked wide (arch spans the frame); CR-C lateral track at deck level; CR-D low from the water under the arch; CR-E high oblique 30°; CR-F tilt from river/sky; CR-G steep high 70° (snow). | sky | 01, 02 (defocused, behind the title), 04, 05, 08, 10, 14, 16, 20, 22, 24, 25, 29, 33, 34 |
+| SILK | **The painting (you), full frame.** Sections: 汴河 boats + 虹桥; city gate + streets; the straw shed; the painting's last section with its bare corner; the colophon paper (张著's columns 翰林张择端…藏者宜宝之…燕山张著跋, 杨准's columns with a replay slot, 冯保's columns, other colophons as illegible stand-ins); seals as stand-ins (嘉庆 五玺 slots). | mono / colour / grey · relief · patch states | vignette | 01, 02 (the title band), 09, 11–13, 21, 23, 28, 30–31 |
+| ROOM-元 | Yuan palace mounting room (the gate-2a hook still): round moon window with the White Dagoba, hanging lamp, long table, hanging scrolls on the wall. | dusk / night | dark wall | 03, 15, 32 (换) |
 | DESK | **One writing-desk set, four dressings.** 北宋 painter's studio (B1). 金 张著's desk (Z2, Z5). 元 杨准's southern study (rectangular lattice window, banana leaves, bamboo). 清宫 night room with the ledger (P3). | window shape, lamp, props, costume | wall / window shade | 09, 12–13, 17, 25 |
 | MING-LANE | Ming house at night from the back lane: front gate (left) with torchlight behind the roofs, back gate (right), the friend's door. | — | night sky | 18, 32 (藏) |
 | MING-HALL | Doorway enfilade (moon gate, vase gate, hall door) → 严府 hall with treasures in silhouette, a table, the lacquer box; the hall doors for the 封条. | — | dark ceiling | 19 |
 | XBL | 伪满 小白楼 (图书楼): small two-storey building in a courtyard with one tree (seasons). Inside: shelves of closed slatted wooden boxes, double doors, floor. | seasons · 1945 night | sky / dark interior | 26 |
-| STORE | 沈阳 临时库房: heaps of rolled scrolls, shelves, a long table, a small 1950s desk lamp. | lamp off / on | dark ceiling | 05, 27, 28 |
-| WUMEN | 午门: exterior with the 马道 ramp (queue / empty), the gate passage, the exhibition hall with the glass case and the plinth card, the storage aisle with boxes. | 2025 night · today day · empty | night sky / dark hall ceiling | 06, 34–37 |
+| STORE | 沈阳 临时库房: heaps of rolled scrolls, shelves, a long table, a small 1950s desk lamp. | lamp off / on | dark ceiling | 06, 27, 28 |
+| WUMEN | 午门: exterior with the 马道 ramp (queue / empty), the gate passage, the exhibition hall with the glass case and the plinth card, the storage aisle with boxes. | 2025 night · today day · empty | night sky / dark hall ceiling | 07, 34–37 |
 | RESTO | 1973 restoration room: long table, overhead fluorescent tubes, magnifier lamp on an arm. | — | cool wall | 30, 31 |
 | WALL | The wall of copies: a long dark gallery of shelves with ~100 grey copies lying half-open (each a grey 虹桥), one glowing. | — | dark | 32 (抄) |
 
@@ -172,19 +210,19 @@ the build (owner row 121).
 
 ---
 
-## Proposed line ↔ bar map (for the screenwriter, who is retiming in parallel)
+## Line ↔ bar map (r2: the same times as the screenwriter's `lines_bars.json` v2.3)
 
 The scene windows below are binding. Line starts *inside* a continuous scene can move by a beat. Times are film seconds.
 
 | Lines | Start bar → s | | Lines | Start bar → s | | Lines | Start bar → s |
 |---|---|---|---|---|---|---|---|
 | H1 | 0 → 0.00 | | W1 | b25 → 58.05 | | P3 | b44.25 → 101.64 |
-| H2 | b1 → 3.71 | | W2 | b26.5 → 61.45 | | V1 | b45.75 → 105.03 |
-| T1–T4 | b3/4/5/6 → 8.24/10.51/12.77/15.03 | | W3 | b28 → 64.85 | | V2 | b47.25 → 108.43 |
-| N1 | b7 → 17.30 | | M1 | b29.5 → 68.24 | | V3 | b48.5 → 111.26 (下落不明 complete by the b49 hit, 112.39) |
-| N2 | b8 or b8.5 → 19.56 / 20.70 | | M2 | b31 → 71.64 | | Y1 | b50 → 114.66 |
-| Title | b10 → 24.09 | | M3 | b32.5 → 75.03 | | Y2 | b51.5 → 118.05 |
-| S1 | b11 → 26.36 | | F1 | **b34 → 78.43** | | Y3 | b53 (or b52.5) → 121.45 |
+| H2 | b1 → 3.71 (H1 and H2 clear on b2.5, 7.11) | | W2 | b26.5 → 61.45 | | V1 | b45.75 → 105.03 |
+| **Title** | **drop 1's hit 9.05** (cut on the 8.96 pickup) → b4.5 | | W3 | b28 → 64.85 | | V2 | b47.25 → 108.43 |
+| T1–T4 | b4.5/6/7/8 → 11.64/15.03/17.30/19.56 | | M1 | b29.5 → 68.24 | | V3 | b48.5 → 111.26 (下落不明 complete by the b49 hit, 112.39) |
+| N1 | b9 → 21.83 | | M2 | b31 → 71.64 | | Y1 | b50 → 114.66 |
+| N2 | b10.5 → 25.22 | | M3 | b32.5 → 75.03 | | Y2 | b51.5 → 118.05 |
+| S1 | b11.5 → 27.49 (v2.2: b11.25) | | F1 | **b34 → 78.43** | | Y3 | b53 (or b52.5) → 121.45 |
 | B1 | b13 → 30.88 | | F2 | b35.5 → 81.83 | | **Y4** | **b54 → 123.71** |
 | BO | b14.5 → 34.28 | | Q1 | b37 → 85.22 | | R1 | b57 → 130.51 |
 | Z1 | b16 → 37.68 | | Q2 | b38.5 → 88.62 | | D1 | b58.5 → 133.90 |
@@ -199,8 +237,12 @@ The scene windows below are binding. Line starts *inside* a continuous scene can
 | | | | | | | Q + end card | b76 → 173.53 … 184.30 |
 
 **Floors the bars squeeze** (screenwriter's call; the picture supports the fixes noted):
-- **N1:** b7–b8 gives 2.26 s against its 3.5 s floor. The picture allows N2 to start at **b8.5**, which gives N1 3.40 s and
-  N2 3.40 s with the title on b10.
+- **Title:** from the hit (9.05) to the T1 cut (b4.5) it reads for 2.59 s, against 2.39 s for 9 字. A cut on b4 (10.51)
+  would leave 1.46 s, so b4.5 is the earliest hand-over.
+- **Teaser, N1, N2:** at their pace.py minimums they fill b4.5 → b11.5 exactly (T1 6 beats, T2–T4 4 each, N1 6, N2 4).
+  - So S1 starts one beat later than in v2.2 (27.49) and still ends on b13.
+  - N1 (3.40 s) and N2 (2.26 s) stay below their floors (3.5 and 2.64), as in v2.2. N2 gets the b11 → b11.5 picture pause
+    after it.
 - **Y3:** b53–b54 gives 2.26 s against 3.1 s. The picture beat (the 真迹 rolls going grey) is fixed on b53, and the line can
   start at b52.5.
 - **F2 and D1:** 3.40 s each, 0.1 s under their floors.
@@ -216,14 +258,14 @@ Notation:
 
 | # | Bars · time | Shot & camera (medium) | Key visual | Text (lines · stamp · chip/counter) | Motion beats on the music | Transition OUT (motivated by…) | Sound |
 |---|---|---|---|---|---|---|---|
-| 01 | 0 → b3 · 0.00–8.24 | SILK full frame, already tracking right→left (as a handscroll is read) on frame 0. b0.5–b1: pull back **out of the silk** onto CREST CR-A, dusk. b2.5: pan right with the walkers. three.js (the silk is a plane in the CREST stage). | **Frame 0:** the glowing 虹桥 section: the boat under the arch lowering its mast, the crowd on the bridge, the river. **Then** the same painting held open on the real 虹桥 at dusk by two era-neutral silhouettes [TOUCH: each figure's hands on a roller]. The painted bridge rhymes with the real one. | H1 on frame 0 with its first glyphs already typed. H2 at b1. Stamp 「— 《清明上河图》」 (line 1). No chip/counter. | **f0:** camera and mast already moving. **0.55 (first note):** the mast drop speeds up and the tiny figures on the bridge raise their arms. **b0.5:** the track eases to a half-beat hold (wind-up). **b1:** pull-back lands. **b1.5:** the real boat below lowers its mast. **b2:** they roll you up [TOUCH: both hands on the roller ends]. **b2.5:** they turn and walk off right (出). **b2.75–b3:** the lanterns go dark behind them, two per beat. | **Hard cut on drop 1 (b3)**, your glow locked at (1250, 600). The drop and the format's four hard cuts motivate it. | Intro, no bass |
-| 02 | b3 → b4 · 8.24–10.51 | ROOM-元, night, the hook-still composition, 3 % push. | Your glowing silk lies on the lock point. The bowed craftsman lays the grey copy at left [TOUCH: hand on the copy's roller]. | T1 (whole on the cut). Stamp 「— 元 · 1351年前」. | **b3:** stamp slams. **b3.5:** he slides the copy right into your place and draws you off right [TOUCH: other hand on your roller]. **At b4** the **grey copy lies exactly on the lock point** where you were. | Hard cut (b4). T2 opens with your glow back on the lock point. | Drop 1: sub-bass in |
-| 03 | b4 → b5 · 10.51–12.77 | CREST CR-C lateral track, NIGHT, lanterns out, P-明 角楼. | The eunuch walks right with your roll under his arm [TOUCH: roll clamped under the upper arm, forearm under its end]. His sleeve is lit. | T2. Stamp 「— 1578 · 紫禁城」. | **b4:** stamp. He takes one step per beat, and the camera tracks so the glow stays on the lock point. | Hard cut (b5), glow-locked. | |
-| 04 | b5 → b6 · 12.77–15.03 | CREST CR-B wide, SNOW-NIGHT, P-1923. Slow pan holds the bundle on the lock point. | A young man in a long gown and 瓜皮帽 (back three-quarter, no face, not 溥仪) crosses right hugging a cloth bundle. Glow leaks through the cloth [TOUCH: both arms round the bundle]. Snow on the railing. | T3. Stamp 「— 1923 · 紫禁城」. | **b5:** stamp. Snow falls; steps on beats. | Hard cut (b6). The glow stops moving. | |
-| 05 | b6 → b7 · 15.03–17.30 | STORE, lamp off. Very slow push. | Heaps of rolled scrolls as black shapes, one faint glow buried on the lock point. | T4. Stamp 「— 约1950 · 沈阳」. | **b6:** stamp. Then a picture pause: only the push and dust. | **Light + shape match (b7):** the buried glow becomes the case light at the top of the 午门 ramp; the heap's shapes become the queue's heads. | |
-| 06 | b7 → b10 · 17.30–24.09 | WUMEN night. **b7:** crane up the ramp. **b8:** through the gate passage into the hall. **b9:** slow push on the case. | The queue snakes up the 马道 toward one warm point: you in a glass case. Inside, the crowd shuffles past, profiles lit only by you. **Then your glow goes out:** the empty case, dim, with a card on the plinth 「撤展回库」「下次展出：未公布」. | N1. N2 **centred** (？ pull-back). Stamps 「— 2025 · 故宫午门 / 故宫百年 · 展了一个月」 → (at the glow-out) 「— 2025年10月30日 / 撤展回库」. No counter. | **b7.0–b8:** the queue steps forward on beats (time-lapse). **b8 (phrase change):** into the hall. **b8.5:** the crowd thins. **b8.75:** the glow goes out. **b9:** the card is there. **b9–b10:** nothing new (pause before the title). | **Light returns (b10):** in the dark of the empty case, the title's silk unrolls. | Phrase change b8 |
-| 07 | b10 → b11 · 24.09–26.36 | TITLE (three.js silk band + HUD). | A glowing silk band (1500 × 330) unrolls right→left across the centre. In ink `#2A1F17`: 「假如你是」 (64 px, tracking 0.35 em) over 「清明上河图」 (170 px Black). Built from the film's own silk, not a dropped-in serif. Surround luma ≥ 25. | Title only; no stamp, no counter. Ink centred by pixel measure. | **b10:** the roller slams to its stop in 5 frames, overshoots 12 px, damped jolt (no flash). **b10.5:** a glint runs along the band. **b10.75:** the ink sinks into the silk (the title leaves before the move). | **Band match (b11):** the band's sheen becomes the river's sheen at dusk; tilt up to the crest. | |
-| 08 | b11 → b13 · 26.36–30.88 | CREST CR-F: tilt up from the river to the empty crest, 宋 DUSK, P-宋 gate far-left. | The empty stage: lanterns, the boat lowering its mast, the bank crowd. The direction rule is shown once: dark spreads **right** along the deck into the road; warm light runs **left** toward the palace. | S1. No stamp. The tally draws itself (hollow). Counter not yet. | **b11.0–b12.0:** lanterns light right→left, two per beat. **b12.0:** the 出 row draws as the shadow runs right. **b12.5:** the 进 row draws as the light runs left. | **Ink-trace morph (b13):** the real crest is traced into ink lines sweeping right→left, and dusk drains into silk: the stage becomes the painting. | |
+| 01 | 0 → drop 1 · 0.00–8.96 (the cut; the title's contact is 9.05) | **One continuous take, the film's longest.** SILK full frame, already tracking right→left (as a handscroll is read) on frame 0. **b0.75 → b1:** pull back **out of the silk** onto CREST CR-A, dusk. **From b2.5:** a lateral track right at a third of the walkers' speed, speeding up into the drop. three.js (the silk is a plane in the CREST stage). | **Frame 0:** the glowing 虹桥 section fills the frame: the boat under the arch with its crew lowering the mast, the bridge crowd leaning over the railing, the river. It must read as a painting on silk (vignette, weave, ink linework), not as scenery. **Then** the same painting is held open on the real 虹桥 at dusk by two era-neutral silhouettes [TOUCH: each figure's hands on a roller]. The painted bridge rhymes with the real one. Small bank figures at both ends of the bridge stand in profile, turned to your light (人人都想留住你). **Then** you are rolled up and carried off right while the crest goes dark behind you. | H1 on frame 0 with its first glyphs already typed. H2 at b1. **Both clear on b2.5**, so the wind-up and the drop carry no subtitle. Stamp 「— 《清明上河图》」 (line 1), legible from frame 0, cleared on b2.5. No chip/counter. | **f0:** camera and mast already moving. **0.57 (first note):** the mast drop speeds up and the painted figures at the railing raise their arms. **b0 (1.45):** 留住 turns red; a sheen crosses the silk. **b0.5:** the track eases into a half-beat hold (wind-up). **b0.75 → b1:** the pull-back, slow → fast, settling on b1. **b1.5:** the real boat below lowers its mast (rhymes with frame 0). **b2:** they roll you up [TOUCH: both hands on the roller ends]. The light on the crest shrinks with the silk, and the rims on the bank figures go out from the ends inward. **b2.5:** they turn and walk off right (出), one step per beat. The front figure carries the roll under his arm [TOUCH: roll clamped under the upper arm, forearm under its end]. The bank figures' heads follow you, and the camera starts its track. **b2.75 · b3.0 · 8.78:** the six lanterns die in pairs, from the palace side toward you; the last pair goes on the track's breath. **8.78 → 8.96:** the darkest frame of the opening, still moving (owner row 91). Your glow, its rim on the carrier's sleeve and the last dusk in the sky remain (mean luma ≥ 45). The walkers step on and the track keeps going. Your glow has drifted to frame right (x ≈ 1710, y ≈ 580), and it trembles and swells 3 % (pauses.md wind-up). | **Glow-locked hard cut on the pickup (8.96)**, the film's first cut. The title band's right roller stands exactly where your glow was, and the band's slam lands on the hit (9.05). Motivated by drop 1 and the glow: the eye never leaves you. | Intro, no bass → the breath 8.78 → pickup 8.96 |
+| 02 | drop 1 → b4.5 · 8.96–11.64 (contact 9.05) | TITLE: three.js silk band + HUD, over the crest at night, out of focus. | **You, opened.** A glowing silk band 1500 × 330, centred on the lock point (960, 580), with the blue mount ends and ivory roller knobs of the stills. In ink `#2A1F17`: 「假如你是」 (64 px, tracking 0.35 em) over 「清明上河图」 (170 px, Noto Serif CJK SC Black). It is built from the film's own silk (owner row 90) and sized like a plaque (owner row 38). Behind it is the crest you just left, dark and soft: dead lanterns, the far-bank skyline low, sky `#16222B → #22323C`. Luma ≥ 25 outside the band's own warm halo. | Title only: no subtitle, stamp or counter (the corner mark stays). The ink is centred by pixel measure. | **8.96 (cut):** the right roller stands at x 1710 and the left roller flies left. **9.05 (the hit: crash + sub-bass):** it slams to its stop at x 210 after 3 frames of flight and overshoots 12 px. A damped jolt follows, with its second bounce on **b3.5 (9.37, the opening's loudest attack)**, while the band scales 1.04 → 1.0. **No flash:** the lit area grows with the opening and peaks at the silk's own value. The bloom threshold stays above the silk's base, so the ink is crisp. **b4.0 (10.51):** a glint runs along the band left → right, the reading direction. **b4.0 → b4.5:** hold. The title is readable for 2.59 s from the hit. | **Glow-locked hard cut (b4.5)** into T1: the band becomes your silk lying open on the Yuan table, centred on the same point. The title says who you are, and the cut shows the first thing done to you. There is no exit move: the cut is the exit. | **Drop 1: the hit at 9.05**, sub-bass full by 9.10 |
+| 03 | b4.5 → b6 · 11.64–15.03 | ROOM-元, night: the hook-still set, recomposed so your silk lies centred on the lock point. 3 % push. | Your glowing silk lies open on the table, its 虹桥 legible. The bowed craftsman (cloth cap) stands behind it at left, one hand on the grey copy's roller [TOUCH]. Behind, at right: the round window with the White Dagoba, and the hanging lamp. | T1 (whole on the cut). Stamp 「— 元 · 1351年前」. | **b4.5:** the stamp slams. **b4.75:** he slides the grey copy right into your place [TOUCH: hand on the copy's roller] and draws you off with the other hand [TOUCH: hand on your roller]. **b5.0:** the grey copy lies exactly on the lock point where you were. **b5.5:** he gathers you up [TOUCH: both hands on your roll] and steps out of frame right. His rim fades as your glow goes. **b5.75 → b6:** only grey is left under the lamp. | Hard cut (b6). T2 opens with your glow back on the lock point. | Sub-bass on the off-beats |
+| 04 | b6 → b7 · 15.03–17.30 | CREST CR-C lateral track, NIGHT, lanterns out, P-明 角楼. | The eunuch walks right with your roll under his arm [TOUCH: roll clamped under the upper arm, forearm under its end]. His sleeve is lit. | T2. Stamp 「— 1578 · 紫禁城」. | **b6:** the stamp slams. He takes one step per beat, and the camera tracks so the glow stays on the lock point. | Hard cut (b7), glow-locked. | |
+| 05 | b7 → b8 · 17.30–19.56 | CREST CR-B wide, SNOW-NIGHT, P-1923. A slow pan holds the bundle on the lock point. | A young man in a long gown and 瓜皮帽 (back three-quarter, no face, not 溥仪) crosses right hugging a cloth bundle. Glow leaks through the cloth [TOUCH: both arms round the bundle]. Snow lies on the railing. | T3. Stamp 「— 1923 · 紫禁城」. | **b7:** the stamp slams. Snow falls; he steps on the beats. | Hard cut (b8). The glow stops moving. | |
+| 06 | b8 → b9 · 19.56–21.83 | STORE, lamp off. Very slow push. | Heaps of rolled scrolls as black shapes, with one faint glow buried on the lock point. | T4. Stamp 「— 约1950 · 沈阳」. | **b8:** the stamp slams. Then a picture pause on the lighter music: only the push and the dust. | **Light + shape match (b9):** the buried glow becomes the case light at the top of the 午门 ramp, and the heap's shapes become the queue's heads. | **Phrase change b8** (lighter top end) |
+| 07 | b9 → b11.5 · 21.83–27.49 | WUMEN night. **b9:** crane up the ramp. **b10:** through the gate passage into the hall. **b10.5:** slow push on the case. | The queue snakes up the 马道 toward one warm point: you, in a glass case on the lock point. Inside, the crowd shuffles past, their profiles lit only by you. **Then your glow goes out:** the empty case, dim, its front pane dark. A card stands on the plinth: 「撤展回库」「下次展出：未公布」 (set-up for E8; it needn't be read here). | N1 (b9). N2 **centred** (？ pull-back) at b10.5. Stamps 「— 2025 · 故宫午门 / 故宫百年 · 展了一个月」 → b10.75 「— 2025年10月30日 / 撤展回库」. No counter. | **b9–b9.75:** the queue steps forward on the beats (time-lapse). **b10:** into the hall; the crowd files past in seconds. **b10.5:** N2 asks; the crowd thins. **b10.75:** your glow goes out, and the last visitor leaves the frame. **b11:** the card is there. **b11 → b11.5:** nothing new appears (picture pause). The push and the dust keep moving; luma ≥ 30. | **Lanterns in the glass (b11.5 → b11.75):** on b11.5, warm points light right → left in the case's dark front pane (the crest's lanterns), with a dusk sky behind them. The camera pushes through the pane (one thin highlight line crosses the frame) and arrives on the crest. Motivated by N2's question: the glass you lay behind shows where your life was played. | |
+| 08 | b11.5 → b13 · 27.49–30.88 | CREST CR-B wide, 宋 DUSK, P-宋 gate far-left. The push through the glass eases into the locked wide by b11.75. | The empty stage: lanterns, the boat, the bank crowd. The direction rule is shown once: dark spreads **right** along the deck into the road; warm light runs **left** toward the palace. | S1 (types on b11.5, over the pane). No stamp. The tally draws itself (hollow). Counter not yet. | **b11.5 → b12.0:** the lanterns light right → left, two per beat (begun in the pane). **b12.0:** the 出 row draws as a shadow runs right along the deck. **b12.5:** the 进 row draws as the light runs left. | **Ink-trace morph (b13):** the real crest is traced into ink lines sweeping right→left, and dusk drains into silk: the stage becomes the painting. | |
 | 09 | b13 → b14.5 · 30.88–34.28 | SILK: track right→left over the city painting itself in. **b14:** pull back to DESK (北宋 studio). | 汴京 draws itself stroke by stroke. Then the painter (whole figure, from behind, soft 幞头) at a long table, lit only by the silk. | B1. Stamp 「— 北宋末年 · 汴京 / 画成，未署名」. Chip 北宋 · 你 0 岁 (appears b13). Labels 「5米多长」 (b13.5) and 「几百个人」 (b14.0) in the mid band, gone by b14.25. | Strokes land on beats. **b14.25:** he rolls you up [TOUCH: both hands on the roller] and holds the roll out to his left, where a court official in 展脚幞头 takes it [TOUCH: both on the roll]. | **Match on action (b14.5):** the roll moving left in his hands continues as the roll carried left across the crest. | |
 | 10 | b14.5 → b16 · 34.28–37.68 | CREST CR-B wide, 宋 DUSK → FIRE. | Two court figures carry you left toward the 宋 gate [TOUCH: each holds one end of the roll]. Then fire-glow, smoke and the palace darkened. Your glow comes back out of the gate among refugee carts streaming right, half hidden behind a cart. **No figure is seen taking you** (C5). | BO. Stamp 「— 北宋 · 宫廷 / 首次入宫（故宫博物院）」 → b15.5 「— 1127 · 汴京 / 靖康之变，流入金国」. Chip 北宋 0 → b15.5 金 · 你 约27岁. | **b15 (lift):** 进 ①. **b15.25–15.5:** the sky turns to FIRE. **b15.75:** 出 ①. | **Push into the drifting glow (b15.75 → b16):** the camera dives into your light and it resolves into your silk (insert entry 1). | Lift b15 → full section b16 |
 | 11 | b16 → b17.25 · 37.68–40.51 | SILK insert: the painting's last section. | The camera searches the corners: lower-left (b16.25), upper-left (b16.75). Bare silk, no signature. | Z1. Stamp 〃. Counter rolls 约27 → 约86, landing at b17.25. | A soft pool of light moves with the camera. | **Slide past the join (b17.25 → b18):** the camera slides left across the seam onto blank paper, and the columns write themselves. | |
@@ -242,8 +284,8 @@ Notation:
 | 24 | b41 → b42.5 · 94.28–97.67 | CREST CR-B wide → T3's framing, SNOW-NIGHT, P-1923. | From the palace side, the young man in a long gown crosses right hugging the glowing bundle [TOUCH: both arms round the bundle] (pays off T3). 溥仪 is not drawn. | P1. Stamp 「— 1923 · 紫禁城 / 以赏弟弟溥杰为名（清宫档案）」 (line 2 shortened, gate-1 carry-forward 3). Chip 民国 · 你 约823岁. | **b41 (full bass back):** snow begins. **b42.0 (build):** 出 ④. | **Snow-gust wipe (b42.5):** a gust of big flakes crosses close to the lens; behind it the camera is high above the crest. | **Full bass b41, build b42** |
 | 25 | b42.5 → b45.75 · 97.67–105.03 | CREST CR-G steep high angle in snow → SILK-paper ledger → DESK (清宫 night room). | Four gowned figures cross left→right one per beat, each with a bundle [TOUCH: arms round the bundles]. The **2nd** glows (you, the 1923-01-04 entry, C24); the others are grey. Each leaves a trail of footprints. Then the four trails straighten into the ledger's four columns. The two 「张择端清明上河图一卷」 entries light up (warm, legible; the other two columns stay unlit). Pull back: the ledger on a desk, and beside it two rolls, one glowing and one grey. | P2 (line 1) · P3 (line 2) at b44.25. Stamp 〃 / 「25天内 · 4卷（清宫档案）」. No dates on the ledger (no 1922). | **b42.5, 42.75, 43.0, 43.25:** the four crossings. **b43.25–44.25: one bar where nothing new appears** (snow on four trails, so the "four?" lands). **b44.25:** snow becomes paper. **b44.5 / b44.75:** the entries light. **b45.0:** pull back. **b45.5:** a standing figure lays your roll in a slatted box and closes the lid [TOUCH: hands on the roll, then the lid]. | **Into the slats (b45.5 → b45.75):** the camera goes close on the slats, with glow leaking through. The cut to another room is hidden in the close-up, and the camera pulls back out of a different place. | |
 | 26 | b45.75 → b50 · 105.03–114.66 | XBL. Pull back from the slats: shelf → room → window → the building. Then night. Then a push through the open doors and a slow drift. | The box on a shelf among closed boxes. The small two-storey 图书楼 in its courtyard, its tree cycling seasons. **1945 (C27b):** headlights sweep across and away. The doors stand open; whole faceless guards carry armfuls of scrolls into the dark [TOUCH: arms round bundles of rolls]; a few scrolls lie on the floor. The camera searches the shelves: where your box was is lost in shadow behind a passing figure. **No glow anywhere** (C28). No prying tools, no tearing, no glow in any arms. | V1 → V2 (line 1) → V3 (line 2). Stamps 「— 伪满时期 · 长春 / 存于伪满皇宫图书楼」 → b47.25 「— 1945年8月 / 伪满覆灭，下落不明」. Chip 民国 · 830多 → 约845. | **b46.5–47.25:** one season per beat. **b47.25–47.75:** two cars' beams cross and leave right. **b48.0:** doors open; figures carry. **b48.5:** the search pan. **b49 (the hit):** the last figure leaves. **112.8–114.25 (true silence):** the camera keeps drifting slowly toward a dark heap on the floor (moonlight from the door, dust; luma ≥ 30). The counter rolls 约845 → 约850. Nothing new appears, and the motion never freezes (owner row 91). | **Lamp-reveal (b50):** a desk lamp clicks on and the dark heap is revealed as a different place: the 沈阳 storeroom. | **Stop b49: the film's one silence** |
-| 27 | b50 → b54 · 114.66–123.71 | STORE, lamp on (pays off T4). Medium on the table, slow push. | The researcher (whole figure, seated, cadre jacket) with his hand on the lamp [TOUCH: hand on the lamp switch]. A faint glow deep in the heap, on the lock point (b50.5). Three rolls opened a hand's width each, each showing a 虹桥 and overlapped so they aren't counted [TOUCH: hands on the rollers]. Two carry 「真迹」 slips. The battered roll with torn edges lies apart in the reject pile. | Y1 (line 1) · Y2 (line 2) · Y3 (line 1). Stamp 「— 约1950 · 沈阳 / 东北博物馆 · 杨仁恺」. Chip 新中国 · 你 约850岁. | **b51.0:** he lifts rolls onto the table [TOUCH]. **b51.5 / 51.75 / 52.0:** one roll opens per beat. **b53.0 / b53.25 (pickup):** the two 真迹 rolls turn grey. **b53.5–53.75: picture pause.** The camera settles on the battered roll; his hand rests on it [TOUCH] and it trembles (wind-up). | **Burst + dive (b54):** insert entry 3, the film's biggest. | Re-entry, no bass → pickup b53 |
-| 28 | **b54 → b57 · 123.71–130.51 · THE PEAK** | STORE → SILK in FULL COLOUR → SILK in relief. Dive, low track, then a crane up and back. | **b54:** he unrolls the battered roll across the table, fast then slow [TOUCH: left hand on the roller, right hand flat on the silk's edge]. Its glow bursts out (gold bloom over 3 frames, peak ≤ 85 % luminance, never white). Every heap and shelf takes a warm rim, and dust motes rise like lanterns. Inside the 虹桥, colour floods out from the centre: the **first full-colour frame of the film**. The painted crowd comes alive: the crew lowering the mast, people at the railing pointing and shouting, a cart crossing. **b56:** the painted quarter lifts off the silk in 5 relief layers (river, boats, bridge, roofs, trees), the whole cast revealed at once (owner row 88). | Y4 (line 2) typed at b54, red 才是你, held. Stamp 〃. Chip 新中国 · 约850. | **b54.0:** the unroll, a 3-frame shake, the burst. **b54.0–54.5:** the dive. **b54.5:** colour floods in. **b55.0:** low across the crowd. **b56.0 (loudest):** crane up into the relief reveal. **b56.75:** start to descend toward the crowd. | **Painted crowd → real crowd (b57):** the painted figures grow into the real silhouettes on the crest in daylight. | **Hardest drop b54; loudest b56–57** |
+| 27 | b50 → 123.40 · 114.66–123.40 | STORE, lamp on (pays off T4). Medium on the table, slow push. | The researcher (whole figure, seated, cadre jacket) with his hand on the lamp [TOUCH: hand on the lamp switch]. A faint glow deep in the heap, on the lock point (b50.5). Three rolls opened a hand's width each, each showing a 虹桥 and overlapped so they aren't counted [TOUCH: hands on the rollers]. Two carry 「真迹」 slips. The battered roll with torn edges lies apart in the reject pile. | Y1 (line 1) · Y2 (line 2) · Y3 (line 1). Stamp 「— 约1950 · 沈阳 / 东北博物馆 · 杨仁恺」. Chip 新中国 · 你 约850岁. | **b51.0:** he lifts rolls onto the table [TOUCH]. **b51.5 / 51.75 / 52.0:** one roll opens per beat. **b53.0 / b53.25 (pickup):** the two 真迹 rolls turn grey. **b53.5 → 123.40: picture pause.** The camera settles on the battered roll; his hand rests on it [TOUCH] and it trembles (wind-up), harder on the small onset at 123.13. | **Burst + dive (123.40, the hardest drop's bass; 「才是你」 types on b54, 123.71):** insert entry 3, the film's biggest. | Re-entry, no bass → pickup b53 |
+| 28 | **123.40 → b57 · 123.40–130.51 · THE PEAK** | STORE → SILK in FULL COLOUR → SILK in relief. Dive, low track, then a crane up and back. | **123.40:** he unrolls the battered roll across the table, fast then slow [TOUCH: left hand on the roller, right hand flat on the silk's edge]. Its glow bursts out (gold bloom over 3 frames, peak ≤ 85 % luminance, never white). Every heap and shelf takes a warm rim, and dust motes rise like lanterns. Inside the 虹桥, colour floods out from the centre: the **first full-colour frame of the film**. The painted crowd comes alive: the crew lowering the mast, people at the railing pointing and shouting, a cart crossing. **b56:** the painted quarter lifts off the silk in 5 relief layers (river, boats, bridge, roofs, trees), the whole cast revealed at once (owner row 88). | Y4 (line 2) typed at b54, red 才是你, held. Stamp 〃. Chip 新中国 · 约850. | **123.40 (the bass):** the unroll, a 3-frame shake, the burst. **b54.0 (Y4 types):** the dive is under way; **b54.0–54.5:** the dive. **b54.5:** colour floods in. **b55.0:** low across the crowd. **b56.0 (loudest):** crane up into the relief reveal. **b56.75:** start to descend toward the crowd. | **Painted crowd → real crowd (b57):** the painted figures grow into the real silhouettes on the crest in daylight. | **Hardest drop: bass at 123.40 (b54 grid 123.71); loudest b56–57** |
 | 29 | b57 → b58.5 · 130.51–133.90 | CREST CR-B wide, DAY (1950s), visitors on the far bank, P-1950 紫禁城 with its gate open and **no plaque**. | Two staff in cadre jackets carry your roll left [TOUCH: each holds an end]. | R1. Stamp 「— 1950年代 · 北京 / 回到故宫博物院」. Chip 新中国 · 你 850多岁. | **b57.5:** 进 ⑤. **b58.0:** all nine marks flash red and the 「四出五进」 label pulses. | **Through the gate passage (b58.25 → b58.5):** the camera follows you into the far-bank gate's dark passage and emerges through the **painted** city gate into the painting (insert entry 4). | |
 | 30 | b58.5 → b61.5 · 133.90–140.70 | SILK (painted street, mono again). **b60:** pull out through a magnifier lens to RESTO. **b60.5:** push back into the lens. | The straw shed: two thin posts rise from a torn spot. A dashed donkey-ear outline draws itself over them, then a donkey paints itself in below on a patch a shade greyer than the silk. **No figure is drawn.** Then 1973: fluorescent tubes; one restorer seated and bent over the lens [TOUCH: tweezers at the patch's edge; other hand flat on the silk], one standing and holding the scroll flat [TOUCH: hands on the margin]. In the lens the patch lifts away and the posts stand over blank silk (C33). | D1 (line 1) · D2 (line 2). Stamp 「— 明代 / 裱画师误补（故宫装裱记录）」, chip 明, counter hidden → b60 「— 1973 · 故宫 / 重新装裱（故宫装裱记录）」, chip 新中国 · 你 约873岁. | **b59.0:** the posts. **b59.25:** the outline. **b59.5:** the donkey. **b60.0:** the lens contracts. **b60.5–61.0:** the peel. | **Crane up and drop (b61.5):** the restorer swings the magnifier aside, the camera rises over the whole scroll, then drops onto 张著's words. | |
 | 31 | b61.5 → b63 · 140.70–144.09 | RESTO, from above the long table → SILK (colophon). | **The whole of you laid out at once:** the painting, the tail, the colophon paper and the red seals dotting the joins (older ones faded). Then 藏者宜宝之 glowing. | E1 (line 1 stays). Stamp 「— 1186 · 张著题跋 / 你身上：96方印 · 14段题跋」. Chip 新中国 · 你 900多岁. | **b61.5:** the magnifier swings aside [TOUCH: hand on the lamp arm]. **b62.25:** the camera drops. **b62.5:** 藏者宜宝之 glows. | **Whip-pan montage (b63).** | |
@@ -251,16 +293,16 @@ Notation:
 | 33 | b65.5 → b67.5 · 149.75–154.28 | CREST CR-B locked: the handover set as a flip-book. | Every 2 beats the era swaps (sky, hats, far-bank palace) and your glow is carried off right again. **宋** FIRE with carts · **元** NIGHT with the 权贵 · **明** NIGHT with the eunuch · **清/1923** SNOW with the bundle. | E4. Stamp 「— 宋 · 元 · 明 · 清 / 四次出宫（故宫博物院）」. **Proposal:** the chip flips 北宋 → 元 → 明 → 清 with the eras and the counter hides for these 2 bars (the script has 〃; producer and screenwriter to confirm). | **b65.5 / 66.0 / 66.5 / 67.0:** an era each, and the four 出 marks flash. | **Costume wipe + daybreak (b67.5):** daylight sweeps across left→right, and the figures it touches lose their hats and robes and walk on as today's visitors. | |
 | 34 | b67.5 → b71.5 · 154.28–163.34 | CREST DAY (today) → b68.5 truck left with the crowd → b69 cross-section into the WUMEN hall. | Ordinary visitors (jackets, backpacks, a child on a parent's shoulders) cross **left** toward the palace: the queue from N1. Inside the hall you lie open in the glass case, the only light, rimming the profiles filing past. **Your glow stays on the lock point while everyone else moves:** the teaser inverted, nobody carries you. | E5 (line 1) · E6 (line 2) at b69. Stamp 「— 1950年代至今 · 故宫博物院 / 结束流离（故宫博物院）」. Chip 新中国 · 你 900多岁. | **b67.5–68.0:** the sweep. **b69.0:** a dark wall plane slides across as a foreground wipe. **b69–71.5:** the crowd flows; you hold. | (in the same hall) **Lights out row by row (b71.5).** | |
 | 35 | b71.5 → b74 · 163.34–169.00 | WUMEN hall → POV from inside the box → the storage aisle, slow pull-back. | The ceiling lights die row by row and the crowd is gone. Two staff in white gloves roll you up [TOUCH: each on a roller] and lay you in a storage box [TOUCH]. **The lid closes over the camera:** its underside is lit warm by you, so it never goes black. Then the closed box on a shelf in a dim aisle, glow faint at its seams. | E7 (line 1 stays). Stamp 「— 故宫规定 / 展后静养三年以上（北京晚报）」. Counter 900多. | **b72.0:** roll-up. **b72.5:** into the box. **b72.75:** the lid. **b73.0:** cut on the lid closing to the aisle; pull back. | **Rectangle match (b74):** the box's front face becomes the empty case in the same screen rectangle. | Outro b74: bass drops out |
-| 36 | b74 → b76 · 169.00–173.53 | WUMEN hall, slow push (callback to scene 06). | The empty case, the card 「撤展回库」「下次展出：未公布」. | E8 (line 2 under E7). Stamp 〃. Counter 900多. | Only the push. Soft. | **Reverse crane (b76):** pull back out of the hall through the gate passage and rise over the ramp. This bookends N1. | Outro |
+| 36 | b74 → b76 · 169.00–173.53 | WUMEN hall, slow push (callback to scene 07). | The empty case, the card 「撤展回库」「下次展出：未公布」. | E8 (line 2 under E7). Stamp 〃. Counter 900多. | Only the push. Soft. | **Reverse crane (b76):** pull back out of the hall through the gate passage and rise over the ramp. This bookends N1. | Outro |
 | 37 | b76 → end · 173.53–184.30 | WUMEN exterior night: a slow rise over the **empty** 马道 ramp, the gate dark → END card over the scene at 40 %. | The empty ramp, where your place in the queue is free. Then the Juno end card. | Q **centred** (？ pull-back) at b76. **b77:** the Juno end card assembles: J monogram, gold title, the question in its slot, follow pill 「关注 Juno · 一起看懂世界」, sources. No stamp, no counter. | The rise continues to the end. The music ends at ≈ 184.2. | — (end) | Outro to the end |
 
 ## The crest handovers (R7 + R8): 14 visits, each IN and OUT different
 
 | Visit | Deal and mood | How you change hands | IN move | OUT move |
 |---|---|---|---|---|
-| 01 hook | neutral, dusk → lanterns die | held open, then rolled and walked off right | pull back out of the silk | hard cut on drop 1 |
-| 03 T2 · 04 T3 | teaser, night | under the arm / bundle in the snow | hard cuts, glow-locked: the format's four cuts, the **only** sanctioned repeat (one device) | hard cuts, glow-locked |
-| 08 S1 | establishing, 宋 dusk | none (the empty stage); the rule drawn by light and shadow | band match: silk → river | ink-trace: stage → painting |
+| 01 hook | neutral, dusk → lanterns die | held open, then rolled and walked off right | pull back out of the silk | glow-locked hard cut to the title, slamming on drop 1's hit (9.05) |
+| 04 T2 · 05 T3 | teaser, night | under the arm / bundle in the snow | hard cuts, glow-locked: the title + the format's four cuts, the **only** sanctioned repeat (one device) | hard cuts, glow-locked |
+| 08 S1 | establishing, 宋 dusk | none (the empty stage); the rule drawn by light and shadow | lanterns in the glass: through the empty case's pane | ink-trace: stage → painting |
 | 10 BO | official 进 (dusk) → 靖康 出 (fire) | two-man carry; then glow among carts, nobody seen grabbing you | match on action | push into the drifting glow |
 | 14 I2 | official 进, 元 day | officials carry; high oblique | roll-up wipe | match through the round window |
 | 16 W2 | **secret sale, night** | four hands on the rollers, then under the 权贵's arm | lamp-out match | shrink into 杨准's column |
@@ -272,14 +314,14 @@ Notation:
 | 33 E4 | the four exits recalled | flip-book of the four exits | sky tilt | costume wipe + daybreak |
 | 34 E5 | nobody's: today, day | visitors walk left; you are not carried | costume wipe | cross-section truck into the hall |
 
-## Transitions (all 36 hand-overs; none repeats except the teaser's four hard cuts, which the format asks for)
+## Transitions (all 36 hand-overs; none repeats except the glow-locked hard cuts of the title + teaser chain, which the format asks for)
 
 | # | Scenes | Lands on | Move | Motivated by |
 |---|---|---|---|---|
-| 1–4 | 01→02→03→04→05 | b3, b4, b5, b6 | Hard cuts with your glow locked at (1250, 600). At b4 the grey copy sits on the lock point. | Drop 1; the format's four cuts; the eye never has to search. |
-| 5 | 05→06 | b7 | Light + shape match: buried glow → case light; heap → queue | The same "you" found again, in a different pile of people |
-| 6 | 06→07 | b10 | Light returns: the silk unrolls out of the empty case's dark | N2 asked where you are; the title answers by bringing you back |
-| 7 | 07→08 | b11 | Band match: silk sheen → river sheen, tilt up | Horizontal light → horizontal light |
+| 1 | 01→02 | cut on the 8.96 pickup, slam on drop 1's hit (9.05) | The film's first hard cut, glow-locked: the band's right roller stands where your glow was, and the band flies open leftward and slams | Drop 1. The eye never leaves you, and a handscroll opens right → left |
+| 2–5 | 02→03→04→05→06 | b4.5, b6, b7, b8 | Hard cuts with your glow locked at (960, 580). The title band becomes your silk on the Yuan table; at b5 the grey copy sits on the lock point | The format's four cuts, chained to the title; the eye never has to search |
+| 6 | 06→07 | b9 | Light + shape match: buried glow → case light; heap → queue | The same "you" found again, in a different pile of people |
+| 7 | 07→08 | b11.5 → b11.75 | Lanterns in the glass: the empty case's dark pane lights with the crest's lanterns, and the camera pushes through the pane | N2 asks why you are hard to see; the glass shows where your life was played |
 | 8 | 08→09 | b13 | Ink-trace morph, right→left: the stage becomes the painting | B1: "you were painted in 汴京" |
 | 9 | 09→10 | b14.5 | Match on action: the roll moving left continues left | The finished painting is handed to the court |
 | 10 | 10→11 | b16 | Push into the drifting glow → silk (insert entry 1) | We follow you into the dark and look at you |
@@ -302,7 +344,7 @@ Notation:
 | 25 | 25→26 | b45.5→45.75 | Into the slats, then pull back out of a different room (the cut hidden in the close-up) | The box travels; the place changes around it |
 | (in 26) | — | b47.25 | Headlight sweep | 1945: the owners leave |
 | 26 | 26→27 | b50 | Lamp-reveal: the dark resolves into the new place | Silence ends with light: someone is looking again |
-| 27 | 27→28 | b54 | Burst + dive into the silk (insert entry 3, the peak) | 才是你: we finally see you as you are |
+| 27 | 27→28 | 123.40 (the bass; b54 = 123.71 carries 才是你) | Burst + dive into the silk (insert entry 3, the peak) | 才是你: we finally see you as you are |
 | 28 | 28→29 | b57 | Painted crowd → real crowd | You come home among people |
 | 29 | 29→30 | b58.5 | Through the gate passage into the painted city gate (insert entry 4) | Carried into the palace, you are opened again |
 | (in 30) | — | b60 / b60.5 | Pull out through the magnifier lens; push back in | 1973: the restorer's eye |
@@ -349,10 +391,13 @@ before each move starts.
     - 张著's colophon is the first one after the painting, so a track along the tail would pass it first.
 11. **Q1: a procession on foot, seen from the water**, instead of a second confiscation cart. This keeps the crest repeats
     apart (gate-1 note: "the crest carry shows up five times in 41 s").
-12. **E4: chip flip proposal** (see scene 33). The title goes on **b10**. If the screenwriter picks b9, the title holds
-    b9–b11, the empty-case hold shrinks to one bar, and nothing else moves.
+12. **E4: chip flip proposal** (see scene 33).
 13. **Stamps M3 and P1:** line 2 is shortened to ≤ 14 字 (gate-1 carry-forward 3).
     **T1 / W1–W2:** 「— 元 · 1351年前」, 「以似本易去」 and counter 200多 (carry-forward 1). The gate-2a stills are not copied.
+14. **(r2) The title is on drop 1** (owner, 2026-10-24). The order is hook → title → teaser → present day → S1, not the format's
+    hook → teaser → present day → title.
+    - Script v2.3 and this storyboard agree on every time from frame 0 to S1.
+    - The script's picture column still shows T3 as a crate on a hand-cart; item 1 above stands (a cloth bundle).
 
 **For the researcher before the build:**
 - The silhouettes in the cast list: the Ming eunuch's hat, the Jin scholar's cap, the Qing officials' cap.
@@ -364,26 +409,41 @@ before each move starts.
 
 | Frame | File | What it proves | What it does not prove / what is superseded |
 |---|---|---|---|
-| A hook | `style/lookA_hook.png` | **ROOM-元** (round window + White Dagoba, hanging lamp, table). Live glow vs dead grey reads instantly. The craftsman's contact pose (hand flat on the silk). The ivory top-left subtitle over a mid-tone wall. A line-1-only teaser stamp. | The stamp text 「元 · 宫中」 is superseded by 「— 元 · 1351年前」. The 30 px corner mark is superseded by the old 21 px mark. |
+| A hook | `style/lookA_hook.png` | **ROOM-元** (round window + White Dagoba, hanging lamp, table). Live glow vs dead grey reads instantly. The craftsman's contact pose (hand flat on the silk). The ivory top-left subtitle over a mid-tone wall. A line-1-only teaser stamp. | The stamp text 「元 · 宫中」 is superseded by 「— 元 · 1351年前」. The 30 px corner mark is superseded by the old 21 px mark. **r2:** T1 recomposes this set with your silk centred on the lock point (960, 580). |
 | A key | `style/lookA_key.png` | **CREST CR-A** scale (figures 54 % of frame height, scroll 436 px, the 虹桥 legible on the scroll). DUSK palette and luma (86/100). The Yuan brim, lanterns, the mast, the ripple dashes. The full furniture layout (subtitle, stamp with 3 lines, chip + counter). It is the lighting for **official entries** (BO, I2, M3, Q1). | **W2 is NIGHT** with the lanterns out (R7), so this frame does not prove the sale's lighting. Superseded text: 至正年间, the 杨准 line, 约240, the placeholder subtitle (use the W1–W2 stamp, 200多 and lines.json). The 30 px mark. |
 | B hook / key | `style/lookB_hook.png`, `lookB_key.png` + `style/src/` | The code-drawn painting quality that **SILK** builds on, and the real-vs-grey split on silk. B's mineral palette is the peak's colour. | Not look A's subtitle polarity over silk (B used ink text). Look A uses the vignette plus ivory. |
 | Corner mark | `style/corner_mark_compare.png` | The **left half** is the mark to build (old, 21 px light). | — |
 
-**New stills to render first for gate 3 (the riskiest shots; nothing is rendered now, to save disk):**
-1. **0:00, scene 01, frame 0.** The full-frame lantern-silk painting with the vignette, H1 typed and the stamp.
+**New stills to render first for gate 3, in this order** (nothing is rendered now, to save disk). Stills 1–3 are the first
+impression.
+1. **0:00, scene 01, frame 0.** The full-frame lantern-silk 虹桥 with the vignette, H1's first glyphs typed, and the stamp.
    - Is frame 0 striking on its own?
-   - Does the ivory subtitle read over a bright insert at 480 px?
-   - Does the painting read on a phone? Insert luma 120–160.
-2. **2:08.2 (b56), scene 28, the peak.** The painting in full colour lifting into 5 relief layers.
+   - Does it read as *the painting* at a glance (the boat under the arch, silk and ink), not as scenery?
+   - Do the ivory subtitle and the stamp read over a bright insert at 480 px?
+   - Insert luma 120–160, with the linework not blown out by the bloom.
+2. **0:08.9 and 0:09.6 (the drop), scenes 01 → 02, as a pair.** The last intro frame (dark crest, the walkers, your glow at
+   frame right) and the title settled after its jolt.
+   - Does the glow at frame right sit where the band's right roller stands (the lock across the cut)?
+   - Is it a title at 480 px: big, the ink centred by pixel measure, 「清明上河图」 crisp under the bloom?
+   - Is the band clearly the film's own silk, not a dropped-in serif card?
+   - No flash: mean luma ≥ 45 before the cut, and the title frame no brighter than about 80 overall (surround ≥ 25).
+3. **0:03.7 (b1), scene 01, the pull-back landing.** The painting held open on the real crest at dusk.
+   - Does the painted bridge rhyme with the real one?
+   - Are the bank figures in profile, turned to your light (no front-on blobs)?
+   - pose_check PASS on the four hands on the rollers.
+   - Dusk luma 75–100.
+4. **2:08.2 (b56), scene 28, the peak.** The painting in full colour lifting into 5 relief layers.
    - Is it the most spectacular frame of the film, and not "an unfinished game" (ep13)?
    - Does the bloom keep the linework legible?
    - This is the hardest build and the biggest promise.
-3. **1:02.6 (b27), scene 16, the night sale.** The gate-2a key composition relit for night, four hands on the rollers.
+5. **1:02.6 (b27), scene 16, the night sale.** The gate-2a key composition relit for night, four hands on the rollers.
    - Night luma ≥ 45, so it is not "too dark" (ep21).
    - Rim light from you only.
    - pose_check PASS on four contact hands.
    - This lighting is reused by F1, T2 and E4.
-4. **1:51.8 (b48.75), scene 26, 1945 小白楼.** Open doors, faceless guards carrying armfuls, scrolls on the floor, no glow.
+6. **1:51.8 (b48.75), scene 26, 1945 小白楼.** Open doors, faceless guards carrying armfuls, scrolls on the floor, no glow.
    - Does it stay inside C27b/C28?
    - Is it not horror and not black?
    - Is the "where is it?" search readable?
+7. **0:27.7 (b11.6), scene 07 → 08, mid-move.** The crest's lanterns lit in the empty case's pane.
+   - Does it read as glass (a pane edge, a faint reflection of the hall), not as a crossfade?
