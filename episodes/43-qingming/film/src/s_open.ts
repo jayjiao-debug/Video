@@ -107,7 +107,10 @@ addScene({id: '01', a: 0, z: 8.96, draw: (t) => {
 	const keep = new Set([rollers.L.mat, rollGlow.L.mat, silk.L.mat, crest.streak.L.mat]);
 	for (const m of st.mats) if (!keep.has(m)) m.uniforms.uTint.value.setRGB(dim, dim * 0.97, dim * 0.95);
 	st.get('sunglow').mat.uniforms.uOpacity.value = 1 - 0.8 * clamp01((t - b(2.75)) / (8.78 - b(2.75)));
-	return {st, grade: {vig: lerp(0.55, 0.32, pull), exposure: 1, corners: 1 - pull}, bloom: 1};
+	// lamplight on the insert: top band only (no chip / tally in scene 01), ending higher so the crowd and the cart stay lit; the
+	// top mount band keeps its own colour (the darkening starts below it)
+	const mountY = st.toScreen(st.at(960, SY - SH / 2 + 9, 22)).y;
+	return {st, grade: {vig: lerp(0.55, 0.32, pull), exposure: 1, corners: 1 - pull, cornersBand: [Math.max(0, mountY + 1), 255, 445, 0]}, bloom: 1};
 }});
 let silkWin: [number, number] | null = null;
 
@@ -118,7 +121,7 @@ addScene({id: '02', a: 8.96, z: b(4.5), draw: (t) => {
 	if (t < 9.05) xl = lerp(1700, 210, easeOut((t - 8.96) / 0.09));
 	else { const u = t - 9.05; xl = 210 - 12 * Math.exp(-u * 7) * Math.cos(u * Math.PI / (b(3.5) - 9.05)); }
 	let sc = t < 9.05 ? 1.04 : 1 + 0.04 * Math.exp(-(t - 9.05) * 6);
-	if (t >= b(3.5)) { const u2 = t - b(3.5), k2 = Math.exp(-u2 / 0.05); xl -= 6 * k2 * Math.cos(u2 * 30); sc *= 1 + 0.015 * k2; }   // the loudest attack (9.37): its own kick
+	if (t >= b(3.5)) { const u2 = t - b(3.5), k2 = Math.exp(-u2 / 0.1); xl -= 6 * k2 * Math.cos(u2 * 30); sc *= 1 + 0.015 * k2; }   // the loudest attack (9.37): its own kick
 	const glint = clamp01(1 - Math.abs(t - b(4.0) - 0.25) / 0.25);
 	band.L.mat.uniforms.uEmissive.value = 0.2;
 	band.drawW(`${Math.round(t * 60)}`, (g) => {

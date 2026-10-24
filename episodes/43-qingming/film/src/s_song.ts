@@ -10,7 +10,7 @@ import {addScene, In} from './film';
 import {Desk} from './rooms';
 import {Crest, deck, SKIES, WATER} from './crest';
 import {look, drawRoll, glowBlob, rig, Contact, drawFig} from './actors';
-import {POSES, FigOpts, walkFor, gaitStride, stepFor, bow, handOver, fkPose, mixPose, toScreen, toBody, reach, LookQ} from './figures';
+import {POSES, FigOpts, walkFor, gaitStride, gaitPose, stepFor, bow, handOver, fkPose, mixPose, toScreen, toBody, reach, LookQ} from './figures';
 import {paintSection, silkWeave} from './silk';
 import {hongqiao, railing, skyline, cityGate, hills, willow} from './draw';
 import {Strip, ScreenLayer, texMat, revealMat, glyphMat, GlowData, dataTex, bigTex, blankLike, crop, strokeOrder, glyphOrder, rollerCanvas, woodCanvas,
@@ -197,8 +197,9 @@ const smokeCanvas = () => {
 };
 const FIRE0 = b(15.25), FIRE1 = b(15.5);
 /** the carrying pair: the front official holds the roll by both ends at chest height; the second walks a step behind */
-const STEP10 = 2.5;                                                     // steps per beat (hurried: into the palace before the fire)
-const carryX = (t: number, h: number) => { const str = gaitStride('08_04', stepFor(lkOfficial)) * h; return HANDOFF_FRAME[0] + 0.2 * h - ((t - P3) / (2 * BEAT)) * STEP10 * str; };
+const CSTEP = 0.7, CSPB = 1.5;                                          // a careful step (they carry you), 1.5 steps per beat
+const carryH = () => Math.max(380, Math.min(520, (deck(HANDOFF_FRAME[0]) + 4 - HANDOFF_FRAME[1]) / 0.64));
+const carryX = (t: number, h: number) => HANDOFF_FRAME[0] + 0.11 * h - ((t - P3) / (2 * BEAT)) * CSPB * gaitStride('08_04', CSTEP) * h;
 let HANDOFF_FRAME: P2 = [790, 635];
 /** the refugee column: x of the group's anchor (moving right) */
 const REF0 = b(15.25), REFV = 1.3;                                      // appears with the fire (time-lapse), 1.3 steps per beat
@@ -271,24 +272,27 @@ const draw10 = (t: number) => {
 	const [cx, cy, cz] = cam10(t, glowF, st); st.setCam(cx, cy, cz);
 	const grp = refugees(t, st);
 	// the carriers (screen px)
-	const figs: FigOpts[] = []; let roll: [P2, P2] | null = null;
-	if (t < FIRE0 + 0.2) {
-		const h = 445, x1 = carryX(t, h), u = (t - P3) / (2 * BEAT) * STEP10, x2 = x1 + 70;
+	const figs: FigOpts[] = []; let roll: [P2, P2] | null = null, cradle: FigOpts | null = null;
+	const out = 1 - smooth(clamp01((t - (FIRE0 - 0.12)) / 0.32));          // time-lapse: the court carry gives way to 1127
+	if (out > 0) {
+		const h = carryH(), x1 = carryX(t, h), u = (t - P3) / (2 * BEAT) * CSPB, x2 = x1 + 300 * h / 560;
 		const gS = (sx: number) => { const p = unproj(st, sx, 0, ZC); return proj(st, p[0], deck(p[0]) + 4, ZC)[1]; };
-		const o1: FigOpts = {x: x1, ground: deck(x1) + 4, h, pose: walkFor(lkOfficial, u), look: lkOfficial, flip: true};
-		const o2: FigOpts = {x: x2, ground: deck(x2) + 4, h: h + 10, pose: walkFor(lkOfficial, u + 0.5), look: lkOfficial, flip: true};
+		const o1: FigOpts = {x: x1, ground: deck(x1) + 4, h, pose: gaitPose('08_04', u, CSTEP), look: lkOfficial, flip: true};
+		const o2: FigOpts = {x: x2, ground: deck(x2) + 4, h: h + 8, pose: gaitPose('08_04', u + 0.28, CSTEP), look: lkOfficial, flip: true};
 		const s1 = onScreen(st, o1, ZC), s2 = onScreen(st, o2, ZC);
-		const rc = toScreen(s1, [0.2, 0.6]), half = 0.21 * s1.h;
-		roll = [[rc[0] - half, rc[1] + 4], [rc[0] + half, rc[1] - 4]];
+		// the front official cradles you against his chest, hands under both ends; the second walks a step behind
+		const rc = toScreen(s1, [0.11, 0.64]), rl = 0.22 * s1.h, k = s1.h / 560;
+		roll = [[rc[0] - rl / 2, rc[1] + 3 * k], [rc[0] + rl / 2, rc[1] - 3 * k]];
 		figs.push(rig(s2, [], gS, 'official10b'));
-		figs.push(rig(s1, [{side: 'L', target: [roll[0][0] + 6, roll[0][1] + 7], name: 'roll end'}, {side: 'R', target: [roll[1][0] - 6, roll[1][1] + 7], name: 'roll end'}], gS, 'official10a'));
+		cradle = rig(s1, [{side: 'L', target: [roll[0][0] + 8 * k, roll[0][1] + 9 * k], name: 'roll end'}, {side: 'R', target: [roll[1][0] - 8 * k, roll[1][1] + 9 * k], name: 'roll end'}], gS, 'official10a');
+		figs.push(cradle);
 	}
 	const fk = `${Math.round(t * 60)}`;
 	const fade = smooth(clamp01((t - REF0) / 0.3));
-	body10.draw(fk, (g) => { for (const f of figs) drawFig(g, f); g.globalAlpha = fade; for (const c of grp.carts) cartBack(g, c.c, c.c.r / 0.115, c.load); for (const f of grp.figs) drawFig(g, f); g.globalAlpha = 1; });
+	body10.draw(fk, (g) => { g.globalAlpha = out; for (const f of figs) drawFig(g, f); g.globalAlpha = fade; for (const c of grp.carts) cartBack(g, c.c, c.c.r / 0.115, c.load); for (const f of grp.figs) drawFig(g, f); g.globalAlpha = 1; });
 	props10.draw(fk, (g) => {
 		const pushK = clamp01((t - b(15.75)) / (b(16.15) - b(15.75)));
-		if (roll) { glowBlob(g, lerpP(roll[0], roll[1], 0.5), 130, 70, 0.34); drawRoll(g, roll[0], roll[1], 0.032 * 445 * cz, 1); for (const f of figs.slice(-1)) { drawFig(g, {...f, part: 'L'}); drawFig(g, {...f, part: 'R'}); } }
+		if (roll && cradle) { g.globalAlpha = out; glowBlob(g, lerpP(roll[0], roll[1], 0.5), 130, 70, 0.34); drawRoll(g, roll[0], roll[1], 0.025 * cradle.h, 1); drawFig(g, {...cradle, part: 'L'}); g.globalAlpha = 1; }
 		g.globalAlpha = fade;
 		if (grp.you) { const m = lerpP(grp.you[0], grp.you[1], 0.5); glowBlob(g, m, 150 + 900 * easeIn(pushK), 80 + 600 * easeIn(pushK), 0.4 + 0.5 * pushK); drawRoll(g, grp.you[0], grp.you[1], 0.032 * grp.hs, 1); }
 		for (const c of grp.carts) cartFront(g, c.c, c.c.r / 0.115);
@@ -334,6 +338,7 @@ const buildJ = async () => {
 	const fullC = crop(full, CROP_X, 0, CW6 - CROP_X, CH6), blankC = crop(blank, CROP_X, 0, CW6 - CROP_X, CH6);
 	GLY = full.silk.glyphs!.map((g) => { const x = (g.x - CROP_X) / CH6 * 200, y = S12.py0 + (CH6 - g.y) / CH6 * 200; return {i: g.i, col: g.col, x, y, size: g.size / CH6 * 200}; });
 	const order = dataTex(glyphOrder(full.silk.glyphs!, CW6 - CROP_X, CH6, 2, CROP_X, 0));
+	full.width = full.height = 1; blank.width = blank.height = 1;              // free the big paints (only the crops are kept)
 	stripJ = new Strip(st, S12.x0, S12.edge, 0);
 	stripJ.plane(texMat(canvasTex(woodCanvas(1024, 256, '#3a2c20', '#20170f', 9))), T12.x0 - S12.x0, 0, T12.x1 - T12.x0, S12.depth, -2, -30);
 	sheetMat = glyphMat(bigTex(fullC), bigTex(blankC), order, glowJ.tex, 0.2);
@@ -460,8 +465,8 @@ const drawJ = (t: number) => {
 	propsJ.draw(fk, (g) => { if (brush) drawBrush(g, brush[0], brush[1], 6 * s.h / 560); if (c.th > 1.0) drawArms(g, [zhang]); });
 	const hero = stripJ.screen(SHEET_W + 260, S12.py0 + 100); st.setHero(hero[0], hero[1], 1300);
 	deskJ.lamp.draw('off', () => {});
-	const ins = 1 - clamp01((c.th - 0.2) / 0.9);
-	return {st, grade: {vig: lerp(0.36, 0.62, ins), vigCol: '#1a120b', corners: 0.95 * ins, exposure: 1}, bloom: 1};
+	const ins = 1 - clamp01((c.th - 0.2) / 0.9), pool = t < b(17.5) ? 0.55 : 0.55 * (1 - clamp01((t - b(17.5)) / 0.4));
+	return {st, grade: {vig: lerp(0.36, 0.62, ins), vigCol: '#1a120b', corners: 0.95 * ins, exposure: 1, pool: [980, 600, 640, pool * ins] as [number, number, number, number]}, bloom: 1};
 };
 addScene({id: '11', a: b(16), z: b(17.5), draw: drawJ, in: {mode: 5, a: b(16), z: b(16.15), pt: [0.5, 0.5], soft: 0.08}});
 addScene({id: '12', a: b(17.5), z: b(19), draw: drawJ});

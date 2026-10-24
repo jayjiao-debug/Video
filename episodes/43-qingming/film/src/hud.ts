@@ -18,24 +18,30 @@ const centred = (s: string) => s.includes('？');
 
 /** markup for a line with [red] words, revealing n characters (fractional = the next char fading in) */
 const markup = (s: string, n: number, ctr: boolean, redOn: (group: number) => boolean = () => true) => {
-	let out = '', i = 0, red = false, grp = -1; const chars = [...s];
+	let out = '', i = 0, red = false, grp = -1, prev = ''; const chars = [...s];
 	const lastVis = chars.filter((c) => c !== '[' && c !== ']').length - 1;
 	for (const ch of chars) {
 		if (ch === '[') { red = true; grp++; continue; } if (ch === ']') { red = false; continue; }
-		const o = clamp01(n - i); const pull = ctr && i === lastVis && PUNCT.includes(ch) ? 'margin-right:-0.5em;' : '';
-		out += `<span style="opacity:${o.toFixed(3)};${red && redOn(grp) ? `color:${RED};` : ''}${pull}">${ch}</span>`; i++;
+		const o = clamp01(n - i); let pull = ctr && i === lastVis && PUNCT.includes(ch) ? 'margin-right:-0.5em;' : '';
+		if ('”’」』）'.includes(prev) && '。，！？；：、'.includes(ch)) pull += 'margin-left:-0.45em;';      // 」。 / ”。: no full-width gap between the two marks
+		out += `<span style="opacity:${o.toFixed(3)};${red && redOn(grp) ? `color:${RED};` : ''}${pull}">${ch}</span>`; i++; prev = ch;
 	}
 	return out;
 };
 /** draw the subtitles for time t from the line list */
+const rowOf = (lines: Line[], i: number) => (i > 0 && stays(lines[i - 1][2]) && Math.abs(lines[i - 1][1] - lines[i][0]) < 0.05 ? 1 : 0);
 export const subtitles = (hud: HTMLElement, lines: Line[], t: number, yTop = 132) => {
 	for (let i = 0; i < lines.length; i++) {
 		const [a, b, s] = lines[i];
 		if (s.startsWith('要是排')) continue;                     // Q lives only in the end card's slot
-		const prevStays = i > 0 && stays(lines[i - 1][2]) && Math.abs(lines[i - 1][1] - a) < 0.05;
+		const prevStays = rowOf(lines, i) === 1;
 		const end = stays(s) && i + 1 < lines.length && Math.abs(lines[i + 1][0] - b) < 0.05 ? lines[i + 1][1] : b;
-		if (t < a - 0.01 || t > end + 0.2) continue;
-		const o = clamp01((end + 0.2 - t) / 0.2) * clamp01((t - a + 0.06) / 0.06);
+		// the outgoing line is gone by the time the next line in the same row starts typing (no text over text)
+		let outEnd = end + 0.2;
+		for (let k = i + 1; k < lines.length && lines[k][0] < outEnd; k++) if (!lines[k][2].startsWith('要是排') && rowOf(lines, k) === rowOf(lines, i) && lines[k][0] >= a + 0.1) { outEnd = Math.max(a + 0.2, lines[k][0]); break; }
+		const fade = Math.min(0.2, outEnd - end + 0.12);
+		if (t < a - 0.01 || t > outEnd) continue;
+		const o = clamp01((outEnd - t) / fade) * clamp01((t - a + 0.06) / 0.06);
 		const nVis = [...s].filter((c) => c !== '[' && c !== ']').length;
 		const n = whole(s) ? 99 : Math.max(1, (t - a) / Math.min(0.4, 0.035 * nVis) * nVis + (i === 0 ? 4 : 0));
 		const ctr = centred(s); const row = prevStays ? 1 : 0;

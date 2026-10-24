@@ -11,7 +11,7 @@ export type Sky = 'dusk' | 'day' | 'night' | 'fire' | 'snow';
 export type Era = '宋' | '元' | '明' | '清' | '1923' | '1950' | 'none';
 export const SKIES: Record<Sky, [number, string][]> = {
 	dusk: [[0, '#2B4552'], [0.3, '#3F5C66'], [0.46, '#6E827E'], [0.58, '#BCA07A'], [0.66, '#E6B676'], [0.72, '#F3CC8E'], [0.8, '#E9C08A'], [1, '#B89670']],
-	day: [[0, '#4E6B75'], [0.3, '#5E7A82'], [0.5, '#8FA7A6'], [0.64, '#D9CFAE'], [0.75, '#F1E2BE'], [1, '#D8CBAA']],
+	day: [[0, '#3E5964'], [0.3, '#4E6A74'], [0.42, '#5E7A82'], [0.55, '#8FA7A6'], [0.66, '#D9CFAE'], [0.76, '#F1E2BE'], [1, '#D8CBAA']],   // top of frame ≤ #5E7A82 (board)
 	night: [[0, '#1F2E38'], [0.4, '#2E404B'], [0.66, '#45565D'], [0.74, '#5A5A4C'], [1, '#3A3E3A']],
 	fire: [[0, '#2A1D1F'], [0.35, '#4A2722'], [0.55, '#6B2E22'], [0.66, '#C2562F'], [0.73, '#E88A45'], [1, '#7A3A22']],
 	snow: [[0, '#2E3B47'], [0.4, '#4A5A66'], [0.68, '#6C7A82'], [0.76, '#7E8A90'], [1, '#4A545A']],
@@ -37,7 +37,6 @@ const palaceSVG = (era: Era, sky: Sky) => {
 		case '1950': s += wumen(-300, base, 0.9, SIL, sky === 'day' ? '#9FA89E' : undefined); break;
 		default: break;
 	}
-	s += Array.from({length: 7}, (_, i) => willow(-2600 + i * 1200 + (i % 2) * 300, base + 6, 230 + (i % 3) * 40, 20 + i)).join('');
 	return s;
 };
 
@@ -61,6 +60,9 @@ export class Crest {
 		const farW = 8400, farH = 1400;
 		const farSvg = svgDoc(`<g transform="translate(${farW / 2 - CX},${-(860 - farH * 0.55)})">${palaceSVG(o.era, o.sky)}${o.bankCrowd ? crowd(-3000, 5000, 862, 26, 40, 220, 5) : ''}</g>`, farW, farH);
 		st.add('far', canvasTex(await svgToCanvas(farSvg, farW, farH, 0.5)), CX, 860 - farH * 0.55 + farH / 2, farW, farH, -2600, {fog: [HORIZON[o.sky], o.sky === 'day' ? 0.45 : 0.32], rim: 0.0});
+		// far-bank willows on their own, barely fogged layer, so they stay darker than the sky behind them (read as trees at 480 px)
+		const wil = Array.from({length: 7}, (_, i) => willow(-2600 + i * 1200 + (i % 2) * 300, 866, 230 + (i % 3) * 40, 20 + i)).join('');
+		st.add('willows', canvasTex(await svgToCanvas(svgDoc(`<g transform="translate(${farW / 2 - CX},${-(860 - farH * 0.55)})">${wil}</g>`, farW, farH), farW, farH, 0.5)), CX, 860 - farH * 0.55 + farH / 2, farW, farH, -2580, {fog: [HORIZON[o.sky], 0.08], rim: 0.0});
 		// river: from the far bank down past the arch
 		const wc = gradCanvas(WATER[o.sky], 64, 1024); st.add('river', canvasTex(wc), CX, 860 + 1400 / 2, 9000, 1400, -1400);
 		// lights on the far bank at night (windows, lamps)

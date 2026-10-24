@@ -1,7 +1,7 @@
 // Scenes 03–08: the fate teaser (T1–T4, glow-locked hard cuts on b4.5 / b6 / b7 / b8), the present day at 午门 (N1/N2:
 // queue → gate passage → hall → the empty case + card) and S1 (宋 dusk crest; "lanterns in the glass" pane move b11.5→b11.75,
 // lanterns light right→left, the direction rule drawn by shadow and light). Every frame is a pure function of t.
-import {Stage, Live, D, W, H, svgDoc, svgToCanvas, bar, BEAT, clamp01, smooth, easeInOut, easeOut, easeIn, lerp, mkCanvas, canvasTex, gradCanvas, hash} from './core';
+import {Stage, Live, Motes, D, W, H, svgDoc, svgToCanvas, bar, BEAT, clamp01, smooth, easeInOut, easeOut, easeIn, lerp, mkCanvas, canvasTex, gradCanvas, hash} from './core';
 import {Crest, deck} from './crest';
 import {RoomYuan, Store, Wumen, scrollHeap} from './rooms';
 import {addScene, In} from './film';
@@ -343,7 +343,7 @@ addScene({id: '06', a: b(8), z: b(9), draw: (t) => {
 // light, on the lock point at the b9 cut). b9 → b10 the camera cranes up the ramp toward it; b10 a match into the hall's deep
 // door passage (warm-lit, far opening visible), through it by b10.25; the hall: you glowing in the glass case, profiles
 // filing past lit only by you; b10.75 your glow goes out; the card; b11.5 the pane move into scene 08.
-let ext: Stage, extDoor: Live, extQueue: Live, pass: Stage, hallSt: Stage, hallSilk: Live, hallCrowd: Live, hallRefl: Live, hallCard: Live;
+let hallDust: Motes, ext: Stage, extDoor: Live, extQueue: Live, pass: Stage, hallSt: Stage, hallSilk: Live, hallCrowd: Live, hallRefl: Live, hallCard: Live;
 const DOOR = {x: 960, y: 604, w: 48, h: 72, z: -190};
 const PANE = {x0: 660, x1: 1260, y0: 432, y1: 728, z: -290};
 const HZ = {wall: -800, inner: -320, silk: -310, glass: -290, frame: -285, card: -280, floor: -400, refl: -395, crowd: 120};
@@ -426,6 +426,7 @@ const bootN = async () => {
 	hallCard = new Live(hallSt, 'card', 960, 800, 420, 160, HZ.card, {}, 1.5);
 	hallCard.drawW('c', (g) => { g.fillStyle = '#cfc8b8'; g.fillRect(820, 752, 280, 96); g.strokeStyle = '#8a8478'; g.lineWidth = 2; g.strokeRect(826, 758, 268, 84);
 		g.fillStyle = '#2b2a28'; g.textAlign = 'center'; g.font = '900 34px "Noto Serif CJK SC"'; g.fillText('撤展回库', 960, 796); g.font = '700 22px "Noto Serif CJK SC"'; g.fillText('下次展出：未公布', 960, 830); });
+	hallDust = new Motes(hallSt, 140, 'dust', -200, 6, '#C9CED2', false);
 	hallCrowd = new Live(hallSt, 'crowd', 960, 640, 2600, 1100, HZ.crowd, {rim: 1.0, rimPx: 6}, 1);
 };
 const N = {cut: b(9), passA: b(10), hallA: b(10.25), out: b(10.75), card: b(11), pane: b(11.5), paneZ: b(11.75)};
@@ -479,6 +480,7 @@ addScene({id: '07', a: N.cut, z: N.pane, draw: (t) => {
 	hallSilk.drawW('s', (g) => { g.fillStyle = '#FFF3D8'; g.fillRect(700, 545, 520, 82); const hh = riverMono.width / (520 / 82); g.drawImage(riverMono, 0, (riverMono.height - hh) / 2, riverMono.width, hh, 700, 545, 520, 82);
 		g.fillStyle = 'rgba(52,80,106,0.9)'; g.fillRect(700, 545, 520, 6); g.fillRect(700, 621, 520, 6); glowBlob(g, [960, 586], 330, 110, 0.35); });
 	hallRefl.drawW(`${on.toFixed(2)}`, (g) => { glowBlob(g, [960, 900], 420, 50, 0.22 * on, '255,214,150'); });
+	hallDust.update(t, [420, 260, 1500, 940], 9, 4, 0.3);
 	st.heroAt(960, 586, HZ.silk, 1100 * on + 1);
 	// the pane rect for scene 08's IN mask (screen uv, y up) from this camera
 	const a = st.toScreen(st.at(PANE.x0, PANE.y0, HZ.glass)), c = st.toScreen(st.at(PANE.x1, PANE.y1, HZ.glass));
