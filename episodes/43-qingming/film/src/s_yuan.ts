@@ -167,7 +167,7 @@ const s15 = (t: number): S15 => {
 	const kup = smooth(clamp01((t - b(26.2)) / (0.12 * BAR_)));
 	const youX0 = P0 + 300 * k1, you: [number, number] = [lerp(youX0, youX0 + SW - 14, k3), youX0 + SW];
 	const copyX0 = lerp(P0 + 40, P0, k2), copy: [number, number] = [copyX0, copyX0 + SW], copyY = k2;          // 0 back band → 1 front band
-	const X = 1270 + 60 * smooth(clamp01((t - b(25.12)) / 0.25)) - 60 * smooth(clamp01((t - b(25.36)) / 0.22)) + 60 * smooth(clamp01((t - b(25.7)) / 0.3));
+	const X = 1190 + 60 * smooth(clamp01((t - b(25.12)) / 0.25)) - 60 * smooth(clamp01((t - b(25.36)) / 0.22)) + 60 * smooth(clamp01((t - b(25.7)) / 0.3));
 	const yc = (FRONT[0] + FRONT[1]) / 2, ycb = (BACK[0] + BACK[1]) / 2, ycopy = lerp(ycb, yc, copyY);
 	let L: P | null, R: P | null, Lflat = false;
 	if (t < b(25.12)) { L = [P0 + 190, yc + 2]; Lflat = true; R = [P0 + 40 + SW, ycb]; }                       // flat on you; near hand on the copy's roller
@@ -176,7 +176,7 @@ const s15 = (t: number): S15 => {
 	else { L = [you[0], yc]; R = [you[1], yc]; }                                                               // both hands on your rollers, rolls you up
 	if (kup > 0) R = [lerp(you[1], LAMP15[0] + 26, kup), lerp(yc, LAMP15[1] + 6, kup)];                        // the near hand cups the lamp
 	const lamp = 1 - smooth(clamp01((t - b(26.27)) / (b(26.5) - b(26.27) - 0.02)));
-	const lean = lerp(48, 16, kup);
+	const lean = lerp(52, 16, kup);
 	return {X, lean, you, youRolled: k3, copy, copyY, L, R, Lflat, lamp, cup: kup};
 };
 const BAR_ = 4 * BEAT;
@@ -228,9 +228,9 @@ const STR16 = CAREFUL * (HF + 12);
 const hold16 = (t: number) => {
 	const k = smooth(clamp01((t - b(27.0)) / (0.3 * BAR_))), lean = Math.sin(t * 1.3) * 0.6;
 	const xL = lerp(SX0, SX1 - 26, k), xR = SX1;
-	const ax = SX0 - 112 + lerp(0, 40, k), bx = SX1 + 112;
-	const let_go = t >= b(27.0) + 0.3 * BAR_ + 0.08;
-	const A = rig({x: ax, ground: deck(ax) + 4, h: HF, pose: fkPose({hip: 0.655, lean: 7 + lean, neck: 6, lt: 2, lk: 2, rt: -3, rk: 3, la: -3, le: 10, ra: 4, re: 14}), look: lkSeller},
+	const ax = SX0 - 104, bx = SX1 + 100;
+	const let_go = xL > SX0 + 50;                           // he follows his roller a hand's width, then lets go
+	const A = rig({x: ax, ground: deck(ax) + 4, h: HF, pose: fkPose({hip: 0.655, lean: 7 + lean + 5 * smooth(clamp01((xL - SX0) / 50)), neck: 6, lt: 2, lk: 2, rt: -3, rk: 3, la: -3, le: 10, ra: 4, re: 14}), look: lkSeller},
 		let_go ? [] : [{side: 'R', target: [xL, SY - 42], name: 'upper roller'}, {side: 'L', target: [xL, SY + 44], name: 'lower roller'}], deck, 'craftsman16');
 	const B = rig({x: bx, ground: deck(bx) + 4, h: HF + 12, pose: fkPose({hip: 0.655, lean: 8 - lean, neck: 6, lt: 2, lk: 2, rt: -3, rk: 3, la: -3, le: 10, ra: 4, re: 14}), look: lkBuyer, flip: true},
 		[{side: 'R', target: [xR, SY - 42], name: 'upper roller'}, {side: 'L', target: [xR, SY + 44], name: 'lower roller'}], deck, 'quangui16');
@@ -238,10 +238,10 @@ const hold16 = (t: number) => {
 };
 /** from b27.5 the 权贵 walks off right, the roll under his arm */
 const walk16 = (t: number) => {
-	const t0 = b(27.5), u = (t - t0) / (2 * BEAT), x = SX1 + 112 + 30 + u * STR16;
+	const t0 = b(27.5), u = (t - t0) / (2 * BEAT), x = SX1 + 100 + 30 + u * STR16;
 	let p = careful(u + 0.5); p = armsFrom(p, underArm(p), 'R');
 	const B = rig({x, ground: deck(x) + 4, h: HF + 12, pose: p, look: lkBuyer}, [], deck, 'quangui16-walk');
-	const ax = SX0 - 112 + 40;
+	const ax = SX0 - 104;
 	const A = rig({x: ax, ground: deck(ax) + 4, h: HF, pose: fkPose({hip: 0.655, lean: 3, neck: 2, lt: 2, lk: 2, rt: -3, rk: 3, la: -2, le: 8, ra: 3, re: 10}), look: lkSeller}, [], deck, 'craftsman16');
 	return {A, B};
 };
@@ -276,14 +276,14 @@ let desk17: Desk, cast17: Cast, paper17: any, slot17: any, ink17: Live, roll17: 
 const PSRC_W = 2400, PSRC_H = 1536;                     // the paper canvas (src px): 杨准's sheet (left) + an earlier colophon (right)
 const PX0 = 720, PW = 1060, PK = PW / PSRC_W, PHF = PSRC_H * PK;   // world x range; scale; full (upright) height
 const DTB = 652, DTF = 714, PYB = 658, PYF = 708;       // desk top back / front edge; the paper lying on it (back → front)
-const SLOT = {x: 560, y: 640, w: 384, h: 216};          // the replay slot in 杨准's column (src px), 16:9
+const SLOT = {x: 840, y: 640, w: 384, h: 216};          // the replay slot in 杨准's column (src px), 16:9
 const NEWX = 286, NEWY0 = 220, NEWP = 68, NEWN = 16;    // the newest column (src px): x, first glyph centre, pitch, glyphs
 const BCOL = (c: number) => 1210 - c * 84;              // the colophon painter's small-script columns, moved onto 杨准's sheet
 let cells17: HTMLCanvasElement;                         // 16 glyph cells (84 × 72) to ink the newest column with
 const H17 = 700, FLOOR17 = 1040, X17 = 640;
 const lkYang = LOOKS.yuanScholar;
 /** f = 0 the paper faces the camera (upright on the desk's front edge) → 1 lying on the desk (foreshortened) */
-const paperY = (f: number) => { const y1 = lerp(PYF, PYF, f), h = lerp(PHF, PYF - PYB, f); return {y0: y1 - h, h}; };
+const paperY = (f: number) => { const y1 = lerp(PYF + 350, PYF, f), h = lerp(PHF, PYF - PYB, f); return {y0: y1 - h, h}; };
 const srcToWorld = (sx: number, sy: number, f: number): P => { const r = paperY(f); return [PX0 + sx * PK, r.y0 + (sy / PSRC_H) * r.h]; };
 let CAM17_0: Cam = [1100, 300, 2.35];
 const CAM17_1: Cam = [1120, 590, 1.0];
@@ -430,12 +430,12 @@ export const bootYuan = async () => {
 			<rect x="${LAMP17[0] - 18}" y="${LAMP17[1] + 6}" width="36" height="6" fill="#15100C"/><rect x="${LAMP17[0] - 4}" y="${LAMP17[1] + 10}" width="8" height="${DTB - LAMP17[1] - 2}" fill="#15100C"/><ellipse cx="${LAMP17[0]}" cy="${DTB + 6}" rx="26" ry="6" fill="#15100C"/>
 			<rect x="${PX0 + PW - 160}" y="${DTB + 14}" width="70" height="18" rx="5" fill="#1b1612"/>`, W, 1200);
 		st.add('mydesk', canvasTex(await svgToCanvas(dk, W, 1200, 0.9)), 960, 600, W, 1200, -2, {rim: 0.9, rimPx: 5});
-		paper17 = st.add('paper', canvasTex(paperCanvas()), PX0 + PW / 2, PYF - PHF / 2, PW, PHF, 0, {emissive: 0.12}, 10);
+		paper17 = st.add('paper', canvasTex(paperCanvas()), PX0 + PW / 2, PYF + 350 - PHF / 2, PW, PHF, 0, {emissive: 0.12}, 10);
 		rt17 = new THREE.WebGLRenderTarget(768, 432, {type: THREE.HalfFloatType, samples: 4});
 		const sr = slotRect();
 		slot17 = st.add('slot', rt17.texture as any, sr.x + sr.w / 2, sr.y + sr.h / 2, sr.w, sr.h, 0, {emissive: 0.3, fog: ['#E8D6B0', 0]}, 11);
-		ink17 = new Live(st, 'ink17', PX0 + NEWX * PK, PYF - PHF / 2, 180 * PK, PHF, 0, {}, 3, 12);
-		roll17 = new Live(st, 'roll17', PX0 + (PSRC_W + 10) * PK, PYF - PHF / 2, 140 * PK, (PSRC_H + 80) * PK, 0, {emissive: 0.45}, 2, 13);
+		ink17 = new Live(st, 'ink17', PX0 + NEWX * PK, PYF + 350 - PHF / 2, 180 * PK, PHF, 0, {}, 3, 12);
+		roll17 = new Live(st, 'roll17', PX0 + (PSRC_W + 10) * PK, PYF + 350 - PHF / 2, 140 * PK, (PSRC_H + 80) * PK, 0, {emissive: 0.45}, 2, 13);
 		roll17.draw('roll', (g) => { const w = 140 * PK, h = (PSRC_H + 80) * PK; const gr = g.createLinearGradient(0, 0, w, 0); gr.addColorStop(0, '#CFA872'); gr.addColorStop(0.45, '#EED8AE'); gr.addColorStop(1, '#BE905A');
 			g.fillStyle = gr; g.beginPath(); g.roundRect(w * 0.15, 18 * PK, w * 0.7, h - 36 * PK, 10); g.fill(); g.fillStyle = '#34506A'; g.fillRect(w * 0.15, 18 * PK, w * 0.7, h * 0.05); g.fillRect(w * 0.15, h - 18 * PK - h * 0.05, w * 0.7, h * 0.05); });
 		cast17 = new Cast(st, 'cast17', 960, 640, W + 400, 1200, 4, {}, 1); cast17.L.L.mesh.renderOrder = 20;

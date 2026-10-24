@@ -1,0 +1,21 @@
+# Brief: 定情信物 · 一人一半 (ep47, working title)
+
+- **Owner asks (2026-10-24):**
+  - Tried and dropped tonight: 龙骨, 同一天 (Lincoln/Darwin), 最后一个, 米尔维娜, 钱学森.
+  - Standing: people from the start; Chinese viewers; any format; **no agents this episode**.
+  - 23:04, picked: 「做每个时代的定情信物」. 23:21, 「试试看」 on the 「一人一半」 throughline.
+- **Episode:** ep47 · **Series:** VIBE知识大赏 (Juno). Relay through eras, the 《三千年》 engine.
+- **Idea in one sentence:** Chinese love tokens through the ages: a quince for a jade (诗经), a pair of silver rings (繁钦, ~1800 years ago), a mirror broken in two (破镜重圆), a gold hairpin split into two prongs (长恨歌), then 三转一响, 520 and the 520-yuan red packet, and today's couple avatars, one picture cut in two. The objects change; 「一人一半」 doesn't.
+- **Hook:** 「你们的情侣头像，一张图，一人一半。这招，一千四百多年前就有人用了。」 (破镜 c. 589 → 2026 = 1,437 years)
+- **Why a 18–25 viewer cares:** they use couple avatars and 520 themselves; they don't know a 1,400-year-old story does the same thing.
+- **Takeaway:** 东西一直在换，意思没变过：我把一半留给你。
+- **Ending question:** 「你们的情侣头像，换过几次了？」
+- **Length:** bgm2 v2 cut, 145.1 s. 1920×1080, subtitle-first, music only, no voice.
+- **Visual direction (to propose at key frames):** each station is one object, drawn big and flat in the era's material (bronze, silver, gold, enamel bike badge, pager screen, phone). Every split object is shown as two halves that slide apart; the next era's object slides in to fill the gap (the transition device). Couple figures as flat silhouettes, never real people's likenesses. Not ep41–45's silhouette-on-dusk family.
+- **Must get right:**
+  - 破镜重圆 is a story in 《本事诗》 (Tang): label 相传.
+  - 三转一响 was a **wedding / dowry** standard, not a 定情 gift. Word it as 谈婚论嫁.
+  - 520 = 我爱你: the 1998 song is the **earliest known** link (界面), not proof it started there.
+  - Don't claim every token in 繁钦's poem is a pair: some are.
+- **Must avoid:** brand logos on phones/apps (draw a generic chat app; the red packet without the WeChat logo, name it in text only); real couples' photos; maps with borders.
+- **Owner approvals:** (1) script v1 + 3 titles; (2) ~12 key frames; (3) 30–35 s demo with music; (4) full build → render, review, preview + HD link.
