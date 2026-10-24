@@ -19,8 +19,8 @@ export const mixC = (c1: string, c2: string, u: number) => {
 
 /* ---------- palette ---------- */
 export const C = {
-	wall: '#B4473A', wallSh: '#8C3329', wallLit: '#C9604F', cope: '#E0A73C', copeSh: '#A9741F', copeLit: '#F2C766',
-	roof: '#D9A23A', roofSh: '#9E6E1E', roofLit: '#F0C462', ridge: '#7A4E18', eave: '#5B3A1A', col: '#9E3B2E', base: '#CFC5B3',
+	wall: '#A9574A', wallSh: '#83392F', wallLit: '#BC6A5B', cope: '#C9A35E', copeSh: '#9A7838', copeLit: '#DDBE80',
+	roof: '#C9A35E', roofSh: '#94733A', roofLit: '#DDBF85', ridge: '#7A4E18', eave: '#5B3A1A', col: '#9E3B2E', base: '#CFC5B3',
 	pave: '#CDBFA3', pave2: '#A99A7D', paveLine: '#8E8068',
 	stele: '#B7B1A4', steleSh: '#8B8579', steleLit: '#D3CEC2', steleInk: '#5F5A50',
 	bark: '#76604E', barkSh: '#4D3E33', barkLit: '#A08673', dead: '#BDB8AE', deadSh: '#8E8A82', char: '#2A2522',
@@ -75,33 +75,39 @@ export const Sky46: React.FC<{id: string; c: [string, string]; y0?: number; y1?:
 </g>;
 
 /* ---------- 泰山: three blue layers, the climbing path (十八盘) and the summit gate ---------- */
-export const PATH: [number, number][] = [[1010, 640], [960, 560], [1040, 470], [930, 380], [990, 280], [880, 170], [930, 60], [840, -60], [880, -170], [800, -280], [820, -360]];
+export const PATH: [number, number][] = [[1010, 640], [960, 560], [1040, 470], [930, 380], [990, 280], [880, 170], [930, 60], [820, -40], [860, -130], [760, -200], [720, -260]];
 export const pathAt = (u: number): [number, number] => { const n = PATH.length - 1, x = clamp(u) * n, i = Math.min(n - 1, Math.floor(x)), f = x - i; return [lerp(PATH[i][0], PATH[i + 1][0], f), lerp(PATH[i][1], PATH[i + 1][1], f)]; };
-export const SUMMIT: [number, number] = [820, -380];
+export const SUMMIT: [number, number] = [700, -285];
+/** 泰山: a broad grey-blue massif (not a cone), the high peak 玉皇顶 left of centre, a notch for 南天门, ragged skyline */
 export const Mountain46: React.FC<{id: string; tint?: number; snow?: number; night?: number; path?: number}> = ({id, tint = 0, snow = 0, night = 0, path = 1}) => {
-	const far = mixC(mixC('#A9B9C7', '#C9B39A', tint), '#2A3550', night), mid = mixC(mixC('#8399AB', '#A88F78', tint), '#222C45', night), near = mixC(mixC('#6E8597', '#8C7663', tint), '#1B2339', night);
-	const hill = mixC(mixC('#6F8670', '#7E7360', tint), '#1A2433', night);
+	void id;
+	const far = mixC(mixC('#98A2A8', '#B6A48E', tint), '#26304A', night), mid = mixC(mixC('#7F8A92', '#9E8C78', tint), '#20283F', night), near = mixC(mixC('#66707A', '#857565', tint), '#1A2236', night);
+	const hill = mixC(mixC('#6B7E6A', '#7A705E', tint), '#182230', night);
+	const sky = (pts: number[][]) => pts.map((p) => p.join(',')).join(' L');
 	return <g>
-		<path d="M-600,660 L-300,420 L-60,300 L180,120 L420,-60 L620,-260 L760,-360 L820,-410 L880,-370 L1040,-230 L1260,-40 L1520,140 L1800,300 L2100,420 L2500,600 L2500,700 L-600,700 Z" fill={far} />
-		{snow > 0 && <path d="M700,-310 L760,-360 L820,-410 L880,-370 L960,-300 L900,-290 L850,-320 L800,-300 L760,-280 Z" fill="#F4F6F6" opacity={snow} />}
-		<path d="M-600,700 L-200,520 L120,360 L380,220 L560,110 L700,0 L760,-60 L860,40 L1060,160 L1300,300 L1600,420 L1900,500 L2500,640 L2500,720 L-600,720 Z" fill={mid} />
-		{/* cliff shading on the lit-left / shade-right faces */}
-		<path d="M820,-410 L880,-370 L1040,-230 L1260,-40 L1100,-60 L960,-200 Z" fill="#000" opacity={0.08} />
-		<path d="M760,-60 L860,40 L1060,160 L940,150 L820,40 Z" fill="#000" opacity={0.08} />
-		{/* rock bands and ridges on the massif, pines on the mid slopes */}
-		{Array.from({length: 9}, (_, i) => { const y = -300 + i * 95, half = 160 + i * 150; return <path key={'rb' + i} d={`M${820 - half * 0.7},${y + 30} Q${820 - half * 0.3},${y - 14} ${820 + half * 0.1},${y + 18} T${820 + half * 0.8},${y + 6}`} stroke={mixC(far, '#ffffff', 0.18)} strokeWidth={3} fill="none" opacity={0.35} />; })}
-		{Array.from({length: 7}, (_, i) => <path key={'rd' + i} d={`M${700 + i * 40},${-200 + i * 60} L${560 + i * 70},${120 + i * 70}`} stroke="#000" strokeWidth={2} opacity={0.06} />)}
-		{Array.from({length: 60}, (_, i) => { const u = rnd(i, 71), x = 300 + rnd(i, 72) * 1300, y = 120 + u * 450; const top = 820 - Math.abs(x - 800) * 0.75; if (y < -380 + Math.abs(x - 820) * 0.7) return null;
-			return <path key={'pn' + i} d={`M${x},${y} l-9,18 l18,0 Z M${x},${y + 8} l-12,20 l24,0 Z`} fill={mixC(mid, '#203028', 0.45)} opacity={0.55} />; })}
-		{/* the climbing path */}
-		{path > 0 && <polyline points={PATH.map((p) => p.join(',')).join(' ')} fill="none" stroke={mixC('#E9DCC2', '#4A5470', night)} strokeWidth={2.5} strokeDasharray="5 5" opacity={0.6 * path} strokeLinejoin="round" />}
-		{/* 南天门: the summit gate */}
-		<g transform={`translate(${SUMMIT[0]},${SUMMIT[1]})`} opacity={0.95}>
-			<rect x={-34} y={-10} width={68} height={30} fill={mixC('#B4473A', '#3A2A33', night)} /><rect x={-10} y={0} width={20} height={20} fill={mixC('#4A3428', '#140F14', night)} />
-			<path d="M-46,-10 L46,-10 L36,-30 L-36,-30 Z" fill={mixC(C.roof, '#5A4A2A', night)} /><rect x={-24} y={-44} width={48} height={14} fill={mixC('#B4473A', '#3A2A33', night)} /><path d="M-34,-44 L34,-44 L26,-58 L-26,-58 Z" fill={mixC(C.roof, '#5A4A2A', night)} />
+		{/* far range: long ragged skyline across the frame */}
+		<path d={`M-700,640 L${sky([[-500, 420], [-320, 380], [-180, 300], [-40, 260], [120, 170], [260, 120], [380, 40], [470, -60], [560, -150], [640, -250], [700, -300], [760, -270], [800, -240], [860, -260], [940, -200], [1040, -120], [1140, -60], [1240, 20], [1380, 60], [1500, 140], [1660, 180], [1800, 260], [1960, 300], [2160, 380], [2400, 460], [2600, 560]])} L2600,700 L-700,700 Z`} fill={far} />
+		{snow > 0 && <path d="M640,-250 L700,-300 L760,-270 L800,-240 L860,-260 L900,-228 L840,-226 L790,-214 L740,-236 L690,-236 Z" fill="#F4F6F6" opacity={snow * 0.9} />}
+		{/* shaded faces (lit from the upper left) */}
+		<path d="M700,-300 L760,-270 L800,-240 L860,-260 L940,-200 L1040,-120 L1140,-60 L1240,20 L1000,40 L880,-80 Z" fill="#000" opacity={0.08} />
+		{/* rock bands */}
+		{Array.from({length: 10}, (_, i) => { const y = -200 + i * 85, x0 = 700 - 160 - i * 120, x1 = 700 + 140 + i * 150; return <path key={'rb' + i} d={`M${x0},${y + 24} Q${(x0 * 2 + x1) / 3},${y - 12} ${(x0 + x1) / 2},${y + 14} T${x1},${y + 4}`} stroke={mixC(far, '#ffffff', 0.15)} strokeWidth={3} fill="none" opacity={0.35} />; })}
+		{/* mid range */}
+		<path d={`M-700,700 L${sky([[-300, 520], [-80, 430], [120, 330], [300, 250], [440, 170], [560, 110], [660, 60], [740, 90], [820, 40], [900, 80], [1040, 140], [1200, 220], [1380, 290], [1560, 350], [1760, 400], [2000, 460], [2600, 560]])} L2600,720 L-700,720 Z`} fill={mid} />
+		{Array.from({length: 70}, (_, i) => { const x = 100 + rnd(i, 72) * 1700, y = 160 + rnd(i, 71) * 480; if (y < 40 + Math.abs(x - 760) * 0.45) return null;
+			return <path key={'pn' + i} d={`M${x},${y} l-8,16 l16,0 Z M${x},${y + 7} l-11,18 l22,0 Z`} fill={mixC(mid, '#203028', 0.5)} opacity={0.5} />; })}
+		{/* 十八盘: the stair path, a solid line with step ticks (dashes are kept for 相传) */}
+		{path > 0 && <g opacity={0.7 * path}>
+			<polyline points={PATH.map((p) => p.join(',')).join(' ')} fill="none" stroke={mixC('#CFC6B4', '#4A5470', night)} strokeWidth={2.5} strokeLinejoin="round" />
+			{Array.from({length: 60}, (_, i) => { const [x, y] = pathAt(i / 59); return <line key={i} x1={x - 4} y1={y} x2={x + 4} y2={y} stroke={mixC('#CFC6B4', '#4A5470', night)} strokeWidth={1.5} />; })}
+		</g>}
+		{/* 南天门 at the notch below the peak */}
+		<g transform={`translate(${SUMMIT[0] + 60},${SUMMIT[1] + 40})`} opacity={0.95}>
+			<rect x={-30} y={-8} width={60} height={26} fill={mixC('#A9574A', '#3A2A33', night)} /><rect x={-9} y={0} width={18} height={18} fill={mixC('#4A3428', '#140F14', night)} />
+			<path d="M-40,-8 L40,-8 L32,-26 L-32,-26 Z" fill={mixC(C.roof, '#5A4A2A', night)} />
 		</g>
-		<path d="M-600,720 L-200,640 L200,610 L520,560 L760,600 L1000,580 L1300,600 L1700,560 L2100,600 L2500,620 L2500,760 L-600,760 Z" fill={near} />
-		<path d="M-600,760 L-100,700 L400,690 L800,700 L1200,690 L1700,700 L2500,690 L2500,800 L-600,800 Z" fill={hill} />
+		<path d="M-700,720 L-200,640 L200,610 L520,560 L760,600 L1000,580 L1300,600 L1700,560 L2100,600 L2600,620 L2600,760 L-700,760 Z" fill={near} />
+		<path d="M-700,760 L-100,700 L400,690 L800,700 L1200,690 L1700,700 L2600,690 L2600,800 L-700,800 Z" fill={hill} />
 		<rect x={-1400} y={560} width={W + 2800} height={240} fill="url(#hazeG)" opacity={0.7 * (1 - night)} />
 	</g>;
 };
@@ -111,7 +117,7 @@ export const Torches: React.FC<{u: number; n?: number; spread?: number; o?: numb
 		return <g key={i}><circle cx={x + (rnd(i, seed) - 0.5) * 10} cy={y - 4} r={9 * fl} fill={C.fire} opacity={0.35} filter="url(#k3)" /><circle cx={x + (rnd(i, seed) - 0.5) * 10} cy={y - 4} r={3.2 * fl} fill={C.fireCore} /></g>; })}
 </g>;
 /** summit altar with rising smoke (the 封 rite on the top) */
-export const Altar: React.FC<{o?: number; t: number}> = ({o = 1, t}) => <g opacity={o} transform={`translate(${SUMMIT[0] + 70},${SUMMIT[1] + 30})`}>
+export const Altar: React.FC<{o?: number; t: number}> = ({o = 1, t}) => <g opacity={o} transform={`translate(${SUMMIT[0] + 10},${SUMMIT[1] + 4})`}>
 	<rect x={-40} y={-16} width={80} height={16} fill="#C9BFA9" /><rect x={-28} y={-30} width={56} height={14} fill="#D8CFBB" /><rect x={-16} y={-42} width={32} height={12} fill="#E4DCCA" />
 	{Array.from({length: 8}, (_, i) => { const k = ((t * 0.5 + i / 8) % 1); return <ellipse key={i} cx={Math.sin(k * 6 + i) * 10 + k * 30} cy={-50 - k * 220} rx={10 + k * 40} ry={8 + k * 26} fill="#EDE6DA" opacity={(1 - k) * 0.55} filter="url(#k6)" />; })}
 </g>;
@@ -169,25 +175,36 @@ export const Pave46: React.FC<{y?: number; earth?: number; snow?: number; night?
 	{night > 0 && <rect x={-1400} y={y} width={W + 2800} height={H - y + 1400} fill="#0E1426" opacity={0.62 * night} />}
 </g>;
 
-/* ---------- a stele on a turtle base (赑屃); optional carved tree picture or a poem column ---------- */
-export const Stele46: React.FC<{x: number; g: number; s?: number; carve?: 'tree' | 'text' | 'none'; glowText?: number; k?: number; night?: number}> = ({x, g, s = 1, carve = 'text', glowText = 0, k = 1, night = 0}) => {
+/* ---------- a stele: a flat stone slab (thin side face visible), a half-round head with a carved band, on a plinth
+   or a 龟趺 tortoise base; variant changes proportions so no two read the same ---------- */
+export const Stele46: React.FC<{x: number; g: number; s?: number; carve?: 'tree' | 'text' | 'none'; glowText?: number; k?: number; night?: number; variant?: number; pavilion?: boolean}> = ({x, g, s = 1, carve = 'text', glowText = 0, k = 1, variant = 0, pavilion}) => {
 	if (k <= 0) return null;
-	const rise = (1 - easeOut(k)) * 1, w = 120 * s, h = 300 * s, top = g - 70 * s - h;
+	const rise = 1 - easeOut(k), w = (variant % 2 ? 128 : 112) * s, h = (variant % 3 === 1 ? 250 : variant % 3 === 2 ? 210 : 280) * s, tortoise = variant % 2 === 0, baseH = (tortoise ? 52 : 40) * s;
+	const top = g - baseH - h, side = 14 * s, headH = w * 0.42;
 	return <g opacity={clamp(k * 3)} transform={`translate(0,${rise * 40 * s})`}>
-		<Shadow x={x + 30 * s} y={g + 2} rx={110 * s} ry={14 * s} o={0.3} />
-		{/* turtle */}
-		<path d={`M${x - 100 * s},${g} Q${x - 100 * s},${g - 70 * s} ${x},${g - 76 * s} Q${x + 100 * s},${g - 70 * s} ${x + 100 * s},${g} Z`} fill={mixC(C.stele, '#2A2D3A', night)} />
-		<path d={`M${x - 100 * s},${g} Q${x - 128 * s},${g - 22 * s} ${x - 124 * s},${g - 40 * s} Q${x - 110 * s},${g - 44 * s} ${x - 96 * s},${g - 26 * s} Z`} fill={mixC(C.steleSh, '#1E212C', night)} />
-		<path d={`M${x - 70 * s},${g - 52 * s} Q${x},${g - 66 * s} ${x + 70 * s},${g - 52 * s}`} stroke={C.steleSh} strokeWidth={3 * s} fill="none" opacity={0.6} />
-		{/* the tablet */}
+		<Shadow x={x + 34 * s} y={g + 2} rx={104 * s} ry={13 * s} o={0.3} />
+		{pavilion && <g>
+			{[-1, 1].map((sg) => <rect key={sg} x={x + sg * 105 * s - 9 * s} y={top - headH - 96 * s} width={18 * s} height={g - (top - headH - 96 * s)} fill={C.col} />)}
+			<rect x={x - 118 * s} y={top - headH - 104 * s} width={236 * s} height={14 * s} fill="#6E2A22" />
+			<path d={`M${x - 160 * s},${top - headH - 96 * s} Q${x - 110 * s},${top - headH - 104 * s} ${x - 80 * s},${top - headH - 160 * s} L${x + 80 * s},${top - headH - 160 * s} Q${x + 110 * s},${top - headH - 104 * s} ${x + 160 * s},${top - headH - 96 * s} Z`} fill="#8E6A34" />
+			<path d={`M${x - 160 * s},${top - headH - 96 * s} L${x + 160 * s},${top - headH - 96 * s}`} stroke="#4A3018" strokeWidth={5 * s} />
+			<rect x={x - 84 * s} y={top - headH - 170 * s} width={168 * s} height={11 * s} fill="#4A3018" />
+		</g>}
+		{tortoise ? <g>
+			<path d={`M${x - 92 * s},${g} Q${x - 96 * s},${g - baseH * 1.1} ${x},${g - baseH * 1.15} Q${x + 96 * s},${g - baseH * 1.1} ${x + 92 * s},${g} Z`} fill={C.stele} />
+			<path d={`M${x - 60 * s},${g - baseH * 0.8} Q${x},${g - baseH * 1.05} ${x + 60 * s},${g - baseH * 0.8}`} stroke={C.steleSh} strokeWidth={3 * s} fill="none" opacity={0.6} />
+			<ellipse cx={x - 104 * s} cy={g - 16 * s} rx={20 * s} ry={15 * s} fill={C.steleSh} /><circle cx={x - 112 * s} cy={g - 20 * s} r={2.5 * s} fill={C.steleInk} />
+		</g> : <g><rect x={x - w / 2 - 22 * s} y={g - baseH} width={w + 44 * s} height={baseH} fill={C.stele} /><rect x={x - w / 2 - 22 * s} y={g - baseH} width={w + 44 * s} height={6 * s} fill={C.steleLit} /><rect x={x + w / 2 + 6 * s} y={g - baseH} width={16 * s} height={baseH} fill="#000" opacity={0.12} /></g>}
+		{/* side face, then the front face of the slab */}
+		<path d={`M${x + w / 2},${top} L${x + w / 2 + side},${top - side * 0.5} L${x + w / 2 + side},${g - baseH - side * 0.4} L${x + w / 2},${g - baseH} Z`} fill={C.steleSh} />
 		<rect x={x - w / 2} y={top} width={w} height={h} fill="url(#steleG)" />
-		<path d={`M${x - w / 2 - 6 * s},${top + 4 * s} Q${x - w / 2},${top - 70 * s} ${x},${top - 74 * s} Q${x + w / 2},${top - 70 * s} ${x + w / 2 + 6 * s},${top + 4 * s} Z`} fill="url(#steleG)" />
-		<path d={`M${x - 34 * s},${top - 44 * s} q16,-14 34,0 q18,-14 34,0`} stroke={C.steleSh} strokeWidth={3 * s} fill="none" opacity={0.5} />
-		<rect x={x + w / 2 - 14 * s} y={top} width={14 * s} height={h} fill="#000" opacity={0.12} />
-		{carve === 'text' && Array.from({length: 4}, (_, c) => <line key={c} x1={x - 36 * s + c * 24 * s} y1={top + 24 * s} x2={x - 36 * s + c * 24 * s} y2={top + h * (0.7 + 0.25 * rnd(c, x))} stroke={C.steleInk} strokeWidth={7 * s} strokeDasharray={`${10 * s} ${5 * s}`} opacity={0.32} />)}
-		{carve === 'tree' && <g transform={`translate(${x},${top + h * 0.9}) scale(${s * 0.16})`} opacity={0.9}><InkTree stroke={C.steleInk} fill="none" /></g>}
-		{glowText > 0 && <g opacity={glowText}><VText x={x + 38 * s} y={top + 18 * s} s="名實賓主誰是乎" size={30 * s} fill={C.glowCore} gap={1.15} /></g>}
-		{night > 0 && <rect x={x - w / 2 - 10} y={top - 80 * s} width={w + 20} height={h + 80 * s} fill="#0E1426" opacity={0.5 * night} />}
+		{/* the head: wider than tall, half-round, with a carved band */}
+		<path d={`M${x - w / 2},${top + 2} L${x - w / 2},${top - headH * 0.35} Q${x - w / 2},${top - headH} ${x},${top - headH} Q${x + w / 2},${top - headH} ${x + w / 2},${top - headH * 0.35} L${x + w / 2},${top + 2} Z`} fill="url(#steleG)" />
+		<path d={`M${x - w / 2 + 10 * s},${top - 2} L${x - w / 2 + 10 * s},${top - headH * 0.3} Q${x - w / 2 + 10 * s},${top - headH + 12 * s} ${x},${top - headH + 12 * s} Q${x + w / 2 - 10 * s},${top - headH + 12 * s} ${x + w / 2 - 10 * s},${top - headH * 0.3} L${x + w / 2 - 10 * s},${top - 2}`} stroke="#A9A396" strokeWidth={4 * s} fill="none" />
+		<rect x={x - w / 2 + 8 * s} y={top + 8 * s} width={w - 16 * s} height={h - 16 * s} fill="none" stroke="#A9A396" strokeWidth={2.5 * s} />
+		{carve === 'text' && Array.from({length: 5}, (_, c) => <line key={c} x1={x - w / 2 + 22 * s + c * (w - 44 * s) / 4} y1={top + 24 * s} x2={x - w / 2 + 22 * s + c * (w - 44 * s) / 4} y2={top + h * (0.62 + 0.3 * rnd(c, x + variant))} stroke={C.steleInk} strokeWidth={4 * s} strokeDasharray={`${30 * s} ${8 * s}`} opacity={0.28} />)}
+		{carve === 'tree' && <g transform={`translate(${x},${top + h * 0.9}) scale(${s * 0.2})`} opacity={0.9}><InkTree stroke={C.steleInk} fill="none" /></g>}
+		{glowText > 0 && <g opacity={glowText}><VText x={x + w / 2 - 18 * s} y={top + 16 * s} s="名實賓主誰是乎" size={26 * s} fill={C.glowCore} gap={1.15} /></g>}
 	</g>;
 };
 /** an ink drawing of our tree (Qianlong's painting / the carving): origin at the base, ~1000 units tall */
@@ -228,6 +245,7 @@ export const Huai46: React.FC<{x: number; g: number; h: number; dead?: number}> 
 	return <g>
 		<Shadow x={x + h * 0.1} y={g + 3} rx={h * 0.4} ry={h * 0.05} o={0.3} />
 		<path d={`M${x - h * 0.06},${g} C${x - h * 0.05},${g - h * 0.3} ${x - h * 0.12},${g - h * 0.45} ${x - h * 0.25},${g - h * 0.55} L${x - h * 0.2},${g - h * 0.58} C${x - h * 0.08},${g - h * 0.5} ${x},${g - h * 0.46} ${x + h * 0.04},${g - h * 0.6} L${x + h * 0.08},${g - h * 0.58} C${x + h * 0.06},${g - h * 0.4} ${x + h * 0.09},${g - h * 0.2} ${x + h * 0.08},${g} Z`} fill={mixC('#5D4A3A', '#857C70', dead)} />
+		{[[-0.3, 0.74], [0.0, 0.84], [0.28, 0.72], [-0.14, 0.66], [0.16, 0.8]].map(([dx, dy], i) => <path key={'br' + i} d={`M${x - h * 0.05},${g - h * 0.55} Q${x + dx * h * 0.4},${g - h * (dy - 0.06)} ${x + dx * h - h * 0.05},${g - h * dy}`} stroke={mixC('#5D4A3A', '#857C70', dead)} strokeWidth={h * 0.025} fill="none" />)}
 		<g opacity={1 - dead * 0.8}>{Array.from({length: 12}, (_, i) => { const a = rnd(i, 41) * Math.PI, r = h * (0.12 + 0.06 * rnd(i, 42)); return <ellipse key={i} cx={x + Math.cos(a) * h * 0.32 - h * 0.05} cy={g - h * 0.68 - Math.sin(a) * h * 0.2} rx={r} ry={r * 0.75} fill={i % 3 ? leaf : leafD} />; })}</g>
 		{dead > 0.3 && [[-0.3, 0.75], [0.2, 0.8], [0.32, 0.66], [-0.2, 0.86]].map(([dx, dy], i) => <path key={i} d={`M${x},${g - h * 0.58} Q${x + dx * h * 0.5},${g - h * (dy - 0.05)} ${x + dx * h},${g - h * dy}`} stroke="#857C70" strokeWidth={5} fill="none" opacity={dead} />)}
 	</g>;
@@ -235,12 +253,15 @@ export const Huai46: React.FC<{x: number; g: number; h: number; dead?: number}> 
 
 /* ---------- 1928: market stalls, cooking fire ---------- */
 export const Stall46: React.FC<{x: number; g: number; s?: number; c?: string}> = ({x, g, s = 1, c = '#C9B27E'}) => <g>
-	<Shadow x={x} y={g + 2} rx={90 * s} ry={10 * s} o={0.3} />
-	<rect x={x - 70 * s} y={g - 70 * s} width={140 * s} height={70 * s} fill="#7A6450" /><rect x={x - 70 * s} y={g - 70 * s} width={140 * s} height={10 * s} fill="#5C4A3A" />
-	{[-60, 60].map((dx) => <rect key={dx} x={x + dx * s - 3 * s} y={g - 150 * s} width={6 * s} height={150 * s} fill="#4A3B2E" />)}
-	<path d={`M${x - 90 * s},${g - 138 * s} L${x + 90 * s},${g - 138 * s} L${x + 74 * s},${g - 168 * s} L${x - 74 * s},${g - 168 * s} Z`} fill={c} />
-	{Array.from({length: 6}, (_, i) => <path key={i} d={`M${x - 90 * s + i * 30 * s},${g - 138 * s} q${15 * s},${12 * s} ${30 * s},0`} fill={c} />)}
-	{Array.from({length: 5}, (_, i) => <circle key={i} cx={x - 50 * s + i * 25 * s} cy={g - 78 * s} r={9 * s} fill={['#C7713C', '#D9B04A', '#8C9A55', '#B85A3C', '#D6C38C'][i]} />)}
+	<Shadow x={x} y={g + 2} rx={95 * s} ry={10 * s} o={0.3} />
+	{/* bamboo frame, a sloping cloth awning, a low table with goods in round baskets */}
+	{[-80, 80].map((dx) => <rect key={dx} x={x + dx * s - 3 * s} y={g - 170 * s} width={6 * s} height={170 * s} fill="#B89A5E" />)}
+	<path d={`M${x - 100 * s},${g - 150 * s} L${x + 100 * s},${g - 170 * s} L${x + 100 * s},${g - 158 * s} L${x - 100 * s},${g - 138 * s} Z`} fill={c} />
+	<path d={`M${x - 100 * s},${g - 138 * s} L${x + 100 * s},${g - 158 * s}`} stroke="#000" strokeWidth={2 * s} opacity={0.15} />
+	<rect x={x - 80 * s} y={g - 64 * s} width={160 * s} height={8 * s} fill="#8A6A44" />
+	{[-70, 66].map((dx) => <rect key={dx} x={x + dx * s} y={g - 56 * s} width={5 * s} height={56 * s} fill="#6E5236" />)}
+	{[-50, 0, 50].map((dx, i) => <g key={i}><path d={`M${x + dx * s - 22 * s},${g - 64 * s} Q${x + dx * s},${g - 40 * s} ${x + dx * s + 22 * s},${g - 64 * s} Z`} fill="#C7A36A" stroke="#8C6A3C" strokeWidth={1.5 * s} />
+		{Array.from({length: 4}, (_, j) => <circle key={j} cx={x + dx * s - 12 * s + j * 8 * s} cy={g - 68 * s} r={5 * s} fill={['#C7713C', '#D9B04A', '#8C9A55', '#B85A3C'][(i + j) % 4]} />)}</g>)}
 </g>;
 export const Fire46: React.FC<{x: number; g: number; s?: number; t: number; o?: number}> = ({x, g, s = 1, t, o = 1}) => <g opacity={o}>
 	<Glow x={x} y={g - 20 * s} r={120 * s} c={C.fire} o={0.35} id={`fg${Math.round(x)}`} />
@@ -355,4 +376,51 @@ export const Sapling46: React.FC<{x: number; g: number; s?: number; glow?: numbe
 	<path d={`M${x - 3 * s},${g} L${x - 2 * s},${g - 80 * s} L${x + 2 * s},${g - 80 * s} L${x + 3 * s},${g} Z`} fill={C.bark} />
 	{[[0, -150, 26, 36], [-16, -122, 22, 24], [16, -116, 22, 24], [0, -96, 22, 20], [-4, -176, 16, 22], [10, -140, 16, 18]].map(([cx, cy, rx, ry], i) => <ellipse key={i} cx={x + (cx + Math.sin(t * 1.4 + i) * 1.5) * s} cy={g + cy * s} rx={rx * s} ry={ry * s} fill={[C.leaf, C.leafM, C.leaf, C.leafM, C.leafL, C.leafL][i]} />)}
 	{glow > 0 && <ellipse cx={x} cy={g - 132 * s} rx={40 * s} ry={58 * s} fill="none" stroke={C.glowCore} strokeWidth={3 * s} opacity={0.75 * glow} filter="url(#k3)" />}
+</g>;
+
+/** a hanging scroll on a wooden stand, standing on the ground (the painting shown beside the table) */
+export const ScrollStand: React.FC<{x: number; g: number; s?: number; open?: number; ink?: number; inscr?: number}> = ({x, g, s = 1, open = 1, ink = 1, inscr = 0}) => {
+	const barY = g - 1120 * s, hw = 270 * s;
+	return <g>
+		<Shadow x={x + 20 * s} y={g + 2} rx={hw * 1.1} ry={10 * s} o={0.3} />
+		{[-1, 1].map((sg) => <g key={sg}><rect x={x + sg * hw - 6 * s} y={barY} width={12 * s} height={g - barY} fill="#5E4330" /><rect x={x + sg * hw - 40 * s} y={g - 10 * s} width={80 * s} height={10 * s} fill="#4E3626" /></g>)}
+		<rect x={x - hw - 20 * s} y={barY - 12 * s} width={2 * hw + 40 * s} height={16 * s} rx={6 * s} fill="#6B4A32" />
+		<Scroll46 x={x} y={barY + 18 * s} s={s} open={open} ink={ink} inscr={inscr} />
+	</g>;
+};
+/** the eight 《汉书·武帝纪》 entries as one bound 简册 standing on a low stand, plus one empty slip (no 种树) */
+export const SlipStand: React.FC<{x: number; g: number; u?: number; grey?: number; empty?: number; cross?: number}> = ({x, g, u = 1, grey = 0, empty = 0}) => {
+	const s = 0.72, standH = 130, y = g - standH - 540 * s;
+	return <g>
+		<Shadow x={x + 30} y={g + 2} rx={340} ry={14} o={0.3} />
+		<rect x={x - 330} y={g - standH} width={660} height={16} fill="#6B4A32" />
+		{[-300, 290].map((dx) => <rect key={dx} x={x + dx} y={g - standH + 16} width={12} height={standH - 16} fill="#4E3626" />)}
+		<Slips46 x={x} y={y} s={s} u={u} lit={8} grey={grey} />
+		{empty > 0 && <g opacity={empty} transform={`translate(${x},${y}) scale(${s})`}>
+			<rect x={-412} y={0} width={72} height={540} rx={6} fill="#EFE6D2" stroke="#FFF8EC" strokeWidth={4} />
+			<text x={-376} y={70} textAnchor="middle" style={{fontFamily: "'Noto Serif CJK SC',serif", fontWeight: 900, fontSize: 46}} fill="#8E8478">种</text>
+			<text x={-376} y={124} textAnchor="middle" style={{fontFamily: "'Noto Serif CJK SC',serif", fontWeight: 900, fontSize: 46}} fill="#8E8478">树</text>
+			<text x={-376} y={300} textAnchor="middle" style={{fontFamily: "'Noto Serif CJK SC',serif", fontWeight: 900, fontSize: 72}} fill="#C0542F">无</text>
+		</g>}
+	</g>;
+};
+/** 《水经注》's line carved on a stone tablet standing on the ground beside the tree, 盖 circled */
+export const Tablet: React.FC<{x: number; g: number; u?: number; hl?: number}> = ({x, g, u = 1, hl = 0}) => {
+	const w = 520, h = 520, top = g - 40 - h;
+	return <g>
+		<Shadow x={x + 40} y={g + 2} rx={320} ry={14} o={0.3} />
+		<rect x={x - w / 2 - 24} y={g - 40} width={w + 48} height={40} fill={C.stele} /><rect x={x - w / 2 - 24} y={g - 40} width={w + 48} height={6} fill={C.steleLit} />
+		<path d={`M${x + w / 2},${top} L${x + w / 2 + 16},${top - 8} L${x + w / 2 + 16},${g - 46} L${x + w / 2},${g - 40} Z`} fill={C.steleSh} />
+		<rect x={x - w / 2} y={top} width={w} height={h} fill="url(#steleG)" />
+		<rect x={x - w / 2 + 12} y={top + 12} width={w - 24} height={h - 24} fill="none" stroke="#A9A396" strokeWidth={3} />
+		{['柏樹夾兩階', '大二十餘圍'].map((txt, i) => <VText key={i} x={x + 170 - i * 100} y={top + 40} s={txt} size={56} fill="#5F5A50" u={clamp(u * 3 - i)} />)}
+		<VText x={x - 30} y={top + 40} s="蓋漢武所植也" size={62} fill={C.ink} u={clamp(u * 3 - 2)} hl={hl > 0 ? {0: mixC(C.ink, '#C0542F', hl)} : {}} />
+		{hl > 0 && <circle cx={x - 30} cy={top + 76} r={50} fill="none" stroke="#C0542F" strokeWidth={6} opacity={hl} strokeDasharray={`${hl * 320} 400`} />}
+		<text x={x - 170} y={g - 70} textAnchor="middle" style={{fontFamily: "'Noto Serif CJK SC',serif", fontSize: 26, fontWeight: 700}} fill="#6E675C" opacity={clamp(u * 3)}>《水經注》卷二十四</text>
+	</g>;
+};
+/** today's visitors as a stream of phone-white points climbing the stair path (and coming down) */
+export const Climbers: React.FC<{t: number; n?: number; o?: number}> = ({t, n = 46, o = 1}) => o <= 0 ? null : <g opacity={o}>
+	{Array.from({length: n}, (_, i) => { const up = i % 3 !== 0, u = ((t * (0.035 + 0.01 * rnd(i, 51)) + rnd(i, 52)) % 1), v = up ? u : 1 - u, [x, y] = pathAt(v);
+		return <circle key={i} cx={x + (rnd(i, 53) - 0.5) * 12} cy={y - 3} r={2.6} fill="#FFFFFF" opacity={0.85} />; })}
 </g>;

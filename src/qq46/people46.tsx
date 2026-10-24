@@ -34,7 +34,7 @@ export const reg = (f: FigSpec) => { if (FIGS.length < 20000) FIGS.push(f); retu
 
 export const LOOK: Record<string, Look4> = {
 	emperor: {dress: 'robe', head: 'bald', sleeves: 'wide', beard: 'moustache'}, attendant: {dress: 'robe', head: 'bald'},
-	soldier: {dress: 'coat', head: 'cap'}, soldier2: {dress: 'coat', head: 'cap', build: 1.05},
+	soldier: {dress: 'coat', head: 'cylcap'}, soldier2: {dress: 'coat', head: 'cylcap', build: 1.05},
 	vendor: {dress: 'jacket', head: 'bowl'}, buyer: {dress: 'robe', head: 'short'}, buyer2: {dress: 'dress', head: 'bob'},
 	tourist: {dress: 'jacket', head: 'short'}, tourist2: {dress: 'dress', head: 'long'}, tourist3: {dress: 'shirt', head: 'cap'}, child: {dress: 'shirt', head: 'child', build: 0.9},
 };
@@ -51,9 +51,9 @@ const QingHat: React.FC<{x: number; ground: number; h: number; pose: Pose; flip?
 	</g>;
 };
 export const Person: React.FC<{who: string; t: number; x: number; ground: number; h: number; pose: Pose; look: Look4; flip?: boolean; intent?: 'stand' | 'walk'; col?: string; rim?: string; rimOp?: number; o?: number; hat?: 'qing';
-	hands?: {joint: 'LHand' | 'RHand'; at: P2; tol?: number}[]}> = ({who, t, x, ground, h, pose, look, flip, intent = 'stand', col = C.fig, rim = C.figRim, rimOp = 0.4, o = 1, hands, hat}) => {
+	hands?: {joint: 'LHand' | 'RHand'; at: P2; tol?: number}[]}> = ({who, t, x, ground, h, pose, look, flip, intent = 'stand', col = C.fig, rim = C.figRim, rimOp = 0.5, o = 1, hands, hat}) => {
 	reg({who, t, x, ground, h, pose, flip, intent, hands});
-	return <g opacity={o}><Rimmed x={x} ground={ground} h={h} pose={pose} look={look} col={col} flip={flip} T={t} rim={rim} rimOp={rimOp} />{hat === 'qing' && <QingHat x={x} ground={ground} h={h} pose={pose} flip={flip} col={col} />}</g>;
+	return <g opacity={o}><ellipse cx={x} cy={ground + 1} rx={0.17 * h} ry={0.024 * h} fill="#2A2218" opacity={0.32} filter="url(#k3)" /><Rimmed x={x} ground={ground} h={h} pose={pose} look={look} col={col} flip={flip} T={t} rim={rim} rimOp={rimOp} />{hat === 'qing' && <QingHat x={x} ground={ground} h={h} pose={pose} flip={flip} col={col} />}</g>;
 };
 /** world position of a joint */
 export const jointAt = (pose: Pose, n: string, x: number, ground: number, h: number, flip = false): P2 => [x + (flip ? -1 : 1) * pose[n][0] * h, ground - pose[n][1] * h];
