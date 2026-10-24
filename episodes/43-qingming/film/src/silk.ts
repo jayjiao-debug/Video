@@ -641,340 +641,34 @@ function fence(P: Painter, X0: number, Z0: number, X1: number, Z1: number, h: nu
   for (const yf of [0.35, 0.75]) line(P, [P.pt(X0, h * yf, Z0), P.pt(X1, h * yf, Z1)], 1.1, { a: 0.85, amp: 0.8 });
 }
 
-// pseudo-character: an illegible glyph built from brush strokes (for signs, flags, colophons in other hands)
+// pseudo-character: an illegible glyph built like a CJK character (components, horizontals, verticals, sweeps, dots)
 function illegibleGlyph(P: Painter, cx: number, cy: number, size: number, weight = 1, cursive = 0) {
-  const r = P.r, s = size / 2, n = ri(r, 3, 7), wB = size * 0.09 * weight;
-  let px = cx + rr(r, -s, 0), py = cy + rr(r, -s, -s * 0.3);
-  for (let i = 0; i < n; i++) {
-    const k = r(); let a: Pt, b: Pt, m: Pt;
-    if (k < 0.32) { const y = cy + rr(r, -s, s) * 0.85, x0 = cx - s * rr(r, 0.4, 0.95), x1 = cx + s * rr(r, 0.3, 0.95); a = [x0, y]; b = [x1, y - s * 0.06]; m = [(x0 + x1) / 2, y - s * 0.05]; }
-    else if (k < 0.6) { const x = cx + rr(r, -s, s) * 0.75, y0 = cy - s * rr(r, 0.5, 0.95), y1 = cy + s * rr(r, 0.2, 0.95); a = [x, y0]; b = [x, y1]; m = [x + rr(r, -1, 1), (y0 + y1) / 2]; }
-    else if (k < 0.78) { a = [cx + rr(r, -0.1, 0.4) * s, cy - rr(r, 0.2, 0.8) * s]; b = [cx - rr(r, 0.5, 0.95) * s, cy + rr(r, 0.4, 0.95) * s]; m = [(a[0] + b[0]) / 2 + s * 0.15, (a[1] + b[1]) / 2]; }
-    else if (k < 0.92) { a = [cx - rr(r, 0, 0.3) * s, cy - rr(r, 0, 0.4) * s]; b = [cx + rr(r, 0.5, 0.95) * s, cy + rr(r, 0.5, 0.95) * s]; m = [(a[0] + b[0]) / 2 - s * 0.1, (a[1] + b[1]) / 2 + s * 0.1]; }
-    else { a = [cx + rr(r, -0.7, 0.7) * s, cy + rr(r, -0.8, 0.6) * s]; b = [a[0] + s * 0.18, a[1] + s * 0.22]; m = [a[0] + s * 0.12, a[1] + s * 0.05]; }
-    if (cursive > 0 && i > 0) { brush(P, [px, py], [(px + a[0]) / 2 + rr(r, -3, 3), (py + a[1]) / 2], a, wB * 0.25, wB * 0.25, undefined, 5); }
-    brush(P, a, m, b, wB * rr(r, 0.8, 1.25), wB * rr(r, 0.35, 0.9), undefined, 7);
-    px = b[0]; py = b[1];
-  }
-}
-
-// ------------------------------------------------------------------ trees (screen space, foot at x,y)
-function branches(P: Painter, x: number, y: number, ang: number, len: number, w: number, depth: number, tips: Pt[], claw = 0) {
-  const r = P.r; const bend = rr(r, -0.35, 0.35);
-  const ex = x + Math.cos(ang) * len, ey = y + Math.sin(ang) * len;
-  const mx = x + Math.cos(ang + bend) * len * 0.55, my = y + Math.sin(ang + bend) * len * 0.55;
-  brush(P, [x, y], [mx, my], [ex, ey], w, w * 0.62, P.ink(0.93), 8);
-  if (depth <= 0 || len < 9) {
-    tips.push([ex, ey]);
-    if (claw > 0) { // crab-claw twigs (蟹爪) of the bare spring trees
-      for (let i = 0; i < 2; i++) { const a = ang + rr(r, -0.9, 0.9); const l = len * rr(r, 0.4, 0.8); const tx = ex + Math.cos(a) * l, ty = ey + Math.sin(a) * l; brush(P, [ex, ey], [tx, ty - l * 0.1], [tx + Math.cos(a + 1.6) * l * 0.3, ty + Math.sin(a + 1.6) * l * 0.3 + l * 0.25], w * 0.6, 0.5, P.ink(0.85), 6); }
-    }
-    return;
-  }
-  const kids = depth > 2 ? 2 : ri(r, 2, 3);
-  for (let i = 0; i < kids; i++) {
-    const a = ang + (i - (kids - 1) / 2) * rr(r, 0.45, 0.85) + rr(r, -0.15, 0.15);
-    branches(P, ex, ey, a, len * rr(r, 0.62, 0.8), w * 0.64, depth - 1, tips, claw);
-  }
-}
-function trunk(P: Painter, x: number, y: number, H: number, wBase: number, lean: number): Pt {
-  const r = P.r; const top: Pt = [x + lean * H * 0.35, y - H * 0.42];
-  const mid: Pt = [x + lean * H * 0.08 + rr(r, -6, 6), y - H * 0.22];
-  const L: Pt[] = [], R: Pt[] = [];
-  const pts = qbez([x, y], mid, top, 10);
-  for (let i = 0; i <= 10; i++) { const t = i / 10; const w = wBase * (1 - t * 0.55) * (i === 0 ? 1.5 : 1) * (1 + 0.12 * Math.sin(i * 1.7)); L.push([pts[i][0] - w / 2, pts[i][1]]); R.push([pts[i][0] + w / 2, pts[i][1]]); }
-  const poly = L.concat(R.reverse());
-  shape(P, poly, P.pal.wood, 2.0, { amp: 0.8, k: P.mode === 'colour' ? 0.9 : 1.4 });
-  for (let i = 0; i < 6 * P.detail; i++) { const t = rr(r, 0.1, 0.9); const p = pts[Math.round(t * 10)]; const w = wBase * (1 - t * 0.55); brush(P, [p[0] - w * 0.3, p[1]], [p[0] - w * 0.1, p[1] - 6], [p[0] + w * 0.25 * rr(r, -1, 1), p[1] - rr(r, 8, 18)], 1.6, 0.5, P.ink(0.6), 5); }
-  return top;
-}
-function willow(P: Painter, x: number, y: number, H: number) {
-  const r = P.r; const top = trunk(P, x, y, H, H * 0.07, rr(r, -0.25, 0.25));
-  const tips: Pt[] = [];
-  for (let i = 0; i < 5; i++) branches(P, top[0], top[1], -Math.PI / 2 + (i - 2) * 0.38 + rr(r, -0.1, 0.1), H * rr(r, 0.16, 0.24), H * 0.032, 3, tips);
-  const ns = Math.round(tips.length * 7 * (0.55 + 0.45 * P.detail));
-  const col = P.mode === 'colour' ? rgba(mix(C_LV, hex('#7FA36A'), 0.4), 0.85 * (1 - P.fog * 0.6)) : P.ink(0.62);
-  for (let i = 0; i < ns; i++) {
-    const t = pick(r, tips); const sx = t[0] + rr(r, -16, 16), sy = t[1] + rr(r, -8, 12);
-    const len = H * rr(r, 0.18, 0.55) * (0.6 + 0.4 * Math.min(1, Math.abs(sx - top[0]) / (H * 0.25))), sway = rr(r, -0.1, 0.1) * len;
-    brush(P, [sx, sy], [sx + sway * 0.2 + rr(r, -6, 6), sy - len * 0.12], [sx + sway, sy + len], rr(r, 1.6, 2.8), 0.6, col, 9);
-  }
-  if (P.mode === 'colour') for (let i = 0; i < 5; i++) { const t = pick(r, tips); fill(P, ellipsePts(t[0], t[1] + H * 0.2, H * 0.14, H * 0.2, 0, 7, 16), rgba(C_LV, 0.12 * (1 - P.fog)), true); }
-}
-function leafTree(P: Painter, x: number, y: number, H: number, style: 'dot' | 'jia' = 'dot') {
-  const r = P.r; const top = trunk(P, x, y, H, H * 0.085, rr(r, -0.2, 0.2));
-  const tips: Pt[] = [];
-  for (let i = 0; i < 3; i++) branches(P, top[0], top[1], -Math.PI / 2 + (i - 1) * 0.6 + rr(r, -0.15, 0.15), H * rr(r, 0.2, 0.28), H * 0.04, 3, tips);
-  // foliage clumps of dotted leaves (点叶)
-  const clumps = tips.filter((_, i) => i % 2 === 0);
-  for (const t of clumps) {
-    const cr = H * rr(r, 0.09, 0.14);
-    if (P.mode === 'colour') fill(P, ellipsePts(t[0], t[1], cr * 1.2, cr * 0.85, 0, 7, 16), P.wash(P.pal.leaf, 0.55), true);
-    else fill(P, ellipsePts(t[0], t[1], cr * 1.15, cr * 0.8, 0, 7, 16), P.wash(P.pal.leaf, 0.6), true);
-    const nd = Math.round(70 * P.detail);
-    for (let i = 0; i < nd; i++) {
-      const a = r() * Math.PI * 2, q = Math.sqrt(r()); const px = t[0] + Math.cos(a) * cr * 1.1 * q, py = t[1] + Math.sin(a) * cr * 0.75 * q;
-      if (style === 'dot') { P.ctx.beginPath(); P.ctx.ellipse(px, py, 2.6, 1.7, rr(r, -0.6, 0.6), 0, 7); P.ctx.fillStyle = P.ink(0.82); P.ctx.fill(); }
-      else { const pts = ellipsePts(px, py, 4.5, 2.4, 0, 7, 8).map(p => [p[0], p[1]] as Pt); line(P, pts, 0.8, { closed: true, amp: 0.1, a: 0.8 }); }
-    }
-  }
-}
-function bareTree(P: Painter, x: number, y: number, H: number) {
-  const r = P.r; const top = trunk(P, x, y, H, H * 0.08, rr(r, -0.3, 0.3)); const tips: Pt[] = [];
-  for (let i = 0; i < 3; i++) branches(P, top[0], top[1], -Math.PI / 2 + (i - 1) * 0.7 + rr(r, -0.2, 0.2), H * rr(r, 0.2, 0.3), H * 0.04, 3, tips, 1);
-  if (P.mode === 'colour') for (const t of tips) if (r() < 0.5) { P.ctx.beginPath(); P.ctx.arc(t[0], t[1], 2.4, 0, 7); P.ctx.fillStyle = rgba(C_LV, 0.8); P.ctx.fill(); }
-}
-// a soft distant tree line (fogged)
-function farTrees(P: Painter, x0: number, x1: number, y: number, H: number) {
-  const r = P.r;
-  for (let x = x0; x < x1; x += rr(r, 40, 90)) {
-    const h = H * rr(r, 0.6, 1.1);
-    seg(P, x, y, x + rr(r, -4, 4), y - h * 0.5, 1.4, 0.5);
-    fill(P, ellipsePts(x, y - h * 0.7, h * 0.28, h * 0.32, 0, 7, 12), P.wash(P.pal.leaf, 0.3), true);
-    for (let i = 0; i < 8 * P.detail; i++) { P.ctx.beginPath(); P.ctx.arc(x + rr(r, -h * 0.25, h * 0.25), y - h * 0.7 + rr(r, -h * 0.25, h * 0.25), 1.8, 0, 7); P.ctx.fillStyle = P.ink(0.4); P.ctx.fill(); }
-  }
-}
-
-// ------------------------------------------------------------------ ground & water
-function tuft(P: Painter, x: number, y: number, s: number, a = 0.75) {
-  const n = ri(P.r, 3, 5);
-  for (let i = 0; i < n; i++) { const dx = (i - (n - 1) / 2) * s * 0.35; brush(P, [x + dx * 0.4, y], [x + dx, y - s * 0.6], [x + dx * 1.6 + rr(P.r, -2, 2), y - s * rr(P.r, 0.7, 1.2)], s * 0.16, s * 0.04, P.ink(a), 5); }
-}
-function dots(P: Painter, x: number, y: number, n: number, sp: number) {
-  for (let i = 0; i < n; i++) { P.ctx.beginPath(); P.ctx.ellipse(x + rr(P.r, -sp, sp), y + rr(P.r, -sp * 0.4, sp * 0.4), 2.4, 1.6, 0, 0, 7); P.ctx.fillStyle = P.ink(0.7); P.ctx.fill(); }
-}
-// fish-scale ripples + long current lines inside a polygon (screen space)
-function ripples(P: Painter, poly: Pt[], flow: Pt, dens = 1) {
-  const c = P.ctx; c.save(); c.beginPath(); tracePath(c, poly, true, false); c.clip();
-  let xs = Infinity, xe = -Infinity, ys = Infinity, ye = -Infinity;
-  for (const p of poly) { xs = Math.min(xs, p[0]); xe = Math.max(xe, p[0]); ys = Math.min(ys, p[1]); ye = Math.max(ye, p[1]); }
-  const r = P.r, fl = Math.hypot(flow[0], flow[1]); const fx = flow[0] / fl, fy = flow[1] / fl;
-  const col = P.mode === 'colour' ? rgba(mix(C_QING, P.pal.ink, 0.35), 0.5) : P.ink(0.42);
-  // long current lines along the flow
-  for (let i = 0; i < 60 * dens * P.detail; i++) {
-    const x = rr(r, xs, xe), y = rr(r, ys, ye), l = rr(r, 120, 340);
-    const pts: Pt[] = []; for (let k = 0; k <= 8; k++) { const t = k / 8; pts.push([x + fx * l * t - fy * Math.sin(t * 6 + i) * 3, y + fy * l * t + fx * Math.sin(t * 6 + i) * 3]); }
-    line(P, pts, 0.9, { color: col, amp: 0.2 });
-  }
-  // scale ripples
-  const sp = 30 / Math.sqrt(dens);
-  for (let y = ys; y < ye; y += sp * 0.8) {
-    const off = (Math.floor(y / sp) % 2) * sp;
-    for (let x = xs + off; x < xe; x += sp * 2.2) {
-      if (r() > 0.75 * P.detail + 0.15) continue;
-      const px = x + rr(r, -10, 10), py = y + rr(r, -4, 4), s = rr(r, 9, 15);
-      c.beginPath(); c.moveTo(px - s, py); c.quadraticCurveTo(px - fx * 2, py - s * 0.45, px + s, py);
-      c.lineWidth = P.lw(1.0); c.strokeStyle = col; c.stroke();
-    }
-  }
-  c.restore();
-}
-
-// ------------------------------------------------------------------ boats (hull along Z, the flow)
-interface Boat { cabin?: 'long' | 'small' | 'none'; mast?: number | null; mastH?: number; crew?: number; push?: Pt[]; oar?: boolean; tow?: Pt | null; robeSeed?: number }
-function boat(P: Painter, Xc: number, Z0: number, L: number, beam: number, o: Boat = {}): { apex?: Pt; roofY: number } {
-  const hh = beam * 0.26, N = 24, lw = 2.2;
-  const hw = (s: number) => beam / 2 * (1 - 0.42 * Math.pow(Math.abs(2 * s - 1), 3));
-  const g = (s: number) => hh * (1 + 0.85 * Math.pow(Math.abs(2 * s - 1), 2.4)) + (s > 0.5 ? (s - 0.5) * hh * 0.5 : 0);
-  const Z = (s: number) => Z0 + s * L;
-  const W = (s: number, side: number, Y: number) => P.pt(Xc + side * hw(s) * (Y <= 0 ? 0.9 : 1), Y, Z(s));
-  // water shadow under the hull
-  const sh: Pt[] = []; for (let i = 0; i <= N; i++) sh.push(P.pt(Xc + hw(i / N) * 1.25, 0, Z(i / N)));
-  for (let i = N; i >= 0; i--) sh.push(P.pt(Xc - hw(i / N) * 0.6, 0, Z(i / N)));
-  fill(P, sh, P.wash(P.pal.water, 1.6), true);
-  // deck (seen from above) then the starboard side band, then the transom
-  const deck: Pt[] = []; for (let i = 0; i <= N; i++) deck.push(W(i / N, 1, g(i / N)));
-  for (let i = N; i >= 0; i--) deck.push(W(i / N, -1, g(i / N)));
-  shape(P, deck, P.pal.wood, lw, { k: 0.55 });
-  for (let i = 1; i < 10; i++) { const s = i / 10; const a = W(s, 1, g(s)), b = W(s, -1, g(s)); seg(P, a[0], a[1], b[0], b[1], 0.8, 0.45); }
-  const side: Pt[] = []; for (let i = 0; i <= N; i++) side.push(W(i / N, 1, g(i / N)));
-  for (let i = N; i >= 0; i--) { const s = i / N; const e = Math.abs(2 * s - 1); side.push(W(s, 1, e > 0.9 ? (e - 0.9) * 10 * g(s) * 0.7 : 0)); }
-  shape(P, side, P.pal.wood, lw * 1.1, { k: 1.1 });
-  for (const f of [0.38, 0.7]) { const pts: Pt[] = []; for (let i = 1; i < N; i++) { const s = i / N; pts.push(W(s, 1, g(s) * (1 - f) )); } line(P, pts, 1.0, { a: 0.75 }); }
-  for (let i = 2; i < N - 1; i += 2) { const s = i / N; const a = W(s, 1, g(s)), b = W(s, 1, g(s) * 0.35); seg(P, a[0], a[1], b[0], b[1], 0.7, 0.5); }
-  { const pts: Pt[] = []; for (let i = 0; i <= N; i++) pts.push(W(i / N, 1, g(i / N) + 3)); line(P, pts, 3.0); }
-  const tr: Pt[] = [W(0, -1, g(0)), W(0, 1, g(0)), W(0.02, 1, g(0) * 0.55), W(0.02, -1, g(0) * 0.55)];
-  shape(P, tr, P.pal.wood, lw, { k: 1.5 });
-  // rudder at the stern
-  const ru: Pt[] = [P.pt(Xc, g(0) * 0.8, Z0 + 4), P.pt(Xc, -hh * 0.3, Z0 - beam * 0.06), P.pt(Xc, -hh * 0.25, Z0 - beam * 0.2), P.pt(Xc, g(0) * 0.45, Z0 - beam * 0.1)];
-  shape(P, ru, P.pal.wood, 1.6, { k: 1.4 });
-  let roofY = g(0.5);
-  const crewPts: { p: Pt; dir: number; pose: Fig['pose']; tool?: Pt }[] = [];
-  if (o.cabin && o.cabin !== 'none') {
-    const long = o.cabin === 'long';
-    const s0 = long ? 0.2 : 0.36, s1 = long ? 0.78 : 0.68, cw = beam * (long ? 0.8 : 0.66), hc = beam * (long ? 0.2 : 0.12), arch = beam * (long ? 0.15 : 0.2), ov = beam * 0.07;
-    const base = g(0.5) - 2;
-    const R = cw / 2 + ov;
-    const prof = (s: number, n = 10): Pt[] => { const out: Pt[] = []; for (let i = 0; i <= n; i++) { const x = -R + 2 * R * i / n; out.push(P.pt(Xc + x, base + hc + arch * (1 - (x / R) ** 2), Z(s))); } return out; };
-    // starboard wall with sliding window panels
-    const sw: Pt[] = [P.pt(Xc + cw / 2, base, Z(s0)), P.pt(Xc + cw / 2, base, Z(s1)), P.pt(Xc + cw / 2, base + hc, Z(s1)), P.pt(Xc + cw / 2, base + hc, Z(s0))];
-    shape(P, sw, P.pal.wood, 1.6, { k: 0.5 });
-    const nb = long ? 9 : 4;
-    for (let i = 1; i < nb; i++) { const s = lerp(s0, s1, i / nb); const a = P.pt(Xc + cw / 2, base, Z(s)), b = P.pt(Xc + cw / 2, base + hc, Z(s)); seg(P, a[0], a[1], b[0], b[1], 1.0, 0.8); }
-    if (long && P.detail > 0.6) for (let i = 0; i < nb; i++) { if (i % 3 === 1) { const sA = lerp(s0, s1, i / nb) + 0.004, sB = lerp(s0, s1, (i + 1) / nb) - 0.004; fill(P, [P.pt(Xc + cw / 2, base + hc * 0.45, Z(sA)), P.pt(Xc + cw / 2, base + hc * 0.45, Z(sB)), P.pt(Xc + cw / 2, base + hc * 0.9, Z(sB)), P.pt(Xc + cw / 2, base + hc * 0.9, Z(sA))], P.wash(P.pal.shade, 2.2)); } }
-    { const a = P.pt(Xc + cw / 2, base + hc * 0.45, Z(s0)), b = P.pt(Xc + cw / 2, base + hc * 0.45, Z(s1)); seg(P, a[0], a[1], b[0], b[1], 0.9, 0.8); }
-    // near end wall (faces the viewer, stern side)
-    const ew: Pt[] = [P.pt(Xc - cw / 2, base, Z(s0)), P.pt(Xc + cw / 2, base, Z(s0)), ...prof(s0).reverse().filter((_, i, a) => i > 0 && i < a.length - 1).map(p => p), P.pt(Xc - cw / 2, base + hc, Z(s0))];
-    shape(P, [P.pt(Xc - cw / 2, base, Z(s0)), P.pt(Xc + cw / 2, base, Z(s0)), P.pt(Xc + cw / 2, base + hc, Z(s0)), ...prof(s0).reverse(), P.pt(Xc - cw / 2, base + hc, Z(s0))], P.pal.wood, 1.6, { k: 0.4 });
-    void ew;
-    fill(P, [P.pt(Xc - cw * 0.18, base, Z(s0)), P.pt(Xc + cw * 0.18, base, Z(s0)), P.pt(Xc + cw * 0.18, base + hc * 0.9, Z(s0)), P.pt(Xc - cw * 0.18, base + hc * 0.9, Z(s0))], P.wash(P.pal.shade, 3));
-    // the arched mat roof
-    const right: Pt[] = [], left: Pt[] = [];
-    for (let i = 0; i <= 12; i++) { const s = lerp(s0 - 0.01, s1 + 0.01, i / 12); right.push(P.pt(Xc + R, base + hc, Z(s))); left.push(P.pt(Xc - R, base + hc, Z(s))); }
-    const roofPoly = [...prof(s0 - 0.01), ...right, ...prof(s1 + 0.01).reverse(), ...left.reverse()];
-    shape(P, roofPoly, P.pal.roof, 0, { k: 0.8 });
-    for (let i = 0; i <= (long ? 18 : 8); i++) line(P, prof(lerp(s0, s1, i / (long ? 18 : 8)), 8), 0.9, { a: 0.6, amp: 0.2 });
-    line(P, roofPoly, 1.8, { closed: true, amp: 0.4 });
-    line(P, prof(s0 - 0.01), 2.2);
-    roofY = base + hc + arch;
-    if (long) { const ridge: Pt[] = []; for (let i = 0; i <= 8; i++) ridge.push(P.pt(Xc, roofY, Z(lerp(s0, s1, i / 8)))); line(P, ridge, 1.0, { a: 0.6 }); }
-  }
-  // the A-frame mast (人字桅), hinged ahead of the cabin; mast 0 = upright, 1 = lowered toward the stern
-  let apex: Pt | undefined;
-  if (o.mast !== undefined && o.mast !== null) {
-    const sh2 = 0.86, Yh = g(sh2), M = o.mastH ?? L * 0.58, th = clamp(o.mast, 0, 1) * 1.38;
-    const ap = { X: Xc, Y: Yh + M * Math.cos(th), Z: Z(sh2) - M * Math.sin(th) };
-    apex = P.pt(ap.X, ap.Y, ap.Z);
-    const fl = P.pt(Xc - beam * 0.3, Yh, Z(sh2)), fr = P.pt(Xc + beam * 0.3, Yh, Z(sh2));
-    // stays: to the bow and down to the stern where the crew pays out the line
-    line(P, [apex, W(1, 0, g(1))], 1.0, { a: 0.85, amp: 0.2 });
-    line(P, [apex, P.pt(Xc + beam * 0.2, roofY, Z(0.2))], 1.0, { a: 0.85, amp: 0.2 });
-    line(P, [apex, W(0.02, 0, g(0) + 4)], 0.9, { a: 0.75, amp: 0.2 });
-    brush(P, fl, [(fl[0] + apex[0]) / 2, (fl[1] + apex[1]) / 2], apex, 11, 6, P.ink(0.95), 4);
-    brush(P, fr, [(fr[0] + apex[0]) / 2, (fr[1] + apex[1]) / 2], apex, 11, 6, P.ink(0.95), 4);
-    const cb = (t: number): [Pt, Pt] => [[lerp(fl[0], apex![0], t), lerp(fl[1], apex![1], t)], [lerp(fr[0], apex![0], t), lerp(fr[1], apex![1], t)]];
-    for (const t of [0.35, 0.7]) { const [a, b] = cb(t); seg(P, a[0], a[1], b[0], b[1], 2.0); }
-  }
-  // crew
-  const nC = o.crew ?? 0, rs = o.robeSeed ?? 0;
-  if (nC > 0) {
-    const onRoof = o.cabin === 'long';
-    // helmsman at the stern, the sculling oar
-    crewPts.push({ p: P.pt(Xc - beam * 0.1, g(0.03) + 2, Z(0.05)), dir: 1, pose: 'pull', tool: P.pt(Xc, g(0) * 0.9, Z0 - beam * 0.1) });
-    if (o.oar) crewPts.push({ p: P.pt(Xc + beam * 0.28, g(0.1), Z(0.12)), dir: 1, pose: 'push', tool: P.pt(Xc + beam * 1.1, -6, Z(0.0)) });
-    // bow crew fending off the bridge with poles
-    const nPush = o.push ? Math.min(o.push.length, Math.max(1, nC - 4)) : 0;
-    for (let i = 0; i < nPush; i++) crewPts.push({ p: P.pt(Xc + (i - (nPush - 1) / 2) * beam * 0.28, g(0.9) - 2, Z(0.88 + 0.03 * (i % 2))), dir: 1, pose: 'push', tool: o.push![i] });
-    // roof crew hauling the mast down on ropes, others shouting
-    const nRoof = nC - nPush - 1;
-    for (let i = 0; i < nRoof; i++) {
-      const s = lerp(0.26, 0.7, (i + 0.5) / Math.max(1, nRoof));
-      const p = P.pt(Xc + rr(P.r, -beam * 0.12, beam * 0.12), onRoof ? roofY - 2 : g(s), Z(s));
-      const pull = apex && i % 3 !== 2;
-      crewPts.push({ p, dir: pull ? 1 : -1, pose: pull ? 'pull' : (i % 2 ? 'raise' : 'point'), tool: pull ? apex : undefined });
-    }
-    crewPts.sort((a, b) => a.p[1] - b.p[1]);
-    let k = 0;
-    for (const c of crewPts) figure(P, c.p[0], c.p[1], 50, { dir: c.dir, body: 'short', pose: c.pose, hat: k % 3 === 0 ? 'li' : 'cap', tool: c.tool, robe: (rs + k++) % 8 });
-  }
-  if (o.tow && apex) line(P, [apex, o.tow], 1.0, { a: 0.8, amp: 0.3 });
-  return { apex, roofY };
-}
-
-// ------------------------------------------------------------------ the 虹桥 (woven-timber arch bridge)
-interface BridgeDef { X0: number; X1: number; Zb: number; Db: number; rise: number; T: number; ramp: number; crowd: number; boatX?: number }
-function bridge(P: Painter, B: BridgeDef, part: 'all' = 'all') {
-  void part;
-  const Xm = (B.X0 + B.X1) / 2, hs = (B.X1 - B.X0) / 2, R = (hs * hs + B.rise * B.rise) / (2 * B.rise);
-  const archY = (X: number) => Math.sqrt(Math.max(0, R * R - (X - Xm) ** 2)) - (R - B.rise);
-  const XA = B.X0 - B.ramp, XB = B.X1 + B.ramp;
-  const E = (X: number) => X < B.X0 ? B.T * (X - XA) / B.ramp : X > B.X1 ? B.T * (XB - X) / B.ramp : archY(X) + B.T;
-  const I = (X: number) => archY(X);
-  const N = 80, xs: number[] = []; for (let i = 0; i <= N; i++) xs.push(lerp(XA, XB, i / N));
-  const Zn = B.Zb, Zf = B.Zb + B.Db;
-  const quad = (Xa: number, Ya: number, Xb: number, Yb: number): Pt[] => [P.pt(Xa, Ya, Zn), P.pt(Xb, Yb, Zn), P.pt(Xb, Yb, Zf), P.pt(Xa, Ya, Zf)];
-  const cross = (q: Pt[]) => (q[1][0] - q[0][0]) * (q[2][1] - q[1][1]) - (q[1][1] - q[0][1]) * (q[2][0] - q[1][0]);
-  // 1 underside (visible on the steep haunch) with its transverse beams
-  for (let i = 0; i < N; i++) {
-    const a = xs[i], b = xs[i + 1]; if (a < B.X0 || b > B.X1) continue;
-    const q = quad(a, I(a), b, I(b)); if (cross(q) <= 0) continue;
-    shape(P, q, P.pal.wood, 0, { k: 1.6 });
-    seg(P, q[0][0], q[0][1], q[3][0], q[3][1], 1.4, 0.9);
-    for (const f of [0.2, 0.4, 0.6, 0.8]) { const p1 = P.pt(a, I(a), Zn + B.Db * f), p2 = P.pt(b, I(b), Zn + B.Db * f); seg(P, p1[0], p1[1], p2[0], p2[1], 1.1, 0.8); }
-  }
-  // 2 deck
-  const deckQ: Pt[][] = [];
-  for (let i = 0; i < N; i++) { const a = xs[i], b = xs[i + 1]; const q = quad(a, E(a), b, E(b)); if (cross(q) < 0) deckQ.push(q); }
-  for (const q of deckQ) { fill(P, q, P.gfill()); fill(P, q, P.wash(P.pal.wood, 0.45)); }
-  for (let i = 0; i < deckQ.length; i += 2) { const q = deckQ[i]; seg(P, q[0][0], q[0][1], q[3][0], q[3][1], 0.8, 0.35); }
-  // 3 far railing
-  const rail = (Zr: number, a: number) => {
-    const top: Pt[] = [], mid: Pt[] = [];
-    for (let X = XA + 8; X <= XB - 8; X += 26) {
-      const p = P.pt(X, E(X), Zr), q = P.pt(X, E(X) + 30, Zr); seg(P, p[0], p[1], q[0], q[1], 1.5, a);
-      P.ctx.beginPath(); P.ctx.arc(q[0], q[1] - 1, 2.0, 0, 7); P.ctx.fillStyle = P.ink(a); P.ctx.fill();
-    }
-    for (let i = 0; i <= N; i++) { top.push(P.pt(xs[i], E(xs[i]) + 30, Zr)); mid.push(P.pt(xs[i], E(xs[i]) + 15, Zr)); }
-    line(P, top, 2.0, { a }); line(P, mid, 1.2, { a: a * 0.85 });
+  const r = P.r, s = size / 2, wB = size * 0.085 * weight;
+  const st = (a: Pt, m: Pt, b: Pt, w0 = 1, w1 = 0.55) => {
+    if (cursive > 0) { m = [m[0] + rr(r, -1, 1) * s * 0.12 * cursive, m[1] + rr(r, -1, 1) * s * 0.12 * cursive]; }
+    brush(P, a, m, b, wB * w0 * rr(r, 0.85, 1.15), wB * w1, undefined, 7);
   };
-  rail(Zf, 0.8);
-  // 4 crowd, stalls and the famous meeting of a sedan chair and a rider at the crest
-  const r = P.r; const items: { X: number; u: number; f: (p: Pt) => void }[] = [];
-  const at = (X: number, u: number) => P.pt(X, E(X), Zn + B.Db * u);
-  const nCrowd = Math.round(B.crowd);
-  for (let i = 0; i < nCrowd; i++) {
-    const X = lerp(XA + B.ramp * 0.3, XB - B.ramp * 0.3, Math.pow(r(), 1) ), u = rr(r, 0.12, 0.88);
-    const kind = r(); const dir = r() < 0.5 ? 1 : -1, robe = ri(r, 0, 7), hat = pick(r, ['futou', 'futou', 'jin', 'cap', 'li', 'futou'] as Fig['hat'][]);
-    items.push({ X, u, f: (p) => figure(P, p[0], p[1], 50, { dir, robe, hat, body: kind < 0.35 ? 'short' : 'robe', pose: kind < 0.2 ? 'carry' : 'walk', load: kind < 0.2 ? 'pole' : kind < 0.3 ? 'pack' : 'none' }) });
-  }
-  // stalls with parasols along both sides
-  for (const [fx, u] of [[0.2, 0.86], [0.3, 0.85], [0.72, 0.86], [0.83, 0.85], [0.26, 0.14], [0.78, 0.13]] as [number, number][]) {
-    const X = lerp(XA, XB, fx);
-    items.push({ X, u, f: (p) => { const tb: Pt[] = [[p[0] - 22, p[1] - 22], [p[0] + 22, p[1] - 22], [p[0] + 28, p[1] - 16], [p[0] - 16, p[1] - 16]]; shape(P, tb, P.pal.wood, 1.3, { k: 0.7 }); seg(P, p[0] - 18, p[1] - 16, p[0] - 18, p[1], 1.2); seg(P, p[0] + 22, p[1] - 16, p[0] + 22, p[1], 1.2); figure(P, p[0] - 30, p[1] + 4, 46, { dir: 1, pose: 'sit', robe: 2, hat: 'jin' }); parasol(P, p[0], p[1] + 2, 58, 92); } });
-  }
-  items.push({ X: Xm - 70, u: 0.5, f: (p) => sedan(P, p[0], p[1], 52, -1) });
-  items.push({ X: Xm + 90, u: 0.48, f: (p) => { beast(P, p[0], p[1], 50, 'horse', 1, false, 0.3); figure(P, p[0] + 2, p[1] - 44, 46, { dir: 1, pose: 'point', hat: 'futou', robe: 1, force: true }); figure(P, p[0] + 66, p[1] + 2, 48, { dir: -1, pose: 'walk', body: 'short', hat: 'cap', robe: 4 }); } });
-  // shouting onlookers on the near railing above the boat
-  const bx = B.boatX ?? Xm;
-  for (let i = 0; i < 11; i++) {
-    const X = bx + (i - 5) * 34 + rr(r, -8, 8), u = rr(r, 0.06, 0.13);
-    items.push({ X, u, f: (p) => figure(P, p[0], p[1], 50, { dir: i % 3 === 0 ? -1 : 1, pose: i % 3 === 0 ? 'raise' : i % 3 === 1 ? 'lean' : 'point', hat: i % 2 ? 'futou' : 'cap', robe: i % 8, body: i % 4 === 0 ? 'short' : 'robe' }) });
-  }
-  items.sort((a, b) => b.u - a.u);
-  for (const it of items) it.f(at(it.X, it.u));
-  // 5 near fascia: the woven beams
-  const fas: Pt[] = []; const inner: Pt[] = [];
-  for (let i = 0; i <= N; i++) { const X = xs[i]; fas.push(P.pt(X, E(X), Zn)); inner.push(P.pt(X, X < B.X0 || X > B.X1 ? 0 : I(X), Zn)); }
-  const facePoly = [...fas, ...inner.reverse()];
-  shape(P, facePoly, P.pal.wood, 0, { k: 1.7 });
-  // two interlocking systems of long straight beams (编木拱), drawn as polygonal chords inside the curved band
-  const sysA = [0, 0.2, 0.4, 0.6, 0.8, 1], sysB = [0.1, 0.3, 0.5, 0.7, 0.9];
-  const nodeP = (f: number, h: number) => { const X = lerp(B.X0, B.X1, f); return P.pt(X, I(X) + (E(X) - I(X)) * h, Zn); };
-  const beamW = (B.T - 16) * 0.2;
-  for (const [sys, h] of [[sysA, 0.27], [sysB, 0.62]] as [number[], number][]) {
-    for (let i = 0; i < sys.length - 1; i++) {
-      const a = nodeP(sys[i], h), b = nodeP(sys[i + 1], h);
-      const q: Pt[] = [[a[0], a[1] - beamW], [b[0], b[1] - beamW], [b[0], b[1] + beamW], [a[0], a[1] + beamW]];
-      fill(P, q, P.wash(P.pal.wood, 0.8)); seg(P, q[0][0], q[0][1], q[1][0], q[1][1], 1.3, 0.9); seg(P, q[3][0], q[3][1], q[2][0], q[2][1], 1.3, 0.9);
-      for (let k = 1; k < 4; k++) { const t = k / 4; seg(P, lerp(a[0], b[0], t), lerp(a[1], b[1], t) - beamW * 0.6, lerp(a[0], b[0], t) + 3, lerp(a[1], b[1], t) + beamW * 0.6, 0.7, 0.4); }
+  const comp = (x0: number, y0: number, x1: number, y1: number, k: number) => {
+    const w = x1 - x0, h = y1 - y0, kind = r();
+    if (kind < 0.22) { // 口-like box
+      st([x0 + w * 0.12, y0 + h * 0.2], [x0 + w * 0.13, y0 + h * 0.5], [x0 + w * 0.15, y1 - h * 0.12]);
+      st([x0 + w * 0.12, y0 + h * 0.2], [x0 + w * 0.5, y0 + h * 0.16], [x1 - w * 0.12, y0 + h * 0.22], 1, 0.9);
+      st([x1 - w * 0.12, y0 + h * 0.22], [x1 - w * 0.1, y0 + h * 0.5], [x1 - w * 0.14, y1 - h * 0.12], 1, 0.6);
+      st([x0 + w * 0.16, y1 - h * 0.14], [x0 + w * 0.5, y1 - h * 0.15], [x1 - w * 0.15, y1 - h * 0.14], 0.8, 0.6);
+      if (r() < 0.5) st([x0 + w * 0.2, y0 + h * 0.5], [x0 + w * 0.5, y0 + h * 0.48], [x1 - w * 0.2, y0 + h * 0.5], 0.7, 0.6);
+    } else {
+      const nh = ri(r, 1, Math.min(4, k + 1));
+      for (let i = 0; i < nh; i++) { const y = y0 + h * (0.18 + 0.64 * (nh === 1 ? 0.45 : i / (nh - 1))); const l = rr(r, 0.55, 0.95); st([x0 + w * (1 - l) / 2, y + h * 0.02], [x0 + w / 2, y - h * 0.03], [x0 + w * (1 + l) / 2, y - h * 0.01], 1, 0.75); }
+      if (r() < 0.75) { const x = x0 + w * rr(r, 0.4, 0.6); const hook = r() < 0.4; st([x, y0 + h * 0.06], [x + 1, y0 + h * 0.5], [x, y1 - h * (hook ? 0.12 : 0.04)], 1.05, 0.5); if (hook) st([x, y1 - h * 0.12], [x - w * 0.05, y1 - h * 0.1], [x - w * 0.14, y1 - h * 0.2], 0.7, 0.3); }
+      if (r() < 0.45) st([x0 + w * 0.5, y0 + h * 0.45], [x0 + w * 0.35, y0 + h * 0.7], [x0 + w * 0.06, y1 - h * 0.06], 1, 0.35);
+      if (r() < 0.4) st([x0 + w * 0.5, y0 + h * 0.5], [x0 + w * 0.7, y0 + h * 0.72], [x1 - w * 0.02, y1 - h * 0.04], 0.6, 1.2);
+      if (r() < 0.35) { const x = x0 + w * rr(r, 0.2, 0.8), y = y0 + h * rr(r, 0.02, 0.2); st([x, y], [x + w * 0.05, y + h * 0.06], [x + w * 0.08, y + h * 0.14], 1.1, 0.5); }
     }
-  }
-  // transverse beam ends (dark squares) where the systems cross
-  for (const [sys, h] of [[sysA, 0.27], [sysB, 0.62]] as [number[], number][]) for (const f of sys) {
-    const p = nodeP(f, h); const s = 8.5; P.ctx.fillStyle = P.ink(0.95); P.ctx.fillRect(p[0] - s, p[1] - s, s * 2, s * 2);
-    P.ctx.fillStyle = P.wash(P.pal.wood, 1.2); P.ctx.fillRect(p[0] - s * 0.45, p[1] - s * 0.45, s * 0.9, s * 0.9);
-  }
-  // cross braces between the beam rows
-  for (let f = 0.05; f < 0.96; f += 0.1) { const p = nodeP(f, 0.12), q = nodeP(f + 0.05, 0.8), p2 = nodeP(f + 0.05, 0.12), q2 = nodeP(f, 0.8); seg(P, p[0], p[1], q[0], q[1], 0.9, 0.5); seg(P, p2[0], p2[1], q2[0], q2[1], 0.9, 0.5); }
-  // deck-edge fascia board with battens
-  const board: Pt[] = []; for (let i = 0; i <= N; i++) board.push(P.pt(xs[i], E(xs[i]) - 14, Zn)); line(P, board, 1.4, { a: 0.9 });
-  for (let X = XA + 10; X < XB - 10; X += 18) { const a = P.pt(X, E(X), Zn), b = P.pt(X, E(X) - 14, Zn); seg(P, a[0], a[1], b[0], b[1], 0.8, 0.6); }
-  line(P, fas, 3.0); line(P, inner.reverse().filter((_, i) => xs[i] >= B.X0 && xs[i] <= B.X1), 3.0);
-  // stone abutments where the arch lands on the banks
-  for (const Xe of [B.X0, B.X1]) {
-    const s = Xe === B.X0 ? -1 : 1; const ab: Pt[] = [P.pt(Xe - 50, -6, Zn - 8), P.pt(Xe + 50, -6, Zn - 8), P.pt(Xe + 50 * (s > 0 ? 1 : 0.4), 40, Zn - 8), P.pt(Xe - 50 * (s < 0 ? 1 : 0.4), 40, Zn - 8)];
-    shape(P, ab, P.pal.stone, 1.8);
-    for (const y of [12, 26]) { const a = P.pt(Xe - 46, y, Zn - 8), b = P.pt(Xe + 46, y, Zn - 8); seg(P, a[0], a[1], b[0], b[1], 0.9, 0.6); }
-  }
-  // 6 near railing
-  rail(Zn, 1);
-  // 7 the tall poles (表木) at the bridge ends
-  for (const [X, Zp, a] of [[XA + 20, Zf + 10, 0.6], [XB - 20, Zf + 10, 0.6], [XA + 16, Zn - 12, 1], [XB - 16, Zn - 12, 1]] as [number, number, number][]) {
-    const p = P.pt(X, 0, Zp), q = P.pt(X, 400, Zp); seg(P, p[0], p[1], q[0], q[1], 3.0, a);
-    const c1 = P.pt(X - 30, 360, Zp), c2 = P.pt(X + 30, 360, Zp); seg(P, c1[0], c1[1], c2[0], c2[1], 2.2, a);
-    const b1 = P.pt(X, 360, Zp - 30), b2 = P.pt(X, 360, Zp + 30); seg(P, b1[0], b1[1], b2[0], b2[1], 2.2, a);
-    brush(P, [q[0] - 6, q[1] + 2], [q[0], q[1] - 10], [q[0] + 10, q[1] - 4], 4, 1.5, P.ink(a));
-  }
+  };
+  const L = r(), x0 = cx - s * 0.92, x1 = cx + s * 0.92, y0 = cy - s * 0.92, y1 = cy + s * 0.92;
+  if (L < 0.45) { const sp = cx + s * rr(r, -0.35, -0.05); comp(x0, y0 + s * 0.1, sp, y1 - s * 0.1, 2); comp(sp + s * 0.05, y0, x1, y1, 3); }
+  else if (L < 0.75) { const sp = cy + s * rr(r, -0.3, 0.1); comp(x0 + s * 0.1, y0, x1 - s * 0.1, sp, 2); comp(x0, sp + s * 0.05, x1, y1, 3); }
+  else comp(x0, y0, x1, y1, 4);
 }
 
 // @@END@@
@@ -1145,6 +839,7 @@ function houseRow(S: Scene, L: number | ((X: number, Z: number) => number), X0: 
     const straw = r() < (opts.straw ?? 0), gable = !straw && r() < (opts.gableZ ?? 0.25), two = !straw && !gable && r() < (opts.two ?? 0.08);
     const o: House = { roof: straw ? 'straw' : pick(r, opts.roof ?? ['gable', 'gable', 'xieshan', 'gable']), ridge: gable ? 'z' : 'x', front: pick(r, ['shop', 'lattice', 'doors', 'open', 'shop'] as House['front'][]), awning: !gable && !straw && r() < (opts.awn ?? 0.3), storeys: two ? 2 : 1 };
     const Zj = Z + rr(r, -20, 20);
+    if (X + (gable ? w * 0.7 : w) > X1 + 40) break;
     addHouse(S, typeof L === 'number' ? L : L(X, Zj), X, Zj, gable ? w * 0.7 : w, gable ? d * 1.3 : d, two ? h * 1.5 : h, o, fog);
     X += (gable ? w * 0.7 : w) + rr(r, 24, 90);
   }
@@ -1322,7 +1017,7 @@ BUILDERS.gate = (S, o) => {
   void o;
   const proj: Proj = { ox: 0, oy: 1680, A: 0.6, B: 0.5 }; const pP = useProj(S, proj);
   const fog: FogFn = Z => clamp((Z - 1600) / 1800, 0, 0.62);
-  const GX = 900, GZ = 1250, GW = 720, GD = 250, GH = 250, PX = 1250;
+  const GX = 680, GZ = 1250, GW = 940, GD = 280, GH = 300, PX = 1150;
   groundFill(S);
   S.ground(0, P => { P.setFog(0.75); farTrees(P, 0, 1300, 200, 120); farTrees(P, 3000, 4150, 180, 110); P.setFog(0); });
   const layerOf = (X: number, Z: number) => (Z > GZ + GD + 40 ? 1 : Z >= GZ - 20 ? 2 : Z > 640 ? 3 : 4); void layerOf;
@@ -1338,26 +1033,26 @@ BUILDERS.gate = (S, o) => {
   houseRow(S, 1, -900, 1500, 2850, fog, { h: [60, 80] });
   addTree(S, 1, 1500, 1800, 330, 'leaf', fog); addTree(S, 1, 300, 2200, 300, 'bare', fog); addTree(S, 1, 2300, 1700, 300, 'willow', fog);
   // the gate and the ramparts
-  S.add(2, GZ, GX, P => gatePlatform(P, GX, GZ, GW, GD, GH, PX, 120, 170));
-  S.add(2, GZ - 1, GX + 60, P => house(P, GX + 100, GZ + 50, GW - 200, GD - 110, 104, { roof: 'hip', front: 'lattice', rh: 130, lift: GH }));
+  S.add(2, GZ, GX, P => gatePlatform(P, GX, GZ, GW, GD, GH, PX, 150, 210));
+  S.add(2, GZ - 1, GX + 60, P => house(P, GX + 130, GZ + 60, GW - 260, GD - 130, 124, { roof: 'hip', front: 'lattice', rh: 160, lift: GH }));
   S.add(2, GZ + 60, GX - 600, P => mound(P, GX - 700, GX - 20, GZ + 60, 160, 120));
   S.add(2, GZ + 60, GX + GW + 40, P => mound(P, GX + GW + 40, GX + GW + 900, GZ + 60, 160, 120));
-  for (const [X, H, k] of [[GX - 560, 330, 'willow'], [GX - 300, 300, 'bare'], [GX + GW + 200, 340, 'willow'], [GX + GW + 560, 300, 'leaf']] as [number, number, string][]) addTree(S, 2, X, GZ + 120, H, k as 'willow', Z => fog(Z) * 0.5);
+  for (const [X, H, k] of [[GX - 600, 330, 'willow'], [GX - 380, 300, 'bare'], [GX + GW + 520, 340, 'willow'], [GX + GW + 800, 300, 'leaf']] as [number, number, string][]) addTree(S, 2, X, GZ + 120, H, k as 'willow', Z => fog(Z) * 0.5);
   // camels coming out of the gate, a drover in front
-  addBeast(S, 3, PX + 30, GZ - 40, 92, 'camel', -1, true, fog);
-  addBeast(S, 3, PX + 70, GZ - 230, 92, 'camel', -1, true, fog);
-  addBeast(S, 3, PX + 110, GZ - 420, 92, 'camel', -1, true, fog);
-  addFig(S, 3, PX - 60, GZ - 520, { dir: -1, pose: 'walk', body: 'short', hat: 'li', robe: 4, force: true }, fog, 54);
+  addBeast(S, 3, PX + 10, GZ - 30, 96, 'camel', -1, true, fog);
+  addBeast(S, 3, PX + 40, GZ - 210, 96, 'camel', -1, true, fog);
+  addBeast(S, 3, PX + 70, GZ - 390, 96, 'camel', -1, true, fog);
+  addFig(S, 3, PX - 80, GZ - 470, { dir: -1, pose: 'walk', body: 'short', hat: 'li', robe: 4, force: true }, fog, 54);
   // outside the gate: the far row of shops facing the street (both sides of the road)
   houseRow(S, 3, -700, PX - 240, 720, fog, { awn: 0.5, gableZ: 0.25 });
-  addHouse(S, 3, PX + 240, 700, 380, 200, 112, { roof: 'xieshan', storeys: 2, huanmen: true, flag: true }, fog);
-  houseRow(S, 3, PX + 700, 3600, 740, fog, { awn: 0.5, gableZ: 0.2, two: 0.2 });
-  addHouse(S, 3, PX + 180, 1000, 220, 140, 90, { roof: 'gable', front: 'open', awning: true, sign: true }, fog);
-  addHouse(S, 3, PX - 420, 1010, 240, 140, 92, { roof: 'gable', front: 'shop', awning: true }, fog);
-  for (const [X, Z, H, k] of [[PX - 700, 980, 360, 'willow'], [PX + 600, 1060, 340, 'leaf'], [2600, 1100, 360, 'willow'], [3100, 1050, 330, 'bare']] as [number, number, number, string][]) addTree(S, 3, X, Z, H, k as 'willow', fog);
+  addHouse(S, 3, PX + 520, 700, 400, 200, 112, { roof: 'xieshan', storeys: 2, huanmen: true, flag: true }, fog);
+  houseRow(S, 3, PX + 1000, 3600, 740, fog, { awn: 0.5, gableZ: 0.2, two: 0.2 });
+  addHouse(S, 3, PX + 200, 960, 200, 130, 86, { roof: 'gable', front: 'open', awning: true, sign: true }, fog);
+  addHouse(S, 3, PX - 440, 960, 220, 130, 88, { roof: 'gable', front: 'shop', awning: true }, fog);
+  for (const [X, Z, H, k] of [[PX - 760, 900, 360, 'willow'], [2700, 1100, 360, 'willow'], [3200, 1050, 330, 'bare']] as [number, number, number, string][]) addTree(S, 3, X, Z, H, k as 'willow', fog);
   // the street: crowds, a sedan, a rider, a wheelbarrow, a storyteller ring
   addCrowd(S, 3, -500, 3400, 420, 690, 70, fog);
-  addCrowd(S, 3, PX - 260, PX + 220, 700, 1200, 16, fog);
+  addCrowd(S, 3, PX - 300, PX - 90, 700, 1180, 8, fog); addCrowd(S, 3, PX + 140, PX + 320, 700, 1180, 8, fog);
   addCrowd(S, 4, -300, 3600, 120, 400, 34, fog);
   S.add(3, 520, 2050, P => { const p = P.pt(2050, 0, 520); sedan(P, p[0], p[1], 54, -1); }, { fog: fog(520) });
   addBeast(S, 3, 2600, 470, 70, 'horse', 1, false, fog, { dir: 1, hat: 'futou', robe: 1, pose: 'stand' });
@@ -1492,4 +1187,167 @@ BUILDERS.shed = (S, o) => {
   });
 };
 
-// @@TAIL@@
+// ---------------- 'colophon': the join from the painting's silk to paper, 张著's colophon verbatim, other hands
+// Text: 张著 (1186), as transcribed by 余辉 (光明日报 2017-02-19) / facts.md C6. The object has no punctuation.
+const ZHANG_S = '翰林张择端字正道东武人也幼读书游学于京师后习绘事本工界画尤嗜于舟车市桥郭径别成家数也按向氏评论图画记云西湖争标图清明上河图选入神品藏者宜宝之大定丙午清明后一日燕山张著跋';
+const ZHANG_T = '翰林張擇端字正道東武人也幼讀書游學於京師後習繪事本工界畫尤嗜於舟車市橋郭徑別成家數也按向氏評論圖畫記云西湖爭標圖清明上河圖選入神品藏者宜寶之大定丙午清明後一日燕山張著跋';
+// 余辉's punctuation (光明日报 2017); only ，。： are drawn (small, beside the column) when punctuate is on.
+const ZHANG_P = '翰林张择端，字正道，东武人也。幼读书，游学于京师，后习绘事，本工界画，尤嗜于舟车市桥郭径，别成家数也。按《向氏评论图画记》云：‘《西湖争标图》《清明上河图》选入神品。’藏者宜宝之。大定丙午清明后一日。燕山张著跋。';
+const ZHANG_PUNCT: Record<number, string> = (() => { const m: Record<number, string> = {}; let n = 0; for (const ch of ZHANG_P) { if ('，。：'.includes(ch)) m[n] = ch; else if (!'《》‘’'.includes(ch)) n++; } return m; })();
+const ZHANG_COLS = [12, 12, 12, 12, 12, 10, 9, 5]; // characters per column (date and signature in their own columns)
+export const ZHANG_ZHU_TEXT = ZHANG_S;
+
+BUILDERS.colophon = (S, o) => {
+  const JOIN = 3830, text = o.traditional ? ZHANG_T : ZHANG_S;
+  const reveal = Math.round(clamp(o.colophonReveal ?? text.length, 0, text.length));
+  const sheets: [number, number, string][] = [[2600, JOIN, '#F8EBD0'], [1330, 2600, '#F4E6C8'], [0, 1330, '#F6E8CC']];
+  S.ground(0, P => {
+    P.ctx.fillStyle = P.gfill(); P.ctx.fillRect(JOIN, 0, W0 - JOIN, H0);
+    for (const [x0, x1, c] of sheets) {
+      const base = P.mode === 'colour' ? hex(c) : P.mode === 'grey' ? P.pal.paper : mix(hex(c), P.pal.ground, 0.25);
+      P.ctx.fillStyle = rgba(base); P.ctx.fillRect(x0, 0, x1 - x0, H0);
+    }
+    // seams: the paper laps over the silk; sheet joins
+    P.ctx.fillStyle = rgba(P.pal.ink, 0.12); P.ctx.fillRect(JOIN - 3, 0, 10, H0);
+    seg(P, JOIN, 0, JOIN, H0, 1.4, 0.55); seg(P, JOIN + 6, 0, JOIN + 6, H0, 0.8, 0.3);
+    for (const x of [2600, 1330]) { P.ctx.fillStyle = rgba(P.pal.ink, 0.07); P.ctx.fillRect(x - 2, 0, 6, H0); seg(P, x, 0, x, H0, 1.0, 0.4); }
+    // faint ruled columns (乌丝栏) on the middle sheet
+    for (let x = 1390; x < 2580; x += 84) seg(P, x, 120, x, 1420, 0.7, 0.16);
+  });
+  // 张著's columns, right to left
+  const size = 92, pitch = 103, colPitch = 128, x0 = 3690, y0 = 210;
+  const glyphs: Glyph[] = [];
+  let idx = 0;
+  ZHANG_COLS.forEach((n, col) => {
+    const yStart = y0 + (col === 6 ? pitch * 0.5 : col === 7 ? pitch * 5 : 0);
+    let y = yStart;
+    for (let k = 0; k < n; k++) {
+      glyphs.push({ ch: text[idx], i: idx, col, x: x0 - col * colPitch, y: y + size / 2, size });
+      y += pitch; if (o.punctuate && ZHANG_PUNCT[idx + 1] !== undefined) y += pitch * 0.32;
+      idx++;
+    }
+  });
+  S.info.glyphs = glyphs;
+  const ph: Record<string, [number, number]> = {};
+  for (const w of ['翰林张择端', '张择端', '清明上河图', '藏者宜宝之', '大定丙午清明后一日', '燕山张著跋', '本工界画']) {
+    const i = w === '清明上河图' ? ZHANG_S.lastIndexOf(w) : ZHANG_S.indexOf(w); ph[w] = [i, i + w.length - 1];
+  }
+  S.info.phrases = ph;
+  S.add(2, 0, 0, P => {
+    const c = P.ctx; c.textAlign = 'center'; c.textBaseline = 'middle';
+    for (const g of glyphs) {
+      if (g.i >= reveal) break;
+      const r = P.r; const a = 0.86 + 0.14 * r();
+      c.save(); c.translate(g.x + rr(r, -2.5, 2.5), g.y + rr(r, -2, 2)); c.rotate(rr(r, -0.025, 0.025));
+      c.font = `500 ${Math.round(g.size * rr(r, 0.96, 1.04))}px ${FONT}`;
+      c.shadowColor = P.ink(0.45); c.shadowBlur = 2.5 * P.scale; c.fillStyle = P.ink(a * 0.7); c.fillText(g.ch, 0, 0);
+      c.shadowBlur = 0; c.fillStyle = P.ink(a); c.fillText(g.ch, 0, 0);
+      c.restore();
+      if (o.punctuate && ZHANG_PUNCT[g.i + 1] !== undefined) { c.font = `500 ${Math.round(g.size * 0.5)}px ${FONT}`; c.fillStyle = P.ink(0.8); c.fillText(ZHANG_PUNCT[g.i + 1], g.x + g.size * 0.38, g.y + g.size * 0.62); }
+    }
+  });
+  // other colophons in other hands: illegible stand-ins (regular small script; then a large running hand)
+  S.add(2, 1, 1, P => {
+    for (let col = 0; col < 14; col++) {
+      const x = 2540 - col * 84, n = col === 13 ? 7 : col % 5 === 4 ? 11 : 16;
+      for (let k = 0; k < n; k++) illegibleGlyph(P, x, 220 + k * 68 + (col === 13 ? 340 : 0), 52, 0.95, 0.1);
+    }
+    for (let col = 0; col < 7; col++) {
+      const x = 1240 - col * 152, n = col === 6 ? 5 : 8 - (col % 3);
+      for (let k = 0; k < n; k++) illegibleGlyph(P, x + rr(P.r, -6, 6), 240 + k * 128 + (col === 6 ? 420 : 0), 98, 1.15, 0.7);
+    }
+  });
+  S.info.colophons = [{ id: 'zhangzhu', x0: 2600, x1: JOIN }, { id: 'B', x0: 1330, x1: 2600 }, { id: 'C', x0: 0, x1: 1330 }];
+  S.info.join = JOIN;
+  S.info.sealSlots = [
+    { x: JOIN, y: 330, size: 150, kind: 'join' }, { x: JOIN, y: 1170, size: 150, kind: 'join' },
+    { x: 2600, y: 400, size: 140, kind: 'join' }, { x: 2600, y: 1120, size: 140, kind: 'join' },
+    { x: 1330, y: 360, size: 140, kind: 'join' }, { x: 1330, y: 1160, size: 140, kind: 'join' },
+    { x: x0 - 7 * colPitch, y: y0 + pitch * 10.6, size: 110, kind: 'after-zhangzhu' },
+    { x: 2540 - 13 * 84, y: 1100, size: 110, kind: 'after-B' }, { x: 1240 - 6 * 152, y: 1300, size: 130, kind: 'after-C' },
+    { x: 3960, y: 1290, size: 170, kind: 'painting-end' },
+  ];
+  if (o.seals !== false) S.add(2, -1, 2, P => {
+    const list = S.info.sealSlots!.filter(s => s.kind === 'join' || s.kind === 'after-C');
+    list.forEach((s, i) => {
+      const sc = paintSeal('', { size: Math.round(s.size * P.scale * 1.6), style: i % 3 === 1 ? 'zhu' : 'bai', seed: 300 + i, fade: 0.35 + 0.1 * (i % 3), mode: P.mode });
+      P.ctx.save(); P.ctx.translate(s.x + (i % 2 ? 6 : -4), s.y); P.ctx.rotate((i % 2 ? 1 : -1) * 0.02); P.ctx.globalAlpha = 0.85;
+      P.ctx.drawImage(sc, -s.size / 2, -s.size / 2, s.size, s.size * sc.height / sc.width); P.ctx.restore();
+    });
+  });
+};
+
+// ------------------------------------------------------------------ seals
+export interface SealOptions { size?: number; style?: 'zhu' | 'bai'; seed?: number; fade?: number; color?: string; tall?: boolean; mode?: SilkMode }
+export interface SealStamp extends SealOptions { x: number; y: number; text?: string; rot?: number; alpha?: number }
+/** A red seal impression. text '' (or omitted) = illegible stand-in glyphs. 朱文 'zhu' = red characters in a red frame;
+ *  白文 'bai' = characters cut out of a red block. Uneven ink, worn edges; `fade` 0..1 for older seals. */
+export function paintSeal(text = '', o: SealOptions = {}): HTMLCanvasElement {
+  const S = Math.max(24, Math.round(o.size ?? 256)), Wd = o.tall ? Math.round(S * 0.62) : S, style = o.style ?? 'bai';
+  const r = mulberry32((o.seed ?? 7) * 977 + text.length * 31 + (text.charCodeAt(0) || 0));
+  const col = hex(o.color ?? (o.mode === 'grey' ? '#7A5650' : '#B42E22'));
+  const cv = makeCanvas(Wd, S), c = cv.getContext('2d')!;
+  const m = S * 0.04, bw = S * 0.065;
+  const wobRect = (x: number, y: number, w: number, h: number, begin = true) => {
+    if (begin) c.beginPath(); const pts: Pt[] = [];
+    const side = (ax: number, ay: number, bx: number, by: number) => { for (let i = 0; i < 8; i++) { const t = i / 8; pts.push([lerp(ax, bx, t) + (r() - 0.5) * S * 0.008, lerp(ay, by, t) + (r() - 0.5) * S * 0.008]); } };
+    side(x, y, x + w, y); side(x + w, y, x + w, y + h); side(x + w, y + h, x, y + h); side(x, y + h, x, y);
+    tracePath(c, pts, true, false);
+  };
+  c.fillStyle = rgba(col);
+  if (style === 'bai') { wobRect(m, m, Wd - 2 * m, S - 2 * m); c.fill(); c.globalCompositeOperation = 'destination-out'; c.fillStyle = '#000'; }
+  else { c.beginPath(); wobRect(m, m, Wd - 2 * m, S - 2 * m, false); wobRect(m + bw, m + bw, Wd - 2 * m - 2 * bw, S - 2 * m - 2 * bw, false); c.fill('evenodd'); }
+  // character cells: columns right to left, top to bottom
+  const chars = [...text]; const n = chars.length || (o.tall ? 2 : 4);
+  const cols = n <= 2 ? (o.tall ? 1 : n) : n <= 4 ? 2 : 3, rows = Math.ceil(n / cols);
+  const ix = m + bw * 1.6, iy = m + bw * 1.6, iw = Wd - 2 * ix, ih = S - 2 * iy, cw = iw / cols;
+  let k = 0;
+  for (let ci = 0; ci < cols; ci++) {
+    const inCol = Math.min(rows, n - k - (cols - ci - 1) * 0 ); const cnt = ci === cols - 1 ? n - k : Math.min(rows, n - k);
+    const ch = ih / Math.max(1, cnt); void inCol;
+    for (let ri2 = 0; ri2 < cnt; ri2++, k++) {
+      const x = ix + iw - (ci + 1) * cw, y = iy + ri2 * ch, pad = Math.min(cw, ch) * 0.04;
+      if (chars.length) {
+        c.save(); c.font = `900 100px ${FONT}`; c.textBaseline = 'alphabetic'; const mt = c.measureText(chars[k]);
+        const gw = mt.actualBoundingBoxLeft + mt.actualBoundingBoxRight, gh = mt.actualBoundingBoxAscent + mt.actualBoundingBoxDescent;
+        c.translate(x + pad, y + pad); c.scale((cw - 2 * pad) / gw, (ch - 2 * pad) / gh);
+        c.fillText(chars[k], mt.actualBoundingBoxLeft, mt.actualBoundingBoxAscent); c.restore();
+      } else {
+        // a maze of square strokes, like seal script at a glance
+        const g = 5, sx = (cw - 2 * pad) / g, sy = (ch - 2 * pad) / g, lw = Math.min(sx, sy) * 0.55;
+        c.lineWidth = lw; c.lineCap = 'square'; c.strokeStyle = style === 'bai' ? '#000' : rgba(col);
+        const ns = ri(r, 4, 7);
+        for (let q = 0; q < ns; q++) {
+          let gx = ri(r, 0, g), gy = ri(r, 0, g); c.beginPath(); c.moveTo(x + pad + gx * sx, y + pad + gy * sy);
+          for (let t = 0; t < ri(r, 1, 3); t++) { if (r() < 0.5) gx = clamp(gx + (r() < 0.5 ? -1 : 1) * ri(r, 1, 4), 0, g); else gy = clamp(gy + (r() < 0.5 ? -1 : 1) * ri(r, 1, 4), 0, g); c.lineTo(x + pad + gx * sx, y + pad + gy * sy); }
+          c.stroke();
+        }
+      }
+    }
+  }
+  c.globalCompositeOperation = 'source-over';
+  // uneven ink: blotchy density, speckled gaps, worn edges; fade for old seals
+  const id = c.getImageData(0, 0, Wd, S), d = id.data, n1 = vnoise((o.seed ?? 7) + 3), n2 = vnoise((o.seed ?? 7) + 9), fade = clamp(o.fade ?? 0, 0, 1);
+  for (let y = 0; y < S; y++) for (let x = 0; x < Wd; x++) {
+    const i4 = (y * Wd + x) * 4; if (!d[i4 + 3]) continue;
+    const lo = n1(x / (S * 0.18), y / (S * 0.18)), hi = n2(x / (S * 0.025), y / (S * 0.025));
+    const edge = Math.min(x, y, Wd - 1 - x, S - 1 - y) / (S * 0.06);
+    let a = 0.62 + 0.45 * lo + 0.2 * (hi - 0.5);
+    if (hi > 0.8 - fade * 0.2 && r() < 0.6) a *= 0.15;
+    if (edge < 1 && n2(x / 6, y / 6) > 0.62) a *= 0.2;
+    a *= 1 - fade * 0.55;
+    d[i4 + 3] = clamp(d[i4 + 3] * a, 0, 255);
+    const dk = 0.86 + 0.14 * (1 - lo); d[i4] = col[0] * dk; d[i4 + 1] = col[1] * dk; d[i4 + 2] = col[2] * dk;
+  }
+  c.putImageData(id, 0, 0);
+  return cv;
+}
+/** Stamp seals onto a canvas; x/y are the seal centres in that canvas's pixels. */
+export function stampSeals(canvas: HTMLCanvasElement, list: SealStamp[]) {
+  const c = canvas.getContext('2d')!;
+  for (const s of list) {
+    const sc = paintSeal(s.text ?? '', s);
+    c.save(); c.translate(s.x, s.y); c.rotate(s.rot ?? 0); c.globalAlpha = s.alpha ?? 0.92; c.globalCompositeOperation = 'multiply';
+    c.drawImage(sc, -sc.width / 2, -sc.height / 2); c.restore();
+  }
+}
