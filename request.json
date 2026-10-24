@@ -1,5 +1,5 @@
 {
- "id": "ep42-vo-03",
+ "id": "ep42-vo-04",
  "model_prefs": [
   "eleven_v4"
  ],
@@ -7,62 +7,378 @@
   {
    "lang": "zh",
    "voice_id": "MI36FIkp9wRP7cpWKPTl",
-   "model": "eleven_v4",
    "settings": {
     "stability": 0.45,
     "similarity_boost": 0.8,
     "style": 0.45
    },
-   "name": "H1a",
-   "text": "哈佛追踪724个人八十多年，找到了答案。"
+   "name": "B1",
+   "text": "泥板上，吉尔伽美什失去好友，想要不死。",
+   "model": "eleven_v4"
   },
   {
    "lang": "zh",
    "voice_id": "MI36FIkp9wRP7cpWKPTl",
-   "model": "eleven_v4",
    "settings": {
     "stability": 0.45,
     "similarity_boost": 0.8,
     "style": 0.45
    },
-   "name": "H2a",
-   "text": "可这个答案，近四千年前，就刻在一块泥板上。"
+   "name": "B3",
+   "text": "她后面的话，留到最后。",
+   "model": "eleven_v4"
   },
   {
    "lang": "zh",
    "voice_id": "MI36FIkp9wRP7cpWKPTl",
-   "model": "eleven_v4",
    "settings": {
     "stability": 0.45,
     "similarity_boost": 0.8,
     "style": 0.45
    },
-   "name": "H1b",
-   "text": "哈佛追踪724个人八十多年，找到了答案。"
+   "name": "C1",
+   "text": "学生问孔子：死，是怎么回事？",
+   "model": "eleven_v4"
   },
   {
    "lang": "zh",
    "voice_id": "MI36FIkp9wRP7cpWKPTl",
-   "model": "eleven_v4",
    "settings": {
     "stability": 0.45,
     "similarity_boost": 0.8,
     "style": 0.45
    },
-   "name": "H2b",
-   "text": "可这个答案，近四千年前，就刻在一块泥板上。"
+   "name": "C2",
+   "text": "他把目光，从死，拉回了生。",
+   "model": "eleven_v4"
   },
   {
    "lang": "zh",
    "voice_id": "MI36FIkp9wRP7cpWKPTl",
-   "model": "eleven_v4",
    "settings": {
     "stability": 0.45,
     "similarity_boost": 0.8,
     "style": 0.45
    },
-   "name": "H1c",
-   "text": "哈佛追踪了七百二十四个人，八十多年，找到了答案。"
+   "name": "S2",
+   "text": "照他说，你凌晨三点那一问，问得好。",
+   "model": "eleven_v4"
+  },
+  {
+   "lang": "zh",
+   "voice_id": "MI36FIkp9wRP7cpWKPTl",
+   "settings": {
+    "stability": 0.45,
+    "similarity_boost": 0.8,
+    "style": 0.45
+   },
+   "name": "M2",
+   "text": "管着帝国的人，也不想起床。",
+   "model": "eleven_v4"
+  },
+  {
+   "lang": "zh",
+   "voice_id": "MI36FIkp9wRP7cpWKPTl",
+   "settings": {
+    "stability": 0.45,
+    "similarity_boost": 0.8,
+    "style": 0.45
+   },
+   "name": "F4",
+   "text": "一无所有的人，想着所爱，也能感到幸福。",
+   "model": "eleven_v4"
+  },
+  {
+   "lang": "zh",
+   "voice_id": "MI36FIkp9wRP7cpWKPTl",
+   "settings": {
+    "stability": 0.45,
+    "similarity_boost": 0.8,
+    "style": 0.45
+   },
+   "name": "R1",
+   "text": "泥板上，酒馆女主人接着说：",
+   "model": "eleven_v4"
+  },
+  {
+   "lang": "zh",
+   "voice_id": "MI36FIkp9wRP7cpWKPTl",
+   "settings": {
+    "stability": 0.45,
+    "similarity_boost": 0.8,
+    "style": 0.45
+   },
+   "name": "L1",
+   "text": "泥板上的答案，真的和哈佛一样。",
+   "model": "eleven_v4"
+  },
+  {
+   "lang": "zh",
+   "voice_id": "MI36FIkp9wRP7cpWKPTl",
+   "settings": {
+    "stability": 0.45,
+    "similarity_boost": 0.8,
+    "style": 0.45
+   },
+   "name": "TE",
+   "text": "你把“为了什么”，改成了“为了谁”。",
+   "model": "eleven_v4"
+  },
+  {
+   "lang": "zh",
+   "voice_id": "MI36FIkp9wRP7cpWKPTl",
+   "settings": {
+    "stability": 0.45,
+    "similarity_boost": 0.8,
+    "style": 0.45
+   },
+   "name": "T3",
+   "text": "你活着，是为了谁？",
+   "model": "eleven_v4"
+  },
+  {
+   "lang": "zh",
+   "voice_id": "Iqi0ix5WGtiSXX9VDZB4",
+   "settings": {
+    "stability": 0.5,
+    "similarity_boost": 0.8,
+    "style": 0.35
+   },
+   "name": "BQ",
+   "text": "你找的那种生命，你找不到。",
+   "model": "eleven_v4"
+  },
+  {
+   "lang": "zh",
+   "voice_id": "Iqi0ix5WGtiSXX9VDZB4",
+   "settings": {
+    "stability": 0.5,
+    "similarity_boost": 0.8,
+    "style": 0.35
+   },
+   "name": "RQ1",
+   "text": "看看那个牵着你手的孩子，",
+   "model": "eleven_v4"
+  },
+  {
+   "lang": "zh",
+   "voice_id": "Iqi0ix5WGtiSXX9VDZB4",
+   "settings": {
+    "stability": 0.5,
+    "similarity_boost": 0.8,
+    "style": 0.35
+   },
+   "name": "RQ2",
+   "text": "常常拥抱你的妻子。",
+   "model": "eleven_v4"
+  },
+  {
+   "lang": "zh",
+   "gender": "male",
+   "age": "old",
+   "accent": "standard",
+   "settings": {
+    "stability": 0.5,
+    "similarity_boost": 0.8,
+    "style": 0.35
+   },
+   "name": "CQ0",
+   "text": "未知生，焉知死？",
+   "model": "eleven_v4",
+   "pick": 0
+  },
+  {
+   "lang": "zh",
+   "gender": "male",
+   "age": "old",
+   "accent": "standard",
+   "settings": {
+    "stability": 0.5,
+    "similarity_boost": 0.8,
+    "style": 0.35
+   },
+   "name": "CQ1",
+   "text": "未知生，焉知死？",
+   "model": "eleven_v4",
+   "pick": 1
+  },
+  {
+   "lang": "el",
+   "gender": "male",
+   "settings": {
+    "stability": 0.45,
+    "similarity_boost": 0.8,
+    "style": 0.4
+   },
+   "name": "S1",
+   "text": "Ο Σωκράτης καταδικάζεται με διαφορά τριάντα ψήφων. Τον περιμένει θάνατος.",
+   "model": "eleven_v4"
+  },
+  {
+   "lang": "el",
+   "gender": "male",
+   "settings": {
+    "stability": 0.45,
+    "similarity_boost": 0.8,
+    "style": 0.4
+   },
+   "name": "SQa",
+   "text": "Πριν από την ποινή είπε:",
+   "model": "eleven_v4"
+  },
+  {
+   "lang": "el",
+   "gender": "male",
+   "settings": {
+    "stability": 0.45,
+    "similarity_boost": 0.8,
+    "style": 0.4
+   },
+   "name": "M1",
+   "text": "Ο αυτοκράτορας Μάρκος Αυρήλιος γράφει στον εαυτό του:",
+   "model": "eleven_v4"
+  },
+  {
+   "lang": "el",
+   "gender": "male",
+   "settings": {
+    "stability": 0.45,
+    "similarity_boost": 0.8,
+    "style": 0.4
+   },
+   "age": "old",
+   "name": "SQb",
+   "text": "ὁ δὲ ἀνεξέταστος βίος οὐ βιωτὸς ἀνθρώπῳ.",
+   "model": "eleven_v4",
+   "pick": 1
+  },
+  {
+   "lang": "el",
+   "gender": "male",
+   "settings": {
+    "stability": 0.45,
+    "similarity_boost": 0.8,
+    "style": 0.4
+   },
+   "age": "middle_aged",
+   "name": "MQ1",
+   "text": "Ὄρθρου, ὅταν δυσόκνως ἐξεγείρῃ, πρόχειρον ἔστω·",
+   "model": "eleven_v4",
+   "pick": 2
+  },
+  {
+   "lang": "el",
+   "gender": "male",
+   "settings": {
+    "stability": 0.45,
+    "similarity_boost": 0.8,
+    "style": 0.4
+   },
+   "age": "middle_aged",
+   "name": "MQ2",
+   "text": "ὅτι ἐπὶ ἀνθρώπου ἔργον ἐγείρομαι.",
+   "model": "eleven_v4",
+   "pick": 2
+  },
+  {
+   "lang": "de",
+   "gender": "male",
+   "settings": {
+    "stability": 0.45,
+    "similarity_boost": 0.8,
+    "style": 0.4
+   },
+   "name": "F0",
+   "text": "Der Arzt Viktor Frankl und seine Familie werden ins Lager deportiert.",
+   "model": "eleven_v4"
+  },
+  {
+   "lang": "de",
+   "gender": "male",
+   "settings": {
+    "stability": 0.45,
+    "similarity_boost": 0.8,
+    "style": 0.4
+   },
+   "name": "F1",
+   "text": "Beim Marsch im Morgengrauen denkt er an das Gesicht seiner Frau.",
+   "model": "eleven_v4"
+  },
+  {
+   "lang": "de",
+   "gender": "male",
+   "settings": {
+    "stability": 0.45,
+    "similarity_boost": 0.8,
+    "style": 0.4
+   },
+   "name": "F2",
+   "text": "Er begreift: Die Liebe ist das Höchste, wonach ein Mensch streben kann.",
+   "model": "eleven_v4"
+  },
+  {
+   "lang": "de",
+   "gender": "male",
+   "settings": {
+    "stability": 0.45,
+    "similarity_boost": 0.8,
+    "style": 0.4
+   },
+   "name": "F3",
+   "text": "Nach der Befreiung erfährt er: Seine Frau lebt nicht mehr.",
+   "model": "eleven_v4"
+  },
+  {
+   "lang": "en",
+   "accent": "american",
+   "gender": "male",
+   "settings": {
+    "stability": 0.45,
+    "similarity_boost": 0.8,
+    "style": 0.4
+   },
+   "name": "H1",
+   "text": "Since nineteen thirty-eight, Harvard has followed seven hundred twenty-four lives.",
+   "model": "eleven_v4"
+  },
+  {
+   "lang": "en",
+   "accent": "american",
+   "gender": "male",
+   "settings": {
+    "stability": 0.45,
+    "similarity_boost": 0.8,
+    "style": 0.4
+   },
+   "name": "H3",
+   "text": "The finding: good relationships keep us happier, and healthier.",
+   "model": "eleven_v4"
+  },
+  {
+   "lang": "zh",
+   "gender": "female",
+   "age": "young",
+   "accent": "standard",
+   "settings": {
+    "stability": 0.35,
+    "similarity_boost": 0.8,
+    "style": 0.6
+   },
+   "name": "T2a",
+   "text": "你也没睡？明天吃火锅！",
+   "model": "eleven_v4"
+  },
+  {
+   "lang": "zh",
+   "voice_id": "agczkAUlHLowaNnL72Cc",
+   "settings": {
+    "stability": 0.35,
+    "similarity_boost": 0.8,
+    "style": 0.6
+   },
+   "name": "T2b",
+   "text": "你也没睡？明天吃火锅！",
+   "model": "eleven_v4"
   }
  ]
 }
