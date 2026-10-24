@@ -50,15 +50,15 @@ export const PlateGround: React.FC<{y: number; c?: string; c2?: string; edge?: s
 
 /* ---------- 你: the bronze horse head (profile, facing left; origin ≈ the eye; ~640 × 740 at s = 1) ----------
    drawn as a coloured engraving: copper fill, shade by dark-copper hatching, thick mane locks on the near side. */
-const HEAD = 'M90,-230 C40,-226 -30,-190 -70,-140 C-120,-70 -170,10 -205,70 C-222,98 -236,128 -232,152 C-230,176 -214,190 -192,192 L-170,190 C-178,204 -174,220 -156,226 C-136,232 -112,224 -96,214 C-60,196 -20,196 10,206 C70,224 122,214 142,178 C158,204 168,262 170,330 L176,380 L404,380 C404,262 372,120 302,0 C252,-90 182,-190 122,-226 C110,-232 100,-232 90,-230 Z';
+const HEAD = 'M90,-230 C40,-226 -30,-190 -70,-140 C-120,-70 -170,10 -205,70 C-222,98 -236,128 -232,152 C-230,176 -214,190 -192,192 L-170,190 C-178,204 -174,220 -156,226 C-136,232 -112,224 -96,214 C-60,196 -20,196 10,206 C70,224 122,214 142,178 C160,200 172,226 178,254 L384,254 C384,150 352,40 292,-50 C240,-128 170,-206 122,-226 C110,-232 100,-232 90,-230 Z';
 const EAR_FAR = 'M104,-222 C100,-284 116,-334 138,-366 C156,-326 158,-268 146,-206 Z';
 const EAR_NEAR = (curl: number) => `M50,-226 C34,-290 40,-346 58,-384 C${76 + curl * 26},${-350 + curl * 46} ${96 + curl * 12},${-296 + curl * 24} 96,-232 Z`;
 /** mane locks along the crest (near side), poll → withers */
-const CREST = (u: number): [number, number] => { const x = 110 + (402 - 110) * u, y = -226 + 606 * Math.pow(u, 1.25) - 120 * Math.sin(u * Math.PI) * 0.5; return [x - 18 * Math.sin(u * Math.PI), y]; };
-const LOCKS = Array.from({length: 13}, (_, i) => { const u = 0.03 + i * 0.075, [x, y] = CREST(u), L = 120 + 40 * rnd(i, 4), bend = 30 + 20 * rnd(i, 5);
-	return {d: `M${x + 10},${y - 18} C${x - 30},${y + L * 0.25} ${x - bend},${y + L * 0.6} ${x - bend * 0.4},${y + L} C${x + 4},${y + L * 0.7} ${x + 26},${y + L * 0.35} ${x + 40},${y - 4} Z`,
-		lines: [0.3, 0.55, 0.8].map((k) => `M${x + 10 + 18 * k},${y - 10} C${x - 16 + 10 * k},${y + L * 0.3} ${x - bend * (1 - k * 0.4)},${y + L * 0.65} ${x - bend * 0.4 + 10 * k},${y + L * (0.95 - k * 0.12)}`)}; });
-export const HorseHead: React.FC<{x: number; y: number; s: number; id: string; glow?: number; curl?: number; spout?: number; flip?: boolean; o?: number; flicker?: number}> = ({x, y, s, id, glow = 1, curl = 0, spout = 0, flip, o = 1, flicker = 0}) =>
+const CREST = (u: number): [number, number] => { const x = 112 + (384 - 112) * Math.pow(u, 0.9), y = -228 + 470 * Math.pow(u, 1.15) - 70 * Math.sin(u * Math.PI); return [x - 22 * Math.sin(u * Math.PI), y]; };
+const LOCKS = Array.from({length: 34}, (_, i) => { const u = 0.02 + i * 0.028, [x, y] = CREST(u), L = 110 + 50 * rnd(i, 4), bend = 26 + 22 * rnd(i, 5), wv = 10 + 8 * rnd(i, 6), wd = 9 + 5 * rnd(i, 7);
+	return {d: `M${x + wd},${y - 10} C${x - 10},${y + L * 0.3} ${x - bend - wv},${y + L * 0.55} ${x - bend * 0.5},${y + L} C${x - bend * 0.4 + wd * 0.6},${y + L * 0.62} ${x + wd * 1.2 - wv},${y + L * 0.32} ${x + wd * 2},${y - 6} Z`,
+		lines: [0.5].map(() => `M${x + wd},${y - 6} C${x - 4},${y + L * 0.3} ${x - bend - wv * 0.6},${y + L * 0.58} ${x - bend * 0.48},${y + L * 0.96}`)}; });
+export const HorseHead: React.FC<{x: number; y: number; s: number; id: string; glow?: number; curl?: number; spout?: number; flip?: boolean; o?: number; flicker?: number; metal?: number; lx?: number; ly?: number}> = ({x, y, s, id, glow = 1, curl = 0, spout = 0, flip, o = 1, flicker = 0, metal = 1, lx = -420, ly = -620}) =>
 	<g transform={`translate(${x},${y}) scale(${flip ? -s : s},${s})`} opacity={o}>
 		<defs>
 			<linearGradient id={`${id}cu`} x1="0.05" y1="0.0" x2="0.8" y2="1"><stop offset="0" stopColor={CU.hi} /><stop offset="0.3" stopColor={CU.mid} /><stop offset="0.72" stopColor={CU.deep} /><stop offset="1" stopColor={CU.dark} /></linearGradient>
@@ -66,9 +66,18 @@ export const HorseHead: React.FC<{x: number; y: number; s: number; id: string; g
 			<pattern id={`${id}hat`} width={7} height={7} patternUnits="userSpaceOnUse" patternTransform="rotate(-35)"><line x1={0} y1={3.5} x2={7} y2={3.5} stroke={CU.dark} strokeWidth={2} /></pattern>
 			<linearGradient id={`${id}sh`} x1="0" y1="0" x2="1" y2="1"><stop offset="0.35" stopColor="#fff" stopOpacity="0" /><stop offset="0.75" stopColor="#fff" stopOpacity="1" /></linearGradient>
 			<mask id={`${id}m`}><rect x={-400} y={-400} width={900} height={900} fill={`url(#${id}sh)`} /></mask>
-			<clipPath id={`${id}clip`}><path d={HEAD} /></clipPath><clipPath id={`${id}lk`}><rect x={-400} y={-420} width={900} height={790} /></clipPath>
+			<filter id={`${id}mt`} filterUnits="userSpaceOnUse" x={-520} y={-520} width={1140} height={1000} colorInterpolationFilters="sRGB">
+				<feGaussianBlur in="SourceAlpha" stdDeviation={9} result="b" />
+				<feSpecularLighting in="b" surfaceScale={7} specularConstant={0.95} specularExponent={18} lightingColor="#FFE6C8" result="sp"><fePointLight x={flip ? -lx : lx} y={ly} z={520} /></feSpecularLighting>
+				<feComposite in="sp" in2="SourceAlpha" operator="in" result="sp2" />
+				<feTurbulence type="fractalNoise" baseFrequency="0.9" numOctaves={2} seed={4} result="n" /><feColorMatrix in="n" type="matrix" values="0 0 0 0 0.25  0 0 0 0 0.12  0 0 0 0 0.06  0 0 0 0.35 0" result="n2" /><feComposite in="n2" in2="SourceAlpha" operator="in" result="n3" />
+				<feBlend in="n3" in2="SourceGraphic" mode="multiply" result="tex" />
+				<feComposite in="tex" in2="sp2" operator="arithmetic" k1={0} k2={1} k3={metal * 0.75} k4={0} />
+			</filter>
+			<clipPath id={`${id}clip`}><path d={HEAD} /></clipPath><clipPath id={`${id}lk`}><rect x={-400} y={-420} width={900} height={664} /></clipPath>
 		</defs>
 		{glow > 0 && <><Glow x={60} y={20} r={800} c={CU.halo} o={0.3 * glow * (1 + flicker * 0.4)} id={`${id}g1`} /><Glow x={0} y={40} r={420} c={CU.mid} o={0.34 * glow * (1 + flicker * 0.3)} id={`${id}g2`} /></>}
+		<g filter={metal > 0 ? `url(#${id}mt)` : undefined}>
 		<path d={EAR_FAR} fill={CU.deep} stroke={CU.dark} strokeWidth={3} />
 		<path d={HEAD} fill={`url(#${id}cu)`} stroke={CU.dark} strokeWidth={4} />
 		<g clipPath={`url(#${id}clip)`}>
@@ -81,12 +90,14 @@ export const HorseHead: React.FC<{x: number; y: number; s: number; id: string; g
 			{/* face bones: the long ridge to the nose, highlit */}
 			<path d="M-56,-150 C-110,-74 -160,4 -196,66" stroke={CU.core} strokeWidth={18} strokeLinecap="round" fill="none" opacity={0.5} />
 			<path d="M-96,-40 C-120,10 -150,60 -170,96" stroke={CU.dark} strokeWidth={2.5} fill="none" opacity={0.4} />
+			<path d="M-40,-60 C0,-40 40,-20 70,20" stroke={CU.hi} strokeWidth={6} fill="none" opacity={0.35} strokeLinecap="round" />
+			<path d="M-150,40 C-120,70 -100,110 -70,130 C-50,140 -30,150 -10,170" stroke={CU.dark} strokeWidth={2} fill="none" opacity={0.35} />
 			{/* neck front shade + throatlatch crease */}
-			<path d="M146,170 C170,230 180,300 184,390 L120,390 L110,200 Z" fill={CU.dark} opacity={0.35} />
+			<path d="M146,170 C166,206 176,232 180,260 L120,260 L110,200 Z" fill={CU.dark} opacity={0.35} />
 			<path d="M142,178 C150,150 168,120 196,100" stroke={CU.dark} strokeWidth={3} fill="none" opacity={0.5} />
 		</g>
 		{/* mane locks on the near side */}
-		<g clipPath={`url(#${id}lk)`}>{LOCKS.map((L, i) => <g key={i}><path d={L.d} fill={i % 2 ? CU.mid : CU.deep} stroke={CU.dark} strokeWidth={2.5} />{L.lines.map((d, j) => <path key={j} d={d} stroke={CU.dark} strokeWidth={1.6} fill="none" opacity={0.6} />)}</g>)}</g>
+		<g clipPath={`url(#${id}lk)`}>{LOCKS.map((L, i) => <g key={i}><path d={L.d} fill={[CU.mid, CU.deep, '#C9744A'][i % 3]} stroke={CU.dark} strokeWidth={1.4} />{L.lines.map((d, j) => <path key={j} d={d} stroke={CU.hi} strokeWidth={1.2} fill="none" opacity={0.45} />)}</g>)}</g>
 		{/* forelock falling between the ears onto the forehead */}
 		<path d="M70,-232 C40,-214 20,-186 6,-150 C30,-166 46,-180 66,-192 C62,-170 64,-150 70,-130 C88,-162 104,-200 108,-232 Z" fill={CU.mid} stroke={CU.dark} strokeWidth={2.5} />
 		<path d="M80,-226 C62,-200 48,-180 34,-160 M96,-228 C88,-200 80,-176 74,-150" stroke={CU.dark} strokeWidth={1.6} fill="none" opacity={0.6} />
@@ -102,8 +113,9 @@ export const HorseHead: React.FC<{x: number; y: number; s: number; id: string; g
 		<path d="M-212,170 C-200,184 -186,190 -170,190" stroke={CU.dark} strokeWidth={4} fill="none" />
 		<path d="M-170,190 L-150,192" stroke={CU.dark} strokeWidth={5} strokeLinecap="round" />
 		{/* the cast collar at the neck base */}
-		<path d="M172,370 L406,370 L406,394 L170,394 Z" fill={CU.deep} stroke={CU.dark} strokeWidth={3} />
-		<path d="M172,382 L406,382" stroke={CU.hi} strokeWidth={2} opacity={0.4} />
+		<path d="M166,244 L394,244 L398,262 L398,276 L162,276 L162,262 Z" fill={CU.deep} stroke={CU.dark} strokeWidth={3} />
+		<path d="M164,262 L398,262" stroke={CU.hi} strokeWidth={2} opacity={0.45} />
+		</g>
 		{/* water from the mouth */}
 		{spout > 0 && <path d={`M-160,194 C${-250 - 180 * spout},${170 - 60 * spout} ${-370 - 300 * spout},${260 + 40 * spout} ${-410 - 360 * spout},${520 + 120 * spout}`} stroke={P.water} strokeWidth={10} fill="none" strokeLinecap="round" opacity={0.85} />}
 	</g>;
@@ -112,7 +124,7 @@ export const HorseHead: React.FC<{x: number; y: number; s: number; id: string; g
 export type Z = '鼠' | '牛' | '虎' | '兔' | '龙' | '蛇' | '马' | '羊' | '猴' | '鸡' | '狗' | '猪';
 export const ZODIAC: Z[] = ['鼠', '牛', '虎', '兔', '龙', '蛇', '马', '羊', '猴', '鸡', '狗', '猪'];
 export const RETURNED = new Set<Z>(['鼠', '牛', '虎', '兔', '马', '猴', '猪']);
-const ZPATH: Record<Z, string> = {
+export const ZPATH: Record<Z, string> = {
 	鼠: 'M-40,30 C-50,0 -30,-30 0,-34 C10,-60 34,-60 36,-34 C50,-20 52,10 40,30 Z M-30,-28 C-46,-50 -30,-66 -14,-50 Z',
 	牛: 'M-38,34 C-46,0 -36,-30 0,-34 C36,-30 46,0 38,34 Z M-34,-24 C-70,-36 -76,-62 -60,-70 C-58,-50 -44,-40 -26,-34 Z M34,-24 C70,-36 76,-62 60,-70 C58,-50 44,-40 26,-34 Z',
 	虎: 'M-42,32 C-50,-6 -32,-38 0,-40 C32,-38 50,-6 42,32 Z M-36,-30 L-40,-52 L-20,-40 Z M36,-30 L40,-52 L20,-40 Z',
