@@ -91,8 +91,6 @@ export const TitleCard: React.FC<{t: number; t0: number; t1: number; num: number
 	return <div style={{position: 'absolute', inset: 0, opacity: (u > 0 ? 1 : 0) * (1 - out)}}>
 		{/* the 匾额: dark lacquer board, gold frame, hung from two cords */}
 		<div style={{position: 'absolute', left: 410, width: 1100, top: 240, height: 400, transform: `scale(${sc})`, transformOrigin: '50% 0%'}}>
-			<div style={{position: 'absolute', left: 300, top: -120, width: 4, height: 128, background: '#8C6A3C', transform: 'rotate(18deg)', transformOrigin: 'bottom'}} />
-			<div style={{position: 'absolute', left: 796, top: -120, width: 4, height: 128, background: '#8C6A3C', transform: 'rotate(-18deg)', transformOrigin: 'bottom'}} />
 			<div style={{position: 'absolute', inset: 0, background: '#3A2A20', border: '12px solid #C9A35E', borderRadius: 6, boxShadow: '0 18px 40px rgba(20,12,6,0.6), inset 0 0 0 4px #6E4E2E, inset 0 0 40px rgba(0,0,0,0.5)'}} />
 			<div style={{position: 'absolute', left: 0, right: 0, top: 46, textAlign: 'center', fontFamily: SERIF, fontWeight: 900, color: '#F3E7CF', letterSpacing: '0.08em', fontSize: 96, textShadow: '0 2px 0 #1A120A'}}>{TITLE1.slice(0, -1)}<span style={{marginRight: '-0.5em'}}>，</span></div>
 			<div style={{position: 'absolute', left: 0, right: 0, top: 186, textAlign: 'center', fontFamily: SERIF, fontWeight: 900, color: KEY, letterSpacing: '0.1em', fontSize: 120, textShadow: '0 0 18px rgba(246,231,160,0.45), 0 2px 0 #1A120A'}}>{TITLE2}</div>

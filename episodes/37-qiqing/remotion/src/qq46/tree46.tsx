@@ -138,3 +138,14 @@ export const STRIP_MID: P = STRIP_C[Math.floor(STRIP_C.length * 0.35)];
 export const CROWN_TOP: P = [60, -740];
 export const WEST_MID: P = WEST_C[Math.floor(WEST_C.length * 0.5)];
 void clamp;
+/** a young cypress (the seedlings at 茂陵): one slender trunk, five small pads, the same warm light as 你 */
+export const Young46: React.FC<{x: number; g: number; s?: number; glow?: number; t?: number; id: string}> = ({x, g, s = 1, glow = 0, t = 0, id}) => {
+	const c = curve([[0, 0], [6, -60], [-8, -120], [4, -170]]);
+	const pads: Pad[] = ([[4, -190, 70, 34], [-26, -160, 60, 28], [30, -150, 60, 28], [-8, -128, 70, 30], [18, -214, 46, 24]] as [number, number, number, number][]).map(([px, py, w, h], i) => ({x: px, y: py, w, h, lit: 0.4 - i * 0.1, seed: 60 + i}));
+	return <g transform={`translate(${x},${g}) scale(${s})`}>
+		{glow > 0 && <><Glow x={0} y={-160} r={170} c={C.glow} o={0.55 * Math.min(1, glow)} id={`${id}g`} /><g filter="url(#k6)" opacity={0.7 * Math.min(1, glow)}>{pads.map((p, i) => <path key={i} d={padTop(p, 1.15, -4)} fill={C.glow} />)}</g></>}
+		<Shadow x={20} y={2} rx={60} ry={8} o={0.3} />
+		<path d={ribbon(c, (u) => lerp(9, 3, u), (u) => lerp(9, 3, u))} fill="url(#barkG)" />
+		{pads.map((p, i) => <PadG key={i} p={p} leaf={C.leaf} leafM={C.leafM} leafL={C.leafL} hi={C.leafHi} dx={Math.sin(t * 1.3 + i) * 1.5} glow={glow} snow={0} night={0} fillO={1} />)}
+	</g>;
+};

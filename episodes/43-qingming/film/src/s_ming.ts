@@ -205,14 +205,14 @@ const buildHall = async () => {
 		<ellipse cx="890" cy="560" rx="11" ry="16" fill="#1a1411"/><ellipse cx="1040" cy="556" rx="13" ry="18" fill="#1a1411"/><rect x="884" y="574" width="12" height="8" fill="#1a1411"/>
 		<path d="M940,566 L992,566 L986,586 L946,586 Z" fill="#1a1411"/><rect x="930" y="640" width="80" height="6" fill="#20170f"/><rect x="936" y="646" width="5" height="54" fill="#1a1411"/><rect x="999" y="646" width="5" height="54" fill="#1a1411"/>
 		<circle cx="905" cy="520" r="5" fill="#FFC98A"/><circle cx="1015" cy="520" r="5" fill="#FFC98A"/>`, 3100, 1400, `${wallG('hw', 960, 560)}`, -600, -200);
-	st.add('hall', canvasTex(await svgToCanvas(hallSvg, 3100, 1400, 1.4)), 950, 500, 3100, 1400, ZHALL, {rim: 0.5, rimPx: 3});
+	st.add('hall', canvasTex(await svgToCanvas(hallSvg, 3100, 1400, 0.85)), 950, 500, 3100, 1400, ZHALL, {rim: 0.5, rimPx: 3});
 	c3 = new Cast(st, 'servant3', 960, 640, 600, 400, ZHALL + 4, {}, 3); box3 = new Live(st, 'box3', 960, 640, 600, 400, ZHALL + 5, {emissive: 0.5}, 3);
 	// the hall door wall (z 300): door opening, lintel and eave, lamps either side, the threshold; leaves + strips are live
 	const w3 = svgDoc(`<path fill-rule="evenodd" fill="url(#w3)" d="M-700,-300 L2600,-300 L2600,1400 L-700,1400 Z M${HD.x0},${HD.y0} L${HD.x1},${HD.y0} L${HD.x1},${HD.y1} L${HD.x0},${HD.y1} Z"/>
 		<rect x="${HD.x0 - 10}" y="${HD.y0 - 12}" width="${HD.x1 - HD.x0 + 20}" height="12" fill="#1c1510"/>${roof(960, HD.y0 - 58, 230, 40, 0.4, '#1c1510')}
 		<rect x="-700" y="${HD.y1}" width="3300" height="700" fill="#2e2620"/><rect x="${HD.x0 - 16}" y="${HD.y1 - 4}" width="${HD.x1 - HD.x0 + 32}" height="8" fill="#1c1510"/>
-		<rect x="${HD.x0 - 8}" y="${HD.y0}" width="8" height="${HD.y1 - HD.y0}" fill="#1c1510"/><rect x="${HD.x1}" y="${HD.y0}" width="8" height="${HD.y1 - HD.y0}" fill="#1c1510"/>`, 3300, 1700, `${wallG('w3', 960, 640)}`, -700, -300);
-	st.add('w3', canvasTex(await svgToCanvas(w3, 3300, 1700, 1.2)), 950, 550, 3300, 1700, ZW3, {rim: 0.4, rimPx: 3});
+		<rect x="${HD.x0 - 8}" y="${HD.y0}" width="8" height="${HD.y1 - HD.y0}" fill="#1c1510"/><rect x="${HD.x1}" y="${HD.y0}" width="8" height="${HD.y1 - HD.y0}" fill="#1c1510"/>`, 2220, 1400, `${wallG('w3', 960, 640)}`, -150, -150);
+	st.add('w3', canvasTex(await svgToCanvas(w3, 2220, 1400, 1.1)), 960, 550, 2220, 1400, ZW3, {rim: 0.4, rimPx: 3});
 	leaves19 = new Live(st, 'leaves', 960, 640, 300, 260, ZW3 + 1, {rim: 0.4}, 4);
 	strips19 = new Live(st, 'strips', 960, 640, 300, 260, ZW3 + 2, {}, 4);
 	offs = new Cast(st, 'officials', 960, 640, 500, 300, ZW3 + 3, {rim: 0.55}, 4);
@@ -221,13 +221,13 @@ const buildHall = async () => {
 	const vase = (cx: number) => { const y0 = VASE_Y0, y1 = VASE_Y1; return `M${cx - 30},${y1} C${cx - 64},${y1 - 40} ${cx - 92},${y1 - 120} ${cx - 86},${y0 + 150} C${cx - 80},${y0 + 90} ${cx - 34},${y0 + 82} ${cx - 34},${y0 + 46} L${cx - 40},${y0} L${cx + 40},${y0} L${cx + 34},${y0 + 46} C${cx + 34},${y0 + 82} ${cx + 80},${y0 + 90} ${cx + 86},${y0 + 150} C${cx + 92},${y1 - 120} ${cx + 64},${y1 - 40} ${cx + 30},${y1} Z`; };
 	const w2 = svgDoc(`<path fill-rule="evenodd" fill="url(#w2)" d="M-800,-400 L2700,-400 L2700,1500 L-800,1500 Z ${vase(960)}"/><path d="${vase(960)}" fill="none" stroke="#1c1510" stroke-width="7"/>
 		<rect x="-800" y="${VASE_Y1}" width="3500" height="800" fill="#30271f"/><rect x="900" y="${VASE_Y1 - 3}" width="120" height="7" fill="#1c1510"/>`, 3500, 1900, `${wallG('w2', 960, 620)}`, -800, -400);
-	st.add('w2', canvasTex(await svgToCanvas(w2, 3500, 1900, 0.9)), 950, 550, 3500, 1900, ZW2, {rim: 0.4, rimPx: 3});
+	st.add('w2', canvasTex(await svgToCanvas(w2, 3500, 1900, 0.6)), 950, 550, 3500, 1900, ZW2, {rim: 0.4, rimPx: 3});
 	c2 = new Cast(st, 'carrier2', 960, 640, 800, 500, ZW2 + 3, {}, 2); box2 = new Live(st, 'box2', 960, 640, 800, 500, ZW2 + 4, {emissive: 0.5}, 2);
 	// the moon gate wall (z 1200)
 	const w1 = svgDoc(`<path fill-rule="evenodd" fill="url(#w1)" d="M-900,-500 L2800,-500 L2800,1600 L-900,1600 Z M${MOON.x},${MOON.y} m-${MOON.r},0 a${MOON.r},${MOON.r} 0 1,0 ${2 * MOON.r},0 a${MOON.r},${MOON.r} 0 1,0 -${2 * MOON.r},0 Z"/>
 		<circle cx="${MOON.x}" cy="${MOON.y}" r="${MOON.r + 6}" fill="none" stroke="#1c1510" stroke-width="16"/><rect x="${MOON.x - 150}" y="${MOON.y + MOON.r - 8}" width="300" height="14" fill="#1c1510"/>
 		<rect x="-900" y="${MOON.y + MOON.r + 4}" width="3700" height="800" fill="#2c241e"/>`, 3700, 2100, `${wallG('w1', 960, 560)}`, -900, -500);
-	st.add('w1', canvasTex(await svgToCanvas(w1, 3700, 2100, 0.7)), 950, 550, 3700, 2100, ZW1, {rim: 0.4, rimPx: 3});
+	st.add('w1', canvasTex(await svgToCanvas(w1, 3700, 2100, 0.5)), 950, 550, 3700, 2100, ZW1, {rim: 0.4, rimPx: 3});
 	c1 = new Cast(st, 'carrier1', 960, 640, 1400, 900, ZW1 + 3, {}, 1); box1 = new Live(st, 'box1', 960, 640, 1400, 900, ZW1 + 4, {emissive: 0.5}, 1);
 };
 

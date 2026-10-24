@@ -34,7 +34,7 @@ export const reg = (f: FigSpec) => { if (FIGS.length < 20000) FIGS.push(f); retu
 
 export const LOOK: Record<string, Look4> = {
 	emperor: {dress: 'robe', head: 'bald', sleeves: 'wide', beard: 'moustache'}, attendant: {dress: 'robe', head: 'bald'},
-	soldier: {dress: 'coat', head: 'cylcap'}, soldier2: {dress: 'coat', head: 'cylcap', build: 1.05},
+	soldier: {dress: 'coat', head: 'cap', legs: 'trousers'}, soldier2: {dress: 'coat', head: 'cap', legs: 'trousers', build: 1.05},
 	vendor: {dress: 'jacket', head: 'bowl'}, buyer: {dress: 'robe', head: 'short'}, buyer2: {dress: 'dress', head: 'bob'},
 	tourist: {dress: 'jacket', head: 'short'}, tourist2: {dress: 'dress', head: 'long'}, tourist3: {dress: 'shirt', head: 'cap'}, child: {dress: 'shirt', head: 'child', build: 0.9},
 };

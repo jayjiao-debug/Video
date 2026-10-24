@@ -57,6 +57,11 @@ export const robeSafe = (p: Pose, max = 54): Pose => {
 		if (ang <= max) continue; const d = (ang - max) * Math.PI / 180 * (v[0] < 0 ? -1 : 1), c = Math.cos(d), sn = Math.sin(d);
 		const r = (q: P): P => { const w = [q[0] - K[0], q[1] - K[1]]; return [K[0] + w[0] * c - w[1] * sn, K[1] + w[0] * sn + w[1] * c]; };
 		o[`${s}Ank`] = r(A); o[`${s}Toe`] = r(T); }
+	// and keep each thigh within 40° of vertical (rotate the whole leg about the hip), so the hull never splits
+	for (const s of ['L', 'R']) { const U = o[`${s}Up`], K = o[`${s}Knee`], v = [K[0] - U[0], K[1] - U[1]], ang = Math.atan2(Math.abs(v[0]), -v[1]) * 180 / Math.PI;
+		if (ang <= 40) continue; const d = (ang - 40) * Math.PI / 180 * (v[0] < 0 ? -1 : 1), c = Math.cos(d), sn = Math.sin(d);
+		const r = (q: P): P => { const w = [q[0] - U[0], q[1] - U[1]]; return [U[0] + w[0] * c - w[1] * sn, U[1] + w[0] * sn + w[1] * c]; };
+		for (const j of ['Knee', 'Ank', 'Toe']) o[`${s}${j}`] = r(o[`${s}${j}`]); }
 	return o;
 };
 /** a neck about half the head's width, from the collar to the jaw (the kit draws a thin stalk under tall caps) */
