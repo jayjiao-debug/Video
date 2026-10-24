@@ -35,14 +35,14 @@ const Streaks: React.FC<{k: number; seed?: number}> = ({k, seed = 0}) => k <= 0.
 
 /* ---------- the numbered cubes (legible stickers) ---------- */
 const CELL = 80;
-type Cell = {cx: number; cy: number; n: number; inner: boolean};
-const CELLS: Cell[] = (() => { const o: Cell[] = []; let n = 0;
+export type Cell = {cx: number; cy: number; n: number; inner: boolean};
+export const CELLS: Cell[] = (() => { const o: Cell[] = []; let n = 0;
 	for (let cy = -200; cy <= 200; cy += CELL) for (let cx = -280; cx <= 280; cx += CELL) { const e = (cx / 300) ** 2 + ((cy + 15) / 212) ** 2; if (e < 1.18) { n++; o.push({cx, cy, n, inner: e < 0.72}); } }
 	return o; })();
 export const Sticker: React.FC<{x: number; y: number; n: number; s?: number; o?: number}> = ({x, y, n, s = 1, o = 1}) => <g transform={`translate(${x},${y}) scale(${s})`} opacity={o}>
 	<rect x={-28} y={-16} width={56} height={32} rx={3} fill={LBL} stroke="#6a4a3a" strokeWidth={1.2} />
 	<text x={0} y={8.5} textAnchor="middle" style={{fontFamily: MONO, fontSize: 23, fontWeight: 700}} fill={LBLI}>{n}</text></g>;
-const BrainCubes: React.FC<{x: number; y: number; s: number; id: string; grid: number; explode: number; whole: number; fall: (c: Cell) => number; o?: number}> = ({x, y, s, id, grid, explode, whole, fall, o = 1}) =>
+export const BrainCubes: React.FC<{x: number; y: number; s: number; id: string; grid: number; explode: number; whole: number; fall: (c: Cell) => number; o?: number}> = ({x, y, s, id, grid, explode, whole, fall, o = 1}) =>
 	<g transform={`translate(${x},${y}) scale(${s})`} opacity={o}>
 		<defs><clipPath id={`${id}c`}><path d={BRAIN_D} /></clipPath>
 			<radialGradient id={`${id}f`} cx="0.45" cy="0.42" r="0.62"><stop offset="0" stopColor={B.core} stopOpacity="0.95" /><stop offset="0.6" stopColor={B.mid} stopOpacity="0.62" /><stop offset="1" stopColor={B.halo} stopOpacity="0.42" /></radialGradient></defs>
