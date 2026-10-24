@@ -33087,7 +33087,7 @@ var palaceSvg = (x0, x1, base, s, col = SIL, ox = 0, sx = 1) => {
   const wallH = 64 * s, X = (x) => ox + x * sx;
   let o = `<rect fill="${col}" x="${X(x0).toFixed(1)}" y="${(base - wallH).toFixed(1)}" width="${((x1 - x0) * sx).toFixed(1)}" height="${(wallH + 900).toFixed(1)}"/>`;
   o += `<rect fill="${col}" x="${X(x0).toFixed(1)}" y="${(base - wallH - 10 * s).toFixed(1)}" width="${((x1 - x0) * sx).toFixed(1)}" height="${(13 * s).toFixed(1)}"/>`;
-  o += `<rect fill="${col}" x="${X(x0).toFixed(1)}" y="${(base - wallH - 80 * s).toFixed(1)}" width="${((x1 - x0) * sx).toFixed(1)}" height="${(80 * s).toFixed(1)}"/>`;
+  o += `<rect fill="${col}" x="${X(x0).toFixed(1)}" y="${(base - wallH - 104 * s).toFixed(1)}" width="${((x1 - x0) * sx).toFixed(1)}" height="${(104 * s).toFixed(1)}"/>`;
   for (const [cx, w, h] of HALLS) if (cx > x0 && cx < x1) o += hall(X(cx), base - wallH, w * s * sx, h * s, 1, col);
   o += jiaolou(X(-360), base - wallH + 4 * s, 0.6 * s * sx, col);
   return o;
@@ -33098,8 +33098,8 @@ var palaceWindows = (base, s, ox = 0, sx = 1) => {
   HALLS.forEach(([cx, w, h], i) => {
     const bh = h * s * 0.55, ww = w * s * sx;
     for (let k = 0; k < 5; k++) {
-      if (hash(i * 7.3 + k * 1.9) < 0.45) continue;
-      out.push([ox + cx * sx - ww * 0.36 + k * ww * 0.15, base - wallH - bh * 0.78, ww * 0.09, bh * 0.42]);
+      if (hash(i * 7.3 + k * 1.9) < 0.5) continue;
+      out.push([ox + cx * sx - ww * 0.33 + k * ww * 0.15, base - wallH - bh * 0.5, ww * 0.035, bh * 0.26]);
     }
   });
   return out;
@@ -33467,14 +33467,16 @@ var startCanvas = () => {
   g.restore();
   g.fillStyle = "#34506A";
   g.fillRect(SC.mount1, 0, SC.w - SC.mount1, SC.h);
-  g.strokeStyle = "rgba(210,174,106,0.45)";
-  g.lineWidth = 4;
-  for (let yy = 40; yy < SC.h; yy += 80) for (let xx = SC.mount1 + 30 + yy / 80 % 2 * 40; xx < SC.w - 40; xx += 80) {
+  g.fillStyle = "#2E4760";
+  g.fillRect(SC.mount1, 0, SC.w - SC.mount1, SC.h);
+  g.strokeStyle = "rgba(196,164,104,0.28)";
+  g.lineWidth = 2;
+  for (let yy = 20; yy < SC.h; yy += 40) for (let xx = SC.mount1 + 20 + yy / 40 % 2 * 20; xx < SC.w - 50; xx += 40) {
     g.beginPath();
-    g.moveTo(xx - 12, yy);
-    g.lineTo(xx, yy - 12);
-    g.lineTo(xx + 12, yy);
-    g.lineTo(xx, yy + 12);
+    g.moveTo(xx - 6, yy);
+    g.lineTo(xx, yy - 6);
+    g.lineTo(xx + 6, yy);
+    g.lineTo(xx, yy + 6);
     g.closePath();
     g.stroke();
   }
@@ -33649,10 +33651,11 @@ var boot24 = async () => {
   win24 = new Live(st2, "win24", 400, 550, 4400, 1100, -2398, { emissive: 0.9 }, 1);
   win24.drawW("w", (g) => {
     for (const [x, y, w, h] of palaceWindows(860, 1)) {
-      g.fillStyle = `rgba(255,184,104,${(0.55 + 0.35 * hash(x)).toFixed(2)})`;
+      g.fillStyle = `rgba(255,184,104,${(0.32 + 0.22 * hash(x)).toFixed(2)})`;
       g.fillRect(x, y + 4, w, h);
     }
   });
+  st2.get("far").mesh.visible = false;
   await snowDeck(st2, 1);
   snowRail(st2, "railSnow24");
   cast24 = new Cast(st2, "cast24", 1200, 640, 3600, 1100, 20);
@@ -34041,6 +34044,7 @@ var bootQing = async () => {
   await boot24();
   await boot25a();
   await boot25b();
+  window.QDBG = { desk25, c25 };
 };
 
 // src/s_xbl.ts
@@ -34103,7 +34107,7 @@ var bootPeak = async () => {
   BR = colBase.silk.bridge;
   UB = (BR.x + BR.w * 0.5) / 4096;
   VB = (BR.y + BR.h * 0.42) / 1536;
-  APEX = [BR.x + BR.w * 0.5 - 160 / SEC / 1.418, BR.y + 134 / SEC];
+  APEX = [BR.x + BR.w * 0.5 - 160 / SEC / 1.418, BR.y + 113 / SEC];
   peak = new Stage("peak");
   peak.add("back", canvasTex(gradCanvas([[0, "#d6c6a3"], [1, "#c4b18c"]])), 960, 540, 9e3, 5e3, -3e3);
   pMono = new Live(peak, "mono", 960, 540, FW, FH, 0, { emissive: 0.16 }, 1.4, 2);
@@ -34380,7 +34384,7 @@ var storeDraw = (t) => {
       g.fillStyle = "#F3E6CA";
       g.fillRect(r.x, r.y, r.w, r.h);
       g.drawImage(monoBase, 0, 0, 4096 * (r.w / SW), 1536, r.x, r.y, r.w, r.h);
-      g.fillStyle = "rgba(48,32,20,0.2)";
+      g.fillStyle = `rgba(48,32,20,${(0.2 * (1 - r.dv)).toFixed(3)})`;
       g.fillRect(r.x, r.y, r.w, r.h);
       g.restore();
       g.fillStyle = "rgba(30,22,16,.75)";
@@ -34414,7 +34418,7 @@ var storeDraw = (t) => {
   if (!unrolled) st2.heroAt(on ? t > b8(50.5) ? bp[0] + 75 : LAMP.bulb[0] : 960, on ? t > b8(50.5) ? bp[1] : LAMP.bulb[1] : 580, 6, on ? 700 : 300);
   else st2.heroAt(r.x + r.w / 2, r.y + r.h / 2, 0, 700 + 900 * burst);
   const dv = r.dv;
-  return { st: st2, grade: { vig: lerp2(0.42, 0.32, dv), vigCol: "#140e0a", exposure: on ? lerp2(1 + 0.02 * burst, 0.97, dv) : 0.6, corners: 0.5 + 0.5 * clamp01((t - DIVE_A) / 0.3) }, bloom: lerp2(1 + 0.15 * burst, 0.8, dv) };
+  return { st: st2, grade: { vig: lerp2(0.42, 0.32, dv), vigCol: "#140e0a", exposure: on ? lerp2(1 - 0.1 * burst, 0.84, dv) : 0.6, corners: 0.5 + 0.5 * clamp01((t - DIVE_A) / 0.3) }, bloom: lerp2(1 + 0.15 * burst, 0.8, dv) };
 };
 addScene({ id: "27", a: b8(50), z: b8(54.5) - 0.1, draw: storeDraw });
 function cartAt(t) {
@@ -34437,13 +34441,13 @@ var peakCam = (t) => {
   const [x2, y2, z2] = camOf(clampV({ u: vc.u, v: vc.v + 0.01, f: 0.47 }));
   return [lerp2(x1, x2, k), lerp2(y1, y2, k), Math.exp(lerp2(Math.log(z1), Math.log(z2), k))];
 };
-var ROLL = -0.09;
+var ROLL = -0.045;
 var peakRoll = (t) => ROLL * easeInOut(clamp01((t - b8(56.75)) / (b8(57) - 0.12 - b8(56.75))));
 var crestMatch = (t) => {
   const [cx, cy, zm] = peakCam(t);
   peak.setCam(cx, cy, zm, peakRoll(t));
   const A = peak.toScreen(peak.at(FX0 + APEX[0] * SEC, APEX[1] * SEC, 0)), sx = A.x, sy = A.y;
-  const zc = 0.2993 * zm;
+  const zc = 0.22 * zm;
   return [960 - (sx - 960) / zc, 900 - (sy - 540) / zc, zc];
 };
 var peakDraw = (t) => {
