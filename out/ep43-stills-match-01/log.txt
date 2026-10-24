@@ -1,0 +1,107 @@
+token id present: yes
+token secret present: yes
+✓ Initialized. View run at 
+https://modal.com/apps/jayjiao249/main/ap-DEmWSfUF0SQ7MIuSB9Pevm
+Building image im-GJHHSG0jeTY46nXqLj7jox
+
+=> Step 0: FROM base
+
+=> Step 1: RUN apt-get update
+Get:1 http://archive.ubuntu.com/ubuntu jammy InRelease [270 kB]
+Get:2 http://security.ubuntu.com/ubuntu jammy-security InRelease [129 kB]
+Get:3 https://deb.nodesource.com/node_20.x nodistro InRelease [12.1 kB]
+Get:4 https://deb.nodesource.com/node_20.x nodistro/main amd64 Packages [14.7 kB]
+Get:5 http://archive.ubuntu.com/ubuntu jammy-updates InRelease [128 kB]
+Get:6 http://archive.ubuntu.com/ubuntu jammy-backports InRelease [127 kB]
+Get:7 http://security.ubuntu.com/ubuntu jammy-security/main amd64 Packages [4430 kB]
+Get:8 http://archive.ubuntu.com/ubuntu jammy/multiverse amd64 Packages [266 kB]
+Get:9 http://archive.ubuntu.com/ubuntu jammy/universe amd64 Packages [17.5 MB]
+Get:10 http://security.ubuntu.com/ubuntu jammy-security/restricted amd64 Packages [7955 kB]
+Get:11 http://archive.ubuntu.com/ubuntu jammy/main amd64 Packages [1792 kB]
+Get:12 http://archive.ubuntu.com/ubuntu jammy/restricted amd64 Packages [164 kB]
+Get:13 http://archive.ubuntu.com/ubuntu jammy-updates/restricted amd64 Packages [8243 kB]
+Get:14 http://security.ubuntu.com/ubuntu jammy-security/multiverse amd64 Packages [96.8 kB]
+Get:15 http://security.ubuntu.com/ubuntu jammy-security/universe amd64 Packages [1325 kB]
+Get:16 http://archive.ubuntu.com/ubuntu jammy-updates/universe amd64 Packages [1628 kB]
+Get:17 http://archive.ubuntu.com/ubuntu jammy-updates/main amd64 Packages [4759 kB]
+Get:18 http://archive.ubuntu.com/ubuntu jammy-updates/multiverse amd64 Packages [104 kB]
+Get:19 http://archive.ubuntu.com/ubuntu jammy-backports/main amd64 Packages [82.9 kB]
+Get:20 http://archive.ubuntu.com/ubuntu jammy-backports/universe amd64 Packages [35.6 kB]
+Fetched 49.0 MB in 3s (16.0 MB/s)
+Reading package lists...
+
+=> Step 2: RUN apt-get install -y ffmpeg fonts-noto-cjk fonts-noto-cjk-extra
+Reading package lists...
+Building dependency tree...
+Reading state information...
+ffmpeg is already the newest version (7:4.4.2-0ubuntu0.22.04.1).
+The following NEW packages will be installed:
+  fonts-noto-cjk fonts-noto-cjk-extra
+0 upgraded, 2 newly installed, 0 to remove and 152 not upgraded.
+Need to get 206 MB of archives.
+After this operation, 312 MB of additional disk space will be used.
+Get:1 http://archive.ubuntu.com/ubuntu jammy/main amd64 fonts-noto-cjk all 1:20220127+repack1-1 [61.2 MB]
+Get:2 http://archive.ubuntu.com/ubuntu jammy/main amd64 fonts-noto-cjk-extra all 1:20220127+repack1-1 [145 MB]
+debconf: delaying package configuration, since apt-utils is not installed
+Fetched 206 MB in 10s (21.7 MB/s)
+Selecting previously unselected package fonts-noto-cjk.
+(Reading database ... 
+[1A(Reading database ... 5%
+[1A(Reading database ... 10%
+[1A(Reading database ... 15%
+[1A(Reading database ... 20%
+[1A(Reading database ... 25%
+[1A(Reading database ... 30%
+[1A(Reading database ... 35%
+[1A(Reading database ... 40%
+[1A(Reading database ... 45%(Reading database ... 50%(Reading database ... 55%
+[1A(Reading database ... 60%(Reading database ... 65%
+[1A(Reading database ... 70%(Reading database ... 75%
+[1A(Reading database ... 80%(Reading database ... 85%(Reading database ... 90%(Reading database ... 95%
+[1A(Reading database ... 100%(Reading database ... 34286 files and directories currently installed.)
+Preparing to unpack .../fonts-noto-cjk_1%3a20220127+repack1-1_all.deb ...
+Unpacking fonts-noto-cjk (1:20220127+repack1-1) ...
+Selecting previously unselected package fonts-noto-cjk-extra.
+Preparing to unpack .../fonts-noto-cjk-extra_1%3a20220127+repack1-1_all.deb ...
+Unpacking fonts-noto-cjk-extra (1:20220127+repack1-1) ...
+Setting up fonts-noto-cjk (1:20220127+repack1-1) ...
+Setting up fonts-noto-cjk-extra (1:20220127+repack1-1) ...
+Processing triggers for fontconfig (2.13.1-4.2ubuntu5) ...
+Saving image...
+Image saved, took 692.35ms
+
+Built image im-GJHHSG0jeTY46nXqLj7jox in 21.22s
+
+
+Building image im-rWolvD77jGdduPhuipW1TV
+
+=> Step 0: FROM base
+
+=> Step 1: RUN cd /app 2>/dev/null || mkdir -p /app && cd /app && npm init -y >/dev/null && npm i playwright-core@1.48.2
+
+added 1 package, and audited 2 packages in 975ms
+
+found 0 vulnerabilities
+Saving image...
+Image saved, took 584.59ms
+
+Built image im-rWolvD77jGdduPhuipW1TV in 3.71s
+
+
+✓ Created objects.
+├── ✓ Uploaded /home/runner/work/Video/Video/render_ep43.py
+├── ✓ Uploaded /home/runner/work/Video/Video/ep43
+├── ✓ Created Function chunk.
+└── ✓ Created Function stills.
+0 STILLS 2
+
+1 STILLS 2
+
+2 STILLS 1
+
+3 STILLS 1
+
+DONE stills
+Stopping app - local entrypoint completed.
+✓ App completed. View run at 
+https://modal.com/apps/jayjiao249/main/ap-DEmWSfUF0SQ7MIuSB9Pevm
