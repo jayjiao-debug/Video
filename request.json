@@ -1,35 +1,11 @@
 {
- "id": "ep42-vo-01",
+ "id": "ep42-vo-02",
  "model_prefs": [
   "eleven_v4"
  ],
  "items": [
   {
    "lang": "zh",
-   "voice_id": "agczkAUlHLowaNnL72Cc",
-   "model": "eleven_v4",
-   "settings": {
-    "stability": 0.35,
-    "similarity_boost": 0.8,
-    "style": 0.3
-   },
-   "name": "Q0a",
-   "text": "人活着……到底为了什么？"
-  },
-  {
-   "lang": "zh",
-   "voice_id": "agczkAUlHLowaNnL72Cc",
-   "model": "eleven_v4",
-   "settings": {
-    "stability": 0.35,
-    "similarity_boost": 0.8,
-    "style": 0.3
-   },
-   "name": "Q0b",
-   "text": "人活着，到底为了什么？"
-  },
-  {
-   "lang": "zh",
    "voice_id": "MI36FIkp9wRP7cpWKPTl",
    "model": "eleven_v4",
    "settings": {
@@ -37,31 +13,7 @@
     "similarity_boost": 0.8,
     "style": 0.4
    },
-   "name": "O1",
-   "text": "凌晨三点，你也搜过吧？"
-  },
-  {
-   "lang": "zh",
-   "voice_id": "MI36FIkp9wRP7cpWKPTl",
-   "model": "eleven_v4",
-   "settings": {
-    "stability": 0.45,
-    "similarity_boost": 0.8,
-    "style": 0.4
-   },
-   "name": "O2",
-   "text": "近四千年前，就有人写下了这个问题。"
-  },
-  {
-   "lang": "zh",
-   "voice_id": "MI36FIkp9wRP7cpWKPTl",
-   "model": "eleven_v4",
-   "settings": {
-    "stability": 0.45,
-    "similarity_boost": 0.8,
-    "style": 0.4
-   },
-   "name": "O3",
+   "name": "O3b",
    "text": "而泥板上的答案，和哈佛一样。"
   },
   {
@@ -73,8 +25,8 @@
     "similarity_boost": 0.8,
     "style": 0.4
    },
-   "name": "TT",
-   "text": "人活着为了什么？人类问了近四千年。"
+   "name": "O3c",
+   "text": "而那块泥板上的答案，和哈佛一样。"
   },
   {
    "lang": "zh",
@@ -85,32 +37,8 @@
     "similarity_boost": 0.8,
     "style": 0.4
    },
-   "name": "E1",
-   "text": "一卷埃及莎草纸上，无名诗人写下："
-  },
-  {
-   "lang": "zh",
-   "voice_id": "MI36FIkp9wRP7cpWKPTl",
-   "model": "eleven_v4",
-   "settings": {
-    "stability": 0.45,
-    "similarity_boost": 0.8,
-    "style": 0.4
-   },
-   "name": "E2",
-   "text": "一个人，和自己的灵魂吵了起来。"
-  },
-  {
-   "lang": "zh",
-   "voice_id": "MI36FIkp9wRP7cpWKPTl",
-   "model": "eleven_v4",
-   "settings": {
-    "stability": 0.45,
-    "similarity_boost": 0.8,
-    "style": 0.4
-   },
-   "name": "E3",
-   "text": "人人自私贪心，这样活着，值不值？"
+   "name": "O3d",
+   "text": "而泥板上写的答案，和哈佛一样。"
   }
  ]
 }
