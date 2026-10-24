@@ -238,7 +238,7 @@ const lensWin = (t: number): {c: P2; span: number} => {
 	// b58.5: out through the painted gate (the arch, tight → wider), then a fast eased slide left to the shed
 	const u0 = clamp01((t - b(58.5) + 0.25) / 0.45), u1 = easeInOut(clamp01((t - b(58.5) - 0.1) / (b(58.75) - b(58.5) - 0.1)));
 	const span = lerp(lerp(900, 1400, easeOut(u0)), 1500, u1);
-	return {c: lerpP([ARCH_C[0] + 40, ARCH_C[1] - 170 + 60 * u0], [PATCH_C[0] + 40, PATCH_C[1] - 30], u1), span};
+	return {c: lerpP([ARCH_C[0] + 40, ARCH_C[1] - 40 + 30 * u0], [PATCH_C[0] + 40, PATCH_C[1] - 30], u1), span};
 	void room;
 };
 const camR = (t: number): Cam => {
@@ -322,6 +322,5 @@ const drawR = (t: number) => {
 	const inLens = c.z > 6 ? 1 : 0, top = c.th < 0.3 ? 1 : 0;
 	return {st, grade: {vig: inLens ? 0.62 : top ? 0.5 : 0.3, vigCol: '#1a120b', corners: inLens || top ? 0.95 : 0.25, exposure: 1}, bloom: 1};
 };
-(window as any).RESTO_DBG = (t: number) => { const c = camR(t); return {c, th: strip.theta}; };
 addScene({id: '30', a: b(58.5), z: b(62), draw: drawR});
 addScene({id: '31', a: b(62), z: b(64), draw: drawR});

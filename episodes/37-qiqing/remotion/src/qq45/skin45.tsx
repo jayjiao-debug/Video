@@ -12,7 +12,7 @@ const fx: React.CSSProperties = {position: 'absolute', fontFamily: SANS, color: 
 export const Marked: React.FC<{s: string; n?: number; pull?: boolean}> = ({s, n = 1e9, pull}) => {
 	let left = n; const parts = s.split(/(\[[^\]]+\])/).filter(Boolean), out: React.ReactNode[] = [];
 	parts.forEach((p, i) => {
-		const key = p.startsWith('['), txt = key ? p.slice(1, -1) : p, vis = txt.slice(0, Math.max(0, left)), hid = txt.slice(vis.length); left -= txt.length;
+		const key = p.startsWith('['), txt = key ? p.slice(1, -1) : p; let cut = Math.max(0, Math.min(txt.length, left)); while (cut > 0 && cut < txt.length && /[0-9.]/.test(txt[cut - 1]) && /[0-9.]/.test(txt[cut])) cut++; const vis = txt.slice(0, cut), hid = txt.slice(vis.length); left -= txt.length;
 		const st: React.CSSProperties = key ? {color: KEY} : {};
 		if (pull && i === parts.length - 1 && !key && /[？。！，]$/.test(vis) && hid === '') out.push(<span key={i} style={st}>{vis.slice(0, -1)}<span style={{marginRight: '-0.5em'}}>{vis.slice(-1)}</span></span>);
 		else out.push(<span key={i} style={st}>{vis}<span style={{opacity: 0}}>{hid}</span></span>);

@@ -70,10 +70,12 @@ const StampBody: React.FC<{y: string; place?: string; note?: string; o: number}>
 /** stamp (top-right): line 1 = year (Cormorant italic) · place (文楷); line 2 = a short dim note (文楷, ≤ 10 字); rose-gold rule */
 export const Stamp: React.FC<{y: string; place?: string; note?: string; o?: number}> = ({y, place, note, o = 1}) =>
 	<StampBody key={`${y}|${place}|${note}`} y={y} place={place} note={note} o={o} />;
-/** the brand as a small round seal, bottom-right, low opacity */
-export const Seal: React.FC = () => <div style={{position: 'absolute', right: 56, bottom: 52, width: 54, height: 54, borderRadius: '50%', border: `2.5px solid ${INK}`, opacity: 0.36, transform: 'rotate(-10deg)', display: 'flex', alignItems: 'center', justifyContent: 'center'}}>
-	<div style={{position: 'absolute', inset: 4, borderRadius: '50%', border: `1px solid ${INK}`}} />
-	<span style={{fontFamily: "'DejaVu Serif',serif", fontWeight: 700, fontSize: 28, color: INK, lineHeight: 1, marginTop: 2}}>J</span></div>;
+/** the brand as a small seal, bottom-right, low opacity. Final pass (QA: the round J read as an ⓘ info icon): a square seal-stamp,
+    double rule, a serif J monogram over a tiny JUNO, rotated like a hand-pressed chop. */
+export const Seal: React.FC = () => <div style={{position: 'absolute', right: 54, bottom: 50, width: 60, height: 60, borderRadius: 6, border: `2.5px solid ${INK}`, opacity: 0.42, transform: 'rotate(-8deg)', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center'}}>
+	<div style={{position: 'absolute', inset: 4, borderRadius: 3, border: `1px solid ${INK}`}} />
+	<span style={{fontFamily: "'Cormorant44','DejaVu Serif',serif", fontStyle: 'italic', fontWeight: 700, fontSize: 32, color: INK, lineHeight: 0.9, marginTop: 1}}>J</span>
+	<span style={{fontFamily: "'DejaVu Sans',sans-serif", fontWeight: 700, fontSize: 8.5, letterSpacing: '0.22em', color: INK, lineHeight: 1, marginTop: 2, marginLeft: '0.22em'}}>JUNO</span></div>;
 /** story text, top-left; rows stack (row 1 stays while row 2 types) */
 export const Story: React.FC<{rows: SubRow[]}> = ({rows}) => rows.length === 0 ? null : <>
 	<div style={{position: 'absolute', borderRadius: '50%', filter: 'blur(38px)', left: 40, top: 70, width: 1080, height: 120 + 88 * rows.length, background: 'rgba(12,16,20,0.30)'}} />
