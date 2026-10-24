@@ -1,0 +1,28 @@
+<!doctype html><html><head><meta charset="utf-8"><style>
+@font-face{font-family:'Cormorant Garamond';src:url('fonts/cormorant-garamond-latin-600-normal.woff2') format('woff2');font-weight:600;font-style:normal}
+html,body{margin:0;background:#000;width:1920px;height:1080px;overflow:hidden}
+#c{position:absolute;inset:0;width:1920px;height:1080px}
+#hud{position:absolute;inset:0;pointer-events:none;font-family:'Noto Serif CJK SC',serif;color:#FFF3D8}
+.sh{text-shadow:0 0 2px rgba(12,8,5,.9),0 2px 6px rgba(12,8,5,.65),0 3px 24px rgba(12,8,5,.6)}
+.sub{position:absolute;left:150px;font-weight:900;font-size:58px;line-height:88px;letter-spacing:.035em;white-space:nowrap}
+.sub .k{color:#EE4B3B}
+.subc{position:absolute;left:0;right:0;text-align:center;font-weight:900;font-size:58px;line-height:88px;letter-spacing:.035em;white-space:nowrap}
+.subc .k{color:#EE4B3B}
+.mark{position:absolute;top:40px;right:64px;font-size:21px;letter-spacing:.3em;font-weight:300;opacity:.62;color:#F2EADB}
+.stamp{position:absolute;top:92px;right:64px;text-align:right;padding-right:22px;border-right:5px solid #EE4B3B}
+.stamp .s1{font-weight:900;font-size:56px;line-height:1.22;letter-spacing:.02em}
+.stamp .s2{font-weight:700;font-size:40px;line-height:1.45;margin-top:2px}
+.stamp .s3{font-weight:600;font-size:34px;line-height:1.45;opacity:.85}
+.age{position:absolute;left:150px;bottom:66px;display:flex;align-items:flex-end;gap:18px}
+.era{background:#EE4B3B;color:#F8EEDC;text-shadow:none;font-weight:900;font-size:30px;line-height:1;padding:10px 10px;border-radius:4px;writing-mode:vertical-rl;letter-spacing:.05em;box-shadow:0 2px 10px rgba(0,0,0,.25);margin-bottom:10px}
+.cnt{font-weight:900;line-height:1;white-space:nowrap;display:flex;align-items:flex-end}
+.cnt .a{font-size:34px;font-weight:700;margin-bottom:12px}
+.cnt .n{font-family:'Cormorant Garamond',serif;font-weight:600;font-size:96px;letter-spacing:.01em;margin:0 8px;display:inline-flex;overflow:hidden;height:92px;line-height:92px}
+.dg{display:inline-block;position:relative;width:.5em;height:92px;overflow:hidden}
+.dg span{position:absolute;left:0;right:0;text-align:center}
+.tally{position:absolute;left:640px;bottom:74px;font-weight:700;font-size:40px;line-height:1.25}
+.tally .o{display:inline-block;width:30px;height:30px;border-radius:15px;border:3px solid #FFF3D8;margin:0 5px -3px;box-sizing:border-box}
+.tally .o.f{background:#EE4B3B;border-color:#EE4B3B}
+.tally .l{font-size:30px;font-weight:600;opacity:.85}
+.lbl{position:absolute;font-weight:700;font-size:44px;white-space:nowrap}
+</style></head><body><canvas id="c" width="1920" height="1080"></canvas><div id="hud"></div><script type="module" src="main.js"></script></body></html>

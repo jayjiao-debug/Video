@@ -35,9 +35,9 @@
 | Film bar | Film time | Music | Script beat it lands on |
 |---|---|---|---|
 | 0–2 | 0–8.2 | intro | H1–H2 「九百年…留住你 / 所以…带走」 |
-| **3** | **8.24** | **drop 1** | the fate teaser starts; one hard cut per bar (bars 3–6) |
-| 8 | 19.56 | phrase change | N2 「你，为什么这么难见？」 (script 19.75) |
-| 9–10 | 21.8–24.1 | — | the title card; the screenwriter/editor picks bar 9 or 10 |
+| 3 | 8.24 (grid) · **9.05 audible** | **drop 1** — the hit (cymbal + sub-bass) lands on the off-beat after beat 2; a half-beat sound pause from 8.78 | **v2.3: the title card slams at 9.05** (owner: title on the first drop) |
+| 4.5–8 | 11.64–19.56 | — | v2.3 teaser hard cuts: T1 11.64 · T2 15.03 · T3 17.30 · T4 19.56 (the bar-8 phrase change) |
+| 9–11.5 | 21.83–27.49 | — | N1 21.83 · N2 25.22 · S1 27.49 |
 | 15–16 | 35.4–37.7 | lift | the 张著 colophon beats |
 | 28 | 64.85 | (the splice, inaudible) | — |
 | **34** | **78.43** | **breakdown** | **F1 1578 冯保 「偷」** (script 79.25): the theft over the sparse breakdown |
@@ -45,7 +45,7 @@
 | **49** | **112.40** | **stop (one bar of near-silence)** | **「混乱中，你下落不明。」** (script 110.0 → move to the stop) |
 | **50** | **114.66** | **re-entry, no bass** | **「几年后，沈阳一间临时库房里」** (script 113.75) |
 | 53 | 121.46 | pickup | 「标着真迹的两卷，都是仿的。」 |
-| **54** | **123.72** | **hardest drop** | **「混在残次品里的那一卷，才是你。」** (script 124.0) |
+| **54** | **123.72** (grid) · sub-bass audible at **123.40** | **hardest drop** | **「混在残次品里的那一卷，才是你。」** (script 124.0) |
 | 54–73 | 123.7–169.0 | full | 1950年代 → donkey → 藏者宜宝之 → 偷你换你藏你抄你 → moral: about 45 s for ~40 s of lines, so the extra goes to holds on 才是你 and E3 |
 | **74** | **169.0** | **outro** | E8 「所以，你才这么难见。」 / Q 「要是排五小时看两分钟，你去吗？」 + Juno end card to 184.3 |
 
