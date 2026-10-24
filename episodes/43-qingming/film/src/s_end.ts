@@ -17,7 +17,7 @@ import {Crest, deck, fillSvg} from './crest';
 import {Cast, look, drawRoll, drawFig, glowBlob, rig, Contact, drawCarriedRoll} from './actors';
 import {POSES, FigOpts, Pose, P, LookQ, gaitPose, gaitStride, walkFor, stepFor, underArm, underArmRoll, armsFrom, carryArmful, armfulAt, toScreen, mixPose, figurePaths} from './figures';
 import {paintSection} from './silk';
-import {SIL, skyline, roof as roofSvg, hall as hallSvg} from './draw';
+import {SIL, skyline, roof as roofSvg, hall as hallSvg, hills, jiaolou, cityGate} from './draw';
 import {endCard} from './hud';
 import {lockCam, robeSafe, bowUpper, armPaths} from './s_teaser';
 
@@ -139,7 +139,7 @@ const LK = {song: look('refugee'), yuan: look('yuanNoble'), ming: look('mingEunu
 const eraT0 = (e: number) => b(66 + 0.25 * e);
 type EraSet = {crest: Crest; cast: Cast; prop: Live; glow: Live; arms?: Live; crowd?: Cast};
 const ERAS: EraSet[] = [];
-let OFF_UA: Record<string, P> = {}, OFF_BUNDLE: P = [0, 0];
+let OFF_UA: Record<string, P> = {}, OFF_BUNDLE: P = [0, 0], FAR_MING: any, FAR_YUAN: any;
 /** today's light, the daybreak camera both matched stages share (b67.5 → b68.5) */
 const CAM_DB: [number, number, number] = [200, 660, 1.0];
 // the standing crowd on the bridge (1923: gowns, Qing caps; after the daybreak: today's visitors) — same places, same sizes
@@ -149,9 +149,9 @@ const L1923: LookQ[] = [{head: 'qingcap', dress: 'robe', sleeves: 'narrow', surc
 const deckFar = (x: number) => deck(x) - 6;
 const bootFlip = async () => {
 	const defs: [string, any][] = [['e4-song', {sky: 'fire', era: '宋', lanterns: true, boat: false, bankCrowd: true, embers: true}], ['e4-yuan', {sky: 'night', era: '元', lanterns: true, boat: false, bankCrowd: false}],
-		['e4-ming', {sky: 'night', era: '明', lanterns: true, boat: false, bankCrowd: false}], ['e4-1923', {sky: 'snow', era: '1923', lanterns: true, boat: false, bankCrowd: true, snow: true}]];
+		['e4-1923', {sky: 'snow', era: '1923', lanterns: true, boat: false, bankCrowd: true, snow: true}]];
 	const crests = defs.map(([n, o]) => new Crest(n, o)); await Promise.all(crests.map((c) => c.ready));
-	crests.forEach((crest, e) => {
+	crests.forEach((crest, e0) => { const e = e0 === 2 ? 3 : e0;
 		const st = crest.st, s: EraSet = {crest, cast: new Cast(st, 'e4cast', 1000, 700, 3200, 1000, 20), prop: new Live(st, 'e4prop', 1000, 700, 3200, 1000, 23, {rim: 0.3}, 1), glow: new Live(st, 'e4glow', 1000, 700, 3200, 1000, 24, {emissive: 1.0}, 0.4)};
 		if (e === 0) st.get('sunglow').mat.uniforms.uOpacity.value = 0.8;
 		if (e === 3) {
@@ -164,8 +164,13 @@ const bootFlip = async () => {
 			dk.drawW('s', (g) => { g.fillStyle = '#C9D2D8'; g.beginPath(); const xs: number[] = []; for (let x = -1300; x <= 3200; x += 20) xs.push(x);
 				xs.forEach((x, i) => (i ? g.lineTo(x, deck(x) - 6 - 2 * Math.sin(x * 0.05)) : g.moveTo(x, deck(x) - 6))); for (const x of xs.slice().reverse()) g.lineTo(x, deck(x) + 3); g.closePath(); g.fill(); });
 		}
-		ERAS.push(s);
+		ERAS[e] = s;
 	});
+	// 明 shares the 元 night stage (memory): only the far bank differs — 紫禁城 角楼 + a gate instead of the Dagoba
+	const farW = 8400, farH = 1400, base = 860;
+	const mingFar = svgDoc(`<g transform="translate(${farW / 2 - 960},${-(860 - farH * 0.55)})">${hills(-3200, 5200, base - 40, 90, 7, '#000')}${skyline(-3200, 5200, base, 40, 110, 11)}${jiaolou(-420, base, 1.3)}${cityGate(250, base, 0.75)}</g>`, farW, farH);
+	FAR_MING = canvasTex(await svgToCanvas(mingFar, farW, farH, 0.5)); FAR_YUAN = ERAS[1].crest.st.get('far').mat.uniforms.map.value;
+	ERAS[2] = ERAS[1];
 	const mean = (f: (u: number) => P): P => { let sx = 0, sy = 0; for (let i = 0; i < 16; i++) { const p = f(i / 16); sx += p[0] / 16; sy += p[1] / 16; } return [sx, sy]; };
 	for (const k of ['yuan', 'ming'] as const) OFF_UA[k] = mean((u) => { let p = robeSafe(walkFor(LK[k], u)); p = armsFrom(p, underArm(p), 'R'); const [a, c] = underArmRoll(p, 'R', 0.29); return [(a[0] + c[0]) / 2, (a[1] + c[1]) / 2]; });
 	OFF_BUNDLE = mean((u) => armfulAt(carryArmful(robeSafe(walkFor(LK.youth, u)))).c);
@@ -239,6 +244,7 @@ const flipCam = (e: number, t: number, ep: EraPose): [number, number, number] =>
 };
 function flipDraw(t: number, eForce?: number): Frame {
 	const e = eForce ?? (t < eraT0(1) ? 0 : t < eraT0(2) ? 1 : t < eraT0(3) ? 2 : 3), S = ERAS[e], st = S.crest.st, ep = eraPose(e, t);
+	if (e === 1 || e === 2) st.get('far').mat.uniforms.map.value = e === 2 ? FAR_MING : FAR_YUAN;
 	const [cx, cy, zm] = flipCam(e, t, ep); st.setCam(cx, cy, zm);
 	const key = k30(t);
 	S.cast.draw(key, [], (g) => ep.draw(g));
