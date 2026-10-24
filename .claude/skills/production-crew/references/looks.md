@@ -26,3 +26,8 @@ opening line (about you vs a detour), not the look.
 | 切尔诺贝利，谁按错了 (ep14) | Night control room: navy-black, warm practical lamps, data on the models (RBMK core, B-17 at dusk, cockpit switches, Hawaii desk), paper report cards; Chernobyl as the famous cold-open question → WWII / Hawaii / Norman door | | | | |
 | 为什么一比，就觉得穷？ (ep21 v3) | 满意度热像 (thermal camera): real three.js scenes rendered as a heat field (heat = satisfaction) through an ironbow LUT with isotherm contours; the camera auto-ranges, so your thing cools when something hotter appears · violet → magenta → orange → white, ice-cyan for "below" | | | | |
 | 分手以后，为什么反而更放不下？ (ep36-breakup) | 霓虹雨夜: one rainy night, phone as key light, window → block across the street → brain as a neon night city; plum + magenta/teal/amber neon, dawn ending. Chosen over 拍立得手账 (warm desk + engraving) and 临床戒断 (light medical) — owner: "stick to dark toned and aesthetic" | | | | |
+| 孤独，会传染 (ep37) | (look not recorded; fill in from the episode) | | | | |
+| 大海捞一颗氢弹 (ep38-hbomb) | (look not recorded; fill in from the episode) | | | | |
+| 为什么要"集中优势兵力" (ep38-lanchester) | three.js 3D set-pieces: musket lines and squares in smoke, Trafalgar ships, a low-poly hero arena (5v3), an Osaka photogrammetry city with glowing districts · warm dusk, smoke, red vs blue sides, gold numbers | | | | |
+| 七宗罪梗图版 (ep39) | meme-image (梗图) format (see the episode folder) | | | | |
+| 为了跟你说一句话，人类努力了三千年 (ep41) / 人活着为了什么？人类问了四千年 (ep42) | one-tone silhouette figures against dusk-gradient skies (noted at ep43 gate 2a, 2026-10-24) — the next look should not be a third silhouette-on-dusk film in a row unless the owner picks it | | | | |
