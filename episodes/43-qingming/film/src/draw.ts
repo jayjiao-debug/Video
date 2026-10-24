@@ -72,11 +72,27 @@ export const skyline = (x0: number, x1: number, base: number, hMin: number, hMax
 };
 /** willow tree silhouette */
 export const willow = (x: number, base: number, h: number, seed = 1, col = SIL) => {
-	const r = rnd(seed); let o = `<path fill="${col}" d="M${f(x - h * 0.03)},${f(base)} Q${f(x - h * 0.02)},${f(base - h * 0.5)} ${f(x + h * 0.05)},${f(base - h * 0.8)} L${f(x + h * 0.07)},${f(base - h * 0.79)} Q${f(x + h * 0.03)},${f(base - h * 0.45)} ${f(x + h * 0.04)},${f(base)} Z"/>`;
-	o += `<ellipse fill="${col}" cx="${f(x + h * 0.04)}" cy="${f(base - h * 0.82)}" rx="${f(h * 0.3)}" ry="${f(h * 0.16)}"/>`;
-	for (let i = 0; i < 22; i++) { const sx = x + h * (-0.26 + r() * 0.6), sy = base - h * (0.78 + r() * 0.1), len = h * (0.25 + r() * 0.35);
-		o += `<path fill="none" stroke="${col}" stroke-width="${f(2 + r() * 3)}" stroke-linecap="round" d="M${f(sx)},${f(sy)} Q${f(sx + 8)},${f(sy + len * 0.5)} ${f(sx + 3 + r() * 10)},${f(sy + len)}"/>`; }
-	return o;
+	// trunk forking into three limbs; each limb arches over and drops curtains of thin strands, longest at the outside,
+	// so the crown is widest at the bottom with a ragged hem (reads as a willow at 480 px, not a disc on a pole)
+	const r = rnd(seed), lean = (r() - 0.5) * 0.05 * h, fx = x + lean, fy = base - h * 0.4, tw = Math.max(1.5, h * 0.03);
+	let o = `<path fill="${col}" d="M${f(x - tw)},${f(base)} Q${f(x - tw * 0.6)},${f(base - h * 0.22)} ${f(fx - tw * 0.55)},${f(fy)} L${f(fx + tw * 0.55)},${f(fy)} Q${f(x + tw * 0.6)},${f(base - h * 0.22)} ${f(x + tw)},${f(base)} Z"/>`;
+	const limbs: [number, number][] = [[-0.2, 0.8], [0.02, 0.98], [0.23, 0.84]];
+	let strands = '';
+	for (const [dx, ty] of limbs) {
+		const tx = fx + dx * h, tyy = base - ty * h, side = dx < -0.05 ? -1 : dx > 0.05 ? 1 : 0;
+		const qx = fx + dx * h * 0.25, qy = fy - (ty - 0.4) * h * 0.75;
+		o += `<path fill="none" stroke="${col}" stroke-width="${f(tw * 0.75)}" stroke-linecap="round" d="M${f(fx)},${f(fy)} Q${f(qx)},${f(qy)} ${f(tx)},${f(tyy)}"/>`;
+		// a few leafy clumps along the arch (rounded crown, no flat top)
+		for (let i = 0; i < 4; i++) { const s2 = 0.45 + i * 0.18, cx = fx + (tx - fx) * s2 + (r() - 0.5) * h * 0.05, cy = fy + (tyy - fy) * s2 - h * 0.02;
+			o += `<ellipse fill="${col}" fill-opacity="0.55" cx="${f(cx)}" cy="${f(cy)}" rx="${f(h * (0.04 + r() * 0.03))}" ry="${f(h * (0.02 + r() * 0.014))}"/>`; }
+		for (let i = 0; i < 18; i++) {
+			const s2 = 0.35 + r() * 0.65, sx = fx + (tx - fx) * s2 + (r() - 0.5) * h * 0.08, sy = fy + (tyy - fy) * s2 - h * 0.02;
+			const out = (side || (r() < 0.5 ? -1 : 1)) * h * (0.03 + r() * 0.09) * (0.5 + s2);
+			const ey = base - h * (0.12 + r() * 0.34) + Math.abs(out) * 0.3, ex = sx + out * 1.5;
+			strands += `<path fill="none" stroke="${col}" stroke-width="${f(Math.max(1, h * (0.006 + r() * 0.008)))}" stroke-linecap="round" d="M${f(sx)},${f(sy)} C${f(sx + out * 0.9)},${f(sy - h * 0.05)} ${f(ex)},${f(sy + h * 0.06)} ${f(ex + (r() - 0.5) * h * 0.02)},${f(ey)}"/>`;
+		}
+	}
+	return o + strands;
 };
 /** a small bank figure (far crowd): head + body + hat variety */
 export const tinyFig = (x: number, base: number, h: number, seed: number, col = SIL) => {

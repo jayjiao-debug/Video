@@ -4,3 +4,5 @@
 |---|---|---|---|---|
 | 2026-10-24 21:41 | folder created | producer | | |
 | 2026-10-24 21:54 | research (facts.md, 25 rows) + script v1 | producer | 2:34, 51 lines | ~55 |
+| 2026-10-24 22:05 | gate 1 r1: director REVISE 4/5 (note 1 structural) + cold read; script v2 + facts F26–F27 | producer | 2:35, 50 lines; r2 check launched | ~25 |
+| 2026-10-24 22:11 | gate 1 r2: director REVISE (wording only, pre-approved), applied → v2.1 | producer | 2:35, 50 lines; to owner | ~15 |
