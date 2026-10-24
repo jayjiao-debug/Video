@@ -57,6 +57,7 @@ export const Defs46: React.FC = () => <defs>
 	<linearGradient id="barkG" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stopColor={C.barkLit} /><stop offset="0.45" stopColor={C.bark} /><stop offset="1" stopColor={C.barkSh} /></linearGradient>
 	<linearGradient id="deadG" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stopColor="#CFC6B8" /><stop offset="0.45" stopColor="#ABA294" /><stop offset="1" stopColor="#7C746A" /></linearGradient>
 	<linearGradient id="paperG" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stopColor="#F5EEDD" /><stop offset="1" stopColor={C.paperSh} /></linearGradient>
+	<pattern id="legendPat" width={10} height={10} patternUnits="userSpaceOnUse" patternTransform="rotate(35)"><rect width={10} height={10} fill="#F6E7A0" opacity={0.18} /><line x1={0} y1={5} x2={10} y2={5} stroke="#FFF6CF" strokeWidth={3} strokeDasharray="5 4" /></pattern>
 	<linearGradient id="hazeG" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stopColor="#F2E6CF" stopOpacity="0" /><stop offset="1" stopColor="#F2E6CF" stopOpacity="0.6" /></linearGradient>
 </defs>;
 
@@ -181,7 +182,8 @@ export const Stele46: React.FC<{x: number; g: number; s?: number; carve?: 'tree'
 	if (k <= 0) return null;
 	const rise = 1 - easeOut(k), w = (variant % 2 ? 128 : 112) * s, h = (variant % 3 === 1 ? 250 : variant % 3 === 2 ? 210 : 280) * s, tortoise = variant % 2 === 0, baseH = (tortoise ? 52 : 40) * s;
 	const top = g - baseH - h, side = 14 * s, headH = w * 0.42;
-	return <g opacity={clamp(k * 3)} transform={`translate(0,${rise * 40 * s})`}>
+	void rise;
+	return <g transform={`translate(0,${g}) scale(1,${easeOut(k)}) translate(0,${-g})`}>
 		<Shadow x={x + 34 * s} y={g + 2} rx={104 * s} ry={13 * s} o={0.3} />
 		{pavilion && <g>
 			{[-1, 1].map((sg) => <rect key={sg} x={x + sg * 105 * s - 9 * s} y={top - headH - 96 * s} width={18 * s} height={g - (top - headH - 96 * s)} fill={C.col} />)}

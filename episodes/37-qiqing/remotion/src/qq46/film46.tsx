@@ -1,7 +1,7 @@
 import React from 'react';
 import {W, H, rnd, lerp, clamp, ease, easeOut, easeIn, seg, mixC, C, SKY, skyMix, Glow, Defs46, Sky46, Mountain46, Torches, Altar, Wall46, Hall46, Pave46, Stele46, Cypress46, Huai46,
 	Stall46, Fire46, Field46, Sapling46, SmokeBank, Pot46, Truck46, Mound46, Slips46, Book46, Scroll46, ScrollStand, SlipStand, Tablet, Climbers, Finish46, Shadow, WALL_BASE, WALL_TOP, SUMMIT, VText} from './kit46';
-import {HanBai, treeAt, STRIP_MID, WEST_MID} from './tree46';
+import {HanBai, Young46, treeAt, STRIP_MID, WEST_MID} from './tree46';
 import {Story, Punch, PeakLine, Stamp, Brand, Counter, SealRow, SealState, TitleCard, EndCard, Src, plainLen, Row} from './skin46';
 import {Person, LOOK, walkAt, grounded, reachPose, jointAt, POSES, reground, gaitPose} from './people46';
 import LINES from './lines46.json';
@@ -23,7 +23,7 @@ const camPath = (t: number, keys: [number, Cam][]): Cam => { if (t <= keys[0][0]
 /* ---------------- the courtyard (岱庙 汉柏院) at a given state ---------------- */
 type Court = {sky: [string, string]; night?: number; snow?: number; autumn?: number; tint?: number; earth?: number; wall?: number; hall?: number; steles?: number; qlStele?: number; nbGrey?: number; nbBare?: number;
 	torch?: number; torch2?: number; altar?: number; age?: number; west?: number; burn?: number; legend?: number; glow?: number; sap?: number; treeO?: number; stars?: number; drift?: number; huaiDead?: number; huaiO?: number; steleGlow?: number; idp: string};
-export const STELES: [number, number, number][] = [[430, 875, 0.72], [150, 940, 0.9], [1760, 965, 0.8], [620, 845, 0.55]];
+export const STELES: [number, number, number][] = [[140, 862, 0.7], [-20, 952, 0.9], [1760, 965, 0.8], [640, 838, 0.55]];
 type Depth = {g: number; node: React.ReactNode};
 const World: React.FC<{c: Court; t: number; children?: React.ReactNode; extra?: React.ReactNode; people?: Depth[]}> = ({c, t, children, extra, people = []}) => {
 	const n = c.night ?? 0, wall = c.wall ?? 1;
@@ -33,12 +33,12 @@ const World: React.FC<{c: Court; t: number; children?: React.ReactNode; extra?: 
 		{(c.torch ?? -1) >= 0 && <Torches u={c.torch!} seed={1} />}
 		{(c.torch2 ?? -1) >= 0 && <Torches u={c.torch2!} seed={7} n={10} />}
 		{(c.altar ?? 0) > 0 && <Altar o={c.altar} t={t} />}
-		{(c.hall ?? 0) > 0 && <g opacity={wall}><Hall46 cx={520} w={1000} k={c.hall} night={n} /></g>}
+		{(c.hall ?? 0) > 0 && <g><Hall46 cx={520} w={1000} k={c.hall} night={n} /></g>}
 		{(c.huaiO ?? 0) > 0 && <g opacity={c.huaiO}><Huai46 x={560} g={WALL_TOP + 120} h={620} dead={c.huaiDead ?? 0} /></g>}
-		{wall > 0 && <g opacity={wall}><Wall46 /></g>}
+		{wall > 0 && <g transform={`translate(0,${WALL_BASE}) scale(1,${ease(wall)}) translate(0,${-WALL_BASE})`}><Wall46 /></g>}
 		<Pave46 earth={c.earth ?? 0} snow={c.snow ?? 0} night={n} />
 		<Field46 o={(c.earth ?? 0) * (1 - n * 0.6)} />
-		<g opacity={wall}>
+		<g transform={`translate(0,${WALL_BASE + 30}) scale(1,${ease(wall)}) translate(0,${-WALL_BASE - 30})`}>
 			<Cypress46 x={260} g={WALL_BASE + 40} h={520} seed={3} grey={c.nbGrey ?? 0} bare={c.nbBare ?? 0} night={n} />
 			<Cypress46 x={1840} g={WALL_BASE + 30} h={480} seed={5} grey={c.nbGrey ?? 0} bare={c.nbBare ?? 0} night={n} />
 			<Cypress46 x={-120} g={WALL_BASE + 20} h={430} seed={8} grey={c.nbGrey ?? 0} bare={c.nbBare ?? 0} night={n} />
@@ -87,24 +87,22 @@ const reacher = (x: number, g: number, h: number, base: Parameters<typeof ground
 };
 /** 1928: soldiers cooking at two fires — one feeds the fire, two stir the pots with ladles, one eats from a bowl */
 const soldiersDepth = (t: number, o: number): Depth[] => {
-	const g = 905, h = 158, F1 = 385, F2 = 765, fs = 0.7, potTop = g - 46 * fs, out: Depth[] = [];
+	const g = 880, h = 150, F1 = 368, F2 = 650, fs = 0.66, potTop = g - 46 * fs, out: Depth[] = [];
 	[F1, F2].forEach((fx, i) => out.push({g: g + 1, node: <g key={'f' + i} opacity={o}><Fire46 x={fx} g={g + 1} s={fs} t={t + i} />
 		{Array.from({length: 4}, (_, j) => { const k = ((t * 0.5 + j / 4 + i * 0.3) % 1); return <ellipse key={j} cx={fx + Math.sin(k * 5 + j) * 6} cy={potTop - 8 - k * 70} rx={6 + 10 * k} ry={4 + 6 * k} fill="#F4F0E8" opacity={(1 - k) * 0.5} filter="url(#k3)" />; })}</g>}));
+	// a stack of three rifles leaning together, by the second fire
+	out.push({g: g - 2, node: <g key="rifles" opacity={o}>{[-14, 0, 14].map((dx, i) => <line key={i} x1={790 + dx * 1.6} y1={g - 2} x2={790 + dx * 0.15} y2={g - 92} stroke="#3A3028" strokeWidth={4} />)}</g>});
 	const cy = soldier;
-	// 1: kneels and feeds a stick into fire 1
-	{ const x = 306, at: [number, number] = [x + 0.26 * h, g - 0.3 * h], r = reacher(x, g, h, {hip: 0.36, lean: 18, neck: 10, lt: 94, lk: 94, rt: 0, rk: 90, rf: 160, la: 40, le: 40, ra: 50, re: 30}, at);
+	{ const x = 290, at: [number, number] = [x + 0.26 * h, g - 0.3 * h], r = reacher(x, g, h, {hip: 0.36, lean: 18, neck: 10, lt: 94, lk: 94, rt: 0, rk: 90, rf: 160, la: 40, le: 40, ra: 50, re: 30}, at);
 		out.push({g, node: <Person key="s1" who="soldier-feed" t={t} x={x} ground={g} h={h} pose={r.pose} look={cy} o={o} hands={[{joint: 'RHand', at, tol: 6}]} />});
 		out.push({g: g + 0.4, node: <line key="stick" x1={r.hand[0] - 8} y1={r.hand[1] - 4} x2={F1 - 2} y2={g - 4} stroke="#5A4230" strokeWidth={4} opacity={o} />}); }
-	// 2: stirs pot 1 with a ladle (faces left)
-	{ const x = 458, st = Math.sin(t * 3.2) * 5, at: [number, number] = [x - 0.22 * h + st * 0.4, g - 0.56 * h], r = reacher(x, g, h, {...STAND, lean: 14, neck: 12, ra: 50, re: 40}, at, true);
+	{ const x = 444, st = Math.sin(t * 3.2) * 5, at: [number, number] = [x - 0.22 * h + st * 0.4, g - 0.56 * h], r = reacher(x, g, h, {...STAND, lean: 14, neck: 12, ra: 50, re: 40}, at, true);
 		out.push({g, node: <Person key="s2" who="soldier-stir1" t={t} x={x} ground={g} h={h} pose={r.pose} look={cy} flip o={o} hands={[{joint: 'RHand', at, tol: 6}]} />});
 		out.push({g: g + 0.4, node: <g key="ladle1" opacity={o}><line x1={r.hand[0]} y1={r.hand[1]} x2={F1 + 4 + st} y2={potTop + 6} stroke="#4A3A2C" strokeWidth={3.5} /><ellipse cx={F1 + 4 + st} cy={potTop + 6} rx={6} ry={3} fill="#4A3A2C" /></g>}); }
-	// 3: holds a bowl at the chest (faces right, toward fire 2)
-	{ const x = 678, at: [number, number] = [x + 0.2 * h, g - 0.6 * h], r = reacher(x, g, h, {...STAND, lean: 6, neck: 14, ra: 50, re: 60}, at);
+	{ const x = 556, at: [number, number] = [x + 0.2 * h, g - 0.6 * h], r = reacher(x, g, h, {...STAND, lean: 6, neck: 14, ra: 50, re: 60}, at);
 		out.push({g, node: <Person key="s3" who="soldier-bowl" t={t} x={x} ground={g} h={h} pose={r.pose} look={LOOK.soldier2} o={o} hands={[{joint: 'RHand', at, tol: 6}]} />});
 		out.push({g: g + 0.4, node: <path key="bowl" d={`M${r.hand[0] - 11},${r.hand[1] - 6} Q${r.hand[0]},${r.hand[1] + 8} ${r.hand[0] + 11},${r.hand[1] - 6} Z`} fill="#D9D2C2" stroke="#6E6658" strokeWidth={1.5} opacity={o} />}); }
-	// 4: stirs pot 2 (faces left)
-	{ const x = 838, st = Math.sin(t * 2.7 + 1) * 5, at: [number, number] = [x - 0.22 * h + st * 0.4, g - 0.56 * h], r = reacher(x, g, h, {...STAND, lean: 14, neck: 12, ra: 50, re: 40}, at, true);
+	{ const x = 724, st = Math.sin(t * 2.7 + 1) * 5, at: [number, number] = [x - 0.22 * h + st * 0.4, g - 0.56 * h], r = reacher(x, g, h, {...STAND, lean: 14, neck: 12, ra: 50, re: 40}, at, true);
 		out.push({g, node: <Person key="s4" who="soldier-stir2" t={t} x={x} ground={g} h={h} pose={r.pose} look={cy} flip o={o} hands={[{joint: 'RHand', at, tol: 6}]} />});
 		out.push({g: g + 0.4, node: <g key="ladle2" opacity={o}><line x1={r.hand[0]} y1={r.hand[1]} x2={F2 + 4 + st} y2={potTop + 6} stroke="#4A3A2C" strokeWidth={3.5} /><ellipse cx={F2 + 4 + st} cy={potTop + 6} rx={6} ry={3} fill="#4A3A2C" /></g>}); }
 	return out;
@@ -125,7 +123,7 @@ const visitorsDepth = (t: number, o: number, fast = 1): Depth[] => {
 	const list: Depth[] = [], h = 108, v = STRIDE * h / 1.1 * fast, span = 2600;
 	const looks = [LOOK.tourist, LOOK.tourist2, LOOK.tourist3, LOOK.child, LOOK.tourist2, LOOK.tourist, LOOK.tourist3, LOOK.tourist, LOOK.tourist2, LOOK.child, LOOK.tourist3];
 	for (let i = 0; i < 11; i++) {
-		const right = i < 6, n = right ? 6 : 5, k = right ? i : i - 6, g = right ? 798 : 814, hh = looks[i] === LOOK.child ? h * 0.7 : h;
+		const right = true, n = 11, k = i, g = 796 + (i % 2) * 14, hh = looks[i] === LOOK.child ? h * 0.7 : h;
 		const dist = (((t - 123.97) * v + k * span / n + (right ? 0 : 200)) % span + span) % span, x = right ? -300 + dist : 2300 - dist, u = dist / (STRIDE * hh);
 		list.push({g, node: <Person key={i} who={'visitor' + i} t={t} x={x} ground={g} h={hh} o={o} pose={reground(gaitPose('08_04', u))} look={looks[i]} intent="walk" flip={!right} />});
 	}
@@ -145,12 +143,12 @@ const Journey: React.FC<{t: number; o: number}> = ({t, o}) => {
 	return <g opacity={o}>
 		<Sky46 id="jsky" c={skyMix('day', 'gold', u)} drift={t * 6} />
 		{/* 泰山 left behind on the right horizon */}
-		<path d="M1500,640 L1640,560 L1720,500 L1780,470 L1840,500 L1960,560 L2100,640 Z" fill="#9AA6AE" opacity={1 - u} />
+		<path d="M1380,660 L1460,610 L1540,590 L1600,560 L1660,540 L1700,520 L1730,530 L1770,515 L1840,545 L1920,570 L2020,600 L2200,650 L2200,700 L1380,700 Z" fill="#9AA6AE" opacity={1 - u} />
 		<g opacity={moundIn}><Mound46 x={760} g={700} s={0.8} /></g>
 		<path d={`M-300,700 Q400,${676} 900,690 T2300,690 L2300,720 L-300,720 Z`} fill="#A9B39A" />
 		<rect x={-300} y={700} width={2600} height={600} fill="#C9B88A" />
 		{Array.from({length: 18}, (_, i) => { const y = 712 + Math.pow(i / 17, 1.6) * 380, sp = 0.3 + i / 17; return <line key={i} x1={-300} y1={y} x2={2300} y2={y} stroke="#B3A271" strokeWidth={2 + i * 0.15} opacity={0.6} strokeDasharray={`${120 * sp} ${60 * sp}`} strokeDashoffset={-drift * sp} />; })}
-		{Array.from({length: 10}, (_, i) => { const x = ((i * 260 + drift * 0.6) % 2600) - 300; return <g key={i}><rect x={x - 3} y={650} width={6} height={52} fill="#6B5A44" /><ellipse cx={x} cy={648} rx={16} ry={30} fill="#6F8A55" /></g>; })}
+		{Array.from({length: 14}, (_, i) => { const x = ((i * 190 + drift * 0.6) % 2600) - 300; return <path key={i} d={`M${x - 70},700 Q${x - 40},${682 - (i % 3) * 4} ${x},${686} Q${x + 40},${680} ${x + 70},700 Z`} fill={i % 2 ? "#7E9465" : "#6F8A58"} />; })}
 		{SEED_X.map((sx, i) => { const k = ease(seg(t, 110.4 + i * 0.08, 114.9 + i * 0.05)), x = lerp(1950 + i * 30, sx, k), y = lerp(260 + (i % 3) * 40, SEED_G[i] - 40, easeIn(k)) - Math.sin(k * Math.PI) * 120;
 			return <g key={i}>{[0.05, 0.1, 0.15].map((d, j) => { const kk = ease(seg(t - d * 2, 110.4 + i * 0.08, 114.9 + i * 0.05)); return <circle key={j} cx={lerp(1950 + i * 30, sx, kk)} cy={lerp(260 + (i % 3) * 40, SEED_G[i] - 40, easeIn(kk)) - Math.sin(kk * Math.PI) * 120} r={7 - j * 2} fill={C.glowCore} opacity={0.4 - j * 0.1} />; })}
 				<Glow x={x} y={y} r={46} c={C.glow} o={0.8} id={`js${i}`} /><circle cx={x} cy={y} r={8} fill={C.glowCore} /></g>; })}
@@ -159,19 +157,20 @@ const Journey: React.FC<{t: number; o: number}> = ({t, o}) => {
 /** the seedlings: small copies of 你 (same pads, same warm light) */
 const Seedling: React.FC<{i: number; grow: number; glow: number; t: number}> = ({i, grow, glow, t}) => grow <= 0 ? null :
 	<g transform={`translate(${SEED_X[i]},${SEED_G[i]}) scale(${lerp(0.15, 1, easeOut(grow))}) translate(${-SEED_X[i]},${-SEED_G[i]})`}>
-		<HanBai x={SEED_X[i]} g={SEED_G[i]} s={0.36} age={0.55} west={0} glow={glow} t={t + i} id={`sd${i}`} />
+		<Young46 x={SEED_X[i]} g={SEED_G[i]} s={1.25} glow={glow} t={t + i} id={`sd${i}`} />
 	</g>;
 const Maoling: React.FC<{t: number; o: number; glow: number}> = ({t, o, glow}) => {
 	const drop = t >= 118.307 ? 1 : 0, big = ease(seg(t, 118.307, 119.4));
 	return <g opacity={o}>
 		<Sky46 id="msky" c={skyMix('gold', 'dusk', seg(t, 114.9, 124))} sun={[1500, 430, 460]} drift={t * 2} />
 		{/* 你, huge and translucent in the sky behind the mound, on the drop */}
-		{big > 0 && <g opacity={0.42 * big}><HanBai x={980} g={880} s={0.95} age={1} west={1} glow={1} t={t} id="ghostTree" /></g>}
+		
 		<path d="M-200,700 L300,640 L700,670 L1200,630 L1700,660 L2200,640 L2200,760 L-200,760 Z" fill="#A9A08E" opacity={0.7} />
+		{big > 0 && <g opacity={0.5 * big}><HanBai x={900} g={600} s={0.82} age={1} west={1} glow={1.5} t={t} id="ghostTree" /></g>}
 		<Mound46 x={960} g={760} s={1.2} rim={glow * 0.8} />
 		{/* 相传: the man said to have planted you, a dashed ghost on the mound */}
-		{t >= 114.91 && <g opacity={0.5 * ease(seg(t, 114.91, 115.6)) * (1 - 0.6 * big)}>
-			<Person who="legend-wudi" t={t} x={960} ground={402} h={210} pose={grounded({hip: 0.655, lean: 2, neck: 2, lt: 2, lk: 2, rt: -3, rk: 3, la: -2, le: 12, ra: 3, re: 14})} look={{dress: 'robe', head: 'guan', sleeves: 'wide', beard: 'long'}} col={C.glow} rim={C.glowCore} rimOp={0.6} />
+		{t >= 114.91 && t < 118.3 && <g opacity={0.55 * ease(seg(t, 114.91, 115.6)) * (1 - ease(seg(t, 117.5, 118.2)))}>
+			<Person who="legend-wudi" t={t} x={960} ground={402} h={210} pose={grounded({hip: 0.655, lean: 2, neck: 2, lt: 2, lk: 2, rt: -3, rk: 3, la: -2, le: 12, ra: 3, re: 14})} look={{dress: 'robe', head: 'guan', sleeves: 'wide', beard: 'long'}} col="url(#legendPat)" rim={C.glowCore} rimOp={0.35} />
 			<text x={1050} y={330} textAnchor="start" style={{fontFamily: "'Noto Sans CJK SC',sans-serif", fontWeight: 900, fontSize: 44}} fill="#FFF8EC" stroke="#2A1A0A" strokeWidth={6} paintOrder="stroke">相传</text>
 		</g>}
 		<rect x={-200} y={750} width={2400} height={500} fill="#BBA676" />
@@ -188,16 +187,17 @@ const Maoling: React.FC<{t: number; o: number; glow: number}> = ({t, o, glow}) =
 const PAGES: {ids: number[]; punch?: boolean; top?: number; size?: number}[] = [
 	{ids: [0, 1, 2]}, {ids: [3, 4, 5]}, {ids: [6, 7]}, {ids: [8, 9]}, {ids: [10, 11]}, {ids: [12, 13]}, {ids: [14, 15]}, {ids: [16, 17]}, {ids: [18, 19]}, {ids: [20]},
 	{ids: [21, 22]}, {ids: [23]}, {ids: [24, 25]}, {ids: [26]}, {ids: [27], punch: true, top: 300}, {ids: [28, 29, 30]}, {ids: [31]}, {ids: [32], punch: true}, {ids: [33, 34]}, {ids: [35, 36]}, {ids: [37]},
-	{ids: [38, 39, 40]}, {ids: [41], punch: true, top: 330, size: 80}, {ids: [42, 43]}, {ids: [44]}, {ids: [45], punch: true, top: 420, size: 96}, {ids: [46], punch: true, top: 430, size: 74},
+	{ids: [38, 39, 40]}, {ids: [41], punch: true, top: 330, size: 80}, {ids: [42, 43]}, {ids: [44]}, {ids: [45], punch: true, top: 300, size: 96}, {ids: [46], punch: true, top: 430, size: 74},
 ];
-const typed = (t: number, i: number) => { const [s, e, txt] = L[i], n = plainLen(txt), dur = Math.min(0.55, (e - s) * 0.35); return Math.floor(n * clamp((t - s) / dur)) + (t >= s ? 1 : 0); };
+const typed = (t: number, i: number) => { const [s, e, txt] = L[i], n = plainLen(txt), dur = i === 0 ? 1.2 : Math.min(0.55, (e - s) * 0.35), n0 = i === 0 ? 4 : 1; return Math.max(t >= s ? n0 : 0, Math.floor(n * clamp((t - s) / dur)) + (t >= s ? 1 : 0)); };
 const Subs: React.FC<{t: number}> = ({t}) => {
+	const fadeIn0 = 1; void fadeIn0;
 	const pi = PAGES.findIndex((p, k) => t >= L[p.ids[0]][0] && (k === PAGES.length - 1 || t < L[PAGES[k + 1].ids[0]][0]) && t < L[p.ids[p.ids.length - 1]][1] + 0.01);
 	if (pi < 0) return null;
 	const p = PAGES[pi], end = L[p.ids[p.ids.length - 1]][1], fadeOut = 1 - seg(t, end - 0.18, end);
 	if (p.ids[0] === 41) { const i = 41, o = fadeOut * clamp((t - L[i][0]) / 0.12); return <PeakLine o={o} n={typed(t, i)} />; }
 	if (p.punch) { const i = p.ids[0]; return <Punch s={L[i][2]} n={typed(t, i)} o={fadeOut * clamp((t - L[i][0]) / 0.12)} top={p.top} size={p.size} />; }
-	const rows: Row[] = p.ids.filter((i) => t >= L[i][0]).map((i) => ({s: L[i][2], n: typed(t, i), o: clamp((t - L[i][0]) / 0.12)}));
+	const rows: Row[] = p.ids.filter((i) => t >= L[i][0]).map((i) => ({s: L[i][2], n: typed(t, i), o: i === 0 ? 1 : clamp((t - L[i][0]) / 0.12)}));
 	return <Story rows={rows} o={fadeOut} />;
 };
 
@@ -233,7 +233,7 @@ export const Film46: React.FC<{t: number}> = ({t}) => {
 		const age = t < 2.83 ? 1 : t < 5.1 ? lerp(1, 0.04, easeOut(u1)) : t < 7.36 ? lerp(0.04, 1, ease(grow)) : 1;
 		const han = t >= 2.83 && t < 5.1 ? 1 : t >= 5.1 && t < 7.36 ? 1 - ease(seg(t, 5.1, 6.6)) : 0;
 		const sky = t < 2.83 ? skyMix('dawn', 'day', seg(t, 0, 2.8)) : t < 5.1 ? SKY.han : t < 7.36 ? skyMix('day', 'night', dayNight) : fire ? SKY.night : t < 10.76 ? SKY.day : skyMix('day', 'gold', today);
-		layers.push(<World key="A" t={t} c={{idp: 'A', sky, night: fire ? 1 : t >= 5.1 && t < 7.36 ? dayNight * 0.8 : 0, earth: han, wall: 1 - han, hall: 1 - han, steles: 1 - han, age, west: t < 2.83 ? 1 : t < 7.36 ? 0 : fire ? lerp(0, 1, seg(t, 7.6, 8.9)) : t < 10.76 ? 0 : 1, burn: fire,
+		layers.push(<World key="A" t={t} c={{idp: 'A', sky, night: fire ? 1 : t >= 5.1 && t < 7.36 ? dayNight * 0.8 : 0, earth: han, wall: 1 - han, hall: 1 - han, steles: 1 - han, age, west: t < 2.83 ? 1 : t < 10.76 ? 0 : 1, burn: fire,
 			legend: t >= 2.83 && t < 5.1 ? 1 : 0, glow: fire ? 0.6 : 1, sap: today, torch: t >= 2.83 && t < 7.36 ? ((t - 2.83) / 1.1) % 1.2 : -1, torch2: t >= 5.1 && t < 7.36 ? ((t - 5.1) / 0.9 + 0.5) % 1.2 : -1, stars: fire ? 1 : 0}} />);
 		if (t >= 9.06 && t < 10.76) layers.push(<g key="scroll" transform={`translate(${lerp(-400, 0, easeOut(seg(t, 9.06, 9.5)))},0)`}><ScrollStand x={760} g={905} s={0.5} open={easeOut(seg(t, 9.1, 9.6))} ink={paint} /></g>);
 		cam = t < 2.83 ? mixCam({cx: 1230, cy: 640, z: 1.6}, {cx: 1040, cy: 540, z: 1.06}, ease(seg(t, 0.4, 2.83))) : t < 10.76 ? CAM0 : mixCam(CAM0, {cx: 1300, cy: 660, z: 1.75}, ease(seg(t, 10.76, 12.2)));
@@ -291,7 +291,7 @@ export const Film46: React.FC<{t: number}> = ({t}) => {
 		layers.push(<World key="E" t={t} c={{idp: 'E', sky: skyMix('day', 'noon', seg(t, 59.44, 77)), wall: 1, hall: 1, steles: 1, qlStele: steleK, steleGlow: ease(seg(t, 74.4, 75.2)), age: 0.97, west: 0, glow: 1 + 0.4 * Math.sin(seg(t, 71.32, 74.1) * Math.PI)}}
 			people={figO > 0 ? qianlongDepth(t, figO) : []} />);
 		if (scrollO > 0) layers.push(<g key="scr" opacity={scrollO}><ScrollStand x={1010} g={905} s={0.27} open={easeOut(seg(t, 62.4, 63.0))} ink={seg(t, 62.6, 64.4)} inscr={seg(t, 64.6, 65.6)} /></g>);
-		if (t >= 71.32 && t < 77.4) { const o = ease(seg(t, 71.5, 72.0)) * (1 - seg(t, 77.0, 77.4)), lab = (x: number, y: number, txt: string) => <text x={x} y={y} textAnchor="middle" style={{fontFamily: "'Noto Sans CJK SC',sans-serif", fontWeight: 900, fontSize: 48}} fill="#FFF8EC" stroke="#2A1A0A" strokeWidth={7} paintOrder="stroke">{txt}</text>;
+		if (t >= 71.32 && t < 77.4) { const o = ease(seg(t, 71.5, 72.0)) * (1 - seg(t, 73.8, 74.2)), lab = (x: number, y: number, txt: string) => <text x={x} y={y} textAnchor="middle" style={{fontFamily: "'Noto Sans CJK SC',sans-serif", fontWeight: 900, fontSize: 48}} fill="#FFF8EC" stroke="#2A1A0A" strokeWidth={7} paintOrder="stroke">{txt}</text>;
 			layers.push(<g key="hg" opacity={o}>{lab(880, 560, '石碑里的你')}{lab(1420, 240, '真的你')}</g>); }
 		if (t >= 71.32 && t < 74.3) { const u = ease(seg(t, 71.4, 72.6)); layers.push(<path key="sight" d={`M900,700 Q1100,${560 - 120 * u} ${lerp(900, 1240, u)},${lerp(700, 560, u)}`} stroke={C.glowCore} strokeWidth={4} strokeDasharray="8 10" fill="none" opacity={0.85 * (1 - seg(t, 73.8, 74.3))} />); }
 		cam = t < 69.06 ? mixCam(CAM0, {cx: 880, cy: 700, z: 1.55}, ease(seg(t, 61.6, 62.8)) * (1 - ease(seg(t, 66.0, 67.4)))) : mixCam(CAM0, {cx: 1080, cy: 600, z: 1.18}, ease(seg(t, 69.06, 70.6)));
@@ -301,12 +301,12 @@ export const Film46: React.FC<{t: number}> = ({t}) => {
 	else if (t < 91.14) {
 		const smoke = ease(seg(t, 80.6, 84.5)), grey = ease(seg(t, 83.9, 86.5)), huai = ease(seg(t, 87.17, 88.0)) * (1 - ease(seg(t, 90.4, 91.1)));
 		layers.push(<World key="F" t={t} c={{idp: 'F', sky: skyMix('day', 'smoke', smoke), tint: smoke * 0.6, wall: 1, hall: 1, steles: 1, qlStele: 1, age: 1, west: 0, glow: lerp(1, 0.55, smoke), nbGrey: grey, nbBare: grey * 0.75, huaiO: 1, huaiDead: ease(seg(t, 87.6, 90.6))}}
-			people={[...marketDepth(t, ease(seg(t, 77.6, 78.4))), ...(t >= 80.4 ? soldiersDepth(t, ease(seg(t, 80.4, 81.0))) : [])]}>
+			people={[...marketDepth(t, ease(seg(t, 77.6, 78.4))), ...(t >= 80.4 && t < 88.0 ? soldiersDepth(t, ease(seg(t, 80.4, 81.0)) * (1 - ease(seg(t, 87.2, 87.9)))) : [])]}>
 			<SmokeBank o={smoke * 0.8} t={t} y={480} />
 			{grey > 0 && Array.from({length: 18}, (_, i) => { const k = ((t - 83.9) * 0.4 + rnd(i, 5)) % 1; return <ellipse key={i} cx={(i % 2 ? 260 : 1840) + (rnd(i, 6) - 0.5) * 300 + k * 60} cy={400 + k * 450} rx={6} ry={3} fill="#8C877C" opacity={grey * (1 - k)} />; })}
 		</World>);
 		const cook = ease(seg(t, 80.2, 81.2)) * (1 - ease(seg(t, 83.6, 84.8)));
-		cam = mixCam(mixCam(CAM0, {cx: 600, cy: 740, z: 1.6}, cook), {cx: 760, cy: 470, z: 1.18}, huai);
+		cam = mixCam(mixCam(CAM0, {cx: 520, cy: 720, z: 1.6}, cook), {cx: 760, cy: 470, z: 1.18}, huai);
 		if (huai > 0) layers.push(<text key="huailab" x={560} y={330} textAnchor="middle" style={{fontFamily: "'Noto Sans CJK SC',sans-serif", fontWeight: 900, fontSize: 48}} fill="#FFF8EC" stroke="#2A1A0A" strokeWidth={7} paintOrder="stroke" opacity={huai}>唐槐</text>);
 	}
 	/* ===== G. you survived; half alive, 91.14 – 105.29 ===== */
@@ -318,8 +318,8 @@ export const Film46: React.FC<{t: number}> = ({t}) => {
 		</World>);
 		cam = mixCam(CAM0, {cx: TX - 40, cy: 640, z: 1.55}, push);
 		// labels on the trunk
-		if (westFocus > 0) { const p = treeAt(TX, TG, 1, 1, WEST_MID); layers.push(<g key="wl" opacity={westFocus}><path d={`M${p[0] - 70},${p[1] - 160} L${p[0] - 70},${p[1] + 220}`} stroke="#FFF2D2" strokeWidth={3} />
-			<text x={p[0] - 100} y={p[1] + 150} textAnchor="end" style={{fontFamily: "'Noto Sans CJK SC',sans-serif", fontWeight: 900, fontSize: 52}} fill="#FFF8EC" stroke="#2A1A0A" strokeWidth={7} paintOrder="stroke">西干 · 死了</text></g>); }
+		if (westFocus > 0) { const p = treeAt(TX, TG, 1, 1, WEST_MID); layers.push(<g key="wl" opacity={westFocus}><path d={`M${p[0] - 150},${p[1] + 40} L${p[0] - 46},${p[1] + 10}`} stroke="#FFF8EC" strokeWidth={4} /><circle cx={p[0] - 46} cy={p[1] + 10} r={6} fill="#FFF8EC" />
+			<text x={p[0] - 160} y={p[1] + 58} textAnchor="end" style={{fontFamily: "'Noto Sans CJK SC',sans-serif", fontWeight: 900, fontSize: 52}} fill="#FFF8EC" stroke="#2A1A0A" strokeWidth={7} paintOrder="stroke">西干 · 死了</text></g>); }
 		if (t >= 99.06 && t < 102.6) { const p = treeAt(TX, TG, 1, 1, STRIP_MID), o = ease(seg(t, 99.1, 99.5)) * (1 - seg(t, 102.2, 102.6));
 			layers.push(<text key="eastname" x={p[0] + 100} y={p[1] - 70} style={{fontFamily: "'Noto Sans CJK SC',sans-serif", fontWeight: 900, fontSize: 52}} fill="#FFF8EC" stroke="#2A1A0A" strokeWidth={7} paintOrder="stroke" opacity={o}>东干 · 活着</text>); }
 		if (eastFocus > 0 && t < 102.6) { const p = treeAt(TX, TG, 1, 1, STRIP_MID), o = ease(seg(t, 99.3, 99.8)) * (1 - seg(t, 102.2, 102.6));
@@ -349,8 +349,8 @@ export const Film46: React.FC<{t: number}> = ({t}) => {
 		if (t < 110.9) {
 			const lift = seg(t, 109.25, 110.6);
 			layers.push(<World key="I0" t={t} c={{idp: 'I0', sky: SKY.day, wall: 1, hall: 1, steles: 1, qlStele: 1, age: 1, west: 1, glow: 1.2, sap: 0.6}}>
-				{SEED_X.map((_, i) => { const k = ease(seg(t, 109.3 + i * 0.1, 110.7)), x = lerp(1250 + i * 30, -200 - i * 40, k), y = lerp(420 + (i % 3) * 30, 160 + i * 20, k) - Math.sin(k * Math.PI) * 80;
-					return <g key={i} opacity={clamp(lift * 4)}><Glow x={x} y={y} r={50} c={C.glow} o={0.85} id={`ls${i}`} /><circle cx={x} cy={y} r={9} fill={C.glowCore} /></g>; })}
+				{SEED_X.map((_, i) => { const k = ease(seg(t, 109.3 + i * 0.1, 110.7)), x = lerp(1330 + i * 26, -200 - i * 40, k), y = lerp(260 + (i % 3) * 40, 160 + i * 20, k) - Math.sin(k * Math.PI) * 80;
+					return <g key={i} opacity={clamp(lift * 4)}><Glow x={x} y={y} r={30} c={C.glow} o={0.85} id={`ls${i}`} /><circle cx={x} cy={y} r={6} fill={C.glowCore} /></g>; })}
 			</World>);
 			cam = mixCam(CAM0, {cx: 1100, cy: 480, z: 1.08}, ease(seg(t, 109.25, 110.6)));
 		}
@@ -386,7 +386,7 @@ export const Film46: React.FC<{t: number}> = ({t}) => {
 		{!endOn && st[1] && st[1] !== '' && <Stamp y={st[1]} place={st[2]} l2={st[3]} />}
 		{t >= 83.78 && t < 87.17 && <Src s="据《齐鲁晚报》2015" top={132 + 87 * 3 + 8} o={seg(t, 84.0, 84.4)} />}
 		{!endOn && cnt !== null && <Counter n={cnt} note={t >= 2.83 && t < 5.1 ? '从前110年汉武帝首次封禅算起 · 估算' : t >= 15.85 && t < 24.34 ? '从前110年算起 · 估算' : undefined} />}
-		<Brand />
+		<Brand o={t >= 102.6 && t < 105.3 ? 1 - ease(seg(t, 102.6, 102.9)) : 1} />
 		{extraHtml}
 		{endOn && <EndCard t={t} t0={149.097} />}
 	</>;
