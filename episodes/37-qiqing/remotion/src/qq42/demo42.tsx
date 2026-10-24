@@ -90,15 +90,16 @@ export const Screen: React.FC<{t: number; rew?: number; rewT?: number}> = ({t, r
 	</g>;
 };
 /* the right hand: fingertips round the left edge, palm under the phone, wrist and sleeve going down out of frame, thumb on the glass */
-const THUMB_BASE: P2 = [PHX + PW / 2 - 6, PHY + PH / 2 - 70];
+const THUMB_BASE: P2 = [PHX + PW / 2 + 30, PHY + PH / 2 - 130];
 const thumbPath = (tip: P2) => { const [bx, by] = THUMB_BASE, dx = tip[0] - bx, dy = tip[1] - by, l = Math.hypot(dx, dy) || 1, ux = dx / l, uy = dy / l, nx = -uy, ny = ux;
 	const P = (s: number, w: number) => `${(bx + ux * s * l + nx * w).toFixed(1)},${(by + uy * s * l + ny * w).toFixed(1)}`;
-	return `M${P(-0.12, 34)} L${P(0.55, 25)} Q${P(0.92, 22)} ${P(1.0, 0)} Q${P(0.92, -21)} ${P(0.55, -21)} L${P(-0.12, -30)} Z`; };
+	const prof: [number, number][] = [[-0.12, 50], [0.25, 38], [0.55, 29], [0.62, 31], [0.85, 25]], R = 24 / l;   // a rounded thumb with a knuckle bulge
+	return `M${P(prof[0][0], prof[0][1])} ` + prof.slice(1).map(([s0, w]) => `L${P(s0, w)}`).join(' ') + ` Q${P(1 + R * 0.2, 25)} ${P(1 + R * 0.25, 0)} Q${P(1 + R * 0.2, -23)} ${P(0.85, -23)} ` + [...prof].reverse().slice(1).map(([s0, w]) => `L${P(s0, -w * 0.92)}`).join(' ') + ' Z'; };
 const HAND_STATIC = [
-	`M${PHX - PW / 2 + 40},${PHY + PH / 2 - 30} Q${PHX - 40},${PHY + PH / 2 + 70} ${PHX + 120},${PHY + PH / 2 + 60} Q${PHX + PW / 2 + 40},${PHY + PH / 2 + 30} ${PHX + PW / 2 + 30},${PHY + PH / 2 - 110} L${PHX + PW / 2 + 70},${PHY + PH / 2 - 40} Q${PHX + PW / 2 + 70},${PHY + PH / 2 + 110} ${PHX + 140},${PHY + PH / 2 + 150} L${PHX - 40},${PHY + PH / 2 + 140} Q${PHX - PW / 2 + 10},${PHY + PH / 2 + 60} ${PHX - PW / 2 + 40},${PHY + PH / 2 - 30} Z`,
-	...[0, 1, 2, 3].map((i) => { const y = PHY + 130 + i * 62, x = PHX - PW / 2 + 4; return `M${x + 6},${y - 22} Q${x - 30},${y - 20} ${x - 30},${y + 2} Q${x - 30},${y + 24} ${x + 6},${y + 24} Z`; }),
+	`M${PHX + PW / 2 - 30},${PHY + 60} Q${PHX + PW / 2 + 74},${PHY + 150} ${PHX + PW / 2 + 70},${PHY + PH / 2 - 40} Q${PHX + PW / 2 + 52},${PHY + PH / 2 + 84} ${PHX + 60},${PHY + PH / 2 + 104} L${PHX - 70},${PHY + PH / 2 + 96} Q${PHX - PW / 2 - 12},${PHY + PH / 2 + 40} ${PHX - PW / 2 + 10},${PHY + PH / 2 - 60} Z`,
+	...[0, 1, 2, 3].map((i) => { const y = PHY + 110 + i * 64, x = PHX - PW / 2 + 4; return `M${x + 6},${y - 24} Q${x - 34},${y - 22} ${x - 34},${y + 2} Q${x - 34},${y + 26} ${x + 6},${y + 26} Z`; }),
 ];
-const SLEEVE = `M${PHX - 70},${PHY + PH / 2 + 120} Q${PHX + 60},${PHY + PH / 2 + 170} ${PHX + 170},${PHY + PH / 2 + 130} L${PHX + 120},${H + 160} L${PHX - 260},${H + 160} Z`;
+const SLEEVE = `M${PHX - 110},${PHY + PH / 2 + 70} Q${PHX + 10},${PHY + PH / 2 + 130} ${PHX + 120},${PHY + PH / 2 + 96} L${PHX + 40},${H + 200} L${PHX - 330},${H + 200} Z`;
 export const Thumb: React.FC<{p: P2; press: number}> = ({p, press}) => <g>
 	<path d={thumbPath(p)} fill="#ffcf96" opacity={0.4} transform="translate(3,-2)" />
 	<path d={thumbPath(p)} fill="#0d0b0f" />
@@ -107,7 +108,7 @@ export const Thumb: React.FC<{p: P2; press: number}> = ({p, press}) => <g>
 export const HandBack: React.FC = () => <g>
 	<g fill="#ffcf96" opacity={0.42} transform="translate(3,-2)"><path d={SLEEVE} />{HAND_STATIC.map((d, i) => <path key={i} d={d} />)}</g>
 	<g fill="#0d0b0f"><path d={SLEEVE} />{HAND_STATIC.map((d, i) => <path key={i} d={d} />)}</g>
-	<path d={`M${PHX - 66},${PHY + PH / 2 + 118} Q${PHX + 60},${PHY + PH / 2 + 166} ${PHX + 172},${PHY + PH / 2 + 126}`} stroke="#2a2430" strokeWidth={10} fill="none" />{/* cuff seam */}
+	<path d={`M${PHX - 104},${PHY + PH / 2 + 82} Q${PHX + 10},${PHY + PH / 2 + 140} ${PHX + 116},${PHY + PH / 2 + 108}`} stroke="#2a2430" strokeWidth={10} fill="none" />{/* cuff seam */}
 </g>;
 /** the viewer seen from behind (head, hood, shoulders); breathing and a small nod */
 export const Viewer: React.FC<{t: number}> = ({t}) => {
