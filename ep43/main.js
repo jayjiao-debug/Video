@@ -30065,12 +30065,12 @@ var bootT1 = async () => {
   g.fillStyle = SIL;
   for (const x of [TB.fx0 + 22, TB.fx1 - 62]) g.fillRect(x, TB.apron - 2, 40, 1010 - TB.apron);
   st2.add("t1table", canvasTex(cv), 960, 540, 1920, 1080, T1Z.table, { rim: 0.5, rimPx: 4 });
-  t1Body = new Live(st2, "t1body", 960, 640, 2600, 1100, T1Z.body, { rim: 1, rimPx: 6 }, 1);
-  t1Pool = new Live(st2, "t1pool", 960, 540, 1920, 1080, T1Z.pool, {}, 0.5);
-  t1Copy = new Live(st2, "t1copy", 960, 600, 1920, 400, T1Z.copy, {}, 1);
-  t1Silk = new Live(st2, "t1silk", 1200, 600, 2600, 700, T1Z.silk, { emissive: 0.32 }, 1);
-  t1Halo = new Live(st2, "t1halo", 1200, 600, 2600, 900, -76, { emissive: 1 }, 0.5);
-  t1Arms = new Live(st2, "t1arms", 960, 640, 2600, 1100, T1Z.arms, { rim: 1, rimPx: 6 }, 1);
+  t1Body = new Live(st2, "t1body", 1250, 640, 1900, 720, T1Z.body, { rim: 1, rimPx: 6 }, 1);
+  t1Pool = new Live(st2, "t1pool", 960, 600, 1920, 320, T1Z.pool, {}, 0.4);
+  t1Copy = new Live(st2, "t1copy", 960, 580, 720, 230, T1Z.copy, {}, 1);
+  t1Silk = new Live(st2, "t1silk", 1250, 560, 1900, 520, T1Z.silk, { emissive: 0.32 }, 1);
+  t1Halo = new Live(st2, "t1halo", 1250, 560, 1900, 520, -76, { emissive: 1 }, 0.4);
+  t1Arms = new Live(st2, "t1arms", 1250, 560, 1900, 520, T1Z.arms, { rim: 1, rimPx: 6 }, 1);
 };
 var T1 = { go: 11.95, land: b3(5), grab: 12.95, lift: 13.3 };
 var t1Seam = (t) => lerp2(SL.x0, SL.x1, easeInOut((t - T1.go) / (T1.land - T1.go)));
@@ -30193,9 +30193,9 @@ var meanRollOff = (lk, side = "R") => {
 var bootT2 = async () => {
   crestT2 = new Crest("t2-night", { sky: "night", era: "\u660E", lanterns: true, boat: false, bankCrowd: false });
   await crestT2.ready;
-  castT2 = new Cast(crestT2.st, "t2cast", 1200, 640, 3400, 1100, 20);
-  propT2 = new Live(crestT2.st, "t2prop", 1200, 640, 3400, 1100, 23, { rim: 0 }, 1);
-  glowT2 = new Live(crestT2.st, "t2glow", 1200, 640, 3400, 1100, 24, { emissive: 1 }, 0.5);
+  castT2 = new Cast(crestT2.st, "t2cast", 1e3, 700, 1700, 900, 20);
+  propT2 = new Live(crestT2.st, "t2prop", 1e3, 640, 1700, 500, 23, { rim: 0 }, 1);
+  glowT2 = new Live(crestT2.st, "t2glow", 1e3, 640, 1700, 500, 24, { emissive: 1 }, 0.4);
   rollOff = meanRollOff(EUN);
 };
 var t2Walk = (t) => {
@@ -30250,7 +30250,7 @@ var bootT3 = async () => {
       g.fillRect(x, y, 9 + i % 3 * 3, 6 + i % 2 * 2);
     }
   });
-  const dk = new Live(st2, "t3deckSnow", 960, 1100, 4800, 1600, 1, {}, 0.5);
+  const dk = new Live(st2, "t3deckSnow", 960, 1100, 4800, 1600, 1, {}, 0.35);
   dk.drawW("s", (g) => {
     g.fillStyle = "#C9D2D8";
     g.beginPath();
@@ -30262,7 +30262,7 @@ var bootT3 = async () => {
     g.fill();
   });
   const rl = railing(960, 906, 1700, 1400, 150, 116), dy = (x) => deck(x) + 6;
-  const rs = new Live(st2, "t3railSnow", 960, 1100, 4800, 1600, 41, {}, 0.5);
+  const rs = new Live(st2, "t3railSnow", 960, 1100, 4800, 1600, 41, {}, 0.4);
   rs.drawW("s", (g) => {
     g.fillStyle = "#D9E1E6";
     for (const [yo, th] of [[150, 7], [67.5, 4]]) {
@@ -30283,10 +30283,10 @@ var bootT3 = async () => {
       g.fill();
     }
   });
-  castT3 = new Cast(st2, "t3cast", 1200, 640, 3400, 1100, 20);
-  propT3 = new Live(st2, "t3prop", 1200, 640, 3400, 1100, 22, { rim: 0.4 }, 1);
-  glowT3 = new Live(st2, "t3glow", 1200, 640, 3400, 1100, 24, { emissive: 1 }, 0.5);
-  armsT3 = new Live(st2, "t3arms", 1200, 640, 3400, 1100, 23, { rim: 1, rimPx: 5 }, 1);
+  castT3 = new Cast(st2, "t3cast", 1e3, 700, 1600, 800, 20);
+  propT3 = new Live(st2, "t3prop", 1e3, 640, 1600, 500, 22, { rim: 0.4 }, 1);
+  glowT3 = new Live(st2, "t3glow", 1e3, 640, 1600, 500, 24, { emissive: 1 }, 0.4);
+  armsT3 = new Live(st2, "t3arms", 1e3, 640, 1600, 500, 23, { rim: 1, rimPx: 5 }, 1);
   let sx = 0, sy = 0;
   for (let i = 0; i < 16; i++) {
     const a = armfulAt(carryArmful(walkFor(YOUTH, i / 16)));
@@ -30522,7 +30522,9 @@ var bootN = async () => {
     fg.fillStyle = "#2a2f34";
     fg.fillRect(960 - 36, PCY + 18, 72, 20);
   }
-  pass.add("far", canvasTex(farCv), 960, 540, 1920, 1080, 0, { emissive: 0.2 });
+  const farS = mkCanvas(960, 540);
+  farS.getContext("2d").drawImage(farCv, 0, 0, 960, 540);
+  pass.add("far", canvasTex(farS), 960, 540, 1920, 1080, 0, { emissive: 0.2 });
   const RZ = [250, 480, 700, 900, 1060, 1180, 1250];
   RZ.forEach((z, i) => {
     const c = mkCanvas(960, 540), g = c.getContext("2d"), s2 = D / (D - z), hw2 = PH * s2 / 2, hh = PV * s2 / 2, cy = 540 / 2 + (PCY - 540) * s2 / 2, k = i / (RZ.length - 1);
@@ -30627,7 +30629,7 @@ var bootN = async () => {
     g.fillText("\u4E0B\u6B21\u5C55\u51FA\uFF1A\u672A\u516C\u5E03", 960, 830);
   });
   hallDust = new Motes(hallSt, 140, "dust", -200, 6, "#C9CED2", false);
-  hallCrowd = new Live(hallSt, "crowd", 960, 640, 2600, 1100, HZ.crowd, { rim: 1, rimPx: 6 }, 1);
+  hallCrowd = new Live(hallSt, "crowd", 960, 770, 2700, 620, HZ.crowd, { rim: 1, rimPx: 6 }, 0.8);
 };
 var N = { cut: b3(9), passA: b3(10), hallA: b3(10.25), out: b3(10.75), card: b3(11), pane: b3(11.5), paneZ: b3(11.75) };
 var qStep = (t) => {
@@ -30713,10 +30715,10 @@ var LANT_ON = [[1832, b3(11.5)], [1600, b3(11.5)], [1368, b3(11.75)], [1136, b3(
 var bootS1 = async () => {
   crestS1 = new Crest("s1-dusk", { sky: "dusk", era: "\u5B8B", lanterns: true, boat: true, bankCrowd: true });
   await crestS1.ready;
-  s1Boat = new Live(crestS1.st, "s1boat", 1500, 900, 1400, 900, -520, { fog: ["#C9A47A", 0.22], rim: 0 }, 0.6);
+  s1Boat = new Live(crestS1.st, "s1boat", 1560, 780, 700, 660, -520, { fog: ["#C9A47A", 0.22], rim: 0 }, 0.6);
   s1Boat.drawW("b", (g) => fillSvg(g, boat(1560, 1010, 520, 0, SIL, 5)));
-  s1Shade = new Live(crestS1.st, "s1shade", 1300, 1100, 5200, 1600, 44, {}, 0.5);
-  s1Light = new Live(crestS1.st, "s1light", 960, 1100, 5200, 1600, 43, { emissive: 0.55 }, 0.5);
+  s1Shade = new Live(crestS1.st, "s1shade", 1300, 1100, 5200, 1600, 44, {}, 0.25);
+  s1Light = new Live(crestS1.st, "s1light", 960, 1100, 5200, 1600, 43, { emissive: 0.55 }, 0.25);
 };
 var deckBand = (g, x0, x1, up, dn) => {
   g.beginPath();
@@ -31949,7 +31951,7 @@ var s15 = (t) => {
   const kup = smooth(clamp01((t - b5(26.2)) / (0.12 * BAR_)));
   const youX0 = P0 + 300 * k1, you = [lerp2(youX0, youX0 + SW2 - 14, k3), youX0 + SW2];
   const copyX0 = lerp2(P0 + 40, P0, k2), copy = [copyX0, copyX0 + SW2], copyY = k2;
-  const X = 1270 + 60 * smooth(clamp01((t - b5(25.12)) / 0.25)) - 60 * smooth(clamp01((t - b5(25.36)) / 0.22)) + 60 * smooth(clamp01((t - b5(25.7)) / 0.3));
+  const X = 1190 + 60 * smooth(clamp01((t - b5(25.12)) / 0.25)) - 60 * smooth(clamp01((t - b5(25.36)) / 0.22)) + 60 * smooth(clamp01((t - b5(25.7)) / 0.3));
   const yc = (FRONT[0] + FRONT[1]) / 2, ycb = (BACK[0] + BACK[1]) / 2, ycopy = lerp2(ycb, yc, copyY);
   let L, R, Lflat = false;
   if (t < b5(25.12)) {
@@ -31957,7 +31959,7 @@ var s15 = (t) => {
     Lflat = true;
     R = [P0 + 40 + SW2, ycb];
   } else if (t < b5(25.36)) {
-    L = [you[0] + 190, yc + 2];
+    L = [you[0] + 168, yc + 2];
     Lflat = true;
     R = [you[1], yc];
   } else if (t < b5(25.75)) {
@@ -31969,7 +31971,7 @@ var s15 = (t) => {
   }
   if (kup > 0) R = [lerp2(you[1], LAMP15[0] + 26, kup), lerp2(yc, LAMP15[1] + 6, kup)];
   const lamp = 1 - smooth(clamp01((t - b5(26.27)) / (b5(26.5) - b5(26.27) - 0.02)));
-  const lean = lerp2(48, 16, kup);
+  const lean = lerp2(52, 16, kup);
   return { X, lean, you, youRolled: k3, copy, copyY, L, R, Lflat, lamp, cup: kup };
 };
 var BAR_ = 4 * BEAT;
@@ -32059,28 +32061,28 @@ var STR16 = CAREFUL * (HF + 12);
 var hold16 = (t) => {
   const k = smooth(clamp01((t - b5(27)) / (0.3 * BAR_))), lean = Math.sin(t * 1.3) * 0.6;
   const xL = lerp2(SX02, SX12 - 26, k), xR = SX12;
-  const ax = SX02 - 112 + lerp2(0, 40, k), bx = SX12 + 112;
-  const let_go = t >= b5(27) + 0.3 * BAR_ + 0.08;
+  const ax = SX02 - 98, bx = SX12 + 96;
+  const let_go = xL > SX02 + 50;
   const A = rig(
-    { x: ax, ground: deck(ax) + 4, h: HF, pose: fkPose({ hip: 0.655, lean: 7 + lean, neck: 6, lt: 2, lk: 2, rt: -3, rk: 3, la: -3, le: 10, ra: 4, re: 14 }), look: lkSeller },
-    let_go ? [] : [{ side: "R", target: [xL, SY2 - 42], name: "upper roller" }, { side: "L", target: [xL, SY2 + 44], name: "lower roller" }],
+    { x: ax, ground: deck(ax) + 4, h: HF, pose: fkPose({ hip: 0.655, lean: 7 + lean + 5 * smooth(clamp01((xL - SX02) / 50)), neck: 6, lt: 2, lk: 2, rt: -3, rk: 3, la: -3, le: 10, ra: 4, re: 14 }), look: lkSeller },
+    let_go ? [] : [{ side: "R", target: [xL, SY2 - 46], name: "upper roller" }, { side: "L", target: [xL, SY2 + 34], name: "lower roller" }],
     deck,
     "craftsman16"
   );
   const B = rig(
     { x: bx, ground: deck(bx) + 4, h: HF + 12, pose: fkPose({ hip: 0.655, lean: 8 - lean, neck: 6, lt: 2, lk: 2, rt: -3, rk: 3, la: -3, le: 10, ra: 4, re: 14 }), look: lkBuyer, flip: true },
-    [{ side: "R", target: [xR, SY2 - 42], name: "upper roller" }, { side: "L", target: [xR, SY2 + 44], name: "lower roller" }],
+    [{ side: "R", target: [xR, SY2 - 46], name: "upper roller" }, { side: "L", target: [xR, SY2 + 34], name: "lower roller" }],
     deck,
     "quangui16"
   );
   return { A, B, xL, xR, k };
 };
 var walk16 = (t) => {
-  const t0 = b5(27.5), u = (t - t0) / (2 * BEAT), x = SX12 + 112 + 30 + u * STR16;
+  const t0 = b5(27.5), u = (t - t0) / (2 * BEAT), x = SX12 + 96 + 30 + u * STR16;
   let p = careful(u + 0.5);
   p = armsFrom(p, underArm(p), "R");
   const B = rig({ x, ground: deck(x) + 4, h: HF + 12, pose: p, look: lkBuyer }, [], deck, "quangui16-walk");
-  const ax = SX02 - 112 + 40;
+  const ax = SX02 - 98;
   const A = rig({ x: ax, ground: deck(ax) + 4, h: HF, pose: fkPose({ hip: 0.655, lean: 3, neck: 2, lt: 2, lk: 2, rt: -3, rk: 3, la: -2, le: 8, ra: 3, re: 10 }), look: lkSeller }, [], deck, "craftsman16");
   return { A, B };
 };
@@ -32153,7 +32155,7 @@ var DTB = 652;
 var DTF = 714;
 var PYB = 658;
 var PYF = 708;
-var SLOT = { x: 560, y: 640, w: 384, h: 216 };
+var SLOT = { x: 840, y: 640, w: 384, h: 216 };
 var NEWX = 286;
 var NEWY0 = 220;
 var NEWP = 68;
@@ -32165,7 +32167,7 @@ var FLOOR17 = 1040;
 var X17 = 640;
 var lkYang = LOOKS.yuanScholar;
 var paperY = (f3) => {
-  const y1 = lerp2(PYF, PYF, f3), h = lerp2(PHF, PYF - PYB, f3);
+  const y1 = lerp2(PYF + 350, PYF, f3), h = lerp2(PHF, PYF - PYB, f3);
   return { y0: y1 - h, h };
 };
 var srcToWorld = (sx, sy, f3) => {
@@ -32378,12 +32380,12 @@ var bootYuan = async () => {
 			<rect x="${LAMP17[0] - 18}" y="${LAMP17[1] + 6}" width="36" height="6" fill="#15100C"/><rect x="${LAMP17[0] - 4}" y="${LAMP17[1] + 10}" width="8" height="${DTB - LAMP17[1] - 2}" fill="#15100C"/><ellipse cx="${LAMP17[0]}" cy="${DTB + 6}" rx="26" ry="6" fill="#15100C"/>
 			<rect x="${PX0 + PW - 160}" y="${DTB + 14}" width="70" height="18" rx="5" fill="#1b1612"/>`, W, 1200);
     st2.add("mydesk", canvasTex(await svgToCanvas(dk, W, 1200, 0.9)), 960, 600, W, 1200, -2, { rim: 0.9, rimPx: 5 });
-    paper17 = st2.add("paper", canvasTex(paperCanvas()), PX0 + PW / 2, PYF - PHF / 2, PW, PHF, 0, { emissive: 0.12 }, 10);
+    paper17 = st2.add("paper", canvasTex(paperCanvas()), PX0 + PW / 2, PYF + 350 - PHF / 2, PW, PHF, 0, { emissive: 0.12 }, 10);
     rt17 = new WebGLRenderTarget(768, 432, { type: HalfFloatType, samples: 4 });
     const sr = slotRect();
     slot17 = st2.add("slot", rt17.texture, sr.x + sr.w / 2, sr.y + sr.h / 2, sr.w, sr.h, 0, { emissive: 0.3, fog: ["#E8D6B0", 0] }, 11);
-    ink17 = new Live(st2, "ink17", PX0 + NEWX * PK, PYF - PHF / 2, 180 * PK, PHF, 0, {}, 3, 12);
-    roll17 = new Live(st2, "roll17", PX0 + (PSRC_W + 10) * PK, PYF - PHF / 2, 140 * PK, (PSRC_H + 80) * PK, 0, { emissive: 0.45 }, 2, 13);
+    ink17 = new Live(st2, "ink17", PX0 + NEWX * PK, PYF + 350 - PHF / 2, 180 * PK, PHF, 0, {}, 3, 12);
+    roll17 = new Live(st2, "roll17", PX0 + (PSRC_W + 10) * PK, PYF + 350 - PHF / 2, 140 * PK, (PSRC_H + 80) * PK, 0, { emissive: 0.45 }, 2, 13);
     roll17.draw("roll", (g) => {
       const w = 140 * PK, h = (PSRC_H + 80) * PK;
       const gr = g.createLinearGradient(0, 0, w, 0);
@@ -32443,7 +32445,7 @@ var DOOR2 = { x0: 1480, x1: 1600, y0: 470, y1: G18 };
 var GATE = { x0: 762, x1: 872 };
 var STR18 = CAREFUL * H18;
 var HANDX = 1235;
-var FRX = 1428;
+var FRX = 1385;
 var lane;
 var cast18;
 var roll18;
@@ -32463,8 +32465,8 @@ var scene18Cast = (t) => {
   const luC = carry2(lx, G18, H18, false);
   let rc = luC.rc, e0 = luC.e0, e1 = luC.e1;
   const fc = carry2(F.x, G18, H18, F.flip);
-  if (t >= b6(30.12)) {
-    const k = smooth(clamp01((t - b6(30.12)) / 0.1));
+  if (t >= b6(29.95)) {
+    const k = smooth(clamp01((t - b6(29.95)) / (b6(30.12) - b6(29.95))));
     const mid = luC.rc;
     rc = F.walk ? fc.rc : [lerp2(mid[0], fc.rc[0], k), lerp2(mid[1], fc.rc[1], k)];
     e0 = [rc[0] - 0.11 * H18, rc[1] + 3];
@@ -32473,7 +32475,7 @@ var scene18Cast = (t) => {
   const luContacts = t < b6(30.12) ? [{ side: "L", target: [e0[0] + 26, e0[1] + 9], name: "roll" }, { side: "R", target: [e0[0] + 8, e0[1] + 9], name: "roll end" }] : [];
   const lu = rig({ x: lx, ground: G18, h: H18, pose: lw ? careful(ul) : fkPose({ hip: 0.655, lean: 5, neck: 4, lt: 2, lk: 2, rt: -3, rk: 3, la: 4, le: 18, ra: 6, re: 22 }), look: lkLu }, luContacts, () => G18, "lu-wan");
   let frC = [];
-  if (t >= b6(29.92) && t < b6(30.12)) frC = [{ side: "L", target: [e1[0] - 26, e1[1] + 9], name: "roll" }, { side: "R", target: [e1[0] - 8, e1[1] + 9], name: "roll end" }];
+  if (t >= b6(30) && t < b6(30.12)) frC = [{ side: "L", target: [e1[0] - 22, e1[1] + 9], name: "roll" }, { side: "R", target: [e1[0] - 6, e1[1] + 9], name: "roll end" }];
   else if (t >= b6(30.12)) frC = twoHands(e0, e1, F.flip);
   const fpose = F.walk ? careful(F.u * H18 / (H18 - 6) + 0.1) : fkPose({ hip: 0.655, lean: 6 + 4 * give, neck: 4, lt: 2, lk: 2, rt: -3, rk: 3, la: 4, le: 16, ra: 6, re: 20 });
   const fr = rig({ x: F.x, ground: G18, h: H18 - 6, pose: fpose, look: lkFriend, flip: F.flip }, frC, () => G18, "friend");
@@ -32667,16 +32669,16 @@ var d19 = (t) => {
     });
   }
   {
-    const h = 120, gx = 925, gy = 700, top = 662, bc = [968, top - 7], set = smooth(clamp01((t - b6(31.7)) / 0.3)), back = smooth(clamp01((t - b6(32.08)) / 0.25));
+    const h = 120, gx = 938, gy = 700, top = 640, bc = [968, top - 7], set = smooth(clamp01((t - b6(31.7)) / 0.3)), back = smooth(clamp01((t - b6(32.08)) / 0.25));
     const bcNow = [bc[0], lerp2(bc[1] - 14, bc[1], set)], bw = 30, bh = 16;
-    const pose = fkPose({ hip: 0.645, hipX: -0.05, lean: lerp2(30, 6, back), neck: 4, lt: 6, lk: 4, rt: 2, rk: 2, la: 20, le: 30, ra: 20, re: 30 });
-    const hands = back < 0.5 ? [{ side: "L", target: [bcNow[0] + bw / 2 - 1, bcNow[1]], name: "box side" }, { side: "R", target: [bcNow[0] - bw / 2 + 2, bcNow[1] + 2], name: "box side" }] : [];
+    const pose = fkPose({ hip: 0.645, hipX: -0.05, lean: lerp2(46, 6, back), neck: 4, lt: 6, lk: 4, rt: 2, rk: 2, la: 20, le: 30, ra: 20, re: 30 });
+    const hands = back < 0.2 ? [{ side: "L", target: [bcNow[0] + bw / 2 - 1, bcNow[1]], name: "box side" }, { side: "R", target: [bcNow[0] - bw / 2 + 2, bcNow[1] + 2], name: "box side" }] : [];
     const f3 = rig({ x: gx - 18 * back, ground: gy, h, pose, look: lkF3 }, hands, () => gy, "box-servant-3");
     c3.draw(fk, [f3]);
     box3.drawW(fk, (g) => {
       boxGlow(g, bcNow, bw * 1.6, bh * 2.2, 0.55);
       drawBox(g, bcNow, bw, bh);
-      if (back < 0.5) drawFig(g, { ...f3, part: "L" });
+      if (back < 0.2) drawFig(g, { ...f3, part: "L" });
     });
   }
   const shut = smooth(clamp01((t - b6(32.02)) / (b6(32.25) - b6(32.02)))), slap = t >= b6(32.5) ? 1 : 0, raise = smooth(clamp01((t - b6(32.27)) / (b6(32.47) - b6(32.27))));
@@ -32717,8 +32719,8 @@ var d19 = (t) => {
       g.restore();
     }
   });
-  const o1h = slap ? [X.a0[0] + 4, X.a0[1] + 3] : [lerp2(880, X.a0[0] + 4, raise), lerp2(700, X.a0[1] + 3, raise)];
-  const o2h = slap ? [X.b0[0] - 4, X.b0[1] + 3] : [lerp2(1040, X.b0[0] - 4, raise), lerp2(700, X.b0[1] + 3, raise)];
+  const o1h = slap ? [X.a0[0] + 4, X.a0[1] + 3] : [lerp2(906, X.a0[0] + 4, raise), lerp2(636, X.a0[1] + 3, raise)];
+  const o2h = slap ? [X.b0[0] - 4, X.b0[1] + 3] : [lerp2(1014, X.b0[0] - 4, raise), lerp2(636, X.b0[1] + 3, raise)];
   const base = fkPose({ hip: 0.655, lean: 4, neck: 2, lt: 2, lk: 2, rt: -3, rk: 3, la: 3, le: 10, ra: 4, re: 14 });
   const O1 = rig({ x: 876, ground: HD.y1, h: 132, pose: base, look: lkOff }, t >= b6(32.27) ? [{ side: "L", target: o1h, name: slap ? "hand on the strip" : "strip" }] : [], () => HD.y1, "seal-official-1");
   const O2 = rig({ x: 1044, ground: HD.y1, h: 134, pose: base, look: lkOff, flip: true }, t >= b6(32.27) ? [{ side: "L", target: o2h, name: slap ? "hand on the strip" : "strip" }] : [], () => HD.y1, "seal-official-2");
@@ -32750,7 +32752,7 @@ var buildHall = async () => {
 		<rect x="-600" y="700" width="3100" height="500" fill="#2b231d"/>
 		${[[880, 640, 18, 34], [906, 650, 12, 24], [1030, 636, 16, 40], [1052, 648, 10, 28], [860, 600, 50, 6], [1014, 598, 60, 6]].map(([x, y, w, h]) => `<rect x="${x}" y="${y - h}" width="${w}" height="${h}" fill="#1a1411" rx="3"/>`).join("")}
 		<ellipse cx="890" cy="560" rx="11" ry="16" fill="#1a1411"/><ellipse cx="1040" cy="556" rx="13" ry="18" fill="#1a1411"/><rect x="884" y="574" width="12" height="8" fill="#1a1411"/>
-		<path d="M940,586 L992,586 L986,606 L946,606 Z" fill="#1a1411"/><rect x="930" y="662" width="80" height="6" fill="#20170f"/><rect x="936" y="668" width="5" height="32" fill="#1a1411"/><rect x="999" y="668" width="5" height="32" fill="#1a1411"/>
+		<path d="M940,566 L992,566 L986,586 L946,586 Z" fill="#1a1411"/><rect x="930" y="640" width="80" height="6" fill="#20170f"/><rect x="936" y="646" width="5" height="54" fill="#1a1411"/><rect x="999" y="646" width="5" height="54" fill="#1a1411"/>
 		<circle cx="905" cy="520" r="5" fill="#FFC98A"/><circle cx="1015" cy="520" r="5" fill="#FFC98A"/>`, 3100, 1400, `${wallG("hw", 960, 560)}`, -600, -200);
   st2.add("hall", canvasTex(await svgToCanvas(hallSvg, 3100, 1400, 1.4)), 950, 500, 3100, 1400, ZHALL, { rim: 0.5, rimPx: 3 });
   c3 = new Cast(st2, "servant3", 960, 640, 600, 400, ZHALL + 4, {}, 3);
@@ -34127,6 +34129,15 @@ var bootPeak = async () => {
   dayRoll = new Live(day.st, "dayRoll", 960, 900, 7e3, 1800, 22, { emissive: 0.55 }, 0.6);
   gateGlow = new Live(day.st, "gateGlow", -300, 800, 200, 160, -2590, { emissive: 0.5 }, 2, -1990);
   gateGlow.draw("g", (g) => drawPassage(g));
+  {
+    const c = mkCanvas(1e3, 200), g = c.getContext("2d"), X = (x) => (x + 4040) / 10, Y = (y) => (y - 1640) / 10;
+    g.fillStyle = "#2b3735";
+    g.fillRect(0, Y(2150), 1e3, 200);
+    g.fillStyle = "#15100C";
+    g.fillRect(0, Y(1690), X(-610), 200);
+    g.fillRect(X(2530), Y(1690), 1e3, 200);
+    day.st.add("nearfill", canvasTex(c), 960, 2640, 1e4, 2e3, -60, {});
+  }
 };
 var tableCanvas = () => {
   const c = mkCanvas(W, H), g = c.getContext("2d");
@@ -34698,9 +34709,9 @@ var bootResto = async () => {
   P_DONKEY = wv(free(shed8("donkey")));
   P_PEELED = wv(free(shed8("peeled")));
   wv(P_BARE);
-  const gate8 = paintSection("gate", { width: 8192, height: 3072, mode: "mono", seed: 43, weave: 0 });
-  const gc = crop(gate8, GATE_CROP.x, GATE_CROP.y, GATE_CROP.w, GATE_CROP.h), gcg = gc.getContext("2d");
-  gate8.width = gate8.height = 1;
+  const gate6 = paintSection("gate", { width: 6144, height: 2304, mode: "mono", seed: 43, weave: 0 }), k6 = 6144 / 8192;
+  const gc = crop(gate6, GATE_CROP.x * k6, GATE_CROP.y * k6, GATE_CROP.w * k6, GATE_CROP.h * k6, GATE_CROP.w, GATE_CROP.h), gcg = gc.getContext("2d");
+  gate6.width = gate6.height = 1;
   const fade = gcg.createLinearGradient(0, 0, 420, 0);
   fade.addColorStop(0, "rgba(0,0,0,0)");
   fade.addColorStop(1, "rgba(0,0,0,1)");
