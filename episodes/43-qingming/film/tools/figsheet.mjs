@@ -8,7 +8,7 @@ let worst = 0; const errs = [];
 try {
 	await build({entryPoints: [path.join(root, 'src/figures.ts')], bundle: true, format: 'esm', platform: 'node', outfile: bundle, logLevel: 'error'});
 	const F = await import(pathToFileURL(bundle).href);
-	const {LOOKS, POSES, figureSVG, handAt, toBody, toScreen, reach, gaitPose, gaitStride, armsFrom, underArm, underArmRoll, armfulAt, gripOf, carryScroll, holdOpen, handOver} = F;
+	const {LOOKS, POSES, figureSVG, handAt, toBody, toScreen, reach, walkFor, gaitStride, stepFor, armsFrom, underArm, underArmRoll, armfulAt, carryScroll, holdOpen} = F;
 	const f = (v) => v.toFixed(1), SIL = '#15100C', SILK = '#F3E6C4', ROLLER = '#3E5F8A', KNOB = '#EFE6D2', TABLE = '#8A7458', RED = '#E0402A';
 	let svg = '';
 	const dot = (p) => `<circle cx="${f(p[0])}" cy="${f(p[1])}" r="2.6" fill="${RED}"/>`;
@@ -28,13 +28,13 @@ try {
 		const look = LOOKS[name], poses = ['stand', 'walk', 'carryScroll', extra[li % extra.length]];
 		svg += text(M + col0 * CW + 6, gy - 252, `<tspan font-weight="700">${name}</tspan>  ${look.head} · ${look.dress}${look.sleeves ? ' · ' + look.sleeves : ''}`, 14);
 		poses.forEach((pn, k) => {
-			const cx = M + (col0 + k) * CW + CW * 0.42, pose = pn === 'walk' ? gaitPose('08_04', (li * 0.137) % 1) : POSES[pn], o = {x: cx, ground: gy, h, pose, look};
+			const cx = M + (col0 + k) * CW + CW * 0.42, pose = pn === 'walk' ? walkFor(look, (li * 0.137) % 1) : POSES[pn], o = {x: cx, ground: gy, h, pose, look};
 			let pre = '', post = '';
 			pre += ground(cx - CW * 0.4, cx + CW * 0.52, gy);
 			if (pn === 'carryScroll') { const a = handAt(o, 'R'), b = handAt(o, 'L'), L = 0.2 * h; pre += silk(a[0], b[0], (a[1] + b[1]) / 2, L); post += roller(a[0], a[1], L, 0.022 * h) + roller(b[0], b[1], L, 0.022 * h) + check(`${name}/carry`, o, 'R', a) + check(`${name}/carry`, o, 'L', b); }
 			if (pn === 'bendTable') { const ty = gy - 0.47 * h; pre += `<rect x="${f(cx + 0.1 * h)}" y="${f(ty)}" width="${f(0.5 * h)}" height="${f(0.03 * h)}" fill="${TABLE}"/><rect x="${f(cx + 0.14 * h)}" y="${f(ty)}" width="${f(0.025 * h)}" height="${f(0.47 * h)}" fill="${TABLE}"/><rect x="${f(cx + 0.55 * h)}" y="${f(ty)}" width="${f(0.025 * h)}" height="${f(0.47 * h)}" fill="${TABLE}"/>`;
 				for (const s of ['L', 'R']) { const g = handAt(o, s); post += dot([g[0], ty]); errs.push([`${name}/table-gap`, s, Math.abs(g[1] + 0.017 * h - ty)]); } }
-			if (pn === 'carryArmful') { const {c, r} = armfulAt(pose), C = toScreen(o, c), R = r * h; for (let i = 0; i < 5; i++) { const a = [C[0] - R * 0.9 + (i % 3) * R * 0.55, C[1] + R * 0.5 - Math.floor(i / 3) * R * 0.6 - (i % 2) * 4]; post += `<circle cx="${f(a[0])}" cy="${f(a[1])}" r="${f(R * 0.32)}" fill="${SILK}" stroke="#9C8A66" stroke-width="0.8"/><circle cx="${f(a[0])}" cy="${f(a[1])}" r="${f(R * 0.12)}" fill="${ROLLER}"/>`; } }
+			if (pn === 'carryArmful') { const {c, r} = armfulAt(pose), C = toScreen(o, c), R = r * h; for (const [dx, dy] of [[-0.5, 0.52], [0.18, 0.55], [0.72, 0.4], [-0.2, -0.05], [0.45, -0.12], [0.05, -0.6]]) { const a = [C[0] + dx * R, C[1] + dy * R]; post += `<circle cx="${f(a[0])}" cy="${f(a[1])}" r="${f(R * 0.36)}" fill="${SILK}" stroke="#9C8A66" stroke-width="0.8"/><circle cx="${f(a[0])}" cy="${f(a[1])}" r="${f(R * 0.13)}" fill="${ROLLER}"/>`; } }
 			if (pn === 'crouch') { const g = handAt(o, 'R'); post += roll([g[0] - 0.09 * h, gy - 0.016 * h], [g[0] + 0.09 * h, gy - 0.016 * h], 0.032 * h); post += check(`${name}/crouch`, o, 'R', g); }
 			if (pn === 'holdOpen') { const g = handAt(o, 'L'), L = 0.2 * h; pre += silk(g[0], g[0] + 0.5 * h, g[1], L); post += roller(g[0], g[1], L, 0.022 * h); }
 			if (pn === 'handOver') { const a = handAt(o, 'R'), b = handAt(o, 'L'); post += roll([a[0] - 0.04 * h, a[1]], [b[0] + 0.12 * h, b[1]], 0.032 * h); }
@@ -76,8 +76,8 @@ try {
 		svg += text((A.x + B.x) / 2, gB + 22, '宋: one roller in both hands each', 13, 'middle'); bx = B.x + 190;
 	}
 	{ // 4. eunuch walking (gait) with the roll under his arm; 4 phases with a stride advance
-		const st = gaitStride('08_04'), h4 = 330;
-		for (let i = 0; i < 4; i++) { const u = i * 0.25, o = {x: bx + 40 + i * 0.62 * h4 + u * st * h4 * 0.2, ground: gB, h: h4, look: LOOKS.mingEunuch, pose: armsFrom(gaitPose('08_04', u), underArm(), 'R')};
+		const h4 = 330;
+		for (let i = 0; i < 4; i++) { const u = i * 0.25, o = {x: bx + 40 + i * 0.62 * h4, ground: gB, h: h4, look: LOOKS.mingEunuch, pose: armsFrom(walkFor(LOOKS.mingEunuch, u), underArm(), 'R')};
 			const [a, b] = underArmRoll(o.pose); svg += figureSVG(o) + roll(toScreen(o, a), toScreen(o, b), 0.03 * h4); }
 		svg += ground(bx, bx + 4 * 0.62 * h4 + 40, gB) + text(bx + 2 * 0.62 * h4, gB + 22, 'eunuch walking, roll under the arm (gait phases 0 .25 .5 .75)', 13, 'middle');
 		bx += 4 * 0.62 * h4 + 70;

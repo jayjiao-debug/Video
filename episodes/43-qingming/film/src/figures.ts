@@ -37,14 +37,13 @@ export type LookQ = {
 	sleeves?: 'wide' | 'narrow';
 	beard?: 'short' | 'long' | 'full' | 'moustache';
 	build?: number;                      // girth multiplier (1 = kit)
-	belt?: boolean;                      // official's hoop belt standing off the waist
 	pack?: 'bundle' | 'backpack';        // refugee's cloth bundle / visitor's backpack
 	surcoat?: boolean;                   // 清 knee-length 补褂 over the robe
 };
 
 /** every look the ep43 storyboard needs */
 export const LOOKS = {
-	songOfficial: {head: 'zhanjiao', dress: 'robe', sleeves: 'wide', belt: true, beard: 'short', build: 1.06},
+	songOfficial: {head: 'zhanjiao', dress: 'robe', sleeves: 'wide', beard: 'short', build: 1.06},
 	songPainter: {head: 'futou', dress: 'robe', sleeves: 'wide', beard: 'short'},
 	refugee: {head: 'scarf', dress: 'tunic', pack: 'bundle'},
 	jinScholar: {head: 'dongpo', dress: 'robe', sleeves: 'wide', beard: 'long'},
@@ -52,7 +51,7 @@ export const LOOKS = {
 	yuanNoble: {head: 'boli', dress: 'robe', sleeves: 'narrow', beard: 'moustache', build: 1.08},
 	yuanScholar: {head: 'ruanjin', dress: 'robe', sleeves: 'wide', beard: 'long'},
 	mingScholar: {head: 'fangjin', dress: 'robe', sleeves: 'wide', beard: 'long'},
-	mingOfficial: {head: 'wusha', dress: 'robe', sleeves: 'wide', belt: true, beard: 'full', build: 1.06},
+	mingOfficial: {head: 'wusha', dress: 'robe', sleeves: 'wide', beard: 'full', build: 1.06},
 	mingEunuch: {head: 'neishi', dress: 'robe', sleeves: 'narrow'},
 	qingOfficial: {head: 'qingcap', dress: 'robe', sleeves: 'narrow', surcoat: true, beard: 'moustache'},
 	youth1923: {head: 'guapi', dress: 'gown', sleeves: 'narrow', build: 0.96},
@@ -122,11 +121,20 @@ const calib = (g: string) => {
 	for (let i = 0; i < 16; i++) top += gaitPose(g, i / 16)[`Top`][1] / 16;
 	gaitCal[g] = {phi, k: 1 / top}; return gaitCal[g];
 };
-/** the mocap walk at phase u (loops): feet re-modelled so the stance foot is flat and planted, scaled to head top ≈ 1 */
-export const gaitPose = (g = '08_04', u = 0): Pose => {
-	const c = calib(g), p = rawGait(g, u);
+/**
+ * the mocap walk at phase u (loops): feet re-modelled so the stance foot is flat and planted, scaled to head top ≈ 1.
+ * step < 1 shortens the stride (leg joints pulled toward the hips in x, arm swing halved by the same amount). Use it only
+ * under long robes, where the legs are hidden: stepFor(look) gives 0.72 for robes/gowns and 1 otherwise.
+ */
+export const gaitPose = (g = '08_04', u = 0, step = 1): Pose => {
+	const c = calib(g), p = rawGait(g, u), hx = p.Hips[0], ak = lerp(1, step, 0.5);
+	const toeV: Record<string, P> = {L: nrm(sub(p.LToe, p.LAnk)), R: nrm(sub(p.RToe, p.RAnk))};
+	if (step !== 1) for (const s of ['L', 'R']) {
+		for (const j of ['Up', 'Knee', 'Ank']) p[`${s}${j}`] = [hx + (p[`${s}${j}`][0] - hx) * step, p[`${s}${j}`][1]];
+		const sh = p[`${s}Sh`]; for (const j of ['Elb', 'Hand']) p[`${s}${j}`] = [sh[0] + (p[`${s}${j}`][0] - sh[0]) * ak, p[`${s}${j}`][1]];
+	}
 	for (const s of ['L', 'R']) {   // rebuild the toe on the sole line of our foot model
-		const A = p[`${s}Ank`], v = nrm(sub(p[`${s}Toe`], A)), sd = rot(v, -c.phi), m: P = [-sd[1], sd[0]];
+		const A = p[`${s}Ank`], v = toeV[s], sd = rot(v, -c.phi), m: P = [-sd[1], sd[0]];
 		p[`${s}Toe`] = add(sub(A, mul(m, BL.ankle)), mul(sd, BL.foot));
 		p[`${s}Tip`] = tipOf(p[`${s}Elb`], p[`${s}Hand`]);
 	}
@@ -135,7 +143,11 @@ export const gaitPose = (g = '08_04', u = 0): Pose => {
 	return q;
 };
 /** body units travelled per gait cycle (advance x by stride * h * cycles so the feet do not slide) */
-export const gaitStride = (g = '08_04') => GAITS[g].stride * calib(g).k;
+export const gaitStride = (g = '08_04', step = 1) => GAITS[g].stride * calib(g).k * step;
+/** stride scale for a look: long robes and gowns walk with shorter steps so the hem does not tent out */
+export const stepFor = (look: LookQ) => (look.dress === 'robe' || look.dress === 'gown' ? 0.72 : 1);
+/** a walk pose suited to the look (gaitPose with stepFor(look)); advance x by gaitStride(g, stepFor(look)) * h per cycle */
+export const walkFor = (look: LookQ, u: number, g = '08_04'): Pose => gaitPose(g, u, stepFor(look));
 export const gaitSeconds = (g = '08_04') => GAITS[g].seconds;
 
 /** designed pose by 2D forward kinematics. Degrees; legs/arms from straight down, + = forward; lw/rw bend the hand off the forearm */
@@ -271,18 +283,17 @@ export const figurePaths = (o: FigOpts): string[] => {
 	const hp = (d: string) => out.push(tx(d, HL));
 	hp('M-0.02,0.07 C-0.066,0.05 -0.072,-0.045 -0.018,-0.066 C0.028,-0.08 0.058,-0.046 0.055,-0.014 L0.058,0.002 L0.074,0.024 L0.058,0.03 L0.06,0.041 L0.055,0.047 C0.057,0.064 0.041,0.072 0.025,0.068 L0.022,0.09 L-0.025,0.095 Z');
 	const sw = Math.sin(T * 3.1) * 0.01, sw2 = Math.sin(T * 3.7 + 1) * 0.012;
-	const wing = (x0: number, x1: number, y: number, t0: number, t1: number) => { const dx = Math.sign(x1 - x0), e = x1 - dx * t1 / 2;   // a straight wing ending in a round paddle
-		return `M${x0},${y - t0 / 2} L${e - dx * 0.03},${y - t0 / 2} Q${e - dx * 0.012},${y - t1 / 2} ${e},${y - t1 / 2} Q${x1},${y - t1 / 2} ${x1},${y} Q${x1},${y + t1 / 2} ${e},${y + t1 / 2} Q${e - dx * 0.012},${y + t1 / 2} ${e - dx * 0.03},${y + t0 / 2} L${x0},${y + t0 / 2} Z`; };
+	const strap = (x0: number, x1: number, y: number, t0: number, t1: number) => { const dx = Math.sign(x1 - x0), r = t1 * 0.45, e = x1 - dx * r;   // a flat straight strap, a touch wider at the end, softly squared tip
+		return `M${x0},${y - t0 / 2} L${e},${y - t1 / 2} Q${x1},${y - t1 / 2} ${x1},${y - t1 / 2 + r} L${x1},${y + t1 / 2 - r} Q${x1},${y + t1 / 2} ${e},${y + t1 / 2} L${x0},${y + t0 / 2} Z`; };
 	switch (look.head) {
 		case 'zhanjiao':   // stiff black cap, raised back, long straight wings
 			hp('M-0.07,0.012 L-0.07,-0.07 Q-0.068,-0.096 -0.042,-0.098 L0.032,-0.096 Q0.058,-0.094 0.06,-0.068 L0.06,-0.022 Q0.0,-0.03 -0.07,0.012 Z');
 			hp('M-0.07,-0.07 Q-0.072,-0.134 -0.032,-0.136 Q0.004,-0.136 0.008,-0.09 Z');
-			hp(wing(-0.03, -0.31, -0.082, 0.011, 0.024)); hp(wing(-0.03, 0.27, -0.082, 0.011, 0.024)); break;
+			hp(strap(-0.02, -0.29, -0.084, 0.016, 0.022)); hp(strap(-0.02, 0.25, -0.084, 0.016, 0.022)); break;
 		case 'futou':      // soft 幞头: round crown, knot bump, two soft tails
 			hp('M-0.068,0.004 Q-0.068,-0.092 0.0,-0.092 Q0.057,-0.088 0.058,-0.024 Q0.0,-0.034 -0.068,0.004 Z');
 			hp('M-0.04,-0.082 Q-0.03,-0.142 0.016,-0.13 Q0.036,-0.112 0.026,-0.084 Z');
-			hp(`M-0.058,-0.05 Q-0.112,${0.0 + sw} ${-0.104 + sw2},0.112 L${-0.09 + sw2},0.114 Q-0.094,0.012 -0.044,-0.032 Z`);
-			hp(`M-0.05,-0.04 Q-0.09,${0.02 + sw} ${-0.074 + sw2 * 0.7},0.1 L${-0.062 + sw2 * 0.7},0.1 Q-0.072,0.03 -0.036,-0.024 Z`); break;
+			hp(`M-0.062,-0.046 Q-0.1,${-0.01 + sw} ${-0.094 + sw2},0.124 L${-0.078 + sw2},0.126 Q-0.08,0.0 -0.05,-0.03 Z`); break;
 		case 'scarf':      // wrapped cloth over skull and nape, knot and short ends at the back
 			hp('M0.058,-0.018 Q0.054,-0.094 -0.006,-0.096 Q-0.074,-0.094 -0.082,-0.02 Q-0.086,0.05 -0.064,0.104 L-0.02,0.1 Q-0.028,0.04 -0.026,0.0 Q0.0,-0.036 0.058,-0.018 Z');
 			hp('M-0.07,-0.07 Q-0.112,-0.09 -0.122,-0.056 Q-0.112,-0.028 -0.072,-0.038 Z');
@@ -290,8 +301,8 @@ export const figurePaths = (o: FigOpts): string[] => {
 		case 'dongpo':     // tall cap: high back wall, stepped lower front
 			hp('M-0.07,0.012 L-0.07,-0.136 Q-0.07,-0.158 -0.046,-0.158 L-0.006,-0.158 Q0.01,-0.158 0.01,-0.142 L0.01,-0.124 L0.042,-0.124 Q0.06,-0.124 0.06,-0.106 L0.06,-0.022 Q0.0,-0.03 -0.07,0.012 Z'); break;
 		case 'clothcap':   // soft rounded cap, slight peak at the back, short flap over the nape
-			hp('M-0.076,0.022 Q-0.084,-0.064 -0.052,-0.098 Q-0.02,-0.118 0.018,-0.104 Q0.056,-0.09 0.062,-0.04 L0.06,-0.02 Q0.0,-0.032 -0.076,0.022 Z');
-			hp('M-0.07,-0.02 Q-0.088,0.03 -0.08,0.07 L-0.046,0.064 Q-0.052,0.02 -0.04,-0.02 Z'); break;
+			hp('M-0.074,0.014 Q-0.084,-0.06 -0.066,-0.098 Q-0.048,-0.126 -0.01,-0.124 Q0.034,-0.12 0.052,-0.098 Q0.064,-0.076 0.062,-0.022 Q0.0,-0.032 -0.074,0.014 Z');
+			hp('M-0.066,-0.088 Q-0.1,-0.104 -0.096,-0.128 Q-0.068,-0.136 -0.04,-0.116 Z'); break;   // soft cloth gathered into a fold at the back
 		case 'boli': {     // 钹笠: dome crown + flat brim with ROUND ends (a stadium, never a point)
 			hp('M-0.058,-0.044 Q-0.06,-0.122 0.0,-0.124 Q0.058,-0.122 0.058,-0.044 Z');
 			hp(ell(0, -0.13, 0.014, 0.012));
@@ -301,12 +312,12 @@ export const figurePaths = (o: FigOpts): string[] => {
 			hp('M-0.072,0.012 Q-0.08,-0.07 -0.07,-0.112 Q-0.064,-0.152 -0.032,-0.15 Q0.022,-0.138 0.048,-0.096 Q0.062,-0.066 0.06,-0.022 Q0.0,-0.032 -0.072,0.012 Z');
 			hp(`M-0.064,-0.04 Q-0.098,${0.01 + sw} ${-0.094 + sw2},0.074 L${-0.078 + sw2},0.074 Q-0.08,0.016 -0.05,-0.03 Z`); break;
 		case 'fangjin':    // tall flat-topped square cap, wider at the top
-			hp('M-0.07,0.01 L-0.086,-0.166 Q-0.087,-0.178 -0.074,-0.178 L0.064,-0.178 Q0.076,-0.178 0.075,-0.166 L0.06,-0.022 Q0.0,-0.03 -0.07,0.01 Z'); break;
+			hp('M-0.07,0.01 L-0.084,-0.152 Q-0.085,-0.163 -0.073,-0.163 L0.062,-0.163 Q0.074,-0.163 0.073,-0.152 L0.06,-0.022 Q0.0,-0.03 -0.07,0.01 Z'); break;
 		case 'wusha':      // 乌纱帽: low front, raised round back, oval wings on short stalks
 			hp('M-0.07,0.012 L-0.07,-0.066 Q-0.068,-0.09 -0.042,-0.092 L0.032,-0.09 Q0.058,-0.088 0.06,-0.064 L0.06,-0.022 Q0.0,-0.03 -0.07,0.012 Z');
 			hp('M-0.07,-0.068 Q-0.074,-0.132 -0.03,-0.134 Q0.008,-0.132 0.01,-0.086 Z');
-			hp('M-0.04,-0.092 L-0.12,-0.092 L-0.12,-0.082 L-0.04,-0.082 Z'); hp(ell(-0.165, -0.087, 0.05, 0.024));
-			hp('M-0.0,-0.092 L0.1,-0.092 L0.1,-0.082 L-0.0,-0.082 Z'); hp(ell(0.14, -0.087, 0.044, 0.021)); break;
+			hp('M-0.03,-0.097 L-0.13,-0.096 L-0.13,-0.082 L-0.03,-0.081 Z'); hp(ell(-0.172, -0.089, 0.054, 0.024));
+			hp('M-0.03,-0.097 L0.08,-0.096 L0.08,-0.082 L-0.03,-0.081 Z'); hp(ell(0.122, -0.089, 0.054, 0.024)); break;
 		case 'neishi':     // eunuch: tall rounded cap on a band
 			hp('M-0.07,0.008 L-0.072,-0.13 Q-0.072,-0.196 -0.006,-0.198 Q0.062,-0.196 0.062,-0.13 L0.06,-0.022 Q0.0,-0.03 -0.07,0.008 Z');
 			hp('M-0.078,0.014 Q-0.08,-0.004 -0.077,-0.016 L0.066,-0.044 Q0.07,-0.032 0.068,-0.018 Z'); break;
@@ -319,8 +330,8 @@ export const figurePaths = (o: FigOpts): string[] => {
 			hp('M-0.076,0.004 L-0.076,-0.014 L0.065,-0.04 L0.065,-0.024 Z'); hp(ell(-0.002, -0.106, 0.013, 0.012)); break;
 		case 'peaked':     // band, crown flaring up to a raised front (saddle), short visor
 			hp('M-0.068,-0.006 L-0.068,-0.058 L0.06,-0.066 L0.06,-0.026 Q0.0,-0.03 -0.068,-0.006 Z');
-			hp('M-0.068,-0.054 Q-0.084,-0.08 -0.09,-0.1 Q-0.086,-0.112 -0.064,-0.11 L0.05,-0.124 Q0.076,-0.128 0.078,-0.114 Q0.072,-0.084 0.06,-0.062 Z');
-			hp('M0.05,-0.036 Q0.09,-0.038 0.112,-0.022 Q0.116,-0.012 0.102,-0.012 Q0.08,-0.018 0.05,-0.018 Z'); break;
+			hp('M-0.068,-0.054 Q-0.078,-0.076 -0.082,-0.094 Q-0.08,-0.106 -0.062,-0.106 L0.03,-0.111 Q0.062,-0.113 0.063,-0.094 Q0.063,-0.078 0.058,-0.062 Z');
+			hp('M0.05,-0.034 Q0.08,-0.036 0.096,-0.024 Q0.099,-0.015 0.088,-0.015 Q0.07,-0.019 0.05,-0.018 Z'); break;
 		case 'cadre':      // soft cap, flattish crown, short visor
 			hp('M-0.072,0.0 Q-0.08,-0.064 -0.062,-0.1 Q0.0,-0.118 0.052,-0.104 Q0.07,-0.084 0.064,-0.032 Q0.0,-0.034 -0.072,0.0 Z');
 			hp('M0.054,-0.038 Q0.088,-0.038 0.104,-0.026 Q0.104,-0.016 0.09,-0.018 Q0.072,-0.022 0.054,-0.02 Z'); break;
@@ -339,20 +350,33 @@ export const figurePaths = (o: FigOpts): string[] => {
 	// ---- clothing, built on the skeleton
 	const W = add(H, mul(u, 0.07)), tf = (q: P, a: number, c: number): P => add(q, add(mul(f, a), mul(u, c)));   // torso frame offsets
 	const legs = (['L', 'R'] as const).map((s) => ({K: p[`${s}Knee`], A: p[`${s}Ank`], U: p[`${s}Up`]}));
-	if (robeLike) {   // long robe: hull over waist, seat, knees and ankles; hem just above the ankles so the shoes show
-		const g = look.dress === 'gown', fl = g ? 0 : look.surcoat ? 0.004 : 0.018, mf = g ? 0.034 : 0.044, mb = g ? 0.046 : 0.058;
-		const pts: P[] = [tf(W, -0.076 * b, 0), tf(W, 0.07 * b, 0), tf(H, -0.088 * b, 0), tf(H, 0.074 * b, 0), tf(H, -0.09 * b, -0.06), tf(H, 0.072 * b, -0.06)];
-		for (const {K, A} of legs) {
+	if (robeLike) {   // long robe over the leg skeleton: waist→knees hull + knees→hem hull; a shin lying on the floor (kneeling) gets its own piece
+		const g = look.dress === 'gown', fl = g ? 0 : look.surcoat ? 0.004 : 0.016, mf = g ? 0.034 : 0.044, mb = g ? 0.046 : 0.056;
+		// standing / walking (both thighs near vertical): one A-line hull. Seated, kneeling, squatting: waist→knees hull, then the
+		// robe hangs from each horizontal thigh to the floor like a curtain; a shin lying on the floor gets its own low piece.
+		const upper: P[] = [tf(sp, -0.068 * b, -0.02), tf(sp, 0.064 * b, -0.02), tf(W, -0.078 * b, 0), tf(W, 0.07 * b, 0), tf(H, -0.088 * b, 0), tf(H, 0.074 * b, 0), tf(H, -0.09 * b, -0.06), tf(H, 0.072 * b, -0.06)], lower: P[] = [], hems: P[] = [], lying: P[][] = [];
+		const angDown = (a: P, c: P) => Math.atan2(Math.abs(c[0] - a[0]), a[1] - c[1]) / D;
+		const split = legs.some(({U, K, A}) => angDown(U, K) > 50 || angDown(K, A) > 55);
+		for (const {U, K, A} of legs) {
 			const hy = Math.max(A[1] - (g ? 0.0 : 0.01), 0.012);
-			pts.push(add(K, [-0.064 * b, 0]), add(K, [0.058 * b, 0]), add(K, [0, 0.05]), add(A, [-mb, 0.06]), add(A, [mf, 0.06]), [A[0] - mb - fl, hy], [A[0] + mf + fl, hy]);
+			const kp: P[] = [add(K, [-0.064 * b, 0]), add(K, [0.058 * b, 0]), add(K, [0, 0.05])], fp: P[] = [add(A, [-mb, 0.06]), add(A, [mf, 0.06]), [A[0] - mb - fl, hy], [A[0] + mf + fl, hy]];
+			upper.push(...kp);
+			if (angDown(K, A) > 55) { lying.push([...kp, add(K, [0, -0.03]), ...fp]); continue; }
+			lower.push(...kp, ...fp); hems.push(A);
+			if (split && angDown(U, K) > 50) { const c = mix(U, K, 0.42); lower.push(add(c, [0, -0.04]), [c[0], hy]); }
 		}
-		const [a1, a2] = [legs[0].A, legs[1].A];
-		pts.push([(a1[0] + a2[0]) / 2, Math.max(0.008, Math.min(a1[1], a2[1]) - 0.022)]);
-		out.push(rounded(hull(pts), 0.03));
-		if (look.surcoat) {   // 清 补褂: knee length, a step wider than the robe
-			const sp2: P[] = [tf(sp, -0.084 * b, 0), tf(sp, 0.086 * b, 0), tf(H, -0.1 * b, 0), tf(H, 0.09 * b, 0)];
-			for (const {K} of legs) sp2.push(add(K, [-0.082, -0.03]), add(K, [0.08, -0.03]));
-			out.push(rounded(hull(sp2), 0.02));
+		if (hems.length === 2) lower.push([(hems[0][0] + hems[1][0]) / 2, Math.max(0.008, Math.min(hems[0][1], hems[1][1]) - 0.022)]);
+		if (split) { out.push(rounded(hull(upper), 0.03)); if (lower.length) out.push(rounded(hull(lower), 0.03)); }
+		else {   // the cloth falls straight down from its widest points (seat, belly, a forward knee) to the hem
+			const all = [...upper, ...lower], hy = Math.max(0.012, Math.min(legs[0].A[1], legs[1].A[1]) - 0.012);
+			const xs = upper.filter((q) => q[1] > hy + 0.05).map((q) => q[0]);
+			out.push(rounded(hull([...all, [Math.min(...xs) - 0.006, hy], [Math.max(...xs) + 0.006, hy]]), 0.03));
+		}
+		for (const l of lying) out.push(rounded(hull(l), 0.025));
+		if (look.surcoat) {   // 清 补褂: hangs from the shoulders to just below the knee, a step wider than the robe
+			const s2: P[] = [tf(sp, -0.084 * b, 0), tf(sp, 0.086 * b, 0), tf(H, -0.1 * b, 0), tf(H, 0.092 * b, 0)];
+			for (const {K, A} of legs) { const k = mix(K, A, 0.12), kx = H[0] + (k[0] - H[0]) * 0.55; s2.push([kx - 0.088, k[1]], [kx + 0.084, k[1]]); }
+			out.push(rounded(hull(s2), 0.02));
 		}
 	}
 	const skirt = (hemAt: number, mf: number, mb: number, flare: number, top: P[]) => {   // coat skirts: hull from the torso down to a hem between knee and ankle
@@ -365,10 +389,7 @@ export const figurePaths = (o: FigOpts): string[] => {
 	if (look.dress === 'smock') skirt(0.1, 0.068 * b, 0.072 * b, 0.006, [tf(sp, -0.074 * b, 0.02), tf(sp, 0.078 * b, 0.02), tf(W, -0.082 * b, 0), tf(W, 0.08 * b, 0), tf(H, -0.09 * b, 0), tf(H, 0.084 * b, 0)]);
 	if (look.dress === 'jacket') out.push(rounded(hull([tf(sp, -0.076 * b, 0.02), tf(sp, 0.08 * b, 0.02), tf(H, -0.086 * b, 0), tf(H, 0.084 * b, 0), tf(H, -0.086 * b, -0.07), tf(H, 0.084 * b, -0.07)]), 0.014));
 	if (look.dress === 'zip') out.push(rounded(hull([tf(sp, -0.08 * b, 0.0), tf(sp, 0.084 * b, 0.0), tf(H, -0.084 * b, 0.02), tf(H, 0.084 * b, 0.02), tf(H, -0.08 * b, -0.04), tf(H, 0.08 * b, -0.04)]), 0.03));
-	if (look.dress === 'greatcoat') {   // broad collar at the neck, belted waist
-		out.push(rounded([tf(p.Neck1, -0.05, -0.03), tf(p.Neck1, 0.032, -0.04), tf(p.Neck1, 0.04, 0.012), tf(p.Neck1, -0.042, 0.03)], 0.012));
-		out.push(rounded([tf(W, -0.082 * b, 0.012), tf(W, 0.076 * b, 0.012), tf(W, 0.076 * b, -0.012), tf(W, -0.082 * b, -0.012)], 0.006));
-	}
+	if (look.dress === 'greatcoat') out.push(rounded([tf(p.Neck1, -0.05, -0.03), tf(p.Neck1, 0.032, -0.04), tf(p.Neck1, 0.04, 0.012), tf(p.Neck1, -0.042, 0.03)], 0.012));   // broad turned-up collar
 	// ---- wide sleeves: per arm segment, a bag that hangs by gravity below the arm
 	if (look.sleeves === 'wide') for (const s of ['R', 'L']) {
 		const sh = p[`${s}Sh`], el = p[`${s}Elb`], wr = p[`${s}Hand`], dn: P = [0, -1];
@@ -383,8 +404,6 @@ export const figurePaths = (o: FigOpts): string[] => {
 		seg(el, add(wr, mul(nrm(sub(wr, el)), -0.006)), 0.046 * b, 0.05 * b, 0.13, true);
 	}
 	// ---- belt, packs
-	if (look.belt) { const c = tf(W, 0, -0.012), e1 = tf(c, -0.115, 0.004), e2 = tf(c, 0.112, -0.03), d = nrm(sub(e2, e1)), n: P = [-d[1], d[0]];
-		out.push(rounded([add(e1, mul(n, 0.009)), add(e2, mul(n, 0.009)), sub(e2, mul(n, 0.009)), sub(e1, mul(n, 0.009))], 0.008)); }
 	if (look.pack === 'bundle') { const c = tf(sp, -0.12, 0.0), e = (a: number, r: number): P => tf(c, Math.cos(a) * 0.072, Math.sin(a) * r);
 		out.push(rounded(Array.from({length: 12}, (_, i) => e((i / 12) * Math.PI * 2, 0.095)), 0.03));
 		out.push(rounded([tf(sp, -0.06, 0.07), tf(sp, -0.13, 0.11), tf(sp, -0.15, 0.09), tf(sp, -0.07, 0.04)], 0.01)); }
@@ -410,7 +429,7 @@ const atReach = (p: Pose, side: Side, y: number, k = 0.92): P => { const sh = p[
 /** both hands on two rollers in front of the chest (near roller with R, far roller with L), e.g. a short open section or a roll's two ends */
 export const carryScroll = (o: {near?: P; far?: P; base?: Pose} = {}): Pose => {
 	const b = o.base ?? fkPose({...STAND, lean: 4, neck: 6}), sh = b.LSh;
-	return reach(reach(b, 'R', o.near ?? [sh[0] + 0.15, sh[1] - 0.15]), 'L', o.far ?? atReach(b, 'L', sh[1] - 0.15, 0.9));
+	return reach(reach(b, 'R', o.near ?? [sh[0] + 0.13, sh[1] - 0.17]), 'L', o.far ?? atReach(b, 'L', sh[1] - 0.15, 0.93));
 };
 /** one hand on a roller at arm's length (the open scroll held between two people); both = the other hand on the same roller, lower */
 export const holdOpen = (o: {at?: P; both?: boolean; base?: Pose} = {}): Pose => {
@@ -438,41 +457,47 @@ export const kneel = (o: {at?: P} = {}): Pose => {
 	const k = b.LKnee;
 	return reach(reach(b, 'R', [k[0] - 0.01, k[1] + 0.047], {dir: -8}), 'L', [k[0] - 0.075, k[1] + 0.05], {dir: -4});
 };
-/** bent over a table (surface at height `top`), hand(s) flat on it; flatX = palm x of the far hand (auto: within reach) */
+const BEND = (lean: number): FK => ({hip: 0.645, hipX: -0.1 - Math.max(0, lean - 55) * 0.0015, lean, neck: -6, lt: 10, lk: 8, rt: 6, rk: 6, la: 20, le: 30, ra: 10, re: 20});
+/**
+ * bent over a table whose surface is at height `top`, the far (L) hand flat on it at palm x `flatX` (auto: well within reach).
+ * other: 'flat' = the near hand flat too, a little nearer the body; a point = the near palm there; 'hang' = left alone.
+ */
 export const bendTable = (o: {top?: number; flatX?: number; other?: P | 'flat' | 'hang'; lean?: number} = {}): Pose => {
-	const top = o.top ?? 0.47, y = top + 0.017;
-	let lean = o.lean ?? 42, b = fkPose({hip: 0.64, hipX: -0.07, lean, neck: 18, lt: 8, lk: 8, rt: 4, rk: 6, la: 20, le: 30, ra: 10, re: 20});
-	while (b.LSh[1] - (y - 0.0) > (BL.upper + BL.fore) * 0.93 && lean < 80) { lean += 4; b = fkPose({hip: 0.64, hipX: -0.07 - (lean - 42) * 0.0015, lean, neck: 18, lt: 8, lk: 8, rt: 4, rk: 6, la: 20, le: 30, ra: 10, re: 20}); }
-	const sh = b.LSh, r = (BL.upper + BL.fore) * 0.92, dy = sh[1] - y, x = o.flatX ?? sh[0] + Math.sqrt(Math.max(0, r * r - dy * dy)) + BL.grip;
+	const top = o.top ?? 0.47, y = top + 0.017, r = (BL.upper + BL.fore) * 0.92;
+	let lean = o.lean ?? 55, b = fkPose(BEND(lean));
+	while (b.LSh[1] - y > r * 0.96 && lean < 80) b = fkPose(BEND((lean += 3)));
+	const sh = b.LSh, dy = sh[1] - y, x = o.flatX ?? sh[0] + Math.sqrt(Math.max(0, r * r - dy * dy)) + BL.grip;
 	let q = reach(b, 'L', [x, y], {dir: 0});
 	const other = o.other ?? 'flat';
-	if (other === 'flat') q = reach(q, 'R', [x - 0.11, y], {dir: -6});
+	if (other === 'flat') q = reach(q, 'R', [x - 0.075, y], {dir: -4});
 	else if (other !== 'hang') q = reach(q, 'R', other);
 	return q;
 };
-/** carrying an armful of rolled scrolls (or a bundle) against the chest; see armfulAt() for where the load sits */
-export const carryArmful = (): Pose => {
-	const b = fkPose({hip: 0.655, lean: -3, neck: 4, lt: 3, lk: 3, rt: -4, rk: 4, la: 0, le: 90, ra: 0, re: 90}), sh = b.LSh;
-	return reach(reach(b, 'R', [sh[0] + 0.19, sh[1] - 0.25], {dir: 20}), 'L', [sh[0] + 0.15, sh[1] - 0.1], {dir: -30});
+/** the load of carryArmful(): centre and radius in body units, relative to the shoulder */
+const ARMFUL: P = [0.13, -0.17], ARMFUL_R = 0.075;
+/** carrying an armful of rolled scrolls (or a cloth bundle) against the chest: near forearm under the load, far hand over its front */
+export const carryArmful = (base?: Pose): Pose => {
+	const b = base ?? fkPose({hip: 0.655, lean: -3, neck: 6, lt: 3, lk: 3, rt: -4, rk: 4, la: 0, le: 90, ra: 0, re: 90}), c = add(b.LSh, ARMFUL);
+	return reach(reach(b, 'R', [c[0] + 0.03, c[1] - ARMFUL_R - 0.014], {dir: 12}), 'L', [c[0] + ARMFUL_R + 0.008, c[1] + 0.012], {dir: -78});
 };
 /** centre and radius (body units) of the load held by carryArmful() */
-export const armfulAt = (p: Pose): {c: P; r: number} => { const {u, f} = frame(p); return {c: add(p.Spine1, add(mul(f, 0.15), mul(u, -0.06))), r: 0.075}; };
-/** crouched low to pick something up from the floor: the near hand's palm at `at` (default: in reach in front of the feet) */
+export const armfulAt = (p: Pose): {c: P; r: number} => ({c: add(p.LSh, ARMFUL), r: ARMFUL_R});
+/** squatting to pick something up from the floor: the near (R) palm at `at` (default: on the floor in front of the knees) */
 export const crouch = (o: {at?: P} = {}): Pose => {
-	const b = fkPose({hip: 0.3, hipX: -0.12, lean: 60, neck: 14, lt: 100, lk: 142, rt: 78, rk: 128, la: 20, le: 20, ra: 20, re: 20});
-	const sh = b.RSh, y = Math.max(o.at?.[1] ?? 0.04, sh[1] - ARM_REACH * 0.96), at = o.at ?? atReach(b, 'R', y, 0.96);
+	const b = fkPose({hip: 0.22, hipX: -0.08, lean: 52, neck: 6, lt: 110, lk: 152, rt: 98, rk: 142, la: 20, le: 20, ra: 20, re: 20});
+	const sh = b.RSh, y = Math.max(o.at?.[1] ?? 0.035, sh[1] - ARM_REACH * 0.97), at = o.at ? [o.at[0], Math.max(o.at[1], y)] as P : atReach(b, 'R', y, 0.97);
 	const k = b.LKnee;
-	return reach(reach(b, 'R', [at[0], Math.max(at[1], y)]), 'L', [k[0] - 0.02, k[1] + 0.045], {dir: -10});
+	return reach(reach(b, 'R', at), 'L', [k[0] - 0.03, k[1] + 0.045], {dir: -6});
 };
-/** a roll clamped under the R upper arm, its front end in the R hand; underArmRoll() gives the roll's ends */
+/** a roll clamped under the R upper arm (against the ribs), its front end in the R hand; underArmRoll() gives the roll's ends */
 export const underArm = (base?: Pose): Pose => {
 	const b = base ?? fkPose(STAND), sh = b.RSh;
-	return reach(b, 'R', [sh[0] + 0.15, sh[1] - 0.25], {dir: 8});
+	return reach(b, 'R', [sh[0] + 0.17, sh[1] - 0.15], {dir: 12});
 };
-/** the roll's two ends (body units) for a pose made with underArm() */
-export const underArmRoll = (p: Pose, side: Side = 'R', length = 0.27): [P, P] => {
-	const g = gripOf(p, side), back = add(p[`${side}Sh`], [-0.03, -0.075]), d = nrm(sub(back, g));
-	return [add(g, mul(d, length - 0.02)), add(g, mul(d, -0.02))];
+/** the roll's two ends (body units) for a pose made with underArm(): through the palm and under the armpit, sticking out behind the back */
+export const underArmRoll = (p: Pose, side: Side = 'R', length = 0.29): [P, P] => {
+	const g = gripOf(p, side), pit = add(p[`${side}Sh`], [0, -0.11]), d = nrm(sub(pit, g));
+	return [add(g, mul(d, length - 0.025)), add(g, mul(d, -0.025))];
 };
 
 export const POSES = {
