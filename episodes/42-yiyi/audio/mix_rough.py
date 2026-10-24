@@ -67,5 +67,6 @@ mid = sosfiltfilt(butter(2, [900, 4500], btype='band', fs=SR, output='sos'), bed
 mix = (bed * env[:, None] - mid * (env[:, None] * (1 - env_mid[:, None])) + vo).astype(np.float32)
 mix *= 10 ** ((-14 - meter.integrated_loudness(mix)) / 20)
 if np.abs(mix).max() > 0.84: mix = (np.tanh(mix / 0.84) * 0.84).astype(np.float32)
+mix *= min(10 ** ((-14 - meter.integrated_loudness(mix)) / 20), 0.89 / np.abs(mix).max())   # back to −14 after the soft clip, peak ≤ −1 dBFS
 sf.write(f'{A}/ep42_rough_mix.wav', mix, SR, subtype='PCM_24'); sf.write(f'{A}/ep42_rough_vo.wav', vo, SR, subtype='PCM_24')
 print('LUFS', round(meter.integrated_loudness(mix), 1), 'peak', round(20 * np.log10(np.abs(mix).max()), 1))
