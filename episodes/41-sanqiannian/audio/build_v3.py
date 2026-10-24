@@ -12,23 +12,32 @@ SR = 48000; A = os.path.dirname(os.path.abspath(__file__)); VO_L = -15.0
 def load(path, extra=''):
     raw = subprocess.run(['ffmpeg', '-loglevel', 'error', '-i', path] + (['-af', extra] if extra else []) + ['-f', 'f32le', '-ac', '2', '-ar', str(SR), '-'], capture_output=True).stdout
     return np.frombuffer(raw, dtype=np.float32).reshape(-1, 2).copy()
-song = load(f'{A}/bgm2.mp3'); SPANS = [(0.0, 54.905), (91.695, 209.47), (238.0, 253.2)]; XF = [0.010, 0.040]
+song = load(f'{A}/bgm2.mp3')
+# r4 (bookend ending): the song's quiet coda (236.65–252.12, where the track stops dead) carries the Golden Record and Voyager;
+# its stop rings out through a long reverb while 「可人类，还是把它寄了出去」 is said into the silence; then the song's own intro
+# returns with the 23:47 phone call (as in the cold open), and its 9.30 hit lands on the dive into the hilltop sky; fade on the end card.
+SPANS = [(0.0, 54.905), (91.695, 209.47), (236.65, 252.12), ('gap', 2.90), (0.0, 24.4)]; XF = [0.010, 0.040, 0.060, 0.010]
 bgm = song[:0]; joins = []
-for k, (a, b) in enumerate(SPANS):
-    seg = song[int(a * SR): int(b * SR)].copy()
+for k, sp_ in enumerate(SPANS):
+    seg = np.zeros((int(sp_[1] * SR), 2), np.float32) if sp_[0] == 'gap' else song[int(sp_[0] * SR): int(sp_[1] * SR)].copy()
     if len(bgm):
         xf = int(XF[k - 1] * SR); ramp = np.linspace(0, 1, xf)[:, None]
         bgm[-xf:] = bgm[-xf:] * (1 - ramp) + seg[:xf] * ramp; seg = seg[xf:]; joins.append(len(bgm) / SR)
     bgm = np.concatenate([bgm, seg])
+FADE = 3.0; bgm[-int(FADE * SR):] *= np.linspace(1, 0, int(FADE * SR))[:, None] ** 1.5   # the end card: a slow fade, not a chop
 n = len(bgm); DUR = n / SR
-# keep the climax ringing across join 2: the last 0.3 s of span 2 through a 2.5 s decaying-noise reverb, −12 dB
-tail = song[int(209.17 * SR): int(209.47 * SR)]
 ir = np.random.default_rng(7).standard_normal(int(2.5 * SR)) * np.exp(-np.arange(int(2.5 * SR)) / (0.55 * SR)); ir /= np.sqrt((ir ** 2).sum())
-rv = np.stack([fftconvolve(tail[:, c], ir) for c in range(2)], 1).astype(np.float32) * 10 ** (-12 / 20)
-j2 = int(joins[1] * SR); m = min(len(rv), n - j2); bgm[j2:j2 + m] += rv[:m]
+def tail_at(src_a, src_b, at, ir, db):
+    tl = song[int(src_a * SR): int(src_b * SR)]; rv = np.stack([fftconvolve(tl[:, c], ir) for c in range(2)], 1).astype(np.float32) * 10 ** (db / 20)
+    j = int(at * SR); m = min(len(rv), n - j); bgm[j:j + m] += rv[:m]
+# keep the climax ringing across join 2: the last 0.3 s of span 2 through a 2.5 s decaying-noise reverb, −12 dB
+tail_at(209.17, 209.47, joins[1], ir, -12)
+# the coda's dead stop rings out into the silence: a 4 s space reverb on its last 0.4 s
+ir2 = np.random.default_rng(11).standard_normal(int(4.0 * SR)) * np.exp(-np.arange(int(4.0 * SR)) / (1.1 * SR)); ir2 /= np.sqrt((ir2 ** 2).sum())
+tail_at(251.72, 252.12, joins[2] - 0.4, ir2, -9)
 
 ECHO = 'aecho=0.8:0.55:45|90|140:0.22|0.14|0.08'; OLD = 'highpass=f=320,lowpass=f=2800,acrusher=bits=10:mix=0.2'; PHONE = 'highpass=f=300,lowpass=f=3400'
-SPACE = 'aecho=0.8:0.6:180|340:0.25|0.15'; SCOTT = 'highpass=f=100,lowshelf=f=180:g=-6,equalizer=f=900:t=q:w=1:g=5,equalizer=f=2200:t=q:w=1:g=3'
+SPACE = 'aecho=0.8:0.6:180|340:0.25|0.15'; SCOTT = 'highpass=f=170:poles=2,afftdn=nr=14:nf=-32:tn=1,equalizer=f=250:t=q:w=1:g=-3,equalizer=f=900:t=q:w=1:g=6,equalizer=f=2000:t=q:w=1:g=5,equalizer=f=3200:t=q:w=1:g=3,lowpass=f=5500,acompressor=threshold=-30dB:ratio=2.5:attack=8:release=120:makeup=2'   # r4: owner 'make the voices clearer'
 FX = {'': '', 'ECHO': ECHO, 'OLD': OLD, 'PHONE': PHONE, 'SPACE': SPACE}
 LINES = [(l['file'], l['at'], ','.join(x for x in (SCOTT if 'CQ_cut' in l['file'] else FX.get(l.get('fx', ''), l.get('fx', '')), l.get('extra', '')) if x), l.get('gain', 0.0)) for l in json.load(open(f'{A}/lines_v3.json'))]
 meter = pyln.Meter(SR); dyn = 'highpass=f=90,acompressor=threshold=-26dB:ratio=3:attack=5:release=120:makeup=2'
@@ -39,7 +48,7 @@ for f, at, fx, gdb in LINES:
     if len(c) > 400: c = c[:-144]
     fi, fo = min(240, len(c) // 4), min(720, len(c) // 4); c[:fi] *= np.linspace(0, 1, fi)[:, None]; c[-fo:] *= np.linspace(1, 0, fo)[:, None]
     if 'CQ_cut' in f and c2_band is not None:   # match the 1860 voice's speech band to the narration's, minus 2 dB
-        g = c2_band - 2 - meter.integrated_loudness(band(c)); c *= 10 ** (g / 20); pk = np.abs(c).max(); c *= min(1, 0.6 / pk)
+        g = c2_band + 1 - meter.integrated_loudness(band(c)); c *= 10 ** (g / 20); pk = np.abs(c).max(); c *= min(1, 0.6 / pk)
     else:
         L = meter.integrated_loudness(c); c *= 10 ** ((VO_L - (2.0 if OLD in fx else 0) + gdb - L) / 20)
         if f.endswith('/C2'): c2_band = meter.integrated_loudness(band(c))
@@ -53,8 +62,11 @@ def ramp_env(events):
         t = np.arange(n) / SR; up = np.clip((t - a) / ri, 0, 1); dn = np.clip((b - t) / ro, 0, 1); w = 0.5 - 0.5 * np.cos(np.pi * np.minimum(up, dn)); g += db * w
     return 10 ** (g / 20)
 DROP = 154.54
-LIFT = [(9.05, 19.2, 1.5, 0.15, 0.15), (DROP, 172.6, 1.5, 0.02, 0.3), (80.45, 85.6, -9, 0.25, 0.4), (DROP - 2 * 0.566, DROP, -5, 0.566, 0.01)]
-QUIET = [(0, 9.0), (145.43, 154.4), (DROP, 188.5)]
+OUT = 172.64   # the outro (OUT_T in s41outro.tsx is relative to this)
+LIFT = [(9.05, 19.2, 1.5, 0.15, 0.15), (DROP, 172.6, 1.5, 0.02, 0.3), (80.45, 85.6, -14, 0.25, 0.4), (DROP - 2 * 0.566, DROP, -5, 0.566, 0.01),
+        (OUT + 19.5, OUT + 26.9, -3, 0.6, 0.4),   # the phone call: the intro thins under two quiet voices
+        (OUT + 27.6, OUT + 39.5, 2.0, 0.05, 1.5)]   # the hit at the dive into the hilltop sky (song 9.30) and the swell under N4 / the title
+QUIET = [(0, 9.0), (145.43, 154.4), (DROP, OUT + 18.2)]
 sp = speaking.copy(); d = np.diff(sp.astype(np.int8)); offs = np.where(d == -1)[0] + 1; ons = np.where(d == 1)[0] + 1
 for o in offs:   # bridge gaps shorter than 1.2 s so the duck never releases between sentences
     nxt = ons[ons > o]

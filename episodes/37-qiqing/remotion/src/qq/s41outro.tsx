@@ -1,5 +1,4 @@
 import React from 'react';
-import {staticFile} from 'remotion';
 import {W, H, SERIF, SANS, LATS, rnd, cl, sm, lerp, fio, fkPose, Rimmed, LOOK4, Glow, Pose, Look4} from './v3base';
 import {Cam, ease, easeIn, seg} from './fx';
 import {Voyager, RecordCover, voyRecordPos} from './voyager';
@@ -15,7 +14,7 @@ import {atEar} from './s41y1977';
    6 · the hilltop: everyone from the relay stands on the ground looking up at the moving point; last in the row, the caller,
        phone at the ear (N4: 「人类发明的每一种通讯，都是因为有人，想跟够不着的人，说一句话。」).
    7 · the Juno end card: title, 「现在，这句话，只要一秒钟。」, the question. */
-export const OUT_T = {pull: 7.2, voy: 8.2, recede: 13.4, point: 20.2, phone: 20.3, connect: 21.5, room: 24.3, win: 28.4, hill: 29.3, title: 35.0, q: 36.6, end: 42.0};
+export const OUT_T = {pull: 5.6, voy: 6.6, recede: 10.4, point: 15.4, phone: 18.3, connect: 19.7, room: 22.45, win: 26.5, hill: 27.6, title: 33.6, q: 37.3, end: 42.69};
 const GOLD = '#f2cf7a';
 const BRAIN_IN = 3.9;   // her brain-wave trace crosses the record when the line about it starts
 const VP = {x: 980, y: 470, s: 175, yaw: 0.3, pitch: -1.35, roll: 0.05};   // the hero framing: record faces us, dish behind
@@ -99,17 +98,61 @@ const HeldPhone: React.FC<{pose: Pose; x: number; ground: number; h: number; fli
 		<g transform={`translate(${e.c[0]},${e.c[1]}) rotate(${e.rot})`}><rect x={-L / 2} y={-w / 2} width={L} height={w} rx={w * 0.25} fill="#090b12" /><rect x={-L / 2 + 2} y={w / 2 - 3} width={L - 4} height={2} fill="#bcd4ff" opacity={0.5 * glow} /></g>
 	</g>;
 };
+/** the city through the window, drawn like the cold open's "today" street: flat black towers, LED and warm windows */
+const WIN = {x: 960, y: 130, w: 800, h: 730};
+const CityNight: React.FC<{t: number}> = ({t}) => {
+	const {x, y, w, h} = WIN, base = y + h;
+	const tower = (i: number, layer: number) => { const n = [11, 6, 3][layer], cw = w / n * (layer === 2 ? 0.62 : layer === 1 ? 0.7 : 0.8), cx = x + (i + 0.5) * (w / n) + (rnd(i, 11 + layer) - 0.5) * 40,
+		th = [h * 0.13, h * 0.24, h * 0.40][layer] * (0.7 + 0.55 * rnd(i, 12 + layer)), top = base - th, col = ['#141a2c', '#0b0f1c', '#05070d'][layer];
+		const cols = Math.max(2, Math.floor(cw / [26, 34, 44][layer])), rows = Math.floor(th / [22, 30, 40][layer]);
+		return <g key={`${layer}_${i}`}><rect x={cx - cw / 2} y={top} width={cw} height={th + 4} fill={col} />
+			{layer > 0 && Array.from({length: rows}, (_, r) => Array.from({length: cols}, (_, c) => { const k = i * 97 + r * 13 + c * 7 + layer * 1000, lit = rnd(k, 3) < (layer === 2 ? 0.34 : 0.28) || (rnd(k, 5) < 0.04 && Math.sin(t * 0.4 + k) > 0.3);
+				return lit ? <rect key={`${r}_${c}`} x={cx - cw / 2 + 10 + c * (cw - 16) / cols} y={top + 14 + r * [22, 30, 40][layer]} width={[0, 12, 18][layer]} height={[0, 10, 16][layer]} fill={rnd(k, 4) < 0.6 ? '#dfeaff' : '#ffd9a0'} opacity={layer === 1 ? 0.55 : 0.85} /> : null; }))}</g>; };
+	return <g>
+		<defs><linearGradient id="nowSky" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stopColor="#0b1020" /><stop offset="0.7" stopColor="#1b2440" /><stop offset="1" stopColor="#2a2f52" /></linearGradient>
+			<clipPath id="nowWinClip"><rect x={x} y={y} width={w} height={h} /></clipPath></defs>
+		<g clipPath="url(#nowWinClip)">
+			<rect x={x} y={y} width={w} height={h} fill="url(#nowSky)" />
+			<Glow x={x + w / 2} y={base} r={w * 0.7} c="#ffcf9a" o={0.12} id="nowHaze" />
+			{Array.from({length: 40}, (_, i) => <circle key={i} cx={x + rnd(i, 21) * w} cy={y + rnd(i, 22) * h * 0.45} r={0.6 + 1.2 * rnd(i, 23) ** 3} fill="#eef0ff" opacity={0.25 + 0.5 * rnd(i, 24)} />)}
+			{[0, 1, 2].map((L) => Array.from({length: [11, 6, 3][L]}, (_, i) => tower(i, L)))}
+			{Array.from({length: 14}, (_, i) => <Glow key={i} x={x + 40 + rnd(i, 31) * (w - 80)} y={base - 6 - 30 * rnd(i, 32)} r={24} c={i % 3 ? '#ffd9a0' : '#bfe0ff'} o={0.35} id={`nowSt${i}`} />)}
+		</g>
+		{/* frame and mullions */}
+		<rect x={x} y={y} width={w} height={h} fill="none" stroke="#03040a" strokeWidth={22} />
+		<path d={`M${x + w / 3},${y} v${h} M${x + 2 * w / 3},${y} v${h} M${x},${y + h * 0.64} h${w}`} stroke="#03040a" strokeWidth={12} />
+	</g>;
+};
+/** a dark modern bedroom in the cold open's flat style: window wall on the right, the bed on the left */
+const NowRoom: React.FC<{t: number}> = ({t}) => <g>
+	<defs><linearGradient id="nowWall" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stopColor="#0c1020" /><stop offset="1" stopColor="#090b14" /></linearGradient></defs>
+	<rect x={-400} y={-300} width={W + 800} height={H + 600} fill="url(#nowWall)" />
+	<rect x={-400} y={900} width={W + 800} height={500} fill="#05060b" />
+	<CityNight t={t} />
+	<Glow x={WIN.x + WIN.w / 2} y={WIN.y + WIN.h * 0.6} r={760} c="#7fa6ff" o={0.1} id="nowWinG" />
+	{/* window light falling on the floor */}
+	<path d={`M${WIN.x},900 L${WIN.x + WIN.w},900 L${WIN.x + WIN.w + 260},1080 L${WIN.x - 240},1080 Z`} fill="#8fb0ff" opacity={0.06} />
+	{/* curtain gathered at the window's left */}
+	<path d={`M${WIN.x - 70},${WIN.y - 24} L${WIN.x + 18},${WIN.y - 24} L${WIN.x + 26},900 L${WIN.x - 82},900 Z`} fill="#0e1424" />
+	<path d={`M${WIN.x - 44},${WIN.y - 20} L${WIN.x - 50},898 M${WIN.x - 16},${WIN.y - 20} L${WIN.x - 14},898 M${WIN.x + 6},${WIN.y - 20} L${WIN.x + 12},898`} stroke="#090d18" strokeWidth={6} />
+	<rect x={WIN.x - 90} y={WIN.y - 34} width={WIN.w + 130} height={10} fill="#03040a" />
+	{/* bed: headboard, frame, mattress, rumpled duvet lit along its top by the window, pillow; a bedside table */}
+	<rect x={20} y={560} width={34} height={300} rx={6} fill="#10141f" />
+	<rect x={40} y={790} width={700} height={52} rx={6} fill="#0b0e18" /><rect x={60} y={838} width={16} height={62} fill="#0b0e18" /><rect x={704} y={838} width={16} height={62} fill="#0b0e18" />
+	<rect x={50} y={742} width={688} height={56} rx={16} fill="#1a2132" />
+	<path d="M70,750 Q180,700 300,738 Q420,712 540,742 Q640,724 730,752 L734,800 L66,800 Z" fill="#212a3e" />
+	<path d="M70,750 Q180,700 300,738 Q420,712 540,742 Q640,724 730,752" stroke="#3a4a6c" strokeWidth={4} fill="none" opacity={0.7} />
+	<path d="M80,742 Q78,700 120,694 L236,690 Q270,694 268,730 Q262,748 230,750 L110,752 Q82,752 80,742 Z" fill="#2a3348" />
+	<rect x={-60} y={690} width={64} height={210} fill="#0d111c" /><rect x={-40} y={640} width={10} height={50} fill="#0d111c" /><path d="M-62,640 L-8,640 L-20,604 L-50,604 Z" fill="#141a28" />
+</g>;
 const Room: React.FC<{tau: number; t: number}> = ({tau, t}) => {
 	const T = OUT_T, push = ease(seg(tau, T.room, T.win)), dive = easeIn(seg(tau, T.win, T.hill + 0.3));
-	const z = lerp(1.0, 1.1, push) * lerp(1, 7, dive), fx = lerp(820, 1120, dive), fy = lerp(640, 250, dive);
+	const z = lerp(1.0, 1.1, push) * lerp(1, 7, dive), fx = lerp(820, 1360, dive), fy = lerp(640, 260, dive);
 	const breathe = 0.004 * Math.sin(t * 1.6);
 	return <Cam zoom={z} fx={fx} fy={fy}>
-		<image href={staticFile('ep41/now_room.webp')} x={0} y={0} width={W} height={H} preserveAspectRatio="xMidYMid slice" />
-		{/* the city breathes: a few windows across the street switch on and off */}
-		{Array.from({length: 6}, (_, i) => { const on = Math.sin(t * (0.3 + 0.2 * rnd(i, 2)) + i * 2.1) > 0.6; return on ? <rect key={i} x={[700, 760, 1395, 1455, 1508, 1452][i]} y={[440, 590, 500, 620, 700, 760][i]} width={44} height={22} fill="#ffe2a8" opacity={0.55} /> : null; })}
-		<Glow x={1150} y={520} r={520} c="#7fa6ff" o={0.08} id="nowWin" />
+		<NowRoom t={t} />
 		<g transform={`translate(0,${-breathe * RF.h})`}>
-			<Rimmed x={RF.x} ground={RF.ground} h={RF.h} pose={NOW_SIT} look={NOW_LOOK} col="#080a12" rim="#9fc0ff" rimOp={0.42} rimDx={2.4} rimDy={-1} T={tau} />
+			<Rimmed x={RF.x} ground={RF.ground} h={RF.h} pose={NOW_SIT} look={NOW_LOOK} col="#070910" rim="#9fc0ff" rimOp={0.42} rimDx={2.4} rimDy={-1} T={tau} />
 			<HeldPhone pose={NOW_SIT} x={RF.x} ground={RF.ground} h={RF.h} id="nowPh" />
 		</g>
 	</Cam>;

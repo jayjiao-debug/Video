@@ -42,9 +42,9 @@ export const camT = (zoom: number, fx: number, fy: number, px: number, py: numbe
 
 /* ---------- poses (facing right, toward the fire and the east) ---------- */
 const KN = {hip: 0.27, lt: 70, lk: 160, rt: 74, rk: 164, lf: 186, rf: 186};   // kneeling upright on both knees
-const P_HOLD = fkPose({...KN, lean: 10, neck: 6, la: 62, le: 56, ra: 56, re: 62});
-const P_LOOK = fkPose({...KN, lean: -2, neck: -30, la: 50, le: 50, ra: 46, re: 56});
-const P_OFFER = fkPose({...KN, lean: -6, neck: -26, la: 146, le: 16, ra: 140, re: 22});
+const P_HOLD = fkPose({...KN, lean: 10, neck: 6, la: 62, le: 56, ra: 62, re: 56});   // both hands under the shell, one behind the other
+const P_LOOK = fkPose({...KN, lean: -2, neck: -30, la: 50, le: 50, ra: 50, re: 50});
+const P_OFFER = fkPose({...KN, lean: -6, neck: -26, la: 146, le: 16, ra: 146, re: 16});
 /** two-link IK for the right arm: returns {ra, re} so the wrist lands on the target (body units, y up) */
 const BLU = 0.194, BLF = 0.135;
 const ikArm = (base: Parameters<typeof fkPose>[0], target: [number, number]) => {
@@ -129,24 +129,26 @@ const PlastronV: React.FC<PlastronState & {tf: string}> = ({tf, cosT, heat, newK
 const mixHex = (a: string, b: string, u: number) => { const p = (s: string, i: number) => parseInt(s.slice(1 + 2 * i, 3 + 2 * i), 16), c = (i: number) => Math.round(lerp(p(a, i), p(b, i), cl(u))).toString(16).padStart(2, '0'); return `#${c(0)}${c(1)}${c(2)}`; };
 
 /* ---------- fire (exported: the 杜甫 beacon uses the same flame so the hand-over matches) ---------- */
-export const Blaze: React.FC<{x: number; y: number; s?: number; t: number; lean?: number; seed?: number; op?: number}> = ({x, y, s = 1, t, lean = 0, seed = 0, op = 1}) => {
+export const Blaze: React.FC<{x: number; y: number; s?: number; t: number; lean?: number; seed?: number; op?: number; bed?: number; bedId?: string}> = ({x, y, s = 1, t, lean = 0, seed = 0, op = 1, bed = 0, bedId = 'blazeBed'}) => {
 	const tongue = (i: number, hgt: number, wid: number, ph: number) => { const n1 = Math.sin(t * (7 + i) + ph) * 0.12 + Math.sin(t * (13.3 + i * 0.7) + ph * 2) * 0.07, hh = hgt * (1 + n1);
 		const tipX = lean * hh + Math.sin(t * (5.1 + i * 0.4) + ph) * wid * 0.35, mx = lean * hh * 0.45 + Math.sin(t * (8.7 + i) + ph * 1.3) * wid * 0.18;
 		return `M${-wid},0 C${-wid * 1.05},${-hh * 0.35} ${mx - wid * 0.55},${-hh * 0.55} ${tipX},${-hh} C${mx + wid * 0.55},${-hh * 0.5} ${wid * 1.05},${-hh * 0.3} ${wid},0 Z`; };
 	const L = [[0, 150, 54, '#e2501c', 0.9], [1, 128, 40, '#ff7e26', 1], [2, 118, 30, '#ff9b2e', 1], [3, 96, 24, '#ffbe48', 1], [4, 70, 17, '#ffe08a', 1], [5, 40, 11, '#fff4d2', 1]] as const;
 	const side = [[-30, 92, 20, '#ff8a2a'], [28, 104, 22, '#ff8a2a'], [-14, 70, 14, '#ffc24a'], [16, 76, 14, '#ffc24a']] as const;
 	return <g transform={`translate(${x},${y}) scale(${s})`} opacity={op}>
+		{bed > 0 && <><defs><radialGradient id={bedId}><stop offset="0" stopColor="#ffbe5a" /><stop offset="0.3" stopColor="#ff9434" /><stop offset="0.65" stopColor="#e2642a" /><stop offset="1" stopColor="#b2471e" /></radialGradient></defs>
+			<circle cx={0} cy={-60} r={260} fill={`url(#${bedId})`} opacity={bed} /></>}
 		{L.slice(0, 1).map(([i, h0, w0, c, o]) => <path key={i} d={tongue(i, h0, w0, seed + i)} fill={c} opacity={o} />)}
 		{side.map(([dx, h0, w0, c], i) => <path key={'s' + i} d={tongue(i + 7, h0, w0, seed + i * 2.3)} fill={c} transform={`translate(${dx},0)`} />)}
 		{L.slice(1).map(([i, h0, w0, c, o]) => <path key={i} d={tongue(i, h0, w0, seed + i * 1.7)} fill={c} opacity={o} />)}
 	</g>;
 };
-const FirePit: React.FC<{t: number; lean: number; tau: number; zoom: number}> = ({t, lean, tau, zoom}) => <g>
+const FirePit: React.FC<{t: number; lean: number; tau: number; zoom: number; bed?: number}> = ({t, lean, tau, zoom, bed = 0}) => <g>
 	<Glow x={FX} y={GY - 70} r={420} c="#ff8a3a" o={0.42 + 0.06 * Math.sin(t * 13) * Math.sin(t * 7.1)} id="shFireG" />
 	<ellipse cx={FX} cy={GY + 6} rx={260} ry={34} fill="#ff8a3a" opacity={0.14} />
 	<Smoke x={FX} y={GY - 150} tau={tau} lean={lean} s={1.1} op={0.8} seed={3} />
 	<path d={`M${FX - 70},${GY + 2} L${FX + 70},${GY - 4} M${FX - 60},${GY - 8} L${FX + 64},${GY + 4}`} stroke="#1a0c06" strokeWidth={13} strokeLinecap="round" />
-	<Blaze x={FX} y={GY - 6} s={1.05} t={t} lean={lean} />
+	<Blaze x={FX} y={GY - 6} s={1.05} t={t} lean={lean} bed={bed} bedId="shBed" />
 	{/* coals and ring of stones */}
 	<ellipse cx={FX} cy={GY - 2} rx={66} ry={9} fill="#ff6a1a" opacity={0.75} />
 	{Array.from({length: 9}, (_, i) => { const a = (i / 8 - 0.5) * 2.6, x = FX + Math.sin(a) * 96; return <ellipse key={i} cx={x} cy={GY + 4 - Math.cos(a) * 4} rx={20 + 6 * rnd(i, 3)} ry={13} fill="#0a0610" />; })}
@@ -251,8 +253,8 @@ export const SHANG3: React.FC<{tau: number; t: number}> = ({tau, t}) => {
 		[T.SQe - 0.2, 1.1, [900, 560], [920, 640]],                 // low angle, tilt up to the clouded east
 		[T.touch - 0.1, 3.0, [P[0] + 40, P[1] + 10], [900, 500]],    // push in to the hands, rod and shell
 		[T.crack + 0.35, 5.6, toW(NX + 4, 14), [960, 520]],           // the crack
-		[T.glyph0 - 0.25, 9.2, toW(-30, 10), [960, 540]],             // tight on the crack and the column of graphs
-		[T.offer + 0.2, 10.4, toW(-31, 10), [960, 540]],
+		[T.glyph0 - 0.25, 9.2, toW(-30, 10), [960, 600]],             // tight on the crack and the column of graphs (the tail and hands stay below the frame)
+		[T.offer + 0.2, 10.4, toW(-31, 10), [960, 600]],
 		[T.sky, 1.35, toW(-30, 10), [700, 520]],                      // pull back and tilt up with the raised shell: the clouded eastern sky
 		[T.fire, 1.33, FIRE_PT, [700 + 1.35 * (FIRE_PT[0] - SHELL_UP[0]), 520 + 1.35 * (FIRE_PT[1] - SHELL_UP[1])]],
 		[T.end, SHANG_END.zoom, FIRE_PT, [W / 2, H / 2]],             // into the flame
@@ -299,7 +301,7 @@ export const SHANG3: React.FC<{tau: number; t: number}> = ({tau, t}) => {
 				<Layer cam={0} f={0.55} base={826} amp={14} seed={8} col="#120d1c" period={420} pad={300} item={(x, gy, i) => i === 0 ? <Sprite k="tree" x={x - 120} y={gy} h={330} c="#0f0a17" /> : i === 1 ? <Sprite k="ding" x={x - 160} y={gy} h={96} c="#0f0a17" /> : (i % 1 === 0 && i > 1 && i < 5) ? <Millet x={x} gy={gy} h={60 + 20 * rnd(i, 2)} col="#0f0a17" t={t} wind={wind} seed={i} /> : null} />
 				{/* the near ground where he kneels */}
 				<path d={`M-200,${H + 200} L-200,${GY - 6} Q400,${GY - 14} ${DX},${GY - 2} Q1300,${GY + 6} ${W + 200},${GY - 10} L${W + 200},${H + 200} Z`} fill="#0b0812" />
-				<FirePit t={t} lean={lean} tau={tau} zoom={cam.zoom} />
+				<FirePit t={t} lean={lean} tau={tau} zoom={cam.zoom} bed={sm(seg(tau, T.end - 0.8, T.end - 0.1))} />
 				{/* a forked stake holds the resting rod; the rod: copper-alloy, its end glowing */}
 				<path d={`M975,${GY + 2} L975,724 M975,736 L966,716 M975,734 L986,714`} stroke="#120a10" strokeWidth={5} strokeLinecap="round" fill="none" />
 				<g>
@@ -316,7 +318,7 @@ export const SHANG3: React.FC<{tau: number; t: number}> = ({tau, t}) => {
 					<circle cx={rodTipD[0]} cy={rodTipD[1]} r={3} fill="#fff0c0" />
 				</g>}
 				{/* left fingers over the shell's edge */}
-				{[-18, -10, 10].map((lx, i) => { const e = toW(lx * Math.sign(cosT || 1), 104); return <ellipse key={i} cx={e[0]} cy={e[1] + 1} rx={3.4} ry={5.2} fill="#0a0710" transform={`rotate(${rot} ${e[0]} ${e[1]})`} />; })}
+				{/* (the hands hold the shell from behind its tail; nothing pokes over the edge) */}
 				{/* the puff of smoke and sparks at the touch */}
 				{tau > T.touch - 0.05 && tau < T.flipA + 0.8 && Array.from({length: 10}, (_, i) => { const u = cl((tau - T.touch) / (0.9 + 0.3 * rnd(i, 3))); return u <= 0 || u >= 1 ? null : <circle key={i} cx={holeW[0] + (rnd(i, 1) - 0.5) * 40 * u - 10 * u} cy={holeW[1] - 50 * u * (0.5 + rnd(i, 2))} r={2 + 9 * u} fill={i < 4 ? '#ffd27a' : '#6a5a66'} opacity={(1 - u) * (i < 4 ? 0.9 : 0.45)} />; })}
 				{/* foreground grass, blurred */}
@@ -325,7 +327,7 @@ export const SHANG3: React.FC<{tau: number; t: number}> = ({tau, t}) => {
 			</g>}
 			{!showWorld && <PlastronV tf={tfP} cosT={cosT} heat={heat} newK={newK} glyph={glyph} cool={cool} t={t} />}
 		</g>
-		{cam.zoom > 3 && <rect width={W} height={H} fill="url(#shCuVig)" opacity={0.75 * seg(cam.zoom, 3, 7)} />}
+		{cam.zoom > 3 && tau < T.fire + 0.4 && <rect width={W} height={H} fill="url(#shCuVig)" opacity={0.45 * seg(cam.zoom, 3, 7) * (1 - seg(tau, T.fire - 0.2, T.fire + 0.4))} />}   {/* the vignette belongs to the shell close-up only, not to the fire */}
 		{/* overlays drawn in screen space so their glow does not scale with the camera */}
 		{dark > 0 && <g><rect width={W} height={H} fill="#030203" opacity={dark} />
 			<radialGradient id="shWarm" cx="0.5" cy="0.5" r="0.6"><stop offset="0" stopColor="#3a1a08" stopOpacity={0.15} /><stop offset="1" stopColor="#000" stopOpacity="0" /></radialGradient>

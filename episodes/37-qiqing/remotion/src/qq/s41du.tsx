@@ -50,10 +50,18 @@ const ik = (base: Parameters<typeof fkPose>[0], target: [number, number]) => {
 };
 const KB = {hip: 0.21, lean: 30, neck: 18, lt: 82, lk: 172, rt: 86, rk: 176, lf: 180, rf: 180, la: 44, le: 70, ra: 40, re: 70};
 const toBody = (p: [number, number]): [number, number] => [(p[0] - DX) / DH, (GY - p[1]) / DH];
+type Pt = [number, number];
+/** a target that eases from key to key (a key's point may follow the time, e.g. a folding edge) — no jumps between frames */
+const glide = (tau: number, keys: [number, Pt | ((tau: number) => Pt)][]): Pt => { const at = (k: number): Pt => { const v = keys[k][1]; return typeof v === 'function' ? v(tau) : v; };
+	if (tau <= keys[0][0]) return at(0); for (let i = 0; i < keys.length - 1; i++) if (tau < keys[i + 1][0]) { const u = sm((tau - keys[i][0]) / Math.max(1e-6, keys[i + 1][0] - keys[i][0])), a = at(i), b = at(i + 1); return [lerp(a[0], b[0], u), lerp(a[1], b[1], u)]; }
+	return at(keys.length - 1); };
+const CH_T = (i: number) => (i < 5 ? DU_T.char0 + i * DU_T.charStep : DU_T.col2 + (i - 5) * DU_T.charStep), CH_D = DU_T.charStep * 0.9;
+const WEND = CH_T(9) + CH_D + 0.2;                        // the brush is put down
+const F1A = DU_T.foldA + 0.25, F1B = F1A + 0.6, F2A = DU_T.foldB + 0.15, F2B = F2A + 0.6;   // the two folds (right third, then left third)
 
 /* ---------- architecture (all drawn standing on the ground y they are given) ---------- */
 /** 烽燧: a square, tapered rammed-earth beacon tower with a parapet and a brushwood stack on top */
-const Beacon: React.FC<{x: number; gy: number; s: number; col: string; lit: number; t: number; seed: number; lean?: number}> = ({x, gy, s, col, lit, t, seed, lean = -0.25}) => {
+const Beacon: React.FC<{x: number; gy: number; s: number; col: string; lit: number; t: number; seed: number; lean?: number; bed?: number}> = ({x, gy, s, col, lit, t, seed, lean = -0.25, bed = 0}) => {
 	const bw = 70 * s, tw = 46 * s, h = 112 * s, top = gy - h;
 	return <g>
 		{lit > 0 && <Glow x={x} y={top - 30 * s} r={150 * s} c="#ffb050" o={0.5 * lit} id={`duBg${seed}`} />}
@@ -64,7 +72,7 @@ const Beacon: React.FC<{x: number; gy: number; s: number; col: string; lit: numb
 		{/* the brushwood stack */}
 		<path d={`M${x - 15 * s},${top - 4 * s} L${x - 3 * s},${top - 26 * s} L${x + 2 * s},${top - 22 * s} L${x + 15 * s},${top - 4 * s} Z`} fill={col} />
 		{Array.from({length: 5}, (_, i) => <path key={i} d={`M${x + (-12 + i * 6) * s},${top - 5 * s} L${x + (-6 + i * 3) * s + (rnd(i, seed) - 0.5) * 8 * s},${top - 30 * s}`} stroke={col} strokeWidth={1.6 * s} />)}
-		{lit > 0 && <Blaze x={x} y={top - 6 * s} s={0.36 * s * (0.4 + 0.6 * lit)} t={t} lean={lean} seed={seed} op={Math.min(1, lit * 1.5)} />}
+		{lit > 0 && <Blaze x={x} y={top - 6 * s} s={0.36 * s * (0.4 + 0.6 * lit)} t={t} lean={lean} seed={seed} op={Math.min(1, lit * 1.5)} bed={bed} bedId="duBedB" />}
 	</g>;
 };
 /** 大雁塔: square brick pagoda of seven storeys with corbelled eaves and a finial, on its own mound */
@@ -161,14 +169,14 @@ const BEACONS: [number, number, number, number, number, number, number | null][]
 	[0.02, 560, 90, 2, bx0(150, 0.02), 0.6, 4],
 ];
 /** a hand for the close-ups: palm, four fingers and a thumb, smaller than the figure's mitt (which is masked out) */
-const CuHand: React.FC<{w: [number, number]; e: [number, number]; h: number; col: string; curl?: number}> = ({w, e, h, col, curl = 0.25}) => {
-	const dx = w[0] - e[0], dy = w[1] - e[1], l = Math.hypot(dx, dy) || 1, ux = dx / l, uy = dy / l; let nx = -uy, ny = ux; if (ny > 0) { nx = -nx; ny = -ny; }   // n: the thumb side, toward screen-up
+const CuHand: React.FC<{w: [number, number]; e: [number, number]; h: number; col: string; curl?: number; op?: number}> = ({w, e, h, col, curl = 0.25, op = 1}) => {
+	const dx = w[0] - e[0], dy = w[1] - e[1], l = Math.hypot(dx, dy) || 1, ux = dx / l, uy = dy / l, nx = uy, ny = -ux;   // n: the thumb side, fixed (forward when the forearm points down) — never flips between frames
 	const P = (a: number, b: number): [number, number] => [w[0] + (ux * a + nx * b) * h, w[1] + (uy * a + ny * b) * h], f = (p: [number, number]) => `${p[0].toFixed(1)},${p[1].toFixed(1)}`;
 	const palm = `M${f(P(-0.004, 0.012))} L${f(P(0.03, 0.014))} L${f(P(0.032, -0.012))} L${f(P(-0.004, -0.012))} Z`;
 	const fingers = [0.0095, 0.0032, -0.0032, -0.0095].map((b, j) => { const L = [0.021, 0.024, 0.022, 0.017][j], c = curl * (0.6 + 0.2 * j), a = Math.cos(c), s2 = Math.sin(c);
 		const d: [number, number] = [a, -s2 * 0.9]; const p0 = P(0.03, b), p1 = P(0.03 + d[0] * L * 0.55, b + d[1] * L * 0.55), p2 = P(0.03 + d[0] * L * 0.9, b + d[1] * L * 1.25);
 		return <path key={j} d={`M${f(p0)} Q${f(p1)} ${f(p2)}`} stroke={col} strokeWidth={0.0062 * h} strokeLinecap="round" fill="none" />; });
-	return <g><path d={palm} fill={col} />{fingers}<path d={`M${f(P(0.006, 0.01))} Q${f(P(0.016, 0.022))} ${f(P(0.027, 0.022))}`} stroke={col} strokeWidth={0.0075 * h} strokeLinecap="round" fill="none" /></g>;
+	return <g opacity={op}><path d={palm} fill={col} />{fingers}<path d={`M${f(P(0.006, 0.01))} Q${f(P(0.016, 0.022))} ${f(P(0.027, 0.022))}`} stroke={col} strokeWidth={0.0075 * h} strokeLinecap="round" fill="none" /></g>;
 };
 
 export const DU3: React.FC<{tau: number; t: number}> = ({tau, t}) => {
@@ -180,33 +188,35 @@ export const DU3: React.FC<{tau: number; t: number}> = ({tau, t}) => {
 	const fs = lerp(0.36, 0.9, ease(seg(tau, T.kneelB - 0.5, T.char0 + 0.2)));     // the camera rises over the table
 	const sheetC: [number, number] = [tableX + 52, tableTop + 2];
 	const chars = Array.from({length: 10}, (_, i) => { const t0 = (i < 5 ? T.char0 + i * T.charStep : T.col2 + (i - 5) * T.charStep); return easeOut(seg(tau, t0, t0 + T.charStep * 0.9)); });
-	const fold1 = seg(tau, T.foldA, T.foldA + 0.6), fold2 = seg(tau, T.foldB, T.foldB + 0.6), band = seg(tau, T.band, T.bandEnd);
+	const fold1 = seg(tau, F1A, F1B), fold2 = seg(tau, F2A, F2B), band = seg(tau, T.band, T.bandEnd);
 	const sheetW = (lx: number, ly: number): [number, number] => [sheetC[0] + lx * PS, sheetC[1] + ly * PS * fs];
 	/* --- Du Fu --- */
 	let pose = tau < T.kneelA ? mixPose(walkToStand('08_04', tau, stopK), POSES.lookUp, lookK) : POSES.stand;
 	// writing: the brush tip follows the character being written; between strokes it lifts a little
 	let brushTip: [number, number] | null = null;
+	let brushOp = 0;
 	if (tau >= T.kneelA) {
-		let tip = sheetW(COLX[0], ROW0 - 10), lift = 18;
-		const cur = chars.findIndex((k) => k < 1);
-		if (tau >= T.char0 - 0.3 && tau < T.foldA - 0.3 && cur >= 0) { const c = Math.floor(cur / 5), i = cur % 5, k = chars[cur]; tip = sheetW(COLX[c] + Math.sin(k * 9) * 3, ROW0 - 9 + i * ROWD + k * 18); lift = k > 0 && k < 1 ? 0 : 8; }
-		brushTip = [tip[0], tip[1] - lift];
-		let hand: [number, number] = [brushTip[0] - 4, brushTip[1] - 30];
-		let leftHand: [number, number] = sheetW(-48, 30);
-		// after the poem: the brush is laid on the table; the hands fold the sheet, slip the band on, and go back to the lap
-		const lap: [number, number] = [DX + 0.2 * DH, GY - 0.24 * DH], lapK = sm(seg(tau, T.bandEnd, T.bandEnd + 0.7));
-		if (tau >= T.foldA - 0.5) {
-			brushTip = null;
-			const r = 1 - 2 * sm(fold1), l = 1 - 2 * sm(fold2);
-			const rh0 = sheetW(25 + 50 * r, 4), lh0 = sheetW(-25 - 50 * l, 4), bandP = sheetW(lerp(20, 0, band), lerp(-60, -6, band));
-			hand = tau < T.foldA ? sheetW(70, 6) : tau < T.band ? rh0 : bandP;
-			leftHand = tau < T.foldB ? sheetW(-50, 6) : tau < T.band ? lh0 : sheetW(-20, 30);
-			hand = [lerp(hand[0], lap[0] + 10, lapK), lerp(hand[1], lap[1], lapK)]; leftHand = [lerp(leftHand[0], lap[0], lapK), lerp(leftHand[1], lap[1] + 6, lapK)];
-		}
+		// the brush tip runs a continuous path: down each character as it is revealed, a small lifted arc to the next (no jumps)
+		const charPos = (i: number, k: number): Pt => sheetW(COLX[Math.floor(i / 5)] + 1.4 * Math.sin(k * Math.PI), ROW0 - 9 + (i % 5) * ROWD + k * 18);
+		const brushAt = (u: number): Pt => {
+			if (u < CH_T(0)) { const p = charPos(0, 0); return [p[0], p[1] - 12 * (1 - sm(seg(u, CH_T(0) - 0.3, CH_T(0))))]; }
+			for (let i = 0; i < 10; i++) { const s0 = CH_T(i), e0 = s0 + CH_D;
+				if (u < e0) return charPos(i, easeOut(seg(u, s0, e0)));
+				if (i < 9 && u < CH_T(i + 1)) { const v = seg(u, e0, CH_T(i + 1)), a = charPos(i, 1), b = charPos(i + 1, 0), q = sm(v); return [lerp(a[0], b[0], q), lerp(a[1], b[1], q) - Math.sin(Math.PI * v) * (i === 4 ? 16 : 9)]; } }
+			const p = charPos(9, 1); return [p[0], p[1] - 16 * sm(seg(u, CH_T(9) + CH_D, WEND))]; };
+		const writeHand = (u: number): Pt => { const b = brushAt(u); return [b[0] - 4, b[1] - 30]; };
+		const r = 1 - 2 * sm(fold1), l = 1 - 2 * sm(fold2);
+		const rh0 = (): Pt => sheetW(25 + 50 * r, 4), lh0 = (): Pt => sheetW(-25 - 50 * l, 4), bandP = (): Pt => sheetW(lerp(20, 0, band), lerp(-60, -6, band));
+		const lap: Pt = [DX + 0.2 * DH, GY - 0.24 * DH];
+		// after the poem: the brush is put down, the right hand folds the right third, the left hand the left third, the band goes on, hands to the lap
+		const hand: Pt = tau < WEND ? writeHand(tau) : glide(tau, [[WEND, writeHand(WEND)], [F1A - 0.05, sheetW(74, 4)], [F1A, rh0], [F1B, rh0], [F1B + 0.25, sheetW(12, 40)], [T.band, bandP], [T.bandEnd, bandP], [T.bandEnd + 0.7, [lap[0] + 10, lap[1]]]]);
+		const leftHand: Pt = glide(tau, [[0, sheetW(-48, 30)], [F2A - 0.4, sheetW(-48, 30)], [F2A, sheetW(-75, 4)], [F2A + 0.001, lh0], [F2B, lh0], [T.band + 0.15, sheetW(-20, 30)], [T.bandEnd, sheetW(-20, 30)], [T.bandEnd + 0.7, [lap[0], lap[1] + 6]]]);
+		brushTip = tau < WEND + 0.25 ? (tau < WEND ? brushAt(tau) : [hand[0] + 4, hand[1] + 30]) : null;
+		brushOp = 1 - seg(tau, WEND, WEND + 0.25);
 		const R = ik(KB, toBody(hand)), L = ik(KB, toBody(leftHand));
 		const writePose = fkPose({...KB, la: L.a, le: L.e, ra: R.a, re: R.e});
 		pose = mixPose(mixPose(POSES.stand, KNEEL, kneelK), writePose, sm(seg(tau, T.kneelB - 0.3, T.kneelB + 0.3)));
-		if (tau < T.kneelB) brushTip = null;
+		if (tau < T.kneelB) { brushTip = null; brushOp = 0; }
 	}
 	const rh = jointAt(pose, 'RHand', DX, GY, DH);
 	/* --- camera --- */
@@ -233,13 +243,15 @@ export const DU3: React.FC<{tau: number; t: number}> = ({tau, t}) => {
 	const CT = camT(c.zoom, c.F[0], c.F[1], c.S[0] - c.F[0] + dpx, c.S[1] - c.F[1] + dpy);
 	const far = c.zoom < 45;                // skip the heavy layers while we are deep inside the flame
 	const tint = SHANG_END.tint * (1 - seg(tau, 0, 0.7));
+	const fireBed = 1 - sm(seg(tau, 0.45, 1.45));   // the same warm bed the 商 fire ends on; the world appears out of it as we pull back
 	const lit = (L: number | null) => L === null ? 1 : easeOut(seg(tau, T.beacon0 + L * T.beaconStep, T.beacon0 + L * T.beaconStep + 0.5));
 	const breachX = DX + 330 + CAM_STOP * 0.25, gateX = 1500;
 	const craneY = 300 * sm(seg(tau, T.craneA, T.craneB)) * (1 - sm(seg(tau, T.craneDownA, T.craneDownB)));
 	const cy = (v: number) => `translate(0,${(craneY * v).toFixed(2)})`;
 	/* close-up hands: over the table the figure's mitts are masked and drawn as hands */
 	const handInfo = (['R', 'L'] as const).map((sd) => ({w: jointAt(pose, `${sd}Hand`, DX, GY, DH), e: jointAt(pose, `${sd}Elb`, DX, GY, DH)}));
-	const cuHands = handInfo.filter((hi) => tau >= T.kneelB - 0.15 && hi.w[0] > DX + 0.27 * DH && hi.w[1] < GY - 0.1 * DH);
+	const handK = seg(tau, T.kneelB + 0.05, T.kneelB + 0.35);   // drawn hands from the kneel to the end (they rest in the lap, clear of the body)
+	const cuHands = handK > 0 ? handInfo : [];
 	return <g>
 		<defs>
 			<filter id="duBlurS" x="-100%" y="-100%" width="300%" height="300%"><feGaussianBlur stdDeviation="10" /></filter>
@@ -261,7 +273,7 @@ export const DU3: React.FC<{tau: number; t: number}> = ({tau, t}) => {
 				{BEACONS.filter((b) => b[0] === 0.04).map((b, i) => { const x = b[4] - cam * b[0]; return <Beacon key={'b' + i} x={x} gy={ridgeY(cam, b[0], b[1], b[2], b[3])(x)} s={b[5]} col="#7a3a46" lit={lit(b[6])} t={t} seed={30 + i} />; })}
 				</g>
 				<g transform={cy(0.12)}><Layer cam={cam} f={0.07} base={650} amp={90} seed={9} col="#6e3646" />
-				{BEACONS.filter((b) => b[0] === 0.07).map((b, i) => { const x = b[4] - cam * b[0]; return <Beacon key={'c' + i} x={x} gy={ridgeY(cam, b[0], b[1], b[2], b[3])(x)} s={b[5]} col="#6e3646" lit={lit(b[6])} t={t} seed={i === 0 ? SHANG_END.seed : 40 + i} lean={i === 0 ? SHANG_END.lean : -0.25} />; })}
+				{BEACONS.filter((b) => b[0] === 0.07).map((b, i) => { const x = b[4] - cam * b[0]; return <Beacon key={'c' + i} x={x} gy={ridgeY(cam, b[0], b[1], b[2], b[3])(x)} s={b[5]} col="#6e3646" lit={lit(b[6])} t={t} seed={i === 0 ? SHANG_END.seed : 40 + i} lean={i === 0 ? SHANG_END.lean : -0.25} bed={i === 0 ? fireBed : 0} />; })}
 				</g>
 				{/* the city: pagoda and halls on their own ground */}
 				<g transform={cy(0.18)}><Layer cam={cam} f={0.1} base={712} amp={26} seed={11} col="#5e2c3e" period={520} pad={500} item={(x, gy, i) => i === 2 ? <Pagoda x={x} gy={gy} s={1.25} col="#5e2c3e" /> : i % 2 ? <TangHall x={x} gy={gy} w={150 + 30 * rnd(i, 2)} col="#5e2c3e" burned={i === 3 ? 1 : 0} t={t} tau={tau} seed={i} /> : null} />
@@ -271,9 +283,6 @@ export const DU3: React.FC<{tau: number; t: number}> = ({tau, t}) => {
 				{/* rammed-earth ward wall with a gate tower and a breach */}
 				<g transform={cy(0.4)}><WardWall cam={cam} f={0.25} gy={800} col="#4a2433" breachX={breachX} gateX={gateX} t={t} tau={tau} />
 				<rect x={-300} y={798} width={W + 600} height={400} fill="#4a2433" />
-				{/* crows lifting from a burned roof */}
-				{tau > T.crows && tau < T.crows + 4 && Array.from({length: 8}, (_, i) => { const u = tau - T.crows - rnd(i, 1) * 0.4; if (u < 0) return null; const x = 1240 - cam * 0.18 + 30 * rnd(i, 2) - u * (90 + 60 * rnd(i, 3)), y = 640 - u * (70 + 40 * rnd(i, 4)) + Math.sin(u * 3 + i) * 10, fl = Math.sin(t * 22 + i * 2) * 5;
-					return <path key={i} d={`M${x - 9},${y + fl} Q${x - 4},${y - 2} ${x},${y + 2} Q${x + 4},${y - 2} ${x + 9},${y + fl}`} stroke="#1d0f16" strokeWidth={2.4} fill="none" />; })}
 				</g>
 				<g transform={cy(0.65)}><Layer cam={cam} f={0.55} base={846} amp={10} seed={14} col="#2a141e" period={380} pad={400} item={(x, gy, i) => i % 4 === 0 ? <Apricot x={x} gy={gy} h={300 + 40 * rnd(i, 3)} col="#2a141e" t={t} seed={i} /> : i % 4 === 2 ? <g><path d={`M${x - 70},${gy + 4} L${x - 64},${gy - 52} L${x - 30},${gy - 58} L${x - 18},${gy - 36} L${x + 10},${gy - 44} L${x + 30},${gy + 4} Z`} fill="#2a141e" /><Grass x={x + 50} gy={gy} h={90} col="#2a141e" t={t} seed={i} /></g> : <Grass x={x} gy={gy} h={70 + 40 * rnd(i, 5)} col="#2a141e" t={t} seed={i + 3} n={12} />} />
 				</g>
@@ -290,21 +299,24 @@ export const DU3: React.FC<{tau: number; t: number}> = ({tau, t}) => {
 				</g>
 			</g>}
 			{/* the first beacon's flame on top (kept while we are inside it) */}
-			{!far && <g><Glow x={fireBase[0]} y={fireBase[1] - 20 * b0s} r={150 * b0s} c="#ff8a3a" o={0.6} id="duB0g" /><Blaze x={fireBase[0]} y={fireBase[1]} s={blazeS} t={t} lean={SHANG_END.lean} seed={SHANG_END.seed} /></g>}
+			{!far && <g><Glow x={fireBase[0]} y={fireBase[1] - 20 * b0s} r={150 * b0s} c="#ff8a3a" o={0.6} id="duB0g" /><Blaze x={fireBase[0]} y={fireBase[1]} s={blazeS} t={t} lean={SHANG_END.lean} seed={SHANG_END.seed} bed={fireBed} bedId="duBed0" /></g>}
 			{far && <g transform={cy(1)}>
 				<Sheet x={sheetC[0]} y={sheetC[1]} fs={fs} chars={chars} fold1={fold1} fold2={fold2} band={band} dim={1 - sm(seg(tau, T.kneelA + 0.2, T.char0 - 0.1))} />
 				{cuHands.length > 0 && <mask id="duHandMask" maskUnits="userSpaceOnUse" x={-4000} y={-4000} width={12000} height={12000}><rect x={-4000} y={-4000} width={12000} height={12000} fill="#fff" />
-					{cuHands.map((hi, i) => { const l = Math.hypot(hi.w[0] - hi.e[0], hi.w[1] - hi.e[1]) || 1; return <circle key={i} cx={hi.w[0] + (hi.w[0] - hi.e[0]) / l * 0.04 * DH} cy={hi.w[1] + (hi.w[1] - hi.e[1]) / l * 0.04 * DH} r={0.033 * DH} fill="#000" />; })}</mask>}
+					{cuHands.map((hi, i) => { const l = Math.hypot(hi.w[0] - hi.e[0], hi.w[1] - hi.e[1]) || 1, v = Math.round(255 * (1 - handK)); return <circle key={i} cx={hi.w[0] + (hi.w[0] - hi.e[0]) / l * 0.04 * DH} cy={hi.w[1] + (hi.w[1] - hi.e[1]) / l * 0.04 * DH} r={0.033 * DH} fill={`rgb(${v},${v},${v})`} />; })}</mask>}
 				<g mask={cuHands.length > 0 ? 'url(#duHandMask)' : undefined}><Rimmed x={DX} ground={GY} h={DH} pose={pose} look={look} col="#120810" rim="#ffcf9a" rimOp={0.18} rimDx={-2} rimDy={-1.4} T={tau} lag={tau < T.stopB ? gaitPose('08_04', (tau - 0.05) / CYCLE) : undefined} /></g>
-				{tau >= T.foldA - 0.5 && <line x1={tableX + 120} y1={tableTop - 4} x2={tableX + 160} y2={tableTop - 8} stroke="#2a1a12" strokeWidth={2.4} strokeLinecap="round" />}
+				{tau >= WEND && <line x1={tableX + 120} y1={tableTop - 4} x2={tableX + 160} y2={tableTop - 8} stroke="#2a1a12" strokeWidth={2.4} strokeLinecap="round" opacity={seg(tau, WEND, WEND + 0.25)} />}
 				{/* the brush, held in the fingers */}
 				{brushTip && (() => { const hi = handInfo[0], l = Math.hypot(hi.w[0] - hi.e[0], hi.w[1] - hi.e[1]) || 1, g0: [number, number] = [hi.w[0] + (hi.w[0] - hi.e[0]) / l * 0.03 * DH, hi.w[1] + (hi.w[1] - hi.e[1]) / l * 0.03 * DH - 10];
-					return <g><line x1={g0[0]} y1={g0[1]} x2={brushTip[0]} y2={brushTip[1]} stroke="#2a1a12" strokeWidth={2.4} strokeLinecap="round" /><path d={`M${brushTip[0] - 2},${brushTip[1] - 7} L${brushTip[0]},${brushTip[1]} L${brushTip[0] + 2},${brushTip[1] - 7} Z`} fill="#0e0a08" /></g>; })()}
-				{cuHands.map((hi, i) => <CuHand key={i} w={hi.w} e={hi.e} h={DH} col="#120810" curl={brushTip && i === 0 ? 0.9 : 0.22} />)}
+					return <g opacity={brushOp}><line x1={g0[0]} y1={g0[1]} x2={brushTip[0]} y2={brushTip[1]} stroke="#2a1a12" strokeWidth={2.4} strokeLinecap="round" /><path d={`M${brushTip[0] - 2},${brushTip[1] - 7} L${brushTip[0]},${brushTip[1]} L${brushTip[0] + 2},${brushTip[1] - 7} Z`} fill="#0e0a08" /></g>; })()}
+				{cuHands.map((hi, i) => <CuHand key={i} w={hi.w} e={hi.e} h={DH} col="#120810" curl={i === 0 ? lerp(0.22, 0.9, brushOp) : 0.22} op={handK} />)}
 			</g>}
 			{/* falling blossom */}
 			{far && <g transform={cy(0.8)}>{Array.from({length: 46}, (_, i) => { const t0 = rnd(i, 7) * 9, u = (((tau - t0) / 6) % 1 + 1) % 1, x = ((rnd(i, 8) * 2400 + u * 260 + Math.sin(u * 9 + i) * 30 - cam * 0.7) % 2400 + 2400) % 2400 - 240, y = 120 + u * 860;
 				return <ellipse key={i} cx={x} cy={y} rx={4.5} ry={2.6} fill={i % 3 ? '#f4a6b8' : '#fbd0da'} opacity={0.85 * Math.sin(Math.PI * u)} transform={`rotate(${u * 340 + i * 23} ${x} ${y})`} />; })}</g>}
+			{/* crows lifting from a burned roof, flying up past the sun — drawn in front of every tower and fire */}
+			{far && tau > T.crows && tau < T.crows + 4.4 && <g transform={cy(0.06)}>{Array.from({length: 8}, (_, i) => { const u = tau - T.crows - rnd(i, 1) * 0.4; if (u < 0) return null; const x = 1240 - cam * 0.18 + 30 * rnd(i, 2) - u * (90 + 60 * rnd(i, 3)), y = 600 - u * (75 + 40 * rnd(i, 4)) + Math.sin(u * 3 + i) * 10, fl = Math.sin(t * 22 + i * 2) * 5.5;
+				return <path key={i} d={`M${x - 10},${y + fl} Q${x - 4.5},${y - 2} ${x},${y + 2} Q${x + 4.5},${y - 2} ${x + 10},${y + fl}`} stroke="#1d0f16" strokeWidth={2.8} fill="none" strokeLinecap="round" />; })}</g>}
 			{/* foreground grass, blurred */}
 			{far && <g filter="url(#duFg)" transform={cy(1.3)}>{Array.from({length: 14}, (_, i) => { const x = ((i * 190 - cam * 1.6) % 2660 + 2660) % 2660 - 370, hh = 80 + 70 * rnd(i, 3), sw = Math.sin(t * 1.2 + i) * 0.1 * hh;
 				return <path key={i} d={`M${x - 16},${H + 60} Q${x},${H - hh * 0.5} ${x + sw},${H - hh} Q${x + 8},${H - hh * 0.5} ${x + 16},${H + 60} Z`} fill="#0c0508" />; })}</g>}
