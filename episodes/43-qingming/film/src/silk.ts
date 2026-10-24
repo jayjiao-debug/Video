@@ -28,6 +28,12 @@ export interface SilkOptions {
   traditional?: boolean;   // 'colophon': write 张著's text in traditional characters (default simplified, as the subtitles)
   punctuate?: boolean;     // 'colophon': add 余辉's modern punctuation (default false: the object has none)
   seals?: boolean;         // 'colophon': draw the default (illegible, faded) seals on the joins (default true)
+  sprites?: boolean;       // 'river': false = paint WITHOUT the mast (+ its rope crew), the railing shouters and the cart (see paintRiverSprites)
+  cartK?: number;          // 'river' with sprites: cart position along the bridge 0..1 (default 0.38)
+  railK?: number;          // 'river' with sprites: railing shouters' arms 0..1 (default 0.7)
+  ghost?: number;          // paintRelief: opacity of the ink ghost each lifted layer leaves on the layer behind (default 0.22, 0 = none)
+  ghostTo?: 'behind' | 'silk'; // paintRelief: ghost onto the next layer back (default) or onto L0, the silk
+  shadow?: boolean | { blur?: number; dx?: number; dy?: number; alpha?: number }; // paintRelief: bake a soft drop shadow into L1..L4
 }
 
 export interface Rect { x: number; y: number; w: number; h: number }
@@ -239,7 +245,7 @@ interface Fig {
   body?: 'robe' | 'short'; pose?: 'stand' | 'walk' | 'raise' | 'point' | 'push' | 'pull' | 'lean' | 'sit' | 'carry' | 'bow';
   load?: 'pole' | 'pack' | 'bundle' | 'parasol' | 'none'; robe?: number; stride?: number; lean?: number;
   tool?: Pt; // world/screen point a pole or rope reaches (push / pull)
-  force?: boolean;
+  force?: boolean; arm?: number; // 0..1 blends the hand from rest to the pose (raise / point), for animation
 }
 function figure(P: Painter, x: number, y: number, H: number, f: Fig = {}) {
   if (!f.force && !P.keepFig()) return;
@@ -290,6 +296,7 @@ function figure(P: Painter, x: number, y: number, H: number, f: Fig = {}) {
   else if (pose === 'push' || pose === 'pull') hand = T(22, -64); else if (pose === 'carry' || f.load === 'pole') hand = T(10, -79);
   else if (pose === 'lean' || pose === 'bow') hand = T(16, -60); else if (pose === 'walk') hand = T(14, -54);
   else if (pose === 'sit') hand = T(16, -48);
+  if (f.arm !== undefined) { const rest = T(11, -50); hand = [lerp(rest[0], hand[0], f.arm), lerp(rest[1], hand[1], f.arm)]; }
   const sh = T(3, -75);
   if (body === 'robe') {
     const mid: Pt = [(sh[0] + hand[0]) / 2 - 2 * u * d, (sh[1] + hand[1]) / 2 + 4 * u];
@@ -671,6 +678,362 @@ function illegibleGlyph(P: Painter, cx: number, cy: number, size: number, weight
   else comp(x0, y0, x1, y1, 4);
 }
 
+// ------------------------------------------------------------------ trees (screen space, foot at x,y)
+function branches(P: Painter, x: number, y: number, ang: number, len: number, w: number, depth: number, tips: Pt[], claw = 0) {
+  const r = P.r; const bend = rr(r, -0.35, 0.35);
+  const ex = x + Math.cos(ang) * len, ey = y + Math.sin(ang) * len;
+  const mx = x + Math.cos(ang + bend) * len * 0.55, my = y + Math.sin(ang + bend) * len * 0.55;
+  brush(P, [x, y], [mx, my], [ex, ey], w, w * 0.62, P.ink(0.93), 8);
+  if (depth <= 0 || len < 9) {
+    tips.push([ex, ey]);
+    if (claw > 0) { // crab-claw twigs (蟹爪) of the bare spring trees
+      for (let i = 0; i < 2; i++) { const a = ang + rr(r, -0.9, 0.9); const l = len * rr(r, 0.4, 0.8); const tx = ex + Math.cos(a) * l, ty = ey + Math.sin(a) * l; brush(P, [ex, ey], [tx, ty - l * 0.1], [tx + Math.cos(a + 1.6) * l * 0.3, ty + Math.sin(a + 1.6) * l * 0.3 + l * 0.25], w * 0.6, 0.5, P.ink(0.85), 6); }
+    }
+    return;
+  }
+  const kids = depth > 2 ? 2 : ri(r, 2, 3);
+  for (let i = 0; i < kids; i++) {
+    const a = ang + (i - (kids - 1) / 2) * rr(r, 0.45, 0.85) + rr(r, -0.15, 0.15);
+    branches(P, ex, ey, a, len * rr(r, 0.62, 0.8), w * 0.64, depth - 1, tips, claw);
+  }
+}
+function trunk(P: Painter, x: number, y: number, H: number, wBase: number, lean: number): Pt {
+  const r = P.r; const top: Pt = [x + lean * H * 0.35, y - H * 0.42];
+  const mid: Pt = [x + lean * H * 0.08 + rr(r, -6, 6), y - H * 0.22];
+  const L: Pt[] = [], R: Pt[] = [];
+  const pts = qbez([x, y], mid, top, 10);
+  for (let i = 0; i <= 10; i++) { const t = i / 10; const w = wBase * (1 - t * 0.55) * (i === 0 ? 1.5 : 1) * (1 + 0.12 * Math.sin(i * 1.7)); L.push([pts[i][0] - w / 2, pts[i][1]]); R.push([pts[i][0] + w / 2, pts[i][1]]); }
+  const poly = L.concat(R.reverse());
+  shape(P, poly, P.pal.wood, 2.0, { amp: 0.8, k: P.mode === 'colour' ? 0.9 : 1.4 });
+  for (let i = 0; i < 6 * P.detail; i++) { const t = rr(r, 0.1, 0.9); const p = pts[Math.round(t * 10)]; const w = wBase * (1 - t * 0.55); brush(P, [p[0] - w * 0.3, p[1]], [p[0] - w * 0.1, p[1] - 6], [p[0] + w * 0.25 * rr(r, -1, 1), p[1] - rr(r, 8, 18)], 1.6, 0.5, P.ink(0.6), 5); }
+  return top;
+}
+function willow(P: Painter, x: number, y: number, H: number) {
+  const r = P.r; const top = trunk(P, x, y, H, H * 0.07, rr(r, -0.25, 0.25));
+  const tips: Pt[] = [];
+  for (let i = 0; i < 5; i++) branches(P, top[0], top[1], -Math.PI / 2 + (i - 2) * 0.38 + rr(r, -0.1, 0.1), H * rr(r, 0.16, 0.24), H * 0.032, 3, tips);
+  const ns = Math.round(tips.length * 7 * (0.55 + 0.45 * P.detail));
+  const col = P.mode === 'colour' ? rgba(mix(C_LV, hex('#7FA36A'), 0.4), 0.85 * (1 - P.fog * 0.6)) : P.ink(0.62);
+  for (let i = 0; i < ns; i++) {
+    const t = pick(r, tips); const sx = t[0] + rr(r, -16, 16), sy = t[1] + rr(r, -8, 12);
+    const len = H * rr(r, 0.18, 0.55) * (0.6 + 0.4 * Math.min(1, Math.abs(sx - top[0]) / (H * 0.25))), sway = rr(r, -0.1, 0.1) * len;
+    brush(P, [sx, sy], [sx + sway * 0.2 + rr(r, -6, 6), sy - len * 0.12], [sx + sway, sy + len], rr(r, 1.6, 2.8), 0.6, col, 9);
+  }
+  if (P.mode === 'colour') for (let i = 0; i < 5; i++) { const t = pick(r, tips); fill(P, ellipsePts(t[0], t[1] + H * 0.2, H * 0.14, H * 0.2, 0, 7, 16), rgba(C_LV, 0.12 * (1 - P.fog)), true); }
+}
+function leafTree(P: Painter, x: number, y: number, H: number, style: 'dot' | 'jia' = 'dot') {
+  const r = P.r; const top = trunk(P, x, y, H, H * 0.085, rr(r, -0.2, 0.2));
+  const tips: Pt[] = [];
+  for (let i = 0; i < 3; i++) branches(P, top[0], top[1], -Math.PI / 2 + (i - 1) * 0.6 + rr(r, -0.15, 0.15), H * rr(r, 0.2, 0.28), H * 0.04, 3, tips);
+  // foliage clumps of dotted leaves (点叶)
+  const clumps = tips.filter((_, i) => i % 2 === 0);
+  for (const t of clumps) {
+    const cr = H * rr(r, 0.09, 0.14);
+    if (P.mode === 'colour') fill(P, ellipsePts(t[0], t[1], cr * 1.2, cr * 0.85, 0, 7, 16), P.wash(P.pal.leaf, 0.55), true);
+    else fill(P, ellipsePts(t[0], t[1], cr * 1.15, cr * 0.8, 0, 7, 16), P.wash(P.pal.leaf, 0.6), true);
+    const nd = Math.round(70 * P.detail);
+    for (let i = 0; i < nd; i++) {
+      const a = r() * Math.PI * 2, q = Math.sqrt(r()); const px = t[0] + Math.cos(a) * cr * 1.1 * q, py = t[1] + Math.sin(a) * cr * 0.75 * q;
+      if (style === 'dot') { P.ctx.beginPath(); P.ctx.ellipse(px, py, 2.6, 1.7, rr(r, -0.6, 0.6), 0, 7); P.ctx.fillStyle = P.ink(0.82); P.ctx.fill(); }
+      else { const pts = ellipsePts(px, py, 4.5, 2.4, 0, 7, 8).map(p => [p[0], p[1]] as Pt); line(P, pts, 0.8, { closed: true, amp: 0.1, a: 0.8 }); }
+    }
+  }
+}
+function bareTree(P: Painter, x: number, y: number, H: number) {
+  const r = P.r; const top = trunk(P, x, y, H, H * 0.08, rr(r, -0.3, 0.3)); const tips: Pt[] = [];
+  for (let i = 0; i < 3; i++) branches(P, top[0], top[1], -Math.PI / 2 + (i - 1) * 0.7 + rr(r, -0.2, 0.2), H * rr(r, 0.2, 0.3), H * 0.04, 3, tips, 1);
+  if (P.mode === 'colour') for (const t of tips) if (r() < 0.5) { P.ctx.beginPath(); P.ctx.arc(t[0], t[1], 2.4, 0, 7); P.ctx.fillStyle = rgba(C_LV, 0.8); P.ctx.fill(); }
+}
+// a soft distant tree line (fogged)
+function farTrees(P: Painter, x0: number, x1: number, y: number, H: number) {
+  const r = P.r;
+  for (let x = x0; x < x1; x += rr(r, 40, 90)) {
+    const h = H * rr(r, 0.6, 1.1);
+    seg(P, x, y, x + rr(r, -4, 4), y - h * 0.5, 1.4, 0.5);
+    fill(P, ellipsePts(x, y - h * 0.7, h * 0.28, h * 0.32, 0, 7, 12), P.wash(P.pal.leaf, 0.3), true);
+    for (let i = 0; i < 8 * P.detail; i++) { P.ctx.beginPath(); P.ctx.arc(x + rr(r, -h * 0.25, h * 0.25), y - h * 0.7 + rr(r, -h * 0.25, h * 0.25), 1.8, 0, 7); P.ctx.fillStyle = P.ink(0.4); P.ctx.fill(); }
+  }
+}
+
+// ------------------------------------------------------------------ ground & water
+function tuft(P: Painter, x: number, y: number, s: number, a = 0.75) {
+  const n = ri(P.r, 3, 5);
+  for (let i = 0; i < n; i++) { const dx = (i - (n - 1) / 2) * s * 0.35; brush(P, [x + dx * 0.4, y], [x + dx, y - s * 0.6], [x + dx * 1.6 + rr(P.r, -2, 2), y - s * rr(P.r, 0.7, 1.2)], s * 0.16, s * 0.04, P.ink(a), 5); }
+}
+function dots(P: Painter, x: number, y: number, n: number, sp: number) {
+  for (let i = 0; i < n; i++) { P.ctx.beginPath(); P.ctx.ellipse(x + rr(P.r, -sp, sp), y + rr(P.r, -sp * 0.4, sp * 0.4), 2.4, 1.6, 0, 0, 7); P.ctx.fillStyle = P.ink(0.7); P.ctx.fill(); }
+}
+// fish-scale ripples + long current lines inside a polygon (screen space)
+function ripples(P: Painter, poly: Pt[], flow: Pt, dens = 1) {
+  const c = P.ctx; c.save(); c.beginPath(); tracePath(c, poly, true, false); c.clip();
+  let xs = Infinity, xe = -Infinity, ys = Infinity, ye = -Infinity;
+  for (const p of poly) { xs = Math.min(xs, p[0]); xe = Math.max(xe, p[0]); ys = Math.min(ys, p[1]); ye = Math.max(ye, p[1]); }
+  const r = P.r, fl = Math.hypot(flow[0], flow[1]); const fx = flow[0] / fl, fy = flow[1] / fl;
+  const col = P.mode === 'colour' ? rgba(mix(C_QING, P.pal.ink, 0.35), 0.5) : P.ink(0.42);
+  for (let i = 0; i < 60 * dens * P.detail; i++) {
+    const x = rr(r, xs, xe), y = rr(r, ys, ye), l = rr(r, 120, 340);
+    const pts: Pt[] = []; for (let k = 0; k <= 8; k++) { const t = k / 8; pts.push([x + fx * l * t - fy * Math.sin(t * 6 + i) * 3, y + fy * l * t + fx * Math.sin(t * 6 + i) * 3]); }
+    line(P, pts, 0.9, { color: col, amp: 0.2 });
+  }
+  const sp = 30 / Math.sqrt(dens);
+  for (let y = ys; y < ye; y += sp * 0.8) {
+    const off = (Math.floor(y / sp) % 2) * sp;
+    for (let x = xs + off; x < xe; x += sp * 2.2) {
+      if (r() > 0.75 * P.detail + 0.15) continue;
+      const px = x + rr(r, -10, 10), py = y + rr(r, -4, 4), s = rr(r, 9, 15);
+      c.beginPath(); c.moveTo(px - s, py); c.quadraticCurveTo(px - fx * 2, py - s * 0.45, px + s, py);
+      c.lineWidth = P.lw(1.0); c.strokeStyle = col; c.stroke();
+    }
+  }
+  c.restore();
+}
+
+// ------------------------------------------------------------------ boats (hull along Z, the flow)
+interface Boat { cabin?: 'long' | 'small' | 'none'; mast?: number | null; mastH?: number; crew?: number; push?: Pt[]; oar?: boolean; tow?: Pt | null; robeSeed?: number; part?: 'all' | 'base' | 'mast' }
+function boat(P: Painter, Xc: number, Z0: number, L: number, beam: number, o: Boat = {}): { apex?: Pt; roofY: number } {
+  const hh = beam * 0.26, N = 24, lw = 2.2;
+  const hw = (s: number) => beam / 2 * (1 - 0.42 * Math.pow(Math.abs(2 * s - 1), 3));
+  const g = (s: number) => hh * (1 + 0.85 * Math.pow(Math.abs(2 * s - 1), 2.4)) + (s > 0.5 ? (s - 0.5) * hh * 0.5 : 0);
+  const Z = (s: number) => Z0 + s * L;
+  const W = (s: number, side: number, Y: number) => P.pt(Xc + side * hw(s) * (Y <= 0 ? 0.9 : 1), Y, Z(s));
+  const part = o.part ?? 'all', drawHull = part !== 'mast';
+  if (drawHull) {
+  // water shadow under the hull
+  const sh: Pt[] = []; for (let i = 0; i <= N; i++) sh.push(P.pt(Xc + hw(i / N) * 1.25, 0, Z(i / N)));
+  for (let i = N; i >= 0; i--) sh.push(P.pt(Xc - hw(i / N) * 0.6, 0, Z(i / N)));
+  fill(P, sh, P.wash(P.pal.water, 1.6), true);
+  // deck (seen from above), the starboard side band, the transom
+  const deck: Pt[] = []; for (let i = 0; i <= N; i++) deck.push(W(i / N, 1, g(i / N)));
+  for (let i = N; i >= 0; i--) deck.push(W(i / N, -1, g(i / N)));
+  shape(P, deck, P.pal.wood, lw, { k: 0.55 });
+  for (let i = 1; i < 10; i++) { const s = i / 10; const a = W(s, 1, g(s)), b = W(s, -1, g(s)); seg(P, a[0], a[1], b[0], b[1], 0.8, 0.45); }
+  const side: Pt[] = []; for (let i = 0; i <= N; i++) side.push(W(i / N, 1, g(i / N)));
+  for (let i = N; i >= 0; i--) { const s = i / N; const e = Math.abs(2 * s - 1); side.push(W(s, 1, e > 0.9 ? (e - 0.9) * 10 * g(s) * 0.7 : 0)); }
+  shape(P, side, P.pal.wood, lw * 1.1, { k: 1.1 });
+  for (const f of [0.38, 0.7]) { const pts: Pt[] = []; for (let i = 1; i < N; i++) { const s = i / N; pts.push(W(s, 1, g(s) * (1 - f))); } line(P, pts, 1.0, { a: 0.75 }); }
+  for (let i = 2; i < N - 1; i += 2) { const s = i / N; const a = W(s, 1, g(s)), b = W(s, 1, g(s) * 0.35); seg(P, a[0], a[1], b[0], b[1], 0.7, 0.5); }
+  { const pts: Pt[] = []; for (let i = 0; i <= N; i++) pts.push(W(i / N, 1, g(i / N) + 3)); line(P, pts, 3.0); }
+  const tr: Pt[] = [W(0, -1, g(0)), W(0, 1, g(0)), W(0.02, 1, g(0) * 0.55), W(0.02, -1, g(0) * 0.55)];
+  shape(P, tr, P.pal.wood, lw, { k: 1.5 });
+  const ru: Pt[] = [P.pt(Xc, g(0) * 0.8, Z0 + 4), P.pt(Xc, -hh * 0.3, Z0 - beam * 0.06), P.pt(Xc, -hh * 0.25, Z0 - beam * 0.2), P.pt(Xc, g(0) * 0.45, Z0 - beam * 0.1)];
+  shape(P, ru, P.pal.wood, 1.6, { k: 1.4 });
+  }
+  let roofY = g(0.5);
+  if (o.cabin && o.cabin !== 'none') {
+    const long = o.cabin === 'long';
+    const s0 = long ? 0.2 : 0.36, s1 = long ? 0.78 : 0.68, cw = beam * (long ? 0.8 : 0.66), hc = beam * (long ? 0.2 : 0.12), arch = beam * (long ? 0.15 : 0.2), ov = beam * 0.07;
+    const base = g(0.5) - 2;
+    const R = cw / 2 + ov;
+    roofY = base + hc + arch;
+    if (drawHull) {
+    const prof = (s: number, n = 10): Pt[] => { const out: Pt[] = []; for (let i = 0; i <= n; i++) { const x = -R + 2 * R * i / n; out.push(P.pt(Xc + x, base + hc + arch * (1 - (x / R) ** 2), Z(s))); } return out; };
+    // starboard wall with sliding window panels
+    const sw: Pt[] = [P.pt(Xc + cw / 2, base, Z(s0)), P.pt(Xc + cw / 2, base, Z(s1)), P.pt(Xc + cw / 2, base + hc, Z(s1)), P.pt(Xc + cw / 2, base + hc, Z(s0))];
+    shape(P, sw, P.pal.wood, 1.6, { k: 0.5 });
+    const nb = long ? 9 : 4;
+    for (let i = 1; i < nb; i++) { const s = lerp(s0, s1, i / nb); const a = P.pt(Xc + cw / 2, base, Z(s)), b = P.pt(Xc + cw / 2, base + hc, Z(s)); seg(P, a[0], a[1], b[0], b[1], 1.0, 0.8); }
+    if (long && P.detail > 0.6) for (let i = 0; i < nb; i++) { if (i % 3 === 1) { const sA = lerp(s0, s1, i / nb) + 0.004, sB = lerp(s0, s1, (i + 1) / nb) - 0.004; fill(P, [P.pt(Xc + cw / 2, base + hc * 0.45, Z(sA)), P.pt(Xc + cw / 2, base + hc * 0.45, Z(sB)), P.pt(Xc + cw / 2, base + hc * 0.9, Z(sB)), P.pt(Xc + cw / 2, base + hc * 0.9, Z(sA))], P.wash(P.pal.shade, 2.2)); } }
+    { const a = P.pt(Xc + cw / 2, base + hc * 0.45, Z(s0)), b = P.pt(Xc + cw / 2, base + hc * 0.45, Z(s1)); seg(P, a[0], a[1], b[0], b[1], 0.9, 0.8); }
+    // near end wall (faces the viewer, stern side) with a dark doorway
+    shape(P, [P.pt(Xc - cw / 2, base, Z(s0)), P.pt(Xc + cw / 2, base, Z(s0)), P.pt(Xc + cw / 2, base + hc, Z(s0)), ...prof(s0).reverse(), P.pt(Xc - cw / 2, base + hc, Z(s0))], P.pal.wood, 1.6, { k: 0.4 });
+    fill(P, [P.pt(Xc - cw * 0.18, base, Z(s0)), P.pt(Xc + cw * 0.18, base, Z(s0)), P.pt(Xc + cw * 0.18, base + hc * 0.9, Z(s0)), P.pt(Xc - cw * 0.18, base + hc * 0.9, Z(s0))], P.wash(P.pal.shade, 3));
+    // the arched mat roof
+    const right: Pt[] = [], left: Pt[] = [];
+    for (let i = 0; i <= 12; i++) { const s = lerp(s0 - 0.01, s1 + 0.01, i / 12); right.push(P.pt(Xc + R, base + hc, Z(s))); left.push(P.pt(Xc - R, base + hc, Z(s))); }
+    const roofPoly = [...prof(s0 - 0.01), ...right, ...prof(s1 + 0.01).reverse(), ...left.reverse()];
+    shape(P, roofPoly, P.pal.roof, 0, { k: 0.8 });
+    for (let i = 0; i <= (long ? 18 : 8); i++) line(P, prof(lerp(s0, s1, i / (long ? 18 : 8)), 8), 0.9, { a: 0.6, amp: 0.2 });
+    line(P, roofPoly, 1.8, { closed: true, amp: 0.4 });
+    line(P, prof(s0 - 0.01), 2.2);
+    if (long) { const ridge: Pt[] = []; for (let i = 0; i <= 8; i++) ridge.push(P.pt(Xc, roofY, Z(lerp(s0, s1, i / 8)))); line(P, ridge, 1.0, { a: 0.6 }); }
+    }
+  }
+  // the A-frame mast (人字桅), hinged ahead of the cabin; mast 0 = upright, 1 = lowered toward the stern
+  let apex: Pt | undefined;
+  if (o.mast !== undefined && o.mast !== null) {
+    const sh2 = 0.86, Yh = g(sh2), M = o.mastH ?? L * 0.58, th = clamp(o.mast, 0, 1) * 1.38;
+    apex = P.pt(Xc, Yh + M * Math.cos(th), Z(sh2) - M * Math.sin(th));
+    const fl = P.pt(Xc - beam * 0.3, Yh, Z(sh2)), fr = P.pt(Xc + beam * 0.3, Yh, Z(sh2));
+    if (part !== 'base') {
+    line(P, [apex, W(1, 0, g(1))], 1.0, { a: 0.85, amp: 0.2 });
+    line(P, [apex, P.pt(Xc + beam * 0.2, roofY, Z(0.2))], 1.0, { a: 0.85, amp: 0.2 });
+    line(P, [apex, W(0.02, 0, g(0) + 4)], 0.9, { a: 0.75, amp: 0.2 });
+    brush(P, fl, [(fl[0] + apex[0]) / 2, (fl[1] + apex[1]) / 2], apex, 11, 6, P.ink(0.95), 4);
+    brush(P, fr, [(fr[0] + apex[0]) / 2, (fr[1] + apex[1]) / 2], apex, 11, 6, P.ink(0.95), 4);
+    for (const t of [0.35, 0.7]) { const a: Pt = [lerp(fl[0], apex[0], t), lerp(fl[1], apex[1], t)], b: Pt = [lerp(fr[0], apex[0], t), lerp(fr[1], apex[1], t)]; seg(P, a[0], a[1], b[0], b[1], 2.0); }
+    }
+  }
+  // crew
+  const nC = o.crew ?? 0, rs = o.robeSeed ?? 0;
+  const crewPts: { p: Pt; dir: number; pose: Fig['pose']; tool?: Pt }[] = [];
+  if (nC > 0) {
+    const onRoof = o.cabin === 'long', cr = mulberry32(rs * 131 + 7);
+    if (part !== 'mast') {
+    crewPts.push({ p: P.pt(Xc - beam * 0.1, g(0.03) + 2, Z(0.05)), dir: 1, pose: 'pull', tool: P.pt(Xc, g(0) * 0.9, Z0 - beam * 0.1) });
+    if (o.oar) crewPts.push({ p: P.pt(Xc + beam * 0.28, g(0.1), Z(0.12)), dir: 1, pose: 'push', tool: P.pt(Xc + beam * 1.1, -6, Z(0.0)) });
+    const nPush = o.push ? Math.min(o.push.length, Math.max(1, nC - 4)) : 0;
+    for (let i = 0; i < nPush; i++) crewPts.push({ p: P.pt(Xc + (i - (nPush - 1) / 2) * beam * 0.28, g(0.9) - 2, Z(0.88 + 0.03 * (i % 2))), dir: 1, pose: 'push', tool: o.push![i] });
+    }
+    const nPush2 = o.push ? Math.min(o.push.length, Math.max(1, nC - 4)) : 0;
+    const nRoof = part === 'base' ? 0 : nC - nPush2 - 1;
+    for (let i = 0; i < nRoof; i++) {
+      const s = lerp(0.26, 0.7, (i + 0.5) / Math.max(1, nRoof));
+      const p = P.pt(Xc + rr(cr, -beam * 0.12, beam * 0.12), onRoof ? roofY - 2 : g(s), Z(s));
+      const pull = !!apex && i % 3 !== 2;
+      crewPts.push({ p, dir: pull ? 1 : -1, pose: pull ? 'pull' : (i % 2 ? 'raise' : 'point'), tool: pull ? apex : undefined });
+    }
+    crewPts.sort((a, b) => a.p[1] - b.p[1]);
+    let k = 0;
+    for (const c of crewPts) figure(P, c.p[0], c.p[1], 50, { dir: c.dir, body: 'short', pose: c.pose, hat: k % 3 === 0 ? 'li' : 'cap', tool: c.tool, robe: (rs + k++) % 8 });
+  }
+  if (o.tow && apex && part !== 'base') line(P, [apex, o.tow], 1.0, { a: 0.8, amp: 0.3 });
+  return { apex, roofY };
+}
+
+// ------------------------------------------------------------------ the 虹桥 (woven-timber arch bridge)
+interface BridgeDef { X0: number; X1: number; Zb: number; Db: number; rise: number; T: number; ramp: number; crowd: number; boatX?: number; seed?: number }
+interface BItem { X: number; u: number; kind: 'fig' | 'stall' | 'sedan' | 'rider' | 'rail' | 'cart'; seed: number; f?: Fig; i?: number }
+interface BridgeDraw { sprites?: boolean; cartK?: number; railK?: number }
+const CART_LANE = 0.3;
+function bridgeGeo(B: BridgeDef) {
+  const Xm = (B.X0 + B.X1) / 2, hs = (B.X1 - B.X0) / 2, R = (hs * hs + B.rise * B.rise) / (2 * B.rise);
+  const archY = (X: number) => Math.sqrt(Math.max(0, R * R - (X - Xm) ** 2)) - (R - B.rise);
+  const XA = B.X0 - B.ramp, XB = B.X1 + B.ramp;
+  const E = (X: number) => X < B.X0 ? B.T * (X - XA) / B.ramp : X > B.X1 ? B.T * (XB - X) / B.ramp : archY(X) + B.T;
+  return { Xm, XA, XB, E, I: archY };
+}
+// every item on the deck has its own seed, so any one of them can be redrawn identically (sprites, occlusion masks)
+function bridgeItems(B: BridgeDef): BItem[] {
+  const G = bridgeGeo(B), r = mulberry32((B.seed ?? 1) * 7717 + 3), items: BItem[] = []; let n = 0;
+  const sd = () => ((B.seed ?? 1) * 92821 + (++n) * 7919) | 0;
+  for (let i = 0; i < Math.round(B.crowd); i++) {
+    const X = lerp(G.XA + B.ramp * 0.3, G.XB - B.ramp * 0.3, r()), u = rr(r, 0.12, 0.88);
+    const kind = r(); const dir = r() < 0.5 ? 1 : -1, robe = ri(r, 0, 7), hat = pick(r, HATS_B);
+    items.push({ X, u, kind: 'fig', seed: sd(), f: { dir, robe, hat, body: kind < 0.35 ? 'short' : 'robe', pose: kind < 0.2 ? 'carry' : 'walk', load: kind < 0.2 ? 'pole' : kind < 0.3 ? 'pack' : 'none' } });
+  }
+  for (const [fx, u] of [[0.2, 0.86], [0.3, 0.85], [0.72, 0.86], [0.83, 0.85], [0.26, 0.14], [0.78, 0.13]] as [number, number][]) items.push({ X: lerp(G.XA, G.XB, fx), u, kind: 'stall', seed: sd() });
+  items.push({ X: G.Xm - 70, u: 0.5, kind: 'sedan', seed: sd() });
+  items.push({ X: G.Xm + 90, u: 0.48, kind: 'rider', seed: sd() });
+  const bx = B.boatX ?? G.Xm;
+  for (let i = 0; i < 11; i++) {
+    const X = bx + (i - 5) * 34 + rr(r, -8, 8), u = rr(r, 0.06, 0.13);
+    items.push({ X, u, kind: 'rail', seed: sd(), i, f: { dir: i % 3 === 0 ? -1 : 1, pose: i % 3 === 0 ? 'raise' : i % 3 === 1 ? 'lean' : 'point', hat: i % 2 ? 'futou' : 'cap', robe: i % 8, body: i % 4 === 0 ? 'short' : 'robe' } });
+  }
+  items.push({ X: 0, u: CART_LANE, kind: 'cart', seed: sd() });
+  return items;
+}
+const HATS_B: Fig['hat'][] = ['futou', 'futou', 'jin', 'cap', 'li', 'futou'];
+const railArm = (i: number, k: number) => { const d = ((i * 0.37) % 1) * 0.55; const t = clamp((k - d) / 0.3, 0, 1); return t * t * (3 - 2 * t); };
+function cartX(B: BridgeDef, k: number) { const G = bridgeGeo(B); return lerp(G.XA + 70, G.XB - 90, clamp(k, 0, 1)); }
+function drawBItem(P: Painter, B: BridgeDef, it: BItem, o: BridgeDraw = {}) {
+  const G = bridgeGeo(B);
+  P.r = mulberry32(it.seed); P.figSeed = it.seed; P.figN = 0;
+  const X = it.kind === 'cart' ? cartX(B, o.cartK ?? 0.38) : it.X;
+  const p = P.pt(X, G.E(X), B.Zb + B.Db * it.u);
+  switch (it.kind) {
+    case 'fig': figure(P, p[0], p[1], 50, it.f); break;
+    case 'rail': { const a = railArm(it.i!, o.railK ?? 0.7); figure(P, p[0], p[1], 50, { ...it.f, arm: it.f!.pose === 'lean' ? undefined : a, lean: it.f!.pose === 'lean' ? 0.3 + 0.7 * a : undefined }); break; }
+    case 'stall': { const tb: Pt[] = [[p[0] - 22, p[1] - 22], [p[0] + 22, p[1] - 22], [p[0] + 28, p[1] - 16], [p[0] - 16, p[1] - 16]]; shape(P, tb, P.pal.wood, 1.3, { k: 0.7 }); seg(P, p[0] - 18, p[1] - 16, p[0] - 18, p[1], 1.2); seg(P, p[0] + 22, p[1] - 16, p[0] + 22, p[1], 1.2); figure(P, p[0] - 30, p[1] + 4, 46, { dir: 1, pose: 'sit', robe: 2, hat: 'jin' }); parasol(P, p[0], p[1] + 2, 58, 92); break; }
+    case 'sedan': sedan(P, p[0], p[1], 52, -1); break;
+    case 'rider': beast(P, p[0], p[1], 50, 'horse', 1, false, 0.3); figure(P, p[0] + 2, p[1] - 44, 46, { dir: 1, pose: 'point', hat: 'futou', robe: 1, force: true }); figure(P, p[0] + 66, p[1] + 2, 48, { dir: -1, pose: 'walk', body: 'short', hat: 'cap', robe: 4 }); break;
+    case 'cart': {
+      // a donkey pulling a small two-wheeled cart across, the driver alongside; tilted with the deck
+      const dX = 6, sl = (G.E(X + dX) - G.E(X - dX)) / (2 * dX), ang = -Math.atan(sl) * 0.75;
+      P.ctx.save(); P.ctx.translate(p[0], p[1]); P.ctx.rotate(ang); P.ctx.translate(-p[0], -p[1]);
+      beast(P, p[0] + 46, p[1], 54, 'donkey', 1, false, (o.cartK ?? 0.38) * 40 % 1);
+      seg(P, p[0] - 10, p[1] - 30, p[0] + 34, p[1] - 30, 1.6);
+      shape(P, [[p[0] - 74, p[1] - 58], [p[0] - 2, p[1] - 58], [p[0] - 2, p[1] - 28], [p[0] - 74, p[1] - 28]], P.pal.wood, 1.6, { k: 0.9 });
+      shape(P, ellipsePts(p[0] - 38, p[1] - 58, 34, 14, Math.PI, Math.PI * 2, 12), P.pal.straw, 1.4);
+      for (let i = 0; i < 4; i++) seg(P, p[0] - 66 + i * 18, p[1] - 56, p[0] - 64 + i * 18, p[1] - 30, 0.7, 0.6);
+      wheel(P, p[0] - 38, p[1] - 22, 22, 1.4);
+      P.ctx.restore();
+      figure(P, p[0] - 96, p[1] + 2, 50, { dir: 1, body: 'short', pose: 'walk', hat: 'li', robe: 3, force: true });
+      break;
+    }
+  }
+}
+function bridgeRail(P: Painter, B: BridgeDef, Zr: number, a: number, seed: number) {
+  const G = bridgeGeo(B); P.r = mulberry32(seed);
+  const N = 80, top: Pt[] = [], mid: Pt[] = [];
+  for (let X = G.XA + 8; X <= G.XB - 8; X += 26) {
+    const p = P.pt(X, G.E(X), Zr), q = P.pt(X, G.E(X) + 30, Zr); seg(P, p[0], p[1], q[0], q[1], 1.5, a);
+    P.ctx.beginPath(); P.ctx.arc(q[0], q[1] - 1, 2.0, 0, 7); P.ctx.fillStyle = P.ink(a); P.ctx.fill();
+  }
+  for (let i = 0; i <= N; i++) { const X = lerp(G.XA, G.XB, i / N); top.push(P.pt(X, G.E(X) + 30, Zr)); mid.push(P.pt(X, G.E(X) + 15, Zr)); }
+  line(P, top, 2.0, { a }); line(P, mid, 1.2, { a: a * 0.85 });
+}
+function bridge(P: Painter, B: BridgeDef, o: BridgeDraw = {}) {
+  const G = bridgeGeo(B), { E, I, XA, XB, Xm } = G; void Xm;
+  const N = 80, xs: number[] = []; for (let i = 0; i <= N; i++) xs.push(lerp(XA, XB, i / N));
+  const Zn = B.Zb, Zf = B.Zb + B.Db, seed = (B.seed ?? 1) * 31;
+  const quad = (Xa: number, Ya: number, Xb: number, Yb: number): Pt[] => [P.pt(Xa, Ya, Zn), P.pt(Xb, Yb, Zn), P.pt(Xb, Yb, Zf), P.pt(Xa, Ya, Zf)];
+  const cross = (q: Pt[]) => (q[1][0] - q[0][0]) * (q[2][1] - q[1][1]) - (q[1][1] - q[0][1]) * (q[2][0] - q[1][0]);
+  // 1 underside (visible on the steep haunch) with its transverse beams
+  for (let i = 0; i < N; i++) {
+    const a = xs[i], b = xs[i + 1]; if (a < B.X0 || b > B.X1) continue;
+    const q = quad(a, I(a), b, I(b)); if (cross(q) <= 0) continue;
+    shape(P, q, P.pal.wood, 0, { k: 1.6 });
+    seg(P, q[0][0], q[0][1], q[3][0], q[3][1], 1.4, 0.9);
+    for (const f of [0.2, 0.4, 0.6, 0.8]) { const p1 = P.pt(a, I(a), Zn + B.Db * f), p2 = P.pt(b, I(b), Zn + B.Db * f); seg(P, p1[0], p1[1], p2[0], p2[1], 1.1, 0.8); }
+  }
+  // 2 deck
+  const deckQ: Pt[][] = [];
+  for (let i = 0; i < N; i++) { const a = xs[i], b = xs[i + 1]; const q = quad(a, E(a), b, E(b)); if (cross(q) < 0) deckQ.push(q); }
+  for (const q of deckQ) { fill(P, q, P.gfill()); fill(P, q, P.wash(P.pal.wood, 0.45)); }
+  for (let i = 0; i < deckQ.length; i += 2) { const q = deckQ[i]; seg(P, q[0][0], q[0][1], q[3][0], q[3][1], 0.8, 0.35); }
+  // 3 far railing
+  bridgeRail(P, B, Zf, 0.8, seed + 1);
+  // 4 crowd, stalls, the sedan meeting the rider at the crest, the onlookers shouting at the boat, the cart
+  const items = bridgeItems(B).filter(it => !(o.sprites === false && (it.kind === 'rail' || it.kind === 'cart')));
+  items.sort((a, b) => b.u - a.u);
+  for (const it of items) drawBItem(P, B, it, o);
+  P.r = mulberry32(seed + 3);
+  // 5 near fascia: the woven beams
+  const fas: Pt[] = [], inner: Pt[] = [];
+  for (let i = 0; i <= N; i++) { const X = xs[i]; fas.push(P.pt(X, E(X), Zn)); inner.push(P.pt(X, X < B.X0 || X > B.X1 ? 0 : I(X), Zn)); }
+  shape(P, [...fas, ...inner.slice().reverse()], P.pal.wood, 0, { k: 1.7 });
+  // two interlocking systems of long straight beams (编木拱), drawn as polygonal chords inside the curved band
+  const sysA = [0, 0.2, 0.4, 0.6, 0.8, 1], sysB = [0.1, 0.3, 0.5, 0.7, 0.9];
+  const nodeP = (f: number, h: number) => { const X = lerp(B.X0, B.X1, f); return P.pt(X, I(X) + (E(X) - I(X)) * h, Zn); };
+  const beamW = (B.T - 16) * 0.2;
+  for (const [sys, h] of [[sysA, 0.27], [sysB, 0.62]] as [number[], number][]) {
+    for (let i = 0; i < sys.length - 1; i++) {
+      const a = nodeP(sys[i], h), b = nodeP(sys[i + 1], h);
+      const q: Pt[] = [[a[0], a[1] - beamW], [b[0], b[1] - beamW], [b[0], b[1] + beamW], [a[0], a[1] + beamW]];
+      fill(P, q, P.wash(P.pal.wood, 0.8)); seg(P, q[0][0], q[0][1], q[1][0], q[1][1], 1.3, 0.9); seg(P, q[3][0], q[3][1], q[2][0], q[2][1], 1.3, 0.9);
+      for (let k = 1; k < 4; k++) { const t = k / 4; seg(P, lerp(a[0], b[0], t), lerp(a[1], b[1], t) - beamW * 0.6, lerp(a[0], b[0], t) + 3, lerp(a[1], b[1], t) + beamW * 0.6, 0.7, 0.4); }
+    }
+  }
+  for (const [sys, h] of [[sysA, 0.27], [sysB, 0.62]] as [number[], number][]) for (const f of sys) {
+    const p = nodeP(f, h); const s = 8.5; P.ctx.fillStyle = P.ink(0.95); P.ctx.fillRect(p[0] - s, p[1] - s, s * 2, s * 2);
+    P.ctx.fillStyle = P.wash(P.pal.wood, 1.2); P.ctx.fillRect(p[0] - s * 0.45, p[1] - s * 0.45, s * 0.9, s * 0.9);
+  }
+  for (let f = 0.05; f < 0.96; f += 0.1) { const p = nodeP(f, 0.12), q = nodeP(f + 0.05, 0.8), p2 = nodeP(f + 0.05, 0.12), q2 = nodeP(f, 0.8); seg(P, p[0], p[1], q[0], q[1], 0.9, 0.5); seg(P, p2[0], p2[1], q2[0], q2[1], 0.9, 0.5); }
+  const board: Pt[] = []; for (let i = 0; i <= N; i++) board.push(P.pt(xs[i], E(xs[i]) - 14, Zn)); line(P, board, 1.4, { a: 0.9 });
+  for (let X = XA + 10; X < XB - 10; X += 18) { const a = P.pt(X, E(X), Zn), b = P.pt(X, E(X) - 14, Zn); seg(P, a[0], a[1], b[0], b[1], 0.8, 0.6); }
+  line(P, fas, 3.0); line(P, inner.filter((_, i) => xs[i] >= B.X0 && xs[i] <= B.X1), 3.0);
+  // stone abutments where the arch lands on the banks
+  for (const Xe of [B.X0, B.X1]) {
+    const s = Xe === B.X0 ? -1 : 1; const ab: Pt[] = [P.pt(Xe - 50, -6, Zn - 8), P.pt(Xe + 50, -6, Zn - 8), P.pt(Xe + 50 * (s > 0 ? 1 : 0.4), 40, Zn - 8), P.pt(Xe - 50 * (s < 0 ? 1 : 0.4), 40, Zn - 8)];
+    shape(P, ab, P.pal.stone, 1.8);
+    for (const y of [12, 26]) { const a = P.pt(Xe - 46, y, Zn - 8), b = P.pt(Xe + 46, y, Zn - 8); seg(P, a[0], a[1], b[0], b[1], 0.9, 0.6); }
+  }
+  // 6 near railing (own seed, so sprites can use it as an occlusion mask)
+  bridgeRail(P, B, Zn, 1, seed + 2);
+  bridgePoles(P, B, seed + 4);
+}
+function bridgePoles(P: Painter, B: BridgeDef, seed: number, nearOnly = false) {
+  // the tall poles (表木) at the bridge ends
+  const G = bridgeGeo(B), Zn = B.Zb, Zf = B.Zb + B.Db; let idx = 0;
+  for (const [X, Zp, a] of [[G.XA + 20, Zf + 10, 0.6], [G.XB - 20, Zf + 10, 0.6], [G.XA + 16, Zn - 12, 1], [G.XB - 16, Zn - 12, 1]] as [number, number, number][]) {
+    P.r = mulberry32(seed * 7 + (idx++));
+    if (nearOnly && Zp > Zn) continue;
+    const p = P.pt(X, 0, Zp), q = P.pt(X, 400, Zp); seg(P, p[0], p[1], q[0], q[1], 3.0, a);
+    const c1 = P.pt(X - 30, 360, Zp), c2 = P.pt(X + 30, 360, Zp); seg(P, c1[0], c1[1], c2[0], c2[1], 2.2, a);
+    const b1 = P.pt(X, 360, Zp - 30), b2 = P.pt(X, 360, Zp + 30); seg(P, b1[0], b1[1], b2[0], b2[1], 2.2, a);
+    brush(P, [q[0] - 6, q[1] + 2], [q[0], q[1] - 10], [q[0] + 10, q[1] - 4], 4, 1.5, P.ink(a));
+  }
+}
 // @@END@@
 
 // ------------------------------------------------------------------ pipeline + public API
@@ -728,7 +1091,10 @@ export function paintSection(name: SectionName, o: SilkOptions = {}): HTMLCanvas
 }
 
 /** The same section split into 5 transparent depth layers: 0 far (sky/haze, opaque silk), 1 far bank, 2 river + boats,
- *  3 bridge (+ the boat passing under it), 4 near roofs / trees. Composited in order they equal paintSection(). */
+ *  3 bridge (+ the boat passing under it), 4 near roofs / trees. Composited in order they equal paintSection()
+ *  (plus the ink ghosts, which sit under identical lines while the layers are at rest).
+ *  ghost: each lifted layer (1..4) leaves a faint ink copy of its linework on the layer behind it (or on L0 with ghostTo 'silk').
+ *  shadow: bakes a soft drop shadow under each lifted layer (or use layerShadow() to animate the offset yourself). */
 export function paintRelief(name: SectionName, o: SilkOptions = {}): (HTMLCanvasElement & { silk: SilkInfo })[] {
   const { S, W, H, mode } = prep(name, o);
   const info = finishInfo(S, name, mode, W, H);
@@ -738,10 +1104,114 @@ export function paintRelief(name: SectionName, o: SilkOptions = {}): (HTMLCanvas
     const P = newPainter(ctx, W, H, mode, o);
     drawLayer(S, P, L);
     ctx.setTransform(1, 0, 0, 1, 0, 0);
-    const wv = o.weave ?? 1; if (wv > 0) silkWeave(cv, wv, { mode, seed: o.seed ?? 43, paperFrom: S.info.join !== undefined ? S.info.join * W / W0 : undefined });
     const c2 = cv as HTMLCanvasElement & { silk: SilkInfo }; c2.silk = info; out.push(c2);
   }
+  const ga = o.ghost ?? 0.22;
+  if (ga > 0) { const ghosts = out.map((c, i) => (i > 0 ? inkGhost(c, mode) : null)); for (let i = 4; i >= 1; i--) { const t = out[o.ghostTo === 'silk' ? 0 : i - 1].getContext('2d')!; t.save(); t.globalAlpha = ga; t.imageSmoothingQuality = 'high'; t.drawImage(ghosts[i]!, 0, 0, W, H); t.restore(); } }
+  const wv = o.weave ?? 1;
+  const paperFrom = S.info.join !== undefined ? S.info.join * W / W0 : undefined;
+  if (wv > 0) for (const c of out) silkWeave(c, wv, { mode, seed: o.seed ?? 43, paperFrom });
+  if (o.shadow) {
+    const so = typeof o.shadow === 'object' ? o.shadow : {};
+    for (let i = 1; i < 5; i++) {
+      const sh = layerShadow(out[i], { ...so, mode });
+      const t = makeCanvas(W, H), tc = t.getContext('2d')!;
+      tc.drawImage(sh, 0, 0); tc.drawImage(out[i], 0, 0);
+      const oc = out[i].getContext('2d')!; oc.clearRect(0, 0, W, H); oc.drawImage(t, 0, 0);
+    }
+  }
   return out;
+}
+// the linework of a layer as ink-only pixels (half resolution, the ghost is soft anyway)
+function inkGhost(src: HTMLCanvasElement, mode: SilkMode): HTMLCanvasElement {
+  const w = Math.ceil(src.width / 2), h = Math.ceil(src.height / 2), cv = makeCanvas(w, h), c = cv.getContext('2d')!;
+  c.imageSmoothingQuality = 'high'; c.drawImage(src, 0, 0, w, h);
+  const id = c.getImageData(0, 0, w, h), d = id.data, pal = palette(mode);
+  const lum = (r: number, g: number, b: number) => 0.3 * r + 0.59 * g + 0.11 * b;
+  const lg = lum(...pal.ground), li = lum(...pal.ink);
+  for (let i = 0; i < d.length; i += 4) {
+    if (!d[i + 3]) continue;
+    const t = clamp((lg - lum(d[i], d[i + 1], d[i + 2])) / (lg - li), 0, 1);
+    d[i + 3] = d[i + 3] * Math.pow(t, 1.4); d[i] = pal.ink[0]; d[i + 1] = pal.ink[1]; d[i + 2] = pal.ink[2];
+  }
+  c.putImageData(id, 0, 0);
+  return cv;
+}
+/** A soft drop shadow for a lifted relief layer (same size as the layer, offset and blurred, ink-tinted).
+ *  Draw it under the layer and move it with the lift (e.g. offset grows with height). Sizes in canvas px. */
+export function layerShadow(layer: HTMLCanvasElement, o: { blur?: number; dx?: number; dy?: number; alpha?: number; mode?: SilkMode } = {}): HTMLCanvasElement {
+  const W = layer.width, H = layer.height, k = W / W0;
+  const blur = o.blur ?? 22 * k, dx = o.dx ?? 12 * k, dy = o.dy ?? 20 * k, alpha = o.alpha ?? 0.3;
+  const q = 4, sw = Math.ceil(W / q), shh = Math.ceil(H / q);
+  const small = makeCanvas(sw, shh), sc = small.getContext('2d')!;
+  sc.filter = `blur(${Math.max(0.5, blur / q)}px)`; sc.drawImage(layer, dx / q, dy / q, sw, shh); sc.filter = 'none';
+  sc.globalCompositeOperation = 'source-in'; sc.fillStyle = rgba(palette(o.mode ?? 'mono').ink, alpha); sc.fillRect(0, 0, sw, shh);
+  const out = makeCanvas(W, H), oc = out.getContext('2d')!; oc.imageSmoothingQuality = 'high'; oc.drawImage(small, 0, 0, W, H);
+  return out;
+}
+
+export interface RiverSprites {
+  /** draw the mast of the boat under the bridge (A-frame, stays, the roof crew hauling on its ropes); k 0 upright .. 1 lowered */
+  mast: (g: CanvasRenderingContext2D, k: number) => Rect;
+  /** draw the shouting onlookers at the near railing; k 0 arms down .. 1 all arms up (staggered) */
+  railing: (g: CanvasRenderingContext2D, k: number) => Rect;
+  /** draw the donkey cart crossing the bridge; k 0 left end .. 1 right end (occluded by nearer people and the railing) */
+  cart: (g: CanvasRenderingContext2D, k: number) => Rect;
+  /** union rects (section px) each sprite can touch, for partial redraws; cartRect(k) is the cart's rect at k */
+  rects: { mast: Rect; railing: Rect; cart: Rect };
+  cartRect: (k: number) => Rect;
+}
+/** The three animated elements of the 'river' section, to composite each frame over paintSection('river', {sprites:false})
+ *  painted with the same width/height/mode/seed. Each draw function paints in the section's pixel coordinates on `g`
+ *  (respecting g's current transform) and returns the rect it touched. Suggested order: cart, railing, mast. */
+export function paintRiverSprites(o: SilkOptions = {}): RiverSprites {
+  const W = Math.round(o.width ?? W0), H = Math.round(o.height ?? H0), mode = o.mode ?? 'mono', sx = W / W0, sy = H / H0;
+  const RD = riverDefs(o), B = RD.B, G = RD.G, proj = RD.proj;
+  const pt = (X: number, Y: number, Z: number): Pt => [proj.ox + X + proj.A * Z, proj.oy - Y - proj.B * Z];
+  const items = bridgeItems(B), rail = items.filter(i => i.kind === 'rail'), cartIt = items.find(i => i.kind === 'cart')!;
+  const atI = (X: number, u: number) => pt(X, G.E(X), B.Zb + B.Db * u);
+  const toPx = (x0: number, y0: number, x1: number, y1: number): Rect => { const x = Math.floor(x0 * sx), y = Math.floor(y0 * sy); return { x, y, w: Math.ceil(x1 * sx) - x, h: Math.ceil(y1 * sy) - y }; };
+  // design-space bounds
+  const bA = RD.boatArgs, sh2 = 0.86, M = 600;
+  let mx0 = Infinity, my0 = Infinity, mx1 = -Infinity, my1 = -Infinity;
+  const grow = (p: Pt, pad: number) => { mx0 = Math.min(mx0, p[0] - pad); my0 = Math.min(my0, p[1] - pad); mx1 = Math.max(mx1, p[0] + pad); my1 = Math.max(my1, p[1] + pad); };
+  for (let i = 0; i <= 20; i++) { const th = i / 20 * 1.38; grow(pt(bA.Xc, 110 + M * Math.cos(th), bA.Z0 + sh2 * bA.L - M * Math.sin(th)), 30); }
+  for (const s of [0.02, 0.2, 0.26, 0.7, 0.86, 1]) for (const side of [-1, 1]) grow(pt(bA.Xc + side * bA.beam * 0.5, 120, bA.Z0 + s * bA.L), 90);
+  const mastR = toPx(mx0, my0, mx1, my1);
+  let rx0 = Infinity, ry0 = Infinity, rx1 = -Infinity, ry1 = -Infinity;
+  for (const it of rail) { const p = atI(it.X, it.u); rx0 = Math.min(rx0, p[0] - 50); rx1 = Math.max(rx1, p[0] + 50); ry0 = Math.min(ry0, p[1] - 125); ry1 = Math.max(ry1, p[1] + 10); }
+  const railR = toPx(rx0, ry0, rx1, ry1);
+  const cartD = (k: number) => { const p = atI(cartX(B, k), CART_LANE); return [p[0] - 150, p[1] - 135, p[0] + 125, p[1] + 16] as [number, number, number, number]; };
+  const cartRect = (k: number) => toPx(...cartD(k));
+  let cx0 = Infinity, cy0 = Infinity, cx1 = -Infinity, cy1 = -Infinity;
+  for (let i = 0; i <= 40; i++) { const d = cartD(i / 40); cx0 = Math.min(cx0, d[0]); cy0 = Math.min(cy0, d[1]); cx1 = Math.max(cx1, d[2]); cy1 = Math.max(cy1, d[3]); }
+  const cartUnion = toPx(cx0, cy0, cx1, cy1);
+  const dens = (o.density ?? 1) * (mode === 'grey' ? 0.45 : 1);
+  const bufs: Record<string, HTMLCanvasElement> = {};
+  const run = (key: string, R: Rect, g: CanvasRenderingContext2D, draw: (P: Painter) => void, erase?: (P: Painter) => void): Rect => {
+    let cv = bufs[key]; if (!cv || cv.width < R.w || cv.height < R.h) { cv = bufs[key] = makeCanvas(Math.max(1, R.w), Math.max(1, R.h)); }
+    const c = cv.getContext('2d')!; c.setTransform(1, 0, 0, 1, 0, 0); c.clearRect(0, 0, cv.width, cv.height);
+    c.setTransform(sx, 0, 0, sy, -R.x, -R.y);
+    const P = new Painter(c, mode, Math.min(sx, sy), dens); P.proj = proj; P.setFog(0); P.figSeed = (o.seed ?? 43) * 17; P.figN = 0;
+    draw(P);
+    if (erase) { c.globalCompositeOperation = 'destination-out'; erase(P); c.globalCompositeOperation = 'source-over'; }
+    g.drawImage(cv, 0, 0, R.w, R.h, R.x, R.y, R.w, R.h);
+    return R;
+  };
+  const seedR = (B.seed ?? 1) * 31;
+  return {
+    mast: (g, k) => run('mast', mastR, g, P => { RD.mastBoat(P, 'mast', clamp(k, 0, 1)); }),
+    railing: (g, k) => run('rail', railR, g, P => { for (const it of rail.slice().sort((a, b) => b.u - a.u)) drawBItem(P, B, it, { railK: k }); }, P => bridgeRail(P, B, B.Zb, 1, seedR + 2)),
+    cart: (g, k) => {
+      const R = cartRect(k), X = cartX(B, k);
+      return run('cart', R, g, P => drawBItem(P, B, cartIt, { cartK: k }), P => {
+        for (const it of items) if (it.u < CART_LANE && it.kind !== 'rail' && it.kind !== 'cart' && Math.abs(it.X - X) < 260) drawBItem(P, B, it);
+        bridgeRail(P, B, B.Zb, 1, seedR + 2); bridgePoles(P, B, seedR + 4, true);
+      });
+    },
+    rects: { mast: mastR, railing: railR, cart: cartUnion },
+    cartRect,
+  };
 }
 
 /** Silk weave + age (mottling, foxing, roll creases) over a canvas. Only darkens where the canvas already has paint,
@@ -864,9 +1334,23 @@ function groundMarks(S: Scene, L: number, n: number, inside: (x: number, y: numb
 }
 
 // ---------------- 'river': the 汴河, the boat lowering its mast, the 虹桥 crowded with people
-BUILDERS.river = (S, o) => {
+// shared by the builder and paintRiverSprites, so a sprite lands exactly where the base painting expects it
+function riverDefs(o: SilkOptions) {
   const proj: Proj = { ox: 0, oy: 1700, A: 0.6, B: 0.5 };
   const Xl = 600, Xr = 1700, Zb = 1480, Db = 300;
+  const B: BridgeDef = { X0: Xl - 110, X1: Xr + 110, Zb, Db, rise: 370, T: 80, ramp: 250, crowd: 104, boatX: 1190, seed: o.seed ?? 43 };
+  const G = bridgeGeo(B);
+  const boatArgs = { Xc: 1185, Z0: Zb - 1080, L: 1050, beam: 250 };
+  const mastBoat = (P: Painter, part: 'all' | 'base' | 'mast', mast: number) => {
+    P.r = mulberry32((o.seed ?? 43) * 613 + (part === 'mast' ? 2 : 1));
+    const tg: Pt[] = [P.pt(1090, G.I(1090) + 10, Zb), P.pt(1270, G.I(1270) + 10, Zb), P.pt(1190, G.I(1190) + 12, Zb)];
+    return boat(P, boatArgs.Xc, boatArgs.Z0, boatArgs.L, boatArgs.beam, { cabin: 'long', mast, mastH: 600, crew: 8, push: tg, oar: true, robeSeed: 3, part });
+  };
+  return { proj, Xl, Xr, Zb, Db, B, G, boatArgs, mastBoat };
+}
+BUILDERS.river = (S, o) => {
+  const RD = riverDefs(o), proj = RD.proj;
+  const { Xl, Xr, Zb, Db } = RD;
   const fog: FogFn = Z => clamp((Z - 1900) / 1900, 0, 0.62);
   const bank = (X: number) => X < Xl ? -1 : X > Xr ? 1 : 0;
   const wrap = (fn: (P: Painter) => void) => (P: Painter) => { P.proj = proj; fn(P); };
@@ -895,13 +1379,8 @@ BUILDERS.river = (S, o) => {
     }
   });
   // the boats
-  const mast = o.mast ?? 0.55;
-  const B: BridgeDef = { X0: Xl - 110, X1: Xr + 110, Zb, Db, rise: 370, T: 80, ramp: 250, crowd: 104, boatX: 1190 };
-  const bridgeFace = (X: number) => { const Xm = (B.X0 + B.X1) / 2, hs = (B.X1 - B.X0) / 2, R = (hs * hs + B.rise * B.rise) / (2 * B.rise); return Math.sqrt(R * R - (X - Xm) ** 2) - (R - B.rise); };
-  S.add(3, Zb - 1080, 1180, P => {
-    const tg: Pt[] = [P.pt(1090, bridgeFace(1090) + 10, Zb), P.pt(1270, bridgeFace(1270) + 10, Zb), P.pt(1190, bridgeFace(1190) + 12, Zb)];
-    boat(P, 1185, Zb - 1080, 1050, 250, { cabin: 'long', mast, mastH: 600, crew: 8, push: tg, oar: true, robeSeed: 3 });
-  });
+  const B = RD.B;
+  S.add(3, Zb - 1080, 1180, P => { RD.mastBoat(P, o.sprites === false ? 'base' : 'all', o.mast ?? 0.55); });
   S.add(2, 1900, 1560, P => { boat(P, 1540, 1900, 720, 190, { cabin: 'long', mast: 0, mastH: 460, crew: 3, robeSeed: 1 }); }, { fog: fog(2100) });
   let towApex: Pt = [0, 0];
   S.add(2, 2520, 900, P => { const b = boat(P, 980, 2520, 560, 160, { cabin: 'long', mast: 0.03, mastH: 440, crew: 2, tow: P.pt(470, 60, 3150) }); towApex = b.apex ?? towApex; }, { fog: fog(2700) });
@@ -912,7 +1391,7 @@ BUILDERS.river = (S, o) => {
   for (let i = 0; i < 5; i++) { const X = 470 - i * 44, Z = 3150 + i * 30; addFig(S, 1, X, Z, { dir: 1, body: 'short', pose: 'pull', hat: i % 2 ? 'li' : 'cap', robe: i, lean: 1, force: true }, fog, 46); }
   void towApex;
   // the bridge
-  S.add(3, Zb, 1150, P => bridge(P, B));
+  S.add(3, Zb, 1150, P => bridge(P, B, { sprites: o.sprites, cartK: o.cartK, railK: o.railK }));
   // left bank (far = L1 above the bridge line, near = L4)
   const LL = (X: number, Z: number) => (Z > Zb - 60 ? 1 : 4);
   houseRow(S, LL, -320, 330, 330, fog, { awn: 0.4, gableZ: 0.3 });
@@ -1103,86 +1582,99 @@ function P_rand(x: number, y: number) { return hash2(Math.round(x), Math.round(y
 BUILDERS.shed = (S, o) => {
   const patch = o.patch ?? 'bare';
   const proj: Proj = { ox: 0, oy: 1680, A: 0.6, B: 0.5 }; const pP = useProj(S, proj);
-  const fog: FogFn = Z => clamp((Z - 1500) / 1700, 0, 0.65);
+  const fog: FogFn = Z => clamp((Z - 1300) / 1600, 0, 0.66);
   groundFill(S);
-  S.ground(0, P => { P.setFog(0.75); farTrees(P, -40, 4150, 230, 130); P.setFog(0.55); farTrees(P, 200, 3900, 330, 150); P.setFog(0); });
-  groundMarks(S, 1, 240, (x, y) => y < 900, 300);
-  groundMarks(S, 4, 240, (x, y) => y >= 900, 900);
-  // fields (furrows) in the distance, the dirt road, the stream with a plank bridge
+  S.ground(0, P => { P.setFog(0.78); farTrees(P, -40, 4150, 210, 130); P.setFog(0.6); farTrees(P, 100, 4000, 300, 150); P.setFog(0); });
+  groundMarks(S, 1, 300, (x, y) => y < 1000, 300);
+  groundMarks(S, 4, 260, (x, y) => y >= 1000, 1000);
+  // fields with furrows, the dirt road (behind the shed), the stream and its plank bridge
   S.ground(1, P => {
-    for (let k = 0; k < 3; k++) { const X0 = -600 + k * 900, Z0 = 1700 + k * 180; P.setFog(fog(Z0)); for (let i = 0; i < 9; i++) line(P, [P.pt(X0, 0, Z0 + i * 26), P.pt(X0 + 640, 0, Z0 + i * 26)], 1.0, { a: 0.45, amp: 1.2 }); }
+    for (const [X0, Z0, w] of [[-700, 1650, 700], [150, 1900, 800], [1500, 1700, 600], [2700, 2050, 700], [-200, 2300, 900]] as [number, number, number][]) {
+      P.setFog(fog(Z0) * 0.8); const box: Pt[] = [P.pt(X0, 0, Z0), P.pt(X0 + w, 0, Z0), P.pt(X0 + w, 0, Z0 + 230), P.pt(X0, 0, Z0 + 230)];
+      fill(P, box, P.wash(P.pal.earth, 1.4)); line(P, box, 1.2, { closed: true, a: 0.5, amp: 1.5 });
+      for (let k = 1; k < 9; k++) line(P, [P.pt(X0 + 6, 0, Z0 + k * 26), P.pt(X0 + w - 6, 0, Z0 + k * 26)], 0.9, { a: 0.4, amp: 1.2 });
+    }
     P.setFog(0);
   });
-  S.ground(3, P => { for (const dz of [0, 150]) line(P, [P.pt(-800, 0, 700 + dz), P.pt(4000, 0, 700 + dz)], 1.6, { a: 0.6, amp: 2 }); for (const dz of [50, 100]) line(P, [P.pt(-800, 0, 700 + dz), P.pt(4000, 0, 700 + dz)], 0.9, { a: 0.35, amp: 2 }); });
-  const SX0 = 2380, SX1 = 2500;
+  const RZ = 1120;
+  S.ground(1, P => { P.setFog(fog(RZ)); for (const dz of [0, 130]) line(P, [P.pt(-900, 0, RZ + dz), P.pt(4200, 0, RZ + dz)], 1.6, { a: 0.6, amp: 2 }); for (const dz of [40, 90]) line(P, [P.pt(-900, 0, RZ + dz), P.pt(4200, 0, RZ + dz)], 0.9, { a: 0.35, amp: 2 }); P.setFog(0); });
+  const SX0 = 2860, SX1 = 2990;
   S.ground(2, P => {
-    const poly: Pt[] = [P.pt(SX0, 0, -100), P.pt(SX1, 0, -100), P.pt(SX1 - 140, 0, 2800), P.pt(SX0 - 160, 0, 2800)];
-    fill(P, poly, P.gfill()); fill(P, poly, P.wash(P.pal.water, 1.2)); ripples(P, poly, [proj.A, -proj.B], 0.6);
+    const poly: Pt[] = [P.pt(SX0 + 60, 0, -150), P.pt(SX1 + 60, 0, -150), P.pt(SX1 - 120, 0, 2900), P.pt(SX0 - 140, 0, 2900)];
+    fill(P, poly, P.gfill()); fill(P, poly, P.wash(P.pal.water, 1.3)); ripples(P, poly, [proj.A, -proj.B], 0.7);
     line(P, [poly[0], poly[3]], 1.8, { amp: 1.5 }); line(P, [poly[1], poly[2]], 1.8, { amp: 1.5 });
   });
-  S.add(2, 690, SX0, P => { const q: Pt[] = [P.pt(SX0 - 30, 14, 700), P.pt(SX1 + 30, 14, 700), P.pt(SX1 + 30, 14, 850), P.pt(SX0 - 30, 14, 850)]; shape(P, q, P.pal.wood, 2, { k: 0.8 }); for (let z = 712; z < 850; z += 14) { const a = P.pt(SX0 - 30, 14, z), b = P.pt(SX1 + 30, 14, z); seg(P, a[0], a[1], b[0], b[1], 0.8, 0.6); } const f: Pt[] = [P.pt(SX0 - 30, 14, 700), P.pt(SX1 + 30, 14, 700), P.pt(SX1 + 30, 0, 700), P.pt(SX0 - 30, 0, 700)]; shape(P, f, P.pal.wood, 1.6, { k: 1.4 }); for (const x of [SX0, SX1]) { const a = P.pt(x, 0, 700), b = P.pt(x, -30, 700); seg(P, a[0], a[1], b[0], b[1], 2); } });
-  // farm compound with straw roofs and wattle fences (left), more farms far right
-  addHouse(S, 3, -260, 1080, 300, 170, 84, { roof: 'straw', front: 'doors' }, fog);
-  addHouse(S, 3, 120, 1150, 240, 160, 80, { roof: 'straw', ridge: 'z', front: 'wall' }, fog);
-  addHouse(S, 1, -560, 1500, 260, 150, 80, { roof: 'straw' }, fog);
-  S.add(3, 1000, -300, P => { fence(P, -300, 1000, 420, 1000, 40); fence(P, 420, 1000, 420, 1350, 40); }, { fog: fog(1000) });
-  addHouse(S, 1, 2900, 1500, 300, 160, 82, { roof: 'straw', front: 'doors' }, fog);
-  addHouse(S, 1, 3300, 1420, 220, 150, 80, { roof: 'straw', ridge: 'z' }, fog);
-  S.add(1, 1380, 2800, P => fence(P, 2800, 1380, 3500, 1380, 36), { fog: fog(1380) });
-  addHouse(S, 4, 3000, 260, 320, 170, 86, { roof: 'straw', front: 'open', awning: true }, fog);
-  // trees: misty willows, old crab-claw trees
-  for (const [X, Z, H, k] of [[-120, 900, 380, 'bare'], [400, 1350, 360, 'willow'], [900, 1250, 400, 'bare'], [1250, 1600, 340, 'willow'], [2150, 1200, 380, 'bare'], [SX0 - 120, 1050, 360, 'willow'], [SX1 + 60, 560, 400, 'willow'], [2850, 1700, 330, 'leaf'], [3600, 1000, 380, 'bare'], [-300, 1800, 300, 'willow']] as [number, number, number, string][]) addTree(S, Z > 1000 ? 1 : Z > 640 ? 3 : 4, X, Z, H, k as 'willow', fog);
-  addTree(S, 4, 1500, 320, 440, 'bare', fog); addTree(S, 4, 300, 380, 420, 'willow', fog);
-  // the donkey caravan carrying charcoal toward the city, a drover behind
-  for (let i = 0; i < 5; i++) addBeast(S, 3, 2900 + i * 120, 760 + (i % 2) * 30, 64, 'donkey', -1, true, fog);
-  addFig(S, 3, 3540, 790, { dir: -1, body: 'short', pose: 'walk', hat: 'li', robe: 2, force: true }, fog);
+  S.add(2, RZ - 10, SX0, P => { P.setFog(fog(RZ)); const bx0 = SX0 - 60, bx1 = SX1 + 40; const q: Pt[] = [P.pt(bx0, 14, RZ), P.pt(bx1, 14, RZ), P.pt(bx1, 14, RZ + 130), P.pt(bx0, 14, RZ + 130)]; shape(P, q, P.pal.wood, 2, { k: 0.8 }); for (let z = RZ + 12; z < RZ + 130; z += 13) { const a = P.pt(bx0, 14, z), b = P.pt(bx1, 14, z); seg(P, a[0], a[1], b[0], b[1], 0.8, 0.6); } const f: Pt[] = [P.pt(bx0, 14, RZ), P.pt(bx1, 14, RZ), P.pt(bx1, 0, RZ), P.pt(bx0, 0, RZ)]; shape(P, f, P.pal.wood, 1.6, { k: 1.4 }); for (const x of [bx0 + 20, bx1 - 20]) { const a = P.pt(x, 0, RZ), b = P.pt(x, -34, RZ); seg(P, a[0], a[1], b[0], b[1], 2); } });
+  // farms: straw roofs, wattle fences
+  addHouse(S, 1, -380, 1420, 320, 170, 86, { roof: 'straw', front: 'doors' }, fog);
+  addHouse(S, 1, 40, 1480, 240, 160, 80, { roof: 'straw', ridge: 'z', front: 'wall' }, fog);
+  S.add(1, 1380, -420, P => { fence(P, -420, 1380, 380, 1380, 40); fence(P, 380, 1380, 380, 1700, 40); }, { fog: fog(1380) });
+  addHouse(S, 1, 1950, 1620, 300, 160, 82, { roof: 'straw', front: 'doors' }, fog);
+  addHouse(S, 1, 3150, 1300, 300, 160, 84, { roof: 'straw', front: 'doors' }, fog);
+  addHouse(S, 1, 3560, 1350, 220, 150, 80, { roof: 'straw', ridge: 'z' }, fog);
+  S.add(1, 1260, 3100, P => fence(P, 3100, 1260, 3900, 1260, 36), { fog: fog(1260) });
+  addHouse(S, 4, 3250, 220, 360, 180, 92, { roof: 'straw', front: 'open', awning: true }, fog);
+  S.add(4, 180, 3150, P => fence(P, 3150, 180, 3150, 520, 40), { fog: 0 });
+  addHouse(S, 4, -420, 330, 320, 170, 88, { roof: 'straw', front: 'doors' }, fog);
+  // trees: misty willows, old crab-claw trees (清明: early spring)
+  for (const [X, Z, H, k] of [[-80, 1250, 380, 'bare'], [520, 1600, 360, 'willow'], [980, 1500, 400, 'bare'], [1450, 1900, 340, 'willow'], [2350, 1450, 380, 'bare'], [SX0 - 260, 1350, 380, 'willow'], [SX1 + 160, 900, 420, 'willow'], [2600, 2100, 330, 'leaf'], [3850, 1500, 380, 'bare'], [-500, 2000, 300, 'willow'], [1900, 2300, 300, 'bare']] as [number, number, number, string][]) addTree(S, Z > 1060 ? 1 : 4, X, Z, H, k as 'willow', fog);
+  for (const [X, Z, H, k] of [[620, 260, 470, 'bare'], [1080, 560, 440, 'willow'], [2500, 380, 460, 'bare'], [SX0 - 120, 640, 420, 'willow'], [3700, 600, 400, 'leaf']] as [number, number, number, string][]) addTree(S, 4, X, Z, H, k as 'willow', fog);
+  // the donkey caravan carrying charcoal along the road toward the city (left), drover behind
+  for (let i = 0; i < 5; i++) addBeast(S, 1, 2050 + i * 125, RZ + 40 + (i % 2) * 40, 64, 'donkey', -1, true, Z => fog(Z) * 0.6);
+  addFig(S, 1, 2700, RZ + 70, { dir: -1, body: 'short', pose: 'walk', hat: 'li', robe: 2, force: true }, Z => fog(Z) * 0.6);
   // the tomb-sweeping party: a sedan dressed with willow branches, attendants, a rider
-  S.add(3, 780, 700, P => { const p = P.pt(700, 0, 780); sedan(P, p[0], p[1], 54, -1, true); }, { fog: fog(780) });
-  addBeast(S, 3, 1000, 760, 70, 'horse', -1, false, fog, { dir: -1, hat: 'futou', robe: 1 });
-  addFig(S, 3, 1120, 790, { dir: -1, body: 'short', pose: 'carry', load: 'pole', hat: 'cap', robe: 4, force: true }, fog);
-  addFig(S, 3, 480, 760, { dir: -1, body: 'short', pose: 'walk', hat: 'cap', robe: 5, force: true }, fog);
-  addCrowd(S, 4, -300, 3600, 120, 560, 10, fog);
-  addCrowd(S, 1, -400, 3400, 1100, 1700, 7, fog, 46, { body: 'short', hat: 'li' });
-  // the straw shed with the damaged spot (the subject of the 1973 repair)
-  const SHX = 1385, SHZ = 1020, SHW = 250, SHD = 130, SHH = 72;
-  S.add(3, SHZ, SHX, P => {
-    house(P, SHX, SHZ, SHW, SHD, SHH, { roof: 'straw', front: 'open', rh: 58 });
-    const t = P.pt(SHX + SHW * 0.5, 0, SHZ - 20); shape(P, [[t[0] - 40, t[1] - 30], [t[0] + 40, t[1] - 30], [t[0] + 46, t[1] - 22], [t[0] - 34, t[1] - 22]], P.pal.wood, 1.4); seg(P, t[0] - 36, t[1] - 22, t[0] - 36, t[1], 1.3); seg(P, t[0] + 40, t[1] - 22, t[0] + 40, t[1], 1.3);
-    figure(P, t[0] + 70, t[1] + 6, 54, { dir: -1, pose: 'sit', hat: 'jin', robe: 2 });
-  }, { fog: fog(SHZ) });
-  const fl = pP(SHX, SHH, SHZ); // front-left eave corner of the shed
-  const PR: Rect = { x: fl[0] - 70, y: fl[1] - 28, w: 170, h: 150 };
-  const ear1: Pt = [PR.x + 46, PR.y + 8], ear2: Pt = [PR.x + 62, PR.y + 9];
-  S.info.patch = PR; S.info.posts = { x: ear1[0] - 8, y: ear1[1] - 34, w: 34, h: 40 };
-  const blob = (P: Painter, inset: number, seed: number): Pt[] => { const n = vnoise(seed); const out: Pt[] = []; const cx = PR.x + PR.w / 2, cy = PR.y + PR.h / 2; for (let i = 0; i < 48; i++) { const a = i / 48 * Math.PI * 2; const k = 0.82 + 0.3 * n(Math.cos(a) * 2 + 3, Math.sin(a) * 2 + 3); out.push([cx + Math.cos(a) * (PR.w / 2 - inset) * k, cy + Math.sin(a) * (PR.h / 2 - inset) * k]); } return out; };
-  S.overlay(3, P => {
+  S.add(1, RZ + 50, 260, P => { P.setFog(fog(RZ) * 0.6); const p = P.pt(260, 0, RZ + 50); sedan(P, p[0], p[1], 54, -1, true); });
+  addBeast(S, 1, 560, RZ + 70, 70, 'horse', -1, false, Z => fog(Z) * 0.6, { dir: -1, hat: 'futou', robe: 1 });
+  addFig(S, 1, 700, RZ + 60, { dir: -1, body: 'short', pose: 'carry', load: 'pole', hat: 'cap', robe: 4, force: true }, Z => fog(Z) * 0.6);
+  addFig(S, 1, 40, RZ + 80, { dir: -1, body: 'short', pose: 'walk', hat: 'cap', robe: 5, force: true }, Z => fog(Z) * 0.6);
+  addCrowd(S, 4, -300, 3800, 120, 700, 9, fog);
+  addCrowd(S, 1, -400, 3600, 1400, 2000, 7, fog, 46, { body: 'short', hat: 'li' });
+  // the straw shed (front-left roof corner = where the silk was lost and later patched)
+  const SHX = 1500, SHZ = 760, SHW = 430, SHD = 210, SHH = 112, RH = 92;
+  const ov = Math.min(SHD * 0.3, 40), sxo = Math.min(SHW * 0.12, 30);
+  S.add(4, SHZ, SHX, P => {
+    house(P, SHX, SHZ, SHW, SHD, SHH, { roof: 'straw', front: 'open', rh: RH });
+    const t = P.pt(SHX + SHW * 0.55, 0, SHZ - 30); shape(P, [[t[0] - 50, t[1] - 34], [t[0] + 50, t[1] - 34], [t[0] + 58, t[1] - 24], [t[0] - 42, t[1] - 24]], P.pal.wood, 1.4); seg(P, t[0] - 44, t[1] - 24, t[0] - 44, t[1], 1.3); seg(P, t[0] + 50, t[1] - 24, t[0] + 50, t[1], 1.3);
+    figure(P, t[0] + 90, t[1] + 8, 56, { dir: -1, pose: 'sit', hat: 'jin', robe: 2 });
+    figure(P, t[0] - 20, t[1] - 30, 54, { dir: 1, pose: 'sit', hat: 'futou', robe: 5 });
+  }, { fog: 0 });
+  // geometry of the damage: a donkey of scale u facing right has its ears exactly on the two poles
+  const corner = pP(SHX - sxo, SHH - 3, SHZ - ov);
+  const u = 1.9, ex = 34, ey = -88, el = 20;
+  const X0 = corner[0] + 14 - ex * u, Y0 = corner[1] + 12 - ey * u; // donkey feet
+  const earB1: Pt = [X0 + (ex - 1) * u, Y0 + ey * u], earT1: Pt = [X0 + (ex - 4) * u, Y0 + (ey - el) * u];
+  const earB2: Pt = [X0 + (ex + 3) * u, Y0 + (ey - 1) * u], earT2: Pt = [X0 + ex * u, Y0 + (ey - el) * u];
+  const PR: Rect = { x: X0 - 52 * u, y: Y0 + (ey - 3) * u, w: (52 + 66) * u, h: (-ey + 3) * u + 18 };
+  S.info.patch = PR; S.info.posts = { x: earT1[0] - 10, y: earT1[1] - 6, w: earB2[0] - earT1[0] + 22, h: earB1[1] - earT1[1] + 12 };
+  const blob = (inset: number, seed: number): Pt[] => { const n = vnoise(seed); const out: Pt[] = []; const cx = PR.x + PR.w / 2, cy = PR.y + PR.h / 2; for (let i = 0; i < 56; i++) { const a = i / 56 * Math.PI * 2; const k = 0.86 + 0.24 * n(Math.cos(a) * 2 + 3, Math.sin(a) * 2 + 3); const c = Math.cos(a), sn = Math.sin(a); const sq = 1 / Math.max(Math.abs(c), Math.abs(sn)) ** 0.6; out.push([cx + c * sq * (PR.w / 2 - inset) * k, cy + sn * sq * (PR.h / 2 - inset) * k]); } return out; };
+  S.overlay(4, P => {
     P.setFog(0);
-    const tear = blob(P, 18, 77);
     if (patch === 'bare' || patch === 'ears') {
       // lost silk: the darker backing shows through, frayed threads at the edge, broken ink fragments
-      fill(P, tear, rgba(mix(P.pal.ground, P.mode === 'grey' ? hex('#6E6A62') : hex('#B89C70'), 0.45)), true);
-      fill(P, blob(P, 30, 78), rgba(mix(P.pal.ground, P.mode === 'grey' ? hex('#5E5A54') : hex('#A88A5E'), 0.4)), true);
-      for (let i = 0; i < 70; i++) { const p = pick(P.r, tear); const a = P.r() * Math.PI * 2; const l = rr(P.r, 3, 9); seg(P, p[0], p[1], p[0] + Math.cos(a) * l, p[1] + Math.sin(a) * l, 0.6, 0.35); }
-      line(P, tear, 0.9, { closed: true, a: 0.45, amp: 1.2 });
-      for (let i = 0; i < 6; i++) { const x = rr(P.r, PR.x + 30, PR.x + PR.w - 30), y = rr(P.r, PR.y + 40, PR.y + PR.h - 30); seg(P, x, y, x + rr(P.r, -14, 14), y + rr(P.r, -6, 6), 1.2, 0.5); }
+      const tear = blob(26, 77);
+      fill(P, tear, rgba(mix(P.pal.ground, P.mode === 'grey' ? hex('#6E6A62') : hex('#B89C70'), 0.5)), true);
+      fill(P, blob(44, 78), rgba(mix(P.pal.ground, P.mode === 'grey' ? hex('#5E5A54') : hex('#A88A5E'), 0.4)), true);
+      for (let i = 0; i < 160; i++) { const p = pick(P.r, tear); const a = P.r() * Math.PI * 2; const l = rr(P.r, 3, 12); seg(P, p[0], p[1], p[0] + Math.cos(a) * l, p[1] + Math.sin(a) * l, 0.6, 0.35); }
+      line(P, tear, 1.0, { closed: true, a: 0.5, amp: 1.4 });
+      for (let i = 0; i < 9; i++) { const x = rr(P.r, PR.x + 50, PR.x + PR.w - 50), y = rr(P.r, PR.y + 60, PR.y + PR.h - 40); seg(P, x, y, x + rr(P.r, -18, 18), y + rr(P.r, -8, 8), 1.3, 0.45); }
     } else if (patch === 'donkey') {
-      const pa = blob(P, 6, 79);
-      fill(P, pa, rgba(mix(P.pal.ground, hex('#B9B4A6'), 0.32)), true);
-      line(P, pa, 0.9, { closed: true, a: 0.35, amp: 0.6 });
-      // the Ming mounter's donkey: ears = the shed's poles
-      const u = 1.3, X0 = ear1[0] + 34 * u + 1, Y0 = ear1[1] + 88 * u;
-      beast(P, X0, Y0, 100 * u, 'donkey', -1, false, 0.35);
+      // the Ming mounter's patch, a shade greyer than the silk, and the donkey he painted under the "ears"
+      const pa = blob(6, 79);
+      fill(P, pa, rgba(mix(P.pal.ground, hex('#B5B0A3'), 0.3)), true);
+      line(P, pa, 1.0, { closed: true, a: 0.32, amp: 0.6 });
+      beast(P, X0, Y0, 100 * u, 'donkey', 1, false, 0.35);
     } else {
-      // 1973: old patch lifted, new plain silk let in; the poles stand over blank silk
-      const pa = blob(P, 6, 79);
-      fill(P, pa, rgba(mix(P.pal.ground, hex('#FFFBF0'), 0.55)), true);
-      line(P, pa, 0.8, { closed: true, a: 0.18, amp: 0.4 });
+      // 1973: the old patch lifted and new plain silk let in; the poles stand over blank silk
+      const pa = blob(6, 79);
+      fill(P, pa, rgba(mix(P.pal.ground, hex('#FFFBF0'), 0.6)), true);
+      line(P, pa, 0.9, { closed: true, a: 0.16, amp: 0.4 });
     }
-    // the two thin poles (original paint)
-    for (const [e, lean] of [[ear1, -0.12], [ear2, 0.05]] as [Pt, number][]) brush(P, [e[0], e[1] + 4], [e[0] + lean * 10, e[1] - 14], [e[0] + lean * 30, e[1] - 32], 3.4, 1.4, P.ink(0.95), 6);
-    if (patch === 'ears') for (const [e, lean] of [[ear1, -0.12], [ear2, 0.05]] as [Pt, number][]) {
-      const tip: Pt = [e[0] + lean * 30, e[1] - 36];
-      line(P, [[e[0] - 7, e[1] + 6], [e[0] - 8 + lean * 12, e[1] - 16], tip, [e[0] + 7 + lean * 12, e[1] - 16], [e[0] + 7, e[1] + 6]], 1.6, { dash: [5, 4], amp: 0 });
+    // the two thin poles of the broken shed roof (original paint)
+    brush(P, earB1, [lerp(earB1[0], earT1[0], 0.5) - 1, lerp(earB1[1], earT1[1], 0.5)], earT1, 4.2, 1.5, P.ink(0.95), 6);
+    brush(P, earB2, [lerp(earB2[0], earT2[0], 0.5) + 1, lerp(earB2[1], earT2[1], 0.5)], earT2, 4.0, 1.5, P.ink(0.95), 6);
+    if (patch === 'ears') for (const [b, t] of [[earB1, earT1], [earB2, earT2]] as [Pt, Pt][]) {
+      const w = 7 * u * 0.5;
+      line(P, [[b[0] - w, b[1] + 4], [lerp(b[0], t[0], 0.55) - w * 1.1, lerp(b[1], t[1], 0.55)], [t[0], t[1] - 6], [lerp(b[0], t[0], 0.55) + w * 1.1, lerp(b[1], t[1], 0.55)], [b[0] + w, b[1] + 4]], 1.7, { dash: [6, 5], amp: 0 });
     }
   });
 };

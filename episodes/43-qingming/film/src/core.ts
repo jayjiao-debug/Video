@@ -100,7 +100,7 @@ export type Layer = {mesh: THREE.Mesh; mat: THREE.ShaderMaterial; z: number; cx:
 export class Stage {
 	scene = new THREE.Scene(); cam = new THREE.PerspectiveCamera(FOV, W / H, 10, 40000);
 	layers: Layer[] = []; mats: THREE.ShaderMaterial[] = []; hero = new THREE.Vector2(1250, 480); heroR = 900;
-	extras: THREE.Object3D[] = [];
+	extras: THREE.Object3D[] = []; clearAlpha = 1;
 	constructor(public name: string) { this.cam.position.set(0, 0, D); this.cam.lookAt(0, 0, 0); }
 	/** world position for frame px at depth z, so that it frames the same at rest */
 	at(px: number, py: number, z: number) { const s = (D - z) / D; return new THREE.Vector3((px - W / 2) * s, (H / 2 - py) * s, z); }
@@ -147,14 +147,15 @@ export const initPost = () => { slots = [mkSlot(), mkSlot()]; };
 const blackBg = new THREE.Color('#000000');
 /** render a stage (base + glow pass) into slot k; bloom mips blurred */
 export const renderStage = (st: Stage, k: number, bloom = 1) => {
+	if ((window as any).NODRAW) return;
 	const s = slots[k];
 	for (const m of st.mats) { m.uniforms.uHero.value.copy(st.hero); m.uniforms.uHeroR.value = st.heroR; m.uniforms.uGlowPass.value = 0; }
-	st.scene.background = null; renderer.setClearColor(0x000000, 1);
+	st.scene.background = null; renderer.setClearColor(0x000000, st.clearAlpha);
 	renderer.setRenderTarget(s.base); renderer.clear(); renderer.render(st.scene, st.cam);
 	if (bloom > 0) {
 		for (const m of st.mats) m.uniforms.uGlowPass.value = 1;
 		const hidden: THREE.Object3D[] = []; for (const o of st.extras) if (o.visible && !(o as any).userData.glow) { o.visible = false; hidden.push(o); }
-		renderer.setRenderTarget(s.glow); renderer.setClearColor(blackBg, 1); renderer.clear(); renderer.render(st.scene, st.cam);
+		renderer.setRenderTarget(s.glow); renderer.setClearColor(blackBg, st.clearAlpha); renderer.clear(); renderer.render(st.scene, st.cam);
 		for (const o of hidden) o.visible = true;
 		for (const m of st.mats) m.uniforms.uGlowPass.value = 0;
 		let src: THREE.Texture = s.glow.texture;
@@ -168,16 +169,16 @@ export const renderStage = (st: Stage, k: number, bloom = 1) => {
 };
 // transition masks: 0 none (A only), 1 cut/mix by k (k≥.5 → B), 2 wipe along dir with soft edge + roller shadow,
 // 3 ink bleed from point (noise), 4 ripple (B through ripples), 5 iris from point, 6 foreground band (dark body sweeps), 7 dissolve, 8 light burst (white-gold flash peaks at k=.5)
-export type Xf = {mode: number; k: number; dir?: [number, number]; pt?: [number, number]; soft?: number; band?: number};
+export type Xf = {mode: number; k: number; dir?: [number, number]; pt?: [number, number]; soft?: number; band?: number; blurA?: number};
 const compMat = new THREE.ShaderMaterial({
 	uniforms: {
 		A: {value: null}, B: {value: null}, Ag0: {value: null}, Ag1: {value: null}, Ag2: {value: null}, Ag3: {value: null}, Bg0: {value: null}, Bg1: {value: null}, Bg2: {value: null}, Bg3: {value: null},
-		bloomA: {value: 1}, bloomB: {value: 1}, mode: {value: 0}, k: {value: 0}, dir: {value: new THREE.Vector2(1, 0)}, pt: {value: new THREE.Vector2(0.5, 0.5)}, soft: {value: 0.04}, band: {value: 0.18},
-		exposure: {value: 1}, vig: {value: 0.35}, vigCol: {value: hex('#120c08')}, lift: {value: 0}, tint: {value: hex('#ffffff')}, grain: {value: 0}, time: {value: 0}, flash: {value: 0},
+		bloomA: {value: 1}, bloomB: {value: 1}, blurA: {value: 0}, mode: {value: 0}, k: {value: 0}, dir: {value: new THREE.Vector2(1, 0)}, pt: {value: new THREE.Vector2(0.5, 0.5)}, soft: {value: 0.04}, band: {value: 0.18},
+		exposure: {value: 1}, corners: {value: 0}, vig: {value: 0.35}, vigCol: {value: hex('#120c08')}, lift: {value: 0}, tint: {value: hex('#ffffff')}, grain: {value: 0}, time: {value: 0}, flash: {value: 0},
 	},
 	vertexShader: QUAD_VS, depthTest: false, depthWrite: false,
 	fragmentShader: `
-	uniform sampler2D A, B, Ag0, Ag1, Ag2, Ag3, Bg0, Bg1, Bg2, Bg3; uniform float bloomA, bloomB, k, soft, band, exposure, vig, lift, grain, time, flash; uniform int mode;
+	uniform sampler2D A, B, Ag0, Ag1, Ag2, Ag3, Bg0, Bg1, Bg2, Bg3; uniform float bloomA, bloomB, blurA, k, soft, band, exposure, corners, vig, lift, grain, time, flash; uniform int mode;
 	uniform vec2 dir, pt; uniform vec3 vigCol, tint; varying vec2 vUv;
 	float h21(vec2 p){ return fract(sin(dot(p, vec2(127.1, 311.7))) * 43758.5453); }
 	float n2(vec2 p){ vec2 i = floor(p), f = fract(p); f = f*f*(3.0-2.0*f); return mix(mix(h21(i), h21(i+vec2(1,0)), f.x), mix(h21(i+vec2(0,1)), h21(i+vec2(1,1)), f.x), f.y); }
@@ -225,24 +226,36 @@ const compMat = new THREE.ShaderMaterial({
 			float m = smoothstep(e - soft, e + soft, p); col = mix(sideB(uv), sideA(uv), m);
 			col += vec3(1.0, 0.9, 0.7) * 0.35 * exp(-pow((p - e) / soft, 2.0)) * step(0.001, k) * step(k, 0.999);
 		}
+		else if (mode == 13) { // overlay B (alpha) over a defocused A
+			vec3 a = vec3(0.0); float n = 0.0;
+			for (int i = -3; i <= 3; i++) for (int j = -3; j <= 3; j++) { vec2 o = vec2(float(i), float(j)) * blurA / vec2(1920.0, 1080.0); a += sideA(uv + o); n += 1.0; }
+			a /= n; vec4 b = texture2D(B, uv); col = mix(a, b.rgb / max(b.a, 0.001), clamp(b.a, 0.0, 1.0)) + bl(Bg0, Bg1, Bg2, Bg3, uv) * bloomB;
+		}
 		else { col = k < 0.5 ? sideA(uv) : sideB(uv); }
 		col *= exposure * tint; col += lift;
 		col += vec3(1.0, 0.86, 0.6) * flash;
 		float v = length((uv - 0.5) * vec2(1.0, 0.85)); col = mix(col, vigCol, smoothstep(0.45, 1.05, v) * vig);
+		if (corners > 0.0) { // lamplight insert: warm dark under the subtitle (top-left), stamp (top-right) and counter (bottom-left)
+			float tl = 1.0 - smoothstep(0.0, 1.0, length((uv - vec2(0.18, 0.88)) / vec2(0.42, 0.2)));
+			float tr = 1.0 - smoothstep(0.0, 1.0, length((uv - vec2(0.88, 0.86)) / vec2(0.26, 0.2)));
+			float bl2 = 1.0 - smoothstep(0.0, 1.0, length((uv - vec2(0.15, 0.08)) / vec2(0.3, 0.14)));
+			col = mix(col, vec3(0.23, 0.17, 0.12) * 0.55, clamp(max(max(tl, tr), bl2), 0.0, 1.0) * corners);
+		}
 		col += (h21(uv * 1920.0 + time) - 0.5) * grain;
 		gl_FragColor = vec4(col, 1.0);
 		#include <colorspace_fragment>
 	}`,
 });
-export type Grade = {exposure?: number; vig?: number; vigCol?: string; lift?: number; tint?: string; grain?: number; flash?: number};
+export type Grade = {exposure?: number; corners?: number; vig?: number; vigCol?: string; lift?: number; tint?: string; grain?: number; flash?: number};
 /** composite slot 0 (A) and optionally slot 1 (B) to the screen */
 export const composite = (x: Xf, g: Grade = {}, t = 0, bloomA = 1, bloomB = 1) => {
+	if ((window as any).NODRAW) return;
 	const u = compMat.uniforms, a = slots[0], b = slots[1];
 	u.A.value = a.base.texture; u.B.value = b.base.texture;
 	[u.Ag0, u.Ag1, u.Ag2, u.Ag3].forEach((s, i) => (s.value = a.mips[i][0].texture)); [u.Bg0, u.Bg1, u.Bg2, u.Bg3].forEach((s, i) => (s.value = b.mips[i][0].texture));
-	u.bloomA.value = bloomA; u.bloomB.value = bloomB; u.mode.value = x.mode; u.k.value = x.k;
+	u.bloomA.value = bloomA; u.bloomB.value = bloomB; u.blurA.value = x.blurA ?? 0; u.mode.value = x.mode; u.k.value = x.k;
 	if (x.dir) u.dir.value.set(x.dir[0], x.dir[1]); if (x.pt) u.pt.value.set(x.pt[0], x.pt[1]); u.soft.value = x.soft ?? 0.04; u.band.value = x.band ?? 0.18;
-	u.exposure.value = g.exposure ?? 1; u.vig.value = g.vig ?? 0.35; u.vigCol.value.set(g.vigCol ?? '#120c08'); u.lift.value = g.lift ?? 0; u.tint.value.set(g.tint ?? '#ffffff');
+	u.exposure.value = g.exposure ?? 1; u.corners.value = g.corners ?? 0; u.vig.value = g.vig ?? 0.35; u.vigCol.value.set(g.vigCol ?? '#120c08'); u.lift.value = g.lift ?? 0; u.tint.value.set(g.tint ?? '#ffffff');
 	u.grain.value = g.grain ?? 0; u.flash.value = g.flash ?? 0; u.time.value = t;
 	runQuad(compMat, null);
 };

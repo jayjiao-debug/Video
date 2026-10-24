@@ -26,7 +26,8 @@ if (process.argv[2] === 'crop') {
   const [, , , name, mode, x, y, w, h, out, patch, scale] = process.argv;
   const url = await page.evaluate(({ name, mode, x, y, w, h, patch, scale }) => {
     const t0 = performance.now();
-    let c = name === 'relief' ? null : SILK.paintSection(name, { mode, patch: patch || undefined });
+    let c = name === 'relief' || name === 'sprites' ? null : SILK.paintSection(name, { mode, patch: patch || undefined });
+    if (name === 'sprites') { c = SILK.paintSection('river', { mode, sprites: false }); const sp = SILK.paintRiverSprites({ mode }); const g = c.getContext('2d'); const ks = (patch || '0.2,1,0.55').split(',').map(Number); sp.cart(g, ks[2]); sp.railing(g, ks[1]); sp.mast(g, ks[0]); }
     if (name === 'relief') { const ls = SILK.paintRelief('river', { mode }); c = document.createElement('canvas'); c.width = 4096; c.height = 1536; const g = c.getContext('2d'); ls.forEach(l => g.drawImage(l, 0, 0)); }
     console.log('paint ms', Math.round(performance.now() - t0));
     const s = +scale || 1; const o = document.createElement('canvas'); o.width = +w * s; o.height = +h * s;
@@ -42,7 +43,17 @@ if (process.argv[2] === 'crop') {
     for (const p of ['ears', 'donkey', 'peeled']) tiles.push(['shed · ' + p, time('shed ' + p, () => SILK.paintSection('shed', { mode: 'mono', patch: p }))]);
     const small = time('river 2048x768', () => SILK.paintSection('river', { mode: 'mono', width: 2048, height: 768 }));
     tiles.push(['river · mono · 2048x768', small]);
-    const layers = time('relief colour (5 layers)', () => SILK.paintRelief('river', { mode: 'colour' }));
+    const base = time('river sprites:false', () => SILK.paintSection('river', { mode: 'mono', sprites: false }));
+    tiles.push(['river · mono · sprites:false (base)', base]);
+    const sp = time('paintRiverSprites setup', () => SILK.paintRiverSprites({ mode: 'mono' }));
+    const comp = document.createElement('canvas'); comp.width = 4096; comp.height = 1536; const cg = comp.getContext('2d'); cg.drawImage(base, 0, 0);
+    const per = (k, f) => { const t0 = performance.now(); for (let i = 0; i < 10; i++) f(i / 9); T[k] = +((performance.now() - t0) / 10).toFixed(1); };
+    const scratch = document.createElement('canvas'); scratch.width = 4096; scratch.height = 1536; const sg2 = scratch.getContext('2d');
+    per('sprite mast (ms/frame)', k => sp.mast(sg2, k)); per('sprite railing (ms/frame)', k => sp.railing(sg2, k)); per('sprite cart (ms/frame)', k => sp.cart(sg2, k));
+    sp.cart(cg, 0.62); sp.railing(cg, 1); sp.mast(cg, 0.15);
+    const R = sp.rects; cg.lineWidth = 4; cg.strokeStyle = 'rgba(200,0,0,0.6)'; for (const r of [R.mast, R.railing, R.cart]) cg.strokeRect(r.x, r.y, r.w, r.h);
+    tiles.push(['base + sprites (mast k=.15 · railing k=1 · cart k=.62), sprite rects in red', comp]);
+    const layers = time('relief colour (5 layers, ghost + shadow)', () => SILK.paintRelief('river', { mode: 'colour', shadow: true }));
     // relief composited with a small parallax offset per layer so the lift shows
     const rc = document.createElement('canvas'); rc.width = 4096; rc.height = 1536; const rg = rc.getContext('2d');
     layers.forEach((l, i) => { rg.save(); const s = 1 + i * 0.012; rg.translate(2048, 900); rg.scale(s, s); rg.translate(-2048 - i * 14, -900 + i * 10); rg.drawImage(l, 0, 0); rg.restore(); });
@@ -53,7 +64,7 @@ if (process.argv[2] === 'crop') {
     const seals = [SILK.paintSeal('', { seed: 1, style: 'zhu' }), SILK.paintSeal('', { seed: 2, style: 'bai' }), SILK.paintSeal('毕沅秘藏', { style: 'bai' }), SILK.paintSeal('毕泷审定', { style: 'zhu' }), SILK.paintSeal('', { seed: 9, style: 'bai', fade: 0.6 }), SILK.paintSeal('嘉庆御览之宝', { style: 'zhu', seed: 4 })];
     seals.forEach((s, i) => sg.drawImage(s, 60 + i * 330, 860, 280, 280 * s.height / s.width));
     tiles.push(['relief layers L0..L4 on checker · seals', strip]);
-    const TW = 1400, TH = 525, pad = 16, cols = 2, rows = Math.ceil(tiles.length / cols);
+    const TW = 1200, TH = 450, pad = 16, cols = 2, rows = Math.ceil(tiles.length / cols);
     const sh = document.createElement('canvas'); sh.width = cols * (TW + pad) + pad; sh.height = rows * (TH + 44 + pad) + pad; const g = sh.getContext('2d');
     g.fillStyle = '#1b1b1b'; g.fillRect(0, 0, sh.width, sh.height);
     tiles.forEach(([label, c], i) => {
