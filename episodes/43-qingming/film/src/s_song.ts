@@ -96,7 +96,7 @@ const build9 = async () => {
 
 /** the crest as ink on silk (screen px for camera (960,560,1)): arch, deck, railing, lanterns, far-bank roofline */
 const traceCanvas = async () => {
-	let s = hongqiao(960, 900, 1700, 1400) + railing(960, 906, 1700, 1400, 150, 116).svg;
+	let s = hongqiao(960, 900, 1700, 1400) + railing(960, 906, 1700, 1400, 240, 116).svg;
 	for (let x = 960 - 1700 * 1.12, i = 0; x <= 960 + 1700 * 1.12; x += 116, i++) if (i % 2 === 0) { const y = 900 + 500 * Math.min(1.4, ((x - 960) / 1700) ** 2) - 150 + 6; s += `<ellipse cx="${x}" cy="${y + 50}" rx="20" ry="27" fill="#15100C"/>`; }
 	s = `<g transform="translate(0,-20)">${s}</g><g transform="translate(0,-8)">${hills(-400, 2400, 820, 90, 7)}${skyline(-300, 2300, 860, 40, 110, 11)}${cityGate(180, 860, 1.1)}${willow(700, 866, 230, 23)}${willow(1500, 866, 250, 25)}</g>`;
 	s = s.replace(/fill="#15100C"/g, 'fill="rgba(42,31,23,0.06)" stroke="#2A1F17" stroke-width="2.4" stroke-linejoin="round"').replace(/fill="#1d1611"/g, 'fill="rgba(42,31,23,0.08)" stroke="#2A1F17" stroke-width="2.4"').replace(/stroke="#15100C"/g, 'stroke="#2A1F17"').replace(/fill="#000"/g, 'fill="none" stroke="#2A1F17" stroke-width="1.6" stroke-opacity="0.7"');
