@@ -1,0 +1,38 @@
+plan: {'tier': None, 'character_count': None, 'character_limit': None, 'status': None}
+models: ['eleven_v4', 'eleven_v4_turbo', 'eleven_v3', 'eleven_v3_conversational', 'eleven_multilingual_v2', 'eleven_flash_v2_5', 'eleven_turbo_v2_5', 'eleven_turbo_v2', 'eleven_flash_v2', 'eleven_english_sts_v2', 'eleven_multilingual_sts_v2']
+model: eleven_v4
+{"name": "O1c", "lang": "zh", "text": "唱片上，还录着她恋爱时的脑电波。", "voice": "MI36FIkp9wRP7cpWKPTl", "voice_id": "MI36FIkp9wRP7cpWKPTl", "model": "eleven_v4", "status": 200, "file": "O1c.mp3", "bytes": 51034}
+{"name": "O1d", "lang": "zh", "text": "唱片上，还录着她恋爱时的脑电波。", "voice": "MI36FIkp9wRP7cpWKPTl", "voice_id": "MI36FIkp9wRP7cpWKPTl", "model": "eleven_v4", "status": 200, "file": "O1d.mp3", "bytes": 52287}
+Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+[
+ {
+  "name": "O1c",
+  "lang": "zh",
+  "text": "唱片上，还录着她恋爱时的脑电波。",
+  "voice": "MI36FIkp9wRP7cpWKPTl",
+  "voice_id": "MI36FIkp9wRP7cpWKPTl",
+  "model": "eleven_v4",
+  "status": 200,
+  "file": "O1c.mp3",
+  "bytes": 51034,
+  "heard": "唱片上還錄著他戀愛時的腦電波",
+  "heard_lang": "zh",
+  "heard_lang_p": 1.0,
+  "seconds": 3.12
+ },
+ {
+  "name": "O1d",
+  "lang": "zh",
+  "text": "唱片上，还录着她恋爱时的脑电波。",
+  "voice": "MI36FIkp9wRP7cpWKPTl",
+  "voice_id": "MI36FIkp9wRP7cpWKPTl",
+  "model": "eleven_v4",
+  "status": 200,
+  "file": "O1d.mp3",
+  "bytes": 52287,
+  "heard": "唱片上還錄著他戀愛時的腦電波",
+  "heard_lang": "zh",
+  "heard_lang_p": 0.999,
+  "seconds": 3.2
+ }
+]
