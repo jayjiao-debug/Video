@@ -58,3 +58,32 @@ export const glowBlob = (g: CanvasRenderingContext2D, c: P, rx: number, ry: numb
 };
 export {reach, handAt, toBody};
 export type {Pose, FigOpts, P};
+
+// ------------------------------------------------------------------------------------------------ rig + contact check
+import {jointAt, toScreen as figToScreen, ReachOpt} from './figures';
+export type Contact = {side: 'L' | 'R'; target: P; opt?: ReachOpt; name?: string};
+/** contact log: per frame, the worst hand miss and foot miss (px); window.CONTACTS collects failures when window.CHECK is set */
+export const CONTACTS: {t: number; who: string; what: string; err: number}[] = [];
+let CHECK_T = 0; export const checkTime = (t: number) => { CHECK_T = t; };
+const log = (who: string, what: string, err: number, lim: number) => { if (err > lim && (window as any).CHECK) CONTACTS.push({t: CHECK_T, who, what, err: Math.round(err * 10) / 10}); };
+/** shift each foot (ankle, toe; knee by half) so the shoe rests on ground(x) at its own x — robes hide the small leg stretch */
+export const slopeFeet = (o: FigOpts, ground: (x: number) => number): FigOpts => {
+	const p: Pose = {...o.pose};
+	for (const s of ['L', 'R']) {
+		const ax = figToScreen(o, p[`${s}Ank`])[0], tx = figToScreen(o, p[`${s}Toe`])[0];
+		const gy = ground((ax + tx) / 2), d = -(gy - o.ground) / o.h;           // body units, y up
+		for (const [j, k] of [[`${s}Ank`, 1], [`${s}Toe`, 1], [`${s}Knee`, 0.5]] as [string, number][]) p[j] = [p[j][0], p[j][1] + d * k];
+	}
+	return {...o, pose: p};
+};
+/** place a figure: aim its hands at screen targets, put its feet on the ground curve, and log contact errors */
+export const rig = (o: FigOpts, contacts: Contact[], ground?: (x: number) => number, who = 'fig'): FigOpts => {
+	let pose = o.pose;
+	for (const c of contacts) pose = reach(pose, c.side, toBody(o, c.target), c.opt ?? {});
+	let f: FigOpts = {...o, pose};
+	if (ground) f = slopeFeet(f, ground);
+	for (const c of contacts) { const h = handAt(f as any, c.side); log(who, `${c.name ?? c.side} hand`, Math.hypot(h[0] - c.target[0], h[1] - c.target[1]), 4); }
+	if (ground) for (const s of ['L', 'R']) { const a = jointAt(f as any, `${s}Ank`), tp = jointAt(f as any, `${s}Toe`); const lowest = Math.max(a[1], tp[1]); const gy = ground((a[0] + tp[0]) / 2);
+		if (gy - lowest < 0.03 * f.h) log(who, `${s} foot`, Math.max(0, lowest - gy - 0.012 * f.h), 3); }
+	return f;
+};

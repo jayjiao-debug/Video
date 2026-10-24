@@ -233,4 +233,180 @@ class Scene {
   overlay(layer: number, draw: (P: Painter) => void) { this.add(layer, -1e9, 0, draw, { overlay: true }); }
 }
 
+// ------------------------------------------------------------------ figures (tiny ink people, profile, no faces)
+interface Fig {
+  dir?: number; hat?: 'futou' | 'zhanjiao' | 'li' | 'jin' | 'bun' | 'cap' | 'none';
+  body?: 'robe' | 'short'; pose?: 'stand' | 'walk' | 'raise' | 'point' | 'push' | 'pull' | 'lean' | 'sit' | 'carry' | 'bow';
+  load?: 'pole' | 'pack' | 'bundle' | 'parasol' | 'none'; robe?: number; stride?: number; lean?: number;
+  tool?: Pt; // world/screen point a pole or rope reaches (push / pull)
+  force?: boolean;
+}
+function figure(P: Painter, x: number, y: number, H: number, f: Fig = {}) {
+  if (!f.force && !P.keepFig()) return;
+  const d = f.dir ?? 1, u = H / 100, lean = f.lean ?? (f.pose === 'lean' || f.pose === 'bow' ? 1 : f.pose === 'push' || f.pose === 'pull' ? 0.7 : 0);
+  const pose = f.pose ?? 'stand', body = f.body ?? 'robe', st = f.stride ?? (pose === 'walk' || pose === 'carry' ? 1 : 0.15);
+  const T = (lx: number, ly: number): Pt => {
+    if (ly < -44) { const k = (-ly - 44); lx += lean * k * (pose === 'pull' ? -0.32 : 0.42); ly += lean * k * 0.12; }
+    return [x + lx * u * d, y + ly * u];
+  };
+  const lw = Math.max(1.05, H * 0.026), robeW = P.pal.robes[(f.robe ?? 0) % P.pal.robes.length];
+  const robeFill = (pts: Pt[]) => { fill(P, pts, P.gfill(), true); fill(P, pts, P.wash(robeW), true); line(P, pts, lw, { closed: true, amp: 0.25 }); };
+  // load behind the body
+  if (f.load === 'pack') robeFill([T(-22, -82), T(-9, -84), T(-7, -52), T(-21, -50)]);
+  if (f.load === 'pole') {
+    const L = T(-36, -80), R = T(34, -77);
+    for (const [e, k] of [[L, -1], [R, 1]] as [Pt, number][]) {
+      seg(P, e[0], e[1], e[0], e[1] + 30 * u, lw * 0.7, 0.8);
+      const bx = e[0], by = e[1] + 30 * u;
+      shape(P, [[bx - 8 * u, by], [bx + 8 * u, by], [bx + 6 * u, by + 13 * u], [bx - 6 * u, by + 13 * u]], P.pal.straw, lw);
+      void k;
+    }
+    seg(P, L[0], L[1], R[0], R[1], lw * 1.1);
+  }
+  // legs (short garments) or hem + feet (robes)
+  if (body === 'short') {
+    const k = pose === 'sit' ? 0 : 1;
+    const legs: [Pt, Pt][] = [[T(3, -46), [x + (7 + st * 9) * u * d, y]], [T(-4, -46), [x + (-5 - st * 8) * u * d, y]]];
+    if (k) for (const [a, b] of legs) {
+      const pts: Pt[] = [[a[0] - 3 * u, a[1]], [a[0] + 3 * u, a[1]], [b[0] + 2.4 * u, b[1] - 2 * u], [b[0] - 2.4 * u, b[1] - 2 * u]];
+      fill(P, pts, P.gfill()); line(P, pts, lw * 0.9, { closed: true, amp: 0.2 });
+      seg(P, b[0] - 2 * u * d, b[1] - 1, b[0] + 5 * u * d, b[1] - 1, lw * 1.5);
+    }
+    robeFill(pose === 'sit' ? [T(-8, -78), T(-10, -40), T(14, -38), T(9, -76), T(2, -80)] : [T(-8, -78), T(-10, -44), T(10, -44), T(8, -76), T(2, -80)]);
+  } else if (pose === 'sit') {
+    robeFill([T(-8, -78), T(-12, -30), T(18, -30), T(20, -4), T(-10, -2), T(-14, -30), T(-10, -60), T(9, -76), T(2, -80)].slice(0, 3).concat([T(20, -28), T(22, -3), T(4, -2), T(6, -26), T(9, -60), T(8, -76)]));
+  } else {
+    const hf = 12 + st * 6, hb = -13 - st * 3;
+    robeFill([T(-4, -80), T(-9, -76), T(-10, -55), T(-11, -38), T(hb, -3), T(hf, -3), T(10, -38), T(9, -58), T(7, -76), T(2, -80)]);
+    seg(P, x + hf * 0.75 * u * d, y - 1.5, x + (hf + 4) * u * d, y - 0.5, lw * 1.6);
+    if (st > 0.5) seg(P, x + (hb + 1) * u * d, y - 1.5, x + (hb - 4) * u * d, y - 0.5, lw * 1.5);
+    if (P.detail > 0.6) { const a = T(-1, -46), b = T(-2 - st * 2, -5); seg(P, a[0], a[1], b[0], b[1], lw * 0.6, 0.55); }
+  }
+  // belt
+  { const a = T(-10, -47), b = T(10, -46); seg(P, a[0], a[1], b[0], b[1], lw * 0.8, 0.8); }
+  // arm + hand
+  let hand: Pt = T(11, -50);
+  if (pose === 'raise') hand = T(13, -106); else if (pose === 'point') hand = T(30, -74);
+  else if (pose === 'push' || pose === 'pull') hand = T(22, -64); else if (pose === 'carry' || f.load === 'pole') hand = T(10, -79);
+  else if (pose === 'lean' || pose === 'bow') hand = T(16, -60); else if (pose === 'walk') hand = T(14, -54);
+  else if (pose === 'sit') hand = T(16, -48);
+  const sh = T(3, -75);
+  if (body === 'robe') {
+    const mid: Pt = [(sh[0] + hand[0]) / 2 - 2 * u * d, (sh[1] + hand[1]) / 2 + 4 * u];
+    const sl: Pt[] = [sh, [mid[0] + 3 * u * d, mid[1]], [hand[0] + 1 * u * d, hand[1] + 4 * u], [hand[0] - 5 * u * d, hand[1] + 5 * u], [mid[0] - 5 * u * d, mid[1] + 3 * u], [sh[0] - 4 * u * d, sh[1] + 6 * u]];
+    robeFill(sl);
+  } else { line(P, [sh, [(sh[0] + hand[0]) / 2, (sh[1] + hand[1]) / 2 + 3 * u], hand], lw * 1.5, { amp: 0.2 }); }
+  P.ctx.beginPath(); P.ctx.arc(hand[0], hand[1], Math.max(0.8, 2.2 * u), 0, Math.PI * 2); P.ctx.fillStyle = P.ink(0.9); P.ctx.fill();
+  if (f.tool) line(P, [[hand[0] - (f.tool[0] - hand[0]) * 0.18, hand[1] - (f.tool[1] - hand[1]) * 0.18], f.tool], pose === 'pull' ? lw * 0.6 : lw * 1.1, { amp: 0.15 });
+  if (f.load === 'bundle') shape(P, [T(8, -66), T(19, -66), T(19, -54), T(8, -54)], P.pal.wood, lw);
+  // head
+  const hc = T(3, -88), hr = 7.5 * u;
+  P.ctx.beginPath(); P.ctx.arc(hc[0], hc[1], hr, 0, Math.PI * 2); P.ctx.fillStyle = rgba(P.pal.skin); P.ctx.fill();
+  P.ctx.lineWidth = P.lw(lw * 0.9); P.ctx.strokeStyle = P.ink(0.95); P.ctx.stroke();
+  const ink = P.ink(0.97), c = P.ctx; c.fillStyle = ink;
+  // hair at the back of the head gives the profile
+  c.beginPath(); c.arc(hc[0], hc[1], hr, d > 0 ? Math.PI * 0.55 : -Math.PI * 0.45, d > 0 ? Math.PI * 1.45 : Math.PI * 0.45); c.closePath(); c.fill();
+  const hat = f.hat ?? 'futou';
+  if (hat === 'futou' || hat === 'zhanjiao' || hat === 'jin' || hat === 'cap') {
+    c.beginPath(); c.ellipse(hc[0] - 0.5 * u * d, hc[1] - 2.5 * u, hr * 1.12, hr * (hat === 'cap' ? 0.7 : 0.95), 0, Math.PI, Math.PI * 2); c.closePath(); c.fill();
+    if (hat !== 'cap') { c.beginPath(); c.ellipse(hc[0] - 1.5 * u * d, hc[1] - 8.5 * u, hr * 0.62, hr * 0.62, 0, 0, Math.PI * 2); c.fill(); }
+    if (hat === 'futou') { const a = T(-6, -91); line(P, [a, [a[0] - 6 * u * d, a[1] + 9 * u]], lw * 0.8, { amp: 0.1 }); }
+    if (hat === 'zhanjiao') seg(P, hc[0] - 24 * u, hc[1] - 6 * u, hc[0] + 24 * u, hc[1] - 6 * u, lw * 0.9);
+    if (hat === 'jin') { c.beginPath(); c.arc(hc[0] - 6 * u * d, hc[1] - 6 * u, hr * 0.45, 0, Math.PI * 2); c.fill(); }
+  } else if (hat === 'li') {
+    const pts: Pt[] = [[hc[0] - 16 * u, hc[1] - 2 * u], [hc[0], hc[1] - 15 * u], [hc[0] + 16 * u, hc[1] - 2 * u]];
+    shape(P, pts, P.pal.straw, lw, { amp: 0.15 });
+  } else if (hat === 'bun') { c.beginPath(); c.arc(hc[0] - 4 * u * d, hc[1] - 7 * u, hr * 0.55, 0, Math.PI * 2); c.fill(); }
+  if (f.load === 'parasol') {
+    const top: Pt = [hand[0], hand[1] - 52 * u]; seg(P, hand[0], hand[1], top[0], top[1], lw);
+    const cn = ellipsePts(top[0], top[1] + 6 * u, 26 * u, 9 * u, Math.PI, Math.PI * 2, 14);
+    shape(P, cn, P.pal.straw, lw);
+  }
+}
+
+// ------------------------------------------------------------------ animals (side view sprites)
+function beast(P: Painter, x: number, y: number, H: number, kind: 'donkey' | 'horse' | 'ox' | 'camel', d = 1, load = false, walk = 0.5) {
+  if (!P.keepFig()) return;
+  const u = H / 100, lw = Math.max(1.1, H * 0.022);
+  const T = (lx: number, ly: number): Pt => [x + lx * u * d, y + ly * u];
+  const sc = kind === 'horse' ? 1.2 : kind === 'camel' ? 1.25 : kind === 'ox' ? 1.15 : 1;
+  const Tb = (lx: number, ly: number) => T(lx * sc, ly * sc);
+  const legTop = kind === 'camel' ? -60 : kind === 'ox' ? -32 : -36;
+  const legsX = kind === 'ox' ? [-26, -18, 18, 25] : [-28, -20, 20, 27];
+  const wash = kind === 'camel' ? P.pal.straw : kind === 'ox' ? P.pal.wood : P.pal.shade;
+  // legs
+  legsX.forEach((lx, i) => {
+    const sw = (i % 2 === 0 ? 1 : -1) * walk * 5;
+    const a = Tb(lx, legTop), b = T(lx * sc + sw, 0);
+    brush(P, a, [(a[0] + b[0]) / 2 + 1, (a[1] + b[1]) / 2], b, 5.5 * u * sc, 2.4 * u * sc, P.ink(0.9), 6);
+  });
+  let body: Pt[];
+  if (kind === 'camel') {
+    body = [Tb(-36, -62), Tb(-28, -86), Tb(-18, -92), Tb(-8, -82), Tb(4, -94), Tb(14, -86), Tb(26, -72), Tb(30, -62), Tb(16, -56), Tb(-30, -56)];
+  } else if (kind === 'ox') {
+    body = [Tb(-36, -40), Tb(-34, -58), Tb(-10, -62), Tb(18, -66), Tb(30, -56), Tb(30, -34), Tb(18, -28), Tb(-28, -30)];
+  } else {
+    body = [Tb(-38, -48), Tb(-34, -60), Tb(-10, -62), Tb(20, -62), Tb(32, -52), Tb(26, -36), Tb(-22, -34), Tb(-36, -40)];
+  }
+  // tail
+  const tb = kind === 'camel' ? Tb(-35, -66) : Tb(-37, -54); brush(P, tb, [tb[0] - 6 * u * d, tb[1] + 8 * u], [tb[0] - 4 * u * d, tb[1] + 22 * u], 3 * u, 1 * u, P.ink(0.85), 6);
+  shape(P, body, wash, lw, { amp: 0.25, smooth: true });
+  // neck + head
+  let neck: Pt[], head: Pt[], ears: Pt[] = [];
+  if (kind === 'camel') {
+    neck = [Tb(22, -70), Tb(38, -72), Tb(48, -84), Tb(50, -104), Tb(44, -108), Tb(40, -88), Tb(30, -80)];
+    head = [Tb(42, -110), Tb(50, -114), Tb(62, -108), Tb(60, -102), Tb(48, -100)];
+  } else if (kind === 'ox') {
+    neck = [Tb(20, -64), Tb(36, -60), Tb(44, -48), Tb(36, -40), Tb(26, -44)];
+    head = [Tb(36, -62), Tb(46, -60), Tb(54, -40), Tb(50, -34), Tb(40, -40)];
+    const h1 = Tb(40, -62); line(P, [h1, [h1[0] + 4 * u * d, h1[1] - 10 * u], [h1[0] + 12 * u * d, h1[1] - 12 * u]], lw * 1.3);
+  } else {
+    const long = kind === 'horse' ? 1.15 : 1;
+    neck = [Tb(14, -60), Tb(32 * long, -84), Tb(40 * long, -82), Tb(34, -56), Tb(26, -50)];
+    head = [Tb(32 * long, -88), Tb(40 * long, -90), Tb(56 * long, -70), Tb(54 * long, -64), Tb(46 * long, -64), Tb(36 * long, -76)];
+    const ex = 34 * long, ey = -88, el = kind === 'donkey' ? 20 : 9;
+    ears = [Tb(ex - 1, ey), Tb(ex - 4, ey - el), Tb(ex + 2, ey - 1)];
+    if (kind === 'horse') for (let i = 0; i < 6; i++) { const a = Tb(18 + i * 3.3, -64 - i * 3.8); seg(P, a[0], a[1], a[0] - 4 * u * d, a[1] + 3 * u, lw * 0.8, 0.8); }
+  }
+  shape(P, neck, wash, lw, { amp: 0.2, smooth: true });
+  shape(P, head, wash, lw, { amp: 0.2, smooth: true });
+  if (ears.length) { shape(P, ears, wash, lw * 0.9, { amp: 0.1 }); if (kind === 'donkey') { const e2 = ears.map(p => [p[0] + 4 * u * d, p[1] + 1] as Pt); shape(P, e2, wash, lw * 0.9, { amp: 0.1 }); } }
+  if (load) {
+    const lp: Pt[] = kind === 'camel' ? [Tb(-24, -82), Tb(-4, -96), Tb(16, -84), Tb(10, -66), Tb(-20, -66)] : [Tb(-24, -58), Tb(-20, -80), Tb(8, -82), Tb(14, -58), Tb(4, -46), Tb(-18, -46)];
+    shape(P, lp, P.pal.straw, lw, { smooth: true });
+    const a = lp[1], b = lp[3]; seg(P, a[0], a[1], b[0], b[1], lw * 0.7, 0.6);
+  }
+}
+
+// wheel seen side-on
+function wheel(P: Painter, cx: number, cy: number, r: number, lw: number) {
+  shape(P, ellipsePts(cx, cy, r * 0.92, r, 0, Math.PI * 2, 20), P.pal.wood, lw * 1.2, { amp: 0.15 });
+  for (let i = 0; i < 6; i++) { const t = i * Math.PI / 6; seg(P, cx - Math.cos(t) * r * 0.85, cy - Math.sin(t) * r * 0.9, cx + Math.cos(t) * r * 0.85, cy + Math.sin(t) * r * 0.9, lw * 0.6, 0.8); }
+  P.ctx.beginPath(); P.ctx.arc(cx, cy, r * 0.16, 0, 7); P.ctx.fillStyle = P.ink(0.9); P.ctx.fill();
+}
+function sedan(P: Painter, x: number, y: number, H: number, d = 1, willow = false) {
+  const u = H / 100, lw = Math.max(1.1, H * 0.024);
+  figure(P, x - 52 * u * d, y, H, { dir: d, body: 'short', pose: 'walk', hat: 'cap', robe: 2, force: true });
+  const box: Pt[] = [[x - 26 * u, y - 18 * u], [x + 26 * u, y - 18 * u], [x + 26 * u, y - 86 * u], [x - 26 * u, y - 86 * u]];
+  shape(P, box, P.pal.wood, lw);
+  seg(P, x - 18 * u, y - 70 * u, x - 18 * u, y - 30 * u, lw * 0.6); seg(P, x + 18 * u, y - 70 * u, x + 18 * u, y - 30 * u, lw * 0.6);
+  shape(P, [[x - 34 * u, y - 84 * u], [x + 34 * u, y - 84 * u], [x + 22 * u, y - 100 * u], [x - 22 * u, y - 100 * u]], P.pal.roof, lw);
+  seg(P, x - 78 * u, y - 70 * u, x + 78 * u, y - 70 * u, lw * 1.4);
+  if (willow) for (let i = 0; i < 9; i++) {
+    const bx = x + rr(P.r, -24, 24) * u, by = y - 100 * u;
+    brush(P, [bx, by], [bx + rr(P.r, -14, 14) * u, by - 22 * u], [bx + rr(P.r, -26, 26) * u, by - rr(P.r, 20, 36) * u], 2.2 * u, 0.6 * u, P.wash(P.pal.leaf, 1.4), 6);
+  }
+  figure(P, x + 50 * u * d, y, H, { dir: d, body: 'short', pose: 'walk', hat: 'cap', robe: 4, force: true });
+}
+function parasol(P: Painter, x: number, y: number, R: number, h: number) {
+  const lw = Math.max(1.1, R * 0.03);
+  seg(P, x, y, x, y - h, lw * 1.2);
+  const top = y - h;
+  const pts = ellipsePts(x, top + R * 0.12, R, R * 0.34, 0, Math.PI * 2, 28);
+  shape(P, pts, P.pal.straw, lw, { amp: 0.3 });
+  fill(P, ellipsePts(x, top + R * 0.12, R, R * 0.34, 0, Math.PI, 14), P.wash(P.pal.shade, 0.6));
+  for (let i = 0; i < 10; i++) { const t = i / 10 * Math.PI * 2; seg(P, x, top - R * 0.06, x + Math.cos(t) * R, top + R * 0.12 + Math.sin(t) * R * 0.34, lw * 0.5, 0.6); }
+  P.ctx.beginPath(); P.ctx.arc(x, top - R * 0.08, lw * 1.6, 0, 7); P.ctx.fillStyle = P.ink(); P.ctx.fill();
+}
+
 // @@END@@
