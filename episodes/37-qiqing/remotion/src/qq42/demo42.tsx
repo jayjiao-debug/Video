@@ -12,7 +12,7 @@ const easeOut = (u: number) => 1 - Math.pow(1 - cl(u), 3);
 const easeIn = (u: number) => Math.pow(cl(u), 3);
 const sm = (u: number) => { const v = cl(u); return v * v * (3 - 2 * v); };
 type P2 = [number, number];
-const LookCam: React.FC<{z: number; L: P2; S: P2; roll?: number; children: React.ReactNode}> = ({z, L, S, roll = 0, children}) =>
+export const LookCam: React.FC<{z: number; L: P2; S: P2; roll?: number; children: React.ReactNode}> = ({z, L, S, roll = 0, children}) =>
 	<g transform={`translate(${S[0]},${S[1]}) rotate(${roll}) scale(${z}) translate(${-L[0]},${-L[1]})`}>{children}</g>;
 const toScreen = (p: P2, z: number, L: P2, S: P2): P2 => [S[0] + (p[0] - L[0]) * z, S[1] + (p[1] - L[1]) * z];
 
@@ -26,7 +26,7 @@ const KW = (SW - 20) / 10, keyPos = (r: number, k: number, n: number): P2 => [SX
 const KEYS: [number, number][] = TYPE_T.map((_, i) => { const r = Math.floor(rnd(i, 21) * 3), n = [10, 9, 7][r]; return [r, Math.floor(rnd(i, 22) * n)]; });
 const SEARCH_KEY: P2 = [SX + SW - 62, SY + SHH - 87];
 /** where the thumb tip is at time t (phone-local coordinates) and how far it is pressed in (0..1) */
-const thumbAt = (t: number): {p: P2; press: number} => {
+export const thumbAt = (t: number): {p: P2; press: number} => {
 	const targets: [number, P2][] = [[-0.3, keyPos(1, 6, 9)], ...TYPE_T.map((tt, i) => [tt, keyPos(KEYS[i][0], KEYS[i][1], [10, 9, 7][KEYS[i][0]])] as [number, P2]), [SEARCH_T, SEARCH_KEY], [3.0, [SX + SW - 90, SY + SHH - 150]], [8.55, [SX + SW - 110, SY + SHH - 260]], [9.06, [SX + SW - 120, SY + SHH - 330]], [9.3, [SX + SW - 100, SY + SHH - 40]]];
 	let i = 0; while (i < targets.length - 1 && t >= targets[i + 1][0]) i++;
 	const [t0, p0] = targets[i], [t1, p1] = targets[Math.min(targets.length - 1, i + 1)], dur = Math.max(0.01, t1 - t0), u = i === targets.length - 1 ? 1 : ease(cl((t - t0) / Math.min(dur, 0.16)));
@@ -50,7 +50,7 @@ const PapyrusCard: React.FC<{y: number; glow: number}> = ({y, glow}) => <g>
 	<rect x={SX + 132} y={y + 84} width={150} height={13} rx={6} fill="#e8d8b0" opacity={0.75} />
 </g>;
 /** the screen: status bar, search box being typed, keyboard, then results; `rew` (0..) scrolls the list violently backwards */
-const Screen: React.FC<{t: number; rew?: number; rewT?: number}> = ({t, rew = -1, rewT = 0}) => {
+export const Screen: React.FC<{t: number; rew?: number; rewT?: number}> = ({t, rew = -1, rewT = 0}) => {
 	const n = TYPE_T.filter((tt) => t >= tt).length, typed = QUERY.slice(0, n), blink = (Math.floor(t * 2.2) % 2 === 0) || (t < 2.4 && n < QUERY.length);
 	const kbOut = easeIn(seg(t, 2.45, 2.85)), res = seg(t, 2.55, 3.3), pc = easeOut(seg(t, 5.1, 5.6)), glow = sm(seg(t, 5.3, 6.2)) * (0.85 + 0.15 * Math.sin(t * 5));
 	const th = thumbAt(t);
@@ -99,18 +99,18 @@ const HAND_STATIC = [
 	...[0, 1, 2, 3].map((i) => { const y = PHY + 130 + i * 62, x = PHX - PW / 2 + 4; return `M${x + 6},${y - 22} Q${x - 30},${y - 20} ${x - 30},${y + 2} Q${x - 30},${y + 24} ${x + 6},${y + 24} Z`; }),
 ];
 const SLEEVE = `M${PHX - 70},${PHY + PH / 2 + 120} Q${PHX + 60},${PHY + PH / 2 + 170} ${PHX + 170},${PHY + PH / 2 + 130} L${PHX + 120},${H + 160} L${PHX - 260},${H + 160} Z`;
-const Thumb: React.FC<{p: P2; press: number}> = ({p, press}) => <g>
+export const Thumb: React.FC<{p: P2; press: number}> = ({p, press}) => <g>
 	<path d={thumbPath(p)} fill="#ffcf96" opacity={0.4} transform="translate(3,-2)" />
 	<path d={thumbPath(p)} fill="#0d0b0f" />
 	{press > 0.2 && <circle cx={p[0] - 8} cy={p[1] - 12} r={10 + 12 * press} fill="#9fc8ff" opacity={0.18 * press} />}
 </g>;
-const HandBack: React.FC = () => <g>
+export const HandBack: React.FC = () => <g>
 	<g fill="#ffcf96" opacity={0.42} transform="translate(3,-2)"><path d={SLEEVE} />{HAND_STATIC.map((d, i) => <path key={i} d={d} />)}</g>
 	<g fill="#0d0b0f"><path d={SLEEVE} />{HAND_STATIC.map((d, i) => <path key={i} d={d} />)}</g>
 	<path d={`M${PHX - 66},${PHY + PH / 2 + 118} Q${PHX + 60},${PHY + PH / 2 + 166} ${PHX + 172},${PHY + PH / 2 + 126}`} stroke="#2a2430" strokeWidth={10} fill="none" />{/* cuff seam */}
 </g>;
 /** the viewer seen from behind (head, hood, shoulders); breathing and a small nod */
-const Viewer: React.FC<{t: number}> = ({t}) => {
+export const Viewer: React.FC<{t: number}> = ({t}) => {
 	const nod = 3 * Math.sin(Math.PI * seg(t, 2.2, 2.7)) + 1.2 * Math.sin(t * 1.3), by = 3 * Math.sin(t * 1.6);
 	const body = <g transform={`translate(0,${by})`}>
 		<path d="M-60,1100 L-60,990 Q40,900 250,890 Q420,880 560,905 Q760,930 900,1100 Z" />
@@ -125,7 +125,7 @@ const Viewer: React.FC<{t: number}> = ({t}) => {
 	</g>;
 	return <g><g fill="#ffcf96" opacity={0.42} transform="translate(4,-3)">{body}</g><g fill="#09080c">{body}</g></g>;
 };
-const PhoneLive: React.FC<{t: number; rew?: number; rewT?: number; bezel?: number}> = ({t, rew = -1, rewT = 0, bezel = 1}) => <g transform={`rotate(${PROT} ${PHX} ${PHY})`}>
+export const PhoneLive: React.FC<{t: number; rew?: number; rewT?: number; bezel?: number}> = ({t, rew = -1, rewT = 0, bezel = 1}) => <g transform={`rotate(${PROT} ${PHX} ${PHY})`}>
 	<Glow x={PHX} y={PHY} r={520} c="#7fa6ff" o={0.2} id="dmPhG" />
 	<g opacity={bezel}><HandBack /><rect x={PHX - PW / 2} y={PHY - PH / 2} width={PW} height={PH} rx={58} fill="#111318" stroke="#2a2d36" strokeWidth={3} /></g>
 	<Screen t={t} rew={rew} rewT={rewT} />
@@ -138,7 +138,7 @@ export const ColdOpen: React.FC<{t: number}> = ({t}) => { const c = coldCam(t);
 		<PhoneLive t={t} />
 		<Viewer t={t} />
 	</LookCam></g>; };
-const RoomLive: React.FC<{t: number}> = ({t}) => <g>
+export const RoomLive: React.FC<{t: number}> = ({t}) => <g>
 	<Room />
 	{/* city lights in the window twinkle a little */}
 	{Array.from({length: 10}, (_, i) => <circle key={i} cx={130 + rnd(i, 31) * 370} cy={430 + rnd(i, 32) * 100} r={3 + 3 * rnd(i, 33)} fill="#ffe2b0" opacity={0.25 * (0.5 + 0.5 * Math.sin(t * (1.2 + rnd(i, 34) * 2) + i))} />)}
@@ -146,8 +146,8 @@ const RoomLive: React.FC<{t: number}> = ({t}) => <g>
 
 /* ======================= rewind: the list flies backwards, the glass turns to papyrus ======================= */
 type Mat = 'glass' | 'form' | 'letter' | 'scroll' | 'slips' | 'clay' | 'papyrus';
-const MATS: Mat[] = ['glass', 'glass', 'form', 'form', 'letter', 'scroll', 'scroll', 'slips', 'slips', 'clay', 'clay', 'papyrus', 'papyrus', 'papyrus'];
-const MatCard: React.FC<{y: number; m: Mat; i: number}> = ({y, m, i}) => { const x = SX + 16, w = SW - 32, h = 112;
+export const MATS: Mat[] = ['glass', 'glass', 'form', 'form', 'letter', 'scroll', 'scroll', 'slips', 'slips', 'clay', 'clay', 'papyrus', 'papyrus', 'papyrus'];
+export const MatCard: React.FC<{y: number; m: Mat; i: number}> = ({y, m, i}) => { const x = SX + 16, w = SW - 32, h = 112;
 	switch (m) {
 		case 'glass': return <g><rect x={x} y={y} width={w} height={h} rx={14} fill="#1f2937" /><rect x={x + 14} y={y + 18} width={72} height={72} rx={10} fill="#3a4658" /><rect x={x + 100} y={y + 26} width={170} height={14} rx={7} fill="#c8d2e0" opacity={0.8} /><rect x={x + 100} y={y + 54} width={150} height={10} rx={5} fill="#7a8698" /></g>;
 		case 'form': return <g><rect x={x} y={y} width={w} height={h} fill="#efe6d0" />{Array.from({length: 5}, (_, k) => <g key={k}><rect x={x + 14} y={y + 16 + k * 19} width={90} height={5} fill="#3a3a44" opacity={0.7} /><rect x={x + 112} y={y + 20 + k * 19} width={w - 130} height={1.5} fill="#3a3a44" opacity={0.5} /></g>)}</g>;
@@ -168,7 +168,7 @@ const RewindCards: React.FC<{rew: number; rewT: number}> = ({rew, rewT}) => {
 	</g>;
 };
 /** year shown during the rewind */
-const yearAt = (u: number) => { const keys: [number, number][] = [[0, 2026], [0.14, 1938], [0.28, 1888], [0.45, 170], [0.6, -399], [0.7, -500], [0.84, -1800], [0.92, -1850], [1, -1850]];
+export const yearAt = (u: number) => { const keys: [number, number][] = [[0, 2026], [0.14, 1938], [0.28, 1888], [0.45, 170], [0.6, -399], [0.7, -500], [0.84, -1800], [0.92, -1850], [1, -1850]];
 	let i = 0; while (i < keys.length - 2 && u > keys[i + 1][0]) i++; const [a, ya] = keys[i], [b, yb] = keys[i + 1], y = Math.round(lerp(ya, yb, cl((u - a) / (b - a))));
 	return y > 0 ? `${y}` : `公元前 ${-y}`; };
 export const Rewind: React.FC<{tau: number; t: number}> = ({tau, t}) => {
@@ -201,7 +201,7 @@ export const Rewind: React.FC<{tau: number; t: number}> = ({tau, t}) => {
 /* ======================= title: written in ink on the papyrus ======================= */
 const L1 = '人活着为了什么？', L2 = '人类问了近四千年';
 const L1S = 116, L1A = 116 * 1.08, L1X = W / 2 + 37 - (L1A * 8) / 2, L2S = 100, L2A = 108, L2X = W / 2 + 6 - (L2A * 8) / 2;
-const InkChar: React.FC<{ch: string; x: number; y: number; s: number; u: number; gold?: boolean; id: string}> = ({ch, x, y, s, u, gold, id}) => {
+export const InkChar: React.FC<{ch: string; x: number; y: number; s: number; u: number; gold?: boolean; id: string}> = ({ch, x, y, s, u, gold, id}) => {
 	if (u <= 0) return null; const k = easeOut(u);
 	return <g>
 		<defs><clipPath id={id}><rect x={x - 10} y={y - s * 1.0} width={(s + 20) * k} height={s * 1.3} /></clipPath></defs>
@@ -233,14 +233,14 @@ export const Title: React.FC<{tau: number; t: number}> = ({tau, t}) => {
 };
 
 /* ======================= Egypt: the scribe, his Ba, the greedy world ======================= */
-type FKA = {hip: number; lean: number; neck: number; lt: number; lk: number; rt: number; rk: number; la: number; le: number; ra: number; re: number};
-const mixF = (a: FKA, b: FKA, k: number): FKA => Object.fromEntries(Object.keys(a).map((n) => [n, lerp(a[n as keyof FKA], b[n as keyof FKA], k)])) as FKA;
-const SC_WRITE: FKA = {hip: 0.1, lean: 30, neck: 22, lt: 82, lk: 162, rt: 78, rk: 158, la: 10, le: 80, ra: 25, re: 60};
-const SC_ARGA: FKA = {...SC_WRITE, lean: 8, neck: -8, ra: 100, re: -18};
-const SC_ARGB: FKA = {...SC_WRITE, lean: 14, neck: -2, ra: 70, re: 26};
-const SC_LOOK: FKA = {...SC_WRITE, lean: 6, neck: -16, ra: 24, re: 62};
+export type FKA = {hip: number; lean: number; neck: number; lt: number; lk: number; rt: number; rk: number; la: number; le: number; ra: number; re: number};
+export const mixF = (a: FKA, b: FKA, k: number): FKA => Object.fromEntries(Object.keys(a).map((n) => [n, lerp(a[n as keyof FKA], b[n as keyof FKA], k)])) as FKA;
+export const SC_WRITE: FKA = {hip: 0.1, lean: 30, neck: 22, lt: 82, lk: 162, rt: 78, rk: 158, la: 10, le: 80, ra: 25, re: 60};
+export const SC_ARGA: FKA = {...SC_WRITE, lean: 8, neck: -8, ra: 100, re: -18};
+export const SC_ARGB: FKA = {...SC_WRITE, lean: 14, neck: -2, ra: 70, re: 26};
+export const SC_LOOK: FKA = {...SC_WRITE, lean: 6, neck: -16, ra: 24, re: 62};
 /** scribe pose at Egypt time tau */
-const scribeFK = (tau: number): FKA => {
+export const scribeFK = (tau: number): FKA => {
 	const T2 = 22.645 - DT.egypt, T3 = 26.607 - DT.egypt, TS = 28.3 - DT.egypt;
 	const w = {...SC_WRITE, re: SC_WRITE.re + 4 * Math.sin(tau * 11) + 2 * Math.sin(tau * 4.3), ra: SC_WRITE.ra + 2 * Math.sin(tau * 2.1)};
 	if (tau < T2 + 0.3) return w;
@@ -251,7 +251,7 @@ const scribeFK = (tau: number): FKA => {
 	return mixF(w, {...SC_LOOK, lean: SC_LOOK.lean + br}, k);
 };
 /** the Ba: a falcon's body with a HUMAN head (Egyptian bob wig, a face in profile, a short ritual beard). Faces right; ground at y=0. */
-const Ba2: React.FC<{x: number; y: number; s: number; flip?: boolean; wing: number; op: number; tilt?: number}> = ({x, y, s, flip, wing, op, tilt = 0}) => {
+export const Ba2: React.FC<{x: number; y: number; s: number; flip?: boolean; wing: number; op: number; tilt?: number}> = ({x, y, s, flip, wing, op, tilt = 0}) => {
 	const wingD = 'M0,0 Q-30,6 -70,52 L-94,104 L-80,96 L-84,118 L-66,100 L-66,118 L-50,92 Q-24,60 14,22 Z';
 	const body = 'M4,-150 Q-30,-146 -42,-112 Q-52,-80 -70,-52 L-108,-24 L-100,-12 L-42,-46 Q-16,-58 2,-58 Q30,-62 40,-92 Q48,-124 38,-150 Z';
 	const legs = 'M-8,-60 L-12,0 L0,0 L4,-60 Z M10,-60 L14,0 L26,0 L18,-60 Z M-22,0 L6,-2 L6,3 L-22,4 Z M6,0 L36,-2 L36,3 L6,4 Z';
@@ -276,16 +276,16 @@ const Ba2: React.FC<{x: number; y: number; s: number; flip?: boolean; wing: numb
 	</g>;
 };
 /** small background people: fkPose silhouettes at a distance */
-const PERSON: Look4 = {dress: 'shirt', legs: 'bare', head: 'egwig'};
-const Greed: React.FC<{tau: number}> = ({tau}) => {
-	const te = tau + DT.egypt, snatch = sm(seg(te, beatAt(47) - 0.1, beatAt(47) + 0.35)), flee = sm(seg(te, beatAt(48), beatAt(52))), turn = sm(seg(te, 27.0, 27.5));
+export const PERSON: Look4 = {dress: 'shirt', legs: 'bare', head: 'egwig'};
+export const Greed: React.FC<{te: number; k0?: number}> = ({te, k0 = 35}) => {
+	const snatch = sm(seg(te, beatAt(k0) - 0.1, beatAt(k0) + 0.35)), flee = sm(seg(te, beatAt(k0 + 1), beatAt(k0 + 5))), turn = sm(seg(te, beatAt(k0) - 0.6, beatAt(k0) - 0.1));
 	const gy = 796, h = 150;
 	const carry = fkPose({hip: 0.655, lean: 4, neck: 2, lt: 10 * Math.sin(te * 3), lk: 8, rt: -10 * Math.sin(te * 3), rk: 8, la: 60, le: 40, ra: 64, re: 36});
 	const reach = fkPose({hip: 0.62, lean: 16, neck: 4, lt: 16, lk: 14, rt: -14, rk: 10, la: 80, le: 6, ra: 86, re: 4});
 	const runP = fkPose({hip: 0.62, lean: 14, neck: 6, lt: 28 * Math.sin(te * 9), lk: 30, rt: -28 * Math.sin(te * 9), rk: 30, la: 60, le: 50, ra: 64, re: 40});
 	const hoard = fkPose({hip: 0.3, lean: 40, neck: 20, lt: 94, lk: 120, rt: 70, rk: 120, la: 70, le: 60, ra: 74, re: 54});
 	const walkAway = fkPose({hip: 0.655, lean: 6, neck: 8, lt: 20 * Math.sin(te * 2.6), lk: 12, rt: -20 * Math.sin(te * 2.6), rk: 12, la: -14 * Math.sin(te * 2.6), le: 20, ra: 14 * Math.sin(te * 2.6), re: 20});
-	const ax = 1400 + 16 * seg(te, 21, 27), bx = lerp(1300, 1220, flee), dx = 1730 + 60 * seg(te, 26.6, 32.3);
+	const ax = 1400 + 16 * seg(te, beatAt(k0) - 5, beatAt(k0)), bx = lerp(1300, 1220, flee), dx = 1730 + 60 * seg(te, beatAt(k0) - 0.6, beatAt(k0) + 5);
 	const aP = snatch < 0.5 ? carry : reach, bP = snatch < 0.3 ? fkPose({hip: 0.655, lean: 10, neck: 4, lt: 8, lk: 8, rt: -6, rk: 6, la: 40, le: 30, ra: 30, re: 30}) : snatch < 1 ? reach : runP;
 	const aHand = jointAt(carry, 'RHand', ax, gy, h), bHand = jointAt(runP, 'RHand', bx, gy, h, true);
 	const basket: P2 = [lerp(aHand[0] + 8, bHand[0] - 8, snatch), lerp(aHand[1], bHand[1], snatch)];
@@ -302,18 +302,18 @@ const Greed: React.FC<{tau: number}> = ({tau}) => {
 		<g transform={`translate(${basket[0]},${basket[1]})`}><path d="M-16,-2 L16,-2 L12,16 L-12,16 Z" fill="#6a4a2a" /><path d="M-16,-2 Q0,-12 16,-2" fill="#c8a06a" /></g>
 	</g>;
 };
-const Birds: React.FC<{t: number}> = ({t}) => <g>{[0, 1, 2, 3].map((i) => { const x = 1700 - ((t * (34 + 8 * i) + i * 260) % 2200), y = 240 + i * 26 + 8 * Math.sin(t * 0.7 + i), f = Math.sin(t * (5 + i) + i) * 10, s = 1 - i * 0.12;
+export const Birds: React.FC<{t: number}> = ({t}) => <g>{[0, 1, 2, 3].map((i) => { const x = 1700 - ((t * (34 + 8 * i) + i * 260) % 2200), y = 240 + i * 26 + 8 * Math.sin(t * 0.7 + i), f = Math.sin(t * (5 + i) + i) * 10, s = 1 - i * 0.12;
 	return <path key={i} d={`M${x - 18 * s},${y - f * s} Q${x - 8 * s},${y - 4 * s} ${x},${y} Q${x + 8 * s},${y - 4 * s} ${x + 18 * s},${y - f * s}`} stroke="#3a2a30" strokeWidth={2.4} fill="none" opacity={0.7} />; })}</g>;
-const Water: React.FC<{t: number}> = ({t}) => <g>{Array.from({length: 34}, (_, i) => { const y = 600 + rnd(i, 51) * 220, len = 30 + 90 * rnd(i, 52), x = ((rnd(i, 53) * 2200 + t * (8 + 10 * rnd(i, 54))) % 2200) - 140;
+export const Water: React.FC<{t: number}> = ({t}) => <g>{Array.from({length: 34}, (_, i) => { const y = 600 + rnd(i, 51) * 220, len = 30 + 90 * rnd(i, 52), x = ((rnd(i, 53) * 2200 + t * (8 + 10 * rnd(i, 54))) % 2200) - 140;
 	return <rect key={i} x={x} y={y} width={len} height={2} rx={1} fill="#ffe2c0" opacity={(0.12 + 0.2 * rnd(i, 55)) * (0.5 + 0.5 * Math.sin(t * (1.5 + rnd(i, 56) * 2) + i))} />; })}</g>;
-const Palm: React.FC<{x: number; y: number; s: number; t: number}> = ({x, y, s, t}) => { const sw = 2.5 * Math.sin(t * 0.9), top: P2 = [x + 40 * s + sw * 2, y - 560 * s];
+export const Palm: React.FC<{x: number; y: number; s: number; t: number}> = ({x, y, s, t}) => { const sw = 2.5 * Math.sin(t * 0.9), top: P2 = [x + 40 * s + sw * 2, y - 560 * s];
 	return <g fill="#1c1418">
 		<path d={`M${x - 12 * s},${y} Q${x + 10 * s},${y - 300 * s} ${top[0] - 6 * s},${top[1]} L${top[0] + 8 * s},${top[1]} Q${x + 26 * s},${y - 300 * s} ${x + 14 * s},${y} Z`} />
 		{Array.from({length: 9}, (_, i) => { const a = -160 + i * 40 + 3 * Math.sin(t * 1.1 + i), r = (150 + 30 * rnd(i, 61)) * s, rad = a * Math.PI / 180, droop = 70 * s;
 			const tip: P2 = [top[0] + Math.cos(rad) * r, top[1] + Math.sin(rad) * r * 0.5 + droop], mid: P2 = [top[0] + Math.cos(rad) * r * 0.5, top[1] + Math.sin(rad) * r * 0.5 - 10 * s];
 			return <path key={i} d={`M${top[0]},${top[1]} Q${mid[0]},${mid[1] - 14 * s} ${tip[0]},${tip[1]} Q${mid[0]},${mid[1] + 10 * s} ${top[0]},${top[1] + 8 * s} Z`} />; })}
 	</g>; };
-const Reeds: React.FC<{t: number}> = ({t}) => <g>{Array.from({length: 16}, (_, i) => { const x = 250 + i * 16 + 10 * rnd(i, 71), h = 90 + 70 * rnd(i, 72), b = 6 * Math.sin(t * 1.3 + i * 0.6);
+export const Reeds: React.FC<{t: number}> = ({t}) => <g>{Array.from({length: 16}, (_, i) => { const x = 250 + i * 16 + 10 * rnd(i, 71), h = 90 + 70 * rnd(i, 72), b = 6 * Math.sin(t * 1.3 + i * 0.6);
 	return <path key={i} d={`M${x - 3},${880} Q${x + b * 0.5},${880 - h * 0.6} ${x + b},${880 - h} Q${x + b * 0.5 + 2},${880 - h * 0.6} ${x + 3},${880} Z`} fill="#1e2218" opacity={0.85} />; })}</g>;
 export const Egypt: React.FC<{tau: number; t: number}> = ({tau, t}) => {
 	const x = 640, g = 905, h = 640, fk = scribeFK(tau), pose = fkPose(fk);
@@ -333,7 +333,7 @@ export const Egypt: React.FC<{tau: number; t: number}> = ({tau, t}) => {
 			<Water t={t} />
 			<Glow x={760} y={430} r={700} c="#ffb27a" o={0.18} id="egSunD" />
 			<Birds t={t} />
-			<Greed tau={tau} />
+			<Greed te={tau + DT.egypt} k0={47} />
 			<path d="M0,860 Q500,840 1100,870 Q1500,890 1920,900 L1920,1080 L0,1080 Z" fill="#6e5440" opacity={0.92} />
 			<path d="M0,880 Q600,872 1920,915" stroke="#a88660" strokeWidth={3} fill="none" opacity={0.5} />
 			<Reeds t={t} />
