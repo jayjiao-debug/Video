@@ -8,7 +8,7 @@ import {MilkyWay, StarField, hill} from './sky41';
    2 · pull back: the record is on the side of Voyager — the real spacecraft in detail — as the greeting plays (O2).
    3 · tilt down to Earth: on a hilltop at night everyone from the relay stands on the ground, looking up at one moving
        point of light. The title, then the question (O3). */
-export const OUT_T = {pull: 4.4, voy: 5.4, recede: 8.6, tilt: 9.9, title: 10.4, q: 11.07, end: 15.165};
+export const OUT_T = {pull: 4.4, voy: 5.4, recede: 8.6, tilt: 9.9, title: 10.4, q: 11.145, end: 15.165};
 const GOLD = '#f2cf7a';
 const VP = {x: 980, y: 470, s: 175, yaw: 0.3, pitch: -1.35, roll: 0.05};   // the hero framing: record faces us, dish behind
 const REC = voyRecordPos(VP.x, VP.y, VP.s, VP.yaw, VP.pitch, VP.roll);

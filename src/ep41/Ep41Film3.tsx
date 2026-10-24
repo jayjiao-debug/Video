@@ -10,7 +10,7 @@ import {SCENES3, LETTERBOX3} from './scenes3';
 import {SUBS3, LABELS3} from './subs3';
 /* ep41 v3 — the cut. Fixed music map (brief_v3.md). Each scene owns its own entrance and exit (motivated transitions);
    the master switches on the music cuts, runs the VHS rewind, the title, labels, subtitles, letterbox and grain. */
-export const T3 = {hit: 9.30, title: 11.564, s1: 18.965, s2: 34.836, s3: 54.875, s4: 73.015, s5: 90.845, s6: 110.385, s7: 128.497, crash: 144.165, s8: 145.70, climax: 154.095, fin: 160.885, outro: 172.935, end: 188.1};
+export const T3 = {hit: 9.30, title: 11.564, s1: 18.965, s2: 34.836, s3: 54.875, s4: 72.80, s5: 90.63, s6: 110.17, s7: 128.282, crash: 143.895, s8: 145.43, climax: 154.54, fin: 160.67, outro: 172.64, end: 187.83};   // after the music fix at the first splice (−0.215 s), measured landmarks
 const BOUNDS = [T3.s1, T3.s2, T3.s3, T3.s4, T3.s5, T3.s6, T3.s7, T3.s8, T3.fin, T3.outro, T3.end];
 
 const sceneAt = (t: number) => { let i = -1; for (let k = 0; k < BOUNDS.length - 1; k++) if (t >= BOUNDS[k]) i = k; return i; };

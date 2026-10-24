@@ -12,10 +12,10 @@ void H;
    hutong roofs, along the Great Wall on its own ridge at night, climbs into the sky and becomes one star; the sky then
    turns backwards (1987 → 1977, director's approved #14; set `trails` past `end` to drop it).
    Entrance: the CRT power-on line (match on text: LO left the frame at the same spot). */
-export const BJ_T = {
-	on: 0, onB: 0.35, j1: 0.5, typeA: 0.75, typeB: 2.9, pullA: 2.0, pullB: 3.75,
-	j2: 3.9, tears: [3.867, 4.433, 4.999, 5.565, 6.131, 6.697], retype: 6.95, ready: 7.3, push: 7.0, hover: 7.6,
-	enter: 8.395, out: 8.5, win: 9.25, roofsB: 10.75, wall: 11.05, wallB: 13.5, climb: 13.45, star: 14.25, trails: 14.3, end: 15.185,
+export const BJ_T = {   // retimed (producer) to the measured drop at film 154.54 = tau 9.11; tears on the beats counted back from it
+	on: 0, onB: 0.35, j1: 0.555, typeA: 0.75, typeB: 2.9, pullA: 2.0, pullB: 3.75,
+	j2: 4.955, tears: [4.582, 5.148, 5.714, 6.28, 6.846, 7.412], retype: 7.66, ready: 8.0, push: 7.7, hover: 8.3,
+	enter: 9.11, out: 9.215, win: 9.965, roofsB: 11.3, wall: 11.55, wallB: 13.95, climb: 13.9, star: 14.55, trails: 14.6, end: 15.24,
 };
 const GOLD = '#F2CF7A', CRT = '#8DFFAE', FIG = '#0B0A12';
 const LINE1 = 'Ueber die Grosse Mauer erreichen wir alle';

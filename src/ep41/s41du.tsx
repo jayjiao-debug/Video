@@ -18,7 +18,7 @@ export const DU_T = {
 	crows: 5.2,                      // crows lift from a burned roof
 	stopA: 7.1, stopB: 8.0,          // walk → stand (walkToStand)
 	craneA: 7.5, craneB: 8.7,        // crane up: the near layers sink, the ridges and their fires fill the frame
-	beacon0: 7.9, beaconStep: 0.566, // the chain lights right to left across the ridges (5 more beacons, on the beats)
+	beacon0: 7.358, beaconStep: 0.566, // the chain lights right to left across the ridges: 5 more beacons on beats 13–17 (all lit before the crane comes down)
 	craneDownA: 10.05, craneDownB: 10.85,
 	kneelA: 10.0, kneelB: 10.7,      // stand → kneel at the low table
 	char0: 11.0, charStep: 0.36, col2: 12.9,     // the ten characters, in sync with DQ (two half-lines)
@@ -135,7 +135,8 @@ const Sheet: React.FC<{x: number; y: number; fs: number; chars: number[]; fold1:
 		{fold2 > 0.5 && <path d="M-24,-60 L-24,60" stroke="#fff" strokeOpacity={0.5} strokeWidth={0.8} />}
 		{fold2 > 0.5 && <g transform={`translate(-25,0) scale(${l},1) translate(25,0)`}><rect x={-75} y={-60} width={50} height={120} fill={back} stroke={edge} strokeWidth={0.6} /></g>}
 		{/* the paper band slipped over the middle, then a stroke of ink across band and fold */}
-		{band > 0 && <g><rect x={-28} y={lerp(-120, -11, easeOut(band))} width={56} height={22} fill="#d9c69c" stroke={edge} strokeWidth={0.6} opacity={cl(band * 3)} />
+		{/* band: last frame (zoom 15.5) puts it at screen y 520–590, as reported to the Morse scene */}
+		{band > 0 && <g><rect x={-28} y={lerp(-120, -2.9, easeOut(band))} width={56} height={10} fill="#d9c69c" stroke={edge} strokeWidth={0.6} opacity={cl(band * 3)} />
 			{band > 0.8 && <path d={`M-6,${-16} L-4,${-16 + 34 * cl((band - 0.8) / 0.2)}`} stroke="#3a1a10" strokeWidth={2.4} strokeLinecap="round" />}</g>}
 	</g>;
 };
@@ -188,7 +189,7 @@ export const DU3: React.FC<{tau: number; t: number}> = ({tau, t}) => {
 		if (tau >= T.char0 - 0.3 && tau < T.foldA - 0.3 && cur >= 0) { const c = Math.floor(cur / 5), i = cur % 5, k = chars[cur]; tip = sheetW(COLX[c] + Math.sin(k * 9) * 3, ROW0 - 9 + i * ROWD + k * 18); lift = k > 0 && k < 1 ? 0 : 8; }
 		brushTip = [tip[0], tip[1] - lift];
 		let hand: [number, number] = [brushTip[0] - 4, brushTip[1] - 30];
-		let leftHand: [number, number] = sheetW(-66, 34);
+		let leftHand: [number, number] = sheetW(-48, 30);
 		// after the poem: the brush is laid on the table; the hands fold the sheet, slip the band on, and go back to the lap
 		const lap: [number, number] = [DX + 0.2 * DH, GY - 0.24 * DH], lapK = sm(seg(tau, T.bandEnd, T.bandEnd + 0.7));
 		if (tau >= T.foldA - 0.5) {
@@ -196,7 +197,7 @@ export const DU3: React.FC<{tau: number; t: number}> = ({tau, t}) => {
 			const r = 1 - 2 * sm(fold1), l = 1 - 2 * sm(fold2);
 			const rh0 = sheetW(25 + 50 * r, 4), lh0 = sheetW(-25 - 50 * l, 4), bandP = sheetW(lerp(20, 0, band), lerp(-60, -6, band));
 			hand = tau < T.foldA ? sheetW(70, 6) : tau < T.band ? rh0 : bandP;
-			leftHand = tau < T.foldB ? sheetW(-60, 6) : tau < T.band ? lh0 : sheetW(-24, 30);
+			leftHand = tau < T.foldB ? sheetW(-50, 6) : tau < T.band ? lh0 : sheetW(-20, 30);
 			hand = [lerp(hand[0], lap[0] + 10, lapK), lerp(hand[1], lap[1], lapK)]; leftHand = [lerp(leftHand[0], lap[0], lapK), lerp(leftHand[1], lap[1] + 6, lapK)];
 		}
 		const R = ik(KB, toBody(hand)), L = ik(KB, toBody(leftHand));
@@ -215,8 +216,8 @@ export const DU3: React.FC<{tau: number; t: number}> = ({tau, t}) => {
 		[0, z0, focus0, [W / 2, H / 2]],
 		[T.pullEnd, 1.0, focus0, focus0],                                // the flame glides from the centre to its place; ends at identity
 		[T.stopA, 1.04, [900, 560], [920, 560]],
-		[T.craneB, 1.2, [760, 560], [900, 500]],                         // (with craneY) the ridges and the chain of fires fill the frame
-		[T.craneDownA, 1.28, [740, 560], [900, 500]],
+		[T.craneB, 1.38, [705, 530], [960, 590]],                        // (with craneY) the ridges and the chain of fires fill the frame
+		[T.craneDownA, 1.46, [700, 530], [960, 590]],
 		[T.char0 - 0.05, 6.6, sheetW(30, -2), [1010, 480]],              // down and in to the sheet
 		[T.DQe, 7.4, sheetW(28, 0), [1000, 480]],
 		[T.foldA + 0.2, 5.4, sheetW(0, 0), [980, 500]],                  // a little back to see the hands fold it
@@ -235,7 +236,7 @@ export const DU3: React.FC<{tau: number; t: number}> = ({tau, t}) => {
 	const cy = (v: number) => `translate(0,${(craneY * v).toFixed(2)})`;
 	/* close-up hands: over the table the figure's mitts are masked and drawn as hands */
 	const handInfo = (['R', 'L'] as const).map((sd) => ({w: jointAt(pose, `${sd}Hand`, DX, GY, DH), e: jointAt(pose, `${sd}Elb`, DX, GY, DH)}));
-	const cuHands = handInfo.filter((hi) => tau >= T.kneelB - 0.15 && hi.w[0] > DX + 0.3 * DH);
+	const cuHands = handInfo.filter((hi) => tau >= T.kneelB - 0.15 && hi.w[0] > DX + 0.27 * DH && hi.w[1] < GY - 0.1 * DH);
 	return <g>
 		<defs>
 			<filter id="duBlurS" x="-100%" y="-100%" width="300%" height="300%"><feGaussianBlur stdDeviation="10" /></filter>

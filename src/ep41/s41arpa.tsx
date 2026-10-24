@@ -11,9 +11,9 @@ void H;
    the SRI half desaturates; Kline lifts his hands and tilts his head to the headset. A4 closes on LO.
    Entrance: three gold dots (Marconi) = three amber panel lamps; pull back. Exit: LO centred → the 1987 CRT powers on. */
 export const ARPA_T = {
-	a1: 0.253, pullB: 3.6, a2: 3.903, toKline: 3.9, klineB: 6.0, dollyA: 7.4, dollyB: 8.9, chalk: 8.7, chalkB: 10.0,
-	split: 10.1, splitB: 10.5, L: 10.703, Lp: 11.2, yes1: 11.853, O: 13.103, Op: 13.6, yes2: 14.253, G: 15.303,
-	crash: 15.668, a3: 15.753, lift: 15.8, close: 16.15, closeB: 17.0, end: 17.203,
+	a1: 0.253, pullB: 3.6, a2: 3.753, toKline: 3.9, klineB: 6.0, dollyA: 7.4, dollyB: 8.9, chalk: 8.7, chalkB: 10.0,
+	split: 10.1, splitB: 10.5, L: 10.853, Lp: 11.35, yes1: 12.003, O: 13.153, Op: 13.65, yes2: 14.303, G: 15.25,
+	crash: 15.613, a3: 15.653, lift: 15.8, close: 16.15, closeB: 17.0, end: 17.203,
 };
 const LAMP = '#FFCF6A', LAMP_R = '#FF6A4A', FIG = '#0A1212';
 const FLOOR_BACK = 800, CEIL = 210, SP = 24;

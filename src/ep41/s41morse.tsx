@@ -62,10 +62,20 @@ const SealedLetter: React.FC<{x: number; y: number; s: number; open: number; cra
 		<rect x={-w / 2 + 3} y={-hh / 2 + 4} width={w} height={hh} fill="#000" opacity={0.18} />
 		<rect x={-w / 2} y={-hh / 2} width={w} height={hh} fill="#ECE3CC" />
 		<rect x={-w / 2} y={-hh / 2} width={w} height={hh * 0.5} fill="#F4ECD8" opacity={0.6} />
+		{/* closed: one sheet folded into a packet (no envelope). The upper panel is tucked down over the lower one; its
+		    straight edge crosses the middle and the wax seal sits on that overlap. The address is written on the lower panel. */}
 		{open < 0.5 && <g opacity={1 - open * 2}>
-			<rect x={-w / 2} y={-hh * 0.06} width={w} height={hh * 0.14} fill="#E2D7BC" />
-			<path d={`M${-w / 2},${-hh * 0.06} L${w / 2},${-hh * 0.06} M${-w / 2},${hh * 0.08} L${w / 2},${hh * 0.08}`} stroke="#C8BB9C" strokeWidth={0.8} />
-			<path d={`M${-w / 2},${-hh / 2} L${-w * 0.2},${-hh * 0.06} M${w / 2},${-hh / 2} L${w * 0.2},${-hh * 0.06}`} stroke="#D6CAAC" strokeWidth={0.6} />
+			<rect x={-w / 2} y={-hh / 2} width={w} height={hh / 2 + 2.4} fill="#F1E9D5" />
+			<rect x={-w / 2} y={2.4} width={w} height={1.6} fill="#BFB292" opacity={0.55} />
+			<path d={`M${-w / 2},2.4 L${w / 2},2.4`} stroke="#B5A684" strokeWidth={0.7} />
+			<path d={`M${-w / 2},${-hh * 0.27} L${w / 2},${-hh * 0.27} M${-w / 2},${hh * 0.3} L${w / 2},${hh * 0.3}`} stroke="#D3C7A8" strokeWidth={0.5} />
+			<path d={`M${-w / 2 + 1.2},${-hh / 2} L${-w / 2 + 1.2},${hh / 2} M${w / 2 - 1.2},${-hh / 2} L${w / 2 - 1.2},${hh / 2}`} stroke="#D9CEB2" strokeWidth={0.5} />
+			<g fill="#3A2C20" opacity={0.86} style={{fontFamily: '"FreeSerif", "DejaVu Serif", serif', fontStyle: 'italic'}}>
+				<text x={-w / 2 + 6} y={21.5} fontSize={5.6}>Saml. F. B. Morse</text>
+				<text x={w / 2 - 8} y={29} fontSize={5.2} textAnchor="end">Esq.</text>
+				<text x={-w / 2 + 12} y={44} fontSize={6.4}>Washington</text>
+			</g>
+			<path d={`M${-w / 2 + 12},47 q10,1.6 22,-0.4 t13,0.6`} stroke="#3A2C20" strokeWidth={0.5} fill="none" opacity={0.75} />
 		</g>}
 		{open > 0.3 && <g opacity={lines}>
 			<path d={`M${-w / 2},${-hh / 6} L${w / 2},${-hh / 6} M${-w / 2},${hh / 6} L${w / 2},${hh / 6}`} stroke="#CFC2A2" strokeWidth={1} />

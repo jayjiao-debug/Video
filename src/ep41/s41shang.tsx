@@ -172,10 +172,10 @@ const Millet: React.FC<{x: number; gy: number; h: number; col: string; t: number
 
 /** a bank of rain clouds rolling in from the east (right): lumpy tops, flat lit undersides, soft edges (no rain falls) */
 const Clouds: React.FC<{tau: number; k: number}> = ({tau, k}) => <g filter="url(#shBlurW)">
-	{Array.from({length: 15}, (_, i) => { const x = lerp(W + 420 + 700 * rnd(i, 3), 560 + 1500 * rnd(i, 4), k) - tau * 6, y = 110 + 330 * rnd(i, 5) * rnd(i, 9), w = 360 + 260 * rnd(i, 6), hh = 70 + 50 * rnd(i, 7);
-		const bumps = Array.from({length: 6}, (_, j) => { const u = (j + 0.5) / 6; return <circle key={j} cx={x - w / 2 + u * w} cy={y - hh * (0.35 + 0.5 * Math.sin(Math.PI * u) * (0.6 + 0.4 * rnd(i * 7 + j, 8)))} r={hh * (0.55 + 0.35 * Math.sin(Math.PI * u))} fill={i % 2 ? '#262640' : '#1f1f36'} />; });
-		return <g key={i}>{bumps}<rect x={x - w / 2} y={y - hh * 0.6} width={w} height={hh * 0.6} rx={hh * 0.3} fill={i % 2 ? '#262640' : '#1f1f36'} />
-			<rect x={x - w * 0.4} y={y - hh * 0.2} width={w * 0.8} height={hh * 0.24} rx={hh * 0.12} fill="#5a3c50" opacity={0.5} /></g>; })}
+	{Array.from({length: 15}, (_, i) => { const x = lerp(W + 420 + 700 * rnd(i, 3), 600 + 1450 * rnd(i, 4), k) - tau * 6, y = 170 + 300 * rnd(i, 5), w = 420 + 300 * rnd(i, 6), hh = 80 + 60 * rnd(i, 7);
+		const bumps = Array.from({length: 6}, (_, j) => { const u = (j + 0.5) / 6; return <circle key={j} cx={x - w / 2 + u * w} cy={y - hh * (0.35 + 0.5 * Math.sin(Math.PI * u) * (0.6 + 0.4 * rnd(i * 7 + j, 8)))} r={hh * (0.55 + 0.35 * Math.sin(Math.PI * u))} fill={i % 2 ? '#22213a' : '#1b1a30'} />; });
+		return <g key={i}>{bumps}<rect x={x - w / 2} y={y - hh * 0.6} width={w} height={hh * 0.6} rx={hh * 0.3} fill={i % 2 ? '#22213a' : '#1b1a30'} />
+			<rect x={x - w * 0.4} y={y - hh * 0.2} width={w * 0.8} height={hh * 0.24} rx={hh * 0.12} fill="#7a4a52" opacity={0.55} /></g>; })}
 </g>;
 /** a soft smoke column that leans with the wind */
 const Smoke: React.FC<{x: number; y: number; tau: number; lean: number; s?: number; op?: number; seed?: number}> = ({x, y, tau, lean, s = 1, op = 1, seed = 0}) => <g filter="url(#shBlurS)" opacity={op}>
@@ -231,7 +231,7 @@ export const SHANG3: React.FC<{tau: number; t: number}> = ({tau, t}) => {
 	const touching = seg(tau, T.touch - 0.05, T.touch + 0.05) * (1 - seg(tau, T.flipA, T.flipA + 0.1));
 	/* --- shell states --- */
 	const newK = easeOut(seg(tau, T.crack, T.crack + 0.42));
-	const heat = Math.max(touching * 0.9, (1 - seg(tau, T.crack + 0.4, T.cool + 0.6)) * cl((tau - T.touch) / 0.2)) * (1 - seg(tau, T.cool, T.coolEnd));
+	const heat = Math.max(touching * 0.9, cl((tau - T.touch) / 0.2) * (1 - 0.25 * seg(tau, T.crack + 0.5, T.cool))) * (1 - seg(tau, T.cool, T.coolEnd));   // the crack glows gold through the graphs, then cools with the shell
 	const glyph = GLYPHS.map((_, i) => easeOut(seg(tau, T.glyph0 + i * T.glyphStep, T.glyph0 + i * T.glyphStep + 0.36)));
 	const cool = sm(seg(tau, T.cool, T.coolEnd));
 	/* --- camera --- */
@@ -340,7 +340,9 @@ export const SHANG3: React.FC<{tau: number; t: number}> = ({tau, t}) => {
 			</g></g></g>}
 		{/* the new crack's gold glow, and each graph's glow as it is cut */}
 		{newK > 0 && heat > 0.02 && cosT > 0 && <g filter="url(#shBlur6)" opacity={heat}><g transform={`${CT} ${tfP}`}>
+			<path d={pathOf(NEW_STEM, cl(newK * 2))} stroke="#ff9a30" strokeWidth={18 + 4 * cam.zoom} vectorEffect="non-scaling-stroke" fill="none" strokeLinecap="round" opacity={0.55} />
 			<path d={pathOf(NEW_STEM, cl(newK * 2))} stroke={GOLD} strokeWidth={10 + 2.2 * cam.zoom} vectorEffect="non-scaling-stroke" fill="none" strokeLinecap="round" />
+			{newK > 0.45 && <path d={pathOf(NEW_BR, cl((newK - 0.45) / 0.4))} stroke="#ff9a30" strokeWidth={16 + 3.6 * cam.zoom} vectorEffect="non-scaling-stroke" fill="none" strokeLinecap="round" opacity={0.55} />}
 			{newK > 0.45 && <path d={pathOf(NEW_BR, cl((newK - 0.45) / 0.4))} stroke={GOLD} strokeWidth={9 + 2 * cam.zoom} vectorEffect="non-scaling-stroke" fill="none" strokeLinecap="round" />}
 		</g></g>}
 		{newK > 0 && heat > 0.02 && cosT > 0 && <g opacity={heat}><g transform={`${CT} ${tfP}`}>
