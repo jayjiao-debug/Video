@@ -454,7 +454,7 @@ const drawJ = (t: number) => {
 	const s = onScreen(st, o, ZZ); const zhang = deskOn ? rig(s, cs, () => s.ground, 'zhangzhu') : s;
 	// his stool
 	const fk = `${Math.round(t * 60)}`;
-	const ext = 520 * (1 - smooth(clamp01(c.th / TH_J * 1.05))), lxL = T12.x0 - S12.x0 - ext;      // while the paper stands up it hides him
+	const ext = 900 * (1 - smooth(clamp01((c.th / TH_J - 0.72) / 0.26))), lxL = T12.x0 - S12.x0 - ext;      // while the paper stands up it hides him
 	const polyJ: P2[] = [stripJ.screen(lxL, -ext * 0.4, -2), stripJ.screen(T12.x1 - S12.x0, 0, -2), stripJ.screen(T12.x1 - S12.x0, S12.depth + ext, -2), stripJ.screen(lxL, S12.depth + ext, -2)];
 	bodyJ.draw(fk, (g) => {
 		g.save(); g.beginPath(); g.rect(-50, -50, W + 100, H + 100); g.moveTo(polyJ[0][0], polyJ[0][1]); for (const q of polyJ.slice(1)) g.lineTo(q[0], q[1]); g.closePath(); g.clip('evenodd');
@@ -470,7 +470,7 @@ const drawJ = (t: number) => {
 };
 addScene({id: '11', a: b(16), z: b(17.5), draw: drawJ, in: {mode: 5, a: b(16), z: b(16.15), pt: [0.5, 0.5], soft: 0.08}});
 addScene({id: '12', a: b(17.5), z: b(19), draw: drawJ});
-addScene({id: '13', a: b(19), z: (window as any).SONG_TEST ? b(23.5) : b(23), draw: drawJ});             // scene 14 starts at b23 with in: ROLLUP_IN (b23 → b23.5)
+addScene({id: '13', a: b(19), z: b(23), draw: drawJ});             // scene 14 starts at b23 with in: ROLLUP_IN (b23 → b23.5)
 
 // ================================================================================================ boot
 export const bootSong = async () => {

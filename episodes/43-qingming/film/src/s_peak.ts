@@ -1,7 +1,7 @@
 // Scenes 27–29: the 沈阳 storeroom (lamp on, the copies, the battered roll), THE PEAK (unroll + burst, dive into the 虹桥,
 // colour floods, the painted quarter lifts into relief, bridge match onto the real arch), and the 1950s day crest (R1, 进⑤).
 import {Stage, Live, bar, BEAT, W, H, D, clamp01, smooth, easeInOut, easeOut, easeIn, lerp, mkCanvas, canvasTex, gradCanvas} from './core';
-import {addScene} from './film';
+import {addScene, SCENES, In} from './film';
 import {Store} from './rooms';
 import {Crest, deck} from './crest';
 import {Cast, look, drawRoll, drawFig, glowBlob, rig, Contact} from './actors';
@@ -61,6 +61,8 @@ export const bootPeak = async () => {
 	dayRoll = new Live(day.st, 'dayRoll', 960, 900, 7000, 1800, 22, {emissive: 0.55}, 0.6);
 	gateGlow = new Live(day.st, 'gateGlow', -300, 800, 200, 160, -2590, {emissive: 0.5}, 2, -1990);   // drawn after the haze (−2000)
 	gateGlow.draw('g', (g) => drawPassage(g));
+	// scene 30 (resto) opens through the 午门's lit passage: an iris from the passage's screen point (kept updated by scene 29's draw)
+	const s30 = SCENES.find((q) => q.id === '30'); if (s30 && !s30.in) s30.in = IRIS30;
 	// the near banks continue down past the frame and the river darkens toward us (the bridge-match camera starts wide enough
 	// to see below the crest's bank shapes, which end at y 1700)
 	{ const c = mkCanvas(1000, 200), g = c.getContext('2d')!, X = (x: number) => (x + 4040) / 10, Y = (y: number) => (y - 1640) / 10;
@@ -291,6 +293,7 @@ const cam29 = (t: number): [number, number, number] => {
 	const m = crestMatch(Math.min(t, b(57) + 0.1));
 	return [lerp(m[0], wide[0], k), lerp(m[1], wide[1], k), Math.exp(lerp(Math.log(m[2]), Math.log(wide[2]), k))];
 };
+const IRIS30: In = {mode: 5, a: b(58.5), z: b(58.5) + 0.32, pt: [0.5, 0.5], soft: 0.05, ease: easeIn};
 const drawPassage = (g: CanvasRenderingContext2D) => {
 	// the 午门 centre passage (52 × 94 at s 0.9, base 860): warm lamplit vault, its far opening a bright arch
 	const cx = 100, base = 140, w = 52, h = 94;
@@ -319,5 +322,6 @@ addScene({id: '29', a: b(57) - 0.12, z: b(58.5), in: {mode: 7, a: b(57) - 0.12, 
 	dayRoll.drawW(`${Math.round(t * 30)}`, (g) => { glowBlob(g, rc, 140, 70, 0.42); drawRoll(g, e0, e1, 14, 1); drawFig(g, {...f1, part: 'L'}); });
 	day.setBoat(1650 - (t - b(57)) * 40, 60); day.setStreak(rc[0], 0.25, t); day.setLanterns(() => 0);
 	st.heroAt(rc[0], rc[1], 22, 650);
+	const pp = st.toScreen(st.at(-300, 813, -2590)); IRIS30.pt = [pp.x / 1920, 1 - pp.y / 1080];
 	return {st, grade: {vig: 0.22, exposure: 1.0, corners: 1, cornersTop: 0.55, cornersBand: [0, 300, 470, 0.8]}, bloom: 1, hideFurniture: t < b(57)};
 }});
