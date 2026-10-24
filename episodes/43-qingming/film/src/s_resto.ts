@@ -313,5 +313,6 @@ const drawR = (t: number) => {
 	const inLens = c.z > 6 ? 1 : 0, top = c.th < 0.3 ? 1 : 0;
 	return {st, grade: {vig: inLens ? 0.62 : top ? 0.5 : 0.3, vigCol: '#1a120b', corners: inLens || top ? 0.95 : 0.25, exposure: 1}, bloom: 1};
 };
+(window as any).RESTO_DBG = (t: number) => { const c = camR(t); return {c, th: strip.theta}; };
 addScene({id: '30', a: b(58.5), z: b(62), draw: drawR});
 addScene({id: '31', a: b(62), z: b(64), draw: drawR});
