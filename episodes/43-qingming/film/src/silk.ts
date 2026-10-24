@@ -412,7 +412,7 @@ function parasol(P: Painter, x: number, y: number, R: number, h: number) {
 // ------------------------------------------------------------------ 界画 buildings (oblique boxes, ridge along X or Z)
 interface House {
   roof?: 'gable' | 'hip' | 'xieshan' | 'straw'; ridge?: 'x' | 'z'; front?: 'shop' | 'lattice' | 'doors' | 'wall' | 'open';
-  awning?: boolean; storeys?: 1 | 2; huanmen?: boolean; flag?: boolean; sign?: boolean; rh?: number; base?: number; goods?: boolean;
+  awning?: boolean; storeys?: 1 | 2; huanmen?: boolean; flag?: boolean; sign?: boolean; rh?: number; base?: number; goods?: boolean; lift?: number;
 }
 function bayLines(P: Painter, q: (s: number, Y: number) => Pt, len: number, Y0: number, h: number, kind: string, lw: number) {
   const n = Math.max(1, Math.round(len / 66));
@@ -535,6 +535,7 @@ function strawHatch(P: Painter, poly: Pt[], low: Pt, high: Pt) {
   c.restore();
 }
 function house(P: Painter, X: number, Z: number, w: number, d: number, h: number, o: House = {}) {
+  if (o.lift) { const pr = P.proj; P.proj = { ...pr, oy: pr.oy - o.lift }; house(P, X, Z, w, d, h, { ...o, lift: 0 }); P.proj = pr; return; }
   const ridge = o.ridge ?? 'x', type = o.roof ?? 'gable', rh = o.rh ?? (type === 'straw' ? d * 0.5 : d * 0.42) * (ridge === 'z' ? w / d : 1);
   const base = o.base ?? 0, lw = 1.6;
   const storeys = o.storeys ?? 1;
@@ -1224,7 +1225,7 @@ BUILDERS.river = (S, o) => {
   houseRow(S, LL, -1050, 60, 1900, fog, { two: 0.15 });
   houseRow(S, LL, -900, -180, 1370, fog, { awn: 0.5 });
   addCrowd(S, 1, -700, 240, 1560, 1760, 18, fog);
-  addBeast(S, 1, -200, 1640, 66, 'ox', 1, false, fog); addBeast(S, 1, -120, 1660, 66, 'ox', 1, false, fog);
+  addBeast(S, 1, 190, 1640, 66, 'ox', 1, false, fog); addBeast(S, 1, 120, 1660, 66, 'ox', 1, false, fog);
   S.add(1, 1650, -40, P => { const p = P.pt(-30, 0, 1650); wheel(P, p[0] + 10, p[1] - 30, 30, 1.6); shape(P, [[p[0] - 30, p[1] - 92], [p[0] + 90, p[1] - 92], [p[0] + 90, p[1] - 40], [p[0] - 30, p[1] - 40]], P.pal.wood, 1.8); shape(P, ellipsePts(p[0] + 30, p[1] - 92, 62, 24, Math.PI, Math.PI * 2, 14), P.pal.straw, 1.8); wheel(P, p[0] + 60, p[1] - 30, 30, 1.6); }, { fog: fog(1650) });
   houseRow(S, LL, -1300, 120, 2350, fog, {});
   houseRow(S, LL, -1700, 0, 2800, fog, { h: [70, 95] });
@@ -1262,6 +1263,233 @@ BUILDERS.river = (S, o) => {
   S.info.bridge = { x: b0[0], y: bt[1], w: b1[0] - b0[0], h: b0[1] - bt[1] };
   const m0 = pP(1060, 0, Zb - 1080), m1 = pP(1310, 0, Zb - 30);
   S.info.mastBoat = { x: m0[0], y: m1[1] - 720, w: m1[0] - m0[0], h: m0[1] - m1[1] + 720 };
+};
+
+function useProj(S: Scene, proj: Proj) {
+  const wrap = (fn: (P: Painter) => void) => (P: Painter) => { P.proj = proj; fn(P); };
+  const add0 = S.add.bind(S); S.add = (L, z, x, draw, extra = {}) => add0(L, z, x, wrap(draw), extra);
+  const g0 = S.ground.bind(S); S.ground = (L, draw, extra = {}) => g0(L, wrap(draw), extra);
+  const o0 = S.overlay.bind(S); S.overlay = (L, draw) => o0(L, wrap(draw));
+  return (X: number, Y: number, Z: number): Pt => [proj.ox + X + proj.A * Z, proj.oy - Y - proj.B * Z];
+}
+const screenX = (proj: Proj, x: number, y: number) => x - proj.A * (proj.oy - y) / proj.B;
+
+// city gate platform (城台) with a trapezoidal timber-framed passage, seen from outside
+function gatePlatform(P: Painter, X: number, Z: number, w: number, d: number, h: number, pX: number, pw: number, ph: number) {
+  const batter = 18;
+  const R: Pt[] = [P.pt(X + w, 0, Z), P.pt(X + w, 0, Z + d), P.pt(X + w - batter, h, Z + d), P.pt(X + w - batter, h, Z)];
+  shape(P, R, P.pal.stone, 2.2, { k: 1.3 });
+  const top: Pt[] = [P.pt(X + batter, h, Z), P.pt(X + w - batter, h, Z), P.pt(X + w - batter, h, Z + d), P.pt(X + batter, h, Z + d)];
+  shape(P, top, P.pal.earth, 1.6, { k: 2 });
+  const F: Pt[] = [P.pt(X, 0, Z), P.pt(X + w, 0, Z), P.pt(X + w - batter, h, Z), P.pt(X + batter, h, Z)];
+  shape(P, F, P.pal.stone, 0, { k: 0.8 });
+  // brick courses
+  P.ctx.save(); P.ctx.beginPath(); tracePath(P.ctx, F, true, false); P.ctx.clip();
+  for (let y = 12; y < h; y += 13) { const a = P.pt(X, y, Z), b = P.pt(X + w, y, Z); seg(P, a[0], a[1], b[0], b[1], 0.7, 0.35); }
+  for (let y = 0; y < h; y += 13) for (let x = ((y / 13) % 2) * 14; x < w; x += 28) { if (P.r() < 0.5 * P.detail) { const a = P.pt(X + x, y, Z), b = P.pt(X + x, y + 13, Z); seg(P, a[0], a[1], b[0], b[1], 0.6, 0.3); } }
+  P.ctx.restore();
+  line(P, F, 2.6, { closed: true });
+  // the passage: dark, its left inner wall with 排叉柱 posts, light at the far end
+  const k = pw * 0.18;
+  const op: Pt[] = [P.pt(pX - pw / 2, 0, Z), P.pt(pX + pw / 2, 0, Z), P.pt(pX + pw / 2, ph - k, Z), P.pt(pX + pw / 2 - k, ph, Z), P.pt(pX - pw / 2 + k, ph, Z), P.pt(pX - pw / 2, ph - k, Z)];
+  P.ctx.save(); P.ctx.beginPath(); tracePath(P.ctx, op, true, false); P.ctx.clip();
+  fill(P, op, P.wash(P.pal.shade, 4.5));
+  const far: Pt[] = op.map((_, i) => { const q = [[pX - pw / 2, 0], [pX + pw / 2, 0], [pX + pw / 2, ph - k], [pX + pw / 2 - k, ph], [pX - pw / 2 + k, ph], [pX - pw / 2, ph - k]][i]; return P.pt(q[0], q[1], Z + d); });
+  fill(P, far, P.gfill()); fill(P, far, P.wash(P.pal.earth, 2));
+  const lw2: Pt[] = [P.pt(pX - pw / 2, 0, Z), P.pt(pX - pw / 2, 0, Z + d), P.pt(pX - pw / 2, ph - k, Z + d), P.pt(pX - pw / 2 + k, ph, Z + d), P.pt(pX - pw / 2 + k, ph, Z), P.pt(pX - pw / 2, ph - k, Z)];
+  fill(P, lw2, P.wash(P.pal.shade, 2.6));
+  for (let z = 14; z < d; z += 22) { const a = P.pt(pX - pw / 2, 0, Z + z), b = P.pt(pX - pw / 2, ph - k, Z + z); seg(P, a[0], a[1], b[0], b[1], 1.3, 0.85); }
+  P.ctx.restore();
+  line(P, op, 2.6, { closed: true });
+  for (const s of [-1, 1]) { const a = P.pt(pX + s * (pw / 2 + 8), 0, Z - 2), b = P.pt(pX + s * (pw / 2 + 8), ph - k, Z - 2); seg(P, a[0], a[1], b[0], b[1], 1.6, 0.9); }
+  // parapet railing on the top edge
+  for (let x = batter + 6; x < w - batter; x += 24) { const a = P.pt(X + x, h, Z + 6), b = P.pt(X + x, h + 22, Z + 6); seg(P, a[0], a[1], b[0], b[1], 1.2, 0.9); }
+  line(P, [P.pt(X + batter, h + 22, Z + 6), P.pt(X + w - batter, h + 22, Z + 6), P.pt(X + w - batter, h + 22, Z + d - 6)], 1.8);
+}
+// earth rampart (no brick wall: the painting shows the city wall only as a low mound by the gate)
+function mound(P: Painter, X0: number, X1: number, Z: number, d: number, h: number) {
+  const pts: Pt[] = [P.pt(X0 - 60, 0, Z), P.pt(X0, h, Z + d * 0.3), P.pt(X1, h, Z + d * 0.3), P.pt(X1, h * 0.9, Z + d), P.pt(X1 + 40, 0, Z + d)];
+  const front: Pt[] = [P.pt(X0 - 60, 0, Z), P.pt(X1 + 50, 0, Z), P.pt(X1, h, Z + d * 0.3), P.pt(X0, h, Z + d * 0.3)];
+  shape(P, [...front], P.pal.earth, 0, { k: 2.4 });
+  void pts;
+  const topL: Pt[] = []; for (let x = X0; x <= X1; x += 40) topL.push(P.pt(x, h + rr(P.r, -4, 4), Z + d * 0.3));
+  line(P, topL, 2.0, { amp: 1.2 });
+  for (let i = 0; i < (X1 - X0) / 30; i++) { const x = rr(P.r, X0, X1), t = rr(P.r, 0.1, 0.9); const p = P.pt(x, h * (1 - t), Z + d * 0.3 * (1 - t)); line(P, [p, [p[0] - 10, p[1] + 14], [p[0] - 6, p[1] + 26]], 1.0, { a: 0.5 }); if (P.r() < 0.4) tuft(P, p[0], p[1], 12, 0.6); }
+}
+
+// ---------------- 'gate': the city gate tower, camels coming out, the street of shops
+BUILDERS.gate = (S, o) => {
+  void o;
+  const proj: Proj = { ox: 0, oy: 1680, A: 0.6, B: 0.5 }; const pP = useProj(S, proj);
+  const fog: FogFn = Z => clamp((Z - 1600) / 1800, 0, 0.62);
+  const GX = 900, GZ = 1250, GW = 720, GD = 250, GH = 250, PX = 1250;
+  groundFill(S);
+  S.ground(0, P => { P.setFog(0.75); farTrees(P, 0, 1300, 200, 120); farTrees(P, 3000, 4150, 180, 110); P.setFog(0); });
+  const layerOf = (X: number, Z: number) => (Z > GZ + GD + 40 ? 1 : Z >= GZ - 20 ? 2 : Z > 640 ? 3 : 4); void layerOf;
+  groundMarks(S, 1, 200, (x, y) => y < 760, 200);
+  groundMarks(S, 3, 200, (x, y) => y >= 760 && y < 1150, 760);
+  groundMarks(S, 4, 160, (x, y) => y >= 1150, 1150);
+  // the road through the gate: wheel ruts
+  S.ground(3, P => { for (const dx of [-30, 30]) line(P, [P.pt(PX + dx, 0, 80), P.pt(PX + dx, 0, GZ)], 1.0, { a: 0.45, amp: 1.2 }); });
+  // inside the city (far): rows of roofs behind the gate, fogged
+  houseRow(S, 1, 400, 2600, 1640, fog, { two: 0.2 });
+  houseRow(S, 1, -100, 2200, 2050, fog, { h: [70, 95] });
+  houseRow(S, 1, -500, 1900, 2450, fog, { h: [60, 90] });
+  houseRow(S, 1, -900, 1500, 2850, fog, { h: [60, 80] });
+  addTree(S, 1, 1500, 1800, 330, 'leaf', fog); addTree(S, 1, 300, 2200, 300, 'bare', fog); addTree(S, 1, 2300, 1700, 300, 'willow', fog);
+  // the gate and the ramparts
+  S.add(2, GZ, GX, P => gatePlatform(P, GX, GZ, GW, GD, GH, PX, 120, 170));
+  S.add(2, GZ - 1, GX + 60, P => house(P, GX + 100, GZ + 50, GW - 200, GD - 110, 104, { roof: 'hip', front: 'lattice', rh: 130, lift: GH }));
+  S.add(2, GZ + 60, GX - 600, P => mound(P, GX - 700, GX - 20, GZ + 60, 160, 120));
+  S.add(2, GZ + 60, GX + GW + 40, P => mound(P, GX + GW + 40, GX + GW + 900, GZ + 60, 160, 120));
+  for (const [X, H, k] of [[GX - 560, 330, 'willow'], [GX - 300, 300, 'bare'], [GX + GW + 200, 340, 'willow'], [GX + GW + 560, 300, 'leaf']] as [number, number, string][]) addTree(S, 2, X, GZ + 120, H, k as 'willow', Z => fog(Z) * 0.5);
+  // camels coming out of the gate, a drover in front
+  addBeast(S, 3, PX + 30, GZ - 40, 92, 'camel', -1, true, fog);
+  addBeast(S, 3, PX + 70, GZ - 230, 92, 'camel', -1, true, fog);
+  addBeast(S, 3, PX + 110, GZ - 420, 92, 'camel', -1, true, fog);
+  addFig(S, 3, PX - 60, GZ - 520, { dir: -1, pose: 'walk', body: 'short', hat: 'li', robe: 4, force: true }, fog, 54);
+  // outside the gate: the far row of shops facing the street (both sides of the road)
+  houseRow(S, 3, -700, PX - 240, 720, fog, { awn: 0.5, gableZ: 0.25 });
+  addHouse(S, 3, PX + 240, 700, 380, 200, 112, { roof: 'xieshan', storeys: 2, huanmen: true, flag: true }, fog);
+  houseRow(S, 3, PX + 700, 3600, 740, fog, { awn: 0.5, gableZ: 0.2, two: 0.2 });
+  addHouse(S, 3, PX + 180, 1000, 220, 140, 90, { roof: 'gable', front: 'open', awning: true, sign: true }, fog);
+  addHouse(S, 3, PX - 420, 1010, 240, 140, 92, { roof: 'gable', front: 'shop', awning: true }, fog);
+  for (const [X, Z, H, k] of [[PX - 700, 980, 360, 'willow'], [PX + 600, 1060, 340, 'leaf'], [2600, 1100, 360, 'willow'], [3100, 1050, 330, 'bare']] as [number, number, number, string][]) addTree(S, 3, X, Z, H, k as 'willow', fog);
+  // the street: crowds, a sedan, a rider, a wheelbarrow, a storyteller ring
+  addCrowd(S, 3, -500, 3400, 420, 690, 70, fog);
+  addCrowd(S, 3, PX - 260, PX + 220, 700, 1200, 16, fog);
+  addCrowd(S, 4, -300, 3600, 120, 400, 34, fog);
+  S.add(3, 520, 2050, P => { const p = P.pt(2050, 0, 520); sedan(P, p[0], p[1], 54, -1); }, { fog: fog(520) });
+  addBeast(S, 3, 2600, 470, 70, 'horse', 1, false, fog, { dir: 1, hat: 'futou', robe: 1, pose: 'stand' });
+  addBeast(S, 3, 600, 560, 64, 'donkey', 1, true, fog); addBeast(S, 3, 520, 600, 64, 'donkey', 1, true, fog);
+  S.add(3, 430, 1700, P => { const p = P.pt(1700, 0, 430); wheel(P, p[0], p[1] - 22, 22, 1.4); shape(P, [[p[0] - 40, p[1] - 50], [p[0] + 30, p[1] - 50], [p[0] + 20, p[1] - 26], [p[0] - 40, p[1] - 26]], P.pal.straw, 1.6); figure(P, p[0] - 62, p[1], 52, { dir: 1, body: 'short', pose: 'push', hat: 'cap', robe: 3, force: true, tool: [p[0] - 40, p[1] - 36] }); }, { fog: fog(430) });
+  S.add(3, 560, 3000, P => { const c = P.pt(3000, 0, 560); figure(P, c[0], c[1], 54, { dir: -1, pose: 'raise', hat: 'jin', robe: 1, force: true }); for (let i = 0; i < 9; i++) { const a = Math.PI * 2 * i / 9; const q = P.pt(3000 + Math.cos(a) * 110, 0, 560 + Math.sin(a) * 90); figure(P, q[0], q[1], 50, { dir: Math.cos(a) > 0 ? -1 : 1, pose: 'stand', robe: i, hat: pick(P.r, HATS) }); } }, { fog: fog(560) });
+  // near row (bottom edge), roofs only partly in frame
+  houseRow(S, 4, -400, 3700, 40, fog, { awn: 0.6, gableZ: 0.15 });
+  addTree(S, 4, 2200, 260, 420, 'leaf', fog); addTree(S, 4, 600, 300, 400, 'willow', fog);
+  hazeOverlay(S, 1, 0, 320, 0.95);
+  const g0 = pP(GX, 0, GZ), g1 = pP(GX + GW, GH + 104 + 160, GZ + GD);
+  S.info.gate = { x: g0[0], y: g1[1], w: g1[0] - g0[0] + 40, h: g0[1] - g1[1] };
+};
+
+// ---------------- 'end': the painting's last stretch of street, then bare silk (no signature)
+BUILDERS.end = (S, o) => {
+  void o;
+  const proj: Proj = { ox: 0, oy: 1680, A: 0.6, B: 0.5 }; useProj(S, proj);
+  const fog: FogFn = Z => clamp((Z - 1500) / 1700, 0, 0.62);
+  groundFill(S);
+  S.ground(0, P => { P.setFog(0.78); farTrees(P, 1900, 4150, 210, 110); P.setFog(0); });
+  // marks thin out toward the bare end (left)
+  groundMarks(S, 1, 260, (x, y) => x > 1500 + (1 - y / H0) * 300 && P_rand(x, y) < (x - 1400) / 1400, 200);
+  groundMarks(S, 4, 160, (x, y) => x > 1600 && y > 1000, 1000);
+  const minX = (Z: number) => 1550 - 0.6 * Z; // keep the city right of screen x≈1550
+  houseRow(S, 1, minX(1900) + 300, 3600, 1900, fog, { h: [70, 95] });
+  houseRow(S, 1, minX(1420) + 120, 3500, 1420, fog, { two: 0.25 });
+  houseRow(S, 3, minX(900) + 60, 3400, 900, fog, { awn: 0.5, gableZ: 0.2, two: 0.15 });
+  addHouse(S, 3, 2300, 880, 420, 210, 118, { roof: 'xieshan', front: 'doors', storeys: 2, sign: true }, fog);
+  houseRow(S, 4, minX(250) + 200, 3700, 250, fog, { awn: 0.5, gableZ: 0.2 });
+  addTree(S, 3, minX(760) + 40, 760, 380, 'willow', fog);
+  addTree(S, 1, minX(1300) + 40, 1300, 330, 'bare', fog);
+  addTree(S, 4, 2900, 380, 420, 'leaf', fog); addTree(S, 3, 3300, 820, 360, 'willow', fog);
+  // the street, emptier toward its end
+  for (let i = 0; i < 46; i++) { const t = Math.pow(S.r(), 0.7); const X = lerp(minX(700) + 80, 3500, t); const Z = rr(S.r, 470, 860); addFig(S, Z > 640 ? 3 : 4, X, Z, randFig(S.r), fog); }
+  addBeast(S, 3, minX(640) + 140, 640, 66, 'donkey', -1, true, fog);
+  addFig(S, 3, minX(640) + 70, 650, { dir: -1, body: 'short', pose: 'walk', hat: 'li', robe: 2, force: true }, fog);
+  addBeast(S, 3, 1900, 720, 72, 'horse', 1, false, fog, { dir: 1, hat: 'futou', robe: 3 });
+  S.add(3, 600, 2400, P => { const p = P.pt(2400, 0, 600); sedan(P, p[0], p[1], 52, -1); }, { fog: fog(600) });
+  hazeOverlay(S, 1, 0, 300, 0.95);
+  // fade the city into bare silk toward the left (an overlay over the far layers, before the near layer)
+  S.overlay(3, P => { const g = P.ctx.createLinearGradient(1250, 0, 1750, 0); g.addColorStop(0, rgba(P.pal.ground, 1)); g.addColorStop(1, rgba(P.pal.ground, 0)); P.ctx.fillStyle = g; P.ctx.fillRect(0, 0, 1750, H0); });
+  S.info.corners = { lowerLeft: { x: 0, y: 1000, w: 900, h: 536 }, upperLeft: { x: 0, y: 0, w: 900, h: 536 } };
+};
+function P_rand(x: number, y: number) { return hash2(Math.round(x), Math.round(y)); }
+
+// ---------------- 'shed': the outskirts, the straw shed whose broken roof poles were read as donkey ears
+BUILDERS.shed = (S, o) => {
+  const patch = o.patch ?? 'bare';
+  const proj: Proj = { ox: 0, oy: 1680, A: 0.6, B: 0.5 }; const pP = useProj(S, proj);
+  const fog: FogFn = Z => clamp((Z - 1500) / 1700, 0, 0.65);
+  groundFill(S);
+  S.ground(0, P => { P.setFog(0.75); farTrees(P, -40, 4150, 230, 130); P.setFog(0.55); farTrees(P, 200, 3900, 330, 150); P.setFog(0); });
+  groundMarks(S, 1, 240, (x, y) => y < 900, 300);
+  groundMarks(S, 4, 240, (x, y) => y >= 900, 900);
+  // fields (furrows) in the distance, the dirt road, the stream with a plank bridge
+  S.ground(1, P => {
+    for (let k = 0; k < 3; k++) { const X0 = -600 + k * 900, Z0 = 1700 + k * 180; P.setFog(fog(Z0)); for (let i = 0; i < 9; i++) line(P, [P.pt(X0, 0, Z0 + i * 26), P.pt(X0 + 640, 0, Z0 + i * 26)], 1.0, { a: 0.45, amp: 1.2 }); }
+    P.setFog(0);
+  });
+  S.ground(3, P => { for (const dz of [0, 150]) line(P, [P.pt(-800, 0, 700 + dz), P.pt(4000, 0, 700 + dz)], 1.6, { a: 0.6, amp: 2 }); for (const dz of [50, 100]) line(P, [P.pt(-800, 0, 700 + dz), P.pt(4000, 0, 700 + dz)], 0.9, { a: 0.35, amp: 2 }); });
+  const SX0 = 2380, SX1 = 2500;
+  S.ground(2, P => {
+    const poly: Pt[] = [P.pt(SX0, 0, -100), P.pt(SX1, 0, -100), P.pt(SX1 - 140, 0, 2800), P.pt(SX0 - 160, 0, 2800)];
+    fill(P, poly, P.gfill()); fill(P, poly, P.wash(P.pal.water, 1.2)); ripples(P, poly, [proj.A, -proj.B], 0.6);
+    line(P, [poly[0], poly[3]], 1.8, { amp: 1.5 }); line(P, [poly[1], poly[2]], 1.8, { amp: 1.5 });
+  });
+  S.add(2, 690, SX0, P => { const q: Pt[] = [P.pt(SX0 - 30, 14, 700), P.pt(SX1 + 30, 14, 700), P.pt(SX1 + 30, 14, 850), P.pt(SX0 - 30, 14, 850)]; shape(P, q, P.pal.wood, 2, { k: 0.8 }); for (let z = 712; z < 850; z += 14) { const a = P.pt(SX0 - 30, 14, z), b = P.pt(SX1 + 30, 14, z); seg(P, a[0], a[1], b[0], b[1], 0.8, 0.6); } const f: Pt[] = [P.pt(SX0 - 30, 14, 700), P.pt(SX1 + 30, 14, 700), P.pt(SX1 + 30, 0, 700), P.pt(SX0 - 30, 0, 700)]; shape(P, f, P.pal.wood, 1.6, { k: 1.4 }); for (const x of [SX0, SX1]) { const a = P.pt(x, 0, 700), b = P.pt(x, -30, 700); seg(P, a[0], a[1], b[0], b[1], 2); } });
+  // farm compound with straw roofs and wattle fences (left), more farms far right
+  addHouse(S, 3, -260, 1080, 300, 170, 84, { roof: 'straw', front: 'doors' }, fog);
+  addHouse(S, 3, 120, 1150, 240, 160, 80, { roof: 'straw', ridge: 'z', front: 'wall' }, fog);
+  addHouse(S, 1, -560, 1500, 260, 150, 80, { roof: 'straw' }, fog);
+  S.add(3, 1000, -300, P => { fence(P, -300, 1000, 420, 1000, 40); fence(P, 420, 1000, 420, 1350, 40); }, { fog: fog(1000) });
+  addHouse(S, 1, 2900, 1500, 300, 160, 82, { roof: 'straw', front: 'doors' }, fog);
+  addHouse(S, 1, 3300, 1420, 220, 150, 80, { roof: 'straw', ridge: 'z' }, fog);
+  S.add(1, 1380, 2800, P => fence(P, 2800, 1380, 3500, 1380, 36), { fog: fog(1380) });
+  addHouse(S, 4, 3000, 260, 320, 170, 86, { roof: 'straw', front: 'open', awning: true }, fog);
+  // trees: misty willows, old crab-claw trees
+  for (const [X, Z, H, k] of [[-120, 900, 380, 'bare'], [400, 1350, 360, 'willow'], [900, 1250, 400, 'bare'], [1250, 1600, 340, 'willow'], [2150, 1200, 380, 'bare'], [SX0 - 120, 1050, 360, 'willow'], [SX1 + 60, 560, 400, 'willow'], [2850, 1700, 330, 'leaf'], [3600, 1000, 380, 'bare'], [-300, 1800, 300, 'willow']] as [number, number, number, string][]) addTree(S, Z > 1000 ? 1 : Z > 640 ? 3 : 4, X, Z, H, k as 'willow', fog);
+  addTree(S, 4, 1500, 320, 440, 'bare', fog); addTree(S, 4, 300, 380, 420, 'willow', fog);
+  // the donkey caravan carrying charcoal toward the city, a drover behind
+  for (let i = 0; i < 5; i++) addBeast(S, 3, 2900 + i * 120, 760 + (i % 2) * 30, 64, 'donkey', -1, true, fog);
+  addFig(S, 3, 3540, 790, { dir: -1, body: 'short', pose: 'walk', hat: 'li', robe: 2, force: true }, fog);
+  // the tomb-sweeping party: a sedan dressed with willow branches, attendants, a rider
+  S.add(3, 780, 700, P => { const p = P.pt(700, 0, 780); sedan(P, p[0], p[1], 54, -1, true); }, { fog: fog(780) });
+  addBeast(S, 3, 1000, 760, 70, 'horse', -1, false, fog, { dir: -1, hat: 'futou', robe: 1 });
+  addFig(S, 3, 1120, 790, { dir: -1, body: 'short', pose: 'carry', load: 'pole', hat: 'cap', robe: 4, force: true }, fog);
+  addFig(S, 3, 480, 760, { dir: -1, body: 'short', pose: 'walk', hat: 'cap', robe: 5, force: true }, fog);
+  addCrowd(S, 4, -300, 3600, 120, 560, 10, fog);
+  addCrowd(S, 1, -400, 3400, 1100, 1700, 7, fog, 46, { body: 'short', hat: 'li' });
+  // the straw shed with the damaged spot (the subject of the 1973 repair)
+  const SHX = 1385, SHZ = 1020, SHW = 250, SHD = 130, SHH = 72;
+  S.add(3, SHZ, SHX, P => {
+    house(P, SHX, SHZ, SHW, SHD, SHH, { roof: 'straw', front: 'open', rh: 58 });
+    const t = P.pt(SHX + SHW * 0.5, 0, SHZ - 20); shape(P, [[t[0] - 40, t[1] - 30], [t[0] + 40, t[1] - 30], [t[0] + 46, t[1] - 22], [t[0] - 34, t[1] - 22]], P.pal.wood, 1.4); seg(P, t[0] - 36, t[1] - 22, t[0] - 36, t[1], 1.3); seg(P, t[0] + 40, t[1] - 22, t[0] + 40, t[1], 1.3);
+    figure(P, t[0] + 70, t[1] + 6, 54, { dir: -1, pose: 'sit', hat: 'jin', robe: 2 });
+  }, { fog: fog(SHZ) });
+  const fl = pP(SHX, SHH, SHZ); // front-left eave corner of the shed
+  const PR: Rect = { x: fl[0] - 70, y: fl[1] - 28, w: 170, h: 150 };
+  const ear1: Pt = [PR.x + 46, PR.y + 8], ear2: Pt = [PR.x + 62, PR.y + 9];
+  S.info.patch = PR; S.info.posts = { x: ear1[0] - 8, y: ear1[1] - 34, w: 34, h: 40 };
+  const blob = (P: Painter, inset: number, seed: number): Pt[] => { const n = vnoise(seed); const out: Pt[] = []; const cx = PR.x + PR.w / 2, cy = PR.y + PR.h / 2; for (let i = 0; i < 48; i++) { const a = i / 48 * Math.PI * 2; const k = 0.82 + 0.3 * n(Math.cos(a) * 2 + 3, Math.sin(a) * 2 + 3); out.push([cx + Math.cos(a) * (PR.w / 2 - inset) * k, cy + Math.sin(a) * (PR.h / 2 - inset) * k]); } return out; };
+  S.overlay(3, P => {
+    P.setFog(0);
+    const tear = blob(P, 18, 77);
+    if (patch === 'bare' || patch === 'ears') {
+      // lost silk: the darker backing shows through, frayed threads at the edge, broken ink fragments
+      fill(P, tear, rgba(mix(P.pal.ground, P.mode === 'grey' ? hex('#6E6A62') : hex('#B89C70'), 0.45)), true);
+      fill(P, blob(P, 30, 78), rgba(mix(P.pal.ground, P.mode === 'grey' ? hex('#5E5A54') : hex('#A88A5E'), 0.4)), true);
+      for (let i = 0; i < 70; i++) { const p = pick(P.r, tear); const a = P.r() * Math.PI * 2; const l = rr(P.r, 3, 9); seg(P, p[0], p[1], p[0] + Math.cos(a) * l, p[1] + Math.sin(a) * l, 0.6, 0.35); }
+      line(P, tear, 0.9, { closed: true, a: 0.45, amp: 1.2 });
+      for (let i = 0; i < 6; i++) { const x = rr(P.r, PR.x + 30, PR.x + PR.w - 30), y = rr(P.r, PR.y + 40, PR.y + PR.h - 30); seg(P, x, y, x + rr(P.r, -14, 14), y + rr(P.r, -6, 6), 1.2, 0.5); }
+    } else if (patch === 'donkey') {
+      const pa = blob(P, 6, 79);
+      fill(P, pa, rgba(mix(P.pal.ground, hex('#B9B4A6'), 0.32)), true);
+      line(P, pa, 0.9, { closed: true, a: 0.35, amp: 0.6 });
+      // the Ming mounter's donkey: ears = the shed's poles
+      const u = 1.3, X0 = ear1[0] + 34 * u + 1, Y0 = ear1[1] + 88 * u;
+      beast(P, X0, Y0, 100 * u, 'donkey', -1, false, 0.35);
+    } else {
+      // 1973: old patch lifted, new plain silk let in; the poles stand over blank silk
+      const pa = blob(P, 6, 79);
+      fill(P, pa, rgba(mix(P.pal.ground, hex('#FFFBF0'), 0.55)), true);
+      line(P, pa, 0.8, { closed: true, a: 0.18, amp: 0.4 });
+    }
+    // the two thin poles (original paint)
+    for (const [e, lean] of [[ear1, -0.12], [ear2, 0.05]] as [Pt, number][]) brush(P, [e[0], e[1] + 4], [e[0] + lean * 10, e[1] - 14], [e[0] + lean * 30, e[1] - 32], 3.4, 1.4, P.ink(0.95), 6);
+    if (patch === 'ears') for (const [e, lean] of [[ear1, -0.12], [ear2, 0.05]] as [Pt, number][]) {
+      const tip: Pt = [e[0] + lean * 30, e[1] - 36];
+      line(P, [[e[0] - 7, e[1] + 6], [e[0] - 8 + lean * 12, e[1] - 16], tip, [e[0] + 7 + lean * 12, e[1] - 16], [e[0] + 7, e[1] + 6]], 1.6, { dash: [5, 4], amp: 0 });
+    }
+  });
 };
 
 // @@TAIL@@
