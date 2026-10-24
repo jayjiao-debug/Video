@@ -21,7 +21,7 @@ export const Sky: React.FC<{id: string; stops: [number, string][]; x?: number; y
 
 /** era label, exactly as the ep41 v3 master draws it */
 export const Label: React.FC<{date: string; name: string; dy?: number}> = ({date, name, dy = 0}) => <g transform={`translate(0,${dy})`}>
-	<defs><radialGradient id="lblS42" cx="0.2" cy="0.3" r="0.8"><stop offset="0" stopColor="#000" stopOpacity="0.45" /><stop offset="1" stopColor="#000" stopOpacity="0" /></radialGradient></defs>
+	<defs><radialGradient id="lblS42" cx="0.3" cy="0.3" r="0.7"><stop offset="0" stopColor="#000" stopOpacity="0.45" /><stop offset="1" stopColor="#000" stopOpacity="0" /></radialGradient></defs>
 	<ellipse cx={330} cy={130} rx={420} ry={150} fill="url(#lblS42)" />
 	<rect x={96} y={96} width={40} height={5} fill="#e0453a" />
 	<text x={148} y={106} style={{fontFamily: SANS, fontWeight: 500, fontSize: 28, letterSpacing: '0.06em'}} fill="#fff" opacity={0.9}>{date}</text>
