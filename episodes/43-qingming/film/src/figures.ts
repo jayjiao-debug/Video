@@ -524,4 +524,6 @@ export const POSES = {
 export type PoseName = keyof typeof POSES;
 
 /** the lowest shoe point of a foot, in body units (y up): for sole contact checks and slope placement */
+/** every shoe outline point of a foot (body units, y up): for slope-aware contacts */
+export const shoePoints = (p: Pose, side: Side): P[] => { const m = shoeMap(p[`${side}Ank`], p[`${side}Toe`]); return SHOE_PTS.map((q) => m(q)); };
 export const soleOf = (p: Pose, side: Side): P => { const m = shoeMap(p[`${side}Ank`], p[`${side}Toe`]); let best: P = [0, Infinity]; for (const q of SHOE_PTS) { const v = m(q); if (v[1] < best[1]) best = v; } return best; };
