@@ -34,11 +34,11 @@ export const Stamp: React.FC<{y: string; place?: string; l2?: string; o?: number
 	<div style={{...fx, top: 92, right: 60, textAlign: 'right', paddingRight: 26, opacity: o}}>
 		<div style={{position: 'absolute', right: 0, top: 8, bottom: 8, width: 8, borderRadius: 3, background: '#D3CEC2', boxShadow: '0 0 6px rgba(0,0,0,0.5)'}} />
 		<div style={{fontWeight: 900, fontSize: 52, lineHeight: 1.22}}><span style={{fontFamily: NUM, fontWeight: 700}}>{y}</span>{place && <span> · {place}</span>}</div>
-		{l2 && <div style={{fontWeight: 700, fontSize: 34, lineHeight: 1.5, marginTop: 2, opacity: 0.92}}>{l2}</div>}
+		{l2 && <div style={{fontWeight: 800, fontSize: 40, lineHeight: 1.45, marginTop: 4}}>{l2}</div>}
 	</div>;
 export const Brand: React.FC<{o?: number}> = ({o = 1}) => <div style={{...fx, top: 34, right: 60, fontSize: 28, letterSpacing: '0.06em', fontWeight: 700, opacity: 0.92 * o}}><span style={{color: KEY}}>◆</span> Juno · VIBE知识大赏</div>;
 /** small source note under the story (e.g. 据齐鲁晚报 2015) */
-export const Src: React.FC<{s: string; top: number; o?: number}> = ({s, top, o = 1}) => <div style={{...fx, left: 154, top, fontSize: 30, fontWeight: 500, opacity: 0.85 * o}}>{s}</div>;
+export const Src: React.FC<{s: string; top: number; o?: number}> = ({s, top, o = 1}) => <div style={{...fx, left: 154, top, fontSize: 36, fontWeight: 700, opacity: 0.92 * o}}>{s}</div>;
 
 /* ---------- the counter: tree rings ---------- */
 export const Rings: React.FC<{n: number; dashed?: boolean; size?: number}> = ({n, dashed, size = 96}) => {
@@ -59,7 +59,7 @@ export const Counter: React.FC<{n: number | string; label?: string; o?: number; 
 				<span style={{fontFamily: NUM, fontSize: 80, fontWeight: 700, lineHeight: 1, letterSpacing: '-0.01em'}}>{n}</span>
 				<span style={{fontSize: 36, fontWeight: 900, lineHeight: 1, marginBottom: 10}}>岁</span>
 			</div>
-			{note && <div style={{fontSize: 24, fontWeight: 500, opacity: 0.8 * noteO, marginTop: 6}}>{note}</div>}
+			{note && <div style={{fontSize: 30, fontWeight: 700, opacity: 0.9 * noteO, marginTop: 6}}>{note}</div>}
 		</div>
 	</div>;
 
@@ -69,18 +69,18 @@ export const SEALS: {name: string; year: string}[] = [
 	{name: '秦始皇', year: '前219'}, {name: '汉武帝', year: '前110'}, {name: '光武帝', year: '56'}, {name: '唐高宗', year: '666'}, {name: '唐玄宗', year: '725'}, {name: '宋真宗', year: '1008'},
 ];
 export const SealRow: React.FC<{st: SealState[]; o?: number; seventh?: number; pop?: number[]}> = ({st, o = 1, seventh = 0, pop = []}) =>
-	<div style={{...fx, left: 0, right: 0, top: 560, display: 'flex', justifyContent: 'center', gap: 36, opacity: o}}>
-		{[...SEALS, {name: '第7位', year: '?'}].map((s, i) => { const state: SealState = i < 6 ? st[i] : (seventh > 0 ? 'ghost' : 'off'); if (state === 'off') return <div key={i} style={{width: 150}} />;
+	<div style={{...fx, left: 0, right: 0, top: 520, display: 'flex', justifyContent: 'center', gap: 22, opacity: o}}>
+		{[...SEALS, {name: '第7位', year: '?'}].map((s, i) => { const state: SealState = i < 6 ? st[i] : (seventh > 0 ? 'ghost' : 'off'); if (state === 'off') return <div key={i} style={{width: 220}} />;
 			const lit = state === 'lit', k = pop[i] ?? 1, dim = state === 'before' ? 0.5 : 1;
-			return <div key={i} style={{width: 150, display: 'flex', flexDirection: 'column', alignItems: 'center', opacity: (i === 6 ? seventh : 1) * dim, transform: `scale(${lerp(0.6, 1, easeOut(k))})`}}>
-				<svg width={120} height={120} viewBox="-60 -60 120 120" style={{overflow: 'visible', filter: 'drop-shadow(0 3px 10px rgba(20,14,8,0.7))'}}>
+			return <div key={i} style={{width: 220, display: 'flex', flexDirection: 'column', alignItems: 'center', opacity: (i === 6 ? seventh : 1) * dim, transform: `scale(${lerp(0.6, 1, easeOut(k))})`}}>
+				<svg width={160} height={160} viewBox="-60 -60 120 120" style={{overflow: 'visible', filter: 'drop-shadow(0 3px 10px rgba(20,14,8,0.7))'}}>
 					<defs><radialGradient id={`jd${i}`} cx="0.35" cy="0.3" r="0.8"><stop offset="0" stopColor="#D8F0DF" /><stop offset="0.5" stopColor={C.jade} /><stop offset="1" stopColor={C.jadeD} /></radialGradient></defs>
 					<circle r={52} fill={lit ? `url(#jd${i})` : 'rgba(60,52,44,0.55)'} stroke={lit ? '#E8F6EC' : '#D3CEC2'} strokeWidth={3} strokeDasharray={state === 'legend' || state === 'ghost' ? '7 6' : undefined} />
 					<circle r={16} fill="rgba(30,24,18,0.75)" stroke={lit ? '#E8F6EC' : '#D3CEC2'} strokeWidth={2} />
 					{lit && Array.from({length: 10}, (_, j) => { const a = j / 10 * Math.PI * 2; return <circle key={j} cx={Math.cos(a) * 34} cy={Math.sin(a) * 34} r={3.4} fill="#F0FAF2" opacity={0.7} />; })}
 				</svg>
-				<div style={{fontSize: 34, fontWeight: 900, marginTop: 8}}>{s.name}</div>
-				<div style={{fontFamily: NUM, fontSize: 28, fontWeight: 700, opacity: 0.9}}>{s.year}</div>
+				<div style={{fontSize: 46, fontWeight: 900, marginTop: 8}}>{s.name}</div>
+				<div style={{fontFamily: NUM, fontSize: 40, fontWeight: 700}}>{s.year}</div>
 			</div>; })}
 	</div>;
 
@@ -94,7 +94,7 @@ export const TitleCard: React.FC<{t: number; t0: number; t1: number; num: number
 			<div style={{fontSize: 108, letterSpacing: '0.08em'}}>{TITLE1.slice(0, -1)}<span style={{marginRight: '-0.5em'}}>，</span></div>
 			<div style={{fontSize: 124, letterSpacing: '0.1em', color: KEY}}>{TITLE2}</div>
 		</div>
-		<div style={{...fx, left: 0, right: 0, top: 700, textAlign: 'center', fontFamily: NUM, fontWeight: 700, fontSize: 64, opacity: 0.9}}>相传 · 你 {Math.round(num)} 岁</div>
+		<div style={{...fx, left: 0, right: 0, top: 700, textAlign: 'center', fontFamily: NUM, fontWeight: 700, fontSize: 64, opacity: 0.9}}>{Math.round(num) > 0 ? `${Math.round(num)}年` : `前${-Math.round(num) + 1}年`}</div>
 	</div>;
 };
 
