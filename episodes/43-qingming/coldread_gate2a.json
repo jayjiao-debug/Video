@@ -1,0 +1,138 @@
+{
+  "label": "gate2a",
+  "viewer": "20-year-old in China, Douyin in the evening, phone held landscape, full screen. Spent about 5s on each frame as if I had just landed on it.",
+  "material_seen": "Six still frames only (lookA/B/C, hook and key for each). No audio, motion, titles or plan. All text is placeholder.",
+
+  "would_keep_watching_after_3s": true,
+  "why": "All three hooks use the same line, 你被人偷偷换成了假的 (someone secretly swapped you for a fake). It is a weird second-person accusation, so I stop for a second to figure out who 'you' is. Look A makes me stay the longest: the warm scroll next to the grey scroll answers the question with a picture before I've finished reading. Look C's red box is striking but has only one scroll, so I'm still puzzled after 3s. Look B shows me right away that this is 清明上河图. That is a stronger 'oh I know this' moment, but it also feels a bit like a textbook.",
+
+  "first_moment_I_got_curious": "lookA_key / lookB_key / lookC_key, bottom-left '元 你约250岁'. That's when it clicked that 'you' is the painting, that it is already 250 years old in 1352, and that the story follows the painting's life. The hook made me pause, but this counter is what made me want to see the next stop.",
+
+  "where_I_would_swipe_away": [
+    "lookC_key: there's no painting in the frame. Two silhouettes stare at each other inside a tilted red box while the subtitle says the painting was sold. I can't see what was sold, so it feels like a mood shot with no information. If the next few frames look like this too, I'd swipe.",
+    "lookB_key: too much text at once. Subtitle, about 3 columns of vertical classical colophon, 4 red seals, a two-line label and the counter are all fighting for attention. It looks like a museum display board, and if it stays on screen long I'd feel like I'm reading a PPT.",
+    "lookC (both): the red diamond pattern covers about 40% of the screen and looks like hotel carpet or 红包 paper. Three minutes of that would wear me out."
+  ],
+
+  "lines_I_did_not_understand": [
+    "Hook subtitle '你被人偷偷换成了假的，': for the first second I genuinely read it as being about ME (like a scam or a cheating-partner story). In lookA and lookB the picture clears it up quickly. In lookC it doesn't, because there's only one grey scroll.",
+    "Top-right '装裱匠以赝本换出（杨准跋，相传）': I get 赝本 (fake copy). '杨准跋' means nothing to me. Who is 杨准, and what does 跋 mean here? It reads like a footnote. '相传' is useful because it tells me this might just be a legend.",
+    "Top-right '纵24.8厘米·横528.7厘米': I can barely read it at phone size, and I don't know why I need the painting's dimensions in the middle of a theft story.",
+    "Bottom-left '你约250岁': I understood it. But 250 = 二百五 (idiot). The comments WILL be '你才二百五' / '这幅画是个二百五'. That could be a fun meme or it could derail the mood, so decide on purpose.",
+    "lookB_key vertical colophon text (翰林张择端字正道东武人也...): too small to read on a phone, and it's classical Chinese anyway. I only caught '张择端' and '清明上河图' because I zoomed in my head. To me it works as texture, not as content.",
+    "'贵官' in the key subtitle: the last characters 官。 are greyed out (mid-typewriter fade, I guess). In a still frame it looks like a rendering glitch."
+  ],
+
+  "takeaway_in_my_words": "In 1352 in Dadu (Beijing), a craftsman who was remounting 清明上河图 secretly swapped it for a fake and sold the real one to an official. The video tells the story as if the painting is 'you', with an age counter that keeps going up.",
+
+  "surprise_that_stuck": "The painting has a running age, '你约250岁', so the whole thing is the painting's biography told to it in second person. The idea that the famous scroll was already stolen and faked back in the Yuan dynasty is also new to me.",
+
+  "title_I_would_click": "No titles were provided, so this doesn't apply. If I were to suggest one from what the frames say: something like '清明上河图第一次被偷，是被装裱师傅调包的'. The frames clearly promise a heist story.",
+  "title_that_misleads": "N/A (no titles shown).",
+
+  "what_I_would_comment": "On A: '那个白塔是妙应寺吧，元大都细节到位' and also '你约250岁 —— 你才二百五'. On B: '这画风好像《如果国宝会说话》'. On C: '那个官帽怎么像鸟嘴'.",
+
+  "for_frames_only": [
+    {
+      "frame": "lookA_hook.png",
+      "what_this_says_in_5s": "Night, dark teal room. A man sits by a round moon window; outside is a white stupa at dusk. On the table in front of him are two copies of the same scroll: one warm and glowing under a hanging lamp, one grey and lifeless. Someone is about to swap the real one for the fake.",
+      "eye_went_first": "Subtitle (big white serif, with 换成了假的 in red), then straight down to the two scrolls. The warm/grey contrast is the second thing I notice, the silhouette third.",
+      "text_read": {
+        "subtitle": "你被人偷偷换成了假的，: very readable at phone size. White with a soft shadow on dark, and the red part pops.",
+        "top_right": "1352年·元大都: readable, big enough. 'Juno · VIBE知识大赏' above it is tiny, widely letter-spaced and low contrast, so I can't read it at phone size.",
+        "bottom_left_counter": "Not present in this frame."
+      },
+      "keep_or_swipe": "Keep. The line plus two side-by-side scrolls is an instant 'real vs fake' puzzle, and the lighting feels like a film, not a lecture.",
+      "confusing_or_off_putting": "The bottom ~15% is empty dark wood, which wastes space on a small screen. The scrolls are small, so I can't see the details that make one fake. The man looks out the window rather than at the scrolls, so it doesn't feel like he is in the act. His hair looks like a long braid or queue, which reads a little Qing to me (minor)."
+    },
+    {
+      "frame": "lookA_key.png",
+      "what_this_says_in_5s": "Golden-hour arched bridge over water, lanterns, a boat. Two silhouettes on top of the bridge hand over a glowing scroll: a plain craftsman on the left, an official in a wide-brimmed hat on the right. The sale is happening.",
+      "eye_went_first": "The glowing scroll in the exact center (backlit halo), then the two-line subtitle top-left, then '250' bottom-left.",
+      "text_read": {
+        "subtitle": "装裱匠用一幅假画换走了你，转手卖给了一位贵官。: both lines readable. 假画 in red works. The grey fading 官。 looks unfinished in a still.",
+        "top_right": "1352年·元大都 is readable. 装裱匠以赝本换出（杨准跋，相传） is small but readable if I squint. 纵24.8厘米·横528.7厘米 is too small and grey, so I effectively can't read it.",
+        "bottom_left_counter": "元 seal + 你约250岁: very readable. The big 250 is the strongest number on screen."
+      },
+      "keep_or_swipe": "Keep. This is the frame I'd screenshot. It's clear who, what and where, and it's beautiful.",
+      "confusing_or_off_putting": "A secret swap happening in the middle of a public bridge feels staged, more like a poster than a shady deal. The scroll is tiny relative to the frame. The bottom third is reflection and dark water, which looks moody but is empty."
+    },
+    {
+      "frame": "lookB_hook.png",
+      "what_this_says_in_5s": "This IS 清明上河图: the rainbow bridge, tiny crowds, a boat, drawn on aged paper. A scroll roller splits the screen. The left half is in color with lots of people; the right half is grey with fewer people and a faded seal, like the fake copy. It's the same painting, real vs copy.",
+      "eye_went_first": "The big arched bridge full of tiny people, then the roller down the middle, then the subtitle.",
+      "text_read": {
+        "subtitle": "你被人偷偷换成了假的，: readable, black on beige, but lower contrast than A. The house line-drawing behind 你被人偷偷 makes it slightly busier.",
+        "top_right": "1352年·元大都: readable (dark text on grey). 'Juno · VIBE知识大赏' collides with a tree branch drawing at the far right and is unreadable.",
+        "bottom_left_counter": "Not present."
+      },
+      "keep_or_swipe": "Keep, probably. The instant recognition of 清明上河图 is a hook in itself, and the split screen is the clearest visual of 'you got replaced' among the three looks. Some of my friends would swipe at 'oh, school painting' though.",
+      "confusing_or_off_putting": "The thick black bar along the bottom looks like a cropping mistake. It's very busy, with no single focal point. The fake side having fewer people is a cool detail, but I only noticed it on a second look."
+    },
+    {
+      "frame": "lookB_key.png",
+      "what_this_says_in_5s": "Line-drawing, 国风 illustration style: a craftsman in beige hands a closed blue scroll to an official in blue in front of a folding screen with mountains. Next to them are vertical columns of old colophon text with red collector seals, and on the right is a strip of the painting itself.",
+      "eye_went_first": "The vertical text columns and the cluster of red seals (珍秘/鉴藏), then the subtitle, then the two figures. The figures are the LAST thing I look at.",
+      "text_read": {
+        "subtitle": "装裱匠用一幅假画换走了你，转手卖给了一位贵官。: readable, dark on parchment.",
+        "top_right": "1352年·元大都 is readable. 装裱匠以赝本换出（杨准跋，相传） sits on top of roof lines and is hard to read. 纵24.8厘米·横528.7厘米 is unreadable. The 'Juno · VIBE' watermark is cut through by a roof.",
+        "bottom_left_counter": "元 你约250岁: readable."
+      },
+      "keep_or_swipe": "Would watch a few more seconds out of interest, but this is the frame where I start to feel I'm in a museum app rather than a story.",
+      "confusing_or_off_putting": "Too much text competing: subtitle + colophon + label + counter + 4 seals. The closed blue roll doesn't show that it's the painting. The figures are polite and formal, nothing feels sneaky. The colophon is unreadable at phone size."
+    },
+    {
+      "frame": "lookC_hook.png",
+      "what_this_says_in_5s": "It's like I'm inside a red brocade box looking out through its opening. A silhouetted man with a gold rim-light leans over a grey scroll. Something sneaky and theatrical is going on, like the opening of a thriller.",
+      "eye_went_first": "The red tunnel/box perspective (it's a heavy frame), then the gold-outlined face, then the subtitle.",
+      "text_read": {
+        "subtitle": "你被人偷偷换成了假的，: readable. The red characters on dark brown have a bit less contrast than in A, but they're fine.",
+        "top_right": "1352年·元大都: readable, white on red. The watermark is unreadable.",
+        "bottom_left_counter": "Not present."
+      },
+      "keep_or_swipe": "Pause for 2-3s because it looks different from everything else in my feed, then probably keep. But I'm not sure what I'm looking at.",
+      "confusing_or_off_putting": "Only ONE scroll, and it's grey. I can't tell if it's the real one or the fake, so the visual doesn't back up '换成了假的'. The box-POV idea (if it IS the painting's storage box) doesn't come through in 5s; it just looks like a red room. The red diamond pattern reads as wallpaper or carpet."
+    },
+    {
+      "frame": "lookC_key.png",
+      "what_this_says_in_5s": "Tilted frame inside the red box. Two silhouettes face each other against a teal patterned wall: craftsman left, official right. It's tense, like a negotiation.",
+      "eye_went_first": "The official's hat. Its long angled brim looks like a beak or horn. Then the subtitle.",
+      "text_read": {
+        "subtitle": "装裱匠用一幅假画换走了你，转手卖给了一位贵官。: readable, white on red/teal.",
+        "top_right": "1352年·元大都 is readable. 装裱匠以赝本换出（杨准跋，相传） is readable. The dimensions line is small but sits on plain red, so it's slightly better than in B.",
+        "bottom_left_counter": "元 你约250岁: readable."
+      },
+      "keep_or_swipe": "This is where I'd be most likely to swipe across all six frames. Nobody is holding the painting, so the frame doesn't show the sale the subtitle talks about.",
+      "confusing_or_off_putting": "No scroll in the scene. The beak-like hat looks like a cartoon villain or plague doctor, which could get mocking comments. The tilted (Dutch) angle plus all-red walls feels heavy and close to horror. Most of the frame is pattern rather than story."
+    }
+  ],
+
+  "per_look": {
+    "A": {
+      "summary": "Cinematic silhouette style: dark teal and amber light, a moon window, a bridge at dusk. Clean composition with one focal point per frame, and the best text readability.",
+      "would_watch_3_min": "Yes. It feels like a short film, and each frame tells me one thing.",
+      "risk": "Lots of empty dark space at the bottom, and the painting itself is always small, so I never get to enjoy the painting's details. It could feel generic 'moody AI-ish cinematic' if every scene looks like this."
+    },
+    "B": {
+      "summary": "Painting-native 国风 style, drawn as if inside 清明上河图 on paper with seals and colophons. Strongest instant recognition of the subject and the clearest real-vs-fake visual (the color/grey split).",
+      "would_watch_3_min": "Maybe. I'd like it, but it drifts toward 'museum explainer'. The key frame is cluttered and the top-right label collides with the artwork.",
+      "risk": "Text overload. Black-on-beige subtitles over line art are lower contrast. The black bottom bar looks like an error."
+    },
+    "C": {
+      "summary": "Theatrical red-box POV with framed silhouette scenes. It's the most distinctive look and creates suspense.",
+      "would_watch_3_min": "No. The red patterned walls are heavy, and the key frame drops the painting entirely, so I lose the thread.",
+      "risk": "Feels claustrophobic, nearly horror. The hat design invites jokes. The box idea isn't obvious without explanation."
+    }
+  },
+
+  "preferred_look_for_3_minutes": "A",
+  "why_preferred": "A is the only look where every frame gives me one clear thing to look at, the subtitle is effortless to read, and the story (real vs fake scroll, then the handoff on the bridge) is understandable even with the sound off. It feels like a film, which is what keeps me on Douyin. If I could mix: keep A's lighting and silhouettes, but cut to B-style full-screen painting close-ups whenever the scroll itself matters (B's color/grey split is the best real-vs-fake image of all six). From C, keep only the gold rim-light on faces.",
+
+  "cross_look_notes": [
+    "The 'Juno · VIBE知识大赏' watermark is unreadable at phone size in all six frames. In B it collides with the artwork.",
+    "The dimensions line (纵24.8厘米·横528.7厘米) is the least readable text in every look and the least useful to me mid-story.",
+    "The bottom-left 你约250岁 counter is the best device across all looks: big, clear, and it makes the painting a character. Watch the 二百五 joke though.",
+    "The hook line works in all three, but only A and B prove it visually with two scrolls. C asks me to take it on faith.",
+    "In full-screen landscape on Douyin, tapping brings up playback controls along the bottom edge. The bottom-left counter sits fairly low and might get covered for a moment."
+  ]
+}
