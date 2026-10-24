@@ -1,6 +1,6 @@
 # Script: 圆明园马首 (v2.1 · gate 1 r1 + r2 notes; for the owner)
 
-Screenwriter (producer), 2026-10-24. Files: this script + `lines.json` (50 lines, `[[start, end, "text"], ...]`, `[ ]` = key word).
+Screenwriter (producer), 2026-10-24. Files: this script + `lines.json` (49 lines, `[[start, end, "text"], ...]`, `[ ]` = key word).
 **Length:** 155.0 s (2:35) on the reading budget (0.5 + 字/7 + 0.6; typed lines +0.4), 0.25 s grid. Retime to bgm2's bars comes with the music (±8 % → ≈2:45 worst case, under 3:00).
 **Title card:** 18.0–21.0 placeholder; it goes on bgm2's first big drop once measured (owner row 133). **Widest line:** 15.55. **Pace:** waiting 6 % (≤ 12 %); MINOR holds are named beats (noon fountain, fire, counter going dark, the twist, the end card).
 
