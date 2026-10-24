@@ -236,12 +236,12 @@ const compMat = new THREE.ShaderMaterial({
 		col *= exposure * tint; col += lift;
 		col += vec3(1.0, 0.86, 0.6) * flash;
 		float v = length((uv - 0.5) * vec2(1.0, 0.85)); col = mix(col, vigCol, smoothstep(0.45, 1.05, v) * vig);
-		if (corners > 0.0) { // lamplight insert: falls to warm dark (≤ #4A3B2C) under the subtitle band (top-left), mark + stamp (top-right), chip + tally (bottom)
+		if (corners > 0.0) { // lamplight insert: the light pools on the middle of the silk and falls to warm dark (≤ #4A3B2C) under the
+			// top band (subtitle, mark, stamp) and the lower-left band (chip, counter, tally); vertical falloff, no box edges
 			vec2 p = vec2(uv.x * 1920.0, (1.0 - uv.y) * 1080.0);
-			float tl = 1.0 - smoothstep(0.0, 170.0, length(max(vec2(0.0), abs(p - vec2(575.0, 160.0)) - vec2(575.0, 160.0))));
-			float tr = 1.0 - smoothstep(0.0, 170.0, length(max(vec2(0.0), abs(p - vec2(1570.0, 165.0)) - vec2(350.0, 165.0))));
-			float bl2 = 1.0 - smoothstep(0.0, 150.0, length(max(vec2(0.0), abs(p - vec2(575.0, 975.0)) - vec2(575.0, 105.0))));
-			float m = clamp(max(max(tl, tr), bl2), 0.0, 1.0) * corners;
+			float top = 1.0 - smoothstep(305.0, 520.0, p.y);
+			float bot = smoothstep(760.0, 905.0, p.y) * (1.0 - smoothstep(1150.0, 1650.0, p.x));
+			float m = clamp(max(top, bot), 0.0, 1.0) * corners;
 			col = mix(col, col * 0.03 + vec3(0.042, 0.027, 0.015), m);
 		}
 		col += (h21(uv * 1920.0 + time) - 0.5) * grain;

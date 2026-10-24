@@ -208,7 +208,7 @@ const peakCam = (t: number): [number, number, number] => {
 	if (t < b(56.75)) return [x1, y1, z1];
 	// exit: the painted arch onto the real one (apex to apex, span to span)
 	const ax = FX0 + (BR.x + BR.w * 0.5) * SEC, ay = BR.y * SEC, sxA = 960 + (960 - C29[0]) * C29[2], syA = 540 + (900 - C29[1]) * C29[2];
-	const zE = (1700 * C29[2]) / (BR.w * SEC * 0.5), xE = ax - (sxA - 960) / zE, yE = ay - (syA - 540) / zE;
+	const zE = Math.max((1700 * C29[2]) / (BR.w * SEC * 0.5), (syA + 30) / ay), xE = ax - (sxA - 960) / zE, yE = ay - (syA - 540) / zE;
 	const k = easeInOut(clamp01((t - b(56.75)) / (b(57) - 0.12 - b(56.75))));
 	return [lerp(x1, xE, k), lerp(y1, yE, k), Math.exp(lerp(Math.log(z1), Math.log(zE), k))];
 };
