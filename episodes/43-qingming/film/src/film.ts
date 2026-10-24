@@ -6,7 +6,7 @@ import {drawFurniture} from './furniture';
 import LINES_JSON from '../../lines_bars.json';
 
 export const LINES = LINES_JSON as unknown as Line[];
-export type Frame = {st: Stage; grade?: Grade; bloom?: number; hud?: (hud: HTMLElement) => void; hideFurniture?: boolean; hideSubs?: boolean};
+export type Frame = {st: Stage; under?: Stage; blurUnder?: number; grade?: Grade; bloom?: number; hud?: (hud: HTMLElement) => void; hideFurniture?: boolean; hideSubs?: boolean};
 export type In = {mode: number; a: number; z: number; dir?: [number, number]; pt?: [number, number]; soft?: number; band?: number; ease?: (u: number) => number};
 export type Scene = {id: string; a: number; z: number; draw: (t: number) => Frame; in?: In};
 export const SCENES: Scene[] = [];
@@ -23,7 +23,8 @@ export const renderFilm = (t: number, hud: HTMLElement) => {
 		const k = (tr.ease ?? ((u: number) => u))(clamp01((t - tr.a) / (tr.z - tr.a)));
 		const x: Xf = {mode: tr.mode, k, dir: tr.dir, pt: tr.pt, soft: tr.soft, band: tr.band};
 		composite(x, fc.grade ?? {}, t, fp.bloom ?? 1, fc.bloom ?? 1);
-	} else { renderStage(fc.st, 0, fc.bloom ?? 1); composite({mode: 0, k: 0}, fc.grade ?? {}, t, fc.bloom ?? 1); }
+	} else if (fc.under) { renderStage(fc.under, 0, 1); renderStage(fc.st, 1, fc.bloom ?? 1); composite({mode: 13, k: 1, blurA: fc.blurUnder ?? 0}, fc.grade ?? {}, t, 1, fc.bloom ?? 1); }
+	else { renderStage(fc.st, 0, fc.bloom ?? 1); composite({mode: 0, k: 0}, fc.grade ?? {}, t, fc.bloom ?? 1); }
 	if (!fc.hideSubs) subtitles(hud, LINES, t);
 	drawFurniture(hud, t, {hideAll: fc.hideFurniture});
 	fc.hud?.(hud);
