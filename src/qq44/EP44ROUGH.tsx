@@ -1,6 +1,6 @@
 import React from 'react';
 import {AbsoluteFill, Composition, registerRoot, useCurrentFrame} from 'remotion';
-import {W, H} from './kit44';
+import {W, H, Grain44} from './kit44';
 import {LINES44F} from './lines44full';
 import {T, seg, sm, ease, ColdBrain, CiderBox, Microscope, Highway, Storage, House, Needle, Meadow, Office} from './demo44';
 import {Story, Punch, Stamp, Seal, Counter, SubRow} from './skin44';
@@ -75,16 +75,15 @@ const STAMPS: [number, string, string?, string?][] = [
 	[44, '1955 → 今天', undefined, '研究你的人'], [45, '约1884', '德国 慕尼黑', '那只指南针'], [46, '柏林', undefined, '纪念牌上，他自己的原话'],
 ];
 /** cold-open stamps (lines 1–4) change on the hard cut, the same frame the counter starts to roll */
-const ON_CUT = new Set([1, 2, 3, 4, 8, 9, 12, 13]);   // lines that start on a hard picture cut: the stamp (and era tag) change on the cut
-const stAt = (i: number) => (i === 0 ? 0 : ON_CUT.has(i) ? LINES[i][0] : LINES[i][0] + STAMP_AT);
+const stAt = (i: number) => (i === 0 ? 0 : i <= 4 || i === 12 || i === 13 ? LINES[i][0] : LINES[i][0] + STAMP_AT);   // 12/13: change on the hard cuts (street, Nobel)
 const stampAt = (t: number) => { if (t >= film(T.title) && t < stAt(5)) return null; if (t >= LINES[48][0]) return null;
 	let cur: (typeof STAMPS)[number] | null = null; for (const s of STAMPS) if (t >= stAt(s[0])) cur = s;
-	if (!cur) return null; const a = cur[0] === 0 ? -1 : stAt(cur[0]); return {s: cur, o: sm(seg(t, a, a + (ON_CUT.has(cur[0]) ? 0.06 : 0.15)))}; };
+	if (!cur) return null; const a = cur[0] === 0 ? -1 : stAt(cur[0]); return {s: cur, o: sm(seg(t, a, a + (cur[0] <= 4 || cur[0] === 12 || cur[0] === 13 ? 0.06 : 0.15)))}; };
 /* ---------- counter: [story time, value, era, roll s, date (fractional year) or undefined, date frozen] ---------- */
 const lc = (i: number) => LINES[i][0] + COUNT_AT;
 const D1 = LINES[19][0], D2 = LINES[20][0], A7 = LINES[27][0];
 const CK: [number, number, string | undefined, number, number?, boolean?][] = [[0, 76, undefined, 0], [LINES[1][0], 99, undefined, 0.2], [LINES[2][0], 106, undefined, 0.2], [LINES[3][0], 117, undefined, 0.2], [LINES[4][0], 147, undefined, 0.2],
-	[film(T.title) + 0.1, 0, undefined, 1.35], [LINES[5][0], 0, '出生', 0], [lc(6), 4, '童年', 0.3], [film(20.3), 5, '童年', 0.3], [LINES[8][0], 16, '少年', 0.4], [LINES[9][0], 23, '青年', 0.4], [lc(10), 26, '青年', 0.4],
+	[film(T.title) + 0.1, 0, undefined, 1.35], [LINES[5][0], 0, '出生', 0], [lc(6), 4, '童年', 0.3], [film(20.3), 5, '童年', 0.3], [LINES[8][0], 16, '少年', 0.4], [lc(9), 23, '青年', 0.4], [lc(10), 26, '青年', 0.4],
 	[lc(11), 40, '壮年', 0.5], [lc(13), 43, '壮年', 0.3], [lc(14), 60, '晚年', 0.5], [lc(16), 75, '晚年', 0.4], [lc(17), 76, '晚年', 0.3],
 	[D1, 76, undefined, 0], [D2, 76, undefined, 0, 1955.2945, true], [A7 + 0.3, 99, undefined, 2.6, 1978.58],
 	[lc(30), 106, undefined, 2.4, 1985.4], [lc(33), 117, undefined, 0.4, 1997.15], [lc(37), 120, undefined, 0.3, 1999.45], [lc(39), 133, undefined, 0.25, 2012.87],
@@ -113,12 +112,10 @@ const Furniture: React.FC<{t: number}> = ({t}) => {
 		{t < LINES[48][0] && <Seal />}
 	</>;
 };
-/** the vignette only (QA / owner row 44: no film grain) */
-const Vignette: React.FC = () => <g pointerEvents="none"><defs><radialGradient id="v44m" cx="0.5" cy="0.5" r="0.75"><stop offset="0.55" stopColor="#000" stopOpacity="0" /><stop offset="1" stopColor="#000" stopOpacity="0.45" /></radialGradient></defs><rect width={W} height={H} fill="url(#v44m)" /></g>;
 const Rough: React.FC = () => {
 	const f = useCurrentFrame(), ft = f / FPS, {s: t, hold} = storyOf(ft), fade = sm(seg(ft, FILM_END - 1.0, FILM_END - 0.03));
 	return <AbsoluteFill style={{background: '#0c1012'}}>
-		<svg width={W} height={H} style={{position: 'absolute'}}><Picture t={t} hold={hold} /><Vignette /></svg>
+		<svg width={W} height={H} style={{position: 'absolute'}}><Picture t={t} hold={hold} /><Grain44 seed={3 + (f % 6)} /></svg>
 		<Furniture t={t} />
 		{fade > 0 && <AbsoluteFill style={{background: '#06080a', opacity: fade}} />}
 	</AbsoluteFill>;
