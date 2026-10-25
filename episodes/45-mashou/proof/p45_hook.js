@@ -18,41 +18,30 @@ const TITLE = 9.05, RET = B(16.5), GROW0 = 11.10, GROW1 = 11.638, N1 = 11.638;
 const ZOD = ['鼠', '牛', '虎', '兔', '龙', '蛇', '马', '羊', '猴', '鸡', '狗', '猪'];
 
 // ---- camera: frame 0 already moving (ease-out), reframe wide for the cases, then the log-zoom push to the horse
-const pos = K.ringPos(), hp = pos.find((p) => p.k === '马');
-const heroSeat = K.ringSeat(hp, 'hero', {heroK: 1.15});
-const hero0 = heroSeat.hero, TX = hero0.x - 0.28 * hero0.h, TY = hero0.y - 0.52 * hero0.h + 70 / 2.1;   // = v7_t_title framing
+// v8 ring (owner note): the horse at brother scale, front-centre; its size on screen comes from the camera
+const pos = K.ringPos(), hp = pos.find((p) => p.k === '马'), HL = K.ringHeroLight(pos);
+const heroSeat = K.ringSeat(hp, 'hero');
+const hero0 = heroSeat.hero, TX = hero0.x - 0.28 * hero0.h, TYz = (z) => hero0.y - 0.52 * hero0.h + 70 / z;   // = v7_t_title framing at zoom z
 const camRing = P.cam([960, 540, 1.0], [
-	{t0: 0, t1: 5.978, to: [1000, 560, 1.08], ease: 'out'},
+	{t0: 0, t1: 5.978, to: [965, 575, 1.08], ease: 'out'},
 	{t0: 5.978, t1: 7.10, to: [1180, 600, 0.86]},
-	{t0: 7.10, t1: 9.60, to: [TX, TY, 2.10]},
-	{t0: 9.60, t1: 11.64, to: [TX, TY, 2.12]},
+	{t0: 7.10, t1: 9.60, to: [TX, TYz(1.9), 1.9]},
+	{t0: 9.60, t1: 11.64, to: [TX, TYz(2.4), 2.4]},   // the title drift carries the push on to the title still's ×2.4 (≤ 25 px/f: the push itself stops at ×1.9)
 ]);
 // N1 opens inside the glass hall (four cases framed where the four heads sat in the case), then the board's pull-back
 const camHall = P.cam([870, 470, 2.0], [{t0: 11.65, t1: 15.0, to: [1500, 540, 1.0]}]);   // N1 now runs 11.638–15.035
 
 // ---- the RING world (authored wide: the 1920 plate extended so zoom 0.86 and the reframe never show an edge)
 let RW = null;
-const ringBase = () => {
-	if (RW) return RW;
-	let s = K.ringNight({heroX: hp.x - 40, heroY: hp.y - 260});
-	s = s.replace('<linearGradient id="r7sky" x1="0" x2="0" y1="0" y2="1">', '<linearGradient id="r7sky" gradientUnits="userSpaceOnUse" x1="0" x2="0" y1="0" y2="1080">')
-		.replace('<linearGradient id="r7terr" x1="0" x2="0" y1="0" y2="1">', '<linearGradient id="r7terr" gradientUnits="userSpaceOnUse" x1="0" x2="0" y1="548" y2="1080">');
-	for (const g of ['r7sky', 'r7moon', 'r7cu']) s = s.replace(`<rect width="1920" height="1080" fill="url(#${g})"/>`, `<rect x="-900" y="-700" width="4000" height="2600" fill="url(#${g})"/>`);
-	s = s.replace('<rect x="0" y="548" width="1920" height="532" fill="url(#r7terr)"/>', '<rect x="-900" y="548" width="4000" height="1300" fill="url(#r7terr)"/>')
-		.replace('<path d="M0,548 L1920,548"', '<path d="M-900,548 L3100,548"');
-	let trees = '';
-	for (let i = -18; i < 64; i++) { if (i >= 0 && i < 40) continue; const x = -40 + i * 52 + rnd(Math.abs(i) + 200) * 30, r = 40 + rnd(Math.abs(i) + 203) * 46; trees += `<ellipse cx="${x}" cy="${560 - rnd(Math.abs(i) + 207) * 40}" rx="${r}" ry="${r * 0.8}"/>`; }
-	s = s.replace('<g fill="#24302F" filter="url(#r7b3)">', `<g fill="#24302F" filter="url(#r7b3)">${trees}`);
-	let stars = ''; for (let i = 0; i < 40; i++) { const x = i < 20 ? 1920 + rnd(i + 300) * 1180 : -900 + rnd(i + 300) * 900; stars += `<circle cx="${x}" cy="${-300 + rnd(i + 330) * 640}" r="${0.8 + rnd(i + 360) * 1.3}" fill="#E4EEE8" opacity="${0.25 + rnd(i + 390) * 0.45}"/>`; }
-	for (let i = 0; i < 24; i++) stars += `<circle cx="${rnd(i + 420) * 1920}" cy="${-300 + rnd(i + 450) * 330}" r="${0.8 + rnd(i + 480) * 1.3}" fill="#E4EEE8" opacity="${0.25 + rnd(i + 510) * 0.45}"/>`;
-	RW = s + stars; return RW;
-};
+const ringBase = () => RW ?? (RW = K.ringNightWide({heroX: HL.x, heroY: HL.y}));
 /** moonlit shimmer on the pool + the moon's reflection (living motion, every frame) */
 const shimmer = (t) => {
 	let s = '';
 	for (let i = 0; i < 9; i++) { const y = 655 + i * 13, w = 30 + 40 * rnd(i + 40), x = 540 + 26 * P.noise(t * 1.3 + i * 3.1, i) - w / 2, a = 0.10 + 0.16 * (0.5 + 0.5 * P.noise(t * 2.2 + i, i + 9));
 		s += `<path d="M${x.toFixed(1)},${y} l${w.toFixed(1)},0" stroke="#E8F0EA" stroke-width="2" opacity="${a.toFixed(3)}" stroke-linecap="round"/>`; }
 	for (let i = 0; i < 7; i++) { const y = 640 + i * 26, a = 0.035 * (0.5 + 0.5 * P.noise(t * 0.9 + i * 2.3, i + 30)); s += `<path d="M${280 + i * 40},${y} L${1640 - i * 40},${y}" stroke="#E6EEE6" stroke-width="1.6" opacity="${a.toFixed(3)}"/>`; }
+	for (let i = 0; i < 5; i++) { const y = 660 + i * 34, w = 22 + 20 * rnd(i + 80), x = HL.x + 16 * P.noise(t * 1.6 + i * 2.7, i + 50) - w / 2, a = 0.18 + 0.22 * (0.5 + 0.5 * P.noise(t * 2.4 + i, i + 60));
+		s += `<path d="M${x.toFixed(1)},${y} l${w.toFixed(1)},0" stroke="#FFC890" stroke-width="2.2" opacity="${a.toFixed(3)}" stroke-linecap="round"/>`; }
 	return s;
 };
 // ---- per-seat state
@@ -95,11 +84,10 @@ const ringWorld = (t, o = {}) => {
 	for (const p of pos) {
 		const s = seatSvg(p, t);
 		const g = `<g filter="url(#${p.arc === 'far' ? 'r7rimF' : 'r7rimN'})">${s.back}${s.head}</g>`;
-		const hs = p.k === '马' && !o.noHero ? K.horseHead(heroAt(t)) + rimSweep(t) : '';
+		const hs = p.k === '马' ? K.heroSeatLight(heroSeat.top, p.s) + (o.noHero ? '' : K.horseHead(heroAt(t)) + rimSweep(t)) : '';
 		if (p.arc === 'far') far += g + hs; else near += g + hs;
 	}
-	const defs = `<defs>${K.rimFilter('r7rimF', 3, 3, '#B8CCC6', 0.75, 1.1)}${K.rimFilter('r7rimN', 4, 4, '#C9DAD4', 0.95, 1.3)}</defs>`;
-	return P.wideFilters(ringBase() + shimmer(t) + defs + far + near);
+	return P.wideFilters(ringBase() + shimmer(t) + K.ringRims() + far + near);
 };
 // ---- cases (screen space; slide in from the right, then out; 保利 returns for the title)
 const caseDx = (t) => {
@@ -146,7 +134,7 @@ const flights = (t, cam, dx) => {
 			heads += K.bro(k, pt[0], pt[1], size, Math.abs(face) < 0.04 ? 0.04 * Math.sign(face || -1) : face, IVORY); }
 	});
 	return `<defs><linearGradient id="trail" x1="0" x2="1"><stop offset="0" stop-color="#F3E6CF" stop-opacity="0"/><stop offset="1" stop-color="#F3E6CF" stop-opacity=".55"/></linearGradient>${K.blur('tb4', 4)}
-	${K.rimFilter('flyRim', 4 * cam.z, 4 * cam.z, '#C9DAD4', 0.95, 1.3)}</defs>${trails}<g filter="url(#flyRim)">${heads}</g>`;
+	${K.rimFilter('flyRim', 4 * cam.z, 4 * cam.z, '#C9DAD4', 0.68, 1.3)}</defs>${trails}<g filter="url(#flyRim)">${heads}</g>`;
 };
 // ---- the Hangzhou glass hall (v7_n3_queue.js set, authored 3200 wide; screen-space vignette applied by the caller)
 let HW = null;
@@ -240,10 +228,10 @@ const render = (t) => {
 		const world = ringWorld(t, {noHero: titleOn});
 		svg += `<g transform="${P.camT(cam)}">${dof > 0.01 ? `<defs>${K.blur('dof', (7 * dof).toFixed(2))}</defs><g filter="url(#dof)">${world}</g>` : world}</g>`;
 		if (titleOn) svg += `<rect width="1920" height="1080" fill="#0E1416" opacity="${(0.28 * dof).toFixed(3)}"/>
-			<g transform="${P.camT(cam)}"><g filter="url(#r7rimN)">${heroSeat.back}</g>${K.horseHead(heroAt(t))}</g>`;
+			<g transform="${P.camT(cam)}"><g filter="url(#r7rimN)">${heroSeat.back}</g>${K.heroSeatLight(heroSeat.top, hp.s)}${K.horseHead(heroAt(t))}</g>`;
 		// screen-space: vignette (H1 → H3 → title)
-		const vc = P.lerp(960, 900, P.smooth(P.seg(t, 5.98, 7.1)) * (1 - dof)), va = P.lerp(0.6, 0.55, P.smooth(P.seg(t, 5.98, 7.1)));
-		svg += `<defs><radialGradient id="vig" cx="${vc}" cy="600" r="1150" gradientUnits="userSpaceOnUse"><stop offset=".55" stop-color="#0A0E0F" stop-opacity="0"/><stop offset="1" stop-color="#0A0E0F" stop-opacity="${va}"/></radialGradient>
+		const hsx = P.toScr(cam, [HL.x, HL.y + 20]);
+		svg += `<defs><radialGradient id="vig" cx="${hsx[0].toFixed(1)}" cy="${hsx[1].toFixed(1)}" r="1150" gradientUnits="userSpaceOnUse"><stop offset=".5" stop-color="#0A0E0F" stop-opacity="0"/><stop offset="1" stop-color="#0A0E0F" stop-opacity=".52"/></radialGradient>
 			<radialGradient id="tvig" cx="960" cy="470" r="1100" gradientUnits="userSpaceOnUse"><stop offset=".35" stop-color="#0A0E0F" stop-opacity="0"/><stop offset="1" stop-color="#0A0E0F" stop-opacity=".7"/></radialGradient>
 			<linearGradient id="tfloor" x1="0" x2="0" y1="0" y2="1"><stop offset="0" stop-color="#0E1112" stop-opacity="0"/><stop offset="1" stop-color="#0E1112" stop-opacity=".78"/></linearGradient>
 			<radialGradient id="caseGlow" cx="${1580 + dx}" cy="520" r="520" gradientUnits="userSpaceOnUse"><stop offset="0" stop-color="#F6E6C6" stop-opacity=".22"/><stop offset="1" stop-color="#F6E6C6" stop-opacity="0"/></radialGradient></defs>`;

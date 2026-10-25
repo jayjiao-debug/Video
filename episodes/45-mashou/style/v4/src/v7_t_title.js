@@ -3,15 +3,17 @@
 // frame right. The title slams centred-low over the seat (scale-down + damped jolt; this is the settled frame), 「一个回家」
 // in the hero's copper, the owner's J seal pressed at its end. The subtitle has cleared; the counter is hidden for the title.
 const pos = K.ringPos();
-window.NOHERO = true; const r = K.ring(pos, {马: 'hero'}, {heroK: 1.15}); window.NOHERO = false;
-const hero = r.seats['马'].hero, Z = 2.1, cx = hero.x - 0.28 * hero.h, cy = hero.y - 0.52 * hero.h;
+window.NOHERO = true; const r = K.ring(pos, {马: 'hero', 牛: 'empty', 虎: 'empty', 猴: 'empty', 猪: 'empty', 鼠: 'empty', 兔: 'empty', 龙: 'dash', 蛇: 'dash', 羊: 'dash', 鸡: 'dash', 狗: 'dash'}, {rimEmpty: '#E9DCC4'}); window.NOHERO = false;
+// v8: the horse is at brother scale on the ring; the title's size comes from the camera (the push reaches ×2.0 at 9.6 s and drifts
+// on to ×2.4 under the title). The ring behind is the story's state after H3 (six empty collars, five dashed).
+const L = K.ringHeroLight(pos), hero = r.seats['马'].hero, Z = 2.4, cx = hero.x - 0.28 * hero.h, cy = hero.y - 0.52 * hero.h;
 const T = `translate(960,470) scale(${Z}) translate(${-cx},${-cy})`;
 const svg = `<defs>${K.blur('dof', 7)}
  <radialGradient id="tvig" cx="960" cy="470" r="1100" gradientUnits="userSpaceOnUse"><stop offset=".35" stop-color="#0A0E0F" stop-opacity="0"/><stop offset="1" stop-color="#0A0E0F" stop-opacity=".7"/></radialGradient>
  <linearGradient id="tfloor" x1="0" x2="0" y1="0" y2="1"><stop offset="0" stop-color="#0E1112" stop-opacity="0"/><stop offset="1" stop-color="#0E1112" stop-opacity=".78"/></linearGradient></defs>
-<g transform="${T}"><g filter="url(#dof)">${K.ringNight({heroX: hero.x - 40, heroY: hero.y - 260})}${r.svg}</g></g>
+<g transform="${T}"><g filter="url(#dof)">${K.ringNightWide({heroX: L.x, heroY: L.y})}${r.svg}</g></g>
 <rect width="1920" height="1080" fill="#0E1416" opacity=".28"/>
-<g transform="${T}"><g filter="url(#r7rimN)">${r.seats["马"].back}</g>${K.horseHead(hero)}</g>
+<g transform="${T}"><g filter="url(#r7rimN)">${r.seats["马"].back}</g>${K.heroSeatLight(r.seats["马"].top, r.seats["马"].p.s)}${K.horseHead(hero)}</g>
 <rect y="640" width="1920" height="440" fill="url(#tfloor)"/>
 <rect width="1920" height="1080" fill="url(#tvig)"/>`;
 const title = `<div id="title" style="position:absolute;left:0;right:0;top:806px;text-align:center;font-family:'Noto Serif CJK SC',serif;font-weight:900;font-size:128px;line-height:1;letter-spacing:.06em;white-space:nowrap">
