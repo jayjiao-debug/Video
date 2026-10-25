@@ -34,12 +34,25 @@ export const reg = (f: FigSpec) => { if (FIGS.length < 20000) FIGS.push(f); retu
 
 export const LOOK: Record<string, Look4> = {
 	emperor: {dress: 'robe', head: 'bald', sleeves: 'wide', beard: 'moustache'}, attendant: {dress: 'robe', head: 'bald'},
-	soldier: {dress: 'coat', head: 'cap', legs: 'trousers'}, soldier2: {dress: 'coat', head: 'cap', legs: 'trousers', build: 1.05},
+	soldier: {dress: 'coat', head: 'short', legs: 'trousers'}, soldier2: {dress: 'coat', head: 'short', legs: 'trousers', build: 1.05},
 	vendor: {dress: 'jacket', head: 'bowl'}, buyer: {dress: 'robe', head: 'short'}, buyer2: {dress: 'dress', head: 'bob'},
 	tourist: {dress: 'jacket', head: 'short'}, tourist2: {dress: 'dress', head: 'long'}, tourist3: {dress: 'shirt', head: 'cap'}, child: {dress: 'shirt', head: 'child', build: 0.9},
 };
 /** one person: draws the figure (one tone + warm rim) and registers it */
 /** Qing court summer hat (凉帽): a wide low cone with a red fringe and a finial, drawn on the head (same head frame as the rig) */
+/** Republican army cap: a flat crown wider than the head, a band, a short visor; plus a belt line at the waist */
+const ArmyCap: React.FC<{x: number; ground: number; h: number; pose: Pose; flip?: boolean; col: string}> = ({x, ground, h, pose, flip, col}) => {
+	const S = (n: string): P2 => [x + pose[n][0] * h, ground - pose[n][1] * h], n1 = S('Neck1'), hd = S('Head'), top = S('Top'), hips = S('Hips'), sp = S('Spine1');
+	const ang = Math.atan2(top[1] - n1[1], top[0] - n1[0]) + Math.PI / 2, hc: P2 = [hd[0] + (top[0] - hd[0]) * 0.45, hd[1] + (top[1] - hd[1]) * 0.45], s = h * 0.93;
+	const R = (px: number, py: number) => { const c = Math.cos(ang), sn = Math.sin(ang); return `${(hc[0] + px * s * c - py * s * sn).toFixed(1)},${(hc[1] + px * s * sn + py * s * c).toFixed(1)}`; };
+	const wx = hips[0] + (sp[0] - hips[0]) * 0.35, wy = hips[1] + (sp[1] - hips[1]) * 0.35;
+	return <g transform={flip ? `translate(${2 * x},0) scale(-1,1)` : undefined}>
+		<path d={`M${R(-0.06, -0.035)} L${R(-0.075, -0.1)} L${R(0.07, -0.1)} L${R(0.058, -0.035)} Z`} fill={col} />
+		<path d={`M${R(0.05, -0.035)} L${R(0.11, -0.022)} L${R(0.05, -0.02)} Z`} fill={col} />
+		<path d={`M${R(-0.062, -0.05)} L${R(0.062, -0.05)}`} stroke="#6E6658" strokeWidth={h * 0.008} />
+		<line x1={wx - h * 0.075} y1={wy} x2={wx + h * 0.075} y2={wy} stroke="#7A6A55" strokeWidth={h * 0.012} />
+	</g>;
+};
 const QingHat: React.FC<{x: number; ground: number; h: number; pose: Pose; flip?: boolean; col: string}> = ({x, ground, h, pose, flip, col}) => {
 	const S = (n: string): P2 => [x + pose[n][0] * h, ground - pose[n][1] * h], n1 = S('Neck1'), hd = S('Head'), top = S('Top');
 	const ang = Math.atan2(top[1] - n1[1], top[0] - n1[0]) + Math.PI / 2, hc: P2 = [hd[0] + (top[0] - hd[0]) * 0.45, hd[1] + (top[1] - hd[1]) * 0.45], s = h * 0.93;
@@ -50,10 +63,10 @@ const QingHat: React.FC<{x: number; ground: number; h: number; pose: Pose; flip?
 		<circle cx={Number(R(0, -0.124).split(',')[0])} cy={Number(R(0, -0.124).split(',')[1])} r={0.011 * s} fill="#C9A24A" />
 	</g>;
 };
-export const Person: React.FC<{who: string; t: number; x: number; ground: number; h: number; pose: Pose; look: Look4; flip?: boolean; intent?: 'stand' | 'walk'; col?: string; rim?: string; rimOp?: number; o?: number; hat?: 'qing';
+export const Person: React.FC<{who: string; t: number; x: number; ground: number; h: number; pose: Pose; look: Look4; flip?: boolean; intent?: 'stand' | 'walk'; col?: string; rim?: string; rimOp?: number; o?: number; hat?: 'qing' | 'army';
 	hands?: {joint: 'LHand' | 'RHand'; at: P2; tol?: number}[]}> = ({who, t, x, ground, h, pose, look, flip, intent = 'stand', col = C.fig, rim = C.figRim, rimOp = 0.5, o = 1, hands, hat}) => {
 	reg({who, t, x, ground, h, pose, flip, intent, hands});
-	return <g opacity={o}><ellipse cx={x} cy={ground + 1} rx={0.17 * h} ry={0.024 * h} fill="#2A2218" opacity={0.32} filter="url(#k3)" /><Rimmed x={x} ground={ground} h={h} pose={pose} look={look} col={col} flip={flip} T={t} rim={rim} rimOp={rimOp} />{hat === 'qing' && <QingHat x={x} ground={ground} h={h} pose={pose} flip={flip} col={col} />}</g>;
+	return <g opacity={o}><ellipse cx={x} cy={ground + 1} rx={0.17 * h} ry={0.024 * h} fill="#2A2218" opacity={0.32} filter="url(#k3)" /><Rimmed x={x} ground={ground} h={h} pose={pose} look={look} col={col} flip={flip} T={t} rim={rim} rimOp={rimOp} />{hat === 'qing' && <QingHat x={x} ground={ground} h={h} pose={pose} flip={flip} col={col} />}{hat === 'army' && <ArmyCap x={x} ground={ground} h={h} pose={pose} flip={flip} col={col} />}</g>;
 };
 /** world position of a joint */
 export const jointAt = (pose: Pose, n: string, x: number, ground: number, h: number, flip = false): P2 => [x + (flip ? -1 : 1) * pose[n][0] * h, ground - pose[n][1] * h];
