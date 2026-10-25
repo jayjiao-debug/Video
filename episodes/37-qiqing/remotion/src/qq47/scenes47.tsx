@@ -18,7 +18,7 @@ export type SceneP = {u: number; d: number; tag?: string};
 /* ---------- people ---------- */
 export const LK: Record<string, Look4> = {
 	zhouGirl: {dress: 'dress', head: 'bun'}, zhouBoy: {dress: 'tunic', head: 'bun', legs: 'trousers'},
-	xu: {dress: 'robe', head: 'bun', sleeves: 'wide'}, princess: {dress: 'robe', head: 'bun', sleeves: 'wide'}, servant: {dress: 'tunic', head: 'bald', legs: 'trousers', beard: 'short'},
+	xu: {dress: 'tunic', head: 'bun', beard: 'short', legs: 'trousers', build: 1.08}, princess: {dress: 'dress', head: 'bun', sleeves: 'wide'}, servant: {dress: 'tunic', head: 'bald', legs: 'trousers', beard: 'short'},
 	yang: {dress: 'robe', head: 'bun', sleeves: 'wide'}, fangshi: {dress: 'tunic', head: 'bun', legs: 'trousers', beard: 'long'}, emperor: {dress: 'robe', head: 'futou', beard: 'full', sleeves: 'wide'},
 	groom70: {dress: 'jacket', head: 'short', legs: 'trousers'}, bride70: {dress: 'jacket', head: 'bob', legs: 'trousers'},
 	man: {dress: 'shirt', head: 'young', legs: 'trousers'}, woman: {dress: 'dress', head: 'long'},
@@ -46,7 +46,7 @@ export const Open: React.FC<SceneP> = ({u}) => {
 			<PhoneStand x={960 - 139 - gap / 2} y={560} s={0.82} /><PhoneStand x={960 + 139 + gap / 2} y={560} s={0.82} />
 			<Phone x={960 - 139 - gap / 2} y={560} s={0.82} side="L" id="opL" glow={0.5 + 0.3 * apart} />
 			<Phone x={960 + 139 + gap / 2} y={560} s={0.82} side="R" id="opR" glow={0.5 + 0.3 * apart} />
-			{mirrorIn > 0 && <g opacity={mirrorIn} transform={`translate(0,${(1 - mirrorIn) * 420})`}><Mirror x={1030} y={480} r={170} id="opm" half="L" gap={0} /></g>}
+			{mirrorIn > 0 && <g transform={`translate(${(1 - mirrorIn) * 1100},0)`}><path d="M995,890 L1030,840 L1065,890 M1008,872 L1052,872" stroke={PP.lacquer} strokeWidth={8} fill="none" /><Mirror x={1030} y={840 - 170} r={170} id="opm" half="L" gap={0} /></g>}
 		</Cam>
 	</g>;
 };
@@ -84,7 +84,8 @@ export const Shijing: React.FC<SceneP> = ({u, d}) => {
 	const [qx, qy] = u < 0.9 ? [tx, ty] : u < 2.1 ? [lerp(tx, cx, fly), lerp(ty, cy, fly) - 140 * Math.sin(fly * Math.PI)] : u < 2.4 ? [cx, cy] : qL;
 	/* the jade: in his right hand from 3.0 (taken from his belt as he turns), handed over the rail, then in her left hand */
 	const jB = hand(boyPose, 'RHand', bx, g, h, true), jG = hand(girlPose, 'LHand', gx, g, h);
-	const [jx, jy] = u < 5.9 ? jB : jG;
+	const belt = jointAt(boyPose, 'Hips', bx, g, h, true), toHand = ease(seg(u, 2.9, 3.2));
+	const [jx, jy] = u < 2.9 ? [belt[0] - 8, belt[1] - 30] : u < 3.2 ? [lerp(belt[0] - 8, jB[0], toHand), lerp(belt[1] - 30, jB[1], toHand)] : u < 5.9 ? jB : jG;
 	const people = 1 - gone;
 	return <g>
 		<Bg c={PP.skyL} c2="#F6E7C8" id="sjbg" />
@@ -95,15 +96,15 @@ export const Shijing: React.FC<SceneP> = ({u, d}) => {
 		<Sheet c="#A9C48C" d={Band(g - 10, 8, 13)} />
 		<g opacity={people}>
 			<Fig frame="Shijing" who="girl" x={gx} g={g} h={h} pose={girlPose} look={LK.zhouGirl} />
-			<Fig frame="Shijing" who="boy" x={bx} g={g} h={h} pose={boyPose} look={LK.zhouBoy} flip />
 			{/* the fence runs away from us between their two yards (seen end-on, in perspective) */}
 			{Array.from({length: 7}, (_, i) => { const k = i / 6, x = lerp(FX - 60, FX + 80, k), y = lerp(g + 60, g - 70, k), hh = lerp(230, 120, k), w = lerp(22, 12, k);
 				return <path key={i} d={`M${x - w},${y} L${x - w},${y - hh + w} L${x},${y - hh} L${x + w},${y - hh + w} L${x + w},${y} Z`} fill={PP.ochre} filter="url(#pdS)" />; })}
 			<path d={`M${FX - 70},${g - 100} L${FX + 86},${g - 160} L${FX + 86},${g - 148} L${FX - 70},${g - 84} Z`} fill={PP.brick} /><path d={`M${FX - 70},${g - 10} L${FX + 86},${g - 110} L${FX + 86},${g - 98} L${FX - 70},${g + 6} Z`} fill={PP.brick} />
+			<Fig frame="Shijing" who="boy" x={bx} g={g} h={h} pose={boyPose} look={LK.zhouBoy} flip />
 			<Quince x={qx} y={qy + (u < 2.1 ? 0 : 26)} s={0.42} rot={u < 2.1 ? fly * 300 : 0} />
-			{u >= 3.0 && <JadeBi x={jx} y={jy + 46} s={0.36} glow={0.8} />}
+			<JadeBi x={jx} y={jy + 46} s={0.36} glow={u < 3.0 ? 0.3 : 0.8} />
 		</g>
-		{close > 0 && (() => { const out = ease(seg(u, d - 0.7, d)); return <g opacity={close}><g opacity={1 - out}><Quince x={lerp(700, 820, close)} y={600} s={1.1} rot={-8} /></g><JadeBi x={lerp(lerp(1220, 1100, close), 1600, out)} y={lerp(580, 370, out)} s={lerp(1.1, 0.3, out)} glow={1} /></g>; })()}
+		{close > 0 && (() => { const out = ease(seg(u, d - 0.7, d)); return <g opacity={close}><g opacity={1 - out}><rect x={560} y={700} width={800} height={22} rx={6} fill={PP.brick} filter="url(#pdS)" /><rect x={600} y={722} width={18} height={220} fill={PP.brick} /><rect x={1300} y={722} width={18} height={220} fill={PP.brick} /><Quince x={lerp(700, 820, close)} y={622} s={1.0} rot={-8} /></g><JadeBi x={lerp(lerp(1220, 1100, close), 1600, out)} y={lerp(560, 370, out)} s={lerp(1.0, 0.3, out)} glow={1} /></g>; })()}
 	</g>;
 };
 /* =====================================================================================
@@ -136,7 +137,7 @@ export const Donghan: React.FC<SceneP> = ({u, d}) => {
 		{u > 5.1 && (() => { const k = (p: [number, number]): [number, number] => fly > 0 ? p : [960 + (p[0] - lerp(960, 1300, push)) * z, 540 + (p[1] - lerp(540, 700, push)) * z];
 			const a = k(fly > 0 ? r1 : [1392, drop(5.1, 746)]), b = k(fly > 0 ? r2 : [1436, drop(5.15, 748)]), rr = 22 * (fly > 0 ? lerp(z, 2.6, fly) : z);
 			return <g opacity={1 - lock}><TokGlow x={(a[0] + b[0]) / 2} y={a[1]} r={130 * z} o={land(5.1)} /><Ring x={a[0]} y={a[1]} r={rr} /><Ring x={b[0]} y={b[1]} r={rr} /></g>; })()}
-		{lock > 0 && <g opacity={lock}><Mirror x={mx} y={my} r={64} id="dhm" half="both" gap={0} /></g>}
+		{lock > 0 && <g opacity={lock}><Mirror x={mx} y={my} r={64} id="dhm" half="both" gap={0} seam={0} /></g>}
 	</g>;
 };
 /* =====================================================================================
@@ -145,20 +146,25 @@ export const Donghan: React.FC<SceneP> = ({u, d}) => {
 const XU_X = 760, PR_X = 1180, PG = 940, PH = 600;
 /** the market on the fifteenth: lanterns; two halves lie apart (the promise) */
 export const Market: React.FC<SceneP> = ({u}) => {
-	const sway = (i: number) => Math.sin(u * 1.6 + i) * 4;
+	/* the market on the fifteenth: stalls are roofs on posts over counters; the two halves arrive from where 破镜 ended
+	   (same size, r = 64) and settle onto small A-frame mirror rests on two counters; full moon between them */
+	const sway = (i: number) => Math.sin(u * 1.6 + i) * 4, R = 64;
+	const stalls: [number, number, string][] = [[200, 520, PP.teal], [700, 560, PP.brick], [1240, 540, PP.teal], [1700, 520, PP.brick]];
 	return <g>
 		<Bg c={PP.night} c2="#4A3A6A" id="mk" />
-		<Moon x={960} y={470} r={50} c="#FFF0C8" />
-		<path d="M1120,250 Q1520,330 1940,250" stroke={PP.ink} strokeWidth={4} fill="none" />
-		{Array.from({length: 4}, (_, i) => { const x = 1220 + i * 200; return <Lantern key={i} x={x + sway(i)} y={400 + Math.sin(i * 1.3) * 14} s={0.8} c={i % 3 === 1 ? PP.apricot : '#D8473A'} />; })}
-				<Sheet c="#5B4A80" d={Band(640, 20, 41)} />
-		{[[200, 520], [700, 560], [1240, 540], [1700, 520]].map(([x, w], i) => <g key={i}><Sheet c={i % 2 ? PP.brick : PP.teal} d={`M${x - w / 4},700 L${x - w / 4 - 30},640 L${x + w / 4 + 30},640 L${x + w / 4},700 Z`} /><Sheet c={PP.ochre} d={`M${x - w / 4},700 L${x + w / 4},700 L${x + w / 4},800 L${x - w / 4},800 Z`} /></g>)}
+		<Moon x={960} y={420} r={50} c="#FFF0C8" />
+		<rect x={1112} y={250} width={10} height={272} fill={PP.ink} /><path d="M1117,252 Q1520,330 1940,250" stroke={PP.ink} strokeWidth={4} fill="none" />
+		{Array.from({length: 4}, (_, i) => { const x = 1240 + i * 190; return <Lantern key={i} x={x + sway(i)} y={392 + Math.sin(i * 1.3) * 12} s={0.75} c={i % 3 === 1 ? PP.apricot : '#D8473A'} />; })}
+		<Sheet c="#5B4A80" d={Band(640, 20, 41)} />
+		{stalls.map(([x, w, c], i) => <g key={i}>
+			<Sheet c={PP.ink} d={`M${x - w / 4 + 6},700 L${x - w / 4 + 6},578 L${x - w / 4 + 18},578 L${x - w / 4 + 18},700 Z`} sh="none" /><Sheet c={PP.ink} d={`M${x + w / 4 - 18},700 L${x + w / 4 - 18},578 L${x + w / 4 - 6},578 L${x + w / 4 - 6},700 Z`} sh="none" />
+			<Sheet c={c} d={`M${x - w / 4},580 L${x - w / 4 - 30},520 L${x + w / 4 + 30},520 L${x + w / 4},580 Z`} />
+			<Sheet c={PP.ochre} d={`M${x - w / 4},700 L${x + w / 4},700 L${x + w / 4},800 L${x - w / 4},800 Z`} /></g>)}
 		<Sheet c="#3C3060" d={Band(820, 6, 42)} />
-		{/* each half stands on a little wooden rest on a stall counter */}
-		{[[700, 'L'], [1240, 'R']].map(([x, sd]) => { const e = PJ1_END(), from = sd === 'L' ? e.L : e.R, k = ease(seg(u, 0, 0.45));
+		{[[700, 'L'], [1240, 'R']].map(([x, sd]) => { const e = PJ1_END(), from = sd === 'L' ? e.L : e.R, k = ease(seg(u, 0, 0.45)), cx = (x as number) + (sd === 'L' ? 22 : -22);
 			return <g key={sd as string}>
-			<path d={`M${(x as number) - 46},700 L${(x as number) - 30},640 L${(x as number) + 30},640 L${(x as number) + 46},700 Z`} fill={PP.lacquer} filter="url(#pdS)" />
-			<Mirror x={lerp(from[0], (x as number) + (sd === 'L' ? 30 : -30), k)} y={lerp(from[1], 560, k)} r={lerp(64, 96, k)} id={`mk${sd}`} half={sd as 'L' | 'R'} gap={0} glow={0.9} /></g>; })}
+				<path d={`M${cx - 26},700 L${cx},668 L${cx + 26},700 M${cx - 16},686 L${cx + 16},686`} stroke={PP.ochreL} strokeWidth={5} fill="none" />
+				<Mirror x={lerp(from[0], cx, k)} y={lerp(from[1], 668 - R + 4, k)} r={R} id={`mk${sd}`} half={sd as 'L' | 'R'} gap={0} glow={0.9} /></g>; })}
 	</g>;
 };
 /** the city falls; she is led in through the gate of 杨素's house */
@@ -181,7 +187,7 @@ export const Gate: React.FC<SceneP> = ({u}) => {
 		{leaf(700, 60)}{leaf(1160, 60)}
 		<defs><clipPath id="gtIn"><rect x={760} y={0} width={400} height={930} /></clipPath></defs>
 		<Sheet c="#7E6A6E" d={Band(g - 4, 4, 52)} />
-		{people.map((p) => { const fig = <Fig frame="Gate" who={p.who} x={p.w.x} g={g} h={h * p.hk * (1 - 0.1 * p.inK)} pose={p.w.pose} look={p.look} flip o={1 - p.inK} />;
+		{people.map((p) => { const fig = <Fig frame="Gate" who={p.who} x={p.w.x} g={g - 10 * p.inK} h={h * p.hk * (1 - 0.15 * p.inK)} pose={p.w.pose} look={p.look} flip o={1 - p.inK} />;
 			return p.inK > 0 ? <g key={p.who} clipPath="url(#gtIn)">{fig}</g> : <g key={p.who}>{fig}</g>; })}
 		{pr.inK < 1 && <g opacity={1 - pr.inK}><Mirror x={mx} y={my + 8} r={R} id="gtm" half="R" gap={0} glow={0.6} /></g>}
 	</g>;
@@ -235,15 +241,19 @@ export const Meet: React.FC<SceneP> = ({u}) => {
 };
 /** the gate opens; she walks out to him */
 export const Return: React.FC<SceneP> = ({u, d}) => {
-	/* the doors open (0–0.8); 杨素 (taller, plum robe, 幞头) stands in the gateway; she starts walking only once the doors are
-	   open, carrying her half; her husband waits facing her with his half; they raise them as she stops */
-	const g = 930, h = 360, R = 0.107 * h, open = ease(seg(u, 0, 0.8));
-	const stopX = 1300, v = STRIDE * h / GAIT_S, t1 = 0.8 + (stopX - 960) / v, wk = walkNat(u, 0.8, t1, 960, 1, h, PZ.stand);
-	const raise = ease(seg(u, t1 + 0.05, t1 + 0.5));
-	const prPose = wk.moving ? wk.pose : mixPose(PZ.stand, PZ.offer, raise), xuPose = mixPose(PZ.stand, PZ.offer, raise);
-	const pH = hand(prPose, 'LHand', wk.x, g, h), xH = hand(xuPose, 'LHand', 1640, g, h, true);
-	const M: [number, number] = [(pH[0] + xH[0]) / 2, (pH[1] + xH[1]) / 2 - 20], join = ease(seg(u, d - 0.5, d - 0.2)), push = ease(seg(u, d - 0.35, d));
-	const pR: [number, number] = [lerp(pH[0] + R * 0.5, M[0], join), lerp(pH[1] - 20, M[1], join)], xLp: [number, number] = [lerp(xH[0] - R * 0.5, M[0], join), lerp(xH[1] - 20, M[1], join)];
+	/* the doors open (0–0.5); 杨素 (taller, plum robe, 幞头) stands in the gateway; she walks out and her husband walks to
+	   meet her — each covers half the distance — they stop with their offering hands touching, raise the halves, the halves
+	   close between their hands, and the camera pushes in on the whole mirror (→ CodaMirror) */
+	const g = 930, h = 360, R = 0.107 * h, open = ease(seg(u, 0, 0.5)), v = STRIDE * h / GAIT_S;
+	const prX0 = 960, xuX0 = 1640, gapHands = 2 * PZ.offer.LHand[0] * h + R + 8, half = (xuX0 - prX0 - gapHands) / 2;
+	const tw0 = 0.5, t1 = Math.min(d - 0.8, tw0 + half / v);
+	const wk = walkNat(u, tw0, t1, prX0, 1, h, PZ.stand), xw = walkNat(u, tw0, t1, xuX0, -1, h, PZ.stand);
+	const raise = ease(seg(u, t1, t1 + 0.3)), join = ease(seg(u, t1 + 0.3, t1 + 0.55)), push = ease(seg(u, d - 0.35, d));
+	const prPose = wk.moving ? wk.pose : mixPose(PZ.stand, PZ.offer, raise), xuPose = xw.moving ? xw.pose : mixPose(PZ.stand, PZ.offer, raise);
+	const pH = hand(prPose, 'LHand', wk.x, g, h), xH = hand(xuPose, 'LHand', xw.x, g, h, true);
+	const M: [number, number] = [(pH[0] + xH[0]) / 2, (pH[1] + xH[1]) / 2 - 16];
+	const pR: [number, number] = [lerp(pH[0] + R * 0.5, M[0], join), lerp(pH[1] - 16, M[1], join)], xLp: [number, number] = [lerp(xH[0] - R * 0.5, M[0], join), lerp(xH[1] - 16, M[1], join)];
+	const her = <g key="her"><Fig frame="Return" who="princess" x={wk.x} g={g} h={h} pose={prPose} look={LK.princess} /><Mirror x={pR[0]} y={pR[1]} r={R} id="rtR" half="R" gap={0} glow={0.5 + 0.5 * raise} seam={0} /></g>;
 	return <g transform={`translate(${lerp(M[0], 960, push)},${lerp(M[1], 540, push)}) scale(${1 + 3 * push}) translate(${-M[0]},${-M[1]})`}>
 		<Bg c="#F0C99A" c2="#F6E3C2" id="rt" />
 		<Sheet c="#D9A27E" d={Band(560, 30, 81)} />
@@ -251,13 +261,12 @@ export const Return: React.FC<SceneP> = ({u, d}) => {
 		<Sheet c={PP.indigo} sh="pdL" d="M300,390 L420,290 L1500,290 L1620,390 Z" />
 		<Sheet c="#FFE9C0" d="M700,930 L700,420 L1220,420 L1220,930 Z" sh="none" />
 		<Fig frame="Return" who="yangsu" x={860} g={g} h={h * 1.12} pose={PZ.stand} look={LK.yangsu} col={PP.plum} />
-		{u < 1.0 && <Fig frame="Return" who="princess" x={wk.x} g={g} h={h} pose={prPose} look={LK.princess} />}
+		{u < 0.7 && her}
 		<Sheet c={PP.lacquer} d={`M700,930 L700,420 L${960 - 250 * open},420 L${960 - 250 * open},930 Z`} /><Sheet c={PP.lacquer} d={`M${960 + 250 * open},930 L${960 + 250 * open},420 L1220,420 L1220,930 Z`} />
 		<Sheet c="#BE8F78" d={Band(g - 4, 4, 82)} />
-		{u >= 1.0 && <Fig frame="Return" who="princess" x={wk.x} g={g} h={h} pose={prPose} look={LK.princess} />}
-		{u >= 0.8 && <Mirror x={pR[0]} y={pR[1]} r={R} id="rtR" half="R" gap={0} glow={0.5 + 0.5 * raise} />}
-		<Fig frame="Return" who="xu" x={1640} g={g} h={h} pose={xuPose} look={LK.xu} flip />
-		<Mirror x={xLp[0]} y={xLp[1]} r={R} id="rtL" half="L" gap={0} glow={0.5 + 0.5 * raise} />
+		{u >= 0.7 && her}
+		<Fig frame="Return" who="xu" x={xw.x} g={g} h={h} pose={xuPose} look={LK.xu} flip />
+		<Mirror x={xLp[0]} y={xLp[1]} r={R} id="rtL" half="L" gap={0} glow={0.5 + 0.5 * raise} seam={0} />
 	</g>;
 };
 /* =====================================================================================
@@ -284,26 +293,27 @@ export const Tang: React.FC<SceneP> = ({u, d, tag}) => {
 	const f2Pose = fIn.moving ? fIn.pose : U < tIn1 + 0.9 ? mixPose(PZ.stand, PZ.offerR, hand2) : mixPose(PZ.offerR, PZ.stand, ease(seg(U, tIn1 + 0.9, tIn1 + 1.4)));
 	const ePose = U < tIn1 + 0.1 ? PZ.stand : U < tIn1 + 0.9 ? mixPose(PZ.stand, PZ.offer, hand2) : mixPose(PZ.offer, PZ.lookUpHold, ease(seg(U, tIn1 + 0.9, tIn1 + 1.6)));
 	const down = ease(seg(U, 7.6, 8.5)), back = ease(seg(U, tIn1 + 1.0, tIn1 + 1.8));
-	const camY = lerp(283, 1363, down), z0 = lerp(1.3, 0.5, back), cy = lerp(camY, 1100, back);
+	const camY = lerp(283, 1363, down), z0 = lerp(1.3, 0.5, back), cy = tag === 'coda' ? 900 : lerp(camY, 900, back), cx = tag === 'coda' ? 180 : lerp(960, 180, back);
 	const z = tag === 'coda' ? 0.5 + 0.06 * seg(u, 0, d) : z0;
 	const yL = hand(yPose, 'LHand', yx, g, h), yR = hand(yPose, 'RHand', yx, g, h), fL = hand(fPose, 'LHand', fOut.x, g, h, fFlip);
 	const f2R = hand(f2Pose, 'RHand', fIn.x, eg, eh, true), eL = hand(ePose, 'LHand', ex, eg, eh);
 	/* the bun: the head joint, a little behind and above */
 	const hd = jointAt(yPose, 'Head', yx, g, h), bun: [number, number] = [hd[0] - 0.05 * h, hd[1] - 0.07 * h];
 	const pinMid: [number, number] = [(yL[0] + yR[0]) / 2 + 6, (yL[1] + yR[1]) / 2 - 20];
-	const wornAt: [number, number] = U < 1.9 ? bun : U < 3.0 ? [lerp(yL[0], pinMid[0], draw), lerp(yL[1] - 20, pinMid[1], draw)] : pinMid;
+	const pull = ease(seg(U, 1.8, 2.2)), inHand: [number, number] = [lerp(bun[0], yL[0], pull), lerp(bun[1], yL[1] - 20, pull)];
+	const wornAt: [number, number] = U < 1.8 ? bun : U < 3.0 ? [lerp(inHand[0], pinMid[0], draw), lerp(inHand[1], pinMid[1], draw)] : pinMid;
 	const keptAt: [number, number] = U < 3.3 ? wornAt : [yL[0], yL[1] - 20];
 	const sentAt: [number, number] = U < 3.3 ? wornAt : U < 6.6 ? [yR[0] + 4, yR[1] - 20] : U < 8.4 ? [fL[0], fL[1] - 20] : U < tIn1 + 0.7 ? [f2R[0], f2R[1] - 22] : [eL[0], eL[1] - 22];
 	return <g>
 		<Bg c={PP.lav} c2={PP.indigo2} id="tg" />
-		<g transform={`translate(960,540) scale(${z}) translate(${-960},${-cy})`}>
+		<g transform={`translate(960,540) scale(${z}) translate(${-cx},${-cy})`}>
 			<rect x={-2000} y={-1200} width={6000} height={2380} fill={PP.lavL} />
 			<Cloud x={420} y={200} s={1.6} c="#F2ECF8" /><Cloud x={1560} y={250} s={1.3} c="#F2ECF8" />
 			<Sheet c="#E9E1F3" d="M200,600 C160,540 300,500 400,520 C460,470 640,470 700,510 C800,470 1100,470 1160,512 C1260,480 1500,490 1560,540 C1700,530 1820,580 1760,610 Z" />
 			<Hall cx={1060} g={g - 30} k={0.55} wall={PP.rose} roof={PP.plum} />
 			<Fig frame="Tang" who="yang" x={yx} g={g} h={h} pose={yPose} look={LK.yang} />
 			{U < 8.4 && <Fig frame="Tang" who="fangshi" x={fOut.x} g={g} h={h} pose={fPose} look={LK.fangshi} flip={fFlip} />}
-			<Hairpin x={keptAt[0]} y={keptAt[1]} s={PS} prong={U < 3.3 ? 'both' : 'L'} glow={0.6} rot={U < 1.9 ? -60 : 0} />
+			<Hairpin x={keptAt[0]} y={keptAt[1]} s={PS} prong={U < 3.3 ? 'both' : 'L'} glow={0.6} rot={lerp(-60, 0, pull)} />
 			{U >= 3.3 && U < 8.4 && <Hairpin x={sentAt[0]} y={sentAt[1]} s={PS} prong="R" glow={0.6} />}
 			{split > 0 && split < 1 && <circle cx={pinMid[0]} cy={pinMid[1]} r={60 * split} fill={AU.core} opacity={0.6 * (1 - split)} />}
 			<path d="M1700,610 C1850,800 1700,1000 1900,1200" stroke="#F2ECF8" strokeWidth={60} fill="none" opacity={0.7} />
@@ -324,7 +334,7 @@ export const Tang: React.FC<SceneP> = ({u, d, tag}) => {
 export const Seventies: React.FC<SceneP> = ({u}) => {
 	/* true scale: the bike's wheel reaches about the groom's knee-to-hip; the sewing machine on its own table, the radio on a
 	   side table; the watch is ON the groom's wrist, shown by a ring callout. Each thing drops onto its surface on a beat. */
-	const g = 930, h = 520, gx = 780, bx = 1140, land = (a: number) => easeOut(seg(u, a, a + 0.22)), price = seg(u, 5.66, 6.2);
+	const g = 930, h = 520, gx = 740, bx = 1180, land = (a: number) => easeOut(seg(u, a, a + 0.22)), price = seg(u, 5.66, 6.2);
 	const wr = hand(PZ.stand, 'LHand', gx, g, h);
 	const wheel = 0.21 * h, bs = wheel / 120;
 	return <g>
@@ -376,43 +386,44 @@ export const Packet: React.FC<SceneP> = ({u}) => {
 export const LookBack: React.FC<SceneP> = ({u, d}) => {
 	/* the halves come back and hold still through the breath; the other tokens cross at mid-height; 0.566 s before the DROP
 	   everything flies to the seam between the two phones of the next shot and lands ON the hit as one moon (cut on the beat) */
-	const m = ease(seg(u, 2.27, 3.3)), p = ease(seg(u, 4.54, 5.6)), others = seg(u, 6.8, 9.4), fly = Math.pow(seg(u, d - 0.566, d), 2);
+	const m = easeOut(seg(u, 0.1, 2.2)), p = ease(seg(u, 4.54, 5.6)), others = seg(u, 6.8, 9.4), fly = Math.pow(seg(u, d - 0.566, d), 2);
 	const T: [number, number] = [960, 390];
 	return <g>
 		<Bg c={PP.ivory} c2={PP.ivory2} id="lb" />
-		{others > 0 && others < 1 && <g>
-			<Quince x={lerp(-160, 2080, others)} y={700} s={0.7} rot={others * 300} />
-			<g transform={`translate(${lerp(2100, -200, others)},720)`}><Ring x={-16} y={0} r={30} /><Ring x={16} y={4} r={30} /></g>
-			<Bike x={lerp(2300, -400, Math.min(1, others * 1.1))} y={740} s={0.6} />
-			<Pager x={lerp(-300, 2200, Math.max(0, others * 1.15 - 0.15))} y={640} s={0.6} text="520" />
-		</g>}
+		{(() => { const lane = (a: number, b: number) => seg(u, a, b), q = lane(6.6, 8.6), pg = lane(7.4, 9.4), rg = lane(6.8, 8.8), bk = lane(7.6, 9.6); const bx = lerp(2300, -400, bk);
+			return <g>
+				{q > 0 && q < 1 && <Quince x={lerp(-160, 2080, q)} y={800} s={0.6} rot={q * 300} />}
+				{pg > 0 && pg < 1 && <Pager x={lerp(-300, 2200, pg)} y={800} s={0.5} text="520" />}
+				{rg > 0 && rg < 1 && <g transform={`translate(${lerp(2100, -200, rg)},930)`}><Ring x={-16} y={0} r={30} /><Ring x={16} y={4} r={30} /></g>}
+				{bk > 0 && bk < 1 && <g transform={`translate(${bx},930) scale(-1,1) translate(${-bx},-930)`}><Bike x={bx} y={930 - 72} s={0.6} /></g>}
+			</g>; })()}
 		{m > 0 && <g opacity={m}><Mirror x={lerp(760, T[0], fly)} y={lerp(560 + (1 - m) * 200, T[1], fly)} r={lerp(150, 106, fly)} id="lbL" half="L" gap={0} tilt={-10 * (1 - fly)} /><Mirror x={lerp(1160, T[0], fly)} y={lerp(560 + (1 - m) * 200, T[1], fly)} r={lerp(150, 106, fly)} id="lbR" half="R" gap={0} tilt={10 * (1 - fly)} /></g>}
-		{p > 0 && <g opacity={p * (1 - fly)}><Hairpin x={lerp(380, T[0] - 30, fly)} y={lerp(560 - (1 - p) * 120, T[1], fly)} s={0.6} prong="L" rot={-14} /><Hairpin x={lerp(1540, T[0] + 30, fly)} y={lerp(560 - (1 - p) * 120, T[1], fly)} s={0.6} prong="R" rot={14} /></g>}
+		{p > 0 && <g opacity={p}><Hairpin x={lerp(380, T[0] - 14, fly)} y={lerp(560 - (1 - p) * 120, T[1] - 30, fly)} s={lerp(0.6, 0.3, fly)} prong="L" rot={-14 * (1 - fly)} /><Hairpin x={lerp(1540, T[0] + 14, fly)} y={lerp(560 - (1 - p) * 120, T[1] - 30, fly)} s={lerp(0.6, 0.3, fly)} prong="R" rot={14 * (1 - fly)} /></g>}
 	</g>;
 };
 /** DROP: night city, two lit windows; in each a person with a phone; the halves fly in and become the avatar halves */
 export const Drop: React.FC<SceneP> = ({u}) => {
 	/* 110.38: pull back out of the joined avatar into the street: two lit windows facing each other; in each a person looks
 	   down at a real-size phone at the chest; each one's avatar half floats as a bubble at the window's inner corner */
-	const pop = easeOut(seg(u, 0, 0.35)), z = 1.25 - 0.25 * ease(seg(u, 0, 1.4)), g = 700, h = 290;
+	const pop = easeOut(seg(u, 1.3, 1.7)), z = 1.25 - 0.25 * ease(seg(u, 0, 1.4)), g = 700, h = 290;
 	const L = {x: 520, w: 520}, R = {x: 1400, w: 520};
 	const fig = (cx: number, flip: boolean, who: string) => { const x = cx + (flip ? 90 : -90);
 		const [phx, phy] = hand(PZ.phoneLow, 'LHand', x, g, h, flip), sg = flip ? -1 : 1;
-		return <g><Fig frame="Drop" who={who} x={x} g={g} h={h} pose={PZ.phoneLow} look={flip ? LK.woman : LK.man} flip={flip} />
+		return <g><Fig frame="Drop" who={who} x={x} g={g} h={h} pose={PZ.phoneLow} look={flip ? LK.man : LK.woman} flip={flip} />
 			<g transform={`translate(${phx + sg * 4},${phy - 10}) rotate(${sg * -30})`}><ellipse cx={sg * -8} cy={-6} rx={22} ry={14} fill={AU.hi} opacity={0.55} /><rect x={-5} y={-14} width={10} height={26} rx={3} fill={PP.ink} stroke={PP.edge} strokeWidth={1.2} /></g></g>; };
 	return <g>
 		<Bg c={PP.night} c2={PP.indigo} id="dr" />
 		{Array.from({length: 60}, (_, i) => <circle key={i} cx={rnd(i, 5) * W} cy={rnd(i, 6) * 400} r={1.5 + rnd(i, 7) * 2} fill={PP.cream} opacity={0.5} />)}
-		<Moon x={960} y={150} r={60} />
-		<Cam z={z} y={520}>
+		<Moon x={1500} y={200} r={60} />
+		<Cam z={z} y={460}>
 			{[[0, 300], [1100, 260], [1700, 380]].map(([x, w], i) => <Sheet key={i} c={i === 1 ? '#3A4678' : '#323E6E'} d={`M${x},1080 L${x},${420 + i * 40} L${x + w},${420 + i * 40} L${x + w},1080 Z`} />)}
 			{[L, R].map((b, i) => <g key={i}>
 				<Sheet c={i ? '#46548A' : '#3E4C82'} d={`M${b.x - b.w / 2 - 60},1080 L${b.x - b.w / 2 - 60},340 L${b.x + b.w / 2 + 60},340 L${b.x + b.w / 2 + 60},1080 Z`} />
 				<rect x={b.x - b.w / 2} y={380} width={b.w} height={g - 380} fill={AU.hi} opacity={0.88} />
 				<rect x={b.x - b.w / 2} y={g} width={b.w} height={26} fill={PP.ivory2} />
-				{fig(b.x, i === 1, i ? 'her' : 'him')}
+				{fig(b.x, i === 1, i ? 'him' : 'her')}
 			</g>)}
-			{pop > 0 && [[L.x + 210, 'L'], [R.x - 210, 'R']].map(([x, sd]) => <g key={sd as string} transform={`translate(${x},250) scale(${pop})`} filter="url(#pd)">
+			{pop > 0 && [[L.x + 210, 'L'], [R.x - 210, 'R']].map(([x, sd]) => <g key={sd as string} transform={`translate(${x},300) scale(${pop})`} filter="url(#pd)">
 				<rect x={-98} y={-98} width={196} height={196} rx={36} fill={PP.cream} /><AvatarArt s={180} side={sd as 'L' | 'R'} id={`drb${sd}`} />
 				<path d={`M${sd === 'L' ? 40 : -40},96 L${sd === 'L' ? 10 : -10},140 L${sd === 'L' ? -10 : 10},96 Z`} fill={PP.cream} /></g>)}
 		</Cam>
@@ -453,13 +464,14 @@ export const CodaPin: React.FC<SceneP> = () => <g>
 	<Sheet c={PP.ivory2} d="M300,940 L860,940 L880,972 L280,972 Z" />
 	<Hairpin x={560} y={930} s={0.42} prong="R" rot={-90} />
 </g>;
-export const CodaPhone: React.FC<SceneP> = ({u}) => <g>
+export const CodaPhone: React.FC<SceneP> = ({u, d}) => <g>
 	<Bg c={PP.ochreL} c2={PP.ochre} id="cph" />
+	<g transform={`translate(960,540) scale(${1 + 0.08 * ease(seg(u, 0, d))}) translate(-960,-560)`}>
 	<Sheet c="#B9864A" d={Band(800, 14, 3)} />
-	<PhoneStand x={780} y={480} s={0.82} /><PhoneStand x={1140} y={480} s={0.82} />
+	<PhoneStand x={780} y={480} s={0.82} />
 	<Phone x={780} y={480} s={0.82} side="L" id="cphL" />
-	<g opacity={0.7}><Phone x={1140} y={480} s={0.82} side="R" ghost id="cphR" glow={0} /></g>
-	{void u}
+	<g opacity={0.55 + 0.25 * Math.sin(u * 2.4)}><Phone x={1140} y={480} s={0.82} side="R" ghost id="cphR" glow={0} /></g>
+	</g>
 </g>;
 /** END: the empty half fills; the avatar changes through several pairs */
 const PAIRS: [string, string][] = [[PP.indigo2, PP.rose], ['#3F7F7A', '#E9A070'], ['#6A4A7E', '#EDB3B4'], ['#2F3A6B', '#78ADA3']];
@@ -469,7 +481,7 @@ export const EndScene: React.FC<SceneP> = ({u}) => {
 	return <g>
 		<Bg c={PP.ochreL} c2={PP.ochre} id="en" />
 		<Sheet c="#B9864A" d={Band(800, 14, 3)} />
-		<PhoneStand x={780} y={480} s={0.82} /><PhoneStand x={1140} y={480} s={0.82} />
+		<PhoneStand x={780} y={480} s={0.82} /><g opacity={fill}><PhoneStand x={1140} y={480} s={0.82} /></g>
 		<Phone x={780} y={480} s={0.82} side="L" id="enL" pal={pal} />
 		<g opacity={fill}><Phone x={1140} y={480} s={0.82} side="R" id="enR" pal={pal} /></g>
 		<g opacity={1 - fill}><Phone x={1140} y={480} s={0.82} side="R" ghost id="enG" glow={0} /></g>
@@ -483,7 +495,7 @@ export const Poem: React.FC<SceneP> = ({u}) => {
 	return <g>
 		<Bg c="#5B4A80" c2={PP.night} id="pm" />
 		<Sheet c="#6E4A36" d="M0,1080 L0,880 L1920,860 L1920,1080 Z" />
-		<Sheet c={PP.cream} sh="pdL" d="M1000,250 L1720,232 L1740,900 L1020,916 Z" />
+		<Sheet c={PP.lacquer} d="M1060,900 L1110,860 L1650,860 L1700,900 Z" /><Sheet c={PP.cream} sh="pdL" d="M1040,260 L1700,240 L1680,880 L1060,890 Z" />
 		{cols.map((c, i) => { const k = Math.max(0, Math.min(5, left)); left -= 5; return <text key={i} x={1600 - i * 150} y={330} style={{writingMode: 'vertical-rl', fontFamily: "'Noto Serif CJK SC',serif", fontWeight: 900, fontSize: 88, letterSpacing: 16} as React.CSSProperties} fill={i === 1 ? AU.deep : PP.ink}>{c.slice(0, k)}</text>; })}
 		<path d="M480,880 L510,800 L610,800 L640,880 Z" fill={PP.lacquer} filter="url(#pdS)" />
 		<Mirror x={600} y={680} r={130} id="pmm" half="L" gap={0} glow={0.8} />
@@ -517,7 +529,7 @@ export const Pojing1: React.FC<SceneP> = ({u}) => {
 		<Sheet c="#3A4778" d={Band(PG - 4, 4, 33)} />
 		<Fig frame="Pojing1" who="xu" x={XX} g={PG} h={PH} pose={xuPose} look={LK.xu} />
 		<Fig frame="Pojing1" who="princess" x={prX} g={PG} h={PH} pose={prPose} look={LK.princess} flip />
-		{u < 2.6 ? <Mirror x={mid[0]} y={mid[1]} r={R} id="pj1w" half="both" gap={0} />
+		{u < 2.6 ? <Mirror x={mid[0]} y={mid[1]} r={R} id="pj1w" half="both" gap={0} seam={0.7 * crack} />
 			: <><Mirror x={leftAt[0]} y={leftAt[1]} r={R} id="pj1l" half="L" gap={u < 3.4 ? 8 * crack : 0} tilt={-4} />
 				<Mirror x={rightAt[0]} y={rightAt[1]} r={R} id="pj1r" half="R" gap={u < 3.4 ? 8 * crack : 0} tilt={4} /></>}
 		{crack > 0 && crack < 1 && <circle cx={mid[0]} cy={mid[1]} r={110 * crack} fill={AU.core} opacity={0.6 * (1 - crack)} />}
@@ -525,7 +537,7 @@ export const Pojing1: React.FC<SceneP> = ({u}) => {
 };
 export const CodaCouple: React.FC<SceneP> = ({u, d}) => {
 	/* K1 「破镜的那一对，后来重圆了」: the reunited couple, small, under the full moon, holding the whole mirror between them */
-	const g = 900, h = 300, x1 = 820, R = 0.107 * h * 1.6;
+	const g = 940, h = 440, x1 = 760, R = 0.107 * h * 1.6;
 	const x2 = x1 + PZ.offer.LHand[0] * h + PZ.offer.LHand[0] * h + 2 * R * 0.2 + 30;
 	const a = hand(PZ.offer, 'LHand', x1, g, h), b = hand(PZ.offer, 'LHand', x2, g, h, true), M: [number, number] = [(a[0] + b[0]) / 2, (a[1] + b[1]) / 2 - 22];
 	return <g>

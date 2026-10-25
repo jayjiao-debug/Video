@@ -246,9 +246,11 @@ const lensWin = (t: number): {c: P2; span: number} => {
 };
 const camR = (t: number): Cam => {
 	const lc = lensAt(Math.min(t, b(61.5)));
-	if (t < b(60.35)) return lensCam(lc);
-	if (t < b(61)) { const u = clamp01((t - b(60.35)) / (b(60.75) - b(60.35))); const drift = clamp01((t - b(60.75)) / (b(61) - b(60.75))); const c = blend(lensCam(lc), ROOM, easeInOut(u)); return {...c, z: c.z * (1 + 0.01 * drift)}; }
-	if (t < b(61.5)) { const u = clamp01((t - b(61)) / (b(61.25) - b(61))); return blend({...ROOM, z: 1.01}, lensCam(lc), easeInOut(u)); }
+	// insert cuts on the beats (a dolly between the lens and the room passed through the seated restorer): lens → room on b60.5,
+	// room → lens on b61 (the peel), lens → R2 on b61.5
+	if (t < b(60.5)) return lensCam(lc);
+	if (t < b(61)) return {...ROOM, z: 1 + 0.012 * smooth(clamp01((t - b(60.5)) / (b(61) - b(60.5))))};
+	if (t < b(61.5)) return {...lensCam(lc), z: LENS_IN * (1 + 0.02 * clamp01((t - b(61)) / (b(61.5) - b(61))))};
 	const R2: Cam = {x: 1060, y: 610, z: 1.55, th: TH_R};
 	if (t < b(62)) return {...R2, z: R2.z * (1 + 0.012 * clamp01((t - b(61.5)) / (b(62) - b(61.5))))};     // a cut on b61.5 (no third whip); the magnifier swings aside in this wide
 	// 31: crane up over the long table to the tail (top-down), drop onto 藏者宜宝之
@@ -321,7 +323,7 @@ const drawR = (t: number) => {
 	// figures: behind the table, hidden by the table top while the paper stands up
 	const fk = `${Math.round(t * 60)}`;
 	const poly: P2[] = [strip.screen(TB.x0 - S.x0, 0, -2), strip.screen(TB.x1 - S.x0, 0, -2), strip.screen(TB.x1 - S.x0, S.depth, -2), strip.screen(TB.x0 - S.x0, S.depth, -2)];
-	const vis = c.z < 40, R = restorers(t, c.z < 4 && c.th > 1.25)   // drawn all through the dolly (they sweep out of frame); contacts logged in the room, sit = R.figs[0], standF = R.figs[1];
+	const vis = c.z < 4, R = restorers(t, vis && c.th > 1.25), sit = R.figs[0], standF = R.figs[1];
 	body.draw(fk, (g) => { if (!vis) return; g.save(); if (c.th > 1.0) { g.beginPath(); g.rect(-50, -50, W + 100, H + 100); g.moveTo(poly[0][0], poly[0][1]); for (const q of poly.slice(1)) g.lineTo(q[0], q[1]); g.closePath(); g.clip('evenodd'); }
 		drawFig(g, standF); g.restore(); });
 	lampL.draw(fk, (g) => { if (vis) drawLamp(g, t, lc); });
