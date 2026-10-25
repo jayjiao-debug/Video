@@ -48,14 +48,14 @@ def picture(name, cx, W, H, img_h, top):
 WCX = {'A': 0.37, 'B': 0.42, 'C': 0.50}
 PORT = {'C': (1080, 0.47)}
 for n, f, cx, k, l1, l2, sub in V:
-    ph, pcx = PORT.get(n, (1330, cx)); t = picture(f, pcx, 1080, 1440, ph, 1440 - ph if ph < 1140 else 300); text_block(t, 78, 96, k, l1, l2, sub, 92, 118); t.save(f'{D}/out/封面_竖版_3x4_{n}.png')
+    ph, pcx = PORT.get(n, (1330, cx)); t = picture(f, pcx, 1080, 1440, ph, 1440 - ph if ph < 1140 else 300); text_block(t, 78, 96, k, l1, l2, sub, 92, 118); t.save(f'{D}/../out/封面_竖版_3x4_{n}.png')
     w = picture(f, WCX.get(n, cx), 1440, 1080, 1160, 170)
     # darken the top-left for the text on the wide version
     a = np.array(w).astype(np.float32); yy, xx = np.mgrid[0:1080, 0:1440]; m = np.clip(1 - 0.62 * np.exp(-(((xx - 200) / 900) ** 2 + ((yy - 160) / 420) ** 2)), 0, 1)
-    w = Image.fromarray((a * m[..., None]).clip(0, 255).astype(np.uint8)); text_block(w, 80, 60, k, l1, l2, sub, 84, 104); w.save(f'{D}/out/封面_横版_4x3_{n}.png')
-ims = [Image.open(f'{D}/out/封面_竖版_3x4_{n}.png').resize((360, 480)) for n, *_ in V] + [Image.open(f'{D}/out/封面_横版_4x3_{n}.png').resize((480, 360)) for n, *_ in V]
+    w = Image.fromarray((a * m[..., None]).clip(0, 255).astype(np.uint8)); text_block(w, 80, 60, k, l1, l2, sub, 84, 104); w.save(f'{D}/../out/封面_横版_4x3_{n}.png')
+ims = [Image.open(f'{D}/../out/封面_竖版_3x4_{n}.png').resize((360, 480)) for n, *_ in V] + [Image.open(f'{D}/../out/封面_横版_4x3_{n}.png').resize((480, 360)) for n, *_ in V]
 s = Image.new('RGB', (1440, 480 + 360 + 20), (30, 30, 32))
 for i in range(3): s.paste(ims[i], (i * 480 + 60, 0))
 for i in range(3): s.paste(ims[3 + i], (i * 480, 500))
-s.save(f'{D}/out/covers_sheet.jpg', quality=88)
+s.save(f'{D}/../out/covers_sheet.jpg', quality=88)
 print('ok')
