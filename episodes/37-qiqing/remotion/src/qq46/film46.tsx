@@ -2,7 +2,7 @@ import React from 'react';
 import {W, H, rnd, lerp, clamp, ease, easeOut, easeIn, seg, mixC, C, SKY, skyMix, Glow, Defs46, Sky46, Mountain46, Torches, Altar, Wall46, Hall46, Pave46, Stele46, Cypress46, Huai46,
 	Stall46, Fire46, Field46, Sapling46, SmokeBank, Pot46, Truck46, Mound46, Slips46, Book46, Scroll46, ScrollStand, SlipStand, Tablet, Climbers, Finish46, Shadow, WALL_BASE, WALL_TOP, SUMMIT, VText} from './kit46';
 import {HanBai, Young46, treeAt, STRIP_MID, WEST_MID} from './tree46';
-import {Story, Punch, PeakLine, Stamp, Brand, Counter, SealRow, SealState, TitleCard, EndCard, Src, plainLen, Row} from './skin46';
+import {Story, Punch, PeakLine, Stamp, Brand, Counter, SealRow, SealState, TitleCard, EndCard, Src, plainLen, Row, CapShade, CapCtx, STORY_TOP, storyRow} from './skin46';
 import {Person, LOOK, walkAt, grounded, reachPose, jointAt, POSES, reground, gaitPose} from './people46';
 import LINES from './lines46.json';
 /* ep46 《汉柏的孩子，去守汉武帝》 — the film. Every frame is a pure function of t (seconds).
@@ -380,7 +380,7 @@ export const Film46: React.FC<{t: number}> = ({t}) => {
 		if (t >= 149.097) scrim = 0.35 * ease(seg(t, 149.097, 149.6));
 	}
 
-	const st = stampAt(t), cnt = counterAt(t), endOn = t >= 149.097;
+	const st = stampAt(t), cnt = counterAt(t), endOn = t >= 149.097, cap = React.useContext(CapCtx);
 	return <>
 		<svg width={W} height={H} style={{position: 'absolute'}}>
 			<Defs46 />
@@ -388,10 +388,11 @@ export const Film46: React.FC<{t: number}> = ({t}) => {
 			{scrim > 0 && <rect width={W} height={H} fill="#1A140E" opacity={scrim} />}
 			<Finish46 rays={t > 133.6 && t < 141 ? 0.2 : 0.45} />
 		</svg>
+		{!endOn && <CapShade />}
 		{!endOn && <Subs t={t} />}
 		{seals}
 		{!endOn && st[1] && st[1] !== '' && <Stamp y={st[1]} place={st[2]} l2={st[3]} />}
-		{t >= 83.78 && t < 87.17 && <Src s="据《齐鲁晚报》2015" top={132 + 87 * 3 + 8} o={seg(t, 84.0, 84.4)} />}
+		{t >= 83.78 && t < 87.17 && <Src s="据《齐鲁晚报》2015" top={STORY_TOP + storyRow(cap) * 3 + 8} o={seg(t, 84.0, 84.4)} />}
 		{!endOn && cnt !== null && <Counter n={cnt} note={t >= 2.83 && t < 5.1 ? '从前110年汉武帝首次封禅算起 · 估算' : t >= 15.85 && t < 24.34 ? '从前110年算起 · 估算' : undefined} />}
 		<Brand o={t >= 102.6 && t < 105.3 ? 1 - ease(seg(t, 102.6, 102.9)) : 1} />
 		{extraHtml}
