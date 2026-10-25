@@ -73,6 +73,11 @@ export const SEALS: Record<string, [string, string]> = {
 	B: ['0 0 100 100', `<rect x="10" y="10" width="80" height="80" rx="3" fill="none" stroke="${SEAL_RED}" stroke-width="9"/>${J(SEAL_RED, 73, 62)}`],
 	// C 圆印白文: a filled round seal, J cut out
 	C: ['0 0 100 100', `<mask id="mC"><rect width="100" height="100" fill="#fff"/>${J('#000', 73, 62)}</mask><circle cx="50" cy="50" r="44" fill="${SEAL_RED}" mask="url(#mC)"/>`],
+	// round 朱文 (owner: C's circle, B's outline + red J): ring weights and a double ring
+	C1: ['0 0 100 100', `<circle cx="50" cy="50" r="41" fill="none" stroke="${SEAL_RED}" stroke-width="8"/>${J(SEAL_RED, 72, 60)}`],
+	C2: ['0 0 100 100', `<circle cx="50" cy="50" r="40" fill="none" stroke="${SEAL_RED}" stroke-width="11"/>${J(SEAL_RED, 71, 56)}`],
+	C3: ['0 0 100 100', `<circle cx="50" cy="50" r="43" fill="none" stroke="${SEAL_RED}" stroke-width="5"/>${J(SEAL_RED, 74, 66)}`],
+	C4: ['0 0 100 100', `<circle cx="50" cy="50" r="43" fill="none" stroke="${SEAL_RED}" stroke-width="6.5"/><circle cx="50" cy="50" r="32" fill="none" stroke="${SEAL_RED}" stroke-width="2.5"/>${J(SEAL_RED, 68, 46)}`],
 	// D 双框朱文: a thick outer frame + thin inner frame, red J (a collector's seal)
 	D: ['0 0 100 100', `<rect x="7" y="7" width="86" height="86" fill="none" stroke="${SEAL_RED}" stroke-width="7"/><rect x="19" y="19" width="62" height="62" fill="none" stroke="${SEAL_RED}" stroke-width="3"/>${J(SEAL_RED, 69, 50)}`],
 	// E 竖长印白文: a tall rectangle, J cut out (like a name seal)
