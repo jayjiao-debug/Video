@@ -24995,6 +24995,16 @@ var compMat = new ShaderMaterial({
     vigCol: { value: hex("#120c08") },
     lift: { value: 0 },
     tint: { value: hex("#ffffff") },
+    post: { value: 0 },
+    aexposure: { value: 1 },
+    acorners: { value: 0 },
+    acband: { value: new Vector4(0, 305, 520, 1) },
+    actop: { value: 1 },
+    apool: { value: new Vector4(960, 540, 600, 0) },
+    avig: { value: 0.35 },
+    avigCol: { value: hex("#120c08") },
+    alift: { value: 0 },
+    atint: { value: hex("#ffffff") },
     grain: { value: 0 },
     time: { value: 0 },
     flash: { value: 0 }
@@ -25003,14 +25013,32 @@ var compMat = new ShaderMaterial({
   depthTest: false,
   depthWrite: false,
   fragmentShader: `
-	uniform sampler2D A, B, Ag0, Ag1, Ag2, Ag3, Bg0, Bg1, Bg2, Bg3; uniform float bloomA, bloomB, blurA, k, soft, band, exposure, corners, ctop, vig, lift, grain, time, flash; uniform vec4 cband, pool; uniform int mode;
+	uniform sampler2D A, B, Ag0, Ag1, Ag2, Ag3, Bg0, Bg1, Bg2, Bg3; uniform float bloomA, bloomB, blurA, k, soft, band, exposure, corners, ctop, vig, lift, grain, time, flash, post; uniform vec4 cband, pool; uniform int mode;
 	uniform vec2 dir, pt; uniform vec3 vigCol, tint; varying vec2 vUv;
+	uniform float aexposure, acorners, actop, avig, alift; uniform vec4 acband, apool; uniform vec3 avigCol, atint;
 	float h21(vec2 p){ return fract(sin(dot(p, vec2(127.1, 311.7))) * 43758.5453); }
 	float n2(vec2 p){ vec2 i = floor(p), f = fract(p); f = f*f*(3.0-2.0*f); return mix(mix(h21(i), h21(i+vec2(1,0)), f.x), mix(h21(i+vec2(0,1)), h21(i+vec2(1,1)), f.x), f.y); }
 	float fbm(vec2 p){ float s = 0.0, a = 0.5; for (int i = 0; i < 5; i++){ s += a * n2(p); p *= 2.03; a *= 0.5; } return s; }
 	vec3 bl(sampler2D g0, sampler2D g1, sampler2D g2, sampler2D g3, vec2 uv){ return (texture2D(g0, uv).rgb * 0.35 + texture2D(g1, uv).rgb * 0.45 + texture2D(g2, uv).rgb * 0.6 + texture2D(g3, uv).rgb * 0.75) * 0.5; }
-	vec3 sideA(vec2 uv){ return texture2D(A, uv).rgb + bl(Ag0, Ag1, Ag2, Ag3, uv) * bloomA; }
-	vec3 sideB(vec2 uv){ return texture2D(B, uv).rgb + bl(Bg0, Bg1, Bg2, Bg3, uv) * bloomB; }
+	// the grade (exposure, tint, lift, vignette, lamplight bands, lamplit pool), applied per side so a transition mixes two graded pictures
+	vec3 gradeF(vec3 col, vec2 uv, float exposure, vec3 tint, float lift, float vig, vec3 vigCol, float corners, vec4 cband, float ctop, vec4 pool){
+		col *= exposure * tint; col += lift;
+		float v = length((uv - 0.5) * vec2(1.0, 0.85)); col = mix(col, vigCol, smoothstep(0.45, 1.05, v) * vig);
+		if (corners > 0.0) { // lamplight insert: warm dark (\u2264 #4A3B2C) under the top band (subtitle, mark, stamp) and the lower-left band (chip, tally)
+			vec2 p = vec2(uv.x * 1920.0, (1.0 - uv.y) * 1080.0);
+			float top = (1.0 - smoothstep(cband.y, cband.z, p.y)) * step(cband.x, p.y) * ctop;          // cband: skip-top px, full-to, clear-by, lower-band weight
+			float bot = smoothstep(760.0, 905.0, p.y) * (1.0 - smoothstep(1150.0, 1650.0, p.x)) * cband.w;
+			float m = clamp(max(top, bot), 0.0, 1.0) * corners;
+			col = mix(col, col * 0.03 + vec3(0.042, 0.027, 0.015), m);
+		}
+		if (pool.w > 0.0) { // a lamplit pool centred on (pool.x, pool.y) px, radius pool.z
+			vec2 p2 = vec2(uv.x * 1920.0, (1.0 - uv.y) * 1080.0); float d = length((p2 - pool.xy) / vec2(pool.z * 1.3, pool.z));
+			col = mix(col, col * 0.06 + vec3(0.042, 0.027, 0.015), smoothstep(0.55, 1.25, d) * pool.w);
+		}
+		return col;
+	}
+	vec3 sideA(vec2 uv){ return gradeF(texture2D(A, uv).rgb + bl(Ag0, Ag1, Ag2, Ag3, uv) * bloomA, uv, aexposure, atint, alift, avig, avigCol, acorners, acband, actop, apool); }
+	vec3 sideB(vec2 uv){ return gradeF(texture2D(B, uv).rgb + bl(Bg0, Bg1, Bg2, Bg3, uv) * bloomB, uv, exposure, tint, lift, vig, vigCol, corners, cband, ctop, pool); }
 	void main(){
 		vec2 uv = vUv; vec3 col;
 		if (mode == 0) col = sideA(uv);
@@ -25058,27 +25086,14 @@ var compMat = new ShaderMaterial({
 			a /= n; vec4 b = texture2D(B, uv); col = mix(a, b.rgb / max(b.a, 0.001), clamp(b.a, 0.0, 1.0)) + bl(Bg0, Bg1, Bg2, Bg3, uv) * bloomB;
 		}
 		else { col = k < 0.5 ? sideA(uv) : sideB(uv); }
-		col *= exposure * tint; col += lift;
+		if (post > 0.5) col = gradeF(col, uv, exposure, tint, lift, vig, vigCol, corners, cband, ctop, pool);   // mode 13: the overlay is graded as a whole
 		col += vec3(1.0, 0.86, 0.6) * flash;
-		float v = length((uv - 0.5) * vec2(1.0, 0.85)); col = mix(col, vigCol, smoothstep(0.45, 1.05, v) * vig);
-		if (corners > 0.0) { // lamplight insert: the light pools on the middle of the silk and falls to warm dark (\u2264 #4A3B2C) under the
-			// top band (subtitle, mark, stamp) and the lower-left band (chip, counter, tally); vertical falloff, no box edges
-			vec2 p = vec2(uv.x * 1920.0, (1.0 - uv.y) * 1080.0);
-			float top = (1.0 - smoothstep(cband.y, cband.z, p.y)) * step(cband.x, p.y) * ctop;          // cband: skip-top px (a mount band stays itself), full-to, clear-by, lower-band weight
-			float bot = smoothstep(760.0, 905.0, p.y) * (1.0 - smoothstep(1150.0, 1650.0, p.x)) * cband.w;
-			float m = clamp(max(top, bot), 0.0, 1.0) * corners;
-			col = mix(col, col * 0.03 + vec3(0.042, 0.027, 0.015), m);
-		}
-		if (pool.w > 0.0) { // a lamplit pool: light centred on (pool.x, pool.y) px, radius pool.z, falling to warm dark outside it
-			vec2 p2 = vec2(uv.x * 1920.0, (1.0 - uv.y) * 1080.0); float d = length((p2 - pool.xy) / vec2(pool.z * 1.3, pool.z));
-			col = mix(col, col * 0.06 + vec3(0.042, 0.027, 0.015), smoothstep(0.55, 1.25, d) * pool.w);
-		}
 		col += (h21(uv * 1920.0 + time) - 0.5) * grain;
 		gl_FragColor = vec4(col, 1.0);
 		#include <colorspace_fragment>
 	}`
 });
-var composite = (x, g = {}, t = 0, bloomA = 1, bloomB = 1) => {
+var composite = (x, g = {}, t = 0, bloomA = 1, bloomB = 1, gA) => {
   if (window.NODRAW) return;
   const u = compMat.uniforms, a = slots[0], b12 = slots[1];
   u.A.value = a.base.texture;
@@ -25103,6 +25118,22 @@ var composite = (x, g = {}, t = 0, bloomA = 1, bloomB = 1) => {
   u.vigCol.value.set(g.vigCol ?? "#120c08");
   u.lift.value = g.lift ?? 0;
   u.tint.value.set(g.tint ?? "#ffffff");
+  const post = x.mode === 13, a2 = post ? { vig: 0 } : gA ?? g;
+  u.post.value = post ? 1 : 0;
+  if (x.mode !== 0 && !post) {
+  } else if (x.mode === 0) {
+  }
+  u.aexposure.value = a2.exposure ?? 1;
+  u.acorners.value = a2.corners ?? 0;
+  u.acband.value.set(...a2.cornersBand ?? [0, 305, 520, 1]);
+  u.actop.value = a2.cornersTop ?? 1;
+  u.apool.value.set(...a2.pool ?? [960, 540, 600, 0]);
+  u.avig.value = a2.vig ?? 0.35;
+  u.avigCol.value.set(a2.vigCol ?? "#120c08");
+  u.alift.value = a2.lift ?? 0;
+  u.atint.value.set(a2.tint ?? "#ffffff");
+  if (post) {
+  }
   u.grain.value = g.grain ?? 0;
   u.flash.value = g.flash ?? 0;
   u.time.value = t;
@@ -25379,7 +25410,7 @@ var AGES = [
 ];
 var TALLY = [[b(15), "in"], [b(15.75), "out"], [b(24.5), "in"], [b(27.5), "out"], [b(33.5), "in"], [b(35.25), "out"], [b(38), "in"], [b(42), "out"], [b(57.5), "in"]];
 var TALLY_ON = [[b(12), b(56)], [b(57), b(75.5)]];
-var LABELS = [[b(13.5), b(14.25), 300, 640, "5\u7C73\u591A\u957F"], [b(14), b(14.25), 300, 730, "\u51E0\u767E\u4E2A\u4EBA"], [b(65), b(65.75), 1010, 668, "\u7EA6\u4E00\u767E\u5377 \xB7 \u53EA\u6709\u4E00\u5377\u662F\u4F60"]];
+var LABELS = [[b(13), b(13.75), 300, 640, "5\u7C73\u591A\u957F"], [b(13.25), b(13.75), 300, 730, "\u51E0\u767E\u4E2A\u4EBA"], [b(65), b(65.75), 1010, 668, "\u7EA6\u4E00\u767E\u5377 \xB7 \u53EA\u6709\u4E00\u5377\u662F\u4F60"]];
 var within = (t, a, z) => t >= a && t < z;
 var drawFurniture = (hud2, t, opts = {}) => {
   mark(hud2);
@@ -25690,7 +25721,7 @@ var renderFilm = (t, hud2) => {
     renderStage(fc.st, 1, fc.bloom ?? 1);
     const k = (tr.ease ?? ((u) => u))(clamp01((t - tr.a) / (tr.z - tr.a)));
     const x = { mode: tr.mode, k, dir: tr.dir, pt: tr.pt, soft: tr.soft, band: tr.band };
-    composite(x, fc.grade ?? {}, t, fp.bloom ?? 1, fc.bloom ?? 1);
+    composite(x, fc.grade ?? {}, t, fp.bloom ?? 1, fc.bloom ?? 1, fp.grade ?? {});
   } else if (fc.under) {
     renderStage(fc.under, 0, 1);
     renderStage(fc.st, 1, fc.bloom ?? 1);
@@ -29602,7 +29633,7 @@ var lookB = look("yuanScholar");
 var H3 = 560;
 var XC = (SX0 + SX1) / 2 + 40;
 var holders = (rollK) => {
-  const k = smooth(rollK), xL = lerp2(SX0, XC - 14, k), xR = lerp2(SX1, XC + 14, k);
+  const k = smooth(rollK), sway = Math.sin(TNOW * 1.9) * 2.5, xL = lerp2(SX0, XC - 14, k) + sway, xR = lerp2(SX1, XC + 14, k) + sway * 0.8;
   const ax = xL - 108, bx = xR + 108;
   const A = { x: ax, ground: deck(ax) + 4, h: H3, pose: POSES.stand, look: lookA };
   const Bf = { x: bx, ground: deck(bx) + 4, h: H3 + 10, pose: POSES.stand, look: lookB, flip: true };
@@ -29620,14 +29651,17 @@ var walkers = (t, t0) => {
   const [r0, r1] = underArmRoll(B.pose, "R", 0.29);
   return { A, B, roll: [toScreen(B, r0), toScreen(B, r1)] };
 };
+var TNOW = 0;
 addScene({ id: "01", a: 0, z: 8.96, draw: (t) => {
+  TNOW = t;
   const st2 = crest.st;
   const zIn = 5.4, pull = easeInOut(clamp01((t - b2(0.75)) / (b2(1) - b2(0.75))));
   const hold = t < b2(0.5) ? t : b2(0.5) + (t - b2(0.5)) * 0.25;
   const camInX = 1e3 - hold * 9, camInY = SY;
   const tr = t < b2(2.5) ? 0 : clamp01((t - b2(2.5)) / (8.96 - b2(2.5)));
-  let camX = lerp2(camInX, 960, pull), camY = lerp2(camInY, 560, pull);
-  const zoom = Math.exp(lerp2(Math.log(zIn), 0, pull));
+  const drift = clamp01((t - b2(1)) / (b2(2.5) - b2(1)));
+  let camX = lerp2(camInX, 960, pull) + 14 * drift, camY = lerp2(camInY, 560, pull) - 6 * drift;
+  const zoom = Math.exp(lerp2(Math.log(zIn), 0, pull)) * (1 + 0.035 * drift);
   if (tr > 0) {
     const w = walkers(8.96, b2(2.5));
     const hx = (w.roll[0][0] + w.roll[1][0]) / 2;
@@ -29695,7 +29729,7 @@ addScene({ id: "01", a: 0, z: 8.96, draw: (t) => {
   const deadAt = [b2(2.75), b2(3), 8.78];
   crest.setLanterns((i, x) => {
     const rank = x < 500 ? 0 : x < 1e3 ? 1 : 2;
-    return t < deadAt[Math.min(2, rank)] ? 1 : 0;
+    return t < deadAt[Math.min(2, rank)] ? 0.9 + 0.1 * Math.sin(t * 11 + i * 2.3) * Math.sin(t * 4.1 + i) : 0;
   });
   crest.setBoat(1660, lerp2(0, 70, smooth(clamp01((t - b2(1.5)) / (BEAT * 2)))));
   crest.setStreak(hero[0], walking ? 0.5 : 0.8, t);
@@ -30728,8 +30762,8 @@ var qStep = (t) => {
   const n = Math.floor(Math.min(bt, 4)), f3 = Math.min(bt, 4) - n;
   return n + easeOut(Math.min(1, f3 / 0.35)) + Math.max(0, bt - 4) * 0.25;
 };
-var extZoom = (t) => Math.exp(lerp2(Math.log(0.86), Math.log(9), easeIn(clamp01((t - N.cut - 0.25) / (N.passA - N.cut - 0.25)) ** 0.85)));
-var passZoom = (t) => Math.exp(lerp2(0, Math.log(12), easeIn(clamp01((t - N.passA) / (N.hallA - N.passA)) ** 0.8)));
+var extZoom = (t) => Math.exp(lerp2(Math.log(0.86), Math.log(3.2), easeInOut(clamp01((t - N.cut - 0.15) / (N.passA - N.cut - 0.15)))));
+var passZoom = (t) => Math.exp(lerp2(0, Math.log(1.6), easeInOut(clamp01((t - N.passA) / (N.hallA - N.passA)))));
 var hallZoom = (t) => {
   if (t < b3(10.5)) return lerp2(0.9, 1, easeOut((t - N.hallA) / (b3(10.5) - N.hallA)));
   if (t < N.pane) return lerp2(1, 1.08, smooth((t - b3(10.5)) / (N.pane - b3(10.5))));
@@ -31264,11 +31298,11 @@ var CAM9_B = [...ins9(1850, 790), 5.8];
 var CAM9_D = [960, 596, 1];
 var cam9 = (t) => {
   if (t < b4(13.25)) return { x: CAM9_A[0], y: CAM9_A[1], z: CAM9_A[2], th: 0 };
-  if (t < b4(14)) {
-    const u2 = easeInOut((t - b4(13.25)) / (b4(14) - b4(13.25)));
+  if (t < b4(13.75)) {
+    const u2 = easeInOut((t - b4(13.25)) / (b4(13.75) - b4(13.25)));
     return { x: lerp2(CAM9_A[0], CAM9_B[0], u2), y: lerp2(CAM9_A[1], CAM9_B[1], u2), z: Math.exp(lerp2(Math.log(CAM9_A[2]), Math.log(CAM9_B[2]), u2)), th: 0 };
   }
-  const u = clamp01((t - b4(14)) / (b4(14.25) - b4(14))), uz = easeInOut(u), ut = easeOut(Math.min(1, u * 1.2));
+  const u = clamp01((t - b4(13.75)) / (b4(14.25) - b4(13.75))), uz = easeInOut(u), ut = easeOut(Math.min(1, u * 1.2));
   const drift = clamp01((t - b4(14.25)) / (b4(14.5) - b4(14.25)));
   return { x: lerp2(CAM9_B[0], CAM9_D[0], uz) - 6 * drift, y: lerp2(CAM9_B[1], CAM9_D[1], uz), z: Math.exp(lerp2(Math.log(CAM9_B[2]), Math.log(CAM9_D[2]), uz)) * (1 + 0.012 * drift), th: TH_D * ut };
 };
@@ -31754,7 +31788,7 @@ var C0 = (lx = 0) => GLY.find((g) => g.i === lx);
 var blend = (a, c, u, ut = u) => ({ x: lerp2(a.x, c.x, u), y: lerp2(a.y, c.y, u), z: Math.exp(lerp2(Math.log(a.z), Math.log(c.z), u)), th: lerp2(a.th, c.th, ut) });
 var camJ = (t) => {
   const endL = SHEET_W;
-  const F16 = frameAt(endL + 215, S12.py0 + 100, 5.5), FLL = frameAt(endL + 122, S12.py0 + 56, 8.2), FUL = frameAt(endL + 118, S12.py0 + 168, 8.2);
+  const F16 = frameAt(endL + 225, S12.py0 + 96, 4.7), FLL = frameAt(endL + 160, S12.py0 + 62, 4.8), FUL = frameAt(endL + 130, S12.py0 + 140, 4.8);
   const g0 = C0(0), g4 = C0(4), mid04 = (g0.y + g4.y) / 2;
   const FPAPER = frameAt(g0.x - 18, S12.py0 + 104, 7.2);
   const F19 = frameAt(g0.x, mid04, 10.2, 1330, 650);
@@ -31762,11 +31796,12 @@ var camJ = (t) => {
   const F21 = frameAt(g65.x, g65.y, 11.6, 1300, 380), F22 = frameAt(g65.x, (g65.y + g69.y) / 2, 11.6, 1300, 520);
   const FWIDE = frameAt(SHEET_W * 0.9, S12.py0 + 100, 3.3);
   if (t < b4(16.25)) return blend(F16, FLL, easeInOut(clamp01((t - b4(16)) / (b4(16.25) - b4(16)))));
-  if (t < b4(16.5)) return { ...FLL, x: FLL.x - 1.2 * (t - b4(16.25)) };
-  const FLL2 = { ...FLL, x: FLL.x - 1.2 * (b4(16.5) - b4(16.25)) };
-  if (t < b4(17)) return blend(FLL2, FUL, easeInOut(clamp01((t - b4(16.5)) / (b4(16.75) - b4(16.5)))));
-  if (t < b4(17.25)) return { ...FUL, z: FUL.z * (1 + 0.012 * clamp01((t - b4(17)) / (b4(17.25) - b4(17)))) };
-  const FUL2 = { ...FUL, z: FUL.z * 1.012 };
+  if (t < b4(17.25)) {
+    const u = clamp01((t - b4(16.25)) / (b4(17.25) - b4(16.25)));
+    const c = blend(FLL, FUL, easeInOut(u));
+    return { ...c, z: c.z * (1 + 0.03 * u) };
+  }
+  const FUL2 = { ...FUL, z: FUL.z * 1.03 };
   if (t < b4(17.75)) {
     const u = easeInOut(clamp01((t - b4(17.25)) / (b4(17.5) - b4(17.25))));
     const s = blend(FUL2, FPAPER, u);
@@ -31812,15 +31847,13 @@ var ROLL_EDGE = [];
 var buildRollup = () => {
   const st2 = deskJ.st;
   ROLL_EDGE = [];
-  let started = false;
   for (let i = 0; i <= 64; i++) {
     const u = i / 64, c = rollCam(u);
     st2.setCam(c.x, c.y, c.z);
     stripJ.tilt(c.th);
     const sx = stripJ.screen(rollerX(u) + 6, S12.py0 + 100, 6)[0], e = sx / 1920 - RU.soft * 0.6;
     const k = (e + RU.soft) / (1 + 2 * RU.soft);
-    if (!started && sx < 30) started = true;
-    ROLL_EDGE.push(started ? Math.max(0, k) : 0);
+    ROLL_EDGE.push(Math.max(0, k) * smooth(clamp01((u - 0.15) / 0.45)));
   }
   for (let i = 1; i <= 64; i++) ROLL_EDGE[i] = Math.max(ROLL_EDGE[i], ROLL_EDGE[i - 1]);
   ROLL_EDGE[64] = 1;
@@ -31872,14 +31905,18 @@ var drawJ = (t) => {
   const fk = `${Math.round(t * 60)}`;
   const ext3 = 900 * (1 - smooth(clamp01((c.th / TH_J - 0.72) / 0.26))), lxL = T12.x0 - S12.x0 - ext3;
   const polyJ = [stripJ.screen(lxL, -ext3 * 0.4, -2), stripJ.screen(T12.x1 - S12.x0, 0, -2), stripJ.screen(T12.x1 - S12.x0, S12.depth + ext3, -2), stripJ.screen(lxL, S12.depth + ext3, -2)];
+  const zVis = c.th >= 0.9, zClip = c.th >= 1.25;
   bodyJ.draw(fk, (g) => {
+    if (!zVis) return;
     g.save();
-    g.beginPath();
-    g.rect(-50, -50, W + 100, H + 100);
-    g.moveTo(polyJ[0][0], polyJ[0][1]);
-    for (const q of polyJ.slice(1)) g.lineTo(q[0], q[1]);
-    g.closePath();
-    g.clip("evenodd");
+    if (zClip) {
+      g.beginPath();
+      g.rect(-50, -50, W + 100, H + 100);
+      g.moveTo(polyJ[0][0], polyJ[0][1]);
+      for (const q of polyJ.slice(1)) g.lineTo(q[0], q[1]);
+      g.closePath();
+      g.clip("evenodd");
+    }
     const k = s.h / 560, sx = s.x, sy = s.ground;
     g.fillStyle = "#15100C";
     g.fillRect(sx - 95 * k, sy - 196 * k, 160 * k, 14 * k);
@@ -31891,14 +31928,14 @@ var drawJ = (t) => {
   });
   propsJ.draw(fk, (g) => {
     if (brush2) drawBrush(g, brush2[0], brush2[1], 6 * s.h / 560);
-    if (c.th > 1) drawArms(g, [zhang]);
+    if (zClip) drawArms(g, [zhang]);
   });
   const hero = stripJ.screen(SHEET_W + 260, S12.py0 + 100);
   st2.setHero(hero[0], hero[1], 1300);
   deskJ.lamp.draw("off", () => {
   });
-  const ins = 1 - clamp01((c.th - 0.2) / 0.9), pool = t < b4(17.5) ? 0.55 : 0.55 * (1 - clamp01((t - b4(17.5)) / 0.4));
-  return { st: st2, grade: { vig: lerp2(0.36, 0.62, ins), vigCol: "#1a120b", corners: 0.95 * ins, cornersBand: [0, 330, 560, 1], exposure: 1, pool: [980, 600, 640, pool * ins] }, bloom: 1 };
+  const ins = 1 - clamp01((c.th - 0.2) / 0.9), pool = t < b4(17.5) ? 0.55 : 0.55 * (1 - clamp01((t - b4(17.5)) / 0.4)), ps = smooth(clamp01((t - b4(16.25)) / (b4(17.25) - b4(16.25))));
+  return { st: st2, grade: { vig: lerp2(0.36, 0.62, ins), vigCol: "#1a120b", corners: 0.95 * ins, cornersBand: [0, 330, 560, 1], exposure: 1, pool: [t < b4(17.5) ? lerp2(1250, 820, ps) : 980, t < b4(17.5) ? lerp2(700, 470, ps) : 600, 640, pool * ins] }, bloom: 1 };
 };
 addScene({ id: "11", a: b4(16), z: b4(17.5), draw: drawJ, in: { mode: 5, a: b4(16), z: b4(16.15), pt: [0.5, 0.5], soft: 0.08 } });
 addScene({ id: "12", a: b4(17.5), z: b4(19), draw: drawJ });
@@ -34547,7 +34584,7 @@ var SKY = [[[0, "#526E78"], [0.55, "#8EA3A3"], [1, "#CFC8AA"]], [[0, "#4E6B78"],
 var NSKY = [[0, "#1F2E38"], [0.55, "#2E404B"], [1, "#45565D"]];
 var facadeCanvas = () => {
   const c = mkCanvas(W, H), g = c.getContext("2d");
-  g.fillStyle = "#CCC8BE";
+  g.fillStyle = "#BDB9AF";
   g.fillRect(760, 410, 800, 470);
   g.fillStyle = "#B7B3A9";
   g.fillRect(760, 640, 800, 10);
@@ -34860,9 +34897,9 @@ var camEx = (t) => {
     const S2 = winC(t), Ze = winW(t) / WIN2.w;
     return camLock(Ze, WIN2.x, WIN2.y, 0, S2[0], S2[1]);
   }
-  const drift = clamp01((t - P12) / (b8(48) - P12)), rest = [960 + 14 * drift, 540, 1 + 0.035 * drift];
-  if (t < b8(48)) return rest;
-  const k = easeIn(clamp01((t - b8(48)) / (DOOR_CUT - b8(48))));
+  const drift = clamp01((t - P12) / (b8(47.9) - P12)), rest = [960 + 14 * drift, 540, 1 + 0.035 * drift];
+  if (t < b8(47.9)) return rest;
+  const k = easeInOut(clamp01((t - b8(47.9)) / (DOOR_CUT - b8(47.9))));
   return camMix(rest, camLock(6.2, DOOR3.x, (DOOR3.y0 + DOOR3.y1) / 2 + 6, 0, 960, 560), k);
 };
 var drawInterior = (t) => {
@@ -34905,7 +34942,7 @@ var drawExterior = (t) => {
   drawCars(t);
   exGuardDraw(t);
   st2.setHero(-9999, 0, 1);
-  return { st: st2, grade: { vig: 0.36, vigCol: "#101214", exposure: 1 }, bloom: 0.8 };
+  return { st: st2, grade: { vig: 0.36, vigCol: "#101214", exposure: 1, corners: 0.7 * (1 - nightK(t)), cornersTop: 1, cornersBand: [0, 305, 520, 0.8] }, bloom: 0.8 };
 };
 var PANE2 = { mode: 9, a: P0, z: P12, pt: [0.5, 0.5], dir: [1, 1], ease: (u) => {
   const w = winW(lerp2(P0, P12, u));
@@ -34930,7 +34967,8 @@ addScene({ id: "26", a: T0, z: P0, draw: (t) => {
 addScene({ id: "26b", a: P0, z: DOOR_CUT, in: PANE2, draw: (t) => {
   if (t < P12) {
     updatePane(t);
-    return { ...drawInterior(t), hud: (hud2) => paneGlint(hud2, t) };
+    const fr = drawInterior(t);
+    return { ...fr, grade: { ...fr.grade, corners: 0.7, cornersTop: 1, cornersBand: [0, 305, 520, 0.8] }, hud: (hud2) => paneGlint(hud2, t) };
   }
   return drawExterior(t);
 } });
@@ -35265,7 +35303,9 @@ var stripRect = (t) => {
 };
 var V0 = () => ({ u: UB - 0.012, v: VB, f: 0.42 });
 var storeCam = (t) => {
-  const push = smooth(clamp01((t - b9(50)) / (T02 - b9(50)))), cx0 = lerp2(990, 1010, push), cy0 = lerp2(600, 655, push), z0 = lerp2(1.04, 1.3, push);
+  const pin = easeInOut(clamp01((t - b9(50.6)) / (b9(51.2) - b9(50.6)))), creep = clamp01((t - b9(51.2)) / (T02 - b9(51.2)));
+  const punch = easeOut(clamp01((t - T02) / 0.35));
+  const cx0 = lerp2(lerp2(990, 1040, pin), 1150, punch), cy0 = lerp2(lerp2(600, 640, pin), 712, punch), z0 = Math.exp(lerp2(Math.log(lerp2(lerp2(1.04, 2.2, pin), 2.3, creep)), Math.log(2.7), punch));
   if (t < DIVE_A) return [cx0, cy0, z0];
   const r = stripRect(DIVE_Z), v = V0(), cx1 = r.x + v.u * SW, cy1 = r.y + v.v * r.h, z1 = 1920 / (v.f * SW);
   const k = easeIn(clamp01((t - DIVE_A) / (DIVE_Z - DIVE_A)));
@@ -35934,29 +35974,29 @@ var lensWin = (t) => {
 };
 var camR = (t) => {
   const lc = lensAt(Math.min(t, b10(61.5)));
-  if (t < b10(60.5)) return lensCam(lc);
+  if (t < b10(60.35)) return lensCam(lc);
   if (t < b10(61)) {
-    const u = clamp01((t - b10(60.5)) / (b10(60.8) - b10(60.5)));
-    const drift = clamp01((t - b10(60.8)) / (b10(61) - b10(60.8)));
+    const u = clamp01((t - b10(60.35)) / (b10(60.75) - b10(60.35)));
+    const drift = clamp01((t - b10(60.75)) / (b10(61) - b10(60.75)));
     const c = blend2(lensCam(lc), ROOM, easeInOut(u));
     return { ...c, z: c.z * (1 + 0.01 * drift) };
   }
   if (t < b10(61.5)) {
-    const u = clamp01((t - b10(61)) / (b10(61.15) - b10(61)));
+    const u = clamp01((t - b10(61)) / (b10(61.25) - b10(61)));
     return blend2({ ...ROOM, z: 1.01 }, lensCam(lc), easeInOut(u));
   }
   const R2 = { x: 1060, y: 610, z: 1.55, th: TH_R };
-  if (t < b10(62)) return blend2(lensCam(lc), R2, easeInOut(clamp01((t - b10(61.5)) / (b10(61.68) - b10(61.5)))));
+  if (t < b10(62)) return { ...R2, z: R2.z * (1 + 0.012 * clamp01((t - b10(61.5)) / (b10(62) - b10(61.5)))) };
   const TAIL = frameAt2(360, S.py0 + 41, 2.75), g65 = GL31.find((g) => g.i === 65), g69 = GL31.find((g) => g.i === 69);
   const DROP = frameAt2(g65.x, (g65.y + g69.y) / 2, 28.5, 1300, 640);
-  if (t < b10(62.75)) {
+  if (t < b10(62.55)) {
     const u = clamp01((t - b10(62)) / (b10(62.4) - b10(62)));
-    const c = blend2(R2, TAIL, easeInOut(u), easeInOut(clamp01(u * 1.15)));
-    const dr = clamp01((t - b10(62.4)) / (b10(62.75) - b10(62.4)));
+    const c = blend2({ ...R2, z: R2.z * 1.012 }, TAIL, easeInOut(u), easeInOut(clamp01(u * 1.15)));
+    const dr = clamp01((t - b10(62.4)) / (b10(62.55) - b10(62.4)));
     return { ...c, x: c.x - 6 * dr, z: c.z * (1 + 0.02 * dr) };
   }
   const T2 = { ...TAIL, x: TAIL.x - 6, z: TAIL.z * 1.02 };
-  if (t < b10(63)) return blend2(T2, DROP, easeInOut(clamp01((t - b10(62.75)) / (b10(63) - b10(62.75)))));
+  if (t < b10(63)) return blend2(T2, DROP, easeInOut(clamp01((t - b10(62.55)) / (b10(63) - b10(62.55)))));
   const h = clamp01((t - b10(63)) / (b10(64) - b10(63)));
   return { ...DROP, y: DROP.y + 0.6 * h, z: DROP.z * (1 + 0.035 * h) };
 };
@@ -36292,7 +36332,7 @@ var wallCam = (t) => {
   if (t < t0) return 5.6;
   if (t < t1) return Math.exp(lerp2(Math.log(5.6), 0, easeOut((t - t0) / (t1 - t0))));
   if (t < t2) return lerp2(1, 1.05, smooth((t - t1) / (t2 - t1)));
-  return Math.exp(lerp2(Math.log(1.05), Math.log(9), easeIn(clamp01((t - t2) / (t3 - t2)))));
+  return Math.exp(lerp2(Math.log(1.05), Math.log(3.2), easeInOut(clamp01((t - t2) / (t3 - t2)))));
 };
 var drawWall = (t) => {
   const st2 = wallSt, z = wallCam(t);
@@ -36300,7 +36340,7 @@ var drawWall = (t) => {
   const push = clamp01((t - b11(65.75)) / (b11(65.9) + 0.12 - b11(65.75)));
   wallHalo.draw(`${push.toFixed(2)}`, (q) => {
     q.translate(-660, -380);
-    glowBlob(q, [960, 580], 90 + 60 * push, 60 + 40 * push, 0.38 + 0.25 * push);
+    glowBlob(q, [960, 580], 90 + 30 * push, 60 + 20 * push, 0.38 + 0.08 * push);
   });
   st2.heroAt(960, 580, 2, 600);
   return { st: st2, grade: { vig: 0.36, vigCol: "#100c0a", corners: 0.7, cornersTop: 0, cornersBand: [0, 305, 520, 1] }, bloom: 1 };
@@ -37211,7 +37251,7 @@ var bootExt = async () => {
     pass2.add("ring" + i, canvasTex(c), 960, 540, 1920, 1080, z, {});
   });
 };
-var E37 = { a: b11(76), hallZ: b11(76) + 0.3, passZ: b11(76) + 0.78, extSettle: b11(77.5) };
+var E37 = { a: b11(76), hallZ: b11(76.25), passZ: b11(76.5), extSettle: b11(77.5) };
 var Q_LINE = (LINES.find((l) => l[2].startsWith("\u8981\u662F\u6392")) ?? [174.657, 184.3, "\u8981\u662F\u6392[\u4E94\u5C0F\u65F6]\u770B\u4E24\u5206\u949F\uFF0C\u4F60\u53BB\u5417\uFF1F"])[2];
 var SOURCES = "\u8D44\u6599\uFF1A\u6545\u5BAB\u535A\u7269\u9662 \xB7 \u4F59\u8F89\uFF08\u6545\u5BAB\u535A\u7269\u9662\u9662\u520A 2012\uFF1B\u5149\u660E\u65E5\u62A5 2017\uFF09\xB7 \u6731\u9E3F\u6587\uFF08\u5149\u660E\u65E5\u62A5 2026\uFF09\xB7 \u738B\u6587\u950B\uFF08\u957F\u6625\u65E5\u62A5 2020\uFF09\xB7 \u8BB8\u5FE0\u9675\u300A\u6E05\u660E\u4E0A\u6CB3\u56FE\u88C5\u88F1\u8BB0\u300B\xB7 \u5317\u4EAC\u665A\u62A5 2015";
 var endHud = (t) => (hud2) => {
@@ -37222,15 +37262,15 @@ var endHud = (t) => (hud2) => {
 addScene({ id: "37", a: b11(76), z: 184.3 + 1, draw: (t) => {
   const dimK = lerp2(1, 0.56, smooth(clamp01((t - b11(76.2)) / (b11(77.6) - b11(76.2)))));
   if (t < E37.hallZ) {
-    const k2 = easeIn(clamp01((t - E37.a) / (E37.hallZ - E37.a)));
+    const k2 = easeInOut(clamp01((t - E37.a) / (E37.hallZ - E37.a)));
     lockCam(hallSt3, Math.exp(lerp2(Math.log(Z36 * 1.38), Math.log(0.62), k2)), PANE_C[0], PANE_C[1], HZ2.glass, 960, lerp2(601, 580, k2));
     drawHall({ t, spots: () => 0, you: 0, card: 1, crowd: [], rope: true, wallK: 0.8 });
     return { st: hallSt3, grade: { vig: 0.42, exposure: 1 }, bloom: 1, hideFurniture: true, hud: endHud(t) };
   }
   if (t < E37.passZ) {
-    const k2 = easeOut(clamp01((t - E37.hallZ) / (E37.passZ - E37.hallZ)));
+    const k2 = easeInOut(clamp01((t - E37.hallZ) / (E37.passZ - E37.hallZ)));
     pass2.setCam(960, 540, Math.exp(lerp2(Math.log(12), 0, k2)));
-    dimWorld(pass2, 0.72, /* @__PURE__ */ new Set(), [1, 0.97, 0.94]);
+    dimWorld(pass2, 0.85, /* @__PURE__ */ new Set(), [1, 0.97, 0.94]);
     return { st: pass2, grade: { vig: 0.45, exposure: 1 }, bloom: 1, hideFurniture: true, hud: endHud(t) };
   }
   const k = easeOut(clamp01((t - E37.passZ) / (E37.extSettle - E37.passZ))), rise = smooth(clamp01((t - E37.extSettle) / (184.3 - E37.extSettle)));
