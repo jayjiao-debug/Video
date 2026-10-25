@@ -1,0 +1,262 @@
+plan: {'tier': None, 'character_count': None, 'character_limit': None, 'status': None}
+models: ['eleven_v4', 'eleven_v4_turbo', 'eleven_v3', 'eleven_v3_conversational', 'eleven_multilingual_v2', 'eleven_flash_v2_5', 'eleven_turbo_v2_5', 'eleven_turbo_v2', 'eleven_flash_v2', 'eleven_english_sts_v2', 'eleven_multilingual_sts_v2']
+model: eleven_v4
+{"name": "05_B2b_t1", "lang": "zh", "text": "稀少、结实，又好带。", "voice": "WuLq5z7nEcrhppO0ZQJw", "voice_id": "WuLq5z7nEcrhppO0ZQJw", "model": "eleven_v4", "status": 200, "file": "05_B2b_t1.mp3", "bytes": 48526}
+{"name": "05_B2b_t2", "lang": "zh", "text": "稀少、结实，又好带。", "voice": "WuLq5z7nEcrhppO0ZQJw", "voice_id": "WuLq5z7nEcrhppO0ZQJw", "model": "eleven_v4", "status": 200, "file": "05_B2b_t2.mp3", "bytes": 48526}
+{"name": "08_C2_t1", "lang": "zh", "text": "钱，摇也，古田器也。", "voice": "MI36FIkp9wRP7cpWKPTl", "voice_id": "MI36FIkp9wRP7cpWKPTl", "model": "eleven_v4", "status": 200, "file": "08_C2_t1.mp3", "bytes": 47272}
+{"name": "08_C2_t2", "lang": "zh", "text": "钱，摇也，古田器也。", "voice": "MI36FIkp9wRP7cpWKPTl", "voice_id": "MI36FIkp9wRP7cpWKPTl", "model": "eleven_v4", "status": 200, "file": "08_C2_t2.mp3", "bytes": 49780}
+{"name": "14_E2_t1", "lang": "zh", "text": "钱上写着半两，就得重半两。", "voice": "WuLq5z7nEcrhppO0ZQJw", "voice_id": "WuLq5z7nEcrhppO0ZQJw", "model": "eleven_v4", "status": 200, "file": "14_E2_t1.mp3", "bytes": 49780}
+{"name": "14_E2_t2", "lang": "zh", "text": "钱上写着半两，就得重半两。", "voice": "WuLq5z7nEcrhppO0ZQJw", "voice_id": "WuLq5z7nEcrhppO0ZQJw", "model": "eleven_v4", "status": 200, "file": "14_E2_t2.mp3", "bytes": 49780}
+{"name": "20_S2_t1", "lang": "zh", "text": "一串一千文，重二十五斤八两。", "voice": "WuLq5z7nEcrhppO0ZQJw", "voice_id": "WuLq5z7nEcrhppO0ZQJw", "model": "eleven_v4", "status": 200, "file": "20_S2_t1.mp3", "bytes": 59811}
+{"name": "20_S2_t2", "lang": "zh", "text": "一串一千文，重二十五斤八两。", "voice": "WuLq5z7nEcrhppO0ZQJw", "voice_id": "WuLq5z7nEcrhppO0ZQJw", "model": "eleven_v4", "status": 200, "file": "20_S2_t2.mp3", "bytes": 59811}
+{"name": "21_S3_t1", "lang": "zh", "text": "患蜀人铁钱重，不便贸易。", "voice": "MI36FIkp9wRP7cpWKPTl", "voice_id": "MI36FIkp9wRP7cpWKPTl", "model": "eleven_v4", "status": 200, "file": "21_S3_t1.mp3", "bytes": 47272}
+{"name": "21_S3_t2", "lang": "zh", "text": "患蜀人铁钱重，不便贸易。", "voice": "MI36FIkp9wRP7cpWKPTl", "voice_id": "MI36FIkp9wRP7cpWKPTl", "model": "eleven_v4", "status": 200, "file": "21_S3_t2.mp3", "bytes": 49780}
+{"name": "22_S3b_t1", "lang": "zh", "text": "川蜀铁钱十枚，才抵一枚铜钱。", "voice": "WuLq5z7nEcrhppO0ZQJw", "voice_id": "WuLq5z7nEcrhppO0ZQJw", "model": "eleven_v4", "status": 200, "file": "22_S3b_t1.mp3", "bytes": 58557}
+{"name": "22_S3b_t2", "lang": "zh", "text": "川蜀铁钱十枚，才抵一枚铜钱。", "voice": "WuLq5z7nEcrhppO0ZQJw", "voice_id": "WuLq5z7nEcrhppO0ZQJw", "model": "eleven_v4", "status": 200, "file": "22_S3b_t2.mp3", "bytes": 58557}
+{"name": "25_S5a_t1", "lang": "zh", "text": "起初，十六家富户发交子，", "voice": "WuLq5z7nEcrhppO0ZQJw", "voice_id": "WuLq5z7nEcrhppO0ZQJw", "model": "eleven_v4", "status": 200, "file": "25_S5a_t1.mp3", "bytes": 52287}
+{"name": "25_S5a_t2", "lang": "zh", "text": "起初，十六家富户发交子，", "voice": "WuLq5z7nEcrhppO0ZQJw", "voice_id": "WuLq5z7nEcrhppO0ZQJw", "model": "eleven_v4", "status": 200, "file": "25_S5a_t2.mp3", "bytes": 52287}
+{"name": "42_P2b_t1", "lang": "zh", "text": "值钱的是，大家都信它。", "voice": "WuLq5z7nEcrhppO0ZQJw", "voice_id": "WuLq5z7nEcrhppO0ZQJw", "model": "eleven_v4", "status": 200, "file": "42_P2b_t1.mp3", "bytes": 43510}
+{"name": "42_P2b_t2", "lang": "zh", "text": "值钱的是，大家都信它。", "voice": "WuLq5z7nEcrhppO0ZQJw", "voice_id": "WuLq5z7nEcrhppO0ZQJw", "model": "eleven_v4", "status": 200, "file": "42_P2b_t2.mp3", "bytes": 43510}
+Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+[
+ {
+  "name": "05_B2b_t1",
+  "lang": "zh",
+  "text": "稀少、结实，又好带。",
+  "voice": "WuLq5z7nEcrhppO0ZQJw",
+  "voice_id": "WuLq5z7nEcrhppO0ZQJw",
+  "model": "eleven_v4",
+  "status": 200,
+  "file": "05_B2b_t1.mp3",
+  "bytes": 48526,
+  "heard": "稀少,劫世,又好待!",
+  "heard_lang": "zh",
+  "heard_lang_p": 1.0,
+  "seconds": 2.96
+ },
+ {
+  "name": "05_B2b_t2",
+  "lang": "zh",
+  "text": "稀少、结实，又好带。",
+  "voice": "WuLq5z7nEcrhppO0ZQJw",
+  "voice_id": "WuLq5z7nEcrhppO0ZQJw",
+  "model": "eleven_v4",
+  "status": 200,
+  "file": "05_B2b_t2.mp3",
+  "bytes": 48526,
+  "heard": "稀少,劫事,又好戴!",
+  "heard_lang": "zh",
+  "heard_lang_p": 0.999,
+  "seconds": 2.96
+ },
+ {
+  "name": "08_C2_t1",
+  "lang": "zh",
+  "text": "钱，摇也，古田器也。",
+  "voice": "MI36FIkp9wRP7cpWKPTl",
+  "voice_id": "MI36FIkp9wRP7cpWKPTl",
+  "model": "eleven_v4",
+  "status": 200,
+  "file": "08_C2_t1.mp3",
+  "bytes": 47272,
+  "heard": "前、咬也、鼓填氣也",
+  "heard_lang": "zh",
+  "heard_lang_p": 0.976,
+  "seconds": 2.88
+ },
+ {
+  "name": "08_C2_t2",
+  "lang": "zh",
+  "text": "钱，摇也，古田器也。",
+  "voice": "MI36FIkp9wRP7cpWKPTl",
+  "voice_id": "MI36FIkp9wRP7cpWKPTl",
+  "model": "eleven_v4",
+  "status": 200,
+  "file": "08_C2_t2.mp3",
+  "bytes": 49780,
+  "heard": "前、咬也、骨填氣也。",
+  "heard_lang": "zh",
+  "heard_lang_p": 0.984,
+  "seconds": 3.04
+ },
+ {
+  "name": "14_E2_t1",
+  "lang": "zh",
+  "text": "钱上写着半两，就得重半两。",
+  "voice": "WuLq5z7nEcrhppO0ZQJw",
+  "voice_id": "WuLq5z7nEcrhppO0ZQJw",
+  "model": "eleven_v4",
+  "status": 200,
+  "file": "14_E2_t1.mp3",
+  "bytes": 49780,
+  "heard": "前上写着半辆就得重半辆",
+  "heard_lang": "zh",
+  "heard_lang_p": 0.999,
+  "seconds": 3.04
+ },
+ {
+  "name": "14_E2_t2",
+  "lang": "zh",
+  "text": "钱上写着半两，就得重半两。",
+  "voice": "WuLq5z7nEcrhppO0ZQJw",
+  "voice_id": "WuLq5z7nEcrhppO0ZQJw",
+  "model": "eleven_v4",
+  "status": 200,
+  "file": "14_E2_t2.mp3",
+  "bytes": 49780,
+  "heard": "前上写着半辆就得重半辆",
+  "heard_lang": "zh",
+  "heard_lang_p": 1.0,
+  "seconds": 3.04
+ },
+ {
+  "name": "20_S2_t1",
+  "lang": "zh",
+  "text": "一串一千文，重二十五斤八两。",
+  "voice": "WuLq5z7nEcrhppO0ZQJw",
+  "voice_id": "WuLq5z7nEcrhppO0ZQJw",
+  "model": "eleven_v4",
+  "status": 200,
+  "file": "20_S2_t1.mp3",
+  "bytes": 59811,
+  "heard": "一串一千吻,種二十五斤八兩。",
+  "heard_lang": "zh",
+  "heard_lang_p": 0.998,
+  "seconds": 3.68
+ },
+ {
+  "name": "20_S2_t2",
+  "lang": "zh",
+  "text": "一串一千文，重二十五斤八两。",
+  "voice": "WuLq5z7nEcrhppO0ZQJw",
+  "voice_id": "WuLq5z7nEcrhppO0ZQJw",
+  "model": "eleven_v4",
+  "status": 200,
+  "file": "20_S2_t2.mp3",
+  "bytes": 59811,
+  "heard": "一串一千吻,中二十五斤八两。",
+  "heard_lang": "zh",
+  "heard_lang_p": 0.999,
+  "seconds": 3.68
+ },
+ {
+  "name": "21_S3_t1",
+  "lang": "zh",
+  "text": "患蜀人铁钱重，不便贸易。",
+  "voice": "MI36FIkp9wRP7cpWKPTl",
+  "voice_id": "MI36FIkp9wRP7cpWKPTl",
+  "model": "eleven_v4",
+  "status": 200,
+  "file": "21_S3_t1.mp3",
+  "bytes": 47272,
+  "heard": "患屬人鐵錢重,不便貿易",
+  "heard_lang": "zh",
+  "heard_lang_p": 0.999,
+  "seconds": 2.88
+ },
+ {
+  "name": "21_S3_t2",
+  "lang": "zh",
+  "text": "患蜀人铁钱重，不便贸易。",
+  "voice": "MI36FIkp9wRP7cpWKPTl",
+  "voice_id": "MI36FIkp9wRP7cpWKPTl",
+  "model": "eleven_v4",
+  "status": 200,
+  "file": "21_S3_t2.mp3",
+  "bytes": 49780,
+  "heard": "患屬人铁钱众,不便贸易。",
+  "heard_lang": "zh",
+  "heard_lang_p": 0.999,
+  "seconds": 3.04
+ },
+ {
+  "name": "22_S3b_t1",
+  "lang": "zh",
+  "text": "川蜀铁钱十枚，才抵一枚铜钱。",
+  "voice": "WuLq5z7nEcrhppO0ZQJw",
+  "voice_id": "WuLq5z7nEcrhppO0ZQJw",
+  "model": "eleven_v4",
+  "status": 200,
+  "file": "22_S3b_t1.mp3",
+  "bytes": 58557,
+  "heard": "穿梳铁钳10枚才抵1枚铜钳",
+  "heard_lang": "zh",
+  "heard_lang_p": 0.992,
+  "seconds": 3.6
+ },
+ {
+  "name": "22_S3b_t2",
+  "lang": "zh",
+  "text": "川蜀铁钱十枚，才抵一枚铜钱。",
+  "voice": "WuLq5z7nEcrhppO0ZQJw",
+  "voice_id": "WuLq5z7nEcrhppO0ZQJw",
+  "model": "eleven_v4",
+  "status": 200,
+  "file": "22_S3b_t2.mp3",
+  "bytes": 58557,
+  "heard": "穿屬帖前十枚,才抵一枚銅錢。",
+  "heard_lang": "zh",
+  "heard_lang_p": 0.993,
+  "seconds": 3.6
+ },
+ {
+  "name": "25_S5a_t1",
+  "lang": "zh",
+  "text": "起初，十六家富户发交子，",
+  "voice": "WuLq5z7nEcrhppO0ZQJw",
+  "voice_id": "WuLq5z7nEcrhppO0ZQJw",
+  "model": "eleven_v4",
+  "status": 200,
+  "file": "25_S5a_t1.mp3",
+  "bytes": 52287,
+  "heard": "起初 16 家户户发胶子。",
+  "heard_lang": "zh",
+  "heard_lang_p": 0.999,
+  "seconds": 3.2
+ },
+ {
+  "name": "25_S5a_t2",
+  "lang": "zh",
+  "text": "起初，十六家富户发交子，",
+  "voice": "WuLq5z7nEcrhppO0ZQJw",
+  "voice_id": "WuLq5z7nEcrhppO0ZQJw",
+  "model": "eleven_v4",
+  "status": 200,
+  "file": "25_S5a_t2.mp3",
+  "bytes": 52287,
+  "heard": "起初 16 家户户发胶子。",
+  "heard_lang": "zh",
+  "heard_lang_p": 1.0,
+  "seconds": 3.2
+ },
+ {
+  "name": "42_P2b_t1",
+  "lang": "zh",
+  "text": "值钱的是，大家都信它。",
+  "voice": "WuLq5z7nEcrhppO0ZQJw",
+  "voice_id": "WuLq5z7nEcrhppO0ZQJw",
+  "model": "eleven_v4",
+  "status": 200,
+  "file": "42_P2b_t1.mp3",
+  "bytes": 43510,
+  "heard": "之前的事 大家都信他",
+  "heard_lang": "zh",
+  "heard_lang_p": 0.998,
+  "seconds": 2.64
+ },
+ {
+  "name": "42_P2b_t2",
+  "lang": "zh",
+  "text": "值钱的是，大家都信它。",
+  "voice": "WuLq5z7nEcrhppO0ZQJw",
+  "voice_id": "WuLq5z7nEcrhppO0ZQJw",
+  "model": "eleven_v4",
+  "status": 200,
+  "file": "42_P2b_t2.mp3",
+  "bytes": 43510,
+  "heard": "之前的事 大家都信他",
+  "heard_lang": "zh",
+  "heard_lang_p": 0.997,
+  "seconds": 2.64
+ }
+]
