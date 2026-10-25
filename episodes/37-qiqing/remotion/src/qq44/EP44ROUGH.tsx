@@ -3,7 +3,7 @@ import {AbsoluteFill, Composition, registerRoot, useCurrentFrame} from 'remotion
 import {W, H} from './kit44';
 import {LINES44F} from './lines44full';
 import {T, seg, sm, ease, ColdBrain, CiderBox, Microscope, Highway, Storage, House, Needle, Meadow, Office} from './demo44';
-import {Story, Punch, Stamp, Seal, Counter, SubRow} from './skin44';
+import {Story, Punch, Stamp, Seal, Counter, SubRow, Skin, SkinCtx} from './skin44';
 import {RoughA} from './rough44a';
 import {RoughB} from './rough44b';
 /* ep44 full cut: film 0–164.5 (4935 frames). Picture: the approved demo (0–35.5 story, EP44DEMO's scenes on their v1 clock),
@@ -12,7 +12,9 @@ import {RoughB} from './rough44b';
    FILM ↔ STORY (final pass, owner note "title flashes by"): story = film up to HOLD_AT (title settled by 14.0);
    the story clock then pauses for HOLD = 2.0 s while the title holds (the picture keeps moving on `hold`);
    from film HOLD_AT + 2.0 on, story = film − 2.0 (birth line story 15.25 = film 17.25; end card story 152.75–162.5 = film 154.75–164.5). */
-const FPS = 30, SH = 0.5, L1 = 4.0, END = 162.5, HOLD_AT = 14.25, HOLD = 2.0, FILM_END = END + HOLD, FRAMES = Math.round(FILM_END * FPS);
+export const FPS = 30;
+const SH = 0.5, L1 = 4.0, END = 162.5, HOLD_AT = 14.25, HOLD = 2.0, FILM_END = END + HOLD;
+export const FRAMES = Math.round(FILM_END * FPS);
 export const storyOf = (ft: number): {s: number; hold: number} => (ft < HOLD_AT ? {s: ft, hold: 0} : ft < HOLD_AT + HOLD ? {s: HOLD_AT, hold: ft - HOLD_AT} : {s: ft - HOLD, hold: HOLD});
 const sceneT = (t: number) => (t < L1 ? t * T.box / L1 : t - SH);
 const film = (v1: number) => (v1 <= T.box ? v1 * L1 / T.box : v1 + SH);
@@ -115,12 +117,14 @@ const Furniture: React.FC<{t: number}> = ({t}) => {
 };
 /** the vignette only (QA / owner row 44: no film grain) */
 const Vignette: React.FC = () => <g pointerEvents="none"><defs><radialGradient id="v44m" cx="0.5" cy="0.5" r="0.75"><stop offset="0.55" stopColor="#000" stopOpacity="0" /><stop offset="1" stopColor="#000" stopOpacity="0.45" /></radialGradient></defs><rect width={W} height={H} fill="url(#v44m)" /></g>;
-const Rough: React.FC = () => {
+/** `skin` picks the caption-layout test variant (SKINTEST.tsx); EP44ROUGH itself always renders skin A */
+export const Rough: React.FC<{skin?: Skin}> = ({skin = 'A'}) => {
 	const f = useCurrentFrame(), ft = f / FPS, {s: t, hold} = storyOf(ft), fade = sm(seg(ft, FILM_END - 1.0, FILM_END - 0.03));
 	return <AbsoluteFill style={{background: '#0c1012'}}>
 		<svg width={W} height={H} style={{position: 'absolute'}}><Picture t={t} hold={hold} /><Vignette /></svg>
-		<Furniture t={t} />
+		<SkinCtx.Provider value={skin}><Furniture t={t} /></SkinCtx.Provider>
 		{fade > 0 && <AbsoluteFill style={{background: '#06080a', opacity: fade}} />}
 	</AbsoluteFill>;
 };
-registerRoot(() => <Composition id="EP44ROUGH" component={Rough} durationInFrames={FRAMES} fps={FPS} width={W} height={H} />);
+/* SKINTEST.tsx imports this file for `Rough` and registers its own root (it sets the flag first, in skinflag44.ts) */
+if (!(globalThis as {__EP44_NO_ROOT?: boolean}).__EP44_NO_ROOT) registerRoot(() => <Composition id="EP44ROUGH" component={Rough} durationInFrames={FRAMES} fps={FPS} width={W} height={H} />);
