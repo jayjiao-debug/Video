@@ -1,0 +1,50 @@
+plan: {'tier': None, 'character_count': None, 'character_limit': None, 'status': None}
+models: ['eleven_v4', 'eleven_v4_turbo', 'eleven_v3', 'eleven_v3_conversational', 'eleven_multilingual_v2', 'eleven_flash_v2_5', 'eleven_turbo_v2_5', 'eleven_turbo_v2', 'eleven_flash_v2', 'eleven_english_sts_v2', 'eleven_multilingual_sts_v2']
+model: eleven_v4
+{"name": "s1_bleep", "type": "sfx", "text": "a single classic TV censor bleep, 1 kHz tone, clean, short", "model": "eleven_text_to_sound_v2", "status": 200, "sfx": true, "file": "s1_bleep.mp3", "bytes": 13835}
+{"name": "s2_gasp", "type": "sfx", "text": "small live studio audience gasps in surprise, then murmurs", "model": "eleven_text_to_sound_v2", "status": 200, "sfx": true, "file": "s2_gasp.mp3", "bytes": 40585}
+{"name": "s3_ding", "type": "sfx", "text": "quiz show correct answer chime, bright, two notes", "model": "eleven_text_to_sound_v2", "status": 200, "sfx": true, "file": "s3_ding.mp3", "bytes": 20105}
+{"name": "s4_tape", "type": "sfx", "text": "cassette tape rewinding fast then a clunk as play is pressed", "model": "eleven_text_to_sound_v3", "status": 200, "sfx": true, "file": "s4_tape.mp3", "bytes": 40585}
+Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+[
+ {
+  "name": "s1_bleep",
+  "type": "sfx",
+  "text": "a single classic TV censor bleep, 1 kHz tone, clean, short",
+  "model": "eleven_text_to_sound_v2",
+  "status": 200,
+  "sfx": true,
+  "file": "s1_bleep.mp3",
+  "bytes": 13835
+ },
+ {
+  "name": "s2_gasp",
+  "type": "sfx",
+  "text": "small live studio audience gasps in surprise, then murmurs",
+  "model": "eleven_text_to_sound_v2",
+  "status": 200,
+  "sfx": true,
+  "file": "s2_gasp.mp3",
+  "bytes": 40585
+ },
+ {
+  "name": "s3_ding",
+  "type": "sfx",
+  "text": "quiz show correct answer chime, bright, two notes",
+  "model": "eleven_text_to_sound_v2",
+  "status": 200,
+  "sfx": true,
+  "file": "s3_ding.mp3",
+  "bytes": 20105
+ },
+ {
+  "name": "s4_tape",
+  "type": "sfx",
+  "text": "cassette tape rewinding fast then a clunk as play is pressed",
+  "model": "eleven_text_to_sound_v3",
+  "status": 200,
+  "sfx": true,
+  "file": "s4_tape.mp3",
+  "bytes": 40585
+ }
+]
