@@ -21,7 +21,7 @@ const offsetLine = (c: P[], off: (u: number) => number) => c.map((p, i): P => { 
 export const WEST_C = curve([[-40, 0], [-50, -110], [-120, -200], [-140, -300], [-158, -380], [-150, -440], [-172, -480]]);
 export const EAST_C = curve([[45, 0], [70, -130], [20, -250], [70, -360], [110, -450], [60, -520], [70, -600]]);
 /** where the 32 cm bark strip runs (north / right side of the east trunk) */
-export const STRIP_C = offsetLine(EAST_C, (u) => lerp(56, 24, u) - 10);
+export const STRIP_C = offsetLine(EAST_C, (u) => lerp(56, 24, u) - 22);
 const westW = (u: number) => lerp(70, 30, Math.pow(u, 0.8)) * (1 - 0.08 * Math.sin(u * 9));
 const eastWl = (u: number) => lerp(70, 30, u) + 6 * Math.sin(u * 7), eastWr = (u: number) => lerp(66, 28, u) + 5 * Math.cos(u * 6);
 const BRANCHES: P[][] = [
@@ -99,8 +99,9 @@ export const HanBai: React.FC<TreeProps> = ({x, g, s = 1, age = 1, west = 1, bur
 			</g>
 			{/* the strip of living bark (sap) */}
 			{sap > 0 && <g>
-				<path d={line(STRIP_C)} stroke={C.glowCore} strokeWidth={14} fill="none" opacity={0.25 * sap} filter="url(#k6)" />
-				<path d={line(STRIP_C)} stroke={C.glow} strokeWidth={5} fill="none" opacity={0.9 * sap} />
+				<path d={line(STRIP_C)} stroke={C.glowCore} strokeWidth={46} fill="none" opacity={0.25 * sap} filter="url(#k6)" />
+				<path d={line(STRIP_C)} stroke="#F3D27A" strokeWidth={30} fill="none" opacity={(0.55 + 0.15 * Math.sin(t * 4)) * sap} strokeLinecap="round" />
+				<path d={line(STRIP_C)} stroke={C.glowCore} strokeWidth={6} fill="none" opacity={0.9 * sap} />
 				{Array.from({length: 7}, (_, i) => { const u = ((t * 0.32 + i / 7) % 1), p = STRIP_C[Math.floor(u * (STRIP_C.length - 1))]; return <circle key={i} cx={p[0]} cy={p[1]} r={7} fill={C.glowCore} opacity={sap * Math.sin(u * Math.PI)} />; })}
 			</g>}
 			{/* west crown (only while the west trunk is alive) */}
@@ -116,13 +117,18 @@ export const HanBai: React.FC<TreeProps> = ({x, g, s = 1, age = 1, west = 1, bur
 			</g>}
 			{/* fire on the west trunk */}
 			{burn > 0 && <g opacity={burn}>
-				<Glow x={-110} y={-240} r={420} c={C.fire} o={0.55} id={`${id}fire`} />
-				<g filter="url(#k3)">{Array.from({length: 22}, (_, i) => { const p = WEST_C[Math.min(WEST_C.length - 1, 2 + Math.floor(i * 1.6))], f = 1 + 0.3 * Math.sin(t * 11 + i * 1.9), r = (26 + 22 * rnd(i, 31)) * f, dx = (rnd(i, 32) - 0.5) * 70, hgt = r * (2.2 + rnd(i, 33));
-					return <path key={i} d={`M${p[0] + dx - r * 0.8},${p[1] + r * 0.4} C${p[0] + dx - r},${p[1] - hgt * 0.4} ${p[0] + dx - r * 0.1},${p[1] - hgt * 0.7} ${p[0] + dx + Math.sin(t * 7 + i) * r * 0.3},${p[1] - hgt} C${p[0] + dx + r * 0.3},${p[1] - hgt * 0.6} ${p[0] + dx + r},${p[1] - hgt * 0.3} ${p[0] + dx + r * 0.8},${p[1] + r * 0.4} Z`} fill={i % 3 === 0 ? C.fireCore : i % 3 === 1 ? C.fire : '#E8642A'} opacity={0.85} />; })}</g>
+				<Glow x={-110} y={-260} r={460} c={C.fire} o={0.55} id={`${id}fire`} />
+				{/* one flame body wrapping the west trunk: an outer orange envelope with tongues, an inner yellow core */}
+				{[[1, '#E8642A', 0.92, 46], [0.72, C.fire, 0.95, 30], [0.42, C.fireCore, 0.95, 16]].map(([k, col, op, extra], j) => {
+					const K = k as number, E = extra as number, n = WEST_C.length, L: P[] = [], Rr: P[] = [];
+					for (let i = 0; i < n; i += 2) { const u = i / (n - 1), p = WEST_C[i], w = (westW(u) + E) * K * (1 + 0.12 * Math.sin(t * 9 + i * 0.7 + j));
+						L.push([p[0] - w, p[1] + 10]); Rr.push([p[0] + w * 0.8, p[1] + 10]); }
+					const top = WEST_C[n - 1], tongues = Array.from({length: 5}, (_, q) => { const ph = t * (7 + q) + q * 1.3, hx = top[0] - 50 * K + q * 25 * K + Math.sin(ph) * 10, hy = top[1] - (90 + 70 * Math.abs(Math.sin(ph * 0.7))) * K; return `${hx.toFixed(1)},${hy.toFixed(1)} ${(hx + 12 * K).toFixed(1)},${(top[1] - 20 * K).toFixed(1)}`; }).join(' L');
+					const d = 'M' + L.map((q) => q[0].toFixed(1) + ',' + q[1].toFixed(1)).join(' L') + ' L' + tongues + ' L' + Rr.reverse().map((q) => q[0].toFixed(1) + ',' + q[1].toFixed(1)).join(' L') + ' Z';
+					return <path key={j} d={d} fill={col as string} opacity={op as number} filter="url(#k3)" strokeLinejoin="round" />; })}
 				{Array.from({length: 14}, (_, i) => { const kk = (t * 0.6 + rnd(i, 35)) % 1; return <circle key={'e' + i} cx={-120 + (rnd(i, 36) - 0.5) * 200 + Math.sin(kk * 6 + i) * 20} cy={-200 - kk * 520} r={3} fill={C.fireCore} opacity={(1 - kk)} />; })}
 				{Array.from({length: 6}, (_, i) => { const kk = (t * 0.4 + i / 6) % 1; return <ellipse key={'s' + i} cx={-130 + kk * 120} cy={-480 - kk * 420} rx={50 + 90 * kk} ry={36 + 50 * kk} fill="#4E4640" opacity={(1 - kk) * 0.5} filter="url(#k6)" />; })}
 			</g>}
-			{night > 0 && <path d={ribbon(EAST_C, eastWl, eastWr)} fill="#0E1426" opacity={0.4 * night} />}
 		</g>}
 	</g>;
 };
@@ -132,3 +138,14 @@ export const STRIP_MID: P = STRIP_C[Math.floor(STRIP_C.length * 0.35)];
 export const CROWN_TOP: P = [60, -740];
 export const WEST_MID: P = WEST_C[Math.floor(WEST_C.length * 0.5)];
 void clamp;
+/** a young cypress (the seedlings at 茂陵): one slender trunk, five small pads, the same warm light as 你 */
+export const Young46: React.FC<{x: number; g: number; s?: number; glow?: number; t?: number; id: string}> = ({x, g, s = 1, glow = 0, t = 0, id}) => {
+	const c = curve([[0, 0], [6, -60], [-8, -120], [4, -170]]);
+	const pads: Pad[] = ([[4, -190, 70, 34], [-26, -160, 60, 28], [30, -150, 60, 28], [-8, -128, 70, 30], [18, -214, 46, 24]] as [number, number, number, number][]).map(([px, py, w, h], i) => ({x: px, y: py, w, h, lit: 0.4 - i * 0.1, seed: 60 + i}));
+	return <g transform={`translate(${x},${g}) scale(${s})`}>
+		{glow > 0 && <><Glow x={0} y={-160} r={170} c={C.glow} o={0.55 * Math.min(1, glow)} id={`${id}g`} /><g filter="url(#k6)" opacity={0.7 * Math.min(1, glow)}>{pads.map((p, i) => <path key={i} d={padTop(p, 1.15, -4)} fill={C.glow} />)}</g></>}
+		<Shadow x={20} y={2} rx={60} ry={8} o={0.3} />
+		<path d={ribbon(c, (u) => lerp(9, 3, u), (u) => lerp(9, 3, u))} fill="url(#barkG)" />
+		{pads.map((p, i) => <PadG key={i} p={p} leaf={C.leaf} leafM={C.leafM} leafL={C.leafL} hi={C.leafHi} dx={Math.sin(t * 1.3 + i) * 1.5} glow={glow} snow={0} night={0} fillO={1} />)}
+	</g>;
+};

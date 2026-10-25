@@ -1,0 +1,13 @@
+Edge scan, ep45_film_v1.mp4, 4 fps. A border column/row counts as exposed when it matches the canvas navy (33,52,72 +/-6).
+Max exposed width per stretch (px at 1920x1080):
+ 0:08.0-0:10.0  left 56
+ 0:33.0-0:34.3  right 185, bottom 48
+ 0:48.3-0:51.0  right 148, bottom 144
+ 0:52.0-1:06.0  left 58
+ 1:09.8-1:15.0  left 57
+ 1:25.0-1:33.3  left 56
+ 1:36.8-1:39.5  left 39, right 76
+ 1:42.5-1:50.3  left 58, bottom 17
+ 2:11.3-2:17.5  right 216
+ 2:26.8-2:30.5  left 42
+Total about 54 s of 154 s.

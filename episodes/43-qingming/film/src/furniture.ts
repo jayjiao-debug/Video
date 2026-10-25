@@ -59,7 +59,8 @@ export const AGES: ARow[] = [
 	{a: b(41), z: b(46), era: '民国', v0: 699, v1: 823, r0: b(41), r1: b(41.6), pre: '约'},
 	{a: b(46), z: b(47.5), era: '民国', v0: 823, v1: 830, r0: b(46), r1: b(46.4), post: '多'},
 	{a: b(47.5), z: b(49), era: '民国', v0: 830, v1: 845, r0: b(47.5), r1: b(48), pre: '约'},
-	{a: b(49), z: b(56), era: '新中国', v0: 845, v1: 850, r0: 112.8, r1: 114.25, pre: '约'},
+	{a: b(49), z: b(50), era: '民国', v0: 845, v1: 850, r0: 112.8, r1: 114.25, pre: '约'},   // still 民国 through the silence (1945); 新中国 from the lamp reveal
+	{a: b(50), z: b(56), era: '新中国', v0: 850, v1: 850, pre: '约'},
 	{a: b(57), z: b(58.5), era: '新中国', v0: 850, v1: 850, post: '多'},
 	{a: b(58.5), z: b(60.5), era: '明', v0: -1, v1: -1},                 // chip only, counter hidden (undated Ming flashback)
 	{a: b(60.5), z: b(62), era: '新中国', v0: 850, v1: 873, r0: b(60.5), r1: b(61), pre: '约'},
@@ -69,7 +70,7 @@ export const AGES: ARow[] = [
 /** the 四出五进 tally: events in order */
 const TALLY: [number, 'in' | 'out'][] = [[b(15), 'in'], [b(15.75), 'out'], [b(24.5), 'in'], [b(27.5), 'out'], [b(33.5), 'in'], [b(35.25), 'out'], [b(38), 'in'], [b(42), 'out'], [b(57.5), 'in']];
 const TALLY_ON: [number, number][] = [[b(12), b(56)], [b(57), b(75.5)]];
-const LABELS: [number, number, number, number, string][] = [[b(13.5), b(14.25), 300, 640, '5米多长'], [b(14), b(14.25), 300, 730, '几百个人'], [b(65), b(65.75), 1200, 700, '约一百卷 · 只有一卷是你']];
+const LABELS: [number, number, number, number, string][] = [[b(13), b(13.75), 300, 640, '5米多长'], [b(13.25), b(13.75), 300, 730, '几百个人'], [b(64.8), b(66), 1010, 668, '约一百卷 · 只有一卷是你']]   // beside your glowing roll on the wall (lock point 960, 580);
 
 const within = (t: number, a: number, z: number) => t >= a && t < z;
 export const drawFurniture = (hud: HTMLElement, t: number, opts: {hideAll?: boolean} = {}) => {

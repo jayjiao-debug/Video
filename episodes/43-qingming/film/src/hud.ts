@@ -24,7 +24,7 @@ const markup = (s: string, n: number, ctr: boolean, redOn: (group: number) => bo
 		if (ch === '[') { red = true; grp++; continue; } if (ch === ']') { red = false; continue; }
 		const o = clamp01(n - i); let pull = ctr && i === lastVis && PUNCT.includes(ch) ? 'margin-right:-0.5em;' : '';
 		if ('”’」』）'.includes(prev) && '。，！？；：、'.includes(ch)) pull += 'margin-left:-0.45em;';      // 」。 / ”。: no full-width gap between the two marks
-		out += `<span style="opacity:${o.toFixed(3)};${red && redOn(grp) ? `color:${RED};` : ''}${pull}">${ch}</span>`; i++; prev = ch;
+		out += `<span${red && redOn(grp) ? ' class="k"' : ''} style="opacity:${o.toFixed(3)};${pull}">${ch}</span>`; i++; prev = ch;
 	}
 	return out;
 };
@@ -90,7 +90,7 @@ export const tally = (hud: HTMLElement, outN: number, inN: number, o = 1, flash 
 /** a mid-band label with a feathered scrim */
 export const label = (hud: HTMLElement, x: number, y: number, text: string, o: number) => {
 	if (o <= 0) return;
-	html(hud, `<div style="position:absolute;left:${x - 40}px;top:${y - 36}px;width:${text.length * 46 + 80}px;height:72px;background:rgba(14,10,8,.5);filter:blur(22px);opacity:${o}"></div><div class="lbl sh" style="left:${x}px;top:${y - 30}px;opacity:${o}">${text}</div>`);
+	html(hud, `<div style="position:absolute;left:${x - 40}px;top:${y - 36}px;width:${text.length * 60 + 80}px;height:84px;background:rgba(14,10,8,.5);filter:blur(22px);opacity:${o}"></div><div class="lbl sh" style="left:${x}px;top:${y - 30}px;opacity:${o};font-size:58px">${text}</div>`);
 };
 /** the title in ink, centred on the silk band (band drawn in three.js) */
 export const titleInk = (hud: HTMLElement, o: number, sink = 0, cy = 540) => {

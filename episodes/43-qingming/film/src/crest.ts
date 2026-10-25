@@ -82,7 +82,7 @@ export class Crest {
 		const archSvg = svgDoc(`<g transform="translate(${2400 - CX},${-300})">${hongqiao(CX, YTOP, HS, YEND)}</g>`, 4800, 1600);
 		st.add('arch', canvasTex(await svgToCanvas(archSvg, 4800, 1600, 0.75)), CX, 300 + 800, 4800, 1600, 0, {rim: 0.45, rimPx: 6});
 		// near railing (in front of the figures), lantern hooks on alternate posts
-		const rl = railing(CX, YTOP + 6, HS, YEND, 150, 116);
+		const rl = railing(CX, YTOP + 6, HS, YEND, 240, 116);   // waist-high on a 560 px figure (logic check: was knee-high)
 		this.posts = rl.posts.filter((_, i) => i % 2 === 0);
 		const railSvg = svgDoc(`<g transform="translate(${2400 - CX},${-300})">${rl.svg}</g>`, 4800, 1600);
 		st.add('rail', canvasTex(await svgToCanvas(railSvg, 4800, 1600, 0.75)), CX, 300 + 800, 4800, 1600, 40, {rim: 0.5, rimPx: 5});

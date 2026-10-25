@@ -1,0 +1,8 @@
+out/*.mp4
+out/intermediate/
+audio/*.wav
+review_v2/frames/
+review_v2/*.npy
+review*/frames/
+review_v2/*.png
+review_v2/*.jpg

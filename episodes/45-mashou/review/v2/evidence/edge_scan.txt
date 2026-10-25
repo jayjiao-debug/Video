@@ -1,0 +1,7 @@
+Edge scan, ep45_film_v2_review.mp4, 4 fps (617 frames), plus 30 fps re-scans of 109.0-110.6 and 135.8-138.1.
+Exposed canvas = a border column/row where >=85 % of pixels match the canvas navy #22374A (+/-8). Script: edge_scan.py.
+
+Result: 0 px exposed canvas.
+- 109.83-109.93 (4 frames, top 24-48 px) matched navy. Checked on the frame: it's the H1a night sky (RGB ~38,51,76), a smooth gradient that continues inward with no edge. False positive.
+- "Flat band" leads (not navy): 17.75 bottom 88 = rewind tracking band; 136.3-137.8 left/right 56-128 = the dark vignette behind the ear close-up; 153.5-154.0 = end-card fade. All intended.
+v1 for comparison: about 54 s exposed, up to 216 px.

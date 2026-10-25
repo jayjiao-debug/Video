@@ -174,18 +174,37 @@ const compMat = new THREE.ShaderMaterial({
 	uniforms: {
 		A: {value: null}, B: {value: null}, Ag0: {value: null}, Ag1: {value: null}, Ag2: {value: null}, Ag3: {value: null}, Bg0: {value: null}, Bg1: {value: null}, Bg2: {value: null}, Bg3: {value: null},
 		bloomA: {value: 1}, bloomB: {value: 1}, blurA: {value: 0}, mode: {value: 0}, k: {value: 0}, dir: {value: new THREE.Vector2(1, 0)}, pt: {value: new THREE.Vector2(0.5, 0.5)}, soft: {value: 0.04}, band: {value: 0.18},
-		exposure: {value: 1}, corners: {value: 0}, cband: {value: new THREE.Vector4(0, 305, 520, 1)}, ctop: {value: 1}, pool: {value: new THREE.Vector4(960, 540, 600, 0)}, vig: {value: 0.35}, vigCol: {value: hex('#120c08')}, lift: {value: 0}, tint: {value: hex('#ffffff')}, grain: {value: 0}, time: {value: 0}, flash: {value: 0},
+		exposure: {value: 1}, corners: {value: 0}, cband: {value: new THREE.Vector4(0, 305, 520, 1)}, ctop: {value: 1}, pool: {value: new THREE.Vector4(960, 540, 600, 0)}, vig: {value: 0.35}, vigCol: {value: hex('#120c08')}, lift: {value: 0}, tint: {value: hex('#ffffff')}, post: {value: 0},
+		aexposure: {value: 1}, acorners: {value: 0}, acband: {value: new THREE.Vector4(0, 305, 520, 1)}, actop: {value: 1}, apool: {value: new THREE.Vector4(960, 540, 600, 0)}, avig: {value: 0.35}, avigCol: {value: hex('#120c08')}, alift: {value: 0}, atint: {value: hex('#ffffff')}, grain: {value: 0}, time: {value: 0}, flash: {value: 0},
 	},
 	vertexShader: QUAD_VS, depthTest: false, depthWrite: false,
 	fragmentShader: `
-	uniform sampler2D A, B, Ag0, Ag1, Ag2, Ag3, Bg0, Bg1, Bg2, Bg3; uniform float bloomA, bloomB, blurA, k, soft, band, exposure, corners, ctop, vig, lift, grain, time, flash; uniform vec4 cband, pool; uniform int mode;
+	uniform sampler2D A, B, Ag0, Ag1, Ag2, Ag3, Bg0, Bg1, Bg2, Bg3; uniform float bloomA, bloomB, blurA, k, soft, band, exposure, corners, ctop, vig, lift, grain, time, flash, post; uniform vec4 cband, pool; uniform int mode;
 	uniform vec2 dir, pt; uniform vec3 vigCol, tint; varying vec2 vUv;
+	uniform float aexposure, acorners, actop, avig, alift; uniform vec4 acband, apool; uniform vec3 avigCol, atint;
 	float h21(vec2 p){ return fract(sin(dot(p, vec2(127.1, 311.7))) * 43758.5453); }
 	float n2(vec2 p){ vec2 i = floor(p), f = fract(p); f = f*f*(3.0-2.0*f); return mix(mix(h21(i), h21(i+vec2(1,0)), f.x), mix(h21(i+vec2(0,1)), h21(i+vec2(1,1)), f.x), f.y); }
 	float fbm(vec2 p){ float s = 0.0, a = 0.5; for (int i = 0; i < 5; i++){ s += a * n2(p); p *= 2.03; a *= 0.5; } return s; }
 	vec3 bl(sampler2D g0, sampler2D g1, sampler2D g2, sampler2D g3, vec2 uv){ return (texture2D(g0, uv).rgb * 0.35 + texture2D(g1, uv).rgb * 0.45 + texture2D(g2, uv).rgb * 0.6 + texture2D(g3, uv).rgb * 0.75) * 0.5; }
-	vec3 sideA(vec2 uv){ return texture2D(A, uv).rgb + bl(Ag0, Ag1, Ag2, Ag3, uv) * bloomA; }
-	vec3 sideB(vec2 uv){ return texture2D(B, uv).rgb + bl(Bg0, Bg1, Bg2, Bg3, uv) * bloomB; }
+	// the grade (exposure, tint, lift, vignette, lamplight bands, lamplit pool), applied per side so a transition mixes two graded pictures
+	vec3 gradeF(vec3 col, vec2 uv, float exposure, vec3 tint, float lift, float vig, vec3 vigCol, float corners, vec4 cband, float ctop, vec4 pool){
+		col *= exposure * tint; col += lift;
+		float v = length((uv - 0.5) * vec2(1.0, 0.85)); col = mix(col, vigCol, smoothstep(0.45, 1.05, v) * vig);
+		if (corners > 0.0) { // lamplight insert: warm dark (≤ #4A3B2C) under the top band (subtitle, mark, stamp) and the lower-left band (chip, tally)
+			vec2 p = vec2(uv.x * 1920.0, (1.0 - uv.y) * 1080.0);
+			float top = (1.0 - smoothstep(cband.y, cband.z, p.y)) * step(cband.x, p.y) * ctop;          // cband: skip-top px, full-to, clear-by, lower-band weight
+			float bot = smoothstep(760.0, 905.0, p.y) * (1.0 - smoothstep(1150.0, 1650.0, p.x)) * cband.w;
+			float m = clamp(max(top, bot), 0.0, 1.0) * corners;
+			col = mix(col, col * 0.03 + vec3(0.042, 0.027, 0.015), m);
+		}
+		if (pool.w > 0.0) { // a lamplit pool centred on (pool.x, pool.y) px, radius pool.z
+			vec2 p2 = vec2(uv.x * 1920.0, (1.0 - uv.y) * 1080.0); float d = length((p2 - pool.xy) / vec2(pool.z * 1.3, pool.z));
+			col = mix(col, col * 0.06 + vec3(0.042, 0.027, 0.015), smoothstep(0.55, 1.25, d) * pool.w);
+		}
+		return col;
+	}
+	vec3 sideA(vec2 uv){ return gradeF(texture2D(A, uv).rgb + bl(Ag0, Ag1, Ag2, Ag3, uv) * bloomA, uv, aexposure, atint, alift, avig, avigCol, acorners, acband, actop, apool); }
+	vec3 sideB(vec2 uv){ return gradeF(texture2D(B, uv).rgb + bl(Bg0, Bg1, Bg2, Bg3, uv) * bloomB, uv, exposure, tint, lift, vig, vigCol, corners, cband, ctop, pool); }
 	void main(){
 		vec2 uv = vUv; vec3 col;
 		if (mode == 0) col = sideA(uv);
@@ -233,21 +252,8 @@ const compMat = new THREE.ShaderMaterial({
 			a /= n; vec4 b = texture2D(B, uv); col = mix(a, b.rgb / max(b.a, 0.001), clamp(b.a, 0.0, 1.0)) + bl(Bg0, Bg1, Bg2, Bg3, uv) * bloomB;
 		}
 		else { col = k < 0.5 ? sideA(uv) : sideB(uv); }
-		col *= exposure * tint; col += lift;
+		if (post > 0.5) col = gradeF(col, uv, exposure, tint, lift, vig, vigCol, corners, cband, ctop, pool);   // mode 13: the overlay is graded as a whole
 		col += vec3(1.0, 0.86, 0.6) * flash;
-		float v = length((uv - 0.5) * vec2(1.0, 0.85)); col = mix(col, vigCol, smoothstep(0.45, 1.05, v) * vig);
-		if (corners > 0.0) { // lamplight insert: the light pools on the middle of the silk and falls to warm dark (≤ #4A3B2C) under the
-			// top band (subtitle, mark, stamp) and the lower-left band (chip, counter, tally); vertical falloff, no box edges
-			vec2 p = vec2(uv.x * 1920.0, (1.0 - uv.y) * 1080.0);
-			float top = (1.0 - smoothstep(cband.y, cband.z, p.y)) * step(cband.x, p.y) * ctop;          // cband: skip-top px (a mount band stays itself), full-to, clear-by, lower-band weight
-			float bot = smoothstep(760.0, 905.0, p.y) * (1.0 - smoothstep(1150.0, 1650.0, p.x)) * cband.w;
-			float m = clamp(max(top, bot), 0.0, 1.0) * corners;
-			col = mix(col, col * 0.03 + vec3(0.042, 0.027, 0.015), m);
-		}
-		if (pool.w > 0.0) { // a lamplit pool: light centred on (pool.x, pool.y) px, radius pool.z, falling to warm dark outside it
-			vec2 p2 = vec2(uv.x * 1920.0, (1.0 - uv.y) * 1080.0); float d = length((p2 - pool.xy) / vec2(pool.z * 1.3, pool.z));
-			col = mix(col, col * 0.06 + vec3(0.042, 0.027, 0.015), smoothstep(0.55, 1.25, d) * pool.w);
-		}
 		col += (h21(uv * 1920.0 + time) - 0.5) * grain;
 		gl_FragColor = vec4(col, 1.0);
 		#include <colorspace_fragment>
@@ -255,7 +261,7 @@ const compMat = new THREE.ShaderMaterial({
 });
 export type Grade = {exposure?: number; corners?: number; cornersBand?: [number, number, number, number]; cornersTop?: number; pool?: [number, number, number, number]; vig?: number; vigCol?: string; lift?: number; tint?: string; grain?: number; flash?: number};
 /** composite slot 0 (A) and optionally slot 1 (B) to the screen */
-export const composite = (x: Xf, g: Grade = {}, t = 0, bloomA = 1, bloomB = 1) => {
+export const composite = (x: Xf, g: Grade = {}, t = 0, bloomA = 1, bloomB = 1, gA?: Grade) => {
 	if ((window as any).NODRAW) return;
 	const u = compMat.uniforms, a = slots[0], b = slots[1];
 	u.A.value = a.base.texture; u.B.value = b.base.texture;
@@ -263,6 +269,12 @@ export const composite = (x: Xf, g: Grade = {}, t = 0, bloomA = 1, bloomB = 1) =
 	u.bloomA.value = bloomA; u.bloomB.value = bloomB; u.blurA.value = x.blurA ?? 0; u.mode.value = x.mode; u.k.value = x.k;
 	if (x.dir) u.dir.value.set(x.dir[0], x.dir[1]); if (x.pt) u.pt.value.set(x.pt[0], x.pt[1]); u.soft.value = x.soft ?? 0.04; u.band.value = x.band ?? 0.18;
 	u.exposure.value = g.exposure ?? 1; u.corners.value = g.corners ?? 0; u.cband.value.set(...(g.cornersBand ?? [0, 305, 520, 1])); u.ctop.value = g.cornersTop ?? 1; u.pool.value.set(...(g.pool ?? [960, 540, 600, 0])); u.vig.value = g.vig ?? 0.35; u.vigCol.value.set(g.vigCol ?? '#120c08'); u.lift.value = g.lift ?? 0; u.tint.value.set(g.tint ?? '#ffffff');
+	// side A's own grade: mode 0 shows A with this scene's grade; a transition passes the outgoing scene's; mode 13 grades the mix afterwards
+	const post = x.mode === 13, a2: Grade = post ? {vig: 0} : (gA ?? g); u.post.value = post ? 1 : 0;
+	if (x.mode !== 0 && !post) { /* B = g (incoming), A = gA (outgoing) */ } else if (x.mode === 0) { /* A only, graded with g */ }
+	u.aexposure.value = a2.exposure ?? 1; u.acorners.value = a2.corners ?? 0; u.acband.value.set(...(a2.cornersBand ?? [0, 305, 520, 1])); u.actop.value = a2.cornersTop ?? 1; u.apool.value.set(...(a2.pool ?? [960, 540, 600, 0]));
+	u.avig.value = a2.vig ?? 0.35; u.avigCol.value.set(a2.vigCol ?? '#120c08'); u.alift.value = a2.lift ?? 0; u.atint.value.set(a2.tint ?? '#ffffff');
+	if (post) { /* B's own side must not be graded twice: B is read raw in mode 13 */ }
 	u.grain.value = g.grain ?? 0; u.flash.value = g.flash ?? 0; u.time.value = t;
 	runQuad(compMat, null);
 };

@@ -52,13 +52,14 @@ export const PlateGround: React.FC<{y: number; c?: string; c2?: string; edge?: s
    drawn as a coloured engraving: copper fill, shade by dark-copper hatching, thick mane locks on the near side. */
 const HEAD = 'M90,-230 C40,-226 -30,-190 -70,-140 C-120,-70 -170,10 -205,70 C-222,98 -236,128 -232,152 C-230,176 -214,190 -192,192 L-170,190 C-178,204 -174,220 -156,226 C-136,232 -112,224 -96,214 C-60,196 -20,196 10,206 C70,224 122,214 142,178 C160,200 172,226 178,254 L384,254 C384,150 352,40 292,-50 C240,-128 170,-206 122,-226 C110,-232 100,-232 90,-230 Z';
 const EAR_FAR = 'M104,-222 C100,-284 116,-334 138,-366 C156,-326 158,-268 146,-206 Z';
-const EAR_NEAR = (curl: number) => `M50,-226 C34,-290 40,-346 58,-384 C${76 + curl * 26},${-350 + curl * 46} ${96 + curl * 12},${-296 + curl * 24} 96,-232 Z`;
+const EAR_NEAR = (curl: number) => curl > 0.5 ? 'M50,-226 C42,-262 44,-296 48,-318 C40,-324 26,-322 10,-318 C18,-342 42,-360 66,-358 C88,-356 100,-340 98,-320 C96,-292 98,-262 96,-232 Z'
+	: 'M50,-226 C34,-290 40,-346 58,-384 C76,-350 96,-296 96,-232 Z';
 /** mane locks along the crest (near side), poll → withers */
 const CREST = (u: number): [number, number] => { const x = 112 + (384 - 112) * Math.pow(u, 0.9), y = -228 + 470 * Math.pow(u, 1.15) - 70 * Math.sin(u * Math.PI); return [x - 22 * Math.sin(u * Math.PI), y]; };
 const LOCKS = Array.from({length: 34}, (_, i) => { const u = 0.02 + i * 0.028, [x, y] = CREST(u), L = 110 + 50 * rnd(i, 4), bend = 26 + 22 * rnd(i, 5), wv = 10 + 8 * rnd(i, 6), wd = 9 + 5 * rnd(i, 7);
 	return {d: `M${x + wd},${y - 10} C${x - 10},${y + L * 0.3} ${x - bend - wv},${y + L * 0.55} ${x - bend * 0.5},${y + L} C${x - bend * 0.4 + wd * 0.6},${y + L * 0.62} ${x + wd * 1.2 - wv},${y + L * 0.32} ${x + wd * 2},${y - 6} Z`,
 		lines: [0.5].map(() => `M${x + wd},${y - 6} C${x - 4},${y + L * 0.3} ${x - bend - wv * 0.6},${y + L * 0.58} ${x - bend * 0.48},${y + L * 0.96}`)}; });
-export const HorseHead: React.FC<{x: number; y: number; s: number; id: string; glow?: number; curl?: number; spout?: number; flip?: boolean; o?: number; flicker?: number; metal?: number; lx?: number; ly?: number}> = ({x, y, s, id, glow = 1, curl = 0, spout = 0, flip, o = 1, flicker = 0, metal = 1, lx = -420, ly = -620}) =>
+export const HorseHead: React.FC<{x: number; y: number; s: number; id: string; glow?: number; curl?: number; spout?: number; flip?: boolean; o?: number; flicker?: number; metal?: number; lx?: number; ly?: number}> = ({x, y, s, id, glow = 1, curl = 1, spout = 0, flip, o = 1, flicker = 0, metal = 1, lx = -420, ly = -620}) =>
 	<g transform={`translate(${x},${y}) scale(${flip ? -s : s},${s})`} opacity={o}>
 		<defs>
 			<linearGradient id={`${id}cu`} x1="0.05" y1="0.0" x2="0.8" y2="1"><stop offset="0" stopColor={CU.hi} /><stop offset="0.3" stopColor={CU.mid} /><stop offset="0.72" stopColor={CU.deep} /><stop offset="1" stopColor={CU.dark} /></linearGradient>
@@ -103,7 +104,10 @@ export const HorseHead: React.FC<{x: number; y: number; s: number; id: string; g
 		<path d="M80,-226 C62,-200 48,-180 34,-160 M96,-228 C88,-200 80,-176 74,-150" stroke={CU.dark} strokeWidth={1.6} fill="none" opacity={0.6} />
 		{/* near ear */}
 		<path d={EAR_NEAR(curl)} fill={`url(#${id}cu)`} stroke={CU.dark} strokeWidth={3} />
-		<path d="M62,-240 C58,-292 62,-332 66,-356" stroke={CU.dark} strokeWidth={3} fill="none" opacity={0.55} />
+		{curl > 0.5 ? <><path d="M62,-240 C58,-278 60,-300 62,-316" stroke={CU.dark} strokeWidth={3} fill="none" opacity={0.55} />
+			<path d="M48,-318 C40,-324 26,-322 10,-318 C22,-310 38,-308 50,-308 Z" fill={CU.dark} opacity={0.6} />
+			<path d="M46,-322 C60,-338 82,-342 96,-328" stroke={CU.dark} strokeWidth={4} fill="none" strokeLinecap="round" /></>
+			: <path d="M62,-240 C58,-292 62,-332 66,-356" stroke={CU.dark} strokeWidth={3} fill="none" opacity={0.55} />}
 		{/* eye with its bony ridge; nostril; lips */}
 		<path d="M-62,-104 C-30,-134 12,-130 30,-104" stroke={CU.dark} strokeWidth={5} fill="none" opacity={0.75} />
 		<path d="M-50,-88 C-32,-104 -6,-104 10,-88 C-6,-76 -32,-74 -50,-88 Z" fill={CU.dark} />

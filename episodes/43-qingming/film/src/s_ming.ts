@@ -9,7 +9,7 @@ import {Stage, Live, bar, BEAT, W, H, D, clamp01, smooth, easeInOut, easeOut, ea
 import {addScene, Frame} from './film';
 import {Crest, deck} from './crest';
 import {SIL, roof, hall, skyline} from './draw';
-import {Cast, drawRoll, glowBlob, rig, drawCarriedRoll, drawFig, Contact} from './actors';
+import {Cast, drawRoll, glowBlob, rig, drawCarriedRoll, drawFig, Contact, handAt} from './actors';
 import {LOOKS, FigOpts, walkFor, gaitStride, stepFor, armsFrom, underArm, underArmRoll, fkPose, LookQ, P, toScreen as figToScreen} from './figures';
 import {paintSection, paintSeal} from './silk';
 import {camPath, solveCam, scr, BLEED_PT, Cam, careful, CAREFUL, softRoll} from './s_yuan';
@@ -29,16 +29,16 @@ const twoHands = (e0: P, e1: P, flip: boolean, name = 'roll'): Contact[] => { co
 const G18 = 905, H18 = 380;
 const lkLu = LOOKS.mingScholar, lkFriend: LookQ = {head: 'fangjin', dress: 'robe', sleeves: 'narrow', beard: 'short', build: 0.98};
 const lkTorch = LOOKS.mingOfficial;
-const DOOR = {x0: 1480, x1: 1600, y0: 470, y1: G18};      // the friend's door (opening)
+const DOOR = {x0: 1470, x1: 1660, y0: 450, y1: G18};      // the friend's door (opening)
 const GATE = {x0: 762, x1: 872};                            // 陆完's back gate
 const STR18 = CAREFUL * H18;
 const HANDX = 1235, FRX = 1385;                             // where 陆完 stops for the hand-over; where the friend waits
 let lane: Stage, cast18: Cast, roll18: Live, glow18: Live, door18: Live, torch18: Live, torchFigs: Cast;
-const luX = (t: number) => Math.min(HANDX, 820 + ((t - b(29.25)) / (2 * BEAT)) * STR18);
+const luX = (t: number) => Math.min(HANDX, 875 + ((t - b(29.25)) / (2 * BEAT)) * STR18);
 const fr18 = (t: number) => {
 	// the friend: waits facing left; holds the roll from b30.0; turns at b30.2 and steps into his door (quicker steps)
 	if (t < b(30.2)) return {x: FRX, flip: true, walk: false, u: 0};
-	const u = (t - b(30.2)) / (1.5 * BEAT); return {x: FRX + u * STR18, flip: false, walk: true, u};
+	const u = (t - b(30.2)) / (1.2 * BEAT); return {x: FRX + u * STR18, flip: false, walk: true, u};
 };
 const scene18Cast = (t: number) => {
 	const lx = luX(t), lw = lx < HANDX - 0.5, ul = (t - b(29.25)) / (2 * BEAT);
@@ -47,25 +47,25 @@ const scene18Cast = (t: number) => {
 	// the roll: in 陆完's hands → both men's hands (b29.95 → b30.12) → the friend's chest
 	let rc = luC.rc, e0 = luC.e0, e1 = luC.e1;
 	const fc = carry2(F.x, G18, H18, F.flip);
-	if (t >= b(29.95)) { const k = smooth(clamp01((t - b(29.95)) / (b(30.12) - b(29.95)))); const mid = luC.rc; rc = F.walk ? fc.rc : [lerp(mid[0], fc.rc[0], k), lerp(mid[1], fc.rc[1], k)]; e0 = [rc[0] - 0.11 * H18, rc[1] + 3]; e1 = [rc[0] + 0.11 * H18, rc[1] - 3]; }
-	const luContacts: Contact[] = t < b(30.12) ? [{side: 'L', target: [e0[0] + 26, e0[1] + 9], name: 'roll'}, {side: 'R', target: [e0[0] + 8, e0[1] + 9], name: 'roll end'}] : [];
+	if (t >= b(30.0)) { const k = smooth(clamp01((t - b(30.0)) / (b(30.15) - b(30.0)))); const mid = luC.rc; rc = F.walk ? fc.rc : [lerp(mid[0], fc.rc[0], k), lerp(mid[1], fc.rc[1], k)]; e0 = [rc[0] - 0.11 * H18, rc[1] + 3]; e1 = [rc[0] + 0.11 * H18, rc[1] - 3]; }
+	const luContacts: Contact[] = t < b(30.15) ? [{side: 'L', target: [e0[0] + 26, e0[1] + 9], name: 'roll'}, {side: 'R', target: [e0[0] + 8, e0[1] + 9], name: 'roll end'}] : [];
 	const lu = rig({x: lx, ground: G18, h: H18, pose: lw ? careful(ul) : fkPose({hip: 0.655, lean: 5, neck: 4, lt: 2, lk: 2, rt: -3, rk: 3, la: 4, le: 18, ra: 6, re: 22}), look: lkLu}, luContacts, () => G18, 'lu-wan');
 	let frC: Contact[] = [];
-	if (t >= b(30.0) && t < b(30.12)) frC = [{side: 'L', target: [e1[0] - 22, e1[1] + 9], name: 'roll'}, {side: 'R', target: [e1[0] - 6, e1[1] + 9], name: 'roll end'}];
-	else if (t >= b(30.12)) frC = twoHands(e0, e1, F.flip);
+	if (t >= b(29.9) && t < b(30.15)) frC = [{side: 'L', target: [e1[0] - 22, e1[1] + 9], name: 'roll'}, {side: 'R', target: [e1[0] - 6, e1[1] + 9], name: 'roll end'}];
+	else if (t >= b(30.15)) frC = twoHands(e0, e1, F.flip);
 	const fpose = F.walk ? careful(F.u * H18 / (H18 - 6) + 0.1) : fkPose({hip: 0.655, lean: 6 + 4 * give, neck: 4, lt: 2, lk: 2, rt: -3, rk: 3, la: 4, le: 16, ra: 6, re: 20});
 	const fr = rig({x: F.x, ground: G18, h: H18 - 6, pose: fpose, look: lkFriend, flip: F.flip}, frC, () => G18, 'friend');
 	return {lu, fr, rc, e0, e1};
 };
-const doorK = (t: number) => smooth(clamp01((t - b(30.42)) / (b(30.52) - b(30.42))));
-const K18: Key[] = [[b(29.25), 960, -150, 1.0], [b(29.85), 990, 560, 1.0], [b(30.75), 1070, 572, 1.06], [b(31.2), 1540, 690, 1.75]];
+const doorK = (t: number) => smooth(clamp01((t - b(30.44)) / (b(30.54) - b(30.44))));
+const K18: Key[] = [[b(29.25), 960, -150, 1.0], [b(29.85), 990, 615, 1.0], [b(30.75), 1070, 630, 1.06], [b(31.2), 1565, 690, 1.75]];
 export const d18 = (t: number): Frame => {
 	const st = lane, [cx, cy, zm] = camPath(t, K18); st.setCam(cx, cy, zm);
 	const fk = `${Math.round(t * 30)}`, c = scene18Cast(t);
 	const clipX = DOOR.x1 - 2;            // whoever goes through the friend's door passes behind its right jamb
 	cast18.L.drawW(fk, (g) => { drawFig(g, c.lu); g.save(); g.beginPath(); g.rect(-2000, -2000, clipX + 2000, 6000); g.clip(); drawFig(g, c.fr); g.restore(); });
 	const inside = clamp01((c.rc[0] - DOOR.x0 - 20) / 50);
-	roll18.drawW(fk, (g) => { g.save(); g.beginPath(); g.rect(-2000, -2000, clipX + 2000, 6000); g.clip(); glowBlob(g, c.rc, 120, 80, 0.4); softRoll(g, c.e0, c.e1, 11);
+	roll18.drawW(fk, (g) => { g.save(); g.beginPath(); g.rect(-2000, -2000, clipX + 2000, 6000); g.clip(); glowBlob(g, c.rc, 140, 95, 0.55); softRoll(g, c.e0, c.e1, 11);
 		drawFig(g, {...c.fr, part: 'L'}); if (t < b(30.12)) drawFig(g, {...c.lu, part: 'L'}); g.restore(); });
 	// the friend's door: your light inside, the leaves swing shut, a sliver under the door until b30.75
 	const dk = doorK(t), sliver = t < b(30.5) ? 1 : 1 - smooth(clamp01((t - b(30.5)) / (b(30.75) - b(30.5))));
@@ -75,6 +75,8 @@ export const d18 = (t: number): Frame => {
 			g.fillStyle = 'rgba(0,0,0,0.35)'; for (let i = 1; i < 4; i++) g.fillRect(x0 + (w * i) / 4, DOOR.y0 + 4, 1.4, DOOR.y1 - DOOR.y0 - 10); }
 	});
 	glow18.drawW(`${fk}`, (g) => {
+		if (dk < 1) { const gap = (DOOR.x1 - DOOR.x0) * (1 - dk), cx = (DOOR.x0 + DOOR.x1) / 2; g.save(); g.beginPath(); g.rect(cx - gap / 2, DOOR.y0, gap, DOOR.y1 - DOOR.y0); g.clip();   // the friend's lamp inside
+			g.fillStyle = 'rgba(120,80,40,0.35)'; g.fillRect(DOOR.x0, DOOR.y0, DOOR.x1 - DOOR.x0, DOOR.y1 - DOOR.y0); glowBlob(g, [cx + 30, 600], 70, 60, 0.35, '255,184,104'); g.fillStyle = '#FFC98A'; g.beginPath(); g.ellipse(cx + 30, 600, 4, 7, 0, 0, Math.PI * 2); g.fill(); g.restore(); }
 		const lit = inside * (t < b(30.52) ? 1 : sliver);
 		if (dk < 1 && lit > 0) { const gap = (DOOR.x1 - DOOR.x0) * (1 - dk); g.save(); g.beginPath(); g.rect((DOOR.x0 + DOOR.x1) / 2 - gap / 2, DOOR.y0, gap, DOOR.y1 - DOOR.y0); g.clip();
 			const gr = g.createLinearGradient(0, DOOR.y0, 0, DOOR.y1); gr.addColorStop(0, `rgba(255,200,130,${(0.18 * lit).toFixed(3)})`); gr.addColorStop(1, `rgba(255,210,140,${(0.55 * lit).toFixed(3)})`); g.fillStyle = gr; g.fillRect(DOOR.x0, DOOR.y0, DOOR.x1 - DOOR.x0, DOOR.y1 - DOOR.y0); g.restore(); }
@@ -82,7 +84,7 @@ export const d18 = (t: number): Frame => {
 	});
 	// torches at the front gate (left): flicker
 	const fl = (i: number) => 0.85 + 0.15 * Math.sin(t * 13 + i * 2.1) * Math.sin(t * 7.3 + i);
-	torch18.drawW(`${Math.round(t * 15)}`, (g) => { for (const [x, y, r, i] of TORCH_GLOW) glowBlob(g, [x, y], r, r * 0.7, 0.34 * fl(i), '255,170,90'); for (const f of TORCHES) { const [x, y] = f; g.fillStyle = `rgba(255,${190 + 30 * fl(x)},110,0.95)`; g.beginPath(); g.ellipse(x, y - 9, 6, 12 * fl(x), 0, 0, Math.PI * 2); g.fill(); glowBlob(g, [x, y - 8], 26, 30, 0.7 * fl(x), '255,190,110'); } });
+	torch18.drawW(`${Math.round(t * 15)}`, (g) => { for (const [x, y, r, i] of TORCH_GLOW) glowBlob(g, [x, y], r, r * 0.7, 0.2 * fl(i), '255,170,90'); for (const f of TORCHES) { const [x, y] = f; g.fillStyle = `rgba(255,${190 + 30 * fl(x)},110,0.95)`; g.beginPath(); g.ellipse(x, y - 9, 6, 12 * fl(x), 0, 0, Math.PI * 2); g.fill(); glowBlob(g, [x, y - 8], 22, 26, 0.45 * fl(x), '255,190,110'); } });
 	st.heroAt(c.rc[0], c.rc[1], -150, 560);
 	return {st, grade: {vig: 0.36, vigCol: '#0b1013', exposure: 1}, bloom: 1};
 };
@@ -132,18 +134,18 @@ const lkF1: LookQ = {head: 'fangjin', dress: 'robe', sleeves: 'wide', beard: 'sh
 const lkOff = LOOKS.mingOfficial;
 let hallSt: Stage, c1: Cast, c2: Cast, c3: Cast, box1: Live, box2: Live, box3: Live, leaves19: Live, strips19: Live, lamps19: Live, offs: Cast;
 /** the camera distance d (= D / zoom) per beat: through the moon gate, through the vase gate, at the hall door, back out */
-const K19: Key[] = [[b(31) - 0.2, 960, 560, D / 1760], [b(31), 960, 562, D / 1590], [b(31.33), 960, 585, D / 1185], [b(31.5), 960, 600, D / 1150], [b(31.83), 960, 625, D / 785], [b(32), 960, 636, D / 742], [b(32.4), 960, 640, D / 690], [b(32.55), 960, 640, D / 690], [b(33), 960, 640, D / 1000]];
+const K19: Key[] = [[b(31) - 0.2, 960, 560, D / 1760], [b(31), 960, 562, D / 1590], [b(31.33), 960, 585, D / 1185], [b(31.5), 960, 600, D / 1150], [b(31.83), 960, 625, D / 785], [b(32), 960, 636, D / 742], [b(32.4), 960, 640, D / 690], [b(32.55), 960, 640, D / 690], [b(33), 960, 588, D / 1000]];
 /** the box: oxblood lacquer, your light at its seam */
 const drawBox = (g: CanvasRenderingContext2D, c: P, w: number, h: number) => {
 	g.fillStyle = '#6A2E24'; g.beginPath(); g.roundRect(c[0] - w / 2, c[1] - h / 2, w, h, w * 0.06); g.fill();
 	g.fillStyle = '#4e2019'; g.fillRect(c[0] - w / 2, c[1] - h / 2, w, h * 0.12);
 	g.fillStyle = '#FFE2A8'; g.fillRect(c[0] - w / 2 + 2, c[1] - h * 0.18, w - 4, Math.max(1.2, h * 0.05));
 };
-const boxGlow = (g: CanvasRenderingContext2D, c: P, w: number, h: number, a = 0.5) => { glowBlob(g, [c[0], c[1] - h * 0.16], w * 0.9, h * 0.45, a); };
+const boxGlow = (g: CanvasRenderingContext2D, c: P, w: number, h: number, a = 0.68) => { glowBlob(g, [c[0], c[1] - h * 0.16], w * 0.9, h * 0.45, a); };
 /** a figure carrying the box at the chest, both hands on it, walking right across a doorway */
 const boxCarrier = (x: number, gr: number, h: number, look: LookQ, u: number, who: string) => {
-	const bw = 0.22 * h, bh = 0.14 * h, bc: P = [x + 0.15 * h, gr - 0.62 * h];
-	const f = rig({x, ground: gr, h, pose: careful(u), look}, [{side: 'L', target: [bc[0] + bw / 2 - 2, bc[1] + 1], name: 'box front'}, {side: 'R', target: [bc[0] - bw * 0.15, bc[1] + bh / 2 - 1], name: 'box bottom'}], () => gr, who);
+	const bw = 0.2 * h, bh = 0.13 * h, bc: P = [x + 0.12 * h, gr - 0.6 * h];
+	const f = rig({x, ground: gr, h, pose: careful(u), look}, [{side: 'L', target: [bc[0] + bw * 0.1, bc[1] + bh / 2], name: 'under the box (front)'}, {side: 'R', target: [bc[0] - bw * 0.28, bc[1] + bh / 2], name: 'under the box (back)'}], () => gr, who);
 	return {f, bc, bw, bh};
 };
 const STR19 = (look: LookQ, h: number) => CAREFUL * h;
@@ -151,7 +153,8 @@ export const d19 = (t: number): Frame => {
 	const st = hallSt, [cx, cy, zm] = camPath(t, K19); st.setCam(cx, cy, zm);
 	const fk = `${Math.round(t * 30)}`;
 	// doorway 1 (moon gate): b30.8 → b31.4
-	{ const h = 300, u = (t - (b(31) - 0.4)) / (2 * BEAT), x = 790 + u * STR19(lkF1, h), r = boxCarrier(x, MOON.y + MOON.r, h, lkF1, u, 'box-carrier-1');
+	if (t > b(31.28)) { c1.draw('gone', []); box1.drawW('gone', () => {}); }   // the camera is through the moon gate: he is behind us
+	else { const h = 300, u = (t - (b(31) - 0.4)) / (2 * BEAT), x = 790 + u * STR19(lkF1, h), r = boxCarrier(x, MOON.y + MOON.r, h, lkF1, u, 'box-carrier-1');
 		c1.draw(fk, [r.f]); box1.drawW(fk, (g) => { boxGlow(g, r.bc, r.bw, r.bh); drawBox(g, r.bc, r.bw, r.bh); drawFig(g, {...r.f, part: 'L'}); }); }
 	// doorway 2 (vase gate): b31.2 → b31.9
 	{ const h = 168, u = (t - b(31.2)) / (2 * BEAT), x = 880 + u * STR19(lkF2, h), r = boxCarrier(x, VASE_Y1, h, lkF2, u, 'box-carrier-2');
@@ -168,28 +171,37 @@ export const d19 = (t: number): Frame => {
 	leaves19.drawW(`${shut.toFixed(3)}`, (g) => { const lw = (HD.x1 - HD.x0) / 2, w = lerp(5, lw, shut); for (const [hx, s] of [[HD.x0, 1], [HD.x1, -1]] as [number, number][]) { const x0 = s > 0 ? hx : hx - w;
 		g.fillStyle = '#2a1d16'; g.fillRect(x0, HD.y0 + 1, w, HD.y1 - HD.y0 - 2); g.fillStyle = 'rgba(0,0,0,0.3)'; for (let i = 1; i < 3; i++) g.fillRect(x0 + (w * i) / 3, HD.y0 + 2, 0.8, HD.y1 - HD.y0 - 4);
 		g.fillStyle = 'rgba(214,170,110,0.5)'; g.beginPath(); g.arc(x0 + (s > 0 ? w - 7 : 7), (HD.y0 + HD.y1) / 2, 2.6 * (w / lw), 0, Math.PI * 2); g.fill(); } });
-	const X = stripX(), shake = slap && t < b(32.5) + 0.07 ? (Math.round((t - b(32.5)) * 60) % 2 ? 1.2 : -1.2) : 0;
-	strips19.drawW(`${slap}:${shake}:${raise.toFixed(2)}`, (g) => {
-		if (slap) { const sc = 1 + 0.06 * Math.exp(-(t - b(32.5)) * 30); g.save(); g.translate(X.c[0] + shake, X.c[1]); g.scale(sc, sc); g.translate(-X.c[0], -X.c[1]);
-			for (const [a, c] of [[X.a0, X.a1], [X.b0, X.b1]] as [P, P][]) { g.strokeStyle = '#E4DCC6'; g.lineWidth = 9; g.lineCap = 'butt'; g.beginPath(); g.moveTo(a[0], a[1]); g.lineTo(c[0], c[1]); g.stroke(); g.strokeStyle = 'rgba(120,110,90,0.35)'; g.lineWidth = 1; g.stroke(); }
-			g.restore(); }
+	// the officials: step in and push the leaves shut (b32.02 → b32.25), turn and step back out to the jambs, face the door
+	// again with a long strip each; each lays his strip on with his hand on it (O1 on b32.5, O2 two frames later)
+	const X = stripX(), S1 = b(32.5), S2 = b(32.5) + 2 / 30, slap1 = t >= S1, slap2 = t >= S2;
+	const shake = (s0: number) => (t >= s0 && t < s0 + 0.07 ? (Math.round((t - s0) * 60) % 2 ? 1.2 : -1.2) : 0);
+	strips19.drawW(`${slap1}:${slap2}:${shake(S1)}:${shake(S2)}:${raise.toFixed(2)}`, (g) => {
+		const strip = (a: P, c: P, s0: number) => { const sc = 1 + 0.06 * Math.exp(-(t - s0) * 30), sh = shake(s0); g.save(); g.translate(X.c[0] + sh, X.c[1]); g.scale(sc, sc); g.translate(-X.c[0], -X.c[1]);
+			g.strokeStyle = '#DCD3BC'; g.lineWidth = 9; g.lineCap = 'butt'; g.beginPath(); g.moveTo(a[0], a[1]); g.lineTo(c[0], c[1]); g.stroke(); g.strokeStyle = 'rgba(120,110,90,0.35)'; g.lineWidth = 1; g.stroke(); g.restore(); };
+		if (slap1) strip(X.a0, X.a1, S1); if (slap2) strip(X.b0, X.b1, S2);
 	});
-	const o1h: P = slap ? [X.a0[0] + 4, X.a0[1] + 3] : [lerp(952, X.a0[0] + 4, raise), lerp(630, X.a0[1] + 3, raise)];
-	const o2h: P = slap ? [X.b0[0] - 4, X.b0[1] + 3] : [lerp(968, X.b0[0] - 4, raise), lerp(630, X.b0[1] + 3, raise)];
 	const base = fkPose({hip: 0.655, lean: 4, neck: 2, lt: 2, lk: 2, rt: -3, rk: 3, la: 3, le: 10, ra: 4, re: 14});
-	const su = 0.5 * clamp01((t - b(32.02)) / (b(32.25) - b(32.02))), stepping = su > 0 && su < 0.5;
-	const o1x = 876 + su * CAREFUL * 132, o2x = 1044 - su * CAREFUL * 134, lwN = lerp(5, (HD.x1 - HD.x0) / 2, shut);
-	const cO1: Contact[] = t >= b(32.27) ? [{side: 'L', target: o1h, name: slap ? 'hand on the strip' : 'strip'}] : stepping ? [{side: 'L', target: [HD.x0 + lwN - 3, 630], name: 'hand on the door leaf'}] : [];
-	const cO2: Contact[] = t >= b(32.27) ? [{side: 'L', target: o2h, name: slap ? 'hand on the strip' : 'strip'}] : stepping ? [{side: 'L', target: [HD.x1 - lwN + 3, 630], name: 'hand on the door leaf'}] : [];
-	// after the slap they turn and step back to the jambs, clear of the X
-	const sb = 0.5 * clamp01((t - b(32.62)) / 0.24), away = t >= b(32.62), stepB = sb > 0 && sb < 0.5;
-	const O1 = away ? rig({x: o1x - sb * CAREFUL * 132, ground: HD.y1, h: 132, pose: stepB ? careful(sb) : base, look: lkOff, flip: true}, [], () => HD.y1, 'seal-official-1')
-		: rig({x: o1x, ground: HD.y1, h: 132, pose: stepping ? careful(su) : base, look: lkOff}, cO1, () => HD.y1, 'seal-official-1');
-	const O2 = away ? rig({x: o2x + sb * CAREFUL * 134, ground: HD.y1, h: 134, pose: stepB ? careful(sb + 0.28) : base, look: lkOff}, [], () => HD.y1, 'seal-official-2')
-		: rig({x: o2x, ground: HD.y1, h: 134, pose: stepping ? careful(su + 0.28) : base, look: lkOff, flip: true}, cO2, () => HD.y1, 'seal-official-2');
-	offs.draw(`${fk}`, t >= b(31.9) ? [O1, O2] : [], (g) => { if (!slap && raise > 0) for (const hnd of [o1h, o2h]) { g.fillStyle = '#E4DCC6'; g.fillRect(hnd[0] - 4, hnd[1], 8, 26 * raise); } });
-	lamps19.drawW('l', (g) => { for (const [x, y, r] of LAMPS19) { glowBlob(g, [x, y], r * 2.6, r * 2.6, 0.45, '255,184,104'); g.fillStyle = '#FFC98A'; g.beginPath(); g.ellipse(x, y, r * 0.55, r * 0.75, 0, 0, Math.PI * 2); g.fill(); } });
-	st.heroAt(960, 650, ZW3, 900);
+	const base2 = fkPose({hip: 0.655, lean: 6, neck: 4, lt: 3, lk: 2, rt: -4, rk: 4, la: 2, le: 14, ra: 6, re: 18});
+	const STP1 = CAREFUL * 132 * 0.5, STP2 = CAREFUL * 134 * 0.5;
+	const su = clamp01((t - b(32.02)) / (b(32.25) - b(32.02))), sb = clamp01((t - b(32.25)) / (b(32.42) - b(32.25)));
+	const lwN = lerp(5, (HD.x1 - HD.x0) / 2, shut), ready = smooth(clamp01((t - b(32.42)) / (S1 - b(32.42) - 0.02)));
+	const off = (k: 1 | 2): FigOpts => {
+		const sgn = k === 1 ? 1 : -1, x0 = k === 1 ? 876 : 1044, h = k === 1 ? 132 : 134, stp = k === 1 ? STP1 : STP2, ph = k === 1 ? 0 : 0.28, who = `seal-official-${k}`, bp = k === 1 ? base : base2;
+		const inward = sgn < 0;                                                               // O1 faces right (no flip), O2 faces left
+		if (t < b(32.02)) return rig({x: x0, ground: HD.y1, h, pose: bp, look: lkOff, flip: inward}, [], () => HD.y1, who);
+		if (t < b(32.25)) { const leaf: P = k === 1 ? [HD.x0 + lwN - 3, 630] : [HD.x1 - lwN + 3, 630];
+			return rig({x: x0 + sgn * su * stp, ground: HD.y1, h, pose: careful(su * 0.5 + ph), look: lkOff, flip: inward}, [{side: 'L', target: leaf, name: 'hand on the door leaf'}], () => HD.y1, who); }
+		if (t < b(32.42)) return rig({x: x0 + sgn * (1 - sb) * stp, ground: HD.y1, h, pose: careful(sb * 0.5 + ph), look: lkOff, flip: !inward}, [], () => HD.y1, who);
+		const end = k === 1 ? X.a0 : X.b0, done = k === 1 ? slap1 : slap2, rp: P = [x0 + sgn * 0.26 * h, HD.y1 - 0.6 * h];
+		const hand: P = done ? [end[0] + sgn * 4, end[1] + 3] : [lerp(rp[0], end[0] + sgn * 4, ready), lerp(rp[1], end[1] + 3, ready)];
+		return rig({x: x0, ground: HD.y1, h, pose: bp, look: lkOff, flip: inward}, [{side: 'L', target: hand, name: done ? 'hand on the strip' : 'strip in hand'}], () => HD.y1, who);
+	};
+	const O1 = off(1), O2 = off(2);
+	offs.draw(`${fk}`, t >= b(31.9) ? [O1, O2] : [], (g) => { if (t < b(32.42)) return;   // the long strips in their hands before they go on
+		for (const [k, O, done] of [[1, O1, slap1], [-1, O2, slap2]] as [number, FigOpts, boolean][]) { if (done) continue; const hp = handAt(O as any, 'L');
+			g.strokeStyle = '#DCD3BC'; g.lineWidth = 8; g.beginPath(); g.moveTo(hp[0], hp[1]); g.lineTo(hp[0] + k * 70, hp[1] + 96); g.stroke(); } });
+	lamps19.drawW('l', (g) => { for (const [x, y, r] of LAMPS19) { glowBlob(g, [x, y], r * 2.2, r * 2.2, 0.22, '255,184,104'); g.fillStyle = '#FFC98A'; g.beginPath(); g.ellipse(x, y, r * 0.55, r * 0.75, 0, 0, Math.PI * 2); g.fill(); } });
+	if (t < b(32.25)) st.heroAt(960, 650, ZW3, 900); else st.setHero(-9999, -9999, 1);   // once the doors shut, your light is inside
 	return {st, grade: {vig: 0.4, vigCol: '#120c09', exposure: 1}, bloom: 1};
 };
 const LAMPS19: [number, number, number][] = [[858, 548, 7], [1062, 548, 7]];
@@ -205,29 +217,29 @@ const buildHall = async () => {
 		<ellipse cx="890" cy="560" rx="11" ry="16" fill="#1a1411"/><ellipse cx="1040" cy="556" rx="13" ry="18" fill="#1a1411"/><rect x="884" y="574" width="12" height="8" fill="#1a1411"/>
 		<path d="M940,566 L992,566 L986,586 L946,586 Z" fill="#1a1411"/><rect x="930" y="640" width="80" height="6" fill="#20170f"/><rect x="936" y="646" width="5" height="54" fill="#1a1411"/><rect x="999" y="646" width="5" height="54" fill="#1a1411"/>
 		<circle cx="905" cy="520" r="5" fill="#FFC98A"/><circle cx="1015" cy="520" r="5" fill="#FFC98A"/>`, 3100, 1400, `${wallG('hw', 960, 560)}`, -600, -200);
-	st.add('hall', canvasTex(await svgToCanvas(hallSvg, 3100, 1400, 1.4)), 950, 500, 3100, 1400, ZHALL, {rim: 0.5, rimPx: 3});
+	st.add('hall', canvasTex(await svgToCanvas(hallSvg, 3100, 1400, 0.85)), 950, 500, 3100, 1400, ZHALL, {rim: 0.5, rimPx: 3});
 	c3 = new Cast(st, 'servant3', 960, 640, 600, 400, ZHALL + 4, {}, 3); box3 = new Live(st, 'box3', 960, 640, 600, 400, ZHALL + 5, {emissive: 0.5}, 3);
 	// the hall door wall (z 300): door opening, lintel and eave, lamps either side, the threshold; leaves + strips are live
 	const w3 = svgDoc(`<path fill-rule="evenodd" fill="url(#w3)" d="M-700,-300 L2600,-300 L2600,1400 L-700,1400 Z M${HD.x0},${HD.y0} L${HD.x1},${HD.y0} L${HD.x1},${HD.y1} L${HD.x0},${HD.y1} Z"/>
 		<rect x="${HD.x0 - 10}" y="${HD.y0 - 12}" width="${HD.x1 - HD.x0 + 20}" height="12" fill="#1c1510"/>${roof(960, HD.y0 - 58, 230, 40, 0.4, '#1c1510')}
 		<rect x="-700" y="${HD.y1}" width="3300" height="700" fill="#2e2620"/><rect x="${HD.x0 - 16}" y="${HD.y1 - 4}" width="${HD.x1 - HD.x0 + 32}" height="8" fill="#1c1510"/>
-		<rect x="${HD.x0 - 8}" y="${HD.y0}" width="8" height="${HD.y1 - HD.y0}" fill="#1c1510"/><rect x="${HD.x1}" y="${HD.y0}" width="8" height="${HD.y1 - HD.y0}" fill="#1c1510"/>`, 3300, 1700, `${wallG('w3', 960, 640)}`, -700, -300);
-	st.add('w3', canvasTex(await svgToCanvas(w3, 3300, 1700, 1.2)), 950, 550, 3300, 1700, ZW3, {rim: 0.4, rimPx: 3});
+		<rect x="${HD.x0 - 8}" y="${HD.y0}" width="8" height="${HD.y1 - HD.y0}" fill="#1c1510"/><rect x="${HD.x1}" y="${HD.y0}" width="8" height="${HD.y1 - HD.y0}" fill="#1c1510"/>`, 2220, 1400, `${wallG('w3', 960, 640)}`, -150, -150);
+	st.add('w3', canvasTex(await svgToCanvas(w3, 2220, 1400, 1.1)), 960, 550, 2220, 1400, ZW3, {rim: 0.4, rimPx: 3});
 	leaves19 = new Live(st, 'leaves', 960, 640, 300, 260, ZW3 + 1, {rim: 0.4}, 4);
 	strips19 = new Live(st, 'strips', 960, 640, 300, 260, ZW3 + 2, {}, 4);
-	offs = new Cast(st, 'officials', 960, 640, 500, 300, ZW3 + 3, {rim: 0.55}, 4);
+	offs = new Cast(st, 'officials', 960, 640, 500, 300, ZW3 + 3, {rim: 0.25, rimPx: 3}, 4);
 	lamps19 = new Live(st, 'lamps', 960, 600, 400, 200, ZW3 + 1.5, {emissive: 1.2}, 3);
 	// the vase gate wall (z 800)
 	const vase = (cx: number) => { const y0 = VASE_Y0, y1 = VASE_Y1; return `M${cx - 30},${y1} C${cx - 64},${y1 - 40} ${cx - 92},${y1 - 120} ${cx - 86},${y0 + 150} C${cx - 80},${y0 + 90} ${cx - 34},${y0 + 82} ${cx - 34},${y0 + 46} L${cx - 40},${y0} L${cx + 40},${y0} L${cx + 34},${y0 + 46} C${cx + 34},${y0 + 82} ${cx + 80},${y0 + 90} ${cx + 86},${y0 + 150} C${cx + 92},${y1 - 120} ${cx + 64},${y1 - 40} ${cx + 30},${y1} Z`; };
 	const w2 = svgDoc(`<path fill-rule="evenodd" fill="url(#w2)" d="M-800,-400 L2700,-400 L2700,1500 L-800,1500 Z ${vase(960)}"/><path d="${vase(960)}" fill="none" stroke="#1c1510" stroke-width="7"/>
 		<rect x="-800" y="${VASE_Y1}" width="3500" height="800" fill="#30271f"/><rect x="900" y="${VASE_Y1 - 3}" width="120" height="7" fill="#1c1510"/>`, 3500, 1900, `${wallG('w2', 960, 620)}`, -800, -400);
-	st.add('w2', canvasTex(await svgToCanvas(w2, 3500, 1900, 0.9)), 950, 550, 3500, 1900, ZW2, {rim: 0.4, rimPx: 3});
+	st.add('w2', canvasTex(await svgToCanvas(w2, 3500, 1900, 0.6)), 950, 550, 3500, 1900, ZW2, {rim: 0.4, rimPx: 3});
 	c2 = new Cast(st, 'carrier2', 960, 640, 800, 500, ZW2 + 3, {}, 2); box2 = new Live(st, 'box2', 960, 640, 800, 500, ZW2 + 4, {emissive: 0.5}, 2);
 	// the moon gate wall (z 1200)
 	const w1 = svgDoc(`<path fill-rule="evenodd" fill="url(#w1)" d="M-900,-500 L2800,-500 L2800,1600 L-900,1600 Z M${MOON.x},${MOON.y} m-${MOON.r},0 a${MOON.r},${MOON.r} 0 1,0 ${2 * MOON.r},0 a${MOON.r},${MOON.r} 0 1,0 -${2 * MOON.r},0 Z"/>
 		<circle cx="${MOON.x}" cy="${MOON.y}" r="${MOON.r + 6}" fill="none" stroke="#1c1510" stroke-width="16"/><rect x="${MOON.x - 150}" y="${MOON.y + MOON.r - 8}" width="300" height="14" fill="#1c1510"/>
 		<rect x="-900" y="${MOON.y + MOON.r + 4}" width="3700" height="800" fill="#2c241e"/>`, 3700, 2100, `${wallG('w1', 960, 560)}`, -900, -500);
-	st.add('w1', canvasTex(await svgToCanvas(w1, 3700, 2100, 0.7)), 950, 550, 3700, 2100, ZW1, {rim: 0.4, rimPx: 3});
+	st.add('w1', canvasTex(await svgToCanvas(w1, 3700, 2100, 0.5)), 950, 550, 3700, 2100, ZW1, {rim: 0.4, rimPx: 3});
 	c1 = new Cast(st, 'carrier1', 960, 640, 1400, 900, ZW1 + 3, {}, 1); box1 = new Live(st, 'box1', 960, 640, 1400, 900, ZW1 + 4, {emissive: 0.5}, 1);
 };
 
@@ -249,7 +261,7 @@ const cam20 = (t: number): Cam => {
 	const k0 = easeInOut(clamp01((t - b(33)) / (b(33.5) - b(33))));
 	let cam: Cam = [lerp(CAM20_0[0], CR_B[0], k0), lerp(CAM20_0[1], CR_B[1], k0), Math.exp(lerp(Math.log(CAM20_0[2]), Math.log(CR_B[2]), k0))];
 	if (t > b(34.5)) {   // CR-C: track the eunuch, his glow on the lock point (960, 580)
-		const r = eunRoll(eunuch20(t)), tr: Cam = [r[0], r[1] - 40, 1.0], k = easeInOut(clamp01((t - b(34.5)) / (b(35.25) - b(34.5))));
+		const r = eunRoll(eunuch20(t)), tr: Cam = [r[0], r[1] - 10, 1.0], k = easeInOut(clamp01((t - b(34.5)) / (b(35.25) - b(34.5))));
 		cam = [lerp(cam[0], tr[0], k), lerp(cam[1], tr[1], k), Math.exp(lerp(Math.log(cam[2]), Math.log(tr[2]), k))];
 		const lens = easeIn(clamp01((t - b(35.3)) / (b(35.5) + 0.3 - b(35.3))));   // he passes the lens: push into his body
 		if (lens > 0) cam = [lerp(cam[0], r[0] - 30, lens), lerp(cam[1], r[1] + 60, lens), cam[2] * (1 + 2.2 * lens)];
@@ -279,13 +291,14 @@ export const d20 = (t: number): Frame => {
 	// dusk → night in the same shot: the night sky over the dusk one, the world dims, the 角楼's windows light
 	nightSky20.mat.uniforms.uOpacity.value = nk; c20.st.get('sunglow').mat.uniforms.uOpacity.value = 1 - nk;
 	keep(st, mine20, lerp(1, 0.6, nk), lerp(1, 0.66, nk), lerp(1, 0.78, nk));
-	const far = c20.st.get('far').mat.uniforms.uFog.value; far.set(lerp(0.79, 0.33, nk), lerp(0.64, 0.38, nk), lerp(0.48, 0.37, nk), lerp(0.32, 0.4, nk));
-	jl20.draw(`${nk.toFixed(2)}`, (g) => { if (nk <= 0) return; drawJiaolouWindows(g, nk); });
+	const far = c20.st.get('far').mat.uniforms.uFog.value; far.set(lerp(0.79, 0.16, nk), lerp(0.64, 0.2, nk), lerp(0.48, 0.23, nk), lerp(0.32, 0.22, nk));
+	jl20.drawW(`${nk.toFixed(2)}`, (g) => { if (nk <= 0) return; drawJiaolouWindows(g, nk); });
 	st.heroAt(hero[0], hero[1], 22, eun ? 560 : 420);
 	return {st, grade: {vig: lerp(0.3, 0.42, nk), vigCol: '#0e1013', exposure: 1}, bloom: 1};
 };
 const drawCart = (g: CanvasRenderingContext2D, xc: number, bedY: number, shaftEnd: P, u: number) => {
 	const L = CART.len, x0 = xc - L / 2;
+	g.fillStyle = '#1a140f'; g.fillRect(x0 - 760, 1379, L + 1500, 14);                                   // the bank's edge under the wheel and the walkers
 	g.strokeStyle = '#18110c'; g.lineWidth = 8; g.lineCap = 'round'; g.beginPath(); g.moveTo(x0 + 14, bedY + 10); g.lineTo(shaftEnd[0] + 8, shaftEnd[1]); g.stroke();   // far shaft
 	g.fillStyle = '#1d150f'; g.fillRect(x0, bedY, L, 22); g.fillRect(x0 + 10, bedY + 22, 10, 40); g.fillRect(x0 + L - 20, bedY + 22, 10, 40);
 	// the crate: dark wood, its face toward us, the two plain strips crossed in an X (the match from scene 19)
@@ -335,7 +348,7 @@ const POOL = {w: 300, y0: 130, h: 1280};
 let pools21: HTMLCanvasElement[] = [];
 const makePools = (sheet: HTMLCanvasElement) => FCOLS.map((x) => {
 	const c = mkCanvas(POOL.w, POOL.h), g = c.getContext('2d')!; g.drawImage(sheet, x - POOL.w / 2, POOL.y0, POOL.w, POOL.h, 0, 0, POOL.w, POOL.h);
-	g.globalCompositeOperation = 'source-atop'; g.fillStyle = 'rgba(255,214,150,0.10)'; g.fillRect(0, 0, POOL.w, POOL.h);
+	g.globalCompositeOperation = 'source-atop'; g.fillStyle = 'rgba(255,214,150,0.06)'; g.fillRect(0, 0, POOL.w, POOL.h);
 	g.globalCompositeOperation = 'destination-in'; g.save(); g.translate(POOL.w / 2, POOL.h / 2); g.scale(1, POOL.h / POOL.w);
 	const gr = g.createRadialGradient(0, 0, 0, 0, 0, POOL.w / 2); gr.addColorStop(0, 'rgba(0,0,0,1)'); gr.addColorStop(0.55, 'rgba(0,0,0,0.85)'); gr.addColorStop(1, 'rgba(0,0,0,0)'); g.fillStyle = gr; g.beginPath(); g.arc(0, 0, POOL.w / 2, 0, Math.PI * 2); g.fill(); g.restore();
 	return c;
@@ -364,7 +377,7 @@ const buildTail = async () => {
 	st.add('end', canvasTex(end), XE + 2048 * SK, 540, 4096 * SK, 1080, 0, {emissive: 0.08, tint: dim});
 	st.add('col', canvasTex(col3), XC + 2048 * SK, 540, 4096 * SK, 1080, 0, {emissive: 0.08, tint: dim});
 	fengPlane = st.add('feng', canvasTex(feng), XF + FW21 / 2 * SK, 540, FW21 * SK, 1080, 0, {emissive: 0.08, tint: dim});
-	lit21 = new Live(st, 'lit', XF + FW21 / 2 * SK, 540, FW21 * SK, 1080, 0.5, {emissive: 0.16}, 1 / SK * 0.6, 3);
+	lit21 = new Live(st, 'lit', XF + FW21 / 2 * SK, 540, FW21 * SK, 1080, 0.5, {emissive: 0.0, tint: '#e8ddca'}, 1 / SK * 0.6, 3);
 	lit21.L.mesh.renderOrder = 5;
 };
 
