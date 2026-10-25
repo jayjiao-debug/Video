@@ -143,7 +143,8 @@ K.statue = (kind, side, i, mode, o = {}) => {
 	const b = K.stoneBody(x, y, h, face, stone); const [tx, ty] = b.top;
 	if (kind === '马') {
 		if (o.empty) return {svg: K.emptySeat(x, y, h, face, stone, fire ? '#FFB070' : '#E8D9B8') + `<ellipse cx="${tx}" cy="${ty}" rx="${30 * s}" ry="${7 * s}" fill="none" stroke="#FFC888" stroke-width="${4 * s}" opacity=".9"/><ellipse cx="${tx}" cy="${ty - 4 * s}" rx="${46 * s}" ry="${18 * s}" fill="#FF9A50" opacity=".22"/>`, top: [tx, ty], s};
-		const hero = {x: tx + face * 4 * s, y: ty + 22 * s, h: 200 * s, flip: face > 0, curl: 0, glow: o.glow ?? 0.9, key: o.key ?? 1.5, mood: o.mood ?? 'warm', rim: o.rim ?? '#FFE6C0', base: 'seat'};
+		const hero = {x: tx + face * 4 * s, y: ty + 22 * s, h: (K.HERO_RING_H ?? 200) * s, flip: face > 0, curl: 0,   // v8: brother scale (owner: the twelve are one size; continuity with the ring)
+		 glow: o.glow ?? 0.9, key: o.key ?? 1.5, mood: o.mood ?? 'warm', rim: o.rim ?? '#FFE6C0', base: 'seat'};
 		const m = K.headPt(hero, 'mouth');
 		return {svg: b.svg, hero, mouth: m, top: [tx, ty], s};
 	}
