@@ -1,0 +1,248 @@
+plan: {'tier': None, 'character_count': None, 'character_limit': None, 'status': None}
+models: ['eleven_v4', 'eleven_v4_turbo', 'eleven_v3', 'eleven_v3_conversational', 'eleven_multilingual_v2', 'eleven_flash_v2_5', 'eleven_turbo_v2_5', 'eleven_turbo_v2', 'eleven_flash_v2', 'eleven_english_sts_v2', 'eleven_multilingual_sts_v2']
+model: eleven_v4
+{"name": "sfx_stamp_char", "type": "sfx", "text": "a single wooden seal stamp pressed firmly onto lacquered wood, short deep thud, dry, close", "model": "eleven_text_to_sound_v2", "status": 200, "sfx": true, "file": "sfx_stamp_char.mp3", "bytes": 13835}
+{"name": "sfx_cowrie_drop", "type": "sfx", "text": "three small seashells dropping and clinking onto a polished wooden counter, close, crisp", "model": "eleven_text_to_sound_v2", "status": 200, "sfx": true, "file": "sfx_cowrie_drop.mp3", "bytes": 24702}
+{"name": "sfx_pay_chime", "type": "sfx", "text": "a soft short modern payment confirmation chime, warm two-note, generic, no voice", "model": "eleven_text_to_sound_v2", "status": 200, "sfx": true, "file": "sfx_pay_chime.mp3", "bytes": 17179}
+{"name": "sfx_rewind", "type": "sfx", "text": "a tape rewind whoosh accelerating backwards, cinematic, airy, 1.5 seconds", "model": "eleven_text_to_sound_v2", "status": 200, "sfx": true, "file": "sfx_rewind.mp3", "bytes": 24702}
+{"name": "sfx_title_hit", "type": "sfx", "text": "a deep taiko drum hit layered with a bronze temple bell ring, cinematic impact with long tail", "model": "eleven_text_to_sound_v2", "status": 200, "sfx": true, "file": "sfx_title_hit.mp3", "bytes": 48944}
+{"name": "sfx_waves_shells", "type": "sfx", "text": "distant gentle sea waves with a handful of seashells rattling in a palm", "model": "eleven_text_to_sound_v2", "status": 200, "sfx": true, "file": "sfx_waves_shells.mp3", "bytes": 48944}
+{"name": "sfx_bronze_pour", "type": "sfx", "text": "molten bronze pouring into a stone mould, hiss and sizzle, then a soft metallic ring as it cools", "model": "eleven_text_to_sound_v2", "status": 200, "sfx": true, "file": "sfx_bronze_pour.mp3", "bytes": 48944}
+{"name": "sfx_guess_tick", "type": "sfx", "text": "four soft wooden clock ticks, slow, suspenseful, dry room", "model": "eleven_text_to_sound_v2", "status": 200, "sfx": true, "file": "sfx_guess_tick.mp3", "bytes": 26792}
+{"name": "sfx_reveal_shimmer", "type": "sfx", "text": "a bright gold leaf shimmer with a small high bell, magical reveal, short", "model": "eleven_text_to_sound_v2", "status": 200, "sfx": true, "file": "sfx_reveal_shimmer.mp3", "bytes": 24702}
+{"name": "sfx_spade_soil", "type": "sfx", "text": "an old bronze spade pushed into soft soil, earthy crunch", "model": "eleven_text_to_sound_v2", "status": 200, "sfx": true, "file": "sfx_spade_soil.mp3", "bytes": 20105}
+{"name": "sfx_coins_hand", "type": "sfx", "text": "a few ancient bronze coins jingling in a hand, close", "model": "eleven_text_to_sound_v2", "status": 200, "sfx": true, "file": "sfx_coins_hand.mp3", "bytes": 24702}
+{"name": "sfx_balance_settle", "type": "sfx", "text": "small brass scale pans clinking and swinging, then settling still", "model": "eleven_text_to_sound_v2", "status": 200, "sfx": true, "file": "sfx_balance_settle.mp3", "bytes": 33061}
+{"name": "sfx_silk_swish", "type": "sfx", "text": "a soft silk cloth swish passing close to the microphone, gentle whoosh", "model": "eleven_text_to_sound_v2", "status": 200, "sfx": true, "file": "sfx_silk_swish.mp3", "bytes": 17179}
+{"name": "sfx_iron_drag", "type": "sfx", "text": "a heavy string of iron coins dragging on stone ground with metallic clanks, heavy and slow", "model": "eleven_text_to_sound_v2", "status": 200, "sfx": true, "file": "sfx_iron_drag.mp3", "bytes": 48944}
+{"name": "sfx_paper_flutter", "type": "sfx", "text": "a single sheet of thin paper fluttering lightly in the air", "model": "eleven_text_to_sound_v2", "status": 200, "sfx": true, "file": "sfx_paper_flutter.mp3", "bytes": 24702}
+{"name": "sfx_crowd_dispute", "type": "sfx", "text": "a small crowd of people arguing in a tense murmur indoors, indistinct, no words", "model": "eleven_text_to_sound_v2", "status": 200, "sfx": true, "file": "sfx_crowd_dispute.mp3", "bytes": 40585}
+{"name": "sfx_woodblock_print", "type": "sfx", "text": "a woodblock printing press: a firm wooden thump, then paper peeled off the block", "model": "eleven_text_to_sound_v2", "status": 200, "sfx": true, "file": "sfx_woodblock_print.mp3", "bytes": 33061}
+{"name": "sfx_paper_crumble", "type": "sfx", "text": "old brittle paper crumbling into small flakes that scatter, dry rustle", "model": "eleven_text_to_sound_v2", "status": 200, "sfx": true, "file": "sfx_paper_crumble.mp3", "bytes": 40585}
+{"name": "sfx_silver_clink", "type": "sfx", "text": "a silver ingot set down on a brass scale pan, bright small clink", "model": "eleven_text_to_sound_v2", "status": 200, "sfx": true, "file": "sfx_silver_clink.mp3", "bytes": 17179}
+{"name": "sfx_night_stall", "type": "sfx", "text": "quiet modern city night street ambience near a noodle stall, soft sizzle, distant traffic, no music", "model": "eleven_text_to_sound_v2", "status": 200, "sfx": true, "file": "sfx_night_stall.mp3", "bytes": 81127}
+{"name": "sfx_trust_swell", "type": "sfx", "text": "a warm soft cinematic swell rising, gentle shimmer, emotional, no drums", "model": "eleven_text_to_sound_v2", "status": 200, "sfx": true, "file": "sfx_trust_swell.mp3", "bytes": 48944}
+{"name": "sfx_seal_paper", "type": "sfx", "text": "a red ink seal stamped onto thick paper, soft thump", "model": "eleven_text_to_sound_v2", "status": 200, "sfx": true, "file": "sfx_seal_paper.mp3", "bytes": 13835}
+Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+[
+ {
+  "name": "sfx_stamp_char",
+  "type": "sfx",
+  "text": "a single wooden seal stamp pressed firmly onto lacquered wood, short deep thud, dry, close",
+  "model": "eleven_text_to_sound_v2",
+  "status": 200,
+  "sfx": true,
+  "file": "sfx_stamp_char.mp3",
+  "bytes": 13835
+ },
+ {
+  "name": "sfx_cowrie_drop",
+  "type": "sfx",
+  "text": "three small seashells dropping and clinking onto a polished wooden counter, close, crisp",
+  "model": "eleven_text_to_sound_v2",
+  "status": 200,
+  "sfx": true,
+  "file": "sfx_cowrie_drop.mp3",
+  "bytes": 24702
+ },
+ {
+  "name": "sfx_pay_chime",
+  "type": "sfx",
+  "text": "a soft short modern payment confirmation chime, warm two-note, generic, no voice",
+  "model": "eleven_text_to_sound_v2",
+  "status": 200,
+  "sfx": true,
+  "file": "sfx_pay_chime.mp3",
+  "bytes": 17179
+ },
+ {
+  "name": "sfx_rewind",
+  "type": "sfx",
+  "text": "a tape rewind whoosh accelerating backwards, cinematic, airy, 1.5 seconds",
+  "model": "eleven_text_to_sound_v2",
+  "status": 200,
+  "sfx": true,
+  "file": "sfx_rewind.mp3",
+  "bytes": 24702
+ },
+ {
+  "name": "sfx_title_hit",
+  "type": "sfx",
+  "text": "a deep taiko drum hit layered with a bronze temple bell ring, cinematic impact with long tail",
+  "model": "eleven_text_to_sound_v2",
+  "status": 200,
+  "sfx": true,
+  "file": "sfx_title_hit.mp3",
+  "bytes": 48944
+ },
+ {
+  "name": "sfx_waves_shells",
+  "type": "sfx",
+  "text": "distant gentle sea waves with a handful of seashells rattling in a palm",
+  "model": "eleven_text_to_sound_v2",
+  "status": 200,
+  "sfx": true,
+  "file": "sfx_waves_shells.mp3",
+  "bytes": 48944
+ },
+ {
+  "name": "sfx_bronze_pour",
+  "type": "sfx",
+  "text": "molten bronze pouring into a stone mould, hiss and sizzle, then a soft metallic ring as it cools",
+  "model": "eleven_text_to_sound_v2",
+  "status": 200,
+  "sfx": true,
+  "file": "sfx_bronze_pour.mp3",
+  "bytes": 48944
+ },
+ {
+  "name": "sfx_guess_tick",
+  "type": "sfx",
+  "text": "four soft wooden clock ticks, slow, suspenseful, dry room",
+  "model": "eleven_text_to_sound_v2",
+  "status": 200,
+  "sfx": true,
+  "file": "sfx_guess_tick.mp3",
+  "bytes": 26792
+ },
+ {
+  "name": "sfx_reveal_shimmer",
+  "type": "sfx",
+  "text": "a bright gold leaf shimmer with a small high bell, magical reveal, short",
+  "model": "eleven_text_to_sound_v2",
+  "status": 200,
+  "sfx": true,
+  "file": "sfx_reveal_shimmer.mp3",
+  "bytes": 24702
+ },
+ {
+  "name": "sfx_spade_soil",
+  "type": "sfx",
+  "text": "an old bronze spade pushed into soft soil, earthy crunch",
+  "model": "eleven_text_to_sound_v2",
+  "status": 200,
+  "sfx": true,
+  "file": "sfx_spade_soil.mp3",
+  "bytes": 20105
+ },
+ {
+  "name": "sfx_coins_hand",
+  "type": "sfx",
+  "text": "a few ancient bronze coins jingling in a hand, close",
+  "model": "eleven_text_to_sound_v2",
+  "status": 200,
+  "sfx": true,
+  "file": "sfx_coins_hand.mp3",
+  "bytes": 24702
+ },
+ {
+  "name": "sfx_balance_settle",
+  "type": "sfx",
+  "text": "small brass scale pans clinking and swinging, then settling still",
+  "model": "eleven_text_to_sound_v2",
+  "status": 200,
+  "sfx": true,
+  "file": "sfx_balance_settle.mp3",
+  "bytes": 33061
+ },
+ {
+  "name": "sfx_silk_swish",
+  "type": "sfx",
+  "text": "a soft silk cloth swish passing close to the microphone, gentle whoosh",
+  "model": "eleven_text_to_sound_v2",
+  "status": 200,
+  "sfx": true,
+  "file": "sfx_silk_swish.mp3",
+  "bytes": 17179
+ },
+ {
+  "name": "sfx_iron_drag",
+  "type": "sfx",
+  "text": "a heavy string of iron coins dragging on stone ground with metallic clanks, heavy and slow",
+  "model": "eleven_text_to_sound_v2",
+  "status": 200,
+  "sfx": true,
+  "file": "sfx_iron_drag.mp3",
+  "bytes": 48944
+ },
+ {
+  "name": "sfx_paper_flutter",
+  "type": "sfx",
+  "text": "a single sheet of thin paper fluttering lightly in the air",
+  "model": "eleven_text_to_sound_v2",
+  "status": 200,
+  "sfx": true,
+  "file": "sfx_paper_flutter.mp3",
+  "bytes": 24702
+ },
+ {
+  "name": "sfx_crowd_dispute",
+  "type": "sfx",
+  "text": "a small crowd of people arguing in a tense murmur indoors, indistinct, no words",
+  "model": "eleven_text_to_sound_v2",
+  "status": 200,
+  "sfx": true,
+  "file": "sfx_crowd_dispute.mp3",
+  "bytes": 40585
+ },
+ {
+  "name": "sfx_woodblock_print",
+  "type": "sfx",
+  "text": "a woodblock printing press: a firm wooden thump, then paper peeled off the block",
+  "model": "eleven_text_to_sound_v2",
+  "status": 200,
+  "sfx": true,
+  "file": "sfx_woodblock_print.mp3",
+  "bytes": 33061
+ },
+ {
+  "name": "sfx_paper_crumble",
+  "type": "sfx",
+  "text": "old brittle paper crumbling into small flakes that scatter, dry rustle",
+  "model": "eleven_text_to_sound_v2",
+  "status": 200,
+  "sfx": true,
+  "file": "sfx_paper_crumble.mp3",
+  "bytes": 40585
+ },
+ {
+  "name": "sfx_silver_clink",
+  "type": "sfx",
+  "text": "a silver ingot set down on a brass scale pan, bright small clink",
+  "model": "eleven_text_to_sound_v2",
+  "status": 200,
+  "sfx": true,
+  "file": "sfx_silver_clink.mp3",
+  "bytes": 17179
+ },
+ {
+  "name": "sfx_night_stall",
+  "type": "sfx",
+  "text": "quiet modern city night street ambience near a noodle stall, soft sizzle, distant traffic, no music",
+  "model": "eleven_text_to_sound_v2",
+  "status": 200,
+  "sfx": true,
+  "file": "sfx_night_stall.mp3",
+  "bytes": 81127
+ },
+ {
+  "name": "sfx_trust_swell",
+  "type": "sfx",
+  "text": "a warm soft cinematic swell rising, gentle shimmer, emotional, no drums",
+  "model": "eleven_text_to_sound_v2",
+  "status": 200,
+  "sfx": true,
+  "file": "sfx_trust_swell.mp3",
+  "bytes": 48944
+ },
+ {
+  "name": "sfx_seal_paper",
+  "type": "sfx",
+  "text": "a red ink seal stamped onto thick paper, soft thump",
+  "model": "eleven_text_to_sound_v2",
+  "status": 200,
+  "sfx": true,
+  "file": "sfx_seal_paper.mp3",
+  "bytes": 13835
+ }
+]
