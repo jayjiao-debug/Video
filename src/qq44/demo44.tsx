@@ -28,10 +28,12 @@ export const Cam: React.FC<{cx: number; cy: number; z: number; r?: number; child
 const scr = (p: P2, cx: number, cy: number, z: number): P2 => [(p[0] - cx) * z + W / 2, (p[1] - cy) * z + H / 2];
 /** place a figure so that its Head joint lands at (hx, hy) */
 const placeHead = (pose: Pose, hx: number, hy: number, h: number, flip = false) => ({x: hx - (flip ? -1 : 1) * pose.Head[0] * h, ground: hy + pose.Head[1] * h});
+/** round 2 (owner note 3): one offset for every profile head: the glow sits 0.04 h behind the head centre (the head reaches ≈ 0.07 h back) */
+export const GLOW_BACK = 0.04;
 /** the back of the skull (final pass: the 你 glow sits behind the ear in profile, never on the face) */
-export const skullBack = (pose: Pose, x: number, g: number, h: number, flip = false, k = 0.03): P2 => { const n1 = jointAt(pose, 'Neck1', x, g, h, flip), tp = jointAt(pose, 'Top', x, g, h, flip), c = headC(pose, x, g, h, flip);
+export const skullBack = (pose: Pose, x: number, g: number, h: number, flip = false, k = 0.03, down = 0): P2 => { const n1 = jointAt(pose, 'Neck1', x, g, h, flip), tp = jointAt(pose, 'Top', x, g, h, flip), c = headC(pose, x, g, h, flip);
 	const ux = tp[0] - n1[0], uy = tp[1] - n1[1], l = Math.hypot(ux, uy) || 1, fx = -uy / l, fy = ux / l, sgn = flip ? -1 : 1;   // f = the face direction
-	return [c[0] - sgn * fx * k * h * 0.93, c[1] - sgn * fy * k * h * 0.93]; };
+	return [c[0] - sgn * fx * k * h * 0.93 - ux / l * down * h * 0.93, c[1] - sgn * fy * k * h * 0.93 - uy / l * down * h * 0.93]; };   // down: toward the nape
 const headC = (pose: Pose, x: number, g: number, h: number, flip = false): P2 => { const hd = jointAt(pose, 'Head', x, g, h, flip), tp = jointAt(pose, 'Top', x, g, h, flip); return [lerp(hd[0], tp[0], 0.45), lerp(hd[1], tp[1], 0.45)]; };
 const Dust: React.FC<{t: number; n?: number; c?: string; o?: number; seed?: number}> = ({t, n = 40, c = '#c8d8dc', o = 0.16, seed = 0}) => <g>{Array.from({length: n}, (_, i) => {
 	const x = ((rnd(i, 1 + seed) * W + t * (8 + 14 * rnd(i, 5))) % (W + 40)) - 20, y = rnd(i, 2 + seed) * H + Math.sin(t * 0.8 + i) * 12;
@@ -278,7 +280,8 @@ const Baby: React.FC<{x: number; y: number; t: number}> = ({x, y, t}) => <g tran
 		<path d="M-62,40 L-92,4 L-84,-46 L-46,-84 L6,-86 Q40,-80 50,-56 L53,-44 Q66,-36 62,-27" stroke={RIMB} strokeWidth={3} fill="none" opacity={0.7} />
 		<path d="M-16,-6 Q-4,-14 2,0 Q0,12 -12,10" stroke={RIMB} strokeWidth={2.5} fill="none" opacity={0.5} />
 	</g>
-	<HeadGlow x={-22} y={-48} r={18 + 2 * Math.sin(t * 3)} id="bbg" />
+	{/* round 2: the back of the skull is the lower part (face up, the crown to the left): behind the ear, not on it */}
+		<HeadGlow x={-30} y={-24} r={18 + 2 * Math.sin(t * 3)} id="bbg" />
 </g>;
 export const House: React.FC<{t: number; hold?: number}> = ({t, hold = 0}) => {
 	const {cx, cy, z} = homeCam(t), nurse = sm(seg(t, 13.95, 14.6)), rew = 1 - nurse;
@@ -326,7 +329,7 @@ export const House: React.FC<{t: number; hold?: number}> = ({t, hold = 0}) => {
 				</g>
 				<Rimmed x={KX + 760} ground={910} h={700} pose={fatherP(t)} look={LK.father} col="#140f0c" rim="#ffd8a8" rimOp={0.45} />
 				<Rimmed x={KX + 1080} ground={904} h={430} pose={kidP} look={LK.child} flip col="#120e12" rim={RIMB} rimOp={0.7} rimDx={2.4} />
-				{(() => { const c = headC(kidP, KX + 1080, 904, 430, true); return <HeadGlow x={c[0]} y={c[1]} r={21.5} id="kg" o={kGlow} />; })()}
+				{(() => { const c = skullBack(kidP, KX + 1080, 904, 430, true, GLOW_BACK); return <HeadGlow x={c[0]} y={c[1]} r={21.5} id="kg" o={kGlow} />; })()}
 				<Compass44 x={cp[0]} y={cp[1]} r={30} a={needle} glow={0.4} id="hc" />
 				<g fill="#0b0807"><path d="M30,1100 L40,780 Q120,740 200,780 L210,1100 Z" /><rect x={20} y={900} width={220} height={26} rx={6} />
 					<g transform={`translate(${KX + 1800},1080)`}><rect x={-60} y={-110} width={120} height={110} rx={10} />{Array.from({length: 7}, (_, i) => <ellipse key={i} cx={Math.cos(i) * 70} cy={-150 - 60 * rnd(i, 2)} rx={60} ry={22} transform={`rotate(${-40 + i * 14} 0 -110)`} />)}</g></g>
@@ -335,7 +338,17 @@ export const House: React.FC<{t: number; hold?: number}> = ({t, hold = 0}) => {
 		{rew > 0 && <Rewind t={t} o={rew} cam={{cx, cy, z}} hold={hold} />}
 	</g>;
 };
-const TITLE = '你是爱因斯坦的大脑';
+/* round 2 (owner note 2): a two-line title. Line 1 (smaller) 「假如说你是」, line 2 (big) 「爱因斯坦的大脑」. 你 stays rose-gold.
+   The alternative line 1 「假如你是」 can be set for a comparison still through globalThis.__EP44_T1 (set before this module loads). */
+export const TITLE_L1: string = (globalThis as {__EP44_T1?: string}).__EP44_T1 ?? '假如说你是';
+export const TITLE_L2 = '爱因斯坦的大脑';
+/** every title character with its slot: line, x offset (from the title centre), size; flies in in reading order */
+const TITLE_CH = (() => { const o: {ch: string; x: number; y: number; fs: number; rose: boolean}[] = [];
+	TITLE_L1.split('').forEach((ch, j) => o.push({ch, x: (j - (TITLE_L1.length - 1) / 2) * 76, y: -132, fs: 70, rose: ch === '你'}));
+	TITLE_L2.split('').forEach((ch, j) => o.push({ch, x: (j - (TITLE_L2.length - 1) / 2) * 118, y: 0, fs: 112, rose: false}));
+	return o; })();
+/** the stagger is spread so the last character lands when the old 9-character title's last one did (fly-in timing unchanged) */
+const TITLE_STEP = 0.24 / (TITLE_CH.length - 1);
 /** the title rewind. `hold` = film seconds the master has paused the story clock for (final pass: the title lands by film ≈14.0
     and holds ≥ 2.5 s); continuous motion (streaks, rays, breathing, the slow push) runs on ua = u + hold so the picture never freezes. */
 const Rewind: React.FC<{t: number; o: number; cam: {cx: number; cy: number; z: number}; hold?: number}> = ({t, o, cam, hold = 0}) => {
@@ -367,8 +380,8 @@ const Rewind: React.FC<{t: number; o: number; cam: {cx: number; cy: number; z: n
 		<rect width={W} height={H} fill={B.core} opacity={0.22 * Math.exp(-Math.max(0, u - 0.95) / 0.12) * seg(u, 0.85, 0.95)} />
 		{/* the title: each character flies out of the fused light; all 9 settle by film ≈14.0, then hold at full size (slow push) until the hand-over */}
 		<g transform={`translate(960,${812 - 30 * go}) scale(${push})`} opacity={1 - sm(seg(t, 14.35, 14.75))}>
-			{TITLE.split('').map((ch, i) => { const k = eo(seg(u, 0.7 + 0.03 * i, 1.05 + 0.03 * i)), x0 = (i - 4) * 118, sx = lerp(0, x0, k), sy = lerp(-380, 0, k);
-				return k > 0 ? <text key={i} x={sx} y={sy} textAnchor="middle" opacity={k} style={{fontFamily: SANS, fontWeight: 900, fontSize: 112 * lerp(0.4, 1, k)}} fill={i === 0 ? ROSE : INK} stroke="rgba(12,8,5,0.6)" strokeWidth={6} paintOrder="stroke">{ch}</text> : null; })}
+			{TITLE_CH.map((c, i) => { const k = eo(seg(u, 0.7 + TITLE_STEP * i, 1.05 + TITLE_STEP * i)), sx = lerp(0, c.x, k), sy = lerp(-380, c.y, k);
+				return k > 0 ? <text key={i} x={sx} y={sy} textAnchor="middle" opacity={k} style={{fontFamily: SANS, fontWeight: 900, fontSize: c.fs * lerp(0.4, 1, k)}} fill={c.rose ? ROSE : INK} stroke="rgba(12,8,5,0.6)" strokeWidth={c.fs > 100 ? 6 : 5} paintOrder="stroke">{c.ch}</text> : null; })}
 			<Glow x={0} y={-40} r={640} c={B.mid} o={0.1 * seg(u, 0.8, 1.4)} id="rwt" />
 		</g>
 		<g opacity={(0.6 + 0.4 * Math.sin(u * 12)) * (1 - sm(seg(u, 1.25, 1.5)))}><path d="M240,190 l-60,36 l60,36 Z M310,190 l-60,36 l60,36 Z" fill={INK} /></g>
@@ -391,7 +404,7 @@ const KH = 1860, KX0 = 0, KG = 1400, K2LOOK: Look4 = {dress: 'tunic', head: 'chi
 const k2Pose = (rot: number, look: number): {pose: Pose; head: P2; glow: P2} => {
 	const P = (p: P2): P2 => [(p[0] - KX0) / KH, (KG - p[1]) / KH], tilt = lerp(40, -4, look) * Math.PI / 180, u: P2 = [Math.sin(tilt), -Math.cos(tilt)];
 	const n1: P2 = [520 - 14 * look, 480 - 12 * look], hd: P2 = [n1[0] + 115 * u[0], n1[1] + 115 * u[1]], top: P2 = [hd[0] + 123 * u[0], hd[1] + 123 * u[1]];
-	const hc: P2 = [lerp(hd[0], top[0], 0.45), lerp(hd[1], top[1], 0.45)], f: P2 = [Math.cos(tilt), Math.sin(tilt)], back = 0.034 * KH * 0.93;
+	const hc: P2 = [lerp(hd[0], top[0], 0.45), lerp(hd[1], top[1], 0.45)], f: P2 = [Math.cos(tilt), Math.sin(tilt)], back = GLOW_BACK * KH * 0.93;
 	const rr = rot * 0.9, nh = pol(150 + rr, K2_R * 1.0), fh = pol(30 + rr, K2_R * 0.42);
 	const pose: Pose = {Hips: P([390, 860]), LUp: P([405, 983]), LKnee: P([896, 1000]), LAnk: P([900, 1500]), LToe: P([1100, 1540]), RUp: P([395, 983]), RKnee: P([880, 1010]), RAnk: P([870, 1510]), RToe: P([1070, 1550]),
 		Spine1: P([470 - 6 * look, 590]), Neck1: P(n1), Head: P(hd), Top: P(top), LSh: P([505, 500]), LElb: P([640, 860]), LHand: P([K2_C[0] + nh[0], K2_C[1] + nh[1]]),
@@ -481,7 +494,7 @@ export const Meadow: React.FC<{t: number}> = ({t}) => {
 	/* final pass (logic 21): 追着光跑 = a run, not a stroll: forward lean, high knees, bent arms pumping, a bounce */
 	const sn = Math.sin(ph), runP = fkPose({hip: 0.6 + 0.025 * Math.abs(Math.cos(ph)), lean: 16, neck: -6, lt: 44 * sn + 6, lk: 18 + 70 * Math.max(0, Math.sin(ph - 1.2)), rt: -44 * sn + 6, rk: 18 + 70 * Math.max(0, Math.sin(ph - 1.2 + Math.PI)),
 		lf: 10 * Math.max(0, -sn), rf: 10 * Math.max(0, sn), la: -40 * sn + 6, le: 88, ra: 40 * sn + 6, re: 88});
-	const hc = skullBack(runP, rx, g, h, false, 0.025), beamY = 600, bx = rx + 240 + 20 * Math.sin(u * 2.4);
+	const hc = skullBack(runP, rx, g, h, false, GLOW_BACK), beamY = 600, bx = rx + 240 + 20 * Math.sin(u * 2.4);
 	const intro = ease(seg(u, 0, 0.9)), push = ei(seg(t, 28.05, 28.5));
 	const cx = lerp(lerp(bx, 960, intro) + 20 * u, hc[0], push), cy = lerp(lerp(beamY, 540, intro), hc[1], push), z = lerp(lerp(2.6, 1.02, intro) + 0.015 * u, 3.0, push);
 	return <g>
@@ -512,7 +525,8 @@ export const Meadow: React.FC<{t: number}> = ({t}) => {
 };
 
 /* ================= P1/P2 28.5–35.0: the patent office; the 1905 paper lights up ================= */
-const typeP = (t: number) => fkPose({hip: 0.37, lean: 18 + 2 * Math.sin(t * 2), neck: 16, lt: 86, lk: 90, rt: 82, rk: 86, la: 50, le: 62, ra: 56 + 4 * Math.sin(t * 6), re: 56});
+/* round 2 (owner note 3): the head pitched less (neck 16 → 4) so the hair's back point sits at the nape, as in the other scenes, and the glow reads as the back of the skull */
+const typeP = (t: number) => fkPose({hip: 0.37, lean: 18 + 2 * Math.sin(t * 2), neck: 4, lt: 86, lk: 90, rt: 82, rk: 86, la: 50, le: 62, ra: 56 + 4 * Math.sin(t * 6), re: 56});
 const DX = 700, DG = 930, DH = 640;
 const SHEETS: {t: number; x: number; title?: string; eq?: boolean}[] = [{t: 31.95, x: 990}, {t: 32.4, x: 1110}, {t: 32.85, x: 1230, title: '论动体的电动力学'}, {t: 33.3, x: 1350, eq: true}];
 const Sheet: React.FC<{title?: string; eq?: boolean; lit?: number}> = ({title, eq, lit = 0}) => <g>
@@ -524,7 +538,7 @@ const Sheet: React.FC<{title?: string; eq?: boolean; lit?: number}> = ({title, e
 		: Array.from({length: 9}, (_, i) => <rect key={i} x={-68} y={-36 + i * 15} width={100 + (i % 3) * 18} height={4} fill="#8a8274" />)}
 </g>;
 export const Office: React.FC<{t: number}> = ({t}) => {
-	const u = t - T.office, p = typeP(t), hc = skullBack(p, DX, DG, DH, false, 0.032), intro = ease(seg(u, 0, 0.95)), pp = ease(seg(t, 31.55, 32.4)), late = ease(seg(t, 33.3, 35.0));
+	const u = t - T.office, p = typeP(t), hc = skullBack(p, DX, DG, DH, false, GLOW_BACK, 0.012),   /* a little toward the nape, clear of the hair's back point */ intro = ease(seg(u, 0, 0.95)), pp = ease(seg(t, 31.55, 32.4)), late = ease(seg(t, 33.3, 35.0));
 	const lift = ease(seg(t, 33.35, 33.95)), lit = sm(seg(t, 33.75, 34.15)), word = eo(seg(t, 33.95, 34.45));
 	const cx = lerp(lerp(hc[0], 960, intro) + 18 * u, lerp(1150, 1260, late), pp), cy = lerp(lerp(hc[1], 540, intro), lerp(560, 480, late), pp), z = lerp(lerp(2.6, 1.03, intro) + 0.012 * u, lerp(1.4, 1.5, late), pp);
 	const stack = Array.from({length: 7}, (_, i) => 28.9 + i * 0.42);
@@ -563,7 +577,8 @@ export const Office: React.FC<{t: number}> = ({t}) => {
 			<Rimmed x={DX} ground={DG} h={DH} pose={p} look={LK.ein} col="#121212" rim={RIMB} rimOp={0.6} />
 			<g transform="translate(600,930)"><rect x={-70} y={-262} width={140} height={14} fill="#1e1a16" /><rect x={-60} y={-248} width={10} height={248} fill="#1e1a16" /><rect x={50} y={-248} width={10} height={248} fill="#1e1a16" /></g>
 			<HeadGlow x={hc[0]} y={hc[1]} r={26 + 8 * lit} id="ofh" />
-			{(() => { const k = (u * 1.6) % 1, x = hc[0] - 12 + 20 * k; return t < 33.4 ? <><rect x={x - 10} y={hc[1] - 1.5} width={10} height={3} fill="#fff" opacity={0.6} /><circle cx={x} cy={hc[1]} r={3} fill="#fff" opacity={0.8} /></> : null; })()}
+			{/* round 2: the beam from 16 is a small spark circling inside the glow (the old dash read as a headlamp beam) */}
+			{(() => { const a = u * 5.5; return t < 33.4 ? <circle cx={hc[0] + 7 * Math.cos(a)} cy={hc[1] + 5 * Math.sin(a)} r={2.6} fill="#fff" opacity={0.75} /> : null; })()}
 			{t >= 33.3 && (() => { const k = ease(seg(t, 33.4, 33.85)), ex = lerp(hc[0], S3[0], k), ey = lerp(hc[1], S3[1], k), mx = (hc[0] + ex) / 2, my = Math.min(hc[1], ey) - 120 * k;
 				return <><path d={`M${hc[0]},${hc[1]} Q${mx},${my} ${ex},${ey}`} stroke="#fff6e0" strokeWidth={4} fill="none" opacity={0.85 * (1 - 0.6 * lit)} /><Glow x={ex} y={ey} r={60} c="#fff6e0" o={0.8 * (1 - lit)} id="ofb" /></>; })()}
 			<g fill="#0b0d0c"><rect x={1830} y={480} width={320} height={640} /><rect x={1830} y={470} width={330} height={16} /><rect x={60} y={220} width={10} height={860} /><path d="M20,240 L65,220 L110,240 M30,300 L65,280 L100,300" stroke="#0b0d0c" strokeWidth={8} fill="none" /><path d="M10,300 Q60,280 110,300 L120,700 L0,700 Z" /></g>
