@@ -17,7 +17,7 @@ if '--v6' in sys.argv:   # the 2:30 version (owner 2026-10-25): bars 7-52 cut, 4
 if '--v7' in sys.argv:   # v7 full rewrite (owner 2026-10-25 "the beginning is not catching enough"): 38 lines, 2:08
     FREE, FADE, END = [(9.05, 11.07), (87.17, 88.60), (123.71, 999)], (125.95, 128.21), 128.21
     BGM, STARTS, OUT = 'audio/bgm_cut45_150.wav', 'vo/starts_v7.json', 'audio/mix45vo_v7.wav'
-    VOGAIN = {'v7_27': -1.5}
+    VOGAIN = {'v7_27': -3.0}
 def trim(x, thr=-45):
     e = np.convolve(np.abs(x), np.ones(441) / 441, 'same'); on = np.where(20 * np.log10(e + 1e-9) > thr)[0]
     return x[max(0, on[0] - 441):min(len(x), on[-1] + 2205)] if len(on) else x
