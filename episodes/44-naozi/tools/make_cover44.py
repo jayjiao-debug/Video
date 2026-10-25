@@ -31,22 +31,24 @@ def text_block(img, x, y, kicker, l1, l2, sub, s1, s2):
     g = np.repeat(col[:, None, :], img.size[0], axis=1).reshape(img.size[1], img.size[0], 3)
     img.paste(Image.fromarray(g), (0, 0), m)
     d.text((x, ys), sub, font=fs, fill=(226, 214, 200))
+FADE = [420, 260]
 def picture(name, cx, W, H, img_h, top):
     src = Image.open(f'{P}/{name}').convert('RGB'); sc = img_h / src.height; src = src.resize((int(src.width * sc), img_h), Image.LANCZOS)
     x0 = int(min(max(0, cx * src.width - W / 2), src.width - W)); crop = src.crop((x0, 0, x0 + W, img_h))
     canvas = Image.new('RGB', (W, H), (10, 12, 15)); canvas.paste(crop, (0, top))
     arr = np.array(canvas).astype(np.float32); yy = np.arange(H)[:, None]
     # fade the picture's top edge into the dark field, and a soft vignette
-    fade = np.clip((yy - top) / (img_h * 0.38), 0, 1) ** 1.2; fade = np.where(yy < top, 0, fade)
+    u = np.clip((yy - top) / FADE[0], 0, 1); fade = u * u * (3 - 2 * u)            # long smoothstep, no hard band
+    ub = np.clip((H - yy) / FADE[1], 0, 1); fade = fade * (0.35 + 0.65 * ub * ub * (3 - 2 * ub))
     base = np.array([10, 12, 15], np.float32)
     arr = base + (arr - base) * fade[..., None] if True else arr
     xx = np.arange(W)[None, :]; r = np.sqrt(((xx - W / 2) / (W / 2)) ** 2 + ((yy - H * 0.6) / (H * 0.7)) ** 2)
     arr *= np.clip(1 - 0.45 * np.clip(r - 0.6, 0, 1), 0, 1)[..., None]
     return Image.fromarray(arr.clip(0, 255).astype(np.uint8))
-WCX = {'A': 0.50, 'B': 0.50, 'C': 0.47}
+WCX = {'A': 0.37, 'B': 0.42, 'C': 0.45}
 for n, f, cx, k, l1, l2, sub in V:
-    t = picture(f, cx, 1080, 1440, 1000, 440); text_block(t, 78, 96, k, l1, l2, sub, 92, 118); t.save(f'{D}/out/封面_竖版_3x4_{n}.png')
-    w = picture(f, WCX.get(n, cx), 1440, 1080, 880, 200)
+    t = picture(f, cx, 1080, 1440, 1330, 300); text_block(t, 78, 96, k, l1, l2, sub, 92, 118); t.save(f'{D}/out/封面_竖版_3x4_{n}.png')
+    w = picture(f, WCX.get(n, cx), 1440, 1080, 1160, 170)
     # darken the top-left for the text on the wide version
     a = np.array(w).astype(np.float32); yy, xx = np.mgrid[0:1080, 0:1440]; m = np.clip(1 - 0.62 * np.exp(-(((xx - 200) / 900) ** 2 + ((yy - 160) / 420) ** 2)), 0, 1)
     w = Image.fromarray((a * m[..., None]).clip(0, 255).astype(np.uint8)); text_block(w, 80, 60, k, l1, l2, sub, 84, 104); w.save(f'{D}/out/封面_横版_4x3_{n}.png')
