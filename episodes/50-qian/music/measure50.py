@@ -153,3 +153,81 @@ ax[1].plot(tc, cent, lw=0.6, color='C1'); ax[1].set_ylabel('centroid Hz'); ax[1]
 ax[1].set_xticks(np.arange(0, 128, 5))
 plt.tight_layout(); plt.savefig(png, dpi=90)
 print('png', png)
+
+# ======================================================================= music_map_ep50.json
+lines = json.load(open(os.path.join(HERE, '..', 'lines_read.json')))
+DB0 = B1(20) - OFF['S1']                      # 0.1932: pre-hush film downbeats DB0 + BAR*k (k = 0..42)
+DB1 = B2(80) - OFF['S6']                      # 98.443: post-hush film downbeats DB1 + BAR*k (k = 0..10)
+def grid_pos(tf):
+    if tf < 96.45: base, kmax, songbar = DB0, 42, None
+    elif tf < 121.085: base, kmax, songbar = DB1, 10, None
+    else: return dict(note='coda (rubato, no grid)')
+    i = int(round((tf - base) / P)); bt = base + i * P
+    return dict(nearest_beat=round(bt, 3), bar=i // 4 + 1, beat=i % 4 + 1, delta=round(bt - tf, 3))
+song_bar_of = {}
+pre = [20, 21, 22, 23, 24, 25, 26, 27, 8, 9, 14, 15] + list(range(48, 71)) + list(range(72, 80))
+for k, sb in enumerate(pre): song_bar_of[round(DB0 + k * BAR, 3)] = sb
+post = list(range(80, 90)) + [103]
+for k, sb in enumerate(post): song_bar_of[round(DB1 + k * BAR, 3)] = sb
+line_tab = []
+for st, en, txt, spk in lines:
+    g = grid_pos(st); line_tab.append(dict(start=st, text=txt.replace('\n', ' / '), **g))
+lm = {r['event']: r['film_measured'] for r in res}
+cues = [
+    dict(cue='hook, energy from frame 0', target=0.0, landed='chorus-1 groove from sample 0 (song 45.660, mid-beat 4 of bar 19); first downbeat (bar 20, phrase start) at 0.193', delta=0.193),
+    dict(cue='hook line 2', target=3.0, landed='bar 21 beat 2 at 3.023', delta=0.023),
+    dict(cue='hook line 3', target=6.5, landed='bar 22 beat 4 at 6.420; fill bar 23 from 6.986', delta=-0.08),
+    dict(cue='TITLE HIT', target=9.25, landed=f"bar 24 re-entry hit at {lm['TITLE: bar 24 re-entry hit']} after the song's own 1-beat break 8.683-9.250 (-25 LUFS-M -> -12; +14.6 dB jump)", delta=round(lm['TITLE: bar 24 re-entry hit'] - 9.25, 3)),
+    dict(cue='先猜？ guess beat 22.0-23.5 (held, tense)', target=22.0, landed='inside the bright B pre-chorus pedal (bars 8-9 | 14-15, brightest stretch before the reveal); bar 14 downbeat 22.836 mid-beat; fill bar 15 from 25.100; reversed swell 26.36-27.36 (-15 dB)', delta=None),
+    dict(cue='REVEAL 原来，"钱"是一把[铲子]', target=27.25, landed=f"chorus downbeat (bar 48) at {lm['REVEAL: chorus bar 48 downbeat']}", delta=round(lm['REVEAL: chorus bar 48 downbeat'] - 27.25, 3)),
+    dict(cue='Tang Q 废五铢钱', target=47.75, landed=f"bar 57 downbeat {lm['Tang Q: bar 57']}", delta=round(lm['Tang Q: bar 57'] - 47.75, 3)),
+    dict(cue='开元 新钱的名字', target=52.25, landed=f"bar 59 downbeat {lm['开元: bar 59']}", delta=round(lm['开元: bar 59'] - 52.25, 3)),
+    dict(cue='纸币之一 (world first)', target=79.0, landed=f"CRASH bar 72 at {lm['CRASH bar 72 (J5)']} (brightest build starts)", delta=round(lm['CRASH bar 72 (J5)'] - 79.0, 3)),
+    dict(cue='printing set-piece', target=81.75, landed=f"bar 73 downbeat {lm['printing: bar 73']}", delta=round(lm['printing: bar 73'] - 81.75, 3)),
+    dict(cue='宝钞 collapse Q', target=92.0, landed='last two build bars 77-78 (90.762, 93.026); stop bar 79 at 95.290: four 8th-note hits 95.29-96.42 = the value tag falling', delta=None),
+    dict(cue='HUSH 96.5-98.5', target=96.5, landed=f"song silence from 96.45; stop-bar ring -25 -> -40 dB by 97.2; below -45 LUFS-M {near_sil['below_minus45_lufsM_s']} s (~97.55-98.1); inhale 97.89-98.44; lead-in first note {lm['lead-in first note']}", delta=-0.05),
+    dict(cue='白银 line', target=98.5, landed=f"lead-in first note {lm['lead-in first note']} (bar 80)", delta=round(lm['lead-in first note'] - 98.5, 3)),
+    dict(cue='如今 10.17亿 (today)', target=107.5, landed=f"DROP bar 84 at {lm['DROP bar 84']}", delta=round(lm['DROP bar 84'] - 107.5, 3)),
+    dict(cue='值钱的是，大家都[信]它 = the peak', target=117.0, landed=f"Bb-minor ARRIVAL bar 88 at {lm['ARRIVAL bar 88']} (+1 dB lift), line starts on beat 2 (117.123); bar 89 downbeat 118.821; loudest 3 s of the film at {out['max_short_term_at']} ({out['max_short_term_lufs']} LUFS-S), loudest 400 ms at {out['max_momentary_at']}", delta=round(117.123 - 117.0, 3)),
+    dict(cue='1.0 s air', target=119.5, landed='bar 89/103 beat 2 at 119.387, beat 3 119.953 (still the peak; J7 splice 119.43-119.91 is inaudible, r 0.93)', delta=-0.113),
+    dict(cue='END CARD', target=120.5, landed='beat 4 at 120.519; the fall (drums stop) at 121.085 = suggested J-stamp moment; coda Gb 121.398, Db hit 124.974', delta=0.019),
+    dict(cue='clean stop', target=127.0, landed=f"fade 125.45 -> 126.96 over the last coda chord (Gb), ending where the next chord would start; last non-silent sample {out['last_nonsilent']}", delta=round(out['last_nonsilent'] - 127.0, 3)),
+]
+spans = [
+    dict(film=[0.0, 18.307], song=[45.660, 63.967], bars='19 (last 0.19 s), 20-23 chorus-1 end + 1-beat break, 24-27 verse', note='TITLE = bar 24 at 9.250'),
+    dict(film=[18.307, 22.836], song=[18.682, 23.211], bars='8-9 B pre-chorus'),
+    dict(film=[22.836, 27.364], song=[32.268, 36.796], bars='14-15 B pre (15 = fill into the chorus)'),
+    dict(film=[27.364, 79.441], song=[109.250, 161.327], bars='48-55 chorus-2, 56-63 verse, 64-70 valley (no kick)'),
+    dict(film=[79.441, 96.45], song=[163.591, 180.60], bars='72-78 B build (crash at 72), 79 stop bar (2 beats of hits)'),
+    dict(film=[96.45, 98.443], song='gap', bars='hush: stop-bar ring + near-silence + inhale'),
+    dict(film=[98.443, 118.821], song=[182.271, 202.649], bars='80-83 lead-in, 84 DROP, 85-87, 88 ARRIVAL (Bb min), 89'),
+    dict(film=[118.821, 126.96], song=[234.347, 242.49], bars='103 (via J7 inside beat 2), 104 fall + coda Gb-F-Bb-Db-Gb, fade'),
+]
+jn = {
+    'J2': dict(film=18.307, cut='bar 27 -> bar 8', how='linear xfade over bar 27 beat 4 = bar 7 beat 4 (the song\'s own A->B approach)'),
+    'J3': dict(film=22.836, cut='bar 9 -> bar 14', how='linear xfade over bar 9 beat 4 = bar 13 beat 4'),
+    'J4': dict(film=27.364, cut='bar 15 -> bar 16 (natural, through the downbeat) -> bar 48', how='linear xfade bar 16 -> bar 48 inside beat 1'),
+    'J5': dict(film=79.441, cut='bar 70 -> bar 72 (bar 71 dropped)', how='18 ms equal-power ending 2 ms before the crash; the only odd-length edit'),
+    'J7': dict(film=119.43, cut='bar 89 -> bar 103', how='linear xfade inside beat 2 (bar 89 = bar 103 copy) so the fall into the coda is the song\'s own'),
+}
+for j in jn:
+    jn[j].update(xfade=info['xfades'][j]['film'], kind=info['xfades'][j]['kind'], lag_ms=info['xfades'][j]['lag_ms'],
+                 copy_correlation=info['xfades'][j]['r'], **{k: v for k, v in joins[j].items() if k != 'film'})
+mm = dict(
+    file='ep50_bed.wav (48 kHz, 24-bit PCM, stereo, 127.000 s) - never commit audio',
+    song='episodes/50-qian/music/bgm.mp3 (バケモノの唄 instrumental, 254.1 s; md5 32975059d98bb656410fe1a58b6cdb3b = ep41 bgm2.mp3)',
+    build='python3 build50.py && python3 measure50.py <png>',
+    loudness=dict(integrated_lufs=out['integrated_lufs'], true_peak_dbtp=out['true_peak_dbtp'], limiter='not needed',
+                  max_short_term=[out['max_short_term_lufs'], out['max_short_term_at']], max_momentary=[out['max_momentary_lufs'], out['max_momentary_at']],
+                  sections_short_term_lufs=sections, lr_correlation=out['lr_correlation'], mono_fold_change_db=out['mono_fold_change_db']),
+    grid=dict(beat_s=P, bpm=round(60 / P, 2), song_part1_downbeats='0.5688 + 2.2642*k (bars 0-79)', song_part2_downbeats='1.1348 + 2.2642*k (bars 80-110)',
+              film_pre_hush=f'downbeats {DB0:.4f} + 2.26420*k, k = 0..42 (95.290 = stop bar); beats every 0.56605',
+              film_post_hush=f'downbeats {DB1:.4f} + 2.26420*k, k = 0..10 (107.500 DROP, 116.557 ARRIVAL, 121.085 fall); coda after 121.085 is rubato',
+              film_downbeat_to_song_bar=song_bar_of),
+    spans=spans, joins=jn, effects=info['fx'],
+    gain_rides=[dict(film=[116.557, 121.085], db=1.0, why='信 + air = the sustained peak; step hidden under the bar-88 downbeat and the drum stop'),
+                dict(film=[125.45, 126.96], db='fade (cos^1.5)', why='last coda chord fades out, silent before 127.0')],
+    cues=cues, landmarks=res, line_starts_vs_grid=line_tab,
+)
+json.dump(mm, open(os.path.join(HERE, 'music_map_ep50.json'), 'w'), indent=1, ensure_ascii=False, default=float)
+print('wrote music_map_ep50.json')

@@ -1,0 +1,925 @@
+{
+ "file": "ep50_bed.wav (48 kHz, 24-bit PCM, stereo, 127.000 s) - never commit audio",
+ "song": "episodes/50-qian/music/bgm.mp3 (バケモノの唄 instrumental, 254.1 s; md5 32975059d98bb656410fe1a58b6cdb3b = ep41 bgm2.mp3)",
+ "build": "python3 build50.py && python3 measure50.py <png>",
+ "loudness": {
+  "integrated_lufs": -14.0,
+  "true_peak_dbtp": -2.29,
+  "limiter": "not needed",
+  "max_short_term": [
+   -11.9,
+   118.05
+  ],
+  "max_momentary": [
+   -11.0,
+   119.0
+  ],
+  "sections_short_term_lufs": {
+   "hook 0-9.25": -13.3,
+   "verse 9.25-18.3": -13.6,
+   "B pre 18.3-27.4": -14.1,
+   "chorus 27.4-45.5": -13.3,
+   "verse 45.5-63.6": -13.4,
+   "valley 63.6-79.4": -15.8,
+   "B build 79.4-95.3": -13.9,
+   "lead-in 98.4-107.5": -15.9,
+   "drop 107.5-116.6": -13.3,
+   "信+air 116.6-121.1": -12.5,
+   "coda 121.1-125.5": -17.2
+  },
+  "lr_correlation": 0.996,
+  "mono_fold_change_db": -0.01
+ },
+ "grid": {
+  "beat_s": 0.56605,
+  "bpm": 106.0,
+  "song_part1_downbeats": "0.5688 + 2.2642*k (bars 0-79)",
+  "song_part2_downbeats": "1.1348 + 2.2642*k (bars 80-110)",
+  "film_pre_hush": "downbeats 0.1932 + 2.26420*k, k = 0..42 (95.290 = stop bar); beats every 0.56605",
+  "film_post_hush": "downbeats 98.4432 + 2.26420*k, k = 0..10 (107.500 DROP, 116.557 ARRIVAL, 121.085 fall); coda after 121.085 is rubato",
+  "film_downbeat_to_song_bar": {
+   "0.193": 20,
+   "2.457": 21,
+   "4.722": 22,
+   "6.986": 23,
+   "9.25": 24,
+   "11.514": 25,
+   "13.778": 26,
+   "16.043": 27,
+   "18.307": 8,
+   "20.571": 9,
+   "22.835": 14,
+   "25.099": 15,
+   "27.364": 48,
+   "29.628": 49,
+   "31.892": 50,
+   "34.156": 51,
+   "36.42": 52,
+   "38.685": 53,
+   "40.949": 54,
+   "43.213": 55,
+   "45.477": 56,
+   "47.741": 57,
+   "50.006": 58,
+   "52.27": 59,
+   "54.534": 60,
+   "56.798": 61,
+   "59.062": 62,
+   "61.327": 63,
+   "63.591": 64,
+   "65.855": 65,
+   "68.119": 66,
+   "70.383": 67,
+   "72.648": 68,
+   "74.912": 69,
+   "77.176": 70,
+   "79.44": 72,
+   "81.704": 73,
+   "83.969": 74,
+   "86.233": 75,
+   "88.497": 76,
+   "90.761": 77,
+   "93.025": 78,
+   "95.29": 79,
+   "98.443": 80,
+   "100.707": 81,
+   "102.972": 82,
+   "105.236": 83,
+   "107.5": 84,
+   "109.764": 85,
+   "112.028": 86,
+   "114.293": 87,
+   "116.557": 88,
+   "118.821": 89,
+   "121.085": 103
+  }
+ },
+ "spans": [
+  {
+   "film": [
+    0.0,
+    18.307
+   ],
+   "song": [
+    45.66,
+    63.967
+   ],
+   "bars": "19 (last 0.19 s), 20-23 chorus-1 end + 1-beat break, 24-27 verse",
+   "note": "TITLE = bar 24 at 9.250"
+  },
+  {
+   "film": [
+    18.307,
+    22.836
+   ],
+   "song": [
+    18.682,
+    23.211
+   ],
+   "bars": "8-9 B pre-chorus"
+  },
+  {
+   "film": [
+    22.836,
+    27.364
+   ],
+   "song": [
+    32.268,
+    36.796
+   ],
+   "bars": "14-15 B pre (15 = fill into the chorus)"
+  },
+  {
+   "film": [
+    27.364,
+    79.441
+   ],
+   "song": [
+    109.25,
+    161.327
+   ],
+   "bars": "48-55 chorus-2, 56-63 verse, 64-70 valley (no kick)"
+  },
+  {
+   "film": [
+    79.441,
+    96.45
+   ],
+   "song": [
+    163.591,
+    180.6
+   ],
+   "bars": "72-78 B build (crash at 72), 79 stop bar (2 beats of hits)"
+  },
+  {
+   "film": [
+    96.45,
+    98.443
+   ],
+   "song": "gap",
+   "bars": "hush: stop-bar ring + near-silence + inhale"
+  },
+  {
+   "film": [
+    98.443,
+    118.821
+   ],
+   "song": [
+    182.271,
+    202.649
+   ],
+   "bars": "80-83 lead-in, 84 DROP, 85-87, 88 ARRIVAL (Bb min), 89"
+  },
+  {
+   "film": [
+    118.821,
+    126.96
+   ],
+   "song": [
+    234.347,
+    242.49
+   ],
+   "bars": "103 (via J7 inside beat 2), 104 fall + coda Gb-F-Bb-Db-Gb, fade"
+  }
+ ],
+ "joins": {
+  "J2": {
+   "film": 18.307,
+   "cut": "bar 27 -> bar 8",
+   "how": "linear xfade over bar 27 beat 4 = bar 7 beat 4 (the song's own A->B approach)",
+   "xfade": [
+    17.7708,
+    18.2948
+   ],
+   "kind": "lin",
+   "lag_ms": 0.979,
+   "copy_correlation": 0.91,
+   "max_5ms_step_in_xfade_db": 9.0,
+   "p99_step_around_db": 7.5,
+   "hf_peak_in_xfade_vs_p95_around_db": -1.6
+  },
+  "J3": {
+   "film": 22.836,
+   "cut": "bar 9 -> bar 14",
+   "how": "linear xfade over bar 9 beat 4 = bar 13 beat 4",
+   "xfade": [
+    22.2992,
+    22.8232
+   ],
+   "kind": "lin",
+   "lag_ms": 0.792,
+   "copy_correlation": 0.978,
+   "max_5ms_step_in_xfade_db": 8.0,
+   "p99_step_around_db": 6.3,
+   "hf_peak_in_xfade_vs_p95_around_db": 0.5
+  },
+  "J4": {
+   "film": 27.364,
+   "cut": "bar 15 -> bar 16 (natural, through the downbeat) -> bar 48",
+   "how": "linear xfade bar 16 -> bar 48 inside beat 1",
+   "xfade": [
+    27.4336,
+    27.8897
+   ],
+   "kind": "lin",
+   "lag_ms": -0.771,
+   "copy_correlation": 0.879,
+   "max_5ms_step_in_xfade_db": 9.5,
+   "p99_step_around_db": 8.9,
+   "hf_peak_in_xfade_vs_p95_around_db": -0.1
+  },
+  "J5": {
+   "film": 79.441,
+   "cut": "bar 70 -> bar 72 (bar 71 dropped)",
+   "how": "18 ms equal-power ending 2 ms before the crash; the only odd-length edit",
+   "xfade": [
+    79.4202,
+    79.4382
+   ],
+   "kind": "eqp",
+   "lag_ms": 0.0,
+   "copy_correlation": null,
+   "max_5ms_step_in_xfade_db": 4.8,
+   "p99_step_around_db": 7.9,
+   "hf_peak_in_xfade_vs_p95_around_db": 1.6
+  },
+  "J7": {
+   "film": 119.43,
+   "cut": "bar 89 -> bar 103",
+   "how": "linear xfade inside beat 2 (bar 89 = bar 103 copy) so the fall into the coda is the song's own",
+   "xfade": [
+    119.4271,
+    119.9131
+   ],
+   "kind": "lin",
+   "lag_ms": -0.708,
+   "copy_correlation": 0.925,
+   "max_5ms_step_in_xfade_db": 12.0,
+   "p99_step_around_db": 8.4,
+   "hf_peak_in_xfade_vs_p95_around_db": -0.5
+  }
+ },
+ "effects": [
+  {
+   "film": [
+    26.364,
+    27.364
+   ],
+   "what": "reversed-reverb swell of the chorus downbeat into the reveal",
+   "db": -15.0
+  },
+  {
+   "film": [
+    95.29,
+    98.4
+   ],
+   "what": "stop-bar ring (reverb of song 179.44-180.62)",
+   "db": -12.0
+  },
+  {
+   "film": [
+    97.888,
+    98.438
+   ],
+   "what": "reversed-reverb inhale into the lead-in",
+   "db": -10.0
+  }
+ ],
+ "gain_rides": [
+  {
+   "film": [
+    116.557,
+    121.085
+   ],
+   "db": 1.0,
+   "why": "信 + air = the sustained peak; step hidden under the bar-88 downbeat and the drum stop"
+  },
+  {
+   "film": [
+    125.45,
+    126.96
+   ],
+   "db": "fade (cos^1.5)",
+   "why": "last coda chord fades out, silent before 127.0"
+  }
+ ],
+ "cues": [
+  {
+   "cue": "hook, energy from frame 0",
+   "target": 0.0,
+   "landed": "chorus-1 groove from sample 0 (song 45.660, mid-beat 4 of bar 19); first downbeat (bar 20, phrase start) at 0.193",
+   "delta": 0.193
+  },
+  {
+   "cue": "hook line 2",
+   "target": 3.0,
+   "landed": "bar 21 beat 2 at 3.023",
+   "delta": 0.023
+  },
+  {
+   "cue": "hook line 3",
+   "target": 6.5,
+   "landed": "bar 22 beat 4 at 6.420; fill bar 23 from 6.986",
+   "delta": -0.08
+  },
+  {
+   "cue": "TITLE HIT",
+   "target": 9.25,
+   "landed": "bar 24 re-entry hit at 9.25 after the song's own 1-beat break 8.683-9.250 (-25 LUFS-M -> -12; +14.6 dB jump)",
+   "delta": 0.0
+  },
+  {
+   "cue": "先猜？ guess beat 22.0-23.5 (held, tense)",
+   "target": 22.0,
+   "landed": "inside the bright B pre-chorus pedal (bars 8-9 | 14-15, brightest stretch before the reveal); bar 14 downbeat 22.836 mid-beat; fill bar 15 from 25.100; reversed swell 26.36-27.36 (-15 dB)",
+   "delta": null
+  },
+  {
+   "cue": "REVEAL 原来，\"钱\"是一把[铲子]",
+   "target": 27.25,
+   "landed": "chorus downbeat (bar 48) at 27.364",
+   "delta": 0.114
+  },
+  {
+   "cue": "Tang Q 废五铢钱",
+   "target": 47.75,
+   "landed": "bar 57 downbeat 47.742",
+   "delta": -0.008
+  },
+  {
+   "cue": "开元 新钱的名字",
+   "target": 52.25,
+   "landed": "bar 59 downbeat 52.271",
+   "delta": 0.021
+  },
+  {
+   "cue": "纸币之一 (world first)",
+   "target": 79.0,
+   "landed": "CRASH bar 72 at 79.44 (brightest build starts)",
+   "delta": 0.44
+  },
+  {
+   "cue": "printing set-piece",
+   "target": 81.75,
+   "landed": "bar 73 downbeat 81.704",
+   "delta": -0.046
+  },
+  {
+   "cue": "宝钞 collapse Q",
+   "target": 92.0,
+   "landed": "last two build bars 77-78 (90.762, 93.026); stop bar 79 at 95.290: four 8th-note hits 95.29-96.42 = the value tag falling",
+   "delta": null
+  },
+  {
+   "cue": "HUSH 96.5-98.5",
+   "target": 96.5,
+   "landed": "song silence from 96.45; stop-bar ring -25 -> -40 dB by 97.2; below -45 LUFS-M 0.1 s (~97.55-98.1); inhale 97.89-98.44; lead-in first note 98.438",
+   "delta": -0.05
+  },
+  {
+   "cue": "白银 line",
+   "target": 98.5,
+   "landed": "lead-in first note 98.438 (bar 80)",
+   "delta": -0.062
+  },
+  {
+   "cue": "如今 10.17亿 (today)",
+   "target": 107.5,
+   "landed": "DROP bar 84 at 107.5",
+   "delta": 0.0
+  },
+  {
+   "cue": "值钱的是，大家都[信]它 = the peak",
+   "target": 117.0,
+   "landed": "Bb-minor ARRIVAL bar 88 at 116.557 (+1 dB lift), line starts on beat 2 (117.123); bar 89 downbeat 118.821; loudest 3 s of the film at 118.05 (-11.9 LUFS-S), loudest 400 ms at 119.0",
+   "delta": 0.123
+  },
+  {
+   "cue": "1.0 s air",
+   "target": 119.5,
+   "landed": "bar 89/103 beat 2 at 119.387, beat 3 119.953 (still the peak; J7 splice 119.43-119.91 is inaudible, r 0.93)",
+   "delta": -0.113
+  },
+  {
+   "cue": "END CARD",
+   "target": 120.5,
+   "landed": "beat 4 at 120.519; the fall (drums stop) at 121.085 = suggested J-stamp moment; coda Gb 121.398, Db hit 124.974",
+   "delta": 0.019
+  },
+  {
+   "cue": "clean stop",
+   "target": 127.0,
+   "landed": "fade 125.45 -> 126.96 over the last coda chord (Gb), ending where the next chord would start; last non-silent sample 126.953",
+   "delta": -0.047
+  }
+ ],
+ "landmarks": [
+  {
+   "event": "hook: chorus bar 20 downbeat (first hit)",
+   "song_s": 45.853,
+   "film_pred": 0.193,
+   "film_measured": 0.193,
+   "xcorr": 1.0
+  },
+  {
+   "event": "1-beat break (song 54.343)",
+   "song_s": 54.343,
+   "film_pred": 8.683,
+   "film_measured": 8.683,
+   "xcorr": 1.0
+  },
+  {
+   "event": "TITLE: bar 24 re-entry hit",
+   "song_s": 54.91,
+   "film_pred": 9.25,
+   "film_measured": 9.25,
+   "xcorr": 1.0
+  },
+  {
+   "event": "B pre bar 8 (J2)",
+   "song_s": 18.682,
+   "film_pred": 18.306,
+   "film_measured": 18.306,
+   "xcorr": 1.0
+  },
+  {
+   "event": "B pre bar 14 (J3)",
+   "song_s": 32.268,
+   "film_pred": 22.834,
+   "film_measured": 22.834,
+   "xcorr": 1.0
+  },
+  {
+   "event": "B pre fill bar 15",
+   "song_s": 34.532,
+   "film_pred": 25.099,
+   "film_measured": 25.099,
+   "xcorr": 1.0
+  },
+  {
+   "event": "REVEAL: chorus bar 48 downbeat",
+   "song_s": 109.25,
+   "film_pred": 27.364,
+   "film_measured": 27.364,
+   "xcorr": 0.92
+  },
+  {
+   "event": "chorus dip bar 55 beat 4",
+   "song_s": 126.798,
+   "film_pred": 44.912,
+   "film_measured": 44.912,
+   "xcorr": 1.0
+  },
+  {
+   "event": "verse hit bar 56",
+   "song_s": 127.364,
+   "film_pred": 45.478,
+   "film_measured": 45.478,
+   "xcorr": 1.0
+  },
+  {
+   "event": "Tang Q: bar 57",
+   "song_s": 129.628,
+   "film_pred": 47.742,
+   "film_measured": 47.742,
+   "xcorr": 1.0
+  },
+  {
+   "event": "开元: bar 59",
+   "song_s": 134.157,
+   "film_pred": 52.271,
+   "film_measured": 52.271,
+   "xcorr": 1.0
+  },
+  {
+   "event": "valley bar 64",
+   "song_s": 145.478,
+   "film_pred": 63.592,
+   "film_measured": 63.592,
+   "xcorr": 1.0
+  },
+  {
+   "event": "CRASH bar 72 (J5)",
+   "song_s": 163.591,
+   "film_pred": 79.44,
+   "film_measured": 79.44,
+   "xcorr": 0.975
+  },
+  {
+   "event": "printing: bar 73",
+   "song_s": 165.855,
+   "film_pred": 81.704,
+   "film_measured": 81.704,
+   "xcorr": 1.0
+  },
+  {
+   "event": "stop bar 79",
+   "song_s": 179.441,
+   "film_pred": 95.29,
+   "film_measured": 95.29,
+   "xcorr": 0.954
+  },
+  {
+   "event": "lead-in first note",
+   "song_s": 182.266,
+   "film_pred": 98.438,
+   "film_measured": 98.438,
+   "xcorr": 0.992
+  },
+  {
+   "event": "DROP bar 84",
+   "song_s": 191.328,
+   "film_pred": 107.5,
+   "film_measured": 107.5,
+   "xcorr": 1.0
+  },
+  {
+   "event": "ARRIVAL bar 88",
+   "song_s": 200.384,
+   "film_pred": 116.557,
+   "film_measured": 116.557,
+   "xcorr": 1.0
+  },
+  {
+   "event": "bar 89",
+   "song_s": 202.649,
+   "film_pred": 118.821,
+   "film_measured": 118.821,
+   "xcorr": 1.0
+  },
+  {
+   "event": "bar 103 beat 3 (after J7)",
+   "song_s": 235.48,
+   "film_pred": 119.954,
+   "film_measured": 119.954,
+   "xcorr": 1.0
+  },
+  {
+   "event": "coda fall bar 104",
+   "song_s": 236.612,
+   "film_pred": 121.086,
+   "film_measured": 121.086,
+   "xcorr": 0.999
+  },
+  {
+   "event": "coda Gb",
+   "song_s": 236.924,
+   "film_pred": 121.398,
+   "film_measured": 121.398,
+   "xcorr": 1.0
+  },
+  {
+   "event": "coda Db hit",
+   "song_s": 240.5,
+   "film_pred": 124.974,
+   "film_measured": 124.974,
+   "xcorr": 1.0
+  }
+ ],
+ "line_starts_vs_grid": [
+  {
+   "start": 0.0,
+   "text": "财、货、贵，都带个\"贝\"， / 偏偏\"钱\"，是[金]字旁。",
+   "nearest_beat": 0.193,
+   "bar": 1,
+   "beat": 1,
+   "delta": 0.193
+  },
+  {
+   "start": 3.0,
+   "text": "你扫码付的钱， / 倒回一千年，只是一张[纸]。",
+   "nearest_beat": 3.023,
+   "bar": 2,
+   "beat": 2,
+   "delta": 0.023
+  },
+  {
+   "start": 6.5,
+   "text": "倒回三千多年，钱是一枚贝壳。",
+   "nearest_beat": 6.42,
+   "bar": 3,
+   "beat": 4,
+   "delta": -0.08
+  },
+  {
+   "start": 12.25,
+   "text": "贝壳从很远的海边运来，",
+   "nearest_beat": 12.08,
+   "bar": 6,
+   "beat": 2,
+   "delta": -0.17
+  },
+  {
+   "start": 14.75,
+   "text": "稀少、结实，又好带。",
+   "nearest_beat": 14.911,
+   "bar": 7,
+   "beat": 3,
+   "delta": 0.161
+  },
+  {
+   "start": 16.75,
+   "text": "商代晚期，还有了青铜铸的贝。",
+   "nearest_beat": 16.609,
+   "bar": 8,
+   "beat": 2,
+   "delta": -0.141
+  },
+  {
+   "start": 19.5,
+   "text": "那\"钱\"，为什么是金字旁？",
+   "nearest_beat": 19.439,
+   "bar": 9,
+   "beat": 3,
+   "delta": -0.061
+  },
+  {
+   "start": 23.5,
+   "text": "钱，铫也，古田器也。 / {钱，是一种古代农具}",
+   "nearest_beat": 23.401,
+   "bar": 11,
+   "beat": 2,
+   "delta": -0.099
+  },
+  {
+   "start": 27.25,
+   "text": "原来，\"钱\"是一把[铲子]。",
+   "nearest_beat": 27.364,
+   "bar": 13,
+   "beat": 1,
+   "delta": 0.114
+  },
+  {
+   "start": 29.5,
+   "text": "东周时，人们照着铲子铸铜币，",
+   "nearest_beat": 29.628,
+   "bar": 14,
+   "beat": 1,
+   "delta": 0.128
+  },
+  {
+   "start": 32.25,
+   "text": "名字也跟着叫\"钱\"。",
+   "nearest_beat": 32.458,
+   "bar": 15,
+   "beat": 2,
+   "delta": 0.208
+  },
+  {
+   "start": 34.25,
+   "text": "战国各国的钱， / 有刀、铲、圆、贝。",
+   "nearest_beat": 34.156,
+   "bar": 16,
+   "beat": 1,
+   "delta": -0.094
+  },
+  {
+   "start": 37.0,
+   "text": "秦统一六国，也统一了钱。",
+   "nearest_beat": 36.986,
+   "bar": 17,
+   "beat": 2,
+   "delta": -0.014
+  },
+  {
+   "start": 39.5,
+   "text": "钱上写着\"半两\"， / 就得重[半两]。",
+   "nearest_beat": 39.251,
+   "bar": 18,
+   "beat": 2,
+   "delta": -0.249
+  },
+  {
+   "start": 42.25,
+   "text": "汉朝的\"五铢\"，名字也是重量，",
+   "nearest_beat": 42.081,
+   "bar": 19,
+   "beat": 3,
+   "delta": -0.169
+  },
+  {
+   "start": 45.0,
+   "text": "一用七百多年，从汉用到唐。",
+   "nearest_beat": 44.911,
+   "bar": 20,
+   "beat": 4,
+   "delta": -0.089
+  },
+  {
+   "start": 47.75,
+   "text": "废五铢钱，行开元通宝钱。 / {不用五铢了，改用开元通宝}",
+   "nearest_beat": 47.741,
+   "bar": 22,
+   "beat": 1,
+   "delta": -0.009
+  },
+  {
+   "start": 52.25,
+   "text": "新钱的名字，不再是[重量]。",
+   "nearest_beat": 52.27,
+   "bar": 24,
+   "beat": 1,
+   "delta": 0.02
+  },
+  {
+   "start": 54.75,
+   "text": "北宋的四川，用的是铁钱。",
+   "nearest_beat": 54.534,
+   "bar": 25,
+   "beat": 1,
+   "delta": -0.216
+  },
+  {
+   "start": 57.25,
+   "text": "一串一千文， / 重[二十五斤八两]。",
+   "nearest_beat": 57.364,
+   "bar": 26,
+   "beat": 2,
+   "delta": 0.114
+  },
+  {
+   "start": 60.0,
+   "text": "患蜀人铁钱重，不便贸易。 / {四川的铁钱太重，买卖不方便}",
+   "nearest_beat": 60.195,
+   "bar": 27,
+   "beat": 3,
+   "delta": 0.195
+  },
+  {
+   "start": 64.75,
+   "text": "川蜀铁钱十枚，才抵一枚铜钱。",
+   "nearest_beat": 64.723,
+   "bar": 29,
+   "beat": 3,
+   "delta": -0.027
+  },
+  {
+   "start": 67.5,
+   "text": "于是有了[交子]：",
+   "nearest_beat": 67.553,
+   "bar": 30,
+   "beat": 4,
+   "delta": 0.053
+  },
+  {
+   "start": 69.5,
+   "text": "一张纸，能换一千文。",
+   "nearest_beat": 69.251,
+   "bar": 31,
+   "beat": 3,
+   "delta": -0.249
+  },
+  {
+   "start": 71.75,
+   "text": "起初，16家富户发交子，",
+   "nearest_beat": 71.516,
+   "bar": 32,
+   "beat": 3,
+   "delta": -0.234
+  },
+  {
+   "start": 74.25,
+   "text": "后来[换不回钱]，官司不断。",
+   "nearest_beat": 74.346,
+   "bar": 33,
+   "beat": 4,
+   "delta": 0.096
+  },
+  {
+   "start": 76.75,
+   "text": "1024年，官府接手交子。",
+   "nearest_beat": 76.61,
+   "bar": 34,
+   "beat": 4,
+   "delta": -0.14
+  },
+  {
+   "start": 79.0,
+   "text": "它是世界上最早的[纸币之一]。",
+   "nearest_beat": 78.874,
+   "bar": 35,
+   "beat": 4,
+   "delta": -0.126
+  },
+  {
+   "start": 81.75,
+   "text": "红黑套印，暗藏编号， / 防人伪造。",
+   "nearest_beat": 81.704,
+   "bar": 37,
+   "beat": 1,
+   "delta": -0.046
+  },
+  {
+   "start": 84.5,
+   "text": "明初，官府印[宝钞]：",
+   "nearest_beat": 84.535,
+   "bar": 38,
+   "beat": 2,
+   "delta": 0.035
+  },
+  {
+   "start": 86.5,
+   "text": "一贯，等于一千文，等于一两银。",
+   "nearest_beat": 86.233,
+   "bar": 39,
+   "beat": 1,
+   "delta": -0.267
+  },
+  {
+   "start": 89.25,
+   "text": "可官府印得[太多]，又收不回来。",
+   "nearest_beat": 89.063,
+   "bar": 40,
+   "beat": 2,
+   "delta": -0.187
+  },
+  {
+   "start": 92.0,
+   "text": "钞一贯不能直钱一文。 / {那时，一贯钞连一文钱都不值}",
+   "nearest_beat": 91.893,
+   "bar": 41,
+   "beat": 3,
+   "delta": -0.107
+  },
+  {
+   "start": 98.5,
+   "text": "纸不灵了，明朝人改用[白银]。",
+   "nearest_beat": 98.443,
+   "bar": 1,
+   "beat": 1,
+   "delta": -0.057
+  },
+  {
+   "start": 101.25,
+   "text": "白银每次都要称，",
+   "nearest_beat": 101.273,
+   "bar": 2,
+   "beat": 2,
+   "delta": 0.023
+  },
+  {
+   "start": 103.25,
+   "text": "钱又回到了看重量。",
+   "nearest_beat": 102.972,
+   "bar": 3,
+   "beat": 1,
+   "delta": -0.278
+  },
+  {
+   "start": 105.5,
+   "text": "1948年，人民币来了。",
+   "nearest_beat": 105.236,
+   "bar": 4,
+   "beat": 1,
+   "delta": -0.264
+  },
+  {
+   "start": 107.5,
+   "text": "如今，[10.17亿]人用网络支付。",
+   "nearest_beat": 107.5,
+   "bar": 5,
+   "beat": 1,
+   "delta": 0.0
+  },
+  {
+   "start": 110.0,
+   "text": "钱越变越轻：",
+   "nearest_beat": 109.764,
+   "bar": 6,
+   "beat": 1,
+   "delta": -0.236
+  },
+  {
+   "start": 111.75,
+   "text": "贝壳、铜、纸，最后是一串数字。",
+   "nearest_beat": 112.028,
+   "bar": 7,
+   "beat": 1,
+   "delta": 0.278
+  },
+  {
+   "start": 114.5,
+   "text": "纸和数字本身不值钱，",
+   "nearest_beat": 114.293,
+   "bar": 8,
+   "beat": 1,
+   "delta": -0.207
+  },
+  {
+   "start": 117.0,
+   "text": "值钱的是，大家都[信]它。",
+   "nearest_beat": 117.123,
+   "bar": 9,
+   "beat": 2,
+   "delta": 0.123
+  },
+  {
+   "start": 120.5,
+   "text": "你上一次用[纸币]，是什么时候？",
+   "nearest_beat": 120.519,
+   "bar": 10,
+   "beat": 4,
+   "delta": 0.019
+  }
+ ]
+}
