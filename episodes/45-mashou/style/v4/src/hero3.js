@@ -75,11 +75,29 @@ const LEAF = (s) => (s < 0.4 ? 0.62 + 0.38 * Math.sin(s / 0.4 * Math.PI / 2) : M
 const ROLLW = (s) => (s < 0.3 ? 0.62 + 0.38 * Math.sin(s / 0.3 * Math.PI / 2) : s < 0.8 ? 1 - 0.25 * (s - 0.3) / 0.5 : Math.max(0.42, 0.78 * Math.cos((s - 0.8) / 0.2 * Math.PI / 2)));
 const EF = leaf([[752, 180], [768, 112], [792, 58], [822, 18]], 34, LEAF), EF_IN = leaf([[752, 168], [768, 112], [790, 62], [816, 30]], 34 * 0.5, LEAF, -1, 0.5);
 const EN = leaf([[700, 184], [712, 114], [734, 62], [760, 20]], 35, LEAF), EN_IN = leaf([[700, 172], [712, 114], [732, 66], [754, 32]], 35 * 0.5, LEAF, 1, 0.5);
-const ER = leaf([[702, 188], [710, 126], [724, 82], [726, 50], [708, 28], [680, 30], [664, 52]], 46, ROLLW);
-const ER_IN = leaf([[704, 172], [710, 128], [720, 96]], 46 * 0.62, (s) => 0.35 + 0.65 * Math.sin(Math.PI * s), 1, 0.55);
 const EAR_FAR = EF.d, EAR_FAR_IN = EF_IN.d, EAR_NEAR = EN.d, EAR_NEAR_IN = EN_IN.d;
-// rolled: the standing two-thirds, then the top third curls forward and down over the front edge as a solid roll
-const EAR_ROLL = ER.d, EAR_ROLL_HOLLOW = ER_IN.d, EAR_ROLL_TOP = ER.back;
+// rolled ear r6 (owner, v7 key frames: "the curled ear reads like a small bird sitting on the head"): the old roll (a round
+// top + a pointed tip + a specular dot) read as a head, a beak and an eye. Now the near ear keeps the far ear's LEAF silhouette
+// (wide base, tapering, no bulb, no neck) and is thicker; its upper half bends forward and its front edge rolls inward over the
+// cup as a tube, as on the real casting (press photos: a leaf ear whose rim is rolled). Everything is a plane of the head's own
+// patina (mid / mid2 / deep), one thin lip line, no highlight dot, no spiral.
+const earRoll = {
+	// silhouette: wide base, tapering to a narrow round ridge where the top third is folded over (no neck, no point sticking out)
+	sil: `M672,178 C670,150 678,116 692,90 C702,70 714,54 728,46 C740,40 754,44 757,58 C761,84 759,120 757,150 C756,162 757,170 759,178 C738,188 696,188 672,178 Z`,
+	// the cup (the ear's inside, deep), below the fold
+	cup: `M690,174 C688,150 694,124 706,100 L738,82 C743,112 741,146 737,174 C722,180 704,180 690,174 Z`,
+	// the folded-over tip: the outer skin turned down over the cup, a blunt triangle pointing down-forward, inside the silhouette
+	flap: `M716,53 C732,42 752,45 757,60 L746,76 C732,94 714,112 697,128 C692,116 695,98 703,84 C708,70 711,61 716,53 Z`,
+	flapShadow: `M746,76 C732,94 714,112 697,128 L703,136 C719,120 737,102 751,86 Z`,   // its cast shadow on the cup
+	ridge: `M714,55 C730,43 750,45 757,59`,                                               // the bend catches the light (a line, no dot)
+	back: `M757,58 C761,84 759,120 757,150 C756,162 757,170 759,178`,
+	// close-up only (o.earDetail): the bend as a lit band with thickness, the flap's lit upper facet and its free edge (no dents:
+	// two dark flats on the flap read as a face)
+	bend: `M712,58 C728,46 748,47 756,60 L751,70 C743,60 729,58 716,66 Z`,
+	litFacet: `M716,53 C732,42 752,45 757,60 L748,72 C738,72 726,76 714,84 C714,72 715,62 716,53 Z`,   // the flap's upper facet catches the key (hard edge)
+	flapEdge: `M746,76 C732,94 714,112 697,128`,                                            // the free edge of the folded tip
+};
+const EAR_ROLL = earRoll.sil;
 
 /* mane r5 (owner on r4: "it should be at least 一体 no?"). 「你由红铜一次铸成」: the mane is the BACK OF THE NECK, cast in relief in
    the same bronze — not a hairpiece laid on a smooth neck. So:
@@ -169,10 +187,12 @@ K.horseHead = (o = {}) => {
 	const maneSvg = MANE.slice().reverse().map((L) => (L.forkD ? `<path d="${L.forkD}" fill="${C.mid}"/><path d="${L.forkD}" fill="url(#${id}nk)"/><path d="${L.forkLit}" fill="${C.mid2}"/>` : '') + `<path d="${L.tongue}" fill="${C.mid}"/><path d="${L.tongue}" fill="url(#${id}nk)"/><path d="${L.shade}" fill="${L.k ? SH : mixC(SH, C.mid, 0.5)}"/><path d="${L.lit}" fill="${C.mid2}"/>`).join('')
 		+ MANE.slice(1).map((L) => `<path d="${L.grooveCut}" fill="${C.dark}" opacity=".8"/>`).join('')
 		+ MANE.map((L) => `<path d="${L.edgeLit}" stroke="${C.hi}" stroke-width="1.8" fill="none" opacity=".35"/>`).join('');
-	const ear = curl > 0.5
-		? `<path d="${EAR_ROLL}" fill="${C.mid2}"/><path d="${EAR_ROLL_HOLLOW}" fill="${C.deep}"/>
-		   <path d="${EAR_ROLL_TOP}" stroke="${C.hi}" stroke-width="5" fill="none" stroke-linecap="round" opacity=".9"/>
-		   <ellipse cx="712" cy="34" rx="9" ry="4.5" transform="rotate(-10 712 34)" fill="${C.spec}" opacity=".85"/>`
+	const E = earRoll, ear = curl > 0.5
+		? `<ellipse cx="716" cy="182" rx="52" ry="11" fill="${C.dark}" opacity=".5" filter="url(#${id}bb)"/><g><path d="${E.sil}" fill="${C.mid}"/><path d="${E.cup}" fill="${C.deep}" opacity=".8"/>
+		   <path d="${E.flapShadow}" fill="${C.dark}" opacity=".7"/><path d="${E.flap}" fill="${o.earDetail ? mixC(C.mid2, C.lite, 0.3) : C.mid2}"/>
+		   ${o.earDetail ? `<path d="${E.litFacet}" fill="${C.lite}"/><path d="${E.bend}" fill="${C.hi}" opacity=".7"/><path d="${E.flapEdge}" stroke="${C.hi}" stroke-width="2" fill="none" stroke-linecap="round" opacity=".55"/>` : ''}
+		   <path d="${E.ridge}" stroke="${C.hi}" stroke-width="${o.earDetail ? 2.6 : 3}" fill="none" stroke-linecap="round" opacity=".6"/>
+		   <path d="${E.back}" stroke="${C.rim}" stroke-width="3" fill="none" opacity=".7"/></g>`
 		: `<path d="${EAR_NEAR}" fill="${C.mid2}"/><path d="${EAR_NEAR_IN}" fill="${C.dark}"/><path d="${EN.back}" stroke="${C.hi}" stroke-width="4" fill="none"/>`;
 	// the silhouette (for the rim copies): neck + mane (one outline) + tongues + ears + head
 	const sil = (fill) => `<g fill="${fill}"><path d="${NECK}"/>${MANE_TONGUES.map((d) => `<path d="${d}"/>`).join('')}<path d="${EAR_FAR}"/><path d="${curl > 0.5 ? EAR_ROLL : EAR_NEAR}"/><path d="${HEAD}" transform="${HT}"/></g>`;
@@ -206,6 +226,8 @@ K.horseHead = (o = {}) => {
 		<linearGradient id="${id}jw" x1="0" x2="0" y1="0" y2="1"><stop offset="0" stop-color="${C.lite}" stop-opacity=".75"/><stop offset=".3" stop-color="${C.mid2}" stop-opacity=".35"/><stop offset=".62" stop-color="${C.mid}" stop-opacity="0"/><stop offset="1" stop-color="${C.dark}" stop-opacity=".85"/></linearGradient>
 		<linearGradient id="${id}hb" gradientUnits="userSpaceOnUse" x1="-60" y1="0" x2="60" y2="0"><stop offset="0" stop-color="${C.mid}" stop-opacity="0"/><stop offset="1" stop-color="${C.mid}" stop-opacity=".9"/></linearGradient>
 		<linearGradient id="${id}nk" gradientUnits="userSpaceOnUse" x1="840" y1="0" x2="1140" y2="0"><stop offset="0" stop-color="${C.mid2}"/><stop offset=".45" stop-color="${C.mid}"/><stop offset="1" stop-color="${mixC(C.mid, C.deep, 0.3)}"/></linearGradient>
+		<linearGradient id="${id}emg" x1="0" x2="0" y1="0" y2="1"><stop offset="0" stop-color="#fff"/><stop offset="1" stop-color="#000"/></linearGradient>
+		<mask id="${id}em" maskUnits="userSpaceOnUse" x="600" y="0" width="260" height="260"><rect x="600" y="0" width="260" height="168" fill="#fff"/><rect x="600" y="168" width="260" height="34" fill="url(#${id}emg)"/></mask>
 		<linearGradient id="${id}mb" x1="0" x2="0" y1="0" y2="1"><stop offset="0" stop-color="#1C1817"/><stop offset=".25" stop-color="#121010"/><stop offset="1" stop-color="#080707"/></linearGradient>
 	</defs>`;
 	const rk = o.rimK ?? 1;

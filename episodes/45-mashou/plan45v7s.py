@@ -8,7 +8,7 @@ snap = lambda t, g=1: BAR0 + BEAT * g * math.ceil((t - BAR0) / (BEAT * g) - 1e-6
 n = lambda s: len(re.sub(r'[\[\]，。：、？！“”"\s]', '', s))
 dmin = lambda s: 0.5 + 0.23 * n(s)   # ≈ 4.3 字/s; the ep44 reference reads 4.1 字/s over 2.6 s lines
 L = [x[2] for x in json.load(open('lines_v7.json'))]
-TITLE = (9.05, 11.32)
+TITLE = (9.05, 11.60)   # title on screen ≥ 2.5 s (house rule): N1 starts on the half-beat 11.638
 ANCH = {14: 42.205, 20: 60.32, 24: 76.165, 27: 87.17}   # 1-based line: breakdown, build, stop, hardest drop
 out, t, bad = [], 0.0, []
 for i, s in enumerate(L, 1):
