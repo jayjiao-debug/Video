@@ -89,7 +89,7 @@ export const HookB: React.FC<{t: number}> = ({t}) => {
 				{/* faint cloud scrolls drifting in the lacquer behind the characters (depth) */}
 				<g opacity={0.5} fill="none" stroke={B.redL} strokeWidth={3}>{[[230, 790, 44, 1], [1640, 520, 40, 1], [1660, 760, 50, -1]].map(([x, y, r, d], i) => <path key={i} d={curl(x + 10 * t, y, r, d, 3)} />)}</g>
 				{/* 2026, the stall: a cinnabar counter with a gold rule and a cloud frieze, the code plaque and your phone */}
-				<rect x={-40} y={CT} width={W + 80} height={H - CT + 40} fill="#B33C24" />
+				<rect x={-40} y={CT} width={W + 80} height={H - CT + 40} fill="#A63721" />
 				<rect x={-40} y={CT} width={W + 80} height={7} fill={B.gold} />
 				<rect x={-40} y={CT + 7} width={W + 80} height={22} fill="#000" opacity={0.12} />
 				<ScrollBand y={CT + 40} x0={-40} x1={W + 40} h={44} flow={t * 20} fill={B.redD} />
@@ -238,7 +238,7 @@ const heavyPose = (sway: number, breath: number): Pose => {
 	p.LSh = s2; p.LElb = [s2[0], s2[1] - 0.194]; p.LHand = [s2[0], s2[1] - 0.329];
 	return p; };
 export const SongB: React.FC<{t: number}> = ({t}) => {
-	const g = 905, h = 565, wx = 830, cam = -7 * t;
+	const g = 905, h = 565, wx = 860, cam = -7 * t;
 	const sway = 7 * Math.exp(-0.28 * t) * Math.sin(2 * Math.PI * t / 1.3 + 0.7), pose = heavyPose(sway, 0.6 * Math.sin(t * 2.1));
 	const J = (n: string): [number, number] => [wx + pose[n][0] * h, g - pose[n][1] * h];
 	const lh = J('LHand'), rh = J('RHand'), re = J('RElb');
@@ -289,7 +289,7 @@ export const SongB: React.FC<{t: number}> = ({t}) => {
 					<JiaoziB w={NW} h={NH} id="jz" />
 				</g>
 				<g filter="url(#edge)"><Figure4 x={wx} ground={g} h={h} pose={pose} look={{dress: 'tunic', head: 'futou', legs: 'trousers'}} col={B.lac} T={t} /></g>
-				<IronLoop x={lh[0]} y={lh[1] + 0.04 * h} L={g - lh[1] - 0.04 * h - 30} th={sway} />
+				<IronLoop x={lh[0]} y={lh[1] + 0.04 * h} L={g - lh[1] - 0.04 * h - 52} th={sway} />
 				<NearArm sh={J('LSh')} hand={lh} h={h} />
 				<g fontFamily={KAI} fontWeight={700} fontSize={46}>
 					<text x={grip[0] + NW / 2 + 22} y={grip[1] - NH + 70} fill={B.goldL} style={{paintOrder: 'stroke'}} stroke={B.lac} strokeWidth={7}>一张</text>
