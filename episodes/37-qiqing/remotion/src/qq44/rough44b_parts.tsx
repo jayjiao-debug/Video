@@ -1,7 +1,7 @@
 import React from 'react';
 import {W, H, rnd, lerp, Glow, Rimmed, fkPose, Look4, Pose, B, jointAt, Sky, HeadGlow} from './kit44';
 import {Cam, seg, ease, eo, ei, sm, K2Scene, K2_C, k2Glow, k2Skull, skullBack, GLOW_BACK, InHead} from './demo44';
-import {SANS, ROSE, INK} from './skin44';
+import {SANS, ROSE, INK, SEAL_SRC} from './skin44';
 import {Motes, Wallpaper, Frame, Curtain, Cloud} from './bg44';
 /* ep44 rough cut, builder B: private copies of demo44 internals (the K2 compass close-up and the K1 house camera),
    changed only where the ending needs it. The shared files are not edited. */
@@ -109,7 +109,8 @@ export const EndCard: React.FC<{t: number}> = ({t}) => {
 	return <g>
 		<rect width={W} height={H} fill="#07090a" opacity={0.7 * dim} />
 		<defs><linearGradient id="ecRose" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stopColor="#ffe2d2" /><stop offset="0.55" stopColor={ROSE} /><stop offset="1" stopColor="#d98a6c" /></linearGradient></defs>
-		<g transform="translate(960,196)" opacity={sm(seg(t, END_T + 0.4, END_T + 0.8))}><JMark draw={mono} /></g>
+		{/* round 5: the owner's red J stamp, pressed in (drops from 1.25x and settles) */}
+		<g transform={`translate(960,196) scale(${1.25 - 0.25 * eo(seg(t, END_T + 0.4, END_T + 0.75))}) rotate(-6)`} opacity={sm(seg(t, END_T + 0.4, END_T + 0.6))}><image href={SEAL_SRC} x={-58} y={-58} width={116} height={116} /></g>
 			{CARD_CH.map((c, i) => { const k = seg(t, END_T + 0.15 + i * CARD_STEP, END_T + 0.45 + i * CARD_STEP); return k > 0 &&
 				<text key={i} x={c.x} y={c.y + 14 * (1 - eo(k))} textAnchor="middle" style={{fontFamily: CARD_SERIF, fontWeight: 900, fontSize: c.fs}} fill="url(#ecRose)" stroke="rgba(30,14,10,0.55)" strokeWidth={c.fs > 50 ? 4 : 3} paintOrder="stroke" opacity={eo(k)}>{c.ch}</text>; })}
 		{pill > 0.01 && <g transform={`translate(960,712) scale(${0.85 + 0.15 * pill})`} opacity={pill}>

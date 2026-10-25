@@ -1,9 +1,9 @@
 import React from 'react';
-import {AbsoluteFill, Composition, registerRoot, useCurrentFrame} from 'remotion';
+import {AbsoluteFill, Composition, registerRoot, useCurrentFrame, Img} from 'remotion';
 import {W, H} from './kit44';
 import {LINES44F} from './lines44full';
 import {T, seg, sm, ease, ColdBrain, CiderBox, Microscope, Highway, Storage, House, Needle, Meadow, Office} from './demo44';
-import {Story, Punch, Stamp, Seal, Counter, SubRow, Skin, SkinCtx} from './skin44';
+import {Story, Punch, Stamp, Seal, SEAL_SRC, Counter, SubRow, Skin, SkinCtx} from './skin44';
 import {RoughA} from './rough44a';
 import {RoughB} from './rough44b';
 /* ep44 full cut: film 0–164.5 (4935 frames). Picture: the approved demo (0–35.5 story, EP44DEMO's scenes on their v1 clock),
@@ -115,7 +115,7 @@ const Furniture: React.FC<{t: number}> = ({t}) => {
 		{st && <Stamp y={st.s[1]} place={st.s[2]} note={st.s[3]} o={st.o} />}
 		{ghost > 0.01 && <Counter who="他" v={76} grey o={0.75 * ghost} lift={78 + 40 * (1 - ghost)} />}
 		{hideC > 0.01 && <Counter who={who} whoFrom={whoK < 1 ? '你' : undefined} whoK={whoK} era={c.era} v={c.val} blur={c.blur} grey={frozen} pulse={pulse} o={dimC * hideC} date={c.date ? c.date : undefined} />}
-		{t < LINES[48][0] && <Seal />}
+		{t < LINES[48][0] ? <Seal /> : <Img src={SEAL_SRC} style={{position: 'absolute', width: 2, height: 2, opacity: 0}} /> /* keeps the stamp loaded for the end card's SVG image */}
 	</>;
 };
 /** the vignette only (QA / owner row 44: no film grain) */
