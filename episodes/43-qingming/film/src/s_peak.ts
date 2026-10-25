@@ -175,7 +175,11 @@ const stripRect = (t: number) => { const dv = easeIn(clamp01((t - DIVE_A) / (DIV
 type View = {u: number; v: number; f: number};
 const V0 = (): View => ({u: UB - 0.012, v: VB, f: 0.42});
 const storeCam = (t: number): [number, number, number] => {
-	const push = smooth(clamp01((t - b(50)) / (T0 - b(50)))), cx0 = lerp(990, 1010, push), cy0 = lerp(600, 655, push), z0 = lerp(1.04, 1.3, push);
+	// b50: lamp on, wide; b50.6 → b51.2: push in to the table so the copies, their 真迹 slips and their greying read on a phone;
+	// T0 (the bass): a punch-in toward the unrolling strip (the hit lands on the picture), then the dive from b54
+	const pin = easeInOut(clamp01((t - b(50.6)) / (b(51.2) - b(50.6)))), creep = clamp01((t - b(51.2)) / (T0 - b(51.2)));
+	const punch = easeOut(clamp01((t - T0) / 0.35));
+	const cx0 = lerp(lerp(990, 1040, pin), 1150, punch), cy0 = lerp(lerp(600, 640, pin), 712, punch), z0 = Math.exp(lerp(Math.log(lerp(lerp(1.04, 2.2, pin), 2.3, creep)), Math.log(2.7), punch));
 	if (t < DIVE_A) return [cx0, cy0, z0];
 	const r = stripRect(DIVE_Z), v = V0(), cx1 = r.x + v.u * SW, cy1 = r.y + v.v * r.h, z1 = 1920 / (v.f * SW);
 	const k = easeIn(clamp01((t - DIVE_A) / (DIVE_Z - DIVE_A)));

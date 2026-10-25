@@ -56,3 +56,6 @@ episodes/*/remotion/look_check/
 episodes/39-qizongzui/*.mp4
 episodes/*/audio/**/*.mp3
 episodes/*/audio/**/*.wav
+episodes/45-mashou/music/*.wav
+episodes/45-mashou/review/**/*.png
+episodes/45-mashou/review/**/*.jpg

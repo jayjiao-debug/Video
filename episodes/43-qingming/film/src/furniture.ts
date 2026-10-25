@@ -70,7 +70,7 @@ export const AGES: ARow[] = [
 /** the 四出五进 tally: events in order */
 const TALLY: [number, 'in' | 'out'][] = [[b(15), 'in'], [b(15.75), 'out'], [b(24.5), 'in'], [b(27.5), 'out'], [b(33.5), 'in'], [b(35.25), 'out'], [b(38), 'in'], [b(42), 'out'], [b(57.5), 'in']];
 const TALLY_ON: [number, number][] = [[b(12), b(56)], [b(57), b(75.5)]];
-const LABELS: [number, number, number, number, string][] = [[b(13.5), b(14.25), 300, 640, '5米多长'], [b(14), b(14.25), 300, 730, '几百个人'], [b(65), b(65.75), 1200, 700, '约一百卷 · 只有一卷是你']];
+const LABELS: [number, number, number, number, string][] = [[b(13), b(13.75), 300, 640, '5米多长'], [b(13.25), b(13.75), 300, 730, '几百个人'], [b(64.8), b(66), 1010, 668, '约一百卷 · 只有一卷是你']]   // beside your glowing roll on the wall (lock point 960, 580);
 
 const within = (t: number, a: number, z: number) => t >= a && t < z;
 export const drawFurniture = (hud: HTMLElement, t: number, opts: {hideAll?: boolean} = {}) => {

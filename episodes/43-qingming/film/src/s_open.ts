@@ -43,7 +43,7 @@ const H = 560;
 const XC = (SX0 + SX1) / 2 + 40;
 const holders = (rollK: number) => {
 	// rollK 0 = open, 1 = rolled up: both rollers wind in toward XC; the holders step in
-	const k = smooth(rollK), xL = lerp(SX0, XC - 14, k), xR = lerp(SX1, XC + 14, k);
+	const k = smooth(rollK), sway = Math.sin(TNOW * 1.9) * 2.5, xL = lerp(SX0, XC - 14, k) + sway, xR = lerp(SX1, XC + 14, k) + sway * 0.8;   // the open silk sways a little in their hands
 	const ax = xL - 108, bx = xR + 108;
 	const A: FigOpts = {x: ax, ground: deck(ax) + 4, h: H, pose: POSES.stand, look: lookA};
 	const Bf: FigOpts = {x: bx, ground: deck(bx) + 4, h: H + 10, pose: POSES.stand, look: lookB, flip: true};
@@ -61,14 +61,18 @@ const walkers = (t: number, t0: number) => {
 	const [r0, r1] = underArmRoll(B.pose, 'R', 0.29); return {A, B, roll: [toScreen(B, r0), toScreen(B, r1)] as [[number, number], [number, number]]};   // (drawn by drawCarriedRoll)
 };
 
+let TNOW = 0;
 addScene({id: '01', a: 0, z: 8.96, draw: (t) => {
+	TNOW = t;
 	const st = crest.st;
 	// camera: frame 0 inside the silk (zoom 5.6 on the bridge), tracking right→left; pull back b0.75→b1; from b2.5 track right
 	const zIn = 5.4, pull = easeInOut(clamp01((t - b(0.75)) / (b(1) - b(0.75))));
 	const hold = t < b(0.5) ? t : b(0.5) + (t - b(0.5)) * 0.25;                       // half-beat wind-up hold
 	const camInX = 1000 - hold * 9, camInY = SY;
 	const tr = t < b(2.5) ? 0 : clamp01((t - b(2.5)) / (8.96 - b(2.5)));
-	let camX = lerp(camInX, 960, pull), camY = lerp(camInY, 560, pull); const zoom = Math.exp(lerp(Math.log(zIn), 0, pull));
+	// after the pull-back the two-shot keeps breathing: a slow push and drift (no frozen frames between b1 and b2.5)
+	const drift = clamp01((t - b(1)) / (b(2.5) - b(1)));
+	let camX = lerp(camInX, 960, pull) + 14 * drift, camY = lerp(camInY, 560, pull) - 6 * drift; const zoom = Math.exp(lerp(Math.log(zIn), 0, pull)) * (1 + 0.035 * drift);
 	if (tr > 0) { const w = walkers(8.96, b(2.5)); const hx = (w.roll[0][0] + w.roll[1][0]) / 2; camX = lerp(960, hx - 750, Math.pow(tr, 1.7)); }
 	st.setCam(camX, camY, zoom);
 	// the cast
@@ -98,7 +102,7 @@ addScene({id: '01', a: 0, z: 8.96, draw: (t) => {
 	rollGlow.drawW(`${Math.round(t * 60)}`, (g) => { if (!rollPts) return; glowBlob(g, hero, 95 * swell, 60 * swell, 0.42 * swell); });
 	// lanterns: die in pairs from the palace side (left): b2.75, b3.0, 8.78
 	const deadAt = [b(2.75), b(3.0), 8.78];
-	crest.setLanterns((i, x) => { const rank = x < 500 ? 0 : x < 1000 ? 1 : 2; return t < deadAt[Math.min(2, rank)] ? 1 : 0; });
+	crest.setLanterns((i, x) => { const rank = x < 500 ? 0 : x < 1000 ? 1 : 2; return t < deadAt[Math.min(2, rank)] ? 0.9 + 0.1 * Math.sin(t * 11 + i * 2.3) * Math.sin(t * 4.1 + i) : 0; });   // candle flicker
 	crest.setBoat(1660, lerp(0, 70, smooth(clamp01((t - b(1.5)) / (BEAT * 2)))));
 	crest.setStreak(hero[0], walking ? 0.5 : 0.8, t);
 	st.heroAt(hero[0], hero[1], 22, walking ? 420 : 640);
