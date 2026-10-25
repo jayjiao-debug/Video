@@ -26,7 +26,7 @@ const svg = `<defs>
 ${[80, 520, 1260, 1700].map((x) => `<rect x="${x}" y="230" width="360" height="520" rx="4" fill="#53433A" opacity=".35" stroke="#7A6250" stroke-width="2"/>`).join('')}
 <rect x="960" y="250" width="260" height="190" fill="#211914" stroke="#8A6E54" stroke-width="5"/>
 ${[0, 1, 2].map((i) => `<rect x="990" y="${290 + i * 40}" width="${200 - i * 50}" height="8" fill="#5A4636" opacity=".6"/>`).join('')}
-${[300, 760, 1240, 1640].map((x) => `<path d="M${x},0 L${x},120" stroke="#1A120D" stroke-width="3"/><path d="M${x - 40},120 L${x + 40},120 L${x + 26},150 L${x - 26},150 Z" fill="#1A120D"/><ellipse cx="${x}" cy="152" rx="22" ry="6" fill="#F0D6A8" opacity=".55"/><ellipse cx="${x}" cy="200" rx="90" ry="60" fill="#F0D6A8" opacity=".08" filter="url(#b30)"/>`).join('')}
+${[[300, 0.3], [760, 0.3], [1240, 1], [1560, 0.3]].map(([x, k]) => `<path d="M${x},0 L${x},${120 * k - 30}" stroke="#1A120D" stroke-width="3"/><path d="M${x - 40},${120 * k - 30} L${x + 40},${120 * k - 30} L${x + 26},${120 * k} L${x - 26},${120 * k} Z" fill="#1A120D"/><ellipse cx="${x}" cy="${120 * k + 2}" rx="22" ry="6" fill="#F0D6A8" opacity=".55"/><ellipse cx="${x}" cy="${120 * k + 50}" rx="90" ry="60" fill="#F0D6A8" opacity=".08" filter="url(#b30)"/>`).join('')}
 <rect x="0" y="770" width="1920" height="310" fill="url(#floor)"/>
 <path d="M0,770 L1920,770" stroke="#6A5240" stroke-width="2" opacity=".6"/>
 <!-- the work light: a clamp lamp on a stand, cool, pointed down at you -->
@@ -56,4 +56,4 @@ ${K.horseHead(hero)}
 </g>
 <!-- near row of chairs (foreground) -->
 <rect width="1920" height="1080" fill="url(#vig)"/>`;
-K.page(svg, K.hud4({sub: '这一次，锤子[没有落下]。', stamp: '2007 · 香港苏富比', era: '当代', rows: [['回国', '4/12', 'erreeeeeerer'.split('').map((c, i) => [1, 2, 8, 11].includes(i) ? 'r' : i === 6 ? 'e' : 'e').join('')]]}), K.CSS4);
+K.page(svg, K.hud4({sub: '这一次，锤子[没有落下]。', stamp: {s1: '2007 · 香港苏富比', s2: '拍卖前 · 撤拍'}, era: '当代', rows: [['回国', '4/12', 'erreeeeeerer'.split('').map((c, i) => [1, 2, 8, 11].includes(i) ? 'r' : i === 6 ? 'e' : 'e').join('')]]}), K.CSS4);

@@ -44,4 +44,4 @@ ${K.horseHead(hero)}
 <g filter="url(#rimArm)">${sol.front}</g>
 ${Array.from({length: 50}, (_, i) => `<circle cx="${rnd(i + 31) * 1920}" cy="${180 + rnd(i + 61) * 700}" r="${1 + rnd(i) * 2.5}" fill="#FFC070" opacity="${0.35 + rnd(i + 2) * 0.5}"/>`).join('')}
 <rect width="1920" height="1080" fill="url(#vig)"/>`;
-K.page(svg, K.hud4({sub: '你被带走了。', stamp: '1860.10.18 · 圆明园', era: '清', rows: [['在家', '11/12', 'hhhhhhehhhhh']]}), K.CSS4);
+K.page(svg, K.hud4({sub: '你被带走了。', stamp: {s1: '1860.10.18 · 圆明园', s2: '英法联军焚园'}, era: '清', rows: [['在家', '11/12', 'hhhhhhehhhhh']]}), K.CSS4);
