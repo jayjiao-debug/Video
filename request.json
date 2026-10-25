@@ -1,59 +1,11 @@
 {
- "id": "ep50-vo-01",
+ "id": "ep50-vo-02",
  "model_prefs": [
   "eleven_v4"
  ],
  "items": [
   {
-   "name": "01_H1",
-   "lang": "zh",
-   "voice_id": "WuLq5z7nEcrhppO0ZQJw",
-   "settings": {
-    "stability": 0.5,
-    "similarity_boost": 0.8,
-    "style": 0.3
-   },
-   "model": "eleven_v4",
-   "text": "财、货、贵，都带个贝，偏偏钱，是金字旁。"
-  },
-  {
-   "name": "02_H2",
-   "lang": "zh",
-   "voice_id": "WuLq5z7nEcrhppO0ZQJw",
-   "settings": {
-    "stability": 0.5,
-    "similarity_boost": 0.8,
-    "style": 0.3
-   },
-   "model": "eleven_v4",
-   "text": "你扫码付的钱，倒回一千年，只是一张纸。"
-  },
-  {
-   "name": "03_H3",
-   "lang": "zh",
-   "voice_id": "WuLq5z7nEcrhppO0ZQJw",
-   "settings": {
-    "stability": 0.5,
-    "similarity_boost": 0.8,
-    "style": 0.3
-   },
-   "model": "eleven_v4",
-   "text": "倒回三千多年，钱是一枚贝壳。"
-  },
-  {
-   "name": "04_B2a",
-   "lang": "zh",
-   "voice_id": "WuLq5z7nEcrhppO0ZQJw",
-   "settings": {
-    "stability": 0.5,
-    "similarity_boost": 0.8,
-    "style": 0.3
-   },
-   "model": "eleven_v4",
-   "text": "贝壳从很远的海边运来，"
-  },
-  {
-   "name": "05_B2b",
+   "name": "05_B2b_t1",
    "lang": "zh",
    "voice_id": "WuLq5z7nEcrhppO0ZQJw",
    "settings": {
@@ -65,31 +17,19 @@
    "text": "稀少、结实，又好带。"
   },
   {
-   "name": "06_B3",
+   "name": "05_B2b_t2",
    "lang": "zh",
    "voice_id": "WuLq5z7nEcrhppO0ZQJw",
    "settings": {
-    "stability": 0.5,
+    "stability": 0.6,
     "similarity_boost": 0.8,
     "style": 0.3
    },
    "model": "eleven_v4",
-   "text": "商代晚期，还有了青铜铸的贝。"
+   "text": "稀少、结实，又好带。"
   },
   {
-   "name": "07_C1",
-   "lang": "zh",
-   "voice_id": "WuLq5z7nEcrhppO0ZQJw",
-   "settings": {
-    "stability": 0.5,
-    "similarity_boost": 0.8,
-    "style": 0.3
-   },
-   "model": "eleven_v4",
-   "text": "那钱，为什么是金字旁？"
-  },
-  {
-   "name": "08_C2",
+   "name": "08_C2_t1",
    "lang": "zh",
    "voice_id": "MI36FIkp9wRP7cpWKPTl",
    "settings": {
@@ -98,70 +38,22 @@
     "style": 0.25
    },
    "model": "eleven_v4",
-   "text": "钱，铫也，古田器也。"
+   "text": "钱，摇也，古田器也。"
   },
   {
-   "name": "09_C3",
+   "name": "08_C2_t2",
    "lang": "zh",
-   "voice_id": "WuLq5z7nEcrhppO0ZQJw",
+   "voice_id": "MI36FIkp9wRP7cpWKPTl",
    "settings": {
-    "stability": 0.5,
+    "stability": 0.7,
     "similarity_boost": 0.8,
-    "style": 0.3
+    "style": 0.25
    },
    "model": "eleven_v4",
-   "text": "原来，钱是一把铲子。"
+   "text": "钱，摇也，古田器也。"
   },
   {
-   "name": "10_C4a",
-   "lang": "zh",
-   "voice_id": "WuLq5z7nEcrhppO0ZQJw",
-   "settings": {
-    "stability": 0.5,
-    "similarity_boost": 0.8,
-    "style": 0.3
-   },
-   "model": "eleven_v4",
-   "text": "东周时，人们照着铲子铸铜币，"
-  },
-  {
-   "name": "11_C4b",
-   "lang": "zh",
-   "voice_id": "WuLq5z7nEcrhppO0ZQJw",
-   "settings": {
-    "stability": 0.5,
-    "similarity_boost": 0.8,
-    "style": 0.3
-   },
-   "model": "eleven_v4",
-   "text": "名字也跟着叫钱。"
-  },
-  {
-   "name": "12_D1",
-   "lang": "zh",
-   "voice_id": "WuLq5z7nEcrhppO0ZQJw",
-   "settings": {
-    "stability": 0.5,
-    "similarity_boost": 0.8,
-    "style": 0.3
-   },
-   "model": "eleven_v4",
-   "text": "战国各国的钱，有刀、铲、圆、贝。"
-  },
-  {
-   "name": "13_E1",
-   "lang": "zh",
-   "voice_id": "WuLq5z7nEcrhppO0ZQJw",
-   "settings": {
-    "stability": 0.5,
-    "similarity_boost": 0.8,
-    "style": 0.3
-   },
-   "model": "eleven_v4",
-   "text": "秦统一六国，也统一了钱。"
-  },
-  {
-   "name": "14_E2",
+   "name": "14_E2_t1",
    "lang": "zh",
    "voice_id": "WuLq5z7nEcrhppO0ZQJw",
    "settings": {
@@ -173,67 +65,19 @@
    "text": "钱上写着半两，就得重半两。"
   },
   {
-   "name": "15_F1a",
+   "name": "14_E2_t2",
    "lang": "zh",
    "voice_id": "WuLq5z7nEcrhppO0ZQJw",
-   "settings": {
-    "stability": 0.5,
-    "similarity_boost": 0.8,
-    "style": 0.3
-   },
-   "model": "eleven_v4",
-   "text": "汉朝的五铢，名字也是重量，"
-  },
-  {
-   "name": "16_F1b",
-   "lang": "zh",
-   "voice_id": "WuLq5z7nEcrhppO0ZQJw",
-   "settings": {
-    "stability": 0.5,
-    "similarity_boost": 0.8,
-    "style": 0.3
-   },
-   "model": "eleven_v4",
-   "text": "一用七百多年，从汉用到唐。"
-  },
-  {
-   "name": "17_G1",
-   "lang": "zh",
-   "voice_id": "MI36FIkp9wRP7cpWKPTl",
    "settings": {
     "stability": 0.6,
     "similarity_boost": 0.8,
-    "style": 0.25
-   },
-   "model": "eleven_v4",
-   "text": "废五铢钱，行开元通宝钱。"
-  },
-  {
-   "name": "18_G2",
-   "lang": "zh",
-   "voice_id": "WuLq5z7nEcrhppO0ZQJw",
-   "settings": {
-    "stability": 0.5,
-    "similarity_boost": 0.8,
     "style": 0.3
    },
    "model": "eleven_v4",
-   "text": "新钱的名字，不再是重量。"
+   "text": "钱上写着半两，就得重半两。"
   },
   {
-   "name": "19_S1",
-   "lang": "zh",
-   "voice_id": "WuLq5z7nEcrhppO0ZQJw",
-   "settings": {
-    "stability": 0.5,
-    "similarity_boost": 0.8,
-    "style": 0.3
-   },
-   "model": "eleven_v4",
-   "text": "北宋的四川，用的是铁钱。"
-  },
-  {
-   "name": "20_S2",
+   "name": "20_S2_t1",
    "lang": "zh",
    "voice_id": "WuLq5z7nEcrhppO0ZQJw",
    "settings": {
@@ -245,7 +89,19 @@
    "text": "一串一千文，重二十五斤八两。"
   },
   {
-   "name": "21_S3",
+   "name": "20_S2_t2",
+   "lang": "zh",
+   "voice_id": "WuLq5z7nEcrhppO0ZQJw",
+   "settings": {
+    "stability": 0.6,
+    "similarity_boost": 0.8,
+    "style": 0.3
+   },
+   "model": "eleven_v4",
+   "text": "一串一千文，重二十五斤八两。"
+  },
+  {
+   "name": "21_S3_t1",
    "lang": "zh",
    "voice_id": "MI36FIkp9wRP7cpWKPTl",
    "settings": {
@@ -257,7 +113,19 @@
    "text": "患蜀人铁钱重，不便贸易。"
   },
   {
-   "name": "22_S3b",
+   "name": "21_S3_t2",
+   "lang": "zh",
+   "voice_id": "MI36FIkp9wRP7cpWKPTl",
+   "settings": {
+    "stability": 0.7,
+    "similarity_boost": 0.8,
+    "style": 0.25
+   },
+   "model": "eleven_v4",
+   "text": "患蜀人铁钱重，不便贸易。"
+  },
+  {
+   "name": "22_S3b_t1",
    "lang": "zh",
    "voice_id": "WuLq5z7nEcrhppO0ZQJw",
    "settings": {
@@ -269,31 +137,19 @@
    "text": "川蜀铁钱十枚，才抵一枚铜钱。"
   },
   {
-   "name": "23_S4a",
+   "name": "22_S3b_t2",
    "lang": "zh",
    "voice_id": "WuLq5z7nEcrhppO0ZQJw",
    "settings": {
-    "stability": 0.5,
+    "stability": 0.6,
     "similarity_boost": 0.8,
     "style": 0.3
    },
    "model": "eleven_v4",
-   "text": "于是有了交子："
+   "text": "川蜀铁钱十枚，才抵一枚铜钱。"
   },
   {
-   "name": "24_S4b",
-   "lang": "zh",
-   "voice_id": "WuLq5z7nEcrhppO0ZQJw",
-   "settings": {
-    "stability": 0.5,
-    "similarity_boost": 0.8,
-    "style": 0.3
-   },
-   "model": "eleven_v4",
-   "text": "一张纸，能换一千文。"
-  },
-  {
-   "name": "25_S5a",
+   "name": "25_S5a_t1",
    "lang": "zh",
    "voice_id": "WuLq5z7nEcrhppO0ZQJw",
    "settings": {
@@ -305,199 +161,19 @@
    "text": "起初，十六家富户发交子，"
   },
   {
-   "name": "26_S5b",
+   "name": "25_S5a_t2",
    "lang": "zh",
    "voice_id": "WuLq5z7nEcrhppO0ZQJw",
-   "settings": {
-    "stability": 0.5,
-    "similarity_boost": 0.8,
-    "style": 0.3
-   },
-   "model": "eleven_v4",
-   "text": "后来换不回钱，官司不断。"
-  },
-  {
-   "name": "27_S6",
-   "lang": "zh",
-   "voice_id": "WuLq5z7nEcrhppO0ZQJw",
-   "settings": {
-    "stability": 0.5,
-    "similarity_boost": 0.8,
-    "style": 0.3
-   },
-   "model": "eleven_v4",
-   "text": "一零二四年，官府接手交子。"
-  },
-  {
-   "name": "28_S7",
-   "lang": "zh",
-   "voice_id": "WuLq5z7nEcrhppO0ZQJw",
-   "settings": {
-    "stability": 0.5,
-    "similarity_boost": 0.8,
-    "style": 0.3
-   },
-   "model": "eleven_v4",
-   "text": "它是世界上最早的纸币之一。"
-  },
-  {
-   "name": "29_S8",
-   "lang": "zh",
-   "voice_id": "WuLq5z7nEcrhppO0ZQJw",
-   "settings": {
-    "stability": 0.5,
-    "similarity_boost": 0.8,
-    "style": 0.3
-   },
-   "model": "eleven_v4",
-   "text": "红黑套印，暗藏编号，防人伪造。"
-  },
-  {
-   "name": "30_M1a",
-   "lang": "zh",
-   "voice_id": "WuLq5z7nEcrhppO0ZQJw",
-   "settings": {
-    "stability": 0.5,
-    "similarity_boost": 0.8,
-    "style": 0.3
-   },
-   "model": "eleven_v4",
-   "text": "明初，官府印宝钞："
-  },
-  {
-   "name": "31_M1b",
-   "lang": "zh",
-   "voice_id": "WuLq5z7nEcrhppO0ZQJw",
-   "settings": {
-    "stability": 0.5,
-    "similarity_boost": 0.8,
-    "style": 0.3
-   },
-   "model": "eleven_v4",
-   "text": "一贯，等于一千文，等于一两银。"
-  },
-  {
-   "name": "32_M1c",
-   "lang": "zh",
-   "voice_id": "WuLq5z7nEcrhppO0ZQJw",
-   "settings": {
-    "stability": 0.5,
-    "similarity_boost": 0.8,
-    "style": 0.3
-   },
-   "model": "eleven_v4",
-   "text": "可官府印得太多，又收不回来。"
-  },
-  {
-   "name": "33_M2",
-   "lang": "zh",
-   "voice_id": "MI36FIkp9wRP7cpWKPTl",
    "settings": {
     "stability": 0.6,
     "similarity_boost": 0.8,
-    "style": 0.25
-   },
-   "model": "eleven_v4",
-   "text": "钞一贯不能直钱一文。"
-  },
-  {
-   "name": "34_M3",
-   "lang": "zh",
-   "voice_id": "WuLq5z7nEcrhppO0ZQJw",
-   "settings": {
-    "stability": 0.5,
-    "similarity_boost": 0.8,
     "style": 0.3
    },
    "model": "eleven_v4",
-   "text": "纸不灵了，明朝人改用白银。"
+   "text": "起初，十六家富户发交子，"
   },
   {
-   "name": "35_M4a",
-   "lang": "zh",
-   "voice_id": "WuLq5z7nEcrhppO0ZQJw",
-   "settings": {
-    "stability": 0.5,
-    "similarity_boost": 0.8,
-    "style": 0.3
-   },
-   "model": "eleven_v4",
-   "text": "白银每次都要称，"
-  },
-  {
-   "name": "36_M4b",
-   "lang": "zh",
-   "voice_id": "WuLq5z7nEcrhppO0ZQJw",
-   "settings": {
-    "stability": 0.5,
-    "similarity_boost": 0.8,
-    "style": 0.3
-   },
-   "model": "eleven_v4",
-   "text": "钱又回到了看重量。"
-  },
-  {
-   "name": "37_R1",
-   "lang": "zh",
-   "voice_id": "WuLq5z7nEcrhppO0ZQJw",
-   "settings": {
-    "stability": 0.5,
-    "similarity_boost": 0.8,
-    "style": 0.3
-   },
-   "model": "eleven_v4",
-   "text": "一九四八年，人民币来了。"
-  },
-  {
-   "name": "38_T1",
-   "lang": "zh",
-   "voice_id": "WuLq5z7nEcrhppO0ZQJw",
-   "settings": {
-    "stability": 0.5,
-    "similarity_boost": 0.8,
-    "style": 0.3
-   },
-   "model": "eleven_v4",
-   "text": "如今，十点一七亿人用网络支付。"
-  },
-  {
-   "name": "39_P1a",
-   "lang": "zh",
-   "voice_id": "WuLq5z7nEcrhppO0ZQJw",
-   "settings": {
-    "stability": 0.5,
-    "similarity_boost": 0.8,
-    "style": 0.3
-   },
-   "model": "eleven_v4",
-   "text": "钱越变越轻："
-  },
-  {
-   "name": "40_P1b",
-   "lang": "zh",
-   "voice_id": "WuLq5z7nEcrhppO0ZQJw",
-   "settings": {
-    "stability": 0.5,
-    "similarity_boost": 0.8,
-    "style": 0.3
-   },
-   "model": "eleven_v4",
-   "text": "贝壳、铜、纸，最后是一串数字。"
-  },
-  {
-   "name": "41_P2a",
-   "lang": "zh",
-   "voice_id": "WuLq5z7nEcrhppO0ZQJw",
-   "settings": {
-    "stability": 0.5,
-    "similarity_boost": 0.8,
-    "style": 0.3
-   },
-   "model": "eleven_v4",
-   "text": "纸和数字本身不值钱，"
-  },
-  {
-   "name": "42_P2b",
+   "name": "42_P2b_t1",
    "lang": "zh",
    "voice_id": "WuLq5z7nEcrhppO0ZQJw",
    "settings": {
@@ -509,16 +185,16 @@
    "text": "值钱的是，大家都信它。"
   },
   {
-   "name": "43_Q",
+   "name": "42_P2b_t2",
    "lang": "zh",
    "voice_id": "WuLq5z7nEcrhppO0ZQJw",
    "settings": {
-    "stability": 0.5,
+    "stability": 0.6,
     "similarity_boost": 0.8,
     "style": 0.3
    },
    "model": "eleven_v4",
-   "text": "你上一次用纸币，是什么时候？"
+   "text": "值钱的是，大家都信它。"
   }
  ]
 }
