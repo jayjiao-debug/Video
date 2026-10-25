@@ -6,7 +6,7 @@ const P = window.P45 = {};
 P.BAR0 = 1.4498; P.BEAT = 60 / 106; P.FPS = 30;
 P.beat = (k) => P.BAR0 + P.BEAT * k;
 P.clamp = (v, a = 0, b = 1) => Math.max(a, Math.min(b, v));
-P.seg = (t, a, b) => P.clamp((t - a) / (b - a));
+P.seg = (t, a, b) => (b === a || !isFinite(a) ? (t >= a ? 1 : 0) : P.clamp((t - a) / (b - a)));
 P.lerp = (a, b, u) => a + (b - a) * u;
 P.smooth = (u) => { u = P.clamp(u); return u * u * (3 - 2 * u); };
 P.easeOut = (u) => { u = P.clamp(u); return 1 - (1 - u) * (1 - u); };

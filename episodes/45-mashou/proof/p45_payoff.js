@@ -9,7 +9,7 @@ const P = window.P45, B = P.beat;
 const C1 = B(160), C2 = B(165), R4 = B(170);
 const LAND = {}; ['牛', '虎', '猴', '猪', '鼠', '兔'].forEach((k, i) => LAND[k] = C2 + 0.572 + 0.08 * i);
 const R = P.makeRing({LIGHT: {牛: B(160), 虎: B(160.5), 猴: B(161), 猪: B(161.5), 鼠: B(162), 兔: B(162.5)}, FLARE: B(163), LIFT: C2, LAND,
-	CASE_IN: [C2, C2 + 0.52], LAB_OUT: [96.55, 96.85], CASE_OUT: [96.55, 97.25], TRAIL_END: C2 + 1.42});
+	CASE_IN: [C2, C2 + 0.52], LAB_OUT: [96.55, 96.85], CASE_OUT: [Infinity, Infinity], CASE_OUT_B: [96.55, 97.25], TRAIL_END: C2 + 1.42});   // v8.1: 保利 ×4 stays parked for V1; 国博 ×2 leaves alone
 const {face, hero0, HL} = R;
 // ---- the ring camera: the match with R2's last frame, the pull back, the reframe for the cases, the push before the cut-in
 const D = P.DROP, cC = D.camCourt(C1), S = P.toScr(cC, D.FACE_C), zM = (D.HERO_C.h * cC.z) / hero0.h;
@@ -85,4 +85,5 @@ const render = (t) => {
 	return {svg, hud: P.hud(hud), meta};
 };
 P.SCENES.payoff = {t0: 89.4, t1: 98.5, render};
+P.PAYOFF = {camRing, face, hero0};
 })();
