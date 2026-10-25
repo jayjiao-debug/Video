@@ -11,3 +11,8 @@
 - **Voice:** narrator WuLq5z7nEcrhppO0ZQJw; old-text quotes MI36FIkp9wRP7cpWKPTl with a little room reverb. Subtitles = spoken words.
 - **Safety/platform:** no brand logos (generic phone/QR), no bordered maps, no real photos of banknotes (draw stylised coins/notes; don't reproduce current 人民币 designs faithfully — draw a generic modern note), no modern politics; facts on screen only from ✓ rows.
 - **Length:** ~2:00–2:40.
+
+## Owner decisions (2026-10-25 22:03–22:34)
+- Style: **B 「漆」** (Qin–Han lacquer) — fix pass on B running; becomes the channel look.
+- Hook order B (金字旁 first). Today line: 「如今，[10.17亿]人用网络支付。」 End card: 「你上一次用[纸币]，是什么时候？」.
+- **No voice-over** (「不要配音了」, 22:34): subtitle-only. Timing = reading budget (0.5 s + 字/7 + 0.6 s; classical lines +0.4 s; planned beats: title 3.0 s, guess beat 1.5 s, 宝钞 hush 2.0 s, 1.0 s air, end card 6.0 s) → `lines_read.json`, 126.5 s. VO-split sentence pairs stack as two rows (row 1 stays). Sound effects and our own music stay (assumed; confirm with the owner). The generated VO (scratchpad/vo50) is unused.
