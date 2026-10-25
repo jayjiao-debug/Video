@@ -624,8 +624,12 @@ const W = (d, w = 6) => `<path d="${d}" fill="none" stroke="currentColor" stroke
 K.BRO = {
 	鼠: `<path d="M6,66 C14,56 30,46 52,44 C74,42 88,52 88,64 C88,76 78,84 62,84 C44,84 24,76 6,68 Z"/>
 		<circle cx="64" cy="30" r="17"/><circle cx="6" cy="66" r="4"/>${W('M12,64 L-10,54 M12,66 L-12,66 M12,68 L-10,78', 1.8)}`,
+	// 牛 (r4, cold read r3: "ox, or a rhino/horse"): the horns now sit on the POLL, not the forehead, and there are TWO — a thick
+	// near horn rising and hooking forward, the far horn rising and hooking back — so the pair reads as a cow's lyre, never a nose horn.
 	牛: `<path d="M6,48 C8,42 24,36 44,34 L74,34 C88,38 92,54 90,70 C88,84 72,90 52,88 L6,86 Z"/>
-		<path d="M52,40 C56,22 48,6 26,0 C36,10 40,22 40,38 Z"/><path d="M74,42 L100,40 L98,52 L76,56 Z"/>`,
+		<path d="M64,38 C60,26 56,16 48,10 C44,7 38,7 34,9 C40,13 43,18 45,26 C46,31 46,36 46,40 Z"/>
+		<path d="M66,38 C68,26 72,16 80,10 C84,7 90,7 94,9 C88,13 85,18 84,26 C83,31 83,36 83,40 Z"/>
+		<path d="M76,44 L102,40 L100,52 L78,58 Z"/>`,
 	虎: `<path d="M6,58 C6,44 22,34 44,30 C66,26 86,36 92,52 C96,68 90,80 80,86 L78,98 L70,88 L62,98 L56,88 L48,96 L44,86 C26,86 8,76 6,64 Z"/>
 		<circle cx="56" cy="26" r="9"/><circle cx="74" cy="30" r="8"/><ellipse cx="12" cy="64" rx="12" ry="14"/>`,
 	兔: `<ellipse cx="44" cy="66" rx="25" ry="17"/><path d="M50,56 C42,30 44,6 54,0 C66,6 66,32 62,56 Z"/>
@@ -637,8 +641,12 @@ K.BRO = {
 		${W('M-2,44 L-16,44 M-16,44 L-24,38 M-16,44 L-24,50', 3)}<path d="M52,52 C64,56 70,66 66,76 L56,84 C54,74 52,66 42,58 Z"/><ellipse cx="62" cy="90" rx="26" ry="9" fill="none" stroke="currentColor" stroke-width="9"/>`,
 	羊: `<path d="M4,62 C8,48 28,40 48,40 C62,40 70,48 72,58 C70,70 58,78 42,80 L20,84 C10,84 4,74 4,62 Z"/>
 		${W('M58,40 C62,20 88,16 94,36 C98,54 82,64 72,56 C64,50 68,40 78,42', 10)}<path d="M14,82 L18,98 L26,84 Z"/>`,
-	猴: `<circle cx="60" cy="48" r="22"/><path d="M22,42 L50,36 L54,46 L26,52 Z"/><path d="M28,54 C20,56 16,62 18,68 C20,74 28,78 36,76 L46,76 L46,56 Z"/>
-		<path d="M26,80 C30,84 38,84 44,80 L44,74 L28,76 Z"/>${W('M90,46 C84,38 74,42 74,52 C74,62 84,66 90,58', 7)}`,
+	// 猴 (r3, note 3a): no brow bar. A round cranium, a deep concave face, a protruding rounded muzzle with the mouth open (a notch in
+	// the outline), a large round ear set mid-head at the back, a jagged cheek fringe under the jaw.
+	// r4 (cold read r3: "a person with a hairstyle"): the B5 fallback — the muzzle is 8 units longer, and a pale bare-face disc
+	// (K.BRO_FACE) sits inside the silhouette around the eye and muzzle, as on a macaque.
+	猴: `<path d="M46,20 C37,22 33,29 34,36 C34,41 37,45 39,49 C30,50 19,52 13,57 C9,61 10,66 15,66 L28,65 L18,70 C18,75 24,78 32,78 L50,82 C70,85 87,72 87,54 C87,33 73,18 58,18 C54,18 50,19 46,20 Z"/>
+		<circle cx="86" cy="50" r="12.5"/><path d="M34,77 L30,90 L39,83 L41,96 L48,85 L52,98 L56,85 L63,94 L64,80 Z"/>`,
 	鸡: `<circle cx="54" cy="58" r="19"/><path d="M38,52 L14,58 L38,66 Z"/>
 		<path d="M38,44 L40,22 L48,36 L54,16 L60,34 L68,18 L72,36 L80,30 L76,48 Z"/><ellipse cx="38" cy="78" rx="7" ry="12"/>
 		<path d="M66,70 L92,76 L86,84 L94,92 L70,92 Z"/>`,
@@ -647,14 +655,20 @@ K.BRO = {
 	猪: `<path d="M14,44 L12,78 L22,80 C36,88 60,90 78,80 C90,72 92,52 82,42 C70,30 40,32 22,42 Z"/>
 		<ellipse cx="11" cy="61" rx="7" ry="17"/><path d="M58,40 C56,22 72,12 86,18 L74,48 Z"/>`,
 };
+// a pale inner shape drawn over the silhouette (only 猴: the bare face disc), with its dark eye and nostril marks
+K.BRO_FACE = {猴: {d: 'M43,29 C35,30 33,38 36,45 C28,48 19,52 15,57 C13,61 15,63 19,63 L29,62 C37,64 46,67 53,62 C58,55 58,42 54,35 C51,31 47,29 43,29 Z',
+	marks: '<ellipse cx="41" cy="41" rx="3.4" ry="2.8"/><ellipse cx="17" cy="58" rx="1.8" ry="1.4"/>'}};
 // eye position per head (a small incised dot, visible only when the head is lit; silhouettes don't need it)
-K.BEYE = {鼠: [40, 54], 牛: [38, 50], 虎: [36, 52], 兔: [36, 60], 龙: [42, 50], 蛇: [26, 46], 羊: [36, 54], 猴: [44, 50], 鸡: [48, 54], 狗: [38, 54], 猪: [40, 52]};
+K.BEYE = {鼠: [40, 54], 牛: [38, 50], 虎: [36, 52], 兔: [36, 60], 龙: [42, 50], 蛇: [26, 46], 羊: [36, 54], 猴: [40, 41], 鸡: [48, 54], 狗: [38, 54], 猪: [40, 52]};
 // mouth (spout point) per head, in box units
-K.BMOUTH = {鼠: [4, 65], 牛: [8, 72], 虎: [10, 72], 兔: [20, 72], 龙: [8, 72], 蛇: [4, 52], 羊: [6, 70], 猴: [20, 66], 鸡: [16, 60], 狗: [4, 66], 猪: [6, 66]};
+K.BMOUTH = {鼠: [4, 65], 牛: [8, 72], 虎: [10, 72], 兔: [20, 72], 龙: [8, 72], 蛇: [4, 52], 羊: [6, 70], 猴: [14, 68], 鸡: [16, 60], 狗: [4, 66], 猪: [6, 66]};
+/** the pale bare-face tone for a given silhouette fill: lifted toward a warm ivory so it reads at 400 px on dark and bronze heads */
+const broPale = (fill) => { const m = /^#([0-9a-f]{6})$/i.exec(fill || ''); if (!m) return '#B89A7A'; const c = [0, 2, 4].map((i) => parseInt(m[1].slice(i, i + 2), 16)), t = [0xD9, 0xBE, 0x9C];
+	return '#' + c.map((v, i) => Math.round(v + (t[i] - v) * 0.55).toString(16).padStart(2, '0')).join(''); };
 /** a brother's head. (x, y) = neck base centre on screen, size = box px, face -1 left / +1 right. */
-const CUT = {牛: 'M4,64 L14,64', 猴: 'M30,53 L48,50', 虎: 'M50,32 L46,46 M62,30 L58,44 M74,36 L68,48 M86,50 L76,56 M88,64 L78,66', 狗: 'M24,64 L4,64'};
+const CUT = {牛: 'M4,64 L14,64', 虎: 'M50,32 L46,46 M62,30 L58,44 M74,36 L68,48 M86,50 L76,56 M88,64 L78,66', 狗: 'M24,64 L4,64'};
 K.bro = (kind, x, y, size, face, fill, extra = '') => { const m = CUT[kind] ? K.uid('bm') : null;
-	return `<g transform="translate(${x},${y}) scale(${(-face) * size / 100},${size / 100}) translate(-70,-100)" fill="${fill}" color="${fill}" ${extra}>${m ? `<mask id="${m}" maskUnits="userSpaceOnUse" x="-40" y="-40" width="180" height="180"><rect x="-40" y="-40" width="180" height="180" fill="#fff"/><path d="${CUT[kind]}" stroke="#000" stroke-width="3.2" stroke-linecap="round"/></mask>` : ''}<g ${m ? `mask="url(#${m})"` : ''}><path d="${NECK}"/>${K.BRO[kind]}</g></g>`; };
+	return `<g transform="translate(${x},${y}) scale(${(-face) * size / 100},${size / 100}) translate(-70,-100)" fill="${fill}" color="${fill}" ${extra}>${m ? `<mask id="${m}" maskUnits="userSpaceOnUse" x="-40" y="-40" width="180" height="180"><rect x="-40" y="-40" width="180" height="180" fill="#fff"/><path d="${CUT[kind]}" stroke="#000" stroke-width="3.2" stroke-linecap="round"/></mask>` : ''}<g ${m ? `mask="url(#${m})"` : ''}><path d="${NECK}"/>${K.BRO[kind]}</g>${K.BRO_FACE[kind] ? `<path d="${K.BRO_FACE[kind].d}" fill="${broPale(fill)}"/><g fill="${fill}">${K.BRO_FACE[kind].marks}</g>` : ''}</g>`; };
 K.broPt = (kind, x, y, size, face, p) => { const q = (p === 'mouth' ? K.BMOUTH : K.BEYE)[kind]; return [x + (-face) * (q[0] - 70) * size / 100, y + (q[1] - 100) * size / 100]; };
 })();
 
@@ -662,7 +676,7 @@ K.broPt = (kind, x, y, size, face, p) => { const q = (p === 'mouth' ? K.BMOUTH :
 // Caption layer = ep43 v6 (capC lay2 bl1 ad + seal C1), copied in kit.js; this adds the story counter (12 dots with states).
 (() => {
 /** the story counter: label + 12 dots. states string, one char per dot in zodiac order 鼠牛虎兔龙蛇马羊猴鸡狗猪:
- *  h = at home (stone ivory) · y = you (copper) · r = back in China (red) · e = gone (hollow) · d = not back (dashed) */
+ *  h = at home (stone ivory) · y = you (copper) · r = back in China (solid ivory #FFF1DC, r3 note 7: no second saturated accent) · e = gone (hollow) · d = not back (dashed) */
 K.dots = (states) => [...states].map((c) => `<span class="o ${c}"></span>`).join('');
 K.CSS4 = `
 .tally .o{width:50px;height:50px;border-radius:25px;border-width:4px;margin:0 5px -8px}
@@ -670,7 +684,7 @@ K.CSS4 = `
 .tally .num{font-family:'Cormorant Garamond',serif;font-weight:600;font-size:64px;margin-right:16px}
 .tally .o.h{background:#E9DCC4;border-color:#E9DCC4}
 .tally .o.y{background:#E8894B;border-color:#FFD9A6;box-shadow:0 0 14px #FF9A5A}
-.tally .o.r{background:#EE4B3B;border-color:#EE4B3B}
+.tally .o.r{background:#FFF1DC;border-color:#FFF1DC}
 .tally .o.e{background:none;border-color:rgba(255,243,216,.75)}
 .tally .o.d{background:none;border:4px dashed rgba(255,243,216,.8)}
 .tally .row2{margin-top:6px}
@@ -714,31 +728,74 @@ K.arc = (p0, p1, h, s, o = {}) => {
 /** 海晏堂 west façade (frontal), its double stair, the fan pool and the two terraces. mode 'noon' | 'fire'. */
 K.ROW_L = ['狗', '猴', '马', '龙', '虎', '鼠'];   // front → back, left bank, facing right (you third from the front)
 K.ROW_R = ['猪', '鸡', '羊', '蛇', '兔', '牛'];   // front → back, across the pool, facing left (the snake across from you)
-K.seatAt = (side, i) => { const t = i / 5, s = 1 - 0.55 * t; const x = 360 + 430 * t, y = 930 - 280 * t; return {x: side < 0 ? x : 1920 - x, y, s, t}; };
+// r3 (note 3b): seats spaced on t = (i/5)^0.72, wider gaps at the front, so 狗's muzzle clears 猴
+K.seatAt = (side, i) => { const t = Math.pow(i / 5, 0.72), s = 1 - 0.55 * t; const x = 360 + 430 * t, y = 930 - 280 * t; return {x: side < 0 ? x : 1920 - x, y, s, t}; };
+// r4 (gate 2b r3 n7): redrawn from the 海晏堂 model (haiyantang_model_bjnews.jpg; reference only, not traced). NO clock pediment:
+// two storeys of tall rectangular lattice windows under small cornice caps; a raised centre of two tower bays with scrolled caps and
+// urn finials; between them a baroque scroll gable crowned by a shell; under the gable the great shell relief wall that backs the
+// water clock, with the shell-and-vase fountain at its foot; balustraded parapet with urns. The double curved stair is K.stairs.
 K.facade = (mode) => {
 	const fire = mode === 'fire';
-	const lit = fire ? '#2A1712' : '#8C8371', sh = fire ? '#1E100C' : '#5C554A', win = fire ? 'url(#winfire)' : '#3A342E', trim = fire ? '#3A2018' : '#C4BAA2';
-	let w = '';
-	for (let i = 0; i < 16; i++) { const x = 330 + i * 80; if (x > 800 && x < 1080) continue; const on = !fire || K.rnd(i + 300) > 0.3;
-		w += `<path d="M${x},612 L${x},560 A20,20 0 0 1 ${x + 40},560 L${x + 40},612 Z" fill="${on ? win : '#2a1610'}"/>
-		<path d="M${x},500 L${x},462 A20,20 0 0 1 ${x + 40},462 L${x + 40},500 Z" fill="${on ? win : '#2a1610'}"/>`; }
-	for (let i = 0; i < 3; i++) { const x = 880 + i * 60; w += `<path d="M${x},${512} L${x},468 A20,20 0 0 1 ${x + 40},468 L${x + 40},512 Z" fill="${win}"/>`; }
+	const lit = fire ? '#2A1712' : '#8C8371', sh = fire ? '#1E100C' : '#5C554A', win = fire ? 'url(#winfire)' : '#3A342E', trim = fire ? '#3A2018' : '#C4BAA2', hi = fire ? '#5A2A1A' : '#D8CFB8';
+	const winR = (x, y, w, h, k) => { const on = !fire || K.rnd(k + 300) > 0.3, f = on ? win : '#2a1610';
+		let g = ''; for (let j = 1; j < 3; j++) g += `M${x + w * j / 3},${y} L${x + w * j / 3},${y + h} `; for (let j = 1; j < 5; j++) g += `M${x},${y + h * j / 5} L${x + w},${y + h * j / 5} `;
+		return `<rect x="${x - 5}" y="${y - 5}" width="${w + 10}" height="${h + 8}" fill="${trim}" opacity=".55"/><rect x="${x}" y="${y}" width="${w}" height="${h}" fill="${f}"/>
+			<path d="${g}" stroke="${sh}" stroke-width="2" opacity="${fire ? 0.8 : 0.6}"/><path d="M${x - 9},${y - 9} L${x + w / 2},${y - 20} L${x + w + 9},${y - 9} Z" fill="${trim}" opacity=".8"/>`; };
+	const urn = (x, y, k = 1) => `<path d="M${x - 7 * k},${y} L${x + 7 * k},${y} L${x + 5 * k},${y - 6 * k} C${x + 10 * k},${y - 10 * k} ${x + 9 * k},${y - 19 * k} ${x + 3 * k},${y - 22 * k} L${x + 2 * k},${y - 28 * k} C${x + 2 * k},${y - 31 * k} ${x - 2 * k},${y - 31 * k} ${x - 2 * k},${y - 28 * k} L${x - 3 * k},${y - 22 * k} C${x - 9 * k},${y - 19 * k} ${x - 10 * k},${y - 10 * k} ${x - 5 * k},${y - 6 * k} Z" fill="${lit}"/>`;
+	let w = '', par = '';
+	// side wings: two storeys of rectangular windows, pilasters between bays
+	for (let i = 0; i < 16; i++) { const x = 326 + i * 80; if (x > 720 && x < 1180) continue;
+		w += winR(x + 6, 556, 30, 58, i) + winR(x + 6, 448, 30, 50, i + 40) + `<rect x="${x - 14}" y="420" width="8" height="200" fill="${sh}" opacity=".45"/>`; }
+	// parapet: balusters + urns on the piers
+	for (let i = 0; i < 38; i++) { const x = 300 + i * 35; if (x > 750 && x < 1170) continue; par += `<rect x="${x + 13}" y="392" width="9" height="12" fill="${lit}"/>`; }
+	for (let i = 0; i < 8; i++) { const x = 300 + i * 64; par += urn(x + 14, 386) + urn(1620 - (x + 14 - 300), 386); }
+	// the raised centre: two tower bays with scrolled caps and urns, the scroll gable between them crowned by a shell
+	const tower = (x) => `<rect x="${x}" y="330" width="100" height="310" fill="${lit}"/>
+		<rect x="${x}" y="330" width="10" height="310" fill="${hi}" opacity=".5"/><rect x="${x + 90}" y="330" width="10" height="310" fill="${sh}" opacity=".5"/>
+		<rect x="${x - 8}" y="322" width="116" height="10" fill="${trim}"/>
+		<path d="M${x + 4},322 C${x + 4},300 ${x + 30},292 ${x + 50},296 C${x + 70},292 ${x + 96},300 ${x + 96},322 Z" fill="${lit}"/>
+		<path d="M${x + 14},320 C${x + 16},306 ${x + 34},300 ${x + 50},304 C${x + 66},300 ${x + 84},306 ${x + 86},320" stroke="${trim}" stroke-width="3" fill="none"/>
+		${urn(x + 50, 296, 1.25)}${winR(x + 30, 430, 40, 150, x)}${winR(x + 34, 348, 32, 44, x + 1)}`;
+	// the scroll gable: concave–convex S sides ending in volutes, a short level cornice, the shell on top (not a dome, not a pediment)
+	const gable = `<path d="M860,640 L860,380 C878,380 886,368 884,356 C882,344 870,340 870,330 C876,322 892,326 900,336 C912,328 916,318 920,312 L1000,312 C1004,318 1008,328 1020,336 C1028,326 1044,322 1050,330 C1050,340 1038,344 1036,356 C1034,368 1042,380 1060,380 L1060,640 Z" fill="${lit}"/>
+		<circle cx="880" cy="350" r="7" fill="none" stroke="${trim}" stroke-width="3"/><circle cx="1040" cy="350" r="7" fill="none" stroke="${trim}" stroke-width="3"/>
+		<rect x="914" y="306" width="92" height="8" fill="${trim}"/>
+		<!-- the crowning shell -->
+		<path d="M960,270 C940,270 928,284 930,306 L990,306 C992,284 980,270 960,270 Z" fill="${hi}" opacity=".85"/>
+		${[-24, -12, 0, 12, 24].map((d) => `<path d="M960,306 L${960 + d * 1.1},${274 + Math.abs(d) * 0.35}" stroke="${sh}" stroke-width="1.6" opacity=".7"/>`).join('')}
+		${winR(930, 392, 60, 104, 7)}`;
+	// the great shell relief wall over the water clock (fan ribs), and the shell-and-vase fountain at its foot
+	const ribs = Array.from({length: 13}, (_, k) => { const a = Math.PI * (1 + k / 12); return `M960,600 L${960 + Math.cos(a) * 92},${600 + Math.sin(a) * 62}`; }).join(' ');
+	const shell = `<path d="M842,640 L842,600 C842,540 900,510 960,510 C1020,510 1078,540 1078,600 L1078,640 Z" fill="${trim}" opacity="${fire ? 1 : 0.9}"/>
+		<path d="M868,600 C868,560 912,538 960,538 C1008,538 1052,560 1052,600 Z" fill="${hi}" opacity=".55"/><path d="${ribs}" stroke="${sh}" stroke-width="2.4" opacity=".55"/>
+		<path d="M930,640 C930,624 940,614 948,612 C944,604 946,596 960,594 C974,596 976,604 972,612 C980,614 990,624 990,640 Z" fill="${hi}"/>
+		<ellipse cx="960" cy="612" rx="34" ry="7" fill="${lit}"/>`;
 	return `<path d="M300,640 L300,420 L292,420 L292,404 L1628,404 L1628,420 L1620,420 L1620,640 Z" fill="${lit}"/>
 	<rect x="292" y="520" width="1336" height="12" fill="${trim}"/><rect x="300" y="620" width="1320" height="20" fill="${sh}"/>
-	${Array.from({length: 38}, (_, i) => `<rect x="${300 + i * 35}" y="392" width="9" height="12" fill="${lit}"/>`).join('')}<rect x="292" y="386" width="1336" height="7" fill="${lit}"/>
-	<path d="M830,640 L830,370 L820,370 L820,356 L960,300 L1100,356 L1090,370 L1090,640 Z" fill="${lit}"/>
-	<path d="M842,360 L960,314 L1078,360 Z" fill="${sh}" opacity=".7"/><circle cx="960" cy="340" r="13" fill="${trim}"/>
-	${Array.from({length: 7}, (_, i) => `<rect x="${300 + i * 220}" y="420" width="14" height="200" fill="${sh}" opacity=".5"/>`).join('')}
-	${w}
-	<path d="M912,640 L912,578 A48,48 0 0 1 1008,578 L1008,640 Z" fill="${fire ? 'url(#winfire)' : '#2E2924'}"/>`;
+	${par}<rect x="292" y="386" width="1336" height="7" fill="${lit}"/>
+	${w}${tower(760)}${tower(1060)}${gable}${shell}`;
 };
+/** r4 (n7): the DOUBLE CURVED STAIR of the model — a balcony landing across the centre at the upper door, and two flights that
+ * curve outward and down around the shell wall to the terraces, each with a balustrade (rail + balusters + end piers with urns). */
 K.stairs = (mode) => {
-	const fire = mode === 'fire', st = fire ? '#24130E' : '#958B76', edge = fire ? '#F0904A' : '#D9CFB6', bal = fire ? '#1A0E0A' : '#7F7664';
+	const fire = mode === 'fire', st = fire ? '#24130E' : '#A39883', tread = fire ? '#160C08' : '#7A7262', edge = fire ? '#F0904A' : '#E2D8BE', bal = fire ? '#1A0E0A' : '#8C8371';
+	const bz = (a, b, c, d, t) => [0, 1].map((j) => (1 - t) ** 3 * a[j] + 3 * (1 - t) ** 2 * t * b[j] + 3 * (1 - t) * t * t * c[j] + t ** 3 * d[j]);
 	const side = (f) => { const X = (x) => (f < 0 ? x : 1920 - x);
-		return `<path d="M${X(912)},640 C${X(820)},652 ${X(720)},664 ${X(640)},700 L${X(600)},720 L${X(560)},720 L${X(600)},690 C${X(690)},646 ${X(800)},628 ${X(912)},622 Z" fill="${st}"/>
-		<path d="M${X(912)},604 C${X(800)},610 ${X(690)},628 ${X(600)},672 L${X(586)},684" stroke="${bal}" stroke-width="16" fill="none"/>
-		<path d="M${X(912)},596 C${X(800)},602 ${X(690)},620 ${X(600)},664" stroke="${edge}" stroke-width="2.5" fill="none" opacity=".6"/>`; };
-	return side(-1) + side(1);
+		const O = [[X(862), 500], [X(800), 506], [X(724), 566], [X(668), 650]], I = [[X(862), 524], [X(812), 530], [X(752), 578], [X(706), 650]];
+		let steps = '', balus = '';
+		for (let k = 1; k < 16; k++) { const t = k / 16, o = bz(...O, t), i = bz(...I, t); steps += `M${o[0].toFixed(1)},${o[1].toFixed(1)} L${i[0].toFixed(1)},${i[1].toFixed(1)} `; }
+		for (let k = 0; k <= 14; k++) { const o = bz(...O, k / 14); balus += `M${o[0].toFixed(1)},${o[1].toFixed(1)} l0,-14 `; }
+		const rail = 'M' + Array.from({length: 21}, (_, k) => bz(...O, k / 20)).map((q) => `${q[0].toFixed(1)},${(q[1] - 15).toFixed(1)}`).join(' L');
+		const end = bz(...O, 1);
+		return `<path d="M${O[0]} C${O[1]} ${O[2]} ${O[3]} L${I[3]} C${I[2]} ${I[1]} ${I[0]} Z" fill="${st}"/>
+			<path d="${steps}" stroke="${tread}" stroke-width="2.2" opacity=".8"/>
+			<path d="${balus}" stroke="${bal}" stroke-width="3.2"/><path d="${rail}" stroke="${bal}" stroke-width="5" fill="none" stroke-linecap="round"/>
+			<path d="${rail}" stroke="${edge}" stroke-width="1.8" fill="none" opacity=".55" transform="translate(0,-2)"/>
+			<rect x="${end[0] - 7}" y="${end[1] - 26}" width="14" height="26" fill="${bal}"/>`; };
+	// the balcony landing across the centre, under the upper door
+	let lb = ''; for (let x = 870; x <= 1050; x += 12) lb += `M${x},500 l0,-14 `;
+	return side(-1) + side(1) + `<rect x="856" y="498" width="208" height="14" fill="${st}"/><path d="${lb}" stroke="${bal}" stroke-width="3.2"/>
+		<path d="M856,485 L1064,485" stroke="${bal}" stroke-width="5"/><path d="M856,483 L1064,483" stroke="${edge}" stroke-width="1.8" opacity=".55"/>`;
 };
 /** the pool: fan basin between the terraces (back edge narrow by the stair foot, front edge wide) */
 K.pool = (mode) => {
@@ -760,7 +817,7 @@ K.statue = (kind, side, i, mode, o = {}) => {
 	const b = K.stoneBody(x, y, h, face, stone); const [tx, ty] = b.top;
 	if (kind === '马') {
 		if (o.empty) return {svg: K.emptySeat(x, y, h, face, stone, fire ? '#FFB070' : '#E8D9B8') + `<ellipse cx="${tx}" cy="${ty}" rx="${30 * s}" ry="${7 * s}" fill="none" stroke="#FFC888" stroke-width="${4 * s}" opacity=".9"/><ellipse cx="${tx}" cy="${ty - 4 * s}" rx="${46 * s}" ry="${18 * s}" fill="#FF9A50" opacity=".22"/>`, top: [tx, ty], s};
-		const hero = {x: tx + face * 4 * s, y: ty + 22 * s, h: 200 * s, flip: face > 0, curl: 0, glow: o.glow ?? 0.9, mood: o.mood ?? 'warm', rim: o.rim ?? '#FFE6C0'};
+		const hero = {x: tx + face * 4 * s, y: ty + 22 * s, h: 200 * s, flip: face > 0, curl: 0, glow: o.glow ?? 0.9, key: o.key ?? 1.5, mood: o.mood ?? 'warm', rim: o.rim ?? '#FFE6C0', base: 'seat'};
 		const m = K.headPt(hero, 'mouth');
 		return {svg: b.svg, hero, mouth: m, top: [tx, ty], s};
 	}
@@ -921,6 +978,282 @@ K.HEAD_PTS = {mouth: [228 - 836, 744 - 950], eye: [470 - 836, 322 - 950], ear: [
 K.headPt = (o, name) => { const s = (o.h ?? 400) / 925, f = o.flip ? -1 : 1, p = K.HEAD_PTS[name]; return [o.x + f * p[0] * s, o.y + p[1] * s]; };
 })();
 
+// ep45 hero r3 (gate 2b r2 note 1): the 圆明园 horse head redrawn against the press photos (新京报, 新华社, 人民日报; reference
+// only, never traced, never on screen). Flat vector, hard tone planes, in our 铜灯影 family.
+// What the photos say, and what this draws:
+//  · colour: a DARK near-black brown patina; the shape is carried by copper rim light and soft lit planes, not by orange paint.
+//    Face and mane share one dark value, so nothing reads as stripes.
+//  · face: long, smooth, tapering (muzzle tip → ear base ≈ 2.3 × jaw depth); a cheek plate with one hard edge from the throat to
+//    the mouth corner; a straight nasal line; a soft rounded muzzle with a flared comma nostril; the mouth slightly open (spout).
+//  · eye: large, bulging, glossy, lid rims, no eyebrow; the brow is a lit plane edge.
+//  · ears: cupped leaves; the near one's top third rolls forward over itself (「有一只耳朵是卷的」), as thick as the far ear.
+//  · mane: parted on the crest; many long S-wave locks run down along the neck, each with fine grooves, overlapping like flames,
+//    ending in forked flame tips that hang free below the neck cut.
+//  · base: a straight neck cut with a slight flare. base:'block' adds the dark post + black marble block of the exhibit;
+//    'seat' sits the cut in a fountain robe (no ring); 'cut' is the bare head (carried).
+// Local frame (as v3/v4, so placements hold): faces LEFT; ear tips y≈40; neck cut y=850; block top / placement point (836, 950);
+// height 925 → px via o.h.  opts: {x, y, h, flip, curl (0 straight, 1 near ear rolled), glow, key (light on the planes, 1 = normal),
+// mood: warm|fire|cool, refl (window colour), base: 'block'|'seat'|'cut', block: {w, h} (local units)}
+(() => {
+const G = {piv: [712, 150], ang: -20, sc: 1.32, cut: 830};
+const D2R = Math.PI / 180;
+const hp = ([x, y]) => { const a = G.ang * D2R, c = Math.cos(a), s = Math.sin(a); x *= G.sc; y *= G.sc; return [G.piv[0] + x * c - y * s, G.piv[1] + x * s + y * c]; };
+const HT = `translate(${G.piv[0]},${G.piv[1]}) rotate(${G.ang}) scale(${G.sc})`;
+const f1 = (v) => (Math.round(v * 10) / 10).toString();
+const P = (p) => f1(p[0]) + ',' + f1(p[1]);
+const rnd = (i) => { const x = Math.sin(i * 91.7 + 13.3) * 43758.5453; return x - Math.floor(x); };
+const hex = (h) => [1, 3, 5].map((i) => parseInt(h.slice(i, i + 2), 16));
+const mixC = (a, b, t) => { const A = hex(a), B = hex(b); return '#' + A.map((v, i) => Math.round(v + (B[i] - v) * Math.max(0, Math.min(1, t))).toString(16).padStart(2, '0')).join(''); };
+
+/* ---------- head (head-local: nose to the LEFT along −x, poll at 0,0, y down) ---------- */
+// muzzle tip → ear base ≈ 620; depth at the mouth corner ≈ 240 (×2.6); the jowl is deep and round and sits just above the cut
+const HEAD = `M0,0 C-50,-8 -110,0 -164,12 C-280,26 -410,40 -512,50 C-572,56 -616,94 -620,142 C-622,178 -608,200 -580,206
+C-548,214 -500,236 -452,262 L-450,270 C-490,258 -530,240 -561,233 C-569,246 -569,268 -558,284 C-544,302 -500,308 -442,304
+C-360,308 -290,336 -236,386 C-190,428 -140,458 -86,462 C-36,464 0,444 14,414 C30,380 40,330 44,280 C46,170 24,64 0,0 Z`;
+const MOUTH_IN = `M-588,204 C-548,214 -500,236 -452,262 L-450,272 C-490,260 -530,242 -563,233 C-576,228 -586,218 -588,204 Z`;
+const TOP_PLANE = `M14,-30 L0,0 C-50,-8 -110,0 -164,12 C-280,26 -410,40 -512,50 C-556,54 -592,76 -608,108 L-574,106
+C-562,90 -540,84 -514,82 C-410,72 -290,62 -180,50 C-120,44 -64,40 -20,46 Z`;
+const REFL = `M-150,20 C-260,32 -390,46 -490,58 C-520,60 -546,70 -562,86 L-556,92 C-540,80 -518,74 -490,72 C-390,60 -262,48 -150,34 Z`;
+const UPPER_SIDE = `M-20,46 C-64,40 -120,44 -180,50 C-290,62 -410,72 -514,82 C-540,84 -562,92 -574,108 L-590,170
+C-560,186 -500,224 -452,262 C-400,232 -300,186 -210,150 C-150,140 -60,150 70,190 L40,60 Z`;
+const CHEEK_EDGE = `M-452,262 C-400,232 -300,186 -210,150`;      // r4: the hard plane edge runs only mouth corner → under the eye
+const JAW_SHADE = `M-452,262 C-400,232 -300,186 -210,150 C-150,140 -60,150 70,190 L120,520 L-600,520 L-600,330 Z`;
+const JAW_SOFT = `M-196,151 C-150,142 -60,152 70,192`;   // behind the eye the plane change is soft: a blurred mid-value band over the edge
+// the big round jowl: lit upper edge, shadow under, no outline (n3)
+const JOWL = {c: [-92, 352], rx: 128, ry: 104, rot: -8};
+const JAW_CORE = `M-442,304 C-360,308 -290,336 -236,386 C-190,428 -140,458 -86,462 C-36,464 0,444 14,414
+C-30,440 -100,440 -160,414 C-230,384 -300,338 -380,318 C-410,312 -430,312 -442,314 Z`;
+const JAW_RIM = `M-442,304 C-360,308 -290,336 -236,386 C-190,428 -140,458 -86,462`;
+const TOP_LINE = `M0,0 C-50,-8 -110,0 -164,12 C-280,26 -410,40 -512,50 C-572,56 -616,94 -620,142`;
+const CREST_RIDGE = `M-130,132 C-90,142 -40,148 10,148`;           // facial crest: from under the eye back to the jaw joint
+const MUZZLE_LIT = `M-520,84 C-560,88 -596,108 -604,140 C-606,158 -598,172 -580,174 C-576,152 -560,134 -536,124 C-510,114 -488,112 -470,112 Z`;
+const NOSTRIL = `M-544,132 C-568,132 -584,150 -584,168 C-584,178 -576,184 -568,182 C-572,170 -568,156 -556,150 C-544,144 -526,146 -516,152 C-518,140 -528,132 -544,132 Z`;
+const NOSTRIL_FLARE = `M-516,152 C-504,166 -508,186 -526,196`;
+const NOSTRIL_RIM = `M-584,168 C-582,150 -570,138 -552,134`;
+const NOSE_FOLD = `M-530,118 C-518,110 -498,110 -484,118`;
+const LIP_LINE = `M-584,210 C-548,218 -500,240 -456,264`;   // r4: falls toward the corner (no grin); no chin rim
+const SPECS = [['M-110,16 C-140,20 -170,24 -194,30', 5, 0.85], ['M-430,54 C-460,57 -482,59 -502,62', 4, 0.75], ['M-596,114 C-604,126 -608,138 -608,148', 4, 0.8], ['M-280,226 C-250,224 -220,224 -190,228', 2.5, 0.5]];
+// eye (big, bulging, glossy, lid rims; the brow is the lit orbital plane above, no stroke)
+const EYE = {c: [-196, 84], rx: 37, ry: 28, rot: 12};
+const ORBIT_LIT = `M-254,58 C-234,30 -184,22 -140,40 C-124,48 -114,60 -112,72 C-134,56 -164,48 -196,50 C-220,52 -240,56 -254,66 Z`;
+const ORBIT_SHADE = `M-112,72 C-110,96 -124,118 -154,124 C-194,130 -234,118 -254,96 C-234,112 -196,118 -164,112 C-140,106 -122,92 -112,72 Z`;
+const ORBIT_EDGE = `M-254,62 C-234,32 -184,24 -140,42 C-124,50 -114,62 -112,72`;
+
+/* ---------- neck, ears, forelock, mane (base frame) ---------- */
+const CUT = G.cut;
+// r4 (n3): the neck's front rises from the cut (now behind the jowl) to a concave throat notch under the jowl's back
+const NECK = `M700,130 C800,130 910,200 980,320 C1040,430 1070,600 1080,${CUT - 30} L1096,${CUT} L842,${CUT} L848,${CUT - 14}
+C862,778 884,740 912,708 C944,664 952,560 936,470 C918,340 830,170 700,130 Z`;
+const NECK_LIT = `M912,708 C884,740 862,778 848,${CUT - 14} L842,${CUT} L866,${CUT} C872,792 890,754 918,722 Z`;
+const UNDER_JOWL = `M912,708 C900,724 884,742 870,760 C908,764 946,736 962,690 L962,640 Z`;     // the jowl's shadow on the neck
+/** crest: poll → back of the cut, the line the mane parts on */
+const CREST = [[772, 150], [884, 192], [974, 302], [1032, 444], [1064, 620], [1084, CUT - 20]];
+const crestAt = (t) => { const n = CREST.length - 1, k = Math.min(n - 1, Math.floor(t * n)), u = t * n - k, a = CREST[k], b = CREST[k + 1]; return [a[0] + (b[0] - a[0]) * u, a[1] + (b[1] - a[1]) * u]; };
+/* mane r4 (gate 2b r3 n1). Locks lie BACK AND DOWN along the neck (≈ (0.55, 0.85) near the poll, steeper lower down where the
+   neck turns vertical), length 280–420, an S of 1–1.5 waves at 0.10–0.14 × length, and gather into 5 flame clumps whose tips
+   flare out and back past the neck's rear edge at five different heights (no level fringe). The front of the neck stays bare. */
+const CLUMPS = [  // tip centre, locks, length, direction (deg below +x), shared wave phase
+	{tip: [1050, 500], n: 4, L: 400, ang: 58, ph: 0.4},
+	{tip: [1126, 612], n: 4, L: 370, ang: 60, ph: 2.1},
+	{tip: [1152, 738], n: 4, L: 390, ang: 67, ph: 3.6},
+	{tip: [1140, 872], n: 4, L: 400, ang: 77, ph: 5.0},
+	{tip: [1092, 930], n: 5, L: 320, ang: 84, ph: 1.2},
+];
+/** one lock from root to tip: S-wave about the chord, the tip flicking out and back (up), a forked flame tip */
+const lockGeo = (root, tip, i, ph, far) => {
+	const n = 44, pts = [], dx = tip[0] - root[0], dy = tip[1] - root[1], L = Math.hypot(dx, dy), ux = dx / L, uy = dy / L;
+	const bx = uy, by = -ux;                                   // the back/up side of the lock
+	const amp = (0.10 + 0.04 * rnd(i * 3 + 1)) * L, waves = 1 + 0.5 * rnd(i * 13 + 2), flick = (far ? 0.06 : 0.12) * L;
+	for (let k = 0; k <= n; k++) { const u = k / n, w = Math.sin(6.283 * waves * u + ph) * amp * Math.min(1, u * 5), f = flick * u * u * u;
+		pts.push([root[0] + dx * u + bx * (w + f), root[1] + dy * u + by * (w + f)]); }
+	const W0 = (far ? 20 : 25) * (0.86 + 0.28 * rnd(i * 17 + 3));
+	const width = (u) => W0 * (u < 0.14 ? 0.45 + u / 0.14 * 0.55 : u < 0.72 ? 1 : Math.max(0.03, Math.pow(1 - (u - 0.72) / 0.28, 0.65)));
+	const L1 = [], R1 = [];   // L1: front/down edge (shadow side), R1: back/up edge (lit side)
+	pts.forEach((p, k) => { const q = pts[Math.min(k + 1, n)], o = pts[Math.max(k - 1, 0)], ddx = q[0] - o[0], ddy = q[1] - o[1], d = Math.hypot(ddx, ddy) || 1, w = width(k / n);
+		L1.push([p[0] - ddy / d * w, p[1] + ddx / d * w]); R1.push([p[0] + ddy / d * w, p[1] - ddx / d * w]); });
+	// the fork: a shorter flame tip leaving at 70 % toward the front/down side
+	const fk = Math.round(n * 0.7), fb = pts[fk], fdir = Math.atan2(pts[n][1] - fb[1], pts[n][0] - fb[0]) + 0.5 + 0.2 * rnd(i + 40), fl = Math.hypot(pts[n][0] - fb[0], pts[n][1] - fb[1]) * (0.6 + 0.2 * rnd(i + 41));
+	const fpts = []; for (let k = 0; k <= 10; k++) { const s = k / 10, a = fdir - 0.6 * s * s; fpts.push([fb[0] + Math.cos(a) * fl * s, fb[1] + Math.sin(a) * fl * s]); }
+	const FL = [], FR = []; fpts.forEach((p, k) => { const q = fpts[Math.min(k + 1, 10)], o = fpts[Math.max(k - 1, 0)], ddx = q[0] - o[0], ddy = q[1] - o[1], d = Math.hypot(ddx, ddy) || 1, w = W0 * 0.5 * (1 - k / 10) + 0.5;
+		FL.push([p[0] - ddy / d * w, p[1] + ddx / d * w]); FR.push([p[0] + ddy / d * w, p[1] - ddx / d * w]); });
+	const outline = 'M' + L1.concat(R1.slice().reverse()).map(P).join(' L') + ' Z';
+	const fork = 'M' + FL.concat(FR.slice().reverse()).map(P).join(' L') + ' Z';
+	const mix = (f, a0, a1) => 'M' + pts.slice(a0, a1).map((_, k) => { const kk = k + a0; return P([L1[kk][0] + (R1[kk][0] - L1[kk][0]) * f, L1[kk][1] + (R1[kk][1] - L1[kk][1]) * f]); }).join(' L');
+	// the lit band: from the back/up edge 45 % in (blurred, clipped to the lock); ≤ 3 grooves
+	const band = 'M' + R1.slice(3, n - 3).map(P).join(' L') + ' L' + pts.slice(3, n - 3).reverse().map((_, k) => { const kk = n - 4 - k; return P([R1[kk][0] + (L1[kk][0] - R1[kk][0]) * 0.45, R1[kk][1] + (L1[kk][1] - R1[kk][1]) * 0.45]); }).join(' L') + ' Z';
+	const grooves = [mix(0.3, 5, n - 6), mix(0.62, 8, n - 4)];
+	return {outline, fork, band, grooves, lit: 'M' + R1.slice(4, n - 8).map(P).join(' L'), gap: 'M' + L1.slice(2, n - 2).map(P).join(' L'), pts, L, root, tip, amp, waves, L1, R1};
+};
+const LOCKS = [], FAR = [];
+CLUMPS.forEach((c, ci) => { for (let j = 0; j < c.n; j++) {
+	const i = ci * 10 + j, off = (j - (c.n - 1) / 2), a = (c.ang + off * 2.5 + (rnd(i + 7) - 0.5) * 3) * D2R, ux = Math.cos(a), uy = Math.sin(a);
+	const L = Math.max(280, Math.min(420, c.L + (rnd(i + 5) - 0.5) * 50 - Math.abs(off) * 14));
+	const tip = [c.tip[0] + uy * off * 24 + ux * (rnd(i + 3) - 0.5) * 30, c.tip[1] - ux * off * 24 + uy * (rnd(i + 3) - 0.5) * 30];
+	LOCKS.push({...lockGeo([tip[0] - ux * L, tip[1] - uy * L], tip, i, c.ph + (rnd(i + 9) - 0.5) * 0.5, false), ci, j}); } });
+// draw order: the lowest clump first, the poll clump on top; inside a clump, back to front
+LOCKS.sort((a, b) => b.ci - a.ci || a.j - b.j);
+// the far half of the parted mane: shorter, darker locks that show only past the crest
+for (let i = 0; i < 9; i++) { const t = 0.1 + 0.78 * i / 8, r = crestAt(t), a = (56 + 26 * t) * D2R, L = 200 + 60 * rnd(i + 70);
+	FAR.push(lockGeo([r[0] - 10, r[1] + 6], [r[0] - 10 + Math.cos(a) * L, r[1] + 6 + Math.sin(a) * L], i + 90, 1.5 * i, true)); }
+/** the crest ridge: a smooth band of hair along the parting, covering the lock roots */
+const RIDGE_PTS = Array.from({length: 25}, (_, k) => crestAt(k / 24 * 0.24));   // r4: the parting only over the poll, covering the first locks' roots
+const ridgeSide = (off) => RIDGE_PTS.map((p, k) => { const q = RIDGE_PTS[Math.min(k + 1, 24)], o = RIDGE_PTS[Math.max(k - 1, 0)], dx = q[0] - o[0], dy = q[1] - o[1], d = Math.hypot(dx, dy) || 1, w = off * (0.4 + 0.6 * Math.sin(Math.PI * Math.min(1, 0.15 + k / 24))); return [p[0] - dy / d * w, p[1] + dx / d * w]; });
+const RIDGE = 'M' + ridgeSide(-6).concat(ridgeSide(22).reverse()).map(P).join(' L') + ' Z';
+const RIDGE_G = [8, 15].map((o) => 'M' + ridgeSide(o).slice(1, 23).map(P).join(' L'));
+const RIDGE_TOP = 'M' + ridgeSide(-4).slice(0, 24).map(P).join(' L');
+// forelock: a few short wavy locks from the poll over the forehead, between the ears
+const FORELOCK = [[740, 172, 2.78, 190, 22], [722, 180, 2.74, 168, 20], [756, 170, 2.82, 140, 18], [704, 188, 2.7, 120, 16]].map(([x, y, h, L, W], j) => {
+	const pts = []; let px = x, py = y, a = h;
+	for (let k = 0; k <= 16; k++) { const s = k / 16; a += 0.08 * Math.sin(s * 8 + j * 1.7) - 0.012; px += Math.cos(a) * L / 16; py += Math.sin(a) * L / 16; pts.push([px, py]); }
+	const Lr = [], Rr = []; pts.forEach((p, k) => { const q = pts[Math.min(k + 1, 16)], o = pts[Math.max(k - 1, 0)], dx = q[0] - o[0], dy = q[1] - o[1], d = Math.hypot(dx, dy) || 1, ww = W * (k < 3 ? 0.7 + k * 0.1 : 1 - 0.85 * (k - 3) / 13) + 0.6;
+		Lr.push([p[0] - dy / d * ww, p[1] + dx / d * ww]); Rr.push([p[0] + dy / d * ww, p[1] - dx / d * ww]); });
+	return {d: 'M' + Lr.concat(Rr.reverse()).map(P).join(' L') + ' Z', g: 'M' + pts.slice(2, 13).map(P).join(' L')}; });
+// ears (base frame): cupped leaves angled up and back. Far ear pricked; near ear straight or with its top third rolled forward.
+/** a leaf ear along a centreline (Catmull-Rom through pts): width profile w(s); hollow = the cupped inside, toward the front edge */
+const cr = (pts, n = 48) => { const out = []; for (let i = 0; i < pts.length - 1; i++) { const p0 = pts[Math.max(0, i - 1)], p1 = pts[i], p2 = pts[i + 1], p3 = pts[Math.min(pts.length - 1, i + 2)], m = Math.ceil(n / (pts.length - 1));
+	for (let k = 0; k < m; k++) { const t = k / m, t2 = t * t, t3 = t2 * t; out.push([0, 1].map((j) => 0.5 * (2 * p1[j] + (-p0[j] + p2[j]) * t + (2 * p0[j] - 5 * p1[j] + 4 * p2[j] - p3[j]) * t2 + (-p0[j] + 3 * p1[j] - 3 * p2[j] + p3[j]) * t3))); } }
+	out.push(pts[pts.length - 1]); return out; };
+const leaf = (pts, W, prof, side = 0, frac = 1) => { const c = cr(pts), n = c.length - 1, L = [], Rr = [];
+	c.forEach((p, k) => { const q = c[Math.min(k + 1, n)], o = c[Math.max(k - 1, 0)], dx = q[0] - o[0], dy = q[1] - o[1], d = Math.hypot(dx, dy) || 1, w = W * prof(k / n);
+		const a = side * w * (1 - frac), b = w * frac;   // side: shift toward one edge (hollow)
+		L.push([p[0] - dy / d * (b + a), p[1] + dx / d * (b + a)]); Rr.push([p[0] + dy / d * (b - a), p[1] - dx / d * (b - a)]); });
+	return {d: 'M' + L.concat(Rr.reverse()).map(P).join(' L') + ' Z', front: 'M' + L.map(P).join(' L'), back: 'M' + Rr.slice().reverse().map(P).join(' L'), c}; };
+const LEAF = (s) => (s < 0.4 ? 0.62 + 0.38 * Math.sin(s / 0.4 * Math.PI / 2) : Math.max(0.03, Math.cos((s - 0.4) / 0.6 * Math.PI / 2)));
+const ROLLW = (s) => (s < 0.3 ? 0.62 + 0.38 * Math.sin(s / 0.3 * Math.PI / 2) : s < 0.8 ? 1 - 0.25 * (s - 0.3) / 0.5 : Math.max(0.42, 0.78 * Math.cos((s - 0.8) / 0.2 * Math.PI / 2)));
+const EF = leaf([[752, 180], [768, 112], [792, 58], [822, 18]], 34, LEAF), EF_IN = leaf([[752, 168], [768, 112], [790, 62], [816, 30]], 34 * 0.5, LEAF, -1, 0.5);
+const EN = leaf([[700, 184], [712, 114], [734, 62], [760, 20]], 35, LEAF), EN_IN = leaf([[700, 172], [712, 114], [732, 66], [754, 32]], 35 * 0.5, LEAF, 1, 0.5);
+const ER = leaf([[702, 188], [710, 126], [724, 82], [726, 50], [708, 28], [680, 30], [664, 52]], 46, ROLLW);
+const ER_IN = leaf([[704, 172], [710, 128], [720, 96]], 46 * 0.62, (s) => 0.35 + 0.65 * Math.sin(Math.PI * s), 1, 0.55);
+const EAR_FAR = EF.d, EAR_FAR_IN = EF_IN.d, EAR_NEAR = EN.d, EAR_NEAR_IN = EN_IN.d;
+// rolled: the standing two-thirds, then the top third curls forward and down over the front edge as a solid roll
+const EAR_ROLL = ER.d, EAR_ROLL_HOLLOW = ER_IN.d, EAR_ROLL_TOP = ER.back;
+
+K.horseHead = (o = {}) => {
+	const id = K.uid('h3'), x = o.x ?? 960, y = o.y ?? 900, h = o.h ?? 400, s = h / 925, flip = o.flip ? -1 : 1;
+	const curl = o.curl ?? 1, glow = o.glow ?? 0.6, mood = o.mood ?? 'warm', refl = o.refl ?? '#9FB2AE', key = o.key ?? 1, base = o.base ?? 'cut';
+	const R = {
+		warm: {dark: '#0D0705', deep: '#190E09', mid: '#2A1A11', mid2: '#3A2418', lite: '#6E4026', hi: '#C77A45', rim: '#F09A5E', spec: '#FFE6C6', glow: '#FF9A5A'},
+		fire: {dark: '#100705', deep: '#1C0E08', mid: '#2E1A10', mid2: '#432616', lite: '#844624', hi: '#E08844', rim: '#FFB060', spec: '#FFF0C8', glow: '#FF9A50'},
+		cool: {dark: '#0C0807', deep: '#18110D', mid: '#281C16', mid2: '#37271F', lite: '#644636', hi: '#B08266', rim: '#E7A27A', spec: '#F4F2EA', glow: '#FF9A5A'},
+	}[mood];
+	const C = {...R, mid: mixC(R.mid, R.lite, (key - 1) * 0.35), mid2: mixC(R.mid2, R.hi, (key - 1) * 0.3), lite: mixC(R.lite, R.hi, (key - 1) * 0.55), hi: mixC(R.hi, R.spec, (key - 1) * 0.3)};
+	// r4 (n1 v): cast metal, not fibres — one soft lit band on the lock's back/up side, ≤ 3 grooves with highlights ≤ .15
+	const lockSvg = (L, k) => `<clipPath id="${id}L${k}"><path d="${L.outline}"/></clipPath>
+		<path d="${L.outline}" fill="${C.mid}"/><path d="${L.fork}" fill="${C.mid}"/>
+		<g clip-path="url(#${id}L${k})"><path d="${L.band}" fill="${C.lite}" opacity=".34" filter="url(#${id}bb)"/></g>
+		<path d="${L.gap}" stroke="${C.dark}" stroke-width="3" fill="none" stroke-linecap="round" opacity=".75"/>
+		${L.grooves.map((g) => `<path d="${g}" stroke="${C.deep}" stroke-width="2" fill="none" opacity=".55" stroke-linecap="round"/><path d="${g}" stroke="${C.lite}" stroke-width="1.2" fill="none" opacity=".14" transform="translate(-1.6,-1.2)"/>`).join('')}
+		<path d="${L.lit}" stroke="${C.hi}" stroke-width="2.4" fill="none" opacity=".45" stroke-linecap="round"/>`;
+	const ear = curl > 0.5
+		? `<path d="${EAR_ROLL}" fill="${C.mid2}"/><path d="${EAR_ROLL_HOLLOW}" fill="${C.deep}"/>
+		   <path d="${EAR_ROLL_TOP}" stroke="${C.hi}" stroke-width="5" fill="none" stroke-linecap="round" opacity=".9"/>
+		   <ellipse cx="712" cy="34" rx="9" ry="4.5" transform="rotate(-10 712 34)" fill="${C.spec}" opacity=".85"/>`
+		: `<path d="${EAR_NEAR}" fill="${C.mid2}"/><path d="${EAR_NEAR_IN}" fill="${C.dark}"/><path d="${EN.back}" stroke="${C.hi}" stroke-width="4" fill="none"/>`;
+	// the silhouette (for the rim copies): neck + head + ears + mane
+	const sil = (fill) => `<g fill="${fill}">${FAR.map((L) => `<path d="${L.outline}"/><path d="${L.fork}"/>`).join('')}<path d="${NECK}"/>${LOCKS.map((L) => `<path d="${L.outline}" stroke="${fill}" stroke-width="8" stroke-linejoin="round"/><path d="${L.fork}"/>`).join('')}<path d="${EAR_FAR}"/><path d="${curl > 0.5 ? EAR_ROLL : EAR_NEAR}"/><path d="${HEAD}" transform="${HT}"/></g>`;
+	const bw = o.block?.w ?? 600, bh = o.block?.h ?? 700, bx = 922 - bw / 2;
+	const block = base !== 'block' ? '' : `
+		<rect x="${bx}" y="950" width="${bw}" height="${bh}" fill="url(#${id}mb)"/>
+		<path d="M${bx},950 L${bx + bw},950" stroke="#8A7A70" stroke-width="3" opacity=".8"/>
+		<path d="M${bx - 10},940 L${bx + bw + 10},940 L${bx + bw},950 L${bx},950 Z" fill="#2A2422"/>
+		<path d="M${bx - 10},940 L${bx + bw + 10},940" stroke="${C.rim}" stroke-width="2.5" opacity=".55"/>
+		<g stroke="#D8D2CA" fill="none" opacity=".38" stroke-width="2.2">
+			<path d="M${bx + bw * 0.12},950 L${bx + bw * 0.2},${950 + bh * 0.14} L${bx + bw * 0.18},${950 + bh * 0.22} L${bx + bw * 0.34},${950 + bh * 0.46} L${bx + bw * 0.3},${950 + bh * 0.6} L${bx + bw * 0.46},${950 + bh * 0.9}"/>
+			<path d="M${bx + bw * 0.2},${950 + bh * 0.14} L${bx + bw * 0.42},${950 + bh * 0.2} L${bx + bw * 0.52},${950 + bh * 0.3}"/>
+			<path d="M${bx + bw * 0.78},950 L${bx + bw * 0.72},${950 + bh * 0.18} L${bx + bw * 0.84},${950 + bh * 0.4} L${bx + bw},${950 + bh * 0.47}"/>
+			<path d="M${bx + bw * 0.34},${950 + bh * 0.46} L${bx + bw * 0.6},${950 + bh * 0.52} L${bx + bw * 0.66},${950 + bh * 0.7}" stroke-width="1.4"/></g>`;
+	const post = base === 'block' ? `<rect x="862" y="${CUT - 4}" width="120" height="${950 - CUT + 4}" fill="#0E0A09"/><path d="M862,${CUT} L862,950" stroke="${C.rim}" stroke-width="2" opacity=".35"/>` : '';
+	const defs = `<defs>
+		<clipPath id="${id}c"><path d="${HEAD}"/></clipPath>
+		<clipPath id="${id}n"><path d="${NECK}"/></clipPath>
+		<radialGradient id="${id}glow"><stop offset="0" stop-color="${o.glowCol ?? C.glow}" stop-opacity="${0.5 * glow}"/><stop offset=".45" stop-color="${o.glowCol ?? C.glow}" stop-opacity="${0.2 * glow}"/><stop offset="1" stop-color="${o.glowCol ?? C.glow}" stop-opacity="0"/></radialGradient>
+		<radialGradient id="${id}eye" cx=".38" cy=".34" r=".75"><stop offset="0" stop-color="${C.mid2}"/><stop offset=".4" stop-color="${C.deep}"/><stop offset="1" stop-color="${C.dark}"/></radialGradient>
+		<linearGradient id="${id}mf" gradientUnits="userSpaceOnUse" x1="760" y1="200" x2="1060" y2="${CUT + 80}"><stop offset="0" stop-color="${C.lite}" stop-opacity=".22"/><stop offset=".55" stop-color="${C.lite}" stop-opacity="0"/><stop offset="1" stop-color="${C.dark}" stop-opacity=".25"/></linearGradient>
+		<linearGradient id="${id}hs" gradientUnits="userSpaceOnUse" x1="-500" y1="0" x2="-100" y2="460"><stop offset="0" stop-color="${C.hi}" stop-opacity=".12"/><stop offset=".5" stop-color="${C.hi}" stop-opacity="0"/><stop offset="1" stop-color="${C.dark}" stop-opacity=".3"/></linearGradient>
+		<filter id="${id}bb" x="-20%" y="-20%" width="140%" height="140%"><feGaussianBlur stdDeviation="5"/></filter>
+		<filter id="${id}bs" x="-20%" y="-60%" width="140%" height="220%"><feGaussianBlur stdDeviation="9"/></filter>
+		<filter id="${id}bj" x="-30%" y="-30%" width="160%" height="160%"><feGaussianBlur stdDeviation="16"/></filter>
+		<linearGradient id="${id}jw" x1="0" x2="0" y1="0" y2="1"><stop offset="0" stop-color="${C.lite}" stop-opacity=".75"/><stop offset=".3" stop-color="${C.mid2}" stop-opacity=".35"/><stop offset=".62" stop-color="${C.mid}" stop-opacity="0"/><stop offset="1" stop-color="${C.dark}" stop-opacity=".85"/></linearGradient>
+		<linearGradient id="${id}hb" gradientUnits="userSpaceOnUse" x1="-60" y1="0" x2="60" y2="0"><stop offset="0" stop-color="${C.mid}" stop-opacity="0"/><stop offset="1" stop-color="${C.mid}" stop-opacity=".9"/></linearGradient>
+		<linearGradient id="${id}nk" gradientUnits="userSpaceOnUse" x1="840" y1="0" x2="1100" y2="0"><stop offset="0" stop-color="${C.mid2}"/><stop offset=".45" stop-color="${C.mid}"/><stop offset="1" stop-color="${C.deep}"/></linearGradient>
+		<linearGradient id="${id}mb" x1="0" x2="0" y1="0" y2="1"><stop offset="0" stop-color="#1C1817"/><stop offset=".25" stop-color="#121010"/><stop offset="1" stop-color="#080707"/></linearGradient>
+	</defs>`;
+	const rk = o.rimK ?? 1;
+	const body = `
+	${glow > 0 ? `<ellipse cx="760" cy="470" rx="760" ry="640" fill="url(#${id}glow)"/>` : ''}
+	${block}${post}
+	<g transform="translate(${5 * rk},${-3 * rk})" opacity=".9">${sil(C.rim)}</g>
+	<g transform="translate(${-3 * rk},${-4 * rk})" opacity=".55">${sil(C.hi)}</g>
+	<!-- far ear (shadow side, pricked) -->
+	<path d="${EAR_FAR}" fill="${C.deep}"/><path d="${EAR_FAR_IN}" fill="${C.dark}"/><path d="${EF.back}" stroke="${C.rim}" stroke-width="3" fill="none" opacity=".8"/>
+	<!-- the far half of the parted mane, behind the crest -->
+	${FAR.map((L) => `<path d="${L.outline}" fill="${C.deep}"/><path d="${L.fork}" fill="${C.deep}"/>${L.grooves.slice(0, 3).map((g) => `<path d="${g}" stroke="${C.dark}" stroke-width="1.8" fill="none" opacity=".8"/>`).join('')}<path d="${L.gap}" stroke="${C.rim}" stroke-width="2" fill="none" opacity=".35"/>`).join('')}
+	<!-- neck -->
+	<path d="${NECK}" fill="${C.mid}"/>
+	<g clip-path="url(#${id}n)">
+		<rect x="600" y="300" width="500" height="600" fill="url(#${id}nk)"/>
+		<path d="${NECK_LIT}" fill="${C.lite}" opacity=".55" filter="url(#${id}bb)"/>
+		<path d="${UNDER_JOWL}" fill="${C.deep}" opacity=".8" filter="url(#${id}bb)"/>
+		<rect x="700" y="${CUT - 14}" width="420" height="14" fill="${C.deep}"/>
+	</g>
+	<path d="M848,${CUT - 14} L842,${CUT} L1096,${CUT}" stroke="${C.lite}" stroke-width="2.4" fill="none" opacity=".7"/>
+	<!-- mane: back layer, front layer; a light-falloff wash over it -->
+	${LOCKS.map((L) => `<path d="${L.outline}" fill="${C.deep}" stroke="${C.deep}" stroke-width="8" stroke-linejoin="round"/>`).join('')}
+	${LOCKS.map(lockSvg).join('')}
+	<g opacity="1">${LOCKS.map((L) => `<path d="${L.outline}" fill="url(#${id}mf)"/>`).join('')}</g>
+	<path d="${RIDGE}" fill="${C.mid2}"/>${RIDGE_G.map((g, k) => `<path d="${g}" stroke="${k % 2 ? C.deep : C.dark}" stroke-width="1.6" fill="none" opacity=".8"/>`).join('')}
+	<path d="${RIDGE_TOP}" stroke="${C.hi}" stroke-width="3" fill="none" opacity=".7"/>
+	<!-- head -->
+	<path d="${MOUTH_IN}" fill="${C.dark}" transform="${HT}"/>
+	<g transform="${HT}">
+		<path d="${HEAD}" fill="${C.mid}"/>
+		<g clip-path="url(#${id}c)">
+			<path d="${UPPER_SIDE}" fill="${C.mid2}"/>
+			<path d="${JAW_SHADE}" fill="${mixC(C.deep, C.mid, 0.55)}"/>
+			<path d="${JAW_SOFT}" stroke="${mixC(C.mid2, mixC(C.deep, C.mid, 0.55), 0.5)}" stroke-width="44" fill="none" stroke-linecap="round" filter="url(#${id}bs)"/>
+			<rect x="-60" y="-40" width="200" height="560" fill="url(#${id}hb)"/>
+			<ellipse cx="${JOWL.c[0]}" cy="${JOWL.c[1]}" rx="${JOWL.rx}" ry="${JOWL.ry}" transform="rotate(${JOWL.rot} ${JOWL.c[0]} ${JOWL.c[1]})" fill="url(#${id}jw)" filter="url(#${id}bj)"/>
+			<path d="${JAW_CORE}" fill="${C.deep}"/>
+			<path d="${TOP_PLANE}" fill="${C.lite}"/>
+			<path d="${REFL}" fill="${refl}" opacity=".5"/>
+			<path d="${MUZZLE_LIT}" fill="${C.lite}" opacity=".85"/>
+			<rect x="-700" y="-60" width="800" height="560" fill="url(#${id}hs)"/>
+			<path d="${CHEEK_EDGE}" stroke="${C.lite}" stroke-width="2.4" fill="none" opacity=".45"/>
+			<path d="${CREST_RIDGE}" stroke="${C.hi}" stroke-width="3" fill="none" opacity=".55" stroke-linecap="round"/>
+			<path d="${CREST_RIDGE}" stroke="${C.dark}" stroke-width="3" fill="none" opacity=".6" transform="translate(0,5)"/>
+			<path d="${ORBIT_SHADE}" fill="${C.deep}"/>
+			<path d="${ORBIT_LIT}" fill="${C.lite}"/>
+			<path d="${ORBIT_EDGE}" stroke="${C.hi}" stroke-width="3" fill="none" opacity=".8"/>
+			<path d="${NOSE_FOLD}" stroke="${C.dark}" stroke-width="3.5" fill="none" opacity=".8"/>
+			<path d="${NOSTRIL}" fill="${C.dark}"/>
+			<path d="${NOSTRIL_FLARE}" stroke="${C.hi}" stroke-width="3.4" fill="none" stroke-linecap="round"/>
+			<path d="${NOSTRIL_RIM}" stroke="${C.hi}" stroke-width="2.4" fill="none" opacity=".8"/>
+			<path d="${LIP_LINE}" stroke="${C.hi}" stroke-width="2.2" fill="none" opacity=".55" transform="translate(0,-4)"/>
+			<path d="${JAW_RIM}" stroke="${C.rim}" stroke-width="4" fill="none" opacity=".55" transform="translate(0,-3)"/>
+			<!-- the eye -->
+			<ellipse cx="${EYE.c[0]}" cy="${EYE.c[1]}" rx="${EYE.rx + 8}" ry="${EYE.ry + 7}" transform="rotate(${EYE.rot} ${EYE.c[0]} ${EYE.c[1]})" fill="${C.deep}"/>
+			<ellipse cx="${EYE.c[0]}" cy="${EYE.c[1]}" rx="${EYE.rx}" ry="${EYE.ry}" transform="rotate(${EYE.rot} ${EYE.c[0]} ${EYE.c[1]})" fill="url(#${id}eye)"/>
+			<path d="M${EYE.c[0] - 40},${EYE.c[1] - 4} C${EYE.c[0] - 26},${EYE.c[1] - 31} ${EYE.c[0] + 18},${EYE.c[1] - 33} ${EYE.c[0] + 38},${EYE.c[1] + 2}" stroke="${C.lite}" stroke-width="4" fill="none" stroke-linecap="round" opacity=".85"/>
+			<path d="M${EYE.c[0] - 40},${EYE.c[1] + 8} C${EYE.c[0] - 20},${EYE.c[1] + 34} ${EYE.c[0] + 24},${EYE.c[1] + 36} ${EYE.c[0] + 42},${EYE.c[1] + 10}" stroke="${C.dark}" stroke-width="5" fill="none" stroke-linecap="round"/>
+			<ellipse cx="${EYE.c[0] - 13}" cy="${EYE.c[1] - 11}" rx="6.5" ry="4.2" transform="rotate(-20 ${EYE.c[0] - 13} ${EYE.c[1] - 11})" fill="${C.spec}" opacity=".9"/>
+			<ellipse cx="${EYE.c[0] + 16}" cy="${EYE.c[1] + 10}" rx="5" ry="3" fill="${C.hi}" opacity=".6"/>
+			<!-- crisp speculars on the high points -->
+			${SPECS.map(([d, w, a]) => `<path d="${d}" stroke="${C.spec}" stroke-width="${w}" fill="none" stroke-linecap="round" opacity="${a}"/>`).join('')}
+		</g>
+		<path d="${TOP_LINE}" stroke="${C.hi}" stroke-width="3" fill="none" opacity=".75"/>
+	</g>
+	<!-- forelock over the poll, then the near ear -->
+	${FORELOCK.map((f) => `<path d="${f.d}" fill="${C.dark}" transform="translate(3,5)" opacity=".6"/><path d="${f.d}" fill="${C.lite}"/><path d="${f.g}" stroke="${C.deep}" stroke-width="2.2" fill="none"/><path d="${f.g}" stroke="${C.hi}" stroke-width="1.6" fill="none" transform="translate(-3,-3)" opacity=".8"/>`).join('')}
+	${ear}`;
+	return `<g transform="translate(${x},${y}) scale(${flip * s},${s}) translate(-836,-950)">${defs}${body}</g>`;
+};
+const HP = {mouth: hp([-572, 226]), eye: hp([EYE.c[0], EYE.c[1]]), ear: [712, 40], nose: hp([-620, 130]), poll: [712, 150], collarF: [760, CUT], collarB: [1096, CUT], throat: [800, 766]};
+K.HEAD_PTS = Object.fromEntries(Object.entries(HP).map(([k, p]) => [k, [p[0] - 836, p[1] - 950]]));
+K.HERO3_GEO = {LOCKS, FAR, CLUMPS, hp, CUT};   // for the r4 measures (hero_measure.mjs)
+K.HEAD_PTS.height = 925; K.HEAD_PTS.cut = CUT - 950;
+K.headPt = (o, name) => { const s = (o.h ?? 400) / 925, f = o.flip ? -1 : 1, p = K.HEAD_PTS[name]; return [o.x + f * p[0] * s, o.y + p[1] * s]; };
+})();
+
 // ep45 skin on the house style (history-video-style, ep44 standard, applied to ep45 by the producer 2026-10-25):
 // ONE accent colour = deep copper (the hero's colour) for the key-word tags · corner items ≥ 120 px from left/right and ≥ 58 px
 // from top/bottom (iPhone feed crop; Douyin's right-column buttons) · two-line stamp in 霞鹜文楷 (year · place / note) ·
@@ -942,6 +1275,561 @@ K.hud4 = ((base) => (c) => { const st = typeof c.stamp === 'string' ? {s1: c.sta
 	if (st && st.s2) h = h.replace(`<div class="s1">${st.s1}</div>`, `<div class="s1">${st.s1}</div><div class="s2">${st.s2}</div>`);
 	return h; })(K.hud4);
 
+(() => {
+  // ../../../film/src/gaits.ts
+  var GAITS = { "08_04": { "stride": 0.9759, "seconds": 1.325, "j": { "Hips": [0, 0.6393, 0, 0.6377, 0, 0.6357, 0, 0.6347, 0, 0.6349, 0, 0.6353, 0, 0.6367, 0, 0.6352, 0, 0.6338, 0, 0.641, 0, 0.6444, 0, 0.646, 0, 0.6467, 0, 0.6471, 0, 0.6473, 0, 0.649, 0, 0.6507, 0, 0.6507, 0, 0.6514, 0, 0.6507, 0, 0.6489, 0, 0.6473, 0, 0.6467, 0, 0.6471, 0, 0.6465, 0, 0.6467, 0, 0.6455, 0, 0.6452, 0, 0.6436, 0, 0.6423, 0, 0.6404, 0, 0.6387, 0, 0.6375, 0, 0.6356, 0, 0.6337, 0, 0.6318, 0, 0.6318, 0, 0.6322, 0, 0.6317, 0, 0.6314, 0, 0.6333, 0, 0.6357, 0, 0.6387, 0, 0.6414, 0, 0.6445, 0, 0.647, 0, 0.6493, 0, 0.6515, 0, 0.6522, 0, 0.6528, 0, 0.6527, 0, 0.6515, 0, 0.6497, 0, 0.6494, 0, 0.6491, 0, 0.6496, 0, 0.6499, 0, 0.6502, 0, 0.6487, 0, 0.6483, 0, 0.6469, 0, 0.6445, 0, 0.6439, 0, 0.6409], "LeftUpLeg": [0.0341, 0.5681, 0.0343, 0.5664, 0.0341, 0.5638, 0.034, 0.5624, 0.0333, 0.5619, 0.0328, 0.5624, 0.0322, 0.5646, 0.0315, 0.5634, 0.0314, 0.563, 0.0323, 0.5726, 0.0329, 0.5769, 0.0335, 0.5782, 0.0338, 0.5789, 0.0345, 0.58, 0.0352, 0.5807, 0.036, 0.5837, 0.0362, 0.5857, 0.0362, 0.5861, 0.0367, 0.5871, 0.0376, 0.5875, 0.038, 0.586, 0.039, 0.5853, 0.0397, 0.5848, 0.039, 0.585, 0.0389, 0.5849, 0.0383, 0.585, 0.0377, 0.5843, 0.037, 0.5842, 0.0359, 0.5828, 0.0354, 0.5822, 0.0348, 0.5808, 0.0338, 0.5799, 0.0328, 0.5788, 0.0317, 0.5771, 0.0312, 0.5755, 0.0307, 0.574, 0.0304, 0.5734, 0.0307, 0.5729, 0.0312, 0.5715, 0.0317, 0.5711, 0.032, 0.5725, 0.0318, 0.5748, 0.0306, 0.5767, 0.0307, 0.5786, 0.0306, 0.5811, 0.0302, 0.5834, 0.0306, 0.5856, 0.0309, 0.5874, 0.0312, 0.5876, 0.0313, 0.5884, 0.0308, 0.587, 0.0311, 0.586, 0.031, 0.5841, 0.0308, 0.583, 0.0313, 0.5825, 0.0317, 0.5832, 0.0318, 0.5827, 0.0321, 0.5822, 0.0322, 0.5801, 0.0325, 0.5786, 0.0325, 0.5766, 0.032, 0.5732, 0.0332, 0.5733, 0.0335, 0.5698], "LeftLeg": [0.1512, 0.3322, 0.1487, 0.3292, 0.1617, 0.3335, 0.1679, 0.3358, 0.1722, 0.3384, 0.1747, 0.3409, 0.1756, 0.344, 0.1794, 0.3459, 0.1775, 0.3445, 0.1656, 0.346, 0.1578, 0.3456, 0.1532, 0.3442, 0.1496, 0.343, 0.144, 0.3414, 0.1369, 0.3387, 0.128, 0.3378, 0.1187, 0.3364, 0.1111, 0.3344, 0.1035, 0.3331, 0.0955, 0.3313, 0.0886, 0.3282, 0.0811, 0.3258, 0.0709, 0.3236, 0.0601, 0.3225, 0.0478, 0.3214, 0.0354, 0.3211, 0.0226, 0.3205, 98e-4, 0.321, -4e-3, 0.3209, -0.0223, 0.3233, -0.0464, 0.3277, -0.0573, 0.33, -0.0647, 0.3311, -0.0721, 0.3317, -0.0786, 0.3325, -0.086, 0.3341, -0.0926, 0.3364, -0.0938, 0.3364, -0.0782, 0.3279, -0.0623, 0.3213, -0.0458, 0.3174, -0.0304, 0.3155, -0.0145, 0.3141, 22e-4, 0.3138, 0.0193, 0.3152, 0.0366, 0.3177, 0.0526, 0.3209, 0.0681, 0.3248, 0.0831, 0.3279, 0.0969, 0.3321, 0.1099, 0.3349, 0.1212, 0.3379, 0.1305, 0.3398, 0.1394, 0.3429, 0.1449, 0.3448, 0.1483, 0.3471, 0.1514, 0.3483, 0.1539, 0.3489, 0.1551, 0.3474, 0.1567, 0.3467, 0.1573, 0.345, 0.1567, 0.3416, 0.1543, 0.3397, 0.1517, 0.3346], "LeftFoot": [0.2746, 0.0835, 0.2699, 0.0794, 0.2611, 0.0743, 0.2483, 0.0703, 0.2385, 0.0691, 0.2277, 0.0689, 0.212, 0.0696, 0.1962, 0.0698, 0.1821, 0.0682, 0.164, 0.0699, 0.1483, 0.0699, 0.1328, 0.0695, 0.1191, 0.0696, 0.1048, 0.0695, 0.0903, 0.0683, 0.0763, 0.0687, 0.0616, 0.0687, 0.0472, 0.0687, 0.0335, 0.0693, 0.0198, 0.0696, 7e-3, 0.0686, -62e-4, 0.0686, -0.0204, 0.0682, -0.0333, 0.0683, -0.0476, 0.0683, -0.0601, 0.0684, -0.0724, 0.0679, -0.0856, 0.069, -0.0982, 0.0688, -0.1118, 0.0697, -0.1248, 0.0704, -0.1376, 0.0737, -0.1512, 0.0773, -0.1647, 0.0807, -0.177, 0.0843, -0.1913, 0.0892, -0.2039, 0.0948, -0.2151, 0.1006, -0.2242, 0.108, -0.2282, 0.1174, -0.2286, 0.1298, -0.2245, 0.1408, -0.2176, 0.151, -0.2086, 0.162, -0.1964, 0.1712, -0.1804, 0.1765, -0.1625, 0.1777, -0.1426, 0.1759, -0.1207, 0.1703, -0.0968, 0.1624, -0.0704, 0.1511, -0.0422, 0.1385, -0.0131, 0.125, 0.0194, 0.1128, 0.052, 0.101, 0.0854, 0.092, 0.1185, 0.0855, 0.1505, 0.0821, 0.1804, 0.0796, 0.2075, 0.0805, 0.2326, 0.0825, 0.2535, 0.0842, 0.2647, 0.0864, 0.2725, 0.0849], "LToeTip": [0.3697, 0.1464, 0.3665, 0.14, 0.36, 0.13, 0.3525, 0.1169, 0.3469, 0.1048, 0.3419, 0.0898, 0.3269, 0.0823, 0.3107, 0.0785, 0.2973, 0.0708, 0.2798, 0.0662, 0.2638, 0.0647, 0.2485, 0.0562, 0.2346, 0.0555, 0.2202, 0.055, 0.2055, 0.0527, 0.1915, 0.0525, 0.1765, 0.0514, 0.1622, 0.0532, 0.1486, 0.0554, 0.1349, 0.056, 0.1217, 0.0523, 0.1081, 0.0509, 0.0937, 0.0495, 0.0807, 0.049, 0.0665, 0.0492, 0.0542, 0.0513, 0.0413, 0.0474, 0.0285, 0.0508, 0.0154, 0.0475, 16e-4, 0.0475, -0.0117, 0.0445, -0.0246, 0.048, -0.0383, 0.0553, -0.0539, 0.0459, -0.0666, 0.0496, -0.0835, 0.0455, -0.0986, 0.0451, -0.1139, 0.0433, -0.1315, 0.0376, -0.1442, 0.0373, -0.1569, 0.0387, -0.1685, 0.0388, -0.181, 0.0398, -0.1825, 0.0481, -0.1661, 0.0592, -0.1452, 0.0662, -0.1212, 0.0696, -0.094, 0.0709, -0.0635, 0.0698, -0.0272, 0.0695, 0.0147, 0.0723, 0.0515, 0.0709, 0.0873, 0.0675, 0.1259, 0.0662, 0.1639, 0.0719, 0.1989, 0.0821, 0.2329, 0.0882, 0.263, 0.0977, 0.2927, 0.1049, 0.316, 0.1175, 0.3364, 0.1305, 0.3518, 0.1408, 0.3585, 0.1496, 0.367, 0.15], "RightUpLeg": [0.0156, 0.5778, 0.0146, 0.5759, 0.0139, 0.5745, 0.0133, 0.5735, 0.0126, 0.5741, 0.0126, 0.5742, 0.0131, 0.5744, 0.014, 0.5726, 0.0144, 0.5697, 0.0145, 0.5745, 0.0144, 0.577, 0.0144, 0.5791, 0.0146, 0.5801, 0.0152, 0.5803, 0.0152, 0.5801, 0.0158, 0.5809, 0.0162, 0.5825, 0.0167, 0.5823, 0.0162, 0.5827, 0.017, 0.5815, 0.0177, 0.5797, 0.018, 0.5777, 0.0181, 0.5774, 0.0182, 0.5777, 0.0189, 0.5768, 0.0186, 0.5767, 0.0194, 0.5751, 0.02, 0.5743, 0.0207, 0.5723, 0.022, 0.5708, 0.0229, 0.5686, 0.0237, 0.5658, 0.0245, 0.5646, 0.0248, 0.5621, 0.0254, 0.5599, 0.0254, 0.5574, 0.0256, 0.558, 0.0252, 0.5592, 0.024, 0.5593, 0.0234, 0.5589, 0.023, 0.5613, 0.0235, 0.5639, 0.0241, 0.5678, 0.0245, 0.5715, 0.025, 0.5753, 0.025, 0.5778, 0.0248, 0.5804, 0.0246, 0.5831, 0.0247, 0.5844, 0.0254, 0.5852, 0.025, 0.5862, 0.0249, 0.5849, 0.0251, 0.5832, 0.0247, 0.5834, 0.0237, 0.5832, 0.0233, 0.5834, 0.0228, 0.5845, 0.0215, 0.5856, 0.0209, 0.5846, 0.0198, 0.5852, 0.0192, 0.5844, 0.0181, 0.5827, 0.0177, 0.5816, 0.0165, 0.5792], "RightLeg": [-0.0327, 0.3044, -0.0428, 0.3044, -0.052, 0.3048, -0.0599, 0.3058, -0.0674, 0.3083, -0.0735, 0.3103, -0.0762, 0.3114, -0.0831, 0.3125, -0.0785, 0.308, -0.0574, 0.3061, -0.0423, 0.3049, -0.0304, 0.3048, -0.0148, 0.3037, 9e-4, 0.3027, 0.0167, 0.3021, 0.0348, 0.3036, 0.0519, 0.3069, 0.0678, 0.3091, 0.0841, 0.3132, 0.1002, 0.3164, 0.1153, 0.3196, 0.1301, 0.3236, 0.1438, 0.3297, 0.1542, 0.3355, 0.1617, 0.3386, 0.169, 0.3432, 0.1759, 0.3456, 0.1805, 0.3478, 0.185, 0.3484, 0.1891, 0.349, 0.1929, 0.3491, 0.1956, 0.3478, 0.197, 0.3471, 0.1977, 0.3449, 0.197, 0.3418, 0.1956, 0.3383, 0.194, 0.3375, 0.1924, 0.3378, 0.1904, 0.3375, 0.1881, 0.3358, 0.1835, 0.3352, 0.1791, 0.3345, 0.1722, 0.3336, 0.1635, 0.3319, 0.155, 0.3308, 0.147, 0.3291, 0.1387, 0.328, 0.1306, 0.3273, 0.1216, 0.3251, 0.1145, 0.3231, 0.1071, 0.3219, 0.1013, 0.3188, 0.0953, 0.3154, 0.0872, 0.3137, 0.0785, 0.3117, 0.0689, 0.3102, 0.0566, 0.3095, 0.0435, 0.3094, 0.0319, 0.3076, 0.0193, 0.308, 8e-3, 0.3073, -18e-4, 0.3061, -0.0138, 0.3059, -0.0235, 0.3046], "RightFoot": [-0.1731, 0.0661, -0.1878, 0.0685, -0.2018, 0.0719, -0.2152, 0.0763, -0.2291, 0.0831, -0.2419, 0.0897, -0.2519, 0.0961, -0.2643, 0.1017, -0.2716, 0.1076, -0.2665, 0.1221, -0.2628, 0.1343, -0.2602, 0.1467, -0.2514, 0.1559, -0.24, 0.162, -0.2262, 0.1651, -0.2074, 0.1652, -0.1862, 0.162, -0.1648, 0.1558, -0.139, 0.1468, -0.1113, 0.1357, -0.0818, 0.124, -0.0488, 0.1114, -0.0132, 0.1008, 0.023, 0.0911, 0.0569, 0.082, 0.0927, 0.0767, 0.1282, 0.0727, 0.1602, 0.0717, 0.1888, 0.072, 0.2121, 0.0737, 0.2308, 0.0756, 0.244, 0.0762, 0.2502, 0.0765, 0.2498, 0.0742, 0.2428, 0.0699, 0.2311, 0.0649, 0.2189, 0.0629, 0.2068, 0.0624, 0.1912, 0.0615, 0.1771, 0.06, 0.162, 0.06, 0.1463, 0.0602, 0.1301, 0.0605, 0.115, 0.0599, 0.1002, 0.0601, 0.0852, 0.0599, 0.0706, 0.0603, 0.0583, 0.0607, 0.0433, 0.0603, 0.0298, 0.0602, 0.0164, 0.061, 3e-3, 0.0607, -0.0109, 0.0603, -0.0241, 0.0607, -0.0371, 0.0608, -0.0497, 0.0607, -0.0626, 0.0604, -0.0763, 0.0607, -0.0892, 0.0597, -0.1029, 0.0607, -0.116, 0.061, -0.1285, 0.0609, -0.1453, 0.0631, -0.159, 0.0638], "RToeTip": [-0.085, 66e-4, -0.1026, 52e-4, -0.1217, 24e-4, -0.1364, 43e-4, -0.1436, 0.0189, -0.1656, 0.0137, -0.1944, 38e-4, -0.2207, 39e-4, -0.2571, 8e-4, -0.2323, 0.0165, -0.2349, 0.0276, -0.2499, 0.0354, -0.2507, 0.0441, -0.2229, 0.0529, -0.2162, 0.0539, -0.1802, 0.0568, -0.1488, 0.057, -0.1108, 0.0589, -0.0709, 0.0599, -0.0306, 0.0604, 96e-4, 0.0641, 0.0498, 0.0628, 0.0908, 0.0664, 0.1302, 0.0709, 0.1656, 0.0738, 0.2017, 0.0796, 0.2371, 0.0841, 0.2682, 0.0916, 0.2956, 0.0984, 0.3174, 0.1067, 0.3368, 0.109, 0.3501, 0.1099, 0.3581, 0.1055, 0.3547, 0.1098, 0.3481, 0.1035, 0.338, 0.0913, 0.3286, 0.0765, 0.317, 0.0678, 0.3019, 0.0586, 0.2876, 0.0488, 0.2715, 0.0424, 0.2557, 0.0448, 0.239, 0.0431, 0.2236, 0.0417, 0.2089, 0.0429, 0.1938, 0.0438, 0.1788, 0.043, 0.1665, 0.0435, 0.1511, 0.0411, 0.1367, 0.0365, 0.1242, 0.0434, 0.1106, 0.0422, 0.0965, 0.0412, 0.0823, 0.0384, 0.0683, 0.0354, 0.0549, 0.0322, 0.0411, 0.029, 0.0258, 0.0254, 0.0121, 0.0222, -19e-4, 0.0223, -0.0162, 0.0201, -0.0307, 0.0163, -0.0511, 0.0122, -0.0691, 7e-3], "LowerBack": [0, 0.6393, 0, 0.6377, 0, 0.6357, 0, 0.6347, 0, 0.6349, 0, 0.6353, 0, 0.6367, 0, 0.6352, 0, 0.6338, 0, 0.641, 0, 0.6444, 0, 0.646, 0, 0.6467, 0, 0.6471, 0, 0.6473, 0, 0.649, 0, 0.6507, 0, 0.6507, 0, 0.6514, 0, 0.6507, 0, 0.6489, 0, 0.6473, 0, 0.6467, 0, 0.6471, 0, 0.6465, 0, 0.6467, 0, 0.6455, 0, 0.6452, 0, 0.6436, 0, 0.6423, 0, 0.6404, 0, 0.6387, 0, 0.6375, 0, 0.6356, 0, 0.6337, 0, 0.6318, 0, 0.6318, 0, 0.6322, 0, 0.6317, 0, 0.6314, 0, 0.6333, 0, 0.6357, 0, 0.6387, 0, 0.6414, 0, 0.6445, 0, 0.647, 0, 0.6493, 0, 0.6515, 0, 0.6522, 0, 0.6528, 0, 0.6527, 0, 0.6515, 0, 0.6497, 0, 0.6494, 0, 0.6491, 0, 0.6496, 0, 0.6499, 0, 0.6502, 0, 0.6487, 0, 0.6483, 0, 0.6469, 0, 0.6445, 0, 0.6439, 0, 0.6409], "Spine": [-21e-4, 0.7171, -19e-4, 0.7155, -4e-4, 0.7136, -5e-4, 0.7125, 1e-3, 0.7128, 9e-4, 0.7132, 7e-4, 0.7146, 2e-4, 0.7132, 1e-4, 0.7117, -5e-4, 0.7189, -5e-4, 0.7223, -5e-4, 0.7239, -1e-4, 0.7246, 12e-4, 0.725, 8e-4, 0.7252, 5e-4, 0.7269, 1e-4, 0.7286, -2e-4, 0.7286, -5e-4, 0.7293, -7e-4, 0.7287, -6e-4, 0.7268, -6e-4, 0.7252, -1e-3, 0.7246, -8e-4, 0.725, -13e-4, 0.7244, -8e-4, 0.7246, -3e-4, 0.7234, -4e-4, 0.7231, -2e-4, 0.7214, -5e-4, 0.7202, 0, 0.7183, -2e-4, 0.7165, 0, 0.7153, 1e-4, 0.7134, 1e-4, 0.7114, 2e-4, 0.7095, 7e-4, 0.7095, 6e-4, 0.7098, 9e-4, 0.7093, 1e-3, 0.709, 1e-3, 0.7109, 12e-4, 0.7133, 13e-4, 0.7163, 12e-4, 0.719, 1e-3, 0.7221, 7e-4, 0.7246, 4e-4, 0.727, 1e-4, 0.7292, -3e-4, 0.7299, -4e-4, 0.7305, -2e-4, 0.7304, -3e-4, 0.7292, -6e-4, 0.7274, -4e-4, 0.727, -6e-4, 0.7268, -6e-4, 0.7273, -9e-4, 0.7276, -11e-4, 0.728, -1e-3, 0.7264, -1e-3, 0.726, -13e-4, 0.7246, -9e-4, 0.7223, -22e-4, 0.7216, -22e-4, 0.7187], "Spine1": [12e-4, 0.7949, 16e-4, 0.7933, 34e-4, 0.7914, 33e-4, 0.7903, 5e-3, 0.7906, 47e-4, 0.7911, 43e-4, 0.7925, 35e-4, 0.7911, 31e-4, 0.7896, 22e-4, 0.7968, 24e-4, 0.8002, 25e-4, 0.8018, 32e-4, 0.8025, 52e-4, 0.8029, 46e-4, 0.803, 42e-4, 0.8048, 34e-4, 0.8065, 26e-4, 0.8066, 2e-3, 0.8072, 18e-4, 0.8066, 21e-4, 0.8047, 22e-4, 0.8031, 16e-4, 0.8025, 2e-3, 0.8029, 13e-4, 0.8023, 22e-4, 0.8025, 31e-4, 0.8013, 29e-4, 0.801, 34e-4, 0.7993, 32e-4, 0.7981, 41e-4, 0.7961, 39e-4, 0.7943, 44e-4, 0.7931, 45e-4, 0.7912, 46e-4, 0.7892, 45e-4, 0.7872, 53e-4, 0.7871, 54e-4, 0.7874, 59e-4, 0.7867, 61e-4, 0.7863, 63e-4, 0.7881, 67e-4, 0.7906, 67e-4, 0.7935, 68e-4, 0.7963, 65e-4, 0.7993, 6e-3, 0.8019, 58e-4, 0.8043, 51e-4, 0.8066, 44e-4, 0.8073, 42e-4, 0.8079, 4e-3, 0.8079, 39e-4, 0.8067, 34e-4, 0.8049, 37e-4, 0.8045, 33e-4, 0.8043, 34e-4, 0.8048, 33e-4, 0.8051, 34e-4, 0.8055, 35e-4, 0.804, 33e-4, 0.8036, 27e-4, 0.8023, 36e-4, 0.7999, 15e-4, 0.7993, 14e-4, 0.7965], "Neck": [12e-4, 0.7949, 16e-4, 0.7933, 34e-4, 0.7914, 33e-4, 0.7903, 5e-3, 0.7906, 47e-4, 0.7911, 43e-4, 0.7925, 35e-4, 0.7911, 31e-4, 0.7896, 22e-4, 0.7968, 24e-4, 0.8002, 25e-4, 0.8018, 32e-4, 0.8025, 52e-4, 0.8029, 46e-4, 0.803, 42e-4, 0.8048, 34e-4, 0.8065, 26e-4, 0.8066, 2e-3, 0.8072, 18e-4, 0.8066, 21e-4, 0.8047, 22e-4, 0.8031, 16e-4, 0.8025, 2e-3, 0.8029, 13e-4, 0.8023, 22e-4, 0.8025, 31e-4, 0.8013, 29e-4, 0.801, 34e-4, 0.7993, 32e-4, 0.7981, 41e-4, 0.7961, 39e-4, 0.7943, 44e-4, 0.7931, 45e-4, 0.7912, 46e-4, 0.7892, 45e-4, 0.7872, 53e-4, 0.7871, 54e-4, 0.7874, 59e-4, 0.7867, 61e-4, 0.7863, 63e-4, 0.7881, 67e-4, 0.7906, 67e-4, 0.7935, 68e-4, 0.7963, 65e-4, 0.7993, 6e-3, 0.8019, 58e-4, 0.8043, 51e-4, 0.8066, 44e-4, 0.8073, 42e-4, 0.8079, 4e-3, 0.8079, 39e-4, 0.8067, 34e-4, 0.8049, 37e-4, 0.8045, 33e-4, 0.8043, 34e-4, 0.8048, 33e-4, 0.8051, 34e-4, 0.8055, 35e-4, 0.804, 33e-4, 0.8036, 27e-4, 0.8023, 36e-4, 0.7999, 15e-4, 0.7993, 14e-4, 0.7965], "Neck1": [32e-4, 0.8574, 31e-4, 0.8559, 51e-4, 0.854, 56e-4, 0.8529, 71e-4, 0.8532, 65e-4, 0.8537, 43e-4, 0.8551, 3e-3, 0.8536, 22e-4, 0.8522, 14e-4, 0.8593, 12e-4, 0.8627, 1e-3, 0.8643, 15e-4, 0.8649, 31e-4, 0.8653, 27e-4, 0.8655, 25e-4, 0.8672, 16e-4, 0.869, 11e-4, 0.8691, 0, 0.8697, -0, 0.8691, 2e-4, 0.8673, 5e-4, 0.8657, 14e-4, 0.8652, 11e-4, 0.8655, 5e-4, 0.8649, 17e-4, 0.8651, 27e-4, 0.8639, 3e-3, 0.8636, 39e-4, 0.8619, 41e-4, 0.8607, 52e-4, 0.8587, 52e-4, 0.8569, 61e-4, 0.8557, 56e-4, 0.8537, 63e-4, 0.8517, 62e-4, 0.8497, 66e-4, 0.8496, 69e-4, 0.8498, 72e-4, 0.849, 74e-4, 0.8485, 81e-4, 0.8503, 86e-4, 0.8527, 77e-4, 0.8556, 94e-4, 0.8586, 75e-4, 0.8615, 62e-4, 0.864, 6e-3, 0.8664, 7e-3, 0.8689, 64e-4, 0.8697, 61e-4, 0.8703, 67e-4, 0.8703, 52e-4, 0.8691, 61e-4, 0.8674, 55e-4, 0.867, 48e-4, 0.8667, 46e-4, 0.8672, 53e-4, 0.8676, 45e-4, 0.8679, 38e-4, 0.8663, 38e-4, 0.8659, 38e-4, 0.8646, 44e-4, 0.8622, 3e-3, 0.8618, 31e-4, 0.8589], "Head": [0.0131, 0.9185, 0.0125, 0.917, 0.0136, 0.9153, 0.0135, 0.9143, 0.0145, 0.9146, 0.0136, 0.9151, 0.0115, 0.9165, 0.01, 0.9151, 91e-4, 0.9136, 81e-4, 0.9208, 77e-4, 0.9242, 75e-4, 0.9257, 8e-3, 0.9264, 96e-4, 0.9268, 94e-4, 0.9269, 95e-4, 0.9287, 91e-4, 0.9304, 88e-4, 0.9304, 82e-4, 0.9311, 84e-4, 0.9304, 86e-4, 0.9286, 88e-4, 0.927, 96e-4, 0.9265, 94e-4, 0.9268, 9e-3, 0.9262, 0.0102, 0.9264, 0.0113, 0.9252, 0.0115, 0.9248, 0.0124, 0.9232, 0.0127, 0.922, 0.0138, 0.92, 0.0136, 0.9182, 0.0143, 0.917, 0.0138, 0.915, 0.0142, 0.913, 0.0139, 0.911, 0.0142, 0.9109, 0.0142, 0.9111, 0.0144, 0.9103, 0.0145, 0.9098, 0.0153, 0.9116, 0.0159, 0.914, 0.0154, 0.9168, 0.0175, 0.9197, 0.0161, 0.9226, 0.0151, 0.9251, 0.0149, 0.9275, 0.0167, 0.93, 0.0164, 0.9307, 0.0162, 0.9313, 0.0171, 0.9314, 0.0155, 0.9301, 0.0164, 0.9284, 0.0156, 0.9281, 0.0149, 0.9278, 0.0146, 0.9282, 0.0152, 0.9287, 0.0139, 0.929, 0.0132, 0.9274, 0.0134, 0.927, 0.0134, 0.9257, 0.0139, 0.9233, 0.0125, 0.9229, 0.0126, 0.92], "HeadTop": [0.0325, 0.9818, 0.0317, 0.9804, 0.0312, 0.9791, 0.0299, 0.9784, 0.0301, 0.9789, 0.0291, 0.9795, 0.0279, 0.9807, 0.0264, 0.9792, 0.0255, 0.9778, 0.0243, 0.985, 0.0238, 0.9884, 0.0238, 0.9899, 0.0244, 0.9905, 0.0258, 0.9909, 0.0259, 0.991, 0.0262, 0.9927, 0.0266, 0.9942, 0.0262, 0.9943, 0.0264, 0.9947, 0.0268, 0.994, 0.0269, 0.9922, 0.027, 0.9906, 0.0268, 0.9904, 0.0271, 0.9906, 0.0271, 0.9898, 0.0279, 0.9902, 0.0292, 0.9888, 0.0292, 0.9885, 0.0297, 0.987, 0.03, 0.9857, 0.0309, 0.9838, 0.0306, 0.982, 0.0309, 0.9809, 0.0305, 0.9788, 0.0302, 0.977, 0.0299, 0.975, 0.0301, 0.9749, 0.0296, 0.9752, 0.0299, 0.9745, 0.0298, 0.974, 0.0305, 0.9758, 0.0313, 0.9781, 0.0317, 0.9808, 0.0337, 0.9836, 0.0338, 0.9862, 0.0337, 0.9885, 0.0336, 0.991, 0.0355, 0.9933, 0.0356, 0.994, 0.0356, 0.9946, 0.0364, 0.9946, 0.0354, 0.9933, 0.0355, 0.9918, 0.0351, 0.9914, 0.0346, 0.991, 0.0342, 0.9915, 0.0344, 0.992, 0.0331, 0.9924, 0.0329, 0.9907, 0.0331, 0.9902, 0.033, 0.989, 0.0334, 0.9866, 0.0319, 0.9862, 0.0319, 0.9834], "LeftArm": [-19e-4, 0.8468, 1e-4, 0.8455, 3e-4, 0.8427, 1e-3, 0.8407, 24e-4, 0.8403, 17e-4, 0.8395, -0, 0.8394, -14e-4, 0.8367, -27e-4, 0.8333, -43e-4, 0.839, -41e-4, 0.8419, -27e-4, 0.8439, -8e-4, 0.8445, 25e-4, 0.8458, 4e-3, 0.8464, 51e-4, 0.8485, 62e-4, 0.8506, 83e-4, 0.8513, 96e-4, 0.8529, 0.0125, 0.8538, 0.0149, 0.853, 0.0173, 0.8522, 0.0184, 0.853, 0.0203, 0.8538, 0.0214, 0.8539, 0.0234, 0.855, 0.0253, 0.8547, 0.0254, 0.855, 0.0253, 0.8538, 0.0247, 0.8531, 0.0263, 0.8519, 0.0253, 0.8506, 0.0262, 0.8495, 0.0266, 0.8486, 0.0259, 0.8474, 0.0252, 0.8463, 0.0256, 0.847, 0.0268, 0.8481, 0.0282, 0.8486, 0.0293, 0.8489, 0.0299, 0.8514, 0.0304, 0.8544, 0.0288, 0.857, 0.0272, 0.8594, 0.0242, 0.8624, 0.0209, 0.8645, 0.0195, 0.8656, 0.0167, 0.8672, 0.0142, 0.8677, 0.0123, 0.8676, 0.0103, 0.8671, 83e-4, 0.8658, 67e-4, 0.8633, 55e-4, 0.8624, 33e-4, 0.8614, 28e-4, 0.8613, 26e-4, 0.8611, 3e-3, 0.8608, 25e-4, 0.8589, 19e-4, 0.8583, 6e-4, 0.8568, 23e-4, 0.854, 0, 0.8526, 1e-4, 0.8487], "LeftForeArm": [-0.1039, 0.6831, -0.1041, 0.6833, -0.1056, 0.6817, -0.1051, 0.6798, -0.1033, 0.6793, -0.0997, 0.6759, -0.0981, 0.6737, -0.0982, 0.6703, -0.0974, 0.6657, -0.0947, 0.669, -0.089, 0.6688, -0.0803, 0.6674, -0.0712, 0.6648, -0.0593, 0.6629, -0.0488, 0.6605, -0.0384, 0.6601, -0.0271, 0.66, -0.017, 0.6594, -67e-4, 0.6598, 39e-4, 0.6601, 0.0142, 0.6591, 0.0248, 0.6584, 0.0333, 0.6595, 0.044, 0.6611, 0.053, 0.6624, 0.0609, 0.6645, 0.0701, 0.6658, 0.0762, 0.6675, 0.0829, 0.6683, 0.0877, 0.6693, 0.0932, 0.6695, 0.0965, 0.6697, 0.0989, 0.6693, 0.0999, 0.6686, 0.0984, 0.667, 0.0953, 0.6651, 0.0927, 0.6648, 0.0892, 0.6643, 0.0834, 0.6627, 0.0773, 0.6611, 0.0714, 0.6621, 0.0665, 0.6639, 0.0604, 0.6657, 0.0568, 0.6676, 0.0511, 0.6699, 0.0433, 0.6713, 0.0371, 0.6718, 0.0273, 0.6728, 0.0197, 0.673, 89e-4, 0.6729, -12e-4, 0.6729, -0.0116, 0.6722, -0.0221, 0.6709, -0.0323, 0.6716, -0.044, 0.6729, -0.0524, 0.6749, -0.0598, 0.6771, -0.0674, 0.6798, -0.0751, 0.6811, -0.0818, 0.6835, -0.088, 0.6846, -0.0916, 0.6849, -0.0968, 0.6854, -0.1006, 0.684], "LeftHand": [-0.128, 0.5639, -0.1299, 0.5645, -0.1328, 0.5632, -0.135, 0.562, -0.1359, 0.5622, -0.1331, 0.5591, -0.1314, 0.5569, -0.1283, 0.5527, -0.1242, 0.5476, -0.1186, 0.5503, -0.11, 0.5497, -0.0975, 0.5479, -0.0834, 0.5447, -0.0661, 0.5425, -0.0493, 0.54, -0.0324, 0.5397, -0.0147, 0.54, 32e-4, 0.5403, 0.0206, 0.5421, 0.0397, 0.5443, 0.0584, 0.546, 0.0765, 0.5481, 0.093, 0.5529, 0.1106, 0.5583, 0.1263, 0.5639, 0.1414, 0.5713, 0.1558, 0.5769, 0.1669, 0.5836, 0.179, 0.5904, 0.1881, 0.5967, 0.197, 0.6016, 0.2029, 0.6056, 0.2074, 0.6086, 0.2102, 0.611, 0.2098, 0.6114, 0.2074, 0.6108, 0.2048, 0.6103, 0.2006, 0.6084, 0.1934, 0.6041, 0.185, 0.5985, 0.1758, 0.5943, 0.1668, 0.5904, 0.1556, 0.5859, 0.1458, 0.5812, 0.1332, 0.5773, 0.1188, 0.5735, 0.1042, 0.5683, 0.0885, 0.566, 0.074, 0.5627, 0.0574, 0.56, 0.0405, 0.5574, 0.0238, 0.5548, 72e-4, 0.5518, -9e-3, 0.5513, -0.0267, 0.5516, -0.041, 0.553, -0.0541, 0.5549, -0.0665, 0.5575, -0.0787, 0.5589, -0.0897, 0.5617, -0.1002, 0.5633, -0.1068, 0.564, -0.1157, 0.5651, -0.1219, 0.5642], "RightArm": [0.0316, 0.8427, 0.0305, 0.8408, 0.032, 0.8403, 0.0314, 0.8402, 0.0319, 0.8415, 0.0319, 0.8432, 0.0329, 0.8462, 0.0326, 0.846, 0.0324, 0.8466, 0.0324, 0.8553, 0.0327, 0.8591, 0.0312, 0.8603, 0.0306, 0.8611, 0.0298, 0.861, 0.0272, 0.8607, 0.0248, 0.8621, 0.0218, 0.8636, 0.0175, 0.8632, 0.0144, 0.863, 0.0105, 0.8609, 85e-4, 0.858, 59e-4, 0.8555, 4e-3, 0.8535, 27e-4, 0.8534, 8e-4, 0.8519, 5e-4, 0.8512, 5e-4, 0.849, 3e-4, 0.8479, 15e-4, 0.8456, 24e-4, 0.8437, 27e-4, 0.8409, 4e-3, 0.8385, 42e-4, 0.8371, 44e-4, 0.8338, 55e-4, 0.831, 57e-4, 0.8282, 69e-4, 0.8272, 66e-4, 0.8262, 64e-4, 0.8242, 56e-4, 0.8228, 58e-4, 0.8238, 6e-3, 0.8256, 79e-4, 0.8291, 0.0103, 0.832, 0.0128, 0.8353, 0.0155, 0.8384, 0.0171, 0.8422, 0.0181, 0.8453, 0.019, 0.8464, 0.02, 0.848, 0.0211, 0.8486, 0.0226, 0.8477, 0.0233, 0.8466, 0.0256, 0.8468, 0.027, 0.8474, 0.0278, 0.8486, 0.0294, 0.849, 0.0306, 0.8499, 0.0311, 0.8488, 0.0314, 0.8486, 0.0314, 0.8475, 0.0326, 0.8452, 0.0307, 0.8456, 0.0307, 0.8438], "RightForeArm": [0.1043, 0.6673, 0.1016, 0.6648, 0.0977, 0.6623, 0.0924, 0.6606, 0.0872, 0.6602, 0.0802, 0.66, 0.0725, 0.661, 0.0628, 0.6591, 0.0526, 0.6583, 0.0433, 0.6661, 0.0351, 0.6695, 0.0255, 0.6706, 0.0183, 0.6714, 0.0138, 0.6712, 47e-4, 0.6714, -5e-3, 0.6735, -0.0127, 0.6755, -0.0223, 0.6759, -0.0304, 0.6767, -0.0379, 0.6754, -0.0438, 0.6735, -0.0508, 0.6723, -0.0569, 0.6716, -0.0634, 0.6733, -0.0687, 0.6732, -0.073, 0.6742, -0.0762, 0.6734, -0.0794, 0.6737, -0.0866, 0.6756, -0.0885, 0.6753, -0.0897, 0.6734, -0.0871, 0.6704, -0.0864, 0.6689, -0.0866, 0.666, -0.0854, 0.6633, -0.0834, 0.6597, -0.0825, 0.6588, -0.0799, 0.6562, -0.0766, 0.6525, -0.0724, 0.6486, -0.0668, 0.6471, -0.0553, 0.6446, -0.0468, 0.6458, -0.0373, 0.6467, -0.0273, 0.6482, -0.0172, 0.6497, -72e-4, 0.6523, -2e-4, 0.6546, 83e-4, 0.655, 0.0125, 0.6562, 0.0256, 0.6568, 0.035, 0.6563, 0.042, 0.6558, 0.0494, 0.6564, 0.0581, 0.6582, 0.065, 0.6606, 0.073, 0.6627, 0.0808, 0.6655, 0.0868, 0.6662, 0.0921, 0.6678, 0.0966, 0.6685, 0.1018, 0.668, 0.102, 0.6694, 0.1029, 0.6681], "RightHand": [0.2118, 0.6045, 0.2088, 0.6014, 0.2041, 0.5976, 0.1974, 0.5936, 0.19, 0.5897, 0.1803, 0.5858, 0.1684, 0.5813, 0.1543, 0.5744, 0.1392, 0.5686, 0.1253, 0.5723, 0.1103, 0.57, 0.0946, 0.5668, 0.0809, 0.5637, 0.0692, 0.5596, 0.0541, 0.557, 0.0382, 0.5567, 0.0227, 0.5563, 82e-4, 0.5553, -5e-3, 0.5549, -0.0188, 0.5525, -0.0301, 0.5499, -0.0419, 0.5483, -0.0522, 0.5475, -0.0625, 0.5492, -0.0718, 0.5491, -0.0803, 0.5502, -0.0869, 0.5496, -0.0938, 0.5504, -0.1014, 0.5522, -0.1043, 0.552, -0.1081, 0.5504, -0.1096, 0.548, -0.1105, 0.5468, -0.1116, 0.544, -0.1108, 0.5414, -0.1093, 0.5378, -0.1061, 0.5365, -0.1021, 0.5335, -0.0971, 0.5295, -0.0907, 0.5253, -0.0817, 0.5232, -0.0702, 0.5208, -0.0578, 0.5215, -0.0434, 0.522, -0.0283, 0.5233, -0.0118, 0.525, 46e-4, 0.528, 0.0198, 0.5314, 0.0371, 0.5336, 0.0506, 0.5373, 0.0718, 0.5409, 0.0887, 0.5436, 0.1039, 0.5474, 0.1196, 0.5533, 0.1355, 0.5604, 0.1481, 0.5677, 0.1624, 0.5757, 0.1746, 0.5833, 0.1846, 0.589, 0.1923, 0.5938, 0.1992, 0.598, 0.2062, 0.6, 0.208, 0.604, 0.2098, 0.6042] } }, "08_01": { "stride": 1.1166, "seconds": 1.017, "j": { "Hips": [0, 0.6437, 0, 0.6411, 0, 0.6378, 0, 0.6352, 0, 0.6342, 0, 0.632, 0, 0.6305, 0, 0.6303, 0, 0.6313, 0, 0.6325, 0, 0.6342, 0, 0.6358, 0, 0.6382, 0, 0.6413, 0, 0.6446, 0, 0.647, 0, 0.648, 0, 0.649, 0, 0.6505, 0, 0.6506, 0, 0.6494, 0, 0.6486, 0, 0.6485, 0, 0.6483, 0, 0.648, 0, 0.6481, 0, 0.6485, 0, 0.6478, 0, 0.6483, 0, 0.6471, 0, 0.6447, 0, 0.6424, 0, 0.6409, 0, 0.6375, 0, 0.6342, 0, 0.6334, 0, 0.6333, 0, 0.6319, 0, 0.6316, 0, 0.6324, 0, 0.6342, 0, 0.6364, 0, 0.6392, 0, 0.6419, 0, 0.645, 0, 0.6471, 0, 0.6498, 0, 0.6521, 0, 0.6537, 0, 0.6545, 0, 0.6546, 0, 0.655, 0, 0.6539, 0, 0.653, 0, 0.6528, 0, 0.6533, 0, 0.6537, 0, 0.6517, 0, 0.6513, 0, 0.6514, 0, 0.6504, 0, 0.6494, 0, 0.6482, 0, 0.646], "LeftUpLeg": [0.036, 0.5692, 0.0359, 0.5661, 0.0363, 0.5631, 0.0368, 0.5614, 0.0365, 0.5604, 0.0364, 0.559, 0.0362, 0.5584, 0.0359, 0.5593, 0.0364, 0.562, 0.0378, 0.5639, 0.0387, 0.5668, 0.0397, 0.5699, 0.04, 0.5726, 0.0395, 0.5762, 0.0389, 0.5798, 0.0381, 0.5824, 0.0373, 0.5836, 0.0365, 0.5846, 0.0361, 0.5866, 0.0354, 0.5874, 0.0346, 0.5862, 0.0335, 0.5858, 0.0327, 0.5862, 0.0314, 0.5861, 0.0301, 0.5861, 0.0285, 0.5862, 0.0271, 0.5865, 0.0248, 0.5857, 0.0228, 0.5865, 0.0213, 0.5854, 0.02, 0.5833, 0.0191, 0.5813, 0.0185, 0.5803, 0.0194, 0.5775, 0.02, 0.5737, 0.0204, 0.5723, 0.0208, 0.5715, 0.0213, 0.5683, 0.0226, 0.5672, 0.0239, 0.5683, 0.025, 0.5691, 0.0256, 0.5705, 0.0257, 0.5729, 0.0259, 0.5748, 0.0258, 0.577, 0.0265, 0.5792, 0.027, 0.5817, 0.027, 0.5837, 0.0273, 0.5848, 0.0278, 0.5855, 0.0286, 0.5848, 0.0294, 0.5855, 0.0299, 0.5842, 0.0309, 0.5827, 0.0316, 0.5821, 0.0328, 0.5827, 0.0336, 0.5822, 0.0346, 0.5803, 0.0349, 0.5796, 0.0352, 0.5791, 0.0351, 0.5775, 0.0352, 0.576, 0.0355, 0.5744, 0.0361, 0.5717], "LeftLeg": [0.176, 0.3453, 0.1788, 0.344, 0.1804, 0.3419, 0.1815, 0.3407, 0.1844, 0.342, 0.1883, 0.3436, 0.1907, 0.3448, 0.1905, 0.3459, 0.188, 0.3466, 0.1843, 0.345, 0.1783, 0.3435, 0.1706, 0.3414, 0.1616, 0.339, 0.1516, 0.3378, 0.1408, 0.3369, 0.1296, 0.3354, 0.1199, 0.3333, 0.11, 0.3313, 0.0988, 0.3304, 0.0884, 0.329, 0.079, 0.3259, 0.069, 0.324, 0.0576, 0.323, 0.0448, 0.3218, 0.0312, 0.3213, 0.0169, 0.3214, 21e-4, 0.3223, -0.015, 0.3232, -0.0333, 0.3268, -0.0512, 0.3296, -0.0706, 0.3332, -0.0896, 0.3383, -0.0969, 0.3402, -0.104, 0.3412, -0.1111, 0.3415, -0.1058, 0.3373, -0.0912, 0.3291, -0.0781, 0.3204, -0.0638, 0.3145, -0.0503, 0.3117, -0.0333, 0.3085, -0.0171, 0.3068, -14e-4, 0.3073, 0.0158, 0.3081, 0.0319, 0.3104, 0.0493, 0.3137, 0.0657, 0.3182, 0.0817, 0.3232, 0.0966, 0.3281, 0.1104, 0.3329, 0.1228, 0.3365, 0.1338, 0.3414, 0.1447, 0.345, 0.1538, 0.3477, 0.1602, 0.3502, 0.1631, 0.3519, 0.1693, 0.3547, 0.1694, 0.3522, 0.1686, 0.3509, 0.1681, 0.35, 0.1676, 0.3484, 0.1689, 0.3478, 0.1725, 0.3483, 0.1752, 0.3471], "LeftFoot": [0.2634, 0.0805, 0.2625, 0.078, 0.2546, 0.073, 0.242, 0.0684, 0.2305, 0.0671, 0.2176, 0.0664, 0.2025, 0.0665, 0.1861, 0.0674, 0.1696, 0.0688, 0.1533, 0.0685, 0.1362, 0.0685, 0.1195, 0.0682, 0.1032, 0.0674, 0.0873, 0.0677, 0.0715, 0.0681, 0.055, 0.0682, 0.0397, 0.0679, 0.0243, 0.0679, 79e-4, 0.0689, -77e-4, 0.0696, -0.0233, 0.0692, -0.0393, 0.0701, -0.0552, 0.0714, -0.0706, 0.0717, -0.086, 0.0722, -0.1023, 0.0736, -0.118, 0.0751, -0.1339, 0.0756, -0.1494, 0.0779, -0.1658, 0.08, -0.1822, 0.0823, -0.1966, 0.0854, -0.2108, 0.0905, -0.2262, 0.0957, -0.2411, 0.1002, -0.2531, 0.1068, -0.262, 0.116, -0.2664, 0.123, -0.2654, 0.1309, -0.263, 0.1418, -0.2551, 0.151, -0.2466, 0.1612, -0.2363, 0.171, -0.222, 0.1772, -0.2068, 0.1819, -0.1884, 0.1836, -0.1691, 0.1835, -0.1484, 0.1807, -0.127, 0.1757, -0.1045, 0.1687, -0.0817, 0.1596, -0.0575, 0.1501, -0.0293, 0.1373, -3e-4, 0.1243, 0.0293, 0.1119, 0.056, 0.1014, 0.0941, 0.0919, 0.1243, 0.0818, 0.1562, 0.076, 0.187, 0.0744, 0.2131, 0.075, 0.2341, 0.0776, 0.2514, 0.0812, 0.2611, 0.0818], "LToeTip": [0.3551, 0.1501, 0.3564, 0.1446, 0.3511, 0.1344, 0.3476, 0.1146, 0.3429, 0.0959, 0.3342, 0.0777, 0.3197, 0.067, 0.3024, 0.0655, 0.2857, 0.0632, 0.2693, 0.0584, 0.2519, 0.0577, 0.2352, 0.0541, 0.2187, 0.0544, 0.2028, 0.0551, 0.1869, 0.0556, 0.1703, 0.0561, 0.1548, 0.0532, 0.1393, 0.0522, 0.1227, 0.0528, 0.1071, 0.0538, 0.0915, 0.0535, 0.0754, 0.0566, 0.0593, 0.0568, 0.0437, 0.0526, 0.0276, 0.0481, 0.0113, 0.0503, -54e-4, 0.0467, -0.0226, 0.0418, -0.0394, 0.0403, -0.0568, 0.0394, -0.0739, 0.0398, -0.0897, 0.0397, -0.1064, 0.0397, -0.1264, 0.0364, -0.1432, 0.0398, -0.1599, 0.0414, -0.1793, 0.0372, -0.2013, 0.0277, -0.2187, 0.025, -0.2327, 0.0301, -0.236, 0.038, -0.2408, 0.0489, -0.2338, 0.0612, -0.2143, 0.0658, -0.1931, 0.0693, -0.1588, 0.075, -0.1334, 0.0758, -0.1037, 0.076, -0.0718, 0.0763, -0.0382, 0.0771, -56e-4, 0.0762, 0.0273, 0.0763, 0.0652, 0.0764, 0.1016, 0.0747, 0.1368, 0.0766, 0.1671, 0.0806, 0.2079, 0.0859, 0.2381, 0.0906, 0.2675, 0.0998, 0.2945, 0.1129, 0.3153, 0.1269, 0.3326, 0.138, 0.3457, 0.148, 0.3548, 0.1508], "RightUpLeg": [86e-4, 0.5843, 82e-4, 0.5825, 83e-4, 0.5789, 85e-4, 0.5754, 9e-3, 0.5742, 93e-4, 0.5708, 98e-4, 0.5682, 0.0111, 0.5669, 0.0121, 0.5661, 0.0121, 0.5672, 0.0124, 0.5679, 0.0128, 0.5684, 0.013, 0.5706, 0.0139, 0.5732, 0.0147, 0.5761, 0.0158, 0.5783, 0.0171, 0.5793, 0.0184, 0.5804, 0.0197, 0.5817, 0.0211, 0.5812, 0.0219, 0.5801, 0.0228, 0.5789, 0.0238, 0.5781, 0.0253, 0.5781, 0.0266, 0.5773, 0.0277, 0.5773, 0.0282, 0.5774, 0.0292, 0.5764, 0.0302, 0.5762, 0.0308, 0.5747, 0.0316, 0.572, 0.0319, 0.5692, 0.0332, 0.5675, 0.0328, 0.5638, 0.0332, 0.5612, 0.0328, 0.5608, 0.0318, 0.5611, 0.0311, 0.5612, 0.0307, 0.5621, 0.0306, 0.563, 0.0304, 0.566, 0.0307, 0.5694, 0.0311, 0.5728, 0.0312, 0.5767, 0.0307, 0.5803, 0.0303, 0.5826, 0.0298, 0.5855, 0.0292, 0.5879, 0.0287, 0.5899, 0.0283, 0.5909, 0.0274, 0.592, 0.0264, 0.5921, 0.0255, 0.5911, 0.024, 0.5908, 0.0228, 0.5911, 0.0216, 0.5914, 0.02, 0.5929, 0.0181, 0.5907, 0.0171, 0.5905, 0.0151, 0.5908, 0.0136, 0.5899, 0.0116, 0.5889, 0.0105, 0.5881, 89e-4, 0.5864], "RightLeg": [-0.0662, 0.3161, -0.0773, 0.3174, -0.0824, 0.3155, -0.0853, 0.313, -0.0844, 0.3116, -0.0802, 0.3068, -0.0689, 0.3007, -0.0544, 0.2957, -0.0397, 0.2918, -0.0237, 0.2903, -68e-4, 0.2892, 0.0118, 0.289, 0.0307, 0.2916, 0.0503, 0.296, 0.0686, 0.3016, 0.0853, 0.3073, 0.1024, 0.3128, 0.1178, 0.3187, 0.1324, 0.3254, 0.146, 0.3305, 0.1575, 0.3349, 0.1676, 0.3389, 0.1757, 0.3426, 0.1823, 0.3459, 0.1871, 0.3476, 0.1898, 0.3487, 0.1908, 0.3492, 0.1922, 0.3485, 0.1936, 0.3488, 0.195, 0.3478, 0.1977, 0.3464, 0.2004, 0.3455, 0.2032, 0.345, 0.2037, 0.342, 0.2028, 0.3385, 0.202, 0.3379, 0.2019, 0.339, 0.2007, 0.3388, 0.2004, 0.3394, 0.1998, 0.3397, 0.1955, 0.3398, 0.1892, 0.3386, 0.1818, 0.337, 0.173, 0.3357, 0.1635, 0.3345, 0.1543, 0.3322, 0.1443, 0.3306, 0.1343, 0.3291, 0.1241, 0.3275, 0.1144, 0.3254, 0.1051, 0.324, 0.0962, 0.3218, 0.0882, 0.3191, 0.0784, 0.317, 0.0675, 0.3156, 0.0537, 0.3139, 0.0418, 0.3146, 0.0289, 0.3117, 0.0163, 0.3113, 16e-4, 0.3119, -0.0138, 0.3122, -0.0299, 0.313, -0.044, 0.3146, -0.0568, 0.3157], "RightFoot": [-0.2123, 0.0797, -0.2288, 0.0842, -0.2433, 0.0886, -0.2586, 0.0951, -0.2697, 0.1035, -0.2779, 0.1101, -0.2783, 0.1163, -0.2751, 0.1246, -0.2713, 0.1353, -0.2638, 0.1469, -0.2534, 0.1571, -0.2388, 0.1647, -0.2213, 0.1701, -0.2006, 0.1723, -0.1796, 0.1725, -0.1583, 0.17, -0.1343, 0.1639, -0.1102, 0.1571, -0.0852, 0.1498, -0.0583, 0.1397, -0.03, 0.1277, 1e-4, 0.1154, 0.0319, 0.1033, 0.0652, 0.0926, 0.0993, 0.0829, 0.1338, 0.0756, 0.1678, 0.0716, 0.2004, 0.0702, 0.2284, 0.0727, 0.2511, 0.0754, 0.2694, 0.0779, 0.2786, 0.0789, 0.2764, 0.0769, 0.2678, 0.0716, 0.2552, 0.0656, 0.2419, 0.0628, 0.2312, 0.0625, 0.2159, 0.0612, 0.1985, 0.0613, 0.1823, 0.062, 0.1658, 0.0632, 0.1493, 0.0633, 0.1327, 0.0632, 0.1157, 0.0634, 0.0984, 0.0639, 0.0828, 0.0633, 0.067, 0.0633, 0.0525, 0.0631, 0.037, 0.0632, 0.0214, 0.0631, 59e-4, 0.064, -97e-4, 0.0646, -0.0238, 0.0647, -0.039, 0.0652, -0.054, 0.0661, -0.0712, 0.0663, -0.0847, 0.0679, -0.1007, 0.0667, -0.117, 0.0683, -0.1326, 0.0695, -0.1483, 0.07, -0.1652, 0.071, -0.1814, 0.0736, -0.1973, 0.0762], "RToeTip": [-0.1333, 59e-4, -0.1567, 3e-3, -0.1783, 13e-4, -0.1976, 48e-4, -0.2163, 8e-3, -0.2395, 64e-4, -0.2543, 68e-4, -0.2606, 0.0136, -0.2739, 0.0226, -0.276, 0.0346, -0.2613, 0.0451, -0.2377, 0.0529, -0.2091, 0.0589, -0.1755, 0.064, -0.1442, 0.0673, -0.1125, 0.0693, -0.077, 0.0701, -0.0438, 0.0693, -0.0112, 0.0669, 0.0251, 0.0664, 0.0614, 0.0657, 0.0987, 0.0663, 0.1362, 0.0719, 0.1729, 0.0764, 0.2081, 0.0788, 0.2441, 0.0816, 0.2776, 0.0879, 0.3082, 0.097, 0.3339, 0.1081, 0.3547, 0.1164, 0.3695, 0.1259, 0.373, 0.1339, 0.3707, 0.1309, 0.3641, 0.1213, 0.3563, 0.1041, 0.349, 0.0856, 0.3414, 0.0681, 0.3263, 0.0569, 0.3085, 0.0495, 0.2915, 0.047, 0.2741, 0.0436, 0.257, 0.0422, 0.2406, 0.0442, 0.2232, 0.0431, 0.2058, 0.0448, 0.1901, 0.0445, 0.1739, 0.043, 0.1589, 0.0417, 0.1428, 0.0388, 0.1265, 0.0368, 0.1106, 0.0377, 0.0954, 0.0401, 0.0817, 0.0388, 0.0675, 0.042, 0.0526, 0.0424, 0.0337, 0.0361, 0.0179, 0.0318, 4e-4, 0.0273, -0.0163, 0.0282, -0.0331, 0.0266, -0.0526, 0.0199, -0.0755, 0.0117, -0.0957, 85e-4, -0.1149, 66e-4], "LowerBack": [0, 0.6437, 0, 0.6411, 0, 0.6378, 0, 0.6352, 0, 0.6342, 0, 0.632, 0, 0.6305, 0, 0.6303, 0, 0.6313, 0, 0.6325, 0, 0.6342, 0, 0.6358, 0, 0.6382, 0, 0.6413, 0, 0.6446, 0, 0.647, 0, 0.648, 0, 0.649, 0, 0.6505, 0, 0.6506, 0, 0.6494, 0, 0.6486, 0, 0.6485, 0, 0.6483, 0, 0.648, 0, 0.6481, 0, 0.6485, 0, 0.6478, 0, 0.6483, 0, 0.6471, 0, 0.6447, 0, 0.6424, 0, 0.6409, 0, 0.6375, 0, 0.6342, 0, 0.6334, 0, 0.6333, 0, 0.6319, 0, 0.6316, 0, 0.6324, 0, 0.6342, 0, 0.6364, 0, 0.6392, 0, 0.6419, 0, 0.645, 0, 0.6471, 0, 0.6498, 0, 0.6521, 0, 0.6537, 0, 0.6545, 0, 0.6546, 0, 0.655, 0, 0.6539, 0, 0.653, 0, 0.6528, 0, 0.6533, 0, 0.6537, 0, 0.6517, 0, 0.6513, 0, 0.6514, 0, 0.6504, 0, 0.6494, 0, 0.6482, 0, 0.646], "Spine": [35e-4, 0.7218, 34e-4, 0.7193, 32e-4, 0.716, 3e-3, 0.7135, 29e-4, 0.7125, 24e-4, 0.7103, 29e-4, 0.7088, 29e-4, 0.7086, 3e-3, 0.7095, 32e-4, 0.7107, 34e-4, 0.7124, 35e-4, 0.7141, 35e-4, 0.7165, 36e-4, 0.7195, 36e-4, 0.7228, 34e-4, 0.7252, 3e-3, 0.7263, 31e-4, 0.7272, 29e-4, 0.7287, 26e-4, 0.7288, 24e-4, 0.7276, 26e-4, 0.7269, 26e-4, 0.7267, 31e-4, 0.7265, 37e-4, 0.7262, 36e-4, 0.7263, 37e-4, 0.7267, 37e-4, 0.726, 38e-4, 0.7265, 4e-3, 0.7253, 39e-4, 0.7229, 48e-4, 0.7206, 53e-4, 0.719, 51e-4, 0.7157, 5e-3, 0.7124, 48e-4, 0.7116, 48e-4, 0.7115, 52e-4, 0.7101, 5e-3, 0.7098, 54e-4, 0.7105, 53e-4, 0.7123, 52e-4, 0.7145, 49e-4, 0.7173, 49e-4, 0.7201, 43e-4, 0.7232, 41e-4, 0.7253, 38e-4, 0.728, 39e-4, 0.7303, 35e-4, 0.7319, 29e-4, 0.7327, 28e-4, 0.7329, 28e-4, 0.7332, 3e-3, 0.7321, 31e-4, 0.7312, 32e-4, 0.731, 24e-4, 0.7314, 36e-4, 0.7318, 36e-4, 0.7299, 34e-4, 0.7295, 35e-4, 0.7295, 35e-4, 0.7286, 3e-3, 0.7275, 31e-4, 0.7263, 33e-4, 0.7241], "Spine1": [82e-4, 0.7997, 79e-4, 0.7972, 77e-4, 0.794, 72e-4, 0.7916, 68e-4, 0.7906, 59e-4, 0.7885, 67e-4, 0.787, 68e-4, 0.7868, 73e-4, 0.7877, 8e-3, 0.7889, 86e-4, 0.7906, 92e-4, 0.7922, 95e-4, 0.7946, 98e-4, 0.7976, 95e-4, 0.8009, 9e-3, 0.8034, 86e-4, 0.8044, 85e-4, 0.8054, 82e-4, 0.8069, 78e-4, 0.807, 74e-4, 0.8058, 76e-4, 0.8051, 77e-4, 0.8049, 85e-4, 0.8047, 93e-4, 0.8043, 94e-4, 0.8044, 95e-4, 0.8048, 94e-4, 0.8041, 97e-4, 0.8046, 98e-4, 0.8034, 97e-4, 0.8011, 0.0111, 0.7987, 0.0122, 0.7971, 0.0119, 0.7938, 0.0117, 0.7905, 0.0113, 0.7897, 0.0111, 0.7896, 0.0116, 0.7881, 0.0115, 0.7877, 0.0122, 0.7884, 0.0124, 0.7901, 0.0124, 0.7922, 0.0122, 0.7951, 0.0122, 0.7978, 0.0112, 0.8009, 0.0106, 0.8031, 98e-4, 0.8058, 97e-4, 0.8081, 9e-3, 0.8097, 78e-4, 0.8106, 75e-4, 0.8107, 73e-4, 0.8111, 78e-4, 0.81, 81e-4, 0.809, 83e-4, 0.8088, 7e-3, 0.8092, 91e-4, 0.8096, 91e-4, 0.8077, 89e-4, 0.8073, 91e-4, 0.8073, 87e-4, 0.8063, 76e-4, 0.8053, 76e-4, 0.8041, 78e-4, 0.802], "Neck": [82e-4, 0.7997, 79e-4, 0.7972, 77e-4, 0.794, 72e-4, 0.7916, 68e-4, 0.7906, 59e-4, 0.7885, 67e-4, 0.787, 68e-4, 0.7868, 73e-4, 0.7877, 8e-3, 0.7889, 86e-4, 0.7906, 92e-4, 0.7922, 95e-4, 0.7946, 98e-4, 0.7976, 95e-4, 0.8009, 9e-3, 0.8034, 86e-4, 0.8044, 85e-4, 0.8054, 82e-4, 0.8069, 78e-4, 0.807, 74e-4, 0.8058, 76e-4, 0.8051, 77e-4, 0.8049, 85e-4, 0.8047, 93e-4, 0.8043, 94e-4, 0.8044, 95e-4, 0.8048, 94e-4, 0.8041, 97e-4, 0.8046, 98e-4, 0.8034, 97e-4, 0.8011, 0.0111, 0.7987, 0.0122, 0.7971, 0.0119, 0.7938, 0.0117, 0.7905, 0.0113, 0.7897, 0.0111, 0.7896, 0.0116, 0.7881, 0.0115, 0.7877, 0.0122, 0.7884, 0.0124, 0.7901, 0.0124, 0.7922, 0.0122, 0.7951, 0.0122, 0.7978, 0.0112, 0.8009, 0.0106, 0.8031, 98e-4, 0.8058, 97e-4, 0.8081, 9e-3, 0.8097, 78e-4, 0.8106, 75e-4, 0.8107, 73e-4, 0.8111, 78e-4, 0.81, 81e-4, 0.809, 83e-4, 0.8088, 7e-3, 0.8092, 91e-4, 0.8096, 91e-4, 0.8077, 89e-4, 0.8073, 91e-4, 0.8073, 87e-4, 0.8063, 76e-4, 0.8053, 76e-4, 0.8041, 78e-4, 0.802], "Neck1": [62e-4, 0.8626, 5e-3, 0.86, 57e-4, 0.8569, 4e-3, 0.8544, 4e-3, 0.8535, 7e-4, 0.8511, -2e-4, 0.8495, -4e-4, 0.8493, 1e-4, 0.8502, 13e-4, 0.8515, 23e-4, 0.8531, 27e-4, 0.8548, 36e-4, 0.8572, 46e-4, 0.8603, 44e-4, 0.8636, 43e-4, 0.8661, 41e-4, 0.8671, 39e-4, 0.8681, 28e-4, 0.8696, 22e-4, 0.8696, 22e-4, 0.8685, 23e-4, 0.8678, 26e-4, 0.8676, 33e-4, 0.8674, 43e-4, 0.867, 5e-3, 0.8672, 57e-4, 0.8676, 63e-4, 0.8669, 64e-4, 0.8674, 68e-4, 0.8662, 71e-4, 0.8639, 77e-4, 0.8615, 81e-4, 0.8598, 78e-4, 0.8565, 8e-3, 0.8532, 67e-4, 0.8523, 61e-4, 0.8521, 65e-4, 0.8506, 57e-4, 0.8501, 66e-4, 0.8507, 75e-4, 0.8524, 78e-4, 0.8545, 79e-4, 0.8573, 76e-4, 0.8601, 68e-4, 0.8633, 65e-4, 0.8655, 57e-4, 0.8682, 6e-3, 0.8706, 52e-4, 0.8722, 45e-4, 0.8732, 38e-4, 0.8733, 36e-4, 0.8736, 42e-4, 0.8726, 48e-4, 0.8717, 55e-4, 0.8715, 47e-4, 0.872, 68e-4, 0.8724, 7e-3, 0.8704, 73e-4, 0.8701, 74e-4, 0.8701, 7e-3, 0.8691, 6e-3, 0.8681, 64e-4, 0.867, 67e-4, 0.8648], "Head": [22e-4, 0.9246, 9e-4, 0.922, 12e-4, 0.9188, -5e-4, 0.9163, -11e-4, 0.9154, -44e-4, 0.9131, -53e-4, 0.9114, -58e-4, 0.9112, -55e-4, 0.9121, -44e-4, 0.9133, -33e-4, 0.915, -27e-4, 0.9166, -17e-4, 0.919, -2e-4, 0.9222, 1e-4, 0.9255, 5e-4, 0.928, 8e-4, 0.9291, 8e-4, 0.9301, -2e-4, 0.9316, -7e-4, 0.9317, -3e-4, 0.9306, -1e-4, 0.9299, -0, 0.9297, 8e-4, 0.9295, 17e-4, 0.9291, 24e-4, 0.9293, 29e-4, 0.9297, 33e-4, 0.929, 32e-4, 0.9295, 34e-4, 0.9283, 34e-4, 0.926, 34e-4, 0.9235, 36e-4, 0.9218, 31e-4, 0.9185, 28e-4, 0.9152, 1e-3, 0.9142, -0, 0.914, 3e-4, 0.9125, -12e-4, 0.9119, -5e-4, 0.9124, 4e-4, 0.9142, 4e-4, 0.9162, 3e-4, 0.9191, 8e-4, 0.9219, 3e-4, 0.9251, 5e-4, 0.9274, 5e-4, 0.9302, 13e-4, 0.9326, 12e-4, 0.9343, 12e-4, 0.9353, 9e-4, 0.9354, 8e-4, 0.9358, 15e-4, 0.9347, 21e-4, 0.9338, 27e-4, 0.9336, 2e-3, 0.9341, 4e-3, 0.9345, 41e-4, 0.9325, 41e-4, 0.9322, 42e-4, 0.9322, 34e-4, 0.9312, 23e-4, 0.9302, 26e-4, 0.929, 28e-4, 0.9269], "HeadTop": [42e-4, 0.9911, 29e-4, 0.9885, 24e-4, 0.9853, 12e-4, 0.9828, -1e-4, 0.9819, -27e-4, 0.9795, -28e-4, 0.9779, -38e-4, 0.9776, -35e-4, 0.9785, -29e-4, 0.9798, -17e-4, 0.9814, -9e-4, 0.983, 0, 0.9855, 19e-4, 0.9886, 27e-4, 0.9919, 35e-4, 0.9944, 44e-4, 0.9954, 48e-4, 0.9964, 43e-4, 0.9979, 41e-4, 0.998, 47e-4, 0.9969, 52e-4, 0.9962, 49e-4, 0.996, 58e-4, 0.9958, 65e-4, 0.9955, 69e-4, 0.9956, 69e-4, 0.9961, 68e-4, 0.9955, 65e-4, 0.996, 63e-4, 0.9948, 57e-4, 0.9925, 53e-4, 0.99, 55e-4, 0.9883, 48e-4, 0.985, 34e-4, 0.9817, 13e-4, 0.9808, -1e-4, 0.9806, 1e-4, 0.9791, -2e-3, 0.9784, -18e-4, 0.979, -11e-4, 0.9807, -16e-4, 0.9828, -15e-4, 0.9856, -4e-4, 0.9885, -4e-4, 0.9917, 4e-4, 0.994, 13e-4, 0.9968, 26e-4, 0.9992, 35e-4, 1.0008, 43e-4, 1.0017, 44e-4, 1.0018, 46e-4, 1.0022, 55e-4, 1.0011, 58e-4, 1.0002, 63e-4, 1.0001, 53e-4, 1.0005, 72e-4, 1.0009, 71e-4, 0.9989, 69e-4, 0.9986, 7e-3, 0.9987, 59e-4, 0.9977, 47e-4, 0.9966, 46e-4, 0.9955, 45e-4, 0.9934], "LeftArm": [0.0103, 0.857, 0.01, 0.8536, 9e-3, 0.8495, 77e-4, 0.846, 65e-4, 0.844, 57e-4, 0.84, 59e-4, 0.8372, 54e-4, 0.8359, 63e-4, 0.8355, 72e-4, 0.8359, 86e-4, 0.8373, 0.0105, 0.8384, 0.0128, 0.8407, 0.0148, 0.8441, 0.0148, 0.848, 0.0148, 0.851, 0.0153, 0.852, 0.0155, 0.8537, 0.0146, 0.8563, 0.0146, 0.8573, 0.0137, 0.8563, 0.0131, 0.8563, 0.0128, 0.8568, 0.0128, 0.8575, 0.0127, 0.8578, 0.0127, 0.8579, 0.0118, 0.8586, 0.0111, 0.8585, 0.0108, 0.8594, 0.0107, 0.8591, 0.01, 0.857, 0.0111, 0.8555, 0.0124, 0.8547, 0.0119, 0.8525, 0.0119, 0.85, 0.0121, 0.8501, 0.0123, 0.8512, 0.0134, 0.8507, 0.0138, 0.8517, 0.0147, 0.8531, 0.0153, 0.8556, 0.0148, 0.858, 0.0139, 0.861, 0.0123, 0.8634, 0.0101, 0.8663, 86e-4, 0.8682, 69e-4, 0.8706, 62e-4, 0.873, 51e-4, 0.8742, 34e-4, 0.8745, 31e-4, 0.8745, 26e-4, 0.8742, 32e-4, 0.8723, 38e-4, 0.8707, 44e-4, 0.87, 35e-4, 0.8699, 64e-4, 0.8701, 76e-4, 0.8676, 85e-4, 0.8671, 96e-4, 0.8668, 97e-4, 0.8657, 88e-4, 0.8642, 88e-4, 0.8626, 95e-4, 0.8598], "LeftForeArm": [-0.0898, 0.6914, -0.0934, 0.6901, -0.0968, 0.6876, -0.0979, 0.684, -0.0988, 0.6819, -0.0971, 0.6763, -0.0949, 0.6723, -0.0911, 0.6684, -0.086, 0.6655, -0.0805, 0.6635, -0.0741, 0.6623, -0.0677, 0.6613, -0.0585, 0.6607, -0.0478, 0.6608, -0.0387, 0.6618, -0.0296, 0.6624, -0.0199, 0.6615, -0.0115, 0.6619, -49e-4, 0.6636, 33e-4, 0.664, 0.01, 0.6628, 0.017, 0.6628, 0.0255, 0.6639, 0.0338, 0.6655, 0.0419, 0.6672, 0.0496, 0.6689, 0.0565, 0.6716, 0.0623, 0.6732, 0.0672, 0.6758, 0.0722, 0.6774, 0.0762, 0.6772, 0.0793, 0.6766, 0.0816, 0.6763, 0.0805, 0.6744, 0.0783, 0.6715, 0.0752, 0.6708, 0.0715, 0.6707, 0.0661, 0.6684, 0.0588, 0.6672, 0.0526, 0.6671, 0.0475, 0.6684, 0.0423, 0.6701, 0.0347, 0.6718, 0.0285, 0.6732, 0.023, 0.6756, 0.0169, 0.6769, 0.0102, 0.6787, 46e-4, 0.6807, -7e-4, 0.6818, -72e-4, 0.6821, -0.0119, 0.6821, -0.0161, 0.682, -0.0198, 0.6805, -0.0239, 0.6793, -0.0281, 0.6793, -0.0351, 0.6803, -0.0391, 0.682, -0.0463, 0.6817, -0.0535, 0.6837, -0.0604, 0.6864, -0.0682, 0.6884, -0.0759, 0.6901, -0.0825, 0.692, -0.0867, 0.6918], "LeftHand": [-0.1341, 0.5777, -0.1409, 0.5777, -0.1471, 0.5764, -0.1517, 0.5745, -0.154, 0.573, -0.1521, 0.5672, -0.1493, 0.5628, -0.1438, 0.558, -0.1364, 0.554, -0.1277, 0.5506, -0.1176, 0.548, -0.107, 0.5456, -0.0923, 0.5434, -0.0761, 0.5422, -0.0607, 0.5419, -0.0448, 0.5417, -0.0265, 0.54, -72e-4, 0.5402, 0.0114, 0.5428, 0.0314, 0.5451, 0.0508, 0.5473, 0.0694, 0.5518, 0.0885, 0.5582, 0.107, 0.5662, 0.1245, 0.5751, 0.1403, 0.5843, 0.1538, 0.5944, 0.166, 0.6046, 0.1764, 0.6159, 0.1855, 0.6255, 0.1929, 0.633, 0.1985, 0.6396, 0.2026, 0.6452, 0.2026, 0.6477, 0.2012, 0.6484, 0.1985, 0.6497, 0.1949, 0.6498, 0.1894, 0.6465, 0.1817, 0.6428, 0.1749, 0.6389, 0.1685, 0.635, 0.1611, 0.629, 0.1508, 0.6235, 0.1409, 0.6166, 0.1304, 0.61, 0.1181, 0.602, 0.104, 0.5949, 0.09, 0.5886, 0.075, 0.5818, 0.0584, 0.5754, 0.0431, 0.57, 0.0275, 0.5655, 0.012, 0.5605, -37e-4, 0.5573, -0.0188, 0.5563, -0.0359, 0.5573, -0.0477, 0.5595, -0.0611, 0.5598, -0.0739, 0.5627, -0.0861, 0.5666, -0.0989, 0.5701, -0.1107, 0.573, -0.1205, 0.5759, -0.1282, 0.5771], "RightArm": [0.0273, 0.8438, 0.0271, 0.8422, 0.0272, 0.84, 0.0273, 0.8388, 0.0268, 0.8391, 0.026, 0.8389, 0.0271, 0.8389, 0.0277, 0.8398, 0.0279, 0.842, 0.0286, 0.8439, 0.0287, 0.8458, 0.0282, 0.8479, 0.0272, 0.8502, 0.0256, 0.853, 0.0248, 0.8557, 0.0232, 0.8577, 0.0222, 0.8587, 0.0214, 0.859, 0.0213, 0.8595, 0.0209, 0.8586, 0.0207, 0.8573, 0.0213, 0.8559, 0.0221, 0.8549, 0.0231, 0.8539, 0.0248, 0.8528, 0.0258, 0.8528, 0.0274, 0.8527, 0.0282, 0.8514, 0.0295, 0.8514, 0.0297, 0.8492, 0.0306, 0.8467, 0.032, 0.8434, 0.0331, 0.8408, 0.0328, 0.8364, 0.032, 0.8323, 0.031, 0.8304, 0.03, 0.8291, 0.0294, 0.8266, 0.0287, 0.8247, 0.0289, 0.8246, 0.0294, 0.8252, 0.0303, 0.8271, 0.0311, 0.8296, 0.0327, 0.8329, 0.0331, 0.8363, 0.0333, 0.8388, 0.0326, 0.8419, 0.0324, 0.8444, 0.0322, 0.8464, 0.0311, 0.8478, 0.0305, 0.8483, 0.0303, 0.8494, 0.0308, 0.8491, 0.0313, 0.8489, 0.0314, 0.8491, 0.0299, 0.8501, 0.0314, 0.8506, 0.0307, 0.8491, 0.0301, 0.8488, 0.0297, 0.849, 0.0288, 0.8482, 0.0275, 0.8476, 0.0275, 0.8469, 0.027, 0.8455], "RightForeArm": [0.1003, 0.6678, 0.1022, 0.6674, 0.1031, 0.6657, 0.1031, 0.6646, 0.0982, 0.6635, 0.0923, 0.6614, 0.0877, 0.6595, 0.08, 0.6578, 0.0726, 0.6579, 0.0655, 0.6578, 0.0571, 0.6579, 0.049, 0.6584, 0.0411, 0.6597, 0.0331, 0.6618, 0.0248, 0.664, 0.0128, 0.6659, 41e-4, 0.6671, -36e-4, 0.6679, -0.0102, 0.669, -0.0176, 0.6692, -0.0246, 0.6691, -0.0308, 0.6693, -0.0359, 0.6698, -0.0414, 0.6707, -0.0427, 0.6707, -0.0466, 0.6724, -0.05, 0.6744, -0.0534, 0.675, -0.059, 0.6783, -0.0656, 0.6797, -0.0676, 0.679, -0.0683, 0.6773, -0.0698, 0.6763, -0.0723, 0.6734, -0.0752, 0.6706, -0.0773, 0.6694, -0.0774, 0.6676, -0.0764, 0.6641, -0.0753, 0.6609, -0.0725, 0.6589, -0.0687, 0.6574, -0.0642, 0.6569, -0.0584, 0.6564, -0.0507, 0.6564, -0.0431, 0.6565, -0.0343, 0.6555, -0.0222, 0.6547, -0.0133, 0.6547, -33e-4, 0.6548, 37e-4, 0.6549, 0.0105, 0.6545, 0.0177, 0.655, 0.0271, 0.6545, 0.0346, 0.6544, 0.0429, 0.6552, 0.0491, 0.657, 0.0603, 0.6592, 0.0679, 0.6595, 0.0745, 0.6611, 0.0809, 0.6635, 0.0868, 0.6652, 0.0907, 0.6668, 0.0946, 0.6679, 0.0978, 0.6683], "RightHand": [0.2182, 0.6257, 0.2214, 0.629, 0.2233, 0.6308, 0.2238, 0.6314, 0.2193, 0.6317, 0.2134, 0.6299, 0.2085, 0.6266, 0.2003, 0.623, 0.192, 0.6201, 0.1836, 0.6165, 0.1734, 0.6115, 0.1631, 0.607, 0.152, 0.6015, 0.1401, 0.5966, 0.127, 0.5916, 0.1094, 0.586, 0.0936, 0.5795, 0.078, 0.5727, 0.0624, 0.5667, 0.0456, 0.5607, 0.0298, 0.5559, 0.0132, 0.5515, -28e-4, 0.5484, -0.0186, 0.5469, -0.0324, 0.5452, -0.0468, 0.5465, -0.0599, 0.5488, -0.0724, 0.5504, -0.084, 0.5547, -0.0956, 0.5572, -0.1039, 0.5581, -0.11, 0.5582, -0.116, 0.5588, -0.1213, 0.557, -0.1255, 0.5546, -0.1282, 0.5537, -0.1284, 0.5519, -0.1267, 0.548, -0.1239, 0.544, -0.1186, 0.541, -0.111, 0.538, -0.1019, 0.536, -0.0907, 0.5339, -0.077, 0.5324, -0.0622, 0.5312, -0.046, 0.5293, -0.0279, 0.5281, -94e-4, 0.5281, 95e-4, 0.5288, 0.0269, 0.5304, 0.0446, 0.5327, 0.0625, 0.5367, 0.082, 0.5407, 0.0993, 0.5459, 0.1167, 0.5527, 0.1309, 0.561, 0.1486, 0.5693, 0.1626, 0.5766, 0.1747, 0.585, 0.1859, 0.5945, 0.1957, 0.6027, 0.2029, 0.6106, 0.2092, 0.617, 0.2143, 0.6222] } }, "08_11": { "stride": 1.2602, "seconds": 1.483, "j": { "Hips": [0, 0.6321, 0, 0.6267, 0, 0.6226, 0, 0.6182, 0, 0.6134, 0, 0.6121, 0, 0.6134, 0, 0.6153, 0, 0.6186, 0, 0.6211, 0, 0.6264, 0, 0.6311, 0, 0.6365, 0, 0.6415, 0, 0.6466, 0, 0.651, 0, 0.6554, 0, 0.6591, 0, 0.6607, 0, 0.6619, 0, 0.6625, 0, 0.6639, 0, 0.6667, 0, 0.667, 0, 0.6673, 0, 0.6654, 0, 0.6632, 0, 0.6596, 0, 0.6544, 0, 0.6489, 0, 0.6428, 0, 0.6365, 0, 0.6314, 0, 0.626, 0, 0.623, 0, 0.6188, 0, 0.6165, 0, 0.6185, 0, 0.6214, 0, 0.6254, 0, 0.63, 0, 0.6356, 0, 0.6401, 0, 0.6444, 0, 0.6496, 0, 0.6551, 0, 0.6595, 0, 0.6629, 0, 0.6652, 0, 0.667, 0, 0.6673, 0, 0.6684, 0, 0.6694, 0, 0.6722, 0, 0.6719, 0, 0.6721, 0, 0.6711, 0, 0.6692, 0, 0.6658, 0, 0.661, 0, 0.6551, 0, 0.6496, 0, 0.6437, 0, 0.6382], "LeftUpLeg": [0.0398, 0.5546, 0.0394, 0.5484, 0.0385, 0.5443, 0.037, 0.5397, 0.0347, 0.5341, 0.0329, 0.5336, 0.0322, 0.5356, 0.0312, 0.5373, 0.0307, 0.5406, 0.0304, 0.5441, 0.0301, 0.5501, 0.0302, 0.5558, 0.0301, 0.562, 0.03, 0.5677, 0.0302, 0.5733, 0.0314, 0.5789, 0.0324, 0.5839, 0.0348, 0.5893, 0.0338, 0.5921, 0.0332, 0.5936, 0.0334, 0.5956, 0.0323, 0.5977, 0.0317, 0.6013, 0.0307, 0.6017, 0.031, 0.6029, 0.0297, 0.6017, 0.028, 0.6003, 0.0273, 0.5984, 0.0272, 0.5936, 0.0266, 0.5887, 0.0257, 0.5828, 0.0239, 0.5768, 0.0223, 0.5714, 0.0208, 0.566, 0.0196, 0.562, 0.0197, 0.5575, 0.0201, 0.5553, 0.0196, 0.5557, 0.0183, 0.558, 0.0176, 0.5611, 0.0179, 0.5656, 0.018, 0.5718, 0.0188, 0.5753, 0.0196, 0.5791, 0.021, 0.5836, 0.0221, 0.5895, 0.0229, 0.5935, 0.0237, 0.5962, 0.0248, 0.5984, 0.0245, 0.5994, 0.0259, 0.5992, 0.0261, 0.5994, 0.0271, 0.5995, 0.0285, 0.602, 0.03, 0.6017, 0.0312, 0.6003, 0.0327, 0.5986, 0.034, 0.5957, 0.0356, 0.5918, 0.0364, 0.5862, 0.0381, 0.5796, 0.0388, 0.5734, 0.0394, 0.5666, 0.0398, 0.5612], "LeftLeg": [0.2091, 0.3507, 0.2137, 0.3488, 0.2202, 0.3515, 0.2281, 0.3563, 0.2351, 0.3609, 0.2355, 0.3628, 0.2316, 0.3614, 0.2268, 0.3588, 0.2206, 0.3562, 0.2137, 0.3532, 0.2049, 0.3515, 0.1945, 0.3485, 0.1827, 0.346, 0.1698, 0.3433, 0.1569, 0.3412, 0.1436, 0.3394, 0.1293, 0.3377, 0.1144, 0.3369, 0.1011, 0.3357, 0.0894, 0.3342, 0.077, 0.3337, 0.0631, 0.3336, 0.0483, 0.3356, 0.0311, 0.3352, 0.012, 0.3368, -58e-4, 0.3369, -0.0254, 0.3382, -0.049, 0.3417, -0.0771, 0.3466, -0.0877, 0.346, -0.097, 0.3439, -0.1068, 0.342, -0.1167, 0.3411, -0.1262, 0.3405, -0.1355, 0.3418, -0.1435, 0.3429, -0.1492, 0.3451, -0.1539, 0.3486, -0.1578, 0.3529, -0.1269, 0.3326, -0.1058, 0.3252, -0.0885, 0.3233, -0.07, 0.32, -0.0521, 0.3185, -0.0331, 0.319, -0.0137, 0.3219, 55e-4, 0.3243, 0.0253, 0.3267, 0.0454, 0.3299, 0.0659, 0.3337, 0.0873, 0.3378, 0.1051, 0.3432, 0.1203, 0.3484, 0.1334, 0.3558, 0.1422, 0.3589, 0.152, 0.362, 0.162, 0.3651, 0.1701, 0.3664, 0.1772, 0.3663, 0.1832, 0.3643, 0.1901, 0.3617, 0.1952, 0.3588, 0.2002, 0.3554, 0.2036, 0.3525], "LeftFoot": [0.3043, 0.0883, 0.3011, 0.0835, 0.2907, 0.0811, 0.2707, 0.0802, 0.2513, 0.0819, 0.2306, 0.0833, 0.2076, 0.0828, 0.1849, 0.0825, 0.1625, 0.0829, 0.1438, 0.0827, 0.125, 0.0838, 0.1058, 0.0837, 0.0876, 0.0834, 0.0696, 0.0827, 0.0521, 0.0824, 0.0345, 0.0825, 0.0177, 0.0819, -12e-4, 0.083, -0.016, 0.0827, -0.0304, 0.0825, -0.0475, 0.0844, -0.0634, 0.0855, -0.0787, 0.0878, -0.0965, 0.0878, -0.1163, 0.0898, -0.1331, 0.0897, -0.1501, 0.0898, -0.1685, 0.0908, -0.1854, 0.0907, -0.2034, 0.0935, -0.2216, 0.0957, -0.2395, 0.0982, -0.2581, 0.1022, -0.2758, 0.1068, -0.2935, 0.1136, -0.3098, 0.1208, -0.3218, 0.1278, -0.3308, 0.1347, -0.3372, 0.1411, -0.3356, 0.1498, -0.3293, 0.1609, -0.3205, 0.1714, -0.3073, 0.1767, -0.2917, 0.1794, -0.2725, 0.1797, -0.2498, 0.1774, -0.2249, 0.171, -0.1971, 0.1623, -0.1662, 0.152, -0.1313, 0.1399, -0.0913, 0.1264, -0.0504, 0.1142, -75e-4, 0.1026, 0.038, 0.0954, 0.0792, 0.0884, 0.122, 0.0855, 0.1635, 0.0867, 0.1988, 0.0893, 0.2299, 0.0925, 0.2542, 0.0945, 0.2741, 0.0957, 0.2881, 0.0958, 0.2989, 0.0944, 0.3036, 0.0919], "LToeTip": [0.3974, 0.1586, 0.3973, 0.1469, 0.4007, 0.1212, 0.3865, 0.1008, 0.3672, 0.0913, 0.3475, 0.0803, 0.3242, 0.0745, 0.3014, 0.0705, 0.2786, 0.0718, 0.2598, 0.0714, 0.2407, 0.0735, 0.2215, 0.0734, 0.2032, 0.0722, 0.1853, 0.0683, 0.1677, 0.0688, 0.15, 0.07, 0.1332, 0.0679, 0.1143, 0.0688, 0.0991, 0.0658, 0.0843, 0.0627, 0.067, 0.0643, 0.0508, 0.0644, 0.0351, 0.0642, 0.0169, 0.0618, -37e-4, 0.0612, -0.0213, 0.0579, -0.0397, 0.0534, -0.0576, 0.0551, -0.0732, 0.0584, -0.092, 0.0593, -0.1113, 0.0583, -0.1305, 0.0579, -0.1504, 0.0591, -0.1704, 0.059, -0.1896, 0.0669, -0.2101, 0.0676, -0.2309, 0.0594, -0.2586, 0.0438, -0.2781, 0.0417, -0.2938, 0.0418, -0.3071, 0.0472, -0.3111, 0.0571, -0.2973, 0.0631, -0.2703, 0.0667, -0.2356, 0.0711, -0.1948, 0.0789, -0.1614, 0.0769, -0.1209, 0.0787, -0.082, 0.0746, -0.0372, 0.0754, 0.0121, 0.0785, 0.0577, 0.0747, 0.1048, 0.0841, 0.1503, 0.0957, 0.191, 0.1032, 0.2333, 0.1117, 0.2718, 0.1264, 0.3033, 0.1399, 0.3313, 0.1516, 0.3489, 0.1643, 0.3637, 0.1723, 0.3726, 0.1772, 0.3867, 0.1723, 0.3951, 0.1658], "RightUpLeg": [44e-4, 0.5782, 27e-4, 0.5732, 15e-4, 0.5679, 11e-4, 0.5629, 12e-4, 0.5581, 12e-4, 0.5545, 5e-4, 0.5541, 0, 0.5557, 0, 0.5587, 8e-4, 0.56, 18e-4, 0.5641, 36e-4, 0.568, 51e-4, 0.5727, 68e-4, 0.5773, 8e-3, 0.5821, 89e-4, 0.5858, 97e-4, 0.5898, 0.0105, 0.5928, 0.0122, 0.5932, 0.0137, 0.5941, 0.0157, 0.594, 0.0175, 0.5948, 0.0191, 0.5972, 0.0208, 0.5975, 0.0221, 0.5975, 0.0241, 0.5951, 0.0257, 0.5921, 0.0272, 0.5873, 0.0289, 0.5826, 0.0302, 0.5768, 0.0312, 0.5706, 0.0327, 0.564, 0.0334, 0.5588, 0.0338, 0.5532, 0.0334, 0.5504, 0.0322, 0.546, 0.0304, 0.5431, 0.0291, 0.5458, 0.0284, 0.5487, 0.0276, 0.553, 0.0259, 0.5572, 0.0254, 0.5622, 0.0241, 0.5674, 0.0239, 0.5724, 0.0228, 0.5783, 0.0217, 0.5833, 0.022, 0.5885, 0.0203, 0.5922, 0.0204, 0.595, 0.0208, 0.5978, 0.0207, 0.5991, 0.0209, 0.6013, 0.0202, 0.6035, 0.0193, 0.6069, 0.0187, 0.607, 0.0176, 0.6093, 0.0163, 0.6096, 0.0147, 0.609, 0.0133, 0.6067, 0.0125, 0.6034, 0.0113, 0.599, 92e-4, 0.5944, 79e-4, 0.5901, 57e-4, 0.5839], "RightLeg": [-0.1067, 0.3215, -0.1178, 0.3207, -0.1302, 0.3211, -0.1382, 0.3202, -0.1428, 0.3181, -0.1478, 0.3176, -0.1465, 0.316, -0.1394, 0.3129, -0.1251, 0.308, -0.1122, 0.3033, -0.0956, 0.3007, -0.0767, 0.2985, -0.0537, 0.2971, -0.0297, 0.2974, -46e-4, 0.2994, 0.02, 0.3022, 0.0435, 0.3072, 0.0674, 0.3131, 0.0924, 0.3183, 0.1149, 0.3255, 0.135, 0.332, 0.1516, 0.3393, 0.1655, 0.3477, 0.1772, 0.3535, 0.1884, 0.3593, 0.1987, 0.3622, 0.2084, 0.3648, 0.2172, 0.3653, 0.2236, 0.364, 0.2287, 0.361, 0.2331, 0.3574, 0.2377, 0.3532, 0.2403, 0.3492, 0.2434, 0.3458, 0.2469, 0.3464, 0.2523, 0.348, 0.255, 0.3492, 0.252, 0.3493, 0.2472, 0.3472, 0.24, 0.3445, 0.232, 0.3421, 0.2236, 0.3395, 0.214, 0.3376, 0.204, 0.3346, 0.1914, 0.3324, 0.1807, 0.331, 0.1689, 0.3294, 0.1565, 0.3273, 0.1443, 0.3246, 0.1336, 0.3229, 0.1246, 0.3209, 0.1121, 0.319, 0.0991, 0.3178, 0.0851, 0.3184, 0.072, 0.3164, 0.0563, 0.3172, 0.0405, 0.3169, 0.0238, 0.3164, 8e-3, 0.3152, -85e-4, 0.3139, -0.0248, 0.3125, -0.0429, 0.312, -0.0594, 0.3126, -0.0771, 0.3125], "RightFoot": [-0.2603, 0.0884, -0.2797, 0.0931, -0.2995, 0.0985, -0.3187, 0.1061, -0.3332, 0.1126, -0.3474, 0.1205, -0.3536, 0.1263, -0.3574, 0.1356, -0.3541, 0.1449, -0.3523, 0.1565, -0.343, 0.1664, -0.329, 0.1735, -0.3079, 0.176, -0.2844, 0.177, -0.2571, 0.1745, -0.2272, 0.1678, -0.195, 0.1586, -0.1609, 0.1492, -0.1212, 0.1363, -0.0789, 0.1229, -0.0343, 0.1093, 0.0103, 0.0985, 0.0557, 0.0915, 0.0984, 0.0867, 0.1402, 0.0862, 0.1786, 0.0863, 0.2125, 0.0885, 0.2425, 0.0906, 0.2673, 0.0921, 0.2863, 0.0922, 0.2977, 0.0905, 0.3026, 0.0865, 0.2999, 0.0814, 0.2936, 0.076, 0.2789, 0.0736, 0.2616, 0.073, 0.244, 0.0738, 0.2236, 0.0749, 0.2031, 0.0745, 0.1839, 0.0738, 0.1648, 0.0738, 0.1447, 0.0741, 0.1267, 0.0746, 0.1075, 0.0747, 0.0874, 0.0752, 0.0715, 0.0759, 0.053, 0.0769, 0.0377, 0.0764, 0.0191, 0.0765, 26e-4, 0.0777, -0.01, 0.0778, -0.0269, 0.0784, -0.0442, 0.0799, -0.0607, 0.0821, -0.0762, 0.0816, -0.0931, 0.0835, -0.1092, 0.0833, -0.1272, 0.0837, -0.1442, 0.0832, -0.1619, 0.0825, -0.1788, 0.0813, -0.1983, 0.0817, -0.2178, 0.0837, -0.2391, 0.0854], "RToeTip": [-0.1965, 0, -0.2156, 45e-4, -0.2379, 73e-4, -0.2643, 0.0102, -0.2869, 0.0117, -0.31, 0.0147, -0.329, 0.0154, -0.342, 0.0224, -0.3403, 0.0334, -0.3623, 0.0412, -0.3522, 0.0517, -0.3326, 0.0581, -0.2963, 0.0618, -0.2594, 0.0656, -0.2186, 0.0679, -0.1722, 0.0715, -0.1299, 0.0697, -0.0885, 0.0647, -0.0375, 0.0666, 0.0127, 0.0658, 0.0633, 0.0689, 0.1114, 0.0732, 0.157, 0.0826, 0.2001, 0.0842, 0.2421, 0.0881, 0.2797, 0.0954, 0.3124, 0.1061, 0.339, 0.1178, 0.3622, 0.1235, 0.3788, 0.1279, 0.3876, 0.1304, 0.3905, 0.1286, 0.3866, 0.1238, 0.3882, 0.1018, 0.379, 0.0763, 0.3615, 0.0669, 0.3436, 0.0581, 0.3223, 0.0553, 0.301, 0.0507, 0.2809, 0.0462, 0.261, 0.0447, 0.2402, 0.0439, 0.2217, 0.0438, 0.2023, 0.0451, 0.1818, 0.0456, 0.1656, 0.046, 0.1463, 0.0439, 0.1307, 0.0438, 0.1112, 0.0416, 0.0942, 0.0415, 0.0811, 0.0405, 0.0628, 0.0373, 0.045, 0.0383, 0.0257, 0.0324, 87e-4, 0.0285, -86e-4, 0.0299, -0.0268, 0.0254, -0.0479, 0.0199, -0.0669, 0.016, -0.0887, 91e-4, -0.1081, 42e-4, -0.1271, 47e-4, -0.1495, 23e-4, -0.1738, -1e-4], "LowerBack": [0, 0.6321, 0, 0.6267, 0, 0.6226, 0, 0.6182, 0, 0.6134, 0, 0.6121, 0, 0.6134, 0, 0.6153, 0, 0.6186, 0, 0.6211, 0, 0.6264, 0, 0.6311, 0, 0.6365, 0, 0.6415, 0, 0.6466, 0, 0.651, 0, 0.6554, 0, 0.6591, 0, 0.6607, 0, 0.6619, 0, 0.6625, 0, 0.6639, 0, 0.6667, 0, 0.667, 0, 0.6673, 0, 0.6654, 0, 0.6632, 0, 0.6596, 0, 0.6544, 0, 0.6489, 0, 0.6428, 0, 0.6365, 0, 0.6314, 0, 0.626, 0, 0.623, 0, 0.6188, 0, 0.6165, 0, 0.6185, 0, 0.6214, 0, 0.6254, 0, 0.63, 0, 0.6356, 0, 0.6401, 0, 0.6444, 0, 0.6496, 0, 0.6551, 0, 0.6595, 0, 0.6629, 0, 0.6652, 0, 0.667, 0, 0.6673, 0, 0.6684, 0, 0.6694, 0, 0.6722, 0, 0.6719, 0, 0.6721, 0, 0.6711, 0, 0.6692, 0, 0.6658, 0, 0.661, 0, 0.6551, 0, 0.6496, 0, 0.6437, 0, 0.6382], "Spine": [37e-4, 0.7106, 47e-4, 0.7051, 58e-4, 0.7009, 61e-4, 0.6965, 75e-4, 0.6915, 87e-4, 0.69, 0.0103, 0.6912, 0.0114, 0.6929, 0.0121, 0.6961, 0.0131, 0.6985, 0.013, 0.7037, 0.0129, 0.7084, 0.0125, 0.7139, 0.0121, 0.719, 0.0117, 0.7242, 0.0109, 0.7287, 0.0103, 0.7331, 9e-3, 0.737, 9e-3, 0.7386, 84e-4, 0.7398, 78e-4, 0.7406, 74e-4, 0.7419, 69e-4, 0.7448, 54e-4, 0.7452, 46e-4, 0.7456, 39e-4, 0.7437, 36e-4, 0.7415, 25e-4, 0.738, 21e-4, 0.7329, 14e-4, 0.7274, 12e-4, 0.7213, 11e-4, 0.7151, 2e-3, 0.7099, 26e-4, 0.7045, 41e-4, 0.7015, 59e-4, 0.6971, 77e-4, 0.6946, 94e-4, 0.6963, 0.011, 0.6991, 0.0127, 0.7028, 0.0132, 0.7072, 0.0139, 0.7127, 0.014, 0.7172, 0.0142, 0.7214, 0.0133, 0.7267, 0.013, 0.7322, 0.0119, 0.7369, 0.0112, 0.7403, 0.0102, 0.7428, 99e-4, 0.7447, 94e-4, 0.7451, 84e-4, 0.7463, 78e-4, 0.7473, 69e-4, 0.7502, 68e-4, 0.7499, 61e-4, 0.7502, 52e-4, 0.7493, 43e-4, 0.7475, 37e-4, 0.7442, 26e-4, 0.7394, 3e-3, 0.7335, 26e-4, 0.7281, 25e-4, 0.7222, 29e-4, 0.7167], "Spine1": [0.0107, 0.7888, 0.0122, 0.7833, 0.0138, 0.779, 0.0145, 0.7746, 0.0168, 0.7696, 0.019, 0.7679, 0.0215, 0.7688, 0.0235, 0.7704, 0.0251, 0.7735, 0.027, 0.7756, 0.0271, 0.7807, 0.0271, 0.7854, 0.0265, 0.7909, 0.0258, 0.7961, 0.0249, 0.8013, 0.0239, 0.8059, 0.0227, 0.8104, 0.0206, 0.8144, 0.0204, 0.8161, 0.0193, 0.8174, 0.0182, 0.8182, 0.0172, 0.8197, 0.0161, 0.8227, 0.0136, 0.8232, 0.0119, 0.8237, 0.0107, 0.8219, 99e-4, 0.8198, 8e-3, 0.8163, 76e-4, 0.8112, 67e-4, 0.8058, 63e-4, 0.7998, 64e-4, 0.7935, 8e-3, 0.7883, 92e-4, 0.7829, 0.012, 0.7797, 0.0154, 0.7751, 0.0191, 0.7723, 0.022, 0.7737, 0.0248, 0.7761, 0.0278, 0.7795, 0.029, 0.7838, 0.0303, 0.7891, 0.0305, 0.7935, 0.0308, 0.7976, 0.0292, 0.8031, 0.0284, 0.8087, 0.0265, 0.8135, 0.0249, 0.8171, 0.023, 0.8197, 0.0221, 0.8217, 0.0215, 0.8222, 0.0196, 0.8235, 0.0183, 0.8247, 0.0167, 0.8277, 0.0163, 0.8274, 0.015, 0.8278, 0.0137, 0.827, 0.0121, 0.8252, 0.0111, 0.8221, 94e-4, 0.8174, 99e-4, 0.8115, 92e-4, 0.8062, 89e-4, 0.8003, 94e-4, 0.7949], "Neck": [0.0107, 0.7888, 0.0122, 0.7833, 0.0138, 0.779, 0.0145, 0.7746, 0.0168, 0.7696, 0.019, 0.7679, 0.0215, 0.7688, 0.0235, 0.7704, 0.0251, 0.7735, 0.027, 0.7756, 0.0271, 0.7807, 0.0271, 0.7854, 0.0265, 0.7909, 0.0258, 0.7961, 0.0249, 0.8013, 0.0239, 0.8059, 0.0227, 0.8104, 0.0206, 0.8144, 0.0204, 0.8161, 0.0193, 0.8174, 0.0182, 0.8182, 0.0172, 0.8197, 0.0161, 0.8227, 0.0136, 0.8232, 0.0119, 0.8237, 0.0107, 0.8219, 99e-4, 0.8198, 8e-3, 0.8163, 76e-4, 0.8112, 67e-4, 0.8058, 63e-4, 0.7998, 64e-4, 0.7935, 8e-3, 0.7883, 92e-4, 0.7829, 0.012, 0.7797, 0.0154, 0.7751, 0.0191, 0.7723, 0.022, 0.7737, 0.0248, 0.7761, 0.0278, 0.7795, 0.029, 0.7838, 0.0303, 0.7891, 0.0305, 0.7935, 0.0308, 0.7976, 0.0292, 0.8031, 0.0284, 0.8087, 0.0265, 0.8135, 0.0249, 0.8171, 0.023, 0.8197, 0.0221, 0.8217, 0.0215, 0.8222, 0.0196, 0.8235, 0.0183, 0.8247, 0.0167, 0.8277, 0.0163, 0.8274, 0.015, 0.8278, 0.0137, 0.827, 0.0121, 0.8252, 0.0111, 0.8221, 94e-4, 0.8174, 99e-4, 0.8115, 92e-4, 0.8062, 89e-4, 0.8003, 94e-4, 0.7949], "Neck1": [0.0125, 0.8518, 0.0144, 0.8463, 0.0163, 0.8421, 0.017, 0.8376, 0.0192, 0.8325, 0.021, 0.8307, 0.0235, 0.8315, 0.0252, 0.8329, 0.0273, 0.8359, 0.0285, 0.8381, 0.0299, 0.8431, 0.0299, 0.8478, 0.0288, 0.8533, 0.0279, 0.8586, 0.0277, 0.8639, 0.0261, 0.8685, 0.0248, 0.8731, 0.0221, 0.8772, 0.0222, 0.8789, 0.0217, 0.8802, 0.0201, 0.8812, 0.0196, 0.8826, 0.0181, 0.8856, 0.016, 0.8862, 0.014, 0.8867, 0.0128, 0.8849, 0.0123, 0.8828, 0.0101, 0.8794, 94e-4, 0.8743, 82e-4, 0.8689, 78e-4, 0.8628, 71e-4, 0.8565, 84e-4, 0.8512, 96e-4, 0.8458, 0.0121, 0.8425, 0.0154, 0.8377, 0.0194, 0.8347, 0.0226, 0.8358, 0.0251, 0.8381, 0.0288, 0.8414, 0.0301, 0.8455, 0.0317, 0.8508, 0.0327, 0.8553, 0.0328, 0.8594, 0.0313, 0.865, 0.0301, 0.8706, 0.0287, 0.8754, 0.0273, 0.8791, 0.0254, 0.8818, 0.0241, 0.8839, 0.0238, 0.8844, 0.0215, 0.8858, 0.0202, 0.887, 0.0187, 0.8901, 0.0186, 0.89, 0.0171, 0.8904, 0.0161, 0.8897, 0.0143, 0.8879, 0.0134, 0.8848, 0.0114, 0.8801, 0.0119, 0.8743, 0.0114, 0.869, 0.0111, 0.8633, 0.0119, 0.8579], "Head": [0.0171, 0.914, 0.0184, 0.9085, 0.0193, 0.9043, 0.0192, 0.8999, 0.0205, 0.8948, 0.0216, 0.893, 0.0236, 0.8938, 0.0252, 0.8951, 0.027, 0.898, 0.0284, 0.9002, 0.0306, 0.9052, 0.0314, 0.9099, 0.031, 0.9154, 0.0309, 0.9207, 0.0309, 0.926, 0.0295, 0.9306, 0.0285, 0.9352, 0.0263, 0.9393, 0.027, 0.941, 0.027, 0.9423, 0.026, 0.9432, 0.0261, 0.9446, 0.0251, 0.9476, 0.0234, 0.9481, 0.0218, 0.9485, 0.0208, 0.9467, 0.0205, 0.9446, 0.0184, 0.9412, 0.0176, 0.936, 0.0163, 0.9307, 0.0155, 0.9246, 0.0144, 0.9184, 0.015, 0.9132, 0.0153, 0.9078, 0.0167, 0.9045, 0.019, 0.8998, 0.0218, 0.8969, 0.0245, 0.898, 0.0263, 0.9001, 0.0297, 0.9034, 0.0311, 0.9075, 0.0328, 0.9128, 0.0343, 0.9172, 0.035, 0.9214, 0.0341, 0.9269, 0.0333, 0.9325, 0.0326, 0.9373, 0.0317, 0.941, 0.0304, 0.9437, 0.0301, 0.9457, 0.0304, 0.9462, 0.0285, 0.9476, 0.0277, 0.9488, 0.0265, 0.9518, 0.0268, 0.9516, 0.0252, 0.9521, 0.0241, 0.9514, 0.0223, 0.9497, 0.0211, 0.9466, 0.0188, 0.942, 0.0188, 0.9362, 0.0179, 0.931, 0.0172, 0.9253, 0.0172, 0.92], "HeadTop": [0.0292, 0.9796, 0.0295, 0.9743, 0.029, 0.9703, 0.0278, 0.9661, 0.0282, 0.961, 0.0285, 0.9594, 0.0298, 0.9602, 0.0314, 0.9615, 0.0328, 0.9644, 0.0348, 0.9665, 0.0377, 0.9714, 0.0394, 0.976, 0.0403, 0.9814, 0.0411, 0.9865, 0.0411, 0.9918, 0.0402, 0.9964, 0.0396, 1.0009, 0.0383, 1.0049, 0.0395, 1.0065, 0.0399, 1.0077, 0.0399, 1.0084, 0.0404, 1.0098, 0.0401, 1.0126, 0.0388, 1.013, 0.038, 1.0132, 0.0371, 1.0114, 0.0368, 1.0092, 0.035, 1.0057, 0.0343, 1.0006, 0.0328, 0.9952, 0.0315, 0.9893, 0.0304, 0.9831, 0.0302, 0.978, 0.0294, 0.9728, 0.0296, 0.9698, 0.0305, 0.9653, 0.0318, 0.9626, 0.0336, 0.9639, 0.0348, 0.9661, 0.0375, 0.9693, 0.0388, 0.9734, 0.0408, 0.9787, 0.0427, 0.9831, 0.0441, 0.9871, 0.044, 0.9926, 0.044, 0.9981, 0.0439, 1.0028, 0.0435, 1.0064, 0.0432, 1.009, 0.0443, 1.0107, 0.0452, 1.011, 0.0441, 1.0122, 0.0439, 1.0133, 0.0432, 1.0162, 0.0436, 1.016, 0.042, 1.0165, 0.0406, 1.0159, 0.0391, 1.0141, 0.0374, 1.0112, 0.0348, 1.0067, 0.0339, 1.0011, 0.0326, 0.9961, 0.0313, 0.9905, 0.0299, 0.9855], "LeftArm": [0.0144, 0.8388, 0.0172, 0.8309, 0.0178, 0.8248, 0.0187, 0.8183, 0.0185, 0.8113, 0.018, 0.8074, 0.0183, 0.8062, 0.0188, 0.8062, 0.0204, 0.8081, 0.0233, 0.8102, 0.0234, 0.8156, 0.0247, 0.8204, 0.0248, 0.826, 0.0252, 0.8314, 0.0253, 0.8372, 0.0262, 0.8427, 0.027, 0.8481, 0.0266, 0.853, 0.0278, 0.8551, 0.0282, 0.8574, 0.0286, 0.8593, 0.0286, 0.8624, 0.0288, 0.8667, 0.0266, 0.8678, 0.0249, 0.8695, 0.0239, 0.8686, 0.023, 0.8667, 0.0215, 0.8643, 0.021, 0.8601, 0.0202, 0.856, 0.0196, 0.8512, 0.0201, 0.8467, 0.0214, 0.8434, 0.0227, 0.8394, 0.0261, 0.8385, 0.0314, 0.836, 0.0378, 0.8348, 0.0428, 0.8379, 0.0476, 0.8419, 0.0515, 0.8464, 0.053, 0.8509, 0.054, 0.8562, 0.0539, 0.8604, 0.0534, 0.8643, 0.0506, 0.8698, 0.0486, 0.8754, 0.0451, 0.88, 0.0414, 0.8832, 0.0377, 0.8856, 0.0352, 0.8872, 0.0323, 0.8868, 0.0281, 0.8879, 0.0248, 0.8886, 0.0216, 0.8906, 0.0195, 0.8897, 0.0173, 0.8891, 0.0157, 0.8875, 0.0136, 0.8852, 0.0125, 0.8809, 0.0108, 0.8747, 0.0109, 0.8676, 0.0104, 0.8611, 0.0107, 0.8537, 0.0122, 0.8467], "LeftForeArm": [-0.1093, 0.689, -0.1099, 0.6839, -0.1113, 0.6795, -0.1103, 0.6729, -0.1108, 0.6661, -0.1088, 0.6601, -0.1075, 0.6579, -0.1034, 0.655, -0.0958, 0.6523, -0.0875, 0.6506, -0.0792, 0.6506, -0.0684, 0.65, -0.0588, 0.651, -0.0483, 0.6519, -0.0384, 0.6543, -0.0264, 0.6565, -0.0119, 0.659, 13e-4, 0.6619, 0.0148, 0.6628, 0.0293, 0.665, 0.0422, 0.6676, 0.0544, 0.6723, 0.0668, 0.6789, 0.0758, 0.683, 0.0832, 0.6877, 0.0903, 0.6898, 0.0967, 0.6913, 0.1013, 0.6919, 0.1053, 0.6902, 0.1069, 0.6876, 0.1075, 0.684, 0.1068, 0.6792, 0.1059, 0.6749, 0.1036, 0.6699, 0.101, 0.6667, 0.0977, 0.661, 0.0922, 0.656, 0.0877, 0.657, 0.0838, 0.659, 0.0806, 0.6623, 0.0754, 0.6656, 0.0718, 0.6701, 0.0667, 0.6734, 0.06, 0.6765, 0.0501, 0.6815, 0.0401, 0.6869, 0.0274, 0.6918, 0.0145, 0.6961, 21e-4, 0.6998, -0.01, 0.7034, -0.0203, 0.7049, -0.0322, 0.708, -0.0426, 0.7108, -0.0524, 0.7151, -0.0605, 0.7163, -0.0688, 0.7181, -0.0751, 0.7185, -0.0822, 0.7185, -0.0876, 0.7164, -0.0947, 0.7131, -0.0992, 0.7088, -0.1036, 0.7047, -0.107, 0.6998, -0.1089, 0.6951], "LeftHand": [-0.1542, 0.5778, -0.1587, 0.574, -0.1636, 0.5709, -0.1664, 0.566, -0.1693, 0.5604, -0.1686, 0.555, -0.1659, 0.5523, -0.1593, 0.5483, -0.1487, 0.5445, -0.1344, 0.5403, -0.1198, 0.5381, -0.101, 0.5351, -0.081, 0.5338, -0.0586, 0.5337, -0.0369, 0.5358, -0.0129, 0.5389, 0.0122, 0.5429, 0.0347, 0.548, 0.0594, 0.553, 0.0828, 0.5591, 0.1047, 0.5665, 0.1247, 0.576, 0.1445, 0.5882, 0.1602, 0.5981, 0.1737, 0.6091, 0.1861, 0.618, 0.1971, 0.6263, 0.2055, 0.634, 0.2123, 0.6388, 0.2163, 0.6427, 0.2182, 0.6441, 0.2183, 0.6432, 0.2181, 0.6418, 0.2155, 0.637, 0.2125, 0.6327, 0.2082, 0.6235, 0.2009, 0.6133, 0.1932, 0.6066, 0.1844, 0.5988, 0.1745, 0.5917, 0.1605, 0.5843, 0.147, 0.5791, 0.1312, 0.5745, 0.1156, 0.5724, 0.0959, 0.5729, 0.0782, 0.5756, 0.0579, 0.5784, 0.0396, 0.5813, 0.022, 0.584, 6e-3, 0.5869, -92e-4, 0.5878, -0.0259, 0.5905, -0.0414, 0.593, -0.056, 0.5972, -0.0687, 0.5986, -0.081, 0.6007, -0.0912, 0.6016, -0.1026, 0.602, -0.1121, 0.6005, -0.1225, 0.5978, -0.1305, 0.594, -0.1381, 0.5906, -0.1444, 0.5864, -0.15, 0.5827], "RightArm": [0.0337, 0.8395, 0.034, 0.8364, 0.0367, 0.834, 0.0383, 0.8314, 0.0439, 0.8279, 0.0491, 0.8282, 0.0541, 0.8311, 0.0578, 0.834, 0.0605, 0.8378, 0.0619, 0.8398, 0.0621, 0.8447, 0.0608, 0.8492, 0.0594, 0.8547, 0.057, 0.86, 0.0542, 0.865, 0.0511, 0.8687, 0.0472, 0.8726, 0.0424, 0.8762, 0.04, 0.8777, 0.037, 0.8781, 0.0332, 0.8782, 0.0301, 0.8784, 0.0274, 0.88, 0.0245, 0.8801, 0.0218, 0.8796, 0.02, 0.877, 0.0188, 0.8747, 0.0161, 0.8703, 0.0162, 0.8641, 0.0156, 0.8573, 0.0155, 0.8499, 0.0159, 0.8416, 0.018, 0.8343, 0.0203, 0.827, 0.0233, 0.8211, 0.0257, 0.8139, 0.0282, 0.8087, 0.0294, 0.8079, 0.0311, 0.8082, 0.0338, 0.8101, 0.0358, 0.8136, 0.0378, 0.819, 0.0387, 0.8235, 0.0393, 0.8281, 0.0387, 0.8336, 0.0387, 0.8395, 0.0383, 0.8445, 0.0379, 0.849, 0.0372, 0.8522, 0.0374, 0.8548, 0.0386, 0.8564, 0.0389, 0.8582, 0.0387, 0.8603, 0.039, 0.8644, 0.0392, 0.8651, 0.0385, 0.8667, 0.0383, 0.8667, 0.0369, 0.8655, 0.0361, 0.8635, 0.0351, 0.8604, 0.0349, 0.856, 0.0344, 0.8518, 0.0335, 0.8477, 0.0329, 0.8439], "RightForeArm": [0.0746, 0.6583, 0.073, 0.6557, 0.0691, 0.6527, 0.0624, 0.6495, 0.0565, 0.6458, 0.0496, 0.6465, 0.0446, 0.6498, 0.0404, 0.653, 0.0364, 0.6573, 0.0331, 0.6595, 0.0283, 0.6646, 0.0213, 0.6696, 0.0141, 0.6756, 66e-4, 0.6817, -25e-4, 0.6882, -0.0129, 0.6942, -0.0204, 0.699, -0.0289, 0.7038, -0.0344, 0.7064, -0.0401, 0.7081, -0.047, 0.7096, -0.0503, 0.7099, -0.0544, 0.7124, -0.0588, 0.7133, -0.0634, 0.714, -0.0658, 0.712, -0.0674, 0.7101, -0.0712, 0.7067, -0.0736, 0.7023, -0.0773, 0.6976, -0.0793, 0.6918, -0.0816, 0.6857, -0.0816, 0.6801, -0.0805, 0.6741, -0.0779, 0.669, -0.0739, 0.661, -0.0702, 0.6553, -0.0676, 0.6541, -0.0621, 0.6521, -0.0549, 0.6514, -0.0489, 0.6528, -0.0427, 0.656, -0.0361, 0.6576, -0.0287, 0.6588, -0.0243, 0.6622, -0.0182, 0.6656, -0.0124, 0.6683, -49e-4, 0.6702, 28e-4, 0.6711, 96e-4, 0.6722, 0.0172, 0.6726, 0.0252, 0.6732, 0.0322, 0.6745, 0.0398, 0.6781, 0.0472, 0.6787, 0.0549, 0.6803, 0.062, 0.6807, 0.0666, 0.6801, 0.0707, 0.6788, 0.0739, 0.6765, 0.0757, 0.6729, 0.0765, 0.6695, 0.0778, 0.6659, 0.0762, 0.6626], "RightHand": [0.1823, 0.5939, 0.1804, 0.5906, 0.1754, 0.5858, 0.1665, 0.579, 0.1574, 0.571, 0.1461, 0.5661, 0.1354, 0.5632, 0.1234, 0.5591, 0.1108, 0.5568, 0.099, 0.5534, 0.0865, 0.5547, 0.0726, 0.5565, 0.0598, 0.5605, 0.046, 0.5644, 0.0316, 0.5695, 0.0178, 0.5746, 51e-4, 0.5784, -83e-4, 0.5824, -0.0184, 0.5845, -0.0284, 0.5858, -0.039, 0.5872, -0.0466, 0.5875, -0.0543, 0.5901, -0.0628, 0.5912, -0.0702, 0.5922, -0.076, 0.5906, -0.0802, 0.5891, -0.0858, 0.5858, -0.089, 0.5815, -0.0937, 0.577, -0.0965, 0.5713, -0.0996, 0.5652, -0.1009, 0.5599, -0.102, 0.5543, -0.1013, 0.5495, -0.1005, 0.5423, -0.0976, 0.5369, -0.0927, 0.5352, -0.0852, 0.5329, -0.0748, 0.5316, -0.0628, 0.5321, -0.0495, 0.5347, -0.035, 0.5359, -0.018, 0.5374, -23e-4, 0.5419, 0.0144, 0.5474, 0.0314, 0.5534, 0.0485, 0.5591, 0.0642, 0.5639, 0.0801, 0.5704, 0.0949, 0.5758, 0.1086, 0.5809, 0.1209, 0.5871, 0.1328, 0.595, 0.1435, 0.599, 0.1535, 0.6035, 0.1632, 0.607, 0.1698, 0.6091, 0.1753, 0.6098, 0.18, 0.6099, 0.1831, 0.6083, 0.1849, 0.6064, 0.1863, 0.6028, 0.1846, 0.5993] } } };
+
+  // ../../../film/src/figures.ts
+  var D = Math.PI / 180;
+  var lerp = (a, b, u) => a + (b - a) * u;
+  var clamp = (v, a, b) => Math.max(a, Math.min(b, v));
+  var add = (a, b) => [a[0] + b[0], a[1] + b[1]];
+  var sub = (a, b) => [a[0] - b[0], a[1] - b[1]];
+  var mul = (a, k) => [a[0] * k, a[1] * k];
+  var len = (a) => Math.hypot(a[0], a[1]);
+  var nrm = (a) => {
+    const l = len(a) || 1e-9;
+    return [a[0] / l, a[1] / l];
+  };
+  var rot = (a, r) => [a[0] * Math.cos(r) - a[1] * Math.sin(r), a[0] * Math.sin(r) + a[1] * Math.cos(r)];
+  var mix = (a, b, u) => [lerp(a[0], b[0], u), lerp(a[1], b[1], u)];
+  var along = (a, b, n) => Array.from({ length: n + 1 }, (_, i) => mix(a, b, i / n));
+  var prof = (n, f) => Array.from({ length: n + 1 }, (_, i) => f(i / n));
+  var dir = (deg, l) => [Math.sin(deg * D) * l, -Math.cos(deg * D) * l];
+  var upv = (deg, l) => [Math.sin(deg * D) * l, Math.cos(deg * D) * l];
+  var BL = { thigh: 0.264, shin: 0.269, foot: 0.11, ankle: 0.045, spine: 0.155, neck: 0.0625, head: 0.0618, top: 0.066, sh: 0.058, upper: 0.194, fore: 0.135, hand: 0.066, grip: 0.033 };
+  var ARM_REACH = BL.upper + BL.fore + BL.grip;
+  var FA = Math.atan2(BL.ankle, BL.foot);
+  var footFrame = (A, T) => {
+    const v = sub(T, A), l = len(v) || 1e-6, s = rot(mul(v, 1 / l), FA), m = [-s[1], s[0]];
+    return { s, m, B: sub(T, mul(s, l * Math.cos(FA))), ku: l * Math.cos(FA) / BL.foot, kw: l * Math.sin(FA) / BL.ankle };
+  };
+  var SHOE = "M-0.03,0 L0.104,0 Q0.12,0 0.12,0.009 Q0.119,0.019 0.102,0.022 Q0.064,0.03 0.032,0.054 L-0.02,0.062 Q-0.04,0.054 -0.043,0.024 Q-0.044,0 -0.03,0 Z";
+  var SHOE_PTS = [[-0.03, 0], [0.104, 0], [0.12, 9e-3], [0.102, 0.022], [0.032, 0.054], [-0.02, 0.062], [-0.043, 0.024]];
+  var shoeMap = (A, T) => {
+    const F = footFrame(A, T);
+    return (p) => add(F.B, add(mul(F.s, p[0] * F.ku), mul(F.m, p[1] * F.kw)));
+  };
+  var plant = (p) => {
+    let lo = Infinity;
+    for (const s of ["L", "R"]) {
+      const m = shoeMap(p[`${s}Ank`], p[`${s}Toe`]);
+      for (const q of SHOE_PTS) lo = Math.min(lo, m(q)[1]);
+      lo = Math.min(lo, p[`${s}Knee`][1] - 0.034);
+    }
+    const o = {};
+    for (const k of Object.keys(p)) o[k] = [p[k][0], p[k][1] - lo];
+    return o;
+  };
+  var tipOf = (el, ha) => add(ha, mul(nrm(sub(ha, el)), BL.hand));
+  var MAP = {
+    Hips: "Hips",
+    LUp: "LeftUpLeg",
+    LKnee: "LeftLeg",
+    LAnk: "LeftFoot",
+    LToe: "LToeTip",
+    RUp: "RightUpLeg",
+    RKnee: "RightLeg",
+    RAnk: "RightFoot",
+    RToe: "RToeTip",
+    Spine1: "Spine1",
+    Neck1: "Neck1",
+    Head: "Head",
+    Top: "HeadTop",
+    LSh: "LeftArm",
+    LElb: "LeftForeArm",
+    LHand: "LeftHand",
+    RSh: "RightArm",
+    RElb: "RightForeArm",
+    RHand: "RightHand"
+  };
+  var gaitCal = {};
+  var rawGait = (g, u) => {
+    const out = {};
+    for (const [k, n] of Object.entries(MAP)) {
+      const a = GAITS[g].j[n], N = a.length / 2, x = (u % 1 + 1) % 1 * N, i = Math.floor(x), f = x - i, j = (i + 1) % N;
+      out[k] = [lerp(a[2 * i], a[2 * j], f), lerp(a[2 * i + 1], a[2 * j + 1], f)];
+    }
+    return out;
+  };
+  var calib = (g) => {
+    if (gaitCal[g]) return gaitCal[g];
+    const a = GAITS[g].j, N = a.Hips.length / 2;
+    let best = 0;
+    for (let i = 0; i < N; i++) if (a.LeftFoot[2 * i + 1] < a.LeftFoot[2 * best + 1]) best = i;
+    const phi = Math.atan2(a.LToeTip[2 * best + 1] - a.LeftFoot[2 * best + 1], a.LToeTip[2 * best] - a.LeftFoot[2 * best]);
+    gaitCal[g] = { phi, k: 1 };
+    let top = 0;
+    for (let i = 0; i < 16; i++) top += gaitPose(g, i / 16)[`Top`][1] / 16;
+    gaitCal[g] = { phi, k: 1 / top };
+    return gaitCal[g];
+  };
+  var gaitPose = (g = "08_04", u = 0, step = 1) => {
+    const c = calib(g), p = rawGait(g, u), hx = p.Hips[0], ak = lerp(1, step, 0.5);
+    const toeV = { L: nrm(sub(p.LToe, p.LAnk)), R: nrm(sub(p.RToe, p.RAnk)) };
+    if (step !== 1) for (const s of ["L", "R"]) {
+      for (const j of ["Up", "Knee", "Ank"]) p[`${s}${j}`] = [hx + (p[`${s}${j}`][0] - hx) * step, p[`${s}${j}`][1]];
+      const sh = p[`${s}Sh`];
+      for (const j of ["Elb", "Hand"]) p[`${s}${j}`] = [sh[0] + (p[`${s}${j}`][0] - sh[0]) * ak, p[`${s}${j}`][1]];
+    }
+    for (const s of ["L", "R"]) {
+      const A = p[`${s}Ank`], v = toeV[s], sd = rot(v, -c.phi), m = [-sd[1], sd[0]];
+      p[`${s}Toe`] = add(sub(A, mul(m, BL.ankle)), mul(sd, BL.foot));
+      p[`${s}Tip`] = tipOf(p[`${s}Elb`], p[`${s}Hand`]);
+    }
+    const q = plant(p);
+    if (c.k === 1) return q;
+    for (const k of Object.keys(q)) q[k] = [q[k][0] * c.k, q[k][1] * c.k];
+    return q;
+  };
+  var fkPose = (k) => {
+    const hips = [k.hipX ?? 0, k.hip];
+    const leg = (t, kn, ft = 0, side = 1) => {
+      const u = add(hips, [84e-4 * side, -0.066]), kneeP = add(u, dir(t, BL.thigh)), ank = add(kneeP, dir(t - kn, BL.shin)), toe = add(ank, rot([BL.foot, -BL.ankle], ft * D));
+      return [u, kneeP, ank, toe];
+    };
+    const [LUp, LKnee, LAnk, LToe] = leg(k.lt, k.lk, k.lf ?? 0, 1), [RUp, RKnee, RAnk, RToe] = leg(k.rt, k.rk, k.rf ?? 0, -1);
+    const sp = add(hips, upv(k.lean, BL.spine)), n1 = add(sp, upv(k.lean + (k.neck ?? 0) * 0.5, BL.neck)), hd = add(n1, upv(k.lean + (k.neck ?? 0), BL.head)), top = add(hd, upv(k.lean + (k.neck ?? 0), BL.top));
+    const LSh = add(sp, upv(k.lean, BL.sh)), RSh = add(LSh, [8e-3, -0.01]);
+    const arm = (sh, a, e, w = 0) => {
+      const el = add(sh, dir(a, BL.upper)), ha = add(el, dir(a + e, BL.fore));
+      return [el, ha, add(ha, dir(a + e + w, BL.hand))];
+    };
+    const [LElb, LHand, LTip] = arm(LSh, k.la, k.le, k.lw), [RElb, RHand, RTip] = arm(RSh, k.ra, k.re, k.rw);
+    return plant({ Hips: hips, LUp, LKnee, LAnk, LToe, RUp, RKnee, RAnk, RToe, Spine1: sp, Neck1: n1, Head: hd, Top: top, LSh, LElb, LHand, LTip, RSh, RElb, RHand, RTip });
+  };
+  var reach = (pose, side, target, opt = {}) => {
+    const o = typeof opt === "number" ? { dir: opt } : opt, g = o.grip ?? BL.grip, S = pose[`${side}Sh`], a = BL.upper;
+    const hd = o.dir === void 0 ? null : [Math.cos(o.dir * D), Math.sin(o.dir * D)];
+    const W = hd ? sub(target, mul(hd, g)) : target, b = hd ? BL.fore : BL.fore + g;
+    const v = sub(W, S), dn = nrm(v), d = clamp(len(v), Math.abs(a - b) + 1e-4, a + b - 1e-6);
+    const A = Math.acos(clamp((a * a + d * d - b * b) / (2 * a * d), -1, 1));
+    const E = add(S, mul(rot(dn, -A * (o.bend ?? 1)), a)), Wc = add(S, mul(dn, d)), fd = nrm(sub(Wc, E));
+    const H = add(E, mul(fd, BL.fore)), T = hd ? add(H, mul(hd, BL.hand)) : add(E, mul(fd, BL.fore + BL.hand));
+    return { ...pose, [`${side}Elb`]: E, [`${side}Hand`]: H, [`${side}Tip`]: T };
+  };
+  var reachGap = (pose, side, target, opt = {}) => {
+    const g = opt.grip ?? BL.grip, hd = opt.dir === void 0 ? null : [Math.cos(opt.dir * D), Math.sin(opt.dir * D)];
+    const W = hd ? sub(target, mul(hd, g)) : target;
+    return Math.max(0, len(sub(W, pose[`${side}Sh`])) - (BL.upper + BL.fore + (hd ? 0 : g)));
+  };
+  var gripOf = (pose, side) => add(pose[`${side}Hand`], mul(nrm(sub(pose[`${side}Tip`], pose[`${side}Hand`])), BL.grip));
+  var toScreen = (o, p) => [o.x + (o.flip ? -1 : 1) * p[0] * o.h, o.ground - p[1] * o.h];
+  var toBody = (o, s) => [(s[0] - o.x) * (o.flip ? -1 : 1) / o.h, (o.ground - s[1]) / o.h];
+  var handAt = (o, side) => toScreen(o, gripOf(o.pose, side));
+  var f1 = (v) => (Math.round(v * 10) / 10).toString();
+  var hull = (pts) => {
+    const a = pts.slice().sort((p, q) => p[0] - q[0] || p[1] - q[1]), cr = (o, p, q) => (p[0] - o[0]) * (q[1] - o[1]) - (p[1] - o[1]) * (q[0] - o[0]);
+    const lo = [], hi = [];
+    for (const p of a) {
+      while (lo.length >= 2 && cr(lo[lo.length - 2], lo[lo.length - 1], p) <= 0) lo.pop();
+      lo.push(p);
+    }
+    for (let i = a.length - 1; i >= 0; i--) {
+      const p = a[i];
+      while (hi.length >= 2 && cr(hi[hi.length - 2], hi[hi.length - 1], p) <= 0) hi.pop();
+      hi.push(p);
+    }
+    hi.pop();
+    lo.pop();
+    return lo.concat(hi);
+  };
+  var figurePaths = (o) => {
+    const { pose: p, look, h } = o, T = o.T ?? 0, b = look.build ?? 1, sg = o.flip ? -1 : 1;
+    const X = (q) => `${f1(o.x + sg * q[0] * h)},${f1(o.ground - q[1] * h)}`;
+    const out = [];
+    const smooth = (ring) => {
+      let d = `M${X(mix(ring[0], ring[1], 0.5))}`;
+      for (let i = 1; i <= ring.length; i++) {
+        const q = ring[i % ring.length], r = ring[(i + 1) % ring.length];
+        d += ` Q${X(q)} ${X(mix(q, r, 0.5))}`;
+      }
+      return d + " Z";
+    };
+    const rounded = (pts, r) => {
+      const n = pts.length;
+      let d = "";
+      for (let i = 0; i < n; i++) {
+        const a = pts[(i + n - 1) % n], c = pts[i], e = pts[(i + 1) % n], la = len(sub(a, c)), le = len(sub(e, c)), k1 = Math.min(r, la / 2), k2 = Math.min(r, le / 2);
+        const p1 = add(c, mul(nrm(sub(a, c)), k1)), p2 = add(c, mul(nrm(sub(e, c)), k2));
+        d += `${i ? " L" : "M"}${X(p1)} Q${X(c)} ${X(p2)}`;
+      }
+      return d + " Z";
+    };
+    const chain = (pts, w1, w2) => {
+      const L = [], R = [];
+      for (let i = 0; i < pts.length; i++) {
+        const a = pts[Math.max(0, i - 1)], c = pts[Math.min(pts.length - 1, i + 1)], n = nrm([c[1] - a[1], -(c[0] - a[0])]);
+        L.push(add(pts[i], mul(n, w1[i])));
+        R.push(sub(pts[i], mul(n, w2[i])));
+      }
+      return smooth([...L, ...R.reverse()]);
+    };
+    const tx = (d, m) => d.replace(/(-?\d*\.?\d+),(-?\d*\.?\d+)/g, (_s, a, c) => X(m([+a, +c])));
+    const ell = (cx, cy, rx, ry) => {
+      const k = 0.5523, kx = rx * k, ky = ry * k;
+      return `M${cx + rx},${cy} C${cx + rx},${cy + ky} ${cx + kx},${cy + ry} ${cx},${cy + ry} C${cx - kx},${cy + ry} ${cx - rx},${cy + ky} ${cx - rx},${cy} C${cx - rx},${cy - ky} ${cx - kx},${cy - ry} ${cx},${cy - ry} C${cx + kx},${cy - ry} ${cx + rx},${cy - ky} ${cx + rx},${cy} Z`;
+    };
+    const H = p.Hips, sp = p.Spine1, u = nrm(sub(sp, H)), f = [u[1], -u[0]];
+    const robeLike = look.dress === "robe" || look.dress === "gown";
+    const trousers = look.dress !== "tunic";
+    if (!robeLike) for (const s of ["R", "L"]) {
+      const hip = p[`${s}Up`], kn = p[`${s}Knee`], an = p[`${s}Ank`], ext = add(hip, mul(nrm(sub(hip, kn)), 0.05));
+      const pts = [ext, ...along(hip, kn, 6), ...along(kn, an, 6).slice(1)], n = pts.length - 1;
+      const w1 = prof(n, (t) => (trousers ? t < 0.5 ? lerp(0.064, 0.04, t * 2) : lerp(0.04, 0.034, (t - 0.5) * 2) : t < 0.5 ? lerp(0.066, 0.034, (t * 2) ** 0.8) : 0.032 + 0.012 * Math.sin(Math.PI * Math.min(1, (t - 0.5) * 2.6)) - 0.01 * Math.max(0, (t - 0.85) / 0.15)) * b);
+      const w2 = prof(n, (t) => (trousers ? lerp(0.052, 0.032, t) : t < 0.5 ? lerp(0.056, 0.032, t * 2) : lerp(0.032, 0.024, (t - 0.5) * 2)) * b);
+      out.push(chain(pts, w1, w2));
+    }
+    for (const s of ["R", "L"]) out.push(tx(SHOE, shoeMap(p[`${s}Ank`], p[`${s}Toe`])));
+    {
+      const pm = add(mix(p.LUp, p.RUp, 0.5), [0, -0.012]);
+      out.push(chain([add(H, mul(u, 0.02)), H, pm], [0.07 * b, 0.076 * b, 0.066 * b], [0.062 * b, 0.064 * b, 0.058 * b]));
+    }
+    {
+      const tp = [...along(H, sp, 5), ...along(sp, p.Neck1, 3).slice(1)], tn = tp.length - 1;
+      out.push(chain(
+        [sub(H, mul(u, 0.03)), ...tp],
+        [0.074, ...prof(tn, (t) => t < 0.35 ? lerp(0.074, 0.06, t / 0.35) : t < 0.75 ? lerp(0.06, 0.07, (t - 0.35) / 0.4) : lerp(0.07, 0.026, (t - 0.75) / 0.25))].map((v) => v * b),
+        [0.062, ...prof(tn, (t) => t < 0.4 ? lerp(0.064, 0.058, t / 0.4) : t < 0.78 ? lerp(0.058, 0.072, (t - 0.4) / 0.38) : lerp(0.072, 0.024, (t - 0.78) / 0.22))].map((v) => v * b)
+      ));
+    }
+    const cloth = look.dress !== "robe" || look.sleeves !== "wide" ? 1.08 : 1;
+    const armIdx = { R: [], L: [] };
+    for (const s of ["R", "L"]) {
+      const i0 = out.length;
+      const sh = p[`${s}Sh`], el = p[`${s}Elb`], ha = p[`${s}Hand`], tip = p[`${s}Tip`];
+      const pts = [...along(sh, el, 5), ...along(el, ha, 5).slice(1)], n = pts.length - 1;
+      out.push(chain(pts, prof(n, (t) => (t < 0.5 ? lerp(0.036, 0.025, t * 2) : lerp(0.025, 0.019, (t - 0.5) * 2)) * b * cloth), prof(n, (t) => (t < 0.15 ? 0.04 : t < 0.5 ? lerp(0.036, 0.023, (t - 0.15) / 0.35) : lerp(0.023, 0.018, (t - 0.5) * 2)) * b * cloth)));
+      const hd = nrm(sub(tip, ha)), q = (k) => add(ha, mul(hd, k));
+      out.push(chain([q(-4e-3), q(0.02), q(0.046), q(BL.hand)], [0.015, 0.02, 0.017, 5e-3], [0.015, 0.018, 0.015, 5e-3]));
+      if (look.sleeves !== "wide" && look.dress !== "zip") {
+        const fd = nrm(sub(ha, el)), c = add(ha, mul(fd, -0.012)), nn = [fd[1], -fd[0]];
+        out.push(rounded([add(c, mul(nn, 0.027)), add(add(c, mul(fd, -0.04)), mul(nn, 0.026)), add(add(c, mul(fd, -0.04)), mul(nn, -0.026)), add(c, mul(nn, -0.027))], 6e-3));
+      }
+      for (let i = i0; i < out.length; i++) armIdx[s].push(i);
+    }
+    const up = nrm(sub(p.Top, p.Neck1)), fw = [up[1], -up[0]], hc = mix(p.Head, p.Top, 0.45), S = 0.93;
+    const HL = (q) => add(hc, add(mul(fw, q[0] * S), mul(up, -q[1] * S)));
+    const hp = (d) => out.push(tx(d, HL));
+    hp("M-0.02,0.07 C-0.066,0.05 -0.072,-0.045 -0.018,-0.066 C0.028,-0.08 0.058,-0.046 0.055,-0.014 L0.058,0.002 L0.074,0.024 L0.058,0.03 L0.06,0.041 L0.055,0.047 C0.057,0.064 0.041,0.072 0.025,0.068 L0.022,0.09 L-0.025,0.095 Z");
+    const sw = Math.sin(T * 3.1) * 0.01, sw2 = Math.sin(T * 3.7 + 1) * 0.012;
+    const strap = (x0, x1, y, t0, t1) => {
+      const dx = Math.sign(x1 - x0), r = t1 * 0.45, e = x1 - dx * r;
+      return `M${x0},${y - t0 / 2} L${e},${y - t1 / 2} Q${x1},${y - t1 / 2} ${x1},${y - t1 / 2 + r} L${x1},${y + t1 / 2 - r} Q${x1},${y + t1 / 2} ${e},${y + t1 / 2} L${x0},${y + t0 / 2} Z`;
+    };
+    switch (look.head) {
+      case "zhanjiao":
+        hp("M-0.07,0.012 L-0.07,-0.07 Q-0.068,-0.096 -0.042,-0.098 L0.032,-0.096 Q0.058,-0.094 0.06,-0.068 L0.06,-0.022 Q0.0,-0.03 -0.07,0.012 Z");
+        hp("M-0.07,-0.07 Q-0.072,-0.134 -0.032,-0.136 Q0.004,-0.136 0.008,-0.09 Z");
+        hp(strap(-0.02, -0.29, -0.084, 0.016, 0.022));
+        hp(strap(-0.02, 0.25, -0.084, 0.016, 0.022));
+        break;
+      case "futou":
+        hp("M-0.068,0.004 Q-0.068,-0.092 0.0,-0.092 Q0.057,-0.088 0.058,-0.024 Q0.0,-0.034 -0.068,0.004 Z");
+        hp("M-0.04,-0.082 Q-0.03,-0.142 0.016,-0.13 Q0.036,-0.112 0.026,-0.084 Z");
+        hp(`M-0.062,-0.046 Q-0.1,${-0.01 + sw} ${-0.094 + sw2},0.124 L${-0.078 + sw2},0.126 Q-0.08,0.0 -0.05,-0.03 Z`);
+        break;
+      case "scarf":
+        hp("M0.058,-0.018 Q0.054,-0.094 -0.006,-0.096 Q-0.074,-0.094 -0.082,-0.02 Q-0.086,0.05 -0.064,0.104 L-0.02,0.1 Q-0.028,0.04 -0.026,0.0 Q0.0,-0.036 0.058,-0.018 Z");
+        hp("M-0.07,-0.07 Q-0.112,-0.09 -0.122,-0.056 Q-0.112,-0.028 -0.072,-0.038 Z");
+        hp(`M-0.1,-0.05 Q-0.13,${-0.01 + sw} ${-0.134 + sw2},0.036 L${-0.114 + sw2},0.03 Q-0.108,-0.01 -0.08,-0.04 Z`);
+        break;
+      case "dongpo":
+        hp("M-0.07,0.012 L-0.07,-0.136 Q-0.07,-0.158 -0.046,-0.158 L-0.006,-0.158 Q0.01,-0.158 0.01,-0.142 L0.01,-0.124 L0.042,-0.124 Q0.06,-0.124 0.06,-0.106 L0.06,-0.022 Q0.0,-0.03 -0.07,0.012 Z");
+        break;
+      case "clothcap":
+        hp("M-0.074,0.014 Q-0.084,-0.06 -0.066,-0.098 Q-0.048,-0.126 -0.01,-0.124 Q0.034,-0.12 0.052,-0.098 Q0.064,-0.076 0.062,-0.022 Q0.0,-0.032 -0.074,0.014 Z");
+        hp("M-0.066,-0.088 Q-0.1,-0.104 -0.096,-0.128 Q-0.068,-0.136 -0.04,-0.116 Z");
+        break;
+      // soft cloth gathered into a fold at the back
+      case "boli": {
+        hp("M-0.058,-0.044 Q-0.06,-0.122 0.0,-0.124 Q0.058,-0.122 0.058,-0.044 Z");
+        hp(ell(0, -0.13, 0.014, 0.012));
+        const R = 0.0115, X0 = -0.138, X1 = 0.138, y = -0.046;
+        hp(`M${X0 + R},${y - R} Q0,${y - R - 0.016} ${X1 - R},${y - R} C${X1 - R + 64e-4},${y - R} ${X1},${y - 64e-4} ${X1},${y} C${X1},${y + 64e-4} ${X1 - R + 64e-4},${y + R} ${X1 - R},${y + R} Q0,${y + R - 0.014} ${X0 + R},${y + R} C${X0 + R - 64e-4},${y + R} ${X0},${y + 64e-4} ${X0},${y} C${X0},${y - 64e-4} ${X0 + R - 64e-4},${y - R} ${X0 + R},${y - R} Z`);
+        break;
+      }
+      case "ruanjin":
+        hp("M-0.072,0.012 Q-0.08,-0.07 -0.07,-0.112 Q-0.064,-0.152 -0.032,-0.15 Q0.022,-0.138 0.048,-0.096 Q0.062,-0.066 0.06,-0.022 Q0.0,-0.032 -0.072,0.012 Z");
+        hp(`M-0.064,-0.04 Q-0.098,${0.01 + sw} ${-0.094 + sw2},0.074 L${-0.078 + sw2},0.074 Q-0.08,0.016 -0.05,-0.03 Z`);
+        break;
+      case "fangjin":
+        hp("M-0.07,0.01 L-0.084,-0.152 Q-0.085,-0.163 -0.073,-0.163 L0.062,-0.163 Q0.074,-0.163 0.073,-0.152 L0.06,-0.022 Q0.0,-0.03 -0.07,0.01 Z");
+        break;
+      case "wusha":
+        hp("M-0.07,0.012 L-0.07,-0.066 Q-0.068,-0.09 -0.042,-0.092 L0.032,-0.09 Q0.058,-0.088 0.06,-0.064 L0.06,-0.022 Q0.0,-0.03 -0.07,0.012 Z");
+        hp("M-0.07,-0.068 Q-0.074,-0.132 -0.03,-0.134 Q0.008,-0.132 0.01,-0.086 Z");
+        hp("M-0.03,-0.097 L-0.13,-0.096 L-0.13,-0.082 L-0.03,-0.081 Z");
+        hp(ell(-0.172, -0.089, 0.054, 0.024));
+        hp("M-0.03,-0.097 L0.08,-0.096 L0.08,-0.082 L-0.03,-0.081 Z");
+        hp(ell(0.122, -0.089, 0.054, 0.024));
+        break;
+      case "neishi":
+        hp("M-0.07,0.008 L-0.072,-0.13 Q-0.072,-0.196 -0.006,-0.198 Q0.062,-0.196 0.062,-0.13 L0.06,-0.022 Q0.0,-0.03 -0.07,0.008 Z");
+        hp("M-0.078,0.014 Q-0.08,-0.004 -0.077,-0.016 L0.066,-0.044 Q0.07,-0.032 0.068,-0.018 Z");
+        break;
+      case "qingcap":
+        hp("M-0.076,-0.008 L-0.094,-0.07 Q-0.094,-0.082 -0.082,-0.082 L0.074,-0.084 Q0.086,-0.084 0.084,-0.072 L0.066,-0.026 Q0.0,-0.034 -0.076,-0.008 Z");
+        hp("M-0.07,-0.078 Q-0.064,-0.124 -0.004,-0.13 Q0.058,-0.124 0.068,-0.08 Z");
+        hp("M-0.005,-0.126 L-0.004,-0.146 L0.004,-0.146 L0.005,-0.126 Z");
+        hp(ell(0, -0.157, 0.015, 0.015));
+        break;
+      case "guapi":
+        hp("M-0.072,-0.002 Q-0.08,-0.092 -0.004,-0.098 Q0.06,-0.094 0.062,-0.032 L0.062,-0.022 Q0.0,-0.034 -0.072,-0.002 Z");
+        hp("M-0.076,0.004 L-0.076,-0.014 L0.065,-0.04 L0.065,-0.024 Z");
+        hp(ell(-2e-3, -0.106, 0.013, 0.012));
+        break;
+      case "peaked":
+        hp("M-0.068,-0.006 L-0.068,-0.058 L0.06,-0.066 L0.06,-0.026 Q0.0,-0.03 -0.068,-0.006 Z");
+        hp("M-0.068,-0.054 Q-0.078,-0.076 -0.082,-0.094 Q-0.08,-0.106 -0.062,-0.106 L0.03,-0.111 Q0.062,-0.113 0.063,-0.094 Q0.063,-0.078 0.058,-0.062 Z");
+        hp("M0.05,-0.034 Q0.08,-0.036 0.096,-0.024 Q0.099,-0.015 0.088,-0.015 Q0.07,-0.019 0.05,-0.018 Z");
+        break;
+      case "cadre":
+        hp("M-0.072,0.0 Q-0.08,-0.064 -0.062,-0.1 Q0.0,-0.118 0.052,-0.104 Q0.07,-0.084 0.064,-0.032 Q0.0,-0.034 -0.072,0.0 Z");
+        hp("M0.054,-0.038 Q0.088,-0.038 0.104,-0.026 Q0.104,-0.016 0.09,-0.018 Q0.072,-0.022 0.054,-0.02 Z");
+        break;
+      case "short":
+        hp("M-0.068,0.014 Q-0.07,-0.074 0.01,-0.074 Q0.056,-0.069 0.06,-0.034 Q0.01,-0.048 -0.012,0.002 Z");
+        break;
+      case "modern":
+        hp("M-0.068,0.012 Q-0.074,-0.074 -0.026,-0.09 Q0.03,-0.104 0.062,-0.078 Q0.074,-0.06 0.064,-0.042 Q0.036,-0.054 0.006,-0.048 Q-0.014,-0.02 -0.014,0.004 Z");
+        break;
+      case "ponytail":
+        hp("M-0.068,0.016 Q-0.072,-0.078 0.006,-0.08 Q0.058,-0.074 0.062,-0.036 Q0.02,-0.05 -0.004,-0.04 Q-0.02,-0.01 -0.02,0.014 Z");
+        hp(`M-0.064,-0.056 Q-0.112,-0.06 -0.118,${-0.01 + sw} Q${-0.12 + sw2},0.06 ${-0.098 + sw2},0.1 Q-0.1,0.03 -0.064,-0.022 Z`);
+        break;
+      case "bun":
+        hp("M-0.068,0.01 Q-0.072,-0.074 0.0,-0.074 Q0.05,-0.07 0.056,-0.032 Q0.0,-0.05 -0.02,0.0 Z");
+        hp(ell(-0.03, -0.088, 0.03, 0.026));
+        break;
+    }
+    if (look.beard) hp(look.beard === "long" ? "M0.036,0.036 Q0.064,0.11 0.018,0.17 Q-0.018,0.09 -0.027,0.036 Z" : look.beard === "full" ? "M0.056,0.032 Q0.068,0.09 0.027,0.104 Q-0.027,0.08 -0.04,0.018 Z" : look.beard === "moustache" ? "M0.056,0.027 Q0.072,0.04 0.044,0.042 Z" : "M0.052,0.036 Q0.058,0.077 0.022,0.08 Q-0.018,0.064 -0.032,0.027 Z");
+    const W = add(H, mul(u, 0.07)), tf = (q, a, c) => add(q, add(mul(f, a), mul(u, c)));
+    const legs = ["L", "R"].map((s) => ({ K: p[`${s}Knee`], A: p[`${s}Ank`], U: p[`${s}Up`] }));
+    if (robeLike) {
+      const g = look.dress === "gown", fl = g ? 0 : look.surcoat ? 4e-3 : 0.016, mf = g ? 0.034 : 0.044, mb = g ? 0.046 : 0.056;
+      const upper = [tf(sp, -0.068 * b, -0.02), tf(sp, 0.064 * b, -0.02), tf(W, -0.078 * b, 0), tf(W, 0.07 * b, 0), tf(H, -0.088 * b, 0), tf(H, 0.074 * b, 0), tf(H, -0.09 * b, -0.06), tf(H, 0.072 * b, -0.06)], lower = [], hems = [], lying = [];
+      const angDown = (a, c) => Math.atan2(Math.abs(c[0] - a[0]), a[1] - c[1]) / D;
+      const split = legs.some(({ U, K, A }) => angDown(U, K) > 50 || angDown(K, A) > 55);
+      for (const { U, K, A } of legs) {
+        const hy = Math.max(A[1] - (g ? 0 : 0.01), 0.012);
+        const kp = [add(K, [-0.064 * b, 0]), add(K, [0.058 * b, 0]), add(K, [0, 0.05])], fp = [add(A, [-mb, 0.06]), add(A, [mf, 0.06]), [A[0] - mb - fl, hy], [A[0] + mf + fl, hy]];
+        upper.push(...kp);
+        if (angDown(K, A) > 55) {
+          lying.push([...kp, add(K, [0, -0.03]), ...fp]);
+          continue;
+        }
+        lower.push(...kp, ...fp);
+        hems.push(A);
+        if (split && angDown(U, K) > 50) {
+          const c = mix(U, K, 0.42);
+          lower.push(add(c, [0, -0.04]), [c[0], hy]);
+        }
+      }
+      if (hems.length === 2) lower.push([(hems[0][0] + hems[1][0]) / 2, Math.max(8e-3, Math.min(hems[0][1], hems[1][1]) - 0.022)]);
+      if (split) {
+        out.push(rounded(hull(upper), 0.03));
+        if (lower.length) out.push(rounded(hull(lower), 0.03));
+      } else {
+        const all = [...upper, ...lower], hy = Math.max(0.012, Math.min(legs[0].A[1], legs[1].A[1]) - 0.012);
+        const xs = upper.filter((q) => q[1] > hy + 0.05).map((q) => q[0]);
+        out.push(rounded(hull([...all, [Math.min(...xs) - 6e-3, hy], [Math.max(...xs) + 6e-3, hy]]), 0.03));
+      }
+      for (const l of lying) out.push(rounded(hull(l), 0.025));
+      if (look.surcoat) {
+        const s2 = [tf(sp, -0.084 * b, 0), tf(sp, 0.086 * b, 0), tf(H, -0.1 * b, 0), tf(H, 0.092 * b, 0)];
+        for (const { K, A } of legs) {
+          const k = mix(K, A, 0.12), kx = H[0] + (k[0] - H[0]) * 0.55;
+          s2.push([kx - 0.088, k[1]], [kx + 0.084, k[1]]);
+        }
+        out.push(rounded(hull(s2), 0.02));
+      }
+    }
+    const skirt = (hemAt, mf, mb, flare, top) => {
+      const pts = [...top];
+      for (const { K, A } of legs) {
+        const hm = mix(K, A, hemAt);
+        pts.push(add(K, [-mb, 0]), add(K, [mf, 0]), add(K, [0, 0.05]), add(hm, [-mb - flare, 0]), add(hm, [mf + flare, 0]));
+      }
+      out.push(rounded(hull(pts), 0.022));
+    };
+    if (look.dress === "tunic") skirt(0.2, 0.062 * b, 0.066 * b, 0.012, [tf(W, -0.076 * b, 0), tf(W, 0.07 * b, 0), tf(H, -0.088 * b, 0), tf(H, 0.076 * b, 0)]);
+    if (look.dress === "greatcoat") skirt(0.5, 0.07 * b, 0.074 * b, 0.022, [tf(W, -0.072 * b, -0.01), tf(W, 0.066 * b, -0.01), tf(H, -0.09 * b, 0), tf(H, 0.08 * b, 0)]);
+    if (look.dress === "smock") skirt(0.1, 0.068 * b, 0.072 * b, 6e-3, [tf(sp, -0.074 * b, 0.02), tf(sp, 0.078 * b, 0.02), tf(W, -0.082 * b, 0), tf(W, 0.08 * b, 0), tf(H, -0.09 * b, 0), tf(H, 0.084 * b, 0)]);
+    if (look.dress === "jacket") out.push(rounded(hull([tf(sp, -0.076 * b, 0.02), tf(sp, 0.08 * b, 0.02), tf(H, -0.086 * b, 0), tf(H, 0.084 * b, 0), tf(H, -0.086 * b, -0.07), tf(H, 0.084 * b, -0.07)]), 0.014));
+    if (look.dress === "zip") out.push(rounded(hull([tf(sp, -0.08 * b, 0), tf(sp, 0.084 * b, 0), tf(H, -0.084 * b, 0.02), tf(H, 0.084 * b, 0.02), tf(H, -0.08 * b, -0.04), tf(H, 0.08 * b, -0.04)]), 0.03));
+    if (look.dress === "greatcoat") out.push(rounded([tf(p.Neck1, -0.05, -0.03), tf(p.Neck1, 0.032, -0.04), tf(p.Neck1, 0.04, 0.012), tf(p.Neck1, -0.042, 0.03)], 0.012));
+    if (look.sleeves === "wide") for (const s of ["R", "L"]) {
+      const i0 = out.length;
+      const sh = p[`${s}Sh`], el = p[`${s}Elb`], wr = p[`${s}Hand`], dn = [0, -1];
+      const seg = (a, c, wa, wc, sag, cuff) => {
+        const d = nrm(sub(c, a)), n = [d[1], -d[0]], hz = Math.abs(d[0]), sg2 = sag * hz;
+        const pts = [add(a, mul(n, wa)), sub(a, mul(n, wa)), add(c, mul(n, wc)), sub(c, mul(n, wc)), add(mix(a, c, 0.6), mul(dn, wc + sg2)), add(mix(a, c, 0.25), mul(dn, wa + sg2 * 0.6))];
+        if (cuff) pts.push(add(add(c, mul(d, -0.01)), mul(dn, wc + sg2 * 0.75)));
+        for (const k of [0, 1, 2, 3]) pts.push(add(a, rot([wa, 0], k * Math.PI / 2)));
+        out.push(rounded(hull(pts), 0.02));
+      };
+      seg(sh, el, 0.044 * b, 0.046 * b, 0.05, false);
+      seg(el, add(wr, mul(nrm(sub(wr, el)), -6e-3)), 0.046 * b, 0.05 * b, 0.13, true);
+      for (let i = i0; i < out.length; i++) armIdx[s].push(i);
+    }
+    if (look.pack === "bundle") {
+      const c = tf(sp, -0.12, 0), e = (a, r) => tf(c, Math.cos(a) * 0.072, Math.sin(a) * r);
+      out.push(rounded(Array.from({ length: 12 }, (_, i) => e(i / 12 * Math.PI * 2, 0.095)), 0.03));
+      out.push(rounded([tf(sp, -0.06, 0.07), tf(sp, -0.13, 0.11), tf(sp, -0.15, 0.09), tf(sp, -0.07, 0.04)], 0.01));
+    }
+    if (look.pack === "backpack") out.push(rounded([tf(sp, -0.06, 0.06), tf(sp, -0.15, 0.05), tf(sp, -0.16, -0.12), tf(sp, -0.06, -0.12)], 0.03));
+    if (o.part) return armIdx[o.part].map((i) => out[i]);
+    return out;
+  };
+  var figureSVG = (o) => {
+    const c = o.col ?? "#15100C";
+    return `<g>${figurePaths(o).map((d) => `<path d="${d}" fill="${c}"/>`).join("")}</g>`;
+  };
+  var rimmedSVG = (o) => {
+    const k = Math.max(1, o.h / 450), dx = (o.rimDx ?? -2.2) * k, dy = (o.rimDy ?? -1.6) * k;
+    return `<g transform="translate(${f1(dx)},${f1(dy)})" opacity="${o.rimOp ?? 0.35}">${figureSVG({ ...o, col: o.rim ?? "#FFD58F" })}</g>${figureSVG(o)}`;
+  };
+  var STAND = { hip: 0.655, lean: 3, lt: 2, lk: 2, rt: -3, rk: 3, la: -3, le: 10, ra: 4, re: 14 };
+  var frame = (p) => {
+    const u = nrm(sub(p.Spine1, p.Hips));
+    return { sh: p.LSh, u, f: [u[1], -u[0]] };
+  };
+  var atReach = (p, side, y, k = 0.92) => {
+    const sh = p[`${side}Sh`], r = ARM_REACH * k, dy = clamp(y - sh[1], -r, r);
+    return [sh[0] + Math.sqrt(Math.max(0, r * r - dy * dy)), sh[1] + dy];
+  };
+  var carryScroll = (o = {}) => {
+    const b = o.base ?? fkPose({ ...STAND, lean: 4, neck: 6 }), sh = b.LSh;
+    return reach(reach(b, "R", o.near ?? [sh[0] + 0.13, sh[1] - 0.17]), "L", o.far ?? atReach(b, "L", sh[1] - 0.15, 0.93));
+  };
+  var holdOpen = (o = {}) => {
+    const b = o.base ?? fkPose({ ...STAND, lean: 5, neck: 4, ra: 8, re: 18 }), at = o.at ?? atReach(b, "L", b.LSh[1] - 0.12, 0.93);
+    let q = reach(b, "L", at);
+    if (o.both) q = reach(q, "R", [at[0], at[1] - 0.075]);
+    return q;
+  };
+  var handOver = (o = {}) => {
+    const base = o.base ?? fkPose({ hip: 0.65, lean: 9, neck: 6, lt: 14, lk: 6, rt: -10, rk: 4, la: 30, le: 20, ra: 30, re: 20 }), sh = base.LSh;
+    const B = o.b ?? atReach(base, "L", sh[1] - 0.1, 0.95), A = o.a ?? [B[0] - 0.07, B[1]];
+    return reach(reach(base, "R", A), "L", B);
+  };
+  var bow = (deg = 34) => {
+    const b = fkPose({ hip: 0.65, hipX: -2e-3 * deg, lean: deg, neck: 10, lt: -2 - deg * 0.05, lk: 0, rt: -4 - deg * 0.05, rk: 0, la: 10, le: 40, ra: 10, re: 40 }), { u, f } = frame(b);
+    const c = add(b.Spine1, add(mul(f, 0.2), mul(u, 0.03)));
+    return reach(reach(b, "R", c, { dir: Math.atan2(u[1], u[0]) / D }), "L", add(c, mul(u, 0.022)), { dir: Math.atan2(u[1], u[0]) / D });
+  };
+  var kneel = (o = {}) => {
+    const b = fkPose({ hip: 0.36, lean: 8, neck: 8, lt: 86, lk: 88, rt: -6, rk: 84, rf: 172, la: 30, le: 40, ra: 30, re: 40 });
+    if (o.at) return reach(reach(b, "R", o.at), "L", [o.at[0] + 0.06, o.at[1] + 5e-3]);
+    const k = b.LKnee;
+    return reach(reach(b, "R", [k[0] - 0.01, k[1] + 0.047], { dir: -8 }), "L", [k[0] - 0.075, k[1] + 0.05], { dir: -4 });
+  };
+  var BEND = (lean) => ({ hip: 0.645, hipX: -0.1 - Math.max(0, lean - 55) * 15e-4, lean, neck: -6, lt: 10, lk: 8, rt: 6, rk: 6, la: 20, le: 30, ra: 10, re: 20 });
+  var bendTable = (o = {}) => {
+    const top = o.top ?? 0.47, y = top + 0.017, r = (BL.upper + BL.fore) * 0.92;
+    let lean = o.lean ?? 55, b = fkPose(BEND(lean));
+    while (b.LSh[1] - y > r * 0.96 && lean < 80) b = fkPose(BEND(lean += 3));
+    const sh = b.LSh, dy = sh[1] - y, x = o.flatX ?? sh[0] + Math.sqrt(Math.max(0, r * r - dy * dy)) + BL.grip;
+    let q = reach(b, "L", [x, y], { dir: 0 });
+    const other = o.other ?? "flat";
+    if (other === "flat") q = reach(q, "R", [x - 0.075, y], { dir: -4 });
+    else if (other !== "hang") q = reach(q, "R", other);
+    return q;
+  };
+  var ARMFUL = [0.13, -0.17];
+  var ARMFUL_R = 0.075;
+  var carryArmful = (base) => {
+    const b = base ?? fkPose({ hip: 0.655, lean: -3, neck: 6, lt: 3, lk: 3, rt: -4, rk: 4, la: 0, le: 90, ra: 0, re: 90 }), c = add(b.LSh, ARMFUL);
+    return reach(reach(b, "R", [c[0] + 0.03, c[1] - ARMFUL_R - 0.014], { dir: 12 }), "L", [c[0] + ARMFUL_R + 8e-3, c[1] + 0.012], { dir: -78 });
+  };
+  var crouch = (o = {}) => {
+    const b = fkPose({ hip: 0.22, hipX: -0.08, lean: 52, neck: 6, lt: 110, lk: 152, rt: 98, rk: 142, la: 20, le: 20, ra: 20, re: 20 });
+    const sh = b.RSh, y = Math.max(o.at?.[1] ?? 0.035, sh[1] - ARM_REACH * 0.97), at = o.at ? [o.at[0], Math.max(o.at[1], y)] : atReach(b, "R", y, 0.97);
+    const k = b.LKnee;
+    return reach(reach(b, "R", at), "L", [k[0] - 0.03, k[1] + 0.045], { dir: -6 });
+  };
+  var underArm = (base) => {
+    const b = base ?? fkPose(STAND), sh = b.RSh;
+    return reach(b, "R", [sh[0] + 0.085, sh[1] - 0.25], { dir: 12 });
+  };
+  var POSES = {
+    stand: fkPose(STAND),
+    lookUp: fkPose({ hip: 0.655, lean: -4, neck: -28, lt: 2, lk: 2, rt: -4, rk: 3, la: -4, le: 8, ra: 3, re: 10 }),
+    sit: fkPose({ hip: 0.37, lean: 6, lt: 88, lk: 92, rt: 84, rk: 86, la: 10, le: 40, ra: 6, re: 46 }),
+    walk: gaitPose("08_04", 0.1),
+    carryScroll: carryScroll(),
+    holdOpen: holdOpen(),
+    handOver: handOver(),
+    bow: bow(),
+    kneel: kneel(),
+    bendTable: bendTable(),
+    carryArmful: carryArmful(),
+    crouch: crouch(),
+    underArm: underArm()
+  };
+  var soleOf = (p, side) => {
+    const m = shoeMap(p[`${side}Ank`], p[`${side}Toe`]);
+    let best = [0, Infinity];
+    for (const q of SHOE_PTS) {
+      const v = m(q);
+      if (v[1] < best[1]) best = v;
+    }
+    return best;
+  };
+
+  // staff45.ts
+  var LOOK = { head: "modern", dress: "jacket", build: 1.02 };
+  var D2 = 180 / Math.PI;
+  var staff = (o) => {
+    const flip = o.face < 0, place = { x: o.x, ground: o.ground, h: o.h, flip };
+    let best = null;
+    for (let lk = 10; lk <= 60; lk += 1) {
+      const fk = { hip: 0.6, lean: 13, neck: 2, lt: 20, lk, rt: -13, rk: 6, rf: 14, la: 30, le: 40, ra: 30, re: 40 };
+      const p = fkPose(fk), e = Math.abs(soleOf(p, "L")[1] - soleOf(p, "R")[1]);
+      if (!best || e < best.err) best = { pose: p, fk, err: e };
+    }
+    let pose = best.pose;
+    const sh = pose.LSh, chestY = sh[1] - 0.1, lowY = sh[1] - 0.118;
+    const edgeB = toBody(place, [o.edgeX, 0])[0], PALM = 0.014;
+    const tNear = [edgeB - PALM, chestY], tFar = [edgeB - PALM, lowY];
+    pose = reach(reach(pose, "L", tNear, { dir: 90 }), "R", tFar, { dir: 90 });
+    const svg = rimmedSVG({ x: o.x, ground: o.ground, h: o.h, flip, pose, look: LOOK, col: o.col ?? "#140D0A", rim: o.rim ?? "#FFB070", rimOp: 0.55, rimDx: flip ? 2.6 : -2.6, rimDy: -1.2 });
+    const scr = (b) => [o.x + (flip ? -1 : 1) * b[0] * o.h, o.ground - b[1] * o.h];
+    const handN = handAt({ ...place, pose }, "L"), handF = handAt({ ...place, pose }, "R");
+    const elbow = (s) => {
+      const a = pose[`${s}Sh`], e = pose[`${s}Elb`], w = pose[`${s}Hand`];
+      const u = [a[0] - e[0], a[1] - e[1]], v = [w[0] - e[0], w[1] - e[1]];
+      return 180 - Math.acos((u[0] * v[0] + u[1] * v[1]) / (Math.hypot(u[0], u[1]) * Math.hypot(v[0], v[1]))) * D2;
+    };
+    const legStart = Math.hypot(pose.LUp[0] - pose.Hips[0], pose.LUp[1] - pose.Hips[1]);
+    const feet = [scr(soleOf(pose, "L")), scr(soleOf(pose, "R"))];
+    return { svg, pose, fk: best.fk, checks: {
+      R1_legs_at_hip_bu: legStart,
+      // ≤ 0.08 body units from the hip joint
+      R2_elbow_deg: [elbow("L"), elbow("R")],
+      // 0–150, natural side
+      R2_knee_deg: [best.fk.lk, best.fk.rk],
+      R2_lean_deg: best.fk.lean,
+      R3_soles_px: feet.map((f) => +(f[1] - o.ground).toFixed(2)),
+      // both on the floor (|·| ≤ 3 px)
+      R5_hands_px: [Math.hypot(handN[0] - scr(tNear)[0], handN[1] - scr(tNear)[1]), Math.hypot(handF[0] - scr(tFar)[0], handF[1] - scr(tFar)[1])],
+      // ≤ 4 px
+      R5_hands_on_edge_px: [Math.abs(handN[0] - o.edgeX), Math.abs(handF[0] - o.edgeX)],
+      R6_reach_gap_bu: [reachGap(pose, "L", tNear, { dir: 90 }), reachGap(pose, "R", tFar, { dir: 90 })],
+      push_elbow_deg: elbow("L"),
+      // r4: the pushing (near) arm reaches: bend ≤ 70°
+      R7_chest_vs_feet_px: scr(pose.Neck1)[0] - (feet[0][0] + feet[1][0]) / 2,
+      // a push lean: chest ahead of the feet, hands on the leaf
+      near_shoulder_at_torso_top: scr(pose.LSh),
+      neck: scr(pose.Neck1),
+      hands: [handN, handF]
+    } };
+  };
+  globalThis.STAFF45 = staff;
+})();
+
+window.H1B_STAFF = {"left": {"x": 867, "ground": 872, "h": 384, "face": -1, "edgeX": 742}, "right": {"x": 1080, "ground": 872, "h": 384, "face": 1, "edgeX": 1208}};
 </script><script>// E2a 「2020年5月，何鸿燊去世，98岁。」 frame at the stop (107.87 s + 3 frames): Ho's room from D7a, empty. The brass desk
 // lamp has just gone out (its filament still a dull ember); the room holds in cool moonlight (mean ≥ 40); his chair empty,
 // pushed back from the desk; the star in the window and the curtain are the living motion that carries E2b.

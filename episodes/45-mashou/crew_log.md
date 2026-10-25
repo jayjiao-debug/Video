@@ -45,3 +45,8 @@
   - Clip 36 is −1.5 dB.
   - Result: mix −16.8 LUFS, peak −1.4 dBFS, voice −17.1 LUFS.
 - Gate 2b r2: REVISE (notes_gate2b_v2.md). The hero still reads as generic / zebra-striped. Reference photos have been requested via the asset farm (ep45-ref-01: 新京报, 人民日报海外版, 新华社; reference only, never on screen).
+
+## 2026-10-25 · gate 2b r3–r4
+- r3 ESCALATE (hero still generic). Option A (flat-vector geometry pass) taken on the director's recommendation; the owner can still ask for 3D.
+- r4 done (hero3.js: S-wave mane in 5 clumps, level mouth, jowl; H1b plinth inside, push elbows 53°/47°, PASS; 海晏堂 from the model photo). c1_proof + h1b sent to the owner for the look OK.
+- Cold read r4: C1 at 400 px reads as "a bronze horse head on a marble pedestal". Brothers sure: 鼠 兔 蛇 羊 猴. Weak: 龙 reads as deer (needs whiskers, a flame mane, a longer snout), 猪 (bigger snout disc), 牛 (thicker horns), 狗. Fix these in the build pass (bros.js).

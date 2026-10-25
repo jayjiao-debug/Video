@@ -7,7 +7,8 @@ SRC = Path(__file__).resolve().parent
 FONT = Path('/home/claude/video/episodes/43-qingming/film/fonts/cormorant-garamond-latin-600-normal.woff2')
 RENDER = '/home/claude/video/.claude/skills/production-crew/scripts/render_html.py'
 font = base64.b64encode(FONT.read_bytes()).decode()
-kit = ''.join((SRC / f).read_text() + '\n' for f in ['kit.js', 'hero.js', 'figs.js', 'bros.js', 'v4.js', 'hero2.js', 'skin.js'] if (SRC / f).exists())
+kit = ''.join((SRC / f).read_text() + '\n' for f in ['kit.js', 'hero.js', 'figs.js', 'bros.js', 'v4.js', 'hero2.js', 'hero3.js', 'skin.js', 'staff45.js'] if (SRC / f).exists())
+kit += 'window.H1B_STAFF = ' + (SRC / 'h1b_staff.json').read_text() + ';\n'
 import re
 WK = Path('/home/claude/video/episodes/36-shanghuo/remotion/public/fonts/wenkai')
 JSEAL = 'data:image/png;base64,' + base64.b64encode(Path('/home/claude/video/docs/history-video-style/jseal.png').read_bytes()).decode()
@@ -25,11 +26,14 @@ def wenkai_css(text):
     return '\n'.join(css)
 out = []
 for n in sys.argv[1:]:
+    pre = ''
+    if n.endswith('@NOHERO'): n = n[:-7]; pre = 'window.NOHERO = true;'
+    if n.endswith('@MASK'): n = n[:-5]; pre = 'window.HERO_MASK = true;'   # r5: hero regions in flat colours (neck green, mane red, head blue)
     html = f"""<!doctype html><html><head><meta charset="utf-8"><style>
 @font-face{{font-family:'Cormorant Garamond';src:url(data:font/woff2;base64,{font}) format('woff2');font-weight:600}}
 {wenkai_css((SRC / f'{n}.js').read_text() + (SRC / 'skin.js').read_text())}
 html,body{{margin:0;width:1920px;height:1080px;overflow:hidden;background:#000}}
 #art{{position:absolute;inset:0}}
-</style></head><body><script>window.JSEAL='{JSEAL}';</script><script>{kit}</script><script>{(SRC / f'{n}.js').read_text()}</script></body></html>"""
-    p = SRC / f'{n}.html'; p.write_text(html); out.append(str(p))
+</style></head><body><script>window.JSEAL='{JSEAL}';{pre}</script><script>{kit}</script><script>{(SRC / f'{n}.js').read_text()}</script></body></html>"""
+    p = SRC / (f'{n}_mask.html' if 'MASK' in pre else f'{n}_nohero.html' if pre else f'{n}.html'); p.write_text(html); out.append(str(p))
 subprocess.run(['python3', RENDER, *out, '--out', str(SRC.parent)], check=True)

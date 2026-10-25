@@ -13,7 +13,7 @@ frames = [('c1_hook', 'C1 hook · 0:01.6', 'your head fills the frame on Ho\'s d
 os.makedirs(D + 'check400', exist_ok=True)
 W, TW, TH, M, CAP = 2000, 960, 540, 26, 86
 sheet = Image.new('RGB', (W, 110 + 3 * (TH + CAP + M) + 10), '#14100d'); d = ImageDraw.Draw(sheet)
-d.text((M, 26), '《马首回家，用了160年》 · storyboard gate 2b · Look 1 铜灯影 · six key frames', font=ImageFont.truetype(F, 44), fill='#F3E6CF')
+d.text((M, 26), '《假如你是圆明园马首》 · storyboard gate 2b r5 · Look 1 铜灯影 · six key frames', font=ImageFont.truetype(F, 44), fill='#F3E6CF')
 for i, (n, t, sub) in enumerate(frames):
     x, y = M + (i % 2) * (TW + M - 4), 110 + (i // 2) * (TH + CAP + M)
     im = Image.open(f'{D}{n}.png').convert('RGB'); lum = np.asarray(im.convert('L'), float).mean()
