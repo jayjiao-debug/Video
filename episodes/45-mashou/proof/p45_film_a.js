@@ -11,9 +11,9 @@ const N = P.NOON;   // the noon set from the hook (NOON_T world), its horse at b
 const STR = window.STAFF_STRIDE;
 const horseSeat = N.items.find((q) => q.k === '马');
 const HSEAT = N.NW([horseSeat.st.hero.x, horseSeat.st.hero.y]);              // the neck cut on the seat (world)
-const BAND = [B(30), B(30) + 0.52], FIRE = B(40 / 4 * 4 / 4 * 0 + 40) * 0 + (P.BAR0 + 10 * 4 * P.BEAT);   // bar 10 = 24.09
+const BAND = [B(30), B(30) + 0.52], FIRE = P.BAR0 + 10 * 4 * P.BEAT;   // the band on b30 (18.43); the fire on bar 10 (24.09)
 const LIFT = FIRE, ALL12 = P.BAR0 + 7 * 4 * P.BEAT, FALL = B(30);
-const SMOKE0 = 25.0, EMPTY = 26.0, RR = 26.356, TILT = [28.7, 29.5];
+const SMOKE0 = 25.0, EMPTY = 26.0, RR = 26.356, TILT = [28.55, 29.55];   // ≤ 25 px/f
 const AFACE = N.nFace;
 const C_B2 = [AFACE[0] + 230, AFACE[1] + 150, 1.3];
 const camPool = P.cam([960, 540, 1.0], [
@@ -169,7 +169,7 @@ const camL = P.cam([960, 300, 1.0], [
 	{t0: 31.70, t1: 33.148, to: [960, 540, 1.03]},
 	{t0: 33.148, t1: 35.412, to: [975, 500, 1.08]},
 	{t0: 36.00, t1: 39.09, to: [975, 500, 1.13]},
-	{t0: 39.09, t1: 45.0, to: [1300, 590, 1.35]},
+	{t0: 39.09, t1: 45.0, to: [1250, 560, 1.25]},   // the lot board stays in the safe zone (below the subtitle)
 	{t0: 45.30, t1: 47.30, to: [1150, 560, 1.15]},
 	{t0: 47.30, t1: 48.6, to: [1140, 560, 1.17], ease: 'linear'},
 ]);
@@ -211,7 +211,7 @@ const room2007 = (t) => {
 	</defs>
 	<rect x="-600" y="-500" width="3200" height="1580" fill="url(#wall)"/>
 	${[80, 520, 1260, 1700].map((x) => `<rect x="${x}" y="230" width="360" height="520" rx="4" fill="#53433A" opacity=".35" stroke="#7A6250" stroke-width="2"/>`).join('')}
-	<g transform="translate(0,${jy.toFixed(2)}) translate(1090,0) scale(${Math.max(0.01, Math.abs(sx)).toFixed(4)},1) translate(-1090,0)">${board}</g>
+	<g transform="translate(0,${jy.toFixed(2)}) translate(1280,0) scale(${Math.max(0.01, Math.abs(sx)).toFixed(4)},1) translate(-1280,0)"><g transform="translate(190,80)">${board}</g></g>
 	${[[300, 0.3, 0], [760, 0.3, 1], [1560, 0.3, 2]].map(([x, k, i]) => `<path d="M${x},-500 L${x},${120 * k - 30}" stroke="#1A120D" stroke-width="3"/><path d="M${x - 40},${120 * k - 30} L${x + 40},${120 * k - 30} L${x + 26},${120 * k} L${x - 26},${120 * k} Z" fill="#1A120D"/><ellipse cx="${x}" cy="${120 * k + 2}" rx="22" ry="6" fill="#F0D6A8" opacity="${(0.55 * lampOn(i)).toFixed(3)}"/><ellipse cx="${x}" cy="${120 * k + 50}" rx="90" ry="60" fill="#F0D6A8" opacity="${(0.08 * lampOn(i)).toFixed(3)}" filter="url(#b30)"/>`).join('')}
 	<rect x="-600" y="770" width="3200" height="310" fill="url(#floor)"/>
 	<path d="M-600,770 L2600,770" stroke="#6A5240" stroke-width="2" opacity=".6"/>
