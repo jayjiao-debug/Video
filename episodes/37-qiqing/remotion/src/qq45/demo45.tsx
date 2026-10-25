@@ -48,7 +48,7 @@ export const S2: React.FC<{t: number}> = ({t}) => { const a = T45.c2, fl = 0.5 +
 	reg({frame: 'C2', who: 'soldier', x, ground: g, h, pose: p, intent: 'walk', hands: [{joint: 'LHand', at: [hx, hy], tol: 40}]});
 	return <g>
 		<PlateSky id="d2" top={T.skySmoke[0]} bot={T.skySmoke[1]} lines={0.3} lineC={T.ink} />
-		{[260, 760, 1300, 1720].map((xx, i) => <g key={i}>{Array.from({length: 7}, (_, j) => <ellipse key={j} cx={xx + Math.sin(j * 1.3 + i) * 60 + j * 22 + (t - a) * 30} cy={700 - j * 100 - (t - a) * 40} rx={130 + j * 26} ry={80 + j * 12} fill={j < 2 ? '#6A5B4E' : '#8E8172'} opacity={0.75 - j * 0.07} />)}</g>)}
+		{[260, 760, 1300, 1720].map((xx, i) => <g key={i}>{Array.from({length: 7}, (_, j) => <ellipse key={j} cx={xx + Math.sin(j * 1.3 + i) * 60 + j * 22 + (t - a) * 30} cy={700 - j * 100 - (t - a) * 40} rx={130 + j * 26} ry={80 + j * 12} fill={j < 2 ? '#6A5B4E' : '#8E8172'} opacity={0.75 - j * 0.07} filter="url(#soft14)" />)}</g>)}
 		<PlateGround y={820} c={T.pave} c2={T.pave2} edge={T.ink} />
 		<StoneBody3 x={500} y={760} s={1.9} />
 		<Shadow45 x={x} y={g + 4} rx={h * 0.16} ry={12} o={0.4} />
@@ -61,8 +61,10 @@ export const S3: React.FC<{t: number}> = ({t}) => { const k = ease(seg(t, beat(1
 	return <Cam z={1.04 - 0.04 * seg(t, T45.c3, T45.c4)}><AuctionRoom hammer="held" k={k} wall={T.wallG} frame="D3" plinthX={860} /><HorseHead x={860} y={604} s={0.26} id="d3h" glow={0.9} /><Bidders frame="D3" up={[2]} xs={[130, 360, 580]} /></Cam>; };
 /* ---------- the private room (C4, D8–D9): no auction — one buyer walks in, signs at the desk; the price card stands on it ---------- */
 export const PrivateRoom: React.FC<{t: number; frame: string; v: number; walk?: number; card?: number}> = ({t, frame, v, walk = 1, card = 1}) => {
-	const g = 960, h = 600, x = lerp(380, 1500, walk), wr = Math.sin(t * 9) * 4;
-	const p = walk < 1 ? walkArmsD(phaseD((x - 380) / h), {la: 10, le: 20, ra: 14, re: 24}) : grounded({lean: 20, neck: 24, lt: 4, lk: 6, rt: -4, rk: 4, la: 8, le: 30, ra: 32 + wr, re: 34 - wr});
+	const g = 960, h = 600, wr = Math.sin(t * 9) * 4; let x = lerp(380, 1500, walk);
+	const stand = grounded({lean: 20, neck: 24, lt: 4, lk: 6, rt: -4, rk: 4, la: 8, le: 30, ra: 32 + wr, re: 34 - wr}), wEnd = walkArmsD(phaseD((1500 - 380) / h), {la: 10, le: 20, ra: 14, re: 24});
+	const p = walk < 1 ? walkArmsD(phaseD((x - 380) / h), {la: 10, le: 20, ra: 14, re: 24}) : stand;
+	if (walk >= 1) x = x + (wEnd.Hips[0] + stand.Hips[0]) * h;   // keep the hips where the walk left them (stand is drawn flipped)
 	reg({frame, who: 'Ho', x, ground: g, h, pose: p, flip: walk >= 1, intent: walk < 1 ? 'walk' : 'stand'});
 	return <g>
 		<rect x={0} y={0} width={W} height={H} fill="#3E4A55" />{hatchOver(0, 0, W, 760, 'h45d', 0.12)}
@@ -83,17 +85,17 @@ export const PrivateRoom: React.FC<{t: number; frame: string; v: number; walk?: 
 		</g>}
 	</g>; };
 /* ---------- S4 · C4: 2007, bought in a private room; the price rolls on a card ---------- */
-export const S4: React.FC<{t: number}> = ({t}) => { const v = Math.round(6910 * easeOut(seg(t, T45.c4 + 0.15, T45.c4 + 1.3)));
+export const S4: React.FC<{t: number}> = ({t}) => { const v = 6910;
 	return <Cam z={1.04 + 0.05 * seg(t, T45.c4, T45.c5)} x={1060} y={580}><PrivateRoom t={t} frame="C4" v={v} /></Cam>; };
 /* ---------- the unveiling (C5, E2): the giver pulls the cloth off you; the receiver claps ---------- */
 export const Unveil: React.FC<{t: number; t0: number; t1: number; frame: string; dim?: number}> = ({t, t0, t1, frame, dim = 0}) => {
 	const g = 940, h = 600, u = ease(seg(t, t0 + 0.25, t0 + 1.05)), clap = t > t0 + 1.1 ? Math.sin((t - t0) * 14) : 0;
-	const gx = 1010, pg = grounded({lean: 6 - 10 * u, neck: 12 - 10 * u, lt: 4, lk: 4, rt: -4, rk: 4, la: -2, le: 14, ra: lerp(58, 150, u), re: lerp(4, 26, u)});
-	const tx = 470, pt = grounded({lean: 4, neck: 8, lt: 2, lk: 2, rt: -3, rk: 3, la: 52, le: 64 + 8 * clap, ra: 46, re: 70 + 8 * clap});
+	const up = Math.min(1, u * 2), dn = Math.max(0, u * 2 - 1), gx = 1010, pg = grounded({lean: 6 - 8 * up + 6 * dn, neck: 12 - 8 * up, lt: 4, lk: 4, rt: -4, rk: 4, la: -2, le: 14, ra: lerp(lerp(58, 132, up), 24, dn), re: lerp(lerp(4, 20, up), 10, dn)});
+	const on = seg(t, t0 + 1.0, t0 + 1.25), tx = 470, pt = grounded({lean: 4, neck: 8, lt: 2, lk: 2, rt: -3, rk: 3, la: lerp(6, 38, on), le: lerp(10, 84 + 8 * clap, on), ra: lerp(8, 44, on), re: lerp(12, 88 + 8 * clap, on)});
 	const hd = jointAt(pg, 'RHand', gx, g, h, true);
 	reg({frame, who: 'giver', x: gx, ground: g, h, pose: pg, flip: true, intent: 'stand'}); reg({frame, who: 'receiver', x: tx, ground: g, h, pose: pt, intent: 'stand'});
 	/* the cloth: draped over you, then hanging from the hand */
-	const dr = [[724, 686], [896, 686]], hang = [[hd[0] - 30, hd[1] + 230], [hd[0] + 50, hd[1] + 210]], cu = Math.min(1, u * 1.15), sw = Math.sin(t * 6) * 16 * u;
+	const dr = [[724, 686], [896, 686]], hang = [[hd[0] - 30, hd[1] + 230], [hd[0] + 50, hd[1] + 210]], cu = Math.min(1, u * 2.2), sw = Math.sin(t * 6) * 16 * u;
 	const c0 = [lerp(dr[0][0], hang[0][0], cu) + sw, lerp(dr[0][1], hang[0][1], cu)], c1 = [lerp(dr[1][0], hang[1][0], cu) + sw, lerp(dr[1][1], hang[1][1], cu)];
 	const top = [lerp(800, hd[0], cu), lerp(500, hd[1], cu)];
 	return <g>
@@ -149,30 +151,30 @@ export const S8: React.FC<{t: number}> = ({t}) => { const a = T45.title, rise = 
 		<HorseHead x={1340} y={420} s={0.22} id="d8h" glow={0.8 + 0.4 * (1 - seg(t, a, a + 0.5))} />
 	</g>; };
 /* ---------- S9 · A1: cast in one piece — a founder pours, the mould is broken away, you stand on its base ---------- */
-const FRAG = Array.from({length: 8}, (_, i) => ({x: 820 + (i % 4) * 87.5, y: 370 + Math.floor(i / 4) * 175, vx: (i % 4 - 1.5) * 160 + (rnd(i, 3) - 0.5) * 80, vy: -180 - 140 * rnd(i, 4), r: (rnd(i, 5) - 0.5) * 220}));
+const FRAG = Array.from({length: 8}, (_, i) => ({x: 880 + (i % 4) * 50, y: 550 + Math.floor(i / 4) * 85, vx: (i % 4 - 1.5) * 160 + (rnd(i, 3) - 0.5) * 80, vy: -180 - 140 * rnd(i, 4), r: (rnd(i, 5) - 0.5) * 220}));
 export const S9: React.FC<{t: number}> = ({t}) => { const a = T45.a1, brk = beat(39), pour = seg(t, a + 0.3, brk - 0.15), z = 1 + 0.05 * seg(t, a, T45.a3), b = Math.max(0, t - brk);
 	const g = 800, h = 560, wx = 330, tilt = ease(seg(t, a, a + 0.6)) * (1 - ease(seg(t, brk - 0.3, brk + 0.2))), down = ease(seg(t, brk - 0.2, brk + 0.5));
 	const p = grounded({lean: 14 - 6 * down, neck: 12, lt: 10, lk: 12, rt: -8, rk: 6, la: 66 - 20 * down, le: 50, ra: 82 - 30 * down, re: 6});
 	const A = jointAt(p, 'LHand', wx, g, h), B2 = jointAt(p, 'RHand', wx, g, h), rear = A[0] < B2[0] ? A : B2, front = A[0] < B2[0] ? B2 : A;
-	const bx = lerp(890, 640, down), by = lerp(300, 770, down), ux0 = bx - rear[0], uy0 = by - rear[1], L = Math.hypot(ux0, uy0) || 1, ux = ux0 / L, uy = uy0 / L, ang = Math.atan2(uy, ux) * 180 / Math.PI; void front;
+	const bx = lerp(880, 640, down), by = lerp(470, 770, down), ux0 = bx - rear[0], uy0 = by - rear[1], L = Math.hypot(ux0, uy0) || 1, ux = ux0 / L, uy = uy0 / L, ang = Math.atan2(uy, ux) * 180 / Math.PI; void front;
 	reg({frame: 'A1', who: 'founder', x: wx, ground: g, h, pose: p, intent: 'stand', hands: [{joint: 'LHand', at: A, tol: 4}]});
 	return <Cam z={z} x={960} y={540}>
 		<rect x={0} y={0} width={W} height={H} fill="#5E5246" />{hatchOver(0, 0, W, 800, 'h45d', 0.18)}
 		{Array.from({length: 9}, (_, i) => <rect key={i} x={0} y={60 + i * 80} width={W} height={2} fill={T.ink} opacity={0.25} />)}
 		<PlateGround y={800} c="#8C7A64" c2="#6A5A48" edge={T.ink} />
-		<Glow x={980} y={560} r={420} c={CU.halo} o={0.25 * pour + 0.35 * Math.max(0, 1 - b)} id="d9w" />
+		<Glow x={980} y={640} r={360} c={CU.halo} o={0.25 * pour + 0.35 * Math.max(0, 1 - b)} id="d9w" />
 		{/* the base stand (stays), the mould on it (broken away on the beat) */}
-		<rect x={850} y={720} width={240} height={80} fill={T.woodD} stroke={T.ink} strokeWidth={2} />
-		{t >= brk && <HorseHead x={960} y={720 - 0.5 * 276} s={0.5} id="d9h" glow={Math.min(1, 0.4 + b)} curl={0} />}
-		{t < brk ? <g><rect x={820} y={370} width={350} height={350} fill="#7A6A58" stroke={T.ink} strokeWidth={2.5} />{hatchOver(820, 370, 350, 350, 'h45d', 0.35)}
-			<path d="M940,370 L980,370 L972,400 L948,400 Z" fill="#3A2E24" />{[0, 1, 2].map((i) => <path key={i} d={`M${860 + i * 110},${380 + i * 90} l40,60 l-20,50`} stroke={T.ink} strokeWidth={1.5} fill="none" opacity={0.4} />)}</g>
-			: FRAG.map((f, i) => { const x = f.x + f.vx * b, y = f.y + f.vy * b + 900 * b * b; return y < 1100 && <rect key={i} x={x} y={y} width={87.5} height={175} fill="#7A6A58" stroke={T.ink} strokeWidth={2} transform={`rotate(${f.r * b} ${x + 44} ${y + 88})`} opacity={1 - seg(b, 0.5, 0.9)} />; })}
+		<rect x={900} y={720} width={150} height={80} fill={T.woodD} stroke={T.ink} strokeWidth={2} />
+		{t >= brk && <HorseHead x={968} y={720 - 0.24 * 276} s={0.24} id="d9h" glow={Math.min(1, 0.4 + b)} curl={0} />}
+		{t < brk ? <g><rect x={880} y={550} width={200} height={170} fill="#7A6A58" stroke={T.ink} strokeWidth={2.5} />{hatchOver(880, 550, 200, 170, 'h45d', 0.35)}
+			<path d="M962,550 L998,550 L992,572 L968,572 Z" fill="#3A2E24" />{[0, 1].map((i) => <path key={i} d={`M${900 + i * 90},${560 + i * 60} l30,40 l-14,30`} stroke={T.ink} strokeWidth={1.5} fill="none" opacity={0.4} />)}</g>
+			: FRAG.map((f, i) => { const x = f.x + f.vx * 0.6 * b, y = Math.min(745, f.y + f.vy * 0.6 * b + 2400 * b * b), rr = f.r * Math.min(b, 0.35); return <rect key={i} x={x} y={y} width={50} height={85} fill="#7A6A58" stroke={T.ink} strokeWidth={2} transform={`rotate(${rr} ${x + 25} ${y + 42})`} />; })}
 		{/* the founder and his ladle */}
 		<Shadow45 x={wx} y={g + 4} rx={110} ry={12} o={0.4} />
-		<Rimmed x={wx} ground={g} h={h} pose={p} look={{dress: 'robe', head: 'cap'} as Look4} col={FIG} rim={RIM} rimOp={0.4} />
+		<Rimmed x={wx} ground={g} h={h} pose={p} look={{dress: 'robe', head: 'cylcap'} as Look4} col={FIG} rim={RIM} rimOp={0.4} />
 		<line x1={rear[0] - ux * 20} y1={rear[1] - uy * 20} x2={bx} y2={by} stroke="#2C241C" strokeWidth={13} strokeLinecap="round" />
 		<g transform={`translate(${bx},${by}) rotate(${-ang * 0.15 + 55 * tilt})`}><path d="M-20,-40 L100,-40 C100,10 82,44 40,44 C-2,44 -20,10 -20,-40 Z" fill="#3E3328" stroke={T.ink} strokeWidth={2.5} /><ellipse cx={40} cy={-40} rx={60} ry={9} fill={CU.mid} opacity={0.9} /></g>
-		{pour > 0 && pour < 1 && tilt > 0.7 && <><Glow x={960} y={380} r={150} c={CU.halo} o={0.6} id="d9g" /><path d={`M${bx + 86},${by + 50} Q${bx + 92},${by + 70} 960,384`} stroke={CU.mid} strokeWidth={16} fill="none" strokeLinecap="round" /><path d={`M${bx + 86},${by + 50} Q${bx + 92},${by + 70} 960,384`} stroke={CU.core} strokeWidth={5} fill="none" strokeLinecap="round" /></>}
+		{pour > 0 && pour < 1 && tilt > 0.7 && <><Glow x={980} y={555} r={150} c={CU.halo} o={0.6} id="d9g" /><path d={`M${bx + 86},${by + 50} Q${bx + 98},${by + 66} 980,560`} stroke={CU.mid} strokeWidth={12} fill="none" strokeLinecap="round" /><path d={`M${bx + 86},${by + 50} Q${bx + 98},${by + 66} 980,560`} stroke={CU.core} strokeWidth={5} fill="none" strokeLinecap="round" /></>}
 	</Cam>; };
 /* ---------- S10–S12 · A3–A5: the fountain; push out from you, then the hours go round ---------- */
 const HOUR_AT = (t: number) => { const u = seg(t, T45.a4, T45.end); return Math.min(6, u * u * 7.2); };

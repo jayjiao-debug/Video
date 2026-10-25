@@ -71,9 +71,9 @@ const youPos = () => ZPos3(960, 575, 1.22).find((p) => p.z === '马')!;
 export const hourAt = (t: number) => t < TL.A4 ? 0 : t < TL.A6 ? 5.2 * Math.pow(seg(t, TL.A4, TL.A6), 1.5) : 5.2 + 0.8 * easeOut(seg(t, TL.A6, TL.A6 + 1.2));
 /* A3–A6: push out from you, the hours go round, the needle reaches 午; the arcs ripple out from you into noon */
 export const F_A3: React.FC<{t: number}> = ({t}) => {
-	const u = ease(seg(t, TL.A3, TL.A3 + 1.6)), y = youPos(), zA6 = ease(seg(t, TL.A6, TL.A6 + 1.4)), ripA = TL.A7 - 2 * P_;
+	const u = ease(seg(t, TL.A3, TL.A3 + 1.6)), y = youPos(), zA6 = ease(seg(t, TL.A6, TL.A6 + 1.4)), ripA = TL.A7 - 0.2;
 	const z = lerp(3.0, 1.0, u) * (1 + 0.6 * zA6) * (1 - 0.25 * ease(seg(t, ripA, TL.A7))), cx = lerp(lerp(y.x, 960, u), y.x - 60, zA6), cy = lerp(lerp(y.y - 80, 540, u), y.y - 120, zA6);
-	const h = hourAt(t), act = t >= TL.A4 ? ZODIAC[Math.floor(h + 0.001) % 12] : undefined, grow = t >= TL.A4 ? (t >= TL.A6 + 1.0 ? 1 : 0.25 + 0.75 * Math.sin(Math.PI * Math.min(0.999, h % 1))) : 0;
+	const h = hourAt(t), act = t >= TL.A6 ? '马' as Z : t >= TL.A4 ? ZODIAC[Math.floor(h + 0.001) % 12] : undefined, grow = t >= TL.A6 ? easeOut(seg(t, TL.A6, TL.A6 + 0.5)) : t >= TL.A4 ? 0.25 + 0.75 * Math.sin(Math.PI * Math.min(0.999, h % 1)) : 0;
 	const label = t >= TL.A4 ? easeOut(seg(t, TL.A4, TL.A4 + 0.4)) * (1 - seg(t, TL.A6 - 0.35, TL.A6)) : 0;
 	return <Cam z={z} x={cx} y={cy}><Garden3 t={t} id="ga3" arcs={t >= ripA ? 'all' : act ? 'one' : 'none'} active={act} grow={Math.max(0.2, grow)} label={label} rip={t >= ripA ? seg(t, ripA, TL.A7) : undefined} /></Cam>;
 };
@@ -83,25 +83,39 @@ export const F_A7: React.FC<{t: number}> = ({t}) => { const z = 1.08 - 0.08 * ea
 
 /* ================= 1860 ================= */
 /** soldiers walking left→right (kepi, short hair); carry: crate / vase / none */
-const March: React.FC<{t: number; t0: number; frame: string; carry?: boolean; g?: number; h?: number; xs?: number[]; speed?: number}> = ({t, t0, frame, carry, g = 860, h = 430, xs = [-200, 240, 680], speed = 150}) => <g>
-	{xs.map((x0, i) => { const x = x0 + (t - t0) * speed, kind = !carry ? 'none' : i === 1 ? 'vase' : 'crate', k = h / 520;
+/** soldiers on the front flagstones (in front of the pool, never on it); dir -1 walks right→left; carry: crate / vase */
+const SG = 1062, SH = 440;
+const March: React.FC<{t: number; t0: number; frame: string; carry?: boolean; xs: number[]; speed: number; dir?: number}> = ({t, t0, frame, carry, xs, speed, dir = 1}) => <g>
+	{xs.map((x0, i) => { const g = SG + (i % 2) * 10, h = SH, x = x0 + dir * (t - t0) * speed, kind = !carry ? 'none' : i === 1 ? 'vase' : 'crate', k = h / 520, fl = dir < 0;
 		const arms = kind === 'crate' ? {la: 34, le: 58, ra: 40, re: 52} : kind === 'vase' ? {la: 24, le: 64, ra: 28, re: 60} : undefined;
-		const p = walkArms(phaseFor((x - x0 + i * 40) / h), arms), l = jointAt(p, 'LHand', x, g, h), r = jointAt(p, 'RHand', x, g, h), hx = (l[0] + r[0]) / 2, hy = Math.min(l[1], r[1]);
-		reg({frame, who: `soldier${i}`, x, ground: g, h, pose: p, intent: 'walk'});
-		return <g key={i}><Shadow x={x} y={g + 4} rx={h * 0.16} ry={10} o={0.35} /><Rimmed x={x} ground={g} h={h} pose={p} look={{dress: 'coat', head: 'short'} as Look4} col={FIG} rim={RIM} rimOp={0.4} /><Kepi pose={p} x={x} g={g} h={h} />
+		const p = walkArms(phaseFor((Math.abs(x - x0) + i * 40) / h), arms), l = jointAt(p, 'LHand', x, g, h, fl), r = jointAt(p, 'RHand', x, g, h, fl), hx = (l[0] + r[0]) / 2, hy = Math.min(l[1], r[1]);
+		reg({frame, who: `soldier${i}`, x, ground: g, h, pose: p, flip: fl, intent: 'walk'});
+		return <g key={i}><Shadow x={x} y={g + 4} rx={h * 0.16} ry={10} o={0.35} /><Rimmed x={x} ground={g} h={h} pose={p} flip={fl} look={{dress: 'shirt', head: 'short'} as Look4} col={FIG} rim={RIM} rimOp={0.4} /><Kepi pose={p} x={x} g={g} h={h} flip={fl} />
 			{kind === 'crate' && <g transform={`translate(${hx},${hy}) scale(${k})`}><rect x={-30} y={-86} width={118} height={88} fill="#7B5A42" stroke="#2B2722" strokeWidth={2} /><rect x={-30} y={-48} width={118} height={7} fill="#4E3828" /></g>}
 			{kind === 'vase' && <g transform={`translate(${hx},${hy}) scale(${k})`}><path d="M6,-116 L34,-116 C28,-98 76,-68 66,-10 C58,28 38,40 20,40 C2,40 -18,28 -26,-10 C-36,-68 12,-98 6,-116 Z" fill="#DCE6EE" stroke="#2B2722" strokeWidth={2} /><path d="M-16,-40 C10,-20 40,-50 60,-30" stroke="#3E5E8A" strokeWidth={5} fill="none" /></g>}
 		</g>; })}
 </g>;
-export const F_B1: React.FC<{t: number}> = ({t}) => <g><Garden3 t={t} id="gb1" smoke={0.25 * seg(t, TL.B1 + 1.2, TL.B2)} /><March t={t} t0={TL.B1} frame="B1" xs={[-160, 160, 480]} speed={170} /></g>;
+export const F_B1: React.FC<{t: number}> = ({t}) => <g><Garden3 t={t} id="gb1" smoke={0.25 * seg(t, TL.B1 + 1.2, TL.B2)} /><March t={t} t0={TL.B1} frame="B1" xs={[2020, 2300, 2580]} speed={170} dir={-1} /></g>;
 export const F_B2: React.FC<{t: number}> = ({t}) => { const fire = easeOut(seg(t, bt(79), bt(80)));   // 一把火, on the beat
-	return <g><Garden3 t={t} id="gb2" smoke={0.35 + 0.65 * fire} fire={fire} /><March t={t} t0={TL.B2} frame="B2" carry xs={[620, 1020, 1420]} speed={120} /><Embers t={t} k={fire} /></g>; };
-/* B4: you go first, then every seat empties in step with the counter; the camera rises into the smoke */
+	return <g><Garden3 t={t} id="gb2" smoke={0.35 + 0.65 * fire} fire={fire} /><March t={t} t0={TL.B2} frame="B2" carry xs={[760, 1120, 1480]} speed={120} /><Embers t={t} k={fire} /></g>; };
+/* B4: a looter lifts you off your seat and carries you away; then every seat empties in step with the counter; the camera rises into the smoke */
 export const B4_ORDER: Z[] = ['马', ...ZODIAC.filter((z) => z !== '马')];
-export const b4Gone = (t: number) => Math.round(12 * seg(t, TL.B4 + 0.05, TL.B4 + 2.6));
-export const F_B4: React.FC<{t: number}> = ({t}) => { const y = youPos(), n = b4Gone(t), gone = new Set<Z>(B4_ORDER.slice(0, n)), out = ease(seg(t, TL.B4 + 0.35, TL.B4 + 1.6)), up = ease(seg(t, TL.D1 - 0.7, TL.D1));
+const LIFT = 0.4;
+export const b4Gone = (t: number) => t < TL.B4 + LIFT ? 0 : 1 + Math.round(11 * seg(t, TL.B4 + 1.0, TL.B4 + 2.6));
+export const F_B4: React.FC<{t: number}> = ({t}) => { const y = youPos(), n = b4Gone(t), gone = new Set<Z>(B4_ORDER.slice(0, n)), out = ease(seg(t, TL.B4 + 0.5, TL.B4 + 1.8)), up = ease(seg(t, TL.D1 - 0.7, TL.D1));
 	const z = lerp(1.7, 1.0, out) + 0.25 * up, cx = lerp(y.x - 80, 960, out), cy = lerp(lerp(y.y - 60, 540, out), 200, up);
-	return <g><Cam z={z} x={cx} y={cy}><Garden3 t={t} id="gb4" smoke={0.7} youOn={!gone.has('马')} present={new Set<Z>(ZODIAC.filter((zz) => zz !== '马' && !gone.has(zz)))} /></Cam>
+	/* the looter: reaching (hands on you), lifting, then walking off to the right with you */
+	const hs = 0.135 * y.s, headY0 = y.y - 63 * y.s, lift = ease(seg(t, TL.B4 + LIFT - 0.25, TL.B4 + LIFT + 0.15)), walking = t >= TL.B4 + LIFT + 0.2;
+	const reach = grounded({lean: 22 - 10 * lift, neck: 20, lt: 4, lk: 8, rt: -6, rk: 6, la: 48 + 22 * lift, le: 22, ra: 54 + 22 * lift, re: 16});
+	const r0 = jointAt(grounded({lean: 22, neck: 20, lt: 4, lk: 8, rt: -6, rk: 6, la: 48, le: 22, ra: 54, re: 16}), 'RHand', 0, SG, SH, true), lx0 = y.x + 40 - r0[0];
+	const wx = lx0 + (t - (TL.B4 + LIFT + 0.2)) * 230, wp = walkArms(phaseFor(Math.max(0, wx - lx0) / SH), {la: 46, le: 58, ra: 50, re: 52});
+	const pose = walking ? wp : reach, lx = walking ? wx : lx0, fl = !walking, hl = jointAt(pose, 'LHand', lx, SG, SH, fl), hr = jointAt(pose, 'RHand', lx, SG, SH, fl), hx = (hl[0] + hr[0]) / 2, hy = Math.min(hl[1], hr[1]);
+	reg({frame: 'B4', who: 'looter', x: lx, ground: SG, h: SH, pose, flip: fl, intent: walking ? 'walk' : 'stand'});
+	const held = t >= TL.B4 + LIFT - 0.25;
+	return <g><Cam z={z} x={cx} y={cy}><Garden3 t={t} id="gb4" smoke={0.7} youOn={!held} present={new Set<Z>(ZODIAC.filter((zz) => zz !== '马' && !gone.has(zz)))} />
+		{lx < 2300 && <g><Shadow x={lx} y={SG + 4} rx={SH * 0.16} ry={10} o={0.35} /><Rimmed x={lx} ground={SG} h={SH} pose={pose} flip={fl} look={{dress: 'shirt', head: 'short'} as Look4} col={FIG} rim={RIM} rimOp={0.4} /><Kepi pose={pose} x={lx} g={SG} h={SH} flip={fl} />
+			{held && <HorseHead x={walking ? hx + 6 : y.x + 2} y={walking ? hy - hs * 276 + 22 : headY0 - 34 * lift} s={hs} id="b4h" glow={0.9} flip={walking} curl={0} />}</g>}
+	</Cam>
 		<rect width={W} height={H} fill="#5B5048" opacity={0.92 * up} /></g>; };
 
 /* ================= the hammer ================= */
@@ -113,10 +127,10 @@ export const F_D1: React.FC<{t: number}> = ({t}) => { const e = ease(seg(t, TL.D
 /* 2000 Hong Kong: whip in; the three brothers set down one per beat; a bidding war; the hammer on 63.97; push into the tiger */
 const BRO: Z[] = ['牛', '猴', '虎'];
 export const F_D3: React.FC<{t: number}> = ({t}) => { const k = t < TL.D4 - 0.07 ? 0 : ease(seg(t, TL.D4 - 0.07, TL.D4)), sh = t < TL.D4 ? 0 : Math.exp(-(t - TL.D4) * 10) * Math.sin((t - TL.D4) * 80) * 8;
-	const w = 1 - seg(t, TL.D3, TL.D3 + 0.3), pi = push(t, TL.D5 - 0.7, TL.D5), beatI = Math.floor((t - TL.D3) / P_);
-	const up = t >= TL.D4 ? [0] : [[0], [1], [2], [0, 2], [1], [0]][beatI % 6];
+	const w = 1 - seg(t, TL.D3, TL.D3 + 0.3), pi = 0.1 * push(t, TL.D5 - 0.9, TL.D5), beatI = Math.floor((t - TL.D3) / P_);
+	const up = t >= TL.D4 ? [0] : t < TL.D3 + 0.3 + 3 * P_ ? [] : [[0], [1], [2], [0, 2], [1], [0]][beatI % 6];
 	const z = (1.0 + 0.14 * ease(seg(t, TL.D3, TL.D4))) * (1 + 0.25 * w) * (1 + 1.4 * pi), x = lerp(lerp(920, 1080, ease(seg(t, TL.D3, TL.D4))) - 400 * w * w, 910, pi) + sh, y = lerp(lerp(540, 470, ease(seg(t, TL.D3, TL.D4))), 630, pi);
-	return <g><Cam z={z} x={x} y={y}><AuctionRoom hammer="held" k={k} wall="#4B5A68" trim="#6D7F8E" frame="D3" screen plinthX={800} />
+	return <g><Cam z={z} x={x} y={y}><AuctionRoom hammer="held" k={k} wall="#4B5A68" trim="#6D7F8E" frame="D3" screen={<text x={1210} y={452} textAnchor="middle" style={{fontFamily: SANS, fontSize: 48, fontWeight: 900}} fill="#E9DFC8">牛 · 猴 · 虎</text>} plinthX={800} />
 		{BRO.map((zz, i) => { const a = TL.D3 + 0.3 + i * P_, d = easeOut(seg(t, a, a + 0.25)); return t >= a && <g key={zz} opacity={d}><ZHead3 z={zz} x={690 + i * 110} y={642 - 50 * (1 - d)} s={0.95} flip tag /></g>; })}
 		<Bidders frame="D3" up={up} xs={[110, 320, 520]} /></Cam><Streaks u={w * w} /></g>; };
 /* 2003: the pig head; a handshake (no hammer); opens close on the pig (match on bronze) */
@@ -124,7 +138,7 @@ export const F_D5: React.FC<{t: number}> = ({t}) => { const g = 960, h = 600, xA
 	const shakeA = grounded({lean: 4, neck: 6, lt: 2, lk: 2, rt: -3, rk: 3, la: -2, le: 12, ra: 44 + pump, re: 36}), hA = jointAt(shakeA, 'RHand', xA, g, h), hB0 = jointAt(shakeA, 'RHand', 0, g, h, true), xB = hA[0] - hB0[0] + 6;
 	reg({frame: 'D5', who: 'Ho', x: xA, ground: g, h, pose: shakeA, intent: 'stand'}); reg({frame: 'D5', who: 'seller', x: xB, ground: g, h, pose: shakeA, flip: true, intent: 'stand'});
 	const o = ease(seg(t, TL.D5, TL.D5 + 0.9));
-	return <Cam z={lerp(2.4, 1.0, o) + 0.04 * seg(t, TL.D5, TL.D6)} x={lerp(1430, 960, o)} y={lerp(680, 540, o)}>
+	return <Cam z={lerp(1.12, 1.0, o) + 0.04 * seg(t, TL.D5, TL.D6)} x={lerp(1100, 960, o)} y={540}>
 		<rect width={W} height={H} fill="#6B5A4E" />{hatchOver(0, 0, W, 760, 'h45d', 0.12)}
 		{[200, 760, 1320].map((x) => <rect key={x} x={x} y={120} width={400} height={480} fill="none" stroke="#A8927C" strokeWidth={4} />)}
 		<rect x={0} y={760} width={W} height={320} fill="#4E3828" />
@@ -137,16 +151,16 @@ export const F_D5: React.FC<{t: number}> = ({t}) => { const g = 960, h = 600, xA
 /* 2007 Hong Kong: the gavel rests, paddles start to rise (D6); the gavel lifts slow→fast, trembles, paddles drop, the room dims: 撤拍 (D7); push into you */
 export const F_D6: React.FC<{t: number}> = ({t}) => {
 	const lift = easeIn(seg(t, TL.D7, TL.D7 + 1.1)), k = t < TL.D7 ? 1 : Math.max(0, 1 - lift + (lift > 0.99 ? 0.035 + 0.03 * Math.sin(t * 46) : 0));
-	const up = t < TL.D6 + 0.8 ? [] : t < TL.D6 + 1.6 ? [0] : t < TL.D7 + 1.0 ? [0, 1] : [], dimr = seg(t, TL.D7 + 0.6, TL.D7 + 1.4), st = easeOut(seg(t, TL.D7 + 1.4, TL.D7 + 1.55)), pi = push(t, TL.D8 - 0.7, TL.D8);
+	const up: number[] = [], dimr = seg(t, TL.D7 + 0.6, TL.D7 + 1.4), st = easeOut(seg(t, TL.D7 + 1.4, TL.D7 + 1.55)), pi = push(t, TL.D8 - 0.7, TL.D8);
 	const screen = <text x={1210} y={452} textAnchor="middle" style={{fontFamily: SANS, fontSize: 52, fontWeight: 900}} fill="#E9DFC8">马首</text>;
 	return <Cam z={(1.0 + 0.06 * seg(t, TL.D6, TL.D8)) * (1 + 1.5 * pi)} x={lerp(900, 800, pi)} y={lerp(540, 600, pi)}>
 		<AuctionRoom hammer="held" k={k} wall="#4B5A68" trim="#6D7F8E" frame="D6" screen={screen} plinthX={800} /><HorseHead x={800} y={676 - 0.26 * 276} s={0.26} id="d6h" glow={1} /><Bidders frame="D6" up={up} xs={[110, 320, 520]} />
 		<rect x={-100} y={-100} width={W + 200} height={H + 200} fill="#0C141A" opacity={0.4 * dimr} />
 		<Glow x={800} y={600} r={200} c={CU.halo} o={0.3 * dimr} id="d6g" />
-		{st > 0 && <g transform={`translate(1210,395) rotate(-10) scale(${1 + 0.6 * (1 - st)})`} opacity={st}><rect x={-120} y={-56} width={240} height={112} rx={10} fill="none" stroke="#C85A3C" strokeWidth={8} /><text x={0} y={26} textAnchor="middle" style={{fontFamily: SANS, fontSize: 76, fontWeight: 900, letterSpacing: '0.12em'}} fill="#C85A3C">撤拍</text></g>}
+		{st > 0 && <g transform={`translate(1210,395) rotate(-10) scale(${1 + 0.6 * (1 - st)})`} opacity={st * (1 - seg(t, TL.D8 - 0.75, TL.D8 - 0.45))}><rect x={-120} y={-56} width={240} height={112} rx={10} fill="none" stroke="#C85A3C" strokeWidth={8} /><text x={0} y={26} textAnchor="middle" style={{fontFamily: SANS, fontSize: 76, fontWeight: 900, letterSpacing: '0.12em'}} fill="#C85A3C">撤拍</text></g>}
 	</Cam>; };
 /* D8–D9: the private room — opens close on you, Ho walks in and signs; the price card rises on the 808 (79.815) */
-export const F_D8: React.FC<{t: number}> = ({t}) => { const o = ease(seg(t, TL.D8, TL.D8 + 1.0)), walk = ease(seg(t, TL.D8 + 0.4, TL.D8 + 2.9)), card = seg(t, TL.D9 - 0.12, TL.D9 + 0.2), v = Math.round(6910 * easeOut(seg(t, TL.D9 - 0.1, TL.D9 + 0.45)));
+export const F_D8: React.FC<{t: number}> = ({t}) => { const o = ease(seg(t, TL.D8, TL.D8 + 1.0)), walk = ease(seg(t, TL.D8 + 0.4, TL.D8 + 2.9)), card = seg(t, TL.D9 - 0.12, TL.D9 + 0.2), v = 6910;
 	return <Cam z={lerp(2.5, 1.04, o) + 0.08 * seg(t, TL.D9, TL.D10)} x={lerp(760, lerp(1000, 1200, seg(t, TL.D9, TL.D10)), o)} y={lerp(640, 560, o)}><PrivateRoom t={t} frame="D8" v={v} walk={walk} card={card} /></Cam>; };
 /* D10: the price, twenty times over (two bars, both in US dollars) */
 export const F_D10: React.FC<{t: number}> = ({t}) => { const g = easeOut(seg(t, TL.D10, TL.D10 + 1.0)), hA = 18, hB = 440 * g, br = easeOut(seg(t, TL.D10 + 1.0, TL.D10 + 1.4));
@@ -200,14 +214,14 @@ export const F_E1: React.FC<{t: number}> = ({t}) => { const FL = 960, w = 1 - se
 		<HorseHead x={958} y={FL - 330 - 0.24 * 276} s={0.24} id="e1h" glow={1} />
 		<rect x={846} y={FL - 520} width={228} height={190} fill="#CFE6EE" opacity={0.08} stroke="#BFD9DE" strokeOpacity={0.5} strokeWidth={2} />
 		<Shadow x={620} y={FL + 54} rx={90} ry={10} o={0.4} /><Rimmed x={620} ground={FL + 50} h={590} pose={pS} look={{dress: 'coat', head: 'glasses'} as Look4} col={FIG} rim={RIM} rimOp={0.35} />
-		{[0, 1].map((i) => { const h = 600 + 20 * i, x = (i ? 1180 : -380) + (t - TL.E1) * 150, p = walkArms(phaseFor((x + 400) / h)), gr = FL + 30 + i * 50;
+		{[0, 1].map((i) => { const h = 600 + 20 * i, x = (i ? 1180 : -460) + (t - TL.E1) * 150, p = walkArms(phaseFor((x + 400) / h)), gr = FL + 30 + i * 50;
 			reg({frame: 'E1', who: `visitor${i}`, x, ground: gr, h, pose: p, intent: 'walk'});
 			return <g key={i}><Shadow x={x} y={gr + 4} rx={h * 0.14} ry={10} o={0.4} /><Rimmed x={x} ground={gr} h={h} pose={p} look={([{dress: 'shirt', head: 'short'}, {dress: 'dress', head: 'bob'}] as Look4[])[i]} col={FIG} rim={RIM} rimOp={0.35} /></g>; })}
 	</Cam><Streaks u={w * w} /></g>; };
 /* E2: 2019, the cloth comes off — given to the state; the room dims to the spotlight */
 export const F_E2: React.FC<{t: number}> = ({t}) => <Cam z={1.03 + 0.04 * seg(t, TL.E2, TL.E3)} x={900}><Unveil t={t} t0={TL.E2} t1={TL.E3} frame="E2" dim={seg(t, TL.E3 - 0.5, TL.E3)} /></Cam>;
 /* E3–E4: the lamp comes on, the empty armchair; the lamp goes out on the stop hit; the star in the window, then a push into it */
-export const F_E3: React.FC<{t: number}> = ({t}) => { const lamp = t < TL.E4 ? easeOut(seg(t, TL.E3 + 0.12, TL.E3 + 0.24)) : 0, pS = push(t, 106.986, TL.H1a);
+export const F_E3: React.FC<{t: number}> = ({t}) => { const lamp = t >= TL.E3 + 0.15 && t < TL.E4 ? 1 : 0, pS = push(t, 106.986, TL.H1a);
 	const z = (1 + 0.12 * ease(seg(t, TL.E3, TL.E4))) * (1 + 2.3 * pS), cx = lerp(lerp(900, 1100, seg(t, TL.E3, TL.E4)), 1520, ease(seg(t, TL.E4 + 0.5, TL.H1a))), cy = lerp(560, 600, ease(seg(t, TL.E4 + 0.5, TL.H1a)));
 	return <Cam z={z} x={cx} y={cy}>
 		<rect width={W} height={H} fill="#46605A" />{hatchOver(0, 0, W, 820, 'h45d', 0.15)}
@@ -256,7 +270,7 @@ export const F_H1a: React.FC<{t: number}> = ({t}) => { const u = seg(t, TL.H1a, 
 	</Cam>; };
 /* H1b–H5: one courtyard — 正觉寺 · 文殊亭. Doors open on the drop; push in; the six others gather (H3) and fly to their museums (H4); pulled back, the old fire beyond the wall (H5) */
 const SIX: Z[] = ['牛', '猴', '虎', '猪', '鼠', '兔'];
-export const F_H1b: React.FC<{t: number}> = ({t}) => { const d = easeOut(seg(t, TL.H1b, TL.H1b + 0.45)), flash = Math.max(0, 1 - (t - TL.H1b) / 0.6), p1 = ease(seg(t, TL.H1b + 0.3, TL.H3)), back = ease(seg(t, TL.H3, TL.H3 + 0.9));
+export const F_H1b: React.FC<{t: number}> = ({t}) => { const d = easeOut(seg(t, TL.H1b, TL.H1b + 0.45)), flash = Math.max(0, 1 - (t - TL.H1b) / 0.6), p1 = 0.35 * easeOut(seg(t, TL.H1b, TL.H1b + P_)) + 0.65 * ease(seg(t, TL.H1b + P_, TL.H3)), back = ease(seg(t, TL.H3, TL.H3 + 0.9));
 	const z = lerp(1.0 + 0.8 * p1, 1.0, back), cy = lerp(lerp(560, 600, p1), 540, back);
 	const split = easeOut(seg(t, TL.H4 + 0.15, TL.H4 + 1.4)), city = easeOut(seg(t, TL.H4, TL.H4 + 0.5));
 	const smoke = t >= TL.H5 ? 0.85 * (1 - seg(t, TL.H5 + 0.8, TL.H5 + 3.0)) : 0, zH5 = t >= TL.H5 ? 1.0 + 0.05 * seg(t, TL.H5, TL.H7) : z;
@@ -267,7 +281,7 @@ export const F_H1b: React.FC<{t: number}> = ({t}) => { const d = easeOut(seg(t, 
 			const x0 = 960 + Math.cos(ang) * 560, y0 = 400 + Math.sin(ang) * 130, mi = i < 4 ? i : i - 4, tx = i < 4 ? 1382 + mi * 42 : 1610 + mi * 66, ty = i < 4 ? 450 : 470;
 			const x = lerp(x0, tx, split), y = lerp(y0, ty, split) - Math.sin(split * Math.PI) * 140, s = lerp(1.0, 0.38, split);
 			return on > 0 && <g key={zz} opacity={on}><Glow x={x} y={y} r={70 * s / 0.62} c={CU.halo} o={0.5} id={`six${i}`} /><ZHead3 z={zz} x={x} y={y} s={s} flip={x0 > 960 && split < 0.5} tag={split < 0.2} /></g>; })}
-	</Cam>{flash > 0 && <rect width={W} height={H} fill="#FFE6C0" opacity={0.5 * flash} />}</g>; };
+	{flash > 0 && t < TL.H5 && <Glow x={960} y={610} r={420} c={CU.halo} o={0.55 * flash} id="h1bf" />}</Cam></g>; };
 /* H7–H8: the folded ear — push in; on the dead stop the ring shuts and the light narrows; bloom into the memory */
 const EAR: [number, number] = [1170 + 50 * 1.12, 640 - 326 * 1.12];
 export const F_H7: React.FC<{t: number}> = ({t}) => { const ring = seg(t, TL.H8, TL.H8 + 0.5), shut = t >= 136.088, z = lerp(1.0, 2.0, ease(seg(t, TL.H7, TL.H8))) + 0.5 * seg(t, TL.H8, TL.K1), narrow = seg(t, 136.088, 136.4), bloom = seg(t, TL.K1 - 0.55, TL.K1);
@@ -283,20 +297,20 @@ export const F_H7: React.FC<{t: number}> = ({t}) => { const ring = seg(t, TL.H8,
 export const F_K1: React.FC<{t: number}> = ({t}) => { const gone = t >= TL.K2, five = t >= TL.K4, bloom = 1 - seg(t, TL.K1, TL.K1 + 0.6);
 	const MISSING = new Set<Z>(['龙', '蛇', '羊', '鸡', '狗']);
 	return <g><Cam z={1.06 - 0.06 * seg(t, TL.K1, TL.K5)}><Garden3 t={t} id="gk1" dim={0.35} present={gone ? new Set<Z>() : 'all'} ghost={five} ghostSet={MISSING} arcs={gone ? 'one' : 'memory'} active="马" grow={1} />
-		{!gone && <rect width={W} height={H} fill="#F3E2C0" opacity={0.22} style={{mixBlendMode: 'multiply'}} />}</Cam>
+		<rect width={W} height={H} fill="#F3E2C0" opacity={0.22} style={{mixBlendMode: 'multiply'}} /></Cam>
 		{bloom > 0 && <rect width={W} height={H} fill="#FFF1D8" opacity={bloom * bloom} />}</g>; };
 /* K5: France 2018 — opens with the gavel up and a paddle raised; the hammer on the final hit (146.82); a slow push; the outline flickers */
 export const F_K5: React.FC<{t: number}> = ({t}) => { const k = t < TL.K5 - 0.07 ? 0 : ease(seg(t, TL.K5 - 0.07, TL.K5)), sh = t < TL.K5 ? 0 : Math.exp(-(t - TL.K5) * 9) * Math.sin((t - TL.K5) * 80) * 10;
 	const fl = 0.55 + 0.45 * Math.abs(Math.sin(t * 5.3) * Math.sin(t * 2.1 + 1));
 	return <Cam z={1.04 + 0.16 * ease(seg(t, TL.K5 + 0.3, TL.Q))} x={lerp(900, 820, seg(t, TL.K5, TL.Q)) + sh} y={lerp(540, 560, seg(t, TL.K5, TL.Q))}><AuctionRoom hammer="held" k={k} wall="#5C5F7A" frame="K5" plinthX={800} />
-		<g opacity={fl}><Glow x={800} y={560} r={220} c="#E9DFC8" o={0.18} id="k5g" /><ZHead3 z="龙" x={800} y={600} s={2.1} ghost="#F3ECDC" flip /></g>
+		<g opacity={fl}><Glow x={800} y={560} r={220} c="#E9DFC8" o={0.18} id="k5g" /><g transform={`translate(0,${Math.sin(t * 1.7) * 4})`}><ZHead3 z="龙" x={800} y={624} s={1.5} ghost="#F3ECDC" flip /></g></g>
 		<text x={800} y={520} textAnchor="middle" style={{fontFamily: SANS, fontSize: 96, fontWeight: 900}} fill="#E9DFC8" opacity={0.85}>?</text>
-		<Bidders frame="K5" up={[1]} xs={[110, 330]} /></Cam>; };
+		<Bidders frame="K5" up={[1]} xs={[330, 540]} /></Cam>; };
 /* Q: the end card, built from the film's own water clock */
 export const F_Q: React.FC<{t: number}> = ({t}) => { const a = TL.Q, rise = easeOut(seg(t, a, a + 1.2));
 	return <g>
 		<Sky3 id="qs" top="#22374A" bot="#4E6A78" clouds={0} />
-		{Array.from({length: 12}, (_, i) => <WaterArc3 key={i} x0={420 + i * 98} y0={860} x1={960} y1={780} h={(220 + 30 * Math.sin(i)) * rise} o={(i === 6 ? 0.95 : 0.2) * rise} w={i === 6 ? 6 : 3} />)}
+		{Array.from({length: 12}, (_, i) => <WaterArc3 key={i} x0={420 + i * 98} y0={860} x1={960} y1={780} h={(220 + 30 * Math.sin(i)) * rise} o={(i === 6 ? 0.95 : 0.2) * rise} w={i === 6 ? 6 : 3} halo={false} />)}
 		<HorseHead x={1560} y={330} s={0.2} id="qh" glow={0.8} />
 	</g>; };
 

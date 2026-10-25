@@ -121,13 +121,13 @@ const wallCam = (t: number) => {
 	if (t < t0) return 5.6;
 	if (t < t1) return Math.exp(lerp(Math.log(5.6), 0, easeOut((t - t0) / (t1 - t0))));
 	if (t < t2) return lerp(1, 1.05, smooth((t - t1) / (t2 - t1)));
-	return Math.exp(lerp(Math.log(1.05), Math.log(9), easeIn(clamp01((t - t2) / (t3 - t2)))));
+	return Math.exp(lerp(Math.log(1.05), Math.log(3.2), easeInOut(clamp01((t - t2) / (t3 - t2)))));   // no frame-filling silk: no flash before the iris
 };
 const drawWall = (t: number): Frame => {
 	const st = wallSt, z = wallCam(t);
 	lockCam(st, z, 960, 580, 2, 960, 580 - 10 * smooth((t - b(65)) / (b(65.75) - b(65))));
 	const push = clamp01((t - b(65.75)) / (b(65.9) + 0.12 - b(65.75)));
-	wallHalo.draw(`${push.toFixed(2)}`, (q) => { q.translate(-660, -380); glowBlob(q, [960, 580], 90 + 60 * push, 60 + 40 * push, 0.38 + 0.25 * push); });
+	wallHalo.draw(`${push.toFixed(2)}`, (q) => { q.translate(-660, -380); glowBlob(q, [960, 580], 90 + 30 * push, 60 + 20 * push, 0.38 + 0.08 * push); });
 	st.heroAt(960, 580, 2, 600);
 	return {st, grade: {vig: 0.36, vigCol: '#100c0a', corners: 0.7, cornersTop: 0, cornersBand: [0, 305, 520, 1]}, bloom: 1};
 };
@@ -603,7 +603,7 @@ const bootExt = async () => {
 		g.globalCompositeOperation = 'destination-out'; g.beginPath(); g.moveTo(480 - hw, cy + hh); g.lineTo(480 - hw, cy - hh + hw); g.arc(480, cy - hh + hw, hw, Math.PI, 0); g.lineTo(480 + hw, cy + hh); g.closePath(); g.fill();
 		g.globalCompositeOperation = 'source-over'; pass.add('ring' + i, canvasTex(c), 960, 540, 1920, 1080, z, {}); });
 };
-const E37 = {a: b(76), hallZ: b(76) + 0.3, passZ: b(76) + 0.78, extSettle: b(77.5)};
+const E37 = {a: b(76), hallZ: b(76.25), passZ: b(76.5), extSettle: b(77.5)};   // each leg ≥ 0.57 s, eased, cuts on beats
 const Q_LINE = (LINES.find((l) => l[2].startsWith('要是排')) ?? [174.657, 184.3, '要是排[五小时]看两分钟，你去吗？'])[2];
 const SOURCES = '资料：故宫博物院 · 余辉（故宫博物院院刊 2012；光明日报 2017）· 朱鸿文（光明日报 2026）· 王文锋（长春日报 2020）· 许忠陵《清明上河图装裱记》· 北京晚报 2015';
 const endHud = (t: number) => (hud: HTMLElement) => {
@@ -614,14 +614,14 @@ const endHud = (t: number) => (hud: HTMLElement) => {
 addScene({id: '37', a: b(76), z: 184.3 + 1, draw: (t) => {
 	const dimK = lerp(1, 0.56, smooth(clamp01((t - b(76.2)) / (b(77.6) - b(76.2)))));
 	if (t < E37.hallZ) {           // ---- out of the hall (the camera backs away from the empty case toward the door)
-		const k = easeIn(clamp01((t - E37.a) / (E37.hallZ - E37.a)));
+		const k = easeInOut(clamp01((t - E37.a) / (E37.hallZ - E37.a)));
 		lockCam(hallSt, Math.exp(lerp(Math.log(Z36 * 1.38), Math.log(0.62), k)), PANE_C[0], PANE_C[1], HZ.glass, 960, lerp(601, 580, k));
 		drawHall({t, spots: () => 0, you: 0, card: 1, crowd: [], rope: true, wallK: 0.8});
 		return {st: hallSt, grade: {vig: 0.42, exposure: 1}, bloom: 1, hideFurniture: true, hud: endHud(t)};
 	}
 	if (t < E37.passZ) {           // ---- back through the passage (its far opening is the hall)
-		const k = easeOut(clamp01((t - E37.hallZ) / (E37.passZ - E37.hallZ)));
-		pass.setCam(960, 540, Math.exp(lerp(Math.log(12), 0, k))); dimWorld(pass, 0.72, new Set(), [1, 0.97, 0.94]);   // warm-lit, but never brighter than the hall it leaves
+		const k = easeInOut(clamp01((t - E37.hallZ) / (E37.passZ - E37.hallZ)));
+		pass.setCam(960, 540, Math.exp(lerp(Math.log(12), 0, k))); dimWorld(pass, 0.85, new Set(), [1, 0.97, 0.94]);   // warm-lit, but never brighter than the hall it leaves
 		return {st: pass, grade: {vig: 0.45, exposure: 1}, bloom: 1, hideFurniture: true, hud: endHud(t)};
 	}
 	// ---- outside: the door at the top of the empty ramp; the crane settles, then a slow rise to the end

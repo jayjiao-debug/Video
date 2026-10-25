@@ -107,7 +107,7 @@ const NSKY: [number, string][] = [[0, '#1F2E38'], [0.55, '#2E404B'], [1, '#45565
 const facadeCanvas = () => {
 	const c = mkCanvas(W, H), g = c.getContext('2d')!;
 	// the building: two storeys, a plain western-style block with a low parapet, white render (in shade), dark sashes
-	g.fillStyle = '#CCC8BE'; g.fillRect(760, 410, 800, 470);
+	g.fillStyle = '#BDB9AF'; g.fillRect(760, 410, 800, 470);
 	g.fillStyle = '#B7B3A9'; g.fillRect(760, 640, 800, 10); g.fillRect(750, 396, 820, 18); g.fillRect(744, 380, 832, 16);     // string course, cornice
 	g.fillStyle = '#A9A59B'; g.fillRect(760, 864, 800, 16);                                                                   // plinth
 	const win = (x: number, y: number, w: number, h: number) => { g.fillStyle = '#3d3c38'; g.fillRect(x - w / 2 - 7, y - h / 2 - 7, w + 14, h + 14); g.fillStyle = '#A9A59B'; g.fillRect(x - w / 2 - 12, y + h / 2 + 7, w + 24, 8);
@@ -226,9 +226,9 @@ const camIn = (t: number): Cam => {
 };
 const camEx = (t: number): Cam => {
 	if (t < P1) { const S = winC(t), Ze = winW(t) / WIN.w; return camLock(Ze, WIN.x, WIN.y, 0, S[0], S[1]); }
-	const drift = clamp01((t - P1) / (b(48) - P1)), rest: Cam = [960 + 14 * drift, 540, 1 + 0.035 * drift];
-	if (t < b(48)) return rest;
-	const k = easeIn(clamp01((t - b(48)) / (DOOR_CUT - b(48))));
+	const drift = clamp01((t - P1) / (b(47.9) - P1)), rest: Cam = [960 + 14 * drift, 540, 1 + 0.035 * drift];
+	if (t < b(47.9)) return rest;
+	const k = easeInOut(clamp01((t - b(47.9)) / (DOOR_CUT - b(47.9))));        // 0.9 s, eased both ends (no whip)
 	return camMix(rest, camLock(6.2, DOOR.x, (DOOR.y0 + DOOR.y1) / 2 + 6, 0, 960, 560), k);
 };
 
@@ -252,7 +252,7 @@ const drawExterior = (t: number): Frame => {
 	const st = exSt, cam = camEx(t); setCam(st, cam);
 	lightEx(t); drawCars(t); exGuardDraw(t);
 	st.setHero(-9999, 0, 1);
-	return {st, grade: {vig: 0.36, vigCol: '#101214', exposure: 1}, bloom: 0.8};
+	return {st, grade: {vig: 0.36, vigCol: '#101214', exposure: 1, corners: 0.7 * (1 - nightK(t)), cornersTop: 1, cornersBand: [0, 305, 520, 0.8]}, bloom: 0.8};
 };
 // the pane (scene 26's own IN between its two halves): outside the rect = the exterior (A), inside = the room (B) — so during the
 // move 26a draws the exterior and 26b draws the room; the rect is the window glass, the sash and casing are the facade's own
@@ -265,7 +265,7 @@ const paneGlint = (hud: HTMLElement, t: number) => {
 		`background:linear-gradient(115deg, rgba(235,240,244,0) ${pos - 7}%, rgba(235,240,244,${(a * 0.2).toFixed(3)}) ${pos - 2}%, rgba(240,244,248,${a.toFixed(3)}) ${pos}%, rgba(235,240,244,${(a * 0.2).toFixed(3)}) ${pos + 0.8}%, rgba(235,240,244,0) ${pos + 6}%)"></div>`);
 };
 addScene({id: '26', a: T0, z: P0, draw: (t) => { if (t >= P0) { updatePane(t); return drawExterior(t); } return drawInterior(t); }});
-addScene({id: '26b', a: P0, z: DOOR_CUT, in: PANE, draw: (t) => { if (t < P1) { updatePane(t); return {...drawInterior(t), hud: (hud: HTMLElement) => paneGlint(hud, t)}; } return drawExterior(t); }});
+addScene({id: '26b', a: P0, z: DOOR_CUT, in: PANE, draw: (t) => { if (t < P1) { updatePane(t); const fr = drawInterior(t); return {...fr, grade: {...fr.grade, corners: 0.7, cornersTop: 1, cornersBand: [0, 305, 520, 0.8]}, hud: (hud: HTMLElement) => paneGlint(hud, t)}; } return drawExterior(t); }});
 addScene({id: '26c', a: DOOR_CUT, z: END, draw: drawInterior});
 
 export const bootXbl = async () => { await bootIn(); await bootEx();
