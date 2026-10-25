@@ -14,9 +14,9 @@ const seal = (h) => `<svg viewBox="0 0 100 100" height="${h}" width="${h}"><defs
 // concepts: hero art + framing per layout, and the words
 const C = {
 	A: {art: 'a7.20.png', kicker: '清明上河图 · 约1100 — 今天', l1: '假如你是', l2: '清明上河图', sub: '九百年，四次被带出皇宫',
-		sky: '#3F5A62', tall: {scale: 4 / 3, left: -927, top: 230, ty: 128}, wide: {scale: 1.04, left: -20, top: 110, ty: 110}},
+		sky: '#3F5A62', tall: {scale: 4 / 3, left: -927, top: 230, ty: 82}, wide: {scale: 1.04, left: -20, top: 110, ty: 62}},
 	B: {art: 'a23.80.png', kicker: '故宫 · 午门 · 2025', l1: '排队四五个小时', l2: '只看你一两分钟', sub: '假如你是清明上河图', small1: true,
-		sky: '#2C3D47', tall: {scale: 4 / 3, left: -520, top: 73, ty: 128}, wide: {scale: 1, left: -180, top: 0, ty: 110}},
+		sky: '#2C3D47', tall: {scale: 4 / 3, left: -520, top: 73, ty: 82}, wide: {scale: 1, left: -180, top: 0, ty: 62}},
 };
 const page = (k, lay) => {
 	const c = C[k], f = c[lay], W = lay === 'tall' ? 1080 : 1440, H = lay === 'tall' ? 1440 : 1080;
@@ -28,10 +28,10 @@ html,body{margin:0;width:${W}px;height:${H}px;overflow:hidden;background:${c.sky
 .art{position:absolute;left:${left}px;top:${top}px;width:${iw}px;height:${ih}px;-webkit-mask-image:linear-gradient(to bottom,transparent 0,#000 60px)}
 .v{position:absolute;inset:0;background:radial-gradient(ellipse 85% 75% at 55% 62%,rgba(8,6,5,0) 40%,rgba(8,6,5,.55) 100%),linear-gradient(to bottom,rgba(10,8,7,.62) 0%,rgba(10,8,7,.25) ${lay === 'tall' ? 34 : 40}%,rgba(10,8,7,0) 55%)}
 .t{position:absolute;left:${lay === 'tall' ? 72 : 80}px;top:${f.ty}px;font-family:'Noto Serif CJK SC',serif;color:#FFF3D8;text-shadow:0 2px 18px rgba(0,0,0,.55)}
-.brand{position:absolute;left:${lay === 'tall' ? 72 : 80}px;top:${lay === 'tall' ? 64 : 56}px;display:flex;align-items:center;gap:12px;font-family:'Noto Serif CJK SC',serif;font-weight:700;font-size:24px;letter-spacing:.32em;color:rgba(255,243,216,.82)}
+.brand{position:absolute;right:${lay === 'tall' ? 64 : 72}px;bottom:${lay === 'tall' ? 64 : 56}px;text-shadow:0 1px 8px rgba(0,0,0,.7);display:flex;align-items:center;gap:12px;font-family:'Noto Serif CJK SC',serif;font-weight:700;font-size:24px;letter-spacing:.32em;color:rgba(255,243,216,.82)}
 .k{font-size:26px;font-weight:600;letter-spacing:.42em;color:rgba(255,243,216,.7);margin:22px 0 22px}
 .l1{font-size:${l1}px;font-weight:900;line-height:1.12;letter-spacing:.04em;white-space:nowrap}
-.l2{font-size:${big}px;font-weight:900;line-height:1.12;letter-spacing:.04em;white-space:nowrap;background:linear-gradient(180deg,#FFF1C9 0%,#F8D483 45%,#E0A951 100%);-webkit-background-clip:text;background-clip:text;color:transparent;filter:drop-shadow(0 3px 14px rgba(0,0,0,.6))}
+.l2{font-size:${big}px;font-weight:900;line-height:1.12;letter-spacing:.04em;white-space:nowrap;background:linear-gradient(180deg,#FFF8E2 0%,#FFE19A 42%,#F5BE5E 100%);-webkit-background-clip:text;background-clip:text;color:transparent;text-shadow:none;filter:drop-shadow(0 0 22px rgba(255,196,100,.38)) drop-shadow(0 2px 3px rgba(20,12,6,.55))}   /* no text-shadow here: it would paint over the clipped gold and dull it */
 .s{font-size:${lay === 'tall' ? 40 : 38}px;font-weight:700;margin-top:26px;color:rgba(255,243,216,.9);letter-spacing:.06em}
 .s::before{content:'';display:inline-block;width:46px;height:3px;background:#C63A2E;vertical-align:middle;margin-right:18px;transform:translateY(-4px)}
 </style></head><body><img class="art" src="${img(c.art)}"><div class="v"></div>
