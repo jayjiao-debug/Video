@@ -619,13 +619,13 @@ K.BRO = {
 		${W('M-2,48 L-16,48 M-16,48 L-24,42 M-16,48 L-24,54', 3)}<path d="M52,56 C70,60 80,72 74,82 C70,88 66,92 70,100 L52,100 C48,90 54,84 56,78 C58,72 50,66 42,62 Z"/>`,
 	羊: `<path d="M4,62 C8,48 28,40 48,40 C62,40 70,48 72,58 C70,70 58,78 42,80 L20,84 C10,84 4,74 4,62 Z"/>
 		${W('M58,40 C62,20 88,16 94,36 C98,54 82,64 72,56 C64,50 68,40 78,42', 10)}<path d="M14,82 L18,98 L26,84 Z"/>`,
-	猴: `<circle cx="58" cy="50" r="23"/><path d="M38,52 C26,50 14,56 14,64 C14,72 24,76 36,74 Z"/><circle cx="80" cy="54" r="10"/>
-		<path d="M38,34 L40,20 L48,30 L54,16 L60,30 L68,18 L70,32 L80,26 L78,40 C66,30 50,28 38,34 Z"/><path d="M30,42 C36,36 46,36 52,38 L50,44 C44,42 38,44 32,48 Z"/>`,
+	猴: `<circle cx="60" cy="50" r="22"/><path d="M44,40 C34,40 26,46 24,52 C20,54 16,60 18,66 C22,74 34,76 44,72 Z"/><circle cx="80" cy="56" r="11"/>
+		<path d="M24,46 C30,36 44,32 54,34 L52,40 C42,40 32,44 26,50 Z"/><path d="M18,66 L14,70 L22,72 Z"/>`,
 	鸡: `<circle cx="54" cy="58" r="19"/><path d="M38,52 L14,58 L38,66 Z"/>
 		<path d="M38,44 L40,22 L48,36 L54,16 L60,34 L68,18 L72,36 L80,30 L76,48 Z"/><ellipse cx="38" cy="78" rx="7" ry="12"/>
 		<path d="M66,70 L92,76 L86,84 L94,92 L70,92 Z"/>`,
-	狗: `<path d="M0,58 C2,52 16,48 30,46 L40,34 C54,26 76,28 84,42 C90,56 86,70 74,78 L44,80 L30,78 L8,74 C2,70 -2,64 0,58 Z"/>
-		<path d="M58,36 C76,32 86,46 80,66 L70,92 C60,84 54,60 58,36 Z"/><path d="M10,72 C12,82 18,90 24,92 C28,86 26,80 22,76 Z"/>`,
+	狗: `<path d="M0,58 C2,52 16,50 30,48 L42,38 C56,32 76,34 84,46 C90,58 86,72 74,78 L44,80 L30,76 L8,72 C2,70 -2,64 0,58 Z"/>
+		<path d="M56,40 L62,8 L78,38 Z"/><path d="M10,70 C12,82 18,90 24,92 C28,86 26,80 22,74 Z"/>`,
 	猪: `<path d="M14,44 L12,78 L22,80 C36,88 60,90 78,80 C90,72 92,52 82,42 C70,30 40,32 22,42 Z"/>
 		<ellipse cx="11" cy="61" rx="7" ry="17"/><path d="M58,40 C56,22 72,12 86,18 L74,48 Z"/>`,
 };
@@ -634,7 +634,7 @@ K.BEYE = {鼠: [40, 54], 牛: [38, 50], 虎: [36, 52], 兔: [36, 60], 龙: [42, 
 // mouth (spout point) per head, in box units
 K.BMOUTH = {鼠: [4, 65], 牛: [8, 72], 虎: [10, 72], 兔: [20, 72], 龙: [8, 72], 蛇: [4, 52], 羊: [6, 70], 猴: [20, 66], 鸡: [16, 60], 狗: [4, 66], 猪: [6, 66]};
 /** a brother's head. (x, y) = neck base centre on screen, size = box px, face -1 left / +1 right. */
-const CUT = {虎: 'M50,32 L46,46 M62,30 L58,44 M74,36 L68,48 M86,50 L76,56 M88,64 L78,66', 狗: 'M22,62 L4,62'};
+const CUT = {虎: 'M50,32 L46,46 M62,30 L58,44 M74,36 L68,48 M86,50 L76,56 M88,64 L78,66', 狗: 'M24,64 L4,64'};
 K.bro = (kind, x, y, size, face, fill, extra = '') => { const m = CUT[kind] ? K.uid('bm') : null;
 	return `<g transform="translate(${x},${y}) scale(${(-face) * size / 100},${size / 100}) translate(-70,-100)" fill="${fill}" color="${fill}" ${extra}>${m ? `<mask id="${m}" maskUnits="userSpaceOnUse" x="-40" y="-40" width="180" height="180"><rect x="-40" y="-40" width="180" height="180" fill="#fff"/><path d="${CUT[kind]}" stroke="#000" stroke-width="3.2" stroke-linecap="round"/></mask>` : ''}<g ${m ? `mask="url(#${m})"` : ''}><path d="${NECK}"/>${K.BRO[kind]}</g></g>`; };
 K.broPt = (kind, x, y, size, face, p) => { const q = (p === 'mouth' ? K.BMOUTH : K.BEYE)[kind]; return [x + (-face) * (q[0] - 70) * size / 100, y + (q[1] - 100) * size / 100]; };
@@ -644,7 +644,7 @@ K.broPt = (kind, x, y, size, face, p) => { const q = (p === 'mouth' ? K.BMOUTH :
 // Caption layer = ep43 v6 (capC lay2 bl1 ad + seal C1), copied in kit.js; this adds the story counter (12 dots with states).
 (() => {
 /** the story counter: label + 12 dots. states string, one char per dot in zodiac order 鼠牛虎兔龙蛇马羊猴鸡狗猪:
- *  h = at home (stone ivory) · y = you (copper) · r = back in China (red) · o = gone (hollow) · d = not back (dashed) */
+ *  h = at home (stone ivory) · y = you (copper) · r = back in China (red) · e = gone (hollow) · d = not back (dashed) */
 K.dots = (states) => [...states].map((c) => `<span class="o ${c}"></span>`).join('');
 K.CSS4 = `
 .tally .o{width:50px;height:50px;border-radius:25px;border-width:4px;margin:0 5px -8px}
@@ -653,7 +653,7 @@ K.CSS4 = `
 .tally .o.h{background:#E9DCC4;border-color:#E9DCC4}
 .tally .o.y{background:#E8894B;border-color:#FFD9A6;box-shadow:0 0 14px #FF9A5A}
 .tally .o.r{background:#EE4B3B;border-color:#EE4B3B}
-.tally .o.o{background:none;border-color:rgba(255,243,216,.75)}
+.tally .o.e{background:none;border-color:rgba(255,243,216,.75)}
 .tally .o.d{background:none;border:4px dashed rgba(255,243,216,.8)}
 .tally .row2{margin-top:6px}
 `;
@@ -696,10 +696,10 @@ K.arc = (p0, p1, h, s, o = {}) => {
 /** 海晏堂 west façade (frontal), its double stair, the fan pool and the two terraces. mode 'noon' | 'fire'. */
 K.ROW_L = ['狗', '猴', '马', '龙', '虎', '鼠'];   // front → back, left bank, facing right (you third from the front)
 K.ROW_R = ['猪', '鸡', '羊', '蛇', '兔', '牛'];   // front → back, across the pool, facing left (the snake across from you)
-K.seatAt = (side, i) => { const t = i / 5, s = 1 - 0.56 * t; const x = 400 + 400 * t, y = 900 - 238 * t; return {x: side < 0 ? x : 1920 - x, y, s, t}; };
+K.seatAt = (side, i) => { const t = i / 5, s = 1 - 0.55 * t; const x = 360 + 430 * t, y = 930 - 280 * t; return {x: side < 0 ? x : 1920 - x, y, s, t}; };
 K.facade = (mode) => {
 	const fire = mode === 'fire';
-	const lit = fire ? '#2A1712' : '#A89E89', sh = fire ? '#1E100C' : '#6F675A', win = fire ? 'url(#winfire)' : '#3A342E', trim = fire ? '#3A2018' : '#C4BAA2';
+	const lit = fire ? '#2A1712' : '#8C8371', sh = fire ? '#1E100C' : '#5C554A', win = fire ? 'url(#winfire)' : '#3A342E', trim = fire ? '#3A2018' : '#C4BAA2';
 	let w = '';
 	for (let i = 0; i < 16; i++) { const x = 330 + i * 80; if (x > 800 && x < 1080) continue; const on = !fire || K.rnd(i + 300) > 0.3;
 		w += `<path d="M${x},612 L${x},560 A20,20 0 0 1 ${x + 40},560 L${x + 40},612 Z" fill="${on ? win : '#2a1610'}"/>
@@ -725,27 +725,28 @@ K.stairs = (mode) => {
 /** the pool: fan basin between the terraces (back edge narrow by the stair foot, front edge wide) */
 K.pool = (mode) => {
 	const fire = mode === 'fire';
-	const water = fire ? 'url(#poolF)' : 'url(#poolN)', rim = fire ? '#2E1A12' : '#A49A84', rimLit = fire ? '#F0904A' : '#E2D8BE', terr = fire ? '#25150F' : '#8C8371', terrS = fire ? '#160C08' : '#6A6254';
+	const water = fire ? 'url(#poolF)' : 'url(#poolN)', rim = fire ? '#1C100B' : '#A49A84', rimLit = fire ? '#F0904A' : '#E2D8BE', terr = fire ? '#25150F' : '#8C8371', terrS = fire ? '#160C08' : '#6A6254';
 	return `<path d="M250,1080 L250,930 L760,650 L1160,650 L1670,930 L1670,1080 Z" fill="${terrS}"/>
 	<path d="M120,940 L700,640 L760,650 L250,930 Z" fill="${terr}"/><path d="M1800,940 L1220,640 L1160,650 L1670,930 Z" fill="${terr}"/>
 	<path d="M330,920 L780,664 L1140,664 L1590,920 C1300,950 620,950 330,920 Z" fill="${rim}"/>
 	<path d="M360,912 L790,672 L1130,672 L1560,912 C1290,938 630,938 360,912 Z" fill="${water}"/>
 	<path d="M330,920 C620,950 1300,950 1590,920" stroke="${rimLit}" stroke-width="3" fill="none" opacity=".7"/>
-	${Array.from({length: 9}, (_, i) => `<path d="M${560 + i * 20},${740 + i * 18} L${1360 - i * 20},${740 + i * 18}" stroke="${fire ? '#F0904A' : '#E6EEE6'}" stroke-width="1.5" opacity="${0.18 - i * 0.012}"/>`).join('')}`;
+	${Array.from({length: 9}, (_, i) => `<path d="M${560 + i * 20},${740 + i * 18} L${1360 - i * 20},${740 + i * 18}" stroke="${fire ? '#F0904A' : '#E6EEE6'}" stroke-width="1.5" opacity="${0.18 - i * 0.012}"/>`).join('')}
+	${fire ? Array.from({length: 26}, (_, i) => { const y = 690 + K.rnd(i + 70) * 220, w = 30 + K.rnd(i + 71) * 120, x = 560 + K.rnd(i + 72) * 800; return `<rect x="${x}" y="${y}" width="${w}" height="3" fill="#FFB060" opacity="${0.25 + 0.4 * K.rnd(i + 73)}"/>`; }).join('') : ''}`;
 };
 /** one seated statue: stone body + brother head (or you, or an empty seat). Returns {svg, mouth, top}. */
 K.statue = (kind, side, i, mode, o = {}) => {
-	const {x, y, s} = K.seatAt(side, i), face = side < 0 ? 1 : -1, h = 230 * s;
+	const {x, y, s} = K.seatAt(side, i), face = side < 0 ? 1 : -1, h = 160 * s;
 	const fire = mode === 'fire';
-	const stone = fire ? '#1E120D' : '#8F8673', bronze = fire ? '#180E0A' : '#2B221B';
+	const stone = fire ? '#1E120D' : (o.stone ?? '#6E6758'), bronze = fire ? '#180E0A' : '#251C16';
 	const b = K.stoneBody(x, y, h, face, stone); const [tx, ty] = b.top;
 	if (kind === '马') {
-		if (o.empty) return {svg: K.emptySeat(x, y, h, face, stone, fire ? '#FFB070' : '#E8D9B8'), top: [tx, ty], s};
-		const hero = {x: tx + face * 6 * s, y: ty + 30 * s, h: 205 * s, flip: face > 0, curl: 0, glow: o.glow ?? 0.9, mood: o.mood ?? 'warm', rim: o.rim ?? '#FFE6C0'};
+		if (o.empty) return {svg: K.emptySeat(x, y, h, face, stone, fire ? '#FFB070' : '#E8D9B8') + `<ellipse cx="${tx}" cy="${ty}" rx="${30 * s}" ry="${7 * s}" fill="none" stroke="#FFC888" stroke-width="${4 * s}" opacity=".9"/><ellipse cx="${tx}" cy="${ty - 4 * s}" rx="${46 * s}" ry="${18 * s}" fill="#FF9A50" opacity=".22"/>`, top: [tx, ty], s};
+		const hero = {x: tx + face * 4 * s, y: ty + 22 * s, h: 200 * s, flip: face > 0, curl: 0, glow: o.glow ?? 0.9, mood: o.mood ?? 'warm', rim: o.rim ?? '#FFE6C0'};
 		const m = K.headPt(hero, 'mouth');
 		return {svg: b.svg, hero, mouth: m, top: [tx, ty], s};
 	}
-	const size = 180 * s, hx = tx + face * 4 * s, hy = ty + 28 * s;
+	const size = 175 * s, hx = tx + face * 4 * s, hy = ty + 22 * s;
 	return {svg: b.svg + K.bro(kind, hx, hy, size, face, bronze), mouth: K.broPt(kind, hx, hy, size, face, 'mouth'), top: [tx, ty], s};
 };
 })();
@@ -759,19 +760,19 @@ let statues = '', arcs = '';
 items.forEach(({k, side, i, st}) => {
 	statues += `<g filter="url(#rimSun)">${st.svg}</g>`;
 	if (st.hero) statues += K.horseHead(st.hero);
-	const land = [960 + (side < 0 ? -1 : 1) * (40 + 120 * (1 - i / 5)), 900 - 228 * (i / 5) - 4];
+	const land = [960 + (side < 0 ? -1 : 1) * (50 + 130 * (1 - i / 5)), 905 - 220 * (i / 5) - 4];
 	const you = k === '马';
 	arcs += K.arc(st.mouth, land, 150 * st.s + 40, st.s * (you ? 1.15 : 1), you ? {core: '#FFE2B4', glow: '#FFB070', gA: 0.5} : {});
 });
 const svg = `<defs>
- <linearGradient id="sky" x1="0" x2="0" gradientUnits="userSpaceOnUse" y1="0" y2="660"><stop offset="0" stop-color="#465F64"/><stop offset=".36" stop-color="#7F918B"/><stop offset=".62" stop-color="#C2BCA2"/><stop offset="1" stop-color="#E2D2AA"/></linearGradient>
+ <linearGradient id="sky" x1="0" x2="0" gradientUnits="userSpaceOnUse" y1="0" y2="660"><stop offset="0" stop-color="#34494E"/><stop offset=".36" stop-color="#5F716C"/><stop offset=".62" stop-color="#A39C84"/><stop offset="1" stop-color="#CDBB93"/></linearGradient>
  <linearGradient id="poolN" x1="0" x2="0" gradientUnits="userSpaceOnUse" y1="670" y2="930"><stop offset="0" stop-color="#9DAE9F"/><stop offset=".5" stop-color="#6B857B"/><stop offset="1" stop-color="#4C645D"/></linearGradient>
  <linearGradient id="fg" x1="0" x2="0" y1="0" y2="1"><stop offset="0" stop-color="#5F574A"/><stop offset="1" stop-color="#2C2721"/></linearGradient>
- <radialGradient id="vig" cx="960" cy="600" r="1150" gradientUnits="userSpaceOnUse"><stop offset=".55" stop-color="#1A140F" stop-opacity="0"/><stop offset="1" stop-color="#1A140F" stop-opacity=".72"/></radialGradient>
+ <radialGradient id="vig" cx="960" cy="600" r="1150" gradientUnits="userSpaceOnUse"><stop offset=".45" stop-color="#1A140F" stop-opacity="0"/><stop offset="1" stop-color="#1A140F" stop-opacity=".85"/></radialGradient>
  ${K.rimFilter('rimSun', 3, 5, '#F6E9C8', 0.85, 1.0)}
  ${K.blur('hz', 3)}${K.blur('hz8', 10)}
 </defs>
-<rect width="1920" height="1080" fill="url(#sky)"/>
+<rect width="1920" height="1080" fill="url(#sky)"/><g transform="translate(960,620) scale(1.22) translate(-960,-620)">
 <g filter="url(#hz8)" opacity=".85">
  ${Array.from({length: 22}, (_, i) => `<ellipse cx="${60 + i * 88}" cy="${560 + (i % 3) * 14}" rx="${70 + (i % 4) * 16}" ry="${60 + (i % 5) * 10}" fill="${i % 2 ? '#7C8574' : '#8A9180'}"/>`).join('')}
 </g>
@@ -781,7 +782,7 @@ ${K.pool('noon')}
 <rect x="0" y="940" width="1920" height="140" fill="url(#fg)"/>
 ${Array.from({length: 5}, (_, i) => `<path d="M0,${960 + i * i * 6} L1920,${960 + i * i * 6}" stroke="#211C17" stroke-width="2" opacity=".5"/>`).join('')}
 ${statues}
-${arcs}
+${arcs}</g>
 <rect width="1920" height="1080" fill="url(#vig)"/>`;
 K.page(svg, K.hud4({sub: '正午12点，十二个[一起喷水]。', stamp: '12:00 · 正午', era: '清', rows: [['在家', '12/12', 'hhhhhhyhhhhh']]}), K.CSS4);
 </script></body></html>
