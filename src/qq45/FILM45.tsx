@@ -18,7 +18,7 @@ const STAMPS: St[] = [
 	[TL.D11, '2009', '巴黎', '佳士得'], [TL.D12, '2009', '巴黎', '鼠首 + 兔首'], [TL.D14, '2013', '北京', '法国皮诺家族捐赠'],
 	[TL.E1, '2007–2019', '香港 · 澳门'], [TL.E2, '2019.11.13', '国家博物馆'], [TL.E3, '2020.5', '香港', '何鸿燊去世，98岁'],
 	[TL.H1a, '2020.12.1', '北京'], [TL.H1b, '2020.12.1', '圆明园', '正觉寺 · 文殊亭'], [TL.H2, '1860 → 2020', ''], [TL.H3, '2020', '回国 7'], [TL.H4, '今天', '回国 7 · 回家 1'],
-	[TL.H5, '正觉寺', '', '1860、1900 两次幸免'], [TL.H7, '马首', '耳朵', '研究者观察'], [TL.K1, '12:00', '正午', '记忆里的水力钟'], [TL.K2, '今天', '', '保利 4 · 国博 2'], [TL.K4, '今天', '', '龙 蛇 羊 鸡 狗'],
+	[TL.H5, '正觉寺', '', '1860、1900 两次幸免'], [TL.H7, '马首', '耳朵', '研究者观察'], [TL.K1, '12:00', '正午', '记忆里的水力钟'], [TL.K2, '12:00', '正午', '保利 4 · 国博 2'], [TL.K4, '12:00', '正午', '龙 蛇 羊 鸡 狗 未归'],
 	[TL.K5 - 0.566, '2018.12.17', '法国'], [TL.Q, ''],
 ];
 const easeOutQ = (u: number) => 1 - (1 - u) * (1 - u);
@@ -75,7 +75,7 @@ export const Frame45: React.FC<{t: number}> = ({t}) => {
 			transform: `scale(${1 + 0.22 * (1 - Math.min(1, ti / 0.12)) - 0.025 * Math.sin(Math.min(1, Math.max(0, (ti - 0.12) / 0.3)) * Math.PI * 2) * (1 - Math.min(1, ti / 0.5))})`}}>
 			<div>马首回家，</div><div>用了<span style={{color: '#9FE6D8'}}>160</span>年</div></div>}
 		<Story rows={sub.rows} />
-		{sub.punch && <Punch s={sub.punch.s} n={sub.punch.n} top={sub.punch.s.includes('6910') ? 300 : 250} size={sub.punch.s.includes('6910') ? 132 : 76} />}
+		{sub.punch && <Punch s={sub.punch.s} n={sub.punch.n} top={sub.punch.s.includes('6910') ? 190 : 250} size={sub.punch.s.includes('6910') ? 132 : 76} />}
 		{sub.end && <EndCard t={t} q={sub.end} />}
 		<Brand />
 		{st && <Stamp y={st[1]} place={st[2] || undefined} l2={st[3]} l3={st[4]} />}
