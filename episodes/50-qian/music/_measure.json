@@ -1,0 +1,250 @@
+{
+ "landmarks": [
+  {
+   "event": "hook: chorus bar 20 downbeat (first hit)",
+   "song_s": 45.853,
+   "film_pred": 0.193,
+   "film_measured": 0.193,
+   "xcorr": 1.0
+  },
+  {
+   "event": "1-beat break (song 54.343)",
+   "song_s": 54.343,
+   "film_pred": 8.683,
+   "film_measured": 8.683,
+   "xcorr": 1.0
+  },
+  {
+   "event": "TITLE: bar 24 re-entry hit",
+   "song_s": 54.91,
+   "film_pred": 9.25,
+   "film_measured": 9.25,
+   "xcorr": 1.0
+  },
+  {
+   "event": "B pre bar 8 (J2)",
+   "song_s": 18.682,
+   "film_pred": 18.306,
+   "film_measured": 18.306,
+   "xcorr": 1.0
+  },
+  {
+   "event": "B pre bar 14 (J3)",
+   "song_s": 32.268,
+   "film_pred": 22.834,
+   "film_measured": 22.834,
+   "xcorr": 1.0
+  },
+  {
+   "event": "B pre fill bar 15",
+   "song_s": 34.532,
+   "film_pred": 25.099,
+   "film_measured": 25.099,
+   "xcorr": 1.0
+  },
+  {
+   "event": "REVEAL: chorus bar 48 downbeat",
+   "song_s": 109.25,
+   "film_pred": 27.364,
+   "film_measured": 27.364,
+   "xcorr": 0.92
+  },
+  {
+   "event": "chorus dip bar 55 beat 4",
+   "song_s": 126.798,
+   "film_pred": 44.912,
+   "film_measured": 44.912,
+   "xcorr": 1.0
+  },
+  {
+   "event": "verse hit bar 56",
+   "song_s": 127.364,
+   "film_pred": 45.478,
+   "film_measured": 45.478,
+   "xcorr": 1.0
+  },
+  {
+   "event": "Tang Q: bar 57",
+   "song_s": 129.628,
+   "film_pred": 47.742,
+   "film_measured": 47.742,
+   "xcorr": 1.0
+  },
+  {
+   "event": "开元: bar 59",
+   "song_s": 134.157,
+   "film_pred": 52.271,
+   "film_measured": 52.271,
+   "xcorr": 1.0
+  },
+  {
+   "event": "valley bar 64",
+   "song_s": 145.478,
+   "film_pred": 63.592,
+   "film_measured": 63.592,
+   "xcorr": 1.0
+  },
+  {
+   "event": "CRASH bar 72 (J5)",
+   "song_s": 163.591,
+   "film_pred": 79.44,
+   "film_measured": 79.44,
+   "xcorr": 0.975
+  },
+  {
+   "event": "printing: bar 73",
+   "song_s": 165.855,
+   "film_pred": 81.704,
+   "film_measured": 81.704,
+   "xcorr": 1.0
+  },
+  {
+   "event": "stop bar 79",
+   "song_s": 179.441,
+   "film_pred": 95.29,
+   "film_measured": 95.29,
+   "xcorr": 0.954
+  },
+  {
+   "event": "lead-in first note",
+   "song_s": 182.266,
+   "film_pred": 98.438,
+   "film_measured": 98.438,
+   "xcorr": 0.992
+  },
+  {
+   "event": "DROP bar 84",
+   "song_s": 191.328,
+   "film_pred": 107.5,
+   "film_measured": 107.5,
+   "xcorr": 1.0
+  },
+  {
+   "event": "ARRIVAL bar 88",
+   "song_s": 200.384,
+   "film_pred": 116.557,
+   "film_measured": 116.557,
+   "xcorr": 1.0
+  },
+  {
+   "event": "bar 89",
+   "song_s": 202.649,
+   "film_pred": 118.821,
+   "film_measured": 118.821,
+   "xcorr": 1.0
+  },
+  {
+   "event": "bar 103 beat 3 (after J7)",
+   "song_s": 235.48,
+   "film_pred": 119.954,
+   "film_measured": 119.954,
+   "xcorr": 1.0
+  },
+  {
+   "event": "coda fall bar 104",
+   "song_s": 236.612,
+   "film_pred": 121.086,
+   "film_measured": 121.086,
+   "xcorr": 0.999
+  },
+  {
+   "event": "coda Gb",
+   "song_s": 236.924,
+   "film_pred": 121.398,
+   "film_measured": 121.398,
+   "xcorr": 1.0
+  },
+  {
+   "event": "coda Db hit",
+   "song_s": 240.5,
+   "film_pred": 124.974,
+   "film_measured": 124.974,
+   "xcorr": 1.0
+  }
+ ],
+ "joins": {
+  "J2": {
+   "film": [
+    17.7708,
+    18.2948
+   ],
+   "max_5ms_step_in_xfade_db": 9.0,
+   "p99_step_around_db": 7.5,
+   "hf_peak_in_xfade_vs_p95_around_db": -1.6
+  },
+  "J3": {
+   "film": [
+    22.2992,
+    22.8232
+   ],
+   "max_5ms_step_in_xfade_db": 8.0,
+   "p99_step_around_db": 6.3,
+   "hf_peak_in_xfade_vs_p95_around_db": 0.5
+  },
+  "J4": {
+   "film": [
+    27.4336,
+    27.8897
+   ],
+   "max_5ms_step_in_xfade_db": 9.5,
+   "p99_step_around_db": 8.9,
+   "hf_peak_in_xfade_vs_p95_around_db": -0.1
+  },
+  "J5": {
+   "film": [
+    79.4202,
+    79.4382
+   ],
+   "max_5ms_step_in_xfade_db": 4.8,
+   "p99_step_around_db": 7.9,
+   "hf_peak_in_xfade_vs_p95_around_db": 1.6
+  },
+  "J7": {
+   "film": [
+    119.4271,
+    119.9131
+   ],
+   "max_5ms_step_in_xfade_db": 12.0,
+   "p99_step_around_db": 8.4,
+   "hf_peak_in_xfade_vs_p95_around_db": -0.5
+  }
+ },
+ "hush": {
+  "below_minus45_lufsM_s": 0.1,
+  "first": 97.9,
+  "last": 97.95,
+  "lowest_M": -45.7
+ },
+ "sag_3s_more_than_6dB_under_body": [],
+ "body_short_term_lufs": -13.6,
+ "section_short_term_lufs": {
+  "hook 0-9.25": -13.3,
+  "verse 9.25-18.3": -13.6,
+  "B pre 18.3-27.4": -14.1,
+  "chorus 27.4-45.5": -13.3,
+  "verse 45.5-63.6": -13.4,
+  "valley 63.6-79.4": -15.8,
+  "B build 79.4-95.3": -13.9,
+  "lead-in 98.4-107.5": -15.9,
+  "drop 107.5-116.6": -13.3,
+  "信+air 116.6-121.1": -12.5,
+  "coda 121.1-125.5": -17.2
+ },
+ "integrated_lufs": -14.0,
+ "true_peak_dbtp": -2.29,
+ "max_momentary_lufs": -11.0,
+ "max_momentary_at": 119.0,
+ "max_short_term_lufs": -11.9,
+ "max_short_term_at": 118.05,
+ "lr_correlation": 0.996,
+ "mono_fold_change_db": -0.01,
+ "band_share_db_body": {
+  "sub_20_60": -10.7,
+  "low_60_120": -3.9,
+  "mud_200_500": -7.7,
+  "harsh_2k_5k": -17.5,
+  "air_8k_16k": -23.1
+ },
+ "duration": 127.0,
+ "last_nonsilent": 126.953
+}
