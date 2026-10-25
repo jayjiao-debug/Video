@@ -547,9 +547,15 @@ const Tower: React.FC<{t: number}> = ({t}) => {
 				return <rect key={i} x={lerp(1380, tx, u) - 40} y={lerp(700, ty, u) - Math.sin(Math.PI * u) * 120} width={80} height={10} fill="#E8DCC0" stroke="#6B5A40" strokeWidth={1} transform={`rotate(${-20 * Math.sin(Math.PI * u)},${lerp(1380, tx, u)},${lerp(700, ty, u)})`} />; })}
 			{stack(0)}{stack(2)}
 			{!spilled && <g transform={`rotate(${ang},${TX[1] - TW / 2},${g})`}>{stack(1)}</g>}
-			{spilled && Array.from({length: 46}, (_, i) => { const u = seg(t, 91.78, 92.15 + 0.1 * rnd(i, 3)), r0 = rnd(i, 7), dx0 = -60 - r0 * 520, x = TX[1] - TW / 2 + dx0 * eout(u) - 40 * (1 - u) * r0, y = g + 8 + 60 * rnd(i, 9) - Math.sin(Math.PI * u) * 60 * rnd(i, 11);
-				return <rect key={i} x={x} y={y} width={78} height={16} fill="#E3D8BE" stroke="#6B5A40" strokeWidth={1} transform={`rotate(${(rnd(i, 13) - 0.5) * 60},${x + 39},${y + 8})`} />; })}
 			<GroundW g={g} />
+			{/* the stack lands lying along the floor; it breaks up into sheets that slide and scatter and stay */}
+			{spilled && t < 91.95 && <g opacity={1 - seg(t, 91.78, 91.95)} transform={`rotate(-88,${TX[1] - TW / 2},${g})`}>{stack(1)}</g>}
+			{spilled && Array.from({length: 72}, (_, i) => { const bx = TX[1] - TW / 2, along = rnd(i, 7) * hgt(1), across = rnd(i, 9) * TW;
+				const sx = bx + 0.035 * across - 0.999 * along, sy = g - 0.999 * across - 0.035 * along + 8;
+				const ex = sx + (rnd(i, 5) - 0.45) * 220 - 60 * rnd(i, 7), ey = g + 6 + 70 * rnd(i, 11);
+				const u = eout(seg(t, 91.78 + 0.08 * rnd(i, 3), 92.3 + 0.15 * rnd(i, 3))), x = lerp(sx, ex, u), y = lerp(sy, ey, u) - Math.sin(Math.PI * u) * 26 * rnd(i, 13);
+				const rot = lerp(-88 + 90, (rnd(i, 17) - 0.5) * 50, u);
+				return <rect key={i} x={x - 39} y={y - 8} width={78} height={16} fill="#E3D8BE" stroke="#6B5A40" strokeWidth={1} transform={`rotate(${rot},${x},${y})`} />; })}
 			{/* the 收回 basket: one note in it */}
 			<path d="M1700,905 L1680,800 L1830,800 L1810,905 Z" fill="#3A2412" stroke={B.gold} strokeOpacity={0.5} strokeWidth={1.5} />
 			<path d="M1688,830 H1824 M1694,860 H1818 M1700,885 H1810" stroke={B.gold} strokeOpacity={0.25} strokeWidth={1.5} />
@@ -842,7 +848,7 @@ const LAYERS: Layer[] = [
 	{a: 76.5, b: 81.45, fi: 0.4, C: Gate},
 	{a: 81.45, b: 84.45, fi: 0, C: Print},
 	{a: 84.15, b: 98.7, fi: 0.3, skip: [89.36, 91.89], C: Ming},
-	{a: 89.0, b: 92.25, fi: 0.35, fo: 0.35, C: Tower},
+	{a: 89.0, b: 92.4, fi: 0.35, fo: 0.5, C: Tower},
 	{a: 98.3, b: 105.55, fi: 0.4, C: Silver},
 	{a: 105.2, b: 107.4, fi: 0.3, C: Modern},
 	{a: 107.0, b: 110.35, fi: 0.4, C: Stall},

@@ -117,15 +117,15 @@ const curlD = (x: number, y: number, r: number, dir = 1) => { const pts: string[
 export const TitleCard: React.FC<{t: number}> = ({t}) => { if (t < TITLE_T[0] || t >= TITLE_T[1] + 0.4) return null;
 	const f = (t - TITLE_T[0]) * 30, sc = f < 4 ? 1.25 - 0.25 * f / 4 : 1 + 0.03 * Math.exp(-(f - 4) / 9) * Math.sin(2 * Math.PI * (f - 4) / 8) * (f < 20 ? 1 : 0);
 	const o = cl(f / 2) * (1 - seg(t, TITLE_T[1] - 0.1, TITLE_T[1] + 0.35)), fs = 116, ls = 0.06;
-	const PX = 960, PY = 250, PW = 1180, PH2 = 300;
+	const PX = 960, PY = 206, PW = 1180, PH2 = 296, OY = PY + PH2 / 2 - 10;   // plaque y 58–354 (≥ 58 from the top); the bun clears its lower edge by ≥ 20 px; the slam scales about the lower edge (OY), so the overshoot grows upward
 	return <div style={{position: 'absolute', inset: 0, opacity: o}}>
 		<div style={{position: 'absolute', left: PX - PW / 2 - 120, top: PY - PH2 / 2 - 90, width: PW + 240, height: PH2 + 180, background: 'radial-gradient(closest-side, rgba(10,5,3,0.82), rgba(10,5,3,0.72) 60%, rgba(10,5,3,0))'}} />
-		<svg width={W} height={H} style={{position: 'absolute', left: 0, top: 0, transform: `scale(${sc})`, transformOrigin: `${PX}px ${PY}px`}}>
+		<svg width={W} height={H} style={{position: 'absolute', left: 0, top: 0, transform: `scale(${sc})`, transformOrigin: `${PX}px ${OY}px`}}>
 			<rect x={PX - PW / 2} y={PY - PH2 / 2} width={PW} height={PH2} fill="none" stroke={B.gold} strokeOpacity={0.55} strokeWidth={2} />
 			<rect x={PX - PW / 2 + 10} y={PY - PH2 / 2 + 10} width={PW - 20} height={PH2 - 20} fill="none" stroke={B.gold} strokeOpacity={0.3} strokeWidth={1.2} />
 			{[[-1, -1], [1, -1], [-1, 1], [1, 1]].map(([dx, dy], k) => <path key={k} d={curlD(PX + dx * (PW / 2 - 34), PY + dy * (PH2 / 2 - 34), 20, -dx)} fill="none" stroke={B.goldL} strokeOpacity={0.7} strokeWidth={2.2} strokeLinecap="round" />)}
 		</svg>
-		<div style={{position: 'absolute', left: 0, right: 0, top: 128, textAlign: 'center', transform: `scale(${sc})`, transformOrigin: `${PX}px ${PY - 128}px`, fontFamily: SANS, fontWeight: 900, fontSize: fs, lineHeight: 1.12, letterSpacing: `${ls}em`, textShadow: thB.halo, whiteSpace: 'nowrap'}}>
+		<div style={{position: 'absolute', left: 0, right: 0, top: 84, textAlign: 'center', transform: `scale(${sc})`, transformOrigin: `${PX}px ${OY - 84}px`, fontFamily: SANS, fontWeight: 900, fontSize: fs, lineHeight: 1.12, letterSpacing: `${ls}em`, textShadow: thB.halo, whiteSpace: 'nowrap'}}>
 			<div style={{color: '#FFF6E6'}}><span style={{position: 'relative', left: `${ls / 2}em`}}>钱是怎么从贝壳</span></div>
 			<div style={{color: B.gold}}><span style={{position: 'relative', left: `${(0.5 + ls) / 2}em`}}>变成二维码的？</span></div>
 		</div></div>; };
