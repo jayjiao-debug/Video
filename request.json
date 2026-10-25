@@ -1,78 +1,268 @@
 {
- "id": "ep49-clips-01",
+ "id": "ep45-vo-07",
  "model_prefs": [
   "eleven_v4"
  ],
  "items": [
   {
-   "name": "c1A_angry",
-   "lang": "en",
-   "gender": "male",
-   "accent": "american",
-   "pick": 0,
-   "model": "eleven_v3",
-   "settings": {
-    "stability": 0.0,
-    "similarity_boost": 0.8,
-    "style": 0.8
-   },
-   "text": "[furious, shouting] Tolvek dunreb, oskefa hembult!"
-  },
-  {
-   "name": "c1B_calm",
-   "lang": "en",
-   "gender": "male",
-   "accent": "american",
-   "pick": 0,
-   "model": "eleven_v3",
+   "name": "v7_01",
+   "lang": "zh",
+   "voice_id": "APSIkVZudNbPAwyPoeVO",
+   "model": "eleven_v4",
    "settings": {
     "stability": 0.5,
     "similarity_boost": 0.8,
-    "style": 0.0
+    "style": 0.3,
+    "speed": 1.08
    },
-   "text": "[calm, friendly] Tolvek dunreb, oskefa hembult!"
+   "text": "圆明园十二兽首，你猜回来了几个？"
   },
   {
-   "name": "c2A_yog",
-   "lang": "en",
-   "gender": "female",
-   "accent": "american",
-   "pick": 0,
+   "name": "v7_02",
+   "lang": "zh",
+   "voice_id": "APSIkVZudNbPAwyPoeVO",
    "model": "eleven_v4",
    "settings": {
-    "stability": 0.8,
+    "stability": 0.5,
     "similarity_boost": 0.8,
-    "style": 0.0
+    "style": 0.3,
+    "speed": 1.08
    },
-   "text": "yog."
+   "text": "七个回了中国。"
   },
   {
-   "name": "c2B_tsog",
-   "lang": "en",
-   "gender": "female",
-   "accent": "american",
-   "pick": 0,
+   "name": "v7_03",
+   "lang": "zh",
+   "voice_id": "APSIkVZudNbPAwyPoeVO",
    "model": "eleven_v4",
    "settings": {
-    "stability": 0.8,
+    "stability": 0.5,
     "similarity_boost": 0.8,
-    "style": 0.0
+    "style": 0.3,
+    "speed": 1.08
    },
-   "text": "tsog."
+   "text": "可住回圆明园的，只有一个。"
   },
   {
-   "name": "c2B_tsog_alt",
-   "lang": "en",
-   "gender": "female",
-   "accent": "american",
-   "pick": 0,
+   "name": "v7_04",
+   "lang": "zh",
+   "voice_id": "APSIkVZudNbPAwyPoeVO",
    "model": "eleven_v4",
    "settings": {
-    "stability": 0.8,
+    "stability": 0.5,
     "similarity_boost": 0.8,
-    "style": 0.0
+    "style": 0.3,
+    "speed": 1.08
    },
-   "text": "tsohg."
+   "text": "今年夏天，四个兽首去了杭州，"
+  },
+  {
+   "name": "v7_05",
+   "lang": "zh",
+   "voice_id": "APSIkVZudNbPAwyPoeVO",
+   "model": "eleven_v4",
+   "settings": {
+    "stability": 0.5,
+    "similarity_boost": 0.8,
+    "style": 0.3,
+    "speed": 1.08
+   },
+   "text": "人们排了几个小时去看。"
+  },
+  {
+   "name": "v7_06",
+   "lang": "zh",
+   "voice_id": "APSIkVZudNbPAwyPoeVO",
+   "model": "eleven_v4",
+   "settings": {
+    "stability": 0.5,
+    "similarity_boost": 0.8,
+    "style": 0.3,
+    "speed": 1.08
+   },
+   "text": "十二兽首，原本是喷泉的出水口。"
+  },
+  {
+   "name": "v7_09",
+   "lang": "zh",
+   "voice_id": "APSIkVZudNbPAwyPoeVO",
+   "model": "eleven_v4",
+   "settings": {
+    "stability": 0.5,
+    "similarity_boost": 0.8,
+    "style": 0.3,
+    "speed": 1.08
+   },
+   "text": "它被带走了。"
+  },
+  {
+   "name": "v7_10",
+   "lang": "zh",
+   "voice_id": "APSIkVZudNbPAwyPoeVO",
+   "model": "eleven_v4",
+   "settings": {
+    "stability": 0.5,
+    "similarity_boost": 0.8,
+    "style": 0.3,
+    "speed": 1.08
+   },
+   "text": "一百多年后，它出现在伦敦。"
+  },
+  {
+   "name": "v7_11",
+   "lang": "zh",
+   "voice_id": "APSIkVZudNbPAwyPoeVO",
+   "model": "eleven_v4",
+   "settings": {
+    "stability": 0.5,
+    "similarity_boost": 0.8,
+    "style": 0.3,
+    "speed": 1.08
+   },
+   "text": "你猜，它卖了多少？"
+  },
+  {
+   "name": "v7_13",
+   "lang": "zh",
+   "voice_id": "APSIkVZudNbPAwyPoeVO",
+   "model": "eleven_v4",
+   "settings": {
+    "stability": 0.5,
+    "similarity_boost": 0.8,
+    "style": 0.3,
+    "speed": 1.08
+   },
+   "text": "二零零七年，它又要上拍了。"
+  },
+  {
+   "name": "v7_16",
+   "lang": "zh",
+   "voice_id": "APSIkVZudNbPAwyPoeVO",
+   "model": "eleven_v4",
+   "settings": {
+    "stability": 0.5,
+    "similarity_boost": 0.8,
+    "style": 0.3,
+    "speed": 1.08
+   },
+   "text": "拍卖前，何鸿燊私下买下了它："
+  },
+  {
+   "name": "v7_23",
+   "lang": "zh",
+   "voice_id": "APSIkVZudNbPAwyPoeVO",
+   "model": "eleven_v4",
+   "settings": {
+    "stability": 0.5,
+    "similarity_boost": 0.8,
+    "style": 0.3,
+    "speed": 1.08
+   },
+   "text": "何鸿燊，也把它捐给了国家。"
+  },
+  {
+   "name": "v7_25",
+   "lang": "zh",
+   "voice_id": "APSIkVZudNbPAwyPoeVO",
+   "model": "eleven_v4",
+   "settings": {
+    "stability": 0.5,
+    "similarity_boost": 0.8,
+    "style": 0.3,
+    "speed": 1.08
+   },
+   "text": "他没等到，它回家的那天。"
+  },
+  {
+   "name": "v7_27",
+   "lang": "zh",
+   "voice_id": "APSIkVZudNbPAwyPoeVO",
+   "model": "eleven_v4",
+   "settings": {
+    "stability": 0.5,
+    "similarity_boost": 0.8,
+    "style": 0.3,
+    "speed": 1.08
+   },
+   "text": "它回到了圆明园。"
+  },
+  {
+   "name": "v7_28",
+   "lang": "zh",
+   "voice_id": "APSIkVZudNbPAwyPoeVO",
+   "model": "eleven_v4",
+   "settings": {
+    "stability": 0.5,
+    "similarity_boost": 0.8,
+    "style": 0.3,
+    "speed": 1.08
+   },
+   "text": "它离开了一百六十年。"
+  },
+  {
+   "name": "v7_29",
+   "lang": "zh",
+   "voice_id": "APSIkVZudNbPAwyPoeVO",
+   "model": "eleven_v4",
+   "settings": {
+    "stability": 0.5,
+    "similarity_boost": 0.8,
+    "style": 0.3,
+    "speed": 1.08
+   },
+   "text": "它住进园里唯一没烧掉的古建筑。"
+  },
+  {
+   "name": "v7_30",
+   "lang": "zh",
+   "voice_id": "APSIkVZudNbPAwyPoeVO",
+   "model": "eleven_v4",
+   "settings": {
+    "stability": 0.5,
+    "similarity_boost": 0.8,
+    "style": 0.3,
+    "speed": 1.08
+   },
+   "text": "细看，它是红铜一次铸成的。"
+  },
+  {
+   "name": "v7_31",
+   "lang": "zh",
+   "voice_id": "APSIkVZudNbPAwyPoeVO",
+   "model": "eleven_v4",
+   "settings": {
+    "stability": 0.5,
+    "similarity_boost": 0.8,
+    "style": 0.3,
+    "speed": 1.08
+   },
+   "text": "只有一只耳朵，是卷的。"
+  },
+  {
+   "name": "v7_32",
+   "lang": "zh",
+   "voice_id": "APSIkVZudNbPAwyPoeVO",
+   "model": "eleven_v4",
+   "settings": {
+    "stability": 0.5,
+    "similarity_boost": 0.8,
+    "style": 0.3,
+    "speed": 1.08
+   },
+   "text": "研究的人说：它这一路被撞过。"
+  },
+  {
+   "name": "v7_33",
+   "lang": "zh",
+   "voice_id": "APSIkVZudNbPAwyPoeVO",
+   "model": "eleven_v4",
+   "settings": {
+    "stability": 0.5,
+    "similarity_boost": 0.8,
+    "style": 0.3,
+    "speed": 1.08
+   },
+   "text": "正午十二点，它们本该一起喷水。"
   }
  ]
 }
