@@ -92,6 +92,9 @@ export const drawFurniture = (hud: HTMLElement, t: number, opts: {hideAll?: bool
 		const flashOut = [66, 66.25, 66.5, 66.75].reduce((m, x) => Math.max(m, clamp01(1 - Math.abs(t - b(x)) / 0.2)), 0);
 		tally(hud, outN, inN, draw, flashAll, flashOut);
 	}
+	// the corner block: the era chip + age and the tally share one container (laid out as one unit by the bl* trials)
+	const ag = hud.querySelector(':scope > .age'), tl = hud.querySelector(':scope > .tally');
+	if (ag || tl) { const w = document.createElement('div'); w.className = 'blk'; hud.appendChild(w); if (ag) w.appendChild(ag); if (tl) w.appendChild(tl); }
 	for (const [a, z, x, y, text] of LABELS) if (within(t, a - 0.2, z + 0.2)) label(hud, x, y, text, clamp01((t - a) / 0.2) * clamp01((z - t) / 0.2));
 };
 /** chip alone (counter hidden) */
