@@ -41,7 +41,7 @@ html,body{margin:0;width:${W}px;height:${H}px;overflow:hidden;background:${c.sky
 const b = await chromium.launch();
 for (const k of Object.keys(C)) for (const lay of ['tall', 'wide']) {
 	const W = lay === 'tall' ? 1080 : 1440, H = lay === 'tall' ? 1440 : 1080;
-	const p = await b.newPage({viewport: {width: W, height: H}}); await p.setContent(page(k, lay)); await p.evaluate(() => document.fonts.ready); await p.waitForTimeout(300);
+	const p = await b.newPage({viewport: {width: W, height: H}, deviceScaleFactor: +(process.env.DSF || 1)}); await p.setContent(page(k, lay)); await p.evaluate(() => document.fonts.ready); await p.waitForTimeout(300);
 	const name = `cover_${k}_${lay === 'tall' ? '竖版3x4' : '横版4x3'}.png`; await p.screenshot({path: path.join(OUT, name)}); console.log(name); await p.close();
 }
 await b.close();
