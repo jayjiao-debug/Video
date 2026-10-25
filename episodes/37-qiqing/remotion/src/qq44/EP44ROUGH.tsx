@@ -84,7 +84,7 @@ const stampAt = (t: number) => { if (t >= film(T.title) && t < stAt(5)) return n
 	if (!cur) return null; const a = cur[0] === 0 ? -1 : stAt(cur[0]); return {s: cur, o: sm(seg(t, a, a + (ON_CUT.has(cur[0]) ? 0.06 : 0.15)))}; };
 /* ---------- counter: [story time, value, era, roll s, date (fractional year) or undefined, date frozen] ---------- */
 const lc = (i: number) => LINES[i][0] + COUNT_AT;
-const D1 = LINES[19][0], D2 = LINES[20][0], A7 = LINES[27][0];
+const D1 = LINES[19][0], D2 = LINES[20][0], A7 = LINES[27][0], B0C = LINES[5][0];
 const CK: [number, number, string | undefined, number, number?, boolean?][] = [[0, 76, undefined, 0], [LINES[1][0], 99, undefined, 0.2], [LINES[2][0], 106, undefined, 0.2], [LINES[3][0], 117, undefined, 0.2], [LINES[4][0], 147, undefined, 0.2],
 	[film(T.title) + 0.1, 0, undefined, 1.35], [LINES[5][0], 0, '出生', 0], [lc(6), 4, '童年', 0.3], [film(20.3), 5, '童年', 0.3], [LINES[8][0], 16, '少年', 0.4], [LINES[9][0], 23, '青年', 0.4], [lc(10), 26, '青年', 0.4],
 	[lc(11), 40, '壮年', 0.5], [lc(13), 43, '壮年', 0.3], [lc(14), 60, '晚年', 0.5], [lc(16), 75, '晚年', 0.4], [lc(17), 76, '晚年', 0.3],
@@ -105,13 +105,16 @@ const counterAt = (t: number) => { let i = 0; while (i + 1 < CK.length && t >= C
 const Furniture: React.FC<{t: number}> = ({t}) => {
 	const sub = subsAt(t), st = stampAt(t), c = counterAt(t);
 	const dimC = t >= LINES[44][0] ? 0.55 : 1, hideC = 1 - sm(seg(t, LINES[48][0] - 0.3, LINES[48][0]));
+	/* round 2 (owner note 7): 他 N 岁 while he lives (birth → the death beat), 你 N 岁 before (the cold open is after his death; the rewind
+	   counts 你 147 → 0) and after (from 「你没有」 on: the grey 他 76 lifts away, 你 76 carries on). At birth 你 dissolves into 他 in 0.3 s. */
+	const alive = t >= B0C && t < D2, who = alive ? '他' : '你', whoK = alive ? sm(seg(t, B0C, B0C + 0.3)) : 1;
 	const frozen = t >= D1 && t < D2, ghost = t >= D2 ? 1 - sm(seg(t, D2 + 0.4, D2 + 1.6)) : 0, pulse = t >= D2 ? Math.exp(-(t - D2) / 0.35) : 0;
 	return <>
 		<Story rows={sub.rows} />
 		{sub.punch && <Punch s={sub.punch.s} o={sub.punch.o} />}
 		{st && <Stamp y={st.s[1]} place={st.s[2]} note={st.s[3]} o={st.o} />}
 		{ghost > 0.01 && <Counter who="他" v={76} grey o={0.75 * ghost} lift={78 + 40 * (1 - ghost)} />}
-		{hideC > 0.01 && <Counter era={c.era} v={c.val} blur={c.blur} grey={frozen} pulse={pulse} o={dimC * hideC} date={c.date ? c.date : undefined} />}
+		{hideC > 0.01 && <Counter who={who} whoFrom={whoK < 1 ? '你' : undefined} whoK={whoK} era={c.era} v={c.val} blur={c.blur} grey={frozen} pulse={pulse} o={dimC * hideC} date={c.date ? c.date : undefined} />}
 		{t < LINES[48][0] && <Seal />}
 	</>;
 };
@@ -121,8 +124,13 @@ const Vignette: React.FC = () => <g pointerEvents="none"><defs><radialGradient i
 export const Rough: React.FC<{skin?: Skin}> = ({skin = 'A'}) => {
 	const f = useCurrentFrame(), ft = f / FPS, {s: t, hold} = storyOf(ft), fade = sm(seg(ft, FILM_END - 1.0, FILM_END - 0.03));
 	return <AbsoluteFill style={{background: '#0c1012'}}>
-		<svg width={W} height={H} style={{position: 'absolute'}}><Picture t={t} hold={hold} /><Vignette /></svg>
-		<SkinCtx.Provider value={skin}><Furniture t={t} /></SkinCtx.Provider>
+		{/* round 2 (owner note 1, the 0:17 "second nursery"): that frame was not drawn twice. In pic.mp4, frames 521, 524–525 and 528–529
+		    (film 17.37–17.63, while 「刚出生…」 types in) carry a pixel copy of the same frame's rows 286 px lower pasted into rows 287–420;
+		    the identical frames rendered as stills are clean. It is a raster/capture glitch in the sequential render, set off when the
+		    subtitle layer (CSS blur pool + per-frame typing) repaints over this heavy SVG. The picture and the furniture now sit on their
+		    own compositor layers, so subtitle repaints no longer re-raster the picture's tiles (pixels unchanged). */}
+		<svg width={W} height={H} style={{position: 'absolute', willChange: 'transform'}}><Picture t={t} hold={hold} /><Vignette /></svg>
+		<div style={{position: 'absolute', inset: 0, willChange: 'transform'}}><SkinCtx.Provider value={skin}><Furniture t={t} /></SkinCtx.Provider></div>
 		{fade > 0 && <AbsoluteFill style={{background: '#06080a', opacity: fade}} />}
 	</AbsoluteFill>;
 };

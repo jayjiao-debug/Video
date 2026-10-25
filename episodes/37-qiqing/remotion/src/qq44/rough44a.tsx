@@ -2,7 +2,7 @@ import React from 'react';
 import {W, H, rnd, lerp, Glow, Rimmed, fkPose, Look4, Pose, B, jointAt, Sky, BRAIN_D, HeadGlow, Jar} from './kit44';
 import {SANS, MONO, ROSE, INK} from './skin44';
 import {Shaft, Motes, Pendant, Shelf, Frame, Wallpaper, Curtain, Cloud, Clock} from './bg44';
-import {seg, ease, eo, ei, sm, cl, Cam, Sticker, ColdBrain, skullBack} from './demo44';
+import {seg, ease, eo, ei, sm, cl, Cam, Sticker, ColdBrain, skullBack, GLOW_BACK} from './demo44';
 /* ep44 full rough cut, part A: film 35.5–95.5 (lines 12–30 of lines.json v2, film = +0.5 s).
    Same family as the demo: flat-vector sets with layered dressing, a camera on every shot, rose-gold only for 你.
    你/他 glow rule: the head glow flares on 你 lines and dims on 他 lines. Each scene takes film time t. */
@@ -17,7 +17,7 @@ const LK: Record<string, Look4> = {
 const headC = (pose: Pose, x: number, g: number, h: number, flip = false): P2 => { const hd = jointAt(pose, 'Head', x, g, h, flip), tp = jointAt(pose, 'Top', x, g, h, flip); return [lerp(hd[0], tp[0], 0.45), lerp(hd[1], tp[1], 0.45)]; };
 /** a figure carrying 你: rim-lit silhouette + the glow in the head */
 const Carrier: React.FC<{x: number; g: number; h: number; pose: Pose; look: Look4; flip?: boolean; id: string; glow: number; col?: string; rimOp?: number}> = ({x, g, h, pose, look, flip, id, glow, col = '#120e10', rimOp = 0.6}) => {
-	const c = skullBack(pose, x, g, h, flip, 0.026);
+	const c = skullBack(pose, x, g, h, flip, GLOW_BACK);
 	return <g><Rimmed x={x} ground={g} h={h} pose={pose} look={look} flip={flip} col={col} rim={RIMB} rimOp={rimOp} rimDx={flip ? 2.4 : -2.4} />
 		<HeadGlow x={c[0]} y={c[1]} r={h * 0.048 * (0.75 + 0.35 * glow)} id={id} o={cl(glow, 0, 1.4)} /></g>; };
 /** a plain walk built on the same skeleton; arms can be overridden (carrying) */
@@ -38,7 +38,44 @@ const SERIF = "'DejaVu Serif',serif";
 /* ================= E1a/E1b 35.5–41.0: the 1919 eclipse; starlight bends; 你对了，他红了 ================= */
 const SUN: P2 = [1180, 430];
 /** the bent ray: from a star behind the sun, round the limb, down to the island (drawn exaggerated, no number) */
-const RAY = `M1760,170 C1500,250 1300,300 ${SUN[0] + 20},${SUN[1] - 112} C1060,${SUN[1] - 96} 620,560 300,860`;
+/* round 2 (owner note 4): Eddington kneels at a telescope on a low tripod, his eye on the eyepiece, both hands on the tube; the tube
+   is aimed at the eclipsed sun (its axis runs from the eyepiece through SUN), and the bent starlight ends in its objective. */
+const OBS = {x: 560, g: 858, h: 300};
+const OBS_K = {hip: 0.36, lean: 34, neck: -58, lt: 94, lk: 94, rt: 0, rk: 90, rf: 160};
+/** 2-bone IK in pose units (y up): the upper-arm angle a and elbow bend e (fkPose convention) that put the hand on `tg`, elbow down */
+const armIK = (sh: P2, tg: P2): {a: number; e: number} => { const U = 0.194, F = 0.135, vx = tg[0] - sh[0], vy = tg[1] - sh[1], D = Math.min(Math.hypot(vx, vy), (U + F) * 0.995);
+	const base = Math.atan2(vx, -vy) * 180 / Math.PI, al = Math.acos(cl((U * U + D * D - F * F) / (2 * U * D), -1, 1)) * 180 / Math.PI;
+	const opts = [base + al, base - al].map((a) => { const r = a * Math.PI / 180, el: P2 = [sh[0] + Math.sin(r) * U, sh[1] - Math.cos(r) * U], fa = Math.atan2(tg[0] - el[0], -(tg[1] - el[1])) * 180 / Math.PI; return {a, e: fa - a, ey: el[1]}; });
+	const o = opts[0].ey < opts[1].ey ? opts[0] : opts[1]; return {a: o.a, e: o.e}; };
+export const SCOPE = (() => {
+	const {x, g, h} = OBS, p0 = fkPose({...OBS_K, la: 0, le: 0, ra: 0, re: 0});
+	const n1 = jointAt(p0, 'Neck1', x, g, h), hd = jointAt(p0, 'Head', x, g, h), tp = jointAt(p0, 'Top', x, g, h), ang = Math.atan2(tp[1] - n1[1], tp[0] - n1[0]) + Math.PI / 2;
+	const hc: P2 = [lerp(hd[0], tp[0], 0.45), lerp(hd[1], tp[1], 0.45)], s = h * 0.93, R = (px: number, py: number): P2 => [hc[0] + (px * Math.cos(ang) - py * Math.sin(ang)) * s, hc[1] + (px * Math.sin(ang) + py * Math.cos(ang)) * s];
+	const E = R(0.072, -0.002), dl = Math.hypot(SUN[0] - E[0], SUN[1] - E[1]), d: P2 = [(SUN[0] - E[0]) / dl, (SUN[1] - E[1]) / dl], nn: P2 = [-d[1], d[0]];   // nn: the tube's underside
+	const at = (k: number, o = 0): P2 => [E[0] + d[0] * k + nn[0] * o, E[1] + d[1] * k + nn[1] * o];
+	const toPose = (q: P2): P2 => [(q[0] - x) / h, (g - q[1]) / h];
+	/* each hand takes the farthest grip along the tube it can reach (a little short of full stretch) */
+	const grip = (sh: P2, k0: number, k1: number) => { let best = k0; for (let k = k0; k <= k1; k += 2) { const q = toPose(at(k, 12)); if (Math.hypot(q[0] - sh[0], q[1] - sh[1]) < 0.3) best = k; } return best; };
+	const kNear = grip(p0.LSh, 30, 70), kFar = grip(p0.RSh, kNear + 30, 150);
+	const L = armIK(p0.LSh, toPose(at(kNear, 10))), Rr = armIK(p0.RSh, toPose(at(kFar, 10)));
+	const pose = fkPose({...OBS_K, la: L.a, le: L.e, ra: Rr.a, re: Rr.e});
+	const pivot = at(150, 22);
+	return {pose, E, d, nn, at, pivot, O: at(300), ang: Math.atan2(d[1], d[0]) * 180 / Math.PI};
+})();
+const RAY = `M1760,170 C1500,250 1300,300 ${SUN[0] + 20},${SUN[1] - 112} C1060,${SUN[1] - 96} ${SCOPE.O[0] + SCOPE.d[0] * 320},${SCOPE.O[1] + SCOPE.d[1] * 320 - 30} ${SCOPE.O[0]},${SCOPE.O[1]}`;
+/** the telescope: tube from the eyepiece (E) along d, dew cap at the objective, a low tripod under the pivot */
+const Telescope: React.FC<{col: string; rim: string}> = ({col, rim}) => { const {E, pivot, ang} = SCOPE, g = OBS.g;
+	return <g>
+		<g stroke={col} strokeWidth={7} strokeLinecap="round"><path d={`M${pivot[0]},${pivot[1]} L${pivot[0] - 78},${g} M${pivot[0]},${pivot[1]} L${pivot[0] + 70},${g} M${pivot[0]},${pivot[1]} L${pivot[0] + 8},${g + 4}`} /></g>
+		<rect x={pivot[0] - 9} y={pivot[1] - 16} width={18} height={24} rx={3} fill={col} />
+		<g transform={`translate(${E[0]},${E[1]}) rotate(${ang})`}>
+			<path d="M24,-15 L250,-17 L250,17 L24,15 Z" fill={col} /><rect x={244} y={-21} width={58} height={42} rx={4} fill={col} />
+			<rect x={2} y={-7} width={24} height={14} rx={3} fill={col} /><rect x={20} y={-11} width={18} height={22} rx={3} fill={col} />
+			<rect x={120} y={-20} width={16} height={40} rx={3} fill={col} />
+			<path d="M24,-15 L250,-17 M244,-21 L302,-21" stroke={rim} strokeWidth={2} opacity={0.35} fill="none" />
+			<rect x={300} y={-19} width={3} height={38} fill="#e8e4f0" opacity={0.5} />
+		</g>
+	</g>; };
 const Eclipse: React.FC<{t: number}> = ({t}) => {
 	const u = t - 35.5, cut = t >= 38.75, draw = ease(seg(t, 35.9, 37.7)), ghost = sm(seg(t, 37.6, 38.2));
 	if (!cut) {
@@ -53,7 +90,7 @@ const Eclipse: React.FC<{t: number}> = ({t}) => {
 					<circle r={100} fill="#04050a" /><circle r={102} fill="none" stroke="#fffaf0" strokeWidth={3} opacity={0.9} />
 				</g>
 				{/* the straight path it "should" take, and the real one, bending round the sun */}
-				<path d="M1760,170 L300,860" stroke="#fff4dc" strokeWidth={2} fill="none" strokeDasharray="3 12" opacity={0.3 * sm(seg(t, 35.7, 36.2))} />
+				<path d={`M1760,170 L${SCOPE.O[0]},${SCOPE.O[1]}`} stroke="#fff4dc" strokeWidth={2} fill="none" strokeDasharray="3 12" opacity={0.3 * sm(seg(t, 35.7, 36.2))} />
 				<path d={RAY} stroke="#fff4dc" strokeWidth={4} fill="none" pathLength={1} strokeDasharray={`${draw} 1`} opacity={0.9} />
 				<path d={RAY} stroke="#fff4dc" strokeWidth={14} fill="none" pathLength={1} strokeDasharray={`${draw} 1`} opacity={0.12} />
 				<circle cx={1760} cy={170} r={7} fill="#fff" /><Glow x={1760} y={170} r={46} c="#ffffff" o={0.85} id="e1st" />
@@ -64,8 +101,8 @@ const Eclipse: React.FC<{t: number}> = ({t}) => {
 				<path d="M-300,860 Q300,800 900,830 Q1500,850 2300,812 L2300,1300 L-300,1300 Z" fill="#12110e" />
 				<path d="M-300,880 Q400,860 2300,872" stroke="#3a3a40" strokeWidth={3} fill="none" opacity={0.5} />
 				{[[1560, 840], [1820, 826], [-60, 850]].map(([x, y], i) => <g key={i} fill="#12110e"><path d={`M${x},${y} Q${x + 10},${y - 170} ${x - 6},${y - 320} L${x + 6},${y - 320} Q${x + 24},${y - 170} ${x + 14},${y} Z`} />{Array.from({length: 7}, (_, k) => { const a = (-170 + k * 30 + 4 * Math.sin(t * 1.1 + k + i)) * Math.PI / 180; return <path key={k} d={`M${x},${y - 320} q${Math.cos(a) * 60},${Math.sin(a) * 40 - 10} ${Math.cos(a) * 140},${Math.sin(a) * 60 + 40}`} stroke="#12110e" strokeWidth={14} fill="none" strokeLinecap="round" />; })}</g>)}
-				<g transform="translate(300,860)"><path d="M0,0 L-34,-130 M0,0 L34,-130 M0,0 L0,-140" stroke="#12110e" strokeWidth={9} /><rect x={-22} y={-330} width={48} height={220} rx={8} fill="#12110e" transform="rotate(32 0 -140)" /></g>
-				<Rimmed x={400} ground={862} h={280} pose={fkPose({...STAND, neck: -24, la: 60, le: 30, ra: 66, re: 26})} look={LK.astro} flip col="#12110e" rim="#e8e4f0" rimOp={0.3} />
+				<Telescope col="#12110e" rim="#e8e4f0" />
+				<Rimmed x={OBS.x} ground={OBS.g} h={OBS.h} pose={SCOPE.pose} look={LK.astro} col="#12110e" rim="#e8e4f0" rimOp={0.3} rimDx={-2.2} />
 				<Motes t={t} x={0} y={700} w={1900} h={300} n={18} o={0.25} col="#e8eaf8" />
 			</Cam>
 		</g>;
@@ -74,9 +111,11 @@ const Eclipse: React.FC<{t: number}> = ({t}) => {
 	const v = t - 38.75, flare = Math.exp(-Math.max(0, v - 0.25) / 0.45) * sm(seg(v, 0, 0.18)), glow = 0.7 + 0.9 * flare;
 	const cx = 900 + 40 * v, cy = 560, z = 1.08 + 0.025 * v;
 	const pose = fkPose({...STAND, lean: 4, neck: lerp(-6, 8, ease(seg(v, 0.9, 1.4))), la: 34, le: 70, ra: 40, re: 66});
-	const HEADS: {a: number; x: number; y: number; r: number; s: number; mast: string; head: string; cn?: boolean; sub?: string}[] = [
+	/* round 2 (owner note 5): every line fits inside the paper's 400 px rule with margin (DejaVu Serif Bold, measured): LIGHT BENT 381,
+	   EINSTEIN 299, LIGHTS ALL ASKEW 370 at 32 px (was 463 at 40), IN THE HEAVENS 263 at 26, MORNING EDITION 378 at 0.08em (was 396) */
+	const HEADS: {a: number; x: number; y: number; r: number; s: number; mast: string; head: string; cn?: boolean; sub?: string; hs?: number; ss?: number; mls?: string}[] = [
 		{a: 1.0, x: 1240, y: 300, r: -8, s: 0.82, mast: 'THE GAZETTE', head: 'LIGHT BENT'}, {a: 1.42, x: 1560, y: 420, r: 7, s: 0.86, mast: 'EVENING NEWS', head: 'EINSTEIN'},
-		{a: 1.84, x: 1330, y: 590, r: -3, s: 1.1, mast: 'MORNING EDITION', head: 'LIGHTS ALL ASKEW', sub: 'IN THE HEAVENS'}];
+		{a: 1.84, x: 1330, y: 590, r: -3, s: 1.1, mast: 'MORNING EDITION', head: 'LIGHTS ALL ASKEW', sub: 'IN THE HEAVENS', hs: 32, ss: 26, mls: '0.08em'}];
 	return <g>
 		<Sky id="e2s" stops={[[0, '#0a0e1a'], [0.6, '#1a2032'], [0.62, '#221e20'], [1, '#141210']]} />
 		<Cam cx={cx} cy={cy} z={z}>
@@ -91,15 +130,15 @@ const Eclipse: React.FC<{t: number}> = ({t}) => {
 			{HEADS.map((hd, i) => { const k = eo(seg(v, hd.a, hd.a + 0.22)); if (k <= 0) return null;
 				return <g key={i} transform={`translate(${hd.x + (1 - k) * 260},${hd.y - (1 - k) * 120}) rotate(${hd.r + (1 - k) * 20}) scale(${hd.s * lerp(1.25, 1, k)})`} opacity={k}>
 					<rect x={-220} y={-150} width={440} height={300} fill="#e8e0cc" stroke="#7a705c" strokeWidth={2} />
-					<text x={0} y={-104} textAnchor="middle" style={txt(hd.cn ? SANS : SERIF, hd.cn ? 30 : 30, 900, {letterSpacing: '0.12em'})} fill="#2a2420">{hd.mast}</text>
+					<text x={0} y={-104} textAnchor="middle" style={txt(hd.cn ? SANS : SERIF, 30, 900, {letterSpacing: hd.mls ?? '0.12em'})} fill="#2a2420">{hd.mast}</text>
 					<rect x={-200} y={-90} width={400} height={3} fill="#2a2420" /><rect x={-200} y={-84} width={400} height={1.5} fill="#2a2420" />
-					<text x={0} y={-30} textAnchor="middle" style={txt(hd.cn ? SANS : SERIF, hd.sub ? 40 : 52, 900)} fill="#1e1a16">{hd.head}</text>
-					{hd.sub && <text x={0} y={8} textAnchor="middle" style={txt(SERIF, 30, 900)} fill="#1e1a16">{hd.sub}</text>}
+					<text x={0} y={-30} textAnchor="middle" style={txt(hd.cn ? SANS : SERIF, hd.hs ?? 52, 900)} fill="#1e1a16">{hd.head}</text>
+					{hd.sub && <text x={0} y={6} textAnchor="middle" style={txt(SERIF, hd.ss ?? 30, 900)} fill="#1e1a16">{hd.sub}</text>}
 					<text x={-200} y={hd.sub ? 30 : 4} style={txt(MONO, 14, 400)} fill="#5a5448">1919</text>
 					{Array.from({length: 6}, (_, r) => [0, 1, 2].map((c) => <rect key={`${r}_${c}`} x={-200 + c * 138} y={20 + r * 18} width={124 - (r % 2) * 20} height={5} fill="#8a8274" />))}
 				</g>; })}
 			<Carrier x={560} g={1010} h={600} pose={pose} look={LK.ein} id="e2g" glow={glow} />
-			{flare > 0.02 && (() => { const c = headC(pose, 560, 1010, 600); return <><Glow x={c[0]} y={c[1]} r={420 * (0.6 + 0.4 * flare)} c={B.mid} o={0.55 * flare} id="e2fl" />{Array.from({length: 12}, (_, i) => { const a = i * Math.PI / 6 + 0.2, l = 60 + 200 * flare; return <line key={i} x1={c[0] + Math.cos(a) * 40} y1={c[1] + Math.sin(a) * 40} x2={c[0] + Math.cos(a) * l} y2={c[1] + Math.sin(a) * l} stroke={B.core} strokeWidth={3} opacity={0.5 * flare} strokeLinecap="round" />; })}</>; })()}
+			{flare > 0.02 && (() => { const c = skullBack(pose, 560, 1010, 600, false, GLOW_BACK); return <><Glow x={c[0]} y={c[1]} r={420 * (0.6 + 0.4 * flare)} c={B.mid} o={0.55 * flare} id="e2fl" />{Array.from({length: 12}, (_, i) => { const a = i * Math.PI / 6 + 0.2, l = 60 + 200 * flare; return <line key={i} x1={c[0] + Math.cos(a) * 40} y1={c[1] + Math.sin(a) * 40} x2={c[0] + Math.cos(a) * l} y2={c[1] + Math.sin(a) * l} stroke={B.core} strokeWidth={3} opacity={0.5 * flare} strokeLinecap="round" />; })}</>; })()}
 			{(() => { const h = jointAt(pose, 'RHand', 560, 1010, 600); return <g transform={`translate(${h[0] + 10},${h[1] - 30}) rotate(-10)`}><rect x={-10} y={-80} width={160} height={124} fill="#d8d0bc" /><rect x={6} y={-66} width={128} height={14} fill="#3a342c" />{Array.from({length: 6}, (_, i) => <rect key={i} x={6} y={-40 + i * 12} width={60 + (i % 3) * 20} height={4} fill="#8a8274" />)}</g>; })()}
 			{/* flashbulbs: 他红了 */}
 			{[1.05, 1.47, 1.9, 2.1].map((a, i) => { const f = v >= a ? Math.exp(-(v - a) / 0.12) : 0; const fx = [300, 980, 120, 860][i], fy = [560, 470, 420, 640][i];
@@ -137,7 +176,7 @@ const Nobel: React.FC<{t: number}> = ({t}) => {
 			{/* the table */}
 			<path d="M240,720 L1680,720 L1620,660 L300,660 Z" fill="#4a3a2c" /><rect x={240} y={720} width={1440} height={24} fill="#3a2a1e" /><rect x={280} y={744} width={18} height={300} fill="#2a1e16" /><rect x={1620} y={744} width={18} height={300} fill="#2a1e16" />
 			<Rimmed x={300} ground={1000} h={640} pose={pose} look={LK.ein} col="#130f0e" rim={RIMB} rimOp={0.5} />
-			{(() => { const c = headC(pose, 300, 1000, 640); return <HeadGlow x={c[0]} y={c[1]} r={30} id="n1h" o={lerp(0.6, 0.38, unlit)} />; })()}
+			{(() => { const c = skullBack(pose, 300, 1000, 640, false, GLOW_BACK); return <HeadGlow x={c[0]} y={c[1]} r={30} id="n1h" o={lerp(0.6, 0.38, unlit)} />; })()}
 			{/* 你的相对论: the 1905 sheet from the office, its glow going out */}
 			<g transform="translate(700,560) rotate(-4)">
 				<Glow x={0} y={0} r={260} c={B.halo} o={0.35 * (1 - unlit)} id="n1rg" />
@@ -321,7 +360,7 @@ const Hospital: React.FC<{t: number}> = ({t}) => {
 				<path d="M510,688 Q600,676 680,684 Q760,696 840,690 Q960,682 1010,694 Q1050,664 1080,684" stroke="#dfe6f0" strokeWidth={3} fill="none" opacity={0.35 * (1 - grey)} />
 			</g>
 			<rect x={-400} y={-300} width={2800} height={1600} fill="#05070a" opacity={0.5 * after} />
-			<HeadGlow x={HEAD[0] - 4} y={HEAD[1] - 6} r={30 * (1 + 0.5 * pulse)} id="h1g" o={cl(gl, 0, 1.3)} />
+			<HeadGlow x={HEAD[0] - 20} y={HEAD[1] - 4} r={30 * (1 + 0.5 * pulse)} id="h1g" o={cl(gl, 0, 1.3)} />
 			{live && <Motes t={t} x={300} y={500} w={500} h={300} n={14} o={0.5 * after} col={B.mid} seed={3} />}
 		</Cam>
 	</g>;

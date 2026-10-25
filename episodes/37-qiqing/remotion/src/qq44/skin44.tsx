@@ -45,21 +45,24 @@ export const Odo: React.FC<{v: number; size: number; blur?: number}> = ({v, size
 			<span style={{display: 'block', height: lh, lineHeight: `${lh}px`}}>{Math.max(0, a)}</span><span style={{display: 'block', height: lh, lineHeight: `${lh}px`}}>{Math.max(0, a + 1)}</span></span></span>;
 };
 /** the counter (bottom-left): no box, just calm text over the picture; era tag optional */
-export const Counter: React.FC<{era?: string; v: number; blur?: number; o?: number; who?: string; date?: string; pulse?: number; grey?: boolean; lift?: number}> = (p) =>
+export const Counter: React.FC<{era?: string; v: number; blur?: number; o?: number; who?: string; date?: string; pulse?: number; grey?: boolean; lift?: number; whoFrom?: string; whoK?: number}> = (p) =>
 	useSkin() === 'A' ? <CounterA {...p} /> : <CounterQ {...p} />;
+/** 你/他 in the counter; while whoK < 1 it cross-dissolves from `whoFrom` (same width, so nothing shifts) */
+const Who: React.FC<{who: string; from?: string; k?: number; style: React.CSSProperties}> = ({who, from, k = 1, style}) => from === undefined || k >= 1 ? <span style={style}>{who}</span>
+	: <span style={{...style, position: 'relative', display: 'inline-block'}}><span style={{opacity: 1 - k}}>{from}</span><span style={{position: 'absolute', left: 0, top: 0, opacity: k}}>{who}</span></span>;
 /** B/C/D: the counter at the reference proportions (number 42, 你/岁 24, era 22), lighter weights, a little dimmer */
-const CounterQ: React.FC<React.ComponentProps<typeof Counter>> = ({era, v, blur = 0, o = 1, who = '你', date, pulse = 0, grey, lift = 0}) =>
+const CounterQ: React.FC<React.ComponentProps<typeof Counter>> = ({era, v, blur = 0, o = 1, who = '你', date, pulse = 0, grey, lift = 0, whoFrom, whoK}) =>
 	<div style={{...fx, left: 44, bottom: 30 + lift, display: 'flex', alignItems: 'flex-end', gap: 7, whiteSpace: 'nowrap', opacity: 0.88 * o, transform: pulse ? `scale(${1 + 0.1 * pulse})` : undefined, transformOrigin: '0% 100%', color: grey ? '#9aa0a4' : INK, textShadow: pulse ? `0 0 2px rgba(10,8,8,0.9), 0 1px 5px rgba(10,8,8,0.7), 0 0 ${14 + 22 * pulse}px rgba(255,150,110,${0.6 * pulse})` : QUIET_SH}}>
 		{era && <span style={{fontSize: 22, fontWeight: 500, opacity: 0.75, marginBottom: 5, marginRight: 5, letterSpacing: '0.1em'}}>{era}</span>}
-		<span style={{fontSize: 24, fontWeight: 500, marginBottom: 4}}>{who}</span>
+		<Who who={who} from={whoFrom} k={whoK} style={{fontSize: 24, fontWeight: 500, marginBottom: 4}} />
 		<span style={{fontFamily: FIG, fontSize: 42, fontWeight: 400, lineHeight: 1, fontVariantNumeric: 'tabular-nums'}}><Odo v={v} size={42} blur={blur * 0.7} /></span>
 		<span style={{fontSize: 24, fontWeight: 500, marginBottom: 4}}>岁</span>
 		{date && <span style={{fontFamily: MONO, fontSize: 17, fontWeight: 400, opacity: 0.55, marginBottom: 6, marginLeft: 10, letterSpacing: '0.04em'}}>{date}</span>}
 	</div>;
-const CounterA: React.FC<React.ComponentProps<typeof Counter>> = ({era, v, blur = 0, o = 1, who = '你', date, pulse = 0, grey, lift = 0}) =>
+const CounterA: React.FC<React.ComponentProps<typeof Counter>> = ({era, v, blur = 0, o = 1, who = '你', date, pulse = 0, grey, lift = 0, whoFrom, whoK}) =>
 	<div style={{...fx, left: 44, bottom: 30 + lift, display: 'flex', alignItems: 'flex-end', gap: 10, whiteSpace: 'nowrap', opacity: o, transform: pulse ? `scale(${1 + 0.1 * pulse})` : undefined, transformOrigin: '0% 100%', color: grey ? '#9aa0a4' : INK, textShadow: pulse ? `0 0 2px rgba(10,8,8,0.9), 0 2px 8px rgba(10,8,8,0.75), 0 0 ${20 + 30 * pulse}px rgba(255,150,110,${0.6 * pulse})` : '0 0 2px rgba(10,8,8,0.9), 0 2px 8px rgba(10,8,8,0.75), 0 0 26px rgba(10,8,8,0.55)'}}>
 		{era && <span style={{fontSize: 26, fontWeight: 700, opacity: 0.8, marginBottom: 8, marginRight: 6, letterSpacing: '0.08em'}}>{era}</span>}
-		<span style={{fontSize: 30, fontWeight: 700, marginBottom: 6}}>{who}</span>
+		<Who who={who} from={whoFrom} k={whoK} style={{fontSize: 30, fontWeight: 700, marginBottom: 6}} />
 		<span style={{fontFamily: FIG, fontSize: 62, fontWeight: 700, lineHeight: 1, fontVariantNumeric: 'tabular-nums'}}><Odo v={v} size={62} blur={blur} /></span>
 		<span style={{fontSize: 30, fontWeight: 700, marginBottom: 6}}>岁</span>
 		{date && <span style={{fontFamily: MONO, fontSize: 22, fontWeight: 700, opacity: 0.55, marginBottom: 10, marginLeft: 14, letterSpacing: '0.04em'}}>{date}</span>}
