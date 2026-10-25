@@ -1,35 +1,78 @@
 {
- "id": "sfx-test-01",
+ "id": "ep49-clips-01",
  "model_prefs": [
   "eleven_v4"
  ],
  "items": [
   {
-   "type": "sfx",
-   "name": "s1_bleep",
-   "text": "a single classic TV censor bleep, 1 kHz tone, clean, short",
-   "duration": 0.8,
-   "influence": 0.6
+   "name": "c1A_angry",
+   "lang": "en",
+   "gender": "male",
+   "accent": "american",
+   "pick": 0,
+   "model": "eleven_v3",
+   "settings": {
+    "stability": 0.0,
+    "similarity_boost": 0.8,
+    "style": 0.8
+   },
+   "text": "[furious, shouting] Tolvek dunreb, oskefa hembult!"
   },
   {
-   "type": "sfx",
-   "name": "s2_gasp",
-   "text": "small live studio audience gasps in surprise, then murmurs",
-   "duration": 2.5
+   "name": "c1B_calm",
+   "lang": "en",
+   "gender": "male",
+   "accent": "american",
+   "pick": 0,
+   "model": "eleven_v3",
+   "settings": {
+    "stability": 0.5,
+    "similarity_boost": 0.8,
+    "style": 0.0
+   },
+   "text": "[calm, friendly] Tolvek dunreb, oskefa hembult!"
   },
   {
-   "type": "sfx",
-   "name": "s3_ding",
-   "text": "quiz show correct answer chime, bright, two notes",
-   "duration": 1.2,
-   "influence": 0.5
+   "name": "c2A_yog",
+   "lang": "en",
+   "gender": "female",
+   "accent": "american",
+   "pick": 0,
+   "model": "eleven_v4",
+   "settings": {
+    "stability": 0.8,
+    "similarity_boost": 0.8,
+    "style": 0.0
+   },
+   "text": "yog."
   },
   {
-   "type": "sfx",
-   "name": "s4_tape",
-   "text": "cassette tape rewinding fast then a clunk as play is pressed",
-   "duration": 2.5,
-   "model": "eleven_text_to_sound_v3"
+   "name": "c2B_tsog",
+   "lang": "en",
+   "gender": "female",
+   "accent": "american",
+   "pick": 0,
+   "model": "eleven_v4",
+   "settings": {
+    "stability": 0.8,
+    "similarity_boost": 0.8,
+    "style": 0.0
+   },
+   "text": "tsog."
+  },
+  {
+   "name": "c2B_tsog_alt",
+   "lang": "en",
+   "gender": "female",
+   "accent": "american",
+   "pick": 0,
+   "model": "eleven_v4",
+   "settings": {
+    "stability": 0.8,
+    "similarity_boost": 0.8,
+    "style": 0.0
+   },
+   "text": "tsohg."
   }
  ]
 }
