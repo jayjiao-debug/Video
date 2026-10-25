@@ -66,6 +66,15 @@ for it in req["items"]:
             if r.ok: fn = f"{it['name']}.mp3"; open(f"out/{fn}", "wb").write(r.content); rec["file"] = fn; rec["bytes"] = len(r.content)
         except Exception as e: rec["error"] = str(e)[:300]
         log(json.dumps(rec, ensure_ascii=False)); report["clips"].append(rec); continue
+    if it.get("type") == "sfx":   # ElevenLabs text-to-sound-effects: {"type":"sfx","name","text","duration"?,"influence"?,"loop"?,"model"?}
+        body = {"text": it["text"], "model_id": it.get("model", "eleven_text_to_sound_v2"), "prompt_influence": it.get("influence", 0.3)}
+        if it.get("duration"): body["duration_seconds"] = it["duration"]
+        if it.get("loop"): body["loop"] = True
+        r = requests.post(f"{API}/v1/sound-generation?output_format=mp3_44100_128", headers=H, json=body, timeout=180)
+        rec = {"name": it["name"], "type": "sfx", "text": it["text"], "model": body["model_id"], "status": r.status_code, "sfx": True}
+        if r.ok: fn = f"{it['name']}.mp3"; open(f"out/{fn}", "wb").write(r.content); rec["file"] = fn; rec["bytes"] = len(r.content)
+        else: rec["error"] = r.text[:400]
+        log(json.dumps(rec, ensure_ascii=False)); report["clips"].append(rec); continue
     vid, vname = (it.get("voice_id"), it.get("voice_id"))
     if not vid and it.get("shared", True): vid, vname = find_shared(it["lang"], it.get("accent"), it.get("gender"), it.get("age"), it.get("search"), it.get("use_case"), it.get("pick", 0))
     if not vid: vid, vname = find_own(it.get("accent"), it.get("gender"))
@@ -87,6 +96,11 @@ try:
     wm = WhisperModel("small", device="cpu", compute_type="int8")
     for rec in report["clips"]:
         if "file" not in rec: continue
+        if rec.get("sfx"):   # no transcript for sound effects, only the length
+            import soundfile as _sf
+            try: rec["seconds"] = round(_sf.info(f"out/{rec['file']}").duration, 2)
+            except Exception: pass
+            continue
         segs, info = wm.transcribe(f"out/{rec['file']}", beam_size=5)
         rec["heard"] = "".join(s.text for s in segs).strip(); rec["heard_lang"] = info.language
         rec["heard_lang_p"] = round(info.language_probability, 3); rec["seconds"] = round(info.duration, 2)

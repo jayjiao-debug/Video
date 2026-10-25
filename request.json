@@ -1,86 +1,35 @@
 {
- "id": "ep45-vo-03",
+ "id": "sfx-test-01",
  "model_prefs": [
   "eleven_v4"
  ],
  "items": [
   {
-   "name": "14b",
-   "lang": "zh",
-   "voice_id": "APSIkVZudNbPAwyPoeVO",
-   "model": "eleven_v4",
-   "settings": {
-    "stability": 0.5,
-    "similarity_boost": 0.8,
-    "style": 0.3,
-    "speed": 1.08
-   },
-   "text": "一八六零年，英法联军进了园子。"
+   "type": "sfx",
+   "name": "s1_bleep",
+   "text": "a single classic TV censor bleep, 1 kHz tone, clean, short",
+   "duration": 0.8,
+   "influence": 0.6
   },
   {
-   "name": "14c",
-   "lang": "zh",
-   "voice_id": "APSIkVZudNbPAwyPoeVO",
-   "model": "eleven_v4",
-   "settings": {
-    "stability": 0.5,
-    "similarity_boost": 0.8,
-    "style": 0.3,
-    "speed": 1.08
-   },
-   "text": "一八六零年，英法联军进了园子。"
+   "type": "sfx",
+   "name": "s2_gasp",
+   "text": "small live studio audience gasps in surprise, then murmurs",
+   "duration": 2.5
   },
   {
-   "name": "20b",
-   "lang": "zh",
-   "voice_id": "APSIkVZudNbPAwyPoeVO",
-   "model": "eleven_v4",
-   "settings": {
-    "stability": 0.5,
-    "similarity_boost": 0.8,
-    "style": 0.3,
-    "speed": 1.08
-   },
-   "text": "你被台湾收藏家买走。"
+   "type": "sfx",
+   "name": "s3_ding",
+   "text": "quiz show correct answer chime, bright, two notes",
+   "duration": 1.2,
+   "influence": 0.5
   },
   {
-   "name": "20c",
-   "lang": "zh",
-   "voice_id": "APSIkVZudNbPAwyPoeVO",
-   "model": "eleven_v4",
-   "settings": {
-    "stability": 0.5,
-    "similarity_boost": 0.8,
-    "style": 0.3,
-    "speed": 1.08
-   },
-   "text": "你被台湾收藏家买走。"
-  },
-  {
-   "name": "24b",
-   "lang": "zh",
-   "voice_id": "APSIkVZudNbPAwyPoeVO",
-   "model": "eleven_v4",
-   "settings": {
-    "stability": 0.5,
-    "similarity_boost": 0.8,
-    "style": 0.3,
-    "speed": 1.08
-   },
-   "text": "国家文物局反对公开拍卖。"
-  },
-  {
-   "name": "24c",
-   "lang": "zh",
-   "voice_id": "APSIkVZudNbPAwyPoeVO",
-   "model": "eleven_v4",
-   "settings": {
-    "stability": 0.5,
-    "similarity_boost": 0.8,
-    "style": 0.3,
-    "speed": 1.08
-   },
-   "text": "国家文物局反对公开拍卖。"
+   "type": "sfx",
+   "name": "s4_tape",
+   "text": "cassette tape rewinding fast then a clunk as play is pressed",
+   "duration": 2.5,
+   "model": "eleven_text_to_sound_v3"
   }
  ]
 }
