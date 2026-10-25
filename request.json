@@ -1,123 +1,120 @@
 {
- "id": "ep42-vo-05",
+ "id": "ep48-vo-01",
  "model_prefs": [
   "eleven_v4"
  ],
  "items": [
   {
-   "name": "CQ_m0",
+   "name": "N1_ep42voice",
+   "lang": "zh",
+   "voice_id": "MI36FIkp9wRP7cpWKPTl",
+   "settings": {
+    "stability": 0.5,
+    "similarity_boost": 0.8,
+    "style": 0.3
+   },
+   "text": "秦始皇陵的土里，汞，是周围的七十多倍。两千多年前的《史记》写着：里面，有水银做的江河。可直到今天，没有一个人打开过它。秦始皇陵，为什么不挖？"
+  },
+  {
+   "name": "N2_doc_male",
    "lang": "zh",
    "gender": "male",
    "accent": "standard",
+   "age": "middle_aged",
+   "use_case": "narrative_story",
    "pick": 0,
    "settings": {
     "stability": 0.5,
     "similarity_boost": 0.8,
-    "style": 0.35
+    "style": 0.3
    },
-   "model": "eleven_v4",
-   "text": "未知生，焉知死？"
+   "text": "秦始皇陵的土里，汞，是周围的七十多倍。两千多年前的《史记》写着：里面，有水银做的江河。可直到今天，没有一个人打开过它。秦始皇陵，为什么不挖？"
   },
   {
-   "name": "CQ_m1",
+   "name": "N3_doc_male",
    "lang": "zh",
    "gender": "male",
    "accent": "standard",
+   "age": "middle_aged",
+   "use_case": "narrative_story",
    "pick": 1,
    "settings": {
     "stability": 0.5,
     "similarity_boost": 0.8,
-    "style": 0.35
+    "style": 0.3
    },
-   "model": "eleven_v4",
-   "text": "未知生，焉知死？"
+   "text": "秦始皇陵的土里，汞，是周围的七十多倍。两千多年前的《史记》写着：里面，有水银做的江河。可直到今天，没有一个人打开过它。秦始皇陵，为什么不挖？"
   },
   {
-   "name": "CQ_m2",
+   "name": "N4_doc_male",
    "lang": "zh",
    "gender": "male",
    "accent": "standard",
+   "age": "middle_aged",
+   "use_case": "narrative_story",
    "pick": 2,
    "settings": {
     "stability": 0.5,
     "similarity_boost": 0.8,
-    "style": 0.35
+    "style": 0.3
    },
-   "model": "eleven_v4",
-   "text": "未知生，焉知死？"
+   "text": "秦始皇陵的土里，汞，是周围的七十多倍。两千多年前的《史记》写着：里面，有水银做的江河。可直到今天，没有一个人打开过它。秦始皇陵，为什么不挖？"
   },
   {
-   "name": "CQ_o0",
+   "name": "N5_edu_male",
    "lang": "zh",
    "gender": "male",
-   "search": "老",
+   "accent": "standard",
+   "use_case": "informative_educational",
    "pick": 0,
    "settings": {
     "stability": 0.5,
     "similarity_boost": 0.8,
-    "style": 0.35
+    "style": 0.3
    },
-   "model": "eleven_v4",
-   "text": "未知生，焉知死？"
+   "text": "秦始皇陵的土里，汞，是周围的七十多倍。两千多年前的《史记》写着：里面，有水银做的江河。可直到今天，没有一个人打开过它。秦始皇陵，为什么不挖？"
   },
   {
-   "name": "CQ_o1",
+   "name": "N6_female",
    "lang": "zh",
-   "gender": "male",
-   "search": "老",
-   "pick": 1,
+   "gender": "female",
+   "accent": "standard",
+   "use_case": "narrative_story",
+   "pick": 0,
    "settings": {
     "stability": 0.5,
     "similarity_boost": 0.8,
-    "style": 0.35
+    "style": 0.3
    },
-   "model": "eleven_v4",
-   "text": "未知生，焉知死？"
+   "text": "秦始皇陵的土里，汞，是周围的七十多倍。两千多年前的《史记》写着：里面，有水银做的江河。可直到今天，没有一个人打开过它。秦始皇陵，为什么不挖？"
   },
   {
-   "name": "T2_f0",
+   "name": "Q1_old_male",
    "lang": "zh",
-   "gender": "female",
+   "gender": "male",
    "accent": "standard",
-   "age": "young",
+   "age": "old",
    "pick": 0,
    "settings": {
-    "stability": 0.35,
+    "stability": 0.6,
     "similarity_boost": 0.8,
-    "style": 0.6
+    "style": 0.25
    },
-   "model": "eleven_v4",
-   "text": "你也没睡？明天吃火锅！"
+   "text": "以水银为百川江河大海，机相灌输，上具天文，下具地理。"
   },
   {
-   "name": "T2_f1",
+   "name": "Q2_old_male",
    "lang": "zh",
-   "gender": "female",
+   "gender": "male",
    "accent": "standard",
-   "age": "young",
+   "age": "old",
    "pick": 1,
    "settings": {
-    "stability": 0.35,
+    "stability": 0.6,
     "similarity_boost": 0.8,
-    "style": 0.6
+    "style": 0.25
    },
-   "model": "eleven_v4",
-   "text": "你也没睡？明天吃火锅！"
-  },
-  {
-   "name": "T2_f2",
-   "lang": "zh",
-   "gender": "female",
-   "accent": "standard",
-   "age": "young",
-   "pick": 2,
-   "settings": {
-    "stability": 0.35,
-    "similarity_boost": 0.8,
-    "style": 0.6
-   },
-   "model": "eleven_v4",
-   "text": "你也没睡？明天吃火锅！"
+   "text": "以水银为百川江河大海，机相灌输，上具天文，下具地理。"
   }
  ]
 }
