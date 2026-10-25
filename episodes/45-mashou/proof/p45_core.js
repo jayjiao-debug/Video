@@ -27,7 +27,7 @@ P.cam = (start, keys) => (t) => {
 	let c = start;
 	for (const k of keys) {
 		if (t <= k.t0) break;
-		const u = P.clamp((t - k.t0) / (k.t1 - k.t0)), e = k.ease === 'out' ? P.easeOut(u) : k.ease === 'linear' ? u : k.ease === 'out3' ? P.easeOut3(u) : P.smooth(u);
+		const u = P.clamp((t - k.t0) / (k.t1 - k.t0)), e = k.ease === 'mix' ? P.easeMix(u) : k.ease === 'out' ? P.easeOut(u) : k.ease === 'linear' ? u : k.ease === 'out3' ? P.easeOut3(u) : P.smooth(u);
 		c = [P.lerp(c[0], k.to[0], e), P.lerp(c[1], k.to[1], e), Math.exp(P.lerp(Math.log(c[2]), Math.log(k.to[2]), e))];
 		if (t < k.t1) break;
 	}
