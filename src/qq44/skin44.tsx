@@ -1,5 +1,5 @@
 import React, {createContext, useContext, useEffect, useState} from 'react';
-import {continueRender, delayRender, staticFile} from 'remotion';
+import {continueRender, delayRender, staticFile, Img} from 'remotion';
 /* ep44 episode skin (owner note 2): same layout as look A, reskinned for "you are Einstein's brain".
    Key words in the brain's rose-gold, a modern sans for the story text, lab-record mono years in the stamp,
    and the counter as a specimen label. No red anywhere. */
@@ -52,7 +52,7 @@ const Who: React.FC<{who: string; from?: string; k?: number; style: React.CSSPro
 	: <span style={{...style, position: 'relative', display: 'inline-block'}}><span style={{opacity: 1 - k}}>{from}</span><span style={{position: 'absolute', left: 0, top: 0, opacity: k}}>{who}</span></span>;
 /** B/C/D: the counter at the reference proportions (number 42, 你/岁 24, era 22), lighter weights, a little dimmer */
 const CounterQ: React.FC<React.ComponentProps<typeof Counter>> = ({era, v, blur = 0, o = 1, who = '你', date, pulse = 0, grey, lift = 0, whoFrom, whoK}) =>
-	<div style={{...fx, left: 44, bottom: 30 + lift, display: 'flex', alignItems: 'flex-end', gap: 7, whiteSpace: 'nowrap', opacity: 0.88 * o, transform: pulse ? `scale(${1 + 0.1 * pulse})` : undefined, transformOrigin: '0% 100%', color: grey ? '#9aa0a4' : INK, textShadow: pulse ? `0 0 2px rgba(10,8,8,0.9), 0 1px 5px rgba(10,8,8,0.7), 0 0 ${14 + 22 * pulse}px rgba(255,150,110,${0.6 * pulse})` : QUIET_SH}}>
+	<div style={{...fx, left: SAFE_X, bottom: SAFE_Y + lift, display: 'flex', alignItems: 'flex-end', gap: 7, whiteSpace: 'nowrap', opacity: 0.88 * o, transform: pulse ? `scale(${1 + 0.1 * pulse})` : undefined, transformOrigin: '0% 100%', color: grey ? '#9aa0a4' : INK, textShadow: pulse ? `0 0 2px rgba(10,8,8,0.9), 0 1px 5px rgba(10,8,8,0.7), 0 0 ${14 + 22 * pulse}px rgba(255,150,110,${0.6 * pulse})` : QUIET_SH}}>
 		{era && <span style={{fontSize: 22, fontWeight: 500, opacity: 0.75, marginBottom: 5, marginRight: 5, letterSpacing: '0.1em'}}>{era}</span>}
 		<Who who={who} from={whoFrom} k={whoK} style={{fontSize: 24, fontWeight: 500, marginBottom: 4}} />
 		<span style={{fontFamily: FIG, fontSize: 42, fontWeight: 400, lineHeight: 1, fontVariantNumeric: 'tabular-nums'}}><Odo v={v} size={42} blur={blur * 0.7} /></span>
@@ -60,7 +60,7 @@ const CounterQ: React.FC<React.ComponentProps<typeof Counter>> = ({era, v, blur 
 		{date && <span style={{fontFamily: MONO, fontSize: 17, fontWeight: 400, opacity: 0.55, marginBottom: 6, marginLeft: 10, letterSpacing: '0.04em'}}>{date}</span>}
 	</div>;
 const CounterA: React.FC<React.ComponentProps<typeof Counter>> = ({era, v, blur = 0, o = 1, who = '你', date, pulse = 0, grey, lift = 0, whoFrom, whoK}) =>
-	<div style={{...fx, left: 44, bottom: 30 + lift, display: 'flex', alignItems: 'flex-end', gap: 10, whiteSpace: 'nowrap', opacity: o, transform: pulse ? `scale(${1 + 0.1 * pulse})` : undefined, transformOrigin: '0% 100%', color: grey ? '#9aa0a4' : INK, textShadow: pulse ? `0 0 2px rgba(10,8,8,0.9), 0 2px 8px rgba(10,8,8,0.75), 0 0 ${20 + 30 * pulse}px rgba(255,150,110,${0.6 * pulse})` : '0 0 2px rgba(10,8,8,0.9), 0 2px 8px rgba(10,8,8,0.75), 0 0 26px rgba(10,8,8,0.55)'}}>
+	<div style={{...fx, left: SAFE_X, bottom: SAFE_Y + lift, display: 'flex', alignItems: 'flex-end', gap: 10, whiteSpace: 'nowrap', opacity: o, transform: pulse ? `scale(${1 + 0.1 * pulse})` : undefined, transformOrigin: '0% 100%', color: grey ? '#9aa0a4' : INK, textShadow: pulse ? `0 0 2px rgba(10,8,8,0.9), 0 2px 8px rgba(10,8,8,0.75), 0 0 ${20 + 30 * pulse}px rgba(255,150,110,${0.6 * pulse})` : '0 0 2px rgba(10,8,8,0.9), 0 2px 8px rgba(10,8,8,0.75), 0 0 26px rgba(10,8,8,0.55)'}}>
 		{era && <span style={{fontSize: 26, fontWeight: 700, opacity: 0.8, marginBottom: 8, marginRight: 6, letterSpacing: '0.08em'}}>{era}</span>}
 		<Who who={who} from={whoFrom} k={whoK} style={{fontSize: 30, fontWeight: 700, marginBottom: 6}} />
 		<span style={{fontFamily: FIG, fontSize: 62, fontWeight: 700, lineHeight: 1, fontVariantNumeric: 'tabular-nums'}}><Odo v={v} size={62} blur={blur} /></span>
@@ -87,7 +87,7 @@ export const useStampFonts = (text: string) => {
 };
 const StampBody: React.FC<{y: string; place?: string; note?: string; o: number}> = ({y, place, note, o}) => {
 	useStampFonts(`${y}${place ?? ''}${note ?? ''}·→`);
-	if (useSkin() !== 'A') return <div style={{position: 'absolute', top: 54, right: 60, textAlign: 'right', paddingRight: 14, borderRight: `2px solid ${ROSE}`, opacity: 0.85 * o, color: INK, textShadow: QUIET_SH, whiteSpace: 'nowrap'}}>
+	if (useSkin() !== 'A') return <div style={{position: 'absolute', top: SAFE_Y + 6, right: SAFE_X, textAlign: 'right', paddingRight: 14, borderRight: `2px solid ${ROSE}`, opacity: 0.85 * o, color: INK, textShadow: QUIET_SH, whiteSpace: 'nowrap'}}>
 		<div style={{lineHeight: 1.15, display: 'flex', alignItems: 'baseline', justifyContent: 'flex-end', gap: 9}}>
 			<span style={{fontFamily: YEAR, fontWeight: 600, fontSize: 46, letterSpacing: '0.02em'}}>{y}</span>
 			{place && <><span style={{fontFamily: YEAR, fontWeight: 600, fontSize: 30, color: ROSE}}>·</span><span style={{fontFamily: KAI, fontWeight: 700, fontSize: 34, letterSpacing: '0.05em'}}>{place}</span></>}
@@ -95,7 +95,7 @@ const StampBody: React.FC<{y: string; place?: string; note?: string; o: number}>
 		{note && <div style={{fontFamily: KAI, fontWeight: 700, fontSize: 24, lineHeight: 1.45, marginTop: 3, letterSpacing: '0.06em', opacity: 0.7}}>{note}</div>}
 	</div>;
 	const soft = '0 0 2px rgba(10,8,8,0.95), 0 2px 8px rgba(10,8,8,0.7), 0 2px 20px rgba(10,8,8,0.55)';
-	return <div style={{position: 'absolute', top: 54, right: 60, textAlign: 'right', paddingRight: 18, borderRight: `4px solid ${ROSE}`, opacity: o, color: INK, textShadow: soft, whiteSpace: 'nowrap'}}>
+	return <div style={{position: 'absolute', top: SAFE_Y + 6, right: SAFE_X, textAlign: 'right', paddingRight: 18, borderRight: `4px solid ${ROSE}`, opacity: o, color: INK, textShadow: soft, whiteSpace: 'nowrap'}}>
 		<div style={{lineHeight: 1.1, display: 'flex', alignItems: 'baseline', justifyContent: 'flex-end', gap: 12}}>
 			<span style={{fontFamily: YEAR, fontWeight: 700, fontSize: 60, letterSpacing: '0.02em'}}>{y}</span>
 			{place && <><span style={{fontFamily: YEAR, fontWeight: 700, fontSize: 44, color: ROSE}}>·</span><span style={{fontFamily: KAI, fontWeight: 700, fontSize: 42, letterSpacing: '0.05em'}}>{place}</span></>}
@@ -106,12 +106,12 @@ const StampBody: React.FC<{y: string; place?: string; note?: string; o: number}>
 /** stamp (top-right): line 1 = year (Cormorant italic) · place (文楷); line 2 = a short dim note (文楷, ≤ 10 字); rose-gold rule */
 export const Stamp: React.FC<{y: string; place?: string; note?: string; o?: number}> = ({y, place, note, o = 1}) =>
 	<StampBody key={`${y}|${place}|${note}`} y={y} place={place} note={note} o={o} />;
-/** the brand as a small seal, bottom-right, low opacity. Final pass (QA: the round J read as an ⓘ info icon): a square seal-stamp,
-    double rule, a serif J monogram over a tiny JUNO, rotated like a hand-pressed chop. */
-export const Seal: React.FC = () => <div style={{position: 'absolute', right: 30, bottom: 26, width: 60, height: 60, borderRadius: 6, border: `2.5px solid ${INK}`, opacity: 0.42, transform: 'rotate(-8deg)', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center'}}>
-	<div style={{position: 'absolute', inset: 4, borderRadius: 3, border: `1px solid ${INK}`}} />
-	<span style={{fontFamily: "'Cormorant44','DejaVu Serif',serif", fontStyle: 'italic', fontWeight: 700, fontSize: 32, color: INK, lineHeight: 0.9, marginTop: 1}}>J</span>
-	<span style={{fontFamily: "'DejaVu Sans',sans-serif", fontWeight: 700, fontSize: 8.5, letterSpacing: '0.22em', color: INK, lineHeight: 1, marginTop: 2, marginLeft: '0.22em'}}>JUNO</span></div>;
+/** the brand seal, bottom-right: the owner's red hand-pressed J stamp (public/ep44/jseal.png, cut from the owner's reference).
+    Round 5 (owner: elements too close to the edge get cut off on iPhone): every corner element sits inside a phone-safe margin
+    (SAFE_X from the sides, SAFE_Y from top/bottom). */
+export const SAFE_X = 120, SAFE_Y = 58;
+export const SEAL_SRC = staticFile('ep44/jseal.png');
+export const Seal: React.FC = () => <Img src={SEAL_SRC} style={{position: 'absolute', right: SAFE_X, bottom: SAFE_Y - 6, width: 74, height: 74, opacity: 0.9, transform: 'rotate(-6deg)'}} />;
 /** story text, top-left; rows stack (row 1 stays while row 2 types) */
 export const Story: React.FC<{rows: SubRow[]}> = ({rows}) => {
 	const skin = useSkin();

@@ -29,11 +29,24 @@ const scr = (p: P2, cx: number, cy: number, z: number): P2 => [(p[0] - cx) * z +
 /** place a figure so that its Head joint lands at (hx, hy) */
 const placeHead = (pose: Pose, hx: number, hy: number, h: number, flip = false) => ({x: hx - (flip ? -1 : 1) * pose.Head[0] * h, ground: hy + pose.Head[1] * h});
 /** round 2 (owner note 3): one offset for every profile head: the glow sits 0.04 h behind the head centre (the head reaches ≈ 0.07 h back) */
-export const GLOW_BACK = 0.04;
+/* round 3 (owner note "the glow left the brain and is leaving a trail"): 0.04 put the centre so close to the back of the skull that
+   the glow spilled out behind the head. It now sits in the middle of the back half of the skull (0.026), and every profile glow is
+   drawn through `InHead` (a feathered mask of the skull), so it reads as light inside the head, never floating behind it. */
+export const GLOW_BACK = 0.026;
 /** the back of the skull (final pass: the 你 glow sits behind the ear in profile, never on the face) */
 export const skullBack = (pose: Pose, x: number, g: number, h: number, flip = false, k = 0.03, down = 0): P2 => { const n1 = jointAt(pose, 'Neck1', x, g, h, flip), tp = jointAt(pose, 'Top', x, g, h, flip), c = headC(pose, x, g, h, flip);
 	const ux = tp[0] - n1[0], uy = tp[1] - n1[1], l = Math.hypot(ux, uy) || 1, fx = -uy / l, fy = ux / l, sgn = flip ? -1 : 1;   // f = the face direction
 	return [c[0] - sgn * fx * k * h * 0.93 - ux / l * down * h * 0.93, c[1] - sgn * fy * k * h * 0.93 - uy / l * down * h * 0.93]; };   // down: toward the nape
+/** the skull as an ellipse in world coordinates (inside the head outline of figure44's profile head; hair not included) */
+export const skullEllipse = (pose: Pose, x: number, g: number, h: number, flip = false) => { const n1 = jointAt(pose, 'Neck1', x, g, h, flip), tp = jointAt(pose, 'Top', x, g, h, flip), c = skullBack(pose, x, g, h, flip, 0.006, -0.006);
+	return {cx: c[0], cy: c[1], rx: 0.057 * h * 0.93, ry: 0.064 * h * 0.93, rot: Math.atan2(tp[1] - n1[1], tp[0] - n1[0]) * 180 / Math.PI + 90}; };
+export type Skull = ReturnType<typeof skullEllipse>;
+/** draws its children only inside the head: `e` = a skull ellipse (feathered edge), or `shape(gradId)` = any white mask shape */
+export const InHead: React.FC<{id: string; e?: Skull; shape?: (grad: string) => React.ReactNode; children: React.ReactNode}> = ({id, e, shape, children}) => <g>
+	<defs><radialGradient id={`${id}ig`}><stop offset="0.72" stopColor="#fff" /><stop offset="1" stopColor="#000" /></radialGradient>
+		<mask id={`${id}im`} maskUnits="userSpaceOnUse" x={-6000} y={-6000} width={14000} height={14000}>
+			{e ? <ellipse cx={e.cx} cy={e.cy} rx={e.rx} ry={e.ry} transform={`rotate(${e.rot} ${e.cx} ${e.cy})`} fill={`url(#${id}ig)`} /> : shape?.(`url(#${id}ig)`)}</mask></defs>
+	<g mask={`url(#${id}im)`}>{children}</g></g>;
 const headC = (pose: Pose, x: number, g: number, h: number, flip = false): P2 => { const hd = jointAt(pose, 'Head', x, g, h, flip), tp = jointAt(pose, 'Top', x, g, h, flip); return [lerp(hd[0], tp[0], 0.45), lerp(hd[1], tp[1], 0.45)]; };
 const Dust: React.FC<{t: number; n?: number; c?: string; o?: number; seed?: number}> = ({t, n = 40, c = '#c8d8dc', o = 0.16, seed = 0}) => <g>{Array.from({length: n}, (_, i) => {
 	const x = ((rnd(i, 1 + seed) * W + t * (8 + 14 * rnd(i, 5))) % (W + 40)) - 20, y = rnd(i, 2 + seed) * H + Math.sin(t * 0.8 + i) * 12;
@@ -244,12 +257,16 @@ export const Storage: React.FC<{t: number}> = ({t}) => {
 const NURSE_HEAD: P2 = [760, 742];
 const kidP = fkPose({hip: 0.36, lean: 10, neck: 22, lt: 88, lk: 92, rt: 84, rk: 88, la: 52, le: 76, ra: 48, re: 80});
 const KX = 1920;
-const homeCam = (t: number): {cx: number; cy: number; z: number} => {
-	let cx = 900 + 30 * Math.sin(t * 0.3), cy = 600, z = 1.12 + 0.012 * (t - T.birth);
-	const pan = ease(seg(t, 17.85, 18.75)); cx = lerp(cx, KX + 980 + 20 * Math.sin(t * 0.4), pan); cy = lerp(cy, 560, pan); z = lerp(z, 1.05 + 0.01 * (t - T.comp), pan);
+/* owner note (flicker at film 20.4–21.3): the camera used to whip 2000 px along the wall in 0.9 s (≈236 px/frame, strobing).
+   Now each room gets its own short, slow drift (240 units over ~1.2 s, peak ≈ 25 px/frame) and the two rooms cross-dissolve in
+   the middle (demo 18.05–18.65 = film 20.55–21.15). From demo 19.25 on the compass-room camera is exactly what it was. */
+const camNursery = (t: number) => ({cx: 900 + 30 * Math.sin(t * 0.3) + 240 * ease(seg(t, 17.6, 18.8)), cy: 600, z: 1.12 + 0.012 * (t - T.birth)});
+const camCompass = (t: number) => { let cx = KX + 980 + 20 * Math.sin(t * 0.4) - 240 * (1 - ease(seg(t, 18.0, 19.25))), cy = 560, z = 1.05 + 0.01 * (t - T.comp);
 	const push = ease(seg(t, 20.75, 21.55)), cp = compassAt(t); cx = lerp(cx, cp[0], push); cy = lerp(cy, cp[1], push); z = lerp(z, 3.4, push);
-	return {cx, cy, z};
-};
+	return {cx, cy, z}; };
+/** the nursery → compass-room dissolve (0 = nursery camera, 1 = compass-room camera) */
+const roomMix = (t: number) => sm(seg(t, 18.05, 18.65));
+const homeCam = (t: number): {cx: number; cy: number; z: number} => (roomMix(t) < 0.5 ? camNursery(t) : camCompass(t));
 /** the father holds the compass out at the boy's eye level, the boy's hands take it; then the father's hand comes back to his knee
     (final pass, logic 18: no empty paddle hands hovering over the boy's head) */
 const fatherP = (t: number) => { const k = ease(seg(t, 18.5, 19.2)), back = ease(seg(t, 19.95, 20.6));
@@ -281,10 +298,10 @@ const Baby: React.FC<{x: number; y: number; t: number}> = ({x, y, t}) => <g tran
 		<path d="M-16,-6 Q-4,-14 2,0 Q0,12 -12,10" stroke={RIMB} strokeWidth={2.5} fill="none" opacity={0.5} />
 	</g>
 	{/* round 2: the back of the skull is the lower part (face up, the crown to the left): behind the ear, not on it */}
-		<HeadGlow x={-30} y={-24} r={18 + 2 * Math.sin(t * 3)} id="bbg" />
+		<InHead id="bbgk" shape={() => <g transform="translate(-14,-70) rotate(-90) scale(1.12)"><path d={BABY_HEAD} fill="#fff" stroke="#000" strokeWidth={9} /></g>}><HeadGlow x={-30} y={-24} r={18 + 2 * Math.sin(t * 3)} id="bbg" /></InHead>
 </g>;
 export const House: React.FC<{t: number; hold?: number}> = ({t, hold = 0}) => {
-	const {cx, cy, z} = homeCam(t), nurse = sm(seg(t, 13.95, 14.6)), rew = 1 - nurse;
+	const {cx, cy, z} = homeCam(t), nurse = sm(seg(t, 13.95, 14.6)), rew = 1 - nurse, mix = roomMix(t);
 	/* final pass (logic 12): she kneels by the cradle, leans in, and on the shock pulls back with a hand to her mouth and one to her chest;
 	   then she reaches back to the cradle's rim (her hand stays on the cradle through the pan) */
 	const k1 = ease(seg(t, 15.0, 15.7)), k2 = ease(seg(t, 16.25, 16.5)), k3 = ease(seg(t, 17.2, 17.9));
@@ -292,10 +309,8 @@ export const House: React.FC<{t: number; hold?: number}> = ({t, hold = 0}) => {
 	const momP = fkPose({hip: 0.36, lt: 94, lk: 94, rt: 0, rk: 90, lean: mp(14, 44, -10, 26), neck: mp(10, 14, -10, 14), la: mp(20, 38, 72, 34), le: mp(30, 6, 152, 8), ra: mp(24, 18, -30, -10), re: mp(30, 30, 148, 120)});
 	const rock = Math.sin(t * 2.2) * 1.6, kGlow = t < T.think ? 0.5 : 1, cp = compassAt(t);
 	const needle = 18 + 28 * Math.sin(t * 2.6) * Math.exp(-Math.max(0, t - 19.9) * 0.9) * seg(t, 19.3, 19.6);
-	return <g>
-		{nurse > 0 && <g opacity={nurse}>
-			<Sky id="hs" stops={[[0, '#3a2c26'], [0.6, '#4a382e'], [0.61, '#2c201a'], [1, '#1a1410']]} />
-			<Cam cx={cx} cy={cy} z={z}>
+	const set = (c: {cx: number; cy: number; z: number}) => (
+			<Cam cx={c.cx} cy={c.cy} z={c.z}>
 				<rect x={-400} y={0} width={4600} height={660} fill="#45342b" /><rect x={-400} y={660} width={4600} height={700} fill="#271c16" />
 				<Wallpaper id="hwp" x={-400} y={0} w={4600} h={500} col="#5e4a3c" o={0.5} />
 				<rect x={-400} y={500} width={4600} height={160} fill="#3a2b22" /><rect x={-400} y={494} width={4600} height={10} fill="#2a1e16" />{Array.from({length: 26}, (_, i) => <rect key={i} x={-380 + i * 180} y={520} width={150} height={120} fill="none" stroke="#2c2018" strokeWidth={4} />)}
@@ -329,11 +344,17 @@ export const House: React.FC<{t: number; hold?: number}> = ({t, hold = 0}) => {
 				</g>
 				<Rimmed x={KX + 760} ground={910} h={700} pose={fatherP(t)} look={LK.father} col="#140f0c" rim="#ffd8a8" rimOp={0.45} />
 				<Rimmed x={KX + 1080} ground={904} h={430} pose={kidP} look={LK.child} flip col="#120e12" rim={RIMB} rimOp={0.7} rimDx={2.4} />
-				{(() => { const c = skullBack(kidP, KX + 1080, 904, 430, true, GLOW_BACK); return <HeadGlow x={c[0]} y={c[1]} r={21.5} id="kg" o={kGlow} />; })()}
+				{(() => { const c = skullBack(kidP, KX + 1080, 904, 430, true, GLOW_BACK); return <InHead id="kgk" e={skullEllipse(kidP, KX + 1080, 904, 430, true)}><HeadGlow x={c[0]} y={c[1]} r={21.5} id="kg" o={kGlow} /></InHead>; })()}
 				<Compass44 x={cp[0]} y={cp[1]} r={30} a={needle} glow={0.4} id="hc" />
 				<g fill="#0b0807"><path d="M30,1100 L40,780 Q120,740 200,780 L210,1100 Z" /><rect x={20} y={900} width={220} height={26} rx={6} />
 					<g transform={`translate(${KX + 1800},1080)`}><rect x={-60} y={-110} width={120} height={110} rx={10} />{Array.from({length: 7}, (_, i) => <ellipse key={i} cx={Math.cos(i) * 70} cy={-150 - 60 * rnd(i, 2)} rx={60} ry={22} transform={`rotate(${-40 + i * 14} 0 -110)`} />)}</g></g>
 			</Cam>
+	);
+	return <g>
+		{nurse > 0 && <g opacity={nurse}>
+			<Sky id="hs" stops={[[0, '#3a2c26'], [0.6, '#4a382e'], [0.61, '#2c201a'], [1, '#1a1410']]} />
+			{mix > 0 && set(mix < 1 ? camCompass(t) : {cx, cy, z})}
+			{mix < 1 && <g opacity={1 - mix}>{set(mix > 0 ? camNursery(t) : {cx, cy, z})}</g>}
 		</g>}
 		{rew > 0 && <Rewind t={t} o={rew} cam={{cx, cy, z}} hold={hold} />}
 	</g>;
@@ -413,6 +434,8 @@ const k2Pose = (rot: number, look: number): {pose: Pose; head: P2; glow: P2} => 
 };
 /** where the boy's head glow sits (the back of his skull) for a given look */
 export const k2Glow = (look = 0): P2 => k2Pose(0, look).glow;
+/** the boy's skull ellipse for a given look (the ending's extra glow is masked to it) */
+export const k2Skull = (look = 0) => skullEllipse(k2Pose(0, look).pose, KX0, KG, KH);
 const fp = (p: P2) => `${p[0].toFixed(4)},${p[1].toFixed(4)}`;
 /* the near hand (units of r, compass-local, before rotation): palm cupping the lower-left rim, four fingers curling up the left side */
 const NEAR_D = (() => { const o: string[] = [`M${fp(pol(122, 1.02))}`, `L${fp(pol(122, 1.3))}`, `Q${fp(pol(136, 1.42))} ${fp(pol(150, 1.36))}`];
@@ -430,11 +453,13 @@ const FAR_D = (() => { const o: string[] = [`M${fp(pol(-30, 1.03))}`, `L${fp(pol
 	for (let i = 0; i <= 10; i++) o.push(`L${fp(pol(lerp(46, -30, i / 10), 1.03))}`); return o.join(' ') + ' Z'; })();
 const TIP = (a: number, len: number, w: number) => { const b = pol(a, 1.08), t = pol(a, 1.08 - len), n: P2 = [-Math.sin(a * Math.PI / 180) * w / 2, Math.cos(a * Math.PI / 180) * w / 2];
 	return `M${fp([b[0] + n[0], b[1] + n[1]])} L${fp([t[0] + n[0], t[1] + n[1]])} A${w / 2},${w / 2} 0 0 0 ${fp([t[0] - n[0], t[1] - n[1]])} L${fp([b[0] - n[0], b[1] - n[1]])} Z`; };
-const FAR_TIPS = [-22, -6, 10, 26].map((a, i) => ({d: TIP(a, i === 3 ? 0.1 : 0.13, 0.13), a}));
+/* owner note (round 4): the far fingertips read as four outlined claws with grey nails. Now they are short, plain, slightly
+   overlapping pads in the hand's own tone (no outline, no nails), so the right hand reads as one soft grip on the bezel. */
+const FAR_TIPS = [-20, -6, 8, 22].map((a, i) => ({d: TIP(a, i === 3 ? 0.06 : 0.085, 0.15), a}));
 /** the boy's hands, drawn over the compass (rotate with it) */
 const K2Hands: React.FC<{rot: number; r: number; rim?: number}> = ({rot, r, rim = 0.4}) => <g transform={`translate(${K2_C[0]},${K2_C[1]}) rotate(${rot * 0.9}) scale(${r})`}>
 	<path d={FAR_D} fill={SKIN} /><path d={FAR_D} fill="none" stroke={RIMB} strokeWidth={2.2 / r} opacity={rim} />
-	{FAR_TIPS.map((f, i) => <g key={i}><path d={f.d} fill={SKIN} stroke={EDGE} strokeWidth={2 / r} /><ellipse cx={pol(f.a, 0.99)[0]} cy={pol(f.a, 0.99)[1]} rx={0.035} ry={0.045} fill={NAIL} transform={`rotate(${f.a} ${pol(f.a, 0.99)[0]} ${pol(f.a, 0.99)[1]})`} opacity={0.8} /></g>)}
+	{FAR_TIPS.map((f, i) => <path key={i} d={f.d} fill={SKIN} />)}
 	<path d={NEAR_D} fill={SKIN} /><path d={NEAR_D} fill="none" stroke={RIMB} strokeWidth={2.4 / r} opacity={rim} />
 	{[0, 1, 2].map((j) => { const a = 153 + (j + 1) * 12.5 - 1; return <path key={j} d={`M${fp(pol(a, 1.06))} L${fp(pol(a + 0.5, 1.24))}`} stroke={EDGE} strokeWidth={2.2 / r} opacity={0.9} />; })}
 	<path d={THUMB_D} fill={SKIN} stroke={EDGE} strokeWidth={2.2 / r} strokeLinejoin="round" />
@@ -457,7 +482,7 @@ export const K2Scene: React.FC<{t: number; id: string; look?: number; flare: num
 		{Array.from({length: 7}, (_, i) => <circle key={i} cx={1500 + rnd(i, 3) * 400} cy={200 + rnd(i, 4) * 400} r={30 + 40 * rnd(i, 5)} fill="#ffe2b0" opacity={0.04 + 0.04 * rnd(i, 6)} />)}
 		<Rimmed x={KX0} ground={KG} h={KH} pose={kp.pose} look={K2LOOK} col="#130e0d" rim={RIMB} rimOp={rimOp} />
 		{bright > 0 && <Glow x={kp.glow[0]} y={kp.glow[1]} r={420} c={B.mid} o={0.3 * bright} id={`${id}hb`} />}
-		<HeadGlow x={kp.glow[0]} y={kp.glow[1]} r={66 + 24 * bright} id={`${id}h`} o={flare} />
+		<InHead id={`${id}hk`} e={skullEllipse(kp.pose, KX0, KG, KH)}><HeadGlow x={kp.glow[0]} y={kp.glow[1]} r={66 + 24 * bright} id={`${id}h`} o={flare} /></InHead>
 		{fl > 0 && <g opacity={fl * 0.8 * fieldK}>{Array.from({length: 7}, (_, i) => { const s = (i - 3) * 0.32, L = 900;
 			return <path key={i} d={`M${tip[0]},${tip[1]} C${tip[0] + Math.sin(s) * 300},${tip[1] - 300} ${tip[0] + Math.sin(s) * L},${tip[1] - 200 - 300 * Math.cos(s)} ${tip[0] + Math.sin(s) * L * 1.4},${tip[1] + 200}`} stroke={B.core} strokeWidth={2} fill="none" strokeDasharray="14 12" strokeDashoffset={-t * 60} opacity={0.6 - Math.abs(i - 3) * 0.12} />; })}</g>}
 		<Glow x={C[0]} y={C[1]} r={r * 3.4} c={B.mid} o={0.5 * Math.min(1.2, flare)} id={`${id}cg`} />
@@ -494,9 +519,9 @@ export const Meadow: React.FC<{t: number}> = ({t}) => {
 	/* final pass (logic 21): 追着光跑 = a run, not a stroll: forward lean, high knees, bent arms pumping, a bounce */
 	const sn = Math.sin(ph), runP = fkPose({hip: 0.6 + 0.025 * Math.abs(Math.cos(ph)), lean: 16, neck: -6, lt: 44 * sn + 6, lk: 18 + 70 * Math.max(0, Math.sin(ph - 1.2)), rt: -44 * sn + 6, rk: 18 + 70 * Math.max(0, Math.sin(ph - 1.2 + Math.PI)),
 		lf: 10 * Math.max(0, -sn), rf: 10 * Math.max(0, sn), la: -40 * sn + 6, le: 88, ra: 40 * sn + 6, re: 88});
-	const hc = skullBack(runP, rx, g, h, false, GLOW_BACK), beamY = 600, bx = rx + 240 + 20 * Math.sin(u * 2.4);
+	const hc0 = skullBack(runP, rx, g, h, false, GLOW_BACK), q4 = 4 * Math.PI / 180, hcR: P2 = [rx + (hc0[0] - rx) * Math.cos(q4) - (hc0[1] - g) * Math.sin(q4), g + (hc0[0] - rx) * Math.sin(q4) + (hc0[1] - g) * Math.cos(q4)], hc = hc0, beamY = 600, bx = rx + 240 + 20 * Math.sin(u * 2.4);
 	const intro = ease(seg(u, 0, 0.9)), push = ei(seg(t, 28.05, 28.5));
-	const cx = lerp(lerp(bx, 960, intro) + 20 * u, hc[0], push), cy = lerp(lerp(beamY, 540, intro), hc[1], push), z = lerp(lerp(2.6, 1.02, intro) + 0.015 * u, 3.0, push);
+	const cx = lerp(lerp(bx, 960, intro) + 20 * u, hcR[0], push), cy = lerp(lerp(beamY, 540, intro), hcR[1], push)   /* the push lands on the glow as drawn (the runner is drawn rotated 4°) */, z = lerp(lerp(2.6, 1.02, intro) + 0.015 * u, 3.0, push);
 	return <g>
 		<Sky id="l1s" stops={[[0, '#1f2a33'], [0.42, '#3b4550'], [0.6, '#857a72'], [0.7, '#a5948a']]} />
 		<Cam cx={cx} cy={cy} z={z}>
@@ -515,9 +540,9 @@ export const Meadow: React.FC<{t: number}> = ({t}) => {
 			<defs><linearGradient id="l1b" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stopColor="#fff8e8" stopOpacity="0" /><stop offset="0.8" stopColor="#fff8e8" stopOpacity="0.85" /><stop offset="1" stopColor="#ffffff" stopOpacity="1" /></linearGradient></defs>
 			<rect x={-240} y={beamY - 5} width={bx + 240} height={10} rx={5} fill="url(#l1b)" /><Glow x={bx} y={beamY} r={150} c="#fff6e0" o={0.9} id="l1bh" />
 			<path d={Array.from({length: 40}, (_, i) => `${i ? 'L' : 'M'}${bx - 40 - i * 14},${beamY + 22 * Math.sin(i * 0.55) * (1 - i / 44)}`).join(' ')} stroke="#fff6e0" strokeWidth={3} fill="none" opacity={0.55} />
-			{Array.from({length: 6}, (_, i) => <rect key={i} x={rx - 220 - i * 70} y={hc[1] - 4 + i * 3} width={150 - i * 18} height={4} rx={2} fill={B.mid} opacity={0.5 - i * 0.07} />)}
 			<g transform={`rotate(4 ${rx} ${g})`}><Rimmed x={rx} ground={g} h={h} pose={runP} look={LK.teen} col="#120e12" rim={RIMB} rimOp={0.7} rimDx={-2.4} /></g>
-			<HeadGlow x={hc[0]} y={hc[1]} r={26} id="l1g" />
+			{/* round 3: no trailing streak behind the head; the glow sits inside the skull (the figure is drawn rotated 4°, so is the mask) */}
+			<g transform={`rotate(4 ${rx} ${g})`}><InHead id="l1gk" e={skullEllipse(runP, rx, g, h)}><HeadGlow x={hc[0]} y={hc[1]} r={26} id="l1g" /></InHead></g>
 			{Array.from({length: 9}, (_, i) => { const x = ((i * 290 - scroll * 1.5) % 2600 + 2600) % 2600 - 300; return <path key={`fg${i}`} d={`M${x},1100 q10,-${120 + 60 * rnd(i, 2)} 30,-${150 + 70 * rnd(i, 3)} q-4,60 4,150 Z M${x + 40},1100 q-8,-90 -40,-${110 + 40 * rnd(i, 4)} q30,40 50,110 Z`} fill="#0a0c0b" />; })}
 			{Array.from({length: 5}, (_, i) => <rect key={i} x={rx - 340 - i * 80} y={760 + i * 34} width={140 - i * 16} height={3} fill="#fff" opacity={0.3 - i * 0.05} />)}
 		</Cam>
@@ -576,7 +601,7 @@ export const Office: React.FC<{t: number}> = ({t}) => {
 			{/* the beam from 16 still runs in his head, then folds into the paper */}
 			<Rimmed x={DX} ground={DG} h={DH} pose={p} look={LK.ein} col="#121212" rim={RIMB} rimOp={0.6} />
 			<g transform="translate(600,930)"><rect x={-70} y={-262} width={140} height={14} fill="#1e1a16" /><rect x={-60} y={-248} width={10} height={248} fill="#1e1a16" /><rect x={50} y={-248} width={10} height={248} fill="#1e1a16" /></g>
-			<HeadGlow x={hc[0]} y={hc[1]} r={26 + 8 * lit} id="ofh" />
+			<InHead id="ofhk" e={skullEllipse(p, DX, DG, DH)}><HeadGlow x={hc[0]} y={hc[1]} r={26 + 8 * lit} id="ofh" /></InHead>
 			{/* round 2: the beam from 16 is a small spark circling inside the glow (the old dash read as a headlamp beam) */}
 			{(() => { const a = u * 5.5; return t < 33.4 ? <circle cx={hc[0] + 7 * Math.cos(a)} cy={hc[1] + 5 * Math.sin(a)} r={2.6} fill="#fff" opacity={0.75} /> : null; })()}
 			{t >= 33.3 && (() => { const k = ease(seg(t, 33.4, 33.85)), ex = lerp(hc[0], S3[0], k), ey = lerp(hc[1], S3[1], k), mx = (hc[0] + ex) / 2, my = Math.min(hc[1], ey) - 120 * k;

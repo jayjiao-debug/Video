@@ -2,7 +2,7 @@ import React from 'react';
 import {W, H, rnd, lerp, Glow, Rimmed, fkPose, Look4, Pose, B, jointAt, Sky, BRAIN_D, HeadGlow, Jar} from './kit44';
 import {SANS, MONO, ROSE, INK} from './skin44';
 import {Shaft, Motes, Pendant, Shelf, Frame, Wallpaper, Curtain, Cloud, Clock} from './bg44';
-import {seg, ease, eo, ei, sm, cl, Cam, Sticker, ColdBrain, skullBack, GLOW_BACK} from './demo44';
+import {seg, ease, eo, ei, sm, cl, Cam, Sticker, ColdBrain, skullBack, GLOW_BACK, InHead, skullEllipse} from './demo44';
 /* ep44 full rough cut, part A: film 35.5–95.5 (lines 12–30 of lines.json v2, film = +0.5 s).
    Same family as the demo: flat-vector sets with layered dressing, a camera on every shot, rose-gold only for 你.
    你/他 glow rule: the head glow flares on 你 lines and dims on 他 lines. Each scene takes film time t. */
@@ -19,7 +19,7 @@ const headC = (pose: Pose, x: number, g: number, h: number, flip = false): P2 =>
 const Carrier: React.FC<{x: number; g: number; h: number; pose: Pose; look: Look4; flip?: boolean; id: string; glow: number; col?: string; rimOp?: number}> = ({x, g, h, pose, look, flip, id, glow, col = '#120e10', rimOp = 0.6}) => {
 	const c = skullBack(pose, x, g, h, flip, GLOW_BACK);
 	return <g><Rimmed x={x} ground={g} h={h} pose={pose} look={look} flip={flip} col={col} rim={RIMB} rimOp={rimOp} rimDx={flip ? 2.4 : -2.4} />
-		<HeadGlow x={c[0]} y={c[1]} r={h * 0.048 * (0.75 + 0.35 * glow)} id={id} o={cl(glow, 0, 1.4)} /></g>; };
+		<InHead id={`${id}k`} e={skullEllipse(pose, x, g, h, flip)}><HeadGlow x={c[0]} y={c[1]} r={h * 0.048 * (0.75 + 0.35 * glow)} id={id} o={cl(glow, 0, 1.4)} /></InHead></g>; };
 /** a plain walk built on the same skeleton; arms can be overridden (carrying) */
 const walkP = (ph: number, arms?: {la: number; le: number; ra: number; re: number}, lean = 5) => fkPose({hip: 0.655 - 0.01 * Math.abs(Math.cos(ph)), lean, neck: 4,
 	lt: 20 * Math.sin(ph), lk: 6 + 26 * Math.max(0, Math.sin(ph + 1.7)), rt: -20 * Math.sin(ph), rk: 6 + 26 * Math.max(0, Math.sin(ph + 1.7 + Math.PI)),
@@ -176,7 +176,7 @@ const Nobel: React.FC<{t: number}> = ({t}) => {
 			{/* the table */}
 			<path d="M240,720 L1680,720 L1620,660 L300,660 Z" fill="#4a3a2c" /><rect x={240} y={720} width={1440} height={24} fill="#3a2a1e" /><rect x={280} y={744} width={18} height={300} fill="#2a1e16" /><rect x={1620} y={744} width={18} height={300} fill="#2a1e16" />
 			<Rimmed x={300} ground={1000} h={640} pose={pose} look={LK.ein} col="#130f0e" rim={RIMB} rimOp={0.5} />
-			{(() => { const c = skullBack(pose, 300, 1000, 640, false, GLOW_BACK); return <HeadGlow x={c[0]} y={c[1]} r={30} id="n1h" o={lerp(0.6, 0.38, unlit)} />; })()}
+			{(() => { const c = skullBack(pose, 300, 1000, 640, false, GLOW_BACK); return <InHead id="n1hk" e={skullEllipse(pose, 300, 1000, 640)}><HeadGlow x={c[0]} y={c[1]} r={30} id="n1h" o={lerp(0.6, 0.38, unlit)} /></InHead>; })()}
 			{/* 你的相对论: the 1905 sheet from the office, its glow going out */}
 			<g transform="translate(700,560) rotate(-4)">
 				<Glow x={0} y={0} r={260} c={B.halo} o={0.35 * (1 - unlit)} id="n1rg" />
@@ -360,7 +360,7 @@ const Hospital: React.FC<{t: number}> = ({t}) => {
 				<path d="M510,688 Q600,676 680,684 Q760,696 840,690 Q960,682 1010,694 Q1050,664 1080,684" stroke="#dfe6f0" strokeWidth={3} fill="none" opacity={0.35 * (1 - grey)} />
 			</g>
 			<rect x={-400} y={-300} width={2800} height={1600} fill="#05070a" opacity={0.5 * after} />
-			<HeadGlow x={HEAD[0] - 20} y={HEAD[1] - 4} r={30 * (1 + 0.5 * pulse)} id="h1g" o={cl(gl, 0, 1.3)} />
+			<InHead id="h1gk" shape={(gr) => <g transform={`rotate(${shake} ${HEAD[0] + 20} ${HEAD[1] + 30})`}><ellipse cx={HEAD[0] - 4} cy={HEAD[1]} rx={50} ry={42} fill={gr} /></g>}><HeadGlow x={HEAD[0] - 20} y={HEAD[1] - 4} r={30 * (1 + 0.5 * pulse)} id="h1g" o={cl(gl, 0, 1.3)} /></InHead>
 			{live && <Motes t={t} x={300} y={500} w={500} h={300} n={14} o={0.5 * after} col={B.mid} seed={3} />}
 		</Cam>
 	</g>;

@@ -1,9 +1,9 @@
 import React from 'react';
-import {AbsoluteFill, Composition, registerRoot, useCurrentFrame} from 'remotion';
+import {AbsoluteFill, Composition, registerRoot, useCurrentFrame, Img} from 'remotion';
 import {W, H} from './kit44';
 import {LINES44F} from './lines44full';
 import {T, seg, sm, ease, ColdBrain, CiderBox, Microscope, Highway, Storage, House, Needle, Meadow, Office} from './demo44';
-import {Story, Punch, Stamp, Seal, Counter, SubRow, Skin, SkinCtx} from './skin44';
+import {Story, Punch, Stamp, Seal, SEAL_SRC, Counter, SubRow, Skin, SkinCtx} from './skin44';
 import {RoughA} from './rough44a';
 import {RoughB} from './rough44b';
 /* ep44 full cut: film 0–164.5 (4935 frames). Picture: the approved demo (0–35.5 story, EP44DEMO's scenes on their v1 clock),
@@ -115,13 +115,13 @@ const Furniture: React.FC<{t: number}> = ({t}) => {
 		{st && <Stamp y={st.s[1]} place={st.s[2]} note={st.s[3]} o={st.o} />}
 		{ghost > 0.01 && <Counter who="他" v={76} grey o={0.75 * ghost} lift={78 + 40 * (1 - ghost)} />}
 		{hideC > 0.01 && <Counter who={who} whoFrom={whoK < 1 ? '你' : undefined} whoK={whoK} era={c.era} v={c.val} blur={c.blur} grey={frozen} pulse={pulse} o={dimC * hideC} date={c.date ? c.date : undefined} />}
-		{t < LINES[48][0] && <Seal />}
+		{t < LINES[48][0] ? <Seal /> : <Img src={SEAL_SRC} style={{position: 'absolute', width: 2, height: 2, opacity: 0}} /> /* keeps the stamp loaded for the end card's SVG image */}
 	</>;
 };
 /** the vignette only (QA / owner row 44: no film grain) */
 const Vignette: React.FC = () => <g pointerEvents="none"><defs><radialGradient id="v44m" cx="0.5" cy="0.5" r="0.75"><stop offset="0.55" stopColor="#000" stopOpacity="0" /><stop offset="1" stopColor="#000" stopOpacity="0.45" /></radialGradient></defs><rect width={W} height={H} fill="url(#v44m)" /></g>;
 /** `skin` picks the caption-layout test variant (SKINTEST.tsx); EP44ROUGH itself always renders skin A */
-export const Rough: React.FC<{skin?: Skin}> = ({skin = 'D'}) => {
+export const Rough: React.FC<{skin?: Skin; pictureOnly?: boolean}> = ({skin = 'D', pictureOnly = false}) => {
 	const f = useCurrentFrame(), ft = f / FPS, {s: t, hold} = storyOf(ft), fade = sm(seg(ft, FILM_END - 1.0, FILM_END - 0.03));
 	return <AbsoluteFill style={{background: '#0c1012'}}>
 		{/* round 2 (owner note 1, the 0:17 "second nursery"): that frame was not drawn twice. In pic.mp4, frames 521, 524–525 and 528–529
@@ -130,7 +130,7 @@ export const Rough: React.FC<{skin?: Skin}> = ({skin = 'D'}) => {
 		    subtitle layer (CSS blur pool + per-frame typing) repaints over this heavy SVG. The picture and the furniture now sit on their
 		    own compositor layers, so subtitle repaints no longer re-raster the picture's tiles (pixels unchanged). */}
 		<svg width={W} height={H} style={{position: 'absolute', willChange: 'transform'}}><Picture t={t} hold={hold} /><Vignette /></svg>
-		<div style={{position: 'absolute', inset: 0, willChange: 'transform'}}><SkinCtx.Provider value={skin}><Furniture t={t} /></SkinCtx.Provider></div>
+		{!pictureOnly && <div style={{position: 'absolute', inset: 0, willChange: 'transform'}}><SkinCtx.Provider value={skin}><Furniture t={t} /></SkinCtx.Provider></div>}
 		{fade > 0 && <AbsoluteFill style={{background: '#06080a', opacity: fade}} />}
 	</AbsoluteFill>;
 };
