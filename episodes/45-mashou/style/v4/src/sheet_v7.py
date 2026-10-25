@@ -20,7 +20,7 @@ frames = [
     ('v7_p3_refuse', 'P3 · 1:06.4', 'Beijing 2009.3.2: the buyer\'s press table; 「未付款」 lands on the board'),
     ('v7_e2_stop', 'E2 · 1:16.2', 'the stop: Ho\'s lamp has just gone out (e2a_lamp, counter hidden)'),
     ('v7_r1_drop', 'R1 · 1:27.2', 'the drop: 「它回到了圆明园」, 文殊亭 doors open; counter back as 回园 1/12'),
-    ('v7_r5_ear', 'R5 · 1:40.0', 'push on the ears: the near one rolled (ringed), the far one straight'),
+    ('v7_r5_ear', 'R5 · 1:40.0', 'macro on the ears: the near one thick, its tip folded down over the cup (dog-ear), the far one straight; counter out'),
     ('v7_q_end', 'Q · 2:00.0', 'the ending question; the dial: 7 home in China (6 ivory + the horse), 5 dashed'),
 ]
 os.makedirs(OUT + 'check400', exist_ok=True)
