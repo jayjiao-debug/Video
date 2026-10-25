@@ -2,8 +2,8 @@
 // leaking from its slats; pickup b148: headlights flare + the 圆明园 gate enters left; b151: the van stops, its rear doors crack a
 // vertical copper slit; push 1.00 → 1.12 so the slit sits on x 975) → HARD CUT on 87.17 (mode 1, light-matched: the slit and
 // the 正觉寺 doorway on one vertical) → COURT R1–R2 (v7_r1_drop.js): the 隔扇 leaves swing in as hinged 3D planes (0.7 s,
-// easeOut), the two staff on the film rig take the leaves home, then step aside (walk) out of the light; 「回园 1/12」 punches in
-// centred and settles to the corner; the stamp odometer 1860 → 2020 on b156; the push to the threshold.
+// easeOut), the two staff on the film rig take the leaves home, then step aside (walk) out of the light; (v8: no counter punch here —
+// it moves to C2); the stamp odometer 1860 → 2020 on b156; R2 pushes onto the face and hands over to the RING at 92.016.
 (() => {
 const P = window.P45, rnd = K.rnd, B = P.beat;
 const CUT = 87.17, PICK = B(148), STOP = B(151), ODO = B(156);
@@ -145,7 +145,11 @@ const leaf = (side, th, lit, id) => {
 };
 const DEG = Math.PI / 180;
 const doorTh = (t) => (14 + 76 * P.easeOut3(P.seg(t, CUT, CUT + 0.7)) + 2 * P.smooth(P.seg(t, CUT + 0.72, CUT + 1.1))) * DEG;
-const camCourt = P.cam([960, 540, 1.0], [{t0: CUT, t1: 89.40, to: [975, 580, 1.12]}, {t0: 89.40, t1: 91.80, to: [975, 600, 1.45]}, {t0: 91.80, t1: 93.60, to: [960, 380, 1.0]}]);
+// v8: R2 pushes onto the horse's face and ends on a framing the ring can match at C1 (92.016): the face at screen (935, 600), ×1.30
+const HERO_C = {x: 975 - (922 - 836) * (176 / 925), y: 505, h: 176}, FACE_C = [HERO_C.x - 0.28 * HERO_C.h, HERO_C.y - 0.52 * HERO_C.h], R2Z = 1.30, R2S = [935, 600];
+const camCourt = P.cam([960, 540, 1.0], [{t0: CUT, t1: 89.40, to: [975, 580, 1.12]},
+	{t0: 89.40, t1: 91.80, to: [FACE_C[0] - (R2S[0] - 960) / R2Z, FACE_C[1] - (R2S[1] - 540) / R2Z, R2Z]},
+	{t0: 91.80, t1: 92.2, to: [FACE_C[0] - (R2S[0] - 960) / (R2Z * 1.01), FACE_C[1] - (R2S[1] - 540) / (R2Z * 1.01), R2Z * 1.01], ease: 'linear'}]);
 const STAFFC = window.H1B_STAFF, STR = window.STAFF_STRIDE;
 const WALK0 = 89.62, WK = 0.32;
 const staffAt = (who, t, edgeX) => {
@@ -197,7 +201,6 @@ const courtWorld = (t) => {
 const courtVig = `<radialGradient id="cvig" cx="975" cy="600" r="1200" gradientUnits="userSpaceOnUse"><stop offset=".6" stop-color="#070605" stop-opacity="0"/><stop offset="1" stop-color="#070605" stop-opacity=".42"/></radialGradient>
 	<radialGradient id="rvig" cx="960" cy="600" r="1150" gradientUnits="userSpaceOnUse"><stop offset=".55" stop-color="#0A0E0F" stop-opacity="0"/><stop offset="1" stop-color="#0A0E0F" stop-opacity=".55"/></radialGradient>`;
 const LINES = window.LINES45;
-let CORNER = null;
 const render = (t) => {
 	const cutF = t >= CUT - 0.5 / 30;   // the cut lands on the frame nearest 87.17 (f2615 = 87.167)
 	const meta = {events: []};
@@ -205,24 +208,18 @@ const render = (t) => {
 	if (!cutF) { const c = camRoad(t); meta.cam = c; meta.camId = 0; svg += `<g transform="${P.camT(c)}">${roadWorld(t)}</g><rect width="1920" height="1080" fill="url(#rvig)"/>`;
 		meta.slitScreenX = P.toScr(c, [SLIT_X, 700])[0]; if (t >= STOP - 0.5 / 30 && t < STOP + 0.5 / 30) meta.events.push({stop: t}); }
 	else { const c = camCourt(t); meta.cam = c; meta.camId = 1; svg += `<g transform="${P.camT(c)}">${courtWorld(t)}</g><rect width="1920" height="1080" fill="url(#cvig)"/>`;
-		meta.doorDeg = doorTh(t) / DEG; meta.punchK = CORNER ? Math.min(3.23, 1640 / CORNER.w) : null; if (t < CUT + 0.5 / 30) meta.events.push({cut: t}); }
+		meta.doorDeg = doorTh(t) / DEG; if (t < CUT + 0.5 / 30) meta.events.push({cut: t}); }
 	// ---- HUD
 	const hud = [];
 	const tl = cutF ? Math.max(t, CUT) : t, ln = P.lineAt(LINES, tl); if (ln) hud.push(P.subHtml(ln[2], tl, ln[0]));   // R1's line is on the cut frame
 	if (!cutF) hud.push(P.stampHtml('2020.12.1 · 北京', '运回圆明园'));
 	else if (t < ODO) hud.push(P.stampHtml('2020.12.1 · 圆明园', '正觉寺 · 文殊亭'));
 	else { const v = 1860 + 160 * P.smooth(P.seg(t, ODO, ODO + 0.4)); hud.push(P.stampHtml(`1860 → ${P.odo(v)}`, '正觉寺 · 文殊亭')); }
-	if (cutF) {
-		const row = [{lab: '回园', num: '1/12', dots: '鼠牛虎兔龙蛇马羊猴鸡狗猪'.split('').map((z) => P.dot(z === '马' ? 'y' : 'e')).join('')}];
-		if (!CORNER) CORNER = P.measure(P.hud([P.blockHtml(row, '当代')]), '.tally');
-		const cx = CORNER.x + CORNER.w / 2, cy = CORNER.y + CORNER.h / 2, KC = Math.min(3.23, 1640 / CORNER.w);   // ≥120 px numerals would push the 12 dots off frame: fit the row to 1640 px
-		const pu = P.seg(t, CUT, CUT + 0.2), settle = P.smooth(P.seg(t, 87.6, 88.3));
-		const k = P.lerp(KC * (1.1 - 0.1 * P.easeOut(pu)), 1, settle), dx = (960 - cx) * (1 - settle), dy = (600 - cy) * (1 - settle);
-		const style = `transform:translate(${(dx / 0.58).toFixed(2)}px,${(dy / 0.58).toFixed(2)}px) scale(${k.toFixed(4)});transform-origin:50% 50%`;
-		hud.push(P.blockHtml(row, '当代').replace('<div class="tally sh" style="opacity:1">', `<div class="tally sh" style="${style}">`));
-	} else hud.push(P.blockHtml([], '当代'));
+	hud.push(P.blockHtml([], '当代'));   // v8: the counter stays hidden at R1/R2; 「回园 1/12」 punches at C2 (94.846)
+
 	hud.push(P.sealHtml());
 	return {svg, hud: P.hud(hud), meta};
 };
 P.SCENES.drop = {t0: 85.2, t1: 92.0, render};
+P.DROP = {camCourt, FACE_C, HERO_C, roadWorld, camRoad, courtWorld, VAN, SLIT_X};
 })();

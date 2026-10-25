@@ -14,10 +14,10 @@ ESB = HERE.parent / 'film' / 'node_modules' / '.bin' / 'esbuild'
 
 kit = ''.join((SRC / f).read_text() + '\n' for f in ['kit.js', 'hero.js', 'figs.js', 'bros.js', 'v4.js', 'hero2.js', 'hero3.js', 'skin.js', 'staff45.js', 'v7.js'])
 kit += 'window.H1B_STAFF = ' + (SRC / 'h1b_staff.json').read_text() + ';\n'
-kit += 'window.LINES45 = ' + (HERE.parent / 'lines_v7s.json').read_text() + ';\n'
+kit += 'window.LINES45 = ' + (HERE.parent / 'lines_v8s.json').read_text() + ';\n'
 walk_js = OUT.parent / 'staff_walk.js'
 subprocess.run([str(ESB), str(HERE / 'staff_walk.ts'), '--bundle', '--format=iife', '--platform=neutral', f'--outfile={walk_js}', '--log-level=warning'], check=True)
-mods = ['p45_core.js', 'p45_hook.js', 'p45_london.js', 'p45_drop.js']
+mods = ['p45_core.js', 'p45_ring.js', 'p45_hook.js', 'p45_london.js', 'p45_drop.js', 'p45_payoff.js']
 proof = walk_js.read_text() + '\n' + ''.join((HERE / m).read_text() + '\n' for m in mods)
 
 def wenkai_css(text):

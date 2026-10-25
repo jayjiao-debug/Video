@@ -69,8 +69,8 @@ P.makeRing = (T0 = {}) => {
 		return P.wideFilters(ringBase() + shimmer(t) + K.ringRims() + far + near);
 	};
 	// ---- the two glass cases (screen space; slide in from the right, then out)
-	const caseDx = (t) => 640 * (1 - P.smooth(P.seg(t, ...T.CASE_IN))) + 640 * P.smooth(P.seg(t, ...T.CASE_OUT));
-	const caseVel = (t) => Math.abs(caseDx(t + 1 / 60) - caseDx(t - 1 / 60)) * 30;
+	const caseDx = (t, i = 0) => 640 * (1 - P.smooth(P.seg(t, ...T.CASE_IN))) + 640 * P.smooth(P.seg(t, ...(i === 1 && T.CASE_OUT_B ? T.CASE_OUT_B : T.CASE_OUT)));
+	const caseVel = (t, i = 0) => Math.abs(caseDx(t + 1 / 60, i) - caseDx(t - 1 / 60, i)) * 30;
 	const vitrine = (c, dx, present, lab) => {
 		const x = c.x + dx, {y, w, h} = c, id = 'vt' + c.size;
 		let in_ = '';
@@ -84,18 +84,19 @@ P.makeRing = (T0 = {}) => {
 		${lab > 0 ? `<text x="${x + w / 2}" y="${y + h + 64}" text-anchor="middle" font-family="Noto Sans CJK SC" font-weight="900" font-size="48" fill="#FFF1DC" opacity="${lab.toFixed(3)}">${c.label}</text>` : ''}`;
 	};
 	const casesSvg = (t) => {
-		const dx = caseDx(t); if (dx >= 640) return '';
-		const blur = caseVel(t) / 30 / 3, lab = 1 - P.seg(t, ...T.LAB_OUT);
-		const cs = `<defs><radialGradient id="caseGlow" cx="${1580 + dx}" cy="520" r="520" gradientUnits="userSpaceOnUse"><stop offset="0" stop-color="#F6E6C6" stop-opacity=".22"/><stop offset="1" stop-color="#F6E6C6" stop-opacity="0"/></radialGradient></defs>
-			<rect width="1920" height="1080" fill="url(#caseGlow)" opacity="${(1 - dx / 640).toFixed(3)}"/>` + CASES.map((c) => vitrine(c, dx, (k) => t >= LAND[k], lab)).join('');
-		return blur > 0.6 ? `<defs><filter id="mb" filterUnits="userSpaceOnUse" x="-200" y="-200" width="2400" height="1480"><feGaussianBlur stdDeviation="${blur.toFixed(2)} 0"/></filter></defs><g filter="url(#mb)">${cs}</g>` : cs;
+		const dx0 = caseDx(t, 0), lab = 1 - P.seg(t, ...T.LAB_OUT); let out = '';
+		if (dx0 < 640) out += `<defs><radialGradient id="caseGlow" cx="${1580 + dx0}" cy="520" r="520" gradientUnits="userSpaceOnUse"><stop offset="0" stop-color="#F6E6C6" stop-opacity=".22"/><stop offset="1" stop-color="#F6E6C6" stop-opacity="0"/></radialGradient></defs>
+			<rect width="1920" height="1080" fill="url(#caseGlow)" opacity="${(1 - dx0 / 640).toFixed(3)}"/>`;
+		CASES.forEach((c, i) => { const dx = caseDx(t, i); if (dx >= 640) return; const blur = caseVel(t, i) / 30 / 3, cs = vitrine(c, dx, (k) => t >= LAND[k], lab);
+			out += blur > 0.6 ? `<defs><filter id="mb${i}" filterUnits="userSpaceOnUse" x="-200" y="-200" width="2400" height="1480"><feGaussianBlur stdDeviation="${blur.toFixed(2)} 0"/></filter></defs><g filter="url(#mb${i})">${cs}</g>` : cs; });
+		return out;
 	};
-	const slot = (k, dx) => { const c = CASES[CASE_OF[k]], i = c.heads.indexOf(k), n = c.heads.length; return [c.x + dx + 20 + (i + 0.5) * (c.w - 40) / n, c.y + c.h - 34, c.size]; };
+	const slot = (k, dx0) => { const c = CASES[CASE_OF[k]], i = c.heads.indexOf(k), n = c.heads.length, dx = caseDx(T.__t ?? 0, CASE_OF[k]); return [c.x + dx + 20 + (i + 0.5) * (c.w - 40) / n, c.y + c.h - 34, c.size]; };
 	const bez = (a, b, c, d, u) => { const m = 1 - u; return [0, 1].map((j) => m * m * m * a[j] + 3 * m * m * u * b[j] + 3 * m * u * u * c[j] + u * u * u * d[j]); };
 	/** the six in flight (screen space) + their ivory trails */
 	const flights = (t, cam) => {
 		if (t < LIFT || t > T.TRAIL_END) return '';
-		const dx = caseDx(t); let heads = '', trails = '';
+		T.__t = t; const dx = caseDx(t); let heads = '', trails = '';
 		Object.keys(LAND).forEach((k, i) => {
 			const p = pos.find((q) => q.k === k), g = headGeo(p), rise = 34 * P.easeOut(P.seg(t, LIFT, LIFT + RISE));
 			const p0 = P.toScr(cam, [g.hx, g.hy - 4 - rise]), [sx, sy, ss] = slot(k, dx), p3 = [sx, sy];

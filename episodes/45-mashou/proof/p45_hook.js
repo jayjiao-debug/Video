@@ -1,284 +1,130 @@
-// ep45 proof 1: the hook, 0 – 12.6 s (S01 RING + title + the rect-grow into N1's glass hall).
-// Board: storyboard_v7.md S01 / OUT → S02 (mode 14 rect-grow). Lines: lines_v7s.json (H3 clears at 9.05 for the title; title
-// holds 9.05 → 11.638; N1 types at 11.638). Art: K.ringNight / K.ringPos / K.ringSeat / K.vitrine / K.horseHead (hero3 r6 ear)
-// and the title of v7_t_title.js, the glass hall of v7_n3_queue.js. All motion is a pure function of t.
+// ep45 proof 1 (script v8): the hook, 0 – 15.4 s. RING at night, every head stays on its seat (the count is held back to C1/C2).
+// H1 0.0 the question (counter 「回来了 ?/12」, neutral dots) · H2 3.997 a paper auction tag drops on its cord beside the copper
+// horse: 「6910万港元」 · H3 6.827 the tag turns over to one copper 「捐」, swings, settles · one continuous push to the horse from
+// frame 0 · title 9.05 → 11.638 「兽首，到底回来了几个？」 over the defocused, dimmed ring, HUD hidden · OUT 11.07 (b17): match-cut on
+// the horse's face (same screen point, same size, under the title's defocus) into POOL NOON (the v7_a2_noon set), racking into
+// focus as the title leaves; A1 11.638 「十二兽首，原本是喷泉的出水口。」 and the pull back to all twelve; trickles from every mouth
+// (b22.5) and the water-clock hop (兔 龙 蛇 → 马, one per half-beat). Lines: lines_v8s.json.
 (() => {
-const P = window.P45, rnd = K.rnd;
-const B = P.beat;
-// ---- timing (film s)
-const LIGHT = {牛: 3.997, 虎: B(5), 猴: B(5.5), 猪: B(6), 鼠: B(6.5), 兔: B(7)};   // one per half-beat from b4.5 (3.997)
-const FLARE = B(7.5);                                                            // 5.695: the horse flares, the five go dashed
-const DASH = ['龙', '蛇', '羊', '鸡', '狗'];
-const LIFT = 5.978, RISE = 0.15;
-const LAND = {牛: 6.55, 虎: 6.63, 猴: 6.71, 猪: 6.79, 鼠: 6.87, 兔: 6.95};
-const CASE_OF = {牛: 0, 虎: 0, 猴: 0, 猪: 0, 鼠: 1, 兔: 1};
-const CASES = [{x: 1340, y: 236, w: 460, h: 236, heads: ['牛', '虎', '猴', '猪'], label: '保利艺术博物馆 ×4', size: 96},
-	{x: 1340, y: 600, w: 460, h: 200, heads: ['鼠', '兔'], label: '国家博物馆 ×2', size: 120}];
-const TITLE = 9.05, RET = B(16.5), GROW0 = 11.10, GROW1 = 11.638, N1 = 11.638;
-const ZOD = ['鼠', '牛', '虎', '兔', '龙', '蛇', '马', '羊', '猴', '鸡', '狗', '猪'];
-
-// ---- camera: frame 0 already moving (ease-out), reframe wide for the cases, then the log-zoom push to the horse
-// v8 ring (owner note): the horse at brother scale, front-centre; its size on screen comes from the camera
-const pos = K.ringPos(), hp = pos.find((p) => p.k === '马'), HL = K.ringHeroLight(pos);
-const heroSeat = K.ringSeat(hp, 'hero');
-const hero0 = heroSeat.hero, TX = hero0.x - 0.28 * hero0.h, TYz = (z) => hero0.y - 0.52 * hero0.h + 70 / z;   // = v7_t_title framing at zoom z
-const camRing = P.cam([960, 540, 1.0], [
-	{t0: 0, t1: 5.978, to: [965, 575, 1.08], ease: 'out'},
-	{t0: 5.978, t1: 7.10, to: [1180, 600, 0.86]},
-	{t0: 7.10, t1: 9.60, to: [TX, TYz(1.9), 1.9]},
-	{t0: 9.60, t1: 11.64, to: [TX, TYz(2.4), 2.4]},   // the title drift carries the push on to the title still's ×2.4 (≤ 25 px/f: the push itself stops at ×1.9)
-]);
-// N1 opens inside the glass hall (four cases framed where the four heads sat in the case), then the board's pull-back
-const camHall = P.cam([870, 470, 2.0], [{t0: 11.65, t1: 15.0, to: [1500, 540, 1.0]}]);   // N1 now runs 11.638–15.035
-
-// ---- the RING world (authored wide: the 1920 plate extended so zoom 0.86 and the reframe never show an edge)
-let RW = null;
-const ringBase = () => RW ?? (RW = K.ringNightWide({heroX: HL.x, heroY: HL.y}));
-/** moonlit shimmer on the pool + the moon's reflection (living motion, every frame) */
-const shimmer = (t) => {
+const P = window.P45, rnd = K.rnd, B = P.beat;
+const TAG = 3.997, FLIP = 6.827, TITLE = 9.05, CUT = B(17), A1 = 11.638, TRICKLE = B(22.5), HOPS = [B(23), B(23.5), B(24), B(24.5)];
+const R = P.makeRing({RIM: P.BAR0});
+const {hero0, face, HL} = R;
+// ---- camera: one push from frame 0 (moving at both ends) to the title framing at ×2.3, cut at 11.07 while still moving
+const Z = 2.3, camRing = P.cam([960, 540, 1.0], [{t0: 0, t1: CUT, to: [face[0], face[1] + 70 / Z, Z], ease: 'mix'}]);
+// ---- the price tag (world space, on a cord from the horse's throat; it drops from behind the head, then hangs and swings)
+const A = K.headPt(hero0, 'throat');
+const tag = (t) => {
+	if (t < TAG) return '';
+	const tau = t - TAG, drop = P.easeIn(P.seg(tau, 0, 0.24)), L = P.lerp(-150, 58, drop);
+	const fu = P.seg(t, FLIP, FLIP + 0.2), sx = Math.cos(Math.PI * P.smooth(fu)), back = fu >= 0.5;
+	const th = (tau > 0.24 ? 10 * Math.sin(2 * Math.PI * (tau - 0.24) / 0.9) * Math.exp(-(tau - 0.24) / 0.7) : 0)
+		+ (t > FLIP + 0.2 ? 7 * Math.sin(2 * Math.PI * (t - FLIP - 0.2) / 0.9) * Math.exp(-(t - FLIP - 0.2) / 0.8) : 0) + 0.8 * Math.sin(t * 1.7);
+	const W = 210, H = 176, x0 = A[0] - W / 2, y0 = A[1] + L;
+	const front = `<text x="${A[0]}" y="${y0 + 104}" text-anchor="middle" font-family="Cormorant Garamond" font-weight="600" font-size="94" fill="#2A1E16">6910</text>
+		<text x="${A[0]}" y="${y0 + 152}" text-anchor="middle" font-family="Noto Sans CJK SC" font-weight="900" font-size="42" fill="#2A1E16" letter-spacing="4">万港元</text>`;
+	const backF = `<text x="${A[0]}" y="${y0 + 150}" text-anchor="middle" font-family="Noto Serif CJK SC" font-weight="900" font-size="128" fill="url(#tagCu)" stroke="#5A2A12" stroke-width="1.5">捐</text>`;
+	return `<defs><clipPath id="tagClip"><rect x="${A[0] - 400}" y="${A[1] - 6}" width="800" height="900"/></clipPath><linearGradient id="tagCu" x1="0" x2="0" y1="0" y2="1"><stop offset="0" stop-color="#FFD9A6"/><stop offset=".55" stop-color="#F09A5E"/><stop offset="1" stop-color="#C8693A"/></linearGradient></defs>
+	<g clip-path="${drop < 1 ? 'url(#tagClip)' : 'none'}"><g transform="rotate(${th.toFixed(2)} ${A[0]} ${A[1]})">
+	 ${L > 0 ? `<path d="M${A[0]},${A[1]} L${A[0]},${y0 + 18}" stroke="#2A1E16" stroke-width="2.6"/>` : ''}
+	 <g transform="translate(${A[0]},0) scale(${Math.max(0.01, Math.abs(sx)).toFixed(4)},1) translate(${-A[0]},0)">
+	  <path d="M${x0 + 26},${y0} L${x0 + W - 26},${y0} L${x0 + W},${y0 + 26} L${x0 + W},${y0 + H} L${x0},${y0 + H} L${x0},${y0 + 26} Z" fill="${back ? '#E6D8BA' : '#EFE3C8'}" stroke="#A8865E" stroke-width="3"/>
+	  <circle cx="${A[0]}" cy="${y0 + 18}" r="8" fill="#3A2A1E"/><circle cx="${A[0]}" cy="${y0 + 18}" r="13" fill="none" stroke="#C8A878" stroke-width="3"/>
+	  ${back ? backF : front}
+	 </g></g></g>`;   // while it drops, the tag is clipped at the jaw line: it slides out from under the head
+};
+// ---- POOL NOON (v7_a2_noon set), its horse at brother scale (K.statue), framed to match the ring horse at the cut
+const NOON_T = 'translate(960,620) scale(1.22) translate(-960,-620)', NW = (p) => [960 + (p[0] - 960) * 1.22, 620 + (p[1] - 620) * 1.22];
+const items = []; for (let i = 5; i >= 0; i--) for (const side of [-1, 1]) { const k = side < 0 ? K.ROW_L[i] : K.ROW_R[i]; items.push({k, side, i, st: K.statue(k, side, i, 'noon')}); }
+const nh = items.find((q) => q.k === '马').st.hero, nFace = NW([nh.x + 0.28 * nh.h, nh.y - 0.52 * nh.h]);
+let NB = null;
+const noonBase = () => NB ?? (NB = {
+	defs: `<defs>
+	 <linearGradient id="nsky" x1="0" x2="0" gradientUnits="userSpaceOnUse" y1="0" y2="660"><stop offset="0" stop-color="#34494E"/><stop offset=".36" stop-color="#5F716C"/><stop offset=".62" stop-color="#A39C84"/><stop offset="1" stop-color="#CDBB93"/></linearGradient>
+	 <linearGradient id="poolN" x1="0" x2="0" gradientUnits="userSpaceOnUse" y1="670" y2="930"><stop offset="0" stop-color="#9DAE9F"/><stop offset=".5" stop-color="#6B857B"/><stop offset="1" stop-color="#4C645D"/></linearGradient>
+	 <linearGradient id="nfg" x1="0" x2="0" y1="0" y2="1"><stop offset="0" stop-color="#5F574A"/><stop offset="1" stop-color="#2C2721"/></linearGradient>
+	 ${K.rimFilter('rimSun', 3, 5, '#F6E9C8', 0.85, 1.0)}${K.blur('nhz', 3)}${K.blur('nhz8', 10)}</defs>`,
+	back: `<rect x="-600" y="-600" width="3120" height="2280" fill="url(#nsky)"/><g transform="${NOON_T}">
+	<g filter="url(#nhz8)" opacity=".85">${Array.from({length: 22}, (_, i) => `<ellipse cx="${60 + i * 88}" cy="${560 + (i % 3) * 14}" rx="${70 + (i % 4) * 16}" ry="${60 + (i % 5) * 10}" fill="${i % 2 ? '#7C8574' : '#8A9180'}"/>`).join('')}</g>
+	<g filter="url(#nhz)">${K.facade('noon')}</g>${K.stairs('noon')}${K.pool('noon')}
+	<rect x="-400" y="940" width="2720" height="400" fill="url(#nfg)"/>${Array.from({length: 5}, (_, i) => `<path d="M-400,${960 + i * i * 6} L2320,${960 + i * i * 6}" stroke="#211C17" stroke-width="2" opacity=".5"/>`).join('')}
+	${items.filter((q) => q.k !== '马').map(({st}) => `<g filter="url(#rimSun)">${st.svg}</g>`).join('')}</g>`,
+	horse: (() => { const st = items.find((q) => q.k === '马').st; return `<g transform="${NOON_T}"><g filter="url(#rimSun)">${st.svg}</g>${K.horseHead(st.hero)}</g>`; })(),
+});
+/** a thin falling trickle from every mouth (b22.5, 0.3 s stagger from the horse outward), then the clock hop to the horse */
+const water = (t) => {
 	let s = '';
-	for (let i = 0; i < 9; i++) { const y = 655 + i * 13, w = 30 + 40 * rnd(i + 40), x = 540 + 26 * P.noise(t * 1.3 + i * 3.1, i) - w / 2, a = 0.10 + 0.16 * (0.5 + 0.5 * P.noise(t * 2.2 + i, i + 9));
-		s += `<path d="M${x.toFixed(1)},${y} l${w.toFixed(1)},0" stroke="#E8F0EA" stroke-width="2" opacity="${a.toFixed(3)}" stroke-linecap="round"/>`; }
-	for (let i = 0; i < 7; i++) { const y = 640 + i * 26, a = 0.035 * (0.5 + 0.5 * P.noise(t * 0.9 + i * 2.3, i + 30)); s += `<path d="M${280 + i * 40},${y} L${1640 - i * 40},${y}" stroke="#E6EEE6" stroke-width="1.6" opacity="${a.toFixed(3)}"/>`; }
-	for (let i = 0; i < 5; i++) { const y = 660 + i * 34, w = 22 + 20 * rnd(i + 80), x = HL.x + 16 * P.noise(t * 1.6 + i * 2.7, i + 50) - w / 2, a = 0.18 + 0.22 * (0.5 + 0.5 * P.noise(t * 2.4 + i, i + 60));
-		s += `<path d="M${x.toFixed(1)},${y} l${w.toFixed(1)},0" stroke="#FFC890" stroke-width="2.2" opacity="${a.toFixed(3)}" stroke-linecap="round"/>`; }
-	return s;
+	const order = items.slice().sort((a, b) => Math.hypot(...[0, 1].map((j) => a.st.mouth[j] - nh.x * (1 - j) - nh.y * j)) - Math.hypot(...[0, 1].map((j) => b.st.mouth[j] - nh.x * (1 - j) - nh.y * j)));
+	order.forEach((q, n) => { const t0 = TRICKLE + 0.3 * n / 4; if (t < t0) return; const [mx, my] = q.st.mouth, len = 60 * P.easeOut(P.seg(t, t0, t0 + 0.3)) * (q.st.s ?? 1) + 10, wob = 1.5 * Math.sin(t * 9 + n);
+		s += `<path d="M${mx},${my} q${(wob + 4 * (q.side < 0 ? 1 : -1)).toFixed(1)},${(len / 2).toFixed(1)} ${(6 * (q.side < 0 ? 1 : -1)).toFixed(1)},${len.toFixed(1)}" stroke="#F3F1E8" stroke-width="${(2.6 * (q.st.s ?? 1)).toFixed(2)}" fill="none" opacity=".85" stroke-linecap="round"/>`; });
+	const hopK = ['兔', '龙', '蛇', '马'];
+	HOPS.forEach((h0, n) => { const u = P.seg(t, h0, h0 + 0.42); if (u <= 0 || u >= 1) return; const q = items.find((z) => z.k === hopK[n]);
+		const land = [960 + (q.side < 0 ? -1 : 1) * (50 + 130 * (1 - q.i / 5)), 905 - 220 * (q.i / 5) - 4], up = Math.sin(Math.PI * u);
+		s += `<g opacity="${up.toFixed(3)}">${K.arc(q.st.mouth, land, (190 * q.st.s + 50) * (0.4 + 0.6 * up), q.st.s * 1.05, q.k === '马' ? {core: '#FFE2B4', glow: '#FFB070', gA: 0.5} : {})}</g>`; });
+	return `<g transform="${NOON_T}">${s}</g>`;
 };
-// ---- per-seat state
-const DARK = '#231B16', IVORY = '#E9DCC4';
-const headGeo = (p) => { const h = 160 * p.s, b = K.stoneBody(p.x, p.y, h, p.face, '#353530'), [tx, ty] = b.top; return {hx: tx + p.face * 4 * p.s, hy: ty + 22 * p.s, size: 175 * p.s, top: [tx, ty]}; };
-const dashHead = (p, op) => { const g = K.ringSeat(p, 'dash'); return `<g opacity="${op}">${g.head}</g>`; };
-const flyFrac = (k, t) => P.smooth(P.seg(t, LIFT + RISE, LAND[k]));
-const seatSvg = (p, t) => {
-	const k = p.k, stone = '#353530', h = 160 * p.s;
-	if (k === '马') return {back: heroSeat.back, head: ''};
-	if (LIGHT[k] !== undefined) {
-		if (t >= LIFT) return {back: K.emptySeat(p.x, p.y, h, p.face, stone, '#E9DCC4'), head: ''};
-		const g = headGeo(p), u = P.seg(t, LIGHT[k], LIGHT[k] + 0.12);
-		return {back: K.stoneBody(p.x, p.y, h, p.face, stone).svg, head: K.bro(k, g.hx, g.hy - 4 * u, g.size, p.face, P.mixC(DARK, IVORY, u))};
-	}
-	if (DASH.includes(k)) {
-		const u = P.seg(t, FLARE, FLARE + 0.15), g = headGeo(p);
-		const dark = u < 1 ? `<g opacity="${(1 - u).toFixed(3)}">${K.bro(k, g.hx, g.hy, g.size, p.face, DARK)}</g>` : '';
-		return {back: K.stoneBody(p.x, p.y, h, p.face, stone).svg, head: dark + (u > 0 ? dashHead(p, (0.95 * u).toFixed(3)) : '')};
-	}
-	const g = headGeo(p);
-	return {back: K.stoneBody(p.x, p.y, h, p.face, stone).svg, head: K.bro(k, g.hx, g.hy, g.size, p.face, DARK)};
-};
-const heroAt = (t, extra = {}) => {
-	const breathe = 1 + 0.03 * Math.sin(2 * Math.PI * (t - P.BAR0) / (4 * P.BEAT));
-	const fl = t >= FLARE ? Math.exp(-(t - FLARE) / 0.35) : 0;
-	return {...hero0, glow: 1.1 * breathe + 0.7 * fl, key: 1.7 + 0.35 * fl, ...extra};
-};
-/** bar 0 (1.45): a copper rim sweeps across the horse left → right (0.4 s): a hotter copy of the head under a moving band */
-const rimSweep = (t) => {
-	const u = P.seg(t, P.BAR0, P.BAR0 + 0.4); if (u <= 0 || u >= 1) return '';
-	const x0 = hero0.x - 0.95 * hero0.h, x1 = hero0.x + 0.45 * hero0.h, bx = P.lerp(x0, x1, P.smooth(u)), w = 0.16 * hero0.h;
-	const a = Math.sin(Math.PI * u);
-	return `<defs><linearGradient id="swg" gradientUnits="userSpaceOnUse" x1="${bx - w}" x2="${bx + w}" y1="0" y2="0"><stop offset="0" stop-color="#000"/><stop offset=".5" stop-color="#fff"/><stop offset="1" stop-color="#000"/></linearGradient>
-	<mask id="swm" maskUnits="userSpaceOnUse" x="${hero0.x - 600}" y="${hero0.y - 600}" width="1200" height="800"><rect x="${hero0.x - 600}" y="${hero0.y - 600}" width="1200" height="800" fill="url(#swg)"/></mask></defs>
-	<g mask="url(#swm)" opacity="${(0.9 * a).toFixed(3)}">${K.horseHead({...heroAt(t), glow: 0, key: 2.9, rimK: 1.5, rim: '#FFD9A6'})}</g>`;
-};
-const ringWorld = (t, o = {}) => {
-	let far = '', near = '';
-	for (const p of pos) {
-		const s = seatSvg(p, t);
-		const g = `<g filter="url(#${p.arc === 'far' ? 'r7rimF' : 'r7rimN'})">${s.back}${s.head}</g>`;
-		const hs = p.k === '马' ? K.heroSeatLight(heroSeat.top, p.s) + (o.noHero ? '' : K.horseHead(heroAt(t)) + rimSweep(t)) : '';
-		if (p.arc === 'far') far += g + hs; else near += g + hs;
-	}
-	return P.wideFilters(ringBase() + shimmer(t) + K.ringRims() + far + near);
-};
-// ---- cases (screen space; slide in from the right, then out; 保利 returns for the title)
-const caseDx = (t) => {
-	let dx = 0;
-	if (t < 9) { const a = P.smooth(P.seg(t, LIFT, 6.50)), b = P.smooth(P.seg(t, 7.30, 8.00)); dx = 640 * (1 - a) + 640 * b; }
-	else dx = 640 * (1 - P.smooth(P.seg(t, RET, 11.13)));
-	return dx;
-};
-const caseVel = (t) => Math.abs(caseDx(t + 1 / 60) - caseDx(t - 1 / 60)) * 30;   // px/s
-const vitrine = (c, dx, present, lab, op = 1) => {
-	const x = c.x + dx, {y, w, h} = c, id = 'vt' + c.size;
-	let in_ = '';
-	c.heads.forEach((k, i) => { const n = c.heads.length, hx = x + 20 + (i + 0.5) * (w - 40) / n, hy = y + h - 34;
-		in_ += `<rect x="${hx - c.size * 0.32}" y="${hy}" width="${c.size * 0.64}" height="34" fill="#C9B79A" opacity=".55"/>` + (present(k) ? K.bro(k, hx, hy, c.size, -1, '#E9DCC4') : ''); });
-	return `<defs><linearGradient id="${id}" x1="0" x2="0" y1="0" y2="1"><stop offset="0" stop-color="#FFF4DE" stop-opacity=".38"/><stop offset="1" stop-color="#E8D2AA" stop-opacity=".12"/></linearGradient></defs>
-	<g opacity="${op}">
-	<rect x="${x - 10}" y="${y + h}" width="${w + 20}" height="92" fill="#2E2621"/><path d="M${x - 10},${y + h} L${x + w + 10},${y + h}" stroke="#E8C690" stroke-width="3" opacity=".7"/>
-	<rect x="${x}" y="${y}" width="${w}" height="${h}" fill="url(#${id})"/>
-	${in_}
-	<rect x="${x}" y="${y}" width="${w}" height="${h}" fill="none" stroke="#F6EAD2" stroke-width="3" opacity=".75"/>
-	<path d="M${x + 16},${y + 14} L${x + 60},${y + 14} M${x + 16},${y + 14} L${x + 16},${y + 80}" stroke="#FFFFFF" stroke-width="4" opacity=".55"/>
-	${lab > 0 ? `<text x="${x + w / 2}" y="${y + h + 46 + 18}" text-anchor="middle" font-family="Noto Sans CJK SC" font-weight="900" font-size="48" fill="#FFF1DC" opacity="${lab.toFixed(3)}">${c.label}</text>` : ''}
-	</g>`;
-};
-const slot = (k, dx) => { const c = CASES[CASE_OF[k]], i = c.heads.indexOf(k), n = c.heads.length; return [c.x + dx + 20 + (i + 0.5) * (c.w - 40) / n, c.y + c.h - 34, c.size]; };
-const bez = (a, b, c, d, u) => { const m = 1 - u; return [0, 1].map((j) => m * m * m * a[j] + 3 * m * m * u * b[j] + 3 * m * u * u * c[j] + u * u * u * d[j]); };
-/** the six in flight (screen space) + their ivory trails */
-const flights = (t, cam, dx) => {
-	if (t < LIFT || t > 7.6) return '';
-	let heads = '', trails = '';
-	Object.keys(LAND).forEach((k, i) => {
-		const p = pos.find((q) => q.k === k), g = headGeo(p), rise = 34 * P.easeOut(P.seg(t, LIFT, LIFT + RISE));
-		const p0 = P.toScr(cam, [g.hx, g.hy - 4 - rise]), [sx, sy, ss] = slot(k, dx), p3 = [sx, sy];
-		const c1 = [p0[0] + 170, p0[1] - 130 + i * 6], c2 = [p3[0] - 240, p3[1] - 50];
-		const u = flyFrac(k, t), pt = bez(p0, c1, c2, p3, u);
-		const top = P.toScr(cam, [g.top[0], g.top[1] - 10]);
-		const fade = 1 - P.seg(t, LAND[k], 7.4);
-		if (u > 0.01 && fade > 0) {
-			let d = `M${top[0].toFixed(1)},${top[1].toFixed(1)}`; const tc1 = [top[0] + 170, top[1] - 130 + i * 6];
-			for (let j = 1; j <= 16; j++) { const q = bez(top, tc1, c2, p3, u * j / 16); d += ` L${q[0].toFixed(1)},${(q[1] - 40 * (1 - u * j / 16) * 0).toFixed(1)}`; }
-			trails += `<path d="${d}" stroke="url(#trail)" stroke-width="${(10 - i * 0.6).toFixed(1)}" fill="none" stroke-linecap="round" opacity="${fade.toFixed(3)}" filter="url(#tb4)"/>`;
-		}
-		if (t < LAND[k]) { const size = P.lerp(g.size * cam.z, ss, u), face = P.lerp(p.face, -1, P.smooth(u));
-			heads += K.bro(k, pt[0], pt[1], size, Math.abs(face) < 0.04 ? 0.04 * Math.sign(face || -1) : face, IVORY); }
-	});
-	return `<defs><linearGradient id="trail" x1="0" x2="1"><stop offset="0" stop-color="#F3E6CF" stop-opacity="0"/><stop offset="1" stop-color="#F3E6CF" stop-opacity=".55"/></linearGradient>${K.blur('tb4', 4)}
-	${K.rimFilter('flyRim', 4 * cam.z, 4 * cam.z, '#C9DAD4', 0.68, 1.3)}</defs>${trails}<g filter="url(#flyRim)">${heads}</g>`;
-};
-// ---- the Hangzhou glass hall (v7_n3_queue.js set, authored 3200 wide; screen-space vignette applied by the caller)
-let HW = null;
-const hallBase = () => {
-	if (HW) return HW;
-	const svg0 = `<defs>
-	 <linearGradient id="sky" x1="0" x2="0" gradientUnits="userSpaceOnUse" y1="0" y2="1080"><stop offset="0" stop-color="#1C2A31"/><stop offset=".6" stop-color="#34474C"/><stop offset="1" stop-color="#4C5C5C"/></linearGradient>
-	 <linearGradient id="mass" x1="0" x2="0" y1="0" y2="1"><stop offset="0" stop-color="#3A3B38"/><stop offset="1" stop-color="#2A2B29"/></linearGradient>
-	 <linearGradient id="hall" x1="0" x2="0" y1="0" y2="1"><stop offset="0" stop-color="#F3E3C2"/><stop offset=".55" stop-color="#E2C99C"/><stop offset="1" stop-color="#B89A70"/></linearGradient>
-	 <linearGradient id="plaza" x1="0" x2="0" y1="0" y2="1"><stop offset="0" stop-color="#57564F"/><stop offset="1" stop-color="#2A2A27"/></linearGradient>
-	 <radialGradient id="spill" cx="900" cy="640" r="900" gradientUnits="userSpaceOnUse"><stop offset="0" stop-color="#F6E2B8" stop-opacity=".38"/><stop offset=".5" stop-color="#E8C890" stop-opacity=".12"/><stop offset="1" stop-color="#E8C890" stop-opacity="0"/></radialGradient>
-	 <radialGradient id="door" cx="250" cy="560" r="300" gradientUnits="userSpaceOnUse"><stop offset="0" stop-color="#FFF0D0" stop-opacity=".7"/><stop offset="1" stop-color="#FFF0D0" stop-opacity="0"/></radialGradient>
-	 ${K.rimFilter('rimQ', 5, 0, '#F6DDB0', 0.9, 1.4)}${K.rimFilter('rimQf', 4, 0, '#E8D2AA', 0.6, 1.2)}${K.blur('qb2', 1.6)}${K.blur('qb12', 12)}
-	</defs>
-	<rect x="-900" y="-600" width="4400" height="2200" fill="url(#sky)"/>
-	${Array.from({length: 50}, (_, i) => `<circle cx="${-300 + rnd(i + 3) * 3600}" cy="${30 + rnd(i + 8) * 200}" r="${0.8 + rnd(i + 5)}" fill="#DDE6E2" opacity="${0.2 + rnd(i + 6) * 0.35}"/>`).join('')}
-	<rect x="-900" y="236" width="4400" height="474" fill="url(#mass)"/>
-	<rect x="-900" y="236" width="4400" height="34" fill="#4A4A45"/><path d="M-900,270 L3500,270" stroke="#6E6A60" stroke-width="2"/>
-	${Array.from({length: 40}, (_, i) => `<rect x="${1290 + i * 48}" y="300" width="4" height="380" fill="#24251F" opacity=".7"/>`).join('')}
-	<rect x="440" y="300" width="840" height="380" fill="url(#hall)"/>
-	${Array.from({length: 7}, (_, i) => `<rect x="${440 + i * 140}" y="300" width="6" height="380" fill="#6E5E48" opacity=".75"/>`).join('')}
-	<rect x="440" y="300" width="840" height="380" fill="none" stroke="#7A6A52" stroke-width="5"/>
-	${['牛', '虎', '猴', '猪'].map((k, i) => { const x = 500 + i * 200; return `<ellipse cx="${x + 70}" cy="330" rx="90" ry="20" fill="#FFF6E2" opacity=".55" filter="url(#qb12)"/>
-		<rect x="${x}" y="560" width="140" height="120" fill="#5E503E"/><path d="M${x},560 L${x + 140},560" stroke="#FFF1D6" stroke-width="3"/>
-		<rect x="${x}" y="396" width="140" height="164" fill="#FFF8EA" opacity=".28" stroke="#FFFFFF" stroke-opacity=".7" stroke-width="2.5"/>
-		${K.bro(k, x + 70, 552, 112, -1, '#3A2A1E')}
-		<path d="M${x + 10},404 L${x + 40},404 M${x + 10},404 L${x + 10},440" stroke="#FFFFFF" stroke-width="3" opacity=".7"/>`; }).join('')}
-	<rect x="150" y="380" width="200" height="300" fill="#FFF1D6"/><rect x="150" y="380" width="200" height="300" fill="none" stroke="#5A4E40" stroke-width="8"/>
-	<rect x="-900" y="-600" width="4400" height="2200" fill="url(#door)"/>
-	<rect x="-900" y="680" width="4400" height="900" fill="url(#plaza)"/>
-	<path d="M-900,680 L3500,680" stroke="#8A8270" stroke-width="2" opacity=".6"/>
-	<rect x="-900" y="-600" width="4400" height="2200" fill="url(#spill)"/>`;
-	const tone = (k) => ['#1C1714', '#1F1916', '#18130F'][k % 3];
-	let far = '', near = '';
-	for (let i = 0; i < 30; i++) { const x = 240 + i * 100 + (rnd(i + 70) - 0.5) * 30, h = 236 + rnd(i + 71) * 34; far += K.visitor(x, 818, h, -1, '#262321'); }
-	const pack = (x, g, h, col, kind) => { const u = h / 8, X = (d) => x - d * u, Y = (d) => g - d * u;
-		return kind === 'bag' ? `<path d="M${X(-0.3)},${Y(6.3)} L${X(0.5)},${Y(4.2)}" stroke="${col}" stroke-width="${0.12 * u}"/><rect x="${X(0.75)}" y="${Y(4.5)}" width="${0.7 * u}" height="${0.75 * u}" rx="${0.12 * u}" fill="${col}"/>`
-			: `<path d="M${X(-0.62)},${Y(6.25)} C${X(-1.25)},${Y(6.1)} ${X(-1.35)},${Y(5.0)} ${X(-1.2)},${Y(4.3)} L${X(-0.6)},${Y(4.35)} Z" fill="${col}"/>`; };
-	for (let i = 0; i < 21; i++) { const x = 300 + i * 136 + (rnd(i + 80) - 0.5) * 34, kid = i === 4, h = kid ? 220 : 318 + rnd(i + 81) * 62;
-		near += K.visitor(kid ? x + 30 : x, 968, h, -1, tone(i)) + (i % 3 === 1 ? pack(x, 968, h, tone(i), 'pack') : i % 4 === 2 ? pack(x, 968, h, tone(i), 'bag') : ''); }
-	let posts = '', rope = 'M150,904';
-	for (let i = 0; i <= 15; i++) { const x = 150 + i * 196; posts += `<rect x="${x - 7}" y="884" width="14" height="96" fill="#A88A5E"/><rect x="${x - 22}" y="976" width="44" height="10" rx="4" fill="#7A6444"/><circle cx="${x}" cy="882" r="10" fill="#E8C690"/>`;
-		if (i) rope += ` Q${x - 98},${936} ${x},904`; }
-	HW = {back: svg0 + `<g filter="url(#qb2)" opacity=".92"><g filter="url(#rimQf)">${far}</g></g><g filter="url(#rimQ)">${near}</g>`,
-		front: `<path d="${rope}" stroke="#8A2E22" stroke-width="9" fill="none"/><path d="${rope}" stroke="#C8584A" stroke-width="3" fill="none" opacity=".6" transform="translate(0,-2)"/>${posts}`};
-	return HW;
-};
-/** phone torches in the line (3–4 small points flickering at random 0.2–0.6 s) */
-const torches = (t) => [[520, 760, 0], [905, 905, 1], [1380, 750, 2], [1690, 900, 3]].map(([x, y, i]) => {
-	const per = 0.2 + 0.4 * rnd(i + 900), on = rnd(Math.floor(t / per) * 7.3 + i * 31) > 0.35 ? 1 : 0.25;
-	return `<circle cx="${x}" cy="${y}" r="5" fill="#F4FAFF" opacity="${0.9 * on}"/><circle cx="${x}" cy="${y}" r="22" fill="#E6F0F6" opacity="${0.18 * on}" filter="url(#qb12)"/>`; }).join('');
-const hallWorld = (t) => { const h = hallBase(); return P.wideFilters(P.scope(h.back + torches(t) + h.front, 'hz')); };
-const hallVig = `<radialGradient id="hvig" cx="960" cy="560" r="1150" gradientUnits="userSpaceOnUse"><stop offset=".55" stop-color="#0B0D0E" stop-opacity="0"/><stop offset="1" stop-color="#0B0D0E" stop-opacity=".6"/></radialGradient>`;
-
-// ---- the title (v7_t_title.js) with the slam
+// match the noon camera to the ring horse at the cut: same face point on screen, same horse height
+const cR = camRing(CUT), Sface = P.toScr(cR, face), zN = (hero0.h * cR.z) / (nh.h * 1.22);
+const camNoon = P.cam([nFace[0] - (Sface[0] - 960) / zN, nFace[1] - (Sface[1] - 540) / zN, zN], [
+	{t0: CUT, t1: 11.30, to: [nFace[0] - (Sface[0] - 960) / (zN * 0.985), nFace[1] - (Sface[1] - 540) / (zN * 0.985), zN * 0.985], ease: 'linear'},
+	{t0: 11.30, t1: 15.3, to: [960, 540, 1.0]},   // the pull back starts as the title leaves (≤ 25 px/f over 4.0 s)
+]);
+const noonVig = `<radialGradient id="nvig" cx="960" cy="600" r="1150" gradientUnits="userSpaceOnUse"><stop offset=".45" stop-color="#1A140F" stop-opacity="0"/><stop offset="1" stop-color="#1A140F" stop-opacity=".85"/></radialGradient>`;
+// ---- the title (house slam), v8 text
 const titleHtml = (t) => {
 	if (t < TITLE || t >= 11.62) return '';
-	const u = P.seg(t, TITLE, TITLE + 0.12), sc = 1.25 - 0.25 * P.easeOut(u), jy = P.jolt(t, TITLE + 0.12, 6, 0.36, 2);
-	const op = 1 - P.smooth(P.seg(t, 11.36, 11.60));
+	const u = P.seg(t, TITLE, TITLE + 0.12), sc = 1.25 - 0.25 * P.easeOut(u), jy = P.jolt(t, TITLE + 0.12, 6, 0.36, 2), op = 1 - P.smooth(P.seg(t, 11.36, 11.60));
 	const su = P.seg(t, TITLE + 0.16, TITLE + 0.30), seal = su <= 0 ? 'opacity:0' : `opacity:${(0.95 * Math.min(1, su * 3)).toFixed(3)};transform:rotate(-6deg) scale(${(1.25 - 0.25 * P.easeOut(su)).toFixed(3)})`;
 	return `<div id="title" style="position:absolute;left:0;right:0;top:806px;text-align:center;font-family:'Noto Serif CJK SC',serif;font-weight:900;font-size:128px;line-height:1;letter-spacing:.06em;white-space:nowrap;z-index:20;opacity:${op.toFixed(3)};transform:translateY(${jy.toFixed(2)}px) scale(${sc.toFixed(4)});transform-origin:50% 60%">
 	 <div style="position:absolute;left:0;right:0;top:-40px;height:2px;background:linear-gradient(90deg,rgba(200,105,58,0) 22%,rgba(232,150,90,.85) 50%,rgba(200,105,58,0) 78%)"></div>
-	 <span style="color:#FFF1DC;text-shadow:0 0 3px rgba(10,8,6,.9),0 4px 26px rgba(10,8,6,.85)">七个回国<span style="margin-right:-.5em">，</span></span><span style="color:#FFB070;background:linear-gradient(180deg,#FFD9A6 0%,#F09A5E 55%,#C8693A 100%);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;filter:drop-shadow(0 0 18px rgba(255,140,70,.45)) drop-shadow(0 3px 6px rgba(10,8,6,.9))">一个回家</span><img src="${window.JSEAL}" style="width:92px;height:92px;transform:rotate(-6deg);vertical-align:top;margin-left:22px;margin-top:-30px;${seal}">
+	 <span style="color:#FFF1DC;text-shadow:0 0 3px rgba(10,8,6,.9),0 4px 26px rgba(10,8,6,.85)">兽首<span style="margin-right:-.5em">，</span>到底回来了</span><span style="color:#FFB070;background:linear-gradient(180deg,#FFD9A6 0%,#F09A5E 55%,#C8693A 100%);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;filter:drop-shadow(0 0 18px rgba(255,140,70,.45)) drop-shadow(0 3px 6px rgba(10,8,6,.9))">几个？</span><img src="${window.JSEAL}" style="width:92px;height:92px;transform:rotate(-6deg);vertical-align:top;margin-left:6px;margin-top:-30px;${seal}">
 	</div>`;
-};
-// ---- HUD: subtitle, stamp, counter rows
-const counter = (t) => {
-	if (t >= TITLE + 0.15) return '';
-	const op = 1 - P.seg(t, TITLE, TITLE + 0.15);
-	let lab = '回来了', num = '?', dots = '';
-	if (t < 3.997) { if (t >= P.BAR0 && t < 3.9) num = String(Math.floor(rnd(Math.floor(t * 15) + 11) * 13)); }
-	else { lab = '回国'; num = String(Object.values(LIGHT).filter((x) => t >= x).length + (t >= FLARE ? 1 : 0)); }
-	for (const z of ZOD) {
-		if (z === '马') dots += t >= FLARE ? `<span class="o y" style="box-shadow:0 0 ${14 + 16 * Math.exp(-(t - FLARE) / 0.3)}px #FF9A5A"></span>` : P.dot('y');
-		else if (LIGHT[z] !== undefined) dots += P.dot('r', P.seg(t, LIGHT[z], LIGHT[z] + 0.12));
-		else dots += P.dot('d', P.seg(t, FLARE, FLARE + 0.15));
-	}
-	const rows = [{lab, num: num + '/12', dots}];
-	if (t >= LIFT) { const u = P.seg(t, LIFT, LIFT + 0.2), s = 1.3 - 0.3 * P.easeOut(u);
-		rows.push({lab: '回园', num: '1/12', dots: ZOD.map((z) => P.dot(z === '马' ? 'y' : 'e')).join(''), style: `transform:scale(${s.toFixed(3)});transform-origin:0 50%;opacity:${Math.min(1, u * 4).toFixed(3)}`}); }
-	return P.blockHtml(rows, null, {op});
 };
 const LINES = window.LINES45;
 const render = (t) => {
-	const cam = camRing(t), dx = caseDx(t), meta = {cam, camId: 0, events: []};
-	let svg = '', hudParts = [];
-	const titleOn = t >= TITLE;
-	if (t < N1) {
-		// --- the ring
-		const dof = P.smooth(P.seg(t, TITLE, TITLE + 0.35));
-		const world = ringWorld(t, {noHero: titleOn});
+	const meta = {events: []};
+	let svg = '';
+	const titleOn = t >= TITLE, dofIn = P.smooth(P.seg(t, TITLE, TITLE + 0.35)), dofOut = 1 - P.smooth(P.seg(t, 11.36, A1)), dof = dofIn * dofOut;
+	if (t < CUT - 0.5 / 30) {
+		const cam = camRing(t); meta.cam = cam; meta.camId = 0;
+		const world = R.ringWorld(t, {noHero: titleOn, heroExtra: tag(t)});
 		svg += `<g transform="${P.camT(cam)}">${dof > 0.01 ? `<defs>${K.blur('dof', (7 * dof).toFixed(2))}</defs><g filter="url(#dof)">${world}</g>` : world}</g>`;
 		if (titleOn) svg += `<rect width="1920" height="1080" fill="#0E1416" opacity="${(0.28 * dof).toFixed(3)}"/>
-			<g transform="${P.camT(cam)}"><g filter="url(#r7rimN)">${heroSeat.back}</g>${K.heroSeatLight(heroSeat.top, hp.s)}${K.horseHead(heroAt(t))}</g>`;
-		// screen-space: vignette (H1 → H3 → title)
-		const hsx = P.toScr(cam, [HL.x, HL.y + 20]);
-		svg += `<defs><radialGradient id="vig" cx="${hsx[0].toFixed(1)}" cy="${hsx[1].toFixed(1)}" r="1150" gradientUnits="userSpaceOnUse"><stop offset=".5" stop-color="#0A0E0F" stop-opacity="0"/><stop offset="1" stop-color="#0A0E0F" stop-opacity=".52"/></radialGradient>
-			<radialGradient id="tvig" cx="960" cy="470" r="1100" gradientUnits="userSpaceOnUse"><stop offset=".35" stop-color="#0A0E0F" stop-opacity="0"/><stop offset="1" stop-color="#0A0E0F" stop-opacity=".7"/></radialGradient>
-			<linearGradient id="tfloor" x1="0" x2="0" y1="0" y2="1"><stop offset="0" stop-color="#0E1112" stop-opacity="0"/><stop offset="1" stop-color="#0E1112" stop-opacity=".78"/></linearGradient>
-			<radialGradient id="caseGlow" cx="${1580 + dx}" cy="520" r="520" gradientUnits="userSpaceOnUse"><stop offset="0" stop-color="#F6E6C6" stop-opacity=".22"/><stop offset="1" stop-color="#F6E6C6" stop-opacity="0"/></radialGradient></defs>`;
-		const caseOn = dx < 640;
-		if (caseOn && !titleOn) svg += `<rect width="1920" height="1080" fill="url(#caseGlow)" opacity="${(1 - dx / 640).toFixed(3)}"/>`;
-		// the flights are drawn before the cases' frames only for the trails; heads on top (below)
-		if (!titleOn && caseOn) {
-			const blur = caseVel(t) / 30 / 3, lab = 1 - P.seg(t, 7.3, 7.6);
-			const cs = CASES.map((c) => vitrine(c, dx, (k) => t >= LAND[k], lab)).join('');
-			svg += blur > 0.6 ? `<defs><filter id="mb" filterUnits="userSpaceOnUse" x="-200" y="-200" width="2400" height="1480"><feGaussianBlur stdDeviation="${blur.toFixed(2)} 0"/></filter></defs><g filter="url(#mb)">${cs}</g>` : cs;
-		}
-		if (!titleOn) svg += flights(t, cam, dx);
-		svg += `<rect width="1920" height="1080" fill="url(#vig)" opacity="${(1 - dof).toFixed(3)}"/>`;
-		if (titleOn) svg += `<rect y="640" width="1920" height="440" fill="url(#tfloor)" opacity="${dof.toFixed(3)}"/><rect width="1920" height="1080" fill="url(#tvig)" opacity="${dof.toFixed(3)}"/>`;
-		// the 保利 case returns for the title (lit, four ivory heads, no label) and becomes the pane
-		if (titleOn && caseOn) {
-			const blur = caseVel(t) / 30 / 3, c = CASES[0];
-			const cs = `<rect width="1920" height="1080" fill="url(#caseGlow)" opacity="${(1 - dx / 640).toFixed(3)}"/>` + vitrine(c, dx, () => true, 0);
-			svg += blur > 0.6 ? `<defs><filter id="mb" filterUnits="userSpaceOnUse" x="-200" y="-200" width="2400" height="1480"><feGaussianBlur stdDeviation="${blur.toFixed(2)} 0"/></filter></defs><g filter="url(#mb)">${cs}</g>` : cs;
-		}
-		// mode 14 rect-grow: the case's glass grows to full frame with the Hangzhou hall inside, framed so its four cases sit where the four heads sat
-		if (t >= GROW0) {
-			const u = P.smooth(P.seg(t, GROW0, GROW1)), c = CASES[0];
-			const R = {x: P.lerp(c.x + dx, 0, u), y: P.lerp(c.y, 0, u), w: P.lerp(c.w, 1920, u), h: P.lerp(c.h, 1080, u)};
-			const s = R.w / 1920, oy = R.y + R.h / 2 - 540 * s, hc = camHall(N1);
-			const fin = P.seg(t, GROW0, GROW0 + 0.12);
-			svg += `<defs><clipPath id="pane"><rect x="${R.x}" y="${R.y}" width="${R.w}" height="${R.h}"/></clipPath>${hallVig}</defs>
-			<g clip-path="url(#pane)" opacity="${fin.toFixed(3)}"><g transform="translate(${R.x},${oy}) scale(${s})"><g transform="${P.camT(hc)}">${hallWorld(t)}</g><rect width="1920" height="1080" fill="url(#hvig)"/></g></g>
-			<rect x="${R.x}" y="${R.y}" width="${R.w}" height="${R.h}" fill="none" stroke="#F6EAD2" stroke-width="3" opacity="${(0.75 * (1 - u)).toFixed(3)}"/>
-			<path d="M${R.x + 16 + R.w * 0.6 * u},${R.y + 14} l${44 + 300 * u},0" stroke="#FFFFFF" stroke-width="4" opacity="${(0.55 * (1 - u)).toFixed(3)}"/>`;
-			meta.events.push({grow: u});
+			<g transform="${P.camT(cam)}">${K.horseHead(R.heroAt(t))}</g>`;   // only the head stays sharp (seat + tag go soft with the ring)
+		svg += P.ringVig(cam, HL, 1 - dof);
+		if (t >= TAG && t < TAG + 1 / 30) meta.events.push({tag: t});
+		if (t >= FLIP && t < FLIP + 1 / 30) meta.events.push({flip: t});
+	} else {
+		const cam = camNoon(t), b = noonBase(); meta.cam = cam; meta.camId = 1;
+		if (t < CUT + 0.5 / 30) meta.events.push({cut: t});
+		const bl = (7 * Z / cam.z) * dof;
+		svg += b.defs + `<defs>${noonVig}</defs><g transform="${P.camT(cam)}">${bl > 0.05 ? `<defs>${K.blur('ndof', bl.toFixed(2))}</defs><g filter="url(#ndof)">${b.back}${water(t)}</g>` : b.back + water(t)}</g>`;
+		if (dof > 0.01) svg += `<rect width="1920" height="1080" fill="#0E1416" opacity="${(0.28 * dof).toFixed(3)}"/>`;
+		svg += `<g transform="${P.camT(cam)}">${b.horse}</g><rect width="1920" height="1080" fill="url(#nvig)" opacity="${(1 - 0.5 * dof).toFixed(3)}"/>`;
+	}
+	if (titleOn && t < 11.62) svg += `<defs><radialGradient id="tvig" cx="960" cy="470" r="1100" gradientUnits="userSpaceOnUse"><stop offset=".35" stop-color="#0A0E0F" stop-opacity="0"/><stop offset="1" stop-color="#0A0E0F" stop-opacity=".7"/></radialGradient>
+		<linearGradient id="tfloor" x1="0" x2="0" y1="0" y2="1"><stop offset="0" stop-color="#0E1112" stop-opacity="0"/><stop offset="1" stop-color="#0E1112" stop-opacity=".78"/></linearGradient></defs>
+		<rect y="640" width="1920" height="440" fill="url(#tfloor)" opacity="${dof.toFixed(3)}"/><rect width="1920" height="1080" fill="url(#tvig)" opacity="${dof.toFixed(3)}"/>`;
+	// ---- HUD
+	const hud = [];
+	const ln = P.lineAt(LINES, t); if (ln) hud.push(P.subHtml(ln[2], t, ln[0]));
+	const hudOp = t < TITLE ? 1 : 1 - P.seg(t, TITLE, TITLE + 0.15);
+	if (t < A1) {
+		if (hudOp > 0) {
+			hud.push(P.stampHtml('圆明园 · 十二兽首', '海晏堂 · 水力钟', {op: hudOp}));
+			const num = t >= P.BAR0 && t < 3.9 ? String(Math.floor(rnd(Math.floor(t * 15) + 11) * 13)) : '?';
+			hud.push(P.blockHtml([{lab: '回来了', num: num + '/12', dots: P.ZOD.map(() => P.dot('e')).join('')}], null, {op: hudOp}));
+			hud.push(P.sealHtml(hudOp));
 		}
 	} else {
-		const hc = camHall(t); meta.cam = hc; meta.camId = 1;
-		svg += `<defs>${hallVig}</defs><g transform="${P.camT(hc)}">${hallWorld(t)}</g><rect width="1920" height="1080" fill="url(#hvig)"/>`;
+		const op = P.seg(t, A1, A1 + 0.2);
+		hud.push(P.stampHtml('乾隆年间 · 海晏堂', '圆明园 · 水力钟'));
+		hud.push(P.blockHtml([{lab: '在家', num: '12/12', dots: P.ZOD.map(() => P.dot('h')).join('')}], '清', {op}));
+		hud.push(P.sealHtml());
 	}
-	// --- HUD
-	const ln = P.lineAt(LINES, t, {'可住回圆明园的，[只有一个]。': TITLE});
-	if (ln) hudParts.push(P.subHtml(ln[2], t, ln[0]));
-	if (t < TITLE) hudParts.push(P.stampHtml('圆明园 · 十二兽首', '海晏堂 · 水力钟'));
-	else if (t < TITLE + 0.15) hudParts.push(P.stampHtml('圆明园 · 十二兽首', '海晏堂 · 水力钟', {op: 1 - P.seg(t, TITLE, TITLE + 0.15)}));
-	if (t >= N1) hudParts.push(P.stampHtml('2026 · 杭州', '浙江省博物馆 · 四兽首'));
-	if (t < N1) hudParts.push(counter(t)); else hudParts.push(P.blockHtml([], '当代'));
-	const sealOp = t < TITLE ? 1 : t < TITLE + 0.15 ? 1 - P.seg(t, TITLE, TITLE + 0.15) : t >= N1 ? 1 : 0;
-	if (sealOp > 0) hudParts.push(P.sealHtml(sealOp));
-	hudParts.push(titleHtml(t));
-	return {svg, hud: P.hud(hudParts), meta};
+	hud.push(titleHtml(t));
+	return {svg, hud: P.hud(hud), meta};
 };
-P.SCENES.hook = {t0: 0, t1: 12.6, render, cam: (t) => (t < N1 ? camRing(t) : camHall(t))};
+P.SCENES.hook = {t0: 0, t1: 15.4, render};
+P.NOON = {noonBase, items, water, NOON_T, NW, nh, nFace, camNoon, noonVig};
 })();
