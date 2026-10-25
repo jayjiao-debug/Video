@@ -445,7 +445,7 @@
 {
 "t": 81.7,
 "sfx": "woodblock2",
-"db": -4.5,
+"db": -6.5,
 "lead": 0.301,
 "role": "normal",
 "why": "stand-in for woodblock_print (regenerate)"
@@ -460,7 +460,7 @@
 {
 "t": 82.84,
 "sfx": "woodblock2",
-"db": -4.0,
+"db": -6.0,
 "lead": 0.301,
 "role": "normal",
 "why": "stand-in for woodblock_print (regenerate)"
@@ -508,7 +508,7 @@
 {
 "t": 89.35,
 "sfx": "woodblock2",
-"db": -4.0,
+"db": -6.0,
 "lead": 0.301,
 "role": "normal",
 "why": "stand-in for woodblock_print (regenerate)"
