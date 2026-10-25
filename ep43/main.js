@@ -25410,7 +25410,7 @@ var AGES = [
 ];
 var TALLY = [[b(15), "in"], [b(15.75), "out"], [b(24.5), "in"], [b(27.5), "out"], [b(33.5), "in"], [b(35.25), "out"], [b(38), "in"], [b(42), "out"], [b(57.5), "in"]];
 var TALLY_ON = [[b(12), b(56)], [b(57), b(75.5)]];
-var LABELS = [[b(13), b(13.75), 300, 640, "5\u7C73\u591A\u957F"], [b(13.25), b(13.75), 300, 730, "\u51E0\u767E\u4E2A\u4EBA"], [b(65), b(65.75), 1010, 668, "\u7EA6\u4E00\u767E\u5377 \xB7 \u53EA\u6709\u4E00\u5377\u662F\u4F60"]];
+var LABELS = [[b(13), b(13.75), 300, 640, "5\u7C73\u591A\u957F"], [b(13.25), b(13.75), 300, 730, "\u51E0\u767E\u4E2A\u4EBA"], [b(64.8), b(66), 1010, 668, "\u7EA6\u4E00\u767E\u5377 \xB7 \u53EA\u6709\u4E00\u5377\u662F\u4F60"]];
 var within = (t, a, z) => t >= a && t < z;
 var drawFurniture = (hud2, t, opts = {}) => {
   mark(hud2);
@@ -36086,7 +36086,7 @@ var drawR = (t) => {
   glowR.set((i) => i >= 65 && i <= 69 ? clamp01((t - b10(63) - (i - 65) * 0.07) / 0.12) : 0);
   const fk = `${Math.round(t * 60)}`;
   const poly3 = [strip2.screen(TB2.x0 - S.x0, 0, -2), strip2.screen(TB2.x1 - S.x0, 0, -2), strip2.screen(TB2.x1 - S.x0, S.depth, -2), strip2.screen(TB2.x0 - S.x0, S.depth, -2)];
-  const vis = c.z < 4, R = restorers(t, vis && c.th > 1.25), sit = R.figs[0], standF = R.figs[1];
+  const vis = c.z < 40, R = restorers(t, c.z < 4 && c.th > 1.25);
   body.draw(fk, (g) => {
     if (!vis) return;
     g.save();
@@ -37269,7 +37269,7 @@ addScene({ id: "37", a: b11(76), z: 184.3 + 1, draw: (t) => {
   }
   if (t < E37.passZ) {
     const k2 = easeInOut(clamp01((t - E37.hallZ) / (E37.passZ - E37.hallZ)));
-    pass2.setCam(960, 540, Math.exp(lerp2(Math.log(12), 0, k2)));
+    pass2.setCam(960, 540, Math.exp(lerp2(Math.log(3.6), 0, k2)));
     dimWorld(pass2, 0.85, /* @__PURE__ */ new Set(), [1, 0.97, 0.94]);
     return { st: pass2, grade: { vig: 0.45, exposure: 1 }, bloom: 1, hideFurniture: true, hud: endHud(t) };
   }
