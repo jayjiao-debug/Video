@@ -1,0 +1,102 @@
+plan: {'tier': None, 'character_count': None, 'character_limit': None, 'status': None}
+models: ['eleven_v4', 'eleven_v4_turbo', 'eleven_v3', 'eleven_v3_conversational', 'eleven_multilingual_v2', 'eleven_flash_v2_5', 'eleven_turbo_v2_5', 'eleven_turbo_v2', 'eleven_flash_v2', 'eleven_english_sts_v2', 'eleven_multilingual_sts_v2']
+model: eleven_v4
+{"name": "m0", "lang": "zh", "text": "假如说，你是圆明园的马首。有人花六千九百一十万港元买下你，又把你捐了出去。", "voice": "shared:James Gao - Calm, Friendly and Warm (standard, zh)", "voice_id": "4VZIsMPtgggwNg7OXbPY", "model": "eleven_v4", "status": 200, "file": "m0.mp3", "bytes": 126684}
+{"name": "m1", "lang": "zh", "text": "假如说，你是圆明园的马首。有人花六千九百一十万港元买下你，又把你捐了出去。", "voice": "shared:Martin Li - Raspy, Serious and Deep (standard, zh)", "voice_id": "WuLq5z7nEcrhppO0ZQJw", "model": "eleven_v4", "status": 200, "file": "m1.mp3", "bytes": 130446}
+{"name": "m2", "lang": "zh", "text": "假如说，你是圆明园的马首。有人花六千九百一十万港元买下你，又把你捐了出去。", "voice": "shared:Adrian - Chinese Mandarin Narration (standard, zh)", "voice_id": "agczkAUlHLowaNnL72Cc", "model": "eleven_v4", "status": 200, "file": "m2.mp3", "bytes": 117489}
+{"name": "f0", "lang": "zh", "text": "假如说，你是圆明园的马首。有人花六千九百一十万港元买下你，又把你捐了出去。", "voice": "shared:Anna Su - Casual, Friendly and Bright (taiwan mandarin, zh)", "voice_id": "9lHjugDhwqoxA5MhX0az", "model": "eleven_v4", "status": 200, "file": "f0.mp3", "bytes": 122505}
+{"name": "f1", "lang": "zh", "text": "假如说，你是圆明园的马首。有人花六千九百一十万港元买下你，又把你捐了出去。", "voice": "shared:Stacy - Young, Sweet and Cute (standard, zh)", "voice_id": "hkfHEbBvdQFNX4uWHqRF", "model": "eleven_v4", "status": 200, "file": "f1.mp3", "bytes": 125430}
+{"name": "f2", "lang": "zh", "text": "假如说，你是圆明园的马首。有人花六千九百一十万港元买下你，又把你捐了出去。", "voice": "shared:Sage - Soothing & Gentle (standard, zh)", "voice_id": "APSIkVZudNbPAwyPoeVO", "model": "eleven_v4", "status": 200, "file": "f2.mp3", "bytes": 129192}
+Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+[
+ {
+  "name": "m0",
+  "lang": "zh",
+  "text": "假如说，你是圆明园的马首。有人花六千九百一十万港元买下你，又把你捐了出去。",
+  "voice": "shared:James Gao - Calm, Friendly and Warm (standard, zh)",
+  "voice_id": "4VZIsMPtgggwNg7OXbPY",
+  "model": "eleven_v4",
+  "status": 200,
+  "file": "m0.mp3",
+  "bytes": 126684,
+  "heard": "假如说你是原名原的马手有人花6,910万港元买下你又把你捐了出去",
+  "heard_lang": "zh",
+  "heard_lang_p": 0.998,
+  "seconds": 7.84
+ },
+ {
+  "name": "m1",
+  "lang": "zh",
+  "text": "假如说，你是圆明园的马首。有人花六千九百一十万港元买下你，又把你捐了出去。",
+  "voice": "shared:Martin Li - Raspy, Serious and Deep (standard, zh)",
+  "voice_id": "WuLq5z7nEcrhppO0ZQJw",
+  "model": "eleven_v4",
+  "status": 200,
+  "file": "m1.mp3",
+  "bytes": 130446,
+  "heard": "假如说你是原名原的马手,有人花6,910万港元买下你,又把你捐了出去。",
+  "heard_lang": "zh",
+  "heard_lang_p": 1.0,
+  "seconds": 8.08
+ },
+ {
+  "name": "m2",
+  "lang": "zh",
+  "text": "假如说，你是圆明园的马首。有人花六千九百一十万港元买下你，又把你捐了出去。",
+  "voice": "shared:Adrian - Chinese Mandarin Narration (standard, zh)",
+  "voice_id": "agczkAUlHLowaNnL72Cc",
+  "model": "eleven_v4",
+  "status": 200,
+  "file": "m2.mp3",
+  "bytes": 117489,
+  "heard": "假如说你是原民员的马手有人花 6910万港元买下你又把你捐了出去",
+  "heard_lang": "zh",
+  "heard_lang_p": 0.999,
+  "seconds": 7.28
+ },
+ {
+  "name": "f0",
+  "lang": "zh",
+  "text": "假如说，你是圆明园的马首。有人花六千九百一十万港元买下你，又把你捐了出去。",
+  "voice": "shared:Anna Su - Casual, Friendly and Bright (taiwan mandarin, zh)",
+  "voice_id": "9lHjugDhwqoxA5MhX0az",
+  "model": "eleven_v4",
+  "status": 200,
+  "file": "f0.mp3",
+  "bytes": 122505,
+  "heard": "假如說,你是原名人的馬手有人花 6910 萬港元買下你又把你捐了出去",
+  "heard_lang": "zh",
+  "heard_lang_p": 0.999,
+  "seconds": 7.6
+ },
+ {
+  "name": "f1",
+  "lang": "zh",
+  "text": "假如说，你是圆明园的马首。有人花六千九百一十万港元买下你，又把你捐了出去。",
+  "voice": "shared:Stacy - Young, Sweet and Cute (standard, zh)",
+  "voice_id": "hkfHEbBvdQFNX4uWHqRF",
+  "model": "eleven_v4",
+  "status": 200,
+  "file": "f1.mp3",
+  "bytes": 125430,
+  "heard": "假如說你是原名人的馬手有人花6,910萬港元買下你又把你捐了出去",
+  "heard_lang": "zh",
+  "heard_lang_p": 0.997,
+  "seconds": 7.76
+ },
+ {
+  "name": "f2",
+  "lang": "zh",
+  "text": "假如说，你是圆明园的马首。有人花六千九百一十万港元买下你，又把你捐了出去。",
+  "voice": "shared:Sage - Soothing & Gentle (standard, zh)",
+  "voice_id": "APSIkVZudNbPAwyPoeVO",
+  "model": "eleven_v4",
+  "status": 200,
+  "file": "f2.mp3",
+  "bytes": 129192,
+  "heard": "假如说,你是元明元的马手有人花6,910万港元买下你又把你捐了出去",
+  "heard_lang": "zh",
+  "heard_lang_p": 0.996,
+  "seconds": 8.0
+ }
+]
