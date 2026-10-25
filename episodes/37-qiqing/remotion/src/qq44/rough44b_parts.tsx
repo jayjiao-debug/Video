@@ -1,6 +1,6 @@
 import React from 'react';
 import {W, H, rnd, lerp, Glow, Rimmed, fkPose, Look4, Pose, B, jointAt, Sky, HeadGlow} from './kit44';
-import {Cam, seg, ease, eo, ei, sm, K2Scene, K2_C, k2Glow, k2Skull, skullBack, GLOW_BACK, InHead} from './demo44';
+import {Cam, seg, ease, eo, ei, sm, K2Scene, K2_C, K2_Z0, HOUSE_PUSH_Z, k2Glow, k2Skull, skullBack, GLOW_BACK, InHead} from './demo44';
 import {SANS, ROSE, INK} from './skin44';
 import {Motes, Wallpaper, Frame, Curtain, Cloud} from './bg44';
 /* ep44 rough cut, builder B: private copies of demo44 internals (the K2 compass close-up and the K1 house camera),
@@ -52,7 +52,7 @@ const compassAt = (t: number): P2 => { const fh = jointAt(fatherP(t), 'RHand', K
 export const homeCam = (t: number): {cx: number; cy: number; z: number} => {
 	let cx = 900 + 30 * Math.sin(t * 0.3), cy = 600, z = 1.12 + 0.012 * (t - 14.75);
 	const pan = ease(seg(t, 17.85, 18.75)); cx = lerp(cx, KX + 980 + 20 * Math.sin(t * 0.4), pan); cy = lerp(cy, 560, pan); z = lerp(z, 1.05 + 0.01 * (t - 18.25), pan);
-	const push = ease(seg(t, 20.75, 21.55)), cp = compassAt(t); cx = lerp(cx, cp[0], push); cy = lerp(cy, cp[1], push); z = lerp(z, 3.4, push);
+	const push = ease(seg(t, 20.75, 21.55)), cp = compassAt(t); cx = lerp(cx, cp[0], push); cy = lerp(cy, cp[1], push); z = lerp(z, HOUSE_PUSH_Z, push);
 	return {cx, cy, z};
 };
 /** the boy's head on screen in the K1 house shot at demo time tm */
@@ -69,7 +69,9 @@ export const NeedleEnd: React.FC<{t: number}> = ({t: ft}) => {
 	const intro = eo(seg(u, 0, 0.5)), drift = Math.max(0, u - 0.5);
 	/* from F3 the camera tilts up a little so his head (and the F4 glow) sits clear of the two subtitle rows */
 	const frame = ease(seg(ft, 145.4, 146.9));
-	const cx = lerp(lerp(K2_C[0] - 120, 1000, intro), 940, frame) - 6 * drift, cy = lerp(lerp(K2_C[1] - 60, 560, intro), 468, frame) - 2 * drift, z = lerp(1.7, 1.06, intro) + 0.006 * drift;
+	/* hands v4: opens on the compass exactly where the house push leaves it (one compass through the dissolve), settles closer than
+	   before (the compass is child-sized now); from F3 a wider frame with his head clear of the subtitle rows */
+	const cx = lerp(lerp(K2_C[0], 760, intro), 700, frame) - 3 * drift, cy = lerp(lerp(K2_C[1], 420, intro), 325, frame) - 1 * drift, z = lerp(lerp(K2_Z0, 1.8, intro), 1.45, frame) + 0.002 * drift;
 	const g = k2Glow(look);
 	return <g>
 		<Sky id="bk2s" stops={[[0, '#4a3a30'], [0.7, '#3a2c24'], [1, '#2a201a']]} />
