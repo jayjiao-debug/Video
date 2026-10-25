@@ -1,0 +1,101 @@
+url https://gol.gg/tournament/tournament-matchlist/Worlds%202026%20Play-In/
+  saved out/files/S16__Worlds_2026_Play_In.html 0.6 MB
+url https://gol.gg/tournament/tournament-matchlist/VCS%202026%20Finals%20Stage%202/
+  saved out/files/S16__VCS_2026_Finals_Stage_2.html 0.6 MB
+url https://gol.gg/tournament/tournament-matchlist/CBLOL%202026%20Split%202%20Playoffs/
+  saved out/files/S16__CBLOL_2026_Split_2_Playoffs.html 0.6 MB
+url https://gol.gg/tournament/tournament-matchlist/LCS%202026%20Summer%20Playoffs/
+  saved out/files/S16__LCS_2026_Summer_Playoffs.html 0.6 MB
+url https://gol.gg/tournament/tournament-matchlist/LEC%202026%20Summer%20Playoffs/
+  saved out/files/S16__LEC_2026_Summer_Playoffs.html 0.6 MB
+url https://gol.gg/tournament/tournament-matchlist/VCS%202026%20Finals%20Stage%201/
+  saved out/files/S16__VCS_2026_Finals_Stage_1.html 0.6 MB
+url https://gol.gg/tournament/tournament-matchlist/LPL%202026%20Regional%20Finals/
+  saved out/files/S16__LPL_2026_Regional_Finals.html 0.6 MB
+url https://gol.gg/tournament/tournament-matchlist/LCK%202026%20Season%20Playoffs/
+  saved out/files/S16__LCK_2026_Season_Playoffs.html 0.6 MB
+url https://gol.gg/tournament/tournament-matchlist/LPL%202026%20Grand%20Finals/
+  saved out/files/S16__LPL_2026_Grand_Finals.html 0.6 MB
+url https://gol.gg/tournament/tournament-matchlist/LCS%202026%20Summer/
+  saved out/files/S16__LCS_2026_Summer.html 0.6 MB
+url https://gol.gg/tournament/tournament-matchlist/LJL%202026%20Summer%20Championship/
+  saved out/files/S16__LJL_2026_Summer_Championship.html 0.6 MB
+url https://gol.gg/tournament/tournament-matchlist/PCS%202026%20Summer%20Season/
+  saved out/files/S16__PCS_2026_Summer_Season.html 0.6 MB
+url https://gol.gg/tournament/tournament-matchlist/CBLOL%202026%20Split%202/
+  saved out/files/S16__CBLOL_2026_Split_2.html 0.6 MB
+url https://gol.gg/tournament/tournament-matchlist/LCP%202026%20Split%203/
+  saved out/files/S16__LCP_2026_Split_3.html 0.6 MB
+url https://gol.gg/tournament/tournament-matchlist/LEC%202026%20Summer%20Season/
+  saved out/files/S16__LEC_2026_Summer_Season.html 0.6 MB
+url https://gol.gg/tournament/tournament-matchlist/LCK%202026%20Season%20Play-In/
+  saved out/files/S16__LCK_2026_Season_Play_In.html 0.6 MB
+url https://gol.gg/tournament/tournament-matchlist/LCK%202026%20Rounds%203-4/
+  saved out/files/S16__LCK_2026_Rounds_3_4.html 0.6 MB
+url https://gol.gg/tournament/tournament-matchlist/LPL%202026%20Split%203/
+  saved out/files/S16__LPL_2026_Split_3.html 0.6 MB
+url https://gol.gg/tournament/tournament-matchlist/Esports%20World%20Cup%202026/
+  saved out/files/S16__Esports_World_Cup_2026.html 0.6 MB
+url https://gol.gg/tournament/tournament-matchlist/MSI%202026/
+  saved out/files/S16__MSI_2026.html 0.6 MB
+url https://gol.gg/tournament/tournament-matchlist/VCS%202026%20Summer%20Playoffs/
+  saved out/files/S16__VCS_2026_Summer_Playoffs.html 0.6 MB
+url https://gol.gg/tournament/tournament-matchlist/LCK%202026%20Road%20to%20MSI/
+  saved out/files/S16__LCK_2026_Road_to_MSI.html 0.6 MB
+url https://gol.gg/tournament/tournament-matchlist/LCS%202026%20Spring%20Playoffs/
+  saved out/files/S16__LCS_2026_Spring_Playoffs.html 0.6 MB
+url https://gol.gg/tournament/tournament-matchlist/LJL%202026%20Spring%20Series/
+  saved out/files/S16__LJL_2026_Spring_Series.html 0.6 MB
+url https://gol.gg/tournament/tournament-matchlist/LPL%202026%20Split%202%20Playoffs/
+  saved out/files/S16__LPL_2026_Split_2_Playoffs.html 0.6 MB
+url https://gol.gg/tournament/tournament-matchlist/LCP%202026%20Split%202%20Playoffs/
+  saved out/files/S16__LCP_2026_Split_2_Playoffs.html 0.6 MB
+url https://gol.gg/tournament/tournament-matchlist/LEC%202026%20Spring%20Playoffs/
+  saved out/files/S16__LEC_2026_Spring_Playoffs.html 0.6 MB
+url https://gol.gg/tournament/tournament-matchlist/CBLOL%202026%20Split%201%20Playoffs/
+  saved out/files/S16__CBLOL_2026_Split_1_Playoffs.html 0.6 MB
+url https://gol.gg/tournament/tournament-matchlist/PCS%202026%20Spring%20Season/
+  saved out/files/S16__PCS_2026_Spring_Season.html 0.6 MB
+url https://gol.gg/tournament/tournament-matchlist/LCK%202026%20Rounds%201-2/
+  saved out/files/S16__LCK_2026_Rounds_1_2.html 0.6 MB
+url https://gol.gg/tournament/tournament-matchlist/VCS%202026%20Summer/
+  saved out/files/S16__VCS_2026_Summer.html 0.6 MB
+url https://gol.gg/tournament/tournament-matchlist/LCP%202026%20Split%202/
+  saved out/files/S16__LCP_2026_Split_2.html 0.6 MB
+url https://gol.gg/tournament/tournament-matchlist/LCS%202026%20Spring/
+  saved out/files/S16__LCS_2026_Spring.html 0.6 MB
+url https://gol.gg/tournament/tournament-matchlist/LPL%202026%20Split%202/
+  saved out/files/S16__LPL_2026_Split_2.html 0.6 MB
+url https://gol.gg/tournament/tournament-matchlist/LEC%202026%20Spring%20Season/
+  saved out/files/S16__LEC_2026_Spring_Season.html 0.6 MB
+url https://gol.gg/tournament/tournament-matchlist/CBLOL%202026%20Split%201/
+  saved out/files/S16__CBLOL_2026_Split_1.html 0.6 MB
+url https://gol.gg/tournament/tournament-matchlist/LJL%202026%20Winter%20Series/
+  saved out/files/S16__LJL_2026_Winter_Series.html 0.6 MB
+url https://gol.gg/tournament/tournament-matchlist/VCS%202026%20Spring%20Playoffs/
+  saved out/files/S16__VCS_2026_Spring_Playoffs.html 0.6 MB
+url https://gol.gg/tournament/tournament-matchlist/2026%20First%20Stand/
+  saved out/files/S16__2026_First_Stand.html 0.6 MB
+url https://gol.gg/tournament/tournament-matchlist/VCS%202026%20Spring/
+  saved out/files/S16__VCS_2026_Spring.html 0.6 MB
+url https://gol.gg/tournament/tournament-matchlist/LPL%202026%20Split%201%20Playoffs/
+  saved out/files/S16__LPL_2026_Split_1_Playoffs.html 0.6 MB
+url https://gol.gg/tournament/tournament-matchlist/CBLOL%20Cup%202026/
+  saved out/files/S16__CBLOL_Cup_2026.html 0.6 MB
+url https://gol.gg/tournament/tournament-matchlist/LCK%20Cup%202026/
+  saved out/files/S16__LCK_Cup_2026.html 0.6 MB
+url https://gol.gg/tournament/tournament-matchlist/LCP%202026%20Split%201%20Playoffs/
+  saved out/files/S16__LCP_2026_Split_1_Playoffs.html 0.6 MB
+url https://gol.gg/tournament/tournament-matchlist/LCS%202026%20Lock-In/
+  saved out/files/S16__LCS_2026_Lock_In.html 0.6 MB
+url https://gol.gg/tournament/tournament-matchlist/LEC%202026%20Versus%20Playoffs/
+  saved out/files/S16__LEC_2026_Versus_Playoffs.html 0.6 MB
+url https://gol.gg/tournament/tournament-matchlist/LCP%202026%20Split%201/
+  saved out/files/S16__LCP_2026_Split_1.html 0.6 MB
+url https://gol.gg/tournament/tournament-matchlist/LEC%202026%20Versus%20Season/
+  saved out/files/S16__LEC_2026_Versus_Season.html 0.6 MB
+url https://gol.gg/tournament/tournament-matchlist/LPL%202026%20Split%201/
+  saved out/files/S16__LPL_2026_Split_1.html 0.6 MB
+url https://gol.gg/tournament/tournament-matchlist/Worlds%202026%20Main%20Event/
+  saved out/files/S16__Worlds_2026_Main_Event.html 0.6 MB
+done
