@@ -27,10 +27,11 @@ K.BRO = {
 		${W('M58,40 C62,20 88,16 94,36 C98,54 82,64 72,56 C64,50 68,40 78,42', 10)}<path d="M14,82 L18,98 L26,84 Z"/>`,
 	// 猴 (r3, note 3a): no brow bar. A round cranium, a deep concave face, a protruding rounded muzzle with the mouth open (a notch in
 	// the outline), a large round ear set mid-head at the back, a jagged cheek fringe under the jaw.
-	// r4 (cold read r3: "a person with a hairstyle"): the B5 fallback — the muzzle is 8 units longer, and a pale bare-face disc
-	// (K.BRO_FACE) sits inside the silhouette around the eye and muzzle, as on a macaque.
-	猴: `<path d="M46,20 C37,22 33,29 34,36 C34,41 37,45 39,49 C30,50 19,52 13,57 C9,61 10,66 15,66 L28,65 L18,70 C18,75 24,78 32,78 L50,82 C70,85 87,72 87,54 C87,33 73,18 58,18 C54,18 50,19 46,20 Z"/>
-		<circle cx="86" cy="50" r="12.5"/><path d="M34,77 L30,90 L39,83 L41,96 L48,85 L52,98 L56,85 L63,94 L64,80 Z"/>`,
+	// r5 (owner, ring v8: the horse is the ONLY non-silhouette head): the pale face disc is gone; the outline alone carries it.
+	// The cranium is lower and the forehead slopes back from a small brow overhang (no human dome), the muzzle juts further with a
+	// deeper open-mouth notch and a jutting lower jaw, and the round ear is bigger and breaks the back of the head at mid-height.
+	猴: `<path d="M60,24 C47,24 39,31 35,38 L29,41 L34,46 C27,48 17,51 8,54 C3,56 2,62 6,64 L21,64 L25,67 L10,71 C9,76 15,79 26,79 L50,82 C70,85 88,72 88,55 C88,36 75,24 60,24 Z"/>
+		<circle cx="89" cy="48" r="14.5"/><path d="M33,78 L29,91 L38,84 L40,97 L47,86 L51,99 L55,86 L62,95 L64,80 Z"/>`,
 	鸡: `<circle cx="54" cy="58" r="19"/><path d="M38,52 L14,58 L38,66 Z"/>
 		<path d="M38,44 L40,22 L48,36 L54,16 L60,34 L68,18 L72,36 L80,30 L76,48 Z"/><ellipse cx="38" cy="78" rx="7" ry="12"/>
 		<path d="M66,70 L92,76 L86,84 L94,92 L70,92 Z"/>`,
@@ -40,12 +41,12 @@ K.BRO = {
 		<ellipse cx="11" cy="61" rx="7" ry="17"/><path d="M58,40 C56,22 72,12 86,18 L74,48 Z"/>`,
 };
 // a pale inner shape drawn over the silhouette (only 猴: the bare face disc), with its dark eye and nostril marks
-K.BRO_FACE = {猴: {d: 'M43,29 C35,30 33,38 36,45 C28,48 19,52 15,57 C13,61 15,63 19,63 L29,62 C37,64 46,67 53,62 C58,55 58,42 54,35 C51,31 47,29 43,29 Z',
-	marks: '<ellipse cx="41" cy="41" rx="3.4" ry="2.8"/><ellipse cx="17" cy="58" rx="1.8" ry="1.4"/>'}};
+// r5 (owner): none — every brother is a pure silhouette; only the horse is modelled. (Kept as an empty table for the K.bro hook.)
+K.BRO_FACE = {};
 // eye position per head (a small incised dot, visible only when the head is lit; silhouettes don't need it)
 K.BEYE = {鼠: [40, 54], 牛: [38, 50], 虎: [36, 52], 兔: [36, 60], 龙: [42, 50], 蛇: [26, 46], 羊: [36, 54], 猴: [40, 41], 鸡: [48, 54], 狗: [38, 54], 猪: [40, 52]};
 // mouth (spout point) per head, in box units
-K.BMOUTH = {鼠: [4, 65], 牛: [8, 72], 虎: [10, 72], 兔: [20, 72], 龙: [8, 72], 蛇: [4, 52], 羊: [6, 70], 猴: [14, 68], 鸡: [16, 60], 狗: [4, 66], 猪: [6, 66]};
+K.BMOUTH = {鼠: [4, 65], 牛: [8, 72], 虎: [10, 72], 兔: [20, 72], 龙: [8, 72], 蛇: [4, 52], 羊: [6, 70], 猴: [12, 67], 鸡: [16, 60], 狗: [4, 66], 猪: [6, 66]};
 /** the pale bare-face tone for a given silhouette fill: lifted toward a warm ivory so it reads at 400 px on dark and bronze heads */
 const broPale = (fill) => { const m = /^#([0-9a-f]{6})$/i.exec(fill || ''); if (!m) return '#B89A7A'; const c = [0, 2, 4].map((i) => parseInt(m[1].slice(i, i + 2), 16)), t = [0xD9, 0xBE, 0x9C];
 	return '#' + c.map((v, i) => Math.round(v + (t[i] - v) * 0.55).toString(16).padStart(2, '0')).join(''); };
