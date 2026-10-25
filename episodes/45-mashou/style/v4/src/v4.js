@@ -89,8 +89,8 @@ K.pool = (mode) => {
 	<path d="M330,920 L780,664 L1140,664 L1590,920 C1300,950 620,950 330,920 Z" fill="${rim}"/>
 	<path d="M360,912 L790,672 L1130,672 L1560,912 C1290,938 630,938 360,912 Z" fill="${water}"/>
 	<path d="M330,920 C620,950 1300,950 1590,920" stroke="${rimLit}" stroke-width="3" fill="none" opacity=".7"/>
-	${Array.from({length: 9}, (_, i) => `<path d="M${560 + i * 20},${740 + i * 18} L${1360 - i * 20},${740 + i * 18}" stroke="${fire ? '#F0904A' : '#E6EEE6'}" stroke-width="1.5" opacity="${0.18 - i * 0.012}"/>`).join('')}
-	${fire ? Array.from({length: 26}, (_, i) => { const y = 690 + K.rnd(i + 70) * 220, w = 30 + K.rnd(i + 71) * 120, x = 560 + K.rnd(i + 72) * 800; return `<rect x="${x}" y="${y}" width="${w}" height="3" fill="#FFB060" opacity="${0.25 + 0.4 * K.rnd(i + 73)}"/>`; }).join('') : ''}`;
+	${fire ? '' : Array.from({length: 9}, (_, i) => `<path d="M${560 + i * 20},${740 + i * 18} L${1360 - i * 20},${740 + i * 18}" stroke="#E6EEE6" stroke-width="1.5" opacity="${0.18 - i * 0.012}"/>`).join('')}
+	${fire ? '<g filter="url(#b3)">' + Array.from({length: 9}, (_, i) => { const x = 640 + i * 80; return Array.from({length: 8}, (_, k) => `<rect x="${x + 6 * Math.sin(k * 1.7 + i)}" y="${686 + k * 26}" width="${(18 - k * 1.5) * (0.6 + 0.8 * K.rnd(i * 9 + k))}" height="${12 + 10 * K.rnd(i + k)}" rx="4" fill="#FFB060" opacity="${0.5 - k * 0.05}"/>`).join(''); }).join('') + '</g>' + `<path d="M330,920 L780,664 L1140,664 L1590,920" stroke="#E8C49A" stroke-width="4" fill="none" opacity=".75"/>` : ''}`;
 };
 /** one seated statue: stone body + brother head (or you, or an empty seat). Returns {svg, mouth, top}. */
 K.statue = (kind, side, i, mode, o = {}) => {

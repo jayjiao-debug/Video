@@ -1,48 +1,65 @@
-// H1b 「你回到了圆明园。」 (the hardest drop, 118.87 s, +0.3 s): the 正觉寺 courtyard at night (pays off T4). The 文殊亭's
-// centre doors have just swung open inward; two staff inside, in profile, backlit by you, each walking a leaf back with both
-// hands on its edge; you on the plinth between them; copper light spills down the steps and across the flagstones; the pines and
-// the eaves take your rim. Sky kept darker than you (no white flash).
-const rnd = K.rnd, S = '#110B08';
-const hero = {x: 960, y: 520, h: 64, curl: 1, glow: 1.8, mood: 'warm', rim: '#FFE6C0'};
-const staff = (x, f, hand) => { const fg = K.figure({x, ground: 640, h: 200, face: f, col: S, hat: 'hair', stride: [0.3, -0.35], hands: hand, elbow: [1, 1], lean: 0.1}); return fg.armBack + fg.svg + fg.armFront + `<path d="M${x - f * 30},${640 - 200 * 0.97} L${x - f * 30},${640}" stroke="none"/>`; };
-const pine = (x, y, sc, flip) => { let s = `<path d="M${x},${y} C${x + 6 * sc},${y - 120 * sc} ${x - 10 * sc},${y - 220 * sc} ${x + 14 * sc},${y - 330 * sc}" stroke="${S}" stroke-width="${16 * sc}" fill="none"/>`;
-	[[-100, -300, 120, 30], [60, -250, 110, 26], [-60, -200, 130, 32], [80, -150, 100, 26], [-30, -360, 90, 24]].forEach(([dx, dy, rx, ry], i) => { s += `<ellipse cx="${x + flip * dx * sc}" cy="${y + dy * sc}" rx="${rx * sc}" ry="${ry * sc}" fill="${S}"/><path d="M${x + flip * dx * sc - rx * sc * 0.8},${y + dy * sc - ry * sc * 0.4} Q${x + flip * dx * sc},${y + dy * sc - ry * sc * 1.1} ${x + flip * dx * sc + rx * sc * 0.8},${y + dy * sc - ry * sc * 0.4}" stroke="${flip > 0 ? '#C87A44' : '#C87A44'}" stroke-width="2.5" fill="none" opacity="${0.35 + 0.2 * (i % 2)}"/>`; });
+// H1b 「你回到了圆明园。」 at the end of the drop's push (118.87 → ≈119.4, 1.00 → 1.12): low and close on the 文殊亭's centre bay.
+// The 隔扇 doors (菱花 lattice) have swung inward; two staff inside, each in profile facing the leaf he walks back, both mittens on
+// its free edge, stepping backward. You stand on the plinth at the threshold, the brightest thing; your copper spill runs down the
+// steps to the lens, lights the eave's underside (rafters, an upturned 翼角 at each top corner) and the pines' needle edges.
+const rnd = K.rnd, S = '#140D0A';
+const hero = {x: 975, y: 640, h: 190, curl: 1, glow: 1.5, mood: 'warm', refl: '#C9C2B0'};
+// a profile figure walking a door leaf back: faces f, both hands on the leaf edge at (ex, ey..ey+dy)
+const staff = (x, ground, h, f, ex, ey) => { const fg = K.figure({x, ground, h, face: f, col: S, hat: 'hair', stride: [-0.55, 0.35], hands: [[ex, ey], [ex, ey + h * 0.09]], elbow: [1, 1], lean: -0.08}); return fg.armBack + fg.svg + fg.armFront; };
+const lingHua = (x, y, w, hh, col, id) => { let d = ''; for (let i = -hh; i < w + hh; i += 26) d += `M${x + i},${y} l${hh * 0.58},${hh} M${x + i},${y} l${-hh * 0.58},${hh} `;
+	return `<clipPath id="${id}"><rect x="${x}" y="${y}" width="${w}" height="${hh}"/></clipPath><g clip-path="url(#${id})"><path d="${d}" stroke="${col}" stroke-width="5"/></g>`; };
+// a 隔扇 leaf seen frontal (side bays) : frame, 菱花 lattice top, 裙板 bottom
+const geshan = (x, y, w, hh, k, lit) => `<rect x="${x}" y="${y}" width="${w}" height="${hh}" fill="#2A1A12"/>
+	<rect x="${x + 10}" y="${y + 12}" width="${w - 20}" height="${hh * 0.58}" fill="${lit ? '#6A3A20' : '#3A2418'}"/>${lingHua(x + 10, y + 12, w - 20, hh * 0.58, '#24150E', 'lh' + k)}
+	<rect x="${x + 10}" y="${y + hh * 0.66}" width="${w - 20}" height="${hh * 0.12}" fill="#24150E" stroke="#5A3A26" stroke-width="2"/>
+	<rect x="${x + 10}" y="${y + hh * 0.8}" width="${w - 20}" height="${hh * 0.16}" fill="#24150E" stroke="#5A3A26" stroke-width="2"/>
+	<rect x="${x}" y="${y}" width="${w}" height="${hh}" fill="none" stroke="#C8783E" stroke-width="2" opacity="${lit ? 0.6 : 0.25}"/>`;
+const pad = (cx, cy, rx, ry, i) => { let d = `M${cx - rx},${cy}`; const n = 14;
+	for (let k = 0; k <= n; k++) { const a = Math.PI + Math.PI * k / n, r = 1 + 0.12 * Math.sin(k * 2.7 + i); d += ` L${cx + Math.cos(a) * rx * r},${cy + Math.sin(a) * ry * r * 1.25}`; }
+	d += ` C${cx + rx * 0.6},${cy + ry * 0.5} ${cx - rx * 0.6},${cy + ry * 0.5} ${cx - rx},${cy} Z`;
+	let tufts = ''; for (let k = 0; k < 9; k++) { const a = Math.PI * (1.08 + 0.84 * k / 8), px = cx + Math.cos(a) * rx * 0.95, py = cy + Math.sin(a) * ry * 1.15; tufts += `M${px},${py} l${-6 + 12 * rnd(k + i)},${-10 - 8 * rnd(k + i + 3)} `; }
+	return {d, tufts}; };
+const pine = (x, y, sc, f, i0) => { let s = `<path d="M${x},${y} C${x + f * 30 * sc},${y - 140 * sc} ${x - f * 40 * sc},${y - 260 * sc} ${x + f * 20 * sc},${y - 420 * sc} M${x + f * 4 * sc},${y - 220 * sc} C${x + f * 80 * sc},${y - 250 * sc} ${x + f * 150 * sc},${y - 260 * sc} ${x + f * 220 * sc},${y - 300 * sc}" stroke="${S}" stroke-width="${18 * sc}" fill="none" stroke-linecap="round"/>`;
+	[[0, -420, 150, 46], [f * 210, -300, 140, 40], [f * -70, -320, 120, 36], [f * 90, -190, 130, 38], [f * -40, -500, 100, 30]].forEach(([dx, dy, rx, ry], k) => { const p = pad(x + dx * sc, y + dy * sc, rx * sc, ry * sc, k + i0);
+		s += `<path d="${p.d}" fill="${S}"/><path d="${p.tufts}" stroke="${S}" stroke-width="${4 * sc}"/><path d="${p.d.split(' C')[0]}" fill="none" stroke="#E8945A" stroke-width="${3 * sc}" opacity=".7"/>`; });
 	return s; };
 const svg = `<defs>
- <linearGradient id="sky" x1="0" x2="0" y1="0" y2="1"><stop offset="0" stop-color="#1E2C33"/><stop offset=".55" stop-color="#2F4246"/><stop offset="1" stop-color="#4A5752"/></linearGradient>
- <linearGradient id="flag" x1="0" x2="0" y1="0" y2="1"><stop offset="0" stop-color="#4C443D"/><stop offset="1" stop-color="#2A2420"/></linearGradient>
- <radialGradient id="inner" cx="960" cy="520" r="260" gradientUnits="userSpaceOnUse"><stop offset="0" stop-color="#FFC890"/><stop offset=".35" stop-color="#E0874A"/><stop offset="1" stop-color="#6A2E16"/></radialGradient>
- <linearGradient id="spill" x1="0" x2="0" y1="0" y2="1"><stop offset="0" stop-color="#FFB070" stop-opacity=".7"/><stop offset=".6" stop-color="#E0874A" stop-opacity=".3"/><stop offset="1" stop-color="#E0874A" stop-opacity=".08"/></linearGradient>
- <radialGradient id="halo" cx="960" cy="560" r="760" gradientUnits="userSpaceOnUse"><stop offset="0" stop-color="#FF9A5A" stop-opacity=".35"/><stop offset=".5" stop-color="#C8682F" stop-opacity=".1"/><stop offset="1" stop-color="#C8682F" stop-opacity="0"/></radialGradient>
- <radialGradient id="vig" cx="960" cy="600" r="1150" gradientUnits="userSpaceOnUse"><stop offset=".55" stop-color="#070605" stop-opacity="0"/><stop offset="1" stop-color="#070605" stop-opacity=".7"/></radialGradient>
- ${K.rimFilter('rimIn', 0, -4, '#FFC890', 1, 1.4)}${K.blur('b6', 6)}${K.blur('b20', 20)}
+ <linearGradient id="sky" x1="0" x2="0" y1="0" y2="1"><stop offset="0" stop-color="#1E2C33"/><stop offset="1" stop-color="#3A4A4A"/></linearGradient>
+ <radialGradient id="inner" cx="975" cy="520" r="420" gradientUnits="userSpaceOnUse"><stop offset="0" stop-color="#FFC890"/><stop offset=".35" stop-color="#D9773E"/><stop offset="1" stop-color="#5A2812"/></radialGradient>
+ <linearGradient id="spill" x1="0" x2="0" y1="0" y2="1"><stop offset="0" stop-color="#FFB070" stop-opacity=".9"/><stop offset=".5" stop-color="#E8874A" stop-opacity=".6"/><stop offset="1" stop-color="#E8874A" stop-opacity=".38"/></linearGradient>
+ <linearGradient id="flag" x1="0" x2="0" y1="0" y2="1"><stop offset="0" stop-color="#4E443C"/><stop offset="1" stop-color="#2C2520"/></linearGradient>
+ <linearGradient id="eave" x1="0" x2="0" y1="0" y2="1"><stop offset="0" stop-color="#120B08"/><stop offset="1" stop-color="#4A2A18"/></linearGradient>
+ <radialGradient id="halo" cx="975" cy="560" r="900" gradientUnits="userSpaceOnUse"><stop offset="0" stop-color="#FF9A5A" stop-opacity=".42"/><stop offset=".55" stop-color="#C8682F" stop-opacity=".14"/><stop offset="1" stop-color="#C8682F" stop-opacity="0"/></radialGradient>
+ <radialGradient id="vig" cx="975" cy="600" r="1200" gradientUnits="userSpaceOnUse"><stop offset=".6" stop-color="#070605" stop-opacity="0"/><stop offset="1" stop-color="#070605" stop-opacity=".6"/></radialGradient>
+ ${K.rimFilter('rimS', 5, 0, '#FFB070', 1, 1.4)}${K.rimFilter('rimS2', -5, 0, '#FFB070', 1, 1.4)}
 </defs>
 <rect width="1920" height="1080" fill="url(#sky)"/>
-${Array.from({length: 40}, (_, i) => `<circle cx="${rnd(i) * 1920}" cy="${rnd(i + 5) * 300}" r="${0.8 + rnd(i + 2) * 1.2}" fill="#DDE6E2" opacity="${0.2 + rnd(i + 3) * 0.4}"/>`).join('')}
-<!-- far wall of the 正觉寺 court, low, with a moon-gate silhouette -->
-<rect x="0" y="560" width="1920" height="140" fill="#26302F"/><path d="M0,556 L1920,556" stroke="#3E4A48" stroke-width="10"/>
-<g transform="translate(960,712) scale(1.38) translate(-960,-712)">
-<!-- the 文殊亭: two eaves, 5 bays, centre doors open -->
-<path d="M400,300 L1520,300 L1640,360 L1560,372 L360,372 L280,360 Z" fill="${S}"/>
-<path d="M560,220 L1360,220 L1440,268 L1380,276 L540,276 L480,268 Z" fill="${S}"/><rect x="600" y="276" width="720" height="26" fill="#1A120E"/>
-<path d="M600,206 L1320,206" stroke="${S}" stroke-width="16"/>
-<path d="M360,372 L1560,372" stroke="#C87A44" stroke-width="3" opacity=".55"/><path d="M540,276 L1380,276" stroke="#C87A44" stroke-width="2" opacity=".4"/>
-<rect x="440" y="372" width="1040" height="268" fill="#2A1C14"/>
-${[440, 640, 840, 1080, 1280, 1460].map((x) => `<rect x="${x}" y="372" width="20" height="268" fill="${S}"/>`).join('')}
-${[460, 660, 1100, 1300].map((x) => `<rect x="${x + 14}" y="392" width="152" height="236" fill="none" stroke="#5A3A26" stroke-width="3"/>${Array.from({length: 7}, (_, k) => `<path d="M${x + 14},${410 + k * 30} L${x + 166},${410 + k * 30}" stroke="#4A2E1E" stroke-width="2"/>`).join('')}`).join('')}
-<!-- the open centre bay: your light inside -->
-<rect x="860" y="372" width="200" height="268" fill="url(#inner)"/>
-<path d="M860,372 L838,382 L838,640 L860,640 Z" fill="#5A3A26"/><path d="M1060,372 L1082,382 L1082,640 L1060,640 Z" fill="#5A3A26"/>
-
-<path d="M860,380 L884,404 L884,622 L860,640 Z" fill="#3A2216"/><path d="M1060,380 L1036,404 L1036,622 L1060,640 Z" fill="#3A2216"/><path d="M884,404 L884,622 M1036,404 L1036,622" stroke="#FFC890" stroke-width="2" opacity=".8"/><rect x="934" y="520" width="52" height="120" fill="#4A2A18"/><rect x="928" y="514" width="64" height="10" fill="#5A341E"/><path d="M928,514 L992,514" stroke="#FFD9A6" stroke-width="2"/>
+${Array.from({length: 30}, (_, i) => `<circle cx="${rnd(i) * 1920}" cy="${150 + rnd(i + 5) * 200}" r="${0.8 + rnd(i + 2) * 1.2}" fill="#DDE6E2" opacity="${0.2 + rnd(i + 3) * 0.4}"/>`).join('')}
+<!-- the hall front: columns, side-bay 隔扇 doors, the open centre bay -->
+<rect x="250" y="150" width="1450" height="790" fill="#3E2819"/><rect width="1920" height="1080" fill="url(#halo)"/>
+${[[310, 0], [480, 1], [1460, 2], [1620, 3]].map(([x, k]) => geshan(x - 10, 190, 150, 730, k, true)).join('')}
+<rect x="640" y="150" width="34" height="790" fill="#3A2216"/><rect x="1276" y="150" width="34" height="790" fill="#3A2216"/>
+<path d="M674,150 L674,940 M1276,150 L1276,940" stroke="#FFB070" stroke-width="3" opacity=".8"/>
+<!-- inside the open bay: your light; the leaves swung inward (foreshortened), the staff walking them back -->
+<rect x="674" y="190" width="602" height="750" fill="url(#inner)"/>
+<path d="M674,190 L768,236 L768,880 L674,940 Z" fill="#3A2216"/>${lingHua(684, 250, 74, 330, '#24150E', 'lhL')}<path d="M768,236 L768,880" stroke="#FFC890" stroke-width="3"/>
+<path d="M1276,190 L1182,236 L1182,880 L1276,940 Z" fill="#3A2216"/>${lingHua(1192, 250, 74, 330, '#24150E', 'lhR')}<path d="M1182,236 L1182,880" stroke="#FFC890" stroke-width="3"/>
+<rect x="674" y="880" width="602" height="60" fill="#6A3A20" opacity=".6"/>
+<g filter="url(#rimS2)">${staff(852, 884, 470, -1, 772, 560)}</g><g filter="url(#rimS)">${staff(1098, 884, 470, 1, 1178, 560)}</g>
+<!-- the plinth at the threshold and you -->
+<path d="M900,646 L1050,646 L1060,948 L890,948 Z" fill="#4A2A18"/><rect x="888" y="636" width="174" height="14" fill="#6A3A20"/><path d="M888,636 L1062,636" stroke="#FFD9A6" stroke-width="2.5"/>
 ${K.horseHead(hero)}
-<g>${staff(898, -1, [[868, 520], [870, 548]])}${staff(1022, 1, [[1052, 520], [1050, 548]])}</g>
-<!-- steps + terrace + flagstones; the spill -->
-<rect x="400" y="640" width="1120" height="26" fill="#2E2620"/><rect x="380" y="666" width="1160" height="22" fill="#262019"/><rect x="360" y="688" width="1200" height="20" fill="#201A15"/></g>
-<path d="M0,715 L1920,715 L1920,1080 L0,1080 Z" fill="url(#flag)"/>
-${Array.from({length: 8}, (_, i) => `<path d="M0,${728 + i * i * 6} L1920,${728 + i * i * 6}" stroke="#151210" stroke-width="2"/>`).join('')}
-${Array.from({length: 13}, (_, i) => `<path d="M${960 + (i - 6) * 120},715 L${960 + (i - 6) * 420},1080" stroke="#151210" stroke-width="2"/>`).join('')}
-<path d="M785,715 L1135,715 L1500,1080 L420,1080 Z" fill="url(#spill)"/><rect width="1920" height="1080" fill="url(#halo)"/>
-${pine(110, 820, 1.3, 1)}${pine(1830, 840, 1.2, -1)}
+<rect width="1920" height="1080" fill="url(#halo)"/>
+<!-- the eave: the lower eave's underside across the top, lit rafters, an upturned 翼角 at each end -->
+<path d="M0,0 L1920,0 L1920,96 C1700,118 1400,134 975,138 C550,134 250,118 0,96 Z" fill="url(#eave)"/>
+${Array.from({length: 34}, (_, i) => { const x = 40 + i * 56, y = 98 + 38 * Math.sin(Math.PI * (x / 1950)); return `<rect x="${x}" y="${y - 30}" width="20" height="30" fill="#3A2216"/><rect x="${x}" y="${y - 6}" width="20" height="6" fill="#E8945A" opacity="${0.35 + 0.45 * Math.exp(-Math.pow((x - 975) / 520, 2))}"/>`; }).join('')}
+<path d="M0,96 C250,118 550,134 975,138 C1400,134 1700,118 1920,96" stroke="#E8945A" stroke-width="3" opacity=".6"/>
+<path d="M0,40 C40,70 70,90 60,40 L90,0 L0,0 Z" fill="#120B08"/><path d="M1920,40 C1880,70 1850,90 1860,40 L1830,0 L1920,0 Z" fill="#120B08"/>
+<!-- steps, terrace, flagstones; the spill running to the lens -->
+<rect x="200" y="940" width="1520" height="30" fill="#3A2E26"/><rect x="150" y="970" width="1620" height="30" fill="#30261F"/>
+<path d="M0,1000 L1920,1000 L1920,1080 L0,1080 Z" fill="url(#flag)"/>
+<path d="M674,940 L1276,940 L1700,1080 L250,1080 Z" fill="url(#spill)"/>
+<path d="M674,940 L1276,940 L1290,970 L660,970 Z" fill="#FFB070" opacity=".4"/>
+${pine(40, 1080, 1.15, 1, 0)}${pine(1890, 1080, 1.1, -1, 7)}
 <rect width="1920" height="1080" fill="url(#vig)"/>`;
-K.page(svg, K.hud4({sub: '你回到了圆明园。', stamp: '2020.12.1 · 圆明园', era: '今', rows: [['回国', '7/12', 'rrrreeyereer'.split('').map((c, i) => [0, 1, 2, 3, 8, 11].includes(i) ? 'r' : i === 6 ? 'y' : 'e').join('')]]}), K.CSS4);
+K.page(svg, K.hud4({sub: '你回到了圆明园。', stamp: {s1: '2020.12.1 · 圆明园', s2: '正觉寺 · 文殊亭'}, era: '当代', rows: [['回国', '7/12', 'rrrreeyereer'.split('').map((c, i) => [0, 1, 2, 3, 8, 11].includes(i) ? 'r' : i === 6 ? 'y' : 'e').join('')]]}), K.CSS4);

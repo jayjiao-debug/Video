@@ -44,10 +44,10 @@ K.soldierCarry = (x, ground, h, col, opts = {}) => {
 	body += `<path d="M${X(-0.55)},${Y(6.35)} L${X(0.62)},${Y(4.1)}" stroke="${opts.beltCol ?? '#2a1a12'}" stroke-width="${0.1 * u}" opacity=".7"/>`;
 	// the head he carries: collar bottom at belly height, held against the chest
 	const hh = h / 4.0;   // true scale ≈ ¼ of a person
-	const hero = {x: X(1.02), y: Y(3.95), h: hh, flip: true};
+	const hero = {x: X(1.02), y: Y(4.75), h: hh, flip: true};
 	const sh = [X(0.1), Y(6.25)];
 	// far hand: under the far end of the collar (cupping the front of the base)
-	const farT = [X(1.5), Y(3.9)], nearT = [X(0.62), Y(3.9)];
+	const farT = [X(1.62), Y(4.75)], nearT = [X(0.62), Y(4.7)];
 	const ef = K.two([sh[0] + 0.15 * u, sh[1] - 0.05 * u], farT, 1.5 * u, 1.45 * u, 1);
 	const back = K.limb([[sh[0] + 0.15 * u, sh[1] - 0.05 * u], ef, farT], 0.34 * u, 0.24 * u, col) + `<ellipse cx="${farT[0]}" cy="${farT[1] + 0.05 * u}" rx="${0.27 * u}" ry="${0.2 * u}" fill="${col}"/>`;
 	// near arm: elbow down at the side, forearm level under the collar, mitten under the near end

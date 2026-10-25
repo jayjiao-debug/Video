@@ -31,4 +31,4 @@ ${Array.from({length: 5}, (_, i) => `<path d="M0,${960 + i * i * 6} L1920,${960 
 ${statues}
 ${arcs}</g>
 <rect width="1920" height="1080" fill="url(#vig)"/>`;
-K.page(svg, K.hud4({sub: '正午12点，十二个[一起喷水]。', stamp: '12:00 · 正午', era: '清', rows: [['在家', '12/12', 'hhhhhhyhhhhh']]}), K.CSS4);
+K.page(svg, K.hud4({sub: '正午12点，十二个[一起喷水]。', stamp: {s1: '12:00 · 正午', s2: '记忆里的海晏堂水力钟'}, era: '清', rows: [['在家', '12/12', 'hhhhhhyhhhhh']]}), K.CSS4);
