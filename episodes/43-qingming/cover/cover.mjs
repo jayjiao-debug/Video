@@ -57,7 +57,7 @@ const paint = (k, lay) => {
 			<div style="margin-top:18px">${seal(70)}</div></div>`
 		: `<div style="position:absolute;left:0;right:0;${tb};text-align:center;color:#2A1F17">
 			<div style="font-size:${lay === 'tall' ? 50 : 46}px;font-weight:700;letter-spacing:.6em;margin-right:-.6em;color:#5a4430">假如你是</div>
-			<div style="display:inline-flex;align-items:center;gap:22px;margin-top:6px"><span style="font-size:${lay === 'tall' ? 156 : 150}px;font-weight:900;letter-spacing:.1em;margin-right:-.1em;line-height:1.08">清明上河图</span>${seal(lay === 'tall' ? 92 : 88)}</div>
+			<div style="margin-top:6px;font-size:${lay === 'tall' ? 156 : 150}px;font-weight:900;letter-spacing:.1em;margin-right:-.1em;line-height:1.08">清明上河图</div>
 			<div style="font-size:${lay === 'tall' ? 38 : 36}px;font-weight:700;letter-spacing:.24em;color:#5a4430;margin-top:14px">—— 九百年，四次被带出皇宫 ——</div></div>`;
 	return `<!doctype html><html><head><meta charset="utf-8"><style>html,body{margin:0;width:${W}px;height:${H}px;overflow:hidden;background:rgb(${c.silk});font-family:'Noto Serif CJK SC',serif}
 .art{position:absolute;left:${left}px;top:${top}px;width:${1920 * s}px;height:${1080 * s}px}
