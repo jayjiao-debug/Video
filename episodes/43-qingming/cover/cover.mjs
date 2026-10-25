@@ -38,6 +38,7 @@ html,body{margin:0;width:${W}px;height:${H}px;overflow:hidden;background:${c.sky
 <div class="brand">${seal(40)}VIBE知识大赏</div>
 <div class="t"><div class="k">${c.kicker}</div>${c.small1 ? `<div class="l2" style="font-size:${big}px">${c.l1}</div><div class="l1">${c.l2}</div>` : `<div class="l1">${c.l1}</div><div class="l2">${c.l2}</div>`}<div class="s">${c.sub}</div></div></body></html>`;
 };
+// 4:3 covers: Douyin's profile grid shows only the centre 3:4 (810 of 1440 px), so title and brand stay inside it.
 // painting covers (owner: show the scroll art itself): the redrawn 虹桥, full bleed, the title in ink on a silk fade
 // (bottom on 4:3, top on 3:4 so Douyin's lower UI keeps clear), a red seal; R = a vertical 题签 strip instead
 const P = {
@@ -57,12 +58,12 @@ const paint = (k, lay) => {
 			<div style="writing-mode:vertical-rl;margin:14px auto 0;font-size:${lay === 'tall' ? 112 : 104}px;font-weight:900;letter-spacing:.06em;line-height:1">清明上河图</div>
 			<div style="margin-top:18px">${seal(70)}</div></div>`
 		: `<div style="position:absolute;left:0;right:0;${tb};text-align:center;color:#2A1F17">
-			<div style="font-size:${lay === 'tall' ? 50 : 46}px;font-weight:700;letter-spacing:.6em;margin-right:-.6em;color:#5a4430">假如你是</div>
-			<div style="margin-top:6px;font-size:${lay === 'tall' ? 156 : 150}px;font-weight:900;letter-spacing:.1em;margin-right:-.1em;line-height:1.08">清明上河图</div>
-			<div style="font-size:${lay === 'tall' ? 38 : 36}px;font-weight:700;letter-spacing:.24em;color:#5a4430;margin-top:14px">—— 九百年，四次被带出皇宫 ——</div></div>`;
+			<div style="font-size:${lay === 'tall' ? 50 : 42}px;font-weight:700;letter-spacing:.6em;margin-right:-.6em;color:#5a4430">假如你是</div>
+			<div style="margin-top:6px;font-size:${lay === 'tall' ? 156 : 124}px;font-weight:900;letter-spacing:.1em;margin-right:-.1em;line-height:1.08">清明上河图</div>
+			<div style="font-size:${lay === 'tall' ? 38 : 30}px;font-weight:700;letter-spacing:.2em;color:#5a4430;margin-top:14px">—— 九百年，四次被带出皇宫 ——</div></div>`;
 	return `<!doctype html><html><head><meta charset="utf-8"><style>html,body{margin:0;width:${W}px;height:${H}px;overflow:hidden;background:rgb(${c.silk});font-family:'Noto Serif CJK SC',serif}
 .art{position:absolute;left:${left}px;top:${top}px;width:${1920 * s}px;height:${1080 * s}px}
-.brand{position:absolute;right:${lay === 'tall' ? 64 : 72}px;bottom:${lay === 'tall' ? 64 : 34}px;display:flex;align-items:center;gap:10px;font-weight:700;font-size:22px;letter-spacing:.3em;color:#3a2c20;text-shadow:0 0 10px rgba(${c.silk},.95),0 0 3px rgba(${c.silk},.95)}</style></head><body>
+.brand{position:absolute;right:${lay === 'tall' ? 64 : 345}px;bottom:${lay === 'tall' ? 64 : 30}px;display:flex;align-items:center;gap:10px;font-weight:700;font-size:22px;letter-spacing:.3em;color:#3a2c20;text-shadow:0 0 10px rgba(${c.silk},.95),0 0 3px rgba(${c.silk},.95)}</style></head><body>
 <img class="art" src="${img(c.art)}"><div style="position:absolute;inset:0;background:${c.strip ? 'radial-gradient(ellipse 90% 85% at 50% 50%,rgba(0,0,0,0) 60%,rgba(40,28,16,.28) 100%)' : band}"></div>
 ${title}<div class="brand">${seal(34)}VIBE知识大赏</div></body></html>`;
 };
