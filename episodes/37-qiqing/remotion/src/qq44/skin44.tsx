@@ -49,7 +49,7 @@ export const Counter: React.FC<{era?: string; v: number; blur?: number; o?: numb
 	useSkin() === 'A' ? <CounterA {...p} /> : <CounterQ {...p} />;
 /** B/C/D: the counter at the reference proportions (number 42, 你/岁 24, era 22), lighter weights, a little dimmer */
 const CounterQ: React.FC<React.ComponentProps<typeof Counter>> = ({era, v, blur = 0, o = 1, who = '你', date, pulse = 0, grey, lift = 0}) =>
-	<div style={{...fx, left: 150, bottom: 58 + lift, display: 'flex', alignItems: 'flex-end', gap: 7, whiteSpace: 'nowrap', opacity: 0.88 * o, transform: pulse ? `scale(${1 + 0.1 * pulse})` : undefined, transformOrigin: '0% 100%', color: grey ? '#9aa0a4' : INK, textShadow: pulse ? `0 0 2px rgba(10,8,8,0.9), 0 1px 5px rgba(10,8,8,0.7), 0 0 ${14 + 22 * pulse}px rgba(255,150,110,${0.6 * pulse})` : QUIET_SH}}>
+	<div style={{...fx, left: 44, bottom: 30 + lift, display: 'flex', alignItems: 'flex-end', gap: 7, whiteSpace: 'nowrap', opacity: 0.88 * o, transform: pulse ? `scale(${1 + 0.1 * pulse})` : undefined, transformOrigin: '0% 100%', color: grey ? '#9aa0a4' : INK, textShadow: pulse ? `0 0 2px rgba(10,8,8,0.9), 0 1px 5px rgba(10,8,8,0.7), 0 0 ${14 + 22 * pulse}px rgba(255,150,110,${0.6 * pulse})` : QUIET_SH}}>
 		{era && <span style={{fontSize: 22, fontWeight: 500, opacity: 0.75, marginBottom: 5, marginRight: 5, letterSpacing: '0.1em'}}>{era}</span>}
 		<span style={{fontSize: 24, fontWeight: 500, marginBottom: 4}}>{who}</span>
 		<span style={{fontFamily: FIG, fontSize: 42, fontWeight: 400, lineHeight: 1, fontVariantNumeric: 'tabular-nums'}}><Odo v={v} size={42} blur={blur * 0.7} /></span>
@@ -57,7 +57,7 @@ const CounterQ: React.FC<React.ComponentProps<typeof Counter>> = ({era, v, blur 
 		{date && <span style={{fontFamily: MONO, fontSize: 17, fontWeight: 400, opacity: 0.55, marginBottom: 6, marginLeft: 10, letterSpacing: '0.04em'}}>{date}</span>}
 	</div>;
 const CounterA: React.FC<React.ComponentProps<typeof Counter>> = ({era, v, blur = 0, o = 1, who = '你', date, pulse = 0, grey, lift = 0}) =>
-	<div style={{...fx, left: 150, bottom: 58 + lift, display: 'flex', alignItems: 'flex-end', gap: 10, whiteSpace: 'nowrap', opacity: o, transform: pulse ? `scale(${1 + 0.1 * pulse})` : undefined, transformOrigin: '0% 100%', color: grey ? '#9aa0a4' : INK, textShadow: pulse ? `0 0 2px rgba(10,8,8,0.9), 0 2px 8px rgba(10,8,8,0.75), 0 0 ${20 + 30 * pulse}px rgba(255,150,110,${0.6 * pulse})` : '0 0 2px rgba(10,8,8,0.9), 0 2px 8px rgba(10,8,8,0.75), 0 0 26px rgba(10,8,8,0.55)'}}>
+	<div style={{...fx, left: 44, bottom: 30 + lift, display: 'flex', alignItems: 'flex-end', gap: 10, whiteSpace: 'nowrap', opacity: o, transform: pulse ? `scale(${1 + 0.1 * pulse})` : undefined, transformOrigin: '0% 100%', color: grey ? '#9aa0a4' : INK, textShadow: pulse ? `0 0 2px rgba(10,8,8,0.9), 0 2px 8px rgba(10,8,8,0.75), 0 0 ${20 + 30 * pulse}px rgba(255,150,110,${0.6 * pulse})` : '0 0 2px rgba(10,8,8,0.9), 0 2px 8px rgba(10,8,8,0.75), 0 0 26px rgba(10,8,8,0.55)'}}>
 		{era && <span style={{fontSize: 26, fontWeight: 700, opacity: 0.8, marginBottom: 8, marginRight: 6, letterSpacing: '0.08em'}}>{era}</span>}
 		<span style={{fontSize: 30, fontWeight: 700, marginBottom: 6}}>{who}</span>
 		<span style={{fontFamily: FIG, fontSize: 62, fontWeight: 700, lineHeight: 1, fontVariantNumeric: 'tabular-nums'}}><Odo v={v} size={62} blur={blur} /></span>
@@ -105,7 +105,7 @@ export const Stamp: React.FC<{y: string; place?: string; note?: string; o?: numb
 	<StampBody key={`${y}|${place}|${note}`} y={y} place={place} note={note} o={o} />;
 /** the brand as a small seal, bottom-right, low opacity. Final pass (QA: the round J read as an ⓘ info icon): a square seal-stamp,
     double rule, a serif J monogram over a tiny JUNO, rotated like a hand-pressed chop. */
-export const Seal: React.FC = () => <div style={{position: 'absolute', right: 54, bottom: 50, width: 60, height: 60, borderRadius: 6, border: `2.5px solid ${INK}`, opacity: 0.42, transform: 'rotate(-8deg)', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center'}}>
+export const Seal: React.FC = () => <div style={{position: 'absolute', right: 30, bottom: 26, width: 60, height: 60, borderRadius: 6, border: `2.5px solid ${INK}`, opacity: 0.42, transform: 'rotate(-8deg)', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center'}}>
 	<div style={{position: 'absolute', inset: 4, borderRadius: 3, border: `1px solid ${INK}`}} />
 	<span style={{fontFamily: "'Cormorant44','DejaVu Serif',serif", fontStyle: 'italic', fontWeight: 700, fontSize: 32, color: INK, lineHeight: 0.9, marginTop: 1}}>J</span>
 	<span style={{fontFamily: "'DejaVu Sans',sans-serif", fontWeight: 700, fontSize: 8.5, letterSpacing: '0.22em', color: INK, lineHeight: 1, marginTop: 2, marginLeft: '0.22em'}}>JUNO</span></div>;
