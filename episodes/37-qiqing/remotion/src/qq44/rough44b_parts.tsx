@@ -1,6 +1,6 @@
 import React from 'react';
 import {W, H, rnd, lerp, Glow, Rimmed, fkPose, Look4, Pose, B, jointAt, Sky, HeadGlow} from './kit44';
-import {Cam, seg, ease, eo, ei, sm, K2Scene, K2_C, k2Glow, skullBack, GLOW_BACK} from './demo44';
+import {Cam, seg, ease, eo, ei, sm, K2Scene, K2_C, k2Glow, k2Skull, skullBack, GLOW_BACK, InHead} from './demo44';
 import {SANS, ROSE, INK} from './skin44';
 import {Motes, Wallpaper, Frame, Curtain, Cloud} from './bg44';
 /* ep44 rough cut, builder B: private copies of demo44 internals (the K2 compass close-up and the K1 house camera),
@@ -76,7 +76,7 @@ export const NeedleEnd: React.FC<{t: number}> = ({t: ft}) => {
 		<Cam cx={cx} cy={cy} z={z}>
 			<K2Scene t={t} id="bk2" look={look} flare={Math.min(1, flare)} bright={bright} fieldK={1 - 0.5 * look} rimOp={0.5 + 0.25 * bright} />
 			{/* F4: the extra rise on top of K2's own glow (radius and opacity about 1.5x at the peak) */}
-			{bright > 0 && <g><Glow x={g[0]} y={g[1]} r={630} c={B.mid} o={0.22 * bright} id="bk2xb" /><HeadGlow x={g[0]} y={g[1]} r={99} id="bk2x" o={0.55 * bright} /></g>}
+			{bright > 0 && <g><Glow x={g[0]} y={g[1]} r={630} c={B.mid} o={0.22 * bright} id="bk2xb" /><InHead id="bk2xk" e={k2Skull(look)}><HeadGlow x={g[0]} y={g[1]} r={99} id="bk2x" o={0.55 * bright} /></InHead></g>}
 		</Cam>
 	</g>;
 };
