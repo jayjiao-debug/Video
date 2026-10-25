@@ -261,8 +261,15 @@ K.ZODIAC = {
 	狗: `<ellipse cx="52" cy="58" rx="26" ry="18"/><path d="M30,52 L10,58 C8,66 12,72 30,70 Z"/><path d="M60,42 C70,38 76,46 74,58 L70,74 C64,70 60,58 60,42 Z"/>`,
 	猪: `<ellipse cx="54" cy="60" rx="27" ry="23"/><ellipse cx="26" cy="62" rx="7" ry="12"/><path d="M58,40 C62,30 74,30 78,38 L66,58 C60,52 58,46 58,40 Z"/>`,
 };
+K.ZEYE = {鼠: [40, 54], 牛: [38, 50], 虎: [40, 52], 兔: [38, 58], 龙: [36, 52], 蛇: [30, 58], 羊: [36, 56], 猴: [44, 48], 鸡: [50, 54], 狗: [40, 52], 猪: [44, 52]};
+K.ZMARK = {虎: `<path d="M56,40 L52,50 M66,44 L60,56 M74,52 L66,62" stroke="#24170f" stroke-width="3" fill="none" opacity=".7"/>`,
+	猪: `<ellipse cx="26" cy="62" rx="4" ry="9" fill="#2a1c12"/><circle cx="25" cy="58" r="1.6" fill="#120a06"/><circle cx="25" cy="66" r="1.6" fill="#120a06"/>`,
+	牛: `<path d="M18,66 C22,72 30,74 36,72" stroke="#24170f" stroke-width="2.5" fill="none" opacity=".8"/><circle cx="20" cy="60" r="2.2" fill="#24170f"/>`,
+	狗: `<circle cx="12" cy="60" r="3" fill="#24170f"/><path d="M12,68 L26,68" stroke="#24170f" stroke-width="2" opacity=".7"/>`,
+	鼠: `<path d="M8,66 L-6,62 M8,66 L-6,70" stroke="#3a2a1d" stroke-width="1.2"/>`,
+	猴: `<path d="M28,66 C32,70 38,70 42,68" stroke="#24170f" stroke-width="2" fill="none"/>`};
 /** a zodiac head; x,y = neck base centre; size = box px; face: -1 left, +1 right */
-K.zhead = (kind, x, y, size, face, fill, extra = '') => `<g transform="translate(${x},${y}) scale(${(-face) * size / 100},${size / 100}) translate(-70,-100)" fill="${fill}" color="${fill}" ${extra}><path d="${NECK}"/>${K.ZODIAC[kind]}</g>`;
+K.zhead = (kind, x, y, size, face, fill, extra = '', line) => `<g transform="translate(${x},${y}) scale(${(-face) * size / 100},${size / 100}) translate(-70,-100)" fill="${fill}" color="${line ?? (fill.startsWith('url') ? '#5A4230' : fill)}" ${extra}><path d="${NECK}"/>${K.ZODIAC[kind]}${K.ZMARK[kind] ?? ''}<circle cx="${K.ZEYE[kind][0]}" cy="${K.ZEYE[kind][1]}" r="3.4" fill="#140b06"/><circle cx="${K.ZEYE[kind][0] - 1}" cy="${K.ZEYE[kind][1] - 1.2}" r="1.1" fill="#f5e6cc"/></g>`;
 /** the robed stone body the heads sit on (seated, profile). x,y = seat base front-centre; h = body height; face as above. Returns {svg, top:[x,y]} */
 K.stoneBody = (x, y, h, face, fill, extra = '') => {
 	const s = h / 140;
@@ -289,4 +296,36 @@ K.bust = (x, y, hh, f, col, rimCol, rimAmt = 0.9) => {
 	return `<defs><filter id="${id}" filterUnits="userSpaceOnUse" x="0" y="0" width="1920" height="1080"><feGaussianBlur stdDeviation="2.5"/></filter></defs>
 	<path d="${d}" fill="${col}"/><path d="${d}" fill="none" stroke="${rimCol}" stroke-width="4" opacity="${rimAmt}" filter="url(#${id})" transform="translate(${f * 3},0)" clip-path="none"/>
 	<path d="${d}" fill="${col}" transform="translate(${-f * 4},2)"/>`;
+};
+/** bronze relief: paint a height map (grey = height) inside <g filter="url(#id)">. Light rakes from azimuth az. */
+K.reliefFilter = (id, o = {}) => { const az = o.az ?? 225, el = o.el ?? 34, sc = o.sc ?? 10, base = o.base ?? '#6A4A2C', lc = o.lc ?? '#FFE0B8';
+	return `<filter id="${id}" filterUnits="userSpaceOnUse" x="0" y="0" width="1920" height="1080" color-interpolation-filters="sRGB">
+	<feColorMatrix in="SourceGraphic" type="luminanceToAlpha" result="h0"/>
+	<feGaussianBlur in="h0" stdDeviation="${o.soft ?? 2.4}" result="hs"/><feGaussianBlur in="h0" stdDeviation="${o.round ?? 9}" result="hr"/>
+	<feComposite in="hs" in2="hr" operator="arithmetic" k2="0.55" k3="0.45" result="h"/>
+	<feDiffuseLighting in="h" surfaceScale="${sc}" diffuseConstant="1.2" lighting-color="${lc}" result="dif"><feDistantLight azimuth="${az}" elevation="${el}"/></feDiffuseLighting>
+	<feSpecularLighting in="h" surfaceScale="${sc}" specularConstant="0.75" specularExponent="24" lighting-color="#FFEBD0" result="spe"><feDistantLight azimuth="${az}" elevation="${el}"/></feSpecularLighting>
+	<feFlood flood-color="${base}" result="base"/>
+	<feComposite in="dif" in2="base" operator="arithmetic" k1="1.35" k2="0" k3="0" k4="0" result="lit0"/>
+	<feColorMatrix in="h" type="matrix" values="0 0 0 1 0  0 0 0 1 0  0 0 0 1 0  0 0 0 0 1" result="hg"/>
+	<feComposite in="lit0" in2="hg" operator="arithmetic" k1="1.1" k2="0.42" result="lit"/>
+	<feGaussianBlur in="h0" stdDeviation="7" result="hb"/>
+	<feComposite in="hb" in2="h0" operator="arithmetic" k2="2.2" k3="-2.2" result="crev"/>
+	<feFlood flood-color="${o.verd ?? '#4E9A86'}" result="vf"/><feComposite in="vf" in2="crev" operator="in" result="verd"/>
+	<feTurbulence type="fractalNoise" baseFrequency="0.5" numOctaves="2" seed="11" result="nz"/>
+	<feColorMatrix in="nz" type="matrix" values="0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 -1.3 0.85" result="grain"/>
+	<feComposite in="spe" in2="lit" operator="arithmetic" k2="0.9" k3="1" result="ls"/>
+	<feMerge result="m"><feMergeNode in="ls"/><feMergeNode in="verd"/></feMerge>
+	<feComposite in="grain" in2="m" operator="atop" result="g2"/>
+	<feMerge><feMergeNode in="m"/><feMergeNode in="g2"/></feMerge></filter>`; };
+/** a seated profile figure for height maps / silhouettes; (x, floor) = chair front foot; f facing; h standing height */
+K.seated = (x, floor, h, f, col, hands) => {
+	const u = h / 8, X = (d) => x + f * d * u, seatY = floor - 2.3 * u, hip = [X(-0.4), seatY - 0.2 * u], knee = [X(1.3), seatY - 0.25 * u], foot = [X(1.35), floor - 0.1 * u];
+	const sh = [X(-0.15), seatY - 2.6 * u], head = [X(0.05), seatY - 3.45 * u];
+	let s = `<path d="M${X(-1.0)},${floor} L${X(-1.0)},${seatY - 2.4 * u} L${X(-0.82)},${seatY - 2.4 * u} L${X(-0.82)},${seatY} L${X(0.5)},${seatY} L${X(0.5)},${floor} L${X(0.4)},${floor} L${X(0.4)},${seatY + 0.18 * u} L${X(-0.9)},${seatY + 0.18 * u} L${X(-0.9)},${floor} Z" fill="${col}" opacity=".8"/>`;
+	s += K.limb([hip, knee, foot], 0.46 * u, 0.36 * u, col);
+	s += `<path d="M${X(-0.75)},${seatY} C${X(-0.85)},${seatY - 1.4 * u} ${X(-0.6)},${seatY - 2.5 * u} ${X(-0.2)},${seatY - 2.85 * u} L${X(0.35)},${seatY - 2.6 * u} C${X(0.5)},${seatY - 1.8 * u} ${X(0.45)},${seatY - 0.8 * u} ${X(0.35)},${seatY} Z" fill="${col}"/>`;
+	s += `<circle cx="${head[0]}" cy="${head[1]}" r="${0.5 * u}" fill="${col}"/><path d="M${X(0.48)},${head[1] - 0.05 * u} L${X(0.66)},${head[1] + 0.12 * u} L${X(0.46)},${head[1] + 0.22 * u} Z" fill="${col}"/><rect x="${Math.min(X(-0.12), X(0.18))}" y="${head[1] + 0.3 * u}" width="${0.3 * u}" height="${0.6 * u}" fill="${col}"/>`;
+	(hands ?? [[X(0.95), seatY - 0.55 * u]]).forEach((t) => { const e = K.two(sh, t, 1.45 * u, 1.35 * u, f > 0 ? -1 : 1); s += K.limb([sh, e, t], 0.3 * u, 0.22 * u, col) + `<circle cx="${t[0]}" cy="${t[1]}" r="${0.22 * u}" fill="${col}"/>`; });
+	return s;
 };

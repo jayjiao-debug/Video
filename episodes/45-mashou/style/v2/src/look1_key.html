@@ -265,8 +265,15 @@ K.ZODIAC = {
 	狗: `<ellipse cx="52" cy="58" rx="26" ry="18"/><path d="M30,52 L10,58 C8,66 12,72 30,70 Z"/><path d="M60,42 C70,38 76,46 74,58 L70,74 C64,70 60,58 60,42 Z"/>`,
 	猪: `<ellipse cx="54" cy="60" rx="27" ry="23"/><ellipse cx="26" cy="62" rx="7" ry="12"/><path d="M58,40 C62,30 74,30 78,38 L66,58 C60,52 58,46 58,40 Z"/>`,
 };
+K.ZEYE = {鼠: [40, 54], 牛: [38, 50], 虎: [40, 52], 兔: [38, 58], 龙: [36, 52], 蛇: [30, 58], 羊: [36, 56], 猴: [44, 48], 鸡: [50, 54], 狗: [40, 52], 猪: [44, 52]};
+K.ZMARK = {虎: `<path d="M56,40 L52,50 M66,44 L60,56 M74,52 L66,62" stroke="#24170f" stroke-width="3" fill="none" opacity=".7"/>`,
+	猪: `<ellipse cx="26" cy="62" rx="4" ry="9" fill="#2a1c12"/><circle cx="25" cy="58" r="1.6" fill="#120a06"/><circle cx="25" cy="66" r="1.6" fill="#120a06"/>`,
+	牛: `<path d="M18,66 C22,72 30,74 36,72" stroke="#24170f" stroke-width="2.5" fill="none" opacity=".8"/><circle cx="20" cy="60" r="2.2" fill="#24170f"/>`,
+	狗: `<circle cx="12" cy="60" r="3" fill="#24170f"/><path d="M12,68 L26,68" stroke="#24170f" stroke-width="2" opacity=".7"/>`,
+	鼠: `<path d="M8,66 L-6,62 M8,66 L-6,70" stroke="#3a2a1d" stroke-width="1.2"/>`,
+	猴: `<path d="M28,66 C32,70 38,70 42,68" stroke="#24170f" stroke-width="2" fill="none"/>`};
 /** a zodiac head; x,y = neck base centre; size = box px; face: -1 left, +1 right */
-K.zhead = (kind, x, y, size, face, fill, extra = '') => `<g transform="translate(${x},${y}) scale(${(-face) * size / 100},${size / 100}) translate(-70,-100)" fill="${fill}" color="${fill}" ${extra}><path d="${NECK}"/>${K.ZODIAC[kind]}</g>`;
+K.zhead = (kind, x, y, size, face, fill, extra = '', line) => `<g transform="translate(${x},${y}) scale(${(-face) * size / 100},${size / 100}) translate(-70,-100)" fill="${fill}" color="${line ?? (fill.startsWith('url') ? '#5A4230' : fill)}" ${extra}><path d="${NECK}"/>${K.ZODIAC[kind]}${K.ZMARK[kind] ?? ''}<circle cx="${K.ZEYE[kind][0]}" cy="${K.ZEYE[kind][1]}" r="3.4" fill="#140b06"/><circle cx="${K.ZEYE[kind][0] - 1}" cy="${K.ZEYE[kind][1] - 1.2}" r="1.1" fill="#f5e6cc"/></g>`;
 /** the robed stone body the heads sit on (seated, profile). x,y = seat base front-centre; h = body height; face as above. Returns {svg, top:[x,y]} */
 K.stoneBody = (x, y, h, face, fill, extra = '') => {
 	const s = h / 140;

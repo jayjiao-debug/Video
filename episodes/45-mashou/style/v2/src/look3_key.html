@@ -168,15 +168,15 @@ K.figure = (o) => {
 		return {foot, knee};
 	});
 	let svg = '';
-	const legW = 0.36 * u;
+	const legW = 0.46 * u;
 	// back leg first
 	[1, 0].forEach((i) => { const L = legs[i]; svg += limb([hip, L.knee, L.foot], legW, legW * 0.72, col);
 		svg += `<path d="M${L.foot[0] - f * 0.25 * u},${L.foot[1] - 0.18 * u} L${L.foot[0] + f * 0.62 * u},${L.foot[1] - 0.08 * u} Q${L.foot[0] + f * 0.7 * u},${L.foot[1] + 0.12 * u} ${L.foot[0] + f * 0.5 * u},${L.foot[1] + 0.12 * u} L${L.foot[0] - f * 0.3 * u},${L.foot[1] + 0.12 * u} Z" fill="${col}"/>`; });
 	// torso (jacket) as a path from shoulders to hips
 	const tw = 0.75 * u, coatLen = o.coat ?? 0.5;
-	const tb = [X(-0.55 + lean * 0.7), gy - 6.4 * u], tf = [X(0.55 + lean * 0.9), gy - 6.1 * u];
-	const hb = [X(-0.5), gy - (4 - coatLen) * u], hf = [X(0.5), gy - (4 - coatLen) * u];
-	svg += `<path d="M${tb[0]},${tb[1]} C${X(-0.75 + lean * 0.5)},${gy - 5.4 * u} ${X(-0.62)},${gy - 4.6 * u} ${hb[0]},${hb[1]} L${hf[0]},${hf[1]} C${X(0.62 + lean * 0.4)},${gy - 4.8 * u} ${X(0.72 + lean * 0.8)},${gy - 5.6 * u} ${tf[0]},${tf[1]} Q${X(0.3 + lean)},${gy - 6.6 * u} ${tb[0]},${tb[1]} Z" fill="${col}"/>`;
+	const tb = [X(-0.7 + lean * 0.7), gy - 6.45 * u], tf = [X(0.62 + lean * 0.9), gy - 6.15 * u];
+	const hb = [X(-0.62), gy - (4 - coatLen) * u], hf = [X(0.6), gy - (4 - coatLen) * u];
+	svg += `<path d="M${tb[0]},${tb[1]} C${X(-0.92 + lean * 0.5)},${gy - 5.4 * u} ${X(-0.72)},${gy - 4.6 * u} ${hb[0]},${hb[1]} L${hf[0]},${hf[1]} C${X(0.74 + lean * 0.4)},${gy - 4.8 * u} ${X(0.86 + lean * 0.8)},${gy - 5.6 * u} ${tf[0]},${tf[1]} Q${X(0.3 + lean)},${gy - 6.6 * u} ${tb[0]},${tb[1]} Z" fill="${col}"/>`;
 	// neck + head (profile: skull, nose bump, jaw)
 	const hx = head[0], hy = head[1], r = 0.48 * u;
 	svg += `<path d="M${X(0.0 + lean)},${gy - 6.2 * u} L${X(0.35 + lean)},${gy - 6.3 * u} L${X(0.3 + lean * 1.1)},${gy - 6.9 * u} L${X(0.02 + lean)},${gy - 6.9 * u} Z" fill="${col}"/>`;
@@ -186,7 +186,7 @@ K.figure = (o) => {
 		C${hx - f * r * 0.7},${hy + r * 0.8} ${hx - f * r * 1.02},${hy + r * 0.5} ${hx - f * r * 0.95},${hy - r * 0.1} Z" fill="${col}"/>`;
 	// hat
 	if (o.hat === 'kepi') {   // French 1860 kepi: crown taller at back, tilted forward, short flat visor
-		svg += `<path d="M${hx - f * r * 1.0},${hy - r * 0.35} L${hx - f * r * 0.92},${hy - r * 1.55} L${hx + f * r * 0.62},${hy - r * 1.25} L${hx + f * r * 0.86},${hy - r * 0.42} Z" fill="${col}"/>
+		svg += `<path d="M${hx - f * r * 1.0},${hy - r * 0.35} L${hx - f * r * 0.95},${hy - r * 1.32} L${hx + f * r * 0.66},${hy - r * 1.08} L${hx + f * r * 0.86},${hy - r * 0.42} Z" fill="${col}"/>
 		<path d="M${hx + f * r * 0.7},${hy - r * 0.46} L${hx + f * r * 1.42},${hy - r * 0.28} L${hx + f * r * 1.38},${hy - r * 0.16} L${hx + f * r * 0.7},${hy - r * 0.26} Z" fill="${col}"/>`;
 	} else if (o.hat === 'cap') {   // Qing 瓜皮帽 skullcap with knob
 		svg += `<path d="M${hx - f * r * 1.0},${hy - r * 0.3} C${hx - f * r * 1.0},${hy - r * 1.35} ${hx + f * r * 0.95},${hy - r * 1.35} ${hx + f * r * 0.98},${hy - r * 0.3} Z" fill="${col}"/><circle cx="${hx}" cy="${hy - r * 1.22}" r="${r * 0.18}" fill="${col}"/>`;
@@ -196,7 +196,7 @@ K.figure = (o) => {
 	if (o.belts) svg += `<path d="M${X(-0.45)},${gy - 6.1 * u} L${X(0.45)},${gy - 4.2 * u}" stroke="${o.beltCol ?? '#2a2018'}" stroke-width="${0.09 * u}" opacity=".6"/>`;
 	// arms: targets (hands) given in screen px; shoulder fixed
 	const arms = (o.hands ?? []).map((tgt, i) => { const e = two(sh, tgt, 1.45 * u, 1.35 * u, (o.elbow?.[i] ?? 1) * (f > 0 ? 1 : -1)); return {e, tgt}; });
-	const armSvg = arms.map(({e, tgt}) => limb([sh, e, tgt], 0.27 * u, 0.2 * u, col) + `<ellipse cx="${tgt[0]}" cy="${tgt[1]}" rx="${0.24 * u}" ry="${0.2 * u}" fill="${col}"/>`);
+	const armSvg = arms.map(({e, tgt}) => limb([sh, e, tgt], 0.32 * u, 0.22 * u, col) + `<ellipse cx="${tgt[0]}" cy="${tgt[1]}" rx="${0.24 * u}" ry="${0.2 * u}" fill="${col}"/>`);
 	return {svg, armBack: armSvg[1] ?? '', armFront: armSvg[0] ?? '', pts: {hip, sh, head, legs, arms}, u};
 };
 
@@ -265,8 +265,15 @@ K.ZODIAC = {
 	狗: `<ellipse cx="52" cy="58" rx="26" ry="18"/><path d="M30,52 L10,58 C8,66 12,72 30,70 Z"/><path d="M60,42 C70,38 76,46 74,58 L70,74 C64,70 60,58 60,42 Z"/>`,
 	猪: `<ellipse cx="54" cy="60" rx="27" ry="23"/><ellipse cx="26" cy="62" rx="7" ry="12"/><path d="M58,40 C62,30 74,30 78,38 L66,58 C60,52 58,46 58,40 Z"/>`,
 };
+K.ZEYE = {鼠: [40, 54], 牛: [38, 50], 虎: [40, 52], 兔: [38, 58], 龙: [36, 52], 蛇: [30, 58], 羊: [36, 56], 猴: [44, 48], 鸡: [50, 54], 狗: [40, 52], 猪: [44, 52]};
+K.ZMARK = {虎: `<path d="M56,40 L52,50 M66,44 L60,56 M74,52 L66,62" stroke="#24170f" stroke-width="3" fill="none" opacity=".7"/>`,
+	猪: `<ellipse cx="26" cy="62" rx="4" ry="9" fill="#2a1c12"/><circle cx="25" cy="58" r="1.6" fill="#120a06"/><circle cx="25" cy="66" r="1.6" fill="#120a06"/>`,
+	牛: `<path d="M18,66 C22,72 30,74 36,72" stroke="#24170f" stroke-width="2.5" fill="none" opacity=".8"/><circle cx="20" cy="60" r="2.2" fill="#24170f"/>`,
+	狗: `<circle cx="12" cy="60" r="3" fill="#24170f"/><path d="M12,68 L26,68" stroke="#24170f" stroke-width="2" opacity=".7"/>`,
+	鼠: `<path d="M8,66 L-6,62 M8,66 L-6,70" stroke="#3a2a1d" stroke-width="1.2"/>`,
+	猴: `<path d="M28,66 C32,70 38,70 42,68" stroke="#24170f" stroke-width="2" fill="none"/>`};
 /** a zodiac head; x,y = neck base centre; size = box px; face: -1 left, +1 right */
-K.zhead = (kind, x, y, size, face, fill, extra = '') => `<g transform="translate(${x},${y}) scale(${(-face) * size / 100},${size / 100}) translate(-70,-100)" fill="${fill}" color="${fill}" ${extra}><path d="${NECK}"/>${K.ZODIAC[kind]}</g>`;
+K.zhead = (kind, x, y, size, face, fill, extra = '', line) => `<g transform="translate(${x},${y}) scale(${(-face) * size / 100},${size / 100}) translate(-70,-100)" fill="${fill}" color="${line ?? (fill.startsWith('url') ? '#5A4230' : fill)}" ${extra}><path d="${NECK}"/>${K.ZODIAC[kind]}${K.ZMARK[kind] ?? ''}<circle cx="${K.ZEYE[kind][0]}" cy="${K.ZEYE[kind][1]}" r="3.4" fill="#140b06"/><circle cx="${K.ZEYE[kind][0] - 1}" cy="${K.ZEYE[kind][1] - 1.2}" r="1.1" fill="#f5e6cc"/></g>`;
 /** the robed stone body the heads sit on (seated, profile). x,y = seat base front-centre; h = body height; face as above. Returns {svg, top:[x,y]} */
 K.stoneBody = (x, y, h, face, fill, extra = '') => {
 	const s = h / 140;
@@ -274,8 +281,97 @@ K.stoneBody = (x, y, h, face, fill, extra = '') => {
 		<path d="M52,0 C42,10 32,30 32,54 L12,66 C4,70 2,88 8,96 L12,132 L4,140 L96,140 C100,96 98,40 88,0 Z"/></g>`,
 		top: [x + (-face) * (70 - 50) * s, y - 140 * s]};
 };
+
+/** rim light as a filter: lights the outer edges facing (−dx, −dy) direction of the light; use on a whole silhouette group */
+K.rimFilter = (id, dx, dy, col, w = 1, blur = 1.2) => `<filter id="${id}" filterUnits="userSpaceOnUse" x="-100" y="-100" width="2120" height="1280">
+	<feOffset in="SourceAlpha" dx="${dx}" dy="${dy}" result="o"/><feComposite in="SourceAlpha" in2="o" operator="out" result="e"/>
+	<feGaussianBlur in="e" stdDeviation="${blur}" result="eb"/><feFlood flood-color="${col}" flood-opacity="${w}"/><feComposite in2="eb" operator="in" result="rim"/>
+	<feComposite in="rim" in2="SourceAlpha" operator="in" result="rimIn"/>
+	<feMerge><feMergeNode in="SourceGraphic"/><feMergeNode in="rimIn"/></feMerge></filter>`;
 window.K = K;
-</script><script>let svg = `<rect width="1920" height="1080" fill="#cfc6b4"/>`;
-Object.keys(K.ZODIAC).forEach((k, i) => { const x = 140 + i * 160; const b = K.stoneBody(x, 700, 220, -1, '#3a2a20'); svg += b.svg + K.zhead(k, b.top[0], b.top[1] + 6, 110, -1, '#3a2a20'); svg += `<text x="${x}" y="760" font-size="40" text-anchor="middle" font-family="Noto Sans CJK SC">${k}</text>`; });
-K.page(svg, '');
+/** a cropped foreground viewer in profile (bust), facing f (+1 right). (x, y) = centre of the head, hh = head height (crown→chin). */
+K.bust = (x, y, hh, f, col, rimCol, rimAmt = 0.9) => {
+	const s = hh / 100, X = (dx) => x + f * dx * s, Y = (dy) => y + dy * s;
+	const d = `M${X(-44)},${Y(-10)} C${X(-48)},${Y(-52)} ${X(-10)},${Y(-62)} ${X(18)},${Y(-54)} C${X(38)},${Y(-48)} ${X(46)},${Y(-30)} ${X(46)},${Y(-12)}
+	L${X(52)},${Y(2)} L${X(47)},${Y(8)} C${X(49)},${Y(14)} ${X(46)},${Y(18)} ${X(42)},${Y(20)} C${X(42)},${Y(30)} ${X(38)},${Y(38)} ${X(26)},${Y(42)}
+	C${X(16)},${Y(44)} ${X(8)},${Y(44)} ${X(4)},${Y(48)} L${X(6)},${Y(70)} C${X(30)},${Y(80)} ${X(70)},${Y(96)} ${X(84)},${Y(130)} L${X(96)},${Y(420)} L${X(-150)},${Y(420)}
+	C${X(-150)},${Y(200)} ${X(-120)},${Y(110)} ${X(-60)},${Y(84)} C${X(-40)},${Y(74)} ${X(-30)},${Y(60)} ${X(-30)},${Y(44)} C${X(-40)},${Y(30)} ${X(-46)},${Y(12)} ${X(-44)},${Y(-10)} Z`;
+	const id = K.uid('bu');
+	return `<defs><filter id="${id}" filterUnits="userSpaceOnUse" x="0" y="0" width="1920" height="1080"><feGaussianBlur stdDeviation="2.5"/></filter></defs>
+	<path d="${d}" fill="${col}"/><path d="${d}" fill="none" stroke="${rimCol}" stroke-width="4" opacity="${rimAmt}" filter="url(#${id})" transform="translate(${f * 3},0)" clip-path="none"/>
+	<path d="${d}" fill="${col}" transform="translate(${-f * 4},2)"/>`;
+};
+/** bronze relief: paint a height map (grey = height) inside <g filter="url(#id)">. Light rakes from azimuth az. */
+K.reliefFilter = (id, o = {}) => { const az = o.az ?? 225, el = o.el ?? 34, sc = o.sc ?? 10, base = o.base ?? '#6A4A2C', lc = o.lc ?? '#FFE0B8';
+	return `<filter id="${id}" filterUnits="userSpaceOnUse" x="0" y="0" width="1920" height="1080" color-interpolation-filters="sRGB">
+	<feColorMatrix in="SourceGraphic" type="luminanceToAlpha" result="h0"/>
+	<feGaussianBlur in="h0" stdDeviation="${o.soft ?? 2.4}" result="hs"/><feGaussianBlur in="h0" stdDeviation="${o.round ?? 9}" result="hr"/>
+	<feComposite in="hs" in2="hr" operator="arithmetic" k2="0.55" k3="0.45" result="h"/>
+	<feDiffuseLighting in="h" surfaceScale="${sc}" diffuseConstant="1.2" lighting-color="${lc}" result="dif"><feDistantLight azimuth="${az}" elevation="${el}"/></feDiffuseLighting>
+	<feSpecularLighting in="h" surfaceScale="${sc}" specularConstant="0.75" specularExponent="24" lighting-color="#FFEBD0" result="spe"><feDistantLight azimuth="${az}" elevation="${el}"/></feSpecularLighting>
+	<feFlood flood-color="${base}" result="base"/>
+	<feComposite in="dif" in2="base" operator="arithmetic" k1="1.35" k2="0" k3="0" k4="0" result="lit0"/>
+	<feColorMatrix in="h" type="matrix" values="0 0 0 1 0  0 0 0 1 0  0 0 0 1 0  0 0 0 0 1" result="hg"/>
+	<feComposite in="lit0" in2="hg" operator="arithmetic" k1="1.1" k2="0.42" result="lit"/>
+	<feGaussianBlur in="h0" stdDeviation="7" result="hb"/>
+	<feComposite in="hb" in2="h0" operator="arithmetic" k2="2.2" k3="-2.2" result="crev"/>
+	<feFlood flood-color="${o.verd ?? '#4E9A86'}" result="vf"/><feComposite in="vf" in2="crev" operator="in" result="verd"/>
+	<feTurbulence type="fractalNoise" baseFrequency="0.5" numOctaves="2" seed="11" result="nz"/>
+	<feColorMatrix in="nz" type="matrix" values="0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 -1.3 0.85" result="grain"/>
+	<feComposite in="spe" in2="lit" operator="arithmetic" k2="0.9" k3="1" result="ls"/>
+	<feMerge result="m"><feMergeNode in="ls"/><feMergeNode in="verd"/></feMerge>
+	<feComposite in="grain" in2="m" operator="atop" result="g2"/>
+	<feMerge><feMergeNode in="m"/><feMergeNode in="g2"/></feMerge></filter>`; };
+/** a seated profile figure for height maps / silhouettes; (x, floor) = chair front foot; f facing; h standing height */
+K.seated = (x, floor, h, f, col, hands) => {
+	const u = h / 8, X = (d) => x + f * d * u, seatY = floor - 2.3 * u, hip = [X(-0.4), seatY - 0.2 * u], knee = [X(1.3), seatY - 0.25 * u], foot = [X(1.35), floor - 0.1 * u];
+	const sh = [X(-0.15), seatY - 2.6 * u], head = [X(0.05), seatY - 3.45 * u];
+	let s = `<path d="M${X(-1.0)},${floor} L${X(-1.0)},${seatY - 2.4 * u} L${X(-0.82)},${seatY - 2.4 * u} L${X(-0.82)},${seatY} L${X(0.5)},${seatY} L${X(0.5)},${floor} L${X(0.4)},${floor} L${X(0.4)},${seatY + 0.18 * u} L${X(-0.9)},${seatY + 0.18 * u} L${X(-0.9)},${floor} Z" fill="${col}" opacity=".8"/>`;
+	s += K.limb([hip, knee, foot], 0.46 * u, 0.36 * u, col);
+	s += `<path d="M${X(-0.75)},${seatY} C${X(-0.85)},${seatY - 1.4 * u} ${X(-0.6)},${seatY - 2.5 * u} ${X(-0.2)},${seatY - 2.85 * u} L${X(0.35)},${seatY - 2.6 * u} C${X(0.5)},${seatY - 1.8 * u} ${X(0.45)},${seatY - 0.8 * u} ${X(0.35)},${seatY} Z" fill="${col}"/>`;
+	s += `<circle cx="${head[0]}" cy="${head[1]}" r="${0.5 * u}" fill="${col}"/><path d="M${X(0.48)},${head[1] - 0.05 * u} L${X(0.66)},${head[1] + 0.12 * u} L${X(0.46)},${head[1] + 0.22 * u} Z" fill="${col}"/><rect x="${Math.min(X(-0.12), X(0.18))}" y="${head[1] + 0.3 * u}" width="${0.3 * u}" height="${0.6 * u}" fill="${col}"/>`;
+	(hands ?? [[X(0.95), seatY - 0.55 * u]]).forEach((t) => { const e = K.two(sh, t, 1.45 * u, 1.35 * u, f > 0 ? -1 : 1); s += K.limb([sh, e, t], 0.3 * u, 0.22 * u, col) + `<circle cx="${t[0]}" cy="${t[1]}" r="${0.22 * u}" fill="${col}"/>`; });
+	return s;
+};
+</script><script>// Look 3 · 铜壁 (bold) — key D7: 2007, the auction where the gavel does not fall. The room is a cast-bronze relief on the
+// wall of time; you alone are in the round — polished red copper, the only light that is not the raking lamp.
+const H = (v) => { const c = Math.round(v * 255).toString(16).padStart(2, '0'); return `#${c}${c}${c}`; };
+const BG = H(0.18), MID = H(0.45), HI = H(0.8), TOP = H(0.95);
+// --- height map
+let hm = `<rect width="1920" height="1080" fill="${BG}"/>`;
+// panel frame + moulding
+hm += `<rect x="30" y="30" width="1860" height="1020" fill="none" stroke="${HI}" stroke-width="22"/><rect x="62" y="62" width="1796" height="956" fill="none" stroke="${MID}" stroke-width="8"/>`;
+// back wall: pilasters and a coffered band
+for (let i = 0; i < 9; i++) hm += `<rect x="${120 + i * 210}" y="250" width="36" height="560" fill="${H(0.3)}"/>`;
+hm += `<rect x="62" y="236" width="1796" height="18" fill="${H(0.34)}"/>`;
+// floor line
+hm += `<rect x="62" y="900" width="1796" height="12" fill="${H(0.4)}"/>`;
+// the rostrum + auctioneer (gavel raised and held: it does not fall)
+hm += `<path d="M1380,900 L1400,640 L1640,640 L1660,900 Z" fill="${H(0.6)}"/><rect x="1370" y="626" width="300" height="22" fill="${HI}"/>`;
+const auc = K.figure({x: 1560, ground: 900, h: 560, face: -1, hat: 'hair', stride: [0.15, -0.15], coat: 1.2, col: HI, hands: [[1430, 620], [1372, 330]], elbow: [-1, 1]});
+hm += auc.armBack + auc.svg + auc.armFront;
+hm += `<path d="M1366,334 L1378,332 L1372,274 L1360,276 Z" fill="${TOP}"/><rect x="1334" y="250" width="64" height="30" rx="8" fill="${TOP}" transform="rotate(-8 1366 265)"/>`;
+// the LOT board: cast letters 撤拍
+hm += `<rect x="1660" y="300" width="170" height="220" fill="${H(0.55)}"/><rect x="1676" y="316" width="138" height="188" fill="${H(0.3)}"/>
+<text x="1745" y="398" text-anchor="middle" font-family="Noto Serif CJK SC" font-weight="900" font-size="70" fill="${TOP}">撤</text><text x="1745" y="482" text-anchor="middle" font-family="Noto Serif CJK SC" font-weight="900" font-size="70" fill="${TOP}">拍</text>`;
+// seated bidders, paddles resting on their laps (no bidding)
+[[300, 520], [520, 520], [740, 520]].forEach(([x], i) => { const u = 520 / 8, seatY = 900 - 2.3 * u; hm += K.seated(x, 900, 520, 1, i === 1 ? HI : H(0.7), [[x + 1.05 * u, seatY - 0.5 * u]]);
+	hm += `<rect x="${x + 0.9 * u}" y="${seatY - 0.75 * u}" width="${0.2 * u}" height="${0.9 * u}" fill="${TOP}" transform="rotate(70 ${x + u} ${seatY - 0.4 * u})"/><ellipse cx="${x + 1.5 * u}" cy="${seatY - 0.36 * u}" rx="${0.36 * u}" ry="${0.16 * u}" fill="${TOP}"/>`; });
+// the stand you sit on (relief) — you are drawn in the round on top of it
+hm += `<path d="M960,900 L975,680 L1205,680 L1220,900 Z" fill="${H(0.62)}"/><rect x="950" y="668" width="280" height="20" fill="${HI}"/>`;
+const hero = {x: 1096, y: 670, h: 300, curl: 1, glow: 1.1, rim: '#FFE2B8', mood: 'warm'};
+let svg = `<defs>${K.reliefFilter('rel', {az: 215, el: 32, sc: 11, base: '#86603A'})}
+ <radialGradient id="lamp" cx="560" cy="200" r="1500" gradientUnits="userSpaceOnUse"><stop offset="0" stop-color="#000" stop-opacity="0"/><stop offset="1" stop-color="#0c0704" stop-opacity=".45"/></radialGradient>
+ <radialGradient id="cu" cx="1080" cy="560" r="420" gradientUnits="userSpaceOnUse"><stop offset="0" stop-color="#FF9A5A" stop-opacity=".38"/><stop offset="1" stop-color="#FF9A5A" stop-opacity="0"/></radialGradient>
+ <filter id="sh" filterUnits="userSpaceOnUse" x="0" y="0" width="1920" height="1080"><feGaussianBlur stdDeviation="14"/></filter>
+</defs>
+<g filter="url(#rel)">${hm}</g>
+<rect width="1920" height="1080" fill="url(#lamp)"/>
+<rect width="1920" height="1080" fill="url(#cu)" style="mix-blend-mode:screen"/>
+<!-- you: in the round, standing proud of the wall (a soft contact shadow on the relief) -->
+<ellipse cx="1140" cy="660" rx="150" ry="20" fill="#120a05" opacity=".55" filter="url(#sh)"/>
+<path d="M1150,380 C1260,420 1300,560 1280,660 L1220,660 C1240,560 1210,450 1150,380 Z" fill="#120a05" opacity=".35" filter="url(#sh)"/>
+${K.horseHead(hero)}
+`;
+K.page(svg, K.hud({sub: '这一次，锤子[没有落下]。', stamp: {s1: '2007 · 香港', s2: '国家文物局反对 · 公开拍卖终止'}, era: '今', age: {a: '回国', n: 4, post: '/12'}, bk: {sub: .5, stamp: .5, blk: .5}}));
 </script></body></html>
