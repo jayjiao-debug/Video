@@ -1,11 +1,10 @@
 import React from 'react';
 import {W, H, bubi, grounded, walkPose, shop, lerp, cl, rnd, KAI, SANS, SERIF, seg, ease} from './kit50';
-import {B, BG, thB, IronLoop as _IronLoopUnused, RimFig, NearArm, Cowrie} from './styleB';
+import {B, BG, thB, RimFig, NearArm, Cowrie} from './styleB';
 import {Pose, Look4} from '../qq44/figure44';
 /* ep50 PartB props and helpers. Copies of the KF50 helpers that are not exported there (KF50.tsx registers its own root,
    so it cannot be imported into the film), plus the second-half props: the 宝钞, a generic 1948 note, the passing pillar,
    lanterns, the cart, the lying iron string. Builder B owns this file. */
-void _IronLoopUnused;
 export type P2 = [number, number];
 export const STRIDE = 0.9759, GAIT_S = 1.325;
 /** natural walking speed in px/s for a walker h px tall */
@@ -248,7 +247,6 @@ export const Baochao: React.FC<{w: number; h: number; age?: number; id: string}>
 			{coins}
 			<path d={Array.from({length: 4}, (_, k) => marks(X(0.22 + k * 0.15), Y(0.79), X(0.11), 80 + k)).join('')} stroke={ink} strokeWidth={Math.max(1, X(0.012))} strokeLinecap="round" fill="none" />
 			<rect x={X(0.52)} y={Y(0.74)} width={X(0.28)} height={X(0.28)} fill={red} opacity={0.82} />
-			<rect x={X(0.24)} y={Y(0.25)} width={X(0.17)} height={X(0.17)} fill={red} opacity={0.75} />
 			{age > 0 && <rect width={w} height={h} fill="#6B4A1E" opacity={0.25 * age} />}
 			{age > 0.3 && [0, 1, 2].map((k) => <circle key={k} cx={X(0.25 + 0.3 * rnd(k, 31))} cy={Y(0.2 + 0.6 * rnd(k, 33))} r={X(0.04) * (age - 0.3) * 2} fill={B.lac} opacity={0.8} />)}
 		</g>
