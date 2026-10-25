@@ -268,11 +268,12 @@ export const composite = (x: Xf, g: Grade = {}, t = 0, bloomA = 1, bloomB = 1, g
 	[u.Ag0, u.Ag1, u.Ag2, u.Ag3].forEach((s, i) => (s.value = a.mips[i][0].texture)); [u.Bg0, u.Bg1, u.Bg2, u.Bg3].forEach((s, i) => (s.value = b.mips[i][0].texture));
 	u.bloomA.value = bloomA; u.bloomB.value = bloomB; u.blurA.value = x.blurA ?? 0; u.mode.value = x.mode; u.k.value = x.k;
 	if (x.dir) u.dir.value.set(x.dir[0], x.dir[1]); if (x.pt) u.pt.value.set(x.pt[0], x.pt[1]); u.soft.value = x.soft ?? 0.04; u.band.value = x.band ?? 0.18;
-	u.exposure.value = g.exposure ?? 1; u.corners.value = g.corners ?? 0; u.cband.value.set(...(g.cornersBand ?? [0, 305, 520, 1])); u.ctop.value = g.cornersTop ?? 1; u.pool.value.set(...(g.pool ?? [960, 540, 600, 0])); u.vig.value = g.vig ?? 0.35; u.vigCol.value.set(g.vigCol ?? '#120c08'); u.lift.value = g.lift ?? 0; u.tint.value.set(g.tint ?? '#ffffff');
+	const noBands = !!(window as any).NOBANDS;            // caption trials: the lamplight bands off (replaced by a HUD-side treatment)
+	u.exposure.value = g.exposure ?? 1; u.corners.value = noBands ? 0 : g.corners ?? 0; u.cband.value.set(...(g.cornersBand ?? [0, 305, 520, 1])); u.ctop.value = g.cornersTop ?? 1; u.pool.value.set(...(g.pool ?? [960, 540, 600, 0])); u.vig.value = g.vig ?? 0.35; u.vigCol.value.set(g.vigCol ?? '#120c08'); u.lift.value = g.lift ?? 0; u.tint.value.set(g.tint ?? '#ffffff');
 	// side A's own grade: mode 0 shows A with this scene's grade; a transition passes the outgoing scene's; mode 13 grades the mix afterwards
 	const post = x.mode === 13, a2: Grade = post ? {vig: 0} : (gA ?? g); u.post.value = post ? 1 : 0;
 	if (x.mode !== 0 && !post) { /* B = g (incoming), A = gA (outgoing) */ } else if (x.mode === 0) { /* A only, graded with g */ }
-	u.aexposure.value = a2.exposure ?? 1; u.acorners.value = a2.corners ?? 0; u.acband.value.set(...(a2.cornersBand ?? [0, 305, 520, 1])); u.actop.value = a2.cornersTop ?? 1; u.apool.value.set(...(a2.pool ?? [960, 540, 600, 0]));
+	u.aexposure.value = a2.exposure ?? 1; u.acorners.value = noBands ? 0 : a2.corners ?? 0; u.acband.value.set(...(a2.cornersBand ?? [0, 305, 520, 1])); u.actop.value = a2.cornersTop ?? 1; u.apool.value.set(...(a2.pool ?? [960, 540, 600, 0]));
 	u.avig.value = a2.vig ?? 0.35; u.avigCol.value.set(a2.vigCol ?? '#120c08'); u.alift.value = a2.lift ?? 0; u.atint.value.set(a2.tint ?? '#ffffff');
 	if (post) { /* B's own side must not be graded twice: B is read raw in mode 13 */ }
 	u.grain.value = g.grain ?? 0; u.flash.value = g.flash ?? 0; u.time.value = t;
