@@ -1,9 +1,19 @@
-# Script: 钱是怎么从贝壳变成二维码的？  (v2 · ep50 · 「从古至今」 #1 · gate 1 r1 notes + cold read)
+# Script: 钱是怎么从贝壳变成二维码的？  (v3 · ep50 · 「从古至今」 #1 · owner decisions after gate 1)
 
-Screenwriter, 2026-10-25. Files: this script, `lines.json` (44 lines, `[[start, end, "text", "speaker"], ...]`) and `vo_lines.json` (44 entries, `{id, speaker, text}`, the words to speak).
-**Length:** 156.25 s (2:36.25); v1 was 156.0. The timing is nominal and comes from the speech budget (字/3.5 + 0.3 s at a sentence end, + 0.15 s at a comma split; Q lines 字/3.0 + 0.3 s). No line is ever under its reading budget (0.5 + 字/7 + 0.6). Everything sits on a 0.25 s grid; the retime to bars comes with the music.
-**Title card:** 13.25–16.25 (3.0 s, silent, on the first hard drop). **Lines:** 44 (N 40 · Q 4). **Spoken 字:** 445. **Highlights:** 15 of 44. **Widest row:** 15.0.
-**Hook order B (the default) is in the lines.** Order A, the alternative, is in its own block below for the owner to compare.
+Screenwriter, 2026-10-25. Files: this script, `lines.json` (43 lines, `[[start, end, "text", "speaker"], ...]`) and `vo_lines.json` (43 entries, `{id, speaker, text}`, the words to speak).
+**Length:** 155.0 s (2:35.0); v2 was 156.25, v1 156.0. The timing is nominal and comes from the speech budget (字/3.5 + 0.3 s at a sentence end, + 0.15 s at a comma split; Q lines 字/3.0 + 0.3 s). No line is ever under its reading budget (0.5 + 字/7 + 0.6). Everything sits on a 0.25 s grid; the retime to bars comes with the music.
+**Title card:** 13.25–16.25 (3.0 s, silent, on the first hard drop). **Lines:** 43 (N 39 · Q 4). **Spoken 字:** 436. **Highlights:** 15 of 43. **Widest row:** 15.0.
+**Hook order B is the owner's pick** (order A is kept below for the record).
+
+## Changelog v3 (owner decisions)
+| Decision | What changed |
+|---|---|
+| **1** hook | Order B stays as built. No change. |
+| **2** today | T2a/T2b (「2025年前三季度，」 / 「移动支付[1700多亿笔]。」) → one line, **T1 「如今，[10.17亿]人用网络支付。」** (132.25–136.50; A1 ✓, CNNIC 第57次). The stamp is 「— 2025年12月 · 中国 / 占网民90.3%」. The 每秒七千多笔 picture counter is **dropped**, so the film carries no 移动支付 figure. The rest is retimed from T1 on, with no gaps (−1.25 s). The sources line now cites CNNIC 第57次报告 (its own survey, no PBOC). |
+| **3** end card | The question is now **「你上一次用[纸币]，是什么时候？」** (one row, 14 wide); 「凭什么算钱」 is gone. P2b 「值钱的是，大家都[信]它。」 is now the film's last statement. It gets **1.0 s of air (148.00–149.00)** with the trust web at full glow on the music's peak, so the insight lands before the card dims in. The question then reads as the viewer's own step away from paper, the whole walk ending in their pocket. |
+
+**Length:** 156.25 → 155.0 s. Pace: 6 % waiting, nothing too fast. T1's 1.7 s "wait" is set by the voice: 十点一七亿 takes longer to say than to read, and the window is at its speech minimum.
+
 
 ## Changelog v2
 IDs below are **v2** IDs.
@@ -12,7 +22,7 @@ IDs below are **v2** IDs.
 |---|---|
 | **N1 (must) + P1** hook order | **Order B is built:**<br>· **H1** 0.00–4.50 「财、货、贵，都带个"贝"，\n偏偏"钱"，是[金]字旁。」 on frame 0 over your phone (the characters stamp onto the screen as overlays).<br>· **H2** 4.50–9.50 「你扫码付的钱，\n倒回一千年，只是一张[纸]。」<br>· **H3** 9.50–13.25 「倒回三千多年，钱是一枚贝壳。」<br>The title is at **13.25**, not ~12.75: H2 is 16 spoken 字 (4.87 s at 3.5 字/s). I kept 「只是」 because it sets up P2a 「本身不值钱」. If the drop is at 12.75, the editor starts the title under H3's last word (owner row 133). Order A is written out below. |
 | **P1** 「先猜？」 beat | A **1.5 s named beat (28.75–30.25)** after C1 「那"钱"，为什么是金字旁？」: the prompt 「先猜？」 plus three faint options by his hand (金块？· 刀？· 铲子？), a tick-tock, and the spade comes forward on the Q voice. It is a picture prompt, not a subtitle, so it is not in `lines.json` and is not voiced. It costs 1.5 s. |
-| **N2 (must) + P5** today | T1a/T1b (10.17亿) and T3 (每秒七千多笔, spoken) are **cut**. One number remains: **T2a/T2b 「2025年前三季度，」 / 「移动支付[1700多亿笔]。」** (A2 ✓). 「每秒七千多笔 · 估算」 is now a small picture counter only. The note → phone change happens at R1's tail, back at the stall. I picked 移动支付 over 10.17亿: it is the bigger surprise, it is about what you do (pay), and the per-second counter makes it visible. |
+| **N2 (must) + P5** today | *(superseded in v3 by owner decision 2)* T1a/T1b (10.17亿) and T3 (每秒七千多笔, spoken) are **cut**. One number remains: **T2a/T2b 「2025年前三季度，」 / 「移动支付[1700多亿笔]。」** (A2 ✓). 「每秒七千多笔 · 估算」 is now a small picture counter only. The note → phone change happens at R1's tail, back at the stall. I picked 移动支付 over 10.17亿: it is the bigger surprise, it is about what you do (pay), and the per-second counter makes it visible. |
 | **N3 (must) + P3** 宝钞 cause | New **M1c 「可官府印得[太多]，又收不回来。」** (N, 3.75 s) between M1b and M2, from I2b ✓ (《明史》, 陈瑛: 出钞太多，收敛无法). The stamp is 「— 永乐年间 · 陈瑛奏 / 出钞太多，收敛无法」. M1c is N, so Q stays at 4 and never two in a row. The film never says 不能兑换. |
 | **N4 (must) + P2** iron | The S1 stamp line 2 is **「蜀地用铁钱」**. The weight and the value are now separate statements on separate frames:<br>· **S2** keeps 「一串一千文，重[二十五斤八两]。」 (don't-change list), with the stamp 「— 北宋初 · 嘉州、邛州 / 《宋史》：早期标准」 and no ratio on its frame.<br>· New **S3b 「川蜀铁钱十枚，才抵一枚铜钱。」** comes after the 《宋史》 Q, on its own frame (a small balance at the stall), stamped 「《宋史》：铁钱十直铜钱一」 (H5). |
 | **N5 (should) + P4** C4a | 「东周时，人们照着铲子铸铜币，」 (铜, not 青铜; C4b ✓). The picture casts the spade into a coin, and the 钅 glints with it. Nothing is attributed to 《说文》 「从金」. |
@@ -25,11 +35,11 @@ IDs below are **v2** IDs.
 | **N12–14 (carry-fwd)** pictures | The coin and note legends are in period script (半兩, 五銖, 開元通寶, 壹貫), while labels stay 简体. The H1 characters are overlays on the phone. B2b 「稀少」 is one cowrie traded for a big load at an inland market. B3 has no 「最早」. E1's counter lands on 前221 and holds. F1b skips year 0. M2's tag goes 1000文 → 不到1文 with no labelled stops. |
 | **N15 (must) + P6** sources | The PBOC annual report is out. In: **CNNIC 第57次报告（引人民银行数据）** and **中新社/中新网 2019（1948）**, plus the classical texts and 国家博物馆. |
 | **N16 + facts A4** | A4 is still ⚠, so the full-year figure stays out and T2 uses the producer's 「2025年前三季度」 wording. That also answers CR's 「"去年"是哪一年？」. |
-| **N17 + P7** end card | The default stays 「你手机里的那串数字，凭什么算[钱]？」. The alternatives are listed below. |
-| **P8** 二维码 / 扫码 | 扫码 is now spoken in H2 as an everyday action (「你扫码付的钱」). The phone + QR is in the hook picture, and he scans the same code at the stall again in T2a. No number ever carries 扫码. |
+| **N17 + P7** end card | *(superseded in v3: the owner picked 「你上一次用纸币，是什么时候？」)* The default stays 「你手机里的那串数字，凭什么算[钱]？」. The alternatives are listed below. |
+| **P8** 二维码 / 扫码 | 扫码 is now spoken in H2 as an everyday action (「你扫码付的钱」). The phone + QR is in the hook picture, and he scans the same code at the stall again in T1. No number ever carries 扫码. |
 | **Cold read** | 「一千年前只是一张纸」 was ambiguous; it is now 「倒回一千年」 → H2. The 4.75 s swipe point is gone (the twist is on frame 0). The 18.5 s textbook detour (B1) is cut. The 42 s list is one line. 「一用七百多年」 now names 汉 → 唐. 「兑不出钱」 is now 能换 → 换不回. The 宝钞 cause is in. There are no longer three numbers in a row. 二维码 is now in the words. |
 
-**Length:** 156.0 → 156.25 s.
+**Length (v2):** 156.0 → 156.25 s.
 - Added: M1c (+3.75), S3b (+3.75), the guess beat (+1.5), C4a (+0.5), F1b (+0.75).
 - Paid back: T1a/T1b/T3 (−7.75), B1 (−2.25), D1 merged (−1.75); the hook is the same length.
 
@@ -52,7 +62,7 @@ IDs below are **v2** IDs.
 ## Story in 3 lines
 1. 财、货、贵都带"贝"，偏偏"钱"是金字旁。你扫码付的钱，倒回一千年只是一张纸，倒回三千多年是一枚贝壳。"钱"原来是一把铲子：东周时人们照着铲子铸铜币，名字也跟着叫"钱"。
 2. 秦的"半两"、汉的"五铢"，名字就是重量，五铢从汉用到唐。621年的开元通宝，名字不再是重量。北宋四川的铁钱，一串一千文重二十五斤八两，十枚才抵一枚铜钱，于是有了交子：一张纸能换一千文。16家富户换不回钱，1024年官府接手，交子成了世界上最早的纸币之一。
-3. 明初一贯宝钞等于一千文，可官府印得太多、收不回来，后来一贯连一文都不值；人们改用白银，钱又回到了称重量。2025年前三季度，移动支付1700多亿笔。钱越变越轻：纸和数字本身不值钱，值钱的是大家都信它。你手机里的那串数字，凭什么算钱？
+3. 明初一贯宝钞等于一千文，可官府印得太多、收不回来，后来一贯连一文都不值；人们改用白银，钱又回到了称重量。如今，10.17亿人用网络支付。钱越变越轻：纸和数字本身不值钱，值钱的是大家都信它。你上一次用纸币，是什么时候？
 
 ## Hook: two orders for the owner
 **Order B (default, built in `lines.json`):** the twist on frame 0 over your own phone, then one rewind.
@@ -70,7 +80,7 @@ IDs below are **v2** IDs.
 | H2 | 5.00–8.75 | 倒回三千多年，钱是一枚贝壳。 | The walker rewinds; a cowrie; 约前1300 |
 | H3 | 8.75–11.25 | 财、货、贵，都带个"贝"。 | The characters rise behind him, 贝 glowing |
 | H4 | 11.25–13.75 | 偏偏"钱"，是[金]字旁。 | 钱 with a cold 钅 |
-| TITLE | 13.75–16.75 | 钱是怎么从贝壳 / 变成二维码的？ | silent, on the drop (everything after it +0.5 s; film 2:36.75) |
+| TITLE | 13.75–16.75 | 钱是怎么从贝壳 / 变成二维码的？ | silent, on the drop (everything after it +0.5 s; film 2:35.5) |
 
 **Why B.**
 - The 预期违背 that kept the cold reader (金字旁) is on frame 0 instead of at 11 s. Topic-picker §3: B_twist with E_barrier 0 holds the first 5 s.
@@ -88,7 +98,7 @@ IDs below are **v2** IDs.
 - No line asks the film's question outright.
 
 ## Title
-**Film title (producer, fixed):** 「钱是怎么从贝壳 / 变成二维码的？」 (14 字, two rows). It is the searched question, and the film walks it all the way, so it doesn't overclaim. 二维码 is now named in the words too (H2 「你扫码付的钱」) and shown at both ends (the hook and T2a). Every number says 移动支付, never 扫码.
+**Film title (producer, fixed):** 「钱是怎么从贝壳 / 变成二维码的？」 (14 字, two rows). It is the searched question, and the film walks it all the way, so it doesn't overclaim. 二维码 is now named in the words too (H2 「你扫码付的钱」) and shown at both ends (the hook and T1). Every number says 移动支付, never 扫码.
 
 **Douyin 标题 options (≤ 30 字)**
 1. **钱是怎么从贝壳变成二维码的？财货贵都带贝，偏偏钱是金字旁** (28 字). **Recommended; the director agrees.** The search words plus the ✓ twist. With order B, the 标题 and frame 0 say the same thing.
@@ -105,8 +115,8 @@ IDs below are **v2** IDs.
 | Hook (order B) | 0.00–13.25 | 财、货、贵，都带个"贝"，偏偏"钱"，是【金】字旁。 / 你扫码付的钱，倒回一千年，只是一张【纸】。 / 倒回三千多年，钱是一枚贝壳。 |
 | Title (silent, first drop) | 13.25–16.25 | 钱是怎么从贝壳 / 变成二维码的？ |
 | First beat: the twist answered | 16.25–42.50 | 贝壳从很远的海边运来 … 那"钱"，为什么是金字旁？ / (先猜？1.5 s) / (Q) 钱，铫也，古田器也。 / 原来，"钱"是一把【铲子】。 / 东周时，人们照着铲子铸铜币，名字也跟着叫"钱"。 |
-| Ending | 138.50–150.00 | 钱越变越轻： / 贝壳、铜、纸，最后是一串数字。 / 纸和数字本身不值钱， / 值钱的是，大家都【信】它。 |
-| Question + end card | 150.25–156.25 | 你手机里的那串数字，凭什么算【钱】？ |
+| Ending | 136.50–149.00 (incl. 1.0 s of air) | 钱越变越轻： / 贝壳、铜、纸，最后是一串数字。 / 纸和数字本身不值钱， / 值钱的是，大家都【信】它。 |
+| Question + end card | 149.00–155.00 | 你上一次用【纸币】，是什么时候？ |
 
 ## Beat sheet
 | Part | Time | Purpose | What the viewer learns / feels |
@@ -117,25 +127,25 @@ IDs below are **v2** IDs.
 | 4 Weight is the name | 46.0–67.25 | 秦 半两 = its weight (the balance). 汉 五铢, also a weight, from 汉 to 唐. 621 (Q): the new coin's name is not a weight. | **原来如此 2:** 半两 and 五铢 are weights; a coin's value starts to come loose from its metal. |
 | 5 交子 (set-pieces 2 + 3) | 67.25–104.5 | Sichuan's iron: 一串一千文 = 25斤8两 (Q: too heavy to trade). Separately: ten iron coins = one copper coin. A slip that **能换** 1000 文. Sixteen houses **换不回钱**. 1024: the state takes over (the hook's year). One of the world's earliest paper monies, printed against forgery. | **原来如此 3:** paper came because iron was heavy and cheap, and it worked only while it could be swapped back. |
 | 6 宝钞 → 银 (set-piece 4) | 104.5–129.0 | Ming: 1 贯 = 1000 文 = 1 两银 → **印得太多，又收不回来** → (Q) 一贯不值一文. **The hush.** Then silver, weighed every time: back to weight. | Trust broken a second time, by the state. When paper failed, money went back to the scale. |
-| 7 Today | 129.0–138.5 | 1948 (one line); back at the stall, the note becomes the phone and he scans the code. 2025 Q1–Q3: 1700多亿笔 (the per-second counter is picture only). | The scale of the number in your pocket. |
-| 8 Payoff + question | 138.5–156.25 | The whole walk as one line, getting lighter (set-piece 5). Paper and numbers aren't worth anything in themselves; what's worth something is that everyone trusts them. | **原来如此 4:** money is trust, earned twice (交子 换不回, 宝钞 收不回). 「凭什么算钱？」 opens the comments. |
+| 7 Today | 129.0–136.5 | 1948 (one line); back at the stall, the note becomes the phone and he scans the same code. 如今 10.17亿人用网络支付 (one number, CNNIC). | The scale of the number in your pocket. |
+| 8 Payoff + question | 136.5–155.0 | The whole walk as one line, getting lighter (set-piece 5). Paper and numbers aren't worth anything in themselves; what's worth something is that everyone trusts them. **1.0 s of air** on the glowing web. Then the question. | **原来如此 4:** money is trust, earned twice (交子 换不回, 宝钞 收不回). 「你上一次用纸币，是什么时候？」 brings the walk into the viewer's own pocket and is easy to answer in the comments. |
 
 ## The 「从古至今」 walk (the spine)
 - **One walker.** A faceless one-tone silhouette with warm rim light keeps walking left → right with the same gait all film. The camera tracks side-on, and the eras slide past on parallax layers.
 - **Era changes** are motivated wipes: a foreground object (banner, pillar, gate tower, vermilion gate) passes in front of him, and his clothes and the set have changed behind it. They come on downbeats.
 - **The money in his hand** carries the film's one accent colour, and it transforms on the line that names it: 贝 → 铜贝 → 铲 → 铜布币 (+ 刀 · 圜 · 蚁鼻 fanned) → 半两 → 五铢 → 开元通宝 → 铁钱串 → 交子 → 宝钞 → 银锭 → generic modern note → phone.
 - **The five pauses (set-pieces):** (1) C3 he digs with the 「钱」 spade, after the 先猜？ beat · (2) S2 the iron string bends him · (3) S8 the 交子 print shop · (4) M2 the 宝钞 crumbles, and he stands still in the hush · (5) P1 the whole walk is seen from far back. Outside these, he never stops.
-- **The hook is the walk run backwards.** H2–H3 rewind from your phone (◀◀) to 约前1300. The film walks forward and arrives at the same stall at R1's tail; at T2a he scans the same code. S6 (1024) ghosts the phone over the slip.
+- **The hook is the walk run backwards.** H2–H3 rewind from your phone (◀◀) to 约前1300. The film walks forward and arrives at the same stall at R1's tail; at T1 he scans the same code. S6 (1024) ghosts the phone over the slip.
 - **The balance motif:** E2 半两 (level) → F1a 五铢 (level) → G2 开元通宝 (no weight tag) → S3b ten iron = one copper (its own frame) → M1b 宝钞 = coins = silver (level) → M2 the note's pan flies up → M4 the silver weighed (半两's ghost).
 
 ## Callbacks (set-up → payoff)
 | Set-up | Payoff |
 |---|---|
 | H1 财货贵 have 贝, 钱 has 钅 | C1 「那"钱"，为什么是金字旁？」 → 先猜？ → C2–C4b (the cast copper coin glints with the 钅) |
-| H2 your scan → a paper slip (1024) | S6 the counter lands on 1024 with the phone ghost · T2a the same stall, the same code |
+| H2 your scan → a paper slip (1024) | S6 the counter lands on 1024 with the phone ghost · T1 the same stall, the same code |
 | E2 the balance 「半两 = 半两」 | G2 the untagged pan · M2 the note's pan flies up · M4b silver on the same pan with 半两's ghost |
 | S4b 「能换一千文」 → S5b 「换不回钱」 (private trust fails) · M1c 「印得太多，又收不回来」 → M2 (state trust fails) | P2b 「值钱的是，大家都信它」 |
-| H2 「你扫码付的钱」 | Q 「你手机里的那串数字，凭什么算钱？」 |
+| H2 「你扫码付的钱」 (paper → phone) | Q 「你上一次用纸币，是什么时候？」 (the viewer's own paper → phone) |
 
 ## Screen furniture
 - **Subtitles:** layout D, top-left. Rows stack (row 1 stays while row 2 types). Centred: C1 「那"钱"，为什么是金字旁？」, Q lines and the end-card question. The 「先猜？」 prompt is a picture element beside the floating 钱, not a subtitle.
@@ -143,8 +153,8 @@ IDs below are **v2** IDs.
 - **Counter (bottom-left):** an era + year pair. The year is shown only where a ✓ row gives one; otherwise the counter shows the era alone, in the body face (Cormorant only for numerals). Sequence: 2026 → 1024 → 约前1300 · 商周 · 东周 · 战国 · 前221 (holds) · 前118 → 621 · 北宋 · 1024 · 1375 · 明 · 明中晚期 · 1948 · 2025 · 2026. It is hidden on the end card.
 - **Stamp (top-right, two lines):** `— year · place` / a ≤ 10 字 note, typed after the subtitle; `〃` = unchanged. Hidden on H1 (the characters are timeless) and on the end card.
 - **Speakers:** N narrator (WuLq5z7nEcrhppO0ZQJw) · Q old-text quotes (MI36FIkp9wRP7cpWKPTl, light room reverb): C2 《说文》, G1 《旧唐书》, S3 《宋史》, M2 《明史》. There are four Q lines and never two in a row.
-- **Conventions in the text:** `[ ]` highlight (15 of 44) · `{ }` gloss row, shown, not spoken · `\n` the second row (max two rows, each ≤ 16 wide).
-- **`vo_lines.json`:** numbers are spelled as read (一零二四年, 一九四八年, 二零二五年, 十六家, 一千七百多亿笔, 二十五斤八两), and quote marks and 《》 are dropped.
+- **Conventions in the text:** `[ ]` highlight (15 of 43) · `{ }` gloss row, shown, not spoken · `\n` the second row (max two rows, each ≤ 16 wide).
+- **`vo_lines.json`:** numbers are spelled as read (一零二四年, 一九四八年, 十六家, 十点一七亿, 二十五斤八两), and quote marks and 《》 are dropped.
 - **Safety:**
   - No brands and no logo on the phone or code.
   - No real banknote designs: 交子, 宝钞 and the modern note are our own generic designs, and coin legends are in period script.
@@ -197,30 +207,28 @@ IDs below are **v2** IDs.
 | 35 | M4a | 124.00 | 126.25 | N | 白银每次都要称， | 7 | 2.15 | 〃 | 〃 / 银锭刻地名、匠名、重量 | **The balance returns (E2 → M4):** the ingot goes on a pan, and a shopkeeper adds weights. Small chiselled marks on the ingot (place, maker, weight) catch the light. | I4, I5 |
 | 36 | M4b | 126.25 | 129.00 | N | 钱又回到了看重量。 | 8 | 2.59 | 〃 | 〃 | A ghost of the 「半两」 coin from E2 flickers on the same pan for a beat: **back to weight**. A small 原来如此. | I4 (callback to E2) |
 | 37 | R1 | 129.00 | 132.25 | N | 1948年，人民币来了。 | 10 | 3.16 | **1948** | — 1948.12.01 · 石家庄 / 人民银行成立 | Fast wipes through later eras: his clothes change twice with no labels, no portraits and no flags. He holds a **generic modern paper note** (never a real 人民币 design: plain, no portrait, no emblem). **In the line's last second he walks back into the hook's noodle stall,** now seen from the side. | J1 |
-| 38 | T2a | 132.25 | 135.00 | N | 2025年前三季度， | 9 | 2.72 | **2025** | — 2025年1–9月 / 人民银行数据 | **The loop closes at the stall:** the note in his hand **becomes the phone**, and he **scans the same QR code** as frame 0. The ✓ lands on the beat. | A2 |
-| 39 | T2b | 135.00 | 138.50 | N | 移动支付[1700多亿笔]。 | 11 | 3.44 | 〃 | 〃 / CNNIC引 | A small light dot leaves his phone, then dots stream from countless windows of a night city (generic), building the counter 「1700多亿笔」 tagged 「移动支付」 (never 扫码). A small second counter ticks under it: **「每秒七千多笔 · 估算」** (picture only, not spoken). | A2 (+ 估算) |
-| 40 | P1a | 138.50 | 140.50 | N | 钱越变越轻： | 5 | 1.81 | **2026** | — 2026 · 今天 / 本片归纳 | **Set-piece 5: the whole walk.** The camera pulls far back and the walk lies behind him as one line. | K5 |
-| 41 | P1b | 140.50 | 144.00 | N | 贝壳、铜、纸，最后是一串数字。 | 11 | 3.44 | 〃 | 〃 | Along the line, each thing he carried sits where he left it: 贝 → 铜贝 → 铲 → 布币 → 半两 → 五铢 → 开元通宝 → 铁钱串 → 交子 → 宝钞 → 银锭 → 纸币 → 手机. A thin weight line runs under them and falls from left to right, with honest bumps at the iron string and the silver. On 「数字」 the phone shows only a number. | K5 |
-| 42 | P2a | 144.25 | 147.00 | N | 纸和数字本身不值钱， | 9 | 2.72 | 〃 | 〃 | The objects fade except the slip, the note and the phone. | K2 |
-| 43 | P2b | 147.00 | 150.00 | N | 值钱的是，大家都[信]它。 | 9 | 2.87 | 〃 | 〃 | Other walkers' silhouettes appear around him, each with a phone. Thin light lines join them into a web, and on 「信」 the web glows. A paper slip glows inside it for a beat, then the phone. **The biggest image.** | K2 (本片归纳; from K1, I2, G4) |
-| 44 | Q | 150.25 | 156.25 | N | 你手机里的那串数字，<br>凭什么算[钱]？ | 14 | 4.30 | hidden | — | **Juno end card:** the web dims to about 30 %. The red J stamp presses in. Then the two-line title, this question centred (~76 px), the pill 「关注 Juno · 一起看懂世界」 and the sources line. Hold ≥ 5.5 s, then fade to black. The music stops dead before the card. | framing |
+| 38 | T1 | 132.25 | 136.50 | N | 如今，[10.17亿]人用网络支付。 | 13 | 4.01 | **2025** | — 2025年12月 · 中国 / 占网民90.3% | **The loop closes at the stall:** the note in his hand **becomes the phone**, and he **scans the same QR code** as frame 0; the ✓ lands on the beat. The camera rises: across a night city (generic), phone screens light up window by window, and the number 「10.17亿」 stands big on a dark panel (≥ 96 px) tagged 「网络支付用户」 (never 扫码, never 增长). No per-second counter. | A1 |
+| 39 | P1a | 136.50 | 138.50 | N | 钱越变越轻： | 5 | 1.81 | **2026** | — 2026 · 今天 / 本片归纳 | **Set-piece 5: the whole walk.** The camera pulls far back and the walk lies behind him as one line. | K5 |
+| 40 | P1b | 138.50 | 142.00 | N | 贝壳、铜、纸，最后是一串数字。 | 11 | 3.44 | 〃 | 〃 | Along the line, each thing he carried sits where he left it: 贝 → 铜贝 → 铲 → 布币 → 半两 → 五铢 → 开元通宝 → 铁钱串 → 交子 → 宝钞 → 银锭 → 纸币 → 手机. A thin weight line runs under them and falls from left to right, with honest bumps at the iron string and the silver. On 「数字」 the phone shows only a number. | K5 |
+| 41 | P2a | 142.25 | 145.00 | N | 纸和数字本身不值钱， | 9 | 2.72 | 〃 | 〃 | The objects fade except the slip, the note and the phone. | K2 |
+| 42 | P2b | 145.00 | 148.00 | N | 值钱的是，大家都[信]它。 | 9 | 2.87 | 〃 | 〃 | Other walkers' silhouettes appear around him, each with a phone. Thin light lines join them into a web, and on 「信」 the web glows. A paper slip glows inside it for a beat, then the phone. **The biggest image, and the film's last statement.**<br>**Then 1.0 s with no line (148.00–149.00):** the web holds at full glow on the music's peak, so the insight lands before the card dims in. | K2 (本片归纳; from K1, I2b, I2, G4) |
+| 43 | Q | 149.00 | 155.00 | N | 你上一次用[纸币]，是什么时候？ | 12 | 3.73 | hidden | — | **Juno end card:** the web dims to about 30 %. The red J stamp presses in. Then the two-line title, this question centred (~76 px, one row), the pill 「关注 Juno · 一起看懂世界」 and the sources line. Hold ≥ 5.5 s, then fade to black. The music stops dead before the card. | framing |
 
 **Pauses (named beats):**
 - 13.25–16.25: the title, silent, on the first hard drop.
 - 28.75–30.25: 「先猜？」, the interactive guess (picture prompt, tick-tock, no voice).
 - 118.50–120.50: the 宝钞 hush (the note crumbles; the walker stands still; music near-silent).
-- 144.00–144.25 and 150.00–150.25: breaths before the takeaway and before the end card.
+- 142.00–142.25: a breath before the takeaway.
+- 148.00–149.00: the insight's air (the trust web at full glow on the peak) before the end card.
 
 ## End card
-- **Question for comments, default:** 「你手机里的那串数字，凭什么算【钱】？」
-  - It echoes H2 (「你扫码付的钱」).
-  - It applies the takeaway to the viewer's own phone.
-  - It has several fair answers (银行、国家、大家都认、能换东西), so the comments argue.
+- **Question for comments (owner's pick):** 「你上一次用【纸币】，是什么时候？」
+  - It is personal and very easy to answer (「上周」「过年红包」「想不起来了」), so it gets comments.
+  - It turns the film's walk (paper → phone) into the viewer's own memory.
+  - The insight is not lost: P2b 「值钱的是，大家都[信]它。」 is the last statement and gets 1.0 s of air before the card.
   - **@ prompt:** 「@ 那个钱包里还揣着现金的朋友」
-- **Alternative 1:** 「你上一次用纸币，是什么时候？」 (12 字). Easier to answer and personal, but it drops the trust idea.
-- **Alternative 2 (tone, director's option):** 「你手机里的那串数字，为什么能算钱？」 It is softer than 「凭什么」 if the owner worries that it reads as a challenge to the currency. I'd keep 凭什么.
-- Show the owner all three.
-- **Sources line:** 资料：《说文解字》（据《太平御览》）《史记》《汉书》《旧唐书》《宋史》《明史》 · 中国国家博物馆 · 光明日报 2024 · 《人民周刊》2024 · 《人民论坛》2022 · 中新网 2021/2024 · 中新社 2019（1948） · CNNIC 第57次报告（引人民银行数据）
+- Dropped: 「你手机里的那串数字，凭什么算钱？」 and its softer variant.
+- **Sources line:** 资料：《说文解字》（据《太平御览》）《史记》《汉书》《旧唐书》《宋史》《明史》 · 中国国家博物馆 · 光明日报 2024 · 《人民周刊》2024 · 《人民论坛》2022 · 中新网 2021/2024 · 中新社 2019（1948） · CNNIC 第57次中国互联网络发展状况统计报告
 - **Rules:** the Juno end card (red J stamp, title, question, follow pill 「关注 Juno · 一起看懂世界」). Never 「Juno 出品」.
 
 ## Music, voice and retiming (for the editor)
@@ -228,9 +236,9 @@ IDs below are **v2** IDs.
 - **Title (13.25).** On the first hard drop. If the drop is at ~12.75, start the title under H3's last word; never cut H3's speech (owner row 133).
 - **先猜？ (28.75).** Use a short tick-tock and a small rise on the beat. The C2 Q voice lands as the answer.
 - **Era wipes** land on downbeats. The money transforms with a small designed sound each time: a shell clack, a bronze ring, a spade in soil, a mould clank (C4a), an iron chain, a paper flick, a silver ting, a phone tap.
-- **Set-pieces:** S2's thud on a beat. S8 has woodblock presses on the beat. M1c's printing room speeds up into M2. M2 → hush → M3 is the film's one near-silence, so bars may only add time there. P1–P2 is the peak, and nothing gets louder after it. The music stops dead before the end card.
+- **Set-pieces:** S2's thud on a beat. S8 has woodblock presses on the beat. M1c's printing room speeds up into M2. M2 → hush → M3 is the film's one near-silence, so bars may only add time there. P1–P2 is the peak; P2b's 1.0 s of air sits on it, and nothing gets louder after it. The music stops dead before the end card.
 - **Voice.**
-  - Generate line by line from `vo_lines.json`. The comma-split pairs (B2a/b, C4a/b, F1a/b, S4a/b, S5a/b, M1a/b, M4a/b, T2a/b, P1a/b, P2a/b) should sound like one sentence: keep the a-half's trailing air short.
+  - Generate line by line from `vo_lines.json`. The comma-split pairs (B2a/b, C4a/b, F1a/b, S4a/b, S5a/b, M1a/b, M4a/b, P1a/b, P2a/b) should sound like one sentence: keep the a-half's trailing air short.
   - If a take runs long, extend into the next line's lead air, and never squeeze a subtitle under its reading budget.
   - Readings to check in the first takes:
     - **铫 yáo** (C2, the field tool, not diào) · **行 xíng** (G1) · **便 biàn** (S3) · **直 zhí** (M2, = 值)
@@ -272,15 +280,15 @@ IDs below are **v2** IDs.
 | I4 | ✓ | M3, M4a, M4b | 明中晚期 · 明朝人改用白银 · 白银成了钱 · 每次都要称 (称量货币) | 光明日报 文摘报 2023-10-28 (徐瑾) |
 | I5 | ✓ | M4a stamp | 银锭刻地名、匠名、重量 | 国博 (中新网 2021-02-16) |
 | J1 | ✓ | R1 | 1948年 · 1948.12.01 · 石家庄 · 人民银行成立 · 人民币来了 (同一天第一套人民币诞生) | 中新网 (中新社) 2019-05-27; 中新网 2015-08-10 |
-| A2 | ✓ | T2a, T2b | 2025年前三季度 · 2025年1–9月 · 移动支付1700多亿笔 (1703.82亿) · picture counter 每秒七千多笔 · 估算 (≈ 7,220) | CNNIC 第57次报告 quoting 人民银行 |
+| A1 | ✓ | T1 | 如今，10.17亿人用网络支付 · 2025年12月 · 占网民90.3% (网络支付, CNNIC's term; not 扫码, not 增长) | CNNIC 第57次中国互联网络发展状况统计报告 |
 | K5, K2 | 本片归纳 | P1a–P2b | 钱越变越轻 · 纸和数字本身不值钱，值钱的是大家都信它 (from K1, I2b, I2, G4) | — (our synthesis, not attributed) |
 
 **Framing lines (no new fact; each follows from the rows above):** C1 「那"钱"，为什么是金字旁？」 · the 先猜？ prompt · M3 「纸不灵了」 (= I2 → I4) · M4b 「钱又回到了看重量」 (= I4 称量 + E2) · Q.
 
-**估算:** 1024 → 2026 = 1002 years (「倒回一千年」). Late Shang 1300 BC → 2026 = 3325 years (「三千多年」). 1703.82亿 ÷ (273 days × 86400 s) ≈ 7,220 a second (picture counter, labelled 估算).
+**估算:** 1024 → 2026 = 1002 years (「倒回一千年」). Late Shang 1300 BC → 2026 = 3325 years (「三千多年」).
 
 ## Left out on purpose
-- **10.17亿 网络支付 (A1).** Cut by producer decision 5: one today number only.
+- **移动支付 1700多亿笔 (A2) and the 每秒七千多笔 counter (估算).** Cut by owner decision 2: one today number only (10.17亿).
 - **2025 full-year 2314.64亿笔 (A4).** Still ⚠ (reprint only).
 - **妇好墓 6000多枚贝 (B2).** It puts a tomb in the film and adds nothing the 贝 beat needs.
 - **朋 (B7), 《说文》 「古者货贝」 (B9), 《说文》 「从金」 (C4b note).** None was opened in primary form.
@@ -292,12 +300,12 @@ IDs below are **v2** IDs.
 - **Kocherlakota (K4).**
 
 ## Checks run
-- **`pace.py` on a 3-column copy (`--film-end 156.25`):**
+- **`pace.py` on a 3-column copy (`--film-end 155`):**
   - TOO FAST: none.
-  - Waiting: 8.4 s = 5 % (target ≤ 12 %).
+  - Waiting: 9.2 s = 6 % (target ≤ 12 %).
   - MINOR WAITs:
     - H1 and H2 on frame 0, where row 2 types after row 1, so the real wait is shorter.
-    - S6 and T2b, where a spoken year or number is longer than its read.
+    - S6 (1.3 s) and T1 (1.7 s), where the spoken year or number (一零二四年, 十点一七亿) takes longer to say than to read. These windows are at the speech minimum, so the voice sets them.
     - Q, the end card.
   - One CHECK: 13.25–16.25, the title. The 先猜？ beat (1.5 s) and the 宝钞 hush (2.0 s) are named beats under the 2 s flag.
 - **`facts.py script.md --lines` (3-column copy):** no problems found.
@@ -305,11 +313,9 @@ IDs below are **v2** IDs.
 - **Timing:**
   - Every window ≥ max(speech, reading).
   - On the 0.25 grid, with no overlaps.
-  - `lines.json` has 44 rows and `vo_lines.json` the same 44 IDs in the same order.
+  - `lines.json` has 43 rows and `vo_lines.json` the same 43 IDs in the same order.
 - **Banned wording:** none of these appear in any line or VO text: 最早的货币, 第一张纸币, 祖宗, 不能兑换, 500斤, 734年, 739年, 天圆地方, 2314, 张咏, and no 扫码 next to a number.
 
-## Open decisions (for the producer / owner)
-1. **Hook order:** B (built) vs A (the block above). The director recommends B.
-2. **Title timing:** it lands at 13.25 (H2 needs 4.87 s of speech). If the drop is at ~12.75, start the title under H3's last word.
-3. **Today number:** 移动支付 1700多亿笔 (built) vs 「如今，[10.17亿]人用网络支付。」 (4.25 s, a one-line swap at T2a/T2b).
-4. **End-card question:** default, alternative 1 or alternative 2 (above).
+## Open decisions
+- None from the owner's list. All three v3 decisions are applied.
+- Still standing from gate 1: the title lands at 13.25 (H2 needs 4.87 s of speech). If the drop is at ~12.75, start the title under H3's last word.
