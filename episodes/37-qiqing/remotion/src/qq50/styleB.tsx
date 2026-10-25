@@ -11,8 +11,10 @@ import {SEAL_SRC} from '../qq44/skin44';
    contour, standing on cinnabar.
    v2: lifted exposure (warm oxblood lacquer, brighter cinnabar, stronger gloss), a printed 交子 note, a weighted iron
    string, an intentional hook still (贝 lifted out of gold-lined sockets → gold-leaf cowries on the counter). */
-export const B = {lac: '#1E100C', lac2: '#2E1712', far: '#5A271B', red: '#C8462B', redL: '#DE6446', redD: '#92301C', ochre: '#B07A3C', gold: '#EBC06A', goldL: '#FFE6A8', silver: '#D4DCE1', cream: '#F6EBD2'};
-export const thB: Theme = {ink: '#FFF6E6', key: B.gold, rule: B.gold, dim: 0.85, pool: 'rgba(16,7,4,A)', poolA: 0.5,
+export const B = {lac: '#120906', lac2: '#1A0D09', far: '#1C0E0A', red: '#B8432A', redL: '#D0583C', redD: '#7A2A1A', ochre: '#A87436', gold: '#E8BC66', goldL: '#FFE6A8', silver: '#D4DCE1', cream: '#F2E6CC'};
+/** v3 (night): everything that is not the subject recedes — dark-on-dark lacquer, thin dim gold line, no big cinnabar */
+export const BG = {band: '#22100B', wall: '#261310', roof: '#140A07', post: '#26120D', beam: '#2E1610', line: 'rgba(232,188,102,0.26)', lineS: 'rgba(232,188,102,0.36)', ground: '#150B08', red: '#3E1A12', rim: '#F0B262'};
+export const thB: Theme = {ink: '#FFF6E6', key: B.gold, rule: B.gold, dim: 0.85, pool: 'rgba(16,7,4,A)', poolA: 0.42,
 	halo: '0 0 2px rgba(16,7,4,0.95), 0 2px 8px rgba(16,7,4,0.8), 0 2px 22px rgba(16,7,4,0.6)'};
 
 /** a 云气纹 curl: a spiral that unwinds into a long tail; dir = ±1 */
@@ -43,28 +45,39 @@ const SilverGrad: React.FC<{id: string; x0: number; x1: number; k: number}> = ({
 /** lacquer ground: warm oxblood-black, a long soft window reflection sliding with the box (sheen 0..1) */
 export const Lacquer: React.FC<{sheen: number; id: string}> = ({sheen, id}) => <g>
 	<defs><linearGradient id={`rf${id}`} gradientUnits="userSpaceOnUse" x1={lerp(-600, 1400, sheen)} y1={0} x2={lerp(-600, 1400, sheen) + 900} y2={700}>
-		<stop offset="0" stopColor="#fff" stopOpacity="0" /><stop offset="0.42" stopColor="#FFE9D0" stopOpacity="0.1" /><stop offset="0.5" stopColor="#FFEBD6" stopOpacity="0.2" /><stop offset="0.58" stopColor="#FFE9D0" stopOpacity="0.1" /><stop offset="1" stopColor="#fff" stopOpacity="0" /></linearGradient>
-		<radialGradient id={`lv${id}`} cx="0.5" cy="0.5" r="0.75"><stop offset="0" stopColor="#6A3122" /><stop offset="0.55" stopColor="#4A2218" /><stop offset="1" stopColor="#2A130E" /></radialGradient></defs>
+		<stop offset="0" stopColor="#fff" stopOpacity="0" /><stop offset="0.42" stopColor="#FFE9D0" stopOpacity="0.03" /><stop offset="0.5" stopColor="#FFEBD6" stopOpacity="0.06" /><stop offset="0.58" stopColor="#FFE9D0" stopOpacity="0.03" /><stop offset="1" stopColor="#fff" stopOpacity="0" /></linearGradient>
+		<radialGradient id={`lv${id}`} cx="0.5" cy="0.5" r="0.75"><stop offset="0" stopColor="#2E1812" /><stop offset="0.6" stopColor="#1E100B" /><stop offset="1" stopColor="#100806" /></radialGradient></defs>
 	<rect width={W} height={H} fill={`url(#lv${id})`} />
-	<rect width={W} height={H} filter="url(#lacN)" opacity={0.18} />
+	<rect width={W} height={H} filter="url(#lacN)" opacity={0.12} />
 	<rect width={W} height={H} filter="url(#lacG)" opacity={0.05} />
 	<rect width={W} height={H} fill={`url(#rf${id})`} />
 </g>;
 /** a cinnabar band with a running gold cloud scroll */
-const ScrollBand: React.FC<{y: number; x0: number; x1: number; h?: number; flow?: number; fill?: string}> = ({y, x0, x1, h = 48, flow = 0, fill = B.redD}) => { const n = Math.ceil((x1 - x0) / 150) + 1;
+const ScrollBand: React.FC<{y: number; x0: number; x1: number; h?: number; flow?: number; fill?: string}> = ({y, x0, x1, h = 48, flow = 0, fill = BG.band}) => { const n = Math.ceil((x1 - x0) / 150) + 1;
 	return <g>
 		<rect x={x0} y={y} width={x1 - x0} height={h} fill={fill} />
-		<rect x={x0} y={y + 3} width={x1 - x0} height={2} fill={B.gold} opacity={0.9} /><rect x={x0} y={y + h - 5} width={x1 - x0} height={2} fill={B.gold} opacity={0.9} />
+		<rect x={x0} y={y + 3} width={x1 - x0} height={2} fill={B.gold} opacity={0.3} /><rect x={x0} y={y + h - 5} width={x1 - x0} height={2} fill={B.gold} opacity={0.3} />
 		<clipPath id={`sb${y}`}><rect x={x0} y={y} width={x1 - x0} height={h} /></clipPath>
 		<g clipPath={`url(#sb${y})`}><g transform={`translate(${-(flow % 300)},0)`}>
-			{Array.from({length: n + 2}, (_, i) => <path key={i} d={curl(x0 + i * 150 + 30, y + h * 0.56, h * 0.36, i % 2 ? -1 : 1, 3.4, 0.5)} fill="none" stroke={B.goldL} strokeWidth={2.4} strokeLinecap="round" transform={i % 2 ? `translate(${90},0)` : undefined} />)}
+			{Array.from({length: n + 2}, (_, i) => <path key={i} d={curl(x0 + i * 150 + 30, y + h * 0.56, h * 0.36, i % 2 ? -1 : 1, 3.4, 0.5)} fill="none" stroke={B.gold} strokeOpacity={0.3} strokeWidth={2.2} strokeLinecap="round" transform={i % 2 ? `translate(${90},0)` : undefined} />)}
 		</g></g>
 	</g>; };
 /** the red J seal on a small paper disc, phone-safe: seal box 74 px, ≥ 120 px from the side, ≥ 58 px from the bottom
     (disc included) */
+/** soft vignette to the edges (ep44) */
+export const Vignette: React.FC<{id: string; a?: number}> = ({id, a = 0.72}) => <g>
+	<defs><radialGradient id={`vg${id}`} cx="0.5" cy="0.5" r="0.72"><stop offset="0.5" stopColor="#040201" stopOpacity="0" /><stop offset="0.8" stopColor="#040201" stopOpacity={a * 0.55} /><stop offset="1" stopColor="#040201" stopOpacity={a} /></radialGradient></defs>
+	<rect width={W} height={H} fill={`url(#vg${id})`} /></g>;
+/** a soft warm pool of light falling on the subject (a lit area of the set, not a glow around a head) */
+export const Pool: React.FC<{id: string; x: number; y: number; rx: number; ry: number; a?: number; col?: string}> = ({id, x, y, rx, ry, a = 0.22, col = '#FFB060'}) => <g>
+	<defs><radialGradient id={`pl${id}`}><stop offset="0" stopColor={col} stopOpacity={a} /><stop offset="0.45" stopColor={col} stopOpacity={a * 0.55} /><stop offset="1" stopColor={col} stopOpacity="0" /></radialGradient></defs>
+	<ellipse cx={x} cy={y} rx={rx} ry={ry} fill={`url(#pl${id})`} /></g>;
+/** one-tone silhouette with a warm rim light on the edges facing the light (dx, dy = toward the light) */
+const RimFig: React.FC<React.ComponentProps<typeof Figure4> & {dx?: number; dy?: number; rimO?: number}> = ({dx = 3, dy = -2.5, rimO = 0.9, ...p}) =>
+	<g><g transform={`translate(${dx},${dy})`} opacity={rimO}><Figure4 {...p} col={BG.rim} /></g><Figure4 {...p} /></g>;
 export const SealB: React.FC = () => <>
-	<div style={{position: 'absolute', right: SAFE_X + 4, bottom: SAFE_Y + 2, width: 86, height: 86, borderRadius: '50%', background: B.cream, boxShadow: '0 2px 8px rgba(0,0,0,0.45), inset 0 0 0 2px rgba(235,192,106,0.9)'}} />
-	<Img src={SEAL_SRC} style={{position: 'absolute', right: SAFE_X + 10, bottom: SAFE_Y + 8, width: 74, height: 74, opacity: 0.95, transform: 'rotate(-6deg)'}} /></>;
+	<div style={{position: 'absolute', right: SAFE_X + 4, bottom: SAFE_Y + 2, width: 86, height: 86, borderRadius: '50%', background: '#CDBE9E', opacity: 0.86, boxShadow: '0 2px 8px rgba(0,0,0,0.5), inset 0 0 0 2px rgba(232,188,102,0.6)'}} />
+	<Img src={SEAL_SRC} style={{position: 'absolute', right: SAFE_X + 10, bottom: SAFE_Y + 8, width: 74, height: 74, opacity: 0.88, transform: 'rotate(-6deg)'}} /></>;
 
 /* ---------- B1: the hook ---------- */
 const CH = ['财', '货', '贵', '钱'], CX = [236, 566, 896, 1290], CY = 410, CS = 300, CT = 872;   // CT = the stall's counter top
@@ -87,15 +100,16 @@ export const HookB: React.FC<{t: number}> = ({t}) => {
 			<g transform={`translate(960,560) scale(${cam}) translate(-960,-560)`}>
 				<ScrollBand y={346} x0={150} x1={1700} flow={t * 40} />
 				{/* faint cloud scrolls drifting in the lacquer behind the characters (depth) */}
-				<g opacity={0.5} fill="none" stroke={B.redL} strokeWidth={3}>{[[230, 790, 44, 1], [1640, 520, 40, 1], [1660, 760, 50, -1]].map(([x, y, r, d], i) => <path key={i} d={curl(x + 10 * t, y, r, d, 3)} />)}</g>
+				<g opacity={0.35} fill="none" stroke="#5A2A1C" strokeWidth={3}>{[[230, 790, 44, 1], [1640, 520, 40, 1], [1660, 760, 50, -1]].map(([x, y, r, d], i) => <path key={i} d={curl(x + 10 * t, y, r, d, 3)} />)}</g>
 				{/* 2026, the stall: a cinnabar counter with a gold rule and a cloud frieze, the code plaque and your phone */}
-				<rect x={-40} y={CT} width={W + 80} height={H - CT + 40} fill="#A63721" />
-				<rect x={-40} y={CT} width={W + 80} height={7} fill={B.gold} />
-				<rect x={-40} y={CT + 7} width={W + 80} height={22} fill="#000" opacity={0.12} />
-				<ScrollBand y={CT + 40} x0={-40} x1={W + 40} h={44} flow={t * 20} fill={B.redD} />
+				<rect x={-40} y={CT} width={W + 80} height={H - CT + 40} fill="#1E0F0B" />
+				<rect x={-40} y={CT} width={W + 80} height={4} fill={B.gold} opacity={0.45} />
+				<ScrollBand y={CT + 40} x0={-40} x1={W + 40} h={44} flow={t * 20} />
+				{/* the light falls on the counter where the cowries land */}
+				<Pool id="hk" x={760} y={CT - 10} rx={760} ry={150} a={0.2} />
 				{/* the code plaque on its little stand, and the phone leaning on it (gold line = today's money) */}
-				<rect x={1452} y={CT - 150} width={124} height={124} rx={6} fill={B.cream} stroke={B.gold} strokeWidth={3} />
-				<rect x={1500} y={CT - 26} width={28} height={26} fill={B.redD} stroke={B.gold} strokeWidth={2} />
+				<rect x={1452} y={CT - 150} width={124} height={124} rx={6} fill="#A39880" stroke={BG.lineS} strokeWidth={2} />
+				<rect x={1500} y={CT - 26} width={28} height={26} fill={BG.post} stroke={BG.line} strokeWidth={2} />
 				<g transform={`translate(${1464},${CT - 138})`}><QRg /></g>
 				<ellipse cx={1356} cy={CT + 4} rx={62} ry={8} fill="#000" opacity={0.3} />
 				<g transform={`translate(1318,${CT - 146}) rotate(-7)`}>
@@ -104,16 +118,16 @@ export const HookB: React.FC<{t: number}> = ({t}) => {
 					<circle cx={42} cy={72} r={22} fill="none" stroke={B.goldL} strokeWidth={5} opacity={seg(t, 0.15, 0.35)} />
 					<path d="M31,72 l8,9 l15,-18" fill="none" stroke={B.goldL} strokeWidth={5} strokeLinecap="round" strokeLinejoin="round" opacity={seg(t, 0.2, 0.4)} />
 				</g>
-				{CH.map((ch, i) => { const a = 0.1 + i * 0.27, k = land(seg(t, a, a + 0.5)), x = CX[i], s = CS;
+				{CH.map((ch, i) => { const a = i === 0 ? -0.6 : 0.1 + i * 0.27, k = land(seg(t, a, a + 0.5))   /* 财 is already on at frame 0 (first frame never empty) */, x = CX[i], s = CS;
 					if (k <= 0) return null;
 					const sc = lerp(1.25, 1, k), op = cl(k * 3), isQ = ch === '钱';
 					const b = 0.5 + 0.22 * i, lift = seg(t, b + 0.15, b + 0.4);
 					return <g key={ch} opacity={op} transform={`translate(${x + s / 2},${CY + s / 2}) scale(${sc}) translate(${-x - s / 2},${-CY - s / 2})`}>
-						<Glyph ch={ch} x={x} y={CY} s={s} part="rest" id={`b${i}`} fill={B.red} stroke={B.goldL} sw={3} />
+						<Glyph ch={ch} x={x} y={CY} s={s} part="rest" id={`b${i}`} fill={B.red} stroke="#D9AC5E" sw={3} />
 						{/* the socket the 贝 leaves: a dark recess still drawn by its gold line */}
-						{!isQ && lift > 0 && <Glyph ch={ch} x={x} y={CY} s={s} part="comp" id={`bs${i}`} fill="rgba(26,10,6,0.38)" stroke={B.goldL} sw={2.5} style={{opacity: cl(lift * 3), strokeDasharray: '10 7'}} />}
-						{!isQ && lift <= 0 && <Glyph ch={ch} x={x} y={CY} s={s} part="comp" id={`bc${i}`} fill={t > b ? 'url(#leaf)' : B.red} stroke={B.goldL} sw={3} />}
-						{isQ && <Glyph ch={ch} x={x} y={CY} s={s} part="comp" id="bq" fill={t > 1.2 ? 'url(#svH)' : B.red} stroke={t > 1.2 ? '#F2F8FB' : B.goldL} sw={3} />}
+						{!isQ && lift > 0 && <Glyph ch={ch} x={x} y={CY} s={s} part="comp" id={`bs${i}`} fill="rgba(8,3,2,0.45)" stroke="#D9AC5E" sw={2.5} style={{opacity: cl(lift * 3), strokeDasharray: '10 7'}} />}
+						{!isQ && lift <= 0 && <Glyph ch={ch} x={x} y={CY} s={s} part="comp" id={`bc${i}`} fill={t > b ? 'url(#leaf)' : B.red} stroke="#D9AC5E" sw={3} />}
+						{isQ && <Glyph ch={ch} x={x} y={CY} s={s} part="comp" id="bq" fill={t > 1.2 ? 'url(#svH)' : B.red} stroke={t > 1.2 ? '#F2F8FB' : '#D9AC5E'} sw={3} />}
 					</g>; })}
 				{/* each gold-leaf 贝 lifts clear of its socket (shadow under it), then drops to the counter as a gold-leaf cowrie */}
 				{[0, 1, 2].map((i) => { const b = 0.5 + 0.22 * i, x = CX[i], s = CS, ch = CH[i], [ccx, ccy] = COMP_C[ch], lx = x + ccx * s, ly = CY + ccy * s;
@@ -130,6 +144,7 @@ export const HookB: React.FC<{t: number}> = ({t}) => {
 							<g filter={fk < 1 ? 'url(#gl)' : 'url(#glS)'}><Cowrie x={px} y={py + bounce} L={lerp(s * 0.42, CL, eout(fk))} rot={lerp(-20, rr + 1.5 * Math.sin(t * 2.2 + i), fk)} o={ck} /></g></>}
 					</g>; })}
 			</g>
+			<Vignette id="h" />
 		</svg>
 		<Subs rows={[{s: r1}, ...(t > 1.0 ? [{s: r2, n: typed(r2, t, 1.0, 0.6)}] : [])]} th={thB} />
 		<Counter year="2026" th={thB} />
@@ -211,7 +226,7 @@ const IronLoop: React.FC<{x: number; y: number; L: number; th: number}> = ({x, y
 	let acc = 0, next = 0, k = 0;
 	for (let i = 1; i < P.length; i++) { const [ax, ay] = P[i - 1], [bx, by] = P[i], seg2 = Math.hypot(bx - ax, by - ay);
 		while (next <= acc + seg2) { const f = (next - acc) / seg2, cx = lerp(ax, bx, f), cy = lerp(ay, by, f), ang = Math.atan2(by - ay, bx - ax) * 180 / Math.PI;
-			coins.push(<ellipse key={k} cx={cx} cy={cy} rx={3.4} ry={13} transform={`rotate(${ang.toFixed(1)},${cx.toFixed(1)},${cy.toFixed(1)})`} fill={k % 2 ? '#5D646A' : '#7C858C'} stroke="#25282B" strokeWidth={1} />); k++; next += 4.4; }
+			coins.push(<ellipse key={k} cx={cx} cy={cy} rx={3.4} ry={13} transform={`rotate(${ang.toFixed(1)},${cx.toFixed(1)},${cy.toFixed(1)})`}  fill={k % 2 ? '#545B61' : '#737C83'} stroke="#1E2023" strokeWidth={1} />); k++; next += 4.4; }
 		acc += seg2; }
 	const bot = rot([0, L - 2]);
 	return <g>
@@ -228,7 +243,7 @@ const NearArm: React.FC<{sh: [number, number]; hand: [number, number]; h: number
 	const w0 = 0.036 * h, we = 0.026 * h, w1 = 0.018 * h, x0 = sh[0], y0 = sh[1] + 0.03 * h, x1 = hand[0], y1 = hand[1], ye = lerp(y0, y1, 0.5);
 	/* deltoid → elbow → wrist, a slight bulge at the back of the upper arm; the fist closes round the cord */
 	const d = `M${x0 - w0},${y0} C${x0 - w0 * 1.15},${lerp(y0, ye, 0.5)} ${x0 - we},${ye - 6} ${x0 - we},${ye} L${x1 - w1},${y1} L${x1 + w1},${y1} L${x0 + we * 0.95},${ye} C${x0 + we},${ye - 10} ${x0 + w0 * 0.95},${lerp(y0, ye, 0.4)} ${x0 + w0 * 0.85},${y0} Q${x0},${y0 - 0.05 * h} ${x0 - w0},${y0} Z`;
-	return <g fill={B.lac} stroke={B.gold} strokeWidth={2.2} strokeLinejoin="round"><path d={d} />
+	return <g fill={B.lac} stroke={BG.rim} strokeOpacity={0.6} strokeWidth={1.8} strokeLinejoin="round"><path d={d} />
 		<ellipse cx={x1} cy={y1 + 0.026 * h} rx={0.026 * h} ry={0.032 * h} /></g>; };
 /** standing under the load: knees bent, the loaded (near) shoulder dropped, near arm hanging plumb; the far hand lifts the
     note to his eyes. sway (deg) = the string's swing; the torso counter-leans a little against it */
@@ -251,52 +266,56 @@ export const SongB: React.FC<{t: number}> = ({t}) => {
 	return <>
 		<svg width={W} height={H} style={{position: 'absolute'}}>
 			<LacDefs />
-			<defs><linearGradient id="skyB" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stopColor="#3C1B14" /><stop offset="0.35" stopColor="#5C2A1E" /><stop offset="0.55" stopColor="#8A4028" /><stop offset="0.85" stopColor="#8A4028" /></linearGradient></defs>
+			<defs><linearGradient id="skyB" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stopColor="#0E0705" /><stop offset="0.45" stopColor="#1A0D09" /><stop offset="0.6" stopColor="#2C160F" /><stop offset="0.85" stopColor="#24120C" /></linearGradient></defs>
 			<rect width={W} height={H} fill="url(#skyB)" />
 			<Lacquer sheen={0.3 + 0.1 * t} id="s" />
-			<rect width={W} height={600} fill="url(#skyB)" opacity={0.55} />
-			{/* sky: gold cloud scrolls drifting */}
-			<g fill="none" stroke={B.gold} strokeWidth={2.6} strokeLinecap="round" opacity={0.75}>{[[1180, 300, 44, 1], [1560, 370, 30, -1], [700, 420, 26, 1], [1840, 250, 34, -1]].map(([x, y, r, d], i) => <path key={i} d={curl(x + cam * 0.15 + 8 * t, y, r, d, 3.2)} />)}</g>
+			<rect width={W} height={600} fill="url(#skyB)" opacity={0.6} />
+			{/* sky: faint cloud scrolls, far back */}
+			<g fill="none" stroke={B.gold} strokeWidth={2.2} strokeLinecap="round" opacity={0.16}>{[[1180, 300, 44, 1], [1560, 370, 30, -1], [1840, 250, 34, -1]].map(([x, y, r, d], i) => <path key={i} d={curl(x + cam * 0.15 + 8 * t, y, r, d, 3.2)} />)}</g>
 			<g transform={`translate(${cam * 0.3},0)`}>
 				<g fill={B.far}>{far.map((s, i) => <path key={i} d={s.roof} />)}
 					<path d="M1260,560 V420 H1540 V560 Z M1210,420 Q1320,392 1340,352 H1460 Q1480,392 1590,420 Z M1290,352 Q1370,334 1380,306 H1420 Q1430,334 1510,352 Z" /></g>
-				<g fill="none" stroke={B.ochre} strokeWidth={1.8} opacity={0.85}>{far.map((s, i) => <path key={i} d={s.roof} />)}</g>
+				<g fill="none" stroke={B.ochre} strokeWidth={1.5} opacity={0.18}>{far.map((s, i) => <path key={i} d={s.roof} />)}</g>
 				<rect x={-200} y={560} width={2600} height={360} fill={B.far} />
 			</g>
 			<g transform={`translate(${cam},0)`}>
-				{/* back walls in warm cinnabar so the black figures read against red */}
-				<rect x={-200} y={575} width={2600} height={335} fill={B.redD} />
+				{/* the street recedes: dark lacquer walls, thin dim gold line, no cinnabar fields */}
+				<rect x={-200} y={575} width={2600} height={335} fill={BG.wall} />
 				{shops.map((s, i) => <g key={i}>
-					<path d={s.roof} fill={B.lac2} stroke={B.gold} strokeWidth={2.5} />
-					<path d={s.tiles} stroke={B.gold} strokeWidth={1.6} opacity={0.6} />
-					<path d={s.posts} fill={B.redD} stroke={B.gold} strokeWidth={1.2} /><path d={s.beam} fill={B.red} stroke={B.gold} strokeWidth={2} />
-					<path d={s.sign} fill={B.lac} stroke={B.gold} strokeWidth={2} />
-					{i !== 2 && <path d={s.counter} fill={B.red} stroke={B.gold} strokeWidth={2} />}
-					<path d={s.shutter} stroke="#6E2414" strokeWidth={7} />
+					<path d={s.roof} fill={BG.roof} stroke={BG.lineS} strokeWidth={2} />
+					<path d={s.tiles} stroke={BG.line} strokeWidth={1.4} opacity={0.6} />
+					<path d={s.posts} fill={BG.post} stroke={BG.line} strokeWidth={1} /><path d={s.beam} fill={BG.beam} stroke={BG.line} strokeWidth={1.5} />
+					<path d={s.sign} fill={BG.roof} stroke={BG.line} strokeWidth={1.5} />
+					{i !== 2 && <path d={s.counter} fill={BG.beam} stroke={BG.line} strokeWidth={1.5} />}
+					<path d={s.shutter} stroke="#170B08" strokeWidth={7} />
 				</g>)}
-				{[[255, 560], [700, 575], [1360, 545]].map(([x, y], i) => <g key={i}><rect x={x - 1.5} y={y - 44} width={3} height={20} fill={B.gold} /><ellipse cx={x} cy={y} rx={22} ry={27} fill={B.redL} stroke={B.gold} strokeWidth={2} /><ellipse cx={x - 6} cy={y - 6} rx={7} ry={10} fill="#FFC9A0" opacity={0.5} /><rect x={x - 12} y={y + 24} width={24} height={8} fill={B.gold} /></g>)}
-				{/* the 交子铺: banner on a pole, the clerk behind the counter waiting with an open hand, his strings of coin */}
-				<rect x={1586} y={430} width={8} height={475} fill={B.ochre} /><path d="M1594,446 H1672 V650 L1633,628 L1594,650 Z" fill={B.redL} stroke={B.gold} strokeWidth={2} />
-				<Figure4 x={1250} ground={g - 4} h={420} pose={kp} look={{dress: 'robe', head: 'futou'}} col={B.lac2} flip />
-				<path d={shops[2].counter} fill={B.red} stroke={B.gold} strokeWidth={2} />
-				{[0, 1, 2].map((i) => <ellipse key={i} cx={1150 + i * 50} cy={g - 4 - 0.3 * 410 - 12} rx={26} ry={13} fill="url(#iron)" />)}
-				{/* ground: a cinnabar band with a gold lozenge lattice */}
-				<rect x={-200} y={g} width={W + 400} height={H - g + 20} fill={B.redD} />
-				<rect x={-200} y={g} width={W + 400} height={4} fill={B.gold} />
-				<path d={Array.from({length: 26}, (_, i) => `M${-180 + i * 90},${g + 30} l45,40 l-45,40 l-45,-40 Z`).join(' ')} fill="none" stroke={B.gold} strokeWidth={2} opacity={0.65} />
+				{[[255, 560], [1360, 545]].map(([x, y], i) => <g key={i}><rect x={x - 1.5} y={y - 44} width={3} height={20} fill={BG.post} /><ellipse cx={x} cy={y} rx={20} ry={25} fill={BG.red} /><ellipse cx={x - 4} cy={y - 4} rx={9} ry={13} fill="#8A4A28" opacity={0.45} /></g>)}
+				{/* the 交子铺: a dark banner on a pole, the clerk in shadow behind the counter with an open hand */}
+				<rect x={1586} y={430} width={6} height={475} fill={BG.post} /><path d="M1592,446 H1666 V650 L1629,628 L1592,650 Z" fill={BG.red} stroke={BG.line} strokeWidth={1.5} />
+				<RimFig x={1250} ground={g - 4} h={420} pose={kp} look={{dress: 'robe', head: 'futou'}} col="#0F0806" flip dx={-2.5} dy={-2} rimO={0.35} />
+				<path d={shops[2].counter} fill={BG.beam} stroke={BG.lineS} strokeWidth={1.5} />
+				{[0, 1, 2].map((i) => <ellipse key={i} cx={1150 + i * 50} cy={g - 4 - 0.3 * 410 - 12} rx={26} ry={13} fill="#3A3D41" />)}
+				{/* ground: dark lacquer with a faint lozenge lattice */}
+				<rect x={-200} y={g} width={W + 400} height={H - g + 20} fill={BG.ground} />
+				<rect x={-200} y={g} width={W + 400} height={3} fill={B.gold} opacity={0.3} />
+				<path d={Array.from({length: 26}, (_, i) => `M${-180 + i * 90},${g + 30} l45,40 l-45,40 l-45,-40 Z`).join(' ')} fill="none" stroke={B.gold} strokeWidth={1.6} opacity={0.12} />
+				{/* the light: one warm pool on the walker and the note he lifts into it */}
+				<Pool id="sg" x={grip[0] - 60} y={grip[1] - 20} rx={540} ry={460} a={0.36} />
+				<Pool id="sf" x={wx + 20} y={g + 6} rx={300} ry={46} a={0.28} />
 				{/* the note, held up by its lower edge (drawn before the figure so the fist closes over it) */}
 				<g transform={`translate(${grip[0]},${grip[1]}) rotate(${-5 + 1.5 * Math.sin(t * 1.7)}) translate(${-NW / 2},${-NH + 34})`} filter="url(#glS)">
 					<JiaoziB w={NW} h={NH} id="jz" />
 				</g>
-				<g filter="url(#edge)"><Figure4 x={wx} ground={g} h={h} pose={pose} look={{dress: 'tunic', head: 'futou', legs: 'trousers'}} col={B.lac} T={t} /></g>
+				<RimFig x={wx} ground={g} h={h} pose={pose} look={{dress: 'tunic', head: 'futou', legs: 'trousers'}} col={B.lac} T={t} dx={3} dy={-2.5} />
 				<IronLoop x={lh[0]} y={lh[1] + 0.04 * h} L={g - lh[1] - 0.04 * h - 52} th={sway} />
 				<NearArm sh={J('LSh')} hand={lh} h={h} />
 				<g fontFamily={KAI} fontWeight={700} fontSize={46}>
 					<text x={grip[0] + NW / 2 + 22} y={grip[1] - NH + 70} fill={B.goldL} style={{paintOrder: 'stroke'}} stroke={B.lac} strokeWidth={7}>一张</text>
-					<path d={`M${lh[0] - 40},${g - 70} L${lh[0] - 120},${g - 128}`} stroke={B.cream} strokeWidth={2.5} opacity={0.8} />
-					<text x={lh[0] - 270} y={g - 138} fill={B.cream} stroke={B.lac} strokeWidth={7} style={{paintOrder: 'stroke'}}>一千文</text>
+					<path d={`M${lh[0] - 40},${g - 70} L${lh[0] - 120},${g - 128}`} stroke={B.cream} strokeWidth={2} opacity={0.55} />
+					<text x={lh[0] - 270} y={g - 138} fill={B.cream} fillOpacity={0.85} stroke={B.lac} strokeWidth={7} style={{paintOrder: 'stroke'}}>一千文</text>
 				</g>
 			</g>
+			<Vignette id="s" />
 		</svg>
 		<Subs rows={[{s: r1}, {s: r2}]} th={thB} />
 		<Stamp y="北宋" place="益州" note="一交一缗" th={thB} />
@@ -327,12 +346,14 @@ export const MorphB: React.FC<{t: number}> = ({t}) => {
 				<ScrollBand y={258} x0={150} x1={1700} flow={t * 60} />
 				{/* the field: two cinnabar trees, a far ridge, the furrowed ground */}
 				<path d="M-40,900 Q300,760 620,840 Q980,720 1320,830 Q1640,760 1960,860 V900 H-40 Z" fill={B.far} />
-				<path d="M-40,900 Q300,760 620,840 Q980,720 1320,830 Q1640,760 1960,860" fill="none" stroke={B.ochre} strokeWidth={2} opacity={0.8} />
-				<path d={treeD(1520, 900, 1.5)} fill={B.redD} stroke={B.gold} strokeWidth={2.4} /><path d={treeD(360, 900, 1.15)} fill={B.redD} stroke={B.gold} strokeWidth={2.4} />
-				<path d={curl(1230 + 10 * t, 420, 34, -1, 3)} fill="none" stroke={B.gold} strokeWidth={2.6} opacity={0.8} />
-				<rect x={-40} y={900} width={W + 80} height={220} fill={B.red} /><rect x={-40} y={900} width={W + 80} height={5} fill={B.gold} />
-				<path d={furrows(900)} stroke={B.goldL} strokeWidth={2} fill="none" opacity={0.55} />
-				{rest > 0.01 && <Glyph ch="钱" x={560} y={330} s={s} part="rest" id="mr" fill={B.red} stroke={B.goldL} sw={3} style={{opacity: rest}} />}
+				<path d="M-40,900 Q300,760 620,840 Q980,720 1320,830 Q1640,760 1960,860" fill="none" stroke={B.ochre} strokeWidth={1.5} opacity={0.22} />
+				<path d={treeD(1520, 900, 1.5)} fill="#1A0D09" stroke={BG.line} strokeWidth={2} /><path d={treeD(360, 900, 1.15)} fill="#1A0D09" stroke={BG.line} strokeWidth={2} />
+				<path d={curl(1230 + 10 * t, 420, 34, -1, 3)} fill="none" stroke={B.gold} strokeWidth={2.2} opacity={0.22} />
+				<rect x={-40} y={900} width={W + 80} height={220} fill={BG.ground} /><rect x={-40} y={900} width={W + 80} height={3} fill={B.gold} opacity={0.3} />
+				<path d={furrows(900)} stroke={B.gold} strokeWidth={1.6} fill="none" opacity={0.12} />
+				<Pool id="mp" x={900} y={600} rx={520} ry={420} a={0.18} />
+				<Pool id="mf" x={940} y={905} rx={330} ry={44} a={0.2} />
+				{rest > 0.01 && <Glyph ch="钱" x={560} y={330} s={s} part="rest" id="mr" fill={B.red} stroke="#D9AC5E" sw={3} style={{opacity: rest}} />}
 				{qFade > 0.01 && <g opacity={qFade}><Glyph ch="钱" x={qx} y={qy} s={s} part="comp" id="mq" fill="url(#svM)" stroke="#F2F8FB" sw={2} /></g>}
 				<g transform={`translate(${cx},${cy}) scale(${lerp(1, 0.96, shrink)}) rotate(${-12 * Math.sin(Math.PI * swirl)})`}>
 					<g opacity={1 - shrink}>
@@ -357,6 +378,7 @@ export const MorphB: React.FC<{t: number}> = ({t}) => {
 						<Glyph ch="钱" x={18} y={20} s={140} part="comp" id="hq" fill="url(#svM)" />
 					</g></>}
 			</g>
+			<Vignette id="m" />
 		</svg>
 		<Subs rows={[t < 2.05 ? {s: r1} : {s: r2, n: typed(r2, t, 2.05, 0.5)}]} th={thB} />
 		<Counter era={t < 2.05 ? '商周' : '东周'} th={thB} />
