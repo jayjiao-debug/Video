@@ -60,6 +60,12 @@ body.bl2 .blk{flex-direction:column;align-items:flex-start;gap:6px}
 body.bl2 .blk .tally{order:-1;margin-left:4px}
 body.bl3 .blk{background:rgba(18,12,8,.55);border:1.5px solid rgba(233,211,160,.38);border-radius:12px;padding:16px 28px 14px 18px}
 body.bl3 .blk .tally{border-left-color:rgba(238,75,59,.8)}
+/* ad: adaptive backing — the soft scrim appears only where the picture behind is bright (--bk set per frame) */
+body.ad .sub,body.ad .subc,body.ad .stamp,body.ad .blk,body.ad .age,body.ad .tally{z-index:0}
+body.ad .sub::before,body.ad .subc::before,body.ad .stamp::before,body.ad .age::before,body.ad .tally::before,body.ad .blk::before{content:'';position:absolute;z-index:-1;left:-60px;right:-60px;top:-26px;bottom:-26px;background:radial-gradient(ellipse 58% 62% at 50% 50%,rgba(16,11,7,.62),rgba(16,11,7,.36) 58%,rgba(16,11,7,0) 100%);filter:blur(6px);opacity:var(--bk,0)}
+body.ad .subc::before{left:22%;right:22%}
+body.ad .blk::before{left:-70px;right:-90px;top:-40px;bottom:-34px}
+body.ad .blk .age::before,body.ad .blk .tally::before{display:none}
 body.lay2 .mark{display:none}
 body.lay2 .stamp{top:30px}
 .seal{position:absolute;right:30px;bottom:24px;line-height:0;filter:drop-shadow(0 1px 2px rgba(12,8,5,.35))}
