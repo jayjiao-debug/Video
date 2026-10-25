@@ -1,0 +1,80 @@
+# Gate 2b notes: 马首回家，用了160年 (rebuild, Look 1 铜灯影 only), storyboard r1 + style/v4. Verdict: REVISE
+
+Director, 2026-10-25. Bar: ep43 storyboard r3 (approved at 2b r2).
+
+**Scores** (rubric 1–5, from the plan and the six frames; this gate covers visual, info, edit and motion):
+| Area | Score | Evidence |
+|---|---|---|
+| Script | n/a | Gate 1 is approved. |
+| Visual | **3** (4 once notes 1–4 land) | a4, b3 and d6a are strong stills. Two things hold it at 3: the hero at full frame (C1) reads as a cartoon horse, not cast copper; and the hardest-drop frame (h1b) is the second-darkest and smallest-hero frame of the six. |
+| Info | **4** | The counter follows the picture. Its dot states are right in every frame: d6a 牛虎猴猪 red = 4, e2a and h1b = 7 with yours copper. Labels sit in the mid band. |
+| Edit | **4** (5 with note 5) | 35 hand-overs, each with a stated reason, all on the approved timing. Two moves repeat, and one tilt jumps cities. |
+| Motion | **4** | Purposeful beats in every row, but 4 rows are overloaded for their time. |
+| Sound | n/a | Music only, per the brief. The gavel SFX is still an owner question. |
+
+There was no earlier 2b round. Against the 2a v2 L1 frames:
+- **Better:** hook luma (51 → 72); no 穿模 at the case; eye and tear fixed (S1/S2); the 2007 room is staged before the sale.
+- **Still open:** the both-hands carry (2a L1-4, half done); the brothers at phone size (2a L1-5).
+
+**Checks I ran:**
+- **Line map.** All 49 line starts in the map match `lines_bars.json` (incl. H3c 128.242, Q 163.903 → 169.503). The bar labels check out: A4 = b17, D7b = b35.75, H3b = b58, K3a = b69.
+- **Mean luma.** Measured, matching the board: c1 72.4, a4 97.6, b3 59.0, d6a 51.7, e2a 51.0, h1b 48.1. All meet their targets.
+- **Frames.** Read all six at full size, plus strip400 and bros_test, with crops of the h1b staff, the b3 carry and the a4 front-left brothers.
+- **Facts.** Checked every stamp against F2–F35, correction 8 and gate-1 decisions (三四十万, 合计3149万, 5天后, 2013 at 国博, no 2007 strike).
+
+---
+
+## Notes
+| # | Sev | Where | Note | Route to | Rule |
+|---|---|---|---|---|---|
+| 1 | **High** | Hero at full frame: C1, H5a/b, the T-flashes | **At 1920 px it reads as a cartoon horse (BoJack-like), not a beautiful cast copper head.** It is fine at phone size.<br>**What is wrong:**<br>• the muzzle is a smooth balloon;<br>• the cheek is a circle with a white stroke;<br>• the shading is airbrushed clay, with no metal reflections;<br>• the mane locks are paper ribbons with drop shadows that lift off the crest into the air;<br>• the folded near ear is a pale flap that looks stuck on.<br>A normal map baked from these shading layers (the AD's build note) will give bevelled plastic, not bronze. **Don't rely on it.**<br>**Route A (try first, ≤ 30 min search):** a licensed 3D horse-head model (CC0/CC-BY, via the asset farm) whose mane and ears can be matched to the 马首. Give it a copper PBR material (metalness 1, roughness ≈ 0.3, env = the scene's own lamp/window), one key light and a rim (row 81). Render it live for C1/H5 and bake it to sprites for the medium and small shots, so it is one hero everywhere.<br>**Route B (if no model fits):** redraw for close-ups:<br>• a bony nasal ridge and a cheek plate with hard plane edges;<br>• 2–3 raised veins;<br>• a flared nostril with a wrinkle fold;<br>• the slightly open spout mouth with lip lines;<br>• mane locks rooted on the crest, falling in heavy S-waves of unequal length, each with 3–4 incised grooves and near-black gaps, none leaving the silhouette;<br>• forelock curls between the ears;<br>• the folded ear as one continuous form with the lit bend.<br>**Metal (both routes):**<br>• a crisp cool reflection band of the window along the nose ridge and forehead;<br>• the lamp's hot spec small and sharp;<br>• core shadows `#250B04`, so one face runs `#250B04` → `#FFF6E6`;<br>• the cast collar ring visible at the bottom of C1.<br>**Proof before build:** the C1 still at full size and at 400 px, next to a photo of the real head. Send only that still to the owner (row 75). | art-director (researcher: model search + reference photo) | brief_v2 "art"; rows 44, 81, 42; rubric 2 |
+| 2 | **High** | Chip, K2 stamp, H3c, T5 | **Four places say or imply "you are at 正觉寺 now"** (F33/F34, correction 8; the board's own caution):<br>**(a) Era chip 「今」 from H1a to K3b.** It is on screen over 2020.12.1 (h1b frame) and over the 正觉寺 case. Fix: keep 「当代」 from D1 through K3b, or hide the chip after E2b.<br>**(b) K2 stamp 「— 2026年10月」 over the CASE**, with you in it. Fix: remove it, and keep K1a's 「记忆里的水力钟 · 12:00」 up through K2. The line's 至今 already carries "now", and it refers to the five.<br>**(c) H3c "four copper glows" in Hangzhou.** Copper is your light only (the look's rule 2), so four copper glows read as "you are in Hangzhou", which is false (F33). Fix:<br>• light the four with the cool museum light `#E6ECE6` plus a dim bronze rim;<br>• when they rise back (#29), they land as **red** medallions (dot state `r`).<br>**(d) T5 (Low).** The crane from the 文殊亭 door ends on "your medallion" under 「2026年10月」. Hang the ring over an unplaced night sky, with no 正觉寺 roof in frame. | art-director | F33, F34, correction 8; HANDOFF §6.9; row 11 |
+| 3 | **High** | 17a H1b, the hardest drop (118.87) | **The film's biggest moment has one of its weakest frames.**<br>**Now (h1b):**<br>• mean 48, the second-darkest key frame;<br>• you are ≈ 85 px tall (≈ 18 px on a phone);<br>• 60 % of the frame is a dark roof and flagstones.<br>**Also wrong in the frame:**<br>• The hall reads **Japanese**: horizontal-rail shoji panels and straight eaves with no 翼角.<br>• The pines are stacked flat discs (lily pads on sticks).<br>• Both staff face *away* from the leaves, with mittens in the air (not on the door edges) and heads on stick necks.<br>**Fix:**<br>• Camera lower and closer. At the end of the 1.00 → 1.12 push, the door opening is ≥ 45 % of frame height and you are ≥ 160 px.<br>• The copper spill runs to the lens, widens across the flagstones, and lights the eave undersides and the pine needle edges.<br>• Mean ≥ 60 at the push's end, with the sky still darker than you (no flash).<br>• **The building:** a Qing 文殊亭 with upturned 翼角, 隔扇 doors with 菱花 lattice, and two eaves if the researcher's photo confirms (it is already on the board's list).<br>• **The pines:** irregular needle-cloud pads with tufted edges on a twisting trunk.<br>• **The staff:** each in profile facing the leaf he walks back, both mittens on its outer edge [TOUCH], stepping backward, with rig proportions.<br>Send the corrected still with notes 1 and 4. | art-director (researcher: 文殊亭 photo; animator: staff on the rig) | row 88 (the biggest image on the peak); rows 52, 124, 101; rubric 2 |
+| 4 | Med-High | Brothers: bros_test, A4, K2 | **My read at 400 px differs from the AD's on 牛.**<br>• **Read at once:** 鼠 兔 龙 羊 鸡.<br>• **Passable:** 虎 (could be a cat), 猪, 狗, 蛇 (reads as a goose).<br>• **Fail:** 猴 (a cloud) and **牛**: two thin upright hooks read as antennae or rabbit ears, not horns.<br>**In A4 the three nearest, biggest heads are the worst reads:** 狗 and 猴 front-left, 猪 front-right. The nearest must be the best.<br>**猴:** a smooth crown, a hard brow shelf with a deep notch under it, a short muzzle with a mouth line and a chin, a big C-ear set back.<br>**牛:** one thick crescent horn sweeping forward-up (≥ 35 % of head height, tapering), the ear horizontal below it, a square muzzle with a nostril notch.<br>**蛇:** coil the base so the S-neck doesn't read as a swan.<br>**At ≥ 150 px (the nearest ones):** add an incised eye, a nostril and a lit top plane (`#3A2C22`–`#4A3A2C`), so they read as bronzes and not holes in daylight. They stay darker than their stone bodies.<br>**B5 proof:** the cold reader names ≥ 10/11 from bros_test at 400 px **without the labels**, and finds 狗 and 猴 in A4 at 400 px. | art-director (cold reader for B5) | brief_v2 ("blob heads"); rows 114, 125 |
+| 5 | Med | Transitions #26/#31, #8/#27, #28 | **Two moves repeat, and one tilt jumps cities.**<br>**#26 and #31 are the same move** 17 s apart: forward through the 文殊亭 doors. Replace #31 with a **shape match: the upturned 翼角 of the eave (same curve, same screen place) becomes the fold of your near ear** for H5a. The building that escaped the fire hands over to the ear that was hurt. It needs note 3's real eaves. Fallback: the lit door rectangle becomes the glass case's lit frame, with no camera travel.<br>**#8 and #27 both crane up off the 文殊亭 into the ring.** Keep the crane for #27, the payoff. Make #8 a door move: the leaves swing almost shut on b8.5, the strip thins to a dot on b8.75, and a pull-back reveals the dot is your medallion.<br>**#28 tilts down from the sky over Beijing straight into Hangzhou.** Follow the thing that travels instead: the four medallions drop out of the ring and fly **right** (away from home, per your direction rule), and the camera follows them down to the queue, where they become the four lit cases. #29 reverses this: they rise and fly **left**, back onto the ring. | art-director, editor | rows 86, 15; rubric 4 |
+| 6 | Med | 16 → 17a, through the gate | **"Forward through the gate" from a side-on road track implies a 90° turn the 2.5D kit can't make** (cards; row 67: one travel direction). Spec it as follows:<br>• the gate is a frontal opening in a wall parallel to the road (far plane);<br>• the van stops in front of it ≈ 2 beats before the drop;<br>• the leftward track eases out, then pushes over the van roof into the opening;<br>• a gate-shaped mask hands over to COURT, landing on 118.87. | art-director, animator | row 67; ep43 2b r1 note 2 (no views the kit can't build) |
+| 7 | Med | Frames b3, c1, e2a, d6a, a4 | **Picture-logic and safe-zone fixes:**<br>**(a) b3, the pool reads as a plank deck or a stair** (horizontal streaks, no water cue): the feet-on-water confusion again. Give the water broken vertical fire reflections under the arched windows and a pale coping edge, and lose the plank streaks.<br>**(b) b3, the carry rests on one near hand at waist height.** Show the far mitten at the collar's front and hold you at chest height (2a L1-4).<br>**(c) c1, the far ear tip enters the subtitle box** (y ≈ 210, against the box bottom at 230, touching 「。」), and the 1.05 push moves it further in. Lower or shift the head so both ears clear y 260 at the end of the push.<br>**(d) e2a:**<br>• the chair's curled top reads as a second desk lamp; give it a straight back with a top rail;<br>• the window top, curtain and moonbeam edge run behind 「2020年5月…」; drop the window top to ≥ y 250;<br>• the star is ≈ 10 px (≈ 2 px on a phone) yet carries #25; make it ≥ 28 px with a halo, clear of the subtitle.<br>**(e) d6a:** the two left hanging lamps sit behind 「这一次」. Raise them above y 90 or move them right of x 1120.<br>**(f) a4:** 海晏堂 is a generic pedimented villa with no double curved stair, and this set is reused in B and K. The researcher pulls the 西洋楼铜版画 「海晏堂西面」 plate (Qianlong-era, public domain, primary), and the AD redraws the façade and stairs from it once. | art-director (researcher for f) | §6.4, §6.5, §6.14; rows 43, 52, 121 |
+| 8 | Med | T5/rewind, C2b, D10a | **(a) T5:** clear the subtitle at 25.2, when the ring starts spinning (row 86; it still has 3.94 s, above its 3.85 floor). Add the ◀◀ glyph and tracking noise to the rewind (row 123; the script names it REWIND ◀◀).<br>**(b) C2b, my call on the AD's flag:** approve the hold. C1 and C2a each have only 0.05 s slack, the music can't move, and cutting words breaks "reads alone". C2b stays full until 9.05 and fades out by 9.37 (2.26 s). Conditions:<br>• it does not jolt with the slam;<br>• no ink overlap with the plaque;<br>• the plaque is the brightest thing on the hit.<br>Update Hide/show ("title only") to match. ep43 kept its title frame clean, so this is a conscious exception, not the new rule.<br>**(c) D10a:** the stamp's last tick 「2009.3.2 · 北京」 labels the Paris room as Beijing. Use 「2009.3.2 · 北京宣布」. | art-director, editor | rows 86, 123, 104; F19 |
+| 9 | Med | Build load (one long session) | **The board adds about 15 new engine features.** Cut these, which cost hours and read as nothing on a phone:<br>• heat shimmer and fountain mist (keep the droplets and splash rings);<br>• the phone bank, from 3 clerks to **1** (F19 needs one phone);<br>• **B3:** seat you at the terrace's front edge so the looter lifts from the flagstones. That drops step-IK down the terrace for ≈ 1 s of screen.<br>• **D7a:** Ho is already seated when the iris opens. Walk → sit is where the body logic failed before (rows 74, 129), and C2a already shows him seated.<br>• **C2a:** stand + lift cloth + drape in 1.13 s is too tight. He starts to stand on b1.5, or drapes the cloth while seated, both hands [TOUCH].<br>• **H3c:** one straight side-on queue in two depth rows, not a winding one.<br>• **SHADOW:** if the render-target threshold takes > 1 h, re-shoot the POOL cards with a flat shadow material on the lattice plane.<br>**Keep:** the water arcs (proof first), the two-layer fire, the gavel rig, the turntable, the hinged doors and tally12. The AD's three proofs stay as gates. | animator (art-director to update the board) | row 42 (choose per shot); ep43 2b r1 note 2 |
+| 10 | Low | D3 roll call | Four heads in four beats (≈ 0.57 s each). Each head stops on the same lock point of the turntable, and 「购回」 lands in the same spot each beat, so the eye never searches. Each head is ≥ 220 px (B3). | animator | rows 99, 116 |
+
+---
+
+## Don't change (it works)
+- **The look's grammar.**
+  - You are the only saturated thing and the light that matters.
+  - Home is the only daylight.
+  - Night is 石青 slate or moonlit umber, never navy.
+  - Every key frame meets its luma target (measured above), and E2a after the lamp dies holds 51, not black.
+- **The timing.** The line↔bar map equals `lines_bars.json`. The measured drops are used (9.05, 118.87), and the lamp goes out on the 107.87 stop.
+- **The counter.**
+  - 12 → 11 on the lift → 0 only under the smoke → 4 → 5 → 7 → 回家 1/12.
+  - Five dot states, ticks on beats, 1860 dots ivory and hollow, the zodiac order.
+- **The screen-direction rule.** Away = right, home = left; the 2020 van is the only long leftward travel (note 5 builds on it).
+- **a4.** The frontal 八; you third from the front between 猴 and 龙; the hand-over crossing the pool at every hour (F4b); only your copper arc at 午时; no labels or seat numbers.
+- **b3's composition.** The burning 海晏堂 behind, the carrier walking right at true scale (≈ ¼), the empty seat's rim-lit collar ring, the kepi.
+- **d6a and the 2007 sequence.** The empty room, catalogues, the gavel at rest, 撤拍 slid in by a hand, lamps out row by row, no paddles or count-up (§6.1).
+- **Paris.** The phone bank, two strikes, 合计, the clerk hanging up on the sale night, five window cycles, 「未付款」 on the board.
+- **These transitions:**
+  - draped-shape match;
+  - cloth wipe into the title;
+  - rewind into the foundry orange;
+  - profile cool-down match;
+  - noon → red-dusk relight;
+  - smoke → saleroom haze;
+  - lamp swing;
+  - spot → desk-lamp iris;
+  - card → column;
+  - certificate → paper;
+  - brass → brass;
+  - window → star → crate;
+  - ring → basin;
+  - push into the dragon's outline with the tiny shadow saleroom.
+- **The ending.** The shadow-play on the 文殊亭 lattice, where the look's name lands. H4's ghost smoke stops at the temple wall. H2's parallax arc replaces a fake orbit.
+- **The caption layer.** Safe zones, stamps on line 1 only, Q typed centred and slid into the end card, nothing brighter at the end.
+- **The AD's three proofs** (water clock, carry contact PASS, D2a/D9b stills) as gates before the full build.
+
+## Process
+- Notes 1, 3 and 4 change pictures. Send only those corrected stills (C1 full + 400 px, H1b, bros_test + A4 at 400 px) to the owner before any build (row 75).
+- Notes 2 and 5–10 are storyboard text and frame fixes.
+- Round 2 checks only these items. If the hero route (note 1) lands, I expect APPROVE.
