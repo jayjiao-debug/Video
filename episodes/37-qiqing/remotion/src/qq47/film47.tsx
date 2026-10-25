@@ -53,7 +53,7 @@ const Film: React.FC<{t: number}> = ({t}) => {
 	/* 'F' = a 0.3 s cross-dissolve from the previous scene (its own motion continues under it) */
 	const w = sc.wipe ? seg(t, sc.a, sc.a + 0.3) : 1;
 	return <g>
-		{w < 1 && prev && <Breath t={t} i={i - 1} a={prev.a} b={prev.b + 0.3}><prev.C u={t - prev.a} d={prev.b - prev.a} tag={prev.tag} /></Breath>}
+		{w < 1 && prev && <Breath t={t} i={i - 1} a={prev.a} b={prev.b}><prev.C u={t - prev.a} d={prev.b - prev.a} tag={prev.tag} /></Breath>}
 		<g opacity={sc.wipe === 'F' ? ease(w) : 1}><Breath t={t} i={i} a={sc.a} b={Math.min(sc.b, END)}><C u={t - sc.a} d={sc.b - sc.a} tag={sc.tag} /></Breath></g>
 	</g>;
 };

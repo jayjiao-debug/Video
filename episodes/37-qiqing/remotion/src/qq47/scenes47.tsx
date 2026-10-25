@@ -18,7 +18,7 @@ export type SceneP = {u: number; d: number; tag?: string};
 /* ---------- people ---------- */
 export const LK: Record<string, Look4> = {
 	zhouGirl: {dress: 'dress', head: 'bun'}, zhouBoy: {dress: 'tunic', head: 'bun', legs: 'trousers'},
-	xu: {dress: 'tunic', head: 'bun', beard: 'short', legs: 'trousers', build: 1.08}, princess: {dress: 'dress', head: 'bun', sleeves: 'wide'}, servant: {dress: 'tunic', head: 'bald', legs: 'trousers', beard: 'short'},
+	xu: {dress: 'tunic', head: 'bun', beard: 'full', legs: 'trousers', build: 1.08}, princess: {dress: 'dress', head: 'bun', sleeves: 'wide'}, servant: {dress: 'tunic', head: 'bald', legs: 'trousers', beard: 'short'},
 	yang: {dress: 'robe', head: 'bun', sleeves: 'wide'}, fangshi: {dress: 'tunic', head: 'bun', legs: 'trousers', beard: 'long'}, emperor: {dress: 'robe', head: 'futou', beard: 'full', sleeves: 'wide'},
 	groom70: {dress: 'jacket', head: 'short', legs: 'trousers'}, bride70: {dress: 'jacket', head: 'bob', legs: 'trousers'},
 	man: {dress: 'shirt', head: 'young', legs: 'trousers'}, woman: {dress: 'dress', head: 'long'},
@@ -254,7 +254,7 @@ export const Return: React.FC<SceneP> = ({u, d}) => {
 	const M: [number, number] = [(pH[0] + xH[0]) / 2, (pH[1] + xH[1]) / 2 - 16];
 	const pR: [number, number] = [lerp(pH[0] + R * 0.5, M[0], join), lerp(pH[1] - 16, M[1], join)], xLp: [number, number] = [lerp(xH[0] - R * 0.5, M[0], join), lerp(xH[1] - 16, M[1], join)];
 	const her = <g key="her"><Fig frame="Return" who="princess" x={wk.x} g={g} h={h} pose={prPose} look={LK.princess} /><Mirror x={pR[0]} y={pR[1]} r={R} id="rtR" half="R" gap={0} glow={0.5 + 0.5 * raise} seam={0} /></g>;
-	return <g transform={`translate(${lerp(M[0], 960, push)},${lerp(M[1], 540, push)}) scale(${1 + 3 * push}) translate(${-M[0]},${-M[1]})`}>
+	return <g transform={`translate(${lerp(M[0], 960, push)},${lerp(M[1], 540, push)}) scale(${1 + 2.6 * push}) translate(${-M[0]},${-M[1]})`}>
 		<Bg c="#F0C99A" c2="#F6E3C2" id="rt" />
 		<Sheet c="#D9A27E" d={Band(560, 30, 81)} />
 		<Sheet c={PP.brick} d="M360,930 L360,380 L1560,380 L1560,930 Z" />
@@ -392,10 +392,10 @@ export const LookBack: React.FC<SceneP> = ({u, d}) => {
 		<Bg c={PP.ivory} c2={PP.ivory2} id="lb" />
 		{(() => { const lane = (a: number, b: number) => seg(u, a, b), q = lane(6.6, 8.6), pg = lane(7.4, 9.4), rg = lane(6.8, 8.8), bk = lane(7.6, 9.6); const bx = lerp(2300, -400, bk);
 			return <g>
-				{q > 0 && q < 1 && <Quince x={lerp(-160, 2080, q)} y={800} s={0.6} rot={q * 300} />}
-				{pg > 0 && pg < 1 && <Pager x={lerp(-300, 2200, pg)} y={800} s={0.5} text="520" />}
+				{q > 0 && q < 1 && <Quince x={lerp(-160, 2080, q)} y={720} s={0.6} rot={q * 300} />}
+				{pg > 0 && pg < 1 && <Pager x={lerp(-300, 2200, pg)} y={700} s={0.45} text="520" />}
 				{rg > 0 && rg < 1 && <g transform={`translate(${lerp(2100, -200, rg)},930)`}><Ring x={-16} y={0} r={30} /><Ring x={16} y={4} r={30} /></g>}
-				{bk > 0 && bk < 1 && <g transform={`translate(${bx},930) scale(-1,1) translate(${-bx},-930)`}><Bike x={bx} y={930 - 72} s={0.6} /></g>}
+				{bk > 0 && bk < 1 && <g transform={`translate(${bx},890) scale(-1,1) translate(${-bx},-890)`}><Bike x={bx} y={950 - 60} s={0.5} /></g>}
 			</g>; })()}
 		{m > 0 && <g opacity={m}><Mirror x={lerp(760, T[0], fly)} y={lerp(560 + (1 - m) * 200, T[1], fly)} r={lerp(150, 106, fly)} id="lbL" half="L" gap={0} tilt={-10 * (1 - fly)} /><Mirror x={lerp(1160, T[0], fly)} y={lerp(560 + (1 - m) * 200, T[1], fly)} r={lerp(150, 106, fly)} id="lbR" half="R" gap={0} tilt={10 * (1 - fly)} /></g>}
 		{p > 0 && <g opacity={p}><Hairpin x={lerp(380, T[0] - 14, fly)} y={lerp(560 - (1 - p) * 120, T[1] - 30, fly)} s={lerp(0.6, 0.3, fly)} prong="L" rot={-14 * (1 - fly)} /><Hairpin x={lerp(1540, T[0] + 14, fly)} y={lerp(560 - (1 - p) * 120, T[1] - 30, fly)} s={lerp(0.6, 0.3, fly)} prong="R" rot={14 * (1 - fly)} /></g>}
@@ -451,7 +451,7 @@ export const CodaMirror: React.FC<SceneP> = ({u, d, tag}) => {
 	/* 63.97: picks up the joined mirror from the Return push-in (r≈154 at centre) and grows; 66.23: it rises and shrinks
 	   into the moon over the cloud palace (Tang draws its moon at the same screen spot) */
 	const grow = ease(seg(u, 0, 0.6)), rise = tag === 'toMoon' ? ease(seg(u, d - 0.7, d)) : 0;
-	const r = lerp(tag === 'toMoon' ? lerp(154, 260, grow) : 260, 60, rise);
+	const r = lerp(tag === 'toMoon' ? lerp(139, 260, grow) : 260, 60, rise);
 	return <g><Bg c={PP.indigo} c2={PP.night} id="cm" /><Mirror x={lerp(960, 1500, rise)} y={lerp(540, 330, rise)} r={r} id="cmm" half="both" gap={0} glow={1 - 0.5 * rise} /></g>;
 };
 export const CodaPin: React.FC<SceneP> = () => <g>
