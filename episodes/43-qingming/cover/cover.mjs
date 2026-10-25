@@ -38,10 +38,39 @@ html,body{margin:0;width:${W}px;height:${H}px;overflow:hidden;background:${c.sky
 <div class="brand">${seal(40)}VIBE知识大赏</div>
 <div class="t"><div class="k">${c.kicker}</div>${c.small1 ? `<div class="l2" style="font-size:${big}px">${c.l1}</div><div class="l1">${c.l2}</div>` : `<div class="l1">${c.l1}</div><div class="l2">${c.l2}</div>`}<div class="s">${c.sub}</div></div></body></html>`;
 };
+// painting covers (owner: show the scroll art itself): the redrawn 虹桥, full bleed, the title in ink on a silk fade
+// (bottom on 4:3, top on 3:4 so Douyin's lower UI keeps clear), a red seal; R = a vertical 题签 strip instead
+const P = {
+	P: {art: 'a127.60.png', silk: '239,227,200', cx: 960, cy: 470, tcx: 700},     // colour (the peak's colour flood)
+	Q: {art: 'a3.00.png', silk: '242,232,208', cx: 960, cy: 560, tcx: 820, ts: 1.45, ttop: 0},   // the tall crop hides the blue mount strip at the frame's foot       // ink on silk (the opening)
+	S: {art: 'a129.40.png', silk: '239,227,200', cx: 980, cy: 560, tcx: 1000, ts: 1.03, ttop: 330},   // colour, pulled back (the whole bridge); on 3:4 the title sits on plain silk above the art
+	R: {art: 'a127.60.png', silk: '239,227,200', cx: 900, cy: 470, tcx: 760, strip: true},
+};
+const paint = (k, lay) => {
+	const c = P[k], tall = lay === 'tall', W = tall ? 1080 : 1440, H = tall ? 1440 : 1080, s = tall ? c.ts ?? 4 / 3 : 1.04;
+	const left = W / 2 - (tall ? c.tcx ?? c.cx : c.cx) * s, top = tall && c.ttop !== undefined ? c.ttop : Math.min(0, Math.max(H - 1080 * s, H / 2 - c.cy * s));
+	const band = lay === 'tall' ? `linear-gradient(to bottom,rgba(${c.silk},.97) 0,rgba(${c.silk},.9) 300px,rgba(${c.silk},0) 520px)` : `linear-gradient(to top,rgba(${c.silk},.97) 0,rgba(${c.silk},.9) 250px,rgba(${c.silk},0) 470px)`;
+	const tb = lay === 'tall' ? 'top:86px' : 'bottom:70px';
+	const title = c.strip
+		? `<div style="position:absolute;right:${lay === 'tall' ? 96 : 120}px;top:${lay === 'tall' ? 90 : 70}px;width:${lay === 'tall' ? 150 : 140}px;padding:34px 0 30px;background:#F7EEDA;border:3px solid #7d5f3c;box-shadow:0 0 0 8px #3E5A78,0 10px 40px rgba(0,0,0,.35);text-align:center;color:#2A1F17">
+			<div style="writing-mode:vertical-rl;margin:0 auto;font-size:36px;font-weight:700;letter-spacing:.3em;color:#6b5236">假如你是</div>
+			<div style="writing-mode:vertical-rl;margin:14px auto 0;font-size:${lay === 'tall' ? 112 : 104}px;font-weight:900;letter-spacing:.06em;line-height:1">清明上河图</div>
+			<div style="margin-top:18px">${seal(70)}</div></div>`
+		: `<div style="position:absolute;left:0;right:0;${tb};text-align:center;color:#2A1F17">
+			<div style="font-size:${lay === 'tall' ? 50 : 46}px;font-weight:700;letter-spacing:.6em;margin-right:-.6em;color:#5a4430">假如你是</div>
+			<div style="margin-top:6px;font-size:${lay === 'tall' ? 156 : 150}px;font-weight:900;letter-spacing:.1em;margin-right:-.1em;line-height:1.08">清明上河图</div>
+			<div style="font-size:${lay === 'tall' ? 38 : 36}px;font-weight:700;letter-spacing:.24em;color:#5a4430;margin-top:14px">—— 九百年，四次被带出皇宫 ——</div></div>`;
+	return `<!doctype html><html><head><meta charset="utf-8"><style>html,body{margin:0;width:${W}px;height:${H}px;overflow:hidden;background:rgb(${c.silk});font-family:'Noto Serif CJK SC',serif}
+.art{position:absolute;left:${left}px;top:${top}px;width:${1920 * s}px;height:${1080 * s}px}
+.brand{position:absolute;right:${lay === 'tall' ? 64 : 72}px;bottom:${lay === 'tall' ? 64 : 34}px;display:flex;align-items:center;gap:10px;font-weight:700;font-size:22px;letter-spacing:.3em;color:#3a2c20;text-shadow:0 0 10px rgba(${c.silk},.95),0 0 3px rgba(${c.silk},.95)}</style></head><body>
+<img class="art" src="${img(c.art)}"><div style="position:absolute;inset:0;background:${c.strip ? 'radial-gradient(ellipse 90% 85% at 50% 50%,rgba(0,0,0,0) 60%,rgba(40,28,16,.28) 100%)' : band}"></div>
+${title}<div class="brand">${seal(34)}VIBE知识大赏</div></body></html>`;
+};
 const b = await chromium.launch();
-for (const k of Object.keys(C)) for (const lay of ['tall', 'wide']) {
+const ONLY = (process.env.ONLY || 'A,B,P,Q,R,S').split(',');
+for (const k of ONLY) for (const lay of ['tall', 'wide']) {
 	const W = lay === 'tall' ? 1080 : 1440, H = lay === 'tall' ? 1440 : 1080;
-	const p = await b.newPage({viewport: {width: W, height: H}, deviceScaleFactor: +(process.env.DSF || 1)}); await p.setContent(page(k, lay)); await p.evaluate(() => document.fonts.ready); await p.waitForTimeout(300);
+	const p = await b.newPage({viewport: {width: W, height: H}, deviceScaleFactor: +(process.env.DSF || 1)}); await p.setContent(P[k] ? paint(k, lay) : page(k, lay)); await p.evaluate(() => document.fonts.ready); await p.waitForTimeout(300);
 	const name = `cover_${k}_${lay === 'tall' ? '竖版3x4' : '横版4x3'}.png`; await p.screenshot({path: path.join(OUT, name)}); console.log(name); await p.close();
 }
 await b.close();
