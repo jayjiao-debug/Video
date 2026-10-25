@@ -1,3 +1,232 @@
+# Script v7 (rewritten from scratch, 2026-10-25 evening)
+
+Screenwriter. The owner heard v6 (2:20) and said **"the beginning is not catching enough, can we redo the whole script?"** So v7 changes the hook, the framing, the order and most of the lines. Only the facts are fixed. Files:
+- `lines_v7.json`: 38 × `[null, null, text]`, in order.
+- `vo_map_v7.json`: `{"01": "NEW" | "REUSE nn", …}`. Here nn is the clip key in `vo/durs.json`, which maps to `lines_v5.json` line nn.
+- `lines_v7_est.json`: my estimated times, for the producer to re-time on the measured clips.
+
+**Runtime: 2:08.2.** Q is read by 123.71, the end card runs 123.71 → 128.21 (4.5 s), and the music fades over the last bar into 128.21. v6 ran 2:20.7.
+
+## Owner note → what changed
+| Note | What changed |
+|---|---|
+| Owner (2026-10-25): "the beginning is not catching enough … redo the whole script" | **1. The new hook asks the question people actually wonder about and turns it twice by 9 s.** 「圆明园十二兽首，你猜回来了几个？」 → 「七个回了中国。」 → 「可住回圆明园的，[只有一个]。」 The viewer guesses from frame 0, and the twist (回国 7, 回园 1) lands by 7 s. v6 opened on a framing line (「假如说，你是圆明园的马首。」) and reached its money paradox at 3.7 s. |
+| | **2. 你 now means the viewer, not the horse.** The horse is 它 all the way through. 你 comes back twice, each time as a turn: the guess at 0 s and the price guess at 33 s 「你猜，它卖了多少？」. The data says "you" framing works when it is about the viewer. Two meanings of 你 in one film would confuse. |
+| | **3. 11–42 s (where we lose people) has no exposition.** It is a new image or a turn every 2–4 s: the Hangzhou queue (now) → 「原本是喷泉的出水口」 (a 原来如此) → noon, all twelve spout → 1860 → taken → London → the guess → the hammer → 2007. |
+| | **4. The title is laid over the picture, 9.05 → 11.07 (2.0 s), with no card.** The analytics name the title card as the first big leak. |
+| | **5. The film is 12.5 s shorter, and the payoff and question come before a 4.5 s end card.** Cut: the old teaser (T1–T5), the rewind, 「假如说…」, 「6910万…捐了出去」 up front, 「今夏杭州…看你兄弟」 after the drop, and 「如今…只有你」 (now the hook). |
+| | **6. The emotional peaks keep v6's music landmarks, with one change in purpose.** The build now carries the money thread (pay 6910万 → win and refuse to pay → give for free), which sets up the closing question. |
+| Director's don't-change list (gate 1 v5 r2) | Kept: the breakdown → the stop → the drop block (D6a–E2b, 「同年12月1日，」 「回到了圆明园」), the Paris phone bid + 5-day refusal + 一个法国家族 + 「也」, the ear, the noon callback, 「还差十一个」 / 「没回中国」, the 疑似龙首 / 说不清 pair, and Q. **Changed on purpose** (the owner asked for a full redo): the year-less teaser and the rewind are gone, because the hook now does their job. 你 = horse becomes 它. |
+
+## Step 1: four hooks
+
+Each hook gives the first ~3 s and the first ~15 s (narration = subtitle, word for word).
+
+### A. 「你猜回来了几个」: the search question + a guess + the 7 ≠ 1 twist (**picked**)
+- **0–3 s.** Frame 0: twelve bronze heads on two arcs of robed stone seats at night. Eleven are dark, and the copper horse glows in the middle of the near arc. A counter reads 「回来了 ?/12」 with the digit rolling, and the push-in starts on frame 0.
+  - Line: 「圆明园十二兽首，你猜回来了几个？」
+- **3–15 s.**
+  - 「七个回了中国。」 Seven heads light up, one per half-beat, and the counter reads 7/12.
+  - 「可住回圆明园的，[只有一个]。」 Six slide off into two museum cases (保利 ×4, 国博 ×2). The horse is left alone.
+  - Title 「七个回国，一个回家」 over the push, on the 9.05 drop.
+  - 「今年夏天，四个兽首去了杭州，」 Night museum, lit door.
+  - 「人们排了[几个小时]去看。」 The queue.
+- **Why a 19-year-old stops:**
+  - It is the exact question people half-know: 兽首 come back in the news every few years, and 成龙 made a film about them. A guess costs nothing.
+  - The answer comes at 4 s and a second surprise at 6 s (「七个都回来了，怎么只有一个在圆明园？」), so two gaps open and close in 9 s.
+  - 你 is in line 1.
+  - 「国宝原来是喷泉出水口」 at 17 s is a fact people send to a friend.
+- **Risk:**
+  - Twelve heads at phone size. The r4 cold read found the brothers weak, so they stay silhouettes and only the horse is modelled.
+  - It could feel like a 百科 quiz if the story doesn't start by ~20 s.
+  - 「住回」 must not be misread as 「回来」.
+  - The twist (1 of 12) is spent early, so the drop has to pay off **how**, not **what**.
+
+### B. 「拍下了，却不付钱」: the 2009 refusal
+- **0–3 s.** Frame 0: a saleroom. A clerk with a phone to his ear raises a paddle, and the gavel falls on bar 0 (1.45 s).
+  - Line: 「有人花3149万欧元，拍下两个兽首。」
+- **3–15 s.**
+  - 「5天后，他说：[这个款不能付]。」 A 「未付款」 stamp lands.
+  - 「这样做，对不对？」
+  - Title.
+  - 「圆明园十二兽首，回来了七个。」 …
+- **Why:** a real-life plot twist (won, then refused to pay) makes the viewer ask 为什么 at once, and it gives them something to argue about.
+- **Risk:**
+  - The hero (the copper horse, our whole look) isn't in the hook.
+  - Euros and 3149万 at frame 0 are cold.
+  - Refusing to pay breaks the auction's terms, so the hook can read as an endorsement.
+  - It spends the build's beat in the first 5 s.
+
+### C. 「卷耳朵」: the physical clue
+- **0–3 s.** Frame 0: a macro shot. Copper light rakes up a bronze ear curled at its tip, with the straight ear soft behind it.
+  - Line: 「这只铜马头，有一只耳朵是卷的。」
+- **3–15 s.**
+  - 「研究的人说，它被撞过。」 Pull back to the whole head.
+  - 「被撞的这一路，走了160年。」
+  - Title.
+  - 1860, the fire.
+- **Why:** an intimate, specific detail invites the viewer to play detective, and it makes a beautiful still.
+- **Risk:**
+  - Frame 0 is an abstract copper curl, and the data says abstract openings lose the first 2 s.
+  - The cause is only a researcher's observation (F6), so the mystery can't pay off with proof.
+  - Nothing in it is about the viewer.
+
+### D. 「你买不买」: the viewer's dilemma first
+- **0–3 s.** Frame 0: an empty auction podium under one lamp. On it is the dashed outline of a bronze head, with the gavel raised.
+  - Line: 「五个圆明园兽首，至今没回中国。」
+- **3–15 s.**
+  - 「要是明天上拍，你会花钱买回来吗？」
+  - 「这道题，真有人答过：」
+  - 「有人花了[6910万港元]，」
+  - 「有人拍下了，却[不付钱]。」
+  - Title.
+- **Why:** everyone has an opinion within a second, so it is the strongest comment driver, and 你 is the decision-maker.
+- **Risk:**
+  - Once viewers have answered in their heads, there is no information gap left, so they swipe.
+  - Opinion first can read as bait or as nationalist.
+  - It uses up the end-card question at 0 s.
+  - Frame 0 is an outline, not a thing.
+
+Also considered:
+- the money paradox (v6's own opening, which the owner heard);
+- the price jump;
+- the Hangzhou queue.
+
+All three are folded into A's body.
+
+**Ranking: A > D > B > C.**
+- A is the only one with a concrete object, a guessable question and two turns inside 9 s.
+- D is the best ending, so it stays the end-card question.
+- B is the best middle beat, and it stays on the build.
+- C is the best close-up, and it stays after the drop.
+
+## Title options (≤ 10 字)
+1. **七个回国，一个回家** (recommended for the title overlay and the end card). It puts the film's twist in 8 字, and it is short enough to read in the 2 s overlay. It doesn't overclaim: the film shows 7 回中国 and 1 住回圆明园 by 7 s. The only risk is that someone reads 一个回家 as 「只回来一个」, and the hook corrects that by 4 s.
+2. **十二兽首，回来了几个** (for the Douyin caption/cover). It is the search question itself, it invites the guess, and it can't overclaim.
+3. **只有它，住回了圆明园**. It is the hero plus the payoff. It is true as read (the four only *visited* in 2023 for 12 days, F24; 住回 marks the difference), but it is less curious than 1.
+
+## Story in 3 lines
+1. 圆明园十二兽首，七个回了中国，住回圆明园的只有马首；它们原本是喷泉的出水口，正午十二个一起喷水。
+2. 1860年马首被带走，1989年在伦敦卖了三四十万美元；2007年锤子没落下，何鸿燊私下花6910万港元买下，后来捐给国家，自己没等到它回家。
+3. 2020年12月1日，它回到圆明园：红铜一次铸成，只有一只耳朵被撞卷了。还差十一个，五个没回中国——要是上拍，该不该花钱买回来？
+
+## Music map v7 (the v6 cut, music_v5.md last section)
+| Landmark | Film s | Lands on |
+|---|---|---|
+| frame 0 / bar 0 | 0.00 / 1.45 | H1 on frame 0; a copper rim sweeps the horse on bar 0 |
+| drop 1 | **9.05** | title overlay 「七个回国，一个回家」 (9.05 → 11.07, 2.0 s, no VO) |
+| join | 17.30 | (inaudible) A1 starts here |
+| bar 9 | 21.83 | the twelve arcs fire (A2) |
+| bar 12 | 28.62 | the fire flares as it is lifted (B2) |
+| bar 15 | 35.41 | the London gavel strike (D3) |
+| breakdown | **42.20** | D5 「这一次，锤子[没有落下]。」 bass drops out under the untouched gavel |
+| bar 22 | 51.26 | 「6910万港元」 rises (D8) |
+| build | **60.32** | P2 spoken 「锤子落下」 = Paris strike ×2 (subtitle at 60.03) |
+| stop | **76.17** | E2 「2020年5月，何鸿燊去世，98岁。」 the lamp goes out |
+| pickup | 85.23 | inside E4 「同年12月1日，」 the van light |
+| hardest drop | **87.17** | R1 「它回到了圆明园。」 the 正觉寺 doors open in copper light |
+| phrase | 105.60 | K1: the noon fountain returns as a lamp shadow |
+| bar 54 | **123.71** | end card (Q read by then) |
+| fade | 125.95 → 128.21 | the music fades over the last bar; film end 128.21 (the outro at 132.77 is not reached) |
+
+**Why the peaks stay where they were:**
+- **Breakdown = a gavel that doesn't fall.** The bass drops out as the hammer stays still.
+- **Build = the money war.** 3149万 is won, then refused, then given for free. It rises to the stop and sets up Q.
+- **Stop = Ho's death.** The silence is the lamp going out.
+- **Drop = the answer to the hook's 「只有一个」.**
+
+Alternatives were tried and rejected:
+- 「十二个一起喷水」 on the drop: the noon image already plays at 21 s and returns as K1.
+- The hook's 7/12 on the drop: a repeat.
+
+## Script v7
+Times are estimates on the beat grid (`bar(k) = 1.4498 + 2.26415·k`). Each window is at least the spoken length + 0.36 s (0.06 lead + 0.30 breath), with the spoken length taken from:
+- the measured clip, for REUSE (and for NEW lines that only swap 你 → 它);
+- syllables ÷ 4.6 + 0.25 s per comma, × 1.05, for the other NEW lines.
+
+Every window is also at least pace.py's reading need − 0.25.
+
+**pace.py** (`lines_v7_est.json`, film end 128.21): 0 lines too fast, **3 % waiting**. The flags are music-held beats:
+- the title gap 9.05–11.07;
+- P2 on the build;
+- E2 on the stop.
+
+**Highlights:** 13 / 38 (34 %), all on payoffs.
+
+**Counter** (bottom-left, house style):
+- **Hook:** 「回来了 ?/12」 → 回国 7/12 → row 2 回园 1/12.
+- **A1–B2:** 在家 12/12 → 11 on the lift → 0 under the smoke.
+- **D1–E4:** hidden. The past is one head's journey, and the 2000–2003 buys are not in this cut, so a 回国 count there wouldn't add up.
+- **From R1:** back as 回园 1/12.
+- **K2/K3:** six tagged, five dashed.
+
+| # | id | subtitle = VO | what we see | music | VO | est. s (window · voice) | facts |
+|---|---|---|---|---|---|---|---|
+| 01 | H1 | 圆明园十二兽首，你猜回来了几个？ | **RING, night garden, lit on frame 0.** Twelve bronze heads on two arcs of robed stone seats, frontal. Eleven are dark patina; **the copper horse in the middle of the near arc glows**. The push-in starts on frame 0. Counter 「回来了 ?/12」, digit rolling. Stamp 「圆明园 · 十二兽首」. | frame 0; copper rim sweep on bar 0 (1.45) | NEW | 0.00–3.86 (3.86 · 3.46) | F1, F23 |
+| 02 | H2 | 七个回了中国。 | Seven heads light **ivory**, one per half-beat (牛 虎 猴 猪 鼠 兔, the horse last in copper). Counter → 回国 7/12. Five stay dark, outlines dashed (龙 蛇 羊 鸡 狗, no labels). | lights on half-beats from 3.99 | NEW | 3.86–5.70 (1.84 · 1.37) | F23, F27 |
+| 03 | H3 | 可住回圆明园的，[只有一个]。 | The six ivory heads lift off and slide **right** (away) into two glass cases that slide in at the frame edge, tags 「保利艺术博物馆 ×4」 「国家博物馆 ×2」 (≥ 48 px). **The horse stays on its seat, alone in copper.** Row 2 punches 「回园 1/12」. Push to the horse. | bar 2 (5.98) | NEW | 5.70–9.05 (3.35 · 2.77) | F21, F17, F18, F20, F27 |
+| — | title | *(on screen, no VO)* 七个回国，一个回家 | **Overlaid on the push, not a card:** the title slams centred-low over the horse (scale-down + short damped jolt), with the J seal. The cases dim. The subtitle clears at 9.05. | **DROP 1 9.05** → 11.07 | — | 2.02 | — |
+| 04 | N1 | 今年夏天，四个兽首去了杭州， | Cut on the beat to **MUSEUM-杭州** at night: the museum mass, a lit doorway. Through the glass, four heads (牛 虎 猴 猪) in ivory light. Stamp 「2026 · 杭州」. | 11.07 (beat) | NEW | 11.07–14.47 (3.40 · 3.00) | F28 |
+| 05 | N3 | 人们排了[几个小时]去看。 | The camera tracks left along **the queue**: profile silhouettes in two depth rows, rope stanchions, a few phone torches. The line keeps coming and folds back on itself; the doorway shrinks far left. No faces, no number on screen. | — | NEW | 14.47–17.30 (2.83 · 2.28) | F31 (safe wording) |
+| 06 | A1 | 十二兽首，原本是喷泉的出水口。 | **Match cut:** the four heads in the vitrine become the same four on their stone seats in daylight (**POOL NOON**, frontal 八). Pull back to all twelve and 海晏堂. Stamp 「乾隆年间 · 海晏堂」. Push to the horse's mouth: a thin trickle of water starts. Counter 在家 12/12. | join 17.30 | NEW | 17.30–20.98 (3.68 · 3.23) | F1, F3, F4 |
+| 07 | A2 | 正午12点，十二个[一起喷水]。 | Beat 1: two arcs hop across the pool (the clock), and the hand-over light crosses to the horse. **On bar 9 all twelve fire together**: white arcs, the horse's arc copper, splash rings. Slow push. | **arcs on bar 9 (21.83)** | REUSE 13 | 20.98–24.37 (3.40 · 2.99) | F3, F4 |
+| 08 | B1 | 1860年，英法联军进了园子。 | The light goes red-dusk. Tilt to the front flagstones; kepi silhouettes march in (never on the water). Stamp 「1860 · 圆明园」. | bar 10 | REUSE 14 | 24.37–28.05 (3.68 · 3.13) | F9 |
+| 09 | B2 | 它被带走了。 | **The fire flares behind the façade on bar 12.** A looter lifts the horse with both hands and walks out **right**. Counter 12 → 11 on the lift, → 0 once smoke covers the pool. | fire on bar 12 (28.62) | NEW (was 17 with 你) | 28.05–29.75 (1.70 · 1.09) | F9, F10 |
+| 10 | D1 | 一百多年后，它出现在伦敦。 | The smoke tilts down into saleroom haze: **SALE, LONDON 1989**. The horse on the podium under the work light; seated bidders. Stamp 「1989 · 伦敦」. The counter hides. | — | NEW (was 18) | 29.75–32.87 (3.11 · 2.51) | F11 |
+| 11 | D2 | 你猜，它卖了多少？ | Paddles rise, one per beat. The lectern card is face-down with a 「?」. The gavel lifts. (The viewer's guess.) | beats | NEW | 32.87–35.41 (2.54 · 1.86) | — |
+| 12 | D3 | 锤子落下：三四十万美元。 | **The gavel strikes exactly on bar 15.** The card flips to 「三四十万美元」 (≥ 96 px). | **strike on bar 15 (35.41)** | REUSE 19 | 35.41–38.80 (3.39 · 2.77) | F11 (估算 range) |
+| 13 | D4 | 2007年，它又要上拍了。 | **The lamp swing:** London's lamp lands on the 2007 work light in the same room. Empty chairs, catalogues, the gavel at rest. Stamp 「2007 · 香港」. A slow push to the gavel starts. | holds into the breakdown | NEW (was 22) | 38.80–42.20 (3.40 · 2.45) | F12 |
+| 14 | D5 | 这一次，锤子[没有落下]。 | The untouched gavel, the lamp hum, the slow push continuing. | **BREAKDOWN 42.20** | REUSE 23 | 42.20–45.03 (2.83 · 2.34) | F12 |
+| 15 | D6 | 国家文物局反对公开拍卖。 | 「撤拍」 on the lot board; the lamps go out row by row (2 rows per beat). | — | REUSE 24 | 45.03–47.87 (2.83 · 2.37) | F12 |
+| 16 | D7 | 拍卖前，何鸿燊私下买下了它： | The last spot becomes the **DESK** lamp. A silhouette (Ho, no face) signs; the horse on the desk. | — | NEW (was 25) | 47.87–51.26 (3.40 · 2.97) | F13 |
+| 17 | D8 | [6910万港元]。 | The price card rises: 「6910万港元」, fixed, no count-up, no paddles. | **slam on bar 22 (51.26)** | REUSE 26 | 51.26–53.81 (2.55 · 2.03) | F13 |
+| 18 | D9 | 比伦敦那次，贵了[二十多倍]。 | **PRICE:** two columns of light on the desk wall, short 「三四十万美元」 and tall 「6910万港元」 (small: ≈884万美元), with the bracket 「二十多倍」. | — | REUSE 27 | 53.81–56.92 (3.11 · 2.56) | F11, F13 (估算) |
+| 19 | P1 | 兄弟鼠和兔，在巴黎上拍。 | **SALE, PARIS 2009:** tall windows, the rat and rabbit on the podium, a phone bank of clerks with handsets (no buyer in the room). Stamp 「2009 · 巴黎」. | — | REUSE 28 | 56.92–60.03 (3.11 · 2.55) | F19 |
+| 20 | P2 | 锤子落下，两个共拍出3149万欧元。 | **The gavel strikes on 60.32 and the next beat.** The result board on an easel: 「两件合计 3149万欧元」. | **BUILD 60.32** = spoken 「锤子落下」 | REUSE 29 | 60.03–64.56 (4.53 · 4.08 at ×1.05) | F19 |
+| 21 | P3 | 5天后，买家却说：[这个款不能付]。 | A day flip 2.25 → 3.2, then a press-room table with microphones and a silhouette (not the saleroom). Stamp 「2009.3.2 · 北京」. A 「未付款」 stamp lands on the result board on 「不能付」. | — | REUSE 30 | 64.56–68.53 (3.96 · 3.47 at ×1.05) | F19 |
+| 22 | P4 | 一个法国家族，把鼠和兔无偿捐回。 | **HALL, 国家博物馆:** the rat and rabbit on one plinth, the cloth drawn off. Stamp 「2013 · 北京」. | — | REUSE 31 | 68.53–72.77 (4.25 · 3.61 at ×1.05) | F20 |
+| 23 | E1 | 何鸿燊，也把它捐给了国家。 | The same HALL, 2019: the horse unveiled; a brass donation plaque. Stamp 「2019 · 北京」. **Match: the brass plaque becomes the lamp base.** | — | NEW (was 32) | 72.77–76.17 (3.40 · 2.36) | F15 |
+| 24 | E2 | 2020年5月，何鸿燊去世，98岁。 | **DESK at night, the chair empty. The lamp goes out on the stop**; moonlight. Stamp 「2020.5 · 香港」. | **STOP 76.17** | REUSE 33 | 76.17–81.26 (5.09 · 4.45) | F16 |
+| 25 | E3 | 他[没等到]，它回家的那天。 | The moonlit room, a star in the window; slow push into the star. | in the stop / re-entry | NEW (was 34) | 81.26–84.37 (3.11 · 2.55) | F16, F21 (估算) |
+| 26 | E4 | 同年12月1日， | The star becomes the crate light in a van. **ROAD:** the van drives **left** (toward home), night turning to blue hour. Stamp 「2020.12.1」. | pickup 85.23 | REUSE 35 | 84.37–87.17 (2.80 · 1.60) | F21 |
+| 27 | R1 | 它回到了圆明园。 | **COURT: the 正觉寺 doors swing open in copper light** and the horse is inside. The counter returns: 回园 1/12. | **HARDEST DROP 87.17** | NEW (was 36) | 87.17–89.19 (2.02 · 1.39) | F21 |
+| 28 | R2 | 它离开了[160年]。 | Push through the doors. Stamp 「1860 → 2020」. | — | NEW (was 37) | 89.19–91.73 (2.55 · 2.00) | F21 (估算) |
+| 29 | R3 | 它住进园里唯一没烧掉的古建筑。 | Wide: the 文殊亭 intact; far off, the 西洋楼 ruins in haze; ghost smoke beyond the wall fades (a callback to B2's fire). | — | NEW | 91.73–95.41 (3.68 · 3.20) | F22 |
+| 30 | R4 | 细看，它是红铜一次铸成的。 | **CASE:** the head turns slowly under raking copper light. One highlight runs over the whole surface without a seam (one casting). | — | NEW | 95.41–98.81 (3.40 · 2.77) | F5 |
+| 31 | R5 | 只有一只耳朵，是卷的。 | Push into the **curled near ear**, with the straight far ear beside it in the same frame. | — | NEW | 98.81–101.64 (2.83 · 2.32) | F6 |
+| 32 | R6 | 研究的人说：它这一路被撞过。 | A macro on the curl; the light trembles once. Stamp line 2 「研究者观察」. | — | NEW (was 43) | 101.64–105.32 (3.68 · 3.10) | F6 |
+| 33 | K1 | 正午12点，它们本该[一起喷水]。 | **The look's signature:** the horse's own light throws the noon fountain as a **shadow-play on the paper lattice** behind it, twelve shadow arcs. Stamp 「12:00 · 正午」 (never 今天). | **phrase 105.60** | NEW (was 44) | 105.32–108.71 (3.40 · 2.97) | F3 |
+| 34 | K2 | 现在，还差[十一个]。 | The shadow arcs go out one by one; eleven empty seat shadows. Six get small tags 「保利 ×4 · 国博 ×2」. Counter row 2 回园 1/12. | — | REUSE 45 | 108.71–111.26 (2.55 · 2.02) | F21, F23, F27 |
+| 35 | K3 | 其中五个，至今[没回中国]。 | Five seats turn dashed (龙 蛇 羊 鸡 狗). | — | REUSE 46 | 111.26–114.37 (3.11 · 2.63) | F23, F27 |
+| 36 | K4 | 法国还拍出过一个疑似龙首， | The dragon's dashed outline flickers; in a small lit inset a French saleroom gavel strikes. Stamp 「2018 · 法国」. | strike on a beat | REUSE 47 | 114.37–117.49 (3.11 · 2.64) | F26 |
+| 37 | K5 | 真假，说不清。 | The outline holds half-drawn with a 「?」. | — | REUSE 48 (brackets dropped; same words) | 117.49–119.75 (2.26 · 1.80) | F26 |
+| 38 | Q | 五个要是上拍，该不该[花钱买回来]？ | Back to the horse alone in its case, the lattice empty behind it. Q is typed centred. **At 123.71 the end card forms around it** and Q slides into its slot. | — | REUSE 49 | 119.75–123.71 (3.96 · 3.06) | F12, F19, F26 |
+| — | END | *(card)* | The house end card: the title 「七个回国 / 一个回家」, Q, the J seal, the pill 「关注 Juno · 一起看懂世界」, sources. The music fades over the last bar. | bar 54 → fade to 128.21 | — | 123.71–128.21 (4.5) | — |
+
+**VO: 20 NEW, 18 REUSE.**
+- **10 of the NEW lines only swap 你 → 它** in an existing clip: 09, 10, 13, 16, 23, 25, 27, 28, 32, 33. Their timing uses the old clip's length.
+- **10 NEW lines are new words:** 01–06, 11, 29–31.
+
+**For the producer (re-timing and mix):**
+- Re-time on the measured clips with plan45vo's rules. The anchors are H1 0.00, H2 3.856 (a quarter beat), H3 5.70, N1 11.07, D3 35.41, D4 38.80, D5 42.20, P2 60.03, E2 76.17, R1 87.17 and the end card 123.71.
+- **Tight spots:**
+  - **H1** has 0.04 s slack on my ×1.05 estimate. If its clip is > 3.44 s, re-take H1 at speed 1.12, or drop 可 from H3 and move H2 → 3.997, H3 → 5.98.
+  - **N1** has 0.04 s slack. If needed, the title may end at 10.79 (1.74 s on screen).
+- **TEMPO ×1.05** stays on clips 29–31. Clip 32 is no longer used (E1 is NEW).
+- **FREE** (no duck): (9.05, 11.07), (87.17, 88.60), (123.71, end).
+- **FADE:** (125.95, 128.21).
+- Read numbers as before: 十二, 一八六零年, 二零零七年, 六千九百一十万港元, 一百六十年.
+
+**For the art director (changes vs storyboard.md):**
+- **New or re-used sets:**
+  - the hook uses **RING**, re-staged as two seat arcs with eleven silhouettes and the copper horse, plus two glass cases that slide in;
+  - **MUSEUM-杭州** moves to 11–17 s;
+  - **POOL NOON** opens by matching from the vitrine.
+- **Gone:** the teaser cuts T1–T4, the rewind, 2000–2003 (D3 roll call, the pig handshake), FOUNDRY, CASE as the hook (the hook is now RING).
+- **The end card title** changes to the picked title (not 「假如你是 / 圆明园马首」).
+
+---
+
 # Script v6 (2:20 cut on music candidate 3, 2026-10-25)
 
 Screenwriter. v6 cuts v5.1 (kept below, unchanged) from 49 to **40 lines** so the film fits candidate 3's map and the owner's retention data. **Every v6 line is an existing voice clip, word for word (40 × REUSE, 0 NEW).** Files:
