@@ -1,0 +1,37 @@
+token id present: yes
+token secret present: yes
+✓ Initialized. View run at 
+https://modal.com/apps/jayjiao249/main/ap-j2aUuPV8DrMyNAgTen78ld
+✓ Created objects.
+├── ✓ Uploaded /home/runner/work/Video/Video/render_ep43.py
+├── ✓ Uploaded /home/runner/work/Video/Video/ep43
+├── ✓ Created Function chunk.
+└── ✓ Created Function stills.
+an error occurred during closing of asynchronous generator <async_generator object async_merge at 0x7b3c6f65a710>
+asyncgen: <async_generator object async_merge at 0x7b3c6f65a710>
+Traceback (most recent call last):
+  File "/opt/hostedtoolcache/Python/3.11.17/x64/lib/python3.11/site-packages/modal/_utils/async_utils.py", line 858, in __iter__
+    yield from run_async_gen(runner, self._async_iterable)
+GeneratorExit
+
+During handling of the above exception, another exception occurred:
+
+RuntimeError: aclose(): asynchronous generator is already running
+0 0 394 RENDERER ANGLE (NVIDIA, Vulkan 1.4.341 (NVIDIA Tesla T4 (0x00001EB8)), NVIDIA) / MS_PER_FRAME 125
+1 394 789 RENDERER ANGLE (NVIDIA, Vulkan 1.4.341 (NVIDIA Tesla T4 (0x00001EB8)), NVIDIA) / MS_PER_FRAME 113
+2 789 1184 RENDERER ANGLE (NVIDIA, Vulkan 1.4.341 (NVIDIA Tesla T4 (0x00001EB8)), NVIDIA) / MS_PER_FRAME 127
+3 1184 1579 RENDERER ANGLE (NVIDIA, Vulkan 1.4.341 (NVIDIA Tesla T4 (0x00001EB8)), NVIDIA) / MS_PER_FRAME 122
+4 1579 1974 RENDERER ANGLE (NVIDIA, Vulkan 1.4.341 (NVIDIA Tesla T4 (0x00001EB8)), NVIDIA) / MS_PER_FRAME 128
+5 1974 2369 RENDERER ANGLE (NVIDIA, Vulkan 1.4.341 (NVIDIA Tesla T4 (0x00001EB8)), NVIDIA) / MS_PER_FRAME 133
+6 2369 2764 RENDERER ANGLE (NVIDIA, Vulkan 1.4.341 (NVIDIA Tesla T4 (0x00001EB8)), NVIDIA) / MS_PER_FRAME 140
+7 2764 3159 RENDERER ANGLE (NVIDIA, Vulkan 1.4.341 (NVIDIA Tesla T4 (0x00001EB8)), NVIDIA) / MS_PER_FRAME 142
+8 3159 3554 RENDERER ANGLE (NVIDIA, Vulkan 1.4.341 (NVIDIA Tesla T4 (0x00001EB8)), NVIDIA) / MS_PER_FRAME 138
+9 3554 3949 RENDERER ANGLE (NVIDIA, Vulkan 1.4.341 (NVIDIA Tesla T4 (0x00001EB8)), NVIDIA) / MS_PER_FRAME 158
+10 3949 4344 RENDERER ANGLE (NVIDIA, Vulkan 1.4.341 (NVIDIA Tesla T4 (0x00001EB8)), NVIDIA) / MS_PER_FRAME 138
+11 4344 4739 RENDERER ANGLE (NVIDIA, Vulkan 1.4.341 (NVIDIA Tesla T4 (0x00001EB8)), NVIDIA) / MS_PER_FRAME 124
+12 4739 5134 RENDERER ANGLE (NVIDIA, Vulkan 1.4.341 (NVIDIA Tesla T4 (0x00001EB8)), NVIDIA) / MS_PER_FRAME 123
+13 5134 5529 RENDERER ANGLE (NVIDIA, Vulkan 1.4.341 (NVIDIA Tesla T4 (0x00001EB8)), NVIDIA) / MS_PER_FRAME 86
+DONE 269920648
+Stopping app - local entrypoint completed.
+✓ App completed. View run at 
+https://modal.com/apps/jayjiao249/main/ap-j2aUuPV8DrMyNAgTen78ld
