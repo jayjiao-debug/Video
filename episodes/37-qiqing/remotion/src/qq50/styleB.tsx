@@ -38,7 +38,7 @@ export const LacDefs: React.FC = () => <defs>
 </defs>;
 /** cold silver inlay with a specular band that slides across (k 0..1 = band position); the band lives inside the fill, so
     the glint never leaves the shape */
-const SilverGrad: React.FC<{id: string; x0: number; x1: number; k: number}> = ({id, x0, x1, k}) => { const c = lerp(x0 - 200, x1 + 200, k);
+export const SilverGrad: React.FC<{id: string; x0: number; x1: number; k: number}> = ({id, x0, x1, k}) => { const c = lerp(x0 - 200, x1 + 200, k);
 	return <linearGradient id={id} gradientUnits="userSpaceOnUse" x1={c - 260} y1={0} x2={c + 260} y2={260}>
 		<stop offset="0" stopColor="#AEBCC5" /><stop offset="0.38" stopColor="#D9E4EA" /><stop offset="0.47" stopColor="#F4FAFD" /><stop offset="0.5" stopColor="#FFFFFF" />
 		<stop offset="0.53" stopColor="#EEF5F9" /><stop offset="0.62" stopColor="#CAD6DD" /><stop offset="1" stopColor="#9DAAB2" /></linearGradient>; };
@@ -53,7 +53,7 @@ export const Lacquer: React.FC<{sheen: number; id: string}> = ({sheen, id}) => <
 	<rect width={W} height={H} fill={`url(#rf${id})`} />
 </g>;
 /** a cinnabar band with a running gold cloud scroll */
-const ScrollBand: React.FC<{y: number; x0: number; x1: number; h?: number; flow?: number; fill?: string}> = ({y, x0, x1, h = 48, flow = 0, fill = BG.band}) => { const n = Math.ceil((x1 - x0) / 150) + 1;
+export const ScrollBand: React.FC<{y: number; x0: number; x1: number; h?: number; flow?: number; fill?: string}> = ({y, x0, x1, h = 48, flow = 0, fill = BG.band}) => { const n = Math.ceil((x1 - x0) / 150) + 1;
 	return <g>
 		<rect x={x0} y={y} width={x1 - x0} height={h} fill={fill} />
 		<rect x={x0} y={y + 3} width={x1 - x0} height={2} fill={B.gold} opacity={0.3} /><rect x={x0} y={y + h - 5} width={x1 - x0} height={2} fill={B.gold} opacity={0.3} />
@@ -73,7 +73,7 @@ export const Pool: React.FC<{id: string; x: number; y: number; rx: number; ry: n
 	<defs><radialGradient id={`pl${id}`}><stop offset="0" stopColor={col} stopOpacity={a} /><stop offset="0.45" stopColor={col} stopOpacity={a * 0.55} /><stop offset="1" stopColor={col} stopOpacity="0" /></radialGradient></defs>
 	<ellipse cx={x} cy={y} rx={rx} ry={ry} fill={`url(#pl${id})`} /></g>;
 /** one-tone silhouette with a warm rim light on the edges facing the light (dx, dy = toward the light) */
-const RimFig: React.FC<React.ComponentProps<typeof Figure4> & {dx?: number; dy?: number; rimO?: number}> = ({dx = 3, dy = -2.5, rimO = 0.9, ...p}) =>
+export const RimFig: React.FC<React.ComponentProps<typeof Figure4> & {dx?: number; dy?: number; rimO?: number}> = ({dx = 3, dy = -2.5, rimO = 0.9, ...p}) =>
 	<g><g transform={`translate(${dx},${dy})`} opacity={rimO}><Figure4 {...p} col={BG.rim} /></g><Figure4 {...p} /></g>;
 export const SealB: React.FC = () => <>
 	<div style={{position: 'absolute', right: SAFE_X + 4, bottom: SAFE_Y + 2, width: 86, height: 86, borderRadius: '50%', background: '#CDBE9E', opacity: 0.86, boxShadow: '0 2px 8px rgba(0,0,0,0.5), inset 0 0 0 2px rgba(232,188,102,0.6)'}} />
@@ -81,7 +81,7 @@ export const SealB: React.FC = () => <>
 
 /* ---------- B1: the hook ---------- */
 const CH = ['财', '货', '贵', '钱'], CX = [236, 566, 896, 1290], CY = 410, CS = 300, CT = 872;   // CT = the stall's counter top
-const Cowrie: React.FC<{x: number; y: number; L: number; rot?: number; o?: number}> = ({x, y, L, rot = 0, o = 1}) => { const c = cowrie(L);
+export const Cowrie: React.FC<{x: number; y: number; L: number; rot?: number; o?: number}> = ({x, y, L, rot = 0, o = 1}) => { const c = cowrie(L);
 	return <g transform={`translate(${x},${y}) rotate(${rot})`} opacity={o}>
 		<path d={c.body} fill="url(#leaf)" stroke="#8A5A1E" strokeWidth={2} />
 		<ellipse cx={-L * 0.08} cy={-L * 0.2} rx={L * 0.2} ry={L * 0.06} fill="#FFF6D8" opacity={0.75} transform="rotate(-8)" /><path d={c.slit} fill={B.lac} /><path d={c.teeth} stroke={B.goldL} strokeWidth={L * 0.025} strokeLinecap="round" />
@@ -151,7 +151,7 @@ export const HookB: React.FC<{t: number}> = ({t}) => {
 		<SealB />
 	</>;
 };
-const QRg: React.FC = () => <g>
+export const QRg: React.FC = () => <g>
 	<path d={qrCells(25, 4).map(([j, i]) => `M${j * 4},${i * 4}h4.2v4.2h-4.2z`).join('')} fill={B.lac} />
 	{[[0, 0], [0, 18], [18, 0]].map(([i, j]) => <g key={`${i}${j}`}><rect x={j * 4} y={i * 4} width={28} height={28} fill={B.lac} /><rect x={j * 4 + 4} y={i * 4 + 4} width={20} height={20} fill={B.cream} /><rect x={j * 4 + 8} y={i * 4 + 8} width={12} height={12} fill={B.lac} /></g>)}
 </g>;
@@ -213,7 +213,7 @@ export const JiaoziB: React.FC<{w: number; h: number; id: string}> = ({w, h, id}
 
 /* ---------- the iron 贯: a heavy loop of square-holed coins, both cord ends in the fist; it hangs plumb and swings as a
    pendulum (th degrees), the bottom lagging a little more than the top ---------- */
-const IronLoop: React.FC<{x: number; y: number; L: number; th: number}> = ({x, y, L, th}) => {
+export const IronLoop: React.FC<{x: number; y: number; L: number; th: number}> = ({x, y, L, th}) => {
 	const cl2: [number, number][] = [], N = 80, br = 30;
 	for (let i = 0; i <= N; i++) { const u = i / N; let p: [number, number];
 		if (u < 0.4) { const v = u / 0.4; p = [lerp(-3, -br, Math.pow(v, 0.8)), lerp(0, L - br, v)]; }
@@ -239,7 +239,7 @@ const IronLoop: React.FC<{x: number; y: number; L: number; th: number}> = ({x, y
 
 /* ---------- B2: the Song street, 交子铺 counter ---------- */
 /** the loaded arm, hanging plumb in front of the body: redrawn on top with a gold contour so it separates from the torso */
-const NearArm: React.FC<{sh: [number, number]; hand: [number, number]; h: number}> = ({sh, hand, h}) => {
+export const NearArm: React.FC<{sh: [number, number]; hand: [number, number]; h: number}> = ({sh, hand, h}) => {
 	const w0 = 0.036 * h, we = 0.026 * h, w1 = 0.018 * h, x0 = sh[0], y0 = sh[1] + 0.03 * h, x1 = hand[0], y1 = hand[1], ye = lerp(y0, y1, 0.5);
 	/* deltoid → elbow → wrist, a slight bulge at the back of the upper arm; the fist closes round the cord */
 	const d = `M${x0 - w0},${y0} C${x0 - w0 * 1.15},${lerp(y0, ye, 0.5)} ${x0 - we},${ye - 6} ${x0 - we},${ye} L${x1 - w1},${y1} L${x1 + w1},${y1} L${x0 + we * 0.95},${ye} C${x0 + we},${ye - 10} ${x0 + w0 * 0.95},${lerp(y0, ye, 0.4)} ${x0 + w0 * 0.85},${y0} Q${x0},${y0 - 0.05 * h} ${x0 - w0},${y0} Z`;
@@ -247,7 +247,7 @@ const NearArm: React.FC<{sh: [number, number]; hand: [number, number]; h: number
 		<ellipse cx={x1} cy={y1 + 0.026 * h} rx={0.026 * h} ry={0.032 * h} /></g>; };
 /** standing under the load: knees bent, the loaded (near) shoulder dropped, near arm hanging plumb; the far hand lifts the
     note to his eyes. sway (deg) = the string's swing; the torso counter-leans a little against it */
-const heavyPose = (sway: number, breath: number): Pose => {
+export const heavyPose = (sway: number, breath: number): Pose => {
 	const p = grounded({lean: 3 - 0.35 * sway + breath, neck: -5, lt: 13, lk: 17, rt: -12, rk: 15, la: 0, le: 0, ra: 70, re: 40});
 	const sh = p.LSh, s2: [number, number] = [sh[0] - 0.008, sh[1] - 0.038];
 	p.LSh = s2; p.LElb = [s2[0], s2[1] - 0.194]; p.LHand = [s2[0], s2[1] - 0.329];
