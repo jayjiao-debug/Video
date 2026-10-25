@@ -459,7 +459,7 @@ const N = {cut: b(9), passA: b(10), hallA: b(10.25), out: b(10.75), card: b(11),
 /** the queue steps forward on each beat b9 → b10 (time-lapse), shuffles slowly after */
 const qStep = (t: number) => { const bt = (t - N.cut) / BEAT; if (bt < 0) return bt * 0.25; const n = Math.floor(Math.min(bt, 4)), f = Math.min(bt, 4) - n; return n + easeOut(Math.min(1, f / 0.35)) + Math.max(0, bt - 4) * 0.25; };
 const extZoom = (t: number) => Math.exp(lerp(Math.log(0.86), Math.log(3.2), easeInOut(clamp01((t - N.cut - 0.15) / (N.passA - N.cut - 0.15)))));   // eases in and lands on b10 (no whip)
-const passZoom = (t: number) => Math.exp(lerp(Math.log(0.9), Math.log(1.45), easeInOut(clamp01((t - N.passA) / (N.hallA - N.passA)))));   // a gentle drift down the passage; cut on b10.25 into the hall
+const passZoom = (t: number) => Math.exp(lerp(0, Math.log(1.6), easeInOut(clamp01((t - N.passA) / (N.hallA - N.passA)))));   // a gentle drift down the passage; cut on b10.25 into the hall
 /** hall camera zoom: out of the passage (0.9 → 1), slow push to b11.5, then through the pane (scene 08's mask grows with it) */
 const hallZoom = (t: number) => {
 	if (t < b(10.5)) return lerp(0.9, 1.0, easeOut((t - N.hallA) / (b(10.5) - N.hallA)));

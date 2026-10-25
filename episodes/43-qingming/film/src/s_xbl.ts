@@ -252,7 +252,7 @@ const drawExterior = (t: number): Frame => {
 	const st = exSt, cam = camEx(t); setCam(st, cam);
 	lightEx(t); drawCars(t); exGuardDraw(t);
 	st.setHero(-9999, 0, 1);
-	return {st, grade: {vig: 0.36, vigCol: '#101214', exposure: 1, corners: 0.45 * (1 - nightK(t)), cornersTop: 1, cornersBand: [0, 305, 520, 0]}, bloom: 0.8};
+	return {st, grade: {vig: 0.36, vigCol: '#101214', exposure: 1, corners: 0.7 * (1 - nightK(t)), cornersTop: 1, cornersBand: [0, 305, 520, 0]}, bloom: 0.8};
 };
 // the pane (scene 26's own IN between its two halves): outside the rect = the exterior (A), inside = the room (B) — so during the
 // move 26a draws the exterior and 26b draws the room; the rect is the window glass, the sash and casing are the facade's own
@@ -265,7 +265,7 @@ const paneGlint = (hud: HTMLElement, t: number) => {
 		`background:linear-gradient(115deg, rgba(235,240,244,0) ${pos - 7}%, rgba(235,240,244,${(a * 0.2).toFixed(3)}) ${pos - 2}%, rgba(240,244,248,${a.toFixed(3)}) ${pos}%, rgba(235,240,244,${(a * 0.2).toFixed(3)}) ${pos + 0.8}%, rgba(235,240,244,0) ${pos + 6}%)"></div>`);
 };
 addScene({id: '26', a: T0, z: P0, draw: (t) => { if (t >= P0) { updatePane(t); return drawExterior(t); } return drawInterior(t); }});
-addScene({id: '26b', a: P0, z: DOOR_CUT, in: PANE, draw: (t) => { if (t < P1) { updatePane(t); const fr = drawInterior(t); return {...fr, grade: {...fr.grade, corners: 0.45, cornersTop: 1, cornersBand: [0, 305, 520, 0]}, hud: (hud: HTMLElement) => paneGlint(hud, t)}; } return drawExterior(t); }});
+addScene({id: '26b', a: P0, z: DOOR_CUT, in: PANE, draw: (t) => { if (t < P1) { updatePane(t); const fr = drawInterior(t); return {...fr, grade: {...fr.grade, corners: 0.7, cornersTop: 1, cornersBand: [0, 305, 520, 0]}, hud: (hud: HTMLElement) => paneGlint(hud, t)}; } return drawExterior(t); }});
 addScene({id: '26c', a: DOOR_CUT, z: END, draw: drawInterior});
 
 export const bootXbl = async () => { await bootIn(); await bootEx();

@@ -621,7 +621,7 @@ addScene({id: '37', a: b(76), z: 184.3 + 1, draw: (t) => {
 	}
 	if (t < E37.passZ) {           // ---- back through the passage (its far opening is the hall)
 		const k = easeInOut(clamp01((t - E37.hallZ) / (E37.passZ - E37.hallZ)));
-		pass.setCam(960, 540, Math.exp(lerp(Math.log(12), 0, k))); dimWorld(pass, 0.72, new Set(), [1, 0.97, 0.94]);   // warm-lit, but never brighter than the hall it leaves
+		pass.setCam(960, 540, Math.exp(lerp(Math.log(12), 0, k))); dimWorld(pass, 0.85, new Set(), [1, 0.97, 0.94]);   // warm-lit, but never brighter than the hall it leaves
 		return {st: pass, grade: {vig: 0.45, exposure: 1}, bloom: 1, hideFurniture: true, hud: endHud(t)};
 	}
 	// ---- outside: the door at the top of the empty ramp; the crane settles, then a slow rise to the end
