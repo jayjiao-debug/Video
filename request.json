@@ -1,104 +1,13 @@
 {
- "id": "ep48-vo-01",
+ "id": "ep48-vo-02",
  "model_prefs": [
   "eleven_v4"
  ],
  "items": [
   {
-   "name": "N1_ep42voice",
+   "name": "Q_N1",
    "lang": "zh",
    "voice_id": "MI36FIkp9wRP7cpWKPTl",
-   "settings": {
-    "stability": 0.5,
-    "similarity_boost": 0.8,
-    "style": 0.3
-   },
-   "text": "秦始皇陵的土里，汞，是周围的七十多倍。两千多年前的《史记》写着：里面，有水银做的江河。可直到今天，没有一个人打开过它。秦始皇陵，为什么不挖？"
-  },
-  {
-   "name": "N2_doc_male",
-   "lang": "zh",
-   "gender": "male",
-   "accent": "standard",
-   "age": "middle_aged",
-   "use_case": "narrative_story",
-   "pick": 0,
-   "model": "eleven_v4",
-   "settings": {
-    "stability": 0.5,
-    "similarity_boost": 0.8,
-    "style": 0.3
-   },
-   "text": "秦始皇陵的土里，汞，是周围的七十多倍。两千多年前的《史记》写着：里面，有水银做的江河。可直到今天，没有一个人打开过它。秦始皇陵，为什么不挖？"
-  },
-  {
-   "name": "N3_doc_male",
-   "lang": "zh",
-   "gender": "male",
-   "accent": "standard",
-   "age": "middle_aged",
-   "use_case": "narrative_story",
-   "pick": 1,
-   "model": "eleven_v4",
-   "settings": {
-    "stability": 0.5,
-    "similarity_boost": 0.8,
-    "style": 0.3
-   },
-   "text": "秦始皇陵的土里，汞，是周围的七十多倍。两千多年前的《史记》写着：里面，有水银做的江河。可直到今天，没有一个人打开过它。秦始皇陵，为什么不挖？"
-  },
-  {
-   "name": "N4_doc_male",
-   "lang": "zh",
-   "gender": "male",
-   "accent": "standard",
-   "age": "middle_aged",
-   "use_case": "narrative_story",
-   "pick": 2,
-   "model": "eleven_v4",
-   "settings": {
-    "stability": 0.5,
-    "similarity_boost": 0.8,
-    "style": 0.3
-   },
-   "text": "秦始皇陵的土里，汞，是周围的七十多倍。两千多年前的《史记》写着：里面，有水银做的江河。可直到今天，没有一个人打开过它。秦始皇陵，为什么不挖？"
-  },
-  {
-   "name": "N5_edu_male",
-   "lang": "zh",
-   "gender": "male",
-   "accent": "standard",
-   "use_case": "informative_educational",
-   "pick": 0,
-   "model": "eleven_v4",
-   "settings": {
-    "stability": 0.5,
-    "similarity_boost": 0.8,
-    "style": 0.3
-   },
-   "text": "秦始皇陵的土里，汞，是周围的七十多倍。两千多年前的《史记》写着：里面，有水银做的江河。可直到今天，没有一个人打开过它。秦始皇陵，为什么不挖？"
-  },
-  {
-   "name": "N6_female",
-   "lang": "zh",
-   "gender": "female",
-   "accent": "standard",
-   "use_case": "narrative_story",
-   "pick": 0,
-   "settings": {
-    "stability": 0.5,
-    "similarity_boost": 0.8,
-    "style": 0.3
-   },
-   "text": "秦始皇陵的土里，汞，是周围的七十多倍。两千多年前的《史记》写着：里面，有水银做的江河。可直到今天，没有一个人打开过它。秦始皇陵，为什么不挖？"
-  },
-  {
-   "name": "Q1_old_male",
-   "lang": "zh",
-   "gender": "male",
-   "accent": "standard",
-   "age": "old",
-   "pick": 0,
    "settings": {
     "stability": 0.6,
     "similarity_boost": 0.8,
@@ -107,12 +16,34 @@
    "text": "以水银为百川江河大海，机相灌输，上具天文，下具地理。"
   },
   {
-   "name": "Q2_old_male",
+   "name": "Q_N3",
+   "lang": "zh",
+   "voice_id": "WuLq5z7nEcrhppO0ZQJw",
+   "settings": {
+    "stability": 0.6,
+    "similarity_boost": 0.8,
+    "style": 0.25
+   },
+   "text": "以水银为百川江河大海，机相灌输，上具天文，下具地理。"
+  },
+  {
+   "name": "Q_N5",
+   "lang": "zh",
+   "voice_id": "WkcRFJo38X9XEP8kGExm",
+   "settings": {
+    "stability": 0.6,
+    "similarity_boost": 0.8,
+    "style": 0.25
+   },
+   "text": "以水银为百川江河大海，机相灌输，上具天文，下具地理。"
+  },
+  {
+   "name": "Q_story",
    "lang": "zh",
    "gender": "male",
    "accent": "standard",
-   "age": "old",
-   "pick": 1,
+   "use_case": "characters_animation",
+   "pick": 0,
    "settings": {
     "stability": 0.6,
     "similarity_boost": 0.8,
