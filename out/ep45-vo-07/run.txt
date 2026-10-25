@@ -1,0 +1,326 @@
+plan: {'tier': None, 'character_count': None, 'character_limit': None, 'status': None}
+models: ['eleven_v4', 'eleven_v4_turbo', 'eleven_v3', 'eleven_v3_conversational', 'eleven_multilingual_v2', 'eleven_flash_v2_5', 'eleven_turbo_v2_5', 'eleven_turbo_v2', 'eleven_flash_v2', 'eleven_english_sts_v2', 'eleven_multilingual_sts_v2']
+model: eleven_v4
+{"name": "v7_01", "lang": "zh", "text": "圆明园十二兽首，你猜回来了几个？", "voice": "APSIkVZudNbPAwyPoeVO", "voice_id": "APSIkVZudNbPAwyPoeVO", "model": "eleven_v4", "status": 200, "file": "v7_01.mp3", "bytes": 57303}
+{"name": "v7_02", "lang": "zh", "text": "七个回了中国。", "voice": "APSIkVZudNbPAwyPoeVO", "voice_id": "APSIkVZudNbPAwyPoeVO", "model": "eleven_v4", "status": 200, "file": "v7_02.mp3", "bytes": 29300}
+{"name": "v7_03", "lang": "zh", "text": "可住回圆明园的，只有一个。", "voice": "APSIkVZudNbPAwyPoeVO", "voice_id": "APSIkVZudNbPAwyPoeVO", "model": "eleven_v4", "status": 200, "file": "v7_03.mp3", "bytes": 46018}
+{"name": "v7_04", "lang": "zh", "text": "今年夏天，四个兽首去了杭州，", "voice": "APSIkVZudNbPAwyPoeVO", "voice_id": "APSIkVZudNbPAwyPoeVO", "model": "eleven_v4", "status": 200, "file": "v7_04.mp3", "bytes": 51034}
+{"name": "v7_05", "lang": "zh", "text": "人们排了几个小时去看。", "voice": "APSIkVZudNbPAwyPoeVO", "voice_id": "APSIkVZudNbPAwyPoeVO", "model": "eleven_v4", "status": 200, "file": "v7_05.mp3", "bytes": 36823}
+{"name": "v7_06", "lang": "zh", "text": "十二兽首，原本是喷泉的出水口。", "voice": "APSIkVZudNbPAwyPoeVO", "voice_id": "APSIkVZudNbPAwyPoeVO", "model": "eleven_v4", "status": 200, "file": "v7_06.mp3", "bytes": 58557}
+{"name": "v7_09", "lang": "zh", "text": "它被带走了。", "voice": "APSIkVZudNbPAwyPoeVO", "voice_id": "APSIkVZudNbPAwyPoeVO", "model": "eleven_v4", "status": 200, "file": "v7_09.mp3", "bytes": 23030}
+{"name": "v7_10", "lang": "zh", "text": "一百多年后，它出现在伦敦。", "voice": "APSIkVZudNbPAwyPoeVO", "voice_id": "APSIkVZudNbPAwyPoeVO", "model": "eleven_v4", "status": 200, "file": "v7_10.mp3", "bytes": 46018}
+{"name": "v7_11", "lang": "zh", "text": "你猜，它卖了多少？", "voice": "APSIkVZudNbPAwyPoeVO", "voice_id": "APSIkVZudNbPAwyPoeVO", "model": "eleven_v4", "status": 200, "file": "v7_11.mp3", "bytes": 31807}
+{"name": "v7_13", "lang": "zh", "text": "二零零七年，它又要上拍了。", "voice": "APSIkVZudNbPAwyPoeVO", "voice_id": "APSIkVZudNbPAwyPoeVO", "model": "eleven_v4", "status": 200, "file": "v7_13.mp3", "bytes": 43510}
+{"name": "v7_16", "lang": "zh", "text": "拍卖前，何鸿燊私下买下了它：", "voice": "APSIkVZudNbPAwyPoeVO", "voice_id": "APSIkVZudNbPAwyPoeVO", "model": "eleven_v4", "status": 200, "file": "v7_16.mp3", "bytes": 52287}
+{"name": "v7_23", "lang": "zh", "text": "何鸿燊，也把它捐给了国家。", "voice": "APSIkVZudNbPAwyPoeVO", "voice_id": "APSIkVZudNbPAwyPoeVO", "model": "eleven_v4", "status": 200, "file": "v7_23.mp3", "bytes": 41838}
+{"name": "v7_25", "lang": "zh", "text": "他没等到，它回家的那天。", "voice": "APSIkVZudNbPAwyPoeVO", "voice_id": "APSIkVZudNbPAwyPoeVO", "model": "eleven_v4", "status": 200, "file": "v7_25.mp3", "bytes": 43510}
+{"name": "v7_27", "lang": "zh", "text": "它回到了圆明园。", "voice": "APSIkVZudNbPAwyPoeVO", "voice_id": "APSIkVZudNbPAwyPoeVO", "model": "eleven_v4", "status": 200, "file": "v7_27.mp3", "bytes": 29300}
+{"name": "v7_28", "lang": "zh", "text": "它离开了一百六十年。", "voice": "APSIkVZudNbPAwyPoeVO", "voice_id": "APSIkVZudNbPAwyPoeVO", "model": "eleven_v4", "status": 200, "file": "v7_28.mp3", "bytes": 35569}
+{"name": "v7_29", "lang": "zh", "text": "它住进园里唯一没烧掉的古建筑。", "voice": "APSIkVZudNbPAwyPoeVO", "voice_id": "APSIkVZudNbPAwyPoeVO", "model": "eleven_v4", "status": 200, "file": "v7_29.mp3", "bytes": 51034}
+{"name": "v7_30", "lang": "zh", "text": "细看，它是红铜一次铸成的。", "voice": "APSIkVZudNbPAwyPoeVO", "voice_id": "APSIkVZudNbPAwyPoeVO", "model": "eleven_v4", "status": 200, "file": "v7_30.mp3", "bytes": 52287}
+{"name": "v7_31", "lang": "zh", "text": "只有一只耳朵，是卷的。", "voice": "APSIkVZudNbPAwyPoeVO", "voice_id": "APSIkVZudNbPAwyPoeVO", "model": "eleven_v4", "status": 200, "file": "v7_31.mp3", "bytes": 40585}
+{"name": "v7_32", "lang": "zh", "text": "研究的人说：它这一路被撞过。", "voice": "APSIkVZudNbPAwyPoeVO", "voice_id": "APSIkVZudNbPAwyPoeVO", "model": "eleven_v4", "status": 200, "file": "v7_32.mp3", "bytes": 56049}
+{"name": "v7_33", "lang": "zh", "text": "正午十二点，它们本该一起喷水。", "voice": "APSIkVZudNbPAwyPoeVO", "voice_id": "APSIkVZudNbPAwyPoeVO", "model": "eleven_v4", "status": 200, "file": "v7_33.mp3", "bytes": 52287}
+Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+[
+ {
+  "name": "v7_01",
+  "lang": "zh",
+  "text": "圆明园十二兽首，你猜回来了几个？",
+  "voice": "APSIkVZudNbPAwyPoeVO",
+  "voice_id": "APSIkVZudNbPAwyPoeVO",
+  "model": "eleven_v4",
+  "status": 200,
+  "file": "v7_01.mp3",
+  "bytes": 57303,
+  "heard": "袁明元十二授手你猜回来了几个",
+  "heard_lang": "zh",
+  "heard_lang_p": 0.998,
+  "seconds": 3.52
+ },
+ {
+  "name": "v7_02",
+  "lang": "zh",
+  "text": "七个回了中国。",
+  "voice": "APSIkVZudNbPAwyPoeVO",
+  "voice_id": "APSIkVZudNbPAwyPoeVO",
+  "model": "eleven_v4",
+  "status": 200,
+  "file": "v7_02.mp3",
+  "bytes": 29300,
+  "heard": "七个回了中国",
+  "heard_lang": "zh",
+  "heard_lang_p": 0.991,
+  "seconds": 1.76
+ },
+ {
+  "name": "v7_03",
+  "lang": "zh",
+  "text": "可住回圆明园的，只有一个。",
+  "voice": "APSIkVZudNbPAwyPoeVO",
+  "voice_id": "APSIkVZudNbPAwyPoeVO",
+  "model": "eleven_v4",
+  "status": 200,
+  "file": "v7_03.mp3",
+  "bytes": 46018,
+  "heard": "可祝回元明元的只有一個",
+  "heard_lang": "zh",
+  "heard_lang_p": 0.997,
+  "seconds": 2.8
+ },
+ {
+  "name": "v7_04",
+  "lang": "zh",
+  "text": "今年夏天，四个兽首去了杭州，",
+  "voice": "APSIkVZudNbPAwyPoeVO",
+  "voice_id": "APSIkVZudNbPAwyPoeVO",
+  "model": "eleven_v4",
+  "status": 200,
+  "file": "v7_04.mp3",
+  "bytes": 51034,
+  "heard": "今年夏天,四个授手去了杭州",
+  "heard_lang": "zh",
+  "heard_lang_p": 0.999,
+  "seconds": 3.12
+ },
+ {
+  "name": "v7_05",
+  "lang": "zh",
+  "text": "人们排了几个小时去看。",
+  "voice": "APSIkVZudNbPAwyPoeVO",
+  "voice_id": "APSIkVZudNbPAwyPoeVO",
+  "model": "eleven_v4",
+  "status": 200,
+  "file": "v7_05.mp3",
+  "bytes": 36823,
+  "heard": "人们排了几个小时去看",
+  "heard_lang": "zh",
+  "heard_lang_p": 0.999,
+  "seconds": 2.24
+ },
+ {
+  "name": "v7_06",
+  "lang": "zh",
+  "text": "十二兽首，原本是喷泉的出水口。",
+  "voice": "APSIkVZudNbPAwyPoeVO",
+  "voice_id": "APSIkVZudNbPAwyPoeVO",
+  "model": "eleven_v4",
+  "status": 200,
+  "file": "v7_06.mp3",
+  "bytes": 58557,
+  "heard": "十二授手,原本是噴泉的出水口",
+  "heard_lang": "zh",
+  "heard_lang_p": 0.998,
+  "seconds": 3.6
+ },
+ {
+  "name": "v7_09",
+  "lang": "zh",
+  "text": "它被带走了。",
+  "voice": "APSIkVZudNbPAwyPoeVO",
+  "voice_id": "APSIkVZudNbPAwyPoeVO",
+  "model": "eleven_v4",
+  "status": 200,
+  "file": "v7_09.mp3",
+  "bytes": 23030,
+  "heard": "他被带走了",
+  "heard_lang": "zh",
+  "heard_lang_p": 0.999,
+  "seconds": 1.36
+ },
+ {
+  "name": "v7_10",
+  "lang": "zh",
+  "text": "一百多年后，它出现在伦敦。",
+  "voice": "APSIkVZudNbPAwyPoeVO",
+  "voice_id": "APSIkVZudNbPAwyPoeVO",
+  "model": "eleven_v4",
+  "status": 200,
+  "file": "v7_10.mp3",
+  "bytes": 46018,
+  "heard": "一百多年后,他出现在伦敦",
+  "heard_lang": "zh",
+  "heard_lang_p": 0.999,
+  "seconds": 2.8
+ },
+ {
+  "name": "v7_11",
+  "lang": "zh",
+  "text": "你猜，它卖了多少？",
+  "voice": "APSIkVZudNbPAwyPoeVO",
+  "voice_id": "APSIkVZudNbPAwyPoeVO",
+  "model": "eleven_v4",
+  "status": 200,
+  "file": "v7_11.mp3",
+  "bytes": 31807,
+  "heard": "你猜他卖了多少",
+  "heard_lang": "zh",
+  "heard_lang_p": 0.998,
+  "seconds": 1.92
+ },
+ {
+  "name": "v7_13",
+  "lang": "zh",
+  "text": "二零零七年，它又要上拍了。",
+  "voice": "APSIkVZudNbPAwyPoeVO",
+  "voice_id": "APSIkVZudNbPAwyPoeVO",
+  "model": "eleven_v4",
+  "status": 200,
+  "file": "v7_13.mp3",
+  "bytes": 43510,
+  "heard": "2007年,他又要上拍了",
+  "heard_lang": "zh",
+  "heard_lang_p": 0.997,
+  "seconds": 2.64
+ },
+ {
+  "name": "v7_16",
+  "lang": "zh",
+  "text": "拍卖前，何鸿燊私下买下了它：",
+  "voice": "APSIkVZudNbPAwyPoeVO",
+  "voice_id": "APSIkVZudNbPAwyPoeVO",
+  "model": "eleven_v4",
+  "status": 200,
+  "file": "v7_16.mp3",
+  "bytes": 52287,
+  "heard": "拍賣前,何宏申私下買下了他",
+  "heard_lang": "zh",
+  "heard_lang_p": 0.996,
+  "seconds": 3.2
+ },
+ {
+  "name": "v7_23",
+  "lang": "zh",
+  "text": "何鸿燊，也把它捐给了国家。",
+  "voice": "APSIkVZudNbPAwyPoeVO",
+  "voice_id": "APSIkVZudNbPAwyPoeVO",
+  "model": "eleven_v4",
+  "status": 200,
+  "file": "v7_23.mp3",
+  "bytes": 41838,
+  "heard": "何洪深也把他捐给了国家",
+  "heard_lang": "zh",
+  "heard_lang_p": 0.999,
+  "seconds": 2.56
+ },
+ {
+  "name": "v7_25",
+  "lang": "zh",
+  "text": "他没等到，它回家的那天。",
+  "voice": "APSIkVZudNbPAwyPoeVO",
+  "voice_id": "APSIkVZudNbPAwyPoeVO",
+  "model": "eleven_v4",
+  "status": 200,
+  "file": "v7_25.mp3",
+  "bytes": 43510,
+  "heard": "他沒等到他回家的那天",
+  "heard_lang": "zh",
+  "heard_lang_p": 0.999,
+  "seconds": 2.64
+ },
+ {
+  "name": "v7_27",
+  "lang": "zh",
+  "text": "它回到了圆明园。",
+  "voice": "APSIkVZudNbPAwyPoeVO",
+  "voice_id": "APSIkVZudNbPAwyPoeVO",
+  "model": "eleven_v4",
+  "status": 200,
+  "file": "v7_27.mp3",
+  "bytes": 29300,
+  "heard": "他回到了原名园",
+  "heard_lang": "zh",
+  "heard_lang_p": 0.999,
+  "seconds": 1.76
+ },
+ {
+  "name": "v7_28",
+  "lang": "zh",
+  "text": "它离开了一百六十年。",
+  "voice": "APSIkVZudNbPAwyPoeVO",
+  "voice_id": "APSIkVZudNbPAwyPoeVO",
+  "model": "eleven_v4",
+  "status": 200,
+  "file": "v7_28.mp3",
+  "bytes": 35569,
+  "heard": "他离开了160年",
+  "heard_lang": "zh",
+  "heard_lang_p": 1.0,
+  "seconds": 2.16
+ },
+ {
+  "name": "v7_29",
+  "lang": "zh",
+  "text": "它住进园里唯一没烧掉的古建筑。",
+  "voice": "APSIkVZudNbPAwyPoeVO",
+  "voice_id": "APSIkVZudNbPAwyPoeVO",
+  "model": "eleven_v4",
+  "status": 200,
+  "file": "v7_29.mp3",
+  "bytes": 51034,
+  "heard": "他住进原里唯一没烧掉的古建筑",
+  "heard_lang": "zh",
+  "heard_lang_p": 0.999,
+  "seconds": 3.12
+ },
+ {
+  "name": "v7_30",
+  "lang": "zh",
+  "text": "细看，它是红铜一次铸成的。",
+  "voice": "APSIkVZudNbPAwyPoeVO",
+  "voice_id": "APSIkVZudNbPAwyPoeVO",
+  "model": "eleven_v4",
+  "status": 200,
+  "file": "v7_30.mp3",
+  "bytes": 52287,
+  "heard": "细看,它是红桐一次铸成的。",
+  "heard_lang": "zh",
+  "heard_lang_p": 0.999,
+  "seconds": 3.2
+ },
+ {
+  "name": "v7_31",
+  "lang": "zh",
+  "text": "只有一只耳朵，是卷的。",
+  "voice": "APSIkVZudNbPAwyPoeVO",
+  "voice_id": "APSIkVZudNbPAwyPoeVO",
+  "model": "eleven_v4",
+  "status": 200,
+  "file": "v7_31.mp3",
+  "bytes": 40585,
+  "heard": "只有一只耳朵是卷的",
+  "heard_lang": "zh",
+  "heard_lang_p": 0.999,
+  "seconds": 2.48
+ },
+ {
+  "name": "v7_32",
+  "lang": "zh",
+  "text": "研究的人说：它这一路被撞过。",
+  "voice": "APSIkVZudNbPAwyPoeVO",
+  "voice_id": "APSIkVZudNbPAwyPoeVO",
+  "model": "eleven_v4",
+  "status": 200,
+  "file": "v7_32.mp3",
+  "bytes": 56049,
+  "heard": "研究的人说,他这一路被撞过",
+  "heard_lang": "zh",
+  "heard_lang_p": 0.999,
+  "seconds": 3.44
+ },
+ {
+  "name": "v7_33",
+  "lang": "zh",
+  "text": "正午十二点，它们本该一起喷水。",
+  "voice": "APSIkVZudNbPAwyPoeVO",
+  "voice_id": "APSIkVZudNbPAwyPoeVO",
+  "model": "eleven_v4",
+  "status": 200,
+  "file": "v7_33.mp3",
+  "bytes": 52287,
+  "heard": "正午12点,他们本该一起喷水",
+  "heard_lang": "zh",
+  "heard_lang_p": 0.998,
+  "seconds": 3.2
+ }
+]
