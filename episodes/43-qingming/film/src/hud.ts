@@ -59,7 +59,7 @@ export const stamp = (hud: HTMLElement, st: Stamp | null, t: number, a: number, 
 	html(hud, `<div class="stamp sh" style="opacity:${(o * smooth(u)).toFixed(3)};transform:translateY(${y.toFixed(1)}px)"><div class="s1">${st.s1}</div>${st.s2 ? `<div class="s2">${st.s2}</div>` : ''}${st.s3 ? `<div class="s3">${st.s3}</div>` : ''}</div>`);
 };
 /** the old series corner mark */
-export const mark = (hud: HTMLElement, o = 1) => { if (o > 0) html(hud, `<div class="mark" style="opacity:${(0.62 * o).toFixed(3)}"><span style="color:#B9B2A6">◆</span> Juno · VIBE知识大赏</div>`); };
+export const mark = (hud: HTMLElement, o = 1) => { if (o > 0) html(hud, `<div class="mark" style="opacity:${(0.62 * o).toFixed(3)}"><span style="color:#B9B2A6">◆</span> Juno · VIBE知识大赏</div><div class="jl" style="opacity:${(0.42 * o).toFixed(3)}">J</div>`); };
 
 /** odometer digits for a value that may be mid-roll (v real); width = number of digits shown */
 const odo = (v: number, width: number) => {
