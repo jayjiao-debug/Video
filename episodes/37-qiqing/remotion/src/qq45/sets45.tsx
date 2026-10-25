@@ -156,9 +156,9 @@ export const ZPos3 = (cx: number, g: number, k: number) => {
 		out.push({z, x: cx + sg * lerp(440 * k, 180 * k, u), y: g + lerp(262 * k, 34 * k, u), s: lerp(1.0, 0.6, u) * k, side: sg}); }));
 	return out;
 };
-export const WaterArc3: React.FC<{x0: number; y0: number; x1: number; y1: number; h: number; o?: number; w?: number}> = ({x0, y0, x1, y1, h, o = 0.9, w = 5}) => {
+export const WaterArc3: React.FC<{x0: number; y0: number; x1: number; y1: number; h: number; o?: number; w?: number; halo?: boolean}> = ({x0, y0, x1, y1, h, o = 0.9, w = 5, halo = true}) => {
 	const cx = (x0 + x1) / 2, cy = Math.min(y0, y1) - h, d = `M${x0},${y0} Q${cx},${cy} ${x1},${y1}`;
-	return <g opacity={o}><path d={d} stroke="#BFE3E0" strokeWidth={w * 1.8} fill="none" strokeLinecap="round" opacity={0.35} filter="url(#soft6)" /><path d={d} stroke="#D9F0EE" strokeWidth={w} fill="none" strokeLinecap="round" /><path d={d} stroke="#ffffff" strokeWidth={w * 0.35} fill="none" strokeLinecap="round" opacity={0.85} />
+	return <g opacity={o}>{halo && <path d={d} stroke="#BFE3E0" strokeWidth={w * 1.8} fill="none" strokeLinecap="round" opacity={0.35} filter="url(#soft6)" />}<path d={d} stroke="#D9F0EE" strokeWidth={w} fill="none" strokeLinecap="round" /><path d={d} stroke="#ffffff" strokeWidth={w * 0.35} fill="none" strokeLinecap="round" opacity={0.85} />
 		{Array.from({length: 8}, (_, i) => <circle key={i} cx={x1 + (rnd(i, x0) - 0.5) * 34} cy={y1 - rnd(i, y0) * 18} r={1.6 + 2 * rnd(i, 9)} fill="#E8F6F4" opacity={0.85} />)}</g>;
 };
 export const Pool3: React.FC<{cx: number; g: number; k: number; present: Set<Z> | 'all'; ghost?: boolean; ghostSet?: Set<Z>; arcs?: 'none' | 'all' | 'memory' | 'one'; id: string; active?: Z; grow?: number; youGlow?: number; you?: boolean; rip?: number}> = ({cx, g, k, present, arcs = 'none', ghost, ghostSet, id, active, grow = 1, youGlow = 0.9, you = true, rip}) => {
@@ -194,9 +194,9 @@ import type {Pose} from '../qq44/figure44';
 export const Kepi: React.FC<{pose: Pose; x: number; g: number; h: number; flip?: boolean; c?: string}> = ({pose, x, g, h, flip, c = '#1D252B'}) => {
 	const top = jointAt(pose, 'Top', x, g, h, flip), hd = jointAt(pose, 'Head', x, g, h, flip), a = Math.atan2(top[0] - hd[0], hd[1] - top[1]) * 180 / Math.PI;
 	return <g transform={`translate(${top[0]},${top[1]}) rotate(${a}) scale(${flip ? -h : h},${h})`}>
-		<path d="M-0.06,0.036 L-0.056,-0.016 Q0,-0.024 0.05,-0.006 L0.056,0.032 Z" fill={c} />
-		<path d="M0.046,0.026 L0.094,0.044 L0.05,0.042 Z" fill={c} />
-		<rect x={-0.06} y={0.02} width={0.116} height={0.012} fill="#E9DFC8" opacity={0.3} />
+		<path d="M-0.056,0.036 L-0.06,-0.03 L0.042,-0.012 L0.05,0.036 Z" fill={c} />
+		<path d="M0.044,0.03 L0.086,0.036 L0.086,0.043 L0.044,0.041 Z" fill={c} />
+		<path d="M-0.06,-0.03 L0.042,-0.012" stroke="#E9DFC8" strokeWidth={0.004} opacity={0.35} />
 	</g>; };
 /** fire behind a roofline: flame tongues from x0 to x1, base y, height hgt; k = strength */
 export const Fire: React.FC<{t: number; x0: number; x1: number; y: number; hgt: number; k: number}> = ({t, x0, x1, y, hgt, k}) => {
@@ -253,8 +253,8 @@ export const Courtyard: React.FC<{t: number; id: string; doors?: number; light?:
 	<g>
 		<rect x={830} y={510} width={260} height={190} fill="#22160F" />
 		<Glow x={960} y={600} r={160} c={CU.halo} o={0.55 * light * youGlow} id={`${id}in`} />
-		<rect x={905} y={636} width={110} height={64} fill="url(#mbV)" stroke={INK} strokeWidth={1.5} />
-		{you && <HorseHead x={960} y={636 - 0.15 * 276} s={0.15} id={`${id}y`} glow={youGlow} />}
+		<rect x={915} y={644} width={90} height={56} fill="url(#mbV)" stroke={INK} strokeWidth={1.5} />
+		{you && <HorseHead x={960} y={644 - 0.12 * 276} s={0.12} id={`${id}y`} glow={youGlow} />}
 	</g>
 	{/* lattice walls either side of the door bay */}
 	{[[640, 820], [1100, 1280]].map(([a, b], i) => <g key={i}><rect x={a} y={500} width={b - a} height={200} fill={REDL} stroke={INK} strokeWidth={1.5} />
