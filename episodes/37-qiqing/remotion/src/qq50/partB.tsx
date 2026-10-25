@@ -68,7 +68,7 @@ const SongIron: React.FC<{t: number}> = ({t}) => {
 	const swayStop = 6 + 8 * Math.exp(-2.2 * Math.max(0, t - tsLast)) * Math.sin(2 * Math.PI * Math.max(0, t - tsLast) / 1.1);
 	const sway = lerp(swayStop, 10 + 4 * Math.sin(2 * Math.PI * phase), walkK);
 	const pose = mix(carrierPose(sway), carryWalk(phase, sway), walkK);
-	const z = 1 + 0.025 * ease(seg(t, S1s, 60.0)) - 0.11 * ease(seg(t, 59.9, 61.2)), shake = jolt(t, S1s, 6) + jolt(t, 62.25, 4);
+	const z = (1 + 0.025 * ease(seg(t, S1s, 60.0)) - 0.11 * ease(seg(t, 59.9, 61.2))) * (1 + 0.3 * ease(seg(t, 64.2, 65.0))), shake = jolt(t, S1s, 6) + jolt(t, 62.25, 4);
 	const lh = J(pose, 'LHand', wX, G1, H1);
 	/* haulers and the coin cart: the street is full of people carrying strings */
 	const haul = [[-900, 120, 0.5], [-1500, 105, 0.46]].map(([x0, v, s]) => ({x: x0 + v * (t - S1a), s, ph: v * (t - S1a) / (STRIDE * H1 * s)}));
@@ -108,36 +108,43 @@ const SongIron: React.FC<{t: number}> = ({t}) => {
 	</Scene>; };
 
 /* ======================================================================================================================
-   S3b · 64.6–67.75 · the counter insert: his fist feeds ten iron coins onto one pan; one copper coin sits on the other. The
-   beam creeps level coin by coin and settles on 66.43; the tags count; the keeper shrugs. (A new frame, away from the string.)
+   S3b · 64.6–67.75 · the counter trade (a new frame, away from the string; no weighing): his hand drops iron coins onto the
+   stall counter one by one (the tag counts 1 → 10); on 「才抵」 (66.43) the keeper slides back ONE copper coin;
+   「铁钱 10枚 ⇄ 铜钱 1枚」; the keeper shrugs. Two big cropped figures across the counter, hands from their own arms.
    ==================================================================================================================== */
-const IB = {x: 900, g: 880, post: 430, arm: 300, t0: 64.95, dt: 0.164};
-const IronBal: React.FC<{t: number}> = ({t}) => {
-	const n = cl(Math.floor((t - IB.t0) / IB.dt) + 1, 0, 10), tl = IB.t0 + (n - 1) * IB.dt;
-	const b = n > 0 ? 1.4 * Math.exp(-9 * (t - tl)) * Math.sin(30 * (t - tl)) : 0;
-	const tilt = -10 + n + b + (n === 10 ? 0 : 0);
-	const fall = n < 10 && t > IB.t0 - 0.16 ? seg(t, IB.t0 + n * IB.dt - 0.15, IB.t0 + n * IB.dt) : -1;
-	const z = 1.14 + 0.045 * ease(seg(t, 64.6, 67.7));
-	const L = panAt(IB.x, IB.g, IB.post, IB.arm, tilt, 'L'), R = panAt(IB.x, IB.g, IB.post, IB.arm, tilt, 'R');
-	const fist: P2 = [L[0] - 175, L[1] - 120 + 4 * Math.sin(t * 3)];
-	const shrug = bump(t, 66.6, 1.0), kp = grounded({lean: 2 - 4 * shrug, neck: 8 + 10 * shrug, lt: 2, lk: 2, rt: -3, rk: 3, la: lerp(20, 55, shrug), le: lerp(40, 105, shrug), ra: 6, re: 20});
-	const stack = (k: number) => <g key={k} transform={`translate(0,${-8 - k * 8})`}><ellipse rx={34} ry={10} fill="url(#ironF)" stroke="#23262A" strokeWidth={1.5} /><ellipse cy={-2} rx={30} ry={7} fill="#6D747A" opacity={0.6} /><rect x={-5} y={-5} width={10} height={5} fill={B.lac} /></g>;
+const TR = {top: 760, sx: 600, t0: 64.95, dt: 0.16, slide: 66.43, c0: 1470, c1: 1250};
+const IronTrade: React.FC<{t: number}> = ({t}) => {
+	const n = cl(Math.floor((t - TR.t0) / TR.dt) + 1, 0, 10);
+	const z = lerp(0.9, 1, eout(seg(t, 64.6, 65.3))) + 0.03 * ease(seg(t, 65.3, 67.75));
+	const since = n > 0 && n < 10 ? (t - TR.t0) - (n - 1) * TR.dt : 1, flick = since < 0.09 ? Math.sin(Math.PI * since / 0.09) : 0;
+	const hand: P2 = [TR.sx - 4, TR.top - 160 - 12 * flick + (n >= 10 ? 30 * ease(seg(t, 66.45, 66.9)) : 0)];
+	const wx = 280, wg = 1560, wh = 1100;
+	const wp = ikArm(grounded({lean: 12, neck: 24, lt: 3, lk: 3, rt: -4, rk: 4, la: 30, le: 40, ra: 4, re: 14}), 'L', toBody(hand[0], hand[1], wx, wg, wh));
+	const slideK = ease(seg(t, TR.slide, TR.slide + 0.45)), cx = lerp(TR.c0, TR.c1, slideK);
+	const reachK = ease(seg(t, TR.slide - 0.35, TR.slide)) * (1 - ease(seg(t, TR.slide + 0.55, TR.slide + 0.95)));
+	const kx = 1720, kg = 1560, kh = 1100, shrug = bump(t, 66.95, 0.8);
+	let kp = grounded({lean: 10 - 6 * shrug, neck: 18 + 8 * shrug, lt: 2, lk: 2, rt: -3, rk: 3, la: lerp(20, 46, shrug), le: lerp(50, 100, shrug), ra: 6, re: 20});
+	if (reachK > 0) kp = ikArm(kp, 'L', toBody(lerp(kx - 230, cx + 38, reachK), lerp(TR.top - 60, TR.top - 22, reachK), kx, kg, kh, true));
+	const coinY = (k: number) => TR.top - 4 - k * 9;
+	const fallK = n < 10 && t > TR.t0 - 0.12 ? seg(t, TR.t0 + n * TR.dt - 0.12, TR.t0 + n * TR.dt) : -1;
+	const ironCoin = (x: number, y: number, k: string) => <g key={k} transform={`translate(${x},${y})`}><ellipse rx={40} ry={11} fill="url(#ironF)" stroke="#23262A" strokeWidth={1.5} /><ellipse cy={-2} rx={34} ry={8} fill="#7A838A" opacity={0.7} /><path d="M-6,-5 L6,-5 L8,0 L-8,0 Z" fill={B.lac} /></g>;
+	const final = fade(t, 66.6, 0.25);
 	return <Scene id="b2" sheen={0.35}>
-		<g transform={`translate(900,700) scale(${z}) translate(-900,-700)`}>
-			<rect x={-40} y={420} width={W + 80} height={460} fill={BG.wall} />
-			{[0, 1, 2, 3, 4, 5].map((i) => <rect key={i} x={-20 + i * 330} y={300} width={70} height={520} rx={6} fill={['#24182C', '#2E1A10', '#1F2618'][i % 3]} stroke={BG.line} strokeWidth={1.2} />)}
-			<Extra x={1610} g={1500} h={1050} pose={kp} look={{dress: 'robe', head: 'futou', beard: 'short', build: 1.05}} rimO={0.4} />
-			<rect x={-40} y={IB.g} width={W + 80} height={240} fill="#1E0F0B" /><rect x={-40} y={IB.g} width={W + 80} height={4} fill={B.gold} opacity={0.4} />
-			<Pool id="b2" x={IB.x} y={600} rx={620} ry={380} a={0.3} />
-			<Bal x={IB.x} g={IB.g} post={IB.post} arm={IB.arm} tilt={tilt}
-				left={<g>{Array.from({length: n}, (_, k) => stack(k))}{fall >= 0 && <g transform={`translate(${-150 * (1 - fall)},${-8 - n * 8 - 90 * (1 - fall) - 120 * Math.sin(Math.PI * fall) * 0.6})`}>{stack(0)}</g>}</g>}
-				right={<g filter="url(#glS)"><RoundCoin x={0} y={-60} r={54} legend={['', '', '', '']} /></g>} />
-			<Tag x={L[0]} y={L[1] + 100} s={`铁钱 ${n}枚`} fs={34} w={190} o={fade(t, 64.8, 0.2)} />
-			<Tag x={R[0]} y={R[1] + 100} s="铜钱 1枚" fs={34} w={190} o={fade(t, 64.8, 0.2)} />
-			{/* his fist from the left edge, the string through it, feeding coins */}
-			<g fill={B.lac} stroke={BG.rim} strokeOpacity={0.5} strokeWidth={1.8}>
-				<path d={`M-60,${fist[1] + 10} Q${fist[0] - 260},${fist[1] - 10} ${fist[0] - 30},${fist[1] - 20} L${fist[0] - 24},${fist[1] + 22} Q${fist[0] - 280},${fist[1] + 40} -60,${fist[1] + 110} Z`} />
-				<ellipse cx={fist[0]} cy={fist[1]} rx={30} ry={34} /></g>
+		<g transform={`translate(900,760) scale(${z}) translate(-900,-760)`}>
+			<rect x={-40} y={300} width={W + 80} height={480} fill={BG.wall} />
+			{[0, 1, 2, 3, 4, 5].map((i) => <rect key={i} x={-20 + i * 330} y={330} width={70} height={430} rx={6} fill={['#24182C', '#2E1A10', '#1F2618'][i % 3]} stroke={BG.line} strokeWidth={1.2} />)}
+			<Pool id="b2" x={900} y={680} rx={760} ry={340} a={0.3} />
+			<RimFig x={wx} ground={wg} h={wh} pose={wp} look={LOOKS.song} col={B.lac} T={t} dx={3} dy={-2.5} />
+			<Extra x={kx} g={kg} h={kh} pose={kp} look={{dress: 'robe', head: 'futou', beard: 'short', build: 1.05}} rimO={0.45} />
+			{/* the counter */}
+			<rect x={-40} y={TR.top} width={W + 80} height={H - TR.top + 40} fill="#1E0F0B" /><rect x={-40} y={TR.top} width={W + 80} height={4} fill={B.gold} opacity={0.42} />
+			<path d={Array.from({length: 12}, (_, i) => `M${-40 + i * 180},${TR.top + 40} h120`).join(' ')} stroke={B.gold} strokeOpacity={0.1} strokeWidth={2} />
+			{Array.from({length: n}, (_, k) => ironCoin(TR.sx, coinY(k), `s${k}`))}
+			{fallK >= 0 && ironCoin(TR.sx, lerp(hand[1] + 30, coinY(n), fallK * fallK), 'f')}
+			{/* the copper coin, slid back across the counter by the keeper */}
+			<g transform={`translate(${cx},${TR.top - 6})`} filter="url(#glS)"><ellipse rx={46} ry={13} fill="url(#brz)" stroke="#5A3A18" strokeWidth={1.5} /><ellipse cy={-2} rx={40} ry={9} fill="#F2C98A" opacity={0.45} /><path d="M-7,-6 L7,-6 L9,0 L-9,0 Z" fill={B.lac} /></g>
+			{final < 1 && <g opacity={(1 - final) * fade(t, 64.9, 0.2)}><Tag x={TR.sx} y={TR.top + 100} s={`铁钱 ×${n}`} fs={44} w={200} /></g>}
+			{final > 0 && <g opacity={final}><Tag x={(TR.sx + TR.c1) / 2} y={TR.top + 100} s="铁钱 10枚 ⇄ 铜钱 1枚" fs={44} w={500} /></g>}
 		</g>
 	</Scene>; };
 
@@ -241,7 +248,7 @@ const ThreadSwap: React.FC<{a: P2; b: P2; o: number; t: number; snap?: number; t
    ==================================================================================================================== */
 const FX0 = 380, FDX = 100, FP = 0.25, FG = 690;
 const litAt = (i: number) => 72.0 + i * 0.115;
-const outAt = (i: number) => 74.45 + (15 - i) * 0.065;
+const outAt = (i: number) => (i >= 8 ? 75.48 : 76.04) + 0.012 * (i % 8);   // the shutters drop on two beats
 const Canal16: React.FC<{t: number}> = ({t}) => {
 	const cam = dJ(t), wx = WJ + cam, {p: pose} = jzPose(t);
 	const Jw = (n: string) => J(pose, n, WJ, GJ, HJ), grip = gripOf(Jw('RHand'), Jw('RElb'), HJ);
@@ -249,8 +256,8 @@ const Canal16: React.FC<{t: number}> = ({t}) => {
 	const lit = (i: number) => fade(t, litAt(i), 0.12) * (1 - fade(t, outAt(i), 0.1));
 	const shut = (i: number) => fade(t, outAt(i), 0.18);
 	const snap = t > 74.91 ? seg(t, 74.91, 75.75) : 0;
-	const crowd = [2.6, 3.3, 6.5, 7.2, 11.4, 12.1].map((u, k) => ({x: FX0 + u * FDX + 45 - off, fl: k % 2 === 0, k}));
-	const crowdO = fade(t, 74.35, 0.4);
+	const crowd = [3.15, 5.85, 9.15, 12.85].map((u, k) => ({x: FX0 + u * FDX + 45 - off, fl: k % 2 === 0, k}));
+	const crowdO = fade(t, 74.3, 0.35);
 	return <Scene id="b4" sheen={0.35 + 0.04 * (t - 71)}>
 		<g fill="none" stroke={B.gold} strokeWidth={2} strokeLinecap="round" opacity={0.14}>{[[300, 330, 36, 1], [1250, 280, 44, -1], [1650, 360, 30, 1]].map(([x, y, r, d], i) => <path key={i} d={curl(x - cam * 0.08 + 6 * t, y, r, d, 3.2)} />)}</g>
 		<path d={`M-40,${FG - 40} Q400,${FG - 120} 900,${FG - 70} Q1400,${FG - 140} 1960,${FG - 60} V${FG} H-40 Z`} fill={B.far} transform={`translate(${-cam * 0.1},0)`} />
@@ -266,10 +273,10 @@ const Canal16: React.FC<{t: number}> = ({t}) => {
 					{L > 0.05 && <text x={x + 45} y={FG - 128} textAnchor="middle" fontFamily={KAI} fontWeight={700} fontSize={22} fill={B.goldL} opacity={L * (1 - fade(t, 74.3, 0.3))}>{i + 1}</text>}
 					{pop > 0 && pop < 1 && t < 74.4 && <rect x={x + 40 + 14 * pop} y={FG - 40 - 50 * pop} width={10} height={16} fill={B.cream} opacity={Math.sin(Math.PI * pop)} transform={`rotate(${30 * pop},${x + 45},${FG - 40})`} />}
 				</g>; })}
-			{crowd.map((c) => { const raise = 0.5 + 0.5 * Math.sin((t - 74.4) * 7 + c.k * 1.7), q = ikArm(grounded({lean: 2, neck: -10, lt: 3, lk: 3, rt: -4, rk: 4, la: 4, le: 12, ra: 4, re: 12}), 'L', [0.16, lerp(0.95, 1.12, raise)]);
-				const hd = J(q, 'LHand', c.x, FG, 96, c.fl);
-				return <g key={c.k} opacity={crowdO}><RimFig x={c.x} ground={FG} h={96} pose={q} look={[LOOKS.song, {dress: 'robe', head: 'futou'} as typeof LOOKS.song, {dress: 'dress', head: 'bun'} as typeof LOOKS.song][c.k % 3]} col="#0F0806" flip={c.fl} dx={c.fl ? -1.5 : 1.5} dy={-1.2} rimO={0.5} />
-					<rect x={hd[0] - 4} y={hd[1] - 14} width={8} height={13} fill={B.cream} opacity={0.85} /></g>; })}
+			{crowd.map((c) => { const raise = 0.5 + 0.5 * Math.sin((t - 74.3) * 6 + c.k * 1.7), q = ikArm(grounded({lean: 4 + 4 * raise, neck: -8, lt: 3, lk: 3, rt: -4, rk: 4, la: 4, le: 12, ra: 4, re: 12}), 'L', [0.2, lerp(0.98, 1.14, raise)]), hh = 108;
+				const hd = J(q, 'LHand', c.x, FG, hh, c.fl);
+				return <g key={c.k} opacity={crowdO}><RimFig x={c.x} ground={FG} h={hh} pose={q} look={[LOOKS.song, {dress: 'robe', head: 'futou'} as typeof LOOKS.song, {dress: 'dress', head: 'bun'} as typeof LOOKS.song][c.k % 3]} col="#140B08" flip={c.fl} dx={c.fl ? -2 : 2} dy={-1.6} rimO={0.85} />
+					<rect x={hd[0] - 6} y={hd[1] - 19} width={12} height={18} fill={B.cream} stroke="#BF3420" strokeWidth={1.5} /></g>; })}
 		</g>
 		{/* the canal, with the lanterns' reflections */}
 		<rect x={-40} y={FG} width={W + 80} height={GJ - FG} fill="#0F0705" />
@@ -294,16 +301,14 @@ const Canal16: React.FC<{t: number}> = ({t}) => {
    S6–S7 · 76.5–81.9 · the government gate: an official presses the seal onto his slip on the downbeat 77.18; the phone from
    frame 0 ghosts over it for one beat; he lifts the slip into a shaft of light on the crash 79.44 and walks on, slip held high.
    ==================================================================================================================== */
-const GG = 905, HG = 565, OX = 1265, OG = 885, OH = 520, SNW = JNW, SNH = JNH;
+const GG = 905, HG = 565, OX = 1265, OG = 885, OH = 520, SNW = JNW, SNH = JNH, MATCH_H = 600, MATCH_Y = 612;   // the match-cut slip: 600 px tall, top ≥ y 312 (clear of the subtitle rows)
 const Gate: React.FC<{t: number}> = ({t}) => {
-	const walkD = trap(t, 80.2, 83.0, vNat(HG), 0.35, 0.3), wx = WJ + walkD;
-	const up = ease(seg(t, 78.85, 79.4));
+	const wx = WJ, up = ease(seg(t, 78.85, 79.4)), push = ease(seg(t, 80.55, 81.45));
 	const pres = ease(seg(t, 76.8, 77.05)), r0 = rel(STAND, 0.25, 0.1);
-	let p = mix(ikArm(STAND, 'R', [lerp(r0[0], 0.32, pres), lerp(r0[1], 0.8, pres)]), ikArm(grounded({lean: 0, neck: -22, lt: 3, lk: 3, rt: -5, rk: 4, la: 4, le: 14, ra: 4, re: 14}), 'R', [0.36, 0.93]), up);
-	const wk = ease(seg(t, 80.2, 80.5));
-	if (wk > 0) { const w = walkPose(phaseOf(walkD, HG)); p = mix(p, ikArm(w, 'R', rel(w, 0.32, 0.4)), wk); }
+	/* the slip stays ≥ 40 px under the subtitle band (its top ≥ y 270): presented at chest height, raised to the shoulder */
+	const p = mix(ikArm(STAND, 'R', [lerp(r0[0], 0.31, pres), lerp(r0[1], 0.72, pres)]), ikArm(grounded({lean: 0, neck: -16, lt: 3, lk: 3, rt: -5, rk: 4, la: 4, le: 14, ra: 4, re: 14}), 'R', [0.33, 0.78]), up);
 	const Jw = (n: string) => J(p, n, wx, GG, HG), grip = gripOf(Jw('RHand'), Jw('RElb'), HG);
-	const rot = -4 + 1.2 * Math.sin(t * 1.5), cx = grip[0], cy = grip[1] - SNH / 2 + 34;   // the slip's centre
+	const rot = lerp(-4 + 1.2 * Math.sin(t * 1.5), 1.5, push), cx = grip[0], cy = grip[1] - SNH / 2 + 34;   // the slip's centre
 	/* the official: seal from his side to the slip's face, pressed on 77.18, lifted at 77.45 */
 	const reach = ease(seg(t, 76.75, 77.12)) * (1 - ease(seg(t, 77.45, 77.85))), press = t > 77.12 && t < 77.45 ? 1 : 0;
 	const sealTo: P2 = [cx + 6, cy + 10 - 30 * (1 - press) * reach], rest: P2 = [OX - 70, OG - 0.42 * OH];
@@ -312,10 +317,14 @@ const Gate: React.FC<{t: number}> = ({t}) => {
 	let op = grounded({lean: 6 + 14 * reach + 26 * bow, neck: 6 + 10 * bow, lt: 2, lk: 2, rt: -3, rk: 3, la: 10, le: 20, ra: 4, re: 14});
 	op = ikArm(op, 'L', toBody(sealPt[0], sealPt[1] + 26, OX, OG, OH, true));
 	const imp = t > 77.18 ? land(seg(t, 77.18, 77.45)) : 0;
-	const ghost = bump(t, 77.75, 0.8), shaft = fade(t, 79.35, 0.15) * (1 - 0.5 * fade(t, 80.0, 1.2)), flash = t > 79.44 ? Math.exp(-3 * (t - 79.44)) : 0;
-	const z = 1 + 0.05 * ease(seg(t, 76.5, 79.4)), camx = 0.25 * walkD;
+	const shaft = fade(t, 79.35, 0.15) * (1 - 0.5 * fade(t, 80.0, 1.2)), flash = t > 79.44 ? Math.exp(-3 * (t - 79.44)) : 0;
+	const z = 1 + 0.05 * ease(seg(t, 76.5, 79.4));
+	/* push in on the slip until it fills ~65 % of the frame height, centred: the match cut to the print shop's drying line */
+	const sc: P2 = [980 + z * (cx - 980), 560 + z * (cy - 560)], S = lerp(1, MATCH_H / SNH / z, push), pc: P2 = [lerp(sc[0], 960, push), lerp(sc[1], MATCH_Y, push)];
+	const offO = 1 - fade(t, 80.2, 0.7);
 	return <Scene id="b5" sheen={0.4}>
-		<g transform={`translate(${980 - camx},560) scale(${z}) translate(-980,-560)`}>
+		<g transform={`translate(${pc[0]},${pc[1]}) scale(${S}) translate(${-sc[0]},${-sc[1]})`}>
+		<g transform={`translate(980,560) scale(${z}) translate(-980,-560)`}>
 			{/* the gate: a long rammed wall, a gate tower, studded doors, two lanterns, a blank plaque */}
 			<rect x={-200} y={560} width={2600} height={GG - 560} fill={BG.wall} />
 			<path d="M640,430 Q760,410 820,350 L1720,350 Q1780,410 1900,430 Q1906,446 1880,448 L660,448 Q634,446 640,430 Z" fill={BG.roof} stroke={BG.lineS} strokeWidth={2} />
@@ -331,18 +340,17 @@ const Gate: React.FC<{t: number}> = ({t}) => {
 			<Pool id="b5a" x={cx} y={cy + 80} rx={560} ry={440} a={0.3 + 0.1 * shaft} /><Pool id="b5b" x={wx + 20} y={GG + 6} rx={300} ry={46} a={0.28} />
 			{shaft > 0 && <g opacity={shaft}><defs><linearGradient id="shB5" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stopColor="#FFE2B0" stopOpacity="0" /><stop offset="0.5" stopColor="#FFE2B0" stopOpacity="0.16" /><stop offset="1" stopColor="#FFE2B0" stopOpacity="0.05" /></linearGradient></defs>
 				<path d={`M${cx - 60},-40 L${cx + 90},-40 L${cx + 160},${GG} L${cx - 170},${GG} Z`} fill="url(#shB5)" /></g>}
-			<Extra x={OX} g={OG} h={OH} pose={op} look={OFFICIAL} rimO={0.5} />
-			{/* the slip, the imprint, the phone ghost */}
+			<g opacity={offO} transform={`translate(${40 * (1 - offO)},0)`}><Extra x={OX} g={OG} h={OH} pose={op} look={OFFICIAL} rimO={0.5} /></g>
+			{/* the slip and the imprint */}
 			<g transform={`translate(${grip[0]},${grip[1]}) rotate(${rot}) translate(${-SNW / 2},${-SNH + 34})`} filter="url(#glS)">
 				<JiaoziB w={SNW} h={SNH} id="jzg" />
 				{imp > 0 && <g transform={`translate(${SNW / 2},${SNH * 0.52}) scale(${lerp(1.3, 1, imp)})`} opacity={cl(imp * 2)}><rect x={-26} y={-26} width={52} height={52} fill="#C0301C" opacity={0.92} /><path d="M-18,-12 h36 M-18,0 h36 M-18,12 h36 M0,-20 v40" stroke="#F5E9CB" strokeWidth={3.5} /></g>}
 				{(flash > 0 || up > 0.9) && <rect width={SNW} height={SNH} fill="#FFF6DC" opacity={0.55 * flash} />}
-				{up > 0.9 && <rect width={SNW} height={SNH} fill="none" stroke={B.goldL} strokeWidth={3} opacity={0.6 + 0.3 * flash} />}
+				{up > 0.9 && <rect width={SNW} height={SNH} fill="none" stroke={B.goldL} strokeWidth={3} opacity={(0.6 + 0.3 * flash) * (1 - push)} />}
 			</g>
-			{ghost > 0 && <g opacity={0.6 * ghost}><PhoneP x={cx} y={cy} w={92} rot={rot} check={1} glow={0.4} /></g>}
 			<Fig x={wx} g={GG} h={HG} pose={p} look={LOOKS.song} T={t} />
 			{reach > 0.02 && <g transform={`translate(${sealPt[0]},${sealPt[1]})`}><rect x={-24} y={-22} width={48} height={42} rx={3} fill="#7A2A1A" stroke={B.gold} strokeOpacity={0.6} strokeWidth={1.5} /><path d="M-10,-22 q10,-30 20,0 Z" fill="#5A2014" stroke={B.gold} strokeOpacity={0.5} strokeWidth={1.2} /><rect x={-24} y={14} width={48} height={8} fill="#C0301C" /></g>}
-		</g>
+		</g></g>
 	</Scene>; };
 
 /* ======================================================================================================================
@@ -357,24 +365,28 @@ const Print: React.FC<{t: number}> = ({t}) => {
 	const wp0 = grounded({lean: 4, neck: 4 - 10 * fade(t, 83.0, 0.4), lt: 4, lk: 4, rt: -6, rk: 5, la: 6, le: 20, ra: 4, re: 14});
 	const wp = walking ? mix(walkPose(phaseOf(wd, h)), wp0, ease(seg(t, 82.75, 82.98))) : wp0;
 	const env = Math.max(...PRESS.map((b) => { const u = t - b; return u < -0.14 || u > 0.2 ? 0 : u < 0 ? 1 + u / 0.14 : 1 - u / 0.2; }));
-	const by = 682 - 30 * (1 - env);
-	const kp = ikArm(ikArm(grounded({lean: 22 + 4 * env, neck: 18, lt: 6, lk: 10, rt: -8, rk: 10, la: 60, le: 30, ra: 50, re: 40}), 'L', toBody(1300, by + 26, 1480, g, h, true)), 'R', toBody(1250, by + 30, 1480, g, h, true));
-	const red = fade(t, 82.27, 0.08), blk = fade(t, 82.84, 0.08), seal = t > 83.97 ? land(seg(t, 83.97, 84.3)) : 0;
+	const by = 682 - 30 * (1 - env), KX = 1420;
+	/* the printer bends over the press; both hands stay on the block, so they ride it down onto the paper and up again */
+	const kp = ikArm(ikArm(grounded({lean: 38 + 4 * env, neck: 14, lt: 8, lk: 14, rt: -8, rk: 12, la: 60, le: 30, ra: 50, re: 40}), 'L', toBody(1300, by + 6, KX, g, h, true)), 'R', toBody(1236, by + 8, KX, g, h, true));
+	/* the drying line: the finished slip (the match cut lands on it) and the next sheet taking its passes */
+	const red = fade(t, 82.27, 0.08), blk = fade(t, 83.40, 0.08), seal = t > 83.97 ? land(seg(t, 83.97, 84.3)) : 0;
 	const ring = seg(t, 82.95, 83.12), line = seg(t, 83.0, 83.14), bub = t > 83.0 ? land(seg(t, 83.0, 83.3)) : 0;
 	const z = 1 + 0.035 * ease(seg(t, 81.45, 84.45)), sw = (k: number) => 1.5 * Math.sin(t * 1.3 + k);
+	const pk = ease(seg(t, 81.45, 82.45)), PS = lerp(MATCH_H / NH, 1, pk), pc: P2 = [lerp(960, 1080, pk), lerp(MATCH_Y, 517, pk)];
+	const pass = (k: number, ps: 'red' | 'black' | 'seal', sc = 1.04) => k > 0 && <g opacity={cl(k * 2)} transform={`translate(${NW / 2},${NH / 2}) scale(${lerp(sc, 1, k)}) translate(${-NW / 2},${-NH / 2})`}><JiaoziPass w={NW} h={NH} pass={ps} /></g>;
 	return <Scene id="b6" sheen={0.45}>
+		<g transform={`translate(${pc[0]},${pc[1]}) scale(${PS}) translate(-1080,-517)`}>
 		<g transform={`translate(900,520) scale(${z}) translate(-900,-520)`}>
 			<rect x={-40} y={540} width={W + 80} height={365} fill={BG.wall} />
 			{[0, 1, 2, 3, 4].map((i) => <rect key={i} x={120 + i * 360} y={540} width={10} height={365} fill={BG.post} />)}
 			<path d="M520,330 Q960,350 1500,330" fill="none" stroke={B.gold} strokeOpacity={0.35} strokeWidth={2} />
 			<Pool id="b6" x={960} y={500} rx={640} ry={420} a={0.3} />
-			<g transform={`translate(640,342) rotate(${-2 + sw(0)},${NW / 2},0)`} opacity={0.82}><JiaoziPass w={NW} h={NH} pass="paper" /><JiaoziPass w={NW} h={NH} pass="red" /></g>
+			<g transform={`translate(640,342) rotate(${-2 + sw(0)},${NW / 2},0)`} opacity={lerp(0.62, 0.88, red)}><JiaoziPass w={NW} h={NH} pass="paper" /><rect width={NW} height={NH} fill="#6B4A2A" opacity={0.3 * (1 - red)} />{pass(red, 'red')}{pass(blk, 'black')}{pass(seal, 'seal', 1.5)}</g>
 			<rect x={712} y={330} width={14} height={26} fill="#8A6232" />
 			<g transform={`translate(980,342) rotate(${1.5 + sw(1)},${NW / 2},0)`} filter="url(#glS)">
-				<JiaoziPass w={NW} h={NH} pass="paper" />
-				{red > 0 && <g opacity={red} transform={`translate(${NW / 2},${NH / 2}) scale(${lerp(1.04, 1, red)}) translate(${-NW / 2},${-NH / 2})`}><JiaoziPass w={NW} h={NH} pass="red" /></g>}
-				{blk > 0 && <g opacity={blk} transform={`translate(${NW / 2},${NH / 2}) scale(${lerp(1.04, 1, blk)}) translate(${-NW / 2},${-NH / 2})`}><JiaoziPass w={NW} h={NH} pass="black" /></g>}
-				{seal > 0 && <g opacity={cl(seal * 2)} transform={`translate(${NW * 0.64},${NH * 0.39 + NW * 0.17}) scale(${lerp(1.5, 1, seal)}) translate(${-NW * 0.64},${-NH * 0.39 - NW * 0.17})`}><JiaoziPass w={NW} h={NH} pass="seal" /></g>}
+				<JiaoziPass w={NW} h={NH} pass="paper" /><JiaoziPass w={NW} h={NH} pass="red" /><JiaoziPass w={NW} h={NH} pass="black" /><JiaoziPass w={NW} h={NH} pass="seal" />
+				{/* the official's seal from the gate (the match cut lands on the same slip) */}
+				<g transform={`translate(${NW / 2},${NH * 0.52}) scale(${NW / SNW})`}><rect x={-26} y={-26} width={52} height={52} fill="#C0301C" opacity={0.92} /><path d="M-18,-12 h36 M-18,0 h36 M-18,12 h36 M0,-20 v40" stroke="#F5E9CB" strokeWidth={3.5} /></g>
 			</g>
 			<rect x={1068} y={330} width={14} height={26} fill="#8A6232" />
 			{ring > 0 && <circle cx={1028} cy={512} r={22} fill="none" stroke={B.goldL} strokeWidth={3} pathLength={1} strokeDasharray="1 1" strokeDashoffset={1 - ring} />}
@@ -387,10 +399,10 @@ const Print: React.FC<{t: number}> = ({t}) => {
 			<rect x={1150} y={708} width={150} height={12} fill="#EFE2C4" />
 			{env > 0.9 && <rect x={1150} y={704} width={150} height={4} fill="#BF3420" opacity={0.6} />}
 			<rect x={1196} y={by} width={130} height={30} rx={3} fill="#3A2116" stroke={B.gold} strokeOpacity={0.6} strokeWidth={1.5} />
-			<RimFig x={1480} ground={g} h={h} pose={kp} look={CLERK} col="#0F0806" flip dx={-2.5} dy={-2} rimO={0.5} />
+			<RimFig x={KX} ground={g} h={h} pose={kp} look={CLERK} col="#0F0806" flip dx={-2.5} dy={-2} rimO={0.5} />
 			<GroundW g={g} />
 			<Fig x={wx} g={g} h={h} pose={wp} look={LOOKS.song} T={t} rimO={0.6} />
-		</g>
+		</g></g>
 	</Scene>; };
 
 /* ======================================================================================================================
@@ -431,9 +443,9 @@ const Ming: React.FC<{t: number}> = ({t}) => {
 	const Jw = (n: string) => J(p, n, wxS, GM, HM);
 	const L = panAt(bx, MBG, MBP, MBA, tilt, 'L'), R = panAt(bx, MBG, MBP, MBA, tilt, 'R');
 	const onPan = t >= 86.75 && t < 95.58, inR = t < 86.75, inL = t >= 95.58;
-	const age = 0.85 * ease(seg(t, 93.3, 95.4));
+	const age = 0.12 * ease(seg(t, 93.3, 94.5)) + 0.16 * [95.29, 95.57, 95.86, 96.14, 96.42].reduce((n, h) => n + fade(t, h, 0.08), 0);
 	const morph = ease(seg(t, 84.95, 85.3));
-	const balO = (1 - 0.65 * ease(seg(t, 95.7, 96.8))) * (1 - fade(t, 97.85, 0.45)), pool = ease(seg(t, 95.7, 96.8));
+	const balO = 1 - fade(t, 96.45, 0.45), pool = ease(seg(t, 95.7, 96.8));
 	const pil = 150 - 700 * (t - 84.3);
 	const tagI = fade(t, 86.85, 0.2), tagC = fade(t, 87.36, 0.2), tagS = fade(t, 87.93, 0.2), eqO = (k: number) => fade(t, k, 0.2);
 	const glowS = 0.5 + 0.5 * fade(t, 87.93, 0.3), glowC = 0.5 + 0.5 * fade(t, 87.36, 0.3);
@@ -461,10 +473,10 @@ const Ming: React.FC<{t: number}> = ({t}) => {
 			<Bal x={bx} g={MBG} post={MBP} arm={MBA} tilt={tilt}
 				left={onPan ? note(0, -6, 6, 0.8) : null}
 				right={<g opacity={glowC}><Coil x={0} y={-22} rx={58} ry={14} iron={false} sc={0.9} /></g>} />
-			<g opacity={1 - fade(t, 95.9, 0.6)}><Tag x={L[0]} y={L[1] + 95} s="一贯" fs={32} o={tagI} />
-			{t > 92.2 && <Reel x={L[0]} y={L[1] + 160} t={t} />}
-			<Tag x={R[0]} y={R[1] + 95} s="一千文" fs={32} o={tagC} />
-			<Tag x={ringX} y={MBG - 70} s="一两银" fs={32} o={tagS} />
+			<g><Tag x={L[0]} y={L[1] + 95} s="一贯" fs={40} o={tagI} />
+			{t > 92.2 && <Reel x={L[0]} y={L[1] + 182} t={t} />}
+			<Tag x={R[0]} y={R[1] + 95} s="一千文" fs={40} o={tagC} />
+			<Tag x={ringX} y={MBG - 70} s="一两银" fs={40} o={tagS} />
 			{[[ (L[0] + R[0]) / 2, (L[1] + R[1]) / 2 + 95, 87.36], [(R[0] + ringX) / 2 + 8, MBG - 70, 87.93]].map(([x, y, k], i) => <text key={i} x={x} y={y + 14} textAnchor="middle" fontFamily={SANS} fontWeight={900} fontSize={56} fill={B.goldL} opacity={eqO(k) * (t > 93.03 ? 1 - fade(t, 93.03, 0.3) : 1)}>=</text>)}
 			{t > 93.03 && <text x={(L[0] + R[0]) / 2} y={(L[1] + R[1]) / 2 + 109} textAnchor="middle" fontFamily={SANS} fontWeight={900} fontSize={56} fill="#E0705A" opacity={fade(t, 93.1, 0.3)}>≠</text>}</g>
 		</g>
@@ -479,15 +491,15 @@ const Ming: React.FC<{t: number}> = ({t}) => {
 		{pil > -400 && <Pillar x={pil} w={360} red />}
 	</Scene>; };
 /** the value tag under the note's pan: 1000文 → (a blur, no stops) → 不到1文 */
-const Reel: React.FC<{x: number; y: number; t: number}> = ({x, y, t}) => { const o = fade(t, 92.3, 0.25), spin = seg(t, 93.1, 95.29), done = t >= 95.29, lk = done ? land(seg(t, 95.29, 95.6)) : 0;
-	const w = 170, hh = 46;
-	return <g transform={`translate(${x},${y})`} opacity={o}>
-		<defs><clipPath id="reelB"><rect x={-w / 2} y={-hh * 0.75} width={w} height={hh} rx={6} /></clipPath></defs>
-		<rect x={-w / 2} y={-hh * 0.75} width={w} height={hh} rx={6} fill={done ? '#E9C9A8' : B.cream} opacity={0.95} />
+const Reel: React.FC<{x: number; y: number; t: number}> = ({x, y, t}) => { const o = fade(t, 92.3, 0.25), spin = seg(t, 93.4, 93.95), done = t >= 93.95, lk = done ? land(seg(t, 93.95, 94.3)) : 0;
+	const w = 280, hh = 84;
+	return <g transform={`translate(${x},${y}) scale(${done ? lerp(1.15, 1, lk) : 1})`} opacity={o}>
+		<defs><clipPath id="reelB"><rect x={-w / 2} y={-hh * 0.7} width={w} height={hh} rx={8} /></clipPath></defs>
+		<rect x={-w / 2} y={-hh * 0.7} width={w} height={hh} rx={8} fill={B.cream} opacity={0.96} />
 		<g clipPath="url(#reelB)">
-			{spin <= 0 && <text x={0} y={hh * 0.08} textAnchor="middle" fontFamily={KAI} fontWeight={700} fontSize={32} fill={B.lac}>1000文</text>}
-			{spin > 0 && !done && Array.from({length: 7}, (_, k) => { const yy = ((k * 22 + spin * spin * 1400) % 154) - 77; return <rect key={k} x={-w / 2 + 24} y={yy} width={w - 48} height={8} rx={4} fill={B.lac} opacity={0.35} />; })}
-			{done && <text x={0} y={hh * 0.08 + (1 - lk) * -30} textAnchor="middle" fontFamily={KAI} fontWeight={700} fontSize={32} fill="#8A2A18">不到1文</text>}
+			{spin <= 0 && <text x={0} y={hh * 0.14} textAnchor="middle" fontFamily={KAI} fontWeight={700} fontSize={48} fill={B.lac}>1000文</text>}
+			{spin > 0 && !done && Array.from({length: 7}, (_, k) => { const yy = ((k * 30 + spin * 1300) % 210) - 105; return <rect key={k} x={-w / 2 + 30} y={yy} width={w - 60} height={12} rx={6} fill={B.lac} opacity={0.3} />; })}
+			{done && <text x={0} y={hh * 0.17 + (1 - lk) * -40} textAnchor="middle" fontFamily={KAI} fontWeight={700} fontSize={60} fill="#B02A16">不到1文</text>}
 		</g>
 	</g>; };
 /** the note's flakes blowing off to the right (KF09's spread at 97.5) */
@@ -606,7 +618,6 @@ const Silver: React.FC<{t: number}> = ({t}) => {
 			<Bal x={bx} g={770} post={400} arm={250} tilt={tilt}
 				left={t >= 101.84 ? <g>{ghost > 0 && <g opacity={ghost * flick * 0.6}><RoundCoin x={0} y={-60} r={58} legend={['', '', '半', '兩']} fill="none" ink={B.goldL} /><circle cx={0} cy={-60} r={58} fill="none" stroke={B.goldL} strokeWidth={2.5} /></g>}</g> : null}
 				right={<g><Weight />{[0, 1, 2].map((i) => t >= placeT[i] && <g key={i} transform={`translate(${-40 + i * 40},${-2})`}>{sw(i)}</g>)}</g>} />
-			{ghost > 0 && <g opacity={ghost * 0.85}><Tag x={R[0] + 100} y={R[1] - 110} s="半两" fs={30} /></g>}
 			{/* the weight in the shopkeeper's fingers */}
 			{cur >= 0 && reachW > 0.05 && t < placeT[cur] && <g transform={`translate(${kh[0] - 6},${kh[1] + 16})`}>{sw(cur)}</g>}
 			<g filter="url(#glS)"><Ingot x={ing[0]} y={ing[1]} w={iw} rot={t > 101.6 && t < 101.84 ? -30 * Math.sin(Math.PI * fly) : 0} /></g>
@@ -625,7 +636,7 @@ const DR = trap(tR1, tR0 - 5, tR1, vR, 0.01, 0.45) - trap(tR0, tR0 - 5, tR1, vR,
 const dRw = (t: number) => trap(t, tR0 - 5, tR1, vR, 0.01, 0.45) - trap(tR0, tR0 - 5, tR1, vR, 0.01, 0.45);
 const rPose = (t: number) => { const w = walkPose(phaseOf(dRw(t), HR)); return ikArm(w, 'L', rel(w, 0.24, 0.12)); };
 const Modern: React.FC<{t: number}> = ({t}) => {
-	const cam = dRw(t), p = rPose(t), hand = J(p, 'LHand', WR, GR, HR);
+	const cam = dRw(t), p = stallPose(t), wxM = rX(t), hand = J(p, 'LHand', wxM, GR, HR);
 	const pil = 380 - 660 * (t - tR0);
 	const fronts = Array.from({length: 9}, (_, i) => ({x: -300 + i * 330, w: 300, h: 380 + 60 * rnd(i, 4)}));
 	return <Scene id="b10" sheen={0.3}>
@@ -641,40 +652,43 @@ const Modern: React.FC<{t: number}> = ({t}) => {
 			<GroundW g={GR} x0={-400} x1={3600} />
 		</g>
 		<Pool id="b10a" x={WR + 40} y={560} rx={420} ry={380} a={0.28} /><Pool id="b10b" x={WR} y={GR + 4} rx={260} ry={38} a={0.25} />
-		<Fig x={WR} g={GR} h={HR} pose={p} look={LOOKS.y1948} T={t} />
+		<Fig x={wxM} g={GR} h={HR} pose={p} look={LOOKS.y1948} T={t} />
 		<g transform={`translate(${hand[0] - 4},${hand[1] - 34}) rotate(-6)`} filter="url(#glS)"><PlainNote w={120} h={58} /></g>
 		{pil > -500 && <Pillar x={pil} w={440} />}
 	</Scene>; };
 
 /* ======================================================================================================================
-   T1 · 107.0–110.35 · today's stall (KF11 at 108.8): the walk arrives at the hook's noodle stall. On the drop 107.50 the note
-   peels off and the phone is in his hand; he scans the same code; ✓ on 108.07; 10.17亿 counts up on its panel; windows across
-   the night city light up one by one; steam rises; the camera lifts a little.
+   T1 · 107.0–110.35 · today's stall (KF11): the walk arrives at the hook's noodle stall (the set stops at 107.45, he walks on
+   to the counter). On the drop 107.50 the note peels off and the phone is in his hand; the QR plaque fades in only now; he
+   holds the phone out over the code at arm's length; ✓ on 108.07 and 10.17亿 lands like a stamp on a feathered scrim (no box).
+   Windows light up across the night city, steam rises, the camera lifts a little. The number leaves before the pull-back.
    ==================================================================================================================== */
-const CT = 700, PH: P2 = [860, 520];
-const stallPose = (t: number): Pose => { const g0 = toBody(PH[0] - 16, PH[1] + 46, WR, GR, HR);
-	const base = grounded({lean: 6, neck: 14, lt: 4, lk: 4, rt: -6, rk: 5, la: 50, le: 60, ra: 4, re: 12});
-	const scan = ikArm(base, 'L', g0);
-	if (t < tR1) return rPose(t);
-	const s = ease(seg(t, tR1, tR1 + 0.12)), up = ease(seg(t, 107.5, 107.9));
-	const standHold = ikArm(STAND, 'L', rel(STAND, 0.24, 0.12));
-	return mix(mix(rPose(tR1), standHold, s), scan, up); };
-const Stall: React.FC<{t: number; zoom?: {s: number; P: P2}}> = ({t, zoom}) => {
-	const shift = DR - dRw(t), p = stallPose(t);
-	const hand = J(p, 'LHand', WR, GR, HR), up = ease(seg(t, 107.5, 107.9));
-	const phonePt: P2 = [hand[0] + 16 * up, hand[1] - 46 * up];
+const CT = 700, QRC: P2 = [1102, CT - 64];
+const dWalk = (t: number) => trap(t, tR0 - 5, 108.05, vR, 0.01, 0.6) - trap(tR0, tR0 - 5, 108.05, vR, 0.01, 0.6);
+/** his screen x in the 1948 walk and at the stall: the set stops at 107.45, he keeps walking to the counter */
+const rX = (t: number) => WR + (dWalk(t) - dRw(t));
+const stallPose = (t: number): Pose => { const x = rX(t);
+	const w = walkPose(phaseOf(dWalk(t), HR)), carry = ikArm(w, 'L', rel(w, 0.24, 0.12));
+	if (t < 107.75) return carry;
+	const reach = ease(seg(t, 107.75, 108.02)), phoneAt: P2 = [QRC[0] - 50, QRC[1] - 6], handAt: P2 = [phoneAt[0] - 14, phoneAt[1] + 44];
+	const q = grounded({lean: 4 + 14 * reach, neck: 10 + 14 * reach, lt: 4, lk: 4, rt: -6, rk: 5, la: 50, le: 30, ra: 4, re: 12});
+	const tb = toBody(handAt[0], handAt[1], x, GR, HR), stand = ikArm(STAND, 'L', rel(STAND, 0.24, 0.12));
+	return mix(mix(carry, stand, ease(seg(t, 107.75, 107.95))), ikArm(q, 'L', [lerp(stand.LHand[0], tb[0], reach), lerp(stand.LHand[1], tb[1], reach)]), reach); };
+const Stall: React.FC<{t: number}> = ({t}) => {
+	const shift = DR - dRw(t), x = rX(t), p = stallPose(t);
+	const hand = J(p, 'LHand', x, GR, HR);
+	const phonePt: P2 = [hand[0] + 14, hand[1] - 44];
 	const check = t > 108.07 ? land(seg(t, 108.07, 108.4)) : 0;
-	const pan = t > 108.07 ? land(seg(t, 108.07, 108.5)) : 0, num = 10.17 * eout(seg(t, 108.07, 108.75));
+	const stamp = t > 108.07 ? land(seg(t, 108.07, 108.45)) : 0, numO = cl(stamp * 3) * (1 - fade(t, 109.45, 0.3));
 	const np = ikArm(grounded({lean: 4 + 3 * Math.sin(t * 2.2), neck: 6, lt: 3, lk: 3, rt: -4, rk: 4, la: 30, le: 60, ra: 20, re: 70}), 'L', toBody(1360 + 14 * Math.sin(t * 3), CT - 6, 1470, GR, 520, true));
 	const rise = 18 * ease(seg(t, 108.3, 110.3));
-	const peel = seg(t, 107.5, 107.95);
-	const tr = zoom ? `translate(${zoom.P[0] - zoom.s * WR},${zoom.P[1] - zoom.s * GR}) scale(${zoom.s})` : '';
+	const peel = seg(t, 107.5, 107.95), qr = fade(t, 107.5, 0.3);
 	return <Scene id="b11" sheen={0.3}>
-		<g transform={tr}><g transform={`translate(${shift},${rise})`}>
+		<g transform={`translate(${shift},${rise})`}>
 			{/* the night city behind: windows light up as the number lands */}
-			<g transform={`translate(${-shift * 0.7},0)`}>{Array.from({length: 9}, (_, i) => { const x = -100 + i * 240, top = 340 + 70 * rnd(i, 12), w = 200;
-				return <g key={i}><rect x={x} y={top} width={w} height={560 - top + 10} fill="#1A0D09" stroke={B.ochre} strokeOpacity={0.12} strokeWidth={1.2} />
-					{Array.from({length: 12}, (_, k) => { const c = k % 4, r = Math.floor(k / 4), on = fade(t, 108.25 + 1.6 * rnd(i * 12 + k, 14), 0.15); return <rect key={k} x={x + 18 + c * 46} y={top + 20 + r * 44} width={26} height={22} fill={on > 0 ? `rgba(255,214,150,${0.08 + 0.42 * on})` : '#120806'} />; })}</g>; })}</g>
+			<g transform={`translate(${-shift * 0.7},0)`}>{Array.from({length: 9}, (_, i) => { const xx = -100 + i * 240, top = 340 + 70 * rnd(i, 12), w = 200;
+				return <g key={i}><rect x={xx} y={top} width={w} height={560 - top + 10} fill="#1A0D09" stroke={B.ochre} strokeOpacity={0.12} strokeWidth={1.2} />
+					{Array.from({length: 12}, (_, k) => { const c = k % 4, r = Math.floor(k / 4), on = fade(t, 108.25 + 1.6 * rnd(i * 12 + k, 14), 0.15); return <rect key={k} x={xx + 18 + c * 46} y={top + 20 + r * 44} width={26} height={22} fill={on > 0 ? `rgba(255,214,150,${0.08 + 0.42 * on})` : '#120806'} />; })}</g>; })}</g>
 			<rect x={-40 - shift} y={560} width={W + 400} height={GR - 560} fill={BG.wall} />
 			<path d="M940,420 H1820 L1780,480 H980 Z" fill={BG.red} stroke={BG.line} strokeWidth={1.5} />
 			<rect x={980} y={480} width={8} height={CT - 480} fill={BG.post} /><rect x={1772} y={480} width={8} height={CT - 480} fill={BG.post} />
@@ -682,87 +696,84 @@ const Stall: React.FC<{t: number; zoom?: {s: number; P: P2}}> = ({t, zoom}) => {
 			<rect x={1540} y={CT - 70} width={130} height={70} rx={10} fill="#2A2420" stroke={BG.line} strokeWidth={1.5} />
 			{[0, 1, 2].map((i) => { const u = ((t * 0.45 + i / 3) % 1); return <path key={i} d={curl(1600 + 10 * i - 10, CT - 90 - 120 * u, 14 + 8 * u, i % 2 ? -1 : 1, 1.6, 0.4)} fill="none" stroke={B.cream} strokeWidth={2} opacity={0.22 * Math.sin(Math.PI * u)} />; })}
 			<rect x={960} y={CT} width={860} height={22} fill="#2A1710" stroke={BG.lineS} strokeWidth={1.5} /><path d={`M980,${CT + 22} H1800 V905 H980 Z`} fill={BG.beam} stroke={BG.line} strokeWidth={1.5} />
-			<rect x={1046} y={CT - 120} width={112} height={112} rx={6} fill="#A39880" stroke={BG.lineS} strokeWidth={2} />
-			<QR x={1058} y={CT - 108} s={88} fg={B.lac} />
-			<rect x={1090} y={CT - 8} width={24} height={8} fill={BG.post} />
+			<g opacity={qr}><rect x={1046} y={CT - 120} width={112} height={112} rx={6} fill="#A39880" stroke={BG.lineS} strokeWidth={2} />
+				<QR x={1058} y={CT - 108} s={88} fg={B.lac} />
+				<rect x={1090} y={CT - 8} width={24} height={8} fill={BG.post} /></g>
 			<GroundW g={GR} x0={-200} x1={2400} />
 		</g>
 		<g transform={`translate(0,${rise})`}>
-			<Pool id="b11a" x={920} y={540} rx={420} ry={360} a={0.3} /><Pool id="b11b" x={WR} y={GR + 4} rx={260} ry={38} a={0.25} />
-			<Fig x={WR} g={GR} h={HR} pose={p} look={LOOKS.today} T={t} />
+			<Pool id="b11a" x={lerp(920, 1000, ease(seg(t, 107.3, 108.0)))} y={540} rx={440} ry={360} a={0.3} /><Pool id="b11b" x={x} y={GR + 4} rx={260} ry={38} a={0.25} />
+			<Fig x={x} g={GR} h={HR} pose={p} look={LOOKS.today} T={t} />
 			{t < 107.5 && <g transform={`translate(${hand[0] - 4},${hand[1] - 34}) rotate(-6)`} filter="url(#glS)"><PlainNote w={120} h={58} /></g>}
 			{t >= 107.5 && peel < 1 && <g transform={`translate(${hand[0] - 4 - 70 * peel},${hand[1] - 34 - 70 * peel}) rotate(${-6 - 20 * peel})`} opacity={0.8 * (1 - peel)}><PlainNote w={120} h={58} /></g>}
-			{t >= 107.5 && <g transform={`translate(${phonePt[0]},${phonePt[1]}) scale(${lerp(0.7, 1, ease(seg(t, 107.5, 107.7)))}) translate(${-phonePt[0]},${-phonePt[1]})`}><PhoneP x={phonePt[0]} y={phonePt[1]} w={64} rot={8 * up} check={check} glow={0.6 + 0.4 * check} /></g>}
-			{up > 0.8 && <path d={`M${PH[0] + 36},${PH[1] - 10} L1046,${CT - 70}`} stroke={B.goldL} strokeOpacity={0.35 * fade(t, 107.8, 0.2)} strokeWidth={2} strokeDasharray="6 8" />}
-			{pan > 0 && <g transform={`translate(1430,325) scale(${pan}) translate(-250,-75)`}><rect x={0} y={0} width={500} height={150} rx={10} fill="#0E0705" stroke={B.gold} strokeOpacity={0.5} strokeWidth={2} />
-				<text x={250} y={98} textAnchor="middle" fontFamily={SANS} fontWeight={900} fontSize={100} fill={B.goldL}>{num.toFixed(2)}亿</text>
-				<text x={250} y={140} textAnchor="middle" fontFamily={KAI} fontWeight={700} fontSize={28} fill={B.cream} opacity={0.85}>网络支付用户</text></g>}
-		</g></g>
+			{t >= 107.5 && <g transform={`translate(${phonePt[0]},${phonePt[1]}) scale(${lerp(0.7, 1, ease(seg(t, 107.5, 107.7)))}) translate(${-phonePt[0]},${-phonePt[1]})`}><PhoneP x={phonePt[0]} y={phonePt[1]} w={64} rot={6} check={check} glow={0.6 + 0.4 * check} /></g>}
+			{numO > 0 && <g transform={`translate(1430,325) scale(${lerp(1.35, 1, stamp)})`} opacity={numO}>
+				<defs><radialGradient id="scr11"><stop offset="0" stopColor="#100704" stopOpacity="0.7" /><stop offset="0.6" stopColor="#100704" stopOpacity="0.45" /><stop offset="1" stopColor="#100704" stopOpacity="0" /></radialGradient></defs>
+				<ellipse cx={0} cy={0} rx={330} ry={120} fill="url(#scr11)" />
+				<text x={0} y={22} textAnchor="middle" fontFamily={SANS} fontWeight={900} fontSize={100} fill={B.goldL} style={{paintOrder: 'stroke'}} stroke="#100704" strokeWidth={8}>10.17亿</text>
+				<text x={0} y={66} textAnchor="middle" fontFamily={KAI} fontWeight={700} fontSize={30} fill={B.cream} style={{paintOrder: 'stroke'}} stroke="#100704" strokeWidth={5}>网络支付用户</text></g>}
+		</g>
 	</Scene>; };
 
 /* ======================================================================================================================
-   P1–P2a · 109.95–117.2 · the whole walk as one line: the camera pulls far back from the stall; everything he carried lies
-   along the road behind him, a weight line under it falling from 重 to 轻. P1b lights 贝壳 / 铜 / 纸 on their words and the phone
-   shows only a number; P2a: all but the paper and the phone fade, the paper turns plain and flies into his phone; the camera
-   moves in on him for the trust web.
+   P1–P2a · 109.95–116.8 · the walk as one row: everything he carried lies along the road behind him (props ≈ 120 px). The
+   shot opens on the cowrie and tracks right as 贝壳 / 铜 / 纸 / 数字 come: each group lights on its word (111.85, 112.35,
+   112.85, 113.55), ending on his phone showing only a balance. Then it pulls back (纸和数字本身不值钱): the rest fades, the paper
+   turns plain and flies into his phone, and the camera moves in on him for the trust web.
    ==================================================================================================================== */
-const LG = 720, LH = 240, LWX = 1580;
+const LG = 760, LH = 300, LWX = 2020;
 const webPose0 = ikArm(grounded({lean: 4, neck: 18, lt: 3, lk: 3, rt: -4, rk: 4, la: 40, le: 70, ra: 4, re: 12}), 'L', [0.2, 0.62]);
-const scanPose = stallPose(109.9);
-/** the line camera: walker screen point and scale over time (stage 1 pull back, stage 2 move in) */
-const lineCam = (t: number) => { const k1 = ease(seg(t, 109.77, 111.3)), k2 = ease(seg(t, 115.6, 116.5)), r = 560 / LH;
-	const s = Math.pow(r, 1 - k1) * Math.pow(r, k2);
-	const P: P2 = t < 113 ? [lerp(660, LWX, k1), lerp(905, LG, k1)] : [lerp(LWX, 960, k2), lerp(LG, 960, k2)];
-	return {s, P}; };
-const PX = (i: number) => 170 + i * 112;
-const WGT = [0.5, 0.56, 0.78, 0.7, 0.62, 0.58, 0.52, 1.0, 0.12, 0.14, 0.74, 0.1, 0.02];
+const PX = (i: number) => 160 + i * 150;
+/** world point A shown at screen point B with scale s */
+const lineCam = (t: number): {A: P2; B: P2; s: number} => {
+	const xL = -40 + 40 * ease(seg(t, 109.95, 112.0)) + 520 * ease(seg(t, 112.0, 113.75));
+	if (t < 114.3) return {A: [xL + 960, LG], B: [960, LG], s: 1};
+	const wB: P2 = [LWX - 520, LG], k2 = ease(seg(t, 114.3, 115.2)), k3 = ease(seg(t, 115.6, 116.5));
+	return {A: [LWX, LG], B: [lerp(lerp(wB[0], 1380, k2), 960, k3), lerp(LG, 960, k3)], s: lerp(0.72, 1, 1 - k2) * Math.pow(560 / LH / 0.72, k3) * (k3 > 0 ? 1 : 1)};
+};
+const GROUPS = [{t: 111.85, ids: [0]}, {t: 112.35, ids: [1, 2, 3, 4, 5, 6]}, {t: 112.85, ids: [8, 9, 11]}, {t: 113.55, ids: [12]}];
 const LineWalk: React.FC<{t: number}> = ({t}) => {
-	const {s, P} = lineCam(t), tr = `translate(${P[0] - s * LWX},${P[1] - s * LG}) scale(${s})`;
-	const pose = mix(scanPose, webPose0, ease(seg(t, 110.4, 111.4)));
-	const hand = J(pose, 'LHand', LWX, LG, LH), phone: P2 = [hand[0] + 0.02 * LH, hand[1] - 0.05 * LH];
-	const grp = t < 111.85 ? -1 : t < 112.35 ? 0 : t < 112.85 ? 1 : t < 113.55 ? 2 : 3;
-	const inG = (i: number) => grp === 0 ? i === 0 : grp === 1 ? i >= 1 && i <= 6 : grp === 2 ? [8, 9, 11].includes(i) : grp === 3 ? i === 12 : false;
+	const {A, B: Bp, s} = lineCam(t), tr = `translate(${Bp[0] - s * A[0]},${Bp[1] - s * A[1]}) scale(${s})`;
+	const hand = J(webPose0, 'LHand', LWX, LG, LH), phone: P2 = [hand[0] + 0.02 * LH, hand[1] - 0.05 * LH];
+	const gi = GROUPS.reduce((acc, g, i) => (t >= g.t ? i : acc), -1);
+	const lit = (i: number) => GROUPS.some((g, k) => k <= gi && g.ids.includes(i)) ? 1 : 0;
+	const cur = (i: number) => gi >= 0 && GROUPS[gi].ids.includes(i) ? fade(t, GROUPS[gi].t, 0.18) : 0;
+	const pop = (i: number) => eout(seg(t, 110.1 + i * 0.1, 110.45 + i * 0.1));
 	const fadeOut = fade(t, 114.6, 0.6), paperK = fade(t, 114.9, 0.5), flyK = ease(seg(t, 115.2, 116.0));
 	const isPaper = (i: number) => [8, 9, 11].includes(i);
-	const op = (i: number) => { let o = grp >= 0 && grp < 3 ? (inG(i) ? 1 : 0.45) : 1; if (!isPaper(i)) o *= 1 - 0.88 * fadeOut; else o *= 1 - fade(t, 116.2, 0.25); return o; };
-	const lift = (i: number) => (inG(i) ? -10 * fade(t, [111.85, 112.35, 112.85, 113.55][grp], 0.2) : 0);
-	const numO = fade(t, 113.6, 0.25) * (1 - fade(t, 116.0, 0.3));
+	const op = (i: number) => { let o = (gi < 0 ? 0.85 : lit(i) ? 1 : 0.42) * pop(i); if (!isPaper(i)) o *= 1 - 0.9 * fadeOut; else o *= 1 - fade(t, 116.0, 0.25); return o; };
+	const numO = fade(t, 113.55, 0.2) * (1 - fade(t, 115.9, 0.3));
 	const prop = (i: number): React.ReactNode => { switch (i) {
-		case 0: return <Cowrie x={0} y={-24} L={70} rot={-8} />;
-		case 1: { const c = cowrie(64); return <g transform="translate(0,-24) rotate(6)"><path d={c.body} fill="url(#brz)" stroke="#5A3A18" strokeWidth={2} /><path d={c.slit} fill={B.lac} /></g>; }
-		case 2: { const sp = spade(60, 46); return <g transform="translate(0,-31)"><path d={sp.handle} fill={B.ochre} /><path d={sp.blade} fill="url(#brz)" stroke="#5A3A18" strokeWidth={1.5} /></g>; }
-		case 3: return <BuCoin x={0} y={-42} Hh={80} />;
-		case 4: return <RoundCoin x={0} y={-36} r={34} legend={['', '', '半', '兩']} />;
-		case 5: return <RoundCoin x={0} y={-36} r={34} legend={['', '', '五', '銖']} />;
-		case 6: return <RoundCoin x={0} y={-36} r={34} legend={['開', '元', '通', '寶']} />;
-		case 7: return <Coil x={0} y={-14} rx={44} ry={9} sc={0.7} />;
-		case 8: return <g transform="translate(-23,-82)"><JiaoziB w={46} h={80} id="jzl" /></g>;
-		case 9: return <g transform="translate(-26,-88)"><Baochao w={52} h={86} id="bcl" /></g>;
-		case 10: return <Ingot x={0} y={-18} w={74} />;
-		case 11: return <g transform="translate(-40,-42)"><PlainNote w={80} h={40} /></g>;
+		case 0: return <Cowrie x={0} y={-30} L={86} rot={-8} />;
+		case 1: { const c = cowrie(80); return <g transform="translate(0,-30) rotate(6)"><path d={c.body} fill="url(#brz)" stroke="#5A3A18" strokeWidth={2} /><path d={c.slit} fill={B.lac} /></g>; }
+		case 2: { const sp = spade(70, 50); return <g transform="translate(0,-36)"><path d={sp.handle} fill={B.ochre} /><path d={sp.blade} fill="url(#brz)" stroke="#5A3A18" strokeWidth={1.5} /></g>; }
+		case 3: return <BuCoin x={0} y={-56} Hh={110} />;
+		case 4: return <RoundCoin x={0} y={-52} r={50} legend={['', '', '半', '兩']} />;
+		case 5: return <RoundCoin x={0} y={-52} r={50} legend={['', '', '五', '銖']} />;
+		case 6: return <RoundCoin x={0} y={-52} r={50} legend={['開', '元', '通', '寶']} />;
+		case 7: return <Coil x={0} y={-18} rx={58} ry={12} sc={0.85} />;
+		case 8: return <g transform="translate(-34,-120)"><JiaoziB w={68} h={118} id="jzl" /></g>;
+		case 9: return <g transform="translate(-38,-126)"><Baochao w={76} h={124} id="bcl" /></g>;
+		case 10: return <Ingot x={0} y={-26} w={104} />;
+		case 11: return <g transform="translate(-60,-62)"><PlainNote w={120} h={60} /></g>;
 		default: return null; } };
-	const wpts = WGT.map((w, i): P2 => [i < 12 ? PX(i) : LWX, 880 - 120 * w]);
-	const wD = 'M' + wpts.map(([x, y]) => `${x},${y}`).join(' L');
 	return <Scene id="b12" sheen={0.25}>
 		<g transform={tr}>
-			<rect x={-2000} y={LG} width={6000} height={2000} fill={BG.ground} />
-			<path d={`M60,${LG} H${LWX + 140}`} stroke={B.gold} strokeOpacity={0.55} strokeWidth={2.5} />
-			{Array.from({length: 12}, (_, i) => <path key={i} d={`M${PX(i)},${LG + 4} v10`} stroke={B.gold} strokeOpacity={0.3} strokeWidth={1.5} />)}
-			<Pool id="b12a" x={900} y={LG - 40} rx={1000} ry={240} a={0.16} /><Pool id="b12b" x={LWX} y={LG - 80} rx={260} ry={220} a={0.22} />
-			{/* the weight line */}
-			<g opacity={fade(t, 110.5, 0.4) * (1 - fadeOut * 0.8)}>
-				<path d={wD} fill="none" stroke={B.goldL} strokeWidth={2.5} strokeOpacity={0.8} pathLength={1} strokeDasharray="1 1" strokeDashoffset={1 - ease(seg(t, 110.6, 111.7))} />
-				<Label x={110} y={wpts[0][1] - 20} s="重" fs={34} anchor="middle" o={0.9} /><Label x={LWX + 70} y={wpts[12][1] + 12} s="轻" fs={34} anchor="middle" o={fade(t, 111.5, 0.3)} />
-			</g>
-			{Array.from({length: 12}, (_, i) => { let x = PX(i), y = LG + lift(i), sc = 1;
-				if (isPaper(i) && flyK > 0) { x = lerp(PX(i), phone[0], flyK); y = lerp(LG, phone[1] + 20, flyK) - Math.sin(Math.PI * flyK) * 80; sc = lerp(1, 0.2, flyK); }
-				return <g key={i} transform={`translate(${x},${y}) scale(${sc * 1.3})`} opacity={op(i)}>{prop(i)}
-					{isPaper(i) && paperK > 0 && <rect x={-45} y={-95} width={90} height={98} fill="#3A2A20" opacity={0.35 * paperK} />}</g>; })}
-			<RimFig x={LWX} ground={LG} h={LH} pose={pose} look={LOOKS.today} col={B.lac} T={t} dx={2.5} dy={-2} />
-			<rect x={phone[0] - 9} y={phone[1] - 15} width={18} height={30} rx={4} fill="#FFE9B8" stroke={B.lac} strokeWidth={1.5} />
-			{numO > 0 && <g transform={`translate(${phone[0] + 10},${phone[1] - 70})`} opacity={numO}><rect x={-66} y={-34} width={132} height={52} rx={8} fill="#0E0705" stroke={B.gold} strokeOpacity={0.6} strokeWidth={1.5} />
-				<text x={0} y={6} textAnchor="middle" fontFamily={SANS} fontWeight={900} fontSize={34} fill={B.goldL}>16.80</text>
-				<path d={`M-8,18 L0,30 L8,18`} fill="#0E0705" /></g>}
+			<rect x={-3000} y={LG} width={8000} height={3000} fill={BG.ground} />
+			<path d={`M-200,${LG} H${LWX + 400}`} stroke={B.gold} strokeOpacity={0.5} strokeWidth={2.5} />
+			{Array.from({length: 12}, (_, i) => <path key={i} d={`M${PX(i)},${LG + 4} v12`} stroke={B.gold} strokeOpacity={0.3} strokeWidth={1.5} />)}
+			<Pool id="b12a" x={1000} y={LG - 60} rx={1300} ry={260} a={0.16} /><Pool id="b12b" x={LWX} y={LG - 120} rx={300} ry={260} a={0.24} />
+			{Array.from({length: 12}, (_, i) => { let x = PX(i), y = LG - 8 * cur(i), sc = 1 + 0.08 * cur(i);
+				if (isPaper(i) && flyK > 0) { x = lerp(PX(i), phone[0], flyK); y = lerp(LG, phone[1] + 20, flyK) - Math.sin(Math.PI * flyK) * 90; sc = lerp(1, 0.15, flyK); }
+				return <g key={i} transform={`translate(${x},${y}) scale(${sc * 1.25})`} opacity={op(i)}>{cur(i) > 0 && <Pool id={`b12g${i}`} x={0} y={-50} rx={90} ry={80} a={0.25 * cur(i)} />}{prop(i)}
+					{isPaper(i) && paperK > 0 && <rect x={-62} y={-130} width={124} height={134} fill="#3A2A20" opacity={0.4 * paperK} />}</g>; })}
+			<RimFig x={LWX} ground={LG} h={LH} pose={webPose0} look={LOOKS.today} col={B.lac} T={t} dx={2.5} dy={-2} />
+			<rect x={phone[0] - 10} y={phone[1] - 17} width={20} height={34} rx={4} fill="#FFE9B8" stroke={B.lac} strokeWidth={1.5} />
+			{numO > 0 && <g transform={`translate(${phone[0] + 6},${phone[1] - 92})`} opacity={numO}>
+				<defs><radialGradient id="numScr"><stop offset="0" stopColor="#100704" stopOpacity="0.75" /><stop offset="0.7" stopColor="#100704" stopOpacity="0.45" /><stop offset="1" stopColor="#100704" stopOpacity="0" /></radialGradient></defs>
+				<ellipse cx={0} cy={-14} rx={150} ry={62} fill="url(#numScr)" />
+				<text x={0} y={2} textAnchor="middle" fontFamily={SANS} fontWeight={900} fontSize={46} fill={B.goldL} style={{paintOrder: 'stroke'}} stroke="#100704" strokeWidth={6}>¥16.80</text>
+				<path d="M0,26 L0,58" stroke={B.goldL} strokeOpacity={0.6} strokeWidth={2} /></g>}
 		</g>
 	</Scene>; };
 
@@ -800,16 +811,19 @@ const Web: React.FC<{t: number}> = ({t}) => {
 const SOURCES = ['资料：《说文解字》（据《太平御览》）《史记》《汉书》《旧唐书》《宋史》《明史》 · 中国国家博物馆 · 光明日报 2024 · 《人民周刊》2024',
 	'《人民论坛》2022 · 中新网 2021/2024 · 中新社 2019（1948） · CNNIC 第57次中国互联网络发展状况统计报告'];
 export const END_Q = '你上一次用[纸币]，是什么时候？';
+/** the centred-line rule: pull a trailing full-width 。？ back by half an em plus the letter-spacing (ink centre 960 ± 2) */
+const PULL = 0.55;
 const EndCard: React.FC<{t: number}> = ({t}) => {
-	const dim = fade(t, 120.5, 0.5), seal = t > 121.085 ? land(seg(t, 121.085, 121.5)) : 0, title = fade(t, 121.3, 0.4), q = fade(t, 121.55, 0.4), src = fade(t, 122.0, 0.4), pill = t > 124.974 ? land(seg(t, 124.974, 125.35)) : 0;
+	const dim = fade(t, 120.5, 0.5), seal = t > 121.085 ? land(seg(t, 121.085, 121.5)) : 0, title = fade(t, 121.3, 0.4), q = fade(t, 121.55, 0.4), src = fade(t, 122.0, 0.4), pill = t > 123.0 ? land(seg(t, 123.0, 123.4)) : 0;
 	const parts = END_Q.split(/(\[[^\]]+\])/).filter(Boolean), fs = 76, tw = fs * 14 * 1.03;
 	return <>
 		<div style={{position: 'absolute', inset: 0, background: `rgba(8,4,3,${0.72 * dim})`}} />
 		{seal > 0 && <Img src={SEAL_SRC} style={{position: 'absolute', left: 960 - 70, top: 120, width: 140, height: 140, opacity: cl(seal * 3), transform: `rotate(-6deg) scale(${lerp(1.7, 1, seal)})`, filter: 'drop-shadow(0 3px 6px rgba(0,0,0,0.5))'}} />}
-		<div style={{position: 'absolute', left: 0, right: 0, top: 290, textAlign: 'center', fontFamily: SANS, fontWeight: 900, fontSize: 60, lineHeight: 1.35, letterSpacing: '0.05em', color: B.gold, textShadow: thB.halo, opacity: title}}>钱是怎么从贝壳<br />变成二维码的？</div>
+		<div style={{position: 'absolute', left: 0, right: 0, top: 290, textAlign: 'center', fontFamily: SANS, fontWeight: 900, fontSize: 60, lineHeight: 1.35, letterSpacing: '0.05em', color: B.gold, textShadow: thB.halo, opacity: title}}>钱是怎么从贝<span style={{marginRight: '-0.05em'}}>壳</span><br />变成二维码的<span style={{marginRight: `${-PULL}em`}}>？</span></div>
 		<div style={{position: 'absolute', left: 960 - tw / 2 - 260, top: 560 - 150, width: tw + 520, height: fs * 1.5 + 300, opacity: q, background: 'radial-gradient(closest-side, rgba(16,7,4,0.42), rgba(16,7,4,0.36) 45%, rgba(16,7,4,0.15) 80%, rgba(16,7,4,0))'}} />
 		<div style={{position: 'absolute', left: 0, right: 0, top: 560 + 10 * (1 - q), opacity: q, textAlign: 'center', fontFamily: SANS, fontWeight: 900, fontSize: fs, lineHeight: 1.5, letterSpacing: '0.03em', color: thB.ink, textShadow: thB.halo, whiteSpace: 'nowrap'}}>
-			{parts.map((p, i) => p.startsWith('[') ? <span key={i} style={{position: 'relative', display: 'inline-block'}}><span style={{position: 'absolute', left: '0.05em', right: '0.05em', bottom: '0.1em', height: '0.13em', borderRadius: '0.06em', background: thB.key}} /><span style={{position: 'relative'}}>{p.slice(1, -1)}</span></span> : <span key={i}>{p}</span>)}</div>
+			{parts.map((p, i) => p.startsWith('[') ? <span key={i} style={{position: 'relative', display: 'inline-block'}}><span style={{position: 'absolute', left: '0.05em', right: '0.05em', bottom: '0.1em', height: '0.13em', borderRadius: '0.06em', background: thB.key}} /><span style={{position: 'relative'}}>{p.slice(1, -1)}</span></span>
+				: /[。？！]$/.test(p) ? <span key={i}>{p.slice(0, -1)}<span style={{marginRight: `${-(PULL - 0.02)}em`}}>{p.slice(-1)}</span></span> : <span key={i}>{p}</span>)}</div>
 		{pill > 0 && <div style={{position: 'absolute', left: 760, top: 790, width: 400, height: 58, borderRadius: 29, border: `2px solid ${B.gold}`, background: 'rgba(255,217,138,0.08)', textAlign: 'center', lineHeight: '58px', fontFamily: SERIF, fontWeight: 700, fontSize: 28, letterSpacing: '0.1em', color: B.gold, opacity: cl(pill * 2), transform: `scale(${lerp(0.9, 1, pill)})`}}>关注 Juno · 一起看懂世界</div>}
 		<div style={{position: 'absolute', left: SAFE_X, right: SAFE_X, top: 930, textAlign: 'center', fontFamily: SANS, fontSize: 21, lineHeight: 1.6, color: '#F2E6CC', opacity: 0.72 * src}}>{SOURCES.map((s, i) => <div key={i}>{s}</div>)}</div>
 		<div style={{position: 'absolute', inset: 0, background: '#000', opacity: seg(t, 126.5, 127.0)}} />
@@ -822,16 +836,16 @@ const EndCard: React.FC<{t: number}> = ({t}) => {
 type Layer = {a: number; b: number; fi: number; fo?: number; skip?: [number, number]; C: React.FC<{t: number}>};
 const LAYERS: Layer[] = [
 	{a: 53.5, b: 65.0, fi: 0, C: SongIron},
-	{a: 64.6, b: 67.75, fi: 0.4, C: IronBal},
+	{a: 64.6, b: 67.75, fi: 0.4, C: IronTrade},
 	{a: 67.35, b: 72.1, fi: 0.4, C: JzStreet},
 	{a: 71.7, b: 76.9, fi: 0.4, C: Canal16},
-	{a: 76.5, b: 81.9, fi: 0.4, C: Gate},
-	{a: 81.45, b: 84.45, fi: 0.45, C: Print},
+	{a: 76.5, b: 81.45, fi: 0.4, C: Gate},
+	{a: 81.45, b: 84.45, fi: 0, C: Print},
 	{a: 84.15, b: 98.7, fi: 0.3, skip: [89.36, 91.89], C: Ming},
 	{a: 89.0, b: 92.25, fi: 0.35, fo: 0.35, C: Tower},
 	{a: 98.3, b: 105.55, fi: 0.4, C: Silver},
 	{a: 105.2, b: 107.4, fi: 0.3, C: Modern},
-	{a: 107.0, b: 110.35, fi: 0.4, C: (p) => <Stall t={p.t} zoom={p.t > 109.77 ? (() => { const c = lineCam(p.t); return {s: c.s * LH / 560, P: c.P}; })() : undefined} />},
+	{a: 107.0, b: 110.35, fi: 0.4, C: Stall},
 	{a: 109.95, b: 116.8, fi: 0.4, C: LineWalk},
 	{a: 116.5, b: 127.01, fi: 0.3, C: Web},
 	{a: 120.5, b: 127.01, fi: 0, C: EndCard},

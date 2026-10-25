@@ -88,7 +88,7 @@ export const Balance: React.FC<{x: number; g: number; post: number; arm: number;
 		return <g><path d={`M${p[0]},${p[1]} L${p[0] - 80},${py} M${p[0]},${p[1]} L${p[0] + 80},${py} M${p[0]},${p[1]} L${p[0]},${py - 6}`} stroke={B.gold} strokeOpacity={0.55} strokeWidth={1.6} />
 			<path d={`M${p[0] - 96},${py} Q${p[0]},${py + 46} ${p[0] + 96},${py} Z`} fill="#3A2116" stroke={B.gold} strokeOpacity={0.7} strokeWidth={2} />
 			<g transform={`translate(${p[0]},${py})`}>{child}</g>
-			{tag && <g transform={`translate(${p[0] + 70},${py - 120})`}><path d={`M-40,60 L0,0`} stroke={B.cream} strokeOpacity={0.5} strokeWidth={1.5} /><rect x={-4} y={-30} width={96} height={46} rx={5} fill={B.cream} opacity={0.92} /><text x={44} y={4} textAnchor="middle" fontFamily={KAI} fontWeight={700} fontSize={30} fill={B.lac}>{tag}</text></g>}
+			{tag && <g transform={`translate(${p[0] + 70},${py - 120})`}><path d={`M-40,60 L0,0`} stroke={B.cream} strokeOpacity={0.5} strokeWidth={1.5} /><rect x={-4} y={-36} width={112} height={54} rx={6} fill={B.cream} opacity={0.92} /><text x={52} y={4} textAnchor="middle" fontFamily={KAI} fontWeight={700} fontSize={40} fill={B.lac}>{tag}</text></g>}
 		</g>; };
 	return <g>
 		<path d={`M${x - 110},${g} L${x + 110},${g} L${x + 70},${g - 26} L${x - 70},${g - 26} Z`} fill="#2A1710" stroke={B.gold} strokeOpacity={0.5} strokeWidth={1.5} />

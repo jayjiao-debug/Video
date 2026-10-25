@@ -72,14 +72,17 @@ export const IronLoopB: React.FC<{x: number; y: number; L: number; th: number; s
 	let acc = 0, next = 0, k = 0;
 	for (let i = 1; i < P.length; i++) { const [ax, ay] = P[i - 1], [bx, by] = P[i], s2 = Math.hypot(bx - ax, by - ay);
 		while (next <= acc + s2) { const f = (next - acc) / s2, cx = lerp(ax, bx, f), cy = lerp(ay, by, f), ang = Math.atan2(by - ay, bx - ax) * 180 / Math.PI;
-			coins.push(<ellipse key={k} cx={cx} cy={cy} rx={3.4 * sc} ry={13 * sc} transform={`rotate(${ang.toFixed(1)},${cx.toFixed(1)},${cy.toFixed(1)})`} fill={k % 2 ? '#545B61' : '#737C83'} stroke="#1E2023" strokeWidth={1} />); k++; next += 4.4 * sc; }
+			/* edge-on coins, with every 6th turned face-on (a square-holed coin) so the string reads as coins, not a chain */
+			if (k % 6 === 3) coins.push(<g key={k} transform={`rotate(${(ang + 90).toFixed(1)},${cx.toFixed(1)},${cy.toFixed(1)})`}><ellipse cx={cx} cy={cy} rx={11 * sc} ry={13 * sc} fill="#8A939A" stroke="#D2DADF" strokeWidth={1.6} /><rect x={cx - 3.6 * sc} y={cy - 3.6 * sc} width={7.2 * sc} height={7.2 * sc} fill={B.lac} /></g>);
+			else coins.push(<ellipse key={k} cx={cx} cy={cy} rx={3.6 * sc} ry={13 * sc} transform={`rotate(${ang.toFixed(1)},${cx.toFixed(1)},${cy.toFixed(1)})`} fill={k % 2 ? '#6E777E' : '#949DA4'} stroke="#24272A" strokeWidth={1} />);
+			k++; next += 4.4 * sc; }
 		acc += s2; }
 	const bot = rot([0, L - 2]);
 	return <g>
 		{shadow && <ellipse cx={bot[0]} cy={y + L + 26 * sc} rx={40 * sc} ry={6 * sc} fill="#000" opacity={0.28} />}
 		{coins}
 		{[[-15, -14, -20], [0, -6, 8], [15, -14, 24]].map(([dx, dy, r], i) => { const [cx, cy] = rot([dx * sc, L + dy * sc]);
-			return <g key={i} transform={`rotate(${r + th},${cx},${cy})`}><circle cx={cx} cy={cy} r={14 * sc} fill="#636A70" stroke="#A9B1B7" strokeWidth={2} /><rect x={cx - 4.5 * sc} y={cy - 4.5 * sc} width={9 * sc} height={9 * sc} fill={B.lac} /></g>; })}
+			return <g key={i} transform={`rotate(${r + th},${cx},${cy})`}><circle cx={cx} cy={cy} r={18 * sc} fill="#7C858C" stroke="#DCE3E8" strokeWidth={2.6} /><circle cx={cx} cy={cy} r={14 * sc} fill="none" stroke="#5A6268" strokeWidth={1.2} /><rect x={cx - 5 * sc} y={cy - 5 * sc} width={10 * sc} height={10 * sc} fill={B.lac} /></g>; })}
 	</g>;
 };
 /** the walker with the string in the near fist: cords from the fist into the loop, the loop to the ground, dust where it drags */
