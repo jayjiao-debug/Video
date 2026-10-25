@@ -121,7 +121,7 @@ const Furniture: React.FC<{t: number}> = ({t}) => {
 /** the vignette only (QA / owner row 44: no film grain) */
 const Vignette: React.FC = () => <g pointerEvents="none"><defs><radialGradient id="v44m" cx="0.5" cy="0.5" r="0.75"><stop offset="0.55" stopColor="#000" stopOpacity="0" /><stop offset="1" stopColor="#000" stopOpacity="0.45" /></radialGradient></defs><rect width={W} height={H} fill="url(#v44m)" /></g>;
 /** `skin` picks the caption-layout test variant (SKINTEST.tsx); EP44ROUGH itself always renders skin A */
-export const Rough: React.FC<{skin?: Skin}> = ({skin = 'A'}) => {
+export const Rough: React.FC<{skin?: Skin}> = ({skin = 'D'}) => {
 	const f = useCurrentFrame(), ft = f / FPS, {s: t, hold} = storyOf(ft), fade = sm(seg(ft, FILM_END - 1.0, FILM_END - 0.03));
 	return <AbsoluteFill style={{background: '#0c1012'}}>
 		{/* round 2 (owner note 1, the 0:17 "second nursery"): that frame was not drawn twice. In pic.mp4, frames 521, 524–525 and 528–529

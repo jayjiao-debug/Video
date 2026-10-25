@@ -338,7 +338,7 @@ const Hospital: React.FC<{t: number}> = ({t}) => {
 				<path d="M1180,600 Q1300,570 1400,590 Q1500,600 1600,575 L1600,690 L1180,690 Z" fill="#0c1018" />
 			</g>} />
 			<path d="M1180,690 L1600,690 L1760,1080 L1000,1080 Z" fill="#c8d4e8" opacity={0.05 + 0.04 * pale} />
-			<Clock x={900} y={250} r={30} t={tf} />
+			<Clock x={1040} y={250} r={30} t={tf} />
 			<g transform="translate(1720,560)"><rect x={-60} y={0} width={120} height={360} fill="#1a2028" /><rect x={-50} y={20} width={100} height={60} fill="#222a34" /><rect x={-40} y={-80} width={10} height={80} fill="#1a2028" /><path d="M-35,-80 Q0,-150 40,-100" stroke="#1a2028" strokeWidth={6} fill="none" /></g>
 			{/* the drip stand */}
 			<g transform="translate(240,930)"><rect x={-4} y={-480} width={8} height={480} fill="#1a2028" /><rect x={-50} y={-480} width={100} height={8} fill="#1a2028" /><rect x={-30} y={-470} width={30} height={60} rx={8} fill="#8a9aaa" opacity={0.35} /><rect x={-40} y={-4} width={80} height={8} fill="#1a2028" /></g>
