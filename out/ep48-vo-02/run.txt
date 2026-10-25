@@ -1,0 +1,70 @@
+plan: {'tier': None, 'character_count': None, 'character_limit': None, 'status': None}
+models: ['eleven_v4', 'eleven_v4_turbo', 'eleven_v3', 'eleven_v3_conversational', 'eleven_multilingual_v2', 'eleven_flash_v2_5', 'eleven_turbo_v2_5', 'eleven_turbo_v2', 'eleven_flash_v2', 'eleven_english_sts_v2', 'eleven_multilingual_sts_v2']
+model: eleven_v4
+{"name": "Q_N1", "lang": "zh", "text": "以水银为百川江河大海，机相灌输，上具天文，下具地理。", "voice": "MI36FIkp9wRP7cpWKPTl", "voice_id": "MI36FIkp9wRP7cpWKPTl", "model": "eleven_v4", "status": 200, "file": "Q_N1.mp3", "bytes": 108712}
+{"name": "Q_N3", "lang": "zh", "text": "以水银为百川江河大海，机相灌输，上具天文，下具地理。", "voice": "WuLq5z7nEcrhppO0ZQJw", "voice_id": "WuLq5z7nEcrhppO0ZQJw", "model": "eleven_v4", "status": 200, "file": "Q_N3.mp3", "bytes": 121251}
+{"name": "Q_N5", "lang": "zh", "text": "以水银为百川江河大海，机相灌输，上具天文，下具地理。", "voice": "WkcRFJo38X9XEP8kGExm", "voice_id": "WkcRFJo38X9XEP8kGExm", "model": "eleven_v4", "status": 200, "file": "Q_N5.mp3", "bytes": 112474}
+{"name": "Q_story", "lang": "zh", "text": "以水银为百川江河大海，机相灌输，上具天文，下具地理。", "voice": "shared:DJ Allen - Rock style radio DJ (standard, zh)", "voice_id": "lcRaSg5QsH61bfHjo8qM", "model": "eleven_v4", "status": 200, "file": "Q_story.mp3", "bytes": 106204}
+Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+[
+ {
+  "name": "Q_N1",
+  "lang": "zh",
+  "text": "以水银为百川江河大海，机相灌输，上具天文，下具地理。",
+  "voice": "MI36FIkp9wRP7cpWKPTl",
+  "voice_id": "MI36FIkp9wRP7cpWKPTl",
+  "model": "eleven_v4",
+  "status": 200,
+  "file": "Q_N1.mp3",
+  "bytes": 108712,
+  "heard": "以水银为百川江河大海,基相贯书。上据天文,下据地理。",
+  "heard_lang": "zh",
+  "heard_lang_p": 1.0,
+  "seconds": 6.72
+ },
+ {
+  "name": "Q_N3",
+  "lang": "zh",
+  "text": "以水银为百川江河大海，机相灌输，上具天文，下具地理。",
+  "voice": "WuLq5z7nEcrhppO0ZQJw",
+  "voice_id": "WuLq5z7nEcrhppO0ZQJw",
+  "model": "eleven_v4",
+  "status": 200,
+  "file": "Q_N3.mp3",
+  "bytes": 121251,
+  "heard": "以水銀為百川江河大海, 跡象貫書,上據天文,下據地理。",
+  "heard_lang": "zh",
+  "heard_lang_p": 0.999,
+  "seconds": 7.52
+ },
+ {
+  "name": "Q_N5",
+  "lang": "zh",
+  "text": "以水银为百川江河大海，机相灌输，上具天文，下具地理。",
+  "voice": "WkcRFJo38X9XEP8kGExm",
+  "voice_id": "WkcRFJo38X9XEP8kGExm",
+  "model": "eleven_v4",
+  "status": 200,
+  "file": "Q_N5.mp3",
+  "bytes": 112474,
+  "heard": "以水银为百川江河大海击乡贯书上俱天文下俱地理",
+  "heard_lang": "zh",
+  "heard_lang_p": 0.997,
+  "seconds": 6.96
+ },
+ {
+  "name": "Q_story",
+  "lang": "zh",
+  "text": "以水银为百川江河大海，机相灌输，上具天文，下具地理。",
+  "voice": "shared:DJ Allen - Rock style radio DJ (standard, zh)",
+  "voice_id": "lcRaSg5QsH61bfHjo8qM",
+  "model": "eleven_v4",
+  "status": 200,
+  "file": "Q_story.mp3",
+  "bytes": 106204,
+  "heard": "以水银为百川江河大海机箱灌输上据天文下据地理",
+  "heard_lang": "zh",
+  "heard_lang_p": 0.999,
+  "seconds": 6.56
+ }
+]
