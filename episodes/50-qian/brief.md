@@ -16,3 +16,4 @@
 - Style: **B 「漆」** (Qin–Han lacquer) — fix pass on B running; becomes the channel look.
 - Hook order B (金字旁 first). Today line: 「如今，[10.17亿]人用网络支付。」 End card: 「你上一次用[纸币]，是什么时候？」.
 - **No voice-over** (「不要配音了」, 22:34): subtitle-only. Timing = reading budget (0.5 s + 字/7 + 0.6 s; classical lines +0.4 s; planned beats: title 3.0 s, guess beat 1.5 s, 宝钞 hush 2.0 s, 1.0 s air, end card 6.0 s) → `lines_read.json`, 126.5 s. VO-split sentence pairs stack as two rows (row 1 stays). Sound effects and our own music stay (assumed; confirm with the owner). The generated VO (scratchpad/vo50) is unused.
+- **22:51–23:16:** music = the owner's track バケモノの唄 instrumental (music/bgm.mp3, gitignored), cut to the reading timeline by the music specialist. Style = **B v3 dark** (ep44-like: dark lacquer ground ~30–36 mean luminance, vignette, receding background, rim-lit walker, the money brightest). Approved; next: character sheet + 13 key frames (scratchpad/kf50), music bed in parallel.
