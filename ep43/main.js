@@ -24846,9 +24846,9 @@ var Stage = class {
   extras = [];
   clearAlpha = 1;
   /** world position for frame px at depth z, so that it frames the same at rest */
-  at(px, py, z) {
+  at(px2, py, z) {
     const s = (D - z) / D;
-    return new Vector3((px - W / 2) * s, (H / 2 - py) * s, z);
+    return new Vector3((px2 - W / 2) * s, (H / 2 - py) * s, z);
   }
   /** add a texture as a plane: (cx,cy) centre and (w,h) size in frame px as seen from the rest camera */
   add(name, tex, cx, cy, w, h, z, o = {}, order = 0) {
@@ -24886,13 +24886,13 @@ var Stage = class {
     const p = v.clone().project(this.cam);
     return new Vector2((p.x + 1) / 2 * W, (1 - p.y) / 2 * H);
   }
-  setHero(px, py, r = 900) {
-    this.hero.set(px, py);
+  setHero(px2, py, r = 900) {
+    this.hero.set(px2, py);
     this.heroR = r;
   }
   /** hero given at a depth: converted to its on-screen position under the current camera */
-  heroAt(px, py, z, r = 900) {
-    const s = this.toScreen(this.at(px, py, z));
+  heroAt(px2, py, z, r = 900) {
+    const s = this.toScreen(this.at(px2, py, z));
     this.setHero(s.x, s.y, r);
   }
 };
@@ -25109,8 +25109,9 @@ var composite = (x, g = {}, t = 0, bloomA = 1, bloomB = 1, gA) => {
   if (x.pt) u.pt.value.set(x.pt[0], x.pt[1]);
   u.soft.value = x.soft ?? 0.04;
   u.band.value = x.band ?? 0.18;
+  const noBands = !!window.NOBANDS || !!window.NOBANDS_NOW;
   u.exposure.value = g.exposure ?? 1;
-  u.corners.value = g.corners ?? 0;
+  u.corners.value = noBands ? 0 : g.corners ?? 0;
   u.cband.value.set(...g.cornersBand ?? [0, 305, 520, 1]);
   u.ctop.value = g.cornersTop ?? 1;
   u.pool.value.set(...g.pool ?? [960, 540, 600, 0]);
@@ -25124,7 +25125,7 @@ var composite = (x, g = {}, t = 0, bloomA = 1, bloomB = 1, gA) => {
   } else if (x.mode === 0) {
   }
   u.aexposure.value = a2.exposure ?? 1;
-  u.acorners.value = a2.corners ?? 0;
+  u.acorners.value = noBands ? 0 : a2.corners ?? 0;
   u.acband.value.set(...a2.cornersBand ?? [0, 305, 520, 1]);
   u.actop.value = a2.cornersTop ?? 1;
   u.apool.value.set(...a2.pool ?? [960, 540, 600, 0]);
@@ -25235,7 +25236,7 @@ var GOLD = "#f6cf78";
 var PUNCT = "\uFF1F\uFF01\u3002\uFF0C\uFF1A\uFF1B\u3001\u201D";
 var html = (hud2, s) => hud2.insertAdjacentHTML("beforeend", s);
 var STAYS = ["\u4E5D\u767E\u5E74\uFF0C\u4EBA\u4EBA\u90FD\u60F3", "1186\u5E74\uFF0C\u91D1\u4EBA", "\u4ED6\u5728\u6700\u540E\u5199\u9053", "\u5BAB\u91CC\u7684\u88F1\u753B\u5320", "\u51E0\u7ECF\u8F97\u8F6C", "1578\u5E74\uFF0C\u592A\u76D1\u51AF\u4FDD", "\u4E00\u4E2A\u6708\u5185\uFF0C\u56DB\u5377", "1945\u5E74\uFF0C\u4F2A\u6EE1\u8986\u706D", "\u51E0\u5E74\u540E\uFF0C\u6C88\u9633", "\u6807\u7740\u771F\u8FF9\u7684\u4E24\u5377", "\u660E\u671D\u4EBA\u628A\u8349\u68DA", "\u85CF\u8005\u5B9C\u5B9D\u4E4B\u2014\u2014", "\u76F4\u5230\u4F60\u4E0D\u518D\u5C5E\u4E8E", "\u5B89\u5168\u7684\u4EE3\u4EF7"];
-var WHOLE = ["\u4F60\u88AB\u4EBA\u5077\u5077", "\u88AB\u4E00\u4E2A[\u592A\u76D1]", "\u88AB[\u672B\u4EE3\u7687\u5E1D]", "\u8FD8\u8EBA\u5728\u4E00\u5806", "[\u5077\u4F60]", "\u6DF7\u4E71\u4E2D\uFF0C\u4F60"];
+var WHOLE = ["\u4F60\u88AB\u4EBA\u5077\u5077", "\u88AB\u4E00\u4E2A\u592A\u76D1", "\u88AB\u672B\u4EE3\u7687\u5E1D", "\u8FD8\u8EBA\u5728\u4E00\u5806", "[\u5077\u4F60]", "\u6DF7\u4E71\u4E2D\uFF0C\u4F60"];
 var stays = (s) => STAYS.some((p) => s.startsWith(p));
 var whole = (s) => WHOLE.some((p) => s.startsWith(p));
 var centred = (s) => s.includes("\uFF1F");
@@ -25256,7 +25257,7 @@ var markup = (s, n, ctr, redOn = () => true) => {
     const o = clamp01(n - i);
     let pull = ctr && i === lastVis && PUNCT.includes(ch) ? "margin-right:-0.5em;" : "";
     if ("\u201D\u2019\u300D\u300F\uFF09".includes(prev) && "\u3002\uFF0C\uFF01\uFF1F\uFF1B\uFF1A\u3001".includes(ch)) pull += "margin-left:-0.45em;";
-    out += `<span style="opacity:${o.toFixed(3)};${red && redOn(grp) ? `color:${RED};` : ""}${pull}">${ch}</span>`;
+    out += `<span${red && redOn(grp) ? ' class="k"' : ""} style="opacity:${o.toFixed(3)};${pull}">${ch}</span>`;
     i++;
     prev = ch;
   }
@@ -25285,16 +25286,40 @@ var subtitles = (hud2, lines, t, yTop = 132) => {
     const row = prevStays ? 1 : 0;
     const perWord = s.startsWith("[\u5077\u4F60]");
     const redOn = perWord ? (g) => t >= a + g * BEAT - 0.02 : void 0;
-    html(hud2, `<div class="${ctr ? "subc" : "sub"} sh" style="top:${yTop - 8 + row * 88}px;opacity:${o.toFixed(3)}">${markup(s, n, ctr, redOn)}</div>`);
+    html(hud2, `<div class="${ctr ? "subc" : "sub"} sh" data-k="L${a.toFixed(3)}" style="top:${yTop - 8 + row * 88}px;opacity:${o.toFixed(3)}">${markup(s, n, ctr, redOn)}</div>`);
   }
 };
 var stamp = (hud2, st2, t, a, o = 1) => {
   if (!st2 || o <= 0) return;
   const u = clamp01((t - a) / 0.16), y = (1 - smooth(u)) * -10;
-  html(hud2, `<div class="stamp sh" style="opacity:${(o * smooth(u)).toFixed(3)};transform:translateY(${y.toFixed(1)}px)"><div class="s1">${st2.s1}</div>${st2.s2 ? `<div class="s2">${st2.s2}</div>` : ""}${st2.s3 ? `<div class="s3">${st2.s3}</div>` : ""}</div>`);
+  html(hud2, `<div class="stamp sh" data-k="S${(st2.s1 + "|" + (st2.s2 ?? "")).replace(/"/g, "")}" style="opacity:${(o * smooth(u)).toFixed(3)};transform:translateY(${y.toFixed(1)}px)"><div class="s1">${st2.s1}</div>${st2.s2 ? `<div class="s2">${st2.s2}</div>` : ""}${st2.s3 ? `<div class="s3">${st2.s3}</div>` : ""}</div>`);
 };
 var mark = (hud2, o = 1) => {
-  if (o > 0) html(hud2, `<div class="mark" style="opacity:${(0.62 * o).toFixed(3)}"><span style="color:#B9B2A6">\u25C6</span> Juno \xB7 VIBE\u77E5\u8BC6\u5927\u8D4F</div>`);
+  if (o > 0) html(hud2, `<div class="mark" style="opacity:${(0.62 * o).toFixed(3)}"><span style="color:#B9B2A6">\u25C6</span> Juno \xB7 VIBE\u77E5\u8BC6\u5927\u8D4F</div>${window.SEAL ? `<div class="seal" style="opacity:${(0.86 * o).toFixed(3)}">${sealSvg(window.SEAL)}</div>` : `<div class="jl" style="opacity:${(0.42 * o).toFixed(3)}">J</div>`}`);
+};
+var SEAL_RED = "#B8322A";
+var wear = (id, seed) => `<filter id="${id}" x="-10%" y="-10%" width="120%" height="120%"><feTurbulence type="fractalNoise" baseFrequency="0.07" numOctaves="2" seed="${seed}" result="n1"/><feDisplacementMap in="SourceGraphic" in2="n1" scale="3.2" xChannelSelector="R" yChannelSelector="G" result="d"/><feTurbulence type="fractalNoise" baseFrequency="0.28" numOctaves="2" seed="${seed + 5}" result="n2"/><feColorMatrix in="n2" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 -4.2 3.25" result="m"/><feComposite in="d" in2="m" operator="in"/></filter>`;
+var J = (fill2, y, size) => `<text x="50" y="${y}" text-anchor="middle" font-family="Noto Serif CJK SC, serif" font-weight="900" font-size="${size}" fill="${fill2}">J</text>`;
+var SEALS = {
+  // A 白文方印: a filled square, the J cut out (the ground shows through)
+  A: ["0 0 100 100", `<mask id="mA"><rect width="100" height="100" fill="#fff"/>${J("#000", 75, 70)}</mask><rect x="8" y="8" width="84" height="84" rx="4" fill="${SEAL_RED}" mask="url(#mA)"/>`],
+  // B 朱文方印: a red frame, the J in red
+  B: ["0 0 100 100", `<rect x="10" y="10" width="80" height="80" rx="3" fill="none" stroke="${SEAL_RED}" stroke-width="9"/>${J(SEAL_RED, 73, 62)}`],
+  // C 圆印白文: a filled round seal, J cut out
+  C: ["0 0 100 100", `<mask id="mC"><rect width="100" height="100" fill="#fff"/>${J("#000", 73, 62)}</mask><circle cx="50" cy="50" r="44" fill="${SEAL_RED}" mask="url(#mC)"/>`],
+  // round 朱文 (owner: C's circle, B's outline + red J): ring weights and a double ring
+  C1: ["0 0 100 100", `<circle cx="50" cy="50" r="41" fill="none" stroke="${SEAL_RED}" stroke-width="8"/>${J(SEAL_RED, 72, 60)}`],
+  C2: ["0 0 100 100", `<circle cx="50" cy="50" r="40" fill="none" stroke="${SEAL_RED}" stroke-width="11"/>${J(SEAL_RED, 71, 56)}`],
+  C3: ["0 0 100 100", `<circle cx="50" cy="50" r="43" fill="none" stroke="${SEAL_RED}" stroke-width="5"/>${J(SEAL_RED, 74, 66)}`],
+  C4: ["0 0 100 100", `<circle cx="50" cy="50" r="43" fill="none" stroke="${SEAL_RED}" stroke-width="6.5"/><circle cx="50" cy="50" r="32" fill="none" stroke="${SEAL_RED}" stroke-width="2.5"/>${J(SEAL_RED, 68, 46)}`],
+  // D 双框朱文: a thick outer frame + thin inner frame, red J (a collector's seal)
+  D: ["0 0 100 100", `<rect x="7" y="7" width="86" height="86" fill="none" stroke="${SEAL_RED}" stroke-width="7"/><rect x="19" y="19" width="62" height="62" fill="none" stroke="${SEAL_RED}" stroke-width="3"/>${J(SEAL_RED, 69, 50)}`],
+  // E 竖长印白文: a tall rectangle, J cut out (like a name seal)
+  E: ["0 0 100 130", `<mask id="mE"><rect width="100" height="130" fill="#fff"/>${J("#000", 94, 78)}</mask><rect x="16" y="6" width="68" height="118" rx="3" fill="${SEAL_RED}" mask="url(#mE)"/>`]
+};
+var sealSvg = (k, h = 54) => {
+  const [vb, body2] = SEALS[k] ?? SEALS.A, [, , w, hh] = vb.split(" ").map(Number);
+  return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="${vb}" height="${h}" width="${(h * w / hh).toFixed(1)}"><defs>${wear("w" + k, 3 + k.charCodeAt(0) % 7)}</defs><g filter="url(#w${k})" transform="rotate(-2.5 50 ${hh / 2})">${body2}</g></svg>`;
 };
 var odo = (v, width) => {
   let out = "";
@@ -25444,252 +25469,68 @@ var drawFurniture = (hud2, t, opts = {}) => {
     const flashOut = [66, 66.25, 66.5, 66.75].reduce((m, x) => Math.max(m, clamp01(1 - Math.abs(t - b(x)) / 0.2)), 0);
     tally(hud2, outN, inN, draw, flashAll, flashOut);
   }
+  const ag = hud2.querySelector(":scope > .age"), tl = hud2.querySelector(":scope > .tally");
+  if (ag || tl) {
+    const w = document.createElement("div");
+    w.className = "blk";
+    hud2.appendChild(w);
+    if (ag) w.appendChild(ag);
+    if (tl) w.appendChild(tl);
+  }
   for (const [a, z, x, y, text] of LABELS) if (within(t, a - 0.2, z + 0.2)) label(hud2, x, y, text, clamp01((t - a) / 0.2) * clamp01((z - t) / 0.2));
 };
 var html_chip = (hud2, era) => hud2.insertAdjacentHTML("beforeend", `<div class="age sh"><div class="era">${era}</div></div>`);
 
 // ../lines_bars.json
 var lines_bars_default = [
-  [
-    0,
-    3.714,
-    "\u4E5D\u767E\u5E74\uFF0C\u4EBA\u4EBA\u90FD\u60F3[\u7559\u4F4F]\u4F60\u3002"
-  ],
-  [
-    3.714,
-    7.11,
-    "\u6240\u4EE5\uFF0C\u4F60\u4E00\u76F4\u5728\u88AB[\u5E26\u8D70]\u3002"
-  ],
-  [
-    11.638,
-    15.035,
-    "\u4F60\u88AB\u4EBA\u5077\u5077[\u6362\u6210\u4E86\u5047\u7684]\uFF0C"
-  ],
-  [
-    15.035,
-    17.299,
-    "\u88AB\u4E00\u4E2A[\u592A\u76D1]\u5E26\u51FA\u7687\u5BAB\uFF0C"
-  ],
-  [
-    17.299,
-    19.563,
-    "\u88AB[\u672B\u4EE3\u7687\u5E1D]\u5077\u8FD0\u51FA\u5BAB\uFF0C"
-  ],
-  [
-    19.563,
-    21.827,
-    "\u8FD8\u8EBA\u5728\u4E00\u5806[\u7834\u753B]\u91CC\u3002"
-  ],
-  [
-    21.827,
-    25.223,
-    "\u6392\u961F[\u56DB\u4E94\u4E2A\u5C0F\u65F6]\uFF0C\u53EA\u770B\u4F60[\u4E00\u4E24\u5206\u949F]\u3002"
-  ],
-  [
-    25.223,
-    27.488,
-    "\u4F60\uFF0C\u4E3A\u4EC0\u4E48\u8FD9\u4E48[\u96BE\u89C1]\uFF1F"
-  ],
-  [
-    27.488,
-    30.884,
-    "\u4F60\u8FD9\u4E00\u751F\uFF1A[\u56DB\u6B21\u51FA\u5BAB]\uFF0C[\u4E94\u6B21\u8FDB\u5BAB]\u3002"
-  ],
-  [
-    30.884,
-    34.28,
-    "\u5317\u5B8B\u672B\u5E74\uFF0C\u4F60\u5728[\u6C74\u4EAC]\u88AB\u753B\u4E86\u51FA\u6765\u3002"
-  ],
-  [
-    34.28,
-    37.676,
-    "\u4F60\u8FDB\u4E86\u5317\u5B8B[\u7687\u5BAB]\uFF0C\u9756\u5EB7\u540E\u6D41\u5165[\u91D1\u56FD]\u3002"
-  ],
-  [
-    37.676,
-    41.072,
-    "\u4F60\u8EAB\u4E0A\uFF0C\u6CA1\u6709\u753B\u5BB6\u7684[\u540D\u5B57]\u3002"
-  ],
-  [
-    41.072,
-    44.469,
-    "1186\u5E74\uFF0C\u91D1\u4EBA[\u5F20\u8457]\u5728\u4F60\u8EAB\u540E\u5199\u4E0B\uFF1A"
-  ],
-  [
-    44.469,
-    47.865,
-    "\u753B\u4F60\u7684\u4EBA\uFF0C\u53EB[\u5F20\u62E9\u7AEF]\u3002"
-  ],
-  [
-    47.865,
-    51.261,
-    "\u4ED6\u5728\u6700\u540E\u5199\u9053\uFF1A[\u85CF\u8005\u5B9C\u5B9D\u4E4B]\u3002"
-  ],
-  [
-    51.261,
-    54.657,
-    "\u8C01\u6536\u85CF\u4F60\uFF0C\u90FD\u8981\u597D\u597D[\u73CD\u60DC]\u3002"
-  ],
-  [
-    54.657,
-    58.054,
-    "\u5143\u671D\u5EFA\u7ACB\u540E\uFF0C\u4F60\u53C8\u8FDB\u4E86[\u7687\u5BAB]\u3002"
-  ],
-  [
-    58.054,
-    61.45,
-    "\u5BAB\u91CC\u7684\u88F1\u753B\u5320\uFF0C\u62FF[\u5047\u753B]\u6362\u8D70\u4E86\u4F60\u3002"
-  ],
-  [
-    61.45,
-    64.846,
-    "\u771F\u7684\u4F60\uFF0C\u88AB\u5077\u5077\u5356\u7ED9\u4E86\u4E00\u4E2A[\u6743\u8D35]\u3002"
-  ],
-  [
-    64.846,
-    68.242,
-    "\u540E\u6765\u4E70\u4E0B\u4F60\u7684\u6587\u4EBA\uFF0C[\u8BB0\u4E0B]\u4E86\u8C03\u5305\u3002"
-  ],
-  [
-    68.242,
-    71.638,
-    "\u660E\u671D\uFF0C\u4E3B\u4EBA\u9646\u5B8C\u88AB\u6284\u5BB6\u524D[\u85CF]\u8D77\u4E86\u4F60\u3002"
-  ],
-  [
-    71.638,
-    75.035,
-    "\u51E0\u7ECF\u8F97\u8F6C\uFF0C\u4F60\u843D\u5230\u6743\u81E3[\u4E25\u5D69]\u624B\u91CC\uFF0C"
-  ],
-  [
-    75.035,
-    78.431,
-    "\u4E25\u5BB6\u5012\u53F0\uFF0C\u4F60\u88AB\u6284\u8FDB\u4E86[\u7687\u5BAB]\u3002"
-  ],
-  [
-    78.431,
-    81.827,
-    "1578\u5E74\uFF0C\u592A\u76D1\u51AF\u4FDD\u628A\u4F60[\u5077]\u51FA\u4E86\u5BAB\u3002"
-  ],
-  [
-    81.827,
-    86.355,
-    "\u753B\u4F60\u7684\u4EBA\u6CA1\u7559\u540D\uFF0C\u5077\u4F60\u7684\u5012[\u9898\u4E86\u5B57]\u3002"
-  ],
-  [
-    86.355,
-    89.752,
-    "\u6E05\u671D\uFF0C\u4E3B\u4EBA\u5BB6\u88AB\u6284\uFF0C\u4F60[\u53C8\u8FDB\u4E86\u5BAB]\u3002"
-  ],
-  [
-    89.752,
-    94.28,
-    "\u5609\u5E86\u76D6\u4E86\u4E94\u65B9\u5927\u5370\uFF1A\u4F60\u5F52[\u7687\u5BB6]\u4E86\u3002"
-  ],
-  [
-    94.28,
-    97.676,
-    "1923\u5E74\uFF0C\u6EA5\u4EEA\u628A\u4F60[\u5077\u8FD0]\u51FA\u4E86\u5BAB\u3002"
-  ],
-  [
-    97.676,
-    102.204,
-    "\u4E00\u4E2A\u6708\u5185\uFF0C\u56DB\u5377[\u6E05\u660E\u4E0A\u6CB3\u56FE]\u51FA\u4E86\u5BAB\u3002"
-  ],
-  [
-    102.204,
-    105.601,
-    "\u6E05\u5355\u4E0A\uFF0C\u5176\u4E2D\u4E24\u5377\u90FD\u5199\u7740[\u5F20\u62E9\u7AEF]\u3002"
-  ],
-  [
-    105.601,
-    108.997,
-    "\u4F60\u5728[\u4F2A\u6EE1\u7687\u5BAB]\uFF0C\u4E00\u653E\u5C31\u662F\u5341\u51E0\u5E74\u3002"
-  ],
-  [
-    108.997,
-    112.393,
-    "1945\u5E74\uFF0C\u4F2A\u6EE1\u8986\u706D\uFF0C\u6EA5\u4EEA\u51FA\u9003\u3002"
-  ],
-  [
-    112.393,
-    114.657,
-    "\u6DF7\u4E71\u4E2D\uFF0C\u4F60[\u4E0B\u843D\u4E0D\u660E]\u3002"
-  ],
-  [
-    114.657,
-    117.487,
-    "\u51E0\u5E74\u540E\uFF0C\u6C88\u9633\u4E00\u95F4[\u4E34\u65F6\u5E93\u623F]\u91CC\uFF0C"
-  ],
-  [
-    117.487,
-    120.884,
-    "\u4E13\u5BB6\u6768\u4EC1\u607A\uFF0C\u7FFB\u51FA[\u597D\u51E0\u5377]\u201C\u4F60\u201D\u3002"
-  ],
-  [
-    120.884,
-    123.714,
-    "\u6807\u7740\u771F\u8FF9\u7684\u4E24\u5377\uFF0C\u90FD\u662F[\u4EFF\u7684]\u3002"
-  ],
-  [
-    123.714,
-    128.242,
-    "\u6DF7\u5728\u6B8B\u6B21\u54C1\u91CC\u7684\u90A3\u4E00\u5377\uFF0C[\u624D\u662F\u4F60]\u3002"
-  ],
-  [
-    130.506,
-    133.903,
-    "1950\u5E74\u4EE3\uFF0C\u4F60\u56DE\u5230\u4E86[\u6545\u5BAB]\u3002"
-  ],
-  [
-    133.903,
-    138.431,
-    "\u660E\u671D\u4EBA\u628A\u8349\u68DA\u5F53\u9A74\u8033\uFF0C[\u8865\u753B]\u4E86\u5934\u9A74\u3002"
-  ],
-  [
-    138.431,
-    141.827,
-    "1973\u5E74\u91CD\u88F1\uFF0C[\u5047\u9A74]\u624D\u88AB\u63ED\u6389\u3002"
-  ],
-  [
-    142.393,
-    146.355,
-    "\u85CF\u8005\u5B9C\u5B9D\u4E4B\u2014\u2014\u4EBA\u4EBA\u90FD\u5F88[\u73CD\u60DC]\u4F60\uFF1A"
-  ],
-  [
-    146.355,
-    150.884,
-    "[\u5077\u4F60]\u3001[\u6362\u4F60]\u3001[\u85CF\u4F60]\u3001[\u6284\u4F60]\u3002"
-  ],
-  [
-    150.884,
-    154.28,
-    "\u53EF\u56DB\u4E2A\u671D\u4EE3\u7684\u7687\u5BAB\uFF0C\u90FD\u6CA1[\u7559\u4F4F]\u4F60\u3002"
-  ],
-  [
-    154.28,
-    157.676,
-    "\u76F4\u5230\u4F60\u4E0D\u518D\u5C5E\u4E8E[\u4EFB\u4F55\u4E00\u4E2A\u4EBA]\uFF0C"
-  ],
-  [
-    157.676,
-    162.204,
-    "\u4F60\u624D\u7EC8\u4E8E\uFF0C\u4E0D\u518D\u88AB\u8C01[\u5E26\u8D70]\u3002"
-  ],
-  [
-    165.035,
-    168.997,
-    "\u5B89\u5168\u7684\u4EE3\u4EF7\uFF1A\u5C55\u5B8C\u8981\u9759\u517B[\u4E09\u5E74\u4EE5\u4E0A]\u3002"
-  ],
-  [
-    168.997,
-    172.393,
-    "\u6240\u4EE5\uFF0C\u4F60\u624D\u8FD9\u4E48[\u96BE\u89C1]\u3002"
-  ],
-  [
-    174.657,
-    184.3,
-    "\u8981\u662F\u6392[\u4E94\u5C0F\u65F6]\u770B\u4E24\u5206\u949F\uFF0C\u4F60\u53BB\u5417\uFF1F"
-  ]
+  [0, 3.714, "\u4E5D\u767E\u5E74\uFF0C\u4EBA\u4EBA\u90FD\u60F3[\u7559\u4F4F]\u4F60\u3002"],
+  [3.714, 7.11, "\u6240\u4EE5\uFF0C\u4F60\u4E00\u76F4\u5728\u88AB[\u5E26\u8D70]\u3002"],
+  [11.638, 15.035, "\u4F60\u88AB\u4EBA\u5077\u5077\u6362\u6210\u4E86\u5047\u7684\uFF0C"],
+  [15.035, 17.299, "\u88AB\u4E00\u4E2A\u592A\u76D1\u5E26\u51FA\u7687\u5BAB\uFF0C"],
+  [17.299, 19.563, "\u88AB\u672B\u4EE3\u7687\u5E1D\u5077\u8FD0\u51FA\u5BAB\uFF0C"],
+  [19.563, 21.827, "\u8FD8\u8EBA\u5728\u4E00\u5806\u7834\u753B\u91CC\u3002"],
+  [21.827, 25.223, "\u6392\u961F\u56DB\u4E94\u4E2A\u5C0F\u65F6\uFF0C\u53EA\u770B\u4F60\u4E00\u4E24\u5206\u949F\u3002"],
+  [25.223, 27.488, "\u4F60\uFF0C\u4E3A\u4EC0\u4E48\u8FD9\u4E48\u96BE\u89C1\uFF1F"],
+  [27.488, 30.884, "\u4F60\u8FD9\u4E00\u751F\uFF1A[\u56DB\u6B21\u51FA\u5BAB]\uFF0C[\u4E94\u6B21\u8FDB\u5BAB]\u3002"],
+  [30.884, 34.28, "\u5317\u5B8B\u672B\u5E74\uFF0C\u4F60\u5728\u6C74\u4EAC\u88AB\u753B\u4E86\u51FA\u6765\u3002"],
+  [34.28, 37.676, "\u4F60\u8FDB\u4E86\u5317\u5B8B\u7687\u5BAB\uFF0C\u9756\u5EB7\u540E\u6D41\u5165\u91D1\u56FD\u3002"],
+  [37.676, 41.072, "\u4F60\u8EAB\u4E0A\uFF0C\u6CA1\u6709\u753B\u5BB6\u7684\u540D\u5B57\u3002"],
+  [41.072, 44.469, "1186\u5E74\uFF0C\u91D1\u4EBA\u5F20\u8457\u5728\u4F60\u8EAB\u540E\u5199\u4E0B\uFF1A"],
+  [44.469, 47.865, "\u753B\u4F60\u7684\u4EBA\uFF0C\u53EB\u5F20\u62E9\u7AEF\u3002"],
+  [47.865, 51.261, "\u4ED6\u5728\u6700\u540E\u5199\u9053\uFF1A[\u85CF\u8005\u5B9C\u5B9D\u4E4B]\u3002"],
+  [51.261, 54.657, "\u8C01\u6536\u85CF\u4F60\uFF0C\u90FD\u8981\u597D\u597D\u73CD\u60DC\u3002"],
+  [54.657, 58.054, "\u5143\u671D\u5EFA\u7ACB\u540E\uFF0C\u4F60\u53C8\u8FDB\u4E86\u7687\u5BAB\u3002"],
+  [58.054, 61.45, "\u5BAB\u91CC\u7684\u88F1\u753B\u5320\uFF0C\u62FF[\u5047\u753B]\u6362\u8D70\u4E86\u4F60\u3002"],
+  [61.45, 64.846, "\u771F\u7684\u4F60\uFF0C\u88AB\u5077\u5077\u5356\u7ED9\u4E86\u4E00\u4E2A\u6743\u8D35\u3002"],
+  [64.846, 68.242, "\u540E\u6765\u4E70\u4E0B\u4F60\u7684\u6587\u4EBA\uFF0C\u8BB0\u4E0B\u4E86\u8C03\u5305\u3002"],
+  [68.242, 71.638, "\u660E\u671D\uFF0C\u4E3B\u4EBA\u9646\u5B8C\u88AB\u6284\u5BB6\u524D\u85CF\u8D77\u4E86\u4F60\u3002"],
+  [71.638, 75.035, "\u51E0\u7ECF\u8F97\u8F6C\uFF0C\u4F60\u843D\u5230\u6743\u81E3\u4E25\u5D69\u624B\u91CC\uFF0C"],
+  [75.035, 78.431, "\u4E25\u5BB6\u5012\u53F0\uFF0C\u4F60\u88AB\u6284\u8FDB\u4E86\u7687\u5BAB\u3002"],
+  [78.431, 81.827, "1578\u5E74\uFF0C\u592A\u76D1\u51AF\u4FDD\u628A\u4F60[\u5077]\u51FA\u4E86\u5BAB\u3002"],
+  [81.827, 86.355, "\u753B\u4F60\u7684\u4EBA\u6CA1\u7559\u540D\uFF0C\u5077\u4F60\u7684\u5012\u9898\u4E86\u5B57\u3002"],
+  [86.355, 89.752, "\u6E05\u671D\uFF0C\u4E3B\u4EBA\u5BB6\u88AB\u6284\uFF0C\u4F60\u53C8\u8FDB\u4E86\u5BAB\u3002"],
+  [89.752, 94.28, "\u5609\u5E86\u76D6\u4E86\u4E94\u65B9\u5927\u5370\uFF1A\u4F60\u5F52\u7687\u5BB6\u4E86\u3002"],
+  [94.28, 97.676, "1923\u5E74\uFF0C\u6EA5\u4EEA\u628A\u4F60\u5077\u8FD0\u51FA\u4E86\u5BAB\u3002"],
+  [97.676, 102.204, "\u4E00\u4E2A\u6708\u5185\uFF0C\u56DB\u5377\u6E05\u660E\u4E0A\u6CB3\u56FE\u51FA\u4E86\u5BAB\u3002"],
+  [102.204, 105.601, "\u6E05\u5355\u4E0A\uFF0C\u5176\u4E2D\u4E24\u5377\u90FD\u5199\u7740\u5F20\u62E9\u7AEF\u3002"],
+  [105.601, 108.997, "\u4F60\u5728\u4F2A\u6EE1\u7687\u5BAB\uFF0C\u4E00\u653E\u5C31\u662F\u5341\u51E0\u5E74\u3002"],
+  [108.997, 112.393, "1945\u5E74\uFF0C\u4F2A\u6EE1\u8986\u706D\uFF0C\u6EA5\u4EEA\u51FA\u9003\u3002"],
+  [112.393, 114.657, "\u6DF7\u4E71\u4E2D\uFF0C\u4F60[\u4E0B\u843D\u4E0D\u660E]\u3002"],
+  [114.657, 117.487, "\u51E0\u5E74\u540E\uFF0C\u6C88\u9633\u4E00\u95F4\u4E34\u65F6\u5E93\u623F\u91CC\uFF0C"],
+  [117.487, 120.884, "\u4E13\u5BB6\u6768\u4EC1\u607A\uFF0C\u7FFB\u51FA\u597D\u51E0\u5377\u201C\u4F60\u201D\u3002"],
+  [120.884, 123.714, "\u6807\u7740\u771F\u8FF9\u7684\u4E24\u5377\uFF0C\u90FD\u662F\u4EFF\u7684\u3002"],
+  [123.714, 128.242, "\u6DF7\u5728\u6B8B\u6B21\u54C1\u91CC\u7684\u90A3\u4E00\u5377\uFF0C[\u624D\u662F\u4F60]\u3002"],
+  [130.506, 133.903, "1950\u5E74\u4EE3\uFF0C\u4F60\u56DE\u5230\u4E86\u6545\u5BAB\u3002"],
+  [133.903, 138.431, "\u660E\u671D\u4EBA\u628A\u8349\u68DA\u5F53\u9A74\u8033\uFF0C\u8865\u753B\u4E86\u5934\u9A74\u3002"],
+  [138.431, 141.827, "1973\u5E74\u91CD\u88F1\uFF0C\u5047\u9A74\u624D\u88AB\u63ED\u6389\u3002"],
+  [142.393, 146.355, "\u85CF\u8005\u5B9C\u5B9D\u4E4B\u2014\u2014\u4EBA\u4EBA\u90FD\u5F88\u73CD\u60DC\u4F60\uFF1A"],
+  [146.355, 150.884, "[\u5077\u4F60]\u3001[\u6362\u4F60]\u3001[\u85CF\u4F60]\u3001[\u6284\u4F60]\u3002"],
+  [150.884, 154.28, "\u53EF\u56DB\u4E2A\u671D\u4EE3\u7684\u7687\u5BAB\uFF0C\u90FD\u6CA1[\u7559\u4F4F]\u4F60\u3002"],
+  [154.28, 157.676, "\u76F4\u5230\u4F60\u4E0D\u518D\u5C5E\u4E8E\u4EFB\u4F55\u4E00\u4E2A\u4EBA\uFF0C"],
+  [157.676, 162.204, "\u4F60\u624D\u7EC8\u4E8E\uFF0C\u4E0D\u518D\u88AB\u8C01[\u5E26\u8D70]\u3002"],
+  [165.035, 168.997, "\u5B89\u5168\u7684\u4EE3\u4EF7\uFF1A\u5C55\u5B8C\u8981\u9759\u517B\u4E09\u5E74\u4EE5\u4E0A\u3002"],
+  [168.997, 172.393, "\u6240\u4EE5\uFF0C\u4F60\u624D\u8FD9\u4E48[\u96BE\u89C1]\u3002"],
+  [174.657, 184.3, "\u8981\u662F\u6392[\u4E94\u5C0F\u65F6]\u770B\u4E24\u5206\u949F\uFF0C\u4F60\u53BB\u5417\uFF1F"]
 ];
 
 // src/film.ts
@@ -25714,6 +25555,9 @@ var renderFilm = (t, hud2) => {
       return { st: FALLBACK.st, grade: { vig: 0 } };
     }
   };
+  window.SCENE_ID = cur.id;
+  window.SCENE_AZ = [cur.a, cur.z];
+  window.NOBANDS_NOW = NOBANDS_SCENES.includes(cur.id);
   const fc = safe(cur, t);
   if (tr) {
     const prev = SCENES[i - 1], fp = safe(prev, t);
@@ -25733,6 +25577,57 @@ var renderFilm = (t, hud2) => {
   if (!fc.hideSubs) subtitles(hud2, LINES, t);
   drawFurniture(hud2, t, { hideAll: fc.hideFurniture });
   fc.hud?.(hud2);
+  window.T_NOW = t;
+  if (document.body.classList.contains("ad")) adaptBacking(hud2);
+};
+var NOBANDS_SCENES = ["09", "10", "11", "12", "13", "21", "23", "30", "31"];
+var BACKED = ":scope > .sub, :scope > .subc, :scope > .stamp, :scope > .blk, :scope > .age, :scope > .tally";
+var px = new Uint8Array(0);
+var blkAt = (sc, t) => {
+  let v = 0;
+  const i = sc.findIndex((s) => t >= s.a && t < s.z);
+  if (i < 0) return 0;
+  v = sc[i].bk;
+  const ease = (u) => u * u * (3 - 2 * u);
+  const nx = sc[i + 1];
+  if (nx && nx.bk > v) {
+    const u = clamp01((t - (nx.a - 0.35)) / 0.5);
+    v += (nx.bk - v) * ease(u);
+  }
+  const pv = sc[i - 1];
+  if (pv && pv.bk > sc[i].bk) {
+    const u = clamp01((t - (sc[i].a - 0.1)) / 0.5);
+    v = pv.bk + (sc[i].bk - pv.bk) * ease(u);
+  }
+  return v;
+};
+var adaptBacking = (hud2) => {
+  const gl = renderer.getContext(), Hc = gl.drawingBufferHeight, Wc = gl.drawingBufferWidth;
+  for (const el of Array.from(hud2.querySelectorAll(BACKED))) {
+    const r = el.getBoundingClientRect();
+    const x0 = Math.max(0, Math.floor(r.left)), x1 = Math.min(Wc, Math.ceil(r.right)), y0 = Math.max(0, Math.floor(r.top)), y1 = Math.min(Hc, Math.ceil(r.bottom));
+    const w = x1 - x0, h = y1 - y0;
+    if (w < 4 || h < 4) continue;
+    if (px.length < w * h * 4) px = new Uint8Array(w * h * 4);
+    gl.readPixels(x0, Hc - y1, w, h, gl.RGBA, gl.UNSIGNED_BYTE, px);
+    let sum = 0, bright = 0, n = 0;
+    for (let j = 0; j < h; j += 3) for (let i = 0; i < w; i += 3) {
+      const k = (j * w + i) * 4, L = (0.2126 * px[k] + 0.7152 * px[k + 1] + 0.0722 * px[k + 2]) / 255;
+      sum += L;
+      if (L > 0.62) bright++;
+      n++;
+    }
+    const mean = sum / n, frac = bright / n, bk = clamp01(Math.max((mean - 0.4) / 0.22, (frac - 0.12) / 0.3));
+    el.dataset.bk = bk.toFixed(2);
+    const plan = window.BK_PLAN;
+    let v = bk;
+    if (plan) {
+      if (el.classList.contains("stamp") && plan.stampFixed !== void 0) v = plan.stampFixed;
+      else if (el.dataset.k && plan.keys[el.dataset.k] !== void 0) v = plan.keys[el.dataset.k];
+      else if (el.classList.contains("blk")) v = plan.cornerFixed ?? blkAt(plan.scenes, window.T_NOW);
+    }
+    el.style.setProperty("--bk", v.toFixed(2));
+  }
 };
 
 // src/gaits.ts
@@ -27840,14 +27735,14 @@ function leafTree(P9, x, y, H5, style = "dot") {
     const nd = Math.round(70 * P9.detail);
     for (let i = 0; i < nd; i++) {
       const a = r() * Math.PI * 2, q = Math.sqrt(r());
-      const px = t[0] + Math.cos(a) * cr * 1.1 * q, py = t[1] + Math.sin(a) * cr * 0.75 * q;
+      const px2 = t[0] + Math.cos(a) * cr * 1.1 * q, py = t[1] + Math.sin(a) * cr * 0.75 * q;
       if (style === "dot") {
         P9.ctx.beginPath();
-        P9.ctx.ellipse(px, py, 2.6, 1.7, rr(r, -0.6, 0.6), 0, 7);
+        P9.ctx.ellipse(px2, py, 2.6, 1.7, rr(r, -0.6, 0.6), 0, 7);
         P9.ctx.fillStyle = P9.ink(0.82);
         P9.ctx.fill();
       } else {
-        const pts = ellipsePts(px, py, 4.5, 2.4, 0, 7, 8).map((p) => [p[0], p[1]]);
+        const pts = ellipsePts(px2, py, 4.5, 2.4, 0, 7, 8).map((p) => [p[0], p[1]]);
         line(P9, pts, 0.8, { closed: true, amp: 0.1, a: 0.8 });
       }
     }
@@ -27926,10 +27821,10 @@ function ripples(P9, poly3, flow, dens = 1) {
     const off = Math.floor(y / sp) % 2 * sp;
     for (let x = xs + off; x < xe; x += sp * 2.2) {
       if (r() > 0.75 * P9.detail + 0.15) continue;
-      const px = x + rr(r, -10, 10), py = y + rr(r, -4, 4), s = rr(r, 9, 15);
+      const px2 = x + rr(r, -10, 10), py = y + rr(r, -4, 4), s = rr(r, 9, 15);
       c.beginPath();
-      c.moveTo(px - s, py);
-      c.quadraticCurveTo(px - fx * 2, py - s * 0.45, px + s, py);
+      c.moveTo(px2 - s, py);
+      c.quadraticCurveTo(px2 - fx * 2, py - s * 0.45, px2 + s, py);
       c.lineWidth = P9.lw(1);
       c.strokeStyle = col;
       c.stroke();
@@ -28631,11 +28526,11 @@ function weaveOverlay(W4, H5, strength, mode, seed, paperFrom) {
   for (let i = 0; i < 4; i++) {
     const x = (0.1 + 0.8 * r()) * W4;
     ctx.beginPath();
-    let px = x;
-    ctx.moveTo(px, 0);
+    let px2 = x;
+    ctx.moveTo(px2, 0);
     for (let y = 0; y <= H5; y += 40 * k) {
-      px += (r() - 0.5) * 3 * k;
-      ctx.lineTo(px, y);
+      px2 += (r() - 0.5) * 3 * k;
+      ctx.lineTo(px2, y);
     }
     ctx.lineWidth = Math.max(1, 1.6 * k);
     ctx.strokeStyle = rgba(ink2, 0.05 * strength);
@@ -30934,8 +30829,8 @@ addScene({ id: "08", a: N.pane, z: b3(13), in: IN08, draw: (t) => {
   return { st: st2, grade: { vig: 0.32, exposure: 1 }, bloom: 1, hud: tr ? (hud2) => glassLine(hud2, t) : void 0 };
 } });
 var glassLine = (hud2, t) => {
-  const u = clamp01((t - N.pane) / (N.paneZ - N.pane)), [px, py] = IN08.pt, [hx, hy] = IN08.dir;
-  const x0 = (px - hx) * 1920, y0 = (1 - py - hy) * 1080, w = hx * 2 * 1920, h = hy * 2 * 1080, pos = lerp2(18, 112, easeIn(u)), a = 0.55 * (1 - smooth((u - 0.8) / 0.2));
+  const u = clamp01((t - N.pane) / (N.paneZ - N.pane)), [px2, py] = IN08.pt, [hx, hy] = IN08.dir;
+  const x0 = (px2 - hx) * 1920, y0 = (1 - py - hy) * 1080, w = hx * 2 * 1920, h = hy * 2 * 1080, pos = lerp2(18, 112, easeIn(u)), a = 0.55 * (1 - smooth((u - 0.8) / 0.2));
   hud2.insertAdjacentHTML("afterbegin", `<div style="position:absolute;left:${x0.toFixed(1)}px;top:${y0.toFixed(1)}px;width:${w.toFixed(1)}px;height:${h.toFixed(1)}px;overflow:hidden;pointer-events:none;background:radial-gradient(ellipse 18% 26% at ${(30 - 12 * u).toFixed(1)}% 34%, rgba(196,206,214,${(0.1 * (1 - u)).toFixed(3)}), rgba(196,206,214,0) 100%), radial-gradient(ellipse 14% 22% at ${(78 + 10 * u).toFixed(1)}% 30%, rgba(196,206,214,${(0.07 * (1 - u)).toFixed(3)}), rgba(196,206,214,0) 100%), linear-gradient(112deg, rgba(255,246,230,0) ${pos - 6}%, rgba(255,246,230,${(a * 0.18).toFixed(3)}) ${pos - 2}%, rgba(255,248,236,${a.toFixed(3)}) ${pos}%, rgba(255,246,230,${(a * 0.18).toFixed(3)}) ${pos + 0.8}%, rgba(255,246,230,0) ${pos + 5}%)"></div>`);
 };
 
@@ -31951,7 +31846,7 @@ var bootSong = async () => {
 
 // src/s_yuan.ts
 var b5 = bar;
-var scr = (st2, px, py, z) => st2.toScreen(st2.at(px, py, z));
+var scr = (st2, px2, py, z) => st2.toScreen(st2.at(px2, py, z));
 var camPath = (t, K, openEnd = false) => {
   const n = K.length;
   if (t <= K[0][0]) return [K[0][1], K[0][2], K[0][3]];
@@ -31965,9 +31860,9 @@ var camPath = (t, K, openEnd = false) => {
   const out = [1, 2, 3].map((c) => h00 * v(i, c) + h10 * h * m(i, c) + h01 * v(i + 1, c) + h11 * h * m(i + 1, c));
   return [out[0], out[1], Math.exp(out[2])];
 };
-var solveCam = (px, py, z, sx, sy, k) => {
+var solveCam = (px2, py, z, sx, sy, k) => {
   const s = (D - z) / D, f3 = k / s, zoom = D / (D / f3 + z);
-  return [960 + (px - 960) * s - (sx - 960) / f3, 540 - ((540 - py) * s - (540 - sy) / f3), zoom];
+  return [960 + (px2 - 960) * s - (sx - 960) / f3, 540 - ((540 - py) * s - (540 - sy) / f3), zoom];
 };
 var standinGlyph = (g, cx, cy, size, seed, ink2 = "#2A1F17", w = 0.085) => {
   const r = (k) => hash(seed * 7.13 + k * 1.91), s = size / 2;
@@ -33687,7 +33582,7 @@ var eaveTop;
 var eaveBot;
 var SC = { w: 3200, h: 1200, join: 1880, mount1: 2600, k: 1.1 };
 var c2w = (x, y) => [960 + (x - SC.w / 2) * SC.k, 540 + (y - SC.h / 2) * SC.k];
-var SEALS = [
+var SEALS2 = [
   { text: "\u5609\u5E86\u5FA1\u89C8\u4E4B\u5B9D", x: 2250, y: 590, size: 200, style: "zhu", beat: 39, rot: -0.01 },
   { text: "\u77F3\u6E20\u5B9D\u7B08", x: SC.join, y: 700, size: 172, style: "zhu", tall: true, beat: 39.25, rot: 0.015 },
   { text: "\u4E09\u5E0C\u5802\u7CBE\u9274\u73BA", x: 2470, y: 556, size: 172, style: "bai", tall: true, beat: 39.5, rot: -0.012 },
@@ -33844,7 +33739,7 @@ var boot23 = async () => {
   const cv = startCanvas();
   st23.add("silk", canvasTex(cv), 960, 540, SC.w * SC.k, SC.h * SC.k, 0, { emissive: 0.14 });
   seals23 = new Live(st23, "seals23", 960, 540, SC.w * SC.k, SC.h * SC.k, 1, {}, 0.6);
-  sealCvs = SEALS.map((s, i) => s.text === "\u5B9C\u5B50\u5B59" ? sealYZS(Math.round(s.size * 1.3)) : paintSeal(s.text, { size: Math.round(s.size * 1.3), style: s.style, seed: 811 + i * 17, tall: s.tall, fade: 0.05 }));
+  sealCvs = SEALS2.map((s, i) => s.text === "\u5B9C\u5B50\u5B59" ? sealYZS(Math.round(s.size * 1.3)) : paintSeal(s.text, { size: Math.round(s.size * 1.3), style: s.style, seed: 811 + i * 17, tall: s.tall, fade: 0.05 }));
   eaves23 = new Live(st23, "eaves23", 960, 540, W, H, 400, { rim: 0.55, rimPx: 6 }, 1);
   eaveTop = eaveTopCanvas();
   eaveBot = await svgToCanvas(svgDoc(palaceSvg(-1700, 2600, 860, 1, "#1b1511"), W, H), W, H, 1);
@@ -33861,9 +33756,9 @@ addScene({ id: "23", a: b7(39), z: b7(41), draw: (t) => {
   const sh = t >= b7(39) && t < b7(39) + 0.1 ? Math.round((t - b7(39)) * 30) % 2 ? 6 : -6 : 0;
   cam = [cam[0] + sh, cam[1] + sh * 0.5, cam[2]];
   setCam(st2, cam);
-  const sk = SEALS.map((s) => sealAt(t, s.beat).toFixed(3)).join(",");
+  const sk = SEALS2.map((s) => sealAt(t, s.beat).toFixed(3)).join(",");
   seals23.drawW(sk, (g) => {
-    SEALS.forEach((s, i) => {
+    SEALS2.forEach((s, i) => {
       const k = sealAt(t, s.beat);
       if (k <= 0) return;
       const cv = sealCvs[i], [x, y] = c2w(s.x, s.y), w = cv.width / 1.3 * SC.k * k, h = cv.height / 1.3 * SC.k * k;
