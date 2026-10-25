@@ -24,7 +24,7 @@ export const renderFilm = (t: number, hud: HTMLElement) => {
 		renderStage(fp.st, 0, fp.bloom ?? 1); renderStage(fc.st, 1, fc.bloom ?? 1);
 		const k = (tr.ease ?? ((u: number) => u))(clamp01((t - tr.a) / (tr.z - tr.a)));
 		const x: Xf = {mode: tr.mode, k, dir: tr.dir, pt: tr.pt, soft: tr.soft, band: tr.band};
-		composite(x, fc.grade ?? {}, t, fp.bloom ?? 1, fc.bloom ?? 1);
+		composite(x, fc.grade ?? {}, t, fp.bloom ?? 1, fc.bloom ?? 1, fp.grade ?? {});   // each side keeps its own scene's grade
 	} else if (fc.under) { renderStage(fc.under, 0, 1); renderStage(fc.st, 1, fc.bloom ?? 1); composite({mode: 13, k: 1, blurA: fc.blurUnder ?? 0}, fc.grade ?? {}, t, 1, fc.bloom ?? 1); }
 	else { renderStage(fc.st, 0, fc.bloom ?? 1); composite({mode: 0, k: 0}, fc.grade ?? {}, t, fc.bloom ?? 1); }
 	if (!fc.hideSubs) subtitles(hud, LINES, t);
