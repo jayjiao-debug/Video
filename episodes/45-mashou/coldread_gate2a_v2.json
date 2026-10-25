@@ -1,0 +1,73 @@
+{
+  "label": "gate2a_v2",
+  "viewing_conditions": "phone, frames judged at ~400px wide, ~5s each, evening scroll",
+  "for_frames_only": [
+    {
+      "frame": "look1_hook.png",
+      "what_this_says_in_5s": "Dark room, a black silhouette of a person staring at a glowing bronze horse head in a glass case, sunset through the window. Text: 'Suppose you are the horse head of Yuanmingyuan.' It's about the horse head, seen from today.",
+      "stop_scrolling_1to5": 3,
+      "what_works": "The big line is readable even small, and the red box on 马首 tells me the subject straight away. Warm horse against dark blue is moody. The horse's eye has a streak that looks like a tear, and I noticed it.",
+      "confusing_or_ugly": "At 400px the silhouette is a big black blob covering about a third of the frame, the same size as the horse. Is that me, a visitor, or a guard? '你约267岁' and '正觉寺·文殊亭' are too small to read. Lots of dark empty area. It looks like 'sad museum video', a type I've seen before."
+    },
+    {
+      "frame": "look1_key.png",
+      "what_this_says_in_5s": "The palace is on fire. A soldier walks off carrying the horse head while the other zodiac heads sit in shadow. 'You were taken away, nobody knows where.' 1860, Anglo-French looting.",
+      "stop_scrolling_1to5": 5,
+      "what_works": "The fire is the strongest thing in all six frames. Orange flames against black are readable at any size. The horse is the only coloured thing in the soldier's arm, so it reads as 'stolen' instantly. The counter (12 dots, one empty, 还剩11个) is a smart idea.",
+      "confusing_or_ugly": "The other zodiac heads are dark silhouettes and hard to recognise small (the rat works because of its whiskers, the rest look like lumps). The counter text is tiny, so I'd only get the dots. The soldier's cap looks a bit modern and generic."
+    },
+    {
+      "frame": "look2_hook.png",
+      "what_this_says_in_5s": "Bright museum hall with red pillars and a horse head in a case. Below it, an upside-down reflection of a European-style building with the horse in it. Same 'suppose you are the horse head' line.",
+      "stop_scrolling_1to5": 3,
+      "what_works": "Clean and bright, and the reflection idea is clever ('now' above, 'then' below) once you work it out.",
+      "confusing_or_ugly": "At small size the bottom half looks like a rendering glitch: an upside-down horse, a white squiggly line coming from nowhere, and a building that isn't the room above it. I needed more than 5s to understand it was a past/present mirror. The top half looks like a textbook illustration and the beige/teal colours feel flat."
+    },
+    {
+      "frame": "look2_key.png",
+      "what_this_says_in_5s": "The zodiac fountain at noon in Qianlong's time, all 12 animal heads spraying water, with the horse highlighted in orange. 'At 12 noon, all twelve spray water together.'",
+      "stop_scrolling_1to5": 3,
+      "what_works": "Pretty, clear, and actually teaches me something (the water clock). Finding the orange horse among the 12 is satisfying, and the 在家12/12 counter makes sense here.",
+      "confusing_or_ugly": "Nothing hurts or is at stake, so it feels like a tourism or children's-encyclopedia image. Small, the animals are little brown heads and only the horse stands out. Pleasant, but I'd swipe if every frame looked like this."
+    },
+    {
+      "frame": "look3_hook.png",
+      "what_this_says_in_5s": "Everything is a bronze relief, like a carved plaque: a pavilion, a man standing, a rabbit fountain spraying water, 乾隆年间 carved in. The horse head sits in a glass case in full colour in front of it. Same opening line.",
+      "stop_scrolling_1to5": 4,
+      "what_works": "Doesn't look like anything else in my feed. The relief is the same bronze material as the horse, so it feels like the horse is coming out of its own history. The full-colour horse pops against the flat bronze.",
+      "confusing_or_ugly": "Brown on brown: small, the relief details turn to mud and I only see 'brown frame + horse'. The teal fringe on every edge looks like a 3D/chromatic-aberration glitch or a bad screenshot. The carved 乾隆年间 competes with the subtitle, so there are two text blocks to read in 5s. The man in the relief has no clear role."
+    },
+    {
+      "frame": "look3_key.png",
+      "what_this_says_in_5s": "Auction-room relief: three bidders seated, an auctioneer raising the hammer, a 撤拍 sign on the wall, the horse glowing on a stand. 'This time, the hammer did not fall.' 2007 Hong Kong, auction stopped. Counter: 回国 4/12.",
+      "stop_scrolling_1to5": 4,
+      "what_works": "Best line of the six: '锤子没有落下' is a little twist and makes me want to know why. The raised hammer and the 撤拍 sign tell the story without the subtitle. The colour horse in the centre spotlight works well. 回国4/12 makes me want to know which ones are still missing.",
+      "confusing_or_ugly": "The bidders look like toilet-sign figures. Same teal fringe and brown mud problem as the hook. The 撤拍 sign is carved into the same brown as everything else, so it's easy to miss when small. The small header text (国家文物局反对…) is unreadable."
+    }
+  ],
+  "style_ranking_for_me": [
+    "1: dark museum then burning palace. Highest emotional hit; the fire frame alone would stop me.",
+    "3: bronze relief. Most original, and the auction line is the best hook. Risk: brown-on-brown gets muddy and samey on a small screen.",
+    "2: bright flat illustration. Easiest to read, but feels like a textbook, and the reflection hook looks like a glitch."
+  ],
+  "which_style_makes_me_watch_whole_thing": "Style 1, because going from a sad, quiet museum to that burning palace with a soldier carrying 'me' away is the only pair that made me feel something in 5 seconds (though style 3's '锤子没有落下' is the line I'd remember).",
+  "would_keep_watching_after_3s": true,
+  "why": "'假如说，你是圆明园的马首' puts me in the horse's shoes. It's the same in all three styles, so the art decides whether I stay. Style 1 and style 3 hold me, style 2 maybe not.",
+  "first_moment_I_got_curious": "look3_key: '这一次，锤子没有落下' (why not, who stopped it?). In style 1 it was the key frame's fire.",
+  "where_I_would_swipe_away": [
+    "look2_hook: the upside-down reflection reads as a glitch at 400px, and I'd swipe before working it out",
+    "look1_hook: if the silhouette scene holds longer than ~3s with nothing moving, it's too dark and empty"
+  ],
+  "lines_I_did_not_understand": [
+    "'你约267岁 / 你约101岁' corner tag: too small to read, and once read, the 'about' plus the maths takes a second (2026 minus 267 = made 1759?)",
+    "'正觉寺·文殊亭': I don't know this place and can't read it small; '圆明园' alone would do"
+  ],
+  "takeaway_in_my_words": "The horse head was one of 12 fountain heads at Yuanmingyuan, stolen when the palace burned in 1860. In 2007 its auction in Hong Kong was stopped and it came back; now it's in a case at Yuanmingyuan, and only some of the 12 are home.",
+  "surprise_that_stuck": "The 12 heads were a water clock, all spraying together at noon, and the hammer 'did not fall' at the 2007 auction.",
+  "what_I_would_comment": "'马首回家了，剩下的还在哪？' or, on style 1, '那个眼泪画得我破防了'",
+  "aesthetic_notes_cross_style": [
+    "The subtitle style (white serif plus a red highlight box) is strong and readable in all three; keep it.",
+    "Corner metadata (date/place top right, age/counter bottom left) is unreadable at phone size; make it bigger or drop it.",
+    "The colour horse on a muted background works in every style; it's the one consistent visual anchor."
+  ]
+}
