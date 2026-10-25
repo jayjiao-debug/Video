@@ -136,41 +136,50 @@ export const JadeBi: React.FC<{x: number; y: number; s?: number; glow?: number}>
 	<path d="M0,70 L-8,150 M0,70 L8,150 M0,70 L0,156" stroke={PP.lacquer} strokeWidth={4} /></g>;
 
 /* ---------- phone, avatar, pager, red packet (no brand marks) ---------- */
-/** the couple-avatar picture: a full moon with a little cut-paper figure on each side (girl left, boy right) */
-export const AvatarArt: React.FC<{s: number; side: 'L' | 'R' | 'both'; id: string; gap?: number}> = ({s, side, id, gap = 0}) => {
+/** the couple-avatar picture: ONE wide 2:1 picture cut into two rounded squares (s = square size).
+    Left square: a girl in profile facing right; right square: a boy in profile facing left; a big moon and a small red
+    heart sit across the seam. side picks which square is drawn (centred on 0 when one square is drawn alone). pal = palette. */
+export const AV_PAL: [string, string, string][] = [[PP.indigo2, PP.rose, AU.hi], ['#2F6F6A', '#E9A070', '#FFF2C8'], ['#5B3F78', '#EDB3B4', '#FFE7B0'], ['#26345E', '#78ADA3', '#F6E9C8'], ['#7A3B3B', '#F0C27A', '#FFF4D2']];
+export const AvatarArt: React.FC<{s: number; side: 'L' | 'R' | 'both'; id: string; gap?: number; pal?: number}> = ({s, side, id, gap = 0, pal = 0}) => {
+	const [c1, c2, mc] = AV_PAL[pal % AV_PAL.length];
 	const halves: ('L' | 'R')[] = side === 'both' ? ['L', 'R'] : [side];
-	return <g>{halves.map((h) => <g key={h} transform={`translate(${(h === 'L' ? -1 : 1) * gap / 2},0)`}>
-		<defs><clipPath id={`${id}${h}`}><rect x={h === 'L' ? -s / 2 : 0} y={-s / 2} width={s / 2} height={s} rx={0} /></clipPath>
-			<linearGradient id={`${id}sky`} x1="0" y1="0" x2="0" y2="1"><stop offset="0" stopColor={PP.indigo2} /><stop offset="1" stopColor={PP.rose} /></linearGradient></defs>
-		<g clipPath={`url(#${id}${h})`}>
-			<rect x={-s / 2} y={-s / 2} width={s} height={s} rx={s * 0.18} fill={`url(#${id}sky)`} />
-			<circle cx={0} cy={-s * 0.06} r={s * 0.3} fill={AU.hi} /><circle cx={0} cy={-s * 0.06} r={s * 0.38} fill={AU.hi} opacity={0.25} />
-			<path d={`M${-s / 2},${s * 0.3} Q${-s * 0.2},${s * 0.2} 0,${s * 0.28} Q${s * 0.2},${s * 0.36} ${s / 2},${s * 0.26} L${s / 2},${s / 2} L${-s / 2},${s / 2} Z`} fill={PP.night} />
-			{/* girl (left) and boy (right), simple cut-paper busts facing the middle */}
-			<g fill={PP.ink}>
-				<circle cx={-s * 0.2} cy={s * 0.06} r={s * 0.07} /><path d={`M${-s * 0.29},${s * 0.04} C${-s * 0.3},${s * 0.16} ${-s * 0.26},${s * 0.22} ${-s * 0.2},${s * 0.24} L${-s * 0.27},${s * 0.24} C${-s * 0.33},${s * 0.18} ${-s * 0.32},${s * 0.06} ${-s * 0.29},${s * 0.04} Z`} />
-				<path d={`M${-s * 0.33},${s * 0.4} C${-s * 0.33},${s * 0.2} ${-s * 0.07},${s * 0.2} ${-s * 0.07},${s * 0.4} Z`} />
-				<circle cx={s * 0.2} cy={s * 0.05} r={s * 0.072} /><path d={`M${s * 0.07},${s * 0.4} C${s * 0.07},${s * 0.19} ${s * 0.34},${s * 0.19} ${s * 0.34},${s * 0.4} Z`} />
+	const bust = (sg: number) => { const hx = sg * 0.55 * s, hy = 0.02 * s, r = 0.13 * s;   // sg = −1 girl (left, faces right), +1 boy (right, faces left)
+		const f = -sg;   // facing direction
+		return <g fill={PP.ink}>
+			<path d={`M${hx - 0.32 * s},${0.5 * s} C${hx - 0.3 * s},${0.24 * s} ${hx - 0.12 * s},${0.18 * s} ${hx},${0.18 * s} C${hx + 0.12 * s},${0.18 * s} ${hx + 0.3 * s},${0.24 * s} ${hx + 0.32 * s},${0.5 * s} Z`} />
+			<rect x={hx - 0.05 * s} y={hy + 0.08 * s} width={0.1 * s} height={0.12 * s} />
+			<circle cx={hx} cy={hy} r={r} />
+			<path d={`M${hx + f * r * 0.9},${hy - r * 0.15} L${hx + f * r * 1.22},${hy + r * 0.12} L${hx + f * r * 0.92},${hy + r * 0.3} Z`} />
+			{sg < 0 ? <circle cx={hx - f * r * 0.95} cy={hy - r * 0.6} r={r * 0.48} /> : <path d={`M${hx - r},${hy - r * 0.2} C${hx - r * 1.05},${hy - r * 1.2} ${hx + r * 0.9},${hy - r * 1.35} ${hx + r * 0.95},${hy - r * 0.45} Z`} />}
+		</g>; };
+	return <g>{halves.map((h) => { const off = side === 'both' ? (h === 'L' ? -gap / 2 : gap / 2) : (h === 'L' ? s / 2 : -s / 2);
+		return <g key={h} transform={`translate(${off},0)`}>
+			<defs><clipPath id={`${id}${h}`}><rect x={h === 'L' ? -s : 0} y={-s / 2} width={s} height={s} rx={s * 0.16} /></clipPath>
+				<linearGradient id={`${id}sky`} x1="0" y1="0" x2="0" y2="1"><stop offset="0" stopColor={c1} /><stop offset="1" stopColor={c2} /></linearGradient></defs>
+			<g clipPath={`url(#${id}${h})`}>
+				<rect x={-s} y={-s / 2} width={2 * s} height={s} fill={`url(#${id}sky)`} />
+				<circle cx={0} cy={-0.08 * s} r={0.3 * s} fill={mc} /><circle cx={0} cy={-0.08 * s} r={0.38 * s} fill={mc} opacity={0.22} />
+				{Array.from({length: 7}, (_, i) => <circle key={i} cx={(rnd(i, 9) - 0.5) * 1.8 * s} cy={(-0.45 + rnd(i, 10) * 0.25) * s} r={0.012 * s} fill="#FFF8EA" opacity={0.8} />)}
+				<path d={`M${-s},${0.36 * s} Q0,${0.28 * s} ${s},${0.36 * s} L${s},${0.5 * s} L${-s},${0.5 * s} Z`} fill={PP.night} opacity={0.55} />
+				{bust(-1)}{bust(1)}
+				<path d={`M0,${0.3 * s} C${-0.02 * s},${0.24 * s} ${-0.11 * s},${0.22 * s} ${-0.11 * s},${0.29 * s} C${-0.11 * s},${0.35 * s} ${-0.04 * s},${0.39 * s} 0,${0.43 * s} C${0.04 * s},${0.39 * s} ${0.11 * s},${0.35 * s} ${0.11 * s},${0.29 * s} C${0.11 * s},${0.22 * s} ${0.02 * s},${0.24 * s} 0,${0.3 * s} Z`} fill="#E9473A" />
 			</g>
-			<path d={`M${-s * 0.06},${s * 0.25} C${-s * 0.03},${s * 0.2} 0,${s * 0.22} 0,${s * 0.25} C0,${s * 0.22} ${s * 0.03},${s * 0.2} ${s * 0.06},${s * 0.25} C${s * 0.04},${s * 0.29} 0,${s * 0.31} 0,${s * 0.33} C0,${s * 0.31} ${-s * 0.04},${s * 0.29} ${-s * 0.06},${s * 0.25} Z`} fill={PP.roseL} />
-		</g>
-		<rect x={h === 'L' ? -s / 2 : 0} y={-s / 2} width={s / 2} height={s} fill="none" stroke={PP.edge} strokeWidth={s * 0.012} opacity={gap > 0 ? 0.9 : 0} />
-	</g>)}</g>;
+			<rect x={h === 'L' ? -s : 0} y={-s / 2} width={s} height={s} rx={s * 0.16} fill="none" stroke={PP.edge} strokeWidth={s * 0.014} />
+		</g>; })}</g>;
 };
 /** a phone, screen-on, showing one avatar (whole/half) and a name line; no brand */
-export const Phone: React.FC<{x: number; y: number; s?: number; rot?: number; side?: 'L' | 'R' | 'both' | 'none'; id: string; name?: string; ghost?: boolean; glow?: number}> = ({x, y, s = 1, rot = 0, side = 'L', id, name = '', ghost, glow = 0.8}) => <g transform={`translate(${x},${y}) rotate(${rot}) scale(${s})`}>
+export const Phone: React.FC<{x: number; y: number; s?: number; rot?: number; side?: 'L' | 'R' | 'both' | 'none'; id: string; name?: string; ghost?: boolean; glow?: number; pal?: number}> = ({x, y, s = 1, rot = 0, side = 'L', id, name = '', ghost, glow = 0.8, pal = 0}) => <g transform={`translate(${x},${y}) rotate(${rot}) scale(${s})`}>
 	{glow > 0 && <TokGlow x={0} y={-60} r={330} o={glow} />}
 	<rect x={-170} y={-330} width={340} height={660} rx={46} fill={PP.ink} filter="url(#pdL)" />
 	<rect x={-156} y={-316} width={312} height={632} rx={36} fill={PP.cream} />
 	<rect x={-156} y={-316} width={312} height={70} rx={36} fill={PP.ivory2} /><rect x={-156} y={-280} width={312} height={34} fill={PP.ivory2} />
 	<rect x={-30} y={-306} width={60} height={14} rx={7} fill={PP.ink} />
-	<g transform="translate(0,-90)">
-		{side === 'none' ? null : ghost ? <rect x={-110} y={-110} width={220} height={220} rx={40} fill="none" stroke={PP.indigoL} strokeWidth={4} strokeDasharray="12 10" />
-			: <><rect x={side === 'R' ? 0 : -110} y={-110} width={side === 'both' ? 220 : 110} height={220} rx={0} fill="none" />
-				<g transform={side === 'L' ? 'translate(55,0)' : side === 'R' ? 'translate(-55,0)' : ''}><AvatarArt s={220} side={side} id={id} /></g></>}
+	<g transform="translate(0,-110)">
+		{side === 'none' ? null : ghost ? <rect x={-130} y={-130} width={260} height={260} rx={42} fill="none" stroke={PP.indigoL} strokeWidth={5} strokeDasharray="14 12" />
+			: <AvatarArt s={260} side={side} id={id} pal={pal} />}
 	</g>
 	{name && <text x={0} y={80} textAnchor="middle" fontFamily="'Noto Sans CJK SC',sans-serif" fontWeight={700} fontSize={34} fill={PP.ink}>{name}</text>}
-	{[120, 160, 200].map((yy, i) => <rect key={i} x={-110} y={yy} width={[220, 170, 200][i]} height={14} rx={7} fill={PP.ivory2} />)}
+	{[110, 150, 190].map((yy, i) => <rect key={i} x={-110} y={yy} width={[220, 170, 200][i]} height={14} rx={7} fill={PP.ivory2} />)}
 </g>;
 /** a small folding phone stand (drawn before the phone, at the phone's base) */
 export const PhoneStand: React.FC<{x: number; y: number; s?: number}> = ({x, y, s = 1}) => <g transform={`translate(${x},${y}) scale(${s})`} filter="url(#pdS)">
@@ -182,7 +191,7 @@ export const Pager: React.FC<{x: number; y: number; s?: number; text: string; ro
 	<rect x={-230} y={-120} width={460} height={240} rx={40} fill={PP.ink} filter="url(#pdL)" />
 	<rect x={-200} y={-90} width={300} height={130} rx={12} fill="#B7D58A" />
 	<rect x={-200} y={-90} width={300} height={130} rx={12} fill="none" stroke="#1d2a1a" strokeWidth={4} opacity={0.4} />
-	<text x={-50} y={10} textAnchor="middle" fontFamily="'DejaVu Sans Mono',monospace" fontWeight={700} fontSize={96} fill="#22341C" letterSpacing={8}>{text}</text>
+	<text x={-50} y={10} textAnchor="middle" fontFamily="'DejaVu Sans',sans-serif" fontWeight={700} fontSize={96} fill="#22341C" letterSpacing={6}>{text}</text>
 	{[0, 1, 2].map((i) => <rect key={i} x={130} y={-80 + i * 52} width={70} height={36} rx={12} fill={PP.indigo2} />)}
 	<rect x={-200} y={62} width={300} height={22} rx={11} fill={PP.indigo} />
 </g>;
@@ -242,7 +251,6 @@ export const Hall: React.FC<{cx: number; g: number; k?: number; wall?: string; r
 };
 export const Lantern: React.FC<{x: number; y: number; s?: number; c?: string}> = ({x, y, s = 1, c = '#D8473A'}) => <g transform={`translate(${x},${y}) scale(${s})`}>
 	<line x1={0} y1={-200} x2={0} y2={-56} stroke={PP.ink} strokeWidth={3} />
-	<circle r={90} fill={AU.hi} opacity={0.22} />
 	<g filter="url(#pdS)"><rect x={-26} y={-62} width={52} height={14} rx={4} fill={PP.ink} /><ellipse cx={0} cy={0} rx={56} ry={50} fill={c} />
 		{[-30, 0, 30].map((dx) => <path key={dx} d={`M${dx * 0.6},-48 Q${dx},0 ${dx * 0.6},48`} stroke={PP.lacquer} strokeWidth={3} fill="none" />)}
 		<rect x={-26} y={48} width={52} height={12} rx={4} fill={PP.ink} />
@@ -259,9 +267,9 @@ export const Tree: React.FC<{x: number; g: number; s?: number; c?: string; c2?: 
 	{blossom && Array.from({length: 18}, (_, i) => <circle key={i} cx={x + (rnd(i, 7) - 0.5) * 300 * s} cy={g - (200 + rnd(i, 8) * 280) * s} r={10 * s} fill={PP.roseL} />)}
 </g>;
 /** a cut-paper scroll unrolled (horizontal), with columns of text */
-export const Scroll: React.FC<{x: number; y: number; w: number; h: number; cols: {t: string; lit?: boolean}[]}> = ({x, y, w, h, cols}) => <g>
+export const Scroll: React.FC<{x: number; y: number; w: number; h: number; cols: {t: string; lit?: boolean; hi?: number}[]}> = ({x, y, w, h, cols}) => <g>
 	<Sheet c={PP.cream} d={`M${x},${y} L${x + w},${y} L${x + w},${y + h} L${x},${y + h} Z`} sh="pdL" />
 	<rect x={x - 22} y={y - 14} width={22} height={h + 28} rx={10} fill={PP.lacquer} /><rect x={x + w} y={y - 14} width={22} height={h + 28} rx={10} fill={PP.lacquer} />
-	{cols.map((c, i) => <text key={i} x={x + w - 60 - i * 80} y={y + 70} writingMode="tb" fontFamily="'Noto Serif CJK SC',serif" fontWeight={700} fontSize={44} letterSpacing={6} fill={c.lit ? AU.deep : PP.ink} opacity={c.lit ? 1 : 0.75}
-		style={{writingMode: 'vertical-rl'} as React.CSSProperties}>{c.t}</text>)}
+	{cols.map((c, i) => <text key={i} x={x + w - 60 - i * 80} y={y + 70} writingMode="tb" fontFamily="'Noto Serif CJK SC',serif" fontWeight={700} fontSize={44} letterSpacing={6} fill={PP.ink} opacity={0.8}
+		style={{writingMode: 'vertical-rl'} as React.CSSProperties}>{c.lit && c.hi !== undefined ? <>{c.t.slice(0, c.hi)}<tspan fill={AU.deep} fontWeight={900}>{c.t[c.hi]}</tspan>{c.t.slice(c.hi + 1)}</> : c.t}</text>)}
 </g>;
