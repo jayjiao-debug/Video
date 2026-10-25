@@ -1,0 +1,12 @@
+token present: yes
+url https://media.bjnews.com.cn/cover/2020/12/01/4997780767200325258.jpg
+  saved out/files/mashou_bjnews_1.jpg 0.1 MB
+url https://media.bjnews.com.cn/cover/2020/12/01/4997780767229683183.jpg
+  saved out/files/mashou_bjnews_zhengjuesi.jpg 0.2 MB
+url https://media.bjnews.com.cn/cover/2020/12/01/4997780767250657056.jpg
+  saved out/files/haiyantang_model_bjnews.jpg 0.3 MB
+url https://paper.people.com.cn/hwbwap/images/2020-12/07/11/rmrbhwb2020120711p29_b.jpg
+  saved out/files/mashou_wenshuting_rmrb.jpg 0.0 MB
+url https://paper.people.com.cn/hwbwap/images/2020-12/07/11/rmrbhwb2020120711p30_b.jpg
+  saved out/files/mashou_xinhua_lihe.jpg 0.0 MB
+done
