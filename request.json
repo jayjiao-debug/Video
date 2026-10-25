@@ -1,200 +1,159 @@
 {
- "id": "ep50-vo-02",
- "model_prefs": [
-  "eleven_v4"
- ],
+ "id": "ep50-sfx-01",
  "items": [
   {
-   "name": "05_B2b_t1",
-   "lang": "zh",
-   "voice_id": "WuLq5z7nEcrhppO0ZQJw",
-   "settings": {
-    "stability": 0.5,
-    "similarity_boost": 0.8,
-    "style": 0.3
-   },
-   "model": "eleven_v4",
-   "text": "稀少、结实，又好带。"
+   "type": "sfx",
+   "name": "sfx_stamp_char",
+   "text": "a single wooden seal stamp pressed firmly onto lacquered wood, short deep thud, dry, close",
+   "duration": 0.8,
+   "influence": 0.5
   },
   {
-   "name": "05_B2b_t2",
-   "lang": "zh",
-   "voice_id": "WuLq5z7nEcrhppO0ZQJw",
-   "settings": {
-    "stability": 0.6,
-    "similarity_boost": 0.8,
-    "style": 0.3
-   },
-   "model": "eleven_v4",
-   "text": "稀少、结实，又好带。"
+   "type": "sfx",
+   "name": "sfx_cowrie_drop",
+   "text": "three small seashells dropping and clinking onto a polished wooden counter, close, crisp",
+   "duration": 1.5,
+   "influence": 0.5
   },
   {
-   "name": "08_C2_t1",
-   "lang": "zh",
-   "voice_id": "MI36FIkp9wRP7cpWKPTl",
-   "settings": {
-    "stability": 0.6,
-    "similarity_boost": 0.8,
-    "style": 0.25
-   },
-   "model": "eleven_v4",
-   "text": "钱，摇也，古田器也。"
+   "type": "sfx",
+   "name": "sfx_pay_chime",
+   "text": "a soft short modern payment confirmation chime, warm two-note, generic, no voice",
+   "duration": 1.0,
+   "influence": 0.5
   },
   {
-   "name": "08_C2_t2",
-   "lang": "zh",
-   "voice_id": "MI36FIkp9wRP7cpWKPTl",
-   "settings": {
-    "stability": 0.7,
-    "similarity_boost": 0.8,
-    "style": 0.25
-   },
-   "model": "eleven_v4",
-   "text": "钱，摇也，古田器也。"
+   "type": "sfx",
+   "name": "sfx_rewind",
+   "text": "a tape rewind whoosh accelerating backwards, cinematic, airy, 1.5 seconds",
+   "duration": 1.5,
+   "influence": 0.5
   },
   {
-   "name": "14_E2_t1",
-   "lang": "zh",
-   "voice_id": "WuLq5z7nEcrhppO0ZQJw",
-   "settings": {
-    "stability": 0.5,
-    "similarity_boost": 0.8,
-    "style": 0.3
-   },
-   "model": "eleven_v4",
-   "text": "钱上写着半两，就得重半两。"
+   "type": "sfx",
+   "name": "sfx_title_hit",
+   "text": "a deep taiko drum hit layered with a bronze temple bell ring, cinematic impact with long tail",
+   "duration": 3.0,
+   "influence": 0.5
   },
   {
-   "name": "14_E2_t2",
-   "lang": "zh",
-   "voice_id": "WuLq5z7nEcrhppO0ZQJw",
-   "settings": {
-    "stability": 0.6,
-    "similarity_boost": 0.8,
-    "style": 0.3
-   },
-   "model": "eleven_v4",
-   "text": "钱上写着半两，就得重半两。"
+   "type": "sfx",
+   "name": "sfx_waves_shells",
+   "text": "distant gentle sea waves with a handful of seashells rattling in a palm",
+   "duration": 3.0,
+   "influence": 0.5
   },
   {
-   "name": "20_S2_t1",
-   "lang": "zh",
-   "voice_id": "WuLq5z7nEcrhppO0ZQJw",
-   "settings": {
-    "stability": 0.5,
-    "similarity_boost": 0.8,
-    "style": 0.3
-   },
-   "model": "eleven_v4",
-   "text": "一串一千文，重二十五斤八两。"
+   "type": "sfx",
+   "name": "sfx_bronze_pour",
+   "text": "molten bronze pouring into a stone mould, hiss and sizzle, then a soft metallic ring as it cools",
+   "duration": 3.0,
+   "influence": 0.5
   },
   {
-   "name": "20_S2_t2",
-   "lang": "zh",
-   "voice_id": "WuLq5z7nEcrhppO0ZQJw",
-   "settings": {
-    "stability": 0.6,
-    "similarity_boost": 0.8,
-    "style": 0.3
-   },
-   "model": "eleven_v4",
-   "text": "一串一千文，重二十五斤八两。"
+   "type": "sfx",
+   "name": "sfx_guess_tick",
+   "text": "four soft wooden clock ticks, slow, suspenseful, dry room",
+   "duration": 1.6,
+   "influence": 0.5
   },
   {
-   "name": "21_S3_t1",
-   "lang": "zh",
-   "voice_id": "MI36FIkp9wRP7cpWKPTl",
-   "settings": {
-    "stability": 0.6,
-    "similarity_boost": 0.8,
-    "style": 0.25
-   },
-   "model": "eleven_v4",
-   "text": "患蜀人铁钱重，不便贸易。"
+   "type": "sfx",
+   "name": "sfx_reveal_shimmer",
+   "text": "a bright gold leaf shimmer with a small high bell, magical reveal, short",
+   "duration": 1.5,
+   "influence": 0.5
   },
   {
-   "name": "21_S3_t2",
-   "lang": "zh",
-   "voice_id": "MI36FIkp9wRP7cpWKPTl",
-   "settings": {
-    "stability": 0.7,
-    "similarity_boost": 0.8,
-    "style": 0.25
-   },
-   "model": "eleven_v4",
-   "text": "患蜀人铁钱重，不便贸易。"
+   "type": "sfx",
+   "name": "sfx_spade_soil",
+   "text": "an old bronze spade pushed into soft soil, earthy crunch",
+   "duration": 1.2,
+   "influence": 0.5
   },
   {
-   "name": "22_S3b_t1",
-   "lang": "zh",
-   "voice_id": "WuLq5z7nEcrhppO0ZQJw",
-   "settings": {
-    "stability": 0.5,
-    "similarity_boost": 0.8,
-    "style": 0.3
-   },
-   "model": "eleven_v4",
-   "text": "川蜀铁钱十枚，才抵一枚铜钱。"
+   "type": "sfx",
+   "name": "sfx_coins_hand",
+   "text": "a few ancient bronze coins jingling in a hand, close",
+   "duration": 1.5,
+   "influence": 0.5
   },
   {
-   "name": "22_S3b_t2",
-   "lang": "zh",
-   "voice_id": "WuLq5z7nEcrhppO0ZQJw",
-   "settings": {
-    "stability": 0.6,
-    "similarity_boost": 0.8,
-    "style": 0.3
-   },
-   "model": "eleven_v4",
-   "text": "川蜀铁钱十枚，才抵一枚铜钱。"
+   "type": "sfx",
+   "name": "sfx_balance_settle",
+   "text": "small brass scale pans clinking and swinging, then settling still",
+   "duration": 2.0,
+   "influence": 0.5
   },
   {
-   "name": "25_S5a_t1",
-   "lang": "zh",
-   "voice_id": "WuLq5z7nEcrhppO0ZQJw",
-   "settings": {
-    "stability": 0.5,
-    "similarity_boost": 0.8,
-    "style": 0.3
-   },
-   "model": "eleven_v4",
-   "text": "起初，十六家富户发交子，"
+   "type": "sfx",
+   "name": "sfx_silk_swish",
+   "text": "a soft silk cloth swish passing close to the microphone, gentle whoosh",
+   "duration": 1.0,
+   "influence": 0.5
   },
   {
-   "name": "25_S5a_t2",
-   "lang": "zh",
-   "voice_id": "WuLq5z7nEcrhppO0ZQJw",
-   "settings": {
-    "stability": 0.6,
-    "similarity_boost": 0.8,
-    "style": 0.3
-   },
-   "model": "eleven_v4",
-   "text": "起初，十六家富户发交子，"
+   "type": "sfx",
+   "name": "sfx_iron_drag",
+   "text": "a heavy string of iron coins dragging on stone ground with metallic clanks, heavy and slow",
+   "duration": 3.0,
+   "influence": 0.5
   },
   {
-   "name": "42_P2b_t1",
-   "lang": "zh",
-   "voice_id": "WuLq5z7nEcrhppO0ZQJw",
-   "settings": {
-    "stability": 0.5,
-    "similarity_boost": 0.8,
-    "style": 0.3
-   },
-   "model": "eleven_v4",
-   "text": "值钱的是，大家都信它。"
+   "type": "sfx",
+   "name": "sfx_paper_flutter",
+   "text": "a single sheet of thin paper fluttering lightly in the air",
+   "duration": 1.5,
+   "influence": 0.5
   },
   {
-   "name": "42_P2b_t2",
-   "lang": "zh",
-   "voice_id": "WuLq5z7nEcrhppO0ZQJw",
-   "settings": {
-    "stability": 0.6,
-    "similarity_boost": 0.8,
-    "style": 0.3
-   },
-   "model": "eleven_v4",
-   "text": "值钱的是，大家都信它。"
+   "type": "sfx",
+   "name": "sfx_crowd_dispute",
+   "text": "a small crowd of people arguing in a tense murmur indoors, indistinct, no words",
+   "duration": 2.5,
+   "influence": 0.5
+  },
+  {
+   "type": "sfx",
+   "name": "sfx_woodblock_print",
+   "text": "a woodblock printing press: a firm wooden thump, then paper peeled off the block",
+   "duration": 2.0,
+   "influence": 0.5
+  },
+  {
+   "type": "sfx",
+   "name": "sfx_paper_crumble",
+   "text": "old brittle paper crumbling into small flakes that scatter, dry rustle",
+   "duration": 2.5,
+   "influence": 0.5
+  },
+  {
+   "type": "sfx",
+   "name": "sfx_silver_clink",
+   "text": "a silver ingot set down on a brass scale pan, bright small clink",
+   "duration": 1.0,
+   "influence": 0.5
+  },
+  {
+   "type": "sfx",
+   "name": "sfx_night_stall",
+   "text": "quiet modern city night street ambience near a noodle stall, soft sizzle, distant traffic, no music",
+   "duration": 5.0,
+   "influence": 0.5
+  },
+  {
+   "type": "sfx",
+   "name": "sfx_trust_swell",
+   "text": "a warm soft cinematic swell rising, gentle shimmer, emotional, no drums",
+   "duration": 3.0,
+   "influence": 0.5
+  },
+  {
+   "type": "sfx",
+   "name": "sfx_seal_paper",
+   "text": "a red ink seal stamped onto thick paper, soft thump",
+   "duration": 0.8,
+   "influence": 0.5
   }
  ]
 }
