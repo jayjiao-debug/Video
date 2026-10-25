@@ -23,7 +23,7 @@ const camPath = (t: number, keys: [number, Cam][]): Cam => { if (t <= keys[0][0]
 /* ---------------- the courtyard (岱庙 汉柏院) at a given state ---------------- */
 type Court = {sky: [string, string]; night?: number; snow?: number; autumn?: number; tint?: number; earth?: number; wall?: number; hall?: number; steles?: number; qlStele?: number; nbGrey?: number; nbBare?: number;
 	torch?: number; torch2?: number; altar?: number; age?: number; west?: number; burn?: number; legend?: number; glow?: number; sap?: number; treeO?: number; stars?: number; drift?: number; huaiDead?: number; huaiO?: number; climb?: number; steleGlow?: number; idp: string};
-export const STELES: [number, number, number][] = [[140, 862, 0.7], [-20, 952, 0.9], [1810, 965, 0.6], [640, 838, 0.55]];
+export const STELES: [number, number, number][] = [[140, 862, 0.7], [-20, 952, 0.9], [1810, 965, 0.45], [640, 838, 0.55]];
 type Depth = {g: number; node: React.ReactNode};
 const World: React.FC<{c: Court; t: number; children?: React.ReactNode; extra?: React.ReactNode; people?: Depth[]}> = ({c, t, children, extra, people = []}) => {
 	const n = c.night ?? 0, wall = c.wall ?? 1;
@@ -99,7 +99,7 @@ const soldiersDepth = (t: number, o: number): Depth[] => {
 	const cy = soldier;
 	{ const x = 290, push = 5 * Math.sin(t * 1.8), at: [number, number] = [x + 0.26 * h + push, g - 0.3 * h], r = reacher(x, g, h, {hip: 0.36, lean: 18, neck: 10, lt: 94, lk: 94, rt: 0, rk: 90, rf: 160, la: 50, le: 30, ra: 30, re: 50}, at, false, 'L');
 		out.push({g, node: <Person key="s1" who="soldier-feed" t={t} x={x} ground={g} h={h} pose={r.pose} look={cy} o={o} hat="army" hands={[{joint: 'LHand', at, tol: 6}]} />});
-		out.push({g: g + 0.4, node: <g key="stick" opacity={o}><line x1={r.hand[0]} y1={r.hand[1]} x2={F1 - 10 + push} y2={g - 6} stroke="#5A4230" strokeWidth={4} />{Array.from({length: 4}, (_, j) => { const k = ((t * 1.3 + j / 4) % 1); return <circle key={j} cx={F1 - 8 + push + Math.sin(j * 3 + t) * 10} cy={g - 10 - k * 50} r={2} fill={C.fireCore} opacity={1 - k} />; })}</g>}); }
+		void r; }
 	{ const x = 444, st = Math.sin(t * 3.2) * 5, at: [number, number] = [x - 0.22 * h + st * 0.4, g - 0.56 * h], r = reacher(x, g, h, {...STAND, lean: 14, neck: 12, ra: 50, re: 40}, at, true);
 		out.push({g, node: <Person key="s2" who="soldier-stir1" t={t} x={x} ground={g} h={h} pose={r.pose} look={cy} flip o={o} hands={[{joint: 'RHand', at, tol: 6}]} hat="army" />});
 		out.push({g: g + 0.4, node: <g key="ladle1" opacity={o}><line x1={r.hand[0]} y1={r.hand[1]} x2={F1 + 4 + st} y2={potTop + 6} stroke="#4A3A2C" strokeWidth={3.5} /><ellipse cx={F1 + 4 + st} cy={potTop + 6} rx={6} ry={3} fill="#4A3A2C" /></g>}); }
@@ -156,8 +156,8 @@ const Journey: React.FC<{t: number; o: number}> = ({t, o}) => {
 		<rect x={-300} y={700} width={2600} height={600} fill="#C9B88A" />
 		{Array.from({length: 18}, (_, i) => { const y = 712 + Math.pow(i / 17, 1.6) * 380, sp = 0.3 + i / 17; return <line key={i} x1={-300} y1={y} x2={2300} y2={y} stroke="#B3A271" strokeWidth={2 + i * 0.15} opacity={0.6} strokeDasharray={`${120 * sp} ${60 * sp}`} strokeDashoffset={-drift * sp} />; })}
 		{Array.from({length: 14}, (_, i) => { const x = ((i * 190 + drift * 0.6) % 2600) - 300; return <path key={i} d={`M${x - 70},700 Q${x - 40},${682 - (i % 3) * 4} ${x},${686} Q${x + 40},${680} ${x + 70},700 Z`} fill={i % 2 ? "#7E9465" : "#6F8A58"} />; })}
-		{SEED_X.map((sx, i) => { const k = ease(seg(t, 110.4 + i * 0.08, 114.9 + i * 0.05)), x = lerp(1950 + i * 30, sx, k), y = lerp(260 + (i % 3) * 40, SEED_G[i] - 40, easeIn(k)) - Math.sin(k * Math.PI) * 120;
-			return <g key={i}>{[0.05, 0.1, 0.15].map((d, j) => { const kk = ease(seg(t - d * 2, 110.4 + i * 0.08, 114.9 + i * 0.05)); return <circle key={j} cx={lerp(1950 + i * 30, sx, kk)} cy={lerp(260 + (i % 3) * 40, SEED_G[i] - 40, easeIn(kk)) - Math.sin(kk * Math.PI) * 120} r={7 - j * 2} fill={C.glowCore} opacity={0.4 - j * 0.1} />; })}
+		{SEED_X.map((sx, i) => { const k = ease(seg(t, 110.4 + i * 0.08, 114.9 + i * 0.05)), x = lerp(1640 + i * 40, sx, k), y = lerp(260 + (i % 3) * 40, SEED_G[i] - 40, easeIn(k)) - Math.sin(k * Math.PI) * 120;
+			return <g key={i}>{[0.05, 0.1, 0.15].map((d, j) => { const kk = ease(seg(t - d * 2, 110.4 + i * 0.08, 114.9 + i * 0.05)); return <circle key={j} cx={lerp(1640 + i * 40, sx, kk)} cy={lerp(260 + (i % 3) * 40, SEED_G[i] - 40, easeIn(kk)) - Math.sin(kk * Math.PI) * 120} r={7 - j * 2} fill={C.glowCore} opacity={0.4 - j * 0.1} />; })}
 				<Glow x={x} y={y} r={46} c={C.glow} o={0.8} id={`js${i}`} /><circle cx={x} cy={y} r={8} fill={C.glowCore} /></g>; })}
 	</g>;
 };
@@ -282,7 +282,7 @@ export const Film46: React.FC<{t: number}> = ({t}) => {
 		scrim = 0.32 * ease(seg(t, 41.32, 41.8)) * (1 - ease(seg(t, 55.4, 56.0)));
 		const st: SealState[] = [t >= 44.15 ? 'before' : 'off', t >= 46.98 ? 'legend' : 'off', ...lit.map((x): SealState => x ? 'lit' : 'off')];
 		if (t < 44.15) st.forEach((_, i) => { st[i] = t >= 41.32 + i * 0.12 ? 'ghost' : 'off'; });
-		seals = <SealRow st={st} o={1 - ease(seg(t, 55.4, 56.0))} seventh={seg(t, 53.21, 53.6) * (1 - seg(t, 55.0, 55.8))} pop={[seg(t, 44.15, 44.4), seg(t, 46.98, 47.2), ...lightT.map((a) => seg(t, a, a + 0.25))]} />;
+		seals = <SealRow st={st} o={1 - ease(seg(t, 55.4, 56.0))} seventh={seg(t, 53.21, 53.6) * (1 - seg(t, 55.0, 55.8))} pop={[t < 44.15 ? 1 : seg(t, 44.15, 44.4), t < 46.98 ? 1 : seg(t, 46.98, 47.2), ...lightT.map((a) => t < a ? 1 : seg(t, a, a + 0.25))]} />;
 	}
 	/* ===== D. time-lapse 56.04 – 59.44 ===== */
 	else if (t < 59.44) {
@@ -325,14 +325,14 @@ export const Film46: React.FC<{t: number}> = ({t}) => {
 		</World>);
 		cam = mixCam(CAM0, {cx: TX - 40, cy: 640, z: 1.55}, push);
 		// labels on the trunk
-		if (westFocus > 0) { const p = treeAt(TX, TG, 1, 1, WEST_MID); layers.push(<g key="wl" opacity={westFocus}><path d={`M${p[0] - 150},${p[1] + 40} L${p[0] - 46},${p[1] + 10}`} stroke="#FFF8EC" strokeWidth={4} /><circle cx={p[0] - 46} cy={p[1] + 10} r={6} fill="#FFF8EC" />
-			<text x={p[0] - 160} y={p[1] + 58} textAnchor="end" style={{fontFamily: "'Noto Sans CJK SC',sans-serif", fontWeight: 900, fontSize: 52}} fill="#FFF8EC" stroke="#2A1A0A" strokeWidth={7} paintOrder="stroke">西干 · 死了</text></g>); }
+		if (westFocus > 0) { const p = treeAt(TX, TG, 1, 1, WEST_MID); layers.push(<g key="wl" opacity={westFocus}><path d={`M${p[0] - 150},${p[1] - 50} L${p[0] - 46},${p[1] + 10}`} stroke="#FFF8EC" strokeWidth={4} /><circle cx={p[0] - 46} cy={p[1] + 10} r={6} fill="#FFF8EC" />
+			<text x={p[0] - 160} y={p[1] - 32} textAnchor="end" style={{fontFamily: "'Noto Sans CJK SC',sans-serif", fontWeight: 900, fontSize: 52}} fill="#FFF8EC" stroke="#2A1A0A" strokeWidth={7} paintOrder="stroke">西干 · 死了</text></g>); }
 		if (t >= 99.06 && t < 102.6) { const p = treeAt(TX, TG, 1, 1, STRIP_MID), o = ease(seg(t, 99.1, 99.5)) * (1 - seg(t, 102.2, 102.6));
 			layers.push(<text key="eastname" x={p[0] + 100} y={p[1] - 70} style={{fontFamily: "'Noto Sans CJK SC',sans-serif", fontWeight: 900, fontSize: 52}} fill="#FFF8EC" stroke="#2A1A0A" strokeWidth={7} paintOrder="stroke" opacity={o}>东干 · 活着</text>); }
 		if (eastFocus > 0 && t < 102.6) { const p = treeAt(TX, TG, 1, 1, STRIP_MID), o = ease(seg(t, 99.3, 99.8)) * (1 - seg(t, 102.2, 102.6));
 			layers.push(<g key="el" opacity={o}><path d={`M${p[0] - 20},${p[1]} L${p[0] + 16},${p[1]} M${p[0] - 20},${p[1] - 12} L${p[0] - 20},${p[1] + 12} M${p[0] + 16},${p[1] - 12} L${p[0] + 16},${p[1] + 12} M${p[0] + 16},${p[1]} L${p[0] + 90},${p[1]}`} stroke="#FFF8EC" strokeWidth={4} />
 				<text x={p[0] + 100} y={p[1] + 14} style={{fontFamily: "'Noto Sans CJK SC',sans-serif", fontWeight: 900, fontSize: 56}} fill="#FFD36E" stroke="#2A1A0A" strokeWidth={7} paintOrder="stroke">32厘米</text></g>); }
-		if (t >= 102.46) { const o = ease(seg(t, 102.9, 103.5)), top = TG - 830, hgt = ease(seg(t, 102.9, 104.0));
+		if (t >= 102.46) { const o = ease(seg(t, 103.5, 104.0)), top = TG - 830, hgt = ease(seg(t, 103.5, 104.4));
 			layers.push(<g key="hb" opacity={o}><line x1={1660} y1={TG} x2={1660} y2={lerp(TG, top, hgt)} stroke="#FFF2D2" strokeWidth={4} /><line x1={1640} y1={TG} x2={1680} y2={TG} stroke="#FFF2D2" strokeWidth={4} /><line x1={1640} y1={top} x2={1680} y2={top} stroke="#FFF2D2" strokeWidth={4} opacity={hgt} /><line x1={1430} y1={top} x2={1640} y2={top} stroke="#FFF2D2" strokeWidth={2} opacity={0.6 * hgt} />
 				<text x={1690} y={(TG + top) / 2} style={{fontFamily: "'Noto Sans CJK SC',sans-serif", fontWeight: 900, fontSize: 64}} fill="#FFD36E" stroke="#2A1A0A" strokeWidth={7} paintOrder="stroke">11.5米</text></g>); }
 	}
@@ -363,10 +363,9 @@ export const Film46: React.FC<{t: number}> = ({t}) => {
 			cam = mixCam(CAM0, {cx: 1100, cy: 480, z: 1.08}, ease(seg(t, 109.25, 110.6)));
 		}
 		if (t >= 110.6 && t < 115.3) layers.push(<Journey key="J" t={t} o={ease(seg(t, 110.6, 110.95))} />);
-		if (t >= 114.6) layers.push(<Maoling key="M" t={t} o={ease(seg(t, 114.6, 115.3)) * (1 - ease(seg(t, 123.2, 123.97)))} glow={t < 117.17 ? 0.25 : t < 118.307 ? 0.12 : lerp(0.3, 1, easeOut(seg(t, 118.307, 119.0)))} />);
+		if (t >= 114.6) layers.push(<Maoling key="M" t={t} o={ease(seg(t, 114.6, 115.3))} glow={t < 117.17 ? 0.25 : t < 118.307 ? 0.12 : lerp(0.3, 1, easeOut(seg(t, 118.307, 119.0)))} />);
 		if (t >= 117.17 && t < 118.307) scrim = 0.22 * ease(seg(t, 117.17, 117.9));
 		if (t >= 114.6) cam = mixCam(CAM0, {cx: 960, cy: 640, z: 1.1}, ease(seg(t, 115.5, 118.3)) * (1 - ease(seg(t, 118.307, 119.2))));
-		if (t >= 123.2) layers.push(<g key="K0" opacity={ease(seg(t, 123.2, 123.97))}><World t={t} c={{idp: 'K0', sky: SKY.day, wall: 1, hall: 1, steles: 1, qlStele: 1, age: 1, west: 1, glow: 1.4, sap: 0.4}} /></g>);
 	}
 	/* ===== J. today, night, dawn, end 123.97 – 156.44 ===== */
 	else {
