@@ -1,0 +1,562 @@
+[
+  {
+    "source": "https://gol.gg/tournament/tournament-matchlist/Worlds%20Main%20Event%202023/",
+    "license": "gol.gg stats page"
+  },
+  {
+    "source": "https://gol.gg/tournament/tournament-matchlist/Worlds%20Play-In%202023/",
+    "license": "gol.gg stats page"
+  },
+  {
+    "source": "https://gol.gg/tournament/tournament-matchlist/LEC%20Season%20Finals%202023/",
+    "license": "gol.gg stats page"
+  },
+  {
+    "source": "https://gol.gg/tournament/tournament-matchlist/CBLOL%20Split%202%20Playoffs%202023/",
+    "license": "gol.gg stats page"
+  },
+  {
+    "source": "https://gol.gg/tournament/tournament-matchlist/PCS%20Summer%20Playoffs%202023/",
+    "license": "gol.gg stats page"
+  },
+  {
+    "source": "https://gol.gg/tournament/tournament-matchlist/VCS%20Summer%20Playoffs%202023/",
+    "license": "gol.gg stats page"
+  },
+  {
+    "source": "https://gol.gg/tournament/tournament-matchlist/LLA%20Closing%20Playoffs%202023/",
+    "license": "gol.gg stats page"
+  },
+  {
+    "source": "https://gol.gg/tournament/tournament-matchlist/LCK%20Summer%20Playoffs%202023/",
+    "license": "gol.gg stats page"
+  },
+  {
+    "source": "https://gol.gg/tournament/tournament-matchlist/LCS%20Championship%202023/",
+    "license": "gol.gg stats page"
+  },
+  {
+    "source": "https://gol.gg/tournament/tournament-matchlist/LJL%20Summer%20Playoffs%202023/",
+    "license": "gol.gg stats page"
+  },
+  {
+    "source": "https://gol.gg/tournament/tournament-matchlist/PCS%20Summer%202023/",
+    "license": "gol.gg stats page"
+  },
+  {
+    "source": "https://gol.gg/tournament/tournament-matchlist/CBLOL%20Split%202%202023/",
+    "license": "gol.gg stats page"
+  },
+  {
+    "source": "https://gol.gg/tournament/tournament-matchlist/LCK%20Summer%202023/",
+    "license": "gol.gg stats page"
+  },
+  {
+    "source": "https://gol.gg/tournament/tournament-matchlist/VCS%20Summer%202023/",
+    "license": "gol.gg stats page"
+  },
+  {
+    "source": "https://gol.gg/tournament/tournament-matchlist/LPL%20Summer%20Playoffs%202023/",
+    "license": "gol.gg stats page"
+  },
+  {
+    "source": "https://gol.gg/tournament/tournament-matchlist/LEC%20Summer%20Playoffs%202023/",
+    "license": "gol.gg stats page"
+  },
+  {
+    "source": "https://gol.gg/tournament/tournament-matchlist/LEC%20Summer%20Groups%202023/",
+    "license": "gol.gg stats page"
+  },
+  {
+    "source": "https://gol.gg/tournament/tournament-matchlist/LCS%20Summer%202023/",
+    "license": "gol.gg stats page"
+  },
+  {
+    "source": "https://gol.gg/tournament/tournament-matchlist/LLA%20Closing%202023/",
+    "license": "gol.gg stats page"
+  },
+  {
+    "source": "https://gol.gg/tournament/tournament-matchlist/LPL%20Summer%202023/",
+    "license": "gol.gg stats page"
+  },
+  {
+    "source": "https://gol.gg/tournament/tournament-matchlist/LJL%20Summer%202023/",
+    "license": "gol.gg stats page"
+  },
+  {
+    "source": "https://gol.gg/tournament/tournament-matchlist/LEC%20Summer%202023/",
+    "license": "gol.gg stats page"
+  },
+  {
+    "source": "https://gol.gg/tournament/tournament-matchlist/MSI%202023/",
+    "license": "gol.gg stats page"
+  },
+  {
+    "source": "https://gol.gg/tournament/tournament-matchlist/LEC%20Spring%20Playoffs%202023/",
+    "license": "gol.gg stats page"
+  },
+  {
+    "source": "https://gol.gg/tournament/tournament-matchlist/VCS%20Spring%20Playoffs%202023/",
+    "license": "gol.gg stats page"
+  },
+  {
+    "source": "https://gol.gg/tournament/tournament-matchlist/LEC%20Spring%20Groups%202023/",
+    "license": "gol.gg stats page"
+  },
+  {
+    "source": "https://gol.gg/tournament/tournament-matchlist/CBLOL%20Split%201%20Playoffs%202023/",
+    "license": "gol.gg stats page"
+  },
+  {
+    "source": "https://gol.gg/tournament/tournament-matchlist/LJL%20Spring%20Playoffs%202023/",
+    "license": "gol.gg stats page"
+  },
+  {
+    "source": "https://gol.gg/tournament/tournament-matchlist/LPL%20Spring%20Playoffs%202023/",
+    "license": "gol.gg stats page"
+  },
+  {
+    "source": "https://gol.gg/tournament/tournament-matchlist/LLA%20Opening%20Playoffs%202023/",
+    "license": "gol.gg stats page"
+  },
+  {
+    "source": "https://gol.gg/tournament/tournament-matchlist/VCS%20Spring%202023/",
+    "license": "gol.gg stats page"
+  },
+  {
+    "source": "https://gol.gg/tournament/tournament-matchlist/LCK%20Spring%20Playoffs%202023/",
+    "license": "gol.gg stats page"
+  },
+  {
+    "source": "https://gol.gg/tournament/tournament-matchlist/LCS%20Spring%20Playoffs%202023/",
+    "license": "gol.gg stats page"
+  },
+  {
+    "source": "https://gol.gg/tournament/tournament-matchlist/PCS%20Spring%20Playoffs%202023/",
+    "license": "gol.gg stats page"
+  },
+  {
+    "source": "https://gol.gg/tournament/tournament-matchlist/LEC%20Spring%20Season%202023/",
+    "license": "gol.gg stats page"
+  },
+  {
+    "source": "https://gol.gg/tournament/tournament-matchlist/LJL%20Spring%202023/",
+    "license": "gol.gg stats page"
+  },
+  {
+    "source": "https://gol.gg/tournament/tournament-matchlist/LPL%20Spring%202023/",
+    "license": "gol.gg stats page"
+  },
+  {
+    "source": "https://gol.gg/tournament/tournament-matchlist/CBLOL%20Split%201%202023/",
+    "license": "gol.gg stats page"
+  },
+  {
+    "source": "https://gol.gg/tournament/tournament-matchlist/LCK%20Spring%202023/",
+    "license": "gol.gg stats page"
+  },
+  {
+    "source": "https://gol.gg/tournament/tournament-matchlist/LCS%20Spring%202023/",
+    "license": "gol.gg stats page"
+  },
+  {
+    "source": "https://gol.gg/tournament/tournament-matchlist/PCS%20Spring%202023/",
+    "license": "gol.gg stats page"
+  },
+  {
+    "source": "https://gol.gg/tournament/tournament-matchlist/LLA%20Opening%202023/",
+    "license": "gol.gg stats page"
+  },
+  {
+    "source": "https://gol.gg/tournament/tournament-matchlist/LEC%20Winter%20Playoffs%202023/",
+    "license": "gol.gg stats page"
+  },
+  {
+    "source": "https://gol.gg/tournament/tournament-matchlist/LEC%20Winter%20Groups%202023/",
+    "license": "gol.gg stats page"
+  },
+  {
+    "source": "https://gol.gg/tournament/tournament-matchlist/LEC%20Winter%202023/",
+    "license": "gol.gg stats page"
+  },
+  {
+    "source": "https://gol.gg/tournament/tournament-matchlist/Worlds%20Main%20Event%202024/",
+    "license": "gol.gg stats page"
+  },
+  {
+    "source": "https://gol.gg/tournament/tournament-matchlist/Worlds%20Play-In%202024/",
+    "license": "gol.gg stats page"
+  },
+  {
+    "source": "https://gol.gg/tournament/tournament-matchlist/LCK%20Summer%20Playoffs%202024/",
+    "license": "gol.gg stats page"
+  },
+  {
+    "source": "https://gol.gg/tournament/tournament-matchlist/CBLOL%20Split%202%20Playoffs%202024/",
+    "license": "gol.gg stats page"
+  },
+  {
+    "source": "https://gol.gg/tournament/tournament-matchlist/LCS%20Championship%202024/",
+    "license": "gol.gg stats page"
+  },
+  {
+    "source": "https://gol.gg/tournament/tournament-matchlist/LEC%20Season%20Finals%202024/",
+    "license": "gol.gg stats page"
+  },
+  {
+    "source": "https://gol.gg/tournament/tournament-matchlist/PCS%20Summer%20Playoffs%202024/",
+    "license": "gol.gg stats page"
+  },
+  {
+    "source": "https://gol.gg/tournament/tournament-matchlist/LPL%20Summer%20Playoffs%202024/",
+    "license": "gol.gg stats page"
+  },
+  {
+    "source": "https://gol.gg/tournament/tournament-matchlist/LLA%20Closing%20Playoffs%202024/",
+    "license": "gol.gg stats page"
+  },
+  {
+    "source": "https://gol.gg/tournament/tournament-matchlist/LCK%20Summer%202024/",
+    "license": "gol.gg stats page"
+  },
+  {
+    "source": "https://gol.gg/tournament/tournament-matchlist/VCS%20Summer%20Playoffs%202024/",
+    "license": "gol.gg stats page"
+  },
+  {
+    "source": "https://gol.gg/tournament/tournament-matchlist/LCS%20Summer%202024/",
+    "license": "gol.gg stats page"
+  },
+  {
+    "source": "https://gol.gg/tournament/tournament-matchlist/VCS%20Summer%202024/",
+    "license": "gol.gg stats page"
+  },
+  {
+    "source": "https://gol.gg/tournament/tournament-matchlist/LPL%20Summer%20Season%202024/",
+    "license": "gol.gg stats page"
+  },
+  {
+    "source": "https://gol.gg/tournament/tournament-matchlist/CBLOL%20Split%202%202024/",
+    "license": "gol.gg stats page"
+  },
+  {
+    "source": "https://gol.gg/tournament/tournament-matchlist/LEC%20Summer%20Playoffs%202024/",
+    "license": "gol.gg stats page"
+  },
+  {
+    "source": "https://gol.gg/tournament/tournament-matchlist/LJL%20Summer%20Playoffs%202024/",
+    "license": "gol.gg stats page"
+  },
+  {
+    "source": "https://gol.gg/tournament/tournament-matchlist/PCS%20Summer%202024/",
+    "license": "gol.gg stats page"
+  },
+  {
+    "source": "https://gol.gg/tournament/tournament-matchlist/LLA%20Closing%202024/",
+    "license": "gol.gg stats page"
+  },
+  {
+    "source": "https://gol.gg/tournament/tournament-matchlist/LJL%20Summer%202024/",
+    "license": "gol.gg stats page"
+  },
+  {
+    "source": "https://gol.gg/tournament/tournament-matchlist/Esports%20World%20Cup%202024/",
+    "license": "gol.gg stats page"
+  },
+  {
+    "source": "https://gol.gg/tournament/tournament-matchlist/LEC%20Summer%20Season%202024/",
+    "license": "gol.gg stats page"
+  },
+  {
+    "source": "https://gol.gg/tournament/tournament-matchlist/LPL%20Summer%20Placements%202024/",
+    "license": "gol.gg stats page"
+  },
+  {
+    "source": "https://gol.gg/tournament/tournament-matchlist/MSI%202024/",
+    "license": "gol.gg stats page"
+  },
+  {
+    "source": "https://gol.gg/tournament/tournament-matchlist/CBLOL%20Split%201%20Playoffs%202024/",
+    "license": "gol.gg stats page"
+  },
+  {
+    "source": "https://gol.gg/tournament/tournament-matchlist/LPL%20Spring%20Playoffs%202024/",
+    "license": "gol.gg stats page"
+  },
+  {
+    "source": "https://gol.gg/tournament/tournament-matchlist/LCK%20Spring%20Playoffs%202024/",
+    "license": "gol.gg stats page"
+  },
+  {
+    "source": "https://gol.gg/tournament/tournament-matchlist/LEC%20Spring%20Playoffs%202024/",
+    "license": "gol.gg stats page"
+  },
+  {
+    "source": "https://gol.gg/tournament/tournament-matchlist/PCS%20Spring%20Playoffs%202024/",
+    "license": "gol.gg stats page"
+  },
+  {
+    "source": "https://gol.gg/tournament/tournament-matchlist/VCS%20Spring%20Playoffs%202024/",
+    "license": "gol.gg stats page"
+  },
+  {
+    "source": "https://gol.gg/tournament/tournament-matchlist/LLA%20Opening%20Playoffs%202024/",
+    "license": "gol.gg stats page"
+  },
+  {
+    "source": "https://gol.gg/tournament/tournament-matchlist/LCS%20Spring%20Playoffs%202024/",
+    "license": "gol.gg stats page"
+  },
+  {
+    "source": "https://gol.gg/tournament/tournament-matchlist/LPL%20Spring%202024/",
+    "license": "gol.gg stats page"
+  },
+  {
+    "source": "https://gol.gg/tournament/tournament-matchlist/LEC%20Spring%20Season%202024/",
+    "license": "gol.gg stats page"
+  },
+  {
+    "source": "https://gol.gg/tournament/tournament-matchlist/LCK%20Spring%202024/",
+    "license": "gol.gg stats page"
+  },
+  {
+    "source": "https://gol.gg/tournament/tournament-matchlist/CBLOL%20Split%201%202024/",
+    "license": "gol.gg stats page"
+  },
+  {
+    "source": "https://gol.gg/tournament/tournament-matchlist/LCS%20Spring%202024/",
+    "license": "gol.gg stats page"
+  },
+  {
+    "source": "https://gol.gg/tournament/tournament-matchlist/VCS%20Spring%202024/",
+    "license": "gol.gg stats page"
+  },
+  {
+    "source": "https://gol.gg/tournament/tournament-matchlist/LJL%20Spring%20Playoffs%202024/",
+    "license": "gol.gg stats page"
+  },
+  {
+    "source": "https://gol.gg/tournament/tournament-matchlist/PCS%20Spring%202024/",
+    "license": "gol.gg stats page"
+  },
+  {
+    "source": "https://gol.gg/tournament/tournament-matchlist/LLA%20Opening%202024/",
+    "license": "gol.gg stats page"
+  },
+  {
+    "source": "https://gol.gg/tournament/tournament-matchlist/LEC%20Winter%20Playoffs%202024/",
+    "license": "gol.gg stats page"
+  },
+  {
+    "source": "https://gol.gg/tournament/tournament-matchlist/LJL%20Spring%202024/",
+    "license": "gol.gg stats page"
+  },
+  {
+    "source": "https://gol.gg/tournament/tournament-matchlist/LEC%20Winter%20Season%202024/",
+    "license": "gol.gg stats page"
+  },
+  {
+    "source": "https://gol.gg/tournament/tournament-matchlist/Worlds%202025%20Main%20Event/",
+    "license": "gol.gg stats page"
+  },
+  {
+    "source": "https://gol.gg/tournament/tournament-matchlist/Worlds%202025%20Play-In/",
+    "license": "gol.gg stats page"
+  },
+  {
+    "source": "https://gol.gg/tournament/tournament-matchlist/LCK%202025%20Season%20Playoffs/",
+    "license": "gol.gg stats page"
+  },
+  {
+    "source": "https://gol.gg/tournament/tournament-matchlist/LEC%202025%20Summer%20Playoffs/",
+    "license": "gol.gg stats page"
+  },
+  {
+    "source": "https://gol.gg/tournament/tournament-matchlist/LTA%202025%20Championship/",
+    "license": "gol.gg stats page"
+  },
+  {
+    "source": "https://gol.gg/tournament/tournament-matchlist/LPL%202025%20Regional%20Finals/",
+    "license": "gol.gg stats page"
+  },
+  {
+    "source": "https://gol.gg/tournament/tournament-matchlist/LCP%202025%20Season%20Finals%20Playoffs/",
+    "license": "gol.gg stats page"
+  },
+  {
+    "source": "https://gol.gg/tournament/tournament-matchlist/LPL%202025%20Grand%20Finals/",
+    "license": "gol.gg stats page"
+  },
+  {
+    "source": "https://gol.gg/tournament/tournament-matchlist/LJL%202025%20Finals/",
+    "license": "gol.gg stats page"
+  },
+  {
+    "source": "https://gol.gg/tournament/tournament-matchlist/LCK%202025%20Season%20Play-In/",
+    "license": "gol.gg stats page"
+  },
+  {
+    "source": "https://gol.gg/tournament/tournament-matchlist/LTA%20North%202025%20Split%203/",
+    "license": "gol.gg stats page"
+  },
+  {
+    "source": "https://gol.gg/tournament/tournament-matchlist/LTA%20South%202025%20Split%203/",
+    "license": "gol.gg stats page"
+  },
+  {
+    "source": "https://gol.gg/tournament/tournament-matchlist/LCK%202025%20Rounds%203-5/",
+    "license": "gol.gg stats page"
+  },
+  {
+    "source": "https://gol.gg/tournament/tournament-matchlist/PCS%202025%20Split%203%20Playoffs/",
+    "license": "gol.gg stats page"
+  },
+  {
+    "source": "https://gol.gg/tournament/tournament-matchlist/LPL%202025%20Split%203/",
+    "license": "gol.gg stats page"
+  },
+  {
+    "source": "https://gol.gg/tournament/tournament-matchlist/LEC%202025%20Summer%20Season/",
+    "license": "gol.gg stats page"
+  },
+  {
+    "source": "https://gol.gg/tournament/tournament-matchlist/LCP%202025%20Season%20Finals/",
+    "license": "gol.gg stats page"
+  },
+  {
+    "source": "https://gol.gg/tournament/tournament-matchlist/PCS%202025%20Split%203/",
+    "license": "gol.gg stats page"
+  },
+  {
+    "source": "https://gol.gg/tournament/tournament-matchlist/Esports%20World%20Cup%202025/",
+    "license": "gol.gg stats page"
+  },
+  {
+    "source": "https://gol.gg/tournament/tournament-matchlist/VCS%202025%20Finals/",
+    "license": "gol.gg stats page"
+  },
+  {
+    "source": "https://gol.gg/tournament/tournament-matchlist/2025%20Mid-Season%20Invitational/",
+    "license": "gol.gg stats page"
+  },
+  {
+    "source": "https://gol.gg/tournament/tournament-matchlist/LJL%202025%20Ignite/",
+    "license": "gol.gg stats page"
+  },
+  {
+    "source": "https://gol.gg/tournament/tournament-matchlist/VCS%202025%20Summer/",
+    "license": "gol.gg stats page"
+  },
+  {
+    "source": "https://gol.gg/tournament/tournament-matchlist/PCS%202025%20Split%202%20Playoffs/",
+    "license": "gol.gg stats page"
+  },
+  {
+    "source": "https://gol.gg/tournament/tournament-matchlist/LCK%202025%20Road%20to%20MSI/",
+    "license": "gol.gg stats page"
+  },
+  {
+    "source": "https://gol.gg/tournament/tournament-matchlist/LTA%20North%202025%20Split%202%20Playoffs/",
+    "license": "gol.gg stats page"
+  },
+  {
+    "source": "https://gol.gg/tournament/tournament-matchlist/LTA%20South%202025%20Split%202%20Playoffs/",
+    "license": "gol.gg stats page"
+  },
+  {
+    "source": "https://gol.gg/tournament/tournament-matchlist/LPL%202025%20Split%202%20Playoffs/",
+    "license": "gol.gg stats page"
+  },
+  {
+    "source": "https://gol.gg/tournament/tournament-matchlist/LEC%202025%20Spring%20Playoffs/",
+    "license": "gol.gg stats page"
+  },
+  {
+    "source": "https://gol.gg/tournament/tournament-matchlist/LCK%202025%20Rounds%201-2/",
+    "license": "gol.gg stats page"
+  },
+  {
+    "source": "https://gol.gg/tournament/tournament-matchlist/PCS%202025%20Split%202/",
+    "license": "gol.gg stats page"
+  },
+  {
+    "source": "https://gol.gg/tournament/tournament-matchlist/LCP%202025%20Mid%20Season/",
+    "license": "gol.gg stats page"
+  },
+  {
+    "source": "https://gol.gg/tournament/tournament-matchlist/LPL%202025%20Split%202/",
+    "license": "gol.gg stats page"
+  },
+  {
+    "source": "https://gol.gg/tournament/tournament-matchlist/LTA%20North%202025%20Split%202/",
+    "license": "gol.gg stats page"
+  },
+  {
+    "source": "https://gol.gg/tournament/tournament-matchlist/LTA%20South%202025%20Split%202/",
+    "license": "gol.gg stats page"
+  },
+  {
+    "source": "https://gol.gg/tournament/tournament-matchlist/LEC%202025%20Spring%20Season/",
+    "license": "gol.gg stats page"
+  },
+  {
+    "source": "https://gol.gg/tournament/tournament-matchlist/LJL%202025%20Storm/",
+    "license": "gol.gg stats page"
+  },
+  {
+    "source": "https://gol.gg/tournament/tournament-matchlist/LPL%202025%20Split%202%20Placements/",
+    "license": "gol.gg stats page"
+  },
+  {
+    "source": "https://gol.gg/tournament/tournament-matchlist/VCS%202025%20Spring/",
+    "license": "gol.gg stats page"
+  },
+  {
+    "source": "https://gol.gg/tournament/tournament-matchlist/PCS%202025%20Split%201%20Playoffs/",
+    "license": "gol.gg stats page"
+  },
+  {
+    "source": "https://gol.gg/tournament/tournament-matchlist/First%20Stand%202025/",
+    "license": "gol.gg stats page"
+  },
+  {
+    "source": "https://gol.gg/tournament/tournament-matchlist/PCS%202025%20Split%201/",
+    "license": "gol.gg stats page"
+  },
+  {
+    "source": "https://gol.gg/tournament/tournament-matchlist/LEC%202025%20Winter%20Playoffs/",
+    "license": "gol.gg stats page"
+  },
+  {
+    "source": "https://gol.gg/tournament/tournament-matchlist/LPL%202025%20Split%201%20Playoffs/",
+    "license": "gol.gg stats page"
+  },
+  {
+    "source": "https://gol.gg/tournament/tournament-matchlist/LCK%20Cup%202025/",
+    "license": "gol.gg stats page"
+  },
+  {
+    "source": "https://gol.gg/tournament/tournament-matchlist/LTA%202025%20Split%201%20Playoffs/",
+    "license": "gol.gg stats page"
+  },
+  {
+    "source": "https://gol.gg/tournament/tournament-matchlist/LCP%202025%20Season%20Kickoff/",
+    "license": "gol.gg stats page"
+  },
+  {
+    "source": "https://gol.gg/tournament/tournament-matchlist/LPL%202025%20Split%201/",
+    "license": "gol.gg stats page"
+  },
+  {
+    "source": "https://gol.gg/tournament/tournament-matchlist/LTA%20North%202025%20Split%201/",
+    "license": "gol.gg stats page"
+  },
+  {
+    "source": "https://gol.gg/tournament/tournament-matchlist/LTA%20South%202025%20Split%201/",
+    "license": "gol.gg stats page"
+  },
+  {
+    "source": "https://gol.gg/tournament/tournament-matchlist/LEC%20Winter%202025/",
+    "license": "gol.gg stats page"
+  }
+]

@@ -1,0 +1,281 @@
+url https://gol.gg/tournament/tournament-matchlist/Worlds%20Main%20Event%202023/
+  saved out/files/S13__Worlds_Main_Event_2023.html 0.6 MB
+url https://gol.gg/tournament/tournament-matchlist/Worlds%20Play-In%202023/
+  saved out/files/S13__Worlds_Play_In_2023.html 0.6 MB
+url https://gol.gg/tournament/tournament-matchlist/LEC%20Season%20Finals%202023/
+  saved out/files/S13__LEC_Season_Finals_2023.html 0.6 MB
+url https://gol.gg/tournament/tournament-matchlist/CBLOL%20Split%202%20Playoffs%202023/
+  saved out/files/S13__CBLOL_Split_2_Playoffs_2023.html 0.6 MB
+url https://gol.gg/tournament/tournament-matchlist/PCS%20Summer%20Playoffs%202023/
+  saved out/files/S13__PCS_Summer_Playoffs_2023.html 0.6 MB
+url https://gol.gg/tournament/tournament-matchlist/VCS%20Summer%20Playoffs%202023/
+  saved out/files/S13__VCS_Summer_Playoffs_2023.html 0.6 MB
+url https://gol.gg/tournament/tournament-matchlist/LLA%20Closing%20Playoffs%202023/
+  saved out/files/S13__LLA_Closing_Playoffs_2023.html 0.6 MB
+url https://gol.gg/tournament/tournament-matchlist/LCK%20Summer%20Playoffs%202023/
+  saved out/files/S13__LCK_Summer_Playoffs_2023.html 0.6 MB
+url https://gol.gg/tournament/tournament-matchlist/LCS%20Championship%202023/
+  saved out/files/S13__LCS_Championship_2023.html 0.6 MB
+url https://gol.gg/tournament/tournament-matchlist/LJL%20Summer%20Playoffs%202023/
+  saved out/files/S13__LJL_Summer_Playoffs_2023.html 0.6 MB
+url https://gol.gg/tournament/tournament-matchlist/PCS%20Summer%202023/
+  saved out/files/S13__PCS_Summer_2023.html 0.6 MB
+url https://gol.gg/tournament/tournament-matchlist/CBLOL%20Split%202%202023/
+  saved out/files/S13__CBLOL_Split_2_2023.html 0.6 MB
+url https://gol.gg/tournament/tournament-matchlist/LCK%20Summer%202023/
+  saved out/files/S13__LCK_Summer_2023.html 0.6 MB
+url https://gol.gg/tournament/tournament-matchlist/VCS%20Summer%202023/
+  saved out/files/S13__VCS_Summer_2023.html 0.6 MB
+url https://gol.gg/tournament/tournament-matchlist/LPL%20Summer%20Playoffs%202023/
+  saved out/files/S13__LPL_Summer_Playoffs_2023.html 0.6 MB
+url https://gol.gg/tournament/tournament-matchlist/LEC%20Summer%20Playoffs%202023/
+  saved out/files/S13__LEC_Summer_Playoffs_2023.html 0.6 MB
+url https://gol.gg/tournament/tournament-matchlist/LEC%20Summer%20Groups%202023/
+  saved out/files/S13__LEC_Summer_Groups_2023.html 0.6 MB
+url https://gol.gg/tournament/tournament-matchlist/LCS%20Summer%202023/
+  saved out/files/S13__LCS_Summer_2023.html 0.6 MB
+url https://gol.gg/tournament/tournament-matchlist/LLA%20Closing%202023/
+  saved out/files/S13__LLA_Closing_2023.html 0.6 MB
+url https://gol.gg/tournament/tournament-matchlist/LPL%20Summer%202023/
+  saved out/files/S13__LPL_Summer_2023.html 0.6 MB
+url https://gol.gg/tournament/tournament-matchlist/LJL%20Summer%202023/
+  saved out/files/S13__LJL_Summer_2023.html 0.6 MB
+url https://gol.gg/tournament/tournament-matchlist/LEC%20Summer%202023/
+  saved out/files/S13__LEC_Summer_2023.html 0.6 MB
+url https://gol.gg/tournament/tournament-matchlist/MSI%202023/
+  saved out/files/S13__MSI_2023.html 0.6 MB
+url https://gol.gg/tournament/tournament-matchlist/LEC%20Spring%20Playoffs%202023/
+  saved out/files/S13__LEC_Spring_Playoffs_2023.html 0.6 MB
+url https://gol.gg/tournament/tournament-matchlist/VCS%20Spring%20Playoffs%202023/
+  saved out/files/S13__VCS_Spring_Playoffs_2023.html 0.6 MB
+url https://gol.gg/tournament/tournament-matchlist/LEC%20Spring%20Groups%202023/
+  saved out/files/S13__LEC_Spring_Groups_2023.html 0.6 MB
+url https://gol.gg/tournament/tournament-matchlist/CBLOL%20Split%201%20Playoffs%202023/
+  saved out/files/S13__CBLOL_Split_1_Playoffs_2023.html 0.6 MB
+url https://gol.gg/tournament/tournament-matchlist/LJL%20Spring%20Playoffs%202023/
+  saved out/files/S13__LJL_Spring_Playoffs_2023.html 0.6 MB
+url https://gol.gg/tournament/tournament-matchlist/LPL%20Spring%20Playoffs%202023/
+  saved out/files/S13__LPL_Spring_Playoffs_2023.html 0.6 MB
+url https://gol.gg/tournament/tournament-matchlist/LLA%20Opening%20Playoffs%202023/
+  saved out/files/S13__LLA_Opening_Playoffs_2023.html 0.6 MB
+url https://gol.gg/tournament/tournament-matchlist/VCS%20Spring%202023/
+  saved out/files/S13__VCS_Spring_2023.html 0.6 MB
+url https://gol.gg/tournament/tournament-matchlist/LCK%20Spring%20Playoffs%202023/
+  saved out/files/S13__LCK_Spring_Playoffs_2023.html 0.6 MB
+url https://gol.gg/tournament/tournament-matchlist/LCS%20Spring%20Playoffs%202023/
+  saved out/files/S13__LCS_Spring_Playoffs_2023.html 0.6 MB
+url https://gol.gg/tournament/tournament-matchlist/PCS%20Spring%20Playoffs%202023/
+  saved out/files/S13__PCS_Spring_Playoffs_2023.html 0.6 MB
+url https://gol.gg/tournament/tournament-matchlist/LEC%20Spring%20Season%202023/
+  saved out/files/S13__LEC_Spring_Season_2023.html 0.6 MB
+url https://gol.gg/tournament/tournament-matchlist/LJL%20Spring%202023/
+  saved out/files/S13__LJL_Spring_2023.html 0.6 MB
+url https://gol.gg/tournament/tournament-matchlist/LPL%20Spring%202023/
+  saved out/files/S13__LPL_Spring_2023.html 0.6 MB
+url https://gol.gg/tournament/tournament-matchlist/CBLOL%20Split%201%202023/
+  saved out/files/S13__CBLOL_Split_1_2023.html 0.6 MB
+url https://gol.gg/tournament/tournament-matchlist/LCK%20Spring%202023/
+  saved out/files/S13__LCK_Spring_2023.html 0.6 MB
+url https://gol.gg/tournament/tournament-matchlist/LCS%20Spring%202023/
+  saved out/files/S13__LCS_Spring_2023.html 0.6 MB
+url https://gol.gg/tournament/tournament-matchlist/PCS%20Spring%202023/
+  saved out/files/S13__PCS_Spring_2023.html 0.6 MB
+url https://gol.gg/tournament/tournament-matchlist/LLA%20Opening%202023/
+  saved out/files/S13__LLA_Opening_2023.html 0.6 MB
+url https://gol.gg/tournament/tournament-matchlist/LEC%20Winter%20Playoffs%202023/
+  saved out/files/S13__LEC_Winter_Playoffs_2023.html 0.6 MB
+url https://gol.gg/tournament/tournament-matchlist/LEC%20Winter%20Groups%202023/
+  saved out/files/S13__LEC_Winter_Groups_2023.html 0.6 MB
+url https://gol.gg/tournament/tournament-matchlist/LEC%20Winter%202023/
+  saved out/files/S13__LEC_Winter_2023.html 0.6 MB
+url https://gol.gg/tournament/tournament-matchlist/Worlds%20Main%20Event%202024/
+  saved out/files/S14__Worlds_Main_Event_2024.html 0.6 MB
+url https://gol.gg/tournament/tournament-matchlist/Worlds%20Play-In%202024/
+  saved out/files/S14__Worlds_Play_In_2024.html 0.6 MB
+url https://gol.gg/tournament/tournament-matchlist/LCK%20Summer%20Playoffs%202024/
+  saved out/files/S14__LCK_Summer_Playoffs_2024.html 0.6 MB
+url https://gol.gg/tournament/tournament-matchlist/CBLOL%20Split%202%20Playoffs%202024/
+  saved out/files/S14__CBLOL_Split_2_Playoffs_2024.html 0.6 MB
+url https://gol.gg/tournament/tournament-matchlist/LCS%20Championship%202024/
+  saved out/files/S14__LCS_Championship_2024.html 0.6 MB
+url https://gol.gg/tournament/tournament-matchlist/LEC%20Season%20Finals%202024/
+  saved out/files/S14__LEC_Season_Finals_2024.html 0.6 MB
+url https://gol.gg/tournament/tournament-matchlist/PCS%20Summer%20Playoffs%202024/
+  saved out/files/S14__PCS_Summer_Playoffs_2024.html 0.6 MB
+url https://gol.gg/tournament/tournament-matchlist/LPL%20Summer%20Playoffs%202024/
+  saved out/files/S14__LPL_Summer_Playoffs_2024.html 0.6 MB
+url https://gol.gg/tournament/tournament-matchlist/LLA%20Closing%20Playoffs%202024/
+  saved out/files/S14__LLA_Closing_Playoffs_2024.html 0.6 MB
+url https://gol.gg/tournament/tournament-matchlist/LCK%20Summer%202024/
+  saved out/files/S14__LCK_Summer_2024.html 0.6 MB
+url https://gol.gg/tournament/tournament-matchlist/VCS%20Summer%20Playoffs%202024/
+  saved out/files/S14__VCS_Summer_Playoffs_2024.html 0.6 MB
+url https://gol.gg/tournament/tournament-matchlist/LCS%20Summer%202024/
+  saved out/files/S14__LCS_Summer_2024.html 0.6 MB
+url https://gol.gg/tournament/tournament-matchlist/VCS%20Summer%202024/
+  saved out/files/S14__VCS_Summer_2024.html 0.6 MB
+url https://gol.gg/tournament/tournament-matchlist/LPL%20Summer%20Season%202024/
+  saved out/files/S14__LPL_Summer_Season_2024.html 0.6 MB
+url https://gol.gg/tournament/tournament-matchlist/CBLOL%20Split%202%202024/
+  saved out/files/S14__CBLOL_Split_2_2024.html 0.6 MB
+url https://gol.gg/tournament/tournament-matchlist/LEC%20Summer%20Playoffs%202024/
+  saved out/files/S14__LEC_Summer_Playoffs_2024.html 0.6 MB
+url https://gol.gg/tournament/tournament-matchlist/LJL%20Summer%20Playoffs%202024/
+  saved out/files/S14__LJL_Summer_Playoffs_2024.html 0.6 MB
+url https://gol.gg/tournament/tournament-matchlist/PCS%20Summer%202024/
+  saved out/files/S14__PCS_Summer_2024.html 0.6 MB
+url https://gol.gg/tournament/tournament-matchlist/LLA%20Closing%202024/
+  saved out/files/S14__LLA_Closing_2024.html 0.6 MB
+url https://gol.gg/tournament/tournament-matchlist/LJL%20Summer%202024/
+  saved out/files/S14__LJL_Summer_2024.html 0.6 MB
+url https://gol.gg/tournament/tournament-matchlist/Esports%20World%20Cup%202024/
+  saved out/files/S14__Esports_World_Cup_2024.html 0.6 MB
+url https://gol.gg/tournament/tournament-matchlist/LEC%20Summer%20Season%202024/
+  saved out/files/S14__LEC_Summer_Season_2024.html 0.6 MB
+url https://gol.gg/tournament/tournament-matchlist/LPL%20Summer%20Placements%202024/
+  saved out/files/S14__LPL_Summer_Placements_2024.html 0.6 MB
+url https://gol.gg/tournament/tournament-matchlist/MSI%202024/
+  saved out/files/S14__MSI_2024.html 0.6 MB
+url https://gol.gg/tournament/tournament-matchlist/CBLOL%20Split%201%20Playoffs%202024/
+  saved out/files/S14__CBLOL_Split_1_Playoffs_2024.html 0.6 MB
+url https://gol.gg/tournament/tournament-matchlist/LPL%20Spring%20Playoffs%202024/
+  saved out/files/S14__LPL_Spring_Playoffs_2024.html 0.6 MB
+url https://gol.gg/tournament/tournament-matchlist/LCK%20Spring%20Playoffs%202024/
+  saved out/files/S14__LCK_Spring_Playoffs_2024.html 0.6 MB
+url https://gol.gg/tournament/tournament-matchlist/LEC%20Spring%20Playoffs%202024/
+  saved out/files/S14__LEC_Spring_Playoffs_2024.html 0.6 MB
+url https://gol.gg/tournament/tournament-matchlist/PCS%20Spring%20Playoffs%202024/
+  saved out/files/S14__PCS_Spring_Playoffs_2024.html 0.6 MB
+url https://gol.gg/tournament/tournament-matchlist/VCS%20Spring%20Playoffs%202024/
+  saved out/files/S14__VCS_Spring_Playoffs_2024.html 0.6 MB
+url https://gol.gg/tournament/tournament-matchlist/LLA%20Opening%20Playoffs%202024/
+  saved out/files/S14__LLA_Opening_Playoffs_2024.html 0.6 MB
+url https://gol.gg/tournament/tournament-matchlist/LCS%20Spring%20Playoffs%202024/
+  saved out/files/S14__LCS_Spring_Playoffs_2024.html 0.6 MB
+url https://gol.gg/tournament/tournament-matchlist/LPL%20Spring%202024/
+  saved out/files/S14__LPL_Spring_2024.html 0.6 MB
+url https://gol.gg/tournament/tournament-matchlist/LEC%20Spring%20Season%202024/
+  saved out/files/S14__LEC_Spring_Season_2024.html 0.6 MB
+url https://gol.gg/tournament/tournament-matchlist/LCK%20Spring%202024/
+  saved out/files/S14__LCK_Spring_2024.html 0.6 MB
+url https://gol.gg/tournament/tournament-matchlist/CBLOL%20Split%201%202024/
+  saved out/files/S14__CBLOL_Split_1_2024.html 0.6 MB
+url https://gol.gg/tournament/tournament-matchlist/LCS%20Spring%202024/
+  saved out/files/S14__LCS_Spring_2024.html 0.6 MB
+url https://gol.gg/tournament/tournament-matchlist/VCS%20Spring%202024/
+  saved out/files/S14__VCS_Spring_2024.html 0.6 MB
+url https://gol.gg/tournament/tournament-matchlist/LJL%20Spring%20Playoffs%202024/
+  saved out/files/S14__LJL_Spring_Playoffs_2024.html 0.6 MB
+url https://gol.gg/tournament/tournament-matchlist/PCS%20Spring%202024/
+  saved out/files/S14__PCS_Spring_2024.html 0.6 MB
+url https://gol.gg/tournament/tournament-matchlist/LLA%20Opening%202024/
+  saved out/files/S14__LLA_Opening_2024.html 0.6 MB
+url https://gol.gg/tournament/tournament-matchlist/LEC%20Winter%20Playoffs%202024/
+  saved out/files/S14__LEC_Winter_Playoffs_2024.html 0.6 MB
+url https://gol.gg/tournament/tournament-matchlist/LJL%20Spring%202024/
+  saved out/files/S14__LJL_Spring_2024.html 0.6 MB
+url https://gol.gg/tournament/tournament-matchlist/LEC%20Winter%20Season%202024/
+  saved out/files/S14__LEC_Winter_Season_2024.html 0.6 MB
+url https://gol.gg/tournament/tournament-matchlist/Worlds%202025%20Main%20Event/
+  saved out/files/S15__Worlds_2025_Main_Event.html 0.6 MB
+url https://gol.gg/tournament/tournament-matchlist/Worlds%202025%20Play-In/
+  saved out/files/S15__Worlds_2025_Play_In.html 0.6 MB
+url https://gol.gg/tournament/tournament-matchlist/LCK%202025%20Season%20Playoffs/
+  saved out/files/S15__LCK_2025_Season_Playoffs.html 0.6 MB
+url https://gol.gg/tournament/tournament-matchlist/LEC%202025%20Summer%20Playoffs/
+  saved out/files/S15__LEC_2025_Summer_Playoffs.html 0.6 MB
+url https://gol.gg/tournament/tournament-matchlist/LTA%202025%20Championship/
+  saved out/files/S15__LTA_2025_Championship.html 0.6 MB
+url https://gol.gg/tournament/tournament-matchlist/LPL%202025%20Regional%20Finals/
+  saved out/files/S15__LPL_2025_Regional_Finals.html 0.6 MB
+url https://gol.gg/tournament/tournament-matchlist/LCP%202025%20Season%20Finals%20Playoffs/
+  saved out/files/S15__LCP_2025_Season_Finals_Playoffs.html 0.6 MB
+url https://gol.gg/tournament/tournament-matchlist/LPL%202025%20Grand%20Finals/
+  saved out/files/S15__LPL_2025_Grand_Finals.html 0.6 MB
+url https://gol.gg/tournament/tournament-matchlist/LJL%202025%20Finals/
+  saved out/files/S15__LJL_2025_Finals.html 0.6 MB
+url https://gol.gg/tournament/tournament-matchlist/LCK%202025%20Season%20Play-In/
+  saved out/files/S15__LCK_2025_Season_Play_In.html 0.6 MB
+url https://gol.gg/tournament/tournament-matchlist/LTA%20North%202025%20Split%203/
+  saved out/files/S15__LTA_North_2025_Split_3.html 0.6 MB
+url https://gol.gg/tournament/tournament-matchlist/LTA%20South%202025%20Split%203/
+  saved out/files/S15__LTA_South_2025_Split_3.html 0.6 MB
+url https://gol.gg/tournament/tournament-matchlist/LCK%202025%20Rounds%203-5/
+  saved out/files/S15__LCK_2025_Rounds_3_5.html 0.6 MB
+url https://gol.gg/tournament/tournament-matchlist/PCS%202025%20Split%203%20Playoffs/
+  saved out/files/S15__PCS_2025_Split_3_Playoffs.html 0.6 MB
+url https://gol.gg/tournament/tournament-matchlist/LPL%202025%20Split%203/
+  saved out/files/S15__LPL_2025_Split_3.html 0.6 MB
+url https://gol.gg/tournament/tournament-matchlist/LEC%202025%20Summer%20Season/
+  saved out/files/S15__LEC_2025_Summer_Season.html 0.6 MB
+url https://gol.gg/tournament/tournament-matchlist/LCP%202025%20Season%20Finals/
+  saved out/files/S15__LCP_2025_Season_Finals.html 0.6 MB
+url https://gol.gg/tournament/tournament-matchlist/PCS%202025%20Split%203/
+  saved out/files/S15__PCS_2025_Split_3.html 0.6 MB
+url https://gol.gg/tournament/tournament-matchlist/Esports%20World%20Cup%202025/
+  saved out/files/S15__Esports_World_Cup_2025.html 0.6 MB
+url https://gol.gg/tournament/tournament-matchlist/VCS%202025%20Finals/
+  saved out/files/S15__VCS_2025_Finals.html 0.6 MB
+url https://gol.gg/tournament/tournament-matchlist/2025%20Mid-Season%20Invitational/
+  saved out/files/S15__2025_Mid_Season_Invitational.html 0.6 MB
+url https://gol.gg/tournament/tournament-matchlist/LJL%202025%20Ignite/
+  saved out/files/S15__LJL_2025_Ignite.html 0.6 MB
+url https://gol.gg/tournament/tournament-matchlist/VCS%202025%20Summer/
+  saved out/files/S15__VCS_2025_Summer.html 0.6 MB
+url https://gol.gg/tournament/tournament-matchlist/PCS%202025%20Split%202%20Playoffs/
+  saved out/files/S15__PCS_2025_Split_2_Playoffs.html 0.6 MB
+url https://gol.gg/tournament/tournament-matchlist/LCK%202025%20Road%20to%20MSI/
+  saved out/files/S15__LCK_2025_Road_to_MSI.html 0.6 MB
+url https://gol.gg/tournament/tournament-matchlist/LTA%20North%202025%20Split%202%20Playoffs/
+  saved out/files/S15__LTA_North_2025_Split_2_Playoffs.html 0.6 MB
+url https://gol.gg/tournament/tournament-matchlist/LTA%20South%202025%20Split%202%20Playoffs/
+  saved out/files/S15__LTA_South_2025_Split_2_Playoffs.html 0.6 MB
+url https://gol.gg/tournament/tournament-matchlist/LPL%202025%20Split%202%20Playoffs/
+  saved out/files/S15__LPL_2025_Split_2_Playoffs.html 0.6 MB
+url https://gol.gg/tournament/tournament-matchlist/LEC%202025%20Spring%20Playoffs/
+  saved out/files/S15__LEC_2025_Spring_Playoffs.html 0.6 MB
+url https://gol.gg/tournament/tournament-matchlist/LCK%202025%20Rounds%201-2/
+  saved out/files/S15__LCK_2025_Rounds_1_2.html 0.6 MB
+url https://gol.gg/tournament/tournament-matchlist/PCS%202025%20Split%202/
+  saved out/files/S15__PCS_2025_Split_2.html 0.6 MB
+url https://gol.gg/tournament/tournament-matchlist/LCP%202025%20Mid%20Season/
+  saved out/files/S15__LCP_2025_Mid_Season.html 0.6 MB
+url https://gol.gg/tournament/tournament-matchlist/LPL%202025%20Split%202/
+  saved out/files/S15__LPL_2025_Split_2.html 0.6 MB
+url https://gol.gg/tournament/tournament-matchlist/LTA%20North%202025%20Split%202/
+  saved out/files/S15__LTA_North_2025_Split_2.html 0.6 MB
+url https://gol.gg/tournament/tournament-matchlist/LTA%20South%202025%20Split%202/
+  saved out/files/S15__LTA_South_2025_Split_2.html 0.6 MB
+url https://gol.gg/tournament/tournament-matchlist/LEC%202025%20Spring%20Season/
+  saved out/files/S15__LEC_2025_Spring_Season.html 0.6 MB
+url https://gol.gg/tournament/tournament-matchlist/LJL%202025%20Storm/
+  saved out/files/S15__LJL_2025_Storm.html 0.6 MB
+url https://gol.gg/tournament/tournament-matchlist/LPL%202025%20Split%202%20Placements/
+  saved out/files/S15__LPL_2025_Split_2_Placements.html 0.6 MB
+url https://gol.gg/tournament/tournament-matchlist/VCS%202025%20Spring/
+  saved out/files/S15__VCS_2025_Spring.html 0.6 MB
+url https://gol.gg/tournament/tournament-matchlist/PCS%202025%20Split%201%20Playoffs/
+  saved out/files/S15__PCS_2025_Split_1_Playoffs.html 0.6 MB
+url https://gol.gg/tournament/tournament-matchlist/First%20Stand%202025/
+  saved out/files/S15__First_Stand_2025.html 0.6 MB
+url https://gol.gg/tournament/tournament-matchlist/PCS%202025%20Split%201/
+  saved out/files/S15__PCS_2025_Split_1.html 0.6 MB
+url https://gol.gg/tournament/tournament-matchlist/LEC%202025%20Winter%20Playoffs/
+  saved out/files/S15__LEC_2025_Winter_Playoffs.html 0.6 MB
+url https://gol.gg/tournament/tournament-matchlist/LPL%202025%20Split%201%20Playoffs/
+  saved out/files/S15__LPL_2025_Split_1_Playoffs.html 0.6 MB
+url https://gol.gg/tournament/tournament-matchlist/LCK%20Cup%202025/
+  saved out/files/S15__LCK_Cup_2025.html 0.6 MB
+url https://gol.gg/tournament/tournament-matchlist/LTA%202025%20Split%201%20Playoffs/
+  saved out/files/S15__LTA_2025_Split_1_Playoffs.html 0.6 MB
+url https://gol.gg/tournament/tournament-matchlist/LCP%202025%20Season%20Kickoff/
+  saved out/files/S15__LCP_2025_Season_Kickoff.html 0.6 MB
+url https://gol.gg/tournament/tournament-matchlist/LPL%202025%20Split%201/
+  saved out/files/S15__LPL_2025_Split_1.html 0.6 MB
+url https://gol.gg/tournament/tournament-matchlist/LTA%20North%202025%20Split%201/
+  saved out/files/S15__LTA_North_2025_Split_1.html 0.6 MB
+url https://gol.gg/tournament/tournament-matchlist/LTA%20South%202025%20Split%201/
+  saved out/files/S15__LTA_South_2025_Split_1.html 0.6 MB
+url https://gol.gg/tournament/tournament-matchlist/LEC%20Winter%202025/
+  saved out/files/S15__LEC_Winter_2025.html 0.6 MB
+done
