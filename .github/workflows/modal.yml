@@ -41,9 +41,11 @@ jobs:
         run: |
           ID=$(python -c "import json;print(json.load(open('job.json'))['id'])")
           find out -type f -size +90M -print0 | while IFS= read -r -d '' f; do split -b 90m -d -a 2 "$f" "$f.part" && rm "$f"; done
-          git clone -q --depth 1 --branch modal-output "https://x-access-token:${GH_TOKEN}@github.com/${{ github.repository }}.git" /tmp/mo || (mkdir -p /tmp/mo && cd /tmp/mo && git init -q && git checkout -q -b modal-output && git remote add origin "https://x-access-token:${GH_TOKEN}@github.com/${{ github.repository }}.git")
+          # the output branch is many GB: clone without blobs and check out only this job's folder (sparse)
+          git clone -q --depth 1 --filter=blob:none --no-checkout --branch modal-output "https://x-access-token:${GH_TOKEN}@github.com/${{ github.repository }}.git" /tmp/mo || (mkdir -p /tmp/mo && cd /tmp/mo && git init -q && git checkout -q -b modal-output && git remote add origin "https://x-access-token:${GH_TOKEN}@github.com/${{ github.repository }}.git")
+          cd /tmp/mo && git sparse-checkout set --no-cone "/latest.json" "/out/$ID/" && (git checkout -q modal-output 2>/dev/null || true) && cd -
           rm -rf "/tmp/mo/out/$ID"; mkdir -p "/tmp/mo/out/$ID"; cp -r out/. "/tmp/mo/out/$ID/"
           cd /tmp/mo
           echo "{\"id\":\"$ID\",\"finished\":$(date -u +%s)}" > latest.json
           git config user.name "modal-farm"; git config user.email "modal-farm@users.noreply.github.com"
-          git add -A && git commit -q -m "modal: $ID" && git push -q origin modal-output
+          git add -A "out/$ID" latest.json && git commit -q -m "modal: $ID" && git push -q origin modal-output
