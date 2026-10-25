@@ -68,7 +68,7 @@ addScene({id: '32a', a: b(64), z: b(64.25) - 0.05, in: booted('resto') ? smearIn
 addScene({id: '32b', a: b(64.25) - 0.05, z: b(64.5) - 0.05, in: smearIn(b(64.25), 0.05, 0.07, [1, 0]),
 	draw: (t) => reRender('03', 12.2 + (t - b(64.25)) * 0.7, fallbackEra(1, t))});
 addScene({id: '32c', a: b(64.5) - 0.05, z: b(64.75) - 0.05, in: smearIn(b(64.5), 0.05, 0.07, [1, 0]),
-	draw: (t) => reRender('18', b(30.36) + (t - b(64.5)) * 0.82, fallbackEra(3, t), (f) => nudgeTo(f.st, 1540, 640, -315))});
+	draw: (t) => reRender('18', b(30.41) + (t - b(64.5)) * 0.68, fallbackEra(3, t), (f) => nudgeTo(f.st, 1565, 640, -315))});   // the friend inside, the leaves closing on your light
 
 // ------------------------------------------------------------------------------------------------ WALL (抄)
 // a long gallery wall (#3E454A, warm picture-light spill): four slanted shelves of grey copies lying half-open, each a grey
@@ -135,7 +135,7 @@ addScene({id: '32d', a: b(64.75) - 0.05, z: b(65.9), in: smearIn(b(64.75), 0.05,
 
 // ================================================================================================ 33 · E4 flip-book
 const FH = 420, FZOOM = 1.12;
-const LK = {song: look('refugee'), yuan: look('yuanNoble'), ming: look('mingEunuch'), youth: look('youth1923')};
+const LK = {song: {head: 'scarf', dress: 'tunic'} as LookQ, yuan: look('yuanNoble'), ming: look('mingEunuch'), youth: look('youth1923')};
 const eraT0 = (e: number) => b(66 + 0.25 * e);
 type EraSet = {crest: Crest; cast: Cast; prop: Live; glow: Live; arms?: Live; crowd?: Cast};
 const ERAS: EraSet[] = [];
@@ -143,7 +143,7 @@ let OFF_UA: Record<string, P> = {}, OFF_BUNDLE: P = [0, 0], FAR_MING: any, FAR_Y
 /** today's light, the daybreak camera both matched stages share (b67.5 → b68.5) */
 const CAM_DB: [number, number, number] = [200, 660, 1.0];
 // the standing crowd on the bridge (1923: gowns, Qing caps; after the daybreak: today's visitors) — same places, same sizes
-const CROWD = [{x: -170, h: 410}, {x: 70, h: 398}, {x: 300, h: 425}, {x: 342, h: 262, child: true}, {x: 560, h: 404}, {x: 790, h: 412}, {x: 1030, h: 420}];
+const CROWD = [{x: -500, h: 410}, {x: -260, h: 398}, {x: -20, h: 425}, {x: -118, h: 262, child: true}, {x: 230, h: 404}, {x: 460, h: 412}, {x: 690, h: 420}];
 const L1923: LookQ[] = [{head: 'qingcap', dress: 'robe', sleeves: 'narrow', surcoat: true}, {head: 'guapi', dress: 'gown', sleeves: 'narrow'}, {head: 'qingcap', dress: 'robe', sleeves: 'narrow', beard: 'moustache'},
 	{head: 'guapi', dress: 'gown', sleeves: 'narrow', build: 0.9}, {head: 'guapi', dress: 'gown', sleeves: 'narrow', build: 1.05}, {head: 'qingcap', dress: 'robe', sleeves: 'narrow', surcoat: true, beard: 'short'}, {head: 'guapi', dress: 'gown', sleeves: 'narrow'}];
 const deckFar = (x: number) => deck(x) - 6;
@@ -178,7 +178,7 @@ const bootFlip = async () => {
 // ---- the 宋 refugee handcart (you in its bed, nobody's hand on you)
 type Cart = {ax: number; ay: number; r: number; ang: number; bed: (s: number, up?: number) => P; hand: P};
 const cartGeo = (ax: number, groundY: number, hand: P, h: number): Cart => {
-	const r = 0.15 * h, ay = groundY - r + 2, piv: P = [ax, ay - r * 0.25], ang = Math.atan2(hand[1] - piv[1], hand[0] - piv[0]), ca = Math.cos(ang), sa = Math.sin(ang);
+	const r = 0.15 * h, ay = groundY - r + 8, piv: P = [ax, ay - r * 0.25], ang = Math.atan2(hand[1] - piv[1], hand[0] - piv[0]), ca = Math.cos(ang), sa = Math.sin(ang);
 	return {ax, ay, r, ang, hand, bed: (s, up = 0) => [piv[0] + ca * s * h + sa * up * h, piv[1] + sa * s * h - ca * up * h]};
 };
 const wheel = (g: CanvasRenderingContext2D, x: number, y: number, r: number, rot: number, col = SIL) => {
@@ -289,15 +289,21 @@ const masonry = (g: CanvasRenderingContext2D, x0: number, x1: number) => {
 };
 const WIPE = {in0: b(68.72), in1: b(69) - 0.02, out0: b(69), out1: b(69.3)};
 /** the visitors on the bridge: standing (facing the palace) until b68.25, then walking left as a queue */
+const PHASE = [0, 0.27, 0.55, 0.3, 0.82, 0.12, 0.4];
+const walkDist = (t: number, t0: number) => { const tau = t - t0, V = gaitStride('08_04', 1) * 420 / (2 * BEAT); return tau <= 0 ? 0 : V * (tau < 0.35 ? (tau * tau) / 0.7 : tau - 0.175); };
 const visitorsToday = (t: number) => {
-	const tau = t - b(68.25), V = gaitStride('08_04', 1) * 420 / (2 * BEAT), dist = tau <= 0 ? 0 : V * (tau < 0.35 ? (tau * tau) / 0.7 : tau - 0.175), k = smooth(clamp01(tau / 0.35));
+	// one cadence for the adults (each covers stride × own height per cycle), each with its own phase; the child keeps beside
+	// the parent with a shorter, quicker step
+	const tau = t - b(68.25), cyc = walkDist(t, b(68.25)) / (gaitStride('08_04', 1) * 420), k = smooth(clamp01(tau / 0.35));
+	const xs = CROWD.map((c) => c.x - cyc * gaitStride('08_04', 1) * c.h);
 	return CROWD.map((c, i) => {
-		const lk = TODAY_L[i], x = c.x - dist, u = 0.13 + i * 0.28 + dist / (gaitStride('08_04', 1) * c.h);
+		const lk = TODAY_L[i], par = 2, x = c.child ? xs[par] + (c.x - CROWD[par].x) : xs[i];
+		const u = c.child ? PHASE[i] + (CROWD[par].x - xs[par]) / (gaitStride('08_04', 1) * c.h) : PHASE[i] + cyc;
 		const pose = k <= 0 ? POSES.stand : k >= 1 ? walkFor(lk, u) : mixPose(POSES.stand, walkFor(lk, u), k);
 		return rig({x, ground: deckFar(x), h: c.h, pose, look: lk, flip: true}, [], deckFar, `E5 visitor ${i}`);
 	});
 };
-const camToday = (t: number): [number, number, number] => { const tau = t - b(68.5), V = gaitStride('08_04', 1) * 420 / (2 * BEAT), d = tau <= 0 ? 0 : V * (tau < 0.3 ? (tau * tau) / 0.6 : tau - 0.15); return [CAM_DB[0] - d, CAM_DB[1], CAM_DB[2]]; };
+const camToday = (t: number): [number, number, number] => [CAM_DB[0] - 0.6 * walkDist(t, b(68.5)), CAM_DB[1], CAM_DB[2]];
 const drawToday = (t: number): Frame => {
 	const st = today.st, [cx, cy, zm] = camToday(t); st.setCam(cx, cy, zm);
 	todayCast.draw(k30(t), visitorsToday(t));
@@ -316,12 +322,12 @@ addScene({id: '34', a: b(67.5), z: b(69), in: {mode: 12, a: b(67.5), z: b(68), d
 // walking left BEHIND the case (their lower bodies hidden by it), leaning to look in; ceiling spots in a soffit at the very
 // top, their pools on the wall above the case. The case's central pane (x 760–1160, y 512–690) is the rectangle the storage
 // box's face matches at b74.
-const HZ = {wall: -800, pools: -790, ceil: -700, floor: -420, crowd: -216, inner: -215, silk: -210, card: -209, rollers: -208, arms: -205, glass: -200, frame: -195, box: -197, staff: -194, halo: -193};
+const HZ = {wall: -800, pools: -790, ceil: -700, floor: -420, crowd: -216, inner: -215, silk: -210, card: -209, rollers: -208, arms: -205, glass: -200, frame: -195, box: -197, staff: -185, halo: -193};
 const CASE = {x0: 240, x1: 1680, top: 494, rail: 512, pane1: 690, base: 900, mull: [600, 760, 1160, 1320], band0: 548, band1: 612, sx0: 300, sx1: 1620};
 const PANE_C: P = [960, 601], PANE_W = 400;
 const HG = 800;                                   // the floor line behind the case (rest px at the crowd's depth)
 const FIX = [210, 510, 810, 1110, 1410, 1710];    // ceiling spots
-let hallSt: Stage, hallCeil: Live, hallPools: Live, hallCrowd: Cast, hallSilk: Live, hallHalo: Live, hallCard: Live, hallRollers: Live, hallBox: Live, hallStaff: Live, hallArms: Live, hallDust: Motes, hallSconce: Live;
+let hallRope: Live, hallSt: Stage, hallCeil: Live, hallPools: Live, hallCrowd: Cast, hallSilk: Live, hallHalo: Live, hallCard: Live, hallRollers: Live, hallBox: Live, hallStaff: Live, hallArms: Live, hallDust: Motes, hallSconce: Live;
 const bootHall = async () => {
 	const st = hallSt = new Stage('e5hall');
 	st.add('wall', canvasTex(gradCanvas([[0, '#30363b'], [0.25, '#3a4046'], [0.55, '#464C52'], [1, '#4b5157']])), 960, 400, 4600, 2800, HZ.wall);
@@ -339,14 +345,19 @@ const bootHall = async () => {
 		g.fillStyle = '#2b3136'; g.fillRect(CASE.x0 + 30, 640, CASE.x1 - CASE.x0 - 60, 18);
 		st.add('inner', canvasTex(c), 960, 540, 1920, 1080, HZ.inner, {rim: 0.2}); }
 	hallSilk = new Live(st, 'silk', 960, 570, 1400, 220, HZ.silk, {emissive: 0.32}, 1.4);
-	hallCard = new Live(st, 'card', 960, 582, 260, 110, HZ.card, {}, 2);
-	hallCard.drawW('c', (g) => { g.fillStyle = '#20252a'; g.fillRect(944, 612, 32, 8); g.fillStyle = '#cfc8b8'; g.fillRect(862, 548, 196, 66); g.strokeStyle = '#8a8478'; g.lineWidth = 1.5; g.strokeRect(867, 553, 186, 56);
+	hallCard = new Live(st, 'card', 960, 592, 260, 130, HZ.card, {}, 2);
+	hallCard.drawW('c', (g) => { g.fillStyle = '#20252a'; g.fillRect(956, 612, 8, 22); g.fillRect(936, 632, 48, 6); g.fillStyle = '#cfc8b8'; g.fillRect(862, 548, 196, 66); g.strokeStyle = '#8a8478'; g.lineWidth = 1.5; g.strokeRect(867, 553, 186, 56);
 		g.fillStyle = '#2b2a28'; g.textAlign = 'center'; g.font = '900 28px "Noto Serif CJK SC"'; g.fillText('撤展回库', 960, 582); g.font = '700 16px "Noto Serif CJK SC"'; g.fillText('下次展出：未公布', 960, 603); });
 	hallRollers = new Live(st, 'rollers', 960, 570, 1400, 260, HZ.rollers, {emissive: 0.2}, 1.4);
 	// the front: glass sheen, top rail, mullions, plinth
-	{ const c = mkCanvas(960, 540), g = c.getContext('2d')!; g.scale(0.5, 0.5);
-		for (let i = 0; i < 5; i++) { const x0 = [CASE.x0, ...CASE.mull][i], x1 = [...CASE.mull, CASE.x1][i]; g.strokeStyle = 'rgba(220,230,236,0.07)'; g.lineWidth = 14; g.beginPath(); g.moveTo(x0 + 40, CASE.pane1); g.lineTo(x0 + 120, CASE.rail); g.stroke(); g.lineWidth = 4; g.beginPath(); g.moveTo(x0 + 78, CASE.pane1); g.lineTo(x0 + 158, CASE.rail); g.stroke(); void x1; }
-		st.add('glass', canvasTex(c), 960, 540, 1920, 1080, HZ.glass, {}); }
+	for (const open of [false, true]) { const c = mkCanvas(960, 540), g = c.getContext('2d')!; g.scale(0.5, 0.5);
+		for (let i = 0; i < 5; i++) { const x0 = [CASE.x0, ...CASE.mull][i]; if (open && i === 2) continue; g.strokeStyle = 'rgba(220,230,236,0.08)'; g.lineWidth = 14; g.beginPath(); g.moveTo(x0 + 40, CASE.pane1); g.lineTo(x0 + 120, CASE.rail); g.stroke(); g.lineWidth = 4; g.beginPath(); g.moveTo(x0 + 78, CASE.pane1); g.lineTo(x0 + 158, CASE.rail); g.stroke(); }
+		if (!open) { g.strokeStyle = 'rgba(220,230,236,0.13)'; g.lineWidth = 10; g.beginPath(); g.moveTo(1010, CASE.pane1); g.lineTo(1080, CASE.rail); g.stroke(); }   // one streak over the card
+		st.add(open ? 'glassOpen' : 'glass', canvasTex(c), 960, 540, 1920, 1080, HZ.glass, {}); }
+	// the central pane lowered on its bottom hinge (the case opened for the staff): a thin glass slab lying forward at the sill
+	{ const c = mkCanvas(1920, 1080), g = c.getContext('2d')!; g.fillStyle = 'rgba(190,204,212,0.35)'; g.beginPath(); g.moveTo(CASE.mull[1] + 4, CASE.pane1); g.lineTo(CASE.mull[2] - 4, CASE.pane1); g.lineTo(CASE.mull[2] + 10, CASE.pane1 + 16); g.lineTo(CASE.mull[1] - 10, CASE.pane1 + 16); g.closePath(); g.fill();
+		g.fillStyle = '#1b1f23'; g.fillRect(CASE.mull[1] - 10, CASE.pane1 + 16, CASE.mull[2] - CASE.mull[1] + 20, 5);
+		st.add('dropPane', canvasTex(c), 960, 540, 1920, 1080, HZ.frame + 0.5, {}); }
 	{ const c = mkCanvas(1920, 1080), g = c.getContext('2d')!;
 		g.fillStyle = '#2a2f34'; g.fillRect(CASE.x0 - 20, CASE.pane1, CASE.x1 - CASE.x0 + 40, CASE.base - CASE.pane1);
 		g.fillStyle = '#3c4248'; g.fillRect(CASE.x0 - 20, CASE.pane1, CASE.x1 - CASE.x0 + 40, 6); g.fillStyle = '#1d2125'; g.fillRect(CASE.x0 - 10, CASE.base - 14, CASE.x1 - CASE.x0 + 20, 14);
@@ -358,13 +369,17 @@ const bootHall = async () => {
 	hallStaff = new Live(st, 'staff', 960, 560, 2000, 900, HZ.staff, {rim: 1.0, rimPx: 6}, 1);
 	hallArms = new Live(st, 'arms', 960, 560, 2000, 900, HZ.arms, {rim: 1.0, rimPx: 6}, 1);   // arms reaching into the case: behind its front rail and glass
 	hallHalo = new Live(st, 'halo', 960, 560, 1800, 500, HZ.halo, {emissive: 1.0}, 0.4);
-	hallSconce = new Live(st, 'sconce', 960, 430, 3400, 200, HZ.wall + 4, {emissive: 0.9}, 0.5);
-	hallSconce.drawW('s', (g) => { for (const x of [-420, 2340]) { g.fillStyle = '#1b1f23'; g.fillRect(x - 16, 400, 32, 50); g.fillStyle = '#E8D2A8'; g.fillRect(x - 10, 406, 20, 36); glowBlob(g, [x, 424], 120, 90, 0.25, '232,214,180'); } });
+	hallSconce = new Live(st, 'sconce', 960, 430, 3400, 700, HZ.wall + 4, {emissive: 0.6}, 0.5);
+	hallSconce.drawW('s', (g) => { for (const x of [140, 1780]) { glowBlob(g, [x, 430], 420, 300, 0.12, '232,214,180'); g.fillStyle = '#1b1f23'; g.fillRect(x - 16, 400, 32, 50); g.fillStyle = '#E8D2A8'; g.fillRect(x - 10, 406, 20, 36); glowBlob(g, [x, 424], 90, 70, 0.3, '232,214,180'); } });
+	// the velvet rope put across after closing (35a, 36)
+	hallRope = new Live(st, 'rope', 960, 860, 1600, 260, -120, {rim: 0.5, rimPx: 3}, 1);
+	hallRope.drawW('r', (g) => { for (const x of [430, 1490]) { g.fillStyle = '#1a1d20'; g.fillRect(x - 6, 790, 12, 160); g.fillRect(x - 22, 944, 44, 8); g.fillStyle = '#8a7250'; g.beginPath(); g.ellipse(x, 788, 9, 6, 0, 0, Math.PI * 2); g.fill(); }
+		g.strokeStyle = '#4a1f1c'; g.lineWidth = 7; g.beginPath(); g.moveTo(436, 796); g.quadraticCurveTo(960, 880, 1484, 796); g.stroke(); });
 	hallDust = new Motes(st, 140, 'dust', -200, 6, '#C9CED2', false);
 };
 /** spot i's light level at t (the rows go out right → left on b72.0 → b72.25); 'out' after; 36 keeps them off */
 const spotLevel = (i: number, t: number) => { const at = b(72) + (5 - i) * 0.09; return t < at ? 1 : t < at + 0.05 ? (Math.round((t - at) * 120) % 2 ? 0.4 : 0.7) : 0; };
-type HallMode = {t: number; spots: (i: number) => number; you: number; card: number; crowd: FigOpts[]; wallK: number; staff?: {A: FigOpts; B: FigOpts; clipY: number; clipArms?: boolean}; rollers?: {xl: number; xr: number; lift: number; r: number}; box?: {lid: number; roll: number}};
+type HallMode = {t: number; spots: (i: number) => number; you: number; card: number; crowd: FigOpts[]; wallK: number; staff?: {A: FigOpts; B: FigOpts}; open?: boolean; rope?: boolean; rollers?: {xl: number; xr: number; lift: number; r: number}; box?: {lid: number; roll: number}};
 const drawHall = (m: HallMode) => {
 	const lv = FIX.map((_, i) => m.spots(i)), key = lv.map((v) => v.toFixed(2)).join(',');
 	hallCeil.drawW(key, (g) => { g.fillStyle = '#1a1d21'; g.fillRect(-1100, -660, 4200, 716); g.fillStyle = '#23272b'; g.fillRect(-1100, 50, 4200, 8);
@@ -379,15 +394,14 @@ const drawHall = (m: HallMode) => {
 		g.fillStyle = 'rgba(52,80,106,0.9)'; g.fillRect(x0, CASE.band0 + dy, x1 - x0, 5); g.fillRect(x0, CASE.band1 + dy - 5, x1 - x0, 5); g.restore(); });
 	hallCard.L.mat.uniforms.uOpacity.value = m.card;
 	hallRollers.L.mesh.visible = !!rl;
-	if (rl) hallRollers.drawW(sk, (g) => { for (const x of [rl.xl, rl.xr]) vRollG(g, x, CASE.band0 - 8 - rl.lift, CASE.band1 + 8 - rl.lift, rl.r); });
+	if (rl) hallRollers.drawW(sk, (g) => { for (const [x, r] of [[rl.xl, rl.r], [rl.xr, 9]]) vRollG(g, x, CASE.band0 - 8 - rl.lift, CASE.band1 + 8 - rl.lift, r); });   // your roller (thick with the wound silk) and the far end's stick
 	hallBox.L.mesh.visible = !!m.box;
 	if (m.box) hallBox.drawW(`${m.box.lid.toFixed(3)}:${m.box.roll.toFixed(2)}`, (g) => storageBox(g, m.box!.lid, m.box!.roll));
-	hallStaff.L.mesh.visible = !!m.staff;
+	hallStaff.L.mesh.visible = !!m.staff; hallArms.L.mesh.visible = false;
 	const fk = k30(m.t);
-	if (m.staff) { const s = m.staff; hallStaff.drawW(`${fk}:${s.A.x.toFixed(1)}`, (g) => { g.save(); g.beginPath(); g.rect(-2000, -2000, 6000, 2000 + s.clipY); g.clip(); drawFig(g, s.A); drawFig(g, s.B); if (s.clipArms) { fillD(g, armPaths(s.A)); fillD(g, armPaths(s.B)); } g.restore();
-	}); }
-	hallArms.L.mesh.visible = !!m.staff && !m.staff.clipArms;
-	if (m.staff && !m.staff.clipArms) { const s = m.staff; hallArms.drawW(`${fk}:${s.A.x.toFixed(1)}`, (g) => { fillD(g, armPaths(s.A)); fillD(g, armPaths(s.B)); }); }
+	if (m.staff) { const s = m.staff; hallStaff.drawW(`${fk}:${s.A.x.toFixed(1)}`, (g) => { drawFig(g, s.A); drawFig(g, s.B); }); }   // in front of the case: whole figures
+	hallSt.get('glass').mesh.visible = !m.open; hallSt.get('glassOpen').mesh.visible = !!m.open; hallSt.get('dropPane').mesh.visible = !!m.open;
+	hallRope.L.mesh.visible = !!m.rope;
 	hallCrowd.draw(fk + ':' + m.crowd.length, m.crowd);
 	const inBox = !!m.box && m.box.roll >= 0, yc: P = rl ? [(rl.xl + rl.xr) / 2, 580 - rl.lift] : inBox ? [BOX35.x0 + BOX35.w / 2, BOX35.top - 4] : [960, 580];
 	const yc0: P = m.box ? [BOX35.x0 + BOX35.w / 2, BOX35.top - 4] : rl ? [(rl.xl + rl.xr) / 2, 580 - rl.lift] : [960, 580];
@@ -409,15 +423,15 @@ const BOX35 = {x0: 340, w: 120, top: 440, h: 53, rim: 7, lid: 40};
 const storageBox = (g: CanvasRenderingContext2D, lid: number, roll: number) => {
 	const {x0, w, top, h, rim} = BOX35, x1 = x0 + w, back = top - rim, th = lid * 100 * Math.PI / 180;      // lid 1 = open (100°), 0 = shut
 	// the cavity seen from a little above: the far inner wall + the bed (warm with your light), you lying in it
-	if (lid > 0.02) { const gr = g.createLinearGradient(0, back, 0, top); gr.addColorStop(0, '#6a4a30'); gr.addColorStop(1, '#9a6c42'); g.fillStyle = gr; g.fillRect(x0 + 4, back, w - 8, rim + 2);
-		if (roll >= 0) { const ry = top - 4 - 18 * (1 - roll); drawRoll(g, [x0 + 13, ry], [x1 - 13, ry], 9, 1); } }
+	if (lid > 0.02) { const gr = g.createLinearGradient(0, back, 0, top); gr.addColorStop(0, roll >= 0 ? '#6a4a30' : '#2c2620'); gr.addColorStop(1, roll >= 0 ? '#9a6c42' : '#3a322a'); g.fillStyle = gr; g.fillRect(x0 + 4, back, w - 8, rim + 2);
+		if (roll >= 0) { const ry = top - 4 - 44 * (1 - roll); drawRoll(g, [x0 + 12, ry], [x1 - 12, ry], 10, 1); } }
 	// the box body (dark lacquered wood, brass corners)
 	const bg = g.createLinearGradient(0, top, 0, top + h); bg.addColorStop(0, '#4a3628'); bg.addColorStop(1, '#2e2219'); g.fillStyle = bg; g.fillRect(x0, top, w, h);
 	g.fillStyle = '#5c4532'; g.fillRect(x0, top, w, 3); g.fillStyle = '#8a7250'; for (const [x, y] of [[x0, top], [x1 - 9, top], [x0, top + h - 9], [x1 - 9, top + h - 9]]) g.fillRect(x, y, 9, 9);
 	g.fillStyle = '#b8a888'; g.fillRect(x0 + w / 2 - 18, top + 17, 36, 15); g.fillStyle = '#5a5248'; g.fillRect(x0 + w / 2 - 13, top + 22, 26, 2); g.fillRect(x0 + w / 2 - 10, top + 26, 20, 2);
 	// the lid: open, its underside lit warm by you; shut, the top board and a warm seam
 	const yf = back - BOX35.lid * Math.sin(th) + BOX35.lid * 0.24 * Math.cos(th);
-	if (yf < back - 1) { const ug = g.createLinearGradient(0, yf, 0, back); ug.addColorStop(0, `rgba(120,84,52,1)`); ug.addColorStop(1, `rgb(${Math.round(150 + 60 * lid)},${Math.round(104 + 40 * lid)},${Math.round(62 + 20 * lid)})`);
+	if (yf < back - 1) { const ug = g.createLinearGradient(0, yf, 0, back), L = roll >= 0 ? 1 : 0; ug.addColorStop(0, L ? 'rgb(120,84,52)' : 'rgb(46,38,32)'); ug.addColorStop(1, L ? `rgb(${Math.round(150 + 60 * lid)},${Math.round(104 + 40 * lid)},${Math.round(62 + 20 * lid)})` : 'rgb(58,48,40)');
 		g.fillStyle = ug; g.fillRect(x0, yf, w, back - yf); g.fillStyle = '#3a2a1e'; g.fillRect(x0, yf - 4, w, 4); }
 	else { g.fillStyle = '#3e2e22'; g.fillRect(x0 - 1, back, w + 2, Math.max(2, yf - back + 1)); }
 	if (lid <= 0.02) { g.fillStyle = 'rgba(255,200,130,0.55)'; g.fillRect(x0 + 6, top - 1, w - 12, 1.5); }
@@ -426,12 +440,16 @@ const storageBox = (g: CanvasRenderingContext2D, lid: number, roll: number) => {
 const lidEdge = (lid: number): P => { const th = lid * 100 * Math.PI / 180, back = BOX35.top - BOX35.rim; return [BOX35.x0 + BOX35.w + 3, back - BOX35.lid * Math.sin(th) + BOX35.lid * 0.24 * Math.cos(th) + 2]; };
 
 // ---- the queue in the hall: walking left behind the case with short steps, leaning to look in
-const QL: LookQ[] = [VLOOK.man, VLOOK.woman, VLOOK.old, VLOOK.woman2, VLOOK.man2, VLOOK.woman, VLOOK.man, VLOOK.old, VLOOK.woman2, VLOOK.man2, VLOOK.woman];
-const QSP = 236, QV = 118, QSTEP = 0.5, QSPAN = QL.length * QSP;
+const QL: LookQ[] = [VLOOK.man, VLOOK.woman, VLOOK.old, {head: 'bun', dress: 'zip', build: 0.97}, VLOOK.man2, {head: 'short', dress: 'zip', pack: 'backpack'}, VLOOK.woman2, {head: 'modern', dress: 'jacket', build: 1.06}, VLOOK.woman, {head: 'short', dress: 'jacket', build: 0.92}, VLOOK.man];
+const QV = 118, QSTEP = 0.5, QGAP = QL.map((_, i) => 190 + 110 * hash(i * 4.7 + 1)), QOFF = QGAP.map((_, i) => QGAP.slice(0, i).reduce((a, c) => a + c, 0)), QSPAN = QGAP.reduce((a, c) => a + c, 0);
+const QPH = [0, 0.36, 0.71, 0.18, 0.52, 0.86, 0.27, 0.63, 0.09, 0.44, 0.79];
 const hallQueue = (t: number, T0 = b(69) - 1.2): FigOpts[] => QL.map((lk, i) => {
-	const h = 452 + 26 * hash(i * 5.1), s = QV * (t - T0) + i * QSP + 40 * hash(i * 2.3), x = 2350 - (((s % QSPAN) + QSPAN) % QSPAN);
-	const u = s / (gaitStride('08_04', QSTEP) * h) + i * 0.37;
-	return rig({x, ground: HG, h, pose: bowUpper(gaitPose('08_04', u, QSTEP), 9 + 4 * hash(i)), look: lk, flip: true}, [], () => HG, `hall visitor ${i}`);
+	// irregular spacing, own phase and cadence, three head angles; one visitor lingers over the scroll for a beat
+	const h = 440 + 44 * hash(i * 5.1), lin = i === 4 ? clamp01((t - b(70)) / BEAT) * 0.6 * BEAT * QV : 0;
+	const s = QV * (t - T0) + QOFF[i] - lin, x = 2350 - (((s % QSPAN) + QSPAN) % QSPAN);
+	const u = QPH[i] + s / (gaitStride('08_04', QSTEP) * h);
+	const tilt = [5, 11, 17][i % 3] + 3 * hash(i * 9.1);
+	return rig({x, ground: HG, h, pose: bowUpper(gaitPose('08_04', u, QSTEP), tilt), look: lk, flip: true}, [], () => HG, `hall visitor ${i}`);
 });
 // ---- 34b: the hall while you are on show (b69 → b72)
 const hallCam34 = (t: number) => { const k = smooth(clamp01((t - b(71)) / (b(72) - b(71)))); lockCam(hallSt, lerp(1.0, 0.86, k), 960, 580, HZ.silk); };
@@ -448,42 +466,45 @@ addScene({id: '34b', a: b(69), z: b(72), draw: draw34b});
 // ================================================================================================ 35 · lights out, roll-up, the lid, the aisle
 // 35a (b72 → b72.25): a time cut on the beat to the same framing after closing — the hall empty, the spots go out row by row
 addScene({id: '35a', a: b(72), z: b(72.25), draw: (t) => {
-	lockCam(hallSt, 0.86, 960, 580, HZ.silk);
-	drawHall({t, spots: (i) => spotLevel(i, t), you: 1, card: 0, crowd: [], wallK: lerp(1, 0.84, clamp01((t - b(72)) / (b(72.25) - b(72))))});
+	lockCam(hallSt, 1.12, 960, 580, HZ.silk, 960, 560);
+	drawHall({t, spots: (i) => spotLevel(i, t), you: 1, card: 0, crowd: [], rope: true, wallK: lerp(1, 0.8, clamp01((t - b(72)) / (b(72.25) - b(72))))});
 	hallDust.update(t, [300, 260, 1700, 900], 9, 4, 0.25);
 	return {st: hallSt, grade: {vig: 0.38, exposure: 1}, bloom: 1};
 }});
-// 35b (b72.25 → b72.75): two staff behind the case, each with both hands on a roller, roll you up toward the middle and lift you
+// 35b (b72.25 → b72.75): the case's central pane is lowered open. Two staff stand in front of it: A rolls you up from the left
+// end onto its roller (stepping right with it, both hands on the roller), B holds the other end's stick still; then both lift
 const STAFF: LookQ[] = [{head: 'short', dress: 'smock'}, {head: 'ponytail', dress: 'smock', build: 0.95}];
+const SG = 950, SH = 500;                                  // the floor in front of the case; staff height
 const rollUp = (t: number) => {
-	// each with both hands near the top of a roller; the rollers lift a little as they wind in, then the whole roll comes up
-	const k = smooth(clamp01((t - b(72.3)) / (b(72.6) - b(72.3)))), lift = 16 * k + 40 * smooth(clamp01((t - b(72.6)) / 0.16));
-	const xl = lerp(840, 947, k), xr = lerp(1080, 973, k), yT = 532 - lift, yB = 556 - lift, lean = 35 + 10 * k - 12 * clamp01((lift - 16) / 40);
-	const A = rig({x: 770, ground: HG, h: 470, pose: bowUpper(POSES.stand, lean), look: STAFF[0]}, [{side: 'R', target: [xl - 4, yT], name: 'roller'}, {side: 'L', target: [xl - 4, yB], name: 'roller'}], () => HG, 'staff A');
-	const B = rig({x: 1150, ground: HG, h: 462, pose: bowUpper(POSES.stand, lean), look: STAFF[1], flip: true}, [{side: 'R', target: [xr + 4, yT], name: 'roller'}, {side: 'L', target: [xr + 4, yB], name: 'roller'}], () => HG, 'staff B');
-	return {A, B, rl: {xl, xr, lift, r: lerp(11, 16, k)}};
+	const k = easeInOut(clamp01((t - b(72.28)) / (b(72.6) - b(72.28)))), lift = 40 * smooth(clamp01((t - b(72.6)) / 0.15));
+	const xl = lerp(800, 1078, k), xr = 1108, yT = 540 - lift, yB = 566 - lift;
+	const ax = xl - 180, uA = (ax - 620) / (gaitStride('08_04', 0.5) * SH);
+	const A = rig({x: ax, ground: SG, h: SH, pose: bowUpper(gaitPose('08_04', uA + 0.15, 0.5), 14), look: STAFF[0]}, [{side: 'R', target: [xl - 3, yT], name: 'roller'}, {side: 'L', target: [xl - 3, yB], name: 'roller'}], () => SG, 'staff A');
+	const B = rig({x: 1292, ground: SG, h: SH - 12, pose: bowUpper(POSES.stand, 12), look: STAFF[1], flip: true}, [{side: 'R', target: [xr + 3, yT], name: 'end stick'}, {side: 'L', target: [xr + 3, yB], name: 'end stick'}], () => SG, 'staff B');
+	return {A, B, rl: {xl, xr, lift, r: lerp(15, 18, k)}};
 };
 addScene({id: '35b', a: b(72.25), z: b(72.75), draw: (t) => {
-	lockCam(hallSt, 1.35, 960, 580, HZ.silk, 960, 650);
+	lockCam(hallSt, 1.0, 960, 580, HZ.silk, 960, 560);
 	const R = rollUp(t);
-	drawHall({t, spots: () => 0, you: 1, card: 0, crowd: [], wallK: 0.84, staff: {A: R.A, B: R.B, clipY: CASE.top}, rollers: R.rl, box: {lid: 1, roll: -1}});
+	drawHall({t, spots: () => 0, you: 1, card: 0, crowd: [], wallK: 0.8, staff: {A: R.A, B: R.B}, rollers: R.rl, box: {lid: 1, roll: -1}, open: true});
 	return {st: hallSt, grade: {vig: 0.4, exposure: 1}, bloom: 1};
 }});
-// 35c (b72.75 → b73.0): you are laid in the box on the case top (A's hands on you), B brings the lid down by its edge; push in
+// 35c (b72.75 → b73.0): A lowers you into the open box on the case top (his hands on the roll), B brings the lid down by its
+// edge; the camera pushes in on the closing lid
 const layLid = (t: number) => {
-	const roll = smooth(clamp01((t - b(72.75)) / 0.1)), lid = 1 - easeInOut(clamp01((t - (b(72.75) + 0.12)) / (b(73) - 0.03 - (b(72.75) + 0.12))));
-	const ry = BOX35.top - 3 - 18 * (1 - roll), rel = smooth(clamp01((t - (b(72.75) + 0.1)) / 0.12));
-	const Aup = bowUpper(POSES.stand, 8), Ain = bowUpper(POSES.stand, 34);
-	const aC: Contact[] = rel < 0.02 ? [{side: 'R', target: [BOX35.x0 + 26, ry - 4], name: 'roll'}, {side: 'L', target: [BOX35.x0 + 62, ry - 4], name: 'roll'}] : [];
-	const A = rig({x: 272, ground: HG, h: 470, pose: rel < 0.02 ? Ain : mixPose(Ain, Aup, rel), look: STAFF[0]}, aC, () => HG, 'staff A box');
-	const e = lidEdge(lid), B = rig({x: 548, ground: HG, h: 462, pose: bowUpper(POSES.stand, lerp(30, 12, lid)), look: STAFF[1], flip: true}, [{side: 'R', target: e, name: 'lid edge'}], () => HG, 'staff B lid');
+	const roll = smooth(clamp01((t - b(72.75)) / 0.13)), lid = 1 - easeInOut(clamp01((t - (b(72.75) + 0.16)) / (b(73) - 0.03 - (b(72.75) + 0.16))));
+	const ry = BOX35.top - 4 - 44 * (1 - roll), rel = smooth(clamp01((t - (b(72.75) + 0.13)) / 0.1));
+	const Aup = bowUpper(POSES.stand, 4), Ain = bowUpper(POSES.stand, 16);
+	const aC: Contact[] = rel < 0.02 ? [{side: 'R', target: [BOX35.x0 + 30, ry - 6], name: 'roll'}, {side: 'L', target: [BOX35.x0 + 70, ry - 6], name: 'roll'}] : [];
+	const A = rig({x: 250, ground: SG, h: SH, pose: rel < 0.02 ? Ain : mixPose(Ain, Aup, rel), look: STAFF[0]}, aC, () => SG, 'staff A box');
+	const e = lidEdge(lid), B = rig({x: 560, ground: SG, h: SH - 12, pose: bowUpper(POSES.stand, lerp(16, 6, lid)), look: STAFF[1], flip: true}, [{side: 'R', target: e, name: 'lid edge'}], () => SG, 'staff B lid');
 	return {A, B, lid, roll};
 };
 addScene({id: '35c', a: b(72.75), z: b(73), draw: (t) => {
-	const zm = Math.exp(lerp(Math.log(1.7), Math.log(4.2), easeIn(clamp01((t - (b(72.75) + 0.1)) / (b(73) - b(72.75) - 0.1)))));
-	lockCam(hallSt, zm, BOX35.x0 + BOX35.w / 2, BOX35.top + 6, HZ.box, 960, lerp(640, 590, clamp01((zm - 1.7) / 2.5)));
+	const zm = Math.exp(lerp(Math.log(1.25), Math.log(3.6), easeIn(clamp01((t - (b(72.75) + 0.14)) / (b(73) - b(72.75) - 0.14)))));
+	lockCam(hallSt, zm, BOX35.x0 + BOX35.w / 2, BOX35.top + 6, HZ.box, 960, lerp(560, 590, clamp01((zm - 1.25) / 2.3)));
 	const L = layLid(t);
-	drawHall({t, spots: () => 0, you: 1, card: 0, crowd: [], wallK: 0.84, staff: {A: L.A, B: L.B, clipY: CASE.top, clipArms: true}, box: {lid: L.lid, roll: L.roll}});
+	drawHall({t, spots: () => 0, you: 1, card: 0, crowd: [], wallK: 0.8, staff: {A: L.A, B: L.B}, box: {lid: L.lid, roll: L.roll}});
 	return {st: hallSt, grade: {vig: 0.42, exposure: 1}, bloom: 1};
 }});
 // 35d (b73 → b74): the storage aisle (#3E454A): a wall of shelved boxes face-on, yours glowing faintly at its seams on the
@@ -504,13 +525,16 @@ const bootAisle = async () => {
 	g.fillStyle = '#353b40'; g.fillRect(OX, OY, 2440, 1300);
 	const boards = [263, 463, 653, 843, 1033];
 	for (const yb of boards) { g.fillStyle = '#23272b'; g.fillRect(OX, yb, 2440, 16); g.fillStyle = '#50565b'; g.fillRect(OX, yb, 2440, 2); }
-	for (let x = -980; x <= 1440; x += 610) { g.fillStyle = '#1e2225'; g.fillRect(x - 10, OY, 20, 1300); }
-	for (let r = 0; r < boards.length; r++) { const yb = boards[r]; let x = -960 + hash(r * 3.1) * 40;
-		while (x < 1400) { const w = 200 + hash(x * 0.13 + r) * 60, h = 86 + hash(x * 0.7 + r) * 28; const mine = r === 2 && x < ABOX.cx + ABOX.w / 2 + 14 && x + w > ABOX.cx - ABOX.w / 2 - 14;
-			if (!mine && x + w < 1420) { const bg = g.createLinearGradient(0, yb - h, 0, yb); bg.addColorStop(0, '#4a3a2c'); bg.addColorStop(1, '#33281f'); g.fillStyle = bg; g.fillRect(x, yb - h, w, h);
-				g.fillStyle = '#5c4834'; g.fillRect(x, yb - h, w, 3); g.fillStyle = 'rgba(20,14,10,0.6)'; g.fillRect(x, yb - h + 14, w, 1.5);
-				g.fillStyle = '#a89a80'; g.fillRect(x + w / 2 - 20, yb - h * 0.55, 40, 16); g.fillStyle = '#5a5248'; g.fillRect(x + w / 2 - 14, yb - h * 0.55 + 6, 28, 2); }
-			x += w + 24; } }
+	const POSTS = [-1050, -440, 170, 780, 1390];
+	for (const x of POSTS) { g.fillStyle = '#1e2225'; g.fillRect(x - 10, OY, 20, 1300); }
+	for (let r = 0; r < boards.length; r++) { const yb = boards[r];
+		for (let p = 0; p + 1 < POSTS.length; p++) { const bx0 = POSTS[p] + 18, bx1 = POSTS[p + 1] - 18; let x = bx0 + hash(r * 3.1 + p) * 30;
+			while (true) { const w = 200 + hash(x * 0.13 + r) * 60, h = 86 + hash(x * 0.7 + r) * 28; if (x + w > bx1) break;
+				const mine = r === 2 && x < ABOX.cx + ABOX.w / 2 + 14 && x + w > ABOX.cx - ABOX.w / 2 - 14;
+				if (!mine) { const bg = g.createLinearGradient(0, yb - h, 0, yb); bg.addColorStop(0, '#4a3a2c'); bg.addColorStop(1, '#33281f'); g.fillStyle = bg; g.fillRect(x, yb - h, w, h);
+					g.fillStyle = '#5c4834'; g.fillRect(x, yb - h, w, 3); g.fillStyle = 'rgba(20,14,10,0.6)'; g.fillRect(x, yb - h + 14, w, 1.5);
+					g.fillStyle = '#a89a80'; g.fillRect(x + w / 2 - 20, yb - h * 0.55, 40, 16); g.fillStyle = '#5a5248'; g.fillRect(x + w / 2 - 14, yb - h * 0.55 + 6, 28, 2); }
+				x += w + 24; } } }
 	// your box: the same kind, a touch longer; its seams are on the emissive layer
 	{ const x0 = ABOX.cx - ABOX.w / 2, y0 = ABOX.cy - ABOX.h / 2; const bg = g.createLinearGradient(0, y0, 0, y0 + ABOX.h); bg.addColorStop(0, '#4e3c2c'); bg.addColorStop(1, '#35291f'); g.fillStyle = bg; g.fillRect(x0, y0, ABOX.w, ABOX.h);
 		g.fillStyle = '#8a7250'; for (const [x, y] of [[x0, y0], [x0 + ABOX.w - 14, y0], [x0, y0 + ABOX.h - 14], [x0 + ABOX.w - 14, y0 + ABOX.h - 14]]) g.fillRect(x, y, 14, 14);
@@ -534,7 +558,7 @@ const Z36 = (() => { const sBox = AISLE_Z1, sPane = (sBox * ABOX.w) / PANE_W, d 
 const cam36 = (t: number) => Math.exp(lerp(Math.log(Z36), Math.log(Z36 * 1.38), easeInOut(clamp01((t - b(74)) / (b(76) - b(74))))));
 addScene({id: '36', a: b(74), z: b(76), draw: (t) => {
 	lockCam(hallSt, cam36(t), PANE_C[0], PANE_C[1], HZ.glass, 960, 601);
-	drawHall({t, spots: () => 0, you: 0, card: 1, crowd: [], wallK: 0.92});
+	drawHall({t, spots: () => 0, you: 0, card: 1, crowd: [], rope: true, wallK: 0.8});
 	hallDust.update(t, [500, 360, 1400, 820], 7, 3, 0.26);
 	return {st: hallSt, grade: {vig: 0.4, exposure: 1}, bloom: 1};
 }});
@@ -553,12 +577,13 @@ const bootExt = async () => {
 	let gate = `<rect x="-1500" y="640" width="4900" height="560" fill="url(#wg)"/>`;
 	for (let i = 0; i < 14; i++) gate += `<line x1="-1500" x2="3400" y1="${668 + i * 38}" y2="${668 + i * 38}" stroke="#2e1f1a" stroke-opacity="0.35" stroke-width="2"/>`;
 	for (let x = -1500; x < 3400; x += 34) gate += `<rect x="${x}" y="628" width="20" height="14" fill="#2c201c"/>`;
-	for (const [ax, aw, ah] of [[960, 118, 200], [690, 84, 150], [1230, 84, 150]]) gate += `<path fill="#24170f" d="M${ax - aw / 2},1200 L${ax - aw / 2},${1200 - ah + aw / 2} A${aw / 2},${aw / 2} 0 0 1 ${ax + aw / 2},${1200 - ah + aw / 2} L${ax + aw / 2},1200 Z"/>`;
+	// (no ground-level arches: from this camera they only read as dark domes at the frame's foot)
 	for (const sg of [-1, 1]) gate += `<rect x="${sg < 0 ? 960 - 860 : 960 + 300}" y="598" width="560" height="44" fill="#17191c"/>` + roofSvg(960 + sg * 580, 570, 620, 34, 0.3, '#17191c') + hallSvg(960 + sg * 900, 642, 200, 130, 1, '#17191c');
 	gate += hallSvg(960, 642, 400, 196, 2, '#17191c');
 	ext.add('gate', canvasTex(await svgToCanvas(svgDoc(defs + gate, 4900, 1200, '', -1500, 100), 4900, 1200, 0.6)), 950, 700, 4900, 1200, -200, {});
-	const ramp = `<path fill="#3d302b" d="M-200,1100 L880,640 L960,640 L960,654 L890,654 L-150,1110 Z"/><path fill="none" stroke="#17120f" stroke-width="7" d="M-200,1086 L880,628"/>` +
-		Array.from({length: 26}, (_, i) => { const x = -160 + i * 40, y = 1086 - (x + 200) * (458 / 1080); return `<rect x="${x}" y="${y - 12}" width="4" height="12" fill="#17120f"/>`; }).join('');
+	// the 马道: an empty stone ramp with a faint lit top edge, its parapet posts only along the upper run
+	const ramp = `<path fill="#3d302b" d="M-200,1100 L880,640 L960,640 L960,654 L890,654 L-150,1110 Z"/><path fill="none" stroke="#6a574a" stroke-opacity="0.8" stroke-width="3" d="M-190,1096 L882,638"/><path fill="none" stroke="#17120f" stroke-width="7" d="M300,874 L880,628"/>` +
+		Array.from({length: 15}, (_, i) => { const x = 320 + i * 40, y = 1086 - (x + 200) * (458 / 1080); return `<rect x="${x}" y="${y - 12}" width="4" height="12" fill="#17120f"/>`; }).join('');
 	ext.add('ramp', canvasTex(await svgToCanvas(svgDoc(ramp, 2400, 700, '', -400, 560), 2400, 700, 0.6)), 800, 910, 2400, 700, -160, {});
 	ext.add('plaza', canvasTex(gradCanvas([[0, '#2c2826'], [1, '#1b1918']])), 960, 1300, 6000, 420, -150);
 	extDoor = new Live(ext, 'door', DOOR.x, DOOR.y, 400, 300, DOOR.z, {emissive: 0.55}, 1);
@@ -582,7 +607,8 @@ const E37 = {a: b(76), hallZ: b(76) + 0.3, passZ: b(76) + 0.78, extSettle: b(77.
 const Q_LINE = (LINES.find((l) => l[2].startsWith('要是排')) ?? [174.657, 184.3, '要是排[五小时]看两分钟，你去吗？'])[2];
 const SOURCES = '资料：故宫博物院 · 余辉（故宫博物院院刊 2012；光明日报 2017）· 朱鸿文（光明日报 2026）· 王文锋（长春日报 2020）· 许忠陵《清明上河图装裱记》· 北京晚报 2015';
 const endHud = (t: number) => (hud: HTMLElement) => {
-	const o = smooth(clamp01((t - b(76)) / 0.5)), n = [...Q_LINE].filter((c) => c !== '[' && c !== ']').length, qT = clamp01((t - b(76.5)) / 0.4) * n + (t >= b(76.5) ? 1 : 0);
+	const o = smooth(clamp01((t - b(76) - 0.3) / 0.5)), n = [...Q_LINE].filter((c) => c !== '[' && c !== ']').length, qT = clamp01((t - b(76.5)) / 0.4) * n + (t >= b(76.5) ? 1 : 0);
+	hud.insertAdjacentHTML('beforeend', `<div style="position:absolute;left:0;right:0;bottom:0;height:150px;opacity:${o.toFixed(3)};background:linear-gradient(to bottom, rgba(12,10,9,0), rgba(12,10,9,0.82) 55%, rgba(12,10,9,0.9))"></div>`);
 	endCard(hud, o, t < b(76.5) ? '' : Q_LINE, SOURCES, t < b(76.5) ? 0 : Math.floor(qT + 1e-6), smooth(clamp01((t - b(78)) / 0.3)), smooth(clamp01((t - b(78.5)) / 0.3)));
 };
 addScene({id: '37', a: b(76), z: 184.3 + 1, draw: (t) => {
@@ -590,7 +616,7 @@ addScene({id: '37', a: b(76), z: 184.3 + 1, draw: (t) => {
 	if (t < E37.hallZ) {           // ---- out of the hall (the camera backs away from the empty case toward the door)
 		const k = easeIn(clamp01((t - E37.a) / (E37.hallZ - E37.a)));
 		lockCam(hallSt, Math.exp(lerp(Math.log(Z36 * 1.38), Math.log(0.62), k)), PANE_C[0], PANE_C[1], HZ.glass, 960, lerp(601, 580, k));
-		drawHall({t, spots: () => 0, you: 0, card: 1, crowd: [], wallK: 0.92});
+		drawHall({t, spots: () => 0, you: 0, card: 1, crowd: [], rope: true, wallK: 0.8});
 		return {st: hallSt, grade: {vig: 0.42, exposure: 1}, bloom: 1, hideFurniture: true, hud: endHud(t)};
 	}
 	if (t < E37.passZ) {           // ---- back through the passage (its far opening is the hall)
@@ -600,8 +626,8 @@ addScene({id: '37', a: b(76), z: 184.3 + 1, draw: (t) => {
 	}
 	// ---- outside: the door at the top of the empty ramp; the crane settles, then a slow rise to the end
 	const k = easeOut(clamp01((t - E37.passZ) / (E37.extSettle - E37.passZ))), rise = smooth(clamp01((t - E37.extSettle) / (184.3 - E37.extSettle)));
-	const zoom = k < 1 ? Math.exp(lerp(Math.log(9), Math.log(1.0), k)) : lerp(1.0, 0.9, rise);
-	lockCam(ext, zoom, DOOR.x, DOOR.y, DOOR.z, 960, 580 + 40 * k + 150 * rise);
+	const zoom = k < 1 ? Math.exp(lerp(Math.log(5.5), Math.log(1.0), k)) : lerp(1.0, 0.9, rise);
+	lockCam(ext, zoom, DOOR.x, DOOR.y, DOOR.z, 960, lerp(740, 800, k) + 90 * rise);
 	ext.heroAt(DOOR.x, DOOR.y, DOOR.z, 700);
 	dimWorld(ext, dimK, new Set(), [1, 0.99, 0.98]); extDoor.L.mat.uniforms.uTint.value.setRGB(0.4 + 0.6 * dimK, 0.4 + 0.6 * dimK, 0.4 + 0.6 * dimK);
 	return {st: ext, grade: {vig: 0.38 + 0.1 * rise, exposure: 1}, bloom: 1, hideFurniture: true, hud: endHud(t)};
