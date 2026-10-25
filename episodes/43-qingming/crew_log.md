@@ -20,3 +20,4 @@
 | 2026-10-25 02:55 | gate 4 v3: SHIP. HD v3 delivered as an Actions artifact (md5 ok) | video-reviewer | notes_gate4_v3.md | |
 | 2026-10-25 03:40 | v4 polish from gate 4 v3: lens insert is now three beat cuts (lens → room b60.5 → lens b61 → R2 b61.5; no single-frame pops, no dolly through the restorer); end passage starts framed on the arch (no grey frames); 一百卷 label 2.7 s; send re-encoded ≤ 28 MB. Checked on farm stills | producer | | |
 | 2026-10-25 03:50 | v4 rendered (5529 frames, md5 ok, no boot/draw errors); lens cuts and end passage checked on master frames; HD v4 delivered (run 40152040376, md5 ok); send 27.1 MB. Douyin package waits for the owner's OK | producer | | |
+| 2026-10-25 10:40 | v5: owner picks — C caption tags, 12 highlights, corners at the edges, Juno·VIBE mark removed, one-row corner block, round 朱文 J seal (C1), per-frame adaptive backing (A), no lamplight bands on painting shots; rendered, HD delivered | owner/producer | | |
