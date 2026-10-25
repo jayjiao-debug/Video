@@ -1,0 +1,39 @@
+plan: {'tier': None, 'character_count': None, 'character_limit': None, 'status': None}
+models: ['eleven_v4', 'eleven_v4_turbo', 'eleven_v3', 'eleven_v3_conversational', 'eleven_multilingual_v2', 'eleven_flash_v2_5', 'eleven_turbo_v2_5', 'eleven_turbo_v2', 'eleven_flash_v2', 'eleven_english_sts_v2', 'eleven_multilingual_sts_v2']
+model: eleven_v4
+{"name": "sfx_woodblock_print", "type": "sfx", "text": "one single heavy wooden printing block pressed onto paper on a wooden table: one firm dull thump, then a short soft paper peel, dry, close, no repeats", "model": "eleven_text_to_sound_v2", "status": 200, "sfx": true, "file": "sfx_woodblock_print.mp3", "bytes": 17179}
+{"name": "sfx_guess_tick", "type": "sfx", "text": "one single dry wooden clock tick, very short and close, no reverb, no second tick", "model": "eleven_text_to_sound_v2", "status": 200, "sfx": true, "file": "sfx_guess_tick.mp3", "bytes": 8820}
+{"name": "sfx_seal_paper", "type": "sfx", "text": "one single red seal stamp pressed onto thick paper, one soft low thump, no second hit", "model": "eleven_text_to_sound_v2", "status": 200, "sfx": true, "file": "sfx_seal_paper.mp3", "bytes": 8820}
+Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+[
+ {
+  "name": "sfx_woodblock_print",
+  "type": "sfx",
+  "text": "one single heavy wooden printing block pressed onto paper on a wooden table: one firm dull thump, then a short soft paper peel, dry, close, no repeats",
+  "model": "eleven_text_to_sound_v2",
+  "status": 200,
+  "sfx": true,
+  "file": "sfx_woodblock_print.mp3",
+  "bytes": 17179
+ },
+ {
+  "name": "sfx_guess_tick",
+  "type": "sfx",
+  "text": "one single dry wooden clock tick, very short and close, no reverb, no second tick",
+  "model": "eleven_text_to_sound_v2",
+  "status": 200,
+  "sfx": true,
+  "file": "sfx_guess_tick.mp3",
+  "bytes": 8820
+ },
+ {
+  "name": "sfx_seal_paper",
+  "type": "sfx",
+  "text": "one single red seal stamp pressed onto thick paper, one soft low thump, no second hit",
+  "model": "eleven_text_to_sound_v2",
+  "status": 200,
+  "sfx": true,
+  "file": "sfx_seal_paper.mp3",
+  "bytes": 8820
+ }
+]
