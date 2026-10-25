@@ -122,17 +122,17 @@ const scene9State = (t: number): S9State => {
 	const near = (lx: number): P2 => strip9.screen(lx, S9.py0 + 14, 9), far = (lx: number): P2 => strip9.screen(lx, S9.py0 + 226, 9);
 	const lift = clamp01((t - P2t) / (P3 - P2t)), lk = smooth(clamp01(lift / 0.55));
 	// the painter: behind the table at its right part, facing left; bent over the right roller, then upright holding the roll out
-	const xp = lerp(1110, 1010, smooth(clamp01((t - P1) / (P2t - P1)))) - 10 * lk;
-	const bent = fkPose({hip: 0.645, hipX: -0.05, lean: 34, neck: -4, lt: 8, lk: 6, rt: 4, rk: 5, la: 30, le: 30, ra: 25, re: 25});
-	const lean2 = fkPose({hip: 0.64, hipX: -0.07, lean: 46, neck: -6, lt: 10, lk: 8, rt: 5, rk: 6, la: 34, le: 30, ra: 28, re: 25});
+	const xp = lerp(1065, 1000, smooth(clamp01((t - P1) / (P2t - P1)))) - 10 * lk;
+	const bent = fkPose({hip: 0.63, hipX: -0.1, lean: 52, neck: -4, lt: 8, lk: 6, rt: 4, rk: 5, la: 30, le: 30, ra: 25, re: 25});
+	const lean2 = fkPose({hip: 0.62, hipX: -0.12, lean: 62, neck: -6, lt: 10, lk: 8, rt: 5, rk: 6, la: 34, le: 30, ra: 28, re: 25});
 	const roll0 = smooth(clamp01((t - P1) / (P2t - P1)));
 	let pPose = mixPose(bent, lean2, roll0); if (lift > 0) pPose = mixPose(pPose, handOver(), lk);
 	const painter: FigOpts = {x: xp, ground: T9.floor - 75, h: 560, pose: pPose, look: lkPainter, flip: true};
 	const held = () => heldRoll(t, win);
 	const pc: Contact[] = [];
-	if (lift <= 0) { if (tableOn) { pc.push({side: 'R', target: near(win[1]), name: 'roller near end'}); pc.push({side: 'L', target: far(win[1]), name: 'roller far end'}); } }
+	if (lift <= 0) { if (tableOn) { pc.push({side: 'R', target: strip9.screen(win[1], S9.py0 + 130, 9), name: 'roller middle'}); pc.push({side: 'L', target: far(win[1]), name: 'roller far end'}); } }
 	else { roll = held(); const at = (s: number): P2 => lerpP(roll![0], roll![1], s);
-		pc.push({side: 'R', target: at(0.9), name: 'roll'}); pc.push({side: 'L', target: at(lerp(0.1, 0.62, lk)), name: 'roll'}); }
+		pc.push({side: 'R', target: at(lerp(0.48, 0.9, lk)), name: 'roll'}); pc.push({side: 'L', target: at(lerp(0.1, 0.62, lk)), name: 'roll'}); }
 	figs.push(tableOn ? place(st, painter, ZF9, pc, 'painter09') : onScreen(st, painter, ZF9));
 	// the court official: waits at the table's left end with a slight bow, steps in and takes the roll in both hands
 	const take = clamp01((lift - 0.35) / 0.4), xo = lerp(540, 590, smooth(take));
@@ -247,7 +247,7 @@ const refugees = (t: number, st: Stage): Grp => {
 		const s = onScreen(st, o, ZC);
 		if (kind === 'walk') { out.figs.push(rig(s, [], gS, who)); return; }
 		// the puller: hands on the shaft ends at his hips, the cart behind him
-		const sh = toScreen(s, s.pose.RSh as any), hand: P2 = [sh[0] - 0.09 * s.h, sh[1] + 0.32 * s.h]; const axw = x - 0.92 * o.h; const axS = proj(st, axw, deck(axw) + 4, ZC);   // hands at the hips, well inside arm reach
+		const sh = toScreen(s, s.pose.RSh as any), hand: P2 = [sh[0] - 0.07 * s.h, sh[1] + 0.3 * s.h]; const axw = x - 0.92 * o.h; const axS = proj(st, axw, deck(axw) + 4, ZC);   // hands at the hips, well inside arm reach
 		const cg = cartGeo(axS[0], axS[1], [hand[0] - 2, hand[1] + 2], s.h);
 		const f = rig(s, [{side: 'R', target: [hand[0] - 2, hand[1] + 2], name: 'shaft'}, {side: 'L', target: [hand[0] - 6, hand[1] + 3], name: 'shaft'}], gS, who);
 		out.figs.push(f); out.carts.push({c: cg, load: kind === 'pullYou' ? 'you' : 'bundles', puller: f});
