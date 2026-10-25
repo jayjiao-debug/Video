@@ -1,0 +1,394 @@
+[
+{
+"t": 0.76,
+"sfx": "stamp_char",
+"db": -4
+},
+{
+"t": 1.33,
+"sfx": "stamp_char",
+"db": -4
+},
+{
+"t": 1.89,
+"sfx": "stamp_char",
+"db": -3
+},
+{
+"t": 1.25,
+"sfx": "cowrie_drop",
+"db": -6
+},
+{
+"t": 1.93,
+"sfx": "cowrie_drop",
+"db": -6
+},
+{
+"t": 2.5,
+"sfx": "cowrie_drop",
+"db": -6
+},
+{
+"t": 2.0,
+"sfx": "reveal_shimmer",
+"db": -8
+},
+{
+"t": 3.59,
+"sfx": "pay_chime",
+"db": -6
+},
+{
+"t": 4.4,
+"sfx": "rewind",
+"db": -8
+},
+{
+"t": 4.65,
+"sfx": "paper_flutter",
+"db": -10
+},
+{
+"t": 6.4,
+"sfx": "rewind",
+"db": -12
+},
+{
+"t": 9.25,
+"sfx": "title_hit",
+"db": -2
+},
+{
+"t": 12.25,
+"sfx": "waves_shells",
+"db": -14
+},
+{
+"t": 15.75,
+"sfx": "cowrie_drop",
+"db": -8
+},
+{
+"t": 16.2,
+"sfx": "cowrie_drop",
+"db": -12
+},
+{
+"t": 17.7,
+"sfx": "bronze_pour",
+"db": -10
+},
+{
+"t": 18.31,
+"sfx": "reveal_shimmer",
+"db": -10
+},
+{
+"t": 21.7,
+"sfx": "guess_tick",
+"db": -8
+},
+{
+"t": 27.36,
+"sfx": "spade_soil",
+"db": -4
+},
+{
+"t": 27.36,
+"sfx": "reveal_shimmer",
+"db": -6
+},
+{
+"t": 30.0,
+"sfx": "bronze_pour",
+"db": -8
+},
+{
+"t": 31.89,
+"sfx": "reveal_shimmer",
+"db": -8
+},
+{
+"t": 32.85,
+"sfx": "seal_paper",
+"db": -10
+},
+{
+"t": 34.16,
+"sfx": "silk_swish",
+"db": -12
+},
+{
+"t": 35.55,
+"sfx": "coins_hand",
+"db": -10
+},
+{
+"t": 36.98,
+"sfx": "silk_swish",
+"db": -12
+},
+{
+"t": 37.6,
+"sfx": "coins_hand",
+"db": -10
+},
+{
+"t": 38.45,
+"sfx": "cowrie_drop",
+"db": -12
+},
+{
+"t": 39.9,
+"sfx": "coins_hand",
+"db": -10
+},
+{
+"t": 40.7,
+"sfx": "balance_settle",
+"db": -6
+},
+{
+"t": 42.08,
+"sfx": "silk_swish",
+"db": -12
+},
+{
+"t": 42.95,
+"sfx": "balance_settle",
+"db": -8
+},
+{
+"t": 47.74,
+"sfx": "silk_swish",
+"db": -12
+},
+{
+"t": 49.5,
+"sfx": "coins_hand",
+"db": -8
+},
+{
+"t": 52.45,
+"sfx": "coins_hand",
+"db": -10
+},
+{
+"t": 52.6,
+"sfx": "balance_settle",
+"db": -8
+},
+{
+"t": 54.5,
+"sfx": "silk_swish",
+"db": -12
+},
+{
+"t": 54.75,
+"sfx": "iron_drag",
+"db": -6
+},
+{
+"t": 57.36,
+"sfx": "iron_drag",
+"db": -2,
+"len": 1.2
+},
+{
+"t": 60.45,
+"sfx": "iron_drag",
+"db": -8
+},
+{
+"t": 62.25,
+"sfx": "coins_hand",
+"db": -6
+},
+{
+"t": 64.95,
+"sfx": "coins_hand",
+"db": -10
+},
+{
+"t": 65.44,
+"sfx": "coins_hand",
+"db": -12
+},
+{
+"t": 65.93,
+"sfx": "coins_hand",
+"db": -12
+},
+{
+"t": 66.43,
+"sfx": "balance_settle",
+"db": -6
+},
+{
+"t": 67.5,
+"sfx": "paper_flutter",
+"db": -4
+},
+{
+"t": 70.85,
+"sfx": "iron_drag",
+"db": -4,
+"len": 1.0
+},
+{
+"t": 70.95,
+"sfx": "reveal_shimmer",
+"db": -10
+},
+{
+"t": 72.0,
+"sfx": "reveal_shimmer",
+"db": -14
+},
+{
+"t": 74.35,
+"sfx": "crowd_dispute",
+"db": -10
+},
+{
+"t": 74.91,
+"sfx": "paper_flutter",
+"db": -10
+},
+{
+"t": 77.18,
+"sfx": "seal_paper",
+"db": -4
+},
+{
+"t": 77.75,
+"sfx": "pay_chime",
+"db": -14
+},
+{
+"t": 79.44,
+"sfx": "reveal_shimmer",
+"db": -6
+},
+{
+"t": 81.7,
+"sfx": "woodblock_print",
+"db": -6
+},
+{
+"t": 82.84,
+"sfx": "woodblock_print",
+"db": -8
+},
+{
+"t": 83.97,
+"sfx": "seal_paper",
+"db": -4
+},
+{
+"t": 84.3,
+"sfx": "silk_swish",
+"db": -10
+},
+{
+"t": 85.0,
+"sfx": "paper_flutter",
+"db": -8
+},
+{
+"t": 86.8,
+"sfx": "balance_settle",
+"db": -8
+},
+{
+"t": 89.35,
+"sfx": "woodblock_print",
+"db": -10
+},
+{
+"t": 91.33,
+"sfx": "paper_crumble",
+"db": -8
+},
+{
+"t": 93.03,
+"sfx": "balance_settle",
+"db": -6
+},
+{
+"t": 96.45,
+"sfx": "paper_crumble",
+"db": -2
+},
+{
+"t": 98.35,
+"sfx": "reveal_shimmer",
+"db": -10
+},
+{
+"t": 99.15,
+"sfx": "silver_clink",
+"db": -8
+},
+{
+"t": 101.84,
+"sfx": "silver_clink",
+"db": -4
+},
+{
+"t": 102.97,
+"sfx": "balance_settle",
+"db": -8
+},
+{
+"t": 103.5,
+"sfx": "reveal_shimmer",
+"db": -12
+},
+{
+"t": 105.2,
+"sfx": "silk_swish",
+"db": -10
+},
+{
+"t": 107.0,
+"sfx": "night_stall",
+"db": -6
+},
+{
+"t": 108.07,
+"sfx": "pay_chime",
+"db": -2
+},
+{
+"t": 111.85,
+"sfx": "cowrie_drop",
+"db": -12
+},
+{
+"t": 112.35,
+"sfx": "coins_hand",
+"db": -12
+},
+{
+"t": 112.85,
+"sfx": "paper_flutter",
+"db": -12
+},
+{
+"t": 115.2,
+"sfx": "paper_flutter",
+"db": -10
+},
+{
+"t": 116.56,
+"sfx": "trust_swell",
+"db": -6
+},
+{
+"t": 121.085,
+"sfx": "seal_paper",
+"db": -2
+}
+]
