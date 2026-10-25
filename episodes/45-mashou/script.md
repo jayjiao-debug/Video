@@ -1,3 +1,83 @@
+# Script v8.1 (the 2023 reunion, 2026-10-25 late night)
+
+Screenwriter. The owner accepted the producer's recommendation in principle: **add the 2023 reunion beat** (F24 ✓: 2023-10-18 → 10-29 the ox, tiger, monkey and pig came to 圆明园 and were shown with the horse for 12 days, then went back to 保利). v8.1 is v8 plus two lines after the payoff. Files:
+- `lines_v81.json` and `lines_v81s.json`: 39 × `[start, end, text]`, identical. `lines_v81s.json` is the timing source.
+- `plan45v81s.py`: a copy of `plan45v8s.py`. It reads the texts from `lines_v81.json` and writes both files. Lines 1–29 come out byte-identical to v8.
+
+**Runtime: 2:14.8 (134.798 s, 4044 frames @ 30), +6.8 s on v8.** Q ends at 130.298. The end card runs 130.298 → 134.798 (4.5 s). The seal lands on bar 57 (130.506, +0.208 s into the card, the same offset as v8). The music fades 132.77 → 134.798.
+
+**How it fits:** the two new lines take exactly **24 half-beats = 3 bars = 6.792 s** (V1 14 字 → 14 half-beats, V2 9 字 → 10). So R4 → Q all move by whole bars, and every picture hit inside them keeps its place in the bar. Q moves from bar 52 to bar 55 and the seal from bar 54 to bar 57.
+
+**plan45v81s.py:** no anchor conflicts, and every line gets at least 0.5 + 0.23 s/字.
+
+**pace.py** (`--film-end 134.798`): 0 too fast, **9 % waiting** (v8: 8 %; target ≤ 12 %). There is one new flag: V1 holds 1.3 s after it is read. pace.py counts 「2023」 as one character, while our plan counts four. The hold is the picture beat of the four cases settling beside the horse. The other flags are v8's: the title gap and the MINOR holds on picture beats.
+
+**Highlights:** 14 / 39 (36 %; [12天] is new). **Longest line:** 16 字 (P2, unchanged). **Hard anchors** 42.205 / 60.32 / 76.165 / 87.17 and **soft anchors** 26.356 / 35.412 are unchanged. The Q anchor is now bar 55 (125.978).
+
+## Notes → what changed
+| Note | What changed |
+|---|---|
+| **1. Add the 2023 reunion beat after the payoff reveal, 2 lines (max 3), emotional and plain, ✓ facts only** | **V1 「2023年，四个兄弟回来看过它，」 97.676–101.638** and **V2 「只待了[12天]，又走了。」 101.638–104.469**, right after C2 「可住回圆明园的，[只有它]。」 and before R4 「细看，它是红铜一次铸成的。」.<br>**Why there:** C2 leaves the horse alone in copper. V1/V2 bring four of the six back, then take them away again, so 「只有它」 is felt, not just counted. Then R4's 细看 starts the close-up in the same room.<br>**Wording:** 兄弟 is already set up by P1 「兄弟鼠和兔」. 看过 + 2023 make it a visit, not a move. 只 + 又走了 carry the feeling with no adjective.<br>**Left out on purpose:** F24's 「时隔163年」. R2 has just said 「它离开了[160年]」, and two near numbers 13 s apart would read as a contradiction. |
+| **2. Runtime ≤ about 2:15; end card ≤ 4.5 s; the seal on a bar** | 2:14.8. The card is 4.5 s and the seal is on bar 57. |
+| **3. Keep the hard and soft anchors; shift only the lines after the insertion; ≤ 16 字; reading minimum; brackets about ⅓** | Lines 1–29 are unchanged to the millisecond. Lines 32–39 are shifted by +6.792 s (3 bars). V1 is 14 字 and V2 is 9 字; both are at their minimum or above (slack +0.24 / +0.26). Brackets are on 14/39 lines. |
+| **4. pace.py** | 9 % waiting; see above. |
+| v8 don't-change list | Everything in v8 is kept word for word, including the hook, the title, the two loops, C1/C2, the ear, the noon callback, 「没回中国」, the 疑似龙首 / 说不清 pair and Q. |
+
+## The new beat in the story
+- **Loop 1 still closes at C1/C2.** V1/V2 come after the answer, as the emotional echo of 「只有它」: the brothers can visit, but only the horse lives there.
+- **Counter during V1/V2:** the 「回园 1/12」 row must **not** tick to 5, because this was a visit and not a return (F24). It hides on V1. A small day counter takes its place, then the counter stays hidden through R4–R6 as in v8.
+
+## Script v8.1 (lines 01–27 and the title are unchanged from v8; their rows are in the v8 table below)
+| # | id | start–end (s) | line (subtitle) | 字 | min s | what we see | music | facts |
+|---|---|---|---|---|---|---|---|---|
+| 01–27 | H1 … R2 | 0.000–92.016 | *(unchanged, see v8)* | | | *(unchanged)* | title 9.05–11.638; anchors 26.356 / 35.412 / 42.205 / 60.32 / 76.165 / 87.17 | |
+| 28 | C1 | 92.016–94.846 | 十二兽首，[七个]回了中国。 | 10 | 2.80 | *(unchanged from v8)* The RING. Seven heads light, one per half-beat; the counter goes 回国 1 → 7; the five turn into dashed outlines. | bar 40 (92.016) | F23, F17, F18, F20, F27 |
+| 29 | C2 | 94.846–97.676 | 可住回圆明园的，[只有它]。 | 10 | 2.80 | *(as v8)* The six fly into the two glass cases at the frame edge: 「保利艺术博物馆 ×4」 and 「国家博物馆 ×2」. The horse stays alone in copper, and 「回园 1/12」 punches. **One change at the end:** the cases do not slide out here. The 保利 ×4 case stays parked at the right edge for V1. | b165 (94.846) | F21, F27, F17, F18, F20 |
+| **30** | **V1** | **97.676–101.638** | **2023年，四个兄弟回来看过它，** | 14 | 3.72 | **NEW. The reunion.** The RING dims away and we are in **a 正觉寺 hall** (the CASE set: the horse on its black marble block, the paper lattice behind it, no 文殊亭 label). **Four glass cases glide in from the right, one per beat from bar 43 (98.808)**, and settle two on each side of the horse: **牛, 虎, 猴, 猪** in bronze, with small labels ≥ 40 px. Their glass catches the horse's copper glow, so for once five heads are lit in one room. Stamp 「2023.10 · 圆明园正觉寺」 / 「牛 虎 猴 猪 · 来自保利艺术博物馆」. The counter hides. A small day tag 「第 1 天」 appears under the row. | cases land on bar 43 → 44 | F24, F17, F18 |
+| **31** | **V2** | **101.638–104.469** | **只待了[12天]，又走了。** | 9 | 2.57 | **NEW. They leave.** The day tag runs 1 → 12 fast and stops on 「第 12 天」 (≥ 96 px numerals, 「12天」 in copper like the bracket). On 「又走了」, **bar 45 (103.336)**, the four cases glide out to the right the way they came, one per half-beat, their reflections sliding off the lattice. **The horse is left alone on its block, still glowing.** Stamp line 2 → 「2023.10.18 – 10.29 · 回到保利」. | bar 45 (103.336) | F24 |
+| 32 | R4 | 104.469–107.582 | 细看，它是红铜一次铸成的。 | 11 | 3.03 | We are already in CASE, so we skip v8's "the cases slide out → CASE". **Push straight into the horse.** One highlight runs over the whole surface without a seam. *Suggestion: let the highlight start on the phrase at 105.60 (bar 46), which now falls inside this line.* Counter hidden (macro). | phrase 105.60 (bar 46) | F5 |
+| 33 | R5 | 107.582–110.412 | 只有一只耳朵，是卷的。 | 9 | 2.57 | *(v8, +3 bars)* Push onto the curled near ear, with the straight far ear beside it; a warm key band sweeps the fold. | — | F6 |
+| 34 | R6 | 110.412–113.808 | 研究的人说：它这一路被撞过。 | 12 | 3.26 | *(v8, +3 bars)* Macro on the fold. **The light trembles once on bar 49 (112.393)**, which was v8's 105.60 + 3 bars. Stamp line 2 「研究者观察」. | bar 49 (112.393) | F6 |
+| 35 | K1 | 113.808–117.488 | 正午12点，它们本该一起喷水。 | 13 | 3.49 | *(v8, +3 bars)* Pull back: the noon fountain appears as a shadow-play on the lattice, and **the twelve shadow arcs fire on bar 50 (114.657)**, which was bar 47. Counter back: both rows. Stamp 「12:00 · 正午」. | bar 50 (114.657) | F3 |
+| 36 | K3 | 117.488–120.318 | 还有五个，至今[没回中国]。 | 10 | 2.80 | *(v8)* The arcs go out; six get tags 「保利 ×4 · 国博 ×2」; the five turn dashed. | — | F23, F27 |
+| 37 | K4 | 120.318–123.714 | 法国还拍出过一个疑似龙首， | 12 | 3.26 | *(v8)* The dragon outline flickers; the shadow-saleroom; its gavel strikes on a beat. Stamp 「2018.12.17 · 法国」. | strike on a beat | F26 |
+| 38 | K5 | 123.714–125.978 | 真假，说不清。 | 5 | 1.65 | *(v8)* The outline holds half-drawn with a 「?」. | — | F26 |
+| 39 | Q | 125.978–130.298 | 五个要是上拍，该不该[花钱买回来]？ | 14 | 3.72 | *(v8)* The seat shadows morph into the dial: 7 solid, 5 dashed. **At 130.298 Q slides into the end card.** | **bar 55 (125.978)** | F12, F19, F26 |
+| — | END | 130.298–134.798 | *(card)* | — | — | *(v8 card, re-timed by +6.792 s)*<br>- 130.298: the last shot dims, and Q slides into its slot.<br>- **130.506 (bar 57): the J seal is pressed in.**<br>- 130.59: title 「七个回国 / 一个回家」.<br>- 130.89: the pill 「关注 Juno · 一起看懂世界」.<br>- 130.99: sources.<br>- **Music fade 132.77 → 134.798.** 132.77 is the outro's downbeat, so the outro's first hit sounds and dies away with the card. If that hit sounds wrong under the card, start the fade one beat earlier (132.20). The film still ends at 134.798. | bar 57 seal; outro 132.77 | — |
+
+**For the producer and the art director (what changes in the build):**
+- **Payoff proof (≈ 91.5–98.5 s):** unchanged, except that the 保利 ×4 case stays parked at the right edge after C2 and the 国博 ×2 case slides out alone.
+- **New shot, REUNION (97.676–104.469), in the CASE set:**
+  - four glass cases with 牛 虎 猴 猪 (reuse the C1/C2 head art at case scale);
+  - in on bar 43, out on bar 45;
+  - the day tag 1 → 12;
+  - the stamps above;
+  - no people.
+- **R4 → Q and the end card:** every v8 time + 6.792 s (exactly 3 bars). The storyboard_v7 in-line hits (b168 highlight, the R6 knock, the K1 arcs, the K4 gavel, the K5 hold, the Q dial morph, the seal) keep their beat-in-bar.
+- **Film length:** `FILM45` composition → 4044 frames @ 30. Wherever the music fade and the film end are set (the BGM render; the `mix45vo.py` FREE / FADE / END if that is reused), they become card `130.298 →`, fade `132.77 → 134.798`, end `134.798`.
+- **Stills to make:** V1 (five heads in one room) and V2 (第12天, cases leaving). Send them to the owner before any re-render.
+
+## Title options (≤ 10 字; unchanged from v8)
+1. **兽首，到底回来了几个？** (9 字; recommended for the 9.05 overlay)
+   - It escalates H1's 你猜.
+   - It fits the 2.59 s window.
+   - It asks, so it can't overclaim.
+2. **圆明园兽首，回来了几个？** (10 字; recommended for the Douyin cover and caption)
+   - It is the search phrase itself.
+   - It is too long for the 2.59 s overlay.
+3. **十二兽首，几个回家了？** (9 字)
+   - It plants 回家, so C2 clicks as the second meaning.
+   - Risk: at 9 s it can read as a typo of the hook question.
+
+The end card keeps **七个回国 / 一个回家**.
+
+## Story in 3 lines
+1. 圆明园十二兽首，你猜回来了几个？有人花6910万港元买下其中一个，却把它捐了——答案留到最后。
+2. 1860年十二个全被带走；马首1989年在伦敦卖了三四十万美元，2007年何鸿燊私下花6910万港元买下，后来捐给国家，自己没等到它回家。
+3. 2020年它回到圆明园：七个回了中国，住回园里的只有它；2023年四个兄弟回来陪了它12天又走了，还有五个没回中国——要是上拍，该不该花钱买回来？
+
+---
+
 # Script v8 (the question stays open, 2026-10-25 night)
 
 Screenwriter. The owner watched the animated hook and asked: **「感觉没有悬念了，答案已经告诉观众了？」** He's right. In v7 the answer (7 回国, 1 回园) is given by 7 s, and the title 「七个回国，一个回家」 repeats it at 9.05, so nothing pulls the viewer forward. In v8 the count is held back until after the drop. Files:
