@@ -36086,7 +36086,7 @@ var drawR = (t) => {
   glowR.set((i) => i >= 65 && i <= 69 ? clamp01((t - b10(63) - (i - 65) * 0.07) / 0.12) : 0);
   const fk = `${Math.round(t * 60)}`;
   const poly3 = [strip2.screen(TB2.x0 - S.x0, 0, -2), strip2.screen(TB2.x1 - S.x0, 0, -2), strip2.screen(TB2.x1 - S.x0, S.depth, -2), strip2.screen(TB2.x0 - S.x0, S.depth, -2)];
-  const vis = c.z < 40, R = restorers(t, c.z < 4 && c.th > 1.25);
+  const vis = c.z < 40, R = restorers(t, c.z < 4 && c.th > 1.25), sit = R.figs[0], standF = R.figs[1];
   body.draw(fk, (g) => {
     if (!vis) return;
     g.save();
