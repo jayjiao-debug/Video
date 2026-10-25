@@ -28,6 +28,7 @@ export const renderFilm = (t: number, hud: HTMLElement) => {
 		composite(x, fc.grade ?? {}, t, fp.bloom ?? 1, fc.bloom ?? 1, fp.grade ?? {});   // each side keeps its own scene's grade
 	} else if (fc.under) { renderStage(fc.under, 0, 1); renderStage(fc.st, 1, fc.bloom ?? 1); composite({mode: 13, k: 1, blurA: fc.blurUnder ?? 0}, fc.grade ?? {}, t, 1, fc.bloom ?? 1); }
 	else { renderStage(fc.st, 0, fc.bloom ?? 1); composite({mode: 0, k: 0}, fc.grade ?? {}, t, fc.bloom ?? 1); }
+	if ((window as any).NOHUD) return;                 // clean art (covers)
 	if (!fc.hideSubs) subtitles(hud, LINES, t);
 	drawFurniture(hud, t, {hideAll: fc.hideFurniture});
 	fc.hud?.(hud);
