@@ -15,12 +15,13 @@ SEG = 500
 NAME = '七个回国一个回家_v1'
 segs = [(a, min(NF, a + SEG)) for a in range(0, NF, SEG)]
 start = int(sys.argv[sys.argv.index('--from') + 1]) if '--from' in sys.argv else 0
+only = set(map(int, sys.argv[sys.argv.index('--segs') + 1].split(','))) if '--segs' in sys.argv else None
 VENC = ['-c:v', 'libx264', '-crf', '16', '-preset', 'medium', '-vf', 'scale=out_color_matrix=bt709:out_range=tv,format=yuv420p',
         '-color_range', 'tv', '-colorspace', 'bt709', '-color_primaries', 'bt709', '-color_trc', 'bt709', '-r', str(FPS)]
 if '--only-finish' not in sys.argv:
     subprocess.run(['python3', str(HERE / 'build_proof.py'), '/dev/shm/p45/proof.html'], check=True)
     for k, (a, b) in enumerate(segs):
-        if k < start: continue
+        if k < start or (only is not None and k not in only): continue
         fr = SHM / f'seg{k:02d}'
         subprocess.run(['node', str(HERE / 'render.mjs'), '/dev/shm/p45/proof.html', 'film', str(a / FPS), str(b / FPS), str(fr), '2'], check=True)
         shutil.copy(fr / 'meta.json', SHM / f'meta{k:02d}.json')

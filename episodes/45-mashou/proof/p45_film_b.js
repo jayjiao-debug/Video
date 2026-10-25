@@ -53,10 +53,10 @@ const deskWorld = (t, o) => {
 };
 const D7 = 48.148, SIGN = [B(84), 50.5], CARD = 51.544, MORPH = [53.525, 54.10], SHORT = B(93.5), BRACK = B(94.5);
 const pen = (t) => { if (t >= SIGN[0] && t < SIGN[1]) { const w = t - SIGN[0]; return [1588 + 14 * Math.sin(w * 11) + 6 * Math.sin(w * 23), 594 + 2.5 * Math.cos(w * 17)]; }
-	const r = P.smooth(P.seg(t, CARD + 0.1, CARD + 0.5)); return [P.lerp(1590, 1606, r), P.lerp(596, 599, r)]; };
+	const r = P.smooth(P.seg(t, CARD + 0.1, CARD + 0.5)), w = t - SIGN[1]; return [P.lerp(1590 + 6 * Math.sin(w * 2.1), 1606, r), P.lerp(596 - 3 * Math.abs(Math.sin(w * 1.3)), 599, r)]; };
 const IRIS = [47.87, 48.45];
 const camDesk = (() => { const s = F.spot2007(IRIS[0]); return P.cam([1236 - (s[0] - 960) / 1.25, 450 - (s[1] - 540) / 1.25, 1.25], [
-	{t0: 48.40, t1: 50.60, to: [960, 540, 1.0]}, {t0: 51.5, t1: 53.5, to: [1050, 520, 1.08]}, {t0: 53.85, t1: 55.6, to: [1340, 0, 0.95]}, {t0: 55.7, t1: 56.95, to: [1430, -260, 1.2]}]); })();
+	{t0: 48.40, t1: 50.60, to: [960, 540, 1.0]}, {t0: 50.60, t1: 51.5, to: [985, 535, 1.02], ease: 'linear'}, {t0: 51.5, t1: 53.5, to: [1050, 520, 1.08]}, {t0: 53.85, t1: 55.6, to: [1340, 0, 0.95]}, {t0: 55.7, t1: 56.95, to: [1430, -260, 1.2]}]); })();
 const cardSvg = (t) => {
 	if (t < CARD) return '';
 	const k = P.easeOut3(P.seg(t, CARD, CARD + 0.3)), dy = (1 - k) * 230 + P.jolt(t, CARD + 0.3, 6, 0.3, 1.5), m = P.smooth(P.seg(t, ...MORPH));
@@ -94,7 +94,7 @@ F.deskRender = (t) => {
 F.camDesk = camDesk;
 // ------------------------------------------------------------------------------------------------ PARIS + PRESS
 const P1 = 56.921, STR1 = 60.32, STR2 = B(105), PLAC = B(106), BID = B(101), HANG = B(107), CYC = B(109), WIPE = [56.70, 57.20], HELD = [64.28, 64.86], P3 = 64.563, STAMP = B(113), HAND = B(112);
-const camPar = P.cam([960, 260, 1.0], [{t0: 56.90, t1: 58.60, to: [700, 560, 1.2]}, {t0: 59.40, t1: 60.90, to: [960, 540, 1.0]}, {t0: 63.15, t1: 64.40, to: [430, 540, 1.0]}, {t0: 64.40, t1: 64.9, to: [415, 540, 1.0], ease: 'out'}]);
+const camPar = P.cam([960, 260, 1.0], [{t0: 56.90, t1: 58.60, to: [700, 560, 1.2]}, {t0: 58.60, t1: 59.40, to: [712, 556, 1.21], ease: 'linear'}, {t0: 59.40, t1: 60.90, to: [960, 540, 1.0]}, {t0: 60.90, t1: 63.15, to: [930, 540, 1.03], ease: 'linear'}, {t0: 63.15, t1: 64.40, to: [430, 540, 1.0]}, {t0: 64.40, t1: 64.9, to: [415, 540, 1.0], ease: 'out'}]);
 const parisWorld = (t) => {
 	const night = (() => { if (t < CYC || t > CYC + 1.25) return 1; const ph = ((t - CYC) / 0.25) % 1; return ph < 0.5 ? 0.15 + 1.7 * Math.abs(ph - 0.25) * 2 * 0.5 : 1; })();
 	const win = (x) => `<path d="M${x},700 L${x},300 C${x},230 ${x + 160},230 ${x + 160},300 L${x + 160},700 Z" fill="url(#pwin)"/>

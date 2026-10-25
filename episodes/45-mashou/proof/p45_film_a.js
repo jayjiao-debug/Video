@@ -18,7 +18,8 @@ const AFACE = N.nFace;
 const C_B2 = [AFACE[0] + 230, AFACE[1] + 150, 1.3];
 const camPool = P.cam([960, 540, 1.0], [
 	{t0: 15.3, t1: 18.4, to: [960, 560, 1.06]},
-	{t0: 19.8, t1: 22.3, to: C_B2},
+	{t0: 18.4, t1: 19.3, to: [945, 566, 1.075], ease: 'linear'},   // no hold: a slow drift until the push
+	{t0: 19.3, t1: 22.3, to: C_B2},
 	{t0: 22.3, t1: 26.3, to: [C_B2[0] + 90, C_B2[1], C_B2[2] * 1.03]},
 	{t0: TILT[0], t1: TILT[1], to: [C_B2[0] + 90, C_B2[1] - 300, C_B2[2] * 1.03]},
 ]);
@@ -110,7 +111,7 @@ const duskWorld = (t, o = {}) => {
 		${statues}${emb}</g>`;
 };
 F.poolSmoke = (t) => {   // screen-space smoke rolling in from the right; densest round (864, 324) for the ink-bleed
-	const a = P.smooth(P.seg(t, SMOKE0, 26.3));
+	const a = 0.82 * P.smooth(P.seg(t, SMOKE0, 26.3));   // the fire's glow still reads through the smoke
 	if (a <= 0) return '';
 	return `<g opacity="${a.toFixed(3)}">${P.LONDON.smoke(t + 3.5)}</g>`;
 };
