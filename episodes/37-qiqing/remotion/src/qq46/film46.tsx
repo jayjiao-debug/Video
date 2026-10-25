@@ -173,7 +173,7 @@ const Maoling: React.FC<{t: number; o: number; glow: number}> = ({t, o, glow}) =
 		{/* 你, huge and translucent in the sky behind the mound, on the drop */}
 		
 		<path d="M-200,700 L300,640 L700,670 L1200,630 L1700,660 L2200,640 L2200,760 L-200,760 Z" fill="#A9A08E" opacity={0.7} />
-		{big > 0 && <g opacity={0.5 * big}><HanBai x={900} g={600} s={0.82} age={1} west={1} glow={1.5} t={t} id="ghostTree" /></g>}
+		{big > 0 && <g opacity={0.55 * big}><HanBai x={910} g={560} s={0.6} age={1} west={1} glow={1.5} t={t} id="ghostTree" /></g>}
 		<Mound46 x={960} g={760} s={1.2} rim={glow * 0.8} />
 		{/* 相传: the man said to have planted you, a dashed ghost on the mound */}
 		{t >= 114.91 && t < 118.3 && <g opacity={0.55 * ease(seg(t, 114.91, 115.6)) * (1 - ease(seg(t, 117.5, 118.2)))}>
@@ -346,11 +346,11 @@ export const Film46: React.FC<{t: number}> = ({t}) => {
 				<path d="M1520,900 L1680,900 L1664,950 L1536,950 Z" fill="#B48A52" /><path d="M1520,900 L1680,900" stroke="#8A6438" strokeWidth={6} />
 				{Array.from({length: 7}, (_, i) => <line key={i} x1={1532 + i * 22} y1={904} x2={1540 + i * 21} y2={948} stroke="#8A6438" strokeWidth={2} />)}
 			</g>}]}>
-			{Array.from({length: 9}, (_, i) => { const t0 = 105.4 + i * 0.25, k = clamp((t - t0) / 1.0), x0 = 1330 + rnd(i, 81) * 200, y0 = 260 + rnd(i, 82) * 140, x1 = 1550 + i * 15, y1 = 902;
-				if (t < t0) return null; const kk = still ? Math.min(k, 1) : k; return <g key={i}><ellipse cx={lerp(x0, x1, kk)} cy={lerp(y0, y1, easeIn(kk))} rx={4.5} ry={6} fill="#7A6A4A" stroke="#4E4232" strokeWidth={1.5} /></g>; })}
-			{still > 0 && <Glow x={1600} y={900} r={160} c={C.glow} o={0.5 * (1 - seg(t, 108.8, 109.25)) + 0.2} id="seedg" />}
+			{Array.from({length: 14}, (_, i) => { const t0 = 105.4 + i * 0.28, k = clamp((t - t0) / 1.0), x0 = 1330 + rnd(i, 81) * 200, y0 = 260 + rnd(i, 82) * 140, x1 = 1550 + i * 15, y1 = 902;
+				if (t < t0) return null; const kk = k; return <g key={i}><ellipse cx={lerp(x0, x1, kk)} cy={lerp(y0, y1, easeIn(kk))} rx={4.5} ry={6} fill="#7A6A4A" stroke="#4E4232" strokeWidth={1.5} /></g>; })}
+			{t >= 106.8 && <Glow x={1600} y={900} r={lerp(60, 220, ease(seg(t, 106.8, 109.25)))} c={C.glow} o={lerp(0.2, 0.75, ease(seg(t, 106.8, 109.25)))} id="seedg" />}
 		</World>);
-		cam = mixCam(CAM0, {cx: 1460, cy: 700, z: 1.45}, ease(seg(t, 105.6, 107.4)));
+		cam = mixCam(CAM0, {cx: 1500, cy: 760, z: 1.7}, ease(seg(t, 105.6, 109.25)));
 	}
 	/* ===== I. 2024: six lights leave the tree, cross the plain, land before 茂陵 and grow; the drop 118.307 ===== */
 	else if (t < 123.97) {
@@ -365,7 +365,7 @@ export const Film46: React.FC<{t: number}> = ({t}) => {
 		if (t >= 110.6 && t < 115.3) layers.push(<Journey key="J" t={t} o={ease(seg(t, 110.6, 110.95))} />);
 		if (t >= 114.6) layers.push(<Maoling key="M" t={t} o={ease(seg(t, 114.6, 115.3)) * (1 - ease(seg(t, 123.2, 123.97)))} glow={t < 117.17 ? 0.25 : t < 118.307 ? 0.12 : lerp(0.3, 1, easeOut(seg(t, 118.307, 119.0)))} />);
 		if (t >= 117.17 && t < 118.307) scrim = 0.22 * ease(seg(t, 117.17, 117.9));
-		if (t >= 114.6) cam = mixCam(CAM0, {cx: 960, cy: 640, z: 1.1}, ease(seg(t, 115.5, 118.3)) * (1 - 0.6 * ease(seg(t, 118.307, 121.5))));
+		if (t >= 114.6) cam = mixCam(CAM0, {cx: 960, cy: 640, z: 1.1}, ease(seg(t, 115.5, 118.3)) * (1 - ease(seg(t, 118.307, 119.2))));
 		if (t >= 123.2) layers.push(<g key="K0" opacity={ease(seg(t, 123.2, 123.97))}><World t={t} c={{idp: 'K0', sky: SKY.day, wall: 1, hall: 1, steles: 1, qlStele: 1, age: 1, west: 1, glow: 1.4, sap: 0.4}} /></g>);
 	}
 	/* ===== J. today, night, dawn, end 123.97 – 156.44 ===== */
