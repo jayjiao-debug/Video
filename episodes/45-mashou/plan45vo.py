@@ -11,8 +11,9 @@ snap = lambda t: beatT(math.ceil((t - BAR0) / BEAT - 1e-6))
 snaph = lambda t: BAR0 + BEAT / 2 * math.ceil((t - BAR0) / (BEAT / 2) - 1e-6)   # half-beat grid, used only where a block is too tight for whole beats
 TITLE = (9.05, 11.32)
 REWIND = (None, 1.13)
-ANCH = {'D9b': bar(40), 'E2a': bar(47) - BAR / 2, 'H1b': 118.87}
+ANCH = {'D9b': bar(40), 'E2a': 107.865, 'H1b': 118.87}   # hard anchors: build, the stop (lamp out), the hardest drop
 LEAD = 0.06      # the voice starts just after the subtitle appears
+HOLD = 0.7       # how long a line may stay up after its voice ends when the reading minimum asks for more
 GAP = 0.30       # breath after the clip before the next line may start
 s = open('script.md').read().split('# Script v4')[0]
 rows = []
@@ -27,7 +28,8 @@ assert len(rows) == len(texts) == len(durs)
 TIGHT = set(json.load(open('vo/tight.json'))) if __import__('os').path.exists('vo/tight.json') else set()
 out, t, bad = [], 0.0, []
 for i, ((lid, dmin), text) in enumerate(zip(rows, texts)):
-    d = max(dmin, LEAD + durs[f'{i + 1:02d}'] + GAP)
+    v = durs[f'{i + 1:02d}']
+    d = max(LEAD + v + GAP, min(dmin, LEAD + v + HOLD))   # with the voice, the reading minimum is capped at the clip + HOLD
     if lid == 'T1': t = max(t, TITLE[1])
     if lid == 'A1': t = snap(t + REWIND[1])
     a = ANCH.get(lid)
