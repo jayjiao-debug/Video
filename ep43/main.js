@@ -25133,6 +25133,13 @@ var composite = (x, g = {}, t = 0, bloomA = 1, bloomB = 1, gA) => {
   u.avigCol.value.set(a2.vigCol ?? "#120c08");
   u.alift.value = a2.lift ?? 0;
   u.atint.value.set(a2.tint ?? "#ffffff");
+  if (window.CLEANGRADE) {
+    for (const [e, p, v] of [[u.exposure, u.pool, u.vig], [u.aexposure, u.apool, u.avig]]) {
+      e.value = 1;
+      p.value.w = 0;
+      v.value = 0.12;
+    }
+  }
   if (post) {
   }
   u.grain.value = g.grain ?? 0;
@@ -25574,6 +25581,7 @@ var renderFilm = (t, hud2) => {
     renderStage(fc.st, 0, fc.bloom ?? 1);
     composite({ mode: 0, k: 0 }, fc.grade ?? {}, t, fc.bloom ?? 1);
   }
+  if (window.NOHUD) return;
   if (!fc.hideSubs) subtitles(hud2, LINES, t);
   drawFurniture(hud2, t, { hideAll: fc.hideFurniture });
   fc.hud?.(hud2);
