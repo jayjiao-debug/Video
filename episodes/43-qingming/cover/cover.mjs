@@ -43,6 +43,7 @@ html,body{margin:0;width:${W}px;height:${H}px;overflow:hidden;background:${c.sky
 const P = {
 	P: {art: 'a127.60.png', silk: '239,227,200', cx: 960, cy: 470, tcx: 700},     // colour (the peak's colour flood)
 	Q: {art: 'a3.00.png', silk: '242,232,208', cx: 960, cy: 560, tcx: 820, ts: 1.45, ttop: 0},   // the tall crop hides the blue mount strip at the frame's foot       // ink on silk (the opening)
+	S: {art: 'a129.40.png', silk: '239,227,200', cx: 980, cy: 560, tcx: 1000, ts: 1.03, ttop: 330},   // colour, pulled back (the whole bridge); on 3:4 the title sits on plain silk above the art
 	R: {art: 'a127.60.png', silk: '239,227,200', cx: 900, cy: 470, tcx: 760, strip: true},
 };
 const paint = (k, lay) => {
@@ -66,7 +67,7 @@ const paint = (k, lay) => {
 ${title}<div class="brand">${seal(34)}VIBE知识大赏</div></body></html>`;
 };
 const b = await chromium.launch();
-const ONLY = (process.env.ONLY || 'A,B,P,Q,R').split(',');
+const ONLY = (process.env.ONLY || 'A,B,P,Q,R,S').split(',');
 for (const k of ONLY) for (const lay of ['tall', 'wide']) {
 	const W = lay === 'tall' ? 1080 : 1440, H = lay === 'tall' ? 1440 : 1080;
 	const p = await b.newPage({viewport: {width: W, height: H}, deviceScaleFactor: +(process.env.DSF || 1)}); await p.setContent(P[k] ? paint(k, lay) : page(k, lay)); await p.evaluate(() => document.fonts.ready); await p.waitForTimeout(300);

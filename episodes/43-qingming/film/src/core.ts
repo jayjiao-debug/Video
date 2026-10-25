@@ -275,6 +275,9 @@ export const composite = (x: Xf, g: Grade = {}, t = 0, bloomA = 1, bloomB = 1, g
 	if (x.mode !== 0 && !post) { /* B = g (incoming), A = gA (outgoing) */ } else if (x.mode === 0) { /* A only, graded with g */ }
 	u.aexposure.value = a2.exposure ?? 1; u.acorners.value = noBands ? 0 : a2.corners ?? 0; u.acband.value.set(...(a2.cornersBand ?? [0, 305, 520, 1])); u.actop.value = a2.cornersTop ?? 1; u.apool.value.set(...(a2.pool ?? [960, 540, 600, 0]));
 	u.avig.value = a2.vig ?? 0.35; u.avigCol.value.set(a2.vigCol ?? '#120c08'); u.alift.value = a2.lift ?? 0; u.atint.value.set(a2.tint ?? '#ffffff');
+	if ((window as any).CLEANGRADE) {                  // covers: the art as drawn (no lamplit pool, light vignette, neutral exposure)
+		for (const [e, p, v] of [[u.exposure, u.pool, u.vig], [u.aexposure, u.apool, u.avig]] as any[]) { e.value = 1; p.value.w = 0; v.value = 0.12; }
+	}
 	if (post) { /* B's own side must not be graded twice: B is read raw in mode 13 */ }
 	u.grain.value = g.grain ?? 0; u.flash.value = g.flash ?? 0; u.time.value = t;
 	runQuad(compMat, null);
