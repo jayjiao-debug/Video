@@ -48,6 +48,18 @@ body.lay2 .stamp{top:48px;right:30px}
 body.lay2 .age{left:30px;bottom:26px}
 body.lay2 .tally{left:262px;bottom:28px}
 body.lay2 .jl{display:block;position:absolute;right:30px;bottom:26px;width:34px;height:34px;border-radius:17px;border:1.5px solid #E9D3A0;color:#E9D3A0;font-family:'Noto Serif CJK SC',serif;font-weight:900;font-size:21px;line-height:33px;text-align:center;box-sizing:border-box;text-shadow:0 1px 4px rgba(12,8,5,.6);box-shadow:0 1px 6px rgba(12,8,5,.35)}
+/* bottom-left as one block (bl1 one row · bl2 stacked · bl3 one plaque) */
+.blk{display:contents}
+body.bl1 .blk,body.bl2 .blk,body.bl3 .blk{display:flex;position:absolute;left:30px;bottom:26px;transform-origin:left bottom;scale:.58;z-index:0}
+body.bl1 .blk .age,body.bl2 .blk .age,body.bl3 .blk .age,body.bl1 .blk .tally,body.bl2 .blk .tally,body.bl3 .blk .tally{position:static;scale:none}
+body.bl1 .blk .age::before,body.bl2 .blk .age::before,body.bl3 .blk .age::before,body.bl1 .blk .tally::before,body.bl2 .blk .tally::before,body.bl3 .blk .tally::before{display:none}
+body.bl1 .blk,body.bl3 .blk{flex-direction:row;align-items:flex-end;gap:26px}
+body.bl1 .blk .tally,body.bl3 .blk .tally{border-left:2px solid rgba(255,243,216,.45);padding-left:26px;margin-bottom:4px}
+body.bl1 .blk::before,body.bl2 .blk::before{content:'';position:absolute;z-index:-1;left:-70px;right:-90px;top:-40px;bottom:-34px;background:radial-gradient(ellipse 60% 64% at 46% 56%,rgba(16,11,7,.6),rgba(16,11,7,.32) 60%,rgba(16,11,7,0) 100%);filter:blur(8px)}
+body.bl2 .blk{flex-direction:column;align-items:flex-start;gap:6px}
+body.bl2 .blk .tally{order:-1;margin-left:4px}
+body.bl3 .blk{background:rgba(18,12,8,.55);border:1.5px solid rgba(233,211,160,.38);border-radius:12px;padding:16px 28px 14px 18px}
+body.bl3 .blk .tally{border-left-color:rgba(238,75,59,.8)}
 body.lay2 .mark{display:none}
 body.lay2 .stamp{top:30px}
 .seal{position:absolute;right:30px;bottom:24px;line-height:0;filter:drop-shadow(0 1px 2px rgba(12,8,5,.35))}
