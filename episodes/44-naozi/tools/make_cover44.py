@@ -45,9 +45,10 @@ def picture(name, cx, W, H, img_h, top):
     xx = np.arange(W)[None, :]; r = np.sqrt(((xx - W / 2) / (W / 2)) ** 2 + ((yy - H * 0.6) / (H * 0.7)) ** 2)
     arr *= np.clip(1 - 0.45 * np.clip(r - 0.6, 0, 1), 0, 1)[..., None]
     return Image.fromarray(arr.clip(0, 255).astype(np.uint8))
-WCX = {'A': 0.37, 'B': 0.42, 'C': 0.45}
+WCX = {'A': 0.37, 'B': 0.42, 'C': 0.50}
+PORT = {'C': (1080, 0.47)}
 for n, f, cx, k, l1, l2, sub in V:
-    t = picture(f, cx, 1080, 1440, 1330, 300); text_block(t, 78, 96, k, l1, l2, sub, 92, 118); t.save(f'{D}/out/封面_竖版_3x4_{n}.png')
+    ph, pcx = PORT.get(n, (1330, cx)); t = picture(f, pcx, 1080, 1440, ph, 1440 - ph if ph < 1140 else 300); text_block(t, 78, 96, k, l1, l2, sub, 92, 118); t.save(f'{D}/out/封面_竖版_3x4_{n}.png')
     w = picture(f, WCX.get(n, cx), 1440, 1080, 1160, 170)
     # darken the top-left for the text on the wide version
     a = np.array(w).astype(np.float32); yy, xx = np.mgrid[0:1080, 0:1440]; m = np.clip(1 - 0.62 * np.exp(-(((xx - 200) / 900) ** 2 + ((yy - 160) / 420) ** 2)), 0, 1)
