@@ -246,17 +246,17 @@ const lensWin = (t: number): {c: P2; span: number} => {
 };
 const camR = (t: number): Cam => {
 	const lc = lensAt(Math.min(t, b(61.5)));
-	if (t < b(60.5)) return lensCam(lc);
-	if (t < b(61)) { const u = clamp01((t - b(60.5)) / (b(60.8) - b(60.5))); const drift = clamp01((t - b(60.8)) / (b(61) - b(60.8))); const c = blend(lensCam(lc), ROOM, easeInOut(u)); return {...c, z: c.z * (1 + 0.01 * drift)}; }
-	if (t < b(61.5)) { const u = clamp01((t - b(61)) / (b(61.15) - b(61))); return blend({...ROOM, z: 1.01}, lensCam(lc), easeInOut(u)); }
+	if (t < b(60.35)) return lensCam(lc);
+	if (t < b(61)) { const u = clamp01((t - b(60.35)) / (b(60.75) - b(60.35))); const drift = clamp01((t - b(60.75)) / (b(61) - b(60.75))); const c = blend(lensCam(lc), ROOM, easeInOut(u)); return {...c, z: c.z * (1 + 0.01 * drift)}; }
+	if (t < b(61.5)) { const u = clamp01((t - b(61)) / (b(61.25) - b(61))); return blend({...ROOM, z: 1.01}, lensCam(lc), easeInOut(u)); }
 	const R2: Cam = {x: 1060, y: 610, z: 1.55, th: TH_R};
-	if (t < b(62)) return blend(lensCam(lc), R2, easeInOut(clamp01((t - b(61.5)) / (b(61.68) - b(61.5)))));
+	if (t < b(62)) return {...R2, z: R2.z * (1 + 0.012 * clamp01((t - b(61.5)) / (b(62) - b(61.5))))};     // a cut on b61.5 (no third whip); the magnifier swings aside in this wide
 	// 31: crane up over the long table to the tail (top-down), drop onto 藏者宜宝之
 	const TAIL: Cam = frameAt(360, S.py0 + 41, 2.75), g65 = GL31.find((g) => g.i === 65)!, g69 = GL31.find((g) => g.i === 69)!;
 	const DROP: Cam = frameAt(g65.x, (g65.y + g69.y) / 2, 28.5, 1300, 640);
-	if (t < b(62.75)) { const u = clamp01((t - b(62)) / (b(62.4) - b(62))); const c = blend(R2, TAIL, easeInOut(u), easeInOut(clamp01(u * 1.15))); const dr = clamp01((t - b(62.4)) / (b(62.75) - b(62.4))); return {...c, x: c.x - 6 * dr, z: c.z * (1 + 0.02 * dr)}; }
+	if (t < b(62.55)) { const u = clamp01((t - b(62)) / (b(62.4) - b(62))); const c = blend({...R2, z: R2.z * 1.012}, TAIL, easeInOut(u), easeInOut(clamp01(u * 1.15))); const dr = clamp01((t - b(62.4)) / (b(62.55) - b(62.4))); return {...c, x: c.x - 6 * dr, z: c.z * (1 + 0.02 * dr)}; }
 	const T2: Cam = {...TAIL, x: TAIL.x - 6, z: TAIL.z * 1.02};
-	if (t < b(63)) return blend(T2, DROP, easeInOut(clamp01((t - b(62.75)) / (b(63) - b(62.75)))));
+	if (t < b(63)) return blend(T2, DROP, easeInOut(clamp01((t - b(62.55)) / (b(63) - b(62.55)))));
 	const h = clamp01((t - b(63)) / (b(64) - b(63))); return {...DROP, y: DROP.y + 0.6 * h, z: DROP.z * (1 + 0.035 * h)};
 };
 const frameAt = (lx: number, ly: number, z: number, sx = 960, sy = 540): Cam => ({x: S.x0 + lx - (sx - 960) / z, y: S.edge - ly - (sy - 540) / z, z, th: 0});
