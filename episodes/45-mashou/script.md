@@ -1,204 +1,223 @@
-# Script v5 (rebuild, 2026-10-25)
+# Script v5.1 (rebuild, gate 1 r1 fixes, 2026-10-25)
 
-Screenwriter. Basis: brief_v2.md, facts.md (✓ rows only, no new rows), HANDOFF §5 beats and §6 logic rules, notes_gate4_r1, review/v2, owner-notes, ep43 `lines_bars.json` as the standard. Lines file: `lines_v5.json` (`[null, null, "text with [key]"]`, in order, times left for the producer).
+Screenwriter. v5 revised in place after `notes_gate1_v5_r1.md` (director REVISE, notes 1–9) and `coldread_gate1_v5.json`. Facts as amended: F4b, F19 and F20. Lines file: `lines_v5.json` (49 × `[null, null, "text with [key]"]`, in order).
 
-- **52 lines.** Reading minimum adds up to **157.7 s**. With the title bar, the rewind bar and the end-card tail (about 2.3 + 2.3 + 3 s), the film comes to **about 165 s**. It will grow a few per cent once lines snap to the bars, and that still sits inside 150–170.
-- **Min duration** = max(1.8 s, 0.25 s × 字 + 0.6 s). 字 = CJK characters, with each number counted as ⌈digits/2⌉ (1860 → 2, 98 → 1). Every line also passes pace.py with 0 % waiting when laid end to end at these minimums.
-- **Width** ≤ 16 on every line: CJK and full-width punctuation count 1, digits count 0.5. The widest lines are Q at 16 and A2, D9a and K3a at 15.
-- **Highlights:** 17 of 52 lines (33 %). They mark only numbers, turns and outcomes, never a name or a place.
-- **Blocks:** ids ending a/b form a two-line block. Line a stays top-left and line b adds under it (14 blocks). T1–T4 are one running sentence over hard cuts, and each line replaces the one before. **Centred** = punch line, bigger.
-- **HIT** = wants a music hit. **DB** = wants a downbeat or a section start. **STOP** = the track's stop or near-silence. **DROP** = the hardest drop. Rows without a mark go on the next free beat. The music is bgm2 with one cut and a fade-out, so nothing here is timed in seconds.
+- **Length:** 49 lines (was 52). Reading minimums add up to **148.4 s** (was 157.7). Each line rounded up to whole beats (0.566 s) gives **≈ 162.5 s**. Add the title bar, the rewind bar and the end-card tail (≈ 7.5 s) and the film is **≈ 170 s**.
+- **Min duration** = max(1.8, 0.25 × 字 + 0.6). 字 counts CJK characters plus ⌈digits/2⌉ per number.
+- **Width:** every line is ≤ 16 (CJK and punctuation 1, digits 0.5). Lines at 16: D3, D9b, D11, Q.
+- **Checks:** pace.py shows 0 lines too fast and 0 % waiting at the minimums. facts.py traces every number.
+- **Highlights:** 15 / 49 (31 %), on numbers, turns and outcomes only.
+- **Year mentions in lines:** 3, down from 13 (1860, 2007, 2020年5月, plus 「同年12月1日」). Every other year lives in its stamp.
+- **Markers:** a/b = two-line block. **HIT** = music hit. **DB** = downbeat or section start. **STOP** = the track's stop. **DROP** = the hardest drop.
+- **World tag `[wall]`**: the shot obviously sits on the hybrid look's bronze relief wall (Look 3 铜壁: recorded history = the sale years, plus the ending). Untagged shots are the main world (Look 1 铜灯影) or for the art director to place. `style/looks_v2.md` ("Hybrid") is the authority.
+- **On the wall:** relief figures don't walk. Their actions are hinged relief parts (gavel arm, paddles, hands, doors), and labels are cast in (molten letters fill, then cool). You stay in the round in front of the wall and are never moved by a relief hand; the history changes behind you.
+
+## Changelog v5 → v5.1
+| Note | What changed |
+|---|---|
+| D1 (High) 2007 staged before the sale | T3, D5, D6a and D6b are now the saleroom **before** the sale: empty chairs with catalogues on the seats, you on the podium under a work light, the gavel lying on its block. D6a = a slow push to the untouched gavel. D6b = 「撤拍」 cast into the lot card, then the room lights go out row by row to your spot. No bidders, no auctioneer, nobody lifts the gavel. The lines stay. |
+| D2 | T5 → 「可十二个里，还有【五个】没回中国。」. The ring reads 「回国 7/12」. |
+| D3 | D9a/D9b: a phone bank (a clerk with a handset raises the paddle). **Two strikes** on two beats, and the board reads 「鼠首 + 兔首 · 合计」. The line is the coordinator's/director's own: 「锤子落下，两个共拍出3149万欧元。」 (F19), no highlight. D10a: a visible time step (the lamp sweeps five times, stamp 2009.2.25 → 「2009.3.2 · 北京」), then 「未付款」, with the line 「5天后，买家却说：【这个款不能付】。」 (F19: 5 days, announced in Beijing). D10b: the handset laid back on its cradle; no buyer is ever in the room. |
+| D4 | D11 is staged at the **国家博物馆, Beijing, 2013.6.28** (F20), with its own move: push into rat and rabbit as the wine light warms, and the podium becomes a museum plinth (shape match). The line names the giver (cold read: 「谁送回的？」): 「一个法国家族，把鼠和兔无偿捐回。」 Stamp 「皮诺家族」. |
+| D5 | **(a) K2a cut.** The tags 「保利 ×4 · 国博 ×2」 move onto six seats during K1b. **(b) Roll call made one beat:** D3a + D3b + D4 → D3 「牛、猴、虎、猪，先后被买回中国。」 (also the cold read's 2000/2003 note). Who bought them is in the stamps (2000 · 保利购回 / 2003 · 何鸿燊购回). |
+| D6 | Highlights removed from D2a (三四十万美元) and D9b (3149万欧元). |
+| D7 | Q → 「五个要是上拍，该不该【花钱买回来】？」 |
+| D8 | (a) E1 → E2a: push into the brass donation plaque, which becomes the brass base of the desk lamp (material match; no second lateral track). (b) H4: the 西洋楼 ruins only far in the background (正觉寺 is in 绮春园). |
+| D9 | A2/A3: two rows of six on either side of the pool, with you in the middle of your row and never the snake beside you (F4b). At 午时 the water and light hand-over **crosses the pool** from the snake on the far bank to you. Because the hours alternate banks, every hand-over crosses. No 南/北 labels and no seat numbers on screen. |
+| Cold read: teaser = summary, then restart (biggest swipe risk) | T1–T4 keep the director's structure (one running sentence over hard cuts, each paid off later) but lose every year and become images: 「你被人抢走，」/「被一锤子卖掉，」/「差点又上了拍卖台，」/「终于，你回了家。」 (8.4 s, was 10.65). They read as a promise of four scenes. The rewind carries the restart. The T3 riddle (「锤子没有落下」) is gone, and the gavel line now lands first at D6a. |
+| Cold read: 13 years in lines | Down to 3. Years dropped where the stamp carries them: T1, T3, T4, D3 (2000, 2003), D9a (2009), D11 (2013), E1 (2019), H1a (→ 「同年」), K3a (2018). |
+| Cold read: 五个 vs 十一个 | T5 says 没回**中国** (note 2). K2 → 「**其中**五个，至今【没回中国】。」, so the five are visibly a subset of the eleven. |
+| Cold read: 6910万 reads as RMB | C2a → 「有人花【6910万港元】买下你，」 (+0.5 s). |
+| Cold read: D1 repeats T2's 伦敦 | T2 no longer names London. D1 is the first time it is said. |
+| Cold read: who gave 2019 | E1 → 「何鸿燊，也把你捐给了国家。」. 也 rhymes with the French family's gift one line earlier. |
+| Cold read: dragon detour muddies the end | K3a is shorter and has no year: 「法国还拍出过一个疑似龙首，」. K3a/K3b stay (director's don't-change list), and Q follows straight after. |
+| Kept as peaks | E2b 「他【没等到】，你回家的那天。」 on the stop. H3b 「如今回到圆明园的，【只有你】。」 on a hit. Neither changed. |
+
+**Not taken from the cold read, and why:**
+- **A real price for 1989:** F11's two figures disagree ($367k / $400k). The safe wording stays 「三四十万美元」, and D8's bars make the 20× visible. Option for the director: 「三四十万美元」 covers both sources, but facts.py flags it as not in a row, so I left it out.
+- **The buyer's name:** F19 says to keep it off screen. The stamp says 「买家本人宣布 · 北京」.
+- **正觉寺 in the H4 line:** no room within 16. The name is in the stamp.
 
 ## Title options (≤ 10 字)
-1. **马首回家，用了160年.** True as read (1860 → 2020, F21 估算). It names the subject, and 回家 is the film's own twist word (回国 7, 回家 1). This is the current working title.
-2. **假如你是圆明园马首.** The ep43 format title the owner liked. It says who 你 is at a glance and promises the device rather than an event, so it can't overclaim.
-3. **6910万买下，又捐了出去.** A number plus a contradiction, and the cold reader's click. Both halves are true (F13, F15), and 又 (not 转手) keeps the 12-year gap honest. Weak spot: it doesn't name the horse, so the cover must show it.
+1. **马首回家，用了160年.** True as read (1860 → 2020, F21 估算), names the subject, and uses the twist word 回家. The cold reader finds it CCTV-like.
+2. **假如你是圆明园马首.** The ep43 format title; it says who 你 is and can't overclaim. The cold reader finds it template-like.
+3. **6910万买下，又捐了出去.** The cold reader's click: a number plus a contradiction. It fits the 10-字 cap, but the cold read took bare 6910万 as RMB, so the cover must carry HK$ (the film's C2a now says 港元).
 
 ## Story in 3 lines
 1. 你是圆明园水力钟的马首：十二兄弟轮流喷水报时，只有正午，十二个一起喷。
-2. 1860年你被抢走；一百多年后你一次次上拍卖台；2007年锤子没落下，何鸿燊私下用6910万港元买下你，2019年把你捐给国家，自己没等到你回家。
-3. 2020年你回到圆明园：回国的有七个，回家的只有你。正午还差十一个，五个没回中国——再上拍，该花钱买回来吗？
+2. 1860年你被抢走；一百多年后你一次次上拍卖台；2007年拍卖被叫停，何鸿燊私下用6910万港元买下你，后来把你捐给国家，自己没等到你回家。
+3. 2020年你回到圆明园：回国的有七个，回家的只有你。正午还差十一个，其中五个没回中国——要是上拍，该不该花钱买回来？
 
 ## Lines
-Every person is a whole-figure silhouette with no face. Hands hold real props, and feet stand on real ground. **Ho** (何鸿燊) uses one silhouette design all film (suit, short hair, a slight stoop). The **counter** (bottom-left) follows the picture: 在家 12/12 → 回国 0 → 3 → 4 → 5 → 7, then a second row 回家 1/12 from H3b. **Your ear** is straight before 1860 and folded from 1989 on.
+Every person is a whole-figure silhouette or a relief figure with no face. Hands hold real props, and feet stand on real ground. **Ho** (何鸿燊) uses one silhouette design all film. The **counter** (bottom-left) follows the picture: 在家 12/12 → 回国 0 → 4 → 5 → 7, then a second row 回家 1/12 from H3b. **Your ear** is straight before 1860 and folded from 1989 on.
 
 | id | line | highlight | min s | HIT / DB | picture (what we see, who does what, what moves) | → transition into the next line's picture |
 |---|---|---|---|---|---|---|
-| C1 | 假如说，你是圆明园的马首。 | — | 3.35 | DB (beat 1) | **Frame 0:** your red-copper head fills the frame in three-quarter profile on a dark desk. The line is already typed on frame 0. On beat 1 a desk lamp clicks on and its light slides across your cheek and mane. Eased push 1.00 → 1.05. The folded ear is already visible. | One continuous pull-back with no cut. The desk, the lamp and a seated silhouette behind you come into frame. |
-| C2a | 有人花【6910万】买下你， | 6910万 | 2.85 | DB | The private room (stamp 「2007 · 私下成交」). Ho sits behind the desk. His right hand signs a paper with a pen and his left hand lies flat on it. A price card stands beside you, **already** reading HK$6910万: it never counts up, and there are no paddles and no gavel (§6.1). | Ho stands, lifts a cloth from the desk with both hands and lays it over you. On the beat, a **match cut on the draped shape**: the same covered form, now in a lit hall. |
-| C2b | 又把你【捐了出去】。 | 捐了出去 | 2.35 | wind-up into the drop | A museum hall (stamp 「2019 · 北京」). Two staff silhouettes, one each side, grip the cloth with both hands and pull it off you. It flies up toward the lens. Ho is **not** in the hall (his attendance isn't in facts.md). | The flying cloth fills the frame as a **wipe carried by the cloth**. The title lands as it clears. |
-| TTL | *(title card, no subtitle)* | — | ≈ 1 bar | **HIT: first big drop** | 「马首回家，用了160年」 on a plaque built from the film's own shapes: your copper profile plus twelve water arcs. It slams in (fast scale-down, short damped jolt, no flash). | **Hard cut** on the next downbeat (the cold-open format). |
-| T1 | 1860年，你被人抢走， | — | 2.60 | DB · hard cut | Smoke over the fountain terrace (stamp 「1860 · 圆明园」). A looter in a kepi (flat forward-tilted top, short visor) grips you under the collar with both hands and lifts you off the robed stone body. The stone shoulders stay empty. Your ears are straight. | **Hard cut** on the beat. |
-| T2 | 在伦敦，被人买走， | — | 2.35 | HIT (gavel) · hard cut | London saleroom, green walls (stamp 「1989 · 伦敦」). You sit on the podium under a spot. The auctioneer stands behind the lectern, his right hand wrapped round the gavel as one mitten shape, and strikes on the beat. | **Hard cut.** |
-| T3 | 2007年，锤子没有落下， | — | 2.85 | DB · hold | Hong Kong saleroom, blue walls (stamp 「2007 · 香港」). The auctioneer holds the gavel up and it trembles but never comes down. No paddles anywhere. A picture pause. | **Hard cut** on the next downbeat. |
-| T4 | 2020年，你终于回了家。 | — | 2.85 | DB · hard cut | Night outside the 正觉寺 courtyard gate (stamp 「2020 · 圆明园」). Two staff silhouettes push the door leaves open a crack, hands flat on the wood. Copper light spills onto the flagstones. H1b pays this framing off. | Crane up and back over the roof. The strip of door light narrows to a dot, and the dot becomes **your medallion** in a ring of twelve (match on the light). |
-| T5 | 可十二个里，还有【五个】没回来。 | 五个 | 3.60 | HIT · **centred** | The counter, grown to fill the frame: a ring of twelve medallions, each a clear animal silhouette. Seven are faintly lit and five are thick dashed outlines. Text 「回国 7/12」, stamp 「— 2026年10月」. | **REWIND ◀◀** (≈ 1 bar, tracking lines). The ring spins backwards like a clock dial, with 3–4-frame flashes of T4 → T1 in reverse (doors close, gavel rises, you fly back onto the stone body). Each flash carries its own year: 2026 → 2020 → 2007 → 1989 → 1860 → 乾隆年间. It lands in the foundry glow. |
-| A1 | 乾隆年间，你由红铜一次铸成。 | — | 3.60 | DB (section start) | The foundry (stamp 「乾隆年间 · 清宫匠师」). A founder tips a crucible with both hands on long tongs, and a molten stream pours into a clay mould. Then he holds the mould with his left hand and knocks it apart with a mallet in his right. The halves fall to the floor and you are there, glowing and seamless. At true scale your head is about ¼ of his height. | Your face cools from orange to copper. A **match cut on your profile** in the same screen spot: daylight, and you now sit on a robed stone body. The pull-back begins. |
-| A2 | 你和十一个兄弟，坐在水池两边。 | — | 3.85 | — | One continuous pull-back to the 海晏堂 fountain: twelve robed stone bodies sit in a 八 on both sides of the pool. Every head reads at phone size: ox horns, tiger ears, monkey face, dragon horns, snake, goat's curled horns, rooster comb, dog ears, pig snout, rat ears, rabbit ears. You are the warm one. The counter appears: 「在家 12/12」. | No cut: the sun's shadow starts to move across the terrace. |
-| A3a | 每两小时，轮到谁，谁就喷水。 | — | 3.35 | on the beat | Time-lapse. A shadow pointer sweeps the terrace while one water arc at a time leaves a head's mouth, always facing the pool. The arc passes from head to head, speeding up. The 「水力钟」 label sits on the picture and leaves before A3b. | The camera **rides along the arc** as it passes from the snake to you. |
-| A3b | 你，是午时。 | — | 1.80 | beat | Close on you, and only you spout (§6.7). Stamp 「11:00–13:00 · 午时」. | On the downbeat a fast pull-back, as the other eleven fire in a ripple outward from you. |
-| A4 | 正午12点，十二个【一起喷水】。 | 一起喷水 | 3.35 | **HIT** | All twelve arcs are up at once, completing on the hit: thick arcs with bright cores, droplets at the tips, splash rings in the pool. Slow push 1.00 → 1.08 over the hold. The film's first big image. | **The light changes**: noon goes to a red October dusk. The arcs fall and stop, and the camera tilts down from the last drops to the front flagstones, where boots step in. |
-| B1a | 1860年，英法联军进了园子。 | — | 3.35 | DB (darker section) | Soldiers in kepis walk in on the **front flagstones**, never on the pool or through the plinths (§6.4, §6.8). No flags. Stamp 「1860.10 · 圆明园」. The camera tracks with them at a fraction of their speed. | Continuous track. |
-| B1b | 能搬走的，都被搬走了。 | — | 2.85 | — | On the same flagstones, one looter carries a crate with both hands under it and another hugs a vase in both arms. They walk out of frame to the left. | The track stops for a picture pause just before the hit. |
-| B2 | 然后，一把火。 | — | 1.85 | **HIT** | Fire flares behind the 海晏堂 facade on the hit, and embers drift across the frame. The fountain is dry. Stamp 「1860.10.18」. | **Push in through the embers** to your seat. |
-| B3 | 你被带走了。 | — | 1.85 | DB | Pays off T1, the same shot run longer. The looter lifts you with both hands and walks off right, and the counter goes 12 → 11. The camera tilts up into the smoke, and only once the smoke covers the pool does the counter roll to 0 and flip to 「回国 0/12」. Nothing pops, and no seat empties on its own (§6.2, §6.6). | The smoke thins into the **haze of a spotlight beam**, which lands where your seat was. The beam is now in London. |
-| D1 | 一百多年后，你出现在伦敦。 | — | 3.35 | DB | London saleroom, green walls (stamp 「1989 · 伦敦苏富比」). You sit on the podium in the spot. Seated bidders' paddle arms rise from the shoulder with the paddle in front of the face, alternating on the beat. | Continuous ease from you to the lectern. |
-| D2a | 锤子落下：【几十万美元】。 | 几十万美元 | 2.85 | **HIT** (hammer 1) | Pays off T2. The auctioneer winds up slow → fast and strikes. The lot card flips to 「几十万美元」. | Same shot. |
-| D2b | 你被台湾收藏家买走。 | — | 2.85 | — | A porter (whole figure) lifts you off the podium with both hands into a crate, and a seated buyer silhouette nods. Stamp 「台湾收藏家」. | The camera **holds on the empty podium** while the wallpaper re-papers in a vertical wipe from the stamp corner (green → blue), and the stamp flips to 「2000 · 香港」. |
-| D3a | 2000年，兄弟牛、猴、虎上拍。 | — | 3.10 | three beats | The porter sets 牛, 猴 and 虎 on the podium, one per beat, each with a name tag. Paddles rise. | Continuous. |
-| D3b | 锤子落下，三个都被买了回来。 | — | 3.60 | **HIT ×3** | Three quick strikes on three beats. Each lot card flips to 「购回」 and the counter ticks 0 → 1 → 2 → 3. Stamp 「保利购回」. | A **lateral track right** along the podium, past the three heads to a fourth stand. Behind it the saleroom dims into a quiet office. |
-| D4 | 2003年，何鸿燊买回了猪首。 | — | 3.35 | DB | Stamp 「2003 · 港澳企业家」. Ho and a seller shake hands across the stand, hands meeting and pumping twice, with the pig head on its crate between them. No hammer. Counter 「回国 4/12」. | **Match cut on the crate**: the pig's crate becomes your crate, opened in the 2007 saleroom store (stamp 「2007 · 香港苏富比」). |
-| D5 | 2007年，你又要上拍了。 | — | 2.85 | — | Two porters lift you out of the crate, hands under the collar, and set you on the podium. The lot board shows your lot number and the gavel rests on the block. Bidders sit with catalogues on their laps: **no paddles** (§6.1). | Continuous. |
-| D6a | 这一次，锤子【没有落下】。 | 没有落下 | 2.85 | **no hit**: wants the music's thinnest moment | Pays off T3. The auctioneer lifts the gavel slow → fast. It stops at the top and trembles (2–3 px, ≈ 6 Hz), and it never comes down. | Same shot. |
-| D6b | 国家文物局反对公开拍卖。 | — | 3.35 | DB | The lot board flips to 「撤拍」. The bidders stand and walk out, feet on the floor, and the room lights go out row by row until only your spot is left. Stamp 「2007.8 · 国家文物局」. The board and stamp leave before the next move. | The spot narrows to a desk lamp's pool and the room rebuilds around that same light into the private room. **One light becomes the next.** |
-| D7a | 拍卖前，何鸿燊私下买下了你： | — | 3.60 | — | Pays off C2a in the same room. Ho walks in (feet stepping, hips steady), sits, and signs with his right hand while his left lies flat on the paper. You stand on the desk. | Same shot. |
-| D7b | 【6910万港元】。 | 6910万港元 | 1.85 | **HIT** · **centred** | The price card stands up beside you, and 「6910万港元」 slams in big (≥ 120 px, scale-down plus damped jolt), fixed with no count-up. Counter 「回国 5/12」. | The price card slides right and becomes **the top of a tall bar**. |
-| D8 | 比伦敦那次，贵了【二十多倍】。 | 二十多倍 | 3.35 | — | Two bars in US dollars. On the left, the London card 「几十万美元」 on a short bar. On the right, 「884万美元」 on a tall bar. A bracket between the bar tops reads 「二十多倍」, with labels ≥ 48 px. | The camera **rises up the tall bar**. Its top edge becomes the ceiling edge of the Paris saleroom, and the camera tilts down into the wine-coloured room. |
-| D9a | 2009年，兄弟鼠和兔在巴黎上拍。 | — | 3.85 | — | Paris saleroom (stamp 「2009 · 巴黎佳士得」). Rat and rabbit sit on the podium with name tags. Paddles rise faster, alternating on half-beats. | Continuous. |
-| D9b | 锤子落下：【3149万欧元】。 | 3149万欧元 | 2.85 | **HIT** (hammer 4) | A fast strike. The result board reads 「鼠首 + 兔首 · 3149万欧元」. | Same shot. |
-| D10a | 买家却【拒绝付款】。 | 拒绝付款 | 2.35 | DB | The winning paddle lowers. A clerk standing at the board presses a stamp onto the result line with one hand, and 「未付款」 appears. | The camera **pans to the winning seat**. |
-| D10b | 他认为：这本就是中国的。 | — | 3.10 | — | The buyer stands and walks out, leaving his paddle on the chair. The chair stays empty. No name, no face. | **Push past the empty chair** to the podium, while the wine light warms to daylight. |
-| D11 | 2013年，鼠和兔被无偿送回。 | — | 3.35 | DB | Stamp 「2013 · 法国皮诺家族 · 无偿捐赠」. In front of rat and rabbit, two silhouettes hold one certificate, both with both hands on it, and pass it across. Two medallions light and the counter reads 「回国 7/12」. | The camera **follows the certificate** as it is laid on a table. A second certificate slides on top of it: yours, dated 2019 (paper match). |
-| E1 | 2019年，何鸿燊把你捐给国家。 | — | 3.60 | — | Pays off C2b in the same hall, run longer (stamp 「2019.11.13 · 国家博物馆」). Two staff pull the cloth off you, and a donation plaque stands beside you. Ho is not drawn here. | A **lateral track left** past a wall edge, out of the hall and into the private room from D7a, now at night. |
-| E2a | 2020年5月，何鸿燊去世，98岁。 | — | 3.60 | **STOP**: the lamp goes out on the music's stop | The same private room, empty. His chair is empty, the desk lamp is on, and the window shows night (stamp 「2020.5.26」). The lamp goes out exactly on the stop. | Same shot. |
-| E2b | 他【没等到】，你回家的那天。 | 没等到 | 3.10 | in the stop (≤ 1 bar) · **centred** | The dark room. A single star in the window and a curtain stirring keep one living motion: no frozen frame (§6.12). | **Push through the window into the star.** The star becomes the copper glow inside your crate in a van. |
-| H1a | 2020年12月1日， | — | 2.35 | pickup into the drop | The van drives from night into dawn, tracked with parallax (near and far trees at different speeds). Your glow leaks between the crate's slats. The van reaches the 圆明园 gate about 2 beats before the drop. | The camera keeps moving forward off the van, **through the gate** and up to the courtyard doors. |
-| H1b | 你回到了圆明园。 | — | 2.35 | **DROP (hardest)** | Pays off T4 in the same framing. Two staff push the doors open on the hit, and warm copper light spills across the flagstones. No white flash, and the sky stays about 15 % darker so you are the brightest thing. A fast push 1.0 → 1.12 in half a second, then ease. You stand in the 文殊亭. The 午 dot on the counter lights. | Continuous. |
-| H2 | 你离开了【160年】。 | 160年 | 2.35 | beat | A slow orbit around you (stamp 「1860 → 2020」). No hold. | **Crane up** out of the courtyard. |
-| H3a | 十二个里，回到中国的有七个。 | — | 3.60 | — | Above the courtyard, the T5 ring of twelve medallions forms over the garden and seven light. Counter 「回国 7/12」. | Same shot. |
-| H3b | 如今回到圆明园的，【只有你】。 | 只有你 | 3.35 | **HIT** (twist) | Six lit medallions arc out over the wall toward two building silhouettes on the skyline, labelled 「保利艺术博物馆」 (4) and 「国家博物馆」 (2) at ≥ 40 px. Only yours stays over the courtyard. 「回家 1/12」 punches in centred, then settles into the counter as its second row. | **Pull back wide.** |
-| H4 | 你住进园里唯一幸存的古建筑。 | — | 3.85 | — | Wide: the courtyard among the garden's ruins (stamp 「正觉寺 · 文殊亭」). A ghost of the 1860 smoke (B2) drifts across the ruins and stops at the temple wall. | **Push in on you** and orbit to your profile, closing on the ear. |
-| H5a | 细看，你有一只耳朵是卷的。 | — | 3.35 | — | Close-up. The near ear fills about 30 % of the frame height, with its top third visibly folded outward. The far ear is straight. | Same shot. |
-| H5b | 研究的人说：你这一路被撞过。 | — | 3.60 | — | A thin ring closes on the fold (stamp 「研究者观察」, never 「检测」). Faint reflections of the saleroom spots slide across the copper. | **Match cut on the circle**: the ring becomes the round basin of the remembered fountain. |
-| K1a | 正午12点，你们本该一起喷水。 | — | 3.60 | DB (section return) | Memory in warm sepia (stamp 「记忆里的水力钟 · 12:00」, never 「今天」, §6.9). The twelve sit on their stone bodies and twelve arcs rise, a callback to A4. | Same shot. |
-| K1b | 现在，还差【十一个】。 | 十一个 | 2.35 | beat · **centred** | Eleven arcs fall, and those eleven heads fade to bare stone shoulders. Only your arc stays. | Same shot. |
-| K2a | 六个，在国内的博物馆里， | — | 3.10 | — | Six of the empty seats get small tags 「保利 ×4 · 国博 ×2」. | Same shot. |
-| K2b | 五个，至今【没回中国】。 | 没回中国 | 2.60 | DB | The other five seats show thick dashed outlines of 龙, 蛇, 羊, 鸡 and 狗, each recognisable. | The dragon's dashed outline **slides forward and stands on a podium**, and a violet saleroom builds itself around it. |
-| K3a | 2018年，法国拍出一个疑似龙首， | — | 3.85 | **HIT (final hit)** | Stamp 「2018.12.17 · 法国」. The gavel is already raised as the shot opens and strikes on the hit. The dragon outline (long snout, whiskers, horns) shakes for 2–4 frames. | Same shot. |
-| K3b | 真假，【说不清】。 | 说不清 | 1.85 | — | The outline half-lights and flickers, with a 「?」 over it. Stamp 「真伪仍存疑」. | The room's lights go out and the camera **pulls back through the dark** to the memory fountain: your single arc, eleven empty seats, five of them dashed. |
-| Q | 剩下五个再上拍，该【花钱买回来】吗？ | 花钱买回来 | 4.10 | DB, then **fade-out** over the final bar, ending on a downbeat | **The one last image**: your single arc at noon among the empty seats. The Juno end card forms over it: J monogram, gold title, the question centred with its ？ pulled back by ½ em, the pill 「关注 Juno · 一起看懂世界」 and the sources, all arriving together with the question. | — (end) |
+| C1 | 假如说，你是圆明园的马首。 | — | 3.35 | DB (beat 1) | **Frame 0:** your red-copper head fills the frame on a dark desk, with the line already typed. On beat 1 a desk lamp clicks on and its light slides across your cheek and mane. Eased push 1.00 → 1.05. The folded ear is visible. | One continuous pull-back with no cut. The desk, the lamp and a seated silhouette come into frame. |
+| C2a | 有人花【6910万港元】买下你， | 6910万港元 | 3.35 | DB | The private room (stamp 「2007 · 私下成交」). Ho signs with his right hand while his left lies flat on the paper. A price card beside you **already** reads HK$6910万 and never counts up. No paddles, no gavel. | Ho stands and lays a cloth over you with both hands. On the beat, a **match cut on the draped shape** into a lit hall. |
+| C2b | 又把你【捐了出去】。 | 捐了出去 | 2.35 | wind-up into the drop | A museum hall (stamp 「2019 · 北京」). Two staff silhouettes pull the cloth off you with both hands, and it flies toward the lens. Ho is not in the hall. | The flying cloth fills the frame as a **wipe carried by the cloth**. |
+| TTL | *(title card)* | — | ≈ 1 bar | **HIT: first big drop** | 「马首回家，用了160年」 on a plaque built from your profile and twelve water arcs. It slams in (scale-down, damped jolt, no flash). | **Hard cut** on the next downbeat. |
+| T1 | 你被人抢走， | — | 1.85 | DB · hard cut | Smoke on the fountain terrace (stamp 「1860 · 圆明园」). A looter in a kepi lifts you off the robed stone body with both hands under the collar. The empty stone shoulders stay. Your ears are straight. | **Hard cut.** |
+| T2 | 被一锤子卖掉， | — | 2.10 | HIT (gavel) · hard cut | `[wall]` The London relief saleroom (stamp 「1989 · 伦敦」). You stand in the round on the podium. The relief auctioneer's hinged gavel arm strikes on the beat. | **Hard cut.** |
+| T3 | 差点又上了拍卖台， | — | 2.60 | DB · hold | `[wall]` The 2007 relief saleroom **before** the sale (stamp 「2007 · 香港」): empty chairs with catalogues on the seats, you under a work light, the gavel lying on its block. 「撤拍」 casts into the lot card. | **Hard cut.** |
+| T4 | 终于，你回了家。 | — | 2.10 | DB · hard cut | Night outside the 正觉寺 courtyard gate (stamp 「2020 · 圆明园」). Two staff push the door leaves open a crack, hands flat on the wood, and copper light spills on the flagstones. H1b pays this framing off. | Crane up over the roof. The strip of door light narrows to a dot, and the dot becomes **your medallion** in a ring of twelve. |
+| T5 | 可十二个里，还有【五个】没回中国。 | 五个 | 3.85 | HIT · centred | The counter grown to fill the frame: twelve animal medallions, seven faintly lit and five thick dashed. 「回国 7/12」, stamp 「— 2026年10月」. | **REWIND ◀◀** (≈ 1 bar). The ring spins back like a clock dial, with 3–4-frame flashes of T4 → T1 in reverse, each with its own year (2026 → 2020 → 2007 → 1989 → 1860 → 乾隆年间), landing in the foundry glow. |
+| A1 | 乾隆年间，你由红铜一次铸成。 | — | 3.60 | DB | The foundry (stamp 「乾隆年间 · 清宫匠师」). A founder tips a crucible on long tongs with both hands, and molten copper pours into a clay mould. He steadies the mould with his left hand and knocks it apart with a mallet in his right. The halves fall and you are there, glowing and seamless. Your head is ≈ ¼ of his height. | Your face cools from orange to copper. A **match cut on your profile**: daylight, and you sit on a robed stone body. |
+| A2 | 你和十一个兄弟，坐在水池两边。 | — | 3.85 | — | One pull-back to the 海晏堂 fountain: **two rows of six robed stone bodies, one row on each side of the pool**. You sit in the middle of your row. The snake is **across** the pool, never beside you (F4b). Every head reads at phone size. You are the warm one. 「在家 12/12」. No 南/北 labels, no seat numbers. | No cut: a sun shadow starts across the terrace. |
+| A3a | 每两小时，轮到谁，谁就喷水。 | — | 3.35 | on the beat | Time-lapse. One arc at a time leaves a head's mouth, always facing the pool. The turn hops from one bank to the other each time, speeding up. The 「水力钟」 label is on the picture and leaves before A3b. | The camera follows the hand-over light **across the pool** from the snake on the far bank to you. |
+| A3b | 你，是午时。 | — | 1.80 | beat | Close on you, and only you spout. Stamp 「11:00–13:00 · 午时」. | On the downbeat a fast pull-back as the eleven fire in a ripple outward from you. |
+| A4 | 正午12点，十二个【一起喷水】。 | 一起喷水 | 3.35 | **HIT** | All twelve arcs up at once (thick bright cores, droplets, splash rings), completing on the hit. Slow push 1.00 → 1.08. | **The light changes**: noon goes to a red October dusk and the arcs stop. Tilt down to the front flagstones as boots step in. |
+| B1a | 1860年，英法联军进了园子。 | — | 3.35 | DB | Soldiers in kepis walk in on the **front flagstones** (never on the pool or the plinths). No flags. Stamp 「1860.10」. The camera tracks at a fraction of their speed. | Continuous track. |
+| B1b | 能搬走的，都被搬走了。 | — | 2.85 | — | One looter carries a crate with both hands under it and another hugs a vase in both arms. They walk out left. | The track stops for a picture pause. |
+| B2 | 然后，一把火。 | — | 1.85 | **HIT** | Fire flares behind the 海晏堂 facade on the hit, embers drifting. Stamp 「1860.10.18」. | **Push in through the embers** to your seat. |
+| B3 | 你被带走了。 | — | 1.85 | DB | Pays off T1, the same shot run longer. The looter lifts you and walks off right, and the counter goes 12 → 11. The camera tilts into the smoke, and only once the smoke hides the pool does the counter roll to 0 and flip to 「回国 0/12」. | The smoke thins into the beam of **a raking lamp on a bronze wall**: the first relief panel. |
+| D1 | 一百多年后，你出现在伦敦。 | — | 3.35 | DB | `[wall]` The London relief saleroom (stamp 「1989 · 伦敦苏富比」). You stand in the round on the podium in the lamp's pool. The relief bidders' paddles hinge up alternately on the beat. | The lamp eases from you to the relief auctioneer. |
+| D2a | 锤子落下：几十万美元。 | — | 2.85 | **HIT** (hammer 1) | `[wall]` Pays off T2. The gavel arm winds up slow → fast and strikes, and 「几十万美元」 casts into the lot card. | Same shot. |
+| D2b | 你被台湾收藏家买走。 | — | 2.85 | — | `[wall]` Beside the podium a relief hand takes the lot card, and the tag 「台湾收藏家」 casts in. You stay lit in the round, and no relief hand touches you. | **Dolly along the wall**: the moulding between panels is the cut. |
+| D3 | 牛、猴、虎、猪，先后被买回中国。 | — | 3.35 | **HIT ×3 + 1 beat** | `[wall]` One panel of four niches. 牛, 猴 and 虎 each get one hinged-gavel strike on three beats (stamp 「2000 · 保利购回」). On the fourth beat two relief hands meet over the pig (no hammer; stamp 「2003 · 何鸿燊购回」). Each niche casts 「购回」, and the counter ticks 0 → 4. | **Lamp swing**: this panel goes dark and the next one lights. |
+| D5 | 2007年，你又要上拍了。 | — | 2.85 | — | `[wall]` The 2007 relief saleroom **before** the sale, pays off T3 (stamp 「2007 · 香港苏富比」): rows of empty chairs with catalogues on the seats, the lot board with your number, the gavel lying on its block. You stand in the round on the podium under a work light. | Continuous. |
+| D6a | 这一次，锤子【没有落下】。 | 没有落下 | 2.85 | **no hit**: wants the music's thinnest moment | `[wall]` A slow push toward the gavel lying still on its block. Nobody touches it; the push is the picture pause, and it rhymes with D2a's strike. | Same shot. |
+| D6b | 国家文物局反对公开拍卖。 | — | 3.35 | DB | `[wall]` 「撤拍」 casts into the lot card, and the room's lamps go out row by row until only your spot is left. Stamp 「2007.8 · 国家文物局」. The card and stamp leave before the next move. | The spot narrows to a desk lamp's pool, and the private room rebuilds around that light. **One light becomes the next**, and we leave the wall. |
+| D7a | 拍卖前，何鸿燊私下买下了你： | — | 3.60 | — | Pays off C2a in the same room. Ho walks in (feet stepping, hips steady), sits and signs with his right hand, his left flat on the paper. You stand on the desk. | Same shot. |
+| D7b | 【6910万港元】。 | 6910万港元 | 1.85 | **HIT** · centred | The price card stands up and 「6910万港元」 slams in big (≥ 120 px, scale-down + damped jolt), fixed with no count-up. Counter 「回国 5/12」. | The price card slides right and becomes **the top of a tall bar**. |
+| D8 | 比伦敦那次，贵了【二十多倍】。 | 二十多倍 | 3.35 | — | `[wall]` Two bars cast in the wall in US dollars. The London 「几十万美元」 is a short bar and 「884万美元」 a tall one, with a bracket between their tops: 「二十多倍」 (labels ≥ 48 px). | **Rise up the tall bar.** Its top edge becomes the moulding of the Paris panel, and the camera tilts down into it. |
+| D9a | 兄弟鼠和兔，在巴黎上拍。 | — | 3.10 | — | `[wall]` The Paris relief saleroom (stamp 「2009.2.25 · 巴黎佳士得」). Rat and rabbit stand on the podium. At a side table, a **phone bank**: relief clerks with handsets at their ears, each with a paddle. | Continuous. |
+| D9b | 锤子落下，两个共拍出3149万欧元。 | — | 4.10 | **HIT ×2** | `[wall]` One clerk's hinged paddle rises with the handset at his ear. The gavel strikes twice on two beats, and the board casts 「鼠首 + 兔首 · 合计 3149万欧元」. | Same shot. |
+| D10a | 5天后，买家却【拒绝付款】。 | 拒绝付款 | 3.10 | DB | `[wall]` **A visible time step**: the lamp sweeps the panel five times, like five days, while the stamp ticks to 「2009.3.2 · 北京」. Then 「未付款」 casts across the board's result line. | Same shot. |
+| ~~D10b~~ | ~~他认为：这本就是中国的。~~ (cut at gate 1 r2: no verified row; D10a now quotes the buyer, F19) | — | 3.10 | — | `[wall]` The clerk's hinged arm lays the handset back on its cradle. Stamp 「买家本人宣布」. No buyer is ever in the room, and no name. | **Push into rat and rabbit** as the wine light warms to day. The podium becomes a museum plinth (**shape match**). |
+| D11 | 一个法国家族，把鼠和兔无偿捐回。 | — | 4.10 | DB | `[wall]` The 国家博物馆 hall (stamp 「2013.6.28 · 北京 · 国家博物馆 · 皮诺家族」). Two relief figures pass one certificate across, each with both hands on it, in front of rat and rabbit on their plinth. Two medallions light: 「回国 7/12」. | The certificate is laid on a table, and a second one slides on top of it: yours, dated 2019 (**paper match**), out of the wall. |
+| E1 | 何鸿燊，也把你捐给了国家。 | — | 3.35 | — | Pays off C2b, the same hall run longer (stamp 「2019.11.13 · 国家博物馆」). Two staff pull the cloth off you, and a brass donation plaque stands beside you. Ho is not drawn. | **Push into the brass plaque.** Its brass becomes the brass base of the desk lamp in his room (material match). |
+| E2a | 2020年5月，何鸿燊去世，98岁。 | — | 3.60 | **STOP**: the lamp goes out on the stop | The private room from D7a, empty: his chair empty, the lamp on, night in the window (stamp 「2020.5.26」). The lamp goes out exactly on the stop. | Same shot. |
+| E2b | 他【没等到】，你回家的那天。 | 没等到 | 3.10 | in the stop (≤ 1 bar) · centred | The dark room. A star in the window and a stirring curtain keep one living motion. | **Push through the window into the star**, which becomes your copper glow inside a crate in a van. |
+| H1a | 同年12月1日， | — | 2.10 | pickup into the drop | The van drives from night into dawn with parallax (near and far trees). Glow leaks between the crate's slats. The van reaches the 圆明园 gate about 2 beats before the drop (stamp 「2020.12.1」). | The camera keeps moving **through the gate** to the courtyard doors. |
+| H1b | 你回到了圆明园。 | — | 2.35 | **DROP (hardest)** | Pays off T4. Two staff push the doors open on the hit and copper light spills across the flagstones. No white flash; the sky is kept darker so you are the brightest thing. Fast push 1.0 → 1.12, then ease. You stand in the 文殊亭. | Continuous. |
+| H2 | 你离开了【160年】。 | 160年 | 2.35 | beat | A slow orbit around you (stamp 「1860 → 2020」). | **Crane up** out of the courtyard. |
+| H3a | 十二个里，回到中国的有七个。 | — | 3.60 | — | The T5 ring forms over the garden and seven medallions light. 「回国 7/12」. | Same shot. |
+| H3b | 如今回到圆明园的，【只有你】。 | 只有你 | 3.35 | **HIT** (twist) | Six lit medallions arc out over the wall to two skyline buildings labelled 「保利艺术博物馆」 (4) and 「国家博物馆」 (2) (≥ 40 px). Only yours stays. 「回家 1/12」 punches in centred, then settles into the counter. | **Pull back wide.** |
+| H4 | 你住进园里唯一幸存的古建筑。 | — | 3.85 | — | Wide: the 正觉寺 courtyard (stamp 「正觉寺 · 文殊亭」). The 西洋楼 ruins appear only far in the background. A ghost of B2's smoke drifts in and stops at the temple wall. | **Push in on you**, orbiting to the ear. |
+| H5a | 细看，你有一只耳朵是卷的。 | — | 3.35 | — | Close-up. The near ear fills ≈ 30 % of the frame height, its top third folded outward. The far ear is straight. | Same shot. |
+| H5b | 研究的人说：你这一路被撞过。 | — | 3.60 | — | A thin ring closes on the fold (stamp 「研究者观察」). Faint saleroom lamp reflections slide over the copper. | **Match cut on the circle**: the ring becomes the round basin of the fountain cast in the wall. |
+| K1a | 正午12点，你们本该一起喷水。 | — | 3.60 | DB (section return) | `[wall]` The wall's fountain panel as memory (stamp 「记忆里的水力钟 · 12:00」, never 「今天」). Twelve arcs rise, a callback to A4. You stand in the round in front of it. | Same shot. |
+| K1b | 现在，还差【十一个】。 | 十一个 | 2.35 | beat · centred | `[wall]` Eleven arcs fall, and those eleven seats go bare. Six of the bare seats get small tags 「保利 ×4 · 国博 ×2」. Only your arc stays. | Same shot. |
+| K2 | 其中五个，至今【没回中国】。 | 没回中国 | 3.10 | DB | `[wall]` The five remaining seats are **uncast niches**: thick outlines of 龙, 蛇, 羊, 鸡 and 狗, each recognisable. | The lamp swings into the dragon's niche, and a relief podium casts itself around the outline. |
+| K3a | 法国还拍出过一个疑似龙首， | — | 3.60 | **HIT (final hit)** | `[wall]` Stamp 「2018.12.17 · 法国」. The hinged gavel arm, already raised, strikes on the hit, and the dragon outline shakes for 2–4 frames. | Same shot. |
+| K3b | 真假，【说不清】。 | 说不清 | 1.85 | — | `[wall]` The outline half-lights and flickers, with a 「?」. Stamp 「真伪仍存疑」. | The lamp pulls back along the wall to the end panel. |
+| Q | 五个要是上拍，该不该【花钱买回来】？ | 花钱买回来 | 4.10 | DB, then **fade-out** over the final bar, ending on a downbeat | `[wall]` **The last image:** you in the round, your single arc lit, in front of the wall's last panel with eleven bare seats and five uncast niches. The Juno end card forms over it, arriving all at once with the question: J monogram, gold title, the question centred with ？ pulled back ½ em, the pill 「关注 Juno · 一起看懂世界」, and the sources. | — |
 
-**Callbacks (set-up → payoff, the same shot run longer):**
-- C2a → D7a, the private room.
-- C2b → E1, the cloth pulled off in the hall.
-- T1 → B3, the looter lifts you.
-- T2 → D2a, hammer 1.
-- T3 → D6a, the held gavel.
-- T4 → H1b, the doors open on the drop.
-- T5's ring → H3a/H3b.
-- A4's twelve arcs → K1a.
-- B2's fire → H4, where the smoke stops at the wall.
-- D2a's London price → D8's bars.
+**Callbacks:**
+- C2a → D7a
+- C2b → E1
+- T1 → B3
+- T2 → D2a
+- T3 → D5/D6a (the gavel at rest)
+- T4 → H1b
+- T5 ring → H3a/H3b
+- A4 → K1a
+- B2 → H4
+- D2a → D8
+- D11's gift → E1's 「也」
 
-**Transitions:** every hand-over between rooms is a different move. In order:
-- continuous pull-back
-- draped-shape match
-- cloth wipe
-- crane into the light dot
-- rewind
-- profile match
-- arc ride
-- light change + tilt
-- ember push
-- smoke → spotlight haze
-- wallpaper re-paper
-- lateral track
-- crate match
-- spot → lamp
-- price card → bar
-- rise up the bar
-- pan to the chair
-- certificate match
-- track through a wall
-- window → star → crate glow
-- forward through the gate
-- crane
-- push into the ear
-- ring → basin
-- outline → podium reveal
-- pull back through the dark
+**Transitions, all different:**
+1. pull-back
+2. draped-shape match
+3. cloth wipe
+4. crane into the light dot
+5. rewind
+6. profile match
+7. light across the pool
+8. light change + tilt
+9. ember push
+10. smoke → raking lamp
+11. dolly along the wall (once)
+12. lamp swing
+13. spot → desk lamp
+14. card → bar
+15. rise up the bar
+16. podium → plinth match
+17. certificate match
+18. brass → brass
+19. window → star → crate
+20. through the gate
+21. crane
+22. push into the ear
+23. ring → basin
+24. lamp into the niche
+25. pull back along the wall
 
 Hard cuts happen only in the T-montage and out of the title.
 
 ## Facts per line
-- C1: F1.
-- C2a: F13.
-- C2b: F15.
-- T1: F9.
-- T2: F11.
-- T3: F12.
-- T4: F21.
-- T5: F23, F27.
-- A1: F5, F7 (乾隆年间 is the safe wording).
-- A2: F4.
-- A3a, A3b, A4: F3 (plus F8b for 11–13 h).
-- B1a, B1b, B2: F9.
-- B3: F9, F10.
-- D1: F11 (correction 6).
-- D2a, D2b: F11.
-- D3a, D3b: F17.
-- D4: F18 (港澳企业家: F13 note).
-- D5: F12.
-- D6a, D6b: F12.
-- D7a, D7b: F13.
-- D8: F11 + F13 估算.
-- D9a, D9b, D10a, D10b: F19.
-- D11: F20.
-- E1: F15.
-- E2a: F16.
-- E2b: F16 + F21 估算.
-- H1a, H1b: F21.
-- H2: F21 估算.
-- H3a, H3b: F21, F23, F24, F27.
-- H4: F22.
-- H5a, H5b: F6.
-- K1a: F3.
-- K1b: F21, F23.
-- K2a, K2b: F23, F27.
-- K3a, K3b: F26.
-- Q: F12, F19, F26.
+| Line | Facts |
+|---|---|
+| C1 | F1 |
+| C2a | F13 |
+| C2b | F15 |
+| T1 | F9 |
+| T2 | F11 |
+| T3 | F12 |
+| T4 | F21 |
+| T5 | F23, F27 |
+| A1 | F5, F7 (乾隆年间) |
+| A2 | F4, F4b (caution: two rows, snake across the pool; exact seat UNVERIFIED, so no seat numbers) |
+| A3a–A4 | F3, F8b |
+| B1a–B2 | F9 |
+| B3 | F9, F10 |
+| D1–D2b | F11 |
+| D3 | F17, F18 |
+| D5–D6b | F12 |
+| D7a, D7b | F13 |
+| D8 | F11 + F13 估算 |
+| D9a–D10b | F19 (phone, two together incl. premium, 5 days, Beijing) |
+| D11 | F20 |
+| E1 | F15 |
+| E2a | F16 |
+| E2b | F16 + F21 估算 |
+| H1a, H1b | F21 |
+| H2 | F21 估算 |
+| H3a, H3b | F21, F23, F24, F27 |
+| H4 | F22 |
+| H5a, H5b | F6 |
+| K1a | F3 |
+| K1b | F21, F23, F27 |
+| K2 | F23, F27 |
+| K3a, K3b | F26 |
+| Q | F12, F19, F26 |
 
-facts.py on these lines: every number traces.
+facts.py: every number traces.
 
-**Flags (check before the build):**
-1. **D6b 「反对公开拍卖」** paraphrases F12's 「表达了终止公开拍卖的坚定立场」. If the director wants the source's own words, use 「国家文物局：终止公开拍卖。」 (same duration).
-2. **D10b** gives the view 环球人物 reports (「他认为这本来就是中国的东西」, F19). It is not a direct quote, and the buyer stays unnamed. It is the most pointed line in the film. It's optional: cutting it saves 3.1 s, and D10a works alone.
-3. **Estimates:**
-   - D2a 几十万美元: sources give $367k (NYRB) and $400k (MIT), so no exact figure goes on screen.
-   - D8 二十多倍: US$8.84 m ÷ $0.367–0.40 m = 22–24×.
-   - H2 160年 and E2b 没等到 are worked out from the dates.
-4. **2026 status** (T5, H3b 如今, K2a, K2b) is caution under F27: nothing new to Oct 2026 and nothing contradicts it.
-5. **Staging, not facts** (keep these off the stamps):
-   - the private desk room (C2a, D7a; F13 says only "private sale brokered by Sotheby's");
-   - the 2003 handshake (F18/MIT: bought from a New York collector);
-   - the van in H1a.
-   - **Don't draw Ho at the 2019 ceremony.** His presence isn't in facts.md.
-6. **Ear (H5a/H5b)** is the researchers' observation (F6): the stamp reads 研究者观察 and the line says 研究的人说.
+**Flags:**
+1. D10a 「5天后」 is worked out from F19's dates (2.25 → 3.2).
+2. D9b follows F19: total for both heads, never 落槌/每个. The board says 合计.
+3. D11 「捐回」 = F20's 无偿捐给中方. The heads went into 国家博物馆's collection.
+4. D3 「先后被买回中国」 covers 2000 (保利, HK auctions) and 2003 (何鸿燊, private purchase). The stamps say who.
+5. Staging, not facts:
+   - the desk room;
+   - the 2003 hands meeting;
+   - the van;
+   - the phone-bank clerks (F19 supports "a phone held by someone in the room").
+6. Earlier flags still stand: 几十万美元, 二十多倍 and 160年 are estimates, and the 2026 status is caution under F27.
 
-## What changed vs v4 (and why)
-1. **Hook.** The paradox (「有人花6910万买下你，」 / 「又把你捐了出去。」) now comes before the title, so the first ~8 s carry a number and a contradiction. The title moves to the first drop (ep43 order, owner row 133). C1 「假如说…」 stays (owner's ask).
-2. **Teaser.** v4 C2–C7 are rewritten as four fates and a punch after the title. Each one is paid off later on the same shot: T1 → B3, T2 → D2a, T3 → D6a, T4 → H1b. This replaces 「被捐了出去」 and 6910万 in the montage, which the hook now carries, and answers the cold read's "前14秒剧透完了".
-3. **Rewind** moves from before the title to T5 → A1, where it carries the cut from 2026 back to 乾隆.
-4. **Highlights** fall from 46 of 47 lines to 17 of 52. They come off places and names (伦敦, 圆明园, 猪首, 马首, 疑似龙首, 水池两边) and stay only on numbers, turns and outcomes.
-5. **Fourteen two-line blocks**, and every line is ≤ 16 wide (v4 D14 was 16.5).
-6. **B section** goes from 3 lines to 5 short ones with the fire as its own HIT line. 「不知去了哪」 becomes 「你被带走了。」 (correction 6: no claim about 1860–1989).
-7. **D2a** puts the London price on screen (几十万美元), so D8 has a baseline. 「比上一次」 becomes 「比伦敦那次」. Cold read: "1989年是什么？"
-8. **D3b** 「被买回中国」 becomes 「三个都被买了回来」, and who bought them goes in the stamp (保利购回). Cold read: "谁买回的？"
-9. **D4:** 港澳企业家 moves to the stamp to fit 16, and the line keeps the name.
-10. **D6b (new)** says why the hammer didn't fall (F12). Cold read: "流拍？撤拍？没解释".
-11. **D7a:** 「还是何鸿燊」 becomes 「何鸿燊私下买下了你」, which names the private sale (F13) instead of relying on the pig-head memory.
-12. **D10b (new)** gives the buyer's reason (F19). It answers the cold read's "为什么拒付" and sets up the end question.
-13. **D11:** 「4年后，鼠和兔被法国一家人送回」 becomes 「2013年，鼠和兔被无偿送回」. It reads alone, and 无偿 is F20's word. The family goes in the stamp.
-14. **E1 「2007到2019年，你在港澳展出」 is cut.** It held no turn and was the weakest beat in the number run. The old E2 is now E1.
-15. **H1b** no longer highlights 圆明园, a place. The drop picture carries it, and H2's 160年 is the number.
-16. **H3/H4** keep 「如今…只有你」 (guards the 2023 visit). In the picture the twist uses the same ring as T5, so set-up and payoff match.
-17. **H7 「人们发现」 becomes H5a 「细看」.** It invites the viewer to find the fold before H5b explains it (gate 4 N8).
-18. **K2 「还差十一个：六个在博物馆，」** is split into K1b and K2a so each reads alone (cold read: "差五个还是差十一个？").
-19. **K5 「2018年，法国拍出疑似龙首，」/「真假，说不清。」** keeps its wording. 「疑似」 and 「说不清」 stay (F26).
-20. **Q:** 「如果找到了」 becomes 「剩下五个再上拍」. It is a concrete case, since one has already come up for sale, so it starts arguments.
-21. **Timing:** no seconds. Every line has a reading minimum and a HIT/DB/STOP/DROP mark for the producer to lay onto bgm2 (one cut + fade-out). The old landmarks are void.
+**Reinstate if the music needs more:**
+- 「谁带走的，没有记录。」 after B3 (F10, +2.6 s)
+- 「六个，在国内的博物馆里，」 before K2 (+3.1 s)
 
-**Reinstate if the cut runs short:** 「谁带走的，没有记录。」 after B3 (F10, +2.6 s) · 「2007到2019年，你在港澳展出。」 before E1 (F14, +3.6 s) · 「240万欧元」 on K3b (F26, +1.25 s).
+**Next to cut if it needs less:** B1b (−2.85 s; director's candidate).
+
+## What changed vs v4 (kept from v5, still true)
+1. The paradox hook (6910万港元 买下 → 捐了出去) comes before the title, and the title moves to the first drop.
+2. The teaser is four year-less fates plus T5, each paid off later on the same shot.
+3. The rewind carries 2026 → 乾隆.
+4. Highlights go from 46 of 47 lines to 15 of 49, never on names or places.
+5. There are two-line blocks, and every line is ≤ 16.
+6. 「不知去了哪」 → 「你被带走了。」 (correction 6).
+7. The London price is on screen, and the comparison is 「比伦敦那次」.
+8. 「国家文物局反对公开拍卖」 explains the missing hammer, and 「私下」 names the private sale.
+9. The buyer's reason (D10b) is new.
+10. 2007–2019 港澳展出 is cut.
+11. 「细看」 invites the viewer to find the ear.
+12. 「还差十一个」 / 「其中五个」 are split so each reads alone.
+13. Q is a concrete either-or.
+14. There are no seconds anywhere: reading minimums plus HIT/DB/STOP/DROP marks.
 
 ---
 
