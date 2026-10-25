@@ -1,0 +1,8 @@
+token present: yes
+url https://bigsoundbank.com/UPLOAD/mp3/3516.mp3
+  saved out/files/bsb_3516_crowd.mp3 8.0 MB
+url https://bigsoundbank.com/UPLOAD/mp3/3522.mp3
+  saved out/files/bsb_3522_applause.mp3 0.6 MB
+url https://bigsoundbank.com/UPLOAD/mp3/2157.mp3
+  saved out/files/bsb_2157_cassette.mp3 0.1 MB
+done
