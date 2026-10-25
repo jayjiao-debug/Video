@@ -19,6 +19,7 @@ for (const [who, o] of Object.entries(cfg)) {
 		['R3 support', c.R3_soles_px.every((d) => Math.abs(d) <= 3), `soles ${f(c.R3_soles_px)} px from the floor`],
 		['R5 hand-purpose', c.R5_hands_px.every((d) => d <= 4) && c.R5_hands_on_edge_px.every((d) => d <= 6), `palms ${f(c.R5_hands_px)} px from their targets; ${f(c.R5_hands_on_edge_px)} px from the leaf edge`],
 		['R6 reachable', c.R6_reach_gap_bu.every((g) => g === 0), `reach gap ${f(c.R6_reach_gap_bu)} bu`],
+		['push elbow ≤ 70°', c.push_elbow_deg <= 70, `pushing (near) arm bends ${f(c.push_elbow_deg)}° (0 = straight; ≤ 70° so the arm reaches and the forearm shows)`],
 		['R7 balance', Math.abs(c.R7_chest_vs_feet_px) <= 0.2 * o.h, `chest ${f(c.R7_chest_vs_feet_px)} px ahead of the feet midpoint (push, hands on the leaf; limit ${0.2 * o.h} px)`],
 	];
 	console.log(`${who}: knee bend picked ${r.fk.lk}°; near shoulder at (${c.near_shoulder_at_torso_top.map((v) => v.toFixed(0))}), neck (${c.neck.map((v) => v.toFixed(0))})`);

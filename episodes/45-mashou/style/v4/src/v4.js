@@ -56,30 +56,72 @@ K.ROW_L = ['狗', '猴', '马', '龙', '虎', '鼠'];   // front → back, left 
 K.ROW_R = ['猪', '鸡', '羊', '蛇', '兔', '牛'];   // front → back, across the pool, facing left (the snake across from you)
 // r3 (note 3b): seats spaced on t = (i/5)^0.72, wider gaps at the front, so 狗's muzzle clears 猴
 K.seatAt = (side, i) => { const t = Math.pow(i / 5, 0.72), s = 1 - 0.55 * t; const x = 360 + 430 * t, y = 930 - 280 * t; return {x: side < 0 ? x : 1920 - x, y, s, t}; };
+// r4 (gate 2b r3 n7): redrawn from the 海晏堂 model (haiyantang_model_bjnews.jpg; reference only, not traced). NO clock pediment:
+// two storeys of tall rectangular lattice windows under small cornice caps; a raised centre of two tower bays with scrolled caps and
+// urn finials; between them a baroque scroll gable crowned by a shell; under the gable the great shell relief wall that backs the
+// water clock, with the shell-and-vase fountain at its foot; balustraded parapet with urns. The double curved stair is K.stairs.
 K.facade = (mode) => {
 	const fire = mode === 'fire';
-	const lit = fire ? '#2A1712' : '#8C8371', sh = fire ? '#1E100C' : '#5C554A', win = fire ? 'url(#winfire)' : '#3A342E', trim = fire ? '#3A2018' : '#C4BAA2';
-	let w = '';
-	for (let i = 0; i < 16; i++) { const x = 330 + i * 80; if (x > 800 && x < 1080) continue; const on = !fire || K.rnd(i + 300) > 0.3;
-		w += `<path d="M${x},612 L${x},560 A20,20 0 0 1 ${x + 40},560 L${x + 40},612 Z" fill="${on ? win : '#2a1610'}"/>
-		<path d="M${x},500 L${x},462 A20,20 0 0 1 ${x + 40},462 L${x + 40},500 Z" fill="${on ? win : '#2a1610'}"/>`; }
-	for (let i = 0; i < 3; i++) { const x = 880 + i * 60; w += `<path d="M${x},${512} L${x},468 A20,20 0 0 1 ${x + 40},468 L${x + 40},512 Z" fill="${win}"/>`; }
+	const lit = fire ? '#2A1712' : '#8C8371', sh = fire ? '#1E100C' : '#5C554A', win = fire ? 'url(#winfire)' : '#3A342E', trim = fire ? '#3A2018' : '#C4BAA2', hi = fire ? '#5A2A1A' : '#D8CFB8';
+	const winR = (x, y, w, h, k) => { const on = !fire || K.rnd(k + 300) > 0.3, f = on ? win : '#2a1610';
+		let g = ''; for (let j = 1; j < 3; j++) g += `M${x + w * j / 3},${y} L${x + w * j / 3},${y + h} `; for (let j = 1; j < 5; j++) g += `M${x},${y + h * j / 5} L${x + w},${y + h * j / 5} `;
+		return `<rect x="${x - 5}" y="${y - 5}" width="${w + 10}" height="${h + 8}" fill="${trim}" opacity=".55"/><rect x="${x}" y="${y}" width="${w}" height="${h}" fill="${f}"/>
+			<path d="${g}" stroke="${sh}" stroke-width="2" opacity="${fire ? 0.8 : 0.6}"/><path d="M${x - 9},${y - 9} L${x + w / 2},${y - 20} L${x + w + 9},${y - 9} Z" fill="${trim}" opacity=".8"/>`; };
+	const urn = (x, y, k = 1) => `<path d="M${x - 7 * k},${y} L${x + 7 * k},${y} L${x + 5 * k},${y - 6 * k} C${x + 10 * k},${y - 10 * k} ${x + 9 * k},${y - 19 * k} ${x + 3 * k},${y - 22 * k} L${x + 2 * k},${y - 28 * k} C${x + 2 * k},${y - 31 * k} ${x - 2 * k},${y - 31 * k} ${x - 2 * k},${y - 28 * k} L${x - 3 * k},${y - 22 * k} C${x - 9 * k},${y - 19 * k} ${x - 10 * k},${y - 10 * k} ${x - 5 * k},${y - 6 * k} Z" fill="${lit}"/>`;
+	let w = '', par = '';
+	// side wings: two storeys of rectangular windows, pilasters between bays
+	for (let i = 0; i < 16; i++) { const x = 326 + i * 80; if (x > 720 && x < 1180) continue;
+		w += winR(x + 6, 556, 30, 58, i) + winR(x + 6, 448, 30, 50, i + 40) + `<rect x="${x - 14}" y="420" width="8" height="200" fill="${sh}" opacity=".45"/>`; }
+	// parapet: balusters + urns on the piers
+	for (let i = 0; i < 38; i++) { const x = 300 + i * 35; if (x > 750 && x < 1170) continue; par += `<rect x="${x + 13}" y="392" width="9" height="12" fill="${lit}"/>`; }
+	for (let i = 0; i < 8; i++) { const x = 300 + i * 64; par += urn(x + 14, 386) + urn(1620 - (x + 14 - 300), 386); }
+	// the raised centre: two tower bays with scrolled caps and urns, the scroll gable between them crowned by a shell
+	const tower = (x) => `<rect x="${x}" y="330" width="100" height="310" fill="${lit}"/>
+		<rect x="${x}" y="330" width="10" height="310" fill="${hi}" opacity=".5"/><rect x="${x + 90}" y="330" width="10" height="310" fill="${sh}" opacity=".5"/>
+		<rect x="${x - 8}" y="322" width="116" height="10" fill="${trim}"/>
+		<path d="M${x + 4},322 C${x + 4},300 ${x + 30},292 ${x + 50},296 C${x + 70},292 ${x + 96},300 ${x + 96},322 Z" fill="${lit}"/>
+		<path d="M${x + 14},320 C${x + 16},306 ${x + 34},300 ${x + 50},304 C${x + 66},300 ${x + 84},306 ${x + 86},320" stroke="${trim}" stroke-width="3" fill="none"/>
+		${urn(x + 50, 296, 1.25)}${winR(x + 30, 430, 40, 150, x)}${winR(x + 34, 348, 32, 44, x + 1)}`;
+	// the scroll gable: concave–convex S sides ending in volutes, a short level cornice, the shell on top (not a dome, not a pediment)
+	const gable = `<path d="M860,640 L860,380 C878,380 886,368 884,356 C882,344 870,340 870,330 C876,322 892,326 900,336 C912,328 916,318 920,312 L1000,312 C1004,318 1008,328 1020,336 C1028,326 1044,322 1050,330 C1050,340 1038,344 1036,356 C1034,368 1042,380 1060,380 L1060,640 Z" fill="${lit}"/>
+		<circle cx="880" cy="350" r="7" fill="none" stroke="${trim}" stroke-width="3"/><circle cx="1040" cy="350" r="7" fill="none" stroke="${trim}" stroke-width="3"/>
+		<rect x="914" y="306" width="92" height="8" fill="${trim}"/>
+		<!-- the crowning shell -->
+		<path d="M960,270 C940,270 928,284 930,306 L990,306 C992,284 980,270 960,270 Z" fill="${hi}" opacity=".85"/>
+		${[-24, -12, 0, 12, 24].map((d) => `<path d="M960,306 L${960 + d * 1.1},${274 + Math.abs(d) * 0.35}" stroke="${sh}" stroke-width="1.6" opacity=".7"/>`).join('')}
+		${winR(930, 392, 60, 104, 7)}`;
+	// the great shell relief wall over the water clock (fan ribs), and the shell-and-vase fountain at its foot
+	const ribs = Array.from({length: 13}, (_, k) => { const a = Math.PI * (1 + k / 12); return `M960,600 L${960 + Math.cos(a) * 92},${600 + Math.sin(a) * 62}`; }).join(' ');
+	const shell = `<path d="M842,640 L842,600 C842,540 900,510 960,510 C1020,510 1078,540 1078,600 L1078,640 Z" fill="${trim}" opacity="${fire ? 1 : 0.9}"/>
+		<path d="M868,600 C868,560 912,538 960,538 C1008,538 1052,560 1052,600 Z" fill="${hi}" opacity=".55"/><path d="${ribs}" stroke="${sh}" stroke-width="2.4" opacity=".55"/>
+		<path d="M930,640 C930,624 940,614 948,612 C944,604 946,596 960,594 C974,596 976,604 972,612 C980,614 990,624 990,640 Z" fill="${hi}"/>
+		<ellipse cx="960" cy="612" rx="34" ry="7" fill="${lit}"/>`;
 	return `<path d="M300,640 L300,420 L292,420 L292,404 L1628,404 L1628,420 L1620,420 L1620,640 Z" fill="${lit}"/>
 	<rect x="292" y="520" width="1336" height="12" fill="${trim}"/><rect x="300" y="620" width="1320" height="20" fill="${sh}"/>
-	${Array.from({length: 38}, (_, i) => `<rect x="${300 + i * 35}" y="392" width="9" height="12" fill="${lit}"/>`).join('')}<rect x="292" y="386" width="1336" height="7" fill="${lit}"/>
-	<path d="M830,640 L830,370 L820,370 L820,356 L960,300 L1100,356 L1090,370 L1090,640 Z" fill="${lit}"/>
-	<path d="M842,360 L960,314 L1078,360 Z" fill="${sh}" opacity=".7"/><circle cx="960" cy="340" r="13" fill="${trim}"/>
-	${Array.from({length: 7}, (_, i) => `<rect x="${300 + i * 220}" y="420" width="14" height="200" fill="${sh}" opacity=".5"/>`).join('')}
-	${w}
-	<path d="M912,640 L912,578 A48,48 0 0 1 1008,578 L1008,640 Z" fill="${fire ? 'url(#winfire)' : '#2E2924'}"/>`;
+	${par}<rect x="292" y="386" width="1336" height="7" fill="${lit}"/>
+	${w}${tower(760)}${tower(1060)}${gable}${shell}`;
 };
+/** r4 (n7): the DOUBLE CURVED STAIR of the model — a balcony landing across the centre at the upper door, and two flights that
+ * curve outward and down around the shell wall to the terraces, each with a balustrade (rail + balusters + end piers with urns). */
 K.stairs = (mode) => {
-	const fire = mode === 'fire', st = fire ? '#24130E' : '#958B76', edge = fire ? '#F0904A' : '#D9CFB6', bal = fire ? '#1A0E0A' : '#7F7664';
+	const fire = mode === 'fire', st = fire ? '#24130E' : '#A39883', tread = fire ? '#160C08' : '#7A7262', edge = fire ? '#F0904A' : '#E2D8BE', bal = fire ? '#1A0E0A' : '#8C8371';
+	const bz = (a, b, c, d, t) => [0, 1].map((j) => (1 - t) ** 3 * a[j] + 3 * (1 - t) ** 2 * t * b[j] + 3 * (1 - t) * t * t * c[j] + t ** 3 * d[j]);
 	const side = (f) => { const X = (x) => (f < 0 ? x : 1920 - x);
-		return `<path d="M${X(912)},640 C${X(820)},652 ${X(720)},664 ${X(640)},700 L${X(600)},720 L${X(560)},720 L${X(600)},690 C${X(690)},646 ${X(800)},628 ${X(912)},622 Z" fill="${st}"/>
-		<path d="M${X(912)},604 C${X(800)},610 ${X(690)},628 ${X(600)},672 L${X(586)},684" stroke="${bal}" stroke-width="16" fill="none"/>
-		<path d="M${X(912)},596 C${X(800)},602 ${X(690)},620 ${X(600)},664" stroke="${edge}" stroke-width="2.5" fill="none" opacity=".6"/>`; };
-	return side(-1) + side(1);
+		const O = [[X(862), 500], [X(800), 506], [X(724), 566], [X(668), 650]], I = [[X(862), 524], [X(812), 530], [X(752), 578], [X(706), 650]];
+		let steps = '', balus = '';
+		for (let k = 1; k < 16; k++) { const t = k / 16, o = bz(...O, t), i = bz(...I, t); steps += `M${o[0].toFixed(1)},${o[1].toFixed(1)} L${i[0].toFixed(1)},${i[1].toFixed(1)} `; }
+		for (let k = 0; k <= 14; k++) { const o = bz(...O, k / 14); balus += `M${o[0].toFixed(1)},${o[1].toFixed(1)} l0,-14 `; }
+		const rail = 'M' + Array.from({length: 21}, (_, k) => bz(...O, k / 20)).map((q) => `${q[0].toFixed(1)},${(q[1] - 15).toFixed(1)}`).join(' L');
+		const end = bz(...O, 1);
+		return `<path d="M${O[0]} C${O[1]} ${O[2]} ${O[3]} L${I[3]} C${I[2]} ${I[1]} ${I[0]} Z" fill="${st}"/>
+			<path d="${steps}" stroke="${tread}" stroke-width="2.2" opacity=".8"/>
+			<path d="${balus}" stroke="${bal}" stroke-width="3.2"/><path d="${rail}" stroke="${bal}" stroke-width="5" fill="none" stroke-linecap="round"/>
+			<path d="${rail}" stroke="${edge}" stroke-width="1.8" fill="none" opacity=".55" transform="translate(0,-2)"/>
+			<rect x="${end[0] - 7}" y="${end[1] - 26}" width="14" height="26" fill="${bal}"/>`; };
+	// the balcony landing across the centre, under the upper door
+	let lb = ''; for (let x = 870; x <= 1050; x += 12) lb += `M${x},500 l0,-14 `;
+	return side(-1) + side(1) + `<rect x="856" y="498" width="208" height="14" fill="${st}"/><path d="${lb}" stroke="${bal}" stroke-width="3.2"/>
+		<path d="M856,485 L1064,485" stroke="${bal}" stroke-width="5"/><path d="M856,483 L1064,483" stroke="${edge}" stroke-width="1.8" opacity=".55"/>`;
 };
 /** the pool: fan basin between the terraces (back edge narrow by the stair foot, front edge wide) */
 K.pool = (mode) => {

@@ -508,15 +508,15 @@
     const flip = o.face < 0, place = { x: o.x, ground: o.ground, h: o.h, flip };
     let best = null;
     for (let lk = 10; lk <= 60; lk += 1) {
-      const fk = { hip: 0.6, lean: 13, neck: 2, lt: 24, lk, rt: -22, rk: 6, rf: 18, la: 30, le: 40, ra: 30, re: 40 };
+      const fk = { hip: 0.6, lean: 13, neck: 2, lt: 20, lk, rt: -13, rk: 6, rf: 14, la: 30, le: 40, ra: 30, re: 40 };
       const p = fkPose(fk), e = Math.abs(soleOf(p, "L")[1] - soleOf(p, "R")[1]);
       if (!best || e < best.err) best = { pose: p, fk, err: e };
     }
     let pose = best.pose;
-    const sh = pose.LSh, chestY = sh[1] - 0.1, lowY = sh[1] - 0.135;
-    const edgeB = toBody(place, [o.edgeX, 0])[0];
-    const tNear = [edgeB - BL.grip * 0.2, chestY], tFar = [edgeB - BL.grip * 0.2, lowY];
-    pose = reach(reach(pose, "L", tNear, { dir: 8 }), "R", tFar, { dir: -4 });
+    const sh = pose.LSh, chestY = sh[1] - 0.1, lowY = sh[1] - 0.118;
+    const edgeB = toBody(place, [o.edgeX, 0])[0], PALM = 0.014;
+    const tNear = [edgeB - PALM, chestY], tFar = [edgeB - PALM, lowY];
+    pose = reach(reach(pose, "L", tNear, { dir: 90 }), "R", tFar, { dir: 90 });
     const svg = rimmedSVG({ x: o.x, ground: o.ground, h: o.h, flip, pose, look: LOOK, col: o.col ?? "#140D0A", rim: o.rim ?? "#FFB070", rimOp: 0.55, rimDx: flip ? 2.6 : -2.6, rimDy: -1.2 });
     const scr = (b) => [o.x + (flip ? -1 : 1) * b[0] * o.h, o.ground - b[1] * o.h];
     const handN = handAt({ ...place, pose }, "L"), handF = handAt({ ...place, pose }, "R");
@@ -539,7 +539,9 @@
       R5_hands_px: [Math.hypot(handN[0] - scr(tNear)[0], handN[1] - scr(tNear)[1]), Math.hypot(handF[0] - scr(tFar)[0], handF[1] - scr(tFar)[1])],
       // ≤ 4 px
       R5_hands_on_edge_px: [Math.abs(handN[0] - o.edgeX), Math.abs(handF[0] - o.edgeX)],
-      R6_reach_gap_bu: [reachGap(pose, "L", tNear, { dir: 8 }), reachGap(pose, "R", tFar, { dir: -4 })],
+      R6_reach_gap_bu: [reachGap(pose, "L", tNear, { dir: 90 }), reachGap(pose, "R", tFar, { dir: 90 })],
+      push_elbow_deg: elbow("L"),
+      // r4: the pushing (near) arm reaches: bend ≤ 70°
       R7_chest_vs_feet_px: scr(pose.Neck1)[0] - (feet[0][0] + feet[1][0]) / 2,
       // a push lean: chest ahead of the feet, hands on the leaf
       near_shoulder_at_torso_top: scr(pose.LSh),

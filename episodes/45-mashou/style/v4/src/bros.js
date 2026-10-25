@@ -8,8 +8,12 @@ const W = (d, w = 6) => `<path d="${d}" fill="none" stroke="currentColor" stroke
 K.BRO = {
 	鼠: `<path d="M6,66 C14,56 30,46 52,44 C74,42 88,52 88,64 C88,76 78,84 62,84 C44,84 24,76 6,68 Z"/>
 		<circle cx="64" cy="30" r="17"/><circle cx="6" cy="66" r="4"/>${W('M12,64 L-10,54 M12,66 L-12,66 M12,68 L-10,78', 1.8)}`,
+	// 牛 (r4, cold read r3: "ox, or a rhino/horse"): the horns now sit on the POLL, not the forehead, and there are TWO — a thick
+	// near horn rising and hooking forward, the far horn rising and hooking back — so the pair reads as a cow's lyre, never a nose horn.
 	牛: `<path d="M6,48 C8,42 24,36 44,34 L74,34 C88,38 92,54 90,70 C88,84 72,90 52,88 L6,86 Z"/>
-		<path d="M52,40 C56,22 48,6 26,0 C36,10 40,22 40,38 Z"/><path d="M74,42 L100,40 L98,52 L76,56 Z"/>`,
+		<path d="M64,38 C60,26 56,16 48,10 C44,7 38,7 34,9 C40,13 43,18 45,26 C46,31 46,36 46,40 Z"/>
+		<path d="M66,38 C68,26 72,16 80,10 C84,7 90,7 94,9 C88,13 85,18 84,26 C83,31 83,36 83,40 Z"/>
+		<path d="M76,44 L102,40 L100,52 L78,58 Z"/>`,
 	虎: `<path d="M6,58 C6,44 22,34 44,30 C66,26 86,36 92,52 C96,68 90,80 80,86 L78,98 L70,88 L62,98 L56,88 L48,96 L44,86 C26,86 8,76 6,64 Z"/>
 		<circle cx="56" cy="26" r="9"/><circle cx="74" cy="30" r="8"/><ellipse cx="12" cy="64" rx="12" ry="14"/>`,
 	兔: `<ellipse cx="44" cy="66" rx="25" ry="17"/><path d="M50,56 C42,30 44,6 54,0 C66,6 66,32 62,56 Z"/>
@@ -23,7 +27,9 @@ K.BRO = {
 		${W('M58,40 C62,20 88,16 94,36 C98,54 82,64 72,56 C64,50 68,40 78,42', 10)}<path d="M14,82 L18,98 L26,84 Z"/>`,
 	// 猴 (r3, note 3a): no brow bar. A round cranium, a deep concave face, a protruding rounded muzzle with the mouth open (a notch in
 	// the outline), a large round ear set mid-head at the back, a jagged cheek fringe under the jaw.
-	猴: `<path d="M46,20 C37,22 33,29 34,36 C34,41 37,45 39,49 C32,50 25,53 21,58 C18,62 19,66 23,66 L31,65 L24,70 C24,75 28,78 34,78 L50,82 C70,85 87,72 87,54 C87,33 73,18 58,18 C54,18 50,19 46,20 Z"/>
+	// r4 (cold read r3: "a person with a hairstyle"): the B5 fallback — the muzzle is 8 units longer, and a pale bare-face disc
+	// (K.BRO_FACE) sits inside the silhouette around the eye and muzzle, as on a macaque.
+	猴: `<path d="M46,20 C37,22 33,29 34,36 C34,41 37,45 39,49 C30,50 19,52 13,57 C9,61 10,66 15,66 L28,65 L18,70 C18,75 24,78 32,78 L50,82 C70,85 87,72 87,54 C87,33 73,18 58,18 C54,18 50,19 46,20 Z"/>
 		<circle cx="86" cy="50" r="12.5"/><path d="M34,77 L30,90 L39,83 L41,96 L48,85 L52,98 L56,85 L63,94 L64,80 Z"/>`,
 	鸡: `<circle cx="54" cy="58" r="19"/><path d="M38,52 L14,58 L38,66 Z"/>
 		<path d="M38,44 L40,22 L48,36 L54,16 L60,34 L68,18 L72,36 L80,30 L76,48 Z"/><ellipse cx="38" cy="78" rx="7" ry="12"/>
@@ -33,13 +39,19 @@ K.BRO = {
 	猪: `<path d="M14,44 L12,78 L22,80 C36,88 60,90 78,80 C90,72 92,52 82,42 C70,30 40,32 22,42 Z"/>
 		<ellipse cx="11" cy="61" rx="7" ry="17"/><path d="M58,40 C56,22 72,12 86,18 L74,48 Z"/>`,
 };
+// a pale inner shape drawn over the silhouette (only 猴: the bare face disc), with its dark eye and nostril marks
+K.BRO_FACE = {猴: {d: 'M43,29 C35,30 33,38 36,45 C28,48 19,52 15,57 C13,61 15,63 19,63 L29,62 C37,64 46,67 53,62 C58,55 58,42 54,35 C51,31 47,29 43,29 Z',
+	marks: '<ellipse cx="41" cy="41" rx="3.4" ry="2.8"/><ellipse cx="17" cy="58" rx="1.8" ry="1.4"/>'}};
 // eye position per head (a small incised dot, visible only when the head is lit; silhouettes don't need it)
 K.BEYE = {鼠: [40, 54], 牛: [38, 50], 虎: [36, 52], 兔: [36, 60], 龙: [42, 50], 蛇: [26, 46], 羊: [36, 54], 猴: [40, 41], 鸡: [48, 54], 狗: [38, 54], 猪: [40, 52]};
 // mouth (spout point) per head, in box units
-K.BMOUTH = {鼠: [4, 65], 牛: [8, 72], 虎: [10, 72], 兔: [20, 72], 龙: [8, 72], 蛇: [4, 52], 羊: [6, 70], 猴: [18, 68], 鸡: [16, 60], 狗: [4, 66], 猪: [6, 66]};
+K.BMOUTH = {鼠: [4, 65], 牛: [8, 72], 虎: [10, 72], 兔: [20, 72], 龙: [8, 72], 蛇: [4, 52], 羊: [6, 70], 猴: [14, 68], 鸡: [16, 60], 狗: [4, 66], 猪: [6, 66]};
+/** the pale bare-face tone for a given silhouette fill: lifted toward a warm ivory so it reads at 400 px on dark and bronze heads */
+const broPale = (fill) => { const m = /^#([0-9a-f]{6})$/i.exec(fill || ''); if (!m) return '#B89A7A'; const c = [0, 2, 4].map((i) => parseInt(m[1].slice(i, i + 2), 16)), t = [0xD9, 0xBE, 0x9C];
+	return '#' + c.map((v, i) => Math.round(v + (t[i] - v) * 0.55).toString(16).padStart(2, '0')).join(''); };
 /** a brother's head. (x, y) = neck base centre on screen, size = box px, face -1 left / +1 right. */
 const CUT = {牛: 'M4,64 L14,64', 虎: 'M50,32 L46,46 M62,30 L58,44 M74,36 L68,48 M86,50 L76,56 M88,64 L78,66', 狗: 'M24,64 L4,64'};
 K.bro = (kind, x, y, size, face, fill, extra = '') => { const m = CUT[kind] ? K.uid('bm') : null;
-	return `<g transform="translate(${x},${y}) scale(${(-face) * size / 100},${size / 100}) translate(-70,-100)" fill="${fill}" color="${fill}" ${extra}>${m ? `<mask id="${m}" maskUnits="userSpaceOnUse" x="-40" y="-40" width="180" height="180"><rect x="-40" y="-40" width="180" height="180" fill="#fff"/><path d="${CUT[kind]}" stroke="#000" stroke-width="3.2" stroke-linecap="round"/></mask>` : ''}<g ${m ? `mask="url(#${m})"` : ''}><path d="${NECK}"/>${K.BRO[kind]}</g></g>`; };
+	return `<g transform="translate(${x},${y}) scale(${(-face) * size / 100},${size / 100}) translate(-70,-100)" fill="${fill}" color="${fill}" ${extra}>${m ? `<mask id="${m}" maskUnits="userSpaceOnUse" x="-40" y="-40" width="180" height="180"><rect x="-40" y="-40" width="180" height="180" fill="#fff"/><path d="${CUT[kind]}" stroke="#000" stroke-width="3.2" stroke-linecap="round"/></mask>` : ''}<g ${m ? `mask="url(#${m})"` : ''}><path d="${NECK}"/>${K.BRO[kind]}</g>${K.BRO_FACE[kind] ? `<path d="${K.BRO_FACE[kind].d}" fill="${broPale(fill)}"/><g fill="${fill}">${K.BRO_FACE[kind].marks}</g>` : ''}</g>`; };
 K.broPt = (kind, x, y, size, face, p) => { const q = (p === 'mouth' ? K.BMOUTH : K.BEYE)[kind]; return [x + (-face) * (q[0] - 70) * size / 100, y + (q[1] - 100) * size / 100]; };
 })();

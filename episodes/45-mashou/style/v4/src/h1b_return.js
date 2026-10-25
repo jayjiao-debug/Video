@@ -5,7 +5,10 @@
 // r3 (note 2b): the hall's back wall falls off to ≤ 110 around you and your lit face is the brightest thing there; your copper
 // spill runs down the steps to the lens, lights the eave's underside (rafters, 翼角) and the pines' needle edges.
 const rnd = K.rnd, S = '#140D0A';
-const hero = {x: 1040, y: 640, h: 182, curl: 1, glow: 0.25, key: 2.7, mood: 'warm', refl: '#C9C2B0', base: 'block', block: {w: 1060, h: (948 - 640) / (182 / 925)}};
+// r4 (gate 2b r3 n4, staging): the plinth stands INSIDE the hall, on its floor (base y 860, behind the staff's floor line 872),
+// 180 px wide and centred on the doorway (x 975); the staff flank it at their leaves and the doors open onto you.
+const HS = 176 / 925, PLINTH = {cx: 975, base: 860, top: 505, w: 180};
+const hero = {x: PLINTH.cx - (922 - 836) * HS, y: PLINTH.top, h: 176, curl: 1, glow: 0.25, key: 2.7, mood: 'warm', refl: '#C9C2B0', base: 'block', block: {w: PLINTH.w / HS, h: (PLINTH.base - PLINTH.top) / HS}};
 // a profile figure walking a door leaf back: faces f, both hands on the leaf edge at (ex, ey..ey+dy)
 const staff = (o) => window.STAFF45({...o, col: S, rim: '#FFB070'}).svg;
 const lingHua = (x, y, w, hh, col, id) => { let d = ''; for (let i = -hh; i < w + hh; i += 26) d += `M${x + i},${y} l${hh * 0.58},${hh} M${x + i},${y} l${-hh * 0.58},${hh} `;
@@ -48,10 +51,10 @@ ${[[310, 0], [480, 1], [1460, 2], [1620, 3]].map(([x, k]) => geshan(x - 10, 190,
 <path d="M674,190 L740,226 L740,888 L674,940 Z" fill="#3A2216"/>${lingHua(682, 244, 50, 330, '#24150E', 'lhL')}<path d="M740,226 L740,888" stroke="#FFC890" stroke-width="3"/>
 <path d="M1276,190 L1210,226 L1210,888 L1276,940 Z" fill="#3A2216"/>${lingHua(1218, 244, 50, 330, '#24150E', 'lhR')}<path d="M1210,226 L1210,888" stroke="#FFC890" stroke-width="3"/>
 <rect x="674" y="880" width="602" height="60" fill="#6A3A20" opacity=".6"/>
-${staff(window.H1B_STAFF.left)}${staff(window.H1B_STAFF.right)}
 <rect x="674" y="190" width="602" height="750" fill="url(#youLight)"/>
-<!-- you on the exhibit block at the threshold -->
+<!-- you on the exhibit plinth inside the hall (behind the staff's floor line), then the staff in front of it -->
 ${window.NOHERO ? '' : K.horseHead(hero)}
+${staff(window.H1B_STAFF.left)}${staff(window.H1B_STAFF.right)}
 <!-- the eave: the lower eave's underside across the top, lit rafters, an upturned 翼角 at each end -->
 <path d="M0,0 L1920,0 L1920,96 C1700,118 1400,134 975,138 C550,134 250,118 0,96 Z" fill="url(#eave)"/>
 ${Array.from({length: 34}, (_, i) => { const x = 40 + i * 56, y = 98 + 38 * Math.sin(Math.PI * (x / 1950)); return `<rect x="${x}" y="${y - 30}" width="20" height="30" fill="#3A2216"/><rect x="${x}" y="${y - 6}" width="20" height="6" fill="#E8945A" opacity="${0.35 + 0.45 * Math.exp(-Math.pow((x - 975) / 520, 2))}"/>`; }).join('')}

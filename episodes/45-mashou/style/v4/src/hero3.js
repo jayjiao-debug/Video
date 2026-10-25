@@ -28,20 +28,22 @@ const mixC = (a, b, t) => { const A = hex(a), B = hex(b); return '#' + A.map((v,
 /* ---------- head (head-local: nose to the LEFT along −x, poll at 0,0, y down) ---------- */
 // muzzle tip → ear base ≈ 620; depth at the mouth corner ≈ 240 (×2.6); the jowl is deep and round and sits just above the cut
 const HEAD = `M0,0 C-50,-8 -110,0 -164,12 C-280,26 -410,40 -512,50 C-572,56 -616,94 -620,142 C-622,178 -608,200 -580,206
-C-546,210 -500,206 -452,198 L-448,210 C-492,226 -532,236 -558,244 C-584,252 -586,278 -564,288 C-532,300 -488,294 -442,294
-C-360,298 -290,330 -236,380 C-180,436 -120,456 -56,446 C4,436 40,370 42,280 C42,170 22,64 0,0 Z`;
-const MOUTH_IN = `M-582,204 L-452,200 L-560,248 C-574,236 -582,220 -582,204 Z`;
+C-548,214 -500,236 -452,262 L-450,270 C-490,258 -530,240 -561,233 C-569,246 -569,268 -558,284 C-544,302 -500,308 -442,304
+C-360,308 -290,336 -236,386 C-190,428 -140,458 -86,462 C-36,464 0,444 14,414 C30,380 40,330 44,280 C46,170 24,64 0,0 Z`;
+const MOUTH_IN = `M-588,204 C-548,214 -500,236 -452,262 L-450,272 C-490,260 -530,242 -563,233 C-576,228 -586,218 -588,204 Z`;
 const TOP_PLANE = `M14,-30 L0,0 C-50,-8 -110,0 -164,12 C-280,26 -410,40 -512,50 C-556,54 -592,76 -608,108 L-574,106
 C-562,90 -540,84 -514,82 C-410,72 -290,62 -180,50 C-120,44 -64,40 -20,46 Z`;
 const REFL = `M-150,20 C-260,32 -390,46 -490,58 C-520,60 -546,70 -562,86 L-556,92 C-540,80 -518,74 -490,72 C-390,60 -262,48 -150,34 Z`;
-const UPPER_SIDE = `M-20,46 C-64,40 -120,44 -180,50 C-290,62 -410,72 -514,82 C-540,84 -562,92 -574,108 L-588,166
-C-540,166 -484,178 -446,194 C-390,214 -320,240 -240,250 C-150,262 -60,272 40,290 L30,60 Z`;
-const CHEEK_EDGE = `M40,290 C-60,272 -150,262 -240,250 C-320,240 -390,214 -446,196`;      // hard plane edge, throat → mouth corner
-const JAW_SHADE = `M40,290 C-60,272 -150,262 -240,250 C-320,240 -390,214 -446,196 L-446,206 C-492,226 -532,236 -558,244 L-600,340 L-60,520 L60,400 Z`;
-const JAW_CORE = `M-442,294 C-360,298 -290,330 -236,380 C-180,436 -120,456 -56,446 C-20,440 10,420 26,392
-C-20,416 -90,422 -150,404 C-220,384 -290,330 -380,306 C-410,300 -430,300 -442,302 Z`;
-const JOWL_RIM = `M30,380 C40,350 44,316 42,280`;
-const JAW_RIM = `M-442,294 C-360,298 -290,330 -236,380 C-180,436 -120,456 -56,446`;
+const UPPER_SIDE = `M-20,46 C-64,40 -120,44 -180,50 C-290,62 -410,72 -514,82 C-540,84 -562,92 -574,108 L-590,170
+C-560,186 -500,224 -452,262 C-400,232 -300,186 -210,150 C-150,140 -60,150 70,190 L40,60 Z`;
+const CHEEK_EDGE = `M-452,262 C-400,232 -300,186 -210,150`;      // r4: the hard plane edge runs only mouth corner → under the eye
+const JAW_SHADE = `M-452,262 C-400,232 -300,186 -210,150 C-150,140 -60,150 70,190 L120,520 L-600,520 L-600,330 Z`;
+const JAW_SOFT = `M-196,151 C-150,142 -60,152 70,192`;   // behind the eye the plane change is soft: a blurred mid-value band over the edge
+// the big round jowl: lit upper edge, shadow under, no outline (n3)
+const JOWL = {c: [-92, 352], rx: 128, ry: 104, rot: -8};
+const JAW_CORE = `M-442,304 C-360,308 -290,336 -236,386 C-190,428 -140,458 -86,462 C-36,464 0,444 14,414
+C-30,440 -100,440 -160,414 C-230,384 -300,338 -380,318 C-410,312 -430,312 -442,314 Z`;
+const JAW_RIM = `M-442,304 C-360,308 -290,336 -236,386 C-190,428 -140,458 -86,462`;
 const TOP_LINE = `M0,0 C-50,-8 -110,0 -164,12 C-280,26 -410,40 -512,50 C-572,56 -616,94 -620,142`;
 const CREST_RIDGE = `M-130,132 C-90,142 -40,148 10,148`;           // facial crest: from under the eye back to the jaw joint
 const MUZZLE_LIT = `M-520,84 C-560,88 -596,108 -604,140 C-606,158 -598,172 -580,174 C-576,152 -560,134 -536,124 C-510,114 -488,112 -470,112 Z`;
@@ -49,8 +51,7 @@ const NOSTRIL = `M-544,132 C-568,132 -584,150 -584,168 C-584,178 -576,184 -568,1
 const NOSTRIL_FLARE = `M-516,152 C-504,166 -508,186 -526,196`;
 const NOSTRIL_RIM = `M-584,168 C-582,150 -570,138 -552,134`;
 const NOSE_FOLD = `M-530,118 C-518,110 -498,110 -484,118`;
-const LIP_LINE = `M-576,210 C-544,214 -500,208 -452,200`;
-const CHIN_LIT = `M-564,288 C-532,300 -488,294 -442,294`;
+const LIP_LINE = `M-584,210 C-548,218 -500,240 -456,264`;   // r4: falls toward the corner (no grin); no chin rim
 const SPECS = [['M-110,16 C-140,20 -170,24 -194,30', 5, 0.85], ['M-430,54 C-460,57 -482,59 -502,62', 4, 0.75], ['M-596,114 C-604,126 -608,138 -608,148', 4, 0.8], ['M-280,226 C-250,224 -220,224 -190,228', 2.5, 0.5]];
 // eye (big, bulging, glossy, lid rims; the brow is the lit orbital plane above, no stroke)
 const EYE = {c: [-196, 84], rx: 37, ry: 28, rot: 12};
@@ -60,50 +61,66 @@ const ORBIT_EDGE = `M-254,62 C-234,32 -184,24 -140,42 C-124,50 -114,62 -112,72`;
 
 /* ---------- neck, ears, forelock, mane (base frame) ---------- */
 const CUT = G.cut;
-const NECK = `M700,130 C800,130 910,200 980,320 C1040,430 1070,600 1080,${CUT - 30} L1096,${CUT} L760,${CUT} L770,${CUT - 30}
-C772,800 780,780 800,766 C860,740 900,640 905,520 C905,360 820,170 700,130 Z`;
-const NECK_LIT = `M730,726 C698,748 676,776 668,${CUT - 30} L652,${CUT} L742,${CUT} C746,800 760,768 792,740 C770,742 748,738 730,726 Z`;
-const NECK_GROOVE = `M884,756 C870,786 860,810 856,${CUT - 6}`;
-const UNDER_JOWL = `M905,520 C900,640 860,740 800,766 C850,786 920,770 950,700 C970,650 970,580 950,530 Z`;
+// r4 (n3): the neck's front rises from the cut (now behind the jowl) to a concave throat notch under the jowl's back
+const NECK = `M700,130 C800,130 910,200 980,320 C1040,430 1070,600 1080,${CUT - 30} L1096,${CUT} L842,${CUT} L848,${CUT - 14}
+C862,778 884,740 912,708 C944,664 952,560 936,470 C918,340 830,170 700,130 Z`;
+const NECK_LIT = `M912,708 C884,740 862,778 848,${CUT - 14} L842,${CUT} L866,${CUT} C872,792 890,754 918,722 Z`;
+const UNDER_JOWL = `M912,708 C900,724 884,742 870,760 C908,764 946,736 962,690 L962,640 Z`;     // the jowl's shadow on the neck
 /** crest: poll → back of the cut, the line the mane parts on */
 const CREST = [[772, 150], [884, 192], [974, 302], [1032, 444], [1064, 620], [1084, CUT - 20]];
 const crestAt = (t) => { const n = CREST.length - 1, k = Math.min(n - 1, Math.floor(t * n)), u = t * n - k, a = CREST[k], b = CREST[k + 1]; return [a[0] + (b[0] - a[0]) * u, a[1] + (b[1] - a[1]) * u]; };
-/** one lock: rooted on the crest at t, an S-wave down along the neck to a forked flame tip below the cut */
-const lockGeo = (t, i, lay) => {
-	const r = crestAt(t), far = lay === 2;
-	const tipX = far ? r[0] + 70 + 70 * rnd(i * 3 + 5) + 50 * (1 - t) : 770 + 340 * Math.pow(t, 0.85) + (rnd(i * 3 + lay) - 0.5) * 40 - (lay ? 22 : 0);
-	const tipY = far ? Math.max(r[1] + 160, CUT + 10 + 50 * rnd(i * 7 + 2)) : CUT + 28 + 40 * rnd(i * 7 + lay) + 30 * t;
-	const root = far ? [r[0] - 6, r[1] + 2] : [r[0] - 10 - lay * 8, r[1] + 4], tip = [tipX, tipY], n = 40, pts = [];
-	const dx = tip[0] - root[0], dy = tip[1] - root[1], L = Math.hypot(dx, dy), nx = -dy / L, ny = dx / L, ph = rnd(i * 5 + lay * 11) * 6.28, amp = 10 + 12 * rnd(i + lay * 3), waves = 1.3 + 0.6 * rnd(i * 13 + lay);
-	for (let k = 0; k <= n; k++) { const s = k / n, bow = Math.sin(Math.PI * s) * (far ? 40 + 30 * (1 - t) : -26 - 30 * (1 - t)), w = Math.sin(6.283 * waves * s + ph) * amp * Math.min(1, s * 3);
-		pts.push([root[0] + dx * s + nx * (bow + w), root[1] + dy * s + ny * (bow + w)]); }
-	const W0 = (lay ? 22 : 26) * (0.85 + 0.3 * rnd(i * 17 + lay));
-	const width = (s) => W0 * (s < 0.12 ? 0.55 + s / 0.12 * 0.45 : s < 0.72 ? 1 : Math.max(0.04, 1 - (s - 0.72) / 0.28)) * (1 + 0.15 * Math.sin(s * 9 + i));
-	const L1 = [], R1 = [];
+/* mane r4 (gate 2b r3 n1). Locks lie BACK AND DOWN along the neck (≈ (0.55, 0.85) near the poll, steeper lower down where the
+   neck turns vertical), length 280–420, an S of 1–1.5 waves at 0.10–0.14 × length, and gather into 5 flame clumps whose tips
+   flare out and back past the neck's rear edge at five different heights (no level fringe). The front of the neck stays bare. */
+const CLUMPS = [  // tip centre, locks, length, direction (deg below +x), shared wave phase
+	{tip: [1050, 500], n: 4, L: 400, ang: 58, ph: 0.4},
+	{tip: [1126, 612], n: 4, L: 370, ang: 60, ph: 2.1},
+	{tip: [1152, 738], n: 4, L: 390, ang: 67, ph: 3.6},
+	{tip: [1140, 872], n: 4, L: 400, ang: 77, ph: 5.0},
+	{tip: [1092, 930], n: 5, L: 320, ang: 84, ph: 1.2},
+];
+/** one lock from root to tip: S-wave about the chord, the tip flicking out and back (up), a forked flame tip */
+const lockGeo = (root, tip, i, ph, far) => {
+	const n = 44, pts = [], dx = tip[0] - root[0], dy = tip[1] - root[1], L = Math.hypot(dx, dy), ux = dx / L, uy = dy / L;
+	const bx = uy, by = -ux;                                   // the back/up side of the lock
+	const amp = (0.10 + 0.04 * rnd(i * 3 + 1)) * L, waves = 1 + 0.5 * rnd(i * 13 + 2), flick = (far ? 0.06 : 0.12) * L;
+	for (let k = 0; k <= n; k++) { const u = k / n, w = Math.sin(6.283 * waves * u + ph) * amp * Math.min(1, u * 5), f = flick * u * u * u;
+		pts.push([root[0] + dx * u + bx * (w + f), root[1] + dy * u + by * (w + f)]); }
+	const W0 = (far ? 20 : 25) * (0.86 + 0.28 * rnd(i * 17 + 3));
+	const width = (u) => W0 * (u < 0.14 ? 0.45 + u / 0.14 * 0.55 : u < 0.72 ? 1 : Math.max(0.03, Math.pow(1 - (u - 0.72) / 0.28, 0.65)));
+	const L1 = [], R1 = [];   // L1: front/down edge (shadow side), R1: back/up edge (lit side)
 	pts.forEach((p, k) => { const q = pts[Math.min(k + 1, n)], o = pts[Math.max(k - 1, 0)], ddx = q[0] - o[0], ddy = q[1] - o[1], d = Math.hypot(ddx, ddy) || 1, w = width(k / n);
 		L1.push([p[0] - ddy / d * w, p[1] + ddx / d * w]); R1.push([p[0] + ddy / d * w, p[1] - ddx / d * w]); });
-	// the fork: a second, shorter flame tip leaving the lock at 70 % toward the front
-	const fk = Math.round(n * 0.68), fb = pts[fk], fdir = Math.atan2(pts[n][1] - fb[1], pts[n][0] - fb[0]) - 0.45 - 0.2 * rnd(i + 40), fl = Math.hypot(pts[n][0] - fb[0], pts[n][1] - fb[1]) * (0.7 + 0.2 * rnd(i + 41));
-	const fpts = []; for (let k = 0; k <= 10; k++) { const s = k / 10, a = fdir + 0.5 * s * s; fpts.push([fb[0] + Math.cos(a) * fl * s, fb[1] + Math.sin(a) * fl * s]); }
-	const FL = [], FR = []; fpts.forEach((p, k) => { const q = fpts[Math.min(k + 1, 10)], o = fpts[Math.max(k - 1, 0)], ddx = q[0] - o[0], ddy = q[1] - o[1], d = Math.hypot(ddx, ddy) || 1, w = W0 * 0.55 * (1 - k / 10) + 0.5;
+	// the fork: a shorter flame tip leaving at 70 % toward the front/down side
+	const fk = Math.round(n * 0.7), fb = pts[fk], fdir = Math.atan2(pts[n][1] - fb[1], pts[n][0] - fb[0]) + 0.5 + 0.2 * rnd(i + 40), fl = Math.hypot(pts[n][0] - fb[0], pts[n][1] - fb[1]) * (0.6 + 0.2 * rnd(i + 41));
+	const fpts = []; for (let k = 0; k <= 10; k++) { const s = k / 10, a = fdir - 0.6 * s * s; fpts.push([fb[0] + Math.cos(a) * fl * s, fb[1] + Math.sin(a) * fl * s]); }
+	const FL = [], FR = []; fpts.forEach((p, k) => { const q = fpts[Math.min(k + 1, 10)], o = fpts[Math.max(k - 1, 0)], ddx = q[0] - o[0], ddy = q[1] - o[1], d = Math.hypot(ddx, ddy) || 1, w = W0 * 0.5 * (1 - k / 10) + 0.5;
 		FL.push([p[0] - ddy / d * w, p[1] + ddx / d * w]); FR.push([p[0] + ddy / d * w, p[1] - ddx / d * w]); });
 	const outline = 'M' + L1.concat(R1.slice().reverse()).map(P).join(' L') + ' Z';
 	const fork = 'M' + FL.concat(FR.slice().reverse()).map(P).join(' L') + ' Z';
-	// fine grooves along the lock (5), plus the fork's 2
-	const grooves = [0.18, 0.36, 0.54, 0.72, 0.88].map((f, g) => 'M' + pts.slice(3, n - 2 - (g % 2) * 3).map((p, k) => { const kk = k + 3; return P([L1[kk][0] + (R1[kk][0] - L1[kk][0]) * f, L1[kk][1] + (R1[kk][1] - L1[kk][1]) * f]); }).join(' L'));
-	const fg = [0.35, 0.7].map((f) => 'M' + fpts.slice(1, 8).map((p, k) => P([FL[k + 1][0] + (FR[k + 1][0] - FL[k + 1][0]) * f, FL[k + 1][1] + (FR[k + 1][1] - FL[k + 1][1]) * f])).join(' L'));
-	return {outline, fork, grooves: grooves.concat(fg), lit: 'M' + L1.slice(2, n - 6).map(P).join(' L'), gap: 'M' + R1.slice(2, n - 2).map(P).join(' L'), t, lay};
+	const mix = (f, a0, a1) => 'M' + pts.slice(a0, a1).map((_, k) => { const kk = k + a0; return P([L1[kk][0] + (R1[kk][0] - L1[kk][0]) * f, L1[kk][1] + (R1[kk][1] - L1[kk][1]) * f]); }).join(' L');
+	// the lit band: from the back/up edge 45 % in (blurred, clipped to the lock); ≤ 3 grooves
+	const band = 'M' + R1.slice(3, n - 3).map(P).join(' L') + ' L' + pts.slice(3, n - 3).reverse().map((_, k) => { const kk = n - 4 - k; return P([R1[kk][0] + (L1[kk][0] - R1[kk][0]) * 0.45, R1[kk][1] + (L1[kk][1] - R1[kk][1]) * 0.45]); }).join(' L') + ' Z';
+	const grooves = [mix(0.3, 5, n - 6), mix(0.62, 8, n - 4)];
+	return {outline, fork, band, grooves, lit: 'M' + R1.slice(4, n - 8).map(P).join(' L'), gap: 'M' + L1.slice(2, n - 2).map(P).join(' L'), pts, L, root, tip, amp, waves, L1, R1};
 };
-/** the crest ridge: a smooth band of hair along the parting, covering the lock roots */
-const RIDGE_PTS = Array.from({length: 25}, (_, k) => crestAt(k / 24 * 0.62));
-const ridgeSide = (off) => RIDGE_PTS.map((p, k) => { const q = RIDGE_PTS[Math.min(k + 1, 24)], o = RIDGE_PTS[Math.max(k - 1, 0)], dx = q[0] - o[0], dy = q[1] - o[1], d = Math.hypot(dx, dy) || 1, w = off * (0.4 + 0.6 * Math.sin(Math.PI * Math.min(1, 0.15 + k / 24))); return [p[0] - dy / d * w, p[1] + dx / d * w]; });
-const RIDGE = 'M' + ridgeSide(-6).concat(ridgeSide(30).reverse()).map(P).join(' L') + ' Z';
-const RIDGE_G = [6, 13, 20].map((o) => 'M' + ridgeSide(o).slice(1, 23).map(P).join(' L'));
-const RIDGE_TOP = 'M' + ridgeSide(-4).slice(0, 24).map(P).join(' L');
 const LOCKS = [], FAR = [];
-for (let lay = 0; lay < 2; lay++) { const N = lay ? 16 : 19; for (let i = 0; i < N; i++) LOCKS.push(lockGeo(Math.min(0.98, (i + 0.5 * lay + 0.3 * rnd(i * 9 + lay)) / N), i + lay * 40, lay)); }
-for (let i = 0; i < 14; i++) FAR.push(lockGeo(0.04 + 0.92 * (i + 0.3 * rnd(i + 70)) / 14, i + 90, 2));
-LOCKS.sort((a, b) => a.lay - b.lay || b.t - a.t);       // back locks first, the front of each layer on top
+CLUMPS.forEach((c, ci) => { for (let j = 0; j < c.n; j++) {
+	const i = ci * 10 + j, off = (j - (c.n - 1) / 2), a = (c.ang + off * 2.5 + (rnd(i + 7) - 0.5) * 3) * D2R, ux = Math.cos(a), uy = Math.sin(a);
+	const L = Math.max(280, Math.min(420, c.L + (rnd(i + 5) - 0.5) * 50 - Math.abs(off) * 14));
+	const tip = [c.tip[0] + uy * off * 24 + ux * (rnd(i + 3) - 0.5) * 30, c.tip[1] - ux * off * 24 + uy * (rnd(i + 3) - 0.5) * 30];
+	LOCKS.push({...lockGeo([tip[0] - ux * L, tip[1] - uy * L], tip, i, c.ph + (rnd(i + 9) - 0.5) * 0.5, false), ci, j}); } });
+// draw order: the lowest clump first, the poll clump on top; inside a clump, back to front
+LOCKS.sort((a, b) => b.ci - a.ci || a.j - b.j);
+// the far half of the parted mane: shorter, darker locks that show only past the crest
+for (let i = 0; i < 9; i++) { const t = 0.1 + 0.78 * i / 8, r = crestAt(t), a = (56 + 26 * t) * D2R, L = 200 + 60 * rnd(i + 70);
+	FAR.push(lockGeo([r[0] - 10, r[1] + 6], [r[0] - 10 + Math.cos(a) * L, r[1] + 6 + Math.sin(a) * L], i + 90, 1.5 * i, true)); }
+/** the crest ridge: a smooth band of hair along the parting, covering the lock roots */
+const RIDGE_PTS = Array.from({length: 25}, (_, k) => crestAt(k / 24 * 0.24));   // r4: the parting only over the poll, covering the first locks' roots
+const ridgeSide = (off) => RIDGE_PTS.map((p, k) => { const q = RIDGE_PTS[Math.min(k + 1, 24)], o = RIDGE_PTS[Math.max(k - 1, 0)], dx = q[0] - o[0], dy = q[1] - o[1], d = Math.hypot(dx, dy) || 1, w = off * (0.4 + 0.6 * Math.sin(Math.PI * Math.min(1, 0.15 + k / 24))); return [p[0] - dy / d * w, p[1] + dx / d * w]; });
+const RIDGE = 'M' + ridgeSide(-6).concat(ridgeSide(22).reverse()).map(P).join(' L') + ' Z';
+const RIDGE_G = [8, 15].map((o) => 'M' + ridgeSide(o).slice(1, 23).map(P).join(' L'));
+const RIDGE_TOP = 'M' + ridgeSide(-4).slice(0, 24).map(P).join(' L');
 // forelock: a few short wavy locks from the poll over the forehead, between the ears
 const FORELOCK = [[740, 172, 2.78, 190, 22], [722, 180, 2.74, 168, 20], [756, 170, 2.82, 140, 18], [704, 188, 2.7, 120, 16]].map(([x, y, h, L, W], j) => {
 	const pts = []; let px = x, py = y, a = h;
@@ -140,17 +157,20 @@ K.horseHead = (o = {}) => {
 		cool: {dark: '#0C0807', deep: '#18110D', mid: '#281C16', mid2: '#37271F', lite: '#644636', hi: '#B08266', rim: '#E7A27A', spec: '#F4F2EA', glow: '#FF9A5A'},
 	}[mood];
 	const C = {...R, mid: mixC(R.mid, R.lite, (key - 1) * 0.35), mid2: mixC(R.mid2, R.hi, (key - 1) * 0.3), lite: mixC(R.lite, R.hi, (key - 1) * 0.55), hi: mixC(R.hi, R.spec, (key - 1) * 0.3)};
-	const lockSvg = (L) => `<path d="${L.outline}" fill="${C.mid}"/><path d="${L.fork}" fill="${C.mid}"/>
-		<path d="${L.gap}" stroke="${C.dark}" stroke-width="3.2" fill="none" stroke-linecap="round"/>
-		${L.grooves.map((g, k) => `<path d="${g}" stroke="${k % 2 ? C.deep : C.dark}" stroke-width="${k % 2 ? 1.5 : 1.9}" fill="none" opacity=".8" stroke-linecap="round"/><path d="${g}" stroke="${C.lite}" stroke-width="1.1" fill="none" opacity=".45" transform="translate(-1.6,-1.2)"/>`).join('')}
-		<path d="${L.lit}" stroke="${C.hi}" stroke-width="2.6" fill="none" opacity=".6" stroke-linecap="round"/>`;
+	// r4 (n1 v): cast metal, not fibres — one soft lit band on the lock's back/up side, ≤ 3 grooves with highlights ≤ .15
+	const lockSvg = (L, k) => `<clipPath id="${id}L${k}"><path d="${L.outline}"/></clipPath>
+		<path d="${L.outline}" fill="${C.mid}"/><path d="${L.fork}" fill="${C.mid}"/>
+		<g clip-path="url(#${id}L${k})"><path d="${L.band}" fill="${C.lite}" opacity=".34" filter="url(#${id}bb)"/></g>
+		<path d="${L.gap}" stroke="${C.dark}" stroke-width="3" fill="none" stroke-linecap="round" opacity=".75"/>
+		${L.grooves.map((g) => `<path d="${g}" stroke="${C.deep}" stroke-width="2" fill="none" opacity=".55" stroke-linecap="round"/><path d="${g}" stroke="${C.lite}" stroke-width="1.2" fill="none" opacity=".14" transform="translate(-1.6,-1.2)"/>`).join('')}
+		<path d="${L.lit}" stroke="${C.hi}" stroke-width="2.4" fill="none" opacity=".45" stroke-linecap="round"/>`;
 	const ear = curl > 0.5
 		? `<path d="${EAR_ROLL}" fill="${C.mid2}"/><path d="${EAR_ROLL_HOLLOW}" fill="${C.deep}"/>
 		   <path d="${EAR_ROLL_TOP}" stroke="${C.hi}" stroke-width="5" fill="none" stroke-linecap="round" opacity=".9"/>
 		   <ellipse cx="712" cy="34" rx="9" ry="4.5" transform="rotate(-10 712 34)" fill="${C.spec}" opacity=".85"/>`
 		: `<path d="${EAR_NEAR}" fill="${C.mid2}"/><path d="${EAR_NEAR_IN}" fill="${C.dark}"/><path d="${EN.back}" stroke="${C.hi}" stroke-width="4" fill="none"/>`;
 	// the silhouette (for the rim copies): neck + head + ears + mane
-	const sil = (fill) => `<g fill="${fill}">${FAR.map((L) => `<path d="${L.outline}"/><path d="${L.fork}"/>`).join('')}<path d="${NECK}"/>${LOCKS.map((L) => `<path d="${L.outline}"/><path d="${L.fork}"/>`).join('')}<path d="${EAR_FAR}"/><path d="${curl > 0.5 ? EAR_ROLL : EAR_NEAR}"/><path d="${HEAD}" transform="${HT}"/></g>`;
+	const sil = (fill) => `<g fill="${fill}">${FAR.map((L) => `<path d="${L.outline}"/><path d="${L.fork}"/>`).join('')}<path d="${NECK}"/>${LOCKS.map((L) => `<path d="${L.outline}" stroke="${fill}" stroke-width="8" stroke-linejoin="round"/><path d="${L.fork}"/>`).join('')}<path d="${EAR_FAR}"/><path d="${curl > 0.5 ? EAR_ROLL : EAR_NEAR}"/><path d="${HEAD}" transform="${HT}"/></g>`;
 	const bw = o.block?.w ?? 600, bh = o.block?.h ?? 700, bx = 922 - bw / 2;
 	const block = base !== 'block' ? '' : `
 		<rect x="${bx}" y="950" width="${bw}" height="${bh}" fill="url(#${id}mb)"/>
@@ -170,7 +190,12 @@ K.horseHead = (o = {}) => {
 		<radialGradient id="${id}eye" cx=".38" cy=".34" r=".75"><stop offset="0" stop-color="${C.mid2}"/><stop offset=".4" stop-color="${C.deep}"/><stop offset="1" stop-color="${C.dark}"/></radialGradient>
 		<linearGradient id="${id}mf" gradientUnits="userSpaceOnUse" x1="760" y1="200" x2="1060" y2="${CUT + 80}"><stop offset="0" stop-color="${C.lite}" stop-opacity=".22"/><stop offset=".55" stop-color="${C.lite}" stop-opacity="0"/><stop offset="1" stop-color="${C.dark}" stop-opacity=".25"/></linearGradient>
 		<linearGradient id="${id}hs" gradientUnits="userSpaceOnUse" x1="-500" y1="0" x2="-100" y2="460"><stop offset="0" stop-color="${C.hi}" stop-opacity=".12"/><stop offset=".5" stop-color="${C.hi}" stop-opacity="0"/><stop offset="1" stop-color="${C.dark}" stop-opacity=".3"/></linearGradient>
-		<linearGradient id="${id}nk" gradientUnits="userSpaceOnUse" x1="760" y1="0" x2="990" y2="0"><stop offset="0" stop-color="${C.mid2}"/><stop offset=".45" stop-color="${C.mid}"/><stop offset="1" stop-color="${C.deep}"/></linearGradient>
+		<filter id="${id}bb" x="-20%" y="-20%" width="140%" height="140%"><feGaussianBlur stdDeviation="5"/></filter>
+		<filter id="${id}bs" x="-20%" y="-60%" width="140%" height="220%"><feGaussianBlur stdDeviation="9"/></filter>
+		<filter id="${id}bj" x="-30%" y="-30%" width="160%" height="160%"><feGaussianBlur stdDeviation="16"/></filter>
+		<linearGradient id="${id}jw" x1="0" x2="0" y1="0" y2="1"><stop offset="0" stop-color="${C.lite}" stop-opacity=".75"/><stop offset=".3" stop-color="${C.mid2}" stop-opacity=".35"/><stop offset=".62" stop-color="${C.mid}" stop-opacity="0"/><stop offset="1" stop-color="${C.dark}" stop-opacity=".85"/></linearGradient>
+		<linearGradient id="${id}hb" gradientUnits="userSpaceOnUse" x1="-60" y1="0" x2="60" y2="0"><stop offset="0" stop-color="${C.mid}" stop-opacity="0"/><stop offset="1" stop-color="${C.mid}" stop-opacity=".9"/></linearGradient>
+		<linearGradient id="${id}nk" gradientUnits="userSpaceOnUse" x1="840" y1="0" x2="1100" y2="0"><stop offset="0" stop-color="${C.mid2}"/><stop offset=".45" stop-color="${C.mid}"/><stop offset="1" stop-color="${C.deep}"/></linearGradient>
 		<linearGradient id="${id}mb" x1="0" x2="0" y1="0" y2="1"><stop offset="0" stop-color="#1C1817"/><stop offset=".25" stop-color="#121010"/><stop offset="1" stop-color="#080707"/></linearGradient>
 	</defs>`;
 	const rk = o.rimK ?? 1;
@@ -187,12 +212,13 @@ K.horseHead = (o = {}) => {
 	<path d="${NECK}" fill="${C.mid}"/>
 	<g clip-path="url(#${id}n)">
 		<rect x="600" y="300" width="500" height="600" fill="url(#${id}nk)"/>
-		<path d="${UNDER_JOWL}" fill="${C.deep}" opacity=".75"/>
-		<path d="${NECK_GROOVE}" stroke="${C.deep}" stroke-width="9" fill="none" opacity=".8"/>
+		<path d="${NECK_LIT}" fill="${C.lite}" opacity=".55" filter="url(#${id}bb)"/>
+		<path d="${UNDER_JOWL}" fill="${C.deep}" opacity=".8" filter="url(#${id}bb)"/>
 		<rect x="700" y="${CUT - 14}" width="420" height="14" fill="${C.deep}"/>
 	</g>
-	<path d="M770,${CUT - 30} L760,${CUT} L1096,${CUT}" stroke="${C.lite}" stroke-width="2.4" fill="none" opacity=".7"/>
+	<path d="M848,${CUT - 14} L842,${CUT} L1096,${CUT}" stroke="${C.lite}" stroke-width="2.4" fill="none" opacity=".7"/>
 	<!-- mane: back layer, front layer; a light-falloff wash over it -->
+	${LOCKS.map((L) => `<path d="${L.outline}" fill="${C.deep}" stroke="${C.deep}" stroke-width="8" stroke-linejoin="round"/>`).join('')}
 	${LOCKS.map(lockSvg).join('')}
 	<g opacity="1">${LOCKS.map((L) => `<path d="${L.outline}" fill="url(#${id}mf)"/>`).join('')}</g>
 	<path d="${RIDGE}" fill="${C.mid2}"/>${RIDGE_G.map((g, k) => `<path d="${g}" stroke="${k % 2 ? C.deep : C.dark}" stroke-width="1.6" fill="none" opacity=".8"/>`).join('')}
@@ -204,6 +230,9 @@ K.horseHead = (o = {}) => {
 		<g clip-path="url(#${id}c)">
 			<path d="${UPPER_SIDE}" fill="${C.mid2}"/>
 			<path d="${JAW_SHADE}" fill="${mixC(C.deep, C.mid, 0.55)}"/>
+			<path d="${JAW_SOFT}" stroke="${mixC(C.mid2, mixC(C.deep, C.mid, 0.55), 0.5)}" stroke-width="44" fill="none" stroke-linecap="round" filter="url(#${id}bs)"/>
+			<rect x="-60" y="-40" width="200" height="560" fill="url(#${id}hb)"/>
+			<ellipse cx="${JOWL.c[0]}" cy="${JOWL.c[1]}" rx="${JOWL.rx}" ry="${JOWL.ry}" transform="rotate(${JOWL.rot} ${JOWL.c[0]} ${JOWL.c[1]})" fill="url(#${id}jw)" filter="url(#${id}bj)"/>
 			<path d="${JAW_CORE}" fill="${C.deep}"/>
 			<path d="${TOP_PLANE}" fill="${C.lite}"/>
 			<path d="${REFL}" fill="${refl}" opacity=".5"/>
@@ -212,7 +241,6 @@ K.horseHead = (o = {}) => {
 			<path d="${CHEEK_EDGE}" stroke="${C.lite}" stroke-width="2.4" fill="none" opacity=".45"/>
 			<path d="${CREST_RIDGE}" stroke="${C.hi}" stroke-width="3" fill="none" opacity=".55" stroke-linecap="round"/>
 			<path d="${CREST_RIDGE}" stroke="${C.dark}" stroke-width="3" fill="none" opacity=".6" transform="translate(0,5)"/>
-			<path d="${JOWL_RIM}" stroke="${C.rim}" stroke-width="4" fill="none" opacity=".6"/>
 			<path d="${ORBIT_SHADE}" fill="${C.deep}"/>
 			<path d="${ORBIT_LIT}" fill="${C.lite}"/>
 			<path d="${ORBIT_EDGE}" stroke="${C.hi}" stroke-width="3" fill="none" opacity=".8"/>
@@ -221,7 +249,6 @@ K.horseHead = (o = {}) => {
 			<path d="${NOSTRIL_FLARE}" stroke="${C.hi}" stroke-width="3.4" fill="none" stroke-linecap="round"/>
 			<path d="${NOSTRIL_RIM}" stroke="${C.hi}" stroke-width="2.4" fill="none" opacity=".8"/>
 			<path d="${LIP_LINE}" stroke="${C.hi}" stroke-width="2.2" fill="none" opacity=".55" transform="translate(0,-4)"/>
-			<path d="${CHIN_LIT}" stroke="${C.rim}" stroke-width="3" fill="none" opacity=".6" transform="translate(0,-3)"/>
 			<path d="${JAW_RIM}" stroke="${C.rim}" stroke-width="4" fill="none" opacity=".55" transform="translate(0,-3)"/>
 			<!-- the eye -->
 			<ellipse cx="${EYE.c[0]}" cy="${EYE.c[1]}" rx="${EYE.rx + 8}" ry="${EYE.ry + 7}" transform="rotate(${EYE.rot} ${EYE.c[0]} ${EYE.c[1]})" fill="${C.deep}"/>
@@ -242,6 +269,7 @@ K.horseHead = (o = {}) => {
 };
 const HP = {mouth: hp([-572, 226]), eye: hp([EYE.c[0], EYE.c[1]]), ear: [712, 40], nose: hp([-620, 130]), poll: [712, 150], collarF: [760, CUT], collarB: [1096, CUT], throat: [800, 766]};
 K.HEAD_PTS = Object.fromEntries(Object.entries(HP).map(([k, p]) => [k, [p[0] - 836, p[1] - 950]]));
+K.HERO3_GEO = {LOCKS, FAR, CLUMPS, hp, CUT};   // for the r4 measures (hero_measure.mjs)
 K.HEAD_PTS.height = 925; K.HEAD_PTS.cut = CUT - 950;
 K.headPt = (o, name) => { const s = (o.h ?? 400) / 925, f = o.flip ? -1 : 1, p = K.HEAD_PTS[name]; return [o.x + f * p[0] * s, o.y + p[1] * s]; };
 })();
