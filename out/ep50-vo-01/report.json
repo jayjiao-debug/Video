@@ -1,0 +1,1527 @@
+{
+  "id": "ep50-vo-01",
+  "clips": [
+    {
+      "name": "01_H1",
+      "lang": "zh",
+      "text": "财、货、贵，都带个贝，偏偏钱，是金字旁。",
+      "voice": "WuLq5z7nEcrhppO0ZQJw",
+      "voice_id": "WuLq5z7nEcrhppO0ZQJw",
+      "model": "eleven_v4",
+      "status": 200,
+      "file": "01_H1.mp3",
+      "bytes": 94501,
+      "heard": "财、货、贵都带个贝,偏偏钱是金字旁。",
+      "heard_lang": "zh",
+      "heard_lang_p": 0.998,
+      "seconds": 5.84
+    },
+    {
+      "name": "02_H2",
+      "lang": "zh",
+      "text": "你扫码付的钱，倒回一千年，只是一张纸。",
+      "voice": "WuLq5z7nEcrhppO0ZQJw",
+      "voice_id": "WuLq5z7nEcrhppO0ZQJw",
+      "model": "eleven_v4",
+      "status": 200,
+      "file": "02_H2.mp3",
+      "bytes": 72767,
+      "heard": "你扫馬付的錢倒回一千年,只是一張紙。",
+      "heard_lang": "zh",
+      "heard_lang_p": 0.999,
+      "seconds": 4.48
+    },
+    {
+      "name": "03_H3",
+      "lang": "zh",
+      "text": "倒回三千多年，钱是一枚贝壳。",
+      "voice": "WuLq5z7nEcrhppO0ZQJw",
+      "voice_id": "WuLq5z7nEcrhppO0ZQJw",
+      "model": "eleven_v4",
+      "status": 200,
+      "file": "03_H3.mp3",
+      "bytes": 66498,
+      "heard": "倒回三千多年,錢是一枚貝殼。",
+      "heard_lang": "zh",
+      "heard_lang_p": 0.997,
+      "seconds": 4.08
+    },
+    {
+      "name": "04_B2a",
+      "lang": "zh",
+      "text": "贝壳从很远的海边运来，",
+      "voice": "WuLq5z7nEcrhppO0ZQJw",
+      "voice_id": "WuLq5z7nEcrhppO0ZQJw",
+      "model": "eleven_v4",
+      "status": 200,
+      "file": "04_B2a.mp3",
+      "bytes": 46018,
+      "heard": "贝壳从很远的海边运来",
+      "heard_lang": "zh",
+      "heard_lang_p": 0.999,
+      "seconds": 2.8
+    },
+    {
+      "name": "05_B2b",
+      "lang": "zh",
+      "text": "稀少、结实，又好带。",
+      "voice": "WuLq5z7nEcrhppO0ZQJw",
+      "voice_id": "WuLq5z7nEcrhppO0ZQJw",
+      "model": "eleven_v4",
+      "status": 200,
+      "file": "05_B2b.mp3",
+      "bytes": 48526,
+      "heard": "稀少,劫事,又好戴!",
+      "heard_lang": "zh",
+      "heard_lang_p": 1.0,
+      "seconds": 2.96
+    },
+    {
+      "name": "06_B3",
+      "lang": "zh",
+      "text": "商代晚期，还有了青铜铸的贝。",
+      "voice": "WuLq5z7nEcrhppO0ZQJw",
+      "voice_id": "WuLq5z7nEcrhppO0ZQJw",
+      "model": "eleven_v4",
+      "status": 200,
+      "file": "06_B3.mp3",
+      "bytes": 52287,
+      "heard": "商代晚期 还有了青铜柱的备",
+      "heard_lang": "zh",
+      "heard_lang_p": 0.998,
+      "seconds": 3.2
+    },
+    {
+      "name": "07_C1",
+      "lang": "zh",
+      "text": "那钱，为什么是金字旁？",
+      "voice": "WuLq5z7nEcrhppO0ZQJw",
+      "voice_id": "WuLq5z7nEcrhppO0ZQJw",
+      "model": "eleven_v4",
+      "status": 200,
+      "file": "07_C1.mp3",
+      "bytes": 44764,
+      "heard": "那前为什么是金字旁?",
+      "heard_lang": "zh",
+      "heard_lang_p": 1.0,
+      "seconds": 2.72
+    },
+    {
+      "name": "08_C2",
+      "lang": "zh",
+      "text": "钱，铫也，古田器也。",
+      "voice": "MI36FIkp9wRP7cpWKPTl",
+      "voice_id": "MI36FIkp9wRP7cpWKPTl",
+      "model": "eleven_v4",
+      "status": 200,
+      "file": "08_C2.mp3",
+      "bytes": 48526,
+      "heard": "前、弱也、古田气也。",
+      "heard_lang": "zh",
+      "heard_lang_p": 0.994,
+      "seconds": 2.96
+    },
+    {
+      "name": "09_C3",
+      "lang": "zh",
+      "text": "原来，钱是一把铲子。",
+      "voice": "WuLq5z7nEcrhppO0ZQJw",
+      "voice_id": "WuLq5z7nEcrhppO0ZQJw",
+      "model": "eleven_v4",
+      "status": 200,
+      "file": "09_C3.mp3",
+      "bytes": 46018,
+      "heard": "原来钱是一把铲子",
+      "heard_lang": "zh",
+      "heard_lang_p": 0.998,
+      "seconds": 2.8
+    },
+    {
+      "name": "10_C4a",
+      "lang": "zh",
+      "text": "东周时，人们照着铲子铸铜币，",
+      "voice": "WuLq5z7nEcrhppO0ZQJw",
+      "voice_id": "WuLq5z7nEcrhppO0ZQJw",
+      "model": "eleven_v4",
+      "status": 200,
+      "file": "10_C4a.mp3",
+      "bytes": 58557,
+      "heard": "東周時,人們照著鏟子鑄銅壁",
+      "heard_lang": "zh",
+      "heard_lang_p": 0.999,
+      "seconds": 3.6
+    },
+    {
+      "name": "11_C4b",
+      "lang": "zh",
+      "text": "名字也跟着叫钱。",
+      "voice": "WuLq5z7nEcrhppO0ZQJw",
+      "voice_id": "WuLq5z7nEcrhppO0ZQJw",
+      "model": "eleven_v4",
+      "status": 200,
+      "file": "11_C4b.mp3",
+      "bytes": 34315,
+      "heard": "名字也跟着叫前。",
+      "heard_lang": "zh",
+      "heard_lang_p": 0.995,
+      "seconds": 2.08
+    },
+    {
+      "name": "12_D1",
+      "lang": "zh",
+      "text": "战国各国的钱，有刀、铲、圆、贝。",
+      "voice": "WuLq5z7nEcrhppO0ZQJw",
+      "voice_id": "WuLq5z7nEcrhppO0ZQJw",
+      "model": "eleven_v4",
+      "status": 200,
+      "file": "12_D1.mp3",
+      "bytes": 76529,
+      "heard": "战国各国的钱有刀、铲、圆、背。",
+      "heard_lang": "zh",
+      "heard_lang_p": 0.998,
+      "seconds": 4.72
+    },
+    {
+      "name": "13_E1",
+      "lang": "zh",
+      "text": "秦统一六国，也统一了钱。",
+      "voice": "WuLq5z7nEcrhppO0ZQJw",
+      "voice_id": "WuLq5z7nEcrhppO0ZQJw",
+      "model": "eleven_v4",
+      "status": 200,
+      "file": "13_E1.mp3",
+      "bytes": 52287,
+      "heard": "秦统一六国也统一了钱。",
+      "heard_lang": "zh",
+      "heard_lang_p": 0.997,
+      "seconds": 3.2
+    },
+    {
+      "name": "14_E2",
+      "lang": "zh",
+      "text": "钱上写着半两，就得重半两。",
+      "voice": "WuLq5z7nEcrhppO0ZQJw",
+      "voice_id": "WuLq5z7nEcrhppO0ZQJw",
+      "model": "eleven_v4",
+      "status": 200,
+      "file": "14_E2.mp3",
+      "bytes": 48526,
+      "heard": "前上写着半辆就得重半辆",
+      "heard_lang": "zh",
+      "heard_lang_p": 0.999,
+      "seconds": 2.96
+    },
+    {
+      "name": "15_F1a",
+      "lang": "zh",
+      "text": "汉朝的五铢，名字也是重量，",
+      "voice": "WuLq5z7nEcrhppO0ZQJw",
+      "voice_id": "WuLq5z7nEcrhppO0ZQJw",
+      "model": "eleven_v4",
+      "status": 200,
+      "file": "15_F1a.mp3",
+      "bytes": 51034,
+      "heard": "漢朝的五珠名字也是重量",
+      "heard_lang": "zh",
+      "heard_lang_p": 0.999,
+      "seconds": 3.12
+    },
+    {
+      "name": "16_F1b",
+      "lang": "zh",
+      "text": "一用七百多年，从汉用到唐。",
+      "voice": "WuLq5z7nEcrhppO0ZQJw",
+      "voice_id": "WuLq5z7nEcrhppO0ZQJw",
+      "model": "eleven_v4",
+      "status": 200,
+      "file": "16_F1b.mp3",
+      "bytes": 62318,
+      "heard": "一用七百多年,從漢用到唐。",
+      "heard_lang": "zh",
+      "heard_lang_p": 0.999,
+      "seconds": 3.84
+    },
+    {
+      "name": "17_G1",
+      "lang": "zh",
+      "text": "废五铢钱，行开元通宝钱。",
+      "voice": "MI36FIkp9wRP7cpWKPTl",
+      "voice_id": "MI36FIkp9wRP7cpWKPTl",
+      "model": "eleven_v4",
+      "status": 200,
+      "file": "17_G1.mp3",
+      "bytes": 49780,
+      "heard": "废五珠前行開源通報前",
+      "heard_lang": "zh",
+      "heard_lang_p": 0.996,
+      "seconds": 3.04
+    },
+    {
+      "name": "18_G2",
+      "lang": "zh",
+      "text": "新钱的名字，不再是重量。",
+      "voice": "WuLq5z7nEcrhppO0ZQJw",
+      "voice_id": "WuLq5z7nEcrhppO0ZQJw",
+      "model": "eleven_v4",
+      "status": 200,
+      "file": "18_G2.mp3",
+      "bytes": 43510,
+      "heard": "新前的名字不再是重量",
+      "heard_lang": "zh",
+      "heard_lang_p": 0.999,
+      "seconds": 2.64
+    },
+    {
+      "name": "19_S1",
+      "lang": "zh",
+      "text": "北宋的四川，用的是铁钱。",
+      "voice": "WuLq5z7nEcrhppO0ZQJw",
+      "voice_id": "WuLq5z7nEcrhppO0ZQJw",
+      "model": "eleven_v4",
+      "status": 200,
+      "file": "19_S1.mp3",
+      "bytes": 47272,
+      "heard": "北宋的四川用的是鐵錢",
+      "heard_lang": "zh",
+      "heard_lang_p": 1.0,
+      "seconds": 2.88
+    },
+    {
+      "name": "20_S2",
+      "lang": "zh",
+      "text": "一串一千文，重二十五斤八两。",
+      "voice": "WuLq5z7nEcrhppO0ZQJw",
+      "voice_id": "WuLq5z7nEcrhppO0ZQJw",
+      "model": "eleven_v4",
+      "status": 200,
+      "file": "20_S2.mp3",
+      "bytes": 59811,
+      "heard": "一串一千吻 中二十五斤八两。",
+      "heard_lang": "zh",
+      "heard_lang_p": 0.999,
+      "seconds": 3.68
+    },
+    {
+      "name": "21_S3",
+      "lang": "zh",
+      "text": "患蜀人铁钱重，不便贸易。",
+      "voice": "MI36FIkp9wRP7cpWKPTl",
+      "voice_id": "MI36FIkp9wRP7cpWKPTl",
+      "model": "eleven_v4",
+      "status": 200,
+      "file": "21_S3.mp3",
+      "bytes": 48526,
+      "heard": "坏属人铁钱众,不便贸易。",
+      "heard_lang": "zh",
+      "heard_lang_p": 0.999,
+      "seconds": 2.96
+    },
+    {
+      "name": "22_S3b",
+      "lang": "zh",
+      "text": "川蜀铁钱十枚，才抵一枚铜钱。",
+      "voice": "WuLq5z7nEcrhppO0ZQJw",
+      "voice_id": "WuLq5z7nEcrhppO0ZQJw",
+      "model": "eleven_v4",
+      "status": 200,
+      "file": "22_S3b.mp3",
+      "bytes": 57303,
+      "heard": "穿梳铁钱十枚才比一枚同钱",
+      "heard_lang": "zh",
+      "heard_lang_p": 0.996,
+      "seconds": 3.52
+    },
+    {
+      "name": "23_S4a",
+      "lang": "zh",
+      "text": "于是有了交子：",
+      "voice": "WuLq5z7nEcrhppO0ZQJw",
+      "voice_id": "WuLq5z7nEcrhppO0ZQJw",
+      "model": "eleven_v4",
+      "status": 200,
+      "file": "23_S4a.mp3",
+      "bytes": 33061,
+      "heard": "于是有了胶子。",
+      "heard_lang": "zh",
+      "heard_lang_p": 0.999,
+      "seconds": 2.0
+    },
+    {
+      "name": "24_S4b",
+      "lang": "zh",
+      "text": "一张纸，能换一千文。",
+      "voice": "WuLq5z7nEcrhppO0ZQJw",
+      "voice_id": "WuLq5z7nEcrhppO0ZQJw",
+      "model": "eleven_v4",
+      "status": 200,
+      "file": "24_S4b.mp3",
+      "bytes": 43510,
+      "heard": "一张纸能换一千文",
+      "heard_lang": "zh",
+      "heard_lang_p": 0.997,
+      "seconds": 2.64
+    },
+    {
+      "name": "25_S5a",
+      "lang": "zh",
+      "text": "起初，十六家富户发交子，",
+      "voice": "WuLq5z7nEcrhppO0ZQJw",
+      "voice_id": "WuLq5z7nEcrhppO0ZQJw",
+      "model": "eleven_v4",
+      "status": 200,
+      "file": "25_S5a.mp3",
+      "bytes": 52287,
+      "heard": "起初16家户户发胶子。",
+      "heard_lang": "zh",
+      "heard_lang_p": 0.999,
+      "seconds": 3.2
+    },
+    {
+      "name": "26_S5b",
+      "lang": "zh",
+      "text": "后来换不回钱，官司不断。",
+      "voice": "WuLq5z7nEcrhppO0ZQJw",
+      "voice_id": "WuLq5z7nEcrhppO0ZQJw",
+      "model": "eleven_v4",
+      "status": 200,
+      "file": "26_S5b.mp3",
+      "bytes": 49780,
+      "heard": "后来换不回钱,官司不断。",
+      "heard_lang": "zh",
+      "heard_lang_p": 1.0,
+      "seconds": 3.04
+    },
+    {
+      "name": "27_S6",
+      "lang": "zh",
+      "text": "一零二四年，官府接手交子。",
+      "voice": "WuLq5z7nEcrhppO0ZQJw",
+      "voice_id": "WuLq5z7nEcrhppO0ZQJw",
+      "model": "eleven_v4",
+      "status": 200,
+      "file": "27_S6.mp3",
+      "bytes": 54795,
+      "heard": "1024年,官府接手交字。",
+      "heard_lang": "zh",
+      "heard_lang_p": 0.999,
+      "seconds": 3.36
+    },
+    {
+      "name": "28_S7",
+      "lang": "zh",
+      "text": "它是世界上最早的纸币之一。",
+      "voice": "WuLq5z7nEcrhppO0ZQJw",
+      "voice_id": "WuLq5z7nEcrhppO0ZQJw",
+      "model": "eleven_v4",
+      "status": 200,
+      "file": "28_S7.mp3",
+      "bytes": 46018,
+      "heard": "它是世界上最早的紙幣之一。",
+      "heard_lang": "zh",
+      "heard_lang_p": 0.998,
+      "seconds": 2.8
+    },
+    {
+      "name": "29_S8",
+      "lang": "zh",
+      "text": "红黑套印，暗藏编号，防人伪造。",
+      "voice": "WuLq5z7nEcrhppO0ZQJw",
+      "voice_id": "WuLq5z7nEcrhppO0ZQJw",
+      "model": "eleven_v4",
+      "status": 200,
+      "file": "29_S8.mp3",
+      "bytes": 59811,
+      "heard": "红黑套印 暗藏编号 防人伪造。",
+      "heard_lang": "zh",
+      "heard_lang_p": 0.998,
+      "seconds": 3.68
+    },
+    {
+      "name": "30_M1a",
+      "lang": "zh",
+      "text": "明初，官府印宝钞：",
+      "voice": "WuLq5z7nEcrhppO0ZQJw",
+      "voice_id": "WuLq5z7nEcrhppO0ZQJw",
+      "model": "eleven_v4",
+      "status": 200,
+      "file": "30_M1a.mp3",
+      "bytes": 43510,
+      "heard": "明初 官府印保抄",
+      "heard_lang": "zh",
+      "heard_lang_p": 0.992,
+      "seconds": 2.64
+    },
+    {
+      "name": "31_M1b",
+      "lang": "zh",
+      "text": "一贯，等于一千文，等于一两银。",
+      "voice": "WuLq5z7nEcrhppO0ZQJw",
+      "voice_id": "WuLq5z7nEcrhppO0ZQJw",
+      "model": "eleven_v4",
+      "status": 200,
+      "file": "31_M1b.mp3",
+      "bytes": 65244,
+      "heard": "一貫等於一千文等於一兩銀",
+      "heard_lang": "zh",
+      "heard_lang_p": 0.994,
+      "seconds": 4.0
+    },
+    {
+      "name": "32_M1c",
+      "lang": "zh",
+      "text": "可官府印得太多，又收不回来。",
+      "voice": "WuLq5z7nEcrhppO0ZQJw",
+      "voice_id": "WuLq5z7nEcrhppO0ZQJw",
+      "model": "eleven_v4",
+      "status": 200,
+      "file": "32_M1c.mp3",
+      "bytes": 52287,
+      "heard": "可官府印得太多,又收不回来。",
+      "heard_lang": "zh",
+      "heard_lang_p": 0.999,
+      "seconds": 3.2
+    },
+    {
+      "name": "33_M2",
+      "lang": "zh",
+      "text": "钞一贯不能直钱一文。",
+      "voice": "MI36FIkp9wRP7cpWKPTl",
+      "voice_id": "MI36FIkp9wRP7cpWKPTl",
+      "model": "eleven_v4",
+      "status": 200,
+      "file": "33_M2.mp3",
+      "bytes": 39331,
+      "heard": "超一貫不能值錢一文",
+      "heard_lang": "zh",
+      "heard_lang_p": 0.99,
+      "seconds": 2.4
+    },
+    {
+      "name": "34_M3",
+      "lang": "zh",
+      "text": "纸不灵了，明朝人改用白银。",
+      "voice": "WuLq5z7nEcrhppO0ZQJw",
+      "voice_id": "WuLq5z7nEcrhppO0ZQJw",
+      "model": "eleven_v4",
+      "status": 200,
+      "file": "34_M3.mp3",
+      "bytes": 56049,
+      "heard": "只不灵了 明朝人改用白银",
+      "heard_lang": "zh",
+      "heard_lang_p": 0.998,
+      "seconds": 3.44
+    },
+    {
+      "name": "35_M4a",
+      "lang": "zh",
+      "text": "白银每次都要称，",
+      "voice": "WuLq5z7nEcrhppO0ZQJw",
+      "voice_id": "WuLq5z7nEcrhppO0ZQJw",
+      "model": "eleven_v4",
+      "status": 200,
+      "file": "35_M4a.mp3",
+      "bytes": 33061,
+      "heard": "白银每次都要撑",
+      "heard_lang": "zh",
+      "heard_lang_p": 0.998,
+      "seconds": 2.0
+    },
+    {
+      "name": "36_M4b",
+      "lang": "zh",
+      "text": "钱又回到了看重量。",
+      "voice": "WuLq5z7nEcrhppO0ZQJw",
+      "voice_id": "WuLq5z7nEcrhppO0ZQJw",
+      "model": "eleven_v4",
+      "status": 200,
+      "file": "36_M4b.mp3",
+      "bytes": 36823,
+      "heard": "錢又回到了看重量",
+      "heard_lang": "zh",
+      "heard_lang_p": 0.996,
+      "seconds": 2.24
+    },
+    {
+      "name": "37_R1",
+      "lang": "zh",
+      "text": "一九四八年，人民币来了。",
+      "voice": "WuLq5z7nEcrhppO0ZQJw",
+      "voice_id": "WuLq5z7nEcrhppO0ZQJw",
+      "model": "eleven_v4",
+      "status": 200,
+      "file": "37_R1.mp3",
+      "bytes": 47272,
+      "heard": "1948年 人民币来了",
+      "heard_lang": "zh",
+      "heard_lang_p": 0.999,
+      "seconds": 2.88
+    },
+    {
+      "name": "38_T1",
+      "lang": "zh",
+      "text": "如今，十点一七亿人用网络支付。",
+      "voice": "WuLq5z7nEcrhppO0ZQJw",
+      "voice_id": "WuLq5z7nEcrhppO0ZQJw",
+      "model": "eleven_v4",
+      "status": 200,
+      "file": "38_T1.mp3",
+      "bytes": 61065,
+      "heard": "如今,10.17亿人用网络支付。",
+      "heard_lang": "zh",
+      "heard_lang_p": 0.998,
+      "seconds": 3.76
+    },
+    {
+      "name": "39_P1a",
+      "lang": "zh",
+      "text": "钱越变越轻：",
+      "voice": "WuLq5z7nEcrhppO0ZQJw",
+      "voice_id": "WuLq5z7nEcrhppO0ZQJw",
+      "model": "eleven_v4",
+      "status": 200,
+      "file": "39_P1a.mp3",
+      "bytes": 31807,
+      "heard": "前越变越轻",
+      "heard_lang": "zh",
+      "heard_lang_p": 0.987,
+      "seconds": 1.92
+    },
+    {
+      "name": "40_P1b",
+      "lang": "zh",
+      "text": "贝壳、铜、纸，最后是一串数字。",
+      "voice": "WuLq5z7nEcrhppO0ZQJw",
+      "voice_id": "WuLq5z7nEcrhppO0ZQJw",
+      "model": "eleven_v4",
+      "status": 200,
+      "file": "40_P1b.mp3",
+      "bytes": 72767,
+      "heard": "背壳、銅、紙最後是一串數字",
+      "heard_lang": "zh",
+      "heard_lang_p": 0.999,
+      "seconds": 4.48
+    },
+    {
+      "name": "41_P2a",
+      "lang": "zh",
+      "text": "纸和数字本身不值钱，",
+      "voice": "WuLq5z7nEcrhppO0ZQJw",
+      "voice_id": "WuLq5z7nEcrhppO0ZQJw",
+      "model": "eleven_v4",
+      "status": 200,
+      "file": "41_P2a.mp3",
+      "bytes": 44764,
+      "heard": "只和数字本身不值钱",
+      "heard_lang": "zh",
+      "heard_lang_p": 0.998,
+      "seconds": 2.72
+    },
+    {
+      "name": "42_P2b",
+      "lang": "zh",
+      "text": "值钱的是，大家都信它。",
+      "voice": "WuLq5z7nEcrhppO0ZQJw",
+      "voice_id": "WuLq5z7nEcrhppO0ZQJw",
+      "model": "eleven_v4",
+      "status": 200,
+      "file": "42_P2b.mp3",
+      "bytes": 43510,
+      "heard": "之前的事 大家都信他",
+      "heard_lang": "zh",
+      "heard_lang_p": 0.998,
+      "seconds": 2.64
+    },
+    {
+      "name": "43_Q",
+      "lang": "zh",
+      "text": "你上一次用纸币，是什么时候？",
+      "voice": "WuLq5z7nEcrhppO0ZQJw",
+      "voice_id": "WuLq5z7nEcrhppO0ZQJw",
+      "model": "eleven_v4",
+      "status": 200,
+      "file": "43_Q.mp3",
+      "bytes": 47272,
+      "heard": "你上一次用紙幣是什麼時候?",
+      "heard_lang": "zh",
+      "heard_lang_p": 0.995,
+      "seconds": 2.88
+    }
+  ],
+  "plan": {
+    "tier": null,
+    "character_count": null,
+    "character_limit": null,
+    "status": null
+  },
+  "models": [
+    "eleven_v4",
+    "eleven_v4_turbo",
+    "eleven_v3",
+    "eleven_v3_conversational",
+    "eleven_multilingual_v2",
+    "eleven_flash_v2_5",
+    "eleven_turbo_v2_5",
+    "eleven_turbo_v2",
+    "eleven_flash_v2",
+    "eleven_english_sts_v2",
+    "eleven_multilingual_sts_v2"
+  ],
+  "model": "eleven_v4",
+  "own_voices": [
+    {
+      "id": "kPzsL2i3teMYv0FxEYQ6",
+      "name": "en-Brittney - Social Media Voice - Fun, ",
+      "labels": {
+        "descriptive": "upbeat",
+        "gender": "female",
+        "use_case": "social_media",
+        "age": "young",
+        "language": "en",
+        "accent": "american"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "lcRaSg5QsH61bfHjo8qM",
+      "name": "zh-DJ Allen - Rock style radio DJ",
+      "labels": {
+        "descriptive": "professional",
+        "gender": "male",
+        "accent": "standard",
+        "age": "middle-aged",
+        "language": "zh",
+        "use_case": "characters_animation"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "WkcRFJo38X9XEP8kGExm",
+      "name": "zh-Vincent - Clear, Brisk and Mature",
+      "labels": {
+        "descriptive": "professional",
+        "gender": "male",
+        "use_case": "informative_educational",
+        "age": "middle_aged",
+        "language": "zh",
+        "accent": "standard"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "vZZLclMx4wouUtKBRfZn",
+      "name": "zh-Jin - Clear, Warm and Casual",
+      "labels": {
+        "descriptive": "casual",
+        "gender": "male",
+        "use_case": "narrative_story",
+        "age": "middle_aged",
+        "language": "zh",
+        "accent": "standard"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "WuLq5z7nEcrhppO0ZQJw",
+      "name": "zh-Martin Li - Raspy, Serious and Deep",
+      "labels": {
+        "gender": "male",
+        "descriptive": "deep",
+        "use_case": "narrative_story",
+        "age": "middle_aged",
+        "language": "zh",
+        "accent": "standard"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "PaZ8laODC1yRxHTPYJFh",
+      "name": "el-Christos - Casual, Calm and Serious",
+      "labels": {
+        "descriptive": "confident",
+        "gender": "male",
+        "accent": "standard",
+        "age": "middle_aged",
+        "language": "el",
+        "use_case": "narrative_story"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "QpnXVbX7RkmUGDwpJh5v",
+      "name": "el-Talos",
+      "labels": {
+        "gender": "male",
+        "descriptive": "calm",
+        "use_case": "narrative_story",
+        "age": "old",
+        "language": "el",
+        "accent": "standard"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "n0vzWypeCK1NlWPVwhOc",
+      "name": "el-Theos - Narrational, Assertive and Wa",
+      "labels": {
+        "descriptive": "professional",
+        "gender": "male",
+        "accent": "standard",
+        "age": "middle_aged",
+        "language": "el",
+        "use_case": "narrative_story"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "2OcnG4mH3jIMtWz3vKus",
+      "name": "zh-Wolf Spencer - Rough and Deep",
+      "labels": {
+        "descriptive": "professional",
+        "gender": "male",
+        "accent": "standard",
+        "age": "old",
+        "language": "de",
+        "use_case": "characters_animation"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "APSIkVZudNbPAwyPoeVO",
+      "name": "zh-Sage - Soothing & Gentle",
+      "labels": {
+        "descriptive": "calm",
+        "gender": "female",
+        "use_case": "narrative_story",
+        "age": "young",
+        "language": "zh",
+        "accent": "standard"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "5mZxJZhSmJTjL7GoYfYI",
+      "name": "zh-Karo Yang - Clear, Lively and Energet",
+      "labels": {
+        "descriptive": "pleasant",
+        "gender": "male",
+        "use_case": "social_media",
+        "age": "young",
+        "language": "zh",
+        "accent": "standard"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "Iqi0ix5WGtiSXX9VDZB4",
+      "name": "zh-Helen Sun - Smooth, Clear and Mature",
+      "labels": {
+        "descriptive": "formal",
+        "gender": "female",
+        "accent": "standard",
+        "age": "middle_aged",
+        "language": "zh",
+        "use_case": "informative_educational"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "agczkAUlHLowaNnL72Cc",
+      "name": "zh-Adrian - Chinese Mandarin Narration",
+      "labels": {
+        "gender": "male",
+        "descriptive": "neutral",
+        "use_case": "narrative_story",
+        "age": "young",
+        "language": "zh",
+        "accent": "standard"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "hkfHEbBvdQFNX4uWHqRF",
+      "name": "zh-Stacy - Young, Sweet and Cute",
+      "labels": {
+        "gender": "female",
+        "descriptive": "pleasant",
+        "accent": "standard",
+        "age": "young",
+        "language": "zh",
+        "use_case": "narrative_story"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "SF9uvIlY93SJRMdV5jeP",
+      "name": "en-Andrew Griffin - Football Commentator",
+      "labels": {
+        "gender": "male",
+        "descriptive": "calm",
+        "accent": "american",
+        "age": "middle_aged",
+        "language": "en",
+        "use_case": "conversational"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "OYTbf65OHHFELVut7v2H",
+      "name": "en-Hope - Natural, Clear and Calm",
+      "labels": {
+        "gender": "female",
+        "descriptive": "crisp",
+        "accent": "american",
+        "age": "young",
+        "language": "en",
+        "use_case": "conversational"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "U5UjeJMsOvyhYhXfZdvZ",
+      "name": "en-Adam - Classic Scottish Storyteller",
+      "labels": {
+        "descriptive": "crisp",
+        "gender": "male",
+        "use_case": "narrative_story",
+        "age": "old",
+        "language": "en",
+        "accent": "scottish"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "keLVje3aBMuRpxuu0bqO",
+      "name": "en-Crofty - Energetic Radio Host",
+      "labels": {
+        "descriptive": "professional",
+        "gender": "male",
+        "use_case": "advertisement",
+        "accent": "scottish",
+        "language": "en"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "yj30vwTGJxSHezdAGsv9",
+      "name": "en-Jessa - Easygoing and Effortless",
+      "labels": {
+        "descriptive": "casual",
+        "gender": "female",
+        "accent": "american",
+        "age": "young",
+        "language": "en",
+        "use_case": "narrative_story"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "h1i3CVVBUuF6s46cxUGG",
+      "name": "en-Andy Lin - Gentle and Friendly Narrat",
+      "labels": {
+        "gender": "male",
+        "descriptive": "gentle",
+        "use_case": "narrative_story",
+        "age": "young",
+        "language": "en",
+        "accent": "chinese"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "ZthjuvLPty3kTMaNKVKb",
+      "name": "en-Peter",
+      "labels": {
+        "gender": "male",
+        "descriptive": "confident",
+        "accent": "american",
+        "age": "middle_aged",
+        "language": "en",
+        "use_case": "narrative_story"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "W71zT1VwIFFx3mMGH2uZ",
+      "name": "it-MarcoTrox - Warm, Balanced and Polish",
+      "labels": {
+        "descriptive": "intense",
+        "gender": "male",
+        "accent": "standard",
+        "age": "middle_aged",
+        "language": "it",
+        "use_case": "narrative_story"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "gUbIduqGzBP438teh4ZA",
+      "name": "en-Lewis - Friendly, Calm, and Full",
+      "labels": {
+        "gender": "male",
+        "descriptive": "calm",
+        "use_case": "narrative_story",
+        "age": "young",
+        "language": "en",
+        "accent": "scottish"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "MFZUKuGQUsGJPQjTS4wC",
+      "name": "en-Jon - Warm & Grounded Storyteller",
+      "labels": {
+        "descriptive": "calm",
+        "gender": "male",
+        "use_case": "narrative_story",
+        "age": "middle_aged",
+        "language": "en",
+        "accent": "american"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "MI36FIkp9wRP7cpWKPTl",
+      "name": "zh-Evan Zhao - Warm, Calm and Trustworth",
+      "labels": {
+        "gender": "male",
+        "descriptive": "gentle",
+        "use_case": "narrative_story",
+        "age": "young",
+        "language": "zh",
+        "accent": "beijing mandarin"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "hZTuv9Zqrq4yHYrEmF1r",
+      "name": "zh-Adam Li -  Deep, Steady and Calm",
+      "labels": {
+        "descriptive": "deep",
+        "gender": "male",
+        "accent": "singapore mandarin",
+        "age": "middle_aged",
+        "language": "zh",
+        "use_case": "narrative_story"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "YxbjaPemDJV2xlfvkiIG",
+      "name": "zh-Yun - Elegant, Sweet and Gentle",
+      "labels": {
+        "descriptive": "calm",
+        "gender": "female",
+        "use_case": "narrative_story",
+        "age": "middle_aged",
+        "language": "zh",
+        "accent": "standard"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "NxUQ5SgevJvRsX9HsM0O",
+      "name": "en-Wenchang - Chinese accent",
+      "labels": {
+        "descriptive": "chill",
+        "gender": "male",
+        "use_case": "informative_educational",
+        "age": "middle_aged",
+        "language": "en",
+        "accent": "chinese"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "6OzrBCQf8cjERkYgzSg8",
+      "name": "en-Young Jamal",
+      "labels": {
+        "gender": "male",
+        "descriptive": "chill",
+        "use_case": "social_media",
+        "age": "young",
+        "language": "en",
+        "accent": "american"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "iLVmqjzCGGvqtMCk6vVQ",
+      "name": "en-Antonio - Lively, Engaging and Energe",
+      "labels": {
+        "gender": "male",
+        "descriptive": "calm",
+        "use_case": "conversational",
+        "age": "young",
+        "language": "en",
+        "accent": "italian"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "y6p0SvBlfEe2MH4XN7BP",
+      "name": "en-Hugh - Rhythmic and Engaging Storytel",
+      "labels": {
+        "gender": "male",
+        "descriptive": "casual",
+        "accent": "scottish",
+        "age": "middle_aged",
+        "language": "en",
+        "use_case": "narrative_story"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "NOpBlnGInO9m6vDvFkFC",
+      "name": "en-Spuds Oxley - Grandpa ",
+      "labels": {
+        "descriptive": "gentle",
+        "gender": "male",
+        "accent": "american",
+        "age": "old",
+        "language": "en",
+        "use_case": "narrative_story"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "7p1Ofvcwsv7UBPoFNcpI",
+      "name": "zh-Julian - Deep, Rich and Mature",
+      "labels": {
+        "descriptive": "mature",
+        "gender": "male",
+        "use_case": "narrative_story",
+        "age": "old",
+        "language": "en",
+        "accent": "british"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "6vTyAgAT8PncODBcLjRf",
+      "name": "fr-Claire - Warm, Pretty and Charming",
+      "labels": {
+        "descriptive": "casual",
+        "gender": "female",
+        "accent": "standard",
+        "age": "middle_aged",
+        "language": "fr",
+        "use_case": "narrative_story"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "aQROLel5sQbj1vuIVi6B",
+      "name": "fr-Nicolas - Narrator",
+      "labels": {
+        "gender": "male",
+        "descriptive": "professional",
+        "use_case": "narrative_story",
+        "age": "middle_aged",
+        "language": "fr",
+        "accent": "parisian"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "v3V1d2rk6528UrLKRuy8",
+      "name": "de-Susi - Effortless and Confident",
+      "labels": {
+        "descriptive": "calm",
+        "gender": "female",
+        "accent": "standard",
+        "age": "middle_aged",
+        "language": "de",
+        "use_case": "conversational"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "FTNCalFNG5bRnkkaP5Ug",
+      "name": "de-Otto - Casual and Normal",
+      "labels": {
+        "descriptive": "calm",
+        "gender": "male",
+        "accent": "standard",
+        "age": "middle_aged",
+        "language": "de",
+        "use_case": "narrative_story"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "ymDCYd8puC7gYjxIamPt",
+      "name": "ru-Marina - Soft, Clear and Warm",
+      "labels": {
+        "gender": "female",
+        "descriptive": "calm",
+        "accent": "standard",
+        "age": "middle_aged",
+        "language": "ru",
+        "use_case": "narrative_story"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "3EuKHIEZbSzrHGNmdYsx",
+      "name": "ru-Nikolay - Confident, Clear and Engagi",
+      "labels": {
+        "gender": "male",
+        "descriptive": "confident",
+        "accent": "standard",
+        "age": "middle_aged",
+        "language": "ru",
+        "use_case": "social_media"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "9lHjugDhwqoxA5MhX0az",
+      "name": "zh-Anna Su - Casual, Friendly and Bright",
+      "labels": {
+        "gender": "female",
+        "descriptive": "casual",
+        "use_case": "social_media",
+        "age": "young",
+        "language": "zh",
+        "accent": "taiwan mandarin"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "4VZIsMPtgggwNg7OXbPY",
+      "name": "zh-James Gao - Calm, Friendly and Warm",
+      "labels": {
+        "gender": "male",
+        "descriptive": "calm",
+        "accent": "standard",
+        "age": "middle_aged",
+        "language": "zh",
+        "use_case": "narrative_story"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "n1PvBOwxb8X6m7tahp2h",
+      "name": "Michael C. Vincent - Suspenseful Storyteller",
+      "labels": {
+        "gender": "male",
+        "descriptive": "serious",
+        "accent": "american",
+        "age": "middle_aged",
+        "language": "en",
+        "use_case": "narrative_story"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "6FiCmD8eY5VyjOdG5Zjk",
+      "name": "Adam - Deep English Story Voice",
+      "labels": {
+        "gender": "male",
+        "descriptive": "calm",
+        "accent": "american",
+        "age": "middle_aged",
+        "language": "en",
+        "use_case": "narrative_story"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "UgBBYS2sOqTuMpoF3BR0",
+      "name": "Mark - Natural Conversations",
+      "labels": {
+        "gender": "male",
+        "descriptive": "casual",
+        "use_case": "conversational",
+        "age": "young",
+        "language": "en",
+        "accent": "american"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "RABOvaPec1ymXz02oDQi",
+      "name": "Anika - Sweet, Lively and Warm",
+      "labels": {
+        "descriptive": "upbeat",
+        "gender": "female",
+        "use_case": "social_media",
+        "age": "young",
+        "language": "hi",
+        "accent": "standard"
+      },
+      "category": "professional"
+    },
+    {
+      "id": "hpp4J3VqNfWAUOO0d1Us",
+      "name": "Bella - Professional, Bright, Warm",
+      "labels": {
+        "gender": "female",
+        "descriptive": "professional",
+        "language": "en",
+        "use_case": "informative_educational",
+        "age": "middle_aged",
+        "accent": "american"
+      },
+      "category": "premade"
+    },
+    {
+      "id": "CwhRBWXzGAHq8TQ4Fs17",
+      "name": "Roger - Laid-Back, Casual, Resonant",
+      "labels": {
+        "gender": "male",
+        "descriptive": "classy",
+        "language": "en",
+        "use_case": "conversational",
+        "age": "middle_aged",
+        "accent": "american"
+      },
+      "category": "premade"
+    },
+    {
+      "id": "EXAVITQu4vr4xnSDxMaL",
+      "name": "Sarah - Mature, Reassuring, Confident",
+      "labels": {
+        "gender": "female",
+        "descriptive": "professional",
+        "language": "en",
+        "use_case": "entertainment_tv",
+        "age": "young",
+        "accent": "american"
+      },
+      "category": "premade"
+    },
+    {
+      "id": "FGY2WhTYpPnrIDTdsKH5",
+      "name": "Laura - Enthusiast, Quirky Attitude",
+      "labels": {
+        "gender": "female",
+        "descriptive": "sassy",
+        "language": "en",
+        "use_case": "social_media",
+        "age": "young",
+        "accent": "american"
+      },
+      "category": "premade"
+    },
+    {
+      "id": "IKne3meq5aSn9XLyUdCD",
+      "name": "Charlie - Deep, Confident, Energetic",
+      "labels": {
+        "gender": "male",
+        "descriptive": "hyped",
+        "language": "en",
+        "use_case": "conversational",
+        "age": "young",
+        "accent": "australian"
+      },
+      "category": "premade"
+    },
+    {
+      "id": "JBFqnCBsd6RMkjVDRZzb",
+      "name": "George - Warm, Captivating Storyteller",
+      "labels": {
+        "gender": "male",
+        "descriptive": "mature",
+        "language": "en",
+        "use_case": "narrative_story",
+        "age": "middle_aged",
+        "accent": "british"
+      },
+      "category": "premade"
+    },
+    {
+      "id": "N2lVS1w4EtoT3dr4eOWO",
+      "name": "Callum - Husky Trickster",
+      "labels": {
+        "gender": "male",
+        "language": "en",
+        "use_case": "characters_animation",
+        "age": "middle_aged",
+        "accent": "american"
+      },
+      "category": "premade"
+    },
+    {
+      "id": "SAz9YHcvj6GT2YYXdXww",
+      "name": "River - Relaxed, Neutral, Informative",
+      "labels": {
+        "gender": "neutral",
+        "descriptive": "calm",
+        "language": "en",
+        "use_case": "conversational",
+        "age": "middle_aged",
+        "accent": "american"
+      },
+      "category": "premade"
+    },
+    {
+      "id": "SOYHLrjzK2X1ezoPC6cr",
+      "name": "Harry - Fierce Warrior",
+      "labels": {
+        "gender": "male",
+        "descriptive": "rough",
+        "language": "en",
+        "use_case": "characters_animation",
+        "age": "young",
+        "accent": "american"
+      },
+      "category": "premade"
+    },
+    {
+      "id": "TX3LPaxmHKxFdv7VOQHJ",
+      "name": "Liam - Energetic, Social Media Creator",
+      "labels": {
+        "gender": "male",
+        "descriptive": "confident",
+        "language": "en",
+        "use_case": "social_media",
+        "age": "young",
+        "accent": "american"
+      },
+      "category": "premade"
+    },
+    {
+      "id": "Xb7hH8MSUJpSbSDYk0k2",
+      "name": "Alice - Clear, Engaging Educator",
+      "labels": {
+        "gender": "female",
+        "descriptive": "professional",
+        "language": "en",
+        "use_case": "informative_educational",
+        "age": "middle_aged",
+        "accent": "british"
+      },
+      "category": "premade"
+    },
+    {
+      "id": "XrExE9yKIg1WjnnlVkGX",
+      "name": "Matilda - Knowledgable, Professional",
+      "labels": {
+        "gender": "female",
+        "descriptive": "upbeat",
+        "language": "en",
+        "use_case": "informative_educational",
+        "age": "middle_aged",
+        "accent": "american"
+      },
+      "category": "premade"
+    },
+    {
+      "id": "bIHbv24MWmeRgasZH58o",
+      "name": "Will - Relaxed Optimist",
+      "labels": {
+        "gender": "male",
+        "descriptive": "chill",
+        "language": "en",
+        "use_case": "conversational",
+        "age": "young",
+        "accent": "american"
+      },
+      "category": "premade"
+    },
+    {
+      "id": "cgSgspJ2msm6clMCkdW9",
+      "name": "Jessica - Playful, Bright, Warm",
+      "labels": {
+        "gender": "female",
+        "descriptive": "cute",
+        "language": "en",
+        "use_case": "conversational",
+        "age": "young",
+        "accent": "american"
+      },
+      "category": "premade"
+    },
+    {
+      "id": "cjVigY5qzO86Huf0OWal",
+      "name": "Eric - Smooth, Trustworthy",
+      "labels": {
+        "gender": "male",
+        "descriptive": "classy",
+        "language": "en",
+        "use_case": "conversational",
+        "age": "middle_aged",
+        "accent": "american"
+      },
+      "category": "premade"
+    },
+    {
+      "id": "iP95p4xoKVk53GoZ742B",
+      "name": "Chris - Charming, Down-to-Earth",
+      "labels": {
+        "gender": "male",
+        "descriptive": "casual",
+        "language": "en",
+        "use_case": "conversational",
+        "age": "middle_aged",
+        "accent": "american"
+      },
+      "category": "premade"
+    },
+    {
+      "id": "nPczCjzI2devNBz1zQrb",
+      "name": "Brian - Deep, Resonant and Comforting",
+      "labels": {
+        "gender": "male",
+        "descriptive": "classy",
+        "language": "en",
+        "use_case": "social_media",
+        "age": "middle_aged",
+        "accent": "american"
+      },
+      "category": "premade"
+    },
+    {
+      "id": "onwK4e9ZLuTAKqWW03F9",
+      "name": "Daniel - Steady Broadcaster",
+      "labels": {
+        "gender": "male",
+        "descriptive": "formal",
+        "language": "en",
+        "use_case": "informative_educational",
+        "age": "middle_aged",
+        "accent": "british"
+      },
+      "category": "premade"
+    },
+    {
+      "id": "pFZP5JQG7iQjIQuC4Bku",
+      "name": "Lily - Velvety Actress",
+      "labels": {
+        "gender": "female",
+        "descriptive": "confident",
+        "language": "en",
+        "use_case": "informative_educational",
+        "age": "middle_aged",
+        "accent": "british"
+      },
+      "category": "premade"
+    },
+    {
+      "id": "pNInz6obpgDQGcFmaJgB",
+      "name": "Adam - Dominant, Firm",
+      "labels": {
+        "gender": "male",
+        "language": "en",
+        "use_case": "social_media",
+        "age": "middle_aged",
+        "accent": "american"
+      },
+      "category": "premade"
+    },
+    {
+      "id": "pqHfZKP75CvOlQylNhV4",
+      "name": "Bill - Wise, Mature, Balanced",
+      "labels": {
+        "gender": "male",
+        "descriptive": "crisp",
+        "language": "en",
+        "use_case": "advertisement",
+        "age": "old",
+        "accent": "american"
+      },
+      "category": "premade"
+    }
+  ]
+}
