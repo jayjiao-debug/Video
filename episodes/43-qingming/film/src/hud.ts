@@ -59,7 +59,32 @@ export const stamp = (hud: HTMLElement, st: Stamp | null, t: number, a: number, 
 	html(hud, `<div class="stamp sh" style="opacity:${(o * smooth(u)).toFixed(3)};transform:translateY(${y.toFixed(1)}px)"><div class="s1">${st.s1}</div>${st.s2 ? `<div class="s2">${st.s2}</div>` : ''}${st.s3 ? `<div class="s3">${st.s3}</div>` : ''}</div>`);
 };
 /** the old series corner mark */
-export const mark = (hud: HTMLElement, o = 1) => { if (o > 0) html(hud, `<div class="mark" style="opacity:${(0.62 * o).toFixed(3)}"><span style="color:#B9B2A6">◆</span> Juno · VIBE知识大赏</div>`); };
+export const mark = (hud: HTMLElement, o = 1) => { if (o > 0) html(hud, `<div class="mark" style="opacity:${(0.62 * o).toFixed(3)}"><span style="color:#B9B2A6">◆</span> Juno · VIBE知识大赏</div>${(window as any).SEAL ? `<div class="seal" style="opacity:${(0.86 * o).toFixed(3)}">${sealSvg((window as any).SEAL)}</div>` : `<div class="jl" style="opacity:${(0.42 * o).toFixed(3)}">J</div>`}`); };
+
+/** the J seal (印章) in the bottom-right corner: a worn cinnabar stamp, slightly askew; variants for the owner to choose from */
+const SEAL_RED = '#B8322A';
+// rough edges (low-frequency displacement) + a few worn spots (blotchy alpha), mostly solid ink
+const wear = (id: string, seed: number) => `<filter id="${id}" x="-10%" y="-10%" width="120%" height="120%"><feTurbulence type="fractalNoise" baseFrequency="0.07" numOctaves="2" seed="${seed}" result="n1"/><feDisplacementMap in="SourceGraphic" in2="n1" scale="3.2" xChannelSelector="R" yChannelSelector="G" result="d"/><feTurbulence type="fractalNoise" baseFrequency="0.28" numOctaves="2" seed="${seed + 5}" result="n2"/><feColorMatrix in="n2" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 -4.2 3.25" result="m"/><feComposite in="d" in2="m" operator="in"/></filter>`;
+const J = (fill: string, y: number, size: number) => `<text x="50" y="${y}" text-anchor="middle" font-family="Noto Serif CJK SC, serif" font-weight="900" font-size="${size}" fill="${fill}">J</text>`;
+export const SEALS: Record<string, [string, string]> = {
+	// A 白文方印: a filled square, the J cut out (the ground shows through)
+	A: ['0 0 100 100', `<mask id="mA"><rect width="100" height="100" fill="#fff"/>${J('#000', 75, 70)}</mask><rect x="8" y="8" width="84" height="84" rx="4" fill="${SEAL_RED}" mask="url(#mA)"/>`],
+	// B 朱文方印: a red frame, the J in red
+	B: ['0 0 100 100', `<rect x="10" y="10" width="80" height="80" rx="3" fill="none" stroke="${SEAL_RED}" stroke-width="9"/>${J(SEAL_RED, 73, 62)}`],
+	// C 圆印白文: a filled round seal, J cut out
+	C: ['0 0 100 100', `<mask id="mC"><rect width="100" height="100" fill="#fff"/>${J('#000', 73, 62)}</mask><circle cx="50" cy="50" r="44" fill="${SEAL_RED}" mask="url(#mC)"/>`],
+	// round 朱文 (owner: C's circle, B's outline + red J): ring weights and a double ring
+	C1: ['0 0 100 100', `<circle cx="50" cy="50" r="41" fill="none" stroke="${SEAL_RED}" stroke-width="8"/>${J(SEAL_RED, 72, 60)}`],
+	C2: ['0 0 100 100', `<circle cx="50" cy="50" r="40" fill="none" stroke="${SEAL_RED}" stroke-width="11"/>${J(SEAL_RED, 71, 56)}`],
+	C3: ['0 0 100 100', `<circle cx="50" cy="50" r="43" fill="none" stroke="${SEAL_RED}" stroke-width="5"/>${J(SEAL_RED, 74, 66)}`],
+	C4: ['0 0 100 100', `<circle cx="50" cy="50" r="43" fill="none" stroke="${SEAL_RED}" stroke-width="6.5"/><circle cx="50" cy="50" r="32" fill="none" stroke="${SEAL_RED}" stroke-width="2.5"/>${J(SEAL_RED, 68, 46)}`],
+	// D 双框朱文: a thick outer frame + thin inner frame, red J (a collector's seal)
+	D: ['0 0 100 100', `<rect x="7" y="7" width="86" height="86" fill="none" stroke="${SEAL_RED}" stroke-width="7"/><rect x="19" y="19" width="62" height="62" fill="none" stroke="${SEAL_RED}" stroke-width="3"/>${J(SEAL_RED, 69, 50)}`],
+	// E 竖长印白文: a tall rectangle, J cut out (like a name seal)
+	E: ['0 0 100 130', `<mask id="mE"><rect width="100" height="130" fill="#fff"/>${J('#000', 94, 78)}</mask><rect x="16" y="6" width="68" height="118" rx="3" fill="${SEAL_RED}" mask="url(#mE)"/>`],
+};
+export const sealSvg = (k: string, h = 54) => { const [vb, body] = SEALS[k] ?? SEALS.A, [, , w, hh] = vb.split(' ').map(Number);
+	return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="${vb}" height="${h}" width="${((h * w) / hh).toFixed(1)}"><defs>${wear('w' + k, 3 + (k.charCodeAt(0) % 7))}</defs><g filter="url(#w${k})" transform="rotate(-2.5 50 ${hh / 2})">${body}</g></svg>`; };
 
 /** odometer digits for a value that may be mid-roll (v real); width = number of digits shown */
 const odo = (v: number, width: number) => {
