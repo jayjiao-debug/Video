@@ -18,7 +18,7 @@ export type SceneP = {u: number; d: number; tag?: string};
 /* ---------- people ---------- */
 export const LK: Record<string, Look4> = {
 	zhouGirl: {dress: 'dress', head: 'bun'}, zhouBoy: {dress: 'tunic', head: 'bun', legs: 'trousers'},
-	xu: {dress: 'robe', head: 'bun', sleeves: 'wide'}, princess: {dress: 'robe', head: 'bun', sleeves: 'wide'}, servant: {dress: 'tunic', head: 'bald', legs: 'trousers', beard: 'short'},
+	xu: {dress: 'tunic', head: 'bun', beard: 'short', legs: 'trousers', build: 1.08}, princess: {dress: 'dress', head: 'bun', sleeves: 'wide'}, servant: {dress: 'tunic', head: 'bald', legs: 'trousers', beard: 'short'},
 	yang: {dress: 'robe', head: 'bun', sleeves: 'wide'}, fangshi: {dress: 'tunic', head: 'bun', legs: 'trousers', beard: 'long'}, emperor: {dress: 'robe', head: 'futou', beard: 'full', sleeves: 'wide'},
 	groom70: {dress: 'jacket', head: 'short', legs: 'trousers'}, bride70: {dress: 'jacket', head: 'bob', legs: 'trousers'},
 	man: {dress: 'shirt', head: 'young', legs: 'trousers'}, woman: {dress: 'dress', head: 'long'},
@@ -293,7 +293,7 @@ export const Tang: React.FC<SceneP> = ({u, d, tag}) => {
 	const f2Pose = fIn.moving ? fIn.pose : U < tIn1 + 0.9 ? mixPose(PZ.stand, PZ.offerR, hand2) : mixPose(PZ.offerR, PZ.stand, ease(seg(U, tIn1 + 0.9, tIn1 + 1.4)));
 	const ePose = U < tIn1 + 0.1 ? PZ.stand : U < tIn1 + 0.9 ? mixPose(PZ.stand, PZ.offer, hand2) : mixPose(PZ.offer, PZ.lookUpHold, ease(seg(U, tIn1 + 0.9, tIn1 + 1.6)));
 	const down = ease(seg(U, 7.6, 8.5)), back = ease(seg(U, tIn1 + 1.0, tIn1 + 1.8));
-	const camY = lerp(283, 1363, down), z0 = lerp(1.3, 0.5, back), cy = tag === 'coda' ? 900 : lerp(camY, 900, back), cx = tag === 'coda' ? 280 : lerp(960, 280, back);
+	const camY = lerp(283, 1363, down), z0 = lerp(1.3, 0.5, back), cy = tag === 'coda' ? 900 : lerp(camY, 900, back), cx = tag === 'coda' ? 180 : lerp(960, 180, back);
 	const z = tag === 'coda' ? 0.5 + 0.06 * seg(u, 0, d) : z0;
 	const yL = hand(yPose, 'LHand', yx, g, h), yR = hand(yPose, 'RHand', yx, g, h), fL = hand(fPose, 'LHand', fOut.x, g, h, fFlip);
 	const f2R = hand(f2Pose, 'RHand', fIn.x, eg, eh, true), eL = hand(ePose, 'LHand', ex, eg, eh);
@@ -386,7 +386,7 @@ export const Packet: React.FC<SceneP> = ({u}) => {
 export const LookBack: React.FC<SceneP> = ({u, d}) => {
 	/* the halves come back and hold still through the breath; the other tokens cross at mid-height; 0.566 s before the DROP
 	   everything flies to the seam between the two phones of the next shot and lands ON the hit as one moon (cut on the beat) */
-	const m = ease(seg(u, 2.27, 3.3)), p = ease(seg(u, 4.54, 5.6)), others = seg(u, 6.8, 9.4), fly = Math.pow(seg(u, d - 0.566, d), 2);
+	const m = easeOut(seg(u, 0.1, 2.2)), p = ease(seg(u, 4.54, 5.6)), others = seg(u, 6.8, 9.4), fly = Math.pow(seg(u, d - 0.566, d), 2);
 	const T: [number, number] = [960, 390];
 	return <g>
 		<Bg c={PP.ivory} c2={PP.ivory2} id="lb" />
@@ -405,7 +405,7 @@ export const LookBack: React.FC<SceneP> = ({u, d}) => {
 export const Drop: React.FC<SceneP> = ({u}) => {
 	/* 110.38: pull back out of the joined avatar into the street: two lit windows facing each other; in each a person looks
 	   down at a real-size phone at the chest; each one's avatar half floats as a bubble at the window's inner corner */
-	const pop = easeOut(seg(u, 0, 0.35)), z = 1.25 - 0.25 * ease(seg(u, 0, 1.4)), g = 700, h = 290;
+	const pop = easeOut(seg(u, 1.3, 1.7)), z = 1.25 - 0.25 * ease(seg(u, 0, 1.4)), g = 700, h = 290;
 	const L = {x: 520, w: 520}, R = {x: 1400, w: 520};
 	const fig = (cx: number, flip: boolean, who: string) => { const x = cx + (flip ? 90 : -90);
 		const [phx, phy] = hand(PZ.phoneLow, 'LHand', x, g, h, flip), sg = flip ? -1 : 1;
@@ -423,7 +423,7 @@ export const Drop: React.FC<SceneP> = ({u}) => {
 				<rect x={b.x - b.w / 2} y={g} width={b.w} height={26} fill={PP.ivory2} />
 				{fig(b.x, i === 1, i ? 'him' : 'her')}
 			</g>)}
-			{pop > 0 && [[L.x + 210, 'L'], [R.x - 210, 'R']].map(([x, sd]) => <g key={sd as string} transform={`translate(${x},250) scale(${pop})`} filter="url(#pd)">
+			{pop > 0 && [[L.x + 210, 'L'], [R.x - 210, 'R']].map(([x, sd]) => <g key={sd as string} transform={`translate(${x},300) scale(${pop})`} filter="url(#pd)">
 				<rect x={-98} y={-98} width={196} height={196} rx={36} fill={PP.cream} /><AvatarArt s={180} side={sd as 'L' | 'R'} id={`drb${sd}`} />
 				<path d={`M${sd === 'L' ? 40 : -40},96 L${sd === 'L' ? 10 : -10},140 L${sd === 'L' ? -10 : 10},96 Z`} fill={PP.cream} /></g>)}
 		</Cam>
@@ -464,13 +464,14 @@ export const CodaPin: React.FC<SceneP> = () => <g>
 	<Sheet c={PP.ivory2} d="M300,940 L860,940 L880,972 L280,972 Z" />
 	<Hairpin x={560} y={930} s={0.42} prong="R" rot={-90} />
 </g>;
-export const CodaPhone: React.FC<SceneP> = ({u}) => <g>
+export const CodaPhone: React.FC<SceneP> = ({u, d}) => <g>
 	<Bg c={PP.ochreL} c2={PP.ochre} id="cph" />
+	<g transform={`translate(960,540) scale(${1 + 0.08 * ease(seg(u, 0, d))}) translate(-960,-560)`}>
 	<Sheet c="#B9864A" d={Band(800, 14, 3)} />
-	<PhoneStand x={780} y={480} s={0.82} /><PhoneStand x={1140} y={480} s={0.82} />
+	<PhoneStand x={780} y={480} s={0.82} />
 	<Phone x={780} y={480} s={0.82} side="L" id="cphL" />
-	<g opacity={0.7}><Phone x={1140} y={480} s={0.82} side="R" ghost id="cphR" glow={0} /></g>
-	{void u}
+	<g opacity={0.55 + 0.25 * Math.sin(u * 2.4)}><Phone x={1140} y={480} s={0.82} side="R" ghost id="cphR" glow={0} /></g>
+	</g>
 </g>;
 /** END: the empty half fills; the avatar changes through several pairs */
 const PAIRS: [string, string][] = [[PP.indigo2, PP.rose], ['#3F7F7A', '#E9A070'], ['#6A4A7E', '#EDB3B4'], ['#2F3A6B', '#78ADA3']];
@@ -480,7 +481,7 @@ export const EndScene: React.FC<SceneP> = ({u}) => {
 	return <g>
 		<Bg c={PP.ochreL} c2={PP.ochre} id="en" />
 		<Sheet c="#B9864A" d={Band(800, 14, 3)} />
-		<PhoneStand x={780} y={480} s={0.82} /><PhoneStand x={1140} y={480} s={0.82} />
+		<PhoneStand x={780} y={480} s={0.82} /><g opacity={fill}><PhoneStand x={1140} y={480} s={0.82} /></g>
 		<Phone x={780} y={480} s={0.82} side="L" id="enL" pal={pal} />
 		<g opacity={fill}><Phone x={1140} y={480} s={0.82} side="R" id="enR" pal={pal} /></g>
 		<g opacity={1 - fill}><Phone x={1140} y={480} s={0.82} side="R" ghost id="enG" glow={0} /></g>
@@ -536,7 +537,7 @@ export const Pojing1: React.FC<SceneP> = ({u}) => {
 };
 export const CodaCouple: React.FC<SceneP> = ({u, d}) => {
 	/* K1 「破镜的那一对，后来重圆了」: the reunited couple, small, under the full moon, holding the whole mirror between them */
-	const g = 900, h = 300, x1 = 820, R = 0.107 * h * 1.6;
+	const g = 940, h = 440, x1 = 760, R = 0.107 * h * 1.6;
 	const x2 = x1 + PZ.offer.LHand[0] * h + PZ.offer.LHand[0] * h + 2 * R * 0.2 + 30;
 	const a = hand(PZ.offer, 'LHand', x1, g, h), b = hand(PZ.offer, 'LHand', x2, g, h, true), M: [number, number] = [(a[0] + b[0]) / 2, (a[1] + b[1]) / 2 - 22];
 	return <g>
