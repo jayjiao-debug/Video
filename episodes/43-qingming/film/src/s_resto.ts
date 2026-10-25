@@ -321,7 +321,7 @@ const drawR = (t: number) => {
 	// figures: behind the table, hidden by the table top while the paper stands up
 	const fk = `${Math.round(t * 60)}`;
 	const poly: P2[] = [strip.screen(TB.x0 - S.x0, 0, -2), strip.screen(TB.x1 - S.x0, 0, -2), strip.screen(TB.x1 - S.x0, S.depth, -2), strip.screen(TB.x0 - S.x0, S.depth, -2)];
-	const vis = c.z < 4, R = restorers(t, vis && c.th > 1.25), sit = R.figs[0], standF = R.figs[1];
+	const vis = c.z < 40, R = restorers(t, c.z < 4 && c.th > 1.25)   // drawn all through the dolly (they sweep out of frame); contacts logged in the room, sit = R.figs[0], standF = R.figs[1];
 	body.draw(fk, (g) => { if (!vis) return; g.save(); if (c.th > 1.0) { g.beginPath(); g.rect(-50, -50, W + 100, H + 100); g.moveTo(poly[0][0], poly[0][1]); for (const q of poly.slice(1)) g.lineTo(q[0], q[1]); g.closePath(); g.clip('evenodd'); }
 		drawFig(g, standF); g.restore(); });
 	lampL.draw(fk, (g) => { if (vis) drawLamp(g, t, lc); });
