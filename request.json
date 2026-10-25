@@ -1,123 +1,92 @@
 {
- "id": "ep42-vo-05",
+ "id": "ep45-vo-01",
  "model_prefs": [
   "eleven_v4"
  ],
  "items": [
   {
-   "name": "CQ_m0",
+   "name": "m0",
    "lang": "zh",
    "gender": "male",
    "accent": "standard",
    "pick": 0,
+   "model": "eleven_v4",
    "settings": {
     "stability": 0.5,
     "similarity_boost": 0.8,
-    "style": 0.35
+    "style": 0.3
    },
-   "model": "eleven_v4",
-   "text": "未知生，焉知死？"
+   "text": "假如说，你是圆明园的马首。有人花六千九百一十万港元买下你，又把你捐了出去。"
   },
   {
-   "name": "CQ_m1",
+   "name": "m1",
    "lang": "zh",
    "gender": "male",
    "accent": "standard",
    "pick": 1,
+   "model": "eleven_v4",
    "settings": {
     "stability": 0.5,
     "similarity_boost": 0.8,
-    "style": 0.35
+    "style": 0.3
    },
-   "model": "eleven_v4",
-   "text": "未知生，焉知死？"
+   "text": "假如说，你是圆明园的马首。有人花六千九百一十万港元买下你，又把你捐了出去。"
   },
   {
-   "name": "CQ_m2",
+   "name": "m2",
    "lang": "zh",
    "gender": "male",
    "accent": "standard",
    "pick": 2,
+   "model": "eleven_v4",
    "settings": {
     "stability": 0.5,
     "similarity_boost": 0.8,
-    "style": 0.35
+    "style": 0.3
    },
-   "model": "eleven_v4",
-   "text": "未知生，焉知死？"
+   "text": "假如说，你是圆明园的马首。有人花六千九百一十万港元买下你，又把你捐了出去。"
   },
   {
-   "name": "CQ_o0",
+   "name": "f0",
    "lang": "zh",
-   "gender": "male",
-   "search": "老",
+   "gender": "female",
+   "accent": "standard",
    "pick": 0,
+   "model": "eleven_v4",
    "settings": {
     "stability": 0.5,
     "similarity_boost": 0.8,
-    "style": 0.35
+    "style": 0.3
    },
-   "model": "eleven_v4",
-   "text": "未知生，焉知死？"
+   "text": "假如说，你是圆明园的马首。有人花六千九百一十万港元买下你，又把你捐了出去。"
   },
   {
-   "name": "CQ_o1",
+   "name": "f1",
    "lang": "zh",
-   "gender": "male",
-   "search": "老",
+   "gender": "female",
+   "accent": "standard",
    "pick": 1,
+   "model": "eleven_v4",
    "settings": {
     "stability": 0.5,
     "similarity_boost": 0.8,
-    "style": 0.35
+    "style": 0.3
    },
-   "model": "eleven_v4",
-   "text": "未知生，焉知死？"
+   "text": "假如说，你是圆明园的马首。有人花六千九百一十万港元买下你，又把你捐了出去。"
   },
   {
-   "name": "T2_f0",
+   "name": "f2",
    "lang": "zh",
    "gender": "female",
    "accent": "standard",
-   "age": "young",
-   "pick": 0,
-   "settings": {
-    "stability": 0.35,
-    "similarity_boost": 0.8,
-    "style": 0.6
-   },
-   "model": "eleven_v4",
-   "text": "你也没睡？明天吃火锅！"
-  },
-  {
-   "name": "T2_f1",
-   "lang": "zh",
-   "gender": "female",
-   "accent": "standard",
-   "age": "young",
-   "pick": 1,
-   "settings": {
-    "stability": 0.35,
-    "similarity_boost": 0.8,
-    "style": 0.6
-   },
-   "model": "eleven_v4",
-   "text": "你也没睡？明天吃火锅！"
-  },
-  {
-   "name": "T2_f2",
-   "lang": "zh",
-   "gender": "female",
-   "accent": "standard",
-   "age": "young",
    "pick": 2,
-   "settings": {
-    "stability": 0.35,
-    "similarity_boost": 0.8,
-    "style": 0.6
-   },
    "model": "eleven_v4",
-   "text": "你也没睡？明天吃火锅！"
+   "settings": {
+    "stability": 0.5,
+    "similarity_boost": 0.8,
+    "style": 0.3
+   },
+   "text": "假如说，你是圆明园的马首。有人花六千九百一十万港元买下你，又把你捐了出去。"
   }
  ]
 }
