@@ -1,23 +1,85 @@
 {
- "id": "sfx-natural-01",
- "items": [
-  {
-   "type": "url",
-   "url": "https://bigsoundbank.com/UPLOAD/mp3/3516.mp3",
-   "name": "bsb_3516_crowd.mp3",
-   "license": "CC0 (BigSoundBank #3516)"
-  },
-  {
-   "type": "url",
-   "url": "https://bigsoundbank.com/UPLOAD/mp3/3522.mp3",
-   "name": "bsb_3522_applause.mp3",
-   "license": "CC0 (BigSoundBank #3522)"
-  },
-  {
-   "type": "url",
-   "url": "https://bigsoundbank.com/UPLOAD/mp3/2157.mp3",
-   "name": "bsb_2157_cassette.mp3",
-   "license": "CC0 (BigSoundBank #2157)"
-  }
- ]
+"id": "lol-worlds26-05",
+"items": [
+{
+"type": "url",
+"url": "https://gol.gg/tournament/ajax.trlist.php",
+"method": "POST",
+"body": "season=S13",
+"name": "golgg_trlist_S13.json",
+"license": "gol.gg",
+"ua": "Mozilla/5.0 (juno-asset-farm)",
+"delay": 1
+},
+{
+"type": "url",
+"url": "https://gol.gg/tournament/ajax.trlist.php",
+"method": "POST",
+"body": "season=S15",
+"name": "golgg_trlist_S15.json",
+"license": "gol.gg",
+"ua": "Mozilla/5.0 (juno-asset-farm)",
+"delay": 1
+},
+{
+"type": "url",
+"url": "https://gol.gg/tournament/tournament-matchlist/Worlds%20Main%20Event%202023/",
+"name": "m_Worlds_Main_Event_2023.html",
+"license": "gol.gg stats page",
+"ua": "Mozilla/5.0 (juno-asset-farm)",
+"delay": 2,
+"retries": 2,
+"backoff": 30
+},
+{
+"type": "url",
+"url": "https://gol.gg/tournament/tournament-matchlist/Worlds%20Main%20Event%202025/",
+"name": "m_Worlds_Main_Event_2025.html",
+"license": "gol.gg stats page",
+"ua": "Mozilla/5.0 (juno-asset-farm)",
+"delay": 2,
+"retries": 2,
+"backoff": 30
+},
+{
+"type": "url",
+"url": "https://gol.gg/tournament/tournament-matchlist/Worlds%202025%20Main%20Event/",
+"name": "m_Worlds_2025_Main_Event.html",
+"license": "gol.gg stats page",
+"ua": "Mozilla/5.0 (juno-asset-farm)",
+"delay": 2,
+"retries": 2,
+"backoff": 30
+},
+{
+"type": "url",
+"url": "https://gol.gg/tournament/tournament-matchlist/World%20Championship%202025/",
+"name": "m_World_Championship_2025.html",
+"license": "gol.gg stats page",
+"ua": "Mozilla/5.0 (juno-asset-farm)",
+"delay": 2,
+"retries": 2,
+"backoff": 30
+},
+{
+"type": "url",
+"url": "https://gol.gg/tournament/tournament-matchlist/Worlds%202026%20Main%20Event/",
+"name": "m_Worlds_2026_Main_Event.html",
+"license": "gol.gg stats page",
+"ua": "Mozilla/5.0 (juno-asset-farm)",
+"delay": 2,
+"retries": 2,
+"backoff": 30
+},
+{
+"type": "url",
+"url": "https://gol.gg/tournament/tournament-matchlist/Worlds%20Main%20Event%202026/",
+"name": "m_Worlds_Main_Event_2026.html",
+"license": "gol.gg stats page",
+"ua": "Mozilla/5.0 (juno-asset-farm)",
+"delay": 2,
+"retries": 2,
+"backoff": 30
+}
+]
 }
