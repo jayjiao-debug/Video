@@ -19,7 +19,7 @@
 | Gate 3 r1–r2 | director | notes_gate3_r1.md, notes_gate3_r2.md | applied |
 | Logic r1–r3 | logic checker | logic_check_r1.md, logic_check_r2.md, logic_check_r3.md | applied |
 | Cut v2 | video-reviewer | review/REVIEW_v2.md | applied |
-| Gate 4 | director | notes_gate4_r1.md | — |
+| Gate 4 | director | notes_gate4_r1.md | APPROVE v3 (overall 4/5); polish → v4 delivered |
 
 The code body-logic check is `scripts/check46.mjs` in the 37-qiqing Remotion project. It covers R2/R3/R4/R5/R7/R8 and passes.
 
@@ -27,7 +27,9 @@ The code body-logic check is `scripts/check46.mjs` in the 37-qiqing Remotion pro
 - **Code:** episodes/37-qiqing/remotion/src/qq46/ (FILM46 + KF46 entry). Render with `scripts/frame.mjs` (ENTRY=qq46/FILM46).
 - **Farm:** tools/farm46.sh runs the film on the farm. The farm was busy with another chat's ep47, so v2 and v3 were rendered locally (about 45 min on 2 cores).
 - **Mux and send version:** tools/finish46.sh. Glitch scan: tools/glitch_scan.py.
-- **Outputs:** in /tmp/claude-0/r46/ (local only, never committed). HD delivery goes via the deliver-hanbai branch and a .bat.
+- **Outputs:** in /tmp/claude-0/r46/ (local only, never committed).
+- **Final v4:** 156.4 s, 4693 frames, 0 glitches, −14.0 LUFS, TP −2.2 dBTP. Send version 27.0 MB.
+- **HD master:** Hanbai_v4_HD.mp4 (80.8 MB, md5 8cfd9d85bbd355bf7fdb8f04bc0b0618) on branch deliver-hanbai (2 parts); get_hanbai_HD.bat downloads and joins it. Keep the branch until the owner has the file.
 
 ## Open
 - A raw audio dump from the v2 review (episodes/46-hanbai/review/v2/a.raw, about 57 MB) was committed by mistake in 975c363 and removed in 8a8d3ab.
