@@ -48,7 +48,7 @@ export const subtitles = (hud: HTMLElement, lines: Line[], t: number, yTop = 132
 		const ctr = centred(s); const row = prevStays ? 1 : 0;
 		const perWord = s.startsWith('[偷你]');                      // E3: each verb turns red on its own beat
 		const redOn = perWord ? (g: number) => t >= a + g * BEAT - 0.02 : undefined;
-		html(hud, `<div class="${ctr ? 'subc' : 'sub'} sh" style="top:${yTop - 8 + row * 88}px;opacity:${o.toFixed(3)}">${markup(s, n, ctr, redOn)}</div>`);
+		html(hud, `<div class="${ctr ? 'subc' : 'sub'} sh" data-k="L${a.toFixed(3)}" style="top:${yTop - 8 + row * 88}px;opacity:${o.toFixed(3)}">${markup(s, n, ctr, redOn)}</div>`);
 	}
 };
 
@@ -56,7 +56,7 @@ export type Stamp = {s1: string; s2?: string; s3?: string};
 /** stamp, arriving with a short drop at time a */
 export const stamp = (hud: HTMLElement, st: Stamp | null, t: number, a: number, o = 1) => {
 	if (!st || o <= 0) return; const u = clamp01((t - a) / 0.16), y = (1 - smooth(u)) * -10;
-	html(hud, `<div class="stamp sh" style="opacity:${(o * smooth(u)).toFixed(3)};transform:translateY(${y.toFixed(1)}px)"><div class="s1">${st.s1}</div>${st.s2 ? `<div class="s2">${st.s2}</div>` : ''}${st.s3 ? `<div class="s3">${st.s3}</div>` : ''}</div>`);
+	html(hud, `<div class="stamp sh" data-k="S${(st.s1 + '|' + (st.s2 ?? '')).replace(/"/g, '')}" style="opacity:${(o * smooth(u)).toFixed(3)};transform:translateY(${y.toFixed(1)}px)"><div class="s1">${st.s1}</div>${st.s2 ? `<div class="s2">${st.s2}</div>` : ''}${st.s3 ? `<div class="s3">${st.s3}</div>` : ''}</div>`);
 };
 /** the old series corner mark */
 export const mark = (hud: HTMLElement, o = 1) => { if (o > 0) html(hud, `<div class="mark" style="opacity:${(0.62 * o).toFixed(3)}"><span style="color:#B9B2A6">◆</span> Juno · VIBE知识大赏</div>${(window as any).SEAL ? `<div class="seal" style="opacity:${(0.86 * o).toFixed(3)}">${sealSvg((window as any).SEAL)}</div>` : `<div class="jl" style="opacity:${(0.42 * o).toFixed(3)}">J</div>`}`); };
