@@ -612,7 +612,7 @@ const endHud = (t: number) => (hud: HTMLElement) => {
 	endCard(hud, o, t < b(76.5) ? '' : Q_LINE, SOURCES, t < b(76.5) ? 0 : Math.floor(qT + 1e-6), smooth(clamp01((t - b(78)) / 0.3)), smooth(clamp01((t - b(78.5)) / 0.3)));
 };
 addScene({id: '37', a: b(76), z: 184.3 + 1, draw: (t) => {
-	const dimK = lerp(1, 0.5, smooth(clamp01((t - b(76.2)) / (b(77.6) - b(76.2)))));
+	const dimK = lerp(1, 0.56, smooth(clamp01((t - b(76.2)) / (b(77.6) - b(76.2)))));
 	if (t < E37.hallZ) {           // ---- out of the hall (the camera backs away from the empty case toward the door)
 		const k = easeIn(clamp01((t - E37.a) / (E37.hallZ - E37.a)));
 		lockCam(hallSt, Math.exp(lerp(Math.log(Z36 * 1.38), Math.log(0.62), k)), PANE_C[0], PANE_C[1], HZ.glass, 960, lerp(601, 580, k));
