@@ -1,35 +1,23 @@
 {
- "id": "ep45-ref-01",
+ "id": "sfx-natural-01",
  "items": [
   {
    "type": "url",
-   "url": "https://media.bjnews.com.cn/cover/2020/12/01/4997780767200325258.jpg",
-   "name": "mashou_bjnews_1.jpg",
-   "license": "reference only, not for screen: 新京报 2020-12-01"
+   "url": "https://bigsoundbank.com/UPLOAD/mp3/3516.mp3",
+   "name": "bsb_3516_crowd.mp3",
+   "license": "CC0 (BigSoundBank #3516)"
   },
   {
    "type": "url",
-   "url": "https://media.bjnews.com.cn/cover/2020/12/01/4997780767229683183.jpg",
-   "name": "mashou_bjnews_zhengjuesi.jpg",
-   "license": "reference only: 新京报/浦峰 2020-12-01"
+   "url": "https://bigsoundbank.com/UPLOAD/mp3/3522.mp3",
+   "name": "bsb_3522_applause.mp3",
+   "license": "CC0 (BigSoundBank #3522)"
   },
   {
    "type": "url",
-   "url": "https://media.bjnews.com.cn/cover/2020/12/01/4997780767250657056.jpg",
-   "name": "haiyantang_model_bjnews.jpg",
-   "license": "reference only: 新京报/浦峰 2020-12-01"
-  },
-  {
-   "type": "url",
-   "url": "https://paper.people.com.cn/hwbwap/images/2020-12/07/11/rmrbhwb2020120711p29_b.jpg",
-   "name": "mashou_wenshuting_rmrb.jpg",
-   "license": "reference only: 人民日报海外版/陈曦"
-  },
-  {
-   "type": "url",
-   "url": "https://paper.people.com.cn/hwbwap/images/2020-12/07/11/rmrbhwb2020120711p30_b.jpg",
-   "name": "mashou_xinhua_lihe.jpg",
-   "license": "reference only: 新华社/李贺"
+   "url": "https://bigsoundbank.com/UPLOAD/mp3/2157.mp3",
+   "name": "bsb_2157_cassette.mp3",
+   "license": "CC0 (BigSoundBank #2157)"
   }
  ]
 }
