@@ -1,6 +1,7 @@
 import React from 'react';
 import {W, H, rnd, lerp, Glow, Rimmed, fkPose, gaitPose, mixPose, Look4, Pose, B, jointAt, Sky, BRAIN_D, HeadGlow, Jar} from './kit44';
 import {SANS, MONO, ROSE, INK} from './skin44';
+import {Figure4} from './figure44';
 import {Shaft, Motes, Pendant, Shelf, Frame, Wallpaper, Curtain, Stove, Cloud, Farm, Fence, Clock} from './bg44';
 /* ep44 demo (story 0–35.0): every scene takes story time t (demo v1 clock); camera on every shot; motivated transitions.
    FOR rough44b (Fixer 2): the fixed compass close-up is exported as `K2Scene` (+ `k2Rot`, `k2Tip`, `k2Glow`, `K2_C`, `K2_R`), see the K2 block.
@@ -272,6 +273,18 @@ const homeCam = (t: number): {cx: number; cy: number; z: number} => (roomMix(t) 
 const fatherP = (t: number) => { const k = ease(seg(t, 18.5, 19.2)), back = ease(seg(t, 19.95, 20.6));
 	return fkPose({hip: 0.37, lean: lerp(lerp(4, 12, k), 8, back), neck: 14, lt: 86, lk: 90, rt: 82, rk: 86, la: 24, le: 56, ra: lerp(lerp(18, 62, k), 30, back), re: lerp(lerp(70, 34, k), 58, back)}); };
 const compassAt = (t: number): P2 => { const fh = jointAt(fatherP(t), 'RHand', KX + 760, 910, 700), kh = jointAt(kidP, 'RHand', KX + 1080, 904, 430, true), k = ease(seg(t, 19.3, 19.9)); return [lerp(fh[0] + 18, kh[0] - 10, k), lerp(fh[1] - 14, kh[1] - 18, k)]; };
+/** hands v3: the boy in the wide shot takes the compass into the same hold as the close-up K2 (mirrored, he faces left here):
+    his right hand cups it from below, the left one steadies it from behind; his arms reach the hands by IK on the figure's bones */
+const kidHoldAt = (t: number, cp: P2) => {
+	const k = sm(seg(t, 19.7, 19.92)), r = 30, X = KX + 1080, G = 904, Hh = 430;
+	const g0 = holdGeo({C: cp, r, hr: 0, m: -1, nE: cp, fE: cp}), nW = g0.W(NEAR_W), fW = g0.W(FAR_W);
+	const J = (n: string) => jointAt(kidP, n, X, G, Hh, true), U = (p: P2): P2 => [(X - p[0]) / Hh, (G - p[1]) / Hh];
+	const nE = ik(J('RSh'), nW, 0.194 * Hh, 0.135 * Hh, -1), fE = ik(J('LSh'), fW, 0.194 * Hh, 0.135 * Hh, -1);
+	/* the figure's mitten is pulled back along the forearm so it ends at the wrist (inside the drawn forearm), never past the hand */
+	const back = (e: P2, w: P2): P2 => { const dx = w[0] - e[0], dy = w[1] - e[1], l = Math.hypot(dx, dy) || 1, m = Math.min(0.066 * Hh, l * 0.6); return [w[0] - dx / l * m, w[1] - dy / l * m]; };
+	const held: Pose = {...kidP, RElb: U(nE), RHand: U(back(nE, nW)), LElb: U(fE), LHand: U(back(fE, fW))};
+	return {k, pose: k > 0 ? mixPose(kidP, held, k) : kidP, g: holdGeo({C: cp, r, hr: 0, m: -1, nE, fE, ww: 0.3})};
+};
 /** a plain brass compass: no red, the north tip is dark oxide */
 export const Compass44: React.FC<{x: number; y: number; r: number; a: number; rot?: number; glow?: number; id: string; halo?: boolean}> = ({x, y, r, a, rot = 0, glow = 0, id, halo = true}) => <g transform={`translate(${x},${y})`}>
 	{halo && glow > 0 && <Glow x={0} y={0} r={r * 3.4} c={B.mid} o={0.5 * glow} id={`${id}g`} />}
@@ -308,6 +321,7 @@ export const House: React.FC<{t: number; hold?: number}> = ({t, hold = 0}) => {
 	const mp = (a: number, b: number, c: number, d: number) => lerp(lerp(lerp(a, b, k1), c, k2), d, k3);
 	const momP = fkPose({hip: 0.36, lt: 94, lk: 94, rt: 0, rk: 90, lean: mp(14, 44, -10, 26), neck: mp(10, 14, -10, 14), la: mp(20, 38, 72, 34), le: mp(30, 6, 152, 8), ra: mp(24, 18, -30, -10), re: mp(30, 30, 148, 120)});
 	const rock = Math.sin(t * 2.2) * 1.6, kGlow = t < T.think ? 0.5 : 1, cp = compassAt(t);
+	const kidHold = kidHoldAt(t, cp);
 	const needle = 18 + 28 * Math.sin(t * 2.6) * Math.exp(-Math.max(0, t - 19.9) * 0.9) * seg(t, 19.3, 19.6);
 	const set = (c: {cx: number; cy: number; z: number}) => (
 			<Cam cx={c.cx} cy={c.cy} z={c.z}>
@@ -343,9 +357,13 @@ export const House: React.FC<{t: number; hold?: number}> = ({t, hold = 0}) => {
 					<g transform="translate(1084,904)"><rect x={-58} y={-158} width={116} height={14} rx={4} fill="#2a1e16" /><rect x={-48} y={-144} width={10} height={144} fill="#2a1e16" /><rect x={38} y={-144} width={10} height={144} fill="#2a1e16" /></g>
 				</g>
 				<Rimmed x={KX + 760} ground={910} h={700} pose={fatherP(t)} look={LK.father} col="#140f0c" rim="#ffd8a8" rimOp={0.45} />
-				<Rimmed x={KX + 1080} ground={904} h={430} pose={kidP} look={LK.child} flip col="#120e12" rim={RIMB} rimOp={0.7} rimDx={2.4} />
+				<Rimmed x={KX + 1080} ground={904} h={430} pose={kidHold.pose} look={LK.child} flip col="#120e12" rim={RIMB} rimOp={0.7} rimDx={2.4} />
 				{(() => { const c = skullBack(kidP, KX + 1080, 904, 430, true, GLOW_BACK); return <InHead id="kgk" e={skullEllipse(kidP, KX + 1080, 904, 430, true)}><HeadGlow x={c[0]} y={c[1]} r={21.5} id="kg" o={kGlow} /></InHead>; })()}
-				<Compass44 x={cp[0]} y={cp[1]} r={30} a={needle} glow={0.4} id="hc" />
+				{/* hands v3: once the compass lands, the boy holds it as in the close-up (cupped near hand under it, the other behind) */}
+				<Glow x={cp[0]} y={cp[1]} r={30 * 3.4} c={B.mid} o={0.2} id="hcg" />
+				{kidHold.k > 0 && <g opacity={kidHold.k}><HoldHands g={kidHold.g} layer="back" col="#120e12" rim={0.55} sw={0.9} /></g>}
+				<Compass44 x={cp[0]} y={cp[1]} r={30} a={needle} glow={0.4} id="hc" halo={false} />
+				{kidHold.k > 0 && <g opacity={kidHold.k}><HoldHands g={kidHold.g} layer="front" col="#120e12" rim={0.55} sw={0.9} /></g>}
 				<g fill="#0b0807"><path d="M30,1100 L40,780 Q120,740 200,780 L210,1100 Z" /><rect x={20} y={900} width={220} height={26} rx={6} />
 					<g transform={`translate(${KX + 1800},1080)`}><rect x={-60} y={-110} width={120} height={110} rx={10} />{Array.from({length: 7}, (_, i) => <ellipse key={i} cx={Math.cos(i) * 70} cy={-150 - 60 * rnd(i, 2)} rx={60} ry={22} transform={`rotate(${-40 + i * 14} 0 -110)`} />)}</g></g>
 			</Cam>
@@ -410,88 +428,110 @@ const Rewind: React.FC<{t: number; o: number; cam: {cx: number; cy: number; z: n
 };
 
 /* ================= K2 21.5–25.25: the needle, close; the boy holds it =================
-   FINAL PASS (logic note 1, shared with the ending): the hands now belong to the seated boy in frame. His forearms come down from
-   his own shoulders to the compass in his lap at chest height; the near hand cups the lower-left rim with a real thumb (tapered,
-   with a nail) on the front; the far hand's fingertips curl over the right rim. Child proportions (a big head, short reach).
+   HANDS v3 (owner: the two earlier hand drawings were rejected): replicated from the reference picture (handref/ref_boy_mirrored).
+   The boy sits at left in profile and looks down at the compass, which rests in his NEAR hand: a cupped palm under the case
+   (palm up), the four fingers together as one band curled up around the far (right) edge, the thumb up along the near (left)
+   edge. His OTHER hand is behind the case and steadies it from behind: only the back of that hand and its fingertips show at
+   the upper left. Both forearms come straight out of his body (elbows by his sides). Plain one-tone silhouettes, smooth bezier
+   outlines, the figure's own rim on the outer contour and a thin warm line only on the edges lying on the brass rim.
+   The compass is a bit smaller than before (r 170 → 100) so a child's hand can hold it as in the reference; it sits a little
+   closer to him (the same place relative to his face as in the reference). The case turns as before; the hands follow
+   45 % of that turn (the boy tilts it in his hands), so the bow never reaches the fingers.
    EXPORTED FOR rough44b (F2–F4 reuse this exact shot): `K2Scene` (everything inside the camera), `k2Rot`, `k2Glow`, `K2_C`, `K2_R`. */
 export const k2Rot = (t: number) => 38 * ease(seg(t, 21.7, 22.4)) - 70 * ease(seg(t, 22.7, 23.4)) + 22 * ease(seg(t, 23.6, 24.1));
 const rotAt = k2Rot;
-const pol = (deg: number, R: number): P2 => [Math.cos(deg * Math.PI / 180) * R, Math.sin(deg * Math.PI / 180) * R];
-const SKIN = '#1b1311', EDGE = '#5a463c', NAIL = '#5e4c42';
-export const K2_C: P2 = [1060, 600];
-export const K2_R = 170;
+const SKIN = '#130e0d';
+export const K2_C: P2 = [1010, 610];
+export const K2_R = 100;
+const K2_GLOW = 520;   // the compass glow radius (kept at the old size so the room is lit as before)
+const HROT = 0.45;     // the hands follow this share of the case's turn
 const KH = 1860, KX0 = 0, KG = 1400, K2LOOK: Look4 = {dress: 'tunic', head: 'child', build: 0.86};   // the boy's rig: authored in world coordinates, converted to body units
-/** two-bone IK: the elbow for shoulder s, wrist w, bone lengths a (upper) and b (fore), bending down */
-const ik = (s: P2, w: P2, a: number, b: number): P2 => { const dx = w[0] - s[0], dy = w[1] - s[1], d = Math.min(a + b - 1, Math.hypot(dx, dy)), A = Math.acos(cl((a * a + d * d - b * b) / (2 * a * d), -1, 1)), g = Math.atan2(dy, dx) + A;
+/* his arms (world): shoulders, and the elbows by his sides */
+const K2_NS: P2 = [505, 500], K2_FS: P2 = [525, 490], K2_NE: P2 = [690, 790], K2_FE: P2 = [680, 700];
+/** two-bone IK: the elbow for shoulder s, wrist w, bone lengths a (upper) and b (fore); side = +1 / -1 picks the bend */
+const ik = (s: P2, w: P2, a: number, b: number, side = 1): P2 => { const dx = w[0] - s[0], dy = w[1] - s[1], d = Math.min(a + b - 1, Math.max(Math.abs(a - b) + 1, Math.hypot(dx, dy))), A = Math.acos(cl((a * a + d * d - b * b) / (2 * a * d), -1, 1)), g = Math.atan2(dy, dx) + side * A;
 	return [s[0] + Math.cos(g) * a, s[1] + Math.sin(g) * a]; };
-/** the boy's pose for compass rotation `rot` (deg) and `look` (0 = eyes on the needle, 1 = looking up from it) */
-const k2Pose = (rot: number, look: number): {pose: Pose; head: P2; glow: P2} => {
+
+/* ---------- the holding hands (shared by K2 and the wide house shot) ----------
+   Compass-local units of r (the case is r 1.08), y down, the holder sits on the -x side (m = -1 mirrors for a holder on the right). */
+type Cmd = [string, ...P2[]];
+const NEAR_W: P2 = [-1.15, 0.78], FAR_W: P2 = [-1.28, -0.22];   // wrist centres
+const pol = (deg: number, R: number): P2 => [Math.cos(deg * Math.PI / 180) * R, Math.sin(deg * Math.PI / 180) * R];
+type Hold = {C: P2; r: number; hr: number; m: number; nE: P2; fE: P2; nS?: P2; fS?: P2; ww?: number};
+const holdGeo = (h: Hold) => {
+	const q = h.hr * Math.PI / 180, cq = Math.cos(q), sq = Math.sin(q), ww = h.ww ?? 0.22;
+	const W = (p: P2): P2 => { const x = p[0] * h.m, y = p[1]; return [h.C[0] + (x * cq - y * sq) * h.r, h.C[1] + (x * sq + y * cq) * h.r]; };   // local → world
+	const L = (p: P2): P2 => { const x = (p[0] - h.C[0]) / h.r, y = (p[1] - h.C[1]) / h.r; return [(x * cq + y * sq) * h.m, -x * sq + y * cq]; };   // world → local
+	const fw = (p: P2) => `${p[0].toFixed(1)},${p[1].toFixed(1)}`;
+	const path = (cmds: Cmd[]) => cmds.map(([c, ...ps]) => c + ps.map((p) => fw(W(p))).join(' ')).join(' ');
+	/* the wrist edge follows the real forearm direction (elbow → wrist), so hand and forearm always meet cleanly */
+	const wrist = (wc: P2, e: P2) => { const el = L(e), dx = wc[0] - el[0], dy = wc[1] - el[1], l = Math.hypot(dx, dy) || 1, d: P2 = [dx / l, dy / l], up: P2 = [d[1], -d[0]];
+		return {t: [wc[0] + up[0] * ww, wc[1] + up[1] * ww] as P2, b: [wc[0] - up[0] * ww, wc[1] - up[1] * ww] as P2,
+			t0: [wc[0] + up[0] * ww - d[0] * 0.25, wc[1] + up[1] * ww - d[1] * 0.25] as P2, b0: [wc[0] - up[0] * ww - d[0] * 0.25, wc[1] - up[1] * ww - d[1] * 0.25] as P2}; };
+	const n = wrist(NEAR_W, h.nE), f = wrist(FAR_W, h.fE);
+	/* NEAR hand, palm up under the case: heel, palm bottom, the finger band up the far edge, its tip curled over the rim,
+	   the band's inner edge down along the brass, (behind the case) across to the thumb, the thumb up the near edge */
+	const FING_IN: Cmd[] = [['C', [0.97, 0.0], [0.92, 0.35], [0.7, 0.66]]], FING_TIP: Cmd[] = [['C', [1.12, -0.3], [0.98, -0.36], [0.9, -0.24]]];
+	const FING_OUT: Cmd[] = [['C', [1.22, 0.58], [1.27, 0.2], [1.18, -0.1]]];
+	const TH_IN: Cmd[] = [['C', [-0.88, 0.5], [-0.95, 0.3], [-0.93, 0.12]], ['C', [-0.92, 0.0], [-1.06, -0.05], [-1.13, 0.05]]];
+	const TH_OUT: Cmd[] = [['C', [-1.21, 0.2], [-1.24, 0.45], n.t]];
+	const nearBack = path([['M', n.t0], ['L', n.b0], ['L', n.b], ['C', [-0.8, 1.1], [-0.45, 1.28], [0.0, 1.3]], ['C', [0.45, 1.32], [0.85, 1.2], [1.06, 0.85]],
+		...FING_OUT, ...FING_TIP, ...FING_IN, ['L', [-0.7, 0.66]], ...TH_IN, ...TH_OUT, ['Z']]);
+	const nearFront = path([['M', [1.06, 0.85]], ...FING_OUT, ...FING_TIP, ...FING_IN, ['L', [0.56, 0.97]], ['Z']]) + ' ' +
+		path([['M', [-0.7, 0.66]], ...TH_IN, ...TH_OUT, ['L', [-0.62, 0.92]], ['Z']]);
+	/* FAR hand, behind the case (it steadies it from behind): its wrist comes in at the left, and only the back of the hand and the
+	   four fingertips, side by side, show just past the upper-left rim (kept clear of the bow at the top for every turn) */
+	const FAR_EDGE: Cmd[] = [['L', pol(-121, 0.98)], ['Q', pol(-121, 1.14), pol(-122, 1.17)]];
+	const farBack = path([['M', f.t0], ['L', f.b0], ['L', f.b], ['C', [-1.0, -0.2], [-0.85, -0.3], [-0.7, -0.45]], ...FAR_EDGE,
+		['Q', pol(-127, 1.31), pol(-132, 1.18)], ['Q', pol(-137, 1.32), pol(-142, 1.19)], ['Q', pol(-147, 1.32), pol(-152, 1.21)],
+		['C', pol(-157, 1.31), pol(-162, 1.36), f.t], ['Z']]);
+	/* the arms: shoulder → elbow → wrist (K2), or just the forearm (the wide shot draws the figure's own arms) */
+	const arm = (s: P2 | undefined, e: P2, wc: P2) => { const w = W(wc), pts: P2[] = [], wd: number[] = [], r = h.r;
+		if (s) for (let i = 0; i < 4; i++) { pts.push([lerp(s[0], e[0], i / 4), lerp(s[1], e[1], i / 4)]); wd.push(lerp(0.46, 0.4, i / 4) * r); }
+		for (let i = 0; i <= 5; i++) { pts.push([lerp(e[0], w[0], i / 5), lerp(e[1], w[1], i / 5)]); wd.push(lerp(0.4, ww + 0.02, (i / 5) ** 0.8) * r); }
+		return limb(pts, wd); };
+	const arms = `${arm(h.fS, h.fE, FAR_W)} ${arm(h.nS, h.nE, NEAR_W)}`;
+	return {W, back: `${arms} ${farBack} ${nearBack}`, front: nearFront,
+		rimBack: path([['M', pol(-121, 0.98)], ...FAR_EDGE, ['Q', pol(-127, 1.31), pol(-132, 1.18)]]),   // under the case: the far fingers' edge facing the glow
+		rimFront: path([['M', [1.18, -0.1]], ...FING_TIP, ...FING_IN]) + ' ' + path([['M', [-0.7, 0.66]], ...TH_IN])};
+};
+/** a smooth closed outline around a chain of points with per-point half-widths (as figure44's chain, one width each side) */
+const limb = (pts: P2[], wd: number[]) => {
+	const A: P2[] = [], Bs: P2[] = [];
+	for (let i = 0; i < pts.length; i++) { const a = pts[Math.max(0, i - 1)], b = pts[Math.min(pts.length - 1, i + 1)], dx = b[0] - a[0], dy = b[1] - a[1], l = Math.hypot(dx, dy) || 1, nx = -dy / l, ny = dx / l;
+		A.push([pts[i][0] + nx * wd[i], pts[i][1] + ny * wd[i]]); Bs.push([pts[i][0] - nx * wd[i], pts[i][1] - ny * wd[i]]); }
+	const ring = [...A, ...Bs.reverse()], f = (v: number) => v.toFixed(1);
+	let d = `M${f((ring[0][0] + ring[1][0]) / 2)},${f((ring[0][1] + ring[1][1]) / 2)}`;
+	for (let i = 1; i <= ring.length; i++) { const p = ring[i % ring.length], q = ring[(i + 1) % ring.length]; d += ` Q${f(p[0])},${f(p[1])} ${f((p[0] + q[0]) / 2)},${f((p[1] + q[1]) / 2)}`; }
+	return d + ' Z';
+};
+/** the holding hands, drawn in two layers around the compass: 'back' (arms, palm, the far hand) and 'front' (thumb and finger band on the rim) */
+const HoldHands: React.FC<{g: ReturnType<typeof holdGeo>; layer: 'back' | 'front'; col?: string; rim?: number; sw?: number}> = ({g, layer, col = SKIN, rim = 0.4, sw = 2}) => layer === 'back'
+	? <g><path d={g.back} fill={col} /><path d={g.rimBack} fill="none" stroke={RIMB} strokeWidth={sw} strokeLinecap="round" opacity={rim * 0.7} /></g>
+	: <g><path d={g.front} fill={col} /><path d={g.rimFront} fill="none" stroke={RIMB} strokeWidth={sw} strokeLinecap="round" opacity={rim} /></g>;
+
+/** the boy's pose for `look` (0 = eyes on the needle, 1 = looking up from it); the figure's own arms are folded out of sight
+    inside the torso (the holding arms are drawn by `holdGeo`) */
+const k2Pose = (look: number): {pose: Pose; head: P2; glow: P2} => {
 	const P = (p: P2): P2 => [(p[0] - KX0) / KH, (KG - p[1]) / KH], tilt = lerp(40, -4, look) * Math.PI / 180, u: P2 = [Math.sin(tilt), -Math.cos(tilt)];
 	const n1: P2 = [520 - 14 * look, 480 - 12 * look], hd: P2 = [n1[0] + 115 * u[0], n1[1] + 115 * u[1]], top: P2 = [hd[0] + 123 * u[0], hd[1] + 123 * u[1]];
 	const hc: P2 = [lerp(hd[0], top[0], 0.45), lerp(hd[1], top[1], 0.45)], f: P2 = [Math.cos(tilt), Math.sin(tilt)], back = GLOW_BACK * KH * 0.93;
-	const rr = rot * 0.9 * Math.PI / 180, cr = Math.cos(rr), sr = Math.sin(rr), wr = (p: P2): P2 => [K2_C[0] + (p[0] * cr - p[1] * sr) * K2_R, K2_C[1] + (p[0] * sr + p[1] * cr) * K2_R];
-	const nw = wr(H_WRIST), fw = wr([0.15, 0.45]), nS: P2 = [505, 500], fS: P2 = [525, 490];   // wrists behind the case; elbows by two-bone IK
+	const hide = (s: P2) => ({sh: P(s), el: P([s[0] - 12, s[1] + 140]), ha: P([s[0] - 40, s[1] + 200])}), a = hide(K2_NS), b = hide(K2_FS);
 	const pose: Pose = {Hips: P([390, 860]), LUp: P([405, 983]), LKnee: P([896, 1000]), LAnk: P([900, 1500]), LToe: P([1100, 1540]), RUp: P([395, 983]), RKnee: P([880, 1010]), RAnk: P([870, 1510]), RToe: P([1070, 1550]),
-		Spine1: P([470 - 6 * look, 590]), Neck1: P(n1), Head: P(hd), Top: P(top), LSh: P(nS), LElb: P(ik(nS, nw, 380, 300)), LHand: P(nw),
-		RSh: P(fS), RElb: P(ik(fS, fw, 390, 300)), RHand: P(fw)};
+		Spine1: P([470 - 6 * look, 590]), Neck1: P(n1), Head: P(hd), Top: P(top), LSh: a.sh, LElb: a.el, LHand: a.ha, RSh: b.sh, RElb: b.el, RHand: b.ha};
 	return {pose, head: hc, glow: [hc[0] - f[0] * back, hc[1] - f[1] * back]};
 };
 /** where the boy's head glow sits (the back of his skull) for a given look */
-export const k2Glow = (look = 0): P2 => k2Pose(0, look).glow;
+export const k2Glow = (look = 0): P2 => k2Pose(look).glow;
 /** the boy's skull ellipse for a given look (the ending's extra glow is masked to it) */
-export const k2Skull = (look = 0) => skullEllipse(k2Pose(0, look).pose, KX0, KG, KH);
-const fp = (p: P2) => `${p[0].toFixed(4)},${p[1].toFixed(4)}`;
-/* HANDS (owner note "this hand is very weird"): two small (≈5-year-old) hands hold the case from behind and below. Each palm sits
-   behind a lower quarter of the case (the wrists and forearms go behind it, so the arms always connect); the thumb wraps the bottom
-   edge and rests on the front of the brass rim, pointing inward; the four slim fingers wrap the side edge as one overlapping group,
-   their tips lying on the rim with small gaps. Units of r, compass-local, before rotation; the left hand is authored, the right one
-   is its mirror. One tone; a thin warm rim only on the edges facing the dial. Hand length ≈ 0.85 r, palm ≈ 0.4 r, finger ≈ 0.09 r. */
-const H_WRIST: P2 = [-0.55, 0.45];   // the rig's wrist joint (hidden behind the case)
-/** a tapered digit from base centre b to tip centre t: base half-width wb, tip half-width wt, bow = sideways bend (units of r) */
-const digit = (b: P2, t: P2, wb: number, wt: number, bow: number) => {
-	const dx = t[0] - b[0], dy = t[1] - b[1], l = Math.hypot(dx, dy), ux = dx / l, uy = dy / l, nx = -uy, ny = ux;
-	const m: P2 = [(b[0] + t[0]) / 2 + nx * bow, (b[1] + t[1]) / 2 + ny * bow], wm = (wb + wt) / 2 + 0.006;
-	const P = (p: P2, k: number, w: number, a = 0): string => fp([p[0] + nx * w * k + ux * a, p[1] + ny * w * k + uy * a]);
-	const t0: P2 = [t[0] - ux * wt * 0.2, t[1] - uy * wt * 0.2];   // the cap starts just short of the tip
-	return `M${P(b, 1, wb)} Q${P(m, 1, wm)} ${P(t0, 1, wt)} C${P(t0, 1, wt, wt * 0.75)} ${P(t0, -1, wt, wt * 0.75)} ${P(t0, -1, wt)} Q${P(m, -1, wm)} ${P(b, -1, wb)} C${P(b, -1, wb, -wb * 0.75)} ${P(b, 1, wb, -wb * 0.75)} ${P(b, 1, wb)} Z`;   // round at both ends (the base hides in the hand)
-};
-/** the cap of a digit only (an open path for the rim light) */
-const digitCap = (b: P2, t: P2, wt: number, from = 1, to = -1) => {
-	const dx = t[0] - b[0], dy = t[1] - b[1], l = Math.hypot(dx, dy), ux = dx / l, uy = dy / l, nx = -uy, ny = ux, t0: P2 = [t[0] - ux * wt * 0.2, t[1] - uy * wt * 0.2];
-	const P = (k: number, a = 0): string => fp([t0[0] + nx * wt * k + ux * a, t0[1] + ny * wt * k + uy * a]);
-	return `M${P(from)} C${P(from, wt * 0.75)} ${P(to, wt * 0.75)} ${P(to)}`;
-};
-/* the thumb wraps the bottom edge; the four fingers wrap the side edge above the wrist, all closing toward the palm (F) */
-const H_F: P2 = [-0.42, 0.42];
-const TH_B = pol(139, 1.12), TH_T = pol(118.5, 0.958), TH_BOW = -0.022;
-const FINGERS = [{a: 167, R: 0.955, w: 0.043, L: 1.2, bow: 0.022}, {a: 173, R: 0.93, w: 0.044, L: 1.22, bow: 0.02}, {a: 179, R: 0.94, w: 0.042, L: 1.22, bow: 0.016}, {a: 185, R: 0.97, w: 0.037, L: 1.19, bow: 0.012}]
-	.map((f) => { const t = pol(f.a, f.R), dx = H_F[0] - t[0], dy = H_F[1] - t[1], l = Math.hypot(dx, dy);
-		let k = 0.1; while (Math.hypot(t[0] - dx / l * k, t[1] - dy / l * k) < f.L - 0.04 && k < 0.6) k += 0.005;   // the base sits inside the knuckle band
-		return {b: [t[0] - dx / l * k, t[1] - dy / l * k] as P2, t, w: f.w, bow: f.bow}; });
-/* behind the case: the knuckles of the curled fingers and the base of the thumb; only the band outside the rim shows */
-const HAND_BACK = (() => { const c = (a: number, R: number) => fp(pol(a, R));
-	return `M${fp(H_WRIST)} L${c(121, 1.0)} Q${c(125, 1.15)} ${c(133, 1.19)} Q${c(141, 1.22)} ${c(149, 1.19)} L${c(155, 1.13)} Q${c(160, 1.2)} ${c(168, 1.23)} Q${c(177, 1.26)} ${c(185, 1.235)} Q${c(191, 1.215)} ${c(192, 1.14)} Q${c(192.5, 1.07)} ${c(190, 1.0)} L${c(186, 0.8)} Z`; })();
-const HAND_FRONT = [digit(TH_B, TH_T, 0.072, 0.05, TH_BOW), ...FINGERS.map((f) => digit(f.b, f.t, f.w, f.w * 0.74, f.bow))];
-/* the warm rim: only the thumb's edge that faces the dial; the fingertips stay plain (no dots) */
-const HAND_RIM = [(() => { const b = TH_B, t = TH_T, wb = 0.072, wt = 0.05, bow = TH_BOW, dx = t[0] - b[0], dy = t[1] - b[1], l = Math.hypot(dx, dy), ux = dx / l, uy = dy / l, nx = -uy, ny = ux;
-	const m: P2 = [(b[0] + t[0]) / 2 + nx * bow, (b[1] + t[1]) / 2 + ny * bow], sg = nx * -m[0] + ny * -m[1] > 0 ? 1 : -1, wm = (wb + wt) / 2 + 0.006;
-	const P = (p: P2, w: number, a = 0) => fp([p[0] + nx * w * sg + ux * a, p[1] + ny * w * sg + uy * a]);
-	return `M${P(b, wb * 0.9, l * 0.3)} Q${P(m, wm)} ${P(t, wt, -wt * 0.2)}`; })()];
-/** the boy's hands: layer 'back' goes under the compass, 'front' (thumbs and fingertips on the rim) over it; both rotate with the case */
-const K2Hands: React.FC<{rot: number; r: number; rim?: number; layer: 'back' | 'front'}> = ({rot, r, rim = 0.4, layer}) => <g transform={`translate(${K2_C[0]},${K2_C[1]}) rotate(${rot * 0.9}) scale(${r})`}>
-	{[1, -1].map((m) => <g key={m} transform={`scale(${m},1)`}>
-		{layer === 'back' ? <path d={HAND_BACK} fill={SKIN} /> : <g>
-			{HAND_FRONT.map((d, i) => <path key={i} d={d} fill={SKIN} />)}
-			{HAND_RIM.map((d, i) => <path key={i} d={d} fill="none" stroke={RIMB} strokeWidth={1.8 / r} strokeLinecap="round" opacity={rim * 0.8} />)}
-		</g>}
-	</g>)}
-</g>;
+export const k2Skull = (look = 0) => skullEllipse(k2Pose(look).pose, KX0, KG, KH);
 /** K2's picture inside the camera: room, the seated boy (his own arms reach the compass), field lines, compass, his hands.
     t = demo clock (21.5–25.25); look = 0..1 he looks up; flare = the head glow; bright = extra glow (F4); fieldK = field-line opacity factor */
 export const K2Scene: React.FC<{t: number; id: string; look?: number; flare: number; bright?: number; fieldK?: number; rimOp?: number}> = ({t, id, look = 0, flare, bright = 0, fieldK = 1, rimOp = 0.5}) => {
 	const rot = rotAt(t), north = -8, needle = north + 0.85 * (rot - rotAt(t - 0.22)) + 6 * Math.sin(t * 9) * Math.exp(-((t - 23.45) ** 2) / 0.1);
 	const C = K2_C, r = K2_R, tip: P2 = [C[0] + Math.sin(needle * Math.PI / 180) * r * 0.72, C[1] - Math.cos(needle * Math.PI / 180) * r * 0.72], fl = seg(t, 23.7, 24.6);
-	const kp = k2Pose(rot, look), f = Math.min(1, flare);
+	const kp = k2Pose(look), f = Math.min(1, flare), rk = Math.max(1, KH / 450);
+	const hg = holdGeo({C, r, hr: rot * HROT, m: 1, nE: K2_NE, fE: K2_FE, nS: K2_NS, fS: K2_FS});
 	return <g>
 		<Wallpaper id={`${id}w`} x={-300} y={-300} w={2600} h={1100} col="#5e4a3c" o={0.45} s={2.2} />
 		<rect x={-300} y={800} width={2600} height={600} fill="#2e221b" /><rect x={-300} y={792} width={2600} height={14} fill="#241a14" />
@@ -500,16 +540,18 @@ export const K2Scene: React.FC<{t: number; id: string; look?: number; flare: num
 		<Glow x={260} y={760} r={600} c="#ffd28a" o={0.16} id={`${id}l`} />
 		<Motes t={t} x={300} y={100} w={1500} h={800} n={26} o={0.35} />
 		{Array.from({length: 7}, (_, i) => <circle key={i} cx={1500 + rnd(i, 3) * 400} cy={200 + rnd(i, 4) * 400} r={30 + 40 * rnd(i, 5)} fill="#ffe2b0" opacity={0.04 + 0.04 * rnd(i, 6)} />)}
-		<Rimmed x={KX0} ground={KG} h={KH} pose={kp.pose} look={K2LOOK} col="#130e0d" rim={RIMB} rimOp={rimOp} />
+		{/* the figure's rim (as Rimmed), with the arms' rim in the same layer so it never lies over his body */}
+		<g transform={`translate(${-2.2 * rk},${-1.6 * rk})`} opacity={rimOp}><Figure4 x={KX0} ground={KG} h={KH} pose={kp.pose} look={K2LOOK} col={RIMB} /><path d={hg.back} fill={RIMB} /></g>
+		<Figure4 x={KX0} ground={KG} h={KH} pose={kp.pose} look={K2LOOK} col={SKIN} />
 		{bright > 0 && <Glow x={kp.glow[0]} y={kp.glow[1]} r={420} c={B.mid} o={0.3 * bright} id={`${id}hb`} />}
 		<InHead id={`${id}hk`} e={skullEllipse(kp.pose, KX0, KG, KH)}><HeadGlow x={kp.glow[0]} y={kp.glow[1]} r={66 + 24 * bright} id={`${id}h`} o={flare} /></InHead>
 		{fl > 0 && <g opacity={fl * 0.8 * fieldK}>{Array.from({length: 7}, (_, i) => { const s = (i - 3) * 0.32, L = 900;
 			return <path key={i} d={`M${tip[0]},${tip[1]} C${tip[0] + Math.sin(s) * 300},${tip[1] - 300} ${tip[0] + Math.sin(s) * L},${tip[1] - 200 - 300 * Math.cos(s)} ${tip[0] + Math.sin(s) * L * 1.4},${tip[1] + 200}`} stroke={B.core} strokeWidth={2} fill="none" strokeDasharray="14 12" strokeDashoffset={-t * 60} opacity={0.6 - Math.abs(i - 3) * 0.12} />; })}</g>}
-		<Glow x={C[0]} y={C[1]} r={r * 3.4} c={B.mid} o={0.5 * Math.min(1.2, flare)} id={`${id}cg`} />
-		<K2Hands rot={rot} r={r} layer="back" />
+		<Glow x={C[0]} y={C[1]} r={K2_GLOW} c={B.mid} o={0.5 * Math.min(1.2, flare)} id={`${id}cg`} />
+		<HoldHands g={hg} layer="back" rim={rimOp * 0.9} />
 		<Compass44 x={C[0]} y={C[1]} r={r} a={needle} rot={rot} glow={f} id={`${id}c`} halo={false} />
-		<K2Hands rot={rot} r={r} rim={rimOp * 0.8} layer="front" />
-		<Glow x={tip[0]} y={tip[1]} r={60} c={B.core} o={0.6 * f} id={`${id}t`} />
+		<HoldHands g={hg} layer="front" rim={rimOp * 0.9} />
+		<Glow x={tip[0]} y={tip[1]} r={45} c={B.core} o={0.6 * f} id={`${id}t`} />
 	</g>;
 };
 /** the needle tip in world coordinates at demo time t (for the push-in) */
