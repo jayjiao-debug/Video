@@ -39,39 +39,6 @@ export const ikArm = (p: Pose, s: 'L' | 'R', grip: P2, elbowDown = true): Pose =
 const toBody = (X: number, Y: number, x: number, g: number, h: number, flip = false): P2 => [(flip ? -1 : 1) * (X - x) / h, (g - Y) / h];
 const J = (p: Pose, n: string, x: number, g: number, h: number, flip = false): P2 => [x + (flip ? -1 : 1) * p[n][0] * h, g - p[n][1] * h];
 
-/* ---------- the 3/4 view (the rig is profile-only): a simple one-tone body built from capsules, turned toward the viewer
-   and to screen-right. 'load' = an iron string in his right hand (screen-left): that shoulder drops, the arm hangs plumb,
-   the torso leans away, the free arm swings out for balance, knees bent. ---------- */
-type Q34 = Record<string, P2>;
-const Q_STAND: Q34 = {pel: [0, 0.53], hR: [-0.058, 0.53], hL: [0.058, 0.53], kR: [-0.062, 0.29], kL: [0.064, 0.29], aR: [-0.066, 0.055], aL: [0.07, 0.055],
-	nk: [0.008, 0.84], sR: [-0.1, 0.81], sL: [0.105, 0.815], eR: [-0.118, 0.645], wR: [-0.124, 0.49], eL: [0.125, 0.645], wL: [0.13, 0.49], hd: [0.014, 0.925], tilt: [0, 0]};
-const Q_LOAD: Q34 = {pel: [-0.012, 0.5], hR: [-0.075, 0.5], hL: [0.048, 0.505], kR: [-0.09, 0.275], kL: [0.07, 0.275], aR: [-0.1, 0.052], aL: [0.1, 0.052],
-	nk: [0.05, 0.8], sR: [-0.066, 0.738], sL: [0.15, 0.79], eR: [-0.076, 0.578], wR: [-0.082, 0.43], eL: [0.225, 0.665], wL: [0.27, 0.53], hd: [0.078, 0.885], tilt: [9, 0]};
-export const Fig34: React.FC<{x: number; g: number; h: number; q: Q34; col: string; hat?: 'futou' | 'bun'; rim?: boolean}> = ({x, g, h, q, col, hat = 'futou', rim = true}) => {
-	const S = (n: string): P2 => [x + q[n][0] * h, g - q[n][1] * h];
-	const ln = (pts: P2[]) => 'M' + pts.map(([a, b]) => `${a.toFixed(1)},${b.toFixed(1)}`).join('L');
-	const body = (c: string) => { const pel = S('pel'), nk = S('nk'), sR = S('sR'), sL = S('sL'), kR = S('kR'), kL = S('kL'), hd = S('hd'), tl = q.tilt[0];
-		const hem = Math.max(kR[1], kL[1]) - 0.03 * h;
-		const tunic = `M${sR[0]},${sR[1] - 0.012 * h} Q${nk[0]},${nk[1] - 0.03 * h} ${sL[0]},${sL[1] - 0.012 * h} Q${sL[0] + 0.03 * h},${sL[1] + 0.06 * h} ${pel[0] + 0.085 * h},${pel[1] - 0.09 * h} L${kL[0] + 0.07 * h},${hem} Q${(kL[0] + kR[0]) / 2},${hem + 0.025 * h} ${kR[0] - 0.07 * h},${hem} L${pel[0] - 0.085 * h},${pel[1] - 0.09 * h} Q${sR[0] - 0.03 * h},${sR[1] + 0.06 * h} ${sR[0]},${sR[1] - 0.012 * h} Z`;
-		const shoe = (a: P2) => <ellipse cx={a[0] + 0.022 * h} cy={a[1] + 0.03 * h} rx={0.05 * h} ry={0.022 * h} transform={`rotate(12,${a[0] + 0.022 * h},${a[1] + 0.03 * h})`} />;
-		return <g fill={c} stroke={c} strokeLinecap="round" strokeLinejoin="round">
-			<path d={ln([S('hR'), kR, S('aR')])} fill="none" strokeWidth={0.068 * h} /><path d={ln([S('hL'), kL, S('aL')])} fill="none" strokeWidth={0.068 * h} />
-			{shoe(S('aR'))}{shoe(S('aL'))}
-			<path d={tunic} strokeWidth={2} />
-			<rect x={pel[0] - 0.088 * h} y={pel[1] - 0.105 * h} width={0.176 * h} height={0.02 * h} rx={3} transform={`rotate(${-tl * 0.5},${pel[0]},${pel[1] - 0.095 * h})`} />
-			<path d={ln([sR, S('eR'), S('wR')])} fill="none" strokeWidth={0.052 * h} /><path d={ln([sL, S('eL'), S('wL')])} fill="none" strokeWidth={0.05 * h} />
-			<circle cx={S('wR')[0]} cy={S('wR')[1] + 0.022 * h} r={0.027 * h} /><circle cx={S('wL')[0] + 0.01 * h} cy={S('wL')[1] + 0.012 * h} r={0.025 * h} />
-			<path d={ln([nk, [lerp(nk[0], hd[0], 0.6), lerp(nk[1], hd[1], 0.6)]])} fill="none" strokeWidth={0.045 * h} />
-			<g transform={`rotate(${tl},${hd[0]},${hd[1]})`}>
-				<ellipse cx={hd[0]} cy={hd[1]} rx={0.05 * h} ry={0.062 * h} />
-				<path d={`M${hd[0] + 0.044 * h},${hd[1] - 0.012 * h} l${0.016 * h},${0.022 * h} l${-0.014 * h},${0.006 * h} Z`} strokeWidth={1} />
-				{hat === 'futou' ? <path d={`M${hd[0] - 0.054 * h},${hd[1] - 0.012 * h} Q${hd[0] - 0.056 * h},${hd[1] - 0.085 * h} ${hd[0]},${hd[1] - 0.086 * h} Q${hd[0] + 0.054 * h},${hd[1] - 0.082 * h} ${hd[0] + 0.052 * h},${hd[1] - 0.02 * h} Z M${hd[0] - 0.02 * h},${hd[1] - 0.08 * h} Q${hd[0]},${hd[1] - 0.125 * h} ${hd[0] + 0.024 * h},${hd[1] - 0.08 * h} Z`} strokeWidth={1} />
-					: <circle cx={hd[0] - 0.006 * h} cy={hd[1] - 0.075 * h} r={0.024 * h} />}
-			</g>
-		</g>; };
-	return <g>{rim && <g transform="translate(3,-2.5)" opacity={0.9}>{body(BG.rim)}</g>}{body(col)}</g>;
-};
-
 /* ---------- small screen furniture ---------- */
 /** stamp with an optional place (line 1 = `year · place`, line 2 = a short dim note) */
 const StampK: React.FC<{y: string; place?: string; note: string}> = ({y, place, note}) => { useStampFonts(`${y}${place ?? ''}${note}·—〃`);
@@ -285,18 +252,34 @@ const KF06: React.FC = () => { const g = 900, h = 540, x = 470;
 		<RimFig x={x} ground={g} h={h} pose={p} look={LOOKS.qin.look} col={B.lac} dx={3} dy={-2.5} />
 	</Frame>; };
 
-/* KF07 · 58.8 s · S2 「一串一千文，重[二十五斤八两]。」 the iron string bends him — 3/4 view so the lean away from the load reads */
-const KF07: React.FC = () => { const g = 920, h = 600, x = 960;
-	const fist: P2 = [x + Q_LOAD.wR[0] * h, g - Q_LOAD.wR[1] * h + 0.045 * h];
+/* the iron-string carrier (profile rig): the torso leans back, away from the load, the loaded (near) shoulder drops, that arm
+   hangs plumb with the fist closed on the cord; knees bent in a short stagger; the free arm swings out behind for balance */
+export const carrierPose = (sway = 0): Pose => {
+	const p = grounded({lean: -14 - 0.3 * sway, neck: 16, lt: 18, lk: 28, rt: -16, rk: 24, la: 0, le: 0, ra: -40, re: 16});
+	const sh = p.LSh, s2: P2 = [sh[0] - 0.012, sh[1] - 0.045];
+	p.LSh = s2; p.LElb = [s2[0], s2[1] - UP]; p.LHand = [s2[0], s2[1] - UP - FO];
+	return p; };
+/** the carrier + his string: the cord runs from the fist into the loop, the loop drags on the ground and swings */
+export const Carrier: React.FC<{x: number; g: number; h: number; look: Look4; sway?: number; id: string}> = ({x, g, h, look, sway = 6, id}) => {
+	const p = carrierPose(sway), lh = J(p, 'LHand', x, g, h), sh = J(p, 'LSh', x, g, h), cordTop = lh[1] + 0.03 * h, loopTop = lh[1] + 0.058 * h + 26;
+	return <g>
+		<RimFig x={x} ground={g} h={h} pose={p} look={look} col={B.lac} dx={3} dy={-2.5} />
+		{/* the cord: two strands from the fist into the coins */}
+		<path d={`M${lh[0] - 3},${cordTop} L${lh[0] - 5},${loopTop + 4} M${lh[0] + 3},${cordTop} L${lh[0] + 5},${loopTop + 4}`} stroke="#B08850" strokeWidth={4} strokeLinecap="round" />
+		<IronLoop x={lh[0]} y={loopTop} L={g - loopTop + 2} th={sway} />
+		{/* where the loop drags on the street: a scuff of dust */}
+		<path d={`M${lh[0] - 60},${g + 3} q50,-16 140,-2 M${lh[0] + 40},${g - 2} q16,-10 36,-6`} stroke="#C8A070" strokeOpacity={0.35} strokeWidth={2.5} fill="none" strokeLinecap="round" />
+		<NearArm sh={sh} hand={lh} h={h} />
+		<title>{id}</title>
+	</g>; };
+/* KF07 · 58.8 s · S2 「一串一千文，重[二十五斤八两]。」 the iron string bends him: he leans back against it, the near shoulder dropped,
+   the fist closed on the cord, the loop dragging on the street */
+const KF07: React.FC = () => { const g = 905, h = 640, x = 900;
 	return <Frame id="k7" over={<><Subs rows={rows(TL('一串一千文，\n重[二十五斤八两]。'))} th={thB} /><StampK y="北宋初" place="嘉州、邛州" note="《宋史》：早期标准" /><Counter era="北宋" th={thB} /><SealB /></>}>
 		<FarRoofs /><Street g={905} shops={[-200, 1300]} />
 		<Ground g={905} />
-		<Pool id="k7" x={x - 20} y={620} rx={460} ry={420} a={0.3} /><Pool id="k7f" x={x} y={g + 2} rx={300} ry={40} a={0.3} />
-		<Fig34 x={x} g={g} h={h} q={Q_LOAD} col={B.lac} />
-		<IronLoop x={fist[0]} y={fist[1]} L={g - fist[1] - 40} th={-3} />
-		<circle cx={fist[0]} cy={fist[1] - 0.012 * h} r={0.028 * h} fill={B.lac} stroke={BG.rim} strokeOpacity={0.7} strokeWidth={1.8} />
-		{/* the strain: a short dim arc of dust where the loop has just thumped down and swung */}
-		<path d={`M${fist[0] - 70},${g - 4} q40,-14 140,0`} stroke={B.gold} strokeOpacity={0.25} strokeWidth={2} fill="none" />
+		<Pool id="k7" x={x + 10} y={600} rx={460} ry={430} a={0.32} /><Pool id="k7f" x={x} y={g + 2} rx={320} ry={42} a={0.32} />
+		<Carrier x={x} g={g} h={h} look={LOOKS.song.look} sway={6} id="kf07" />
 	</Frame>; };
 
 /* KF08 · 83.2 s · S8 「红黑套印，暗藏编号，防人伪造。」 the print shop: two sheets drying (red pass, then red + black), the clerk
@@ -448,16 +431,15 @@ const CharSheet: React.FC = () => { const g1 = 600, g2 = 1000;
 		<Pool id="cs1" x={560} y={420} rx={520} ry={260} a={0.18} />
 		<RimFig x={280} ground={g1} h={420} pose={stand} look={LOOKS.song.look} col={B.lac} dx={3} dy={-2.5} />
 		<Label x={280} y={g1 + 40} s="侧面 · 站" fs={26} anchor="middle" />
-		<Fig34 x={520} g={g1} h={420} q={Q_STAND} col={B.lac} />
-		<Label x={520} y={g1 + 40} s="3/4 · 站" fs={26} anchor="middle" />
-		<g><Fig34 x={760} g={g1} h={420} q={Q_LOAD} col={B.lac} />
-			{(() => { const f: P2 = [760 + Q_LOAD.wR[0] * 420, g1 - Q_LOAD.wR[1] * 420 + 0.045 * 420]; return <><IronLoop x={f[0]} y={f[1]} L={g1 - f[1] - 26} th={-3} /><circle cx={f[0]} cy={f[1] - 5} r={12} fill={B.lac} stroke={BG.rim} strokeOpacity={0.7} strokeWidth={1.5} /></>; })()}</g>
-		<Label x={770} y={g1 + 40} s="3/4 · 负重（铁钱串）" fs={26} anchor="middle" />
+		<RimFig x={520} ground={g1} h={420} pose={walkPose(0.22)} look={LOOKS.song.look} col={B.lac} dx={3} dy={-2.5} />
+		<Label x={530} y={g1 + 40} s="侧面 · 行走" fs={26} anchor="middle" />
+		<Carrier x={770} g={g1} h={420} look={LOOKS.song.look} sway={6} id="csc" />
+		<Label x={770} y={g1 + 40} s="负重 · 后仰（铁钱串）" fs={22} anchor="middle" />
 		{(() => { const hp = heavyPose(0, 0), wx = 1010, h = 420, jz = J(hp, 'RHand', wx, g1, h), lh = J(hp, 'LHand', wx, g1, h); return <g>
 			<g transform={`translate(${jz[0] + 8},${jz[1] + 4}) rotate(-5) translate(-38,-122)`}><JiaoziB w={76} h={134} id="csn" /></g>
 			<RimFig x={wx} ground={g1} h={h} pose={hp} look={LOOKS.song.look} col={B.lac} dx={3} dy={-2.5} />
 			<IronLoop x={lh[0]} y={lh[1] + 0.04 * h} L={g1 - lh[1] - 0.04 * h - 36} th={0} /><NearArm sh={J(hp, 'LSh', wx, g1, h)} hand={lh} h={h} /></g>; })()}
-		<Label x={1030} y={g1 + 40} s="侧面 · 负重 + 交子" fs={26} anchor="middle" />
+		<Label x={1030} y={g1 + 40} s="负重 + 交子" fs={26} anchor="middle" />
 		{/* the two other characters */}
 		<RimFig x={1390} ground={g1} h={400} pose={grounded({lean: 4, neck: 6, lt: 2, lk: 2, rt: -3, rk: 3, la: 50, le: 40, ra: 4, re: 14})} look={CLERK} col="#0F0806" flip dx={-2.5} dy={-2} rimO={0.75} />
 		<Label x={1380} y={g1 + 40} s="交子铺掌柜" fs={26} anchor="middle" />
