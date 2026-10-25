@@ -20,14 +20,19 @@ export const Marked: React.FC<{s: string; n?: number; pull?: boolean}> = ({s, n 
 	return <>{out}</>;
 };
 export type SubRow = {s: string; n?: number; o?: number};
-/** story text, top-left; rows stack (the latest is last) */
-export const Story: React.FC<{rows: SubRow[]; o?: number}> = ({rows, o = 1}) => rows.length === 0 ? null : <div style={{opacity: o}}>
-	<div style={{position: 'absolute', borderRadius: '50%', filter: 'blur(42px)', left: 30, top: 70, width: 1120, height: 130 + 88 * rows.length, background: 'rgba(27,24,48,0.34)'}} />
-	<div style={{...fx, left: 150, top: 132, fontWeight: 900, fontSize: 58, lineHeight: 1.5, letterSpacing: '0.03em', whiteSpace: 'nowrap'}}>{rows.map((r, i) => <div key={i} style={{opacity: r.o ?? 1}}><Marked s={r.s} n={r.n} /></div>)}</div>
-</div>;
+/** story text, top-left; rows stack (the latest is last). The scrim is sized to the text and tinted per scene. */
+const visLen = (t: string) => t.replace(/[[\]]/g, '').length;
+export const Story: React.FC<{rows: SubRow[]; o?: number; tint?: string; to?: number}> = ({rows, o = 1, tint = '#1B1830', to = 0.34}) => {
+	if (rows.length === 0) return null;
+	const w = Math.max(...rows.map((r) => visLen(r.s))) * 60 + 160;
+	return <div style={{opacity: o}}>
+		<div style={{position: 'absolute', borderRadius: 60, filter: 'blur(34px)', left: 90, top: 100, width: w, height: 70 + 87 * rows.length, background: tint, opacity: to}} />
+		<div style={{...fx, left: 150, top: 132, fontWeight: 900, fontSize: 58, lineHeight: 1.5, letterSpacing: '0.03em', whiteSpace: 'nowrap'}}>{rows.map((r, i) => <div key={i} style={{opacity: r.o ?? 1}}><Marked s={r.s} n={r.n} /></div>)}</div>
+	</div>;
+};
 /** a punch line, centred and bigger */
-export const Punch: React.FC<{s: string; o?: number; n?: number; top?: number; size?: number}> = ({s, o = 1, n, top = 470, size = 78}) => <>
-	<div style={{position: 'absolute', left: 360, right: 360, top: top - 30, height: 170, borderRadius: '50%', filter: 'blur(42px)', background: 'rgba(27,24,48,0.42)', opacity: o}} />
+export const Punch: React.FC<{s: string; o?: number; n?: number; top?: number; size?: number; tint?: string}> = ({s, o = 1, n, top = 470, size = 78, tint = '#1B1830'}) => <>
+	<div style={{position: 'absolute', left: 960 - visLen(s) * size * 0.56 - 60, width: visLen(s) * size * 1.12 + 120, top: top - 24, height: size * 1.9, borderRadius: 70, filter: 'blur(36px)', background: tint, opacity: 0.45 * o}} />
 	<div style={{...fx, left: 0, right: 0, top, textAlign: 'center', fontWeight: 900, fontSize: size, letterSpacing: '0.06em', opacity: o}}><Marked s={s} n={n} pull /></div></>;
 /** the classical original, small, under the story block */
 export const Orig: React.FC<{s: string; o?: number; top?: number}> = ({s, o = 1, top = 330}) =>

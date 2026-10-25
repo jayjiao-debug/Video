@@ -44,7 +44,7 @@ export const dagoba = (cx: number, base: number, s = 1, col = SIL) => {
 	M${p(-70, 72)} C${p(-96, 120)} ${p(-86, 170)} ${p(-40, 186)} L${p(40, 186)} C${p(86, 170)} ${p(96, 120)} ${p(70, 72)} Z
 	M${p(-34, 186)} L${p(34, 186)} L${p(26, 204)} L${p(-26, 204)} Z
 	M${p(-22, 204)} L${p(22, 204)} L${p(10, 330)} L${p(-10, 330)} Z
-	M${p(-46, 330)} L${p(46, 330)} L${p(30, 342)} L${p(-30, 342)} Z M${p(-6, 342)} L${p(6, 342)} L${p(3, 372)} L${p(-3, 372)} Z"/>` +
+	M${p(-50, 324)} C${p(-44, 330)} ${p(-30, 352)} ${p(0, 356)} C${p(30, 352)} ${p(44, 330)} ${p(50, 324)} L${p(36, 326)} L${p(24, 322)} L${p(12, 326)} L${p(0, 322)} L${p(-12, 326)} L${p(-24, 322)} L${p(-36, 326)} Z M${p(-7, 354)} L${p(7, 354)} L${p(4, 384)} L${p(-4, 384)} Z"/><circle fill="${col}" cx="${f(cx)}" cy="${f(base - 390 * s)}" r="${f(7 * s)}"/>`   // 华盖: a domed canopy with a fringed hem + spire and pearl (no crossbar) +
 		Array.from({length: 9}, (_, i) => `<rect fill="${col}" x="${f(cx - (20 - i * 1.4) * s)}" y="${f(base - (210 + i * 13) * s)}" width="${f((40 - i * 2.8) * s)}" height="${f(5 * s)}"/>`).join('');
 };
 /** 紫禁城 corner tower (角楼): stacked cross roofs */
