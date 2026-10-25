@@ -66,8 +66,8 @@ const water = (t) => {
 // match the noon camera to the ring horse at the cut: same face point on screen, same horse height
 const cR = camRing(CUT), Sface = P.toScr(cR, face), zN = (hero0.h * cR.z) / (nh.h * 1.22);
 const camNoon = P.cam([nFace[0] - (Sface[0] - 960) / zN, nFace[1] - (Sface[1] - 540) / zN, zN], [
-	{t0: CUT, t1: A1, to: [nFace[0] - (Sface[0] - 960) / (zN * 0.97), nFace[1] - (Sface[1] - 540) / (zN * 0.97), zN * 0.97], ease: 'linear'},
-	{t0: A1, t1: 15.3, to: [960, 540, 1.0]},
+	{t0: CUT, t1: 11.30, to: [nFace[0] - (Sface[0] - 960) / (zN * 0.985), nFace[1] - (Sface[1] - 540) / (zN * 0.985), zN * 0.985], ease: 'linear'},
+	{t0: 11.30, t1: 15.3, to: [960, 540, 1.0]},   // the pull back starts as the title leaves (≤ 25 px/f over 4.0 s)
 ]);
 const noonVig = `<radialGradient id="nvig" cx="960" cy="600" r="1150" gradientUnits="userSpaceOnUse"><stop offset=".45" stop-color="#1A140F" stop-opacity="0"/><stop offset="1" stop-color="#1A140F" stop-opacity=".85"/></radialGradient>`;
 // ---- the title (house slam), v8 text
@@ -126,4 +126,5 @@ const render = (t) => {
 	return {svg, hud: P.hud(hud), meta};
 };
 P.SCENES.hook = {t0: 0, t1: 15.4, render};
+P.NOON = {noonBase, items, water, NOON_T, NW, nh, nFace, camNoon, noonVig};
 })();

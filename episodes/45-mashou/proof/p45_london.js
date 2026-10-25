@@ -267,4 +267,5 @@ const render = (t) => {
 	return {svg, hud: P.hud(hud), meta};
 };
 P.SCENES.london = {t0: 29.9, t1: 38.9, render, cam: camL};
+P.LONDON = {londonRoom, lampSvg, lampAng, swingEdge, smoke, vigL};
 })();

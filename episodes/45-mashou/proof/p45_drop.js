@@ -221,5 +221,5 @@ const render = (t) => {
 	return {svg, hud: P.hud(hud), meta};
 };
 P.SCENES.drop = {t0: 85.2, t1: 92.0, render};
-P.DROP = {camCourt, FACE_C, HERO_C};
+P.DROP = {camCourt, FACE_C, HERO_C, roadWorld, camRoad, courtWorld, VAN, SLIT_X};
 })();
