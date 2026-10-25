@@ -30,3 +30,18 @@
 | 2026-10-25 15:50 | researcher: F28–F35 (2026 wave: Hangzhou 4 originals 7/30–10/18, 5.7万 museum entries first weekend, cap 1万/day, queue wording "排几个小时" safe; Kunshan 10/31–; the horse itself on loan in Fuzhou 7/31–10/25 (F33); F27 corrected). Producer added H3c 「今夏杭州，人们排几小时看你兄弟。」 after H3a; re-timed: Q ends 169.5, end card to 179.75. Art director told | producer | facts.md, lines_bars.json | |
 | 2026-10-25 16:20 | storyboard (gate 2b) delivered: Look 1 only, 20 scene rows, 35 transitions, 11 sets, 6 key frames (style/v4); riskiest: water clock, 1860 carry in fire, saleroom family. Sent to owner; director gate 2b launched | producer | storyboard.md, style/v4/sheet.png | |
 | 2026-10-25 16:50 | gate 2b r1: director REVISE (hero at full frame reads as a cartoon → redraw route B; H1b too weak; brothers 猴/牛; "you at 正觉寺 now" cues; 2 repeated transitions; build-load cuts). Routed to the art director with the owner's history-video-style rules (≥120 px side margins, jseal.png, copper key-word tag, end card). Title card: 假如你是圆明园马首 | producer | notes_gate2b_v1.md | |
+
+## 2026-10-25 · voice-over (owner: "lets add voice over, 旁白")
+- Voice test ep45-vo-01 (6 native zh voices; the Taiwan-accent one dropped). Owner picked ⑤ Sage (shared, standard zh, id APSIkVZudNbPAwyPoeVO). He wants every subtitle read word for word and OK'd a slight music dip under the voice.
+- ep45-vo-02: 49 lines, eleven_v4, speed 1.08, numbers spelled out in Chinese for TTS. Whisper flagged 14/20/24, which were retaken (ep45-vo-03: 14b, 20c, 24c are clean). takes in vo/takes.json.
+- Timing: plan45vo.py → lines_vo.json + vo/starts.json.
+  - The reading minimum is capped at clip + 0.7 s.
+  - A half-beat grid is used in the busy blocks.
+  - Clips 29–32 are 5 % faster (atempo) so Paris → Ho fits between the build (92.02) and the stop (107.87).
+  - Anchors held: 92.02, 107.865, 118.87. C2b's voice ends at 8.87, before the title at 9.05; Q's voice ends at 167.0.
+- Mix: mix45vo.py → audio/mix45vo.wav.
+  - The voice is limited (alimiter), not the music.
+  - The music dips −6 dB under the voice (120 ms attack / 450 ms release). There is no dip at the title, the drop (118.87–120.30) or the end card.
+  - Clip 36 is −1.5 dB.
+  - Result: mix −16.8 LUFS, peak −1.4 dBFS, voice −17.1 LUFS.
+- Gate 2b r2: REVISE (notes_gate2b_v2.md). The hero still reads as generic / zebra-striped. Reference photos have been requested via the asset farm (ep45-ref-01: 新京报, 人民日报海外版, 新华社; reference only, never on screen).
