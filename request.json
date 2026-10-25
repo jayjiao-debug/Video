@@ -23,6 +23,7 @@
    "age": "middle_aged",
    "use_case": "narrative_story",
    "pick": 0,
+   "model": "eleven_v4",
    "settings": {
     "stability": 0.5,
     "similarity_boost": 0.8,
@@ -38,6 +39,7 @@
    "age": "middle_aged",
    "use_case": "narrative_story",
    "pick": 1,
+   "model": "eleven_v4",
    "settings": {
     "stability": 0.5,
     "similarity_boost": 0.8,
@@ -53,6 +55,7 @@
    "age": "middle_aged",
    "use_case": "narrative_story",
    "pick": 2,
+   "model": "eleven_v4",
    "settings": {
     "stability": 0.5,
     "similarity_boost": 0.8,
@@ -67,6 +70,7 @@
    "accent": "standard",
    "use_case": "informative_educational",
    "pick": 0,
+   "model": "eleven_v4",
    "settings": {
     "stability": 0.5,
     "similarity_boost": 0.8,
