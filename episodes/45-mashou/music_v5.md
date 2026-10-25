@@ -26,3 +26,17 @@ build 72, stop 79, re-entry 80, pickup 83, hardest drop 84, outro 104, song end 
 | — | 179.75 | song ends | film end |
 
 Line times: `plan45v5.py` → `lines_bars.json` (each line on a beat, at least its reading minimum, anchors above).
+
+## v6 cut, for a 2:30 film (owner, 2026-10-25 19:40: "they all sound fine"; candidate ③ chosen so the whole film fits in 2:30)
+- **Remove track bars 7–52 (46 bars):** play to bar 7 (track 17.30 s), then jump to bar 53, with a 20 ms crossfade. No candidate reaching 2:30 matches at 0.999; this one is 0.97/0.97, and the owner heard all three and found them fine.
+- **File:** `audio/bgm_cut45_150.wav` (local only, never commit).
+- **Film bars:** j < 7 → track j; j ≥ 7 → track j + 46.
+- **Landmarks (film s):**
+  - title 9.05
+  - join 17.30
+  - breakdown 42.20
+  - build 60.32
+  - stop 76.17
+  - drop 87.17 (audible; the grid is 87.49 − 0.32)
+  - outro 132.77
+  - music ends 148.05
