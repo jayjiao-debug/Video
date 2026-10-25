@@ -21,3 +21,8 @@
 - **Repeated set-piece idea (the reference's device):** each era someone stands on the mound and asks/tries ("挖吗？") → a reason not to → the counter keeps running; speeds up toward today.
 - **Safety:** no bodies, no gore (the sealed craftsmen as a door closing / lamps going out), no bordered maps, no real photos, respectful silhouettes. Facts on screen only from ✓ rows in facts.md; separate 史记 claims ("《史记》记载") from verified findings and from legends.
 - **Title on Douyin:** match the search words: 秦始皇陵，为什么不挖？ (plus a payoff hint if it fits ≤ 30 字).
+
+## Owner decisions (2026-10-25 14:23–14:45)
+- **Voice-over: yes** (旁白 etc.). Narrator = voice 3 「Martin Li」 (ElevenLabs voice_id WuLq5z7nEcrhppO0ZQJw, eleven_v4, stability 0.5 / similarity 0.8 / style 0.3). 《史记》 original text read by voice 1 (voice_id MI36FIkp9wRP7cpWKPTl, the ep42 narrator) with a little room reverb. An expert quote (吴永琪) may get a third voice with a light TV-interview colour. Subtitles stay on screen, in sync with the voice.
+- **Hook changed: the 15-second colour loss** (facts: 夏寅, 新华社 / 人民日报 2024-11-02: pigment starts to change 15 s after exposure, flaking within 4 min). The "70多倍" mercury number is NOT used (no traceable measurement). Shape: 兵马俑出土15秒，颜色就开始变了 → 4分钟，开始脱落 → 《史记》: 里面有水银做的江河 → 可直到今天，没有人打开过它 → title 「秦始皇陵 / 为什么不挖？」.
+- Counter: 「嬴政 N 岁」 in 虚岁 (13 at accession 前247 … 50 at death 前210), then 「封存 N 年」 from 前210 burial: 2026 = 2235 (see facts.md).
