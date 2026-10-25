@@ -10,7 +10,7 @@ export const env = (t: number, a: number, b: number, fi = 0.18, fo = 0.18) => cl
 /** lines that stay on screen as line 1 until the next line (their line 2) ends */
 const STAYS = ['九百年，人人都想', '1186年，金人', '他在最后写道', '宫里的裱画匠', '几经辗转', '1578年，太监冯保', '一个月内，四卷', '1945年，伪满覆灭', '几年后，沈阳', '标着真迹的两卷', '明朝人把草棚', '藏者宜宝之——', '直到你不再属于', '安全的代价'];
 /** lines that appear whole on their cut (no typed reveal) */
-const WHOLE = ['你被人偷偷', '被一个[太监]', '被[末代皇帝]', '还躺在一堆', '[偷你]', '混乱中，你'];
+const WHOLE = ['你被人偷偷', '被一个太监', '被末代皇帝', '还躺在一堆', '[偷你]', '混乱中，你'];
 export type Line = [number, number, string];
 const stays = (s: string) => STAYS.some((p) => s.startsWith(p));
 const whole = (s: string) => WHOLE.some((p) => s.startsWith(p));

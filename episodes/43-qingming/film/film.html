@@ -41,6 +41,17 @@ body.capB .sub::before,body.capB .subc::before{content:'';position:absolute;z-in
 body.capB .subc::before{left:22%;right:22%}
 body.capB .sub,body.capB .subc{z-index:0}
 body.capB .sub .k,body.capB .subc .k{color:#FF6450}
+/* shade trials over the painting (window.NOBANDS turns the lamplight bands off) */
+body.sh2 .sub,body.sh2 .subc,body.sh2 .stamp,body.sh2 .age,body.sh2 .tally{z-index:0}
+body.sh2 .sub::before,body.sh2 .subc::before,body.sh2 .stamp::before,body.sh2 .age::before,body.sh2 .tally::before{content:'';position:absolute;z-index:-1;left:-60px;right:-60px;top:-26px;bottom:-26px;background:radial-gradient(ellipse 58% 62% at 50% 50%,rgba(16,11,7,.6),rgba(16,11,7,.34) 58%,rgba(16,11,7,0) 100%);filter:blur(6px)}
+body.sh3 #hud{color:#2A1F17}
+body.sh3 .sh{text-shadow:0 0 3px rgba(255,246,226,.95),0 0 10px rgba(255,246,226,.8),0 0 26px rgba(255,246,226,.55)}
+body.sh3 .mark{color:#4a3b2c}
+body.sh3 .tally .o{border-color:#2A1F17}
+body.sh4 .sub,body.sh4 .subc{background:rgba(18,12,8,.58);padding:0 20px;margin-left:-20px;border-radius:6px}
+body.sh4 .subc{left:50%;right:auto;transform:translateX(-50%);margin-left:0}
+body.sh4 .stamp,body.sh4 .age,body.sh4 .tally{background:rgba(18,12,8,.5);border-radius:10px;padding:14px 26px}
+body.sh4 .stamp{padding-right:30px}
 /* C: key words as white on a red tag */
 body.capC .sub .k,body.capC .subc .k{color:#FFF8EC;background:#D8392A;box-shadow:-.08em 0 0 #D8392A,.08em 0 0 #D8392A;text-shadow:none}
 </style></head><body><canvas id="c" width="1920" height="1080"></canvas><div id="hud"></div><script type="module" src="main.js"></script></body></html>
