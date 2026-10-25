@@ -2,393 +2,642 @@
 {
 "t": 0.76,
 "sfx": "stamp_char",
-"db": -4
-},
-{
-"t": 1.33,
-"sfx": "stamp_char",
-"db": -4
-},
-{
-"t": 1.89,
-"sfx": "stamp_char",
-"db": -3
+"db": -10.5,
+"lead": 0.07,
+"role": "accent"
 },
 {
 "t": 1.25,
 "sfx": "cowrie_drop",
-"db": -6
+"db": -6,
+"lead": 0.03,
+"len": 0.7,
+"fade_out": 0.2,
+"off": true,
+"why": "stacked on the 货/贵 stamps (2 hits within 0.6 s)"
+},
+{
+"t": 1.33,
+"sfx": "stamp_char",
+"db": -10.0,
+"lead": 0.07,
+"role": "accent"
+},
+{
+"t": 1.89,
+"sfx": "stamp_char",
+"db": -10.0,
+"lead": 0.07,
+"role": "accent"
 },
 {
 "t": 1.93,
 "sfx": "cowrie_drop",
-"db": -6
-},
-{
-"t": 2.5,
-"sfx": "cowrie_drop",
-"db": -6
+"db": -6,
+"lead": 0.03,
+"len": 0.7,
+"fade_out": 0.2,
+"off": true,
+"why": "stacked on the 货/贵 stamps (2 hits within 0.6 s)"
 },
 {
 "t": 2.0,
 "sfx": "reveal_shimmer",
-"db": -8
+"db": -17.5,
+"role": "normal"
+},
+{
+"t": 2.5,
+"sfx": "cowrie_drop",
+"db": -17.0,
+"lead": 0.03,
+"len": 0.7,
+"fade_out": 0.2,
+"role": "normal"
 },
 {
 "t": 3.59,
 "sfx": "pay_chime",
-"db": -6
+"db": -6.5,
+"semitones": -6,
+"role": "accent"
 },
 {
 "t": 4.4,
 "sfx": "rewind",
-"db": -8
+"db": -3.5,
+"role": "normal"
 },
 {
 "t": 4.65,
 "sfx": "paper_flutter",
-"db": -10
+"db": -10.0,
+"role": "normal"
 },
 {
 "t": 6.4,
 "sfx": "rewind",
-"db": -12
+"db": -3.5,
+"role": "normal"
 },
 {
 "t": 9.25,
 "sfx": "title_hit",
-"db": -2
+"db": -2,
+"off": true,
+"why": "clashes with the title hit: 0.4 s rumble at 86 Hz smears the bed re-entry; the music carries the title"
 },
 {
 "t": 12.25,
 "sfx": "waves_shells",
-"db": -14
+"db": -16.5,
+"role": "soft"
 },
 {
 "t": 15.75,
 "sfx": "cowrie_drop",
-"db": -8
+"db": -17.0,
+"lead": 0.03,
+"len": 0.7,
+"fade_out": 0.2,
+"role": "normal"
 },
 {
 "t": 16.2,
 "sfx": "cowrie_drop",
-"db": -12
+"db": -17.0,
+"lead": 0.03,
+"len": 0.7,
+"fade_out": 0.2,
+"role": "normal",
+"off": true,
+"why": "producer: fewer SFX (coins dup)"
 },
 {
 "t": 17.7,
 "sfx": "bronze_pour",
-"db": -10
+"db": -18.0,
+"role": "normal"
 },
 {
 "t": 18.31,
 "sfx": "reveal_shimmer",
-"db": -10
+"db": -18.5,
+"role": "normal",
+"off": true,
+"why": "producer: fewer SFX (pour enough)"
 },
 {
 "t": 21.7,
 "sfx": "guess_tick",
-"db": -8
+"db": -8,
+"off": true,
+"why": "file has 3 irregular ticks (0.19/0.89/1.20 s), not 4 slow ones: replaced by single ticks on the beats"
 },
 {
-"t": 27.36,
-"sfx": "spade_soil",
-"db": -4
+"t": 22.27,
+"sfx": "guess_tick",
+"db": -3.0,
+"src_start": 0.17,
+"len": 0.28,
+"lead": 0.025,
+"fade_out": 0.08,
+"semitones": 0,
+"role": "accent",
+"why": "先猜？ tick-tock on the beats 22.270 / 22.836 / 23.401"
+},
+{
+"t": 22.836,
+"sfx": "guess_tick",
+"db": -4.5,
+"src_start": 0.86,
+"len": 0.28,
+"lead": 0.025,
+"fade_out": 0.08,
+"semitones": -3,
+"role": "accent",
+"why": "先猜？ tick-tock on the beats 22.270 / 22.836 / 23.401"
+},
+{
+"t": 23.401,
+"sfx": "guess_tick",
+"db": -2.5,
+"src_start": 1.17,
+"len": 0.28,
+"lead": 0.025,
+"fade_out": 0.08,
+"semitones": 0,
+"role": "accent",
+"why": "先猜？ tick-tock on the beats 22.270 / 22.836 / 23.401"
 },
 {
 "t": 27.36,
 "sfx": "reveal_shimmer",
-"db": -6
+"db": -6,
+"off": true,
+"why": "same 8-13 kHz band as the chorus-downbeat crash at 27.364 (clash)"
+},
+{
+"t": 27.364,
+"sfx": "spade_soil",
+"db": -11.0,
+"src_start": 0.47,
+"lead": 0.06,
+"role": "accent"
 },
 {
 "t": 30.0,
 "sfx": "bronze_pour",
-"db": -8
+"db": -17.5,
+"role": "normal"
 },
 {
 "t": 31.89,
 "sfx": "reveal_shimmer",
-"db": -8
+"db": -18.0,
+"role": "normal"
 },
 {
 "t": 32.85,
-"sfx": "seal_paper",
-"db": -10
+"sfx": "seal1",
+"db": 5.5,
+"lead": 0.004,
+"fade_out": 0.08,
+"role": "normal",
+"off": true,
+"why": "producer: inaudible under bed"
 },
 {
 "t": 34.16,
 "sfx": "silk_swish",
-"db": -12
+"db": 4.0,
+"hp": 300,
+"role": "normal"
 },
 {
 "t": 35.55,
 "sfx": "coins_hand",
-"db": -10
+"db": -12.5,
+"role": "normal"
 },
 {
 "t": 36.98,
 "sfx": "silk_swish",
-"db": -12
+"db": -1.0,
+"hp": 300,
+"role": "normal"
 },
 {
 "t": 37.6,
 "sfx": "coins_hand",
-"db": -10
+"db": -16.5,
+"role": "normal",
+"off": true,
+"why": "producer: fewer SFX (thin)"
 },
 {
 "t": 38.45,
 "sfx": "cowrie_drop",
-"db": -12
+"db": -17.0,
+"lead": 0.03,
+"len": 0.7,
+"fade_out": 0.2,
+"role": "normal",
+"off": true,
+"why": "producer: fewer SFX (thin)"
 },
 {
 "t": 39.9,
 "sfx": "coins_hand",
-"db": -10
+"db": -17.0,
+"role": "normal",
+"off": true,
+"why": "producer: fewer SFX (thin)"
 },
 {
 "t": 40.7,
 "sfx": "balance_settle",
-"db": -6
+"db": -12.0,
+"lead": 0.08,
+"role": "normal"
 },
 {
 "t": 42.08,
 "sfx": "silk_swish",
-"db": -12
+"db": 0.5,
+"hp": 300,
+"role": "normal"
 },
 {
 "t": 42.95,
 "sfx": "balance_settle",
-"db": -8
+"db": -12.0,
+"lead": 0.08,
+"role": "normal",
+"off": true,
+"why": "producer: fewer SFX (one balance per scene)"
 },
 {
 "t": 47.74,
 "sfx": "silk_swish",
-"db": -12
+"db": -4.0,
+"hp": 300,
+"role": "normal"
 },
 {
 "t": 49.5,
 "sfx": "coins_hand",
-"db": -8
+"db": -16.5,
+"role": "normal"
 },
 {
 "t": 52.45,
 "sfx": "coins_hand",
-"db": -10
+"db": -10,
+"off": true,
+"why": "stacked 0.15 s before balance_settle 52.6"
 },
 {
 "t": 52.6,
 "sfx": "balance_settle",
-"db": -8
+"db": -12.0,
+"lead": 0.08,
+"role": "normal",
+"off": true,
+"why": "producer: fewer SFX (one balance per scene)"
 },
 {
 "t": 54.5,
 "sfx": "silk_swish",
-"db": -12
+"db": -12,
+"hp": 300,
+"off": true,
+"why": "stacked 0.25 s before iron_drag 54.75"
 },
 {
 "t": 54.75,
 "sfx": "iron_drag",
-"db": -6
+"db": -14.0,
+"role": "normal"
 },
 {
-"t": 57.36,
+"t": 57.364,
 "sfx": "iron_drag",
-"db": -2,
-"len": 1.2
+"db": 1.0,
+"len": 1.2,
+"src_start": 1.25,
+"lead": 0.04,
+"fade_out": 0.3,
+"role": "accent"
 },
 {
 "t": 60.45,
 "sfx": "iron_drag",
-"db": -8
+"db": -14.5,
+"role": "normal"
 },
 {
 "t": 62.25,
 "sfx": "coins_hand",
-"db": -6
+"db": -16.0,
+"role": "normal",
+"off": true,
+"why": "producer: fewer SFX (thin)"
 },
 {
 "t": 64.95,
 "sfx": "coins_hand",
-"db": -10
+"db": -21.5,
+"role": "normal",
+"off": true,
+"why": "producer: fewer SFX (thin)"
 },
 {
 "t": 65.44,
 "sfx": "coins_hand",
-"db": -12
+"db": -16.0,
+"role": "normal"
 },
 {
 "t": 65.93,
 "sfx": "coins_hand",
-"db": -12
+"db": -20.5,
+"role": "normal",
+"off": true,
+"why": "producer: fewer SFX (thin)"
 },
 {
 "t": 66.43,
 "sfx": "balance_settle",
-"db": -6
+"db": -20.0,
+"lead": 0.08,
+"role": "normal",
+"off": true,
+"why": "producer: fewer SFX (thin)"
 },
 {
 "t": 67.5,
 "sfx": "paper_flutter",
-"db": -4
+"db": -12.0,
+"role": "accent"
 },
 {
 "t": 70.85,
 "sfx": "iron_drag",
-"db": -4,
-"len": 1.0
+"db": -17.0,
+"len": 1.0,
+"role": "normal"
 },
 {
 "t": 70.95,
 "sfx": "reveal_shimmer",
-"db": -10
+"db": -17.5,
+"role": "normal"
 },
 {
 "t": 72.0,
 "sfx": "reveal_shimmer",
-"db": -14
+"db": -14,
+"off": true,
+"why": "repeat of the 70.95 shimmer 1 s later"
 },
 {
 "t": 74.35,
 "sfx": "crowd_dispute",
-"db": -10
+"db": -16.0,
+"role": "soft"
 },
 {
 "t": 74.91,
 "sfx": "paper_flutter",
-"db": -10
+"db": -9.5,
+"role": "normal"
 },
 {
 "t": 77.18,
-"sfx": "seal_paper",
-"db": -4
+"sfx": "seal1",
+"db": 0.5,
+"lead": 0.004,
+"fade_out": 0.08,
+"role": "accent"
 },
 {
 "t": 77.75,
 "sfx": "pay_chime",
-"db": -14
+"db": -13.0,
+"semitones": -2,
+"role": "normal"
 },
 {
 "t": 79.44,
 "sfx": "reveal_shimmer",
-"db": -6
+"db": -6,
+"off": true,
+"why": "masked by / fights the crash at 79.441"
 },
 {
 "t": 81.7,
 "sfx": "woodblock_print",
-"db": -6
+"db": -6,
+"off": true,
+"why": "wrong for its prompt: a 14-hit rattle at ~1.1 kHz, not a thump + peel; stand-in stamp_char thud added"
+},
+{
+"t": 81.7,
+"sfx": "woodblock2",
+"db": -4.5,
+"lead": 0.301,
+"role": "normal",
+"why": "stand-in for woodblock_print (regenerate)"
 },
 {
 "t": 82.84,
 "sfx": "woodblock_print",
-"db": -8
+"db": -8,
+"off": true,
+"why": "wrong for its prompt: a 14-hit rattle at ~1.1 kHz, not a thump + peel; stand-in stamp_char thud added"
+},
+{
+"t": 82.84,
+"sfx": "woodblock2",
+"db": -4.0,
+"lead": 0.301,
+"role": "normal",
+"why": "stand-in for woodblock_print (regenerate)"
 },
 {
 "t": 83.97,
-"sfx": "seal_paper",
-"db": -4
+"sfx": "seal1",
+"db": 1.5,
+"lead": 0.004,
+"fade_out": 0.08,
+"role": "accent"
 },
 {
 "t": 84.3,
 "sfx": "silk_swish",
-"db": -10
+"db": -10,
+"hp": 300,
+"off": true,
+"why": "stacked 0.33 s after the 宝钞 seal 83.97"
 },
 {
 "t": 85.0,
 "sfx": "paper_flutter",
-"db": -8
+"db": -15.5,
+"role": "normal",
+"off": true,
+"why": "producer: fewer SFX (thin)"
 },
 {
 "t": 86.8,
 "sfx": "balance_settle",
-"db": -8
+"db": -16.0,
+"lead": 0.08,
+"role": "normal",
+"off": true,
+"why": "producer: fewer SFX (thin)"
 },
 {
 "t": 89.35,
 "sfx": "woodblock_print",
-"db": -10
+"db": -10,
+"off": true,
+"why": "wrong for its prompt: a 14-hit rattle at ~1.1 kHz, not a thump + peel; stand-in stamp_char thud added"
+},
+{
+"t": 89.35,
+"sfx": "woodblock2",
+"db": -4.0,
+"lead": 0.301,
+"role": "normal",
+"why": "stand-in for woodblock_print (regenerate)"
 },
 {
 "t": 91.33,
 "sfx": "paper_crumble",
-"db": -8
+"db": -9.0,
+"role": "normal"
 },
 {
 "t": 93.03,
 "sfx": "balance_settle",
-"db": -6
+"db": -16.5,
+"lead": 0.08,
+"role": "normal"
 },
 {
 "t": 96.45,
 "sfx": "paper_crumble",
-"db": -2
+"db": -13.0,
+"len": 1.95,
+"fade_out": 0.5,
+"role": "hush"
 },
 {
 "t": 98.35,
 "sfx": "reveal_shimmer",
-"db": -10
+"db": -10,
+"off": true,
+"why": "hush must hold only the crumble and the inhale"
 },
 {
 "t": 99.15,
 "sfx": "silver_clink",
-"db": -8
+"db": -16.0,
+"lead": 0.105,
+"role": "normal",
+"off": true,
+"why": "producer: fewer SFX (one clink)"
 },
 {
 "t": 101.84,
 "sfx": "silver_clink",
-"db": -4
+"db": -7.5,
+"lead": 0.105,
+"role": "accent"
 },
 {
 "t": 102.97,
 "sfx": "balance_settle",
-"db": -8
+"db": -15.0,
+"lead": 0.08,
+"role": "normal",
+"off": true,
+"why": "producer: fewer SFX (thin)"
 },
 {
 "t": 103.5,
 "sfx": "reveal_shimmer",
-"db": -12
+"db": -8.5,
+"role": "normal"
 },
 {
 "t": 105.2,
 "sfx": "silk_swish",
-"db": -10
+"db": -4.5,
+"hp": 300,
+"role": "normal"
 },
 {
 "t": 107.0,
 "sfx": "night_stall",
-"db": -6
+"db": -6.0,
+"hp": 150,
+"fade_in": 0.5,
+"fade_out": 1.0,
+"role": "soft"
 },
 {
 "t": 108.07,
 "sfx": "pay_chime",
-"db": -2
+"db": -12.0,
+"semitones": -5,
+"role": "accent"
 },
 {
 "t": 111.85,
 "sfx": "cowrie_drop",
-"db": -12
+"db": -16.5,
+"lead": 0.03,
+"len": 0.7,
+"fade_out": 0.2,
+"role": "normal"
 },
 {
 "t": 112.35,
 "sfx": "coins_hand",
-"db": -12
+"db": -16.0,
+"role": "normal"
 },
 {
 "t": 112.85,
 "sfx": "paper_flutter",
-"db": -12
+"db": -8.5,
+"role": "normal"
 },
 {
 "t": 115.2,
 "sfx": "paper_flutter",
-"db": -10
+"db": -10.5,
+"role": "normal",
+"off": true,
+"why": "producer: fewer SFX (thin)"
 },
 {
 "t": 116.56,
 "sfx": "trust_swell",
-"db": -6
+"db": -5.5,
+"semitones": -6,
+"fade_out": 0.6,
+"role": "pad"
 },
 {
 "t": 121.085,
-"sfx": "seal_paper",
-"db": -2
+"sfx": "seal1",
+"db": 0.0,
+"lead": 0.004,
+"fade_out": 0.08,
+"role": "accent"
 }
 ]
