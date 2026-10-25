@@ -1,180 +1,11 @@
 {
- "id": "ep45-vo-02",
+ "id": "ep45-vo-03",
  "model_prefs": [
   "eleven_v4"
  ],
  "items": [
   {
-   "name": "01",
-   "lang": "zh",
-   "voice_id": "APSIkVZudNbPAwyPoeVO",
-   "model": "eleven_v4",
-   "settings": {
-    "stability": 0.5,
-    "similarity_boost": 0.8,
-    "style": 0.3,
-    "speed": 1.08
-   },
-   "text": "假如说，你是圆明园的马首。"
-  },
-  {
-   "name": "02",
-   "lang": "zh",
-   "voice_id": "APSIkVZudNbPAwyPoeVO",
-   "model": "eleven_v4",
-   "settings": {
-    "stability": 0.5,
-    "similarity_boost": 0.8,
-    "style": 0.3,
-    "speed": 1.08
-   },
-   "text": "有人花六千九百一十万港元买下你，"
-  },
-  {
-   "name": "03",
-   "lang": "zh",
-   "voice_id": "APSIkVZudNbPAwyPoeVO",
-   "model": "eleven_v4",
-   "settings": {
-    "stability": 0.5,
-    "similarity_boost": 0.8,
-    "style": 0.3,
-    "speed": 1.08
-   },
-   "text": "又把你捐了出去。"
-  },
-  {
-   "name": "04",
-   "lang": "zh",
-   "voice_id": "APSIkVZudNbPAwyPoeVO",
-   "model": "eleven_v4",
-   "settings": {
-    "stability": 0.5,
-    "similarity_boost": 0.8,
-    "style": 0.3,
-    "speed": 1.08
-   },
-   "text": "你被人抢走，"
-  },
-  {
-   "name": "05",
-   "lang": "zh",
-   "voice_id": "APSIkVZudNbPAwyPoeVO",
-   "model": "eleven_v4",
-   "settings": {
-    "stability": 0.5,
-    "similarity_boost": 0.8,
-    "style": 0.3,
-    "speed": 1.08
-   },
-   "text": "被一锤子卖掉，"
-  },
-  {
-   "name": "06",
-   "lang": "zh",
-   "voice_id": "APSIkVZudNbPAwyPoeVO",
-   "model": "eleven_v4",
-   "settings": {
-    "stability": 0.5,
-    "similarity_boost": 0.8,
-    "style": 0.3,
-    "speed": 1.08
-   },
-   "text": "差点又上了拍卖台，"
-  },
-  {
-   "name": "07",
-   "lang": "zh",
-   "voice_id": "APSIkVZudNbPAwyPoeVO",
-   "model": "eleven_v4",
-   "settings": {
-    "stability": 0.5,
-    "similarity_boost": 0.8,
-    "style": 0.3,
-    "speed": 1.08
-   },
-   "text": "终于，你回了家。"
-  },
-  {
-   "name": "08",
-   "lang": "zh",
-   "voice_id": "APSIkVZudNbPAwyPoeVO",
-   "model": "eleven_v4",
-   "settings": {
-    "stability": 0.5,
-    "similarity_boost": 0.8,
-    "style": 0.3,
-    "speed": 1.08
-   },
-   "text": "可十二个里，还有五个没回中国。"
-  },
-  {
-   "name": "09",
-   "lang": "zh",
-   "voice_id": "APSIkVZudNbPAwyPoeVO",
-   "model": "eleven_v4",
-   "settings": {
-    "stability": 0.5,
-    "similarity_boost": 0.8,
-    "style": 0.3,
-    "speed": 1.08
-   },
-   "text": "乾隆年间，你由红铜一次铸成。"
-  },
-  {
-   "name": "10",
-   "lang": "zh",
-   "voice_id": "APSIkVZudNbPAwyPoeVO",
-   "model": "eleven_v4",
-   "settings": {
-    "stability": 0.5,
-    "similarity_boost": 0.8,
-    "style": 0.3,
-    "speed": 1.08
-   },
-   "text": "你和十一个兄弟，坐在水池两边。"
-  },
-  {
-   "name": "11",
-   "lang": "zh",
-   "voice_id": "APSIkVZudNbPAwyPoeVO",
-   "model": "eleven_v4",
-   "settings": {
-    "stability": 0.5,
-    "similarity_boost": 0.8,
-    "style": 0.3,
-    "speed": 1.08
-   },
-   "text": "每两小时，轮到谁，谁就喷水。"
-  },
-  {
-   "name": "12",
-   "lang": "zh",
-   "voice_id": "APSIkVZudNbPAwyPoeVO",
-   "model": "eleven_v4",
-   "settings": {
-    "stability": 0.5,
-    "similarity_boost": 0.8,
-    "style": 0.3,
-    "speed": 1.08
-   },
-   "text": "你，是午时。"
-  },
-  {
-   "name": "13",
-   "lang": "zh",
-   "voice_id": "APSIkVZudNbPAwyPoeVO",
-   "model": "eleven_v4",
-   "settings": {
-    "stability": 0.5,
-    "similarity_boost": 0.8,
-    "style": 0.3,
-    "speed": 1.08
-   },
-   "text": "正午十二点，十二个一起喷水。"
-  },
-  {
-   "name": "14",
+   "name": "14b",
    "lang": "zh",
    "voice_id": "APSIkVZudNbPAwyPoeVO",
    "model": "eleven_v4",
@@ -187,7 +18,7 @@
    "text": "一八六零年，英法联军进了园子。"
   },
   {
-   "name": "15",
+   "name": "14c",
    "lang": "zh",
    "voice_id": "APSIkVZudNbPAwyPoeVO",
    "model": "eleven_v4",
@@ -197,62 +28,10 @@
     "style": 0.3,
     "speed": 1.08
    },
-   "text": "能搬走的，都被搬走了。"
+   "text": "一八六零年，英法联军进了园子。"
   },
   {
-   "name": "16",
-   "lang": "zh",
-   "voice_id": "APSIkVZudNbPAwyPoeVO",
-   "model": "eleven_v4",
-   "settings": {
-    "stability": 0.5,
-    "similarity_boost": 0.8,
-    "style": 0.3,
-    "speed": 1.08
-   },
-   "text": "然后，一把火。"
-  },
-  {
-   "name": "17",
-   "lang": "zh",
-   "voice_id": "APSIkVZudNbPAwyPoeVO",
-   "model": "eleven_v4",
-   "settings": {
-    "stability": 0.5,
-    "similarity_boost": 0.8,
-    "style": 0.3,
-    "speed": 1.08
-   },
-   "text": "你被带走了。"
-  },
-  {
-   "name": "18",
-   "lang": "zh",
-   "voice_id": "APSIkVZudNbPAwyPoeVO",
-   "model": "eleven_v4",
-   "settings": {
-    "stability": 0.5,
-    "similarity_boost": 0.8,
-    "style": 0.3,
-    "speed": 1.08
-   },
-   "text": "一百多年后，你出现在伦敦。"
-  },
-  {
-   "name": "19",
-   "lang": "zh",
-   "voice_id": "APSIkVZudNbPAwyPoeVO",
-   "model": "eleven_v4",
-   "settings": {
-    "stability": 0.5,
-    "similarity_boost": 0.8,
-    "style": 0.3,
-    "speed": 1.08
-   },
-   "text": "锤子落下：三四十万美元。"
-  },
-  {
-   "name": "20",
+   "name": "20b",
    "lang": "zh",
    "voice_id": "APSIkVZudNbPAwyPoeVO",
    "model": "eleven_v4",
@@ -265,7 +44,7 @@
    "text": "你被台湾收藏家买走。"
   },
   {
-   "name": "21",
+   "name": "20c",
    "lang": "zh",
    "voice_id": "APSIkVZudNbPAwyPoeVO",
    "model": "eleven_v4",
@@ -275,36 +54,10 @@
     "style": 0.3,
     "speed": 1.08
    },
-   "text": "牛、猴、虎、猪，先后被买回中国。"
+   "text": "你被台湾收藏家买走。"
   },
   {
-   "name": "22",
-   "lang": "zh",
-   "voice_id": "APSIkVZudNbPAwyPoeVO",
-   "model": "eleven_v4",
-   "settings": {
-    "stability": 0.5,
-    "similarity_boost": 0.8,
-    "style": 0.3,
-    "speed": 1.08
-   },
-   "text": "二零零七年，你又要上拍了。"
-  },
-  {
-   "name": "23",
-   "lang": "zh",
-   "voice_id": "APSIkVZudNbPAwyPoeVO",
-   "model": "eleven_v4",
-   "settings": {
-    "stability": 0.5,
-    "similarity_boost": 0.8,
-    "style": 0.3,
-    "speed": 1.08
-   },
-   "text": "这一次，锤子没有落下。"
-  },
-  {
-   "name": "24",
+   "name": "24b",
    "lang": "zh",
    "voice_id": "APSIkVZudNbPAwyPoeVO",
    "model": "eleven_v4",
@@ -317,7 +70,7 @@
    "text": "国家文物局反对公开拍卖。"
   },
   {
-   "name": "25",
+   "name": "24c",
    "lang": "zh",
    "voice_id": "APSIkVZudNbPAwyPoeVO",
    "model": "eleven_v4",
@@ -327,319 +80,7 @@
     "style": 0.3,
     "speed": 1.08
    },
-   "text": "拍卖前，何鸿燊私下买下了你："
-  },
-  {
-   "name": "26",
-   "lang": "zh",
-   "voice_id": "APSIkVZudNbPAwyPoeVO",
-   "model": "eleven_v4",
-   "settings": {
-    "stability": 0.5,
-    "similarity_boost": 0.8,
-    "style": 0.3,
-    "speed": 1.08
-   },
-   "text": "六千九百一十万港元。"
-  },
-  {
-   "name": "27",
-   "lang": "zh",
-   "voice_id": "APSIkVZudNbPAwyPoeVO",
-   "model": "eleven_v4",
-   "settings": {
-    "stability": 0.5,
-    "similarity_boost": 0.8,
-    "style": 0.3,
-    "speed": 1.08
-   },
-   "text": "比伦敦那次，贵了二十多倍。"
-  },
-  {
-   "name": "28",
-   "lang": "zh",
-   "voice_id": "APSIkVZudNbPAwyPoeVO",
-   "model": "eleven_v4",
-   "settings": {
-    "stability": 0.5,
-    "similarity_boost": 0.8,
-    "style": 0.3,
-    "speed": 1.08
-   },
-   "text": "兄弟鼠和兔，在巴黎上拍。"
-  },
-  {
-   "name": "29",
-   "lang": "zh",
-   "voice_id": "APSIkVZudNbPAwyPoeVO",
-   "model": "eleven_v4",
-   "settings": {
-    "stability": 0.5,
-    "similarity_boost": 0.8,
-    "style": 0.3,
-    "speed": 1.08
-   },
-   "text": "锤子落下，两个共拍出三千一百四十九万欧元。"
-  },
-  {
-   "name": "30",
-   "lang": "zh",
-   "voice_id": "APSIkVZudNbPAwyPoeVO",
-   "model": "eleven_v4",
-   "settings": {
-    "stability": 0.5,
-    "similarity_boost": 0.8,
-    "style": 0.3,
-    "speed": 1.08
-   },
-   "text": "五天后，买家却说：这个款不能付。"
-  },
-  {
-   "name": "31",
-   "lang": "zh",
-   "voice_id": "APSIkVZudNbPAwyPoeVO",
-   "model": "eleven_v4",
-   "settings": {
-    "stability": 0.5,
-    "similarity_boost": 0.8,
-    "style": 0.3,
-    "speed": 1.08
-   },
-   "text": "一个法国家族，把鼠和兔无偿捐回。"
-  },
-  {
-   "name": "32",
-   "lang": "zh",
-   "voice_id": "APSIkVZudNbPAwyPoeVO",
-   "model": "eleven_v4",
-   "settings": {
-    "stability": 0.5,
-    "similarity_boost": 0.8,
-    "style": 0.3,
-    "speed": 1.08
-   },
-   "text": "何鸿燊，也把你捐给了国家。"
-  },
-  {
-   "name": "33",
-   "lang": "zh",
-   "voice_id": "APSIkVZudNbPAwyPoeVO",
-   "model": "eleven_v4",
-   "settings": {
-    "stability": 0.5,
-    "similarity_boost": 0.8,
-    "style": 0.3,
-    "speed": 1.08
-   },
-   "text": "二零二零年五月，何鸿燊去世，九十八岁。"
-  },
-  {
-   "name": "34",
-   "lang": "zh",
-   "voice_id": "APSIkVZudNbPAwyPoeVO",
-   "model": "eleven_v4",
-   "settings": {
-    "stability": 0.5,
-    "similarity_boost": 0.8,
-    "style": 0.3,
-    "speed": 1.08
-   },
-   "text": "他没等到，你回家的那天。"
-  },
-  {
-   "name": "35",
-   "lang": "zh",
-   "voice_id": "APSIkVZudNbPAwyPoeVO",
-   "model": "eleven_v4",
-   "settings": {
-    "stability": 0.5,
-    "similarity_boost": 0.8,
-    "style": 0.3,
-    "speed": 1.08
-   },
-   "text": "同年十二月一日，"
-  },
-  {
-   "name": "36",
-   "lang": "zh",
-   "voice_id": "APSIkVZudNbPAwyPoeVO",
-   "model": "eleven_v4",
-   "settings": {
-    "stability": 0.5,
-    "similarity_boost": 0.8,
-    "style": 0.3,
-    "speed": 1.08
-   },
-   "text": "你回到了圆明园。"
-  },
-  {
-   "name": "37",
-   "lang": "zh",
-   "voice_id": "APSIkVZudNbPAwyPoeVO",
-   "model": "eleven_v4",
-   "settings": {
-    "stability": 0.5,
-    "similarity_boost": 0.8,
-    "style": 0.3,
-    "speed": 1.08
-   },
-   "text": "你离开了一百六十年。"
-  },
-  {
-   "name": "38",
-   "lang": "zh",
-   "voice_id": "APSIkVZudNbPAwyPoeVO",
-   "model": "eleven_v4",
-   "settings": {
-    "stability": 0.5,
-    "similarity_boost": 0.8,
-    "style": 0.3,
-    "speed": 1.08
-   },
-   "text": "十二个里，回到中国的有七个。"
-  },
-  {
-   "name": "39",
-   "lang": "zh",
-   "voice_id": "APSIkVZudNbPAwyPoeVO",
-   "model": "eleven_v4",
-   "settings": {
-    "stability": 0.5,
-    "similarity_boost": 0.8,
-    "style": 0.3,
-    "speed": 1.08
-   },
-   "text": "今夏杭州，人们排几小时看你兄弟。"
-  },
-  {
-   "name": "40",
-   "lang": "zh",
-   "voice_id": "APSIkVZudNbPAwyPoeVO",
-   "model": "eleven_v4",
-   "settings": {
-    "stability": 0.5,
-    "similarity_boost": 0.8,
-    "style": 0.3,
-    "speed": 1.08
-   },
-   "text": "如今回到圆明园的，只有你。"
-  },
-  {
-   "name": "41",
-   "lang": "zh",
-   "voice_id": "APSIkVZudNbPAwyPoeVO",
-   "model": "eleven_v4",
-   "settings": {
-    "stability": 0.5,
-    "similarity_boost": 0.8,
-    "style": 0.3,
-    "speed": 1.08
-   },
-   "text": "你住进园里唯一幸存的古建筑。"
-  },
-  {
-   "name": "42",
-   "lang": "zh",
-   "voice_id": "APSIkVZudNbPAwyPoeVO",
-   "model": "eleven_v4",
-   "settings": {
-    "stability": 0.5,
-    "similarity_boost": 0.8,
-    "style": 0.3,
-    "speed": 1.08
-   },
-   "text": "细看，你有一只耳朵是卷的。"
-  },
-  {
-   "name": "43",
-   "lang": "zh",
-   "voice_id": "APSIkVZudNbPAwyPoeVO",
-   "model": "eleven_v4",
-   "settings": {
-    "stability": 0.5,
-    "similarity_boost": 0.8,
-    "style": 0.3,
-    "speed": 1.08
-   },
-   "text": "研究的人说：你这一路被撞过。"
-  },
-  {
-   "name": "44",
-   "lang": "zh",
-   "voice_id": "APSIkVZudNbPAwyPoeVO",
-   "model": "eleven_v4",
-   "settings": {
-    "stability": 0.5,
-    "similarity_boost": 0.8,
-    "style": 0.3,
-    "speed": 1.08
-   },
-   "text": "正午十二点，你们本该一起喷水。"
-  },
-  {
-   "name": "45",
-   "lang": "zh",
-   "voice_id": "APSIkVZudNbPAwyPoeVO",
-   "model": "eleven_v4",
-   "settings": {
-    "stability": 0.5,
-    "similarity_boost": 0.8,
-    "style": 0.3,
-    "speed": 1.08
-   },
-   "text": "现在，还差十一个。"
-  },
-  {
-   "name": "46",
-   "lang": "zh",
-   "voice_id": "APSIkVZudNbPAwyPoeVO",
-   "model": "eleven_v4",
-   "settings": {
-    "stability": 0.5,
-    "similarity_boost": 0.8,
-    "style": 0.3,
-    "speed": 1.08
-   },
-   "text": "其中五个，至今没回中国。"
-  },
-  {
-   "name": "47",
-   "lang": "zh",
-   "voice_id": "APSIkVZudNbPAwyPoeVO",
-   "model": "eleven_v4",
-   "settings": {
-    "stability": 0.5,
-    "similarity_boost": 0.8,
-    "style": 0.3,
-    "speed": 1.08
-   },
-   "text": "法国还拍出过一个疑似龙首，"
-  },
-  {
-   "name": "48",
-   "lang": "zh",
-   "voice_id": "APSIkVZudNbPAwyPoeVO",
-   "model": "eleven_v4",
-   "settings": {
-    "stability": 0.5,
-    "similarity_boost": 0.8,
-    "style": 0.3,
-    "speed": 1.08
-   },
-   "text": "真假，说不清。"
-  },
-  {
-   "name": "49",
-   "lang": "zh",
-   "voice_id": "APSIkVZudNbPAwyPoeVO",
-   "model": "eleven_v4",
-   "settings": {
-    "stability": 0.5,
-    "similarity_boost": 0.8,
-    "style": 0.3,
-    "speed": 1.08
-   },
-   "text": "五个要是上拍，该不该花钱买回来？"
+   "text": "国家文物局反对公开拍卖。"
   }
  ]
 }
