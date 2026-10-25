@@ -1,0 +1,17 @@
+url https://gol.gg/tournament/ajax.trlist.php
+  saved out/files/golgg_trlist_S13.json 0.0 MB
+url https://gol.gg/tournament/ajax.trlist.php
+  saved out/files/golgg_trlist_S15.json 0.0 MB
+url https://gol.gg/tournament/tournament-matchlist/Worlds%20Main%20Event%202023/
+  saved out/files/m_Worlds_Main_Event_2023.html 0.6 MB
+url https://gol.gg/tournament/tournament-matchlist/Worlds%20Main%20Event%202025/
+  saved out/files/m_Worlds_Main_Event_2025.html 0.6 MB
+url https://gol.gg/tournament/tournament-matchlist/Worlds%202025%20Main%20Event/
+  saved out/files/m_Worlds_2025_Main_Event.html 0.6 MB
+url https://gol.gg/tournament/tournament-matchlist/World%20Championship%202025/
+  saved out/files/m_World_Championship_2025.html 0.6 MB
+url https://gol.gg/tournament/tournament-matchlist/Worlds%202026%20Main%20Event/
+  saved out/files/m_Worlds_2026_Main_Event.html 0.6 MB
+url https://gol.gg/tournament/tournament-matchlist/Worlds%20Main%20Event%202026/
+  saved out/files/m_Worlds_Main_Event_2026.html 0.6 MB
+done
