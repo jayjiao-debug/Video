@@ -21,8 +21,10 @@ K.BRO = {
 		${W('M-2,44 L-16,44 M-16,44 L-24,38 M-16,44 L-24,50', 3)}<path d="M52,52 C64,56 70,66 66,76 L56,84 C54,74 52,66 42,58 Z"/><ellipse cx="62" cy="90" rx="26" ry="9" fill="none" stroke="currentColor" stroke-width="9"/>`,
 	羊: `<path d="M4,62 C8,48 28,40 48,40 C62,40 70,48 72,58 C70,70 58,78 42,80 L20,84 C10,84 4,74 4,62 Z"/>
 		${W('M58,40 C62,20 88,16 94,36 C98,54 82,64 72,56 C64,50 68,40 78,42', 10)}<path d="M14,82 L18,98 L26,84 Z"/>`,
-	猴: `<circle cx="60" cy="48" r="22"/><path d="M22,42 L50,36 L54,46 L26,52 Z"/><path d="M28,54 C20,56 16,62 18,68 C20,74 28,78 36,76 L46,76 L46,56 Z"/>
-		<path d="M26,80 C30,84 38,84 44,80 L44,74 L28,76 Z"/>${W('M90,46 C84,38 74,42 74,52 C74,62 84,66 90,58', 7)}`,
+	// 猴 (r3, note 3a): no brow bar. A round cranium, a deep concave face, a protruding rounded muzzle with the mouth open (a notch in
+	// the outline), a large round ear set mid-head at the back, a jagged cheek fringe under the jaw.
+	猴: `<path d="M46,20 C37,22 33,29 34,36 C34,41 37,45 39,49 C32,50 25,53 21,58 C18,62 19,66 23,66 L31,65 L24,70 C24,75 28,78 34,78 L50,82 C70,85 87,72 87,54 C87,33 73,18 58,18 C54,18 50,19 46,20 Z"/>
+		<circle cx="86" cy="50" r="12.5"/><path d="M34,77 L30,90 L39,83 L41,96 L48,85 L52,98 L56,85 L63,94 L64,80 Z"/>`,
 	鸡: `<circle cx="54" cy="58" r="19"/><path d="M38,52 L14,58 L38,66 Z"/>
 		<path d="M38,44 L40,22 L48,36 L54,16 L60,34 L68,18 L72,36 L80,30 L76,48 Z"/><ellipse cx="38" cy="78" rx="7" ry="12"/>
 		<path d="M66,70 L92,76 L86,84 L94,92 L70,92 Z"/>`,
@@ -32,11 +34,11 @@ K.BRO = {
 		<ellipse cx="11" cy="61" rx="7" ry="17"/><path d="M58,40 C56,22 72,12 86,18 L74,48 Z"/>`,
 };
 // eye position per head (a small incised dot, visible only when the head is lit; silhouettes don't need it)
-K.BEYE = {鼠: [40, 54], 牛: [38, 50], 虎: [36, 52], 兔: [36, 60], 龙: [42, 50], 蛇: [26, 46], 羊: [36, 54], 猴: [44, 50], 鸡: [48, 54], 狗: [38, 54], 猪: [40, 52]};
+K.BEYE = {鼠: [40, 54], 牛: [38, 50], 虎: [36, 52], 兔: [36, 60], 龙: [42, 50], 蛇: [26, 46], 羊: [36, 54], 猴: [40, 41], 鸡: [48, 54], 狗: [38, 54], 猪: [40, 52]};
 // mouth (spout point) per head, in box units
-K.BMOUTH = {鼠: [4, 65], 牛: [8, 72], 虎: [10, 72], 兔: [20, 72], 龙: [8, 72], 蛇: [4, 52], 羊: [6, 70], 猴: [20, 66], 鸡: [16, 60], 狗: [4, 66], 猪: [6, 66]};
+K.BMOUTH = {鼠: [4, 65], 牛: [8, 72], 虎: [10, 72], 兔: [20, 72], 龙: [8, 72], 蛇: [4, 52], 羊: [6, 70], 猴: [18, 68], 鸡: [16, 60], 狗: [4, 66], 猪: [6, 66]};
 /** a brother's head. (x, y) = neck base centre on screen, size = box px, face -1 left / +1 right. */
-const CUT = {牛: 'M4,64 L14,64', 猴: 'M30,53 L48,50', 虎: 'M50,32 L46,46 M62,30 L58,44 M74,36 L68,48 M86,50 L76,56 M88,64 L78,66', 狗: 'M24,64 L4,64'};
+const CUT = {牛: 'M4,64 L14,64', 虎: 'M50,32 L46,46 M62,30 L58,44 M74,36 L68,48 M86,50 L76,56 M88,64 L78,66', 狗: 'M24,64 L4,64'};
 K.bro = (kind, x, y, size, face, fill, extra = '') => { const m = CUT[kind] ? K.uid('bm') : null;
 	return `<g transform="translate(${x},${y}) scale(${(-face) * size / 100},${size / 100}) translate(-70,-100)" fill="${fill}" color="${fill}" ${extra}>${m ? `<mask id="${m}" maskUnits="userSpaceOnUse" x="-40" y="-40" width="180" height="180"><rect x="-40" y="-40" width="180" height="180" fill="#fff"/><path d="${CUT[kind]}" stroke="#000" stroke-width="3.2" stroke-linecap="round"/></mask>` : ''}<g ${m ? `mask="url(#${m})"` : ''}><path d="${NECK}"/>${K.BRO[kind]}</g></g>`; };
 K.broPt = (kind, x, y, size, face, p) => { const q = (p === 'mouth' ? K.BMOUTH : K.BEYE)[kind]; return [x + (-face) * (q[0] - 70) * size / 100, y + (q[1] - 100) * size / 100]; };

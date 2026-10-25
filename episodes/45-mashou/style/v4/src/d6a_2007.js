@@ -11,7 +11,7 @@ const chair = (x, fy, k, cat) => { const u = 330 * k, X = (d) => x + d * u, Y = 
 let rows = '';
 [[0.52, 770, 60, 9, '#2A201A'], [0.72, 845, 30, 7, '#1F1813'], [1.0, 965, -40, 5, S]].forEach(([k, fy, x0, n, col], r) => {
 	for (let i = 0; i < n; i++) rows += chair(x0 + i * 175 * k + (r % 2) * 30, fy, k, rnd(i + r * 10) > 0.15).replaceAll(S, col); });
-const hero = {x: 1000, y: 650, h: 170, curl: 1, glow: 1.0, mood: 'warm', rim: '#F4F0E6'};
+const hero = {x: 1030, y: 604, h: 162, curl: 1, glow: 0.8, key: 1.6, mood: 'warm', refl: '#DCE4E0', base: 'block', block: {w: 900, h: 38 / (162 / 925)}};   // r3: on a low black marble display block
 const svg = `<defs>
  <linearGradient id="wall" x1="0" x2="0" y1="0" y2="1"><stop offset="0" stop-color="#352B25"/><stop offset=".55" stop-color="#56463A"/><stop offset="1" stop-color="#43362C"/></linearGradient>
  <linearGradient id="floor" x1="0" x2="0" y1="0" y2="1"><stop offset="0" stop-color="#3D2F25"/><stop offset="1" stop-color="#1E1712"/></linearGradient>
@@ -41,7 +41,7 @@ ${rows.split('</path>').length ? '' : ''}
 <path d="M900,650 L1100,650 L1110,800 L890,800 Z" fill="#2A211B"/><rect x="884" y="642" width="232" height="14" fill="#3E3128"/>
 <path d="M884,642 L1116,642" stroke="#E6ECE6" stroke-width="2.5" opacity=".7"/>
 <ellipse cx="1000" cy="652" rx="100" ry="10" fill="#FF9A5A" opacity=".35" filter="url(#b12)"/>
-${K.horseHead(hero)}
+${window.NOHERO ? "" : K.horseHead(hero)}
 <!-- the rostrum, near right: lectern with its own small lamp; the gavel lying on the sound block -->
 <rect width="1920" height="1080" fill="url(#lect)"/>
 <path d="M1330,1080 L1360,660 L1690,660 L1720,1080 Z" fill="#20160F"/>

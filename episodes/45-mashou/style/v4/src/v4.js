@@ -2,7 +2,7 @@
 // Caption layer = ep43 v6 (capC lay2 bl1 ad + seal C1), copied in kit.js; this adds the story counter (12 dots with states).
 (() => {
 /** the story counter: label + 12 dots. states string, one char per dot in zodiac order 鼠牛虎兔龙蛇马羊猴鸡狗猪:
- *  h = at home (stone ivory) · y = you (copper) · r = back in China (red) · e = gone (hollow) · d = not back (dashed) */
+ *  h = at home (stone ivory) · y = you (copper) · r = back in China (solid ivory #FFF1DC, r3 note 7: no second saturated accent) · e = gone (hollow) · d = not back (dashed) */
 K.dots = (states) => [...states].map((c) => `<span class="o ${c}"></span>`).join('');
 K.CSS4 = `
 .tally .o{width:50px;height:50px;border-radius:25px;border-width:4px;margin:0 5px -8px}
@@ -10,7 +10,7 @@ K.CSS4 = `
 .tally .num{font-family:'Cormorant Garamond',serif;font-weight:600;font-size:64px;margin-right:16px}
 .tally .o.h{background:#E9DCC4;border-color:#E9DCC4}
 .tally .o.y{background:#E8894B;border-color:#FFD9A6;box-shadow:0 0 14px #FF9A5A}
-.tally .o.r{background:#EE4B3B;border-color:#EE4B3B}
+.tally .o.r{background:#FFF1DC;border-color:#FFF1DC}
 .tally .o.e{background:none;border-color:rgba(255,243,216,.75)}
 .tally .o.d{background:none;border:4px dashed rgba(255,243,216,.8)}
 .tally .row2{margin-top:6px}
@@ -54,7 +54,8 @@ K.arc = (p0, p1, h, s, o = {}) => {
 /** 海晏堂 west façade (frontal), its double stair, the fan pool and the two terraces. mode 'noon' | 'fire'. */
 K.ROW_L = ['狗', '猴', '马', '龙', '虎', '鼠'];   // front → back, left bank, facing right (you third from the front)
 K.ROW_R = ['猪', '鸡', '羊', '蛇', '兔', '牛'];   // front → back, across the pool, facing left (the snake across from you)
-K.seatAt = (side, i) => { const t = i / 5, s = 1 - 0.55 * t; const x = 360 + 430 * t, y = 930 - 280 * t; return {x: side < 0 ? x : 1920 - x, y, s, t}; };
+// r3 (note 3b): seats spaced on t = (i/5)^0.72, wider gaps at the front, so 狗's muzzle clears 猴
+K.seatAt = (side, i) => { const t = Math.pow(i / 5, 0.72), s = 1 - 0.55 * t; const x = 360 + 430 * t, y = 930 - 280 * t; return {x: side < 0 ? x : 1920 - x, y, s, t}; };
 K.facade = (mode) => {
 	const fire = mode === 'fire';
 	const lit = fire ? '#2A1712' : '#8C8371', sh = fire ? '#1E100C' : '#5C554A', win = fire ? 'url(#winfire)' : '#3A342E', trim = fire ? '#3A2018' : '#C4BAA2';
@@ -100,7 +101,7 @@ K.statue = (kind, side, i, mode, o = {}) => {
 	const b = K.stoneBody(x, y, h, face, stone); const [tx, ty] = b.top;
 	if (kind === '马') {
 		if (o.empty) return {svg: K.emptySeat(x, y, h, face, stone, fire ? '#FFB070' : '#E8D9B8') + `<ellipse cx="${tx}" cy="${ty}" rx="${30 * s}" ry="${7 * s}" fill="none" stroke="#FFC888" stroke-width="${4 * s}" opacity=".9"/><ellipse cx="${tx}" cy="${ty - 4 * s}" rx="${46 * s}" ry="${18 * s}" fill="#FF9A50" opacity=".22"/>`, top: [tx, ty], s};
-		const hero = {x: tx + face * 4 * s, y: ty + 22 * s, h: 200 * s, flip: face > 0, curl: 0, glow: o.glow ?? 0.9, mood: o.mood ?? 'warm', rim: o.rim ?? '#FFE6C0'};
+		const hero = {x: tx + face * 4 * s, y: ty + 22 * s, h: 200 * s, flip: face > 0, curl: 0, glow: o.glow ?? 0.9, key: o.key ?? 1.5, mood: o.mood ?? 'warm', rim: o.rim ?? '#FFE6C0', base: 'seat'};
 		const m = K.headPt(hero, 'mouth');
 		return {svg: b.svg, hero, mouth: m, top: [tx, ty], s};
 	}

@@ -6,7 +6,7 @@ const P = [960, 0];
 let statues = '', arcs = '';
 items.forEach(({k, side, i, st}) => {
 	statues += `<g filter="url(#rimSun)">${st.svg}</g>`;
-	if (st.hero) statues += K.horseHead(st.hero);
+	if (st.hero && !window.NOHERO) statues += K.horseHead(st.hero);
 	const land = [960 + (side < 0 ? -1 : 1) * (50 + 130 * (1 - i / 5)), 905 - 220 * (i / 5) - 4];
 	const you = k === '马';
 	arcs += K.arc(st.mouth, land, 150 * st.s + 40, st.s * (you ? 1.15 : 1), you ? {core: '#FFE2B4', glow: '#FFB070', gA: 0.5} : {});
