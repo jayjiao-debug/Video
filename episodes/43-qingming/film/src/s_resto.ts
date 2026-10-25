@@ -246,9 +246,11 @@ const lensWin = (t: number): {c: P2; span: number} => {
 };
 const camR = (t: number): Cam => {
 	const lc = lensAt(Math.min(t, b(61.5)));
-	if (t < b(60.35)) return lensCam(lc);
-	if (t < b(61)) { const u = clamp01((t - b(60.35)) / (b(60.75) - b(60.35))); const drift = clamp01((t - b(60.75)) / (b(61) - b(60.75))); const c = blend(lensCam(lc), ROOM, easeInOut(u)); return {...c, z: c.z * (1 + 0.01 * drift)}; }
-	if (t < b(61.5)) { const u = clamp01((t - b(61)) / (b(61.25) - b(61))); return blend({...ROOM, z: 1.01}, lensCam(lc), easeInOut(u)); }
+	// insert cuts on the beats (a dolly between the lens and the room passed through the seated restorer): lens → room on b60.5,
+	// room → lens on b61 (the peel), lens → R2 on b61.5
+	if (t < b(60.5)) return lensCam(lc);
+	if (t < b(61)) return {...ROOM, z: 1 + 0.012 * smooth(clamp01((t - b(60.5)) / (b(61) - b(60.5))))};
+	if (t < b(61.5)) return {...lensCam(lc), z: LENS_IN * (1 + 0.02 * clamp01((t - b(61)) / (b(61.5) - b(61))))};
 	const R2: Cam = {x: 1060, y: 610, z: 1.55, th: TH_R};
 	if (t < b(62)) return {...R2, z: R2.z * (1 + 0.012 * clamp01((t - b(61.5)) / (b(62) - b(61.5))))};     // a cut on b61.5 (no third whip); the magnifier swings aside in this wide
 	// 31: crane up over the long table to the tail (top-down), drop onto 藏者宜宝之

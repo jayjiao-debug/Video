@@ -24,7 +24,7 @@ Screenwriter, 2026-10-24. Files: this script + `lines.json` (49 lines, `[[start,
 | **6(g)** C1 tally | No bare 「240」 anywhere. The count lives on the cubes' own sticker numbers; any running tally stops on 「约240」. |
 | **Length ruling** | Taken: Z1 and the G3 trim. Kept: A5, B1 and G4a. **P1 stays** (it is the next cut only if 2:30 is required). |
 | **End-card question** (producer) | Default **「如果是你，愿意把大脑【留给科学】吗？」** (14 字, 16.0 wide); alternative 「你觉得，天才是【天生的】吗？」. Both fit the same 5.5 s end-card slot. 如果是你 marks the switch of 你 from the brain to the viewer (cold read #49). |
-| **Title** | Stays 「你是爱因斯坦的大脑」, pending the owner. |
+| **Title** | Owner, round 2: two lines, 「假如说你是」 (small) over 「爱因斯坦的大脑」 (big), in the opening title and the end card (alternative line 1 「假如你是」 shown for comparison). |
 
 **Length:** 160.5 − 3.0 (Z1) + 2.25 (E1 split) + 0.25 (G2a) − 1.5 (G3) − 0.25 (F1) − 0.5 (F2) = **157.75 s**. An ep43-sized retime (+8 %) gives about 2:50, under the 3:00 cap.
 
@@ -117,7 +117,7 @@ Screenwriter, 2026-10-24. Files: this script + `lines.json` (49 lines, `[[start,
 | C4 「坐车【横穿美国】」 | R2 「坐车【横穿美国】，6000多公里，」 (same words, same car) |
 | C5 「天才，藏在你【哪一块】？」 | G4b 「天才在哪？【没有找到】可信的证据。」, then F1–F4 |
 | L1 「16岁，你想：要是【追着光跑】呢？」 | P2 「你想了10年，答案叫【相对论】。」 (counter 16 → 26) |
-| P2 相对论 | E1b 「【你对了】」 and N1 「不是因为你的【相对论】」 |
+| P2 相对论 | E1b 「【你对了】」 and N1 「却不是因为【相对论】」 |
 | B1 「他的后脑勺就【大得吓人】」 | A5 「你约1.2公斤，不比别人重。」 (the baby's head flashes on the scale) |
 | K2 「你想：事物背后，一定【深藏着什么】。」 (compass shot) | F2 「你身上，一定【深藏着什么】。」, on the same compass shot: the boy's idea, now aimed at you |
 | A6 picture: Harvey's camera flash before the cut | G3: the same 1955 photo snaps in |
@@ -168,7 +168,7 @@ Screenwriter, 2026-10-24. Files: this script + `lines.json` (49 lines, `[[start,
 | 3 | C3 | 5.75 | 7.75 | 被放上【显微镜】， | 6 | 1.96 (cut-on) | | — 1985 · 加州大学 | 106 | **HARD CUT.** A microscope eyepiece circle fills the frame. A thin glass slide slides in and abstract light patterns bloom (no tissue). | G1, B14 |
 | 4 | C4 | 7.75 | 9.75 | 坐车【横穿美国】。 | 6 | 1.96 (cut-on) | | — 1997 · 美国公路 | 117 | **HARD CUT.** Night highway: a mid-90s teal-green sedan passes the camera, with a soft glow seeping from the trunk. Road signs flick past. No map. | B22, P6 |
 | 5 | C5 | 9.75 | 12.25 | 天才，藏在你【哪一块】？ | 8 | 2.24 (cut-on) · key | | — 2026 · 今天 | 147 | **HARD CUT. Centred.** A dark storage room today. The camera glides over drawers of glass slides and rows of numbered cubes; each flickers as if scanned, and none lights. | framing (G1–G4) |
-| — | TITLE | 12.25 | 14.75 | 你是爱因斯坦的大脑 | (9) | | | — | 147 → 0 ◀◀ | **The rewind, all motion (carry-forward 3):** ◀◀, tracking lines, the counter spinning back. The cubes fly out of the drawers, back past the car, the microscope and the box, and fuse into one glowing brain. It settles into a newborn's head silhouette and the title lands on it (the first drop, owner row 133). It hands over to B1 as the mother leans into frame. | — |
+| — | TITLE | 12.25 | 14.75 | 假如说你是 / 爱因斯坦的大脑 | (12) | | | — | 147 → 0 ◀◀ | **The rewind, all motion (carry-forward 3):** ◀◀, tracking lines, the counter spinning back. The cubes fly out of the drawers, back past the car, the microscope and the box, and fuse into one glowing brain. It settles into a newborn's head silhouette and the title lands on it (the first drop, owner row 133). It hands over to B1 as the mother leans into frame. | — |
 | 6 | B1 | 14.75 | 18.25 | 刚出生，他的后脑勺就【大得吓人】。 | 13 | 2.96 | | — 1879 · 德国乌尔姆 / 几周后就正常了（妹妹回忆） | 0 | A cradle. The mother leans in and startles back. The baby's head silhouette has a big, angular back (comic exaggeration, no face), labelled 「又大又方」. You glow small inside it. | L1, L2 |
 | 7 | K1 | 18.25 | 21.50 | 四五岁时，爸爸给他看【指南针】。 | 12 | 2.81 | L1 | — 四五岁 / 父亲给他看指南针（《自述》）/ "深刻而难忘的印象" | 4 → 5 | The father (whole figure) holds out a brass pocket compass and the boy takes it in both hands. Close on it: the boy turns it, and the needle swings back to the same direction every time. Your glow is dim (a 他 line). | L5 |
 | 8 | K2 | 21.50 | 25.25 | 你想：事物背后，一定【深藏着什么】。 | 13 | 2.96 · key | L2 | 〃 | 5 | **Teaches the 你/他 rule:** your glow flares as the line types. Push into the needle's tip: faint field lines fan out behind it. **This exact shot returns at F2.** | L5 (本片译) |
@@ -177,7 +177,7 @@ Screenwriter, 2026-10-24. Files: this script + `lines.json` (49 lines, `[[start,
 | 11 | P2 **v2** | 31.75 | 35.00 | 你想了10年，答案叫【相对论】。 | 11 | 2.67 · key | L2 | — 1905 / 4篇论文（美国物理联合会） | 26 | Four sheets drop onto his desk, one per beat. The third, 「论动体的电动力学」, lights up as the L1 beam folds into it and the word 「相对论」 glows over it. The fourth carries a small 「E=mc²」. | L6 (10 years → relativity), L8 |
 | 12 | E1a **v2** | 35.00 | 38.25 | 1919年日全食：星光真的【弯了】。 | 11 | 2.67 | L1 | — 1919 · 日全食 / 结果公布（英国皇家学会）/ 头条："天上的光全歪了" | 40 | A black sun with a bright ring. Lines of starlight pass it and visibly bend. | L10 (NYT headline, 本片译) |
 | 13 | E1b **v2** | 38.25 | 40.50 | 【你对了】，【他红了】。 | 6 | 1.96 (cut-on, on the beat) | L2 | 〃 | 40 | 你对了: your glow flares. 他红了: mock headlines stack over the sky one per beat (our own mastheads), the biggest 「天上的光全歪了」, and his silhouette in flashbulbs. | L10 |
-| 14 | N1 **v2** | 40.50 | 44.00 | 他拿诺奖，不是因为你的【相对论】。 | 13 | 2.96 | | — 1922 / 理由：光电效应（诺贝尔官网） | 43 | A prize diploma slides in, its line 「光电效应」 lit. The relativity sheet from P2 sits beside it, unlit. | L11 |
+| 14 | N1 **v3** | 40.50 | 44.00 | 他拿了诺奖，却不是因为【相对论】。 | 13 | 2.96 | | — 1922 / 理由：光电效应（诺贝尔官网） | 43 | A prize diploma slides in, its line 「光电效应」 lit. The relativity sheet from P2 sits beside it, unlit. | L11 |
 | 15 | W1 | 44.00 | 47.25 | 1939年，怕德国先造出【原子弹】， | 11 | 2.67 | L1 | — 1939.8.2 / 致罗斯福（美国国家档案馆） | 60 | A typed letter fills the frame, dated "August 2nd, 1939". | L13 |
 | 16 | W2 | 47.25 | 50.25 | 他签信，建议美国【也造】。 | 9 | 2.39 | L2 | 〃 | 60 | Side view at a desk: he signs (whole figure, pen in hand). Your glow dims. | L13 |
 | 17 | W3 | 50.25 | 53.75 | 后来他说：这是一生【最大的错误】。 | 13 | 2.96 · key | | — 1954 / 对鲍林说（鲍林当天笔记） | 75 | Years later, an old man's silhouette at a window, the letter's outline faint in the glass. No cloud, no city. | L13 |
@@ -263,7 +263,7 @@ Screenwriter, 2026-10-24. Files: this script + `lines.json` (49 lines, `[[start,
 | L7 | ✓ | P1 | 专利局 · 三级技术员 · stamp 1902 · 伯尔尼 | Swiss Federal Institute of IP |
 | L8 | ✓ | P2 stamp + picture | 1905 · 4篇论文 · 论动体的电动力学 · E=mc² | AIP Center for History of Physics |
 | L10 | ✓ (E1a's wording is a plain gloss; see "Where I differ" 1) | E1a, E1b | 1919 · 日全食 · 星光真的弯了 (= the NYT's "Lights All Askew in the Heavens") · 你对了 (proved right) · 他红了 (world fame) · mock headline 天上的光全歪了 | Royal Society 2024; NYT 10 Nov 1919 (ProQuest) |
-| L11 | ✓ | N1 | 他拿诺奖，不是因为你的相对论; stamp 1922 · 光电效应 | nobelprize.org |
+| L11 | ✓ | N1 | 他拿了诺奖，却不是因为相对论; stamp 1922 · 光电效应 | nobelprize.org |
 | L13 | ✓ (keeps the "some justification" half) | W1–W3 | 1939 · 怕德国先造出原子弹 · 他签信，建议美国也造 · 一生最大的错误; stamps 1939.8.2 · 致罗斯福 / 1954 · 对鲍林说 | National Archives; OSU Pauling papers (16 Nov 1954) |
 | B2 | ✓ caution (Dukas's account) | S1, S2 | 医生劝他手术 · 我做完了我的那份，该走了 (本片译); stamp 据秘书杜卡斯回忆 | PBS 2023; *An. Med. Interna* 2006; Princeton UP 2020 |
 | B1 | ✓ (minute disputed → 凌晨1点多) | D1 + stamp | 76岁 · 1955.4.18 · 凌晨1点多 · 普林斯顿医院 · 腹主动脉瘤破裂 | Daily Princetonian 1955; Falk 2013 |

@@ -57,7 +57,7 @@ export const PZ = {
 	/** look up while holding something up in the near hand */
 	lookUpHold: grounded({lean: -4, neck: -26, lt: 3, lk: 3, rt: -5, rk: 4, la: 120, le: 26, ra: 4, re: 14}),
 	/** hold something forward at face height (showing it / looking at it) */
-	showFace: grounded({lean: 2, neck: -4, lt: 3, lk: 3, rt: -5, rk: 4, la: 96, le: 28, ra: 4, re: 14}),
+	showFace: grounded({lean: 2, neck: -4, lt: 3, lk: 3, rt: -5, rk: 4, la: 86, le: 26, ra: 4, re: 14}),
 	/** near hand raised to the back of the head (to pull out a hairpin) */
 	reachHead: grounded({lean: 4, neck: 10, lt: 3, lk: 3, rt: -5, rk: 4, la: 165, le: 95, ra: 4, re: 14}),
 	/** phone held low at the chest, looking down at it */

@@ -69,7 +69,7 @@ export const Moon: React.FC<{x: number; y: number; r: number; c?: string; o?: nu
 const CRACK: [number, number][] = [[0.06, -1.05], [-0.05, -0.72], [0.09, -0.48], [-0.07, -0.2], [0.05, 0.06], [-0.08, 0.3], [0.06, 0.55], [-0.04, 0.8], [0.04, 1.05]];
 const crackPoly = (side: 'L' | 'R') => { const pts = CRACK.map(([x, y]) => `${x},${y}`).join(' L'); return side === 'L' ? `M-1.2,-1.2 L${pts} L-1.2,1.2 Z` : `M1.2,-1.2 L${pts} L1.2,1.2 Z`; };
 /** a bronze mirror (front face, polished) or one half of it. gap = how far the halves are apart (px). */
-export const Mirror: React.FC<{x: number; y: number; r: number; id: string; half?: 'L' | 'R' | 'both'; gap?: number; moon?: boolean; glow?: number; tilt?: number}> = ({x, y, r, id, half = 'both', gap = 0, moon = true, glow = 1, tilt = 0}) => {
+export const Mirror: React.FC<{x: number; y: number; r: number; id: string; half?: 'L' | 'R' | 'both'; gap?: number; moon?: boolean; glow?: number; tilt?: number; seam?: number}> = ({x, y, r, id, half = 'both', gap = 0, moon = true, glow = 1, tilt = 0, seam = 0.55}) => {
 	const halves: ('L' | 'R')[] = half === 'both' ? ['L', 'R'] : [half];
 	return <g>
 		{glow > 0 && <TokGlow x={x} y={y} r={r * 1.9} o={glow} />}
@@ -83,7 +83,7 @@ export const Mirror: React.FC<{x: number; y: number; r: number; id: string; half
 					{moon && <><circle cx={r * 0.18} cy={-r * 0.2} r={r * 0.3} fill={AU.core} opacity={0.75} /><circle cx={r * 0.18} cy={-r * 0.2} r={r * 0.42} fill={AU.core} opacity={0.18} /></>}
 					<path d={`M${-r * 0.7},${-r * 0.35} Q${-r * 0.5},${-r * 0.75} ${-r * 0.1},${-r * 0.86}`} stroke={AU.core} strokeWidth={r * 0.05} fill="none" strokeLinecap="round" opacity={0.7} />
 				</g>
-				<path d={'M' + CRACK.map(([cx, cy]) => `${cx * r},${cy * r}`).join(' L')} fill="none" stroke={AU.dark} strokeWidth={Math.max(2, r * 0.018)} opacity={half === 'both' && gap === 0 ? 0.55 : 0} />
+				<path d={'M' + CRACK.map(([cx, cy]) => `${cx * r},${cy * r}`).join(' L')} fill="none" stroke={AU.dark} strokeWidth={Math.max(2, r * 0.018)} opacity={half === 'both' && gap === 0 ? seam : 0} />
 			</g>; })}
 	</g>;
 };
@@ -216,7 +216,7 @@ export const Bike: React.FC<{x: number; y: number; s?: number}> = ({x, y, s = 1}
 	{[-170, 170].map((cx) => <path key={`f${cx}`} d={`M${cx - 128},-10 A130,130 0 0 1 ${cx + 128},-10`} fill="none" stroke={PP.ink} strokeWidth={10} />)}
 	<path d="M-20,-24 L-170,-24 L-170,24 L-20,24 Z" fill={PP.ink} opacity={0.85} />
 	<path d="M-180,-130 L-60,-130 M-170,-130 L-170,0 M-120,-130 L-110,-40" stroke={PP.ink} strokeWidth={8} fill="none" />
-	<path d="M-150,0 L-175,120 M-150,0 L-125,120" stroke={PP.ink} strokeWidth={8} /></g>;
+	<path d="M-170,10 L-200,120 M-170,10 L-140,120 M-206,120 L-134,120" stroke={AG.deep} strokeWidth={10} strokeLinecap="round" /></g>;
 export const Watch: React.FC<{x: number; y: number; s?: number}> = ({x, y, s = 1}) => <g transform={`translate(${x},${y}) scale(${s})`} filter="url(#pd)">
 	<rect x={-34} y={-150} width={68} height={300} rx={14} fill={PP.brick} />
 	<circle r={86} fill={AG.mid} /><circle r={72} fill={PP.cream} />

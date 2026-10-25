@@ -13,7 +13,7 @@ ffmpeg -loglevel error -y -i $BED -af loudnorm=I=-14:TP=-1.5:LRA=11:measured_I=$
 M="$OUT/汉柏的孩子_$TAG.mp4"; S="$OUT/汉柏的孩子_${TAG}_发送版.mp4"
 ffmpeg -loglevel error -y -i $PIC -i $TMP/a.wav -map 0:v -map 1:a -c:v libx264 -preset slow -crf 17 -pix_fmt yuv420p -c:a aac -b:a 320k -movflags +faststart "$M"
 D=$(ffprobe -v error -show_entries format=duration -of csv=p=0 "$M")
-VB=$(python3 -c "print(int((26.5*8*1024*1024/ $D - 130000)/1000))")k
+VB=$(python3 -c "print(int((25.5*8*1024*1024/ $D - 130000)/1000))")k
 cd $TMP && ffmpeg -loglevel error -y -i $PIC -c:v libx264 -preset slow -b:v $VB -pass 1 -an -f null /dev/null && \
   ffmpeg -loglevel error -y -i $PIC -i $TMP/a.wav -map 0:v -map 1:a -c:v libx264 -preset slow -b:v $VB -pass 2 -pix_fmt yuv420p -c:a aac -b:a 128k -movflags +faststart "$S"
 ls -la "$M" "$S"

@@ -1,6 +1,6 @@
 // Scene framework: scenes are pure functions of film time. A scene may declare an IN transition that overlaps the end of
 // the previous scene: both are rendered (prev → slot 0, this → slot 1) and composited with the transition mask.
-import {Stage, renderStage, composite, Xf, Grade, clamp01} from './core';
+import {Stage, renderStage, composite, Xf, Grade, clamp01, renderer} from './core';
 import {subtitles, Line} from './hud';
 import {drawFurniture} from './furniture';
 import LINES_JSON from '../../lines_bars.json';
@@ -30,4 +30,23 @@ export const renderFilm = (t: number, hud: HTMLElement) => {
 	if (!fc.hideSubs) subtitles(hud, LINES, t);
 	drawFurniture(hud, t, {hideAll: fc.hideFurniture});
 	fc.hud?.(hud);
+	if (document.body.classList.contains('ad')) adaptBacking(hud);
+};
+
+/** backing only where it is needed: for each HUD block, measure the rendered picture behind it and set --bk (0 = dark enough,
+ *  no backing … 1 = bright, full soft backing). A pure function of the frame, so it follows cuts and camera moves. */
+const BACKED = ':scope > .sub, :scope > .subc, :scope > .stamp, :scope > .blk, :scope > .age, :scope > .tally';
+let px = new Uint8Array(0);
+const adaptBacking = (hud: HTMLElement) => {
+	const gl = renderer.getContext(), Hc = gl.drawingBufferHeight, Wc = gl.drawingBufferWidth;
+	for (const el of Array.from(hud.querySelectorAll<HTMLElement>(BACKED))) {
+		const r = el.getBoundingClientRect(); const x0 = Math.max(0, Math.floor(r.left)), x1 = Math.min(Wc, Math.ceil(r.right)), y0 = Math.max(0, Math.floor(r.top)), y1 = Math.min(Hc, Math.ceil(r.bottom));
+		const w = x1 - x0, h = y1 - y0; if (w < 4 || h < 4) continue;
+		if (px.length < w * h * 4) px = new Uint8Array(w * h * 4);
+		gl.readPixels(x0, Hc - y1, w, h, gl.RGBA, gl.UNSIGNED_BYTE, px);
+		let sum = 0, bright = 0, n = 0;
+		for (let j = 0; j < h; j += 3) for (let i = 0; i < w; i += 3) { const k = (j * w + i) * 4, L = (0.2126 * px[k] + 0.7152 * px[k + 1] + 0.0722 * px[k + 2]) / 255; sum += L; if (L > 0.62) bright++; n++; }
+		const mean = sum / n, frac = bright / n, bk = clamp01(Math.max((mean - 0.4) / 0.22, (frac - 0.12) / 0.3));
+		el.style.setProperty('--bk', bk.toFixed(2)); el.dataset.bk = bk.toFixed(2);
+	}
 };

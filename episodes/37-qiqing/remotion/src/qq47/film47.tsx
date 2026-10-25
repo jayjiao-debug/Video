@@ -41,14 +41,20 @@ const subsAt = (t: number) => {
 	const prev = block ? LINES.slice(0, i).filter((l) => l[4] === block && l[3] !== 'p').slice(-1) : [];
 	return {rows: [...prev.map((l) => ({s: l[2], o: 0.55})), {s, n}]};
 };
+/** a slow camera breath on every scene: zoom and drift follow sin(π·k), so they are exactly 0 at each scene's first and
+    last frame (match cuts keep their positions) and the picture is never frozen in between */
+const Breath: React.FC<{t: number; i: number; a: number; b: number; children: React.ReactNode}> = ({t, i, a, b, children}) => {
+	const k = Math.max(0, Math.min(1, (t - a) / (b - a))), w = Math.sin(Math.PI * k), s = 1 + 0.035 * w, px = (i % 2 ? 1 : -1) * 16 * w;
+	return <g transform={`translate(${960 + px},540) scale(${s}) translate(-960,-540)`}>{children}</g>;
+};
 const Film: React.FC<{t: number}> = ({t}) => {
 	const sc = SCENES.find((s) => t >= s.a && t < s.b) ?? SCENES[SCENES.length - 1];
-	const C = sc.C, prev = SCENES[SCENES.indexOf(sc) - 1];
+	const i = SCENES.indexOf(sc), C = sc.C, prev = SCENES[i - 1];
 	/* 'F' = a 0.3 s cross-dissolve from the previous scene (its own motion continues under it) */
 	const w = sc.wipe ? seg(t, sc.a, sc.a + 0.3) : 1;
 	return <g>
-		{w < 1 && prev && <prev.C u={t - prev.a} d={prev.b - prev.a} tag={prev.tag} />}
-		<g opacity={sc.wipe === 'F' ? ease(w) : 1}><C u={t - sc.a} d={sc.b - sc.a} tag={sc.tag} /></g>
+		{w < 1 && prev && <Breath t={t} i={i - 1} a={prev.a} b={prev.b}><prev.C u={t - prev.a} d={prev.b - prev.a} tag={prev.tag} /></Breath>}
+		<g opacity={sc.wipe === 'F' ? ease(w) : 1}><Breath t={t} i={i} a={sc.a} b={Math.min(sc.b, END)}><C u={t - sc.a} d={sc.b - sc.a} tag={sc.tag} /></Breath></g>
 	</g>;
 };
 export const Frame47: React.FC<{t: number}> = ({t}) => {

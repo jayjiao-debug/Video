@@ -1,6 +1,6 @@
 import React from 'react';
 import {W, H, rnd, lerp, Glow, Rimmed, fkPose, Look4, Pose, B, jointAt, Sky, HeadGlow} from './kit44';
-import {Cam, seg, ease, eo, ei, sm, K2Scene, K2_C, k2Glow} from './demo44';
+import {Cam, seg, ease, eo, ei, sm, K2Scene, K2_C, k2Glow, skullBack, GLOW_BACK} from './demo44';
 import {SANS, ROSE, INK} from './skin44';
 import {Motes, Wallpaper, Frame, Curtain, Cloud} from './bg44';
 /* ep44 rough cut, builder B: private copies of demo44 internals (the K2 compass close-up and the K1 house camera),
@@ -56,7 +56,7 @@ export const homeCam = (t: number): {cx: number; cy: number; z: number} => {
 	return {cx, cy, z};
 };
 /** the boy's head on screen in the K1 house shot at demo time tm */
-export const kidHeadScreen = (tm: number): P2 => { const c = homeCam(tm), h = headC(kidP, KX + 1080, 904, 430, true); return scr(h, c.cx, c.cy, c.z); };
+export const kidHeadScreen = (tm: number): P2 => { const c = homeCam(tm), h = skullBack(kidP, KX + 1080, 904, 430, true, GLOW_BACK); return scr(h, c.cx, c.cy, c.z); };   // lands on the head glow (round 2: back of the skull)
 
 /* ---------- the ending on K2's exact shot (F2–F4), now Fixer 1's fixed close-up from demo44 (`K2Scene`: the boy's own forearms,
    real thumbs, child scale). ft = story time; F2 starts at 142.0 = demo 21.5 (the 22 s frame). Changes from the demo: no push into
@@ -89,7 +89,11 @@ void ei; void H;
 export const END_T = 152.75;
 const SOURCES = ['资料：Witelson 等《柳叶刀》1999 · Falk 等《Brain》2013 · Levy《新泽西月刊》1978 · Burrell《科学美国人》2015 · NPR 2005',
 	'美国国家健康与医学博物馆 · Paterniti（C-SPAN 2000）· 诺贝尔奖官网 · 美国国家档案馆 · 爱因斯坦《自述》'];
-const TITLE = '你是爱因斯坦的大脑';
+/* round 2 (owner note 2): the title in two lines, 「假如说你是」 (small) over 「爱因斯坦的大脑」 (big); same reveal span as the 9-character title */
+const TITLE_L1 = '假如说你是', TITLE_L2 = '爱因斯坦的大脑';
+const CARD_CH = [...TITLE_L1.split('').map((ch, j) => ({ch, x: 960 + (j - (TITLE_L1.length - 1) / 2) * 48, y: 318, fs: 42})),
+	...TITLE_L2.split('').map((ch, j) => ({ch, x: 960 + (j - (TITLE_L2.length - 1) / 2) * 74, y: 404, fs: 68}))];
+const CARD_STEP = 0.4 / (CARD_CH.length - 1);
 const CARD_SERIF = "'Noto Serif CJK SC','Noto Serif CJK',serif";
 /** the channel monogram: a ring that draws itself, an italic J, a small four-point spark (rose-gold, the film's one colour) */
 const JMark: React.FC<{draw: number}> = ({draw}) => { const r = 50, c = 2 * Math.PI * r, k = Math.min(1, draw * 1.3), spark = Math.max(0, Math.min(1, (draw - 0.6) / 0.4));
@@ -102,13 +106,12 @@ const JMark: React.FC<{draw: number}> = ({draw}) => { const r = 50, c = 2 * Math
 export const EndCard: React.FC<{t: number}> = ({t}) => {
 	if (t < END_T - 0.05) return null;
 	const dim = sm(seg(t, END_T, END_T + 0.6)), mono = seg(t, END_T + 0.5, END_T + 1.6), pill = eo(seg(t, END_T + 1.3, END_T + 1.7)), src = sm(seg(t, END_T + 1.8, END_T + 2.4));
-	const adv = 74, x0 = 960 - (TITLE.length - 1) * adv / 2;
 	return <g>
 		<rect width={W} height={H} fill="#07090a" opacity={0.7 * dim} />
 		<defs><linearGradient id="ecRose" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stopColor="#ffe2d2" /><stop offset="0.55" stopColor={ROSE} /><stop offset="1" stopColor="#d98a6c" /></linearGradient></defs>
-		<g transform="translate(960,236)" opacity={sm(seg(t, END_T + 0.4, END_T + 0.8))}><JMark draw={mono} /></g>
-		{TITLE.split('').map((ch, i) => { const k = seg(t, END_T + 0.15 + i * 0.05, END_T + 0.45 + i * 0.05); return k > 0 &&
-			<text key={i} x={x0 + i * adv} y={392 + 14 * (1 - eo(k))} textAnchor="middle" style={{fontFamily: CARD_SERIF, fontWeight: 900, fontSize: 68}} fill="url(#ecRose)" stroke="rgba(30,14,10,0.55)" strokeWidth={4} paintOrder="stroke" opacity={eo(k)}>{ch}</text>; })}
+		<g transform="translate(960,196)" opacity={sm(seg(t, END_T + 0.4, END_T + 0.8))}><JMark draw={mono} /></g>
+			{CARD_CH.map((c, i) => { const k = seg(t, END_T + 0.15 + i * CARD_STEP, END_T + 0.45 + i * CARD_STEP); return k > 0 &&
+				<text key={i} x={c.x} y={c.y + 14 * (1 - eo(k))} textAnchor="middle" style={{fontFamily: CARD_SERIF, fontWeight: 900, fontSize: c.fs}} fill="url(#ecRose)" stroke="rgba(30,14,10,0.55)" strokeWidth={c.fs > 50 ? 4 : 3} paintOrder="stroke" opacity={eo(k)}>{c.ch}</text>; })}
 		{pill > 0.01 && <g transform={`translate(960,712) scale(${0.85 + 0.15 * pill})`} opacity={pill}>
 			<rect x={-250} y={-33} width={500} height={66} rx={33} fill="rgba(255,178,145,0.10)" stroke={ROSE} strokeOpacity={0.8} strokeWidth={2} />
 			<text x={0} y={11} textAnchor="middle" style={{fontFamily: SANS, fontWeight: 700, fontSize: 31, letterSpacing: '0.08em'}} fill={INK}>关注 Juno · 一起看懂世界</text></g>}

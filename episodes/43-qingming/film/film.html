@@ -24,5 +24,62 @@ html,body{margin:0;background:#000;width:1920px;height:1080px;overflow:hidden}
 .tally .o{display:inline-block;width:30px;height:30px;border-radius:15px;border:3px solid #FFF3D8;margin:0 5px -3px;box-sizing:border-box}
 .tally .o.f{background:#EE4B3B;border-color:#EE4B3B}
 .tally .l{font-size:30px;font-weight:600;opacity:.85}
-.lbl{position:absolute;font-weight:700;font-size:44px;white-space:nowrap}
+.lbl{position:absolute;font-weight:700;font-size:56px;white-space:nowrap}
+
+/* ---- caption layout trials (body.capA / capB / capC); no class = v4 ---- */
+body.capA .sub,body.capB .sub,body.capC .sub,body.capA .subc,body.capB .subc,body.capC .subc{font-size:64px;line-height:88px;letter-spacing:.03em}
+body.capA .sub,body.capB .sub,body.capC .sub{left:116px}
+body.capA .stamp,body.capB .stamp,body.capC .stamp{top:64px;right:56px;transform-origin:top right;scale:.6}
+body.capA .mark,body.capB .mark,body.capC .mark{top:26px;right:56px;font-size:18px}
+body.capA .age,body.capB .age,body.capC .age{left:96px;bottom:54px;transform-origin:left bottom;scale:.55}
+body.capA .tally,body.capB .tally,body.capC .tally{left:360px;bottom:58px;transform-origin:left bottom;scale:.6}
+/* A: brighter red with a dark outline glow */
+body.capA .sub .k,body.capA .subc .k{color:#FF5A45;text-shadow:0 0 2px #120805,0 0 3px #120805,0 0 6px rgba(18,8,5,.95),0 2px 10px rgba(18,8,5,.85),0 3px 26px rgba(18,8,5,.6)}
+body.capA .sub,body.capA .subc{text-shadow:0 0 2px rgba(12,8,5,.95),0 0 4px rgba(12,8,5,.8),0 2px 8px rgba(12,8,5,.7),0 3px 26px rgba(12,8,5,.6)}
+/* B: a soft dark band behind the caption block (fades with the line) */
+body.capB .sub::before,body.capB .subc::before{content:'';position:absolute;z-index:-1;left:-140px;right:-120px;top:-34px;bottom:-34px;background:radial-gradient(ellipse 60% 70% at 40% 50%,rgba(14,9,6,.62),rgba(14,9,6,.38) 55%,rgba(14,9,6,0) 100%);filter:blur(8px)}
+body.capB .subc::before{left:22%;right:22%}
+body.capB .sub,body.capB .subc{z-index:0}
+body.capB .sub .k,body.capB .subc .k{color:#FF6450}
+/* lay2: corner elements pushed to the frame edges (30 px), small J mark bottom-right */
+.jl{display:none}
+body.lay2 .mark{top:18px;right:30px}
+body.lay2 .stamp{top:48px;right:30px}
+body.lay2 .age{left:30px;bottom:26px}
+body.lay2 .tally{left:262px;bottom:28px}
+body.lay2 .jl{display:block;position:absolute;right:30px;bottom:26px;width:34px;height:34px;border-radius:17px;border:1.5px solid #E9D3A0;color:#E9D3A0;font-family:'Noto Serif CJK SC',serif;font-weight:900;font-size:21px;line-height:33px;text-align:center;box-sizing:border-box;text-shadow:0 1px 4px rgba(12,8,5,.6);box-shadow:0 1px 6px rgba(12,8,5,.35)}
+/* bottom-left as one block (bl1 one row · bl2 stacked · bl3 one plaque) */
+.blk{display:contents}
+body.bl1 .blk,body.bl2 .blk,body.bl3 .blk{display:flex;position:absolute;left:30px;bottom:26px;transform-origin:left bottom;scale:.58;z-index:0}
+body.bl1 .blk .age,body.bl2 .blk .age,body.bl3 .blk .age,body.bl1 .blk .tally,body.bl2 .blk .tally,body.bl3 .blk .tally{position:static;scale:none}
+body.bl1 .blk .age::before,body.bl2 .blk .age::before,body.bl3 .blk .age::before,body.bl1 .blk .tally::before,body.bl2 .blk .tally::before,body.bl3 .blk .tally::before{display:none}
+body.bl1 .blk,body.bl3 .blk{flex-direction:row;align-items:flex-end;gap:26px}
+body.bl1 .blk .tally,body.bl3 .blk .tally{border-left:2px solid rgba(255,243,216,.45);padding-left:26px;margin-bottom:4px}
+body.bl1 .blk::before,body.bl2 .blk::before{content:'';position:absolute;z-index:-1;left:-70px;right:-90px;top:-40px;bottom:-34px;background:radial-gradient(ellipse 60% 64% at 46% 56%,rgba(16,11,7,.6),rgba(16,11,7,.32) 60%,rgba(16,11,7,0) 100%);filter:blur(8px)}
+body.bl2 .blk{flex-direction:column;align-items:flex-start;gap:6px}
+body.bl2 .blk .tally{order:-1;margin-left:4px}
+body.bl3 .blk{background:rgba(18,12,8,.55);border:1.5px solid rgba(233,211,160,.38);border-radius:12px;padding:16px 28px 14px 18px}
+body.bl3 .blk .tally{border-left-color:rgba(238,75,59,.8)}
+/* ad: adaptive backing — the soft scrim appears only where the picture behind is bright (--bk set per frame) */
+body.ad .sub,body.ad .subc,body.ad .stamp,body.ad .blk,body.ad .age,body.ad .tally{z-index:0}
+body.ad .sub::before,body.ad .subc::before,body.ad .stamp::before,body.ad .age::before,body.ad .tally::before,body.ad .blk::before{content:'';position:absolute;z-index:-1;left:-60px;right:-60px;top:-26px;bottom:-26px;background:radial-gradient(ellipse 58% 62% at 50% 50%,rgba(16,11,7,.62),rgba(16,11,7,.36) 58%,rgba(16,11,7,0) 100%);filter:blur(6px);opacity:var(--bk,0)}
+body.ad .subc::before{left:22%;right:22%}
+body.ad .blk::before{left:-70px;right:-90px;top:-40px;bottom:-34px}
+body.ad .blk .age::before,body.ad .blk .tally::before{display:none}
+body.lay2 .mark{display:none}
+body.lay2 .stamp{top:30px}
+.seal{position:absolute;right:30px;bottom:24px;line-height:0;filter:drop-shadow(0 1px 2px rgba(12,8,5,.35))}
+/* shade trials over the painting (window.NOBANDS turns the lamplight bands off) */
+body.sh2 .sub,body.sh2 .subc,body.sh2 .stamp,body.sh2 .age,body.sh2 .tally{z-index:0}
+body.sh2 .sub::before,body.sh2 .subc::before,body.sh2 .stamp::before,body.sh2 .age::before,body.sh2 .tally::before{content:'';position:absolute;z-index:-1;left:-60px;right:-60px;top:-26px;bottom:-26px;background:radial-gradient(ellipse 58% 62% at 50% 50%,rgba(16,11,7,.6),rgba(16,11,7,.34) 58%,rgba(16,11,7,0) 100%);filter:blur(6px)}
+body.sh3 #hud{color:#2A1F17}
+body.sh3 .sh{text-shadow:0 0 3px rgba(255,246,226,.95),0 0 10px rgba(255,246,226,.8),0 0 26px rgba(255,246,226,.55)}
+body.sh3 .mark{color:#4a3b2c}
+body.sh3 .tally .o{border-color:#2A1F17}
+body.sh4 .sub,body.sh4 .subc{background:rgba(18,12,8,.58);padding:0 20px;margin-left:-20px;border-radius:6px}
+body.sh4 .subc{left:50%;right:auto;transform:translateX(-50%);margin-left:0}
+body.sh4 .stamp,body.sh4 .age,body.sh4 .tally{background:rgba(18,12,8,.5);border-radius:10px;padding:14px 26px}
+body.sh4 .stamp{padding-right:30px}
+/* C: key words as white on a red tag */
+body.capC .sub .k,body.capC .subc .k{color:#FFF8EC;background:#D8392A;box-shadow:-.08em 0 0 #D8392A,.08em 0 0 #D8392A;text-shadow:none}
 </style></head><body><canvas id="c" width="1920" height="1080"></canvas><div id="hud"></div><script type="module" src="main.js"></script></body></html>
