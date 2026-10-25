@@ -9,15 +9,15 @@
 const HEAD = `M470,196 C430,250 330,390 250,500 C222,540 196,572 178,600 C150,636 140,676 152,708
 C160,728 182,738 206,736 L248,739 C228,748 212,760 216,774 C224,796 262,806 296,796
 C350,782 420,772 486,764 C566,754 622,728 652,688 C688,640 700,594 692,552
-C700,660 670,800 610,884 L1036,884 C1010,740 962,520 888,380
+C702,660 692,800 646,884 L1036,884 C1010,740 962,520 888,380
 C836,270 732,190 640,166 C580,150 512,160 470,196 Z`;
 const EAR_UP = `M502,190 C486,150 490,92 528,24 C562,70 588,122 592,172 Z`;
 const EAR_IN_UP = `M512,178 C502,140 508,96 528,56 C550,94 564,134 568,172 Z`;
 // folded ear: the cup stands from the root to the bend (y≈96); above it the top third hangs forward and down
 // one closed outline: front root → up the cup → the rounded fold → the tip hanging forward-down → back under the flap → back root
-const EAR_FOLD = `M496,194 C484,160 484,130 494,110 C500,92 520,72 552,70 C578,70 594,88 594,112 C596,140 600,160 602,176 Z`;
-const EAR_CUP_IN = `M512,182 C504,156 504,134 510,120 C530,118 552,120 572,126 C578,146 582,162 584,176 Z`;
-const EAR_FLAP = `M594,112 C594,88 578,70 552,70 C520,72 496,90 476,112 C462,128 448,146 432,170 C430,178 438,180 444,174 C462,154 482,138 504,128 C530,118 562,116 594,112 Z`;
+const EAR_FOLD = `M502,214 C490,170 500,122 518,92 C504,100 488,112 470,132 C462,140 454,136 458,128 C474,98 500,66 528,54 C548,46 568,54 566,76 C576,112 594,152 600,214 Z`;
+const EAR_CUP_IN = `M521,182 C515,146 519,110 529,86 C539,82 549,82 555,86 C559,118 565,150 571,178 Z`;
+const EAR_FLAP = `M564,70 C566,50 546,44 528,52 C502,62 478,90 461,118 C458,124 464,128 470,122 C490,102 508,88 530,82 C546,78 560,78 564,70 Z`;
 const crest = (t) => {   // crest curve, poll (t=0) → base (t=1)
 	const b = [[640, 166], [732, 190], [836, 270], [888, 380]], c = [[888, 380], [962, 520], [1010, 740], [1036, 884]];
 	const bz = (q, u) => { const m = 1 - u; return [0, 1].map((k) => m * m * m * q[0][k] + 3 * m * m * u * q[1][k] + 3 * m * u * u * q[2][k] + u * u * u * q[3][k]); };
@@ -84,7 +84,7 @@ K.horseHead = (o = {}) => {
 	<linearGradient id="${id}lm" gradientUnits="userSpaceOnUse" x1="640" y1="160" x2="1040" y2="900"><stop offset="0" stop-color="${C.lite}"/><stop offset="0.45" stop-color="${C.mid}"/><stop offset="1" stop-color="${C.deep}"/></linearGradient>
 	<linearGradient id="${id}lf" gradientUnits="userSpaceOnUse" x1="620" y1="160" x2="980" y2="860"><stop offset="0" stop-color="${C.lite}"/><stop offset="0.4" stop-color="${C.mid}"/><stop offset="1" stop-color="${C.deep}"/></linearGradient>
 	<linearGradient id="${id}col" gradientUnits="userSpaceOnUse" x1="0" y1="866" x2="0" y2="956"><stop offset="0" stop-color="${C.deep}"/><stop offset="0.16" stop-color="${C.hi}"/><stop offset="0.32" stop-color="${C.lite}"/><stop offset="0.7" stop-color="${C.deep}"/><stop offset="1" stop-color="${C.dark}"/></linearGradient>
-	<linearGradient id="${id}flap" gradientUnits="userSpaceOnUse" x1="570" y1="70" x2="440" y2="170"><stop offset="0" stop-color="${C.hi}"/><stop offset="0.3" stop-color="${C.lite}"/><stop offset="1" stop-color="${C.mid}"/></linearGradient>
+	<linearGradient id="${id}ear" gradientUnits="userSpaceOnUse" x1="540" y1="50" x2="560" y2="200"><stop offset="0" stop-color="${C.hi}"/><stop offset="0.3" stop-color="${C.lite}"/><stop offset="1" stop-color="${C.mid}"/></linearGradient>
 	<radialGradient id="${id}ball" cx="456" cy="312" r="46" gradientUnits="userSpaceOnUse"><stop offset="0" stop-color="${C.hi}"/><stop offset="0.35" stop-color="${C.lite}"/><stop offset="0.75" stop-color="${C.mid}"/><stop offset="1" stop-color="${C.deep}"/></radialGradient>
 	<radialGradient id="${id}glow"><stop offset="0" stop-color="${o.glowCol ?? '#FF9A5A'}" stop-opacity="${0.5 * glow}"/><stop offset="0.45" stop-color="${o.glowCol ?? '#FF8A50'}" stop-opacity="${0.2 * glow}"/><stop offset="1" stop-color="${o.glowCol ?? '#FF8A50'}" stop-opacity="0"/></radialGradient>
 	${blur(1.2)}${blur(3)}${blur(4)}${blur(8)}${blur(18)}${blur(36)}
@@ -106,8 +106,7 @@ K.horseHead = (o = {}) => {
 		<path d="M458,214 C410,290 320,412 248,512 C222,550 200,580 186,606" stroke="${C.hi}" stroke-width="42" fill="none" opacity=".5" ${b(18)}/>
 		<path d="M330,470 C300,520 270,580 246,640" stroke="${C.dark}" stroke-width="40" fill="none" opacity=".28" ${b(18)}/>
 		<!-- facial crest: starts BELOW and BEHIND the eye, runs back along the cheek to the jowl (no line from the eye corner) -->
-		<path d="M520,392 C548,428 566,470 576,512" stroke="${C.hi}" stroke-width="16" fill="none" opacity=".4" ${b(8)}/>
-		<path d="M506,406 C532,442 548,482 556,522" stroke="${C.dark}" stroke-width="16" fill="none" opacity=".35" ${b(8)}/>
+
 		<!-- neck: shade under the mane, muscle highlight, throat groove -->
 		<path d="M690,250 C866,380 944,600 966,900" stroke="${C.dark}" stroke-width="170" fill="none" opacity=".6" ${b(36)}/>
 		<path d="M720,430 C774,530 800,670 806,900" stroke="${C.lite}" stroke-width="90" fill="none" opacity=".32" ${b(36)}/>
@@ -132,19 +131,21 @@ K.horseHead = (o = {}) => {
 		${front.map((l) => `<path d="${l.d}" fill="${C.dark}" opacity=".7" transform="translate(5,8)" ${b(4)}/>`).join('')}
 	</g>
 	<!-- mane: back layer (darker, longest, past the crest), middle, front (lit, short, on the neck) -->
-	${lockSvg(back, id + 'lb', C.dark, 0.35)}
-	${lockSvg(midL, id + 'lm', C.dark, 0.55)}
-	${lockSvg(front, id + 'lf', C.deep, 0.8)}
+	${lockSvg(back, id + 'lb', C.dark, 0.25)}
+	${lockSvg(midL, id + 'lm', C.dark, 0.4)}
+	${lockSvg(front, id + 'lf', C.deep, 0.6)}
 	<!-- forelock curls -->
 	${FORELOCK.map((f) => `<path d="${f.d}" fill="${C.dark}" opacity=".6" transform="translate(4,7)" ${b(3)}/><path d="${f.d}" fill="url(#${id}lm)"/><path d="${f.d}" fill="none" stroke="${C.dark}" stroke-width="2.4" opacity=".8"/><path d="${f.g}" stroke="${C.dark}" stroke-width="2.2" fill="none" opacity=".75"/><path d="${f.lit}" stroke="${C.hi}" stroke-width="2.4" fill="none" opacity=".8"/>`).join('')}
 	<!-- near ear -->
 	${curl > 0.5 ? `
-	<path d="${EAR_FOLD}" fill="${C.mid}"/><path d="${EAR_CUP_IN}" fill="${C.dark}" opacity=".85"/>
-	<path d="M500,190 C490,160 490,134 498,116" stroke="${C.lite}" stroke-width="4" fill="none" opacity=".7"/>
-	<path d="M506,128 C532,120 562,118 592,116 L590,134 C560,134 532,136 508,142 Z" fill="${C.dark}" opacity=".75" ${b(3)}/>
-	<path d="${EAR_FLAP}" fill="url(#${id}flap)"/><path d="${EAR_FLAP}" fill="none" stroke="${C.deep}" stroke-width="3"/>
-	<path d="M590,100 C584,80 566,72 548,72 C522,74 500,90 480,112" stroke="${C.spec}" stroke-width="6" fill="none" opacity=".95" stroke-linecap="round"/>
-	<path d="M588,116 C556,120 520,126 490,144" stroke="${C.deep}" stroke-width="3" fill="none" opacity=".8"/>`
+	<path d="${EAR_FOLD}" fill="url(#${id}ear)"/>
+	<path d="M514,186 C508,152 512,122 522,100 C527,114 528,150 530,184 Z" fill="${C.dark}" opacity=".85"/>
+	<path d="M522,90 C540,84 556,84 566,88 L568,112 C552,106 536,106 520,112 Z" fill="${C.dark}" opacity=".7" ${b(4)}/>
+	<path d="M566,74 C568,54 548,46 528,54 C500,66 476,96 460,124" stroke="${C.spec}" stroke-width="6" fill="none" opacity=".95" stroke-linecap="round"/>
+	<path d="M564,88 C548,84 530,88 516,94 C500,104 484,118 468,134" stroke="${C.deep}" stroke-width="3" fill="none" opacity=".75"/>
+	<path d="M590,180 C578,148 568,110 566,76" stroke="${C.dark}" stroke-width="5" fill="none" opacity=".55" ${b(1.2)}/>
+	<path d="M502,212 C490,170 500,122 518,92 C504,100 488,112 470,132 C462,140 454,136 458,128 C474,98 500,66 528,54 C548,46 568,54 566,76 C576,112 594,152 600,212" fill="none" stroke="${C.dark}" stroke-width="2" opacity=".5"/>
+	<path d="M496,206 C530,196 570,194 606,204" stroke="${C.dark}" stroke-width="16" fill="none" opacity=".55" ${b(4)}/>`
 	: `<path d="${EAR_UP}" fill="${C.mid}"/><path d="${EAR_IN_UP}" fill="${C.dark}" opacity=".78"/><path d="M503,186 C490,150 494,96 526,32" stroke="${C.hi}" stroke-width="4" fill="none" opacity=".75"/>`}
 	<!-- the cast eye: a copper dome under a lid fold, an incised pupil ring; no white, no catch-light dot -->
 	<ellipse cx="468" cy="324" rx="39" ry="25" transform="rotate(-22 468 324)" fill="url(#${id}ball)"/>
@@ -157,19 +158,21 @@ K.horseHead = (o = {}) => {
 	<path d="M484,326 C482,332 476,335 470,334" stroke="${C.hi}" stroke-width="2.5" fill="none" opacity=".9" stroke-linecap="round"/>
 	<path d="M444,318 C450,309 460,305 470,304" stroke="${C.spec}" stroke-width="3.5" fill="none" opacity=".95" stroke-linecap="round"/>
 	<!-- collar ring: the cast neck ends in a rounded ring -->
-	<path d="M598,878 C590,898 590,922 600,944 C680,960 970,960 1048,944 C1058,922 1058,898 1050,878 C970,866 680,866 598,878 Z" fill="url(#${id}col)"/>
-	<path d="M598,878 C680,866 970,866 1050,878" stroke="${C.spec}" stroke-width="3" fill="none" opacity=".85"/>
-	<path d="M594,912 C680,926 970,926 1054,912" stroke="${C.dark}" stroke-width="3" fill="none" opacity=".6"/>
+	<path d="M632,878 C624,898 624,922 634,944 C710,960 970,960 1048,944 C1058,922 1058,898 1050,878 C970,866 710,866 632,878 Z" fill="url(#${id}col)"/>
+	<path d="M632,878 C710,866 970,866 1050,878" stroke="${C.spec}" stroke-width="3" fill="none" opacity=".85"/>
+	<path d="M628,912 C710,926 970,926 1054,912" stroke="${C.dark}" stroke-width="3" fill="none" opacity=".6"/>
 	<!-- crisp speculars (narrow, unblurred) -->
 	<path d="M448,230 C426,262 406,292 390,316" stroke="${C.spec}" stroke-width="4" fill="none" opacity=".95" stroke-linecap="round"/>
 	<path d="M372,346 C350,378 326,412 306,440" stroke="${C.spec}" stroke-width="3" fill="none" opacity=".8" stroke-linecap="round"/>
 	<path d="M240,570 C228,588 218,602 210,616" stroke="${C.spec}" stroke-width="4" fill="none" opacity=".85" stroke-linecap="round"/>
 	<path d="M430,520 C456,486 500,470 548,468" stroke="${C.spec}" stroke-width="3.5" fill="none" opacity=".75" stroke-linecap="round"/>
+	<path d="M300,792 C360,780 420,772 480,766" stroke="${C.hi}" stroke-width="2.5" fill="none" opacity=".55" stroke-linecap="round"/>
+	<path d="M700,600 C704,690 696,780 664,870" stroke="${C.lite}" stroke-width="3" fill="none" opacity=".55" stroke-linecap="round"/>
 	<path d="M752,500 C788,590 806,700 812,840" stroke="${C.spec}" stroke-width="3" fill="none" opacity=".45" stroke-linecap="round"/>`;
 	const ty = 950;
 	return `<g transform="translate(${x},${y}) scale(${flip * s},${s}) translate(-836,-${ty})">${defs}${body}</g>`;
 };
 K.HEAD_PTS = {mouth: [228 - 836, 740 - 950], eye: [470 - 836, 322 - 950], ear: [470 - 836, 120 - 950], nose: [150 - 836, 680 - 950],
-	poll: [560 - 836, 180 - 950], collarF: [598 - 836, 900 - 950], collarB: [1050 - 836, 900 - 950], throat: [690 - 836, 700 - 950], height: 925};
+	poll: [560 - 836, 180 - 950], collarF: [632 - 836, 900 - 950], collarB: [1050 - 836, 900 - 950], throat: [690 - 836, 700 - 950], height: 925};
 K.headPt = (o, name) => { const s = (o.h ?? 400) / 925, f = o.flip ? -1 : 1, p = K.HEAD_PTS[name]; return [o.x + f * p[0] * s, o.y + p[1] * s]; };
 })();

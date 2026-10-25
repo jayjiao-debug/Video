@@ -259,3 +259,155 @@ rim light that takes each look's light colour.
 - L2: the hook's reflected seat is low-contrast against the marble.
 - L3: the auctioneer's near arm makes an odd angle; it needs rig work in the build.
 - The brothers are proven at mid size only.
+
+---
+
+## Hybrid (owner pick)
+Owner, 2026-10-25 13:30: 「一般他们喜欢暗调的能在晚上观看，我感觉1和3都不错但是各有各在不同场景的强项」, and remove the tear (S2 a).
+Art director, v3. Stills: `style/v3/{hook_L1, key_L1_1860, handover, key_L3_2007}.png`, sheet `style/v3/sheet.png`,
+sources `style/v3/src/` (`hero.js` the rebuilt hero, `figs.js` figures, `sc1860.js` the 1860 stage, `relief.py` the bronze
+shader, `build.py <name>` renders a frame, `sheet.py` the sheet).
+
+**The idea in one line:** what you **live through** is L1 铜灯影 (silhouette theatre, you are the only light); what was
+**put on record** is L3 铜壁 (a bronze relief wall under one raking lamp, only you in the round). The auction years are
+the public record, so they are cast; everything done to you by hands (made, carried, signed for, unveiled, driven home) is
+lived, so it is theatre. Ho's deal was private (私下), so the camera steps **off** the wall for it.
+
+### The split (improved from the producer's)
+- **L1** (29 lines, plus K1b where the switch happens): C1 museum · C2a/D7a/E2 Ho's room · C2b/E1 the 2019 hall · T1/T4/T5 · A1 casting · A2–A4 the
+  海晏堂 water clock (memory) · B1–B3 1860 · H1–H5 the 2020 night van, the doors, the courtyard, the ear.
+- **L3** (22 lines): T2/T3 (flashes of the wall in the cold open, so the second world is planted in the first
+  15 s) · D1–D6b 1989/2000/2003/2007 · D8 the prices cast as two columns · D9–D11 2009/2013 · K1b–Q the end of the wall.
+- **Changes vs the suggested split:** T2/T3 move to L3, so the wall is seen before it takes over; D8 (the price
+  comparison) is cast, because a number on record belongs to the wall; the ending starts on L1 (K1a, the memory
+  fountain, a callback to A4) and **cools into** L3 on K1b, so the last switch is the story's own turn (memory →
+  record); the title plaque is cast bronze (the material of both worlds' hero).
+
+### The two hand-overs (each crossing below is a different move: owner row 86)
+1. **L1 → L3, "it sets into bronze".** The lived scene stops moving and becomes metal: a cooling front (a strip of hot
+   copper glow under smoke) crosses the frame and leaves a cast relief of the same composition behind it, lit by the
+   raking lamp. The camera then dollies right along the wall, and the moulding between panels is the cut.
+   Uses: B3 → D1 (smoke), D7b → D8 (the price card is poured), K1a → K1b (the memory cools). Still: `handover.png`.
+2. **L3 → L1, "the lamp leaves the wall".** The raking lamp narrows to one practical light in the next lived room,
+   and the relief around it falls into the dark. The silhouette room rebuilds around that same light.
+   Uses: D6b → D7a (the work lamp → Ho's desk lamp), D11 → E1 (the cast certificate → a paper one under your glow).
+
+### One shared rule (so it is one film)
+1. **One hero, one copper.** `K.horseHead` (hero.js) is the same asset in both worlds:
+   - ramp `#FFD9A6 / #E8874A / #B4532A / #6A2612 / #250B04`;
+   - true scale ¼ of a person;
+   - ears straight before 1860, the near ear folded from 1989.
+
+   You are the only saturated red-copper in every frame. Fire is yellow-orange (`#F09A50`, `#FFB04E`), and the L3
+   bronze is desaturated. Its ramp in relief.py: `#0F0A06 → #3C2B1C → #7E5E3E → #CEA676 → #FFE8C2`, with a muted
+   石青 patina `#546E64` only in deep crevices and only in patches (no edge fringe).
+2. **One light direction.** The key always comes from upper-left:
+   - L3: the lamp at az 145°, el 24°;
+   - L1: the dusk sky or the fire behind-left.
+
+   Shadows fall down-right in both worlds. Your glow is always the second light, rimming whatever is near you on
+   your side.
+3. **Time runs left → right** in both worlds: the looter exits right, the wall dollies right, and the van drives
+   right. A hand-over never reverses screen direction.
+4. **One texture layer.** The engine grain pass is the same over both worlds (or off over both, row 44). It is never
+   on one world and off the other. The cast grain of L3 lives in the material.
+5. **One caption layer.**
+   - It is the ep43 v6 layer, unchanged.
+   - The adaptive scrim (`bk` 0.5) switches on only over L3's brighter bronze.
+   - The story counter follows the picture: tally dots render at ≥ 28 px.
+   - The age counter and the stamp's second line are dropped (S6).
+6. **One brightness band.** L1 night/indoor mean luma ≥ 45 (the hook ≥ 70). L3 55–70.
+
+### Buildability
+- **L1:** ep43's three.js 2.5D stage engine, as in my v2 note.
+- **L3:**
+  - Each panel is a height map drawn with the same vector shapes. relief.py's maths (normals, AO, cavity mask) is
+    baked into normal and AO textures on a plane, lit by one moving three.js `SpotLight`.
+  - Figures that act (porters, Ho shaking hands, the clerk with the stamp) are **separate relief cut-outs on their
+    own planes**, driven by the IK rig, with the same shading. You are a separate lit layer in front of them with a
+    projected shadow.
+  - **Still owed before the build (director L3-4):** a 5-s motion test of one relief figure carrying you (D2b, the
+    porter).
+
+### Scene by scene (script v5 / lines_v5 ids)
+| id | world | one-line picture | → transition into the next |
+|---|---|---|---|
+| C1 | L1 | 正觉寺·文殊亭 at dusk: you in the glass case glowing, a visitor at the case's depth (her head ≈ ½ of you), the courtyard through the bay (`hook_L1.png`) | **glass-reflection rack:** a desk lamp appears in the case glass; focus racks into the reflection, which becomes Ho's room |
+| C2a | L1 | Ho's room 2007: he signs (right hand pen, left hand flat), price card already 6910万 beside you | **draped-shape match:** he lays a cloth over you; the covered form cuts to the lit hall |
+| C2b | L1 | 2019 hall: two staff pull the cloth off you with both hands | **cloth wipe** toward the lens |
+| TTL | L3 material | the title as a **cast bronze plaque** (your copper profile + twelve arcs), slams in | hard cut (format) |
+| T1 | L1 | smoke on the terrace: a looter in a kepi lifts you with both hands off the stone body | hard cut |
+| T2 | L3 | flash of the wall: the 1989 London panel, the relief gavel arm strikes on the beat | hard cut |
+| T3 | L3 | flash: the 2007 panel, the gavel **lying still** on its block, the 撤拍 board (gate-1 v5 note 1) | hard cut |
+| T4 | L1 | night, the 正觉寺 courtyard gate: two staff push the doors open a crack, copper light on the flagstones | **crane up:** the strip of door light shrinks to a dot = your medallion |
+| T5 | L1 | a ring of twelve medallions over the dark garden: seven lit, five dashed | **rewind** (ring spins back, flashes T4 → T1 in their own worlds) into the foundry glow |
+| A1 | L1 | the foundry: tongs tip the crucible, the pour, the mould knocked apart: you glow, seamless (≈ ¼ of the founder) | **profile match:** your face cools to copper in the same screen spot, now on a stone body |
+| A2 | L1 | noon memory, silhouettes on a pale-gold sky: the twelve in a 八 by the pool, you the warm one; 在家 12/12 | the sun's shadow starts to move |
+| A3a | L1 | time-lapse: one arc at a time passes from head to head | **ride the arc** from the snake across the pool to you |
+| A3b | L1 | close on you; only you spout | fast pull-back as the eleven fire outward |
+| A4 | L1 | all twelve arcs up on the hit | **light change** noon → red dusk, tilt down to the flagstones |
+| B1a | L1 | soldiers in kepis walk in on the front flagstones | continuous track |
+| B1b | L1 | a crate carried in both hands, a vase hugged, walking out left | picture pause |
+| B2 | L1 | fire flares behind 海晏堂 on the hit; embers | **push through the embers** to your seat |
+| B3 | L1 | the looter lifts you in both hands and walks right; your seat between 龙 and 猴 is empty; 在家 11/12 (`key_L1_1860.png`) | **hand-over 1, "it sets into bronze":** a cooling front under smoke turns the stage into a relief behind him (`handover.png`); counter → 回国 0/12 once the seats are covered; dolly right along the wall |
+| D1 | L3 | 1989 London panel: you in the round on the relief podium under the lamp; relief bidders' paddles rise on the beat | ease from you to the lectern |
+| D2a | L3 | the relief gavel arm winds up and strikes; the cast lot card flips to 几十万美元 | same shot |
+| D2b | L3 | a relief porter (cut-out plane) lifts you, in the round, into a crate | **lamp swing:** this panel goes dark, the next lights |
+| D3a | L3 | 2000 Hong Kong panel: 牛 猴 虎 set on the podium in relief, one per beat | continuous |
+| D3b | L3 | three strikes; three cast cards flip to 购回; counter 0 → 3 | **dolly right**; the moulding is the cut |
+| D4 | L3 | 2003 panel: Ho and the seller shake hands over the pig head on its crate (relief) | **crate match:** the pig's crate becomes your crate in the 2007 panel |
+| D5 | L3 | 2007: two relief porters lift you out and set you on the pedestal; empty chairs with catalogues; the gavel on its block | continuous |
+| D6a | L3 | the room before the sale: the gavel lies still, 撤拍 board, a gloved porter beside you (≈ 4× your height) (`key_L3_2007.png`) | same shot |
+| D6b | L3 | the board's letters rise as 撤拍; the lamp dims row by row until only your pool is left | **hand-over 2, "the lamp leaves the wall":** the pool narrows into a desk lamp; the relief falls dark; the silhouette room builds around it (off the record) |
+| D7a | L1 | Ho's room (the C2a callback): he walks in, sits, signs | same shot |
+| D7b | L1 | the price card stands up: 6910万港元 slams in | **the price is poured:** the card slides right off the desk and lands on the wall as the cast cap of a bronze column, molten metal filling it |
+| D8 | L3 | two cast columns on the wall: 几十万美元 short, 884万美元 tall, bracket 二十多倍 cast between | **rise up the tall column**; its capital is the ceiling moulding of the Paris panel; tilt down |
+| D9a | L3 | 2009 Paris panel: rat and rabbit in relief on the podium; a phone clerk with a handset raises the paddle (F19: the buyer was on the phone) | continuous |
+| D9b | L3 | the strike; the cast result board: 鼠首 + 兔首 · 3149万欧元 | same shot |
+| D10a | L3 | a clerk drives a die into the result line: 未付款 is punched into the bronze | **pan to the phone desk** |
+| D10b | L3 | the handset laid down, the paddle left on an empty chair (screenwriter: F19 says the buyer was never in the room) | **push past the empty chair**; the lamp warms |
+| D11 | L3 | 2013: two relief figures pass one certificate, both hands on it; two medallions light; 回国 7/12 | **hand-over 2b, cast → paper:** the camera follows the certificate down; as it is laid on a table it is paper under your glow (the 2019 hall) |
+| E1 | L1 | the 2019 hall (the C2b callback): the cloth pulled off, a donation plaque | **lateral track left** through a wall edge into Ho's room at night |
+| E2a | L1 | Ho's room empty, the lamp on; it goes out on the music's stop | same shot |
+| E2b | L1 | the dark room: one star in the window, a curtain stirring | **push through the window into the star** → the glow in your crate |
+| H1a | L1 | the van drives night → dawn, your glow between the slats, parallax trees | forward **through the gate** |
+| H1b | L1 | the T4 doors open on the drop; copper light spills; you stand in the 文殊亭 | continuous |
+| H2 | L1 | slow orbit around you, 1860 → 2020 | **crane up** |
+| H3a | L1 | the T5 ring forms over the courtyard; seven light | same shot |
+| H3b | L1 | six medallions arc away to 保利 (4) and 国博 (2); yours stays: 回家 1/12 | **pull back wide** |
+| H4 | L1 | the courtyard among the ruins; the ghost of B2's smoke stops at the temple wall | **push in and orbit** to your profile |
+| H5a | L1 | close-up: the folded near ear fills ~30 % of the height (the S4 fold with the lit bend) | same shot |
+| H5b | L1 | a thin ring closes on the fold | **ring → basin** of the remembered fountain |
+| K1a | L1 | the memory fountain at noon (the A4 callback): twelve arcs | same shot |
+| K1b | L1 → L3 | eleven arcs fall; brother by brother, from the far end inward, the memory **cools into the wall**; only you and your arc stay copper and alive | (hand-over 1c, in the shot) |
+| K2a | L3 | the last panel: twelve niches; six get small cast tags 保利 ×4 · 国博 ×2 | same shot |
+| K2b | L3 | five niches are uncast: rough mould cavities with incised outlines of 龙 蛇 羊 鸡 狗 | **dolly right**; the dragon's outline leads into a small 2018 panel |
+| K3a | L3 | 2018 France panel: the gavel arm already raised, strikes on the final hit; the dragon outline shakes | same shot |
+| K3b | L3 | the outline half-fills with molten copper, then drains; an incised ？ | **lamp out, panel by panel**; pull back through the dark to the wall's end |
+| Q | L3 | the end of the wall: eleven niches (six tagged, five empty), you in the round with your single arc catching the lamp; the Juno end card forms over it | end |
+
+### The stills (v3)
+| Still | Mean luma |
+|---|---|
+| hook_L1 | 72 |
+| key_L1_1860 | 61 |
+| handover | 71 |
+| key_L3_2007 | 66 |
+
+Every still was checked at full size and at 400 px wide.
+
+**Hero fixes (S1–S4) are in `src/hero.js`:**
+- the cast copper eye: a dome, an incised pupil ring, a brow ridge, no white and no dot;
+- no tear line, and no line from the eye corner;
+- three layers of grooved, wavy locks of unequal length, with shadows under them;
+- curled forelock locks;
+- the neck as deep as the jaw, ending in a cast collar ring;
+- a darker core shadow and narrow unblurred speculars;
+- the folded near ear drawn as one leaf, with the top third bent forward and down and a lit bend.
+
+**Captions:** S5 and S6 are applied:
+- line 1 has no tag;
+- the lines come from lines_v5;
+- the stamps keep line 1 only;
+- the age counter is dropped;
+- the dots are ≥ 28 px.

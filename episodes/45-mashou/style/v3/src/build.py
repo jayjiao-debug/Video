@@ -10,7 +10,7 @@ RENDER = '/home/claude/video/.claude/skills/production-crew/scripts/render_html.
 args = sys.argv[1:]; out_dir = SRC.parent
 if args and args[0] == '--out': out_dir = Path(args[1]); args = args[2:]
 font = base64.b64encode(FONT.read_bytes()).decode()
-kit = ''.join((SRC / f).read_text() + '\n' for f in ['kit.js', 'hero.js', 'figs.js'] if (SRC / f).exists())
+kit = ''.join((SRC / f).read_text() + '\n' for f in ['kit.js', 'hero.js', 'figs.js', 'sc1860.js'] if (SRC / f).exists())
 img = lambda m: 'data:image/png;base64,' + base64.b64encode((SRC / m.group(1)).read_bytes()).decode()
 out = []
 for n in args:

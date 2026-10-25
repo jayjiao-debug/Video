@@ -345,15 +345,15 @@ K.seated = (x, floor, h, f, col, hands) => {
 const HEAD = `M470,196 C430,250 330,390 250,500 C222,540 196,572 178,600 C150,636 140,676 152,708
 C160,728 182,738 206,736 L248,739 C228,748 212,760 216,774 C224,796 262,806 296,796
 C350,782 420,772 486,764 C566,754 622,728 652,688 C688,640 700,594 692,552
-C700,660 670,800 610,884 L1036,884 C1010,740 962,520 888,380
+C702,660 692,800 646,884 L1036,884 C1010,740 962,520 888,380
 C836,270 732,190 640,166 C580,150 512,160 470,196 Z`;
 const EAR_UP = `M502,190 C486,150 490,92 528,24 C562,70 588,122 592,172 Z`;
 const EAR_IN_UP = `M512,178 C502,140 508,96 528,56 C550,94 564,134 568,172 Z`;
 // folded ear: the cup stands from the root to the bend (y≈96); above it the top third hangs forward and down
 // one closed outline: front root → up the cup → the rounded fold → the tip hanging forward-down → back under the flap → back root
-const EAR_FOLD = `M496,194 C484,160 484,130 494,110 C500,92 520,72 552,70 C578,70 594,88 594,112 C596,140 600,160 602,176 Z`;
-const EAR_CUP_IN = `M512,182 C504,156 504,134 510,120 C530,118 552,120 572,126 C578,146 582,162 584,176 Z`;
-const EAR_FLAP = `M594,112 C594,88 578,70 552,70 C520,72 496,90 476,112 C462,128 448,146 432,170 C430,178 438,180 444,174 C462,154 482,138 504,128 C530,118 562,116 594,112 Z`;
+const EAR_FOLD = `M502,214 C490,170 500,122 518,92 C504,100 488,112 470,132 C462,140 454,136 458,128 C474,98 500,66 528,54 C548,46 568,54 566,76 C576,112 594,152 600,214 Z`;
+const EAR_CUP_IN = `M521,182 C515,146 519,110 529,86 C539,82 549,82 555,86 C559,118 565,150 571,178 Z`;
+const EAR_FLAP = `M564,70 C566,50 546,44 528,52 C502,62 478,90 461,118 C458,124 464,128 470,122 C490,102 508,88 530,82 C546,78 560,78 564,70 Z`;
 const crest = (t) => {   // crest curve, poll (t=0) → base (t=1)
 	const b = [[640, 166], [732, 190], [836, 270], [888, 380]], c = [[888, 380], [962, 520], [1010, 740], [1036, 884]];
 	const bz = (q, u) => { const m = 1 - u; return [0, 1].map((k) => m * m * m * q[0][k] + 3 * m * m * u * q[1][k] + 3 * m * u * u * q[2][k] + u * u * u * q[3][k]); };
@@ -420,7 +420,7 @@ K.horseHead = (o = {}) => {
 	<linearGradient id="${id}lm" gradientUnits="userSpaceOnUse" x1="640" y1="160" x2="1040" y2="900"><stop offset="0" stop-color="${C.lite}"/><stop offset="0.45" stop-color="${C.mid}"/><stop offset="1" stop-color="${C.deep}"/></linearGradient>
 	<linearGradient id="${id}lf" gradientUnits="userSpaceOnUse" x1="620" y1="160" x2="980" y2="860"><stop offset="0" stop-color="${C.lite}"/><stop offset="0.4" stop-color="${C.mid}"/><stop offset="1" stop-color="${C.deep}"/></linearGradient>
 	<linearGradient id="${id}col" gradientUnits="userSpaceOnUse" x1="0" y1="866" x2="0" y2="956"><stop offset="0" stop-color="${C.deep}"/><stop offset="0.16" stop-color="${C.hi}"/><stop offset="0.32" stop-color="${C.lite}"/><stop offset="0.7" stop-color="${C.deep}"/><stop offset="1" stop-color="${C.dark}"/></linearGradient>
-	<linearGradient id="${id}flap" gradientUnits="userSpaceOnUse" x1="570" y1="70" x2="440" y2="170"><stop offset="0" stop-color="${C.hi}"/><stop offset="0.3" stop-color="${C.lite}"/><stop offset="1" stop-color="${C.mid}"/></linearGradient>
+	<linearGradient id="${id}ear" gradientUnits="userSpaceOnUse" x1="540" y1="50" x2="560" y2="200"><stop offset="0" stop-color="${C.hi}"/><stop offset="0.3" stop-color="${C.lite}"/><stop offset="1" stop-color="${C.mid}"/></linearGradient>
 	<radialGradient id="${id}ball" cx="456" cy="312" r="46" gradientUnits="userSpaceOnUse"><stop offset="0" stop-color="${C.hi}"/><stop offset="0.35" stop-color="${C.lite}"/><stop offset="0.75" stop-color="${C.mid}"/><stop offset="1" stop-color="${C.deep}"/></radialGradient>
 	<radialGradient id="${id}glow"><stop offset="0" stop-color="${o.glowCol ?? '#FF9A5A'}" stop-opacity="${0.5 * glow}"/><stop offset="0.45" stop-color="${o.glowCol ?? '#FF8A50'}" stop-opacity="${0.2 * glow}"/><stop offset="1" stop-color="${o.glowCol ?? '#FF8A50'}" stop-opacity="0"/></radialGradient>
 	${blur(1.2)}${blur(3)}${blur(4)}${blur(8)}${blur(18)}${blur(36)}
@@ -442,8 +442,7 @@ K.horseHead = (o = {}) => {
 		<path d="M458,214 C410,290 320,412 248,512 C222,550 200,580 186,606" stroke="${C.hi}" stroke-width="42" fill="none" opacity=".5" ${b(18)}/>
 		<path d="M330,470 C300,520 270,580 246,640" stroke="${C.dark}" stroke-width="40" fill="none" opacity=".28" ${b(18)}/>
 		<!-- facial crest: starts BELOW and BEHIND the eye, runs back along the cheek to the jowl (no line from the eye corner) -->
-		<path d="M520,392 C548,428 566,470 576,512" stroke="${C.hi}" stroke-width="16" fill="none" opacity=".4" ${b(8)}/>
-		<path d="M506,406 C532,442 548,482 556,522" stroke="${C.dark}" stroke-width="16" fill="none" opacity=".35" ${b(8)}/>
+
 		<!-- neck: shade under the mane, muscle highlight, throat groove -->
 		<path d="M690,250 C866,380 944,600 966,900" stroke="${C.dark}" stroke-width="170" fill="none" opacity=".6" ${b(36)}/>
 		<path d="M720,430 C774,530 800,670 806,900" stroke="${C.lite}" stroke-width="90" fill="none" opacity=".32" ${b(36)}/>
@@ -468,19 +467,21 @@ K.horseHead = (o = {}) => {
 		${front.map((l) => `<path d="${l.d}" fill="${C.dark}" opacity=".7" transform="translate(5,8)" ${b(4)}/>`).join('')}
 	</g>
 	<!-- mane: back layer (darker, longest, past the crest), middle, front (lit, short, on the neck) -->
-	${lockSvg(back, id + 'lb', C.dark, 0.35)}
-	${lockSvg(midL, id + 'lm', C.dark, 0.55)}
-	${lockSvg(front, id + 'lf', C.deep, 0.8)}
+	${lockSvg(back, id + 'lb', C.dark, 0.25)}
+	${lockSvg(midL, id + 'lm', C.dark, 0.4)}
+	${lockSvg(front, id + 'lf', C.deep, 0.6)}
 	<!-- forelock curls -->
 	${FORELOCK.map((f) => `<path d="${f.d}" fill="${C.dark}" opacity=".6" transform="translate(4,7)" ${b(3)}/><path d="${f.d}" fill="url(#${id}lm)"/><path d="${f.d}" fill="none" stroke="${C.dark}" stroke-width="2.4" opacity=".8"/><path d="${f.g}" stroke="${C.dark}" stroke-width="2.2" fill="none" opacity=".75"/><path d="${f.lit}" stroke="${C.hi}" stroke-width="2.4" fill="none" opacity=".8"/>`).join('')}
 	<!-- near ear -->
 	${curl > 0.5 ? `
-	<path d="${EAR_FOLD}" fill="${C.mid}"/><path d="${EAR_CUP_IN}" fill="${C.dark}" opacity=".85"/>
-	<path d="M500,190 C490,160 490,134 498,116" stroke="${C.lite}" stroke-width="4" fill="none" opacity=".7"/>
-	<path d="M506,128 C532,120 562,118 592,116 L590,134 C560,134 532,136 508,142 Z" fill="${C.dark}" opacity=".75" ${b(3)}/>
-	<path d="${EAR_FLAP}" fill="url(#${id}flap)"/><path d="${EAR_FLAP}" fill="none" stroke="${C.deep}" stroke-width="3"/>
-	<path d="M590,100 C584,80 566,72 548,72 C522,74 500,90 480,112" stroke="${C.spec}" stroke-width="6" fill="none" opacity=".95" stroke-linecap="round"/>
-	<path d="M588,116 C556,120 520,126 490,144" stroke="${C.deep}" stroke-width="3" fill="none" opacity=".8"/>`
+	<path d="${EAR_FOLD}" fill="url(#${id}ear)"/>
+	<path d="M514,186 C508,152 512,122 522,100 C527,114 528,150 530,184 Z" fill="${C.dark}" opacity=".85"/>
+	<path d="M522,90 C540,84 556,84 566,88 L568,112 C552,106 536,106 520,112 Z" fill="${C.dark}" opacity=".7" ${b(4)}/>
+	<path d="M566,74 C568,54 548,46 528,54 C500,66 476,96 460,124" stroke="${C.spec}" stroke-width="6" fill="none" opacity=".95" stroke-linecap="round"/>
+	<path d="M564,88 C548,84 530,88 516,94 C500,104 484,118 468,134" stroke="${C.deep}" stroke-width="3" fill="none" opacity=".75"/>
+	<path d="M590,180 C578,148 568,110 566,76" stroke="${C.dark}" stroke-width="5" fill="none" opacity=".55" ${b(1.2)}/>
+	<path d="M502,212 C490,170 500,122 518,92 C504,100 488,112 470,132 C462,140 454,136 458,128 C474,98 500,66 528,54 C548,46 568,54 566,76 C576,112 594,152 600,212" fill="none" stroke="${C.dark}" stroke-width="2" opacity=".5"/>
+	<path d="M496,206 C530,196 570,194 606,204" stroke="${C.dark}" stroke-width="16" fill="none" opacity=".55" ${b(4)}/>`
 	: `<path d="${EAR_UP}" fill="${C.mid}"/><path d="${EAR_IN_UP}" fill="${C.dark}" opacity=".78"/><path d="M503,186 C490,150 494,96 526,32" stroke="${C.hi}" stroke-width="4" fill="none" opacity=".75"/>`}
 	<!-- the cast eye: a copper dome under a lid fold, an incised pupil ring; no white, no catch-light dot -->
 	<ellipse cx="468" cy="324" rx="39" ry="25" transform="rotate(-22 468 324)" fill="url(#${id}ball)"/>
@@ -493,27 +494,192 @@ K.horseHead = (o = {}) => {
 	<path d="M484,326 C482,332 476,335 470,334" stroke="${C.hi}" stroke-width="2.5" fill="none" opacity=".9" stroke-linecap="round"/>
 	<path d="M444,318 C450,309 460,305 470,304" stroke="${C.spec}" stroke-width="3.5" fill="none" opacity=".95" stroke-linecap="round"/>
 	<!-- collar ring: the cast neck ends in a rounded ring -->
-	<path d="M598,878 C590,898 590,922 600,944 C680,960 970,960 1048,944 C1058,922 1058,898 1050,878 C970,866 680,866 598,878 Z" fill="url(#${id}col)"/>
-	<path d="M598,878 C680,866 970,866 1050,878" stroke="${C.spec}" stroke-width="3" fill="none" opacity=".85"/>
-	<path d="M594,912 C680,926 970,926 1054,912" stroke="${C.dark}" stroke-width="3" fill="none" opacity=".6"/>
+	<path d="M632,878 C624,898 624,922 634,944 C710,960 970,960 1048,944 C1058,922 1058,898 1050,878 C970,866 710,866 632,878 Z" fill="url(#${id}col)"/>
+	<path d="M632,878 C710,866 970,866 1050,878" stroke="${C.spec}" stroke-width="3" fill="none" opacity=".85"/>
+	<path d="M628,912 C710,926 970,926 1054,912" stroke="${C.dark}" stroke-width="3" fill="none" opacity=".6"/>
 	<!-- crisp speculars (narrow, unblurred) -->
 	<path d="M448,230 C426,262 406,292 390,316" stroke="${C.spec}" stroke-width="4" fill="none" opacity=".95" stroke-linecap="round"/>
 	<path d="M372,346 C350,378 326,412 306,440" stroke="${C.spec}" stroke-width="3" fill="none" opacity=".8" stroke-linecap="round"/>
 	<path d="M240,570 C228,588 218,602 210,616" stroke="${C.spec}" stroke-width="4" fill="none" opacity=".85" stroke-linecap="round"/>
 	<path d="M430,520 C456,486 500,470 548,468" stroke="${C.spec}" stroke-width="3.5" fill="none" opacity=".75" stroke-linecap="round"/>
+	<path d="M300,792 C360,780 420,772 480,766" stroke="${C.hi}" stroke-width="2.5" fill="none" opacity=".55" stroke-linecap="round"/>
+	<path d="M700,600 C704,690 696,780 664,870" stroke="${C.lite}" stroke-width="3" fill="none" opacity=".55" stroke-linecap="round"/>
 	<path d="M752,500 C788,590 806,700 812,840" stroke="${C.spec}" stroke-width="3" fill="none" opacity=".45" stroke-linecap="round"/>`;
 	const ty = 950;
 	return `<g transform="translate(${x},${y}) scale(${flip * s},${s}) translate(-836,-${ty})">${defs}${body}</g>`;
 };
 K.HEAD_PTS = {mouth: [228 - 836, 740 - 950], eye: [470 - 836, 322 - 950], ear: [470 - 836, 120 - 950], nose: [150 - 836, 680 - 950],
-	poll: [560 - 836, 180 - 950], collarF: [598 - 836, 900 - 950], collarB: [1050 - 836, 900 - 950], throat: [690 - 836, 700 - 950], height: 925};
+	poll: [560 - 836, 180 - 950], collarF: [632 - 836, 900 - 950], collarB: [1050 - 836, 900 - 950], throat: [690 - 836, 700 - 950], height: 925};
 K.headPt = (o, name) => { const s = (o.h ?? 400) / 925, f = o.flip ? -1 : 1, p = K.HEAD_PTS[name]; return [o.x + f * p[0] * s, o.y + p[1] * s]; };
 })();
 
-</script><script>const svg = `<rect width="1920" height="1080" fill="#3a2a22"/>
-${K.horseHead({x: 560, y: 1040, h: 1000, curl: 1, glow: 0.6})}
-${K.horseHead({x: 1420, y: 640, h: 560, curl: 0, glow: 0.4, mood: 'fire'})}
-${K.horseHead({x: 1180, y: 1040, h: 300, curl: 1, glow: 0.6})}
-${K.horseHead({x: 1700, y: 1040, h: 300, curl: 1, glow: 0.6, flip: true})}`;
-K.page(svg, '');
+// ep45 v3 figure helpers (one-tone profile silhouettes): 1860 soldier with a period kepi and a fuller torso,
+// carrying the head with BOTH hands; a museum visitor (hair, nose, collar, hands behind the back); the empty stone seat.
+(() => {
+/** 1860 French kepi on a profile head at (hx, hy) radius r, facing f: soft crown higher at the back, narrower than the
+ *  band at the top, the flat top tilted down to the front, a short visor angled down. Never wider at the top (police cap). */
+K.kepi = (hx, hy, r, f, col) => {
+	const X = (d) => hx + f * d * r, Y = (d) => hy + d * r;
+	return `<path d="M${X(-1.02)},${Y(-0.18)} L${X(-0.88)},${Y(-1.36)} L${X(0.52)},${Y(-1.08)} L${X(0.86)},${Y(-0.42)} Z" fill="${col}"/>
+	<path d="M${X(-1.04)},${Y(-0.14)} L${X(0.9)},${Y(-0.44)} L${X(0.92)},${Y(-0.62)} L${X(-1.0)},${Y(-0.36)} Z" fill="${col}"/>
+	<path d="M${X(0.78)},${Y(-0.46)} L${X(1.5)},${Y(-0.14)} L${X(1.46)},${Y(-0.02)} L${X(0.8)},${Y(-0.26)} Z" fill="${col}"/>`;
+};
+/** a profile head with nose, lips, chin, ear bump and hair options. (hx, hy) centre, r radius, f facing. */
+K.profileHead = (hx, hy, r, f, col, hair) => {
+	const X = (d) => hx + f * d * r, Y = (d) => hy + d * r;
+	let s = `<path d="M${X(-0.95)},${Y(-0.05)} C${X(-1.0)},${Y(-1.2)} ${X(0.9)},${Y(-1.25)} ${X(0.92)},${Y(-0.25)}
+		L${X(1.0)},${Y(-0.05)} L${X(1.24)},${Y(0.22)} L${X(1.0)},${Y(0.32)} L${X(1.04)},${Y(0.46)} L${X(0.98)},${Y(0.56)} L${X(1.02)},${Y(0.66)}
+		C${X(0.96)},${Y(0.92)} ${X(0.7)},${Y(1.02)} ${X(0.36)},${Y(1.0)} C${X(0.1)},${Y(0.98)} ${X(-0.3)},${Y(0.9)} ${X(-0.6)},${Y(0.62)}
+		C${X(-0.9)},${Y(0.4)} ${X(-0.98)},${Y(0.2)} ${X(-0.95)},${Y(-0.05)} Z" fill="${col}"/>`;
+	if (hair === 'bun') s += `<path d="M${X(-1.0)},${Y(0.3)} C${X(-1.12)},${Y(-1.15)} ${X(0.4)},${Y(-1.45)} ${X(0.95)},${Y(-0.45)} C${X(0.6)},${Y(-0.75)} ${X(0)},${Y(-0.62)} ${X(-0.42)},${Y(-0.1)} C${X(-0.6)},${Y(0.15)} ${X(-0.8)},${Y(0.35)} ${X(-1.0)},${Y(0.3)} Z" fill="${col}"/>
+		<ellipse cx="${X(-1.05)}" cy="${Y(-0.62)}" rx="${0.42 * r}" ry="${0.38 * r}" fill="${col}"/>`;
+	if (hair === 'short') s += `<path d="M${X(-1.0)},${Y(0.05)} C${X(-1.1)},${Y(-1.2)} ${X(0.5)},${Y(-1.42)} ${X(0.98)},${Y(-0.42)} C${X(0.5)},${Y(-0.7)} ${X(-0.2)},${Y(-0.6)} ${X(-0.5)},${Y(-0.2)} Z" fill="${col}"/>`;
+	return s;
+};
+/** 1860 soldier walking right, carrying the head against his chest with both hands. Returns {back, body, front, hero}.
+ *  x = hip x, ground = feet line, h = height. The head (hero) is placed so the collar sits on the near forearm. */
+K.soldierCarry = (x, ground, h, col, opts = {}) => {
+	const u = h / 8, f = 1, X = (d) => x + f * d * u, Y = (d) => ground - d * u;
+	const st = opts.stride ?? [0.95, -0.7];
+	const hip = [X(0), Y(4.0)];
+	let body = '';
+	// legs (trousers) with boots
+	st.forEach((sx, i) => { const foot = [X(sx), Y(0.12)], knee = K.two(hip, foot, 2.0 * u, 1.95 * u, -1);
+		body += K.limb([hip, knee, foot], 0.55 * u, 0.42 * u, col);
+		body += `<path d="M${foot[0] - 0.3 * u},${foot[1] - 0.3 * u} L${foot[0] + 0.62 * u},${foot[1] - 0.12 * u} Q${foot[0] + 0.72 * u},${foot[1] + 0.12 * u} ${foot[0] + 0.5 * u},${foot[1] + 0.12 * u} L${foot[0] - 0.34 * u},${foot[1] + 0.12 * u} Z" fill="${col}"/>`; });
+	// greatcoat torso: broad chest, belt, skirt to mid-thigh flaring with the stride
+	body += `<path d="M${X(-0.55)},${Y(6.5)} C${X(-0.92)},${Y(5.8)} ${X(-0.86)},${Y(4.7)} ${X(-0.7)},${Y(4.0)} L${X(-0.92)},${Y(3.0)} L${X(0.78)},${Y(3.05)}
+		L${X(0.62)},${Y(4.0)} C${X(0.8)},${Y(4.7)} ${X(0.92)},${Y(5.6)} ${X(0.6)},${Y(6.38)} Q${X(0.05)},${Y(6.68)} ${X(-0.55)},${Y(6.5)} Z" fill="${col}"/>
+		<path d="M${X(-0.72)},${Y(4.05)} L${X(0.64)},${Y(4.05)}" stroke="${opts.beltCol ?? '#2a1a12'}" stroke-width="${0.12 * u}" opacity=".8"/>`;
+	// neck, head and kepi (head tilted slightly down: looking at what he carries)
+	const hx = X(0.28), hy = Y(7.2), r = 0.47 * u;
+	body += `<path d="M${X(-0.05)},${Y(6.3)} L${X(0.42)},${Y(6.35)} L${X(0.38)},${Y(6.9)} L${X(0.0)},${Y(6.9)} Z" fill="${col}"/>`;
+	body += K.profileHead(hx, hy, r, f, col, null) + K.kepi(hx, hy, r, f, col);
+	// pack strap / cross belt
+	body += `<path d="M${X(-0.55)},${Y(6.35)} L${X(0.62)},${Y(4.1)}" stroke="${opts.beltCol ?? '#2a1a12'}" stroke-width="${0.1 * u}" opacity=".7"/>`;
+	// the head he carries: collar bottom at belly height, held against the chest
+	const hh = h / 4.0;   // true scale ≈ ¼ of a person
+	const hero = {x: X(1.02), y: Y(3.95), h: hh, flip: true};
+	const sh = [X(0.1), Y(6.25)];
+	// far hand: under the far end of the collar (cupping the front of the base)
+	const farT = [X(1.5), Y(3.9)], nearT = [X(0.62), Y(3.9)];
+	const ef = K.two([sh[0] + 0.15 * u, sh[1] - 0.05 * u], farT, 1.5 * u, 1.45 * u, 1);
+	const back = K.limb([[sh[0] + 0.15 * u, sh[1] - 0.05 * u], ef, farT], 0.34 * u, 0.24 * u, col) + `<ellipse cx="${farT[0]}" cy="${farT[1] + 0.05 * u}" rx="${0.27 * u}" ry="${0.2 * u}" fill="${col}"/>`;
+	// near arm: elbow down at the side, forearm level under the collar, mitten under the near end
+	const en = K.two(sh, [nearT[0] + 0.3 * u, nearT[1]], 1.45 * u, 1.35 * u, 1);
+	const front = K.limb([sh, en, [nearT[0] + 0.3 * u, nearT[1] + 0.05 * u]], 0.36 * u, 0.26 * u, col) + `<ellipse cx="${nearT[0] + 0.3 * u}" cy="${nearT[1] + 0.07 * u}" rx="${0.28 * u}" ry="${0.21 * u}" fill="${col}"/>`;
+	return {back, body, front, hero, u};
+};
+/** museum visitor standing in profile, hands clasped behind the back, slight forward lean (looking into the case). */
+K.visitor = (x, ground, h, f, col) => {
+	const u = h / 8, X = (d) => x + f * d * u, Y = (d) => ground - d * u;
+	let s = '';
+	const hip = [X(0), Y(4.0)];
+	[[0.25, 0], [-0.2, 1]].forEach(([sx]) => { const foot = [X(sx), Y(0.1)], knee = K.two(hip, foot, 2.0 * u, 1.95 * u, f > 0 ? -1 : 1);
+		s += K.limb([hip, knee, foot], 0.48 * u, 0.36 * u, col) + `<path d="M${foot[0] - f * 0.25 * u},${foot[1] - 0.2 * u} L${foot[0] + f * 0.6 * u},${foot[1] - 0.08 * u} L${foot[0] + f * 0.6 * u},${foot[1] + 0.1 * u} L${foot[0] - f * 0.28 * u},${foot[1] + 0.1 * u} Z" fill="${col}"/>`; });
+	// coat: shoulders forward a little (leaning to look), collar stand, hem at the upper thigh
+	s += `<path d="M${X(-0.55)},${Y(6.45)} C${X(-0.85)},${Y(5.6)} ${X(-0.8)},${Y(4.4)} ${X(-0.78)},${Y(3.2)} L${X(0.66)},${Y(3.2)} C${X(0.7)},${Y(4.3)} ${X(0.9)},${Y(5.5)} ${X(0.78)},${Y(6.3)} Q${X(0.25)},${Y(6.62)} ${X(-0.55)},${Y(6.45)} Z" fill="${col}"/>`;
+	s += `<path d="M${X(0.12)},${Y(6.3)} L${X(0.6)},${Y(6.5)} L${X(0.56)},${Y(6.95)} L${X(0.16)},${Y(6.95)} Z" fill="${col}"/>`;
+	s += `<path d="M${X(0.0)},${Y(6.42)} L${X(0.42)},${Y(6.85)} L${X(0.72)},${Y(6.4)} Z" fill="${col}"/>`;   // turned-up collar
+	s += K.profileHead(X(0.55), Y(7.25), 0.47 * u, f, col, 'bun');
+	// arm hanging back, hands clasped behind (the mitten sits at the small of the back)
+	const sh = [X(0.05), Y(6.15)], hand = [X(-0.5), Y(3.95)], e = K.two(sh, hand, 1.45 * u, 1.35 * u, f > 0 ? -1 : 1);
+	s += K.limb([sh, e, hand], 0.32 * u, 0.24 * u, col) + `<ellipse cx="${hand[0]}" cy="${hand[1]}" rx="${0.26 * u}" ry="${0.22 * u}" fill="${col}"/>`;
+	return s;
+};
+/** the empty stone seat: the robed stone body with an empty neck socket (a collar ring with nothing in it) */
+K.emptySeat = (x, y, h, face, fill, rimCol) => {
+	const b = K.stoneBody(x, y, h, face, fill), [tx, ty] = b.top, s = h / 140;
+	return b.svg + `<path d="M${tx - 34 * s},${ty + 4 * s} C${tx - 34 * s},${ty - 8 * s} ${tx + 34 * s},${ty - 8 * s} ${tx + 34 * s},${ty + 4 * s} L${tx + 30 * s},${ty + 12 * s} L${tx - 30 * s},${ty + 12 * s} Z" fill="${fill}"/>
+	<ellipse cx="${tx}" cy="${ty - 1 * s}" rx="${30 * s}" ry="${6 * s}" fill="#050302"/>
+	<path d="M${tx - 30 * s},${ty - 2 * s} C${tx - 10 * s},${ty - 8 * s} ${tx + 14 * s},${ty - 8 * s} ${tx + 32 * s},${ty}" stroke="${rimCol}" stroke-width="${2.5 * s}" fill="none" opacity=".9"/>`;
+};
+})();
+
+// ep45 v3 · L1 铜灯影 · the 1860 stage (B3): 海晏堂 burning behind its balustrade, the south-bank seats
+// 鼠 虎 龙 [马, empty] 猴 狗 (F4b), a looter in a kepi walking right (出) with you held against his chest in both hands.
+// K.sc1860({lx, mode}) → svg. mode 'full' | 'relief' (height map of the same stage, no looter/hero: for the L3 hand-over)
+(() => {
+const rnd = (i) => { const x = Math.sin(i * 127.1 + 7.7) * 43758.5453; return x - Math.floor(x); };
+K.sc1860 = (o = {}) => {
+	const S = '#170E0A', gy = 1012, lx = o.lx ?? 1440, relief = o.mode === 'relief';
+	const G = (v) => { const c = Math.round(v * 255).toString(16).padStart(2, '0'); return `#${c}${c}${c}`; };
+	// ---- flames: two depth layers, noise-driven heights (an envelope × per-tongue jitter), forked tips, gaps
+	const env = (x) => Math.max(0, 0.55 + 0.45 * Math.sin(x / 210 + 0.6) * Math.cos(x / 97 + 1.3) + 0.25 * Math.sin(x / 41));
+	const tongue = (x, base, h, w, lean, fork) => {
+		const tip = [x + lean, base - h];
+		let d = `M${x - w / 2},${base} C${x - w * 0.62},${base - h * 0.35} ${x + lean * 0.3 - w * 0.34},${base - h * 0.62} ${tip[0]},${tip[1]}`;
+		if (fork) d += ` C${x + lean * 0.6},${base - h * 0.72} ${x + lean * 0.5 + w * 0.1},${base - h * 0.62} ${x + lean * 0.7 + w * 0.32},${base - h * 0.8} C${x + w * 0.4},${base - h * 0.5} ${x + w * 0.66},${base - h * 0.3} ${x + w / 2},${base} Z`;
+		else d += ` C${x + lean * 0.4 + w * 0.32},${base - h * 0.6} ${x + w * 0.7},${base - h * 0.32} ${x + w / 2},${base} Z`;
+		return d; };
+	let fBack = '', fFront = '';
+	for (let i = 0; i < 30; i++) { const x = 180 + rnd(i + 40) * 1560, e = env(x); if (e < 0.18) continue;
+		fBack += `<path d="${tongue(x, 520, 140 + e * 300 * (0.6 + 0.6 * rnd(i + 3)), 70 + rnd(i + 5) * 120, (rnd(i + 7) - 0.3) * 120, rnd(i + 9) > 0.6)}"/>`; }
+	for (let i = 0; i < 44; i++) { const x = 200 + rnd(i + 140) * 1520, e = env(x + 40); if (e < 0.25) continue;
+		fFront += `<path d="${tongue(x, 510, 50 + e * 220 * (0.4 + 0.8 * Math.pow(rnd(i + 103), 1.5)), 30 + rnd(i + 105) * 70, (rnd(i + 107) - 0.3) * 80, rnd(i + 109) > 0.55)}"/>`; }
+	// ---- 海晏堂 façade (two storeys, balustrade, raised centre with pediment), windows lit from inside
+	let win = '';
+	for (let i = 0; i < 18; i++) { const x = 290 + i * 76; if (x > 860 && x < 1080) continue; const lit = rnd(i + 300) > 0.25;
+		win += `<path d="M${x},700 L${x},640 A18,18 0 0 1 ${x + 36},640 L${x + 36},700 Z" fill="${relief ? G(0.12) : lit ? 'url(#winfire)' : '#3a1c12'}"/><path d="M${x},590 L${x},556 A18,18 0 0 1 ${x + 36},556 L${x + 36},590 Z" fill="${relief ? G(0.12) : lit ? 'url(#winfire)' : '#3a1c12'}" opacity="${relief ? 1 : 0.85}"/>`; }
+	const facCol = relief ? G(0.42) : '#2B1813';
+	const fac = `<path d="M250,720 L250,520 L240,520 L240,500 L870,500 L870,440 L860,440 L960,370 L1060,440 L1050,440 L1050,500 L1680,500 L1680,520 L1670,520 L1670,720 Z" fill="${facCol}"/>
+	 ${Array.from({length: 40}, (_, i) => `<rect x="${246 + i * 36}" y="${i > 17 && i < 23 ? 426 : 486}" width="10" height="14" fill="${facCol}"/>`).join('')}
+	 <path d="M900,720 L900,600 A60,60 0 0 1 1020,600 L1020,720 Z" fill="${relief ? G(0.12) : 'url(#winfire)'}"/>
+	 ${relief ? Array.from({length: 9}, (_, i) => `<rect x="${262 + i * 160}" y="520" width="14" height="200" fill="${G(0.5)}"/>`).join('') : ''}`;
+	// ---- the south bank: 鼠 虎 龙 [马] 猴 狗; you sat between 龙 and 猴
+	const row = [['鼠', 220], ['虎', 420], ['龙', 620], [null, 820], ['猴', 1020], ['狗', 1220]];
+	const stone = relief ? G(0.62) : '#1d120d', headF = relief ? G(0.75) : '#1d120d';
+	let seats = '';
+	row.forEach(([k, x]) => { if (!k) { seats += K.emptySeat(x, 842, 220, -1, stone, relief ? G(0.62) : '#FFB070'); return; }
+		const b = K.stoneBody(x, 842, 220, -1, stone); seats += b.svg + K.zhead(k, b.top[0] - 2, b.top[1] + 34, 175, -1, headF); });
+	// ---- the looter
+	const sol = K.soldierCarry(lx, gy, 720, S, {beltCol: '#3a2418'});
+	const hero = {...sol.hero, curl: 0, glow: 1.4, mood: 'fire', rim: '#FFE0A0'};
+	if (relief) {   // height map: background low, façade/seats raised, flames as low ridges, ground lines incised
+		return `<rect width="1920" height="1080" fill="${G(0.2)}"/>
+		<g fill="${G(0.3)}">${fBack}</g><g fill="${G(0.36)}">${fFront}</g>
+		${fac}${win}
+		<rect x="0" y="720" width="1920" height="40" fill="${G(0.46)}"/><rect x="0" y="760" width="1920" height="82" fill="${G(0.38)}"/>
+		${seats}
+		<rect x="0" y="842" width="1920" height="18" fill="${G(0.5)}"/><rect x="0" y="860" width="1920" height="220" fill="${G(0.26)}"/>
+		${Array.from({length: 7}, (_, i) => `<path d="M0,${880 + i * i * 4} L1920,${880 + i * i * 4}" stroke="${G(0.18)}" stroke-width="4"/>`).join('')}`;
+	}
+	const rimDefs = `${K.rimFilter('rimFire', 0, 5, '#FF9A50', 0.8, 1.2)}${K.rimFilter('rimFig', -5, 3, '#FFB070', 0.95, 1.4)}${K.rimFilter('rimArm', 0, 4, '#FFC080', 0.95, 1.2)}`;
+	return `<defs>
+	 <linearGradient id="sky" x1="0" x2="0" gradientUnits="userSpaceOnUse" y1="0" y2="760"><stop offset="0" stop-color="#2E1E22"/><stop offset=".36" stop-color="#6A2E24"/><stop offset=".7" stop-color="#C0582F"/><stop offset="1" stop-color="#F09A50"/></linearGradient>
+	 <linearGradient id="flB" x1="0" y1="1" x2="0" y2="0"><stop offset="0" stop-color="#FF9A48"/><stop offset=".5" stop-color="#D24A22" stop-opacity=".85"/><stop offset="1" stop-color="#8A2412" stop-opacity="0"/></linearGradient>
+	 <linearGradient id="flF" x1="0" y1="1" x2="0" y2="0"><stop offset="0" stop-color="#FFF0B8"/><stop offset=".3" stop-color="#FFB04E"/><stop offset=".7" stop-color="#EA6028" stop-opacity=".8"/><stop offset="1" stop-color="#C0401E" stop-opacity="0"/></linearGradient>
+	 <linearGradient id="winfire" x1="0" y1="1" x2="0" y2="0"><stop offset="0" stop-color="#FFD27A"/><stop offset="1" stop-color="#E86A2E"/></linearGradient>
+	 <linearGradient id="ground" x1="0" x2="0" y1="0" y2="1"><stop offset="0" stop-color="#4A2A1E"/><stop offset="1" stop-color="#22140E"/></linearGradient>
+	 <radialGradient id="smk" cx=".5" cy=".7" r=".6"><stop offset="0" stop-color="#7A3A26"/><stop offset=".55" stop-color="#3A2224"/><stop offset="1" stop-color="#2A1A1E" stop-opacity="0"/></radialGradient>
+	 ${rimDefs}
+	 <filter id="b3" filterUnits="userSpaceOnUse" x="0" y="0" width="1920" height="1080"><feGaussianBlur stdDeviation="3"/></filter>
+	 <filter id="b7" filterUnits="userSpaceOnUse" x="0" y="0" width="1920" height="1080"><feGaussianBlur stdDeviation="7"/></filter>
+	 <filter id="b40" filterUnits="userSpaceOnUse" x="0" y="0" width="1920" height="1080"><feGaussianBlur stdDeviation="40"/></filter>
+	</defs>
+	<rect width="1920" height="1080" fill="url(#sky)"/>
+	<!-- smoke columns rising from the fire, lit from below -->
+	<g filter="url(#b40)">
+	 ${[[420, 300, 300, 200], [760, 220, 260, 260], [1180, 180, 340, 260], [1540, 260, 260, 220], [960, 60, 900, 120]].map(([cx, cy, rx, ry]) => `<ellipse cx="${cx}" cy="${cy}" rx="${rx}" ry="${ry}" fill="url(#smk)"/>`).join('')}
+	</g>
+	<ellipse cx="960" cy="480" rx="920" ry="160" fill="#FF8A3A" opacity=".35" filter="url(#b40)"/>
+	<g fill="url(#flB)" filter="url(#b7)" opacity=".9">${fBack}</g>
+	<g fill="url(#flF)" filter="url(#b3)">${fFront}</g>
+	${fac}${win}
+	<rect x="0" y="720" width="1920" height="40" fill="#2E1913"/>
+	<path d="M0,760 L1920,760 L1920,842 L0,842 Z" fill="#40231A"/>
+	<path d="M0,770 L1920,770" stroke="#F0904A" stroke-opacity=".4" stroke-width="3"/>
+	<g filter="url(#rimFire)">${seats}</g>
+	<path d="M0,842 L1920,842 L1920,860 L0,860 Z" fill="#1d120d"/>
+	<rect x="0" y="860" width="1920" height="220" fill="url(#ground)"/>
+	${Array.from({length: 9}, (_, i) => `<path d="M0,${880 + i * i * 3.2} L1920,${880 + i * i * 3.2}" stroke="#F0904A" stroke-opacity="${0.14 - i * 0.012}" stroke-width="2"/>`).join('')}
+	<ellipse cx="${lx + 15}" cy="${gy + 6}" rx="150" ry="12" fill="#0d0705" opacity=".7"/>
+	<g filter="url(#rimFig)">${sol.back}${sol.body}</g>
+	${K.horseHead(hero)}
+	<g filter="url(#rimArm)">${sol.front}</g>
+	${Array.from({length: 60}, (_, i) => `<circle cx="${rnd(i + 30) * 1920}" cy="${200 + rnd(i + 60) * 620}" r="${1 + rnd(i) * 2.5}" fill="#FFC070" opacity="${0.35 + rnd(i + 2) * 0.5}"/>`).join('')}`;
+};
+})();
+
+</script><script>K.page(K.sc1860({lx: 1560}), '');
 </script></body></html>
