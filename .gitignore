@@ -73,3 +73,4 @@ episodes/45-mashou/style/v7/
 # owner BGM and mixes: never commit (public repo)
 episodes/*/music/*.mp3
 episodes/*/music/*.wav
+episodes/45-mashou/review/*_evidence/
