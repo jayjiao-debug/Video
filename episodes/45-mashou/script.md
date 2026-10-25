@@ -17,10 +17,10 @@ Screenwriter. v5 revised in place after `notes_gate1_v5_r1.md` (director REVISE,
 |---|---|
 | D1 (High) 2007 staged before the sale | T3, D5, D6a and D6b are now the saleroom **before** the sale: empty chairs with catalogues on the seats, you on the podium under a work light, the gavel lying on its block. D6a = a slow push to the untouched gavel. D6b = 「撤拍」 cast into the lot card, then the room lights go out row by row to your spot. No bidders, no auctioneer, nobody lifts the gavel. The lines stay. |
 | D2 | T5 → 「可十二个里，还有【五个】没回中国。」. The ring reads 「回国 7/12」. |
-| D3 | D9a/D9b: a phone bank (a clerk with a handset raises the paddle). **Two strikes** on two beats, and the board reads 「鼠首 + 兔首 · 合计」. The line is the coordinator's/director's own: 「锤子落下，两个共拍出3149万欧元。」 (F19), no highlight. D10a: a visible time step (the lamp sweeps five times, stamp 2009.2.25 → 「2009.3.2 · 北京」), then 「未付款」, with the line 「5天后，买家却【拒绝付款】。」 (F19: 5 days, announced in Beijing). D10b: the handset laid back on its cradle; no buyer is ever in the room. |
+| D3 | D9a/D9b: a phone bank (a clerk with a handset raises the paddle). **Two strikes** on two beats, and the board reads 「鼠首 + 兔首 · 合计」. The line is the coordinator's/director's own: 「锤子落下，两个共拍出3149万欧元。」 (F19), no highlight. D10a: a visible time step (the lamp sweeps five times, stamp 2009.2.25 → 「2009.3.2 · 北京」), then 「未付款」, with the line 「5天后，买家却说：【这个款不能付】。」 (F19: 5 days, announced in Beijing). D10b: the handset laid back on its cradle; no buyer is ever in the room. |
 | D4 | D11 is staged at the **国家博物馆, Beijing, 2013.6.28** (F20), with its own move: push into rat and rabbit as the wine light warms, and the podium becomes a museum plinth (shape match). The line names the giver (cold read: 「谁送回的？」): 「一个法国家族，把鼠和兔无偿捐回。」 Stamp 「皮诺家族」. |
 | D5 | **(a) K2a cut.** The tags 「保利 ×4 · 国博 ×2」 move onto six seats during K1b. **(b) Roll call made one beat:** D3a + D3b + D4 → D3 「牛、猴、虎、猪，先后被买回中国。」 (also the cold read's 2000/2003 note). Who bought them is in the stamps (2000 · 保利购回 / 2003 · 何鸿燊购回). |
-| D6 | Highlights removed from D2a (几十万美元) and D9b (3149万欧元). |
+| D6 | Highlights removed from D2a (三四十万美元) and D9b (3149万欧元). |
 | D7 | Q → 「五个要是上拍，该不该【花钱买回来】？」 |
 | D8 | (a) E1 → E2a: push into the brass donation plaque, which becomes the brass base of the desk lamp (material match; no second lateral track). (b) H4: the 西洋楼 ruins only far in the background (正觉寺 is in 绮春园). |
 | D9 | A2/A3: two rows of six on either side of the pool, with you in the middle of your row and never the snake beside you (F4b). At 午时 the water and light hand-over **crosses the pool** from the snake on the far bank to you. Because the hours alternate banks, every hand-over crosses. No 南/北 labels and no seat numbers on screen. |
@@ -34,7 +34,7 @@ Screenwriter. v5 revised in place after `notes_gate1_v5_r1.md` (director REVISE,
 | Kept as peaks | E2b 「他【没等到】，你回家的那天。」 on the stop. H3b 「如今回到圆明园的，【只有你】。」 on a hit. Neither changed. |
 
 **Not taken from the cold read, and why:**
-- **A real price for 1989:** F11's two figures disagree ($367k / $400k). The safe wording stays 「几十万美元」, and D8's bars make the 20× visible. Option for the director: 「三四十万美元」 covers both sources, but facts.py flags it as not in a row, so I left it out.
+- **A real price for 1989:** F11's two figures disagree ($367k / $400k). The safe wording stays 「三四十万美元」, and D8's bars make the 20× visible. Option for the director: 「三四十万美元」 covers both sources, but facts.py flags it as not in a row, so I left it out.
 - **The buyer's name:** F19 says to keep it off screen. The stamp says 「买家本人宣布 · 北京」.
 - **正觉寺 in the H4 line:** no room within 16. The name is in the stamp.
 
@@ -84,7 +84,7 @@ Every person is a whole-figure silhouette or a relief figure with no face. Hands
 | D9a | 兄弟鼠和兔，在巴黎上拍。 | — | 3.10 | — | `[wall]` The Paris relief saleroom (stamp 「2009.2.25 · 巴黎佳士得」). Rat and rabbit stand on the podium. At a side table, a **phone bank**: relief clerks with handsets at their ears, each with a paddle. | Continuous. |
 | D9b | 锤子落下，两个共拍出3149万欧元。 | — | 4.10 | **HIT ×2** | `[wall]` One clerk's hinged paddle rises with the handset at his ear. The gavel strikes twice on two beats, and the board casts 「鼠首 + 兔首 · 合计 3149万欧元」. | Same shot. |
 | D10a | 5天后，买家却【拒绝付款】。 | 拒绝付款 | 3.10 | DB | `[wall]` **A visible time step**: the lamp sweeps the panel five times, like five days, while the stamp ticks to 「2009.3.2 · 北京」. Then 「未付款」 casts across the board's result line. | Same shot. |
-| D10b | 他认为：这本就是中国的。 | — | 3.10 | — | `[wall]` The clerk's hinged arm lays the handset back on its cradle. Stamp 「买家本人宣布」. No buyer is ever in the room, and no name. | **Push into rat and rabbit** as the wine light warms to day. The podium becomes a museum plinth (**shape match**). |
+| ~~D10b~~ | ~~他认为：这本就是中国的。~~ (cut at gate 1 r2: no verified row; D10a now quotes the buyer, F19) | — | 3.10 | — | `[wall]` The clerk's hinged arm lays the handset back on its cradle. Stamp 「买家本人宣布」. No buyer is ever in the room, and no name. | **Push into rat and rabbit** as the wine light warms to day. The podium becomes a museum plinth (**shape match**). |
 | D11 | 一个法国家族，把鼠和兔无偿捐回。 | — | 4.10 | DB | `[wall]` The 国家博物馆 hall (stamp 「2013.6.28 · 北京 · 国家博物馆 · 皮诺家族」). Two relief figures pass one certificate across, each with both hands on it, in front of rat and rabbit on their plinth. Two medallions light: 「回国 7/12」. | The certificate is laid on a table, and a second one slides on top of it: yours, dated 2019 (**paper match**), out of the wall. |
 | E1 | 何鸿燊，也把你捐给了国家。 | — | 3.35 | — | Pays off C2b, the same hall run longer (stamp 「2019.11.13 · 国家博物馆」). Two staff pull the cloth off you, and a brass donation plaque stands beside you. Ho is not drawn. | **Push into the brass plaque.** Its brass becomes the brass base of the desk lamp in his room (material match). |
 | E2a | 2020年5月，何鸿燊去世，98岁。 | — | 3.60 | **STOP**: the lamp goes out on the stop | The private room from D7a, empty: his chair empty, the lamp on, night in the window (stamp 「2020.5.26」). The lamp goes out exactly on the stop. | Same shot. |
