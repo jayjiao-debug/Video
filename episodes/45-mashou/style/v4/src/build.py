@@ -28,11 +28,12 @@ out = []
 for n in sys.argv[1:]:
     pre = ''
     if n.endswith('@NOHERO'): n = n[:-7]; pre = 'window.NOHERO = true;'
+    if n.endswith('@MASK'): n = n[:-5]; pre = 'window.HERO_MASK = true;'   # r5: hero regions in flat colours (neck green, mane red, head blue)
     html = f"""<!doctype html><html><head><meta charset="utf-8"><style>
 @font-face{{font-family:'Cormorant Garamond';src:url(data:font/woff2;base64,{font}) format('woff2');font-weight:600}}
 {wenkai_css((SRC / f'{n}.js').read_text() + (SRC / 'skin.js').read_text())}
 html,body{{margin:0;width:1920px;height:1080px;overflow:hidden;background:#000}}
 #art{{position:absolute;inset:0}}
 </style></head><body><script>window.JSEAL='{JSEAL}';{pre}</script><script>{kit}</script><script>{(SRC / f'{n}.js').read_text()}</script></body></html>"""
-    p = SRC / (f'{n}_nohero.html' if pre else f'{n}.html'); p.write_text(html); out.append(str(p))
+    p = SRC / (f'{n}_mask.html' if 'MASK' in pre else f'{n}_nohero.html' if pre else f'{n}.html'); p.write_text(html); out.append(str(p))
 subprocess.run(['python3', RENDER, *out, '--out', str(SRC.parent)], check=True)

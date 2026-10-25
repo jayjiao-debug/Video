@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""c1_proof.png (gate 2b r4): C1 at full size next to TWO press photos at the same height — the 3/4 view (mashou_bjnews_1.jpg)
+"""c1_proof.png (gate 2b r5): C1 at full size next to TWO press photos at the same height — the 3/4 view (mashou_bjnews_1.jpg)
 and the mane from behind (mashou_bjnews_zhengjuesi.jpg) — plus the 400 px row of all three.
 For the owner and the director only: the photos are REFERENCE, never on screen, never traced."""
 from PIL import Image, ImageDraw, ImageFont
@@ -16,9 +16,9 @@ M, TOP, GAP = 40, 130, 60
 W = M + sum(b.width + M for b in big)
 Hh = TOP + H + 56 + GAP + 70 + h4 + 120
 s = Image.new('RGB', (W, Hh), '#14100d'); d = ImageDraw.Draw(s)
-d.text((M, 30), 'ep45 C1 hero proof (gate 2b r4) · for the owner and the director only · the photos are reference, never on screen, never traced', font=ImageFont.truetype(F, 40), fill='#F3E6CF')
+d.text((M, 30), 'ep45 C1 hero proof (gate 2b r5) · for the owner and the director only · the photos are reference, never on screen, never traced', font=ImageFont.truetype(F, 40), fill='#F3E6CF')
 d.text((M, 82), 'Left: c1_hook.png as it will play (1920×1080).   Middle and right: 新京报 press photos of the 圆明园马首, scaled to the same height.', font=ImageFont.truetype(FR, 30), fill='#CDBFA8')
-x = M; labels = ['C1 · r4: mane in S-wave locks running back and down, 5 flame clumps; mouth level; round jowl, throat notch, bare neck front'] + [l for _, l in REFS]
+x = M; labels = ['C1 · r5: one casting: the mane is relief in the neck (same patina, one outline), cast tongues below the cut; ears out of the poll'] + [l for _, l in REFS]
 for b, lab in zip(big, labels):
     s.paste(b, (x, TOP)); d.text((x, TOP + H + 10), lab, font=ImageFont.truetype(FR, 28), fill='#FFB070'); x += b.width + M
 y2 = TOP + H + 56 + GAP
