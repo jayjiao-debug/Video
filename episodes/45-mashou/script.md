@@ -1,3 +1,135 @@
+# Script v6 (2:20 cut on music candidate 3, 2026-10-25)
+
+Screenwriter. v6 cuts v5.1 (kept below, unchanged) from 49 to **40 lines** so the film fits candidate 3's map and the owner's retention data. **Every v6 line is an existing voice clip, word for word (40 × REUSE, 0 NEW).** Files:
+- `lines_v6.json`: 40 × `[null, null, text]`, in order;
+- `vo_map_v6.json`: `{"01": "REUSE 01", …}`, where the v6 index maps to the clip key in `vo/durs.json` and `audio/vo/NN.wav`;
+- `lines_v6_est.json`: my estimated times (plan45vo rules, below), for the editor to check against.
+
+## The brief this answers
+- **Music, candidate 3:**
+  - title 9.05 → 11.32;
+  - breakdown **42.20**;
+  - build **60.32** (D9b);
+  - stop **76.17** (E2a, the lamp goes out);
+  - hardest drop **87.17** (H1b);
+  - outro **132.77** (Q);
+  - the music runs to 148.05.
+
+  Everything from the build on keeps today's spacing (−31.70 s = 14 bars). The music join at 17.3 s is inaudible and needs nothing.
+- **Owner, on retention:**
+  - Keep the hook and teaser intact, and take the time out of the middle.
+  - Make 20–40 s a concrete image plus a turn, not exposition.
+  - Speak and read Q fully before an end card of about 4 s.
+  - Keep the title at or under about 2.3 s.
+
+## What changed (v5.1 → v6)
+| # | Change | Why |
+|---|---|---|
+| 1 | **C1–C2b, the title and T1–T5 are untouched** (same lines, same times, 0.32 → 24.87). | The owner's data says the opening holds people. The title is still 9.05 → 11.32 (2.27 s). |
+| 2 | **Nine lines are cut from the middle:** A1, A2, A3a, A3b, B1b, B2, D2a, D2b, D3 (31.7 s). See "Cuts" below. | The time had to come out between the teaser and the breakdown. |
+| 3 | **20–40 s is now one image, then turns, every 3 s:** noon spout (A4) → the soldiers come in (B1a) → you are taken (B3) → London (D1) → 2007 (D5). It drops all the clock exposition. The picture carries the count: the rewind spins the ring back from 回国 7/12 to a full **在家 12/12**, and B3 empties it to **0**. | Owner point 2. The count the teaser just showed (7/12) is the hook that runs through the turn. |
+| 4 | **D6a starts ON the breakdown (42.205 = beat 72)**, not 2.26 s before it, so 「这一次，锤子【没有落下】」 appears as the bass drops out. D6b–D9a keep their lines, at the tightest legal windows (clip + 0.36 s, on half-beats). | This bought the 2.26 s that let T3 stay in the teaser. |
+| 5 | **D9b's subtitle appears half a beat before the build (60.03).** The spoken 「锤子落下」 lands on the build strike (60.32), and D10a–E1 are re-laid on half-beats. | v5.1's E1 had a 0.07 s breath before the stop, against the 0.3 s rule. Now it has 0.35 s, and E2a still starts exactly on the stop (76.17). |
+| 6 | **The ending:** Q runs 132.21 → 136.17 (voice ends 135.33, read by 135.7). The **end card runs 136.17 → 140.70 (4.5 s)**, and the music fades over the last bar into 140.70 (bar 61.5). The film is **2:20.7**, not 2:28, saving 7.35 s. The saving is **not** spent: the owner's data says shorter is better, and nothing after the drop is missing. If the owner wants ≥ 141 s, end on bar 62 = 141.83 (a 5.7 s card). | Owner point 3. |
+| 7 | Text, highlights and facts are unchanged for every kept line. | So every clip is reused. |
+
+## Cuts (one line each: what the picture loses)
+| Cut | Line | What the picture loses |
+|---|---|---|
+| A1 | 乾隆年间，你由红铜一次铸成。 | **The foundry (set FOUNDRY, scene 06b) is gone:** the pour, the mould breaking, the profile match. The rewind now lands straight on the noon pool, with the stamp 「乾隆年间 · 海晏堂」. One of the risky builds disappears. |
+| A2 | 你和十一个兄弟，坐在水池两边。 | No separate pull-back to the 八 layout. A4 opens on the frontal 八 wide, and 在家 12/12 draws on A4's first beat. |
+| A3a | 每两小时，轮到谁，谁就喷水。 | The turn-taking time-lapse shrinks to a 1-beat flick at the top of A4: two or three arcs hop across the pool, then the hand-over reaches you. The 「水力钟」 label goes. |
+| A3b | 你，是午时。 | The close-up of only you spouting is gone. The ripple outward from you on A4 still shows that you are the noon one. |
+| B1b | 能搬走的，都被搬走了。 | The crate and vase carriers and the track pause go. B1a's soldiers walk in, and B3 follows straight on. |
+| B2 | 然后，一把火。 | **No line for the fire, but the fire stays in the picture.** It flares behind the façade on B3's downbeat (33.15), and B3 plays in front of it: the b3_1860 key frame is exactly this shot. H4's ghost smoke still has its source. |
+| D2a | 锤子落下：三四十万美元。 | The London strike (T2's payoff) moves under D1. On a beat inside D1, the gavel strikes and the lectern card reads 「三四十万美元」 (≥ 56 px), unvoiced. D8's short bar keeps that number. |
+| D2b | 你被台湾收藏家买走。 | The porter, the crate and the trolley go. The buyer appears only as a small tag 「台湾收藏家」 on the lectern card (optional). |
+| D3 | 牛、猴、虎、猪，先后被买回中国。 | **The turntable roll call and the 2003 handshake go**, and so does the counter's 0 → 4 step. Suggestion: under D5, while the lamp swings onto the 2007 podium, four dots fill ivory in one beat under a small stamp 「2000–2003 · 牛 猴 虎 猪 购回」, so D7b's 回国 5/12 still adds up. The four brothers are first named by H3c (Hangzhou) and counted by H3a (七个). |
+
+The lines cut in v5.1 stay cut. The callbacks that remain:
+- T1 → B3
+- T2 → the strike under D1
+- T3 → D5/D6a
+- T4 → H1b
+- T5 → H3a/H3b
+- A4 → K1a
+- the fire under B3 → H4
+- C2a → D7a
+- C2b → E1
+
+D8 still reads alone (「比伦敦那次」, with London said in D1 and the price on the bar).
+
+## Title options (≤ 10 字; the board already uses 1)
+1. **假如你是圆明园马首.** This is the one in use on the title and end cards. It is the series format: "you" framing (highest share rate in the owner's data), it says who 你 is, and it can't overclaim.
+2. **马首回家，用了160年.** It is true as read (1860 → 2020, F21 估算) and uses the film's twist word, 回家. It is a little CCTV-like.
+3. **6910万买下，又捐了出去.** A number plus a contradiction: the hook's own paradox. The cover must say 港元 (F13).
+
+## Story in 3 lines
+1. 你是圆明园水力钟的马首：正午12点，十二兄弟一起喷水；1860年你被抢走，一百多年后出现在伦敦拍卖台。
+2. 2007年你又要上拍，锤子没有落下：何鸿燊私下用6910万港元买下你，后来捐给国家，自己没等到你回家。
+3. 2020年你回到圆明园：回国的有七个，回家的只有你。还差十一个，其中五个没回中国——要是上拍，该不该花钱买回来？
+
+## Lines v6
+Times are estimates using plan45vo.py's rules. Each line starts on a beat (on a half-beat in the busy blocks). The window is at least clip + 0.36 s (0.06 lead + 0.30 breath), with the reading minimum capped at clip + 0.7. **Act 1 is not on a hard anchor between 11.64 and 42.20**: the v5.1 HIT marks there (A4, B2) were for the old track. The editor puts picture hits on the nearest real hits in candidate 3.
+
+**pace.py:** 0 lines too fast, 8 % waiting (target ≤ 12 %). The holds flagged are the title under C2b, D5 before the breakdown, D9b, D10a, E2a's stop, and H3c. All are music-held beats.
+
+| v6 | id | VO | est. time | clip | line | music | picture (changes vs storyboard in **bold**) | facts |
+|---|---|---|---|---|---|---|---|---|
+| 01 | C1 | REUSE 01 | 0.32–3.71 | 2.67 | 假如说，你是圆明园的马首。 | frame 0 | Unchanged (scene 01). | F1 |
+| 02 | C2a | REUSE 02 | 3.71–7.39 | 3.19 | 有人花【6910万港元】买下你， | DB | Unchanged. | F13 |
+| 03 | C2b | REUSE 03 | 7.39–11.64 | 1.42 | 又把你【捐了出去】。 | → title 9.05–11.32 | Unchanged (02, 03). | F15 |
+| 04 | T1 | REUSE 04 | 11.64–13.90 | 1.24 | 你被人抢走， | hard cut | Unchanged (04). | F9 |
+| 05 | T2 | REUSE 05 | 13.90–16.17 | 1.32 | 被一锤子卖掉， | hard cut, gavel | Unchanged (05). | F11 |
+| 06 | T3 | REUSE 06 | 16.17–19.00 | 1.80 | 差点又上了拍卖台， | hard cut (music join 17.3 is inaudible) | Unchanged. | F12 |
+| 07 | T4 | REUSE 07 | 19.00–21.26 | 1.73 | 终于，你回了家。 | hard cut | Unchanged; the door move into the ring. | F21 |
+| 08 | T5 | REUSE 08 | 21.26–24.87 | 2.85 | 可十二个里，还有【五个】没回中国。 | — | Unchanged: the ring, 回国 7/12. | F23, F27 |
+| — | rewind | — | 24.87–26.07 | — | *(picture only, ≈ 1.2 s)* | — | **The ring spins back and its dots relight to a full 在家 12/12** while T4 → T1 flash in reverse with their years, landing on the noon pool. **The last stamp is 「乾隆年间 · 海晏堂」 (no foundry).** | F1, F7 |
+| 09 | A4 | REUSE 13 | 26.07–29.47 | 2.99 | 正午12点，十二个【一起喷水】。 | the act's peak; land the arcs on the nearest downbeat | **POOL NOON from the frontal 八 wide.** Beat 1: two or three single arcs hop across the pool (the clock, a 1-beat flick), and the hand-over light crosses to you. Then all twelve fire outward from you, with thick cores and splash rings. 在家 12/12, your dot copper. Slow push. | F3, F4 |
+| 10 | B1a | REUSE 14 | 29.47–33.15 | 3.13 | 1860年，英法联军进了园子。 | DB | Unchanged (08): the light change to red dusk, the tilt to the flagstones, kepis walking in. **The track runs through; no picture pause.** | F9 |
+| 11 | B3 | REUSE 17 | 33.15–35.13 | 1.09 | 你被带走了。 | DB: the fire flares on it | **B2's fire moves here:** it flares behind the façade on the downbeat while the looter lifts you and carries you right (pays off T1). The counter goes 12 → 11 on the lift, then rolls to 0 and flips to 回国 0/12 once the smoke covers the pool. | F9, F10 |
+| 12 | D1 | REUSE 18 | 35.13–38.52 | 2.51 | 一百多年后，你出现在伦敦。 | **strike on a beat inside the line** | Smoke → saleroom haze (unchanged hand-over). London 1989: you on the podium; the paddles rise. **D2a's strike moves here**: the gavel strikes on a beat (pays off T2), and the lectern card turns to 「三四十万美元」 (no line). Optional tag 「台湾收藏家」. **No porter or crate.** | F11 |
+| 13 | D5 | REUSE 22 | 38.52–42.20 | 2.45 | 2007年，你又要上拍了。 | holds into the breakdown | The lamp swing: London's lamp lands on the 2007 work light (the same room, empty chairs, the gavel at rest), pays off T3. **The counter's 0 → 4 lands in one beat here, with the stamp 「2000–2003 · 牛 猴 虎 猪 购回」.** The push to the gavel starts. | F12, (F17, F18 stamp only) |
+| 14 | D6a | REUSE 23 | **42.20**–45.03 | 2.34 | 这一次，锤子【没有落下】。 | **BREAKDOWN 42.20**: the line appears as the bass drops | The slow push to the untouched gavel **starts on the breakdown** (it no longer crosses it). | F12 |
+| 15 | D6b | REUSE 24 | 45.03–47.87 | 2.37 | 国家文物局反对公开拍卖。 | — | Unchanged: 「撤拍」 and the lamps out row by row. **Over 2.8 s, so 2 rows per beat.** | F12 |
+| 16 | D7a | REUSE 25 | 47.87–51.26 | 2.97 | 拍卖前，何鸿燊私下买下了你： | — | Unchanged: spot → desk lamp; Ho signs. | F13 |
+| 17 | D7b | REUSE 26 | 51.26–53.81 | 2.03 | 【6910万港元】。 | slam on its first beat | Unchanged. 回国 5/12. | F13 |
+| 18 | D8 | REUSE 27 | 53.81–56.92 | 2.56 | 比伦敦那次，贵了【二十多倍】。 | — | Unchanged: the two light columns. | F11, F13 估算 |
+| 19 | D9a | REUSE 28 | 56.92–60.03 | 2.55 | 兄弟鼠和兔，在巴黎上拍。 | — | Unchanged. | F19 |
+| 20 | D9b | REUSE 29 | **60.03**–64.85 | 4.29 (×1.05) | 锤子落下，两个共拍出3149万欧元。 | **BUILD 60.32** = the spoken 「锤子落下」, strikes ×2 | Unchanged; the strikes stay on 60.32 and the next beat. | F19 |
+| 21 | D10a | REUSE 30 | 64.85–69.09 | 3.65 (×1.05) | 5天后，买家却说：【这个款不能付】。 | — | Unchanged. | F19 |
+| 22 | D11 | REUSE 31 | 69.09–73.34 | 3.79 (×1.05) | 一个法国家族，把鼠和兔无偿捐回。 | — | Unchanged. | F20 |
+| 23 | E1 | REUSE 32 | 73.34–76.17 | 2.48 (×1.05) | 何鸿燊，也把你捐给了国家。 | — | Unchanged. | F15 |
+| 24 | E2a | REUSE 33 | 76.17–81.26 | 4.45 | 2020年5月，何鸿燊去世，98岁。 | **STOP 76.17**: the lamp goes out | Unchanged. | F16 |
+| 25 | E2b | REUSE 34 | 81.26–84.37 | 2.55 | 他【没等到】，你回家的那天。 | in the stop | Unchanged. | F16, F21 |
+| 26 | H1a | REUSE 35 | 84.37–87.17 | 1.60 | 同年12月1日， | pickup | Unchanged. | F21 |
+| 27 | H1b | REUSE 36 | **87.17**–89.75 | 1.39 | 你回到了圆明园。 | **HARDEST DROP 87.17** | Unchanged. | F21 |
+| 28 | H2 | REUSE 37 | 89.75–92.58 | 2.00 | 你离开了【160年】。 | — | Unchanged. | F21 估算 |
+| 29 | H3a | REUSE 38 | 92.58–96.54 | 2.90 | 十二个里，回到中国的有七个。 | — | Unchanged. | F21, F23 |
+| 30 | H3c | REUSE 39 | 96.54–101.07 | 3.79 | 今夏杭州，人们排几小时看你兄弟。 | — | Unchanged. | F28, F31 |
+| 31 | H3b | REUSE 40 | 101.07–104.47 | 2.65 | 如今回到圆明园的，【只有你】。 | HIT | Unchanged. | F21, F23, F24, F27 |
+| 32 | H4 | REUSE 41 | 104.47–108.43 | 2.84 | 你住进园里唯一幸存的古建筑。 | — | Unchanged (the ghost smoke now calls back B3's fire). | F22 |
+| 33 | H5a | REUSE 42 | 108.43–111.83 | 2.92 | 细看，你有一只耳朵是卷的。 | — | Unchanged. | F6 |
+| 34 | H5b | REUSE 43 | 111.83–115.79 | 3.10 | 研究的人说：你这一路被撞过。 | — | Unchanged. | F6 |
+| 35 | K1a | REUSE 44 | 115.79–119.75 | 2.97 | 正午12点，你们本该一起喷水。 | section return | Unchanged (calls back A4). | F3 |
+| 36 | K1b | REUSE 45 | 119.75–122.58 | 2.02 | 现在，还差【十一个】。 | — | Unchanged. | F21, F23, F27 |
+| 37 | K2 | REUSE 46 | 122.58–125.98 | 2.63 | 其中五个，至今【没回中国】。 | — | Unchanged. | F23, F27 |
+| 38 | K3a | REUSE 47 | 125.98–129.94 | 2.64 | 法国还拍出过一个疑似龙首， | strike | Unchanged. | F26 |
+| 39 | K3b | REUSE 48 | 129.94–132.21 | 1.80 | 真假，【说不清】。 | — | Unchanged. | F26 |
+| 40 | Q | REUSE 49 | 132.21–136.17 | 3.06 | 五个要是上拍，该不该【花钱买回来】？ | **OUTRO 132.77** | The last image. Q is spoken (ends 135.33) and read before the card. **The end card runs 136.17 → 140.70 (4.5 s), and Q slides into its slot.** The fade runs over the last bar, ending at 140.70. | F12, F19, F26 |
+
+**Highlights:** 15 / 40 (38 %), the same 15 as v5.1. The cuts removed only unhighlighted lines, so the ratio rose from 31 %. If the director wants it nearer ⅓, unbracket K3b 「说不清」. That changes no clip.
+
+**For the producer (re-timing):**
+- `plan45vo.py` needs v6's 40 rows and these anchors: D6a 42.205, D9b 60.03 (half a beat early), E2a 76.165, H1b 87.17. D6a–E1 need floor windows (clip + 0.36, no HOLD); with HOLD, D9a would run past the build.
+- In `mix45vo.py`:
+  - keep TEMPO on clips 29–32;
+  - VOGAIN stays on clip 36;
+  - FREE becomes (9.05, 11.32), (87.17, 88.60), (136.17, end);
+  - FADE becomes (138.43, 140.70).
+
+---
+
 # Script v5.1 (rebuild, gate 1 r1 fixes, 2026-10-25)
 
 Screenwriter. v5 revised in place after `notes_gate1_v5_r1.md` (director REVISE, notes 1–9) and `coldread_gate1_v5.json`. Facts as amended: F4b, F19 and F20. Lines file: `lines_v5.json` (49 × `[null, null, "text with [key]"]`, in order).
