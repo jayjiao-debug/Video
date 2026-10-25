@@ -1,17 +1,22 @@
 // ep45 v7 key frames (script v7, subtitles only, 你 = the viewer, 它 = the horse). Shared helpers for the new v7 frames.
-// RING (v7 hook set): the twelve on two shallow arcs of robed stone seats around the night pool, seen frontally from a
-// little above. Far arc 6 (small), near arc 6 (big), staggered so no head hides another. Every head is a profile turned
-// toward the centre line; the horse is 4th from the left on the near arc (centre-right), facing left, copper-lit.
+// RING (v8, owner note on the hook: the horse is the centre by light, space and camera — never by size). The twelve sit as a
+// zodiac clock around the night pool, seen frontally from a little above: the far arc holds 10–2 o'clock (狗 猪 鼠 牛 虎, 鼠 at
+// twelve), the near arc 9–3 o'clock (鸡 猴 羊 马 蛇 龙 兔) with 马 at six, front-centre. Every head (the horse included) is drawn
+// at brother scale on its own seat with air around it; no head overlaps another head or seat. The horse is the only lit,
+// copper head: rim + its own glow, a soft pool of light on its seat, a copper streak in the water; the eleven stay dark and
+// cool with softer rims. Its size on screen comes from the camera (the push to the title), so every ring shot matches.
 (() => {
-// zodiac clock order, far arc left → right then near arc right → left (so the near arc reads 鸡 猴 羊 马 蛇 龙 left → right)
-K.RING_FAR = ['狗', '猪', '鼠', '牛', '虎', '兔'];
-K.RING_NEAR = ['鸡', '猴', '羊', '马', '蛇', '龙'];
+K.RING_FAR = ['狗', '猪', '鼠', '牛', '虎'];
+K.RING_NEAR = ['鸡', '猴', '羊', '马', '蛇', '龙', '兔'];
+/** horse height for a seat of scale s: the head's visual box (1.19 h tall, 1.54 h long) set against a brother's (≈ 0.9 × box) */
+K.HERO_RING_H = 142;
 /** seat positions. o: {cx, far: {y, s, dx, sag}, near: {y, s, dx, lift}} → [{k, x, y, s, face, arc}] */
 K.ringPos = (o = {}) => {
-	const cx = o.cx ?? 960, F = {y: 572, s: 0.8, dx: 232, sag: 28, ...(o.far ?? {})}, N = {y: 896, s: 1.25, dx: 268, lift: 56, ...(o.near ?? {})};
-	const out = [];
-	K.RING_FAR.forEach((k, i) => { const u = (i - 2.5), x = cx + u * F.dx, t = Math.abs(u) / 2.5; out.push({k, x, y: F.y + F.sag * t * t, s: F.s * (1 + 0.06 * t), face: x < cx ? 1 : -1, arc: 'far'}); });
-	K.RING_NEAR.forEach((k, i) => { const u = (i - 2.5), x = cx + u * N.dx, t = Math.abs(u) / 2.5; out.push({k, x, y: N.y - N.lift * t * t, s: N.s * (1 - 0.1 * t), face: x < cx ? 1 : -1, arc: 'near'}); });
+	const cx = o.cx ?? 960, F = {y: 552, s: 0.74, dx: 280, sag: 0, ...(o.far ?? {})}, N = {y: 916, s: 1.12, dx: 288, lift: 24, ...(o.near ?? {})};
+	const out = [], arc = (list, A, sgn, kind) => { const m = (list.length - 1) / 2;
+		list.forEach((k, i) => { const u = i - m, x = cx + u * A.dx + (k === '马' ? (o.heroDx ?? 22) : 0), t = m ? Math.abs(u) / m : 0;   // the horse's head reaches left of its seat: nudge the seat so the head's centre sits on the centre line
+			out.push({k, x, y: A.y + sgn * (kind === 'far' ? A.sag : A.lift) * t * t, s: A.s * (kind === 'far' ? 1 + 0.06 * t : 1 - 0.06 * t), face: x < cx - 1 ? 1 : -1, arc: kind}); }); };
+	arc(K.RING_FAR, F, 1, 'far'); arc(K.RING_NEAR, N, -1, 'near');
 	return out;
 };
 /** one ring seat with its head. st: 'dark' | 'lit' (ivory, back in China) | 'dash' (not back) | 'empty' (head gone) | 'hero'.
@@ -20,7 +25,7 @@ K.ringSeat = (p, st, o = {}) => {
 	const {x, y, s, face} = p, h = 160 * s, stone = o.stone ?? '#353530';
 	const b = K.stoneBody(x, y, h, face, stone); const [tx, ty] = b.top;
 	if (st === 'empty') return {back: K.emptySeat(x, y, h, face, stone, o.rimEmpty ?? '#BFD0CC'), head: '', top: [tx, ty]};
-	if (st === 'hero') return {back: b.svg, head: '', hero: {x: tx + face * 4 * s, y: ty + 22 * s, h: 200 * s * (o.heroK ?? 1.1), flip: face > 0, curl: o.curl ?? 1, glow: o.glow ?? 1.1, key: o.key ?? 1.7, mood: 'warm', rim: '#FFE6C0', base: 'seat'}, top: [tx, ty]};
+	if (st === 'hero') return {back: b.svg, head: '', hero: {x: tx + face * 4 * s, y: ty + 22 * s, h: K.HERO_RING_H * s * (o.heroK ?? 1), flip: face > 0, curl: o.curl ?? 1, glow: o.glow ?? 1.1, key: o.key ?? 1.7, mood: 'warm', rim: '#FFE6C0', base: 'seat'}, top: [tx, ty]};
 	const size = 175 * s, hx = tx + face * 4 * s, hy = ty + 22 * s;
 	if (st === 'dash') { const sw = 4.2 / (size / 100);
 		const dash = `stroke-dasharray="${11 / (size / 100)} ${8 / (size / 100)}"`;
@@ -28,12 +33,16 @@ K.ringSeat = (p, st, o = {}) => {
 		const g = K.bro(p.k, hx, hy, size, face, '#E9DCC4', `fill-opacity=".10" stroke="#F3E6CF" stroke-width="${sw}" ${dash} stroke-linejoin="round"`)
 			.replace(/stroke="currentColor" stroke-width="[\d.]+"/g, `stroke="#F3E6CF" stroke-width="${sw}" ${dash}`);
 		return {back: b.svg, head: `<g opacity=".95">${g}</g>`, top: [tx, ty]}; }
-	const fill = st === 'lit' ? (o.litFill ?? '#E9DCC4') : (o.darkFill ?? '#231B16');
+	const fill = st === 'lit' ? (o.litFill ?? '#E9DCC4') : (o.darkFill ?? '#2B2521');   // v8: a touch lighter = lower contrast for the eleven
 	return {back: b.svg, head: K.bro(p.k, hx, hy, size, face, fill), top: [tx, ty], mouth: K.broPt(p.k, hx, hy, size, face, 'mouth')};
 };
-/** the night garden behind the ring: sky with moon haze, far roofs + trees, the pool inside the ring. o: {cx, haze} */
+/** the horse's light on the ring: where its head glows (screen-space centre of the head) */
+K.ringHeroLight = (pos) => { const hp = pos.find((q) => q.k === '马'), hs = K.ringSeat(hp, 'hero'), h = hs.hero;
+	return {x: h.x - 0.3 * h.h, y: h.y - 0.5 * h.h, seat: hs.top, s: hp.s, base: [hp.x, hp.y]}; };
+/** the night garden behind the ring: sky with moon haze, far roofs + trees, the pool inside the ring, and the horse's light on
+ *  the water (heroX/heroY = the head's centre). o: {cx, heroX, heroY, poolRx} */
 K.ringNight = (o = {}) => {
-	const cx = o.cx ?? 960, rnd = K.rnd;
+	const cx = o.cx ?? 960, rnd = K.rnd, hx = o.heroX ?? cx, hy = o.heroY ?? 690;
 	let trees = '';
 	for (let i = 0; i < 40; i++) { const x = -40 + i * 52 + rnd(i) * 30, r = 40 + rnd(i + 3) * 46; trees += `<ellipse cx="${x}" cy="${560 - rnd(i + 7) * 40}" rx="${r}" ry="${r * 0.8}"/>`; }
 	return `<defs>
@@ -41,8 +50,9 @@ K.ringNight = (o = {}) => {
 	 <radialGradient id="r7moon" cx="${cx - 420}" cy="250" r="700" gradientUnits="userSpaceOnUse"><stop offset="0" stop-color="#E4EEE8" stop-opacity=".42"/><stop offset=".4" stop-color="#C8D6D0" stop-opacity=".14"/><stop offset="1" stop-color="#C8D6D0" stop-opacity="0"/></radialGradient>
 	 <linearGradient id="r7pool" x1="0" x2="0" y1="0" y2="1"><stop offset="0" stop-color="#8FA7A2"/><stop offset=".55" stop-color="#5E7A76"/><stop offset="1" stop-color="#3C5452"/></linearGradient>
 	 <linearGradient id="r7terr" x1="0" x2="0" y1="0" y2="1"><stop offset="0" stop-color="#3E4644"/><stop offset="1" stop-color="#1C2122"/></linearGradient>
-	 <radialGradient id="r7cu" cx="${o.heroX ?? cx}" cy="${o.heroY ?? 640}" r="520" gradientUnits="userSpaceOnUse"><stop offset="0" stop-color="#FF9A5A" stop-opacity=".42"/><stop offset=".5" stop-color="#E07A3E" stop-opacity=".12"/><stop offset="1" stop-color="#E07A3E" stop-opacity="0"/></radialGradient>
-	 ${K.blur('r7b10', 10)}${K.blur('r7b3', 3)}
+	 <radialGradient id="r7cu" cx="${hx}" cy="${hy}" r="460" gradientUnits="userSpaceOnUse"><stop offset="0" stop-color="#FF9A5A" stop-opacity=".40"/><stop offset=".45" stop-color="#E07A3E" stop-opacity=".12"/><stop offset="1" stop-color="#E07A3E" stop-opacity="0"/></radialGradient>
+	 <radialGradient id="r7streak"><stop offset="0" stop-color="#FFB070" stop-opacity=".1"/><stop offset=".45" stop-color="#FFB070" stop-opacity=".7"/><stop offset="1" stop-color="#E07A3E" stop-opacity="0"/></radialGradient>
+	 ${K.blur('r7b10', 10)}${K.blur('r7b3', 3)}${K.blur('r7b6', 6)}
 	</defs>
 	<rect width="1920" height="1080" fill="url(#r7sky)"/><rect width="1920" height="1080" fill="url(#r7moon)"/>
 	<circle cx="${cx - 420}" cy="250" r="60" fill="#DCE6E0" opacity=".16" filter="url(#r7b10)"/><circle cx="${cx - 420}" cy="250" r="20" fill="#E8EEE6" opacity=".55" filter="url(#r7b3)"/>
@@ -57,17 +67,41 @@ K.ringNight = (o = {}) => {
 	${Array.from({length: 7}, (_, i) => `<path d="M${cx - 640 + i * 40},${640 + i * 26} L${cx + 640 - i * 40},${640 + i * 26}" stroke="#E6EEE6" stroke-width="1.6" opacity="${0.22 - i * 0.025}"/>`).join('')}
 	<ellipse cx="${cx - 420}" cy="700" rx="40" ry="90" fill="#E8F0EA" opacity=".18" filter="url(#r7b10)"/>
 	<path d="M${cx - (o.poolRx ?? 900) + 24},738 A${(o.poolRx ?? 900) - 24},138 0 0 0 ${cx + (o.poolRx ?? 900) - 24},738" stroke="#C8D6D0" stroke-width="3" fill="none" opacity=".35"/>
+	<!-- the horse's copper on the water: one soft streak under it, broken by the ripples (the moon's twin, warm) -->
+	<ellipse cx="${hx}" cy="760" rx="70" ry="120" fill="url(#r7streak)" opacity=".42" filter="url(#r7b10)"/>
+	${Array.from({length: 7}, (_, i) => `<path d="M${(hx - 26 - 14 * K.rnd(i + 70) + 4 * i).toFixed(1)},${648 + i * 30} l${(34 + 30 * K.rnd(i + 71) - 2 * i).toFixed(1)},0" stroke="#FFB070" stroke-width="2.2" stroke-linecap="round" opacity="${(0.42 - i * 0.04).toFixed(2)}"/>`).join('')}
 	<rect width="1920" height="1080" fill="url(#r7cu)"/>`;
 };
-/** draw a whole ring: states = {kind: st}; returns {svg, heroes:[hero], seats:{k: seat}} (far arc first, then near) */
+/** the same night garden authored wide (for camera zooms below 1 and pans): the 1920 plate extended on all sides */
+K.ringNightWide = (o = {}) => {
+	const rnd = K.rnd;
+	let s = K.ringNight(o);
+	s = s.replace('<linearGradient id="r7sky" x1="0" x2="0" y1="0" y2="1">', '<linearGradient id="r7sky" gradientUnits="userSpaceOnUse" x1="0" x2="0" y1="0" y2="1080">')
+		.replace('<linearGradient id="r7terr" x1="0" x2="0" y1="0" y2="1">', '<linearGradient id="r7terr" gradientUnits="userSpaceOnUse" x1="0" x2="0" y1="548" y2="1080">');
+	for (const g of ['r7sky', 'r7moon', 'r7cu']) s = s.replace(`<rect width="1920" height="1080" fill="url(#${g})"/>`, `<rect x="-900" y="-700" width="4000" height="2600" fill="url(#${g})"/>`);
+	s = s.replace('<rect x="0" y="548" width="1920" height="532" fill="url(#r7terr)"/>', '<rect x="-900" y="548" width="4000" height="1300" fill="url(#r7terr)"/>')
+		.replace('<path d="M0,548 L1920,548"', '<path d="M-900,548 L3100,548"');
+	let trees = '';
+	for (let i = -18; i < 64; i++) { if (i >= 0 && i < 40) continue; const x = -40 + i * 52 + rnd(Math.abs(i) + 200) * 30, r = 40 + rnd(Math.abs(i) + 203) * 46; trees += `<ellipse cx="${x}" cy="${560 - rnd(Math.abs(i) + 207) * 40}" rx="${r}" ry="${r * 0.8}"/>`; }
+	s = s.replace('<g fill="#24302F" filter="url(#r7b3)">', `<g fill="#24302F" filter="url(#r7b3)">${trees}`);
+	let stars = ''; for (let i = 0; i < 40; i++) { const x = i < 20 ? 1920 + rnd(i + 300) * 1180 : -900 + rnd(i + 300) * 900; stars += `<circle cx="${x}" cy="${-300 + rnd(i + 330) * 640}" r="${0.8 + rnd(i + 360) * 1.3}" fill="#E4EEE8" opacity="${0.25 + rnd(i + 390) * 0.45}"/>`; }
+	for (let i = 0; i < 24; i++) stars += `<circle cx="${rnd(i + 420) * 1920}" cy="${-300 + rnd(i + 450) * 330}" r="${0.8 + rnd(i + 480) * 1.3}" fill="#E4EEE8" opacity="${0.25 + rnd(i + 510) * 0.45}"/>`;
+	return (s + stars).replaceAll('x="-200" y="-200" width="2320" height="1480"', 'x="-1200" y="-1200" width="4400" height="3600"');
+};
+/** a soft pool of copper light on the horse's own seat (drawn over the seat, under the head) */
+K.heroSeatLight = (seatTop, s) => { const [tx, ty] = seatTop, id = K.uid('hsl');
+	return `<defs><radialGradient id="${id}" cx="${tx}" cy="${ty + 40 * s}" r="${120 * s}" gradientUnits="userSpaceOnUse"><stop offset="0" stop-color="#FFB070" stop-opacity=".42"/><stop offset=".6" stop-color="#E07A3E" stop-opacity=".12"/><stop offset="1" stop-color="#E07A3E" stop-opacity="0"/></radialGradient></defs>
+	<ellipse cx="${tx}" cy="${ty + 60 * s}" rx="${110 * s}" ry="${130 * s}" fill="url(#${id})"/>`; };
+/** the eleven: dark, cool, a softer rim than before (lower contrast); the horse carries the only warm light */
+K.ringRims = (o = {}) => `<defs>${K.rimFilter('r7rimF', 3, 3, o.rim ?? '#B8CCC6', 0.5, 1.1)}${K.rimFilter('r7rimN', 4, 4, o.rim ?? '#C9DAD4', 0.68, 1.3)}</defs>`;
+/** draw a whole ring: states = {kind: st}; returns {svg, seats:{k: seat}} (far arc first, then near) */
 K.ring = (pos, states, o = {}) => {
-	let far = '', near = '', heroSvg = ''; const seats = {};
+	let far = '', near = ''; const seats = {};
 	pos.forEach((p) => { const st = states[p.k] ?? 'dark', r = K.ringSeat(p, st, o); seats[p.k] = {...r, p};
 		const g = `<g filter="url(#${p.arc === 'far' ? 'r7rimF' : 'r7rimN'})">${r.back}${r.head}</g>`;
-		const hs = r.hero && !window.NOHERO ? K.horseHead(r.hero) : '';
+		const hs = r.hero ? K.heroSeatLight(r.top, p.s) + (window.NOHERO ? '' : K.horseHead(r.hero)) : '';
 		if (p.arc === 'far') far += g + hs; else near += g + hs; });
-	const defs = `<defs>${K.rimFilter('r7rimF', 3, 3, o.rim ?? '#B8CCC6', 0.75, 1.1)}${K.rimFilter('r7rimN', 4, 4, o.rim ?? '#C9DAD4', 0.95, 1.3)}</defs>`;
-	return {svg: defs + far + near, seats};
+	return {svg: K.ringRims(o) + far + near, seats};
 };
 /** a museum glass case (vitrine) with heads inside, frontal. (x, y) = top-left of the glass, w × h; label under it. */
 K.vitrine = (x, y, w, h, heads, label, o = {}) => {
