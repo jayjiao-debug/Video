@@ -50,3 +50,9 @@
 - r3 ESCALATE (hero still generic). Option A (flat-vector geometry pass) taken on the director's recommendation; the owner can still ask for 3D.
 - r4 done (hero3.js: S-wave mane in 5 clumps, level mouth, jowl; H1b plinth inside, push elbows 53°/47°, PASS; 海晏堂 from the model photo). c1_proof + h1b sent to the owner for the look OK.
 - Cold read r4: C1 at 400 px reads as "a bronze horse head on a marble pedestal". Brothers sure: 鼠 兔 蛇 羊 猴. Weak: 龙 reads as deer (needs whiskers, a flame mane, a longer snout), 猪 (bigger snout disc), 牛 (thicker horns), 狗. Fix these in the build pass (bros.js).
+
+## 2026-10-25 evening · v6 → v7, voice-over dropped
+- **v6:** 2:20; 40 lines; act 1 trimmed. Owner (19:43): the start holds people (his analytics), so keep it. Analytics saved to docs/analytics_takeaways.md.
+- **v7:** owner (19:52): 「the beginning is not catching enough, redo the whole script」. Full rewrite with a new hook: 「圆明园十二兽首，你猜回来了几个？」→「七个回了中国。」→「可住回圆明园的，只有一个。」, title overlay 「七个回国，一个回家」. 你 = the viewer, 它 = the horse. 38 lines.
+- **Voice-over dropped** (owner 20:28: 「我们不要配音了」). Subtitles only. plan45v7s.py re-times lines_v7.json at about 4.3 字/s (0.5 + 0.23 s per character), with the anchors on the v6 cut: breakdown 42.205, build 60.32, stop 76.165, drop 87.17. Last line ends 123.5, end card +4.5 → 2:08. The VO clips and mixes stay on disk unused.
+- **Key frames for v7:** requested from the art director (sheet_v7.png).
