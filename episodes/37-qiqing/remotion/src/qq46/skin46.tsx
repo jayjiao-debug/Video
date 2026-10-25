@@ -122,7 +122,7 @@ export const EndCard: React.FC<{t: number; t0: number}> = ({t, t0}) => {
 export const PeakLine: React.FC<{o: number; n: number}> = ({o, n}) => {
 	const l1 = '两千多年后，', l2a = '轮到你的孩子', l2b = '守他', l2c = '了。';
 	const k = (start: number, len: number) => Math.max(0, Math.min(len, n - start));
-	return <div style={{position: 'absolute', left: 0, right: 0, top: 150, opacity: o}}>
+	return <div style={{position: 'absolute', left: 0, right: 0, top: 360, opacity: o}}>
 		<div style={{position: 'absolute', left: 360, right: 360, top: 0, height: 300, borderRadius: '50%', filter: 'blur(50px)', background: 'rgba(40,46,56,0.4)'}} />
 		<div style={{...fx, left: 0, right: 0, top: 10, textAlign: 'center', fontWeight: 900, fontSize: 72, letterSpacing: '0.06em'}}>{l1.slice(0, k(0, 6))}<span style={{opacity: 0}}>{l1.slice(k(0, 6))}</span></div>
 		<div style={{...fx, left: 0, right: 0, top: 110, textAlign: 'center', fontWeight: 900, fontSize: 84, letterSpacing: '0.06em', whiteSpace: 'nowrap'}}>
