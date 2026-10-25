@@ -1,3 +1,6 @@
 out/*.mp4
 out/intermediate/
 audio/*.wav
+review_v2/frames/
+review_v2/*.npy
+review*/frames/
