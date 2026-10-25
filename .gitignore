@@ -66,3 +66,6 @@ episodes/*/review/**/*.wav
 episodes/*/review/**/*.mp4
 episodes/*/review/**/*.pcm
 episodes/44-naozi/tools/pic/
+
+# ep45 v7 key-frame renders (rendered images stay out of the public repo)
+episodes/45-mashou/style/v7/
