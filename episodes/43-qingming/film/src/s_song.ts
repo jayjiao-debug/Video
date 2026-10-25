@@ -59,8 +59,8 @@ export let HANDOFF: {c: P2; len: number} = {c: [790, 615], len: 200};
 const CAM9_A = [...ins9(2300, 760), 6.4] as number[], CAM9_B = [...ins9(1850, 790), 5.8] as number[], CAM9_D = [960, 596, 1.0];
 const cam9 = (t: number): {x: number; y: number; z: number; th: number} => {
 	if (t < b(13.25)) return {x: CAM9_A[0], y: CAM9_A[1], z: CAM9_A[2], th: 0};
-	if (t < b(14)) { const u = easeInOut((t - b(13.25)) / (b(14) - b(13.25))); return {x: lerp(CAM9_A[0], CAM9_B[0], u), y: lerp(CAM9_A[1], CAM9_B[1], u), z: Math.exp(lerp(Math.log(CAM9_A[2]), Math.log(CAM9_B[2]), u)), th: 0}; }
-	const u = clamp01((t - b(14)) / (b(14.25) - b(14))), uz = easeInOut(u), ut = easeOut(Math.min(1, u * 1.2));
+	if (t < b(13.75)) { const u = easeInOut((t - b(13.25)) / (b(13.75) - b(13.25))); return {x: lerp(CAM9_A[0], CAM9_B[0], u), y: lerp(CAM9_A[1], CAM9_B[1], u), z: Math.exp(lerp(Math.log(CAM9_A[2]), Math.log(CAM9_B[2]), u)), th: 0}; }
+	const u = clamp01((t - b(13.75)) / (b(14.25) - b(13.75))), uz = easeInOut(u), ut = easeOut(Math.min(1, u * 1.2));
 	const drift = clamp01((t - b(14.25)) / (b(14.5) - b(14.25)));
 	return {x: lerp(CAM9_B[0], CAM9_D[0], uz) - 6 * drift, y: lerp(CAM9_B[1], CAM9_D[1], uz), z: Math.exp(lerp(Math.log(CAM9_B[2]), Math.log(CAM9_D[2]), uz)) * (1 + 0.012 * drift), th: TH_D * ut};
 };
@@ -374,7 +374,7 @@ const blend = (a: CamJ, c: CamJ, u: number, ut = u): CamJ => ({x: lerp(a.x, c.x,
 /** the camera through 11 → 12 → 13 (one continuous path on one stage) */
 const camJ = (t: number): CamJ => {
 	const endL = SHEET_W;                                      // the painting's left edge (local)
-	const F16 = frameAt(endL + 215, S12.py0 + 100, 5.5), FLL = frameAt(endL + 122, S12.py0 + 56, 8.2), FUL = frameAt(endL + 118, S12.py0 + 168, 8.2);
+	const F16 = frameAt(endL + 225, S12.py0 + 96, 4.7), FLL = frameAt(endL + 160, S12.py0 + 62, 4.8), FUL = frameAt(endL + 130, S12.py0 + 140, 4.8);
 	const g0 = C0(0), g4 = C0(4), mid04 = (g0.y + g4.y) / 2;
 	const FPAPER = frameAt(g0.x - 18, S12.py0 + 104, 7.2);
 	const F19 = frameAt(g0.x, mid04, 10.2, 1330, 650);
@@ -382,11 +382,8 @@ const camJ = (t: number): CamJ => {
 	const F21 = frameAt(g65.x, g65.y, 11.6, 1300, 380), F22 = frameAt(g65.x, (g65.y + g69.y) / 2, 11.6, 1300, 520);
 	const FWIDE = frameAt(SHEET_W * 0.9, S12.py0 + 100, 3.3);
 	if (t < b(16.25)) return blend(F16, FLL, easeInOut(clamp01((t - b(16)) / (b(16.25) - b(16)))));
-	if (t < b(16.5)) return {...FLL, x: FLL.x - 1.2 * (t - b(16.25))};
-	const FLL2 = {...FLL, x: FLL.x - 1.2 * (b(16.5) - b(16.25))};
-	if (t < b(17)) return blend(FLL2, FUL, easeInOut(clamp01((t - b(16.5)) / (b(16.75) - b(16.5)))));
-	if (t < b(17.25)) return {...FUL, z: FUL.z * (1 + 0.012 * clamp01((t - b(17)) / (b(17.25) - b(17))))};
-	const FUL2 = {...FUL, z: FUL.z * 1.012};
+	if (t < b(17.25)) { const u = clamp01((t - b(16.25)) / (b(17.25) - b(16.25))); const c = blend(FLL, FUL, easeInOut(u)); return {...c, z: c.z * (1 + 0.03 * u)}; }   // one slow search up the bare corner
+	const FUL2 = {...FUL, z: FUL.z * 1.03};
 	if (t < b(17.75)) { const u = easeInOut(clamp01((t - b(17.25)) / (b(17.5) - b(17.25)))); const s = blend(FUL2, FPAPER, u); const push = clamp01((t - b(17.5)) / (b(17.75) - b(17.5))); return {...s, z: s.z * (1 + 0.04 * push)}; }
 	const FP2 = {...FPAPER, z: FPAPER.z * 1.04};
 	if (t < b(18.25)) { const u = clamp01((t - b(17.75)) / (b(18.25) - b(17.75))); return blend(FP2, DESKJ, easeInOut(u), easeOut(Math.min(1, u * 1.15))); }
@@ -412,13 +409,11 @@ const rollCam = (u: number): CamJ => {
 let ROLL_EDGE: number[] = [];                                   // wipe k per 1/64 of the transition, from the roller's screen x
 const buildRollup = () => {
 	const st = deskJ.st; ROLL_EDGE = [];
-	let started = false;
 	for (let i = 0; i <= 64; i++) {
 		const u = i / 64, c = rollCam(u); st.setCam(c.x, c.y, c.z); stripJ.tilt(c.th);
 		const sx = stripJ.screen(rollerX(u) + 6, S12.py0 + 100, 6)[0], e = sx / 1920 - RU.soft * 0.6;
 		const k = (e + RU.soft) / (1 + 2 * RU.soft);
-		if (!started && sx < 30) started = true;
-		ROLL_EDGE.push(started ? Math.max(0, k) : 0);
+		ROLL_EDGE.push(Math.max(0, k) * smooth(clamp01((u - 0.15) / 0.45)));      // from the frame's left edge it catches up with the roller by u 0.6, then rides it
 	}
 	for (let i = 1; i <= 64; i++) ROLL_EDGE[i] = Math.max(ROLL_EDGE[i], ROLL_EDGE[i - 1]);
 	ROLL_EDGE[64] = 1;
@@ -460,17 +455,20 @@ const drawJ = (t: number) => {
 	const fk = `${Math.round(t * 60)}`;
 	const ext = 900 * (1 - smooth(clamp01((c.th / TH_J - 0.72) / 0.26))), lxL = T12.x0 - S12.x0 - ext;      // while the paper stands up it hides him
 	const polyJ: P2[] = [stripJ.screen(lxL, -ext * 0.4, -2), stripJ.screen(T12.x1 - S12.x0, 0, -2), stripJ.screen(T12.x1 - S12.x0, S12.depth + ext, -2), stripJ.screen(lxL, S12.depth + ext, -2)];
+	// he is all hidden behind the standing paper (th < 0.9), all seen while it lies down (no partial clip: the clip line would sweep through him), then sits behind the table top
+	const zVis = c.th >= 0.9, zClip = c.th >= 1.25;
 	bodyJ.draw(fk, (g) => {
-		g.save(); g.beginPath(); g.rect(-50, -50, W + 100, H + 100); g.moveTo(polyJ[0][0], polyJ[0][1]); for (const q of polyJ.slice(1)) g.lineTo(q[0], q[1]); g.closePath(); g.clip('evenodd');
+		if (!zVis) return;
+		g.save(); if (zClip) { g.beginPath(); g.rect(-50, -50, W + 100, H + 100); g.moveTo(polyJ[0][0], polyJ[0][1]); for (const q of polyJ.slice(1)) g.lineTo(q[0], q[1]); g.closePath(); g.clip('evenodd'); }
 		const k = s.h / 560, sx = s.x, sy = s.ground; g.fillStyle = '#15100C';
 		g.fillRect(sx - 95 * k, sy - 196 * k, 160 * k, 14 * k); g.fillRect(sx - 85 * k, sy - 184 * k, 11 * k, 184 * k); g.fillRect(sx + 44 * k, sy - 184 * k, 11 * k, 184 * k); g.fillRect(sx - 80 * k, sy - 40 * k, 130 * k, 7 * k);
 		drawFig(g, zhang); g.restore();
 	});
-	propsJ.draw(fk, (g) => { if (brush) drawBrush(g, brush[0], brush[1], 6 * s.h / 560); if (c.th > 1.0) drawArms(g, [zhang]); });
+	propsJ.draw(fk, (g) => { if (brush) drawBrush(g, brush[0], brush[1], 6 * s.h / 560); if (zClip) drawArms(g, [zhang]); });
 	const hero = stripJ.screen(SHEET_W + 260, S12.py0 + 100); st.setHero(hero[0], hero[1], 1300);
 	deskJ.lamp.draw('off', () => {});
-	const ins = 1 - clamp01((c.th - 0.2) / 0.9), pool = t < b(17.5) ? 0.55 : 0.55 * (1 - clamp01((t - b(17.5)) / 0.4));
-	return {st, grade: {vig: lerp(0.36, 0.62, ins), vigCol: '#1a120b', corners: 0.95 * ins, cornersBand: [0, 330, 560, 1] as [number, number, number, number], exposure: 1, pool: [980, 600, 640, pool * ins] as [number, number, number, number]}, bloom: 1};
+	const ins = 1 - clamp01((c.th - 0.2) / 0.9), pool = t < b(17.5) ? 0.55 : 0.55 * (1 - clamp01((t - b(17.5)) / 0.4)), ps = smooth(clamp01((t - b(16.25)) / (b(17.25) - b(16.25))));
+	return {st, grade: {vig: lerp(0.36, 0.62, ins), vigCol: '#1a120b', corners: 0.95 * ins, cornersBand: [0, 330, 560, 1] as [number, number, number, number], exposure: 1, pool: [t < b(17.5) ? lerp(1250, 820, ps) : 980, t < b(17.5) ? lerp(700, 470, ps) : 600, 640, pool * ins] as [number, number, number, number]}, bloom: 1};
 };
 addScene({id: '11', a: b(16), z: b(17.5), draw: drawJ, in: {mode: 5, a: b(16), z: b(16.15), pt: [0.5, 0.5], soft: 0.08}});
 addScene({id: '12', a: b(17.5), z: b(19), draw: drawJ});
