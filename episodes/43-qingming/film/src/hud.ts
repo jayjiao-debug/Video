@@ -24,7 +24,7 @@ const markup = (s: string, n: number, ctr: boolean, redOn: (group: number) => bo
 		if (ch === '[') { red = true; grp++; continue; } if (ch === ']') { red = false; continue; }
 		const o = clamp01(n - i); let pull = ctr && i === lastVis && PUNCT.includes(ch) ? 'margin-right:-0.5em;' : '';
 		if ('”’」』）'.includes(prev) && '。，！？；：、'.includes(ch)) pull += 'margin-left:-0.45em;';      // 」。 / ”。: no full-width gap between the two marks
-		out += `<span style="opacity:${o.toFixed(3)};${red && redOn(grp) ? `color:${RED};` : ''}${pull}">${ch}</span>`; i++; prev = ch;
+		out += `<span${red && redOn(grp) ? ' class="k"' : ''} style="opacity:${o.toFixed(3)};${pull}">${ch}</span>`; i++; prev = ch;
 	}
 	return out;
 };
