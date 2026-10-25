@@ -1,0 +1,134 @@
+plan: {'tier': None, 'character_count': None, 'character_limit': None, 'status': None}
+models: ['eleven_v4', 'eleven_v4_turbo', 'eleven_v3', 'eleven_v3_conversational', 'eleven_multilingual_v2', 'eleven_flash_v2_5', 'eleven_turbo_v2_5', 'eleven_turbo_v2', 'eleven_flash_v2', 'eleven_english_sts_v2', 'eleven_multilingual_sts_v2']
+model: eleven_v4
+{"name": "N1_ep42voice", "lang": "zh", "text": "秦始皇陵的土里，汞，是周围的七十多倍。两千多年前的《史记》写着：里面，有水银做的江河。可直到今天，没有一个人打开过它。秦始皇陵，为什么不挖？", "voice": "MI36FIkp9wRP7cpWKPTl", "voice_id": "MI36FIkp9wRP7cpWKPTl", "model": "eleven_v4", "status": 200, "file": "N1_ep42voice.mp3", "bytes": 253326}
+{"name": "N2_doc_male", "lang": "zh", "text": "秦始皇陵的土里，汞，是周围的七十多倍。两千多年前的《史记》写着：里面，有水银做的江河。可直到今天，没有一个人打开过它。秦始皇陵，为什么不挖？", "voice": "shared:James Gao - Calm, Friendly and Warm (standard, zh)", "voice_id": "4VZIsMPtgggwNg7OXbPY", "model": "eleven_v4", "status": 200, "file": "N2_doc_male.mp3", "bytes": 264611}
+{"name": "N3_doc_male", "lang": "zh", "text": "秦始皇陵的土里，汞，是周围的七十多倍。两千多年前的《史记》写着：里面，有水银做的江河。可直到今天，没有一个人打开过它。秦始皇陵，为什么不挖？", "voice": "shared:Martin Li - Raspy, Serious and Deep (standard, zh)", "voice_id": "WuLq5z7nEcrhppO0ZQJw", "model": "eleven_v4", "status": 200, "file": "N3_doc_male.mp3", "bytes": 273806}
+{"name": "N4_doc_male", "lang": "zh", "text": "秦始皇陵的土里，汞，是周围的七十多倍。两千多年前的《史记》写着：里面，有水银做的江河。可直到今天，没有一个人打开过它。秦始皇陵，为什么不挖？", "voice": "shared:Jin - Clear, Warm and Casual (standard, zh)", "voice_id": "vZZLclMx4wouUtKBRfZn", "model": "eleven_v4", "status": 200, "file": "N4_doc_male.mp3", "bytes": 245385}
+{"name": "N5_edu_male", "lang": "zh", "text": "秦始皇陵的土里，汞，是周围的七十多倍。两千多年前的《史记》写着：里面，有水银做的江河。可直到今天，没有一个人打开过它。秦始皇陵，为什么不挖？", "voice": "shared:Vincent - Clear, Brisk and Mature (standard, zh)", "voice_id": "WkcRFJo38X9XEP8kGExm", "model": "eleven_v4", "status": 200, "file": "N5_edu_male.mp3", "bytes": 245385}
+{"name": "N6_female", "lang": "zh", "text": "秦始皇陵的土里，汞，是周围的七十多倍。两千多年前的《史记》写着：里面，有水银做的江河。可直到今天，没有一个人打开过它。秦始皇陵，为什么不挖？", "voice": "shared:Stacy - Young, Sweet and Cute (standard, zh)", "voice_id": "hkfHEbBvdQFNX4uWHqRF", "model": "eleven_v4", "status": 200, "file": "N6_female.mp3", "bytes": 245385}
+{"name": "Q1_old_male", "lang": "zh", "text": "以水银为百川江河大海，机相灌输，上具天文，下具地理。", "voice": "shared:Julian - Deep, Rich and Mature (british, en)", "voice_id": "7p1Ofvcwsv7UBPoFNcpI", "model": "eleven_v4", "status": 200, "file": "Q1_old_male.mp3", "bytes": 109966}
+{"name": "Q2_old_male", "lang": "zh", "text": "以水银为百川江河大海，机相灌输，上具天文，下具地理。", "voice": "shared:Wolf Spencer - Rough and Deep (standard, de)", "voice_id": "2OcnG4mH3jIMtWz3vKus", "model": "eleven_v4", "status": 200, "file": "Q2_old_male.mp3", "bytes": 107458}
+Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+[
+ {
+  "name": "N1_ep42voice",
+  "lang": "zh",
+  "text": "秦始皇陵的土里，汞，是周围的七十多倍。两千多年前的《史记》写着：里面，有水银做的江河。可直到今天，没有一个人打开过它。秦始皇陵，为什么不挖？",
+  "voice": "MI36FIkp9wRP7cpWKPTl",
+  "voice_id": "MI36FIkp9wRP7cpWKPTl",
+  "model": "eleven_v4",
+  "status": 200,
+  "file": "N1_ep42voice.mp3",
+  "bytes": 253326,
+  "heard": "秦始皇陵的土里,拱,是周围的七十多辈两千多年前的史记写着里面有水银座的江河可直到今天没有一个人打开过它秦始皇陵为什么不挖",
+  "heard_lang": "zh",
+  "heard_lang_p": 0.999,
+  "seconds": 15.76
+ },
+ {
+  "name": "N2_doc_male",
+  "lang": "zh",
+  "text": "秦始皇陵的土里，汞，是周围的七十多倍。两千多年前的《史记》写着：里面，有水银做的江河。可直到今天，没有一个人打开过它。秦始皇陵，为什么不挖？",
+  "voice": "shared:James Gao - Calm, Friendly and Warm (standard, zh)",
+  "voice_id": "4VZIsMPtgggwNg7OXbPY",
+  "model": "eleven_v4",
+  "status": 200,
+  "file": "N2_doc_male.mp3",
+  "bytes": 264611,
+  "heard": "秦始皇陵的土里 拱是周围的七十多倍两千多年前的史记写着里面有水银座的江河可直到今天没有一个人打开过它秦始皇陵为什么不挖",
+  "heard_lang": "zh",
+  "heard_lang_p": 1.0,
+  "seconds": 16.48
+ },
+ {
+  "name": "N3_doc_male",
+  "lang": "zh",
+  "text": "秦始皇陵的土里，汞，是周围的七十多倍。两千多年前的《史记》写着：里面，有水银做的江河。可直到今天，没有一个人打开过它。秦始皇陵，为什么不挖？",
+  "voice": "shared:Martin Li - Raspy, Serious and Deep (standard, zh)",
+  "voice_id": "WuLq5z7nEcrhppO0ZQJw",
+  "model": "eleven_v4",
+  "status": 200,
+  "file": "N3_doc_male.mp3",
+  "bytes": 273806,
+  "heard": "秦始皇陵的土里,拱,是周围的七十多倍。两千多年前的史记写着,里面有水银座的江河,可直到今天没有一个人打开过它。秦始皇陵为什么不挖?",
+  "heard_lang": "zh",
+  "heard_lang_p": 0.999,
+  "seconds": 17.04
+ },
+ {
+  "name": "N4_doc_male",
+  "lang": "zh",
+  "text": "秦始皇陵的土里，汞，是周围的七十多倍。两千多年前的《史记》写着：里面，有水银做的江河。可直到今天，没有一个人打开过它。秦始皇陵，为什么不挖？",
+  "voice": "shared:Jin - Clear, Warm and Casual (standard, zh)",
+  "voice_id": "vZZLclMx4wouUtKBRfZn",
+  "model": "eleven_v4",
+  "status": 200,
+  "file": "N4_doc_male.mp3",
+  "bytes": 245385,
+  "heard": "秦始皇陵的土里 拱是周围的七十多倍两千多年前的史记写着里面有水银座的江河可直到今天没有一个人打开过它秦始皇陵为什么不挖",
+  "heard_lang": "zh",
+  "heard_lang_p": 0.999,
+  "seconds": 15.28
+ },
+ {
+  "name": "N5_edu_male",
+  "lang": "zh",
+  "text": "秦始皇陵的土里，汞，是周围的七十多倍。两千多年前的《史记》写着：里面，有水银做的江河。可直到今天，没有一个人打开过它。秦始皇陵，为什么不挖？",
+  "voice": "shared:Vincent - Clear, Brisk and Mature (standard, zh)",
+  "voice_id": "WkcRFJo38X9XEP8kGExm",
+  "model": "eleven_v4",
+  "status": 200,
+  "file": "N5_edu_male.mp3",
+  "bytes": 245385,
+  "heard": "秦始皇陵的土里 拱 是周围的七十多倍两千多年前的史记写着里面有水银座的江河可直到今天 没有一个人打开过它秦始皇陵为什么不挖",
+  "heard_lang": "zh",
+  "heard_lang_p": 0.997,
+  "seconds": 15.28
+ },
+ {
+  "name": "N6_female",
+  "lang": "zh",
+  "text": "秦始皇陵的土里，汞，是周围的七十多倍。两千多年前的《史记》写着：里面，有水银做的江河。可直到今天，没有一个人打开过它。秦始皇陵，为什么不挖？",
+  "voice": "shared:Stacy - Young, Sweet and Cute (standard, zh)",
+  "voice_id": "hkfHEbBvdQFNX4uWHqRF",
+  "model": "eleven_v4",
+  "status": 200,
+  "file": "N6_female.mp3",
+  "bytes": 245385,
+  "heard": "秦始皇陵的土里 拱 是周围的七十多倍两千多年前的史记写着里面有水营座的江河可直到今天没有一个人打开过它秦始皇陵为什么不挖",
+  "heard_lang": "zh",
+  "heard_lang_p": 0.999,
+  "seconds": 15.28
+ },
+ {
+  "name": "Q1_old_male",
+  "lang": "zh",
+  "text": "以水银为百川江河大海，机相灌输，上具天文，下具地理。",
+  "voice": "shared:Julian - Deep, Rich and Mature (british, en)",
+  "voice_id": "7p1Ofvcwsv7UBPoFNcpI",
+  "model": "eleven_v4",
+  "status": 200,
+  "file": "Q1_old_male.mp3",
+  "bytes": 109966,
+  "heard": "以水银为百川江河大海机箱灌输上俱天文下俱地理",
+  "heard_lang": "zh",
+  "heard_lang_p": 0.999,
+  "seconds": 6.8
+ },
+ {
+  "name": "Q2_old_male",
+  "lang": "zh",
+  "text": "以水银为百川江河大海，机相灌输，上具天文，下具地理。",
+  "voice": "shared:Wolf Spencer - Rough and Deep (standard, de)",
+  "voice_id": "2OcnG4mH3jIMtWz3vKus",
+  "model": "eleven_v4",
+  "status": 200,
+  "file": "Q2_old_male.mp3",
+  "bytes": 107458,
+  "heard": "以水银为百川江河大海 机箱灌输上据天文下据地理",
+  "heard_lang": "zh",
+  "heard_lang_p": 0.999,
+  "seconds": 6.64
+ }
+]
