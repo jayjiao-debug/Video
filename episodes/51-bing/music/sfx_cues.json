@@ -1,0 +1,205 @@
+[
+{
+"t": 0.443,
+"sfx": "fridge_open",
+"db": -6,
+"lead": 0.37,
+"len": 0.9,
+"role": "accent",
+"note": "H1 door unseals (frame 0 picture)"
+},
+{
+"t": 0.693,
+"sfx": "fridge_hum",
+"db": -14,
+"len": 2.014,
+"fade_in": 0.3,
+"fade_out": 0.02,
+"role": "soft",
+"note": "hum until the click"
+},
+{
+"t": 2.707,
+"sfx": "light_click",
+"db": -4,
+"lead": 0.68,
+"len": 0.75,
+"role": "accent",
+"note": "[不会冷]: light dies, hum cut"
+},
+{
+"t": 7.0,
+"sfx": "rewind_ice",
+"db": -8,
+"len": 1.75,
+"fade_out": 0.3,
+"role": "normal",
+"note": "H3 seasons rewind"
+},
+{
+"t": 9.5,
+"sfx": "title_hit",
+"db": -6,
+"role": "accent",
+"note": "title slam"
+},
+{
+"t": 12.896,
+"sfx": "ice_chisel",
+"db": -7,
+"src_start": 0.2,
+"lead": 0.04,
+"len": 0.28,
+"role": "normal",
+"note": "Q1 chisel 1"
+},
+{
+"t": 13.462,
+"sfx": "ice_chisel",
+"db": -7,
+"src_start": 0.46,
+"lead": 0.04,
+"len": 0.4,
+"role": "normal",
+"note": "Q1 chisel 2"
+},
+{
+"t": 15.161,
+"sfx": "ice_slide",
+"db": -9,
+"lead": 0.33,
+"role": "soft",
+"note": "block slides into the pit"
+},
+{
+"t": 33.274,
+"sfx": "ice_bronze",
+"db": -7,
+"role": "normal",
+"note": "J3 ice into the gap"
+},
+{
+"t": 34.972,
+"sfx": "tick1",
+"db": -8,
+"role": "normal",
+"note": "先猜？ pop"
+},
+{
+"t": 37.803,
+"sfx": "ladle_pour",
+"db": -10,
+"len": 1.2,
+"role": "soft",
+"note": "J4 pour into the cup"
+},
+{
+"t": 61.011,
+"sfx": "silver_ting2",
+"db": -6,
+"role": "accent",
+"note": "S3 [银器] glint"
+},
+{
+"t": 63.841,
+"sfx": "chisel_stone",
+"db": -7,
+"src_start": 0.2,
+"lead": 0.04,
+"len": 0.3,
+"role": "normal",
+"note": "Q4 声如錾石 1"
+},
+{
+"t": 64.407,
+"sfx": "chisel_stone",
+"db": -7,
+"src_start": 0.52,
+"lead": 0.04,
+"len": 0.4,
+"role": "normal",
+"note": "Q4 声如錾石 2"
+},
+{
+"t": 70.63,
+"sfx": "drips",
+"db": -10,
+"src_start": 0.12,
+"lead": 0.02,
+"len": 0.3,
+"role": "hush",
+"note": "C2 melt drip"
+},
+{
+"t": 71.762,
+"sfx": "drips",
+"db": -10,
+"src_start": 0.53,
+"lead": 0.02,
+"len": 0.3,
+"role": "hush",
+"note": "C2 melt drip"
+},
+{
+"t": 72.894,
+"sfx": "drips",
+"db": -10,
+"src_start": 1.22,
+"lead": 0.02,
+"len": 0.3,
+"role": "hush",
+"note": "C2 melt drip"
+},
+{
+"t": 76.523,
+"sfx": "seal1",
+"db": -7,
+"role": "normal",
+"note": "C4 冰票 stamp"
+},
+{
+"t": 81.617,
+"sfx": "brass_bowls",
+"db": -8,
+"role": "normal",
+"note": "C6 锵锵 1"
+},
+{
+"t": 82.749,
+"sfx": "brass_bowls",
+"db": -10,
+"role": "soft",
+"note": "C6 锵锵 2"
+},
+{
+"t": 104.259,
+"sfx": "ice_glass",
+"db": -6,
+"lead": 0.25,
+"role": "accent",
+"note": "M4 cubes into the frame-0 cup"
+},
+{
+"t": 89.542,
+"sfx": "mist_breath",
+"db": -14,
+"role": "soft",
+"off": true,
+"note": "K2 coin holes (optional)"
+},
+{
+"t": 108.788,
+"sfx": "frost_bloom",
+"db": -16,
+"role": "soft",
+"off": true,
+"note": "P2 frost (optional)"
+},
+{
+"t": 112.75,
+"sfx": "seal1",
+"db": -6,
+"role": "accent",
+"note": "end card J seal"
+}
+]
