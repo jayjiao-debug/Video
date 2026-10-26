@@ -9,7 +9,7 @@ export const LINES51: Line51[] = [
 	{id: "H1", a: 0.0, b: 4.25, s: "2400多年前，中国就有“冰箱”了。\n可它自己，[不会冷]。", q: false, c: false, st: {y: "战国早期", place: "湖北随州", note: "曾侯乙墓的铜鉴缶"}, ct: {era: "", year: "2026"}},
 	{id: "H2", a: 4.25, b: 7.0, s: "它的冷，是冬天凿下的冰，", q: false, c: false, st: {y: "战国早期", place: "湖北随州", note: "现藏湖北省博物馆"}, ct: {era: "战国早期", year: ""}},
 	{id: "H3", a: 7.0, b: 9.5, s: "从冬天，一直撑到夏天。", q: false, c: false, st: null, ct: {era: "周", year: ""}},
-	{id: "Q1", a: 12.5, b: 16.75, s: "二之日凿冰冲冲，三之日纳于凌阴。\n{寒冬凿冰，藏进冰窖}", q: true, c: true, st: {y: "周", place: "《诗经·七月》", note: "寒冬凿冰，藏进冰窖"}, ct: {era: "周", year: ""}},
+	{id: "Q1", a: 12.5, b: 16.75, s: "二之日凿冰冲冲，三之日纳于凌阴。\n{寒冬凿冰，藏进冰窖}", q: true, c: true, st: {y: "周", place: "《诗经·七月》", note: "周人冬天凿冰"}, ct: {era: "周", year: ""}},
 	{id: "Z1", a: 16.75, b: 21.0, s: "还设了专管冰的官，\n手下光干活的，就有80人。", q: false, c: false, st: {y: "《周礼·天官》", place: "", note: "冰官手下：徒八十人"}, ct: {era: "周", year: ""}},
 	{id: "Z3", a: 21.0, b: 23.5, s: "凿冰，要备足[三倍]的量。", q: false, c: false, st: {y: "《周礼·天官》", place: "", note: "令斩冰，三其凌"}, ct: {era: "周", year: ""}},
 	{id: "A1", a: 23.5, b: 26.5, s: "考古真挖到过：秦国的地下冰窖。", q: false, c: false, st: {y: "春秋", place: "陕西凤翔", note: "秦雍城地下冰窖遗址"}, ct: {era: "春秋", year: ""}},

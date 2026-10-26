@@ -68,8 +68,8 @@ const SongStreet: React.FC<{t: number}> = ({t}) => {
 	const onCtr: P2 = [E + 150, ctr.top], toBuyer: P2 = [E + 250, ctr.top];
 	const put = ease(seg(t, sA1 - 0.05, 56.8)), slide = ease(seg(t, 56.85, 57.15));
 	const blk: P2 = t < 56.85 ? [lerp(carry[0], onCtr[0], put), lerp(carry[1] + 35, onCtr[1], put)] : [lerp(onCtr[0], toBuyer[0], slide), onCtr[1]];
-	const buyerLeave = t > 57.7 ? (t - 57.7) * 330 : 0, bx = E + 360 - buyerLeave, bLift = ease(seg(t, 57.3, 57.6));
-	const blkB: P2 = t >= 57.3 ? [lerp(toBuyer[0], bx - 0.25 * 480, bLift), lerp(toBuyer[1], SG - 0.47 * 480 + 30, bLift)] : blk;
+	const buyerLeave = t > 57.35 ? (t - 57.35) * 300 : 0, bx = E + 380 - buyerLeave, bLift = ease(seg(t, 57.3, 57.6));
+	const blkB: P2 = t >= 57.3 ? [lerp(toBuyer[0], bx - 0.25 * 400, bLift), lerp(toBuyer[1], SG - 40 - 0.47 * 400 + 30, bLift)] : blk;
 	/* the coin: buyer's hand → over the counter → his open hand on beat 100 */
 	const cu = seg(t, 56.75, BA(100)), coinP: P2 = [lerp(E + 300, E + 128, cu), lerp(560, 604, cu) - Math.sin(Math.PI * cu) * 50];
 	let wp = wp0;
@@ -116,7 +116,7 @@ const SongStreet: React.FC<{t: number}> = ({t}) => {
 		</g>
 		{night('#05060C', 0.5 * nt)}
 		{/* the night-market stall (back left, under the eave): the 冰雪冷元子 board and plum-red boxes, lit as the day goes */}
-		<g transform={`translate(${-cam},0)`} opacity={nt}>
+		<g transform={`translate(${-cam},0)`} opacity={nt * (1 - fade(t, 62.4, 0.25))}>
 			<rect x={560} y={548} width={290} height={62} rx={4} fill="#1A0E09" stroke={B.goldL} strokeOpacity={0.35 + 0.4 * nt} strokeWidth={2} />
 			<text x={705} y={594} textAnchor="middle" fontFamily={KAI} fontWeight={700} fontSize={42} fill={B.cream} opacity={0.55 + 0.45 * nt}>冰雪冷元子</text>
 			<rect x={590} y={738} width={230} height={14} fill="#3A2116" stroke={B.gold} strokeOpacity={0.35} strokeWidth={1.2} />
@@ -129,9 +129,9 @@ const SongStreet: React.FC<{t: number}> = ({t}) => {
 			{/* the ordinary stall where he hands the block across */}
 			<rect x={ctr.x0} y={ctr.top} width={ctr.x1 - ctr.x0} height={18} fill="#3A2116" stroke={B.gold} strokeOpacity={0.45} strokeWidth={1.5} />
 			<path d={`M${ctr.x0 + 10},${ctr.top + 18} H${ctr.x1 - 10} V${SG} H${ctr.x0 + 10} Z`} fill={BG.beam} stroke={BG.line} strokeWidth={1.5} />
-			<Extra x={bx} g={SG} h={480} pose={t >= 57.7 ? ikArm(walkPose(buyerLeave / (STRIDE * 480)), 'L', toBody(blkB[0] + 40, blkB[1] - 10, bx, SG, 480, true)) : ikArm(grounded({lean: 8, neck: 6, lt: 3, lk: 3, rt: -4, rk: 4, la: 40, le: 30, ra: 4, re: 12}), 'L', t < 56.95 ? toBody(E + 300, 572, bx, SG, 480, true) : toBody(blkB[0] + 40, blkB[1] - 10, bx, SG, 480, true))} era="song" flip look={{dress: 'tunic', legs: 'trousers', head: 'bun'}} rimO={0.55} />
+			<Extra x={bx} g={SG - 40} h={400} pose={t >= 57.35 ? ikArm(walkPose(buyerLeave / (STRIDE * 400)), 'L', toBody(blkB[0] + 34, blkB[1] - 8, bx, SG - 40, 400, true)) : ikArm(grounded({lean: 8, neck: 6, lt: 3, lk: 3, rt: -4, rk: 4, la: 40, le: 30, ra: 4, re: 12}), 'L', t < 56.95 ? toBody(E + 300, 572, bx, SG - 40, 400, true) : toBody(blkB[0] + 34, blkB[1] - 8, bx, SG - 40, 400, true))} era="song" flip look={{dress: 'tunic', legs: 'trousers', head: 'bun'}} rimO={0.55} />
 			{t < 57.1 + 0.6 && t > 56.7 && cu < 1 && <Coin x={coinP[0]} y={coinP[1]} r={12} />}
-			{(t < 58.6) && <IceBlock x={(t >= 57.3 ? blkB : blk)[0] - 48} y={(t >= 57.3 ? blkB : blk)[1]} w={96} h={66} d={36} seed={8} />}
+			{<IceBlock x={(t >= 57.3 ? blkB : blk)[0] - 48} y={(t >= 57.3 ? blkB : blk)[1]} w={96} h={66} d={36} seed={8} />}
 			{/* the best stall: big umbrella, the keeper, every vessel silver (KF10) */}
 			<Umbrella x={1440} y={430} r={340} g={CT0} />
 			<Extra x={vx} g={SG} h={vh} pose={vp} era="song" flip look={{dress: 'robe', head: 'futou', build: 1.04}} rimO={0.55} />
@@ -231,7 +231,7 @@ const TWO_M = 69.5;   // the music's chord hit: the 两米 line lands
 const vWx = (t: number) => { const v = vNat(128) * 1.15; return lerp(150, 575, seg(t, 67.45, 67.45 + 425 / v)); };
 const vWy = (x: number) => x < VL1 ? VS : x < 560 ? lerp(VS, VF, (x - VL1) / (560 - VL1)) : VF;
 const Vault: React.FC<{t: number}> = ({t}) => {
-	const z = 1 + 0.035 * seg(t, 67.0, 76.4);
+	const z = 1 + 0.05 * seg(t, 67.0, 76.3);
 	const melt = seg(t, 70.4, 73.75) * 0.15 + 0.85 * ease(seg(t, 70.4, 73.75)), rows = lerp(6, 2, melt), fill = lerp(GT, GB - (GB - GT) / 3, melt);
 	const hatch = (x0: number, x1: number, y0: number, y1: number, id: string) => <g>
 		<clipPath id={id}><rect x={x0} y={y0} width={x1 - x0} height={y1 - y0} /></clipPath>
@@ -245,6 +245,7 @@ const Vault: React.FC<{t: number}> = ({t}) => {
 	const gIn = fade(t, 73.5, 0.35), m1 = lerp(1, 0.5, ease(seg(t, 73.75, 74.26))), m2 = lerp(1, 0.26, ease(seg(t, 73.75, 74.26)));
 	const pop = seg(t, 74.26, 74.7), solid = t >= 74.26, landY = solid ? -10 * Math.exp(-(t - 74.26) * 9) * Math.cos((t - 74.26) * 30) : 0;
 	return <Scene id="vV" sheen={0.2}>
+		<defs><radialGradient id="scrim51"><stop offset="0" stopColor="#0A0503" stopOpacity="0.85" /><stop offset="0.6" stopColor="#0A0503" stopOpacity="0.7" /><stop offset="1" stopColor="#0A0503" stopOpacity="0" /></radialGradient></defs>
 		<g transform={`translate(960,600) scale(${z}) translate(-960,-600)`}>
 			<rect x={-40} y={VS} width={VL0 + 40} height={H - VS + 40} fill="#1C100B" /><rect x={VR1} y={VS} width={W - VR1 + 40} height={H - VS + 40} fill="#1C100B" />
 			<rect x={VL0} y={VF} width={VR1 - VL0} height={H - VF + 40} fill="#1C100B" />
@@ -279,10 +280,13 @@ const Vault: React.FC<{t: number}> = ({t}) => {
 			<rect x={GX} y={GT} width={34} height={GB - GT} rx={17} fill="#0D0909" stroke={B.cream} strokeWidth={2.5} />
 			<rect x={GX + 6} y={fill} width={22} height={GB - fill - 6} rx={11} fill={ICE.body} />
 			{[0, 1, 2, 3].map((k) => <path key={k} d={`M${GX + 34},${GT + (GB - GT) * k / 3} h14`} stroke={B.cream} strokeWidth={2} />)}
-			<g opacity={fade(t, 72.0, 0.3)}>
+			<Label x={GX + 17} y={GT - 14} s="存冰" fs={40} col={B.cream} anchor="middle" />
+			{t >= DRIPS[0] - 0.05 && (() => { const k = land(seg(t, DRIPS[0] - 0.05, DRIPS[0] + 0.35)); return <g opacity={cl(k * 3)}>
 				<path d={`M${GX - 14},${GT + 4} h-12 V${fill - 4} h12`} fill="none" stroke={B.goldL} strokeWidth={3} />
-				<g transform={`translate(${GX - 40},${(GT + fill) / 2})`}><rect x={-268} y={-40} width={256} height={62} rx={8} fill="#0E0705" stroke={B.gold} strokeOpacity={0.6} strokeWidth={2} />
-					<text x={-140} y={6} textAnchor="middle" fontFamily={KAI} fontWeight={700} fontSize={44} fill={B.cream}>约2/3 化掉</text></g></g>
+				<g transform={`translate(${GX - 190},${GT + 70}) scale(${lerp(1.25, 1, k)})`}>
+					<ellipse cx={0} cy={10} rx={200} ry={120} fill="url(#scrim51)" />
+					<text x={0} y={18} textAnchor="middle" fontFamily={SANS} fontWeight={900} fontSize={100} fill={B.goldL} stroke={B.lac} strokeWidth={6} style={{paintOrder: 'stroke'}}><tspan fontFamily={KAI} fontWeight={700} fontSize={64} dy={0}>约</tspan>2/3</text>
+					<text x={0} y={90} textAnchor="middle" fontFamily={KAI} fontWeight={700} fontSize={58} fill={B.cream} stroke={B.lac} strokeWidth={6} style={{paintOrder: 'stroke'}}>化掉</text></g></g>; })()}
 			{/* C3: the ghost blocks on the stack, the 「？」 above */}
 			{gIn > 0 && <g opacity={gIn}>
 				<MeltBlock x={STX + 6} y={topY - 4} w={108} h={88} k={m1} o={0.95} seed={4} />
@@ -302,7 +306,7 @@ const Vault: React.FC<{t: number}> = ({t}) => {
    C5 · the queue by grade, 78.5–81.2: three officials with slips; big, medium, small blocks land in their hands on beats.
    =================================================================================================================== */
 const WG = 905, WH = 560;
-const wWx = (t: number) => t < 77.55 ? 790 : 790 + trap(t, 77.55, 80, vNat(WH), 0.35, 0.01);
+const wWx = (t: number) => 790 + trap(t, 77.4, 78.2, 520, 0.3, 0.3) + trap(t, 78.45, 82, vNat(WH), 0.35, 0.01);
 const CellarWall: React.FC<{cam: number; summer?: number}> = ({cam, summer = 1}) => <g transform={`translate(${-cam},0)`}>
 	<rect x={-400} y={330} width={3000} height={WG - 330} fill="#2A1712" />
 	<path d={Array.from({length: 12}, (_, i) => `M-400,${360 + i * 46} H2600`).join(' ')} stroke={B.gold} strokeOpacity={0.08} strokeWidth={1.5} />
@@ -314,54 +318,64 @@ const CellarWall: React.FC<{cam: number; summer?: number}> = ({cam, summer = 1})
 	<IceBlock x={1500} y={WG - 6} w={70} h={48} d={22} seed={31} marks={false} /><IceBlock x={1580} y={WG - 6} w={64} h={44} d={22} seed={32} marks={false} /><IceBlock x={1530} y={WG - 54} w={66} h={40} d={20} seed={33} marks={false} />
 </g>;
 const Window: React.FC<{t: number}> = ({t}) => {
-	const cam = trap(t, 77.6, 80, 260, 0.6, 0.01), {x: wx, pose: wp0} = gait(wWx, t, WH, vNat(WH) * 0.8);
+	/* one set, 75.3–81.6: the summer street by the cellar. Push in on the hand-over (the slip ≥ 160 px, its seal on 76.523), he
+	   trades the slip for a block at the arch and walks off; the camera trucks left (+260) as three officials step into the
+	   queue; blocks 1× / 2× / 3.5× land in their hands on 79.353 / 79.919 / 80.485 (rank by silhouette only). */
+	const {x: wx, pose: wp0} = gait(wWx, t, WH, vNat(WH) * 0.8);
 	const kx = 1150, kh = 520, sill = 720, seal = 76.523;
+	const zp = 1 + 0.28 * ease(seg(t, 76.0, 76.9)) * (1 - ease(seg(t, 77.6, 78.3))), truck = 260 * ease(seg(t, 78.2, 79.2));
 	const press = t < seal ? ease(seg(t, seal - 0.35, seal)) : 1 - ease(seg(t, seal + 0.08, seal + 0.4));
 	const slipOn = t < 76.95, give = ease(seg(t, 76.95, 77.35));
-	const slipPos: P2 = slipOn ? [1010, sill - 4] : [lerp(1010, wx + 0.3 * WH, give), lerp(sill - 4, WG - 0.55 * WH, give)];
+	const slipPos: P2 = slipOn ? [1010, sill - 4] : [lerp(1010, wx + 0.3 * WH, give), lerp(sill - 4, WG - 0.56 * WH, give)];
 	let kp = grounded({lean: 18, neck: 14, lt: 3, lk: 4, rt: -4, rk: 4, la: 50, le: 30, ra: 40, re: 30});
 	kp = ikArm(kp, 'L', toBody(1030, lerp(sill - 70, sill - 18, press), kx, WG, kh, true));
-	if (!slipOn && give < 1) kp = ikArm(kp, 'R', toBody(slipPos[0] + 30, slipPos[1] + 10, kx, WG, kh, true));
+	if (!slipOn && give < 1) kp = ikArm(kp, 'R', toBody(slipPos[0] + 36, slipPos[1] + 10, kx, WG, kh, true));
 	let wp = wp0;
-	if (t >= 76.95) wp = ikArm(wp, 'L', toBody(slipPos[0] - 6, slipPos[1] + 26, wx, WG, WH));
-	const blockOut = ease(seg(t, BB(7) - 0.3, BB(7))), handed = t > BB(7);
+	const handed = t > BB(7), held = t >= 76.95 && !handed;
+	if (held) wp = ikArm(wp, 'L', toBody(slipPos[0] - 8, slipPos[1] + 26, wx, WG, WH));
+	const blockOut = ease(seg(t, BB(7) - 0.3, BB(7)));
+	const queue: {x: number; tb: number; s: number; look: Parameters<typeof Walker51>[0]['look']; fin: boolean}[] = [
+		{x: 600, tb: BB(11), s: 126, look: {dress: 'robe', head: 'hat', build: 1.08}, fin: true},
+		{x: 400, tb: BB(10), s: 72, look: {dress: 'robe', head: 'hat', build: 1.0}, fin: false},
+		{x: 200, tb: BB(9), s: 36, look: {dress: 'tunic', legs: 'trousers', head: 'bald'}, fin: false}];
 	return <Scene id="cW" sheen={0.4}>
-		<CellarWall cam={cam} />
-		<g transform={`translate(${-cam},0)`}>
-			{/* the cellar office window: the clerk inside, his seal coming down on the slip */}
-			<rect x={930} y={430} width={420} height={sill - 430} fill="#120A08" stroke={B.goldL} strokeOpacity={0.55} strokeWidth={3} />
-			<Extra x={kx} g={WG} h={kh} pose={kp} era="qing" flip look={{dress: 'robe', head: 'bald', beard: 'short', build: 1.06}} rimO={0.5} />
+		<g transform={`translate(${truck},0) translate(1000,650) scale(${zp}) translate(-1000,-650)`}>
+			<CellarWall cam={0} />
+			{/* the sun shaft of a summer day */}
+			<path d="M520,300 L900,300 L1300,905 L760,905 Z" fill="#FFD9A0" opacity={0.08} />
+			{/* the office window, lit inside: lamp, shelf, ledger; the clerk; his seal coming down on the slip */}
+			<rect x={930} y={430} width={420} height={sill - 430} fill="#4A2A16" stroke={B.goldL} strokeOpacity={0.55} strokeWidth={3} />
+			<Pool id="cwL" x={1290} y={520} rx={260} ry={200} a={0.55} />
+			<path d="M950,500 H1330 M950,560 H1330" stroke="#2A160C" strokeWidth={6} /><path d={Array.from({length: 8}, (_, i) => `M${965 + i * 44},500 v-34`).join(' ')} stroke="#6A3A1C" strokeWidth={9} />
+			<rect x={1282} y={600} width={16} height={30} rx={4} fill="#3A2116" /><ellipse cx={1290} cy={592} rx={7} ry={11} fill="#FFE2A8" />
+			<Extra x={kx} g={WG} h={kh} pose={kp} era="qing" flip look={{dress: 'robe', head: 'bald', beard: 'short', build: 1.06}} rimO={0.55} />
 			<rect x={910} y={sill} width={460} height={22} fill="#3A2116" stroke={B.gold} strokeOpacity={0.5} strokeWidth={1.5} />
+			<rect x={1180} y={sill - 14} width={90} height={14} fill="#C9A86A" stroke="#5A3A18" strokeWidth={1} />
 			<rect x={930} y={sill + 22} width={420} height={WG - sill - 22} fill="#2A1712" />
 			{(() => { const hd = J(kp, 'LHand', kx, WG, kh, true); return <g><rect x={hd[0] - 30} y={hd[1] + 2} width={26} height={22} rx={3} fill="#5A3A20" stroke={B.gold} strokeOpacity={0.5} strokeWidth={1.2} /><rect x={hd[0] - 28} y={hd[1] + 22} width={22} height={6} fill="#BF3420" /></g>; })()}
-			<g transform={`translate(${slipPos[0]},${slipPos[1]}) rotate(${slipOn ? 0 : -8})`}>
-				{slipOn ? <><path d="M-46,0 L46,0 L52,-12 L-40,-12 Z" fill="#EFE2C4" stroke="#8A6A3A" strokeWidth={1.2} />{t >= seal && <rect x={4} y={-11} width={22} height={9} fill="#BF3420" />}</>
-					: <><rect x={-24} y={-96} width={48} height={96} fill="#EFE2C4" stroke="#8A6A3A" strokeWidth={1.5} />{[-10, 0, 10].map((dx, i) => <path key={i} d={`M${dx},-84 v14 m0,6 v10 m0,6 v14`} stroke="#22150F" strokeWidth={3} strokeLinecap="round" />)}<rect x={-12} y={-34} width={24} height={24} fill="#BF3420" /></>}
-			</g>
-			{t >= seal && t < seal + 0.3 && <g opacity={1 - (t - seal) / 0.3}>{Array.from({length: 6}, (_, i) => { const a = Math.PI * (1.1 + i * 0.16); return <path key={i} d={`M${1025 + Math.cos(a) * 30},${sill - 8 + Math.sin(a) * 30} l${Math.cos(a) * 22},${Math.sin(a) * 22}`} stroke={B.goldL} strokeWidth={3} strokeLinecap="round" />; })}</g>}
-			<Floor g={WG} x0={-400} x1={2600} />
+			{t < BB(7) + 0.05 && <g transform={`translate(${slipPos[0]},${slipPos[1]}) rotate(${slipOn ? 0 : -6})`}>
+				{slipOn ? <><path d="M-60,0 L60,0 L68,-14 L-52,-14 Z" fill="#EFE2C4" stroke="#8A6A3A" strokeWidth={1.2} />{t >= seal && <rect x={6} y={-13} width={28} height={11} fill="#BF3420" />}</>
+					: <><rect x={-36} y={-150} width={72} height={150} fill="#EFE2C4" stroke="#8A6A3A" strokeWidth={1.5} />{[-16, 0, 16].map((dx, i) => <path key={i} d={`M${dx},-134 v20 m0,9 v16 m0,9 v22`} stroke="#22150F" strokeWidth={4} strokeLinecap="round" />)}<rect x={-18} y={-50} width={36} height={36} fill="#BF3420" /></>}
+			</g>}
+			{t >= seal && t < seal + 0.3 && <g opacity={1 - (t - seal) / 0.3}>{Array.from({length: 6}, (_, i) => { const a = Math.PI * (1.1 + i * 0.16); return <path key={i} d={`M${1030 + Math.cos(a) * 30},${sill - 10 + Math.sin(a) * 30} l${Math.cos(a) * 22},${Math.sin(a) * 22}`} stroke={B.goldL} strokeWidth={3} strokeLinecap="round" />; })}</g>}
+			<Floor g={WG} x0={-700} x1={2600} />
+			{/* the queue steps in from the left (rank by silhouette only: hat finial, robe hem) */}
+			{queue.map((q, i) => { const h = 440, qx = q.x - 520 * (1 - ease(seg(t, 78.35 + i * 0.12, 79.15 + i * 0.12))), moving = t < 79.15 + i * 0.12, has = t >= q.tb, k = has ? land(seg(t, q.tb, q.tb + 0.35)) : 0;
+				const bx = qx + 0.3 * h, by = WG - 0.4 * h;
+				let p = moving ? walkPose((qx + 600) / (STRIDE * h)) : grounded({lean: 4, neck: 6, lt: 3, lk: 3, rt: -4, rk: 4, la: 40, le: 40, ra: 30, re: 50});
+				if (has) p = ikArm(ikArm(p, 'L', toBody(bx - q.s / 2 + 4, by - q.s * 0.3, qx, WG, h)), 'R', toBody(bx + q.s / 2 - 6, by - q.s * 0.4, qx, WG, h));
+				else if (!moving) p = ikArm(p, 'L', toBody(bx, by - 30, qx, WG, h));
+				const top = J(p, 'Top', qx, WG, h);
+				return <g key={i}>
+					<Extra x={qx} g={WG} h={h} pose={p} era="qing" look={q.look} rimO={0.5} />
+					{q.fin && <circle cx={top[0]} cy={top[1] - 10} r={7} fill={NEUT} stroke={BG.rim} strokeOpacity={0.5} strokeWidth={1.5} />}
+					{!has && !moving && <rect x={bx - 14} y={by - 86} width={28} height={58} fill="#EFE2C4" stroke="#8A6A3A" strokeWidth={1.2} />}
+					{has && <g transform={`translate(${bx},${by}) scale(${0.6 + 0.4 * k}) translate(${-bx},${-by})`}><IceBlock x={bx - q.s / 2} y={by} w={q.s} h={q.s * 0.66} d={q.s * 0.35} seed={40 + i} /></g>}
+				</g>; })}
 			<Pool id="cwF" x={wx + 60} y={WG + 4} rx={320} ry={42} a={0.3} />
 			{blockOut > 0 && <IceBlock x={lerp(1520, wx + 0.28 * WH - 40, blockOut)} y={lerp(WG - 6, WG - 0.4 * WH, blockOut)} w={80} h={56} d={30} seed={34} />}
 			<Wk x={wx} g={WG} h={WH} pose={handed ? ikArm(ikArm(wp, 'L', toBody(wx + 0.28 * WH - 36, WG - 0.4 * WH - 20, wx, WG, WH)), 'R', toBody(wx + 0.28 * WH + 36, WG - 0.4 * WH - 30, wx, WG, WH)) : wp} era="qing" T={t} />
 		</g>
-	</Scene>; };
-const qX = (t: number) => -250 + trap(t, 78.45, 82, 470, 0.01, 0.01);
-const Queue: React.FC<{t: number}> = ({t}) => {
-	const {x: wx, pose: wp0} = gait(qX, t, WH, 470 * 0.8);
-	const hands: [number, number, number, number][] = [[1260, 0.98, BB(9), 96], [1060, 1.0, BB(10), 74], [860, 0.97, BB(11), 54]];   // x, build, beat, block size
-	return <Scene id="cQ" sheen={0.4}>
-		<CellarWall cam={0} />
-		<Floor g={WG} />
-		{hands.map(([x, b, tb, s], i) => { const h = 430, has = t >= tb, k = has ? land(seg(t, tb, tb + 0.35)) : 0, bx = x + 0.3 * h, by = WG - 0.42 * h;
-			let p = grounded({lean: 4, neck: 6, lt: 3, lk: 3, rt: -4, rk: 4, la: 40, le: 40, ra: 30, re: 50});
-			p = ikArm(ikArm(p, 'L', toBody(bx - s / 2 + 4, by - s * 0.3, x, WG, h)), 'R', toBody(bx + s / 2 - 6, by - s * 0.4, x, WG, h));
-			return <g key={i}>
-				<Extra x={x} g={WG} h={h} pose={p} era="qing" look={{dress: 'robe', head: 'bald', build: b}} rimO={0.5} />
-				{!has && <rect x={bx - 12} y={by - 60} width={24} height={50} fill="#EFE2C4" stroke="#8A6A3A" strokeWidth={1.2} />}
-				{has && <g transform={`translate(${bx},${by}) scale(${0.6 + 0.4 * k}) translate(${-bx},${-by})`}><IceBlock x={bx - s / 2} y={by} w={s} h={s * 0.7} d={s * 0.35} seed={40 + i} /></g>}
-			</g>; })}
-		<Pool id="cqF" x={wx + 60} y={WG + 4} rx={300} ry={40} a={0.28} />
-		<Wk x={wx} g={WG} h={WH} pose={wp0} era="qing" T={t} />
 	</Scene>; };
 
 /* ===================================================================================================================
@@ -371,17 +385,17 @@ const Queue: React.FC<{t: number}> = ({t}) => {
 const HG = 905, HH = 560;
 const hWx = (t: number) => 900 + trap(t, 79, 83.75, 470, 0.01, 0.5) - trap(80.9, 79, 83.75, 470, 0.01, 0.5) + trap(t, 86.0, 90, vNat(HH), 0.4, 0.01);
 const hCam = (t: number) => hWx(t) - lerp(900, 640, ease(seg(t, 80.9, 82.4)));
-const Bowl2: React.FC<{x: number; y: number; open: number}> = ({x, y, open}) => <g>
-	<path d={`M${x - 26},${y - 10 - open} Q${x - 22},${y + 8 - open} ${x},${y + 10 - open} Q${x + 22},${y + 8 - open} ${x + 26},${y - 10 - open} Z`} fill="url(#brz51v)" stroke={BRZ.line} strokeWidth={1.2} />
-	<path d={`M${x - 26},${y + 10 + open} Q${x - 22},${y - 8 + open} ${x},${y - 10 + open} Q${x + 22},${y - 8 + open} ${x + 26},${y + 10 + open} Z`} fill="url(#brz51v)" stroke={BRZ.line} strokeWidth={1.2} />
-</g>;
+/** the 冰盏: two small brass bowls held in one hand, struck rim to rim; open = their gap (px) */
+const Bowl2: React.FC<{x: number; y: number; open: number}> = ({x, y, open}) => { const bowl = (cx: number, rot: number) => <g transform={`translate(${cx},${y}) rotate(${rot})`}>
+		<path d="M-30,-12 Q-27,10 0,14 Q27,10 30,-12 Z" fill="url(#brz51v)" stroke={BRZ.line} strokeWidth={1.4} /><ellipse cx={0} cy={-12} rx={30} ry={6} fill="#5A3A18" stroke={BRZ.hi} strokeWidth={1.5} /></g>;
+	return <g>{bowl(x - 32 - open / 2, 62)}{bowl(x + 32 + open / 2, -62)}</g>; };
 const Hutong: React.FC<{t: number}> = ({t}) => {
 	const cam = hCam(t), {x: wx, pose: wp0} = gait(hWx, t, HH, 470 * 0.8);
-	const sx = wx + 300, sp = gait(hWx, t, 520, 470 * 0.8).pose;
+	const sx = wx + 350, sp = gait(hWx, t, 500, 470 * 0.8).pose;
 	const clangs = [BA(0) * 0 + 81.617, 82.749], open = (() => { let o = 18; for (const c of clangs) { if (t >= c - 0.14 && t < c) o = 18 * (c - t) / 0.14; else if (t >= c && t < c + 0.25) o = 18 * (t - c) / 0.25; } return o; })();
-	let sPose = ikArm(sp, 'L', toBody(sx + 0.24 * 520, HG - 0.62 * 520, sx, HG, 520, true));
-	sPose = ikArm(sPose, 'R', toBody(sx - 0.05 * 520, HG - 0.84 * 520, sx, HG, 520, true));
-	const bh = J(sPose, 'LHand', sx, HG, 520, true);
+	let sPose = ikArm(sp, 'L', toBody(sx + 0.24 * 500, HG - 0.62 * 500, sx, HG, 500, true));
+	sPose = ikArm(sPose, 'R', toBody(sx - 0.05 * 500, HG - 0.84 * 500, sx, HG, 500, true));
+	const bh = J(sPose, 'LHand', sx, HG, 500, true);
 	/* the bowl of 酸梅汤 handed over at 84.1, raised; the shiver on beat 20 */
 	const giveK = ease(seg(t, 83.85, 84.25)), has = t >= 84.25, cupP: P2 = has ? [wx + 0.27 * HH, HG - lerp(0.6, 0.72, ease(seg(t, 84.6, 85.1))) * HH] : [lerp(bh[0] - 10, wx + 0.27 * HH, giveK), lerp(bh[1] + 30, HG - 0.6 * HH, giveK)];
 	const shiv = t >= 85.58 && t < 86.0 ? Math.sin((t - 85.58) * 95) * 6 * (1 - (t - 85.58) / 0.42) : 0;
@@ -402,18 +416,17 @@ const Hutong: React.FC<{t: number}> = ({t}) => {
 				<rect x={x + 90 + 90 * 0.7 * o} y={548} width={90 * (1 - 0.7 * o)} height={HG - 548} fill="#2A1712" stroke={B.gold} strokeOpacity={0.3} strokeWidth={1.2} />
 				{isO && o > 0.3 && <Extra x={x + 90} g={HG} h={430} pose={grounded({lean: 10, neck: 10, lt: 3, lk: 3, rt: -4, rk: 4, la: 10, le: 20, ra: 4, re: 12})} era="qing" flip look={{dress: 'robe', head: 'bun'}} rimO={0.5 * o} />}
 			</g>; })}
-			{/* a neighbour at the corner turns at the first clang */}
-			<Extra x={1900} g={HG} h={440} pose={grounded({lean: 2, neck: headTurn ? 18 : 2, lt: 3, lk: 3, rt: -4, rk: 4, la: 4, le: 12, ra: 4, re: 12})} era="qing" flip={headTurn} look={{dress: 'tunic', legs: 'trousers', head: 'bald'}} rimO={0.45} />
+			{/* the reaction: the door ahead opens at the second clang and someone leans out */}
 			<Floor g={HG} x0={0} x1={5200} />
 			<Pool id="hF" x={wx + 120} y={HG + 4} rx={420} ry={44} a={0.3} />
 			{/* the seller: shoulder pole with two tubs, two brass bowls in his left hand */}
-			{(() => { const sh = J(sPose, 'RHand', sx, HG, 520, true); return <g>
-				<path d={`M${sh[0] - 170},${sh[1] + 6} L${sh[0] + 150},${sh[1] - 4}`} stroke="#8A6232" strokeWidth={8} strokeLinecap="round" />
-				{[-160, 140].map((dx, i) => <g key={i}><path d={`M${sh[0] + dx},${sh[1]} L${sh[0] + dx - 20},${HG - 130} M${sh[0] + dx},${sh[1]} L${sh[0] + dx + 20},${HG - 130}`} stroke="#B08850" strokeWidth={2} />
+			{(() => { const sh = J(sPose, 'RHand', sx, HG, 500, true); return <g>
+				<path d={`M${sh[0] - 130},${sh[1] + 6} L${sh[0] + 130},${sh[1] - 4}`} stroke="#8A6232" strokeWidth={8} strokeLinecap="round" />
+				{[-120, 120].map((dx, i) => <g key={i}><path d={`M${sh[0] + dx},${sh[1]} L${sh[0] + dx - 20},${HG - 130} M${sh[0] + dx},${sh[1]} L${sh[0] + dx + 20},${HG - 130}`} stroke="#B08850" strokeWidth={2} />
 					<path d={`M${sh[0] + dx - 40},${HG - 130} H${sh[0] + dx + 40} L${sh[0] + dx + 32},${HG - 40} H${sh[0] + dx - 32} Z`} fill="#3A2416" stroke={B.gold} strokeOpacity={0.4} strokeWidth={1.5} /></g>)}
 			</g>; })()}
-			<Extra x={sx} g={HG} h={520} pose={sPose} era="qing" flip look={{dress: 'tunic', legs: 'trousers', head: 'bald'}} rimO={0.6} />
-			<Bowl2 x={bh[0] - 6} y={bh[1] - 20} open={open} />
+			<Extra x={sx} g={HG} h={500} pose={sPose} era="qing" flip look={{dress: 'tunic', legs: 'trousers', head: 'bald'}} rimO={0.6} />
+			<Bowl2 x={bh[0] + 4} y={bh[1] - 16} open={open} />
 			{clangs.map((c, i) => t >= c && t < c + 0.3 && <g key={i} opacity={1 - (t - c) / 0.3}>{Array.from({length: 7}, (_, k) => { const a = -Math.PI / 2 + (k - 3) * 0.4, r0 = 34 + 50 * (t - c), r1 = r0 + 20; return <path key={k} d={`M${bh[0] - 6 + Math.cos(a) * r0},${bh[1] - 20 + Math.sin(a) * r0} L${bh[0] - 6 + Math.cos(a) * r1},${bh[1] - 20 + Math.sin(a) * r1}`} stroke={BRZ.hi} strokeWidth={3.5} strokeLinecap="round" />; })}</g>)}
 			{t > 83.85 && <g transform={`translate(${-shiv},0)`}><path d={`M${cupP[0] - 30},${cupP[1] - 18} Q${cupP[0] - 26},${cupP[1] + 8} ${cupP[0]},${cupP[1] + 10} Q${cupP[0] + 26},${cupP[1] + 8} ${cupP[0] + 30},${cupP[1] - 18} Z`} fill="url(#brz51v)" stroke={BRZ.line} strokeWidth={1.2} />
 				<ellipse cx={cupP[0]} cy={cupP[1] - 18} rx={30} ry={7} fill="#4A140C" stroke={BRZ.hi} strokeWidth={1.5} />
@@ -429,35 +442,47 @@ const Hutong: React.FC<{t: number}> = ({t}) => {
    hall turns cool as he walks through it (K3).
    =================================================================================================================== */
 const KG = 905, KHt = 640, KCX = 1040, KTOP = 548, KCH = 180, KCW = 324;
-const kWx = (t: number) => t < 92.9 ? 680 - (trap(88.2, 80, 88.2, vNat(KHt), 0.01, 0.45) - trap(t, 80, 88.2, vNat(KHt), 0.01, 0.45)) : 680 + trap(t, 92.9, 99, vNat(KHt), 0.45, 0.01);
+const kWx = (t: number) => 680 - (trap(88.2, 80, 88.2, vNat(KHt), 0.01, 0.45) - trap(t, 80, 88.2, vNat(KHt), 0.01, 0.45)) - trap(t, 93.0, 94.0, 140, 0.3, 0.3);
 const Palace: React.FC<{t: number}> = ({t}) => {
 	const {x: wx, pose: wp0} = gait(kWx, t, KHt, vNat(KHt) * 0.8);
-	const reach = fade(t, 88.4, 0.5) * (1 - fade(t, 92.6, 0.35));
-	let wp = wp0; if (reach > 0) { const p2 = ikArm(grounded({lean: 6, neck: 14, lt: 4, lk: 4, rt: -6, rk: 5, la: 60, le: 30, ra: 4, re: 12}), 'L', toBody(KCX - 150, KTOP - 50, wx, KG, KHt)); wp = mixPose(wp0, p2, reach); }
-	const cool = fade(t, 92.6, 1.4), label = fade(t, 87.9, 0.3) * (1 - fade(t, 89.6, 0.4)), cut = fade(t, 89.6, 0.5);
+	/* K2: his palm goes down into the falling cold and comes up; K3: he draws back a step (the source stays visible) */
+	const reach = fade(t, 88.4, 0.5) * (1 - fade(t, 92.75, 0.3)), dip = 40 * bump(t, 90.4, 1.5);
+	let wp = wp0; if (reach > 0) { const p2 = ikArm(grounded({lean: 6, neck: 14, lt: 4, lk: 4, rt: -6, rk: 5, la: 60, le: 30, ra: 4, re: 12}), 'L', toBody(KCX - 160, KTOP - 46 + dip, wx, KG, KHt)); wp = mixPose(wp0, p2, reach); }
+	const cool = fade(t, BB(33), 1.2), label = fade(t, 87.9, 0.3) * (1 - fade(t, 89.6, 0.4)), cut = fade(t, 89.6, 0.5);
 	const breath = (i: number) => fade(t, BB(29) + i * 0.09, 0.4);
+	const camZ = 1 + 0.05 * seg(t, 88.0, 94.7), camX = 30 * Math.sin(Math.PI * seg(t, 88.0, 94.7));
 	return <Scene id="kP" sheen={0.3}>
-		<rect x={-40} y={300} width={W + 80} height={KG - 300} fill={BG.wall} />
-		{[[210, 380], [1330, 380]].map(([x0, w], i) => <g key={i}>
-			<rect x={x0} y={340} width={w} height={360} fill="#C9782E" opacity={0.42 * (1 - 0.55 * cool)} />
-			<path d={[...Array.from({length: 9}, (_, k) => `M${x0 + (k + 1) * w / 10},340 V700`), ...Array.from({length: 8}, (_, k) => `M${x0},${340 + (k + 1) * 40} H${x0 + w}`)].join(' ')} stroke="#2A140C" strokeWidth={6} />
-			<rect x={x0} y={340} width={w} height={360} fill="none" stroke={B.gold} strokeOpacity={0.4} strokeWidth={3} />
-			<path d={`M${x0 + 20},700 L${x0 + w - 20},700 L${x0 + w + 180},${KG} L${x0 + 140},${KG} Z`} fill="#FFB060" opacity={0.07 * (1 - cool)} /></g>)}
-		{[120, 780, 1220, 1820].map((x0, i) => <rect key={i} x={x0} y={260} width={50} height={KG - 260} fill="#3A140E" stroke={BG.line} strokeWidth={1.2} />)}
-		<rect x={-40} y={262} width={W + 80} height={40} fill={BG.beam} stroke={BG.line} strokeWidth={1.5} />
-		<Pool id="kW" x={KCX - 60} y={600} rx={640} ry={420} a={0.34 * (1 - 0.6 * cool)} />
-		<Pool id="kC" x={KCX - 60} y={760} rx={1100 * (0.3 + 0.7 * cool)} ry={460} a={0.24 * cool} col="#9FD2EA" />
-		<Floor g={KG} lattice={false} />
-		<path d={Array.from({length: 5}, (_, i) => `M-40,${KG + 20 + i * 36} H${W + 40}`).join(' ') + ' ' + Array.from({length: 22}, (_, i) => `M${-40 + i * 96},${KG} l${(i - 11) * 12},180`).join(' ')} stroke={B.gold} strokeOpacity={0.1} strokeWidth={1.5} />
-		{(() => { const st = KTOP + KCH, cx = KCX, cw = KCW; return <g>
-			<rect x={cx - cw / 2 - 20} y={st} width={cw + 100} height={20} fill="#2E1610" stroke={B.gold} strokeOpacity={0.5} strokeWidth={1.5} />
-			<path d={`M${cx - cw / 2 - 6},${st + 20} Q${cx - cw / 2 - 20},${st + 110} ${cx - cw / 2 + 4},${KG} H${cx - cw / 2 + 20} Q${cx - cw / 2 + 6},${st + 100} ${cx - cw / 2 + 18},${st + 20} Z M${cx + cw / 2 + 44},${st + 20} Q${cx + cw / 2 + 58},${st + 110} ${cx + cw / 2 + 34},${KG} H${cx + cw / 2 + 18} Q${cx + cw / 2 + 32},${st + 100} ${cx + cw / 2 + 20},${st + 20} Z`} fill="#2E1610" stroke={B.gold} strokeOpacity={0.4} strokeWidth={1.2} /></g>; })()}
-		<IceChest x={KCX} top={KTOP} w={KCW} h={KCH} cut={cut} breath={[0, 1, 2, 3].map(breath)} T={t} />
-		{/* the cold sinking off the stand and spreading over the floor (K3) */}
-		<g filter="url(#mist)" opacity={0.14 + 0.12 * fade(t, 90.7, 1)}>{[[-1, 0], [1, 0]].map(([d], i) => <ellipse key={i} cx={KCX + d * (150 + 500 * cool)} cy={KG - 8} rx={150 + 500 * cool} ry={14 + 6 * cool} fill="#DCEFF9" />)}</g>
-		<Pool id="kF" x={wx + 40} y={KG + 4} rx={280} ry={40} a={0.26} />
-		<Walker51 x={wx} g={KG} h={KHt} pose={wp} look={LA.qing.look} qing T={t} />
-		{label > 0 && <g opacity={label} transform={`translate(${KCX + 40},${KTOP - 120 - 20 * label})`}><Label x={0} y={0} s="“冰箱”" fs={56} col={B.cream} anchor="middle" /></g>}
+		<g transform={`translate(${960 + camX},560) scale(${camZ}) translate(-960,-560)`}>
+			<rect x={-40} y={300} width={W + 80} height={KG - 300} fill={BG.wall} />
+			{[[210, 380], [1330, 380]].map(([x0, w], i) => <g key={i}>
+				<rect x={x0} y={340} width={w} height={360} fill="#C9782E" opacity={0.42 * (1 - 0.6 * cool)} />
+				<rect x={x0} y={340} width={w} height={360} fill="#9FC6DE" opacity={0.3 * cool} />
+				<path d={[...Array.from({length: 9}, (_, k) => `M${x0 + (k + 1) * w / 10},340 V700`), ...Array.from({length: 8}, (_, k) => `M${x0},${340 + (k + 1) * 40} H${x0 + w}`)].join(' ')} stroke="#2A140C" strokeWidth={6} />
+				{/* frost creeping across the lattice from the bottom */}
+				<g opacity={cool}>{Array.from({length: 30}, (_, k) => { const fx = x0 + 10 + rnd(k + i * 40, 81) * (w - 20), fy = 700 - rnd(k + i * 40, 82) * 360 * cool, sz = 10 + 14 * rnd(k, 83);
+					return <g key={k} stroke="#F2FAFF" strokeWidth={2} strokeLinecap="round" opacity={0.6} transform={`translate(${fx},${fy}) rotate(${60 * rnd(k, 84)})`}>{[0, 60, 120].map((a) => <path key={a} d={`M${-sz / 2},0 L${sz / 2},0`} transform={`rotate(${a})`} />)}</g>; })}</g>
+				<rect x={x0} y={340} width={w} height={360} fill="none" stroke={B.gold} strokeOpacity={0.4} strokeWidth={3} />
+				<path d={`M${x0 + 20},700 L${x0 + w - 20},700 L${x0 + w + 180},${KG} L${x0 + 140},${KG} Z`} fill="#FFB060" opacity={0.07 * (1 - cool)} /></g>)}
+			{[120, 780, 1220, 1820].map((x0, i) => <rect key={i} x={x0} y={260} width={50} height={KG - 260} fill="#3A140E" stroke={BG.line} strokeWidth={1.2} />)}
+			<rect x={-40} y={262} width={W + 80} height={40} fill={BG.beam} stroke={BG.line} strokeWidth={1.5} />
+			<Pool id="kW" x={KCX - 60} y={600} rx={640} ry={420} a={0.34 * (1 - 0.7 * cool)} />
+			<Floor g={KG} lattice={false} />
+			<path d={Array.from({length: 5}, (_, i) => `M-40,${KG + 20 + i * 36} H${W + 40}`).join(' ') + ' ' + Array.from({length: 22}, (_, i) => `M${-40 + i * 96},${KG} l${(i - 11) * 12},180`).join(' ')} stroke={B.gold} strokeOpacity={0.1} strokeWidth={1.5} />
+			{/* 整间屋子: the whole hall grades to cool blue */}
+			<rect x={-60} y={-60} width={W + 120} height={H + 120} fill="#46708F" opacity={0.42 * cool} style={{mixBlendMode: 'color'}} />
+			<rect x={-60} y={-60} width={W + 120} height={H + 120} fill="#5D7F9A" opacity={0.16 * cool} />
+			{(() => { const st = KTOP + KCH, cx = KCX, cw = KCW; return <g>
+				<rect x={cx - cw / 2 - 20} y={st} width={cw + 100} height={20} fill="#2E1610" stroke={B.gold} strokeOpacity={0.5} strokeWidth={1.5} />
+				<path d={`M${cx - cw / 2 - 6},${st + 20} Q${cx - cw / 2 - 20},${st + 110} ${cx - cw / 2 + 4},${KG} H${cx - cw / 2 + 20} Q${cx - cw / 2 + 6},${st + 100} ${cx - cw / 2 + 18},${st + 20} Z M${cx + cw / 2 + 44},${st + 20} Q${cx + cw / 2 + 58},${st + 110} ${cx + cw / 2 + 34},${KG} H${cx + cw / 2 + 18} Q${cx + cw / 2 + 32},${st + 100} ${cx + cw / 2 + 20},${st + 20} Z`} fill="#2E1610" stroke={B.gold} strokeOpacity={0.4} strokeWidth={1.2} /></g>; })()}
+			<IceChest x={KCX} top={KTOP} w={KCW} h={KCH} cut={cut} breath={[0, 1, 2, 3].map(breath)} T={t} />
+			{/* the falling cold: it pours off the stand's top and runs out over the floor to both walls */}
+			{(() => { const k = fade(t, BB(29), 1.0), sp = cool; return <g filter="url(#mist)">
+				<path d={`M${KCX - KCW / 2 - 10},${KTOP + KCH + 10} Q${KCX - KCW / 2 - 40},${KG - 80} ${KCX - KCW / 2 - 70 - 500 * sp},${KG - 6} L${KCX + KCW / 2 + 140 + 600 * sp},${KG - 6} Q${KCX + KCW / 2 + 90},${KG - 80} ${KCX + KCW / 2 + 60},${KTOP + KCH + 10} Z`} fill="#DCEFF9" opacity={0.16 * k + 0.1 * sp} />
+				<ellipse cx={KCX} cy={KG - 4} rx={220 + 900 * sp} ry={18 + 14 * sp} fill="#DCEFF9" opacity={0.18 * k + 0.12 * sp} /></g>; })()}
+			<Pool id="kF" x={wx + 40} y={KG + 4} rx={280} ry={40} a={0.26 * (1 - 0.5 * cool)} />
+			<Walker51 x={wx} g={KG} h={KHt} pose={wp} look={LA.qing.look} qing T={t} />
+			{label > 0 && <g opacity={label} transform={`translate(${KCX + 40},${KTOP - 120 - 20 * label})`}><Label x={0} y={0} s="“冰箱”" fs={56} col={B.cream} anchor="middle" /></g>}
+		</g>
 	</Scene>; };
 
 /* ===================================================================================================================
@@ -465,12 +490,15 @@ const Palace: React.FC<{t: number}> = ({t}) => {
    ice by itself in its tank; he walks in in the modern jacket, watches, walks on.
    =================================================================================================================== */
 const MG = 905, MH = 560;
-const mWx = (t: number) => t < 96.9 ? 1000 - (trap(95.7, 90, 95.7, vNat(MH), 0.01, 0.45) - trap(t, 90, 95.7, vNat(MH), 0.01, 0.45)) : 1000 + trap(t, 96.9, 101, vNat(MH), 0.4, 0.01);
+const mWx = (t: number) => t < 96.9 ? 1000 - (trap(95.7, 90, 95.7, vNat(MH), 0.01, 0.45) - trap(t, 90, 95.7, vNat(MH), 0.01, 0.45)) : 1000 + 0 * trap(t, 96.9, 101, vNat(MH), 0.4, 0.01);
 const Machine: React.FC<{t: number}> = ({t}) => {
 	const {x: wx, pose: wp} = gait(mWx, t, MH, vNat(MH) * 0.8), rot = t * 160, frost = fade(t, 94.9, 2.0), blk = ease(seg(t, 95.3, 96.9)), DROP = 96.9;
 	const fw: P2 = [520, 620], R = 190, crank: P2 = [fw[0] + 60 * Math.cos(rot * Math.PI / 180), fw[1] + 60 * Math.sin(rot * Math.PI / 180)];
 	const tank = {x: 1180, y: 600, w: 380, h: 300};
+	/* 97.5–97.95: push into the glowing tank; its light becomes the one lit window of the grid */
+	const TW: P2 = [1370, 735], zp = Math.exp(lerp(0, Math.log(14), Math.pow(seg(t, 97.5, 97.95), 1.6))), kp = (zp - 1) / 13;
 	return <Scene id="mM" sheen={0.2}>
+		<g transform={`translate(${lerp(TW[0], 960, kp)},${lerp(TW[1], 540, kp)}) scale(${zp}) translate(${-TW[0]},${-TW[1]})`}>
 		<rect x={-40} y={240} width={W + 80} height={MG - 240} fill="#1E1210" />
 		<path d={Array.from({length: 14}, (_, i) => `M-40,${270 + i * 46} H${W + 40}`).join(' ') + ' ' + Array.from({length: 60}, (_, i) => `M${(i % 2) * 45 + (i >> 1) * 90 - 40},${270 + (i % 14) * 46} v46`).join(' ')} stroke={B.gold} strokeOpacity={0.05} strokeWidth={1.5} />
 		<Pool id="mP" x={900} y={600} rx={800} ry={420} a={0.28} />
@@ -498,108 +526,134 @@ const Machine: React.FC<{t: number}> = ({t}) => {
 		<Floor g={MG} />
 		<Pool id="mF" x={wx + 60} y={MG + 4} rx={300} ry={42} a={0.3} />
 		<Walker51 x={wx} g={MG} h={MH} pose={wp} look={LA.today.look} T={t} />
+		</g>
+		<rect x={0} y={0} width={W} height={H} fill="#EAF6FF" opacity={ease(seg(t, 97.72, 97.95))} />
 	</Scene>; };
 
 /* ===================================================================================================================
-   M2/M3 · the village grid, 97.75–103.4 (KF14 at 100.0): one window lights on beat 43 (98.599), the sliver on 99.165, the
-   panel's 1.22 lands; 2024: the rows light, fridge icons spill past the edge (101.995 / 102.561), the 全国 panel lands with the
-   农村 one kept beside it.
+   M2/M3 · the grid, 97.95–103.8 (KF14 at 100.0). It opens out of the machine's light: the camera pulls back from the one
+   lit window (the match). 1990: 「农村」, the sliver on 99.165, the 1.22 lands. 2024: the grid turns into a mixed 全国 grid
+   (towns and city blocks among the villages), every window lights, fridge icons spill past the edge (101.995 / 102.561),
+   the 全国 panel lands beside the 农村 one. Tags clear 103.25–103.45; then the camera pushes into the lit window, whose
+   light becomes your fridge's (103.45–103.8).
    =================================================================================================================== */
-const GX0 = 150, GY0 = 288, GCW = 96, GCH = 60;
+const GX0 = 150, GY0 = 308, GCW = 96, GCH = 60, LW: P2 = [GX0 + 3 * GCW + GCW / 2, GY0 + 5 * GCH + GCH * 0.42 + 16];
 const gWx = (t: number) => t < 100.3 ? 1400 + (trap(100.0, 98.1, 100.0, 353, 0.01, 0.4) - trap(t, 98.1, 100.0, 353, 0.01, 0.4)) : 1400 + trap(t, 100.6, 104, 330, 0.4, 0.01);
+const Scrim: React.FC<{x: number; y: number; w: number; h: number; o?: number}> = ({x, y, w, h, o = 1}) =>
+	<div style={{position: 'absolute', left: x - 60, top: y - 50, width: w + 120, height: h + 100, opacity: o, background: 'radial-gradient(closest-side, rgba(10,5,3,0.86), rgba(10,5,3,0.74) 55%, rgba(10,5,3,0))'}} />;
 const Grid: React.FC<{t: number}> = ({t}) => {
 	const stars = Array.from({length: 40}, (_, i) => [rnd(i, 51) * W, 250 + rnd(i, 52) * 120, 1 + 1.5 * rnd(i, 53)]);
-	const in1 = (r: number) => fade(t, 97.5 + r * 0.02, 0.2), lit1 = t >= BB(43), sl = t >= BB(44) ? 0.22 : 0;
-	const rowLit = (r: number) => fade(t, 101.0 + (9 - r) * 0.1, 0.12);   // 2024: rows light from the bottom up
+	const zIn = t < 98.6 ? Math.exp(lerp(Math.log(18), 0, ease(seg(t, 97.95, 98.6)))) : 1, zOut = t > 103.45 ? Math.exp(lerp(0, Math.log(28), Math.pow(seg(t, 103.45, 103.8), 1.6))) : 1, z = zIn * zOut;
+	const kc = (z - 1) / 27, sc: P2 = [lerp(LW[0], 960, Math.min(1, kc * 1.5)), lerp(LW[1], 540, Math.min(1, kc * 1.5))];
+	const sl = t >= BB(44) ? 0.22 : 0, nat = fade(t, 101.0, 0.35);
+	const rowLit = (r: number) => fade(t, 101.0 + (9 - r) * 0.1, 0.12);
 	const spill = [BB(49), BB(49) + 0.09, BB(49) + 0.18, BB(50), BB(50) + 0.09];
-	const walkingIn = t < 100.3, gw = gait(gWx, t, 355, 300 * 0.8);
+	const tags = 1 - fade(t, 103.25, 0.2), walkingIn = t < 100.3, gw = gait(gWx, t, 355, 300 * 0.8);
 	const houses: React.ReactNode[] = [];
 	for (let r = 0; r < 10; r++) for (let c = 0; c < 10; c++) {
 		const x = GX0 + c * GCW, y = GY0 + r * GCH, wall = y + GCH * 0.42, ww = GCW * 0.78, wx0 = x + (GCW - ww) / 2, win = {x: x + GCW / 2 - 17, y: wall + 6, w: 34, h: 20};
-		const isLit = r === 5 && c === 3, isSl = r === 5 && c === 4, L = Math.max(rowLit(r), isLit && lit1 ? 1 : 0);
-		houses.push(<g key={`${r}-${c}`} opacity={in1(r)}>
-			<rect x={wx0} y={wall} width={ww} height={GCH - (wall - y) - 4} fill="#33201A" stroke={B.gold} strokeOpacity={0.18} strokeWidth={1} />
-			<path d={rnd(r * 10 + c, 61) > 0.5 ? `M${wx0 - 6},${wall + 2} L${x + GCW / 2},${y + 4} L${wx0 + ww + 6},${wall + 2} Z` : `M${wx0 - 8},${wall + 2} Q${x + GCW / 2},${y + 2} ${wx0 + ww + 8},${wall + 2} Z`} fill="#1E100B" stroke={B.gold} strokeOpacity={0.4} strokeWidth={1.4} />
+		const isLit = r === 5 && c === 3, isSl = r === 5 && c === 4, L = Math.max(rowLit(r), isLit ? 1 : 0);
+		const city = (c >= 6 || (r + c) % 4 === 0) && !isLit && !isSl, m = city ? nat : 0;   // 2024: towns and city blocks among the villages
+		houses.push(<g key={`${r}-${c}`}>
+			<rect x={wx0} y={lerp(wall, y + 6, m)} width={ww} height={GCH - (lerp(wall, y + 6, m) - y) - 4} fill={m > 0 ? '#2C2A2E' : '#33201A'} stroke={B.gold} strokeOpacity={0.18} strokeWidth={1} />
+			{m < 1 && <path d={rnd(r * 10 + c, 61) > 0.5 ? `M${wx0 - 6},${wall + 2} L${x + GCW / 2},${y + 4} L${wx0 + ww + 6},${wall + 2} Z` : `M${wx0 - 8},${wall + 2} Q${x + GCW / 2},${y + 2} ${wx0 + ww + 8},${wall + 2} Z`} fill="#1E100B" stroke={B.gold} strokeOpacity={0.4} strokeWidth={1.4} opacity={1 - m} />}
+			{m > 0 && <rect x={wx0 + 6} y={y + 12} width={ww - 12} height={10} fill="#140A07" stroke="#C9A060" strokeOpacity={0.5 * m} strokeWidth={1.2} opacity={m} />}
 			<rect x={win.x} y={win.y} width={win.w} height={win.h} fill="#140A07" stroke="#C9A060" strokeOpacity={0.75} strokeWidth={1.6} />
 			{L > 0 && <rect x={win.x} y={win.y} width={win.w} height={win.h} fill="#EAF6FF" opacity={L} />}
+			{isLit && rowLit(r) < 1 && <rect x={win.x + 11} y={win.y + 3} width={11} height={17} fill="#BFD6E0" />}
 			{isSl && sl > 0 && L < 1 && <rect x={win.x} y={win.y} width={win.w * sl} height={win.h} fill="#EAF6FF" />}
 		</g>); }
-	const p1 = ease(seg(t, 101.0, 101.4)), p2 = land(seg(t, BB(48), BB(48) + 0.4)), num1 = land(seg(t, BB(44), BB(44) + 0.4)), pan1 = fade(t, 98.3, 0.35);
+	const p1 = ease(seg(t, 101.0, 101.4)), p2 = land(seg(t, BB(48), BB(48) + 0.4)), num1 = land(seg(t, BB(44), BB(44) + 0.4)), pan1 = fade(t, 98.3, 0.35) * tags;
 	const P1x = lerp(1210, 1290, p1), P1y = lerp(300, 268, p1), P1s = lerp(1, 0.75, p1);
-	return <Scene id="gG" sheen={0.15}>
-		<g fill="#E8E0D0" opacity={0.35}>{stars.map(([x, y, r], i) => <circle key={i} cx={x} cy={y} r={r} />)}</g>
-		<path d={`M-40,${GY0 + 30} Q400,${GY0 - 40} 900,${GY0 + 10} Q1400,${GY0 + 50} 1960,${GY0 - 10} V${H} H-40 Z`} fill="#1A0E0A" />
-		{houses}
-		{lit1 && rowLit(5) < 1 && (() => { const x = GX0 + 3 * GCW, wy = GY0 + 5 * GCH + GCH * 0.42 + 6; return <g opacity={fade(t, BB(43), 0.12)}>
-			<ellipse cx={x + GCW / 2} cy={wy + 10} rx={GCW * 0.9} ry={GCH * 0.75} fill="url(#iceGlow)" />
-			<rect x={x + GCW / 2 - 17} y={wy} width={34} height={20} fill="#EAF6FF" stroke="#FFFFFF" strokeWidth={1.5} /><rect x={x + GCW / 2 - 6} y={wy + 3} width={11} height={17} fill="#BFD6E0" /></g>; })()}
-		{spill.map((ts, i) => { const k = land(seg(t, ts, ts + 0.3)); if (k <= 0) return null; const fx = GX0 + 10 * GCW + 14, fy = GY0 + 60 + i * 62;
-			return <g key={i} transform={`translate(${fx + 20},${fy + 25}) scale(${k}) translate(${-fx - 20},${-fy - 25})`}>
-				<clipPath id={`sp${i}`}><rect x={fx - 2} y={fy - 2} width={i === 4 ? 0.8 * 30 : 40} height={60} /></clipPath>
-				<g clipPath={`url(#sp${i})`}><FridgeIcon x={fx} y={fy} h={52} /></g></g>; })}
-		<Floor g={935} />
-		<Pool id="gW" x={gw.x} y={939} rx={240} ry={34} a={0.26} />
-		<RimFig x={gw.x} ground={935} h={355} pose={walkingIn || gw.k > 0.05 ? gw.pose : grounded({lean: 0, neck: -18, lt: 3, lk: 3, rt: -4, rk: 4, la: 4, le: 14, ra: 4, re: 12})} look={LA.today.look} col={B.lac} flip={walkingIn} dx={walkingIn ? -3 : 3} dy={-2.5} />
-		{pan1 > 0 && <g opacity={pan1} transform={`translate(${P1x},${P1y}) scale(${P1s})`}><rect x={0} y={0} width={500} height={250} rx={12} fill="#0E0705" stroke={B.gold} strokeOpacity={0.6} strokeWidth={2.5} />
-			<text x={250} y={70} textAnchor="middle" fontFamily={KAI} fontWeight={700} fontSize={56} fill={B.cream}>农村 · 每百户</text>
-			<FridgeIcon x={44} y={110} h={110} />
-			{num1 > 0 && <g transform={`translate(290,170) scale(${lerp(1.3, 1, num1)}) translate(-290,-170)`} opacity={cl(num1 * 3)}><text x={290} y={204} textAnchor="middle" fontFamily={SANS} fontWeight={900} fontSize={132} fill={B.goldL}>1.22<tspan fontSize={64} dx={10}>台</tspan></text></g>}</g>}
-		{p2 > 0 && <g opacity={cl(p2 * 3)} transform={`translate(1210,${480 + 20 * (1 - p2)})`}><rect x={0} y={0} width={500} height={250} rx={12} fill="#0E0705" stroke={B.gold} strokeOpacity={0.6} strokeWidth={2.5} />
-			<text x={250} y={70} textAnchor="middle" fontFamily={KAI} fontWeight={700} fontSize={56} fill={B.cream}>全国 · 每百户</text>
-			<text x={250} y={204} textAnchor="middle" fontFamily={SANS} fontWeight={900} fontSize={128} fill={B.goldL}>104.8<tspan fontSize={60} dx={8}>台</tspan></text></g>}
-	</Scene>; };
+	return <>
+		<Scene id="gG" sheen={0.15}>
+			<g fill="#E8E0D0" opacity={0.35}>{stars.map(([x, y, r], i) => <circle key={i} cx={x} cy={y} r={r} />)}</g>
+			<g transform={`translate(${sc[0]},${sc[1]}) scale(${z}) translate(${-LW[0]},${-LW[1]})`}>
+				<path d={`M-40,${GY0 + 30} Q400,${GY0 - 40} 900,${GY0 + 10} Q1400,${GY0 + 50} 1960,${GY0 - 10} V${H} H-40 Z`} fill="#1A0E0A" />
+				{houses}
+				{rowLit(5) < 1 && <ellipse cx={LW[0]} cy={LW[1] + 4} rx={GCW * 0.9} ry={GCH * 0.75} fill="url(#iceGlow)" />}
+				{spill.map((ts, i) => { const k = land(seg(t, ts, ts + 0.3)) * tags; if (k <= 0) return null; const fx = GX0 + 10 * GCW + 14, fy = GY0 + 60 + i * 62;
+					return <g key={i} transform={`translate(${fx + 20},${fy + 25}) scale(${k}) translate(${-fx - 20},${-fy - 25})`}>
+						<clipPath id={`sp${i}`}><rect x={fx - 2} y={fy - 2} width={i === 4 ? 0.8 * 30 : 40} height={60} /></clipPath>
+						<g clipPath={`url(#sp${i})`}><FridgeIcon x={fx} y={fy} h={52} /></g></g>; })}
+				<Floor g={935} />
+				<Pool id="gW" x={gw.x} y={939} rx={240} ry={34} a={0.26} />
+				{gw.x < 2050 && <RimFig x={gw.x} ground={935} h={355} pose={walkingIn || gw.k > 0.05 ? gw.pose : grounded({lean: 0, neck: -18, lt: 3, lk: 3, rt: -4, rk: 4, la: 4, le: 14, ra: 4, re: 12})} look={LA.today.look} col={B.lac} flip={walkingIn} dx={walkingIn ? -3 : 3} dy={-2.5} />}
+			</g>
+			{/* the light of the window we push into (and pulled back out of) */}
+			<rect x={0} y={0} width={W} height={H} fill="#EAF6FF" opacity={Math.max(1 - ease(seg(t, 97.95, 98.15)), ease(seg(t, 103.62, 103.8)))} />
+		</Scene>
+		{/* scope tag over the grid (56 px): 农村 (1990) → 全国 (2024) */}
+		{tags > 0 && t > 98.25 && <><Scrim x={GX0 + 330} y={GY0 - 70} w={300} h={64} o={tags * fade(t, 98.25, 0.3)} />
+			<div style={{position: 'absolute', left: GX0, width: 10 * GCW, top: GY0 - 76, textAlign: 'center', fontFamily: KAI, fontWeight: 700, fontSize: 56, color: B.cream, textShadow: thB.halo, opacity: tags * fade(t, 98.25, 0.3)}}>
+				<span style={{opacity: 1 - nat, position: 'absolute', left: 0, right: 0}}>农村</span><span style={{opacity: nat, position: 'absolute', left: 0, right: 0}}>全国 · 城乡</span></div></>}
+		{pan1 > 0 && <div style={{position: 'absolute', left: 0, top: 0, opacity: pan1, transform: `translate(${P1x}px,${P1y}px) scale(${P1s})`, transformOrigin: '0 0'}}>
+			<Scrim x={0} y={0} w={500} h={250} />
+			<div style={{position: 'absolute', left: 0, width: 500, top: 18, textAlign: 'center', fontFamily: KAI, fontWeight: 700, fontSize: 56, color: B.cream, textShadow: thB.halo}}>农村 · 每百户</div>
+			<svg width={120} height={140} style={{position: 'absolute', left: 30, top: 100}}><FridgeIcon x={14} y={10} h={110} /></svg>
+			{num1 > 0 && <div style={{position: 'absolute', left: 110, width: 380, top: 92, whiteSpace: 'nowrap', textAlign: 'center', fontFamily: SANS, fontWeight: 900, fontSize: 132, lineHeight: 1.1, color: B.goldL, textShadow: thB.halo, opacity: cl(num1 * 3), transform: `scale(${lerp(1.3, 1, num1)})`}}>1.22<span style={{fontSize: 64, marginLeft: 10}}>台</span></div>}
+		</div>}
+		{p2 > 0 && tags > 0 && <div style={{position: 'absolute', left: 1210, top: 480 + 20 * (1 - p2), opacity: cl(p2 * 3) * tags, width: 500, height: 250}}>
+			<Scrim x={0} y={0} w={500} h={250} />
+			<div style={{position: 'absolute', left: 0, width: 500, top: 18, textAlign: 'center', fontFamily: KAI, fontWeight: 700, fontSize: 56, color: B.cream, textShadow: thB.halo}}>全国 · 每百户</div>
+			<div style={{position: 'absolute', left: 0, width: 500, top: 92, whiteSpace: 'nowrap', textAlign: 'center', fontFamily: SANS, fontWeight: 900, fontSize: 128, lineHeight: 1.1, color: B.goldL, textShadow: thB.halo}}>104.8<span style={{fontSize: 60, marginLeft: 8}}>台</span></div>
+		</div>}
+	</>; };
 
 /* ===================================================================================================================
-   M3→M4 · your kitchen, 103.0–106.2: he opens the same fridge (its light comes on) and drops ice cubes into the frame-0 cup;
-   they land on 104.259 (the clink).
+   FINALE · one world, one camera, 103.8–end. The world is the P1 walk line; today's fridge is its last item.
+   · M4 (103.8–105.96): your kitchen = that fridge seen close (z 2.07), the walker beside it with the frame-0 cup; the shot
+     opens out of the fridge's light (the match from the grid window), the cubes drop on 104.259 (the clink).
+   · P1 (105.96–107.75): one eased pull-back; the kitchen dressing goes, the other cold things rise along the line, snow
+     lights inside each, left → right, one per half-beat from 106.524.
+   · P2 (107.95–109.3): one continuous push into the same fridge (the props leave by scale), which frosts by itself;
+     the cold light blooms across the room by 111.75; a slow push holds the peak; the end card dims over it.
    =================================================================================================================== */
-const KX = 800, KH2 = 600, KTOPC = 590, CUPX = 930, CLINK = 104.259;
-const Kitchen: React.FC<{t: number}> = ({t}) => {
-	const open = 0.9 * ease(seg(t, 103.05, 103.5)), drop = seg(t, CLINK - 0.21, CLINK), inCup = t >= CLINK;
-	const handTo = ease(seg(t, 103.3, 103.65)) * (1 - ease(seg(t, 103.7, 104.0)));
-	const rh: P2 = [lerp(CUPX + 4, 1060, handTo), lerp(KTOPC - 150, 500, handTo)];
-	let p = grounded({lean: 10, neck: 14, lt: 3, lk: 3, rt: -4, rk: 4, la: 40, le: 40, ra: 50, re: 50});
-	p = ikArm(ikArm(p, 'L', toBody(CUPX - 46, KTOPC - 60, KX, 905, KH2)), 'R', toBody(rh[0] - 6, rh[1] + 22, KX, 905, KH2));
-	const cubeY = lerp(rh[1] - 10, KTOPC - 70, drop * drop), push = 1 + 0.01 * seg(t, 103.0, 106.2);
-	return <Scene id="kK" sheen={0.15}>
-		<g transform={`translate(960,560) scale(${push}) translate(-960,-560)`}>
-			<rect x={-40} y={0} width={W + 80} height={H} fill="#140A07" opacity={0.5} />
-			<path d={Array.from({length: 12}, (_, i) => `M${-40 + i * 90},330 V${KTOPC}`).join(' ') + ` M-40,420 H1100 M-40,510 H1100`} stroke={B.gold} strokeOpacity={0.06} strokeWidth={1.5} />
-			<Fridge x0={1270} y0={145} w={420} h={760} open={open} light={open / 0.9} id="kfr" />
-			<rect x={-40} y={KTOPC} width={1160} height={905 - KTOPC} fill="#1E100B" /><rect x={-40} y={KTOPC} width={1160} height={4} fill={B.gold} opacity={0.32} />
-			<path d={Array.from({length: 5}, (_, i) => `M${40 + i * 220},${KTOPC + 30} h180 v${905 - KTOPC - 60} h-180 Z`).join(' ')} fill="none" stroke={B.gold} strokeOpacity={0.12} strokeWidth={1.5} />
-			<Floor g={905} lattice={false} />
-			<Cup x={CUPX} y={KTOPC} w={92} frost={0.4 + 0.4 * seg(t, CLINK, CLINK + 1)} ice={inCup} />
-			{!inCup && <g transform={`translate(0,${cubeY - (rh[1] - 10)})`}><IceCubes x={t < CLINK - 0.21 ? rh[0] + 4 : CUPX} y={rh[1] - 10} s={28} n={2} seed={7} /></g>}
-			{inCup && t < CLINK + 0.35 && <g opacity={1 - (t - CLINK) / 0.35}>{Array.from({length: 8}, (_, k) => { const a = -Math.PI * (0.15 + 0.7 * k / 7), r0 = 50 + 60 * (t - CLINK), r1 = r0 + 18; return <path key={k} d={`M${CUPX + Math.cos(a) * r0},${KTOPC - 124 + Math.sin(a) * r0 * 0.6} L${CUPX + Math.cos(a) * r1},${KTOPC - 124 + Math.sin(a) * r1 * 0.6}`} stroke="#F4FBFF" strokeWidth={3} strokeLinecap="round" />; })}</g>}
-			<Pool id="kkF" x={KX + 40} y={909} rx={280} ry={40} a={0.24} />
-			<Walker51 x={KX} g={905} h={KH2} pose={p} look={LA.today.look} T={t} />
+const FC: P2 = [1500, 655], CLINK = 104.259;
+const camF = (t: number) => {
+	const zk = 2.07, sk: P2 = [760, 600];
+	const intro = t < 104.05 ? 1 + 2 * Math.pow(1 - ease(seg(t, 103.8, 104.05)), 1.5) : 1;   // out of the fridge's light
+	const out = ease(seg(t, 105.96, 107.75)), inn = ease(seg(t, 107.95, 109.3)), hold = seg(t, 109.3, 112.9);
+	const zOut = Math.exp(lerp(Math.log(zk), 0, out)), z = (inn > 0 ? Math.exp(lerp(0, Math.log(2.41), inn)) * (1 + 0.04 * hold) : zOut) * intro;
+	const s: P2 = inn > 0 ? [lerp(FC[0], 960, inn), lerp(FC[1], 625, inn)] : [lerp(sk[0], FC[0], out), lerp(sk[1], FC[1], out)];
+	return {z, s}; };
+const Finale: React.FC<{t: number}> = ({t}) => {
+	const {z, s} = camF(t), wx = 1640, wh = 330, g = 800;
+	const kd = 1 - fade(t, 106.0, 0.5);   // the kitchen dressing
+	const pscale = Array.from({length: 9}, (_, i) => i === 8 ? 1 : fade(t, 106.05 + (7 - i) * 0.09, 0.35) * (1 - fade(t, 108.0 + (7 - i) * 0.04, 0.4)));
+	const psnow = Array.from({length: 9}, (_, i) => fade(t, BB(57) + i * 0.283 - 0.05, 0.2));
+	const lab = fade(t, 106.9, 0.3) * (1 - fade(t, 107.8, 0.15)), lineO = fade(t, 106.3, 0.5) * (1 - fade(t, 108.0, 0.5));
+	const ffrost = 0.15 + 0.85 * ease(seg(t, 109.2, 111.6));
+	/* the walker: the frame-0 cup in his near hand, the cubes dropped from the other on the clink */
+	const cup: P2 = [wx - 0.27 * wh, g - 0.5 * wh], cupW = 44, drop = seg(t, CLINK - 0.21, CLINK), inCup = t >= CLINK, lift = bump(t, 104.6, 1.0);
+	const cupP: P2 = [cup[0], cup[1] - 18 * lift];
+	const rh: P2 = [cupP[0] + 2, cupP[1] - cupW * 1.35 - 26];
+	let wp = grounded({lean: 6, neck: 12, lt: 3, lk: 3, rt: -4, rk: 4, la: 40, le: 50, ra: 50, re: 60});
+	wp = ikArm(ikArm(wp, 'L', toBody(cupP[0] + cupW * 0.42, cupP[1] - 30, wx, g, wh, true)), 'R', inCup ? toBody(wx - 0.12 * wh, g - 0.45 * wh, wx, g, wh, true) : toBody(rh[0] + 10, rh[1] + 6, wx, g, wh, true));
+	const cubeY = lerp(rh[1], cupP[1] - cupW * 0.9, drop * drop);
+	const bloom = ease(seg(t, 109.6, 111.75));
+	return <Scene id="fin" sheen={0.2}>
+		{/* the kitchen (screen space, behind the world): dark wall, tiles, a counter run behind him */}
+		{kd > 0 && <g opacity={kd}>
+			<rect x={-40} y={0} width={W + 80} height={H} fill="#140A07" opacity={0.6} />
+			<path d={Array.from({length: 12}, (_, i) => `M${980 + i * 90},300 V560`).join(' ') + ' M980,390 H2000 M980,475 H2000'} stroke={B.gold} strokeOpacity={0.06} strokeWidth={1.5} />
+			<rect x={1180} y={560} width={800} height={340} fill="#1E100B" /><rect x={1180} y={560} width={800} height={4} fill={B.gold} opacity={0.3} />
+			<path d={Array.from({length: 3}, (_, i) => `M${1260 + i * 230},590 h190 v280 h-190 Z`).join(' ')} fill="none" stroke={B.gold} strokeOpacity={0.12} strokeWidth={1.5} />
+		</g>}
+		<g transform={`translate(${s[0]},${s[1]}) scale(${z}) translate(${-FC[0]},${-FC[1]})`}>
+			{/* the cold light filling the room on the peak */}
+			<ellipse cx={FC[0]} cy={FC[1]} rx={140 + 900 * bloom} ry={160 + 520 * bloom} fill="url(#iceGlow)" opacity={0.35 + 0.65 * bloom} />
+			<P1Line t={t} pscale={pscale} psnow={psnow} lab={lab} lineO={lineO} ffrost={ffrost} wx={wx} wpose={wp} />
+			<Cup x={cupP[0]} y={cupP[1]} w={cupW} frost={0.4 + 0.4 * seg(t, CLINK, CLINK + 1)} ice={inCup} />
+			{!inCup && <IceCubes x={t < CLINK - 0.21 ? rh[0] : cupP[0]} y={cubeY} s={13} n={2} seed={7} />}
+			{inCup && t < CLINK + 0.35 && <g opacity={1 - (t - CLINK) / 0.35}>{Array.from({length: 8}, (_, k) => { const a = -Math.PI * (0.15 + 0.7 * k / 7), r0 = 24 + 28 * (t - CLINK), r1 = r0 + 9; return <path key={k} d={`M${cupP[0] + Math.cos(a) * r0},${cupP[1] - cupW * 1.35 + Math.sin(a) * r0 * 0.6} L${cupP[0] + Math.cos(a) * r1},${cupP[1] - cupW * 1.35 + Math.sin(a) * r1 * 0.6}`} stroke="#F4FBFF" strokeWidth={1.6} strokeLinecap="round" />; })}</g>}
 		</g>
-	</Scene>; };
-
-/* ===================================================================================================================
-   P1 · the walk as one line, 105.8–109.0 (KF15 at 107.5): pulls back from today's fridge (the kitchen) to the whole line;
-   snow starts inside every cold thing on 冬天 (beat 57, 106.524); he walks in from the right to the end of the line.
-   P2 · 108.0–: the camera pushes into today's fridge, which frosts by itself (no ice put in); the air holds; end card.
-   =================================================================================================================== */
-const P1F: P2 = [1500, 655];
-const p1Wx = (t: number) => 1640 + (trap(107.4, 105.9, 107.4, 230, 0.01, 0.4) - trap(t, 105.9, 107.4, 230, 0.01, 0.4));
-const P1: React.FC<{t: number}> = ({t}) => {
-	const out = eout(seg(t, 105.85, 107.4)), inn = ease(seg(t, 107.95, 108.95));
-	/* starts matched to the kitchen fridge (x0 1270, w 420: centre 1480, 525), so the dissolve shows one fridge */
-	const z = lerp(lerp(2.8, 1, out), 3.47, inn), fx = lerp(lerp(P1F[0], 960, out), P1F[0], inn), fy = lerp(lerp(P1F[1], 540, out), P1F[1], inn);
-	const sx = lerp(lerp(1480, 960, out), 960, inn), ty = lerp(lerp(525, 540, out), 590, inn);
-	const g = gait(p1Wx, t, 330, 230 * 0.8);
-	return <Scene id="p1" sheen={0.2}>
-		<g transform={`translate(${sx},${ty}) scale(${z}) translate(${-fx},${-fy})`}>
-			<P1Line t={t} snow={fade(t, BB(57) - 0.05, 0.3)} wx={g.x} wpose={g.pose} />
-		</g>
-	</Scene>; };
-const P2: React.FC<{t: number}> = ({t}) => {
-	const frost = ease(seg(t, 109.2, 111.6)), push = 1 + 0.03 * seg(t, 108.8, 112.75);
-	return <Scene id="p2" sheen={0.2}>
-		<g transform={`translate(960,590) scale(${push}) translate(-960,-590)`}><P2Shot frost={frost} t={t} /></g>
-		<rect x={700} y={160} width={520} height={860} fill="#EAF6FF" opacity={0.05 * bump(t, 111.6, 1.2)} />
+		{/* frost creeping in from the frame's edges as the room goes cold (P2) */}
+		{bloom > 0 && <g opacity={bloom}>{Array.from({length: 26}, (_, i) => { const side = i % 4, u = rnd(i, 71), x = side === 0 ? 40 + 120 * rnd(i, 72) : side === 1 ? W - 40 - 120 * rnd(i, 72) : 120 + u * (W - 240), y = side < 2 ? 260 + u * 700 : side === 2 ? 960 + 80 * rnd(i, 72) : 250 + 40 * rnd(i, 72), sz = 14 + 22 * rnd(i, 73);
+			return <g key={i} stroke="#F2FAFF" strokeWidth={2} strokeLinecap="round" opacity={0.35 + 0.35 * rnd(i, 74)} transform={`translate(${x},${y}) rotate(${60 * rnd(i, 75)})`}>{[0, 60, 120].map((a) => <path key={a} d={`M${-sz / 2},0 L${sz / 2},0`} transform={`rotate(${a})`} />)}</g>; })}
+			<rect x={0} y={0} width={W} height={H} fill="#BFE3F2" opacity={0.06} /></g>}
+		{/* the light this shot opens from (matched to the grid's lit window) */}
+		{t < 104.0 && <rect x={0} y={0} width={W} height={H} fill="#EAF6FF" opacity={1 - ease(seg(t, 103.8, 103.98))} />}
 	</Scene>; };
 
 /* ===================================================================================================================
@@ -608,11 +662,11 @@ const P2: React.FC<{t: number}> = ({t}) => {
    =================================================================================================================== */
 const END_Q = '你家冰箱里，现在冻着什么？';
 const EndCard: React.FC<{t: number}> = ({t}) => {
-	const T0 = 112.75, dim = fade(t, T0 - 0.1, 0.45), seal = land(seg(t, T0, T0 + 0.4)), title = fade(t, T0 + 0.35, 0.4), q = fade(t, T0 + 0.7, 0.4), src = fade(t, T0 + 1.3, 0.4), pill = t > 114.6 ? land(seg(t, 114.6, 115.0)) : 0;
+	const T0 = 112.75, dim = fade(t, T0 - 0.1, 0.45), seal = land(seg(t, T0 - 0.07, T0 + 0.33)), title = fade(t, T0 + 0.35, 0.4), q = fade(t, T0 + 0.7, 0.4), src = fade(t, T0 + 1.3, 0.4), pill = t > 114.6 ? land(seg(t, 114.6, 115.0)) : 0;
 	const fs = 76, tw = fs * 13 * 1.03;
 	return <>
 		<div style={{position: 'absolute', inset: 0, background: `rgba(8,4,3,${0.72 * dim})`}} />
-		{t >= T0 && <Img src={SEAL_SRC} style={{position: 'absolute', left: 960 - 70, top: 120, width: 140, height: 140, opacity: cl(seal * 3), transform: `rotate(-6deg) scale(${lerp(1.7, 1, seal)})`, filter: 'drop-shadow(0 3px 6px rgba(0,0,0,0.5))'}} />}
+		{t >= T0 - 0.07 && <Img src={SEAL_SRC} style={{position: 'absolute', left: 960 - 70, top: 120, width: 140, height: 140, opacity: cl(seal * 3), transform: `rotate(-6deg) scale(${lerp(1.7, 1, seal)})`, filter: 'drop-shadow(0 3px 6px rgba(0,0,0,0.5))'}} />}
 		<div style={{position: 'absolute', left: 0, right: 0, top: 290, textAlign: 'center', fontFamily: SANS, fontWeight: 900, fontSize: 60, lineHeight: 1.35, letterSpacing: '0.05em', color: B.gold, textShadow: thB.halo, opacity: title}}>古代没有冰<span style={{marginRight: '-0.05em'}}>箱</span><br />夏天怎么吃冰<span style={{marginRight: '-0.55em'}}>？</span></div>
 		<div style={{position: 'absolute', left: 960 - tw / 2 - 260, top: 560 - 150, width: tw + 520, height: fs * 1.5 + 300, opacity: q, background: 'radial-gradient(closest-side, rgba(16,7,4,0.42), rgba(16,7,4,0.36) 45%, rgba(16,7,4,0.15) 80%, rgba(16,7,4,0))'}} />
 		<div style={{position: 'absolute', left: 0, right: 0, top: 560 + 10 * (1 - q), opacity: q, textAlign: 'center', fontFamily: SANS, fontWeight: 900, fontSize: fs, lineHeight: 1.5, letterSpacing: '0.03em', color: thB.ink, textShadow: thB.halo, whiteSpace: 'nowrap'}}>{END_Q.slice(0, -1)}<span style={{marginRight: '-0.53em'}}>？</span></div>
@@ -626,31 +680,37 @@ const EndCard: React.FC<{t: number}> = ({t}) => {
    one shot only (or in the same place), and dips through dark where he would otherwise be doubled.
    =================================================================================================================== */
 type SC = React.FC<{t: number}>;
-const Lay: React.FC<{C: SC; t: number; o?: number}> = ({C, t, o = 1}) => o <= 0 ? null : <div style={{position: 'absolute', inset: 0, opacity: o}}><C t={t} /></div>;
-const diss = (t: number, A: SC, Bc: SC, a: number, b: number) => <><Lay C={A} t={t} o={t < b ? 1 : 0} /><Lay C={Bc} t={t} o={fade(t, a, b - a)} /></>;
-const dip = (t: number, A: SC, Bc: SC, a: number, b: number, m: number) => t < m ? <Lay C={A} t={t} o={1 - 0.85 * fade(t, a, m - a)} /> : <Lay C={Bc} t={t} o={0.15 + 0.85 * fade(t, m, b - m)} />;
 const wipe = (t: number, A: SC, Bc: SC, cross: number, kind: PillarKind, x0: number, id: string) => <WipeSplit t={t} cross={cross} kind={kind} id={id} x0={x0} oldP={<A t={t} />} newP={<Bc t={t} />} />;
+/** a vertical camera move between two stacked sets: the old set slides by dyA, the new by dyB, split at a moving seam (a soft
+    band of earth with the gold ground line), so no frame shows either set at partial opacity */
+const Stack: React.FC<{A: SC; Bc: SC; t: number; dyA: number; dyB: number; seam: number; aAbove: boolean}> = ({A, Bc, t, dyA, dyB, seam, aAbove}) => {
+	const sA = aAbove ? {transform: `translateY(${dyA}px)`, clipPath: `inset(0 0 ${Math.max(0, H - (seam - dyA))}px 0)`} : {transform: `translateY(${dyA}px)`, clipPath: `inset(${Math.max(0, seam - dyA)}px 0 0 0)`};
+	const sB = aAbove ? {transform: `translateY(${dyB}px)`, clipPath: `inset(${Math.max(0, seam - dyB)}px 0 0 0)`} : {transform: `translateY(${dyB}px)`, clipPath: `inset(0 0 ${Math.max(0, H - (seam - dyB))}px 0)`};
+	return <>
+		<div style={{position: 'absolute', inset: 0, ...sA}}><A t={t} /></div>
+		<div style={{position: 'absolute', inset: 0, ...sB}}><Bc t={t} /></div>
+		<div style={{position: 'absolute', left: 0, right: 0, top: seam - 26, height: 52, background: 'linear-gradient(#1C100B00, #1C100B 40%, #1C100B 60%, #1C100B00)'}} />
+		<div style={{position: 'absolute', left: 0, right: 0, top: seam - 1, height: 3, background: B.goldL, opacity: 0.6}} />
+	</>; };
+/* 66.7–67.35: tilt down from the moat into the ground and the vault below it */
+const MoatVault: SC = ({t}) => { const c = 500 * ease(seg(t, 66.7, 67.35)), seam = H - 2.2 * c; return <Stack A={Moat} Bc={Vault} t={t} dyA={-c} dyB={500 - c} seam={seam} aAbove />; };
+/* 75.25–76.25: crane up out of the vault, through the ground line, into the summer street */
+const VaultStreet: SC = ({t}) => { const c = 560 * ease(seg(t, 75.25, 76.25)), seam = 1.95 * c; return <Stack A={Vault} Bc={Window} t={t} dyA={c} dyB={c - 560} seam={seam} aAbove={false} />; };
 const SongMoat: SC = ({t}) => { const x0 = sWalkerScreen(BA(110)); Q_HX = x0; return wipe(t, SongStreet, Moat, BA(110), 'vermilion', x0, 'b1'); };
+const WinHut: SC = ({t}) => wipe(t, Window, Hutong, BB(12), 'gate', hWx(BB(12)) - hCam(BB(12)), 'b0');
 const HutPal: SC = ({t}) => wipe(t, Hutong, Palace, BB(22), 'door', hWx(BB(22)) - hCam(BB(22)), 'b2');
-const PalMac: SC = ({t}) => wipe(t, Palace, Machine, BB(36), 'pipe', kWx(BB(36)), 'b3');
-const P1P2: SC = ({t}) => <><Lay C={P1} t={t} o={t < 108.95 ? 1 : 0} /><Lay C={P2} t={t} o={fade(t, 108.65, 0.3)} /></>;
+const palX = (t: number) => (kWx(t) - 960) * (1 + 0.05 * seg(t, 88.0, 94.7)) + 960 + 30 * Math.sin(Math.PI * seg(t, 88.0, 94.7));
+const PalMac: SC = ({t}) => wipe(t, Palace, Machine, BB(36), 'pipe', palX(BB(36)), 'b3');
 export const PartB: React.FC<{t: number}> = ({t}) => <div style={{position: 'absolute', inset: 0, background: '#0A0503', overflow: 'hidden'}}>
-	{t < 66.95 ? <SongMoat t={t} />
-		: t < 67.35 ? diss(t, Moat, Vault, 66.95, 67.35)
-		: t < 76.1 ? <Vault t={t} />
-		: t < 76.45 ? dip(t, Vault, Window, 76.1, 76.45, 76.25)
-		: t < 78.5 ? <Window t={t} />
-		: t < 78.8 ? diss(t, Window, Queue, 78.5, 78.8)
-		: t < 80.8 ? <Queue t={t} />
-		: t < 81.05 ? diss(t, Queue, Hutong, 80.8, 81.05)
+	{t < 66.7 ? <SongMoat t={t} />
+		: t < 67.35 ? <MoatVault t={t} />
+		: t < 75.25 ? <Vault t={t} />
+		: t < 76.25 ? <VaultStreet t={t} />
+		: t < 82.2 ? <WinHut t={t} />
 		: t < 90.5 ? <HutPal t={t} />
-		: t < 97.75 ? <PalMac t={t} />
-		: t < 98.1 ? diss(t, Machine, Grid, 97.75, 98.1)
-		: t < 103.0 ? <Grid t={t} />
-		: t < 103.35 ? diss(t, Grid, Kitchen, 103.0, 103.35)
-		: t < 105.8 ? <Kitchen t={t} />
-		: t < 106.1 ? diss(t, Kitchen, P1, 105.8, 106.1)
-		: <P1P2 t={t} />}
+		: t < 97.95 ? <PalMac t={t} />
+		: t < 103.8 ? <Grid t={t} />
+		: <Finale t={t} />}
 	{t >= 112.6 && <EndCard t={t} />}
 </div>;
-void rnd; void curl; void Label; void IceHeap; void ICE; void MeltBlock; void J; void Glint;
+void rnd; void curl; void Label; void IceHeap; void ICE; void MeltBlock; void J; void Glint; void P1Line; void P2Shot; void bump;

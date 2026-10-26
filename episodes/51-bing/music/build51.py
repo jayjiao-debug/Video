@@ -39,8 +39,14 @@ Film layout (n = grid-A bar, m = grid-B bar; every span is the song playing stra
   S4  62.7- 69.50  143.9-150.6         63b3-b4, valley 64-65, 66b1-b2 (F; hit at DA(28) 63.84 = Q4 chisels)
   J5  69.500       66b2 -> stop bar 79 under its first hit (E chord = the E of bar 66's beats 3-4)
   S5  69.50- 70.7  179.44-180.66       stop bar 79: four eighth-note hits on DA(30) beats 3-4, silence from 70.63
-  HUSH 70.63-74.26                     stop-bar ring (reverb of the hits) dies away, near silence,
+  HUSH 70.63-74.26                     stop-bar ring (reverb of the hits) dies away into a held-breath FLOOR,
                                        reversed-reverb inhale of the bar-16 downbeat into DB(0)
+                                       FLOOR (sound r1 addendum, QA Q4 "hush too long"): a spectral freeze of the
+                                       song's own intro Am (bars 1 and 3, beats 1-2, harmonic part only; reads as an
+                                       A-E open fifth, shared by the E stop chord and the F return), dark (90 Hz-2.5 kHz),
+                                       half-wide stereo, faded in under the ring 70.30-71.10, held at FLOOR_LUFS,
+                                       faded out over the last beat into DB(0). Without it the bed sat below
+                                       -35 LUFS-M for 2.2 s (owner: a silence of ~1 s at most); with it, 0 s.
   S6  74.26- 92.37 36.80- 54.91        chorus-1 16-23 (return on the chorus downbeat at DB(0), deep break 91.80-92.37)
   J7  92.372       break -> lead-in    23b4 break -> bar 80 first note (from the song's own silence), cut on the bar line
   S7  92.37- 93.7  182.27-183.6        lead-in 80 b1-b2
@@ -75,7 +81,10 @@ RISE_DB = 1.5              # arrival lift, bars 88-90 (DB14..DB17)
 RING_DB = -12.0            # stop-bar ring into the hush
 RING_TAU = 0.55            # ring decay (s)
 INHALE_DB = -10.0          # reversed-reverb inhale into DB(0)
-INHALE_LEN = 1.0           # s
+INHALE_LEN = 1.4           # s (r1 addendum: 1.0 -> 1.4, the inhale starts ~72.86 so the breath is drawn earlier)
+FLOOR_LUFS = -33.0         # held-breath floor under the hush: its integrated loudness in the final bed (None = off)
+FLOOR_BARS = (1, 3)        # song part-1 bars whose beats 1-2 (intro Am, no drums) are frozen
+FLOOR_ENV = (70.30, 71.10) # fade-in under the stop-bar ring; fade-out = the last beat before DB(0)
 RELEASE_SWELL_DB = -15.0   # reversed-reverb swell into the chorus downbeat DA(16) (None = off)
 FADE = (117.27, 119.10)    # coda fade: from the bar-107 Bbm (song 243.40) to silence before the film ends
 LUFS_TARGET = -14.0
@@ -273,6 +282,41 @@ g = 10 ** (gd / 20)
 w = ramp(*FADE); g = g * np.cos(w * np.pi / 2) ** 1.5
 g[t >= FADE[1]] = 0.0
 mix *= g[:, None].astype(np.float32)
+
+
+import pyloudnorm as _pyln
+meter_pre = _pyln.Meter(SR)
+
+# ---- (4) the held-breath floor under the hush (placed after the gain rides so its level is exactly FLOOR_LUFS)
+def spectral_freeze(bars, dur, seed, nfft=8192, hop=1024, jitter=0.35):
+    """Median magnitude spectrum of the harmonic part of `bars` (beats 1-2 each), resynthesised for `dur` s with
+    running phase + a small random phase jitter: a steady, slightly shimmering pad made only of the song itself."""
+    import librosa
+    mags = []
+    for k in bars:
+        x = song_cut(B1(k) + 0.03, B1(k) + 2 * P - 0.03).mean(1).astype(np.float64)
+        mags.append(np.abs(librosa.stft(librosa.effects.harmonic(x, margin=2.0), n_fft=nfft, hop_length=hop)))
+    mg = np.median(np.concatenate(mags, 1), 1)
+    rng = np.random.default_rng(seed); w = 2 * np.pi * np.arange(nfft // 2 + 1) * hop / nfft
+    ph = rng.uniform(0, 2 * np.pi, len(mg)); nfr = int(dur * SR / hop) + 4; Z = np.empty((len(mg), nfr), complex)
+    for i in range(nfr):
+        ph = ph + w + rng.normal(0, jitter, len(mg)); Z[:, i] = mg * np.exp(1j * ph)
+    return librosa.istft(Z, hop_length=hop, n_fft=nfft)[:S(dur)]
+
+
+if FLOOR_LUFS is not None:
+    f0, f1 = FLOOR_ENV[0], DB(0)
+    a_, b_ = spectral_freeze(FLOOR_BARS, f1 - f0, 1), spectral_freeze(FLOOR_BARS, f1 - f0, 2)
+    pad = np.stack([a_, 0.6 * a_ + 0.8 * b_], 1)                                  # L/R r ~0.6: wide but mono-safe
+    pad = sosfilt(butter(2, 2500, 'low', fs=SR, output='sos'), pad, axis=0)
+    pad = sosfilt(butter(2, 90, 'high', fs=SR, output='sos'), pad, axis=0)
+    gain_now = LUFS_TARGET - meter_pre.integrated_loudness(mix.astype(np.float64))  # what normalise() will apply
+    pad *= 10 ** ((FLOOR_LUFS - gain_now - meter_pre.integrated_loudness(pad)) / 20)
+    tp_ = f0 + np.arange(len(pad)) / SR
+    env_ = np.sin(np.clip((tp_ - f0) / (FLOOR_ENV[1] - f0), 0, 1) * np.pi / 2) * np.cos(np.clip((tp_ - (f1 - P)) / P, 0, 1) * np.pi / 2)
+    place((pad * env_[:, None]).astype(np.float32), f0, 0.0)
+    fx.append(dict(film=[round(f0, 3), round(f1, 3)], what='held-breath floor: spectral freeze of the intro Am (bars %s, beats 1-2), 90 Hz-2.5 kHz' % (FLOOR_BARS,),
+                   lufs=FLOOR_LUFS))
 
 # ---- loudness
 import pyloudnorm as pyln

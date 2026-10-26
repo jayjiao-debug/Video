@@ -195,17 +195,15 @@ export const IceChest: React.FC<{x: number; top: number; w: number; h: number; c
 			<rect x={-7} y={-7} width={14} height={14} fill="url(#brz51)" />
 			<path d="M0,-17 V-7 M0,7 V17 M-17,0 H-7 M7,0 H17" stroke="url(#brz51)" strokeWidth={3} />
 		</g>)}
-		{/* cold breath curls out of each hole, then sinks down the sides */}
-		{holes.map(([hx0, hy0], i) => { const d = i < 2 ? -1 : 1, b = breath[i] ?? 1; if (b <= 0.01) return null; const hx = hx0 + d * 4 * Math.sin(T * 1.3 + i), hy = hy0;
-			return <g key={`b${i}`} opacity={b} transform={`translate(${hx0},${hy0}) scale(${0.5 + 0.5 * b}) translate(${-hx0},${-hy0})`}>
-				<path d={`M${hx},${hy - 4} C${hx - d * 6},${hy - 40} ${hx + d * 20},${hy - 70} ${hx + d * 6},${hy - 96}`} fill="none" stroke="#E6F5FD" strokeWidth={9} opacity={0.35} filter="url(#mistS)" />
-				<path d={curl(hx + d * 8, hy - 92, 18 + 3 * i, d, 2.4, 0.6)} fill="none" stroke="#E6F5FD" strokeWidth={3} strokeLinecap="round" opacity={0.85} />
-				<path d={`M${hx},${hy - 4} C${hx - d * 6},${hy - 40} ${hx + d * 20},${hy - 70} ${hx + d * 6},${hy - 92}`} fill="none" stroke="#F4FBFF" strokeWidth={3} strokeLinecap="round" opacity={0.85} />
+		{/* cold air: a small curl out of each coin hole, then heavy and falling: it rolls over the lid's edge and pours down the
+		    front of the box (never rising like steam) */}
+		{holes.map(([hx, hy], i) => { const b = breath[i] ?? 1; if (b <= 0.01) return null; const d = i < 2 ? -1 : 1, fx = hx - dx * 0.5, fall = 60 + (bot - top + 40) * b;
+			const flow = `M${hx},${hy - 6} Q${hx - 6},${hy + 6} ${fx},${top + 2} Q${fx - 6 + d * 4},${top + fall * 0.45} ${fx + d * 10},${top + fall}`;
+			return <g key={`b${i}`} opacity={b}>
+				<path d={curl(hx + d * 3, hy - 14, 8, d, 1.2, 0.3)} fill="none" stroke="#F4FBFF" strokeWidth={2.5} strokeLinecap="round" opacity={0.85} />
+				<path d={flow} fill="none" stroke="#DCEFF9" strokeWidth={22} strokeLinecap="round" opacity={0.28} filter="url(#mistS)" />
+				<path d={flow} fill="none" stroke="#F4FBFF" strokeWidth={2.5} strokeLinecap="round" opacity={0.75} strokeDasharray="18 14" strokeDashoffset={-T * 60 - i * 9} />
 			</g>; })}
-		<g fill="none" stroke="#E6F5FD" strokeLinecap="round" opacity={0.5}>
-			<path d={`M${x0 - 6},${top + 10} Q${x0 - 40},${top + 80} ${x0 - 30},${bot + 40} Q${x0 - 24},${bot + 120} ${x0 - 90},${bot + 160}`} strokeWidth={3} />
-			<path d={`M${x1 + dx + 6},${top + dy + 20} Q${x1 + dx + 40},${top + 100} ${x1 + dx + 30},${bot + 30} Q${x1 + dx + 30},${bot + 110} ${x1 + dx + 100},${bot + 150}`} strokeWidth={3} />
-		</g>
 	</g>; };
 
 export const FridgeIcon: React.FC<{x: number; y: number; h: number}> = ({x, y, h}) => { const w = h * 0.52;
@@ -272,7 +270,9 @@ export const EnamelBox: React.FC<{x: number; y: number; s: number; breath?: numb
 		{breath > 0 && [-26, 0, 26].map((dx, i) => <path key={i} d={curl(dx * k + 4, -110 * k, 9 * k, i % 2 ? -1 : 1, 1.6, 0.4)} fill="none" stroke="#DCEFF8" strokeOpacity={0.6 * breath} strokeWidth={2.5} strokeLinecap="round" />)}</g>; };
 
 
-export const P1Line: React.FC<{t: number; dim?: boolean; snow?: number; wx?: number; wpose?: Pose; wflip?: boolean}> = ({t, dim, snow = 1, wx: wxIn, wpose, wflip = true}) => { const g = 800;
+/** the walk as one line. Film use: pscale[i] (each prop's scale about its base), psnow[i] (snow inside it), lab (labels), lineO
+    (the gold line), ffrost (today's fridge's own frost) */
+export const P1Line: React.FC<{t: number; dim?: boolean; snow?: number; wx?: number; wpose?: Pose; wflip?: boolean; pscale?: number[]; psnow?: number[]; lab?: number; lineO?: number; ffrost?: number}> = ({t, dim, snow = 1, wx: wxIn, wpose, wflip = true, pscale, psnow, lab = 1, lineO = 1, ffrost = 0.6}) => { const g = 800;
 	const xs = [190, 355, 525, 690, 850, 1005, 1160, 1320, 1500];
 	const eras = ['周', '战国', '唐', '唐', '北宋', '清', '清', '乾隆', '今天'];
 	const props: React.ReactNode[] = [
@@ -282,24 +282,24 @@ export const P1Line: React.FC<{t: number; dim?: boolean; snow?: number; wx?: num
 		<SuShan key={3} x={xs[3]} y={g} s={130} />,
 		<SilverBowlI key={4} x={xs[4]} y={g} s={130} />,
 		<IceTicket key={5} x={xs[5]} y={g} s={120} />,
-		<PlumBowl key={6} x={xs[6]} y={g} s={120} />,
+		<PlumBowl key={6} x={xs[6]} y={g} s={136} />,
 		<EnamelBox key={7} x={xs[7]} y={g} s={130} />,
-		<Fridge key={8} x0={xs[8] - 75} y0={g - 290} w={150} h={290} open={0.8} light={1} frost={0.6} id="p1f" />,
+		<Fridge key={8} x0={xs[8] - 75} y0={g - 290} w={150} h={290} open={0.8} light={1} frost={ffrost} id="p1f" t={t} />,
 	];
 	const tops = [110, 150, 150, 120, 120, 130, 100, 140, 300];
 	const wp = wpose ?? stand({lean: 2, neck: 6, la: 4, le: 18}), wx = wxIn ?? 1640, wh = 330;
 	return <g>
 		<Ground g={g} lattice={false} />
-		<path d={`M120,${g + 2} H1580`} stroke={B.goldL} strokeOpacity={0.55} strokeWidth={2.5} />
-		{xs.map((x, i) => <g key={i}>
+		<path d={`M120,${g + 2} H1580`} stroke={B.goldL} strokeOpacity={0.55 * lineO} strokeWidth={2.5} />
+		{xs.map((x, i) => { const sc = pscale ? pscale[i] : 1; if (sc <= 0.005) return null; return <g key={i} transform={`translate(${x},${g}) scale(${sc}) translate(${-x},${-g})`}>
 			<Pool id={`p1${i}${dim ? 'd' : ''}`} x={x} y={g - 60} rx={110} ry={150} a={0.16} />
-			<circle cx={x} cy={g + 2} r={5} fill={B.goldL} />
+			<circle cx={x} cy={g + 2} r={5} fill={B.goldL} opacity={lineO} />
 			{props[i]}
 			{/* winter inside each: snow falling within the thing's own space */}
 			<defs><clipPath id={`sn${i}${dim ? 'd' : ''}`}><ellipse cx={x} cy={g - tops[i] / 2 - 10} rx={i === 8 ? 72 : 78} ry={tops[i] / 2 + 34} /></clipPath></defs>
-			<g clipPath={`url(#sn${i}${dim ? 'd' : ''})`} opacity={snow}><Snow x0={x - 80} x1={x + 80} y0={g - tops[i] - 50} y1={g} n={26} t={t} seed={i + 1} size={1.05} o={1} /></g>
-			<Label x={x} y={g + 64} s={eras[i]} fs={40} anchor="middle" o={0.9} />
-		</g>)}
+			<g clipPath={`url(#sn${i}${dim ? 'd' : ''})`} opacity={psnow ? psnow[i] : snow}><Snow x0={x - 80} x1={x + 80} y0={g - tops[i] - 50} y1={g} n={26} t={t} seed={i + 1} size={1.05} o={1} /></g>
+			{lab > 0 && <Label x={x} y={g + 64} s={eras[i]} fs={40} anchor="middle" o={0.9 * lab} />}
+		</g>; })}
 		<Pool id={`p1w${dim ? 'd' : ''}`} x={wx} y={g + 2} rx={140} ry={26} a={0.3} />
 		<Walker51 x={wx} g={g} h={wh} pose={wp} look={L51A.today.look} flip={wflip} T={t} />
 	</g>; };

@@ -58,14 +58,16 @@ export const Pillar: React.FC<{x: number; kind: PillarKind; id: string}> = ({x, 
 				{[200, 640].map((y) => <rect key={y} x={w * 0.24} y={y} width={w * 0.52} height={34} fill="#30353A" stroke="#8E959B" strokeOpacity={0.3} />)}</>}
 		</g></svg>; };
 /** compose an old and a new picture split by the passing foreground object */
-export const WipeSplit: React.FC<{t: number; cross: number; kind: PillarKind; id: string; oldP: React.ReactNode; newP: React.ReactNode; x0?: number}> = ({t, cross, kind, id, oldP, newP, x0 = 860}) => {
+/** gap: the new picture starts gap px right of the split line (inside the object's opaque body), so a prop carried in front of
+    the new walker can't show before his body does */
+export const WipeSplit: React.FC<{t: number; cross: number; kind: PillarKind; id: string; oldP: React.ReactNode; newP: React.ReactNode; x0?: number; gap?: number}> = ({t, cross, kind, id, oldP, newP, x0 = 860, gap = 0}) => {
 	const [t0, t1] = wipeSpan(cross, x0);
 	if (t <= t0) return <>{oldP}</>;
 	if (t >= t1) return <>{newP}</>;
 	const px = pillarX(t, cross, x0);
 	return <>
 		<div style={{position: 'absolute', inset: 0, clipPath: `inset(0 ${W - px}px 0 0)`}}>{oldP}</div>
-		<div style={{position: 'absolute', inset: 0, clipPath: `inset(0 0 0 ${px}px)`}}>{newP}</div>
+		<div style={{position: 'absolute', inset: 0, clipPath: `inset(0 0 0 ${px + gap}px)`}}>{newP}</div>
 		<Pillar x={px} kind={kind} id={id} />
 	</>; };
 
@@ -81,7 +83,7 @@ export const SubsCentre: React.FC<{rows: string[]; gloss: string; q: boolean; n:
 	const len = Math.max(...rows.map((r) => r.replace(/[[\]]/g, '').length), gloss.length * 0.65), tw = 65 * len * 1.05, hh = 97 * rows.length + (gloss ? 70 : 0);
 	return <div style={{opacity: o}}>
 		<div style={{position: 'absolute', left: 960 - tw / 2 - 280, top: 132 + hh / 2 - (hh / 2 + 190), width: tw + 560, height: hh + 380, background: 'radial-gradient(closest-side, rgba(16,7,4,0.46), rgba(16,7,4,0.4) 45%, rgba(16,7,4,0.16) 80%, rgba(16,7,4,0))'}} />
-		<div style={{position: 'absolute', left: 0, right: 0, top: 132, textAlign: 'center', color: thB.ink, textShadow: thB.halo, whiteSpace: 'nowrap'}}>
+		<div style={{position: 'absolute', left: 0, right: 0, top: q ? 168 : 132, textAlign: 'center', color: thB.ink, textShadow: thB.halo, whiteSpace: 'nowrap'}}>
 			{rows.map((r, i) => { const ls = q ? 0.08 : 0.03, pull = (/[。？！，、：；]$/.test(r) ? (0.5 + ls) / 2 : ls / 2) + (q ? 0.06 : 0);
 				return <div key={i} style={{fontFamily: q ? KAI : SANS, fontWeight: q ? 700 : 900, fontSize: q ? 68 : 65, lineHeight: 1.5, letterSpacing: `${ls}em`}}><span style={{position: 'relative', left: `${pull}em`}}><Marked s={r} n={n[i]} /></span></div>; })}
 			{gloss && <div style={{fontFamily: SANS, fontWeight: 700, fontSize: 44, lineHeight: 1.6, letterSpacing: '0.06em', color: B.cream, opacity: 0.92}}><span style={{position: 'relative', left: '0.03em'}}>{gloss}</span></div>}
@@ -106,7 +108,7 @@ const StampBox: React.FC<{y: string; place: string; note: string; o: number; nNo
 		<div style={{lineHeight: 1.15, display: 'flex', alignItems: 'baseline', justifyContent: 'flex-end', gap: 10}}>
 			<span style={{fontFamily: num ? YEAR : KAI, fontWeight: num ? 600 : 700, fontSize: num ? 48 : 38}}>{y}</span>
 			{place && <><span style={{fontFamily: YEAR, fontWeight: 600, fontSize: 32, color: thB.rule}}>·</span><span style={{fontFamily: KAI, fontWeight: 700, fontSize: 36, letterSpacing: '0.05em'}}>{place}</span></>}</div>
-		<div style={{fontFamily: KAI, fontWeight: 700, fontSize: 30, lineHeight: 1.45, marginTop: 2, letterSpacing: '0.04em', opacity: 0.88}}>{note.slice(0, nNote)}<span style={{opacity: 0}}>{note.slice(nNote)}</span></div>
+		<div style={{fontFamily: KAI, fontWeight: 700, fontSize: 28, lineHeight: 1.45, marginTop: 2, letterSpacing: '0.04em', opacity: 0.88}}>{note.slice(0, nNote)}<span style={{opacity: 0}}>{note.slice(nNote)}</span></div>
 	</div>; };
 type LineStamp = {y: string; place: string; note: string} | null;
 const sameHead = (a: LineStamp, b: LineStamp) => !!a && !!b && a.y === b.y && a.place === b.place;
@@ -129,13 +131,15 @@ export const StampLayer: React.FC<{t: number}> = ({t}) => {
 const FLIP_H1 = ['清', '明', '宋', '唐', '汉', '秦', '战国早期'], FLIP_H3 = ['春秋', '周'];
 export const counterAt = (t: number): {era: string; year: string; k: number} | null => {
 	if (t >= CARD_T) return null;
+	/* the two hook spins own the counter from their start until their landed value is the line's own (no stray values):
+	   H1: 2026 → (1.0–1.86) 清 明 宋 唐 汉 秦 → 战国早期, held through H2 to 7.0. H3: 战国早期 (7.0–7.5) → 春秋 → 周 (lands 7.95–8.35). */
 	if (t < 1.0) return {era: '', year: '2026', k: 1};
-	if (t < 2.05) { const i = Math.min(FLIP_H1.length - 1, Math.floor((t - 1.0) / 0.15)); return {era: FLIP_H1[i], year: '', k: i === FLIP_H1.length - 1 ? land(seg(t, 1.0 + 0.15 * i, 1.45 + 0.15 * i)) : 0.6}; }
-	if (t >= 7.2 && t < 8.4) { const i = t < 7.75 ? -1 : t < 8.1 ? 0 : 1; return {era: i < 0 ? '战国早期' : FLIP_H3[i], year: '', k: i === 1 ? land(seg(t, 8.1, 8.5)) : 1}; }
+	if (t < 7.0) { const i = Math.min(FLIP_H1.length - 1, Math.floor((t - 1.0) / 0.143)), t0 = 1.0 + 0.143 * i; return {era: FLIP_H1[i], year: '', k: i === FLIP_H1.length - 1 ? land(seg(t, t0, t0 + 0.4)) : 0.6}; }
+	if (t < 8.4) { const i = t < 7.5 ? -1 : t < 7.95 ? 0 : 1; return {era: i < 0 ? '战国早期' : FLIP_H3[i], year: '', k: i === 1 ? land(seg(t, 7.95, 8.35)) : i === 0 ? land(seg(t, 7.5, 7.8)) * 0.4 + 0.6 : 1}; }
 	const k = lastLine(t); if (k < 0) return {era: '', year: '2026', k: 1};
 	const c = LINES51[k].ct; if (!c) return null;
-	const changed = k > 0 && LINES51[k - 1].ct && (LINES51[k - 1].ct!.era !== c.era || LINES51[k - 1].ct!.year !== c.year);
-	return {...c, k: changed && k !== 2 ? land(seg(t, LINES51[k].a, LINES51[k].a + 0.45)) : 1};
+	const changed = k > 2 && LINES51[k - 1].ct && (LINES51[k - 1].ct!.era !== c.era || LINES51[k - 1].ct!.year !== c.year);
+	return {...c, k: changed ? land(seg(t, LINES51[k].a, LINES51[k].a + 0.45)) : 1};
 };
 export const CounterLayer: React.FC<{t: number}> = ({t}) => { const c = counterAt(t); if (!c) return null;
 	return <div style={{transform: `scale(${lerp(1.2, 1, c.k)})`, transformOrigin: `${SAFE_X + 30}px ${H - SAFE_Y}px`, position: 'absolute', inset: 0}}><Counter era={c.era || undefined} year={c.year || undefined} th={thB} /></div>; };
@@ -146,8 +150,9 @@ const curlD = (x: number, y: number, r: number, dir = 1) => { const pts: string[
 	for (let i = 0; i <= 30; i++) { const th = (i / 30) * 2.2 * Math.PI, rr = r * (0.15 + 0.85 * i / 30); pts.push(`${(x + dir * rr * Math.cos(th)).toFixed(1)},${(y - rr * Math.sin(th)).toFixed(1)}`); }
 	return 'M' + pts.join('L'); };
 export const TitleCard: React.FC<{t: number}> = ({t}) => { if (t < TITLE_T[0] || t >= TITLE_T[1]) return null;   // gone before Q1's centred row arrives at 12.50
-	const f = (t - TITLE_T[0]) * 30, sc = f < 4 ? 1.25 - 0.25 * f / 4 : 1 + 0.03 * Math.exp(-(f - 4) / 9) * Math.sin(2 * Math.PI * (f - 4) / 8) * (f < 20 ? 1 : 0);
-	const o = cl(f / 2) * (1 - seg(t, TITLE_T[1] - 0.3, TITLE_T[1] - 0.02)), fs = 116, ls = 0.06;
+	/* on the hit: fully opaque on f285 (9.500) at 1.10, at 1.0 by f286, then the ep50 damped jolt (2 cycles) */
+	const f = Math.round((t - TITLE_T[0]) * 30), sc = f < 1 ? 1.10 : f < 17 ? 1 + 0.03 * Math.exp(-(f - 1) / 9) * Math.sin(2 * Math.PI * (f - 1) / 8) : 1;
+	const o = 1 - seg(t, TITLE_T[1] - 0.3, TITLE_T[1] - 0.02), fs = 116, ls = 0.06;
 	const PX = 960, PY = 206, PW = 1180, PH2 = 296, OY = PY + PH2 / 2 - 10;
 	return <div style={{position: 'absolute', inset: 0, opacity: o}}>
 		<div style={{position: 'absolute', left: PX - PW / 2 - 120, top: PY - PH2 / 2 - 90, width: PW + 240, height: PH2 + 180, background: 'radial-gradient(closest-side, rgba(10,5,3,0.82), rgba(10,5,3,0.72) 60%, rgba(10,5,3,0))'}} />

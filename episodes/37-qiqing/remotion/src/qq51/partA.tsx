@@ -102,14 +102,15 @@ const Rewind: Fc = ({t}) => {
 	const from: P2 = [LG.gapL, LG.yt + 150], bx = lerp(from[0], RW_B[0], ue), by = lerp(from[1], RW_B[1], ue), bw = lerp(LG.gapW * 0.9, RW_W, ue), bh = lerp(LG.gapW * 0.8, 262, ue);
 	const sum = 1 - seg(t, 7.35, 7.6), aut = bump(t, 7.35, 0.5), win = seg(t, 7.6, 7.85);
 	const vesO = 1 - seg(t, 7.0, 7.35);
-	const leaves = (col: string, o: number, seed: number) => o <= 0 ? null : <g opacity={o}>{Array.from({length: 28}, (_, i) => { const y = (H + 60) - ((rnd(i, seed) * (H + 120) + 900 * (t - 7.0)) % (H + 120)), x = rnd(i, seed + 1) * W + 30 * Math.sin(t * 3 + i);
-		return <ellipse key={i} cx={x} cy={y} rx={9} ry={4} fill={col} transform={`rotate(${rnd(i, seed + 2) * 180 + t * 200},${x},${y})`} />; })}</g>;
+	/* large leaves running BACKWARDS (rising) behind the block: green, then orange, then the snow */
+	const leaves = (col: string, vein: string, o: number, seed: number) => o <= 0 ? null : <g opacity={o}>{Array.from({length: 22}, (_, i) => { const y = (H + 80) - ((rnd(i, seed) * (H + 160) + 1100 * (t - 7.0)) % (H + 160)), x = rnd(i, seed + 1) * W + 40 * Math.sin(t * 3 + i), r = 22 + 14 * rnd(i, seed + 3);
+		return <g key={i} transform={`translate(${x},${y}) rotate(${rnd(i, seed + 2) * 180 - t * 260})`}><path d={`M${-r},0 Q0,${-r * 0.55} ${r},0 Q0,${r * 0.55} ${-r},0 Z`} fill={col} /><path d={`M${-r},0 L${r},0`} stroke={vein} strokeWidth={1.5} /></g>; })}</g>;
 	return <Pic id="rw" sheen={0.2}>
 		{/* the season field behind: warm summer → amber autumn → cold winter night */}
 		<rect width={W} height={H} fill="#2E1A0E" opacity={0.6 * sum} />
 		<rect width={W} height={H} fill="#3A200C" opacity={0.55 * aut} />
 		<rect width={W} height={H} fill="#10141A" opacity={0.5 * win} />
-		{leaves('#4A5A2A', sum * seg(t, 7.05, 7.25), 3)}{leaves('#B0702A', aut, 5)}
+		{leaves('#5E8A3A', '#3A5A22', sum * seg(t, 7.02, 7.15), 3)}{leaves('#D0782A', '#8A4A16', aut, 5)}
 		{/* rewind streaks */}
 		<g stroke={B.cream} strokeLinecap="round">{Array.from({length: 14}, (_, i) => { const y = 120 + i * 70 + 20 * rnd(i, 4), x = W - ((rnd(i, 5) * W + 2600 * (t - 7.0)) % (W + 600)) + 300;
 			return <path key={i} d={`M${x},${y} h${160 + 200 * rnd(i, 6)}`} strokeWidth={2} opacity={0.1 * bump(t, 7.0, 1.4)} />; })}</g>
@@ -117,72 +118,86 @@ const Rewind: Fc = ({t}) => {
 		{vesO > 0 && <g opacity={vesO} transform={`translate(0,${80 * ue})`}><VesselClose t={7.0} /></g>}
 		<IcePool x={bx} y={by + 8} rx={bw * 0.9} o={ue} />
 		<IceBlock x={bx} y={by} w={bw} h={bh} d={bw * 0.46} seed={3} />
+		{/* ◀◀ (upper right, clear of the subtitle; the stamp is hidden on H3) */}
+		<g transform="translate(1330,330)" opacity={fade(t, 7.0, 0.1) * (0.75 + 0.25 * Math.sin(t * 14))}>
+			<path d="M0,-46 L-62,0 L0,46 Z M66,-46 L4,0 L66,46 Z" fill={B.cream} stroke="#0A0503" strokeWidth={6} style={{paintOrder: 'stroke'}} /></g>
 	</Pic>; };
 
 /* ======================= 4 · the 周 river 8.2–17.3: walker revealed (KF03), title (KF04), two strikes, push, into the 冰窖 ======================= */
-const RG = 880, RH = 540, BW = 240, BH = 150, PITX = 1720;
-const STR = [BA(22), BA(23)];   // 12.896, 13.462
+const RG = 880, RH = 540, BW = 240, BH = 150, PITX = 1450, WG = RG - 24;   // WG: he walks a step behind the block (along the pit's far rim)
+const STR = [BA(22), 13.40];   // the two strikes (sound cues 12.896 / 13.40)
+/* his world x: chisel stance → walks round behind the block (13.55–14.75) → hauls it on the rope (14.75–15.6) → the block drops
+   into the 冰窖 (15.6–15.75) → a look back → walks on (15.95) */
+const riverWX = (t: number) => t < 13.55 ? 860 : t < 14.75 ? 860 + 446 * (t - 13.55) : t < 15.6 ? 1395 + 400 * (t - 14.75) : t < 15.95 ? 1735 : 1735 + V(RH) * (t - 15.95);
+const blockWX = (t: number) => t < 14.75 ? 1110 : 1110 + 400 * (Math.min(t, 15.6) - 14.75);
 const riverCam = (t: number) => {   // → {s, fx, fy, sx, sy}: world (fx, fy) lands on screen (sx, sy) at scale s
 	/* one pull-back straight to the title framing, done by 8.93; the music breaks 8.93–9.50, the picture holds, the title slams on 9.50 */
 	if (t < 8.93) { const u = ease(seg(t, 8.1, 8.93)); return {s: lerp(RW_W / BW, 0.87, u), fx: 1110, fy: RG, sx: lerp(RW_B[0], 960 + 150 * 0.87, u), sy: lerp(RW_B[1], RG, u)}; }
-	const s = 0.87;
-	const fx = 960 + 0.9 * Math.max(0, pushX(t) - 855) + Math.max(0, riverWX(t) - riverWX(15.9));
+	const s = 0.87 + 0.03 * ease(seg(t, 9.5, 12.5)) - 0.03 * ease(seg(t, 12.5, 13.6));   // a slow drift in over the title, back out for the haul
+	const fx = 960 + 0.85 * (riverWX(t) - 860) + 30 * ease(seg(t, 9.5, 12.5)) * (1 - ease(seg(t, 12.5, 13.6)));
 	return {s, fx, fy: RG, sx: 960, sy: RG}; };
-/** the walker's world x (push from 13.6, stops at the pit 14.86, walks on from 15.9) */
-const PUSH_V = 240;
-const pushX = (t: number) => 855 + PUSH_V * cl(t - 13.6, 0, 14.86 - 13.6);
-const riverWX = (t: number) => t < 15.9 ? pushX(t) : pushX(15.9) + V(RH) * (t - 15.9);
-const blockWX = (t: number) => t < 14.86 ? 1110 + Math.max(0, pushX(t) - 855) : lerp(1110 + pushX(14.86) - 855, PITX, eout(seg(t, 14.86, BA(26))));
-const PitMouth: React.FC<{x: number; y: number; w: number; id: string}> = ({x, y, w, id}) => { const hw = w / 2, d = w * 0.22;
+const PitMouth: React.FC<{x: number; y: number; w: number; id: string}> = ({x, y, w, id}) => { const hw = w / 2, d = w * 0.27;
 	return <g>
 		<defs><linearGradient id={`pw${id}`} x1="0" y1="0" x2="0" y2="1"><stop offset="0" stopColor="#6A4A30" /><stop offset="0.45" stopColor="#2A1A10" /><stop offset="1" stopColor="#030101" /></linearGradient></defs>
 		<path d={`M${x - hw},${y - d} L${x + hw},${y - d} L${x + hw + 40},${y} L${x - hw - 40},${y} Z`} fill="#040202" />
-		<path d={`M${x - hw},${y - d} L${x + hw},${y - d} L${x + hw - 10},${y - d * 0.4} L${x - hw + 10},${y - d * 0.4} Z`} fill={`url(#pw${id})`} />
+		<path d={`M${x - hw},${y - d} L${x + hw},${y - d} L${x + hw - 10},${y - d * 0.45} L${x - hw + 10},${y - d * 0.45} Z`} fill={`url(#pw${id})`} />
 		<path d={`M${x - hw},${y - d} L${x + hw},${y - d} L${x + hw + 40},${y} L${x - hw - 40},${y} Z`} fill="none" stroke={SNOW} strokeOpacity={0.35} strokeWidth={3} strokeLinejoin="round" />
 	</g>; };
 const River: Fc = ({t}) => {
 	const c = riverCam(t), wx = riverWX(t), bxw = blockWX(t);
-	/* the chisel: resting (KF03) → two strikes → laid down on the ice at 13.6 */
-	const lift = t < STR[0] ? bump(t, 12.45, STR[0] - 12.45) * (t < 12.75 ? 1 : 1) : t < STR[1] ? Math.sin(Math.PI * seg(t, STR[0] + 0.04, STR[1])) : 0;
+	/* the chisel: resting (KF03) → two strikes → tucked in his belt from 13.55 */
+	const lift = t < STR[0] ? bump(t, 12.45, STR[0] - 12.45) : t < STR[1] ? Math.sin(Math.PI * seg(t, STR[0] + 0.04, STR[1])) : 0;
 	const tipRest: P2 = [1110 - 70, RG - BH - 12];
 	const tip: P2 = [tipRest[0], tipRest[1] - 70 * lift], butt: P2 = [tip[0] - 52, tip[1] - 168];
-	const chiselHeld = t < 13.6;
+	const chiselHeld = t < 13.55;
+	const stance = (k = lift) => { let q = stand({lean: 8 + 6 * k, neck: 18, la: 10, le: 20, ra: 4, re: 16}); q = reach(q, 'L', butt[0] + 10, butt[1] + 26, 860, WG, RH); return t > 12.3 ? reach(q, 'R', butt[0] + 20, butt[1] + 62, 860, WG, RH) : q; };
+	const haulLean = grounded({lean: 20, neck: -8, lt: 20, lk: 14, rt: -16, rk: 10, la: -30, le: 10, ra: -26, re: 14});
 	let p: Pose;
-	if (chiselHeld) {
-		p = stand({lean: 8 + 6 * lift, neck: 18, la: 10, le: 20, ra: 4, re: 16});
-		p = reach(p, 'L', butt[0] + 10, butt[1] + 26, 860, RG, RH);
-		if (t > 12.3) p = reach(p, 'R', butt[0] + 20, butt[1] + 62, 860, RG, RH);
-	} else if (t < 14.86) {   // pushing the block
-		p = ikArm(ikArm(walkPose(wph(wx - 855, RH)), 'L', [0.25, 0.55]), 'R', [0.26, 0.6]);
-	} else if (t < 15.9) {
-		p = mixP(ikArm(ikArm(walkPose(wph(pushX(14.86) - 855, RH)), 'L', [0.25, 0.55]), 'R', [0.26, 0.6]), stand({lean: 6, neck: 20}), ease(seg(t, 14.86, 15.3)));
-	} else p = walkPose(wph(wx - pushX(15.9), RH) + 0.3);
-	const pitIn = seg(t, BA(26) - 0.04, BA(26) + 0.3);
+	if (chiselHeld) p = stance();
+	else if (t < 14.75) p = mixP(stance(0), walkPose(wph(wx - 860, RH)), ease(seg(t, 13.55, 13.8)));
+	else if (t < 15.6) p = ikArm(ikArm(mixP(walkPose(wph(wx - 860, RH)), haulLean, 0.4 * ease(seg(t, 14.75, 14.95))), 'L', [-0.1, 0.52]), 'R', [-0.08, 0.5]);
+	else if (t < 15.95) p = mixP(ikArm(ikArm(mixP(walkPose(wph(1735 - 860, RH)), haulLean, 0.4), 'L', [-0.1, 0.52]), 'R', [-0.08, 0.5]), stand({lean: 0, neck: -24, la: -10, le: 14}), ease(seg(t, 15.6, 15.85)));
+	else p = mixP(stand({lean: 0, neck: -24, la: -10, le: 14}), walkPose(wph(wx - 1735, RH) + 0.3), ease(seg(t, 15.95, 16.15)));
+	const drop = seg(t, 15.6, 15.76);
 	const lab = t > BA(27) - 0.25 ? land(seg(t, BA(27) - 0.25, BA(27) + 0.25)) : 0;
 	const hits = STR.map((s) => seg(t, s, s + 0.6));
+	const hand = J(p, 'LHand', wx, WG, RH), hip = J(p, 'Hips', wx, WG, RH);
+	const ropeAt: P2 = [bxw + BW / 2 - 6, RG - BH * 0.45];
+	const gust = bump(t, 9.5, 0.9);
 	return <Pic id="rv" sheen={0.2}>
 		<g transform={`translate(${c.sx},${c.sy}) scale(${c.s}) translate(${-c.fx},${-c.fy})`}>
 			<g transform={`translate(${-W},0)`}><FrozenRiver g={RG} t={t} id="rvl" /></g>
 			<FrozenRiver g={RG} t={t} id="rva" />
-			<rect x={-W} y={H} width={W * 3} height={300} fill="#2A201C" />
 			<g transform={`translate(${W},0)`}><FrozenRiver g={RG} t={t} id="rvb" /></g>
+			{/* one continuous near snow bank across all three copies (no seams) */}
+			<path d={`M${-W},${RG + 150} ${Array.from({length: 13}, (_, i) => `Q${-W + i * 480 + 240},${RG + 120 + 30 * Math.sin(i * 1.7)} ${-W + (i + 1) * 480},${RG + 145 + 15 * Math.sin(i * 2.3)}`).join(' ')} V${H + 400} H${-W} Z`} fill="#241A16" />
+			<path d={`M${-W},${RG + 150} ${Array.from({length: 13}, (_, i) => `Q${-W + i * 480 + 240},${RG + 120 + 30 * Math.sin(i * 1.7)} ${-W + (i + 1) * 480},${RG + 145 + 15 * Math.sin(i * 2.3)}`).join(' ')}`} fill="none" stroke={SNOW} strokeOpacity={0.24} strokeWidth={3} />
 			<Pool id="rv" x={wx + 60} y={640} rx={560} ry={420} a={0.24} />
-			<Pool id="rvf" x={wx} y={RG + 4} rx={260} ry={36} a={0.22} />
+			<Pool id="rvf" x={wx} y={WG + 4} rx={260} ry={36} a={0.22} />
 			{/* where the block was cut from the sheet: a dark slot + chips */}
 			<path d={`M${1110 - 190},${RG + 34} L${1110 + 210},${RG + 34} L${1110 + 260},${RG + 8} L${1110 - 140},${RG + 8} Z`} fill="#0C0605" opacity={0.6} />
 			{Array.from({length: 9}, (_, i) => <path key={i} d={`M0,0 l${6 + 6 * rnd(i, 2)},${-4 - 4 * rnd(i, 3)} l${4 + 4 * rnd(i, 4)},${6 + 3 * rnd(i, 5)} Z`} transform={`translate(${1110 - 170 + 360 * rnd(i, 7)},${RG + 6 + 26 * rnd(i, 8)})`} fill={ICE.body} opacity={0.75} />)}
-			<PitMouth x={PITX} y={RG + 30} w={320} id="rvp" />
-			{lab > 0 && <Lab x={PITX} y={RG - 70 - 120 * (1 - lab)} s="冰窖" fs={56} anchor="middle" col={B.goldL} o={cl(lab * 3)} />}
-			{/* the block: on the ice, pushed, sliding, dropping in */}
-			{pitIn < 1 && <g opacity={1 - seg(pitIn, 0.6, 1)}>
-				<defs><clipPath id="rvc"><rect x={0} y={-200} width={4000} height={RG + 30 + 200} /></clipPath></defs>
-				<g clipPath="url(#rvc)"><IcePool x={bxw + 20} y={RG + 6} rx={240} o={1 - pitIn} /><IceBlock x={bxw} y={RG + 90 * pitIn * pitIn} w={BW} h={BH} d={110} seed={3} /></g></g>}
-			{!chiselHeld && <Chisel x={880} y={RG + 22} L={180} rot={-4} />}
+			<PitMouth x={PITX} y={RG + 60} w={250} id="rvp" />
+			{lab > 0 && <Lab x={PITX} y={RG + 140 - 120 * (1 - lab)} s="冰窖" fs={56} anchor="middle" col={B.goldL} o={cl(lab * 3)} />}
+			{/* the rope, lying slack on the ice until he takes it up (14.75) */}
+			{t < 14.75 && <path d={`M${ropeAt[0]},${ropeAt[1]} Q${ropeAt[0] + 40},${RG - 12} ${ropeAt[0] + 90},${RG - 14} q30,4 26,-8 q-6,-10 -30,-4`} fill="none" stroke="#A88A5C" strokeWidth={4} strokeLinecap="round" />}
+			<Walker51 x={chiselHeld ? 860 : wx} g={WG} h={RH} pose={p} look={LOOKS51.zhou.look} />
 			{chiselHeld && <Chisel x={butt[0]} y={butt[1]} L={Math.hypot(tip[0] - butt[0], tip[1] - butt[1])} rot={Math.atan2(tip[1] - butt[1], tip[0] - butt[0]) * 180 / Math.PI} />}
-			<Walker51 x={chiselHeld ? 860 : wx} g={RG} h={RH} pose={p} look={LOOKS51.zhou.look} />
+			{!chiselHeld && <Chisel x={hip[0] - 18} y={hip[1] - 46} L={150} rot={98} />}
+			{/* the block, with its rope loop; it sinks into the 冰窖 behind the near lip */}
+			{drop < 1 && <g opacity={1 - seg(drop, 0.55, 1)}>
+				<defs><clipPath id="rvc"><rect x={-W} y={-400} width={W * 4} height={RG + 60 + 400} /></clipPath></defs>
+				<g clipPath="url(#rvc)"><IcePool x={bxw + 20} y={RG + 6} rx={240} o={1 - drop} />
+					<IceBlock x={bxw} y={RG + 110 * drop * drop} w={BW} h={BH} d={110} seed={3} />
+					<path d={`M${bxw - BW / 2},${RG - BH * 0.45 + 110 * drop * drop} H${bxw + BW / 2}`} stroke="#A88A5C" strokeWidth={4} opacity={0.9} /></g></g>}
+			{t >= 14.75 && t < 15.62 && <path d={`M${hand[0]},${hand[1]} L${ropeAt[0]},${ropeAt[1]}`} stroke="#A88A5C" strokeWidth={4} strokeLinecap="round" />}
 			{hits.map((k, i) => <Burst key={i} x={tipRest[0]} y={tipRest[1]} s={160} k={k} seed={i + 2} />)}
 		</g>
 		<Snow t={t} n={150} seed={3} />
+		{t < 8.4 && <g transform="translate(1330,330)" opacity={(1 - seg(t, 8.2, 8.4)) * (0.75 + 0.25 * Math.sin(t * 14))}>
+			<path d="M0,-46 L-62,0 L0,46 Z M66,-46 L4,0 L66,46 Z" fill={B.cream} stroke="#0A0503" strokeWidth={6} style={{paintOrder: 'stroke'}} /></g>}
+		{gust > 0 && <g opacity={gust}>{Array.from({length: 60}, (_, i) => { const y = H * rnd(i, 31), x = W + 200 - ((rnd(i, 32) * (W + 400) + 2400 * (t - 9.5)) % (W + 400));
+			return <path key={i} d={`M${x},${y} l${-26 - 30 * rnd(i, 33)},${4}`} stroke={SNOW} strokeWidth={2 + 2 * rnd(i, 34)} strokeLinecap="round" opacity={0.7} />; })}</g>}
 	</Pic>; };
 
 /* ======================= 5 · Z1 16.4–21.3: 80 labourers (20 teams of four) to the 冰窖, officials with tallies, tag 1 → 80 ======================= */
@@ -202,10 +217,12 @@ const Tally: React.FC<{x: number; y: number; h: number; rot?: number}> = ({x, y,
 	<path d={`M${-h * 0.15},${-h * 0.72} H${h * 0.15} M${-h * 0.15},${-h * 0.28} H${h * 0.15}`} stroke="#5A3A18" strokeWidth={1.6} /></g>;
 const NumTag: React.FC<{x: number; y: number; label: string; num: string; w: number; tail?: string; o?: number; sc?: number}> = ({x, y, label, num, w, tail, o = 1, sc = 1}) =>
 	<g transform={`translate(${x + w / 2},${y + 70}) scale(${sc}) translate(${-w / 2},-70)`} opacity={o}>
-		<rect x={0} y={0} width={w} height={140} rx={10} fill="#0E0705" fillOpacity={0.9} stroke={B.gold} strokeOpacity={0.5} strokeWidth={2} />
-		<text x={28} y={98} fontFamily={KAI} fontWeight={700} fontSize={58} fill={B.cream}>{label}</text>
-		<text x={tail ? w - 210 : w - 28} y={106} textAnchor="end" fontFamily={SANS} fontWeight={900} fontSize={104} fill={B.goldL}>{num}</text>
-		{tail && <text x={w - 28} y={98} textAnchor="end" fontFamily={KAI} fontWeight={700} fontSize={58} fill={B.cream}>{tail}</text>}</g>;
+		<defs><radialGradient id={`nt${Math.round(x)}${Math.round(y)}`}><stop offset="0" stopColor="#0A0503" stopOpacity="0.82" /><stop offset="0.6" stopColor="#0A0503" stopOpacity="0.6" /><stop offset="1" stopColor="#0A0503" stopOpacity="0" /></radialGradient></defs>
+		<ellipse cx={w / 2} cy={70} rx={w * 0.72} ry={120} fill={`url(#nt${Math.round(x)}${Math.round(y)})`} />
+		<g stroke="#0A0503" strokeWidth={10} style={{paintOrder: 'stroke'}} strokeLinejoin="round">
+			<text x={28} y={98} fontFamily={KAI} fontWeight={700} fontSize={58} fill={B.cream}>{label}</text>
+			<text x={tail ? w - 210 : w - 28} y={106} textAnchor="end" fontFamily={SANS} fontWeight={900} fontSize={104} fill={B.goldL}>{num}</text>
+			{tail && <text x={w - 28} y={98} textAnchor="end" fontFamily={KAI} fontWeight={700} fontSize={58} fill={B.cream}>{tail}</text>}</g></g>;
 const ROWS_T: {g: number; h: number; dir: 1 | -1; xs: number[]}[] = [
 	{g: 655, h: 34, dir: 1, xs: Array.from({length: 9}, (_, i) => 250 + i * 100)},
 	{g: 712, h: 48, dir: -1, xs: Array.from({length: 6}, (_, i) => 1010 - i * 142)},
@@ -215,7 +232,7 @@ const Zhou80: Fc = ({t}) => { const g = 960, h = 480, wx = 300 + 230 * (t - 19.5
 	const o1 = ikArm(ikArm(stand({lean: 6, neck: 18 + 6 * bump(t % 1.13, 0, 0.5), la: 40, le: 60, ra: 50, re: 70}), 'L', [0.2, 0.66]), 'R', [0.16, 0.6]);
 	const o2 = ikArm(stand({lean: 2, neck: 10, la: 50, le: 70, ra: 6, re: 12}), 'L', [0.22, 0.68 + 0.02 * Math.sin(t * 5)]);
 	const n = Math.round(lerp(1, 80, eio(seg(t, 17.45, BA(32)))));
-	const tagO = fade(t, 17.2, 0.3), tagS = t > BA(32) - 0.05 ? lerp(1.12, 1, land(seg(t, BA(32) - 0.05, BA(32) + 0.4))) : 1;
+	const tagO = fade(t, 17.2, 0.3) * (1 - fade(t, 20.3, 0.3)), tagS = t > BA(32) - 0.05 ? lerp(1.12, 1, land(seg(t, BA(32) - 0.05, BA(32) + 0.4))) : 1;
 	const prog = (r: typeof ROWS_T[0]) => r.dir * 0.22 * r.h * (t - 19.5);
 	return <Pic id="z1" sheen={0.2}>
 		<path d={`M-40,600 Q300,540 620,580 Q980,520 1320,570 Q1640,530 1960,580 V640 H-40 Z`} fill={B.far} />
@@ -249,7 +266,7 @@ const Zhou80: Fc = ({t}) => { const g = 960, h = 480, wx = 300 + 230 * (t - 19.5
 		<Tally x={1262 - 0.22 * 280} y={814 - (0.62 + 0.02 * Math.sin(t * 5)) * 280} h={72} rot={-10} />
 		<Walker51 x={1664} g={884} h={320} pose={o1} look={{dress: 'robe', head: 'guan', beard: 'short'}} col="#0F0806" flip rimO={0.6} />
 		<Tally x={1664 - 0.2 * 320} y={884 - 0.6 * 320} h={84} rot={8} />
-		{tagO > 0 && <NumTag x={560} y={420} label="干活的 ×" num={`${n}`} w={430} o={tagO} sc={tagS} />}
+		{tagO > 0 && <NumTag x={640} y={380} label="干活的 ×" num={`${n}`} w={430} o={tagO} sc={tagS} />}
 		<rect x={-40} y={g} width={W + 80} height={H - g + 40} fill={BG.ground} /><rect x={-40} y={g} width={W + 80} height={3} fill={B.gold} opacity={0.28} />
 		<Pool id="z1f" x={wx} y={g + 4} rx={240} ry={34} a={0.25} />
 		<Walker51 x={wx} g={g} h={h} pose={walkPose(wph(wx, h) + 0.2)} look={LOOKS51.zhou.look} />
@@ -297,8 +314,8 @@ const Pit: Fc = ({t}) => {
 		{qO > 0 && <g opacity={qO}>
 			<path d={`M1010,${GS + 2} L${1010 + 74 * Math.sin(swing * Math.PI / 180)},${GS + 74}`} stroke={B.cream} strokeOpacity={0.5} strokeWidth={2} />
 			<g transform={`translate(1010,${GS + 2}) rotate(${-swing}) translate(0,72)`}><circle r={40} fill="#0E0705" stroke={B.gold} strokeOpacity={0.6} strokeWidth={2} /><text x={2} y={22} textAnchor="middle" fontFamily={SANS} fontWeight={900} fontSize={62} fill={B.goldL}>？</text></g></g>}
-		{x3 > 0 && <g opacity={1 - seg(t, 23.5, 23.85)} transform={`translate(1615,670) scale(${lerp(1.3, 1, x3)}) translate(-85,-70)`}><rect x={0} y={0} width={170} height={140} rx={10} fill="#0E0705" fillOpacity={0.9} stroke={B.gold} strokeOpacity={0.5} strokeWidth={2} />
-			<text x={85} y={106} textAnchor="middle" fontFamily={SANS} fontWeight={900} fontSize={104} fill={B.goldL}>×3</text></g>}
+		{x3 > 0 && <g opacity={1 - seg(t, 23.5, 23.85)} transform={`translate(1615,670) scale(${lerp(1.3, 1, x3)}) translate(-85,-70)`}><ellipse cx={85} cy={70} rx={150} ry={110} fill="url(#x3s)" /><defs><radialGradient id="x3s"><stop offset="0" stopColor="#0A0503" stopOpacity="0.82" /><stop offset="0.6" stopColor="#0A0503" stopOpacity="0.55" /><stop offset="1" stopColor="#0A0503" stopOpacity="0" /></radialGradient></defs>
+			<text x={85} y={106} textAnchor="middle" fontFamily={SANS} fontWeight={900} fontSize={104} fill={B.goldL} stroke="#0A0503" strokeWidth={10} style={{paintOrder: 'stroke'}}>×3</text></g>}
 		{tag190 > 0 && <NumTag x={700} y={650} label="容积" num="190" tail="立方米" w={560} sc={lerp(1.15, 1, tag190)} o={cl(tag190 * 3)} />}
 		<Pool id="ptw" x={wx} y={GS - 160} rx={260} ry={200} a={0.2} />
 		{t >= 23.6 && <rect x={tl} y={GS - 14} width={tr - tl} height={14} fill="#2A160E" opacity={0.8} />}
@@ -327,10 +344,11 @@ const Room: React.FC<{t: number}> = ({t}) => { const snowO = seg(t, 39.3, 39.8);
 		<rect x={VX7 - 300} y={VY7 + 22} width={600} height={6} fill={B.redD} opacity={0.6} />
 	</g>; };
 /** where his far hand holds the ladle at t (same maths as the ladle drawing in Banquet) */
-const ladleHand = (t: number): P2 => { const ld = seg(t, 37.3, 37.6), sw = eio(seg(t, 37.6, BA(66))), CUP: P2 = [958, 540];
+const POUR = 37.66;   // the pour cue
+const ladleHand = (t: number): P2 => { const ld = seg(t, 37.25, 37.45), sw = eio(seg(t, 37.45, POUR)), CUP: P2 = [958, 540];
 	const bowlDip: P2 = [VX7 + 6, G7.neckTop + 18], bowlUp: P2 = [VX7 - 10, G7.neckTop - 70], bowlPour: P2 = [CUP[0] + 22, CUP[1] - 62];
-	const bowl: P2 = t < 37.6 ? [lerp(bowlUp[0], bowlDip[0], Math.sin(Math.PI * ld)), lerp(bowlUp[1], bowlDip[1], Math.sin(Math.PI * ld))] : [lerp(bowlUp[0], bowlPour[0], sw), lerp(bowlUp[1], bowlPour[1], sw)];
-	const hAng = t < 37.6 ? Math.PI + 0.22 : lerp(Math.PI + 0.22, Math.PI + 0.42, sw); return [bowl[0] + 165 * Math.cos(hAng), bowl[1] + 165 * Math.sin(hAng)]; };
+	const bowl: P2 = t < 37.45 ? [lerp(bowlUp[0], bowlDip[0], Math.sin(Math.PI * ld)), lerp(bowlUp[1], bowlDip[1], Math.sin(Math.PI * ld))] : [lerp(bowlUp[0], bowlPour[0], sw), lerp(bowlUp[1], bowlPour[1], sw)];
+	const hAng = t < 37.45 ? Math.PI + 0.22 : lerp(Math.PI + 0.22, Math.PI + 0.42, sw); return [bowl[0] + 165 * Math.cos(hAng), bowl[1] + 165 * Math.sin(hAng)]; };
 /** walking carry pose: both mittens under the block's lower corners */
 const carryPose = (ph: number, walking: boolean) => ikArm(ikArm(walking ? walkPose(ph) : stand({lean: -2, neck: 8}), 'L', [0.17, 0.5]), 'R', [0.3, 0.52]);
 const X_STOP = 450 + 146 * (28.6 - BA(46));
@@ -350,7 +368,7 @@ const Banquet: Fc = ({t}) => {
 	const exp = eio(seg(t, BA(52), BA(53))) * (1 - eio(seg(t, BA(55), BA(56))));   // the jar rises out (29.88–30.44), settles back (31.58–32.14)
 	const lab = fade(t, BA(53), 0.3) * (1 - fade(t, 34.6, 0.35));
 	const REVEAL = BA(64);   // 36.670 = DA(16), the chorus downbeat: 肉？/瓜果？ drop, 酒 lights, the jar lid pops
-	const wineO = fade(t, REVEAL, 0.25), jarLidUp = eout(seg(t, REVEAL, REVEAL + 0.3));
+	const wineO = fade(t, 37.25, 0.25), jarLidUp = eout(seg(t, REVEAL, REVEAL + 0.3));
 	const melt = seg(t, 39.45, 40.7), water = eout(seg(t, 39.6, 40.9));
 	/* the walker's pose */
 	let p: Pose;
@@ -369,20 +387,20 @@ const Banquet: Fc = ({t}) => {
 	const carried = t < 32.75;
 	const cb = carried ? (() => { if (t >= 32.3) return {x: lerp(CARRY_AT.x, gapC, ease(seg(t, 32.3, 32.7))), y: lerp(CARRY_AT.y, bTop0 + bh, ease(seg(t, 32.3, 32.7)))};
 		const a = J(p, 'LHand', wx, G_, H7), b = J(p, 'RHand', wx, G_, H7); return {x: (a[0] + b[0]) / 2 + 4, y: Math.min(a[1], b[1]) + 4}; })() : null;
-	/* the ladle (server's forearm from the right): dips 37.35–37.75, swings over the cup, pours from BA(66) = 37.803 */
-	/* the ladle in his far hand: dips into the jar mouth (37.3–37.6), swings over his cup, pours from BA(66) = 37.803, put away */
-	const ld = seg(t, 37.3, 37.6), sw = eio(seg(t, 37.6, BA(66))), pour = seg(t, BA(66), 38.7), back = eio(seg(t, 38.75, 39.1));
+	/* the ladle in his far hand: dips into the jar mouth (37.25–37.45), swings over his cup, pours from 37.66, put away */
+	const ld = seg(t, 37.25, 37.45), sw = eio(seg(t, 37.45, POUR)), pour = seg(t, POUR, 38.6), back = eio(seg(t, 38.75, 39.1));
 	const CUP: P2 = [958, 540], bowlDip: P2 = [VX7 + 6, G7.neckTop + 18], bowlUp: P2 = [VX7 - 10, G7.neckTop - 70], bowlPour: P2 = [CUP[0] + 22, CUP[1] - 62];
-	const bowl: P2 = t < 37.6 ? [lerp(bowlUp[0], bowlDip[0], Math.sin(Math.PI * ld)), lerp(bowlUp[1], bowlDip[1], Math.sin(Math.PI * ld))] : [lerp(bowlUp[0], bowlPour[0], sw), lerp(bowlUp[1], bowlPour[1], sw)];
-	const hAng = t < 37.6 ? Math.PI + 0.22 : lerp(Math.PI + 0.22, Math.PI + 0.42, sw);   // from the bowl back along the handle to his hand
+	const bowl: P2 = t < 37.45 ? [lerp(bowlUp[0], bowlDip[0], Math.sin(Math.PI * ld)), lerp(bowlUp[1], bowlDip[1], Math.sin(Math.PI * ld))] : [lerp(bowlUp[0], bowlPour[0], sw), lerp(bowlUp[1], bowlPour[1], sw)];
+	const hAng = t < 37.45 ? Math.PI + 0.22 : lerp(Math.PI + 0.22, Math.PI + 0.42, sw);   // from the bowl back along the handle to his hand
 	const lHand: P2 = [bowl[0] + 165 * Math.cos(hAng), bowl[1] + 165 * Math.sin(hAng)];
 	const tilt = -55 * Math.sin(Math.PI * Math.min(1, pour * 1.2)) * (1 - back);
 	const ladleO = fade(t, 37.25, 0.15) * (1 - seg(t, 38.85, 39.1));
 	const cupO = fade(t, 37.25, 0.25), cupFrost = seg(t, 38.2, 39.0) * (1 - melt), steam = seg(t, 39.6, 40.4);
-	const ghost = bump(t, BA(48), 0.6);
-	const opts = ['肉？', '瓜果？', '酒？'], xs = [VX7 - 250, VX7, VX7 + 230], oy = G7.neckTop - 110;
+	const ghost = t < 27.74 ? 0 : t < 27.84 ? seg(t, 27.74, 27.84) : 1 - seg(t, 28.31, 28.4);
+	const opts = ['肉？', '瓜果？', '酒？'], xs = [VX7 - 160, VX7 + 70, VX7 + 290], oy = G7.neckTop - 100;
 	const pill = t > BA(61) - 0.05 ? land(seg(t, BA(61) - 0.05, BA(61) + 0.3)) : 0, tick = Math.sin((t - 35) * Math.PI / 0.566) * 3;
-	const optO = (i: number) => (t < 35.0 ? 0 : fade(t, 35.15 + 0.15 * i, 0.25)) * (t < REVEAL ? 1 : i === 2 ? 1 : 1 - fade(t, REVEAL, 0.25)) * (1 - fade(t, 38.9, 0.4));
+	const optO = (i: number) => (t < 34.95 ? 0 : fade(t, 34.97 + 0.03 * i, 0.12)) * (t < REVEAL ? 1 : i === 2 ? 1 : 1 - fade(t, REVEAL, 0.25)) * (1 - fade(t, 38.9, 0.4));
+	const optDrop = (i: number) => i < 2 && t > REVEAL ? 80 * eio(seg(t, REVEAL, REVEAL + 0.35)) : 0;
 	const vessel = <>
 		{exp > 0 || t < 32.25 ? <>
 			{exp > 0 && <JarWhole x={VX7} y={VY7} w={VW7} dy={240 * exp} />}
@@ -402,9 +420,13 @@ const Banquet: Fc = ({t}) => {
 	return <Pic id="b7" sheen={0.28}>
 		<Room t={t} />
 		{/* the ghost of the open fridge door frames the vessel for one beat (开头那件) */}
-		{ghost > 0 && <g opacity={0.4 * ghost} fill="none" stroke="#CFE6F1" strokeWidth={3}>
-			<rect x={VX7 - 300} y={G7.neckTop - 150} width={600} height={VY7 - G7.neckTop + 180} rx={20} />
-			<path d={`M${VX7 - 300},${G7.neckTop - 140} L${VX7 - 520},${G7.neckTop - 190} L${VX7 - 520},${VY7 + 90} L${VX7 - 300},${VY7 + 30}`} /></g>}
+		{ghost > 0 && <g opacity={0.35 * ghost}>
+			{/* the frame-0 fridge for one beat: cabinet, cold blue interior washing the vessel, the open door */}
+			<rect x={VX7 - 300} y={G7.neckTop - 170} width={600} height={VY7 - G7.neckTop + 200} rx={22} fill="#6B6762" />
+			<rect x={VX7 - 270} y={G7.neckTop - 140} width={540} height={VY7 - G7.neckTop + 150} rx={8} fill="#A6C1CE" />
+			<rect x={VX7 - 120} y={G7.neckTop - 120} width={240} height={10} rx={5} fill="#F4FBFF" />
+			<path d={`M${VX7 - 300},${G7.neckTop - 150} L${VX7 - 520},${G7.neckTop - 200} L${VX7 - 520},${VY7 + 90} L${VX7 - 300},${VY7 + 30} Z`} fill="#B9C6CC" stroke="#E8F2F6" strokeWidth={3} />
+			{[0.3, 0.55, 0.8].map((u, i) => <path key={i} d={`M${VX7 - 320},${lerp(G7.neckTop - 140, VY7 + 20, u)} L${VX7 - 500},${lerp(G7.neckTop - 180, VY7 + 70, u)}`} stroke="#E0EAEE" strokeWidth={8} strokeLinecap="round" />)}</g>}
 		{vessel}
 		{/* exploded-view labels, kept through the pack (KF07) */}
 		{lab > 0 && <g opacity={lab}>
@@ -438,7 +460,7 @@ const Banquet: Fc = ({t}) => {
 		{/* 先猜？ and the three guesses over the jar mouth; 酒 lights up on BA(65) = 37.237 */}
 		{opts.map((o, i) => { const oo = optO(i); if (oo <= 0) return null; const lit = i === 2 && t > REVEAL ? land(seg(t, REVEAL, REVEAL + 0.35)) : 0;
 			return <g key={i} opacity={oo}><path d={`M${xs[i]},${oy + 18} Q${lerp(xs[i], VX7, 0.6)},${oy + 60} ${VX7 + (i - 1) * 30},${G7.neckTop - 40}`} stroke={B.cream} strokeOpacity={0.25 * (1 - lit)} strokeWidth={2} fill="none" strokeDasharray="5 7" />
-				<g transform={`translate(${xs[i]},${oy + 4 * Math.sin(t * 2.4 + i)}) scale(${1 + 0.35 * lit}) translate(${-xs[i]},${-oy})`}><Lab x={xs[i]} y={oy} s={lit > 0 ? '酒' : o} fs={56} anchor="middle" o={0.88 + 0.12 * lit} col={lit > 0 ? B.goldL : B.cream} /></g></g>; })}
+				<g transform={`translate(${xs[i]},${oy + 4 * Math.sin(t * 2.4 + i) + optDrop(i)}) scale(${1 + 0.35 * lit}) translate(${-xs[i]},${-oy})`}><Lab x={xs[i]} y={oy} s={lit > 0 ? '酒' : o} fs={56} anchor="middle" o={0.88 + 0.12 * lit} col={lit > 0 ? B.goldL : B.cream} /></g></g>; })}
 		{pill > 0 && t < 37.0 && <g opacity={cl(pill * 3) * (1 - fade(t, REVEAL - 0.05, 0.2))} transform={`translate(1540,${G7.yt + 132}) rotate(${-4 + tick}) scale(${lerp(1.4, 1, pill)}) translate(-110,-42)`}><rect x={0} y={0} width={220} height={84} rx={42} fill={B.goldL} /><text x={110} y={60} textAnchor="middle" fontFamily={SANS} fontWeight={900} fontSize={52} fill={B.lac}>先猜？</text></g>}
 	</Pic>; };
 
@@ -551,22 +573,26 @@ const SuShanP: React.FC<{x: number; y: number; s: number; ks: number[]; f: numbe
 		{peak(-30 * k, -6 * k, 52 * k, 40 * k, '#C8503A', 0, ks[0])}{peak(28 * k, -6 * k, 48 * k, 38 * k, '#5E9A6A', 1, ks[2])}{peak(0, -2 * k, 76 * k, 48 * k, '#C8503A', 2, ks[1])}
 		{f > 0 && Array.from({length: 22}, (_, i) => <circle key={i} cx={(-46 + 92 * rnd(i, 3)) * k} cy={(-10 - 64 * rnd(i, 4) * (1 - Math.abs(rnd(i, 3) - 0.5) * 1.4)) * k} r={1.6 * k} fill="#F4FBFF" opacity={f * (0.5 + 0.5 * rnd(i, 5))} />)}
 	</g>; };
-const CELLAR = 2370, TANG_G = 905, TANG_H = 540, TW0 = 300, TANG_WALK = 48.9;
-const tangWX = (t: number) => t < 45.727 ? 260 - 80 * (45.727 - t) : t < 46.3 ? lerp(260, TW0, ease(seg(t, 45.727, 46.3))) : t < TANG_WALK ? TW0 : TW0 + V(TANG_H) * (t - TANG_WALK);
+const TANG_G = 905, TANG_H = 540, TW0 = 300, TANG_WALK = 48.9, STOP0 = 53.2, STOP1 = 55.0;   // he stops at the cellar 53.2–55.0
+const T_STOP = TW0 + V(TANG_H) * (STOP0 - TANG_WALK), CELLAR = T_STOP + 215;   // the cellar mouth (a waist-high curb over the steps)
+const tangWX = (t: number) => t < 45.727 ? 260 - 80 * (45.727 - t) : t < 46.3 ? lerp(260, TW0, ease(seg(t, 45.727, 46.3))) : t < TANG_WALK ? TW0 : t < STOP0 ? TW0 + V(TANG_H) * (t - TANG_WALK) : t < STOP1 ? T_STOP : T_STOP + V(TANG_H) * (t - STOP1);
 const tangCam = (t: number) => Math.max(0, tangWX(t) - HANDOFF.x);
 const Tang: Fc = ({t}) => { const g = TANG_G, mx = 990, base = 820, h = TANG_H;
 	const camX = tangCam(t), wxW = tangWX(t), wx = wxW - camX;
-	const z = 1 + 0.06 * eio(seg(t, 50.0, 52.0));
-	const walking = t < 46.3 || t >= TANG_WALK;
+	const z = 1 + 0.15 * eio(seg(t, 50.0, 52.0));
+	const walking = t < 46.3 || (t >= TANG_WALK && (t < STOP0 || t >= STOP1));
 	const plateT = BA(88);   // 50.256: the servant's plate reaches his hand
 	const has = t >= plateT - 0.05;
-	const dip = bump(t, 53.25, 0.9);
-	let p: Pose = walking ? walkPose(wph(Math.abs(wxW - 260), h)) : grounded({lean: -2, neck: -22, lt: 4, lk: 4, rt: -6, rk: 5, la: 6, le: 20, ra: 4, re: 12});
-	if (has) p = ikArm(p, 'L', [0.26, 0.6 - 0.12 * dip]);
+	/* at the cellar: he leans in and lowers the plate into the cold (53.45–53.6 → in), lifts it out frosted (54.6–54.75) */
+	const dip = ease(seg(t, 53.4, 53.6)) * (1 - ease(seg(t, 54.6, 54.78)));
+	const atC = t >= STOP0 && t < STOP1, lean = atC ? 34 * ease(seg(t, STOP0, 53.45)) * (1 - ease(seg(t, 54.7, STOP1))) : 0;
+	const walkP = walkPose(wph(Math.abs(wxW - 260), h));
+	let p: Pose = t < 46.3 || (t >= TANG_WALK && t < STOP0) ? walkP : atC ? mixP(walkPose(wph(T_STOP - 260, h)), stand({lean, neck: 20}), ease(seg(t, STOP0, STOP0 + 0.25))) : t >= STOP1 ? mixP(stand({lean: 0, neck: 10}), walkP, ease(seg(t, STOP1, STOP1 + 0.2))) : grounded({lean: -2, neck: -22, lt: 4, lk: 4, rt: -6, rk: 5, la: 6, le: 20, ra: 4, re: 12});
+	if (has) p = ikArm(p, 'L', [lerp(0.26, 0.33, dip), lerp(0.6, 0.48, dip)]);
 	else if (!walking) p = ikArm(p, 'L', [0.12, 0.42]);
 	const ph = J(p, 'LHand', wx, g, h);
 	const ks = [BA(89), BA(90), BA(91)].map((b) => seg(t, b - 0.28, b));
-	const frost = seg(t, 53.45, 54.3);
+	const frost = seg(t, 53.7, 54.5);
 	/* a servant stands in his path and holds out the plate; it changes hands on BA(88), she stays behind as he walks on */
 	const servW = 1120, servX = servW - camX, sp = reach(stand({lean: 8, neck: 12}), 'L', Math.max(ph[0] + 40, servX - 0.3 * 500), Math.min(ph[1], g - 0.5 * 500), servX, g, 500, true);
 	const sh = J(sp, 'LHand', servX, g, 500, true);
@@ -575,7 +601,7 @@ const Tang: Fc = ({t}) => { const g = TANG_G, mx = 990, base = 820, h = TANG_H;
 	const strike = (b: number) => { const u = ((t - b) / 0.566 + 10) % 2; return u < 1 ? {k: eio(Math.min(1, u * 3)), hit: seg(u, 0.33, 0.95)} : {k: 1 - eio(Math.min(1, (u - 1) * 1.4)), hit: 0}; };
 	const s1 = strike(BA(81) - 0.19), s2 = strike(BA(82) - 0.19);
 	const cellarX = CELLAR - camX;
-	const cone = bump(t, BA(95), 0.56);
+	const cone = t < BA(96) - 0.06 ? 0 : t < BA(96) ? seg(t, BA(96) - 0.06, BA(96)) : 1 - seg(t, BA(97) - 0.06, BA(97));   // one beat, 「像」
 	return <Pic id="tg" sheen={0.25 + camX * 0.0001}>
 		<g transform={`translate(${wx},${g}) scale(${z}) translate(${-wx},${-g})`}>
 		<g transform={`translate(${-camX},0)`}>
@@ -597,20 +623,33 @@ const Tang: Fc = ({t}) => { const g = TANG_G, mx = 990, base = 820, h = TANG_H;
 			<rect x={570} y={g - 30} width={150} height={30} fill="#2A1710" stroke={B.gold} strokeOpacity={0.35} strokeWidth={1.2} />
 			<rect x={1265} y={g - 30} width={150} height={30} fill="#2A1710" stroke={B.gold} strokeOpacity={0.35} strokeWidth={1.2} />
 			<Mist t={t} pts={[[mx - 380, 860, 40, -1], [mx - 470, 885, 32, -1], [mx + 380, 860, 40, 1], [mx + 470, 885, 32, 1], [mx - 180, 870, 26, -1], [mx + 200, 872, 26, 1]]} o={0.55} />
-			{/* the ice cellar's mouth in the floor further on, breathing cold */}
-			<path d={`M${CELLAR - 170},${g + 6} L${CELLAR + 170},${g + 6} L${CELLAR + 220},${g + 60} L${CELLAR - 220},${g + 60} Z`} fill="#040202" stroke={SNOW} strokeOpacity={0.3} strokeWidth={2.5} />
+			{/* the ice cellar's mouth: a waist-high curb round the stair hatch, its lid propped open, a cold blue glow from below */}
+			<g>
+				<path d={`M${CELLAR - 150},${g - 0.62 * h} L${CELLAR + 150},${g - 0.62 * h} L${CELLAR + 120},${g - 0.62 * h - 40} L${CELLAR - 120},${g - 0.62 * h - 40} Z`} fill="#0A1418" />
+				<defs><radialGradient id="tgGlow"><stop offset="0" stopColor="#CFEBFA" stopOpacity="0.55" /><stop offset="0.5" stopColor="#8EC3DA" stopOpacity="0.2" /><stop offset="1" stopColor="#6FA9C4" stopOpacity="0" /></radialGradient></defs>
+				<ellipse cx={CELLAR} cy={g - 0.62 * h - 30} rx={220} ry={150} fill="url(#tgGlow)" opacity={seg(t, 52.6, 53.0)} />
+				{[0, 1, 2].map((i) => <path key={i} d={`M${CELLAR - 110 + i * 12},${g - 0.62 * h - 34 + i * 9} H${CELLAR + 110 - i * 12}`} stroke="#9CCBE0" strokeOpacity={0.5} strokeWidth={2} />)}
+				<path d={`M${CELLAR + 120},${g - 0.62 * h - 40} L${CELLAR + 170},${g - 0.62 * h - 230} L${CELLAR + 200},${g - 0.62 * h - 222} L${CELLAR + 150},${g - 0.62 * h - 30} Z`} fill="#3A2116" stroke={B.gold} strokeOpacity={0.4} strokeWidth={1.5} />
+			</g>
 		</g>
 		{focus > 0 && <rect x={-100} y={0} width={W + 200} height={H} fill="#0A0503" opacity={focus} />}
 		{/* the cellar's cold breath: a column rising from the floor mouth up to the plate */}
-		<Mist t={t} pts={Array.from({length: 7}, (_, i): [number, number, number, number] => [cellarX + (i % 2 ? 50 : -60) + 10 * Math.sin(t * 1.5 + i), g - 20 - i * 58 - 20 * ((t * 0.7 + i * 0.15) % 1), 30 - i * 1.5, i % 2 ? 1 : -1])} o={0.65 * (1 - seg(t, 54.6, 55.4)) * seg(t, 52.4, 52.9)} />
+		<Mist t={t} pts={Array.from({length: 5}, (_, i): [number, number, number, number] => [cellarX + (i % 2 ? 40 : -50) + 10 * Math.sin(t * 1.5 + i), g - 0.62 * h - 50 - i * 46 - 20 * ((t * 0.7 + i * 0.15) % 1), 30 - i * 2, i % 2 ? 1 : -1])} o={0.6 * (1 - seg(t, 55.2, 55.9)) * seg(t, 52.6, 53.1)} />
 		{/* the servant who hands him the plate */}
 		{servX > -200 && servX < W + 200 && t < 51.2 && <g opacity={1 - fade(t, 50.65, 0.5)} transform={`translate(${60 * ease(seg(t, 50.5, 51.1))},0)`}><RimFig x={servX} ground={g} h={500} pose={sp} look={{dress: 'dress', head: 'bun'}} col="#1A0F0A" flip dx={-2.5} dy={-2} rimO={0.75} /></g>}
 		<Pool id="tgf" x={wx} y={g + 4} rx={240} ry={34} a={0.22} />
 		<Walker51 x={wx} g={g} h={h} pose={p} look={LOOKS51.tang.look} />
-		{t > 49.6 && <SuShanP x={plateP[0]} y={plateP[1]} s={118} ks={ks} f={frost} />}
+		{t > 49.6 && <SuShanP x={plateP[0]} y={plateP[1]} s={170} ks={ks} f={frost} />}
 		{has && <ellipse cx={ph[0] + 3} cy={ph[1] + 4} rx={13} ry={12} fill={B.lac} />}
-		{cone > 0 && <g opacity={0.6 * cone} fill="none" stroke="#F2E6CC" strokeWidth={3} strokeDasharray="8 7" transform={`translate(${plateP[0] + 120},${plateP[1] - 20})`}>
-			<path d="M-26,-40 L0,40 L26,-40" /><path d="M-30,-40 Q-30,-84 0,-88 Q30,-84 30,-40 Z" /><path d="M-20,-40 l40,40 M-10,-40 l30,30 M20,-40 l-40,40" opacity={0.5} /></g>}
+		{/* the curb's front wall: the plate goes in behind it */}
+		{cellarX > -300 && cellarX < W + 300 && <g>
+			<path d={`M${cellarX - 150},${g} L${cellarX - 150},${g - 0.62 * h} L${cellarX + 150},${g - 0.62 * h} L${cellarX + 150},${g} Z`} fill="#2A1A12" stroke={B.gold} strokeOpacity={0.4} strokeWidth={1.5} />
+			{[0.3, 0.62].map((u, i) => <path key={i} d={`M${cellarX - 150},${g - 0.62 * h * u} H${cellarX + 150}`} stroke="#1A0E09" strokeWidth={2} />)}
+			<path d={`M${cellarX - 150},${g - 0.62 * h} H${cellarX + 150}`} stroke="#BFE3F2" strokeOpacity={0.6} strokeWidth={3} /></g>}
+		{cone > 0 && <g opacity={0.72 * cone} transform={`translate(${plateP[0] + 200},${plateP[1] - 60})`}>
+			<path d="M-36,-30 L0,100 L36,-30 Z" fill="#E8D6B0" stroke="#F2E6CC" strokeWidth={3} />
+			<path d="M-30,-14 L30,-14 M-24,10 L24,10 M-18,34 L18,34" stroke="#C9B08A" strokeWidth={3} />
+			<path d="M-42,-30 Q-46,-84 0,-92 Q46,-84 42,-30 Z" fill={B.cream} stroke="#F2E6CC" strokeWidth={3} /></g>}
 		</g>
 	</Pic>; };
 
@@ -623,9 +662,12 @@ const early = (t: number): React.ReactNode => {
 	if (t < 8.1) return <><Rewind t={t} /><div style={{position: 'absolute', inset: 0, opacity: ease(seg(t, 7.9, 8.1))}}><River t={t} /></div></>;
 	return <River t={t} />;
 };
-const mid = (t: number): React.ReactNode => t < 20.8 ? <Zhou80 t={t} /> : t < 21.15 ? <><Zhou80 t={t} /><div style={{position: 'absolute', inset: 0, opacity: ease(seg(t, 20.8, 21.15)), transform: `translateY(${60 * (1 - ease(seg(t, 20.8, 21.15)))}px)`}}><Pit t={t} /></div></> : <Pit t={t} />;
+/* Z1 → Z3: the ×80 tag clears (20.3–20.6), then a cellar post passes in the foreground (centre on BA(36) = 20.821 at x 1000) */
+const mid = (t: number): React.ReactNode => <WipeSplit t={t} cross={BA(36)} kind="post" id="wz3" x0={1000} oldP={t < 21.9 ? <Zhou80 t={t} /> : null} newP={t > 19.8 ? <Pit t={t} /> : null} />;
 const W1X = 260;
-const late = (t: number): React.ReactNode => t < 41.5 ? <Banquet t={t} /> : t < 41.85 ? <><Banquet t={t} /><div style={{position: 'absolute', inset: 0, opacity: ease(seg(t, 41.5, 41.85))}}><W1 t={t} /></div></> : <W1 t={t} />;
+/* J5 → W1: a lacquer pillar passes in the foreground; its centre crosses the walker on BA(73) = 41.765 (same pose and place in both) */
+const W1CROSS = BA(73), W1X0 = 786 + 260 * (W1CROSS - 41.0);
+const late = (t: number): React.ReactNode => <WipeSplit t={t} cross={W1CROSS} kind="redpillar" id="ww1" x0={W1X0} oldP={t < 42.8 ? <Banquet t={t} /> : null} newP={t > 40.7 ? <W1 t={t} /> : null} />;
 const WIPES: {cross: number; kind: PillarKind; x0: number}[] = [{cross: BA(29), kind: 'banner', x0: 860}, {cross: BA(46), kind: 'screen', x0: 1000}, {cross: BA(80), kind: 'gate', x0: W1X}];   // x0 = where the new picture's walker is at the crossing
 export const PartA: Fc = ({t}) => <div style={{position: 'absolute', inset: 0, background: '#0A0503', overflow: 'hidden'}}>
 	{t < 20 ? <WipeSplit t={t} cross={WIPES[0].cross} kind={WIPES[0].kind} id="wa1" x0={WIPES[0].x0} oldP={early(t)} newP={mid(t)} />
