@@ -2,10 +2,10 @@
 Sitting cat taps with both paws; standing cat bounces, steps and swings. 100 BPM, TR-707 beat."""
 import math, os, sys, numpy as np, soundfile as sf
 from PIL import Image, ImageDraw
-sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 from rigrender import Rig
 W, H, FPS, BPM = 1920, 1080, 30, 100; B = 60 / BPM; T0 = .4; DUR = T0 + 16 * B + 1.2; K = .78
-RIGS = {p: Rig('.', p, K) for p in ('sit', 'stand')}
+RIGS = {p: Rig('..', p, K) for p in ('sit', 'stand')}
 def ease(x): return x * x * (3 - 2 * x)
 def on(t): return T0 < t < T0 + 16 * B
 def stroke(t, phase=0):

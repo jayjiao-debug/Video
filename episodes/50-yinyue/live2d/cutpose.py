@@ -40,11 +40,21 @@ def decontam(rgb, m, bg=None):
         sel = (ring & near & (lum > 75)) | out_
         o[sel] = rgb[iy[sel], ix[sel]]
     return o
-def fill_specks(im):
+def shape_hint(m):
+    return nd.binary_dilation(m, iterations=2)
+def fill_specks(im, where):
     dk = im.mean(2) < 110
-    sp = nd.binary_closing(dk, iterations=3) & ~dk & (im.min(2) > 190)
+    sp = nd.binary_closing(dk, iterations=4) & ~dk & (im.min(2) > 150) & where
+    lab, n = nd.label(sp); sz = nd.sum(sp, lab, range(1, n + 1))
+    sp = np.isin(lab, [i + 1 for i, v in enumerate(sz) if v <= 40])   # only specks, never real gaps
     o = im.copy(); o[sp] = INK; return o
-F = fill_specks(F); A = fill_specks(A)
+# the real head's silhouette (keeps head pixels out of the arms; sets the head warp zone)
+h = Image.open('../l2d/band/cream_head.png'); full = Image.new('RGBA', (1024, 1024)); full.paste(h, (153, 76))
+inv = (1 / s, 0, 512.9 - mx / s, 0, 1 / s, 438.45 - my / s)
+Hd = np.asarray(full.transform((1024, 1024), Image.AFFINE, inv, resample=Image.BICUBIC)).astype(float)
+hsolid = nd.binary_opening(Hd[..., 3] > 127, iterations=6)
+face = nd.binary_erosion(hsolid, iterations=14)
+F = fill_specks(F, ~face); A = fill_specks(A, ~face)
 cA, cF = charmask(A), charmask(F)
 darkA, darkF = A.mean(2) < 110, F.mean(2) < 110
 softF = nd.gaussian_filter(cF.astype(float), .8); softA = nd.gaussian_filter(cA.astype(float), .8)
@@ -65,11 +75,6 @@ CFG = {
               legs={'legL': ([(368,835),(515,835),(515,1010),(368,1010)], (440, 870)),
                     'legR': ([(515,835),(662,835),(662,1010),(515,1010)], (590, 870))}, hipY=878),
 }[pose]
-# the real head's silhouette (keeps head pixels out of the arms; sets the head warp zone)
-h = Image.open('../l2d/band/cream_head.png'); full = Image.new('RGBA', (1024, 1024)); full.paste(h, (153, 76))
-inv = (1 / s, 0, 512.9 - mx / s, 0, 1 / s, 438.45 - my / s)
-Hd = np.asarray(full.transform((1024, 1024), Image.AFFINE, inv, resample=Image.BICUBIC)).astype(float)
-hsolid = nd.binary_opening(Hd[..., 3] > 127, iterations=6)
 # the armless picture's own head (cutcat's method), to know where its body is
 solid = nd.binary_opening(cA, iterations=9)
 rows = range(int(my) + 120, int(my) + 300); neckY = rows[int(np.argmin([solid[y].sum() for y in rows]))]
@@ -138,6 +143,8 @@ for k, c in CFG['arms'].items():
         ring = nd.binary_dilation(shape, iterations=LINE) & ~shape
         furc = np.median(F[fur & ~darkF], 0)
         rgb = np.where(fur[..., None], F, furc)                         # fur (with toe lines) from the art, filled root
+        nwhite = (F.min(2) >= 240) & (F.max(2) - F.min(2) <= 8)
+        rgb = np.where((nwhite & nd.binary_dilation(fur, iterations=2) & shape_hint(arm))[..., None], furc, rgb)   # toe-tip white wedges -> cream, as in the art
         rgb = np.where((arm & darkF & ~fur)[..., None], F, rgb)          # the art's own outline where it has one
         full_ = shape | ring
         rgb = np.where((ring & ~(arm & darkF))[..., None], INK, rgb)    # a fresh outline where it had none (the root)
@@ -157,7 +164,7 @@ for k, c in CFG['arms'].items():
     placed = np.asarray(im.transform((1024, 1024), Image.AFFINE, inv_, resample=Image.BICUBIC)).astype(float)
     save(k, placed[..., :3], placed[..., 3] / 255.)
     info['pivots'][k] = list(pv); info['deform'][k] = [0, 1]          # rigid swing about the hidden pivot
-    info.setdefault('limits', {})[k] = ([-40, 40] if pose == 'sit' else ([-6, 45] if k == 'armL' else [-45, 6]))
+    info.setdefault('limits', {})[k] = (([-40, 22] if k == 'armL' else [-22, 40]) if pose == 'sit' else ([-6, 45] if k == 'armL' else [-45, 6]))
 # ---------- legs (reference picture), behind the torso
 legs = {}; crotch = None
 if CFG['legs']:
@@ -176,26 +183,40 @@ if legs:
     T &= ~(legzone & (yy > CFG['hipY']) & ~(crotch[None, :] & (yy < CFG['hipY'] + 28)))
 headzone = nd.binary_dilation(Hd[..., 3] > 60, iterations=16 if pose == 'stand' else 3)   # standing: the shoulder fur under the cheek stays with the torso
 keepcheek = (darkF & nd.binary_dilation(hsolid, iterations=16)) if pose == 'stand' else np.zeros_like(T)
-T &= ~(allarm & ~Abody & ~headzone & ~keepcheek)   # remove the arm, keep the head (and, standing, its cheek outline)
+shoulder_y0 = min(c['shoulder'][1] for c in CFG['arms'].values()) + 15
+upper0 = nd.binary_dilation((F.mean(2) < 170) & (yy <= shoulder_y0) & cF, iterations=2) & cF & (yy <= shoulder_y0 + 4) & nd.binary_dilation(Abody, iterations=3)   # only inside the body's side line
+if pose == 'stand': upper0[:] = False
+T &= ~(allarm & ~Abody & ~headzone & ~keepcheek & ~upper0)   # remove the arm; keep the head, (standing) its cheek outline, (sitting) the shoulder stroke
 T &= ~(gapF & ~Abody)
 outside = T & ~Abody & ~headzone
 lab_, n_ = nd.label(outside); sz_ = nd.sum(outside, lab_, range(1, n_ + 1))
 T &= ~np.isin(lab_, [i + 1 for i, v in enumerate(sz_) if v < 400])      # stubs / chips of the old arm outline
 T = largest(T)
 import cv2
-zone = np.zeros((1024, 1024), bool)
+# repaint only the arm's own footprint on the body, plus stray arm strokes below the shoulder; everything else stays as drawn
+band = np.zeros((1024, 1024), bool)
 for k, c in CFG['arms'].items():
     side = k[-1]
     for y in range(c['y0'], c['yjoin'] + 6):
         e = edge_of(darkA & cA & ~Ahead & ~nd.binary_dilation(tail | tp, iterations=6), y, side)
         if e is None: continue
-        if side == 'L': zone[y, :e + 44] = True
-        else: zone[y, e - 44:] = True
-zone &= Abody & ~hsolid
+        if side == 'L': band[y, :e + 44] = True
+        else: band[y, e - 44:] = True
+band &= Abody & ~headzone
+shoulder_y = min(c['shoulder'][1] for c in CFG['arms'].values()) + 15
+strokes = (F.mean(2) < 160) & ~headzone
+lab_, n_ = nd.label(strokes)
+armstroke = np.zeros_like(strokes)
+for i in range(1, n_ + 1):
+    comp = lab_ == i; ys_ = np.where(comp)[0]
+    if (comp & band).sum() > .6 * comp.sum() and ys_.mean() > shoulder_y: armstroke |= comp
+zone = (nd.binary_dilation(allarm, iterations=6) | nd.binary_dilation(armstroke, iterations=5) | (band & (yy > shoulder_y))) & Abody & ~headzone
+
 orangeF = (F[..., 0] > 200) & (F[..., 2] < 170) & (F[..., 0] - F[..., 2] > 60)
-protect = (nd.binary_dilation(darkF, iterations=4) | nd.binary_dilation(orangeF, iterations=2)) & ~nd.binary_dilation(allarm, iterations=4)
-zone &= ~protect                                  # other strokes (cheek-line tips) and body patches stay as drawn
+zone &= ~(nd.binary_dilation(orangeF, iterations=2) & ~nd.binary_dilation(allarm, iterations=4))   # body patches stay as drawn
 zone |= allarm & Abody
+upper = (F.mean(2) < 170) & (yy <= shoulder_y)
+if pose == 'sit': zone &= ~nd.binary_dilation(upper, iterations=3)   # the shoulder strokes above the arm stay whole, as drawn
 furmed = np.median(F[Abody & ~darkF & ~zone & (yy > neckY)], 0)
 Fs = F.copy(); Fs[~Abody] = furmed; Fs[nd.binary_dilation(darkF, iterations=3)] = furmed   # paint from fur only, never smear strokes
 paint = cv2.inpaint(np.clip(Fs, 0, 255).astype(np.uint8), (zone | (allarm & ~Abody)).astype(np.uint8) * 255, 9, cv2.INPAINT_TELEA).astype(float)

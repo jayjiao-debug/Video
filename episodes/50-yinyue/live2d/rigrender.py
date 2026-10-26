@@ -22,8 +22,16 @@ class Rig:
         hd = self.info['head']; self.hpiv = np.array(hd['pivot']) * k; self.hwarp = np.array(hd['warp']) * k
         self.feet = max(b[3] for b in self.info['boxes'].values()) * k
         yy, xx = np.mgrid[0:N, 0:N].astype(np.float32); self.xx, self.yy = xx, yy
+    @staticmethod
+    def _pre(img):
+        o = img.copy(); o[..., :3] *= img[..., 3:] / 255.; return o
+    @staticmethod
+    def _post(img):
+        o = img.copy(); a = np.maximum(img[..., 3:], 1e-3) / 255.; o[..., :3] = np.where(img[..., 3:] > 0, img[..., :3] / a, 0); return o
     def remap(self, img, mx, my):
-        return cv2.remap(img, mx.astype(np.float32), my.astype(np.float32), cv2.INTER_LINEAR, borderMode=cv2.BORDER_CONSTANT, borderValue=0)
+        # resample premultiplied colour, so colour hidden in transparent pixels never bleeds into the edge
+        o = cv2.remap(self._pre(img), mx.astype(np.float32), my.astype(np.float32), cv2.INTER_LINEAR, borderMode=cv2.BORDER_CONSTANT, borderValue=0)
+        return self._post(o)
     def twirl(self, img, piv, ang, r0, r1):
         if not ang: return img
         dx, dy = self.xx - piv[0], self.yy - piv[1]; r = np.hypot(dx, dy)
@@ -41,7 +49,7 @@ class Rig:
     def shift(self, img, dy):
         if not dy: return img
         M = np.float32([[1, 0, 0], [0, 1, dy * self.k]])
-        return cv2.warpAffine(img, M, (self.N, self.N), flags=cv2.INTER_LINEAR, borderMode=cv2.BORDER_CONSTANT, borderValue=0)
+        return self._post(cv2.warpAffine(self._pre(img), M, (self.N, self.N), flags=cv2.INTER_LINEAR, borderMode=cv2.BORDER_CONSTANT, borderValue=0))
     def compose(self, T=None, order=ORDER):
         T = T or {}; out = np.zeros((self.N, self.N, 4), np.float32)
         bdy, squash = T.get('body', (0, 0))
@@ -58,8 +66,8 @@ class Rig:
                 img = self.twirl(img, self.piv[n], ang, *self.D[n])
             elif n == 'tail':
                 ang = T.get(n, (0,))[0]
-                if ang and 'tail_edge' in self.L:              # the tail's hidden inner edge gets its outline as it swings out
-                    e = self.L['tail_edge'].copy(); e[..., 3] *= min(1, abs(ang) / 5.)
+                if ang > 0 and 'tail_edge' in self.L:          # outline on the tail's hidden inner edge, only as it swings out
+                    e = self.L['tail_edge'].copy(); e[..., 3] *= min(1, ang / 5.)
                     a = e[..., 3:] / 255.; img = img.copy(); img[..., :3] = e[..., :3] * a + img[..., :3] * (1 - a)
                 img = self.twirl(img, self.piv[n], ang, *self.D['tail'])
             elif n in ('legL', 'legR'): img = self.lift(img, T.get(n, (0,))[0], *self.D['leg'])
