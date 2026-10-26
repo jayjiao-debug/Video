@@ -391,7 +391,7 @@ const Bowl2: React.FC<{x: number; y: number; open: number}> = ({x, y, open}) => 
 	return <g>{bowl(x - 32 - open / 2, 62)}{bowl(x + 32 + open / 2, -62)}</g>; };
 const Hutong: React.FC<{t: number}> = ({t}) => {
 	const cam = hCam(t), {x: wx, pose: wp0} = gait(hWx, t, HH, 470 * 0.8);
-	const sx = wx + 350, sp = gait(hWx, t, 500, 470 * 0.8).pose;
+	const sx = wx + 420, sp = gait(hWx, t, 500, 470 * 0.8).pose;
 	const clangs = [BA(0) * 0 + 81.617, 82.749], open = (() => { let o = 18; for (const c of clangs) { if (t >= c - 0.14 && t < c) o = 18 * (c - t) / 0.14; else if (t >= c && t < c + 0.25) o = 18 * (t - c) / 0.25; } return o; })();
 	let sPose = ikArm(sp, 'L', toBody(sx + 0.24 * 500, HG - 0.62 * 500, sx, HG, 500, true));
 	sPose = ikArm(sPose, 'R', toBody(sx - 0.05 * 500, HG - 0.84 * 500, sx, HG, 500, true));
@@ -421,8 +421,8 @@ const Hutong: React.FC<{t: number}> = ({t}) => {
 			<Pool id="hF" x={wx + 120} y={HG + 4} rx={420} ry={44} a={0.3} />
 			{/* the seller: shoulder pole with two tubs, two brass bowls in his left hand */}
 			{(() => { const sh = J(sPose, 'RHand', sx, HG, 500, true); return <g>
-				<path d={`M${sh[0] - 130},${sh[1] + 6} L${sh[0] + 130},${sh[1] - 4}`} stroke="#8A6232" strokeWidth={8} strokeLinecap="round" />
-				{[-120, 120].map((dx, i) => <g key={i}><path d={`M${sh[0] + dx},${sh[1]} L${sh[0] + dx - 20},${HG - 130} M${sh[0] + dx},${sh[1]} L${sh[0] + dx + 20},${HG - 130}`} stroke="#B08850" strokeWidth={2} />
+				<path d={`M${sh[0] - 105},${sh[1] + 6} L${sh[0] + 115},${sh[1] - 4}`} stroke="#8A6232" strokeWidth={8} strokeLinecap="round" />
+				{[-95, 105].map((dx, i) => <g key={i}><path d={`M${sh[0] + dx},${sh[1]} L${sh[0] + dx - 20},${HG - 130} M${sh[0] + dx},${sh[1]} L${sh[0] + dx + 20},${HG - 130}`} stroke="#B08850" strokeWidth={2} />
 					<path d={`M${sh[0] + dx - 40},${HG - 130} H${sh[0] + dx + 40} L${sh[0] + dx + 32},${HG - 40} H${sh[0] + dx - 32} Z`} fill="#3A2416" stroke={B.gold} strokeOpacity={0.4} strokeWidth={1.5} /></g>)}
 			</g>; })()}
 			<Extra x={sx} g={HG} h={500} pose={sPose} era="qing" flip look={{dress: 'tunic', legs: 'trousers', head: 'bald'}} rimO={0.6} />
@@ -496,7 +496,7 @@ const Machine: React.FC<{t: number}> = ({t}) => {
 	const fw: P2 = [520, 620], R = 190, crank: P2 = [fw[0] + 60 * Math.cos(rot * Math.PI / 180), fw[1] + 60 * Math.sin(rot * Math.PI / 180)];
 	const tank = {x: 1180, y: 600, w: 380, h: 300};
 	/* 97.5–97.95: push into the glowing tank; its light becomes the one lit window of the grid */
-	const TW: P2 = [1370, 735], zp = Math.exp(lerp(0, Math.log(3.4), Math.pow(seg(t, 97.5, 97.95), 1.4))), kp = (zp - 1) / 2.4;
+	const TW: P2 = [1370, 726], zp = Math.exp(lerp(0, Math.log(2.9), ease(seg(t, 97.05, 97.95)))), kp = (zp - 1) / 1.9;
 	return <Scene id="mM" sheen={0.2}>
 		<g transform={`translate(${lerp(TW[0], 960, kp)},${lerp(TW[1], 540, kp)}) scale(${zp}) translate(${-TW[0]},${-TW[1]})`}>
 		<rect x={-40} y={240} width={W + 80} height={MG - 240} fill="#1E1210" />
@@ -527,7 +527,7 @@ const Machine: React.FC<{t: number}> = ({t}) => {
 		<Pool id="mF" x={wx + 60} y={MG + 4} rx={300} ry={42} a={0.3} />
 		<Walker51 x={wx} g={MG} h={MH} pose={wp} look={LA.today.look} T={t} />
 		</g>
-		<ellipse cx={960} cy={560} rx={520} ry={300} fill="url(#iceGlow)" opacity={0.95 * ease(seg(t, 97.78, 97.95))} />
+		<ellipse cx={960} cy={560} rx={520} ry={300} fill="url(#iceGlow)" opacity={0.35 * ease(seg(t, 97.78, 97.95))} />
 	</Scene>; };
 
 /* ===================================================================================================================
@@ -543,12 +543,12 @@ const Scrim: React.FC<{x: number; y: number; w: number; h: number; o?: number}> 
 	<div style={{position: 'absolute', left: x - 60, top: y - 50, width: w + 120, height: h + 100, opacity: o, background: 'radial-gradient(closest-side, rgba(10,5,3,0.86), rgba(10,5,3,0.74) 55%, rgba(10,5,3,0))'}} />;
 const Grid: React.FC<{t: number}> = ({t}) => {
 	const stars = Array.from({length: 40}, (_, i) => [rnd(i, 51) * W, 250 + rnd(i, 52) * 120, 1 + 1.5 * rnd(i, 53)]);
-	const zIn = t < 98.6 ? Math.exp(lerp(Math.log(16), 0, ease(seg(t, 97.95, 98.6)))) : 1, zOut = t > 103.45 ? Math.exp(lerp(0, Math.log(18), Math.pow(seg(t, 103.45, 103.8), 1.6))) : 1, z = zIn * zOut;
-	const kc = (z - 1) / 17, sc: P2 = [lerp(LW[0], 960, Math.min(1, kc * 1.5)), lerp(LW[1], 540, Math.min(1, kc * 1.5))];
+	const zIn = t < 98.75 ? Math.exp(lerp(Math.log(15), 0, ease(seg(t, 97.95, 98.75)))) : 1, zOut = t > 103.0 ? Math.exp(lerp(0, Math.log(15), ease(seg(t, 103.0, 103.8)))) : 1, z = zIn * zOut;
+	const kc = (z - 1) / 14, sc: P2 = [lerp(LW[0], 960, Math.min(1, kc * 1.5)), lerp(LW[1], 540, Math.min(1, kc * 1.5))];
 	const sl = t >= BB(44) ? 0.22 : 0, nat = fade(t, 101.0, 0.35);
 	const rowLit = (r: number) => fade(t, 101.0 + (9 - r) * 0.1, 0.12);
 	const spill = [BB(49), BB(49) + 0.09, BB(49) + 0.18, BB(50), BB(50) + 0.09];
-	const tags = 1 - fade(t, 103.25, 0.2), walkingIn = t < 100.3, gw = gait(gWx, t, 355, 300 * 0.8);
+	const tags = 1 - fade(t, 102.82, 0.18), walkingIn = t < 100.3, gw = gait(gWx, t, 355, 300 * 0.8);
 	const houses: React.ReactNode[] = [];
 	for (let r = 0; r < 10; r++) for (let c = 0; c < 10; c++) {
 		const x = GX0 + c * GCW, y = GY0 + r * GCH, wall = y + GCH * 0.42, ww = GCW * 0.78, wx0 = x + (GCW - ww) / 2, win = {x: x + GCW / 2 - 17, y: wall + 6, w: 34, h: 20};
@@ -581,7 +581,7 @@ const Grid: React.FC<{t: number}> = ({t}) => {
 				{gw.x < 2050 && <RimFig x={gw.x} ground={935} h={355} pose={walkingIn || gw.k > 0.05 ? gw.pose : grounded({lean: 0, neck: -18, lt: 3, lk: 3, rt: -4, rk: 4, la: 4, le: 14, ra: 4, re: 12})} look={LA.today.look} col={B.lac} flip={walkingIn} dx={walkingIn ? -3 : 3} dy={-2.5} />}
 			</g>
 			{/* the light of the window we push into (and pulled back out of) */}
-			<ellipse cx={960} cy={540} rx={520} ry={300} fill="url(#iceGlow)" opacity={0.95 * Math.max(1 - ease(seg(t, 97.95, 98.12)), ease(seg(t, 103.63, 103.8)))} />
+			<ellipse cx={960} cy={540} rx={520} ry={300} fill="url(#iceGlow)" opacity={0.35 * Math.max(1 - ease(seg(t, 97.95, 98.12)), ease(seg(t, 103.63, 103.8)))} />
 		</Scene>
 		{/* scope tag over the grid (56 px): 农村 (1990) → 全国 (2024) */}
 		{tags > 0 && t > 98.25 && <><Scrim x={GX0 + 330} y={GY0 - 70} w={300} h={64} o={tags * fade(t, 98.25, 0.3)} />
@@ -612,7 +612,7 @@ const Grid: React.FC<{t: number}> = ({t}) => {
 const FC: P2 = [1500, 655], CLINK = 104.259;
 const camF = (t: number) => {
 	const zk = 2.07, sk: P2 = [760, 600];
-	const intro = t < 104.05 ? 1 + 1.2 * Math.pow(1 - ease(seg(t, 103.8, 104.05)), 1.5) : 1;   // out of the fridge's light
+	const intro = t < 104.2 ? 1 + 0.8 * (1 - ease(seg(t, 103.8, 104.2))) : 1;   // out of the fridge's light
 	const out = ease(seg(t, 105.96, 107.75)), inn = ease(seg(t, 107.95, 109.3)), hold = seg(t, 109.3, 112.9);
 	const zOut = Math.exp(lerp(Math.log(zk), 0, out)), z = (inn > 0 ? Math.exp(lerp(0, Math.log(2.41), inn)) * (1 + 0.04 * hold) : zOut) * intro;
 	const s: P2 = inn > 0 ? [lerp(FC[0], 960, inn), lerp(FC[1], 625, inn)] : [lerp(sk[0], FC[0], out), lerp(sk[1], FC[1], out)];
@@ -650,7 +650,7 @@ const Finale: React.FC<{t: number}> = ({t}) => {
 			{inCup && t < CLINK + 0.35 && <g opacity={1 - (t - CLINK) / 0.35}>{Array.from({length: 8}, (_, k) => { const a = -Math.PI * (0.15 + 0.7 * k / 7), r0 = 24 + 28 * (t - CLINK), r1 = r0 + 9; return <path key={k} d={`M${cupP[0] + Math.cos(a) * r0},${cupP[1] - cupW * 1.35 + Math.sin(a) * r0 * 0.6} L${cupP[0] + Math.cos(a) * r1},${cupP[1] - cupW * 1.35 + Math.sin(a) * r1 * 0.6}`} stroke="#F4FBFF" strokeWidth={1.6} strokeLinecap="round" />; })}</g>}
 		</g>
 		{/* the light this shot opens from (matched to the grid's lit window) */}
-		{t < 104.0 && <ellipse cx={960} cy={560} rx={520} ry={300} fill="url(#iceGlow)" opacity={0.95 * (1 - ease(seg(t, 103.8, 103.97)))} />}
+		{t < 104.0 && <ellipse cx={960} cy={560} rx={520} ry={300} fill="url(#iceGlow)" opacity={0.35 * (1 - ease(seg(t, 103.8, 103.97)))} />}
 	</Scene>; };
 
 /* ===================================================================================================================
@@ -690,18 +690,18 @@ const Stack: React.FC<{A: SC; Bc: SC; t: number; dyA: number; dyB: number; seam:
 		<div style={{position: 'absolute', left: 0, right: 0, top: seam - 1, height: 3, background: B.goldL, opacity: 0.6}} />
 	</>; };
 /* 66.7–67.35: tilt down from the moat into the ground and the vault below it */
-const MoatVault: SC = ({t}) => { const c = 500 * ease(seg(t, 66.7, 67.35)), seam = H - 2.2 * c; return <Stack A={Moat} Bc={Vault} t={t} dyA={-c} dyB={500 - c} seam={seam} aAbove />; };
+const MoatVault: SC = ({t}) => { const c = 600 * ease(seg(t, 66.25, 67.35)), seam = H - 1.85 * c; return <Stack A={Moat} Bc={Vault} t={t} dyA={-c} dyB={600 - c} seam={seam} aAbove />; };
 /* 75.25–76.25: crane up out of the vault, through the ground line, into the summer street */
-const VaultStreet: SC = ({t}) => { const c = 560 * ease(seg(t, 75.25, 76.25)), seam = 1.95 * c; return <Stack A={Vault} Bc={Window} t={t} dyA={c} dyB={c - 560} seam={seam} aAbove={false} />; };
+const VaultStreet: SC = ({t}) => { const c = 560 * ease(seg(t, 75.0, 76.25)), seam = 1.95 * c; return <Stack A={Vault} Bc={Window} t={t} dyA={c} dyB={c - 560} seam={seam} aAbove={false} />; };
 const SongMoat: SC = ({t}) => { const x0 = sWalkerScreen(BA(110)); Q_HX = x0; return wipe(t, SongStreet, Moat, BA(110), 'vermilion', x0, 'b1'); };
 const WinHut: SC = ({t}) => wipe(t, Window, Hutong, BB(12), 'gate', hWx(BB(12)) - hCam(BB(12)), 'b0');
 const HutPal: SC = ({t}) => wipe(t, Hutong, Palace, BB(22), 'door', hWx(BB(22)) - hCam(BB(22)), 'b2');
 const palX = (t: number) => (kWx(t) - 960) * (1 + 0.05 * seg(t, 88.0, 94.7)) + 960 + 30 * Math.sin(Math.PI * seg(t, 88.0, 94.7));
 const PalMac: SC = ({t}) => wipe(t, Palace, Machine, BB(36), 'pipe', palX(BB(36)), 'b3');
 export const PartB: React.FC<{t: number}> = ({t}) => <div style={{position: 'absolute', inset: 0, background: '#0A0503', overflow: 'hidden'}}>
-	{t < 66.7 ? <SongMoat t={t} />
+	{t < 66.25 ? <SongMoat t={t} />
 		: t < 67.35 ? <MoatVault t={t} />
-		: t < 75.25 ? <Vault t={t} />
+		: t < 75.0 ? <Vault t={t} />
 		: t < 76.25 ? <VaultStreet t={t} />
 		: t < 82.2 ? <WinHut t={t} />
 		: t < 90.5 ? <HutPal t={t} />
