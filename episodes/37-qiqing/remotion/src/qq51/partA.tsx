@@ -19,6 +19,8 @@ const wph = (dist: number, h: number) => dist / (STRIDE * h);   // walk phase (c
 const fade = (t: number, a: number, d: number) => ease(seg(t, a, a + d));
 const bump = (t: number, a: number, d: number) => Math.sin(Math.PI * seg(t, a, a + d));
 const stand = (k: Partial<{lean: number; neck: number; la: number; le: number; ra: number; re: number}> = {}) => grounded({lean: 3, neck: 4, lt: 3, lk: 3, rt: -4, rk: 4, la: -3, le: 10, ra: 4, re: 14, ...k});
+/** the 周 padded robe needs an open stance, or the robe hangs as a narrow column and reads as a coat over trousers */
+const standW = (k: Partial<{lean: number; neck: number; la: number; le: number; ra: number; re: number}> = {}) => grounded({lean: 3, neck: 4, lt: 14, lk: 8, rt: -16, rk: 10, la: -3, le: 10, ra: 4, re: 14, ...k});
 const reach = (p: Pose, s: 'L' | 'R', X: number, Y: number, x: number, g: number, h: number, flip = false) => ikArm(p, s, toBody(X, Y, x, g, h, flip));
 const mixP = (a: Pose, b: Pose, k: number): Pose => { const o: Pose = {}; for (const n of Object.keys(a)) o[n] = [lerp(a[n][0], b[n][0], k), lerp(a[n][1], b[n][1], k)]; return o; };
 const Lab: React.FC<{x: number; y: number; s: string; fs?: number; col?: string; anchor?: 'start' | 'middle' | 'end'; o?: number}> = ({x, y, s, fs = 40, col = B.cream, anchor = 'start', o = 1}) =>
@@ -153,14 +155,14 @@ const River: Fc = ({t}) => {
 	const tipRest: P2 = [1110 - 70, RG - BH - 12];
 	const tip: P2 = [tipRest[0], tipRest[1] - 70 * lift], butt: P2 = [tip[0] - 52, tip[1] - 168];
 	const chiselHeld = t < 13.55;
-	const stance = (k = lift) => { let q = stand({lean: 8 + 6 * k, neck: 18, la: 10, le: 20, ra: 4, re: 16}); q = reach(q, 'L', butt[0] + 10, butt[1] + 26, 860, WG, RH); return t > 12.3 ? reach(q, 'R', butt[0] + 20, butt[1] + 62, 860, WG, RH) : q; };
+	const stance = (k = lift) => { let q = standW({lean: 8 + 6 * k, neck: 18, la: 10, le: 20, ra: 4, re: 16}); q = reach(q, 'L', butt[0] + 10, butt[1] + 26, 860, WG, RH); return t > 12.3 ? reach(q, 'R', butt[0] + 20, butt[1] + 62, 860, WG, RH) : q; };
 	const haulLean = grounded({lean: 20, neck: -8, lt: 20, lk: 14, rt: -16, rk: 10, la: -30, le: 10, ra: -26, re: 14});
 	let p: Pose;
 	if (chiselHeld) p = stance();
 	else if (t < 14.75) p = mixP(stance(0), walkPose(wph(wx - 860, RH)), ease(seg(t, 13.55, 13.8)));
 	else if (t < 15.6) p = ikArm(ikArm(mixP(walkPose(wph(wx - 860, RH)), haulLean, 0.4 * ease(seg(t, 14.75, 14.95))), 'L', [-0.1, 0.52]), 'R', [-0.08, 0.5]);
-	else if (t < 15.95) p = mixP(ikArm(ikArm(mixP(walkPose(wph(1735 - 860, RH)), haulLean, 0.4), 'L', [-0.1, 0.52]), 'R', [-0.08, 0.5]), stand({lean: 0, neck: -24, la: -10, le: 14}), ease(seg(t, 15.6, 15.85)));
-	else p = mixP(stand({lean: 0, neck: -24, la: -10, le: 14}), walkPose(wph(wx - 1735, RH) + 0.3), ease(seg(t, 15.95, 16.15)));
+	else if (t < 15.95) p = mixP(ikArm(ikArm(mixP(walkPose(wph(1735 - 860, RH)), haulLean, 0.4), 'L', [-0.1, 0.52]), 'R', [-0.08, 0.5]), standW({lean: 0, neck: -24, la: -10, le: 14}), ease(seg(t, 15.6, 15.85)));
+	else p = mixP(standW({lean: 0, neck: -24, la: -10, le: 14}), walkPose(wph(wx - 1735, RH) + 0.3), ease(seg(t, 15.95, 16.15)));
 	const drop = seg(t, 15.6, 15.76);
 	const lab = t > BA(27) - 0.25 ? land(seg(t, BA(27) - 0.25, BA(27) + 0.25)) : 0;
 	const hits = STR.map((s) => seg(t, s, s + 0.6));
@@ -287,7 +289,7 @@ const Pit: Fc = ({t}) => {
 	const tag190 = t > BA(42) - 0.1 ? land(seg(t, BA(42) - 0.1, BA(42) + 0.35)) : 0;
 	/* the walker: Z3 stands at the rim looking down (≤ 3 s); A1 walks along the far rim */
 	const h = 300, inW = 221 * Math.min(0, t - 23.0), wx = t < 23.6 ? 430 + inW : 430 + 150 * (t - 23.6);
-	const p = t < 23.0 ? walkPose(wph(inW, h)) : t < 23.6 ? mixP(walkPose(0), stand({lean: 12, neck: 34, la: 8, le: 24, ra: -4, re: 16}), ease(seg(t, 23.0, 23.3))) : walkPose(wph(150 * (t - 23.6), h));
+	const p = t < 23.0 ? walkPose(wph(inW, h)) : t < 23.6 ? mixP(walkPose(0), standW({lean: 12, neck: 34, la: 8, le: 24, ra: -4, re: 16}), ease(seg(t, 23.0, 23.3))) : walkPose(wph(150 * (t - 23.6), h));
 	const wg = t < 23.6 ? GS : GS - 12;
 	return <Pic id="pt" sheen={0.2}>
 		<path d={`M-40,${GS - 40} Q400,${GS - 90} 900,${GS - 60} Q1400,${GS - 100} 1960,${GS - 50} V${GS} H-40 Z`} fill={B.far} />

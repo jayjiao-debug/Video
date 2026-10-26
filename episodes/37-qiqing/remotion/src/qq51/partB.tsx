@@ -327,7 +327,7 @@ const Window: React.FC<{t: number}> = ({t}) => {
 	const press = t < seal ? ease(seg(t, seal - 0.35, seal)) : 1 - ease(seg(t, seal + 0.08, seal + 0.4));
 	const slipOn = t < 76.95, give = ease(seg(t, 76.95, 77.35));
 	const slipPos: P2 = slipOn ? [1010, sill - 4] : [lerp(1010, wx + 0.33 * WH, give), lerp(sill - 4, WG - 0.56 * WH, give)];
-	let kp = grounded({lean: 18, neck: 14, lt: 3, lk: 4, rt: -4, rk: 4, la: 50, le: 30, ra: 40, re: 30});
+	let kp = grounded({lean: lerp(18, -4, ease(seg(t, 77.35, 77.7))), neck: 14, lt: 3, lk: 4, rt: -4, rk: 4, la: 50, le: 30, ra: 40, re: 30});   // he sits back once the slip is handed over
 	kp = ikArm(kp, 'L', toBody(1030, lerp(sill - 70, sill - 18, press), kx, WG, kh, true));
 	if (!slipOn && give < 1) kp = ikArm(kp, 'R', toBody(slipPos[0] + 36, slipPos[1] + 10, kx, WG, kh, true));
 	let wp = wp0;
@@ -527,7 +527,7 @@ const Machine: React.FC<{t: number}> = ({t}) => {
 		<Pool id="mF" x={wx + 60} y={MG + 4} rx={300} ry={42} a={0.3} />
 		<Walker51 x={wx} g={MG} h={MH} pose={wp} look={LA.today.look} T={t} />
 		</g>
-		<ellipse cx={960} cy={560} rx={520} ry={300} fill="url(#iceGlow)" opacity={1.2 * ease(seg(t, 97.78, 97.95))} />
+		<ellipse cx={960} cy={560} rx={520} ry={300} fill="url(#iceGlow)" opacity={0.95 * ease(seg(t, 97.78, 97.95))} />
 	</Scene>; };
 
 /* ===================================================================================================================
@@ -581,7 +581,7 @@ const Grid: React.FC<{t: number}> = ({t}) => {
 				{gw.x < 2050 && <RimFig x={gw.x} ground={935} h={355} pose={walkingIn || gw.k > 0.05 ? gw.pose : grounded({lean: 0, neck: -18, lt: 3, lk: 3, rt: -4, rk: 4, la: 4, le: 14, ra: 4, re: 12})} look={LA.today.look} col={B.lac} flip={walkingIn} dx={walkingIn ? -3 : 3} dy={-2.5} />}
 			</g>
 			{/* the light of the window we push into (and pulled back out of) */}
-			<ellipse cx={960} cy={540} rx={520} ry={300} fill="url(#iceGlow)" opacity={1.2 * Math.max(1 - ease(seg(t, 97.95, 98.12)), ease(seg(t, 103.63, 103.8)))} />
+			<ellipse cx={960} cy={540} rx={520} ry={300} fill="url(#iceGlow)" opacity={0.95 * Math.max(1 - ease(seg(t, 97.95, 98.12)), ease(seg(t, 103.63, 103.8)))} />
 		</Scene>
 		{/* scope tag over the grid (56 px): 农村 (1990) → 全国 (2024) */}
 		{tags > 0 && t > 98.25 && <><Scrim x={GX0 + 330} y={GY0 - 70} w={300} h={64} o={tags * fade(t, 98.25, 0.3)} />
@@ -650,7 +650,7 @@ const Finale: React.FC<{t: number}> = ({t}) => {
 			{inCup && t < CLINK + 0.35 && <g opacity={1 - (t - CLINK) / 0.35}>{Array.from({length: 8}, (_, k) => { const a = -Math.PI * (0.15 + 0.7 * k / 7), r0 = 24 + 28 * (t - CLINK), r1 = r0 + 9; return <path key={k} d={`M${cupP[0] + Math.cos(a) * r0},${cupP[1] - cupW * 1.35 + Math.sin(a) * r0 * 0.6} L${cupP[0] + Math.cos(a) * r1},${cupP[1] - cupW * 1.35 + Math.sin(a) * r1 * 0.6}`} stroke="#F4FBFF" strokeWidth={1.6} strokeLinecap="round" />; })}</g>}
 		</g>
 		{/* the light this shot opens from (matched to the grid's lit window) */}
-		{t < 104.0 && <ellipse cx={960} cy={560} rx={520} ry={300} fill="url(#iceGlow)" opacity={1.2 * (1 - ease(seg(t, 103.8, 103.97)))} />}
+		{t < 104.0 && <ellipse cx={960} cy={560} rx={520} ry={300} fill="url(#iceGlow)" opacity={0.95 * (1 - ease(seg(t, 103.8, 103.97)))} />}
 	</Scene>; };
 
 /* ===================================================================================================================
