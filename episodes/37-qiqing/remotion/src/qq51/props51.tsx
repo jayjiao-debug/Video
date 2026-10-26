@@ -168,7 +168,7 @@ const band = (x0: number, x1: number, y: number, h: number) => { const n = Math.
 	for (let i = 0; i < n; i++) { const cx = x0 + step * (i + 0.5); d.push(`M${(cx - step * 0.3).toFixed(1)},${(y + h * 0.7).toFixed(1)} L${(cx - step * 0.3).toFixed(1)},${(y + h * 0.3).toFixed(1)} L${(cx + step * 0.15).toFixed(1)},${(y + h * 0.3).toFixed(1)} L${(cx + step * 0.15).toFixed(1)},${(y + h * 0.55).toFixed(1)} L${(cx - step * 0.08).toFixed(1)},${(y + h * 0.55).toFixed(1)}`); }
 	return d.join(' '); };
 /** lid = the basin's lid on (whole: always); slot = drawn inside the gap layer (e.g. a block being packed) */
-export const Jianfou: React.FC<{x: number; y: number; w: number; mode?: 'whole' | 'section'; ice?: number; frost?: number; glow?: number; wine?: boolean; lid?: boolean; slot?: React.ReactNode; id?: string}> = ({x, y, w, mode = 'whole', ice = 1, frost = 0, glow = 1, wine = true, lid: lidOn = true, slot, id = 'jf'}) => {
+export const Jianfou: React.FC<{x: number; y: number; w: number; mode?: 'whole' | 'section'; ice?: number; frost?: number; glow?: number; wine?: boolean; lid?: boolean; slot?: React.ReactNode; id?: string; jar?: boolean; wineO?: number; water?: number; jarLidOff?: number}> = ({x, y, w, mode = 'whole', ice = 1, frost = 0, glow = 1, wine = true, lid: lidOn = true, slot, id = 'jf', jar = true, wineO = 1, water = 0, jarLidOff = 0}) => {
 	const G = jfGeom(x, y, w), {wb, dy, jw, nw, nh, t, yb, yt, yl} = G, sw = Math.max(1.5, w / 200);
 	const L = x - w / 2, R = x + w / 2, Lb = x - wb / 2, Rb = x + wb / 2, nT = yl - nh;
 	const body = `M${L},${yt} L${R},${yt} L${Rb},${yb} L${Lb},${yb} Z`;
@@ -198,12 +198,12 @@ export const Jianfou: React.FC<{x: number; y: number; w: number; mode?: 'whole' 
 		<path d={`M${L - w * 0.01},${yt} L${R + w * 0.01},${yt} L${R + w * 0.01},${yl} L${L - w * 0.01},${yl} Z`} fill="url(#brz51)" stroke={BRZ.line} strokeWidth={sw} />
 		<path d={topF(yl, w * 1.02, dy)} fill="url(#brz51v)" stroke={BRZ.line} strokeWidth={sw} />
 		<path d={topF(yl - dy * 0.15, nw * 1.2, dy * 0.7)} fill={BRZ.deep} />
-		<path d={`M${x - nw / 2},${yl - dy * 0.3} L${x + nw / 2},${yl - dy * 0.3} L${x + nw / 2},${nT} L${x - nw / 2},${nT} Z`} fill="url(#brz51)" stroke={BRZ.line} strokeWidth={sw} />
+{jar && <><path d={`M${x - nw / 2},${yl - dy * 0.3} L${x + nw / 2},${yl - dy * 0.3} L${x + nw / 2},${nT} L${x - nw / 2},${nT} Z`} fill="url(#brz51)" stroke={BRZ.line} strokeWidth={sw} />
 		<path d={`M${x - nw / 2},${nT + nh * 0.35} H${x + nw / 2}`} stroke={BRZ.dark} strokeWidth={sw} opacity={0.6} />
-		<path d={jarLid} fill="url(#brz51v)" stroke={BRZ.line} strokeWidth={sw} />{knob}
+		<path d={jarLid} fill="url(#brz51v)" stroke={BRZ.line} strokeWidth={sw} />{knob}</>}
 		{/* the warm rim light: top edges and the lit left corner */}
 		{rimLight(`M${x - w * 0.51},${yl - dy} L${x + w * 0.51},${yl - dy}`)}
-		{rimLight(`M${x - nw / 2 - w * 0.02},${nT - w * 0.01} Q${x - nw / 2},${nT - w * 0.05} ${x},${nT - w * 0.055}`)}
+		{jar && rimLight(`M${x - nw / 2 - w * 0.02},${nT - w * 0.01} Q${x - nw / 2},${nT - w * 0.05} ${x},${nT - w * 0.055}`)}
 		{rimLight(`M${L},${yt + w * 0.05} L${Lb},${yb}`, 0.7)}
 		<path d={`M${L + w * 0.13},${yt + w * 0.22} L${L + w * 0.19},${yb - w * 0.14}`} stroke="#FFF2D2" strokeOpacity={0.35 * glow} strokeWidth={w * 0.03} strokeLinecap="round" />
 		{frostDots(L, R, yt, yb, 70, 3)}
@@ -229,13 +229,15 @@ export const Jianfou: React.FC<{x: number; y: number; w: number; mode?: 'whole' 
 		<path d={`M${L + t},${yt + w * 0.05} L${R - t},${yt + w * 0.05} L${Rb - t},${yb - t} L${Lb + t},${yb - t} Z`} fill="url(#brz51d)" />
 		{/* the jar: its back, the wine, its cut walls and shoulders */}
 		<path d={shoulderOut} fill="#24130A" />
-		{wine && <><path d={`M${jx0 + t},${jb - t} L${jx0 + t},${ys + w * 0.02} L${jx1 - t},${ys + w * 0.02} L${jx1 - t},${jb - t} Z`} fill="#5A1E14" />
-			<path d={`M${jx0 + t},${ys + w * 0.02} L${jx1 - t},${ys + w * 0.02}`} stroke="#B0503A" strokeWidth={sw * 1.6} opacity={0.85} /></>}
+		{wine && wineO > 0 && <g opacity={wineO}><path d={`M${jx0 + t},${jb - t} L${jx0 + t},${ys + w * 0.02} L${jx1 - t},${ys + w * 0.02} L${jx1 - t},${jb - t} Z`} fill="#5A1E14" />
+			<path d={`M${jx0 + t},${ys + w * 0.02} L${jx1 - t},${ys + w * 0.02}`} stroke="#B0503A" strokeWidth={sw * 1.6} opacity={0.85} /></g>}
 		{cutP(rectD(jx0, ys, jx0 + t, jb), 'jl', [jx0, ys, jx0 + t, jb])}{cutP(rectD(jx1 - t, ys, jx1, jb), 'jr', [jx1 - t, ys, jx1, jb])}{cutP(rectD(jx0, jb - t, jx1, jb), 'jf', [jx0, jb - t, jx1, jb])}
 		{cutP(shoulderCut(-1), 'sl', [jx0, nT, x, ys])}{cutP(shoulderCut(1), 'sr', [x, nT, jx1, ys])}
+		<g transform={`translate(${w * 0.36 * jarLidOff},${(nT < yl ? (yl - nT) : 0) * jarLidOff - w * 0.12 * Math.sin(Math.PI * jarLidOff)})`}>
 		<path d={jarLid} fill="url(#brz51v)" stroke={BRZ.line} strokeWidth={sw} />{knob}
-		{rimLight(`M${x - nw / 2 - w * 0.02},${nT - w * 0.01} Q${x - nw / 2},${nT - w * 0.05} ${x},${nT - w * 0.055}`)}
+		{rimLight(`M${x - nw / 2 - w * 0.02},${nT - w * 0.01} Q${x - nw / 2},${nT - w * 0.05} ${x},${nT - w * 0.055}`)}</g>
 		{/* ice in the gap, left and right of the jar */}
+		{water > 0 && [G.gapL, G.gapR].map((gx, i) => { const wt = lerp(yb - t, yt + w * 0.12, water); return <g key={i}><rect x={gx - G.gapW / 2} y={wt} width={G.gapW} height={yb - t - wt} fill="#7A4420" opacity={0.75} /><path d={`M${gx - G.gapW / 2},${wt} H${gx + G.gapW / 2}`} stroke="#E8B070" strokeWidth={sw * 1.5} opacity={0.8} /></g>; })}
 		{ice > 0 && <>{chunks(G.gapL, G.gapW, 3)}{chunks(G.gapR, G.gapW, 4)}</>}
 		{slot}
 		{/* the basin's cut walls and floor, the lip */}
@@ -352,3 +354,18 @@ export const Forearm: React.FC<{el: P2; wr: P2; size?: number; thumb?: 1 | -1; s
 	return <g><g opacity={0.9}>{arm(BG.rim, true)}</g>{arm(B.lac)}{sleeve && <path d={`M${P(-120, 62)} L${P(-120, -62)}`} stroke={B.gold} strokeOpacity={0.35} strokeWidth={2} />}</g>; };
 
 void H; void cl;
+
+/** the 缶 alone (square jar: body, rounded shoulders, neck, domed lid with a ring), standing on the basin floor of a
+    Jianfou drawn with the same (x, y, w); dy lifts it (exploded view). Draw it BEFORE a whole Jianfou with jar={false}. */
+export const JarWhole: React.FC<{x: number; y: number; w: number; dy?: number; glow?: number}> = ({x, y, w, dy = 0, glow = 1}) => {
+	const G = jfGeom(x, y, w), {jw, nw, t, yb, yt} = G, nT = G.neckTop - dy, jb = yb - t - w * 0.015 - dy, ys = yt + w * 0.18 - dy, yn = yt + w * 0.03 - dy, jx0 = x - jw / 2, jx1 = x + jw / 2, sw = Math.max(1.5, w / 200);
+	const body = `M${jx0},${jb} L${jx0},${ys} Q${jx0},${yn} ${x - nw / 2},${yn} L${x - nw / 2},${nT} L${x + nw / 2},${nT} L${x + nw / 2},${yn} Q${jx1},${yn} ${jx1},${ys} L${jx1},${jb} Z`;
+	const lid = `M${x - nw / 2 - w * 0.025},${nT} L${x + nw / 2 + w * 0.025},${nT} Q${x + nw / 2},${nT - w * 0.05} ${x},${nT - w * 0.055} Q${x - nw / 2},${nT - w * 0.05} ${x - nw / 2 - w * 0.025},${nT} Z`;
+	return <g>
+		<path d={body} fill="url(#brz51)" stroke={BRZ.line} strokeWidth={sw} />
+		<g stroke={BRZ.dark} strokeWidth={sw} fill="none" opacity={0.7}><path d={`M${jx0 + w * 0.02},${ys + w * 0.04} H${jx1 - w * 0.02} M${jx0 + w * 0.02},${ys + w * 0.1} H${jx1 - w * 0.02} M${jx0 + w * 0.02},${jb - w * 0.06} H${jx1 - w * 0.02}`} /></g>
+		<path d={lid} fill="url(#brz51v)" stroke={BRZ.line} strokeWidth={sw} />
+		<circle cx={x} cy={nT - w * 0.085} r={w * 0.028} fill="none" stroke={BRZ.lit} strokeWidth={w * 0.012} />
+		<path d={`M${jx0},${ys} Q${jx0},${yn} ${x - nw / 2},${yn}`} fill="none" stroke={BRZ.hi} strokeOpacity={0.8 * glow} strokeWidth={sw * 2} />
+		<path d={`M${jx0 + w * 0.06},${ys + w * 0.14} L${jx0 + w * 0.08},${jb - w * 0.1}`} stroke="#FFF2D2" strokeOpacity={0.3 * glow} strokeWidth={w * 0.025} strokeLinecap="round" />
+	</g>; };

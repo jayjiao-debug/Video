@@ -1,0 +1,300 @@
+{
+ "OFF": {
+  "S1": 45.409600000000005,
+  "S2": 0.1255999999999986,
+  "S3": 72.58,
+  "S4": 81.63680000000002,
+  "S5": 109.93930000000002,
+  "S6": -37.462599999999995,
+  "S7": 89.89860000000003,
+  "S8": 94.42700000000004,
+  "S9": 126.12580000000003
+ },
+ "lags_ms": {
+  "S1": 0.0,
+  "S2": 0.979,
+  "S3": -0.583,
+  "S4": -0.771,
+  "S5": 0.0,
+  "S6": 0.0,
+  "S7": 0.0,
+  "S8": -0.083,
+  "S9": 0.0
+ },
+ "joins": {
+  "J2": {
+   "film": [
+    17.4647,
+    17.9507
+   ],
+   "kind": "copy xfade (linear)",
+   "lag_ms": 0.979,
+   "r": 0.96,
+   "cut": "bar 27 -> bar 7 inside beat 3 (27~7), so bar 8 follows the song's own bar 7"
+  },
+  "J3": {
+   "film": [
+    53.1258,
+    53.6119
+   ],
+   "kind": "copy xfade (linear)",
+   "lag_ms": -0.583,
+   "r": 0.953,
+   "cut": "bar 23 -> bar 55 inside beat 2 (23~55), so n24 follows the shallow chorus-2 break"
+  },
+  "J4": {
+   "film": [
+    62.7487,
+    63.2348
+   ],
+   "kind": "copy xfade (linear)",
+   "lag_ms": -0.771,
+   "r": 0.925,
+   "cut": "bar 59 -> bar 63 inside beat 3 (59~63), so the valley follows bar 63 as in the song"
+  },
+  "J5": {
+   "film_out": [
+    69.4993,
+    69.5413
+   ],
+   "film_in": [
+    69.4903,
+    69.4918
+   ],
+   "kind": "cut (equal-power)",
+   "lag_ms": 0.0,
+   "r": null,
+   "cut": "valley 66 beat 2 -> stop bar 79 under its first hit (E chord on beat 3 = bar 66's own E)"
+  },
+  "J6": {
+   "film_out": null,
+   "film_in": [
+    74.2478,
+    74.2493
+   ],
+   "kind": "cut (equal-power)",
+   "lag_ms": 0.0,
+   "r": null,
+   "cut": "hush -> chorus-1 downbeat (bar 16) at DB(0), out of the inhale"
+  },
+  "J7": {
+   "film_out": [
+    92.3422,
+    92.3692
+   ],
+   "film_in": [
+    92.3122,
+    92.3222
+   ],
+   "kind": "cut (equal-power)",
+   "lag_ms": 0.0,
+   "r": null,
+   "cut": "bar 23 beat-4 break -> lead-in bar 80 from its first note (incoming starts in the song's silence)"
+  },
+  "J8": {
+   "film": [
+    93.5443,
+    94.0303
+   ],
+   "kind": "copy xfade (linear)",
+   "lag_ms": -0.083,
+   "r": 0.953,
+   "cut": "lead-in 80 -> 82 inside beat 3 (80~82)"
+  },
+  "J9": {
+   "film_out": [
+    112.715,
+    112.74
+   ],
+   "film_in": [
+    112.61,
+    112.746
+   ],
+   "kind": "cut (equal-power)",
+   "lag_ms": 0.0,
+   "r": null,
+   "cut": "bar 90 (Gb-F) -> coda bar 105 (Bbm): drums stop on the end-card downbeat, harmony V -> i"
+  }
+ },
+ "spans": {
+  "S1": {
+   "film": [
+    0.0,
+    17.9507
+   ],
+   "song": [
+    45.4096,
+    63.3604
+   ],
+   "off": 45.4096,
+   "lag_ms": 0.0
+  },
+  "S2": {
+   "film": [
+    17.4647,
+    53.6119
+   ],
+   "song": [
+    17.5913,
+    53.7385
+   ],
+   "off": 0.1256,
+   "lag_ms": 0.979
+  },
+  "S3": {
+   "film": [
+    53.1258,
+    63.2348
+   ],
+   "song": [
+    125.7053,
+    135.8142
+   ],
+   "off": 72.58,
+   "lag_ms": -0.583
+  },
+  "S4": {
+   "film": [
+    62.7487,
+    69.5413
+   ],
+   "song": [
+    144.3847,
+    151.1773
+   ],
+   "off": 81.6368,
+   "lag_ms": -0.771
+  },
+  "S5": {
+   "film": [
+    69.4903,
+    70.5147
+   ],
+   "song": [
+    179.4296,
+    180.454
+   ],
+   "off": 109.9393,
+   "lag_ms": 0.0
+  },
+  "S6": {
+   "film": [
+    74.2478,
+    92.3692
+   ],
+   "song": [
+    36.7853,
+    54.9066
+   ],
+   "off": -37.4626,
+   "lag_ms": 0.0
+  },
+  "S7": {
+   "film": [
+    92.3122,
+    94.0303
+   ],
+   "song": [
+    182.2108,
+    183.929
+   ],
+   "off": 89.8986,
+   "lag_ms": 0.0
+  },
+  "S8": {
+   "film": [
+    93.5443,
+    112.74
+   ],
+   "song": [
+    187.9712,
+    207.1669
+   ],
+   "off": 94.427,
+   "lag_ms": -0.083
+  },
+  "S9": {
+   "film": [
+    112.61,
+    119.11
+   ],
+   "song": [
+    238.7358,
+    245.2358
+   ],
+   "off": 126.1258,
+   "lag_ms": 0.0
+  }
+ },
+ "fx": [
+  {
+   "film": [
+    35.67,
+    36.67
+   ],
+   "what": "reversed-reverb swell of the bar-16 downbeat into the chorus release",
+   "db": -15.0
+  },
+  {
+   "film": [
+    69.501,
+    72.501
+   ],
+   "what": "stop-bar ring (reverb of the four hits, tau 0.55 s)",
+   "db": -12.0
+  },
+  {
+   "film": [
+    73.259,
+    74.259
+   ],
+   "what": "reversed-reverb inhale of the bar-16 downbeat into DB(0)",
+   "db": -10.0
+  }
+ ],
+ "attacks": {
+  "stop79": 179.43110416666667,
+  "bar16": 36.78675,
+  "lead80": 182.2675,
+  "stop_silence": 180.45
+ },
+ "anchors": {
+  "TITLE": 9.5,
+  "RELEASE": 36.6704,
+  "VALLEY": 63.8408,
+  "STOP": 69.5013,
+  "HUSH": [
+   70.63340000000001,
+   74.2586
+  ],
+  "RETURN": 74.2586,
+  "LEADIN": 92.3722,
+  "DROP": 96.9006,
+  "ARRIVAL": 105.9574,
+  "ENDCARD": 112.75,
+  "FADE": [
+   117.27,
+   119.1
+  ]
+ },
+ "gains": {
+  "BUILD_DB": -1.5,
+  "RISE_DB": 1.0
+ },
+ "lufs_in": -17.13940394774291,
+ "lufs_out": -13.999999999999998,
+ "true_peak_dbtp": -2.6100311555352276,
+ "limited": false,
+ "dur": 119.25,
+ "untouched": {
+  "song_offset": 0.1256,
+  "fade": [
+   115.91740000000001,
+   118.18160000000002
+  ],
+  "gain_db": 3.0261528120028736,
+  "lufs_in": -17.026152812002874,
+  "lufs_out": -14.0,
+  "true_peak_dbtp": -2.8514653634946634
+ }
+}
