@@ -134,3 +134,52 @@ Method: frame-difference scan of rough_v1.mp4 plus contact sheets around every c
 - **69.50 → 74.26, the hush as a held breath.** The drips now count down in key. To make the return lift more, end the last drip's tail on the inhale. One option is a 1-beat pre-delay so the tail is still blooming at 74.26; the "silence" then ends inside a sound and doesn't cut to the chorus.
 - **96.90, the drop.** The block "sets" on the frame, which is right. Don't add an effect here. Let the modulation be the event, and keep the picture still for the 2 frames before it (a picture pause before the hit, owner row 112).
 - **112.75, the end-card fall.** The seal is now on F over the V→i fall. Once the picture contact moves to f3383, the stamp, the downbeat and the dim all become one gesture. That is the cleanest "full stop" the film can have.
+
+## Addendum r1b: hush floor (QA Q4 "hush too long") and the coordinator's lift
+
+**Context.** The coordinator applied my suggested lift: `BUILD_DB −2.5`, `RISE_DB 1.5`. That pre-change bed is `ep51_bed_r0.wav` in the scratchpad.
+
+**Problem.** In the hush the bed sat below −35 LUFS-M for **2.2 s** (71.4–73.6) and bottomed out at −65 at 73.30. The drips only covered it in blips. Between drips the mix fell to −48 (`hushcurve_mix.png`, `mix_before`). On a phone that reads as broken audio, and the owner's limit is about 1 s of silence.
+
+**Fix in `build51.py`.** Everything is documented in the docstring HUSH row and the tunables block. The stop hits (69.50–70.51), the five drips and the DB(0) return are unchanged.
+
+- **New `(4) held-breath floor`.** `spectral_freeze()` takes the median magnitude spectrum of the harmonic part (HPSS) of the song's own intro Am: bars 1 and 3, beats 1–2, which have no drums. It resynthesises that spectrum as a steady pad with running phase and a 0.35 rad jitter, so the pad is made of the song itself and adds no new instrument.
+  - It reads as an **A–E open fifth**. Chroma over 71.3–73.5 is A 1.00, E 0.97, B 0.51.
+  - E is shared with the E stop chord and A with the F return, and the drips (E6, C6) sit inside it.
+  - Shaping:
+    - band-limited to 90 Hz–2.5 kHz, so the drips' 1–8 kHz plinks sit on top;
+    - L/R r ≈ 0.6;
+    - fades in under the ring over 70.30–71.10 (`FLOOR_ENV`);
+    - holds at `FLOOR_LUFS = −33`;
+    - cos-fades over the last beat into DB(0).
+  - It is placed after the gain rides, so its level is exact.
+  - The 100 ms RMS varies by 3.9 dB over 72.0–73.5: steady, no pumping.
+- **Inhale.** `INHALE_LEN` 1.0 → 1.4 s, so the inhale starts at 72.86 and the breath is drawn earlier.
+- **Drips.** In `sfx_cues.json`, +1.5 dB each (now −18.5 → −14.5 dB), so they stay clear of the floor. Band SNR is 31–57 dB at 6–8 kHz, momentary loudness 2–4 LU over the floor, peak −10.6 dBFS against body peaks −4.4.
+
+**Measured, hush window 70.6–74.26 (`hushcurve_mix.png`):**
+
+| | below −35 LUFS-M | longest run below −35 | lowest |
+|---|---|---|---|
+| bed before | 2.20 s | 2.20 s | −65.1 at 73.30 |
+| bed after | **0.00 s** | 0 | −33.5 at 73.20 |
+| mix before | 0.63 s (gaps to −48) | 0.19 s | −48.5 |
+| mix after | **0.00 s** | 0 | −32.8 |
+
+The floor sits about 19 LU under the body (−14), which still reads as a hush, but as held breath rather than a dropout.
+
+**Checks after the rebuild:**
+- Outside 70.2–74.3 the new bed matches the pre-floor bed to within −91.5 dB (identical).
+- `measure51.py` re-run:
+  - grid within 1.0 ms at 48 downbeats;
+  - no stretch more than 6 dB under the body for 3 s (`sag` list empty);
+  - mono fold −0.01 dB.
+  - `music_map_ep51.json`, `_measure.json` and `ep51_bed_curves.png` are refreshed.
+- Bed: −14.00 LUFS, −2.32 dBTP, no limiting.
+- Mix (`mix51.py`): −14.0 LUFS, **−2.14 dBTP**, 22 cues.
+- Hush L/R r = 0.38; the mono fold costs 1.6 dB of the hush's wide tails and pad, but the dry drips are centred.
+
+**Files.**
+- Preview: `/tmp/claude-0/-home-claude/bf206d1e-1152-5595-9b84-b15be6e5a777/scratchpad/snd51/rough_v1_sound_r1b.mp4`.
+- Plots: `hushcurve_mix.png` and `hush_r1b.png`, same folder.
+- Pre-floor bed and mix, for A/B: `ep51_bed_lift_prefloor.wav` and `ep51_mix_lift_prefloor.wav`, same folder.

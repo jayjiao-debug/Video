@@ -145,57 +145,57 @@
 {
 "t": 71.43,
 "sfx": "drip_room",
-"db": -20,
+"db": -18.5,
 "lead": 0.012,
 "role": "hush",
 "note": "C2 melt drip, counting into the return",
 "semitones": -0.35,
 "fade_out": 0.1,
-"r1": "sound r1: one drip per picture drip (the old 0.3 s slices held two each: 10 sounds for 5 drips), 1 s stone-vault tail (sfx_drip_room.mp3), tuned E6: E6-C6-E6-C6-E6 (Am chord tones; the last E6 leads into the F return = Fmaj7), even crescendo -20 -> -16"
+"r1": "sound r1: one drip per picture drip (the old 0.3 s slices held two each: 10 sounds for 5 drips), 1 s stone-vault tail (sfx_drip_room.mp3), tuned E6: E6-C6-E6-C6-E6 (Am chord tones; the last E6 leads into the F return = Fmaj7), even crescendo -18.5 -> -14.5 (addendum: +1.5 dB to sit over the new -33 LUFS floor)"
 },
 {
 "t": 72.0,
 "sfx": "drip_room",
-"db": -19,
+"db": -17.5,
 "lead": 0.012,
 "role": "hush",
 "note": "C2 melt drip, counting into the return",
 "semitones": -4.35,
 "fade_out": 0.1,
-"r1": "sound r1: one drip per picture drip (the old 0.3 s slices held two each: 10 sounds for 5 drips), 1 s stone-vault tail (sfx_drip_room.mp3), tuned C6: E6-C6-E6-C6-E6 (Am chord tones; the last E6 leads into the F return = Fmaj7), even crescendo -20 -> -16"
+"r1": "sound r1: one drip per picture drip (the old 0.3 s slices held two each: 10 sounds for 5 drips), 1 s stone-vault tail (sfx_drip_room.mp3), tuned C6: E6-C6-E6-C6-E6 (Am chord tones; the last E6 leads into the F return = Fmaj7), even crescendo -18.5 -> -14.5 (addendum: +1.5 dB to sit over the new -33 LUFS floor)"
 },
 {
 "t": 72.56,
 "sfx": "drip_room",
-"db": -18,
+"db": -16.5,
 "lead": 0.012,
 "role": "hush",
 "note": "C2 melt drip, counting into the return",
 "semitones": -0.35,
 "fade_out": 0.1,
-"r1": "sound r1: one drip per picture drip (the old 0.3 s slices held two each: 10 sounds for 5 drips), 1 s stone-vault tail (sfx_drip_room.mp3), tuned E6: E6-C6-E6-C6-E6 (Am chord tones; the last E6 leads into the F return = Fmaj7), even crescendo -20 -> -16"
+"r1": "sound r1: one drip per picture drip (the old 0.3 s slices held two each: 10 sounds for 5 drips), 1 s stone-vault tail (sfx_drip_room.mp3), tuned E6: E6-C6-E6-C6-E6 (Am chord tones; the last E6 leads into the F return = Fmaj7), even crescendo -18.5 -> -14.5 (addendum: +1.5 dB to sit over the new -33 LUFS floor)"
 },
 {
 "t": 73.13,
 "sfx": "drip_room",
-"db": -17,
+"db": -15.5,
 "lead": 0.012,
 "role": "hush",
 "note": "C2 melt drip, counting into the return",
 "semitones": -4.35,
 "fade_out": 0.1,
-"r1": "sound r1: one drip per picture drip (the old 0.3 s slices held two each: 10 sounds for 5 drips), 1 s stone-vault tail (sfx_drip_room.mp3), tuned C6: E6-C6-E6-C6-E6 (Am chord tones; the last E6 leads into the F return = Fmaj7), even crescendo -20 -> -16"
+"r1": "sound r1: one drip per picture drip (the old 0.3 s slices held two each: 10 sounds for 5 drips), 1 s stone-vault tail (sfx_drip_room.mp3), tuned C6: E6-C6-E6-C6-E6 (Am chord tones; the last E6 leads into the F return = Fmaj7), even crescendo -18.5 -> -14.5 (addendum: +1.5 dB to sit over the new -33 LUFS floor)"
 },
 {
 "t": 73.69,
 "sfx": "drip_room",
-"db": -16,
+"db": -14.5,
 "lead": 0.012,
 "role": "hush",
 "note": "C2 melt drip, counting into the return",
 "semitones": -0.35,
 "fade_out": 0.1,
-"r1": "sound r1: one drip per picture drip (the old 0.3 s slices held two each: 10 sounds for 5 drips), 1 s stone-vault tail (sfx_drip_room.mp3), tuned E6: E6-C6-E6-C6-E6 (Am chord tones; the last E6 leads into the F return = Fmaj7), even crescendo -20 -> -16"
+"r1": "sound r1: one drip per picture drip (the old 0.3 s slices held two each: 10 sounds for 5 drips), 1 s stone-vault tail (sfx_drip_room.mp3), tuned E6: E6-C6-E6-C6-E6 (Am chord tones; the last E6 leads into the F return = Fmaj7), even crescendo -18.5 -> -14.5 (addendum: +1.5 dB to sit over the new -33 LUFS floor)"
 },
 {
 "t": 76.523,

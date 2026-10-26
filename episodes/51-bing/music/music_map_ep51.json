@@ -5,14 +5,14 @@
  "build": "python3 build51.py && python3 measure51.py",
  "loudness": {
   "integrated_lufs": -14.0,
-  "true_peak_dbtp": -2.61,
+  "true_peak_dbtp": -2.32,
   "limiter": "not needed",
   "max_short_term": [
-   -12.1,
+   -11.6,
    108.6
   ],
   "max_momentary": [
-   -11.2,
+   -10.7,
    108.4
   ],
   "body_short_term": -13.6,
@@ -26,7 +26,7 @@
     "centroid_hz": 2427
    },
    "B pre 18.56-36.67 (周/战国, 先猜？)": {
-    "short_term_lufs": -14.3,
+    "short_term_lufs": -14.2,
     "centroid_hz": 2869
    },
    "chorus 36.67-54.78 (酒 -> Tang)": {
@@ -38,31 +38,31 @@
     "centroid_hz": 2429
    },
    "valley 63.84-69.50 (清 night)": {
-    "short_term_lufs": -16.2,
+    "short_term_lufs": -16.1,
     "centroid_hz": 1880
    },
    "stop hits 69.50-70.63": {
-    "short_term_lufs": -12.4,
+    "short_term_lufs": -12.3,
     "centroid_hz": 1052
    },
    "hush 70.63-74.26": {
-    "short_term_lufs": -26.5,
-    "centroid_hz": 1310
+    "short_term_lufs": -26.0,
+    "centroid_hz": 1045
    },
    "return chorus 74.26-92.37 (剩下一份 -> 乾隆)": {
-    "short_term_lufs": -14.3,
+    "short_term_lufs": -14.8,
     "centroid_hz": 2339
    },
    "lead-in 92.37-96.90 (整间屋子)": {
-    "short_term_lufs": -16.0,
+    "short_term_lufs": -16.1,
     "centroid_hz": 2118
    },
    "drop 96.90-105.96 (19世纪 -> numbers)": {
-    "short_term_lufs": -13.6,
+    "short_term_lufs": -13.5,
     "centroid_hz": 1917
    },
    "ARRIVAL 105.96-112.75 (P1, P2, air)": {
-    "short_term_lufs": -12.4,
+    "short_term_lufs": -11.8,
     "centroid_hz": 2388
    },
    "coda 112.75-117.27 (end card)": {
@@ -591,7 +591,7 @@
     "song_bar": 105,
     "measured": 112.75,
     "err_ms": 0.0,
-    "xcorr": 0.9,
+    "xcorr": 0.892,
     "note": "END CARD: drums stop, coda bar 105 (J9)"
    },
    {
@@ -694,7 +694,7 @@
     74.2586
    ],
    "song": "gap",
-   "bars": "stop-bar ring (-12 dB, tau 0.55 s) -> near silence (< -45 LUFS-M 72.3-73.6) -> reversed-reverb inhale (-10 dB, 1.0 s)"
+   "bars": "stop-bar ring (-12 dB, tau 0.55 s) -> near silence (< -45 LUFS-M None-None) -> reversed-reverb inhale (-10 dB, 1.0 s)"
   },
   {
    "seg": "S6",
@@ -829,7 +829,7 @@
     69.5413
    ],
    "max_5ms_step_in_join_db": 9.2,
-   "p99_5ms_step_around_db": 8.8,
+   "p99_5ms_step_around_db": 8.0,
    "hf_peak_in_join_vs_p95_around_db": -0.2,
    "spectral_jump_db": 8.0,
    "spectral_jump_typical_offbeat_db": 3.8
@@ -849,9 +849,9 @@
     74.2493
    ],
    "max_5ms_step_in_join_db": 7.8,
-   "p99_5ms_step_around_db": 8.6,
+   "p99_5ms_step_around_db": 8.2,
    "hf_peak_in_join_vs_p95_around_db": 2.1,
-   "spectral_jump_db": 11.6,
+   "spectral_jump_db": 11.4,
    "spectral_jump_typical_offbeat_db": 3.8
   },
   "J7": {
@@ -916,7 +916,7 @@
    "max_5ms_step_in_join_db": 8.5,
    "p99_5ms_step_around_db": 8.2,
    "hf_peak_in_join_vs_p95_around_db": -4.2,
-   "spectral_jump_db": 15.0,
+   "spectral_jump_db": 15.1,
    "spectral_jump_typical_offbeat_db": 3.8
   }
  },
@@ -939,11 +939,19 @@
   },
   {
    "film": [
-    73.259,
+    72.859,
     74.259
    ],
    "what": "reversed-reverb inhale of the bar-16 downbeat into DB(0)",
    "db": -10.0
+  },
+  {
+   "film": [
+    70.3,
+    74.259
+   ],
+   "what": "held-breath floor: spectral freeze of the intro Am (bars (1, 3), beats 1-2), 90 Hz-2.5 kHz",
+   "lufs": -33.0
   }
  ],
  "gain_rides": [
@@ -952,7 +960,7 @@
     74.2586,
     96.9006
    ],
-   "db": "-1.5 -> 0 (linear in dB)",
+   "db": "-2.5 -> 0 (linear in dB)",
    "why": "post-hush chorus + lead-in grow into the drop"
   },
   {
@@ -960,7 +968,7 @@
     105.9574,
     112.75
    ],
-   "db": 1.0,
+   "db": 1.5,
    "why": "arrival (bars 88-90, P1 + P2 + air); step under the 88 downbeat, removed under the fall"
   },
   {
@@ -1139,7 +1147,7 @@
    "film_formula": 112.75,
    "film_measured": 112.75,
    "err_ms": 0.0,
-   "xcorr": 0.9
+   "xcorr": 0.892
   },
   {
    "event": "coda bar 106",
