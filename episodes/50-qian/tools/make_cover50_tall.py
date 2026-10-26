@@ -41,28 +41,30 @@ def journey(img, x0, y0, width, h, d, fs):
         paste(img, hook if srcn == 'hook' else walk, box, sc * (0.8 if srcn == 'hook' else 1), (int(cx - w * (0.8 if srcn == 'hook' else 1) / 2), y0 + (int(h * 0.25) if srcn == 'hook' else 0)))
         d.text((cx, y0 + h + 14), lab, font=fs, fill=(226, 214, 200), anchor='ma')
         if i < n - 1: arrow(d, int(x0 + slot * (i + 1)), y0 + h // 2)
+CH = [(200, 365, 520, 725), (545, 365, 865, 725), (875, 365, 1215, 725), (1270, 365, 1620, 725)]   # 财 货 贵 钱 (with their dashed sockets)
+def title(img, W, y0, s1, s2, gap):
+    d = ImageDraw.Draw(img); fk = ImageFont.truetype(SERIF_R, int(s1 * 0.27), index=0)
+    f1 = ImageFont.truetype(SERIF, s1, index=0); f2 = ImageFont.truetype(SERIF, s2, index=0)
+    y1, y2 = y0 + int(s1 * 0.55), y0 + int(s1 * 0.55) + gap
+    shadow_text(img, [((W // 2, y1), '钱是怎么从贝壳', f1, 'ma'), ((W // 2, y2), '变成二维码的？', f2, 'ma')])
+    d.text((W // 2, y0), '从古至今 · 钱', font=fk, fill=(214, 196, 178), anchor='ma')
+    d.text((W // 2, y1), '钱是怎么从贝壳', font=f1, fill=CREAM, anchor='ma')
+    grad_text(img, (W // 2 + int(s2 * 0.25), y2), '变成二维码的？', f2, 'ma')
 def tall():
-    W, H = 1080, 1440; img = ground(W, H); d = ImageDraw.Draw(img)
-    fk = ImageFont.truetype(SERIF_R, 30, index=0); f1 = ImageFont.truetype(SERIF, 112, index=0); f2 = ImageFont.truetype(SERIF, 128, index=0)
-    fl = ImageFont.truetype(SERIF_R, 34, index=0)
-    shadow_text(img, [((W // 2, 150), '钱是怎么从贝壳', f1, 'ma'), ((W // 2, 290), '变成二维码的？', f2, 'ma')])
-    d.text((W // 2, 92), '从古至今 · 钱', font=fk, fill=(214, 196, 178), anchor='ma')
-    d.text((W // 2, 150), '钱是怎么从贝壳', font=f1, fill=CREAM, anchor='ma')
-    grad_text(img, (W // 2 + 32, 290), '变成二维码的？', f2, 'ma')       # ？ carries ~½em of space on its right: shift right to centre the ink
-    paste(img, hook, CHARS, 1080 / (CHARS[2] - CHARS[0]), (0, 440))
-    journey(img, 30, 880, 1020, 250, d, fl)
-    d.line([(140, 1210), (W - 140, 1210)], fill=(120, 84, 46), width=2)
+    W, H = 1080, 1440; img = ground(W, H)
+    title(img, W, 92, 112, 128, 140)
+    sc = 1.16; cw = int(330 * sc); ch = int(360 * sc)
+    for i, box in enumerate(CH):
+        r, c = divmod(i, 2); bw, bh = box[2] - box[0], box[3] - box[1]
+        x = W // 2 + (c - 1) * (cw + 10) + 5 + (cw - int(bw * sc)) // 2; y = 455 + r * (ch + 6)
+        paste(img, hook, box, sc, (x, y))
     img.save(f'{OUT}/封面_竖版_3x4_设计版.png'); return img
 def wide():
-    W, H = 1440, 1080; img = ground(W, H); d = ImageDraw.Draw(img)
-    fk = ImageFont.truetype(SERIF_R, 28, index=0); f1 = ImageFont.truetype(SERIF, 104, index=0); f2 = ImageFont.truetype(SERIF, 118, index=0)
-    fl = ImageFont.truetype(SERIF_R, 30, index=0)
-    shadow_text(img, [((W // 2, 110), '钱是怎么从贝壳', f1, 'ma'), ((W // 2, 236), '变成二维码的？', f2, 'ma')])
-    d.text((W // 2, 60), '从古至今 · 钱', font=fk, fill=(214, 196, 178), anchor='ma')
-    d.text((W // 2, 110), '钱是怎么从贝壳', font=f1, fill=CREAM, anchor='ma')
-    grad_text(img, (W // 2 + 30, 236), '变成二维码的？', f2, 'ma')
-    paste(img, hook, CHARS, 1240 / (CHARS[2] - CHARS[0]), (100, 380))
-    journey(img, 170, 820, 1100, 170, d, fl)
+    W, H = 1440, 1080; img = ground(W, H)
+    title(img, W, 70, 108, 122, 134)
+    sc = 1.0; xs = 36
+    for box in CH:
+        bw = box[2] - box[0]; paste(img, hook, box, sc, (xs, 470)); xs += int(bw * sc) + 4
     img.save(f'{OUT}/封面_横版_4x3_设计版.png'); return img
 t, w = tall(), wide()
 s = Image.new('RGB', (540 + 720 + 20, 720), (30, 30, 32)); s.paste(t.resize((540, 720)), (0, 0)); s.paste(w.resize((720, 540)), (560, 90))
