@@ -26,7 +26,13 @@ P.makeRing = (T0 = {}) => {
 			s += `<path d="M${x.toFixed(1)},${y} l${w.toFixed(1)},0" stroke="#FFC890" stroke-width="2.2" opacity="${a.toFixed(3)}" stroke-linecap="round"/>`; }
 		return s;
 	};
-	const DARK = '#2B2521', IVORY = '#E9DCC4';
+	const DARK = '#2B2521', IVORY = '#E9DCC4', IVD = '#B4A48A';   // v2: the lit brothers in a dim warm ivory (the horse stays brightest)
+	const cx0 = pos.reduce((a, p) => a + p.x, 0) / pos.length, cy0 = pos.reduce((a, p) => a + p.y, 0) / pos.length;
+	const ang = (p) => Math.atan2((p.y - cy0) * 2.4, p.x - cx0), aH = ang(hp);
+	const SWEEP_ORD = pos.filter((p) => p.k !== '马').map((p) => ({k: p.k, a: (((ang(p) - aH) % (2 * Math.PI)) + 2 * Math.PI) % (2 * Math.PI)})).sort((a, b) => a.a - b.a).map((q) => q.k);
+	const sweepAt = (k) => { if (!T.SWEEP) return Infinity; const i = SWEEP_ORD.indexOf(k); return T.SWEEP[0] + (T.SWEEP[1] - T.SWEEP[0]) * (i + 1) / 12; };
+	const sweepHead = (p, g, t) => { const ts = sweepAt(p.k); if (t < ts - 0.06 || t > ts + 0.9) return ''; const a = t < ts ? P.seg(t, ts - 0.06, ts) : Math.exp(-(t - ts) / 0.22);
+		return `<g opacity="${(0.85 * a).toFixed(3)}">${K.bro(p.k, g.hx, g.hy, g.size, p.face, '#C8693A')}</g>`; };
 	const headGeo = (p) => { const h = 160 * p.s, b = K.stoneBody(p.x, p.y, h, p.face, '#353530'), [tx, ty] = b.top; return {hx: tx + p.face * 4 * p.s, hy: ty + 22 * p.s, size: 175 * p.s, top: [tx, ty]}; };
 	const dashHead = (p, op) => `<g opacity="${op}">${K.ringSeat(p, 'dash').head}</g>`;
 	const seatSvg = (p, t) => {
@@ -35,15 +41,15 @@ P.makeRing = (T0 = {}) => {
 		if (LIGHT[k] !== undefined) {
 			if (t >= LIFT) return {back: K.emptySeat(p.x, p.y, h, p.face, stone, '#E9DCC4'), head: ''};
 			const g = headGeo(p), u = P.seg(t, LIGHT[k], LIGHT[k] + 0.12);
-			return {back: K.stoneBody(p.x, p.y, h, p.face, stone).svg, head: K.bro(k, g.hx, g.hy - 4 * u, g.size, p.face, P.mixC(DARK, IVORY, u))};
+			return {back: K.stoneBody(p.x, p.y, h, p.face, stone).svg, head: K.bro(k, g.hx, g.hy - 4 * u, g.size, p.face, P.mixC(DARK, IVD, u))};
 		}
 		const g = headGeo(p);
 		if (DASH.includes(k)) {
 			const u = P.seg(t, FLARE, FLARE + 0.15);
 			const dark = u < 1 ? `<g opacity="${(1 - u).toFixed(3)}">${K.bro(k, g.hx, g.hy, g.size, p.face, DARK)}</g>` : '';
-			return {back: K.stoneBody(p.x, p.y, h, p.face, stone).svg, head: dark + (u > 0 ? dashHead(p, (0.95 * u).toFixed(3)) : '')};
+			return {back: K.stoneBody(p.x, p.y, h, p.face, stone).svg, head: dark + (u > 0 ? dashHead(p, (0.95 * u).toFixed(3)) : '') + sweepHead(p, g, t)};
 		}
-		return {back: K.stoneBody(p.x, p.y, h, p.face, stone).svg, head: K.bro(k, g.hx, g.hy, g.size, p.face, DARK)};
+		return {back: K.stoneBody(p.x, p.y, h, p.face, stone).svg, head: K.bro(k, g.hx, g.hy, g.size, p.face, DARK) + sweepHead(p, g, t)};
 	};
 	const heroAt = (t, extra = {}) => {
 		const breathe = 1 + 0.03 * Math.sin(2 * Math.PI * (t - P.BAR0) / (4 * P.BEAT));
@@ -75,7 +81,7 @@ P.makeRing = (T0 = {}) => {
 		const x = c.x + dx, {y, w, h} = c, id = 'vt' + c.size;
 		let in_ = '';
 		c.heads.forEach((k, i) => { const n = c.heads.length, hx = x + 20 + (i + 0.5) * (w - 40) / n, hy = y + h - 34;
-			in_ += `<rect x="${hx - c.size * 0.32}" y="${hy}" width="${c.size * 0.64}" height="34" fill="#C9B79A" opacity=".55"/>` + (present(k) ? K.bro(k, hx, hy, c.size, -1, IVORY) : ''); });
+			in_ += `<rect x="${hx - c.size * 0.32}" y="${hy}" width="${c.size * 0.64}" height="34" fill="#C9B79A" opacity=".55"/>` + (present(k) ? K.bro(k, hx, hy, c.size, -1, IVD) : ''); });
 		return `<defs><linearGradient id="${id}" x1="0" x2="0" y1="0" y2="1"><stop offset="0" stop-color="#FFF4DE" stop-opacity=".38"/><stop offset="1" stop-color="#E8D2AA" stop-opacity=".12"/></linearGradient></defs>
 		<rect x="${x - 10}" y="${y + h}" width="${w + 20}" height="92" fill="#2E2621"/><path d="M${x - 10},${y + h} L${x + w + 10},${y + h}" stroke="#E8C690" stroke-width="3" opacity=".7"/>
 		<rect x="${x}" y="${y}" width="${w}" height="${h}" fill="url(#${id})"/>${in_}
@@ -88,7 +94,7 @@ P.makeRing = (T0 = {}) => {
 		if (dx0 < 640) out += `<defs><radialGradient id="caseGlow" cx="${1580 + dx0}" cy="520" r="520" gradientUnits="userSpaceOnUse"><stop offset="0" stop-color="#F6E6C6" stop-opacity=".22"/><stop offset="1" stop-color="#F6E6C6" stop-opacity="0"/></radialGradient></defs>
 			<rect width="1920" height="1080" fill="url(#caseGlow)" opacity="${(1 - dx0 / 640).toFixed(3)}"/>`;
 		CASES.forEach((c, i) => { const dx = caseDx(t, i); if (dx >= 640) return; const blur = caseVel(t, i) / 30 / 3, cs = vitrine(c, dx, (k) => t >= LAND[k], lab);
-			out += blur > 0.6 ? `<defs><filter id="mb${i}" filterUnits="userSpaceOnUse" x="-200" y="-200" width="2400" height="1480"><feGaussianBlur stdDeviation="${blur.toFixed(2)} 0"/></filter></defs><g filter="url(#mb${i})">${cs}</g>` : cs; });
+			out += cs; });   // v2: no motion blur on the cases
 		return out;
 	};
 	const slot = (k, dx0) => { const c = CASES[CASE_OF[k]], i = c.heads.indexOf(k), n = c.heads.length, dx = caseDx(T.__t ?? 0, CASE_OF[k]); return [c.x + dx + 20 + (i + 0.5) * (c.w - 40) / n, c.y + c.h - 34, c.size]; };
@@ -109,7 +115,7 @@ P.makeRing = (T0 = {}) => {
 				trails += `<path d="${d}" stroke="url(#trail)" stroke-width="${(10 - i * 0.6).toFixed(1)}" fill="none" stroke-linecap="round" opacity="${fade.toFixed(3)}" filter="url(#tb4)"/>`;
 			}
 			if (t < LAND[k]) { const size = P.lerp(g.size * cam.z, ss, u), f = P.lerp(p.face, -1, P.smooth(u));
-				heads += K.bro(k, pt[0], pt[1], size, Math.abs(f) < 0.04 ? 0.04 * Math.sign(f || -1) : f, IVORY); }
+				heads += K.bro(k, pt[0], pt[1], size, Math.abs(f) < 0.04 ? 0.04 * Math.sign(f || -1) : f, IVD); }
 		});
 		return `<defs><linearGradient id="trail" x1="0" x2="1"><stop offset="0" stop-color="#F3E6CF" stop-opacity="0"/><stop offset="1" stop-color="#F3E6CF" stop-opacity=".55"/></linearGradient>${K.blur('tb4', 4)}
 		${K.rimFilter('flyRim', 4 * cam.z, 4 * cam.z, '#C9DAD4', 0.68, 1.3)}</defs>${trails}<g filter="url(#flyRim)">${heads}</g>`;

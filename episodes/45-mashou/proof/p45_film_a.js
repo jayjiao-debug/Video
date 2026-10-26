@@ -50,6 +50,7 @@ const fireDefs = (fl) => `<defs>
 	 <radialGradient id="smk" cx=".5" cy=".7" r=".6"><stop offset="0" stop-color="#7A3A26"/><stop offset=".55" stop-color="#3A2224"/><stop offset="1" stop-color="#2A1A1E" stop-opacity="0"/></radialGradient>
 	 ${K.rimFilter('rimFire', -2, 5, '#FFA458', 0.95, 1.1)}${K.rimFilter('rimFig', -5, 3, '#FFB070', 0.95, 1.4)}${K.blur('fb3', 3)}${K.blur('fb7', 7)}${K.blur('fb40', 40)}${K.blur('fhz', 2.5)}</defs>`;
 /** the 1860 soldier on the film rig + the kepi. o: {x, ground, h, face, u, stand, carry, reach, col} */
+const anon = (o) => window.WALKER({look: 'suit', col: o.col ?? '#140C09', rim: '#FFB070', rimOp: 0.5, ...o});   // v2: the looter + carriers are anonymous
 const soldier = (o) => { const w = window.WALKER({look: 'soldier', col: o.col ?? '#140C09', rim: '#FFB070', rimOp: 0.5, ...o});
 	return {...w, svg: w.svg + K.kepi(w.head[0], w.head[1] - w.r * 0.05, w.r * 1.02, o.face, o.col ?? '#140C09')}; };
 /** the six marchers of B1 (enter from the right, walking left, halt in a line), the looter (from the left, lifts the horse on bar
@@ -71,7 +72,7 @@ const looter = (t) => {
 		if (t >= LIFT - 0.5) reachP = lift < 1 ? r0 : null;
 		carry = lift; horse = {k: lift}; }
 	else { const tw = t - (LIFT + 0.45); x = LOOT.xs + tw * v * LOOT.rate; u = (LOOT.xs - LOOT.x0) / (STR * LOOT.h) + (x - LOOT.xs) / (STR * LOOT.h); carry = 1; horse = {k: 1}; stand = 1 - P.smooth(P.seg(tw, 0, 0.3)); }
-	const w = soldier({x, ground: LOOT.g, h: LOOT.h, face: 1, u, stand, carry, reach: reachP});
+	const w = anon({x, ground: LOOT.g, h: LOOT.h, face: 1, u, stand, carry, reach: reachP});
 	if (horse) { const k = horse.k, seatHero = horseSeat.st.hero, at = [P.lerp(HSEAT[0], w.load[0] + 6, k), P.lerp(HSEAT[1], w.load[1] + w.loadR * 0.9, k)];
 		const hh = P.lerp(seatHero.h * 1.22, LOOT.h / 4.0, k);
 		horse.svg = K.horseHead({...seatHero, x: at[0], y: at[1] - 8 * Math.sin(Math.PI * k), h: hh, flip: true, glow: 1.3, mood: 'fire', rim: '#FFE0A0', base: 'cut', curl: 0}); }
@@ -80,7 +81,7 @@ const looter = (t) => {
 const CARRIERS = [{t0: 24.55, k: '狗', h: 400, g: 1030, x0: -300}, {t0: 24.9, k: '猪', h: 390, g: 1020, x0: -320}];
 const carriers = (t) => CARRIERS.map((c) => {
 	if (t < c.t0) return ''; const v = STR * c.h / 1.325 * 1.25, x = c.x0 + (t - c.t0) * v;
-	const w = soldier({x, ground: c.g, h: c.h, face: 1, u: (x - c.x0) / (STR * c.h), carry: 1, col: '#1A100C'});
+	const w = anon({x, ground: c.g, h: c.h, face: 1, u: (x - c.x0) / (STR * c.h), carry: 1, col: '#1A100C'});
 	return w.svg + K.bro(c.k, w.load[0] + 4, w.load[1] + w.loadR, c.h * 0.22, 1, '#180E0A');
 }).join('');
 /** the pool world at t: noon (with the spouts and arcs) or dusk/fire; o.dusk forces the dusk set (for the band wipe) */
@@ -94,6 +95,20 @@ const noonWorld = (t) => {
 	const motes = t > ALL12 && t < FALL + 0.3 ? Array.from({length: 40}, (_, i) => `<circle cx="${(560 + rnd(i) * 800).toFixed(1)}" cy="${(700 + rnd(i + 3) * 200 - ((t - ALL12) * 60 * rnd(i + 5)) % 120).toFixed(1)}" r="${(1 + rnd(i + 7) * 2).toFixed(1)}" fill="#F3F1E8" opacity="${(0.4 + 0.4 * rnd(i + 9)).toFixed(2)}"/>`).join('') : '';
 	return b.defs + b.back + (t < ALL12 ? N.water(t) : '') + `<g transform="${N.NOON_T}">${arcs}${motes}</g>` + b.horse;
 };
+/** v2: the pool as water lit by the fire: a warm reflection gradient, the lit windows as wavering streaks, long ripples */
+const fireWater = (t, fl) => {
+	const g = 0.35 + 0.65 * fl;
+	let s = `<defs><linearGradient id="fwat" x1="0" x2="0" gradientUnits="userSpaceOnUse" y1="672" y2="935"><stop offset="0" stop-color="${P.mixC('#7A3A22', '#F0A050', fl)}"/><stop offset=".3" stop-color="${P.mixC('#5A2A18', '#C0602E', fl)}"/><stop offset=".75" stop-color="${P.mixC('#3A1A10', '#6A2E1A', fl)}"/><stop offset="1" stop-color="#2A140C"/></linearGradient>
+		<clipPath id="fwc"><path d="M360,912 L790,672 L1130,672 L1560,912 C1290,938 630,938 360,912 Z"/></clipPath>${K.blur('fwb', 2)}</defs>
+		<g clip-path="url(#fwc)"><rect x="300" y="660" width="1320" height="300" fill="url(#fwat)"/><g filter="url(#fwb)">`;
+	for (let i = 0; i < 16; i++) { const x = 720 + i * 32 + 6 * rnd(i + 3), hgt = 60 + 150 * rnd(i + 11) * g;
+		for (let k = 0; k < 6; k++) { const y = 682 + k * (hgt / 6), w = 10 + 8 * rnd(i * 7 + k), dx = 7 * Math.sin(t * 2.3 + k * 1.3 + i);
+			s += `<rect x="${(x + dx).toFixed(1)}" y="${y.toFixed(1)}" width="${w.toFixed(1)}" height="${(hgt / 6 - 3).toFixed(1)}" fill="#FFD08A" opacity="${((0.22 + 0.2 * rnd(i + k)) * g * (1 - k / 7)).toFixed(3)}"/>`; } }
+	s += '</g>';
+	for (let i = 0; i < 12; i++) { const y = 690 + i * 19 + 3 * Math.sin(t * 1.4 + i), x0 = 560 - i * 14 + 30 * P.noise(t * 0.8 + i, i), x1 = 1360 + i * 14 + 30 * P.noise(t * 0.7 + i, i + 9);
+		s += `<path d="M${x0.toFixed(1)},${y.toFixed(1)} L${x1.toFixed(1)},${y.toFixed(1)}" stroke="#FFE0B0" stroke-width="${(2.4 - i * 0.12).toFixed(2)}" opacity="${((0.32 - i * 0.02) * g).toFixed(3)}" stroke-dasharray="${(140 + 60 * rnd(i)).toFixed(0)} ${(30 + 30 * rnd(i + 4)).toFixed(0)}" stroke-dashoffset="${(-t * 40 * (i % 2 ? 1 : -1)).toFixed(1)}"/>`; }
+	return s + '</g>';
+};
 const duskWorld = (t, o = {}) => {
 	const fb = fireBase(), fl = P.smooth(P.seg(t, FIRE, FIRE + 0.3)) * (1 + 0.06 * P.noise(t * 5, 3)), lifted = t >= LIFT + 0.1;
 	const empties = new Set(); if (lifted) empties.add('马'); CARRIERS.forEach((c) => { if (t >= c.t0 - 0.2) empties.add(c.k); }); if (t >= EMPTY) Object.keys(fb.st).forEach((k) => empties.add(k));
@@ -106,18 +121,32 @@ const duskWorld = (t, o = {}) => {
 	return fireDefs(fl) + `<rect x="-600" y="-900" width="3120" height="2580" fill="url(#fsky)"/><g transform="${N.NOON_T}">
 		<g filter="url(#fb40)">${[[420, 240, 300, 200], [760, 160, 260, 260], [1180, 140, 340, 240], [1540, 220, 260, 220], [960, 40, 900, 120]].map(([cx, cy, rx, ry]) => `<ellipse cx="${cx}" cy="${cy}" rx="${rx}" ry="${ry}" fill="url(#smk)" opacity="${(0.4 + 0.6 * fl).toFixed(2)}"/>`).join('')}</g>
 		<ellipse cx="960" cy="400" rx="920" ry="150" fill="#FF8A3A" opacity="${(0.12 + 0.23 * fl).toFixed(3)}" filter="url(#fb40)"/>${flames}
-		<g filter="url(#fhz)">${fb.facade}</g>${fb.stairs}${fb.pool}
+		<g filter="url(#fhz)">${fb.facade}</g>${fb.stairs}${fb.pool}${fireWater(t, fl)}
 		<rect x="-400" y="940" width="2720" height="400" fill="url(#ffg)"/>
 		${statues}${emb}</g>`;
 };
 F.poolSmoke = (t) => {   // screen-space smoke rolling in from the right; densest round (864, 324) for the ink-bleed
-	const a = 0.82 * P.smooth(P.seg(t, SMOKE0, 26.3));   // the fire's glow still reads through the smoke
+	const a = 0.9 * P.smooth(P.seg(t, SMOKE0, 26.3));   // v2: warm grey smoke, lit from below by the fire
 	if (a <= 0) return '';
-	return `<g opacity="${a.toFixed(3)}">${P.LONDON.smoke(t + 3.5)}</g>`;
+	const tt = t + 3.5, blobs = [[864, 330, 520, 300, '#8A7464', 0.95], [1300, 240, 520, 320, '#97806E', 0.9], [420, 300, 460, 300, '#8C7666', 0.85], [980, 640, 700, 260, '#B07A56', 0.8],
+		[1650, 560, 420, 300, '#9A7A64', 0.85], [260, 700, 420, 240, '#C0784A', 0.7], [1500, 900, 600, 220, '#C8743E', 0.65], [700, 60, 700, 200, '#7A685C', 0.9], [1600, 60, 500, 200, '#7A685C', 0.9], [560, 480, 520, 260, '#A08068', 0.9], [1180, 420, 560, 280, '#94806E', 0.9], [120, 120, 400, 260, '#76665A', 0.9]];
+	return `<defs>${K.blur('smb', 46)}<linearGradient id="smkLit" x1="0" x2="0" y1="0" y2="1"><stop offset=".45" stop-color="#FF9A50" stop-opacity="0"/><stop offset="1" stop-color="#FF9A50" stop-opacity=".35"/></linearGradient></defs><g opacity="${a.toFixed(3)}"><g filter="url(#smb)">${blobs.map(([x, y, rx, ry, c, al], i) => { const dx = -(tt - 29.2) * (34 + 18 * rnd(i + 5)) + 20 * P.noise(tt * 0.7 + i, i), dy = 10 * P.noise(tt * 0.5 + i * 2, i + 4);
+		return `<ellipse cx="${(x + dx).toFixed(1)}" cy="${(y + dy).toFixed(1)}" rx="${rx}" ry="${ry}" fill="${P.mixC(c, '#1A100C', 0.3)}" opacity="${al}"/>`; }).join('')}</g><rect width="1920" height="1080" fill="url(#smkLit)" opacity="${(0.8 + 0.2 * P.noise(t * 4, 5)).toFixed(3)}"/></g>`;
+};
+/** v2: the fire lights the whole set (a screen-blended warm light from above, flickering) */
+F.fireLift = (t) => { const fl = P.smooth(P.seg(t, FIRE, FIRE + 0.3)), a = (0.6 + 0.4 * fl) * P.seg(t, BAND[0], BAND[1]) * (1 + 0.06 * P.noise(t * 5, 8)) * (1 - 0.6 * P.smooth(P.seg(t, SMOKE0, 26.3)));
+	return `<defs><radialGradient id="flift" cx="960" cy="240" r="1350" gradientUnits="userSpaceOnUse"><stop offset="0" stop-color="#8E4C2A"/><stop offset=".55" stop-color="#5E2E1A"/><stop offset="1" stop-color="#2E160C"/></radialGradient></defs><rect width="1920" height="1080" fill="url(#flift)" style="mix-blend-mode:screen" opacity="${a.toFixed(3)}"/>`; };
+/** v2 RR: on 「先说马首」 the copper horse itself glows through the smoke, frame right, where it was carried out */
+F.poolGlint = (t) => {
+	const g = P.seg(t, 27.9, 28.25) * (1 - P.seg(t, 29.05, 29.4)); if (g <= 0) return '';
+	const pulse = 0.85 + 0.15 * Math.sin((t - 27.9) * 7), y = 780 - 300 * P.smooth(P.seg(t, ...TILT));
+	return `<defs>${K.blur('glint', 34)}</defs><ellipse cx="1480" cy="${(y - 150).toFixed(1)}" rx="230" ry="190" fill="#FF9A5A" opacity="${(0.4 * g * pulse).toFixed(3)}" filter="url(#glint)"/>
+		<g opacity="${(0.92 * g).toFixed(3)}">${K.horseHead({x: 1530, y, h: 320, flip: true, glow: 1.4 * pulse, key: 2.2, mood: 'fire', rim: '#FFD9A6', base: 'cut', curl: 0})}</g>`;
 };
 const figuresLayer = (t) => {
 	const l = looter(t);
-	return `<g filter="url(#rimFig)">${t < 26.6 ? marchers(t) : ''}${carriers(t)}${l.svg}</g>${l.horse ?? ''}`;
+	const fo = 1 - P.smooth(P.seg(t, 25.9, 26.5)); if (fo <= 0) return '';   // v2: the figures vanish into the smoke
+	return `<g opacity="${fo.toFixed(3)}"><g filter="url(#rimFig)">${marchers(t)}${carriers(t)}${l.svg}</g>${l.horse ?? ''}</g>`;
 };
 F.poolWorld = (t) => {
 	if (t < BAND[0]) return noonWorld(t);
@@ -138,11 +167,8 @@ F.poolRender = (t) => {
 		meta.events.push({band: u});
 	} else svg += `<g transform="${P.camT(cam)}">${F.poolWorld(t)}</g>`;
 	if (t >= BAND[0]) {
-		svg += F.poolSmoke(t);
-		// RR: on 「先说马首」 a copper glint shows through the smoke where the horse was carried (frame right)
-		const g = P.seg(t, 27.9, 28.2) * (1 - P.seg(t, 29.0, 29.4)) * (0.75 + 0.25 * Math.sin(t * 9));
-		if (g > 0) svg += `<defs>${K.blur('glint', 26)}</defs><ellipse cx="1560" cy="${(700 - 300 * P.smooth(P.seg(t, ...TILT))).toFixed(1)}" rx="70" ry="44" fill="#FF9A5A" opacity="${(0.55 * g).toFixed(3)}" filter="url(#glint)"/>`;
-		svg += `<defs><radialGradient id="bvig2" cx="960" cy="560" r="1150" gradientUnits="userSpaceOnUse"><stop offset=".5" stop-color="#120A08" stop-opacity="0"/><stop offset="1" stop-color="#120A08" stop-opacity=".8"/></radialGradient></defs><rect width="1920" height="1080" fill="url(#bvig2)"/>`;
+		svg += F.fireLift(t) + F.poolSmoke(t) + F.poolGlint(t);
+		svg += `<defs><radialGradient id="bvig2" cx="960" cy="560" r="1150" gradientUnits="userSpaceOnUse"><stop offset=".5" stop-color="#120A08" stop-opacity="0"/><stop offset="1" stop-color="#120A08" stop-opacity=".5"/></radialGradient></defs><rect width="1920" height="1080" fill="url(#bvig2)"/>`;
 	}
 	if (t >= LIFT && t < LIFT + 1 / 30) meta.events.push({fire_lift: t});
 	if (t >= ALL12 && t < ALL12 + 1 / 30) meta.events.push({arcs: t});
@@ -157,20 +183,24 @@ F.poolCounter = (t) => {
 		const dots = P.ZOD.map((z) => (t >= EMPTY && n === 0) || gone.has(z) ? P.dot('e') : P.dot('h')).join('');
 		return {lab: '在家', num: `${n}/12`, dots};
 	}
-	const roll = t < 27.6 ? String(Math.floor(rnd(Math.floor(t * 15) + 7) * 13)) : '?', pulse = t >= 27.9 ? 0.5 + 0.5 * Math.sin((t - 27.9) * 8) : 0;
+	const roll = '?', pulse = t >= 27.9 ? 0.5 + 0.5 * Math.sin((t - 27.9) * 8) : 0;
 	return {lab: '回来了', num: `${roll}/12`, dots: P.ZOD.map((z) => z === '马' && t >= 27.9 ? `<span class="o y" style="box-shadow:0 0 ${(10 + 18 * pulse).toFixed(1)}px #FF9A5A;opacity:${(0.7 + 0.3 * pulse).toFixed(2)}"></span>` : P.dot('e')).join('')};
 };
 F.POOLT = {BAND, FIRE, LIFT, ALL12, FALL, EMPTY, RR, TILT, C_B2};
 // ------------------------------------------------------------------------------------------------ SALE (London 1989 → 2007)
 const L = P.LONDON;
 const INK0 = 29.2, INK1 = 29.8, SW0 = 37.96, SW1 = 38.60;
-const B78 = B(78), LAMPS_OUT = [B(79), B(80), B(81)], NARROW = B(81.5);
+const B78 = B(78), LAMPS_OUT = [B(79), B(80), B(81)], NARROW = B(81.5), HOUSE = 42.205;
 const camL = P.cam([960, 300, 1.0], [
 	{t0: 29.8, t1: 31.4, to: [960, 540, 1.0]},
-	{t0: 31.70, t1: 33.148, to: [960, 540, 1.03]},
-	{t0: 33.148, t1: 35.412, to: [975, 500, 1.08]},
-	{t0: 36.00, t1: 39.09, to: [975, 500, 1.13]},
-	{t0: 39.09, t1: 45.0, to: [1250, 560, 1.25]},   // the lot board stays in the safe zone (below the subtitle)
+	{t0: 31.4, t1: 32.58, to: [975, 530, 1.04], ease: 'linear'},
+	{t0: 32.58, t1: 35.25, to: [1150, 440, 1.42]},                   // v2 「你猜」: push in to the board and the gavel; paddles rise in front
+	{t0: 35.25, t1: 35.412, to: [1150, 440, 1.425], ease: 'linear'},
+	{t0: 35.412, t1: 35.48, to: [1150, 440, 1.47], ease: 'linear'},   // the strike: a small punch-in on the hit
+	{t0: 35.48, t1: 36.3, to: [1145, 442, 1.43], ease: 'out'},
+	{t0: 36.3, t1: 38.6, to: [1100, 470, 1.32]},
+	{t0: 38.6, t1: 41.4, to: [1240, 540, 1.45]},                      // 2007: a quicker push to the gavel
+	{t0: 41.4, t1: 45.0, to: [1252, 536, 1.5], ease: 'linear'},       // the house lights die on 42.205; the push goes on
 	{t0: 45.30, t1: 47.30, to: [1150, 560, 1.15]},
 	{t0: 47.30, t1: 48.6, to: [1140, 560, 1.17], ease: 'linear'},
 ]);
@@ -192,7 +222,7 @@ const room2007 = (t) => {
 		Y7 = {rows};
 	}
 	const lampOn = (i) => 1 - P.seg(t, LAMPS_OUT[i], LAMPS_OUT[i] + 0.08);   // 0: x 300 (back), 1: 760, 2: 1240 + 1560
-	const dark = (1 - lampOn(0)) * 0.16 + (1 - lampOn(1)) * 0.17 + (1 - lampOn(2)) * 0.2;
+	const dark = (1 - lampOn(0)) * 0.16 + (1 - lampOn(1)) * 0.17 + (1 - lampOn(2)) * 0.2, house = 0.7 * P.seg(t, HOUSE - 0.5 / 30, HOUSE + 1.5 / 30);
 	const spotR = P.lerp(380, 170, P.smooth(P.seg(t, NARROW, NARROW + 0.35))), flick = 1 + 0.03 * P.noise(t * 3, 77);
 	const hero = {x: 1030, y: 604, h: 162, curl: 1, glow: 0.8 * (1 + 0.04 * Math.sin(t * 2.4)), key: 1.6, mood: 'warm', refl: '#DCE4E0', base: 'block', block: {w: 900, h: 38 / (162 / 925)}};
 	const fu = P.seg(t, B78, B78 + 0.2), sx = Math.cos(Math.PI * P.smooth(fu)), jy = P.jolt(t, B78 + 0.2, 4, 0.4, 2);
@@ -236,7 +266,12 @@ const room2007 = (t) => {
 	 <rect x="1508" y="572" width="54" height="62" rx="10" fill="#6A4226"/><rect x="1508" y="572" width="54" height="16" rx="6" fill="#C8955E" opacity=".75"/>
 	 <rect x="1518" y="572" width="6" height="62" fill="#3A2416" opacity=".7"/><rect x="1546" y="572" width="6" height="62" fill="#3A2416" opacity=".7"/>
 	</g>
-	<rect x="-600" y="-500" width="3200" height="1580" fill="url(#hole)"/>`, 'y7');
+	<rect x="-600" y="-500" width="3200" height="1580" fill="url(#hole)"/>
+	${house > 0 ? `<defs><radialGradient id="hk1" cx="1010" cy="560" r="300" gradientUnits="userSpaceOnUse"><stop offset=".35" stop-color="#000"/><stop offset="1" stop-color="#000" stop-opacity="0"/></radialGradient>
+		<radialGradient id="hk2" cx="1480" cy="600" r="260" gradientUnits="userSpaceOnUse"><stop offset=".3" stop-color="#000"/><stop offset="1" stop-color="#000" stop-opacity="0"/></radialGradient>
+		<mask id="hkm" maskUnits="userSpaceOnUse" x="-600" y="-500" width="3200" height="1580"><rect x="-600" y="-500" width="3200" height="1580" fill="#fff"/><rect x="-600" y="-500" width="3200" height="1580" fill="url(#hk1)"/><rect x="-600" y="-500" width="3200" height="1580" fill="url(#hk2)"/></mask></defs>
+		<rect x="-600" y="-500" width="3200" height="1580" fill="#0A0706" opacity="${house.toFixed(3)}" mask="url(#hkm)"/>
+		${[[300, 0], [760, 1], [1560, 2]].map(([x, i]) => `<ellipse cx="${x}" cy="38" rx="22" ry="6" fill="#F0D6A8" opacity="${(0.55 * lampOn(i)).toFixed(3)}"/><ellipse cx="${x}" cy="86" rx="90" ry="60" fill="#F0D6A8" opacity="${(0.1 * lampOn(i)).toFixed(3)}" filter="url(#b30)"/>`).join('')}` : ''}`, 'y7');
 };
 F.spot2007 = (t) => P.toScr(camL(t), [1000, 590]);
 F.saleRender = (t) => {
@@ -248,7 +283,7 @@ F.saleRender = (t) => {
 	if (t < INK1) {
 		// INK-BLEED (mode 3) at the densest smoke: the London ceiling opens through it with a noise edge
 		const pc = camPool(t), u = P.smooth(P.seg(t, INK0, INK1)), R = 30 + 1700 * u;
-		svg += `<g transform="${P.camT(pc)}">${F.poolWorld(t)}</g>${F.poolSmoke(t)}`;
+		svg += `<g transform="${P.camT(pc)}">${F.poolWorld(t)}</g>${F.fireLift(t)}${F.poolSmoke(t)}${F.poolGlint(t)}`;
 		svg += `<defs><filter id="inkN" filterUnits="userSpaceOnUse" x="-400" y="-400" width="2720" height="1880"><feTurbulence type="fractalNoise" baseFrequency="0.009" numOctaves="3" seed="7" result="n"/><feDisplacementMap in="SourceGraphic" in2="n" scale="${(260 + 200 * u).toFixed(0)}" xChannelSelector="R" yChannelSelector="G" result="d"/><feGaussianBlur in="d" stdDeviation="14"/></filter>
 			<mask id="ink" maskUnits="userSpaceOnUse" x="0" y="0" width="1920" height="1080"><g filter="url(#inkN)"><circle cx="864" cy="324" r="${R.toFixed(1)}" fill="#fff"/></g></mask></defs><g mask="url(#ink)">${london}</g>`;
 		meta.events.push({ink: u}); meta.camPool = pc;
@@ -265,6 +300,8 @@ F.saleRender = (t) => {
 	}
 	if (t >= 35.412 - 0.5 / 30 && t < 35.412 + 0.5 / 30) meta.events.push({strike: t});
 	if (t >= B78 && t < B78 + 1 / 30) meta.events.push({chepai: t});
+	if (t >= HOUSE - 0.5 / 30 && t < HOUSE + 0.5 / 30) meta.events.push({house: t});
+	if (t >= 35.412 && t < 35.62) svg += `<rect width="1920" height="1080" fill="#FFE8C0" opacity="${(0.2 * Math.exp(-(t - 35.412) / 0.07)).toFixed(3)}"/>`;   // the strike's hit
 	LAMPS_OUT.forEach((x, i) => { if (t >= x && t < x + 1 / 30) meta.events.push({['lamp' + i]: t}); });
 	return {svg, meta};
 };

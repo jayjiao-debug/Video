@@ -56,7 +56,7 @@ const pen = (t) => { if (t >= SIGN[0] && t < SIGN[1]) { const w = t - SIGN[0]; r
 	const r = P.smooth(P.seg(t, CARD + 0.1, CARD + 0.5)), w = t - SIGN[1]; return [P.lerp(1590 + 6 * Math.sin(w * 2.1), 1606, r), P.lerp(596 - 3 * Math.abs(Math.sin(w * 1.3)), 599, r)]; };
 const IRIS = [47.87, 48.45];
 const camDesk = (() => { const s = F.spot2007(IRIS[0]); return P.cam([1236 - (s[0] - 960) / 1.25, 450 - (s[1] - 540) / 1.25, 1.25], [
-	{t0: 48.40, t1: 50.60, to: [960, 540, 1.0]}, {t0: 50.60, t1: 51.5, to: [985, 535, 1.02], ease: 'linear'}, {t0: 51.5, t1: 53.5, to: [1050, 520, 1.08]}, {t0: 53.85, t1: 55.6, to: [1340, 0, 0.95]}, {t0: 55.7, t1: 56.95, to: [1430, -260, 1.2]}]); })();
+	{t0: 48.40, t1: 50.60, to: [960, 540, 1.0]}, {t0: 50.60, t1: 51.5, to: [985, 535, 1.02], ease: 'linear'}, {t0: 51.5, t1: 53.5, to: [1050, 520, 1.08]}, {t0: 53.62, t1: 55.65, to: [1340, -190, 0.95]}, {t0: 55.7, t1: 56.95, to: [1430, -260, 1.2]}]); })();
 const cardSvg = (t) => {
 	if (t < CARD) return '';
 	const k = P.easeOut3(P.seg(t, CARD, CARD + 0.3)), dy = (1 - k) * 230 + P.jolt(t, CARD + 0.3, 6, 0.3, 1.5), m = P.smooth(P.seg(t, ...MORPH));
@@ -69,12 +69,12 @@ const cardSvg = (t) => {
 };
 const priceSvg = (t) => {
 	if (t < MORPH[1] - 0.1) return '';
-	const a = P.seg(t, MORPH[1] - 0.1, MORPH[1] + 0.2), sh = P.easeOut(P.seg(t, SHORT, SHORT + 0.3)), br = P.smooth(P.seg(t, BRACK, BRACK + 0.3));
+	const a = P.seg(t, MORPH[1] - 0.1, MORPH[1] + 0.2), sh = P.easeOut(P.seg(t, SHORT, SHORT + 0.3)), br = P.smooth(P.seg(t, BRACK, BRACK + 0.3)), brO = 1 - P.smooth(P.seg(t, 56.35, 56.65));   // v2: gone before the wipe
 	return `<g opacity="${a.toFixed(3)}"><text x="1430" y="-418" text-anchor="middle" font-family="Cormorant Garamond" font-weight="600" font-size="92" fill="#FFF1DC">6910<tspan font-family="Noto Sans CJK SC" font-weight="900" font-size="44">万港元</tspan></text>
-		<text x="1430" y="384" text-anchor="middle" font-family="Noto Sans CJK SC" font-weight="900" font-size="48" fill="#E9DCC4" opacity=".85">≈ 884万美元</text></g>
+		<text x="1352" y="-300" text-anchor="end" font-family="Noto Sans CJK SC" font-weight="900" font-size="46" fill="#E9DCC4" opacity="${(0.9 * P.seg(t, 55.25, 55.6)).toFixed(3)}">≈ 884万美元</text></g>
 	${sh > 0 ? `<rect x="1080" y="${330 - 32 * sh}" width="100" height="${32 * sh}" fill="url(#col)"/><text x="1130" y="280" text-anchor="middle" font-family="Noto Sans CJK SC" font-weight="900" font-size="48" fill="#FFF1DC" opacity="${sh.toFixed(3)}">三四十万美元</text>` : ''}
-	${br > 0 ? `<path d="M1560,${298 - (298 + 380) * br} L1560,298 M1540,298 L1560,298 M1540,${298 - (298 + 380) * br} L1560,${298 - (298 + 380) * br}" stroke="#C8693A" stroke-width="6" fill="none"/>
-		<g opacity="${br.toFixed(3)}"><rect x="1590" y="-90" width="300" height="104" fill="#A84A26"/><text x="1740" y="-8" text-anchor="middle" font-family="Noto Serif CJK SC" font-weight="900" font-size="72" fill="#FFF1DC">二十多倍</text></g>` : ''}`;
+	${br > 0 && brO > 0 ? `<g opacity="${brO.toFixed(3)}"><path d="M1560,${298 - (298 + 380) * br} L1560,298 M1540,298 L1560,298 M1540,${298 - (298 + 380) * br} L1560,${298 - (298 + 380) * br}" stroke="#C8693A" stroke-width="6" fill="none"/>
+		<g opacity="${br.toFixed(3)}"><rect x="1590" y="-90" width="300" height="104" fill="#A84A26"/><text x="1740" y="-8" text-anchor="middle" font-family="Noto Serif CJK SC" font-weight="900" font-size="72" fill="#FFF1DC">二十多倍</text></g></g>` : ''}`;
 };
 F.deskRender = (t) => {
 	const cam = camDesk(t), meta = {cam, camId: 12, events: []};
@@ -119,7 +119,7 @@ const parisWorld = (t) => {
 	const pl = P.easeOut3(P.seg(t, PLAC, PLAC + 0.3)), bx = 760;
 	const board = `<rect x="${bx}" y="300" width="480" height="300" fill="#2A1E16" stroke="#C8955E" stroke-width="5"/><rect x="${bx + 12}" y="312" width="456" height="276" fill="#F3E6CC"/>
 		<clipPath id="pcl"><rect x="${bx + 12}" y="312" width="456" height="276"/></clipPath><g clip-path="url(#pcl)"><g transform="translate(0,${(-300 * (1 - pl)).toFixed(1)})">
-		<text x="${bx + 240}" y="390" text-anchor="middle" font-family="Noto Sans CJK SC" font-weight="900" font-size="56" fill="#5A4636">两件合计</text>
+		<text x="${bx + 240}" y="390" text-anchor="middle" font-family="Noto Sans CJK SC" font-weight="900" font-size="52" fill="#5A4636">两件 · 含佣金</text>
 		<text x="${bx + 240}" y="520" text-anchor="middle" font-family="Noto Sans CJK SC" font-weight="900" font-size="100" fill="#2A1E16">3149<tspan font-size="64">万欧元</tspan></text></g></g>`;
 	return {board, svg: `<defs>
 	 <linearGradient id="pwall" x1="0" x2="0" gradientUnits="userSpaceOnUse" y1="0" y2="1080"><stop offset="0" stop-color="#3A3230"/><stop offset=".6" stop-color="#5A4A40"/><stop offset="1" stop-color="#46382E"/></linearGradient>
@@ -147,8 +147,10 @@ const parisWorld = (t) => {
 	${[1400, 1570, 1740].map((x) => `<rect x="${x - 26}" y="728" width="52" height="16" rx="4" fill="#1A1210"/>`).join('')}`};
 };
 const pressWorld = (t) => {
-	const u = 520 / 8, x = 960, fl = 872, hu = P.easeOut(P.seg(t, HAND, HAND + 0.3)), hand = [P.lerp(x - 1.6 * u, x - 1.35 * u, hu), P.lerp(704, 610, hu)];
-	return K.pressRoom().replace(`${K.seated(x, fl, 520, -1, '#120D0B', [[x - 1.6 * u, 704]])}`, K.seated(x, fl, 520, -1, '#120D0B', [hand]));
+	// v2: a standing speaker in side profile behind the table (the seated figure's arm read oddly); one hand on the table, one lifts on b112
+	const u = 520 / 8, x = 960, fl = 872, hu = P.easeOut(P.seg(t, HAND, HAND + 0.3)), sx = 930;
+	const fig = K.figure({x: sx, ground: fl, h: 600, face: -1, col: '#120D0B', hat: 'hair', coat: 0.4, hands: [[P.lerp(sx - 62, sx - 104, hu), P.lerp(700, 612, hu) + 3 * Math.sin(t * 2.2)], [sx - 34, 702]], elbow: [1, 1]});
+	return K.pressRoom().replace(`${K.seated(x, fl, 520, -1, '#120D0B', [[x - 1.6 * u, 704]])}`, fig.svg + fig.armBack + fig.armFront);
 };
 const camPress = P.cam([960, 540, 1.0], [{t0: 64.6, t1: 68.0, to: [940, 540, 1.06]}]);
 /** the result board, screen-locked (x 1290–1770, y 300–600) on both sides of the held-prop wipe; the 「未付款」 stamp lands on b113 */
@@ -182,11 +184,11 @@ F.parisRender = (t) => {
 	[[STR1, 'strike1'], [STR2, 'strike2'], [PLAC, 'placard'], [STAMP, 'stamp']].forEach(([x, n]) => { if (t >= x - 0.5 / 30 && t < x + 0.5 / 30) meta.events.push({[n]: t}); });
 	return {svg, meta};
 };
-F.parisDate = (t) => (t < CYC ? '2.25' : ['2.26', '2.27', '2.28', '3.1', '3.2'][Math.min(4, Math.floor((t - CYC) / 0.25))]);
+F.parisDate = () => '2.25';   // v2: no date roll under the hammer line (the press stamp 2009.3.2 comes with 「5天后」)
 // ------------------------------------------------------------------------------------------------ HALL (国家博物馆)
-const CLOTH = [67.96, 68.55], PL1 = 900, PL2 = 1760, GLINT = B(129.5), MATCH = 75.601;
-const camHall = P.cam([900, 540, 1.0], [{t0: 68.5, t1: 70.9, to: [900, 540, 1.05]}, {t0: 70.9, t1: 72.9, to: [PL2, 540, 1.0]}, {t0: 72.9, t1: 74.19, to: [PL2, 548, 1.02]}, {t0: 74.19, t1: MATCH, to: [PL2, 700, 1.5]}]);
-const hallHero = {x: PL2 - (922 - 836) * (300 / 925), y: 560, h: 300, curl: 1, glow: 0.9, key: 1.9, mood: 'warm', refl: '#E6ECE6', base: 'cut'};
+const CLOTH = [67.96, 68.55], PL1 = 900, PL2 = 2030, GLINT = B(129.5), MATCH = 75.601, E1 = 72.205, HH = 205, PT2 = 640;
+const camHall = P.cam([900, 540, 1.0], [{t0: 68.5, t1: E1, to: [880, 540, 1.05], ease: 'mix'}, {t0: E1, t1: 74.32, to: [PL2, 560, 1.0], ease: 'mix'}, {t0: 74.32, t1: MATCH, to: [PL2, 640, 1.4]}]);
+const hallHero = {x: PL2 - (922 - 836) * (HH / 925), y: PT2, h: HH, curl: 1, glow: 0.9, key: 1.9, mood: 'warm', refl: '#E6ECE6', base: 'cut'};
 const hallWorld = (t) => {
 	const g = P.seg(t, GLINT, GLINT + 0.5);
 	const win = (x) => `<rect x="${x}" y="80" width="150" height="560" fill="url(#hwin)"/><path d="M${x + 75},80 L${x + 75},640 M${x},270 L${x + 150},270 M${x},460 L${x + 150},460" stroke="#3A4448" stroke-width="6"/><rect x="${x}" y="80" width="150" height="560" fill="none" stroke="#8C8A80" stroke-width="5"/>`;
@@ -217,13 +219,13 @@ const hallWorld = (t) => {
 	<rect x="-600" y="-600" width="3800" height="2000" fill="url(#hsp1)"/><rect x="-600" y="-600" width="3800" height="2000" fill="url(#hsp2)"/>
 	${plinth(PL1, 360, 640)}<g filter="url(#hrim)">${K.bro('鼠', PL1 - 80, 640, 250, -1, '#2A1A12')}${K.bro('兔', PL1 + 90, 640, 250, -1, '#2A1A12')}</g>
 	${cloth}<g filter="url(#hrim)">${staffA.svg}${staffB.svg}</g>
-	${plinth(PL2, 300, 560)}${K.horseHead(hallHero)}
-	<rect x="${PL2 - 135}" y="700" width="270" height="86" fill="url(#brass)" stroke="#5A3E1A" stroke-width="3"/>
-	<text x="${PL2}" y="738" text-anchor="middle" font-family="Noto Serif CJK SC" font-weight="900" font-size="28" fill="#3A2A14">马首铜像</text><text x="${PL2}" y="772" text-anchor="middle" font-family="Noto Serif CJK SC" font-weight="900" font-size="24" fill="#3A2A14">何鸿燊先生捐赠</text>
-	<rect x="${PL2 - 135}" y="700" width="270" height="86" fill="url(#gl)"/>
+	${plinth(PL2, 260, PT2)}${K.horseHead(hallHero)}
+	<rect x="${PL2 - 115}" y="720" width="230" height="86" fill="url(#brass)" stroke="#5A3E1A" stroke-width="3"/>
+	<text x="${PL2}" y="758" text-anchor="middle" font-family="Noto Serif CJK SC" font-weight="900" font-size="28" fill="#3A2A14">马首铜像</text><text x="${PL2}" y="792" text-anchor="middle" font-family="Noto Serif CJK SC" font-weight="900" font-size="22" fill="#3A2A14">何鸿燊先生捐赠</text>
+	<rect x="${PL2 - 115}" y="720" width="230" height="86" fill="url(#gl)"/>
 	${ropes(-200, 3000)}`;
 };
-F.plaqueScreen = (t) => P.toScr(camHall(t), [PL2, 743]);
+F.plaqueScreen = (t) => P.toScr(camHall(t), [PL2, 763]);
 F.hallRender = (t) => {
 	const meta = {events: []}; let svg = '';
 	const cam = camHall(t); meta.cam = cam; meta.camId = 15;
@@ -244,7 +246,7 @@ F.hallRender = (t) => {
 const STOP = 76.165, E3 = [80.20, 83.0], IRIS2 = [82.68, 83.30];
 const camNight = (() => { const s = F.plaqueScreen(MATCH - 1 / 30), z = 1.5;
 	const road0 = P.toScr(P.DROP.camRoad(82.96), [815, 690]), zs = 2.0;   // the crate slats' glow
-	return P.cam([1256 - (s[0] - 960) / z, 592 - (s[1] - 540) / z, z], [{t0: MATCH, t1: 78.40, to: [960, 540, 1.0]}, {t0: 78.40, t1: E3[0], to: [955, 535, 1.02], ease: 'linear'},
+	return P.cam([1256 - (s[0] - 960) / z, 592 - (s[1] - 540) / z, z], [{t0: MATCH, t1: 78.40, to: [960, 540, 1.0]}, {t0: 78.40, t1: E3[0], to: [915, 526, 1.08], ease: 'linear'},   // v2: a visible drift through the music's stop
 		{t0: E3[0], t1: E3[1], to: [540 - (road0[0] - 960) / zs, 360 - (road0[1] - 540) / zs, zs]}]); })();
 F.nightRender = (t) => {
 	const cam = camNight(t), meta = {cam, camId: 16, events: []};

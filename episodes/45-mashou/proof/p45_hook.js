@@ -8,30 +8,31 @@
 (() => {
 const P = window.P45, rnd = K.rnd, B = P.beat;
 const TAG = 3.997, FLIP = 6.827, TITLE = 9.05, CUT = B(17), A1 = 11.638, TRICKLE = B(22.5), HOPS = [B(23), B(23.5), B(24), B(24.5)];
-const R = P.makeRing({RIM: P.BAR0});
+const R = P.makeRing({RIM: P.BAR0, SWEEP: [0.55, P.BAR0]});
 const {hero0, face, HL} = R;
 // ---- camera: one push from frame 0 (moving at both ends) to the title framing at ×2.3, cut at 11.07 while still moving
 const Z = 2.3, camRing = P.cam([960, 540, 1.0], [{t0: 0, t1: CUT, to: [face[0], face[1] + 70 / Z, Z], ease: 'mix'}]);
 // ---- the price tag (world space, on a cord from the horse's throat; it drops from behind the head, then hangs and swings)
 const A = K.headPt(hero0, 'throat');
 const tag = (t) => {
-	if (t < TAG) return '';
+	if (t < TAG || t >= TITLE) return '';
+	const gone = P.smooth(P.seg(t, 8.72, 8.98));   // v2: lifts away before the title slams (9.05)
 	const tau = t - TAG, drop = P.easeIn(P.seg(tau, 0, 0.24)), L = P.lerp(-150, 58, drop);
 	const fu = P.seg(t, FLIP, FLIP + 0.2), sx = Math.cos(Math.PI * P.smooth(fu)), back = fu >= 0.5;
 	const th = (tau > 0.24 ? 10 * Math.sin(2 * Math.PI * (tau - 0.24) / 0.9) * Math.exp(-(tau - 0.24) / 0.7) : 0)
 		+ (t > FLIP + 0.2 ? 7 * Math.sin(2 * Math.PI * (t - FLIP - 0.2) / 0.9) * Math.exp(-(t - FLIP - 0.2) / 0.8) : 0) + 0.8 * Math.sin(t * 1.7);
-	const W = 210, H = 176, x0 = A[0] - W / 2, y0 = A[1] + L;
+	const W = 210, H = 176, x0 = A[0] - W / 2, y0 = A[1] + L - 60 * gone;
 	const front = `<text x="${A[0]}" y="${y0 + 104}" text-anchor="middle" font-family="Cormorant Garamond" font-weight="600" font-size="94" fill="#2A1E16">6910</text>
 		<text x="${A[0]}" y="${y0 + 152}" text-anchor="middle" font-family="Noto Sans CJK SC" font-weight="900" font-size="42" fill="#2A1E16" letter-spacing="4">万港元</text>`;
 	const backF = `<text x="${A[0]}" y="${y0 + 150}" text-anchor="middle" font-family="Noto Serif CJK SC" font-weight="900" font-size="128" fill="url(#tagCu)" stroke="#5A2A12" stroke-width="1.5">捐</text>`;
-	return `<defs><clipPath id="tagClip"><rect x="${A[0] - 400}" y="${A[1] - 6}" width="800" height="900"/></clipPath><linearGradient id="tagCu" x1="0" x2="0" y1="0" y2="1"><stop offset="0" stop-color="#FFD9A6"/><stop offset=".55" stop-color="#F09A5E"/><stop offset="1" stop-color="#C8693A"/></linearGradient></defs>
+	return `<g opacity="${(1 - gone).toFixed(3)}"><defs><clipPath id="tagClip"><rect x="${A[0] - 400}" y="${A[1] - 6}" width="800" height="900"/></clipPath><linearGradient id="tagCu" x1="0" x2="0" y1="0" y2="1"><stop offset="0" stop-color="#FFD9A6"/><stop offset=".55" stop-color="#F09A5E"/><stop offset="1" stop-color="#C8693A"/></linearGradient></defs>
 	<g clip-path="${drop < 1 ? 'url(#tagClip)' : 'none'}"><g transform="rotate(${th.toFixed(2)} ${A[0]} ${A[1]})">
 	 ${L > 0 ? `<path d="M${A[0]},${A[1]} L${A[0]},${y0 + 18}" stroke="#2A1E16" stroke-width="2.6"/>` : ''}
 	 <g transform="translate(${A[0]},0) scale(${Math.max(0.01, Math.abs(sx)).toFixed(4)},1) translate(${-A[0]},0)">
 	  <path d="M${x0 + 26},${y0} L${x0 + W - 26},${y0} L${x0 + W},${y0 + 26} L${x0 + W},${y0 + H} L${x0},${y0 + H} L${x0},${y0 + 26} Z" fill="${back ? '#E6D8BA' : '#EFE3C8'}" stroke="#A8865E" stroke-width="3"/>
 	  <circle cx="${A[0]}" cy="${y0 + 18}" r="8" fill="#3A2A1E"/><circle cx="${A[0]}" cy="${y0 + 18}" r="13" fill="none" stroke="#C8A878" stroke-width="3"/>
 	  ${back ? backF : front}
-	 </g></g></g>`;   // while it drops, the tag is clipped at the jaw line: it slides out from under the head
+	 </g></g></g></g>`;   // while it drops, the tag is clipped at the jaw line: it slides out from under the head
 };
 // ---- POOL NOON (v7_a2_noon set), its horse at brother scale (K.statue), framed to match the ring horse at the cut
 const NOON_T = 'translate(960,620) scale(1.22) translate(-960,-620)', NW = (p) => [960 + (p[0] - 960) * 1.22, 620 + (p[1] - 620) * 1.22];
@@ -108,12 +109,12 @@ const render = (t) => {
 	// ---- HUD
 	const hud = [];
 	const ln = P.lineAt(LINES, t); if (ln) hud.push(P.subHtml(ln[2], t, ln[0]));
-	const hudOp = t < TITLE ? 1 : 1 - P.seg(t, TITLE, TITLE + 0.15);
+	const hudOp = 1 - P.seg(t, 8.80, 9.00);   // v2: the HUD is gone before the title slams
 	if (t < A1) {
 		if (hudOp > 0) {
 			hud.push(P.stampHtml('圆明园 · 十二兽首', '海晏堂 · 水力钟', {op: hudOp}));
-			const num = t >= P.BAR0 && t < 3.9 ? String(Math.floor(rnd(Math.floor(t * 15) + 11) * 13)) : '?';
-			hud.push(P.blockHtml([{lab: '回来了', num: num + '/12', dots: P.ZOD.map(() => P.dot('e')).join('')}], null, {op: hudOp}));
+			const pq = t >= P.BAR0 ? 1 + 0.08 * Math.max(0, Math.sin((t - P.BAR0) * Math.PI / P.BEAT)) : 1;   // v2: a pure 「?」 breathing on the beat, never a digit
+			hud.push(P.blockHtml([{lab: '回来了', num: `<span style="display:inline-block;transform:scale(${pq.toFixed(3)})">?</span>/12`, dots: P.ZOD.map(() => P.dot('e')).join('')}], null, {op: hudOp}));
 			hud.push(P.sealHtml(hudOp));
 		}
 	} else {

@@ -97,7 +97,20 @@ const earRoll = {
 	litFacet: `M716,53 C732,42 752,45 757,60 L748,72 C738,72 726,76 714,84 C714,72 715,62 716,53 Z`,   // the flap's upper facet catches the key (hard edge)
 	flapEdge: `M746,76 C732,94 714,112 697,128`,                                            // the free edge of the folded tip
 };
-const EAR_ROLL = earRoll.sil;
+// v2 (gate 4 note 5, 「只有一只耳朵，是卷的」 must read at phone size): the top third of the near ear rolls FORWARD ~90° over the
+// ear's own hollow, like a turned-down page: one leaf silhouette with a forward hood; the dark inner cavity shows under the fold;
+// the flap's free edge and a small curl at the tip catch the light. Same patina as the head, no drop shadow, no round 'eye'.
+const roll2 = {
+	sil: `M676,186 C688,150 700,118 706,92 C704,80 696,74 684,72 C672,74 660,76 650,70 C640,62 642,48 656,40 C676,30 716,30 736,44 C752,58 756,100 757,140 C758,160 758,176 758,186 C738,194 700,194 676,186 Z`,
+	cavity: `M696,184 C700,152 708,124 714,104 C719,96 726,96 731,102 C736,124 737,152 735,184 Z`,
+	inner: `M652,64 C664,72 688,70 704,76 C700,66 686,60 666,60 C660,60 655,61 652,64 Z`,
+	flapLit: `M656,42 C680,30 714,30 736,44 C744,51 749,60 752,72 C742,58 728,48 708,45 C690,43 672,45 658,51 Z`,
+	edge: `M706,92 C720,84 736,82 752,86`,
+	tipCurl: `M664,70 C651,71 643,61 647,52 C651,44 664,44 668,52 C670,58 666,62 661,60`,
+	under: `M704,98 C718,92 734,91 752,95`,
+	back: `M752,72 C756,100 758,140 758,170`,
+};
+const EAR_ROLL = roll2.sil;
 
 /* mane r5 (owner on r4: "it should be at least 一体 no?"). 「你由红铜一次铸成」: the mane is the BACK OF THE NECK, cast in relief in
    the same bronze — not a hairpiece laid on a smooth neck. So:
@@ -187,11 +200,12 @@ K.horseHead = (o = {}) => {
 	const maneSvg = MANE.slice().reverse().map((L) => (L.forkD ? `<path d="${L.forkD}" fill="${C.mid}"/><path d="${L.forkD}" fill="url(#${id}nk)"/><path d="${L.forkLit}" fill="${C.mid2}"/>` : '') + `<path d="${L.tongue}" fill="${C.mid}"/><path d="${L.tongue}" fill="url(#${id}nk)"/><path d="${L.shade}" fill="${L.k ? SH : mixC(SH, C.mid, 0.5)}"/><path d="${L.lit}" fill="${C.mid2}"/>`).join('')
 		+ MANE.slice(1).map((L) => `<path d="${L.grooveCut}" fill="${C.dark}" opacity=".8"/>`).join('')
 		+ MANE.map((L) => `<path d="${L.edgeLit}" stroke="${C.hi}" stroke-width="1.8" fill="none" opacity=".35"/>`).join('');
-	const E = earRoll, ear = curl > 0.5
-		? `<ellipse cx="716" cy="182" rx="52" ry="11" fill="${C.dark}" opacity=".5" filter="url(#${id}bb)"/><g><path d="${E.sil}" fill="${C.mid}"/><path d="${E.cup}" fill="${C.deep}" opacity=".8"/>
-		   <path d="${E.flapShadow}" fill="${C.dark}" opacity=".7"/><path d="${E.flap}" fill="${o.earDetail ? mixC(C.mid2, C.lite, 0.3) : C.mid2}"/>
-		   ${o.earDetail ? `<path d="${E.litFacet}" fill="${C.lite}"/><path d="${E.bend}" fill="${C.hi}" opacity=".7"/><path d="${E.flapEdge}" stroke="${C.hi}" stroke-width="2" fill="none" stroke-linecap="round" opacity=".55"/>` : ''}
-		   <path d="${E.ridge}" stroke="${C.hi}" stroke-width="${o.earDetail ? 2.6 : 3}" fill="none" stroke-linecap="round" opacity=".6"/>
+	const E = roll2, ear = curl > 0.5
+		? `<g mask="url(#${id}eb)"><path d="${E.sil}" fill="${C.mid2}"/><path d="${E.cavity}" fill="${C.deep}" opacity=".85"/><path d="${E.inner}" fill="${C.dark}" opacity=".85"/>
+		   <path d="${E.under}" stroke="${C.dark}" stroke-width="3" fill="none" stroke-linecap="round" opacity=".55"/>
+		   <path d="${E.flapLit}" fill="${C.lite}"/>
+		   <path d="${E.edge}" stroke="${C.hi}" stroke-width="${o.earDetail ? 3 : 3.6}" fill="none" stroke-linecap="round" opacity=".85"/>
+		   <path d="${E.tipCurl}" stroke="${C.hi}" stroke-width="${o.earDetail ? 2.6 : 3}" fill="none" stroke-linecap="round" opacity=".8"/>
 		   <path d="${E.back}" stroke="${C.rim}" stroke-width="3" fill="none" opacity=".7"/></g>`
 		: `<path d="${EAR_NEAR}" fill="${C.mid2}"/><path d="${EAR_NEAR_IN}" fill="${C.dark}"/><path d="${EN.back}" stroke="${C.hi}" stroke-width="4" fill="none"/>`;
 	// the silhouette (for the rim copies): neck + mane (one outline) + tongues + ears + head
@@ -251,7 +265,7 @@ K.horseHead = (o = {}) => {
 	 <path d="${CREST_REFL}" stroke="${refl}" stroke-width="3" fill="none" opacity=".45" stroke-linecap="round"/>
 	${MANE_SPECS.map((d) => `<path d="${d}" stroke="${C.spec}" stroke-width="2.6" fill="none" stroke-linecap="round" opacity=".55"/>`).join('')}
 	<!-- far ear (shadow side, pricked): out of the poll, in front of the mane -->
-	<path d="${EAR_FAR}" fill="${C.deep}"/><path d="${EAR_FAR_IN}" fill="${C.dark}"/><path d="${EF.back}" stroke="${C.rim}" stroke-width="3" fill="none" opacity=".8"/>
+	<path d="${EAR_FAR}" fill="${o.earDetail ? C.mid : C.deep}"/><path d="${EAR_FAR_IN}" fill="${C.dark}"/><path d="${EF.back}" stroke="${C.rim}" stroke-width="3" fill="none" opacity=".8"/>${o.earDetail ? `<path d="${EF.front}" stroke="${C.hi}" stroke-width="2.6" fill="none" opacity=".75"/>` : ''}
 	<!-- head -->
 	<path d="${MOUTH_IN}" fill="${C.dark}" transform="${HT}"/>
 	<g transform="${HT}">

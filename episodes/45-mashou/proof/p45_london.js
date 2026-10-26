@@ -57,7 +57,7 @@ const smoke = (t) => {
 };
 // ------------------------------------------------ the London room, 1989 (K.saleLondon, animated)
 const U = 42, G0 = 792, AX = 1590, hHi = [1530, 498], hLo = [1488, 596], hRest = [1628, 600];
-const RAISE = [[0, 3], [1, 5], [2, 2]], PADN = [12, 47, 88];
+const RAISE = [[2, 3], [1, 5], [2, 4]], PADN = [12, 47, 88];   // v2: the paddles rise in the near rows, big
 const ROWS = [[0.5, 772, 70, 8, '#2E241D'], [0.7, 852, 20, 7, '#251D17'], [0.95, 1000, -60, 5, '#18120E']];
 const lampSvg = (x, k, ang = 0, gl = 1, col = '#F6DCAE', up = 0) => `<g transform="rotate(${ang.toFixed(2)} ${x} ${-up})"><path d="M${x},${-up} L${x},${120 * k - 30}" stroke="#1A120D" stroke-width="3"/><path d="M${x - 40},${120 * k - 30} L${x + 40},${120 * k - 30} L${x + 26},${120 * k} L${x - 26},${120 * k} Z" fill="#1A120D"/><ellipse cx="${x}" cy="${120 * k + 2}" rx="22" ry="6" fill="${col}" opacity="${0.7 * gl}"/><ellipse cx="${x}" cy="${120 * k + 60}" rx="110" ry="70" fill="#F0D6A8" opacity="${0.12 * gl}" filter="url(#lb30)"/></g>`;
 /** pendulum angle of the swing lamp (x 1240): a gentle hang sway, then the swing left → right that drives the wipe */
@@ -90,9 +90,9 @@ const londonRoom = (t, cam) => {
 				if (up > 0.001) {
 					s += K.limb([sh, el, hand], 0.3 * u, 0.22 * u, col) + `<circle cx="${hand[0]}" cy="${hand[1]}" r="${0.22 * u}" fill="${col}"/>`;
 					const tilt = (1 - up) * 70;
-					s += `<g transform="rotate(${tilt.toFixed(1)} ${hand[0]} ${hand[1]})"><rect x="${hand[0] - 0.06 * u}" y="${hand[1] - 1.1 * u}" width="${0.12 * u}" height="${1.1 * u}" fill="${col}"/>
-						<rect x="${hand[0] - 0.55 * u}" y="${hand[1] - 2.0 * u}" width="${1.1 * u}" height="${0.95 * u}" rx="${0.1 * u}" fill="#F3E6CC"/>
-						<text x="${hand[0]}" y="${hand[1] - 1.3 * u}" text-anchor="middle" font-family="DejaVu Sans Mono" font-weight="700" font-size="${0.62 * u}" fill="#2A1E16">${PADN[pi]}</text></g>`;
+					s += `<g transform="rotate(${tilt.toFixed(1)} ${hand[0]} ${hand[1]})"><rect x="${hand[0] - 0.07 * u}" y="${hand[1] - 1.1 * u}" width="${0.14 * u}" height="${1.1 * u}" fill="${col}"/>
+						<rect x="${hand[0] - 0.88 * u}" y="${hand[1] - 2.6 * u}" width="${1.76 * u}" height="${1.52 * u}" rx="${0.14 * u}" fill="#F3E6CC" stroke="#2A1E16" stroke-width="${0.06 * u}"/>
+						<text x="${hand[0]}" y="${hand[1] - 1.45 * u}" text-anchor="middle" font-family="DejaVu Sans Mono" font-weight="700" font-size="${1.0 * u}" fill="#2A1E16">${PADN[pi]}</text></g>`;
 				}
 			}
 			rows += `<g transform="translate(0,${breathe.toFixed(2)})">${s}</g>`;

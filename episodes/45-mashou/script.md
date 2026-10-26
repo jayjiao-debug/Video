@@ -202,7 +202,7 @@ The end card keeps **七个回国 / 一个回家**. It is now the answer, shown 
 | 16 | D8 | 51.544–53.808 | [6910万港元]。 | 7 | 2.11 | The price card rises: 「6910万港元」, fixed, no count-up. **Same type and size as H2's tag, so the viewer recognises the hook's number** (loop 2 clicks: this is the one). | slam on bar 22 (51.26) | F13 |
 | 17 | D9 | 53.808–56.921 | 比伦敦那次，贵了[二十多倍]。 | 11 | 3.03 | PRICE: two light columns, 「三四十万美元」 short, 「6910万港元」 tall, bracket 「二十多倍」. (v7) | — | F11, F13 (估算) |
 | 18 | P1 | 56.921–60.320 | 兄弟鼠和兔，在巴黎上拍。 | 10 | 2.80 | SALE, PARIS 2009: rat and rabbit on the podium; phone-bank clerks. (v7) | — | F19 |
-| 19 | P2 | 60.320–64.563 | 锤子落下，两个共拍出3149万欧元。 | 16 | 4.18 | Two strikes; 「两件合计 3149万欧元」. (v7) | **BUILD 60.32** | F19 |
+| 19 | P2 | 60.320–64.563 | 锤子落下，连佣金共3149万欧元。 | 16 | 4.18 | Two strikes; 「两件合计 3149万欧元」. (v7) | **BUILD 60.32** | F19 |
 | 20 | P3 | 64.563–68.242 | 5天后，买家却说：[这个款不能付]。 | 13 | 3.49 | Press table, Beijing; the 「未付款」 stamp lands. (v7) | — | F19 |
 | 21 | P4 | 68.242–72.205 | 一个法国家族，把鼠和兔无偿捐回。 | 14 | 3.72 | HALL, 国家博物馆 2013: the cloth drawn off the rat and rabbit. (v7) | — | F20 |
 | 22 | E1 | 72.205–76.165 | 何鸿燊，也把它捐给了国家。 | 11 | 3.03 | Same hall, 2019: the horse unveiled, brass plaque. **Closes the hook's 「却捐了」.** Plaque → lamp base. (v7) | — | F15 |
