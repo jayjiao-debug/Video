@@ -1,0 +1,98 @@
+{
+  "label": "frames",
+  "source": "4 contact sheets, 60 frames at 2 s intervals, 0-118 s. Frames only, no audio.",
+
+  "would_keep_watching_after_3s": true,
+  "why": "0s: a bronze pot sitting inside a modern open fridge, with a hand holding an iced drink, looks wrong in a fun way, so my thumb pauses. The 2s line '可它自己，不会冷。' is the real hook, because it flips the boast '2400多年前就有冰箱' in the very next breath. Two things hold it back. First, 曾侯乙冰鉴 'ancient fridge' videos are already common on Douyin, so the first line on its own feels like a repost. Second, the whole frame is dark brown on dark brown. Between bright feed videos it reads as dim and low energy, and the only cold accent (the pale blue fridge interior) goes dark at 2s.",
+  "first_moment_I_got_curious": "2s, '可它自己，不会冷。' Then 6s, the cutaway that shows ice packed into the walls, made me get how it works. The real lean-in was 34s, the '先猜?' bubble, paid off at 38s with '罐里装的，是酒。'",
+
+  "q1_first_frames_0_4s_stop_scroll": "Mostly yes. The fridge-plus-bronze-pot image is odd enough, and 'it doesn't get cold by itself' is a real twist. Weak points: (a) the title card '古代没有冰箱 夏天怎么吃冰?' doesn't appear until 10s, too late to help the hook; (b) the frame is very dark, with low contrast against the feed; (c) the only identification, '曾侯乙墓的铜鉴缶', is tiny top-right text I can't read on a phone, so I never learn whose pot this is.",
+
+  "where_I_would_swipe_away": [
+    "8-16s: one silhouette chips at one ice block for about 8 seconds, with a classical 诗经 line ('二之日凿冰冲冲...') in thin font. At 10s the title card drops over this same shot. It feels like the video is stalling right after the hook. This is the biggest risk point.",
+    "42-44s: '只有朝廷和达官显贵用得起' is a line everyone could guess, over generic silhouettes passing a cup. Low information, and the transition at 44s splits the frame in half.",
+    "52-54s: the ice mountain is gone and the frame is mostly empty dark brown, with a woman holding a tiny white blob and floating swirl icons. Nothing to look at.",
+    "62-66s: '于夜内凿之，声如錾石' stays on screen for 6 seconds. It's the second classical quote, and 錾 is a character I'd have to guess. Same 'man chiseling ice' visual as 8-14s, so it feels like a repeat.",
+    "94s: the frame is a black pipe and an empty dashed box, with the subtitle cut off at '机械制冷的冰箱，19'. Looks unfinished for a beat."
+  ],
+
+  "q3_confusing_or_looks_wrong": [
+    "10s: the title card covers the top third and there's no subtitle in that frame, so it feels like an interruption rather than an opener.",
+    "12s vs 14s: the ice cutter changes silhouette. At 12s it's a short-robed man bent over the block; at 14s it's a figure in a long flared skirt with arms out, which reads as a different (female?) person. I wasn't sure who that was.",
+    "16s and 26s: a big dark vertical panel with a pointed bottom (16s) and a dark strip (26s) cover the left of the frame. Mid-wipe, it looks like a rendering glitch or a banner that failed to load.",
+    "18-20s: the '80 workers' are a row of tiny figures and ice cubes. At phone size it's a texture, not people. At 20s a silhouette walks over the counter label so it reads '干 活的 × 80' with a character covered, and the '冰窖' label is faded or overlapped.",
+    "30s vs 0-4s: the vessel changes shape. At 0-4s it's a squat box with a small lid; at 30s a tall cylindrical jar sticks way out of the top. If this is the inner jar being lifted, it isn't clear; it looks like a different object.",
+    "44s: the frame is split down the middle mid-transition, with the left half still the old scene and the right half new. Tiny top-right text '据上海社科院 程鹏' means nothing to me (who is 程鹏?).",
+    "50-54s: the 酥山 itself, the payoff of 'like ice cream', is a tiny white blob on a plate. I can't see what it looks like. At 52-54s, floating spiral/cloud icons hang in empty air; I can't tell if they're cold air, wind, or a glitch.",
+    "62s: a red pillar on the left still shows a '冰雪冷元子' sign from the Song street scene while the subtitle is already in Qing Beijing. It looks like leftover art from the previous shot.",
+    "70-74s: the gauge on the right wall drops from full (68-70s) to low (72-74s). I read it as a thermometer, and a thermometer going DOWN means colder, which contradicts 'ice is melting'. If it's an ice-level bar it needs a label.",
+    "72-74s: the math looks off. 70s has about 16 blocks. At 72s about 8 remain, which is half, not the 1/3 left after 2/3 melts. 74s has dashed 'ghost' blocks plus a big solid block stacked on top. I can't count '存三份，化两份，剩下一份' from this picture.",
+    "80s: a crossfade with ghosted, overlapping figures and a carrying pole. Messy double exposure in a still frame.",
+    "90-92s: the 'cool air' from the coin holes is drawn as wavy lines rising upward, which is the universal symbol for HOT steam. My first read was that the box is cooking something. Cold air sinks.",
+    "98-104s: it compares '1990年农村每百户1.22台' with '2024年全国每百户104.8台', rural vs national. Even I noticed the mismatch, and someone in the comments will definitely call it out.",
+    "114-118s: the source list at the bottom is unreadable at phone size. That's fine for an end card, but don't count on it as credibility."
+  ],
+
+  "q4_best_moments": [
+    "0-2s: bronze pot inside a modern fridge, then '可它自己，不会冷。' A strong visual gag plus a twist.",
+    "6s: the cutaway showing ice packed in the walls of the vessel. Instant 'oh, that's how it works'.",
+    "22s: '凿冰，要备足三倍的量' with three blocks, a '?' and '×3'. Simple and clear, and it sets up a question.",
+    "24s: '考古真挖到过' plus '容积 190 立方米'. A concrete, big number makes it feel real.",
+    "34-38s: the '先猜?' bubble, then '罐里装的，是酒。' Best surprise in the video. I assumed fruit or food.",
+    "46-48s: the Tang ice mountain carved for a banquet. The most visually striking frame; bright blue ice finally breaks up the brown.",
+    "54s: '有点像冰淇淋' about 酥山. A fun fact that's easy to repeat to friends (even though I can't see the dessert).",
+    "74s: '存三份，化两份，剩下一份' pays off the ×3 from 22s. I liked noticing that callback (despite the block count issue).",
+    "82-84s: the 酸梅汤 seller clacking two copper bowls as his street call. A small, human, sound-led detail.",
+    "98-104s: the 1990 grid of dark houses with ONE lit window, then 104.8. '冰箱，比家庭还多了' is a good jolt.",
+    "106s: a lineup of every 'fridge' from 周 to 今天 on one shelf. A satisfying recap shot I'd screenshot.",
+    "108-110s: '今天的冰箱，自己就能造出冬天。' A clean callback to '不会冷' at 2s; the loop closes well."
+  ],
+
+  "lines_I_did_not_understand": [
+    "12-14s '二之日凿冰冲冲，三之日纳于凌阴': I only got it from the small gloss underneath; '二之日' means nothing to me.",
+    "62-66s '于夜内凿之，声如錾石': I had to guess 錾 and needed the small subtitle again.",
+    "30s '缶·罐 / 鉴·盆' labels: helpful, but 缶 and 鉴 sit next to each other quickly; I'm not sure I'd remember which is inside.",
+    "44s / 50s tiny source text '据上海社科院 程鹏': I don't know who this is or why he's cited."
+  ],
+
+  "q5_takeaway": "The ancient Chinese 'fridge' never made cold. It just stored winter: people cut river ice in winter, cut three times what they needed because two-thirds melted in the cellar, and only the rich got to use it, whereas a fridge today makes its own winter and there's more than one per household.",
+  "takeaway_in_my_words": "古人的冰箱不制冷，靠的是冬天凿的冰硬撑到夏天，存三份化两份，只有贵族用得起；现在冰箱自己造冬天，比家庭还多。",
+  "surprise_that_stuck": "38s: the jar in the 冰鉴 held WINE, and in winter the same thing warmed wine. Runner-up: 104s, more fridges than households.",
+
+  "title_I_would_click": "'古代没有冰箱，夏天怎么吃冰?' is the only title shown (10s and the end card). It's a clear question with an obvious 'I want to know' itch, so I'd click it. But it's a very common title for this topic; I've seen versions of it before.",
+  "title_that_misleads": "Slightly. '夏天怎么吃冰' promises eating ice, but the first 40s are about storing ice to chill WINE, and actual edible ice (酥山, 冰雪, 酸梅汤) only shows up at 50-84s. Not a big betrayal, but the payoff for the title arrives late.",
+
+  "q6_would_comment": true,
+  "what_I_would_comment": "'冰鉴原来是冰酒的不是冰西瓜的😂 古人也太会享受了' Or, answering the end question: '我家冰箱冻着过年的饺子和一袋不知道哪年的冰棍'. If I'm in a nitpicky mood: '1990年是农村数据，2024年是全国数据，这俩能直接比吗?'",
+
+  "for_frames_only": [
+    {"frame": "0s", "what_this_says_in_5s": "A bronze pot inside a modern fridge. 'China had a fridge 2400 years ago.' Weird enough to pause."},
+    {"frame": "2s", "what_this_says_in_5s": "The fridge goes dark: 'but it can't get cold by itself.' The twist works."},
+    {"frame": "6s", "what_this_says_in_5s": "Cutaway: ice packed in the walls. I instantly get the mechanism."},
+    {"frame": "10s", "what_this_says_in_5s": "Title card over a man chipping ice. Feels like a restart, not progress."},
+    {"frame": "12-14s", "what_this_says_in_5s": "Ancient poem, dark, slow. Thumb hovering to swipe."},
+    {"frame": "16s", "what_this_says_in_5s": "Big black banner shape blocking the left; looks like a glitch."},
+    {"frame": "18-20s", "what_this_says_in_5s": "'80 workers', but they're specks; the label gets covered at 20s."},
+    {"frame": "22s", "what_this_says_in_5s": "Three ice blocks ×3 with a '?'. Clear and intriguing."},
+    {"frame": "24s", "what_this_says_in_5s": "Real dig, 190 m³ pit. Credible, concrete."},
+    {"frame": "30s", "what_this_says_in_5s": "Labeled diagram 缶/鉴, but the pot shape suddenly differs from the opening."},
+    {"frame": "34s", "what_this_says_in_5s": "'先猜?' I actually guessed (I said fruit)."},
+    {"frame": "38s", "what_this_says_in_5s": "It's wine. Fun surprise."},
+    {"frame": "40s", "what_this_says_in_5s": "Also warms wine in winter. Clever, and the starry window shows it's winter."},
+    {"frame": "42-44s", "what_this_says_in_5s": "'Only the rich could afford it.' Obvious; half-split transition frame."},
+    {"frame": "46-48s", "what_this_says_in_5s": "Tang ice mountain at a banquet. Prettiest shot; finally some bright color."},
+    {"frame": "50-54s", "what_this_says_in_5s": "酥山 = ancient ice cream, but the dessert is a tiny blob in a mostly empty dark frame."},
+    {"frame": "56-60s", "what_this_says_in_5s": "Song street, blue umbrellas, ice sold in silver bowls. Lively, readable."},
+    {"frame": "62-66s", "what_this_says_in_5s": "Qing night ice-cutting, second classical quote, leftover Song sign on the left. Feels repetitive."},
+    {"frame": "68-74s", "what_this_says_in_5s": "Cellar cross-section, 2 m wall, 2/3 melts. The idea is clear but the block count and the falling 'thermometer' confuse me."},
+    {"frame": "76-80s", "what_this_says_in_5s": "Ice tickets, rationed by rank. OK; 80s is a messy crossfade."},
+    {"frame": "82-84s", "what_this_says_in_5s": "Plum-soup seller clacking bowls. Charming small detail."},
+    {"frame": "88-92s", "what_this_says_in_5s": "Qianlong's blue 'fridge', but the cold air is drawn like hot steam."},
+    {"frame": "94-96s", "what_this_says_in_5s": "Unfinished-looking transition, then a 19th-century machine. Quick, fine."},
+    {"frame": "98-102s", "what_this_says_in_5s": "One lit house among hundreds, then 104.8. Strong data visual, but rural vs national."},
+    {"frame": "104s", "what_this_says_in_5s": "More fridges than homes. Good jolt."},
+    {"frame": "106s", "what_this_says_in_5s": "Every era's 'fridge' on one shelf. Best recap shot, screenshot-worthy."},
+    {"frame": "110s", "what_this_says_in_5s": "Modern fridge with snowflakes: 'makes its own winter'. Loop closed."},
+    {"frame": "114-118s", "what_this_says_in_5s": "End card asks what's in my fridge. Easy comment bait; sources unreadable."}
+  ]
+}

@@ -70,8 +70,8 @@ BAR = 4 * P
 FILM_LEN = 119.25
 
 # ---- tunables (dB unless noted)
-BUILD_DB = -1.5            # post-hush chorus starts this much under unity, ramps to 0 dB at the drop DB(10)
-RISE_DB = 1.0              # arrival lift, bars 88-90 (DB14..DB17)
+BUILD_DB = -2.5            # post-hush chorus starts this much under unity, ramps to 0 dB at the drop DB(10)
+RISE_DB = 1.5              # arrival lift, bars 88-90 (DB14..DB17)
 RING_DB = -12.0            # stop-bar ring into the hush
 RING_TAU = 0.55            # ring decay (s)
 INHALE_DB = -10.0          # reversed-reverb inhale into DB(0)

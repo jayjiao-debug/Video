@@ -278,12 +278,12 @@
   ]
  },
  "gains": {
-  "BUILD_DB": -1.5,
-  "RISE_DB": 1.0
+  "BUILD_DB": -2.5,
+  "RISE_DB": 1.5
  },
- "lufs_in": -17.13940394774291,
- "lufs_out": -13.999999999999998,
- "true_peak_dbtp": -2.6100311555352276,
+ "lufs_in": -17.178064068999692,
+ "lufs_out": -14.000000000000012,
+ "true_peak_dbtp": -2.318970780574125,
  "limited": false,
  "dur": 119.25,
  "untouched": {
