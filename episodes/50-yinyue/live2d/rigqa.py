@@ -13,20 +13,21 @@ from rigrender import Rig
 RIG = Rig(R, pose)
 def compose(T): return RIG.compose(T)
 # stress set: each part alone at both extremes, then everything at once
-ext = {'head': [(9, 0, -12), (-9, 0, 8)], 'armL': [(45, 0, 0), (-45, 0, 0)], 'armR': [(45, 0, 0), (-45, 0, 0)],
-       'tail': [(16, 0, 0), (-16, 0, 0)], 'legL': [(0, 0, -20), (6, 0, 0)], 'legR': [(0, 0, -20), (-6, 0, 0)]}
+ext = {'head': [(9, 0, -12), (-9, 0, 8)], 'armL': [(45,), (-45,)], 'armR': [(45,), (-45,)],
+       'tail': [(16,), (-16,)], 'legL': [(22,), (8,)], 'legR': [(22,), (8,)], 'body': [(0, .06), (0, -.03)]}
 cases = [('rest', {})]
 for k, vs in ext.items():
-    if k in L or k == 'head':
+    if k in RIG.L or k in ('head', 'body'):
         for i, v in enumerate(vs): cases.append((f'{k}{"+-"[i]}', {k: v}))
 cases.append(('all+', {k: vs[0] for k, vs in ext.items()})); cases.append(('all-', {k: vs[1] for k, vs in ext.items()}))
 joints = {'neck': (512, nk), **{k: tuple(P[k]) for k in ('armL', 'armR', 'tail', 'legL', 'legR') if k in P}}
 rest = compose({})
 CORE = nd.binary_erosion(np.asarray(RIG.L['body'])[..., 3] > 200, iterations=4)   # moving parts may uncover background; the body itself never may
 findings = []
-def check(name, comp):
+def check(name, comp, T=None):
     a = np.asarray(comp)[..., 3] / 255.; rgb = np.asarray(comp)[..., :3].astype(float)
-    see = CORE & (a < .93)                                   # background shows through inside the figure
+    core = nd.binary_erosion(np.asarray(RIG.compose(T or {}, order=['body']))[..., 3] > 200, iterations=4)
+    see = core & (a < .93)                                   # background shows through inside the figure
     lab, n = nd.label(nd.binary_dilation(see, iterations=2))
     for i in range(1, n + 1):
         ys, xs = np.where(lab == i)
@@ -41,7 +42,7 @@ def on(comp, col):
     bg = Image.new('RGBA', (1024, 1024), col + (255,)); bg.alpha_composite(comp); return bg.convert('RGB')
 sheets = []
 for name, T in cases:
-    comp = compose(T); check(name, comp)
+    comp = compose(T); check(name, comp, T)
     row = [on(comp, (255, 0, 255)).resize((340, 340))]
     for j, (jx, jy) in joints.items():
         jx, jy = int(jx), int(jy); box = (max(0, jx - 110), max(0, jy - 110), min(1024, jx + 110), min(1024, jy + 110))

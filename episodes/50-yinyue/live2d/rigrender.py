@@ -1,40 +1,59 @@
-"""Shared renderer for layered kittens: one place for draw order and masks.
-compose(rig, T, scale) -> RGBA figure.  T: part -> (angle_deg, dx, dy) in master (1024) pixels.
-Masks: each arm's root zone (near its shoulder pivot) is clipped to the body+head silhouette of the same frame,
-so the arm always grows out of the body and never pokes out past the shoulder."""
-import json, numpy as np; from PIL import Image
+"""Shared renderer for layered kittens (v2): deformers instead of rigid rotations, so no joint ever opens.
+compose(T) -> RGBA.  T (all optional):
+  head: (angle_deg, dx, dy)            rigid, about the neck point
+  armL/armR/tail: (angle_deg,)         bend: no motion within r0 of the pivot, full angle beyond r1 (twirl deformer)
+  legL/legR: (lift_px,)                the foot lifts, the hip stays (vertical deformer from hip to foot)
+  body: (dy, squash)                   whole figure offset (dy) and squash about the feet (squash 0.04 = 4 % shorter)
+All parts move with the body offset; the head adds its own bob on top."""
+import json, numpy as np, cv2; from PIL import Image
 ORDER = ['tail', 'legL', 'legR', 'body', 'armL', 'armR', 'head']
-ROOT_IN, ROOT_OUT = 46, 78          # clip fully inside ROOT_IN of the pivot, fade out to ROOT_OUT
+def smooth(x): x = np.clip(x, 0, 1); return x * x * (3 - 2 * x)
 class Rig:
     def __init__(self, rigdir, pose, scale=1.0):
-        self.info = json.load(open(f'{rigdir}/{pose}.json')); self.k = scale
-        self.size = int(round(1024 * scale)); self.L = {}
+        self.info = json.load(open(f'{rigdir}/{pose}.json')); self.k = k = scale; self.N = N = int(round(1024 * k))
+        self.L = {}
         for name, (x0, y0, x1, y1) in self.info['boxes'].items():
             im = Image.open(f'{rigdir}/{pose}_{name}.png')
-            if scale != 1: im = im.resize((max(1, round(im.size[0] * scale)), max(1, round(im.size[1] * scale))), Image.LANCZOS)
-            full = Image.new('RGBA', (self.size, self.size)); full.paste(im, (round(x0 * scale), round(y0 * scale)))
-            self.L[name] = full
-        self.piv = {k: tuple(v) for k, v in self.info['pivots'].items()}; self.piv['head'] = (512, self.info['head']['neckY'])
-        yy, xx = np.mgrid[0:self.size, 0:self.size]; self.yy, self.xx = yy / scale, xx / scale
-    def part(self, name, T):
-        ang, dx, dy = T.get(name, (0, 0, 0)); im = self.L[name]
-        if ang or dx or dy:
-            px, py = self.piv.get(name, (512, 512))
-            im = im.rotate(ang, resample=Image.BICUBIC, center=(px * self.k, py * self.k), translate=(dx * self.k, dy * self.k))
-        return im
+            full = Image.new('RGBA', (1024, 1024)); full.paste(im, (x0, y0))
+            if k != 1: full = full.resize((N, N), Image.LANCZOS)
+            self.L[name] = np.asarray(full).astype(np.float32)
+        self.piv = {n: np.array(v, float) * k for n, v in self.info['pivots'].items()}
+        self.neck = np.array([512, self.info['head']['neckY']], float) * k
+        d = self.info['deform']; self.arm_r = np.array(d['arm']) * k; self.tail_r = np.array(d['tail']) * k; self.leg_y = np.array(d['leg']) * k
+        self.feet = max(b[3] for b in self.info['boxes'].values()) * k
+        yy, xx = np.mgrid[0:N, 0:N].astype(np.float32); self.xx, self.yy = xx, yy
+    def remap(self, img, mx, my):
+        return cv2.remap(img, mx.astype(np.float32), my.astype(np.float32), cv2.INTER_LINEAR, borderMode=cv2.BORDER_CONSTANT, borderValue=0)
+    def twirl(self, img, piv, ang, r0, r1):
+        if not ang: return img
+        dx, dy = self.xx - piv[0], self.yy - piv[1]; r = np.hypot(dx, dy)
+        t = -np.radians(ang) * smooth((r - r0) / (r1 - r0))       # inverse map: rotate back by the local angle
+        c, s = np.cos(t), np.sin(t)
+        return self.remap(img, piv[0] + c * dx - s * dy, piv[1] + s * dx + c * dy)
+    def lift(self, img, amt, y0, y1):
+        if not amt: return img
+        w = smooth((self.yy - y0) / (y1 - y0))
+        return self.remap(img, self.xx, self.yy + amt * self.k * w)
+    def rigid(self, img, piv, ang, dx, dy):
+        if not (ang or dx or dy): return img
+        M = cv2.getRotationMatrix2D((float(piv[0]), float(piv[1])), ang, 1.0); M[:, 2] += (dx * self.k, dy * self.k)
+        return cv2.warpAffine(img, M, (self.N, self.N), flags=cv2.INTER_LINEAR, borderMode=cv2.BORDER_CONSTANT, borderValue=0)
     def compose(self, T=None, order=ORDER):
-        T = T or {}; c = Image.new('RGBA', (self.size, self.size)); parts = {}
+        T = T or {}; out = np.zeros((self.N, self.N, 4), np.float32)
+        bdy, squash = T.get('body', (0, 0))
         for n in order:
-            if n in self.L: parts[n] = self.part(n, T)
-        host = np.maximum(np.asarray(parts['body'])[..., 3], np.asarray(parts['head'])[..., 3]).astype(float) / 255.
-        for n in order:
-            if n not in parts: continue
-            im = parts[n]
-            if n.startswith('arm'):
-                ang, dx, dy = T.get(n, (0, 0, 0)); px, py = self.piv[n]; px += dx; py += dy
-                d = np.hypot(self.xx - px, self.yy - py)
-                w = np.clip((d - ROOT_IN) / (ROOT_OUT - ROOT_IN), 0, 1)          # 0 at the root, 1 away from it
-                a = np.asarray(im).astype(float); a[..., 3] *= w + (1 - w) * host
-                im = Image.fromarray(a.astype(np.uint8))
-            c.alpha_composite(im)
-        return c
+            if n not in self.L: continue
+            img = self.L[n]
+            if n in ('armL', 'armR'): img = self.twirl(img, self.piv[n], T.get(n, (0,))[0], *self.arm_r)
+            elif n == 'tail': img = self.twirl(img, self.piv[n], T.get(n, (0,))[0], *self.tail_r)
+            elif n in ('legL', 'legR'): img = self.lift(img, T.get(n, (0,))[0], *self.leg_y)
+            elif n == 'head':
+                a, dx, dy = T.get('head', (0, 0, 0)); img = self.rigid(img, self.neck, a, dx, dy)
+            if squash and n != 'head':                                  # squash about the feet
+                sy = 1 - squash; img = self.remap(img, self.xx, self.feet + (self.yy - self.feet) / sy)
+            elif squash and n == 'head':                                # the head rides down with the squashed neck
+                img = self.rigid(img, self.neck, 0, 0, (self.feet - self.neck[1]) * squash / self.k)
+            if bdy: img = self.rigid(img, (0, 0), 0, 0, bdy)
+            a = img[..., 3:] / 255.
+            out[..., :3] = img[..., :3] * a + out[..., :3] * (1 - a); out[..., 3:] = 255 * a + out[..., 3:] * (1 - a)
+        return Image.fromarray(np.clip(out, 0, 255).astype(np.uint8))
