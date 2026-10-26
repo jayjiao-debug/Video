@@ -11,7 +11,7 @@ const lerp = (a, b, k) => a + (b - a) * k;
 const ph = (t) => { const i = clamp(Math.floor(t * 120), 0, S.ph.length - 2), [t0, p0, b0] = S.ph[i], [t1, p1, b1] = S.ph[i + 1], k = (t - t0) / (t1 - t0); return [lerp(p0, p1, k), lerp(b0, b1, k)]; };
 const last = (inst, t, pred = () => true) => { let h = null; for (const x of S.hits) if (x.inst === inst && x.t <= t + 1e-6 && pred(x)) h = x; return h; };
 const flash = (h, t, d = .32) => h ? clamp(1 - (t - h.t) / d) : 0;
-const B = S.beats, TREC = B[S.REC], TX0 = TREC - 1.7;         // transition womb → record
+const B = S.beats, TREC = B[S.REC], TX0 = TREC - 1.0;         // transition womb → record
 const HC = [1200, 380];                                          // the heart point
 
 function womb(t) {
@@ -33,13 +33,13 @@ function womb(t) {
 	if (hb) { const a = clamp((t - hb.t) / .6); s += `<text x="1340" y="${350 - 20 * a}" ${F} font-size="54" font-weight="900" fill="${INK.kick}" opacity="${1 - a}" transform="rotate(8 1340 350)">咚</text>`;
 		const b = clamp((t - hb.t - .27) / .6); if (t > hb.t + .27) s += `<text x="1410" y="${422 - 20 * b}" ${F} font-size="40" font-weight="900" fill="${INK.kick}" opacity="${.8 * (1 - b)}" transform="rotate(8 1410 422)">咚</text>`; }
 	s += `<g opacity="${fade(t, .1)}"><text x="140" y="470" ${F} font-size="46" font-weight="700" fill="#fff" opacity=".75">你听过的第一首歌，</text></g>`;
-	const k2 = fade(t, 2.2, .3); s += `<g opacity="${k2}" transform="translate(${140} 580) scale(${1 + .06 * (1 - k2)}) translate(-140 -580)"><text x="140" y="580" ${F} font-size="96" font-weight="900" fill="#fff">是<tspan fill="${INK.kick}">妈妈的心跳</tspan></text></g>`;
-	s += `<text x="140" y="660" ${F} font-size="34" font-weight="500" fill="#fff" opacity="${.55 * fade(t, 4.6)}">只有一个鼓，一直在打</text>`;
+	const k2 = fade(t, .9, .25); s += `<g opacity="${k2}" transform="translate(${140} 580) scale(${1 + .06 * (1 - k2)}) translate(-140 -580)"><text x="140" y="580" ${F} font-size="96" font-weight="900" fill="#fff">是<tspan fill="${INK.kick}">妈妈的心跳</tspan></text></g>`;
+	s += `<text x="140" y="660" ${F} font-size="34" font-weight="500" fill="#fff" opacity="${.55 * fade(t, 1.8)}">只有一个鼓，一直在打</text>`;
 	return s;
 }
 
 function lesson(t, bg = true) {
-	const [p, bpm] = ph(t), rot = p * 90;                          // one turn = one bar (4 beats), clockwise
+	const [p0, bpm] = ph(t), p = p0 - S.REC, rot = p * 90;                          // one turn = one bar (4 beats), clockwise
 	let s = bg ? `<rect width="${W}" height="${H}" fill="${INK.ink}"/>` : '';
 	s += `<g opacity="${fade(t, TREC + .2)}">${chapter('01', '速度')}</g>`;
 	const ramp = t > S.T1 - .9;
@@ -47,12 +47,14 @@ function lesson(t, bg = true) {
 	if (ramp) s += `<g opacity="${fade(t, S.T1 - .6)}">${caption(['转得越快，', { k: 'BPM' }, ' 越大'])}</g>`;
 	// kick ring: beat k sits at position (4 - k) % 4; dots appear the first time they are hit, the shape draws itself
 	const kpos = [0, 3, 2, 1], nk = S.hits.filter((h) => h.inst === 'kick' && h.t <= t + 1e-6).length;
-	const fl = {}; for (let k = 0; k < 4; k++) fl[kpos[k]] = flash(last('kick', t, (h) => h.k % 4 === k), t);
+	const fl = {}; for (let k = 0; k < 4; k++) fl[kpos[k]] = flash(last('kick', t, (h) => (h.k - S.REC) % 4 === k), t);
 	const rings = [{ f: .82, n: 4, hits: kpos, vis: Math.min(4, nk), tail: true, col: INK.kick, shape: true, size: .06, flash: fl,
 		lab: { 0: '1', 3: '2', 2: '3', 1: '4' }, name: nk ? '底鼓' : '', nameDy: -40 }];
 	const hatOn = t > B[S.HAT] - .9;
-	if (hatOn) { const hf = {}; for (let p8 = 0; p8 < 8; p8++) { const e = (8 - p8) % 8; hf[p8] = flash(last('hat', t, (h) => h.k % 8 === e), t, .2); }
-		rings.push({ f: .58, n: 8, hits: [...Array(8).keys()], col: INK.hat, size: .035, flash: hf, name: '镲', nameDy: 60, nameSize: 36 }); }
+	if (hatOn) { const hf = {}; for (let p8 = 0; p8 < 8; p8++) { const e = (8 - p8) % 8; hf[p8] = flash(last('hat', t, (h) => ((h.k - 2 * S.REC) % 8 + 8) % 8 === e), t, .2); }
+		const cf = {}; for (const k of [1, 3]) cf[kpos[k]] = flash(last('clap', t, (h) => (h.k - S.REC) % 4 === k), t);
+		rings.push({ f: .7, n: 4, hits: [3, 1], col: INK.snare, size: .05, flash: cf, name: '拍手', nameDy: 10, nameSize: 36 });
+		rings.push({ f: .58, n: 8, hits: [...Array(8).keys()], col: INK.hat, size: .035, flash: hf, name: '镲', nameDy: 70, nameSize: 36 }); }
 	const R = 330, cx = 760, cy = 560;
 	s += `<g opacity="${hatOn ? 1 : 1}">${record({ cx, cy, R, rot, rings, label: { t: `${Math.round(bpm)}`, sub: 'BPM' } })}</g>`;
 	if (hatOn) s += `<g opacity="${1 - fade(t, B[S.HAT] - .9, .5)}"><circle cx="${cx}" cy="${cy}" r="${R * .58}" fill="none" stroke="${INK.hat}" stroke-width="10" opacity=".5"/></g>`;
@@ -61,10 +63,10 @@ function lesson(t, bg = true) {
 	for (let k = 0; k < 4; k++) { const now = k === kb && t >= TREC, x = sx0 + k * (sw + gap), a = now ? fl[kpos[k]] : 0, seen = k < nk || nk >= 4;
 		s += `<rect x="${x}" y="${sy}" width="${sw}" height="60" rx="12" fill="${seen ? INK.kick : INK.dim}" opacity="${seen ? .35 + .65 * (now ? 1 : 0) : 1}" ${now ? `stroke="#fff" stroke-width="${2 + 4 * a}"` : ''}/>
 		<text x="${x + sw / 2}" y="${sy + 43}" text-anchor="middle" ${F} font-size="34" font-weight="900" fill="${now ? '#fff' : INK.ink}">${k + 1}</text>`;
-		if (hatOn) for (const hh of [0, 1]) { const hk = last('hat', t, (h) => h.k % 8 === 2 * k + hh), ha = flash(hk, t, .2);
+		if (hatOn) for (const hh of [0, 1]) { const hk = last('hat', t, (h) => ((h.k - 2 * S.REC) % 8 + 8) % 8 === 2 * k + hh), ha = flash(hk, t, .2);
 			s += `<rect x="${x + 22 + hh * 58}" y="${sy - 26}" width="18" height="14" rx="4" fill="${INK.hat}" opacity="${.35 + .65 * ha}"/>`; } }
 	// right column: the tempo slider and the clap prompt
-	const x0 = 1340, x1 = 1760, y = 470, lo = 50, span = 150, ks = fade(t, TREC + 1.2);
+	const x0 = 1340, x1 = 1760, y = 470, lo = 50, span = 150, ks = fade(t, TREC + .6);
 	s += `<g opacity="${ks}"><text x="${x0}" y="${y - 70}" ${F} font-size="30" font-weight="700" fill="#fff" opacity=".6">这张唱片现在的速度</text>
 		<rect x="${x0}" y="${y - 6}" width="${x1 - x0}" height="12" rx="6" fill="${INK.dim}"/><rect x="${x0}" y="${y - 6}" width="${(bpm - lo) / span * (x1 - x0)}" height="12" rx="6" fill="${INK.kick}"/>
 		<circle cx="${x0 + (bpm - lo) / span * (x1 - x0)}" cy="${y}" r="22" fill="#fff"/>`;
