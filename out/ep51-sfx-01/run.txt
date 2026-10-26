@@ -1,0 +1,160 @@
+plan: {'tier': None, 'character_count': None, 'character_limit': None, 'status': None}
+models: ['eleven_v4', 'eleven_v4_turbo', 'eleven_v3', 'eleven_v3_conversational', 'eleven_multilingual_v2', 'eleven_flash_v2_5', 'eleven_turbo_v2_5', 'eleven_turbo_v2', 'eleven_flash_v2', 'eleven_english_sts_v2', 'eleven_multilingual_sts_v2']
+model: eleven_v4
+{"name": "sfx_fridge_open", "type": "sfx", "text": "a household refrigerator door pulled open: one soft rubber seal unsticking pop, then a low steady electric compressor hum, close, quiet room", "model": "eleven_text_to_sound_v2", "status": 200, "sfx": true, "file": "sfx_fridge_open.mp3", "bytes": 33061}
+{"name": "sfx_light_click", "type": "sfx", "text": "one small plastic light switch click inside a refrigerator, then a low electric hum that stops abruptly into silence", "model": "eleven_text_to_sound_v2", "status": 200, "sfx": true, "file": "sfx_light_click.mp3", "bytes": 20105}
+{"name": "sfx_rewind_ice", "type": "sfx", "text": "fast reversed sound of ice cracking and wind, a rising backwards whoosh with tiny crackles, about two seconds, ends abruptly", "model": "eleven_text_to_sound_v2", "status": 200, "sfx": true, "file": "sfx_rewind_ice.mp3", "bytes": 33061}
+{"name": "sfx_ice_chisel", "type": "sfx", "text": "two sharp metal chisel strikes on thick river ice, bright crisp chips flying, cold outdoor night, short gap between strikes", "model": "eleven_text_to_sound_v2", "status": 200, "sfx": true, "file": "sfx_ice_chisel.mp3", "bytes": 24702}
+{"name": "sfx_ice_slide", "type": "sfx", "text": "a heavy block of ice sliding across ice then dropping into a dark pit with one dull thud", "model": "eleven_text_to_sound_v2", "status": 200, "sfx": true, "file": "sfx_ice_slide.mp3", "bytes": 29300}
+{"name": "sfx_ice_bronze", "type": "sfx", "text": "a block of ice knocked down into a bronze vessel: one hollow metallic clunk with a short bronze ring", "model": "eleven_text_to_sound_v2", "status": 200, "sfx": true, "file": "sfx_ice_bronze.mp3", "bytes": 17179}
+{"name": "sfx_ladle_pour", "type": "sfx", "text": "a bronze ladle pouring a little cold wine into a small cup, short liquid pour, then a faint tiny frost crackle", "model": "eleven_text_to_sound_v2", "status": 200, "sfx": true, "file": "sfx_ladle_pour.mp3", "bytes": 26792}
+{"name": "sfx_silver_ting", "type": "sfx", "text": "one single clear light ting of a silver bowl struck softly, bright and pure, short ring", "model": "eleven_text_to_sound_v2", "status": 200, "sfx": true, "file": "sfx_silver_ting.mp3", "bytes": 20105}
+{"name": "sfx_chisel_stone", "type": "sfx", "text": "two hard chisel strikes on frozen ice that sound like chiselling stone, ringing hard clacks at night, slight echo", "model": "eleven_text_to_sound_v2", "status": 200, "sfx": true, "file": "sfx_chisel_stone.mp3", "bytes": 26792}
+{"name": "sfx_drips", "type": "sfx", "text": "slow single water drips falling into a small puddle in a cool stone cellar, one drop every half second, quiet", "model": "eleven_text_to_sound_v2", "status": 200, "sfx": true, "file": "sfx_drips.mp3", "bytes": 48944}
+{"name": "sfx_brass_bowls", "type": "sfx", "text": "two small brass bowls clinked together twice in one hand, a bright ringing clang clang, street vendor call signal", "model": "eleven_text_to_sound_v2", "status": 200, "sfx": true, "file": "sfx_brass_bowls.mp3", "bytes": 23030}
+{"name": "sfx_ice_glass", "type": "sfx", "text": "three ice cubes dropped into an empty glass tumbler: crisp clinks and a short rattle", "model": "eleven_text_to_sound_v2", "status": 200, "sfx": true, "file": "sfx_ice_glass.mp3", "bytes": 20105}
+{"name": "sfx_frost_bloom", "type": "sfx", "text": "a soft crystalline shimmer of frost forming on glass, delicate icy tinkling sparkle swelling then fading", "model": "eleven_text_to_sound_v2", "status": 200, "sfx": true, "file": "sfx_frost_bloom.mp3", "bytes": 33061}
+{"name": "sfx_mist_breath", "type": "sfx", "text": "a soft cool airy whoosh of cold mist breathing out and spreading across a stone floor, gentle", "model": "eleven_text_to_sound_v2", "status": 200, "sfx": true, "file": "sfx_mist_breath.mp3", "bytes": 33061}
+Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+[
+ {
+  "name": "sfx_fridge_open",
+  "type": "sfx",
+  "text": "a household refrigerator door pulled open: one soft rubber seal unsticking pop, then a low steady electric compressor hum, close, quiet room",
+  "model": "eleven_text_to_sound_v2",
+  "status": 200,
+  "sfx": true,
+  "file": "sfx_fridge_open.mp3",
+  "bytes": 33061
+ },
+ {
+  "name": "sfx_light_click",
+  "type": "sfx",
+  "text": "one small plastic light switch click inside a refrigerator, then a low electric hum that stops abruptly into silence",
+  "model": "eleven_text_to_sound_v2",
+  "status": 200,
+  "sfx": true,
+  "file": "sfx_light_click.mp3",
+  "bytes": 20105
+ },
+ {
+  "name": "sfx_rewind_ice",
+  "type": "sfx",
+  "text": "fast reversed sound of ice cracking and wind, a rising backwards whoosh with tiny crackles, about two seconds, ends abruptly",
+  "model": "eleven_text_to_sound_v2",
+  "status": 200,
+  "sfx": true,
+  "file": "sfx_rewind_ice.mp3",
+  "bytes": 33061
+ },
+ {
+  "name": "sfx_ice_chisel",
+  "type": "sfx",
+  "text": "two sharp metal chisel strikes on thick river ice, bright crisp chips flying, cold outdoor night, short gap between strikes",
+  "model": "eleven_text_to_sound_v2",
+  "status": 200,
+  "sfx": true,
+  "file": "sfx_ice_chisel.mp3",
+  "bytes": 24702
+ },
+ {
+  "name": "sfx_ice_slide",
+  "type": "sfx",
+  "text": "a heavy block of ice sliding across ice then dropping into a dark pit with one dull thud",
+  "model": "eleven_text_to_sound_v2",
+  "status": 200,
+  "sfx": true,
+  "file": "sfx_ice_slide.mp3",
+  "bytes": 29300
+ },
+ {
+  "name": "sfx_ice_bronze",
+  "type": "sfx",
+  "text": "a block of ice knocked down into a bronze vessel: one hollow metallic clunk with a short bronze ring",
+  "model": "eleven_text_to_sound_v2",
+  "status": 200,
+  "sfx": true,
+  "file": "sfx_ice_bronze.mp3",
+  "bytes": 17179
+ },
+ {
+  "name": "sfx_ladle_pour",
+  "type": "sfx",
+  "text": "a bronze ladle pouring a little cold wine into a small cup, short liquid pour, then a faint tiny frost crackle",
+  "model": "eleven_text_to_sound_v2",
+  "status": 200,
+  "sfx": true,
+  "file": "sfx_ladle_pour.mp3",
+  "bytes": 26792
+ },
+ {
+  "name": "sfx_silver_ting",
+  "type": "sfx",
+  "text": "one single clear light ting of a silver bowl struck softly, bright and pure, short ring",
+  "model": "eleven_text_to_sound_v2",
+  "status": 200,
+  "sfx": true,
+  "file": "sfx_silver_ting.mp3",
+  "bytes": 20105
+ },
+ {
+  "name": "sfx_chisel_stone",
+  "type": "sfx",
+  "text": "two hard chisel strikes on frozen ice that sound like chiselling stone, ringing hard clacks at night, slight echo",
+  "model": "eleven_text_to_sound_v2",
+  "status": 200,
+  "sfx": true,
+  "file": "sfx_chisel_stone.mp3",
+  "bytes": 26792
+ },
+ {
+  "name": "sfx_drips",
+  "type": "sfx",
+  "text": "slow single water drips falling into a small puddle in a cool stone cellar, one drop every half second, quiet",
+  "model": "eleven_text_to_sound_v2",
+  "status": 200,
+  "sfx": true,
+  "file": "sfx_drips.mp3",
+  "bytes": 48944
+ },
+ {
+  "name": "sfx_brass_bowls",
+  "type": "sfx",
+  "text": "two small brass bowls clinked together twice in one hand, a bright ringing clang clang, street vendor call signal",
+  "model": "eleven_text_to_sound_v2",
+  "status": 200,
+  "sfx": true,
+  "file": "sfx_brass_bowls.mp3",
+  "bytes": 23030
+ },
+ {
+  "name": "sfx_ice_glass",
+  "type": "sfx",
+  "text": "three ice cubes dropped into an empty glass tumbler: crisp clinks and a short rattle",
+  "model": "eleven_text_to_sound_v2",
+  "status": 200,
+  "sfx": true,
+  "file": "sfx_ice_glass.mp3",
+  "bytes": 20105
+ },
+ {
+  "name": "sfx_frost_bloom",
+  "type": "sfx",
+  "text": "a soft crystalline shimmer of frost forming on glass, delicate icy tinkling sparkle swelling then fading",
+  "model": "eleven_text_to_sound_v2",
+  "status": 200,
+  "sfx": true,
+  "file": "sfx_frost_bloom.mp3",
+  "bytes": 33061
+ },
+ {
+  "name": "sfx_mist_breath",
+  "type": "sfx",
+  "text": "a soft cool airy whoosh of cold mist breathing out and spreading across a stone floor, gentle",
+  "model": "eleven_text_to_sound_v2",
+  "status": 200,
+  "sfx": true,
+  "file": "sfx_mist_breath.mp3",
+  "bytes": 33061
+ }
+]
