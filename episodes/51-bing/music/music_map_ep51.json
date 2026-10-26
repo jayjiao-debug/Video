@@ -1,0 +1,1484 @@
+{
+ "file": "ep51_bed.wav (48 kHz, 24-bit PCM, stereo, 119.250 s) - never commit audio",
+ "alt": "ep51_bed_untouched.wav: song from 0.1256 s in one piece (bar 0 at DA(0), bar 4 = groove/sub entry at 9.50), +3.03 dB static gain, one fade 115.92->118.18",
+ "song": "episodes/51-bing/music/bgm.mp3 (バケモノの唄 instrumental, 254.1 s; md5 32975059d98bb656410fe1a58b6cdb3b = ep50 / ep41 bgm2.mp3)",
+ "build": "python3 build51.py && python3 measure51.py",
+ "loudness": {
+  "integrated_lufs": -14.0,
+  "true_peak_dbtp": -2.61,
+  "limiter": "not needed",
+  "max_short_term": [
+   -12.1,
+   108.6
+  ],
+  "max_momentary": [
+   -11.2,
+   108.4
+  ],
+  "body_short_term": -13.6,
+  "sections": {
+   "hook 0-9.50": {
+    "short_term_lufs": -13.5,
+    "centroid_hz": 2281
+   },
+   "title verse 9.50-18.56": {
+    "short_term_lufs": -13.7,
+    "centroid_hz": 2427
+   },
+   "B pre 18.56-36.67 (周/战国, 先猜？)": {
+    "short_term_lufs": -14.3,
+    "centroid_hz": 2869
+   },
+   "chorus 36.67-54.78 (酒 -> Tang)": {
+    "short_term_lufs": -13.3,
+    "centroid_hz": 2259
+   },
+   "verse 54.78-63.84 (Song street, 银器)": {
+    "short_term_lufs": -13.5,
+    "centroid_hz": 2429
+   },
+   "valley 63.84-69.50 (清 night)": {
+    "short_term_lufs": -16.2,
+    "centroid_hz": 1880
+   },
+   "stop hits 69.50-70.63": {
+    "short_term_lufs": -12.4,
+    "centroid_hz": 1052
+   },
+   "hush 70.63-74.26": {
+    "short_term_lufs": -26.5,
+    "centroid_hz": 1310
+   },
+   "return chorus 74.26-92.37 (剩下一份 -> 乾隆)": {
+    "short_term_lufs": -14.3,
+    "centroid_hz": 2339
+   },
+   "lead-in 92.37-96.90 (整间屋子)": {
+    "short_term_lufs": -16.0,
+    "centroid_hz": 2118
+   },
+   "drop 96.90-105.96 (19世纪 -> numbers)": {
+    "short_term_lufs": -13.6,
+    "centroid_hz": 1917
+   },
+   "ARRIVAL 105.96-112.75 (P1, P2, air)": {
+    "short_term_lufs": -12.4,
+    "centroid_hz": 2388
+   },
+   "coda 112.75-117.27 (end card)": {
+    "short_term_lufs": -17.6,
+    "centroid_hz": 1125
+   },
+   "fade 117.27-119.25": {
+    "short_term_lufs": -20.6,
+    "centroid_hz": 1182
+   }
+  },
+  "lr_correlation": 0.996,
+  "mono_fold_change_db": -0.01,
+  "bands_body": {
+   "sub_20_60": -9.8,
+   "low_60_120": -4.0,
+   "mud_200_500": -8.1,
+   "harsh_2k_5k": -17.7,
+   "air_8k_16k": -23.6
+  }
+ },
+ "grid": {
+  "beat_s": 0.56605,
+  "bpm": 106.0,
+  "song_part1_downbeats": "0.5688 + 2.2642*k (bars 0-79)",
+  "song_part2_downbeats": "1.1348 + 2.2642*k (bars 80-110)",
+  "film_grid_A": "DA(k) = 0.4432 + 2.2642*k, k = 0..30 (beats 0.4432 + 0.56605*n); stop hits on DA(30) beats 3-4",
+  "film_hush": "70.63-74.26: no pulse. Drips, if counted, should count INTO the return on grid B: 71.43 72.00 72.56 73.13 73.69 -> 74.26",
+  "film_grid_B": "DB(k) = 74.2586 + 2.2642*k, k = 0..16 with drums; DB(17) = 112.75 fall; coda bars 105-107 continue the grid softly",
+  "placement_check": {
+   "max_abs_err_ms": 1.0,
+   "mean_abs_err_ms": 0.5,
+   "n": 48,
+   "beat_onsets": {
+    "beats_checked": 190,
+    "with_clear_onset": 163,
+    "median_offset_ms": -1.5,
+    "p90_abs_offset_ms": 26.1
+   }
+  },
+  "film_downbeats": [
+   {
+    "grid": "A",
+    "n": 0,
+    "formula": 0.4432,
+    "song_bar": 20,
+    "measured": 0.4432,
+    "err_ms": -0.0,
+    "xcorr": 1.0,
+    "note": ""
+   },
+   {
+    "grid": "A",
+    "n": 1,
+    "formula": 2.7074,
+    "song_bar": 21,
+    "measured": 2.7074,
+    "err_ms": -0.0,
+    "xcorr": 1.0,
+    "note": ""
+   },
+   {
+    "grid": "A",
+    "n": 2,
+    "formula": 4.9716,
+    "song_bar": 22,
+    "measured": 4.9716,
+    "err_ms": 0.0,
+    "xcorr": 1.0,
+    "note": ""
+   },
+   {
+    "grid": "A",
+    "n": 3,
+    "formula": 7.2358,
+    "song_bar": 23,
+    "measured": 7.2358,
+    "err_ms": -0.0,
+    "xcorr": 1.0,
+    "note": ""
+   },
+   {
+    "grid": "A",
+    "n": 4,
+    "formula": 9.5,
+    "song_bar": 24,
+    "measured": 9.5,
+    "err_ms": 0.0,
+    "xcorr": 1.0,
+    "note": ""
+   },
+   {
+    "grid": "A",
+    "n": 5,
+    "formula": 11.7642,
+    "song_bar": 25,
+    "measured": 11.7642,
+    "err_ms": -0.0,
+    "xcorr": 1.0,
+    "note": ""
+   },
+   {
+    "grid": "A",
+    "n": 6,
+    "formula": 14.0284,
+    "song_bar": 26,
+    "measured": 14.0284,
+    "err_ms": -0.0,
+    "xcorr": 1.0,
+    "note": ""
+   },
+   {
+    "grid": "A",
+    "n": 7,
+    "formula": 16.2926,
+    "song_bar": 27,
+    "measured": 16.2926,
+    "err_ms": 0.0,
+    "xcorr": 1.0,
+    "note": "bar 27 b1-b2, then bar 7 from beat 3 (J2)"
+   },
+   {
+    "grid": "A",
+    "n": 8,
+    "formula": 18.5568,
+    "song_bar": 8,
+    "measured": 18.5558,
+    "err_ms": -1.0,
+    "xcorr": 1.0,
+    "note": ""
+   },
+   {
+    "grid": "A",
+    "n": 9,
+    "formula": 20.821,
+    "song_bar": 9,
+    "measured": 20.82,
+    "err_ms": -1.0,
+    "xcorr": 1.0,
+    "note": ""
+   },
+   {
+    "grid": "A",
+    "n": 10,
+    "formula": 23.0852,
+    "song_bar": 10,
+    "measured": 23.0842,
+    "err_ms": -1.0,
+    "xcorr": 1.0,
+    "note": ""
+   },
+   {
+    "grid": "A",
+    "n": 11,
+    "formula": 25.3494,
+    "song_bar": 11,
+    "measured": 25.3484,
+    "err_ms": -1.0,
+    "xcorr": 1.0,
+    "note": ""
+   },
+   {
+    "grid": "A",
+    "n": 12,
+    "formula": 27.6136,
+    "song_bar": 12,
+    "measured": 27.6126,
+    "err_ms": -1.0,
+    "xcorr": 1.0,
+    "note": ""
+   },
+   {
+    "grid": "A",
+    "n": 13,
+    "formula": 29.8778,
+    "song_bar": 13,
+    "measured": 29.8768,
+    "err_ms": -1.0,
+    "xcorr": 1.0,
+    "note": ""
+   },
+   {
+    "grid": "A",
+    "n": 14,
+    "formula": 32.142,
+    "song_bar": 14,
+    "measured": 32.141,
+    "err_ms": -1.0,
+    "xcorr": 1.0,
+    "note": ""
+   },
+   {
+    "grid": "A",
+    "n": 15,
+    "formula": 34.4062,
+    "song_bar": 15,
+    "measured": 34.4052,
+    "err_ms": -1.0,
+    "xcorr": 1.0,
+    "note": ""
+   },
+   {
+    "grid": "A",
+    "n": 16,
+    "formula": 36.6704,
+    "song_bar": 16,
+    "measured": 36.6694,
+    "err_ms": -1.0,
+    "xcorr": 0.995,
+    "note": ""
+   },
+   {
+    "grid": "A",
+    "n": 17,
+    "formula": 38.9346,
+    "song_bar": 17,
+    "measured": 38.9336,
+    "err_ms": -1.0,
+    "xcorr": 1.0,
+    "note": ""
+   },
+   {
+    "grid": "A",
+    "n": 18,
+    "formula": 41.1988,
+    "song_bar": 18,
+    "measured": 41.1978,
+    "err_ms": -1.0,
+    "xcorr": 1.0,
+    "note": ""
+   },
+   {
+    "grid": "A",
+    "n": 19,
+    "formula": 43.463,
+    "song_bar": 19,
+    "measured": 43.462,
+    "err_ms": -1.0,
+    "xcorr": 1.0,
+    "note": ""
+   },
+   {
+    "grid": "A",
+    "n": 20,
+    "formula": 45.7272,
+    "song_bar": 20,
+    "measured": 45.7262,
+    "err_ms": -1.0,
+    "xcorr": 1.0,
+    "note": ""
+   },
+   {
+    "grid": "A",
+    "n": 21,
+    "formula": 47.9914,
+    "song_bar": 21,
+    "measured": 47.9904,
+    "err_ms": -1.0,
+    "xcorr": 1.0,
+    "note": ""
+   },
+   {
+    "grid": "A",
+    "n": 22,
+    "formula": 50.2556,
+    "song_bar": 22,
+    "measured": 50.2546,
+    "err_ms": -1.0,
+    "xcorr": 1.0,
+    "note": ""
+   },
+   {
+    "grid": "A",
+    "n": 23,
+    "formula": 52.5198,
+    "song_bar": 23,
+    "measured": 52.5188,
+    "err_ms": -1.0,
+    "xcorr": 1.0,
+    "note": "bar 23 b1, then bar 55 from beat 2 (J3)"
+   },
+   {
+    "grid": "A",
+    "n": 24,
+    "formula": 54.784,
+    "song_bar": 56,
+    "measured": 54.7846,
+    "err_ms": 0.6,
+    "xcorr": 1.0,
+    "note": ""
+   },
+   {
+    "grid": "A",
+    "n": 25,
+    "formula": 57.0482,
+    "song_bar": 57,
+    "measured": 57.0488,
+    "err_ms": 0.6,
+    "xcorr": 1.0,
+    "note": ""
+   },
+   {
+    "grid": "A",
+    "n": 26,
+    "formula": 59.3124,
+    "song_bar": 58,
+    "measured": 59.313,
+    "err_ms": 0.6,
+    "xcorr": 1.0,
+    "note": ""
+   },
+   {
+    "grid": "A",
+    "n": 27,
+    "formula": 61.5766,
+    "song_bar": 59,
+    "measured": 61.5772,
+    "err_ms": 0.6,
+    "xcorr": 1.0,
+    "note": "bar 59 b1-b2, then bar 63 from beat 3 (J4)"
+   },
+   {
+    "grid": "A",
+    "n": 28,
+    "formula": 63.8408,
+    "song_bar": 64,
+    "measured": 63.8416,
+    "err_ms": 0.8,
+    "xcorr": 1.0,
+    "note": ""
+   },
+   {
+    "grid": "A",
+    "n": 29,
+    "formula": 66.105,
+    "song_bar": 65,
+    "measured": 66.1058,
+    "err_ms": 0.8,
+    "xcorr": 1.0,
+    "note": ""
+   },
+   {
+    "grid": "A",
+    "n": 30,
+    "formula": 68.3692,
+    "song_bar": 66,
+    "measured": 68.37,
+    "err_ms": 0.8,
+    "xcorr": 1.0,
+    "note": "bar 66 b1-b2, then stop bar 79 hits on b3-b4 (J5)"
+   },
+   {
+    "grid": "B",
+    "n": 0,
+    "formula": 74.2586,
+    "song_bar": 16,
+    "measured": 74.2586,
+    "err_ms": 0.0,
+    "xcorr": 0.965,
+    "note": ""
+   },
+   {
+    "grid": "B",
+    "n": 1,
+    "formula": 76.5228,
+    "song_bar": 17,
+    "measured": 76.5228,
+    "err_ms": 0.0,
+    "xcorr": 1.0,
+    "note": ""
+   },
+   {
+    "grid": "B",
+    "n": 2,
+    "formula": 78.787,
+    "song_bar": 18,
+    "measured": 78.787,
+    "err_ms": -0.0,
+    "xcorr": 1.0,
+    "note": ""
+   },
+   {
+    "grid": "B",
+    "n": 3,
+    "formula": 81.0512,
+    "song_bar": 19,
+    "measured": 81.0512,
+    "err_ms": 0.0,
+    "xcorr": 1.0,
+    "note": ""
+   },
+   {
+    "grid": "B",
+    "n": 4,
+    "formula": 83.3154,
+    "song_bar": 20,
+    "measured": 83.3154,
+    "err_ms": -0.0,
+    "xcorr": 1.0,
+    "note": ""
+   },
+   {
+    "grid": "B",
+    "n": 5,
+    "formula": 85.5796,
+    "song_bar": 21,
+    "measured": 85.5796,
+    "err_ms": 0.0,
+    "xcorr": 1.0,
+    "note": ""
+   },
+   {
+    "grid": "B",
+    "n": 6,
+    "formula": 87.8438,
+    "song_bar": 22,
+    "measured": 87.8438,
+    "err_ms": 0.0,
+    "xcorr": 1.0,
+    "note": ""
+   },
+   {
+    "grid": "B",
+    "n": 7,
+    "formula": 90.108,
+    "song_bar": 23,
+    "measured": 90.108,
+    "err_ms": 0.0,
+    "xcorr": 1.0,
+    "note": ""
+   },
+   {
+    "grid": "B",
+    "n": 8,
+    "formula": 92.3722,
+    "song_bar": 80,
+    "measured": 92.3722,
+    "err_ms": 0.0,
+    "xcorr": 0.998,
+    "note": "lead-in 80 b1-b2, then bar 82 from beat 3 (J8)"
+   },
+   {
+    "grid": "B",
+    "n": 9,
+    "formula": 94.6364,
+    "song_bar": 83,
+    "measured": 94.6365,
+    "err_ms": 0.1,
+    "xcorr": 1.0,
+    "note": ""
+   },
+   {
+    "grid": "B",
+    "n": 10,
+    "formula": 96.9006,
+    "song_bar": 84,
+    "measured": 96.9007,
+    "err_ms": 0.1,
+    "xcorr": 1.0,
+    "note": ""
+   },
+   {
+    "grid": "B",
+    "n": 11,
+    "formula": 99.1648,
+    "song_bar": 85,
+    "measured": 99.1649,
+    "err_ms": 0.1,
+    "xcorr": 1.0,
+    "note": ""
+   },
+   {
+    "grid": "B",
+    "n": 12,
+    "formula": 101.429,
+    "song_bar": 86,
+    "measured": 101.4291,
+    "err_ms": 0.1,
+    "xcorr": 1.0,
+    "note": ""
+   },
+   {
+    "grid": "B",
+    "n": 13,
+    "formula": 103.6932,
+    "song_bar": 87,
+    "measured": 103.6933,
+    "err_ms": 0.1,
+    "xcorr": 1.0,
+    "note": ""
+   },
+   {
+    "grid": "B",
+    "n": 14,
+    "formula": 105.9574,
+    "song_bar": 88,
+    "measured": 105.9575,
+    "err_ms": 0.1,
+    "xcorr": 0.999,
+    "note": ""
+   },
+   {
+    "grid": "B",
+    "n": 15,
+    "formula": 108.2216,
+    "song_bar": 89,
+    "measured": 108.2217,
+    "err_ms": 0.1,
+    "xcorr": 1.0,
+    "note": ""
+   },
+   {
+    "grid": "B",
+    "n": 16,
+    "formula": 110.4858,
+    "song_bar": 90,
+    "measured": 110.4859,
+    "err_ms": 0.1,
+    "xcorr": 1.0,
+    "note": ""
+   },
+   {
+    "grid": "B",
+    "n": 17,
+    "formula": 112.75,
+    "song_bar": 105,
+    "measured": 112.75,
+    "err_ms": 0.0,
+    "xcorr": 0.9,
+    "note": "END CARD: drums stop, coda bar 105 (J9)"
+   },
+   {
+    "grid": "B",
+    "n": 18,
+    "formula": 115.0142,
+    "song_bar": 106,
+    "measured": 115.0142,
+    "err_ms": 0.0,
+    "xcorr": 1.0,
+    "note": ""
+   },
+   {
+    "grid": "B",
+    "n": 19,
+    "formula": 117.2784,
+    "song_bar": 107,
+    "measured": 117.2784,
+    "err_ms": 0.0,
+    "xcorr": 1.0,
+    "note": "coda bar 107, fading 117.27 -> 119.10"
+   }
+  ]
+ },
+ "spans": [
+  {
+   "seg": "S1",
+   "film": [
+    0.0,
+    17.9507
+   ],
+   "song": [
+    45.4096,
+    63.3604
+   ],
+   "lag_ms": 0.0,
+   "bars": "19 (last 0.44 s) | 20-23 chorus-1 end, bar 23 beat-4 break 8.93-9.50 | 24-27b2 verse",
+   "note": "TITLE = bar 24 re-entry at DA(4) 9.50"
+  },
+  {
+   "seg": "S2",
+   "film": [
+    17.4647,
+    53.6119
+   ],
+   "song": [
+    17.5913,
+    53.7385
+   ],
+   "lag_ms": 0.979,
+   "bars": "7b3-b4 | B pre 8-15 (15 = fill under 先猜？) | chorus-1 16-23b1 (16 = release at DA(16) 36.67)",
+   "note": "the song at offset 0.1256 (same alignment as the untouched alt)"
+  },
+  {
+   "seg": "S3",
+   "film": [
+    53.1258,
+    63.2348
+   ],
+   "song": [
+    125.7053,
+    135.8142
+   ],
+   "lag_ms": -0.583,
+   "bars": "55b2-b4 (shallow break 54.22-54.78) | verse 56-58 | 59b1-b2",
+   "note": ""
+  },
+  {
+   "seg": "S4",
+   "film": [
+    62.7487,
+    69.5413
+   ],
+   "song": [
+    144.3847,
+    151.1773
+   ],
+   "lag_ms": -0.771,
+   "bars": "63b3-b4 | valley 64-65 | 66b1-b2 (hits at 63.84 and 68.37)",
+   "note": ""
+  },
+  {
+   "seg": "S5",
+   "film": [
+    69.4903,
+    70.5147
+   ],
+   "song": [
+    179.4296,
+    180.454
+   ],
+   "lag_ms": 0.0,
+   "bars": "stop bar 79: four eighth-note hits on DA(30) beats 3-4 (69.50-70.51), then the song's own digital silence",
+   "note": ""
+  },
+  {
+   "seg": "HUSH",
+   "film": [
+    70.5147,
+    74.2586
+   ],
+   "song": "gap",
+   "bars": "stop-bar ring (-12 dB, tau 0.55 s) -> near silence (< -45 LUFS-M 72.3-73.6) -> reversed-reverb inhale (-10 dB, 1.0 s)"
+  },
+  {
+   "seg": "S6",
+   "film": [
+    74.2478,
+    92.3692
+   ],
+   "song": [
+    36.7853,
+    54.9066
+   ],
+   "lag_ms": 0.0,
+   "bars": "chorus-1 16-23 (bar 23 beat-4 deep break 91.81-92.37)",
+   "note": "RETURN on the bar-16 downbeat at DB(0)"
+  },
+  {
+   "seg": "S7",
+   "film": [
+    92.3122,
+    94.0303
+   ],
+   "song": [
+    182.2108,
+    183.929
+   ],
+   "lag_ms": 0.0,
+   "bars": "lead-in 80 b1-b2 from its first note",
+   "note": ""
+  },
+  {
+   "seg": "S8",
+   "film": [
+    93.5443,
+    112.74
+   ],
+   "song": [
+    187.9712,
+    207.1669
+   ],
+   "lag_ms": -0.083,
+   "bars": "82b3-b4 | 83 | DROP 84 | 85-87 | ARRIVAL 88 | 89 | 90",
+   "note": "DROP at DB(10) 96.90, ARRIVAL at DB(14) 105.957"
+  },
+  {
+   "seg": "S9",
+   "film": [
+    112.61,
+    119.11
+   ],
+   "song": [
+    238.7358,
+    245.2358
+   ],
+   "lag_ms": 0.0,
+   "bars": "coda 105 (Bbm) | 106 (Gb-F) | 107 fading 117.27-119.10",
+   "note": "drums out from DB(17) 112.75"
+  }
+ ],
+ "joins": {
+  "J2": {
+   "film": [
+    17.4647,
+    17.9507
+   ],
+   "kind": "copy xfade (linear)",
+   "lag_ms": 0.979,
+   "r": 0.96,
+   "cut": "bar 27 -> bar 7 inside beat 3 (27~7), so bar 8 follows the song's own bar 7",
+   "window": [
+    17.4647,
+    17.9507
+   ],
+   "max_5ms_step_in_join_db": 8.6,
+   "p99_5ms_step_around_db": 8.0,
+   "hf_peak_in_join_vs_p95_around_db": 1.4,
+   "spectral_jump_db": 1.8,
+   "spectral_jump_typical_offbeat_db": 3.8
+  },
+  "J3": {
+   "film": [
+    53.1258,
+    53.6119
+   ],
+   "kind": "copy xfade (linear)",
+   "lag_ms": -0.583,
+   "r": 0.953,
+   "cut": "bar 23 -> bar 55 inside beat 2 (23~55), so n24 follows the shallow chorus-2 break",
+   "window": [
+    53.1258,
+    53.6119
+   ],
+   "max_5ms_step_in_join_db": 10.9,
+   "p99_5ms_step_around_db": 10.3,
+   "hf_peak_in_join_vs_p95_around_db": -4.1,
+   "spectral_jump_db": 2.0,
+   "spectral_jump_typical_offbeat_db": 3.8
+  },
+  "J4": {
+   "film": [
+    62.7487,
+    63.2348
+   ],
+   "kind": "copy xfade (linear)",
+   "lag_ms": -0.771,
+   "r": 0.925,
+   "cut": "bar 59 -> bar 63 inside beat 3 (59~63), so the valley follows bar 63 as in the song",
+   "window": [
+    62.7487,
+    63.2348
+   ],
+   "max_5ms_step_in_join_db": 7.2,
+   "p99_5ms_step_around_db": 7.7,
+   "hf_peak_in_join_vs_p95_around_db": 0.7,
+   "spectral_jump_db": 2.3,
+   "spectral_jump_typical_offbeat_db": 3.8
+  },
+  "J5": {
+   "film_out": [
+    69.4993,
+    69.5413
+   ],
+   "film_in": [
+    69.4903,
+    69.4918
+   ],
+   "kind": "cut (equal-power)",
+   "lag_ms": 0.0,
+   "r": null,
+   "cut": "valley 66 beat 2 -> stop bar 79 under its first hit (E chord on beat 3 = bar 66's own E)",
+   "window": [
+    69.4903,
+    69.5413
+   ],
+   "max_5ms_step_in_join_db": 9.2,
+   "p99_5ms_step_around_db": 8.8,
+   "hf_peak_in_join_vs_p95_around_db": -0.2,
+   "spectral_jump_db": 8.0,
+   "spectral_jump_typical_offbeat_db": 3.8
+  },
+  "J6": {
+   "film_out": null,
+   "film_in": [
+    74.2478,
+    74.2493
+   ],
+   "kind": "cut (equal-power)",
+   "lag_ms": 0.0,
+   "r": null,
+   "cut": "hush -> chorus-1 downbeat (bar 16) at DB(0), out of the inhale",
+   "window": [
+    74.2478,
+    74.2493
+   ],
+   "max_5ms_step_in_join_db": 7.8,
+   "p99_5ms_step_around_db": 8.6,
+   "hf_peak_in_join_vs_p95_around_db": 2.1,
+   "spectral_jump_db": 11.6,
+   "spectral_jump_typical_offbeat_db": 3.8
+  },
+  "J7": {
+   "film_out": [
+    92.3422,
+    92.3692
+   ],
+   "film_in": [
+    92.3122,
+    92.3222
+   ],
+   "kind": "cut (equal-power)",
+   "lag_ms": 0.0,
+   "r": null,
+   "cut": "bar 23 beat-4 break -> lead-in bar 80 from its first note (incoming starts in the song's silence)",
+   "window": [
+    92.3122,
+    92.3692
+   ],
+   "max_5ms_step_in_join_db": 16.0,
+   "p99_5ms_step_around_db": 9.9,
+   "hf_peak_in_join_vs_p95_around_db": 6.3,
+   "spectral_jump_db": 16.4,
+   "spectral_jump_typical_offbeat_db": 3.8
+  },
+  "J8": {
+   "film": [
+    93.5443,
+    94.0303
+   ],
+   "kind": "copy xfade (linear)",
+   "lag_ms": -0.083,
+   "r": 0.953,
+   "cut": "lead-in 80 -> 82 inside beat 3 (80~82)",
+   "window": [
+    93.5443,
+    94.0303
+   ],
+   "max_5ms_step_in_join_db": 7.0,
+   "p99_5ms_step_around_db": 6.3,
+   "hf_peak_in_join_vs_p95_around_db": -0.7,
+   "spectral_jump_db": 3.1,
+   "spectral_jump_typical_offbeat_db": 3.8
+  },
+  "J9": {
+   "film_out": [
+    112.715,
+    112.74
+   ],
+   "film_in": [
+    112.61,
+    112.746
+   ],
+   "kind": "cut (equal-power)",
+   "lag_ms": 0.0,
+   "r": null,
+   "cut": "bar 90 (Gb-F) -> coda bar 105 (Bbm): drums stop on the end-card downbeat, harmony V -> i",
+   "window": [
+    112.61,
+    112.746
+   ],
+   "max_5ms_step_in_join_db": 8.5,
+   "p99_5ms_step_around_db": 8.2,
+   "hf_peak_in_join_vs_p95_around_db": -4.2,
+   "spectral_jump_db": 15.0,
+   "spectral_jump_typical_offbeat_db": 3.8
+  }
+ },
+ "effects": [
+  {
+   "film": [
+    35.67,
+    36.67
+   ],
+   "what": "reversed-reverb swell of the bar-16 downbeat into the chorus release",
+   "db": -15.0
+  },
+  {
+   "film": [
+    69.501,
+    72.501
+   ],
+   "what": "stop-bar ring (reverb of the four hits, tau 0.55 s)",
+   "db": -12.0
+  },
+  {
+   "film": [
+    73.259,
+    74.259
+   ],
+   "what": "reversed-reverb inhale of the bar-16 downbeat into DB(0)",
+   "db": -10.0
+  }
+ ],
+ "gain_rides": [
+  {
+   "film": [
+    74.2586,
+    96.9006
+   ],
+   "db": "-1.5 -> 0 (linear in dB)",
+   "why": "post-hush chorus + lead-in grow into the drop"
+  },
+  {
+   "film": [
+    105.9574,
+    112.75
+   ],
+   "db": 1.0,
+   "why": "arrival (bars 88-90, P1 + P2 + air); step under the 88 downbeat, removed under the fall"
+  },
+  {
+   "film": [
+    117.27,
+    119.1
+   ],
+   "db": "fade (cos^1.5)",
+   "why": "coda bar 107 (Bbm) fades out, silent before 119.25"
+  }
+ ],
+ "landmarks": [
+  {
+   "event": "hook: bar 20 downbeat (fridge door)",
+   "song_s": 45.853,
+   "film_formula": 0.443,
+   "film_measured": 0.443,
+   "err_ms": -0.0,
+   "xcorr": 1.0
+  },
+  {
+   "event": "bar 23 beat-4 break",
+   "song_s": 54.344,
+   "film_formula": 8.934,
+   "film_measured": 8.934,
+   "err_ms": -0.0,
+   "xcorr": 1.0
+  },
+  {
+   "event": "TITLE: bar 24 re-entry",
+   "song_s": 54.91,
+   "film_formula": 9.5,
+   "film_measured": 9.5,
+   "err_ms": 0.0,
+   "xcorr": 1.0
+  },
+  {
+   "event": "B pre bar 8 (after J2)",
+   "song_s": 18.682,
+   "film_formula": 18.557,
+   "film_measured": 18.556,
+   "err_ms": -1.0,
+   "xcorr": 1.0
+  },
+  {
+   "event": "fill bar 15 (先猜？ hold)",
+   "song_s": 34.532,
+   "film_formula": 34.406,
+   "film_measured": 34.405,
+   "err_ms": -1.0,
+   "xcorr": 1.0
+  },
+  {
+   "event": "RELEASE: chorus bar 16",
+   "song_s": 36.796,
+   "film_formula": 36.67,
+   "film_measured": 36.669,
+   "err_ms": -1.0,
+   "xcorr": 0.995
+  },
+  {
+   "event": "Tang Q: chorus bar 20",
+   "song_s": 45.853,
+   "film_formula": 45.727,
+   "film_measured": 45.726,
+   "err_ms": -1.0,
+   "xcorr": 1.0
+  },
+  {
+   "event": "bar 55 break (after J3)",
+   "song_s": 126.798,
+   "film_formula": 54.218,
+   "film_measured": 54.219,
+   "err_ms": 0.6,
+   "xcorr": 1.0
+  },
+  {
+   "event": "Song street: verse 56",
+   "song_s": 127.364,
+   "film_formula": 54.784,
+   "film_measured": 54.785,
+   "err_ms": 0.6,
+   "xcorr": 1.0
+  },
+  {
+   "event": "Q4 清: valley 64 hit",
+   "song_s": 145.478,
+   "film_formula": 63.841,
+   "film_measured": 63.842,
+   "err_ms": 0.8,
+   "xcorr": 1.0
+  },
+  {
+   "event": "墙厚两米: valley 66 hit",
+   "song_s": 150.006,
+   "film_formula": 68.369,
+   "film_measured": 68.37,
+   "err_ms": 0.8,
+   "xcorr": 1.0
+  },
+  {
+   "event": "STOP hits (bar 79)",
+   "song_s": 179.441,
+   "film_formula": 69.501,
+   "film_measured": 69.501,
+   "err_ms": 0.0,
+   "xcorr": 0.933
+  },
+  {
+   "event": "RETURN: chorus bar 16",
+   "song_s": 36.796,
+   "film_formula": 74.259,
+   "film_measured": 74.259,
+   "err_ms": 0.0,
+   "xcorr": 0.965
+  },
+  {
+   "event": "bar 23 break before the lead-in",
+   "song_s": 54.344,
+   "film_formula": 91.806,
+   "film_measured": 91.806,
+   "err_ms": -0.0,
+   "xcorr": 1.0
+  },
+  {
+   "event": "lead-in first note (bar 80)",
+   "song_s": 182.271,
+   "film_formula": 92.372,
+   "film_measured": 92.372,
+   "err_ms": 0.0,
+   "xcorr": 0.998
+  },
+  {
+   "event": "lead-in bar 83",
+   "song_s": 189.063,
+   "film_formula": 94.636,
+   "film_measured": 94.636,
+   "err_ms": 0.1,
+   "xcorr": 1.0
+  },
+  {
+   "event": "DROP bar 84",
+   "song_s": 191.328,
+   "film_formula": 96.901,
+   "film_measured": 96.901,
+   "err_ms": 0.1,
+   "xcorr": 1.0
+  },
+  {
+   "event": "ARRIVAL bar 88 (Bb minor)",
+   "song_s": 200.384,
+   "film_formula": 105.957,
+   "film_measured": 105.957,
+   "err_ms": 0.1,
+   "xcorr": 0.999
+  },
+  {
+   "event": "bar 89 (P2)",
+   "song_s": 202.649,
+   "film_formula": 108.222,
+   "film_measured": 108.222,
+   "err_ms": 0.1,
+   "xcorr": 1.0
+  },
+  {
+   "event": "bar 90 (air)",
+   "song_s": 204.913,
+   "film_formula": 110.486,
+   "film_measured": 110.486,
+   "err_ms": 0.1,
+   "xcorr": 1.0
+  },
+  {
+   "event": "FALL: coda bar 105",
+   "song_s": 238.876,
+   "film_formula": 112.75,
+   "film_measured": 112.75,
+   "err_ms": 0.0,
+   "xcorr": 0.9
+  },
+  {
+   "event": "coda bar 106",
+   "song_s": 241.14,
+   "film_formula": 115.014,
+   "film_measured": 115.014,
+   "err_ms": 0.0,
+   "xcorr": 1.0
+  },
+  {
+   "event": "coda bar 107",
+   "song_s": 243.404,
+   "film_formula": 117.278,
+   "film_measured": 117.278,
+   "err_ms": 0.0,
+   "xcorr": 1.0
+  }
+ ],
+ "line_starts_vs_grid": [
+  {
+   "start": 0.0,
+   "text": "2400多年前，中国就有\"冰箱\"了。 / 可它自己，[不会冷]。",
+   "grid": "A",
+   "nearest_beat": -0.123,
+   "grid_bar": -1,
+   "beat": 4,
+   "delta": -0.123
+  },
+  {
+   "start": 4.25,
+   "text": "它的冷，是冬天凿下的冰，",
+   "grid": "A",
+   "nearest_beat": 4.406,
+   "grid_bar": 1,
+   "beat": 4,
+   "delta": 0.156
+  },
+  {
+   "start": 7.0,
+   "text": "从冬天，一直撑到夏天。",
+   "grid": "A",
+   "nearest_beat": 7.236,
+   "grid_bar": 3,
+   "beat": 1,
+   "delta": 0.236
+  },
+  {
+   "start": 12.5,
+   "text": "二之日凿冰冲冲，三之日纳于凌阴。 / {寒冬凿冰，藏进冰窖}",
+   "grid": "A",
+   "nearest_beat": 12.33,
+   "grid_bar": 5,
+   "beat": 2,
+   "delta": -0.17
+  },
+  {
+   "start": 16.75,
+   "text": "还设了专管冰的官， / 手下光干活的，就有80人。",
+   "grid": "A",
+   "nearest_beat": 16.859,
+   "grid_bar": 7,
+   "beat": 2,
+   "delta": 0.109
+  },
+  {
+   "start": 21.0,
+   "text": "凿冰，要备足[三倍]的量。",
+   "grid": "A",
+   "nearest_beat": 20.821,
+   "grid_bar": 9,
+   "beat": 1,
+   "delta": -0.179
+  },
+  {
+   "start": 23.5,
+   "text": "考古真挖到过：秦国的地下冰窖。",
+   "grid": "A",
+   "nearest_beat": 23.651,
+   "grid_bar": 10,
+   "beat": 2,
+   "delta": 0.151
+  },
+  {
+   "start": 26.5,
+   "text": "战国早期，开头那件\"冰箱\"登场。",
+   "grid": "A",
+   "nearest_beat": 26.482,
+   "grid_bar": 11,
+   "beat": 3,
+   "delta": -0.018
+  },
+  {
+   "start": 29.5,
+   "text": "方形铜盆里，套着一只方罐，",
+   "grid": "A",
+   "nearest_beat": 29.312,
+   "grid_bar": 12,
+   "beat": 4,
+   "delta": -0.188
+  },
+  {
+   "start": 32.25,
+   "text": "冰，就塞在盆和罐的中间。",
+   "grid": "A",
+   "nearest_beat": 32.142,
+   "grid_bar": 14,
+   "beat": 1,
+   "delta": -0.108
+  },
+  {
+   "start": 37.25,
+   "text": "罐里装的，是[酒]。",
+   "grid": "A",
+   "nearest_beat": 37.236,
+   "grid_bar": 16,
+   "beat": 2,
+   "delta": -0.014
+  },
+  {
+   "start": 39.25,
+   "text": "到了冬天，它还能[温]酒。",
+   "grid": "A",
+   "nearest_beat": 39.501,
+   "grid_bar": 17,
+   "beat": 2,
+   "delta": 0.251
+  },
+  {
+   "start": 41.75,
+   "text": "这么费劲的冰， / 只有朝廷和达官显贵用得起。",
+   "grid": "A",
+   "nearest_beat": 41.765,
+   "grid_bar": 18,
+   "beat": 2,
+   "delta": 0.015
+  },
+  {
+   "start": 45.75,
+   "text": "取大冰，使匠琢为山。 / {唐朝权贵：让工匠把大冰雕成山}",
+   "grid": "A",
+   "nearest_beat": 45.727,
+   "grid_bar": 20,
+   "beat": 1,
+   "delta": -0.023
+  },
+  {
+   "start": 50.0,
+   "text": "能吃的叫\"酥山\"：乳酥淋成小山，",
+   "grid": "A",
+   "nearest_beat": 50.256,
+   "grid_bar": 22,
+   "beat": 1,
+   "delta": 0.256
+  },
+  {
+   "start": 53.0,
+   "text": "进冰窖冻好，有点像[冰淇淋]。",
+   "grid": "A",
+   "nearest_beat": 53.086,
+   "grid_bar": 23,
+   "beat": 2,
+   "delta": 0.086
+  },
+  {
+   "start": 55.75,
+   "text": "到了北宋，冰上了街： / 汴京六月，青布伞下卖\"冰雪\"。",
+   "grid": "A",
+   "nearest_beat": 55.916,
+   "grid_bar": 24,
+   "beat": 3,
+   "delta": 0.166
+  },
+  {
+   "start": 60.0,
+   "text": "卖得最好的两家，全用[银器]。",
+   "grid": "A",
+   "nearest_beat": 59.878,
+   "grid_bar": 26,
+   "beat": 2,
+   "delta": -0.122
+  },
+  {
+   "start": 62.75,
+   "text": "于夜内凿之，声如錾石。 / {清朝北京：夜里凿冰，声音像凿石头}",
+   "grid": "A",
+   "nearest_beat": 62.709,
+   "grid_bar": 27,
+   "beat": 3,
+   "delta": -0.041
+  },
+  {
+   "start": 67.25,
+   "text": "清宫冰窖建在半地下，墙厚两米，",
+   "grid": "A",
+   "nearest_beat": 67.237,
+   "grid_bar": 29,
+   "beat": 3,
+   "delta": -0.013
+  },
+  {
+   "start": 70.25,
+   "text": "可存到夏天，还是会化掉约2/3。",
+   "grid": "A",
+   "nearest_beat": 70.067,
+   "grid_bar": 30,
+   "beat": 4,
+   "delta": -0.183
+  },
+  {
+   "start": 73.5,
+   "text": "存三份，化两份，剩下[一份]。",
+   "grid": "hush",
+   "note": "no pulse (70.63-74.26)"
+  },
+  {
+   "start": 76.25,
+   "text": "夏天，官员凭[冰票]领冰。",
+   "grid": "B",
+   "nearest_beat": 76.523,
+   "grid_bar": 1,
+   "beat": 1,
+   "delta": 0.273
+  },
+  {
+   "start": 78.75,
+   "text": "领多领少，按等级分。",
+   "grid": "B",
+   "nearest_beat": 78.787,
+   "grid_bar": 2,
+   "beat": 1,
+   "delta": 0.037
+  },
+  {
+   "start": 81.0,
+   "text": "卖酸梅汤的，敲两只铜碗当吆喝，",
+   "grid": "B",
+   "nearest_beat": 81.051,
+   "grid_bar": 3,
+   "beat": 1,
+   "delta": 0.051
+  },
+  {
+   "start": 84.0,
+   "text": "冰镇酸梅汤，凉得牙齿打颤。",
+   "grid": "B",
+   "nearest_beat": 83.881,
+   "grid_bar": 4,
+   "beat": 2,
+   "delta": -0.119
+  },
+  {
+   "start": 86.75,
+   "text": "故宫里，就藏着乾隆的\"冰箱\"：",
+   "grid": "B",
+   "nearest_beat": 86.712,
+   "grid_bar": 5,
+   "beat": 3,
+   "delta": -0.038
+  },
+  {
+   "start": 89.5,
+   "text": "箱里装冰，凉气从铜钱孔冒出，",
+   "grid": "B",
+   "nearest_beat": 89.542,
+   "grid_bar": 6,
+   "beat": 4,
+   "delta": 0.042
+  },
+  {
+   "start": 92.5,
+   "text": "凉的是[整间屋子]。",
+   "grid": "B",
+   "nearest_beat": 92.372,
+   "grid_bar": 8,
+   "beat": 1,
+   "delta": -0.128
+  },
+  {
+   "start": 94.75,
+   "text": "机械制冷的冰箱，19世纪才发明。",
+   "grid": "B",
+   "nearest_beat": 94.636,
+   "grid_bar": 9,
+   "beat": 1,
+   "delta": -0.114
+  },
+  {
+   "start": 98.0,
+   "text": "1990年，农村每百户只有[1.22台]。",
+   "grid": "B",
+   "nearest_beat": 98.033,
+   "grid_bar": 10,
+   "beat": 3,
+   "delta": 0.033
+  },
+  {
+   "start": 101.0,
+   "text": "2024年，全国每百户[104.8台]。",
+   "grid": "B",
+   "nearest_beat": 100.863,
+   "grid_bar": 11,
+   "beat": 4,
+   "delta": -0.137
+  },
+  {
+   "start": 103.75,
+   "text": "冰箱，比家庭还多了。",
+   "grid": "B",
+   "nearest_beat": 103.693,
+   "grid_bar": 13,
+   "beat": 1,
+   "delta": -0.057
+  },
+  {
+   "start": 106.0,
+   "text": "古人的\"冰箱\"里，装的是[冬天]。",
+   "grid": "B",
+   "nearest_beat": 105.957,
+   "grid_bar": 14,
+   "beat": 1,
+   "delta": -0.043
+  },
+  {
+   "start": 108.75,
+   "text": "今天的冰箱，自己就能造出冬天。",
+   "grid": "B",
+   "nearest_beat": 108.788,
+   "grid_bar": 15,
+   "beat": 2,
+   "delta": 0.038
+  },
+  {
+   "start": 112.75,
+   "text": "你家冰箱里，现在冻着什么？",
+   "grid": "B",
+   "nearest_beat": 112.75,
+   "grid_bar": 17,
+   "beat": 1,
+   "delta": 0.0
+  }
+ ]
+}

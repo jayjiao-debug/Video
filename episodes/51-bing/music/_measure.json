@@ -1,0 +1,906 @@
+{
+ "grid_check": {
+  "max_abs_err_ms": 1.0,
+  "mean_abs_err_ms": 0.5,
+  "n": 48,
+  "beat_onsets": {
+   "beats_checked": 190,
+   "with_clear_onset": 163,
+   "median_offset_ms": -1.5,
+   "p90_abs_offset_ms": 26.1
+  }
+ },
+ "landmarks": [
+  {
+   "event": "hook: bar 20 downbeat (fridge door)",
+   "song_s": 45.853,
+   "film_formula": 0.443,
+   "film_measured": 0.443,
+   "err_ms": -0.0,
+   "xcorr": 1.0
+  },
+  {
+   "event": "bar 23 beat-4 break",
+   "song_s": 54.344,
+   "film_formula": 8.934,
+   "film_measured": 8.934,
+   "err_ms": -0.0,
+   "xcorr": 1.0
+  },
+  {
+   "event": "TITLE: bar 24 re-entry",
+   "song_s": 54.91,
+   "film_formula": 9.5,
+   "film_measured": 9.5,
+   "err_ms": 0.0,
+   "xcorr": 1.0
+  },
+  {
+   "event": "B pre bar 8 (after J2)",
+   "song_s": 18.682,
+   "film_formula": 18.557,
+   "film_measured": 18.556,
+   "err_ms": -1.0,
+   "xcorr": 1.0
+  },
+  {
+   "event": "fill bar 15 (先猜？ hold)",
+   "song_s": 34.532,
+   "film_formula": 34.406,
+   "film_measured": 34.405,
+   "err_ms": -1.0,
+   "xcorr": 1.0
+  },
+  {
+   "event": "RELEASE: chorus bar 16",
+   "song_s": 36.796,
+   "film_formula": 36.67,
+   "film_measured": 36.669,
+   "err_ms": -1.0,
+   "xcorr": 0.995
+  },
+  {
+   "event": "Tang Q: chorus bar 20",
+   "song_s": 45.853,
+   "film_formula": 45.727,
+   "film_measured": 45.726,
+   "err_ms": -1.0,
+   "xcorr": 1.0
+  },
+  {
+   "event": "bar 55 break (after J3)",
+   "song_s": 126.798,
+   "film_formula": 54.218,
+   "film_measured": 54.219,
+   "err_ms": 0.6,
+   "xcorr": 1.0
+  },
+  {
+   "event": "Song street: verse 56",
+   "song_s": 127.364,
+   "film_formula": 54.784,
+   "film_measured": 54.785,
+   "err_ms": 0.6,
+   "xcorr": 1.0
+  },
+  {
+   "event": "Q4 清: valley 64 hit",
+   "song_s": 145.478,
+   "film_formula": 63.841,
+   "film_measured": 63.842,
+   "err_ms": 0.8,
+   "xcorr": 1.0
+  },
+  {
+   "event": "墙厚两米: valley 66 hit",
+   "song_s": 150.006,
+   "film_formula": 68.369,
+   "film_measured": 68.37,
+   "err_ms": 0.8,
+   "xcorr": 1.0
+  },
+  {
+   "event": "STOP hits (bar 79)",
+   "song_s": 179.441,
+   "film_formula": 69.501,
+   "film_measured": 69.501,
+   "err_ms": 0.0,
+   "xcorr": 0.933
+  },
+  {
+   "event": "RETURN: chorus bar 16",
+   "song_s": 36.796,
+   "film_formula": 74.259,
+   "film_measured": 74.259,
+   "err_ms": 0.0,
+   "xcorr": 0.965
+  },
+  {
+   "event": "bar 23 break before the lead-in",
+   "song_s": 54.344,
+   "film_formula": 91.806,
+   "film_measured": 91.806,
+   "err_ms": -0.0,
+   "xcorr": 1.0
+  },
+  {
+   "event": "lead-in first note (bar 80)",
+   "song_s": 182.271,
+   "film_formula": 92.372,
+   "film_measured": 92.372,
+   "err_ms": 0.0,
+   "xcorr": 0.998
+  },
+  {
+   "event": "lead-in bar 83",
+   "song_s": 189.063,
+   "film_formula": 94.636,
+   "film_measured": 94.636,
+   "err_ms": 0.1,
+   "xcorr": 1.0
+  },
+  {
+   "event": "DROP bar 84",
+   "song_s": 191.328,
+   "film_formula": 96.901,
+   "film_measured": 96.901,
+   "err_ms": 0.1,
+   "xcorr": 1.0
+  },
+  {
+   "event": "ARRIVAL bar 88 (Bb minor)",
+   "song_s": 200.384,
+   "film_formula": 105.957,
+   "film_measured": 105.957,
+   "err_ms": 0.1,
+   "xcorr": 0.999
+  },
+  {
+   "event": "bar 89 (P2)",
+   "song_s": 202.649,
+   "film_formula": 108.222,
+   "film_measured": 108.222,
+   "err_ms": 0.1,
+   "xcorr": 1.0
+  },
+  {
+   "event": "bar 90 (air)",
+   "song_s": 204.913,
+   "film_formula": 110.486,
+   "film_measured": 110.486,
+   "err_ms": 0.1,
+   "xcorr": 1.0
+  },
+  {
+   "event": "FALL: coda bar 105",
+   "song_s": 238.876,
+   "film_formula": 112.75,
+   "film_measured": 112.75,
+   "err_ms": 0.0,
+   "xcorr": 0.9
+  },
+  {
+   "event": "coda bar 106",
+   "song_s": 241.14,
+   "film_formula": 115.014,
+   "film_measured": 115.014,
+   "err_ms": 0.0,
+   "xcorr": 1.0
+  },
+  {
+   "event": "coda bar 107",
+   "song_s": 243.404,
+   "film_formula": 117.278,
+   "film_measured": 117.278,
+   "err_ms": 0.0,
+   "xcorr": 1.0
+  }
+ ],
+ "joins": {
+  "J2": {
+   "window": [
+    17.4647,
+    17.9507
+   ],
+   "max_5ms_step_in_join_db": 8.6,
+   "p99_5ms_step_around_db": 8.0,
+   "hf_peak_in_join_vs_p95_around_db": 1.4,
+   "spectral_jump_db": 1.8,
+   "spectral_jump_typical_offbeat_db": 3.8
+  },
+  "J3": {
+   "window": [
+    53.1258,
+    53.6119
+   ],
+   "max_5ms_step_in_join_db": 10.9,
+   "p99_5ms_step_around_db": 10.3,
+   "hf_peak_in_join_vs_p95_around_db": -4.1,
+   "spectral_jump_db": 2.0,
+   "spectral_jump_typical_offbeat_db": 3.8
+  },
+  "J4": {
+   "window": [
+    62.7487,
+    63.2348
+   ],
+   "max_5ms_step_in_join_db": 7.2,
+   "p99_5ms_step_around_db": 7.7,
+   "hf_peak_in_join_vs_p95_around_db": 0.7,
+   "spectral_jump_db": 2.3,
+   "spectral_jump_typical_offbeat_db": 3.8
+  },
+  "J5": {
+   "window": [
+    69.4903,
+    69.5413
+   ],
+   "max_5ms_step_in_join_db": 9.2,
+   "p99_5ms_step_around_db": 8.8,
+   "hf_peak_in_join_vs_p95_around_db": -0.2,
+   "spectral_jump_db": 8.0,
+   "spectral_jump_typical_offbeat_db": 3.8
+  },
+  "J6": {
+   "window": [
+    74.2478,
+    74.2493
+   ],
+   "max_5ms_step_in_join_db": 7.8,
+   "p99_5ms_step_around_db": 8.6,
+   "hf_peak_in_join_vs_p95_around_db": 2.1,
+   "spectral_jump_db": 11.6,
+   "spectral_jump_typical_offbeat_db": 3.8
+  },
+  "J7": {
+   "window": [
+    92.3122,
+    92.3692
+   ],
+   "max_5ms_step_in_join_db": 16.0,
+   "p99_5ms_step_around_db": 9.9,
+   "hf_peak_in_join_vs_p95_around_db": 6.3,
+   "spectral_jump_db": 16.4,
+   "spectral_jump_typical_offbeat_db": 3.8
+  },
+  "J8": {
+   "window": [
+    93.5443,
+    94.0303
+   ],
+   "max_5ms_step_in_join_db": 7.0,
+   "p99_5ms_step_around_db": 6.3,
+   "hf_peak_in_join_vs_p95_around_db": -0.7,
+   "spectral_jump_db": 3.1,
+   "spectral_jump_typical_offbeat_db": 3.8
+  },
+  "J9": {
+   "window": [
+    112.61,
+    112.746
+   ],
+   "max_5ms_step_in_join_db": 8.5,
+   "p99_5ms_step_around_db": 8.2,
+   "hf_peak_in_join_vs_p95_around_db": -4.2,
+   "spectral_jump_db": 15.0,
+   "spectral_jump_typical_offbeat_db": 3.8
+  }
+ },
+ "hush": {
+  "below_minus45_lufsM_s": 1.35,
+  "first": 72.3,
+  "last": 73.6,
+  "lowest_M": -64.1,
+  "M_at": {
+   "70.00": -11.5,
+   "70.40": -12.9,
+   "70.63": -17.4,
+   "71.00": -25.0,
+   "71.50": -32.8,
+   "72.00": -39.9,
+   "72.50": -48.9,
+   "73.00": -58.5,
+   "73.50": -54.4,
+   "74.00": -27.3,
+   "74.20": -16.2,
+   "74.50": -14.1
+  }
+ },
+ "sag_3s_more_than_6dB_under_body": [],
+ "body_short_term_lufs": -13.6,
+ "sections": {
+  "hook 0-9.50": {
+   "short_term_lufs": -13.5,
+   "centroid_hz": 2281
+  },
+  "title verse 9.50-18.56": {
+   "short_term_lufs": -13.7,
+   "centroid_hz": 2427
+  },
+  "B pre 18.56-36.67 (周/战国, 先猜？)": {
+   "short_term_lufs": -14.3,
+   "centroid_hz": 2869
+  },
+  "chorus 36.67-54.78 (酒 -> Tang)": {
+   "short_term_lufs": -13.3,
+   "centroid_hz": 2259
+  },
+  "verse 54.78-63.84 (Song street, 银器)": {
+   "short_term_lufs": -13.5,
+   "centroid_hz": 2429
+  },
+  "valley 63.84-69.50 (清 night)": {
+   "short_term_lufs": -16.2,
+   "centroid_hz": 1880
+  },
+  "stop hits 69.50-70.63": {
+   "short_term_lufs": -12.4,
+   "centroid_hz": 1052
+  },
+  "hush 70.63-74.26": {
+   "short_term_lufs": -26.5,
+   "centroid_hz": 1310
+  },
+  "return chorus 74.26-92.37 (剩下一份 -> 乾隆)": {
+   "short_term_lufs": -14.3,
+   "centroid_hz": 2339
+  },
+  "lead-in 92.37-96.90 (整间屋子)": {
+   "short_term_lufs": -16.0,
+   "centroid_hz": 2118
+  },
+  "drop 96.90-105.96 (19世纪 -> numbers)": {
+   "short_term_lufs": -13.6,
+   "centroid_hz": 1917
+  },
+  "ARRIVAL 105.96-112.75 (P1, P2, air)": {
+   "short_term_lufs": -12.4,
+   "centroid_hz": 2388
+  },
+  "coda 112.75-117.27 (end card)": {
+   "short_term_lufs": -17.6,
+   "centroid_hz": 1125
+  },
+  "fade 117.27-119.25": {
+   "short_term_lufs": -20.6,
+   "centroid_hz": 1182
+  }
+ },
+ "integrated_lufs": -14.0,
+ "true_peak_dbtp": -2.61,
+ "max_momentary_lufs": -11.2,
+ "max_momentary_at": 108.4,
+ "max_short_term_lufs": -12.1,
+ "max_short_term_at": 108.6,
+ "lr_correlation": 0.996,
+ "mono_fold_change_db": -0.01,
+ "band_share_db_body": {
+  "sub_20_60": -9.8,
+  "low_60_120": -4.0,
+  "mud_200_500": -8.1,
+  "harsh_2k_5k": -17.7,
+  "air_8k_16k": -23.6
+ },
+ "duration": 119.25,
+ "last_nonsilent": 119.093,
+ "untouched": {
+  "integrated_lufs": -14.0,
+  "true_peak_dbtp": -2.85,
+  "title_9p5": {
+   "M_before": -14.8,
+   "M_after": -13.5
+  }
+ },
+ "grid": [
+  {
+   "grid": "A",
+   "n": 0,
+   "formula": 0.4432,
+   "song_bar": 20,
+   "measured": 0.4432,
+   "err_ms": -0.0,
+   "xcorr": 1.0,
+   "note": ""
+  },
+  {
+   "grid": "A",
+   "n": 1,
+   "formula": 2.7074,
+   "song_bar": 21,
+   "measured": 2.7074,
+   "err_ms": -0.0,
+   "xcorr": 1.0,
+   "note": ""
+  },
+  {
+   "grid": "A",
+   "n": 2,
+   "formula": 4.9716,
+   "song_bar": 22,
+   "measured": 4.9716,
+   "err_ms": 0.0,
+   "xcorr": 1.0,
+   "note": ""
+  },
+  {
+   "grid": "A",
+   "n": 3,
+   "formula": 7.2358,
+   "song_bar": 23,
+   "measured": 7.2358,
+   "err_ms": -0.0,
+   "xcorr": 1.0,
+   "note": ""
+  },
+  {
+   "grid": "A",
+   "n": 4,
+   "formula": 9.5,
+   "song_bar": 24,
+   "measured": 9.5,
+   "err_ms": 0.0,
+   "xcorr": 1.0,
+   "note": ""
+  },
+  {
+   "grid": "A",
+   "n": 5,
+   "formula": 11.7642,
+   "song_bar": 25,
+   "measured": 11.7642,
+   "err_ms": -0.0,
+   "xcorr": 1.0,
+   "note": ""
+  },
+  {
+   "grid": "A",
+   "n": 6,
+   "formula": 14.0284,
+   "song_bar": 26,
+   "measured": 14.0284,
+   "err_ms": -0.0,
+   "xcorr": 1.0,
+   "note": ""
+  },
+  {
+   "grid": "A",
+   "n": 7,
+   "formula": 16.2926,
+   "song_bar": 27,
+   "measured": 16.2926,
+   "err_ms": 0.0,
+   "xcorr": 1.0,
+   "note": "bar 27 b1-b2, then bar 7 from beat 3 (J2)"
+  },
+  {
+   "grid": "A",
+   "n": 8,
+   "formula": 18.5568,
+   "song_bar": 8,
+   "measured": 18.5558,
+   "err_ms": -1.0,
+   "xcorr": 1.0,
+   "note": ""
+  },
+  {
+   "grid": "A",
+   "n": 9,
+   "formula": 20.821,
+   "song_bar": 9,
+   "measured": 20.82,
+   "err_ms": -1.0,
+   "xcorr": 1.0,
+   "note": ""
+  },
+  {
+   "grid": "A",
+   "n": 10,
+   "formula": 23.0852,
+   "song_bar": 10,
+   "measured": 23.0842,
+   "err_ms": -1.0,
+   "xcorr": 1.0,
+   "note": ""
+  },
+  {
+   "grid": "A",
+   "n": 11,
+   "formula": 25.3494,
+   "song_bar": 11,
+   "measured": 25.3484,
+   "err_ms": -1.0,
+   "xcorr": 1.0,
+   "note": ""
+  },
+  {
+   "grid": "A",
+   "n": 12,
+   "formula": 27.6136,
+   "song_bar": 12,
+   "measured": 27.6126,
+   "err_ms": -1.0,
+   "xcorr": 1.0,
+   "note": ""
+  },
+  {
+   "grid": "A",
+   "n": 13,
+   "formula": 29.8778,
+   "song_bar": 13,
+   "measured": 29.8768,
+   "err_ms": -1.0,
+   "xcorr": 1.0,
+   "note": ""
+  },
+  {
+   "grid": "A",
+   "n": 14,
+   "formula": 32.142,
+   "song_bar": 14,
+   "measured": 32.141,
+   "err_ms": -1.0,
+   "xcorr": 1.0,
+   "note": ""
+  },
+  {
+   "grid": "A",
+   "n": 15,
+   "formula": 34.4062,
+   "song_bar": 15,
+   "measured": 34.4052,
+   "err_ms": -1.0,
+   "xcorr": 1.0,
+   "note": ""
+  },
+  {
+   "grid": "A",
+   "n": 16,
+   "formula": 36.6704,
+   "song_bar": 16,
+   "measured": 36.6694,
+   "err_ms": -1.0,
+   "xcorr": 0.995,
+   "note": ""
+  },
+  {
+   "grid": "A",
+   "n": 17,
+   "formula": 38.9346,
+   "song_bar": 17,
+   "measured": 38.9336,
+   "err_ms": -1.0,
+   "xcorr": 1.0,
+   "note": ""
+  },
+  {
+   "grid": "A",
+   "n": 18,
+   "formula": 41.1988,
+   "song_bar": 18,
+   "measured": 41.1978,
+   "err_ms": -1.0,
+   "xcorr": 1.0,
+   "note": ""
+  },
+  {
+   "grid": "A",
+   "n": 19,
+   "formula": 43.463,
+   "song_bar": 19,
+   "measured": 43.462,
+   "err_ms": -1.0,
+   "xcorr": 1.0,
+   "note": ""
+  },
+  {
+   "grid": "A",
+   "n": 20,
+   "formula": 45.7272,
+   "song_bar": 20,
+   "measured": 45.7262,
+   "err_ms": -1.0,
+   "xcorr": 1.0,
+   "note": ""
+  },
+  {
+   "grid": "A",
+   "n": 21,
+   "formula": 47.9914,
+   "song_bar": 21,
+   "measured": 47.9904,
+   "err_ms": -1.0,
+   "xcorr": 1.0,
+   "note": ""
+  },
+  {
+   "grid": "A",
+   "n": 22,
+   "formula": 50.2556,
+   "song_bar": 22,
+   "measured": 50.2546,
+   "err_ms": -1.0,
+   "xcorr": 1.0,
+   "note": ""
+  },
+  {
+   "grid": "A",
+   "n": 23,
+   "formula": 52.5198,
+   "song_bar": 23,
+   "measured": 52.5188,
+   "err_ms": -1.0,
+   "xcorr": 1.0,
+   "note": "bar 23 b1, then bar 55 from beat 2 (J3)"
+  },
+  {
+   "grid": "A",
+   "n": 24,
+   "formula": 54.784,
+   "song_bar": 56,
+   "measured": 54.7846,
+   "err_ms": 0.6,
+   "xcorr": 1.0,
+   "note": ""
+  },
+  {
+   "grid": "A",
+   "n": 25,
+   "formula": 57.0482,
+   "song_bar": 57,
+   "measured": 57.0488,
+   "err_ms": 0.6,
+   "xcorr": 1.0,
+   "note": ""
+  },
+  {
+   "grid": "A",
+   "n": 26,
+   "formula": 59.3124,
+   "song_bar": 58,
+   "measured": 59.313,
+   "err_ms": 0.6,
+   "xcorr": 1.0,
+   "note": ""
+  },
+  {
+   "grid": "A",
+   "n": 27,
+   "formula": 61.5766,
+   "song_bar": 59,
+   "measured": 61.5772,
+   "err_ms": 0.6,
+   "xcorr": 1.0,
+   "note": "bar 59 b1-b2, then bar 63 from beat 3 (J4)"
+  },
+  {
+   "grid": "A",
+   "n": 28,
+   "formula": 63.8408,
+   "song_bar": 64,
+   "measured": 63.8416,
+   "err_ms": 0.8,
+   "xcorr": 1.0,
+   "note": ""
+  },
+  {
+   "grid": "A",
+   "n": 29,
+   "formula": 66.105,
+   "song_bar": 65,
+   "measured": 66.1058,
+   "err_ms": 0.8,
+   "xcorr": 1.0,
+   "note": ""
+  },
+  {
+   "grid": "A",
+   "n": 30,
+   "formula": 68.3692,
+   "song_bar": 66,
+   "measured": 68.37,
+   "err_ms": 0.8,
+   "xcorr": 1.0,
+   "note": "bar 66 b1-b2, then stop bar 79 hits on b3-b4 (J5)"
+  },
+  {
+   "grid": "B",
+   "n": 0,
+   "formula": 74.2586,
+   "song_bar": 16,
+   "measured": 74.2586,
+   "err_ms": 0.0,
+   "xcorr": 0.965,
+   "note": ""
+  },
+  {
+   "grid": "B",
+   "n": 1,
+   "formula": 76.5228,
+   "song_bar": 17,
+   "measured": 76.5228,
+   "err_ms": 0.0,
+   "xcorr": 1.0,
+   "note": ""
+  },
+  {
+   "grid": "B",
+   "n": 2,
+   "formula": 78.787,
+   "song_bar": 18,
+   "measured": 78.787,
+   "err_ms": -0.0,
+   "xcorr": 1.0,
+   "note": ""
+  },
+  {
+   "grid": "B",
+   "n": 3,
+   "formula": 81.0512,
+   "song_bar": 19,
+   "measured": 81.0512,
+   "err_ms": 0.0,
+   "xcorr": 1.0,
+   "note": ""
+  },
+  {
+   "grid": "B",
+   "n": 4,
+   "formula": 83.3154,
+   "song_bar": 20,
+   "measured": 83.3154,
+   "err_ms": -0.0,
+   "xcorr": 1.0,
+   "note": ""
+  },
+  {
+   "grid": "B",
+   "n": 5,
+   "formula": 85.5796,
+   "song_bar": 21,
+   "measured": 85.5796,
+   "err_ms": 0.0,
+   "xcorr": 1.0,
+   "note": ""
+  },
+  {
+   "grid": "B",
+   "n": 6,
+   "formula": 87.8438,
+   "song_bar": 22,
+   "measured": 87.8438,
+   "err_ms": 0.0,
+   "xcorr": 1.0,
+   "note": ""
+  },
+  {
+   "grid": "B",
+   "n": 7,
+   "formula": 90.108,
+   "song_bar": 23,
+   "measured": 90.108,
+   "err_ms": 0.0,
+   "xcorr": 1.0,
+   "note": ""
+  },
+  {
+   "grid": "B",
+   "n": 8,
+   "formula": 92.3722,
+   "song_bar": 80,
+   "measured": 92.3722,
+   "err_ms": 0.0,
+   "xcorr": 0.998,
+   "note": "lead-in 80 b1-b2, then bar 82 from beat 3 (J8)"
+  },
+  {
+   "grid": "B",
+   "n": 9,
+   "formula": 94.6364,
+   "song_bar": 83,
+   "measured": 94.6365,
+   "err_ms": 0.1,
+   "xcorr": 1.0,
+   "note": ""
+  },
+  {
+   "grid": "B",
+   "n": 10,
+   "formula": 96.9006,
+   "song_bar": 84,
+   "measured": 96.9007,
+   "err_ms": 0.1,
+   "xcorr": 1.0,
+   "note": ""
+  },
+  {
+   "grid": "B",
+   "n": 11,
+   "formula": 99.1648,
+   "song_bar": 85,
+   "measured": 99.1649,
+   "err_ms": 0.1,
+   "xcorr": 1.0,
+   "note": ""
+  },
+  {
+   "grid": "B",
+   "n": 12,
+   "formula": 101.429,
+   "song_bar": 86,
+   "measured": 101.4291,
+   "err_ms": 0.1,
+   "xcorr": 1.0,
+   "note": ""
+  },
+  {
+   "grid": "B",
+   "n": 13,
+   "formula": 103.6932,
+   "song_bar": 87,
+   "measured": 103.6933,
+   "err_ms": 0.1,
+   "xcorr": 1.0,
+   "note": ""
+  },
+  {
+   "grid": "B",
+   "n": 14,
+   "formula": 105.9574,
+   "song_bar": 88,
+   "measured": 105.9575,
+   "err_ms": 0.1,
+   "xcorr": 0.999,
+   "note": ""
+  },
+  {
+   "grid": "B",
+   "n": 15,
+   "formula": 108.2216,
+   "song_bar": 89,
+   "measured": 108.2217,
+   "err_ms": 0.1,
+   "xcorr": 1.0,
+   "note": ""
+  },
+  {
+   "grid": "B",
+   "n": 16,
+   "formula": 110.4858,
+   "song_bar": 90,
+   "measured": 110.4859,
+   "err_ms": 0.1,
+   "xcorr": 1.0,
+   "note": ""
+  },
+  {
+   "grid": "B",
+   "n": 17,
+   "formula": 112.75,
+   "song_bar": 105,
+   "measured": 112.75,
+   "err_ms": 0.0,
+   "xcorr": 0.9,
+   "note": "END CARD: drums stop, coda bar 105 (J9)"
+  },
+  {
+   "grid": "B",
+   "n": 18,
+   "formula": 115.0142,
+   "song_bar": 106,
+   "measured": 115.0142,
+   "err_ms": 0.0,
+   "xcorr": 1.0,
+   "note": ""
+  },
+  {
+   "grid": "B",
+   "n": 19,
+   "formula": 117.2784,
+   "song_bar": 107,
+   "measured": 117.2784,
+   "err_ms": 0.0,
+   "xcorr": 1.0,
+   "note": "coda bar 107, fading 117.27 -> 119.10"
+  }
+ ]
+}

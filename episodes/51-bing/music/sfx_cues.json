@@ -2,7 +2,7 @@
 {
 "t": 0.443,
 "sfx": "fridge_open",
-"db": -6,
+"db": -9,
 "lead": 0.37,
 "len": 0.9,
 "role": "accent",
@@ -16,12 +16,13 @@
 "fade_in": 0.3,
 "fade_out": 0.02,
 "role": "soft",
-"note": "hum until the click"
+"note": "hum until the click (masked by the music: off)",
+"off": true
 },
 {
 "t": 2.707,
 "sfx": "light_click",
-"db": -4,
+"db": -7,
 "lead": 0.68,
 "len": 0.75,
 "role": "accent",
@@ -39,14 +40,14 @@
 {
 "t": 9.5,
 "sfx": "title_hit",
-"db": -6,
+"db": -3,
 "role": "accent",
 "note": "title slam"
 },
 {
 "t": 12.896,
 "sfx": "ice_chisel",
-"db": -7,
+"db": -5,
 "src_start": 0.2,
 "lead": 0.04,
 "len": 0.28,
@@ -56,7 +57,7 @@
 {
 "t": 13.462,
 "sfx": "ice_chisel",
-"db": -7,
+"db": -5,
 "src_start": 0.46,
 "lead": 0.04,
 "len": 0.4,
@@ -66,7 +67,7 @@
 {
 "t": 15.161,
 "sfx": "ice_slide",
-"db": -9,
+"db": -6,
 "lead": 0.33,
 "role": "soft",
 "note": "block slides into the pit"
@@ -81,7 +82,7 @@
 {
 "t": 34.972,
 "sfx": "tick1",
-"db": -8,
+"db": 0,
 "role": "normal",
 "note": "先猜？ pop"
 },
@@ -98,12 +99,13 @@
 "sfx": "silver_ting2",
 "db": -6,
 "role": "accent",
-"note": "S3 [银器] glint"
+"note": "S3 [银器] glint (tuned to A)",
+"semitones": 0.57
 },
 {
 "t": 63.841,
 "sfx": "chisel_stone",
-"db": -7,
+"db": -5,
 "src_start": 0.2,
 "lead": 0.04,
 "len": 0.3,
@@ -113,7 +115,7 @@
 {
 "t": 64.407,
 "sfx": "chisel_stone",
-"db": -7,
+"db": -5,
 "src_start": 0.52,
 "lead": 0.04,
 "len": 0.4,
@@ -121,39 +123,59 @@
 "note": "Q4 声如錾石 2"
 },
 {
-"t": 70.63,
+"t": 71.43,
 "sfx": "drips",
-"db": -10,
+"db": -10.0,
 "src_start": 0.12,
 "lead": 0.02,
 "len": 0.3,
 "role": "hush",
-"note": "C2 melt drip"
+"note": "C2 melt drip, counting into the return"
 },
 {
-"t": 71.762,
+"t": 72.0,
 "sfx": "drips",
-"db": -10,
+"db": -9.5,
 "src_start": 0.53,
 "lead": 0.02,
 "len": 0.3,
 "role": "hush",
-"note": "C2 melt drip"
+"note": "C2 melt drip, counting into the return"
 },
 {
-"t": 72.894,
+"t": 72.56,
 "sfx": "drips",
-"db": -10,
+"db": -9.0,
 "src_start": 1.22,
 "lead": 0.02,
 "len": 0.3,
 "role": "hush",
-"note": "C2 melt drip"
+"note": "C2 melt drip, counting into the return"
+},
+{
+"t": 73.13,
+"sfx": "drips",
+"db": -8.5,
+"src_start": 0.33,
+"lead": 0.02,
+"len": 0.3,
+"role": "hush",
+"note": "C2 melt drip, counting into the return"
+},
+{
+"t": 73.69,
+"sfx": "drips",
+"db": -8.0,
+"src_start": 0.53,
+"lead": 0.02,
+"len": 0.3,
+"role": "hush",
+"note": "C2 melt drip, counting into the return"
 },
 {
 "t": 76.523,
 "sfx": "seal1",
-"db": -7,
+"db": 0,
 "role": "normal",
 "note": "C4 冰票 stamp"
 },
@@ -172,20 +194,20 @@
 "note": "C6 锵锵 2"
 },
 {
-"t": 104.259,
-"sfx": "ice_glass",
-"db": -6,
-"lead": 0.25,
-"role": "accent",
-"note": "M4 cubes into the frame-0 cup"
-},
-{
 "t": 89.542,
 "sfx": "mist_breath",
 "db": -14,
 "role": "soft",
 "off": true,
 "note": "K2 coin holes (optional)"
+},
+{
+"t": 104.259,
+"sfx": "ice_glass",
+"db": -8,
+"lead": 0.25,
+"role": "accent",
+"note": "M4 cubes into the frame-0 cup"
 },
 {
 "t": 108.788,
@@ -198,7 +220,7 @@
 {
 "t": 112.75,
 "sfx": "seal1",
-"db": -6,
+"db": -1,
 "role": "accent",
 "note": "end card J seal"
 }
