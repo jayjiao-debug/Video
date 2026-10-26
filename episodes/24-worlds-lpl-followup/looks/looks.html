@@ -1,0 +1,113 @@
+<!doctype html><html><head><meta charset="utf-8"><style>
+@font-face{font-family:"Inter Display";src:url(InterDisplay-Black.otf)}
+html,body{margin:0;width:1920px;height:1080px;overflow:hidden}
+body{position:relative;font-family:"Noto Sans CJK SC",sans-serif}
+.clip{position:absolute;box-sizing:border-box}
+.src{font-family:"Inter Display",sans-serif;font-size:17px;letter-spacing:1px;opacity:.65}
+.sub{position:absolute;left:50%;bottom:70px;transform:translateX(-50%);background:rgba(6,8,13,.80);color:#fff;font-weight:900;font-size:64px;padding:14px 40px;border-radius:10px;white-space:nowrap;z-index:50}
+.sub b{color:#F6CF78}
+/* S1: no strip, white type lifted off the desk by a soft shadow */
+.sub.s1{background:none;padding:0;text-shadow:0 3px 0 rgba(0,0,0,.55),0 6px 26px rgba(0,0,0,.9),0 0 60px rgba(0,0,0,.6)}
+/* S2: subtitle printed on a torn newsprint strip, like the clippings */
+.sub.s2{background:none;padding:0;color:#17130f;font-family:'Noto Serif CJK SC';font-weight:700;transform:translateX(-50%) rotate(-.8deg);filter:drop-shadow(0 10px 14px rgba(0,0,0,.6))}
+.sub.s2 .bg{position:absolute;inset:-14px -40px;background:#ECE3CF;filter:url(#paper)}
+.sub.s2 span{position:relative}
+.sub.s2 b{color:#b3261e}
+.tag{position:absolute;left:34px;top:26px;font:900 26px "Inter Display";letter-spacing:3px;color:#fff;opacity:.5;z-index:60}
+</style></head><body>
+<svg width="0" height="0" style="position:absolute">
+ <filter id="paper"><feTurbulence type="fractalNoise" baseFrequency=".9" numOctaves="3" seed="4"/><feColorMatrix values="0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 .10 0"/><feComposite in2="SourceGraphic" operator="in"/><feBlend in="SourceGraphic" mode="multiply"/></filter>
+ <filter id="rough"><feTurbulence type="fractalNoise" baseFrequency=".04" numOctaves="2" seed="9"/><feDisplacementMap in="SourceGraphic" scale="6"/></filter>
+ <filter id="cork"><feTurbulence type="fractalNoise" baseFrequency=".55" numOctaves="4" seed="2"/><feColorMatrix values="0 0 0 0 .42  0 0 0 0 .27  0 0 0 0 .14  0 0 0 1.4 -.35"/></filter>
+</svg>
+<div id="stage"></div>
+<script>
+const Q=new URLSearchParams(location.search),L=Q.get('look')||'A',F=Q.get('f')||'slam';
+let s=7;const rnd=()=>(s=(s*16807)%2147483647)/2147483647;
+const torn=(n=14,j=.012)=>{const p=[];for(let i=0;i<=n;i++)p.push(`${(i/n*100).toFixed(1)}% ${(rnd()*j*100).toFixed(2)}%`);for(let i=0;i<=n;i++)p.push(`${(100-rnd()*j*100).toFixed(2)}% ${(i/n*100).toFixed(1)}%`);for(let i=n;i>=0;i--)p.push(`${(i/n*100).toFixed(1)}% ${(100-rnd()*j*100).toFixed(2)}%`);for(let i=n;i>=0;i--)p.push(`${(rnd()*j*100).toFixed(2)}% ${(i/n*100).toFixed(1)}%`);return `polygon(${p.join(',')})`};
+// headlines: real wording, translated; source tag kept on each clipping
+const H=[
+ {t:'瑞士轮开局<br>LPL一场未胜',s:'GOSUGAMERS · 10.24'},
+ {t:'LCK横扫首轮<br>LPL 0–4',s:'ESPORTS.NET · 10.24'},
+ {t:'四支头号种子<br>0–2',s:'HOTSPAWN · 10.25'},
+ {t:'LPL内战见血<br>TES击败AL',s:'GOSUGAMERS · 10.25'},
+];
+const RES=[['IG','GEN'],['TES','HLE'],['BLG','MKOI'],['AL','KC']];
+const st=document.getElementById('stage');
+const add=(html,css)=>{const d=document.createElement('div');d.className='clip';d.innerHTML=html;Object.assign(d.style,css);st.appendChild(d);return d};
+const tag=document.createElement('div');tag.className='tag';if(L==='B')tag.style.color='#111';tag.textContent=`LOOK ${L} · ${F==='slam'?'SLAM':'TURN'}`;document.body.appendChild(tag);
+const SV=Q.get('sub')||'0';
+const sub=(h)=>{const d=document.createElement('div');d.className='sub'+(SV!=='0'?' s'+SV:'');d.innerHTML=SV==='2'?`<div class="bg" style="clip-path:${torn(18,.03)}"></div><span>${h}</span>`:h;document.body.appendChild(d)};
+const SUB='四连败：20次里，才会出现<b>1次</b>';
+
+if(L==='A'){ // ---------- dark desk, real newsprint clippings, warm top light
+ document.body.style.background='radial-gradient(ellipse 70% 60% at 50% 38%,#3a3029 0%,#1b1714 55%,#0b0908 100%)';
+ const paper=(w,h,rot,x,y,inner,o={})=>add(`<div style="position:absolute;inset:0;background:${o.bg||'#ECE3CF'};filter:url(#paper);clip-path:${torn()}"></div><div style="position:relative;padding:${o.pad||'26px 34px'};color:#17130f">${inner}</div>`,{left:x+'px',top:y+'px',width:w+'px',height:h+'px',transform:`rotate(${rot}deg) ${o.tf||''}`,filter:`drop-shadow(0 ${o.sh||18}px ${o.bl||22}px rgba(0,0,0,.55)) ${o.blur?`blur(${o.blur}px)`:''}`,zIndex:o.z||1,opacity:o.op??1});
+ const head=(h,fs=66)=>`<div class="src" style="margin-bottom:10px">${h.s}</div><div style="font:700 ${fs}px/1.12 'Noto Serif CJK SC';letter-spacing:2px">${h.t}</div><div style="margin-top:14px;height:68px;background:repeating-linear-gradient(#0002 0 2px,transparent 2px 13px)"></div>`;
+ const score=`<div class="src">SWISS · ROUND 1</div><div style="font:900 210px/1 'Inter Display';letter-spacing:-6px;margin-top:6px;text-align:center">0<span style="color:#b3261e">–</span>4</div><div style="font:700 30px 'Noto Serif CJK SC';margin-top:26px;text-align:center">${RES.map(r=>`${r[0]} 负 ${r[1]}`).join('　')}</div>`;
+ const tape=(x,y,r,z)=>add('',{left:x+'px',top:y+'px',width:'150px',height:'42px',background:'rgba(230,220,170,.55)',transform:`rotate(${r}deg)`,zIndex:z,boxShadow:'0 2px 6px #0004'});
+ if(F==='slam'){
+  paper(620,330,-7,140,120,head(H[0]),{z:2});paper(600,330,5,1120,90,head(H[1]),{z:3});paper(560,300,3,250,600,head(H[2]),{z:4});paper(480,300,-4,1415,640,head(H[3],56),{z:5});
+  // the one slamming in: big, slightly scaled, motion-blurred, dust
+  paper(880,470,-2.5,520,300,score,{z:10,tf:'scale(1.06)',sh:40,bl:40});
+  tape(560,290,-30,11);tape(1300,300,24,11);
+  for(let i=0;i<70;i++){const a=rnd()*Math.PI*2,r=380+rnd()*260;add('',{left:960+Math.cos(a)*r*1.3+'px',top:540+Math.sin(a)*r*.75+'px',width:2+rnd()*5+'px',height:2+rnd()*5+'px',borderRadius:'50%',background:'#e9dcc0',opacity:.25+rnd()*.5,zIndex:12})}
+ } else {
+  paper(620,330,-7,60,70,head(H[0]),{z:2,blur:7,op:.8});paper(600,330,5,1250,60,head(H[1]),{z:3,blur:7,op:.8});paper(560,300,3,140,640,head(H[2]),{z:4,blur:8,op:.75});paper(600,320,-4,1330,700,head(H[3]),{z:5,blur:8,op:.75});
+  paper(980,520,-1.5,470,190,score,{z:10,sh:30,bl:36});
+  // red pen annotation: circle around the score + handwritten note
+  add(`<svg width="560" height="300" viewBox="0 0 560 300"><ellipse cx="280" cy="150" rx="250" ry="118" fill="none" stroke="#c8231a" stroke-width="9" stroke-linecap="round" stroke-dasharray="1500" stroke-dashoffset="90" filter="url(#rough)" transform="rotate(-4 280 150)"/></svg>`,{left:680+'px',top:215+'px',zIndex:11});
+  add(`<div style="font:700 60px 'Noto Serif CJK SC';color:#d02a1f;transform:rotate(-6deg)">≈ 4.9%</div>`,{left:1150+'px',top:590+'px',zIndex:11});
+  sub(SUB);
+ }
+ add('',{inset:0,background:'radial-gradient(ellipse at 50% 35%,transparent 40%,rgba(0,0,0,.55) 100%)',zIndex:40,pointerEvents:'none'});
+}
+
+if(L==='B'){ // ---------- 号外 extra: flat red/black/newsprint graphic
+ document.body.style.background='#E9E2D2';
+ const ink='#111',red='#D7261E';
+ const sheet=(x,y,w,h,rot,inner,z,o={})=>add(`<div style="position:absolute;inset:0;background:#F3EEE2;border:3px solid ${ink}"></div><div style="position:relative;padding:28px 36px;color:${ink}">${inner}</div>`,{left:x+'px',top:y+'px',width:w+'px',height:h+'px',transform:`rotate(${rot}deg)`,zIndex:z,boxShadow:`${o.off||14}px ${o.off||14}px 0 ${ink}`,opacity:o.op??1});
+ const rule=`<div style="height:6px;background:${ink};margin:12px 0 8px"></div><div style="height:2px;background:${ink};margin-bottom:14px"></div>`;
+ const headB=(h,big=78)=>`<div style="display:flex;justify-content:space-between;align-items:center"><span style="background:${red};color:#fff;font:900 30px 'Noto Sans CJK SC';padding:4px 14px">号外</span><span class="src" style="opacity:.8">${h.s}</span></div>${rule}<div style="font:900 ${big}px/1.08 'Noto Sans CJK SC'">${h.t}</div><div style="margin-top:18px;columns:3;column-gap:18px;height:90px;overflow:hidden">${'<div style="height:9px;background:#0003;margin-bottom:9px"></div>'.repeat(18)}</div>`;
+ // halftone burst behind
+ add('',{left:'-200px',top:'-300px',width:'2400px',height:'1700px',background:`repeating-conic-gradient(${red} 0 6deg,transparent 6deg 18deg)`,opacity:.12,zIndex:0});
+ if(F==='slam'){
+  sheet(90,90,700,420,-5,headB(H[0]),2);sheet(1130,70,700,420,4,headB(H[1]),3);sheet(180,580,640,380,3,headB(H[2],70),4);
+  sheet(560,250,820,560,-2,`<div style="display:flex;justify-content:space-between"><span style="background:${red};color:#fff;font:900 34px 'Noto Sans CJK SC';padding:4px 16px">号外</span><span class="src">SWISS · ROUND 1</span></div>${rule}<div style="font:900 300px/0.95 'Inter Display';letter-spacing:-12px;text-align:center">0<span style="color:${red}">–</span>4</div><div style="font:900 34px 'Noto Sans CJK SC';text-align:center;margin-top:10px">${RES.map(r=>`${r[0]}<span style="color:${red}">负</span>${r[1]}`).join('　')}</div>`,10,{off:22});
+  // speed lines
+  for(let i=0;i<22;i++){const y=230+rnd()*620;add('',{left:(rnd()<.5?380:1400)+rnd()*120+'px',top:y+'px',width:80+rnd()*140+'px',height:'7px',background:ink,zIndex:1})}
+ } else {
+  sheet(-60,40,700,420,-5,headB(H[0]),2,{op:.35});sheet(1300,40,700,420,4,headB(H[1]),3,{op:.35});
+  sheet(430,140,1060,690,-1,`<div style="display:flex;justify-content:space-between"><span style="background:${red};color:#fff;font:900 34px 'Noto Sans CJK SC';padding:4px 16px">号外</span><span class="src">SWISS · ROUND 1</span></div>${rule}<div style="font:900 330px/0.95 'Inter Display';letter-spacing:-14px;text-align:center">0<span style="color:${red}">–</span>4</div><div style="font:900 38px 'Noto Sans CJK SC';text-align:center;margin-top:24px">${RES.map(r=>`${r[0]}<span style="color:${red}">负</span>${r[1]}`).join('　')}</div>`,10,{off:22});
+  // giant red stamp "4.9%"
+  add(`<div style="border:10px solid ${red};color:${red};font:900 120px 'Inter Display';padding:4px 34px;letter-spacing:-2px;transform:rotate(-12deg);opacity:.9;mix-blend-mode:multiply;filter:url(#rough)">4.9%</div>`,{left:1330+'px',top:690+'px',zIndex:12});
+  sub(SUB);
+ }
+}
+
+if(L==='C'){ // ---------- detective wall: corkboard, pins, red string to data
+ document.body.style.background='#6b4526';
+ add('',{inset:0,filter:'url(#cork)',background:'#7a5130',zIndex:0});
+ add('',{inset:0,background:'radial-gradient(ellipse 65% 70% at 50% 45%,rgba(255,220,160,.18),rgba(0,0,0,.6) 100%)',zIndex:1});
+ const pin=(x,y,c='#c62a22')=>add('',{left:x-11+'px',top:y-11+'px',width:'22px',height:'22px',borderRadius:'50%',background:`radial-gradient(circle at 35% 35%,#fff8,${c} 45%,#3a0806)`,boxShadow:'3px 6px 6px #0007',zIndex:30});
+ const card=(x,y,w,h,rot,inner,o={})=>{add(`<div style="position:absolute;inset:0;background:${o.bg||'#EFE7D4'};filter:url(#paper);clip-path:${o.torn===false?'none':torn(10,.01)}"></div><div style="position:relative;padding:24px 30px;color:#1a1612">${inner}</div>`,{left:x+'px',top:y+'px',width:w+'px',height:h+'px',transform:`rotate(${rot}deg)`,zIndex:o.z||5,filter:`drop-shadow(4px 12px 10px rgba(0,0,0,.5)) ${o.blur?`blur(${o.blur}px)`:''}`});pin(x+w/2,y+18)};
+ const headC=(h)=>`<div class="src" style="margin-bottom:8px">${h.s}</div><div style="font:700 54px/1.12 'Noto Serif CJK SC'">${h.t}</div>`;
+ const note=(x,y,rot,html,c='#F6D55C')=>{add(`<div style="font:900 44px/1.15 'Noto Sans CJK SC';color:#1a1612">${html}</div>`,{left:x+'px',top:y+'px',width:'300px',height:'230px',padding:'26px',boxSizing:'border-box',background:c,transform:`rotate(${rot}deg)`,zIndex:6,boxShadow:'4px 10px 12px #0006'});pin(x+150,y+16,'#1f4fbf')};
+ const string=(pts)=>add(`<svg width="1920" height="1080"><polyline points="${pts.map(p=>p.join(',')).join(' ')}" fill="none" stroke="#c4211b" stroke-width="5" stroke-linecap="round" style="filter:drop-shadow(2px 5px 3px #0008)"/></svg>`,{left:0,top:0,zIndex:25});
+ const score=`<div class="src">SWISS · ROUND 1</div><div style="font:900 180px/1 'Inter Display';letter-spacing:-5px;text-align:center;margin-top:40px">0<span style="color:#b3261e">–</span>4</div>`;
+ if(F==='slam'){
+  card(110,110,520,250,-4,headC(H[0]));card(1250,90,540,250,3,headC(H[1]));card(200,640,480,230,5,headC(H[2]));
+  card(700,300,560,330,-2,score,{z:8});
+  card(1320,600,430,300,2,`<div class="src">RESULTS</div><div style="font:700 40px/1.5 'Noto Serif CJK SC'">${RES.map(r=>`${r[0]} 负 ${r[1]}`).join('<br>')}</div>`);
+  string([[440,660],[370,130],[980,318],[1520,110],[1535,620]]);
+ } else {
+  card(110,110,520,250,-4,headC(H[0]),{blur:4});card(1250,90,540,250,3,headC(H[1]),{blur:4});card(200,640,480,230,5,headC(H[2]),{blur:4});
+  card(640,250,620,360,-2,score,{z:8});
+  note(1350,280,6,'按签运<br>本该输<br><span style="color:#b3261e">≈2场</span>');
+  note(330,300,-7,'全输的<br>概率<br><span style="color:#b3261e">4.9%</span>','#9FE0C8');
+  string([[480,316],[950,268],[1500,296]]);
+  sub(SUB);
+ }
+}
+window.READY=true;
+</script></body></html>

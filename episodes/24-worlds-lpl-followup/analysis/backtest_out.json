@@ -1,0 +1,412 @@
+{
+ "2023": {
+  "n_train": 1608,
+  "missing": [],
+  "pre": {
+   "champ": "t1",
+   "p_champ": 1.2,
+   "champ_rank": 10,
+   "qf_brier": 0.162,
+   "qf_brier_coin": 0.25,
+   "qf_hits": 7,
+   "top3": [
+    [
+     "jdgaming",
+     46.0
+    ],
+    [
+     "geng",
+     13.6
+    ],
+    [
+     "bilibiligaming",
+     10.9
+    ]
+   ],
+   "region": {
+    "LPL": 66.0,
+    "LCS": 1.4,
+    "LCK": 21.8,
+    "LEC": 9.5,
+    "VCS": 1.3
+   }
+  },
+  "after_r2": {
+   "champ": "t1",
+   "p_champ": 0.8,
+   "champ_rank": 8,
+   "qf_brier": 0.148,
+   "qf_brier_coin": 0.25,
+   "qf_hits": 7,
+   "top3": [
+    [
+     "jdgaming",
+     48.3
+    ],
+    [
+     "geng",
+     15.3
+    ],
+    [
+     "g2",
+     9.9
+    ]
+   ],
+   "region": {
+    "LPL": 67.1,
+    "LCS": 0.7,
+    "LCK": 21.7,
+    "LEC": 10.2,
+    "VCS": 0.3
+   }
+  },
+  "ess": 32240,
+  "reg": {
+   "bilibiligaming": "LPL",
+   "cloud9": "LCS",
+   "dpluskia": "LCK",
+   "fnatic": "LEC",
+   "g2": "LEC",
+   "gam": "VCS",
+   "geng": "LCK",
+   "jdgaming": "LPL",
+   "ktrolster": "LCK",
+   "lng": "LPL",
+   "madlions": "LEC",
+   "nrg": "LCS",
+   "t1": "LCK",
+   "teambds": "LEC",
+   "teamliquid": "LCS",
+   "weibogaming": "LPL"
+  },
+  "lpl_after_r2": {
+   "bilibiligaming": [
+    79.9,
+    44.3,
+    21.9,
+    9.3
+   ],
+   "jdgaming": [
+    99.1,
+    83.7,
+    64.5,
+    48.3
+   ],
+   "lng": [
+    91.1,
+    53.0,
+    23.3,
+    8.6
+   ],
+   "weibogaming": [
+    50.3,
+    15.4,
+    4.2,
+    0.9
+   ]
+  }
+ },
+ "2024": {
+  "n_train": 1387,
+  "missing": [],
+  "pre": {
+   "champ": "t1",
+   "p_champ": 4.0,
+   "champ_rank": 6,
+   "qf_brier": 0.217,
+   "qf_brier_coin": 0.25,
+   "qf_hits": 5,
+   "top3": [
+    [
+     "geng",
+     56.7
+    ],
+    [
+     "hanwhalife",
+     21.5
+    ],
+    [
+     "bilibiligaming",
+     6.6
+    ]
+   ],
+   "region": {
+    "LPL": 11.6,
+    "LCK": 83.0,
+    "LCS": 0.5,
+    "LEC": 4.4,
+    "VCS": 0.0,
+    "CBLOL": 0.1,
+    "PCS": 0.4
+   }
+  },
+  "after_r2": {
+   "champ": "t1",
+   "p_champ": 3.4,
+   "champ_rank": 5,
+   "qf_brier": 0.186,
+   "qf_brier_coin": 0.25,
+   "qf_hits": 6,
+   "top3": [
+    [
+     "geng",
+     57.7
+    ],
+    [
+     "hanwhalife",
+     23.8
+    ],
+    [
+     "bilibiligaming",
+     5.0
+    ]
+   ],
+   "region": {
+    "LPL": 9.7,
+    "LCK": 86.3,
+    "LCS": 0.2,
+    "LEC": 3.5,
+    "VCS": 0.0,
+    "CBLOL": 0.0,
+    "PCS": 0.3
+   }
+  },
+  "ess": 28786,
+  "reg": {
+   "bilibiligaming": "LPL",
+   "dpluskia": "LCK",
+   "flyquest": "LCS",
+   "fnatic": "LEC",
+   "g2": "LEC",
+   "gam": "VCS",
+   "geng": "LCK",
+   "hanwhalife": "LCK",
+   "lng": "LPL",
+   "madlionskoi": "LEC",
+   "paingaming": "CBLOL",
+   "psgtalon": "PCS",
+   "t1": "LCK",
+   "teamliquid": "LCS",
+   "top": "LPL",
+   "weibogaming": "LPL"
+  },
+  "lpl_after_r2": {
+   "bilibiligaming": [
+    72.7,
+    39.4,
+    16.9,
+    5.0
+   ],
+   "lng": [
+    59.3,
+    11.4,
+    1.3,
+    0.1
+   ],
+   "top": [
+    76.0,
+    39.5,
+    16.3,
+    4.6
+   ],
+   "weibogaming": [
+    23.9,
+    3.8,
+    0.4,
+    0.0
+   ]
+  }
+ },
+ "2025": {
+  "n_train": 1262,
+  "missing": [],
+  "pre": {
+   "champ": "t1",
+   "p_champ": 12.9,
+   "champ_rank": 3,
+   "qf_brier": 0.132,
+   "qf_brier_coin": 0.25,
+   "qf_hits": 6,
+   "top3": [
+    [
+     "geng",
+     48.2
+    ],
+    [
+     "hanwhalife",
+     14.4
+    ],
+    [
+     "t1",
+     12.9
+    ]
+   ],
+   "region": {
+    "LTA": 4.4,
+    "LPL": 16.1,
+    "LCP": 1.7,
+    "LEC": 1.5,
+    "LCK": 76.2
+   }
+  },
+  "after_r2": {
+   "champ": "t1",
+   "p_champ": 12.5,
+   "champ_rank": 3,
+   "qf_brier": 0.08,
+   "qf_brier_coin": 0.25,
+   "qf_hits": 7,
+   "top3": [
+    [
+     "geng",
+     43.2
+    ],
+    [
+     "hanwhalife",
+     12.9
+    ],
+    [
+     "t1",
+     12.5
+    ]
+   ],
+   "region": {
+    "LTA": 4.1,
+    "LPL": 21.7,
+    "LCP": 3.0,
+    "LEC": 1.3,
+    "LCK": 70.0
+   }
+  },
+  "ess": 29257,
+  "reg": {
+   "100thieves": "LTA",
+   "anyoneslegend": "LPL",
+   "bilibiligaming": "LPL",
+   "ctbcflyingoyster": "LCP",
+   "flyquest": "LTA",
+   "fnatic": "LEC",
+   "g2": "LEC",
+   "geng": "LCK",
+   "hanwhalife": "LCK",
+   "ktrolster": "LCK",
+   "movistarkoi": "LEC",
+   "psgtalon": "LCP",
+   "t1": "LCK",
+   "teamsecretwhales": "LCP",
+   "top": "LPL",
+   "vivokeydstars": "LTA"
+  },
+  "lpl_after_r2": {
+   "anyoneslegend": [
+    95.4,
+    53.9,
+    26.7,
+    11.4
+   ],
+   "bilibiligaming": [
+    54.9,
+    25.0,
+    10.0,
+    3.4
+   ],
+   "top": [
+    89.8,
+    45.4,
+    19.3,
+    6.9
+   ]
+  }
+ },
+ "series": {
+  "n": 120,
+  "model": {
+   "acc": 0.683,
+   "logloss": 0.625,
+   "brier": 0.214
+  },
+  "region_only": {
+   "acc": 0.583,
+   "logloss": 0.603,
+   "brier": 0.208
+  },
+  "coin": {
+   "acc": 0.0,
+   "logloss": 0.693,
+   "brier": 0.25
+  },
+  "by_year": {
+   "2023": {
+    "n": 40,
+    "model": {
+     "acc": 0.7,
+     "logloss": 0.659,
+     "brier": 0.227
+    },
+    "region_only": {
+     "acc": 0.525,
+     "logloss": 0.617,
+     "brier": 0.215
+    }
+   },
+   "2024": {
+    "n": 40,
+    "model": {
+     "acc": 0.625,
+     "logloss": 0.642,
+     "brier": 0.226
+    },
+    "region_only": {
+     "acc": 0.625,
+     "logloss": 0.64,
+     "brier": 0.224
+    }
+   },
+   "2025": {
+    "n": 40,
+    "model": {
+     "acc": 0.725,
+     "logloss": 0.574,
+     "brier": 0.19
+    },
+    "region_only": {
+     "acc": 0.6,
+     "logloss": 0.55,
+     "brier": 0.186
+    }
+   }
+  }
+ },
+ "calibration": [
+  {
+   "bin": "50-60%",
+   "n": 36,
+   "predicted": 55.3,
+   "actual": 55.6
+  },
+  {
+   "bin": "60-70%",
+   "n": 41,
+   "predicted": 64.7,
+   "actual": 73.2
+  },
+  {
+   "bin": "70-80%",
+   "n": 28,
+   "predicted": 74.0,
+   "actual": 75.0
+  },
+  {
+   "bin": "80-90%",
+   "n": 10,
+   "predicted": 85.5,
+   "actual": 80.0
+  },
+  {
+   "bin": "90-100%",
+   "n": 5,
+   "predicted": 93.1,
+   "actual": 60.0
+  }
+ ]
+}

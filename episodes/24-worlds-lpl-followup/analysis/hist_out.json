@@ -1,0 +1,668 @@
+{
+ "base": {
+  "after_R1": [
+   {
+    "r1": "0-1",
+    "n": 24,
+    "qf": 6,
+    "sf": 2,
+    "champ": 1
+   },
+   {
+    "r1": "1-0",
+    "n": 24,
+    "qf": 18,
+    "sf": 10,
+    "champ": 2
+   }
+  ],
+  "after_R2": [
+   {
+    "r2": "0-2",
+    "n": 12,
+    "qf": 0,
+    "sf": 0,
+    "champ": 0
+   },
+   {
+    "r2": "1-1",
+    "n": 24,
+    "qf": 14,
+    "sf": 8,
+    "champ": 3
+   },
+   {
+    "r2": "2-0",
+    "n": 12,
+    "qf": 10,
+    "sf": 4,
+    "champ": 0
+   }
+  ],
+  "after_R3": [
+   {
+    "r3": "0-3",
+    "n": 6,
+    "qf": 0,
+    "sf": 0,
+    "champ": 0
+   },
+   {
+    "r3": "1-2",
+    "n": 18,
+    "qf": 4,
+    "sf": 4,
+    "champ": 1
+   },
+   {
+    "r3": "2-1",
+    "n": 18,
+    "qf": 14,
+    "sf": 5,
+    "champ": 2
+   },
+   {
+    "r3": "3-0",
+    "n": 6,
+    "qf": 6,
+    "sf": 3,
+    "champ": 0
+   }
+  ]
+ },
+ "champs": [
+  {
+   "year": 2023,
+   "team": "T1",
+   "res": "1011"
+  },
+  {
+   "year": 2024,
+   "team": "T1",
+   "res": "0111"
+  },
+  {
+   "year": 2025,
+   "team": "T1",
+   "res": "10011"
+  }
+ ],
+ "table": [
+  {
+   "year": 2023,
+   "team": "Bilibili Gaming",
+   "reg": "LPL",
+   "res": "10101",
+   "qf": true,
+   "sf": true,
+   "champ": false,
+   "r1": "1-0",
+   "r2": "1-1",
+   "r3": "2-1"
+  },
+  {
+   "year": 2023,
+   "team": "KT Rolster",
+   "reg": "LCK",
+   "res": "01101",
+   "qf": true,
+   "sf": false,
+   "champ": false,
+   "r1": "0-1",
+   "r2": "1-1",
+   "r3": "2-1"
+  },
+  {
+   "year": 2023,
+   "team": "LNG Esports",
+   "reg": "LPL",
+   "res": "1101",
+   "qf": true,
+   "sf": false,
+   "champ": false,
+   "r1": "1-0",
+   "r2": "2-0",
+   "r3": "2-1"
+  },
+  {
+   "year": 2023,
+   "team": "Fnatic",
+   "reg": "other",
+   "res": "01010",
+   "qf": false,
+   "sf": false,
+   "champ": false,
+   "r1": "0-1",
+   "r2": "1-1",
+   "r3": "1-2"
+  },
+  {
+   "year": 2023,
+   "team": "Weibo Gaming",
+   "reg": "LPL",
+   "res": "10011",
+   "qf": true,
+   "sf": true,
+   "champ": false,
+   "r1": "1-0",
+   "r2": "1-1",
+   "r3": "1-2"
+  },
+  {
+   "year": 2023,
+   "team": "NRG",
+   "reg": "other",
+   "res": "0111",
+   "qf": true,
+   "sf": false,
+   "champ": false,
+   "r1": "0-1",
+   "r2": "1-1",
+   "r3": "2-1"
+  },
+  {
+   "year": 2023,
+   "team": "G2 Esports",
+   "reg": "other",
+   "res": "11000",
+   "qf": false,
+   "sf": false,
+   "champ": false,
+   "r1": "1-0",
+   "r2": "2-0",
+   "r3": "2-1"
+  },
+  {
+   "year": 2023,
+   "team": "Dplus KIA",
+   "reg": "LCK",
+   "res": "00110",
+   "qf": false,
+   "sf": false,
+   "champ": false,
+   "r1": "0-1",
+   "r2": "0-2",
+   "r3": "1-2"
+  },
+  {
+   "year": 2023,
+   "team": "JD Gaming",
+   "reg": "LPL",
+   "res": "111",
+   "qf": true,
+   "sf": true,
+   "champ": false,
+   "r1": "1-0",
+   "r2": "2-0",
+   "r3": "3-0"
+  },
+  {
+   "year": 2023,
+   "team": "Team BDS",
+   "reg": "other",
+   "res": "000",
+   "qf": false,
+   "sf": false,
+   "champ": false,
+   "r1": "0-1",
+   "r2": "0-2",
+   "r3": "0-3"
+  },
+  {
+   "year": 2023,
+   "team": "Gen.G",
+   "reg": "LCK",
+   "res": "111",
+   "qf": true,
+   "sf": false,
+   "champ": false,
+   "r1": "1-0",
+   "r2": "2-0",
+   "r3": "3-0"
+  },
+  {
+   "year": 2023,
+   "team": "GAM Esports",
+   "reg": "other",
+   "res": "0010",
+   "qf": false,
+   "sf": false,
+   "champ": false,
+   "r1": "0-1",
+   "r2": "0-2",
+   "r3": "1-2"
+  },
+  {
+   "year": 2023,
+   "team": "Cloud9",
+   "reg": "other",
+   "res": "1000",
+   "qf": false,
+   "sf": false,
+   "champ": false,
+   "r1": "1-0",
+   "r2": "1-1",
+   "r3": "1-2"
+  },
+  {
+   "year": 2023,
+   "team": "MAD Lions",
+   "reg": "other",
+   "res": "0100",
+   "qf": false,
+   "sf": false,
+   "champ": false,
+   "r1": "0-1",
+   "r2": "1-1",
+   "r3": "1-2"
+  },
+  {
+   "year": 2023,
+   "team": "T1",
+   "reg": "LCK",
+   "res": "1011",
+   "qf": true,
+   "sf": true,
+   "champ": true,
+   "r1": "1-0",
+   "r2": "1-1",
+   "r3": "2-1"
+  },
+  {
+   "year": 2023,
+   "team": "Team Liquid",
+   "reg": "other",
+   "res": "000",
+   "qf": false,
+   "sf": false,
+   "champ": false,
+   "r1": "0-1",
+   "r2": "0-2",
+   "r3": "0-3"
+  },
+  {
+   "year": 2024,
+   "team": "G2 Esports",
+   "reg": "other",
+   "res": "10100",
+   "qf": false,
+   "sf": false,
+   "champ": false,
+   "r1": "1-0",
+   "r2": "1-1",
+   "r3": "2-1"
+  },
+  {
+   "year": 2024,
+   "team": "paiN Gaming",
+   "reg": "other",
+   "res": "000",
+   "qf": false,
+   "sf": false,
+   "champ": false,
+   "r1": "0-1",
+   "r2": "0-2",
+   "r3": "0-3"
+  },
+  {
+   "year": 2024,
+   "team": "FlyQuest",
+   "reg": "other",
+   "res": "10101",
+   "qf": true,
+   "sf": false,
+   "champ": false,
+   "r1": "1-0",
+   "r2": "1-1",
+   "r3": "2-1"
+  },
+  {
+   "year": 2024,
+   "team": "GAM Esports",
+   "reg": "other",
+   "res": "0010",
+   "qf": false,
+   "sf": false,
+   "champ": false,
+   "r1": "0-1",
+   "r2": "0-2",
+   "r3": "1-2"
+  },
+  {
+   "year": 2024,
+   "team": "Hanwha Life Esports",
+   "reg": "LCK",
+   "res": "1101",
+   "qf": true,
+   "sf": false,
+   "champ": false,
+   "r1": "1-0",
+   "r2": "2-0",
+   "r3": "2-1"
+  },
+  {
+   "year": 2024,
+   "team": "PSG Talon",
+   "reg": "other",
+   "res": "0100",
+   "qf": false,
+   "sf": false,
+   "champ": false,
+   "r1": "0-1",
+   "r2": "1-1",
+   "r3": "1-2"
+  },
+  {
+   "year": 2024,
+   "team": "LNG Esports",
+   "reg": "LPL",
+   "res": "111",
+   "qf": true,
+   "sf": false,
+   "champ": false,
+   "r1": "1-0",
+   "r2": "2-0",
+   "r3": "3-0"
+  },
+  {
+   "year": 2024,
+   "team": "Team Liquid",
+   "reg": "other",
+   "res": "00110",
+   "qf": false,
+   "sf": false,
+   "champ": false,
+   "r1": "0-1",
+   "r2": "0-2",
+   "r3": "1-2"
+  },
+  {
+   "year": 2024,
+   "team": "Dplus KIA",
+   "reg": "LCK",
+   "res": "11000",
+   "qf": false,
+   "sf": false,
+   "champ": false,
+   "r1": "1-0",
+   "r2": "2-0",
+   "r3": "2-1"
+  },
+  {
+   "year": 2024,
+   "team": "Fnatic",
+   "reg": "other",
+   "res": "0100",
+   "qf": false,
+   "sf": false,
+   "champ": false,
+   "r1": "0-1",
+   "r2": "1-1",
+   "r3": "1-2"
+  },
+  {
+   "year": 2024,
+   "team": "Gen.G",
+   "reg": "LCK",
+   "res": "111",
+   "qf": true,
+   "sf": true,
+   "champ": false,
+   "r1": "1-0",
+   "r2": "2-0",
+   "r3": "3-0"
+  },
+  {
+   "year": 2024,
+   "team": "Weibo Gaming",
+   "reg": "LPL",
+   "res": "01011",
+   "qf": true,
+   "sf": true,
+   "champ": false,
+   "r1": "0-1",
+   "r2": "1-1",
+   "r3": "1-2"
+  },
+  {
+   "year": 2024,
+   "team": "Top Esports",
+   "reg": "LPL",
+   "res": "1011",
+   "qf": true,
+   "sf": false,
+   "champ": false,
+   "r1": "1-0",
+   "r2": "1-1",
+   "r3": "2-1"
+  },
+  {
+   "year": 2024,
+   "team": "T1",
+   "reg": "LCK",
+   "res": "0111",
+   "qf": true,
+   "sf": true,
+   "champ": true,
+   "r1": "0-1",
+   "r2": "1-1",
+   "r3": "2-1"
+  },
+  {
+   "year": 2024,
+   "team": "Bilibili Gaming",
+   "reg": "LPL",
+   "res": "10011",
+   "qf": true,
+   "sf": true,
+   "champ": false,
+   "r1": "1-0",
+   "r2": "1-1",
+   "r3": "1-2"
+  },
+  {
+   "year": 2024,
+   "team": "Movistar KOI",
+   "reg": "other",
+   "res": "000",
+   "qf": false,
+   "sf": false,
+   "champ": false,
+   "r1": "0-1",
+   "r2": "0-2",
+   "r3": "0-3"
+  },
+  {
+   "year": 2025,
+   "team": "Gen.G",
+   "reg": "LCK",
+   "res": "1011",
+   "qf": true,
+   "sf": true,
+   "champ": false,
+   "r1": "1-0",
+   "r2": "1-1",
+   "r3": "2-1"
+  },
+  {
+   "year": 2025,
+   "team": "PSG Talon",
+   "reg": "other",
+   "res": "000",
+   "qf": false,
+   "sf": false,
+   "champ": false,
+   "r1": "0-1",
+   "r2": "0-2",
+   "r3": "0-3"
+  },
+  {
+   "year": 2025,
+   "team": "Top Esports",
+   "reg": "LPL",
+   "res": "11001",
+   "qf": true,
+   "sf": true,
+   "champ": false,
+   "r1": "1-0",
+   "r2": "2-0",
+   "r3": "2-1"
+  },
+  {
+   "year": 2025,
+   "team": "G2 Esports",
+   "reg": "other",
+   "res": "0111",
+   "qf": true,
+   "sf": false,
+   "champ": false,
+   "r1": "0-1",
+   "r2": "1-1",
+   "r3": "2-1"
+  },
+  {
+   "year": 2025,
+   "team": "Anyone s Legend",
+   "reg": "LPL",
+   "res": "111",
+   "qf": true,
+   "sf": false,
+   "champ": false,
+   "r1": "1-0",
+   "r2": "2-0",
+   "r3": "3-0"
+  },
+  {
+   "year": 2025,
+   "team": "Hanwha Life Esports",
+   "reg": "LCK",
+   "res": "0111",
+   "qf": true,
+   "sf": false,
+   "champ": false,
+   "r1": "0-1",
+   "r2": "1-1",
+   "r3": "2-1"
+  },
+  {
+   "year": 2025,
+   "team": "T1",
+   "reg": "LCK",
+   "res": "10011",
+   "qf": true,
+   "sf": true,
+   "champ": true,
+   "r1": "1-0",
+   "r2": "1-1",
+   "r3": "1-2"
+  },
+  {
+   "year": 2025,
+   "team": "FlyQuest",
+   "reg": "other",
+   "res": "01100",
+   "qf": false,
+   "sf": false,
+   "champ": false,
+   "r1": "0-1",
+   "r2": "1-1",
+   "r3": "2-1"
+  },
+  {
+   "year": 2025,
+   "team": "100 Thieves",
+   "reg": "other",
+   "res": "1000",
+   "qf": false,
+   "sf": false,
+   "champ": false,
+   "r1": "1-0",
+   "r2": "1-1",
+   "r3": "1-2"
+  },
+  {
+   "year": 2025,
+   "team": "Bilibili Gaming",
+   "reg": "LPL",
+   "res": "01010",
+   "qf": false,
+   "sf": false,
+   "champ": false,
+   "r1": "0-1",
+   "r2": "1-1",
+   "r3": "1-2"
+  },
+  {
+   "year": 2025,
+   "team": "KT Rolster",
+   "reg": "LCK",
+   "res": "111",
+   "qf": true,
+   "sf": true,
+   "champ": false,
+   "r1": "1-0",
+   "r2": "2-0",
+   "r3": "3-0"
+  },
+  {
+   "year": 2025,
+   "team": "Movistar KOI",
+   "reg": "other",
+   "res": "00110",
+   "qf": false,
+   "sf": false,
+   "champ": false,
+   "r1": "0-1",
+   "r2": "0-2",
+   "r3": "1-2"
+  },
+  {
+   "year": 2025,
+   "team": "CTBC Flying Oyster",
+   "reg": "other",
+   "res": "11001",
+   "qf": true,
+   "sf": false,
+   "champ": false,
+   "r1": "1-0",
+   "r2": "2-0",
+   "r3": "2-1"
+  },
+  {
+   "year": 2025,
+   "team": "Fnatic",
+   "reg": "other",
+   "res": "000",
+   "qf": false,
+   "sf": false,
+   "champ": false,
+   "r1": "0-1",
+   "r2": "0-2",
+   "r3": "0-3"
+  },
+  {
+   "year": 2025,
+   "team": "Team Secret Whales",
+   "reg": "other",
+   "res": "1000",
+   "qf": false,
+   "sf": false,
+   "champ": false,
+   "r1": "1-0",
+   "r2": "1-1",
+   "r3": "1-2"
+  },
+  {
+   "year": 2025,
+   "team": "Vivo Keyd Stars",
+   "reg": "other",
+   "res": "0010",
+   "qf": false,
+   "sf": false,
+   "champ": false,
+   "r1": "0-1",
+   "r2": "0-2",
+   "r3": "1-2"
+  }
+ ]
+}
