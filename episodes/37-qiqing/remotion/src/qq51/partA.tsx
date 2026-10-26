@@ -340,10 +340,11 @@ const Room: React.FC<{t: number}> = ({t}) => { const snowO = seg(t, 39.3, 39.8);
 		<rect x={VX7 - 300} y={VY7 + 22} width={600} height={6} fill={B.redD} opacity={0.6} />
 	</g>; };
 /** where his far hand holds the ladle at t (same maths as the ladle drawing in Banquet) */
-const ladleHand = (t: number): P2 => { const ld = seg(t, 37.3, 37.6), sw = eio(seg(t, 37.6, BA(66))), CUP: P2 = [958, 540];
+const POUR = 37.66;   // the pour cue
+const ladleHand = (t: number): P2 => { const ld = seg(t, 37.25, 37.45), sw = eio(seg(t, 37.45, POUR)), CUP: P2 = [958, 540];
 	const bowlDip: P2 = [VX7 + 6, G7.neckTop + 18], bowlUp: P2 = [VX7 - 10, G7.neckTop - 70], bowlPour: P2 = [CUP[0] + 22, CUP[1] - 62];
-	const bowl: P2 = t < 37.6 ? [lerp(bowlUp[0], bowlDip[0], Math.sin(Math.PI * ld)), lerp(bowlUp[1], bowlDip[1], Math.sin(Math.PI * ld))] : [lerp(bowlUp[0], bowlPour[0], sw), lerp(bowlUp[1], bowlPour[1], sw)];
-	const hAng = t < 37.6 ? Math.PI + 0.22 : lerp(Math.PI + 0.22, Math.PI + 0.42, sw); return [bowl[0] + 165 * Math.cos(hAng), bowl[1] + 165 * Math.sin(hAng)]; };
+	const bowl: P2 = t < 37.45 ? [lerp(bowlUp[0], bowlDip[0], Math.sin(Math.PI * ld)), lerp(bowlUp[1], bowlDip[1], Math.sin(Math.PI * ld))] : [lerp(bowlUp[0], bowlPour[0], sw), lerp(bowlUp[1], bowlPour[1], sw)];
+	const hAng = t < 37.45 ? Math.PI + 0.22 : lerp(Math.PI + 0.22, Math.PI + 0.42, sw); return [bowl[0] + 165 * Math.cos(hAng), bowl[1] + 165 * Math.sin(hAng)]; };
 /** walking carry pose: both mittens under the block's lower corners */
 const carryPose = (ph: number, walking: boolean) => ikArm(ikArm(walking ? walkPose(ph) : stand({lean: -2, neck: 8}), 'L', [0.17, 0.5]), 'R', [0.3, 0.52]);
 const X_STOP = 450 + 146 * (28.6 - BA(46));
@@ -363,7 +364,7 @@ const Banquet: Fc = ({t}) => {
 	const exp = eio(seg(t, BA(52), BA(53))) * (1 - eio(seg(t, BA(55), BA(56))));   // the jar rises out (29.88–30.44), settles back (31.58–32.14)
 	const lab = fade(t, BA(53), 0.3) * (1 - fade(t, 34.6, 0.35));
 	const REVEAL = BA(64);   // 36.670 = DA(16), the chorus downbeat: 肉？/瓜果？ drop, 酒 lights, the jar lid pops
-	const wineO = fade(t, REVEAL, 0.25), jarLidUp = eout(seg(t, REVEAL, REVEAL + 0.3));
+	const wineO = fade(t, 37.25, 0.25), jarLidUp = eout(seg(t, REVEAL, REVEAL + 0.3));
 	const melt = seg(t, 39.45, 40.7), water = eout(seg(t, 39.6, 40.9));
 	/* the walker's pose */
 	let p: Pose;
@@ -382,20 +383,20 @@ const Banquet: Fc = ({t}) => {
 	const carried = t < 32.75;
 	const cb = carried ? (() => { if (t >= 32.3) return {x: lerp(CARRY_AT.x, gapC, ease(seg(t, 32.3, 32.7))), y: lerp(CARRY_AT.y, bTop0 + bh, ease(seg(t, 32.3, 32.7)))};
 		const a = J(p, 'LHand', wx, G_, H7), b = J(p, 'RHand', wx, G_, H7); return {x: (a[0] + b[0]) / 2 + 4, y: Math.min(a[1], b[1]) + 4}; })() : null;
-	/* the ladle (server's forearm from the right): dips 37.35–37.75, swings over the cup, pours from BA(66) = 37.803 */
-	/* the ladle in his far hand: dips into the jar mouth (37.3–37.6), swings over his cup, pours from BA(66) = 37.803, put away */
-	const ld = seg(t, 37.3, 37.6), sw = eio(seg(t, 37.6, BA(66))), pour = seg(t, BA(66), 38.7), back = eio(seg(t, 38.75, 39.1));
+	/* the ladle in his far hand: dips into the jar mouth (37.25–37.45), swings over his cup, pours from 37.66, put away */
+	const ld = seg(t, 37.25, 37.45), sw = eio(seg(t, 37.45, POUR)), pour = seg(t, POUR, 38.6), back = eio(seg(t, 38.75, 39.1));
 	const CUP: P2 = [958, 540], bowlDip: P2 = [VX7 + 6, G7.neckTop + 18], bowlUp: P2 = [VX7 - 10, G7.neckTop - 70], bowlPour: P2 = [CUP[0] + 22, CUP[1] - 62];
-	const bowl: P2 = t < 37.6 ? [lerp(bowlUp[0], bowlDip[0], Math.sin(Math.PI * ld)), lerp(bowlUp[1], bowlDip[1], Math.sin(Math.PI * ld))] : [lerp(bowlUp[0], bowlPour[0], sw), lerp(bowlUp[1], bowlPour[1], sw)];
-	const hAng = t < 37.6 ? Math.PI + 0.22 : lerp(Math.PI + 0.22, Math.PI + 0.42, sw);   // from the bowl back along the handle to his hand
+	const bowl: P2 = t < 37.45 ? [lerp(bowlUp[0], bowlDip[0], Math.sin(Math.PI * ld)), lerp(bowlUp[1], bowlDip[1], Math.sin(Math.PI * ld))] : [lerp(bowlUp[0], bowlPour[0], sw), lerp(bowlUp[1], bowlPour[1], sw)];
+	const hAng = t < 37.45 ? Math.PI + 0.22 : lerp(Math.PI + 0.22, Math.PI + 0.42, sw);   // from the bowl back along the handle to his hand
 	const lHand: P2 = [bowl[0] + 165 * Math.cos(hAng), bowl[1] + 165 * Math.sin(hAng)];
 	const tilt = -55 * Math.sin(Math.PI * Math.min(1, pour * 1.2)) * (1 - back);
 	const ladleO = fade(t, 37.25, 0.15) * (1 - seg(t, 38.85, 39.1));
 	const cupO = fade(t, 37.25, 0.25), cupFrost = seg(t, 38.2, 39.0) * (1 - melt), steam = seg(t, 39.6, 40.4);
-	const ghost = bump(t, BA(48), 0.6);
-	const opts = ['肉？', '瓜果？', '酒？'], xs = [VX7 - 250, VX7, VX7 + 230], oy = G7.neckTop - 110;
+	const ghost = t < 27.74 ? 0 : t < 27.84 ? seg(t, 27.74, 27.84) : 1 - seg(t, 28.31, 28.4);
+	const opts = ['肉？', '瓜果？', '酒？'], xs = [VX7 - 160, VX7 + 70, VX7 + 290], oy = G7.neckTop - 100;
 	const pill = t > BA(61) - 0.05 ? land(seg(t, BA(61) - 0.05, BA(61) + 0.3)) : 0, tick = Math.sin((t - 35) * Math.PI / 0.566) * 3;
-	const optO = (i: number) => (t < 35.0 ? 0 : fade(t, 35.15 + 0.15 * i, 0.25)) * (t < REVEAL ? 1 : i === 2 ? 1 : 1 - fade(t, REVEAL, 0.25)) * (1 - fade(t, 38.9, 0.4));
+	const optO = (i: number) => (t < 34.95 ? 0 : fade(t, 34.97 + 0.04 * i, 0.12)) * (t < REVEAL ? 1 : i === 2 ? 1 : 1 - fade(t, REVEAL, 0.25)) * (1 - fade(t, 38.9, 0.4));
+	const optDrop = (i: number) => i < 2 && t > REVEAL ? 80 * eio(seg(t, REVEAL, REVEAL + 0.35)) : 0;
 	const vessel = <>
 		{exp > 0 || t < 32.25 ? <>
 			{exp > 0 && <JarWhole x={VX7} y={VY7} w={VW7} dy={240 * exp} />}
@@ -415,9 +416,13 @@ const Banquet: Fc = ({t}) => {
 	return <Pic id="b7" sheen={0.28}>
 		<Room t={t} />
 		{/* the ghost of the open fridge door frames the vessel for one beat (开头那件) */}
-		{ghost > 0 && <g opacity={0.4 * ghost} fill="none" stroke="#CFE6F1" strokeWidth={3}>
-			<rect x={VX7 - 300} y={G7.neckTop - 150} width={600} height={VY7 - G7.neckTop + 180} rx={20} />
-			<path d={`M${VX7 - 300},${G7.neckTop - 140} L${VX7 - 520},${G7.neckTop - 190} L${VX7 - 520},${VY7 + 90} L${VX7 - 300},${VY7 + 30}`} /></g>}
+		{ghost > 0 && <g opacity={0.35 * ghost}>
+			{/* the frame-0 fridge for one beat: cabinet, cold blue interior washing the vessel, the open door */}
+			<rect x={VX7 - 300} y={G7.neckTop - 170} width={600} height={VY7 - G7.neckTop + 200} rx={22} fill="#6B6762" />
+			<rect x={VX7 - 270} y={G7.neckTop - 140} width={540} height={VY7 - G7.neckTop + 150} rx={8} fill="#A6C1CE" />
+			<rect x={VX7 - 120} y={G7.neckTop - 120} width={240} height={10} rx={5} fill="#F4FBFF" />
+			<path d={`M${VX7 - 300},${G7.neckTop - 150} L${VX7 - 520},${G7.neckTop - 200} L${VX7 - 520},${VY7 + 90} L${VX7 - 300},${VY7 + 30} Z`} fill="#B9C6CC" stroke="#E8F2F6" strokeWidth={3} />
+			{[0.3, 0.55, 0.8].map((u, i) => <path key={i} d={`M${VX7 - 320},${lerp(G7.neckTop - 140, VY7 + 20, u)} L${VX7 - 500},${lerp(G7.neckTop - 180, VY7 + 70, u)}`} stroke="#E0EAEE" strokeWidth={8} strokeLinecap="round" />)}</g>}
 		{vessel}
 		{/* exploded-view labels, kept through the pack (KF07) */}
 		{lab > 0 && <g opacity={lab}>
@@ -451,7 +456,7 @@ const Banquet: Fc = ({t}) => {
 		{/* 先猜？ and the three guesses over the jar mouth; 酒 lights up on BA(65) = 37.237 */}
 		{opts.map((o, i) => { const oo = optO(i); if (oo <= 0) return null; const lit = i === 2 && t > REVEAL ? land(seg(t, REVEAL, REVEAL + 0.35)) : 0;
 			return <g key={i} opacity={oo}><path d={`M${xs[i]},${oy + 18} Q${lerp(xs[i], VX7, 0.6)},${oy + 60} ${VX7 + (i - 1) * 30},${G7.neckTop - 40}`} stroke={B.cream} strokeOpacity={0.25 * (1 - lit)} strokeWidth={2} fill="none" strokeDasharray="5 7" />
-				<g transform={`translate(${xs[i]},${oy + 4 * Math.sin(t * 2.4 + i)}) scale(${1 + 0.35 * lit}) translate(${-xs[i]},${-oy})`}><Lab x={xs[i]} y={oy} s={lit > 0 ? '酒' : o} fs={56} anchor="middle" o={0.88 + 0.12 * lit} col={lit > 0 ? B.goldL : B.cream} /></g></g>; })}
+				<g transform={`translate(${xs[i]},${oy + 4 * Math.sin(t * 2.4 + i) + optDrop(i)}) scale(${1 + 0.35 * lit}) translate(${-xs[i]},${-oy})`}><Lab x={xs[i]} y={oy} s={lit > 0 ? '酒' : o} fs={56} anchor="middle" o={0.88 + 0.12 * lit} col={lit > 0 ? B.goldL : B.cream} /></g></g>; })}
 		{pill > 0 && t < 37.0 && <g opacity={cl(pill * 3) * (1 - fade(t, REVEAL - 0.05, 0.2))} transform={`translate(1540,${G7.yt + 132}) rotate(${-4 + tick}) scale(${lerp(1.4, 1, pill)}) translate(-110,-42)`}><rect x={0} y={0} width={220} height={84} rx={42} fill={B.goldL} /><text x={110} y={60} textAnchor="middle" fontFamily={SANS} fontWeight={900} fontSize={52} fill={B.lac}>先猜？</text></g>}
 	</Pic>; };
 

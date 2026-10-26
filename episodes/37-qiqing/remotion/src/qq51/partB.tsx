@@ -550,56 +550,59 @@ const Grid: React.FC<{t: number}> = ({t}) => {
 	</Scene>; };
 
 /* ===================================================================================================================
-   M3→M4 · your kitchen, 103.0–106.2: he opens the same fridge (its light comes on) and drops ice cubes into the frame-0 cup;
-   they land on 104.259 (the clink).
+   FINALE · one world, one camera, 103.8–end. The world is the P1 walk line; today's fridge is its last item.
+   · M4 (103.8–105.96): your kitchen = that fridge seen close (z 2.07), the walker beside it with the frame-0 cup; the shot
+     opens out of the fridge's light (the match from the grid window), the cubes drop on 104.259 (the clink).
+   · P1 (105.96–107.75): one eased pull-back; the kitchen dressing goes, the other cold things rise along the line, snow
+     lights inside each, left → right, one per half-beat from 106.524.
+   · P2 (107.95–109.3): one continuous push into the same fridge (the props leave by scale), which frosts by itself;
+     the cold light blooms across the room by 111.75; a slow push holds the peak; the end card dims over it.
    =================================================================================================================== */
-const KX = 800, KH2 = 600, KTOPC = 590, CUPX = 930, CLINK = 104.259;
-const Kitchen: React.FC<{t: number}> = ({t}) => {
-	const open = 0.9 * ease(seg(t, 103.05, 103.5)), drop = seg(t, CLINK - 0.21, CLINK), inCup = t >= CLINK;
-	const handTo = ease(seg(t, 103.3, 103.65)) * (1 - ease(seg(t, 103.7, 104.0)));
-	const rh: P2 = [lerp(CUPX + 4, 1060, handTo), lerp(KTOPC - 150, 500, handTo)];
-	let p = grounded({lean: 10, neck: 14, lt: 3, lk: 3, rt: -4, rk: 4, la: 40, le: 40, ra: 50, re: 50});
-	p = ikArm(ikArm(p, 'L', toBody(CUPX - 46, KTOPC - 60, KX, 905, KH2)), 'R', toBody(rh[0] - 6, rh[1] + 22, KX, 905, KH2));
-	const cubeY = lerp(rh[1] - 10, KTOPC - 70, drop * drop), push = 1 + 0.01 * seg(t, 103.0, 106.2);
-	return <Scene id="kK" sheen={0.15}>
-		<g transform={`translate(960,560) scale(${push}) translate(-960,-560)`}>
-			<rect x={-40} y={0} width={W + 80} height={H} fill="#140A07" opacity={0.5} />
-			<path d={Array.from({length: 12}, (_, i) => `M${-40 + i * 90},330 V${KTOPC}`).join(' ') + ` M-40,420 H1100 M-40,510 H1100`} stroke={B.gold} strokeOpacity={0.06} strokeWidth={1.5} />
-			<Fridge x0={1270} y0={145} w={420} h={760} open={open} light={open / 0.9} id="kfr" />
-			<rect x={-40} y={KTOPC} width={1160} height={905 - KTOPC} fill="#1E100B" /><rect x={-40} y={KTOPC} width={1160} height={4} fill={B.gold} opacity={0.32} />
-			<path d={Array.from({length: 5}, (_, i) => `M${40 + i * 220},${KTOPC + 30} h180 v${905 - KTOPC - 60} h-180 Z`).join(' ')} fill="none" stroke={B.gold} strokeOpacity={0.12} strokeWidth={1.5} />
-			<Floor g={905} lattice={false} />
-			<Cup x={CUPX} y={KTOPC} w={92} frost={0.4 + 0.4 * seg(t, CLINK, CLINK + 1)} ice={inCup} />
-			{!inCup && <g transform={`translate(0,${cubeY - (rh[1] - 10)})`}><IceCubes x={t < CLINK - 0.21 ? rh[0] + 4 : CUPX} y={rh[1] - 10} s={28} n={2} seed={7} /></g>}
-			{inCup && t < CLINK + 0.35 && <g opacity={1 - (t - CLINK) / 0.35}>{Array.from({length: 8}, (_, k) => { const a = -Math.PI * (0.15 + 0.7 * k / 7), r0 = 50 + 60 * (t - CLINK), r1 = r0 + 18; return <path key={k} d={`M${CUPX + Math.cos(a) * r0},${KTOPC - 124 + Math.sin(a) * r0 * 0.6} L${CUPX + Math.cos(a) * r1},${KTOPC - 124 + Math.sin(a) * r1 * 0.6}`} stroke="#F4FBFF" strokeWidth={3} strokeLinecap="round" />; })}</g>}
-			<Pool id="kkF" x={KX + 40} y={909} rx={280} ry={40} a={0.24} />
-			<Walker51 x={KX} g={905} h={KH2} pose={p} look={LA.today.look} T={t} />
+const FC: P2 = [1500, 655], CLINK = 104.259;
+const camF = (t: number) => {
+	const zk = 2.07, sk: P2 = [760, 600];
+	const intro = t < 104.05 ? 1 + 2 * Math.pow(1 - ease(seg(t, 103.8, 104.05)), 1.5) : 1;   // out of the fridge's light
+	const out = ease(seg(t, 105.96, 107.75)), inn = ease(seg(t, 107.95, 109.3)), hold = seg(t, 109.3, 112.9);
+	const zOut = Math.exp(lerp(Math.log(zk), 0, out)), z = (inn > 0 ? Math.exp(lerp(0, Math.log(2.41), inn)) * (1 + 0.07 * hold) : zOut) * intro;
+	const s: P2 = inn > 0 ? [lerp(FC[0], 960, inn), lerp(FC[1], 600, inn)] : [lerp(sk[0], FC[0], out), lerp(sk[1], FC[1], out)];
+	return {z, s}; };
+const Finale: React.FC<{t: number}> = ({t}) => {
+	const {z, s} = camF(t), wx = 1640, wh = 330, g = 800;
+	const kd = 1 - fade(t, 106.0, 0.5);   // the kitchen dressing
+	const pscale = Array.from({length: 9}, (_, i) => i === 8 ? 1 : fade(t, 106.05 + (7 - i) * 0.09, 0.35) * (1 - fade(t, 108.0 + (7 - i) * 0.04, 0.4)));
+	const psnow = Array.from({length: 9}, (_, i) => fade(t, BB(57) + i * 0.283 - 0.05, 0.2));
+	const lab = fade(t, 106.9, 0.3) * (1 - fade(t, 107.8, 0.15)), lineO = fade(t, 106.3, 0.5) * (1 - fade(t, 108.0, 0.5));
+	const ffrost = 0.15 + 0.85 * ease(seg(t, 109.2, 111.6));
+	/* the walker: the frame-0 cup in his near hand, the cubes dropped from the other on the clink */
+	const cup: P2 = [wx - 0.27 * wh, g - 0.5 * wh], cupW = 44, drop = seg(t, CLINK - 0.21, CLINK), inCup = t >= CLINK, lift = bump(t, 104.6, 1.0);
+	const cupP: P2 = [cup[0], cup[1] - 18 * lift];
+	const rh: P2 = [cupP[0] + 2, cupP[1] - cupW * 1.35 - 26];
+	let wp = grounded({lean: 6, neck: 12, lt: 3, lk: 3, rt: -4, rk: 4, la: 40, le: 50, ra: 50, re: 60});
+	wp = ikArm(ikArm(wp, 'L', toBody(cupP[0] + cupW * 0.42, cupP[1] - 30, wx, g, wh, true)), 'R', inCup ? toBody(wx - 0.12 * wh, g - 0.45 * wh, wx, g, wh, true) : toBody(rh[0] + 10, rh[1] + 6, wx, g, wh, true));
+	const cubeY = lerp(rh[1], cupP[1] - cupW * 0.9, drop * drop);
+	const bloom = ease(seg(t, 109.6, 111.75));
+	return <Scene id="fin" sheen={0.2}>
+		{/* the kitchen (screen space, behind the world): dark wall, tiles, a counter run behind him */}
+		{kd > 0 && <g opacity={kd}>
+			<rect x={-40} y={0} width={W + 80} height={H} fill="#140A07" opacity={0.6} />
+			<path d={Array.from({length: 12}, (_, i) => `M${980 + i * 90},300 V560`).join(' ') + ' M980,390 H2000 M980,475 H2000'} stroke={B.gold} strokeOpacity={0.06} strokeWidth={1.5} />
+			<rect x={1180} y={560} width={800} height={340} fill="#1E100B" /><rect x={1180} y={560} width={800} height={4} fill={B.gold} opacity={0.3} />
+			<path d={Array.from({length: 3}, (_, i) => `M${1260 + i * 230},590 h190 v280 h-190 Z`).join(' ')} fill="none" stroke={B.gold} strokeOpacity={0.12} strokeWidth={1.5} />
+		</g>}
+		<g transform={`translate(${s[0]},${s[1]}) scale(${z}) translate(${-FC[0]},${-FC[1]})`}>
+			{/* the cold light filling the room on the peak */}
+			<ellipse cx={FC[0]} cy={FC[1]} rx={140 + 900 * bloom} ry={160 + 520 * bloom} fill="url(#iceGlow)" opacity={0.35 + 0.65 * bloom} />
+			<P1Line t={t} pscale={pscale} psnow={psnow} lab={lab} lineO={lineO} ffrost={ffrost} wx={wx} wpose={wp} />
+			<Cup x={cupP[0]} y={cupP[1]} w={cupW} frost={0.4 + 0.4 * seg(t, CLINK, CLINK + 1)} ice={inCup} />
+			{!inCup && <IceCubes x={t < CLINK - 0.21 ? rh[0] : cupP[0]} y={cubeY} s={13} n={2} seed={7} />}
+			{inCup && t < CLINK + 0.35 && <g opacity={1 - (t - CLINK) / 0.35}>{Array.from({length: 8}, (_, k) => { const a = -Math.PI * (0.15 + 0.7 * k / 7), r0 = 24 + 28 * (t - CLINK), r1 = r0 + 9; return <path key={k} d={`M${cupP[0] + Math.cos(a) * r0},${cupP[1] - cupW * 1.35 + Math.sin(a) * r0 * 0.6} L${cupP[0] + Math.cos(a) * r1},${cupP[1] - cupW * 1.35 + Math.sin(a) * r1 * 0.6}`} stroke="#F4FBFF" strokeWidth={1.6} strokeLinecap="round" />; })}</g>}
 		</g>
-	</Scene>; };
-
-/* ===================================================================================================================
-   P1 · the walk as one line, 105.8–109.0 (KF15 at 107.5): pulls back from today's fridge (the kitchen) to the whole line;
-   snow starts inside every cold thing on 冬天 (beat 57, 106.524); he walks in from the right to the end of the line.
-   P2 · 108.0–: the camera pushes into today's fridge, which frosts by itself (no ice put in); the air holds; end card.
-   =================================================================================================================== */
-const P1F: P2 = [1500, 655];
-const p1Wx = (t: number) => 1640 + (trap(107.4, 105.9, 107.4, 230, 0.01, 0.4) - trap(t, 105.9, 107.4, 230, 0.01, 0.4));
-const P1: React.FC<{t: number}> = ({t}) => {
-	const out = eout(seg(t, 105.85, 107.4)), inn = ease(seg(t, 107.95, 108.95));
-	/* starts matched to the kitchen fridge (x0 1270, w 420: centre 1480, 525), so the dissolve shows one fridge */
-	const z = lerp(lerp(2.8, 1, out), 3.47, inn), fx = lerp(lerp(P1F[0], 960, out), P1F[0], inn), fy = lerp(lerp(P1F[1], 540, out), P1F[1], inn);
-	const sx = lerp(lerp(1480, 960, out), 960, inn), ty = lerp(lerp(525, 540, out), 590, inn);
-	const g = gait(p1Wx, t, 330, 230 * 0.8);
-	return <Scene id="p1" sheen={0.2}>
-		<g transform={`translate(${sx},${ty}) scale(${z}) translate(${-fx},${-fy})`}>
-			<P1Line t={t} snow={fade(t, BB(57) - 0.05, 0.3)} wx={g.x} wpose={g.pose} />
-		</g>
-	</Scene>; };
-const P2: React.FC<{t: number}> = ({t}) => {
-	const frost = ease(seg(t, 109.2, 111.6)), push = 1 + 0.03 * seg(t, 108.8, 112.75);
-	return <Scene id="p2" sheen={0.2}>
-		<g transform={`translate(960,590) scale(${push}) translate(-960,-590)`}><P2Shot frost={frost} t={t} /></g>
-		<rect x={700} y={160} width={520} height={860} fill="#EAF6FF" opacity={0.05 * bump(t, 111.6, 1.2)} />
+		{/* frost creeping in from the frame's edges as the room goes cold (P2) */}
+		{bloom > 0 && <g opacity={bloom}>{Array.from({length: 26}, (_, i) => { const side = i % 4, u = rnd(i, 71), x = side === 0 ? 40 + 120 * rnd(i, 72) : side === 1 ? W - 40 - 120 * rnd(i, 72) : 120 + u * (W - 240), y = side < 2 ? 260 + u * 700 : side === 2 ? 960 + 80 * rnd(i, 72) : 250 + 40 * rnd(i, 72), sz = 14 + 22 * rnd(i, 73);
+			return <g key={i} stroke="#F2FAFF" strokeWidth={2} strokeLinecap="round" opacity={0.35 + 0.35 * rnd(i, 74)} transform={`translate(${x},${y}) rotate(${60 * rnd(i, 75)})`}>{[0, 60, 120].map((a) => <path key={a} d={`M${-sz / 2},0 L${sz / 2},0`} transform={`rotate(${a})`} />)}</g>; })}
+			<rect x={0} y={0} width={W} height={H} fill="#BFE3F2" opacity={0.06} /></g>}
+		{/* the light this shot opens from (matched to the grid's lit window) */}
+		{t < 104.0 && <rect x={0} y={0} width={W} height={H} fill="#EAF6FF" opacity={1 - ease(seg(t, 103.8, 103.98))} />}
 	</Scene>; };
 
 /* ===================================================================================================================
@@ -608,11 +611,11 @@ const P2: React.FC<{t: number}> = ({t}) => {
    =================================================================================================================== */
 const END_Q = '你家冰箱里，现在冻着什么？';
 const EndCard: React.FC<{t: number}> = ({t}) => {
-	const T0 = 112.75, dim = fade(t, T0 - 0.1, 0.45), seal = land(seg(t, T0, T0 + 0.4)), title = fade(t, T0 + 0.35, 0.4), q = fade(t, T0 + 0.7, 0.4), src = fade(t, T0 + 1.3, 0.4), pill = t > 114.6 ? land(seg(t, 114.6, 115.0)) : 0;
+	const T0 = 112.75, dim = fade(t, T0 - 0.1, 0.45), seal = land(seg(t, T0 - 0.07, T0 + 0.33)), title = fade(t, T0 + 0.35, 0.4), q = fade(t, T0 + 0.7, 0.4), src = fade(t, T0 + 1.3, 0.4), pill = t > 114.6 ? land(seg(t, 114.6, 115.0)) : 0;
 	const fs = 76, tw = fs * 13 * 1.03;
 	return <>
 		<div style={{position: 'absolute', inset: 0, background: `rgba(8,4,3,${0.72 * dim})`}} />
-		{t >= T0 && <Img src={SEAL_SRC} style={{position: 'absolute', left: 960 - 70, top: 120, width: 140, height: 140, opacity: cl(seal * 3), transform: `rotate(-6deg) scale(${lerp(1.7, 1, seal)})`, filter: 'drop-shadow(0 3px 6px rgba(0,0,0,0.5))'}} />}
+		{t >= T0 - 0.07 && <Img src={SEAL_SRC} style={{position: 'absolute', left: 960 - 70, top: 120, width: 140, height: 140, opacity: cl(seal * 3), transform: `rotate(-6deg) scale(${lerp(1.7, 1, seal)})`, filter: 'drop-shadow(0 3px 6px rgba(0,0,0,0.5))'}} />}
 		<div style={{position: 'absolute', left: 0, right: 0, top: 290, textAlign: 'center', fontFamily: SANS, fontWeight: 900, fontSize: 60, lineHeight: 1.35, letterSpacing: '0.05em', color: B.gold, textShadow: thB.halo, opacity: title}}>古代没有冰<span style={{marginRight: '-0.05em'}}>箱</span><br />夏天怎么吃冰<span style={{marginRight: '-0.55em'}}>？</span></div>
 		<div style={{position: 'absolute', left: 960 - tw / 2 - 260, top: 560 - 150, width: tw + 520, height: fs * 1.5 + 300, opacity: q, background: 'radial-gradient(closest-side, rgba(16,7,4,0.42), rgba(16,7,4,0.36) 45%, rgba(16,7,4,0.15) 80%, rgba(16,7,4,0))'}} />
 		<div style={{position: 'absolute', left: 0, right: 0, top: 560 + 10 * (1 - q), opacity: q, textAlign: 'center', fontFamily: SANS, fontWeight: 900, fontSize: fs, lineHeight: 1.5, letterSpacing: '0.03em', color: thB.ink, textShadow: thB.halo, whiteSpace: 'nowrap'}}>{END_Q.slice(0, -1)}<span style={{marginRight: '-0.53em'}}>？</span></div>
