@@ -29,6 +29,10 @@ D = dict(
     picks_lpl={t: A[f'picks_{t}'] for t in ['BLG', 'AL', 'TES', 'IG']},
     ahead15=A['ahead15_wins'], blue=A['blue_wr'], throws=A['throws'], n_games=len(G),
     paths={k: S[k] for k in S if k.startswith('blg_path')}, combos=S.get('combos', [])[:4] + S.get('combos', [])[-4:],
-    ai=json.load(open('ai25.json')) if os.path.exists('ai25.json') else None)
+    ai=json.load(open('ai25.json')) if os.path.exists('ai25.json') else None,
+    r4_opp=S.get('r4_opp'), qf_opp=S.get('qf_opp'), civil_r4=S.get('civil_r4'), civil_r5=S.get('civil_r5'), lpl_teams=S.get('lpl_teams'),
+    r4_winp=S.get('r4_winp'), r4_combos=S.get('r4_combos', [])[:3] + S.get('r4_combos', [])[-3:])
+if 'sim5' in simf: D['chain'] = D['chain'] + [['第三轮后', D['lpl']]]
+else: D['chain'][-1][1] = D['lpl']
 json.dump(D, open('../film/data.json', 'w'), ensure_ascii=False)
 print('data.json from', simf, 'LPL', D['lpl'], 'r1 tally', D['r1_tally'], 'later', D['later_tally'])

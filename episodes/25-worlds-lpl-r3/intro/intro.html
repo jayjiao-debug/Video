@@ -17,7 +17,7 @@ body{position:relative;font-family:"Noto Sans CJK SC",sans-serif}
  <filter id="paper"><feTurbulence type="fractalNoise" baseFrequency=".9" numOctaves="3" seed="4"/><feColorMatrix values="0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 .10 0"/><feComposite in2="SourceGraphic" operator="in"/><feBlend in="SourceGraphic" mode="multiply"/></filter>
  <filter id="rough"><feTurbulence type="fractalNoise" baseFrequency=".04" numOctaves="2" seed="9"/><feDisplacementMap in="SourceGraphic" scale="6"/></filter>
 </svg>
-<div id="desk"></div><div id="cam"></div><div id="vig"></div>
+<div id="desk"></div><div id="cam"></div><div id="vig"></div><div id="shade" style="position:absolute;inset:0;background:#000;opacity:.16;z-index:60;pointer-events:none"></div>
 <script>
 // ---- timing (series track 118.5 bpm: bar n = 0.383 + 2.0248 n)
 const B=n=>0.383+2.0248*n, BEAT=0.5062;
@@ -75,6 +75,7 @@ function place(c,t){
  c.el.style.filter=`drop-shadow(0 ${sh}px ${bl}px rgba(0,0,0,.55))${blur>.05?` blur(${blur.toFixed(2)}px)`:''}`;
 }
 window.renderAt=function(t){
+ document.getElementById('shade').style.opacity=(.16+.84*smooth((t-(B(10)-.4))/.4)).toFixed(3); // a little darker overall; fade to black into the Manim part
  // camera: one direction only — a slow, continuous push in toward the score
  const z=1+.025*cl(t/BIG)+.13*smooth((t-BIG)/(TITLE-BIG));
  cam.style.transform=`scale(${z})`;

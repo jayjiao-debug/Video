@@ -15,3 +15,10 @@
     (not imitating logos). Key moments are rebuilt from real per-game data (gold curve, objectives).
 - Model: the ep23 model (ratings 'BL') as before; no claims that it is validated. Keep 「模型看不到：状态、心态、临场BP」.
 - No 赔率 / 押注 / 竞猜.
+
+## Update 2026-10-26 17:00 — look changed to Manim style
+- Owner: the 3D gold version was too bright in places; wants the Manim (3Blue1Brown) feel. **Main film = 2D Manim
+  look** (`m2/film.html`): pure black, thin strokes, Create/Write animations, CMU Serif (OFL) + Noto Serif SC,
+  Manim palette (LPL red #FC6255, LCK blue #58C4DD, yellow #F7D96F, green #83C167), no glow, no camera travel.
+- **Intro keeps the newspaper clippings** (`intro/intro.html`), a little darker, fading to black at bar 10.
+- The 3D version (`film/`) is shelved.

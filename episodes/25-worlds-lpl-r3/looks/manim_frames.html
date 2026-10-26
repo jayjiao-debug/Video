@@ -1,0 +1,88 @@
+<!doctype html><html><head><meta charset="utf-8"><style>
+@font-face{font-family:"CMU";src:url(cmu-serif-500-roman.ttf)}
+@font-face{font-family:"CMU";font-weight:700;src:url(cmu-serif-700-roman.ttf)}
+@font-face{font-family:"CMU";font-style:italic;src:url(cmu-serif-500-italic.ttf)}
+@font-face{font-family:"SongB";src:url(fonts/NotoSerifSC-Bold.otf)}
+html,body{margin:0;width:1920px;height:1080px;overflow:hidden;background:#000}
+canvas{position:absolute;inset:0}
+</style></head><body><canvas id="c" width="1920" height="1080"></canvas>
+<script type="module">
+// Manim-style test frames: black ground, thin strokes, CMU serif + 宋体, muted Manim palette, no glow.
+const F=+(new URLSearchParams(location.search).get('f')||1);
+const D=await (await fetch('data.json')).json();
+const c=document.getElementById('c').getContext('2d');
+const COL={white:'#ECECEC',grey:'#888888',dim:'#444',yellow:'#F7D96F',blue:'#58C4DD',red:'#FC6255',green:'#83C167',gold:'#F0AC5F'};
+const FONT=(sz,w=500,it=false)=>`${it?'italic ':''}${w} ${sz}px CMU, SongB`;
+await document.fonts.load(FONT(60));await document.fonts.load(FONT(60,700));await document.fonts.load('60px SongB');
+// rich text: [[text,color],...] laid out left to right
+function rich(parts,x,y,sz,{al='left',w=500}={}){c.font=FONT(sz,w);let tot=parts.reduce((s,[t])=>s+c.measureText(t).width,0);let X=al==='center'?x-tot/2:al==='right'?x-tot:x;
+ for(const [t,col] of parts){c.fillStyle=COL[col]||col;c.fillText(t,X,y);X+=c.measureText(t).width;}}
+const T=(s,x,y,sz,col='white',al='left',w=500,it=false)=>{c.font=FONT(sz,w,it);c.fillStyle=COL[col]||col;c.textAlign=al;c.textBaseline='alphabetic';c.fillText(s,x,y);c.textAlign='left';};
+const line=(pts,col='white',w=3)=>{c.strokeStyle=COL[col]||col;c.lineWidth=w;c.lineCap='round';c.lineJoin='round';c.beginPath();pts.forEach((p,i)=>i?c.lineTo(...p):c.moveTo(...p));c.stroke();};
+const arrow=(x0,y0,x1,y1,col='white',w=3)=>{line([[x0,y0],[x1,y1]],col,w);const a=Math.atan2(y1-y0,x1-x0),h=18;c.fillStyle=COL[col]||col;c.beginPath();c.moveTo(x1,y1);c.lineTo(x1-h*Math.cos(a-.35),y1-h*Math.sin(a-.35));c.lineTo(x1-h*Math.cos(a+.35),y1-h*Math.sin(a+.35));c.closePath();c.fill();};
+const circ=(x,y,r,{stroke='white',fill=null,w=3}={})=>{c.beginPath();c.arc(x,y,r,0,Math.PI*2);if(fill){c.fillStyle=COL[fill]||fill;c.fill();}if(stroke){c.strokeStyle=COL[stroke]||stroke;c.lineWidth=w;c.stroke();}};
+const box=(x,y,w,h,col='white',lw=3)=>{c.strokeStyle=COL[col]||col;c.lineWidth=lw;c.strokeRect(x,y,w,h);};
+let s=7;const rnd=()=>(s=(s*16807)%2147483647)/2147483647;
+c.fillStyle='#000';c.fillRect(0,0,1920,1080);
+const title=parts=>rich(parts,110,140,72);
+const sub=(parts)=>rich(parts,960,1000,58,{al:'center'});
+
+if(F===1){ // the Swiss board as a Galton board
+ title([['LPL ','red'],['还有','white'],['几成','yellow'],['？','white']]);
+ const XS=150,YS=112,X0=960,Y0=230;const P=(w,l)=>[X0+(w-l)*XS,Y0+(w+l)*YS];
+ // edges
+ for(let w=0;w<3;w++)for(let l=0;l<3;l++){if(w+l>4)continue;for(const [dw,dl] of [[1,0],[0,1]]){const a=P(w,l),b=P(w+dw,l+dl);line([a,b],'dim',2);}}
+ // balls in flight with faint trails (one simulated run each)
+ for(let i=0;i<260;i++){let w=0,l=0;const reg=rnd();const pw=reg<.25?.55:reg<.5?.62:.42;const steps=[];while(w<3&&l<3){steps.push([w,l]);rnd()<pw?w++:l++;}steps.push([w,l]);
+  const k=Math.floor(rnd()*(steps.length-1)),u=rnd();const a=P(...steps[k]),b=P(...steps[k+1]);const x=a[0]+(b[0]-a[0])*u,y=a[1]+(b[1]-a[1])*u-Math.sin(u*Math.PI)*40;
+  const col=reg<.25?'red':reg<.5?'blue':'grey';c.globalAlpha=.25;circ(x-(b[0]-a[0])*.06,y-(b[1]-a[1])*.06+8,5,{stroke:null,fill:col});c.globalAlpha=1;circ(x,y,7,{stroke:null,fill:col});}
+ // pegs
+ for(let w=0;w<3;w++)for(let l=0;l<3;l++){if(w+l>4)continue;const [x,y]=P(w,l);circ(x,y,30,{stroke:'white',fill:'#000',w:3});T(`${w}-${l}`,x,y+10,28,'white','center');}
+ // bins
+ const bins=[[3,0],[3,1],[3,2],[0,3],[1,3],[2,3]];
+ for(const [w,l] of bins){const [x,y]=P(w,l);const q=w===3;box(x-70,y-28,140,80,q?'yellow':'grey',3);
+  const n=Math.round(q?[18,30,26][l]:[8,14,22][w]);for(let j=0;j<n;j++)circ(x-55+(j%9)*14,y+38-Math.floor(j/9)*14,5,{stroke:null,fill:j%4===0?'red':j%3===0?'blue':'grey'});
+  T(q?`${w}-${l} 晋级`:`${w}-${l} 淘汰`,x,y+100,30,q?'yellow':'grey','center');}
+ sub([['每一颗弹珠，都是一届','white'],['模拟','yellow'],['的世界赛','white']]);
+}
+if(F===2){ // gold difference, IG vs GEN
+ title([['IG ','red'],['vs ','white'],['GEN','blue'],['：领先，然后呢？','white']]);
+ const g=D.r1_games[0],gd=g.gold_diff_blue,n=gd.length-1;const ox=260,oy=560,W=1000,s=.022;const X=i=>ox+W*i/n,Y=v=>oy-v*s;
+ arrow(ox,oy,ox+W+50,oy,'white',3);arrow(ox,oy+320,ox,oy-330,'white',3);
+ T('经济差','',0,0);T('经济差',ox+20,oy-300,40,'white');T('分钟',ox+W+40,oy+60,40,'white','right');
+ for(const v of [10000,5000,-5000,-10000]){line([[ox-12,Y(v)],[ox+12,Y(v)]],'white',3);T((v>0?'+':'')+v/1000+'k',ox-24,Y(v)+12,30,'white','right');}
+ for(const m of [5,10,15,20,25]){line([[X(m),oy-10],[X(m),oy+10]],'white',3);T(String(m),X(m),oy+50,30,'white','center');}
+ c.setLineDash([10,12]);line([[X(15),oy-280],[X(15),oy+300]],'grey',2);c.setLineDash([]);
+ // curve: red above the axis, blue below
+ const pts=gd.map((v,i)=>[X(i),Y(v)]);
+ c.save();c.beginPath();c.rect(0,0,1920,oy);c.clip();line(pts,'red',5);c.restore();c.save();c.beginPath();c.rect(0,oy,1920,1080);c.clip();line(pts,'blue',5);c.restore();
+ circ(X(15),Y(gd[15]),10,{stroke:null,fill:'red'});T('+1.9k',X(15)+20,Y(gd[15])-24,40,'red');
+ circ(X(n),Y(gd[n]),10,{stroke:null,fill:'blue'});
+ T('终局',1560,420,52,'white','center');T('-13.4k',1560,580,150,'blue','center');
+ sub([['15 分钟还领先 ','white'],['1.9k','red'],['，26 分钟输掉','white']]);
+}
+if(F===3){ // the draft: banned most
+ title([['这届最怕的英雄：','white'],['蔚','yellow']]);
+ const L=D.presence.slice(0,8);const x0=190,y0=250,rowH=86;
+ L.forEach(([name,pk,bn,pres,wr],i)=>{const y=y0+i*rowH;const im=new Image();
+  T((D.cn?.[name]||name).split('·')[0],x0+120,y+48,40,i===0?'yellow':'white');
+  // ban bar (red) + pick bar (blue), thin outlines, scaled to 23 games
+  const W=900/23;c.fillStyle=COL.red;c.globalAlpha=.85;c.fillRect(x0+340,y+14,bn*W,26);c.globalAlpha=.85;c.fillStyle=COL.blue;c.fillRect(x0+340+bn*W,y+14,pk*W,26);c.globalAlpha=1;
+  box(x0+340,y+14,900,26,'dim',2);T(`${pres}%`,x0+1270,y+40,36,i===0?'yellow':'white');});
+ // icons last (async)
+ await Promise.all(L.map(([name],i)=>new Promise(r=>{const im=new Image();im.onload=()=>{c.drawImage(im,x0,y0+i*rowH,68,68);box(x0,y0+i*rowH,68,68,i===0?'yellow':'white',2);r()};im.onerror=r;im.src='icons/icon_'+(D.ids[name]||name)+'.png';})));
+ c.fillStyle=COL.red;c.fillRect(1480,110,26,26);T('被禁',1520,134,34,'white');c.fillStyle=COL.blue;c.fillRect(1640,110,26,26);T('被选',1680,134,34,'white');
+ sub([['蔚：23 局里被禁了 ','white'],['18 次','yellow']]);
+}
+if(F===4){ // the drop: our number, round by round
+ title([['LPL ','red'],['夺冠概率','white']]);
+ const ch=[['赛前',21.1],['首轮后',14.8],['第二轮后',16.5],['今天',20.0]];const ox=260,oy=820,W=950,X=i=>ox+60+W*i/3,Y=v=>oy-(v-10)*42;
+ arrow(ox,oy,ox+W+150,oy,'white',3);arrow(ox,oy,ox,oy-680,'white',3);
+ for(const v of [10,15,20,25]){line([[ox-12,Y(v)],[ox+12,Y(v)]],'white',3);T(v+'%',ox-24,Y(v)+12,30,'white','right');}
+ c.setLineDash([10,12]);line([[ox,Y(21.1)],[ox+W+120,Y(21.1)]],'grey',2);c.setLineDash([]);T('五分之一',ox+W+130,Y(21.1)+12,32,'grey');
+ line(ch.map(([l,v],i)=>[X(i),Y(v)]),'green',5);ch.forEach(([l,v],i)=>{circ(X(i),Y(v),i===3?12:9,{stroke:null,fill:i===3?'yellow':'white'});T(l,X(i),oy+52,32,'white','center');});
+ T('夺冠概率',1560,420,52,'white','center');T('20.0%',1560,600,190,'yellow','center');
+ sub([['把最新比分放进模型：','white'],['20.0%','yellow']]);
+}
+window.READY=true;
+</script></body></html>
