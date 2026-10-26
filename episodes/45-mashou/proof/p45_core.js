@@ -3,6 +3,8 @@
 // a camera (log-zoom, smoothstep) on a "world" group, plus screen-space layers. HUD = the same DOM/CSS as K.hud4 (skin.js).
 (() => {
 const P = window.P45 = {};
+// v2 fact fix (F19: 3149万 includes the buyer's premium; never a hammer price)
+for (const l of window.LINES45 ?? []) if (l[2] === '锤子落下，两个共拍出3149万欧元。') l[2] = '锤子落下，连佣金共3149万欧元。';
 P.BAR0 = 1.4498; P.BEAT = 60 / 106; P.FPS = 30;
 P.beat = (k) => P.BAR0 + P.BEAT * k;
 P.clamp = (v, a = 0, b = 1) => Math.max(a, Math.min(b, v));
@@ -79,7 +81,15 @@ P.blockHtml = (rows, era, o = {}) => {
 	const r = rows.map((w, i) => `<div class="${i ? 'row2' : ''}" style="${w.style ?? ''}"><span class="lab">${w.lab}</span><span class="num">${w.num}</span>${w.dots}</div>`).join('');
 	return `<div class="blk" style="--bk:${o.bk ?? 0};${o.style ?? ''}"><div class="age sh">${era ? `<div class="era" style="opacity:${o.eraOp ?? 1}">${era}</div>` : ''}</div>${r ? `<div class="tally sh" style="opacity:${o.op ?? 1}">${r}</div>` : ''}</div>`;
 };
-P.sealHtml = (op = 1) => `<div class="seal" style="opacity:${0.9 * op}">${K.seal()}</div>`;
+P.sealHtml = (op = 1) => `<div class="seal" style="opacity:${op >= 1 ? 1 : op.toFixed(3)}"><img src="${window.JSEAL90}"></div>`;
+P.BLK = 1;   // the counter block's scale (v2: 1.0, phone-readable)
+/** a counter row punched in at screen point c (scale KC, 0.2 s settle of the punch), then flown back into its slot over [s0, s1].
+ *  rect: the row's laid-out screen rect (P.measure). Returns the row's inline style. */
+P.punchStyle = (rect, t, t0, s0, s1, KC, c = [960, 540]) => {
+	const cx = rect.x + rect.w / 2, cy = rect.y + rect.h / 2, pu = P.seg(t, t0, t0 + 0.2), settle = P.smooth(P.seg(t, s0, s1));
+	const k = P.lerp(KC * (1.1 - 0.1 * P.easeOut(pu)), 1, settle), dx = (c[0] - cx) * (1 - settle), dy = (c[1] - cy) * (1 - settle);
+	return `transform:translate(${(dx / P.BLK).toFixed(2)}px,${(dy / P.BLK).toFixed(2)}px) scale(${k.toFixed(4)});transform-origin:50% 50%;position:relative;z-index:5`;
+};
 P.hud = (parts) => `<div id="hud">${parts.join('')}</div>`;
 /** lay out a HUD fragment once and return the screen rect of sel (for moves between a HUD slot and the frame centre) */
 P.measure = (html, sel) => { P.mount(); const w = document.getElementById('hudwrap'); w.innerHTML = html; const r = w.querySelector(sel).getBoundingClientRect(); return {x: r.x, y: r.y, w: r.width, h: r.height}; };
@@ -93,7 +103,7 @@ P.SCENES = {};
 let styled = false;
 P.mount = () => {
 	if (styled) return; styled = true;
-	const st = document.createElement('style'); st.textContent = K.CSS + K.CSS4 + `.blk{transition:none}`; document.head.appendChild(st);
+	const st = document.createElement('style'); st.textContent = K.CSS + K.CSS4 + `.blk{transition:none;scale:1;bottom:60px}.tally{font-size:40px;padding-left:22px}.tally .lab{font-size:40px;margin-right:12px}.tally .num{font-size:66px;margin-right:18px}.tally .o{width:34px;height:34px;border-width:3px;margin:0 3px -3px}.tally .o.d{border:3px dashed rgba(255,243,216,.85)}.tally .row2{margin-top:2px}.era{font-size:30px}.stamp .s1{font-size:38px}.stamp .s2{font-size:32px;opacity:.88}`; document.head.appendChild(st);
 	document.body.innerHTML = `<svg id="art" xmlns="http://www.w3.org/2000/svg" width="1920" height="1080" viewBox="0 0 1920 1080"></svg><div id="hudwrap"></div>`;
 };
 window.renderAt = (t, scene) => {

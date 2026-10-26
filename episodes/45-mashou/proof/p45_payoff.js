@@ -9,7 +9,7 @@ const P = window.P45, B = P.beat;
 const C1 = B(160), C2 = B(165), R4 = B(170);
 const LAND = {}; ['牛', '虎', '猴', '猪', '鼠', '兔'].forEach((k, i) => LAND[k] = C2 + 0.572 + 0.08 * i);
 const R = P.makeRing({LIGHT: {牛: B(160), 虎: B(160.5), 猴: B(161), 猪: B(161.5), 鼠: B(162), 兔: B(162.5)}, FLARE: B(163), LIFT: C2, LAND,
-	CASE_IN: [C2, C2 + 0.52], LAB_OUT: [96.55, 96.85], CASE_OUT: [Infinity, Infinity], CASE_OUT_B: [96.55, 97.25], TRAIL_END: C2 + 1.42});   // v8.1: 保利 ×4 stays parked for V1; 国博 ×2 leaves alone
+	CASE_IN: [C2, C2 + 0.52], LAB_OUT: [96.55, 96.85], CASE_OUT: [96.95, 97.55], CASE_OUT_B: [96.55, 97.25], TRAIL_END: C2 + 1.42});   // v8.1: 保利 ×4 stays parked for V1; 国博 ×2 leaves alone
 const {face, hero0, HL} = R;
 // ---- the ring camera: the match with R2's last frame, the pull back, the reframe for the cases, the push before the cut-in
 const D = P.DROP, cC = D.camCourt(C1), S = P.toScr(cC, D.FACE_C), zM = (D.HERO_C.h * cC.z) / hero0.h;
@@ -48,13 +48,14 @@ const caseWorld = (t) => {
 };
 const caseVig = `<radialGradient id="cvig2" cx="960" cy="560" r="1150" gradientUnits="userSpaceOnUse"><stop offset=".5" stop-color="#0A0605" stop-opacity="0"/><stop offset="1" stop-color="#0A0605" stop-opacity=".72"/></radialGradient>`;
 const LINES = window.LINES45;
+P.PUNCH_C2 = [830, 285];
 let ROW2 = null;
-const render = (t) => {
+const render = (t, o = {}) => {
 	if (t < C1 - 0.5 / 30) { const r = P.SCENES.drop.render(t); r.meta.camId = 0; return r; }
 	const meta = {events: []}, hud = [];
 	let svg = '';
 	const tl = Math.max(t, (t < R4 - 0.5 / 30 ? C1 : R4) + 1e-3), ln = P.lineAt(LINES, tl); if (ln) hud.push(P.subHtml(ln[2], tl, ln[0]));
-	if (t < R4 - 0.5 / 30) {
+	if (t < R4 - 0.5 / 30 || o.ring) {
 		const cam = camRing(t); meta.cam = cam; meta.camId = 1;
 		if (t < C1 + 0.5 / 30) meta.events.push({c1cut: t});
 		svg += `<g transform="${P.camT(cam)}">${R.ringWorld(t)}</g>${R.casesSvg(t)}${R.flights(t, cam)}${P.ringVig(cam, HL)}`;
@@ -67,10 +68,7 @@ const render = (t) => {
 		const row2 = {lab: '回园', num: '1/12', dots: P.ZOD.map((z) => P.dot(z === '马' ? 'y' : 'e')).join('')};
 		if (t >= C2) {
 			if (!ROW2) { ROW2 = P.measure(P.hud([P.blockHtml([rows[0], row2], null)]), '.row2'); }
-			const cx = ROW2.x + ROW2.w / 2, cy = ROW2.y + ROW2.h / 2, KC = Math.min(3.23, 1640 / ROW2.w);
-			const pu = P.seg(t, C2, C2 + 0.2), settle = P.smooth(P.seg(t, C2 + 0.5, C2 + 1.2));
-			const k = P.lerp(KC * (1.1 - 0.1 * P.easeOut(pu)), 1, settle), dx = (960 - cx) * (1 - settle), dy = (560 - cy) * (1 - settle);
-			rows.push({...row2, style: `transform:translate(${(dx / 0.58).toFixed(2)}px,${(dy / 0.58).toFixed(2)}px) scale(${k.toFixed(4)});transform-origin:50% 50%;position:relative;z-index:5`});
+			rows.push({...row2, style: P.punchStyle(ROW2, t, C2, C2 + 0.5, C2 + 1.2, Math.min(1.45, 1500 / ROW2.w), P.PUNCH_C2)});   // v2: in the sky band, clear of the heads
 			if (t < C2 + 1 / 30) meta.events.push({punch: t});
 		}
 		hud.push(P.blockHtml(rows, null, {op: P.seg(t, C1 - 0.5 / 30, C1 + 0.15)}));

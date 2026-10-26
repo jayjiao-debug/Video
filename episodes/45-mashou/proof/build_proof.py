@@ -10,6 +10,12 @@ OUT = Path(sys.argv[1] if len(sys.argv) > 1 else '/dev/shm/p45/proof.html'); OUT
 FONT = Path('/home/claude/video/episodes/43-qingming/film/fonts/cormorant-garamond-latin-600-normal.woff2')
 WK = Path('/home/claude/video/episodes/36-shanghuo/remotion/public/fonts/wenkai')
 JSEAL = 'data:image/png;base64,' + base64.b64encode(Path('/home/claude/video/docs/history-video-style/jseal.png').read_bytes()).decode()
+def _seal90():
+    import io
+    from PIL import Image
+    im = Image.open('/home/claude/video/docs/history-video-style/jseal.png').convert('RGBA'); r, g, b, a = im.split(); a = a.point(lambda v: round(v * 0.9))
+    buf = io.BytesIO(); Image.merge('RGBA', (r, g, b, a)).save(buf, 'PNG'); return 'data:image/png;base64,' + base64.b64encode(buf.getvalue()).decode()
+JSEAL90 = _seal90()
 ESB = HERE.parent / 'film' / 'node_modules' / '.bin' / 'esbuild'
 
 kit = ''.join((SRC / f).read_text() + '\n' for f in ['kit.js', 'hero.js', 'figs.js', 'bros.js', 'v4.js', 'hero2.js', 'hero3.js', 'skin.js', 'staff45.js', 'v7.js'])
@@ -39,7 +45,7 @@ html = f"""<!doctype html><html><head><meta charset="utf-8"><style>
 {wenkai_css(proof + (SRC / 'skin.js').read_text())}
 html,body{{margin:0;width:1920px;height:1080px;overflow:hidden;background:#000}}
 #art{{position:absolute;inset:0}}
-</style></head><body><script>window.JSEAL='{JSEAL}';</script><script>{kit}</script><script>{proof}</script>
+</style></head><body><script>window.JSEAL='{JSEAL}';window.JSEAL90='{JSEAL90}';</script><script>{kit}</script><script>{proof}</script>
 <script>window.READY = true;</script></body></html>"""
 OUT.write_text(html)
 print(OUT, len(html) // 1024, 'KB')

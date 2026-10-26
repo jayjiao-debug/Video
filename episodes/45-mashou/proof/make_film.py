@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """ep45 full film: render the master timeline (scene 'film') in segments to /dev/shm, encode each segment (frames deleted after),
 join, mux the music (bgm_cut45_150.wav cut to the film end, fade 132.77 → end), write the master, the send version, a contact sheet
-(1 frame / 2 s) and a check report (camera speed per shot, beat events, black / frozen frames).
+(1 frame / s) and a check report (camera speed per shot, beat events, black / frozen frames).
 usage: make_film.py [--from SEG] [--only-finish]"""
 import json, math, os, shutil, subprocess, sys
 from pathlib import Path
@@ -12,7 +12,7 @@ AUDIO = HERE.parent / 'audio' / 'bgm_cut45_150.wav'
 FPS, END, FADE0 = 30, 134.798, 132.77
 NF = round(END * FPS)            # 4044 frames
 SEG = 500
-NAME = '七个回国一个回家_v1'
+NAME = '圆明园兽首回来了几个_v2'   # v2: the file name must not give the answer away
 segs = [(a, min(NF, a + SEG)) for a in range(0, NF, SEG)]
 start = int(sys.argv[sys.argv.index('--from') + 1]) if '--from' in sys.argv else 0
 only = set(map(int, sys.argv[sys.argv.index('--segs') + 1].split(','))) if '--segs' in sys.argv else None
@@ -35,18 +35,20 @@ subprocess.run(['ffmpeg', '-loglevel', 'error', '-y', '-f', 'concat', '-safe', '
     '-c:v', 'copy', '-af', f'atrim=0:{END},afade=t=out:st={FADE0}:d={END - FADE0:.3f}', '-c:a', 'aac', '-b:a', '256k', '-ar', '48000', '-ac', '2',
     '-t', f'{END}', '-movflags', '+faststart', str(master)], check=True)
 send = OUT / f'{NAME}_send.mp4'
-subprocess.run(['ffmpeg', '-loglevel', 'error', '-y', '-i', str(master), '-vf', 'scale=1280:720:flags=lanczos', '-c:v', 'libx264', '-b:v', '1250k', '-maxrate', '1600k', '-bufsize', '2500k',
-    '-preset', 'slow', '-pix_fmt', 'yuv420p', '-color_range', 'tv', '-colorspace', 'bt709', '-color_primaries', 'bt709', '-color_trc', 'bt709',
-    '-c:a', 'aac', '-b:a', '160k', '-ar', '48000', '-ac', '2', '-movflags', '+faststart', str(send)], check=True)
-# contact sheet, 1 frame / 2 s
+# send version (v2): 1080p, 2-pass ≈ 1.45 Mbps video + 128k AAC, < 28 MB; the audio is the master's (no gain change)
+SV = ['-c:v', 'libx264', '-b:v', '1450k', '-maxrate', '2200k', '-bufsize', '3000k', '-preset', 'slow', '-pix_fmt', 'yuv420p', '-color_range', 'tv', '-colorspace', 'bt709', '-color_primaries', 'bt709', '-color_trc', 'bt709']
+plog = str(SHM / 'x264pass')
+subprocess.run(['ffmpeg', '-loglevel', 'error', '-y', '-i', str(master), *SV, '-pass', '1', '-passlogfile', plog, '-an', '-f', 'null', '/dev/null'], check=True)
+subprocess.run(['ffmpeg', '-loglevel', 'error', '-y', '-i', str(master), *SV, '-pass', '2', '-passlogfile', plog, '-c:a', 'aac', '-b:a', '128k', '-ar', '48000', '-ac', '2', '-movflags', '+faststart', str(send)], check=True)
+# contact sheet, 1 frame / s
 from PIL import Image, ImageDraw, ImageFont
 tmp = SHM / 'sheet'; tmp.mkdir(exist_ok=True)
-subprocess.run(['ffmpeg', '-loglevel', 'error', '-y', '-i', str(master), '-vf', 'fps=1/2,scale=480:270', str(tmp / 's%03d.png')], check=True)
+subprocess.run(['ffmpeg', '-loglevel', 'error', '-y', '-i', str(master), '-vf', 'fps=1,scale=480:270', str(tmp / 's%03d.png')], check=True)
 ims = sorted(tmp.glob('s*.png')); cols, W, H = 6, 480, 270
 sheet = Image.new('RGB', (cols * W, math.ceil(len(ims) / cols) * (H + 22)), (16, 16, 16)); d = ImageDraw.Draw(sheet)
 fnt = ImageFont.truetype('/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf', 16)
 for i, p in enumerate(ims):
-    x, y = (i % cols) * W, (i // cols) * (H + 22); sheet.paste(Image.open(p).convert('RGB'), (x, y + 22)); d.text((x + 6, y + 3), f'{i * 2:.0f} s', fill=(230, 220, 200), font=fnt)
+    x, y = (i % cols) * W, (i // cols) * (H + 22); sheet.paste(Image.open(p).convert('RGB'), (x, y + 22)); d.text((x + 6, y + 3), f'{i:.0f} s', fill=(230, 220, 200), font=fnt)
 sheet.save(OUT / f'{NAME}_contact.jpg', quality=86); shutil.rmtree(tmp)
 # checks: camera speed per shot (camId), events, black / frozen frames
 meta = {}
