@@ -5,6 +5,7 @@ import {Figure4, Pose, Look4} from '../qq44/figure44';
 import {useStampFonts, YEAR} from '../qq44/skin44';
 import {Defs51, IceBlock as IceBlockA, LOOKS51 as L51A, Walker51, ICE as ICEA, BRZ, Jianfou, Fridge, Snow} from './props51';
 import {Pool} from '../qq50/styleB';
+import {LookId, palOf} from './palette51';
 /* ep51 Builder B shared parts: the ep50 look-B furniture copied (KF50.tsx registers its own root, so it cannot be imported),
    the ice accent (cool blue-white: core #EAF6FF, body #BFE3F2, shade #6FA9C4), the Qing head (cap + queue overlay),
    and the props of KF09–KF14 (ice mountain, silver bowl, cloisonné ice chest, village houses). */
@@ -115,9 +116,9 @@ export const QingFig: React.FC<{x: number; ground: number; h: number; pose: Pose
 	<Walker51 x={x} g={ground} h={h} pose={pose} look={look} qing col={col} flip={flip} rimO={rimO} />;
 export const NEUT = '#120A07';   // other people: one tone, a touch darker than the walker
 /* ---------- props moved here from KF51B so the film can use them ---------- */
-export const Umbrella: React.FC<{x: number; y: number; r: number; g: number; o?: number}> = ({x, y, r, g, o = 1}) => <g opacity={o}>
+export const Umbrella: React.FC<{x: number; y: number; r: number; g: number; o?: number; col?: string}> = ({x, y, r, g, o = 1, col = '#2A3A4E'}) => <g opacity={o}>
 	<rect x={x - 3} y={y} width={6} height={g - y} fill="#3A2416" />
-	<path d={`M${x - r},${y + r * 0.22} Q${x - r * 0.75},${y - r * 0.3} ${x},${y - r * 0.38} Q${x + r * 0.75},${y - r * 0.3} ${x + r},${y + r * 0.22} Q${x + r * 0.5},${y + r * 0.08} ${x},${y + r * 0.1} Q${x - r * 0.5},${y + r * 0.08} ${x - r},${y + r * 0.22} Z`} fill="#2A3A4E" stroke={B.gold} strokeOpacity={0.45} strokeWidth={1.6} />
+	<path d={`M${x - r},${y + r * 0.22} Q${x - r * 0.75},${y - r * 0.3} ${x},${y - r * 0.38} Q${x + r * 0.75},${y - r * 0.3} ${x + r},${y + r * 0.22} Q${x + r * 0.5},${y + r * 0.08} ${x},${y + r * 0.1} Q${x - r * 0.5},${y + r * 0.08} ${x - r},${y + r * 0.22} Z`} fill={col} stroke={B.gold} strokeOpacity={0.45} strokeWidth={1.6} />
 	<path d={[-0.66, -0.33, 0, 0.33, 0.66].map((u) => `M${x},${y - r * 0.38} Q${x + u * r * 0.7},${y - r * 0.28} ${x + u * r * 1.0},${y + r * 0.12 + Math.abs(u) * r * 0.06}`).join(' ')} fill="none" stroke="#11171F" strokeWidth={2} opacity={0.6} />
 	<path d={`M${x - r * 0.75},${y - r * 0.22} Q${x - r * 0.3},${y - r * 0.4} ${x + r * 0.2},${y - r * 0.36}`} fill="none" stroke="#7B8EA3" strokeWidth={3} opacity={0.35} strokeLinecap="round" />
 </g>;
@@ -272,7 +273,7 @@ export const EnamelBox: React.FC<{x: number; y: number; s: number; breath?: numb
 
 /** the walk as one line. Film use: pscale[i] (each prop's scale about its base), psnow[i] (snow inside it), lab (labels), lineO
     (the gold line), ffrost (today's fridge's own frost) */
-export const P1Line: React.FC<{t: number; dim?: boolean; snow?: number; wx?: number; wpose?: Pose; wflip?: boolean; pscale?: number[]; psnow?: number[]; lab?: number; lineO?: number; ffrost?: number}> = ({t, dim, snow = 1, wx: wxIn, wpose, wflip = true, pscale, psnow, lab = 1, lineO = 1, ffrost = 0.6}) => { const g = 800;
+export const P1Line: React.FC<{t: number; dim?: boolean; snow?: number; wx?: number; wpose?: Pose; wflip?: boolean; pscale?: number[]; psnow?: number[]; lab?: number; lineO?: number; ffrost?: number; ground?: string}> = ({t, dim, snow = 1, wx: wxIn, wpose, wflip = true, pscale, psnow, lab = 1, lineO = 1, ffrost = 0.6, ground}) => { const g = 800;
 	const xs = [190, 355, 525, 690, 850, 1005, 1160, 1320, 1500];
 	const eras = ['周', '战国', '唐', '唐', '北宋', '清', '清', '乾隆', '今天'];
 	const props: React.ReactNode[] = [
@@ -289,7 +290,7 @@ export const P1Line: React.FC<{t: number; dim?: boolean; snow?: number; wx?: num
 	const tops = [110, 150, 150, 120, 120, 130, 100, 140, 300];
 	const wp = wpose ?? stand({lean: 2, neck: 6, la: 4, le: 18}), wx = wxIn ?? 1640, wh = 330;
 	return <g>
-		<Ground g={g} lattice={false} />
+		<Ground g={g} lattice={false} fill={ground} />
 		<path d={`M120,${g + 2} H1580`} stroke={B.goldL} strokeOpacity={0.55 * lineO} strokeWidth={2.5} />
 		{xs.map((x, i) => { const sc = pscale ? pscale[i] : 1; if (sc <= 0.005) return null; return <g key={i} transform={`translate(${x},${g}) scale(${sc}) translate(${-x},${-g})`}>
 			<Pool id={`p1${i}${dim ? 'd' : ''}`} x={x} y={g - 60} rx={110} ry={150} a={0.16} />
@@ -331,3 +332,17 @@ export const Lantern51: React.FC<{x: number; y: number; s?: number; lit?: number
 	</g>; };
 
 export {Figure4};
+
+/* ---------- §2 colour looks for B's scenes (round 3), from Builder A's palette51 tokens (PAL[look][era]); 'cur' keeps the approved
+   values. Local tokens (not in palette51): umbrella cloth, wood, doors, door leaves, tubs, the extras' tone. ---------- */
+const mixC = (a: string, b: string, k: number) => { const pa = parseInt(a.slice(1), 16), pb = parseInt(b.slice(1), 16); return '#' + [16, 8, 0].map((s) => Math.round(lerp((pa >> s) & 255, (pb >> s) & 255, k)).toString(16).padStart(2, '0')).join(''); };
+type SongPal = {sky: string[]; skyO: number; sunA: number; sunCol: string; far: string; farO: number; midRoof: string; midPost: string; midBeam: string; midLine: string; street: string; ground: string; umb: string; neut: string; back: string; backA: number; wood: string};
+export const songPal = (look: LookId): SongPal => { if (look === 'cur') return {sky: ['#24120B', '#5A2F1A', '#6E3D20', '#2A150D'], skyO: 0.75, sunA: 0.42, sunCol: '#FFC070', far: '#2C170F', farO: 1, midRoof: '#140A07', midPost: '#26120D', midBeam: '#2E1610', midLine: 'rgba(232,188,102,0.26)', street: '#241209', ground: '#150B08', umb: '#2A3A4E', neut: '#120A07', back: '#FFD9A0', backA: 0, wood: '#2E1610'};
+	const P = palOf(look, 'song'), era = look === 'era';
+	return {sky: [P.sky[0], P.sky[1], P.sky[2], P.field[0]], skyO: P.skyA, sunA: era ? 0.2 : 0.46, sunCol: era ? '#FFE8B8' : '#FFD08A', far: P.far, farO: 0.85, midRoof: mixC(P.mid, '#000000', era ? 0.55 : 0.45),
+		midPost: P.mid, midBeam: P.panel, midLine: P.line, street: mixC(P.mid, P.field[0], 0.5), ground: P.field[1], umb: era ? '#2E5E82' : '#3A6288', neut: era ? '#1A100C' : '#0E0604', back: P.backdrop, backA: P.backdropA, wood: era ? '#7A4E2A' : '#6A3E22'}; };
+type HutPal = {sky: string[] | null; wall: string; wallLine: string; wallLineO: number; coping: string; sunA: number; sunCol: string; door: string; leaf: string; ground: string; tub: string; back: string; backA: number};
+export const hutPal = (look: LookId): HutPal => { if (look === 'cur') return {sky: null, wall: '#221816', wallLine: '#C9B9A6', wallLineO: 0.06, coping: '#141010', sunA: 0.26, sunCol: '#FFC070', door: '#140C0A', leaf: '#2A1712', ground: '#150B08', tub: '#3A2416', back: '#FFD9A0', backA: 0};
+	const P = palOf(look, 'qingSummer'), era = look === 'era';
+	return {sky: [P.sky[0], P.sky[2]], wall: P.mid, wallLine: era ? '#2E2824' : '#E8D2B0', wallLineO: era ? 0.18 : 0.12, coping: mixC(P.mid, '#000000', 0.5), sunA: era ? 0.2 : 0.4, sunCol: era ? '#FFE8C0' : '#FFD08A',
+		door: era ? '#7A2C1E' : '#5A2416', leaf: era ? '#5E2216' : '#6E2E1A', ground: P.field[1], tub: '#6A4426', back: P.backdrop, backA: P.backdropA}; };

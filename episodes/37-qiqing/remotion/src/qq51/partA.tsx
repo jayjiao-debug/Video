@@ -6,6 +6,7 @@ import {Pose} from '../qq44/figure44';
 import {seated, STRIDE, GAIT_S} from '../qq47/pose47';
 import {Defs51, ICE, BRZ, SNOW, IceBlock, IcePool, Chisel, Cup, Snow, FrozenRiver, Jianfou, JarWhole, jfGeom, Fridge, fridgeGeom, LOOKS51, Walker51, Forearm, P2} from './props51';
 import {WipeSplit, BA, PillarKind} from './master51';
+import {usePal, useLook, EraId, rimProps} from './palette51';
 /* ep51 PartA (Builder A): film t 0–55.92 (+ a little past it for the hand-off wipe).
    hook (your fridge, 不会冷, the lid, the ◀◀ season rewind) → 周 river: title, the two chisel strikes, the block into the 冰窖 →
    80 labourers → ×3 → the 秦 pit 190 m³ → 战国 banquet: the 鉴缶 (exploded, section, packed, 先猜？, 酒, 温) → the cup taken →
@@ -31,10 +32,14 @@ const IceDefsA: React.FC = () => <defs>
 	<linearGradient id="iceShd" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stopColor="#9CCBE0" /><stop offset="0.6" stopColor={ICE.shade} /><stop offset="1" stopColor="#4F87A2" /></linearGradient>
 	<filter id="mist" x="-30%" y="-30%" width="160%" height="160%"><feGaussianBlur stdDeviation="7" /></filter>
 </defs>;
-const Pic: React.FC<{id: string; sheen?: number; children: React.ReactNode}> = ({id, sheen = 0.25, children}) =>
-	<svg width={W} height={H} style={{position: 'absolute', left: 0, top: 0}}><LacDefs /><Defs51 /><IceDefsA /><Lacquer sheen={sheen} id={id} />{children}<Vignette id={id} /></svg>;
-const Ground: React.FC<{g: number; lattice?: boolean; x0?: number; x1?: number}> = ({g, lattice = true, x0 = -40, x1 = W + 40}) => <g>
-	<rect x={x0} y={g} width={x1 - x0} height={H - g + 400} fill={BG.ground} /><rect x={x0} y={g} width={x1 - x0} height={3} fill={B.gold} opacity={0.28} />
+/** era (palette51): the look's sky / back-wall gradient is painted over the lacquer (nothing in the 'cur' look) */
+const Pic: React.FC<{id: string; sheen?: number; children: React.ReactNode; era?: EraId; hz?: number}> = ({id, sheen = 0.25, children, era = 'zhou', hz = 640}) => { const pal = usePal(era);
+	return <svg width={W} height={H} style={{position: 'absolute', left: 0, top: 0}}><LacDefs /><Defs51 /><IceDefsA /><Lacquer sheen={sheen} id={id} />
+		{pal.skyA > 0 && <><defs><linearGradient id={`sky${id}`} gradientUnits="userSpaceOnUse" x1={0} y1={0} x2={0} y2={hz}><stop offset="0" stopColor={pal.sky[0]} /><stop offset="0.6" stopColor={pal.sky[1]} /><stop offset="1" stopColor={pal.sky[2]} /></linearGradient></defs>
+			<rect width={W} height={H} fill={`url(#sky${id})`} opacity={pal.skyA} /></>}
+		{children}<Vignette id={id} a={pal.skyA > 0 ? 0.5 : 0.72} /></svg>; };
+const Ground: React.FC<{g: number; lattice?: boolean; x0?: number; x1?: number; fill?: string}> = ({g, lattice = true, x0 = -40, x1 = W + 40, fill = BG.ground}) => <g>
+	<rect x={x0} y={g} width={x1 - x0} height={H - g + 400} fill={fill} /><rect x={x0} y={g} width={x1 - x0} height={3} fill={B.gold} opacity={0.28} />
 	{lattice && <path d={Array.from({length: Math.ceil((x1 - x0) / 90) + 2}, (_, i) => `M${x0 - 20 + i * 90},${g + 30} l45,40 l-45,40 l-45,-40 Z`).join(' ')} fill="none" stroke={B.gold} strokeWidth={1.5} opacity={0.1} />}
 </g>;
 /** ice chips bursting from a strike point; k = 0..1 progress of the burst */
@@ -56,12 +61,13 @@ const Hook: Fc = ({t}) => {   // the push-in (3.85–4.6) lands the vessel exact
 	const edge = FX0 - 0.42 * FW * open, hand: P2 = [edge + 18, 640 + 6 * Math.sin(t * 1.3)], el: P2 = [120, 1180];
 	const d = Math.hypot(hand[0] - el[0], hand[1] - el[1]), wr: P2 = [hand[0] - (hand[0] - el[0]) / d * 45, hand[1] - (hand[1] - el[1]) / d * 45];
 	const bob = 5 * Math.sin(t * 1.7);
-	return <Pic id="hk" sheen={0.12 + 0.03 * t}>
+	const pk = usePal('today'), onk = useLook() !== 'cur';
+	return <Pic id="hk" sheen={0.12 + 0.03 * t} era="today" hz={700}>
 		<g transform={`translate(${fx},${fy}) scale(${z}) translate(${-fx},${-fy})`}>
-			<rect x={-40} y={0} width={W + 80} height={H} fill="#140A07" opacity={0.5} />
-			<rect x={-40} y={700} width={880} height={400} fill="#1E100B" /><rect x={-40} y={700} width={880} height={3} fill={B.gold} opacity={0.3} />
+			<rect x={-40} y={0} width={W + 80} height={H} fill="#140A07" opacity={onk ? 0 : 0.5} />
+			<rect x={-40} y={700} width={880} height={400} fill={onk ? pk.near : '#1E100B'} /><rect x={-40} y={700} width={880} height={3} fill={B.gold} opacity={0.3} />
 			<path d={Array.from({length: 10}, (_, i) => `M${-40 + i * 90},420 V700`).join(' ') + ' M-40,510 H840 M-40,600 H840'} stroke={B.gold} strokeOpacity={0.06} strokeWidth={1.5} />
-			<rect x={1500} y={700} width={460} height={400} fill="#1E100B" /><rect x={1500} y={700} width={460} height={3} fill={B.gold} opacity={0.3} />
+			<rect x={1500} y={700} width={460} height={400} fill={onk ? pk.near : '#1E100B'} /><rect x={1500} y={700} width={460} height={3} fill={B.gold} opacity={0.3} />
 			<Fridge x0={FX0} y0={FY0} w={FW} h={FH} open={open} light={light} id="hkf" fzK={FZK} handle="h">
 				<Pool id="hkv" x={VX} y={VY - 170} rx={330} ry={260} a={light > 0.5 ? 0.22 : 0.34} />
 				<ellipse cx={VX} cy={VY + 4} rx={VW * 0.62} ry={16} fill="#000" opacity={0.35} />
@@ -98,7 +104,7 @@ const VesselClose: React.FC<{t: number}> = ({t}) => {
 		<Glint x={LG.gapL - 10} y={LG.yt + 140} r={26} o={bump(t, BA(9) - 0.1, 0.45)} />
 		<Glint x={LG.gapR + 6} y={LG.yt + 230} r={22} o={bump(t, BA(10) - 0.1, 0.45)} />
 	</g>; };
-const LidShot: Fc = ({t}) => <Pic id="ls" sheen={0.2}><VesselClose t={t} /></Pic>;
+const LidShot: Fc = ({t}) => <Pic id="ls" sheen={0.2} era="zhanguo" hz={1000}><VesselClose t={t} /></Pic>;
 
 /* ======================= 3 · H3 7.0–9.0: ◀◀ the block slides back out, the seasons run backwards, pull back to the river ======================= */
 const RW_B: P2 = [960, 760], RW_W = 420;   // the block's screen place during the rewind (= the river block at camera ×1.75)
@@ -110,7 +116,11 @@ const Rewind: Fc = ({t}) => {
 	/* large leaves running BACKWARDS (rising) behind the block: green, then orange, then the snow */
 	const leaves = (col: string, vein: string, o: number, seed: number) => o <= 0 ? null : <g opacity={o}>{Array.from({length: 22}, (_, i) => { const y = (H + 80) - ((rnd(i, seed) * (H + 160) + 1100 * (t - 7.0)) % (H + 160)), x = rnd(i, seed + 1) * W + 40 * Math.sin(t * 3 + i), r = 22 + 14 * rnd(i, seed + 3);
 		return <g key={i} transform={`translate(${x},${y}) rotate(${rnd(i, seed + 2) * 180 - t * 260})`}><path d={`M${-r},0 Q0,${-r * 0.55} ${r},0 Q0,${r * 0.55} ${-r},0 Z`} fill={col} /><path d={`M${-r},0 L${r},0`} stroke={vein} strokeWidth={1.5} /></g>; })}</g>;
-	return <Pic id="rw" sheen={0.2}>
+	const pzg = usePal('zhanguo'), onr = useLook() !== 'cur', warmK = 1 - ease(seg(t, 7.0, 7.5));
+	return <Pic id="rw" sheen={0.2} era="zhou" hz={900}>
+		{/* the 战国 lacquer red of the lid shot runs back into the 周 night as the seasons rewind */}
+		{onr && warmK > 0 && <><defs><linearGradient id="rwZg" gradientUnits="userSpaceOnUse" x1={0} y1={0} x2={0} y2={1000}><stop offset="0" stopColor={pzg.sky[0]} /><stop offset="0.6" stopColor={pzg.sky[1]} /><stop offset="1" stopColor={pzg.sky[2]} /></linearGradient></defs>
+			<rect width={W} height={H} fill="url(#rwZg)" opacity={warmK} /></>}
 		{/* the season field behind: warm summer → amber autumn → cold winter night */}
 		<rect width={W} height={H} fill="#2E1A0E" opacity={0.6 * sum} />
 		<rect width={W} height={H} fill="#3A200C" opacity={0.55 * aut} />
@@ -169,15 +179,19 @@ const River: Fc = ({t}) => {
 	const hand = J(p, 'LHand', wx, WG, RH), hip = J(p, 'Hips', wx, WG, RH);
 	const ropeAt: P2 = [bxw + BW / 2 - 6, RG - BH * 0.45];
 	const gust = bump(t, 9.5, 0.9);
-	return <Pic id="rv" sheen={0.2}>
+	const look = useLook(), pal = usePal('zhou'), on = look !== 'cur', hz = RG - 250;
+	return <Pic id="rv" sheen={0.2} era="zhou" hz={c.sy + (hz - c.fy) * c.s}>
 		<g transform={`translate(${c.sx},${c.sy}) scale(${c.s}) translate(${-c.fx},${-c.fy})`}>
-			<g transform={`translate(${-W},0)`}><FrozenRiver g={RG} t={t} id="rvl" /></g>
-			<FrozenRiver g={RG} t={t} id="rva" />
-			<g transform={`translate(${W},0)`}><FrozenRiver g={RG} t={t} id="rvb" /></g>
+			{on && <><defs><linearGradient id="rvHz" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stopColor={pal.horizon} stopOpacity="0" /><stop offset="0.75" stopColor={pal.horizon} stopOpacity={pal.horizonA} /><stop offset="1" stopColor={pal.horizon} stopOpacity="0" /></linearGradient></defs>
+				<rect x={-W} y={hz - 260} width={W * 4} height={290} fill="url(#rvHz)" /></>}
+			<g transform={`translate(${-W},0)`}><FrozenRiver g={RG} t={t} id="rvl" pal={on ? {far: pal.far, field: pal.field, bank: pal.near, line: pal.line} : undefined} /></g>
+			<FrozenRiver g={RG} t={t} id="rva" pal={on ? {far: pal.far, field: pal.field, bank: pal.near, line: pal.line} : undefined} />
+			<g transform={`translate(${W},0)`}><FrozenRiver g={RG} t={t} id="rvb" pal={on ? {far: pal.far, field: pal.field, bank: pal.near, line: pal.line} : undefined} /></g>
 			{/* one continuous near snow bank across all three copies (no seams) */}
-			<path d={`M${-W},${RG + 150} ${Array.from({length: 13}, (_, i) => `Q${-W + i * 480 + 240},${RG + 120 + 30 * Math.sin(i * 1.7)} ${-W + (i + 1) * 480},${RG + 145 + 15 * Math.sin(i * 2.3)}`).join(' ')} V${H + 400} H${-W} Z`} fill="#241A16" />
+			<path d={`M${-W},${RG + 150} ${Array.from({length: 13}, (_, i) => `Q${-W + i * 480 + 240},${RG + 120 + 30 * Math.sin(i * 1.7)} ${-W + (i + 1) * 480},${RG + 145 + 15 * Math.sin(i * 2.3)}`).join(' ')} V${H + 400} H${-W} Z`} fill={on ? pal.near : '#241A16'} />
 			<path d={`M${-W},${RG + 150} ${Array.from({length: 13}, (_, i) => `Q${-W + i * 480 + 240},${RG + 120 + 30 * Math.sin(i * 1.7)} ${-W + (i + 1) * 480},${RG + 145 + 15 * Math.sin(i * 2.3)}`).join(' ')}`} fill="none" stroke={SNOW} strokeOpacity={0.24} strokeWidth={3} />
 			<Pool id="rv" x={wx + 60} y={640} rx={560} ry={420} a={0.24} />
+			{on && <Pool id="rvbd" x={wx + 30} y={WG - 0.55 * RH} rx={330} ry={420} a={pal.backdropA} col={pal.backdrop} />}
 			<Pool id="rvf" x={wx} y={WG + 4} rx={260} ry={36} a={0.22} />
 			{/* where the block was cut from the sheet: a dark slot + chips */}
 			<path d={`M${1110 - 190},${RG + 34} L${1110 + 210},${RG + 34} L${1110 + 260},${RG + 8} L${1110 - 140},${RG + 8} Z`} fill="#0C0605" opacity={0.6} />
@@ -186,14 +200,14 @@ const River: Fc = ({t}) => {
 			{lab > 0 && t < 16.2 && <Lab x={PITX} y={RG + 140 - 120 * (1 - lab)} s="冰窖" fs={56} anchor="middle" col={B.goldL} o={cl(lab * 3) * (1 - fade(t, 15.9, 0.3))} />}
 			{/* the rope, lying slack on the ice until he takes it up (14.75) */}
 			{t < 14.75 && <path d={`M${ropeAt[0]},${ropeAt[1]} Q${ropeAt[0] + 40},${RG - 12} ${ropeAt[0] + 90},${RG - 14} q30,4 26,-8 q-6,-10 -30,-4`} fill="none" stroke="#A88A5C" strokeWidth={4} strokeLinecap="round" />}
-			<Walker51 x={chiselHeld ? 860 : wx} g={WG} h={RH} pose={p} look={LOOKS51.zhou.look} />
+			<Walker51 x={chiselHeld ? 860 : wx} g={WG} h={RH} pose={p} look={LOOKS51.zhou.look} rim={on ? pal.rim : undefined} rimO={pal.rimO} dx={pal.rimD} dy={-pal.rimD * 0.85} />
 			{chiselHeld && <Chisel x={butt[0]} y={butt[1]} L={Math.hypot(tip[0] - butt[0], tip[1] - butt[1])} rot={Math.atan2(tip[1] - butt[1], tip[0] - butt[0]) * 180 / Math.PI} />}
 			{!chiselHeld && <Chisel x={hip[0] - 18} y={hip[1] - 46} L={150} rot={98} />}
 			{/* the block, with its rope loop; it sinks into the 冰窖 behind the near lip */}
 			{drop < 1 && <g opacity={1 - seg(drop, 0.55, 1)}>
 				<defs><clipPath id="rvc"><rect x={-W} y={-400} width={W * 4} height={RG + 60 + 400} /></clipPath></defs>
 				<g clipPath="url(#rvc)"><IcePool x={bxw + 20} y={RG + 6} rx={240} o={1 - drop} />
-					<IceBlock x={bxw} y={RG + 110 * drop * drop} w={BW} h={BH} d={110} seed={3} />
+					<IceBlock x={bxw} y={RG + 110 * drop * drop} w={BW} h={BH} d={110} seed={3} warmEdge={pal.iceEdge} />
 					<path d={`M${bxw - BW / 2},${RG - BH * 0.45 + 110 * drop * drop} H${bxw + BW / 2}`} stroke="#A88A5C" strokeWidth={4} opacity={0.9} /></g></g>}
 			{t >= 14.75 && t < 15.62 && <path d={`M${hand[0]},${hand[1]} L${ropeAt[0]},${ropeAt[1]}`} stroke="#A88A5C" strokeWidth={4} strokeLinecap="round" />}
 			{hits.map((k, i) => <Burst key={i} x={tipRest[0]} y={tipRest[1]} s={160} k={k} seed={i + 2} />)}
@@ -207,9 +221,12 @@ const River: Fc = ({t}) => {
 
 /* ======================= 5 · Z1 16.4–21.3: 80 labourers (20 teams of four) to the 冰窖, officials with tallies, tag 1 → 80 ======================= */
 const haulPose = (ph: number) => ikArm(ikArm(grounded({lean: 24 + 3 * Math.sin(ph), neck: -12, lt: 26 + 8 * Math.sin(ph), lk: 18, rt: -18 - 8 * Math.sin(ph), rk: 14, la: -30, le: 10, ra: -26, re: 14}), 'L', [-0.12, 0.5]), 'R', [-0.1, 0.48]);
-const Team: React.FC<{x: number; g: number; h: number; dir: 1 | -1; seed: number; t: number}> = ({x, g, h, dir, seed, t}) => {
+/** dist = how far the team has moved (px): the haulers' legs step with it, in the direction they face (no moonwalk) */
+const Team: React.FC<{x: number; g: number; h: number; dir: 1 | -1; seed: number; t: number; dist?: number}> = ({x, g, h, dir, seed, t, dist = 0}) => {
 	const gap = 0.36 * h, bw = 0.8 * h, bx = x - dir * (3 * gap + 0.75 * h), flip = dir === -1;
-	const ps = [0, 1, 2, 3].map((k) => ({x: x - dir * k * gap, p: haulPose(seed + k * 1.7 + t * 4.2)}));
+	const lean = grounded({lean: 24, neck: -12, lt: 26, lk: 18, rt: -18, rk: 14, la: -30, le: 10, ra: -26, re: 14});
+	const ps = [0, 1, 2, 3].map((k) => ({x: x - dir * k * gap, p: ikArm(ikArm(mixP(walkPose(dist / (STRIDE * h) + 0.27 * k + 0.13 * seed), lean, 0.45), 'L', [-0.12, 0.5]), 'R', [-0.1, 0.48])}));
+	void t;
 	const hands = ps.map((o) => J(o.p, 'LHand', o.x, g, h, flip));
 	return <g>
 		<path d={`M${hands[0][0]},${hands[0][1]} ${hands.slice(1).map((q) => `L${q[0]},${q[1]}`).join(' ')} L${bx + dir * bw * 0.5},${g - h * 0.12}`} stroke="#A88A5C" strokeWidth={Math.max(1, h * 0.02)} fill="none" />
@@ -239,13 +256,16 @@ const Zhou80: Fc = ({t}) => { const g = 960, h = 480, wx = 300 + 230 * (t - 19.5
 	const n = Math.round(lerp(1, 80, eio(seg(t, 17.45, BA(32)))));
 	const tagO = fade(t, 17.2, 0.3) * (1 - fade(t, 20.3, 0.3)), tagS = t > BA(32) - 0.05 ? lerp(1.12, 1, land(seg(t, BA(32) - 0.05, BA(32) + 0.4))) : 1;
 	const prog = (r: typeof ROWS_T[0]) => r.dir * 0.22 * r.h * (t - 19.5);
-	return <Pic id="z1" sheen={0.2}>
-		<path d={`M-40,600 Q300,540 620,580 Q980,520 1320,570 Q1640,530 1960,580 V640 H-40 Z`} fill={B.far} />
+	const pz = usePal('zhou'), onz = useLook() !== 'cur';
+	return <Pic id="z1" sheen={0.2} era="zhou" hz={600}>
+		{onz && <><defs><linearGradient id="z1Hz" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stopColor={pz.horizon} stopOpacity="0" /><stop offset="0.8" stopColor={pz.horizon} stopOpacity={pz.horizonA} /><stop offset="1" stopColor={pz.horizon} stopOpacity="0" /></linearGradient></defs><rect x={-40} y={340} width={W + 80} height={270} fill="url(#z1Hz)" /></>}
+		<path d={`M-40,600 Q300,540 620,580 Q980,520 1320,570 Q1640,530 1960,580 V640 H-40 Z`} fill={onz ? pz.far : B.far} />
 		<path d={`M-40,600 Q300,540 620,580 Q980,520 1320,570 Q1640,530 1960,580`} fill="none" stroke={SNOW} strokeOpacity={0.18} strokeWidth={3} />
-		<rect x={-40} y={630} width={W + 80} height={400} fill="#1A120F" />
+		<defs><linearGradient id="z1F" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stopColor={onz ? pz.field[0] : '#1A120F'} /><stop offset="1" stopColor={onz ? pz.field[1] : '#1A120F'} /></linearGradient></defs>
+		<rect x={-40} y={630} width={W + 80} height={400} fill="url(#z1F)" />
 		<path d="M-40,632 H1960" stroke={SNOW} strokeOpacity={0.2} strokeWidth={3} />
 		<Pool id="z1" x={1100} y={720} rx={720} ry={300} a={0.22} />
-		<path d="M140,658 H1150 Q1220,668 1150,700 H140 Q60,730 140,770 H1000 Q1060,780 1080,850" fill="none" stroke="#3A2A20" strokeWidth={22} strokeLinejoin="round" opacity={0.8} />
+		<path d="M140,658 H1150 Q1220,668 1150,700 H140 Q60,730 140,770 H1000 Q1060,780 1080,850" fill="none" stroke={onz ? pz.panel : '#3A2A20'} strokeWidth={22} strokeLinejoin="round" opacity={0.8} />
 		<defs>
 			<linearGradient id="z1wall" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stopColor="#7A5434" /><stop offset="0.35" stopColor="#4A3020" /><stop offset="0.75" stopColor="#1E110A" /><stop offset="1" stopColor="#050202" /></linearGradient>
 			<radialGradient id="z1hole" cx="0.5" cy="0.75" r="0.7"><stop offset="0" stopColor="#020101" /><stop offset="0.7" stopColor="#080403" /><stop offset="1" stopColor="#1A0E09" /></radialGradient>
@@ -266,15 +286,16 @@ const Zhou80: Fc = ({t}) => { const g = 960, h = 480, wx = 300 + 230 * (t - 19.5
 		<path d="M1200,822 L1560,822 L1630,904 L1150,904 Z" fill="none" stroke={SNOW} strokeOpacity={0.32} strokeWidth={3} strokeLinejoin="round" />
 		<path d="M1196,822 L1564,822" stroke={B.gold} strokeOpacity={0.35} strokeWidth={2} />
 		<Lab x={1400} y={806} s="冰窖" fs={52} anchor="middle" col={B.goldL} />
-		{ROWS_T.map((r, ri) => r.xs.map((x, i) => <Team key={`${ri}-${i}`} x={x + prog(r)} g={r.g} h={r.h} dir={r.dir} seed={ri * 10 + i} t={t} />))}
+		{ROWS_T.map((r, ri) => r.xs.map((x, i) => <Team key={`${ri}-${i}`} x={x + prog(r)} g={r.g} h={r.h} dir={r.dir} seed={ri * 10 + i} t={t} dist={0.22 * r.h * (t - 16) + 400} />))}
 		<Walker51 x={1262} g={814} h={280} pose={o2} look={{dress: 'robe', head: 'guan', beard: 'long'}} col="#0F0806" flip rimO={0.6} />
 		<Tally x={1262 - 0.22 * 280} y={814 - (0.62 + 0.02 * Math.sin(t * 5)) * 280} h={72} rot={-10} />
 		<Walker51 x={1664} g={884} h={320} pose={o1} look={{dress: 'robe', head: 'guan', beard: 'short'}} col="#0F0806" flip rimO={0.6} />
 		<Tally x={1664 - 0.2 * 320} y={884 - 0.6 * 320} h={84} rot={8} />
 		{tagO > 0 && <NumTag x={640} y={380} label="干活的 ×" num={`${n}`} w={430} o={tagO} sc={tagS} />}
-		<rect x={-40} y={g} width={W + 80} height={H - g + 40} fill={BG.ground} /><rect x={-40} y={g} width={W + 80} height={3} fill={B.gold} opacity={0.28} />
+		<rect x={-40} y={g} width={W + 80} height={H - g + 40} fill={onz ? pz.near : BG.ground} /><rect x={-40} y={g} width={W + 80} height={3} fill={B.gold} opacity={0.28} />
+		{onz && <Pool id="z1bd" x={wx + 20} y={g - 0.55 * h} rx={300} ry={360} a={pz.backdropA} col={pz.backdrop} />}
 		<Pool id="z1f" x={wx} y={g + 4} rx={240} ry={34} a={0.25} />
-		<Walker51 x={wx} g={g} h={h} pose={walkPose(wph(wx, h) + 0.2)} look={LOOKS51.zhou.look} />
+		<Walker51 x={wx} g={g} h={h} pose={walkPose(wph(wx, h) + 0.2)} look={LOOKS51.zhou.look} {...rimProps(pz, onz)} />
 		<Snow t={t} n={80} seed={5} o={0.6} />
 	</Pic>; };
 
@@ -291,10 +312,13 @@ const Pit: Fc = ({t}) => {
 	const h = 300, inW = 221 * Math.min(0, t - 23.0), wx = t < 23.6 ? 430 + inW : 430 + 150 * (t - 23.6);
 	const p = t < 23.0 ? walkPose(wph(inW, h)) : t < 23.6 ? mixP(walkPose(0), standW({lean: 12, neck: 34, la: 8, le: 24, ra: -4, re: 16}), ease(seg(t, 23.0, 23.3))) : walkPose(wph(150 * (t - 23.6), h));
 	const wg = t < 23.6 ? GS : GS - 12;
-	return <Pic id="pt" sheen={0.2}>
-		<path d={`M-40,${GS - 40} Q400,${GS - 90} 900,${GS - 60} Q1400,${GS - 100} 1960,${GS - 50} V${GS} H-40 Z`} fill={B.far} />
+	const pp = usePal('zhou'), pc = usePal('chunqiu'), onp = useLook() !== 'cur';
+	return <Pic id="pt" sheen={0.2} era="zhou" hz={GS}>
+		{onp && m > 0 && <><defs><linearGradient id="ptCq" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stopColor={pc.sky[0]} /><stop offset="0.6" stopColor={pc.sky[1]} /><stop offset="1" stopColor={pc.sky[2]} /></linearGradient></defs><rect width={W} height={GS} fill="url(#ptCq)" opacity={m} /></>}
+		{onp && <><defs><linearGradient id="ptHz" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stopColor={pp.horizon} stopOpacity="0" /><stop offset="1" stopColor={pp.horizon} stopOpacity={pp.horizonA} /></linearGradient></defs><rect x={-40} y={GS - 220} width={W + 80} height={180} fill="url(#ptHz)" opacity={1 - m} /></>}
+		<path d={`M-40,${GS - 40} Q400,${GS - 90} 900,${GS - 60} Q1400,${GS - 100} 1960,${GS - 50} V${GS} H-40 Z`} fill={onp ? (m > 0.5 ? pc.far : pp.far) : B.far} />
 		<path d={`M-40,${GS - 40} Q400,${GS - 90} 900,${GS - 60} Q1400,${GS - 100} 1960,${GS - 50}`} fill="none" stroke={SNOW} strokeOpacity={0.16} strokeWidth={3} />
-		<rect x={-40} y={GS} width={W + 80} height={H - GS + 40} fill="#21110C" />
+		<rect x={-40} y={GS} width={W + 80} height={H - GS + 40} fill={onp ? '#2A1A16' : '#21110C'} />
 		{Array.from({length: 14}, (_, i) => <path key={i} d={`M-40,${GS + 36 * (i + 1)} H${W + 40}`} stroke={B.ochre} strokeOpacity={0.1 + 0.08 * m} strokeWidth={1.5} />)}
 		<path d={`M-40,${GS} H${W + 40}`} stroke={SNOW} strokeOpacity={0.35 * (1 - m) + 0.1} strokeWidth={4} />
 		<path d={`M${tl},${GS} L${tr},${GS} L${br},${pf} L${bl},${pf} Z`} fill="#0A0504" stroke={B.gold} strokeOpacity={0.4} strokeWidth={2.5} strokeDasharray={m > 0.5 ? '14 8' : undefined} />
@@ -324,16 +348,18 @@ const Pit: Fc = ({t}) => {
 		{tag190 > 0 && <NumTag x={700} y={650} label="容积" num="190" tail="立方米" w={560} sc={lerp(1.15, 1, tag190)} o={cl(tag190 * 3)} />}
 		<Pool id="ptw" x={wx} y={GS - 160} rx={260} ry={200} a={0.2} />
 		{t >= 23.6 && <rect x={tl} y={GS - 14} width={tr - tl} height={14} fill="#2A160E" opacity={0.8} />}
-		<Walker51 x={wx} g={wg} h={h} pose={p} look={LOOKS51.zhou.look} />
+		{onp && <Pool id="ptbd" x={wx + 10} y={wg - 0.55 * h} rx={200} ry={240} a={pp.backdropA} col={m > 0.5 ? pc.backdrop : pp.backdrop} />}
+		<Walker51 x={wx} g={wg} h={h} pose={p} look={LOOKS51.zhou.look} {...rimProps(pp, onp)} />
 		<Snow t={t} n={70} seed={6} y1={GS} o={0.6} />
 	</Pic>; };
 
 /* ======================= 7 · 战国 banquet 26.0–41.9: carry in (ghost fridge door) → exploded → section, pack → 先猜？ → 酒 → 温 ======================= */
 const VX7 = 1140, VY7 = 880, VW7 = 420, G7 = jfGeom(VX7, VY7, VW7), G_ = 960, H7 = 600;
-const Room: React.FC<{t: number}> = ({t}) => { const snowO = seg(t, 39.3, 39.8);
+const Room: React.FC<{t: number}> = ({t}) => { const snowO = seg(t, 39.3, 39.8), look = useLook(), pal = usePal('zhanguo'), on = look !== 'cur';
 	return <g>
-		<rect x={-40} y={300} width={W + 80} height={605} fill={BG.wall} />
-		{[0, 1, 2, 3, 4].map((i) => <g key={i}><rect x={160 + i * 330} y={340} width={320} height={500} fill="#1A0D09" stroke={BG.line} strokeWidth={1.5} />
+		<rect x={-40} y={300} width={W + 80} height={605} fill={on ? pal.mid : BG.wall} />
+		{on && <Pool id="r7bd" x={760} y={600} rx={900} ry={360} a={pal.backdropA} col={pal.backdrop} />}
+		{[0, 1, 2, 3, 4].map((i) => <g key={i}><rect x={160 + i * 330} y={340} width={320} height={500} fill={on ? pal.panel : '#1A0D09'} opacity={on ? 0.75 : 1} stroke={on ? pal.line : BG.line} strokeWidth={1.5} />
 			<rect x={176 + i * 330} y={356} width={288} height={468} fill="none" stroke={B.gold} strokeOpacity={0.12} strokeWidth={1.2} /></g>)}
 		{/* the window (left): a warm summer night, then snow (J5) */}
 		<rect x={196} y={500} width={248} height={250} fill={snowO > 0 ? '#121820' : '#2A1A10'} />
@@ -341,9 +367,9 @@ const Room: React.FC<{t: number}> = ({t}) => { const snowO = seg(t, 39.3, 39.8);
 		{snowO > 0 && <defs><clipPath id="win7"><rect x={196} y={500} width={248} height={250} /></clipPath></defs>}
 		{snowO > 0 && <g clipPath="url(#win7)" opacity={snowO}><Snow x0={196} x1={444} y0={500} y1={750} n={40} t={t} seed={9} size={0.9} /></g>}
 		<path d={`M196,500 h248 v250 h-248 Z M320,500 v250 M196,625 h248`} fill="none" stroke={B.gold} strokeOpacity={0.4} strokeWidth={3} />
-		<ScrollBand y={420} x0={160} x1={1810} h={44} flow={20 + 6 * t} fill="#2A120C" />
+		<ScrollBand y={420} x0={160} x1={1810} h={44} flow={20 + 6 * t} fill={on ? pal.panel : '#2A120C'} />
 		<rect x={-40} y={300} width={W + 80} height={4} fill={B.gold} opacity={0.18} />
-		<Ground g={905} />
+		<Ground g={905} fill={on ? pal.near : BG.ground} />
 		<Pool id="r7" x={1060} y={640} rx={640} ry={400} a={0.3} />
 		<rect x={VX7 - 310} y={VY7} width={620} height={22} fill="#2E1610" stroke={B.gold} strokeOpacity={0.5} strokeWidth={1.5} />
 		<rect x={VX7 - 300} y={VY7 + 22} width={600} height={6} fill={B.redD} opacity={0.6} />
@@ -422,7 +448,8 @@ const Banquet: Fc = ({t}) => {
 		</g>}
 		{/* the jar lid hops off for the ladle (J4) and rests on the basin lid */}
 	</>;
-	return <Pic id="b7" sheen={0.28}>
+	const pal7 = usePal('zhanguo'), on7 = useLook() !== 'cur';
+	return <Pic id="b7" sheen={0.28} era="zhanguo" hz={300}>
 		<Room t={t} />
 		{/* the ghost of the open fridge door frames the vessel for one beat (开头那件) */}
 		{ghost > 0 && <g opacity={0.35 * ghost}>
@@ -453,7 +480,8 @@ const Banquet: Fc = ({t}) => {
 			<g transform={`translate(${bowl[0]},${bowl[1]}) rotate(${tilt})`}><path d="M-24,-6 Q-22,16 0,18 Q22,16 24,-6 Z" fill="url(#brz51v)" stroke={BRZ.line} strokeWidth={1.5} /></g>
 			{pour > 0 && pour < 0.95 && <path d={`M${bowl[0] - 16},${bowl[1] + 8} Q${bowl[0] - 20},${(bowl[1] + CUP[1]) / 2} ${CUP[0] + 6},${CUP[1] - 18}`} stroke="#7A2418" strokeWidth={6} fill="none" strokeLinecap="round" opacity={0.9} />}
 		</g>}
-		<Walker51 x={wx} g={G_} h={H7} pose={p} look={LOOKS51.zhanguo.look} />
+		{on7 && <Pool id="b7bd" x={wx + 20} y={G_ - 0.5 * H7} rx={260} ry={360} a={pal7.backdropA} col={pal7.backdrop} />}
+		<Walker51 x={wx} g={G_} h={H7} pose={p} look={LOOKS51.zhanguo.look} rim={on7 ? pal7.rim : undefined} rimO={pal7.rimO} dx={pal7.rimD} dy={-pal7.rimD * 0.85} />
 		{/* his cup (J4 →): frosts when the chilled wine is in, steams in winter */}
 		{cupO > 0 && <g opacity={cupO}><g transform={`translate(${cupHand[0] + 4},${cupHand[1] + 8})`}>
 			<path d="M-24,-30 Q-22,-4 0,0 Q22,-4 24,-30 Z" fill="url(#brz51v)" stroke={BRZ.line} strokeWidth={1.5} />
@@ -488,12 +516,14 @@ const W1: Fc = ({t}) => { const g = 960, h = 600;
 	const nh2 = J(np, 'LHand', nx, ng, nh, true);
 	const cupP: P2 = t < take ? [ch[0] + 4, ch[1]] : [nh2[0] - 4, nh2[1]];
 	const cols = Array.from({length: 12}, (_, i) => -200 + i * 360 - (camX * 1.0) % 360);
-	return <Pic id="w1" sheen={0.25 + camX * 0.0002}>
-		<rect x={-40} y={300} width={W + 80} height={605} fill={BG.wall} />
-		<g transform={`translate(${-camX * 0.4},0)`}>{Array.from({length: 10}, (_, i) => <rect key={i} x={i * 420} y={360} width={300} height={420} fill="#1A0D09" stroke={BG.line} strokeWidth={1.5} />)}</g>
-		<ScrollBand y={330} x0={-40} x1={W + 40} h={40} flow={camX} fill="#2A120C" />
-		{cols.map((x, i) => <rect key={i} x={x} y={300} width={46} height={605} fill="#2E130D" stroke={BG.line} strokeWidth={1.2} />)}
-		<Ground g={g} />
+	const pw = usePal('zhanguo'), onw = useLook() !== 'cur';
+	return <Pic id="w1" sheen={0.25 + camX * 0.0002} era="zhanguo" hz={300}>
+		<rect x={-40} y={300} width={W + 80} height={605} fill={onw ? pw.mid : BG.wall} />
+		{onw && <Pool id="w1bd" x={W1X + 500} y={600} rx={900} ry={360} a={pw.backdropA} col={pw.backdrop} />}
+		<g transform={`translate(${-camX * 0.4},0)`}>{Array.from({length: 10}, (_, i) => <rect key={i} x={i * 420} y={360} width={300} height={420} fill={onw ? pw.panel : '#1A0D09'} opacity={onw ? 0.75 : 1} stroke={BG.line} strokeWidth={1.5} />)}</g>
+		<ScrollBand y={330} x0={-40} x1={W + 40} h={40} flow={camX} fill={onw ? pw.panel : '#2A120C'} />
+		{cols.map((x, i) => <rect key={i} x={x} y={300} width={46} height={605} fill={onw ? '#1E0605' : '#2E130D'} stroke={onw ? pw.line : BG.line} strokeWidth={1.2} />)}
+		<Ground g={g} fill={onw ? pw.near : BG.ground} />
 		<Pool id="w1" x={sx + 300} y={600} rx={560} ry={380} a={0.28} />
 		{/* the high table on a dais; a noble behind it; a seated figure higher up the table (dim) */}
 		<g transform={`translate(${tableX - camX},0)`}>
@@ -505,7 +535,7 @@ const W1: Fc = ({t}) => { const g = 960, h = 600;
 		{(() => { const sxx = tableX - camX + 470, sp = seated({lean: 2, neck: 8, la: 40, le: 70}); return <RimFig x={sxx} ground={g - 130} h={430} pose={sp.pose} look={{dress: 'robe', head: 'guan', beard: 'long', build: 1.15}} col="#0F0806" flip dx={-2.5} dy={-2} rimO={0.45} />; })()}
 		<RimFig x={nx} ground={ng} h={nh} pose={np} look={{dress: 'robe', head: 'guan', beard: 'short', build: 1.12}} col="#0F0806" flip dx={-2.5} dy={-2} rimO={0.6} />
 		<Pool id="w1f" x={wx} y={g + 4} rx={240} ry={34} a={0.22} />
-		<Walker51 x={wx} g={g} h={h} pose={p} look={LOOKS51.zhanguo.look} />
+		<Walker51 x={wx} g={g} h={h} pose={p} look={LOOKS51.zhanguo.look} {...rimProps(pw, onw)} />
 		{/* the cup: in his hand → the noble's → up the table */}
 		<g transform={`translate(${cupP[0]},${cupP[1] + 8})`} opacity={1 - seg(t, 45.0, 45.4)}>
 			<path d="M-22,-28 Q-20,-4 0,0 Q20,-4 22,-28 Z" fill="url(#brz51v)" stroke={BRZ.line} strokeWidth={1.5} /><ellipse cx={0} cy={-28} rx={22} ry={5} fill="#5A1E14" />
@@ -607,19 +637,20 @@ const Tang: Fc = ({t}) => { const g = TANG_G, mx = 990, base = 820, h = TANG_H;
 	const s1 = strike(BA(81) - 0.19), s2 = strike(BA(82) - 0.19);
 	const cellarX = CELLAR - camX;
 	const cone = t < BA(96) - 0.06 ? 0 : t < BA(96) ? seg(t, BA(96) - 0.06, BA(96)) : 1 - seg(t, BA(97) - 0.06, BA(97));   // one beat, 「像」
-	return <Pic id="tg" sheen={0.25 + camX * 0.0001}>
+	const pt = usePal('tang'), ont = useLook() !== 'cur';
+	return <Pic id="tg" sheen={0.25 + camX * 0.0001} era="tang" hz={330}>
 		<g transform={`translate(${wx},${g}) scale(${z}) translate(${-wx},${-g})`}>
 		<g transform={`translate(${-camX},0)`}>
-			<rect x={-40} y={330} width={W * 2.5} height={g - 330} fill={BG.wall} />
-			{[[180, 420], [1480, 420], [2200, 420], [2900, 420], [3600, 420], [4300, 420]].map(([x0, w], i) => <g key={i}><rect x={x0} y={360} width={w} height={300} fill="#5A3018" opacity={0.55} />
+			<rect x={-40} y={330} width={W * 2.5} height={g - 330} fill={ont ? pt.mid : BG.wall} />
+			{[[180, 420], [1480, 420], [2200, 420], [2900, 420], [3600, 420], [4300, 420]].map(([x0, w], i) => <g key={i}><rect x={x0} y={360} width={w} height={300} fill={ont ? pt.panel : '#5A3018'} opacity={ont ? 0.85 : 0.55} />
 				<path d={Array.from({length: 26}, (_, k) => `M${x0},${372 + k * 11} h${w}`).join(' ')} stroke="#2A140C" strokeWidth={4} opacity={0.75} />
 				<rect x={x0} y={360} width={w} height={300} fill="none" stroke={BG.lineS} strokeWidth={2} /></g>)}
-			<rect x={-40} y={310} width={W * 2.5} height={34} fill={BG.beam} stroke={BG.line} strokeWidth={1.5} />
-			{[110, 650, 1340, 1830, 2400, 2950, 3500, 4050, 4600].map((x0, i) => <rect key={i} x={x0} y={344} width={44} height={g - 344} fill="#2E130D" stroke={BG.line} strokeWidth={1.2} />)}
+			<rect x={-40} y={310} width={W * 2.5} height={34} fill={ont ? '#2A0A06' : BG.beam} stroke={ont ? pt.line : BG.line} strokeWidth={1.5} />
+			{[110, 650, 1340, 1830, 2400, 2950, 3500, 4050, 4600].map((x0, i) => <rect key={i} x={x0} y={344} width={44} height={g - 344} fill={ont ? '#2A0A06' : '#2E130D'} stroke={ont ? pt.line : BG.line} strokeWidth={1.2} />)}
 			<Pool id="tg" x={mx} y={600} rx={760} ry={430} a={0.3} />
 			<rect x={mx - 420} y={base + 42} width={840} height={g - base - 42} fill="#2A1710" stroke={B.gold} strokeOpacity={0.35} strokeWidth={1.5} />
 			<IceMountain x={mx} base={base} />
-			<Ground g={g} x0={-40} x1={W * 2.5} />
+			<Ground g={g} x0={-40} x1={W * 2.5} fill={ont ? pt.near : BG.ground} />
 			<Guest x={480} g={g} h={500} lean={-16 - 4 * Math.sin(t * 1.3)} />
 			<Guest x={1660} g={g} h={500} flip lean={-16 - 3 * Math.sin(t * 1.1 + 1)} />
 			<Guest x={1500} g={g} h={470} flip look={{dress: 'dress', head: 'bun'}} lean={-20} />
@@ -641,9 +672,10 @@ const Tang: Fc = ({t}) => { const g = TANG_G, mx = 990, base = 820, h = TANG_H;
 		{/* the cellar's cold breath: a column rising from the floor mouth up to the plate */}
 		<Mist t={t} pts={Array.from({length: 5}, (_, i): [number, number, number, number] => [cellarX + (i % 2 ? 40 : -50) + 10 * Math.sin(t * 1.5 + i), g - 0.62 * h - 50 - i * 46 - 20 * ((t * 0.7 + i * 0.15) % 1), 30 - i * 2, i % 2 ? 1 : -1])} o={0.6 * (1 - seg(t, 55.2, 55.9)) * seg(t, 52.6, 53.1)} />
 		{/* the servant who hands him the plate */}
-		{servX > -200 && servX < W + 200 && t < 51.2 && <g opacity={1 - fade(t, 50.65, 0.5)} transform={`translate(${60 * ease(seg(t, 50.5, 51.1))},0)`}><RimFig x={servX} ground={g} h={500} pose={sp} look={{dress: 'dress', head: 'bun'}} col="#1A0F0A" flip dx={-2.5} dy={-2} rimO={0.75} /></g>}
+		{servX > -200 && servX < W + 200 && t < 51.2 && <g opacity={1 - fade(t, 50.65, 0.5)}><RimFig x={servX} ground={g} h={500} pose={sp} look={{dress: 'dress', head: 'bun'}} col="#1A0F0A" flip dx={-2.5} dy={-2} rimO={0.75} /></g>}
 		<Pool id="tgf" x={wx} y={g + 4} rx={240} ry={34} a={0.22} />
-		<Walker51 x={wx} g={g} h={h} pose={p} look={LOOKS51.tang.look} />
+		{ont && <Pool id="tgbd" x={wx + 30} y={g - 0.55 * h} rx={300} ry={380} a={pt.backdropA} col={pt.backdrop} />}
+		<Walker51 x={wx} g={g} h={h} pose={p} look={LOOKS51.tang.look} {...rimProps(pt, ont)} />
 		{t > 49.6 && <SuShanP x={plateP[0]} y={plateP[1]} s={170} ks={ks} f={frost} />}
 		{has && <ellipse cx={ph[0] + 3} cy={ph[1] + 4} rx={13} ry={12} fill={B.lac} />}
 		{/* the curb's front wall: the plate goes in behind it */}
