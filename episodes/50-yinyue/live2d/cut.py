@@ -20,9 +20,11 @@ head = char & (inside | (yy < 330) | (((xx < 222) | (xx > 802)) & (yy > 430) & (
 from matplotlib.path import Path
 tailpoly = Path([(752, 655), (875, 640), (880, 885), (800, 900), (758, 872), (748, 760)])
 tail = char & tailpoly.contains_points(np.c_[xx.ravel(), yy.ravel()]).reshape(H, W) & ~head
+# the body keeps its own outline where the tail tucks behind it (no cut edge that swings with the tail)
+body_keep = char & ~head & (xx < 772)
 # body keeps a band under the head (hidden by the head) so a moving head never opens a hole
 under = ((xx - 512) / 300.) ** 2 + ((yy - 430) / 236.) ** 2 <= 1
-body = char & ~tail & ~(head & ~(under & (yy > 520)))
+body = (char & ~tail & ~(head & ~(under & (yy > 520)))) | (body_keep & ~(head & ~(under & (yy > 520))))
 print('px head', head.sum(), 'tail', tail.sum(), 'body', body.sum(), 'char', char.sum())
 rgba = np.dstack([im.astype(np.uint8), np.zeros((H, W), np.uint8)])
 def save(mask, name):

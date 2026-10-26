@@ -59,20 +59,29 @@ const fillStroke = (fill, w = 6) => { if (fill) { ctx.fillStyle = fill; ctx.fill
 const circle = (x, y, r, fill, w = 6) => { path(() => ctx.arc(x, y, r, 0, Math.PI * 2)); fillStroke(fill, w); };
 const ell = (x, y, rx, ry, a, fill, w = 6) => { path(() => ctx.ellipse(x, y, rx, ry, a, 0, Math.PI * 2)); fillStroke(fill, w); };
 const line = (x0, y0, x1, y1, col, w) => { path(() => { ctx.moveTo(x0, y0); ctx.lineTo(x1, y1); }); ctx.strokeStyle = col; ctx.lineWidth = w; ctx.lineCap = 'round'; ctx.stroke(); };
-function arm(sh, paw, sd) {
-	const mx = (sh[0] + paw[0]) / 2, my = Math.max(sh[1], paw[1]) + 18;
-	for (const [c, w] of [[LINE, 58], [FUR, 46]]) { path(() => { ctx.moveTo(sh[0], sh[1]); ctx.quadraticCurveTo(mx, my, paw[0], paw[1]); }); ctx.strokeStyle = c; ctx.lineWidth = w; ctx.lineCap = 'round'; ctx.stroke(); }
-	const tip = [paw[0] + sd[0] * 170, paw[1] + sd[1] * 170];
-	line(paw[0], paw[1], tip[0], tip[1], LINE, 17); line(paw[0], paw[1], tip[0], tip[1], STICK, 9); circle(tip[0], tip[1], 9, STICK, 4);
-	circle(paw[0], paw[1], 33, FUR, 6);
-	for (const [dx, dy, r] of [[-12, -8, 7], [0, -13, 7], [12, -8, 7], [0, 6, 11]]) circle(paw[0] + dx, paw[1] + dy, r, PINK, 0);
+function elbowOf(sh, paw, side, a = 96, b = 90) {   // 2-bone IK; the elbow bends outward (side = -1 left, +1 right) and down
+	let dx = paw[0] - sh[0], dy = paw[1] - sh[1], d = Math.hypot(dx, dy); const dc = clamp(d, Math.abs(a - b) + 2, a + b - 2);
+	const ux = dx / d, uy = dy / d, A = Math.acos(clamp((a * a + dc * dc - b * b) / (2 * a * dc), -1, 1));
+	const cand = [1, -1].map((s) => [sh[0] + a * (ux * Math.cos(s * A) - uy * Math.sin(s * A)), sh[1] + a * (ux * Math.sin(s * A) + uy * Math.cos(s * A))]);
+	return cand.sort((p, q) => ((q[0] - p[0]) * side * .5 + (q[1] - p[1])))[0];
 }
+function arm(sh, paw, side) {
+	const el = elbowOf(sh, paw, side);
+	for (const [c, w1, w2] of [[LINE, 62, 56], [FUR, 50, 44]]) {
+		path(() => { ctx.moveTo(sh[0], sh[1]); ctx.lineTo(el[0], el[1]); }); ctx.strokeStyle = c; ctx.lineWidth = w1; ctx.lineCap = 'round'; ctx.stroke();
+		path(() => { ctx.moveTo(el[0], el[1]); ctx.lineTo(paw[0], paw[1]); }); ctx.lineWidth = w2; ctx.stroke(); }
+	circle(paw[0], paw[1], 31, FUR, 6);
+	for (const [dx, dy, r] of [[-11, -8, 6.5], [0, -12, 6.5], [11, -8, 6.5], [0, 5, 10]]) circle(paw[0] + dx, paw[1] + dy, r, PINK, 0);
+}
+function stick(paw, sd, L = 170) { const tip = [paw[0] + sd[0] * L, paw[1] + sd[1] * L];
+	line(paw[0] - sd[0] * 18, paw[1] - sd[1] * 18, tip[0], tip[1], LINE, 17); line(paw[0] - sd[0] * 18, paw[1] - sd[1] * 18, tip[0], tip[1], STICK, 9); circle(tip[0], tip[1], 9, STICK, 4); }
 function strokePose(shoulder, contactPaw, hit, h) {
-	const paw = [contactPaw[0] + (contactPaw[0] - shoulder[0]) * -.08 * h, contactPaw[1] - 95 * h];
+	// the paw lifts a little; the stick swings from pointing at the drum to pointing up, passing through "toward the camera"
+	// (so it looks shorter mid-swing, like a real stick seen from the front)
+	const paw = [contactPaw[0], contactPaw[1] - 62 * h];
 	const dn0 = [hit[0] - contactPaw[0], hit[1] - contactPaw[1]], l = Math.hypot(...dn0), dn = [dn0[0] / l, dn0[1] / l];
-	const up0 = [dn[0] * .35, -1], ul = Math.hypot(...up0), un = [up0[0] / ul, up0[1] / ul];
-	const sd = [dn[0] * (1 - h) + un[0] * h, dn[1] * (1 - h) + un[1] * h], sl = Math.hypot(...sd);
-	return [paw, [sd[0] / sl, sd[1] / sl]];
+	const up = [dn[0] * .25, -.97], v = [dn[0] * (1 - h) + up[0] * h, dn[1] * (1 - h) + up[1] * h], vl = Math.hypot(...v);
+	return [paw, [v[0] / vl, v[1] / vl], l * (.55 + .45 * vl)];
 }
 
 window.renderAt = (t) => {
@@ -100,26 +109,29 @@ window.renderAt = (t) => {
 	drawMesh(M.head, headMap); ctx.setTransform(1, 0, 0, 1, 0, 0);
 	// face: blinks; happy eyes + open mouth on the final crash
 	const crashE = env(T.crash, t, .9), blink = [1.9, 4.6, 7.2, 9.9].some((b) => Math.abs(t - b) < .06), happy = crashE > .15;
-	if (blink || happy) for (const ex of [378, 650]) { const [cx, cy] = headMap(ex, 440); ell(cx, cy, 64 * SC, 64 * SC, 0, FUR, 0);
+	if (blink || happy) { for (const ex of [366, 660]) { const [cx, cy] = headMap(ex, 432); ell(cx, cy, 80 * SC, 72 * SC, 0, FUR, 0); }
+		for (const ex of [318, 708]) { const [bx, by] = headMap(ex, 522); const gr = ctx.createRadialGradient(bx, by, 4, bx, by, 52); gr.addColorStop(0, 'rgba(244,160,160,.55)'); gr.addColorStop(1, 'rgba(244,160,160,0)'); ctx.fillStyle = gr; ctx.beginPath(); ctx.ellipse(bx, by, 56, 40, 0, 0, 7); ctx.fill(); } }
+	if (blink || happy) for (const ex of [372, 652]) { const [cx, cy] = headMap(ex, 440);
 		path(() => { if (happy) { ctx.moveTo(cx - 34, cy + 10); ctx.quadraticCurveTo(cx, cy - 34, cx + 34, cy + 10); } else { ctx.moveTo(cx - 34, cy); ctx.quadraticCurveTo(cx, cy + 16, cx + 34, cy); } }); fillStroke(null, 9); }
 	if (happy) { const [mx, my] = headMap(512, 512); ell(mx, my + 6, 26, 22, 0, '#c8574f', 6); ell(mx, my + 16, 14, 8, 0, PINK, 0); }
 	// drums
-	const hatY = 690 - 6 * env(T.hat, t, .05), hatA = wob(T.hat, t, .05, .12, 7), crA = wob(T.crash, t, .28, .7, 3.2);
-	for (const [x, y0] of [[1230, hatY], [640, 760], [560, 520]]) { line(x, y0, x, 1030, METAL, 10); line(x, 1030, x - 50, 1060, METAL, 8); line(x, 1030, x + 50, 1060, METAL, 8); }
-	ell(560, 520, 160, 26, -.25 + crA, GOLD); circle(560, 520, 8, LINE, 0);
-	ell(1230, hatY + 22, 130, 20, hatA * .3, GOLD); ell(1230, hatY, 130, 20, hatA, GOLD); circle(1230, hatY - 4, 7, LINE, 0);
-	const sy = 760 + 4 * sE; path(() => ctx.roundRect(520, sy, 240, 80, 14)); fillStroke(CORAL, 6);
-	for (let i = 0; i < 5; i++) line(545 + i * 48, sy + 10, 545 + i * 48, sy + 70, 'rgba(255,255,255,.6)', 4);
-	ell(640, sy, 120 * (1 + .03 * sE), 30, 0, CREAM);
+	const hatY = 752 - 6 * env(T.hat, t, .05), hatA = wob(T.hat, t, .05, .12, 7), crA = wob(T.crash, t, .28, .7, 3.2);
+	for (const [x, y0] of [[1400, hatY], [565, 788], [520, 565]]) { line(x, y0, x, 1030, METAL, 10); line(x, 1030, x - 50, 1060, METAL, 8); line(x, 1030, x + 50, 1060, METAL, 8); }
+	ell(520, 565, 150, 24, -.22 + crA, GOLD); circle(520, 565, 8, LINE, 0);
+	ell(1400, hatY + 22, 120, 19, hatA * .3, GOLD); ell(1400, hatY, 120, 19, hatA, GOLD); circle(1400, hatY - 4, 7, LINE, 0);
+	// arms: behind the drums, so the elbows tuck behind the kick and only forearms and paws reach over
+	const sL = bodyMap(338, 652), sR = bodyMap(686, 652), useCrash = t > S.t0 + 15.5 * S.beat;
+	const [pawL, sdL, lenL] = useCrash ? strokePose(sL, [640, 620], [530, 562], stroke(T.crash, t, 1.1)) : strokePose(sL, [650, 690], [580, 790], stroke(T.snare, t, 1));
+	const [pawR, sdR, lenR] = strokePose(sR, [1300, 672], [1385, 750], stroke(T.hat, t, .7));
+	arm(sL, pawL, -1); arm(sR, pawR, 1);
+	const sy = 788 + 4 * sE; path(() => ctx.roundRect(445, sy, 240, 80, 14)); fillStroke(CORAL, 6);
+	for (let i = 0; i < 5; i++) line(470 + i * 48, sy + 10, 470 + i * 48, sy + 70, 'rgba(255,255,255,.6)', 4);
+	ell(565, sy, 120 * (1 + .03 * sE), 30, 0, CREAM);
 	const kr = 165 * (1 + .03 * kE); circle(960, 885, kr, CORAL, 7); circle(960, 885, kr - 24, CREAM, 5); circle(960, 885, 52, 'rgba(245,163,160,.8)', 0);
 	for (const [dx, dy, r] of [[-30, -18, 12], [0, -30, 12], [30, -18, 12], [0, 10, 22]]) circle(960 + dx, 885 + dy, r, CREAM, 0);
-	// arms (in front of the drums so every stroke reads)
-	const sL = bodyMap(405, 655), sR = bodyMap(619, 655), useCrash = t > S.t0 + 15.5 * S.beat;
-	const [pawL, sdL] = useCrash ? strokePose(sL, [600, 560], [560, 515], stroke(T.crash, t, 1.2)) : strokePose(sL, [640, 700], [650, 762], stroke(T.snare, t, 1));
-	const [pawR, sdR] = strokePose(sR, [1150, 640], [1235, 690], stroke(T.hat, t, .6));
-	arm(sL, pawL, sdL); arm(sR, pawR, sdR);
+	stick(pawL, sdL, lenL); stick(pawR, sdR, lenR);
 	// sparks on the snare and the crash
-	for (const [arr, x, y, c] of [[T.snare, 650, 755, CORAL], [T.crash, 560, 510, GOLD]]) { const e = env(arr, t, .12); if (e < .05) continue; ctx.globalAlpha = e;
+	for (const [arr, x, y, c] of [[T.snare, 575, 788, CORAL], [T.crash, 520, 560, GOLD]]) { const e = env(arr, t, .12); if (e < .05) continue; ctx.globalAlpha = e;
 		for (let i = 0; i < 8; i++) { const a = i / 8 * Math.PI * 2, r0 = 40 + 50 * (1 - e), r1 = r0 + 30 * e; line(x + Math.cos(a) * r0, y + Math.sin(a) * r0 * .6, x + Math.cos(a) * r1, y + Math.sin(a) * r1 * .6, c, 6); } ctx.globalAlpha = 1; }
 	return true;
 };
