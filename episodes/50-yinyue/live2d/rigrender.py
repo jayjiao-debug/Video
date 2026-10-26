@@ -11,7 +11,9 @@ ORDER = ['tail', 'legL', 'legR', 'armL', 'armR', 'torso']
 def smooth(x): x = np.clip(x, 0, 1); return x * x * (3 - 2 * x)
 class Rig:
     def __init__(self, rigdir, pose, scale=1.0):
-        self.info = json.load(open(f'{rigdir}/{pose}.json')); self.k = k = scale; self.N = N = int(round(1024 * k))
+        # layers are always composed at full size and the finished figure is scaled once: scaling layers one by one
+        # makes their hard cuts partly transparent and lets the background show through the seams
+        self.info = json.load(open(f'{rigdir}/{pose}.json')); self.out_scale = scale; self.k = k = 1.0; self.N = N = 1024
         self.L = {}
         for name, (x0, y0, x1, y1) in self.info['boxes'].items():
             im = Image.open(f'{rigdir}/{pose}_{name}.png'); full = Image.new('RGBA', (1024, 1024)); full.paste(im, (x0, y0))
@@ -76,4 +78,8 @@ class Rig:
             img = self.shift(img, bdy)
             a = img[..., 3:] / 255.
             out[..., :3] = img[..., :3] * a + out[..., :3] * (1 - a); out[..., 3:] = 255 * a + out[..., 3:] * (1 - a)
-        return Image.fromarray(np.clip(out, 0, 255).astype(np.uint8))
+        im = Image.fromarray(np.clip(out, 0, 255).astype(np.uint8))
+        if self.out_scale != 1:
+            s_ = int(round(1024 * self.out_scale)); pre = self._pre(out); pre = cv2.resize(pre, (s_, s_), interpolation=cv2.INTER_AREA)
+            im = Image.fromarray(np.clip(self._post(pre), 0, 255).astype(np.uint8))
+        return im

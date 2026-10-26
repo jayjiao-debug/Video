@@ -92,9 +92,10 @@ gapF |= pocket
 gapF |= nd.binary_dilation(gapF, iterations=2) & (F.mean(2) > 170) & ~(F.mean(2) < 110)   # its anti-aliased rim too
 cF = cF & ~pocket
 tail = largest(nd.binary_closing(cA & tp & ~Ahead & ~white, iterations=3) & cA & ~white)
+tail = nd.binary_fill_holes(nd.binary_closing(tail, iterations=4)) & cA      # no slits inside the tail
 neutralA = (A.min(2) >= 246) & (A.max(2) - A.min(2) <= 5)
 Abody = cA & ~Ahead & ~tail & ~(tp & white) & ~(neutralA & nd.binary_dilation(tp, iterations=30))   # enclosed background is not body
-tpv = np.array(CFG['tailPivot']); near_root = np.hypot(xx - tpv[0], yy - tpv[1]) < 55
+tpv = np.array(CFG['tailPivot']); near_root = np.hypot(xx - tpv[0], yy - tpv[1]) < 90
 under = nd.binary_dilation(tail, iterations=24) & nd.binary_erosion(Abody, iterations=2) & near_root   # hidden behind the torso
 tailx = tail | under
 _, (iy, ix) = nd.distance_transform_edt(~tail, return_indices=True)
