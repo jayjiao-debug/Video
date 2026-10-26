@@ -1,0 +1,155 @@
+url https://ddragon.leagueoflegends.com/cdn/16.20.1/img/champion/Ahri.png
+  saved out/files/icon_Ahri.png 0.0 MB
+url https://ddragon.leagueoflegends.com/cdn/16.20.1/img/champion/Akali.png
+  saved out/files/icon_Akali.png 0.0 MB
+url https://ddragon.leagueoflegends.com/cdn/16.20.1/img/champion/Alistar.png
+  saved out/files/icon_Alistar.png 0.0 MB
+url https://ddragon.leagueoflegends.com/cdn/16.20.1/img/champion/Ambessa.png
+  saved out/files/icon_Ambessa.png 0.0 MB
+url https://ddragon.leagueoflegends.com/cdn/16.20.1/img/champion/Anivia.png
+  saved out/files/icon_Anivia.png 0.0 MB
+url https://ddragon.leagueoflegends.com/cdn/16.20.1/img/champion/Annie.png
+  saved out/files/icon_Annie.png 0.0 MB
+url https://ddragon.leagueoflegends.com/cdn/16.20.1/img/champion/Aphelios.png
+  saved out/files/icon_Aphelios.png 0.0 MB
+url https://ddragon.leagueoflegends.com/cdn/16.20.1/img/champion/Ashe.png
+  saved out/files/icon_Ashe.png 0.0 MB
+url https://ddragon.leagueoflegends.com/cdn/16.20.1/img/champion/Aurora.png
+  saved out/files/icon_Aurora.png 0.0 MB
+url https://ddragon.leagueoflegends.com/cdn/16.20.1/img/champion/Bard.png
+  saved out/files/icon_Bard.png 0.0 MB
+url https://ddragon.leagueoflegends.com/cdn/16.20.1/img/champion/Caitlyn.png
+  saved out/files/icon_Caitlyn.png 0.0 MB
+url https://ddragon.leagueoflegends.com/cdn/16.20.1/img/champion/Camille.png
+  saved out/files/icon_Camille.png 0.0 MB
+url https://ddragon.leagueoflegends.com/cdn/16.20.1/img/champion/Cassiopeia.png
+  saved out/files/icon_Cassiopeia.png 0.0 MB
+url https://ddragon.leagueoflegends.com/cdn/16.20.1/img/champion/Corki.png
+  saved out/files/icon_Corki.png 0.0 MB
+url https://ddragon.leagueoflegends.com/cdn/16.20.1/img/champion/Diana.png
+  saved out/files/icon_Diana.png 0.0 MB
+url https://ddragon.leagueoflegends.com/cdn/16.20.1/img/champion/Draven.png
+  saved out/files/icon_Draven.png 0.0 MB
+url https://ddragon.leagueoflegends.com/cdn/16.20.1/img/champion/Ezreal.png
+  saved out/files/icon_Ezreal.png 0.0 MB
+url https://ddragon.leagueoflegends.com/cdn/16.20.1/img/champion/Galio.png
+  saved out/files/icon_Galio.png 0.0 MB
+url https://ddragon.leagueoflegends.com/cdn/16.20.1/img/champion/Gnar.png
+  saved out/files/icon_Gnar.png 0.0 MB
+url https://ddragon.leagueoflegends.com/cdn/16.20.1/img/champion/Gwen.png
+  saved out/files/icon_Gwen.png 0.0 MB
+url https://ddragon.leagueoflegends.com/cdn/16.20.1/img/champion/Irelia.png
+  saved out/files/icon_Irelia.png 0.0 MB
+url https://ddragon.leagueoflegends.com/cdn/16.20.1/img/champion/JarvanIV.png
+  saved out/files/icon_JarvanIV.png 0.0 MB
+url https://ddragon.leagueoflegends.com/cdn/16.20.1/img/champion/Jax.png
+  saved out/files/icon_Jax.png 0.0 MB
+url https://ddragon.leagueoflegends.com/cdn/16.20.1/img/champion/Jayce.png
+  saved out/files/icon_Jayce.png 0.0 MB
+url https://ddragon.leagueoflegends.com/cdn/16.20.1/img/champion/Jhin.png
+  saved out/files/icon_Jhin.png 0.0 MB
+url https://ddragon.leagueoflegends.com/cdn/16.20.1/img/champion/KSante.png
+  saved out/files/icon_KSante.png 0.0 MB
+url https://ddragon.leagueoflegends.com/cdn/16.20.1/img/champion/Kaisa.png
+  saved out/files/icon_Kaisa.png 0.0 MB
+url https://ddragon.leagueoflegends.com/cdn/16.20.1/img/champion/Kalista.png
+  saved out/files/icon_Kalista.png 0.0 MB
+url https://ddragon.leagueoflegends.com/cdn/16.20.1/img/champion/Karma.png
+  saved out/files/icon_Karma.png 0.0 MB
+url https://ddragon.leagueoflegends.com/cdn/16.20.1/img/champion/Kled.png
+  saved out/files/icon_Kled.png 0.0 MB
+url https://ddragon.leagueoflegends.com/cdn/16.20.1/img/champion/LeBlanc.png
+  FAILED: 403 https://ddragon.leagueoflegends.com/cdn/16.20.1/img/champion/LeBlanc.png
+url https://ddragon.leagueoflegends.com/cdn/16.20.1/img/champion/LeeSin.png
+  saved out/files/icon_LeeSin.png 0.0 MB
+url https://ddragon.leagueoflegends.com/cdn/16.20.1/img/champion/Leona.png
+  saved out/files/icon_Leona.png 0.0 MB
+url https://ddragon.leagueoflegends.com/cdn/16.20.1/img/champion/Lissandra.png
+  saved out/files/icon_Lissandra.png 0.0 MB
+url https://ddragon.leagueoflegends.com/cdn/16.20.1/img/champion/Locke.png
+  saved out/files/icon_Locke.png 0.0 MB
+url https://ddragon.leagueoflegends.com/cdn/16.20.1/img/champion/Lucian.png
+  saved out/files/icon_Lucian.png 0.0 MB
+url https://ddragon.leagueoflegends.com/cdn/16.20.1/img/champion/Lulu.png
+  saved out/files/icon_Lulu.png 0.0 MB
+url https://ddragon.leagueoflegends.com/cdn/16.20.1/img/champion/Maokai.png
+  saved out/files/icon_Maokai.png 0.0 MB
+url https://ddragon.leagueoflegends.com/cdn/16.20.1/img/champion/Milio.png
+  saved out/files/icon_Milio.png 0.0 MB
+url https://ddragon.leagueoflegends.com/cdn/16.20.1/img/champion/MissFortune.png
+  saved out/files/icon_MissFortune.png 0.0 MB
+url https://ddragon.leagueoflegends.com/cdn/16.20.1/img/champion/Nautilus.png
+  saved out/files/icon_Nautilus.png 0.0 MB
+url https://ddragon.leagueoflegends.com/cdn/16.20.1/img/champion/Neeko.png
+  saved out/files/icon_Neeko.png 0.0 MB
+url https://ddragon.leagueoflegends.com/cdn/16.20.1/img/champion/Nocturne.png
+  saved out/files/icon_Nocturne.png 0.0 MB
+url https://ddragon.leagueoflegends.com/cdn/16.20.1/img/champion/Olaf.png
+  saved out/files/icon_Olaf.png 0.0 MB
+url https://ddragon.leagueoflegends.com/cdn/16.20.1/img/champion/Orianna.png
+  saved out/files/icon_Orianna.png 0.0 MB
+url https://ddragon.leagueoflegends.com/cdn/16.20.1/img/champion/Ornn.png
+  saved out/files/icon_Ornn.png 0.0 MB
+url https://ddragon.leagueoflegends.com/cdn/16.20.1/img/champion/Pantheon.png
+  saved out/files/icon_Pantheon.png 0.0 MB
+url https://ddragon.leagueoflegends.com/cdn/16.20.1/img/champion/Poppy.png
+  saved out/files/icon_Poppy.png 0.0 MB
+url https://ddragon.leagueoflegends.com/cdn/16.20.1/img/champion/Qiyana.png
+  saved out/files/icon_Qiyana.png 0.0 MB
+url https://ddragon.leagueoflegends.com/cdn/16.20.1/img/champion/Rakan.png
+  saved out/files/icon_Rakan.png 0.0 MB
+url https://ddragon.leagueoflegends.com/cdn/16.20.1/img/champion/RenataGlasc.png
+  FAILED: 403 https://ddragon.leagueoflegends.com/cdn/16.20.1/img/champion/RenataGlasc.png
+url https://ddragon.leagueoflegends.com/cdn/16.20.1/img/champion/Renekton.png
+  saved out/files/icon_Renekton.png 0.0 MB
+url https://ddragon.leagueoflegends.com/cdn/16.20.1/img/champion/Rumble.png
+  saved out/files/icon_Rumble.png 0.0 MB
+url https://ddragon.leagueoflegends.com/cdn/16.20.1/img/champion/Ryze.png
+  saved out/files/icon_Ryze.png 0.0 MB
+url https://ddragon.leagueoflegends.com/cdn/16.20.1/img/champion/Seraphine.png
+  saved out/files/icon_Seraphine.png 0.0 MB
+url https://ddragon.leagueoflegends.com/cdn/16.20.1/img/champion/Shen.png
+  saved out/files/icon_Shen.png 0.0 MB
+url https://ddragon.leagueoflegends.com/cdn/16.20.1/img/champion/Sivir.png
+  saved out/files/icon_Sivir.png 0.0 MB
+url https://ddragon.leagueoflegends.com/cdn/16.20.1/img/champion/Skarner.png
+  saved out/files/icon_Skarner.png 0.0 MB
+url https://ddragon.leagueoflegends.com/cdn/16.20.1/img/champion/Sylas.png
+  saved out/files/icon_Sylas.png 0.0 MB
+url https://ddragon.leagueoflegends.com/cdn/16.20.1/img/champion/Syndra.png
+  saved out/files/icon_Syndra.png 0.0 MB
+url https://ddragon.leagueoflegends.com/cdn/16.20.1/img/champion/Taliyah.png
+  saved out/files/icon_Taliyah.png 0.0 MB
+url https://ddragon.leagueoflegends.com/cdn/16.20.1/img/champion/Tristana.png
+  saved out/files/icon_Tristana.png 0.0 MB
+url https://ddragon.leagueoflegends.com/cdn/16.20.1/img/champion/Trundle.png
+  saved out/files/icon_Trundle.png 0.0 MB
+url https://ddragon.leagueoflegends.com/cdn/16.20.1/img/champion/TwistedFate.png
+  saved out/files/icon_TwistedFate.png 0.0 MB
+url https://ddragon.leagueoflegends.com/cdn/16.20.1/img/champion/Varus.png
+  saved out/files/icon_Varus.png 0.0 MB
+url https://ddragon.leagueoflegends.com/cdn/16.20.1/img/champion/Vayne.png
+  saved out/files/icon_Vayne.png 0.0 MB
+url https://ddragon.leagueoflegends.com/cdn/16.20.1/img/champion/Vi.png
+  saved out/files/icon_Vi.png 0.0 MB
+url https://ddragon.leagueoflegends.com/cdn/16.20.1/img/champion/Viktor.png
+  saved out/files/icon_Viktor.png 0.0 MB
+url https://ddragon.leagueoflegends.com/cdn/16.20.1/img/champion/Volibear.png
+  saved out/files/icon_Volibear.png 0.0 MB
+url https://ddragon.leagueoflegends.com/cdn/16.20.1/img/champion/Wukong.png
+  FAILED: 403 https://ddragon.leagueoflegends.com/cdn/16.20.1/img/champion/Wukong.png
+url https://ddragon.leagueoflegends.com/cdn/16.20.1/img/champion/XinZhao.png
+  saved out/files/icon_XinZhao.png 0.0 MB
+url https://ddragon.leagueoflegends.com/cdn/16.20.1/img/champion/Yone.png
+  saved out/files/icon_Yone.png 0.0 MB
+url https://ddragon.leagueoflegends.com/cdn/16.20.1/img/champion/Yunara.png
+  saved out/files/icon_Yunara.png 0.0 MB
+url https://ddragon.leagueoflegends.com/cdn/16.20.1/img/champion/Ziggs.png
+  saved out/files/icon_Ziggs.png 0.0 MB
+url https://ddragon.leagueoflegends.com/cdn/16.20.1/img/champion/void.png
+  FAILED: 403 https://ddragon.leagueoflegends.com/cdn/16.20.1/img/champion/void.png
+url https://ddragon.leagueoflegends.com/cdn/16.20.1/data/zh_CN/champion.json
+  saved out/files/champion_zh_CN.json 0.2 MB
+url https://ddragon.leagueoflegends.com/cdn/16.20.1/img/map/map11.png
+  saved out/files/map11.png 0.1 MB
+done
