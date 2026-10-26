@@ -248,7 +248,7 @@ export const Jianfou: React.FC<{x: number; y: number; w: number; mode?: 'whole' 
 		{lidOn && rimLight(`M${L - w * 0.01},${yl} L${x - nw / 2 - w * 0.015},${yl} M${x + nw / 2 + w * 0.015},${yl} L${R + w * 0.01},${yl}`)}
 		{earsN}
 		{frostDots(L - w * 0.02, L + t * 2, yt, yb, 26, 7)}{frostDots(R - t * 2, R + w * 0.02, yt, yb, 26, 8)}
-		{frostDots(L, R, yt - w * 0.02, yt + w * 0.02, 40, 10)}
+		{frostDots(L - w * 0.01, jx0 - t, yt - w * 0.02, yt + w * 0.03, 16, 10)}{frostDots(jx1 + t, R + w * 0.01, yt - w * 0.02, yt + w * 0.03, 16, 11)}
 	</g>;
 };
 /* ---------- the fridge (generic, no brand): front view, the main door opening toward the viewer on the left ----------
@@ -278,6 +278,7 @@ export const Fridge: React.FC<{x0: number; y0: number; w: number; h: number; ope
 		<rect x={x0 + 4} y={y0 + 4} width={w - 8} height={fz - 8} rx={r * 0.8} fill="#8A8681" />
 		<rect x={x0 + 4} y={y0 + 4} width={w - 8} height={fz - 8} rx={r * 0.8} fill="none" stroke="#B8B3AC" strokeOpacity={0.35} strokeWidth={2} />
 		<rect x={x0 + w * 0.08} y={y0 + fz - w * 0.2} width={w * 0.03} height={w * 0.16} rx={w * 0.015} fill="#5C5955" />
+		{light < 1 && <rect x={x0} y={y0} width={w} height={h} rx={r} fill="#0A0605" opacity={0.45 * (1 - light)} />}
 		{/* the open compartment: back wall, side walls, ceiling, floor (one-point perspective) */}
 		<path d={`M${ix0},${iy0} L${ix1},${iy0} L${bx1},${by0} L${bx0},${by0} Z`} fill={sideC} />
 		<path d={`M${ix0},${iy0} L${bx0},${by0} L${bx0},${by1} L${ix0},${iy1} Z`} fill={sideC} />
@@ -298,6 +299,7 @@ export const Fridge: React.FC<{x0: number; y0: number; w: number; h: number; ope
 			<path d={`M${dx0 - sw2 * 0.12},${dTop + h * 0.08} L${dx0 - sw2 * 0.86},${dTop + h * 0.06 - dyx} L${dx0 - sw2 * 0.86},${dBot - h * 0.06 + dyx} L${dx0 - sw2 * 0.12},${dBot - h * 0.08} Z`} fill={L('#3A3633', '#9EB0B9', 0.6 * light + 0.1)} />
 			{[0.32, 0.55, 0.78].map((u, i) => <path key={i} d={`M${dx0 - sw2 * 0.12},${lerp(dTop, dBot, u)} L${dx0 - sw2 * 0.86},${lerp(dTop - dyx, dBot + dyx, u) + 6}`} stroke={L('#5A5652', '#D9E6EC', 0.5 * light + 0.15)} strokeWidth={8} strokeLinecap="round" />)}
 			<path d={`M${dx0 - sw2},${dTop - dyx * 1.4} L${dx0 - sw2},${dBot + dyx * 1.4}`} stroke="#C9C4BD" strokeOpacity={0.6} strokeWidth={4} />
+			{light < 1 && <path d={door} fill="#0A0605" opacity={0.45 * (1 - light)} />}
 		</g>}
 	</g>; };
 

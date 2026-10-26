@@ -115,8 +115,8 @@ const FridgeShot: React.FC<{t: number; light: number}> = ({t, light}) => {
 		{/* left forearm from the bottom-left, the mitten closed on the door's free edge */}
 		<Forearm el={[120, 1180]} wr={[546, 674]} size={36} thumb={-1} />
 		{/* the iced drink in the right hand */}
-		<Cup x={1585} y={905} w={112} frost={0.6} />
-		<Forearm el={[1690, 1200]} wr={[1602, 893]} size={34} thumb={1} sleeve />
+		<Cup x={1560} y={905} w={112} frost={0.6} />
+		<Forearm el={[1640, 1200]} wr={[1574, 894]} size={34} thumb={1} sleeve />
 		{void t}
 	</Frame>; };
 const KF01: React.FC = () => <FridgeShot t={0} light={1} />;
@@ -241,7 +241,7 @@ const PitSection: React.FC<{t: number; id: string}> = ({id}) => { const gs = 560
 		{/* the roof beam over the mouth */}
 		<rect x={500} y={gs - 16} width={1020} height={18} fill="#2A1710" stroke={BG.lineS} strokeWidth={1.5} />
 	</g>; };
-const KF06: React.FC = () => { const gs = 560, pf = 950, wx = 400, h = 340;
+const KF06: React.FC = () => { const gs = 560, pf = 950, wx = 430, h = 300;
 	const p = stand({lean: 12, neck: 34, la: 8, le: 24, ra: -4, re: 16});
 	return <Frame id="k6" sheen={0.2} over={<><Subs rows={rows('凿冰，要备足[三倍]的量。')} th={thB} /><StampK y="《周礼·天官》" note="令斩冰，三其凌" /><Counter era="周" th={thB} /><SealB /></>}>
 		<PitSection t={22.5} id="k6" />
@@ -281,7 +281,7 @@ const KF07: React.FC = () => { const g = 960, h = 600, wx = 786, vx = 1140, vy =
 	return <Frame id="k7" sheen={0.25} over={<><Fonts s="鉴·盆缶罐" /><Subs rows={rows('冰，就塞在盆和罐的中间。')} th={thB} /><StampK y="战国早期" place="湖北随州" note="冰在夹层里" /><Counter era="战国早期" th={thB} /><SealB /></>}>
 		<Room id="k7" />
 		<Stand x={vx} y={vy} w={620} />
-		<Jianfou x={vx} y={vy} w={vw} mode="section" ice={0.62} lid={false} frost={0.8} id="k7j"
+		<Jianfou x={vx} y={vy} w={vw} mode="section" ice={0.62} lid={false} frost={0.8} wine={false} id="k7j"
 			slot={<IceBlock x={gapC} y={bTop + bh} w={bw} h={bh} d={22} seed={77} />} />
 		{/* he stands beside the stand, his mittens pressing the block down into the gap */}
 		<Walker51 x={wx} g={g} h={h} pose={p} look={LOOKS51.zhanguo.look} />
