@@ -1,0 +1,975 @@
+{
+ "lpl_games": [
+  {
+   "game": 83638,
+   "rnd": "ROUND1",
+   "team": "IG",
+   "opp": "GEN",
+   "win": false,
+   "min": 26.02,
+   "side": "blue",
+   "gd10": 1859,
+   "gd15": 1892,
+   "gd20": -2574,
+   "maxlead": 2172,
+   "maxdef": -13441,
+   "fb": true,
+   "ft": true,
+   "drag": 0,
+   "odrag": 4,
+   "baron": 0,
+   "obaron": 1,
+   "kills": 10,
+   "okills": 22,
+   "picks": [
+    "Jarvan IV",
+    "Rumble",
+    "Aurora",
+    "Jhin",
+    "Alistar"
+   ],
+   "bans": [
+    "Vi",
+    "Lee Sin",
+    "Cassiopeia",
+    "Renata Glasc",
+    "Lucian"
+   ],
+   "obans": [
+    "Nocturne",
+    "Syndra",
+    "Galio",
+    "Lulu",
+    "Ezreal"
+   ]
+  },
+  {
+   "game": 83640,
+   "rnd": "ROUND1",
+   "team": "AL",
+   "opp": "KC",
+   "win": false,
+   "min": 33.27,
+   "side": "red",
+   "gd10": 724,
+   "gd15": 461,
+   "gd20": -189,
+   "maxlead": 724,
+   "maxdef": -8077,
+   "fb": true,
+   "ft": true,
+   "drag": 2,
+   "odrag": 3,
+   "baron": 0,
+   "obaron": 2,
+   "kills": 4,
+   "okills": 12,
+   "picks": [
+    "Nocturne",
+    "Olaf",
+    "Akali",
+    "Miss Fortune",
+    "Neeko"
+   ],
+   "bans": [
+    "Jayce",
+    "Rumble",
+    "Syndra",
+    "Ezreal",
+    "Lulu"
+   ],
+   "obans": [
+    "Vi",
+    "Qiyana",
+    "Cassiopeia",
+    "Seraphine",
+    "Nautilus"
+   ]
+  },
+  {
+   "game": 83642,
+   "rnd": "ROUND1",
+   "team": "TES",
+   "opp": "HLE",
+   "win": false,
+   "min": 23.85,
+   "side": "blue",
+   "gd10": -1289,
+   "gd15": -943,
+   "gd20": -8867,
+   "maxlead": 88,
+   "maxdef": -15702,
+   "fb": false,
+   "ft": false,
+   "drag": 1,
+   "odrag": 2,
+   "baron": 0,
+   "obaron": 1,
+   "kills": 7,
+   "okills": 24,
+   "picks": [
+    "Orianna",
+    "Lee Sin",
+    "Alistar",
+    "Ezreal",
+    "KSante"
+   ],
+   "bans": [
+    "Olaf",
+    "Vi",
+    "Jayce",
+    "Nautilus",
+    "Bard"
+   ],
+   "obans": [
+    "Cassiopeia",
+    "Qiyana",
+    "Akali",
+    "Corki",
+    "Renekton"
+   ]
+  },
+  {
+   "game": 83645,
+   "rnd": "ROUND1",
+   "team": "BLG",
+   "opp": "MKOI",
+   "win": false,
+   "min": 38.68,
+   "side": "red",
+   "gd10": -1600,
+   "gd15": -1088,
+   "gd20": -2552,
+   "maxlead": 25,
+   "maxdef": -7548,
+   "fb": false,
+   "ft": false,
+   "drag": 1,
+   "odrag": 4,
+   "baron": 0,
+   "obaron": 2,
+   "kills": 14,
+   "okills": 18,
+   "picks": [
+    "Seraphine",
+    "Ashe",
+    "Akali",
+    "Pantheon",
+    "Ambessa"
+   ],
+   "bans": [
+    "Galio",
+    "Nocturne",
+    "Qiyana",
+    "Twisted Fate",
+    "Olaf"
+   ],
+   "obans": [
+    "Vi",
+    "Rumble",
+    "Cassiopeia",
+    "Lee Sin",
+    "Skarner"
+   ]
+  },
+  {
+   "game": 83646,
+   "rnd": "ROUND2",
+   "team": "TES",
+   "opp": "AL",
+   "win": true,
+   "min": 30.3,
+   "side": "blue",
+   "gd10": 53,
+   "gd15": 417,
+   "gd20": 1754,
+   "maxlead": 9532,
+   "maxdef": -923,
+   "fb": false,
+   "ft": true,
+   "drag": 3,
+   "odrag": 2,
+   "baron": 1,
+   "obaron": 0,
+   "kills": 18,
+   "okills": 9,
+   "picks": [
+    "Nocturne",
+    "Renata Glasc",
+    "Kalista",
+    "Locke",
+    "Ambessa"
+   ],
+   "bans": [
+    "Olaf",
+    "Qiyana",
+    "Cassiopeia",
+    "Jhin",
+    "Ashe"
+   ],
+   "obans": [
+    "Akali",
+    "Ezreal",
+    "Vi",
+    "Ornn",
+    "Yone"
+   ]
+  },
+  {
+   "game": 83646,
+   "rnd": "ROUND2",
+   "team": "AL",
+   "opp": "TES",
+   "win": false,
+   "min": 30.3,
+   "side": "red",
+   "gd10": -53,
+   "gd15": -417,
+   "gd20": -1754,
+   "maxlead": 923,
+   "maxdef": -9532,
+   "fb": true,
+   "ft": false,
+   "drag": 2,
+   "odrag": 3,
+   "baron": 0,
+   "obaron": 1,
+   "kills": 9,
+   "okills": 18,
+   "picks": [
+    "Orianna",
+    "Jarvan IV",
+    "Rumble",
+    "Lucian",
+    "Milio"
+   ],
+   "bans": [
+    "Akali",
+    "Ezreal",
+    "Vi",
+    "Ornn",
+    "Yone"
+   ],
+   "obans": [
+    "Olaf",
+    "Qiyana",
+    "Cassiopeia",
+    "Jhin",
+    "Ashe"
+   ]
+  },
+  {
+   "game": 83650,
+   "rnd": "ROUND2",
+   "team": "IG",
+   "opp": "TSW",
+   "win": true,
+   "min": 30.33,
+   "side": "red",
+   "gd10": -118,
+   "gd15": 944,
+   "gd20": 1208,
+   "maxlead": 9312,
+   "maxdef": -919,
+   "fb": false,
+   "ft": true,
+   "drag": 3,
+   "odrag": 1,
+   "baron": 1,
+   "obaron": 0,
+   "kills": 21,
+   "okills": 12,
+   "picks": [
+    "Nocturne",
+    "Orianna",
+    "KSante",
+    "Ashe",
+    "Seraphine"
+   ],
+   "bans": [
+    "Olaf",
+    "Galio",
+    "Vi",
+    "Nautilus",
+    "Volibear"
+   ],
+   "obans": [
+    "Syndra",
+    "Rumble",
+    "Jayce",
+    "Lulu",
+    "Renata Glasc"
+   ]
+  },
+  {
+   "game": 83653,
+   "rnd": "ROUND2",
+   "team": "BLG",
+   "opp": "TL",
+   "win": true,
+   "min": 31.58,
+   "side": "red",
+   "gd10": -349,
+   "gd15": -293,
+   "gd20": 3572,
+   "maxlead": 14727,
+   "maxdef": -786,
+   "fb": true,
+   "ft": true,
+   "drag": 3,
+   "odrag": 1,
+   "baron": 1,
+   "obaron": 0,
+   "kills": 17,
+   "okills": 2,
+   "picks": [
+    "Lee Sin",
+    "Orianna",
+    "Camille",
+    "Jhin",
+    "Nautilus"
+   ],
+   "bans": [
+    "Renata Glasc",
+    "Qiyana",
+    "Galio",
+    "Syndra",
+    "Olaf"
+   ],
+   "obans": [
+    "Cassiopeia",
+    "Vi",
+    "Nocturne",
+    "Ziggs",
+    "Gnar"
+   ]
+  },
+  {
+   "game": 83654,
+   "rnd": "ROUND3",
+   "team": "IG",
+   "opp": "HLE",
+   "win": true,
+   "min": 28.6,
+   "side": "blue",
+   "gd10": 968,
+   "gd15": 856,
+   "gd20": 1071,
+   "maxlead": 9252,
+   "maxdef": -557,
+   "fb": true,
+   "ft": true,
+   "drag": 4,
+   "odrag": 0,
+   "baron": 0,
+   "obaron": 1,
+   "kills": 29,
+   "okills": 9,
+   "picks": [
+    "Yunara",
+    "Lulu",
+    "Nocturne",
+    "Annie",
+    "Kled"
+   ],
+   "bans": [
+    "Jayce",
+    "Cassiopeia",
+    "Jhin",
+    "Galio",
+    "Locke"
+   ],
+   "obans": [
+    "Syndra",
+    "Orianna",
+    "Vi",
+    "Rumble",
+    "Aurora"
+   ]
+  },
+  {
+   "game": 83655,
+   "rnd": "ROUND3",
+   "team": "TES",
+   "opp": "G2",
+   "win": true,
+   "min": 35.73,
+   "side": "blue",
+   "gd10": -293,
+   "gd15": -562,
+   "gd20": -1553,
+   "maxlead": 10842,
+   "maxdef": -1715,
+   "fb": true,
+   "ft": false,
+   "drag": 3,
+   "odrag": 2,
+   "baron": 2,
+   "obaron": 0,
+   "kills": 18,
+   "okills": 6,
+   "picks": [
+    "Nocturne",
+    "Orianna",
+    "Nautilus",
+    "Varus",
+    "Ambessa"
+   ],
+   "bans": [
+    "Olaf",
+    "Galio",
+    "Renata Glasc",
+    "Jarvan IV",
+    "Renekton"
+   ],
+   "obans": [
+    "Qiyana",
+    "Lee Sin",
+    "Vi",
+    "Kaisa",
+    "Jhin"
+   ]
+  }
+ ],
+ "throws": [
+  [
+   "ROUND1",
+   "IG",
+   "GEN",
+   1892
+  ],
+  [
+   "ROUND1",
+   "G2",
+   "DK",
+   3933
+  ],
+  [
+   "ROUND2",
+   "KC",
+   "LYON",
+   4974
+  ],
+  [
+   "ROUND2",
+   "T1",
+   "DK",
+   4727
+  ],
+  [
+   "ROUND3",
+   "G2",
+   "TES",
+   1715
+  ],
+  [
+   "ROUND3",
+   "GEN",
+   "LYON",
+   2099
+  ],
+  [
+   "ROUND3",
+   "LYON",
+   "GEN",
+   2754
+  ]
+ ],
+ "blue_wr": [
+  13,
+  23
+ ],
+ "gd15_LPL": 127,
+ "gd15_LCK": 361,
+ "ahead15_wins": [
+  12,
+  23
+ ],
+ "presence": [
+  [
+   "Vi",
+   4,
+   18,
+   96,
+   25
+  ],
+  [
+   "Nocturne",
+   9,
+   12,
+   91,
+   78
+  ],
+  [
+   "Ezreal",
+   10,
+   8,
+   78,
+   50
+  ],
+  [
+   "Syndra",
+   6,
+   12,
+   78,
+   67
+  ],
+  [
+   "Cassiopeia",
+   3,
+   15,
+   78,
+   67
+  ],
+  [
+   "Olaf",
+   5,
+   12,
+   74,
+   40
+  ],
+  [
+   "Qiyana",
+   7,
+   10,
+   74,
+   57
+  ],
+  [
+   "Renata Glasc",
+   9,
+   7,
+   70,
+   56
+  ],
+  [
+   "Akali",
+   6,
+   9,
+   65,
+   17
+  ],
+  [
+   "Rumble",
+   7,
+   7,
+   61,
+   29
+  ],
+  [
+   "Orianna",
+   7,
+   7,
+   61,
+   57
+  ],
+  [
+   "Lee Sin",
+   9,
+   5,
+   61,
+   44
+  ],
+  [
+   "Jhin",
+   7,
+   6,
+   57,
+   43
+  ],
+  [
+   "Galio",
+   3,
+   10,
+   57,
+   67
+  ],
+  [
+   "Jarvan IV",
+   8,
+   5,
+   57,
+   50
+  ]
+ ],
+ "lpl_vs_lck": [
+  [
+   "Vi",
+   [
+    0,
+    0
+   ],
+   [
+    2,
+    1
+   ]
+  ],
+  [
+   "Nocturne",
+   [
+    5,
+    4
+   ],
+   [
+    2,
+    2
+   ]
+  ],
+  [
+   "Ezreal",
+   [
+    1,
+    0
+   ],
+   [
+    2,
+    2
+   ]
+  ],
+  [
+   "Syndra",
+   [
+    0,
+    0
+   ],
+   [
+    3,
+    3
+   ]
+  ],
+  [
+   "Cassiopeia",
+   [
+    0,
+    0
+   ],
+   [
+    1,
+    1
+   ]
+  ],
+  [
+   "Olaf",
+   [
+    1,
+    0
+   ],
+   [
+    2,
+    1
+   ]
+  ],
+  [
+   "Qiyana",
+   [
+    0,
+    0
+   ],
+   [
+    4,
+    2
+   ]
+  ],
+  [
+   "Renata Glasc",
+   [
+    1,
+    1
+   ],
+   [
+    2,
+    1
+   ]
+  ],
+  [
+   "Akali",
+   [
+    2,
+    0
+   ],
+   [
+    1,
+    1
+   ]
+  ],
+  [
+   "Rumble",
+   [
+    2,
+    0
+   ],
+   [
+    2,
+    1
+   ]
+  ]
+ ],
+ "bans_vs_BLG": [
+  2,
+  [
+   [
+    "Vi",
+    2
+   ],
+   [
+    "Cassiopeia",
+    2
+   ],
+   [
+    "Rumble",
+    1
+   ],
+   [
+    "Lee Sin",
+    1
+   ],
+   [
+    "Skarner",
+    1
+   ]
+  ]
+ ],
+ "bans_vs_AL": [
+  2,
+  [
+   [
+    "Qiyana",
+    2
+   ],
+   [
+    "Cassiopeia",
+    2
+   ],
+   [
+    "Vi",
+    1
+   ],
+   [
+    "Seraphine",
+    1
+   ],
+   [
+    "Nautilus",
+    1
+   ]
+  ]
+ ],
+ "bans_vs_TES": [
+  3,
+  [
+   [
+    "Qiyana",
+    2
+   ],
+   [
+    "Akali",
+    2
+   ],
+   [
+    "Vi",
+    2
+   ],
+   [
+    "Cassiopeia",
+    1
+   ],
+   [
+    "Corki",
+    1
+   ]
+  ]
+ ],
+ "bans_vs_IG": [
+  3,
+  [
+   [
+    "Syndra",
+    3
+   ],
+   [
+    "Lulu",
+    2
+   ],
+   [
+    "Rumble",
+    2
+   ],
+   [
+    "Nocturne",
+    1
+   ],
+   [
+    "Galio",
+    1
+   ]
+  ]
+ ],
+ "picks_BLG": [
+  [
+   "Seraphine",
+   1
+  ],
+  [
+   "Ashe",
+   1
+  ],
+  [
+   "Akali",
+   1
+  ],
+  [
+   "Pantheon",
+   1
+  ],
+  [
+   "Ambessa",
+   1
+  ],
+  [
+   "Lee Sin",
+   1
+  ],
+  [
+   "Orianna",
+   1
+  ],
+  [
+   "Camille",
+   1
+  ],
+  [
+   "Jhin",
+   1
+  ],
+  [
+   "Nautilus",
+   1
+  ]
+ ],
+ "picks_AL": [
+  [
+   "Nocturne",
+   1
+  ],
+  [
+   "Olaf",
+   1
+  ],
+  [
+   "Akali",
+   1
+  ],
+  [
+   "Miss Fortune",
+   1
+  ],
+  [
+   "Neeko",
+   1
+  ],
+  [
+   "Orianna",
+   1
+  ],
+  [
+   "Jarvan IV",
+   1
+  ],
+  [
+   "Rumble",
+   1
+  ],
+  [
+   "Lucian",
+   1
+  ],
+  [
+   "Milio",
+   1
+  ]
+ ],
+ "picks_TES": [
+  [
+   "Orianna",
+   2
+  ],
+  [
+   "Nocturne",
+   2
+  ],
+  [
+   "Ambessa",
+   2
+  ],
+  [
+   "Lee Sin",
+   1
+  ],
+  [
+   "Alistar",
+   1
+  ],
+  [
+   "Ezreal",
+   1
+  ],
+  [
+   "KSante",
+   1
+  ],
+  [
+   "Renata Glasc",
+   1
+  ],
+  [
+   "Kalista",
+   1
+  ],
+  [
+   "Locke",
+   1
+  ]
+ ],
+ "picks_IG": [
+  [
+   "Nocturne",
+   2
+  ],
+  [
+   "Jarvan IV",
+   1
+  ],
+  [
+   "Rumble",
+   1
+  ],
+  [
+   "Aurora",
+   1
+  ],
+  [
+   "Jhin",
+   1
+  ],
+  [
+   "Alistar",
+   1
+  ],
+  [
+   "Orianna",
+   1
+  ],
+  [
+   "KSante",
+   1
+  ],
+  [
+   "Ashe",
+   1
+  ],
+  [
+   "Seraphine",
+   1
+  ]
+ ]
+}
