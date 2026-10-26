@@ -22,7 +22,7 @@ html,body{margin:0;width:${c.W}px;height:${c.H}px;overflow:hidden;background:#1d
 .l1 .n{font-family:'Cormorant Garamond',serif;font-weight:600;font-size:1.18em}
 .l2{font-size:${c.big}px;font-weight:900;line-height:1.05;letter-spacing:.08em;margin-right:-.08em;background:linear-gradient(180deg,#FFE6C2 0%,#F2B27A 45%,#C8743F 100%);-webkit-background-clip:text;background-clip:text;color:transparent;filter:drop-shadow(0 0 26px rgba(232,140,80,.35)) drop-shadow(0 3px 3px rgba(20,10,4,.6))}
 .s{margin-top:18px;font-size:${c.sub}px;font-weight:700;color:rgba(255,243,216,.92);letter-spacing:.06em;text-shadow:0 2px 12px rgba(0,0,0,.7)}
-.brand{position:absolute;right:${lay === 'tall' ? 70 : 84}px;${lay === 'tall' ? 'top:58px' : 'bottom:64px'};display:flex;align-items:center;gap:12px;font-weight:700;font-size:24px;letter-spacing:.3em;color:rgba(255,243,216,.85);text-shadow:0 1px 8px rgba(0,0,0,.7)}
+.brand{position:absolute;right:${lay === 'tall' ? 70 : 84}px;bottom:${lay === 'tall' ? 70 : 64}px;display:flex;align-items:center;gap:12px;font-weight:700;font-size:24px;letter-spacing:.3em;color:rgba(255,243,216,.85);text-shadow:0 1px 8px rgba(0,0,0,.7)}
 .brand img{width:44px;height:44px;opacity:.9;transform:rotate(-6deg)}
 </style></head><body><img class="art" src="${art}"><div class="v"></div>
 <div class="t"><div class="k">圆明园 · 十二兽首</div><div class="l1">有人花<span class="n">6910</span>万港元买下</div><div class="l2">却捐了</div><div class="s">十二个，到底回来了几个<span style="margin-right:-.5em">？</span></div></div>
