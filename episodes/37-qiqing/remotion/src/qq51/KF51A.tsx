@@ -60,17 +60,31 @@ const IceMountain: React.FC<{x: number; y: number; s: number}> = ({x, y, s}) => 
 		<path d={`M${-12 * k},${-96 * k} L${-22 * k},${-40 * k} L${-16 * k},${-40 * k} Z`} fill="#FFFFFF" opacity={0.6} />
 		<ellipse cx={0} cy={2} rx={70 * k} ry={8 * k} fill="none" stroke={B.gold} strokeOpacity={0.35} strokeWidth={2} /></g>; };
 const SuShan: React.FC<{x: number; y: number; s: number}> = ({x, y, s}) => { const k = s / 100;
+	/* a small dish with three piped/drizzled cream peaks: spiral bands across each cone, tips tinted red / green */
+	const peak = (cx: number, base: number, ht: number, wd: number, tint: string, i: number) => { const top = base - ht;
+		const body = `M${cx - wd / 2},${base} Q${cx - wd * 0.46},${base - ht * 0.45} ${cx - wd * 0.14},${top + ht * 0.2} Q${cx - wd * 0.02},${top - ht * 0.04} ${cx + wd * 0.12},${top + ht * 0.05} Q${cx + wd * 0.1},${top + ht * 0.16} ${cx + wd * 0.16},${top + ht * 0.24} Q${cx + wd * 0.46},${base - ht * 0.45} ${cx + wd / 2},${base} Z`;
+		const bands = [0.22, 0.45, 0.68].map((u) => { const yy = top + ht * (0.18 + u * 0.8), hw = wd * (0.12 + 0.4 * u); return `M${cx - hw},${yy} Q${cx},${yy + ht * 0.12} ${cx + hw},${yy - ht * 0.04}`; }).join(' ');
+		return <g key={i}><path d={body} fill={B.cream} stroke="#BFA77C" strokeWidth={1.5} />
+			<path d={bands} stroke="#C9B08A" strokeWidth={2.4 * k} fill="none" strokeLinecap="round" />
+			<path d={`M${cx - wd * 0.14},${top + ht * 0.2} Q${cx - wd * 0.02},${top - ht * 0.04} ${cx + wd * 0.12},${top + ht * 0.05} Q${cx + wd * 0.1},${top + ht * 0.16} ${cx + wd * 0.16},${top + ht * 0.24}`} fill="none" stroke={tint} strokeWidth={5 * k} strokeLinecap="round" opacity={0.75} />
+			<path d={`M${cx + wd * 0.18},${top + ht * 0.4} q${3 * k},${8 * k} 0,${14 * k}`} stroke="#E8DCC0" strokeWidth={2.5 * k} fill="none" strokeLinecap="round" /></g>; };
 	return <g transform={`translate(${x},${y})`}>
-		<ellipse cx={0} cy={0} rx={62 * k} ry={12 * k} fill="#3A2116" stroke={B.gold} strokeOpacity={0.6} strokeWidth={2} />
-		<path d={`M${-44 * k},${-4 * k} Q${-36 * k},${-40 * k} ${-20 * k},${-44 * k} Q${-10 * k},${-78 * k} ${4 * k},${-82 * k} Q${16 * k},${-60 * k} ${26 * k},${-52 * k} Q${42 * k},${-36 * k} ${46 * k},${-4 * k} Z`} fill={B.cream} stroke="#C9B48E" strokeWidth={1.5} />
-		<path d={`M${-30 * k},${-30 * k} q4,10 0,18 M${-4 * k},${-60 * k} q5,14 0,26 M${22 * k},${-40 * k} q4,10 0,20`} stroke="#D9C49C" strokeWidth={2.5} fill="none" />
-		<path d={`M${4 * k},${-82 * k} Q${10 * k},${-64 * k} ${16 * k},${-58 * k}`} stroke="#B8432A" strokeWidth={4 * k} fill="none" strokeLinecap="round" opacity={0.8} /></g>; };
+		<ellipse cx={0} cy={-6 * k} rx={64 * k} ry={13 * k} fill="#2A1710" stroke={B.gold} strokeOpacity={0.7} strokeWidth={2} />
+		<ellipse cx={0} cy={-9 * k} rx={54 * k} ry={9 * k} fill="#3A2116" />
+		{peak(-30 * k, -8 * k, 52 * k, 40 * k, '#C8503A', 0)}{peak(28 * k, -8 * k, 48 * k, 38 * k, '#5E9A6A', 1)}{peak(0, -4 * k, 76 * k, 48 * k, '#C8503A', 2)}
+	</g>; };
 const SilverBowl: React.FC<{x: number; y: number; s: number}> = ({x, y, s}) => { const k = s / 100;
+	/* a wide, shallow silver bowl on a low foot ring, a heaped mound of shaved ice above the rim, a bright glint */
+	const rimY = -30 * k, rw = 66 * k;
 	return <g transform={`translate(${x},${y})`}>
-		<path d={`M${-40 * k},${-46 * k} Q${-34 * k},${-24 * k} ${-18 * k},${-14 * k} L${-14 * k},0 L${14 * k},0 L${18 * k},${-14 * k} Q${34 * k},${-24 * k} ${40 * k},${-46 * k} Z`} fill="url(#slv51)" stroke="#59636A" strokeWidth={1.5} />
-		<path d={`M${-40 * k},${-46 * k} Q${-20 * k},${-84 * k} ${0},${-80 * k} Q${22 * k},${-84 * k} ${40 * k},${-46 * k} Z`} fill="url(#ice51T)" stroke={ICE.line} strokeWidth={1.5} />
-		{Array.from({length: 9}, (_, i) => <circle key={i} cx={(-30 + 60 * rnd(i, 3)) * k} cy={(-50 - 24 * rnd(i, 4)) * k} r={2 * k} fill={ICE.shade} opacity={0.6} />)}
-		<path d={`M${-28 * k},${-40 * k} Q${-22 * k},${-26 * k} ${-12 * k},${-20 * k}`} stroke="#FFFFFF" strokeWidth={4 * k} fill="none" strokeLinecap="round" /></g>; };
+		<path d={`M${-18 * k},0 L${-14 * k},${-8 * k} L${14 * k},${-8 * k} L${18 * k},0 Z`} fill="url(#slv51)" stroke="#59636A" strokeWidth={1.2} />
+		<path d={`M${-rw},${rimY} Q${-rw * 0.9},${-8 * k} ${-14 * k},${-8 * k} L${14 * k},${-8 * k} Q${rw * 0.9},${-8 * k} ${rw},${rimY} Z`} fill="url(#slv51)" stroke="#59636A" strokeWidth={1.5} />
+		<path d={`M${-rw},${rimY} Q${-30 * k},${-82 * k} ${-4 * k},${-80 * k} Q${10 * k},${-90 * k} ${24 * k},${-74 * k} Q${52 * k},${-62 * k} ${rw},${rimY} Z`} fill="url(#ice51T)" stroke={ICE.line} strokeWidth={1.8} />
+		{Array.from({length: 22}, (_, i) => <circle key={i} cx={(-50 + 100 * rnd(i, 3)) * k} cy={(-36 - 34 * rnd(i, 4) * (1 - Math.abs(rnd(i, 3) - 0.5))) * k} r={1.8 * k} fill={i % 3 ? ICE.shade : '#FFFFFF'} opacity={0.7} />)}
+		<ellipse cx={0} cy={rimY} rx={rw} ry={6 * k} fill="none" stroke="#F4F8FA" strokeWidth={2.5} />
+		<path d={`M${-rw * 0.62},${rimY + 8 * k} Q${-rw * 0.5},${rimY + 17 * k} ${-rw * 0.24},${rimY + 20 * k}`} stroke="#FFFFFF" strokeWidth={5 * k} fill="none" strokeLinecap="round" />
+		<g transform={`translate(${rw * 0.44},${rimY + 10 * k})`} fill="#FFFFFF"><path d={`M0,${-14 * k} L${2.2 * k},${-2.2 * k} L${14 * k},0 L${2.2 * k},${2.2 * k} L0,${14 * k} L${-2.2 * k},${2.2 * k} L${-14 * k},0 L${-2.2 * k},${-2.2 * k} Z`} /></g>
+	</g>; };
 const IceTicket: React.FC<{x: number; y: number; s: number}> = ({x, y, s}) => { const k = s / 100;
 	return <g transform={`translate(${x},${y}) rotate(-4)`}>
 		<rect x={-30 * k} y={-110 * k} width={60 * k} height={110 * k} fill="#EFE2C4" stroke="#8A6A3A" strokeWidth={1.5} />
@@ -191,7 +205,7 @@ const KF05: React.FC = () => { const g = 960, h = 480, wx = 300;
 	const rowsT: {g: number; h: number; dir: 1 | -1; xs: number[]}[] = [
 		{g: 655, h: 34, dir: 1, xs: Array.from({length: 9}, (_, i) => 250 + i * 100)},
 		{g: 712, h: 48, dir: -1, xs: Array.from({length: 6}, (_, i) => 1010 - i * 142)},
-		{g: 790, h: 66, dir: 1, xs: Array.from({length: 5}, (_, i) => 330 + i * 186)},
+		{g: 790, h: 66, dir: 1, xs: Array.from({length: 5}, (_, i) => 300 + i * 180)},
 	];
 	const o1 = ikArm(ikArm(stand({lean: 6, neck: 18, la: 40, le: 60, ra: 50, re: 70}), 'L', [0.2, 0.66]), 'R', [0.16, 0.6]);
 	const o2 = ikArm(stand({lean: 2, neck: 10, la: 50, le: 70, ra: 6, re: 12}), 'L', [0.22, 0.68]);
@@ -203,20 +217,40 @@ const KF05: React.FC = () => { const g = 960, h = 480, wx = 300;
 		<rect x={-40} y={630} width={W + 80} height={400} fill="#1A120F" />
 		<path d="M-40,632 H1960" stroke={SNOW} strokeOpacity={0.2} strokeWidth={3} />
 		<Pool id="k5" x={1100} y={720} rx={720} ry={300} a={0.22} />
-		{/* the trodden switchback path */}
-		<path d="M140,658 H1150 Q1220,668 1150,700 H140 Q60,730 140,770 H1160 Q1230,790 1240,826" fill="none" stroke="#3A2A20" strokeWidth={22} strokeLinejoin="round" opacity={0.8} />
-		{/* the pit mouth: a timber-framed dark opening in the bank, a ramp down into it */}
-		<path d="M1170,800 L1560,800 L1610,866 L1130,866 Z" fill="#050202" stroke={B.gold} strokeOpacity={0.45} strokeWidth={2.5} />
-		<path d="M1170,800 L1560,800" stroke={SNOW} strokeOpacity={0.3} strokeWidth={3} />
-		<rect x={1140} y={796} width={450} height={10} fill="#2A1710" stroke={BG.lineS} strokeWidth={1.5} />
-		<Label x={1365} y={856} s="冰窖" fs={52} anchor="middle" col={B.goldL} />
+		{/* the trodden switchback path, ending at the ramp */}
+		<path d="M140,658 H1150 Q1220,668 1150,700 H140 Q60,730 140,770 H1000 Q1060,780 1080,850" fill="none" stroke="#3A2A20" strokeWidth={22} strokeLinejoin="round" opacity={0.8} />
+		{/* the pit: a hole in the ground plane. Far inner wall (earth courses, lit at the top, fading down), a black depth,
+		    a pale lip round the opening, and a ramp running down into it from the left with a block going in */}
+		<defs>
+			<linearGradient id="k5wall" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stopColor="#7A5434" /><stop offset="0.35" stopColor="#4A3020" /><stop offset="0.75" stopColor="#1E110A" /><stop offset="1" stopColor="#050202" /></linearGradient>
+			<radialGradient id="k5hole" cx="0.5" cy="0.75" r="0.7"><stop offset="0" stopColor="#020101" /><stop offset="0.7" stopColor="#080403" /><stop offset="1" stopColor="#1A0E09" /></radialGradient>
+			<clipPath id="k5open"><path d="M1200,822 L1560,822 L1630,904 L1150,904 Z" /></clipPath>
+			<linearGradient id="k5ramp" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stopColor="#3A2A20" /><stop offset="1" stopColor="#0A0504" /></linearGradient>
+		</defs>
+		<path d="M1200,822 L1560,822 L1630,904 L1150,904 Z" fill="url(#k5hole)" />
+		<g clipPath="url(#k5open)">
+			<path d="M1200,822 L1560,822 L1540,884 L1222,884 Z" fill="url(#k5wall)" />
+			<path d="M1560,822 L1630,904 L1590,904 L1540,884 Z" fill="#2A1A10" />
+			<path d="M1200,822 L1222,884 L1190,904 L1150,904 Z" fill="#1A0F09" />
+			{[836, 852, 868].map((y) => <path key={y} d={`M1190,${y} H1570`} stroke="#0E0705" strokeOpacity={0.5} strokeWidth={1.5} />)}
+			{[1222, 1540].map((x, i) => <path key={i} d={`M${i ? 1560 : 1200},822 L${x},884`} stroke="#8A6040" strokeOpacity={0.5} strokeWidth={2} />)}
+			<Pool id="k5p" x={1380} y={830} rx={200} ry={30} a={0.25} />
+			{/* the ramp going down from the left edge into the dark */}
+			<path d="M1150,904 L1196,826 L1330,872 L1300,904 Z" fill="url(#k5ramp)" />
+		</g>
+		<path d="M1060,846 L1196,826 L1150,904 L1050,890 Z" fill="#3A2A20" />
+		<path d="M1200,822 L1560,822 L1630,904 L1150,904 Z" fill="none" stroke={SNOW} strokeOpacity={0.32} strokeWidth={3} strokeLinejoin="round" />
+		<path d="M1196,822 L1564,822" stroke={B.gold} strokeOpacity={0.35} strokeWidth={2} />
+		<g clipPath="url(#k5open)"><IceBlock x={1272} y={926} w={90} h={52} d={30} seed={41} rot={14} /></g>
+		
+		<Label x={1400} y={806} s="冰窖" fs={52} anchor="middle" col={B.goldL} />
 		{rowsT.map((r, ri) => r.xs.map((x, i) => <Team key={`${ri}-${i}`} x={x} g={r.g} h={r.h} dir={r.dir} seed={ri * 10 + i} />))}
-		{/* the two officials at the pit mouth, tallies in hand, facing the file */}
-		<Walker51 x={1290} g={796} h={290} pose={o2} look={{dress: 'robe', head: 'guan', beard: 'long'}} col="#0F0806" flip rimO={0.6} />
-		<Tally x={1290 - 0.22 * 290} y={796 - 0.62 * 290} h={74} rot={-10} />
-		<Walker51 x={1650} g={812} h={320} pose={o1} look={{dress: 'robe', head: 'guan', beard: 'short'}} col="#0F0806" flip rimO={0.6} />
-		<Tally x={1650 - 0.2 * 320} y={812 - 0.6 * 320} h={84} rot={8} />
-		<NumTag x={1180} y={370} label="干活的 ×" num="80" w={430} />
+		{/* the two officials on the ground beside the pit, tallies in hand, facing the file */}
+		<Walker51 x={1262} g={814} h={280} pose={o2} look={{dress: 'robe', head: 'guan', beard: 'long'}} col="#0F0806" flip rimO={0.6} />
+		<Tally x={1262 - 0.22 * 280} y={814 - 0.62 * 280} h={72} rot={-10} />
+		<Walker51 x={1664} g={884} h={320} pose={o1} look={{dress: 'robe', head: 'guan', beard: 'short'}} col="#0F0806" flip rimO={0.6} />
+		<Tally x={1664 - 0.2 * 320} y={884 - 0.6 * 320} h={84} rot={8} />
+		<NumTag x={560} y={420} label="干活的 ×" num="80" w={430} />
 		<rect x={-40} y={g} width={W + 80} height={H - g + 40} fill={BG.ground} /><rect x={-40} y={g} width={W + 80} height={3} fill={B.gold} opacity={0.28} />
 		<Pool id="k5f" x={wx} y={g + 4} rx={240} ry={34} a={0.25} />
 		<Walker51 x={wx} g={g} h={h} pose={wp} look={LOOKS51.zhou.look} />
