@@ -1,0 +1,3 @@
+url https://gol.gg/tournament/tournament-matchlist/Worlds%202026%20Main%20Event/
+  saved out/files/m_Worlds_2026_Main_Event.html 0.6 MB
+done
