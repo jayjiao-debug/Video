@@ -1,15 +1,9 @@
 {
-"id": "lol-worlds26-06",
-"items": [
-{
-"type": "url",
-"url": "https://gol.gg/tournament/tournament-matchlist/Worlds%202026%20Main%20Event/",
-"name": "m_Worlds_2026_Main_Event.html",
-"license": "gol.gg stats page",
-"ua": "Mozilla/5.0 (juno-asset-farm)",
-"delay": 1,
-"retries": 2,
-"backoff": 30
-}
-]
+ "id": "cat3d-catpilot-01",
+ "items": [
+  {"type": "url", "url": "https://opengameart.org/sites/default/files/CatPilot.blend", "name": "CatPilot.blend", "license": "CC0 (OpenGameArt, Tomcat94, 'cat pilot rigged animated')"},
+  {"type": "url", "url": "https://opengameart.org/sites/default/files/catPilotTex.png", "name": "catPilotTex.png", "license": "CC0 (OpenGameArt, Tomcat94)"},
+  {"type": "url", "url": "https://opengameart.org/sites/default/files/preview_787.png", "name": "preview_787.png", "license": "CC0 (OpenGameArt, Tomcat94)"},
+  {"type": "url", "url": "https://opengameart.org/sites/default/files/walk_20.gif", "name": "walk_20.gif", "license": "CC0 (OpenGameArt, Tomcat94)"}
+ ]
 }
