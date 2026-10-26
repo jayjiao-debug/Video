@@ -184,7 +184,7 @@ const Picker: React.FC<{x: number; g: number; h: number; up: boolean; flip?: boo
 	let p = grounded(up ? {lean: -4, neck: 2, lt: 12, lk: 10, rt: -14, rk: 10, la: 60, le: 40, ra: 70, re: 40} : {lean: 22, neck: 8, lt: 16, lk: 24, rt: -10, rk: 14, la: 40, le: 10, ra: 30, re: 10});
 	p = ikArm(p, 'R', toBody(gU[0], gU[1], x, g, h, flip), !up);
 	p = ikArm(p, 'L', toBody(gL[0], gL[1], x, g, h, flip));
-	const fig = walker ? <QingFig x={x} ground={g} h={h} pose={p} col={col} flip={flip} /> : <RimFig x={x} ground={g} h={h} pose={p} look={{dress: 'tunic', legs: 'trousers', head: 'cap'}} col={col} flip={flip} dx={sgn * 2.5} dy={-2} rimO={rimO} />;
+	const fig = walker ? <QingFig x={x} ground={g} h={h} pose={p} col={col} flip={flip} /> : <QingFig x={x} ground={g} h={h} pose={p} look={{dress: 'tunic', legs: 'trousers', head: 'bald'}} col={col} flip={flip} rimO={rimO} />;
 	const iron = at(0.86);
 	return <g>
 		<path d={`M${top[0]},${top[1]} L${iron[0]},${iron[1]}`} stroke="#8A6232" strokeWidth={Math.max(4, h * 0.016)} strokeLinecap="round" />
@@ -211,8 +211,16 @@ const KF11: React.FC = () => { const g = 950;
 		<path d="M560,700 L1460,700" stroke={ICE.core} strokeWidth={3} opacity={0.85} /><path d="M540,742 L1490,742" stroke={ICE.body} strokeWidth={2} opacity={0.5} />
 		<path d={Array.from({length: 8}, (_, i) => `M${640 + i * 110},700 l-6,42`).join(' ')} stroke={ICE.body} strokeWidth={1.5} opacity={0.35} />
 		{/* lanterns on the bank and their warm pools on the ice */}
-		{[340, 1600].map((lx, i) => <g key={i}><rect x={lx - 3} y={470} width={6} height={170} fill={BG.post} /><path d={`M${lx},470 h40`} stroke={BG.post} strokeWidth={5} />
-			<ellipse cx={lx + 40} cy={505} rx={20} ry={26} fill="#E8964A" /><ellipse cx={lx + 36} cy={500} rx={8} ry={12} fill="#FFE2A8" opacity={0.8} /></g>)}
+		{/* paper lanterns hung from the wall's eave on short cords: oval, warm, with small top and bottom caps */}
+		{[360, 1620].map((lx, i) => <g key={i}>
+			<defs><radialGradient id={`lan${i}`} cx="0.42" cy="0.45" r="0.6"><stop offset="0" stopColor="#FFE6B0" /><stop offset="0.55" stopColor="#F2A55A" /><stop offset="1" stopColor="#B85A2A" /></radialGradient></defs>
+			<path d={`M${lx},384 V438`} stroke="#3A2416" strokeWidth={3} />
+			<ellipse cx={lx} cy={492} rx={36} ry={40} fill="#FFB060" opacity={0.18} filter="url(#mistS)" />
+			<rect x={lx - 14} y={438} width={28} height={10} rx={2} fill="#2A1710" stroke={B.gold} strokeOpacity={0.5} strokeWidth={1.2} />
+			<ellipse cx={lx} cy={490} rx={30} ry={42} fill={`url(#lan${i})`} />
+			<path d={`M${lx - 22},462 Q${lx},458 ${lx + 22},462 M${lx - 29},480 Q${lx},476 ${lx + 29},480 M${lx - 29},500 Q${lx},496 ${lx + 29},500 M${lx - 22},518 Q${lx},514 ${lx + 22},518`} fill="none" stroke="#9A4A22" strokeWidth={1.5} opacity={0.55} />
+			<rect x={lx - 12} y={530} width={24} height={9} rx={2} fill="#2A1710" stroke={B.gold} strokeOpacity={0.5} strokeWidth={1.2} />
+			<path d={`M${lx},539 V556`} stroke="#B8432A" strokeWidth={3} strokeLinecap="round" /></g>)}
 		<Pool id="k11a" x={380} y={700} rx={420} ry={160} a={0.3} /><Pool id="k11b" x={1640} y={700} rx={420} ry={160} a={0.3} />
 		<Pool id="k11c" x={860} y={820} rx={560} ry={260} a={0.24} />
 		<IceBlock x={1440} y={790} w={110} h={70} d={40} seed={3} />
@@ -266,7 +274,6 @@ const KF12: React.FC = () => {
 		</g>
 		<Label x={(L0 + L1) / 2 - 40} y={wallTop - 90} s="两米" fs={52} col={B.cream} anchor="middle" />
 		{/* the stack after the summer: one third left; the dashed line is where it stood in winter */}
-		<rect x={stackX - 6} y={gaugeT} width={bw * 4 + 30} height={floor - gaugeT} fill="none" stroke={ICE.body} strokeWidth={2.5} strokeDasharray="12 10" opacity={0.3} />
 		{[0, 1].map((r) => [0, 1, 2, 3].map((c) => <IceBlock key={`${r}${c}`} x={stackX + c * bw} y={floor - r * rowH} w={bw - 4} h={rowH - 4} d={18} seed={r * 4 + c} marks={r === 1} />))}
 		{/* the gauge on the wall: down to about a third, 「约2/3 化掉」 over the emptied part */}
 		<rect x={gx} y={gaugeT} width={34} height={gaugeB - gaugeT} rx={17} fill="#0D0909" stroke={B.cream} strokeWidth={2.5} />
@@ -277,10 +284,10 @@ const KF12: React.FC = () => {
 		<g transform={`translate(${gx - 40},${(gaugeT + fill) / 2})`}><rect x={-268} y={-40} width={256} height={62} rx={8} fill="#0E0705" stroke={B.gold} strokeOpacity={0.6} strokeWidth={2} />
 			<text x={-140} y={6} textAnchor="middle" fontFamily={KAI} fontWeight={700} fontSize={44} fill={B.cream}>约2/3 化掉</text></g>
 		{/* the three Zhou blocks ghost in: two melt away, one stays; the 「？」 pops */}
-		<MeltBlock x={560} y={680} w={110} h={92} k={0.5} o={0.95} seed={4} />
-		<MeltBlock x={712} y={680} w={110} h={92} k={0.26} o={0.85} seed={5} />
-		<IceBlock x={864} y={680} w={110} h={92} d={44} seed={11} />
-		<g transform="translate(770,462)">
+		<MeltBlock x={626} y={floor - 2 * rowH - 4} w={108} h={88} k={0.5} o={0.95} seed={4} />
+		<MeltBlock x={746} y={floor - 2 * rowH - 4} w={108} h={88} k={0.26} o={0.9} seed={5} />
+		<IceBlock x={866} y={floor - 2 * rowH - 4} w={108} h={88} d={44} seed={11} />
+		<g transform="translate(800,560)">
 			{Array.from({length: 10}, (_, i) => { const a = i * Math.PI / 5; return <path key={i} d={`M${Math.cos(a) * 52},${Math.sin(a) * 52} L${Math.cos(a) * 84},${Math.sin(a) * 84}`} stroke={B.goldL} strokeWidth={4} strokeLinecap="round" opacity={0.85} />; })}
 			<text x={0} y={30} textAnchor="middle" fontFamily={SANS} fontWeight={900} fontSize={88} fill={B.goldL} opacity={0.9}>？</text></g>
 		{/* the walker, small, inside the vault (scale: 1.7 m) */}

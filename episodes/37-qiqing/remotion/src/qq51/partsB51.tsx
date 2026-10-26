@@ -75,10 +75,14 @@ export const IceBlock: React.FC<{x: number; y: number; w: number; h: number; d?:
 export const MeltBlock: React.FC<{x: number; y: number; w: number; h: number; k: number; o?: number; seed?: number}> = ({x, y, w, h, k, o = 0.8, seed = 3}) => {
 	const d = w * 0.42, ox = d * 0.55, oy = -d * 0.48, t = y - h;
 	return <g opacity={o}>
-		<ellipse cx={x + w / 2} cy={y + 4} rx={w * 0.7} ry={9} fill={ICE.body} opacity={0.3} />
+		{/* the ghost of the whole block: a soft ~40 % fill under a dashed outline */}
+		<path d={`M${x + w},${y} V${t} L${x + w + ox},${t + oy} V${y + oy} Z`} fill={ICE.shade} opacity={0.32} />
+		<path d={`M${x},${t} H${x + w} L${x + w + ox},${t + oy} H${x + ox} Z`} fill={ICE.core} opacity={0.4} />
+		<rect x={x} y={t} width={w} height={h} fill={ICE.body} opacity={0.38} />
+		<ellipse cx={x + w / 2 + 6} cy={y - 3} rx={w * 0.52} ry={7} fill={ICE.shade} stroke="#FFFFFF" strokeWidth={1.2} opacity={0.7} />
 		<path d={`M${x},${y} V${t} H${x + w} V${y} Z M${x},${t} L${x + ox},${t + oy} H${x + w + ox} L${x + w},${t} M${x + w + ox},${t + oy} V${y + oy} L${x + w},${y}`} fill="none" stroke={ICE.core} strokeWidth={2.5} strokeDasharray="9 8" opacity={0.75} />
 		<IceBlockA x={x + w / 2} y={y} w={w * (0.6 + 0.35 * k)} h={h * k} d={d * (0.6 + 0.4 * k)} melt={0.5} marks={false} seed={seed} o={0.85} />
-		{[0.25, 0.55, 0.85].map((u, i) => <path key={i} d={`M${x + w * u},${y + 10 + 12 * i} q-5,11 0,17 q5,-6 0,-17 Z`} fill={ICE.core} opacity={0.85} />)}
+		{[0.2, 0.5, 0.8].map((u, i) => <path key={i} d={`M${x + w * u},${y + 6 + 6 * i} q-5,11 0,17 q5,-6 0,-17 Z`} fill={ICE.shade} stroke="#FFFFFF" strokeWidth={1.2} opacity={0.95} />)}
 	</g>; };
 /** shaved ice (冰雪) heaped above a rim from x0 to x1 at y, height hh */
 export const IceHeap: React.FC<{x0: number; x1: number; y: number; hh: number; seed?: number}> = ({x0, x1, y, hh, seed = 2}) => { const w = x1 - x0, n = 7;
@@ -106,6 +110,6 @@ export const Chips: React.FC<{x: number; y: number; s: number; seed?: number; di
 </g>;
 
 /** the Qing walker: Builder A's Walker51 with the cap + queue */
-export const QingFig: React.FC<{x: number; ground: number; h: number; pose: Pose; col?: string; flip?: boolean; rimO?: number}> = ({x, ground, h, pose, col = B.lac, flip, rimO = 0.9}) =>
-	<Walker51 x={x} g={ground} h={h} pose={pose} look={L51A.qing.look} qing col={col} flip={flip} rimO={rimO} />;
+export const QingFig: React.FC<{x: number; ground: number; h: number; pose: Pose; col?: string; flip?: boolean; rimO?: number; look?: Look4}> = ({x, ground, h, pose, col = B.lac, flip, rimO = 0.9, look = L51A.qing.look}) =>
+	<Walker51 x={x} g={ground} h={h} pose={pose} look={look} qing col={col} flip={flip} rimO={rimO} />;
 export {Figure4};
