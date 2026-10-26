@@ -1,9 +1,808 @@
 {
- "id": "cat3d-catpilot-01",
- "items": [
-  {"type": "url", "url": "https://opengameart.org/sites/default/files/CatPilot.blend", "name": "CatPilot.blend", "license": "CC0 (OpenGameArt, Tomcat94, 'cat pilot rigged animated')"},
-  {"type": "url", "url": "https://opengameart.org/sites/default/files/catPilotTex.png", "name": "catPilotTex.png", "license": "CC0 (OpenGameArt, Tomcat94)"},
-  {"type": "url", "url": "https://opengameart.org/sites/default/files/preview_787.png", "name": "preview_787.png", "license": "CC0 (OpenGameArt, Tomcat94)"},
-  {"type": "url", "url": "https://opengameart.org/sites/default/files/walk_20.gif", "name": "walk_20.gif", "license": "CC0 (OpenGameArt, Tomcat94)"}
- ]
+"id": "lol-ep25-01",
+"items": [
+{
+"type": "url",
+"url": "https://gol.gg/game/stats/83638/page-game/",
+"name": "g83638_page-game.html",
+"license": "gol.gg stats page",
+"ua": "Mozilla/5.0 (juno-asset-farm)",
+"delay": 1,
+"retries": 2,
+"backoff": 20
+},
+{
+"type": "url",
+"url": "https://gol.gg/game/stats/83638/page-timeline/",
+"name": "g83638_page-timeline.html",
+"license": "gol.gg stats page",
+"ua": "Mozilla/5.0 (juno-asset-farm)",
+"delay": 1,
+"retries": 2,
+"backoff": 20
+},
+{
+"type": "url",
+"url": "https://gol.gg/game/stats/83638/page-summary/",
+"name": "g83638_page-summary.html",
+"license": "gol.gg stats page",
+"ua": "Mozilla/5.0 (juno-asset-farm)",
+"delay": 1,
+"retries": 2,
+"backoff": 20
+},
+{
+"type": "url",
+"url": "https://gol.gg/game/stats/83639/page-game/",
+"name": "g83639_page-game.html",
+"license": "gol.gg stats page",
+"ua": "Mozilla/5.0 (juno-asset-farm)",
+"delay": 1,
+"retries": 2,
+"backoff": 20
+},
+{
+"type": "url",
+"url": "https://gol.gg/game/stats/83639/page-timeline/",
+"name": "g83639_page-timeline.html",
+"license": "gol.gg stats page",
+"ua": "Mozilla/5.0 (juno-asset-farm)",
+"delay": 1,
+"retries": 2,
+"backoff": 20
+},
+{
+"type": "url",
+"url": "https://gol.gg/game/stats/83639/page-summary/",
+"name": "g83639_page-summary.html",
+"license": "gol.gg stats page",
+"ua": "Mozilla/5.0 (juno-asset-farm)",
+"delay": 1,
+"retries": 2,
+"backoff": 20
+},
+{
+"type": "url",
+"url": "https://gol.gg/game/stats/83640/page-game/",
+"name": "g83640_page-game.html",
+"license": "gol.gg stats page",
+"ua": "Mozilla/5.0 (juno-asset-farm)",
+"delay": 1,
+"retries": 2,
+"backoff": 20
+},
+{
+"type": "url",
+"url": "https://gol.gg/game/stats/83640/page-timeline/",
+"name": "g83640_page-timeline.html",
+"license": "gol.gg stats page",
+"ua": "Mozilla/5.0 (juno-asset-farm)",
+"delay": 1,
+"retries": 2,
+"backoff": 20
+},
+{
+"type": "url",
+"url": "https://gol.gg/game/stats/83640/page-summary/",
+"name": "g83640_page-summary.html",
+"license": "gol.gg stats page",
+"ua": "Mozilla/5.0 (juno-asset-farm)",
+"delay": 1,
+"retries": 2,
+"backoff": 20
+},
+{
+"type": "url",
+"url": "https://gol.gg/game/stats/83641/page-game/",
+"name": "g83641_page-game.html",
+"license": "gol.gg stats page",
+"ua": "Mozilla/5.0 (juno-asset-farm)",
+"delay": 1,
+"retries": 2,
+"backoff": 20
+},
+{
+"type": "url",
+"url": "https://gol.gg/game/stats/83641/page-timeline/",
+"name": "g83641_page-timeline.html",
+"license": "gol.gg stats page",
+"ua": "Mozilla/5.0 (juno-asset-farm)",
+"delay": 1,
+"retries": 2,
+"backoff": 20
+},
+{
+"type": "url",
+"url": "https://gol.gg/game/stats/83641/page-summary/",
+"name": "g83641_page-summary.html",
+"license": "gol.gg stats page",
+"ua": "Mozilla/5.0 (juno-asset-farm)",
+"delay": 1,
+"retries": 2,
+"backoff": 20
+},
+{
+"type": "url",
+"url": "https://gol.gg/game/stats/83642/page-game/",
+"name": "g83642_page-game.html",
+"license": "gol.gg stats page",
+"ua": "Mozilla/5.0 (juno-asset-farm)",
+"delay": 1,
+"retries": 2,
+"backoff": 20
+},
+{
+"type": "url",
+"url": "https://gol.gg/game/stats/83642/page-timeline/",
+"name": "g83642_page-timeline.html",
+"license": "gol.gg stats page",
+"ua": "Mozilla/5.0 (juno-asset-farm)",
+"delay": 1,
+"retries": 2,
+"backoff": 20
+},
+{
+"type": "url",
+"url": "https://gol.gg/game/stats/83642/page-summary/",
+"name": "g83642_page-summary.html",
+"license": "gol.gg stats page",
+"ua": "Mozilla/5.0 (juno-asset-farm)",
+"delay": 1,
+"retries": 2,
+"backoff": 20
+},
+{
+"type": "url",
+"url": "https://gol.gg/game/stats/83643/page-game/",
+"name": "g83643_page-game.html",
+"license": "gol.gg stats page",
+"ua": "Mozilla/5.0 (juno-asset-farm)",
+"delay": 1,
+"retries": 2,
+"backoff": 20
+},
+{
+"type": "url",
+"url": "https://gol.gg/game/stats/83643/page-timeline/",
+"name": "g83643_page-timeline.html",
+"license": "gol.gg stats page",
+"ua": "Mozilla/5.0 (juno-asset-farm)",
+"delay": 1,
+"retries": 2,
+"backoff": 20
+},
+{
+"type": "url",
+"url": "https://gol.gg/game/stats/83643/page-summary/",
+"name": "g83643_page-summary.html",
+"license": "gol.gg stats page",
+"ua": "Mozilla/5.0 (juno-asset-farm)",
+"delay": 1,
+"retries": 2,
+"backoff": 20
+},
+{
+"type": "url",
+"url": "https://gol.gg/game/stats/83644/page-game/",
+"name": "g83644_page-game.html",
+"license": "gol.gg stats page",
+"ua": "Mozilla/5.0 (juno-asset-farm)",
+"delay": 1,
+"retries": 2,
+"backoff": 20
+},
+{
+"type": "url",
+"url": "https://gol.gg/game/stats/83644/page-timeline/",
+"name": "g83644_page-timeline.html",
+"license": "gol.gg stats page",
+"ua": "Mozilla/5.0 (juno-asset-farm)",
+"delay": 1,
+"retries": 2,
+"backoff": 20
+},
+{
+"type": "url",
+"url": "https://gol.gg/game/stats/83644/page-summary/",
+"name": "g83644_page-summary.html",
+"license": "gol.gg stats page",
+"ua": "Mozilla/5.0 (juno-asset-farm)",
+"delay": 1,
+"retries": 2,
+"backoff": 20
+},
+{
+"type": "url",
+"url": "https://gol.gg/game/stats/83645/page-game/",
+"name": "g83645_page-game.html",
+"license": "gol.gg stats page",
+"ua": "Mozilla/5.0 (juno-asset-farm)",
+"delay": 1,
+"retries": 2,
+"backoff": 20
+},
+{
+"type": "url",
+"url": "https://gol.gg/game/stats/83645/page-timeline/",
+"name": "g83645_page-timeline.html",
+"license": "gol.gg stats page",
+"ua": "Mozilla/5.0 (juno-asset-farm)",
+"delay": 1,
+"retries": 2,
+"backoff": 20
+},
+{
+"type": "url",
+"url": "https://gol.gg/game/stats/83645/page-summary/",
+"name": "g83645_page-summary.html",
+"license": "gol.gg stats page",
+"ua": "Mozilla/5.0 (juno-asset-farm)",
+"delay": 1,
+"retries": 2,
+"backoff": 20
+},
+{
+"type": "url",
+"url": "https://gol.gg/game/stats/83646/page-game/",
+"name": "g83646_page-game.html",
+"license": "gol.gg stats page",
+"ua": "Mozilla/5.0 (juno-asset-farm)",
+"delay": 1,
+"retries": 2,
+"backoff": 20
+},
+{
+"type": "url",
+"url": "https://gol.gg/game/stats/83646/page-timeline/",
+"name": "g83646_page-timeline.html",
+"license": "gol.gg stats page",
+"ua": "Mozilla/5.0 (juno-asset-farm)",
+"delay": 1,
+"retries": 2,
+"backoff": 20
+},
+{
+"type": "url",
+"url": "https://gol.gg/game/stats/83646/page-summary/",
+"name": "g83646_page-summary.html",
+"license": "gol.gg stats page",
+"ua": "Mozilla/5.0 (juno-asset-farm)",
+"delay": 1,
+"retries": 2,
+"backoff": 20
+},
+{
+"type": "url",
+"url": "https://gol.gg/game/stats/83647/page-game/",
+"name": "g83647_page-game.html",
+"license": "gol.gg stats page",
+"ua": "Mozilla/5.0 (juno-asset-farm)",
+"delay": 1,
+"retries": 2,
+"backoff": 20
+},
+{
+"type": "url",
+"url": "https://gol.gg/game/stats/83647/page-timeline/",
+"name": "g83647_page-timeline.html",
+"license": "gol.gg stats page",
+"ua": "Mozilla/5.0 (juno-asset-farm)",
+"delay": 1,
+"retries": 2,
+"backoff": 20
+},
+{
+"type": "url",
+"url": "https://gol.gg/game/stats/83647/page-summary/",
+"name": "g83647_page-summary.html",
+"license": "gol.gg stats page",
+"ua": "Mozilla/5.0 (juno-asset-farm)",
+"delay": 1,
+"retries": 2,
+"backoff": 20
+},
+{
+"type": "url",
+"url": "https://gol.gg/game/stats/83648/page-game/",
+"name": "g83648_page-game.html",
+"license": "gol.gg stats page",
+"ua": "Mozilla/5.0 (juno-asset-farm)",
+"delay": 1,
+"retries": 2,
+"backoff": 20
+},
+{
+"type": "url",
+"url": "https://gol.gg/game/stats/83648/page-timeline/",
+"name": "g83648_page-timeline.html",
+"license": "gol.gg stats page",
+"ua": "Mozilla/5.0 (juno-asset-farm)",
+"delay": 1,
+"retries": 2,
+"backoff": 20
+},
+{
+"type": "url",
+"url": "https://gol.gg/game/stats/83648/page-summary/",
+"name": "g83648_page-summary.html",
+"license": "gol.gg stats page",
+"ua": "Mozilla/5.0 (juno-asset-farm)",
+"delay": 1,
+"retries": 2,
+"backoff": 20
+},
+{
+"type": "url",
+"url": "https://gol.gg/game/stats/83649/page-game/",
+"name": "g83649_page-game.html",
+"license": "gol.gg stats page",
+"ua": "Mozilla/5.0 (juno-asset-farm)",
+"delay": 1,
+"retries": 2,
+"backoff": 20
+},
+{
+"type": "url",
+"url": "https://gol.gg/game/stats/83649/page-timeline/",
+"name": "g83649_page-timeline.html",
+"license": "gol.gg stats page",
+"ua": "Mozilla/5.0 (juno-asset-farm)",
+"delay": 1,
+"retries": 2,
+"backoff": 20
+},
+{
+"type": "url",
+"url": "https://gol.gg/game/stats/83649/page-summary/",
+"name": "g83649_page-summary.html",
+"license": "gol.gg stats page",
+"ua": "Mozilla/5.0 (juno-asset-farm)",
+"delay": 1,
+"retries": 2,
+"backoff": 20
+},
+{
+"type": "url",
+"url": "https://gol.gg/game/stats/83650/page-game/",
+"name": "g83650_page-game.html",
+"license": "gol.gg stats page",
+"ua": "Mozilla/5.0 (juno-asset-farm)",
+"delay": 1,
+"retries": 2,
+"backoff": 20
+},
+{
+"type": "url",
+"url": "https://gol.gg/game/stats/83650/page-timeline/",
+"name": "g83650_page-timeline.html",
+"license": "gol.gg stats page",
+"ua": "Mozilla/5.0 (juno-asset-farm)",
+"delay": 1,
+"retries": 2,
+"backoff": 20
+},
+{
+"type": "url",
+"url": "https://gol.gg/game/stats/83650/page-summary/",
+"name": "g83650_page-summary.html",
+"license": "gol.gg stats page",
+"ua": "Mozilla/5.0 (juno-asset-farm)",
+"delay": 1,
+"retries": 2,
+"backoff": 20
+},
+{
+"type": "url",
+"url": "https://gol.gg/game/stats/83651/page-game/",
+"name": "g83651_page-game.html",
+"license": "gol.gg stats page",
+"ua": "Mozilla/5.0 (juno-asset-farm)",
+"delay": 1,
+"retries": 2,
+"backoff": 20
+},
+{
+"type": "url",
+"url": "https://gol.gg/game/stats/83651/page-timeline/",
+"name": "g83651_page-timeline.html",
+"license": "gol.gg stats page",
+"ua": "Mozilla/5.0 (juno-asset-farm)",
+"delay": 1,
+"retries": 2,
+"backoff": 20
+},
+{
+"type": "url",
+"url": "https://gol.gg/game/stats/83651/page-summary/",
+"name": "g83651_page-summary.html",
+"license": "gol.gg stats page",
+"ua": "Mozilla/5.0 (juno-asset-farm)",
+"delay": 1,
+"retries": 2,
+"backoff": 20
+},
+{
+"type": "url",
+"url": "https://gol.gg/game/stats/83652/page-game/",
+"name": "g83652_page-game.html",
+"license": "gol.gg stats page",
+"ua": "Mozilla/5.0 (juno-asset-farm)",
+"delay": 1,
+"retries": 2,
+"backoff": 20
+},
+{
+"type": "url",
+"url": "https://gol.gg/game/stats/83652/page-timeline/",
+"name": "g83652_page-timeline.html",
+"license": "gol.gg stats page",
+"ua": "Mozilla/5.0 (juno-asset-farm)",
+"delay": 1,
+"retries": 2,
+"backoff": 20
+},
+{
+"type": "url",
+"url": "https://gol.gg/game/stats/83652/page-summary/",
+"name": "g83652_page-summary.html",
+"license": "gol.gg stats page",
+"ua": "Mozilla/5.0 (juno-asset-farm)",
+"delay": 1,
+"retries": 2,
+"backoff": 20
+},
+{
+"type": "url",
+"url": "https://gol.gg/game/stats/83653/page-game/",
+"name": "g83653_page-game.html",
+"license": "gol.gg stats page",
+"ua": "Mozilla/5.0 (juno-asset-farm)",
+"delay": 1,
+"retries": 2,
+"backoff": 20
+},
+{
+"type": "url",
+"url": "https://gol.gg/game/stats/83653/page-timeline/",
+"name": "g83653_page-timeline.html",
+"license": "gol.gg stats page",
+"ua": "Mozilla/5.0 (juno-asset-farm)",
+"delay": 1,
+"retries": 2,
+"backoff": 20
+},
+{
+"type": "url",
+"url": "https://gol.gg/game/stats/83653/page-summary/",
+"name": "g83653_page-summary.html",
+"license": "gol.gg stats page",
+"ua": "Mozilla/5.0 (juno-asset-farm)",
+"delay": 1,
+"retries": 2,
+"backoff": 20
+},
+{
+"type": "url",
+"url": "https://gol.gg/game/stats/83654/page-game/",
+"name": "g83654_page-game.html",
+"license": "gol.gg stats page",
+"ua": "Mozilla/5.0 (juno-asset-farm)",
+"delay": 1,
+"retries": 2,
+"backoff": 20
+},
+{
+"type": "url",
+"url": "https://gol.gg/game/stats/83654/page-timeline/",
+"name": "g83654_page-timeline.html",
+"license": "gol.gg stats page",
+"ua": "Mozilla/5.0 (juno-asset-farm)",
+"delay": 1,
+"retries": 2,
+"backoff": 20
+},
+{
+"type": "url",
+"url": "https://gol.gg/game/stats/83654/page-summary/",
+"name": "g83654_page-summary.html",
+"license": "gol.gg stats page",
+"ua": "Mozilla/5.0 (juno-asset-farm)",
+"delay": 1,
+"retries": 2,
+"backoff": 20
+},
+{
+"type": "url",
+"url": "https://gol.gg/game/stats/83655/page-game/",
+"name": "g83655_page-game.html",
+"license": "gol.gg stats page",
+"ua": "Mozilla/5.0 (juno-asset-farm)",
+"delay": 1,
+"retries": 2,
+"backoff": 20
+},
+{
+"type": "url",
+"url": "https://gol.gg/game/stats/83655/page-timeline/",
+"name": "g83655_page-timeline.html",
+"license": "gol.gg stats page",
+"ua": "Mozilla/5.0 (juno-asset-farm)",
+"delay": 1,
+"retries": 2,
+"backoff": 20
+},
+{
+"type": "url",
+"url": "https://gol.gg/game/stats/83655/page-summary/",
+"name": "g83655_page-summary.html",
+"license": "gol.gg stats page",
+"ua": "Mozilla/5.0 (juno-asset-farm)",
+"delay": 1,
+"retries": 2,
+"backoff": 20
+},
+{
+"type": "url",
+"url": "https://gol.gg/game/stats/83656/page-game/",
+"name": "g83656_page-game.html",
+"license": "gol.gg stats page",
+"ua": "Mozilla/5.0 (juno-asset-farm)",
+"delay": 1,
+"retries": 2,
+"backoff": 20
+},
+{
+"type": "url",
+"url": "https://gol.gg/game/stats/83656/page-timeline/",
+"name": "g83656_page-timeline.html",
+"license": "gol.gg stats page",
+"ua": "Mozilla/5.0 (juno-asset-farm)",
+"delay": 1,
+"retries": 2,
+"backoff": 20
+},
+{
+"type": "url",
+"url": "https://gol.gg/game/stats/83656/page-summary/",
+"name": "g83656_page-summary.html",
+"license": "gol.gg stats page",
+"ua": "Mozilla/5.0 (juno-asset-farm)",
+"delay": 1,
+"retries": 2,
+"backoff": 20
+},
+{
+"type": "url",
+"url": "https://gol.gg/game/stats/83657/page-game/",
+"name": "g83657_page-game.html",
+"license": "gol.gg stats page",
+"ua": "Mozilla/5.0 (juno-asset-farm)",
+"delay": 1,
+"retries": 2,
+"backoff": 20
+},
+{
+"type": "url",
+"url": "https://gol.gg/game/stats/83657/page-timeline/",
+"name": "g83657_page-timeline.html",
+"license": "gol.gg stats page",
+"ua": "Mozilla/5.0 (juno-asset-farm)",
+"delay": 1,
+"retries": 2,
+"backoff": 20
+},
+{
+"type": "url",
+"url": "https://gol.gg/game/stats/83657/page-summary/",
+"name": "g83657_page-summary.html",
+"license": "gol.gg stats page",
+"ua": "Mozilla/5.0 (juno-asset-farm)",
+"delay": 1,
+"retries": 2,
+"backoff": 20
+},
+{
+"type": "url",
+"url": "https://gol.gg/game/stats/83658/page-game/",
+"name": "g83658_page-game.html",
+"license": "gol.gg stats page",
+"ua": "Mozilla/5.0 (juno-asset-farm)",
+"delay": 1,
+"retries": 2,
+"backoff": 20
+},
+{
+"type": "url",
+"url": "https://gol.gg/game/stats/83658/page-timeline/",
+"name": "g83658_page-timeline.html",
+"license": "gol.gg stats page",
+"ua": "Mozilla/5.0 (juno-asset-farm)",
+"delay": 1,
+"retries": 2,
+"backoff": 20
+},
+{
+"type": "url",
+"url": "https://gol.gg/game/stats/83658/page-summary/",
+"name": "g83658_page-summary.html",
+"license": "gol.gg stats page",
+"ua": "Mozilla/5.0 (juno-asset-farm)",
+"delay": 1,
+"retries": 2,
+"backoff": 20
+},
+{
+"type": "url",
+"url": "https://gol.gg/game/stats/83659/page-game/",
+"name": "g83659_page-game.html",
+"license": "gol.gg stats page",
+"ua": "Mozilla/5.0 (juno-asset-farm)",
+"delay": 1,
+"retries": 2,
+"backoff": 20
+},
+{
+"type": "url",
+"url": "https://gol.gg/game/stats/83659/page-timeline/",
+"name": "g83659_page-timeline.html",
+"license": "gol.gg stats page",
+"ua": "Mozilla/5.0 (juno-asset-farm)",
+"delay": 1,
+"retries": 2,
+"backoff": 20
+},
+{
+"type": "url",
+"url": "https://gol.gg/game/stats/83659/page-summary/",
+"name": "g83659_page-summary.html",
+"license": "gol.gg stats page",
+"ua": "Mozilla/5.0 (juno-asset-farm)",
+"delay": 1,
+"retries": 2,
+"backoff": 20
+},
+{
+"type": "url",
+"url": "https://gol.gg/game/stats/83660/page-game/",
+"name": "g83660_page-game.html",
+"license": "gol.gg stats page",
+"ua": "Mozilla/5.0 (juno-asset-farm)",
+"delay": 1,
+"retries": 2,
+"backoff": 20
+},
+{
+"type": "url",
+"url": "https://gol.gg/game/stats/83660/page-timeline/",
+"name": "g83660_page-timeline.html",
+"license": "gol.gg stats page",
+"ua": "Mozilla/5.0 (juno-asset-farm)",
+"delay": 1,
+"retries": 2,
+"backoff": 20
+},
+{
+"type": "url",
+"url": "https://gol.gg/game/stats/83660/page-summary/",
+"name": "g83660_page-summary.html",
+"license": "gol.gg stats page",
+"ua": "Mozilla/5.0 (juno-asset-farm)",
+"delay": 1,
+"retries": 2,
+"backoff": 20
+},
+{
+"type": "url",
+"url": "https://gol.gg/game/stats/83661/page-game/",
+"name": "g83661_page-game.html",
+"license": "gol.gg stats page",
+"ua": "Mozilla/5.0 (juno-asset-farm)",
+"delay": 1,
+"retries": 2,
+"backoff": 20
+},
+{
+"type": "url",
+"url": "https://gol.gg/game/stats/83661/page-timeline/",
+"name": "g83661_page-timeline.html",
+"license": "gol.gg stats page",
+"ua": "Mozilla/5.0 (juno-asset-farm)",
+"delay": 1,
+"retries": 2,
+"backoff": 20
+},
+{
+"type": "url",
+"url": "https://gol.gg/game/stats/83661/page-summary/",
+"name": "g83661_page-summary.html",
+"license": "gol.gg stats page",
+"ua": "Mozilla/5.0 (juno-asset-farm)",
+"delay": 1,
+"retries": 2,
+"backoff": 20
+},
+{
+"type": "url",
+"url": "https://gol.gg/game/stats/83662/page-game/",
+"name": "g83662_page-game.html",
+"license": "gol.gg stats page",
+"ua": "Mozilla/5.0 (juno-asset-farm)",
+"delay": 1,
+"retries": 2,
+"backoff": 20
+},
+{
+"type": "url",
+"url": "https://gol.gg/game/stats/83662/page-timeline/",
+"name": "g83662_page-timeline.html",
+"license": "gol.gg stats page",
+"ua": "Mozilla/5.0 (juno-asset-farm)",
+"delay": 1,
+"retries": 2,
+"backoff": 20
+},
+{
+"type": "url",
+"url": "https://gol.gg/game/stats/83662/page-summary/",
+"name": "g83662_page-summary.html",
+"license": "gol.gg stats page",
+"ua": "Mozilla/5.0 (juno-asset-farm)",
+"delay": 1,
+"retries": 2,
+"backoff": 20
+},
+{
+"type": "url",
+"url": "https://gol.gg/game/stats/83663/page-game/",
+"name": "g83663_page-game.html",
+"license": "gol.gg stats page",
+"ua": "Mozilla/5.0 (juno-asset-farm)",
+"delay": 1,
+"retries": 2,
+"backoff": 20
+},
+{
+"type": "url",
+"url": "https://gol.gg/game/stats/83663/page-timeline/",
+"name": "g83663_page-timeline.html",
+"license": "gol.gg stats page",
+"ua": "Mozilla/5.0 (juno-asset-farm)",
+"delay": 1,
+"retries": 2,
+"backoff": 20
+},
+{
+"type": "url",
+"url": "https://gol.gg/game/stats/83663/page-summary/",
+"name": "g83663_page-summary.html",
+"license": "gol.gg stats page",
+"ua": "Mozilla/5.0 (juno-asset-farm)",
+"delay": 1,
+"retries": 2,
+"backoff": 20
+},
+{
+"type": "url",
+"url": "https://gol.gg/champion/list/season-S16/split-ALL/tournament-Worlds%202026%20Main%20Event/",
+"name": "champs_worlds26_main.html",
+"license": "gol.gg stats page",
+"ua": "Mozilla/5.0 (juno-asset-farm)",
+"delay": 1
+},
+{
+"type": "url",
+"url": "https://gol.gg/champion/list/season-S16/split-ALL/tournament-Worlds%202026%20Play-In/",
+"name": "champs_worlds26_playin.html",
+"license": "gol.gg stats page",
+"ua": "Mozilla/5.0 (juno-asset-farm)",
+"delay": 1
+},
+{
+"type": "url",
+"url": "https://ddragon.leagueoflegends.com/api/versions.json",
+"name": "dd_versions.json",
+"license": "Riot Data Dragon (fan content policy)",
+"ua": "Mozilla/5.0 (juno-asset-farm)"
+}
+]
 }
