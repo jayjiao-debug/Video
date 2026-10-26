@@ -145,9 +145,9 @@ export const CounterLayer: React.FC<{t: number}> = ({t}) => { const c = counterA
 const curlD = (x: number, y: number, r: number, dir = 1) => { const pts: string[] = [];
 	for (let i = 0; i <= 30; i++) { const th = (i / 30) * 2.2 * Math.PI, rr = r * (0.15 + 0.85 * i / 30); pts.push(`${(x + dir * rr * Math.cos(th)).toFixed(1)},${(y - rr * Math.sin(th)).toFixed(1)}`); }
 	return 'M' + pts.join('L'); };
-export const TitleCard: React.FC<{t: number}> = ({t}) => { if (t < TITLE_T[0] || t >= TITLE_T[1] + 0.4) return null;
+export const TitleCard: React.FC<{t: number}> = ({t}) => { if (t < TITLE_T[0] || t >= TITLE_T[1]) return null;   // gone before Q1's centred row arrives at 12.50
 	const f = (t - TITLE_T[0]) * 30, sc = f < 4 ? 1.25 - 0.25 * f / 4 : 1 + 0.03 * Math.exp(-(f - 4) / 9) * Math.sin(2 * Math.PI * (f - 4) / 8) * (f < 20 ? 1 : 0);
-	const o = cl(f / 2) * (1 - seg(t, TITLE_T[1] - 0.1, TITLE_T[1] + 0.35)), fs = 116, ls = 0.06;
+	const o = cl(f / 2) * (1 - seg(t, TITLE_T[1] - 0.3, TITLE_T[1] - 0.02)), fs = 116, ls = 0.06;
 	const PX = 960, PY = 206, PW = 1180, PH2 = 296, OY = PY + PH2 / 2 - 10;
 	return <div style={{position: 'absolute', inset: 0, opacity: o}}>
 		<div style={{position: 'absolute', left: PX - PW / 2 - 120, top: PY - PH2 / 2 - 90, width: PW + 240, height: PH2 + 180, background: 'radial-gradient(closest-side, rgba(10,5,3,0.82), rgba(10,5,3,0.72) 60%, rgba(10,5,3,0))'}} />
