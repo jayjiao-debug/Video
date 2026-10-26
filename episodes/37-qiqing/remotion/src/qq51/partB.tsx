@@ -68,8 +68,8 @@ const SongStreet: React.FC<{t: number}> = ({t}) => {
 	const onCtr: P2 = [E + 150, ctr.top], toBuyer: P2 = [E + 250, ctr.top];
 	const put = ease(seg(t, sA1 - 0.05, 56.8)), slide = ease(seg(t, 56.85, 57.15));
 	const blk: P2 = t < 56.85 ? [lerp(carry[0], onCtr[0], put), lerp(carry[1] + 35, onCtr[1], put)] : [lerp(onCtr[0], toBuyer[0], slide), onCtr[1]];
-	const buyerLeave = 0, bx = E + 380, bLift = ease(seg(t, 57.3, 57.6));
-	const blkB: P2 = t >= 57.3 ? [lerp(toBuyer[0], bx - 0.25 * 480, bLift), lerp(toBuyer[1], SG - 0.47 * 480 + 30, bLift)] : blk;
+	const buyerLeave = t > 57.35 ? (t - 57.35) * 300 : 0, bx = E + 380 - buyerLeave, bLift = ease(seg(t, 57.3, 57.6));
+	const blkB: P2 = t >= 57.3 ? [lerp(toBuyer[0], bx - 0.25 * 400, bLift), lerp(toBuyer[1], SG - 40 - 0.47 * 400 + 30, bLift)] : blk;
 	/* the coin: buyer's hand → over the counter → his open hand on beat 100 */
 	const cu = seg(t, 56.75, BA(100)), coinP: P2 = [lerp(E + 300, E + 128, cu), lerp(560, 604, cu) - Math.sin(Math.PI * cu) * 50];
 	let wp = wp0;
@@ -129,9 +129,9 @@ const SongStreet: React.FC<{t: number}> = ({t}) => {
 			{/* the ordinary stall where he hands the block across */}
 			<rect x={ctr.x0} y={ctr.top} width={ctr.x1 - ctr.x0} height={18} fill="#3A2116" stroke={B.gold} strokeOpacity={0.45} strokeWidth={1.5} />
 			<path d={`M${ctr.x0 + 10},${ctr.top + 18} H${ctr.x1 - 10} V${SG} H${ctr.x0 + 10} Z`} fill={BG.beam} stroke={BG.line} strokeWidth={1.5} />
-			<Extra x={bx} g={SG - 22} h={450} pose={t >= 57.7 ? ikArm(walkPose(buyerLeave / (STRIDE * 480)), 'L', toBody(blkB[0] + 40, blkB[1] - 10, bx, SG - 22, 450, true)) : ikArm(grounded({lean: 8, neck: 6, lt: 3, lk: 3, rt: -4, rk: 4, la: 40, le: 30, ra: 4, re: 12}), 'L', t < 56.95 ? toBody(E + 300, 572, bx, SG - 22, 450, true) : toBody(blkB[0] + 40, blkB[1] - 10, bx, SG - 22, 450, true))} era="song" flip look={{dress: 'tunic', legs: 'trousers', head: 'bun'}} rimO={0.55} />
+			<Extra x={bx} g={SG - 40} h={400} pose={t >= 57.35 ? ikArm(walkPose(buyerLeave / (STRIDE * 400)), 'L', toBody(blkB[0] + 34, blkB[1] - 8, bx, SG - 40, 400, true)) : ikArm(grounded({lean: 8, neck: 6, lt: 3, lk: 3, rt: -4, rk: 4, la: 40, le: 30, ra: 4, re: 12}), 'L', t < 56.95 ? toBody(E + 300, 572, bx, SG - 40, 400, true) : toBody(blkB[0] + 34, blkB[1] - 8, bx, SG - 40, 400, true))} era="song" flip look={{dress: 'tunic', legs: 'trousers', head: 'bun'}} rimO={0.55} />
 			{t < 57.1 + 0.6 && t > 56.7 && cu < 1 && <Coin x={coinP[0]} y={coinP[1]} r={12} />}
-			{(t < 58.6) && <IceBlock x={(t >= 57.3 ? blkB : blk)[0] - 48} y={(t >= 57.3 ? blkB : blk)[1]} w={96} h={66} d={36} seed={8} />}
+			{<IceBlock x={(t >= 57.3 ? blkB : blk)[0] - 48} y={(t >= 57.3 ? blkB : blk)[1]} w={96} h={66} d={36} seed={8} />}
 			{/* the best stall: big umbrella, the keeper, every vessel silver (KF10) */}
 			<Umbrella x={1440} y={430} r={340} g={CT0} />
 			<Extra x={vx} g={SG} h={vh} pose={vp} era="song" flip look={{dress: 'robe', head: 'futou', build: 1.04}} rimO={0.55} />
@@ -416,8 +416,7 @@ const Hutong: React.FC<{t: number}> = ({t}) => {
 				<rect x={x + 90 + 90 * 0.7 * o} y={548} width={90 * (1 - 0.7 * o)} height={HG - 548} fill="#2A1712" stroke={B.gold} strokeOpacity={0.3} strokeWidth={1.2} />
 				{isO && o > 0.3 && <Extra x={x + 90} g={HG} h={430} pose={grounded({lean: 10, neck: 10, lt: 3, lk: 3, rt: -4, rk: 4, la: 10, le: 20, ra: 4, re: 12})} era="qing" flip look={{dress: 'robe', head: 'bun'}} rimO={0.5 * o} />}
 			</g>; })}
-			{/* a neighbour at the corner turns at the first clang */}
-			<Extra x={1900} g={HG - 24} h={380} pose={grounded({lean: 2, neck: headTurn ? 18 : 2, lt: 3, lk: 3, rt: -4, rk: 4, la: 4, le: 12, ra: 4, re: 12})} era="qing" flip={headTurn} look={{dress: 'tunic', legs: 'trousers', head: 'bald'}} rimO={0.3} />
+			{/* the reaction: the door ahead opens at the second clang and someone leans out */}
 			<Floor g={HG} x0={0} x1={5200} />
 			<Pool id="hF" x={wx + 120} y={HG + 4} rx={420} ry={44} a={0.3} />
 			{/* the seller: shoulder pole with two tubs, two brass bowls in his left hand */}
