@@ -90,6 +90,8 @@ export const SubsCentre: React.FC<{rows: string[]; gloss: string; q: boolean; n:
 		</div></div>; };
 /** H1 (frame 0): row 1 is on screen from frame 0; row 2 types 1.55–1.95 so 不会冷 is read by ~2.1 (the light dies on BA(3)) */
 export const H1_ROW2: [number, number] = [1.55, 1.95];
+/** H1 sits over the lit fridge: a deeper soft shade behind both rows */
+const TH_H1 = {...thB, poolA: 0.66};
 export const Subtitles: React.FC<{t: number}> = ({t}) => {
 	const i = lineAt(t); if (i < 0 || t >= CARD_T) return null;
 	const L = LINES51[i], {rows, gloss} = split(L.s);
@@ -97,7 +99,7 @@ export const Subtitles: React.FC<{t: number}> = ({t}) => {
 	const n = rows.map((r, k) => (i === 0 && k === 0 ? 1e9 : k === 0 ? nTyped(r, t, L.a) : i === 0 ? nTyped(r, t, r2, H1_ROW2[1] - H1_ROW2[0]) : nTyped(r, t, r2)));
 	if (L.c) return <SubsCentre rows={rows} gloss={gloss} q={L.q} n={L.q ? rows.map(() => 1e9) : n} />;
 	const vis = rows.map((r, k) => ({s: r, n: n[k]})).filter((r, k) => k === 0 || t >= r2);
-	return <Subs rows={vis} th={thB} />;
+	return <Subs rows={vis} th={i === 0 ? TH_H1 : thB} />;
 };
 
 /* ---------- stamp: line 1 (year · place) fades in after the subtitle has typed and HOLDS while unchanged; a changed note

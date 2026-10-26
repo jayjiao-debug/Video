@@ -64,16 +64,16 @@ const SongStreet: React.FC<{t: number}> = ({t}) => {
 	const {x: wx, pose: wp0} = gait(sWx, t, SH, SV * 0.8);
 	/* the block he carries in (world), then on the counter, then the buyer's */
 	const E = S_E, ctr = {x0: E + 80, x1: E + 300, top: 640};
-	const carry: P2 = [wx + 0.23 * SH, SG - 0.47 * SH];
+	const carry: P2 = [wx + 0.13 * SH, SG - 0.44 * SH];
 	const onCtr: P2 = [E + 150, ctr.top], toBuyer: P2 = [E + 250, ctr.top];
 	const put = ease(seg(t, sA1 - 0.05, 56.8)), slide = ease(seg(t, 56.85, 57.15));
 	const blk: P2 = t < 56.85 ? [lerp(carry[0], onCtr[0], put), lerp(carry[1] + 35, onCtr[1], put)] : [lerp(onCtr[0], toBuyer[0], slide), onCtr[1]];
-	const buyerLeave = t > 57.35 ? (t - 57.35) * 300 : 0, bx = E + 380 - buyerLeave, bLift = ease(seg(t, 57.3, 57.6));
-	const blkB: P2 = t >= 57.3 ? [lerp(toBuyer[0], bx - 0.25 * 400, bLift), lerp(toBuyer[1], SG - 40 - 0.47 * 400 + 30, bLift)] : blk;
+	const buyerLeave = trap(t, 57.3, 62, 660, 0.3, 0.01), bx = E + 380 + buyerLeave, bLift = ease(seg(t, 57.3, 57.6));
+	const blkB: P2 = t >= 57.3 ? [lerp(toBuyer[0], bx + 0.25 * 400, bLift), lerp(toBuyer[1], SG - 40 - 0.47 * 400 + 30, bLift)] : blk;
 	/* the coin: buyer's hand → over the counter → his open hand on beat 100 */
 	const cu = seg(t, 56.75, BA(100)), coinP: P2 = [lerp(E + 300, E + 128, cu), lerp(560, 604, cu) - Math.sin(Math.PI * cu) * 50];
 	let wp = wp0;
-	if (t < 56.82) { const bw = 96; wp = ikArm(ikArm(wp, 'L', toBody(blk[0] - bw / 2 + 4, blk[1] - 20, wx, SG, SH)), 'R', toBody(blk[0] + bw / 2 - 10, blk[1] - 30, wx, SG, SH)); }
+	if (t < 56.82) { const bw = 96; wp = ikArm(ikArm(wp, 'L', toBody(blk[0] + bw / 2 - 18, blk[1] - 8, wx, SG, SH)), 'R', toBody(blk[0] - bw / 2 + 10, blk[1] - 34, wx, SG, SH)); }
 	else if (t < 57.5) { const k = bump(t, 56.82, 0.68); wp = ikArm(wp, 'L', toBody(lerp(wx + 0.2 * SH, E + 118, Math.min(1, k * 1.4)), lerp(SG - 0.42 * SH, 618, Math.min(1, k * 1.4)), wx, SG, SH)); }
 	/* the bowl at the silver stall: scooped at the basin, handed across, then carried */
 	const bowlUp = ease(seg(t, 59.7, 60.5)), take = t >= 61.55;
@@ -129,7 +129,7 @@ const SongStreet: React.FC<{t: number}> = ({t}) => {
 			{/* the ordinary stall where he hands the block across */}
 			<rect x={ctr.x0} y={ctr.top} width={ctr.x1 - ctr.x0} height={18} fill="#3A2116" stroke={B.gold} strokeOpacity={0.45} strokeWidth={1.5} />
 			<path d={`M${ctr.x0 + 10},${ctr.top + 18} H${ctr.x1 - 10} V${SG} H${ctr.x0 + 10} Z`} fill={BG.beam} stroke={BG.line} strokeWidth={1.5} />
-			<Extra x={bx} g={SG - 40} h={400} pose={t >= 57.35 ? ikArm(walkPose(buyerLeave / (STRIDE * 400)), 'L', toBody(blkB[0] + 34, blkB[1] - 8, bx, SG - 40, 400, true)) : ikArm(grounded({lean: 8, neck: 6, lt: 3, lk: 3, rt: -4, rk: 4, la: 40, le: 30, ra: 4, re: 12}), 'L', t < 56.95 ? toBody(E + 300, 572, bx, SG - 40, 400, true) : toBody(blkB[0] + 34, blkB[1] - 8, bx, SG - 40, 400, true))} era="song" flip look={{dress: 'tunic', legs: 'trousers', head: 'bun'}} rimO={0.55} />
+			<Extra x={bx} g={SG - 40} h={400} pose={t >= 57.35 ? ikArm(walkPose(buyerLeave / (STRIDE * 400)), 'L', toBody(blkB[0] - 34, blkB[1] - 8, bx, SG - 40, 400)) : ikArm(grounded({lean: 8, neck: 6, lt: 3, lk: 3, rt: -4, rk: 4, la: 40, le: 30, ra: 4, re: 12}), 'L', t < 56.95 ? toBody(E + 300, 572, bx, SG - 40, 400, true) : toBody(blkB[0] + 34, blkB[1] - 8, bx, SG - 40, 400, true))} era="song" flip look={{dress: 'tunic', legs: 'trousers', head: 'bun'}} rimO={0.55} />
 			{t < 57.1 + 0.6 && t > 56.7 && cu < 1 && <Coin x={coinP[0]} y={coinP[1]} r={12} />}
 			{<IceBlock x={(t >= 57.3 ? blkB : blk)[0] - 48} y={(t >= 57.3 ? blkB : blk)[1]} w={96} h={66} d={36} seed={8} />}
 			{/* the best stall: big umbrella, the keeper, every vessel silver (KF10) */}
@@ -306,16 +306,16 @@ const Vault: React.FC<{t: number}> = ({t}) => {
    C5 · the queue by grade, 78.5–81.2: three officials with slips; big, medium, small blocks land in their hands on beats.
    =================================================================================================================== */
 const WG = 905, WH = 560;
-const wWx = (t: number) => 790 + trap(t, 77.4, 78.2, 520, 0.3, 0.3) + trap(t, 78.45, 82, vNat(WH), 0.35, 0.01);
+const wWx = (t: number) => 720 + trap(t, 77.4, 78.2, 620, 0.3, 0.3) + trap(t, 78.45, 82, vNat(WH), 0.35, 0.01);
 const CellarWall: React.FC<{cam: number; summer?: number}> = ({cam, summer = 1}) => <g transform={`translate(${-cam},0)`}>
 	<rect x={-400} y={330} width={3000} height={WG - 330} fill="#2A1712" />
 	<path d={Array.from({length: 12}, (_, i) => `M-400,${360 + i * 46} H2600`).join(' ')} stroke={B.gold} strokeOpacity={0.08} strokeWidth={1.5} />
 	<path d="M-420,330 L-400,300 H2600 L2620,330 Z" fill="#1A0E09" stroke={B.gold} strokeOpacity={0.4} strokeWidth={2} />
 	<Pool id="cwS" x={900} y={500} rx={1100} ry={420} a={0.32 * summer} col="#FFC070" />
 	{/* the cellar mouth: a dark arch with the cold glow of ice inside */}
-	<path d={`M1450,${WG} V600 Q1580,500 1710,600 V${WG} Z`} fill="#0C0A0C" stroke={B.goldL} strokeOpacity={0.5} strokeWidth={2.5} />
-	<ellipse cx={1580} cy={WG - 40} rx={110} ry={60} fill="url(#iceGlow)" />
-	<IceBlock x={1500} y={WG - 6} w={70} h={48} d={22} seed={31} marks={false} /><IceBlock x={1580} y={WG - 6} w={64} h={44} d={22} seed={32} marks={false} /><IceBlock x={1530} y={WG - 54} w={66} h={40} d={20} seed={33} marks={false} />
+	<path d={`M1320,${WG} V600 Q1440,500 1560,600 V${WG} Z`} fill="#0C0A0C" stroke={B.goldL} strokeOpacity={0.5} strokeWidth={2.5} />
+	<ellipse cx={1440} cy={WG - 40} rx={100} ry={60} fill="url(#iceGlow)" />
+	<IceBlock x={1362} y={WG - 6} w={66} h={46} d={20} seed={31} marks={false} /><IceBlock x={1436} y={WG - 6} w={60} h={42} d={20} seed={32} marks={false} /><IceBlock x={1390} y={WG - 52} w={62} h={38} d={18} seed={33} marks={false} />
 </g>;
 const Window: React.FC<{t: number}> = ({t}) => {
 	/* one set, 75.3–81.6: the summer street by the cellar. Push in on the hand-over (the slip ≥ 160 px, its seal on 76.523), he
@@ -326,7 +326,7 @@ const Window: React.FC<{t: number}> = ({t}) => {
 	const zp = 1 + 0.28 * ease(seg(t, 76.0, 76.9)) * (1 - ease(seg(t, 77.6, 78.3))), truck = 260 * ease(seg(t, 78.2, 79.2));
 	const press = t < seal ? ease(seg(t, seal - 0.35, seal)) : 1 - ease(seg(t, seal + 0.08, seal + 0.4));
 	const slipOn = t < 76.95, give = ease(seg(t, 76.95, 77.35));
-	const slipPos: P2 = slipOn ? [1010, sill - 4] : [lerp(1010, wx + 0.3 * WH, give), lerp(sill - 4, WG - 0.56 * WH, give)];
+	const slipPos: P2 = slipOn ? [1010, sill - 4] : [lerp(1010, wx + 0.33 * WH, give), lerp(sill - 4, WG - 0.56 * WH, give)];
 	let kp = grounded({lean: 18, neck: 14, lt: 3, lk: 4, rt: -4, rk: 4, la: 50, le: 30, ra: 40, re: 30});
 	kp = ikArm(kp, 'L', toBody(1030, lerp(sill - 70, sill - 18, press), kx, WG, kh, true));
 	if (!slipOn && give < 1) kp = ikArm(kp, 'R', toBody(slipPos[0] + 36, slipPos[1] + 10, kx, WG, kh, true));
@@ -344,14 +344,14 @@ const Window: React.FC<{t: number}> = ({t}) => {
 			{/* the sun shaft of a summer day */}
 			<path d="M520,300 L900,300 L1300,905 L760,905 Z" fill="#FFD9A0" opacity={0.08} />
 			{/* the office window, lit inside: lamp, shelf, ledger; the clerk; his seal coming down on the slip */}
-			<rect x={930} y={430} width={420} height={sill - 430} fill="#4A2A16" stroke={B.goldL} strokeOpacity={0.55} strokeWidth={3} />
-			<Pool id="cwL" x={1290} y={520} rx={260} ry={200} a={0.55} />
-			<path d="M950,500 H1330 M950,560 H1330" stroke="#2A160C" strokeWidth={6} /><path d={Array.from({length: 8}, (_, i) => `M${965 + i * 44},500 v-34`).join(' ')} stroke="#6A3A1C" strokeWidth={9} />
-			<rect x={1282} y={600} width={16} height={30} rx={4} fill="#3A2116" /><ellipse cx={1290} cy={592} rx={7} ry={11} fill="#FFE2A8" />
+			<rect x={930} y={430} width={350} height={sill - 430} fill="#4A2A16" stroke={B.goldL} strokeOpacity={0.55} strokeWidth={3} />
+			<Pool id="cwL" x={1220} y={520} rx={260} ry={200} a={0.55} />
+			<path d="M950,500 H1260 M950,560 H1260" stroke="#2A160C" strokeWidth={6} /><path d={Array.from({length: 6}, (_, i) => `M${965 + i * 44},500 v-34`).join(' ')} stroke="#6A3A1C" strokeWidth={9} />
+			<rect x={1232} y={600} width={16} height={30} rx={4} fill="#3A2116" /><ellipse cx={1240} cy={592} rx={7} ry={11} fill="#FFE2A8" />
 			<Extra x={kx} g={WG} h={kh} pose={kp} era="qing" flip look={{dress: 'robe', head: 'bald', beard: 'short', build: 1.06}} rimO={0.55} />
-			<rect x={910} y={sill} width={460} height={22} fill="#3A2116" stroke={B.gold} strokeOpacity={0.5} strokeWidth={1.5} />
+			<rect x={910} y={sill} width={390} height={22} fill="#3A2116" stroke={B.gold} strokeOpacity={0.5} strokeWidth={1.5} />
 			<rect x={1180} y={sill - 14} width={90} height={14} fill="#C9A86A" stroke="#5A3A18" strokeWidth={1} />
-			<rect x={930} y={sill + 22} width={420} height={WG - sill - 22} fill="#2A1712" />
+			<rect x={930} y={sill + 22} width={350} height={WG - sill - 22} fill="#2A1712" />
 			{(() => { const hd = J(kp, 'LHand', kx, WG, kh, true); return <g><rect x={hd[0] - 30} y={hd[1] + 2} width={26} height={22} rx={3} fill="#5A3A20" stroke={B.gold} strokeOpacity={0.5} strokeWidth={1.2} /><rect x={hd[0] - 28} y={hd[1] + 22} width={22} height={6} fill="#BF3420" /></g>; })()}
 			{t < BB(7) + 0.05 && <g transform={`translate(${slipPos[0]},${slipPos[1]}) rotate(${slipOn ? 0 : -6})`}>
 				{slipOn ? <><path d="M-60,0 L60,0 L68,-14 L-52,-14 Z" fill="#EFE2C4" stroke="#8A6A3A" strokeWidth={1.2} />{t >= seal && <rect x={6} y={-13} width={28} height={11} fill="#BF3420" />}</>
@@ -373,7 +373,7 @@ const Window: React.FC<{t: number}> = ({t}) => {
 					{has && <g transform={`translate(${bx},${by}) scale(${0.6 + 0.4 * k}) translate(${-bx},${-by})`}><IceBlock x={bx - q.s / 2} y={by} w={q.s} h={q.s * 0.66} d={q.s * 0.35} seed={40 + i} /></g>}
 				</g>; })}
 			<Pool id="cwF" x={wx + 60} y={WG + 4} rx={320} ry={42} a={0.3} />
-			{blockOut > 0 && <IceBlock x={lerp(1520, wx + 0.28 * WH - 40, blockOut)} y={lerp(WG - 6, WG - 0.4 * WH, blockOut)} w={80} h={56} d={30} seed={34} />}
+			{blockOut > 0 && <IceBlock x={lerp(1380, wx + 0.28 * WH - 40, blockOut)} y={lerp(WG - 6, WG - 0.4 * WH, blockOut)} w={80} h={56} d={30} seed={34} />}
 			<Wk x={wx} g={WG} h={WH} pose={handed ? ikArm(ikArm(wp, 'L', toBody(wx + 0.28 * WH - 36, WG - 0.4 * WH - 20, wx, WG, WH)), 'R', toBody(wx + 0.28 * WH + 36, WG - 0.4 * WH - 30, wx, WG, WH)) : wp} era="qing" T={t} />
 		</g>
 	</Scene>; };
@@ -496,7 +496,7 @@ const Machine: React.FC<{t: number}> = ({t}) => {
 	const fw: P2 = [520, 620], R = 190, crank: P2 = [fw[0] + 60 * Math.cos(rot * Math.PI / 180), fw[1] + 60 * Math.sin(rot * Math.PI / 180)];
 	const tank = {x: 1180, y: 600, w: 380, h: 300};
 	/* 97.5–97.95: push into the glowing tank; its light becomes the one lit window of the grid */
-	const TW: P2 = [1370, 735], zp = Math.exp(lerp(0, Math.log(14), Math.pow(seg(t, 97.5, 97.95), 1.6))), kp = (zp - 1) / 13;
+	const TW: P2 = [1370, 735], zp = Math.exp(lerp(0, Math.log(3.4), Math.pow(seg(t, 97.5, 97.95), 1.4))), kp = (zp - 1) / 2.4;
 	return <Scene id="mM" sheen={0.2}>
 		<g transform={`translate(${lerp(TW[0], 960, kp)},${lerp(TW[1], 540, kp)}) scale(${zp}) translate(${-TW[0]},${-TW[1]})`}>
 		<rect x={-40} y={240} width={W + 80} height={MG - 240} fill="#1E1210" />
@@ -527,7 +527,7 @@ const Machine: React.FC<{t: number}> = ({t}) => {
 		<Pool id="mF" x={wx + 60} y={MG + 4} rx={300} ry={42} a={0.3} />
 		<Walker51 x={wx} g={MG} h={MH} pose={wp} look={LA.today.look} T={t} />
 		</g>
-		<rect x={0} y={0} width={W} height={H} fill="#EAF6FF" opacity={ease(seg(t, 97.72, 97.95))} />
+		<ellipse cx={960} cy={560} rx={520} ry={300} fill="url(#iceGlow)" opacity={1.2 * ease(seg(t, 97.78, 97.95))} />
 	</Scene>; };
 
 /* ===================================================================================================================
@@ -543,8 +543,8 @@ const Scrim: React.FC<{x: number; y: number; w: number; h: number; o?: number}> 
 	<div style={{position: 'absolute', left: x - 60, top: y - 50, width: w + 120, height: h + 100, opacity: o, background: 'radial-gradient(closest-side, rgba(10,5,3,0.86), rgba(10,5,3,0.74) 55%, rgba(10,5,3,0))'}} />;
 const Grid: React.FC<{t: number}> = ({t}) => {
 	const stars = Array.from({length: 40}, (_, i) => [rnd(i, 51) * W, 250 + rnd(i, 52) * 120, 1 + 1.5 * rnd(i, 53)]);
-	const zIn = t < 98.6 ? Math.exp(lerp(Math.log(18), 0, ease(seg(t, 97.95, 98.6)))) : 1, zOut = t > 103.45 ? Math.exp(lerp(0, Math.log(28), Math.pow(seg(t, 103.45, 103.8), 1.6))) : 1, z = zIn * zOut;
-	const kc = (z - 1) / 27, sc: P2 = [lerp(LW[0], 960, Math.min(1, kc * 1.5)), lerp(LW[1], 540, Math.min(1, kc * 1.5))];
+	const zIn = t < 98.6 ? Math.exp(lerp(Math.log(16), 0, ease(seg(t, 97.95, 98.6)))) : 1, zOut = t > 103.45 ? Math.exp(lerp(0, Math.log(18), Math.pow(seg(t, 103.45, 103.8), 1.6))) : 1, z = zIn * zOut;
+	const kc = (z - 1) / 17, sc: P2 = [lerp(LW[0], 960, Math.min(1, kc * 1.5)), lerp(LW[1], 540, Math.min(1, kc * 1.5))];
 	const sl = t >= BB(44) ? 0.22 : 0, nat = fade(t, 101.0, 0.35);
 	const rowLit = (r: number) => fade(t, 101.0 + (9 - r) * 0.1, 0.12);
 	const spill = [BB(49), BB(49) + 0.09, BB(49) + 0.18, BB(50), BB(50) + 0.09];
@@ -581,7 +581,7 @@ const Grid: React.FC<{t: number}> = ({t}) => {
 				{gw.x < 2050 && <RimFig x={gw.x} ground={935} h={355} pose={walkingIn || gw.k > 0.05 ? gw.pose : grounded({lean: 0, neck: -18, lt: 3, lk: 3, rt: -4, rk: 4, la: 4, le: 14, ra: 4, re: 12})} look={LA.today.look} col={B.lac} flip={walkingIn} dx={walkingIn ? -3 : 3} dy={-2.5} />}
 			</g>
 			{/* the light of the window we push into (and pulled back out of) */}
-			<rect x={0} y={0} width={W} height={H} fill="#EAF6FF" opacity={Math.max(1 - ease(seg(t, 97.95, 98.15)), ease(seg(t, 103.62, 103.8)))} />
+			<ellipse cx={960} cy={540} rx={520} ry={300} fill="url(#iceGlow)" opacity={1.2 * Math.max(1 - ease(seg(t, 97.95, 98.12)), ease(seg(t, 103.63, 103.8)))} />
 		</Scene>
 		{/* scope tag over the grid (56 px): 农村 (1990) → 全国 (2024) */}
 		{tags > 0 && t > 98.25 && <><Scrim x={GX0 + 330} y={GY0 - 70} w={300} h={64} o={tags * fade(t, 98.25, 0.3)} />
@@ -612,24 +612,25 @@ const Grid: React.FC<{t: number}> = ({t}) => {
 const FC: P2 = [1500, 655], CLINK = 104.259;
 const camF = (t: number) => {
 	const zk = 2.07, sk: P2 = [760, 600];
-	const intro = t < 104.05 ? 1 + 2 * Math.pow(1 - ease(seg(t, 103.8, 104.05)), 1.5) : 1;   // out of the fridge's light
+	const intro = t < 104.05 ? 1 + 1.2 * Math.pow(1 - ease(seg(t, 103.8, 104.05)), 1.5) : 1;   // out of the fridge's light
 	const out = ease(seg(t, 105.96, 107.75)), inn = ease(seg(t, 107.95, 109.3)), hold = seg(t, 109.3, 112.9);
 	const zOut = Math.exp(lerp(Math.log(zk), 0, out)), z = (inn > 0 ? Math.exp(lerp(0, Math.log(2.41), inn)) * (1 + 0.04 * hold) : zOut) * intro;
 	const s: P2 = inn > 0 ? [lerp(FC[0], 960, inn), lerp(FC[1], 625, inn)] : [lerp(sk[0], FC[0], out), lerp(sk[1], FC[1], out)];
 	return {z, s}; };
 const Finale: React.FC<{t: number}> = ({t}) => {
-	const {z, s} = camF(t), wx = 1640, wh = 330, g = 800;
+	const {z, s} = camF(t), wh = 330, g = 800, wx = 1640 + trap(t, 111.75, 115, 390, 0.25, 0.01), out = t >= 111.75, dir = out ? 1 : -1;
 	const kd = 1 - fade(t, 106.0, 0.5);   // the kitchen dressing
-	const pscale = Array.from({length: 9}, (_, i) => i === 8 ? 1 : fade(t, 106.05 + (7 - i) * 0.09, 0.35) * (1 - fade(t, 108.0 + (7 - i) * 0.04, 0.4)));
+	const pscale = Array.from({length: 9}, (_, i) => i === 8 ? 1 : fade(t, 106.05 + (7 - i) * 0.09, 0.35) * (1 - fade(t, 107.9, 0.3)));
 	const psnow = Array.from({length: 9}, (_, i) => fade(t, BB(57) + i * 0.283 - 0.05, 0.2));
 	const lab = fade(t, 106.9, 0.3) * (1 - fade(t, 107.8, 0.15)), lineO = fade(t, 106.3, 0.5) * (1 - fade(t, 108.0, 0.5));
 	const ffrost = 0.15 + 0.85 * ease(seg(t, 109.2, 111.6));
 	/* the walker: the frame-0 cup in his near hand, the cubes dropped from the other on the clink */
-	const cup: P2 = [wx - 0.27 * wh, g - 0.5 * wh], cupW = 44, drop = seg(t, CLINK - 0.21, CLINK), inCup = t >= CLINK, lift = bump(t, 104.6, 1.0);
+	const cup: P2 = [wx + dir * 0.27 * wh, g - 0.5 * wh], cupW = 44, drop = seg(t, CLINK - 0.21, CLINK), inCup = t >= CLINK, lift = bump(t, 104.6, 1.0);
 	const cupP: P2 = [cup[0], cup[1] - 18 * lift];
 	const rh: P2 = [cupP[0] + 2, cupP[1] - cupW * 1.35 - 26];
-	let wp = grounded({lean: 6, neck: 12, lt: 3, lk: 3, rt: -4, rk: 4, la: 40, le: 50, ra: 50, re: 60});
-	wp = ikArm(ikArm(wp, 'L', toBody(cupP[0] + cupW * 0.42, cupP[1] - 30, wx, g, wh, true)), 'R', inCup ? toBody(wx - 0.12 * wh, g - 0.45 * wh, wx, g, wh, true) : toBody(rh[0] + 10, rh[1] + 6, wx, g, wh, true));
+	let wp = out ? walkPose((wx - 1640) / (STRIDE * wh)) : grounded({lean: 6, neck: 12, lt: 3, lk: 3, rt: -4, rk: 4, la: 40, le: 50, ra: 50, re: 60});
+	if (out) wp = ikArm(wp, 'L', toBody(cupP[0] - cupW * 0.42, cupP[1] - 30, wx, g, wh));
+	else wp = ikArm(ikArm(wp, 'L', toBody(cupP[0] + cupW * 0.42, cupP[1] - 30, wx, g, wh, true)), 'R', inCup ? toBody(wx - 0.12 * wh, g - 0.45 * wh, wx, g, wh, true) : toBody(rh[0] + 10, rh[1] + 6, wx, g, wh, true));
 	const cubeY = lerp(rh[1], cupP[1] - cupW * 0.9, drop * drop);
 	const bloom = ease(seg(t, 109.6, 111.75));
 	return <Scene id="fin" sheen={0.2}>
@@ -642,18 +643,14 @@ const Finale: React.FC<{t: number}> = ({t}) => {
 		</g>}
 		<g transform={`translate(${s[0]},${s[1]}) scale(${z}) translate(${-FC[0]},${-FC[1]})`}>
 			{/* the cold light filling the room on the peak */}
-			<ellipse cx={FC[0]} cy={FC[1]} rx={140 + 900 * bloom} ry={160 + 520 * bloom} fill="url(#iceGlow)" opacity={0.35 + 0.65 * bloom} />
-			<P1Line t={t} pscale={pscale} psnow={psnow} lab={lab} lineO={lineO} ffrost={ffrost} wx={wx} wpose={wp} />
+			<ellipse cx={FC[0]} cy={FC[1]} rx={98} ry={190} fill="url(#iceGlow)" opacity={0.35 + 0.45 * bloom} />
+			<P1Line t={t} pscale={pscale} psnow={psnow} lab={lab} lineO={lineO} ffrost={ffrost} wx={wx} wpose={wp} wflip={!out} />
 			<Cup x={cupP[0]} y={cupP[1]} w={cupW} frost={0.4 + 0.4 * seg(t, CLINK, CLINK + 1)} ice={inCup} />
 			{!inCup && <IceCubes x={t < CLINK - 0.21 ? rh[0] : cupP[0]} y={cubeY} s={13} n={2} seed={7} />}
 			{inCup && t < CLINK + 0.35 && <g opacity={1 - (t - CLINK) / 0.35}>{Array.from({length: 8}, (_, k) => { const a = -Math.PI * (0.15 + 0.7 * k / 7), r0 = 24 + 28 * (t - CLINK), r1 = r0 + 9; return <path key={k} d={`M${cupP[0] + Math.cos(a) * r0},${cupP[1] - cupW * 1.35 + Math.sin(a) * r0 * 0.6} L${cupP[0] + Math.cos(a) * r1},${cupP[1] - cupW * 1.35 + Math.sin(a) * r1 * 0.6}`} stroke="#F4FBFF" strokeWidth={1.6} strokeLinecap="round" />; })}</g>}
 		</g>
-		{/* frost creeping in from the frame's edges as the room goes cold (P2) */}
-		{bloom > 0 && <g opacity={bloom}>{Array.from({length: 26}, (_, i) => { const side = i % 4, u = rnd(i, 71), x = side === 0 ? 40 + 120 * rnd(i, 72) : side === 1 ? W - 40 - 120 * rnd(i, 72) : 120 + u * (W - 240), y = side < 2 ? 260 + u * 700 : side === 2 ? 960 + 80 * rnd(i, 72) : 250 + 40 * rnd(i, 72), sz = 14 + 22 * rnd(i, 73);
-			return <g key={i} stroke="#F2FAFF" strokeWidth={2} strokeLinecap="round" opacity={0.35 + 0.35 * rnd(i, 74)} transform={`translate(${x},${y}) rotate(${60 * rnd(i, 75)})`}>{[0, 60, 120].map((a) => <path key={a} d={`M${-sz / 2},0 L${sz / 2},0`} transform={`rotate(${a})`} />)}</g>; })}
-			<rect x={0} y={0} width={W} height={H} fill="#BFE3F2" opacity={0.06} /></g>}
 		{/* the light this shot opens from (matched to the grid's lit window) */}
-		{t < 104.0 && <rect x={0} y={0} width={W} height={H} fill="#EAF6FF" opacity={1 - ease(seg(t, 103.8, 103.98))} />}
+		{t < 104.0 && <ellipse cx={960} cy={560} rx={520} ry={300} fill="url(#iceGlow)" opacity={1.2 * (1 - ease(seg(t, 103.8, 103.97)))} />}
 	</Scene>; };
 
 /* ===================================================================================================================
