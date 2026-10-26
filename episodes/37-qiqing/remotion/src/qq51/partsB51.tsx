@@ -195,17 +195,15 @@ export const IceChest: React.FC<{x: number; top: number; w: number; h: number; c
 			<rect x={-7} y={-7} width={14} height={14} fill="url(#brz51)" />
 			<path d="M0,-17 V-7 M0,7 V17 M-17,0 H-7 M7,0 H17" stroke="url(#brz51)" strokeWidth={3} />
 		</g>)}
-		{/* cold breath curls out of each hole, then sinks down the sides */}
-		{holes.map(([hx0, hy0], i) => { const d = i < 2 ? -1 : 1, b = breath[i] ?? 1; if (b <= 0.01) return null; const hx = hx0 + d * 4 * Math.sin(T * 1.3 + i), hy = hy0;
-			return <g key={`b${i}`} opacity={b} transform={`translate(${hx0},${hy0}) scale(${0.5 + 0.5 * b}) translate(${-hx0},${-hy0})`}>
-				<path d={`M${hx},${hy - 4} C${hx - d * 6},${hy - 40} ${hx + d * 20},${hy - 70} ${hx + d * 6},${hy - 96}`} fill="none" stroke="#E6F5FD" strokeWidth={9} opacity={0.35} filter="url(#mistS)" />
-				<path d={curl(hx + d * 8, hy - 92, 18 + 3 * i, d, 2.4, 0.6)} fill="none" stroke="#E6F5FD" strokeWidth={3} strokeLinecap="round" opacity={0.85} />
-				<path d={`M${hx},${hy - 4} C${hx - d * 6},${hy - 40} ${hx + d * 20},${hy - 70} ${hx + d * 6},${hy - 92}`} fill="none" stroke="#F4FBFF" strokeWidth={3} strokeLinecap="round" opacity={0.85} />
+		{/* cold air: a small curl out of each coin hole, then heavy and falling: it rolls over the lid's edge and pours down the
+		    front of the box (never rising like steam) */}
+		{holes.map(([hx, hy], i) => { const b = breath[i] ?? 1; if (b <= 0.01) return null; const d = i < 2 ? -1 : 1, fx = hx - dx * 0.5, fall = 60 + (bot - top + 40) * b;
+			const flow = `M${hx},${hy - 6} Q${hx - 6},${hy + 6} ${fx},${top + 2} Q${fx - 6 + d * 4},${top + fall * 0.45} ${fx + d * 10},${top + fall}`;
+			return <g key={`b${i}`} opacity={b}>
+				<path d={curl(hx + d * 3, hy - 14, 8, d, 1.2, 0.3)} fill="none" stroke="#F4FBFF" strokeWidth={2.5} strokeLinecap="round" opacity={0.85} />
+				<path d={flow} fill="none" stroke="#DCEFF9" strokeWidth={22} strokeLinecap="round" opacity={0.28} filter="url(#mistS)" />
+				<path d={flow} fill="none" stroke="#F4FBFF" strokeWidth={2.5} strokeLinecap="round" opacity={0.75} strokeDasharray="18 14" strokeDashoffset={-T * 60 - i * 9} />
 			</g>; })}
-		<g fill="none" stroke="#E6F5FD" strokeLinecap="round" opacity={0.5}>
-			<path d={`M${x0 - 6},${top + 10} Q${x0 - 40},${top + 80} ${x0 - 30},${bot + 40} Q${x0 - 24},${bot + 120} ${x0 - 90},${bot + 160}`} strokeWidth={3} />
-			<path d={`M${x1 + dx + 6},${top + dy + 20} Q${x1 + dx + 40},${top + 100} ${x1 + dx + 30},${bot + 30} Q${x1 + dx + 30},${bot + 110} ${x1 + dx + 100},${bot + 150}`} strokeWidth={3} />
-		</g>
 	</g>; };
 
 export const FridgeIcon: React.FC<{x: number; y: number; h: number}> = ({x, y, h}) => { const w = h * 0.52;
