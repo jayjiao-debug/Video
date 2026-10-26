@@ -16,3 +16,10 @@ What the ideas have in common: a question simple enough that most people underst
   - Sources: BigSoundBank (CC0, through the asset farm `url` items), the Sonniss GDC bundles (royalty-free), Pixabay, Kenney (CC0), and Freesound (CC0 or CC-BY only).
   - Keep a credits file per episode.
   - Use ElevenLabs sound generation only for designed or synthetic sounds that no recording has (it's in speak.py as `"type": "sfx"`).
+
+## 4. 从零做一首歌 (owner, 2026-10-26)
+A music-teaching series that builds one song from scratch. Each episode adds one layer:
+BPM → strong/weak beats → backbeat → hi-hats → syncopation → bass → chords → melody. Later episodes use the same grid to explain genres.
+- **Format:** vertical 9:16. The beat grid and the score sit low on screen, but above Douyin's bottom UI. Strong rhythm, and the viewer follows along.
+- **Music:** made by us in code from one score (not Suno). The same score drives both the audio and the picture, so they stay in sync.
+- **Layout mockups:** scratchpad/music/mock_{A,B,C}.png (A: pads + grid + score; B: falling notes; C: circle clock).
