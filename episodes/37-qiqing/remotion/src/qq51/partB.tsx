@@ -7,8 +7,9 @@ import {Pose, mixPose} from '../qq44/figure44';
 import {STRIDE, vNat, STAND} from '../qq50/partB_parts';
 import {Defs51, LOOKS51 as LA, Walker51, Fridge, Cup, IceCubes, Snow, BRZ} from './props51';
 import {WipeSplit, BA, BB, PillarKind} from './master51';
+import {useLook, palOf, EraId} from './palette51';
 import {P2, ikArm, toBody, J, Label, IceDefs, ICE, IceBlock, MeltBlock, IceHeap, Glint, Chips, NEUT, Umbrella, SilverBowl, SilverBasin, IceChest, FridgeIcon,
-	P1Line, P2Shot, Lantern51, SOURCES51} from './partsB51';
+	P1Line, P2Shot, Lantern51, SOURCES51, songPal, hutPal} from './partsB51';
 /* ep51 PartB (Builder B): film t 55.75–119.25. 北宋 street (ice across a counter → the silver stall) → day→night lantern bridge →
    清 night moat → the half-underground vault (两米 · the ~2/3 melt in the hush · three ghost blocks, 「？」 pops on the music's return)
    → 冰票 → the queue by grade → the hutong (锵锵 · the shiver) → 乾隆's cloisonné box → the 19th-century machine → the 1990 grid
@@ -27,16 +28,26 @@ const trap = (t: number, t0: number, t1: number, v: number, ra: number, de: numb
 	if (T > Tt - de) { const u = T - (Tt - de); d += v * (u - u * u / (2 * de)); }
 	return d; };
 /** a walker driven by a position function: pose mixes from stand to the walk cycle by speed */
-const gait = (xf: (t: number) => number, t: number, h: number, vref: number, still: Pose = STAND): {x: number; pose: Pose; k: number} => {
-	const x = xf(t), sp = Math.abs(xf(t + 0.02) - xf(t - 0.02)) / 0.04, k = cl(sp / vref), ph = x / (STRIDE * h);
+const gait = (xf: (t: number) => number, t: number, h: number, vref: number, still: Pose = STAND, dir = 1): {x: number; pose: Pose; k: number} => {
+	const x = xf(t), sp = Math.abs(xf(t + 0.02) - xf(t - 0.02)) / 0.04, k = cl(sp / vref), ph = dir * x / (STRIDE * h);
 	return {x, pose: k > 0.01 ? mixPose(still, walkPose(ph), ease(k)) : still, k}; };
-const Scene: React.FC<{id: string; sheen?: number; children: React.ReactNode; vig?: number}> = ({id, sheen = 0.3, children, vig}) =>
-	<svg width={W} height={H} style={{position: 'absolute', left: 0, top: 0}}><LacDefs /><Defs51 /><IceDefs /><Lacquer sheen={sheen} id={id} />{children}<Vignette id={id} a={vig} /></svg>;
+/** local era tokens not in palette51 (时代色): the vault's cool stone, the 19th-century iron grey-green, the grids' night blue */
+const LOC = {
+	vault: {sky: ['#1A2028', '#283240', '#3A4656'], earth: '#2A3038', earthDot: '#7A8A9A', roof: '#232A34', roofTop: '#161B22', inside: '#141A22', wall: '#4A5462'},
+	machine: {sky: ['#18201E', '#26302C', '#36423C'], wall: '#2C3834', floor: '#161E1C', pipe: '#46524E', base: '#2E3834'},
+	grid: {sky: ['#0E1428', '#1A2442', '#2C3A5E'], hill: '#161E34', wall: '#2C3450', roof: '#1A2034', win: '#120E14', frame: '#D9A860', floor: '#121628'},
+};
+const Scene: React.FC<{id: string; sheen?: number; children: React.ReactNode; vig?: number; pe?: EraId; sky?: string[]; hz?: number}> = ({id, sheen = 0.3, children, vig, pe, sky, hz = 700}) => {
+	const L = useLook(), on = L !== 'cur' && (!!pe || !!sky), s = sky ?? (pe ? palOf(L, pe).sky : null), a = sky ? 1 : pe ? palOf(L, pe).skyA : 0;
+	return <svg width={W} height={H} style={{position: 'absolute', left: 0, top: 0}}><LacDefs /><Defs51 /><IceDefs /><Lacquer sheen={sheen} id={id} />
+		{on && s && a > 0 && <><defs><linearGradient id={`sk${id}`} gradientUnits="userSpaceOnUse" x1={0} y1={0} x2={0} y2={hz}><stop offset="0" stopColor={s[0]} /><stop offset="0.6" stopColor={s[1]} /><stop offset="1" stopColor={s[2]} /></linearGradient></defs><rect width={W} height={H} fill={`url(#sk${id})`} opacity={a} /></>}
+		{children}<Vignette id={id} a={on ? Math.min(vig ?? 0.72, 0.5) : vig} /></svg>; };
 type Era = 'song' | 'qing' | 'today';
-const Wk: React.FC<{x: number; g: number; h: number; pose: Pose; era: Era; flip?: boolean; T?: number; rimO?: number}> = ({x, g, h, pose, era, flip, T = 0, rimO = 0.9}) =>
-	<Walker51 x={x} g={g} h={h} pose={pose} look={LA[era].look} qing={era === 'qing'} flip={flip} T={T} rimO={rimO} />;
+const Wk: React.FC<{x: number; g: number; h: number; pose: Pose; era: Era; flip?: boolean; T?: number; rimO?: number; pe?: EraId}> = ({x, g, h, pose, era, flip, T = 0, rimO = 0.9, pe}) => {
+	const L = useLook(), P = palOf(L, pe ?? (era === 'qing' ? 'qing' : era)), d = P.rimD;
+	return <Walker51 x={x} g={g} h={h} pose={pose} look={LA[era].look} qing={era === 'qing'} flip={flip} T={T} rimO={L === 'cur' ? rimO : P.rimO} dx={L === 'cur' ? undefined : (flip ? -d : d)} dy={L === 'cur' ? undefined : -d * 0.85} rim={L === 'cur' ? undefined : P.rim} />; };
 const Extra: React.FC<{x: number; g: number; h: number; pose: Pose; era: Era; flip?: boolean; rimO?: number; look?: Parameters<typeof Walker51>[0]['look']}> = ({x, g, h, pose, era, flip, rimO = 0.5, look}) =>
-	<Walker51 x={x} g={g} h={h} pose={pose} look={look ?? LA[era].look} qing={era === 'qing'} flip={flip} col={NEUT} rimO={rimO} />;
+	<Walker51 x={x} g={g} h={h} pose={pose} look={look ?? LA[era].look} qing={era === 'qing'} flip={flip} col={useLook() === 'cur' ? NEUT : '#0E0604'} rimO={useLook() === 'cur' ? rimO : Math.min(1, rimO + 0.25)} />;
 const Floor: React.FC<{g: number; x0?: number; x1?: number; lattice?: boolean; fill?: string}> = ({g, x0 = -40, x1 = W + 40, lattice = true, fill = BG.ground}) => <g>
 	<rect x={x0} y={g} width={x1 - x0} height={H - g + 40} fill={fill} /><rect x={x0} y={g} width={x1 - x0} height={3} fill={B.gold} opacity={0.28} />
 	{lattice && <path d={Array.from({length: Math.ceil((x1 - x0) / 90) + 2}, (_, i) => `M${Math.floor(x0 / 90) * 90 + i * 90},${g + 30} l45,40 l-45,40 l-45,-40 Z`).join(' ')} fill="none" stroke={B.gold} strokeWidth={1.5} opacity={0.1} />}
@@ -60,6 +71,7 @@ const sCamX = (t: number) => t <= sC0 ? sWx(t) - (t < sB0 ? HX_B : lerp(HX_B, 88
 export const sWalkerScreen = (t: number) => sWx(t) - sCamX(t);
 const BOWL: P2 = [1050, 560];
 const SongStreet: React.FC<{t: number}> = ({t}) => {
+	const C = songPal(useLook());
 	const cam = sCamX(t), nt = fade(t, 61.55, 1.1);
 	const {x: wx, pose: wp0} = gait(sWx, t, SH, SV * 0.8);
 	/* the block he carries in (world), then on the counter, then the buyer's */
@@ -90,7 +102,7 @@ const SongStreet: React.FC<{t: number}> = ({t}) => {
 	const lanterns: [number, number][] = [[700, BA(108)], [1080, BA(109)], [1500, BA(110)], [1900, BA(111)], [2300, BA(112)]];
 	const scoop = (x: number, i: number) => { const ph = t * 2.6 + i * 1.7, hy = 772 - 22 * Math.abs(Math.sin(ph));
 		return <g key={x}>
-			<Umbrella x={x} y={560 + (i % 2) * 15} r={115} g={800} o={0.9} />
+			<Umbrella x={x} y={560 + (i % 2) * 15} r={115} g={800} o={0.9} col={C.umb} />
 			<Extra x={x + 30} g={800} h={230} pose={ikArm(grounded({lean: 14, neck: 10, lt: 3, lk: 3, rt: -4, rk: 4, la: 40, le: 30, ra: 6, re: 20}), 'L', toBody(x - 10, hy, x + 30, 800, 230, true))} era="song" flip rimO={0.4} />
 			<path d={`M${x - 40},800 L${x - 34},758 H${x + 4} L${x + 10},800 Z`} fill="#3A2416" stroke={BG.lineS} strokeWidth={1.2} />
 			<ellipse cx={x - 15} cy={757} rx={22} ry={5} fill={ICE.body} opacity={0.8} />
@@ -98,14 +110,16 @@ const SongStreet: React.FC<{t: number}> = ({t}) => {
 			<path d={`M${x - 95 + 0.2 * 220 - 14},${800 - 0.55 * 220 - 8} q14,12 28,0 Z`} fill="#3A2416" /><ellipse cx={x - 95 + 0.2 * 220} cy={800 - 0.55 * 220 - 9} rx={12} ry={4} fill={ICE.core} />
 		</g>; };
 	return <Scene id="sS" sheen={0.45} vig={0.6}>
-		<defs><linearGradient id="dayS" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stopColor="#24120B" /><stop offset="0.5" stopColor="#5A2F1A" /><stop offset="0.72" stopColor="#6E3D20" /><stop offset="1" stopColor="#2A150D" /></linearGradient></defs>
-		<rect width={W} height={H} fill="url(#dayS)" opacity={0.75 * (1 - 0.8 * nt)} />
-		<Pool id="sSun" x={1000} y={330} rx={1200} ry={560} a={0.42 * (1 - nt)} col="#FFC070" />
-		<g transform={`translate(${-cam * 0.5},0)`}><g fill="#2C170F">{far.map((s, i) => <path key={i} d={s.roof} />)}</g><rect x={-1900} y={600} width={6000} height={300} fill="#2C170F" /></g>
+		<defs><linearGradient id="dayS" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stopColor={C.sky[0]} /><stop offset="0.5" stopColor={C.sky[1]} /><stop offset="0.72" stopColor={C.sky[2]} /><stop offset="1" stopColor={C.sky[3]} /></linearGradient></defs>
+		<rect width={W} height={H} fill="url(#dayS)" opacity={C.skyO * (1 - 0.8 * nt)} />
+		<Pool id="sSun" x={1000} y={330} rx={1200} ry={560} a={C.sunA * (1 - nt)} col={C.sunCol} />
+		<g transform={`translate(${-cam * 0.5},0)`}><g opacity={C.farO}><g fill={C.far}>{far.map((s, i) => <path key={i} d={s.roof} />)}</g><rect x={-1900} y={600} width={6000} height={300} fill={C.far} /></g></g>
 		<g transform={`translate(${-cam},0)`}>
-			{mids.map((s, i) => <g key={i}><path d={s.roof} fill={BG.roof} stroke={BG.lineS} strokeWidth={2} /><path d={s.tiles} stroke={BG.line} strokeWidth={1.4} opacity={0.6} />
-				<path d={s.posts} fill={BG.post} stroke={BG.line} strokeWidth={1} /><path d={s.beam} fill={BG.beam} stroke={BG.line} strokeWidth={1.5} /><path d={s.shutter} stroke="#170B08" strokeWidth={6} /></g>)}
-			<rect x={-2000} y={790} width={6000} height={115} fill="#241209" />
+			{mids.map((s, i) => <g key={i}><path d={s.roof} fill={C.midRoof} stroke={C.midLine} strokeWidth={2} /><path d={s.tiles} stroke={C.midLine} strokeWidth={1.4} opacity={0.6} />
+				<path d={s.posts} fill={C.midPost} stroke={C.midLine} strokeWidth={1} /><path d={s.beam} fill={C.midBeam} stroke={C.midLine} strokeWidth={1.5} /><path d={s.shutter} stroke="#170B08" strokeWidth={6} /></g>)}
+			<rect x={-2000} y={790} width={6000} height={115} fill={C.street} />
+			{/* a soft lit backdrop behind the walker (the 暖层次 / 时代色 looks) */}
+			{C.backA > 0 && <Pool id="sBk" x={wx + 40} y={SG - 0.5 * SH} rx={380} ry={400} a={C.backA} col={C.back} />}
 			{[-1450, -980, -520, 150, 560, 1640, 2150].map((x, i) => scoop(x, i))}
 			{/* the other of the two best stalls (back left): silver too */}
 			<rect x={250} y={735} width={230} height={65} fill={BG.beam} stroke={BG.lineS} strokeWidth={1.2} />
@@ -114,7 +128,7 @@ const SongStreet: React.FC<{t: number}> = ({t}) => {
 			{/* lanterns under the eaves, lit one per beat as the day goes */}
 			{lanterns.map(([x, tl], i) => <Lantern51 key={i} x={x} y={470 + (i % 2) * 18} s={0.7} lit={nt * fade(t, tl - 0.08, 0.16)} />)}
 		</g>
-		{night('#05060C', 0.5 * nt)}
+		{night(useLook() === 'cur' ? '#05060C' : '#0A1428', 0.5 * nt)}
 		{/* the night-market stall (back left, under the eave): the 冰雪冷元子 board and plum-red boxes, lit as the day goes */}
 		<g transform={`translate(${-cam},0)`} opacity={nt * (1 - fade(t, 62.4, 0.25))}>
 			<rect x={560} y={548} width={290} height={62} rx={4} fill="#1A0E09" stroke={B.goldL} strokeOpacity={0.35 + 0.4 * nt} strokeWidth={2} />
@@ -124,16 +138,16 @@ const SongStreet: React.FC<{t: number}> = ({t}) => {
 			<Lantern51 x={866} y={600} s={0.6} lit={fade(t, BA(108) - 0.08, 0.16) * nt} />
 		</g>
 		<g transform={`translate(${-cam},0)`}>
-			<Floor g={SG} x0={-2000} x1={4000} />
+			<Floor g={SG} x0={-2000} x1={4000} fill={C.ground} />
 			<Pool id="sF" x={wx + 60} y={SG + 4} rx={360} ry={44} a={0.3} />
 			{/* the ordinary stall where he hands the block across */}
 			<rect x={ctr.x0} y={ctr.top} width={ctr.x1 - ctr.x0} height={18} fill="#3A2116" stroke={B.gold} strokeOpacity={0.45} strokeWidth={1.5} />
 			<path d={`M${ctr.x0 + 10},${ctr.top + 18} H${ctr.x1 - 10} V${SG} H${ctr.x0 + 10} Z`} fill={BG.beam} stroke={BG.line} strokeWidth={1.5} />
-			<Extra x={bx} g={SG - 40} h={400} pose={t >= 57.35 ? ikArm(walkPose(buyerLeave / (STRIDE * 400)), 'L', toBody(blkB[0] - 34, blkB[1] - 8, bx, SG - 40, 400)) : ikArm(grounded({lean: 8, neck: 6, lt: 3, lk: 3, rt: -4, rk: 4, la: 40, le: 30, ra: 4, re: 12}), 'L', t < 56.95 ? toBody(E + 300, 572, bx, SG - 40, 400, true) : toBody(blkB[0] + 34, blkB[1] - 8, bx, SG - 40, 400, true))} era="song" flip look={{dress: 'tunic', legs: 'trousers', head: 'bun'}} rimO={0.55} />
+			<Extra x={bx} g={SG - 40} h={400} pose={t >= 57.35 ? ikArm(walkPose(buyerLeave / (STRIDE * 400)), 'L', toBody(blkB[0] - 34, blkB[1] - 8, bx, SG - 40, 400)) : ikArm(grounded({lean: 8, neck: 6, lt: 3, lk: 3, rt: -4, rk: 4, la: 40, le: 30, ra: 4, re: 12}), 'L', t < 56.95 ? toBody(E + 300, 572, bx, SG - 40, 400, true) : toBody(blkB[0] + 34, blkB[1] - 8, bx, SG - 40, 400, true))} era="song" flip={t < 57.35} look={{dress: 'tunic', legs: 'trousers', head: 'bun'}} rimO={0.55} />
 			{t < 57.1 + 0.6 && t > 56.7 && cu < 1 && <Coin x={coinP[0]} y={coinP[1]} r={12} />}
 			{<IceBlock x={(t >= 57.3 ? blkB : blk)[0] - 48} y={(t >= 57.3 ? blkB : blk)[1]} w={96} h={66} d={36} seed={8} />}
 			{/* the best stall: big umbrella, the keeper, every vessel silver (KF10) */}
-			<Umbrella x={1440} y={430} r={340} g={CT0} />
+			<Umbrella x={1440} y={430} r={340} g={CT0} col={C.umb} />
 			<Extra x={vx} g={SG} h={vh} pose={vp} era="song" flip look={{dress: 'robe', head: 'futou', build: 1.04}} rimO={0.55} />
 			<rect x={1110} y={CT0} width={560} height={22} fill="#3A2116" stroke={B.gold} strokeOpacity={0.5} strokeWidth={1.5} /><path d={`M1125,${CT0 + 22} H1655 V${SG} H1125 Z`} fill={BG.beam} stroke={BG.line} strokeWidth={1.5} />
 			<path d={Array.from({length: 6}, (_, i) => `M${1160 + i * 90},${CT0 + 50} h50 v130 h-50 Z`).join(' ')} fill="none" stroke={BG.line} strokeWidth={1.2} />
@@ -186,9 +200,10 @@ const Moat: React.FC<{t: number}> = ({t}) => {
 	const holding = t >= 63.9 && t < 66.15;
 	const workers: [number, number, number, boolean][] = [[230, 300, 63.841, false], [440, 290, 64.407, false], [1150, 300, 63.841, true], [1335, 290, 64.407, true]];
 	const leftPick = pickGeom(760, QG, QH, 1, 1);   // where his pick stays standing after he lets go
-	return <Scene id="qM" sheen={0.2}>
-		<defs><linearGradient id="verm" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stopColor="#6E2618" /><stop offset="1" stopColor="#3E140C" /></linearGradient>
-			<linearGradient id="moat" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stopColor="#17151A" /><stop offset="1" stopColor="#0E0B0C" /></linearGradient></defs>
+	const LQ = useLook(), onQ = LQ !== 'cur', PQ = palOf(LQ, 'qing');
+	return <Scene id="qM" sheen={0.2} pe="qing" hz={380}>
+		<defs><linearGradient id="verm" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stopColor={onQ ? '#8C3020' : '#6E2618'} /><stop offset="1" stopColor={onQ ? PQ.mid : '#3E140C'} /></linearGradient>
+			<linearGradient id="moat" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stopColor={onQ ? PQ.field[0] : '#17151A'} /><stop offset="1" stopColor={onQ ? PQ.field[1] : '#0E0B0C'} /></linearGradient></defs>
 		<g transform={`translate(${-cam * 0.85},0)`}>
 			<rect x={-1400} y={380} width={4800} height={250} fill="url(#verm)" />
 			<path d="M-1400,380 H3400" stroke={B.gold} strokeOpacity={0.4} strokeWidth={2} />
@@ -197,7 +212,7 @@ const Moat: React.FC<{t: number}> = ({t}) => {
 			{[-600, 360, 1620, 2600].map((lx, i) => <Lantern51 key={i} x={lx} y={490} lit={1} />)}
 		</g>
 		<g transform={`translate(${-cam},0)`}>
-			<rect x={-1400} y={630} width={4800} height={26} fill="#22150F" stroke={BG.lineS} strokeWidth={1.5} />
+			<rect x={-1400} y={630} width={4800} height={26} fill={onQ ? PQ.near : '#22150F'} stroke={BG.lineS} strokeWidth={1.5} />
 			<rect x={-1400} y={656} width={4800} height={H - 616} fill="url(#moat)" />
 			<path d={Array.from({length: 22}, (_, i) => `M${rnd(i, 31) * 3400 - 1300},${680 + (i % 14) * 26 + 8 * rnd(i, 32)} h${120 + 240 * rnd(i, 33)}`).join(' ')} stroke={ICE.shade} strokeOpacity={0.14} strokeWidth={2} strokeLinecap="round" />
 			<path d="M560,700 L2460,700 L2490,742 L540,742 Z" fill="#050405" />
@@ -207,6 +222,7 @@ const Moat: React.FC<{t: number}> = ({t}) => {
 			{workers.map(([x, h, first, fl], i) => { const s = swingS(t, first, 1.1321), ts = QStrikes(first, 1.1321, t), G = pickGeom(x, 790, h, 1, fl ? -1 : 1);
 				return <g key={i}><Pick x={x} g={790} h={h} s={s} flip={fl} who="worker" />{t - ts < 0.3 && t >= ts && <g opacity={1 - (t - ts) / 0.3}><Chips x={G.tip[0]} y={G.tip[1] - 4} s={h * 0.32 * (0.7 + (t - ts))} seed={i + Math.floor(ts)} dir={fl ? -1 : 1} n={10} /></g>}</g>; })}
 			<Pool id="qw" x={wx + 70} y={QG + 4} rx={320} ry={44} a={0.3} />
+			{onQ && <Pool id="qbk" x={wx + 60} y={QG - 0.55 * QH} rx={330} ry={420} a={PQ.backdropA} col={PQ.backdrop} />}
 			{holding ? <Pick x={760} g={QG} h={QH} s={sw} who="walker" T={t} /> : <>
 				{t >= 66.15 && <g><path d={`M${leftPick.top[0]},${leftPick.top[1]} L${leftPick.tip[0]},${leftPick.tip[1]}`} stroke="#8A6232" strokeWidth={9} strokeLinecap="round" /><path d={`M${leftPick.at(0.86)[0]},${leftPick.at(0.86)[1]} L${leftPick.tip[0]},${leftPick.tip[1]}`} stroke="#AEB8BF" strokeWidth={11} strokeLinecap="round" /></g>}
 				{t < 63.9 && (() => { const p = ikArm(wpWalk, 'R', toBody(wx + 0.12 * QH, QG - 0.46 * QH, wx, QG, QH)), rh = J(p, 'RHand', wx, QG, QH);
@@ -244,19 +260,20 @@ const Vault: React.FC<{t: number}> = ({t}) => {
 	const topY = VF - rows * RH;
 	const gIn = fade(t, 73.5, 0.35), m1 = lerp(1, 0.5, ease(seg(t, 73.75, 74.26))), m2 = lerp(1, 0.26, ease(seg(t, 73.75, 74.26)));
 	const pop = seg(t, 74.26, 74.7), solid = t >= 74.26, landY = solid ? -10 * Math.exp(-(t - 74.26) * 9) * Math.cos((t - 74.26) * 30) : 0;
-	return <Scene id="vV" sheen={0.2}>
+	const onV = useLook() !== 'cur', LV = LOC.vault;
+	return <Scene id="vV" sheen={0.2} sky={onV ? LV.sky : undefined} hz={760}>
 		<defs><radialGradient id="scrim51"><stop offset="0" stopColor="#0A0503" stopOpacity="0.85" /><stop offset="0.6" stopColor="#0A0503" stopOpacity="0.7" /><stop offset="1" stopColor="#0A0503" stopOpacity="0" /></radialGradient></defs>
 		<g transform={`translate(960,600) scale(${z}) translate(-960,-600)`}>
-			<rect x={-40} y={VS} width={VL0 + 40} height={H - VS + 40} fill="#1C100B" /><rect x={VR1} y={VS} width={W - VR1 + 40} height={H - VS + 40} fill="#1C100B" />
-			<rect x={VL0} y={VF} width={VR1 - VL0} height={H - VF + 40} fill="#1C100B" />
-			<g fill={B.ochre} opacity={0.22}>{Array.from({length: 70}, (_, i) => { const side = i % 3, x = side === 0 ? rnd(i, 41) * (VL0 - 20) : side === 1 ? VR1 + 20 + rnd(i, 41) * (W - VR1 - 20) : VL0 + rnd(i, 41) * (VR1 - VL0), y = (side === 2 ? VF + 46 : VS + 16) + rnd(i, 42) * 200; return <circle key={i} cx={x} cy={y} r={2.2} />; })}</g>
+			<rect x={-40} y={VS} width={VL0 + 40} height={H - VS + 40} fill={onV ? LV.earth : '#1C100B'} /><rect x={VR1} y={VS} width={W - VR1 + 40} height={H - VS + 40} fill={onV ? LV.earth : '#1C100B'} />
+			<rect x={VL0} y={VF} width={VR1 - VL0} height={H - VF + 40} fill={onV ? LV.earth : '#1C100B'} />
+			<g fill={onV ? LV.earthDot : B.ochre} opacity={0.22}>{Array.from({length: 70}, (_, i) => { const side = i % 3, x = side === 0 ? rnd(i, 41) * (VL0 - 20) : side === 1 ? VR1 + 20 + rnd(i, 41) * (W - VR1 - 20) : VL0 + rnd(i, 41) * (VR1 - VL0), y = (side === 2 ? VF + 46 : VS + 16) + rnd(i, 42) * 200; return <circle key={i} cx={x} cy={y} r={2.2} />; })}</g>
 			<path d={`M-40,${VS} H${VL0} M${VR1},${VS} H${W + 40}`} stroke={B.goldL} strokeWidth={3} opacity={0.75} />
 			<g opacity={fade(t, 67.4, 0.4)}><Label x={150} y={VS - 16} s="地面" fs={40} col={B.goldL} /><Label x={VR1 + 30} y={VS - 16} s="地面" fs={40} col={B.goldL} /></g>
-			<path d={`M${VL0},${VT} Q${VAX},${VT - 270} ${VR1},${VT} Z`} fill="#2A1712" stroke={B.gold} strokeOpacity={0.5} strokeWidth={2} />
-			<path d={`M${VL0 - 50},${VT + 6} L${VAX},${VT - 210} L${VR1 + 50},${VT + 6} L${VR1 + 40},${VT + 14} L${VAX},${VT - 196} L${VL0 - 40},${VT + 14} Z`} fill="#140A07" stroke={B.gold} strokeOpacity={0.5} strokeWidth={2} />
-			<path d={`M${VL1},${VF} V${VT} Q${VAX},${VT - 190} ${VR0},${VT} V${VF} Z`} fill="#160E0D" />
+			<path d={`M${VL0},${VT} Q${VAX},${VT - 270} ${VR1},${VT} Z`} fill={onV ? LV.roof : '#2A1712'} stroke={B.gold} strokeOpacity={0.5} strokeWidth={2} />
+			<path d={`M${VL0 - 50},${VT + 6} L${VAX},${VT - 210} L${VR1 + 50},${VT + 6} L${VR1 + 40},${VT + 14} L${VAX},${VT - 196} L${VL0 - 40},${VT + 14} Z`} fill={onV ? LV.roofTop : '#140A07'} stroke={B.gold} strokeOpacity={0.5} strokeWidth={2} />
+			<path d={`M${VL1},${VF} V${VT} Q${VAX},${VT - 190} ${VR0},${VT} V${VF} Z`} fill={onV ? LV.inside : '#160E0D'} />
 			<Pool id="vC" x={VAX} y={VF - 120} rx={520} ry={260} a={0.2} col="#9FD2EA" />
-			{[[VL0, VL1], [VR0, VR1]].map(([a, b], i) => <g key={i}><rect x={a} y={VT} width={b - a} height={VF - VT + 30} fill="#3A2318" stroke={B.goldL} strokeOpacity={0.7} strokeWidth={2.5} />
+			{[[VL0, VL1], [VR0, VR1]].map(([a, b], i) => <g key={i}><rect x={a} y={VT} width={b - a} height={VF - VT + 30} fill={onV ? LV.wall : '#3A2318'} stroke={B.goldL} strokeOpacity={0.7} strokeWidth={2.5} />
 				{hatch(a, b, VT, VF + 30, `vh${i}`)}
 				{Array.from({length: 8}, (_, k) => <path key={k} d={`M${a},${VT + 50 * (k + 1)} H${b}`} stroke={B.gold} strokeOpacity={0.18} strokeWidth={1.2} />)}</g>)}
 			{/* the door through the left wall at street level, and the steps down to the floor */}
@@ -307,8 +324,9 @@ const Vault: React.FC<{t: number}> = ({t}) => {
    =================================================================================================================== */
 const WG = 905, WH = 560;
 const wWx = (t: number) => 720 + trap(t, 77.4, 78.2, 620, 0.3, 0.3) + trap(t, 78.45, 82, vNat(WH), 0.35, 0.01);
-const CellarWall: React.FC<{cam: number; summer?: number}> = ({cam, summer = 1}) => <g transform={`translate(${-cam},0)`}>
-	<rect x={-400} y={330} width={3000} height={WG - 330} fill="#2A1712" />
+const CellarWall: React.FC<{cam: number; summer?: number}> = ({cam, summer = 1}) => { const L = useLook(), on = L !== 'cur', P = palOf(L, 'qingSummer');
+	return <g transform={`translate(${-cam},0)`}>
+	<rect x={-400} y={330} width={3000} height={WG - 330} fill={on ? P.mid : '#2A1712'} />
 	<path d={Array.from({length: 12}, (_, i) => `M-400,${360 + i * 46} H2600`).join(' ')} stroke={B.gold} strokeOpacity={0.08} strokeWidth={1.5} />
 	<path d="M-420,330 L-400,300 H2600 L2620,330 Z" fill="#1A0E09" stroke={B.gold} strokeOpacity={0.4} strokeWidth={2} />
 	<Pool id="cwS" x={900} y={500} rx={1100} ry={420} a={0.32 * summer} col="#FFC070" />
@@ -316,7 +334,7 @@ const CellarWall: React.FC<{cam: number; summer?: number}> = ({cam, summer = 1})
 	<path d={`M1320,${WG} V600 Q1440,500 1560,600 V${WG} Z`} fill="#0C0A0C" stroke={B.goldL} strokeOpacity={0.5} strokeWidth={2.5} />
 	<ellipse cx={1440} cy={WG - 40} rx={100} ry={60} fill="url(#iceGlow)" />
 	<IceBlock x={1362} y={WG - 6} w={66} h={46} d={20} seed={31} marks={false} /><IceBlock x={1436} y={WG - 6} w={60} h={42} d={20} seed={32} marks={false} /><IceBlock x={1390} y={WG - 52} w={62} h={38} d={18} seed={33} marks={false} />
-</g>;
+</g>; };
 const Window: React.FC<{t: number}> = ({t}) => {
 	/* one set, 75.3–81.6: the summer street by the cellar. Push in on the hand-over (the slip ≥ 160 px, its seal on 76.523), he
 	   trades the slip for a block at the arch and walks off; the camera trucks left (+260) as three officials step into the
@@ -338,7 +356,8 @@ const Window: React.FC<{t: number}> = ({t}) => {
 		{x: 600, tb: BB(11), s: 126, look: {dress: 'robe', head: 'hat', build: 1.08}, fin: true},
 		{x: 400, tb: BB(10), s: 72, look: {dress: 'robe', head: 'hat', build: 1.0}, fin: false},
 		{x: 200, tb: BB(9), s: 36, look: {dress: 'tunic', legs: 'trousers', head: 'bald'}, fin: false}];
-	return <Scene id="cW" sheen={0.4}>
+	const LW = useLook(), onW = LW !== 'cur', PW = palOf(LW, 'qingSummer');
+	return <Scene id="cW" sheen={0.4} pe="qingSummer" hz={330}>
 		<g transform={`translate(${truck},0) translate(1000,650) scale(${zp}) translate(-1000,-650)`}>
 			<CellarWall cam={0} />
 			{/* the sun shaft of a summer day */}
@@ -358,7 +377,8 @@ const Window: React.FC<{t: number}> = ({t}) => {
 					: <><rect x={-36} y={-150} width={72} height={150} fill="#EFE2C4" stroke="#8A6A3A" strokeWidth={1.5} />{[-16, 0, 16].map((dx, i) => <path key={i} d={`M${dx},-134 v20 m0,9 v16 m0,9 v22`} stroke="#22150F" strokeWidth={4} strokeLinecap="round" />)}<rect x={-18} y={-50} width={36} height={36} fill="#BF3420" /></>}
 			</g>}
 			{t >= seal && t < seal + 0.3 && <g opacity={1 - (t - seal) / 0.3}>{Array.from({length: 6}, (_, i) => { const a = Math.PI * (1.1 + i * 0.16); return <path key={i} d={`M${1030 + Math.cos(a) * 30},${sill - 10 + Math.sin(a) * 30} l${Math.cos(a) * 22},${Math.sin(a) * 22}`} stroke={B.goldL} strokeWidth={3} strokeLinecap="round" />; })}</g>}
-			<Floor g={WG} x0={-700} x1={2600} />
+			<Floor g={WG} x0={-700} x1={2600} fill={onW ? PW.field[1] : undefined} />
+			{onW && <Pool id="cwBk" x={wx + 40} y={WG - 0.5 * WH} rx={340} ry={400} a={PW.backdropA} col={PW.backdrop} />}
 			{/* the queue steps in from the left (rank by silhouette only: hat finial, robe hem) */}
 			{queue.map((q, i) => { const h = 440, qx = q.x - 520 * (1 - ease(seg(t, 78.35 + i * 0.12, 79.15 + i * 0.12))), moving = t < 79.15 + i * 0.12, has = t >= q.tb, k = has ? land(seg(t, q.tb, q.tb + 0.35)) : 0;
 				const bx = qx + 0.3 * h, by = WG - 0.4 * h;
@@ -390,42 +410,46 @@ const Bowl2: React.FC<{x: number; y: number; open: number}> = ({x, y, open}) => 
 		<path d="M-30,-12 Q-27,10 0,14 Q27,10 30,-12 Z" fill="url(#brz51v)" stroke={BRZ.line} strokeWidth={1.4} /><ellipse cx={0} cy={-12} rx={30} ry={6} fill="#5A3A18" stroke={BRZ.hi} strokeWidth={1.5} /></g>;
 	return <g>{bowl(x - 32 - open / 2, 62)}{bowl(x + 32 + open / 2, -62)}</g>; };
 const Hutong: React.FC<{t: number}> = ({t}) => {
+	const C = hutPal(useLook());
 	const cam = hCam(t), {x: wx, pose: wp0} = gait(hWx, t, HH, 470 * 0.8);
 	const sx = wx + 420, sp = gait(hWx, t, 500, 470 * 0.8).pose;
 	const clangs = [BA(0) * 0 + 81.617, 82.749], open = (() => { let o = 18; for (const c of clangs) { if (t >= c - 0.14 && t < c) o = 18 * (c - t) / 0.14; else if (t >= c && t < c + 0.25) o = 18 * (t - c) / 0.25; } return o; })();
-	let sPose = ikArm(sp, 'L', toBody(sx + 0.24 * 500, HG - 0.62 * 500, sx, HG, 500, true));
-	sPose = ikArm(sPose, 'R', toBody(sx - 0.05 * 500, HG - 0.84 * 500, sx, HG, 500, true));
-	const bh = J(sPose, 'LHand', sx, HG, 500, true);
+	const sf = t >= 83.7 && t < 86.0, sd = sf ? -1 : 1;   // walking: he faces right, the way he goes; stopped: he turns to the walker
+	let sPose = ikArm(sp, 'L', toBody(sx + sd * 0.24 * 500, HG - 0.62 * 500, sx, HG, 500, sf));
+	sPose = ikArm(sPose, 'R', toBody(sx - sd * 0.05 * 500, HG - 0.84 * 500, sx, HG, 500, sf));
+	const bh = J(sPose, 'LHand', sx, HG, 500, sf);
 	/* the bowl of 酸梅汤 handed over at 84.1, raised; the shiver on beat 20 */
 	const giveK = ease(seg(t, 83.85, 84.25)), has = t >= 84.25, cupP: P2 = has ? [wx + 0.27 * HH, HG - lerp(0.6, 0.72, ease(seg(t, 84.6, 85.1))) * HH] : [lerp(bh[0] - 10, wx + 0.27 * HH, giveK), lerp(bh[1] + 30, HG - 0.6 * HH, giveK)];
 	const shiv = t >= 85.58 && t < 86.0 ? Math.sin((t - 85.58) * 95) * 6 * (1 - (t - 85.58) / 0.42) : 0;
 	let wp = wp0; if (t > 83.9) wp = ikArm(ikArm(wp, 'L', toBody(cupP[0] - 22 - shiv, cupP[1] + 14, wx, HG, HH)), 'R', toBody(cupP[0] + 22 - shiv, cupP[1] + 10, wx, HG, HH));
 	const doorO = ease(seg(t, 82.749, 83.2)), headTurn = t > 81.7;
 	const doors = [2800, 1500, 3550, 4300];
-	return <Scene id="hH" sheen={0.25}>
+	return <Scene id="hH" sheen={0.25} pe="qingSummer" hz={420}>
+		{C.sky && <><defs><linearGradient id="hSky" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stopColor={C.sky[0]} /><stop offset="1" stopColor={C.sky[1]} /></linearGradient></defs><rect x={-40} y={-40} width={W + 80} height={470} fill="url(#hSky)" /></>}
 		<g transform={`translate(${-cam},0)`}>
-			<rect x={0} y={420} width={5200} height={HG - 420} fill="#221816" />
-			<path d={Array.from({length: 10}, (_, i) => `M0,${450 + i * 46} H5200`).join(' ')} stroke="#C9B9A6" strokeOpacity={0.06} strokeWidth={2} />
-			<path d="M-20,420 L0,392 H5200 L5220,420 Z" fill="#141010" stroke={B.gold} strokeOpacity={0.35} strokeWidth={2} />
-			<Pool id="hS" x={cam + 900} y={520} rx={1100} ry={420} a={0.26} col="#FFC070" />
+			<rect x={0} y={420} width={5200} height={HG - 420} fill={C.wall} />
+			<path d={Array.from({length: 10}, (_, i) => `M0,${450 + i * 46} H5200`).join(' ')} stroke={C.wallLine} strokeOpacity={C.wallLineO} strokeWidth={2} />
+			<path d="M-20,420 L0,392 H5200 L5220,420 Z" fill={C.coping} stroke={B.gold} strokeOpacity={0.35} strokeWidth={2} />
+			<Pool id="hS" x={cam + 900} y={520} rx={1100} ry={420} a={C.sunA} col={C.sunCol} />
+			{C.backA > 0 && <Pool id="hBk" x={wx + 200} y={HG - 300} rx={560} ry={380} a={C.backA} col={C.back} />}
 			{doors.map((x, i) => { const isO = i === 0, o = isO ? doorO : 0; return <g key={i}>
-				<rect x={x - 10} y={540} width={200} height={HG - 540} fill={isO && o > 0 ? '#3A2416' : '#140C0A'} stroke={B.gold} strokeOpacity={0.4} strokeWidth={2} />
+				<rect x={x - 10} y={540} width={200} height={HG - 540} fill={isO && o > 0 ? '#3A2416' : C.door} stroke={B.gold} strokeOpacity={0.4} strokeWidth={2} />
 				{isO && o > 0 && <Pool id="hD" x={x + 90} y={HG - 120} rx={120} ry={180} a={0.4 * o} />}
 				<path d={`M${x - 30},540 H${x + 210} L${x + 200},516 H${x - 20} Z`} fill="#1A1210" stroke={B.gold} strokeOpacity={0.35} strokeWidth={1.5} />
-				<rect x={x} y={548} width={90 * (1 - 0.7 * o)} height={HG - 548} fill="#2A1712" stroke={B.gold} strokeOpacity={0.3} strokeWidth={1.2} />
-				<rect x={x + 90 + 90 * 0.7 * o} y={548} width={90 * (1 - 0.7 * o)} height={HG - 548} fill="#2A1712" stroke={B.gold} strokeOpacity={0.3} strokeWidth={1.2} />
+				<rect x={x} y={548} width={90 * (1 - 0.7 * o)} height={HG - 548} fill={C.leaf} stroke={B.gold} strokeOpacity={0.3} strokeWidth={1.2} />
+				<rect x={x + 90 + 90 * 0.7 * o} y={548} width={90 * (1 - 0.7 * o)} height={HG - 548} fill={C.leaf} stroke={B.gold} strokeOpacity={0.3} strokeWidth={1.2} />
 				{isO && o > 0.3 && <Extra x={x + 90} g={HG} h={430} pose={grounded({lean: 10, neck: 10, lt: 3, lk: 3, rt: -4, rk: 4, la: 10, le: 20, ra: 4, re: 12})} era="qing" flip look={{dress: 'robe', head: 'bun'}} rimO={0.5 * o} />}
 			</g>; })}
 			{/* the reaction: the door ahead opens at the second clang and someone leans out */}
-			<Floor g={HG} x0={0} x1={5200} />
+			<Floor g={HG} x0={0} x1={5200} fill={C.ground} />
 			<Pool id="hF" x={wx + 120} y={HG + 4} rx={420} ry={44} a={0.3} />
 			{/* the seller: shoulder pole with two tubs, two brass bowls in his left hand */}
-			{(() => { const sh = J(sPose, 'RHand', sx, HG, 500, true); return <g>
+			{(() => { const sh = J(sPose, 'RHand', sx, HG, 500, sf); return <g>
 				<path d={`M${sh[0] - 105},${sh[1] + 6} L${sh[0] + 115},${sh[1] - 4}`} stroke="#8A6232" strokeWidth={8} strokeLinecap="round" />
 				{[-95, 105].map((dx, i) => <g key={i}><path d={`M${sh[0] + dx},${sh[1]} L${sh[0] + dx - 20},${HG - 130} M${sh[0] + dx},${sh[1]} L${sh[0] + dx + 20},${HG - 130}`} stroke="#B08850" strokeWidth={2} />
-					<path d={`M${sh[0] + dx - 40},${HG - 130} H${sh[0] + dx + 40} L${sh[0] + dx + 32},${HG - 40} H${sh[0] + dx - 32} Z`} fill="#3A2416" stroke={B.gold} strokeOpacity={0.4} strokeWidth={1.5} /></g>)}
+					<path d={`M${sh[0] + dx - 40},${HG - 130} H${sh[0] + dx + 40} L${sh[0] + dx + 32},${HG - 40} H${sh[0] + dx - 32} Z`} fill={C.tub} stroke={B.gold} strokeOpacity={0.4} strokeWidth={1.5} /></g>)}
 			</g>; })()}
-			<Extra x={sx} g={HG} h={500} pose={sPose} era="qing" flip look={{dress: 'tunic', legs: 'trousers', head: 'bald'}} rimO={0.6} />
+			<Extra x={sx} g={HG} h={500} pose={sPose} era="qing" flip={sf} look={{dress: 'tunic', legs: 'trousers', head: 'bald'}} rimO={0.6} />
 			<Bowl2 x={bh[0] + 4} y={bh[1] - 16} open={open} />
 			{clangs.map((c, i) => t >= c && t < c + 0.3 && <g key={i} opacity={1 - (t - c) / 0.3}>{Array.from({length: 7}, (_, k) => { const a = -Math.PI / 2 + (k - 3) * 0.4, r0 = 34 + 50 * (t - c), r1 = r0 + 20; return <path key={k} d={`M${bh[0] - 6 + Math.cos(a) * r0},${bh[1] - 20 + Math.sin(a) * r0} L${bh[0] - 6 + Math.cos(a) * r1},${bh[1] - 20 + Math.sin(a) * r1}`} stroke={BRZ.hi} strokeWidth={3.5} strokeLinecap="round" />; })}</g>)}
 			{t > 83.85 && <g transform={`translate(${-shiv},0)`}><path d={`M${cupP[0] - 30},${cupP[1] - 18} Q${cupP[0] - 26},${cupP[1] + 8} ${cupP[0]},${cupP[1] + 10} Q${cupP[0] + 26},${cupP[1] + 8} ${cupP[0] + 30},${cupP[1] - 18} Z`} fill="url(#brz51v)" stroke={BRZ.line} strokeWidth={1.2} />
@@ -442,7 +466,7 @@ const Hutong: React.FC<{t: number}> = ({t}) => {
    hall turns cool as he walks through it (K3).
    =================================================================================================================== */
 const KG = 905, KHt = 640, KCX = 1040, KTOP = 548, KCH = 180, KCW = 324;
-const kWx = (t: number) => 680 - (trap(88.2, 80, 88.2, vNat(KHt), 0.01, 0.45) - trap(t, 80, 88.2, vNat(KHt), 0.01, 0.45)) - trap(t, 93.0, 94.0, 140, 0.3, 0.3);
+const kWx = (t: number) => 680 - (trap(88.2, 80, 88.2, vNat(KHt), 0.01, 0.45) - trap(t, 80, 88.2, vNat(KHt), 0.01, 0.45));
 const Palace: React.FC<{t: number}> = ({t}) => {
 	const {x: wx, pose: wp0} = gait(kWx, t, KHt, vNat(KHt) * 0.8);
 	/* K2: his palm goes down into the falling cold and comes up; K3: he draws back a step (the source stays visible) */
@@ -451,9 +475,10 @@ const Palace: React.FC<{t: number}> = ({t}) => {
 	const cool = fade(t, BB(33), 1.2), label = fade(t, 87.9, 0.3) * (1 - fade(t, 89.6, 0.4)), cut = fade(t, 89.6, 0.5);
 	const breath = (i: number) => fade(t, BB(29) + i * 0.09, 0.4);
 	const camZ = 1 + 0.05 * seg(t, 88.0, 94.7), camX = 30 * Math.sin(Math.PI * seg(t, 88.0, 94.7));
-	return <Scene id="kP" sheen={0.3}>
+	const LK = useLook(), onK = LK !== 'cur', PK = palOf(LK, 'qianlong');
+	return <Scene id="kP" sheen={0.3} pe="qianlong" hz={300}>
 		<g transform={`translate(${960 + camX},560) scale(${camZ}) translate(-960,-560)`}>
-			<rect x={-40} y={300} width={W + 80} height={KG - 300} fill={BG.wall} />
+			<rect x={-40} y={300} width={W + 80} height={KG - 300} fill={onK ? PK.mid : BG.wall} />
 			{[[210, 380], [1330, 380]].map(([x0, w], i) => <g key={i}>
 				<rect x={x0} y={340} width={w} height={360} fill="#C9782E" opacity={0.42 * (1 - 0.6 * cool)} />
 				<rect x={x0} y={340} width={w} height={360} fill="#9FC6DE" opacity={0.3 * cool} />
@@ -463,10 +488,10 @@ const Palace: React.FC<{t: number}> = ({t}) => {
 					return <g key={k} stroke="#F2FAFF" strokeWidth={2} strokeLinecap="round" opacity={0.6} transform={`translate(${fx},${fy}) rotate(${60 * rnd(k, 84)})`}>{[0, 60, 120].map((a) => <path key={a} d={`M${-sz / 2},0 L${sz / 2},0`} transform={`rotate(${a})`} />)}</g>; })}</g>
 				<rect x={x0} y={340} width={w} height={360} fill="none" stroke={B.gold} strokeOpacity={0.4} strokeWidth={3} />
 				<path d={`M${x0 + 20},700 L${x0 + w - 20},700 L${x0 + w + 180},${KG} L${x0 + 140},${KG} Z`} fill="#FFB060" opacity={0.07 * (1 - cool)} /></g>)}
-			{[120, 780, 1220, 1820].map((x0, i) => <rect key={i} x={x0} y={260} width={50} height={KG - 260} fill="#3A140E" stroke={BG.line} strokeWidth={1.2} />)}
+			{[120, 780, 1220, 1820].map((x0, i) => <rect key={i} x={x0} y={260} width={50} height={KG - 260} fill={onK ? '#7A2416' : '#3A140E'} stroke={onK ? PK.line : BG.line} strokeWidth={1.2} />)}
 			<rect x={-40} y={262} width={W + 80} height={40} fill={BG.beam} stroke={BG.line} strokeWidth={1.5} />
 			<Pool id="kW" x={KCX - 60} y={600} rx={640} ry={420} a={0.34 * (1 - 0.7 * cool)} />
-			<Floor g={KG} lattice={false} />
+			<Floor g={KG} lattice={false} fill={onK ? PK.near : undefined} />
 			<path d={Array.from({length: 5}, (_, i) => `M-40,${KG + 20 + i * 36} H${W + 40}`).join(' ') + ' ' + Array.from({length: 22}, (_, i) => `M${-40 + i * 96},${KG} l${(i - 11) * 12},180`).join(' ')} stroke={B.gold} strokeOpacity={0.1} strokeWidth={1.5} />
 			{/* 整间屋子: the whole hall grades to cool blue */}
 			<rect x={-60} y={-60} width={W + 120} height={H + 120} fill="#46708F" opacity={0.42 * cool} style={{mixBlendMode: 'color'}} />
@@ -497,9 +522,11 @@ const Machine: React.FC<{t: number}> = ({t}) => {
 	const tank = {x: 1180, y: 600, w: 380, h: 300};
 	/* 97.5–97.95: push into the glowing tank; its light becomes the one lit window of the grid */
 	const TW: P2 = [1370, 726], zp = Math.exp(lerp(0, Math.log(2.9), ease(seg(t, 97.05, 97.95)))), kp = (zp - 1) / 1.9;
-	return <Scene id="mM" sheen={0.2}>
+	const onM = useLook() !== 'cur', LM = LOC.machine;
+	return <Scene id="mM" sheen={0.2} sky={onM ? LM.sky : undefined} hz={260}>
 		<g transform={`translate(${lerp(TW[0], 960, kp)},${lerp(TW[1], 540, kp)}) scale(${zp}) translate(${-TW[0]},${-TW[1]})`}>
-		<rect x={-40} y={240} width={W + 80} height={MG - 240} fill="#1E1210" />
+		<rect x={-40} y={240} width={W + 80} height={MG - 240} fill={onM ? LM.wall : '#1E1210'} />
+		{onM && <Pool id="mBk" x={wx + 40} y={MG - 0.5 * MH} rx={320} ry={380} a={0.22} col="#C8D8C0" />}
 		<path d={Array.from({length: 14}, (_, i) => `M-40,${270 + i * 46} H${W + 40}`).join(' ') + ' ' + Array.from({length: 60}, (_, i) => `M${(i % 2) * 45 + (i >> 1) * 90 - 40},${270 + (i % 14) * 46} v46`).join(' ')} stroke={B.gold} strokeOpacity={0.05} strokeWidth={1.5} />
 		<Pool id="mP" x={900} y={600} rx={800} ry={420} a={0.28} />
 		{/* pipes overhead, frosting */}
@@ -523,7 +550,7 @@ const Machine: React.FC<{t: number}> = ({t}) => {
 			<g clipPath="url(#mclip)"><IceBlock x={tank.x + 90} y={tank.y + tank.h - 36} w={200} h={180} d={0.1} seed={51} /></g></g>
 		{t >= DROP && t < DROP + 0.45 && <g opacity={1 - (t - DROP) / 0.45}><rect x={tank.x + 90} y={tank.y + tank.h - 216} width={200 + 30 * (t - DROP)} height={180} fill="none" stroke="#FFFFFF" strokeWidth={5} />{Array.from({length: 8}, (_, k) => { const a = k * Math.PI / 4, r0 = 120 + 160 * (t - DROP); return <path key={k} d={`M${tank.x + 190 + Math.cos(a) * r0},${tank.y + tank.h - 126 + Math.sin(a) * r0} l${Math.cos(a) * 24},${Math.sin(a) * 24}`} stroke="#F4FBFF" strokeWidth={4} strokeLinecap="round" />; })}</g>}
 		{Array.from({length: 18}, (_, i) => <path key={i} d={`M${tank.x + 6 + rnd(i, 61) * (tank.w - 12)},${tank.y + 4} l${-4 + 8 * rnd(i, 62)},${10 + 20 * rnd(i, 63) * frost}`} stroke="#F4FBFF" strokeWidth={3} strokeLinecap="round" opacity={frost} />)}
-		<Floor g={MG} />
+		<Floor g={MG} fill={onM ? LM.floor : undefined} />
 		<Pool id="mF" x={wx + 60} y={MG + 4} rx={300} ry={42} a={0.3} />
 		<Walker51 x={wx} g={MG} h={MH} pose={wp} look={LA.today.look} T={t} />
 		</g>
@@ -543,20 +570,21 @@ const Scrim: React.FC<{x: number; y: number; w: number; h: number; o?: number}> 
 	<div style={{position: 'absolute', left: x - 60, top: y - 50, width: w + 120, height: h + 100, opacity: o, background: 'radial-gradient(closest-side, rgba(10,5,3,0.86), rgba(10,5,3,0.74) 55%, rgba(10,5,3,0))'}} />;
 const Grid: React.FC<{t: number}> = ({t}) => {
 	const stars = Array.from({length: 40}, (_, i) => [rnd(i, 51) * W, 250 + rnd(i, 52) * 120, 1 + 1.5 * rnd(i, 53)]);
+	const onG = useLook() !== 'cur', LG = LOC.grid;
 	const zIn = t < 98.75 ? Math.exp(lerp(Math.log(15), 0, ease(seg(t, 97.95, 98.75)))) : 1, zOut = t > 103.0 ? Math.exp(lerp(0, Math.log(15), ease(seg(t, 103.0, 103.8)))) : 1, z = zIn * zOut;
 	const kc = (z - 1) / 14, sc: P2 = [lerp(LW[0], 960, Math.min(1, kc * 1.5)), lerp(LW[1], 540, Math.min(1, kc * 1.5))];
 	const sl = t >= BB(44) ? 0.22 : 0, nat = fade(t, 101.0, 0.35);
 	const rowLit = (r: number) => fade(t, 101.0 + (9 - r) * 0.1, 0.12);
 	const spill = [BB(49), BB(49) + 0.09, BB(49) + 0.18, BB(50), BB(50) + 0.09];
-	const tags = 1 - fade(t, 102.82, 0.18), walkingIn = t < 100.3, gw = gait(gWx, t, 355, 300 * 0.8);
+	const tags = 1 - fade(t, 102.82, 0.18), walkingIn = t < 100.3, gw = gait(gWx, t, 355, 300 * 0.8, STAND, walkingIn ? -1 : 1);
 	const houses: React.ReactNode[] = [];
 	for (let r = 0; r < 10; r++) for (let c = 0; c < 10; c++) {
 		const x = GX0 + c * GCW, y = GY0 + r * GCH, wall = y + GCH * 0.42, ww = GCW * 0.78, wx0 = x + (GCW - ww) / 2, win = {x: x + GCW / 2 - 17, y: wall + 6, w: 34, h: 20};
 		const isLit = r === 5 && c === 3, isSl = r === 5 && c === 4, L = Math.max(rowLit(r), isLit ? 1 : 0);
 		const city = (c >= 6 || (r + c) % 4 === 0) && !isLit && !isSl, m = city ? nat : 0;   // 2024: towns and city blocks among the villages
 		houses.push(<g key={`${r}-${c}`}>
-			<rect x={wx0} y={lerp(wall, y + 6, m)} width={ww} height={GCH - (lerp(wall, y + 6, m) - y) - 4} fill={m > 0 ? '#2C2A2E' : '#33201A'} stroke={B.gold} strokeOpacity={0.18} strokeWidth={1} />
-			{m < 1 && <path d={rnd(r * 10 + c, 61) > 0.5 ? `M${wx0 - 6},${wall + 2} L${x + GCW / 2},${y + 4} L${wx0 + ww + 6},${wall + 2} Z` : `M${wx0 - 8},${wall + 2} Q${x + GCW / 2},${y + 2} ${wx0 + ww + 8},${wall + 2} Z`} fill="#1E100B" stroke={B.gold} strokeOpacity={0.4} strokeWidth={1.4} opacity={1 - m} />}
+			<rect x={wx0} y={lerp(wall, y + 6, m)} width={ww} height={GCH - (lerp(wall, y + 6, m) - y) - 4} fill={m > 0 ? (onG ? '#3A3E50' : '#2C2A2E') : (onG ? LG.wall : '#33201A')} stroke={B.gold} strokeOpacity={0.18} strokeWidth={1} />
+			{m < 1 && <path d={rnd(r * 10 + c, 61) > 0.5 ? `M${wx0 - 6},${wall + 2} L${x + GCW / 2},${y + 4} L${wx0 + ww + 6},${wall + 2} Z` : `M${wx0 - 8},${wall + 2} Q${x + GCW / 2},${y + 2} ${wx0 + ww + 8},${wall + 2} Z`} fill={onG ? LG.roof : '#1E100B'} stroke={B.gold} strokeOpacity={0.4} strokeWidth={1.4} opacity={1 - m} />}
 			{m > 0 && <rect x={wx0 + 6} y={y + 12} width={ww - 12} height={10} fill="#140A07" stroke="#C9A060" strokeOpacity={0.5 * m} strokeWidth={1.2} opacity={m} />}
 			<rect x={win.x} y={win.y} width={win.w} height={win.h} fill="#140A07" stroke="#C9A060" strokeOpacity={0.75} strokeWidth={1.6} />
 			{L > 0 && <rect x={win.x} y={win.y} width={win.w} height={win.h} fill="#EAF6FF" opacity={L} />}
@@ -566,17 +594,17 @@ const Grid: React.FC<{t: number}> = ({t}) => {
 	const p1 = ease(seg(t, 101.0, 101.4)), p2 = land(seg(t, BB(48), BB(48) + 0.4)), num1 = land(seg(t, BB(44), BB(44) + 0.4)), pan1 = fade(t, 98.3, 0.35) * tags;
 	const P1x = lerp(1210, 1290, p1), P1y = lerp(300, 268, p1), P1s = lerp(1, 0.75, p1);
 	return <>
-		<Scene id="gG" sheen={0.15}>
+		<Scene id="gG" sheen={0.15} sky={onG ? LG.sky : undefined} hz={420}>
 			<g fill="#E8E0D0" opacity={0.35}>{stars.map(([x, y, r], i) => <circle key={i} cx={x} cy={y} r={r} />)}</g>
 			<g transform={`translate(${sc[0]},${sc[1]}) scale(${z}) translate(${-LW[0]},${-LW[1]})`}>
-				<path d={`M-40,${GY0 + 30} Q400,${GY0 - 40} 900,${GY0 + 10} Q1400,${GY0 + 50} 1960,${GY0 - 10} V${H} H-40 Z`} fill="#1A0E0A" />
+				<path d={`M-40,${GY0 + 30} Q400,${GY0 - 40} 900,${GY0 + 10} Q1400,${GY0 + 50} 1960,${GY0 - 10} V${H} H-40 Z`} fill={onG ? LG.hill : '#1A0E0A'} />
 				{houses}
 				{rowLit(5) < 1 && <ellipse cx={LW[0]} cy={LW[1] + 4} rx={GCW * 0.9} ry={GCH * 0.75} fill="url(#iceGlow)" />}
 				{spill.map((ts, i) => { const k = land(seg(t, ts, ts + 0.3)) * tags; if (k <= 0) return null; const fx = GX0 + 10 * GCW + 14, fy = GY0 + 60 + i * 62;
 					return <g key={i} transform={`translate(${fx + 20},${fy + 25}) scale(${k}) translate(${-fx - 20},${-fy - 25})`}>
 						<clipPath id={`sp${i}`}><rect x={fx - 2} y={fy - 2} width={i === 4 ? 0.8 * 30 : 40} height={60} /></clipPath>
 						<g clipPath={`url(#sp${i})`}><FridgeIcon x={fx} y={fy} h={52} /></g></g>; })}
-				<Floor g={935} />
+				<Floor g={935} fill={onG ? LG.floor : undefined} />
 				<Pool id="gW" x={gw.x} y={939} rx={240} ry={34} a={0.26} />
 				{gw.x < 2050 && <RimFig x={gw.x} ground={935} h={355} pose={walkingIn || gw.k > 0.05 ? gw.pose : grounded({lean: 0, neck: -18, lt: 3, lk: 3, rt: -4, rk: 4, la: 4, le: 14, ra: 4, re: 12})} look={LA.today.look} col={B.lac} flip={walkingIn} dx={walkingIn ? -3 : 3} dy={-2.5} />}
 			</g>
@@ -633,18 +661,19 @@ const Finale: React.FC<{t: number}> = ({t}) => {
 	else wp = ikArm(ikArm(wp, 'L', toBody(cupP[0] + cupW * 0.42, cupP[1] - 30, wx, g, wh, true)), 'R', inCup ? toBody(wx - 0.12 * wh, g - 0.45 * wh, wx, g, wh, true) : toBody(rh[0] + 10, rh[1] + 6, wx, g, wh, true));
 	const cubeY = lerp(rh[1], cupP[1] - cupW * 0.9, drop * drop);
 	const bloom = ease(seg(t, 109.6, 111.75));
-	return <Scene id="fin" sheen={0.2}>
+	const LF = useLook(), onF = LF !== 'cur', PF = palOf(LF, 'today');
+	return <Scene id="fin" sheen={0.2} pe="today" hz={800}>
 		{/* the kitchen (screen space, behind the world): dark wall, tiles, a counter run behind him */}
 		{kd > 0 && <g opacity={kd}>
-			<rect x={-40} y={0} width={W + 80} height={H} fill="#140A07" opacity={0.6} />
+			<rect x={-40} y={0} width={W + 80} height={H} fill={onF ? PF.mid : '#140A07'} opacity={onF ? 0.75 : 0.6} />
 			<path d={Array.from({length: 12}, (_, i) => `M${980 + i * 90},300 V560`).join(' ') + ' M980,390 H2000 M980,475 H2000'} stroke={B.gold} strokeOpacity={0.06} strokeWidth={1.5} />
-			<rect x={1180} y={560} width={800} height={340} fill="#1E100B" /><rect x={1180} y={560} width={800} height={4} fill={B.gold} opacity={0.3} />
+			<rect x={1180} y={560} width={800} height={340} fill={onF ? PF.panel : '#1E100B'} /><rect x={1180} y={560} width={800} height={4} fill={B.gold} opacity={0.3} />
 			<path d={Array.from({length: 3}, (_, i) => `M${1260 + i * 230},590 h190 v280 h-190 Z`).join(' ')} fill="none" stroke={B.gold} strokeOpacity={0.12} strokeWidth={1.5} />
 		</g>}
 		<g transform={`translate(${s[0]},${s[1]}) scale(${z}) translate(${-FC[0]},${-FC[1]})`}>
 			{/* the cold light filling the room on the peak */}
 			<ellipse cx={FC[0]} cy={FC[1]} rx={98} ry={190} fill="url(#iceGlow)" opacity={0.35 + 0.45 * bloom} />
-			<P1Line t={t} pscale={pscale} psnow={psnow} lab={lab} lineO={lineO} ffrost={ffrost} wx={wx} wpose={wp} wflip={!out} />
+			<P1Line t={t} pscale={pscale} psnow={psnow} lab={lab} lineO={lineO} ffrost={ffrost} wx={wx} wpose={wp} wflip={!out} ground={onF ? PF.near : undefined} />
 			<Cup x={cupP[0]} y={cupP[1]} w={cupW} frost={0.4 + 0.4 * seg(t, CLINK, CLINK + 1)} ice={inCup} />
 			{!inCup && <IceCubes x={t < CLINK - 0.21 ? rh[0] : cupP[0]} y={cubeY} s={13} n={2} seed={7} />}
 			{inCup && t < CLINK + 0.35 && <g opacity={1 - (t - CLINK) / 0.35}>{Array.from({length: 8}, (_, k) => { const a = -Math.PI * (0.15 + 0.7 * k / 7), r0 = 24 + 28 * (t - CLINK), r1 = r0 + 9; return <path key={k} d={`M${cupP[0] + Math.cos(a) * r0},${cupP[1] - cupW * 1.35 + Math.sin(a) * r0 * 0.6} L${cupP[0] + Math.cos(a) * r1},${cupP[1] - cupW * 1.35 + Math.sin(a) * r1 * 0.6}`} stroke="#F4FBFF" strokeWidth={1.6} strokeLinecap="round" />; })}</g>}

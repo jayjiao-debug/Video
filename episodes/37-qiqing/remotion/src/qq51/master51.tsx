@@ -1,7 +1,7 @@
 import React from 'react';
 import {Img} from 'remotion';
 import {W, H, Subs, Counter, seg, cl, lerp, eout, land, KAI, SANS} from '../qq50/kit50';
-import {B, thB, SealB, curl} from '../qq50/styleB';
+import {B, thB, curl} from '../qq50/styleB';
 import {useStampFonts, YEAR, SEAL_SRC, SAFE_X, SAFE_Y} from '../qq44/skin44';
 import {LINES51, lineAt, lastLine, CARD_T, TITLE_T, GUESS_T} from './lines51';
 /* ep51 master overlays + shared timing (Builder A; started from master50).
@@ -10,7 +10,7 @@ import {LINES51, lineAt, lastLine, CARD_T, TITLE_T, GUESS_T} from './lines51';
      beatAt(t) → {n, t0, ph} on whichever grid is active, nearestBeat(t).
    - wipes: Pillar, WipeSplit, pillarX, wipeSpan, PILLAR_W, PILLAR_V, PillarKind
      ('post' | 'banner' | 'redpillar' | 'gate' | 'screen' | 'shop' | 'door' | 'pipe' | 'vermilion').
-   - overlay: Subtitles, StampLayer, CounterLayer, TitleCard, Overlay (all hidden from CARD_T; the end card is B's),
+   - overlay: Subtitles, StampLayer, CounterLayer (no longer drawn, owner r3), SealHollow, TitleCard, Overlay (all hidden from CARD_T; the end card is B's),
      cq (ASCII " → curly “”).
    The overlay draws all subtitles/stamps/counters from lines51.ts, so parts draw only picture. */
 
@@ -169,11 +169,17 @@ export const TitleCard: React.FC<{t: number}> = ({t}) => { if (t < TITLE_T[0] ||
 		</div></div>; };
 
 /** everything that sits on top of the picture (hidden from the end card on; B's end card draws its own) */
+/** the J seal, hollow (owner r3): an outline ring + a line-only J, ~65 % opacity, same phone-safe place as before */
+export const SealHollow: React.FC<{o?: number}> = ({o = 0.65}) => <svg width={92} height={92} viewBox="0 0 92 92" style={{position: 'absolute', right: SAFE_X + 1, bottom: SAFE_Y - 1, opacity: o}}>
+	<circle cx={46} cy={46} r={39} fill="none" stroke="#D0583C" strokeWidth={3.2} />
+	<circle cx={46} cy={46} r={33} fill="none" stroke="#D0583C" strokeWidth={1.2} opacity={0.7} />
+	<path d="M38,27 H58 M50,27 V56 Q50,67 40,67 Q32,67 30,59" fill="none" stroke="#D0583C" strokeWidth={4.2} strokeLinecap="round" strokeLinejoin="round" transform="rotate(-6,46,46)" />
+</svg>;
+/** everything on top of the picture. Owner r3: no bottom-left counter for the whole film (the stamp carries the era). */
 export const Overlay: React.FC<{t: number}> = ({t}) => <>
 	<Subtitles t={t} />
 	<StampLayer t={t} />
-	<CounterLayer t={t} />
-	{t < CARD_T && <SealB />}
+	{t < CARD_T && <SealHollow />}
 	<TitleCard t={t} />
 	<Img src={SEAL_SRC} style={{position: 'absolute', width: 1, height: 1, opacity: 0}} />
 </>;

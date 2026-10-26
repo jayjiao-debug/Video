@@ -1,7 +1,7 @@
 import React from 'react';
 import {W, H, lerp, rnd, cl} from '../qq50/kit50';
 import {B, BG, RimFig} from '../qq50/styleB';
-import {Pose, Look4} from '../qq44/figure44';
+import {Pose, Look4, Figure4} from '../qq44/figure44';
 /* ep51 「古代没有冰箱，夏天怎么吃冰？」 shared props (Builder A owns this file; Builder B may import, never edit).
    The look is ep50's B v3 (漆 · night). The ONE new accent is ice: cool blue-white (core #EAF6FF, body #BFE3F2, shade #6FA9C4).
    Every ice drawing has translucent facets, a bright top edge, an inner highlight and crisp chisel marks.
@@ -35,8 +35,9 @@ export const IcePool: React.FC<{x: number; y: number; rx: number; ry?: number; o
 /** a hand-cut ice block, seen from slightly above-right. (x, y) = centre of the front bottom edge (where it sits); w × h front
     face, d depth; side = which side face shows (1 right, -1 left). marks: chisel marks on the front face. melt 0..1 rounds and
     shrinks it (for the vault). seed varies the cut. */
-export const IceBlock: React.FC<{x: number; y: number; w: number; h: number; d?: number; side?: 1 | -1; marks?: boolean; seed?: number; o?: number; melt?: number; rot?: number}> =
-	({x, y, w, h, d = w * 0.42, side = 1, marks = true, seed = 1, o = 1, melt = 0, rot = 0}) => {
+/** warmEdge 0..1: a thin warm outline that separates the ice from a blue field (palette51 'iceEdge') */
+export const IceBlock: React.FC<{x: number; y: number; w: number; h: number; d?: number; side?: 1 | -1; marks?: boolean; seed?: number; o?: number; melt?: number; rot?: number; warmEdge?: number}> =
+	({x, y, w, h, d = w * 0.42, side = 1, marks = true, seed = 1, o = 1, melt = 0, rot = 0, warmEdge = 0}) => {
 		const j = (k: number, a: number) => (rnd(seed * 13 + k, 3) - 0.5) * a;   // small irregular cut
 		const k = 1 - 0.35 * melt, ww = w * k, hh = h * k, dd = d * k;
 		const ox = side * dd * 0.55, oy = -dd * 0.48;
@@ -59,6 +60,7 @@ export const IceBlock: React.FC<{x: number; y: number; w: number; h: number; d?:
 				return {d: `M${cx.toFixed(1)},${cy.toFixed(1)} l${L.toFixed(1)},${(L * 0.3).toFixed(1)}`, lip: `M${cx.toFixed(1)},${(cy + sw * 1.6).toFixed(1)} l${L.toFixed(1)},${(L * 0.3).toFixed(1)}`}; })] : [];
 		return <g transform={`translate(${x},${y}) rotate(${rot})`} opacity={o}>
 			<defs><clipPath id={cid}><path d={front} /></clipPath></defs>
+			{warmEdge > 0 && <path d={`${front} ${top} ${sideD}`} fill="none" stroke="#FFC888" strokeWidth={sw * 5} strokeLinejoin="round" opacity={0.55 * warmEdge} />}
 			<path d={sideD} fill="url(#ice51S)" opacity={0.95} />
 			<path d={top} fill="url(#ice51T)" />
 			<path d={front} fill="url(#ice51F)" opacity={0.93} />
@@ -132,13 +134,14 @@ export const Snow: React.FC<{x0?: number; y0?: number; x1?: number; y1?: number;
 /* ---------- sets ---------- */
 /** the frozen river at night: far bank with bare trees and snow, the ice sheet with cracks and a faint cold sheen. g = the
     near edge line where people stand (the ice), horizon ≈ g - 230 */
-export const FrozenRiver: React.FC<{g: number; t?: number; id?: string}> = ({g, t = 0, id = 'fr'}) => { const hz = g - 250;
+/** pal (optional, palette51 looks): far = far bank fill, field = the ice sheet gradient, bank = near snow bank, line = tree line */
+export const FrozenRiver: React.FC<{g: number; t?: number; id?: string; pal?: {far?: string; field?: [string, string]; bank?: string; line?: string}}> = ({g, t = 0, id = 'fr', pal = {}}) => { const hz = g - 250;
 	return <g>
-		<defs><linearGradient id={`frI${id}`} x1="0" y1="0" x2="0" y2="1"><stop offset="0" stopColor="#1E1614" /><stop offset="0.5" stopColor="#1A1210" /><stop offset="1" stopColor="#120B09" /></linearGradient></defs>
+		<defs><linearGradient id={`frI${id}`} x1="0" y1="0" x2="0" y2="1"><stop offset="0" stopColor={pal.field?.[0] ?? '#1E1614'} /><stop offset="0.5" stopColor={pal.field ? pal.field[0] : '#1A1210'} stopOpacity={pal.field ? 0.85 : 1} /><stop offset="1" stopColor={pal.field?.[1] ?? '#120B09'} /></linearGradient></defs>
 		{/* far bank: low hills, bare trees, a snow line */}
-		<path d={`M-40,${hz} Q260,${hz - 70} 520,${hz - 30} Q860,${hz - 95} 1180,${hz - 40} Q1520,${hz - 80} 1960,${hz - 20} V${hz + 20} H-40 Z`} fill={B.far} />
+		<path d={`M-40,${hz} Q260,${hz - 70} 520,${hz - 30} Q860,${hz - 95} 1180,${hz - 40} Q1520,${hz - 80} 1960,${hz - 20} V${hz + 20} H-40 Z`} fill={pal.far ?? B.far} />
 		<path d={`M-40,${hz} Q260,${hz - 70} 520,${hz - 30} Q860,${hz - 95} 1180,${hz - 40} Q1520,${hz - 80} 1960,${hz - 20}`} fill="none" stroke={SNOW} strokeOpacity={0.16} strokeWidth={3} />
-		{[[180, 1.0], [430, 0.7], [1330, 0.85], [1640, 1.1], [1820, 0.6]].map(([x, s], i) => <g key={i} stroke={BG.line} strokeWidth={2.2 * s} fill="none" strokeLinecap="round">
+		{[[180, 1.0], [430, 0.7], [1330, 0.85], [1640, 1.1], [1820, 0.6]].map(([x, s], i) => <g key={i} stroke={pal.line ?? BG.line} strokeWidth={2.2 * s} fill="none" strokeLinecap="round">
 			<path d={`M${x},${hz - 20} L${x + 4},${hz - 20 - 150 * s} M${x + 2},${hz - 20 - 70 * s} L${x - 40 * s},${hz - 20 - 130 * s} M${x + 3},${hz - 20 - 100 * s} L${x + 46 * s},${hz - 20 - 160 * s} M${x - 18 * s},${hz - 20 - 105 * s} L${x - 30 * s},${hz - 20 - 150 * s}`} /></g>)}
 		<rect x={-40} y={hz} width={W + 80} height={H - hz + 40} fill={`url(#frI${id})`} />
 		<path d={`M-40,${hz + 3} H${W + 40}`} stroke={SNOW} strokeOpacity={0.22} strokeWidth={4} />
@@ -150,9 +153,9 @@ export const FrozenRiver: React.FC<{g: number; t?: number; id?: string}> = ({g, 
 			<path d={`M860,${hz + 40} L960,${hz + 80} L1120,${hz + 70}`} />
 		</g>
 		{/* snow drifts at the near edge */}
-		<path d={`M-40,${H + 10} V${g + 90} Q160,${g + 60} 330,${g + 96} Q520,${g + 120} 700,${g + 140} V${H + 10} Z`} fill="#2A201C" />
+		<path d={`M-40,${H + 10} V${g + 90} Q160,${g + 60} 330,${g + 96} Q520,${g + 120} 700,${g + 140} V${H + 10} Z`} fill={pal.bank ?? '#2A201C'} />
 		<path d={`M-40,${g + 90} Q160,${g + 60} 330,${g + 96} Q520,${g + 120} 700,${g + 140}`} fill="none" stroke={SNOW} strokeOpacity={0.28} strokeWidth={3} />
-		<path d={`M1300,${H + 10} Q1500,${g + 110} 1960,${g + 70} V${H + 10} Z`} fill="#2A201C" />
+		<path d={`M1300,${H + 10} Q1500,${g + 110} 1960,${g + 70} V${H + 10} Z`} fill={pal.bank ?? '#2A201C'} />
 		<path d={`M1300,${H + 10} Q1500,${g + 110} 1960,${g + 70}`} fill="none" stroke={SNOW} strokeOpacity={0.24} strokeWidth={3} />
 	</g>; };
 
@@ -329,13 +332,15 @@ export const qingParts = (pose: Pose, x: number, g: number, h: number, sway = 0)
 	const queue = `M${(a[0] - bw).toFixed(1)},${a[1].toFixed(1)} Q${(a[0] - 0.035 * h).toFixed(1)},${(a[1] + len * 0.5).toFixed(1)} ${(ex - bw * 0.4).toFixed(1)},${ey.toFixed(1)} L${(ex + bw * 0.4).toFixed(1)},${(ey + 0.02 * h).toFixed(1)} Q${(a[0] - 0.012 * h).toFixed(1)},${(a[1] + len * 0.5).toFixed(1)} ${(a[0] + bw).toFixed(1)},${a[1].toFixed(1)} Z`;
 	return [cap, knot, queue]; };
 /** the walker / a cast member: ep50 RimFig plus the ep51 extras (Qing cap + queue) */
-export const Walker51: React.FC<{x: number; g: number; h: number; pose: Pose; look: Look4; qing?: boolean; col?: string; flip?: boolean; rimO?: number; dx?: number; dy?: number; T?: number}> = ({x, g, h, pose, look, qing, col = B.lac, flip, rimO = 0.9, dx, dy, T = 0}) => {
+/** rim (optional): the rim-light colour (default the ep50 warm rim) */
+export const Walker51: React.FC<{x: number; g: number; h: number; pose: Pose; look: Look4; qing?: boolean; col?: string; flip?: boolean; rimO?: number; dx?: number; dy?: number; T?: number; rim?: string}> = ({x, g, h, pose, look, qing, col = B.lac, flip, rimO = 0.9, dx, dy, T = 0, rim}) => {
 	const ddx = dx ?? (flip ? -2.5 : 3), ddy = dy ?? -2.5;
 	const extra = qing ? qingParts(pose, x, g, h, Math.sin(T * 2)) : [];
 	const tf = flip ? `translate(${2 * x},0) scale(-1,1)` : undefined;
 	return <g>
-		{extra.length > 0 && <g transform={tf}><g transform={`translate(${flip ? -ddx : ddx},${ddy})`} opacity={rimO}>{extra.map((d, i) => <path key={i} d={d} fill={BG.rim} />)}</g></g>}
-		<RimFig x={x} ground={g} h={h} pose={pose} look={look} col={col} flip={flip} dx={ddx} dy={ddy} rimO={rimO} T={T} />
+		{extra.length > 0 && <g transform={tf}><g transform={`translate(${flip ? -ddx : ddx},${ddy})`} opacity={rimO}>{extra.map((d, i) => <path key={i} d={d} fill={rim ?? BG.rim} />)}</g></g>}
+		{rim ? <g><g transform={`translate(${ddx},${ddy})`} opacity={rimO}><Figure4 x={x} ground={g} h={h} pose={pose} look={look} col={rim} flip={flip} T={T} /></g><Figure4 x={x} ground={g} h={h} pose={pose} look={look} col={col} flip={flip} T={T} /></g>
+			: <RimFig x={x} ground={g} h={h} pose={pose} look={look} col={col} flip={flip} dx={ddx} dy={ddy} rimO={rimO} T={T} />}
 		{extra.length > 0 && <g transform={tf}>{extra.map((d, i) => <path key={i} d={d} fill={col} />)}</g>}
 	</g>; };
 
