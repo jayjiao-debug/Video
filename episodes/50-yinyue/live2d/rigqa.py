@@ -22,11 +22,11 @@ for k, vs in ext.items():
 cases.append(('all+', {k: vs[0] for k, vs in ext.items()})); cases.append(('all-', {k: vs[1] for k, vs in ext.items()}))
 joints = {'neck': (512, nk), **{k: tuple(P[k]) for k in ('armL', 'armR', 'tail', 'legL', 'legR') if k in P}}
 rest = compose({})
-CORE = nd.binary_erosion(np.asarray(RIG.L['body'])[..., 3] > 200, iterations=4)   # moving parts may uncover background; the body itself never may
+CORE = nd.binary_erosion(np.asarray(RIG.L['torso'])[..., 3] > 200, iterations=4)   # moving parts may uncover background; the body itself never may
 findings = []
 def check(name, comp, T=None):
     a = np.asarray(comp)[..., 3] / 255.; rgb = np.asarray(comp)[..., :3].astype(float)
-    core = nd.binary_erosion(np.asarray(RIG.compose(T or {}, order=['body']))[..., 3] > 200, iterations=4)
+    core = nd.binary_erosion(np.asarray(RIG.compose(T or {}, order=['torso']))[..., 3] > 200, iterations=4)
     see = core & (a < .93)                                   # background shows through inside the figure
     lab, n = nd.label(nd.binary_dilation(see, iterations=2))
     for i in range(1, n + 1):
