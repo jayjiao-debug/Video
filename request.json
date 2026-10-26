@@ -1,26 +1,103 @@
 {
- "id": "ep50-sfx-02",
+ "id": "ep51-sfx-01",
  "items": [
   {
    "type": "sfx",
-   "name": "sfx_woodblock_print",
-   "text": "one single heavy wooden printing block pressed onto paper on a wooden table: one firm dull thump, then a short soft paper peel, dry, close, no repeats",
+   "name": "sfx_fridge_open",
+   "text": "a household refrigerator door pulled open: one soft rubber seal unsticking pop, then a low steady electric compressor hum, close, quiet room",
+   "duration": 2.0,
+   "influence": 0.6
+  },
+  {
+   "type": "sfx",
+   "name": "sfx_light_click",
+   "text": "one small plastic light switch click inside a refrigerator, then a low electric hum that stops abruptly into silence",
+   "duration": 1.2,
+   "influence": 0.6
+  },
+  {
+   "type": "sfx",
+   "name": "sfx_rewind_ice",
+   "text": "fast reversed sound of ice cracking and wind, a rising backwards whoosh with tiny crackles, about two seconds, ends abruptly",
+   "duration": 2.0,
+   "influence": 0.5
+  },
+  {
+   "type": "sfx",
+   "name": "sfx_ice_chisel",
+   "text": "two sharp metal chisel strikes on thick river ice, bright crisp chips flying, cold outdoor night, short gap between strikes",
+   "duration": 1.5,
+   "influence": 0.6
+  },
+  {
+   "type": "sfx",
+   "name": "sfx_ice_slide",
+   "text": "a heavy block of ice sliding across ice then dropping into a dark pit with one dull thud",
+   "duration": 1.8,
+   "influence": 0.6
+  },
+  {
+   "type": "sfx",
+   "name": "sfx_ice_bronze",
+   "text": "a block of ice knocked down into a bronze vessel: one hollow metallic clunk with a short bronze ring",
    "duration": 1.0,
    "influence": 0.6
   },
   {
    "type": "sfx",
-   "name": "sfx_guess_tick",
-   "text": "one single dry wooden clock tick, very short and close, no reverb, no second tick",
-   "duration": 0.5,
+   "name": "sfx_ladle_pour",
+   "text": "a bronze ladle pouring a little cold wine into a small cup, short liquid pour, then a faint tiny frost crackle",
+   "duration": 1.6,
    "influence": 0.6
   },
   {
    "type": "sfx",
-   "name": "sfx_seal_paper",
-   "text": "one single red seal stamp pressed onto thick paper, one soft low thump, no second hit",
-   "duration": 0.5,
+   "name": "sfx_silver_ting",
+   "text": "one single clear light ting of a silver bowl struck softly, bright and pure, short ring",
+   "duration": 1.2,
    "influence": 0.6
+  },
+  {
+   "type": "sfx",
+   "name": "sfx_chisel_stone",
+   "text": "two hard chisel strikes on frozen ice that sound like chiselling stone, ringing hard clacks at night, slight echo",
+   "duration": 1.6,
+   "influence": 0.6
+  },
+  {
+   "type": "sfx",
+   "name": "sfx_drips",
+   "text": "slow single water drips falling into a small puddle in a cool stone cellar, one drop every half second, quiet",
+   "duration": 3.0,
+   "influence": 0.5
+  },
+  {
+   "type": "sfx",
+   "name": "sfx_brass_bowls",
+   "text": "two small brass bowls clinked together twice in one hand, a bright ringing clang clang, street vendor call signal",
+   "duration": 1.4,
+   "influence": 0.6
+  },
+  {
+   "type": "sfx",
+   "name": "sfx_ice_glass",
+   "text": "three ice cubes dropped into an empty glass tumbler: crisp clinks and a short rattle",
+   "duration": 1.2,
+   "influence": 0.6
+  },
+  {
+   "type": "sfx",
+   "name": "sfx_frost_bloom",
+   "text": "a soft crystalline shimmer of frost forming on glass, delicate icy tinkling sparkle swelling then fading",
+   "duration": 2.0,
+   "influence": 0.5
+  },
+  {
+   "type": "sfx",
+   "name": "sfx_mist_breath",
+   "text": "a soft cool airy whoosh of cold mist breathing out and spreading across a stone floor, gentle",
+   "duration": 2.0,
+   "influence": 0.5
   }
  ]
 }
