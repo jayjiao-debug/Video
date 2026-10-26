@@ -24,14 +24,25 @@ def charmask(im):
 def largest(m):
     lab, n = nd.label(m)
     return lab == (np.argmax(nd.sum(m, lab, range(1, n + 1))) + 1) if n else m
-def decontam(rgb, m):
-    """replace the outer 3 px (anti-aliased against white) with the nearest inner colour: no white fringe"""
-    inner = nd.binary_erosion(m, iterations=3)
-    _, (iy, ix) = nd.distance_transform_edt(~inner, return_indices=True)
-    o = rgb.copy(); ring = m & ~inner; o[ring] = rgb[iy[ring], ix[ring]]; return o
+def decontam(rgb, m, bg=None):
+    """edge pixels facing the background were anti-aliased against white: give them the darkest colour nearby
+    (every silhouette in this art is an outline), and colour the pixels just outside the mask the same way so a
+    soft alpha never shows a pale rim. Internal cuts (not facing the background) are left alone."""
+    bgm = ~m if bg is None else bg
+    ring = nd.binary_dilation(bgm, iterations=3) & m
+    out_ = nd.binary_dilation(m, iterations=2) & ~m
+    lum = rgb.mean(2); dk = lum < 75
+    src = m & dk
+    o = rgb.copy()
+    if src.any():
+        _, (iy, ix) = nd.distance_transform_edt(~src, return_indices=True)
+        near = nd.distance_transform_edt(~src) < 5
+        sel = (ring & near & (lum > 75)) | out_
+        o[sel] = rgb[iy[sel], ix[sel]]
+    return o
 def fill_specks(im):
     dk = im.mean(2) < 110
-    sp = nd.binary_closing(dk, iterations=2) & ~dk & (im.min(2) > 190)
+    sp = nd.binary_closing(dk, iterations=3) & ~dk & (im.min(2) > 190)
     o = im.copy(); o[sp] = INK; return o
 F = fill_specks(F); A = fill_specks(A)
 cA, cF = charmask(A), charmask(F)
@@ -73,6 +84,7 @@ cand = cF & (F.min(2) >= 246) & (F.max(2) - F.min(2) <= 5) & (nd.distance_transf
 lab_, n_ = nd.label(cand); sz_ = nd.sum(cand, lab_, range(1, n_ + 1))
 pocket = np.isin(lab_, [i + 1 for i, v in enumerate(sz_) if v <= 120])   # only small pockets trapped between strokes
 gapF |= pocket
+gapF |= nd.binary_dilation(gapF, iterations=2) & (F.mean(2) > 170) & ~(F.mean(2) < 110)   # its anti-aliased rim too
 cF = cF & ~pocket
 tail = largest(nd.binary_closing(cA & tp & ~Ahead & ~white, iterations=3) & cA & ~white)
 neutralA = (A.min(2) >= 246) & (A.max(2) - A.min(2) <= 5)
@@ -82,7 +94,8 @@ under = nd.binary_dilation(tail, iterations=24) & nd.binary_erosion(Abody, itera
 tailx = tail | under
 _, (iy, ix) = nd.distance_transform_edt(~tail, return_indices=True)
 T_rgb = A.copy(); T_rgb[under] = A[iy[under], ix[under]]
-save('tail', decontam(T_rgb, tailx), tailx * np.where(under, 1, nd.gaussian_filter(tailx.astype(float), .8))); info['pivots']['tail'] = CFG['tailPivot']
+bgA = ~cA | (tp & white) | (nd.binary_dilation(tp, iterations=30) & (A.min(2) >= 246) & (A.max(2) - A.min(2) <= 5))
+save('tail', decontam(T_rgb, tailx, bgA), np.maximum(tailx * np.where(nd.binary_dilation(bgA, iterations=2), nd.gaussian_filter(tailx.astype(float), .8), 1), 0)); info['pivots']['tail'] = CFG['tailPivot']
 tcut = tail & ~nd.binary_erosion(tail, iterations=1) & nd.binary_dilation(Abody, iterations=3) & ~near_root
 tstroke = nd.binary_dilation(tcut, iterations=4) & tail & ~darkA
 if tstroke.sum() > 20: save('tail_edge', np.broadcast_to(INK, F.shape).copy(), nd.gaussian_filter(tstroke.astype(float), .7) * tail)
@@ -129,7 +142,8 @@ for k, c in CFG['arms'].items():
         full_ = shape | ring
         rgb = np.where((ring & ~(arm & darkF))[..., None], INK, rgb)    # a fresh outline where it had none (the root)
         sil = nd.gaussian_filter(full_.astype(float), .9)
-        Image.fromarray(np.dstack([np.clip(decontam(rgb, full_), 0, 255), sil * 255]).astype(np.uint8)).save(f'{out}/arm_master.png')
+        rgb = np.where((~full_)[..., None], INK, rgb)
+        Image.fromarray(np.dstack([np.clip(rgb, 0, 255), sil * 255]).astype(np.uint8)).save(f'{out}/arm_master.png')
         json.dump({'pivot': list(map(float, pm))}, open(f'{out}/arm_master.json', 'w'))
 # 2) place the master arm (mirrored for the right) at each pose's shoulder pivots; arms are drawn BEHIND the torso
 MA = Image.open(f'{out}/arm_master.png'); pm = json.load(open(f'{out}/arm_master.json'))['pivot']
@@ -143,13 +157,15 @@ for k, c in CFG['arms'].items():
     placed = np.asarray(im.transform((1024, 1024), Image.AFFINE, inv_, resample=Image.BICUBIC)).astype(float)
     save(k, placed[..., :3], placed[..., 3] / 255.)
     info['pivots'][k] = list(pv); info['deform'][k] = [0, 1]          # rigid swing about the hidden pivot
+    info.setdefault('limits', {})[k] = ([-40, 40] if pose == 'sit' else ([-6, 45] if k == 'armL' else [-45, 6]))
 # ---------- legs (reference picture), behind the torso
 legs = {}; crotch = None
 if CFG['legs']:
     xs = np.arange(1024); crotch = (xs > 440) & (xs < 600) & ~cA[940]
     for k, (p, pv) in CFG['legs'].items():
         m = cF & poly(p) & ~((yy > CFG['hipY']) & crotch[None, :]); legs[k] = m
-        save(k, decontam(F, m), m * softF); info['pivots'][k] = pv
+        bgL = ~cF
+        save(k, decontam(F, m, bgL), m * np.where(nd.binary_dilation(bgL, iterations=2), softF, 1)); info['pivots'][k] = pv
     feet = int(np.where(np.any(list(legs.values()), 0).any(1))[0].max())
     info['deform']['leg'] = [CFG['hipY'] + 12, CFG['hipY'] + 12 + .4 * (feet - CFG['hipY'])]
 # ---------- torso: the reference picture minus arms, tail and legs; the arm areas filled from the armless picture
@@ -159,29 +175,38 @@ if legs:
     legzone = np.any([poly(p) for p, _ in CFG['legs'].values()], 0)
     T &= ~(legzone & (yy > CFG['hipY']) & ~(crotch[None, :] & (yy < CFG['hipY'] + 28)))
 headzone = nd.binary_dilation(Hd[..., 3] > 60, iterations=16 if pose == 'stand' else 3)   # standing: the shoulder fur under the cheek stays with the torso
-T &= ~(allarm & ~Abody & ~headzone & ~(darkF & nd.binary_dilation(hsolid, iterations=16)))   # remove the arm, keep the head and its cheek outline
+keepcheek = (darkF & nd.binary_dilation(hsolid, iterations=16)) if pose == 'stand' else np.zeros_like(T)
+T &= ~(allarm & ~Abody & ~headzone & ~keepcheek)   # remove the arm, keep the head (and, standing, its cheek outline)
 T &= ~(gapF & ~Abody)
+outside = T & ~Abody & ~headzone
+lab_, n_ = nd.label(outside); sz_ = nd.sum(outside, lab_, range(1, n_ + 1))
+T &= ~np.isin(lab_, [i + 1 for i, v in enumerate(sz_) if v < 400])      # stubs / chips of the old arm outline
 T = largest(T)
 import cv2
 zone = np.zeros((1024, 1024), bool)
 for k, c in CFG['arms'].items():
     side = k[-1]
-    for y in range(c['y0'], c['yjoin'] + 40):
+    for y in range(c['y0'], c['yjoin'] + 6):
         e = edge_of(darkA & cA & ~Ahead & ~nd.binary_dilation(tail | tp, iterations=6), y, side)
         if e is None: continue
         if side == 'L': zone[y, :e + 44] = True
         else: zone[y, e - 44:] = True
 zone &= Abody & ~hsolid
+orangeF = (F[..., 0] > 200) & (F[..., 2] < 170) & (F[..., 0] - F[..., 2] > 60)
+protect = (nd.binary_dilation(darkF, iterations=4) | nd.binary_dilation(orangeF, iterations=2)) & ~nd.binary_dilation(allarm, iterations=4)
+zone &= ~protect                                  # other strokes (cheek-line tips) and body patches stay as drawn
 zone |= allarm & Abody
 furmed = np.median(F[Abody & ~darkF & ~zone & (yy > neckY)], 0)
-Fs = F.copy(); Fs[~Abody] = furmed
+Fs = F.copy(); Fs[~Abody] = furmed; Fs[nd.binary_dilation(darkF, iterations=3)] = furmed   # paint from fur only, never smear strokes
 paint = cv2.inpaint(np.clip(Fs, 0, 255).astype(np.uint8), (zone | (allarm & ~Abody)).astype(np.uint8) * 255, 9, cv2.INPAINT_TELEA).astype(float)
 outlineA = darkA & zone
 w = nd.gaussian_filter(zone.astype(float), 3) * zone                      # feather into the reference fur
 Tr = F * (1 - w[..., None]) + paint * w[..., None]
 aA = nd.gaussian_filter(outlineA.astype(float), .7)[..., None]
 Tr = Tr * (1 - aA) + A * aA                                                # the armless body's side outline
-save('torso', decontam(Tr, T), T * np.where(nd.binary_erosion(cF | cA, iterations=2), 1, np.maximum(softF, softA)))
+bgT = ~(cF | cA) | (allarm & ~Abody) | gapF | (~T & nd.binary_dilation(tp, iterations=30) & ~tail)
+Ta = T * np.where(nd.binary_dilation(bgT, iterations=2), nd.gaussian_filter(T.astype(float), .8), 1)
+save('torso', decontam(Tr, T, bgT), Ta)
 # ---------- head warp zone: full head motion above warp[1], none below warp[0] (shoulders and arm roots stay put)
 y_arm = min(c['y0'] for c in CFG['arms'].values())
 info['head'] = {'scale': s, 'neckY': int(neckY), 'pivot': [float(mx), float(neckY - 20)],

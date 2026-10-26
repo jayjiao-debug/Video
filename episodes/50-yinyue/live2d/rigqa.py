@@ -13,7 +13,7 @@ from rigrender import Rig
 RIG = Rig(R, pose)
 def compose(T): return RIG.compose(T)
 # stress set: each part alone at both extremes, then everything at once
-ext = {'head': [(9, 0, -12), (-9, 0, 8)], 'armL': [(45,), (-45,)], 'armR': [(45,), (-45,)],
+ext = {'head': [(9, 0, -12), (-9, 0, 8)], 'armL': [(45,), (-45,)], 'armR': [(-45,), (45,)],
        'tail': [(16,), (-16,)], 'legL': [(22,), (8,)], 'legR': [(22,), (8,)], 'body': [(0, .06), (0, -.03)]}
 cases = [('rest', {})]
 for k, vs in ext.items():

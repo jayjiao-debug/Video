@@ -50,6 +50,8 @@ class Rig:
             img = self.L[n]
             if n in ('armL', 'armR'):
                 ang = T.get(n, (0,))[0]
+                lim = self.info.get('limits', {}).get(n)
+                if lim: ang = float(np.clip(ang, *lim))                 # e.g. standing arms never swing into the body
                 if ang and n + '_edge' in self.L:              # inner-edge outline fades in as the arm bends away
                     e = self.L[n + '_edge'].copy(); e[..., 3] *= min(1, abs(ang) / 6.)
                     a = e[..., 3:] / 255.; img = img.copy(); img[..., :3] = e[..., :3] * a + img[..., :3] * (1 - a)
