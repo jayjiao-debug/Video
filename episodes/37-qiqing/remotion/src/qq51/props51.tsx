@@ -256,10 +256,11 @@ export const Jianfou: React.FC<{x: number; y: number; w: number; mode?: 'whole' 
 /* ---------- the fridge (generic, no brand): front view, the main door opening toward the viewer on the left ----------
    (x0, y0) top-left of the cabinet, w × h. open 0..1 (door swing), light 0..1 (its cold interior light), frost 0..1 (rime on
    the back wall, P2). children = what stands inside (drawn after the back wall, before the door). Freezer door on top, closed. */
-export const fridgeGeom = (x0: number, y0: number, w: number, h: number) => { const fz = h * 0.3, m = w * 0.05, ix0 = x0 + m, ix1 = x0 + w - m, iy0 = y0 + fz + m * 0.6, iy1 = y0 + h - m * 0.8, inset = w * 0.12;
+export const fridgeGeom = (x0: number, y0: number, w: number, h: number, fzK = 0.3) => { const fz = h * fzK, m = w * 0.05, ix0 = x0 + m, ix1 = x0 + w - m, iy0 = y0 + fz + m * 0.6, iy1 = y0 + h - m * 0.8, inset = w * 0.12;
 	return {fz, m, ix0, ix1, iy0, iy1, bx0: ix0 + inset, bx1: ix1 - inset, by0: iy0 + inset * 0.6, by1: iy1 - inset * 0.5, floorY: iy1 - inset * 0.25}; };
-export const Fridge: React.FC<{x0: number; y0: number; w: number; h: number; open?: number; light?: number; frost?: number; children?: React.ReactNode; id?: string; t?: number}> = ({x0, y0, w, h, open = 1, light = 1, frost = 0, children, id = 'fg', t = 0}) => {
-	const G = fridgeGeom(x0, y0, w, h), {fz, ix0, ix1, iy0, iy1, bx0, bx1, by0, by1} = G, r = w * 0.04;
+/** fzK = the freezer door's share of the height; handle 'h' = a horizontal pull along the freezer's bottom edge */
+export const Fridge: React.FC<{x0: number; y0: number; w: number; h: number; open?: number; light?: number; frost?: number; children?: React.ReactNode; id?: string; t?: number; fzK?: number; handle?: 'v' | 'h'}> = ({x0, y0, w, h, open = 1, light = 1, frost = 0, children, id = 'fg', t = 0, fzK = 0.3, handle = 'v'}) => {
+	const G = fridgeGeom(x0, y0, w, h, fzK), {fz, ix0, ix1, iy0, iy1, bx0, bx1, by0, by1} = G, r = w * 0.04;
 	const L = (a: string, b: string, k: number) => { const pa = parseInt(a.slice(1), 16), pb = parseInt(b.slice(1), 16); const c = [16, 8, 0].map((s) => Math.round(lerp((pa >> s) & 255, (pb >> s) & 255, k))); return `rgb(${c.join(',')})`; };
 	const back = L('#1A1513', '#A6C1CE', light), backD = L('#120E0D', '#6E8C9C', light), sideC = L('#16110F', '#86A3B2', light), floorC = L('#1C1715', '#C3D8E2', light);
 	/* door: hinged on the cabinet's left edge, swung toward us: a trapezoid whose free edge is nearer (taller) */
@@ -279,7 +280,8 @@ export const Fridge: React.FC<{x0: number; y0: number; w: number; h: number; ope
 		{/* freezer door (closed) with its handle and the seam */}
 		<rect x={x0 + 4} y={y0 + 4} width={w - 8} height={fz - 8} rx={r * 0.8} fill="#8A8681" />
 		<rect x={x0 + 4} y={y0 + 4} width={w - 8} height={fz - 8} rx={r * 0.8} fill="none" stroke="#B8B3AC" strokeOpacity={0.35} strokeWidth={2} />
-		<rect x={x0 + w * 0.08} y={y0 + fz - w * 0.2} width={w * 0.03} height={w * 0.16} rx={w * 0.015} fill="#5C5955" />
+		{handle === 'v' ? <rect x={x0 + w * 0.08} y={y0 + fz - w * 0.2} width={w * 0.03} height={w * 0.16} rx={w * 0.015} fill="#5C5955" />
+			: <rect x={x0 + w * 0.3} y={y0 + fz - w * 0.05} width={w * 0.4} height={w * 0.022} rx={w * 0.011} fill="#5C5955" />}
 		{light < 1 && <rect x={x0} y={y0} width={w} height={h} rx={r} fill="#0A0605" opacity={0.45 * (1 - light)} />}
 		{/* the open compartment: back wall, side walls, ceiling, floor (one-point perspective) */}
 		<path d={`M${ix0},${iy0} L${ix1},${iy0} L${bx1},${by0} L${bx0},${by0} Z`} fill={sideC} />

@@ -298,7 +298,7 @@ export const P1Line: React.FC<{t: number; dim?: boolean; snow?: number; wx?: num
 			{/* winter inside each: snow falling within the thing's own space */}
 			<defs><clipPath id={`sn${i}${dim ? 'd' : ''}`}><ellipse cx={x} cy={g - tops[i] / 2 - 10} rx={i === 8 ? 72 : 78} ry={tops[i] / 2 + 34} /></clipPath></defs>
 			<g clipPath={`url(#sn${i}${dim ? 'd' : ''})`} opacity={psnow ? psnow[i] : snow}><Snow x0={x - 80} x1={x + 80} y0={g - tops[i] - 50} y1={g} n={26} t={t} seed={i + 1} size={1.05} o={1} /></g>
-			{lab > 0 && <Label x={x} y={g + 64} s={eras[i]} fs={40} anchor="middle" o={0.9 * lab} />}
+			{lab > 0 && <Label x={x} y={g + 70} s={eras[i]} fs={52} anchor="middle" o={0.9 * lab} />}
 		</g>; })}
 		<Pool id={`p1w${dim ? 'd' : ''}`} x={wx} y={g + 2} rx={140} ry={26} a={0.3} />
 		<Walker51 x={wx} g={g} h={wh} pose={wp} look={L51A.today.look} flip={wflip} T={t} />

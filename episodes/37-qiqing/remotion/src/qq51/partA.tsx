@@ -19,6 +19,8 @@ const wph = (dist: number, h: number) => dist / (STRIDE * h);   // walk phase (c
 const fade = (t: number, a: number, d: number) => ease(seg(t, a, a + d));
 const bump = (t: number, a: number, d: number) => Math.sin(Math.PI * seg(t, a, a + d));
 const stand = (k: Partial<{lean: number; neck: number; la: number; le: number; ra: number; re: number}> = {}) => grounded({lean: 3, neck: 4, lt: 3, lk: 3, rt: -4, rk: 4, la: -3, le: 10, ra: 4, re: 14, ...k});
+/** the 周 padded robe needs an open stance, or the robe hangs as a narrow column and reads as a coat over trousers */
+const standW = (k: Partial<{lean: number; neck: number; la: number; le: number; ra: number; re: number}> = {}) => grounded({lean: 3, neck: 4, lt: 14, lk: 8, rt: -16, rk: 10, la: -3, le: 10, ra: 4, re: 14, ...k});
 const reach = (p: Pose, s: 'L' | 'R', X: number, Y: number, x: number, g: number, h: number, flip = false) => ikArm(p, s, toBody(X, Y, x, g, h, flip));
 const mixP = (a: Pose, b: Pose, k: number): Pose => { const o: Pose = {}; for (const n of Object.keys(a)) o[n] = [lerp(a[n][0], b[n][0], k), lerp(a[n][1], b[n][1], k)]; return o; };
 const Lab: React.FC<{x: number; y: number; s: string; fs?: number; col?: string; anchor?: 'start' | 'middle' | 'end'; o?: number}> = ({x, y, s, fs = 40, col = B.cream, anchor = 'start', o = 1}) =>
@@ -46,7 +48,7 @@ const Glint: React.FC<{x: number; y: number; r: number; o?: number}> = ({x, y, r
 	<path d={`M0,${-r} L${r * 0.09},${-r * 0.09} L${r},0 L${r * 0.09},${r * 0.09} L0,${r} L${-r * 0.09},${r * 0.09} L${-r},0 L${-r * 0.09},${-r * 0.09} Z`} fill="#FFFFFF" /></g>;
 
 /* ======================= 1 · HOOK 0–4.6: your fridge (frame 0 = KF01; the light dies on DA(1) = 2.707 = KF02) ======================= */
-const FX0 = 820, FY0 = -40, FW = 680, FH = 1060, FG = fridgeGeom(FX0, FY0, FW, FH), VX = (FG.bx0 + FG.bx1) / 2, VY = FG.iy1 - 18, VW = 380;
+const FX0 = 820, FY0 = -40, FW = 680, FH = 1060, FZK = 0.39, FG = fridgeGeom(FX0, FY0, FW, FH, FZK), VX = (FG.bx0 + FG.bx1) / 2, VY = FG.iy1 - 18, VW = 380;
 const Hook: Fc = ({t}) => {   // the push-in (3.85–4.6) lands the vessel exactly on the lid shot's vessel (LX, LY, LW)
 	const open = t < BA(0) ? 0.6 : lerp(0.6, 0.92, eout(seg(t, BA(0), BA(0) + 0.55)));
 	const light = t < BA(4) ? 1 : t < BA(4) + 0.07 ? 0.3 : 0;
@@ -60,11 +62,14 @@ const Hook: Fc = ({t}) => {   // the push-in (3.85–4.6) lands the vessel exact
 			<rect x={-40} y={700} width={880} height={400} fill="#1E100B" /><rect x={-40} y={700} width={880} height={3} fill={B.gold} opacity={0.3} />
 			<path d={Array.from({length: 10}, (_, i) => `M${-40 + i * 90},420 V700`).join(' ') + ' M-40,510 H840 M-40,600 H840'} stroke={B.gold} strokeOpacity={0.06} strokeWidth={1.5} />
 			<rect x={1500} y={700} width={460} height={400} fill="#1E100B" /><rect x={1500} y={700} width={460} height={3} fill={B.gold} opacity={0.3} />
-			<Fridge x0={FX0} y0={FY0} w={FW} h={FH} open={open} light={light} id="hkf">
+			<Fridge x0={FX0} y0={FY0} w={FW} h={FH} open={open} light={light} id="hkf" fzK={FZK} handle="h">
 				<Pool id="hkv" x={VX} y={VY - 170} rx={330} ry={260} a={light > 0.5 ? 0.22 : 0.34} />
 				<ellipse cx={VX} cy={VY + 4} rx={VW * 0.62} ry={16} fill="#000" opacity={0.35} />
 				<g filter="url(#sh51)"><Jianfou x={VX} y={VY} w={VW} id="hkj" /></g>
 			</Fridge>
+			{/* a soft dark shade on the freezer door behind the subtitle rows (they cross the fridge) */}
+			<defs><radialGradient id="hkSh"><stop offset="0" stopColor="#0A0503" stopOpacity="0.72" /><stop offset="0.6" stopColor="#0A0503" stopOpacity="0.45" /><stop offset="1" stopColor="#0A0503" stopOpacity="0" /></radialGradient></defs>
+			<ellipse cx={1010} cy={225} rx={430} ry={175} fill="url(#hkSh)" />
 			<Forearm el={el} wr={wr} size={36} thumb={-1} />
 			<Cup x={1560} y={905 + bob} w={112} frost={0.6} />
 			<Forearm el={[1640, 1200 + bob]} wr={[1574, 894 + bob]} size={34} thumb={1} />
@@ -150,14 +155,14 @@ const River: Fc = ({t}) => {
 	const tipRest: P2 = [1110 - 70, RG - BH - 12];
 	const tip: P2 = [tipRest[0], tipRest[1] - 70 * lift], butt: P2 = [tip[0] - 52, tip[1] - 168];
 	const chiselHeld = t < 13.55;
-	const stance = (k = lift) => { let q = stand({lean: 8 + 6 * k, neck: 18, la: 10, le: 20, ra: 4, re: 16}); q = reach(q, 'L', butt[0] + 10, butt[1] + 26, 860, WG, RH); return t > 12.3 ? reach(q, 'R', butt[0] + 20, butt[1] + 62, 860, WG, RH) : q; };
+	const stance = (k = lift) => { let q = standW({lean: 8 + 6 * k, neck: 18, la: 10, le: 20, ra: 4, re: 16}); q = reach(q, 'L', butt[0] + 10, butt[1] + 26, 860, WG, RH); return t > 12.3 ? reach(q, 'R', butt[0] + 20, butt[1] + 62, 860, WG, RH) : q; };
 	const haulLean = grounded({lean: 20, neck: -8, lt: 20, lk: 14, rt: -16, rk: 10, la: -30, le: 10, ra: -26, re: 14});
 	let p: Pose;
 	if (chiselHeld) p = stance();
 	else if (t < 14.75) p = mixP(stance(0), walkPose(wph(wx - 860, RH)), ease(seg(t, 13.55, 13.8)));
 	else if (t < 15.6) p = ikArm(ikArm(mixP(walkPose(wph(wx - 860, RH)), haulLean, 0.4 * ease(seg(t, 14.75, 14.95))), 'L', [-0.1, 0.52]), 'R', [-0.08, 0.5]);
-	else if (t < 15.95) p = mixP(ikArm(ikArm(mixP(walkPose(wph(1735 - 860, RH)), haulLean, 0.4), 'L', [-0.1, 0.52]), 'R', [-0.08, 0.5]), stand({lean: 0, neck: -24, la: -10, le: 14}), ease(seg(t, 15.6, 15.85)));
-	else p = mixP(stand({lean: 0, neck: -24, la: -10, le: 14}), walkPose(wph(wx - 1735, RH) + 0.3), ease(seg(t, 15.95, 16.15)));
+	else if (t < 15.95) p = mixP(ikArm(ikArm(mixP(walkPose(wph(1735 - 860, RH)), haulLean, 0.4), 'L', [-0.1, 0.52]), 'R', [-0.08, 0.5]), standW({lean: 0, neck: -24, la: -10, le: 14}), ease(seg(t, 15.6, 15.85)));
+	else p = mixP(standW({lean: 0, neck: -24, la: -10, le: 14}), walkPose(wph(wx - 1735, RH) + 0.3), ease(seg(t, 15.95, 16.15)));
 	const drop = seg(t, 15.6, 15.76);
 	const lab = t > BA(27) - 0.25 ? land(seg(t, BA(27) - 0.25, BA(27) + 0.25)) : 0;
 	const hits = STR.map((s) => seg(t, s, s + 0.6));
@@ -178,7 +183,7 @@ const River: Fc = ({t}) => {
 			<path d={`M${1110 - 190},${RG + 34} L${1110 + 210},${RG + 34} L${1110 + 260},${RG + 8} L${1110 - 140},${RG + 8} Z`} fill="#0C0605" opacity={0.6} />
 			{Array.from({length: 9}, (_, i) => <path key={i} d={`M0,0 l${6 + 6 * rnd(i, 2)},${-4 - 4 * rnd(i, 3)} l${4 + 4 * rnd(i, 4)},${6 + 3 * rnd(i, 5)} Z`} transform={`translate(${1110 - 170 + 360 * rnd(i, 7)},${RG + 6 + 26 * rnd(i, 8)})`} fill={ICE.body} opacity={0.75} />)}
 			<PitMouth x={PITX} y={RG + 60} w={250} id="rvp" />
-			{lab > 0 && <Lab x={PITX} y={RG + 140 - 120 * (1 - lab)} s="冰窖" fs={56} anchor="middle" col={B.goldL} o={cl(lab * 3)} />}
+			{lab > 0 && t < 16.2 && <Lab x={PITX} y={RG + 140 - 120 * (1 - lab)} s="冰窖" fs={56} anchor="middle" col={B.goldL} o={cl(lab * 3) * (1 - fade(t, 15.9, 0.3))} />}
 			{/* the rope, lying slack on the ice until he takes it up (14.75) */}
 			{t < 14.75 && <path d={`M${ropeAt[0]},${ropeAt[1]} Q${ropeAt[0] + 40},${RG - 12} ${ropeAt[0] + 90},${RG - 14} q30,4 26,-8 q-6,-10 -30,-4`} fill="none" stroke="#A88A5C" strokeWidth={4} strokeLinecap="round" />}
 			<Walker51 x={chiselHeld ? 860 : wx} g={WG} h={RH} pose={p} look={LOOKS51.zhou.look} />
@@ -284,7 +289,7 @@ const Pit: Fc = ({t}) => {
 	const tag190 = t > BA(42) - 0.1 ? land(seg(t, BA(42) - 0.1, BA(42) + 0.35)) : 0;
 	/* the walker: Z3 stands at the rim looking down (≤ 3 s); A1 walks along the far rim */
 	const h = 300, inW = 221 * Math.min(0, t - 23.0), wx = t < 23.6 ? 430 + inW : 430 + 150 * (t - 23.6);
-	const p = t < 23.0 ? walkPose(wph(inW, h)) : t < 23.6 ? mixP(walkPose(0), stand({lean: 12, neck: 34, la: 8, le: 24, ra: -4, re: 16}), ease(seg(t, 23.0, 23.3))) : walkPose(wph(150 * (t - 23.6), h));
+	const p = t < 23.0 ? walkPose(wph(inW, h)) : t < 23.6 ? mixP(walkPose(0), standW({lean: 12, neck: 34, la: 8, le: 24, ra: -4, re: 16}), ease(seg(t, 23.0, 23.3))) : walkPose(wph(150 * (t - 23.6), h));
 	const wg = t < 23.6 ? GS : GS - 12;
 	return <Pic id="pt" sheen={0.2}>
 		<path d={`M-40,${GS - 40} Q400,${GS - 90} 900,${GS - 60} Q1400,${GS - 100} 1960,${GS - 50} V${GS} H-40 Z`} fill={B.far} />
@@ -644,7 +649,12 @@ const Tang: Fc = ({t}) => { const g = TANG_G, mx = 990, base = 820, h = TANG_H;
 		{/* the curb's front wall: the plate goes in behind it */}
 		{cellarX > -300 && cellarX < W + 300 && <g>
 			<path d={`M${cellarX - 150},${g} L${cellarX - 150},${g - 0.62 * h} L${cellarX + 150},${g - 0.62 * h} L${cellarX + 150},${g} Z`} fill="#2A1A12" stroke={B.gold} strokeOpacity={0.4} strokeWidth={1.5} />
-			{[0.3, 0.62].map((u, i) => <path key={i} d={`M${cellarX - 150},${g - 0.62 * h * u} H${cellarX + 150}`} stroke="#1A0E09" strokeWidth={2} />)}
+			{[0.3, 0.62].map((u, i) => <path key={i} d={`M${cellarX - 150},${g - 0.62 * h * u} H${cellarX + 30}`} stroke="#1A0E09" strokeWidth={2} />)}
+			{/* the stair doorway: steps going down into the cold */}
+			<rect x={cellarX + 40} y={g - 0.62 * h + 26} width={96} height={0.62 * h - 26} fill="#0C1A20" />
+			<rect x={cellarX + 40} y={g - 0.62 * h + 26} width={96} height={0.62 * h - 26} fill="url(#tgGlow)" opacity={0.9} />
+			{Array.from({length: 6}, (_, i) => <path key={i} d={`M${cellarX + 44},${g - 0.62 * h + 60 + i * 34} h${88 - i * 9} v-12`} fill="none" stroke="#9CCBE0" strokeOpacity={0.65 - i * 0.08} strokeWidth={3} />)}
+			<rect x={cellarX + 34} y={g - 0.62 * h + 18} width={108} height={12} fill="#3A2116" stroke={B.gold} strokeOpacity={0.4} strokeWidth={1.2} />
 			<path d={`M${cellarX - 150},${g - 0.62 * h} H${cellarX + 150}`} stroke="#BFE3F2" strokeOpacity={0.6} strokeWidth={3} /></g>}
 		{cone > 0 && <g opacity={0.72 * cone} transform={`translate(${plateP[0] + 200},${plateP[1] - 60})`}>
 			<path d="M-36,-30 L0,100 L36,-30 Z" fill="#E8D6B0" stroke="#F2E6CC" strokeWidth={3} />
