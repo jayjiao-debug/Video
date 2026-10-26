@@ -236,7 +236,7 @@ const Vault: React.FC<{t: number}> = ({t}) => {
 	const hatch = (x0: number, x1: number, y0: number, y1: number, id: string) => <g>
 		<clipPath id={id}><rect x={x0} y={y0} width={x1 - x0} height={y1 - y0} /></clipPath>
 		<g clipPath={`url(#${id})`} stroke={B.gold} strokeOpacity={0.16} strokeWidth={1.5}>{Array.from({length: 40}, (_, i) => <path key={i} d={`M${x0 - 400 + i * 26},${y1} l400,-400`} />)}</g></g>;
-	const dim = fade(t, TWO_M - 0.1, 0.35);
+	const dim = fade(t, TWO_M - 0.35, 0.2);
 	const wx = vWx(t), wy = vWy(wx), wk = gait(vWx, t, 128, vNat(128));
 	const blocks: React.ReactNode[] = [];
 	for (let r = 0; r < 6; r++) { const left = rows - r; if (left <= 0) continue; const hk = Math.min(1, left);
@@ -265,7 +265,7 @@ const Vault: React.FC<{t: number}> = ({t}) => {
 			{/* 两米 */}
 			<g opacity={dim}>
 				<path d={`M${VL0},${VT - 6} V${VT - 70} M${VL1},${VT - 6} V${VT - 70}`} stroke={B.cream} strokeWidth={2} opacity={0.8} />
-				<path d={`M${VL0 + 2},${VT - 50} H${lerp(VL0 + 2, VL1 - 2, ease(seg(t, TWO_M - 0.1, TWO_M + 0.25)))}`} stroke={B.cream} strokeWidth={3} />
+				<path d={`M${VL0 + 2},${VT - 50} H${lerp(VL0 + 2, VL1 - 2, ease(seg(t, TWO_M - 0.3, TWO_M)))}`} stroke={B.cream} strokeWidth={3} />
 				<path d={`M${VL0 + 2},${VT - 50} l16,-9 v18 Z M${VL1 - 2},${VT - 50} l-16,-9 v18 Z`} fill={B.cream} />
 			</g>
 			{t > TWO_M && <g transform={`translate(${(VL0 + VL1) / 2 - 40},${VT - 105}) scale(${lerp(1.3, 1, land(seg(t, TWO_M, TWO_M + 0.4)))})`}><Label x={0} y={15} s="两米" fs={52} col={B.cream} anchor="middle" /></g>}
@@ -387,7 +387,7 @@ const Hutong: React.FC<{t: number}> = ({t}) => {
 	const shiv = t >= 85.58 && t < 86.0 ? Math.sin((t - 85.58) * 95) * 6 * (1 - (t - 85.58) / 0.42) : 0;
 	let wp = wp0; if (t > 83.9) wp = ikArm(ikArm(wp, 'L', toBody(cupP[0] - 22 - shiv, cupP[1] + 14, wx, HG, HH)), 'R', toBody(cupP[0] + 22 - shiv, cupP[1] + 10, wx, HG, HH));
 	const doorO = ease(seg(t, 82.749, 83.2)), headTurn = t > 81.7;
-	const doors = [2300, 3100, 3900, 4700];
+	const doors = [2800, 1500, 3550, 4300];
 	return <Scene id="hH" sheen={0.25}>
 		<g transform={`translate(${-cam},0)`}>
 			<rect x={0} y={420} width={5200} height={HG - 420} fill="#221816" />
@@ -403,7 +403,7 @@ const Hutong: React.FC<{t: number}> = ({t}) => {
 				{isO && o > 0.3 && <Extra x={x + 90} g={HG} h={430} pose={grounded({lean: 10, neck: 10, lt: 3, lk: 3, rt: -4, rk: 4, la: 10, le: 20, ra: 4, re: 12})} era="qing" flip look={{dress: 'robe', head: 'bun'}} rimO={0.5 * o} />}
 			</g>; })}
 			{/* a neighbour at the corner turns at the first clang */}
-			<Extra x={1700} g={HG} h={440} pose={grounded({lean: 2, neck: headTurn ? 18 : 2, lt: 3, lk: 3, rt: -4, rk: 4, la: 4, le: 12, ra: 4, re: 12})} era="qing" flip={headTurn} look={{dress: 'tunic', legs: 'trousers', head: 'bald'}} rimO={0.45} />
+			<Extra x={1900} g={HG} h={440} pose={grounded({lean: 2, neck: headTurn ? 18 : 2, lt: 3, lk: 3, rt: -4, rk: 4, la: 4, le: 12, ra: 4, re: 12})} era="qing" flip={headTurn} look={{dress: 'tunic', legs: 'trousers', head: 'bald'}} rimO={0.45} />
 			<Floor g={HG} x0={0} x1={5200} />
 			<Pool id="hF" x={wx + 120} y={HG + 4} rx={420} ry={44} a={0.3} />
 			{/* the seller: shoulder pole with two tubs, two brass bowls in his left hand */}

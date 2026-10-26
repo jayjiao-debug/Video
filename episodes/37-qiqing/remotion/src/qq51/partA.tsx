@@ -100,7 +100,7 @@ const RW_B: P2 = [960, 760], RW_W = 420;   // the block's screen place during th
 const Rewind: Fc = ({t}) => {
 	const u = seg(t, 7.0, 7.45), ue = eio(u);
 	const from: P2 = [LG.gapL, LG.yt + 150], bx = lerp(from[0], RW_B[0], ue), by = lerp(from[1], RW_B[1], ue), bw = lerp(LG.gapW * 0.9, RW_W, ue), bh = lerp(LG.gapW * 0.8, 262, ue);
-	const sum = 1 - seg(t, 7.45, 7.75), aut = bump(t, 7.45, 0.65), win = seg(t, 7.8, 8.1);
+	const sum = 1 - seg(t, 7.35, 7.6), aut = bump(t, 7.35, 0.5), win = seg(t, 7.6, 7.85);
 	const vesO = 1 - seg(t, 7.0, 7.35);
 	const leaves = (col: string, o: number, seed: number) => o <= 0 ? null : <g opacity={o}>{Array.from({length: 28}, (_, i) => { const y = (H + 60) - ((rnd(i, seed) * (H + 120) + 900 * (t - 7.0)) % (H + 120)), x = rnd(i, seed + 1) * W + 30 * Math.sin(t * 3 + i);
 		return <ellipse key={i} cx={x} cy={y} rx={9} ry={4} fill={col} transform={`rotate(${rnd(i, seed + 2) * 180 + t * 200},${x},${y})`} />; })}</g>;
@@ -113,7 +113,7 @@ const Rewind: Fc = ({t}) => {
 		{/* rewind streaks */}
 		<g stroke={B.cream} strokeLinecap="round">{Array.from({length: 14}, (_, i) => { const y = 120 + i * 70 + 20 * rnd(i, 4), x = W - ((rnd(i, 5) * W + 2600 * (t - 7.0)) % (W + 600)) + 300;
 			return <path key={i} d={`M${x},${y} h${160 + 200 * rnd(i, 6)}`} strokeWidth={2} opacity={0.1 * bump(t, 7.0, 1.4)} />; })}</g>
-		{win > 0 && <g opacity={win}><Snow t={-(t - 7.8) * 2.2 + 3} n={110} seed={8} /></g>}
+		{win > 0 && <g opacity={win}><Snow t={-(t - 7.6) * 2.2 + 3} n={110} seed={8} /></g>}
 		{vesO > 0 && <g opacity={vesO} transform={`translate(0,${80 * ue})`}><VesselClose t={7.0} /></g>}
 		<IcePool x={bx} y={by + 8} rx={bw * 0.9} o={ue} />
 		<IceBlock x={bx} y={by} w={bw} h={bh} d={bw * 0.46} seed={3} />
@@ -123,8 +123,9 @@ const Rewind: Fc = ({t}) => {
 const RG = 880, RH = 540, BW = 240, BH = 150, PITX = 1720;
 const STR = [BA(22), BA(23)];   // 12.896, 13.462
 const riverCam = (t: number) => {   // → {s, fx, fy, sx, sy}: world (fx, fy) lands on screen (sx, sy) at scale s
-	if (t < 9.0) { const u = eio(seg(t, 8.3, 9.0)); return {s: lerp(RW_W / BW, 1, u), fx: 1110, fy: RG, sx: lerp(RW_B[0], 1110, u), sy: lerp(RW_B[1], RG, u)}; }
-	const s = lerp(1, 0.87, eio(seg(t, 9.0, 9.48)));
+	/* one pull-back straight to the title framing, done by 8.93; the music breaks 8.93–9.50, the picture holds, the title slams on 9.50 */
+	if (t < 8.93) { const u = ease(seg(t, 8.1, 8.93)); return {s: lerp(RW_W / BW, 0.87, u), fx: 1110, fy: RG, sx: lerp(RW_B[0], 960 + 150 * 0.87, u), sy: lerp(RW_B[1], RG, u)}; }
+	const s = 0.87;
 	const fx = 960 + 0.9 * Math.max(0, pushX(t) - 855) + Math.max(0, riverWX(t) - riverWX(15.9));
 	return {s, fx, fy: RG, sx: 960, sy: RG}; };
 /** the walker's world x (push from 13.6, stops at the pit 14.86, walks on from 15.9) */
@@ -348,7 +349,8 @@ const Banquet: Fc = ({t}) => {
 	const lidOn = t > 34.55, lidDrop = seg(t, 34.4, 34.6);
 	const exp = eio(seg(t, BA(52), BA(53))) * (1 - eio(seg(t, BA(55), BA(56))));   // the jar rises out (29.88–30.44), settles back (31.58–32.14)
 	const lab = fade(t, BA(53), 0.3) * (1 - fade(t, 34.6, 0.35));
-	const wineO = fade(t, BA(65), 0.25), jarLidUp = eout(seg(t, BA(65), BA(65) + 0.3));
+	const REVEAL = BA(64);   // 36.670 = DA(16), the chorus downbeat: 肉？/瓜果？ drop, 酒 lights, the jar lid pops
+	const wineO = fade(t, REVEAL, 0.25), jarLidUp = eout(seg(t, REVEAL, REVEAL + 0.3));
 	const melt = seg(t, 39.45, 40.7), water = eout(seg(t, 39.6, 40.9));
 	/* the walker's pose */
 	let p: Pose;
@@ -380,7 +382,7 @@ const Banquet: Fc = ({t}) => {
 	const ghost = bump(t, BA(48), 0.6);
 	const opts = ['肉？', '瓜果？', '酒？'], xs = [VX7 - 250, VX7, VX7 + 230], oy = G7.neckTop - 110;
 	const pill = t > BA(61) - 0.05 ? land(seg(t, BA(61) - 0.05, BA(61) + 0.3)) : 0, tick = Math.sin((t - 35) * Math.PI / 0.566) * 3;
-	const optO = (i: number) => (t < 35.0 ? 0 : fade(t, 35.15 + 0.15 * i, 0.25)) * (t < BA(65) ? 1 : i === 2 ? 1 : 1 - fade(t, BA(65), 0.25)) * (1 - fade(t, 38.9, 0.4));
+	const optO = (i: number) => (t < 35.0 ? 0 : fade(t, 35.15 + 0.15 * i, 0.25)) * (t < REVEAL ? 1 : i === 2 ? 1 : 1 - fade(t, REVEAL, 0.25)) * (1 - fade(t, 38.9, 0.4));
 	const vessel = <>
 		{exp > 0 || t < 32.25 ? <>
 			{exp > 0 && <JarWhole x={VX7} y={VY7} w={VW7} dy={240 * exp} />}
@@ -434,10 +436,10 @@ const Banquet: Fc = ({t}) => {
 		{/* the ladle and the server's forearm */}
 
 		{/* 先猜？ and the three guesses over the jar mouth; 酒 lights up on BA(65) = 37.237 */}
-		{opts.map((o, i) => { const oo = optO(i); if (oo <= 0) return null; const lit = i === 2 && t > BA(65) ? land(seg(t, BA(65), BA(65) + 0.35)) : 0;
+		{opts.map((o, i) => { const oo = optO(i); if (oo <= 0) return null; const lit = i === 2 && t > REVEAL ? land(seg(t, REVEAL, REVEAL + 0.35)) : 0;
 			return <g key={i} opacity={oo}><path d={`M${xs[i]},${oy + 18} Q${lerp(xs[i], VX7, 0.6)},${oy + 60} ${VX7 + (i - 1) * 30},${G7.neckTop - 40}`} stroke={B.cream} strokeOpacity={0.25 * (1 - lit)} strokeWidth={2} fill="none" strokeDasharray="5 7" />
 				<g transform={`translate(${xs[i]},${oy + 4 * Math.sin(t * 2.4 + i)}) scale(${1 + 0.35 * lit}) translate(${-xs[i]},${-oy})`}><Lab x={xs[i]} y={oy} s={lit > 0 ? '酒' : o} fs={56} anchor="middle" o={0.88 + 0.12 * lit} col={lit > 0 ? B.goldL : B.cream} /></g></g>; })}
-		{pill > 0 && t < 37.3 && <g opacity={cl(pill * 3) * (1 - fade(t, 37.05, 0.2))} transform={`translate(1540,${G7.yt + 132}) rotate(${-4 + tick}) scale(${lerp(1.4, 1, pill)}) translate(-110,-42)`}><rect x={0} y={0} width={220} height={84} rx={42} fill={B.goldL} /><text x={110} y={60} textAnchor="middle" fontFamily={SANS} fontWeight={900} fontSize={52} fill={B.lac}>先猜？</text></g>}
+		{pill > 0 && t < 37.0 && <g opacity={cl(pill * 3) * (1 - fade(t, REVEAL - 0.05, 0.2))} transform={`translate(1540,${G7.yt + 132}) rotate(${-4 + tick}) scale(${lerp(1.4, 1, pill)}) translate(-110,-42)`}><rect x={0} y={0} width={220} height={84} rx={42} fill={B.goldL} /><text x={110} y={60} textAnchor="middle" fontFamily={SANS} fontWeight={900} fontSize={52} fill={B.lac}>先猜？</text></g>}
 	</Pic>; };
 
 /* ======================= 8 · W1 41.5–46.3: he walks on with his cup; a noble at a high table takes it (on BA(76) = 43.463) ======================= */
@@ -617,8 +619,8 @@ const early = (t: number): React.ReactNode => {
 	if (t < 4.25) return <Hook t={t} />;
 	if (t < 4.6) return <><Hook t={t} /><div style={{position: 'absolute', inset: 0, opacity: ease(seg(t, 4.4, 4.6))}}><LidShot t={t} /></div></>;
 	if (t < 7.0) return <LidShot t={t} />;
-	if (t < 8.2) return <Rewind t={t} />;
-	if (t < 8.45) return <><Rewind t={t} /><div style={{position: 'absolute', inset: 0, opacity: ease(seg(t, 8.2, 8.45))}}><River t={t} /></div></>;
+	if (t < 7.9) return <Rewind t={t} />;
+	if (t < 8.1) return <><Rewind t={t} /><div style={{position: 'absolute', inset: 0, opacity: ease(seg(t, 7.9, 8.1))}}><River t={t} /></div></>;
 	return <River t={t} />;
 };
 const mid = (t: number): React.ReactNode => t < 20.8 ? <Zhou80 t={t} /> : t < 21.15 ? <><Zhou80 t={t} /><div style={{position: 'absolute', inset: 0, opacity: ease(seg(t, 20.8, 21.15)), transform: `translateY(${60 * (1 - ease(seg(t, 20.8, 21.15)))}px)`}}><Pit t={t} /></div></> : <Pit t={t} />;
