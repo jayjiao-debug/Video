@@ -65,14 +65,28 @@ function elbowOf(sh, paw, side, a = 96, b = 90) {   // 2-bone IK; the elbow bend
 	const cand = [1, -1].map((s) => [sh[0] + a * (ux * Math.cos(s * A) - uy * Math.sin(s * A)), sh[1] + a * (ux * Math.sin(s * A) + uy * Math.cos(s * A))]);
 	return cand.sort((p, q) => ((q[0] - p[0]) * side * .5 + (q[1] - p[1])))[0];
 }
+// arm styles (chibi-friendly, no visible elbow): A rubber-hose curve · B stubby nub + long sticks · C floating paws · D chubby tapered arm
+const ARM = new URLSearchParams(location.search).get('arm') || 'A';
+function pawDraw(p, r = 31) { circle(p[0], p[1], r, FUR, 6); for (const [dx, dy, rr] of [[-11, -8, 6.5], [0, -12, 6.5], [11, -8, 6.5], [0, 5, 10]]) circle(p[0] + dx * r / 31, p[1] + dy * r / 31, rr * r / 31, PINK, 0); }
+function merge(sh) { circle(sh[0], sh[1], 24, FUR, 0); }   // hide the arm's cap where it meets the body
 function arm(sh, paw, side) {
-	const el = elbowOf(sh, paw, side);
-	for (const [c, w1, w2] of [[LINE, 62, 56], [FUR, 50, 44]]) {
-		path(() => { ctx.moveTo(sh[0], sh[1]); ctx.lineTo(el[0], el[1]); }); ctx.strokeStyle = c; ctx.lineWidth = w1; ctx.lineCap = 'round'; ctx.stroke();
-		path(() => { ctx.moveTo(el[0], el[1]); ctx.lineTo(paw[0], paw[1]); }); ctx.lineWidth = w2; ctx.stroke(); }
-	circle(paw[0], paw[1], 31, FUR, 6);
-	for (const [dx, dy, r] of [[-11, -8, 6.5], [0, -12, 6.5], [11, -8, 6.5], [0, 5, 10]]) circle(paw[0] + dx, paw[1] + dy, r, PINK, 0);
+	if (ARM === 'C') { pawDraw(paw, 34); return; }
+	if (ARM === 'A') {
+		const c1 = [sh[0] + side * 38, sh[1] + 34], c2 = [paw[0] + side * 34, paw[1] + 46];
+		for (const [c, w] of [[LINE, 52], [FUR, 40]]) { path(() => { ctx.moveTo(sh[0], sh[1]); ctx.bezierCurveTo(c1[0], c1[1], c2[0], c2[1], paw[0], paw[1]); }); ctx.strokeStyle = c; ctx.lineWidth = w; ctx.lineCap = 'round'; ctx.stroke(); }
+		merge(sh); pawDraw(paw); return; }
+	if (ARM === 'B') {
+		for (const [c, w] of [[LINE, 56], [FUR, 44]]) line(sh[0], sh[1], paw[0], paw[1], c, w);
+		merge(sh); pawDraw(paw, 30); return; }
+	// D: a soft teardrop from a wide shoulder to the paw, slightly curved
+	const dx = paw[0] - sh[0], dy = paw[1] - sh[1], L = Math.hypot(dx, dy), ux = dx / L, uy = dy / L, nx = -uy, ny = ux, r0 = 36, r1 = 24, bow = side * 10;
+	const mid = [sh[0] + dx * .5 + nx * bow, sh[1] + dy * .5 + ny * bow];
+	path(() => { ctx.moveTo(sh[0] + nx * r0, sh[1] + ny * r0); ctx.quadraticCurveTo(mid[0] + nx * (r0 + r1) / 2, mid[1] + ny * (r0 + r1) / 2, paw[0] + nx * r1, paw[1] + ny * r1);
+		ctx.lineTo(paw[0] - nx * r1, paw[1] - ny * r1); ctx.quadraticCurveTo(mid[0] - nx * (r0 + r1) / 2, mid[1] - ny * (r0 + r1) / 2, sh[0] - nx * r0, sh[1] - ny * r0); ctx.closePath(); });
+	fillStroke(FUR, 6); merge(sh); circle(sh[0], sh[1], 30, FUR, 0); pawDraw(paw, 29);
 }
+// B keeps the paw close to the body: the arm is a short nub and the stick does the reaching
+function nub(sh, paw, hit) { if (ARM !== 'B') return null; const dx = paw[0] - sh[0], dy = paw[1] - sh[1], L = Math.hypot(dx, dy), k = 74 / L; return [sh[0] + dx * k, sh[1] + dy * k]; }
 function stick(paw, sd, L = 170) { const tip = [paw[0] + sd[0] * L, paw[1] + sd[1] * L];
 	line(paw[0] - sd[0] * 18, paw[1] - sd[1] * 18, tip[0], tip[1], LINE, 17); line(paw[0] - sd[0] * 18, paw[1] - sd[1] * 18, tip[0], tip[1], STICK, 9); circle(tip[0], tip[1], 9, STICK, 4); }
 function strokePose(shoulder, contactPaw, hit, h) {
@@ -101,7 +115,7 @@ window.renderAt = (t) => {
 	const nk = bodyMap(512, 640), neck = [nk[0] + SP.hx.x, nk[1] + SP.hy.x - 4];
 	const ang = SP.ha.x, ca = Math.cos(ang), sa = Math.sin(ang), turn = lean * .9;
 	const headMap = (x, y) => { let dx = x - 512, dy = y - 640;
-		if (y < 270 && Math.abs(x - 512) > 70) { const side = x < 512 ? -1 : 1, ex = 512 + side * 205, ey = 270, w = clamp((270 - y) / 180) * sstep(70, 170, Math.abs(x - 512)), a = (side < 0 ? SP.earL.x : SP.earR.x) * w;
+		if (y < 250 && Math.abs(x - 512) > 80) { const side = x < 512 ? -1 : 1, ex = 512 + side * 205, ey = 250, w = sstep(250, 110, y) * sstep(80, 200, Math.abs(x - 512)) * .4, a = (side < 0 ? SP.earL.x : SP.earR.x) * w;
 			const rx = x - ex, ry = y - ey; dx = ex + rx * Math.cos(a) - ry * Math.sin(a) - 512; dy = ey + rx * Math.sin(a) + ry * Math.cos(a) - 640; }
 		const r2 = ((x - 512) / 330) ** 2 + ((y - 400) / 260) ** 2; dx += turn * 20 * clamp(1 - r2);
 		dy *= 1 - .05 * sq; dx *= 1 + .035 * sq * clamp((y - 330) / 300);
@@ -121,8 +135,16 @@ window.renderAt = (t) => {
 	ell(1400, hatY + 22, 120, 19, hatA * .3, GOLD); ell(1400, hatY, 120, 19, hatA, GOLD); circle(1400, hatY - 4, 7, LINE, 0);
 	// arms: behind the drums, so the elbows tuck behind the kick and only forearms and paws reach over
 	const sL = bodyMap(338, 652), sR = bodyMap(686, 652), useCrash = t > S.t0 + 15.5 * S.beat;
-	const [pawL, sdL, lenL] = useCrash ? strokePose(sL, [640, 620], [530, 562], stroke(T.crash, t, 1.1)) : strokePose(sL, [650, 690], [580, 790], stroke(T.snare, t, 1));
-	const [pawR, sdR, lenR] = strokePose(sR, [1300, 672], [1385, 750], stroke(T.hat, t, .7));
+	let [pawL, sdL, lenL] = useCrash ? strokePose(sL, [640, 620], [530, 562], stroke(T.crash, t, 1.1)) : strokePose(sL, [650, 690], [580, 790], stroke(T.snare, t, 1));
+	let [pawR, sdR, lenR] = strokePose(sR, [1300, 672], [1385, 750], stroke(T.hat, t, .7));
+	if (ARM === 'B') {   // re-aim the sticks from the short-arm paws so the tips still land on the drums
+		const fix = (sh, pw, sd, len, hit, contact) => { const np = nub(sh, pw), cp = nub(sh, contact), L = Math.hypot(hit[0] - cp[0], hit[1] - cp[1]); return [np, sd, L]; };
+		[pawL, sdL, lenL] = useCrash ? fix(sL, pawL, sdL, lenL, [530, 562], [640, 620]) : fix(sL, pawL, sdL, lenL, [580, 790], [650, 690]);
+		[pawR, sdR, lenR] = fix(sR, pawR, sdR, lenR, [1385, 750], [1300, 672]);
+		const aim = (p, hit, h) => { const dn0 = [hit[0] - p[0], hit[1] - p[1]], l = Math.hypot(...dn0), dn = [dn0[0] / l, dn0[1] / l], up = [dn[0] * .25, -.97], v = [dn[0] * (1 - h) + up[0] * h, dn[1] * (1 - h) + up[1] * h], vl = Math.hypot(...v); return [[v[0] / vl, v[1] / vl], vl]; };
+		let v; [sdL, v] = useCrash ? aim(nub(sL, [640, 620]), [530, 562], stroke(T.crash, t, 1.1)) : aim(nub(sL, [650, 690]), [580, 790], stroke(T.snare, t, 1)); lenL *= .55 + .45 * v;
+		[sdR, v] = aim(nub(sR, [1300, 672]), [1385, 750], stroke(T.hat, t, .7)); lenR *= .55 + .45 * v;
+	}
 	arm(sL, pawL, -1); arm(sR, pawR, 1);
 	const sy = 788 + 4 * sE; path(() => ctx.roundRect(445, sy, 240, 80, 14)); fillStroke(CORAL, 6);
 	for (let i = 0; i < 5; i++) line(470 + i * 48, sy + 10, 470 + i * 48, sy + 70, 'rgba(255,255,255,.6)', 4);

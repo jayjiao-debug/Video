@@ -8,7 +8,7 @@ const srv = http.createServer((q, r) => { const f = path.join(DIR, decodeURIComp
 const browser = await chromium.launch({ args: ['--no-proxy-server'] });
 const page = await browser.newPage({ viewport: { width: 1920, height: 1080 } });
 page.on('pageerror', (e) => console.log('ERR', e.message));
-await page.goto(`http://127.0.0.1:${srv.address().port}/drummer2d.html`); await page.waitForFunction(() => window.READY === true, null, { timeout: 60000 });
+await page.goto(`http://127.0.0.1:${srv.address().port}/drummer2d.html?arm=${process.env.ARM || 'A'}`); await page.waitForFunction(() => window.READY === true, null, { timeout: 60000 });
 const S = JSON.parse(fs.readFileSync(path.join(DIR, 'hits.json'))), fps = +FPS;
 const a = Math.round((T0 ? +T0 : 0) * fps), b = Math.ceil((T1 ? +T1 : S.dur) * fps), t0 = Date.now();
 for (let i = a; i < b; i++) { const url = await page.evaluate((t) => { window.renderAt(t); return window.grab(); }, i / fps);

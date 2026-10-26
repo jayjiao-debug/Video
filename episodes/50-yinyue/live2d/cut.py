@@ -19,16 +19,22 @@ inside = ((xx - 512) / 318.) ** 2 + ((yy - 392) / 252.) ** 2 <= 1
 head = char & (inside | (yy < 330) | (((xx < 222) | (xx > 802)) & (yy > 430) & (yy < 610)))
 from matplotlib.path import Path
 tailpoly = Path([(752, 655), (875, 640), (880, 885), (800, 900), (758, 872), (748, 760)])
-tail = char & tailpoly.contains_points(np.c_[xx.ravel(), yy.ravel()]).reshape(H, W) & ~head
+tail = char & tailpoly.contains_points(np.c_[xx.ravel(), yy.ravel()]).reshape(H, W) & ~head & (xx >= 770)
 # the body keeps its own outline where the tail tucks behind it (no cut edge that swings with the tail)
 body_keep = char & ~head & (xx < 772)
 # body keeps a band under the head (hidden by the head) so a moving head never opens a hole
 under = ((xx - 512) / 300.) ** 2 + ((yy - 430) / 236.) ** 2 <= 1
 body = (char & ~tail & ~(head & ~(under & (yy > 520)))) | (body_keep & ~(head & ~(under & (yy > 520))))
 print('px head', head.sum(), 'tail', tail.sum(), 'body', body.sum(), 'char', char.sum())
+# the band under the head is plain fur (a neck), never a second copy of the cheeks / chin / whiskers
+neck = (((xx - 512) / 172.) ** 2 + ((yy - 640) / 120.) ** 2 <= 1) & (yy > 520)
+body = (body & ~head) | neck
 rgba = np.dstack([im.astype(np.uint8), np.zeros((H, W), np.uint8)])
+furc = im[700, 512].astype(np.uint8)
 def save(mask, name):
-	a = rgba.copy(); a[..., 3] = (nd.gaussian_filter(mask.astype(float), .7) * 255).astype(np.uint8)
+	a = rgba.copy()
+	if name == 'body': a[neck & head, :3] = furc
+	a[..., 3] = (nd.gaussian_filter(mask.astype(float), .7) * 255).astype(np.uint8)
 	ys, xs = np.where(mask); x0, x1, y0, y1 = xs.min(), xs.max() + 1, ys.min(), ys.max() + 1
 	Image.fromarray(a[y0:y1, x0:x1]).save(f'{out}/{name}.png'); print(name, 'bbox', int(x0), int(y0), int(x1), int(y1))
 	return (int(x0), int(y0), int(x1), int(y1))
