@@ -76,7 +76,14 @@ if CFG['legs']:
     bm &= ~(legzone & (yy > 878) & ~crotch[None, :])
 core = nd.binary_opening(bm, iterations=5); bm &= nd.binary_dilation(core, iterations=6); bm = largest(bm)
 B = A.copy(); B[band & bm] = furc          # plain fur where the chin overlaps the neck
-save('body', B, bm * np.where(band, 1, soft))
+# a real neck under the head: a fur column with outlined sides, so a tilting head shows neck, never a gap
+xs_ = np.where(bm[hb + 15])[0]; nh = (xs_.max() - xs_.min()) / 2 * .62; ncx = (xs_.max() + xs_.min()) / 2
+neck = (np.abs(xx - ncx) < nh) & (yy > my + 40) & (yy < hb + 20)
+neck = nd.binary_opening(neck, iterations=2)
+nring = nd.binary_dilation(neck, iterations=LINE) & ~neck & (yy > my + 40) & (yy < hb + 20)
+B[neck] = furc; B[nring & ~bm] = INK
+nm = neck | nring
+save('body', B, np.maximum(bm * np.where(band, 1, soft), nm.astype(float)))
 # ---- arms: the arm's own fur from the final picture (toe lines kept), and a fresh outline drawn round it
 diff = np.abs(F - A).max(2) > 40
 orangeF = (F[..., 0] > 200) & (F[..., 2] < 170) & (F[..., 0] - F[..., 2] > 70)
