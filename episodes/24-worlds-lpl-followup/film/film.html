@@ -146,13 +146,13 @@ stroke(6,B(42)+.15,ellipse(1405,575,290,140,0),{dur:.5});
 pen(6,B(42)+.6,'TES、IG 2-1，AL 0-2',1180,780,{fs:46,rot:-3,dur:.7});
 
 // ================= SCENES 7/8: best and worst path
-function route(k,b0,nodes,end,col,label){
+function route(k,b0,nodes,end,col,label,eb){
  nodes.forEach((n,i)=>{const x=140+i*420,y=[170,340,190][i];
   paper(k,B(b0)+.2+i*.6,x,y,330,280,(i%2?2.5:-2),`<div class="src">${n.k}</div><div class="serif" style="font-size:36px;margin-top:8px;line-height:1.15">${n.t}</div><div class="num" style="font-size:72px;margin-top:10px;color:${n.c?'#b3261e':'#17130f'}">${n.p}</div>`,{z:6,pad:'22px 26px'});});
  stroke(k,B(b0)+.5,penLine([170,340,190].map((y,i)=>[305+i*420,y+320]).concat([[1560,720]]),{c:col,dash:'2 18',w:9}),{dur:3.2,z:4});
- paper(k,B(b0+4)+.2,1450,560,420,260,-3,`<div style="text-align:center"><div class="serif" style="font-size:30px">${label}</div><div class="num" style="font-size:120px;line-height:1;color:${col}">${end}</div></div>`,{z:12,big:true});}
-route(7,44,D.best,D.bestEnd,'#c8231a','LPL 夺冠');
-route(8,50,D.worst,D.worstEnd,'#17130f','LPL 夺冠');
+ paper(k,B(eb)+.2,1450,560,420,260,-3,`<div style="text-align:center"><div class="serif" style="font-size:30px">${label}</div><div class="num" style="font-size:120px;line-height:1;color:${col}">${end}</div></div>`,{z:12,big:true});}
+route(7,44,D.best,D.bestEnd,'#c8231a','LPL 夺冠',48);
+route(8,50,D.worst,D.worstEnd,'#17130f','LPL 夺冠',52);
 
 // ================= SCENE 9: what the model can't see
 paper(9,B(54)+.2,560,220,800,520,-1.5,`<div class="src">模型看不到的</div><div style="margin-top:30px">${['状态','心态','临场 BP'].map(x=>`<div style="display:flex;align-items:center;gap:26px;margin-bottom:26px"><span style="display:inline-block;width:64px;height:64px;border:4px solid #17130f"></span><span class="serif" style="font-size:64px">${x}</span></div>`).join('')}</div>`,{clean:false});
