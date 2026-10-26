@@ -1,0 +1,8 @@
+token present: yes
+url https://ddragon.leagueoflegends.com/cdn/16.20.1/img/champion/Leblanc.png
+  saved out/files/icon_LeBlanc.png 0.0 MB
+url https://ddragon.leagueoflegends.com/cdn/16.20.1/img/champion/Renata.png
+  saved out/files/icon_RenataGlasc.png 0.0 MB
+url https://ddragon.leagueoflegends.com/cdn/16.20.1/img/champion/MonkeyKing.png
+  saved out/files/icon_Wukong.png 0.0 MB
+done
