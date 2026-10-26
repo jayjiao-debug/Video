@@ -3,7 +3,8 @@ import {W, H, SANS, KAI, SAFE_X, SAFE_Y, lerp, rnd, cl, grounded} from '../qq50/
 import {B, BG, thB, LacDefs, Lacquer, Vignette, RimFig, SilverGrad, curl} from '../qq50/styleB';
 import {Figure4, Pose, Look4} from '../qq44/figure44';
 import {useStampFonts, YEAR} from '../qq44/skin44';
-import {Defs51, IceBlock as IceBlockA, LOOKS51 as L51A, Walker51} from './props51';
+import {Defs51, IceBlock as IceBlockA, LOOKS51 as L51A, Walker51, ICE as ICEA, BRZ, Jianfou, Fridge, Snow} from './props51';
+import {Pool} from '../qq50/styleB';
 /* ep51 Builder B shared parts: the ep50 look-B furniture copied (KF50.tsx registers its own root, so it cannot be imported),
    the ice accent (cool blue-white: core #EAF6FF, body #BFE3F2, shade #6FA9C4), the Qing head (cap + queue overlay),
    and the props of KF09–KF14 (ice mountain, silver bowl, cloisonné ice chest, village houses). */
@@ -155,14 +156,14 @@ export const Picker: React.FC<{x: number; g: number; h: number; up: boolean; fli
 		{!up && <Chips x={tip[0]} y={tip[1] - 4} s={h * 0.3} seed={seed} dir={sgn} n={10} />}
 	</g>; };
 
-export const IceChest: React.FC<{x: number; top: number; w: number; h: number}> = ({x, top, w, h}) => {
+export const IceChest: React.FC<{x: number; top: number; w: number; h: number; cut?: number; breath?: number[]; T?: number}> = ({x, top, w, h, cut = 1, breath = [1, 1, 1, 1], T = 0}) => {
 	const bot = top + h, dx = 74, dy = -44, x0 = x - w / 2, x1 = x + w / 2, b0 = x0 + w * 0.06, b1 = x1 - w * 0.06;
 	/* lid coordinates: u across (0..w), v back (0..1) */
 	const L = (u: number, v: number): P2 => [x0 + u + dx * v, top + dy * v];
 	const holes: P2[] = [[0.2, 0.5], [0.4, 0.5], [0.62, 0.5], [0.82, 0.5]].map(([u, v]) => L(u * w, v));
 	const front = `M${x0},${top} H${x1} L${b1},${bot} H${b0} Z`;
 	const side = `M${x1},${top} L${x1 + dx},${top + dy} L${b1 + dx},${bot + dy} L${b1},${bot} Z`;
-	const cut = `M${x + 10},${top + 26} H${x1 - 22} L${b1 - 12},${bot - 24} H${x + 10} Z`;
+	const cutD = `M${x + 10},${top + 26} H${x1 - 22} L${b1 - 12},${bot - 24} H${x + 10} Z`;
 	const wire = Array.from({length: 5}, (_, i) => curl(x0 + 40 + i * (w - 80) / 4 + (i % 2) * 6, top + h * (0.42 + 0.1 * (i % 2)), 16, i % 2 ? -1 : 1, 1.4, 0.4)).join(' ');
 	return <g>
 		<defs><linearGradient id="enam" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stopColor="#2F67A8" /><stop offset="0.55" stopColor="#1F4A85" /><stop offset="1" stopColor="#163562" /></linearGradient>
@@ -175,12 +176,12 @@ export const IceChest: React.FC<{x: number; top: number; w: number; h: number}> 
 			<path d={Array.from({length: 7}, (_, i) => `M${x0 + 26 + i * (w - 52) / 6},${bot - 36} l12,12 l-12,12 l-12,-12 Z`).join(' ')} fill="none" stroke="#E8BC66" strokeWidth={1.8} opacity={0.85} />
 			<path d={`M${x0},${top + 46} H${x1} M${x0},${bot - 46} H${x1}`} stroke="#E8BC66" strokeWidth={2} opacity={0.8} />
 			{/* section hint: the front cut open — the tin lining, ice packed inside */}
-			<path d={cut} fill="#22272C" />
+			<g opacity={cut}><path d={cutD} fill="#22272C" />
 			<path d={`M${x + 10},${top + 26} H${x1 - 22} L${x1 - 30},${top + 40} H${x + 20} Z`} fill="#4A535A" />
 			<IceBlock x={x + 26} y={bot - 30} w={74} h={58} d={16} seed={21} />
 			<IceBlock x={x + 102} y={bot - 30} w={68} h={60} d={16} seed={22} />
 			<IceBlock x={x + 40} y={bot - 90} w={70} h={34} d={14} seed={23} marks={false} />
-			<path d={cut} fill="none" stroke={B.cream} strokeWidth={2.5} strokeDasharray="9 7" />
+			<path d={cutD} fill="none" stroke={B.cream} strokeWidth={2.5} strokeDasharray="9 7" /></g>
 		</g>
 		{/* gilt corner bands, foot, ring handle */}
 		<path d={`M${x0},${top} L${b0},${bot} M${x1},${top} L${b1},${bot}`} stroke="url(#brz51)" strokeWidth={7} />
@@ -195,8 +196,8 @@ export const IceChest: React.FC<{x: number; top: number; w: number; h: number}> 
 			<path d="M0,-17 V-7 M0,7 V17 M-17,0 H-7 M7,0 H17" stroke="url(#brz51)" strokeWidth={3} />
 		</g>)}
 		{/* cold breath curls out of each hole, then sinks down the sides */}
-		{holes.map(([hx, hy], i) => { const d = i < 2 ? -1 : 1;
-			return <g key={`b${i}`}>
+		{holes.map(([hx0, hy0], i) => { const d = i < 2 ? -1 : 1, b = breath[i] ?? 1; if (b <= 0.01) return null; const hx = hx0 + d * 4 * Math.sin(T * 1.3 + i), hy = hy0;
+			return <g key={`b${i}`} opacity={b} transform={`translate(${hx0},${hy0}) scale(${0.5 + 0.5 * b}) translate(${-hx0},${-hy0})`}>
 				<path d={`M${hx},${hy - 4} C${hx - d * 6},${hy - 40} ${hx + d * 20},${hy - 70} ${hx + d * 6},${hy - 96}`} fill="none" stroke="#E6F5FD" strokeWidth={9} opacity={0.35} filter="url(#mistS)" />
 				<path d={curl(hx + d * 8, hy - 92, 18 + 3 * i, d, 2.4, 0.6)} fill="none" stroke="#E6F5FD" strokeWidth={3} strokeLinecap="round" opacity={0.85} />
 				<path d={`M${hx},${hy - 4} C${hx - d * 6},${hy - 40} ${hx + d * 20},${hy - 70} ${hx + d * 6},${hy - 92}`} fill="none" stroke="#F4FBFF" strokeWidth={3} strokeLinecap="round" opacity={0.85} />
@@ -211,5 +212,122 @@ export const FridgeIcon: React.FC<{x: number; y: number; h: number}> = ({x, y, h
 	return <g><rect x={x} y={y} width={w} height={h} rx={w * 0.12} fill="#EEF4F6" stroke="#9FB4BE" strokeWidth={2} />
 		<path d={`M${x},${y + h * 0.36} H${x + w}`} stroke="#9FB4BE" strokeWidth={2} />
 		<rect x={x + w * 0.76} y={y + h * 0.1} width={w * 0.08} height={h * 0.18} rx={2} fill="#9FB4BE" /><rect x={x + w * 0.76} y={y + h * 0.44} width={w * 0.08} height={h * 0.24} rx={2} fill="#9FB4BE" /></g>; };
+
+
+/* ---------- copied from KF51A (Builder A's KF15/KF16 look; KF51A registers its own root) ---------- */
+const stand = (k: Partial<{lean: number; neck: number; la: number; le: number; ra: number; re: number}> = {}) => grounded({lean: 3, neck: 4, lt: 3, lk: 3, rt: -4, rk: 4, la: -3, le: 10, ra: 4, re: 14, ...k});
+/* ---------- small cold-thing icons (KF15) ---------- */
+export const IceMountainI: React.FC<{x: number; y: number; s: number}> = ({x, y, s}) => { const k = s / 100;
+	const d = `M${-60 * k},0 L${-42 * k},${-46 * k} L${-30 * k},${-38 * k} L${-12 * k},${-96 * k} L${4 * k},${-64 * k} L${18 * k},${-82 * k} L${40 * k},${-30 * k} L${60 * k},0 Z`;
+	return <g transform={`translate(${x},${y})`}>
+		<path d={d} fill="url(#ice51F)" opacity={0.92} stroke={ICEA.line} strokeWidth={2} strokeLinejoin="round" />
+		<path d={`M${-12 * k},${-96 * k} L${-6 * k},${-20 * k} L${4 * k},${-64 * k} M${18 * k},${-82 * k} L${14 * k},${-18 * k} M${-42 * k},${-46 * k} L${-34 * k},${-8 * k}`} stroke="#FFFFFF" strokeOpacity={0.7} strokeWidth={2} fill="none" />
+		<path d={`M${-12 * k},${-96 * k} L${-22 * k},${-40 * k} L${-16 * k},${-40 * k} Z`} fill="#FFFFFF" opacity={0.6} />
+		<ellipse cx={0} cy={2} rx={70 * k} ry={8 * k} fill="none" stroke={B.gold} strokeOpacity={0.35} strokeWidth={2} /></g>; };
+export const SuShan: React.FC<{x: number; y: number; s: number}> = ({x, y, s}) => { const k = s / 100;
+	/* a small dish with three piped/drizzled cream peaks: spiral bands across each cone, tips tinted red / green */
+	const peak = (cx: number, base: number, ht: number, wd: number, tint: string, i: number) => { const top = base - ht;
+		const body = `M${cx - wd / 2},${base} Q${cx - wd * 0.46},${base - ht * 0.45} ${cx - wd * 0.14},${top + ht * 0.2} Q${cx - wd * 0.02},${top - ht * 0.04} ${cx + wd * 0.12},${top + ht * 0.05} Q${cx + wd * 0.1},${top + ht * 0.16} ${cx + wd * 0.16},${top + ht * 0.24} Q${cx + wd * 0.46},${base - ht * 0.45} ${cx + wd / 2},${base} Z`;
+		const bands = [0.22, 0.45, 0.68].map((u) => { const yy = top + ht * (0.18 + u * 0.8), hw = wd * (0.12 + 0.4 * u); return `M${cx - hw},${yy} Q${cx},${yy + ht * 0.12} ${cx + hw},${yy - ht * 0.04}`; }).join(' ');
+		return <g key={i}><path d={body} fill={B.cream} stroke="#BFA77C" strokeWidth={1.5} />
+			<path d={bands} stroke="#C9B08A" strokeWidth={2.4 * k} fill="none" strokeLinecap="round" />
+			<path d={`M${cx - wd * 0.14},${top + ht * 0.2} Q${cx - wd * 0.02},${top - ht * 0.04} ${cx + wd * 0.12},${top + ht * 0.05} Q${cx + wd * 0.1},${top + ht * 0.16} ${cx + wd * 0.16},${top + ht * 0.24}`} fill="none" stroke={tint} strokeWidth={5 * k} strokeLinecap="round" opacity={0.75} />
+			<path d={`M${cx + wd * 0.18},${top + ht * 0.4} q${3 * k},${8 * k} 0,${14 * k}`} stroke="#E8DCC0" strokeWidth={2.5 * k} fill="none" strokeLinecap="round" /></g>; };
+	return <g transform={`translate(${x},${y})`}>
+		<ellipse cx={0} cy={-6 * k} rx={64 * k} ry={13 * k} fill="#2A1710" stroke={B.gold} strokeOpacity={0.7} strokeWidth={2} />
+		<ellipse cx={0} cy={-9 * k} rx={54 * k} ry={9 * k} fill="#3A2116" />
+		{peak(-30 * k, -8 * k, 52 * k, 40 * k, '#C8503A', 0)}{peak(28 * k, -8 * k, 48 * k, 38 * k, '#5E9A6A', 1)}{peak(0, -4 * k, 76 * k, 48 * k, '#C8503A', 2)}
+	</g>; };
+export const SilverBowlI: React.FC<{x: number; y: number; s: number}> = ({x, y, s}) => { const k = s / 100;
+	/* a wide, shallow silver bowl on a low foot ring, a heaped mound of shaved ice above the rim, a bright glint */
+	const rimY = -30 * k, rw = 66 * k;
+	return <g transform={`translate(${x},${y})`}>
+		<path d={`M${-18 * k},0 L${-14 * k},${-8 * k} L${14 * k},${-8 * k} L${18 * k},0 Z`} fill="url(#slv51)" stroke="#59636A" strokeWidth={1.2} />
+		<path d={`M${-rw},${rimY} Q${-rw * 0.9},${-8 * k} ${-14 * k},${-8 * k} L${14 * k},${-8 * k} Q${rw * 0.9},${-8 * k} ${rw},${rimY} Z`} fill="url(#slv51)" stroke="#59636A" strokeWidth={1.5} />
+		<path d={`M${-rw},${rimY} Q${-30 * k},${-82 * k} ${-4 * k},${-80 * k} Q${10 * k},${-90 * k} ${24 * k},${-74 * k} Q${52 * k},${-62 * k} ${rw},${rimY} Z`} fill="url(#ice51T)" stroke={ICEA.line} strokeWidth={1.8} />
+		{Array.from({length: 22}, (_, i) => <circle key={i} cx={(-50 + 100 * rnd(i, 3)) * k} cy={(-36 - 34 * rnd(i, 4) * (1 - Math.abs(rnd(i, 3) - 0.5))) * k} r={1.8 * k} fill={i % 3 ? ICEA.shade : '#FFFFFF'} opacity={0.7} />)}
+		<ellipse cx={0} cy={rimY} rx={rw} ry={6 * k} fill="none" stroke="#F4F8FA" strokeWidth={2.5} />
+		<path d={`M${-rw * 0.62},${rimY + 8 * k} Q${-rw * 0.5},${rimY + 17 * k} ${-rw * 0.24},${rimY + 20 * k}`} stroke="#FFFFFF" strokeWidth={5 * k} fill="none" strokeLinecap="round" />
+		<g transform={`translate(${rw * 0.44},${rimY + 10 * k})`} fill="#FFFFFF"><path d={`M0,${-14 * k} L${2.2 * k},${-2.2 * k} L${14 * k},0 L${2.2 * k},${2.2 * k} L0,${14 * k} L${-2.2 * k},${2.2 * k} L${-14 * k},0 L${-2.2 * k},${-2.2 * k} Z`} /></g>
+	</g>; };
+export const IceTicket: React.FC<{x: number; y: number; s: number}> = ({x, y, s}) => { const k = s / 100;
+	return <g transform={`translate(${x},${y}) rotate(-4)`}>
+		<rect x={-30 * k} y={-110 * k} width={60 * k} height={110 * k} fill="#EFE2C4" stroke="#8A6A3A" strokeWidth={1.5} />
+		<rect x={-24 * k} y={-104 * k} width={48 * k} height={98 * k} fill="none" stroke="#22150F" strokeWidth={1.4} />
+		{[-12, 0, 12].map((dx, i) => <path key={i} d={`M${dx * k},${-94 * k} v${14 * k} m0,${6 * k} v${10 * k} m0,${6 * k} v${16 * k}`} stroke="#22150F" strokeWidth={3 * k} strokeLinecap="round" />)}
+		<rect x={-14 * k} y={-38 * k} width={28 * k} height={28 * k} fill="#BF3420" opacity={0.9} /></g>; };
+export const PlumBowl: React.FC<{x: number; y: number; s: number}> = ({x, y, s}) => { const k = s / 100;
+	return <g transform={`translate(${x},${y})`}>
+		<path d={`M${-46 * k},${-40 * k} Q${-40 * k},${-8 * k} ${-16 * k},${-4 * k} L${-14 * k},0 L${14 * k},0 L${16 * k},${-4 * k} Q${40 * k},${-8 * k} ${46 * k},${-40 * k} Z`} fill="url(#brz51v)" stroke={BRZ.line} strokeWidth={1.5} />
+		<ellipse cx={0} cy={-40 * k} rx={46 * k} ry={10 * k} fill="#3A120C" stroke={BRZ.hi} strokeWidth={2} />
+		<ellipse cx={-6 * k} cy={-42 * k} rx={30 * k} ry={5 * k} fill="#6A2418" opacity={0.8} />
+		<g transform={`translate(${12 * k},${-46 * k}) rotate(12)`}><rect x={-9 * k} y={-9 * k} width={18 * k} height={18 * k} rx={3} fill="url(#ice51F)" stroke={ICEA.line} strokeWidth={1.2} /></g></g>; };
+export const EnamelBox: React.FC<{x: number; y: number; s: number; breath?: number}> = ({x, y, s, breath = 1}) => { const k = s / 100;
+	return <g transform={`translate(${x},${y})`}>
+		<path d={`M${-50 * k},0 L${-44 * k},${-18 * k} L${44 * k},${-18 * k} L${50 * k},0 Z`} fill="#2A1710" stroke={B.gold} strokeOpacity={0.6} strokeWidth={1.5} />
+		<rect x={-46 * k} y={-84 * k} width={92 * k} height={66 * k} fill="#1F4E7A" stroke="#E8BC66" strokeWidth={2} />
+		<path d={`M${-40 * k},${-76 * k} h${80 * k} v${50 * k} h${-80 * k} Z M${-20 * k},${-52 * k} q${20 * k},${-20 * k} ${40 * k},0 q${-20 * k},${20 * k} ${-40 * k},0`} fill="none" stroke="#E8BC66" strokeWidth={1.5} opacity={0.9} />
+		<path d={`M${-52 * k},${-84 * k} L${52 * k},${-84 * k} L${46 * k},${-96 * k} L${-46 * k},${-96 * k} Z`} fill="#2C6494" stroke="#E8BC66" strokeWidth={2} />
+		{[-26, 0, 26].map((dx, i) => <g key={i}><circle cx={dx * k} cy={-90 * k} r={5 * k} fill="#0E0705" stroke="#E8BC66" strokeWidth={1.2} /><rect x={dx * k - 2 * k} y={-92 * k} width={4 * k} height={4 * k} fill="#E8BC66" /></g>)}
+		{breath > 0 && [-26, 0, 26].map((dx, i) => <path key={i} d={curl(dx * k + 4, -110 * k, 9 * k, i % 2 ? -1 : 1, 1.6, 0.4)} fill="none" stroke="#DCEFF8" strokeOpacity={0.6 * breath} strokeWidth={2.5} strokeLinecap="round" />)}</g>; };
+
+
+export const P1Line: React.FC<{t: number; dim?: boolean; snow?: number; wx?: number; wpose?: Pose; wflip?: boolean}> = ({t, dim, snow = 1, wx: wxIn, wpose, wflip = true}) => { const g = 800;
+	const xs = [190, 355, 525, 690, 850, 1005, 1160, 1320, 1500];
+	const eras = ['周', '战国', '唐', '唐', '北宋', '清', '清', '乾隆', '今天'];
+	const props: React.ReactNode[] = [
+		<IceBlockA key={0} x={xs[0]} y={g} w={120} h={90} d={50} seed={3} />,
+		<Jianfou key={1} x={xs[1]} y={g} w={140} id="p1j" />,
+		<IceMountainI key={2} x={xs[2]} y={g} s={140} />,
+		<SuShan key={3} x={xs[3]} y={g} s={130} />,
+		<SilverBowlI key={4} x={xs[4]} y={g} s={130} />,
+		<IceTicket key={5} x={xs[5]} y={g} s={120} />,
+		<PlumBowl key={6} x={xs[6]} y={g} s={120} />,
+		<EnamelBox key={7} x={xs[7]} y={g} s={130} />,
+		<Fridge key={8} x0={xs[8] - 75} y0={g - 290} w={150} h={290} open={0.8} light={1} frost={0.6} id="p1f" />,
+	];
+	const tops = [110, 150, 150, 120, 120, 130, 100, 140, 300];
+	const wp = wpose ?? stand({lean: 2, neck: 6, la: 4, le: 18}), wx = wxIn ?? 1640, wh = 330;
+	return <g>
+		<Ground g={g} lattice={false} />
+		<path d={`M120,${g + 2} H1580`} stroke={B.goldL} strokeOpacity={0.55} strokeWidth={2.5} />
+		{xs.map((x, i) => <g key={i}>
+			<Pool id={`p1${i}${dim ? 'd' : ''}`} x={x} y={g - 60} rx={110} ry={150} a={0.16} />
+			<circle cx={x} cy={g + 2} r={5} fill={B.goldL} />
+			{props[i]}
+			{/* winter inside each: snow falling within the thing's own space */}
+			<defs><clipPath id={`sn${i}${dim ? 'd' : ''}`}><ellipse cx={x} cy={g - tops[i] / 2 - 10} rx={i === 8 ? 72 : 78} ry={tops[i] / 2 + 34} /></clipPath></defs>
+			<g clipPath={`url(#sn${i}${dim ? 'd' : ''})`} opacity={snow}><Snow x0={x - 80} x1={x + 80} y0={g - tops[i] - 50} y1={g} n={26} t={t} seed={i + 1} size={1.05} o={1} /></g>
+			<Label x={x} y={g + 64} s={eras[i]} fs={40} anchor="middle" o={0.9} />
+		</g>)}
+		<Pool id={`p1w${dim ? 'd' : ''}`} x={wx} y={g + 2} rx={140} ry={26} a={0.3} />
+		<Walker51 x={wx} g={g} h={wh} pose={wp} look={L51A.today.look} flip={wflip} T={t} />
+	</g>; };
+
+export const P2Shot: React.FC<{frost?: number; t?: number}> = ({frost = 1, t = 0}) => { const x0 = 700, y0 = 160, fw = 520, fh = 860;
+	return <g>
+		<rect x={-40} y={700} width={W + 80} height={400} fill="#1E100B" />
+		<Ground g={1020} lattice={false} />
+		<Fridge x0={x0} y0={y0} w={fw} h={fh} open={0.9} light={1} frost={frost} id="p2f" t={t} />
+		<g opacity={0.5}><P1Mini /></g>
+	</g>; };
+export const P1Mini: React.FC = () => <g>{[220, 380, 1460, 1620].map((x, i) => <circle key={i} cx={x} cy={1000} r={5} fill={B.goldL} />)}<path d="M100,1002 H700 M1220,1002 H1820" stroke={B.goldL} strokeOpacity={0.5} strokeWidth={2} /></g>;
+export const SOURCES51 = ['资料：《诗经》《周礼》（南京博物院《十三经》本）《太平御览》《东京梦华录》 · 《开元天宝遗事》《燕京岁时记》《清稗类钞》',
+	'（据解放日报2025、中新网2022、新京报2026、《人民周刊》2019引） · 中国国家博物馆 · 湖北省博物馆（中新社2025） · 新华社（2025） · 宝鸡市文物局',
+	'故宫博物院周乾 · 北京大学李零（澎湃2017） · 上海社科院程鹏（中新网2022） · 国家统计局'];
+
+/** a paper lantern (oval, warm, small top and bottom caps, a short cord above, a tassel below); (x, y) = its centre */
+export const Lantern51: React.FC<{x: number; y: number; s?: number; lit?: number}> = ({x, y, s = 1, lit = 1}) => { const rx = 30 * s, ry = 42 * s;
+	const c = (a: string, b: string) => { const pa = parseInt(a.slice(1), 16), pb = parseInt(b.slice(1), 16); return `rgb(${[16, 8, 0].map((k) => Math.round(lerp((pa >> k) & 255, (pb >> k) & 255, lit))).join(',')})`; };
+	return <g>
+		<path d={`M${x},${y - ry - 40 * s} V${y - ry - 10 * s}`} stroke="#3A2416" strokeWidth={3 * s} />
+		{lit > 0.05 && <ellipse cx={x} cy={y} rx={rx * 1.5} ry={ry * 1.35} fill="#FFB060" opacity={0.2 * lit} filter="url(#mistS)" />}
+		<rect x={x - 14 * s} y={y - ry - 10 * s} width={28 * s} height={10 * s} rx={2} fill="#2A1710" stroke={B.gold} strokeOpacity={0.5} strokeWidth={1.2} />
+		<ellipse cx={x} cy={y} rx={rx} ry={ry} fill={c('#4A1C12', '#F2A55A')} />
+		{lit > 0.05 && <ellipse cx={x - rx * 0.15} cy={y - ry * 0.1} rx={rx * 0.6} ry={ry * 0.62} fill="#FFE6B0" opacity={0.75 * lit} />}
+		<path d={[-0.66, -0.22, 0.22, 0.66].map((u) => { const yy = y + u * ry, hw = rx * Math.sqrt(1 - u * u); return `M${x - hw},${yy} Q${x},${yy - 4 * s} ${x + hw},${yy}`; }).join(' ')} fill="none" stroke="#9A4A22" strokeWidth={1.5} opacity={0.55} />
+		<rect x={x - 12 * s} y={y + ry} width={24 * s} height={9 * s} rx={2} fill="#2A1710" stroke={B.gold} strokeOpacity={0.5} strokeWidth={1.2} />
+		<path d={`M${x},${y + ry + 9 * s} V${y + ry + 26 * s}`} stroke="#B8432A" strokeWidth={3 * s} strokeLinecap="round" />
+	</g>; };
 
 export {Figure4};
