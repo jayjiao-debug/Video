@@ -272,7 +272,9 @@ export const EnamelBox: React.FC<{x: number; y: number; s: number; breath?: numb
 		{breath > 0 && [-26, 0, 26].map((dx, i) => <path key={i} d={curl(dx * k + 4, -110 * k, 9 * k, i % 2 ? -1 : 1, 1.6, 0.4)} fill="none" stroke="#DCEFF8" strokeOpacity={0.6 * breath} strokeWidth={2.5} strokeLinecap="round" />)}</g>; };
 
 
-export const P1Line: React.FC<{t: number; dim?: boolean; snow?: number; wx?: number; wpose?: Pose; wflip?: boolean}> = ({t, dim, snow = 1, wx: wxIn, wpose, wflip = true}) => { const g = 800;
+/** the walk as one line. Film use: pscale[i] (each prop's scale about its base), psnow[i] (snow inside it), lab (labels), lineO
+    (the gold line), ffrost (today's fridge's own frost) */
+export const P1Line: React.FC<{t: number; dim?: boolean; snow?: number; wx?: number; wpose?: Pose; wflip?: boolean; pscale?: number[]; psnow?: number[]; lab?: number; lineO?: number; ffrost?: number}> = ({t, dim, snow = 1, wx: wxIn, wpose, wflip = true, pscale, psnow, lab = 1, lineO = 1, ffrost = 0.6}) => { const g = 800;
 	const xs = [190, 355, 525, 690, 850, 1005, 1160, 1320, 1500];
 	const eras = ['周', '战国', '唐', '唐', '北宋', '清', '清', '乾隆', '今天'];
 	const props: React.ReactNode[] = [
@@ -282,24 +284,24 @@ export const P1Line: React.FC<{t: number; dim?: boolean; snow?: number; wx?: num
 		<SuShan key={3} x={xs[3]} y={g} s={130} />,
 		<SilverBowlI key={4} x={xs[4]} y={g} s={130} />,
 		<IceTicket key={5} x={xs[5]} y={g} s={120} />,
-		<PlumBowl key={6} x={xs[6]} y={g} s={120} />,
+		<PlumBowl key={6} x={xs[6]} y={g} s={136} />,
 		<EnamelBox key={7} x={xs[7]} y={g} s={130} />,
-		<Fridge key={8} x0={xs[8] - 75} y0={g - 290} w={150} h={290} open={0.8} light={1} frost={0.6} id="p1f" />,
+		<Fridge key={8} x0={xs[8] - 75} y0={g - 290} w={150} h={290} open={0.8} light={1} frost={ffrost} id="p1f" t={t} />,
 	];
 	const tops = [110, 150, 150, 120, 120, 130, 100, 140, 300];
 	const wp = wpose ?? stand({lean: 2, neck: 6, la: 4, le: 18}), wx = wxIn ?? 1640, wh = 330;
 	return <g>
 		<Ground g={g} lattice={false} />
-		<path d={`M120,${g + 2} H1580`} stroke={B.goldL} strokeOpacity={0.55} strokeWidth={2.5} />
-		{xs.map((x, i) => <g key={i}>
+		<path d={`M120,${g + 2} H1580`} stroke={B.goldL} strokeOpacity={0.55 * lineO} strokeWidth={2.5} />
+		{xs.map((x, i) => { const sc = pscale ? pscale[i] : 1; if (sc <= 0.005) return null; return <g key={i} transform={`translate(${x},${g}) scale(${sc}) translate(${-x},${-g})`}>
 			<Pool id={`p1${i}${dim ? 'd' : ''}`} x={x} y={g - 60} rx={110} ry={150} a={0.16} />
-			<circle cx={x} cy={g + 2} r={5} fill={B.goldL} />
+			<circle cx={x} cy={g + 2} r={5} fill={B.goldL} opacity={lineO} />
 			{props[i]}
 			{/* winter inside each: snow falling within the thing's own space */}
 			<defs><clipPath id={`sn${i}${dim ? 'd' : ''}`}><ellipse cx={x} cy={g - tops[i] / 2 - 10} rx={i === 8 ? 72 : 78} ry={tops[i] / 2 + 34} /></clipPath></defs>
-			<g clipPath={`url(#sn${i}${dim ? 'd' : ''})`} opacity={snow}><Snow x0={x - 80} x1={x + 80} y0={g - tops[i] - 50} y1={g} n={26} t={t} seed={i + 1} size={1.05} o={1} /></g>
-			<Label x={x} y={g + 64} s={eras[i]} fs={40} anchor="middle" o={0.9} />
-		</g>)}
+			<g clipPath={`url(#sn${i}${dim ? 'd' : ''})`} opacity={psnow ? psnow[i] : snow}><Snow x0={x - 80} x1={x + 80} y0={g - tops[i] - 50} y1={g} n={26} t={t} seed={i + 1} size={1.05} o={1} /></g>
+			{lab > 0 && <Label x={x} y={g + 64} s={eras[i]} fs={40} anchor="middle" o={0.9 * lab} />}
+		</g>; })}
 		<Pool id={`p1w${dim ? 'd' : ''}`} x={wx} y={g + 2} rx={140} ry={26} a={0.3} />
 		<Walker51 x={wx} g={g} h={wh} pose={wp} look={L51A.today.look} flip={wflip} T={t} />
 	</g>; };

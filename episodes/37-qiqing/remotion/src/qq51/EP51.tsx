@@ -11,7 +11,7 @@ import {PartB} from './partB';
    parts render a little outside their nominal ranges. On top: subtitles, stamp, counter, J seal and the title card
    (master51.tsx); all hidden from the end card on (B's end card draws its own). */
 export const Film51: React.FC<{t: number}> = ({t}) => <AbsoluteFill style={{background: '#0C0605', overflow: 'hidden'}}>
-	<WipeSplit t={t} cross={HANDOFF.t} kind="shop" id="ab" x0={HANDOFF.x} oldP={<PartA t={t} />} newP={<PartB t={t} />} />
+	<WipeSplit t={t} cross={HANDOFF.t} kind="shop" id="ab" x0={HANDOFF.x} gap={140} oldP={<PartA t={t} />} newP={<PartB t={t} />} />
 	<Overlay t={t} />
 </AbsoluteFill>;
 const EP51C: React.FC = () => <Film51 t={useCurrentFrame() / FPS51} />;

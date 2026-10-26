@@ -102,14 +102,15 @@ const Rewind: Fc = ({t}) => {
 	const from: P2 = [LG.gapL, LG.yt + 150], bx = lerp(from[0], RW_B[0], ue), by = lerp(from[1], RW_B[1], ue), bw = lerp(LG.gapW * 0.9, RW_W, ue), bh = lerp(LG.gapW * 0.8, 262, ue);
 	const sum = 1 - seg(t, 7.35, 7.6), aut = bump(t, 7.35, 0.5), win = seg(t, 7.6, 7.85);
 	const vesO = 1 - seg(t, 7.0, 7.35);
-	const leaves = (col: string, o: number, seed: number) => o <= 0 ? null : <g opacity={o}>{Array.from({length: 28}, (_, i) => { const y = (H + 60) - ((rnd(i, seed) * (H + 120) + 900 * (t - 7.0)) % (H + 120)), x = rnd(i, seed + 1) * W + 30 * Math.sin(t * 3 + i);
-		return <ellipse key={i} cx={x} cy={y} rx={9} ry={4} fill={col} transform={`rotate(${rnd(i, seed + 2) * 180 + t * 200},${x},${y})`} />; })}</g>;
+	/* large leaves running BACKWARDS (rising) behind the block: green, then orange, then the snow */
+	const leaves = (col: string, vein: string, o: number, seed: number) => o <= 0 ? null : <g opacity={o}>{Array.from({length: 22}, (_, i) => { const y = (H + 80) - ((rnd(i, seed) * (H + 160) + 1100 * (t - 7.0)) % (H + 160)), x = rnd(i, seed + 1) * W + 40 * Math.sin(t * 3 + i), r = 22 + 14 * rnd(i, seed + 3);
+		return <g key={i} transform={`translate(${x},${y}) rotate(${rnd(i, seed + 2) * 180 - t * 260})`}><path d={`M${-r},0 Q0,${-r * 0.55} ${r},0 Q0,${r * 0.55} ${-r},0 Z`} fill={col} /><path d={`M${-r},0 L${r},0`} stroke={vein} strokeWidth={1.5} /></g>; })}</g>;
 	return <Pic id="rw" sheen={0.2}>
 		{/* the season field behind: warm summer → amber autumn → cold winter night */}
 		<rect width={W} height={H} fill="#2E1A0E" opacity={0.6 * sum} />
 		<rect width={W} height={H} fill="#3A200C" opacity={0.55 * aut} />
 		<rect width={W} height={H} fill="#10141A" opacity={0.5 * win} />
-		{leaves('#4A5A2A', sum * seg(t, 7.05, 7.25), 3)}{leaves('#B0702A', aut, 5)}
+		{leaves('#5E8A3A', '#3A5A22', sum * seg(t, 7.02, 7.15), 3)}{leaves('#D0782A', '#8A4A16', aut, 5)}
 		{/* rewind streaks */}
 		<g stroke={B.cream} strokeLinecap="round">{Array.from({length: 14}, (_, i) => { const y = 120 + i * 70 + 20 * rnd(i, 4), x = W - ((rnd(i, 5) * W + 2600 * (t - 7.0)) % (W + 600)) + 300;
 			return <path key={i} d={`M${x},${y} h${160 + 200 * rnd(i, 6)}`} strokeWidth={2} opacity={0.1 * bump(t, 7.0, 1.4)} />; })}</g>
@@ -117,49 +118,52 @@ const Rewind: Fc = ({t}) => {
 		{vesO > 0 && <g opacity={vesO} transform={`translate(0,${80 * ue})`}><VesselClose t={7.0} /></g>}
 		<IcePool x={bx} y={by + 8} rx={bw * 0.9} o={ue} />
 		<IceBlock x={bx} y={by} w={bw} h={bh} d={bw * 0.46} seed={3} />
+		{/* ◀◀ (upper right, clear of the subtitle; the stamp is hidden on H3) */}
+		<g transform="translate(1330,330)" opacity={fade(t, 7.0, 0.1) * (0.75 + 0.25 * Math.sin(t * 14))}>
+			<path d="M0,-46 L-62,0 L0,46 Z M66,-46 L4,0 L66,46 Z" fill={B.cream} stroke="#0A0503" strokeWidth={6} style={{paintOrder: 'stroke'}} /></g>
 	</Pic>; };
 
 /* ======================= 4 · the 周 river 8.2–17.3: walker revealed (KF03), title (KF04), two strikes, push, into the 冰窖 ======================= */
-const RG = 880, RH = 540, BW = 240, BH = 150, PITX = 1720;
-const STR = [BA(22), BA(23)];   // 12.896, 13.462
+const RG = 880, RH = 540, BW = 240, BH = 150, PITX = 1365, WG = RG - 24;   // WG: he walks a step behind the block (along the pit's far rim)
+const STR = [BA(22), 13.40];   // the two strikes (sound cues 12.896 / 13.40)
+/* his world x: chisel stance → walks round behind the block (13.55–14.75) → hauls it on the rope (14.75–15.6) → the block drops
+   into the 冰窖 (15.6–15.75) → a look back → walks on (15.95) */
+const riverWX = (t: number) => t < 13.55 ? 860 : t < 14.75 ? 860 + 446 * (t - 13.55) : t < 15.6 ? 1395 + 300 * (t - 14.75) : t < 15.95 ? 1650 : 1650 + V(RH) * (t - 15.95);
+const blockWX = (t: number) => t < 14.75 ? 1110 : 1110 + 300 * (Math.min(t, 15.6) - 14.75);
 const riverCam = (t: number) => {   // → {s, fx, fy, sx, sy}: world (fx, fy) lands on screen (sx, sy) at scale s
 	/* one pull-back straight to the title framing, done by 8.93; the music breaks 8.93–9.50, the picture holds, the title slams on 9.50 */
 	if (t < 8.93) { const u = ease(seg(t, 8.1, 8.93)); return {s: lerp(RW_W / BW, 0.87, u), fx: 1110, fy: RG, sx: lerp(RW_B[0], 960 + 150 * 0.87, u), sy: lerp(RW_B[1], RG, u)}; }
-	const s = 0.87;
-	const fx = 960 + 0.9 * Math.max(0, pushX(t) - 855) + Math.max(0, riverWX(t) - riverWX(15.9));
+	const s = 0.87 + 0.03 * ease(seg(t, 9.5, 12.5)) - 0.03 * ease(seg(t, 12.5, 13.6));   // a slow drift in over the title, back out for the haul
+	const fx = 960 + 0.85 * (riverWX(t) - 860) + 30 * ease(seg(t, 9.5, 12.5)) * (1 - ease(seg(t, 12.5, 13.6)));
 	return {s, fx, fy: RG, sx: 960, sy: RG}; };
-/** the walker's world x (push from 13.6, stops at the pit 14.86, walks on from 15.9) */
-const PUSH_V = 240;
-const pushX = (t: number) => 855 + PUSH_V * cl(t - 13.6, 0, 14.86 - 13.6);
-const riverWX = (t: number) => t < 15.9 ? pushX(t) : pushX(15.9) + V(RH) * (t - 15.9);
-const blockWX = (t: number) => t < 14.86 ? 1110 + Math.max(0, pushX(t) - 855) : lerp(1110 + pushX(14.86) - 855, PITX, eout(seg(t, 14.86, BA(26))));
-const PitMouth: React.FC<{x: number; y: number; w: number; id: string}> = ({x, y, w, id}) => { const hw = w / 2, d = w * 0.22;
+const PitMouth: React.FC<{x: number; y: number; w: number; id: string}> = ({x, y, w, id}) => { const hw = w / 2, d = w * 0.27;
 	return <g>
 		<defs><linearGradient id={`pw${id}`} x1="0" y1="0" x2="0" y2="1"><stop offset="0" stopColor="#6A4A30" /><stop offset="0.45" stopColor="#2A1A10" /><stop offset="1" stopColor="#030101" /></linearGradient></defs>
 		<path d={`M${x - hw},${y - d} L${x + hw},${y - d} L${x + hw + 40},${y} L${x - hw - 40},${y} Z`} fill="#040202" />
-		<path d={`M${x - hw},${y - d} L${x + hw},${y - d} L${x + hw - 10},${y - d * 0.4} L${x - hw + 10},${y - d * 0.4} Z`} fill={`url(#pw${id})`} />
+		<path d={`M${x - hw},${y - d} L${x + hw},${y - d} L${x + hw - 10},${y - d * 0.45} L${x - hw + 10},${y - d * 0.45} Z`} fill={`url(#pw${id})`} />
 		<path d={`M${x - hw},${y - d} L${x + hw},${y - d} L${x + hw + 40},${y} L${x - hw - 40},${y} Z`} fill="none" stroke={SNOW} strokeOpacity={0.35} strokeWidth={3} strokeLinejoin="round" />
 	</g>; };
 const River: Fc = ({t}) => {
 	const c = riverCam(t), wx = riverWX(t), bxw = blockWX(t);
-	/* the chisel: resting (KF03) → two strikes → laid down on the ice at 13.6 */
-	const lift = t < STR[0] ? bump(t, 12.45, STR[0] - 12.45) * (t < 12.75 ? 1 : 1) : t < STR[1] ? Math.sin(Math.PI * seg(t, STR[0] + 0.04, STR[1])) : 0;
+	/* the chisel: resting (KF03) → two strikes → tucked in his belt from 13.55 */
+	const lift = t < STR[0] ? bump(t, 12.45, STR[0] - 12.45) : t < STR[1] ? Math.sin(Math.PI * seg(t, STR[0] + 0.04, STR[1])) : 0;
 	const tipRest: P2 = [1110 - 70, RG - BH - 12];
 	const tip: P2 = [tipRest[0], tipRest[1] - 70 * lift], butt: P2 = [tip[0] - 52, tip[1] - 168];
-	const chiselHeld = t < 13.6;
+	const chiselHeld = t < 13.55;
+	const stance = (k = lift) => { let q = stand({lean: 8 + 6 * k, neck: 18, la: 10, le: 20, ra: 4, re: 16}); q = reach(q, 'L', butt[0] + 10, butt[1] + 26, 860, WG, RH); return t > 12.3 ? reach(q, 'R', butt[0] + 20, butt[1] + 62, 860, WG, RH) : q; };
+	const haulLean = grounded({lean: 20, neck: -8, lt: 20, lk: 14, rt: -16, rk: 10, la: -30, le: 10, ra: -26, re: 14});
 	let p: Pose;
-	if (chiselHeld) {
-		p = stand({lean: 8 + 6 * lift, neck: 18, la: 10, le: 20, ra: 4, re: 16});
-		p = reach(p, 'L', butt[0] + 10, butt[1] + 26, 860, RG, RH);
-		if (t > 12.3) p = reach(p, 'R', butt[0] + 20, butt[1] + 62, 860, RG, RH);
-	} else if (t < 14.86) {   // pushing the block
-		p = ikArm(ikArm(walkPose(wph(wx - 855, RH)), 'L', [0.25, 0.55]), 'R', [0.26, 0.6]);
-	} else if (t < 15.9) {
-		p = mixP(ikArm(ikArm(walkPose(wph(pushX(14.86) - 855, RH)), 'L', [0.25, 0.55]), 'R', [0.26, 0.6]), stand({lean: 6, neck: 20}), ease(seg(t, 14.86, 15.3)));
-	} else p = walkPose(wph(wx - pushX(15.9), RH) + 0.3);
-	const pitIn = seg(t, BA(26) - 0.04, BA(26) + 0.3);
+	if (chiselHeld) p = stance();
+	else if (t < 14.75) p = mixP(stance(0), walkPose(wph(wx - 860, RH)), ease(seg(t, 13.55, 13.8)));
+	else if (t < 15.6) p = ikArm(ikArm(mixP(walkPose(wph(wx - 860, RH)), haulLean, 0.4 * ease(seg(t, 14.75, 14.95))), 'L', [-0.1, 0.52]), 'R', [-0.08, 0.5]);
+	else if (t < 15.95) p = mixP(ikArm(ikArm(mixP(walkPose(wph(1650 - 860, RH)), haulLean, 0.4), 'L', [-0.1, 0.52]), 'R', [-0.08, 0.5]), stand({lean: 0, neck: -24, la: -10, le: 14}), ease(seg(t, 15.6, 15.85)));
+	else p = mixP(stand({lean: 0, neck: -24, la: -10, le: 14}), walkPose(wph(wx - 1650, RH) + 0.3), ease(seg(t, 15.95, 16.15)));
+	const drop = seg(t, 15.6, 15.76);
 	const lab = t > BA(27) - 0.25 ? land(seg(t, BA(27) - 0.25, BA(27) + 0.25)) : 0;
 	const hits = STR.map((s) => seg(t, s, s + 0.6));
+	const hand = J(p, 'LHand', wx, WG, RH), hip = J(p, 'Hips', wx, WG, RH);
+	const ropeAt: P2 = [bxw + BW / 2 - 6, RG - BH * 0.45];
+	const gust = bump(t, 9.5, 0.9);
 	return <Pic id="rv" sheen={0.2}>
 		<g transform={`translate(${c.sx},${c.sy}) scale(${c.s}) translate(${-c.fx},${-c.fy})`}>
 			<g transform={`translate(${-W},0)`}><FrozenRiver g={RG} t={t} id="rvl" /></g>
@@ -167,22 +171,29 @@ const River: Fc = ({t}) => {
 			<rect x={-W} y={H} width={W * 3} height={300} fill="#2A201C" />
 			<g transform={`translate(${W},0)`}><FrozenRiver g={RG} t={t} id="rvb" /></g>
 			<Pool id="rv" x={wx + 60} y={640} rx={560} ry={420} a={0.24} />
-			<Pool id="rvf" x={wx} y={RG + 4} rx={260} ry={36} a={0.22} />
+			<Pool id="rvf" x={wx} y={WG + 4} rx={260} ry={36} a={0.22} />
 			{/* where the block was cut from the sheet: a dark slot + chips */}
 			<path d={`M${1110 - 190},${RG + 34} L${1110 + 210},${RG + 34} L${1110 + 260},${RG + 8} L${1110 - 140},${RG + 8} Z`} fill="#0C0605" opacity={0.6} />
 			{Array.from({length: 9}, (_, i) => <path key={i} d={`M0,0 l${6 + 6 * rnd(i, 2)},${-4 - 4 * rnd(i, 3)} l${4 + 4 * rnd(i, 4)},${6 + 3 * rnd(i, 5)} Z`} transform={`translate(${1110 - 170 + 360 * rnd(i, 7)},${RG + 6 + 26 * rnd(i, 8)})`} fill={ICE.body} opacity={0.75} />)}
-			<PitMouth x={PITX} y={RG + 30} w={320} id="rvp" />
-			{lab > 0 && <Lab x={PITX} y={RG - 70 - 120 * (1 - lab)} s="冰窖" fs={56} anchor="middle" col={B.goldL} o={cl(lab * 3)} />}
-			{/* the block: on the ice, pushed, sliding, dropping in */}
-			{pitIn < 1 && <g opacity={1 - seg(pitIn, 0.6, 1)}>
-				<defs><clipPath id="rvc"><rect x={0} y={-200} width={4000} height={RG + 30 + 200} /></clipPath></defs>
-				<g clipPath="url(#rvc)"><IcePool x={bxw + 20} y={RG + 6} rx={240} o={1 - pitIn} /><IceBlock x={bxw} y={RG + 90 * pitIn * pitIn} w={BW} h={BH} d={110} seed={3} /></g></g>}
-			{!chiselHeld && <Chisel x={880} y={RG + 22} L={180} rot={-4} />}
+			<PitMouth x={PITX} y={RG + 60} w={250} id="rvp" />
+			{lab > 0 && <Lab x={PITX} y={RG + 140 - 120 * (1 - lab)} s="冰窖" fs={56} anchor="middle" col={B.goldL} o={cl(lab * 3)} />}
+			{/* the rope, lying slack on the ice until he takes it up (14.75) */}
+			{t < 14.75 && <path d={`M${ropeAt[0]},${ropeAt[1]} Q${ropeAt[0] + 60},${RG + 4} ${ropeAt[0] + 150},${RG + 8} q30,4 26,-8 q-6,-10 -30,-4`} fill="none" stroke="#A88A5C" strokeWidth={4} strokeLinecap="round" />}
+			<Walker51 x={chiselHeld ? 860 : wx} g={WG} h={RH} pose={p} look={LOOKS51.zhou.look} />
 			{chiselHeld && <Chisel x={butt[0]} y={butt[1]} L={Math.hypot(tip[0] - butt[0], tip[1] - butt[1])} rot={Math.atan2(tip[1] - butt[1], tip[0] - butt[0]) * 180 / Math.PI} />}
-			<Walker51 x={chiselHeld ? 860 : wx} g={RG} h={RH} pose={p} look={LOOKS51.zhou.look} />
+			{!chiselHeld && <Chisel x={hip[0] - 18} y={hip[1] - 46} L={150} rot={98} />}
+			{/* the block, with its rope loop; it sinks into the 冰窖 behind the near lip */}
+			{drop < 1 && <g opacity={1 - seg(drop, 0.55, 1)}>
+				<defs><clipPath id="rvc"><rect x={-W} y={-400} width={W * 4} height={RG + 60 + 400} /></clipPath></defs>
+				<g clipPath="url(#rvc)"><IcePool x={bxw + 20} y={RG + 6} rx={240} o={1 - drop} />
+					<IceBlock x={bxw} y={RG + 110 * drop * drop} w={BW} h={BH} d={110} seed={3} />
+					<path d={`M${bxw - BW / 2},${RG - BH * 0.45 + 110 * drop * drop} H${bxw + BW / 2}`} stroke="#A88A5C" strokeWidth={4} opacity={0.9} /></g></g>}
+			{t >= 14.75 && t < 15.62 && <path d={`M${hand[0]},${hand[1]} L${ropeAt[0]},${ropeAt[1]}`} stroke="#A88A5C" strokeWidth={4} strokeLinecap="round" />}
 			{hits.map((k, i) => <Burst key={i} x={tipRest[0]} y={tipRest[1]} s={160} k={k} seed={i + 2} />)}
 		</g>
 		<Snow t={t} n={150} seed={3} />
+		{gust > 0 && <g opacity={gust}>{Array.from({length: 60}, (_, i) => { const y = H * rnd(i, 31), x = W + 200 - ((rnd(i, 32) * (W + 400) + 2400 * (t - 9.5)) % (W + 400));
+			return <path key={i} d={`M${x},${y} l${-26 - 30 * rnd(i, 33)},${4}`} stroke={SNOW} strokeWidth={2 + 2 * rnd(i, 34)} strokeLinecap="round" opacity={0.7} />; })}</g>}
 	</Pic>; };
 
 /* ======================= 5 · Z1 16.4–21.3: 80 labourers (20 teams of four) to the 冰窖, officials with tallies, tag 1 → 80 ======================= */
@@ -202,10 +213,12 @@ const Tally: React.FC<{x: number; y: number; h: number; rot?: number}> = ({x, y,
 	<path d={`M${-h * 0.15},${-h * 0.72} H${h * 0.15} M${-h * 0.15},${-h * 0.28} H${h * 0.15}`} stroke="#5A3A18" strokeWidth={1.6} /></g>;
 const NumTag: React.FC<{x: number; y: number; label: string; num: string; w: number; tail?: string; o?: number; sc?: number}> = ({x, y, label, num, w, tail, o = 1, sc = 1}) =>
 	<g transform={`translate(${x + w / 2},${y + 70}) scale(${sc}) translate(${-w / 2},-70)`} opacity={o}>
-		<rect x={0} y={0} width={w} height={140} rx={10} fill="#0E0705" fillOpacity={0.9} stroke={B.gold} strokeOpacity={0.5} strokeWidth={2} />
-		<text x={28} y={98} fontFamily={KAI} fontWeight={700} fontSize={58} fill={B.cream}>{label}</text>
-		<text x={tail ? w - 210 : w - 28} y={106} textAnchor="end" fontFamily={SANS} fontWeight={900} fontSize={104} fill={B.goldL}>{num}</text>
-		{tail && <text x={w - 28} y={98} textAnchor="end" fontFamily={KAI} fontWeight={700} fontSize={58} fill={B.cream}>{tail}</text>}</g>;
+		<defs><radialGradient id={`nt${Math.round(x)}${Math.round(y)}`}><stop offset="0" stopColor="#0A0503" stopOpacity="0.82" /><stop offset="0.6" stopColor="#0A0503" stopOpacity="0.6" /><stop offset="1" stopColor="#0A0503" stopOpacity="0" /></radialGradient></defs>
+		<ellipse cx={w / 2} cy={70} rx={w * 0.72} ry={120} fill={`url(#nt${Math.round(x)}${Math.round(y)})`} />
+		<g stroke="#0A0503" strokeWidth={10} style={{paintOrder: 'stroke'}} strokeLinejoin="round">
+			<text x={28} y={98} fontFamily={KAI} fontWeight={700} fontSize={58} fill={B.cream}>{label}</text>
+			<text x={tail ? w - 210 : w - 28} y={106} textAnchor="end" fontFamily={SANS} fontWeight={900} fontSize={104} fill={B.goldL}>{num}</text>
+			{tail && <text x={w - 28} y={98} textAnchor="end" fontFamily={KAI} fontWeight={700} fontSize={58} fill={B.cream}>{tail}</text>}</g></g>;
 const ROWS_T: {g: number; h: number; dir: 1 | -1; xs: number[]}[] = [
 	{g: 655, h: 34, dir: 1, xs: Array.from({length: 9}, (_, i) => 250 + i * 100)},
 	{g: 712, h: 48, dir: -1, xs: Array.from({length: 6}, (_, i) => 1010 - i * 142)},
@@ -215,7 +228,7 @@ const Zhou80: Fc = ({t}) => { const g = 960, h = 480, wx = 300 + 230 * (t - 19.5
 	const o1 = ikArm(ikArm(stand({lean: 6, neck: 18 + 6 * bump(t % 1.13, 0, 0.5), la: 40, le: 60, ra: 50, re: 70}), 'L', [0.2, 0.66]), 'R', [0.16, 0.6]);
 	const o2 = ikArm(stand({lean: 2, neck: 10, la: 50, le: 70, ra: 6, re: 12}), 'L', [0.22, 0.68 + 0.02 * Math.sin(t * 5)]);
 	const n = Math.round(lerp(1, 80, eio(seg(t, 17.45, BA(32)))));
-	const tagO = fade(t, 17.2, 0.3), tagS = t > BA(32) - 0.05 ? lerp(1.12, 1, land(seg(t, BA(32) - 0.05, BA(32) + 0.4))) : 1;
+	const tagO = fade(t, 17.2, 0.3) * (1 - fade(t, 20.3, 0.3)), tagS = t > BA(32) - 0.05 ? lerp(1.12, 1, land(seg(t, BA(32) - 0.05, BA(32) + 0.4))) : 1;
 	const prog = (r: typeof ROWS_T[0]) => r.dir * 0.22 * r.h * (t - 19.5);
 	return <Pic id="z1" sheen={0.2}>
 		<path d={`M-40,600 Q300,540 620,580 Q980,520 1320,570 Q1640,530 1960,580 V640 H-40 Z`} fill={B.far} />
@@ -249,7 +262,7 @@ const Zhou80: Fc = ({t}) => { const g = 960, h = 480, wx = 300 + 230 * (t - 19.5
 		<Tally x={1262 - 0.22 * 280} y={814 - (0.62 + 0.02 * Math.sin(t * 5)) * 280} h={72} rot={-10} />
 		<Walker51 x={1664} g={884} h={320} pose={o1} look={{dress: 'robe', head: 'guan', beard: 'short'}} col="#0F0806" flip rimO={0.6} />
 		<Tally x={1664 - 0.2 * 320} y={884 - 0.6 * 320} h={84} rot={8} />
-		{tagO > 0 && <NumTag x={560} y={420} label="干活的 ×" num={`${n}`} w={430} o={tagO} sc={tagS} />}
+		{tagO > 0 && <NumTag x={640} y={380} label="干活的 ×" num={`${n}`} w={430} o={tagO} sc={tagS} />}
 		<rect x={-40} y={g} width={W + 80} height={H - g + 40} fill={BG.ground} /><rect x={-40} y={g} width={W + 80} height={3} fill={B.gold} opacity={0.28} />
 		<Pool id="z1f" x={wx} y={g + 4} rx={240} ry={34} a={0.25} />
 		<Walker51 x={wx} g={g} h={h} pose={walkPose(wph(wx, h) + 0.2)} look={LOOKS51.zhou.look} />
@@ -297,8 +310,8 @@ const Pit: Fc = ({t}) => {
 		{qO > 0 && <g opacity={qO}>
 			<path d={`M1010,${GS + 2} L${1010 + 74 * Math.sin(swing * Math.PI / 180)},${GS + 74}`} stroke={B.cream} strokeOpacity={0.5} strokeWidth={2} />
 			<g transform={`translate(1010,${GS + 2}) rotate(${-swing}) translate(0,72)`}><circle r={40} fill="#0E0705" stroke={B.gold} strokeOpacity={0.6} strokeWidth={2} /><text x={2} y={22} textAnchor="middle" fontFamily={SANS} fontWeight={900} fontSize={62} fill={B.goldL}>？</text></g></g>}
-		{x3 > 0 && <g opacity={1 - seg(t, 23.5, 23.85)} transform={`translate(1615,670) scale(${lerp(1.3, 1, x3)}) translate(-85,-70)`}><rect x={0} y={0} width={170} height={140} rx={10} fill="#0E0705" fillOpacity={0.9} stroke={B.gold} strokeOpacity={0.5} strokeWidth={2} />
-			<text x={85} y={106} textAnchor="middle" fontFamily={SANS} fontWeight={900} fontSize={104} fill={B.goldL}>×3</text></g>}
+		{x3 > 0 && <g opacity={1 - seg(t, 23.5, 23.85)} transform={`translate(1615,670) scale(${lerp(1.3, 1, x3)}) translate(-85,-70)`}><ellipse cx={85} cy={70} rx={150} ry={110} fill="url(#x3s)" /><defs><radialGradient id="x3s"><stop offset="0" stopColor="#0A0503" stopOpacity="0.82" /><stop offset="0.6" stopColor="#0A0503" stopOpacity="0.55" /><stop offset="1" stopColor="#0A0503" stopOpacity="0" /></radialGradient></defs>
+			<text x={85} y={106} textAnchor="middle" fontFamily={SANS} fontWeight={900} fontSize={104} fill={B.goldL} stroke="#0A0503" strokeWidth={10} style={{paintOrder: 'stroke'}}>×3</text></g>}
 		{tag190 > 0 && <NumTag x={700} y={650} label="容积" num="190" tail="立方米" w={560} sc={lerp(1.15, 1, tag190)} o={cl(tag190 * 3)} />}
 		<Pool id="ptw" x={wx} y={GS - 160} rx={260} ry={200} a={0.2} />
 		{t >= 23.6 && <rect x={tl} y={GS - 14} width={tr - tl} height={14} fill="#2A160E" opacity={0.8} />}
