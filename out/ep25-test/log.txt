@@ -1,0 +1,36 @@
+token id present: yes
+token secret present: yes
+✓ Initialized. View run at 
+https://modal.com/apps/jayjiao249/main/ap-g64RMiu94WCmdFC73WWIrh
+✓ Created objects.
+├── ✓ Uploaded /home/runner/work/Video/Video/render_ep25.py
+├── ✓ Uploaded /home/runner/work/Video/Video/ep25
+└── ✓ Created Function chunk.
+an error occurred during closing of asynchronous generator <async_generator object async_merge at 0x73cd7b162710>
+asyncgen: <async_generator object async_merge at 0x73cd7b162710>
+Traceback (most recent call last):
+  File "/opt/hostedtoolcache/Python/3.11.17/x64/lib/python3.11/site-packages/modal/_utils/async_utils.py", line 858, in __iter__
+    yield from run_async_gen(runner, self._async_iterable)
+GeneratorExit
+
+During handling of the above exception, another exception occurred:
+
+RuntimeError: aclose(): asynchronous generator is already running
+an error occurred during closing of asynchronous generator <async_generator object Synchronizer._run_generator_async at 0x73cd7b218760>
+asyncgen: <async_generator object Synchronizer._run_generator_async at 0x73cd7b218760>
+Traceback (most recent call last):
+  File "/opt/hostedtoolcache/Python/3.11.17/x64/lib/python3.11/site-packages/modal/_utils/async_utils.py", line 858, in __iter__
+    yield from run_async_gen(runner, self._async_iterable)
+GeneratorExit
+
+During handling of the above exception, another exception occurred:
+
+RuntimeError: aclose(): asynchronous generator is already running
+Task was destroyed but it is pending!
+task: <Task pending name='Task-562' coro=<<async_generator_athrow without __name__>()> wait_for=<Future finished result=None>>
+0 900 930 RENDERER ANGLE (NVIDIA, Vulkan 1.4.341 (NVIDIA Tesla T4 (0x00001EB8)), NVIDIA) / MS_PER_FRAME 124
+1 930 960 RENDERER ANGLE (NVIDIA, Vulkan 1.4.341 (NVIDIA Tesla T4 (0x00001EB8)), NVIDIA) / MS_PER_FRAME 127
+DONE 2078328
+Stopping app - local entrypoint completed.
+✓ App completed. View run at 
+https://modal.com/apps/jayjiao249/main/ap-g64RMiu94WCmdFC73WWIrh
