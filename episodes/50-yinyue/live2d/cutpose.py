@@ -29,6 +29,11 @@ def decontam(rgb, m):
     inner = nd.binary_erosion(m, iterations=3)
     _, (iy, ix) = nd.distance_transform_edt(~inner, return_indices=True)
     o = rgb.copy(); ring = m & ~inner; o[ring] = rgb[iy[ring], ix[ring]]; return o
+def fill_specks(im):
+    dk = im.mean(2) < 110
+    sp = nd.binary_closing(dk, iterations=2) & ~dk & (im.min(2) > 190)
+    o = im.copy(); o[sp] = INK; return o
+F = fill_specks(F); A = fill_specks(A)
 cA, cF = charmask(A), charmask(F)
 darkA, darkF = A.mean(2) < 110, F.mean(2) < 110
 softF = nd.gaussian_filter(cF.astype(float), .8); softA = nd.gaussian_filter(cA.astype(float), .8)
@@ -40,12 +45,12 @@ def save(name, rgb, alpha):
     info['boxes'][name] = [int(x0), int(y0), int(x1), int(y1)]
 CFG = {
  'sit':   dict(tail=[(742,620),(875,620),(875,905),(756,905),(756,700),(742,690)], tailPivot=(768,868),
-              arms={'armL': dict(y0=560, yjoin=708, seed=(215, 680), pivot=(330, 640)),
-                    'armR': dict(y0=560, yjoin=708, seed=(812, 680), pivot=(694, 640))},
-              legs={}, hipY=None),
+              arms={'armL': dict(y0=560, yjoin=708, seed=(215, 680), pivot=(330, 640), shoulder=(368, 652), rest=(0, 1.0)),
+                    'armR': dict(y0=560, yjoin=708, seed=(812, 680), pivot=(694, 640), shoulder=(656, 652), rest=(0, 1.0))},
+              masterPivot=(368, 652), legs={}, hipY=None),
  'stand': dict(tail=[(735,600),(870,600),(870,875),(690,875),(712,800),(735,760)], tailPivot=(722,838),
-              arms={'armL': dict(y0=560, yjoin=738, seed=(300, 700), pivot=(352, 618)),
-                    'armR': dict(y0=560, yjoin=738, seed=(724, 700), pivot=(672, 618))},
+              arms={'armL': dict(y0=560, yjoin=738, seed=(300, 700), pivot=(352, 618), shoulder=(395, 645), rest=(23, .72)),
+                    'armR': dict(y0=560, yjoin=738, seed=(724, 700), pivot=(672, 618), shoulder=(629, 645), rest=(23, .72))},
               legs={'legL': ([(368,835),(515,835),(515,1010),(368,1010)], (440, 870)),
                     'legR': ([(515,835),(662,835),(662,1010),(515,1010)], (590, 870))}, hipY=878),
 }[pose]
@@ -63,14 +68,24 @@ ry = (neckY - (my - 300 * s)) / 2 + 4; cy = neckY - ry + 2; rx = hw + 4
 Ahead = cA & ((((xx - ncx) / rx) ** 2 + ((yy - cy) / ry) ** 2 <= 1) | (yy < neckY - 30))
 # ---------- tail (armless picture), extended under the body
 white = A.min(2) > 246; tp = poly(CFG['tail'])
-gapF = (F.min(2) > 246) & nd.binary_dilation(tp, iterations=25)      # enclosed white between body, paw and tail = background
+gapF = (F.min(2) >= 246) & (F.max(2) - F.min(2) <= 5) & nd.binary_dilation(tp, iterations=30)      # enclosed white between body, paw and tail = background
+cand = cF & (F.min(2) >= 246) & (F.max(2) - F.min(2) <= 5) & (nd.distance_transform_edt(cF) < 20)   # neutral white (background, not cream fur)
+lab_, n_ = nd.label(cand); sz_ = nd.sum(cand, lab_, range(1, n_ + 1))
+pocket = np.isin(lab_, [i + 1 for i, v in enumerate(sz_) if v <= 120])   # only small pockets trapped between strokes
+gapF |= pocket
+cF = cF & ~pocket
 tail = largest(nd.binary_closing(cA & tp & ~Ahead & ~white, iterations=3) & cA & ~white)
-Abody = cA & ~Ahead & ~tail & ~(tp & white)
-under = nd.binary_dilation(tail, iterations=24) & nd.binary_erosion(Abody, iterations=12)     # hidden behind the torso
+neutralA = (A.min(2) >= 246) & (A.max(2) - A.min(2) <= 5)
+Abody = cA & ~Ahead & ~tail & ~(tp & white) & ~(neutralA & nd.binary_dilation(tp, iterations=30))   # enclosed background is not body
+tpv = np.array(CFG['tailPivot']); near_root = np.hypot(xx - tpv[0], yy - tpv[1]) < 55
+under = nd.binary_dilation(tail, iterations=24) & nd.binary_erosion(Abody, iterations=2) & near_root   # hidden behind the torso
 tailx = tail | under
 _, (iy, ix) = nd.distance_transform_edt(~tail, return_indices=True)
 T_rgb = A.copy(); T_rgb[under] = A[iy[under], ix[under]]
-save('tail', decontam(T_rgb, tailx), tailx * np.where(under, 1, softA)); info['pivots']['tail'] = CFG['tailPivot']
+save('tail', decontam(T_rgb, tailx), tailx * np.where(under, 1, nd.gaussian_filter(tailx.astype(float), .8))); info['pivots']['tail'] = CFG['tailPivot']
+tcut = tail & ~nd.binary_erosion(tail, iterations=1) & nd.binary_dilation(Abody, iterations=3) & ~near_root
+tstroke = nd.binary_dilation(tcut, iterations=4) & tail & ~darkA
+if tstroke.sum() > 20: save('tail_edge', np.broadcast_to(INK, F.shape).copy(), nd.gaussian_filter(tstroke.astype(float), .7) * tail)
 # ---------- arms (reference picture), cut along the armless body's outline
 def edge_of(dark, y, side):
     r = dark[y]; rng = range(500, 140, -1) if side == 'L' else range(524, 884)
@@ -79,10 +94,14 @@ def edge_of(dark, y, side):
 arms = {}
 for k, c in CFG['arms'].items():
     side = k[-1]; region = np.zeros((1024, 1024), bool)
-    for y in range(c['y0'], c['yjoin'] + 40):
-        e = edge_of(darkA & cA & ~Ahead & ~nd.binary_dilation(tail | tp, iterations=6), y, side)
-        if e is None: continue
-        lim = e + (8 if y <= c['yjoin'] else -22) * (1 if side == 'L' else -1)
+    ys_ = list(range(c['y0'], c['yjoin'] + 40)); dk = darkA & cA & ~Ahead & ~nd.binary_dilation(tail | tp, iterations=6)
+    es = [edge_of(dk, y, side) for y in ys_]
+    good = [i for i, e in enumerate(es) if e is not None]
+    es = np.interp(range(len(ys_)), good, [es[i] for i in good])
+    es = nd.median_filter(es, size=9, mode='nearest')                     # a smooth cut line, not a staircase
+    for y, e in zip(ys_, es):
+        e = int(round(e))
+        lim = e + ((8 if pose == 'sit' else 20) if y <= c['yjoin'] else -22) * (1 if side == 'L' else -1)
         if side == 'L': region[y, :lim] = True
         else: region[y, lim:] = True
     region &= cF & ~hsolid                          # never take head pixels: the head stays in the torso
@@ -92,14 +111,38 @@ for k, c in CFG['arms'].items():
     arm = fur | (region & darkF & nd.binary_dilation(fur, iterations=13))
     arm = nd.binary_closing(arm, iterations=2) & region & ~hsolid & ~gapF
     arms[k] = arm
-    inner = nd.binary_erosion(cA, iterations=2) & ~nd.binary_dilation(~cF, iterations=2)
-    save(k, decontam(F, arm), arm * np.where(inner, 1, softF))
-    # the arm's cut edge that lies on the body: an outline shown only while the arm bends away
-    cut = arm & ~nd.binary_erosion(arm, iterations=1) & nd.binary_erosion(Abody, iterations=6) & ~nd.binary_dilation(hsolid, iterations=10)
-    stroke = nd.binary_dilation(cut, iterations=4) & arm
-    save(k + '_edge', np.broadcast_to(INK, F.shape).copy(), nd.gaussian_filter(stroke.astype(float), .8) * arm)
-    L = float(np.hypot(c['seed'][0] - c['pivot'][0], c['seed'][1] - c['pivot'][1]))
-    info['pivots'][k] = c['pivot']; info['deform'][k] = [round(.18 * L, 1), round(.58 * L, 1)]
+    if pose == 'sit' and k == 'armL':
+        # the master arm: the clean sitting left arm, completed into a whole limb whose root reaches a pivot
+        # well inside the shoulder (hidden behind the torso at any angle), with one clean outline all round
+        pm = np.array(CFG['masterPivot'], float); d = np.hypot(xx - pm[0], yy - pm[1])
+        from scipy.spatial import ConvexHull
+        pts = np.c_[np.where(arm & (d < 120))[::-1]]
+        pts = np.r_[pts, [[pm[0] + 26 * np.cos(t_), pm[1] + 26 * np.sin(t_)] for t_ in np.linspace(0, 2 * np.pi, 20)]]
+        hull = Path(pts[ConvexHull(pts).vertices]).contains_points(P).reshape(1024, 1024)
+        armfur = nd.binary_erosion(arm, iterations=LINE) | (fur & arm)
+        shape = nd.binary_closing(armfur | (hull & ~nd.binary_dilation(arm, iterations=0)) | fur, iterations=3)
+        shape = nd.binary_fill_holes(shape | nd.binary_erosion(hull, iterations=LINE))
+        ring = nd.binary_dilation(shape, iterations=LINE) & ~shape
+        furc = np.median(F[fur & ~darkF], 0)
+        rgb = np.where(fur[..., None], F, furc)                         # fur (with toe lines) from the art, filled root
+        rgb = np.where((arm & darkF & ~fur)[..., None], F, rgb)          # the art's own outline where it has one
+        full_ = shape | ring
+        rgb = np.where((ring & ~(arm & darkF))[..., None], INK, rgb)    # a fresh outline where it had none (the root)
+        sil = nd.gaussian_filter(full_.astype(float), .9)
+        Image.fromarray(np.dstack([np.clip(decontam(rgb, full_), 0, 255), sil * 255]).astype(np.uint8)).save(f'{out}/arm_master.png')
+        json.dump({'pivot': list(map(float, pm))}, open(f'{out}/arm_master.json', 'w'))
+# 2) place the master arm (mirrored for the right) at each pose's shoulder pivots; arms are drawn BEHIND the torso
+MA = Image.open(f'{out}/arm_master.png'); pm = json.load(open(f'{out}/arm_master.json'))['pivot']
+for k, c in CFG['arms'].items():
+    ang, sc = c['rest']; pv = c['shoulder']
+    im = MA if k == 'armL' else MA.transpose(Image.FLIP_LEFT_RIGHT)
+    src = pm if k == 'armL' else (1023 - pm[0], pm[1])
+    if k == 'armR': ang = -ang
+    t = np.radians(ang); cs, sn = np.cos(t) / sc, np.sin(t) / sc        # inverse map: output -> master
+    inv_ = (cs, -sn, src[0] - cs * pv[0] + sn * pv[1], sn, cs, src[1] - sn * pv[0] - cs * pv[1])
+    placed = np.asarray(im.transform((1024, 1024), Image.AFFINE, inv_, resample=Image.BICUBIC)).astype(float)
+    save(k, placed[..., :3], placed[..., 3] / 255.)
+    info['pivots'][k] = list(pv); info['deform'][k] = [0, 1]          # rigid swing about the hidden pivot
 # ---------- legs (reference picture), behind the torso
 legs = {}; crotch = None
 if CFG['legs']:
@@ -108,25 +151,41 @@ if CFG['legs']:
         m = cF & poly(p) & ~((yy > CFG['hipY']) & crotch[None, :]); legs[k] = m
         save(k, decontam(F, m), m * softF); info['pivots'][k] = pv
     feet = int(np.where(np.any(list(legs.values()), 0).any(1))[0].max())
-    info['deform']['leg'] = [CFG['hipY'] - 6, CFG['hipY'] + .45 * (feet - CFG['hipY'])]
+    info['deform']['leg'] = [CFG['hipY'] + 12, CFG['hipY'] + 12 + .4 * (feet - CFG['hipY'])]
 # ---------- torso: the reference picture minus arms, tail and legs; the arm areas filled from the armless picture
 allarm = np.any(list(arms.values()), 0)
 T = (cF | (Abody & allarm)) & ~(tp & ~nd.binary_dilation(Abody, iterations=2)) & ~tail
 if legs:
     legzone = np.any([poly(p) for p, _ in CFG['legs'].values()], 0)
-    T &= ~(legzone & (yy > CFG['hipY']) & ~crotch[None, :])
-T &= ~(allarm & ~Abody)                              # where only the arm was, nothing is left behind it
+    T &= ~(legzone & (yy > CFG['hipY']) & ~(crotch[None, :] & (yy < CFG['hipY'] + 28)))
+headzone = nd.binary_dilation(Hd[..., 3] > 60, iterations=16 if pose == 'stand' else 3)   # standing: the shoulder fur under the cheek stays with the torso
+T &= ~(allarm & ~Abody & ~headzone & ~(darkF & nd.binary_dilation(hsolid, iterations=16)))   # remove the arm, keep the head and its cheek outline
 T &= ~(gapF & ~Abody)
 T = largest(T)
-fill = allarm & Abody
-ring = nd.binary_dilation(fill, iterations=14) & ~allarm & Abody & ~darkF & ~darkA
-gain = (np.median(F[ring], 0) + 1) / (np.median(A[ring], 0) + 1)       # colour-match the armless fill to the reference
-Tr = F.copy(); Tr[fill] = np.clip(A[fill] * gain, 0, 255)
+import cv2
+zone = np.zeros((1024, 1024), bool)
+for k, c in CFG['arms'].items():
+    side = k[-1]
+    for y in range(c['y0'], c['yjoin'] + 40):
+        e = edge_of(darkA & cA & ~Ahead & ~nd.binary_dilation(tail | tp, iterations=6), y, side)
+        if e is None: continue
+        if side == 'L': zone[y, :e + 44] = True
+        else: zone[y, e - 44:] = True
+zone &= Abody & ~hsolid
+zone |= allarm & Abody
+furmed = np.median(F[Abody & ~darkF & ~zone & (yy > neckY)], 0)
+Fs = F.copy(); Fs[~Abody] = furmed
+paint = cv2.inpaint(np.clip(Fs, 0, 255).astype(np.uint8), (zone | (allarm & ~Abody)).astype(np.uint8) * 255, 9, cv2.INPAINT_TELEA).astype(float)
+outlineA = darkA & zone
+w = nd.gaussian_filter(zone.astype(float), 3) * zone                      # feather into the reference fur
+Tr = F * (1 - w[..., None]) + paint * w[..., None]
+aA = nd.gaussian_filter(outlineA.astype(float), .7)[..., None]
+Tr = Tr * (1 - aA) + A * aA                                                # the armless body's side outline
 save('torso', decontam(Tr, T), T * np.where(nd.binary_erosion(cF | cA, iterations=2), 1, np.maximum(softF, softA)))
 # ---------- head warp zone: full head motion above warp[1], none below warp[0] (shoulders and arm roots stay put)
 y_arm = min(c['y0'] for c in CFG['arms'].values())
 info['head'] = {'scale': s, 'neckY': int(neckY), 'pivot': [float(mx), float(neckY - 20)],
-                'warp': [float(y_arm + 15), float(my + 60)], 'eyes': [[mx - 138.6 * s, my], [mx + 138.6 * s, my]]}
+                'warp': [float(y_arm + 15), float(my - 40)], 'eyes': [[mx - 138.6 * s, my], [mx + 138.6 * s, my]]}
 info['deform']['tail'] = [26, 120]
 json.dump(info, open(f'{out}/{pose}.json', 'w'), indent=1)
 print(pose, 'neckY', neckY, info['boxes'])

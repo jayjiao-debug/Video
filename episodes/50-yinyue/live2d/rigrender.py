@@ -7,7 +7,7 @@ compose(T) -> RGBA.  T (all optional):
   body: (dy, squash)            whole-figure offset and squash about the feet
 Draw order: tail, legs, torso (with head), arms.  The arm's inner-edge outline fades in with the bend."""
 import json, numpy as np, cv2; from PIL import Image
-ORDER = ['tail', 'legL', 'legR', 'torso', 'armL', 'armR']
+ORDER = ['tail', 'legL', 'legR', 'armL', 'armR', 'torso']
 def smooth(x): x = np.clip(x, 0, 1); return x * x * (3 - 2 * x)
 class Rig:
     def __init__(self, rigdir, pose, scale=1.0):
@@ -51,10 +51,15 @@ class Rig:
             if n in ('armL', 'armR'):
                 ang = T.get(n, (0,))[0]
                 if ang and n + '_edge' in self.L:              # inner-edge outline fades in as the arm bends away
-                    e = self.L[n + '_edge'].copy(); e[..., 3] *= min(1, abs(ang) / 12.)
+                    e = self.L[n + '_edge'].copy(); e[..., 3] *= min(1, abs(ang) / 6.)
                     a = e[..., 3:] / 255.; img = img.copy(); img[..., :3] = e[..., :3] * a + img[..., :3] * (1 - a)
                 img = self.twirl(img, self.piv[n], ang, *self.D[n])
-            elif n == 'tail': img = self.twirl(img, self.piv[n], T.get(n, (0,))[0], *self.D['tail'])
+            elif n == 'tail':
+                ang = T.get(n, (0,))[0]
+                if ang and 'tail_edge' in self.L:              # the tail's hidden inner edge gets its outline as it swings out
+                    e = self.L['tail_edge'].copy(); e[..., 3] *= min(1, abs(ang) / 5.)
+                    a = e[..., 3:] / 255.; img = img.copy(); img[..., :3] = e[..., :3] * a + img[..., :3] * (1 - a)
+                img = self.twirl(img, self.piv[n], ang, *self.D['tail'])
             elif n in ('legL', 'legR'): img = self.lift(img, T.get(n, (0,))[0], *self.D['leg'])
             elif n == 'torso': img = self.headwarp(img, *T.get('head', (0, 0, 0)))
             if squash: img = self.remap(img, self.xx, self.feet + (self.yy - self.feet) / (1 - squash))

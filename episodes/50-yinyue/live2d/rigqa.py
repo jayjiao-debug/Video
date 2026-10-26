@@ -32,6 +32,12 @@ def check(name, comp, T=None):
     for i in range(1, n + 1):
         ys, xs = np.where(lab == i)
         if len(ys) > 25: findings.append({'case': name, 'type': 'see-through', 'px': int(len(ys)), 'at': [int(xs.mean()), int(ys.mean())]})
+    nearedge = (a > .5) & (nd.distance_transform_edt(a > .5) < 10)
+    speck = nearedge & (rgb.min(2) > 244) & (rgb.max(2) - rgb.min(2) <= 6)   # neutral white = background left between strokes (fur is warm cream)
+    lab, n = nd.label(speck)
+    for i in range(1, n + 1):
+        ys, xs = np.where(lab == i)
+        if 2 <= len(ys) <= 80: findings.append({'case': name, 'type': 'matte-speck', 'px': int(len(ys)), 'at': [int(xs.mean()), int(ys.mean())]})
     dark = (rgb.mean(2) < 120) & (a > .5)
     lab, n = nd.label(dark); sizes = nd.sum(dark, lab, range(1, n + 1))
     for i, sz in enumerate(sizes, 1):
