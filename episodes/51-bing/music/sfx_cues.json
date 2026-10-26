@@ -22,11 +22,15 @@
 {
 "t": 2.707,
 "sfx": "light_click",
-"db": -7,
-"lead": 0.68,
-"len": 0.75,
+"db": -10,
+"lead": 0.48,
+"len": 0.62,
 "role": "accent",
-"note": "[不会冷]: light dies, hum cut"
+"note": "[不会冷]: light dies, hum cut",
+"src_start": 0.2,
+"fade_in": 0.05,
+"fade_out": 0.1,
+"r1": "sound r1: was len 0.75 from 0 -> the default 0.15 s fade started before the click (-6.6 dB on it) and cut its decay; now the fade sits after it"
 },
 {
 "t": 7.0,
@@ -60,9 +64,10 @@
 "db": -5,
 "src_start": 0.46,
 "lead": 0.04,
-"len": 0.4,
+"len": 0.25,
 "role": "normal",
-"note": "Q1 chisel 2"
+"note": "Q1 chisel 2",
+"r1": "sound r1: len 0.4 let a 3rd strike through at 13.73 (no picture strike); 0.25 keeps one"
 },
 {
 "t": 15.161,
@@ -70,21 +75,29 @@
 "db": -6,
 "lead": 0.33,
 "role": "soft",
-"note": "block slides into the pit"
+"note": "block slides into the pit",
+"off": true,
+"r1": "sound r1: off. Masked (band SNR 4 dB @634 Hz), no story beat, 1.7 s after the two chisels in the title stretch; one fewer effect (ep50 QA: too many)"
 },
 {
 "t": 33.274,
 "sfx": "ice_bronze",
 "db": -7,
 "role": "normal",
-"note": "J3 ice into the gap"
+"note": "J3 ice into the gap",
+"hp": 400,
+"r1": "sound r1: hp 400 Hz: its 217 Hz partial was masked energy (dLUFS -8.7 but band SNR only 2.7 dB) = mud, not knock"
 },
 {
 "t": 34.972,
-"sfx": "tick1",
-"db": 0,
+"sfx": "guess_tick",
+"db": -2,
 "role": "normal",
-"note": "先猜？ pop"
+"note": "先猜？ pop",
+"src_start": 0.15,
+"lead": 0.05,
+"len": 0.4,
+"r1": "sound r1: tick1 was masked (band SNR -0.5 dB). ep50's guess_tick, first tick only: 1-4 kHz, band SNR +8 dB @3.2 kHz, -12.9 LU under the bed"
 },
 {
 "t": 37.803,
@@ -92,15 +105,18 @@
 "db": -10,
 "len": 1.2,
 "role": "soft",
-"note": "J4 pour into the cup"
+"note": "J4 pour into the cup",
+"lead": 0.14,
+"r1": "sound r1: the pour's splash sat 0.18 s into the file -> 5 frames after the stream appears (f1135); lead 0.14 puts it on f1135"
 },
 {
 "t": 61.011,
 "sfx": "silver_ting2",
-"db": -6,
+"db": -8,
 "role": "accent",
 "note": "S3 [银器] glint (tuned to A)",
-"semitones": 0.57
+"semitones": 0.57,
+"r1": "sound r1: db -6 -> -8: a pure 1.77 kHz ring was the loudest effect after the title (-7.7 LU); now ~-9.7 LU, band SNR still ~+7 dB. Tuning A6 +8 c kept (sus4 over the E chord, resolves into the Am bar at 61.58)"
 },
 {
 "t": 63.841,
@@ -110,88 +126,106 @@
 "lead": 0.04,
 "len": 0.3,
 "role": "normal",
-"note": "Q4 声如錾石 1"
+"note": "Q4 声如錾石 1",
+"fade_in": 0.005
 },
 {
 "t": 64.407,
 "sfx": "chisel_stone",
 "db": -5,
-"src_start": 0.52,
-"lead": 0.04,
-"len": 0.4,
+"src_start": 0.53,
+"lead": 0.027,
+"len": 0.3,
 "role": "normal",
-"note": "Q4 声如錾石 2"
+"note": "Q4 声如錾石 2",
+"fade_in": 0.005,
+"r1": "sound r1: len 0.4 from 0.52 let the file's 3rd strike (0.84 s) through at 64.69, where no one strikes; now 0.53-0.83 = one strike (0.557 s) on 64.407",
+"fade_out": 0.12
 },
 {
 "t": 71.43,
-"sfx": "drips",
-"db": -10.0,
-"src_start": 0.12,
-"lead": 0.02,
-"len": 0.3,
+"sfx": "drip_room",
+"db": -20,
+"lead": 0.012,
 "role": "hush",
-"note": "C2 melt drip, counting into the return"
+"note": "C2 melt drip, counting into the return",
+"semitones": -0.35,
+"fade_out": 0.1,
+"r1": "sound r1: one drip per picture drip (the old 0.3 s slices held two each: 10 sounds for 5 drips), 1 s stone-vault tail (sfx_drip_room.mp3), tuned E6: E6-C6-E6-C6-E6 (Am chord tones; the last E6 leads into the F return = Fmaj7), even crescendo -20 -> -16"
 },
 {
 "t": 72.0,
-"sfx": "drips",
-"db": -9.5,
-"src_start": 0.53,
-"lead": 0.02,
-"len": 0.3,
+"sfx": "drip_room",
+"db": -19,
+"lead": 0.012,
 "role": "hush",
-"note": "C2 melt drip, counting into the return"
+"note": "C2 melt drip, counting into the return",
+"semitones": -4.35,
+"fade_out": 0.1,
+"r1": "sound r1: one drip per picture drip (the old 0.3 s slices held two each: 10 sounds for 5 drips), 1 s stone-vault tail (sfx_drip_room.mp3), tuned C6: E6-C6-E6-C6-E6 (Am chord tones; the last E6 leads into the F return = Fmaj7), even crescendo -20 -> -16"
 },
 {
 "t": 72.56,
-"sfx": "drips",
-"db": -9.0,
-"src_start": 1.22,
-"lead": 0.02,
-"len": 0.3,
+"sfx": "drip_room",
+"db": -18,
+"lead": 0.012,
 "role": "hush",
-"note": "C2 melt drip, counting into the return"
+"note": "C2 melt drip, counting into the return",
+"semitones": -0.35,
+"fade_out": 0.1,
+"r1": "sound r1: one drip per picture drip (the old 0.3 s slices held two each: 10 sounds for 5 drips), 1 s stone-vault tail (sfx_drip_room.mp3), tuned E6: E6-C6-E6-C6-E6 (Am chord tones; the last E6 leads into the F return = Fmaj7), even crescendo -20 -> -16"
 },
 {
 "t": 73.13,
-"sfx": "drips",
-"db": -8.5,
-"src_start": 0.33,
-"lead": 0.02,
-"len": 0.3,
+"sfx": "drip_room",
+"db": -17,
+"lead": 0.012,
 "role": "hush",
-"note": "C2 melt drip, counting into the return"
+"note": "C2 melt drip, counting into the return",
+"semitones": -4.35,
+"fade_out": 0.1,
+"r1": "sound r1: one drip per picture drip (the old 0.3 s slices held two each: 10 sounds for 5 drips), 1 s stone-vault tail (sfx_drip_room.mp3), tuned C6: E6-C6-E6-C6-E6 (Am chord tones; the last E6 leads into the F return = Fmaj7), even crescendo -20 -> -16"
 },
 {
 "t": 73.69,
-"sfx": "drips",
-"db": -8.0,
-"src_start": 0.53,
-"lead": 0.02,
-"len": 0.3,
+"sfx": "drip_room",
+"db": -16,
+"lead": 0.012,
 "role": "hush",
-"note": "C2 melt drip, counting into the return"
+"note": "C2 melt drip, counting into the return",
+"semitones": -0.35,
+"fade_out": 0.1,
+"r1": "sound r1: one drip per picture drip (the old 0.3 s slices held two each: 10 sounds for 5 drips), 1 s stone-vault tail (sfx_drip_room.mp3), tuned E6: E6-C6-E6-C6-E6 (Am chord tones; the last E6 leads into the F return = Fmaj7), even crescendo -20 -> -16"
 },
 {
 "t": 76.523,
-"sfx": "seal1",
-"db": 0,
+"sfx": "stamp_char",
+"db": 2,
 "role": "normal",
-"note": "C4 冰票 stamp"
+"note": "C4 冰票 stamp",
+"lead": 0.07,
+"len": 0.45,
+"r1": "sound r1: seal1 was 25-30 dB under the bed in every band (masked by the DB(1) downbeat). stamp_char: wooden thud with a 634 Hz body (A3 = root of the Am/C bar), +6 dB band SNR, -11 LU under the bed"
 },
 {
 "t": 81.617,
 "sfx": "brass_bowls",
 "db": -8,
 "role": "normal",
-"note": "C6 锵锵 1"
+"note": "C6 锵锵 1",
+"src_start": 0.16,
+"lead": 0.02,
+"r1": "sound r1: the clang sat 0.18 s into the file -> 6 frames after the picture clang; now on it"
 },
 {
 "t": 82.749,
 "sfx": "brass_bowls",
 "db": -10,
 "role": "soft",
-"note": "C6 锵锵 2"
+"note": "C6 锵锵 2",
+"src_start": 0.16,
+"lead": 0.02,
+"r1": "sound r1: the clang sat 0.18 s into the file -> 6 frames after the picture clang; now on it"
 },
 {
 "t": 89.542,
@@ -204,10 +238,12 @@
 {
 "t": 104.259,
 "sfx": "ice_glass",
-"db": -8,
-"lead": 0.25,
+"db": -10.5,
+"lead": 0.025,
 "role": "accent",
-"note": "M4 cubes into the frame-0 cup"
+"note": "M4 cubes into the frame-0 cup",
+"semitones": 1.5,
+"r1": "sound r1: lead 0.25 put the loudest clink 7 frames BEFORE the cubes land (f3128); the big clink is at 0.025 s. +1.5 st moves the glass partials onto E/G/B/D (Em7 over the Cmaj7 bed); db -8 -> -10.5: the tuned clink peaked 6 dB over the bed's instantaneous level and set the film's true peak (-0.98 dBTP)"
 },
 {
 "t": 108.788,
@@ -220,8 +256,11 @@
 {
 "t": 112.75,
 "sfx": "seal1",
-"db": -1,
+"db": 0,
 "role": "accent",
-"note": "end card J seal"
+"note": "end card J seal",
+"semitones": -2.37,
+"fade_out": 0.08,
+"r1": "sound r1: its 200 Hz body was G+37 c over the Bb-minor fall; -2.37 st puts it on F (the chord's 5th)"
 }
 ]
