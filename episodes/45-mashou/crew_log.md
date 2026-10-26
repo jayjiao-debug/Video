@@ -56,3 +56,17 @@
 - **v7:** owner (19:52): 「the beginning is not catching enough, redo the whole script」. Full rewrite with a new hook: 「圆明园十二兽首，你猜回来了几个？」→「七个回了中国。」→「可住回圆明园的，只有一个。」, title overlay 「七个回国，一个回家」. 你 = the viewer, 它 = the horse. 38 lines.
 - **Voice-over dropped** (owner 20:28: 「我们不要配音了」). Subtitles only. plan45v7s.py re-times lines_v7.json at about 4.3 字/s (0.5 + 0.23 s per character), with the anchors on the v6 cut: breakdown 42.205, build 60.32, stop 76.165, drop 87.17. Last line ends 123.5, end card +4.5 → 2:08. The VO clips and mixes stay on disk unused.
 - **Key frames for v7:** requested from the art director (sheet_v7.png).
+
+## 2026-10-26 overnight · v8 → full cut v1 → v2
+- **Owner (23:02):** 「没有悬念」 → v8: the question stays open and the answer comes after the drop. **Owner (23:38):** "make the full video, review, correct, improve". Added the 2023 reunion beat (v8.1, 2:14.8).
+- **Cut v1:** reviewed by the director (gate 4: REVISE, 14 fixes) and the video reviewer (review_v1.md).
+- **Cut v2:** all fixes applied, in summary:
+  - the horse is at brother scale everywhere (2013 hall, reunion);
+  - end card title at 132 px;
+  - the fire stretch is lit;
+  - the HUD is phone-readable;
+  - F19 now reads 「连佣金共3149万欧元」;
+  - anonymous looters.
+- **v2 renders:** master 74.8 MB (md5 99f09668…), send version 1080p 26.7 MB.
+- **HD delivery:** the deliver-mashou branch (4 parts, md5 verified after the push) and scratchpad/bat45/get_YuanMingYuan_ShouShou_v2_HD.bat.
+- **Open for the owner:** the curled-ear close-up (may still read as a bird); real-recorded SFX (gavel/stamp/doors), only if he wants them; −17.3 LUFS is the song's own level.
