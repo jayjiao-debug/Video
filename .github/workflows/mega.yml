@@ -1,0 +1,63 @@
+name: mega
+
+# Push a new request.json to the mega-farm branch. The runner fetches a finished file from a delivery branch
+# (joining parts if needed, checking the md5), then uploads it to MEGA with rclone, logging in with the
+# MEGA_EMAIL / MEGA_PASSWORD secrets (never stored in the repo, never printed). A report goes to the
+# mega-output branch under out/<request id>/.
+on:
+  push:
+    branches: [mega-farm]
+    paths: ['request.json']
+
+permissions:
+  contents: write
+
+concurrency:
+  group: mega
+  cancel-in-progress: false
+
+jobs:
+  upload:
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    steps:
+      - uses: actions/checkout@v4
+      - name: fetch, check, upload
+        env:
+          MEGA_EMAIL: ${{ secrets.MEGA_EMAIL }}
+          MEGA_PASSWORD: ${{ secrets.MEGA_PASSWORD }}
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set +x
+          mkdir -p out work
+          python3 - <<'PY' > work/env.sh
+          import json, shlex; r = json.load(open('request.json'))
+          for k in ('id', 'branch', 'parts_dir', 'file', 'name', 'md5', 'dest'):
+              print(f"{k.upper()}={shlex.quote(str(r.get(k, '')))}")
+          PY
+          . work/env.sh
+          echo "request $ID: $BRANCH → MEGA:/$DEST/$NAME" | tee -a out/run.txt
+          if [ -z "$MEGA_EMAIL" ] || [ -z "$MEGA_PASSWORD" ]; then echo "MISSING SECRETS: add MEGA_EMAIL and MEGA_PASSWORD in the repo's Actions secrets" | tee -a out/run.txt; exit 0; fi
+          git clone -q --depth 1 --filter=blob:none --sparse --branch "$BRANCH" "https://x-access-token:${GH_TOKEN}@github.com/${{ github.repository }}.git" work/src
+          cd work/src
+          if [ -n "$PARTS_DIR" ]; then git sparse-checkout set "$PARTS_DIR"; cat "$PARTS_DIR"/master.mp4.part* > "../$NAME"; else git sparse-checkout set "$(dirname "$FILE")"; cp "$FILE" "../$NAME"; fi
+          cd ..
+          if [ -n "$MD5" ]; then echo "$MD5  $NAME" | md5sum -c - | tee -a ../out/run.txt; fi
+          ls -l "$NAME" | tee -a ../out/run.txt
+          curl -s https://rclone.org/install.sh | sudo bash >/dev/null 2>&1
+          rclone config create mega mega user "$MEGA_EMAIL" pass "$(rclone obscure "$MEGA_PASSWORD")" >/dev/null 2>&1
+          rclone mkdir "mega:$DEST" 2>&1 | sed "s/$MEGA_EMAIL/<email>/g" | tee -a ../out/run.txt
+          rclone copyto "$NAME" "mega:$DEST/$NAME" --stats-one-line --stats 30s 2>&1 | sed "s/$MEGA_EMAIL/<email>/g" | tail -5 | tee -a ../out/run.txt
+          echo "--- now in MEGA:/$DEST" | tee -a ../out/run.txt
+          rclone lsl "mega:$DEST" 2>&1 | sed "s/$MEGA_EMAIL/<email>/g" | tee -a ../out/run.txt
+          rm -f ~/.config/rclone/rclone.conf
+      - name: publish report
+        if: always()
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          ID=$(python3 -c "import json;print(json.load(open('request.json'))['id'])")
+          git clone -q --depth 1 --branch mega-output "https://x-access-token:${GH_TOKEN}@github.com/${{ github.repository }}.git" /tmp/mo || (mkdir -p /tmp/mo && cd /tmp/mo && git init -q && git checkout -q -b mega-output && git remote add origin "https://x-access-token:${GH_TOKEN}@github.com/${{ github.repository }}.git")
+          rm -rf "/tmp/mo/out/$ID"; mkdir -p "/tmp/mo/out/$ID"; cp -r out/. "/tmp/mo/out/$ID/"
+          cd /tmp/mo; git config user.name "mega-farm"; git config user.email "mega-farm@users.noreply.github.com"
+          git add -A && git commit -q -m "mega: $ID" && git push -q origin mega-output
