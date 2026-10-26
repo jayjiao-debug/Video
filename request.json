@@ -1,807 +1,543 @@
 {
-"id": "lol-ep25-01",
+"id": "lol-ep25-02",
 "items": [
 {
 "type": "url",
-"url": "https://gol.gg/game/stats/83638/page-game/",
-"name": "g83638_page-game.html",
-"license": "gol.gg stats page",
-"ua": "Mozilla/5.0 (juno-asset-farm)",
-"delay": 1,
-"retries": 2,
-"backoff": 20
+"url": "https://ddragon.leagueoflegends.com/cdn/16.20.1/img/champion/Ahri.png",
+"name": "icon_Ahri.png",
+"license": "Riot Games Data Dragon - fan content policy",
+"ua": "Mozilla/5.0 (juno-asset-farm)"
 },
 {
 "type": "url",
-"url": "https://gol.gg/game/stats/83638/page-timeline/",
-"name": "g83638_page-timeline.html",
-"license": "gol.gg stats page",
-"ua": "Mozilla/5.0 (juno-asset-farm)",
-"delay": 1,
-"retries": 2,
-"backoff": 20
+"url": "https://ddragon.leagueoflegends.com/cdn/16.20.1/img/champion/Akali.png",
+"name": "icon_Akali.png",
+"license": "Riot Games Data Dragon - fan content policy",
+"ua": "Mozilla/5.0 (juno-asset-farm)"
 },
 {
 "type": "url",
-"url": "https://gol.gg/game/stats/83638/page-summary/",
-"name": "g83638_page-summary.html",
-"license": "gol.gg stats page",
-"ua": "Mozilla/5.0 (juno-asset-farm)",
-"delay": 1,
-"retries": 2,
-"backoff": 20
+"url": "https://ddragon.leagueoflegends.com/cdn/16.20.1/img/champion/Alistar.png",
+"name": "icon_Alistar.png",
+"license": "Riot Games Data Dragon - fan content policy",
+"ua": "Mozilla/5.0 (juno-asset-farm)"
 },
 {
 "type": "url",
-"url": "https://gol.gg/game/stats/83639/page-game/",
-"name": "g83639_page-game.html",
-"license": "gol.gg stats page",
-"ua": "Mozilla/5.0 (juno-asset-farm)",
-"delay": 1,
-"retries": 2,
-"backoff": 20
+"url": "https://ddragon.leagueoflegends.com/cdn/16.20.1/img/champion/Ambessa.png",
+"name": "icon_Ambessa.png",
+"license": "Riot Games Data Dragon - fan content policy",
+"ua": "Mozilla/5.0 (juno-asset-farm)"
 },
 {
 "type": "url",
-"url": "https://gol.gg/game/stats/83639/page-timeline/",
-"name": "g83639_page-timeline.html",
-"license": "gol.gg stats page",
-"ua": "Mozilla/5.0 (juno-asset-farm)",
-"delay": 1,
-"retries": 2,
-"backoff": 20
+"url": "https://ddragon.leagueoflegends.com/cdn/16.20.1/img/champion/Anivia.png",
+"name": "icon_Anivia.png",
+"license": "Riot Games Data Dragon - fan content policy",
+"ua": "Mozilla/5.0 (juno-asset-farm)"
 },
 {
 "type": "url",
-"url": "https://gol.gg/game/stats/83639/page-summary/",
-"name": "g83639_page-summary.html",
-"license": "gol.gg stats page",
-"ua": "Mozilla/5.0 (juno-asset-farm)",
-"delay": 1,
-"retries": 2,
-"backoff": 20
+"url": "https://ddragon.leagueoflegends.com/cdn/16.20.1/img/champion/Annie.png",
+"name": "icon_Annie.png",
+"license": "Riot Games Data Dragon - fan content policy",
+"ua": "Mozilla/5.0 (juno-asset-farm)"
 },
 {
 "type": "url",
-"url": "https://gol.gg/game/stats/83640/page-game/",
-"name": "g83640_page-game.html",
-"license": "gol.gg stats page",
-"ua": "Mozilla/5.0 (juno-asset-farm)",
-"delay": 1,
-"retries": 2,
-"backoff": 20
+"url": "https://ddragon.leagueoflegends.com/cdn/16.20.1/img/champion/Aphelios.png",
+"name": "icon_Aphelios.png",
+"license": "Riot Games Data Dragon - fan content policy",
+"ua": "Mozilla/5.0 (juno-asset-farm)"
 },
 {
 "type": "url",
-"url": "https://gol.gg/game/stats/83640/page-timeline/",
-"name": "g83640_page-timeline.html",
-"license": "gol.gg stats page",
-"ua": "Mozilla/5.0 (juno-asset-farm)",
-"delay": 1,
-"retries": 2,
-"backoff": 20
+"url": "https://ddragon.leagueoflegends.com/cdn/16.20.1/img/champion/Ashe.png",
+"name": "icon_Ashe.png",
+"license": "Riot Games Data Dragon - fan content policy",
+"ua": "Mozilla/5.0 (juno-asset-farm)"
 },
 {
 "type": "url",
-"url": "https://gol.gg/game/stats/83640/page-summary/",
-"name": "g83640_page-summary.html",
-"license": "gol.gg stats page",
-"ua": "Mozilla/5.0 (juno-asset-farm)",
-"delay": 1,
-"retries": 2,
-"backoff": 20
+"url": "https://ddragon.leagueoflegends.com/cdn/16.20.1/img/champion/Aurora.png",
+"name": "icon_Aurora.png",
+"license": "Riot Games Data Dragon - fan content policy",
+"ua": "Mozilla/5.0 (juno-asset-farm)"
 },
 {
 "type": "url",
-"url": "https://gol.gg/game/stats/83641/page-game/",
-"name": "g83641_page-game.html",
-"license": "gol.gg stats page",
-"ua": "Mozilla/5.0 (juno-asset-farm)",
-"delay": 1,
-"retries": 2,
-"backoff": 20
+"url": "https://ddragon.leagueoflegends.com/cdn/16.20.1/img/champion/Bard.png",
+"name": "icon_Bard.png",
+"license": "Riot Games Data Dragon - fan content policy",
+"ua": "Mozilla/5.0 (juno-asset-farm)"
 },
 {
 "type": "url",
-"url": "https://gol.gg/game/stats/83641/page-timeline/",
-"name": "g83641_page-timeline.html",
-"license": "gol.gg stats page",
-"ua": "Mozilla/5.0 (juno-asset-farm)",
-"delay": 1,
-"retries": 2,
-"backoff": 20
+"url": "https://ddragon.leagueoflegends.com/cdn/16.20.1/img/champion/Caitlyn.png",
+"name": "icon_Caitlyn.png",
+"license": "Riot Games Data Dragon - fan content policy",
+"ua": "Mozilla/5.0 (juno-asset-farm)"
 },
 {
 "type": "url",
-"url": "https://gol.gg/game/stats/83641/page-summary/",
-"name": "g83641_page-summary.html",
-"license": "gol.gg stats page",
-"ua": "Mozilla/5.0 (juno-asset-farm)",
-"delay": 1,
-"retries": 2,
-"backoff": 20
+"url": "https://ddragon.leagueoflegends.com/cdn/16.20.1/img/champion/Camille.png",
+"name": "icon_Camille.png",
+"license": "Riot Games Data Dragon - fan content policy",
+"ua": "Mozilla/5.0 (juno-asset-farm)"
 },
 {
 "type": "url",
-"url": "https://gol.gg/game/stats/83642/page-game/",
-"name": "g83642_page-game.html",
-"license": "gol.gg stats page",
-"ua": "Mozilla/5.0 (juno-asset-farm)",
-"delay": 1,
-"retries": 2,
-"backoff": 20
+"url": "https://ddragon.leagueoflegends.com/cdn/16.20.1/img/champion/Cassiopeia.png",
+"name": "icon_Cassiopeia.png",
+"license": "Riot Games Data Dragon - fan content policy",
+"ua": "Mozilla/5.0 (juno-asset-farm)"
 },
 {
 "type": "url",
-"url": "https://gol.gg/game/stats/83642/page-timeline/",
-"name": "g83642_page-timeline.html",
-"license": "gol.gg stats page",
-"ua": "Mozilla/5.0 (juno-asset-farm)",
-"delay": 1,
-"retries": 2,
-"backoff": 20
+"url": "https://ddragon.leagueoflegends.com/cdn/16.20.1/img/champion/Corki.png",
+"name": "icon_Corki.png",
+"license": "Riot Games Data Dragon - fan content policy",
+"ua": "Mozilla/5.0 (juno-asset-farm)"
 },
 {
 "type": "url",
-"url": "https://gol.gg/game/stats/83642/page-summary/",
-"name": "g83642_page-summary.html",
-"license": "gol.gg stats page",
-"ua": "Mozilla/5.0 (juno-asset-farm)",
-"delay": 1,
-"retries": 2,
-"backoff": 20
+"url": "https://ddragon.leagueoflegends.com/cdn/16.20.1/img/champion/Diana.png",
+"name": "icon_Diana.png",
+"license": "Riot Games Data Dragon - fan content policy",
+"ua": "Mozilla/5.0 (juno-asset-farm)"
 },
 {
 "type": "url",
-"url": "https://gol.gg/game/stats/83643/page-game/",
-"name": "g83643_page-game.html",
-"license": "gol.gg stats page",
-"ua": "Mozilla/5.0 (juno-asset-farm)",
-"delay": 1,
-"retries": 2,
-"backoff": 20
+"url": "https://ddragon.leagueoflegends.com/cdn/16.20.1/img/champion/Draven.png",
+"name": "icon_Draven.png",
+"license": "Riot Games Data Dragon - fan content policy",
+"ua": "Mozilla/5.0 (juno-asset-farm)"
 },
 {
 "type": "url",
-"url": "https://gol.gg/game/stats/83643/page-timeline/",
-"name": "g83643_page-timeline.html",
-"license": "gol.gg stats page",
-"ua": "Mozilla/5.0 (juno-asset-farm)",
-"delay": 1,
-"retries": 2,
-"backoff": 20
+"url": "https://ddragon.leagueoflegends.com/cdn/16.20.1/img/champion/Ezreal.png",
+"name": "icon_Ezreal.png",
+"license": "Riot Games Data Dragon - fan content policy",
+"ua": "Mozilla/5.0 (juno-asset-farm)"
 },
 {
 "type": "url",
-"url": "https://gol.gg/game/stats/83643/page-summary/",
-"name": "g83643_page-summary.html",
-"license": "gol.gg stats page",
-"ua": "Mozilla/5.0 (juno-asset-farm)",
-"delay": 1,
-"retries": 2,
-"backoff": 20
+"url": "https://ddragon.leagueoflegends.com/cdn/16.20.1/img/champion/Galio.png",
+"name": "icon_Galio.png",
+"license": "Riot Games Data Dragon - fan content policy",
+"ua": "Mozilla/5.0 (juno-asset-farm)"
 },
 {
 "type": "url",
-"url": "https://gol.gg/game/stats/83644/page-game/",
-"name": "g83644_page-game.html",
-"license": "gol.gg stats page",
-"ua": "Mozilla/5.0 (juno-asset-farm)",
-"delay": 1,
-"retries": 2,
-"backoff": 20
+"url": "https://ddragon.leagueoflegends.com/cdn/16.20.1/img/champion/Gnar.png",
+"name": "icon_Gnar.png",
+"license": "Riot Games Data Dragon - fan content policy",
+"ua": "Mozilla/5.0 (juno-asset-farm)"
 },
 {
 "type": "url",
-"url": "https://gol.gg/game/stats/83644/page-timeline/",
-"name": "g83644_page-timeline.html",
-"license": "gol.gg stats page",
-"ua": "Mozilla/5.0 (juno-asset-farm)",
-"delay": 1,
-"retries": 2,
-"backoff": 20
+"url": "https://ddragon.leagueoflegends.com/cdn/16.20.1/img/champion/Gwen.png",
+"name": "icon_Gwen.png",
+"license": "Riot Games Data Dragon - fan content policy",
+"ua": "Mozilla/5.0 (juno-asset-farm)"
 },
 {
 "type": "url",
-"url": "https://gol.gg/game/stats/83644/page-summary/",
-"name": "g83644_page-summary.html",
-"license": "gol.gg stats page",
-"ua": "Mozilla/5.0 (juno-asset-farm)",
-"delay": 1,
-"retries": 2,
-"backoff": 20
+"url": "https://ddragon.leagueoflegends.com/cdn/16.20.1/img/champion/Irelia.png",
+"name": "icon_Irelia.png",
+"license": "Riot Games Data Dragon - fan content policy",
+"ua": "Mozilla/5.0 (juno-asset-farm)"
 },
 {
 "type": "url",
-"url": "https://gol.gg/game/stats/83645/page-game/",
-"name": "g83645_page-game.html",
-"license": "gol.gg stats page",
-"ua": "Mozilla/5.0 (juno-asset-farm)",
-"delay": 1,
-"retries": 2,
-"backoff": 20
+"url": "https://ddragon.leagueoflegends.com/cdn/16.20.1/img/champion/JarvanIV.png",
+"name": "icon_JarvanIV.png",
+"license": "Riot Games Data Dragon - fan content policy",
+"ua": "Mozilla/5.0 (juno-asset-farm)"
 },
 {
 "type": "url",
-"url": "https://gol.gg/game/stats/83645/page-timeline/",
-"name": "g83645_page-timeline.html",
-"license": "gol.gg stats page",
-"ua": "Mozilla/5.0 (juno-asset-farm)",
-"delay": 1,
-"retries": 2,
-"backoff": 20
+"url": "https://ddragon.leagueoflegends.com/cdn/16.20.1/img/champion/Jax.png",
+"name": "icon_Jax.png",
+"license": "Riot Games Data Dragon - fan content policy",
+"ua": "Mozilla/5.0 (juno-asset-farm)"
 },
 {
 "type": "url",
-"url": "https://gol.gg/game/stats/83645/page-summary/",
-"name": "g83645_page-summary.html",
-"license": "gol.gg stats page",
-"ua": "Mozilla/5.0 (juno-asset-farm)",
-"delay": 1,
-"retries": 2,
-"backoff": 20
+"url": "https://ddragon.leagueoflegends.com/cdn/16.20.1/img/champion/Jayce.png",
+"name": "icon_Jayce.png",
+"license": "Riot Games Data Dragon - fan content policy",
+"ua": "Mozilla/5.0 (juno-asset-farm)"
 },
 {
 "type": "url",
-"url": "https://gol.gg/game/stats/83646/page-game/",
-"name": "g83646_page-game.html",
-"license": "gol.gg stats page",
-"ua": "Mozilla/5.0 (juno-asset-farm)",
-"delay": 1,
-"retries": 2,
-"backoff": 20
+"url": "https://ddragon.leagueoflegends.com/cdn/16.20.1/img/champion/Jhin.png",
+"name": "icon_Jhin.png",
+"license": "Riot Games Data Dragon - fan content policy",
+"ua": "Mozilla/5.0 (juno-asset-farm)"
 },
 {
 "type": "url",
-"url": "https://gol.gg/game/stats/83646/page-timeline/",
-"name": "g83646_page-timeline.html",
-"license": "gol.gg stats page",
-"ua": "Mozilla/5.0 (juno-asset-farm)",
-"delay": 1,
-"retries": 2,
-"backoff": 20
+"url": "https://ddragon.leagueoflegends.com/cdn/16.20.1/img/champion/KSante.png",
+"name": "icon_KSante.png",
+"license": "Riot Games Data Dragon - fan content policy",
+"ua": "Mozilla/5.0 (juno-asset-farm)"
 },
 {
 "type": "url",
-"url": "https://gol.gg/game/stats/83646/page-summary/",
-"name": "g83646_page-summary.html",
-"license": "gol.gg stats page",
-"ua": "Mozilla/5.0 (juno-asset-farm)",
-"delay": 1,
-"retries": 2,
-"backoff": 20
+"url": "https://ddragon.leagueoflegends.com/cdn/16.20.1/img/champion/Kaisa.png",
+"name": "icon_Kaisa.png",
+"license": "Riot Games Data Dragon - fan content policy",
+"ua": "Mozilla/5.0 (juno-asset-farm)"
 },
 {
 "type": "url",
-"url": "https://gol.gg/game/stats/83647/page-game/",
-"name": "g83647_page-game.html",
-"license": "gol.gg stats page",
-"ua": "Mozilla/5.0 (juno-asset-farm)",
-"delay": 1,
-"retries": 2,
-"backoff": 20
+"url": "https://ddragon.leagueoflegends.com/cdn/16.20.1/img/champion/Kalista.png",
+"name": "icon_Kalista.png",
+"license": "Riot Games Data Dragon - fan content policy",
+"ua": "Mozilla/5.0 (juno-asset-farm)"
 },
 {
 "type": "url",
-"url": "https://gol.gg/game/stats/83647/page-timeline/",
-"name": "g83647_page-timeline.html",
-"license": "gol.gg stats page",
-"ua": "Mozilla/5.0 (juno-asset-farm)",
-"delay": 1,
-"retries": 2,
-"backoff": 20
+"url": "https://ddragon.leagueoflegends.com/cdn/16.20.1/img/champion/Karma.png",
+"name": "icon_Karma.png",
+"license": "Riot Games Data Dragon - fan content policy",
+"ua": "Mozilla/5.0 (juno-asset-farm)"
 },
 {
 "type": "url",
-"url": "https://gol.gg/game/stats/83647/page-summary/",
-"name": "g83647_page-summary.html",
-"license": "gol.gg stats page",
-"ua": "Mozilla/5.0 (juno-asset-farm)",
-"delay": 1,
-"retries": 2,
-"backoff": 20
+"url": "https://ddragon.leagueoflegends.com/cdn/16.20.1/img/champion/Kled.png",
+"name": "icon_Kled.png",
+"license": "Riot Games Data Dragon - fan content policy",
+"ua": "Mozilla/5.0 (juno-asset-farm)"
 },
 {
 "type": "url",
-"url": "https://gol.gg/game/stats/83648/page-game/",
-"name": "g83648_page-game.html",
-"license": "gol.gg stats page",
-"ua": "Mozilla/5.0 (juno-asset-farm)",
-"delay": 1,
-"retries": 2,
-"backoff": 20
+"url": "https://ddragon.leagueoflegends.com/cdn/16.20.1/img/champion/LeBlanc.png",
+"name": "icon_LeBlanc.png",
+"license": "Riot Games Data Dragon - fan content policy",
+"ua": "Mozilla/5.0 (juno-asset-farm)"
 },
 {
 "type": "url",
-"url": "https://gol.gg/game/stats/83648/page-timeline/",
-"name": "g83648_page-timeline.html",
-"license": "gol.gg stats page",
-"ua": "Mozilla/5.0 (juno-asset-farm)",
-"delay": 1,
-"retries": 2,
-"backoff": 20
+"url": "https://ddragon.leagueoflegends.com/cdn/16.20.1/img/champion/LeeSin.png",
+"name": "icon_LeeSin.png",
+"license": "Riot Games Data Dragon - fan content policy",
+"ua": "Mozilla/5.0 (juno-asset-farm)"
 },
 {
 "type": "url",
-"url": "https://gol.gg/game/stats/83648/page-summary/",
-"name": "g83648_page-summary.html",
-"license": "gol.gg stats page",
-"ua": "Mozilla/5.0 (juno-asset-farm)",
-"delay": 1,
-"retries": 2,
-"backoff": 20
+"url": "https://ddragon.leagueoflegends.com/cdn/16.20.1/img/champion/Leona.png",
+"name": "icon_Leona.png",
+"license": "Riot Games Data Dragon - fan content policy",
+"ua": "Mozilla/5.0 (juno-asset-farm)"
 },
 {
 "type": "url",
-"url": "https://gol.gg/game/stats/83649/page-game/",
-"name": "g83649_page-game.html",
-"license": "gol.gg stats page",
-"ua": "Mozilla/5.0 (juno-asset-farm)",
-"delay": 1,
-"retries": 2,
-"backoff": 20
+"url": "https://ddragon.leagueoflegends.com/cdn/16.20.1/img/champion/Lissandra.png",
+"name": "icon_Lissandra.png",
+"license": "Riot Games Data Dragon - fan content policy",
+"ua": "Mozilla/5.0 (juno-asset-farm)"
 },
 {
 "type": "url",
-"url": "https://gol.gg/game/stats/83649/page-timeline/",
-"name": "g83649_page-timeline.html",
-"license": "gol.gg stats page",
-"ua": "Mozilla/5.0 (juno-asset-farm)",
-"delay": 1,
-"retries": 2,
-"backoff": 20
+"url": "https://ddragon.leagueoflegends.com/cdn/16.20.1/img/champion/Locke.png",
+"name": "icon_Locke.png",
+"license": "Riot Games Data Dragon - fan content policy",
+"ua": "Mozilla/5.0 (juno-asset-farm)"
 },
 {
 "type": "url",
-"url": "https://gol.gg/game/stats/83649/page-summary/",
-"name": "g83649_page-summary.html",
-"license": "gol.gg stats page",
-"ua": "Mozilla/5.0 (juno-asset-farm)",
-"delay": 1,
-"retries": 2,
-"backoff": 20
+"url": "https://ddragon.leagueoflegends.com/cdn/16.20.1/img/champion/Lucian.png",
+"name": "icon_Lucian.png",
+"license": "Riot Games Data Dragon - fan content policy",
+"ua": "Mozilla/5.0 (juno-asset-farm)"
 },
 {
 "type": "url",
-"url": "https://gol.gg/game/stats/83650/page-game/",
-"name": "g83650_page-game.html",
-"license": "gol.gg stats page",
-"ua": "Mozilla/5.0 (juno-asset-farm)",
-"delay": 1,
-"retries": 2,
-"backoff": 20
+"url": "https://ddragon.leagueoflegends.com/cdn/16.20.1/img/champion/Lulu.png",
+"name": "icon_Lulu.png",
+"license": "Riot Games Data Dragon - fan content policy",
+"ua": "Mozilla/5.0 (juno-asset-farm)"
 },
 {
 "type": "url",
-"url": "https://gol.gg/game/stats/83650/page-timeline/",
-"name": "g83650_page-timeline.html",
-"license": "gol.gg stats page",
-"ua": "Mozilla/5.0 (juno-asset-farm)",
-"delay": 1,
-"retries": 2,
-"backoff": 20
+"url": "https://ddragon.leagueoflegends.com/cdn/16.20.1/img/champion/Maokai.png",
+"name": "icon_Maokai.png",
+"license": "Riot Games Data Dragon - fan content policy",
+"ua": "Mozilla/5.0 (juno-asset-farm)"
 },
 {
 "type": "url",
-"url": "https://gol.gg/game/stats/83650/page-summary/",
-"name": "g83650_page-summary.html",
-"license": "gol.gg stats page",
-"ua": "Mozilla/5.0 (juno-asset-farm)",
-"delay": 1,
-"retries": 2,
-"backoff": 20
+"url": "https://ddragon.leagueoflegends.com/cdn/16.20.1/img/champion/Milio.png",
+"name": "icon_Milio.png",
+"license": "Riot Games Data Dragon - fan content policy",
+"ua": "Mozilla/5.0 (juno-asset-farm)"
 },
 {
 "type": "url",
-"url": "https://gol.gg/game/stats/83651/page-game/",
-"name": "g83651_page-game.html",
-"license": "gol.gg stats page",
-"ua": "Mozilla/5.0 (juno-asset-farm)",
-"delay": 1,
-"retries": 2,
-"backoff": 20
+"url": "https://ddragon.leagueoflegends.com/cdn/16.20.1/img/champion/MissFortune.png",
+"name": "icon_MissFortune.png",
+"license": "Riot Games Data Dragon - fan content policy",
+"ua": "Mozilla/5.0 (juno-asset-farm)"
 },
 {
 "type": "url",
-"url": "https://gol.gg/game/stats/83651/page-timeline/",
-"name": "g83651_page-timeline.html",
-"license": "gol.gg stats page",
-"ua": "Mozilla/5.0 (juno-asset-farm)",
-"delay": 1,
-"retries": 2,
-"backoff": 20
+"url": "https://ddragon.leagueoflegends.com/cdn/16.20.1/img/champion/Nautilus.png",
+"name": "icon_Nautilus.png",
+"license": "Riot Games Data Dragon - fan content policy",
+"ua": "Mozilla/5.0 (juno-asset-farm)"
 },
 {
 "type": "url",
-"url": "https://gol.gg/game/stats/83651/page-summary/",
-"name": "g83651_page-summary.html",
-"license": "gol.gg stats page",
-"ua": "Mozilla/5.0 (juno-asset-farm)",
-"delay": 1,
-"retries": 2,
-"backoff": 20
+"url": "https://ddragon.leagueoflegends.com/cdn/16.20.1/img/champion/Neeko.png",
+"name": "icon_Neeko.png",
+"license": "Riot Games Data Dragon - fan content policy",
+"ua": "Mozilla/5.0 (juno-asset-farm)"
 },
 {
 "type": "url",
-"url": "https://gol.gg/game/stats/83652/page-game/",
-"name": "g83652_page-game.html",
-"license": "gol.gg stats page",
-"ua": "Mozilla/5.0 (juno-asset-farm)",
-"delay": 1,
-"retries": 2,
-"backoff": 20
+"url": "https://ddragon.leagueoflegends.com/cdn/16.20.1/img/champion/Nocturne.png",
+"name": "icon_Nocturne.png",
+"license": "Riot Games Data Dragon - fan content policy",
+"ua": "Mozilla/5.0 (juno-asset-farm)"
 },
 {
 "type": "url",
-"url": "https://gol.gg/game/stats/83652/page-timeline/",
-"name": "g83652_page-timeline.html",
-"license": "gol.gg stats page",
-"ua": "Mozilla/5.0 (juno-asset-farm)",
-"delay": 1,
-"retries": 2,
-"backoff": 20
+"url": "https://ddragon.leagueoflegends.com/cdn/16.20.1/img/champion/Olaf.png",
+"name": "icon_Olaf.png",
+"license": "Riot Games Data Dragon - fan content policy",
+"ua": "Mozilla/5.0 (juno-asset-farm)"
 },
 {
 "type": "url",
-"url": "https://gol.gg/game/stats/83652/page-summary/",
-"name": "g83652_page-summary.html",
-"license": "gol.gg stats page",
-"ua": "Mozilla/5.0 (juno-asset-farm)",
-"delay": 1,
-"retries": 2,
-"backoff": 20
+"url": "https://ddragon.leagueoflegends.com/cdn/16.20.1/img/champion/Orianna.png",
+"name": "icon_Orianna.png",
+"license": "Riot Games Data Dragon - fan content policy",
+"ua": "Mozilla/5.0 (juno-asset-farm)"
 },
 {
 "type": "url",
-"url": "https://gol.gg/game/stats/83653/page-game/",
-"name": "g83653_page-game.html",
-"license": "gol.gg stats page",
-"ua": "Mozilla/5.0 (juno-asset-farm)",
-"delay": 1,
-"retries": 2,
-"backoff": 20
+"url": "https://ddragon.leagueoflegends.com/cdn/16.20.1/img/champion/Ornn.png",
+"name": "icon_Ornn.png",
+"license": "Riot Games Data Dragon - fan content policy",
+"ua": "Mozilla/5.0 (juno-asset-farm)"
 },
 {
 "type": "url",
-"url": "https://gol.gg/game/stats/83653/page-timeline/",
-"name": "g83653_page-timeline.html",
-"license": "gol.gg stats page",
-"ua": "Mozilla/5.0 (juno-asset-farm)",
-"delay": 1,
-"retries": 2,
-"backoff": 20
+"url": "https://ddragon.leagueoflegends.com/cdn/16.20.1/img/champion/Pantheon.png",
+"name": "icon_Pantheon.png",
+"license": "Riot Games Data Dragon - fan content policy",
+"ua": "Mozilla/5.0 (juno-asset-farm)"
 },
 {
 "type": "url",
-"url": "https://gol.gg/game/stats/83653/page-summary/",
-"name": "g83653_page-summary.html",
-"license": "gol.gg stats page",
-"ua": "Mozilla/5.0 (juno-asset-farm)",
-"delay": 1,
-"retries": 2,
-"backoff": 20
+"url": "https://ddragon.leagueoflegends.com/cdn/16.20.1/img/champion/Poppy.png",
+"name": "icon_Poppy.png",
+"license": "Riot Games Data Dragon - fan content policy",
+"ua": "Mozilla/5.0 (juno-asset-farm)"
 },
 {
 "type": "url",
-"url": "https://gol.gg/game/stats/83654/page-game/",
-"name": "g83654_page-game.html",
-"license": "gol.gg stats page",
-"ua": "Mozilla/5.0 (juno-asset-farm)",
-"delay": 1,
-"retries": 2,
-"backoff": 20
+"url": "https://ddragon.leagueoflegends.com/cdn/16.20.1/img/champion/Qiyana.png",
+"name": "icon_Qiyana.png",
+"license": "Riot Games Data Dragon - fan content policy",
+"ua": "Mozilla/5.0 (juno-asset-farm)"
 },
 {
 "type": "url",
-"url": "https://gol.gg/game/stats/83654/page-timeline/",
-"name": "g83654_page-timeline.html",
-"license": "gol.gg stats page",
-"ua": "Mozilla/5.0 (juno-asset-farm)",
-"delay": 1,
-"retries": 2,
-"backoff": 20
+"url": "https://ddragon.leagueoflegends.com/cdn/16.20.1/img/champion/Rakan.png",
+"name": "icon_Rakan.png",
+"license": "Riot Games Data Dragon - fan content policy",
+"ua": "Mozilla/5.0 (juno-asset-farm)"
 },
 {
 "type": "url",
-"url": "https://gol.gg/game/stats/83654/page-summary/",
-"name": "g83654_page-summary.html",
-"license": "gol.gg stats page",
-"ua": "Mozilla/5.0 (juno-asset-farm)",
-"delay": 1,
-"retries": 2,
-"backoff": 20
+"url": "https://ddragon.leagueoflegends.com/cdn/16.20.1/img/champion/RenataGlasc.png",
+"name": "icon_RenataGlasc.png",
+"license": "Riot Games Data Dragon - fan content policy",
+"ua": "Mozilla/5.0 (juno-asset-farm)"
 },
 {
 "type": "url",
-"url": "https://gol.gg/game/stats/83655/page-game/",
-"name": "g83655_page-game.html",
-"license": "gol.gg stats page",
-"ua": "Mozilla/5.0 (juno-asset-farm)",
-"delay": 1,
-"retries": 2,
-"backoff": 20
+"url": "https://ddragon.leagueoflegends.com/cdn/16.20.1/img/champion/Renekton.png",
+"name": "icon_Renekton.png",
+"license": "Riot Games Data Dragon - fan content policy",
+"ua": "Mozilla/5.0 (juno-asset-farm)"
 },
 {
 "type": "url",
-"url": "https://gol.gg/game/stats/83655/page-timeline/",
-"name": "g83655_page-timeline.html",
-"license": "gol.gg stats page",
-"ua": "Mozilla/5.0 (juno-asset-farm)",
-"delay": 1,
-"retries": 2,
-"backoff": 20
+"url": "https://ddragon.leagueoflegends.com/cdn/16.20.1/img/champion/Rumble.png",
+"name": "icon_Rumble.png",
+"license": "Riot Games Data Dragon - fan content policy",
+"ua": "Mozilla/5.0 (juno-asset-farm)"
 },
 {
 "type": "url",
-"url": "https://gol.gg/game/stats/83655/page-summary/",
-"name": "g83655_page-summary.html",
-"license": "gol.gg stats page",
-"ua": "Mozilla/5.0 (juno-asset-farm)",
-"delay": 1,
-"retries": 2,
-"backoff": 20
+"url": "https://ddragon.leagueoflegends.com/cdn/16.20.1/img/champion/Ryze.png",
+"name": "icon_Ryze.png",
+"license": "Riot Games Data Dragon - fan content policy",
+"ua": "Mozilla/5.0 (juno-asset-farm)"
 },
 {
 "type": "url",
-"url": "https://gol.gg/game/stats/83656/page-game/",
-"name": "g83656_page-game.html",
-"license": "gol.gg stats page",
-"ua": "Mozilla/5.0 (juno-asset-farm)",
-"delay": 1,
-"retries": 2,
-"backoff": 20
+"url": "https://ddragon.leagueoflegends.com/cdn/16.20.1/img/champion/Seraphine.png",
+"name": "icon_Seraphine.png",
+"license": "Riot Games Data Dragon - fan content policy",
+"ua": "Mozilla/5.0 (juno-asset-farm)"
 },
 {
 "type": "url",
-"url": "https://gol.gg/game/stats/83656/page-timeline/",
-"name": "g83656_page-timeline.html",
-"license": "gol.gg stats page",
-"ua": "Mozilla/5.0 (juno-asset-farm)",
-"delay": 1,
-"retries": 2,
-"backoff": 20
+"url": "https://ddragon.leagueoflegends.com/cdn/16.20.1/img/champion/Shen.png",
+"name": "icon_Shen.png",
+"license": "Riot Games Data Dragon - fan content policy",
+"ua": "Mozilla/5.0 (juno-asset-farm)"
 },
 {
 "type": "url",
-"url": "https://gol.gg/game/stats/83656/page-summary/",
-"name": "g83656_page-summary.html",
-"license": "gol.gg stats page",
-"ua": "Mozilla/5.0 (juno-asset-farm)",
-"delay": 1,
-"retries": 2,
-"backoff": 20
+"url": "https://ddragon.leagueoflegends.com/cdn/16.20.1/img/champion/Sivir.png",
+"name": "icon_Sivir.png",
+"license": "Riot Games Data Dragon - fan content policy",
+"ua": "Mozilla/5.0 (juno-asset-farm)"
 },
 {
 "type": "url",
-"url": "https://gol.gg/game/stats/83657/page-game/",
-"name": "g83657_page-game.html",
-"license": "gol.gg stats page",
-"ua": "Mozilla/5.0 (juno-asset-farm)",
-"delay": 1,
-"retries": 2,
-"backoff": 20
+"url": "https://ddragon.leagueoflegends.com/cdn/16.20.1/img/champion/Skarner.png",
+"name": "icon_Skarner.png",
+"license": "Riot Games Data Dragon - fan content policy",
+"ua": "Mozilla/5.0 (juno-asset-farm)"
 },
 {
 "type": "url",
-"url": "https://gol.gg/game/stats/83657/page-timeline/",
-"name": "g83657_page-timeline.html",
-"license": "gol.gg stats page",
-"ua": "Mozilla/5.0 (juno-asset-farm)",
-"delay": 1,
-"retries": 2,
-"backoff": 20
+"url": "https://ddragon.leagueoflegends.com/cdn/16.20.1/img/champion/Sylas.png",
+"name": "icon_Sylas.png",
+"license": "Riot Games Data Dragon - fan content policy",
+"ua": "Mozilla/5.0 (juno-asset-farm)"
 },
 {
 "type": "url",
-"url": "https://gol.gg/game/stats/83657/page-summary/",
-"name": "g83657_page-summary.html",
-"license": "gol.gg stats page",
-"ua": "Mozilla/5.0 (juno-asset-farm)",
-"delay": 1,
-"retries": 2,
-"backoff": 20
+"url": "https://ddragon.leagueoflegends.com/cdn/16.20.1/img/champion/Syndra.png",
+"name": "icon_Syndra.png",
+"license": "Riot Games Data Dragon - fan content policy",
+"ua": "Mozilla/5.0 (juno-asset-farm)"
 },
 {
 "type": "url",
-"url": "https://gol.gg/game/stats/83658/page-game/",
-"name": "g83658_page-game.html",
-"license": "gol.gg stats page",
-"ua": "Mozilla/5.0 (juno-asset-farm)",
-"delay": 1,
-"retries": 2,
-"backoff": 20
+"url": "https://ddragon.leagueoflegends.com/cdn/16.20.1/img/champion/Taliyah.png",
+"name": "icon_Taliyah.png",
+"license": "Riot Games Data Dragon - fan content policy",
+"ua": "Mozilla/5.0 (juno-asset-farm)"
 },
 {
 "type": "url",
-"url": "https://gol.gg/game/stats/83658/page-timeline/",
-"name": "g83658_page-timeline.html",
-"license": "gol.gg stats page",
-"ua": "Mozilla/5.0 (juno-asset-farm)",
-"delay": 1,
-"retries": 2,
-"backoff": 20
+"url": "https://ddragon.leagueoflegends.com/cdn/16.20.1/img/champion/Tristana.png",
+"name": "icon_Tristana.png",
+"license": "Riot Games Data Dragon - fan content policy",
+"ua": "Mozilla/5.0 (juno-asset-farm)"
 },
 {
 "type": "url",
-"url": "https://gol.gg/game/stats/83658/page-summary/",
-"name": "g83658_page-summary.html",
-"license": "gol.gg stats page",
-"ua": "Mozilla/5.0 (juno-asset-farm)",
-"delay": 1,
-"retries": 2,
-"backoff": 20
+"url": "https://ddragon.leagueoflegends.com/cdn/16.20.1/img/champion/Trundle.png",
+"name": "icon_Trundle.png",
+"license": "Riot Games Data Dragon - fan content policy",
+"ua": "Mozilla/5.0 (juno-asset-farm)"
 },
 {
 "type": "url",
-"url": "https://gol.gg/game/stats/83659/page-game/",
-"name": "g83659_page-game.html",
-"license": "gol.gg stats page",
-"ua": "Mozilla/5.0 (juno-asset-farm)",
-"delay": 1,
-"retries": 2,
-"backoff": 20
+"url": "https://ddragon.leagueoflegends.com/cdn/16.20.1/img/champion/TwistedFate.png",
+"name": "icon_TwistedFate.png",
+"license": "Riot Games Data Dragon - fan content policy",
+"ua": "Mozilla/5.0 (juno-asset-farm)"
 },
 {
 "type": "url",
-"url": "https://gol.gg/game/stats/83659/page-timeline/",
-"name": "g83659_page-timeline.html",
-"license": "gol.gg stats page",
-"ua": "Mozilla/5.0 (juno-asset-farm)",
-"delay": 1,
-"retries": 2,
-"backoff": 20
+"url": "https://ddragon.leagueoflegends.com/cdn/16.20.1/img/champion/Varus.png",
+"name": "icon_Varus.png",
+"license": "Riot Games Data Dragon - fan content policy",
+"ua": "Mozilla/5.0 (juno-asset-farm)"
 },
 {
 "type": "url",
-"url": "https://gol.gg/game/stats/83659/page-summary/",
-"name": "g83659_page-summary.html",
-"license": "gol.gg stats page",
-"ua": "Mozilla/5.0 (juno-asset-farm)",
-"delay": 1,
-"retries": 2,
-"backoff": 20
+"url": "https://ddragon.leagueoflegends.com/cdn/16.20.1/img/champion/Vayne.png",
+"name": "icon_Vayne.png",
+"license": "Riot Games Data Dragon - fan content policy",
+"ua": "Mozilla/5.0 (juno-asset-farm)"
 },
 {
 "type": "url",
-"url": "https://gol.gg/game/stats/83660/page-game/",
-"name": "g83660_page-game.html",
-"license": "gol.gg stats page",
-"ua": "Mozilla/5.0 (juno-asset-farm)",
-"delay": 1,
-"retries": 2,
-"backoff": 20
+"url": "https://ddragon.leagueoflegends.com/cdn/16.20.1/img/champion/Vi.png",
+"name": "icon_Vi.png",
+"license": "Riot Games Data Dragon - fan content policy",
+"ua": "Mozilla/5.0 (juno-asset-farm)"
 },
 {
 "type": "url",
-"url": "https://gol.gg/game/stats/83660/page-timeline/",
-"name": "g83660_page-timeline.html",
-"license": "gol.gg stats page",
-"ua": "Mozilla/5.0 (juno-asset-farm)",
-"delay": 1,
-"retries": 2,
-"backoff": 20
+"url": "https://ddragon.leagueoflegends.com/cdn/16.20.1/img/champion/Viktor.png",
+"name": "icon_Viktor.png",
+"license": "Riot Games Data Dragon - fan content policy",
+"ua": "Mozilla/5.0 (juno-asset-farm)"
 },
 {
 "type": "url",
-"url": "https://gol.gg/game/stats/83660/page-summary/",
-"name": "g83660_page-summary.html",
-"license": "gol.gg stats page",
-"ua": "Mozilla/5.0 (juno-asset-farm)",
-"delay": 1,
-"retries": 2,
-"backoff": 20
+"url": "https://ddragon.leagueoflegends.com/cdn/16.20.1/img/champion/Volibear.png",
+"name": "icon_Volibear.png",
+"license": "Riot Games Data Dragon - fan content policy",
+"ua": "Mozilla/5.0 (juno-asset-farm)"
 },
 {
 "type": "url",
-"url": "https://gol.gg/game/stats/83661/page-game/",
-"name": "g83661_page-game.html",
-"license": "gol.gg stats page",
-"ua": "Mozilla/5.0 (juno-asset-farm)",
-"delay": 1,
-"retries": 2,
-"backoff": 20
+"url": "https://ddragon.leagueoflegends.com/cdn/16.20.1/img/champion/Wukong.png",
+"name": "icon_Wukong.png",
+"license": "Riot Games Data Dragon - fan content policy",
+"ua": "Mozilla/5.0 (juno-asset-farm)"
 },
 {
 "type": "url",
-"url": "https://gol.gg/game/stats/83661/page-timeline/",
-"name": "g83661_page-timeline.html",
-"license": "gol.gg stats page",
-"ua": "Mozilla/5.0 (juno-asset-farm)",
-"delay": 1,
-"retries": 2,
-"backoff": 20
+"url": "https://ddragon.leagueoflegends.com/cdn/16.20.1/img/champion/XinZhao.png",
+"name": "icon_XinZhao.png",
+"license": "Riot Games Data Dragon - fan content policy",
+"ua": "Mozilla/5.0 (juno-asset-farm)"
 },
 {
 "type": "url",
-"url": "https://gol.gg/game/stats/83661/page-summary/",
-"name": "g83661_page-summary.html",
-"license": "gol.gg stats page",
-"ua": "Mozilla/5.0 (juno-asset-farm)",
-"delay": 1,
-"retries": 2,
-"backoff": 20
+"url": "https://ddragon.leagueoflegends.com/cdn/16.20.1/img/champion/Yone.png",
+"name": "icon_Yone.png",
+"license": "Riot Games Data Dragon - fan content policy",
+"ua": "Mozilla/5.0 (juno-asset-farm)"
 },
 {
 "type": "url",
-"url": "https://gol.gg/game/stats/83662/page-game/",
-"name": "g83662_page-game.html",
-"license": "gol.gg stats page",
-"ua": "Mozilla/5.0 (juno-asset-farm)",
-"delay": 1,
-"retries": 2,
-"backoff": 20
+"url": "https://ddragon.leagueoflegends.com/cdn/16.20.1/img/champion/Yunara.png",
+"name": "icon_Yunara.png",
+"license": "Riot Games Data Dragon - fan content policy",
+"ua": "Mozilla/5.0 (juno-asset-farm)"
 },
 {
 "type": "url",
-"url": "https://gol.gg/game/stats/83662/page-timeline/",
-"name": "g83662_page-timeline.html",
-"license": "gol.gg stats page",
-"ua": "Mozilla/5.0 (juno-asset-farm)",
-"delay": 1,
-"retries": 2,
-"backoff": 20
+"url": "https://ddragon.leagueoflegends.com/cdn/16.20.1/img/champion/Ziggs.png",
+"name": "icon_Ziggs.png",
+"license": "Riot Games Data Dragon - fan content policy",
+"ua": "Mozilla/5.0 (juno-asset-farm)"
 },
 {
 "type": "url",
-"url": "https://gol.gg/game/stats/83662/page-summary/",
-"name": "g83662_page-summary.html",
-"license": "gol.gg stats page",
-"ua": "Mozilla/5.0 (juno-asset-farm)",
-"delay": 1,
-"retries": 2,
-"backoff": 20
+"url": "https://ddragon.leagueoflegends.com/cdn/16.20.1/img/champion/void.png",
+"name": "icon_void.png",
+"license": "Riot Games Data Dragon - fan content policy",
+"ua": "Mozilla/5.0 (juno-asset-farm)"
 },
 {
 "type": "url",
-"url": "https://gol.gg/game/stats/83663/page-game/",
-"name": "g83663_page-game.html",
-"license": "gol.gg stats page",
-"ua": "Mozilla/5.0 (juno-asset-farm)",
-"delay": 1,
-"retries": 2,
-"backoff": 20
+"url": "https://ddragon.leagueoflegends.com/cdn/16.20.1/data/zh_CN/champion.json",
+"name": "champion_zh_CN.json",
+"license": "Riot Games Data Dragon",
+"ua": "Mozilla/5.0 (juno-asset-farm)"
 },
 {
 "type": "url",
-"url": "https://gol.gg/game/stats/83663/page-timeline/",
-"name": "g83663_page-timeline.html",
-"license": "gol.gg stats page",
-"ua": "Mozilla/5.0 (juno-asset-farm)",
-"delay": 1,
-"retries": 2,
-"backoff": 20
-},
-{
-"type": "url",
-"url": "https://gol.gg/game/stats/83663/page-summary/",
-"name": "g83663_page-summary.html",
-"license": "gol.gg stats page",
-"ua": "Mozilla/5.0 (juno-asset-farm)",
-"delay": 1,
-"retries": 2,
-"backoff": 20
-},
-{
-"type": "url",
-"url": "https://gol.gg/champion/list/season-S16/split-ALL/tournament-Worlds%202026%20Main%20Event/",
-"name": "champs_worlds26_main.html",
-"license": "gol.gg stats page",
-"ua": "Mozilla/5.0 (juno-asset-farm)",
-"delay": 1
-},
-{
-"type": "url",
-"url": "https://gol.gg/champion/list/season-S16/split-ALL/tournament-Worlds%202026%20Play-In/",
-"name": "champs_worlds26_playin.html",
-"license": "gol.gg stats page",
-"ua": "Mozilla/5.0 (juno-asset-farm)",
-"delay": 1
-},
-{
-"type": "url",
-"url": "https://ddragon.leagueoflegends.com/api/versions.json",
-"name": "dd_versions.json",
-"license": "Riot Data Dragon (fan content policy)",
+"url": "https://ddragon.leagueoflegends.com/cdn/16.20.1/img/map/map11.png",
+"name": "map11.png",
+"license": "Riot Games Data Dragon - fan content policy",
 "ua": "Mozilla/5.0 (juno-asset-farm)"
 }
 ]
