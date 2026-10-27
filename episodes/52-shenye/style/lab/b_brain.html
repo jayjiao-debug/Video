@@ -1,0 +1,85 @@
+<!doctype html>
+<html><head><meta charset="utf-8">
+<style>
+  * { margin:0; padding:0; box-sizing:border-box; }
+  html,body { width:1920px; height:1080px; overflow:hidden; background:#060a0d; font-family:'Noto Sans CJK SC','Noto Sans SC',sans-serif; }
+  .stage { position:relative; width:1920px; height:1080px; background:
+      radial-gradient(ellipse 1500px 1000px at 50% 46%, #0d1c1e 0%, #070f11 55%, #04080a 85%); }
+  .grid { position:absolute; inset:0; opacity:.14; background-image:
+      linear-gradient(rgba(125,255,179,.35) 1px, transparent 1px), linear-gradient(90deg, rgba(125,255,179,.35) 1px, transparent 1px);
+      background-size: 96px 96px; }
+
+  /* ONE shared console housing a single dual-needle gauge -- not two separate panels+cable.
+     A single semicircular meter: one needle (amygdala) swings UP into the red zone, a second needle
+     (prefrontal brake) sags DOWN past its hold-line, both on the SAME dial face at once. */
+  .panel { position:absolute; left:310px; top:70px; width:1300px; height:760px; border-radius:22px;
+      background: linear-gradient(170deg,#101b1d,#070d0e); box-shadow:0 30px 90px rgba(0,0,0,.6), 0 0 0 2px rgba(125,255,179,.18); }
+  .panel-label { position:absolute; left:50px; top:28px; font-family:'DejaVu Sans Mono',monospace; font-size:24px; color:#7DFFB3; letter-spacing:2px; opacity:.85; }
+
+  .legend { position:absolute; display:flex; align-items:center; gap:14px; font-weight:800; font-size:32px; top:92px; }
+  .legend .dot { width:24px; height:24px; border-radius:50%; }
+  .legend.amyg { right:470px; color:#ffcf8a; }
+  .legend.amyg .dot { background:#ff9a3c; box-shadow:0 0 16px rgba(255,160,70,.8); }
+  .legend.pfc { left:470px; color:#bfe8ff; }
+  .legend.pfc .dot { background:#7dd4ff; box-shadow:0 0 16px rgba(125,210,255,.8); }
+
+  .meter { position:absolute; left:50%; top:140px; transform:translateX(-50%); width:1000px; height:500px; }
+
+  .caption { position:absolute; left:50%; bottom:40px; transform:translateX(-50%); font-weight:700; font-size:28px; color:#7DFFB3; opacity:.9; }
+
+  .corner-mark { position:absolute; top:34px; right:40px; width:56px; height:56px; border-radius:14px;
+      background: rgba(6,8,13,.55); display:flex; align-items:center; justify-content:center;
+      font-family:'Cormorant Garamond', serif; font-weight:600; font-size:34px; color:#D4AF6A;
+      border:1px solid rgba(212,175,106,.4); z-index:10; }
+  .subtitle-wrap { position:absolute; left:0; right:0; top:860px; display:flex; justify-content:center; z-index:10;}
+  .subtitle { background: rgba(6,8,13,.80); border-radius:18px; padding:10px 34px;
+      font-weight:900; font-size:64px; color:#fff; letter-spacing:2px; white-space:nowrap; }
+  .subtitle .gold { color:#D4AF6A; }
+</style></head>
+<body>
+<div class="stage">
+  <div class="grid"></div>
+  <div class="panel">
+    <div class="panel-label">NEURO MONITOR · DUAL NEEDLE GAUGE</div>
+    <div class="legend pfc"><div class="dot"></div>前额叶</div>
+    <div class="legend amyg"><div class="dot"></div>杏仁核</div>
+
+    <div class="meter">
+      <svg width="1000" height="500" viewBox="0 0 1120 560">
+        <!-- single shared semicircular dial -->
+        <path d="M 60 500 A 500 500 0 0 1 1060 500" fill="none" stroke="#1a2b2e" stroke-width="50"/>
+        <!-- amygdala zone: right side of the dial, climbing into red/alarm -->
+        <path d="M 560 20 A 500 500 0 0 1 1060 500" fill="none" stroke="#3a2412" stroke-width="50" opacity=".9"/>
+        <!-- prefrontal zone: left side of the dial, the "hold" zone the brake should sit in -->
+        <path d="M 60 500 A 500 500 0 0 1 560 20" fill="none" stroke="#12262c" stroke-width="50" opacity=".9"/>
+        <!-- tick labels -->
+        <text x="560" y="2" fill="#7DFFB3" font-size="24" font-weight="800" text-anchor="middle" font-family="DejaVu Sans Mono" dy="20">MAX</text>
+        <text x="30" y="520" fill="#7DFFB3" font-size="24" font-weight="800" text-anchor="middle" font-family="DejaVu Sans Mono">0</text>
+        <text x="1090" y="520" fill="#7DFFB3" font-size="24" font-weight="800" text-anchor="middle" font-family="DejaVu Sans Mono">0</text>
+
+        <!-- PFC hold-line: where the brake needle should rest when the system is working -->
+        <line x1="300" y1="250" x2="345" y2="295" stroke="#7dd4ff" stroke-width="5" stroke-dasharray="4 6" opacity=".6"/>
+        <text x="260" y="235" fill="#7dd4ff" font-size="19" font-family="DejaVu Sans Mono" opacity=".7" text-anchor="end">正常</text>
+
+        <!-- pivot -->
+        <circle cx="560" cy="500" r="24" fill="#223033" stroke="#7DFFB3" stroke-width="3"/>
+
+        <!-- amygdala needle: swung far right, deep into its red alarm zone -->
+        <line x1="560" y1="500" x2="880" y2="150" stroke="#ff9a3c" stroke-width="12" stroke-linecap="round"
+          filter="drop-shadow(0 0 16px rgba(255,160,70,.9))"/>
+        <circle cx="880" cy="150" r="16" fill="#ffcf8a"/>
+
+        <!-- prefrontal needle: sagged down past its hold-line, well short of where it should be -->
+        <line x1="560" y1="500" x2="350" y2="300" stroke="#7dd4ff" stroke-width="12" stroke-linecap="round"
+          opacity=".92" filter="drop-shadow(0 0 12px rgba(125,210,255,.7))"/>
+        <circle cx="350" cy="300" r="14" fill="#bfe8ff"/>
+      </svg>
+    </div>
+
+    <div class="caption">同一块表 · 一边冲到顶，一边掉下去</div>
+  </div>
+
+  <div class="corner-mark">J</div>
+  <div class="subtitle-wrap"><div class="subtitle"><span class="gold">杏仁核</span>在报警，前额叶的<span class="gold">刹车</span>松了</div></div>
+</div>
+</body></html>

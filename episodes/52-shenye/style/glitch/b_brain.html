@@ -1,0 +1,83 @@
+<!doctype html>
+<html><head><meta charset="utf-8">
+<style>
+  * { margin:0; padding:0; box-sizing:border-box; }
+  html,body { width:1920px; height:1080px; overflow:hidden; background:#0a0612; font-family:'Noto Sans CJK SC','Noto Sans SC',sans-serif; }
+  .stage { position:relative; width:1920px; height:1080px; background:
+      radial-gradient(ellipse 1700px 1200px at 50% 46%, #241536 0%, #150c24 52%, #0a0612 85%); }
+  .scanlines { position:absolute; inset:0; opacity:.12; background-image: repeating-linear-gradient(180deg, rgba(255,255,255,.5) 0 1px, transparent 1px 3px); mix-blend-mode:overlay; z-index:9;}
+
+  /* ONE single corrupted signal screen -- no two-panel-plus-cable layout.
+     A single waveform trace carries both ideas at once: it spikes/overloads on the left half (amygdala)
+     and then drops out into a dead flat gap on the right half (prefrontal) -- one continuous line,
+     one failure happening in two places along it. */
+  .panel { position:absolute; left:210px; top:120px; width:1500px; height:700px; border-radius:24px;
+      background: linear-gradient(170deg,#140a22,#0a0514); box-shadow:0 30px 90px rgba(0,0,0,.6), 0 0 0 2px rgba(255,70,140,.3); overflow:hidden; }
+  .panel-label { position:absolute; left:46px; top:30px; font-family:'DejaVu Sans Mono',monospace; font-weight:700; font-size:26px; color:#ff8fc0; letter-spacing:2px; z-index:3; }
+  .noise { position:absolute; inset:0; opacity:.15; background-image: radial-gradient(rgba(255,255,255,.5) 1px, transparent 1.4px); background-size: 7px 7px; }
+
+  .scope { position:absolute; left:46px; right:46px; top:96px; bottom:140px; border-radius:14px; background:#0a0514; overflow:hidden; }
+  .scope-grid { position:absolute; inset:0; opacity:.4; background-image:
+      linear-gradient(rgba(255,255,255,.08) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,.08) 1px, transparent 1px);
+      background-size: 48px 48px; }
+
+  .zone-label { position:absolute; top:24px; font-family:'DejaVu Sans Mono',monospace; font-weight:700; font-size:24px; letter-spacing:1px; z-index:4; }
+  .zone-label.l { left:40px; color:#ff5c9a; }
+  .zone-label.r { right:40px; color:#6fc7ff; }
+
+  .tag { position:absolute; bottom:28px; font-weight:800; font-size:28px; padding:8px 20px; border-radius:22px; z-index:4; }
+  .tag.l { left:60px; color:#ffc2da; background:rgba(255,60,130,.16); border:2px dashed #ff5c9a; }
+  .tag.r { right:60px; color:#bfe3ff; background:rgba(110,190,255,.16); border:2px dashed #6fc7ff; }
+
+  .mid-divider { position:absolute; left:50%; top:10%; bottom:10%; width:2px; background: rgba(255,255,255,.12); }
+
+  .sag-note { position:absolute; left:50%; bottom:40px; transform:translateX(-50%); font-weight:700; font-size:26px; color:#c9a6ff; opacity:.9; z-index:5; }
+
+  .corner-mark { position:absolute; top:34px; right:40px; width:56px; height:56px; border-radius:14px;
+      background: rgba(6,8,13,.55); display:flex; align-items:center; justify-content:center;
+      font-family:'Cormorant Garamond', serif; font-weight:600; font-size:34px; color:#D4AF6A;
+      border:1px solid rgba(212,175,106,.4); z-index:10; }
+  .subtitle-wrap { position:absolute; left:0; right:0; top:860px; display:flex; justify-content:center; z-index:10;}
+  .subtitle { background: rgba(6,8,13,.80); border-radius:18px; padding:10px 34px;
+      font-weight:900; font-size:64px; color:#fff; letter-spacing:2px; white-space:nowrap; }
+  .subtitle .gold { color:#D4AF6A; }
+</style></head>
+<body>
+<div class="stage">
+  <div class="panel">
+    <div class="noise"></div>
+    <div class="panel-label">ONE SIGNAL · TWO FAILURES</div>
+    <div class="scope">
+      <div class="scope-grid"></div>
+      <div class="mid-divider"></div>
+      <div class="zone-label l">杏仁核 · 信号过载</div>
+      <div class="zone-label r">前额叶 · 信号丢失</div>
+      <svg width="100%" height="100%" viewBox="0 0 1408 464" preserveAspectRatio="none">
+        <!-- left half: the trace spikes violently, clipping/overloading, with chromatic ghost offsets -->
+        <path d="M 0,260 C 60,250 100,270 140,240 C 190,190 220,310 260,220 C 300,130 320,350 360,150
+                 C 400,30 420,380 460,120 C 500,10 520,400 560,170 C 600,80 630,300 680,232"
+          stroke="#ff3c82" stroke-width="5" fill="none" filter="drop-shadow(0 0 10px rgba(255,60,130,.8))"/>
+        <path d="M 0,260 C 60,250 100,270 140,240 C 190,190 220,310 260,220 C 300,130 320,350 360,150
+                 C 400,30 420,380 460,120 C 500,10 520,400 560,170 C 600,80 630,300 680,232"
+          stroke="#00dcff" stroke-width="2" fill="none" opacity=".55" transform="translate(5,-4)"/>
+        <!-- right half: the same trace drops to a flat dead line with a visible missing-block gap -->
+        <path d="M 680,232 C 720,220 740,232 780,230 L 1010,230" stroke="#6fc7ff" stroke-width="5" fill="none"
+          filter="drop-shadow(0 0 8px rgba(110,190,255,.6))"/>
+        <rect x="1010" y="214" width="90" height="32" fill="#0a0514"/>
+        <path d="M 1100,230 L 1180,230 C 1220,230 1260,226 1310,232 C 1360,238 1390,222 1408,228" stroke="#6fc7ff" stroke-width="5" fill="none"
+          opacity=".7" filter="drop-shadow(0 0 8px rgba(110,190,255,.5))"/>
+        <!-- missing-block cutout marker -->
+        <text x="1055" y="200" fill="#6fc7ff" font-size="18" text-anchor="middle" font-family="DejaVu Sans Mono" opacity=".8">NO SIGNAL</text>
+      </svg>
+      <div class="tag l">在报警</div>
+      <div class="tag r">刹车松懈</div>
+    </div>
+  </div>
+
+  <div class="sag-note">一条信号线 · 左边过载，右边丢失</div>
+
+  <div class="scanlines"></div>
+  <div class="corner-mark">J</div>
+  <div class="subtitle-wrap"><div class="subtitle"><span class="gold">杏仁核</span>在报警，前额叶的<span class="gold">刹车</span>松了</div></div>
+</div>
+</body></html>

@@ -1,0 +1,81 @@
+<!doctype html>
+<html><head><meta charset="utf-8">
+<style>
+  * { margin:0; padding:0; box-sizing:border-box; }
+  html,body { width:1920px; height:1080px; overflow:hidden; background:#060a0d; font-family:'Noto Sans CJK SC','Noto Sans SC',sans-serif; }
+  .stage { position:relative; width:1920px; height:1080px; background:
+      radial-gradient(ellipse 1500px 1000px at 50% 60%, #0c1a1c 0%, #070f11 55%, #04080a 85%); }
+  .scanlines { position:absolute; inset:0; opacity:.1; background-image: repeating-linear-gradient(180deg, rgba(130,255,210,.5) 0 1px, transparent 1px 4px); }
+  .grid { position:absolute; inset:0; opacity:.13; background-image:
+      linear-gradient(rgba(125,255,179,.35) 1px, transparent 1px), linear-gradient(90deg, rgba(125,255,179,.35) 1px, transparent 1px);
+      background-size: 96px 96px; }
+
+  /* figure holding the device up near the face: shoulders + head, dark, lit only from below/front by the device's phosphor glow */
+  .figure { position:absolute; left:50%; top:60px; transform:translateX(-50%); width:620px; height:700px; z-index:2; }
+  .shoulders { position:absolute; left:50%; bottom:0; transform:translateX(-50%); width:580px; height:300px;
+      border-radius:250px 250px 0 0; background:#050c0d; }
+  .shoulders .underlight { position:absolute; left:0; right:0; top:0; height:48%;
+      background: linear-gradient(0deg, rgba(125,255,179,.4) 0%, rgba(125,255,179,.06) 70%, transparent 100%); }
+  .head { position:absolute; left:50%; bottom:250px; transform:translateX(-50%); width:270px; height:300px;
+      border-radius:50% 50% 46% 46%/56% 56% 44% 44%; background:#050c0d; overflow:hidden; }
+  .head .underlight { position:absolute; left:0; right:0; bottom:0; height:58%;
+      background: linear-gradient(0deg, rgba(150,255,200,.8) 0%, rgba(125,255,179,.32) 44%, rgba(125,255,179,0) 100%); }
+  .head .jaw-hot { position:absolute; left:50%; bottom:0; transform:translateX(-50%); width:68%; height:22%; border-radius:50% 50% 40% 40%/80% 80% 20% 20%;
+      background: radial-gradient(ellipse at 50% 100%, rgba(190,255,220,.9) 0%, rgba(125,255,179,.45) 60%, transparent 100%); }
+  /* simple arm bars suggesting the figure holds the device up in front of the face */
+  .arm { position:absolute; width:48px; height:230px; background:#050c0d; border-radius:24px; z-index:1; }
+  .arm.l { left:588px; bottom:40px; transform:rotate(18deg); }
+  .arm.r { left:1284px; bottom:40px; transform:rotate(-18deg); }
+
+  /* the device/oscilloscope held up in front of the chest, now the clear key light aimed upward at the face */
+  .device-glow { position:absolute; left:50%; top:62%; transform:translate(-50%,-50%); width:1300px; height:980px;
+      background: radial-gradient(ellipse at 50% 60%, rgba(125,255,179,.3) 0%, rgba(125,255,179,.09) 42%, rgba(125,255,179,0) 72%); z-index:1;}
+  .device { position:absolute; left:50%; bottom:40px; transform:translateX(-50%); width:620px; height:360px; border-radius:22px;
+      background: linear-gradient(170deg,#132023,#070c0d); box-shadow:0 30px 90px rgba(0,0,0,.6), 0 0 0 3px rgba(125,255,179,.3); z-index:5; }
+  .readout { position:absolute; left:34px; right:34px; top:34px; bottom:96px; border-radius:10px; background:#04100d;
+      box-shadow: inset 0 0 50px rgba(0,0,0,.7); overflow:hidden; }
+  .readout-grid { position:absolute; inset:0; opacity:.5; background-image:
+      linear-gradient(rgba(125,255,179,.22) 1px, transparent 1px), linear-gradient(90deg, rgba(125,255,179,.22) 1px, transparent 1px);
+      background-size: 36px 36px; }
+  .trace { position:absolute; inset:0; }
+  .readout-label { position:absolute; left:14px; top:8px; font-family:'DejaVu Sans Mono',monospace; font-size:19px; color:#7DFFB3; opacity:.85; letter-spacing:1px; }
+  .readout-clock { position:absolute; right:14px; top:6px; font-family:'DejaVu Sans Mono',monospace; font-weight:700; font-size:34px; color:#eafff3; text-shadow:0 0 14px rgba(125,255,179,.7); }
+  .knobs { position:absolute; left:34px; bottom:18px; display:flex; gap:18px; }
+  .knob { width:24px; height:24px; border-radius:50%; background: radial-gradient(circle at 35% 30%, #2a3a3c, #0a1012); border:2px solid rgba(125,255,179,.35); }
+
+  .corner-mark { position:absolute; top:34px; right:40px; width:56px; height:56px; border-radius:14px;
+      background: rgba(6,8,13,.55); display:flex; align-items:center; justify-content:center;
+      font-family:'Cormorant Garamond', serif; font-weight:600; font-size:34px; color:#D4AF6A;
+      border:1px solid rgba(212,175,106,.4); z-index:10; }
+  .subtitle-wrap { position:absolute; left:0; right:0; top:860px; display:flex; justify-content:center; z-index:10;}
+  .subtitle { background: rgba(6,8,13,.80); border-radius:18px; padding:10px 34px;
+      font-weight:900; font-size:64px; color:#fff; letter-spacing:2px; white-space:nowrap; }
+  .subtitle .gold { color:#D4AF6A; }
+</style></head>
+<body>
+<div class="stage">
+  <div class="grid"></div>
+  <div class="device-glow"></div>
+  <div class="figure">
+    <div class="shoulders"><div class="underlight"></div></div>
+    <div class="head"><div class="underlight"></div><div class="jaw-hot"></div></div>
+  </div>
+  <div class="arm l"></div>
+  <div class="arm r"></div>
+  <div class="device">
+    <div class="readout">
+      <div class="readout-grid"></div>
+      <div class="readout-label">REC · CH1 AMYG</div>
+      <div class="readout-clock">02:00</div>
+      <svg class="trace" width="100%" height="100%" viewBox="0 0 552 230">
+        <path d="M 0,145 C 34,128 52,180 86,145 C 120,110 138,170 172,145 C 224,110 242,188 294,128 C 346,76 372,196 432,120 C 484,60 510,170 552,128"
+          stroke="#7DFFB3" stroke-width="5" fill="none" filter="drop-shadow(0 0 10px rgba(125,255,179,.8))"/>
+      </svg>
+    </div>
+    <div class="knobs"><div class="knob"></div><div class="knob"></div><div class="knob"></div></div>
+  </div>
+  <div class="scanlines"></div>
+  <div class="corner-mark">J</div>
+  <div class="subtitle-wrap"><div class="subtitle">凌晨<span class="gold">两点</span></div></div>
+</div>
+</body></html>

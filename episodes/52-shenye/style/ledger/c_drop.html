@@ -1,0 +1,104 @@
+<!doctype html>
+<html><head><meta charset="utf-8">
+<style>
+  * { margin:0; padding:0; box-sizing:border-box; }
+  html,body { width:1920px; height:1080px; overflow:hidden; background:#140d08; font-family:'Noto Sans CJK SC','Noto Sans SC',sans-serif; }
+  .stage { position:relative; width:1920px; height:1080px;
+      background: radial-gradient(ellipse 1700px 1200px at 50% 40%, #44300f 0%, #22160a 48%, #140d08 80%); }
+  .lamp-glow { position:absolute; left:50%; top:-300px; transform:translateX(-50%); width:1700px; height:1700px; border-radius:50%;
+      background: radial-gradient(circle, rgba(255,186,90,.34) 0%, rgba(255,160,70,.12) 34%, rgba(255,150,60,0) 60%); }
+  .desk { position:absolute; left:0; right:0; bottom:0; height:200px; background: linear-gradient(180deg,#2b1d10,#170f07); }
+
+  /* left: the brass pocket-watch dial, biological-night wedge glowing, mood line dipping */
+  .watch { position:absolute; left:120px; top:150px; width:620px; height:620px; border-radius:50%;
+      background: radial-gradient(circle at 42% 38%, #e8c27a 0%, #b4832f 55%, #6e4a16 100%);
+      box-shadow: 0 30px 90px rgba(0,0,0,.6), 0 0 0 14px #3a260d, 0 0 0 20px #c89a4e; }
+  .dial-face { position:absolute; inset:36px; border-radius:50%; background: radial-gradient(circle at 50% 50%, #1c130a 0%, #0c0804 72%); overflow:hidden; }
+  .night-wedge { position:absolute; left:50%; top:50%; width:100%; height:100%; transform:translate(-50%,-50%);
+      background: conic-gradient(from 300deg, rgba(100,70,205,.6) 0deg, rgba(100,70,205,.6) 80deg, transparent 80deg, transparent 360deg); }
+
+  /* right: the SAME dial dissolving into a glowing world map — drawn as a single wide panel so it reads as one transformation */
+  .map-panel { position:absolute; left:800px; top:150px; width:1000px; height:620px; }
+  .map-glow { position:absolute; inset:-40px; border-radius:40px;
+      background: radial-gradient(ellipse at 40% 50%, rgba(255,200,130,.12) 0%, rgba(120,170,255,0) 70%); }
+  .dot { position:absolute; width:13px; height:13px; border-radius:50%; background:#ffd98a;
+      box-shadow:0 0 18px 7px rgba(255,217,138,.8); }
+  .dot.cold { background:#8fb6e8; box-shadow:0 0 16px 6px rgba(143,182,232,.7); }
+
+  .bridge-arrow { position:absolute; left:742px; top:420px; width:120px; height:60px; opacity:.8; }
+
+  .counter-wrap { position:absolute; left:800px; top:60px; text-align:left; z-index:8; }
+  .counter { font-family:'DejaVu Sans Mono', monospace; font-weight:700; font-size:72px; color:#fff;
+      text-shadow: 0 0 24px rgba(255,210,140,.5); }
+  .counter .gold { color:#D4AF6A; }
+  .counter-cap { font-size:28px; color:#caa45a; margin-top:4px; font-weight:700; }
+
+  .corner-mark { position:absolute; top:34px; right:40px; width:56px; height:56px; border-radius:14px;
+      background: rgba(6,8,13,.55); display:flex; align-items:center; justify-content:center;
+      font-family:'Cormorant Garamond', serif; font-weight:600; font-size:34px; color:#D4AF6A;
+      border:1px solid rgba(212,175,106,.4); z-index:10; }
+  .subtitle-wrap { position:absolute; left:0; right:0; top:860px; display:flex; justify-content:center; z-index:10;}
+  .subtitle { background: rgba(6,8,13,.80); border-radius:18px; padding:10px 34px;
+      font-weight:900; font-size:64px; color:#fff; letter-spacing:2px; white-space:nowrap; }
+  .subtitle .gold { color:#D4AF6A; }
+</style></head>
+<body>
+<div class="stage">
+  <div class="lamp-glow"></div>
+  <div class="desk"></div>
+
+  <div class="watch">
+    <div class="dial-face">
+      <div class="night-wedge"></div>
+      <svg width="100%" height="100%" viewBox="0 0 548 548" style="position:absolute;inset:0;">
+        <g stroke="#e8c27a" stroke-width="3">
+          <line x1="274" y1="30" x2="274" y2="60"/>
+          <line x1="274" y1="488" x2="274" y2="518"/>
+        </g>
+        <text x="274" y="90" fill="#e8c27a" font-size="26" font-weight="800" text-anchor="middle">0</text>
+        <text x="274" y="476" fill="#e8c27a" font-size="26" font-weight="800" text-anchor="middle">12</text>
+        <path d="M 70,274 Q 170,230 230,260 Q 320,300 350,390 Q 375,460 470,320" stroke="#ff8a5c" stroke-width="7" fill="none"
+          stroke-linecap="round" filter="drop-shadow(0 0 10px rgba(255,120,80,.8))"/>
+        <circle cx="350" cy="390" r="11" fill="#ff8a5c"/>
+      </svg>
+    </div>
+  </div>
+
+  <svg class="bridge-arrow" viewBox="0 0 120 60">
+    <path d="M 0,30 C 40,10 80,50 118,28" stroke="#d4af6a" stroke-width="5" fill="none" stroke-dasharray="2 14" stroke-linecap="round"/>
+    <path d="M 100,18 L 118,28 L 100,40" stroke="#d4af6a" stroke-width="5" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+  </svg>
+
+  <div class="counter-wrap">
+    <div class="counter"><span class="gold">5亿</span>条真实推文</div>
+    <div class="counter-cap">深夜同时转负 · 全球一致</div>
+  </div>
+
+  <div class="map-panel">
+    <div class="map-glow"></div>
+    <svg width="100%" height="100%" viewBox="0 0 1000 620">
+      <g fill="#3a2c18" opacity=".9">
+        <ellipse cx="210" cy="220" rx="140" ry="90"/>
+        <ellipse cx="430" cy="170" rx="90" ry="60"/>
+        <ellipse cx="560" cy="320" rx="120" ry="80"/>
+        <ellipse cx="760" cy="230" rx="150" ry="100"/>
+        <ellipse cx="840" cy="430" rx="100" ry="66"/>
+        <ellipse cx="270" cy="420" rx="90" ry="58"/>
+      </g>
+    </svg>
+    <div class="dot" style="left:160px; top:170px;"></div>
+    <div class="dot cold" style="left:260px; top:250px;"></div>
+    <div class="dot" style="left:450px; top:140px;"></div>
+    <div class="dot cold" style="left:530px; top:300px;"></div>
+    <div class="dot" style="left:720px; top:190px;"></div>
+    <div class="dot cold" style="left:800px; top:400px;"></div>
+    <div class="dot" style="left:610px; top:360px;"></div>
+    <div class="dot cold" style="left:300px; top:440px;"></div>
+    <div class="dot" style="left:860px; top:260px;"></div>
+    <div class="dot cold" style="left:180px; top:360px;"></div>
+  </div>
+
+  <div class="corner-mark">J</div>
+  <div class="subtitle-wrap"><div class="subtitle"><span class="gold">5亿条</span>真实推文也测到了</div></div>
+</div>
+</body></html>

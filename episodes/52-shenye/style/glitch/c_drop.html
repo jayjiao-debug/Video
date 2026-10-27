@@ -1,0 +1,89 @@
+<!doctype html>
+<html><head><meta charset="utf-8">
+<style>
+  * { margin:0; padding:0; box-sizing:border-box; }
+  html,body { width:1920px; height:1080px; overflow:hidden; background:#0a0612; font-family:'Noto Sans CJK SC','Noto Sans SC',sans-serif; }
+  .stage { position:relative; width:1920px; height:1080px; background:
+      radial-gradient(ellipse 1800px 1200px at 50% 42%, #2c1740 0%, #170d26 50%, #0a0612 85%); }
+  .scanlines { position:absolute; inset:0; opacity:.12; background-image: repeating-linear-gradient(180deg, rgba(255,255,255,.5) 0 1px, transparent 1px 3px); mix-blend-mode:overlay; z-index:9;}
+
+  /* NO circular dial here at all -- dropping the dial+side-panel split entirely.
+     Instead: a single vertical falling "feed" -- a ticker-tape of thousands of individual tweet-pixels
+     cascading downward through a 24-hour timeline printed along the left edge; warm (day) pixels fall
+     clean at the top, then visibly corrupt/invert to cool (night) pixels as they cross the "now" line,
+     which is the same glitch-corruption motif as the hook/brain frames applied to a feed instead of a map. */
+  .timeline { position:absolute; left:140px; top:60px; height:700px; width:3px; background: rgba(255,255,255,.14); }
+  .tick { position:absolute; left:120px; font-family:'DejaVu Sans Mono',monospace; font-size:20px; color:#c9a6ff; opacity:.75; }
+
+  .feed-panel { position:absolute; left:280px; top:60px; width:1420px; height:700px; border-radius:22px;
+      background: linear-gradient(170deg,#140a22,#0a0514); box-shadow:0 30px 90px rgba(0,0,0,.6), 0 0 0 2px rgba(255,70,140,.3); overflow:hidden; }
+  .feed-label { position:absolute; left:40px; top:26px; font-family:'DejaVu Sans Mono',monospace; font-size:24px; color:#ff8fc0; letter-spacing:2px; z-index:3; }
+
+  .now-line { position:absolute; left:0; right:0; top:46%; height:3px; background:#ff3c82; box-shadow:0 0 14px rgba(255,60,130,.8); z-index:4; }
+  .now-tag { position:absolute; right:40px; top:calc(46% - 46px); font-family:'DejaVu Sans Mono',monospace; font-weight:700; font-size:22px; color:#ff8fc0; z-index:4; }
+
+  .counter { position:absolute; left:40px; bottom:40px; font-family:'DejaVu Sans Mono',monospace; font-weight:700; font-size:68px; color:#fff;
+      text-shadow: 3px 0 0 rgba(255,0,90,.7), -3px 0 0 rgba(0,220,255,.7); z-index:5;}
+  .counter .gold { color:#D4AF6A; text-shadow:none; }
+  .counter-cap { position:absolute; left:42px; bottom:18px; font-size:24px; color:#c9a6ff; font-weight:700; opacity:.95; z-index:5;}
+
+  .corner-mark { position:absolute; top:34px; right:40px; width:56px; height:56px; border-radius:14px;
+      background: rgba(6,8,13,.55); display:flex; align-items:center; justify-content:center;
+      font-family:'Cormorant Garamond', serif; font-weight:600; font-size:34px; color:#D4AF6A;
+      border:1px solid rgba(212,175,106,.4); z-index:10; }
+  .subtitle-wrap { position:absolute; left:0; right:0; top:860px; display:flex; justify-content:center; z-index:10;}
+  .subtitle { background: rgba(6,8,13,.80); border-radius:18px; padding:10px 34px;
+      font-weight:900; font-size:64px; color:#fff; letter-spacing:2px; white-space:nowrap; }
+  .subtitle .gold { color:#D4AF6A; }
+</style></head>
+<body>
+<div class="stage">
+  <div class="timeline"></div>
+  <div class="tick" style="top:60px;">06</div>
+  <div class="tick" style="top:230px;">12</div>
+  <div class="tick" style="top:400px;">18</div>
+  <div class="tick" style="top:570px;">00</div>
+  <div class="tick" style="top:720px;">06</div>
+
+  <div class="feed-panel">
+    <div class="feed-label">LIVE FEED · 5亿 TWEETS CASCADING</div>
+    <div class="now-line"></div>
+    <div class="now-tag">NOW · 深夜</div>
+    <svg id="pixels" width="1420" height="700" style="position:absolute; left:0; top:0;"></svg>
+    <div class="counter"><span class="gold">5亿</span>条</div>
+    <div class="counter-cap">真实推文 · 深夜同步转负</div>
+  </div>
+
+  <div class="scanlines"></div>
+  <div class="corner-mark">J</div>
+  <div class="subtitle-wrap"><div class="subtitle"><span class="gold">5亿条</span>真实推文也测到了</div></div>
+</div>
+<script>
+  // build a falling pixel-tweet ticker: warm pixels above the now-line, cool pixels below it,
+  // density thinning toward the edges, a few corrupted/glitched white pixels right at the crossing
+  const svg = document.getElementById('pixels');
+  const ns = 'http://www.w3.org/2000/svg';
+  const cols = 34, rows = 19, cw = 1420/cols, rh = 700/rows;
+  const nowRow = 9; // matches the now-line position (~46% of 19 rows)
+  for (let r=0;r<rows;r++){
+    for (let c=0;c<cols;c++){
+      // sparse pseudo-random but deterministic placement
+      const seed = Math.sin(c*12.9898+r*78.233)*43758.5453;
+      const v = seed - Math.floor(seed);
+      if (v > 0.52) continue; // leave gaps so it reads as scattered tweets, not a solid block
+      const x = c*cw + (cw-12)/2;
+      const y = r*rh + (rh-12)/2;
+      const rect = document.createElementNS(ns,'rect');
+      rect.setAttribute('x', x); rect.setAttribute('y', y);
+      rect.setAttribute('width', 12); rect.setAttribute('height', 12); rect.setAttribute('rx', 2);
+      let fill, glow;
+      if (r < nowRow - 1) { fill = 'rgba(255,200,130,.85)'; glow = 'rgba(255,200,130,.6)'; }
+      else if (r > nowRow + 1) { fill = 'rgba(110,190,255,.85)'; glow = 'rgba(110,190,255,.6)'; }
+      else { fill = '#fff'; glow = '#fff'; } // the crossing row: a glitch-white corruption band
+      rect.setAttribute('fill', fill);
+      rect.style.filter = `drop-shadow(0 0 6px ${glow})`;
+      svg.appendChild(rect);
+    }
+  }
+</script>
+</body></html>

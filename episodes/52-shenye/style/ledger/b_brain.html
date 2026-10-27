@@ -1,0 +1,96 @@
+<!doctype html>
+<html><head><meta charset="utf-8">
+<style>
+  * { margin:0; padding:0; box-sizing:border-box; }
+  html,body { width:1920px; height:1080px; overflow:hidden; background:#140d08; font-family:'Noto Sans CJK SC','Noto Sans SC',sans-serif; }
+  .stage { position:relative; width:1920px; height:1080px;
+      background: radial-gradient(ellipse 1500px 1100px at 50% 44%, #3a2a16 0%, #20150c 50%, #140d08 82%); }
+  .lamp-glow { position:absolute; left:50%; top:-340px; transform:translateX(-50%); width:1500px; height:1500px; border-radius:50%;
+      background: radial-gradient(circle, rgba(255,196,110,.26) 0%, rgba(255,170,80,.10) 36%, rgba(255,150,60,0) 62%); }
+
+  /* corkboard behind, warm wood frame, implying a desk/study world (not clinical) */
+  .corkboard { position:absolute; left:260px; top:110px; width:1400px; height:620px; border-radius:18px;
+      background: linear-gradient(160deg,#5a4327,#3c2c16); box-shadow: 0 30px 80px rgba(0,0,0,.55); }
+  .corkboard-inner { position:absolute; inset:28px; border-radius:10px;
+      background: radial-gradient(ellipse at 50% 40%, #8a6a3e 0%, #6b5030 60%, #563f24 100%); }
+  .corkboard-inner::before { content:''; position:absolute; inset:0; opacity:.18; background-image:
+      radial-gradient(rgba(0,0,0,.4) 1px, transparent 1.4px); background-size: 14px 14px; }
+
+  /* two hand-pinned index cards, each with an ink-sketch diagram: amygdala (left) and prefrontal brake (right), joined by a string with a pin */
+  .card { position:absolute; top:150px; width:480px; height:460px; background: linear-gradient(170deg,#f3e7c9,#e2cf9f);
+      border-radius:6px; box-shadow:0 18px 40px rgba(0,0,0,.5); }
+  .card.left { left:340px; transform:rotate(-3deg); }
+  .card.right { left:1080px; transform:rotate(2.4deg); }
+  .pin { position:absolute; top:-14px; left:50%; transform:translateX(-50%); width:26px; height:26px; border-radius:50%;
+      background: radial-gradient(circle at 35% 30%, #ff7a5c, #b2311a); box-shadow:0 4px 8px rgba(0,0,0,.5); z-index:6; }
+
+  .label { position:absolute; left:50%; top:30px; transform:translateX(-50%); font-weight:900; font-size:40px; color:#3a2a14; letter-spacing:2px; }
+
+  /* amygdala: a small glowing almond with jagged alarm rays, drawn as ink + warm glow (siren motif via colour pulses, not a literal siren) */
+  .almond { position:absolute; left:50%; top:200px; transform:translateX(-50%); width:150px; height:100px; border-radius:50%;
+      background: radial-gradient(circle, #ff6a3c 0%, #c23a16 55%, #7a2008 100%);
+      box-shadow: 0 0 90px 30px rgba(255,110,50,.85), 0 0 30px 6px rgba(255,200,140,.9); }
+  .ray { position:absolute; left:50%; top:200px; width:4px; height:70px; background:#b2431d; transform-origin:50% 100%; opacity:.8; }
+  .alarm-tag { position:absolute; left:50%; top:330px; transform:translateX(-50%); font-weight:800; font-size:30px; color:#8a2d10;
+      background: rgba(255,106,60,.18); padding:6px 18px; border-radius:20px; border:2px dashed #c23a16; }
+
+  /* prefrontal brake: a second ink node, connected by a cable with a literal lever that is visibly slack/drooping */
+  .node { position:absolute; left:50%; top:160px; transform:translateX(-50%); width:130px; height:130px; border-radius:50%;
+      background: radial-gradient(circle, #d8e3ea 0%, #8fa8b8 55%, #4c6372 100%);
+      box-shadow: 0 0 40px 10px rgba(180,210,225,.35); }
+  .node-tag { position:absolute; left:50%; top:300px; transform:translateX(-50%); font-weight:800; font-size:30px; color:#374954;
+      background: rgba(170,200,215,.25); padding:6px 18px; border-radius:20px; border:2px dashed #6c8696; }
+
+  /* the slack cable spanning between the two cards, drawn with a sag (quadratic curve) + lever hanging limp mid-span */
+  .cable-wrap { position:absolute; left:340px; top:390px; width:1220px; height:160px; z-index:3; }
+  .lever-pivot { position:absolute; left:50%; top:96px; transform:translateX(-50%); width:18px; height:18px; border-radius:50%; background:#caa45a; }
+  .lever-arm { position:absolute; left:50%; top:96px; width:10px; height:90px; background: linear-gradient(180deg,#caa45a,#8a6a34);
+      transform-origin:top center; transform:translateX(-50%) rotate(28deg); border-radius:6px; box-shadow:0 6px 10px rgba(0,0,0,.4); }
+  .lever-handle { position:absolute; left:50%; top:178px; transform:translateX(calc(-50% + 36px)) rotate(28deg); width:34px; height:18px;
+      background:#d4af6a; border-radius:8px; }
+
+  .sag-note { position:absolute; left:50%; bottom:6px; transform:translateX(-50%); font-weight:700; font-size:26px; color:#caa45a; opacity:.9; }
+
+  .corner-mark { position:absolute; top:34px; right:40px; width:56px; height:56px; border-radius:14px;
+      background: rgba(6,8,13,.55); display:flex; align-items:center; justify-content:center;
+      font-family:'Cormorant Garamond', serif; font-weight:600; font-size:34px; color:#D4AF6A;
+      border:1px solid rgba(212,175,106,.4); z-index:10; }
+  .subtitle-wrap { position:absolute; left:0; right:0; top:860px; display:flex; justify-content:center; z-index:10;}
+  .subtitle { background: rgba(6,8,13,.80); border-radius:18px; padding:10px 34px;
+      font-weight:900; font-size:64px; color:#fff; letter-spacing:2px; white-space:nowrap; }
+  .subtitle .gold { color:#D4AF6A; }
+</style></head>
+<body>
+<div class="stage">
+  <div class="lamp-glow"></div>
+  <div class="corkboard"><div class="corkboard-inner"></div></div>
+
+  <svg class="cable-wrap" viewBox="0 0 1220 160">
+    <path d="M 340 20 Q 610 150 880 20" stroke="#caa45a" stroke-width="7" fill="none" opacity=".85"/>
+  </svg>
+
+  <div class="card left"><div class="pin"></div>
+    <div class="label">杏仁核</div>
+    <div class="almond"></div>
+    <div class="ray" style="transform:translateX(-120px) rotate(-30deg)"></div>
+    <div class="ray" style="transform:translateX(-80px) rotate(-12deg)"></div>
+    <div class="ray" style="transform:translateX(80px) rotate(12deg)"></div>
+    <div class="ray" style="transform:translateX(120px) rotate(30deg)"></div>
+    <div class="alarm-tag">在报警</div>
+  </div>
+
+  <div class="card right"><div class="pin"></div>
+    <div class="label">前额叶</div>
+    <div class="node"></div>
+    <div class="lever-pivot"></div>
+    <div class="lever-arm"></div>
+    <div class="lever-handle"></div>
+    <div class="node-tag">刹车松懈</div>
+  </div>
+
+  <div class="sag-note">连接变松，刹车踩不住</div>
+
+  <div class="corner-mark">J</div>
+  <div class="subtitle-wrap"><div class="subtitle"><span class="gold">杏仁核</span>在报警，前额叶的<span class="gold">刹车</span>松了</div></div>
+</div>
+</body></html>

@@ -1,0 +1,82 @@
+<!doctype html>
+<html><head><meta charset="utf-8">
+<style>
+  * { margin:0; padding:0; box-sizing:border-box; }
+  html,body { width:1920px; height:1080px; overflow:hidden; background:#060a0d; font-family:'Noto Sans CJK SC','Noto Sans SC',sans-serif; }
+  .stage { position:relative; width:1920px; height:1080px; background:
+      radial-gradient(ellipse 1700px 1100px at 50% 44%, #112224 0%, #081214 50%, #04080a 85%); }
+  .grid { position:absolute; inset:0; opacity:.14; background-image:
+      linear-gradient(rgba(125,255,179,.35) 1px, transparent 1px), linear-gradient(90deg, rgba(125,255,179,.35) 1px, transparent 1px);
+      background-size: 96px 96px; }
+
+  /* ONE unified circular instrument -- the 24h dial IS the map: the world's data sits as a ring
+     of lit dots just inside the dial's own rim, at the same clock position as the mood-line's dip,
+     instead of a separate side panel. No dial+side-panel split. */
+  .label-top { position:absolute; left:50%; top:60px; transform:translateX(-50%); text-align:center; }
+  .label-top .big { font-weight:900; font-size:74px; color:#fff; }
+  .label-top .big .gold { color:#D4AF6A; }
+  .label-top .sub { font-family:'DejaVu Sans Mono',monospace; font-size:24px; color:#7DFFB3; letter-spacing:2px; opacity:.85; margin-top:6px; }
+
+  .instrument { position:absolute; left:50%; top:160px; transform:translateX(-50%); width:660px; height:660px; }
+
+  .corner-mark { position:absolute; top:34px; right:40px; width:56px; height:56px; border-radius:14px;
+      background: rgba(6,8,13,.55); display:flex; align-items:center; justify-content:center;
+      font-family:'Cormorant Garamond', serif; font-weight:600; font-size:34px; color:#D4AF6A;
+      border:1px solid rgba(212,175,106,.4); z-index:10; }
+  .subtitle-wrap { position:absolute; left:0; right:0; top:860px; display:flex; justify-content:center; z-index:10;}
+  .subtitle { background: rgba(6,8,13,.80); border-radius:18px; padding:10px 34px;
+      font-weight:900; font-size:64px; color:#fff; letter-spacing:2px; white-space:nowrap; }
+  .subtitle .gold { color:#D4AF6A; }
+</style></head>
+<body>
+<div class="stage">
+  <div class="grid"></div>
+
+  <div class="label-top">
+    <div class="sub">GLOBAL SENTIMENT RING · LIVE</div>
+  </div>
+
+  <div class="instrument">
+    <svg width="660" height="660" viewBox="0 0 760 760">
+      <!-- outer ring: the world's tweet-dots, placed around the dial's own rim at their local clock position -->
+      <circle cx="380" cy="380" r="355" fill="none" stroke="#0a1a1b" stroke-width="40"/>
+      <!-- night wedge painted directly onto the outer data ring, so dial-time and data-time are literally the same ring -->
+      <path d="M 380 380 L 380 25 A 355 355 0 0 1 565 120 Z" fill="rgba(120,90,230,.35)"/>
+
+      <!-- data dots sit ON the outer ring at their own local time-of-day, warm=day gold / cool=night blue -->
+      <g>
+        <circle cx="380" cy="30" r="10" fill="#ffd98a" style="filter:drop-shadow(0 0 8px rgba(255,217,138,.8))"/>
+        <circle cx="520" cy="65" r="9" fill="#ffd98a" style="filter:drop-shadow(0 0 8px rgba(255,217,138,.8))"/>
+        <circle cx="630" cy="155" r="10" fill="#7dd4ff" style="filter:drop-shadow(0 0 8px rgba(125,212,255,.8))"/>
+        <circle cx="705" cy="290" r="9" fill="#7dd4ff" style="filter:drop-shadow(0 0 8px rgba(125,212,255,.8))"/>
+        <circle cx="722" cy="440" r="10" fill="#7dd4ff" style="filter:drop-shadow(0 0 8px rgba(125,212,255,.8))"/>
+        <circle cx="675" cy="580" r="9" fill="#ffd98a" style="filter:drop-shadow(0 0 8px rgba(255,217,138,.8))"/>
+        <circle cx="560" cy="680" r="10" fill="#ffd98a" style="filter:drop-shadow(0 0 8px rgba(255,217,138,.8))"/>
+        <circle cx="400" cy="725" r="9" fill="#ffd98a" style="filter:drop-shadow(0 0 8px rgba(255,217,138,.8))"/>
+        <circle cx="240" cy="700" r="10" fill="#7dd4ff" style="filter:drop-shadow(0 0 8px rgba(125,212,255,.8))"/>
+        <circle cx="120" cy="610" r="9" fill="#7dd4ff" style="filter:drop-shadow(0 0 8px rgba(125,212,255,.8))"/>
+        <circle cx="48" cy="470" r="10" fill="#7dd4ff" style="filter:drop-shadow(0 0 8px rgba(125,212,255,.8))"/>
+        <circle cx="38" cy="310" r="9" fill="#ffd98a" style="filter:drop-shadow(0 0 8px rgba(255,217,138,.8))"/>
+        <circle cx="90" cy="170" r="10" fill="#ffd98a" style="filter:drop-shadow(0 0 8px rgba(255,217,138,.8))"/>
+      </g>
+
+      <!-- inner dial face: the mood-line dips exactly under the night wedge, same angular position as the dim dots above -->
+      <circle cx="380" cy="380" r="300" fill="#04100d"/>
+      <circle cx="380" cy="380" r="300" fill="none" stroke="rgba(125,255,179,.2)" stroke-width="2"/>
+      <circle cx="380" cy="380" r="220" fill="none" stroke="rgba(125,255,179,.14)" stroke-width="2"/>
+      <text x="380" y="110" fill="#7DFFB3" font-size="26" font-weight="800" text-anchor="middle" font-family="DejaVu Sans Mono">00</text>
+      <text x="380" y="665" fill="#7DFFB3" font-size="26" font-weight="800" text-anchor="middle" font-family="DejaVu Sans Mono">12</text>
+      <path d="M 130,380 Q 220,330 290,360 Q 390,400 420,490 Q 445,560 560,430" stroke="#ff8a5c" stroke-width="7" fill="none"
+        stroke-linecap="round" filter="drop-shadow(0 0 10px rgba(255,120,80,.8))"/>
+      <circle cx="420" cy="490" r="11" fill="#ff8a5c"/>
+
+      <!-- centre readout: the counter lives at the hub where dial and data ring meet -->
+      <text x="380" y="368" fill="#fff" font-size="62" font-weight="900" text-anchor="middle" font-family="'Noto Sans CJK SC'"><tspan fill="#D4AF6A">5亿</tspan>条</text>
+      <text x="380" y="412" fill="#7DFFB3" font-size="20" font-weight="700" text-anchor="middle" font-family="'Noto Sans CJK SC'" opacity=".9">深夜同步转负 · 全球一致</text>
+    </svg>
+  </div>
+
+  <div class="corner-mark">J</div>
+  <div class="subtitle-wrap"><div class="subtitle"><span class="gold">5亿条</span>真实推文也测到了</div></div>
+</div>
+</body></html>

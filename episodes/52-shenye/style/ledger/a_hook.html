@@ -1,0 +1,82 @@
+<!doctype html>
+<html><head><meta charset="utf-8">
+<style>
+  * { margin:0; padding:0; box-sizing:border-box; }
+  html,body { width:1920px; height:1080px; overflow:hidden; background:#0a0603; font-family:'Noto Sans CJK SC','Noto Sans SC',sans-serif; }
+  .stage { position:relative; width:1920px; height:1080px;
+      background: radial-gradient(ellipse 1100px 900px at 50% 92%, #2c1d0e 0%, #140d07 50%, #0a0603 82%); }
+  /* lamp is now a small, dim, secondary accent far upper-right -- NOT the key light */
+  .lamp-glow { position:absolute; right:140px; top:-60px; width:420px; height:420px; border-radius:50%;
+      background: radial-gradient(circle, rgba(255,196,110,.16) 0%, rgba(255,170,80,.05) 45%, rgba(255,150,60,0) 70%); }
+  .desk { position:absolute; left:0; right:0; bottom:0; height:260px;
+      background: linear-gradient(180deg, #1c130a 0%, #0c0803 100%); }
+  .desk::before { content:''; position:absolute; inset:0; opacity:.3;
+      background-image: repeating-linear-gradient(90deg, rgba(0,0,0,.12) 0 2px, transparent 2px 160px); }
+
+  /* figure: head + shoulders, lit ONLY from below by the phone -- dark everywhere else, warm rim on chin/jaw/underside */
+  .figure { position:absolute; left:50%; top:150px; transform:translateX(-50%); width:620px; height:660px; z-index:2; }
+  .shoulders { position:absolute; left:50%; bottom:0; transform:translateX(-50%); width:560px; height:280px;
+      border-radius:230px 230px 0 0; background:#0c0703; }
+  .shoulders .underlight { position:absolute; left:0; right:0; top:0; height:46%;
+      background: linear-gradient(0deg, rgba(255,205,120,.5) 0%, rgba(255,190,100,.08) 70%, transparent 100%); }
+  .head { position:absolute; left:50%; bottom:225px; transform:translateX(-50%); width:270px; height:300px;
+      border-radius:50% 50% 46% 46%/56% 56% 44% 44%; background:#0c0703; overflow:hidden; }
+  /* chin/jaw glow: concentrated at the BOTTOM of the head shape only, fading out well before the top -- unmistakably lit from below */
+  .head .underlight { position:absolute; left:0; right:0; bottom:0; height:58%;
+      background: linear-gradient(0deg, rgba(255,210,130,.92) 0%, rgba(255,195,110,.42) 42%, rgba(255,185,95,0) 100%); }
+  .head .jaw-hot { position:absolute; left:50%; bottom:0; transform:translateX(-50%); width:70%; height:22%; border-radius:50% 50% 40% 40%/80% 80% 20% 20%;
+      background: radial-gradient(ellipse at 50% 100%, rgba(255,225,165,.95) 0%, rgba(255,205,130,.5) 60%, transparent 100%); }
+
+  /* phone: now the dominant light source -- big, bright, tilted up toward the face, strong upward beam */
+  .screen-beam { position:absolute; left:50%; bottom:300px; transform:translateX(-50%); width:1500px; height:1150px;
+      background: radial-gradient(ellipse at 50% 100%, rgba(255,214,140,.65) 0%, rgba(255,195,110,.28) 38%, rgba(255,180,90,0) 68%);
+      pointer-events:none; z-index:1; }
+  .phone { position:absolute; left:50%; bottom:30px; transform:translateX(-50%) rotate(-3deg); width:300px; height:430px;
+      border-radius:34px; background: linear-gradient(160deg,#4a3012,#1c1206); box-shadow:0 10px 70px rgba(0,0,0,.6); z-index:6; }
+  .screen { position:absolute; inset:16px; border-radius:22px; overflow:hidden;
+      background: linear-gradient(180deg, #fff8e6 0%, #ffe0a0 50%, #f0a84a 100%); }
+  .clock { position:absolute; inset:0; display:flex; align-items:center; justify-content:center;
+      font-family:'DejaVu Sans Mono', monospace; font-weight:700; font-size:60px; color:#5a3a10; letter-spacing:2px; }
+  .chat-lines { position:absolute; left:28px; right:28px; top:36px; display:flex; flex-direction:column; gap:14px; opacity:.5; }
+  .chat-lines div { height:16px; border-radius:8px; background:#b97a2a; }
+
+  /* notebook + pen, kept small and dim in the foreground corner -- no longer competing for light */
+  .notebook { position:absolute; left:90px; bottom:60px; width:380px; height:260px; transform:rotate(-6deg);
+      background: linear-gradient(170deg,#d8c7a0,#b8a074); border-radius:6px; box-shadow:0 20px 50px rgba(0,0,0,.55); z-index:3; opacity:.75;}
+  .notebook::before { content:''; position:absolute; inset:18px; background-image:
+      repeating-linear-gradient(180deg, rgba(60,40,15,.18) 0 2px, transparent 2px 34px); }
+  .pen { position:absolute; left:410px; bottom:200px; width:210px; height:14px; border-radius:8px;
+      background: linear-gradient(90deg,#2a2a2a,#111); transform:rotate(-20deg); box-shadow:0 8px 14px rgba(0,0,0,.5); z-index:4; opacity:.75;}
+  .pen::after { content:''; position:absolute; right:-4px; top:1px; width:18px; height:12px; border-radius:50% 10% 10% 50%;
+      background:#d4af6a; }
+
+  .corner-mark { position:absolute; top:34px; right:40px; width:56px; height:56px; border-radius:14px;
+      background: rgba(6,8,13,.55); display:flex; align-items:center; justify-content:center;
+      font-family:'Cormorant Garamond', serif; font-weight:600; font-size:34px; color:#D4AF6A;
+      border:1px solid rgba(212,175,106,.4); z-index:10; }
+  .subtitle-wrap { position:absolute; left:0; right:0; top:860px; display:flex; justify-content:center; z-index:10;}
+  .subtitle { background: rgba(6,8,13,.80); border-radius:18px; padding:10px 34px;
+      font-weight:900; font-size:64px; color:#fff; letter-spacing:2px; white-space:nowrap; }
+  .subtitle .gold { color:#D4AF6A; }
+</style></head>
+<body>
+<div class="stage">
+  <div class="lamp-glow"></div>
+  <div class="screen-beam"></div>
+  <div class="figure">
+    <div class="shoulders"><div class="underlight"></div></div>
+    <div class="head"><div class="underlight"></div><div class="jaw-hot"></div></div>
+  </div>
+  <div class="desk"></div>
+  <div class="notebook"></div>
+  <div class="pen"></div>
+  <div class="phone">
+    <div class="screen">
+      <div class="chat-lines"><div style="width:70%"></div><div style="width:50%"></div></div>
+      <div class="clock">2:00</div>
+    </div>
+  </div>
+  <div class="corner-mark">J</div>
+  <div class="subtitle-wrap"><div class="subtitle">凌晨<span class="gold">两点</span></div></div>
+</div>
+</body></html>
