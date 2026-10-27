@@ -116,7 +116,7 @@ jobs:
             jq -r '"**Cost:** $" + ((.total_cost_usd // 0)*100|round/100|tostring) + " · **turns:** " + ((.num_turns // 0)|tostring)' "$RUNNER_TEMP/result.json"
             echo
             jq -r '.result // "No result (see the log)."' "$RUNNER_TEMP/result.json"
-          } >> "$GITHUB_STEP_SUMMARY"
+          } | tee -a "$GITHUB_STEP_SUMMARY"
 
       - name: Commit the results to api/<episode>
         run: |
