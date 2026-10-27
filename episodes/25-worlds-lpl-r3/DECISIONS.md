@@ -30,3 +30,10 @@
 - New review scene: the model's report card on LPL's 10 games against other regions (pre-match odds from 'BL'
   ratings before the event): single-game calls 5/10, expected wins 5.0 vs actual 5 (R1 1.9→0, R2 1.3→2, R3 1.9→3).
 - R4 opponents are not published; R4 numbers use simulated Swiss pairings (UNVERIFIED pairings).
+
+## Update 2026-10-27 09:10 — full original song
+- Owner sent the full song (164.5 s). s130f is its first 130 s with a fade, so the grid is unchanged
+  (bar n = 0.383 + 2.0248 n). The film now runs to the end of the song: end card at bar 78 (158.3 s).
+- Used the extra 16 bars to restore the best/worst-path lines, give the 12-draw scene 4 lines, and add
+  "who each LPL team wants in Round 4" (QF % by opponent, averaged over the draws in draw25_out.json).
+- Music file is not committed (copyright); it lives in the session scratchpad as ep25/full/full.wav.

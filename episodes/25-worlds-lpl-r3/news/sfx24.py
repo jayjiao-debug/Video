@@ -3,7 +3,7 @@ import numpy as np, soundfile as sf, json, sys
 from scipy.ndimage import minimum_filter1d, uniform_filter1d
 SR = 44100; B = lambda n: 0.383 + 2.0248 * n; BEAT = 0.5062
 rng = np.random.default_rng(24)
-mus, _ = sf.read('../../ep23/film/s130f.wav'); L = len(mus)
+mus, _ = sf.read('../full/full.wav'); L = len(mus)
 def bp(x, lo, hi):
     X = np.fft.rfft(x); f = np.fft.rfftfreq(len(x), 1 / SR); X[(f < lo) | (f > hi)] = 0; return np.fft.irfft(X, len(x))
 def env(n, a, d): t = np.arange(n) / SR; return np.minimum(1, t / a) * np.exp(-t / d)
@@ -50,8 +50,8 @@ for e in sorted(E, key=lambda e: e['t']):
     elif e['kind'] == 'pen': add(scratch(e.get('dur', .5)), t, pan=.15)
     elif e['kind'] == 'tick':
         for i in range(28): add(tick(), t + e['dur'] * (1 - (1 - i / 28) ** 2), pan=-.2)
-for bar in [10, 14, 22, 26, 32, 36, 40, 44, 48, 52, 58, 60]: add(whoosh(.9), B(bar) - .75)   # camera glides
-add(thup(.6), 125.4)                                                             # end card
+for bar in [10, 14, 22, 26, 32, 36, 40, 44, 50, 54, 62, 70, 72]: add(whoosh(.9), B(bar) - .75)   # camera glides
+add(thup(.6), B(78))                                                             # end card
 o *= .8; lim = 10 ** (-0.3 / 20); m = mus + o; gg = np.ones(L)
 for c in range(2):
     kk = np.where((np.abs(m[:, c]) > lim) & (o[:, c] != 0))[0]; gg[kk] = np.minimum(gg[kk], np.clip((np.sign(m[kk, c]) * lim - mus[kk, c]) / o[kk, c], 0, 1))
