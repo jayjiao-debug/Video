@@ -9,7 +9,7 @@ def place(canvas, pose, k, info, ang=0, dx=0, dy=0, pivot=None):
     canvas.alpha_composite(full)
 def build(pose, P):
     info = json.load(open(f'{pose}.json')); c = Image.new('RGBA', (1024, 1024), (236, 228, 214, 255))
-    order = ['tail', 'legL', 'legR', 'body', 'armL', 'armR', 'head']
+    order = ['tail', 'legL', 'legR', 'body', 'armL', 'armR', 'capL', 'capR', 'head']
     for k in order:
         if k in info['boxes']: place(c, pose, k, info, *P.get(k, (0, 0, 0)), pivot=(512, info['head']['neckY']) if k == 'head' else None)
     return c.convert('RGB')
