@@ -171,3 +171,4 @@ export function paper(W, H) {
 }
 export const setHandStyle = (k) => { ST = HSTYLES[k]; };
 export const handLine = () => ST.line;
+export { shapes, ell, face, bow, burst as handBurst };
